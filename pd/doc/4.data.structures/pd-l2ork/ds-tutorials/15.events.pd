@@ -5,8 +5,8 @@
 #X text 0 1 New Drawing Commands: mouse events;
 #X text 53 43 When the user mouses over or clicks a scalar a message
 gets sent to the outlet of the corresponding [struct] object.;
-#X obj 373 87 loadbang;
-#X msg 373 108 fill blue;
+#X obj 343 87 loadbang;
+#X msg 343 108 fill blue;
 #X text 53 430 The following events are reported:;
 #X text 53 490 click - clicking the scalar in "Run mode";
 #X text 53 550 enter - moving the mouse over a scalar;
@@ -20,9 +20,9 @@ shape or value;
 #X obj 53 138 list split 1;
 #X obj 63 113 print;
 #X obj 53 87 struct drawtut-events float x float y;
-#X msg 411 200 fill white;
+#X msg 381 200 fill white;
 #X text 149 261 <- Click and move the mouse over these shapes;
-#X obj 373 157 loadbang;
+#X obj 343 157 loadbang;
 #X text 149 299 Notice that when you move from the circle's border
 to its center \, you generate a "leave" event. This is because the
 circle has no fill color. Once you set a fill color-- even white--
@@ -31,14 +31,14 @@ then the middle will count as part of the shape.;
 event \, which will register a click for anything inside the scalar's
 bounding box (i.e. \, the selection rectangle that appears when you
 select it in edit-mode.;
-#X obj 373 129 draw rect 0 0 60 60;
-#X msg 373 178 stroke-width 20;
-#X obj 373 221 draw circle 30 120 25;
+#X obj 343 129 draw rect 0 0 60 60;
+#X obj 343 221 draw circle 30 120 25;
+#X msg 343 178 stroke-width 20 \, stroke black \, fill "";
 #X connect 4 0 5 0;
 #X connect 5 0 23 0;
 #X connect 15 0 14 0;
 #X connect 17 0 15 0;
 #X connect 17 0 16 0;
-#X connect 18 0 25 0;
-#X connect 20 0 24 0;
-#X connect 24 0 25 0;
+#X connect 18 0 24 0;
+#X connect 20 0 25 0;
+#X connect 25 0 24 0;

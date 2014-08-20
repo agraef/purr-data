@@ -18,7 +18,6 @@ object attributes are supported in Pd. But the basic ones are.;
 object and a scalar created from them. Let's send a message to make
 the rectangle more interesting.;
 #X msg 53 252 fill red;
-#X msg 123 252 fill white;
 #X text 53 229 Click a message box to change the "fill" attribute:
 ;
 #X text 53 394 As you can see \, the "fill" message changes the fill
@@ -40,7 +39,8 @@ the fourth argument specifying opacity.;
 using a [loadbang] message. Notice that attributes will be the same
 for all scalars created from this [struct]. Later you will see how
 to set attributes to be different for each scalar.;
+#X msg 123 252 fill green;
 #X connect 9 0 6 0;
-#X connect 10 0 6 0;
-#X connect 17 0 18 0;
-#X connect 18 0 6 0;
+#X connect 16 0 17 0;
+#X connect 17 0 6 0;
+#X connect 19 0 6 0;

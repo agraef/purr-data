@@ -1,55 +1,56 @@
 #N struct drawtut-attr-cont float x float y;
 #N canvas 0 19 638 678 10;
-#X obj 93 563 draw rect 0 0 50 50;
-#X msg 93 92 fill red;
+#X obj 93 583 draw rect 0 0 50 50;
+#X msg 93 112 fill red;
 #X text 0 1 New Drawing Commands: attributes (continued);
 #X text 0 1 ____________________________________________;
 #X text 53 23 There are quite a few attributes we can control to change
 the appearance of a shape:;
 #X obj 53 57 struct drawtut-attr-cont float x float y;
 #X scalar drawtut-attr-cont 24 283 \;;
-#X text 200 92 fill color. 1 symbol \, 3 floats (rgb) \, or 4 floats
+#X text 200 112 fill color. 1 symbol \, 3 floats (rgb) \, or 4 floats
 (rgba);
-#X text 200 150 opacity for fill color. float in range 0-1;
-#X msg 100 149 fill-opacity \$1;
-#X text 200 176 fill-rule for overlapping polygons. 0 = nonzero \,
+#X text 200 170 opacity for fill color. float in range 0-1;
+#X msg 100 169 fill-opacity \$1;
+#X text 200 196 fill-rule for overlapping polygons. 0 = nonzero \,
 1 = evenodd;
-#X floatatom 113 201 5 0 0 0 - - -, f 5;
-#X floatatom 120 246 5 0 0 0 - - -, f 5;
-#X msg 113 223 rx \$1;
-#X msg 120 270 ry \$1;
-#X text 160 223 x value for rounded rectangle corner;
-#X text 164 271 y value for rounded rectangle corner;
-#X text 214 297 stroke color. 1 symbol \, 3 floats (rgb) \, or 4 floats
+#X floatatom 113 221 5 0 0 0 - - -, f 5;
+#X floatatom 120 266 5 0 0 0 - - -, f 5;
+#X msg 113 243 rx \$1;
+#X msg 120 290 ry \$1;
+#X text 160 243 x value for rounded rectangle corner;
+#X text 164 291 y value for rounded rectangle corner;
+#X text 214 317 stroke color. 1 symbol \, 3 floats (rgb) \, or 4 floats
 (rgba);
-#X text 274 324 list of numbers to specify dash lengths;
-#X msg 140 351 stroke-linecap 0;
-#X text 254 351 for ends of open subpaths. 0 = butt \, 1 = round \,
+#X text 274 344 list of numbers to specify dash lengths;
+#X msg 140 371 stroke-linecap 0;
+#X text 254 371 for ends of open subpaths. 0 = butt \, 1 = round \,
 2 = square;
-#X text 264 379 shape of path corners. 0 = miter \, 1 = round \, 2
+#X text 264 399 shape of path corners. 0 = miter \, 1 = round \, 2
 = bevel;
-#X text 286 405 limit miter length;
-#X text 286 432 opacity for the stroke. float in range 0-1;
-#X text 286 458 width of the stroke.;
-#X msg 146 378 stroke-linejoin 0;
-#X msg 151 405 stroke-miterlimit 0;
-#X msg 155 432 stroke-opacity 0.4;
-#X text 286 536 affine transformation on the object.;
-#X msg 158 459 stroke-width 10;
-#X floatatom 161 491 5 0 0 0 - - -, f 5;
-#X msg 161 536 transform skewx \$1;
-#X obj 161 512 * 0.01;
-#X text 275 580 Read more about svg attributes here:;
-#X obj 275 601 pddp/pddplink http://www.w3.org/TR/SVG11/painting.html
+#X text 286 425 limit miter length;
+#X text 286 452 opacity for the stroke. float in range 0-1;
+#X text 286 478 width of the stroke.;
+#X msg 146 398 stroke-linejoin 0;
+#X msg 151 425 stroke-miterlimit 0;
+#X msg 155 452 stroke-opacity 0.4;
+#X text 286 556 affine transformation on the object.;
+#X msg 158 479 stroke-width 10;
+#X floatatom 161 511 5 0 0 0 - - -, f 5;
+#X msg 161 556 transform skewx \$1;
+#X obj 161 532 * 0.01;
+#X text 275 600 Read more about svg attributes here:;
+#X obj 275 621 pddp/pddplink http://www.w3.org/TR/SVG11/painting.html
 ;
-#X msg 107 176 fill-rule 0;
-#X msg 134 324 stroke-dasharray 5 10;
-#X msg 127 297 stroke purple;
-#X obj 127 121 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 600 1;
-#X text 107 121 0;
-#X text 268 121 1;
+#X msg 107 196 fill-rule 0;
+#X msg 134 344 stroke-dasharray 5 10;
+#X msg 127 317 stroke purple;
+#X obj 127 141 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X text 107 141 0;
+#X text 268 141 1;
 #X text 25 348 (scalar);
+#X obj 93 85 loadbang;
 #X connect 1 0 0 0;
 #X connect 9 0 0 0;
 #X connect 11 0 13 0;
@@ -68,3 +69,4 @@ the appearance of a shape:;
 #X connect 36 0 0 0;
 #X connect 37 0 0 0;
 #X connect 38 0 9 0;
+#X connect 42 0 1 0;

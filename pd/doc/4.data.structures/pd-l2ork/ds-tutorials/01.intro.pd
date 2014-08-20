@@ -1,5 +1,5 @@
 #N struct foo float x float y;
-#N canvas -9 19 565 491 10;
+#N canvas 0 19 565 491 10;
 #X scalar foo 96 105 \;;
 #N canvas 429 132 808 465 welcome-animation 0;
 #X obj 877 107 bng 54 250 50 0 empty empty empty 17 7 0 10 -262144
@@ -133,8 +133,6 @@
 #X obj 311 66 draw rect -40 -50 200 90;
 #X obj 189 -26 struct foo float x float y;
 #X obj 189 4 loadbang;
-#X msg 311 35 stroke-dasharray 10 4 \, stroke-width 4 \, stroke gray
-;
 #N canvas 433 184 450 300 welcome-text 0;
 #N canvas 71 237 450 300 w 0;
 #X obj 40 215 draw path m 93.8047 87.029 c 0 1.17187 0.859375 2.05078
@@ -635,10 +633,12 @@ c -0.21485 -0.05859 -0.41016 -0.9375 -0.41016 -1.21094;
 #X restore 37 97 group exclamation-point;
 #X restore 189 66 group welcome-text;
 #X msg 189 37 fill black;
-#X connect 2 0 3 0;
+#X msg 311 35 stroke-dasharray 10 4 \, stroke-width 4 \, stroke gray
+\, fill "";
 #X connect 2 0 5 0;
-#X connect 3 0 0 0;
-#X connect 5 0 4 0;
+#X connect 2 0 4 0;
+#X connect 4 0 3 0;
+#X connect 5 0 0 0;
 #X restore 339 39 pd welcome-struct;
 #X text 0 1 New Drawing Commands: Intro;
 #X text 0 1 ___________________________;

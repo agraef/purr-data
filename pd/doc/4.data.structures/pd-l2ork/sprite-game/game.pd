@@ -1,6 +1,6 @@
 #N struct foo;
-#N canvas 34 19 881 608 10;
-#X obj 661 39 pddplink http://remusprites.carbonmade.com/ -text Sprite
+#N canvas 0 19 881 608 10;
+#X obj 731 39 pddplink http://remusprites.carbonmade.com/ -text Sprite
 by Bleed;
 #N canvas 480 111 853 605 (subpatch) 0;
 #X obj 253 455 cnv 15 378 41 empty empty empty 20 12 0 14 -204786 -66577
@@ -367,13 +367,13 @@ z m -10.2 6.76 c -16.409 -1.07188 2.85868 -24.3778 6.81644 -7.79128
 #X msg 68 509 stroke-dasharray 5 6 \, fill yellow \, fill-opacity 0.5
 \, stroke darkgray;
 #X obj 367 401 loadbang;
-#X msg 367 422 fill yellow \, transform translate 27 -7 scale 0.57
-;
 #X msg 411 245 fill black \, transform translate -130 100 scale 0.75
 \, fill-opacity 0.6 \, stroke-opacity 0.6;
 #X obj 411 224 loadbang;
 #X obj 606 168 loadbang;
 #X obj 259 324 r \$0-hit-object;
+#X msg 367 422 fill yellow \, transform translate 27 -7 scale 0.57
+\, stroke black;
 #X connect 5 0 22 0;
 #X connect 8 0 23 0;
 #X connect 9 0 27 0;
@@ -417,14 +417,14 @@ z m -10.2 6.76 c -16.409 -1.07188 2.85868 -24.3778 6.81644 -7.79128
 #X connect 45 0 33 0;
 #X connect 45 0 34 0;
 #X connect 46 0 7 0;
-#X connect 47 0 48 0;
-#X connect 48 0 14 0;
-#X connect 49 0 25 1;
-#X connect 50 0 49 0;
-#X connect 51 0 28 0;
-#X connect 52 0 17 0;
-#X restore 664 138 group;
-#N canvas 322 56 1002 543 guts 0;
+#X connect 47 0 52 0;
+#X connect 48 0 25 1;
+#X connect 49 0 48 0;
+#X connect 50 0 28 0;
+#X connect 51 0 17 0;
+#X connect 52 0 14 0;
+#X restore 734 138 group;
+#N canvas 150 76 1002 543 guts 1;
 #X obj 155 292 * 6;
 #X obj 181 254 + 1;
 #X obj 155 342 pack;
@@ -563,7 +563,7 @@ z m -10.2 6.76 c -16.409 -1.07188 2.85868 -24.3778 6.81644 -7.79128
 #X obj 181 223 float 40;
 #X obj 36 223 float 47;
 #X obj 797 75 loadbang;
-#N canvas 421 92 756 500 game-engine 0;
+#N canvas 82 159 756 500 game-engine 0;
 #X obj 37 14 inlet;
 #X obj 37 65 f;
 #X obj 67 65 + 1;
@@ -720,6 +720,11 @@ connect 10 0 11 0 \,;
 #X obj 134 296 send game-canvas;
 #X obj 254 100 send bullets;
 #X obj 254 79 f 14;
+#X obj 347 58 b;
+#X obj 347 100 send music;
+#X obj 318 19 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 347 80 list append verse synthbass pluck1 simple-snare;
 #X msg 134 132 obj 190 239 float 0 \, obj 190 319 + 1 \, obj 190 149
 bng 50 250 50 0 empty empty empty 17 7 0 10 -262144 -1 -1 \, text 235
 319 <- This will add '1' to the incoming value and also store that
@@ -731,20 +736,15 @@ time you fire a 'bang' above. \, obj 190 392 * 7 \, floatatom 223 369
 6 0 4 0 \, connect 8 0 10 0 \, connect 8 0 11 0 \, connect 11 0 12
 0 \, text 200 20 Level 7: My End is My Next Bang'd Beginning \, text
 200 20 ___________________________________________;
-#X obj 347 58 b;
-#X obj 347 100 send music;
-#X obj 318 19 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
--1;
-#X obj 347 80 list append verse synthbass pluck1 simple-snare;
-#X connect 0 0 5 0;
+#X connect 0 0 9 0;
 #X connect 0 0 1 0;
-#X connect 0 0 6 0;
+#X connect 0 0 5 0;
 #X connect 1 0 4 0;
 #X connect 4 0 3 0;
-#X connect 5 0 2 0;
-#X connect 6 0 9 0;
+#X connect 5 0 8 0;
+#X connect 7 0 5 0;
 #X connect 8 0 6 0;
-#X connect 9 0 7 0;
+#X connect 9 0 2 0;
 #X restore 232 198 pd accumulate;
 #X obj 132 146 select 0 1 2 3 4 5 6;
 #N canvas 677 249 537 300 dynamic 0;
@@ -776,6 +776,10 @@ empty empty empty 17 7 0 10 -262144 -1 -1 \, obj 396 328 send the_answer
 #X obj 134 436 send game-canvas;
 #X obj 254 100 send bullets;
 #X obj 254 79 f 21;
+#X obj 353 45 b;
+#X obj 353 107 send music;
+#X obj 353 69 list append verse simple-bass simple-snare guitar-arpeggios
+;
 #X msg 134 132 obj 259 125 bng 48 250 50 0 empty empty empty 17 7 0
 10 -262144 -1 -1 \, obj 259 199 metro 1000 \, obj 259 230 float 0 \,
 obj 259 268 == 0 \, obj 174 309 tgl 15 0 empty empty empty 17 7 0 10
@@ -783,29 +787,26 @@ obj 259 268 == 0 \, obj 174 309 tgl 15 0 empty empty empty 17 7 0 10
 10 -262144 -1 -1 0 1 \, obj 227 392 spigot 0 \, obj 157 391 spigot
 0 \, obj 227 329 bng 32 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1 \, obj 157 329 bng 32 250 50 0 empty empty empty 17 7 0 10 -262144
--1 -1 \, obj 157 452 + \, text 200 20 Level 11: I've Got Rhythm \,
-obj 227 367 f 21 \, obj 157 367 f 21 \, obj 157 473 select 42 \, obj
-157 494 send the_answer \, floatatom 237 413 5 0 0 0 - - - \, f 5 \,
-floatatom 167 412 5 0 0 0 - - - \, f 5 \, text 332 199 <- after you
-send a bang it will send out one bang every second. \, connect 4 0
-5 0 \, connect 5 0 6 0 \, connect 6 0 7 0 \, connect 6 0 8 0 \, connect
-6 0 11 1 \, connect 7 0 6 1 \, connect 7 0 9 0 \, connect 7 0 10 1
-\, connect 10 0 14 1 \, connect 10 0 20 0 \, connect 11 0 14 0 \, connect
-11 0 21 0 \, connect 12 0 16 0 \, connect 13 0 17 0 \, connect 14 0
-18 0 \, connect 16 0 10 0 \, connect 17 0 11 0 \, connect 18 0 19 0
-\, text 200 20 _________________________;
-#X obj 353 45 b;
-#X obj 353 107 send music;
-#X obj 353 69 list append verse simple-bass simple-snare guitar-arpeggios
+-1 -1 \, obj 157 452 + \, text 200 20 Level 11: You and Me and a Metronome
+Makes Three \, obj 227 367 f 21 \, obj 157 367 f 21 \, obj 157 473
+select 42 \, obj 157 494 send the_answer \, floatatom 237 413 5 0 0
+0 - - - \, f 5 \, floatatom 167 412 5 0 0 0 - - - \, f 5 \, text 332
+199 <- after you send a bang it will send out one bang every second.
+\, connect 4 0 5 0 \, connect 5 0 6 0 \, connect 6 0 7 0 \, connect
+6 0 8 0 \, connect 6 0 11 1 \, connect 7 0 6 1 \, connect 7 0 9 0 \,
+connect 7 0 10 1 \, connect 10 0 14 1 \, connect 10 0 20 0 \, connect
+11 0 14 0 \, connect 11 0 21 0 \, connect 12 0 16 0 \, connect 13 0
+17 0 \, connect 14 0 18 0 \, connect 16 0 10 0 \, connect 17 0 11 0
+\, connect 18 0 19 0 \, text 200 20 ________________________________________________
 ;
-#X connect 0 0 5 0;
+#X connect 0 0 8 0;
 #X connect 0 0 1 0;
-#X connect 0 0 6 0;
+#X connect 0 0 5 0;
 #X connect 1 0 4 0;
 #X connect 4 0 3 0;
-#X connect 5 0 2 0;
-#X connect 6 0 8 0;
-#X connect 8 0 7 0;
+#X connect 5 0 7 0;
+#X connect 7 0 6 0;
+#X connect 8 0 2 0;
 #X restore 394 322 pd metro-and-spigots;
 #N canvas 677 249 618 300 delay 0;
 #X obj 134 25 inlet;
@@ -1005,9 +1006,15 @@ change it to 'X' for '1'... \, connect 4 0 10 0 \, connect 6 0 7 0
 #X obj 134 436 send game-canvas;
 #X obj 254 100 send bullets;
 #X obj 254 79 f 21;
+#X obj 344 38 b;
+#X obj 344 100 send music;
+#X obj 344 62 list append verse simple-bass simple-snare guitar-arpeggios
+pluck2;
+#X obj 441 33 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
 #X msg 134 132 obj 367 193 bng 48 250 50 0 empty empty empty 17 7 0
 10 -262144 -1 -1 \, obj 367 286 float 0 \, obj 367 321 == 0 \, text
-268 38 Level 10: I've Got Rhythm \, text 268 38 _________________________
+268 38 Level 10: I've Got Quantized Rhythm \, text 268 38 __________________________________
 \, obj 367 257 metro 1500 \, obj 334 454 spigot \, obj 167 333 bng
 48 250 50 0 empty empty empty 17 7 0 10 -262144 -1 -1 \, obj 367 433
 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1 \, obj 334 475
@@ -1016,21 +1023,15 @@ text 442 255 <- This metronome sends a bang every 1 1/2 seconds. \,
 connect 4 0 9 0 \, connect 5 0 6 0 \, connect 6 0 5 1 \, connect 6
 0 12 0 \, connect 9 0 5 0 \, connect 10 0 13 0 \, connect 11 0 15 0
 \, connect 12 0 10 1 \, connect 13 0 14 0 \, connect 15 0 10 0 \,;
-#X obj 344 38 b;
-#X obj 344 100 send music;
-#X obj 344 62 list append verse simple-bass simple-snare guitar-arpeggios
-pluck2;
-#X obj 441 33 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
--1;
-#X connect 0 0 5 0;
+#X connect 0 0 9 0;
 #X connect 0 0 1 0;
-#X connect 0 0 6 0;
+#X connect 0 0 5 0;
 #X connect 1 0 4 0;
 #X connect 4 0 3 0;
-#X connect 5 0 2 0;
-#X connect 6 0 8 0;
+#X connect 5 0 7 0;
+#X connect 7 0 6 0;
 #X connect 8 0 7 0;
-#X connect 9 0 8 0;
+#X connect 9 0 2 0;
 #X restore 373 353 pd metro;
 #N canvas 674 144 639 474 toggle 0;
 #X obj 134 25 inlet;
@@ -1042,7 +1043,7 @@ pluck2;
 -1 -1 0 1 \, obj 209 418 select 42 \, obj 209 439 s the_answer \, text
 373 164 <- This is a toggle. When you send it a 'bang' the toggle displays
 an 'X' and sends a '1'. 'Bang' it again and it becomes empty and sends
-'0'. \, text 200 20 Level 5: To Be or Not \, text 200 20 _____________________
+'0'. \, text 200 20 Level 6: To Be or Not \, text 200 20 _____________________
 \, obj 357 298 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1 \, obj 306 298 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1 \, obj 298 271 select 0 1 \, obj 209 325 float 42 \, obj 209
@@ -1052,10 +1053,9 @@ an 'X' and sends a '1'. 'Bang' it again and it becomes empty and sends
 0 \, connect 12 1 10 0 \, connect 12 1 15 0 \, connect 13 0 17 0 \,
 connect 14 0 13 0 \, connect 15 0 17 1 \, connect 16 0 17 1 \, connect
 17 0 5 0 \,;
-#X obj 340 58 b;
-#X obj 340 100 send music;
-#X obj 339 78 list append verse siren-fade-single pluck-fade simple-snare
-;
+#X obj 374 51 b;
+#X obj 374 93 send music;
+#X obj 374 72 list append verse siren-to-bass pluck1 simple-snare;
 #X connect 0 0 5 0;
 #X connect 0 0 1 0;
 #X connect 0 0 6 0;
@@ -1064,7 +1064,7 @@ connect 14 0 13 0 \, connect 15 0 17 1 \, connect 16 0 17 1 \, connect
 #X connect 5 0 2 0;
 #X connect 6 0 8 0;
 #X connect 8 0 7 0;
-#X restore 198 252 pd toggle;
+#X restore 215 223 pd toggle;
 #N canvas 553 178 608 363 gate 0;
 #X obj 134 25 inlet;
 #X obj 254 58 b;
@@ -1078,22 +1078,20 @@ connect 14 0 13 0 \, connect 15 0 17 1 \, connect 16 0 17 1 \, connect
 is a spigot. Input at left only passes if the input at right has received
 a number that isn't a '0'. \, connect 4 0 5 0 \, connect 5 0 6 0 \,
 connect 6 0 8 0 \, connect 7 0 6 1 \, connect 8 0 9 0 \, text 200 20
-Level 6: Heaven's Gate \, text 200 20 ______________________;
-#X obj 346 57 b;
-#X obj 346 99 send music;
-#X obj 430 37 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
--1;
-#X obj 346 78 list append verse siren-to-bass pluck1 simple-snare;
+Level 5: Heaven's Gate \, text 200 20 ______________________;
+#X obj 353 56 b;
+#X obj 352 98 send music;
+#X obj 352 76 list append verse siren-fade-single pluck-fade simple-snare
+;
 #X connect 0 0 5 0;
 #X connect 0 0 1 0;
 #X connect 0 0 6 0;
 #X connect 1 0 4 0;
 #X connect 4 0 3 0;
 #X connect 5 0 2 0;
-#X connect 6 0 9 0;
-#X connect 8 0 9 0;
-#X connect 9 0 7 0;
-#X restore 215 221 pd gate;
+#X connect 6 0 8 0;
+#X connect 8 0 7 0;
+#X restore 198 251 pd gate;
 #N canvas 408 232 721 435 line 0;
 #X obj 134 25 inlet;
 #X obj 254 58 b;
@@ -1393,8 +1391,8 @@ connect 14 0 16 1 \, connect 15 0 20 0 \, connect 15 1 17 0 \, connect
 #X connect 12 1 9 0;
 #X connect 12 2 7 0;
 #X connect 12 3 10 0;
-#X connect 12 4 25 0;
-#X connect 12 5 26 0;
+#X connect 12 4 26 0;
+#X connect 12 5 25 0;
 #X connect 12 6 11 0;
 #X connect 12 7 22 0;
 #X connect 18 0 34 0;
@@ -1437,7 +1435,7 @@ connect 14 0 16 1 \, connect 15 0 20 0 \, connect 15 1 17 0 \, connect
 #X obj 786 454 list append;
 #X obj 786 475 send sfx;
 #X msg 786 314 bbox \, class;
-#N canvas 717 92 574 583 check_for_object 0;
+#N canvas 717 92 574 583 check_for_object 1;
 #X obj 38 20 inlet;
 #X msg 139 88 72 236;
 #X msg 194 88 -76 60;
@@ -1804,7 +1802,7 @@ shooting the final [s the_answer] object;
 #X obj 58 265 route 0 1 2 3;
 #X obj 85 515 del 140;
 #X obj 58 611 rev1~;
-#N canvas 905 222 450 300 cut 0;
+#N canvas 373 246 450 300 cut 1;
 #X obj 102 10 inlet;
 #X obj 104 152 list split;
 #X msg 224 133 5;
@@ -1825,7 +1823,6 @@ shooting the final [s the_answer] object;
 #X restore 58 440 pd cut;
 #X msg 112 585 2;
 #X obj 85 395 random 3;
-#X msg 58 353 0 12 19 24 31 36;
 #N canvas 291 46 408 438 ks 0;
 #X obj 260 30 inlet;
 #X obj 67 130 noise~;
@@ -1909,16 +1906,17 @@ shooting the final [s the_answer] object;
 #X obj 278 404 random 4;
 #X obj 58 632 *~ 0.14;
 #X obj 278 494 random 2;
+#X msg 58 353 0 12 19 24 31 36;
 #X connect 0 0 2 0;
 #X connect 1 0 3 0;
 #X connect 1 1 12 0;
 #X connect 2 0 1 0;
 #X connect 2 1 0 1;
-#X connect 3 0 48 0;
-#X connect 4 0 47 0;
-#X connect 5 0 47 0;
-#X connect 6 0 47 0;
-#X connect 7 0 47 0;
+#X connect 3 0 47 0;
+#X connect 4 0 46 0;
+#X connect 5 0 46 0;
+#X connect 6 0 46 0;
+#X connect 7 0 46 0;
 #X connect 8 0 14 0;
 #X connect 9 0 8 0;
 #X connect 9 1 16 0;
@@ -1928,62 +1926,62 @@ shooting the final [s the_answer] object;
 #X connect 11 2 6 0;
 #X connect 11 3 7 0;
 #X connect 12 0 0 0;
-#X connect 13 0 58 0;
+#X connect 13 0 57 0;
 #X connect 14 0 2 0;
 #X connect 15 0 13 1;
 #X connect 16 0 8 1;
-#X connect 17 0 9 0;
-#X connect 18 0 13 0;
+#X connect 17 0 13 0;
+#X connect 18 0 19 0;
 #X connect 19 0 20 0;
-#X connect 20 0 21 0;
-#X connect 21 0 49 0;
-#X connect 22 0 39 0;
-#X connect 23 0 15 0;
-#X connect 27 0 26 0;
-#X connect 27 0 43 1;
-#X connect 28 0 43 1;
-#X connect 29 0 28 0;
-#X connect 30 0 35 0;
-#X connect 31 0 32 0;
-#X connect 31 1 33 0;
-#X connect 31 2 34 0;
-#X connect 31 3 34 0;
-#X connect 32 0 47 0;
-#X connect 33 0 47 0;
-#X connect 34 0 47 0;
-#X connect 35 0 11 0;
-#X connect 35 1 31 0;
-#X connect 36 0 40 1;
-#X connect 37 0 38 0;
-#X connect 39 0 19 0;
-#X connect 39 1 41 0;
-#X connect 40 0 30 1;
+#X connect 20 0 48 0;
+#X connect 21 0 38 0;
+#X connect 22 0 15 0;
+#X connect 26 0 25 0;
+#X connect 26 0 42 1;
+#X connect 27 0 42 1;
+#X connect 28 0 27 0;
+#X connect 29 0 34 0;
+#X connect 30 0 31 0;
+#X connect 30 1 32 0;
+#X connect 30 2 33 0;
+#X connect 30 3 33 0;
+#X connect 31 0 46 0;
+#X connect 32 0 46 0;
+#X connect 33 0 46 0;
+#X connect 34 0 11 0;
+#X connect 34 1 30 0;
+#X connect 35 0 39 1;
+#X connect 36 0 37 0;
+#X connect 38 0 18 0;
+#X connect 38 1 40 0;
+#X connect 39 0 29 1;
+#X connect 40 0 41 0;
+#X connect 41 0 39 0;
 #X connect 41 0 42 0;
-#X connect 42 0 40 0;
-#X connect 42 0 43 0;
-#X connect 43 0 26 0;
-#X connect 43 0 46 0;
-#X connect 44 0 26 0;
-#X connect 44 0 43 1;
-#X connect 45 0 41 1;
-#X connect 46 0 45 0;
+#X connect 42 0 25 0;
+#X connect 42 0 45 0;
+#X connect 43 0 25 0;
+#X connect 43 0 42 1;
+#X connect 44 0 40 1;
+#X connect 45 0 44 0;
+#X connect 46 0 59 0;
+#X connect 46 1 3 1;
 #X connect 47 0 17 0;
-#X connect 47 1 3 1;
-#X connect 48 0 18 0;
-#X connect 49 0 30 0;
-#X connect 49 1 50 0;
-#X connect 50 0 51 0;
-#X connect 51 0 56 0;
-#X connect 51 1 52 0;
-#X connect 52 0 12 1;
-#X connect 53 0 59 0;
-#X connect 54 0 12 1;
-#X connect 55 0 53 0;
-#X connect 56 0 57 0;
-#X connect 57 0 55 0;
-#X connect 58 0 24 0;
-#X connect 58 0 25 0;
-#X connect 59 0 54 0;
+#X connect 48 0 29 0;
+#X connect 48 1 49 0;
+#X connect 49 0 50 0;
+#X connect 50 0 55 0;
+#X connect 50 1 51 0;
+#X connect 51 0 12 1;
+#X connect 52 0 58 0;
+#X connect 53 0 12 1;
+#X connect 54 0 52 0;
+#X connect 55 0 56 0;
+#X connect 56 0 54 0;
+#X connect 57 0 23 0;
+#X connect 57 0 24 0;
+#X connect 58 0 53 0;
+#X connect 59 0 9 0;
 #X restore 795 246 pd guitar-arpeggios;
 #X msg 107 58 0;
 #X obj 107 79 send omni;
@@ -2361,7 +2359,7 @@ shooting the final [s the_answer] object;
 #X restore 923 246 pd simple-snare;
 #N canvas 115 68 1190 634 baseline 0;
 #X obj 326 343 phasor~;
-#X msg 326 186 \$12;
+#X msg 326 186 \$15;
 #X obj 326 227 mtof;
 #X obj 326 279 line~;
 #X obj 1065 87 + 1;
@@ -2534,7 +2532,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X connect 72 0 11 0;
 #X restore 469 285 pd baseline;
 #N canvas 1 37 682 683 siren 0;
-#X msg 269 204 \$3;
+#X msg 269 204 \$4;
 #X obj 269 235 mtof;
 #X obj 269 287 line~;
 #X obj 479 152 + 1;
@@ -2552,7 +2550,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X obj 350 -2 f;
 #X msg 269 173 \$1 \$2 \$2 \$2;
 #X obj 269 -87 trigger anything anything;
-#X msg 789 274 \$3;
+#X msg 789 274 \$4;
 #X obj 789 298 mtof;
 #X obj 789 346 line~;
 #X obj 969 182 + 1;
@@ -2705,7 +2703,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X restore 713 285 pd siren;
 #N canvas 19 60 947 608 simple-bass 0;
 #X obj 195 273 phasor~;
-#X msg 195 166 \$12;
+#X msg 195 166 \$15;
 #X obj 195 197 mtof;
 #X obj 195 249 line~;
 #X msg 195 74 40 52;
@@ -2817,7 +2815,7 @@ adddollar 1 \, add2 0 0 0 0 0 0 0 0 0;
 #X restore 76 285 pd simple-bass;
 #N canvas 0 19 1366 684 stepwise-bass 0;
 #X obj 215 303 phasor~;
-#X msg 215 146 \$12;
+#X msg 215 146 \$15;
 #X obj 215 177 mtof;
 #X obj 215 229 line~;
 #X obj 565 13 + 1;
@@ -2916,7 +2914,7 @@ adddollar 1 \, add2 0 0 0 0 0 0 0 0 0;
 adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 2 \, adddollar 2 \, adddollar 3 \, adddollar 3 \, adddollar 3 \, adddollar
 3;
-#X obj 155 423 *~ 0.15;
+#X obj 155 423 *~ 0.1;
 #X connect 0 0 31 1;
 #X connect 1 0 2 0;
 #X connect 1 0 35 0;
@@ -3044,7 +3042,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X restore 167 285 pd stepwise-bass;
 #N canvas 288 49 565 650 siren-to-bass 0;
 #X obj 200 380 phasor~;
-#X msg 75 179 \$3;
+#X msg 75 179 \$4;
 #X obj 200 264 mtof;
 #X obj 200 311 line~;
 #X msg 75 55 40 52;
@@ -3151,7 +3149,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X restore 539 285 pd siren-to-bass;
 #N canvas 440 34 584 635 siren-fade 0;
 #X obj 192 372 phasor~;
-#X msg 95 246 \$3;
+#X msg 95 246 \$4;
 #X obj 192 300 mtof;
 #X obj 192 348 line~;
 #X msg 95 109 40 52;
@@ -3271,7 +3269,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X restore 713 335 pd siren-fade;
 #N canvas 440 34 584 670 siren-fade-long 0;
 #X obj 192 372 phasor~;
-#X msg 95 246 \$3;
+#X msg 95 246 \$4;
 #X obj 192 300 mtof;
 #X obj 192 348 line~;
 #X msg 95 109 40 52;
@@ -3391,7 +3389,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X restore 803 335 pd siren-fade-long;
 #N canvas 440 34 584 670 siren-fade-single 0;
 #X obj 192 372 phasor~;
-#X msg 95 246 \$3;
+#X msg 95 246 \$4;
 #X obj 192 300 mtof;
 #X obj 192 348 line~;
 #X msg 95 109 40 52;
@@ -3698,7 +3696,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X restore 642 175 pd pluck-fade;
 #N canvas 0 19 797 634 level8-bass 0;
 #X obj 326 343 phasor~;
-#X msg 326 186 \$12;
+#X msg 326 186 \$15;
 #X obj 326 227 mtof;
 #X obj 326 279 line~;
 #X obj 645 127 + 1;
@@ -3823,7 +3821,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X obj 286 494 *~ 0.5;
 #X obj 493 494 *~ 0.5;
 #N canvas 76 51 1221 608 stepwise-osc 0;
-#X msg 215 146 \$12;
+#X msg 215 146 \$15;
 #X obj 215 177 mtof;
 #X obj 215 229 line~;
 #X obj 565 13 + 1;
@@ -3924,7 +3922,6 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X obj 215 303 osc~;
 #X obj 681 130 r stepwise-osc;
 #X obj 215 345 clip~ -1 1;
-#X obj 155 463 *~ 0.1;
 #X obj 279 216 v \$0-x;
 #X obj 266 168 metro 100;
 #X obj 254 144 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
@@ -3935,6 +3932,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X obj 274 308 line~;
 #X obj 215 324 *~;
 #X obj 529 375 loadbang;
+#X obj 155 463 *~ 0.1;
 #X connect 0 0 1 0;
 #X connect 0 0 34 0;
 #X connect 1 0 44 0;
@@ -3976,7 +3974,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X connect 28 0 26 1;
 #X connect 29 0 31 0;
 #X connect 30 0 51 0;
-#X connect 30 0 95 0;
+#X connect 30 0 104 0;
 #X connect 31 0 30 0;
 #X connect 32 0 31 0;
 #X connect 33 0 32 0;
@@ -4007,7 +4005,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X connect 48 0 61 0;
 #X connect 49 0 61 0;
 #X connect 50 0 61 0;
-#X connect 51 0 95 0;
+#X connect 51 0 104 0;
 #X connect 52 0 53 0;
 #X connect 53 0 51 1;
 #X connect 54 0 25 0;
@@ -4055,20 +4053,20 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X connect 89 0 78 0;
 #X connect 90 0 87 0;
 #X connect 91 0 56 0;
-#X connect 92 0 103 0;
+#X connect 92 0 102 0;
 #X connect 93 0 13 0;
 #X connect 94 0 30 1;
-#X connect 95 0 9 0;
-#X connect 95 0 10 0;
-#X connect 96 0 100 0;
+#X connect 95 0 99 0;
+#X connect 96 0 95 0;
 #X connect 97 0 96 0;
-#X connect 98 0 97 0;
-#X connect 99 0 102 0;
-#X connect 100 0 101 0;
-#X connect 101 0 99 0;
-#X connect 102 0 103 1;
-#X connect 103 0 94 0;
-#X connect 104 0 97 0;
+#X connect 98 0 101 0;
+#X connect 99 0 100 0;
+#X connect 100 0 98 0;
+#X connect 101 0 102 1;
+#X connect 102 0 94 0;
+#X connect 103 0 96 0;
+#X connect 104 0 9 0;
+#X connect 104 0 10 0;
 #X restore 157 335 pd stepwise-osc;
 #N canvas 0 24 597 402 shuffle 0;
 #X obj 204 17 inlet;
@@ -4110,7 +4108,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X connect 16 0 7 0;
 #X restore 923 166 pd shuffle;
 #N canvas 76 51 1221 608 stepwise-fm 0;
-#X msg 215 146 \$12;
+#X msg 215 146 \$15;
 #X obj 215 177 mtof;
 #X obj 215 229 line~;
 #X obj 565 13 + 1;
@@ -4250,7 +4248,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X restore 546 377 pd bang-mod;
 #X obj 681 130 r stepwise-fm;
 #X msg 274 287 \$1 900;
-#X obj 155 463 *~ 0.06;
+#X obj 155 463 *~ 0.05;
 #X connect 0 0 1 0;
 #X connect 0 0 34 0;
 #X connect 1 0 44 0;
@@ -4556,9 +4554,9 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X connect 0 0 45 0;
 #X connect 0 0 36 0;
 #X connect 0 0 54 0;
-#X connect 0 0 55 0;
 #X connect 0 0 56 0;
 #X connect 0 0 57 0;
+#X connect 0 0 55 0;
 #X connect 1 0 0 1;
 #X connect 2 0 46 0;
 #X connect 3 0 20 0;
@@ -4604,7 +4602,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X obj 385 305 del 450;
 #X obj 620 203 del 600;
 #X obj 271 325 hsl 91 15 0 1 0 0 \$0-master \$0-from-nowhere Volume
-29 8 0 10 -237503 -1 -1 6700 1;
+29 8 0 10 -237503 -1 -1 7300 1;
 #X connect 0 0 2 0;
 #X connect 0 0 18 0;
 #X connect 1 0 3 0;
@@ -4710,20 +4708,58 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X connect 88 0 86 0;
 #X connect 89 0 68 0;
 #X coords 0 -1 1 1 115 61 1 262 284;
-#X restore 664 61 pd guts;
-#X obj 664 15 struct foo;
-#X obj 450 200 bng 61 250 50 0 empty empty empty 17 7 0 10 -262144
+#X restore 734 61 pd guts;
+#X obj 734 15 struct foo;
+#X obj 74 87 bng 26 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 74 119 float 42;
+#X obj 119 154 tgl 27 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 158 224 tgl 27 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 164 338 tgl 27 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 203 408 tgl 27 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 119 195 * 43;
+#X obj 74 243 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 158 313 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;
-#X obj 450 370 float 42;
-#X obj 450 390 send the_answer;
-#X text 200 50 Use the arrow keys to move;
-#X text 200 80 Click 'f' to turn on the flashlight. When you hit an
-object that you can shoot you'll see an exclamation mark.;
-#X text 200 120 Click 'b' to shoot!;
-#X text 200 20 Level 1: Send the Answer;
-#X text 200 20 ________________________;
+#X obj 119 427 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 164 527 select 42;
+#X obj 164 548 send the_answer;
+#X obj 203 498 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 200 20 Level 16: Straighten Up and Float Right;
+#X obj 158 265 * 43;
+#X obj 164 379 * 43;
+#X obj 203 449 * 43;
+#X obj 119 292 moses 0;
+#X obj 164 476 moses 0;
+#X obj 74 222 moses 43;
+#X obj 119 406 moses 43;
+#X text 200 20 _______________________________________;
 #X scalar foo \;;
 #X connect 2 0 1 0;
 #X connect 2 1 1 1;
 #X connect 4 0 5 0;
-#X connect 5 0 6 0;
+#X connect 5 0 23 0;
+#X connect 6 0 10 0;
+#X connect 7 0 18 0;
+#X connect 8 0 19 0;
+#X connect 9 0 20 0;
+#X connect 10 0 23 1;
+#X connect 14 0 15 0;
+#X connect 18 0 21 1;
+#X connect 19 0 24 1;
+#X connect 20 0 22 1;
+#X connect 21 0 24 0;
+#X connect 21 1 12 0;
+#X connect 22 0 14 0;
+#X connect 22 1 16 0;
+#X connect 23 0 11 0;
+#X connect 23 1 21 0;
+#X connect 24 0 13 0;
+#X connect 24 1 22 0;

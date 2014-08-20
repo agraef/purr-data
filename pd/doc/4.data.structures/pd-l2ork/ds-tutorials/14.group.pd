@@ -19,17 +19,17 @@ of individually.;
 #X obj 35 26 loadbang;
 #X msg 35 47 fill blue;
 #X obj 35 210 loadbang;
-#X msg 35 231 stroke-width 10;
 #X obj 35 101 loadbang;
-#X msg 35 122 stroke darkgreen \, stroke-width 10;
 #X msg 49 148 fill white;
+#X msg 35 122 stroke darkgreen \, stroke-width 10 \, fill "";
+#X msg 35 231 stroke-width 10 \, stroke black;
 #X connect 3 0 4 0;
 #X connect 4 0 0 0;
-#X connect 5 0 6 0;
-#X connect 6 0 2 0;
-#X connect 7 0 8 0;
+#X connect 5 0 9 0;
+#X connect 6 0 8 0;
+#X connect 7 0 1 0;
 #X connect 8 0 1 0;
-#X connect 9 0 1 0;
+#X connect 9 0 2 0;
 #X restore 434 236 group;
 #X text 53 263 The [group] object is essentially just a subpatch with
 an inlet. You can send it all the same messages that you can send to
