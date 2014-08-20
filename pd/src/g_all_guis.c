@@ -470,7 +470,10 @@ void iemgui_color(t_iemgui *x, t_symbol *s, int ac, t_atom *av)
     else
         x->x_lcol = iemgui_compatible_col(atom_getintarg(1, ac, av));
     if(glist_isvisible(x->x_glist))
+    {
         x->x_draw(x, x->x_glist, IEM_GUI_DRAW_MODE_CONFIG);
+        iemgui_label_draw_config(x);
+    }
 }
 
 void iemgui_displace(t_gobj *z, t_glist *glist, int dx, int dy)
