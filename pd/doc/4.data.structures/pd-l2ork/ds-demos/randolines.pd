@@ -1,4 +1,6 @@
-#N canvas -9 19 574 479 10;
+#N struct randolines float x float y float x0 float y0 float x1 float
+y1 float r float g float b;
+#N canvas 0 19 574 479 10;
 #X msg 93 144 100;
 #X obj 93 170 until;
 #X obj 93 226 t b b b b b;

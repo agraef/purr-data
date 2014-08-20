@@ -6,11 +6,11 @@
 #N struct aussa float x float y;
 #N struct ausql float x float y;
 #N struct aust float x float y;
-#N canvas 0 19 829 552 10;
+#N canvas 27 19 829 552 10;
 #X obj 504 611 struct australia float x float y;
 #X scalar australia 50 43 \;;
 #X obj 21 291 vradio 22 1 0 8 empty empty empty 0 -8 0 10 -262144 -1
--1 0;
+-1 3;
 #X text 52 319 Northern Territory;
 #X text 52 341 Queensland;
 #X text 52 385 New South Wales;
@@ -57,7 +57,7 @@ transform scale 1 \; westernaustralia fill white \, transform scale
 #X connect 6 0 3 0;
 #X connect 6 1 1 0;
 #X restore 267 549 pd reset;
-#N canvas 798 30 536 581 ausv 0;
+#N canvas 612 65 536 581 ausv 0;
 #X obj 120 24 struct ausv float x float y;
 #X obj 117 179 draw path M 252.869 203.121 l -0.873 -0.643 l -1.721
 -0.121 l -8.182 -4.065 l 0.178 -1.349 l -0.354 -1.082 l -0.722 -1.028
@@ -116,12 +116,14 @@ h 1.49 l 0.428 -1.275 l -1.492 0.425 l -0.853 -0.64 h 1.063 l 2.771
 l -0.213 0.427 l 9.371 -0.853 l 1.915 -1.703 l -0.638 -0.64 H 252.869
 z;
 #X obj 119 588 loadbang;
-#X msg 119 609 fill-opacity 0.4;
 #X msg 118 149 transform scale \$1 translate \$2 \$3;
+#X obj -23 86 loadbang;
+#X msg -23 107 stroke black \, fill "";
+#X msg 119 609 fill-opacity 0.4 \, stroke black \, fill "";
 #X connect 2 0 7 0;
 #X connect 3 0 5 0;
 #X connect 4 0 5 1;
-#X connect 5 0 13 0;
+#X connect 5 0 12 0;
 #X connect 6 0 3 0;
 #X connect 6 1 4 0;
 #X connect 6 2 9 0;
@@ -130,9 +132,11 @@ z;
 #X connect 8 0 1 0;
 #X connect 8 0 10 0;
 #X connect 9 0 5 2;
-#X connect 11 0 12 0;
-#X connect 12 0 10 0;
-#X connect 13 0 1 0;
+#X connect 11 0 15 0;
+#X connect 12 0 1 0;
+#X connect 13 0 14 0;
+#X connect 14 0 1 0;
+#X connect 15 0 10 0;
 #X restore 504 384 pd ausv;
 #N canvas 0 27 1366 684 ausnsw 0;
 #X obj 133 291 draw path M 278.939 132.632 l -0.641 -0.853 l 0.183
@@ -234,7 +238,9 @@ l 0.64 0.213 l -0.213 -0.853 l 1.703 -3.193 h -0.426 l 0.426 -0.214
 L 278.939 132.632 z M 261.268 143.072 h -0.215 l -0.213 -0.639 l 0.641
 -0.214 L 261.268 143.072 z;
 #X obj 543 210 loadbang;
-#X msg 543 231 fill-opacity 0.4;
+#X msg 543 231 fill-opacity 0.4 \, fill "" \, stroke black;
+#X obj 9 193 loadbang;
+#X msg 9 214 stroke black \, fill "";
 #X connect 1 0 7 0;
 #X connect 3 0 5 0;
 #X connect 4 0 5 1;
@@ -250,6 +256,8 @@ L 278.939 132.632 z M 261.268 143.072 h -0.215 l -0.213 -0.639 l 0.641
 #X connect 10 0 5 2;
 #X connect 12 0 13 0;
 #X connect 13 0 11 0;
+#X connect 14 0 15 0;
+#X connect 15 0 0 0;
 #X restore 504 417 pd ausnsw;
 #N canvas 0 27 1366 684 auswa 0;
 #X obj 41 180 draw path M 112.615 33.818 l -0.426 -0.425 l -0.852 -0.213
@@ -447,7 +455,9 @@ l 0.213 -0.426 l -1.278 -0.426 l 0.213 -0.852 l -0.639 0.426 l 0.852
 z M 83.443 45.535 v -0.81 l 0.639 0.384 L 83.443 45.535 z M 113.852
 44.081 V 43.35 l -0.168 0.056 L 113.852 44.081 z;
 #X obj 451 74 loadbang;
-#X msg 451 95 fill-opacity 0.4;
+#X msg 451 95 fill-opacity 0.4 \, stroke black \, fill "";
+#X obj 267 65 loadbang;
+#X msg 267 86 stroke black \, fill "";
 #X connect 1 0 6 0;
 #X connect 3 0 4 0;
 #X connect 4 0 8 0;
@@ -463,6 +473,8 @@ z M 83.443 45.535 v -0.81 l 0.639 0.384 L 83.443 45.535 z M 113.852
 #X connect 10 0 4 1;
 #X connect 12 0 13 0;
 #X connect 13 0 11 0;
+#X connect 14 0 15 0;
+#X connect 15 0 0 0;
 #X restore 504 450 pd auswa;
 #N canvas 0 27 1366 684 ausnt 0;
 #X obj 80 14 struct ausnt float x float y;
@@ -612,7 +624,9 @@ l -0.213 0.426 l -0.639 -0.426 v 0.852 h -0.426 l 4.046 0.426 L 125.184
 12.525 z M 123.906 12.525 l 0.157 -0.939 l 0.056 0.3 l 1.064 0.638
 l -1.064 -0.425 L 123.906 12.525 z;
 #X obj 506 100 loadbang;
-#X msg 506 121 fill-opacity 0.4;
+#X msg 506 121 fill-opacity 0.4 \, stroke black \, fill "";
+#X obj 312 75 loadbang;
+#X msg 312 96 fill "" \, stroke black;
 #X connect 2 0 6 0;
 #X connect 3 0 4 0;
 #X connect 4 0 8 0;
@@ -628,6 +642,8 @@ l -1.064 -0.425 L 123.906 12.525 z;
 #X connect 10 0 4 2;
 #X connect 12 0 13 0;
 #X connect 13 0 11 0;
+#X connect 14 0 15 0;
+#X connect 15 0 1 0;
 #X restore 504 483 pd ausnt;
 #N canvas 0 27 1366 684 aussa 0;
 #X obj 96 23 struct aussa float x float y;
@@ -699,7 +715,9 @@ l -0.564 -0.873 l 1.631 4.281 l -0.213 1.064 l -1.063 1.064 l 0.851
 1.491 l 1.918 -0.213 l 1.49 -0.427 l 1.703 0.853 l 0.852 -0.64 l 0.213
 -0.853 h 2.77 l 0.424 -0.851 l -1.49 -0.639 L 172.887 189.499 z;
 #X obj 503 107 loadbang;
-#X msg 503 128 fill-opacity 0.4;
+#X msg 503 128 fill-opacity 0.4 \, stroke black \, fill "";
+#X obj 309 92 loadbang;
+#X msg 309 113 stroke black \, fill "";
 #X connect 2 0 6 0;
 #X connect 3 0 4 0;
 #X connect 4 0 8 0;
@@ -715,6 +733,8 @@ l -0.564 -0.873 l 1.631 4.281 l -0.213 1.064 l -1.063 1.064 l 0.851
 #X connect 10 0 4 1;
 #X connect 12 0 13 0;
 #X connect 13 0 11 0;
+#X connect 14 0 15 0;
+#X connect 15 0 1 0;
 #X restore 504 516 pd aussa;
 #N canvas 0 27 1366 684 ausql 0;
 #X obj 97 27 struct ausql float x float y;
@@ -862,7 +882,9 @@ l -0.183 1.97 L 278.516 129.443 z M 274.258 109.85 l 0.852 1.491 l
 1.916 -5.751 l -0.426 -0.852 v -1.49 l -1.063 0.852 l 0.85 1.278 l
 -1.704 1.917 h 0.428 l -0.428 1.49 L 274.258 109.85 z;
 #X obj 504 101 loadbang;
-#X msg 504 122 fill-opacity 0.4;
+#X msg 504 122 fill-opacity 0.4 \, stroke black \, fill "";
+#X obj 347 97 loadbang;
+#X msg 347 118 stroke black \, fill "";
 #X connect 2 0 6 0;
 #X connect 3 0 4 0;
 #X connect 4 0 8 0;
@@ -878,8 +900,10 @@ l -0.183 1.97 L 278.516 129.443 z M 274.258 109.85 l 0.852 1.491 l
 #X connect 10 0 4 1;
 #X connect 12 0 13 0;
 #X connect 13 0 11 0;
+#X connect 14 0 15 0;
+#X connect 15 0 1 0;
 #X restore 504 549 pd ausql;
-#N canvas 0 27 1366 684 aust 0;
+#N canvas 467 46 888 608 aust 0;
 #X obj 77 17 struct aust float x float y;
 #X obj 79 190 draw path M 214.201 220.805 l -0.639 1.277 l 0.213 2.555
 v 0.853 l 0.426 0.426 l 1.279 -1.278 l -0.213 -2.98 L 214.201 220.805
@@ -914,7 +938,6 @@ l -1.705 -2.129 l -1.276 1.491 l 0.853 0.212 V 224.637 z;
 #X obj 79 94 t a a a;
 #X obj 79 74 route float;
 #X obj 226 119 t a;
-#X msg 79 157 transform scale \$1 translate \$2 \$3;
 #X obj 153 115 * -45;
 #X obj 110 114 * -80;
 #X obj 469 190 draw path M 214.201 220.805 l -0.639 1.277 l 0.213 2.555
@@ -945,22 +968,27 @@ l -0.639 -1.064 l 0.852 -0.426 l 0.212 -1.703 l -0.64 0.212 l 1.066
 l -0.425 -1.064 l -0.427 0.427 l 0.427 -1.065 l 0.212 -0.426 h -0.852
 l -1.705 -2.129 l -1.276 1.491 l 0.853 0.212 V 224.637 z;
 #X obj 469 124 loadbang;
-#X msg 469 145 fill-opacity 0.4;
+#X msg 79 157 transform scale \$1 translate \$2 \$3;
+#X msg 469 145 fill-opacity 0.4 \, stroke black \, fill "";
+#X obj 300 90 loadbang;
+#X msg 300 111 stroke black \, fill "";
 #X connect 2 0 6 0;
 #X connect 3 0 4 0;
-#X connect 4 0 8 0;
+#X connect 4 0 12 0;
 #X connect 5 0 3 0;
-#X connect 5 1 10 0;
-#X connect 5 2 9 0;
+#X connect 5 1 9 0;
+#X connect 5 2 8 0;
 #X connect 6 0 5 0;
 #X connect 6 1 7 0;
 #X connect 7 0 1 0;
-#X connect 7 0 11 0;
-#X connect 8 0 1 0;
-#X connect 9 0 4 2;
-#X connect 10 0 4 1;
-#X connect 12 0 13 0;
-#X connect 13 0 11 0;
+#X connect 7 0 10 0;
+#X connect 8 0 4 2;
+#X connect 9 0 4 1;
+#X connect 11 0 13 0;
+#X connect 12 0 1 0;
+#X connect 13 0 10 0;
+#X connect 14 0 15 0;
+#X connect 15 0 1 0;
 #X restore 504 582 pd aust;
 #X obj 127 866 t b a;
 #X msg 173 961 symbol \$1;
@@ -1048,10 +1076,10 @@ l -1.705 -2.129 l -1.276 1.491 l 0.853 0.212 V 224.637 z;
 ;
 #X text 502 286 the country of your choice-. Norway \, London \,;
 #X text 502 266 Make your own patch to interact with;
-#X text 502 236 of all kinds of preexisting vector images.;
 #X text 502 306 Africa-- the sky's the limit!;
 #X obj 504 354 pddp/pddplink http://raphaeljs.com/australia.html;
 #X text 502 336 Based off of:;
+#X text 502 236 of all kinds of preexisting vector drawings.;
 #X connect 2 0 44 0;
 #X connect 2 0 47 0;
 #X connect 8 0 21 0;

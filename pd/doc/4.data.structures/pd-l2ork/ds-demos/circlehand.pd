@@ -14,10 +14,7 @@
 #X obj 357 408 loadbang;
 #X msg 357 429 fill blue \, stroke blue \, stroke-width 2 \, fill-opacity
 0.4;
-#X msg 531 228 stroke-width 2 \, stroke blue \, stroke-opacity 0.4
-;
 #X obj 519 68 line;
-#X msg 594 180 stroke-width 2 \, stroke blue;
 #X msg 519 305 fill blue \, stroke blue \, stroke-opacity 1 \, fill-opacity
 1;
 #X msg 599 47 0;
@@ -34,22 +31,25 @@ control the frame rate using the second argument of [line].;
 #X text 81 383 The original is here:;
 #X obj 81 404 pddp/pddplink http://raphaeljs.com/hand.html;
 #X obj 519 113 * 90;
-#X connect 0 0 20 0;
-#X connect 5 0 16 0;
+#X msg 594 180 stroke-width 2 \, stroke blue \, fill "";
+#X msg 531 228 stroke-width 2 \, stroke blue \, stroke-opacity 0.4
+\, fill "";
+#X connect 0 0 18 0;
+#X connect 5 0 14 0;
 #X connect 8 0 2 0;
 #X connect 8 0 7 0;
-#X connect 9 0 27 0;
-#X connect 10 0 14 0;
+#X connect 9 0 25 0;
+#X connect 10 0 13 0;
 #X connect 11 0 12 0;
 #X connect 12 0 4 0;
-#X connect 13 0 7 0;
-#X connect 14 0 9 0;
-#X connect 15 0 2 0;
-#X connect 16 0 3 0;
-#X connect 17 0 14 0;
-#X connect 18 0 19 0;
-#X connect 19 0 6 0;
-#X connect 20 0 10 0;
-#X connect 21 0 15 0;
-#X connect 22 0 13 0;
-#X connect 27 0 8 0;
+#X connect 13 0 9 0;
+#X connect 14 0 3 0;
+#X connect 15 0 13 0;
+#X connect 16 0 17 0;
+#X connect 17 0 6 0;
+#X connect 18 0 10 0;
+#X connect 19 0 26 0;
+#X connect 20 0 27 0;
+#X connect 25 0 8 0;
+#X connect 26 0 2 0;
+#X connect 27 0 7 0;

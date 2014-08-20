@@ -1,5 +1,5 @@
 #N struct yin-yang float x float y float yin float yang;
-#N canvas 0 19 660 636 10;
+#N canvas 383 44 660 636 10;
 #X obj 383 468 pointer;
 #X msg 406 439 next;
 #X obj 291 415 t a a;
@@ -66,8 +66,8 @@
 #X connect 13 0 6 0;
 #X connect 14 0 8 0;
 #X restore 151 581 group;
-#X scalar yin-yang 86 124 146.137 108.863 \;;
-#X scalar yin-yang 284 106 0 255 \;;
+#X scalar yin-yang 96 94 146.137 108.863 \;;
+#X scalar yin-yang 314 96 0 255 \;;
 #X msg 383 412 traverse pd-yin-yang.pd \, next;
 #X connect 0 0 26 2;
 #X connect 1 0 0 0;

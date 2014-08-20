@@ -34,7 +34,7 @@ r float g float b float radius;
 #X obj 469 71 loadbang;
 #X obj 458 187 draw circle 0 y1 8;
 #X obj 458 147 loadbang;
-#X msg 458 168 stroke "";
+#X msg 458 168 fill "";
 #X connect 1 0 5 1;
 #X connect 1 1 0 1;
 #X connect 1 2 0 2;

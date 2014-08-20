@@ -1,5 +1,5 @@
 #N struct mm float x float y float a;
-#N canvas -9 19 844 666 10;
+#N canvas 0 19 844 666 10;
 #X obj -11 119 cnv 15 317 17 empty empty empty 20 12 0 14 -204786 -66577
 0;
 #X scalar mm 301 434.322 3 \;;
@@ -19,7 +19,7 @@
 #X msg 258 42 0;
 #X obj 453 300 t a b;
 #X obj 333 62 metro 90;
-#X obj 481 427 + 5;
+#X obj 481 417 + 5;
 #X obj 525 270 t a b;
 #X obj 569 269 t a b;
 #X msg 561 378 4;
@@ -29,7 +29,7 @@
 #X msg 510 327 traverse pd-megaman.pd \, next;
 #X obj 0 0 struct mm float x float y float a;
 #X obj 481 378 get mm x;
-#X obj 453 456 set mm a x;
+#X obj 453 446 set mm a x;
 #X obj 226 295 canvasinfo;
 #X msg 226 152 traverse pd-megaman.pd \, next;
 #X obj 226 173 pointer;

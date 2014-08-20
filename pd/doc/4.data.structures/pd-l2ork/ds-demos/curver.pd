@@ -1,56 +1,57 @@
 #N struct rcurver float x float y float x1 float y1 float ax float
 ay float bx float by float zx float zy float r float g float b;
-#N canvas -9 19 813 591 10;
+#N canvas 0 19 813 591 10;
 #X obj 92 363 cnv 15 461 213 empty empty empty 20 12 0 14 -33289 -66577
 0;
 #X scalar rcurver 150 401 30 123 -31 135 21 -12 -28 -5 255 40 100 \;
 ;
-#X obj 115 89 loadbang;
-#X obj 115 134 draw path M x1 y1 C ax ay bx by zx zy;
-#X obj 115 197 draw path M x1 y1 L ax ay M bx by L zx zy;
-#X msg 115 176 stroke #ccc \, stroke-dasharray 1 1;
-#X obj 115 155 loadbang;
+#X obj 95 69 loadbang;
+#X obj 95 114 draw path M x1 y1 C ax ay bx by zx zy;
+#X obj 95 177 draw path M x1 y1 L ax ay M bx by L zx zy;
+#X msg 95 156 stroke #ccc \, stroke-dasharray 1 1;
+#X obj 95 135 loadbang;
 #X scalar rcurver 250 404 30 123 -31 135 20 -13 -28 -5 80 2 150 \;
 ;
 #X scalar rcurver 365 407 42 128 -31 135 18 -10 -39 -5 150 6 50 \;
 ;
 #X scalar rcurver 480 403 34 136 -32 143 17 -9 -37 -5 70 255 60 \;
 ;
-#X obj 115 37 struct rcurver float x float y float x1 float y1 float
+#X obj 95 17 struct rcurver float x float y float x1 float y1 float
 ax float ay float bx float by float zx float zy float r float g float
 b;
-#X msg 115 110 stroke-width 4 \, stroke-linecap 1 \, stroke r g b;
-#X obj 115 218 draw circle x1 y1 5;
-#X obj 115 239 draw circle ax ay 5;
-#X obj 115 260 draw circle bx by 5;
-#X obj 115 281 draw circle zx zy 5;
-#X obj 16 172 loadbang;
-#X msg 16 193 fill white;
-#X text 414 112 Raphael Curver;
-#X text 414 112 ______________;
-#X text 414 322 So \, though it makes this patch easier to write \,
+#X obj 95 198 draw circle x1 y1 5;
+#X obj 95 219 draw circle ax ay 5;
+#X obj 95 240 draw circle bx by 5;
+#X obj 95 261 draw circle zx zy 5;
+#X obj 16 152 loadbang;
+#X msg 16 173 fill white;
+#X text 424 112 Raphael Curver;
+#X text 424 112 ______________;
+#X text 424 322 So \, though it makes this patch easier to write \,
 a more powerful method of defining interactive behavior is needed.
 ;
 #X text 575 392 <- Click and drag the white circles;
-#X text 414 132 This is an interesting demo for two reasons. First
+#X text 424 132 This is an interesting demo for two reasons. First
 \, aside from the loadbangs it is completely declarative. We just define
 some variables and put them in the drawing instructions. Second \,
 this patch is a full port of the Raphael.js demo and it's much shorter.
 This is because the mouse interaction with the variables is implicit--
 we just define them in the drawing commands and Pd assumes that they
 should be clickable.;
-#X text 414 232 Unfortunately this isn't a very flexible system. There
+#X text 424 232 Unfortunately this isn't a very flexible system. There
 are times when you don't want mouse interaction at a variable \, or
 would like it for some but not all of them. Or you may want some other
 behavior than dragging a vertice of the polygon underneath the mouse.
 At present you can't define any other behavior-- only turn off mouse
 interaction altogether.;
-#X connect 2 0 11 0;
+#X msg 95 90 stroke-width 4 \, stroke-linecap 1 \, stroke r g b \,
+fill "";
+#X connect 2 0 23 0;
 #X connect 5 0 4 0;
 #X connect 6 0 5 0;
-#X connect 11 0 3 0;
-#X connect 16 0 17 0;
-#X connect 17 0 12 0;
-#X connect 17 0 13 0;
-#X connect 17 0 14 0;
-#X connect 17 0 15 0;
+#X connect 15 0 16 0;
+#X connect 16 0 11 0;
+#X connect 16 0 12 0;
+#X connect 16 0 13 0;
+#X connect 16 0 14 0;
+#X connect 23 0 3 0;

@@ -1,156 +1,182 @@
-#N struct unit_circle float x float y float rx float ry float lx array
-a balls float l2y;
-#N struct balls float y;
-#N canvas 84 19 1215 585 10;
-#X scalar unit_circle 203 99 99.9997 -0.238894 778 -0.318509 \; 5.02189
-\; 10.0311 \; 15.015 \; 19.961 \; 24.8566 \; 29 \; 34 \; 35 \; 33 \;
-30 \; 26.6667 \; 23.3333 \; 20 \; 13 \; 5.99999 \; -7.00001 \; -12
-\; -12 \; -12 \; -13 \; -14 \; -14.5714 \; -15.1429 \; -15.7143 \;
--16.2857 \; -16.8572 \; -17.4286 \; -18 \; -18 \; 23 \; 24 \; 24 \;
-24.3333 \; 24.6667 \; 25 \; 26 \; 26 \; 27 \; 28 \; 28 \; 29 \; 29
-\; 29 \; 30 \; 30 \; 39 \; 71 \; 74 \; 73 \; 58.8815 \; 54.7482 \;
-50.4768 \; 46.0779 \; 41.5627 \; 36.9427 \; 32.2295 \; 27.4349 \; 22.5711
-\; 17.6503 \; 12.685 \; 7.68767 \; 2.67094 \; -2.35253 \; -7.37006
-\; -12.369 \; -17.3367 \; -22.2607 \; -27.1284 \; -31.9278 \; -36.6466
-\; -41.2728 \; -45.795 \; -50.2015 \; -54.4814 \; -58.6238 \; -62.6183
-\; -66.4547 \; -70.1234 \; -73.6152 \; -76.9212 \; -80.0331 \; -82.9431
-\; -85.6437 \; -88.1282 \; -90.3903 \; -92.4243 \; -94.225 \; -95.788
-\; -97.1093 \; -98.1855 \; -99.0139 \; -99.5925 \; -99.9197 \; -99.9948
-\; -99.8176 \; -99.3884 \; -98.7085 \; -97.7794 \; -96.6037 \; -95.1841
-\; -93.5243 \; -91.6285 \; -89.5015 \; -87.1487 \; -84.5759 \; -81.7896
-\; -78.797 \; -75.6055 \; -72.2233 \; -68.6588 \; -64.921 \; -61.0194
-\; -56.9638 \; -52.7644 \; -48.4319 \; -43.9773 \; -39.4115 \; -34.7464
-\; -29.9935 \; -25.165 \; -20.273 \; -15.3298 \; -10.348 \; -5.33997
-\; -0.318509 \; \;;
-#X obj 377 430 pointer;
-#X floatatom 116 119 5 0 0 0 - - -, f 5;
-#X obj 100 328 * 6.28;
-#X obj 100 379 sin;
-#X obj 100 400 * 100;
-#X obj 154 379 cos;
-#X obj 100 349 t a a;
-#X obj 154 400 * 100;
-#X obj 100 303 + 0.25;
-#X obj 100 226 / 180;
-#X obj 100 278 * -1;
-#X obj 256 373 + 150;
-#X obj 256 316 * 628;
-#X obj 355 482 setsize unit_circle a;
-#X obj 346 510 element unit_circle a;
-#X obj 283 535 set balls y;
-#X obj 298 381 t a a;
-#X obj 231 474 spigot;
-#X msg 346 409 0;
-#X obj 298 408 change;
-#X msg 264 440 1;
-#X obj 100 247 t a a a;
-#X obj 207 359 * 6.28;
-#X obj 207 380 sin;
-#X obj 207 400 * 100;
-#X msg 100 75 0 \, 180 5000;
-#N canvas 433 184 450 300 nested 0;
-#X obj 171 35 struct balls float y;
-#X restore 704 173 pd nested;
-#X obj 704 36 struct unit_circle float x float y float rx float ry
-float lx array a balls float l2y;
-#X obj 100 535 set unit_circle rx ry lx l2y;
-#X obj 377 388 loadbang;
-#X obj 100 96 line 0 40;
-#X obj 100 45 bng 21 250 50 0 empty empty Go! 28 10 0 10 -4034 -1 -1
+#N struct unit_circle float x float y;
+#N canvas -9 19 683 520 10;
+#X scalar unit_circle 103 387 \;;
+#X obj 310 166 * 6.28;
+#X obj 310 212 sin;
+#X obj 310 251 * 100;
+#X obj 364 212 cos;
+#X obj 310 187 t a a;
+#X obj 310 146 + 0.25;
+#X obj 310 94 line 0 40;
+#X obj 310 5 bng 21 250 50 0 empty empty Go! 28 10 0 10 -4034 -1 -1
 ;
-#X msg 704 114 transform translate 75 0 scale \$1;
-#X obj 704 72 loadbang;
-#X text 229 170 This unit circle demo (which I just realized spins
-the wrong direction-- oops) shows some of the benefits and drawbacks
-of [draw] as it's currently implemented:;
-#X text 230 214 Benefits:;
-#X text 230 229 * you can easily scale the entire group;
-#X text 230 244 * a struct field can be used in different [draw] objects
-;
-#X text 345 264 Drawbacks:;
-#X text 345 281 * [draw group] doesn't affect [plot]. Thus I have to
-manually scale the x-spacing and y value accordingly.;
-#X text 345 307 * traversing the canvas is a pain. Fortunately \, you
-only need to do it once for arrays. But if you modify the patch at
-all you have to traverse again. This means it's way easier to send
-messages to [draw]-- which affect all scalars-- than it is to use field
-variables-- which are local to a particular scalar.;
-#X obj 298 360 div 5;
-#N canvas 655 108 616 478 (subpatch) 0;
+#X obj 52 101 loadbang;
+#N canvas 274 34 770 578 (subpatch) 0;
+#X obj 117 -58 draw path m -120 0 l 120 0 m 0 120 l 0 -240 0 20 150
+0 m -150 100 l 150 0 m -150 100 l 150 0 m 0 20 l 0 -240 0 20 150 0
+m -150 100 l 150 0 m -150 100 l 150 0 m 0 20 l 0 -240 0 20 150 0 m
+-150 100 l 150 0 m -150 100 l 150 0 m 0 20 l 0 -240 0 20 150 0 m -150
+100 l 150 0 m -150 100 l 150 0 m 0 20 l 0 -240 0 20 150 0 m -150 100
+l 150 0 m -150 100 l 150 0 m 0 20 l 0 -240 0 20 20 0 m -20 100 l 20
+0 m -20 100 l 20 0;
 #X obj 117 -140 draw circle 0 0 100;
-#X obj 117 -77 draw line 0 0 rx ry;
-#X obj 117 -1 draw line 150 0 lx 0;
-#X obj 117 62 draw path M 0 100 L 0 120 0 -120 M 0 0 L -120 0 798 0
-M 0 -100 l 0 0 798 0 M 0 100 l 798 0 M 150 -120 l 0 0 0 240 m 157 0
-l 0 0 0 -240 m 157 0 l 0 0 0 240 m 157 0 l 0 0 0 -240 m 157 0 l 0 0
-0 240;
-#X msg 117 41 stroke-width 2 \, stroke gray \, stroke-opacity 0.6;
-#X msg 117 -35 stroke-width 4 \, stroke blue \, stroke-opacity 0.6
-\, stroke-linecap 1;
 #X msg 117 -174 fill black \, fill-opacity 0.1 \, stroke blue \, stroke-opacity
 0.6 \, stroke-width 4;
-#X obj 117 171 draw line rx ry lx l2y;
-#X msg 117 149 stroke orange \, stroke-width 2;
-#X msg 117 -98 stroke-width 3 \, stroke blue \, stroke-opacity 0.6
-;
-#X obj 117 127 loadbang;
 #X obj 117 -195 loadbang;
-#X obj 117 -119 loadbang;
-#X obj 117 -56 loadbang;
-#X obj 117 20 loadbang;
-#X obj 119 213 plot a 0 1 150 0 5;
-#X connect 4 0 3 0;
-#X connect 5 0 2 0;
-#X connect 6 0 0 0;
-#X connect 8 0 7 0;
-#X connect 9 0 1 0;
-#X connect 10 0 8 0;
-#X connect 11 0 6 0;
-#X connect 12 0 9 0;
-#X connect 13 0 5 0;
-#X connect 14 0 4 0;
-#X restore 704 136 group;
-#X msg 704 93 0.3;
-#X msg 377 409 traverse pd-unit-circle.pd \, next;
-#X connect 1 0 14 1;
-#X connect 1 0 15 1;
-#X connect 1 0 29 4;
-#X connect 2 0 10 0;
-#X connect 3 0 7 0;
-#X connect 4 0 5 0;
-#X connect 5 0 29 0;
-#X connect 6 0 8 0;
-#X connect 7 0 4 0;
-#X connect 7 1 6 0;
-#X connect 8 0 29 1;
-#X connect 9 0 3 0;
-#X connect 10 0 22 0;
-#X connect 11 0 9 0;
-#X connect 12 0 29 2;
+#X obj 117 -100 loadbang;
+#X msg 166 154 stroke-width 4 \, stroke blue \, stroke-opacity 0.6
+\, stroke-linecap 1;
+#X obj 166 133 loadbang;
+#X msg 116 92 x2 \$1;
+#X msg 174 93 y2 \$1;
+#X obj 116 190 draw line 0 0 100 0;
+#X obj 116 67 r arc-x;
+#X obj 174 67 r arc-y;
+#X obj 507 329 draw line 0 0 0 0;
+#X msg 586 248 y1 \$1;
+#X msg 528 248 x1 \$1;
+#X msg 594 297 x2 \$1 \, y2 \$2;
+#X obj 586 223 r arc-y;
+#X obj 528 223 r arc-x;
+#X obj 594 274 r sine-xy;
+#X msg 184 258 stroke-width 4 \, stroke blue \, stroke-opacity 0.6
+\, stroke-linecap 1;
+#X obj 184 237 loadbang;
+#X obj 184 292 draw line 150 0 0 0;
+#X msg 116 260 x2 \$1;
+#X obj 116 237 r sine-xy;
+#X obj 504 39 list prepend points;
+#X obj 504 17 r sine-points;
+#X obj 505 135 draw polyline;
+#X obj 525 89 loadbang;
+#X obj 507 175 loadbang;
+#X msg 507 196 stroke-width 2 \, stroke orange;
+#X obj 504 61 list trim;
+#X text 511 -41 <- grid;
+#X text 602 135 <- sine wave;
+#X text 245 189 <- radius line;
+#X text 313 292 <- progress line;
+#X text 624 329 <- guide line;
+#X msg 117 -79 stroke-width 2 \, stroke gray \, stroke-opacity 0.6
+\, fill white;
+#X msg 525 110 stroke-width 3 \, stroke red \, fill "";
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;
+#X connect 4 0 36 0;
+#X connect 5 0 9 0;
+#X connect 6 0 5 0;
+#X connect 7 0 9 0;
+#X connect 8 0 9 0;
+#X connect 10 0 7 0;
+#X connect 11 0 8 0;
 #X connect 13 0 12 0;
-#X connect 13 0 42 0;
-#X connect 15 0 16 1;
-#X connect 17 0 20 0;
-#X connect 17 1 19 0;
-#X connect 18 0 29 3;
-#X connect 18 0 16 0;
-#X connect 19 0 18 1;
-#X connect 20 0 14 0;
-#X connect 20 0 15 0;
-#X connect 20 0 21 0;
-#X connect 21 0 18 1;
-#X connect 22 0 11 0;
-#X connect 22 1 23 0;
-#X connect 22 2 13 0;
-#X connect 23 0 24 0;
-#X connect 24 0 25 0;
-#X connect 25 0 18 0;
-#X connect 26 0 31 0;
-#X connect 30 0 45 0;
-#X connect 31 0 10 0;
-#X connect 32 0 26 0;
-#X connect 33 0 43 0;
-#X connect 34 0 44 0;
-#X connect 42 0 17 0;
-#X connect 44 0 33 0;
-#X connect 45 0 1 0;
+#X connect 14 0 12 0;
+#X connect 15 0 12 0;
+#X connect 16 0 13 0;
+#X connect 17 0 14 0;
+#X connect 18 0 15 0;
+#X connect 19 0 21 0;
+#X connect 20 0 19 0;
+#X connect 22 0 21 0;
+#X connect 23 0 22 0;
+#X connect 24 0 30 0;
+#X connect 25 0 24 0;
+#X connect 27 0 37 0;
+#X connect 28 0 29 0;
+#X connect 29 0 12 0;
+#X connect 30 0 26 0;
+#X connect 36 0 0 0;
+#X connect 37 0 26 0;
+#X restore 52 247 group;
+#X obj 92 5 struct unit_circle float x float y;
+#X obj 364 251 * 100;
+#X obj 548 243 * 600;
+#X obj 548 264 + 150;
+#X obj 501 350 list prepend;
+#X obj 501 371 t a;
+#X obj 310 31 t b b;
+#X obj 310 115 t a a;
+#X obj 501 297 list prepend;
+#X msg 606 171 150 0;
+#X obj 310 287 s arc-x;
+#X obj 364 287 s arc-y;
+#X obj 509 322 s sine-xy;
+#X obj 501 402 s sine-points;
+#X floatatom 140 122 5 0 0 0 scale - -, f 5;
+#X msg 52 122 0.42;
+#X text 432 338 + 1;
+#X text 432 422 - 1;
+#X text 443 382 0;
+#X text 161 444 0;
+#X text 212 444 1/2*Pi;
+#X text 285 444 Pi;
+#X text 335 444 3/2*Pi;
+#X text 405 444 2*Pi;
+#X floatatom 186 122 5 0 0 1 rotate - -, f 5;
+#X obj 186 143 t b a;
+#X obj 140 143 * 0.01;
+#X msg 52 213 transform scale \$1 rotate \$2 150 0;
+#X obj 140 183 pack 0.42 0;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array csm 62079 float 2 black black;
+#X coords 0 1 62078 -1 114 59 1;
+#X restore 509 6 graph;
+#X obj 422 238 output~;
+#X msg 310 73 0 \, 1 4200;
+#N canvas 433 184 450 300 array-init 0;
+#X obj 86 110 soundfiler;
+#X obj 86 65 loadbang;
+#X msg 86 88 read -resize voice.wav csm;
+#X connect 1 0 2 0;
+#X connect 2 0 0 0;
+#X restore 509 73 pd array-init;
+#N canvas 433 184 450 300 sfx~ 0;
+#X obj 62 18 inlet;
+#X obj 62 84 line~;
+#X obj 62 105 +~ 31039.5;
+#X obj 62 42 * 34039.5;
+#X obj 62 63 pack 0 100;
+#X obj 62 126 tabread4~ csm;
+#X obj 62 147 outlet~;
+#X connect 0 0 3 0;
+#X connect 1 0 2 0;
+#X connect 2 0 5 0;
+#X connect 3 0 4 0;
+#X connect 4 0 1 0;
+#X connect 5 0 6 0;
+#X restore 422 216 pd sfx~;
+#X connect 1 0 5 0;
+#X connect 2 0 3 0;
+#X connect 3 0 21 0;
+#X connect 4 0 12 0;
+#X connect 4 0 44 0;
+#X connect 5 0 2 0;
+#X connect 5 1 4 0;
+#X connect 6 0 1 0;
+#X connect 7 0 18 0;
+#X connect 8 0 17 0;
+#X connect 9 0 26 0;
+#X connect 12 0 19 0;
+#X connect 12 0 22 0;
+#X connect 13 0 14 0;
+#X connect 14 0 19 1;
+#X connect 15 0 16 0;
+#X connect 16 0 15 1;
+#X connect 16 0 24 0;
+#X connect 17 0 42 0;
+#X connect 17 1 20 0;
+#X connect 18 0 6 0;
+#X connect 18 1 13 0;
+#X connect 19 0 15 0;
+#X connect 19 0 23 0;
+#X connect 20 0 15 1;
+#X connect 25 0 37 0;
+#X connect 26 0 38 0;
+#X connect 35 0 36 0;
+#X connect 36 0 39 0;
+#X connect 36 1 39 1;
+#X connect 37 0 39 0;
+#X connect 38 0 10 0;
+#X connect 39 0 38 0;
+#X connect 42 0 7 0;
+#X connect 44 0 41 0;
