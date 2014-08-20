@@ -572,6 +572,19 @@ int iemgui_dialog(t_iemgui *x, int argc, t_atom *argv)
     if(iemgui_has_rcv(x)) oldsndrcvable |= IEM_GUI_OLD_RCV_FLAG;
     if(iemgui_has_snd(x)) oldsndrcvable |= IEM_GUI_OLD_SND_FLAG;
     iemgui_all_raute2dollar(srl);
+
+    // replace ascii code 11 (\v or vertical tab) with spaces
+    // we do this so that the string with spaces can survive argc,argv
+    // conversion when coming from dialog side of things where it is parsed
+    char *c;
+    for(c = srl[2]->s_name; c != NULL && *c != '\0'; c++)
+    {
+        if(*c == '\v')
+        {
+            *c = ' ';
+        }
+    }
+
     x->x_snd_unexpanded=srl[0]; srl[0]=canvas_realizedollar(x->x_glist, srl[0]);
     x->x_rcv_unexpanded=srl[1]; srl[1]=canvas_realizedollar(x->x_glist, srl[1]);
     x->x_lab_unexpanded=srl[2]; srl[2]=canvas_realizedollar(x->x_glist, srl[2]);
