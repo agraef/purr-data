@@ -410,31 +410,6 @@ void glist_sort(t_glist *x)
         x->gl_list = glist_dosort(x, x->gl_list, nitems);
 }
 
-void glist_cleanup(t_glist *x)
-{
-    //fprintf(stderr,"glist_cleanup =============\n");
-    freebytes(x->gl_xlabel, x->gl_nxlabels * sizeof(*(x->gl_xlabel)));
-    freebytes(x->gl_ylabel, x->gl_nylabels * sizeof(*(x->gl_ylabel)));
-    if (x->x_handle)
-    {    
-        pd_unbind((t_pd *)x->x_handle, ((t_scalehandle *)x->x_handle)->h_bindsym);
-        pd_free((t_pd *)x->x_handle);
-    }
-    if (x->x_mhandle)
-    {
-        pd_unbind((t_pd *)x->x_mhandle, ((t_scalehandle *)x->x_mhandle)->h_bindsym);
-        pd_free((t_pd *)x->x_mhandle);
-    }
-    gstub_cutoff(x->gl_stub);
-}
-
-void glist_free(t_glist *x)
-{
-    //fprintf(stderr,"glist_free =============\n");
-    glist_cleanup(x);
-    freebytes(x, sizeof(*x));
-}
-
 /* --------------- inlets and outlets  ----------- */
 
 

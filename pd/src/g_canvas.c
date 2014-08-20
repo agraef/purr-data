@@ -870,7 +870,6 @@ extern void canvas_group_free(t_pd *x);
 
 void canvas_free(t_canvas *x)
 {
-    //fprintf(stderr,"canvas_free %lx\n", x);
     t_gobj *y;
     int dspstate = canvas_suspend_dsp();
 
@@ -890,12 +889,8 @@ void canvas_free(t_canvas *x)
      if (x->gl_editor)
          canvas_destroy_editor(x);   /* bug workaround; should already be gone*/
 
-    /*
-    if (x-> x_handle)
-        scalehandle_free(x->x_handle);
-    if (x-> x_mhandle)
-        scalehandle_free(x->x_mhandle);
-    */
+    if (x-> x_handle) scalehandle_free( x->x_handle);
+    if (x->x_mhandle) scalehandle_free(x->x_mhandle);
     
     canvas_unbind(x);
     if (x->gl_env)
@@ -904,7 +899,9 @@ void canvas_free(t_canvas *x)
         freebytes(x->gl_env, sizeof(*x->gl_env));
     }
     canvas_resume_dsp(dspstate);
-    glist_cleanup(x);
+    freebytes(x->gl_xlabel, x->gl_nxlabels * sizeof(*(x->gl_xlabel)));
+    freebytes(x->gl_ylabel, x->gl_nylabels * sizeof(*(x->gl_ylabel)));
+    gstub_cutoff(x->gl_stub);
     gfxstub_deleteforkey(x);        /* probably unnecessary */
     if (!x->gl_owner)
         canvas_takeofflist(x);
