@@ -441,8 +441,8 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     pd_pushsym(&x->gl_pd);
 
     //dpsaha@vt.edu gop resize (refactored by mathieu)
-    x-> x_handle = scalehandle_new(scalehandle_class,(t_gobj *)x,x,1);
-    x->x_mhandle = scalehandle_new(scalehandle_class,(t_gobj *)x,x,0);
+    x-> x_handle = scalehandle_new(scalehandle_class,(t_object *)x,x,1);
+    x->x_mhandle = scalehandle_new(scalehandle_class,(t_object *)x,x,0);
 
     x->u_queue = canvas_undo_init(x);
     return(x);
