@@ -45,7 +45,7 @@ static int drawimage_getindex(void *z, t_template *template, t_word *data);
 
 /* ---------------------- storage ------------------------- */
 
-static t_class *gtemplate_class;
+t_class *gtemplate_class;
 static t_class *template_class;
 
 /* there's a pre-defined "float" template.  LATER should we bind this
@@ -673,9 +673,13 @@ int gtemplate_cancreate(t_symbol *templatename, int argc, t_atom *argv)
                 /* check for cancreation here */
                 t_template *elemtemplate =
                     template_findbyname(canvas_makebindsym(argv[2].a_w.w_symbol));
-                if (!elemtemplate ||
-                    !template_check_array_fields(
-                        canvas_makebindsym(templatename), elemtemplate))
+                if (!elemtemplate)
+                {
+                    post("warning: template %s does not exist",
+                        argv[2].a_w.w_symbol->s_name);
+                }
+                else if (template_check_array_fields(
+                        canvas_makebindsym(templatename), elemtemplate) == 0)
                 {
                     return 0;
                 }
@@ -707,7 +711,7 @@ static void *gtemplate_new(t_symbol *s, int argc, t_atom *argv)
         return (gtemplate_donew(canvas_makebindsym(sym), argc, argv));
     }
     else
-        return 0;
+        return (0);
 }
 
     /* old version (0.34) -- delete 2003 or so */
@@ -1244,7 +1248,7 @@ void *svg_new(t_pd *parent, t_symbol *s, int argc, t_atom *argv)
     }
     if (argc & 1 && x->x_type != gensym("path"))
         fielddesc_setfloat_const(fd, 0);
-    x->x_filltype = 42;
+    x->x_filltype = 0;
     x->x_fillopacity.a_flag = 0;
     x->x_fillrule.a_flag = 0;
     x->x_stroketype = 0;
@@ -1399,15 +1403,17 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
     t_template *template, t_word *data, int *predraw_bbox, void *parent,
     t_scalar *sc)
 {
- /* todo-- I'm mixing "c" with glist_getcanvas(c) a little too freely...
-    need to experiment with gop scalars to make sure I'm not breaking
-    anything */ 
-   char tag[MAXPDSTRING];
+   /* todo-- I'm mixing "c" with glist_getcanvas(c) a little too freely...
+      need to experiment with gop scalars to make sure I'm not breaking
+      anything */ 
+    int in_array = (sc->sc_vec != data);
+    post("in_array is %d", in_array);
+    char tag[MAXPDSTRING];
     if (x->x_type == gensym("group"))
     {
-        template_findcanvas(template);
-        sprintf(tag, ".dgroup%lx.%lx",
-            (long unsigned int)template_findcanvas(template),
+        sprintf(tag, "%s%lx.%lx",
+            (in_array ? ".scelem" : ".dgroup"),
+            (long unsigned int)x->x_parent,
             (long unsigned int)data);
     }
     else
@@ -1537,14 +1543,6 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
             x->x_pathrect_cache = 0;
         }
         svg_parsetransform(x, template, data, &m1, &m2, &m3, &m4, &m5, &m6);
-        if (x->x_type == gensym("group"))
-        {
-            sys_vgui(".x%lx.c itemconfigure .dgroup%lx.%lx -matrix "
-                "{ {%g %g} {%g %g} {%g %g} }\n",
-                glist_getcanvas(c), x->x_parent, data,
-                m1, m2, m3, m4, m5, m6);
-        }
-        else
             sys_vgui(".x%lx.c itemconfigure %s -matrix "
                     "{ {%g %g} {%g %g} {%g %g} }\n",
                     glist_getcanvas(c), tag,
@@ -1650,6 +1648,7 @@ void svg_updatevec(t_canvas *c, t_word *data, t_template *template,
     t_template *target, void *parent, t_symbol *s, t_svg *x, t_scalar *sc,
     int *predraw_bbox)
 {
+    post("updateing vec...");
     int i, j;
     for (i = 0; i < template->t_n; i++)
     {
@@ -2103,7 +2102,8 @@ void svg_rectpoints(t_svg *x, t_symbol *s, int argc, t_atom *argv)
             if (type == A_FLOAT || type == A_SYMBOL)
             {
                 t_fielddesc *fd = x->x_vec;
-                if (type == A_FLOAT && argv[0].a_w.w_float < 0)
+                /* don't allow negative height/width */
+                if (type == A_FLOAT && i > 1 && argv[0].a_w.w_float < 0)
                     fielddesc_setfloat_const(fd + i, 0);
                 else
                     fielddesc_setfloatarg(fd + i, argc, argv);
@@ -3443,16 +3443,6 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             */
 
             int in_array = (sc->sc_vec == data) ? 0 : 1;
-//            if (in_array)
-//            {
-                /* we probably don't need 'p' anymore... */
-                //t_canvas *p =
-                //    template_findcanvas(template_findbyname(sc->sc_template));
-//               sys_vgui(".x%lx.c create group -tags {.scelem%lx} "
-//                    "-parent .scelem%lx.%lx -matrix { {1 0} {0 1} {%g %g} }\n",
-//                    glist_getcanvas(glist), data,
-//                    parentglist, data, basex, basey);
-//            }
             //int flags = sa->x_flags;
             t_float pix[500];
             if (n > 500)
@@ -3875,7 +3865,7 @@ typedef struct _curve
    when loading a file.) The reason is that they have not had their
    motionfn revised to respect the parent affine transformations.  If they
    did then we could allow them inside a [group]. */
-extern canvas_isgroup(t_canvas *x);
+extern int canvas_isgroup(t_canvas *x);
 
 static int legacy_draw_in_group(t_canvas *c)
 {
@@ -4097,18 +4087,6 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                revised so it's done in a more sane fashion
             */
             int in_array = (sc->sc_vec == data) ? 0 : 1;
-            if (in_array)
-            {
-               /* since the old drawing commands don't have svg attributes
-                  or transforms, we just make them children of the scalar's
-                  group.  That seems to work just fine. */
-               t_canvas *p =
-                    template_findcanvas(template_findbyname(sc->sc_template));
-               sys_vgui(".x%lx.c create group -tags {.scelem%lx} "
-                    "-parent .dgroup%lx.%lx -matrix { {1 0} {0 1} {%g %g} }\n",
-                    glist_getcanvas(glist), data,
-                    p, sc->sc_vec, basex, basey);
-            }
             int flags = x->x_flags;
             t_float width = fielddesc_getfloat(&x->x_width, template, data, 1);
             char outline[20], fill[20];
@@ -4166,10 +4144,9 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             }
             for (i = 0; i < n; i++)
             {
-                //sys_vgui("%d %d \\\n", pix[2*i], pix[2*i+1]);
                 sys_vgui("%d %d \\\n",
-                    pix[2*i] + (in_array ? (int)basex : 0),
-                    pix[2*i+1] + (in_array ? (int)basey : 0));
+                    pix[2*i],
+                    pix[2*i+1]);
                 if ((flags & BEZ) && (flags & BBOX))
                 {
                     sys_vgui("-rx %d -ry %d \\\n",
@@ -4184,9 +4161,9 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             if (flags & CLOSED) sys_vgui("-fill %s -stroke %s \\\n",
                 fill, outline);
             else if(flags & BBOX) sys_vgui("-stroke %s \\\n", outline);
-            else sys_vgui("-stroke %s \\\n", outline);
+            else sys_vgui("-stroke %s -fill \"\" \\\n", outline);
             if (in_array)
-                sys_vgui("-parent .scelem%lx \\\n", data);
+                sys_vgui("-parent .scelem%lx.%lx \\\n", parentglist, data);
             else
                 sys_vgui("-parent .dgroup%lx.%lx \\\n", x->x_canvas, sc->sc_vec);
             // this doesn't work with tkpath...
@@ -4920,7 +4897,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         if (symfill == &s_) symfill = gensym("#000000");
         if (style == PLOTSTYLE_POINTS || style == PLOTSTYLE_BARS)
         {
-            symfill = style == PLOTSTYLE_POINTS ? symoutline : symfill;
+            symfill = (style == PLOTSTYLE_POINTS ? symoutline : symfill);
             t_float minyval = 1e20, maxyval = -1e20;
             int ndrawn = 0;
             sys_vgui(".x%lx.c create path { \\\n", glist_getcanvas(glist));
@@ -5165,7 +5142,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                         fielddesc_cvttocoord(yfielddesc, yval));
                 }
 
-                sys_vgui("-strokewidth %f -stroke %s \\\n", linewidth, symoutline->s_name);
+                sys_vgui("-strokewidth %f -stroke %s -fill \"\" \\\n", linewidth, symoutline->s_name);
                 //if (style == PLOTSTYLE_BEZ) sys_vgui("-smooth 1 \\\n"); //this doesn't work with tkpath
                 if (in_array)
                     sys_vgui(" -parent .scelem%lx \\\n", data);
@@ -6277,8 +6254,8 @@ static void drawnumber_getrect(t_gobj *z, t_glist *glist,
     drawnumber_sprintf(x, buf, &at);
     *xp1 = xloc;
     *yp1 = yloc;
-    *xp2 = xloc + (fontwidth * strlen(buf) * xscale);
-    *yp2 = yloc + (fontheight * yscale);
+    *xp2 = xloc + (fontwidth * strlen(buf));
+    *yp2 = yloc + (fontheight);
 }
 
 static void drawnumber_displace(t_gobj *z, t_glist *glist,
@@ -6323,7 +6300,11 @@ static void drawnumber_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     if (vis)
     {
         t_atom at;
-
+        int in_array = (sc->sc_vec == data) ? 0 : 1;
+        t_float xscale = glist_xtopixels(glist, 1) - glist_xtopixels(glist, 0);
+        t_float yscale = glist_ytopixels(glist, 1) - glist_ytopixels(glist, 0);
+        if (xscale != 0) xscale = 1.0 / xscale;
+        if (yscale != 0) yscale = 1.0 / yscale;
         int fontsize = fielddesc_getfloat(&x->x_fontsize, template, data, 0);
         if (!fontsize) fontsize = glist_getfont(glist);
         /*int xloc = glist_xtopixels(glist,
@@ -6351,8 +6332,14 @@ static void drawnumber_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                sys_hostfontsize(fontsize), yloc, colorstring, buf);
         /* have to remove fontweight for the time being... */
         sys_vgui(" -fontfamily {%s} -fontsize %d", sys_font, fontsize);
-        sys_vgui(" -parent .scalar%lx", data);
-        /* sys_vgui(" -matrix {{%g 0.0} {0.0 %g} {0.0 0.0}}", xinv, yinv); */
+        sys_vgui(" -matrix { {%g 0} {0 %g} {0 0} }", xscale, yscale);
+
+        if (in_array)
+            sys_vgui(" -parent .scelem%lx.%lx \\\n", parentglist, data);
+        else
+            sys_vgui(" -parent .dgroup%lx.%lx \\\n",
+                x->x_canvas, data);
+
         sys_vgui(" -tags {.x%lx.x%lx.template%lx scalar%lx}\n", 
             glist_getcanvas(glist), glist, data, sc);
     }
@@ -6654,6 +6641,7 @@ static void drawsymbol_getrect(t_gobj *z, t_glist *glist,
         basex + fielddesc_getcoord(&x->x_xloc, template, data, 0));
     yloc = glist_ytopixels(glist,
         basey + fielddesc_getcoord(&x->x_yloc, template, data, 0));
+
     font = fielddesc_getfloat(&x->x_fontsize, template, data, 0);
     if (!font) font = glist_getfont(glist);
     fontwidth = sys_fontwidth(font);
@@ -6664,8 +6652,8 @@ static void drawsymbol_getrect(t_gobj *z, t_glist *glist,
     drawsymbol_sprintf(x, buf, &at);
     *xp1 = xloc;
     *yp1 = yloc;
-    *xp2 = (xloc + (fontwidth * strlen(buf) * xscale));
-    *yp2 = (yloc + (fontheight * yscale));
+    *xp2 = (xloc + (fontwidth * strlen(buf)));
+    *yp2 = (yloc + (fontheight));
 }
 
 static void drawsymbol_displace(t_gobj *z, t_glist *glist,
@@ -6708,8 +6696,12 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         return;
     if (vis)
     {
-        int in_array = (sc->sc_vec == data) ? 0 : 1;
         t_atom at;
+        int in_array = (sc->sc_vec == data) ? 0 : 1;
+        t_float xscale = glist_xtopixels(glist, 1) - glist_xtopixels(glist, 0);
+        t_float yscale = glist_ytopixels(glist, 1) - glist_ytopixels(glist, 0);
+        if (xscale != 0) xscale = 1.0 / xscale;
+        if (yscale != 0) yscale = 1.0 / yscale;
 
         int fontsize = fielddesc_getfloat(&x->x_fontsize, template, data, 0);
         if (!fontsize) fontsize = glist_getfont(glist);
@@ -6734,8 +6726,14 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 glist_getcanvas(glist), xloc, sys_font,
                 sys_hostfontsize(fontsize), yloc, colorstring, buf);
         sys_vgui(" -fontfamily {%s} -fontsize %d ", sys_font, fontsize);
-        sys_vgui(" -parent .scalar%lx", data);
-        /*  sys_vgui(" -matrix {{%g 0.0} {0.0 %g} {0.0 0.0}}", xinv, yinv); */
+        sys_vgui(" -matrix { {%g 0} {0 %g} {0 0} }", xscale, yscale);
+
+        if (in_array)
+            sys_vgui(" -parent .scelem%lx.%lx \\\n", parentglist, data);
+        else
+            sys_vgui(" -parent .dgroup%lx.%lx \\\n",
+                x->x_canvas, data);
+
         sys_vgui(" -tags {.x%lx.x%lx.template%lx scalar%lx}\n", 
             glist_getcanvas(glist), glist, data, sc);
     }

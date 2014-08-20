@@ -458,6 +458,36 @@ static void canvas_addtemplatesforscalar(t_symbol *templatesym,
     }
 }
 
+static void canvas_addtemplatesforstruct(t_template *template,
+    int *p_ntemplates, t_symbol ***p_templatevec)
+{
+    t_dataslot *ds;
+    int i;
+    canvas_doaddtemplate(template->t_sym, p_ntemplates, p_templatevec);
+    if (!template)
+        bug("canvas_addtemplatesforscalar");
+    else for (ds = template->t_vec, i = template->t_n; i--; ds++)
+    {
+        if (ds->ds_type == DT_ARRAY)
+        {
+            t_symbol *arraytemplatesym = ds->ds_arraytemplate;
+            t_template *arraytemplate = template_findbyname(arraytemplatesym);
+            if (arraytemplate)
+            {
+                canvas_doaddtemplate(arraytemplatesym, p_ntemplates,
+                    p_templatevec);
+                canvas_addtemplatesforstruct(arraytemplate,
+                        p_ntemplates, p_templatevec);
+            }
+        }
+        /* not sure about this part-- all the sublist datatype seems
+           to do is crash */
+        //else if (ds->ds_type == DT_LIST)
+        //    canvas_addtemplatesforlist(w->w_list->gl_list,
+        //        p_ntemplates, p_templatevec);
+    }
+}
+
 static void canvas_addtemplatesforlist(t_gobj *y,
     int  *p_ntemplates, t_symbol ***p_templatevec)
 {
@@ -625,6 +655,9 @@ static void canvas_saveto(t_canvas *x, t_binbuf *b)
     }
 }
 
+/* yuck, wish I didn't have to do this... */
+extern t_class *gtemplate_class;
+
     /* call this recursively to collect all the template names for
     a canvas or for the selection. */
 static void canvas_collecttemplatesfor(t_canvas *x, int *ntemplatesp,
@@ -638,6 +671,10 @@ static void canvas_collecttemplatesfor(t_canvas *x, int *ntemplatesp,
             (wholething || glist_isselected(x, y)))
                 canvas_addtemplatesforscalar(((t_scalar *)y)->sc_template,
                     ((t_scalar *)y)->sc_vec,  ntemplatesp, templatevecp);
+        else if ((pd_class(&y->g_pd) == gtemplate_class) &&
+            (wholething || glist_isselected(x, y)))
+                canvas_addtemplatesforstruct(gtemplate_get((t_gtemplate *)y),
+                    ntemplatesp, templatevecp);
         else if ((pd_class(&y->g_pd) == canvas_class) &&
             (wholething || glist_isselected(x, y)))
                 canvas_collecttemplatesfor((t_canvas *)y,
