@@ -5925,11 +5925,11 @@ proc pdtk_iemgui_dialog {id mainheader \
     
     match_linux_wm [list frame $id.colors.select]
     pack $id.colors.select -side top
-    match_linux_wm [list radiobutton $id.colors.select.radio0 -value 0 -variable \
+    ttk::radiobutton $id.colors.select.radio0 -value 0 -variable \
         ::dialog($vid:l2_f1_b0) -text "background" -width 10]
-    match_linux_wm [list radiobutton $id.colors.select.radio1 -value 1 -variable \
+    ttk::radiobutton $id.colors.select.radio1 -value 1 -variable \
         ::dialog($vid:l2_f1_b0) -text "front" -width 5]
-    match_linux_wm [list radiobutton $id.colors.select.radio2 -value 2 -variable \
+    ttk::radiobutton $id.colors.select.radio2 -value 2 -variable \
         ::dialog($vid:l2_f1_b0) -text "label" -width 5]
     if { $::dialog($vid:fcol) >= 0 } {
         pack $id.colors.select.radio0 $id.colors.select.radio1 \
