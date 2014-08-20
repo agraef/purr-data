@@ -1088,10 +1088,13 @@ proc pdtk_enquote {x} {
     concat $foo2
 }
 
-#enquote a string to send it to Pd.  Blow off semi and comma; alias spaces
+interp alias {} chr {} format %c
+
+#enquote a string to send it to Pd.  Blow off semi and comma; replace spaces with VT (ascii dec. 11)
 #we also blow off "{", "}", "\" because they'll just cause bad trouble later.
 proc pdtk_unspace {x} {
-    set y [string map {" " "_" ";" "" "," "" "{" "" "}" "" "\\" ""} $x]
+	set space [chr 11]
+    set y [string map [list " " $space ";" "" "," "" "{" "" "}" "" "\\" ""] $x]
     if {$y == ""} {set y "empty"}
     concat $y
 }
