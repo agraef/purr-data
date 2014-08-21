@@ -160,7 +160,7 @@ if { [info tclversion] >= 8.5 } {
 proc match_linux_wm {list} {
 	global pd_nt linux_wm_bgcolor linux_wm_hlcolor
 	if { [info tclversion] >= 8.5 && $pd_nt == 0 } {
-		if {[lsearch -regexp $list ::] == -1} {
+		if {[lsearch -regexp $list ::] != 0} {
 			#puts stderr [lindex $list 0]
 			if {[lindex $list 0] != "button" \
 				&& [lindex $list 0] != "checkbutton" \
@@ -197,6 +197,7 @@ proc match_linux_wm {list} {
 	if {[info exists newlist]} {
 		eval $newlist
 	} else {
+		#puts stderr "[lsearch -regexp $list ::]:::::[lindex $list 0]::::::$list"
 		eval $list
 	}
 }
@@ -801,7 +802,7 @@ match_linux_wm [list frame .controls]
 #if { [info tclversion] >= 8.5 && $pd_nt == 0 } {
 #	ttk::separator .eyecandy
 #	pack .eyecandy .controls -fill x -expand 0
-#} else {checkbutton
+#} else {
 pack .controls -fill x -expand 1
 #}
 match_linux_wm [list frame .controls.switches]
@@ -5928,11 +5929,11 @@ proc pdtk_iemgui_dialog {id mainheader \
     
     match_linux_wm [list frame $id.colors.select]
     pack $id.colors.select -side top
-    ttk::radiobutton $id.colors.select.radio0 -value 0 -variable \
+    match_linux_wm [list radiobutton $id.colors.select.radio0 -value 0 -variable \
         ::dialog($vid:l2_f1_b0) -text "background" -width 10]
-    ttk::radiobutton $id.colors.select.radio1 -value 1 -variable \
+    match_linux_wm [list radiobutton $id.colors.select.radio1 -value 1 -variable \
         ::dialog($vid:l2_f1_b0) -text "front" -width 5]
-    ttk::radiobutton $id.colors.select.radio2 -value 2 -variable \
+    match_linux_wm [list radiobutton $id.colors.select.radio2 -value 2 -variable \
         ::dialog($vid:l2_f1_b0) -text "label" -width 5]
     if { $::dialog($vid:fcol) >= 0 } {
         pack $id.colors.select.radio0 $id.colors.select.radio1 \
@@ -6548,12 +6549,12 @@ proc pdtk_canvas_dialog {id xscale yscale graphme x1 y1 x2 y2 \
 		-textvariable ::dialog($vid:yscale) -width 10]
     pack $id.yscale.label $id.yscale.entry -side left -padx 3
 
-    match_linux_wm [list ttk::checkbutton $id.graphme -text {graph on parent} \
+    match_linux_wm [list checkbutton $id.graphme -text {graph on parent} \
         -variable ::dialog($vid:graphme) \
         -command [concat canvas_checkcommand $wid]]
     pack $id.graphme -side top
 
-    match_linux_wm [list ttk::checkbutton $id.hidetext \
+    match_linux_wm [list checkbutton $id.hidetext \
 		-text {hide object name and arguments} \
         -variable ::dialog($vid:hidetext) \
         -command [concat canvas_checkcommand $wid]]

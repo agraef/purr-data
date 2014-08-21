@@ -184,21 +184,24 @@ proc ::dialog_prefs::set_color {array key op} {
             lappend commands "itemconfigure \
                 outlet&&signal -fill $c"
         }
-        outlet  {set commands [list "itemconfigure outlet -outline $c"]}
+        #outlet  {set commands [list "itemconfigure outlet -stroke $c"]}
         signal_cord {set commands [list "itemconfigure \
             all_cords&&signal -stroke $c"]
             lappend commands "itemconfigure \
             (outlet&&signal)||(inlet&&signal) -stroke $c"
         }
         control_cord {set commands [list "itemconfigure \
-            all_cords&&control -stroke $c"]}
+            all_cords&&control -stroke $c"]
+            lappend commands "itemconfigure \
+            ((inlet||outlet)&&control) -stroke $c"
+        }
         selection {
             set commands [list "itemconfigure \
                 selected&&text&&(!box&&!iemgui) -fill $c"]
             lappend commands "itemconfigure \
                 selected&&(border&&(!iemgui)) -fill $c"
             lappend commands "itemconfigure \
-                selected&&border&&iemgui -outline $c"
+                selected&&border&&iemgui -stroke $c"
         }
         box_border {set commands [list "itemconfigure \
             (box)&&(!iemgui) -stroke $c"]}

@@ -42,7 +42,7 @@ static t_binbuf *copy_binbuf;
 static t_glist *glist_finddirty(t_glist *x);
 static void canvas_reselect(t_canvas *x);
 static void canvas_cut(t_canvas *x);
-static void canvas_undo(t_canvas *x);
+//static void canvas_undo(t_canvas *x);
 static int paste_xyoffset = 0; /* a counter of pastes to make x,y offsets */
 //static void canvas_mouseup_gop(t_canvas *x, t_gobj *g);
 static void canvas_done_popup(t_canvas *x, t_float which, t_float xpos,
@@ -352,7 +352,7 @@ void canvas_check_nlet_highlights(t_glist *x)
     {
         sys_vgui(".x%x.c itemconfigure %s -stroke %s -fill %s -strokewidth 1\n",
             x, x->gl_editor->canvas_cnct_inlet_tag,
-            (last_inlet_filter ? "black" : (inlet_issignal ?
+            (last_inlet_filter ? "$pd_colors(iemgui_nlet)" : (inlet_issignal ?
                     "$pd_colors(signal_cord)" : "$pd_colors(control_cord)")),
             (inlet_issignal ?
                 "$pd_colors(signal_nlet)" : "$pd_colors(control_nlet)"));
@@ -373,7 +373,7 @@ void canvas_check_nlet_highlights(t_glist *x)
     {
         sys_vgui(".x%x.c itemconfigure %s -stroke %s -fill %s -strokewidth 1\n",
             x, x->gl_editor->canvas_cnct_outlet_tag,
-            (last_outlet_filter ? "black" : (outlet_issignal ?
+            (last_outlet_filter ? "$pd_colors(iemgui_nlet)" : (outlet_issignal ?
                     "$pd_colors(signal_cord)" : "$pd_colors(control_cord)")),
             (outlet_issignal ?
                 "$pd_colors(signal_nlet)" : "$pd_colors(control_nlet)"));
@@ -3235,7 +3235,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                                      "-stroke %s -fill %s -strokewidth 1\n",
                                 x, x->gl_editor->canvas_cnct_outlet_tag,
                                 (last_outlet_filter ?
-                                    "black" : (outlet_issignal ?
+                                    "$pd_colors(iemgui_nlet)" : (outlet_issignal ?
                                         "$pd_colors(signal_cord)" :
                                         "$pd_colors(control_cord)")),
                                 (outlet_issignal ?
@@ -3247,8 +3247,6 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                             last_outlet_filter =
                                 gobj_filter_highlight_behavior(
                                     (t_text *)&ob->ob_g);
-                            //fprintf(stderr,"last_outlet_filter == %d\n",
-                            //    last_outlet_filter);
                             sprintf(x->gl_editor->canvas_cnct_outlet_tag, 
                                 "%so%d", rtext_gettag(yr), closest);
                             sys_vgui(".x%x.c itemconfigure %s "
@@ -3309,7 +3307,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                                  "-strokewidth 1\n",
                             x, x->gl_editor->canvas_cnct_inlet_tag,
                             (last_inlet_filter ?
-                                "black" :
+                                "$pd_colors(iemgui_nlet)" :
                                 (inlet_issignal ?
                                     "$pd_colors(signal_cord)" :
                                     "$pd_colors(control_cord)")),
@@ -3322,8 +3320,6 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                     {
                         last_inlet_filter =
                             gobj_filter_highlight_behavior((t_text *)&ob->ob_g);
-                        //fprintf(stderr,"last_inlet_filter == %d\n",
-                        //    last_inlet_filter);
                         sprintf(x->gl_editor->canvas_cnct_inlet_tag, 
                             "%si%d", rtext_gettag(yr), closest);
                         sys_vgui(".x%x.c itemconfigure %s "
@@ -3407,7 +3403,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                              "-strokewidth 1\n",
                         x, x->gl_editor->canvas_cnct_inlet_tag,
                         (last_inlet_filter ?
-                            "black" :
+                            "$pd_colors(iemgui_nlet)" :
                             (inlet_issignal ?
                                 "$pd_colors(signal_cord)" :
                                 "$pd_colors(control_cord)")),
@@ -3428,7 +3424,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                              "-strokewidth 1\n",
                         x, x->gl_editor->canvas_cnct_outlet_tag,
                         (last_outlet_filter ?
-                            "black" :
+                            "$pd_colors(iemgui_nlet)" :
                             (outlet_issignal ?
                                 "$pd_colors(signal_cord)" :
                                 "$pd_colors(control_cord)")),
@@ -3536,7 +3532,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                              "-strokewidth 1\n",
                         x, x->gl_editor->canvas_cnct_inlet_tag,
                         (last_inlet_filter ?
-                            "black" :
+                            "$pd_colors(iemgui_nlet)" :
                             (inlet_issignal ?
                                 "$pd_colors(signal_cord)" :
                                 "$pd_colors(control_cord)")),
@@ -3556,7 +3552,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                              "-strokewidth 1\n",
                         x, x->gl_editor->canvas_cnct_outlet_tag,
                         (last_outlet_filter ?
-                            "black" :
+                            "$pd_colors(iemgui_nlet)" :
                             (outlet_issignal ?
                                 "$pd_colors(signal_cord)" :
                                 "$pd_colors(control_cord)")),
@@ -3581,7 +3577,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
         sys_vgui(".x%x.c itemconfigure %s -stroke %s -fill %s -strokewidth 1\n",
             x, x->gl_editor->canvas_cnct_inlet_tag,
             (last_inlet_filter ?
-                "black" :
+                "$pd_colors(iemgui_nlet)" :
                 (inlet_issignal ?
                     "$pd_colors(signal_cord)" :
                      "$pd_colors(control_cord)")),
@@ -3601,7 +3597,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
         sys_vgui(".x%x.c itemconfigure %s -stroke %s -fill %s -strokewidth 1\n",
             x, x->gl_editor->canvas_cnct_outlet_tag,
             (last_outlet_filter ?
-                "black" :
+                "$pd_colors(iemgui_nlet)" :
                 (outlet_issignal ?
                 "$pd_colors(signal_cord)" :
                 "$pd_colors(control_cord)")),
@@ -3924,7 +3920,7 @@ int canvas_doconnect_doit(t_canvas *x, t_gobj *y1, t_gobj *y2,
         sys_vgui(".x%x.c itemconfigure %s -stroke %s -fill %s -strokewidth 1\n",
             x, x->gl_editor->canvas_cnct_inlet_tag,
             (last_inlet_filter ?
-                "black" :
+                "$pd_colors(iemgui_nlet)" :
                 (obj_issignalinlet(ob2, closest2) ?
                     "$pd_colors(signal_cord)" :
                     "$pd_colors(control_cord)")),
@@ -3942,7 +3938,7 @@ int canvas_doconnect_doit(t_canvas *x, t_gobj *y1, t_gobj *y2,
         sys_vgui(".x%x.c itemconfigure %s -stroke %s -fill %s -strokewidth 1\n",
             x, x->gl_editor->canvas_cnct_outlet_tag,
             (last_outlet_filter ?
-                "black" :
+                "$pd_colors(iemgui_nlet)" :
                 (outlet_issignal ?
                     "$pd_colors(signal_cord)" :
                     "$pd_colors(control_cord)")),
@@ -4496,7 +4492,7 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                              "-strokewidth 1\n",
                         x, x->gl_editor->canvas_cnct_inlet_tag,
                         (last_inlet_filter ?
-                            "black" :
+                            "$pd_colors(iemgui_nlet)" :
                             (inlet_issignal ?
                                 "$pd_colors(signal_cord)" :
                                 "$pd_colors(control_cord)")),
@@ -4541,7 +4537,7 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
         sys_vgui(".x%x.c itemconfigure %s -stroke %s -fill %s -strokewidth 1\n",
             x, x->gl_editor->canvas_cnct_inlet_tag,
             (last_inlet_filter ?
-                "black" :
+                "$pd_colors(iemgui_nlet)" :
                 (inlet_issignal ?
                     "$pd_colors(signal_cord)" :
                     "$pd_colors(control_cord)")),
@@ -4745,7 +4741,7 @@ void canvas_mouseup(t_canvas *x,
                      "-strokewidth 1\n",
                 x, x->gl_editor->canvas_cnct_outlet_tag,
                 (last_outlet_filter ?
-                    "black" :
+                    "$pd_colors(iemgui_nlet)" :
                     (outlet_issignal ?
                         "$pd_colors(signal_cord)" :
                         "$pd_colors(control_cord)")),
@@ -4759,7 +4755,7 @@ void canvas_mouseup(t_canvas *x,
                      "-strokewidth 1\n",
                 x, x->gl_editor->canvas_cnct_inlet_tag,
                 (last_inlet_filter ?
-                    "black" :
+                    "$pd_colors(iemgui_nlet)" :
                     (inlet_issignal ?
                         "$pd_colors(signal_cord)" :
                         "$pd_colors(control_cord)")),
@@ -7071,20 +7067,20 @@ static void canvas_tidy(t_canvas *x)
 #define NHIST 15
 
     /* LATER might have to speed this up */
-static void canvas_tidyold(t_canvas *x)
+/*static void canvas_tidyold(t_canvas *x)
 {
     t_gobj *y, *y2;
     int ax1, ay1, ax2, ay2, bx1, by1, bx2, by2;
     int histogram[NHIST], *ip, i, besthist, bestdist;
-        /* if nobody is selected, this means do it to all boxes;
-        othewise just the selection */
+        // if nobody is selected, this means do it to all boxes;
+        // othewise just the selection
     int all = (x->gl_editor ? (x->gl_editor->e_selection == 0) : 1);
 
     //canvas_setundo(x, canvas_undo_move, canvas_undo_set_move(x, !all),
     //    "motion");
     canvas_undo_add(x, 4, "motion", canvas_undo_set_move(x, !all));
 
-        /* tidy horizontally */
+        // tidy horizontally
     for (y = x->gl_list; y; y = y->g_next)
         if (all || glist_isselected(x, y))
     {
@@ -7109,7 +7105,7 @@ static void canvas_tidyold(t_canvas *x)
         }
     nothorizhead: ;
     }
-        /* tidy vertically.  First guess the user's favorite vertical spacing */
+        // tidy vertically.  First guess the user's favorite vertical spacing
     for (i = NHIST, ip = histogram; i--; ip++) *ip = 0;
     for (y = x->gl_list; y; y = y->g_next)
         if (all || glist_isselected(x, y))
@@ -7173,7 +7169,7 @@ static void canvas_tidyold(t_canvas *x)
     nothead: ;
     }
     canvas_dirty(x, 1);
-}
+}*/
 
 static void canvas_texteditor(t_canvas *x)
 {
@@ -7249,7 +7245,7 @@ void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
                          "-strokewidth 1\n",
                     x, x->gl_editor->canvas_cnct_inlet_tag,
                     (last_inlet_filter ?
-                        "black" :
+                        "$pd_colors(iemgui_nlet)" :
                         (inlet_issignal ?
                             "$pd_colors(signal_cord)" :
                             "$pd_colors(control_cord)")),
@@ -7264,7 +7260,7 @@ void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
                          "-strokewidth 1\n",
                     x, x->gl_editor->canvas_cnct_outlet_tag,
                     (last_outlet_filter ?
-                        "black" :
+                        "$pd_colors(iemgui_nlet)" :
                         (outlet_issignal ?
                             "$pd_colors(signal_cord)" :
                             "$pd_colors(control_cord)")),
