@@ -596,19 +596,20 @@ void canvas_resortoutlets(t_canvas *x)
 static void graph_bounds(t_glist *x, t_floatarg x1, t_floatarg y1,
     t_floatarg x2, t_floatarg y2)
 {
-    x->gl_x1 = x1;
-    x->gl_x2 = x2;
-    x->gl_y1 = y1;
-    x->gl_y2 = y2;
-    if (x->gl_x2 == x->gl_x1 ||
-        x->gl_y2 == x->gl_y1)
-    {
+    if (x1==x2 || y1==y2) {
         error("graph: empty bounds rectangle");
         x1 = y1 = 0;
         x2 = y2 = 1;
     }
-    if (!do_not_redraw)
-        glist_redraw(x);
+    if (x->gl_x1!=x1 || x->gl_y1!=y1 || x->gl_x2!=x2 || x->gl_y2!=y2) {
+        //printf("%f %f %f %f %f %f %f %f\n",x->gl_x1,x1,x->gl_y1,y1,x->gl_x2,x2,x->gl_y2,y2);
+        x->gl_x1 = x1;
+        x->gl_x2 = x2;
+        x->gl_y1 = y1;
+        x->gl_y2 = y2;
+        if (!do_not_redraw)
+            glist_redraw(x);
+    }
 }
 
 static void graph_xticks(t_glist *x,
