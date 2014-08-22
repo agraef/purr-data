@@ -1181,7 +1181,7 @@ void canvas_closebang(t_canvas *x)
 
 /* needed for readjustment of garrays */
 extern t_array *garray_getarray(t_garray *x);
-extern void garray_fittograph(t_garray *x, int n);
+extern void garray_fittograph(t_garray *x, int n, int redraw);
 extern t_rtext *glist_findrtext(t_glist *gl, t_text *who);
 extern void rtext_gettext(t_rtext *x, char **buf, int *bufsize);
 
@@ -1217,7 +1217,7 @@ static void canvas_relocate(t_canvas *x, t_symbol *canvasgeom,
             {
                 a = garray_getarray(ga);
                 num_elem = a->a_n;
-                garray_fittograph(ga, num_elem);
+                garray_fittograph(ga, num_elem, 1);
             }
         }
     }

@@ -607,7 +607,8 @@ static void graph_bounds(t_glist *x, t_floatarg x1, t_floatarg y1,
         x1 = y1 = 0;
         x2 = y2 = 1;
     }
-    glist_redraw(x);
+    if (!do_not_redraw)
+        glist_redraw(x);
 }
 
 static void graph_xticks(t_glist *x,

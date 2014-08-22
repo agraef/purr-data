@@ -2344,7 +2344,7 @@ void canvas_map(t_canvas *x, t_floatarg f);
     in front of all windows; or with "f" zero, when we want to get rid of
     the window. */
 //extern t_array *garray_getarray(t_garray *x);
-//extern void garray_fittograph(t_garray *x, int n);
+//extern void garray_fittograph(t_garray *x, int n, int redraw);
 //extern t_rtext *glist_findrtext(t_glist *gl, t_text *who);
 //extern void rtext_gettext(t_rtext *x, char **buf, int *bufsize);
 
@@ -2410,7 +2410,7 @@ void canvas_vis(t_canvas *x, t_floatarg f)
                     if (ga) {
                         a = garray_getarray(ga);
                         num_elem = a->a_n;
-                        garray_fittograph(ga, num_elem);
+                        garray_fittograph(ga, num_elem, 1);
                     }
                 }
                 //for garrays in gop inside a newly opened patch window
@@ -2430,7 +2430,7 @@ void canvas_vis(t_canvas *x, t_floatarg f)
                                     if (ga) {
                                         a = garray_getarray(ga);
                                         num_elem = a->a_n;
-                                        garray_fittograph(ga, num_elem);
+                                        garray_fittograph(ga, num_elem, 1);
                                         canvas_dirty(x, 2);
                                     }
                                 }

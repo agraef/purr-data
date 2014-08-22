@@ -67,7 +67,7 @@ void garray_arrayviewlist_close(t_garray *x);
 
 void array_resize(t_array *x, int n)
 {
-    //fprintf(stderr,"array_resize\n");
+    //fprintf(stderr,"array_resize %d\n", n);
     int elemsize, oldn;
     t_template *template = template_findbyname(x->a_templatesym);
     if (n < 1)
@@ -271,11 +271,12 @@ int garray_joc(t_garray *x)
     return (x->x_joc);
 }
 
-        /* if there is one garray in a graph, reset the graph's coordinates
-            to fit a new size and style for the garray */
-void garray_fittograph(t_garray *x, int n)
+    /* if there is one garray in a graph, reset the graph's coordinates
+        to fit a new size and style for the garray */
+    // flag options -1 = don't resize or redraw, 0 = resize, 1 = resize and redraw
+void garray_fittograph(t_garray *x, int n, int flag)
 {
-    //fprintf(stderr,"garray_fittoraph %d\n", n);
+    //fprintf(stderr,"garray_fittograph %d %d\n", n, flag);
     // here we check for x->x_glist validity because when creating
     // a new array from the menu gl is null at the first garray_vis call
     if (!x->x_glist)
@@ -284,6 +285,7 @@ void garray_fittograph(t_garray *x, int n)
     t_glist *gl = x->x_glist;
     if (gl->gl_list == &x->x_gobj && !x->x_gobj.g_next)
     {
+        //fprintf(stderr,"loop\n");
         vmess(&gl->gl_pd, gensym("bounds"), "ffff",
             0., gl->gl_y1, (double)
                 (x->x_style == PLOTSTYLE_POINTS || x->x_style == PLOTSTYLE_BARS
@@ -294,7 +296,13 @@ void garray_fittograph(t_garray *x, int n)
                 close the properties which is annoying */
         gfxstub_deleteforkey(gl);
     }
-    array_resize_and_redraw(array, x->x_glist, n);
+    if (flag >= 0)
+    {
+        if (flag == 1)
+            array_resize_and_redraw(array, x->x_glist, n);
+        else
+            array_resize(array, n);
+    }
 }
 
 /* handle "array" message to glists; call graph_scalar above with
@@ -375,7 +383,8 @@ t_garray *graph_array(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
     // when creating from the menu but not when loading from the file)
     int gop_w = (x->x_style == PLOTSTYLE_POINTS || x->x_style == PLOTSTYLE_BARS
                     || n == 1 ? n : n-1);
-    if (gl->gl_x2 < gop_w) gl->gl_x2 = gop_w;
+    //fprintf(stderr,"graph_array glist->gl_x2=%g gop_w=%d n=%d\n", gl->gl_x2, gop_w, n);
+    if (gl->gl_x2 != gop_w) gl->gl_x2 = gop_w;
 
     template_setfloat(template, gensym("style"), x->x_scalar->sc_vec,
         x->x_style, 1);
@@ -392,7 +401,7 @@ t_garray *graph_array(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
 
 /* todo: need to test to see if this is necessary
    doesn't seem like it is...
-    garray_fittograph(x, n);
+    garray_fittograph(x, n, 1);
 */
     return (x);
 }
@@ -477,7 +486,7 @@ void glist_arraydialog(t_glist *parent, t_symbol *s, int argc, t_atom *argv)
     canvas_dirty(parent, 1);
     
     //canvas_redraw(glist_getcanvas(parent));
-    garray_fittograph(a, (int)size);
+    garray_fittograph(a, (int)size, 1);
     sys_vgui("pdtk_canvas_getscroll .x%lx.c\n",
         (long unsigned int)glist_getcanvas(parent));
 }
@@ -571,7 +580,7 @@ void garray_arraydialog(t_garray *x, t_symbol *s, int argc, t_atom *argv)
         if (style != x->x_style)
         {
             x->x_style = style;
-            garray_fittograph(x, size);
+            garray_fittograph(x, size, 1);
         }
         //fprintf(stderr,"style=%d %f\n", style, (t_float)x->x_style);
         template_setfloat(scalartemplate, gensym("style"),
@@ -1254,6 +1263,8 @@ static void garray_delete(t_gobj *z, t_glist *glist)
     /* nothing to do */
 }
 
+extern int do_not_redraw;
+
 static void garray_vis(t_gobj *z, t_glist *glist, int vis)
 {
     //fprintf(stderr,"garray_vis %d\n", vis);
@@ -1264,9 +1275,13 @@ static void garray_vis(t_gobj *z, t_glist *glist, int vis)
         int ne = a->a_n;
         int n = (x->x_style == PLOTSTYLE_POINTS ||
             x->x_style == PLOTSTYLE_BARS || ne == 1 ? ne : ne-1);
-        if (glist->gl_x2 < n) {
+        //fprintf(stderr,"garray_vis glist->gl_x2=%g n=%d a->a_n=%d\n", glist->gl_x2, n, a->a_n);
+        if (glist->gl_x2 != n) {
             glist->gl_x2 = n;
-            garray_fittograph(x, n);
+            // this causes infinite recursion when changing array size from dialog
+            do_not_redraw = 1;
+            garray_fittograph(x, n, 0);
+            do_not_redraw = 0;
         }
     }
     gobj_vis(&x->x_scalar->sc_gobj, glist, vis);
@@ -1778,10 +1793,12 @@ void garray_resize(t_garray *x, t_floatarg f)
 {
     t_array *array = garray_getarray(x);
     int n = (f < 1 ? 1 : f);
-    garray_fittograph(x, n);/*template_getfloat(
+    //fprintf(stderr,"garray_resize %d\n", n);
+    array_resize(array, n);
+    garray_fittograph(x, n, -1);/*template_getfloat(
         template_findbyname(x->x_scalar->sc_template),
             gensym("style"), x->x_scalar->sc_vec, 1));*/
-    array_resize_and_redraw(array, x->x_glist, n);
+    //array_resize_and_redraw(array, x->x_glist, n);
     if (x->x_usedindsp)
         canvas_update_dsp();
 }
