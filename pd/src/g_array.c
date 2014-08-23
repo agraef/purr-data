@@ -372,12 +372,13 @@ static int garray_get_largest_array(t_garray *x)
          1 = bounds, resize, and redraw */
 void garray_fittograph(t_garray *x, int n, int flag)
 {
-    int max_length = garray_get_largest_array(x);
-    //fprintf(stderr,"garray_fittograph n=%d flag=%d | max_length=%d\n", n, flag, max_length);
+    //fprintf(stderr,"garray_fittograph\n");
     // here we check for x->x_glist validity because when creating
     // a new array from the menu gl is null at the first garray_vis call
     if (!x->x_glist)
         return;
+    int max_length = garray_get_largest_array(x);
+    //fprintf(stderr,"garray_fittograph n=%d flag=%d | max_length=%d\n", n, flag, max_length);
     t_array *array = garray_getarray(x);
     t_garray *tmp;
     t_glist *gl = x->x_glist;
