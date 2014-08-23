@@ -812,7 +812,7 @@ void scalehandle_unclick_label(t_scalehandle *h) {
     {
         iemgui_select((t_gobj *)x, x->x_glist, 1);
         canvas_fixlinesfor(x->x_glist, (t_text *)x);
-        sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x->x_glist);
+        canvas_getscroll(x->x_glist);
     }
 }
 
@@ -863,7 +863,7 @@ void scalehandle_unclick_scale(t_scalehandle *h) {
     iemgui_io_draw_move(x);
     iemgui_select((t_gobj *)x, x->x_glist, 1);
     canvas_fixlinesfor(x->x_glist, (t_text *)x);
-    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x->x_glist);
+    canvas_getscroll(x->x_glist);
 }
 
 void scalehandle_drag_scale(t_scalehandle *h) {
@@ -1092,7 +1092,7 @@ void scrollbar_update(t_glist *glist) {
     //ico@bukvic.net 100518 update scrollbars when object potentially
     //exceeds window size
     t_canvas *canvas=(t_canvas *)glist_getcanvas(glist);
-    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (long unsigned int)canvas);
+    canvas_getscroll(canvas);
 }
 
 void wb_init(t_widgetbehavior *wb, t_getrectfn gr, t_clickfn cl) {

@@ -593,8 +593,7 @@ void glist_arraydialog(t_glist *parent, t_symbol *s, int argc, t_atom *argv)
     
     //canvas_redraw(glist_getcanvas(parent));
     garray_fittograph(a, (int)size, -1);
-    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n",
-        (long unsigned int)glist_getcanvas(parent));
+    canvas_getscroll(glist_getcanvas(parent));
 }
 
 extern void canvas_apply_setundo(t_canvas *x, t_gobj *y);
