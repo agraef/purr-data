@@ -5779,6 +5779,12 @@ static void old_plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                             py2 = y2;
                             //border = 1;
                         }
+                        else
+                        {
+                            py2 = (int)(glist_getcanvas(glist)->gl_screeny2
+                             - glist_getcanvas(glist)->gl_screeny1);
+                        }
+
                     }
                 //fprintf(stderr,"%f %f %f %f %f\n", basey, minyval, maxyval,glist->gl_y2,glist->gl_y1);
                 // with the following experimental code we can prevent drawing outside the gop window (preferred but needs to be further tested)
