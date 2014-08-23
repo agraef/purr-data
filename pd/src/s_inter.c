@@ -715,6 +715,8 @@ void sys_vvgui(const char *fmt, va_list ap) {
     sys_guibufhead += msglen;
     sys_bytessincelastping += msglen;
     if (sys_guibufhead>0) lastend=sys_guibuf[sys_guibufhead-1];
+    if (sys_guibufhead>1 && strcmp(sys_guibuf+sys_guibufhead-2,"\\\n")==0)
+        lastend=' ';
 }
 #undef sys_vgui
 #undef sys_gui
