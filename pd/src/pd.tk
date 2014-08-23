@@ -4197,7 +4197,7 @@ proc pdtk_canvas_mouseup {name x y b} {
 # we use this to ensure that all gop children are selected for
 # optimized displace and other operations without having to redraw
 # canvas on every operation
-# (this could be further improved by using &&)
+# (could this be further improved by using && for tags?)
 proc pdtk_select_all_gop_widgets {name gop state} {
 	#puts stderr "pdtk_select_all_gop_widgets $name $gop $state"
 	foreach item [$name.c find all] {
