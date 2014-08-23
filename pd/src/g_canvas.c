@@ -1181,7 +1181,7 @@ void canvas_closebang(t_canvas *x)
 
 /* needed for readjustment of garrays */
 extern t_array *garray_getarray(t_garray *x);
-extern void garray_fittograph(t_garray *x, int n, int redraw);
+extern void garray_fittograph(t_garray *x, int n, int flag);
 extern t_rtext *glist_findrtext(t_glist *gl, t_text *who);
 extern void rtext_gettext(t_rtext *x, char **buf, int *bufsize);
 

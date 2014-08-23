@@ -11,6 +11,8 @@
 
 extern int glob_lmclick;
 
+static void garray_select(t_gobj *z, t_glist *glist, int state);
+
 /* jsarlo { */
 #define ARRAYPAGESIZE 1000  /* this should match the page size in u_main.tk */
 /* } jsarlo */
@@ -92,7 +94,7 @@ void array_resize(t_array *x, int n)
 
 static void array_resize_and_redraw(t_array *array, t_glist *glist, int n)
 {
-    //fprintf(stderr,"array_resize_and_redraw\n");
+    fprintf(stderr,"array_resize_and_redraw\n");
     t_array *a2 = array;
     int vis = glist_isvisible(glist);
     while (a2->a_gp.gp_stub->gs_which == GP_ARRAY)
@@ -486,7 +488,7 @@ void glist_arraydialog(t_glist *parent, t_symbol *s, int argc, t_atom *argv)
     canvas_dirty(parent, 1);
     
     //canvas_redraw(glist_getcanvas(parent));
-    garray_fittograph(a, (int)size, 1);
+    garray_fittograph(a, (int)size, -1);
     sys_vgui("pdtk_canvas_getscroll .x%lx.c\n",
         (long unsigned int)glist_getcanvas(parent));
 }
@@ -604,6 +606,7 @@ void garray_arraydialog(t_garray *x, t_symbol *s, int argc, t_atom *argv)
         x->x_style = style;
         //fprintf(stderr,"GARRAY_REDRAW\n");
         garray_redraw(x);
+        garray_select((t_gobj *)x,glist_getcanvas(x->x_glist),1);
         canvas_dirty(x->x_glist, 1);
     }
 }
@@ -1408,8 +1411,8 @@ void garray_redraw(t_garray *x)
 {
     //fprintf(stderr,"garray_redraw\n");
     if (glist_isvisible(x->x_glist))
-        sys_queuegui(&x->x_gobj, x->x_glist, garray_doredraw);
-    //garray_doredraw(&x->x_gobj, x->x_glist);
+        //sys_queuegui(&x->x_gobj, x->x_glist, garray_doredraw);
+        garray_doredraw(&x->x_gobj, x->x_glist);
     /* jsarlo { */
     /* this happens in garray_vis() when array is visible for
        performance reasons */

@@ -2344,7 +2344,7 @@ void canvas_map(t_canvas *x, t_floatarg f);
     in front of all windows; or with "f" zero, when we want to get rid of
     the window. */
 //extern t_array *garray_getarray(t_garray *x);
-//extern void garray_fittograph(t_garray *x, int n, int redraw);
+//extern void garray_fittograph(t_garray *x, int n, int flag);
 //extern t_rtext *glist_findrtext(t_glist *gl, t_text *who);
 //extern void rtext_gettext(t_rtext *x, char **buf, int *bufsize);
 

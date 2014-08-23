@@ -607,8 +607,8 @@ static void graph_bounds(t_glist *x, t_floatarg x1, t_floatarg y1,
         x->gl_x2 = x2;
         x->gl_y1 = y1;
         x->gl_y2 = y2;
-        if (!do_not_redraw)
-            glist_redraw(x);
+        //if (!do_not_redraw)
+        glist_redraw(x);
     }
 }
 
@@ -1049,6 +1049,7 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
             tag, x1, y1, x2, y2);
         if (glist_isselected(parent_glist, gr))
             gobj_select(gr, parent_glist, 1);
+        //fprintf(stderr,"******************graph_vis SELECT\n");
     }
     else
     {
