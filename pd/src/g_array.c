@@ -279,12 +279,25 @@ static int garray_get_largest_array(t_garray *x)
 {
     t_gobj *g;
     t_array *a;
+    t_garray *tmp;
     int an = 0;
+
+    // checks if there is a PLOTSTYLE_POLY vs others
+    // longest array uses has_*, total_* gives total number
+    // n_array gives you the number of arrays
+    int has_poly = 0;
+    int total_poly = 0;
+    int has_other = 0;
+    int total_other = 0;
+    int n_array = 0;
+
     int length = 0;
+
     for (g = x->x_glist->gl_list; g; g = g->g_next)
     {
         if (pd_class(&g->g_pd) == garray_class)
         {
+            n_array++;
             a = garray_getarray((t_garray *)g);
             //if ((t_garray *)g != x)
             //{
@@ -297,11 +310,55 @@ static int garray_get_largest_array(t_garray *x)
             //else
             //{
                 a = garray_getarray((t_garray *)g);
+                tmp = (t_garray *)g;
+
+                // if we have new longest plot reset the
+                // count for the longest plot style
                 if (a->a_n > length)
+                {
+                    has_poly = 0;
+                    has_other = 0;
+                }
+
+                // get the longest (or matching) plots style
+                if (a->a_n >= length)
+                {
+                    if (tmp->x_style == PLOTSTYLE_POLY)
+                    {
+                        has_poly++;                      
+                    }
+                    else
+                    {
+                        has_other++;
+                    }
                     length = a->a_n;
+                }
+
+                // adjust total number of plot styles
+                if (tmp->x_style == PLOTSTYLE_POLY)
+                {
+                    total_poly++;                        
+                }
+                else
+                {
+                    total_other++;
+                }
             //}
         }
     }
+    //fprintf(stderr, "has_poly=%d has_other=%d | total_poly=%d total_other=%d | n_array=%d | pre-length=%d ",
+    //        has_poly, has_other, total_poly, total_other, n_array, length);
+    if (has_poly && !has_other)
+    {
+        if (total_other)
+            length--;
+    }
+    if (!has_poly && has_other)
+    {
+        if (total_poly)
+            length++;
+    }
+    //fprintf(stderr, "post-lenght=%d\n", length);
     return(length);
 }
 
@@ -316,7 +373,7 @@ static int garray_get_largest_array(t_garray *x)
 void garray_fittograph(t_garray *x, int n, int flag)
 {
     int max_length = garray_get_largest_array(x);
-    fprintf(stderr,"garray_fittograph n=%d flag=%d | max_length=%d\n", n, flag, max_length);
+    //fprintf(stderr,"garray_fittograph n=%d flag=%d | max_length=%d\n", n, flag, max_length);
     // here we check for x->x_glist validity because when creating
     // a new array from the menu gl is null at the first garray_vis call
     if (!x->x_glist)
