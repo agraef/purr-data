@@ -8371,9 +8371,8 @@ proc pdtk_tip_mouseover {w} {
 }
 
 proc pdtk_gettip { w item xletno name helpname dir } {
-	#puts stderr "pdtk_gettip $w"
+	# puts stderr "pdtk_gettip $w $item $xletno $name $helpname $dir"
 	variable k12_mode
-	#puts stderr "pdtk_gettip $w $item $xletno $name $helpname $dir"
 	if {$name eq "preset_hub" && $k12_mode == 1} {
 		return
 	}
@@ -8404,6 +8403,7 @@ proc pdtk_gettip { w item xletno name helpname dir } {
         set filefound 1
     }
     if {$filefound} {
+    	# puts stderr filefound
 		set filecontents [read $fp]
 		close $fp
 		# leave in pd's linebreaks-- serendipitously it
@@ -8427,6 +8427,7 @@ proc pdtk_gettip { w item xletno name helpname dir } {
 		}
     }
     # make Pd's comma atoms look pretty
+    # puts stderr $msg
     regsub -all {\\,} $msg {,} msg
     regsub -all { ,} $msg {,} msg
     regsub -all {\n} $msg { } msg
