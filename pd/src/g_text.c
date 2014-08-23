@@ -237,7 +237,7 @@ static void canvas_objtext(t_glist *gl, int xpix, int ypix,
     }*/
     if ( glist_isvisible( ((t_canvas *)gl) ) )
     {
-        sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", glist_getcanvas(gl));
+        canvas_getscroll(glist_getcanvas(gl));
     }
 }
 
@@ -286,7 +286,7 @@ void canvas_howputnew(t_canvas *x, int *connectp, int *xpixp, int *ypixp,
                 indx = nobj-1;
         }
         x->gl_editor->e_onmotion = MA_NONE;
-        sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+        canvas_getscroll(x);
     }
     else
     {
@@ -599,7 +599,7 @@ static void message_set(t_message *x, t_symbol *s, int argc, t_atom *argv)
     binbuf_add(x->m_text.te_binbuf, argc, argv);
     glist_retext(x->m_glist, &x->m_text);
     if (glist_isvisible(glist_getcanvas(x->m_glist)))
-        sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x->m_glist);
+        canvas_getscroll(x->m_glist);
 }
 
 static void message_add2(t_message *x, t_symbol *s, int argc, t_atom *argv)
@@ -607,7 +607,7 @@ static void message_add2(t_message *x, t_symbol *s, int argc, t_atom *argv)
     binbuf_add(x->m_text.te_binbuf, argc, argv);
     glist_retext(x->m_glist, &x->m_text);
     if (glist_isvisible(glist_getcanvas(x->m_glist)))
-        sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x->m_glist);
+        canvas_getscroll(x->m_glist);
 }
 
 static void message_add(t_message *x, t_symbol *s, int argc, t_atom *argv)
@@ -616,7 +616,7 @@ static void message_add(t_message *x, t_symbol *s, int argc, t_atom *argv)
     binbuf_addsemi(x->m_text.te_binbuf);
     glist_retext(x->m_glist, &x->m_text);
     if (glist_isvisible(glist_getcanvas(x->m_glist)))
-        sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x->m_glist);
+        canvas_getscroll(x->m_glist);
 }
 
 static void message_addcomma(t_message *x)
@@ -626,14 +626,14 @@ static void message_addcomma(t_message *x)
     binbuf_add(x->m_text.te_binbuf, 1, &a);
     glist_retext(x->m_glist, &x->m_text);
     if (glist_isvisible(glist_getcanvas(x->m_glist)))
-        sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x->m_glist);
+        canvas_getscroll(x->m_glist);
 }
 
 static void message_addsemi(t_message *x)
 {
     message_add(x, 0, 0, 0);
     if (glist_isvisible(glist_getcanvas(x->m_glist)))
-        sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x->m_glist);
+        canvas_getscroll(x->m_glist);
 }
 
 static void message_adddollar(t_message *x, t_floatarg f)
@@ -646,7 +646,7 @@ static void message_adddollar(t_message *x, t_floatarg f)
     binbuf_add(x->m_text.te_binbuf, 1, &a);
     glist_retext(x->m_glist, &x->m_text);
     if (glist_isvisible(glist_getcanvas(x->m_glist)))
-        sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x->m_glist);
+        canvas_getscroll(x->m_glist);
 }
 
 static void message_adddollsym(t_message *x, t_symbol *s)
@@ -660,7 +660,7 @@ static void message_adddollsym(t_message *x, t_symbol *s)
     binbuf_add(x->m_text.te_binbuf, 1, &a);
     glist_retext(x->m_glist, &x->m_text);
     if (glist_isvisible(glist_getcanvas(x->m_glist)))
-        sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x->m_glist);
+        canvas_getscroll(x->m_glist);
 }
 
 static void message_click(t_message *x,
@@ -1099,8 +1099,7 @@ static void gatom_param(t_gatom *x, t_symbol *sel, int argc, t_atom *argv)
     gobj_vis(&x->a_text.te_g, x->a_glist, 1);
     gobj_select(&x->a_text.te_g, x->a_glist, 1);
     canvas_dirty(x->a_glist, 1);
-    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x->a_glist);
-
+    canvas_getscroll(x->a_glist);
     /* glist_retext(x->a_glist, &x->a_text); */
 }
 
@@ -2079,7 +2078,7 @@ void text_drawborder(t_text *x, t_glist *glist,
 
     //ico@bukvic.net 100518 update scrollbars when GOP
     //potentially exceeds window size
-    //sys_vgui("pdtk_canvas_getscroll .x%lx.c\n",
+    //canvas_getscroll(
     //    (long unsigned int)glist_getcanvas(glist));
 }
 
@@ -2174,7 +2173,7 @@ void text_drawborder_withtag(t_text *x, t_glist *glist,
 
     //ico@bukvic.net 100518 update scrollbars when GOP
     //potentially exceeds window size
-    //sys_vgui("pdtk_canvas_getscroll .x%lx.c\n",
+    //canvas_getscroll(
     //    (long unsigned int)glist_getcanvas(glist));
 }
 

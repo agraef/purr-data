@@ -1733,7 +1733,7 @@ void svg_doupdate(t_svg *x, t_canvas *c, t_symbol *s)
                 /* uncache the scalar's bbox */
                 ((t_scalar *)g)->sc_bboxcache = 0;
                 /* only get the scroll if we had to redraw the bbox */
-                sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", visible);
+                canvas_getscroll(visible);
                 if (glist_isselected(c, &((t_scalar *)g)->sc_gobj))
                 {
                     scalar_drawselectrect((t_scalar *)g, c, 0);

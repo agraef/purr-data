@@ -1423,7 +1423,7 @@ static void graph_delete(t_gobj *z, t_glist *glist)
         glist_delete(x, y);
     }
     if (glist_istoplevel(glist) && glist_isvisible(glist))
-        sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", glist);
+        canvas_getscroll(glist);
 }
 
 static t_float graph_lastxpix, graph_lastypix;

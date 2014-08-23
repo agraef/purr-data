@@ -581,7 +581,7 @@ static void scalar_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
     SETFLOAT(&at[2], (t_float)dy);
     template_notify(template, gensym("displace"), 2, at);
 
-    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", glist);
+    canvas_getscroll(glist);
      
     /* Apparently this is no longer needed, so it is commented out.  But if
        we merge garrays back into this code we may need it... */
@@ -776,7 +776,7 @@ static void scalar_doredraw(t_gobj *client, t_glist *glist)
         sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n",
             glist_getcanvas(glist), glist, 1);
     }
-    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", glist_getcanvas(glist));
+    canvas_getscroll(glist_getcanvas(glist));
 }
 
 void scalar_redraw(t_scalar *x, t_glist *glist)

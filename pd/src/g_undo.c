@@ -93,7 +93,7 @@ void canvas_undo_undo(t_canvas *x)
         {
             sys_vgui("pdtk_undomenu .x%lx %s %s\n",
                 x, undo_action, redo_action);
-            sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+            canvas_getscroll(x);
         }
         canvas_dirty(x, 1);
     }
@@ -137,7 +137,7 @@ void canvas_undo_redo(t_canvas *x)
         {
             sys_vgui("pdtk_undomenu .x%lx %s %s\n",
                 x, undo_action, redo_action);
-            sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+            canvas_getscroll(x);
         }
         canvas_dirty(x, 1);
     }

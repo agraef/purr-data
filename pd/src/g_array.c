@@ -599,8 +599,7 @@ void glist_arraydialog(t_glist *parent, t_symbol *s, int argc, t_atom *argv)
     // sys_queuegui((t_gobj *)gl, glist_getcanvas(gl), graph_redraw);
     //fprintf(stderr,"glist_arraydialog done\n");
     glist_redraw(gl);
-    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n",
-        (long unsigned int)glist_getcanvas(parent));
+    canvas_getscroll(glist_getcanvas(parent));
     canvas_dirty(parent, 1);
 }
 

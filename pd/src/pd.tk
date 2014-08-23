@@ -8077,32 +8077,26 @@ if { [info tclversion] >= 8.5 && $pd_nt == 0 } {
 proc pdtk_canvas_enteritem_gettags {tkcanvas x y item} {
 	#puts stderr "gettags $tkcanvas $x $y $item"
 	variable nlet_color
-	variable select_color
     if {[winfo exists $tkcanvas]} {
         set mytoplevel [winfo toplevel $tkcanvas]
-        #set id [$tkcanvas find withtag current]
         set tags [$tkcanvas gettags $item]
         set xletno -1 
 		set object text
-		if { [string match *o* $item] } { set object outlet }
-		if { [string match *i* $item] } { set object inlet }
         foreach tag $tags {
-			if { ![regexp "\.x.*\.t.*\[io\](\[0-9\]+)$" $tag -- xletno] } {
-			    # iemgui tag
-			    regexp ".*OUT(\[0-9\]+)$" $tag -- xletno
-		        regexp ".*IN(\[0-9\]+)$" $tag -- xletno
+			if {[regexp "(\[io\])(\[0-9\]+)$" $tag -- type xletno] } {
+			    if {$type=="i"} {set object inlet}
+			    if {$type=="o"} {set object outlet}
+			    break
 			}
 		}
-		#puts stderr "gettags $tags $xletno [$tkcanvas canvasx $x] [$tkcanvas canvasy $y]"
+		#puts stderr "gettags $tags $object $xletno [$tkcanvas canvasx $x] [$tkcanvas canvasy $y]"
 		if { $xletno == -1 && $object ne "text" } { return }
 		if { $object ne "text" } {
 			set nlet_color [$tkcanvas itemcget [lindex $tags 0] -stroke]
 		} else {
 			set nlet_color $::pd_colors(selection)
 		}
-
-        pd [concat $mytoplevel enter $object \
-           $x $y $xletno \;]
+        pd [concat $mytoplevel enter $object $x $y $xletno \;]
     }
 }
 
@@ -8197,7 +8191,6 @@ proc pdtk_tip_delete {w} {
 
 proc pdtk_tip {w fromc show args} {
 	#puts stderr "$w $fromc $show $args"
-	variable select_color
 	variable nlet_color
 	variable tooltip_visible
     global pd_fontlist
