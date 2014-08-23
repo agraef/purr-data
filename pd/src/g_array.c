@@ -94,7 +94,7 @@ void array_resize(t_array *x, int n)
 
 static void array_resize_and_redraw(t_array *array, t_glist *glist, int n)
 {
-    fprintf(stderr,"array_resize_and_redraw\n");
+    //fprintf(stderr,"array_resize_and_redraw\n");
     t_array *a2 = array;
     int vis = glist_isvisible(glist);
     while (a2->a_gp.gp_stub->gs_which == GP_ARRAY)
@@ -273,29 +273,75 @@ int garray_joc(t_garray *x)
     return (x->x_joc);
 }
 
-    /* if there is one garray in a graph, reset the graph's coordinates
+    /* helper function for fittograph to see if the same GOP has multiple
+        arrays in which case take length of the largest one */
+static int garray_get_largest_array(t_garray *x)
+{
+    t_gobj *g;
+    t_array *a;
+    int an = 0;
+    int length = 0;
+    for (g = x->x_glist->gl_list; g; g = g->g_next)
+    {
+        if (pd_class(&g->g_pd) == garray_class)
+        {
+            a = garray_getarray((t_garray *)g);
+            //if ((t_garray *)g != x)
+            //{
+            //    an = (x->x_style == PLOTSTYLE_POINTS
+            //        || x->x_style == PLOTSTYLE_BARS
+            //        || a->a_n == 1 ? a->a_n : a->a_n-1);
+            //    if (an > length)
+            //        length = an;               
+            //}
+            //else
+            //{
+                a = garray_getarray((t_garray *)g);
+                if (a->a_n > length)
+                    length = a->a_n;
+            //}
+        }
+    }
+    return(length);
+}
+
+    /* reset the graph's coordinates
         to fit a new size and style for the garray */
-    // flag options -1 = don't resize or redraw, 0 = resize, 1 = resize and redraw
+    /* in pd-l2ork we use this for all situations, both one or more
+        arrays to ensure that they are always drawn within boundaries. */
+    /* flag options:
+        -1 = don't resize or redraw, just send bounds message to scalars
+         0 = bounds, and also resize
+         1 = bounds, resize, and redraw */
 void garray_fittograph(t_garray *x, int n, int flag)
 {
-    //fprintf(stderr,"garray_fittograph %d %d\n", n, flag);
+    int max_length = garray_get_largest_array(x);
+    fprintf(stderr,"garray_fittograph n=%d flag=%d | max_length=%d\n", n, flag, max_length);
     // here we check for x->x_glist validity because when creating
     // a new array from the menu gl is null at the first garray_vis call
     if (!x->x_glist)
         return;
     t_array *array = garray_getarray(x);
+    t_garray *tmp;
     t_glist *gl = x->x_glist;
-    if (gl->gl_list == &x->x_gobj && !x->x_gobj.g_next)
+    //if (gl->gl_list == &x->x_gobj && !x->x_gobj.g_next)
+
+    t_gobj *g;
+    for (g = gl->gl_list; g; g = g->g_next)
     {
-        //fprintf(stderr,"loop\n");
-        vmess(&gl->gl_pd, gensym("bounds"), "ffff",
-            0., gl->gl_y1, (double)
-                (x->x_style == PLOTSTYLE_POINTS || x->x_style == PLOTSTYLE_BARS
-                    || n == 1 ? n : n-1),
-                    gl->gl_y2);
-                /* close any dialogs that might have the wrong info now... 
-                TODO: make changes dynamic to avoid this as it causes Apply to
-                close the properties which is annoying */
+        if (pd_class(&g->g_pd) == garray_class)
+        {
+            //fprintf(stderr,"found array\n");
+            tmp = (t_garray *)g;
+            vmess(&gl->gl_pd, gensym("bounds"), "ffff",
+                0., gl->gl_y1, (double)
+                    (tmp->x_style == PLOTSTYLE_POINTS || tmp->x_style == PLOTSTYLE_BARS
+                        || max_length == 1 ? max_length : max_length-1),
+                        gl->gl_y2);
+        }
+        /* close any dialogs that might have the wrong info now... 
+        TODO: make changes dynamic to avoid this as it causes Apply to
+        close the properties which is annoying */
         gfxstub_deleteforkey(gl);
     }
     if (flag >= 0)
@@ -1279,13 +1325,11 @@ static void garray_vis(t_gobj *z, t_glist *glist, int vis)
         int n = (x->x_style == PLOTSTYLE_POINTS ||
             x->x_style == PLOTSTYLE_BARS || ne == 1 ? ne : ne-1);
         //fprintf(stderr,"garray_vis glist->gl_x2=%g n=%d a->a_n=%d\n", glist->gl_x2, n, a->a_n);
-        if (glist->gl_x2 != n) {
-            glist->gl_x2 = n;
-            // this causes infinite recursion when changing array size from dialog
-            do_not_redraw = 1;
-            garray_fittograph(x, n, 0);
-            do_not_redraw = 0;
-        }
+        //if (glist->gl_x2 != n) {
+        glist->gl_x2 = n;
+        do_not_redraw = 1;
+        garray_fittograph(x, n, -1);
+        do_not_redraw = 0;
     }
     gobj_vis(&x->x_scalar->sc_gobj, glist, vis);
     //if (((t_glist *)z)->gl_isgraph)

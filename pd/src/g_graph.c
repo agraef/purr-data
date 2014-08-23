@@ -607,8 +607,8 @@ static void graph_bounds(t_glist *x, t_floatarg x1, t_floatarg y1,
         x->gl_x2 = x2;
         x->gl_y1 = y1;
         x->gl_y2 = y2;
-        //if (!do_not_redraw)
-        glist_redraw(x);
+        if (!do_not_redraw)
+            glist_redraw(x);
     }
 }
 
