@@ -14,6 +14,8 @@ that didn't really belong anywhere. */
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#else // if isatty exists outside unistd, please add another #ifdef
+static int isatty(int fd) {return 0;}
 #endif
 
 #ifndef _WIN32
@@ -79,6 +81,8 @@ typedef int socklen_t;
 #else
 #define LOCALHOST "localhost"
 #endif
+
+static int stderr_isatty;
 
 #include <execinfo.h>
 
@@ -452,10 +456,11 @@ static int socketreceiver_doread(t_socketreceiver *x)
         {
             intail = (indx+1)&(INBUFSIZE-1);
             binbuf_text(inbinbuf, messbuf, bp - messbuf);
-            if (sys_debuglevel & DEBUG_MESSDOWN)
-            {
-                int res = write(2,  messbuf, bp - messbuf);
-                res = write(2, "\n", 1);
+            if (sys_debuglevel & DEBUG_MESSDOWN) {
+                if (stderr_isatty)
+                    fprintf(stderr,"<- \e[0;1;36m%.*s\e[0m\n", bp - messbuf, messbuf);
+                else
+                    fprintf(stderr,"<- %.*s\n", bp - messbuf, messbuf);
             }
             x->sr_inhead = inhead;
             x->sr_intail = intail;
@@ -710,7 +715,13 @@ void sys_vvgui(const char *fmt, va_list ap) {
     }
     if (sys_debuglevel & DEBUG_MESSUP) {
         //blargh();
-        fprintf(stderr, "%s",  sys_guibuf + sys_guibufhead);
+        int begin = lastend=='\n' || lastend=='\r' || lastend==-1;
+        if (stderr_isatty)
+            fprintf(stderr, "%s\e[0;1;35m%s\e[0m",
+                begin ? "-> " : "", sys_guibuf + sys_guibufhead);
+        else
+            fprintf(stderr, "%s%s",
+                begin ? "-> " : "", sys_guibuf + sys_guibufhead);
     }
     sys_guibufhead += msglen;
     sys_bytessincelastping += msglen;
@@ -931,6 +942,7 @@ int sys_startgui(const char *guidir)
     int len = sizeof(server);
     int ntry = 0, portno = FIRSTPORTNUM;
     int xsock = -1;
+    stderr_isatty = isatty(2);
 #ifdef MSW
     short version = MAKEWORD(2, 0);
     WSADATA nobby;

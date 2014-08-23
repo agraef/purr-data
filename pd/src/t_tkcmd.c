@@ -17,6 +17,8 @@
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#else // if isatty exists outside unistd, please add another #ifdef
+static int isatty(int fd) {return 0;}
 #endif
 
 #ifndef MSW
@@ -64,6 +66,7 @@
 void tcl_mess(char *s);
 static Tcl_Interp *tk_pdinterp;
 static int pd_portno = 0;
+static int stderr_isatty;
 
 
 /***************** the socket setup code ********************/
@@ -558,8 +561,8 @@ void tcl_mess(char *s)
     int result;
 
 #ifdef DEBUG_TCL
-    char catch_s[strlen(s)+1];
-    sprintf(catch_s, "%s", s);
+    char *catch_s = s;
+    //char catch_s[strlen(s)+666]; sprintf(catch_s, "set errorInfo \"\"; if {[catch {%s}]} {puts \"\\033\\[0;1;33m$errorInfo\\033\\[0m\"}", s);
 #else
     char catch_s[strlen(s)+11];
     sprintf(catch_s, "catch { %s }", s);
@@ -571,9 +574,13 @@ void tcl_mess(char *s)
     Tcl_DecrRefCount(messageObjPtr);
     if (result != TCL_OK)
     {
-        if (tk_pdinterp) printf("in sys_gui \e[0;1;36m%s\e[31m%s\e[0m\n",
-            s, Tcl_GetStringResult(tk_pdinterp));
-        else printf("no error\n");
+        if (tk_pdinterp) {
+            const char *t = Tcl_GetStringResult(tk_pdinterp);
+            if (stderr_isatty)
+                printf("in sys_gui \e[0;1;33m%s\e[31m%s\e[0m\n", s, t);
+            else
+                printf("in sys_gui %s%s\n", s, t);
+        } else printf("no error\n");
     }
 }
 
@@ -653,6 +660,7 @@ void pdgui_setname(char *s)
 
 int Pdtcl_Init(Tcl_Interp *interp)
 {
+    stderr_isatty = isatty(2);
     const char *argv = Tcl_GetVar(interp, "argv", 0);
     int portno = 0, i;
     if (argv)
