@@ -12,6 +12,7 @@
 extern int glob_lmclick;
 
 static void garray_select(t_gobj *z, t_glist *glist, int state);
+static void garray_doredraw(t_gobj *client, t_glist *glist);
 
 /* jsarlo { */
 #define ARRAYPAGESIZE 1000  /* this should match the page size in u_main.tk */
@@ -589,12 +590,18 @@ void glist_arraydialog(t_glist *parent, t_symbol *s, int argc, t_atom *argv)
     SETSYMBOL(at+4, fillcolor);
     SETSYMBOL(at+5, outlinecolor);
     a = graph_array(gl, gensym("array"), 8, at);
-    canvas_dirty(parent, 1);
     
     //canvas_redraw(glist_getcanvas(parent));
     garray_fittograph(a, (int)size, -1);
+    // we queue gui here because otherwise garray is not drawn properly
+    // since things are still being created and the object has not yet
+    // been associated with glist
+    // sys_queuegui((t_gobj *)gl, glist_getcanvas(gl), graph_redraw);
+    //fprintf(stderr,"glist_arraydialog done\n");
+    glist_redraw(gl);
     sys_vgui("pdtk_canvas_getscroll .x%lx.c\n",
         (long unsigned int)glist_getcanvas(parent));
+    canvas_dirty(parent, 1);
 }
 
 extern void canvas_apply_setundo(t_canvas *x, t_gobj *y);
@@ -672,21 +679,20 @@ void garray_arraydialog(t_garray *x, t_symbol *s, int argc, t_atom *argv)
             x->x_realname = canvas_realizedollar(x->x_glist, argname);
             pd_bind(&x->x_gobj.g_pd, x->x_realname);
         }
-            /* redraw the whole glist, just so the name change shows up */
-        if (x->x_glist->gl_havewindow)
+            /* redraw the whole glist, just so the name change shows up
+                there has to be a better way */
+        /*if (x->x_glist->gl_havewindow)
         {
             canvas_redraw(glist_getcanvas(x->x_glist));
             //fprintf(stderr,"================REDRAW\n");
-        }
+        }*/
         size = fsize;
         if (size < 1)
             size = 1;
-        if (size != a->a_n)
-            garray_resize(x, size);
         if (style != x->x_style)
         {
             x->x_style = style;
-            garray_fittograph(x, size, 1);
+            //garray_fittograph(x, size, 1);
         }
         //fprintf(stderr,"style=%d %f\n", style, (t_float)x->x_style);
         template_setfloat(scalartemplate, gensym("style"),
@@ -708,8 +714,11 @@ void garray_arraydialog(t_garray *x, t_symbol *s, int argc, t_atom *argv)
         x->x_fillcolor = fill;
         x->x_outlinecolor = outline;
         x->x_style = style;
-        //fprintf(stderr,"GARRAY_REDRAW\n");
-        garray_redraw(x);
+        if (size != a->a_n)
+            garray_resize(x, size);
+        else
+            garray_redraw(x);
+        //fprintf(stderr,"garray_arraydialog garray_redraw done\n");
         garray_select((t_gobj *)x,glist_getcanvas(x->x_glist),1);
         canvas_dirty(x->x_glist, 1);
     }
@@ -1513,7 +1522,15 @@ void garray_redraw(t_garray *x)
 {
     //fprintf(stderr,"garray_redraw\n");
     if (glist_isvisible(x->x_glist))
+        // enqueueing redraw ensures that the array is drawn after its values
+        // have been instantiated (instead, we address this in the creating
+        // dialog by enqueuing redrawing of the graph garray resides in as
+        // this will fix the lack of the array name and other features
+        // hence this approach is considered wrong
         //sys_queuegui(&x->x_gobj, x->x_glist, garray_doredraw);
+
+        // this is useful so that things get redrawn before they are selected
+        // so that we don't have to fake yet another selection after the fact
         garray_doredraw(&x->x_gobj, x->x_glist);
     /* jsarlo { */
     /* this happens in garray_vis() when array is visible for
@@ -1900,7 +1917,7 @@ void garray_resize(t_garray *x, t_floatarg f)
     int n = (f < 1 ? 1 : f);
     //fprintf(stderr,"garray_resize %d\n", n);
     array_resize(array, n);
-    garray_fittograph(x, n, -1);/*template_getfloat(
+    garray_fittograph(x, n, 1);/*template_getfloat(
         template_findbyname(x->x_scalar->sc_template),
             gensym("style"), x->x_scalar->sc_vec, 1));*/
     //array_resize_and_redraw(array, x->x_glist, n);

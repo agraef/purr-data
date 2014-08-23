@@ -923,24 +923,27 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
                  //REMOVED: -fill $pd_colors(graph) 
             glist_getcanvas(x->gl_owner),
             x1, y1, x2, y2, tag); // -fill $pd_colors(graph)
-        
-            /* if there's just one "garray" in the graph, write its name
-                along the top */
+
+            /* write garrays' names along the top */
         for (i = (y1 < y2 ? y1 : y2)-1, g = x->gl_list; g; g = g->g_next)
+        {
+            //fprintf(stderr,".\n");
+            //if (g->g_pd == garray_class)
+            //    fprintf(stderr,"garray_getname=%d\n",garray_getname((t_garray *)g, &arrayname));
             if (g->g_pd == garray_class &&
                 !garray_getname((t_garray *)g, &arrayname))
-        {
-            //i++;
-            sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor nw "
-                     "-font {{%s} -%d %s} -tags {%s label graph} -fill %s\n",
-                (long)glist_getcanvas(x),  x1+2, i, arrayname->s_name,
-                sys_font, sys_hostfontsize(glist_getfont(x)), sys_fontweight,
-                tag,
-                (glist_isselected(x, gr) ?
-                    "$pd_colors(selection)" : "$pd_colors(graph_border)"));
-            i += sys_fontheight(glist_getfont(x));
+            {
+                //i++;
+                sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor nw "
+                         "-font {{%s} -%d %s} -tags {%s label graph} -fill %s\n",
+                    (long)glist_getcanvas(x),  x1+2, i, arrayname->s_name,
+                    sys_font, sys_hostfontsize(glist_getfont(x)), sys_fontweight,
+                    tag,
+                    (glist_isselected(x, gr) ?
+                        "$pd_colors(selection)" : "$pd_colors(graph_border)"));
+                i += sys_fontheight(glist_getfont(x));
+            }
         }
-        
             /* draw ticks on horizontal borders.  If lperb field is
             zero, this is disabled. */
         if (x->gl_xtick.k_lperb)
