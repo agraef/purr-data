@@ -3408,7 +3408,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                 canvas_setcursor(x, CURSOR_EDITMODE_NOTHING); 
 
                 /* now check for tooltips object tooltips */
-                if (tooltips)
+                if (tooltips && ob)
                 {
                     t_rtext *yr = glist_findrtext(x, (t_text *)&ob->ob_g);
                     objtooltip = 1;
