@@ -3878,7 +3878,35 @@ static int legacy_draw_in_group(t_canvas *c)
         return (0);
 }
 
-    
+/* this is a conversion from tk's smooth method to an svg path command.
+   It is here for backwards-compabitility with the legacy data structure
+   drawing commands. A description of tk's curve implementation may be
+   found here:
+   http://www.tcl.tk/cgi-bin/tct/tip/168.html */
+void curve_smooth_to_q(int *pix, int n, int closed)
+{
+    int i, end = (closed ? n : n - 1);
+    sys_vgui("M %d %d\\\n", pix[0], pix[1]);
+    int ox = pix[2], oy = pix[3];
+    for (i = 2; i < n - 1; i++)
+    {
+        sys_vgui("Q %d %d %d %d\\\n",
+            ox, oy,
+            (int)(0.5*ox + 0.5*pix[i*2]),
+            (int)(0.5*oy + 0.5*pix[i*2+1]));
+        ox = pix[i*2];
+        oy = pix[i*2+1];
+    }
+    /* this part for closed curves doesn't work yet. The numbers I have
+       placed in the command need to be replaced with different, less
+       wrong numbers. */
+    if (closed)
+        sys_vgui("Q %d %d %d %d\\\n", pix[n*2-2], pix[n*2-1], pix[0], pix[1]);
+    else
+       sys_vgui("Q %d %d %d %d\\\n", pix[n*2-4], pix[n*2-3],
+           pix[n*2-2], pix[n*2-1]);
+}
+
 static void *curve_new(t_symbol *classsym, t_int argc, t_atom *argv)
 {
     if (legacy_draw_in_group(canvas_getcurrent()))
@@ -4117,8 +4145,12 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                     fill);
                 if (flags & CLOSED && !(flags & BBOX))
                 {
-                    sys_vgui(".x%lx.c create ppolygon \\\n",
-                        glist_getcanvas(glist));
+                    if (flags & BEZ)
+                        sys_vgui(".x%lx.c create path {\\\n",
+                            glist_getcanvas(glist));
+                    else
+                        sys_vgui(".x%lx.c create ppolygon \\\n",
+                            glist_getcanvas(glist));
                 }
                 else if (flags & BBOX) /* rectangles and ellipses */
                 {
@@ -4139,22 +4171,37 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                         sys_vgui(".x%lx.c create ellipse \\\n", glist_getcanvas(glist));
                     else
                         sys_vgui(".x%lx.c create prect \\\n", glist_getcanvas(glist));
-                } else
-                    sys_vgui(".x%lx.c create polyline \\\n", glist_getcanvas(glist));
+                }
+                else
+                { 
+                    if(flags & BEZ)
+                        sys_vgui(".x%lx.c create path {\\\n", glist_getcanvas(glist));
+                    else
+                        sys_vgui(".x%lx.c create polyline \\\n", glist_getcanvas(glist));
+                }
             }
-            for (i = 0; i < n; i++)
+
+            if ((flags & BEZ) && !(flags & BBOX))
             {
-                sys_vgui("%d %d \\\n",
-                    pix[2*i],
-                    pix[2*i+1]);
-                if ((flags & BEZ) && (flags & BBOX))
+                curve_smooth_to_q(pix, n, (flags & CLOSED));
+                sys_gui("}\\\n");
+            }
+            else
+            {
+                for (i = 0; i < n; i++)
                 {
-                    sys_vgui("-rx %d -ry %d \\\n",
-                        (t_int)fielddesc_getfloat(x->x_vec+2,
-                            template, data, 1),
-                        (t_int)fielddesc_getfloat(x->x_vec+3,
-                            template, data, 1));
-                    break;
+                    sys_vgui("%d %d \\\n",
+                        pix[2*i],
+                        pix[2*i+1]);
+                    if ((flags & BEZ) && (flags & BBOX))
+                    {
+                        sys_vgui("-rx %d -ry %d \\\n",
+                            (t_int)fielddesc_getfloat(x->x_vec+2,
+                                template, data, 1),
+                            (t_int)fielddesc_getfloat(x->x_vec+3,
+                                template, data, 1));
+                        break;
+                    }
                 }
             }
             sys_vgui("-strokewidth %f \\\n", width);
