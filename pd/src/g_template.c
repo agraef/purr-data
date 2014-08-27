@@ -3878,6 +3878,8 @@ static int legacy_draw_in_group(t_canvas *c)
         return (0);
 }
 
+typedef struct {int x,y;} intxy;
+
 /* this is a conversion from tk's smooth method to an svg path command.
    It is here for backwards-compabitility with the legacy data structure
    drawing commands. A description of tk's curve implementation may be
@@ -3885,26 +3887,31 @@ static int legacy_draw_in_group(t_canvas *c)
    http://www.tcl.tk/cgi-bin/tct/tip/168.html */
 void curve_smooth_to_q(int *pix, int n, int closed)
 {
+    intxy *p = (intxy *)pix;
     int i, end = (closed ? n : n - 1);
-    sys_vgui("M %d %d\\\n", pix[0], pix[1]);
-    int ox = pix[2], oy = pix[3];
-    for (i = 2; i < n - 1; i++)
-    {
-        sys_vgui("Q %d %d %d %d\\\n",
-            ox, oy,
-            (int)(0.5*ox + 0.5*pix[i*2]),
-            (int)(0.5*oy + 0.5*pix[i*2+1]));
-        ox = pix[i*2];
-        oy = pix[i*2+1];
-    }
-    /* this part for closed curves doesn't work yet. The numbers I have
-       placed in the command need to be replaced with different, less
-       wrong numbers. */
+    // >>1 is used instead of /2 or *0.5, because of slight difference in rounding.
     if (closed)
-        sys_vgui("Q %d %d %d %d\\\n", pix[n*2-2], pix[n*2-1], pix[0], pix[1]);
+        sys_vgui("M %d %d \\\n",
+            (p[0].x+p[n-1].x)>>1,
+            (p[0].y+p[n-1].y)>>1);
     else
-       sys_vgui("Q %d %d %d %d\\\n", pix[n*2-4], pix[n*2-3],
-           pix[n*2-2], pix[n*2-1]);
+        sys_vgui("M %d %d \\\n", p[0].x, p[0].y);
+    intxy o = closed ? p[n-1] : p[1];
+    int n2 = closed?n:n-1;
+    for (i = closed?0:2; i < n2; i++)
+    {
+        sys_vgui("Q %d %d %d %d \\\n",
+            o.x, o.y,
+            (o.x + p[i].x)>>1,
+            (o.y + p[i].y)>>1);
+        o = p[i];
+    }
+    if (closed)
+        sys_vgui("Q %d %d %d %d \\\n", p[n-1].x, p[n-1].y,
+            (p[n-1].x+p[0].x)>>1,
+            (p[n-1].y+p[0].y)>>1);
+    else
+       sys_vgui("Q %d %d %d %d \\\n", p[n-2].x, p[n-2].y, p[n-1].x, p[n-1].y);
 }
 
 static void *curve_new(t_symbol *classsym, t_int argc, t_atom *argv)
