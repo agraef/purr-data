@@ -260,9 +260,8 @@ void iemgui_label_font(t_iemgui *x, t_symbol *s, int ac, t_atom *av)
     if(glist_isvisible(x->x_glist))
     {
         sys_vgui(".x%lx.c itemconfigure %lxLABEL -font %s\n",
-            glist_getcanvas(x->x_glist), x, iemgui_font(x), 
-            x->x_fontsize, sys_fontweight);
-            iemgui_shouldvis(x, IEM_GUI_DRAW_MODE_CONFIG);
+            glist_getcanvas(x->x_glist), x, iemgui_font(x));
+        iemgui_shouldvis(x, IEM_GUI_DRAW_MODE_CONFIG);
     }
 }
 
