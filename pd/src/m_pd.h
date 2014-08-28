@@ -13,7 +13,7 @@ extern "C" {
 #define PD_MAJOR_VERSION 0
 #define PD_MINOR_VERSION 42
 #define PD_BUGFIX_VERSION 7
-#define PD_TEST_VERSION "20140813"
+#define PD_TEST_VERSION "20140814"
 #define PDL2ORK
 
 /* old name for "MSW" flag -- we have to take it for the sake of many old
@@ -648,9 +648,8 @@ typedef void (*t_guicallbackfn)(t_gobj *client, t_glist *glist);
 EXTERN void sys_vgui(const char *fmt, ...)
     __attribute__((format(printf,1,2)));
 EXTERN void sys_vguid(const char *file, int line, const char *fmt, ...)
-    __attribute__((format(printf,1,2)));
-EXTERN void sys_vvguid(const char *file, int line, const char *fmt, va_list)
     __attribute__((format(printf,3,4)));
+EXTERN void sys_vvguid(const char *file, int line, const char *fmt, va_list);
 #else
 EXTERN void sys_vgui(const char *fmt, ...);
 EXTERN void sys_vguid(const char *file, int line, const char *fmt, ...);

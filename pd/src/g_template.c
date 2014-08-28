@@ -5243,7 +5243,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                          "-matrix {{1.0 0.0} {0.0 1.0} {%g %g}} ",
                     glist_getcanvas(glist), elemtemplatecanvas,
                     (t_word *)(elem + elemsize * i),
-                    x->x_canvas, data, usexloc, useyloc);
+                    usexloc, useyloc);
                 if (in_array)
                 {
                     sys_vgui("-parent {.scelem%lx.%lx}\n", parentglist, data);
