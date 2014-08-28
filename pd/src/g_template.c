@@ -874,7 +874,6 @@ static void fielddesc_setfloat_var(t_fielddesc *fd, t_symbol *s)
 #define CLOSED 1
 #define BEZ 2
 #define NOMOUSE 4
-#define BBOX 8          /* pair of coords for rectangles and ellipses */
 #define A_ARRAY 55      /* LATER decide whether to enshrine this in m_pd.h */
 
 static void fielddesc_setfloatarg(t_fielddesc *fd, int argc, t_atom *argv)
@@ -3542,8 +3541,6 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             }
 
             svg_togui(sa, template, data);
-            //if ((flags & BEZ) && !(flags & BBOX))
-            //    sys_vgui("-smooth 1\\\n"); //this doesn't work with tkpath
 
             if (in_array)
                 sys_vgui(" -parent .scelem%lx.%lx \\\n", parentglist, data);
@@ -3930,8 +3927,7 @@ static void *curve_new(t_symbol *classsym, t_int argc, t_atom *argv)
         flags |= CLOSED;
     }
     else classname += 4;
-    if (classname[0] == 'c' || classname[0] == 'e') flags |= BEZ;
-    if (classname[0] == 'e' || classname[0] == 'r') flags |= BBOX;
+    if (classname[0] == 'c') flags |= BEZ;
     fielddesc_setfloat_const(&x->x_vis, 1);
     while (1)
     {
@@ -4011,23 +4007,6 @@ static void curve_getrect(t_gobj *z, t_glist *glist,
         if (xloc > x2) x2 = xloc;
         if (yloc < y1) y1 = yloc;
         if (yloc > y2) y2 = yloc;
-    }
-    if ((x->x_flags & BEZ) && (x->x_flags & BBOX))
-    {
-        int cx = glist_xtopixels(glist,
-            basex + fielddesc_getcoord(x->x_vec, template,
-                data, 0));
-        int cy = glist_ytopixels(glist,
-            basey + fielddesc_getcoord(x->x_vec+1, template,
-                data, 0));
-        int rx = fielddesc_getfloat(x->x_vec+2, template,
-            data, 0);
-        int ry = fielddesc_getfloat(x->x_vec+3, template,
-            data, 0);
-        x1 = cx - rx;
-        y1 = cy - ry;
-        x2 = cx + rx;
-        y2 = cy + ry;
     }
     //fprintf(stderr,"FINAL curve_getrect %d %d %d %d\n", x1, y1, x2, y2);
     //sys_vgui(".x%lx.c create prect %d %d %d %d -stroke red -tags blah\n",
@@ -4150,45 +4129,23 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 numbertocolor(
                     fielddesc_getfloat(&x->x_fillcolor, template, data, 1),
                     fill);
-                if (flags & CLOSED && !(flags & BBOX))
-                {
-                    if (flags & BEZ)
-                        sys_vgui(".x%lx.c create path {\\\n",
-                            glist_getcanvas(glist));
-                    else
-                        sys_vgui(".x%lx.c create ppolygon \\\n",
-                            glist_getcanvas(glist));
-                }
-                else if (flags & BBOX) /* rectangles and ellipses */
-                {
-                    n = 2; /* silently truncate extra coordinates */
-                    if(flags & BEZ)
-                        sys_vgui(".x%lx.c create ellipse \\\n",
-                            glist_getcanvas(glist));
-                    else
-                        sys_vgui(".x%lx.c create prect \\\n",
+                if (flags & BEZ)
+                    sys_vgui(".x%lx.c create path {\\\n",
                         glist_getcanvas(glist));
-                }
+                else
+                    sys_vgui(".x%lx.c create ppolygon \\\n",
+                        glist_getcanvas(glist));
             }
             else
             {
-                if(flags & BBOX)
-                {
-                    if(flags & BEZ)
-                        sys_vgui(".x%lx.c create ellipse \\\n", glist_getcanvas(glist));
-                    else
-                        sys_vgui(".x%lx.c create prect \\\n", glist_getcanvas(glist));
-                }
+                if(flags & BEZ)
+                    sys_vgui(".x%lx.c create path {\\\n",
+                        glist_getcanvas(glist));
                 else
-                { 
-                    if(flags & BEZ)
-                        sys_vgui(".x%lx.c create path {\\\n", glist_getcanvas(glist));
-                    else
-                        sys_vgui(".x%lx.c create polyline \\\n", glist_getcanvas(glist));
-                }
+                    sys_vgui(".x%lx.c create polyline \\\n",
+                        glist_getcanvas(glist));
             }
-
-            if ((flags & BEZ) && !(flags & BBOX))
+            if (flags & BEZ)
             {
                 curve_smooth_to_q(pix, n, (flags & CLOSED));
                 sys_gui("}\\\n");
@@ -4200,28 +4157,16 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                     sys_vgui("%d %d \\\n",
                         pix[2*i],
                         pix[2*i+1]);
-                    if ((flags & BEZ) && (flags & BBOX))
-                    {
-                        sys_vgui("-rx %d -ry %d \\\n",
-                            (t_int)fielddesc_getfloat(x->x_vec+2,
-                                template, data, 1),
-                            (t_int)fielddesc_getfloat(x->x_vec+3,
-                                template, data, 1));
-                        break;
-                    }
                 }
             }
             sys_vgui("-strokewidth %f \\\n", width);
             if (flags & CLOSED) sys_vgui("-fill %s -stroke %s \\\n",
                 fill, outline);
-            else if(flags & BBOX) sys_vgui("-stroke %s \\\n", outline);
             else sys_vgui("-stroke %s -fill \"\" \\\n", outline);
             if (in_array)
                 sys_vgui("-parent .scelem%lx.%lx \\\n", parentglist, data);
             else
                 sys_vgui("-parent .dgroup%lx.%lx \\\n", x->x_canvas, sc->sc_vec);
-            // this doesn't work with tkpath...
-            //if ((flags & BEZ) && !(flags & BBOX)) sys_vgui("-smooth 1 \\\n");
             sys_vgui("-tags {.x%lx.x%lx.template%lx scalar%lx}\n",
                 glist_getcanvas(glist), glist, data, sc);
             if (!glist_istoplevel(glist))
@@ -4385,14 +4330,6 @@ static void curve_setup(void)
     class_addcreator((t_newmethod)curve_new, gensym("filledpolygon"),
         A_GIMME, 0);
     class_addcreator((t_newmethod)curve_new, gensym("filledcurve"),
-        A_GIMME, 0);
-    class_addcreator((t_newmethod)curve_new, gensym("drawrectangle"),
-        A_GIMME, 0);
-    class_addcreator((t_newmethod)curve_new, gensym("filledrectangle"),
-        A_GIMME, 0);
-    class_addcreator((t_newmethod)curve_new, gensym("drawellipse"),
-        A_GIMME, 0);
-    class_addcreator((t_newmethod)curve_new, gensym("filledellipse"),
         A_GIMME, 0);
     class_setparentwidget(curve_class, &curve_widgetbehavior);
     class_addfloat(curve_class, curve_float);
