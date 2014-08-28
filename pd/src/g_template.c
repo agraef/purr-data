@@ -4713,7 +4713,7 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
                         *(t_float *)(((char *)(array->a_vec) + elemsize * i)
                             + xonset));
                 //else usexloc = x1; //usexloc = basex + xsum, xsum += xinc;
-                usexloc = basex + xsum, xsum += xinc;
+                usexloc = xloc + basex + xsum, xsum += xinc;
                 if (yonset >= 0)
                     yval = *(t_float *)(((char *)(array->a_vec) + elemsize * i)
                         + yonset);
