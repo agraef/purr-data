@@ -770,6 +770,7 @@ void *qt_thread_main (void *);
 /* ---------- other things added by Mathieu (aug.2014) ----------------- */
 
 void canvas_raise_all_cords (t_canvas *x);
+void canvas_getscroll (t_canvas *x);
 
 /* --------------------------------------------------------------------- */
 
