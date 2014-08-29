@@ -4296,6 +4296,7 @@ proc pdtk_find_highest_widget_withtag {canvas name} {
 #}
 
 proc pdtk_canvas_getscroll {name} {
+	if {![winfo exists $name]} {return}
 	set parentname [winfo parent $name]
 	if {$::scroll($parentname) == 0} {return}
 	# if {$::editmode($parentname) == 0} {
