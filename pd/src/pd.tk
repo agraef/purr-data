@@ -1321,7 +1321,7 @@ proc open_file {filename} {
     if {[regexp -nocase -- "\.(pd|pat|mxt)$" $basename]} {
         pd "pd open [pdtk_enquote $basename] [pdtk_enquote $directory] ;"
         set pd_opendir $directory
-        ::pd_guiprefs::update_recentfiles $filename 1
+        ::pd_guiprefs::update_recentfiles "$filename" 1
     }
 }
 
@@ -3818,8 +3818,8 @@ proc pdtk_array_listview_new {id arrayName page} {
     toplevel $windowName -class [winfo class .]
 	wm geometry $windowName 220x400
 	wm minsize $windowName 220 400
-	#pdtk_standardkeybindings $windowName
-	bind $windowName <Control-w> {destroy %W}
+	# pdtk_standardkeybindings $windowName
+	bind $windowName <Control-w> [list destroy $windowName]
 	bind $windowName <Control-q> {menu_quit}
 	match_linux_wm [list $windowName configure]
     wm protocol $windowName WM_DELETE_WINDOW \
@@ -4964,7 +4964,7 @@ proc pdtk_canvas_saveas {name initfile initdir} {
     #       pd [concat $name savetofile $basename $directory \;]
     set untitled_directory $directory
     # add to recentfiles
-    ::pd_guiprefs::update_recentfiles $filename 1
+    ::pd_guiprefs::update_recentfiles "$filename" 1
 }
 
 # zooming (a subset of dofont)
