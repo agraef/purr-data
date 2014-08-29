@@ -758,7 +758,7 @@ void garray_arrayviewlist_fillpage(t_garray *x,
                                    t_float page,
                                    t_float fTopItem)
 {
-    //fprintf(stderr,"garray_fillpage\n");
+    //fprintf(stderr,"garray_fillpage %g %g\n", page, fTopItem);
     int i, yonset=0, elemsize=0, topItem;
     t_float yval;
     t_array *a = garray_getarray_floatonly(x, &yonset, &elemsize);
