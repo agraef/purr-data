@@ -6251,8 +6251,14 @@ static void drawnumber_getrect(t_gobj *z, t_glist *glist,
     drawnumber_sprintf(x, buf, &at);
     *xp1 = xloc;
     *yp1 = yloc;
-    *xp2 = xloc + (fontwidth * strlen(buf));
-    *yp2 = yloc + (fontheight);
+    // Ico 20140830: another regression from the 20140731 where getrect is not accurate
+    // this, in addition to the vis call fix makes things work right again
+    // namely, this fixes the getrect inconsistency, while the one in the vis
+    // function fixes sizing problems
+    *xp2 = xloc + (fontwidth * strlen(buf) * xscale);
+    *yp2 = yloc + (fontheight * yscale);
+    //*xp2 = xloc + (fontwidth * strlen(buf));
+    //*yp2 = yloc + (fontheight);
 }
 
 static void drawnumber_displace(t_gobj *z, t_glist *glist,
@@ -6298,10 +6304,16 @@ static void drawnumber_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     {
         t_atom at;
         int in_array = (sc->sc_vec == data) ? 0 : 1;
-        t_float xscale = glist_xtopixels(glist, 1) - glist_xtopixels(glist, 0);
+        // Ico: why are we using scale here? For group transforms? I thought
+        // that drawsymbol was not eligible for group transforms since it is 
+        // a legacy object? keepin xscale and yscale 1.0 makes things look good
+        // again on the disis_wiimote-help.pd patch
+        t_float xscale = 1.0;
+        t_float yscale = 1.0;
+        /*t_float xscale = glist_xtopixels(glist, 1) - glist_xtopixels(glist, 0);
         t_float yscale = glist_ytopixels(glist, 1) - glist_ytopixels(glist, 0);
         if (xscale != 0) xscale = 1.0 / xscale;
-        if (yscale != 0) yscale = 1.0 / yscale;
+        if (yscale != 0) yscale = 1.0 / yscale;*/
         int fontsize = fielddesc_getfloat(&x->x_fontsize, template, data, 0);
         if (!fontsize) fontsize = glist_getfont(glist);
         /*int xloc = glist_xtopixels(glist,
@@ -6649,8 +6661,14 @@ static void drawsymbol_getrect(t_gobj *z, t_glist *glist,
     drawsymbol_sprintf(x, buf, &at);
     *xp1 = xloc;
     *yp1 = yloc;
-    *xp2 = (xloc + (fontwidth * strlen(buf)));
-    *yp2 = (yloc + (fontheight));
+    // Ico 20140830: another regression from the 20140731 where getrect is not accurate
+    // this, in addition to the vis call fix makes things work right again
+    // namely, this fixes the getrect inconsistency, while the one in the vis
+    // function fixes sizing problems
+    *xp2 = xloc + (fontwidth * strlen(buf) * xscale);
+    *yp2 = yloc + (fontheight * yscale);
+    //*xp2 = xloc + (fontwidth * strlen(buf));
+    //*yp2 = yloc + (fontheight);
 }
 
 static void drawsymbol_displace(t_gobj *z, t_glist *glist,
@@ -6695,10 +6713,16 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     {
         t_atom at;
         int in_array = (sc->sc_vec == data) ? 0 : 1;
-        t_float xscale = glist_xtopixels(glist, 1) - glist_xtopixels(glist, 0);
+        // Ico: why are we using scale here? For group transforms? I thought
+        // that drawsymbol was not eligible for group transforms since it is 
+        // a legacy object? keepin xscale and yscale 1.0 makes things look good
+        // again on the disis_wiimote-help.pd patch
+        t_float xscale = 1.0;
+        t_float yscale = 1.0;
+        /*t_float xscale = glist_xtopixels(glist, 1) - glist_xtopixels(glist, 0);
         t_float yscale = glist_ytopixels(glist, 1) - glist_ytopixels(glist, 0);
         if (xscale != 0) xscale = 1.0 / xscale;
-        if (yscale != 0) yscale = 1.0 / yscale;
+        if (yscale != 0) yscale = 1.0 / yscale;*/
 
         int fontsize = fielddesc_getfloat(&x->x_fontsize, template, data, 0);
         if (!fontsize) fontsize = glist_getfont(glist);
