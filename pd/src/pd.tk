@@ -6372,6 +6372,7 @@ if {[catch {
 # see comments above (pdtk_gatom_dialog) about variable name handling 
 
 proc canvas_apply {id} {
+	# puts stderr pdtk_canvas_apply
     # strip "." from the TK id to make a variable name suffix 
     set vid [string trimleft $id .]
     # for each variable, make a local variable to hold its name...
@@ -8454,6 +8455,7 @@ proc pdtk_check_unique {unique filenames} {
 	global appname
 	if { $unique == 0 } {
 		foreach file $filenames {
+			#puts stderr $file
 			cd [file dirname $file]
 			set dir [pwd]
 			set name [file tail $file]

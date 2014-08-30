@@ -2631,6 +2631,7 @@ void canvas_properties(t_glist *x)
 static void canvas_donecanvasdialog(t_glist *x,
     t_symbol *s, int argc, t_atom *argv)
 {
+    //fprintf(stderr,"canvas_donecanvasdialog\n");
     t_float xperpix, yperpix, x1, y1, x2, y2, xpix, ypix, xmargin, ymargin;
     int rx1=0, ry1=0, rx2=0, ry2=0; //for getrect
     int graphme;

@@ -401,7 +401,7 @@ void garray_fittograph(t_garray *x, int n, int flag)
         /* close any dialogs that might have the wrong info now... 
         TODO: make changes dynamic to avoid this as it causes Apply to
         close the properties which is annoying */
-        gfxstub_deleteforkey(gl);
+        //gfxstub_deleteforkey(gl);
     }
     if (flag >= 0)
     {

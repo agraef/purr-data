@@ -313,13 +313,15 @@ int sys_main(int argc, char **argv)
         if((filenames = malloc(length)) != NULL)
         {
             filenames[0] = '\0';   // ensures the memory is an empty string
+            strcat(filenames,"\"");
             if (sys_openlist)
             {
                 for (nl = sys_openlist; nl; nl = nl->nl_next)
                 {
                     strcat(filenames,nl->nl_string);
                     if (nl->nl_next)
-                        strcat(filenames," ");
+                        strcat(filenames,"\" \"");
+                    else strcat(filenames,"\"");
                 }
             }
             //fprintf(stderr,"final list: <%s>\n", filenames);
