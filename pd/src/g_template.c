@@ -3884,18 +3884,39 @@ typedef struct {int x,y;} intxy;
    http://www.tcl.tk/cgi-bin/tct/tip/168.html */
 void curve_smooth_to_q(int *pix, int n, int closed)
 {
+    fprintf(stderr,"curve_smooth_to_q closed=%d\n", closed);
     intxy *p = (intxy *)pix;
     int i, end = (closed ? n : n - 1);
+    int a = 0, b = 0;
+    int overlap = 0;
+    int current = 0;
     // >>1 is used instead of /2 or *0.5, because of slight difference in rounding.
     if (closed)
-        sys_vgui("M %d %d \\\n",
-            (p[0].x+p[n-1].x)>>1,
-            (p[0].y+p[n-1].y)>>1);
-    else
+    {
+        int a=0, b=0;
+        // if first point and last point are the same skip the first point
+        if (p[0].x == p[n-1].x && p[0].y == p[n-1].y)
+        {
+            if (n-1 != 0)
+            {
+                // protects below in the for loop to not exceed the point array size
+                overlap = 1;
+            }
+            a = (p[1].x+p[0].x)>>1;
+            b = (p[1].y+p[0].y)>>1;
+        }
+        else
+        {
+            a = (p[0].x+p[n-1].x)>>1;
+            b = (p[0].y+p[n-1].y)>>1;
+        }
+        sys_vgui("M %d %d \\\n", a, b);
+    }
+    else // need to test non-closed smooth curves
         sys_vgui("M %d %d \\\n", p[0].x, p[0].y);
-    intxy o = closed ? p[n-1] : p[1];
-    int n2 = closed?n:n-1;
-    for (i = closed?0:2; i < n2; i++)
+    intxy o = closed ? p[0+overlap] : p[1];
+    int n2 = (closed?n:n-1); // need to test this for non-closed smooth curves
+    for (i = (closed?(1+overlap):2); i < n2; i++)
     {
         sys_vgui("Q %d %d %d %d \\\n",
             o.x, o.y,
@@ -3904,11 +3925,15 @@ void curve_smooth_to_q(int *pix, int n, int closed)
         o = p[i];
     }
     if (closed)
+    {
+        // here we repurpose overlap for an additional check
+        overlap = (p[0].x == p[n-1].x && p[0].y == p[n-1].y && n-1 != 0);
         sys_vgui("Q %d %d %d %d \\\n", p[n-1].x, p[n-1].y,
-            (p[n-1].x+p[0].x)>>1,
-            (p[n-1].y+p[0].y)>>1);
+            (p[n-1].x+p[0+overlap].x)>>1,
+            (p[n-1].y+p[0+overlap].y)>>1);
+    }
     else
-       sys_vgui("Q %d %d %d %d \\\n", p[n-2].x, p[n-2].y, p[n-1].x, p[n-1].y);
+       sys_vgui("Q %d %d %d %d \\\n", p[n-2].x, p[n-2].y, p[n-1].x, p[n-1].y); // need ot test this for non-closed smooth curves
 }
 
 static void *curve_new(t_symbol *classsym, t_int argc, t_atom *argv)
