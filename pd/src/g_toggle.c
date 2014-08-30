@@ -73,7 +73,7 @@ void toggle_draw_config(t_toggle* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
     iemgui_base_draw_config(&x->x_gui);
-    sys_vgui(".x%lx.c itemconfigure {%lxX1||%lX2} -fill #%6.6x\n",
+    sys_vgui(".x%lx.c itemconfigure {%lxX1||%lxX2} -stroke #%6.6x\n",
         canvas, x, x, x->x_on?x->x_gui.x_fcol:x->x_gui.x_bcol);
 }
 
