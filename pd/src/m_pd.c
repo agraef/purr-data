@@ -315,6 +315,7 @@ t_pd *pd_findbyclass(t_symbol *s, t_class *c)
 {
     t_pd *x = 0;
     
+    //fprintf(stderr,"pd_findbyclass\n");
     if (!s->s_thing) return (0);
     if (*s->s_thing == c) return (s->s_thing);
     if (*s->s_thing == bindlist_class)
@@ -325,8 +326,10 @@ t_pd *pd_findbyclass(t_symbol *s, t_class *c)
         for (e = b->b_list; e; e = e->e_next)
         {
             //if (e->e_who != NULL && *e->e_who == c)
+            //fprintf(stderr, "(e_who == c)?%d || e->e_delayed_free=%d\n", (*e->e_who == c ? 1 : 0), e->e_delayed_free);
             if (e->e_delayed_free != 1 && *e->e_who == c)
             {
+                //fprintf(stderr,"...found %lx", e);
                 if (x && !warned)
                 {
                     zz();
@@ -337,6 +340,7 @@ t_pd *pd_findbyclass(t_symbol *s, t_class *c)
             }
         }
     }
+    //fprintf(stderr,"====\n");
     return x;
 }
 

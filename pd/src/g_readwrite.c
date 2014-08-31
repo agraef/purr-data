@@ -163,8 +163,10 @@ int glist_readscalar(t_glist *x, int natoms, t_atom *vec,
 
 void glist_readfrombinbuf(t_glist *x, t_binbuf *b, char *filename, int selectem)
 {
-    int natoms, nline, message, nextmsg = 0;
+    t_canvas *canvas = glist_getcanvas(x);
+    int cr = 0, natoms, nline, message, nextmsg = 0, i, j, nitems;
     t_atom *vec;
+    t_gobj *gobj;
 
     natoms = binbuf_getnatom(b);
     vec = binbuf_getvec(b);
@@ -216,15 +218,15 @@ void glist_readfrombinbuf(t_glist *x, t_binbuf *b, char *filename, int selectem)
                 templateargs[ntemplateargs + 2] = vec[message + 2];
             ntemplateargs = newnargs;
         }
-        newtemplate = template_new(templatesym, ntemplateargs, templateargs);
-        t_freebytes(templateargs, sizeof (*templateargs) * ntemplateargs);
         if (!(existtemplate = template_findbyname(templatesym)))
         {
             error("%s: template not found in current patch",
                 templatesym->s_name);
-            template_free(newtemplate);
+            t_freebytes(templateargs, sizeof (*templateargs) * ntemplateargs);
             return;
         }
+        newtemplate = template_new(templatesym, ntemplateargs, templateargs);
+        t_freebytes(templateargs, sizeof (*templateargs) * ntemplateargs);
         if (!template_match(existtemplate, newtemplate))
         {
             error("%s: template doesn't match current one",
@@ -286,6 +288,7 @@ void canvas_dataproperties(t_canvas *x, t_scalar *sc, t_binbuf *b)
 {
     int ntotal, nnew, scindex;
     t_gobj *y, *y2 = 0, *newone, *oldone = 0;
+    t_template *template;
     for (y = x->gl_list, ntotal = 0, scindex = -1; y; y = y->g_next)
     {
         if (y == &sc->sc_gobj)
@@ -294,31 +297,48 @@ void canvas_dataproperties(t_canvas *x, t_scalar *sc, t_binbuf *b)
     }
     
     if (scindex == -1)
-        bug("data_properties: scalar disappeared");
+    {
+        error("data_properties: scalar disappeared");
+        return;
+    }
     glist_readfrombinbuf(x, b, "properties dialog", 0);
     newone = 0;
-    if (scindex >= 0)
-    {
         /* take the new object off the list */
-        if (ntotal)
+    if (ntotal)
+    {
+        for (y = x->gl_list, nnew = 1; y2 = y->g_next;
+            y = y2, nnew++)
+                if (nnew == ntotal)
         {
-            for (y = x->gl_list, nnew = 1; y2 = y->g_next;
-                y = y2, nnew++)
-                    if (nnew == ntotal)
-            {
-                newone = y2;
-                y->g_next = y2->g_next;
-                break;    
-            }
+            newone = y2;
+            gobj_vis(newone, x, 0);
+            y->g_next = y2->g_next;
+            break;    
         }
-        else newone = x->gl_list, x->gl_list = newone->g_next;
     }
+    else gobj_vis((newone = x->gl_list), x, 0), x->gl_list = newone->g_next;
     if (!newone)
         error("couldn't update properties (perhaps a format problem?)");
     else if (!oldone)
         bug("data_properties: couldn't find old element");
+    else if (newone->g_pd == scalar_class && oldone->g_pd == scalar_class
+        && ((t_scalar *)newone)->sc_template ==
+            ((t_scalar *)oldone)->sc_template 
+        && (template = template_findbyname(((t_scalar *)newone)->sc_template)))
+    {
+            /* copy new one to old one and delete new one */
+        memcpy(&((t_scalar *)oldone)->sc_vec, &((t_scalar *)newone)->sc_vec,
+            template->t_n * sizeof(t_word));
+        pd_free(&newone->g_pd);
+        if (glist_isvisible(x))
+        {
+            gobj_vis(oldone, x, 0);
+            gobj_vis(oldone, x, 1);
+        }
+    }
     else
     {
+            /* delete old one; put new one where the old one was on glist */
         glist_delete(x, oldone);
         if (scindex > 0)
         {

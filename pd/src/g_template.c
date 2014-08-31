@@ -66,6 +66,7 @@ static int dataslot_matches(t_dataslot *ds1, t_dataslot *ds2,
 t_template *template_new(t_symbol *templatesym, int argc, t_atom *argv)
 {
     t_template *x = (t_template *)pd_new(template_class);
+    //fprintf(stderr,"template_new %lx\n", x);
     x->t_n = 0;
     x->t_transformable = 0;
     x->t_vec = (t_dataslot *)t_getbytes(0);
@@ -6645,11 +6646,12 @@ void drawsymbol_float(t_drawsymbol *x, t_floatarg f)
 #define DRAWSYMBOL_BUFSIZE 80
 static void drawsymbol_sprintf(t_drawsymbol *x, char *buf, t_atom *ap)
 {
-    //int nchars;
-    //strncpy(buf, x->x_label->s_name, DRAWSYMBOL_BUFSIZE);
-    //buf[DRAWSYMBOL_BUFSIZE - 1] = 0;
-    //nchars = strlen(buf);
-    atom_string(ap, buf, DRAWSYMBOL_BUFSIZE);
+    int nchars;
+    strncpy(buf, x->x_label->s_name, DRAWSYMBOL_BUFSIZE);
+    buf[DRAWSYMBOL_BUFSIZE - 1] = 0;
+    nchars = strlen(buf);
+    atom_string(ap, buf + nchars, DRAWSYMBOL_BUFSIZE - nchars);
+    //fprintf(stderr,"drawsymbol_sprintf %s\n", buf);
 }
 
 static void drawsymbol_getrect(t_gobj *z, t_glist *glist,
