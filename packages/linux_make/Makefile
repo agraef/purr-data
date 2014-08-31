@@ -121,7 +121,7 @@ deb: $(bindir)
 		$(DESTDIR)/usr/share/mime/packages/
 # files for /etc
 	install -d $(DESTDIR)/etc/bash_completion.d/
-	install -p -m0644 $(scripts_src)/bash_completion/pd \
+	install -p -m0644 $(scripts_src)/bash_completion/pd-l2ork \
 		$(DESTDIR)/etc/bash_completion.d
 	install -d $(DESTDIR)/etc/default
 	install -p -m0644 $(scripts_src)/debian/default/pd-l2ork \
