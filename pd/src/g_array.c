@@ -871,6 +871,16 @@ void array_getcoordinate(t_glist *glist,
     *xp2 = glist_xtopixels(glist, basex +
         fielddesc_cvttocoord(xfielddesc, xval+1))-1;
     *yp = ypix;
+    // increased following on 20140830 to 8 (+4 and -4) and 
+    // so that the smallest hitbox is always at least 8x8
+    // check with all_about_arrays.pd inside custom scalars
+    // in an array
+    if (*xp1 == *xp2)
+    {
+        *xp1 = *xp1 - 4;
+        *xp2 = *xp2 + 4;
+        wpix = 8;
+    }
     *wp = wpix;
 }
 
@@ -1078,8 +1088,11 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
                 xonset, yonset, wonset, i, xloc, yloc, xinc,
                 xfield, yfield, wfield, &pxpix1, &pxpix2, &pypix, &pwpix);
             //fprintf(stderr,"    array_getcoordinate %d: pxpix1:%f pxpix2:%f pypix:%f pwpix:%f dx:%f dy:%f elemsize:%d yonset:%d wonset:%d xonset:%d xloc:%f yloc:%f xinc:%f\n", i, pxpix1, pxpix2, pypix, pwpix, dx, dy, elemsize, yonset, wonset, xonset, xloc, yloc, xinc);
-            if (pwpix < 4)
-                pwpix = 4;
+            // increased following on 20140830 to 8 and updated array_getcoordinate
+            // so that the smallest hitbox is always at least 8x8--check with
+            // all_about_arrays.pd inside custom scalars in an array
+            if (pwpix < 8)
+                pwpix = 8;
             if (xpix >= (int)pxpix1 && xpix <= (int)pxpix2 &&
                 ((array_joc) ||
                  (ypix >= pypix-pwpix && ypix <= pypix+pwpix)))
