@@ -8160,9 +8160,13 @@ proc pdtk_canvas_displace_withtag {w dx dy} {
     $w move selected $dx $dy
     foreach item [$w find withtag scalar_selected] {
         set matrix [lindex [$w itemconfigure $item -matrix] 4]
+        #puts stderr "A:$matrix"
         set newx [expr {[lindex $matrix 2 0] + $dx}]
         set newy [expr {[lindex $matrix 2 1] + $dy}]
+        #set newx [expr {[lindex $matrix 2 0] + ($dx * [expr 1.0-[lindex $matrix 0 0]])}]
+        #set newy [expr {[lindex $matrix 2 1] + ($dy * [expr 1.0-[lindex $matrix 1 1]])}]
         set matrix [lreplace $matrix 2 2 [list $newx $newy]]
+        #puts stderr "B:$matrix"
         $w itemconfigure $item -matrix $matrix
     }
 }
