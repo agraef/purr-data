@@ -1,8 +1,8 @@
-#N struct IR-blobs float x float y symbol s;
 #N struct NC-stick float x float y;
+#N struct IR-blobs float x float y symbol s;
 #N struct CL-L-stick float x float y;
 #N struct CL-R-stick float x float y;
-#N canvas 141 50 872 633 10;
+#N canvas 383 66 872 633 10;
 #X msg 6 388 disconnect;
 #X msg 27 87 discover;
 #X obj 187 186 tgl 25 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
@@ -203,7 +203,7 @@ case. The total acceleration is given by:;
 #N canvas 136 244 342 204 IR-blobs 0;
 #X obj 39 34 struct IR-blobs float x float y symbol s;
 #X obj 39 71 filledcurve 9 30 0 0 -30 -30 0 0 30 30 0;
-#X obj 63 109 drawsymbol s -35 -75 0 24 blob;
+#X obj 64 105 drawsymbol s -35 -75 0 24;
 #X restore 776 384 pd IR-blobs;
 #X text 648 166 IR Blobs (1024x768):;
 #X floatatom 742 128 7 0 0 1 _PITCH #0-wii-pitch-set #0-wii-pitch,
@@ -233,12 +233,12 @@ empty -2 -8 0 10 -225280 -1 -1 0 1;
 #X scalar NC-stick 0 0 \;;
 #X coords 0 256 256 0 80 80 1 0 0;
 #X restore 768 468 pd NC-data;
-#X obj -5 611 print;
+#X obj -4 611 print;
 #X obj 15 203 tgl 25 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X text -4 254 Enable metro to get accelerometer uppdates;
+#X text -2 254 Enable metro to get accelerometer uppdates;
 #X obj 117 365 disis_wiimote;
-#X obj -5 589 disis_wiimote 00:19:1D:BE:6A:66;
+#X obj -4 589 disis_wiimote 00:19:1D:BE:6A:66;
 #X obj 231 333 tgl 25 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X text 212 357 connection;
@@ -312,10 +312,10 @@ empty -2 -8 0 10 -225280 -1 -1 0 1;
 #X restore 478 290 pd bytemask;
 #X text 430 337 RUMBLE:;
 #X text 277 551 4 start metro and enable "reportAcceleration";
-#X text -4 294 NB: setting metro below 20 makes little sense as even
+#X text -2 294 NB: setting metro below 20 makes little sense as even
 at max rate I was unable to get more than 50 updates/second from the
 bluetooth stack.;
-#X text -5 265 (buttons \, xyz wiimote \, xyz nunchuk \, ir).;
+#X text -4 265 (buttons \, xyz wiimote \, xyz nunchuk \, ir).;
 #X obj 585 560 unpack 0 0 0;
 #X obj 658 583 hsl 180 15 0 16000 0 0 empty empty empty -2 -8 0 10
 -261681 -1 -1 0 1;
@@ -329,7 +329,7 @@ bluetooth stack.;
 #X text 277 562 5 connect nunchuk and enable "reportExtension";
 #X text 594 439 NUNCHUK;
 #X text 586 543 MOTION PLUS;
-#X text -16 2 Threaded implementation of Wiimote object by DISIS &
+#X text -14 2 Threaded implementation of Wiimote object by DISIS &
 L2Ork by Ivica Ico Bukvic <ico@vt.edu> <http://disis.music.vt.edu>
 <http://l2ork.music.vt.edu>;
 #X text 119 122 By default \, the wiimote does not report acceleration
@@ -402,11 +402,11 @@ balance battery;
 #X obj 15 234 metro 100;
 #X text 289 528 console and your bluetooth settings;
 #N canvas 35 30 815 233 \$0-classic 0;
-#X obj 60 -20 inlet;
-#X obj 690 -19 inlet;
-#X text 47 -38 left stick;
-#X text 340 -38 right stick;
-#X text 684 -37 buttons;
+#X obj 60 -19 inlet;
+#X obj 690 -17 inlet;
+#X text 47 -37 left stick;
+#X text 340 -37 right stick;
+#X text 684 -35 buttons;
 #N canvas 154 209 610 221 CL-L-stick 0;
 #X obj 39 34 struct CL-L-stick float x float y;
 #X obj 44 71 filledpolygon 900 8 0 2 -2 0 -8 -2 -2 -8 0 -2 2 0 8 2
@@ -421,7 +421,7 @@ balance battery;
 #X obj 60 47 unpack 0 0;
 #X obj 60 69 set CL-L-stick x y;
 #X msg 165 24 traverse pd-CL-L-data \, next;
-#X obj 357 -19 inlet;
+#X obj 357 -17 inlet;
 #X obj 462 47 pointer;
 #X obj 462 4 loadbang;
 #X obj 357 48 unpack 0 0;
