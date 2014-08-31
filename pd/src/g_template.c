@@ -6174,6 +6174,7 @@ static void *drawnumber_new(t_symbol *classsym, t_int argc, t_atom *argv)
     t_drawnumber *x = (t_drawnumber *)pd_new(drawnumber_class);
     char *classname = classsym->s_name;
     int flags = 0;
+    int got_font_size = 0;
     
     if (classname[4] == 's')
         flags |= DRAW_SYMBOL;
@@ -6206,11 +6207,29 @@ static void *drawnumber_new(t_symbol *classsym, t_int argc, t_atom *argv)
     else fielddesc_setfloat_const(&x->x_yloc, 0);
     if (argc) fielddesc_setfloatarg(&x->x_color, argc--, argv++);
     else fielddesc_setfloat_const(&x->x_color, 1);
-    if (argc == 2) fielddesc_setfloatarg(&x->x_fontsize, argc--, argv++);
-    else fielddesc_setfloatarg(&x->x_fontsize, 0, NULL);
+
+    if (argc == 2)
+    {
+        fielddesc_setfloatarg(&x->x_fontsize, argc--, argv++);
+        got_font_size = 1;
+    }
     if (argc)
-        x->x_label = atom_getsymbolarg(0, argc, argv);
-    else x->x_label = &s_;
+    {
+        if (argv->a_type == A_SYMBOL || got_font_size)
+        {
+            x->x_label = atom_getsymbolarg(0, argc, argv);
+            if (!got_font_size) 
+                fielddesc_setfloatarg(&x->x_fontsize, 0, NULL);         
+        }
+        else if (argv->a_type == A_FLOAT)
+        {
+            fielddesc_setfloatarg(&x->x_fontsize, argc, argv);
+            x->x_label = &s_;
+        }
+    } else {
+        fielddesc_setfloatarg(&x->x_fontsize, 0, NULL);
+        x->x_label = &s_;
+    }
 
     return (x);
 }
@@ -6583,6 +6602,7 @@ static void *drawsymbol_new(t_symbol *classsym, t_int argc, t_atom *argv)
     t_drawsymbol *x = (t_drawsymbol *)pd_new(drawsymbol_class);
     char *classname = classsym->s_name;
     int flags = 0;
+    int got_font_size = 0;
     
     if (classname[4] == 's')
         flags |= DRAW_SYMBOL;
@@ -6615,11 +6635,29 @@ static void *drawsymbol_new(t_symbol *classsym, t_int argc, t_atom *argv)
     else fielddesc_setfloat_const(&x->x_yloc, 0);
     if (argc) fielddesc_setfloatarg(&x->x_color, argc--, argv++);
     else fielddesc_setfloat_const(&x->x_color, 1);
-    if (argc == 2) fielddesc_setfloatarg(&x->x_fontsize, argc--, argv++);
-    else fielddesc_setfloatarg(&x->x_fontsize, 0, NULL);
+
+    if (argc == 2)
+    {
+        fielddesc_setfloatarg(&x->x_fontsize, argc--, argv++);
+        got_font_size = 1;
+    }
     if (argc)
-        x->x_label = atom_getsymbolarg(0, argc, argv);
-    else x->x_label = &s_;
+    {
+        if (argv->a_type == A_SYMBOL || got_font_size)
+        {
+            x->x_label = atom_getsymbolarg(0, argc, argv);
+            if (!got_font_size) 
+                fielddesc_setfloatarg(&x->x_fontsize, 0, NULL);         
+        }
+        else if (argv->a_type == A_FLOAT)
+        {
+            fielddesc_setfloatarg(&x->x_fontsize, argc, argv);
+            x->x_label = &s_;
+        }
+    } else {
+        fielddesc_setfloatarg(&x->x_fontsize, 0, NULL);
+        x->x_label = &s_;
+    }
 
     return (x);
 }
