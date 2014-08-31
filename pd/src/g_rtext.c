@@ -61,6 +61,11 @@ t_rtext *rtext_new(t_glist *glist, t_text *who)
         x->x_drawnwidth = x->x_drawnheight = 0;
     binbuf_gettext(who->te_binbuf, &x->x_buf, &x->x_bufsize);
     glist->gl_editor->e_rtext = x;
+    // here we use a more complex tag which will later help us properly
+    // select objects inside a gop on its parent that are otherwise not
+    // supposed to be there (they don't belong to that canvas). See
+    // in pd.tk pdtk_select_all_gop_widgets function and how it affects
+    // draw data structures that are displayed via gop (Ico 20140831)
     sprintf(x->x_tag, ".x%lx.t%lx", (t_int)glist_getcanvas(x->x_glist),
         (t_int)x);
     return (x);
