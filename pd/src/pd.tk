@@ -2198,6 +2198,8 @@ proc menu_fixeditmenu {name} {
 			global autotips
 			#global magicglass
 
+			pdtk_canvas_leaveitem $name.c
+
 			pdtk_canvas_tooltips $name $autotips
 			#pdtk_canvas_magicglassval $name $magicglass
 
@@ -3486,7 +3488,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
     set pdtk_canvas_mouseup_name ""
 
 	bind $name <FocusIn> "menu_fixeditmenu $name"
-	# bind $name <FocusOut> { pdtk_noselect %W }
+	bind $name <FocusOut> "pdtk_canvas_leaveitem $name.c"
 	if { $k12_mode == 1 } { pd [concat $name tooltips 1 \;] }
     after idle [concat focus $name.c]
 
@@ -5332,6 +5334,8 @@ proc pdtk_gatom_dialog {id initwidth initlo inithi \
 
 proc popup_action {name action} {
     global popup_xpix popup_ypix
+    #puts stderr "popup_action $name"
+    pdtk_canvas_leaveitem $name.c
 	if {[string compare $name .c]} {
 		set name [string trimright $name .c]
 	}
@@ -8165,6 +8169,7 @@ proc pdtk_canvas_displace_withtag {w dx dy} {
 
 # move activewidth to toggle on editmode?
 proc pdtk_canvas_leaveitem {w} {
+	#puts stderr "pdtk_canvas_leaveitem $w"
     variable afterid
     variable current_window
 	variable duplicate_tags
