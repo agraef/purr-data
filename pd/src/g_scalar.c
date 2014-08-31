@@ -473,29 +473,14 @@ void scalar_select(t_gobj *z, t_glist *owner, int state)
             glist_getcanvas(owner), x);
         sys_vgui(".x%lx.c addtag scalar_selected withtag {.scalar%lx}\n",
             glist_getcanvas(owner), x->sc_vec);
-        if (x->sc_selected != glist_getcanvas(owner))
-        {
-            // we are inside gop
-            sys_vgui(".x%lx.c addtag scalarGOP withtag blankscalar%lx\n",
-                glist_getcanvas(owner), x);
-            sys_vgui(".x%lx.c addtag scalarGOP withtag {.scalar%lx}\n",
-                glist_getcanvas(owner), x->sc_vec);
-        }
     }
     else
     {
+        x->sc_selected = 0;
         sys_vgui(".x%lx.c dtag blankscalar%lx selected\n",
             glist_getcanvas(owner), x);
         sys_vgui(".x%lx.c dtag .scalar%lx scalar_selected\n",
             glist_getcanvas(owner), x->sc_vec);
-        if (x->sc_selected != glist_getcanvas(owner))
-        {
-            sys_vgui(".x%lx.c dtag blankscalar%lx scalarGOP\n",
-                    glist_getcanvas(owner), x);
-                sys_vgui(".x%lx.c dtag .scalar%lx scalarGOP\n",
-                    glist_getcanvas(owner), x->sc_vec);
-        }
-        x->sc_selected = 0;
     }
     //sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n",
     //    glist_getcanvas(owner), owner, state);
