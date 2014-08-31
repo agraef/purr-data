@@ -8157,16 +8157,24 @@ proc pdtk_canvas_update_sticky_tip {w} {
 }
     # move normal selected items and add (dx, dy) to selected scalars' matrices
 proc pdtk_canvas_displace_withtag {w dx dy} {
+	#puts stderr "pdtk_canvas_displace_withtag $dx $dy"
     $w move selected $dx $dy
-    foreach item [$w find withtag scalar_selected] {
+    foreach item [$w find withtag {scalar_selected&&!scalarGOP}] {
         set matrix [lindex [$w itemconfigure $item -matrix] 4]
         #puts stderr "A:$matrix"
         set newx [expr {[lindex $matrix 2 0] + $dx}]
         set newy [expr {[lindex $matrix 2 1] + $dy}]
-        #set newx [expr {[lindex $matrix 2 0] + ($dx * [expr 1.0-[lindex $matrix 0 0]])}]
-        #set newy [expr {[lindex $matrix 2 1] + ($dy * [expr 1.0-[lindex $matrix 1 1]])}]
         set matrix [lreplace $matrix 2 2 [list $newx $newy]]
         #puts stderr "B:$matrix"
+        $w itemconfigure $item -matrix $matrix
+    }
+    foreach item [$w find withtag {scalar_selected&&scalarGOP}] {
+        set matrix [lindex [$w itemconfigure $item -matrix] 4]
+        #puts stderr "C:$matrix"
+        set newx [expr {[lindex $matrix 2 0] + ($dx * [expr 1.0-[lindex $matrix 0 0]])}]
+        set newy [expr {[lindex $matrix 2 1] + ($dy * [expr 1.0-[lindex $matrix 1 1]])}]
+        set matrix [lreplace $matrix 2 2 [list $newx $newy]]
+        #puts stderr "D:$matrix"
         $w itemconfigure $item -matrix $matrix
     }
 }

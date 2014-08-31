@@ -1052,6 +1052,9 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
             tag, x1, y1, x2, y2);
         if (glist_isselected(parent_glist, gr))
             gobj_select(gr, parent_glist, 1);
+        // here we check for changes in scrollbar because of legacy
+        // objects that can fall outside gop window, e.g. scalars
+        canvas_getscroll(glist_getcanvas(x->gl_owner));
         //fprintf(stderr,"******************graph_vis SELECT\n");
     }
     else
@@ -1063,6 +1066,9 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
         glist_eraseiofor(parent_glist, &x->gl_obj, tag);
         for (g = x->gl_list; g; g = g->g_next)
             gobj_vis(g, x, 0);
+        // here we check for changes in scrollbar because of legacy
+        // objects that can fall outside gop window, e.g. scalars
+        canvas_getscroll(glist_getcanvas(x->gl_owner));
     }
 }
 

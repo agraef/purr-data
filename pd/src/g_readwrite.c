@@ -354,6 +354,8 @@ void canvas_dataproperties(t_canvas *x, t_scalar *sc, t_binbuf *b)
         }
         else newone->g_next = x->gl_list, x->gl_list = newone;
     }
+    // here we check for changes in scrollbar due to potential repositioning
+    canvas_getscroll(x);
 didit:
     ;
 }
