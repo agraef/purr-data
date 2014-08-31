@@ -3884,7 +3884,7 @@ typedef struct {int x,y;} intxy;
    http://www.tcl.tk/cgi-bin/tct/tip/168.html */
 void curve_smooth_to_q(int *pix, int n, int closed)
 {
-    fprintf(stderr,"curve_smooth_to_q closed=%d\n", closed);
+    //fprintf(stderr,"curve_smooth_to_q closed=%d\n", closed);
     intxy *p = (intxy *)pix;
     int i, end = (closed ? n : n - 1);
     int a = 0, b = 0;
