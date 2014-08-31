@@ -573,6 +573,7 @@ static void scalar_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
         x->sc_y1 += dy;
         x->sc_y2 += dy;
     }
+    //fprintf(stderr,"gotx=%d goty=%d\n", gotx, goty);
     scalar_getbasexy(x, &basex, &basey);
     gpointer_init(&gp);
     gpointer_setglist(&gp, glist, x);
