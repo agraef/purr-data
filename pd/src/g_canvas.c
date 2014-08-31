@@ -1179,6 +1179,28 @@ void canvas_closebang(t_canvas *x)
       }
 }
 
+// we use this function to check if the canvas that has sent out the <config>
+// signal, meaning it has been resized, if we have scalars in there and
+// the canvas has gop enabled, we need to redraw the window to make sure
+// scalars scale with the window
+void canvas_checkconfig(t_canvas *x)
+{
+    //fprintf(stderr,"canvas_checkconfig\n");
+    t_gobj *y;
+    if (x->gl_isgraph)
+    {
+        for (y = x->gl_list; y; y = y->g_next)
+        {
+            if (pd_class(&y->g_pd) == scalar_class)
+            {
+                //fprintf(stderr,"...redrawing\n");
+                canvas_redraw(x);
+                break;
+            }
+        }
+    }
+}
+
 /* needed for readjustment of garrays */
 extern t_array *garray_getarray(t_garray *x);
 extern void garray_fittograph(t_garray *x, int n, int flag);
@@ -1221,6 +1243,7 @@ static void canvas_relocate(t_canvas *x, t_symbol *canvasgeom,
             }
         }
     }
+    canvas_checkconfig(x);
 }
 
 void canvas_popabstraction(t_canvas *x)
@@ -2204,6 +2227,8 @@ void g_canvas_setup(void)
         gensym("rename"), A_GIMME, 0);
     class_addmethod(canvas_class, (t_method)canvas_forwardmess,
         gensym("forwardmess"), A_GIMME, 0);
+    class_addmethod(canvas_class, (t_method)canvas_checkconfig,
+        gensym("checkconfig"), A_NULL, 0);
 
 /*---------------------------- tables -- GG ------------------- */
 
