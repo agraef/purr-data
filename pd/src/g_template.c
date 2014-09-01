@@ -1407,7 +1407,7 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
       need to experiment with gop scalars to make sure I'm not breaking
       anything */ 
     int in_array = (sc->sc_vec != data);
-    post("in_array is %d", in_array);
+    //post("in_array is %d", in_array);
     char tag[MAXPDSTRING];
     if (x->x_type == gensym("group"))
     {
@@ -2240,7 +2240,7 @@ void svg_parsetransform(t_svg *x, t_template *template, t_word *data,
     t_fielddesc *fd = x->x_transform;
     /* should probably change this to argc > 0 since a screwup
        could land us in negativeland */
-    while (argc)
+    while (argc > 0)
     {
         if (fd->fd_un.fd_varsym)
             type = fd->fd_un.fd_varsym;
