@@ -309,7 +309,11 @@ int sys_main(int argc, char **argv)
         int length = 0;
         t_namelist *nl;
         for (nl = sys_openlist; nl; nl = nl->nl_next)
-            length = length + strlen(nl->nl_string) + 1;
+        {
+            // for starting and ending quotes plus a space or null terminating
+            // character, we add 3 additional characters per entry
+            length = length + strlen(nl->nl_string) + 3;
+        }
         if((filenames = malloc(length)) != NULL)
         {
             filenames[0] = '\0';   // ensures the memory is an empty string
@@ -321,7 +325,7 @@ int sys_main(int argc, char **argv)
                     strcat(filenames,nl->nl_string);
                     if (nl->nl_next)
                         strcat(filenames,"\" \"");
-                    else strcat(filenames,"\"");
+                    else strcat(filenames,"\"\0"); // ensures proper termination
                 }
             }
             //fprintf(stderr,"final list: <%s>\n", filenames);
