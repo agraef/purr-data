@@ -247,20 +247,27 @@ void binbuf_gettext(t_binbuf *x, char **bufp, int *lengthp)
     char string[MAXPDSTRING];
     t_atom *ap;
     int indx;
+    int newlength;
 
     for (ap = x->b_vec, indx = x->b_n; indx--; ap++)
     {
-        int newlength;
+        //fprintf(stderr,"=====\n");
         if ((ap->a_type == A_SEMI || ap->a_type == A_COMMA) &&
-                length && buf[length-1] == ' ') length--;
+                length && buf[length-1] == ' ') 
+        {
+            //fprintf(stderr, "subtracting length\n");
+            length--;
+        }
         atom_string(ap, string, MAXPDSTRING);
         newlength = length + strlen(string) + 1;
         if (!(newbuf = resizebytes(buf, length, newlength))) break;
         buf = newbuf;
+        //fprintf(stderr,"string=<%s> buf=<%s> length=%d\n", string, buf, length);
         strcpy(buf + length, string);
         length = newlength;
         if (ap->a_type == A_SEMI) buf[length-1] = '\n';
         else buf[length-1] = ' ';
+        //if (ap->a_type == A_COMMA) length--;
     }
     if (length && buf[length-1] == ' ')
     {
