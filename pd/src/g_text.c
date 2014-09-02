@@ -1618,7 +1618,7 @@ static void text_vis(t_gobj *z, t_glist *glist, int vis)
             t_rtext *y = glist_findrtext(glist, x);
             if (gobj_shouldvis(&x->te_g, glist))
             {
-                //fprintf(stderr,"    erase it\n");
+                //fprintf(stderr,"    erase it %lx %lx\n", x, glist);
                 text_eraseborder(x, glist, rtext_gettag(y));
                 rtext_erase(y);
             }
@@ -2194,7 +2194,8 @@ void glist_eraseiofor(t_glist *glist, t_object *ob, char *tag)
 
 void text_eraseborder(t_text *x, t_glist *glist, char *tag)
 {
-    //if (x->te_type == T_TEXT) return;
+    if (x->te_type == T_TEXT && !glist->gl_edit) return;
+    //if (!glist_isvisible(glist)) return;
     sys_vgui(".x%lx.c delete %sR\n",
         glist_getcanvas(glist), tag);
     glist_eraseiofor(glist, x, tag);

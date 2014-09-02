@@ -849,7 +849,7 @@ void glist_menu_open(t_glist *x)
 
 int glist_isvisible(t_glist *x)
 {
-    return ((!x->gl_loading) && glist_getcanvas(x)->gl_mapped);
+    return ((!x->gl_loading) && ((x->gl_isgraph && glist_getcanvas(x)->gl_mapped) || (!x->gl_isgraph && x->gl_mapped)));
 }
 
 int glist_istoplevel(t_glist *x)
@@ -872,6 +872,7 @@ extern void canvas_group_free(t_pd *x);
 
 void canvas_free(t_canvas *x)
 {
+    //fprintf(stderr,"canvas_free %lx\n", (t_int)x);
     t_gobj *y;
     int dspstate = canvas_suspend_dsp();
 
@@ -888,8 +889,8 @@ void canvas_free(t_canvas *x)
         glist_delete(x, y);
     if (x == glist_getcanvas(x))
         canvas_vis(x, 0);
-     if (x->gl_editor)
-         canvas_destroy_editor(x);   /* bug workaround; should already be gone*/
+    if (x->gl_editor)
+        canvas_destroy_editor(x);   /* bug workaround; should already be gone*/
 
     if (x-> x_handle) scalehandle_free( x->x_handle);
     if (x->x_mhandle) scalehandle_free(x->x_mhandle);

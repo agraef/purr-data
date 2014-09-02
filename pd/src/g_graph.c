@@ -143,7 +143,7 @@ extern t_rtext *glist_tryfindrtext(t_glist *gl, t_text *who);
     /* delete an object from a glist and free it */
 void glist_delete(t_glist *x, t_gobj *y)
 {
-    //fprintf(stderr,"glist_delete?\n");
+    //fprintf(stderr,"glist_delete y=%lx x=%lx glist_getcanvas=%lx\n", y, x, glist_getcanvas(x));
     if (x->gl_list)
     {
         //fprintf(stderr,"glist_delete YES\n");
@@ -184,22 +184,25 @@ void glist_delete(t_glist *x, t_gobj *y)
                 zap the inlets and outlets here... */
             if (pd_class(&y->g_pd) == canvas_class)
             {
-                t_glist *gl = (t_glist *)y;
-                if (gl->gl_isgraph)
+                if (glist_isvisible(x))
                 {
-                    char tag[80];
-                    //sprintf(tag, "graph%lx", (t_int)gl);
-                    //t_glist *yy = (t_glist *)y;
-                    sprintf(tag, "%s",
-                        rtext_gettag(glist_findrtext(x, &gl->gl_obj)));
-                    glist_eraseiofor(x, &gl->gl_obj, tag);
-                    text_eraseborder(&gl->gl_obj, x,
-                        rtext_gettag(glist_findrtext(x, &gl->gl_obj)));
-                }
-                else
-                {
-                    text_eraseborder(&gl->gl_obj, x,
-                        rtext_gettag(glist_findrtext(x, &gl->gl_obj)));
+                    t_glist *gl = (t_glist *)y;
+                    if (gl->gl_isgraph)
+                    {
+                        char tag[80];
+                        //sprintf(tag, "graph%lx", (t_int)gl);
+                        //t_glist *yy = (t_glist *)y;
+                        sprintf(tag, "%s",
+                            rtext_gettag(glist_findrtext(x, &gl->gl_obj)));
+                        glist_eraseiofor(x, &gl->gl_obj, tag);
+                        text_eraseborder(&gl->gl_obj, x,
+                            rtext_gettag(glist_findrtext(x, &gl->gl_obj)));
+                    }
+                    else
+                    {
+                        text_eraseborder(&gl->gl_obj, x,
+                            rtext_gettag(glist_findrtext(x, &gl->gl_obj)));
+                    }
                 }
             }
         }
@@ -215,7 +218,10 @@ void glist_delete(t_glist *x, t_gobj *y)
             }
         }
         if (glist_isvisible(canvas))
+        {
+            //fprintf(stderr,"...deleting %lx %lx\n", x, glist_getcanvas(x));
             gobj_vis(y, x, 0);
+        }
         if (x->gl_editor && (ob = pd_checkobject(&y->g_pd)))
         {
             //rtext_new(x, ob);
@@ -314,6 +320,9 @@ t_canvas *glist_getcanvas(t_glist *x)
     while (x->gl_owner && !x->gl_havewindow && x->gl_isgraph &&
         gobj_shouldvis(&x->gl_gobj, x->gl_owner))
     {
+            //fprintf(stderr,"x=%lx x->gl_owner=%d x->gl_havewindow=%d x->gl_isgraph=%d gobj_shouldvis=%d\n", 
+            //    x, (x->gl_owner ? 1:0), x->gl_havewindow, x->gl_isgraph, 
+            //    gobj_shouldvis(&x->gl_gobj, x->gl_owner));
             x = x->gl_owner;
             //fprintf(stderr,"+\n");
     }
