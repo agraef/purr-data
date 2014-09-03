@@ -2264,7 +2264,7 @@ static void canvas_rightclick(t_canvas *x, int xpos, int ypos, t_gobj *y_sel)
     if (yclick)
     {
         y = yclick;
-        if (!glist_isselected(x, y))
+        if (x->gl_edit && !glist_isselected(x, y))
             glist_select(x, y);
     }
     // if we are in K12 mode and are requesting popup on comments,
@@ -2820,6 +2820,7 @@ static void canvas_doarrange(t_canvas *x, t_float which, t_gobj *oldy,
 static void canvas_done_popup(t_canvas *x, t_float which, t_float xpos,
     t_float ypos)
 {
+    //fprintf(stderr,"x->gl_edit=%d\n", x->gl_edit);
     //fprintf(stderr,"canvas_done_pupup %lx\n", (t_int)x);
     char namebuf[FILENAME_MAX];
     t_gobj *y=NULL, *oldy=NULL, *oldy_prev=NULL, *oldy_next=NULL,
@@ -2828,12 +2829,15 @@ static void canvas_done_popup(t_canvas *x, t_float which, t_float xpos,
 
     // first deselect any objects that may be already selected
     // if doing action 3 or 4
-    if (which == 3 || which == 4)
+    if (x->gl_edit)
     {
-        if (x->gl_editor->e_selection && x->gl_editor->e_selection->sel_next)
-            glist_noselect(x);
+        if (which == 3 || which == 4)
+        {
+            if (x->gl_editor->e_selection && x->gl_editor->e_selection->sel_next)
+                glist_noselect(x);
+        }
+        else glist_noselect(x);
     }
-    else glist_noselect(x);
 
     // mark the beginning of the glist for front/back
     y_begin = x->gl_list;
@@ -2842,8 +2846,8 @@ static void canvas_done_popup(t_canvas *x, t_float which, t_float xpos,
 
     ///if (which == 3 || which == 4) {
         // if no object has been selected for to-front/back action
-    if (!x->gl_editor->e_selection)
-    {
+    //if (!x->gl_editor->e_selection)
+    //{
         //fprintf(stderr,"doing hitbox\n");
         for (y = x->gl_list; y; y = y->g_next)
         {
@@ -2852,104 +2856,113 @@ static void canvas_done_popup(t_canvas *x, t_float which, t_float xpos,
                 yclick = y;
             }
         }
-        if (yclick)
-        { 
-            y = yclick;
-            if (!x->gl_edit)
-                canvas_editmode(x, 1);
-            if (!glist_isselected(x, y))
-                glist_select(x, y);
-        }
-    }
+        //if (yclick)
+        //{ 
+        //    y = yclick;
+        //    if (!x->gl_edit)
+        //        canvas_editmode(x, 1);
+        //    if (!glist_isselected(x, y))
+        //        glist_select(x, y);
+        //}
+    //}
     //}
 
     // this was a bogus/unsupported call for tofront/back--get me out of here!
     // we don't have to check for multiple objects being selected since we
     // did noselect above explicitly for cases 3 and 4 when detecting
     // more than one selected object
-    if ((which == 3 || which == 4) && !x->gl_editor->e_selection)
+    // 20140902 Ico: I don't think we need this...
+    if ((which == 3 || which == 4) && !yclick)
     {
         post("Popup action could not be performed because no object "
              "was found under the cursor...");
         return;
     }
     
-    for (y = x->gl_list; y; y = y->g_next)
+    if (yclick)
     {
-        if (which == 3 || which == 4) /* to-front or to-back */
+        for (y = x->gl_list; y; y = y->g_next)
         {
-            if (!x->gl_edit)
-                canvas_editmode(x, 1);
-
-            // if next one is the one selected for moving
-            if (y->g_next && glist_isselected(x, y->g_next))
+            if (which == 3 || which == 4) /* to-front or to-back */
             {
-                oldy_prev = y;
-                oldy = y->g_next;
-                //if there is more after the selected object
-                if (oldy->g_next)
-                    oldy_next = oldy->g_next;
+                // if next one is the one selected for moving
+                if (y->g_next && yclick == y->g_next)
+                {
+                    oldy_prev = y;
+                    oldy = y->g_next;
+                    //if there is more after the selected object
+                    if (oldy->g_next)
+                        oldy_next = oldy->g_next;
+                }
+                else if (yclick == y && oldy == NULL)
+                {
+                    //selected obj is the first in the cue
+                    oldy = y;
+                    if (y->g_next)
+                        oldy_next = y->g_next;
+                }
             }
-            else if (glist_isselected(x, y) && oldy == NULL)
+            else if (y == yclick)
             {
-                //selected obj is the first in the cue
-                oldy = y;
-                if (y->g_next)
-                    oldy_next = y->g_next;
-            }
-        }
-        else if (glist_isselected(x, y))
-        {
-            if (which == 0)     /* properties */
-            {
-                if (!class_getpropertiesfn(pd_class(&y->g_pd)))
-                    continue;
-                else {
-                    if (!x->gl_edit)
-                        canvas_editmode(x, 1);
-                    //if (!glist_isselected(x, y))
-                    //    glist_select(x, y);
-                    (*class_getpropertiesfn(pd_class(&y->g_pd)))(y, x);
+                if (which == 0)     /* properties */
+                {
+                    if (!class_getpropertiesfn(pd_class(&y->g_pd)))
+                        continue;
+                    else {
+                        if (!x->gl_edit)
+                            canvas_editmode(x, 1);
+                        if (!glist_isselected(x, y))
+                            glist_select(x, y);
+                        (*class_getpropertiesfn(pd_class(&y->g_pd)))(y, x);
+                        return;
+                    }
+                }
+                else if (which == 1)    /* open */
+                {
+                    //fprintf(stderr,"OPEN\n");
+                    if (!zgetfn(&y->g_pd, gensym("menu-open")))
+                        continue;
+                    vmess(&y->g_pd, gensym("menu-open"), "");
                     return;
                 }
-            }
-            else if (which == 1)    /* open */
-            {
-                //fprintf(stderr,"OPEN\n");
-                if (!zgetfn(&y->g_pd, gensym("menu-open")))
-                    continue;
-                vmess(&y->g_pd, gensym("menu-open"), "");
-                return;
-            }
-            else if (which == 2)   /* help */
-            {
-                char *dir;
-                if (pd_class(&y->g_pd) == canvas_class &&
-                    canvas_isabstraction((t_canvas *)y))
+                else if (which == 2)   /* help */
                 {
-                    t_object *ob = (t_object *)y;
-                    int ac = binbuf_getnatom(ob->te_binbuf);
-                    t_atom *av = binbuf_getvec(ob->te_binbuf);
-                    if (ac < 1)
-                        return;
-                    atom_string(av, namebuf, FILENAME_MAX);
-                    dir = canvas_getdir((t_canvas *)y)->s_name;
+                    char *dir;
+                    if (pd_class(&y->g_pd) == canvas_class &&
+                        canvas_isabstraction((t_canvas *)y))
+                    {
+                        t_object *ob = (t_object *)y;
+                        int ac = binbuf_getnatom(ob->te_binbuf);
+                        t_atom *av = binbuf_getvec(ob->te_binbuf);
+                        if (ac < 1)
+                            return;
+                        atom_string(av, namebuf, FILENAME_MAX);
+                        dir = canvas_getdir((t_canvas *)y)->s_name;
+                    }
+                    else
+                    {
+                        strcpy(namebuf, class_gethelpname(pd_class(&y->g_pd)));
+                        dir = class_gethelpdir(pd_class(&y->g_pd));
+                    }
+                    if (strlen(namebuf) < 4 ||
+                        strcmp(namebuf + strlen(namebuf) - 3, ".pd"))
+                            strcat(namebuf, ".pd");
+                    open_via_helppath(namebuf, dir);
+                    return;
                 }
-                else
-                {
-                    strcpy(namebuf, class_gethelpname(pd_class(&y->g_pd)));
-                    dir = class_gethelpdir(pd_class(&y->g_pd));
-                }
-                if (strlen(namebuf) < 4 ||
-                    strcmp(namebuf + strlen(namebuf) - 3, ".pd"))
-                        strcat(namebuf, ".pd");
-                open_via_helppath(namebuf, dir);
-                return;
             }
         }
     }
 
     y_end = glist_nth(x, glist_getindex(x,0) - 1);
+
+    if (which == 3 || which == 4)
+    {
+        if (!x->gl_edit)
+            canvas_editmode(x, 1);
+        if (!glist_isselected(x, yclick))
+            glist_select(x, yclick);
+    }
 
     if (which == 3 && y_end != oldy) /* to front */
     {
