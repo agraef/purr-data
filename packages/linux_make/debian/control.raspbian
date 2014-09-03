@@ -10,7 +10,7 @@ Depends: xterm | x-terminal-emulator, ttf-dejavu-core, tcl, tk, libasound2, libj
 Provides: pd-l2ork
 Installed-Size: 90624
 Recommends: xdg-utils, pulseaudio-utils, tap-plugins, ladspa-foo-plugins, invada-studio-plugins-ladspa, blepvco, swh-plugins, mcp-plugins, cmt, blop, slv2-jack, omins, ubuntustudio-audio-plugins, rev-plugins, libslv2-dev, dssi-utils, vco-plugins, wah-plugins, fil-plugins, mda-lv2
-Conflicts: puredata-utils, cyclist
+Conflicts: cyclist
 Replaces: pd-l2ork
 Description:  Interactive multimedia programming environment
  .
