@@ -15,7 +15,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <pthread.h>
-#include "g_canvas.h"
+//#include "g_canvas.h"
 #include "wiringPi/wiringPi/wiringPi.h"
 #include "wiringPi/wiringPi/softPwm.h"
 
