@@ -1274,7 +1274,7 @@ static void *subcanvas_new(t_symbol *s)
 {
     t_atom a[6];
     t_canvas *x, *z = canvas_getcurrent();
-    fprintf(stderr,"subcanvas_new current canvas .x%lx\n", (t_int)z);
+    //fprintf(stderr,"subcanvas_new current canvas .x%lx\n", (t_int)z);
     if (!*s->s_name) s = gensym("/SUBPATCH/");
     SETFLOAT(a, 0);
     SETFLOAT(a+1, GLIST_DEFCANVASYLOC);
