@@ -820,9 +820,10 @@ void glist_redraw(t_glist *x)
                 /* redraw all the lines */
             linetraverser_start(&t, x);
             while (oc = linetraverser_next(&t))
-                sys_vgui(".x%lx.c coords l%lx %d %d %d %d\n",
-                    glist_getcanvas(x), oc,
-                        t.tr_lx1, t.tr_ly1, t.tr_lx2, t.tr_ly2);
+                canvas_updateconnection(glist_getcanvas(x), t.tr_lx1, t.tr_ly1, t.tr_lx2, t.tr_ly2, (t_int)oc);
+                //sys_vgui(".x%lx.c coords l%lx %d %d %d %d\n",
+                //    glist_getcanvas(x), oc,
+                //        t.tr_lx1, t.tr_ly1, t.tr_lx2, t.tr_ly2);
             canvas_drawredrect(x, 0);
             if (x->gl_goprect)
             {
