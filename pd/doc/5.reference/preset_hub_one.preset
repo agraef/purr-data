@@ -1,1 +1,1 @@
-#hubpreset 1 %node% 2 86 7 %preset% 1 1 %node% 2 86 9 %preset% 1 one %node% 2 86 11
+#hubpreset 1 %node% 1 7 %preset% 1 1 %node% 1 9 %preset% 1 one

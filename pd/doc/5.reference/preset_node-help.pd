@@ -47,29 +47,29 @@ nlah 1 %preset% 2 1 2 3 4 %node% 2 50 0 %preset% 0 0 %preset% 1 1 %preset%
 2 2;
 #X msg 78 74 store \$1;
 #X msg 78 124 recall \$1;
-#X floatatom 78 50 5 0 0 0 - - -;
-#X floatatom 78 100 5 0 0 0 - - -;
+#X floatatom 78 50 5 0 0 0 - - -, f 5;
+#X floatatom 78 100 5 0 0 0 - - -, f 5;
 #X msg 28 73 purge;
 #X msg 18 51 reset;
 #X msg 79 174 clear \$1;
-#X floatatom 79 150 5 0 0 0 - - -;
+#X floatatom 79 150 5 0 0 0 - - -, f 5;
 #X obj 18 231 print hub_test_says;
 #X obj 186 267 preset_node test;
-#X floatatom 186 295 5 0 0 0 - - -;
+#X floatatom 186 295 5 0 0 0 - - -, f 5;
 #X msg 195 213 purge;
 #X msg 143 190 reset;
 #X msg 246 212 clearall \$1;
-#X floatatom 246 191 5 0 0 0 - - -;
+#X floatatom 246 191 5 0 0 0 - - -, f 5;
 #X obj 377 50 cnv 15 156 279 empty empty empty 20 12 0 14 -233017 -66577
 0;
 #X msg 448 83 store \$1;
 #X msg 448 134 recall \$1;
-#X floatatom 448 59 5 0 0 0 - - -;
-#X floatatom 448 110 5 0 0 0 - - -;
+#X floatatom 448 59 5 0 0 0 - - -, f 5;
+#X floatatom 448 110 5 0 0 0 - - -, f 5;
 #X msg 396 82 purge;
 #X msg 387 60 reset;
 #X msg 448 184 clear \$1;
-#X floatatom 448 160 5 0 0 0 - - -;
+#X floatatom 448 160 5 0 0 0 - - -, f 5;
 #X obj 387 217 preset_hub another %hidden% %node% 1 43 %preset% 0 -5.1
 %preset% 1 22 %preset% 2 1.001 %node% 2 50 2 %preset% 0 41 %preset%
 1 101 %preset% 2 7.13;
@@ -84,9 +84,9 @@ nlah 1 %preset% 2 1 2 3 4 %node% 2 50 0 %preset% 0 0 %preset% 1 1 %preset%
 #X msg 238 115 list 1 2 3 4;
 #N canvas 523 458 404 229 sub 0;
 #X obj 237 69 preset_node test;
-#X floatatom 237 92 5 0 0 0 - - -;
+#X floatatom 237 92 5 0 0 0 - - -, f 5;
 #X obj 113 69 preset_node another;
-#X floatatom 113 91 5 0 0 0 - - -;
+#X floatatom 113 91 5 0 0 0 - - -, f 5;
 #X text 111 41 a preset in a subpatch;
 #X connect 0 0 1 0;
 #X connect 2 0 3 0;
@@ -131,13 +131,14 @@ same canvas as the abstraction:;
 0;
 #X msg 213 406 store \$1;
 #X obj 213 382 hradio 15 1 0 2 empty empty empty 0 -8 0 10 -262144
--1 -1 0;
+-1 -1 1;
 #X msg 275 406 recall \$1;
 #X msg 92 382 set some_scope;
 #X obj 58 407 preset_node some_scope;
 #X obj 213 433 preset_hub %hidden% %node% 2 60 17 %preset% 0 50 %preset%
-1 100 %node% 2 60 19 %preset% 0 50 %preset% 1 100;
-#X floatatom 58 435 5 0 0 0 - - -;
+1 100 %node% 2 60 19 %preset% 0 50 %preset% 1 100 %node% 1 19 %preset%
+0 1 %preset% 1 5;
+#X floatatom 58 435 5 0 0 0 - - -, f 5;
 #X text 19 275 Setting node scope via "set" message allows for dynamic
 scope switching. If you wish to set it to the default (also known as
 null or "") scope \, you should use empty "set" message. Notice in
@@ -171,17 +172,13 @@ hub);
 #X msg 308 242 set test;
 #X obj 381 293 cnv 15 44 27 empty empty empty 20 12 0 14 -204280 -66577
 0;
-#X floatatom 387 298 5 0 0 0 - - -;
+#X floatatom 387 298 5 0 0 0 - - -, f 5;
 #X text 169 765 - OPTIONAL scope for this preset (defaults to null
 or "");
 #X text 96 543 read;
 #X text 96 573 write;
 #X text 96 603 readpreset;
 #X text 96 643 writepreset;
-#X text 166 543 - reads all presets from a file named in the second
-argument (forwarded to hub);
-#X text 166 573 - write all presets to a file named in the second argument
-(forwarded to hub);
 #X text 166 603 - read one preset (optional 3rd argumemnt \, otherwise
 preset 0) from a file named in the second argument (forwarded to hub)
 ;
@@ -208,6 +205,10 @@ messages when supplied no argument default to null (empty string) or
 #X text 166 496 - sort all presets chronologically and assign them
 new preset numbers one after another starting with a value n or 0 if
 no value provided (forwarded to hub);
+#X text 166 573 - write all presets to a file named in the first argument
+(forwarded to hub);
+#X text 166 543 - reads all presets from a file named in the first
+argument (forwarded to hub);
 #X connect 15 0 24 0;
 #X connect 16 0 15 0;
 #X connect 17 0 15 0;
@@ -239,4 +240,4 @@ no value provided (forwarded to hub);
 #X connect 49 0 45 0;
 #X connect 69 0 25 0;
 #X connect 70 0 25 0;
-#X connect 84 0 25 0;
+#X connect 82 0 25 0;

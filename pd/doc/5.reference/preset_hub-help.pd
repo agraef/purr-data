@@ -55,11 +55,11 @@ to conform to the PDDP template for Pd version 0.42.;
 0;
 #X msg 447 139 store \$1;
 #X msg 447 80 recall \$1;
-#X floatatom 447 115 5 0 0 0 - - -;
+#X floatatom 447 115 5 0 0 0 - - -, f 5;
 #X msg 395 82 purge;
 #X msg 386 60 reset;
 #X msg 447 190 clear \$1;
-#X floatatom 447 166 5 0 0 0 - - -;
+#X floatatom 447 166 5 0 0 0 - - -, f 5;
 #X obj 386 217 preset_hub another %hidden% %node% 1 32 %preset% 0 99
 %preset% 1 65 %preset% 2 123 %preset% 3 0 %node% 2 39 2 %preset% 0
 19 %preset% 1 0.23 %preset% 2 999 %preset% 3 0.01;
@@ -74,9 +74,9 @@ to conform to the PDDP template for Pd version 0.42.;
 #X msg 241 111 list 1 2 3 4;
 #N canvas 778 51 404 229 sub 0;
 #X obj 237 69 preset_node test;
-#X floatatom 237 92 5 0 0 0 - - -;
+#X floatatom 237 92 5 0 0 0 - - -, f 5;
 #X obj 113 69 preset_node another;
-#X floatatom 113 91 5 0 0 0 - - -;
+#X floatatom 113 91 5 0 0 0 - - -, f 5;
 #X text 111 41 a preset in a subpatch;
 #X connect 0 0 1 0;
 #X connect 2 0 3 0;
@@ -88,11 +88,11 @@ to conform to the PDDP template for Pd version 0.42.;
 #X text 98 436 store;
 #X obj 381 305 cnv 15 44 27 empty empty empty 20 12 0 14 -204280 -66577
 0;
-#X floatatom 386 310 5 0 0 0 - - -;
+#X floatatom 386 310 5 0 0 0 - - -, f 5;
 #X obj 80 52 hradio 15 1 0 4 empty empty empty 0 -8 0 10 -262144 -1
 -1 0;
-#X floatatom 80 102 5 0 0 0 - - -;
-#X floatatom 80 151 5 0 0 0 - - -;
+#X floatatom 80 102 5 0 0 0 - - -, f 5;
+#X floatatom 80 151 5 0 0 0 - - -, f 5;
 #X obj 447 58 hradio 15 1 0 4 empty empty empty 0 -8 0 10 -262144 -1
 -1 0;
 #X obj 98 930 pddp/pddplink preset_node-help.pd;
@@ -103,13 +103,13 @@ of that patch's children (i.e. \, subpatches and abstractions).;
 #X text 98 356 clear;
 #X text 168 356 - clears preset n for all nodes;
 #X obj 483 4 preset_hub %hidden% %node% 2 10 1 %node% 2 90 37 %node%
-3 10 3 37;
+3 10 3 37 %node% 3 10 3 36;
 #X obj 189 271 preset_node test;
-#X floatatom 189 299 5 0 0 0 - - -;
+#X floatatom 189 299 5 0 0 0 - - -, f 5;
 #X msg 198 211 purge;
 #X msg 189 189 reset;
 #X msg 249 210 clearall \$1;
-#X floatatom 249 189 5 0 0 0 - - -;
+#X floatatom 249 189 5 0 0 0 - - -, f 5;
 #X msg 232 244 set another;
 #X msg 311 244 set test;
 #X text 171 712 - OPTIONAL scope for this preset (defaults to null
@@ -127,10 +127,6 @@ changes to the preset will not trigger "patch dirty" message;
 that renders preset_hub invisible to GUI operations;
 #X text 98 519 write;
 #X text 98 539 readpreset;
-#X text 168 519 - write all presets to a file named in the second argument
-;
-#X text 168 499 - reads all presets from a file named in the second
-argument;
 #X text 168 539 - read one preset (optional 3rd argumemnt \, otherwise
 preset 0) from a file named in the second argument;
 #X text 98 569 writepreset;
@@ -167,12 +163,12 @@ same canvas as the abstraction:;
 -1 0;
 #X msg 19 159 recall \$1;
 #X obj 85 139 hradio 15 1 0 4 empty empty empty 0 -8 0 10 -262144 -1
--1 0;
+-1 3;
 #X msg 85 159 store \$1;
 #X obj 10 238 preset_node another;
-#X floatatom 10 260 5 0 0 0 - - -;
+#X floatatom 10 260 5 0 0 0 - - -, f 5;
 #X obj 135 238 preset_node another;
-#X symbolatom 135 260 10 0 0 0 - - -;
+#X symbolatom 135 260 10 0 0 0 - - -, f 10;
 #X text 263 24 First \, click on read to read all presets stored in
 a separate file. Try recalling presets 0 and 1 Note how storing a new
 preset does not make the patch dirty due to use of the "file" flag.
@@ -239,10 +235,10 @@ with the rest of pd-l2ork \, \$1 with no argument given reverts to
 1 444 %preset% 2 333 %preset% 3 222 %preset% 4 111 %preset% 5 0;
 #X msg 39 63 store \$1;
 #X msg 106 63 recall \$1;
-#X floatatom 39 42 5 0 0 0 - - -;
-#X floatatom 106 41 5 0 0 0 - - -;
+#X floatatom 39 42 5 0 0 0 - - -, f 5;
+#X floatatom 106 41 5 0 0 0 - - -, f 5;
 #X obj 38 135 preset_node \$1;
-#X floatatom 38 157 5 0 0 0 - - -;
+#X floatatom 38 157 5 0 0 0 - - -, f 5;
 #X text 142 39 <-- recall presets 0-5;
 #X text 73 155 <-- note how the value changes with each recall;
 #X text 34 191 Notice how the hub and node are paired even no optional
@@ -274,6 +270,10 @@ or not (1 or 0).;
 #X text 168 456 - sort all presets chronologically and assign them
 new preset numbers one after another starting with a value n or 0 if
 no value provided;
+#X text 168 499 - reads all presets from a file named in the first
+argument;
+#X text 168 519 - write all presets to a file named in the first argument
+;
 #X connect 14 0 20 0;
 #X connect 15 0 14 0;
 #X connect 16 0 14 0;

@@ -1,1 +1,1 @@
-#hub %node% 2 86 7 %preset% 0 0 %preset% 1 1 %node% 2 86 9 %preset% 0 zero %preset% 1 one %node% 2 86 11
+#hub %node% 1 7 %preset% 0 0 %preset% 1 1 %preset% 2 2 %preset% 3 3 %node% 1 9 %preset% 0 zero %preset% 1 one %preset% 2 two %preset% 3 BOO!
