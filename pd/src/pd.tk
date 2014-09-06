@@ -4646,41 +4646,28 @@ proc pdtk_canvas_sendkey {name state key iso shift focus serial} {
 
 	#puts stderr "shift=$shift ctrl=$ctrl key=$key"
 
-	#if {[string match Home $key] && $ctrl} {
-	#	set key "CtrlHome"
-	#	set state 1
-	#}
-
-	#if {[string match End $key] && $ctrl} {
-	#	set key "CtrlEnd"
-	#	set state 1
-	#}
-
-	if {[string match Left $key]} {
-		if {$ctrl == 1 && $shift == 0} {
-			set key "CtrlLeft"
-			set state 1
-		}
-		if {$ctrl == 0 && $shift == 1} {
-			set key "ShiftLeft"
-		}
-		if {$ctrl == 1 && $shift == 1} {
-			set key "CtrlShiftLeft"
-			set state 1
-		}
-	}
-
-	if {[string match Right $key]} {
-		if {$ctrl == 1 && $shift == 0} {
-			set key "CtrlRight"
-			set state 1
-		}
-		if {$ctrl == 0 && $shift == 1} {
-			set key "ShiftRight"
-		}
-		if {$ctrl == 1 && $shift == 1} {
-			set key "CtrlShiftRight"
-			set state 1
+	switch -- $key {
+		Left -
+		Right -
+		Up -
+		Down -
+		Home -
+		End -
+		Next -
+		Prior {
+			if {$ctrl == 1 && $shift == 0} {
+				set key "Ctrl$key"
+				set state 1
+			}
+			if {$ctrl == 0 && $shift == 1} {
+				set key "Shift$key"
+				#set state 1 (this results in a double press)
+			}
+			if {$ctrl == 1 && $shift == 1} {
+				set key "CtrlShift$key"
+				set state 1
+			}
+			#puts stderr "outcome=$key"
 		}
 	}
 

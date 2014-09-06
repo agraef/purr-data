@@ -660,7 +660,7 @@ t_symbol  s__X =        {"#X", 0, 0};
 t_symbol  s_x =         {"x", 0, 0};
 t_symbol  s_y =         {"y", 0, 0};
 t_symbol  s_ =          {"", 0, 0};
-t_symbol  s_blob =    {"blob", 0, 0}; /* MP 20061223 blob type */
+t_symbol  s_blob =      {"blob", 0, 0}; /* MP 20061223 blob type */
 
 static t_symbol *symlist[] = { &s_pointer, &s_float, &s_symbol, &s_bang,
     &s_list, &s_anything, &s_signal, &s__N, &s__X, &s_x, &s_y, &s_, &s_blob}; /* MP 20061223 added s_blob */
@@ -713,6 +713,12 @@ typedef t_pd *(*t_fun6)(t_int i1, t_int i2, t_int i3, t_int i4, t_int i5, t_int 
 /* needed for proper error reporting */
 extern t_pd *pd_mess_from_responder(t_pd *x);
 
+// hackish way to figure out what was the last command we invoked so that commands
+// that follow it (via commas, like the new width ability), can understand whom
+// they belong to. This is a problem with subpatches whose values get assigned to
+// their last created object, as opposed themselves
+t_symbol *last_typedmess;
+
 void pd_typedmess(t_pd *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_class *c = *x;
@@ -724,7 +730,7 @@ void pd_typedmess(t_pd *x, t_symbol *s, int argc, t_atom *argv)
     int narg = 0;
     t_pd *bonzo;
     
-    //fprintf(stderr,"\nstart %s %d\n", s->s_name, c->c_nmethod);
+    //fprintf(stderr,"pd_typedmess: %s %d\n", s->s_name, c->c_nmethod);
 
         /* check for messages that are handled by fixed slots in the class
         structure.  We don't catch "pointer" though so that sending "pointer"
@@ -735,17 +741,17 @@ void pd_typedmess(t_pd *x, t_symbol *s, int argc, t_atom *argv)
         else if (argv->a_type == A_FLOAT)
             (*c->c_floatmethod)(x, argv->a_w.w_float);
         else goto badarg;
-        return;
+        goto lastmess;
     }
     if (s == &s_bang)
     {
         (*c->c_bangmethod)(x);
-        return;
+        goto lastmess;
     }
     if (s == &s_list)
     {
         (*c->c_listmethod)(x, s, argc, argv);
-        return;
+        goto lastmess;
     }
     if (s == &s_symbol)
     {
@@ -753,14 +759,14 @@ void pd_typedmess(t_pd *x, t_symbol *s, int argc, t_atom *argv)
             (*c->c_symbolmethod)(x, argv->a_w.w_symbol);
         else
             (*c->c_symbolmethod)(x, &s_);
-        return;
+        goto lastmess;
     }
     if (s == &s_blob) /* MP 20061226 blob type */
     {
         /*post("pd_typedmess argc = %d\n", argc);*//* MP 20061226 debug */
         if (argc == 1) (*c->c_blobmethod)(x, argv->a_w.w_blob);
         else goto badarg;
-        return;
+        goto lastmess;
     }
     for (i = c->c_nmethod, m = c->c_methods; i--; m++)
     {
@@ -774,7 +780,7 @@ void pd_typedmess(t_pd *x, t_symbol *s, int argc, t_atom *argv)
                 if (x == &pd_objectmaker)
                     newest = (*((t_newgimme)(m->me_fun)))(s, argc, argv);
                 else (*((t_messgimme)(m->me_fun)))(x, s, argc, argv);
-                return;
+                goto lastmess;
             }
             if (argc > MAXPDARG) argc = MAXPDARG;
             if (x != &pd_objectmaker) *(ap++) = (t_int)x, narg++;
@@ -874,11 +880,11 @@ void pd_typedmess(t_pd *x, t_symbol *s, int argc, t_atom *argv)
             }
             if (x == &pd_objectmaker)
                 newest = bonzo;
-            return;
+            goto lastmess;
         }
     }
     (*c->c_anymethod)(x, s, argc, argv);
-    return;
+    goto lastmess;
 badarg:
     /* if x is a messresponder class, tweak it to point to the
        message that contains it (so it can be selected when 'Find
@@ -886,6 +892,9 @@ badarg:
     x = pd_mess_from_responder(x);
     pd_error(x, "Bad arguments for message '%s' to object '%s'",
         s->s_name, c->c_name->s_name);
+lastmess:
+    last_typedmess = s;    
+    return;
 }
 
     /* convenience routine giving a stdarg interface to typedmess().  Only

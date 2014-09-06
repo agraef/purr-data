@@ -512,11 +512,15 @@ void rtext_select(t_rtext *x, int state)
 
 void rtext_activate(t_rtext *x, int state)
 {
+    //fprintf(stderr,"rtext_activate\n");
     int w = 0, h = 0, indx;
     t_glist *glist = x->x_glist;
     t_canvas *canvas = glist_getcanvas(glist);
     //if (state && x->x_active) printf("duplicate rtext_activate\n");
-    if (state == x->x_active) return; // avoid excess calls
+    // the following prevents from selecting all when inside an
+    // object that is already being text for... please *test*
+    // "fixes" before committing them
+    //if (state == x->x_active) return; // avoid excess calls
     if (state)
     {
         sys_vgui(".x%lx.c focus %s\n", canvas, x->x_tag);
@@ -549,6 +553,7 @@ static int rtext_compare_special_chars(const char c)
 
 void rtext_key(t_rtext *x, int keynum, t_symbol *keysym)
 {
+    //fprintf(stderr,"rtext_key %d %s\n", keynum, keysym->s_name);
     int w = 0, h = 0, indx, i, newsize, ndel;
     if (keynum)
     {
@@ -697,6 +702,20 @@ be printable in whatever 8-bit character set we find ourselves. */
         x->x_selend = x->x_selstart;
         last_sel = 0;
     }
+    else if (!strcmp(keysym->s_name, "ShiftHome"))
+    {
+        if (x->x_selstart)
+        {
+            if (last_sel == 2)
+                x->x_selend = x->x_selstart;
+            u8_dec(x->x_buf, &x->x_selstart);
+            last_sel = 1;
+        }
+        while (x->x_selstart > 0 && x->x_buf[x->x_selstart] != '\n')
+            u8_dec(x->x_buf, &x->x_selstart);
+        //x->x_selend = x->x_selstart;
+        //last_sel = 1;
+    }
     else if (!strcmp(keysym->s_name, "End"))
     {
         while (x->x_selend < x->x_bufsize &&
@@ -706,6 +725,20 @@ be printable in whatever 8-bit character set we find ourselves. */
             u8_inc(x->x_buf, &x->x_selend);
         x->x_selstart = x->x_selend;
         last_sel = 0;
+    }
+    else if (!strcmp(keysym->s_name, "ShiftEnd"))
+    {
+        if (last_sel == 1)
+            x->x_selstart = x->x_selend;
+        while (x->x_selend < x->x_bufsize &&
+            x->x_buf[x->x_selend] != '\n')
+            u8_inc(x->x_buf, &x->x_selend);
+        if (x->x_selend < x->x_bufsize)
+        {
+            u8_inc(x->x_buf, &x->x_selend);
+        }
+        //x->x_selstart = x->x_selend;
+        last_sel = 2;
     }
     else if (!strcmp(keysym->s_name, "CtrlLeft"))
     {

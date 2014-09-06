@@ -357,6 +357,15 @@ void canvasgop__motionhook(t_scalehandle *sh,t_floatarg f1, t_floatarg f2);
     tells us which.) */
 t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
 {
+    /* DEBUG
+    int d;
+    for (d=0; d < argc; d++)
+    {
+        if (argv[d].a_type == A_FLOAT)
+            fprintf(stderr, " %g ", argv[d].a_w.w_float);
+        else fprintf(stderr, " %s ", argv[d].a_w.w_symbol->s_name);
+    }
+    fprintf(stderr,"\n");*/
     t_canvas *x = (t_canvas *)pd_new(canvas_class);
     t_canvas *owner = canvas_getcurrent();
     t_symbol *s = &s_;
@@ -1047,6 +1056,7 @@ void canvas_objfor(t_glist *gl, t_text *x, int argc, t_atom *argv);
 void canvas_restore(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_pd *z;
+    //fprintf(stderr,"canvas_restore %lx\n", x);
     /* for [group] we add an inlet to the svg attr proxy */
     if (argc > 2 && argv[2].a_w.w_symbol == gensym("group"))
     {
@@ -1868,10 +1878,12 @@ int canvas_open(t_canvas *x, const char *name, const char *ext,
     return(result);
 }
 
+extern t_symbol *last_typedmess; // see g_readwrite.c for the explanation of this ugly hack
+
 static void canvas_f(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 {
     static int warned;
-    //fprintf(stderr,"canvas_f .x%lx\n", (t_int)x);
+    //fprintf(stderr,"canvas_f %lx %d current=%lx %s\n", (t_int)x, argc, canvas_getcurrent(), last_typedmess != NULL ? last_typedmess->s_name : "none");
     t_canvas *xp = x; //parent window for a special case dealing with subpatches
     t_gobj *g, *g2;
     t_object *ob;
@@ -1880,10 +1892,12 @@ static void canvas_f(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
         post("** ignoring width or font settings from future Pd version **");
         warned = 1;
     }
-    if (!x->gl_list) {
+    // if we are either an empty canvas or are a part of a restore message of a subpatch
+    if (!x->gl_list || !strcmp(last_typedmess->s_name, "restore")) {
         if (x->gl_owner && !x->gl_isgraph) {
-            // this means that we are a canvas that was just created
-            // and that our width applies to our appearance on our parent
+            // this means that we are a canvas that was just created or have just
+            // fnished restoring and that our width applies to our appearance on
+            // our parent
             xp = x->gl_owner;
             for (g = xp->gl_list; g != (t_gobj *)x; g = g->g_next) {
                 //fprintf(stderr,".x%lx .x%lx\n", (t_int)g, (t_int)x);
@@ -1894,6 +1908,7 @@ static void canvas_f(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     } else {
     for (g = x->gl_list; g2 = g->g_next; g = g2)
         ;
+        //fprintf(stderr,"same canvas .x%lx .x%lx\n", (t_int)g, (t_int)x);
     }
     //fprintf(stderr,"is canvas_class? %d\n", (pd_class(&g->g_pd) == canvas_class ? 1:0));
     if ((ob = pd_checkobject(&g->g_pd)) || pd_class(&g->g_pd) == canvas_class)
@@ -1904,6 +1919,7 @@ static void canvas_f(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
         {
             gobj_vis(g, xp, 0);
             gobj_vis(g, xp, 1);
+            gobj_select(g, xp, 1);
         }
     }
 }

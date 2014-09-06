@@ -4767,6 +4767,7 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     if (av[1].a_type == A_SYMBOL)
     {
         gotkeysym = av[1].a_w.w_symbol;
+        //fprintf(stderr,"gotkeysym=%s\n", gotkeysym->s_name);
     }
     else if (av[1].a_type == A_FLOAT)
     {
@@ -4854,14 +4855,11 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
             || !strcmp(gotkeysym->s_name, "Down")
             || !strcmp(gotkeysym->s_name, "Left")
             || !strcmp(gotkeysym->s_name, "Right")
-            || !strcmp(gotkeysym->s_name, "CtrlLeft")
-            || !strcmp(gotkeysym->s_name, "CtrlRight")
-            || !strcmp(gotkeysym->s_name, "ShiftLeft")
-            || !strcmp(gotkeysym->s_name, "ShiftRight")
-            || !strcmp(gotkeysym->s_name, "CtrlShiftLeft")
-            || !strcmp(gotkeysym->s_name, "CtrlShiftRight")
             || !strcmp(gotkeysym->s_name, "Home")
-            || !strcmp(gotkeysym->s_name, "End")))
+            || !strcmp(gotkeysym->s_name, "End")
+            || !strncmp("Ctrl", gotkeysym->s_name, 4)
+            || !strncmp("CtrlShift", gotkeysym->s_name, 9)
+            || !strncmp("Shift", gotkeysym->s_name, 5)))
         {
                 /* send the key to the box's editor */
             /*if (!x->gl_editor->e_textdirty)

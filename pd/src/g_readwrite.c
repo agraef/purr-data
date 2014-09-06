@@ -615,6 +615,7 @@ static void canvas_saveto(t_canvas *x, t_binbuf *b)
     if (x->gl_owner && !x->gl_env)
     {
         /* have to go to original binbuf to find out how we were named. */
+        //fprintf(stderr,"saving subpatch\n");
         t_binbuf *bz = binbuf_new();
         t_symbol *patchsym;
         binbuf_addbinbuf(bz, x->gl_obj.ob_binbuf);
@@ -627,6 +628,7 @@ static void canvas_saveto(t_canvas *x, t_binbuf *b)
             (int)(x->gl_screeny2 - x->gl_screeny1),
             (patchsym != &s_ ? patchsym: gensym("(subpatch)")),
             x->gl_mapped);
+        t_text *xt = (t_text *)x;
     }
         /* root or abstraction */
     else 
