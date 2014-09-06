@@ -1799,6 +1799,7 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
     int n = obj_noutlets(ob), nplus = (n == 1 ? 1 : n-1), i;
     int width = x2 - x1;
     int issignal;
+    int selected = glist_isselected(glist, (t_gobj*)ob);
     for (i = 0; i < n; i++)
     {
         int onset = x1 + (width - IOWIDTH) * i / nplus;
@@ -1807,14 +1808,15 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
             //fprintf(stderr,"glist_drawiofor o firsttime\n");
             issignal = obj_issignaloutlet(ob,i);
             sys_vgui(".x%lx.c create prect %d %d %d %d \
-                      -fill %s -stroke %s -tags {%so%d %lx outlet %s}\n",
+                      -fill %s -stroke %s -tags {%so%d %lx outlet %s %s}\n",
                 glist_getcanvas(glist), onset, y2 - 2, onset + IOWIDTH, y2,
                 (issignal ? "$pd_colors(signal_nlet)" :
                    "$pd_colors(control_nlet)"),
                 (issignal ? "$pd_colors(signal_cord)" :
                     "$pd_colors(control_cord)"),
                 tag, i, tag,
-                (issignal ? "signal" : "control"));
+                (issignal ? "signal" : "control"),
+                (selected ? "selected" : ""));
         }
         else {
             //fprintf(stderr,"glist_drawiofor o redraw\n");
@@ -1840,7 +1842,7 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
             //fprintf(stderr,"glist_drawiofor i firsttime\n");
             issignal = obj_issignalinlet(ob,i);
             sys_vgui(".x%lx.c create prect %d %d %d %d \
-                      -fill %s -stroke %s -tags {%si%d %lx inlet %s}\n",
+                      -fill %s -stroke %s -tags {%si%d %lx inlet %s %s}\n",
                 glist_getcanvas(glist), onset, y1,
                 onset + IOWIDTH, y1 + EXTRAPIX,
                 (issignal ? "$pd_colors(signal_nlet)" :
@@ -1848,7 +1850,8 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
                 (issignal ? "$pd_colors(signal_cord)" :
                     "$pd_colors(control_cord)"),
                 tag, i, tag,
-                (issignal ? "signal" : "control"));
+                (issignal ? "signal" : "control"),
+                (selected ? "selected" : ""));
         }
         else {
             //fprintf(stderr,"glist_drawiofor i firsttime\n");
@@ -1945,6 +1948,8 @@ void text_drawborder(t_text *x, t_glist *glist,
     t_object *ob;
     int x1, y1, x2, y2;
 
+    int selected = glist_isselected(glist, (t_gobj*)x);
+
     /* if this is gop patcher, the getrect should be equal to gop-ed window
        rather than just the size of text */
     if (pd_class(&x->te_pd) == canvas_class &&
@@ -1987,10 +1992,12 @@ void text_drawborder(t_text *x, t_glist *glist,
         if (firsttime)
         {
             sys_vgui(".x%lx.c create ppolygon %d %d %d %d %d %d %d %d %d %d \
-                      -stroke %s -fill %s -tags {%sR %lx text %s}\n", 
-                glist_getcanvas(glist),
-                     x1, y1,  x2, y1,  x2, y2,  x1, y2,  x1, y1,  
-                     outline, fill, tag, tag, box_tag);
+                    -stroke %s -fill %s -tags {%sR %lx text %s %s}\n", 
+                    glist_getcanvas(glist),
+                    x1, y1,  x2, y1,  x2, y2,  x1, y2,  x1, y1,  
+                    (selected ? "$pd_colors(selection)" : outline),
+                    fill, tag, tag, box_tag,
+                    (selected ? "selected" : ""));
                 //-dash %s -> pattern disabled for tkpath
         }
         else
@@ -2010,12 +2017,13 @@ void text_drawborder(t_text *x, t_glist *glist,
         if (firsttime)
             sys_vgui(".x%lx.c create ppolygon "
                      "%d %d %d %d %d %d %d %d %d %d %d %d %d %d "
-                     "-stroke $pd_colors(msg_border) -fill $pd_colors(msg) "
-                     "-tags {%sR %lx text msg box}\n",
+                     "-stroke %s -fill $pd_colors(msg) "
+                     "-tags {%sR %lx text msg box %s}\n",
                 glist_getcanvas(glist),
                 x1, y1,  x2+4, y1,  x2, y1+4,  x2, y2-4,  x2+4, y2,
                 x1, y2,  x1, y1,
-                    tag, tag);
+                (selected ? "$pd_colors(selection)" : "$pd_colors(msg_border)"),
+                    tag, tag, (selected ? "selected" : ""));
         else
             sys_vgui(".x%lx.c coords %sR "
                      "%d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
@@ -2028,12 +2036,13 @@ void text_drawborder(t_text *x, t_glist *glist,
         if (firsttime)
             sys_vgui(".x%lx.c create ppolygon "
                      "%d %d %d %d %d %d %d %d %d %d %d %d "
-                     "-stroke $pd_colors(atom_box_border) "
+                     "-stroke %s "
                      "-fill $pd_colors(atom_box) "
-                     "-tags {%sR %lx text atom box}\n",
+                     "-tags {%sR %lx text atom box %s}\n",
                 glist_getcanvas(glist),
                 x1, y1,  x2-4, y1,  x2, y1+4,  x2, y2,  x1, y2,  x1, y1,
-                    tag, tag);
+                (selected ? "$pd_colors(selection)" : "$pd_colors(atom_box_border)"),
+                    tag, tag, (selected ? "selected" : ""));
         else
             sys_vgui(".x%lx.c coords %sR "
                      "%d %d %d %d %d %d %d %d %d %d %d %d\n",
@@ -2047,18 +2056,20 @@ void text_drawborder(t_text *x, t_glist *glist,
         on top level--this avoids bugggy behavior where comment rectangles are
         drawn inside a GOP on another toplevel glist when the GOP subpatch is
         in edit mode */
-    else if (x->te_type == T_TEXT && glist->gl_edit  && glist_istoplevel(glist))
+    else if (x->te_type == T_TEXT && glist->gl_edit && glist_istoplevel(glist))
     {
         if (firsttime)
         {
             /*sys_vgui(".x%lx.c create pline\
                  %d %d %d %d -tags [list %sR commentbar] -stroke $pd_colors(atom_box_border)\n",*/
             sys_vgui(".x%lx.c create ppolygon %d %d %d %d %d %d %d %d %d %d\
-                -tags [list %sR commentbar] -stroke $pd_colors(box_border)\
+                -tags [list %sR commentbar %s] -stroke %s\
                 -strokewidth 1 -strokedasharray {2 2} -strokelinecap butt\n",
                 glist_getcanvas(glist),
                 //x2, y1,  x2, y2, tag);
-                x1, y1,  x2, y1,  x2, y2,  x1, y2,  x1, y1, tag);
+                x1, y1,  x2, y1,  x2, y2,  x1, y2,  x1, y1, tag,
+                (selected ? "selected" : ""),
+                (selected ? "$pd_colors(selection)" : "$pd_colors(box_border)"));
         }
         else
         {

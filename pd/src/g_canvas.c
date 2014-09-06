@@ -1919,7 +1919,6 @@ static void canvas_f(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
         {
             gobj_vis(g, xp, 0);
             gobj_vis(g, xp, 1);
-            gobj_select(g, xp, 1);
         }
     }
 }

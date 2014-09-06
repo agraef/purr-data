@@ -334,13 +334,13 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
         }
         if (action == SEND_FIRST)
         {
-            sys_vgui("pdtk_text_new .x%lx.c {%s %s text} %f %f {%.*s} %d %s\n",
+            //fprintf(stderr,"send_first rtext=%lx t_text=%lx\n", x, x->x_text);
+            sys_vgui("pdtk_text_new .x%lx.c {%s %s text %s} %f %f {%.*s} %d %s\n",
                 canvas, x->x_tag, rtext_gettype(x)->s_name,
+                (glist_isselected(x->x_glist, ((t_gobj*)x->x_text)) ? "selected" : ""),
                 dispx + LMARGIN, dispy + TMARGIN,
                 outchars_b, tempbuf, sys_hostfontsize(font),
-                (glist_isselected(x->x_glist,
-                    &x->x_glist->gl_gobj)? "$pd_colors(selection)" :
-                        "$pd_colors(text)"));
+                (glist_isselected(x->x_glist, ((t_gobj*)x->x_text)) ? "$pd_colors(selection)" : "$pd_colors(text)"));
         }
         else if (action == SEND_UPDATE)
         {

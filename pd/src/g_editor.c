@@ -3179,7 +3179,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
             {
                 if (doit)
                 {
-                    if (!glist_isselected(x, y))
+                    if (!glist_isselected(x, y) || x->gl_editor->e_selection->sel_next)
                     {
                         glist_noselect(x);
                         glist_select(x, y);
@@ -4542,8 +4542,7 @@ void canvas_mouseup(t_canvas *x,
         canvas_doconnect(x, xpos, ypos, which, 1);
     else if (x->gl_editor->e_onmotion == MA_REGION)
         canvas_doregion(x, xpos, ypos, 1);
-    else if (x->gl_editor->e_onmotion == MA_MOVE ||
-        x->gl_editor->e_onmotion == MA_RESIZE)
+    else if (x->gl_editor->e_onmotion == MA_MOVE)
     {
             /* after motion or resizing, if there's only one text item
                 selected, activate the text */
@@ -5033,6 +5032,10 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
                 gobj_vis(y1, x, 0);
                 canvas_fixlinesfor(x, ob);
                 gobj_vis(y1, x, 1);
+                // object vis function should check if the object is still
+                // selected, so as to draw the outline in the right color
+                // it should also tag all aspects with selected tag
+                // fprintf(stderr,"MA_RESIZE gobj=%lx\n", y1);
                 canvas_dirty(x, 1);
             }
             else if (ob && ob->ob_pd == canvas_class)
