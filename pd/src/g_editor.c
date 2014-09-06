@@ -4894,12 +4894,14 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
                 /* check for arrow keys */
         else if (x->gl_editor->e_selection)
         {
-            if (!strcmp(gotkeysym->s_name, "Up"))
+            if (!strcmp(gotkeysym->s_name, "Up") ||
+                !strcmp(gotkeysym->s_name, "ShiftUp"))
             {
                 canvas_displaceselection(x, 0, shift ? -10 : -1);
                 scrollbar_update(x);
             }
-            else if (!strcmp(gotkeysym->s_name, "Down"))
+            else if (!strcmp(gotkeysym->s_name, "Down") ||
+                !strcmp(gotkeysym->s_name, "ShiftDown"))
             {
                 canvas_displaceselection(x, 0, shift ? 10 : 1);
                 scrollbar_update(x);
