@@ -7098,10 +7098,14 @@ proc pdtk_pastetext {} {
     global pdtk_pastebuffer
     set pdtk_pastebuffer ""
     catch {global pdtk_pastebuffer; set pdtk_pastebuffer [clipboard get]}
-	#puts stderr [concat paste $pdtk_pastebuffer]
+	#puts stderr "paste <$pdtk_pastebuffer>"
     for {set i 0} {$i < [string length $pdtk_pastebuffer]} {incr i 1} {
         set cha [string index $pdtk_pastebuffer $i]
         scan $cha %c keynum
+        #puts stderr "keynum=<$keynum>"
+        #if { $keynum == 11 } {
+        #	set keynum 15
+        #}
 		if {$i == [expr [string length $pdtk_pastebuffer] - 1]} {
 			# unlike key command which would be pd [concat pd key 1 $keynum 0\;]
 			# we add first digit to ask for force getscroll as we limit the number of 

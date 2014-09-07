@@ -558,7 +558,7 @@ void rtext_key(t_rtext *x, int keynum, t_symbol *keysym)
     if (keynum)
     {
         int n = keynum;
-        if (n == '\r') n = '\n';
+        if (n == '\r' || n == '\v') n = '\n';
         if (n == '\b') /* backspace */
         {
             if (x->x_selstart && (x->x_selstart == x->x_selend))
