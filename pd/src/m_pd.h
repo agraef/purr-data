@@ -13,7 +13,7 @@ extern "C" {
 #define PD_MAJOR_VERSION 0
 #define PD_MINOR_VERSION 42
 #define PD_BUGFIX_VERSION 7
-#define PD_TEST_VERSION "20140814"
+#define PD_TEST_VERSION "20140903"
 #define PDL2ORK
 
 /* old name for "MSW" flag -- we have to take it for the sake of many old
@@ -52,6 +52,12 @@ extern "C" {
 #define EXTERN_STRUCT extern struct
 #endif
 
+    /* Define some attributes, specific to the compiler */
+#if defined(__GNUC__)
+#define ATTRIBUTE_FORMAT_PRINTF(a, b) __attribute__ ((format (printf, a, b)))
+#else
+#define ATTRIBUTE_FORMAT_PRINTF(a, b)
+#endif
 
 #if !defined(_SIZE_T) && !defined(_SIZE_T_)
 #include <stddef.h>     /* just for size_t -- how lame! */
@@ -501,6 +507,8 @@ EXTERN void error(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 EXTERN void verbose(int level, const char *fmt, ...) __attribute__ ((format (printf, 2, 3)));
 EXTERN void bug(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 EXTERN void pd_error(void *object, const char *fmt, ...) __attribute__ ((format (printf, 2, 3)));
+EXTERN void logpost(const void *object, const int level, const char *fmt, ...)
+    ATTRIBUTE_FORMAT_PRINTF(3, 4);
 EXTERN void sys_logerror(const char *object, const char *s);
 EXTERN void sys_unixerror(const char *object);
 EXTERN void sys_ouch(void);

@@ -9,6 +9,9 @@
 #include <string.h>
 #include <errno.h>
 #include "s_stuff.h"
+#ifdef _MSC_VER  /* This is only for Microsoft's compiler, not cygwin, e.g. */
+#define snprintf sprintf_s
+#endif
 
 t_printhook sys_printhook;
 int sys_printtostderr;
@@ -21,10 +24,10 @@ static char* strnescape(char *dest, const char *src, size_t len)
     for(; ptout < len; ptin++, ptout++)
     {
         int c = src[ptin];
-        if (c == '\\' || c == '{' || c == '}')
+        if (c == '\\' || c == '{' || c == '}' || c == ';')
             dest[ptout++] = '\\';
-            dest[ptout] = src[ptin];
-            if (c==0) break;
+        dest[ptout] = src[ptin];
+        if (c==0) break;
     }
 
     if(ptout < len)
@@ -65,6 +68,32 @@ static void doerror(const void *object, const char *s)
     }
 }
 
+static void dologpost(const void *object, const int level, const char *s)
+{
+    char upbuf[MAXPDSTRING];
+    upbuf[MAXPDSTRING-1]=0;
+
+    // what about sys_printhook_verbose ?
+    if (sys_printhook) 
+    {
+        snprintf(upbuf, MAXPDSTRING-1, "verbose(%d): %s", level, s);
+        (*sys_printhook)(upbuf);
+    }
+    else if (sys_printtostderr) 
+    {
+        fprintf(stderr, "verbose(%d): %s", level, s);
+    }
+    else
+    {
+        char obuf[MAXPDSTRING];
+        //sys_vgui("::pdwindow::logpost {%s} %d {%s}\n", 
+                 //strnpointerid(obuf, object, MAXPDSTRING), 
+                 //level, strnescape(upbuf, s, MAXPDSTRING));
+        sys_vgui("pdtk_post {%s}\n", 
+                 strnescape(upbuf, s, MAXPDSTRING));
+    }
+}
+
 static void dopost(const char *s)
 {
     if (sys_printhook)
@@ -91,6 +120,20 @@ static void dopost(const char *s)
         upbuf[ptout] = 0;
         sys_vgui("pdtk_post {%s}\n", upbuf);
     }
+}
+
+void logpost(const void *object, const int level, const char *fmt, ...)
+{
+    char buf[MAXPDSTRING];
+    va_list ap;
+    t_int arg[8];
+    int i;
+    va_start(ap, fmt);
+    vsnprintf(buf, MAXPDSTRING-1, fmt, ap);
+    va_end(ap);
+    strcat(buf, "\n");
+
+    dologpost(object, level, buf);
 }
 
 void post(const char *fmt, ...)
