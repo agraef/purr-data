@@ -252,6 +252,8 @@ static void radio_dialog(t_radio *x, t_symbol *s, int argc, t_atom *argv)
             x->x_on_old = x->x_on;
         }
         iemgui_shouldvis(&x->x_gui, IEM_GUI_DRAW_MODE_NEW);
+        if (glist_isselected(x->x_gui.x_glist, (t_gobj *)x))
+            iemgui_select((t_gobj *)x, x->x_gui.x_glist, 1);
     }
     else
     {
