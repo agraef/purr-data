@@ -693,6 +693,7 @@ be printable in whatever 8-bit character set we find ourselves. */
             {
                 //printf("found break\n");
                 u8_dec(x->x_buf, &x->x_selstart);
+                right++;
             }
             while (x->x_selstart > 0 &&
                     (x->x_buf[x->x_selstart-1] != '\n' &&
@@ -701,6 +702,8 @@ be printable in whatever 8-bit character set we find ourselves. */
                 u8_dec(x->x_buf, &x->x_selstart);
                 right++;
             }
+            if (x->x_selstart == 0)
+                right = 0;
             //printf("first linebreak: right=%d selstart=%d\n", right, x->x_selstart);
             if (x->x_selstart > 0)
                 u8_dec(x->x_buf, &x->x_selstart);
@@ -774,9 +777,9 @@ be printable in whatever 8-bit character set we find ourselves. */
                 u8_inc(x->x_buf, &x->x_selend);
             }
             //printf("increase by 1: selend=%d\n", x->x_selend);
-            while (right > 0 && x->x_selend+1 < x->x_bufsize &&
-                (x->x_buf[x->x_selend+1] != '\n' &&
-                    x->x_buf[x->x_selend+1] != '\v'))
+            while (right > 0 && x->x_selend < x->x_bufsize &&
+                (x->x_buf[x->x_selend] != '\n' &&
+                    x->x_buf[x->x_selend] != '\v'))
             {
                 u8_inc(x->x_buf, &x->x_selend);
                 right--;
