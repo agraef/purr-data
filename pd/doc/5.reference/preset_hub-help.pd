@@ -3,7 +3,7 @@
 0;
 #X obj 183 294 cnv 15 44 27 empty empty empty 20 12 0 14 -204280 -66577
 0;
-#X obj 0 1331 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+#X obj 0 1378 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header preset_hub 3 12
 0 18 -204280 -1 0;
@@ -18,12 +18,12 @@ to conform to the PDDP template for Pd version 0.42.;
 #X text 12 85 OUTLET_0 anything;
 #X text 12 105 AUTHOR Ivica Ico Bukvic (c) 2012 <ico@vt.edu>;
 #X text 12 65 INLET_0 clear purge recall reset store;
-#X restore 500 1333 pd META;
+#X restore 500 1380 pd META;
 #X obj 0 607 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
 13 -228856 -1 0;
-#X obj 0 695 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+#X obj 0 742 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
 0 13 -228856 -1 0;
-#X obj 0 865 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+#X obj 0 912 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X obj 78 357 cnv 17 3 240 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
@@ -33,10 +33,10 @@ to conform to the PDDP template for Pd version 0.42.;
 #X obj 22 36 preset_node;
 #X text 7 1 [preset_hub] Related Objects;
 #X obj 98 36 preset_node_array;
-#X restore 101 1333 pd Related_objects;
+#X restore 101 1380 pd Related_objects;
 #X obj 78 616 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 4 1333 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 4 1380 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
 #X text 11 20 universal preset system for pd-l2ork;
 #X obj 20 202 preset_hub test %hidden% %node% 2 31 1 %preset% 1 problems
@@ -95,9 +95,9 @@ to conform to the PDDP template for Pd version 0.42.;
 #X floatatom 80 151 5 0 0 0 - - -, f 5;
 #X obj 447 58 hradio 15 1 0 4 empty empty empty 0 -8 0 10 -262144 -1
 -1 0;
-#X obj 98 930 pddp/pddplink preset_node-help.pd;
+#X obj 98 977 pddp/pddplink preset_node-help.pd;
 #X text 168 436 - store the current state at index n;
-#X text 98 902 Scope- [preset_hub foo] is local to its patch and all
+#X text 98 949 Scope- [preset_hub foo] is local to its patch and all
 of that patch's children (i.e. \, subpatches and abstractions).;
 #X text 168 376 - purge all orphaned/unused nodes;
 #X text 98 356 clear;
@@ -112,18 +112,18 @@ of that patch's children (i.e. \, subpatches and abstractions).;
 #X floatatom 249 189 5 0 0 0 - - -, f 5;
 #X msg 232 244 set another;
 #X msg 311 244 set test;
-#X text 171 712 - OPTIONAL scope for this preset (defaults to null
+#X text 171 759 - OPTIONAL scope for this preset (defaults to null
 or "");
 #X text 168 416 - reset all preset node data (wipes hub clean);
 #X text 98 499 read;
-#X text 81 732 2) symbol file;
-#X text 81 822 3) float;
-#X text 171 732 - OPTIONAL literal "file" argument instructs hub not
+#X text 81 779 2) symbol file;
+#X text 81 869 3) float;
+#X text 171 779 - OPTIONAL literal "file" argument instructs hub not
 to embed its preset data into the patch but rather assumes that the
 user will save this data into an external file (see read \, write \,
 readpreset \, and writepreset message above)--this also means that
 changes to the preset will not trigger "patch dirty" message;
-#X text 171 822 - OPTIONAL argument used exclusively in the K12 mode
+#X text 171 869 - OPTIONAL argument used exclusively in the K12 mode
 that renders preset_hub invisible to GUI operations;
 #X text 98 519 write;
 #X text 98 539 readpreset;
@@ -152,7 +152,7 @@ same canvas as the abstraction:;
 #X text 168 205 inside it.;
 #X text 40 171 [preset_hub foo] <-- this won't apply to [bar] because
 ;
-#X restore 461 908 pd More_info;
+#X restore 461 955 pd More_info;
 #N canvas 512 381 640 292 More_info 0;
 #X obj -9 -1 cnv 15 639 20 empty \$0-pddp.cnv.subheading empty 3 12
 0 14 -204280 -1 0;
@@ -163,7 +163,7 @@ same canvas as the abstraction:;
 -1 0;
 #X msg 19 159 recall \$1;
 #X obj 85 139 hradio 15 1 0 4 empty empty empty 0 -8 0 10 -262144 -1
--1 3;
+-1 0;
 #X msg 85 159 store \$1;
 #X obj 10 238 preset_node another;
 #X floatatom 10 260 5 0 0 0 - - -, f 5;
@@ -203,8 +203,8 @@ files into specific folders.;
 #X connect 16 0 2 0;
 #X connect 17 0 2 0;
 #X connect 18 0 2 0;
-#X restore 461 1055 pd More_info;
-#X text 98 1047 Writing to and reading from a file- preset_hub can
+#X restore 461 1102 pd More_info;
+#X text 98 1094 Writing to and reading from a file- preset_hub can
 also write to an external file and read from it. More so \, the optional
 2nd creation argument (literal symbol "file") prevents preset_hub from
 trying to save itself into the patch. Hub can read/write all preset
@@ -215,12 +215,12 @@ in the hub. Only valid nodes will be imported. Node data that does
 not have a valid node in the existing patch will be silently dropped.
 Reading a single preset will automatically recall it as soon as the
 preset has been loaded.;
-#X text 98 1265 Presets with Arrays- arrays cannot be accessed directly
+#X text 98 1312 Presets with Arrays- arrays cannot be accessed directly
 as they have no direct inlets and outlets. For this reason we use preset_node_array
 abstraction to read/write to/from arrays. For additional info see;
-#X obj 290 1304 pddp/pddplink preset_node_array-help.pd;
-#X text 81 712 1) symbol/float;
-#X text 98 948 Modular Scope- arguments starting with $ (e.g. \$1 or
+#X obj 290 1351 pddp/pddplink preset_node_array-help.pd;
+#X text 81 759 1) symbol/float;
+#X text 98 995 Modular Scope- arguments starting with $ (e.g. \$1 or
 \$2blah) allow modular creation of preset_hub and node's scopes inside
 embedded abstractions. As long as both hub and node share the same
 scope \, they will see each other regardless of what scope is given
@@ -253,19 +253,14 @@ looking one level up.;
 #X connect 5 0 3 0;
 #X connect 6 0 4 0;
 #X connect 7 0 8 0;
-#X restore 461 955 pd More_info;
+#X restore 461 1002 pd More_info;
 #X text 168 396 - recall the values stored at index n (n must be >=
 0);
-#X text 98 1221 Default values- depending on the expected data format
+#X text 98 1268 Default values- depending on the expected data format
 messages when supplied no argument default to null (empty string) or
 0;
-#X text 98 871 Preset names- only values 0 or greater are valid. No
+#X text 98 918 Preset names- only values 0 or greater are valid. No
 negative preset numbers are possible.;
-#X text 169 616 - print message in response to input followed by 1
-for successful and 0 for failed operation. Some messages provide value
-pairs (e.g. store and recall) where first value reflects requested
-preset number and second value reflects whether this action was successful
-or not (1 or 0).;
 #X text 98 456 sort;
 #X text 168 456 - sort all presets chronologically and assign them
 new preset numbers one after another starting with a value n or 0 if
@@ -274,6 +269,14 @@ no value provided;
 argument;
 #X text 168 519 - write all presets to a file named in the first argument
 ;
+#X text 169 616 - print message in response to input followed by 1
+for successful and 0 for failed operation. Some messages provide value
+pairs (e.g. store and recall) where first value reflects requested
+preset number and second value reflects whether this action was successful
+or not (1 or 0). In addition \, hub outputs "dirty" message whenever
+one of its nodes has had its value changed. This allows for implementing
+visual cues for reminding user that hub's latest state has not been
+saved.;
 #X connect 14 0 20 0;
 #X connect 15 0 14 0;
 #X connect 16 0 14 0;
