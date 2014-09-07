@@ -99,7 +99,7 @@ static void helplink_select(t_gobj *z, t_glist *glist, int state)
     if (glist_isvisible(glist) && glist->gl_havewindow)
     {
 		if (state) {
-			sys_vgui(".x%lx.c itemconfigure %s -fill $select_color\n",
+			sys_vgui(".x%lx.c itemconfigure %s -fill $::pd_colors(selection)\n",
 				glist, rtext_gettag(y));
 			sys_vgui(".x%lx.c addtag selected withtag %s\n",
 				glist, rtext_gettag(y));
