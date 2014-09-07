@@ -46,6 +46,7 @@
 //==================== forward declarations ========================//
 
 void preset_hub_add_a_node(t_preset_hub *h, t_preset_node *x);
+void preset_hub_dirty(t_preset_hub *h);
 void preset_hub_recall(t_preset_hub *h, t_float f);
 void preset_hub_store(t_preset_hub *h, t_float f);
 void preset_hub_delete_a_node(t_preset_hub *h, t_preset_node *x);
@@ -550,7 +551,8 @@ static void preset_node_anything(t_preset_node *x, t_symbol *s, int argc, t_atom
             break;
         }
     }
-    
+    if (x->pn_hub)
+        preset_hub_dirty(x->pn_hub);    
 }
 
 //======== following functions are for interaction with the hub/pd =======//
@@ -995,6 +997,13 @@ void preset_hub_bang(t_preset_hub *x)
     t_atom ap[1];
     SETFLOAT(ap+0, (t_float)x->ph_preset);
     outlet_anything(x->ph_outlet, gensym("current"), 1, ap);
+}
+
+void preset_hub_dirty(t_preset_hub *x)
+{
+    t_atom ap[1];
+    SETFLOAT(ap+0, (t_float)1);
+    outlet_anything(x->ph_outlet, gensym("dirty"), 1, ap);    
 }
 
 void preset_hub_recall(t_preset_hub *x, t_float f)
