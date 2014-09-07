@@ -1,5 +1,4 @@
 C:
-*up and down inside textedfor should go immediately up if possible, rather than the end/begnning of line
 *verbosity level for the console
 *Draw SECONDARY redrect on gop scalar patchers to reflect the viewport?
 
