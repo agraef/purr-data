@@ -1,0 +1,30 @@
+C:
+*up and down inside textedfor should go immediately up if possible, rather than the end/begnning of line
+*verbosity level for the console
+*Draw SECONDARY redrect on gop scalar patchers to reflect the viewport?
+
+*object synonyms do not instantiate until the main object has been instantiated (no solution--advise getting rid of aliases or making one monster startup setup routine)
+*number2 should maintain focus after return to allow for entering next value (like regular number)
+	*number and number2 arrow down/up should inc/dec value
+*Add  netsend/receive~ for RPi objects to the RPi build IN PROGRESS
+*Redesign main window interface
+*add ability to custom name each instance of pd-l2ork (pd~?)
+*shared sends and receives among multiple instances?
+*scalar in a subpatch is visible even if it spills outside GOP (for legacy purposes we will keep this, and will hopefully fix this soon with the implementation of a window on a canvas)
+*improve dialogs IN PROGRESS
+*retrofit all 3rd-party gui objects to support tkpath
+	*Scope~ window name "h16ffd10" already exists in parent (likely resize hook)
+		*Change appearance of the resize hook
+		*change to scope~?
+	*clean-up ggee/gui
+=====================================
+
+Tkpath:
+*Postscript not printing? (will switch to Qt, so not necessary)
+*canvas_move should take into account transformations of children? (see Jonathan's email)
+
+K12:
+
+Help:
+
+Git commit:
