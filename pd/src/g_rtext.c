@@ -674,24 +674,117 @@ be printable in whatever 8-bit character set we find ourselves. */
     }
     else if (!strcmp(keysym->s_name, "Up"))
     {
-        if (x->x_selstart)
-            u8_dec(x->x_buf, &x->x_selstart);
-        while (x->x_selstart > 0 &&
-            (x->x_buf[x->x_selstart] != '\n' &&
-                x->x_buf[x->x_selstart] != '\v'))
-            u8_dec(x->x_buf, &x->x_selstart);
-        x->x_selend = x->x_selstart;
-        last_sel = 0;
+        if (x->x_selstart != x->x_selend)
+        {
+            x->x_selend = x->x_selstart;
+            last_sel = 0;
+        }
+        else
+        {
+            // we do this twice and then move to the right
+            // as many spots as we had before, this will
+            // allow us to go visually above where we used
+            // to be in multiline situations (e.g. comments)
+            int right = 0;
+            //printf("start: selstart=%d\n", x->x_selstart);
+            if (x->x_selstart > 0 &&
+                    (x->x_buf[x->x_selstart] == '\n' ||
+                        x->x_buf[x->x_selstart] == '\v'))
+            {
+                //printf("found break\n");
+                u8_dec(x->x_buf, &x->x_selstart);
+            }
+            while (x->x_selstart > 0 &&
+                    (x->x_buf[x->x_selstart-1] != '\n' &&
+                        x->x_buf[x->x_selstart-1] != '\v'))
+            {
+                u8_dec(x->x_buf, &x->x_selstart);
+                right++;
+            }
+            //printf("first linebreak: right=%d selstart=%d\n", right, x->x_selstart);
+            if (x->x_selstart > 0)
+                u8_dec(x->x_buf, &x->x_selstart);
+            //printf("decrease by 1: selstart=%d\n", x->x_selstart);
+            while (x->x_selstart > 0 &&
+                (x->x_buf[x->x_selstart-1] != '\n' &&
+                    x->x_buf[x->x_selstart-1] != '\v'))
+                u8_dec(x->x_buf, &x->x_selstart);
+            //printf("second linebreak: selstart=%d\n", x->x_selstart);
+            if (x->x_selstart < x->x_bufsize && right > 0)
+            {
+                u8_inc(x->x_buf, &x->x_selstart);
+                right--;
+            }
+            //printf("increase by 1: selstart=%d\n", x->x_selstart);
+            while (right > 0 && 
+                (x->x_buf[x->x_selstart] != '\n' &&
+                    x->x_buf[x->x_selstart] != '\v'))
+            {
+                u8_inc(x->x_buf, &x->x_selstart);
+                right--;
+            }
+            //printf("final: selstart=%d\n", x->x_selstart);
+            x->x_selend = x->x_selstart;
+            last_sel = 0;
+        }
     }
     else if (!strcmp(keysym->s_name, "Down"))
     {
-        while (x->x_selend < x->x_bufsize &&
-            (x->x_buf[x->x_selend] != '\n' && x->x_buf[x->x_selend] != '\v'))
-            u8_inc(x->x_buf, &x->x_selend);
-        if (x->x_selend < x->x_bufsize)
-            u8_inc(x->x_buf, &x->x_selend);
-        x->x_selstart = x->x_selend;
-        last_sel = 0;
+        if (x->x_selstart != x->x_selend)
+        {
+            x->x_selstart = x->x_selend;
+            last_sel = 0;
+        }
+        else
+        {
+            // we do this twice and then move to the right
+            // as many spots as we had before, this will
+            // allow us to go visually below where we used
+            // to be in multiline situations (e.g. comments)
+            int right = 0;
+            if (x->x_selstart > 0 &&
+                    (x->x_buf[x->x_selstart] != '\n' ||
+                        x->x_buf[x->x_selstart] != '\v'))
+            {
+                while (x->x_selstart > 0 &&
+                        (x->x_buf[x->x_selstart-1] != '\n' &&
+                            x->x_buf[x->x_selstart-1] != '\v'))
+                {
+                    x->x_selstart--;
+                    right++;
+                }
+            }
+            //printf("start: right=%d selstart=%d selend=%d\n", right, x->x_selstart, x->x_selend);
+            if (x->x_selend < x->x_bufsize &&
+                    (x->x_buf[x->x_selend] == '\n' ||
+                        x->x_buf[x->x_selend] == '\v'))
+            {
+                //printf("found break\n");
+                u8_inc(x->x_buf, &x->x_selend);
+                right--;
+            }
+            else while (x->x_selend < x->x_bufsize &&
+                (x->x_buf[x->x_selend] != '\n' && x->x_buf[x->x_selend] != '\v'))
+            {
+                u8_inc(x->x_buf, &x->x_selend);
+            }
+            //printf("first linebreak: selend=%d\n", x->x_selend);
+            if (x->x_selend+1 < x->x_bufsize)
+            {
+                u8_inc(x->x_buf, &x->x_selend);
+            }
+            //printf("increase by 1: selend=%d\n", x->x_selend);
+            while (right > 0 && x->x_selend+1 < x->x_bufsize &&
+                (x->x_buf[x->x_selend+1] != '\n' &&
+                    x->x_buf[x->x_selend+1] != '\v'))
+            {
+                u8_inc(x->x_buf, &x->x_selend);
+                right--;
+            }
+            //printf("final: selend=%d\n", x->x_selend);
+            x->x_selstart = x->x_selend;
+            last_sel = 0;
+        }
     }
     else if (!strcmp(keysym->s_name, "Home"))
     {
