@@ -77,7 +77,7 @@ void bilex_setup(void)
     	sizeof(t_rand_bilex), 0, A_DEFFLOAT, 0);
     class_addbang(rand_bilex_class, rand_bilex_bang);
 	class_sethelpsymbol(rand_bilex_class, gensym("bilex-help.pd"));
-    post(version);
+    logpost(NULL, 4, version);
 }
 #else
 void maxlib_bilex_setup(void)

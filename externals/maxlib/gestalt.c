@@ -106,7 +106,7 @@ void gestalt_setup(void)
 	class_addmethod(gestalt_class, (t_method)gestalt_ft1, gensym("ft1"), A_FLOAT, 0);
 	class_addmethod(gestalt_class, (t_method)gestalt_ft2, gensym("ft2"), A_FLOAT, 0);
     
-    post(version);
+    logpost(NULL, 4, version);
 }
 #else
 void maxlib_gestalt_setup(void)

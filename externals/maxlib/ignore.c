@@ -102,7 +102,7 @@ void ignore_setup(void)
     class_addmethod(ignore_class, (t_method)ignore_time, gensym("time"), A_FLOAT, 0);
     class_addfloat(ignore_class, ignore_float);
     
-    post(version);
+    logpost(NULL, 4, version);
 }
 #else
 void maxlib_ignore_setup(void)

@@ -492,7 +492,7 @@ void mlife_setup(void)
     class_addfloat(mlife_class, ml_int);
 	class_addbang(mlife_class, ml_bang);
     
-    post(version);
+    logpost(NULL, 4, version);
 }
 #else
 void maxlib_mlife_setup(void)

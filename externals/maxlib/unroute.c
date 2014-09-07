@@ -167,7 +167,7 @@ void maxlib_unroute_setup(void)
     class_addanything(unroute_class, unroute_any);
 #ifndef MAXLIB
     
-    post(version);
+    logpost(NULL, 4, version);
 #else
 	class_addcreator((t_newmethod)unroute_new, gensym("unroute"), A_GIMME, 0);
     class_sethelpsymbol(unroute_class, gensym("maxlib/unroute-help.pd"));

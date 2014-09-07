@@ -94,7 +94,7 @@ void listfifo_setup(void)
 	class_addbang(listfifo_class, listfifo_bang);
     class_addlist(listfifo_class, listfifo_list);
     
-    post(version);
+    logpost(NULL, 4, version);
 }
 #else
 void maxlib_listfifo_setup(void)

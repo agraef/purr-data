@@ -1813,7 +1813,7 @@ void maxlib_chord_setup(void)
     class_addmethod(chord_class, (t_method)chord_ft1, gensym("ft1"), A_FLOAT, 0);
 #ifndef MAXLIB
     
-    post(version);
+    logpost(NULL, 4, version);
 #else
 	class_addcreator((t_newmethod)chord_new, gensym("chord"), A_DEFFLOAT, 0);
     class_sethelpsymbol(chord_class, gensym("maxlib/chord-help.pd"));

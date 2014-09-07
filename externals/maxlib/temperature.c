@@ -103,7 +103,7 @@ void temperature_setup(void)
 	class_addmethod(temperature_class, (t_method)temperature_time, gensym("time"), A_FLOAT, 0);
 	class_addanything(temperature_class, temperature_anything);
     
-    post(version);
+    logpost(NULL, 4, version);
 }
 #else
 void maxlib_temperature_setup(void)

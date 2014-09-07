@@ -72,7 +72,7 @@ void expo_setup(void)
     	sizeof(t_rand_expo), 0, A_DEFFLOAT, 0);
     class_addbang(rand_expo_class, rand_expo_bang);
 	class_sethelpsymbol(rand_expo_class, gensym("expo-help.pd"));
-    post(version);
+    logpost(NULL, 4, version);
 }
 #else
 void maxlib_expo_setup(void)

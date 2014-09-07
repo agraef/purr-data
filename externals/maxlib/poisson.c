@@ -77,7 +77,7 @@ void poisson_setup(void)
     	sizeof(t_rand_poisson), 0, A_DEFFLOAT, 0);
     class_addbang(rand_poisson_class, rand_poisson_bang);
 	class_sethelpsymbol(rand_poisson_class, gensym("poisson-help.pd"));
-    post(version);
+    logpost(NULL, 4, version);
 }
 #else
 void maxlib_poisson_setup(void)

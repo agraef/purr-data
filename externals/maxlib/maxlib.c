@@ -22,7 +22,7 @@
 /*                                                                              */
 /* ---------------------------------------------------------------------------- */
 #ifndef VERSION
-#define VERSION "1.5.3"
+#define VERSION "1.5.4"
 #endif
 
 #include "m_pd.h"
@@ -179,9 +179,9 @@ void maxlib_setup(void)
 
 	post("\n       maxlib :: Music Analysis eXtensions LIBrary");
 	post("       written by Olaf Matthes <olaf.matthes@gmx.de>");
-	post("       version "VERSION);
+	logpost(NULL, 4, "       version "VERSION);
 	post("       compiled "__DATE__);
-	post("       latest version at http://www.akustische-kunst.org/puredata/maxlib/");
+	logpost(NULL, 4, "       latest version at http://www.akustische-kunst.org/puredata/maxlib/");
 	post("       objects: allow arbran arraycopy average beat beta bilex borax cauchy ");
 	post("                chord delta deny dist divide divmod edge expo fifo gauss ");
 	post("                gestalt history ignore iso lifo linear listfifo listfunnel ");

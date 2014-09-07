@@ -653,7 +653,7 @@ void netserver_setup(void)
    class_addmethod(netserver_class, (t_method)netserver_debug, gensym("debug"), 0);
    
    
-   post(version);
+   logpost(NULL, 4, version);
 }
 #else
 void maxlib_netserver_setup(void)

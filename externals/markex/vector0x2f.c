@@ -54,14 +54,12 @@ static void vectorDiv_setup(void)
     	sizeof(t_vectorDiv), 0, A_DEFFLOAT, 0);
     class_addcreator((t_newmethod)vectorDiv_new, gensym("v/"), A_DEFFLOAT, 0);
     class_addmethod(vectorDiv_class, (t_method)doVectorDiv,
-    	    &s_list, A_GIMME, A_NULL); 
+    	    &s_list, A_GIMME, A_NULL);
+    class_sethelpsymbol(vectorDiv_class, gensym("vector0x2f"));
 }
 
 
-void setup_vector0x2f(void){
-  vectorDiv_setup();
-}
-
-void setup_v0x2f(void){
-  vectorDiv_setup();
-}
+void setup_vector0x2f(void) { vectorDiv_setup(); }
+void vector0x2f_setup(void) { vectorDiv_setup(); }
+void setup_v0x2f(void)      { vectorDiv_setup(); }
+void v0x2f_setup(void)      { vectorDiv_setup(); }

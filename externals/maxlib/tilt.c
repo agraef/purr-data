@@ -170,7 +170,7 @@ void tilt_setup(void)
 	class_addmethod(tilt_class, (t_method)tilt_low_limit, gensym("low"), A_FLOAT, 0);
 	class_addmethod(tilt_class, (t_method)tilt_trip_point, gensym("trip"), A_FLOAT, 0);
     
-    post(version);
+    logpost(NULL, 4, version);
 }
 #else
 void maxlib_tilt_setup(void)

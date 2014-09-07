@@ -67,7 +67,7 @@ void linear_setup(void)
     	sizeof(t_rand_linear), 0, A_DEFFLOAT, 0);
     class_addbang(rand_linear_class, rand_linear_bang);
 	class_sethelpsymbol(rand_linear_class, gensym("linear-help.pd"));
-    post(version);
+    logpost(NULL, 4, version);
 }		
 #else
 void maxlib_linear_setup(void)

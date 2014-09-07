@@ -25,7 +25,7 @@
 #include "m_pd.h"
 #include <stdlib.h>
 
-static char *version = "arraycopy v0.2, written by Olaf Matthes <olaf.matthes@gmx.de>";
+static char *version = "arraycopy v0.2.1, written by Olaf Matthes <olaf.matthes@gmx.de>";
 
 typedef struct arraycopy
 {
@@ -80,13 +80,25 @@ static void arraycopy_setsourcearray(t_arraycopy *x, t_symbol *s)
 	/* get's called directly when we get a 'bang' */
 static void arraycopy_docopy(t_arraycopy *x)
 {
+  /* use new 64-bit compatible array API if available */
+#if (defined PD_MAJOR_VERSION && defined PD_MINOR_VERSION) && (PD_MAJOR_VERSION > 0 || PD_MINOR_VERSION >= 41)
+# define arraynumber_t t_word
+# define array_getarray garray_getfloatwords
+# define array_get(pointer, index) (pointer[index].w_float)
+# define array_set(pointer, index, value) ((pointer[index].w_float)=value)
+#else
+# define arraynumber_t t_float
+# define array_getarray garray_getfloatarray
+# define array_get(pointer, index) (pointer[index])
+# define array_set(pointer, index, value) ((pointer[index])=value)
+#endif
+
 	t_garray *b;		/* make local copy of array */
-	t_float *tab;                 /* the content itselfe */
-	int items;
+	arraynumber_t *tab;  /* the content itself */
+	int sourcesize, destsize;
 	t_int i;
 	t_garray *A;
-	int npoints;
-	t_float *vec;
+	arraynumber_t *vec;
 
 	if(!x->x_destarray)
 	{
@@ -110,39 +122,56 @@ static void arraycopy_docopy(t_arraycopy *x)
 	}
 
 		// read from our array
-	if (!garray_getfloatarray(b, &items, &tab))
+	if (!array_getarray(b, &sourcesize, &tab))
 	{
-		post("arraycopy: couldn't read from source array!");
+		pd_error(x, "arraycopy: couldn't read from source array '%s'!",
+                 x->x_sourcearray->s_name);
 		return;
 	}
 
 	if (!(A = (t_garray *)pd_findbyclass(x->x_destarray, garray_class)))
 		error("arraycopy: %s: no such array", x->x_destarray->s_name);
-	else if (!garray_getfloatarray(A, &npoints, &vec))
+	else if (!array_getarray(A, &destsize, &vec))
 		error("arraycopy: %s: bad template ", x->x_destarray->s_name);
 	else
 	{
-		if(x->x_start > items)	// check start point
+		if(x->x_start > sourcesize)
 		{
-			post("arraycopy: source start point out of range for the array given");
+			pd_error(x, "arraycopy: start point %i out of range for source '%s'",
+                     (int)x->x_start, x->x_sourcearray->s_name);
+			return;
+		}
+		if(x->x_start > destsize)
+		{
+			pd_error(x, "arraycopy: start point %i out of range for destination '%s'",
+                     (int)x->x_start, x->x_destarray->s_name);
 			return;
 		}
 		if(x->x_end)	// end point is specified
 		{
-			if(x->x_end > items)	// check start point
-			{
-				post("arraycopy: source end point out of range for the array given");
-				x->x_end = items;
+            if(x->x_end > sourcesize)
+            {
+                logpost(x, 2, "arraycopy: end point %i out of range for source '%s', using %i",
+                        (int)x->x_end, x->x_sourcearray->s_name, sourcesize);
+                x->x_end = sourcesize;
+            }
+            if(x->x_end > destsize)
+            {
+                logpost(x, 2, "arraycopy: end point %i out of range for destination '%s', using %i",
+                        (int)x->x_end, x->x_destarray->s_name, destsize);
+                x->x_end = destsize;
 			}
 		}
-		else x->x_end = items;
+        else
+            x->x_end = (sourcesize < destsize ? sourcesize : destsize);
 
 		if(x->x_pos)
 			vec += x->x_pos;
 
 		for(i = x->x_start; i < x->x_end; i++)
 		{
-			*vec++ = tab[i];
+            array_set(vec, 0, array_get(tab, i));
+			vec++;
 		}
 		garray_redraw(A);
 		if(x->x_print)post("arraycopy: copied %d values from array \"%s\" to array \"%s\"", 
@@ -277,7 +306,7 @@ void maxlib_arraycopy_setup(void)
 	// class_addlist(arraycopy_class, arraycopy_list);
 #ifndef MAXLIB
     
-    post(version);
+    logpost(NULL, 4, version);
 #else
     class_sethelpsymbol(arraycopy_class, gensym("maxlib/arraycopy-help.pd"));
 #endif

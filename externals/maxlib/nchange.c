@@ -186,7 +186,7 @@ void nchange_setup(void)
     class_addanything(nchange_class, nchange_list);
     class_addmethod(nchange_class, (t_method)nchange_set, gensym("set"), A_GIMME, 0);
     
-    post(version);
+    logpost(NULL, 4, version);
 }
 #else
 void maxlib_nchange_setup(void)

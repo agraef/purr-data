@@ -25,7 +25,7 @@
 #X restore 402 361 graph;
 #X obj 30 235 score sco_array 2 300;
 #X msg 130 173 set sco_array;
-#X msg 23 449 \; sco_array resize 25 \; sco_array read examplescore.txt
+#X msg 23 449 \; sco_array resize 25 \; sco_array read examples/score.txt
 \;;
 #X text 250 174 set to array that contains the score;
 #X text 88 303 position on score;

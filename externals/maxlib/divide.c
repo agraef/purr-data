@@ -101,7 +101,7 @@ void maxlib_divide_setup(void)
 	class_addbang(divide_class, (t_method)divide_bang);
 #ifndef MAXLIB
     
-    post(version);
+    logpost(NULL, 4, version);
 #else
 	class_addcreator((t_newmethod)divide_new, gensym("divide"), A_GIMME, 0);
     class_sethelpsymbol(divide_class, gensym("maxlib/divide-help.pd"));

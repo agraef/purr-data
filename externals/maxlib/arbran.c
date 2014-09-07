@@ -181,7 +181,7 @@ void maxlib_arbran_setup(void)
 	class_addmethod(rand_arbran_class, (t_method)rand_arbran_setarrays, gensym("set"), A_SYMBOL, A_SYMBOL, 0);
 #ifndef MAXLIB
 	class_sethelpsymbol(rand_arbran_class, gensym("arbran-help.pd"));
-    post(version);
+    logpost(NULL, 4, version);
 #else
 	class_addcreator((t_newmethod)rand_arbran_new, gensym("arbran"), A_SYMBOL, A_SYMBOL, 0);
 	class_sethelpsymbol(rand_arbran_class, gensym("maxlib/arbran-help.pd"));

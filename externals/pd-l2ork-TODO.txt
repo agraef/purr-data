@@ -6,6 +6,8 @@ creb
 flatgui (disabled, as all externals have various problems)
 gem2pdp
 hcs
+markex
+maxlib
 moonlib
 mrpeach
 pdp

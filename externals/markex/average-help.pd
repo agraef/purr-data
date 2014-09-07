@@ -7,7 +7,7 @@
 #X msg 247 164 reset 5;
 #X msg 345 168 clear;
 #X text 89 408 The initial argument is the number to average together.
-The default is 10 numbers.;
+The default is 10 numbers, the maximum is 100 numbers;
 #X obj 421 231 average 20;
 #X text 139 23 [average];
 #X text 81 371 [average] together a series of numbers.;

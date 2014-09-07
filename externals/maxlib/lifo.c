@@ -93,7 +93,7 @@ void lifo_setup(void)
 	class_addbang(lifo_class, lifo_bang);
 	class_addmethod(lifo_class, (t_method)lifo_clear, gensym("clear"), 0);
     
-    post(version);
+    logpost(NULL, 4, version);
 }
 #else
 void maxlib_lifo_setup(void)

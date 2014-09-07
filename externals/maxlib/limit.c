@@ -117,7 +117,7 @@ void maxlib_limit_setup(void)
     class_addbang(limit_class, limit_bang);
 #ifndef MAXLIB
     
-    post(version);
+    logpost(NULL, 4, version);
 #else
     class_sethelpsymbol(limit_class, gensym("maxlib/limit-help.pd"));
 #endif

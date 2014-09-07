@@ -55,6 +55,8 @@ static void vectorMult_setup(void)
     class_addcreator((t_newmethod)vectorMult_new, gensym("v*"), A_DEFFLOAT, 0);
     class_addmethod(vectorMult_class, (t_method)doVectorMult,
 		&s_list, A_GIMME, A_NULL); 
+
+    class_sethelpsymbol(vectorMult_class, gensym("vector0x2a"));
 }
 
 void setup_vector0x2a(void){

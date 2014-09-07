@@ -282,7 +282,7 @@ void pulse_setup(void)
     class_addfloat(pulse_class, pulse_onoff);
     class_addbang(pulse_class, pulse_bang);
     
-    post(version);
+    logpost(NULL, 4, version);
 }
 #else
 void maxlib_pulse_setup(void)

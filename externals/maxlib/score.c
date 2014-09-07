@@ -288,7 +288,7 @@ void score_setup(void)
 	class_addmethod(score_class, (t_method)score_set, gensym("set"), A_SYMBOL, 0);
     class_addfloat(score_class, score_float);
     
-    post(version);
+    logpost(NULL, 4, version);
 }
 #else
 void maxlib_score_setup(void)

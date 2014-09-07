@@ -67,7 +67,7 @@ void edge_setup(void)
     	0, sizeof(t_edge), 0, A_DEFFLOAT, 0);
     class_addfloat(edge_class, edge_float);
     
-    post(version);
+    logpost(NULL, 4, version);
 }
 #else
 void maxlib_edge_setup(void)

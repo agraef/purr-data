@@ -105,7 +105,7 @@ void maxlib_allow_setup(void)
     class_addfloat(allow_class, allow_float);
 #ifndef MAXLIB
     
-    post(version);
+    logpost(NULL, 4, version);
 #else
     class_sethelpsymbol(allow_class, gensym("maxlib/allow-help.pd"));
 #endif

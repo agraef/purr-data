@@ -11,12 +11,14 @@
 /* instance structure */
 static t_class *average_class;
 
+#define MAX_NUMBERS 100
+
 typedef struct _average
 {
 	t_object    x_obj;	        /* obligatory object header */
 	int	        a_total;	    /* number of numbers to average */
 	int	        a_whichNum;	    /* which number are pointing at */
-	float	    a_numbers[100]; /* numbers to average, 100 maximum */
+	float	    a_numbers[MAX_NUMBERS]; /* numbers to average */
 	t_outlet    *t_out1;	    /* the outlet */
 } t_average;
 
@@ -39,21 +41,27 @@ void average_float(t_average *x, t_floatarg n)
     average_bang(x);
 }
 
-void average_total(t_average *x, t_floatarg n)
+void average_total(t_average *x, t_float f)
 {
-    x->a_total = (int)n;
+    if (f) x->a_total = (int)f;
+    else x->a_total = 10;
+    if (x->a_total > MAX_NUMBERS) {
+        logpost(x, 2, "[average]: argument set max numbers greater than %i, setting to %i",
+                MAX_NUMBERS, MAX_NUMBERS);
+        x->a_total = MAX_NUMBERS;
+    }
 }
 
 void average_reset(t_average *x, t_floatarg newVal)
 {
     int n;  
-    for (n=0; n < 100; n ++) x->a_numbers[n] = newVal;
+    for (n=0; n < MAX_NUMBERS; n ++) x->a_numbers[n] = newVal;
 }
 
 void average_clear(t_average *x)
 {
     int n;    
-    for ( n = 0; n < 100; n ++) x->a_numbers[n] = 0.0f;
+    for ( n = 0; n < MAX_NUMBERS; n ++) x->a_numbers[n] = 0.0f;
 }
 
 void *average_new(t_floatarg f) /* init vals in struc */
@@ -62,8 +70,7 @@ void *average_new(t_floatarg f) /* init vals in struc */
     x->t_out1 = outlet_new(&x->x_obj, 0);
     inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_float, gensym("fl1"));
     average_clear(x);
-    if (f) x->a_total = (int)f;
-    else x->a_total = 10;
+    average_total(x, f);
     x->a_whichNum = 0;
     return (x);
 }

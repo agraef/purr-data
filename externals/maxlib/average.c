@@ -24,10 +24,10 @@
 
 #include "m_pd.h"
 #include <math.h>
+#include <stdlib.h>
+#include <stdio.h>
 
-#define MAX_ARG  128                /* maximum number of items to average */
-
-static char *version = "average v0.1, written by Olaf Matthes <olaf.matthes@gmx.de>";
+static char *version = "average v0.2, written by Olaf Matthes <olaf.matthes@gmx.de>, revised by Ivica Ico Bukvic <ico@vt.edu>";
  
 typedef struct average
 {
@@ -38,7 +38,7 @@ typedef struct average
   t_outlet *x_outtendency;          /* outputs the tendency of the average */
   t_int    x_limit;                 /* indicates if input is 'blocked' (1) */
   t_int    x_index;                 /* the number of elements to average */
-  t_float  x_input[MAX_ARG];        /* stores the input values we need for averaging */
+  t_float  *x_input;        		/* stores the input values we need for averaging */
   t_int    x_inpointer;             /* actual position in above array */
   t_float  x_average;               /* what do you guess ? */
   t_float  x_lastaverage;
@@ -91,7 +91,7 @@ static void average_float(t_average *x, t_floatarg f)
 				x->x_average = x->x_average / (float)normalise(x->x_index - 1);
 		} else post("average: internal error!");
 	}
-	if(++x->x_inpointer > x->x_index)
+	if(++x->x_inpointer >= x->x_index)
 	{
 		x->x_inpointer = 0;
 		if(x->x_lastaverage < x->x_average)
@@ -111,15 +111,35 @@ static void average_float(t_average *x, t_floatarg f)
 
 static void average_index(t_average *x, t_floatarg f)
 {
-	x->x_index = (t_int)f;
-	if(x->x_index > MAX_ARG)x->x_index = MAX_ARG;
+	if ((t_int)f > 0 && (t_int)f != x->x_index)
+	{
+		int zero_out_new = 0;
+		int i = 0;
+
+		if ((t_int)f > x->x_index)
+			zero_out_new = x->x_index;
+		x->x_index = (t_int)f;		
+		x->x_input = (t_float *)realloc(x->x_input, x->x_index * sizeof(t_float));
+		if (zero_out_new)
+		{
+			for (i = zero_out_new; i < x->x_index; i++)
+				x->x_input[i] = 0;			
+		}
+		
+		/* DEBUG:
+		printf("%d %d: ", (int)x->x_index, zero_out_new);
+		for (i=0; i<x->x_index; i++)
+			printf("%g ", x->x_input[i]);
+		printf("\n");
+		*/
+	}
 }
 
 static void average_reset(t_average *x)
 {
 	int i;
-		/* zeroe out the array */
-	for(i = 0; i < MAX_ARG; i++)x->x_input[i] = 0.0;
+		/* zero out the array */
+	for(i = 0; i < x->x_index; i++)x->x_input[i] = 0.0;
 	x->x_inpointer = 0;
 	x->x_average = 0;
 	x->x_lastaverage = 0;
@@ -146,28 +166,24 @@ static void average_weight(t_average *x)
 
 static void average_free(t_average *x)
 {
-	/* nothing to do */
+	free(x->x_input);
 }
 
 static t_class *average_class;
 
 static void *average_new(t_floatarg f)
 {
-	int i;
-
-    t_average *x = (t_average *)pd_new(average_class);
+	t_average *x = (t_average *)pd_new(average_class);
 	x->x_inindex = inlet_new(&x->x_ob, &x->x_ob.ob_pd, gensym("float"), gensym("index"));
 	x->x_outfloat = outlet_new(&x->x_ob, gensym("float"));
 	x->x_outtendency = outlet_new(&x->x_ob, gensym("float"));
 
-		/* zeroe out the array */
-	for(i = 0; i < MAX_ARG; i++)x->x_input[i] = 0.0;
+		/* zero out the array */
 	x->x_index = (t_int)f;
-	if(x->x_index > MAX_ARG)
-	{
-		x->x_index = MAX_ARG;
-		post("average: set number of items to %d", x->x_index);
-	}
+	if (x->x_index < 1)
+		x->x_index = 1;
+	x->x_input = (t_float *)calloc(x->x_index,sizeof(t_float));
+
 	x->x_inpointer = 0;
 	x->x_average = 0;
 	x->x_mode = 0;
@@ -192,7 +208,7 @@ void maxlib_average_setup(void)
     class_addfloat(average_class, average_float);
 	class_addmethod(average_class, (t_method)average_index, gensym("index"), A_FLOAT, 0);
 #ifndef MAXLIB
-    post(version);
+    logpost(NULL, 4, version);
     
 #else
 	class_addcreator((t_newmethod)average_new, gensym("average"), A_DEFFLOAT, 0);

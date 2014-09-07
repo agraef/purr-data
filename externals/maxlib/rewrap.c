@@ -139,7 +139,7 @@ void rewrap_setup(void)
 	class_addmethod(rewrap_class, (t_method)rewrap_a, gensym("a"), A_FLOAT, 0);
 	class_addmethod(rewrap_class, (t_method)rewrap_b, gensym("b"), A_FLOAT, 0);
     
-    post(version);
+    logpost(NULL, 4, version);
 }
 #else
 void maxlib_rewrap_setup(void)

@@ -394,7 +394,7 @@ void maxlib_beat_setup(void)
 	class_addmethod(beat_class, (t_method)beat_print, gensym("print"), 0);
 #ifndef MAXLIB
     
-    post(version);
+    logpost(NULL, 4, version);
 #else
 	class_addcreator((t_newmethod)beat_new, gensym("beat"), A_DEFFLOAT, 0);
     class_sethelpsymbol(beat_class, gensym("maxlib/beat-help.pd"));

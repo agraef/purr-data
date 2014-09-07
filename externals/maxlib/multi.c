@@ -94,7 +94,7 @@ void multi_setup(void)
     class_addmethod(multi_class, (t_method)multi_ft1, gensym("ft1"), A_FLOAT, 0);
 	class_addbang(multi_class, (t_method)multi_bang);
     
-    post(version);
+    logpost(NULL, 4, version);
 }
 #else
 void maxlib_multi_setup(void)

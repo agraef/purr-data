@@ -325,7 +325,7 @@ void rhythm_setup(void)
 	class_addmethod(rhythm_class, (t_method)rhythm_reset, gensym("reset"), 0);
 	class_addmethod(rhythm_class, (t_method)rhythm_print, gensym("print"), 0);
     
-    post(version);
+    logpost(NULL, 4, version);
 }
 #else
 void maxlib_rhythm_setup(void)

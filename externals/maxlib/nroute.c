@@ -172,7 +172,7 @@ void maxlib_nroute_setup(void)
 	class_addanything(proxy_class, nroute_setmatch);
 #ifndef MAXLIB
     
-    post(version);
+    logpost(NULL, 4, version);
 #else
     class_sethelpsymbol(nroute_class, gensym("maxlib/nroute-help.pd"));
 #endif

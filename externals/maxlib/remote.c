@@ -94,7 +94,7 @@ void remote_setup(void)
     	sizeof(t_remote), 0, A_DEFSYM, 0);
     class_addanything(remote_class, remote_anything);
 	
-    post(version);
+    logpost(NULL, 4, version);
 }
 #else
 void maxlib_remote_setup(void)

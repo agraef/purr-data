@@ -104,7 +104,7 @@ void maxlib_velocity_setup(void)
 	class_addbang(velocity_class, velocity_bang);
 #ifndef MAXLIB
     
-    post(version);
+    logpost(NULL, 4, version);
 #else
     class_sethelpsymbol(velocity_class, gensym("maxlib/velocity-help.pd"));
 #endif

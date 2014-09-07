@@ -166,7 +166,7 @@ void maxlib_timebang_setup(void)
 	class_addbang(timebang_class, (t_method)timebang_bang);
 #ifndef MAXLIB
     
-    post(version);
+    logpost(NULL, 4, version);
 #else
     class_sethelpsymbol(timebang_class, gensym("maxlib/timebang-help.pd"));
 #endif

@@ -94,7 +94,7 @@ void plus_setup(void)
     class_addmethod(plus_class, (t_method)plus_ft1, gensym("ft1"), A_FLOAT, 0);
 	class_addbang(plus_class, (t_method)plus_bang);
     
-    post(version);
+    logpost(NULL, 4, version);
 }
 #else
 void maxlib_plus_setup(void)

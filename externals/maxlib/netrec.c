@@ -433,7 +433,7 @@ void netrec_setup(void)
     	sizeof(t_netrec), 0, A_DEFFLOAT, A_DEFFLOAT, A_DEFSYM, 0);
 	class_addmethod(netrec_class, (t_method)netrec_print, gensym("print"), 0);
 	
-    post(version);
+    logpost(NULL, 4, version);
 }
 #else
 void maxlib_netrec_setup(void)

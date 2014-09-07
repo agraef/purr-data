@@ -325,7 +325,7 @@ void maxlib_pong_setup(void)
 	class_addbang(pong_class, pong_bang);
 #ifndef MAXLIB
     
-    post(version);
+    logpost(NULL, 4, version);
 #else
     class_sethelpsymbol(pong_class, gensym("maxlib/pong-help.pd"));
 #endif

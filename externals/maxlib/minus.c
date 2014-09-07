@@ -95,7 +95,7 @@ void minus_setup(void)
     class_addmethod(minus_class, (t_method)minus_ft1, gensym("ft1"), A_FLOAT, 0);
 	class_addbang(minus_class, (t_method)minus_bang);
     
-    post(version);
+    logpost(NULL, 4, version);
 }
 #else
 void maxlib_minus_setup(void)

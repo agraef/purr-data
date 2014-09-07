@@ -76,7 +76,7 @@ void listfunnel_setup(void)
     class_addfloat(listfunnel_class, listfunnel_float);
     class_addlist(listfunnel_class, listfunnel_list);
     
-    post(version);
+    logpost(NULL, 4, version);
 }
 #else
 void maxlib_listfunnel_setup(void)

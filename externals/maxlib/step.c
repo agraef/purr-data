@@ -162,7 +162,7 @@ void step_setup(void)
     class_addmethod(step_class, (t_method)step_stop, gensym("stop"), 0);
     class_addfloat(step_class, (t_method)step_float);
 	
-    post(version);
+    logpost(NULL, 4, version);
 }
 #else
 void maxlib_step_setup(void)
