@@ -1965,6 +1965,50 @@ extern void canvas_canvas_setundo(t_canvas *x);
 extern void graph_checkgop_rect(t_gobj *z, t_glist *glist,
     int *xp1, int *yp1, int *xp2, int *yp2);
 
+/* we use the following function after saving to file
+   gop-enabled canvas with hidetext disabled to check
+   whether the requested size fits the newfound canvas
+   name (as reflected in its new filename)
+
+   LATER: use this for __clickhook below and possibly
+   other places as well */
+void canvasgop_checksize(t_canvas *x)
+{
+    if (x->gl_isgraph)
+    {
+        int x1=0, y1=0, x2=0, y2=0;
+        int dirty=0;
+        if (x->gl_owner)
+        {
+            gobj_getrect((t_gobj*)x, x->gl_owner,
+                &x1, &y1, &x2, &y2);
+        }
+        else
+        {
+            graph_checkgop_rect((t_gobj*)x, x, &x1, &y1, &x2, &y2);
+        }
+        if (x2-x1 > x->gl_pixwidth)
+        {
+            x->gl_pixwidth = x2-x1;
+            dirty = 1;
+        }
+        if (y2-y1 > x->gl_pixheight)
+        { 
+            x->gl_pixheight = y2-y1;
+            dirty = 1;
+        }
+
+        if (dirty)
+        {
+            post("Adjusting canvas graph-on-parent area to accomodate its name. If you want to have a smaller graph-on-parent window, please hide graph text.");
+            canvas_dirty(x, 1);
+            canvasgop_draw_move(x,1);
+            canvas_fixlinesfor(x, (t_text *)x);
+            scrollbar_update(x);
+        }
+    }
+}
+
 void canvasgop__clickhook(t_scalehandle *sh, int newstate)
 {
     t_canvas *x = (t_canvas *)(sh->h_master);

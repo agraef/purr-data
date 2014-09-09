@@ -745,6 +745,7 @@ static void canvas_savetemplatesto(t_canvas *x, t_binbuf *b, int wholething)
 }
 
 void canvas_reload(t_symbol *name, t_symbol *dir, t_gobj *except);
+extern void canvasgop_checksize(t_canvas *x);
 
     /* save a "root" canvas to a file; cf. canvas_saveto() which saves the
     body (and which is called recursively.) */
@@ -765,6 +766,8 @@ static void canvas_savetofile(t_canvas *x, t_symbol *filename, t_symbol *dir)
         }
         post("saved to: %s/%s", dir->s_name, filename->s_name);
         canvas_dirty(x, 0);
+        if (x->gl_isgraph)
+            canvasgop_checksize(x);
         canvas_reload(filename, dir, &x->gl_gobj);
     }
     binbuf_free(b);

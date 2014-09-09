@@ -136,10 +136,6 @@ int canvas_hasarray(t_canvas *x)
 /* JMZ: emit a closebang message */
 void canvas_closebang(t_canvas *x);
 
-/* variant of the glist_findrtext found in g_rtext.c 
-   that does not throw a consistency check */
-extern t_rtext *glist_tryfindrtext(t_glist *gl, t_text *who);
-
     /* delete an object from a glist and free it */
 void glist_delete(t_glist *x, t_gobj *y)
 {
@@ -149,7 +145,7 @@ void glist_delete(t_glist *x, t_gobj *y)
         //fprintf(stderr,"glist_delete YES\n");
         t_gobj *g;
         t_object *ob;
-        t_template *tmpl;
+        t_template *tmpl = NULL;
         t_gotfn chkdsp = zgetfn(&y->g_pd, gensym("dsp"));
         t_canvas *canvas = glist_getcanvas(x);
         int drawcommand = class_isdrawcommand(y->g_pd);
@@ -251,7 +247,7 @@ void glist_delete(t_glist *x, t_gobj *y)
         if (chkdsp) canvas_update_dsp();
         if (drawcommand)
         {
-            if (tmpl && !(canvas_isgroup(canvas) && canvas->gl_unloading))
+            if (tmpl != NULL && !(canvas_isgroup(canvas) && canvas->gl_unloading))
             {
                 canvas_redrawallfortemplate(tmpl, 1);
             }
@@ -798,6 +794,8 @@ int text_ypix(t_text *x, t_glist *glist)
                 x->te_ypix / (glist->gl_screeny2 - glist->gl_screeny1)));
 }
 
+extern void canvas_updateconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2, t_int tag);
+
     /* redraw all the items in a glist.  We construe this to mean
     redrawing in its own window and on parent, as needed in each case.
     This is too conservative -- for instance, when you draw an "open"
@@ -1225,7 +1223,8 @@ static void graph_getrect(t_gobj *z, t_glist *glist,
         //fprintf(stderr,"%d %d %d %d\n", x1, y1, x2, y2);
 
         // check if the text is not hidden and if so use that as the
-        // limit of the gop's size
+        // limit of the gop's size (we check for hidden flag inside
+        // the function we point to)
         graph_checkgop_rect(z, glist, &x1, &y1, &x2, &y2);
 
         /* fix visibility of edge items for garrays */

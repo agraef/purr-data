@@ -1287,12 +1287,16 @@ static void gatom_properties(t_gobj *z, t_glist *owner)
 
 /* -------------------- widget behavior for text objects ------------ */
 
+/* variant of the glist_findrtext found in g_rtext.c 
+   that does not throw a consistency check */
+extern t_rtext *glist_tryfindrtext(t_glist *gl, t_text *who);
+
 static void text_getrect(t_gobj *z, t_glist *glist,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
     //fprintf(stderr,"text_getrect\n");
     t_text *x = (t_text *)z;
-    int width, height, iscomment = (x->te_type == T_TEXT);
+    int width = 0, height = 0, iscomment = (x->te_type == T_TEXT);
     t_float x1, y1, x2, y2;
 
         /* for number boxes, we know width and height a priori, and should
@@ -1337,11 +1341,14 @@ static void text_getrect(t_gobj *z, t_glist *glist,
         built.  LATER reconsider when "vis" flag should be on and off? */
     else if (glist->gl_editor && glist->gl_editor->e_rtext)
     {
-        t_rtext *y = glist_findrtext(glist, x);
-        width = rtext_width(y);
-        height = rtext_height(y) - (iscomment << 1);
+        t_rtext *y = glist_tryfindrtext(glist, x);
+        if (y)
+        {
+            width = rtext_width(y);
+            height = rtext_height(y) - (iscomment << 1);
+        }
 
-        //fprintf(stderr,"rtext_width=%d\n", width);
+        //fprintf(stderr,"rtext width=%d height=%d\n", width, height);
 
         /*  now find if we have more inlets or outlets than
             what can comfortably fit and adjust accordingly
