@@ -4940,6 +4940,13 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
             canvas_setcursor(x, down ?
                 CURSOR_RUNMODE_NOTHING : CURSOR_EDITMODE_NOTHING);
             sys_vgui("pdtk_canvas_editval .x%lx %d\n", (t_int)x, down ? 0 : 1);
+            if(x->gl_editor && x->gl_editor->gl_magic_glass)
+            {
+                if (down)
+                {
+                    magicGlass_hide(x->gl_editor->gl_magic_glass);                    
+                }
+            }
         }
     }
     //fprintf(stderr," %d %d %d %s %d %d\n",
