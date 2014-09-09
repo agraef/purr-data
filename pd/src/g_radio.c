@@ -378,7 +378,9 @@ static int radio_newclick(t_gobj *z, struct _glist *glist, int xpix, int ypix,
 static void radio_loadbang(t_radio *x)
 {
     if(!sys_noloadbang && x->x_gui.x_loadinit)
+    {
         radio_bang(x);
+    }
 }
 
 static void radio_number(t_radio *x, t_floatarg num)
@@ -438,7 +440,7 @@ static void *radio_new(t_symbol *s, int argc, t_atom *argv)
         bflcol[0] = atom_getintarg(11, argc, argv);
         bflcol[1] = atom_getintarg(12, argc, argv);
         bflcol[2] = atom_getintarg(13, argc, argv);
-        on = mini(maxi(atom_getintarg(14, argc, argv),0),x->x_number-1);
+        on = mini(maxi(atom_getintarg(14, argc, argv),0),num-1);
     }
     else iemgui_new_getnames(&x->x_gui, 4, 0);
     x->x_gui.x_draw = (t_iemfunptr)radio_draw;
@@ -446,7 +448,7 @@ static void *radio_new(t_symbol *s, int argc, t_atom *argv)
     if (x->x_gui.x_font_style<0 || x->x_gui.x_font_style>2) x->x_gui.x_font_style=0;
     x->x_number = num;
     x->x_on = x->x_gui.x_loadinit ? on : 0;
-    x->x_on_old = x->x_on;
+    x->x_on_old = -1;
     x->x_change = (chg==0)?0:1;
     if (iemgui_has_rcv(&x->x_gui))
         pd_bind(&x->x_gui.x_obj.ob_pd, x->x_gui.x_rcv);

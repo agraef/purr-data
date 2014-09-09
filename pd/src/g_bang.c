@@ -368,7 +368,7 @@ static void *bng_new(t_symbol *s, int argc, t_atom *argv)
     x->x_gui. x_handle = scalehandle_new((t_object *)x,x->x_gui.x_glist,1,bng__clickhook,bng__motionhook);
     x->x_gui.x_lhandle = scalehandle_new((t_object *)x,x->x_gui.x_glist,0,bng__clickhook,bng__motionhook);
     x->x_gui.x_obj.te_iemgui = 1;
-    x->x_gui.x_changed = 0;
+    x->x_gui.x_changed = -1;
 
     return (x);
 }
