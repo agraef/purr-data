@@ -351,6 +351,7 @@ void glist_init(t_glist *x)
 
 void canvasgop__clickhook(t_scalehandle *sh, int newstate);
 void canvasgop__motionhook(t_scalehandle *sh,t_floatarg f1, t_floatarg f2);
+extern void glist_setlastxy(t_glist *gl, int xval, int yval);
 
     /* make a new glist.  It will either be a "root" canvas or else
     it appears as a "text" object in another window (canvas_getcurrent() 
@@ -456,6 +457,7 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     x->x_mhandle = scalehandle_new((t_object *)x,x,0,canvasgop__clickhook,canvasgop__motionhook);
 
     x->u_queue = canvas_undo_init(x);
+    glist_setlastxy(x, 20, 20);
     return(x);
 }
 

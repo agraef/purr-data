@@ -72,7 +72,7 @@ int canvas_apply_restore_original_position(t_canvas *x, int orig_pos);
 extern void canvas_draw_gop_resize_hooks(t_canvas *x);
 static void canvas_font(t_canvas *x, t_floatarg font, t_floatarg oldfont,
     t_floatarg resize, t_floatarg preview);
-static void canvas_displaceselection(t_canvas *x, int dx, int dy);
+void canvas_displaceselection(t_canvas *x, int dx, int dy);
 void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
     t_floatarg fmod);
 /* for updating preset_node locations in case of operations that alter
@@ -98,7 +98,7 @@ int glob_ctrl = 0;
 int glob_alt = 0;
 
 static t_glist *canvas_last_glist;
-static int canvas_last_glist_x, canvas_last_glist_y, canvas_last_glist_mod;
+static int canvas_last_glist_x=20, canvas_last_glist_y=20, canvas_last_glist_mod;
 
 struct _outlet
 {
@@ -4653,7 +4653,7 @@ void canvas_mousedown_middle(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
 }
 
     /* displace the selection by (dx, dy) pixels */
-static void canvas_displaceselection(t_canvas *x, int dx, int dy)
+void canvas_displaceselection(t_canvas *x, int dx, int dy)
 {
     //fprintf(stderr,"canvas_displaceselection %d %d\n", dx, dy);
     t_selection *y;
@@ -5110,7 +5110,7 @@ void canvas_startmotion(t_canvas *x)
     int xval, yval;
     if (!x->gl_editor) return;
     glist_getnextxy(x, &xval, &yval);
-    if (xval == 0 && yval == 0) return;
+    //if (xval == 0 && yval == 0) return;
     x->gl_editor->e_onmotion = MA_MOVE;
     x->gl_editor->e_xwas = xval;
     x->gl_editor->e_ywas = yval;
@@ -7239,7 +7239,7 @@ void glist_getnextxy(t_glist *gl, int *xpix, int *ypix)
 {
     if (canvas_last_glist == gl)
         *xpix = canvas_last_glist_x, *ypix = canvas_last_glist_y;
-    else *xpix = *ypix = 40;
+    else *xpix = *ypix = 20;
 }
 
 void glist_setlastxy(t_glist *gl, int xval, int yval)

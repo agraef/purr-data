@@ -35,6 +35,7 @@ t_widgetbehavior text_widgetbehavior;
 
 static char *invalid_fill = "$::pd_colors(dash_fill)";
 
+extern void canvas_displaceselection(t_canvas *x, int dx, int dy);
 extern void canvas_apply_setundo(t_canvas *x, t_gobj *y);
 extern void canvas_setundo(t_canvas *x, t_undofn undofn, void *buf,
     const char *name);
@@ -99,7 +100,11 @@ void glist_text(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
         if (!we_are_undoing)
             canvas_undo_add(glist_getcanvas(gl), 9, "create",
                 (void *)canvas_undo_set_create(glist_getcanvas(gl)));
-        if (connectme == 0) canvas_startmotion(glist_getcanvas(gl));
+        if (connectme == 0)
+        {
+            canvas_displaceselection(glist_getcanvas(gl), -10, -10);
+            canvas_startmotion(glist_getcanvas(gl));
+        }
     }
 }
 
@@ -341,6 +346,7 @@ void canvas_obj(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
         else if (connectme == 0)
         {
             //fprintf(stderr,"canvas_obj calls canvas_startmotion\n");
+            canvas_displaceselection(glist_getcanvas(gl), -10, -10);
             canvas_startmotion(glist_getcanvas(gl));
         }
         //canvas_setundo(glist_getcanvas(gl),
@@ -411,6 +417,7 @@ void canvas_iemguis(t_glist *gl, t_symbol *guiobjname)
         glist_noselect(gl);
 
     int connectme, xpix, ypix, indx, nobj;
+
     canvas_howputnew(gl, &connectme, &xpix, &ypix, &indx, &nobj);
 
     /* NOT NECESSARY ANY MORE: compensate for the iemgui sliders' xyoffset
@@ -437,7 +444,11 @@ void canvas_iemguis(t_glist *gl, t_symbol *guiobjname)
         canvas_connect(gl, indx, 0, nobj, 0);
     //glist_getnextxy(gl, &xpix, &ypix);
     //canvas_objtext(gl, xpix, ypix, 1, b);
-    else if (connectme == 0 ) canvas_startmotion(glist_getcanvas(gl));
+    else if (connectme == 0)
+    {
+        canvas_displaceselection(glist_getcanvas(gl), -10, -10);
+        canvas_startmotion(glist_getcanvas(gl));
+    }
     //canvas_setundo(glist_getcanvas(gl),
     //    canvas_undo_create, canvas_undo_set_create(gl), "create");
     canvas_undo_add(glist_getcanvas(gl), 9, "create",
@@ -751,7 +762,11 @@ void canvas_msg(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
         gobj_activate(&x->m_text.te_g, gl, 1);
         if (connectme == 1)
             canvas_connect(gl, indx, 0, nobj, 0);
-        else if (connectme == 0) canvas_startmotion(glist_getcanvas(gl));
+        else if (connectme == 0)
+        {
+            canvas_displaceselection(glist_getcanvas(gl), -10, -10);
+            canvas_startmotion(glist_getcanvas(gl));
+        }
         //canvas_setundo(glist_getcanvas(gl),
         //    canvas_undo_create, canvas_undo_set_create(gl), "create");
         canvas_undo_add(glist_getcanvas(gl), 9, "create",
@@ -1246,7 +1261,11 @@ void canvas_atom(t_glist *gl, t_atomtype type,
         glist_select(gl, &x->a_text.te_g);
         if (connectme == 1)
             canvas_connect(gl, indx, 0, nobj, 0);
-        else if (connectme == 0) canvas_startmotion(glist_getcanvas(gl));
+        else if (connectme == 0)
+        {
+            canvas_displaceselection(glist_getcanvas(gl), -10, -10);
+            canvas_startmotion(glist_getcanvas(gl));
+        }
         //canvas_setundo(glist_getcanvas(gl),
         //    canvas_undo_create, canvas_undo_set_create(gl), "create");
         canvas_undo_add(glist_getcanvas(gl), 9, "create",
