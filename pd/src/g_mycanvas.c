@@ -81,6 +81,18 @@ static void my_canvas__clickhook(t_scalehandle *sh, int newstate)
             x->x_vis_h += sh->h_dragy;
             canvas_dirty(x->x_gui.x_glist, 1);
         }
+        // if select area is larger tahn the visible arae
+        // make select area match that of the dragged one
+        // so that we don't have to go into properties to 
+        // manually adjust this
+        if (x->x_vis_w < x->x_gui.x_w)
+            x->x_gui.x_w = x->x_vis_w;
+        if (x->x_vis_h < x->x_gui.x_h)
+            x->x_gui.x_h = x->x_vis_h;
+        if (x->x_gui.x_w < x->x_gui.x_h)
+            x->x_gui.x_h = x->x_gui.x_w;
+        else
+            x->x_gui.x_w = x->x_gui.x_h;
         if (glist_isvisible(x->x_gui.x_glist))
         {
             my_canvas_draw_move(x, x->x_gui.x_glist);
