@@ -1,5 +1,5 @@
 --- ../../../pd-extended/externals/maxlib/average.c	2013-10-27 15:48:21.866606276 -0400
-+++ average.c	2014-09-07 11:20:51.069292145 -0400
++++ average.c	2014-09-09 19:28:16.694066181 -0400
 @@ -24,10 +24,10 @@
  
  #include "m_pd.h"
@@ -32,7 +32,7 @@
  	{
  		x->x_inpointer = 0;
  		if(x->x_lastaverage < x->x_average)
-@@ -111,15 +111,35 @@
+@@ -111,15 +111,40 @@
  
  static void average_index(t_average *x, t_floatarg f)
  {
@@ -40,12 +40,17 @@
 -	if(x->x_index > MAX_ARG)x->x_index = MAX_ARG;
 +	if ((t_int)f > 0 && (t_int)f != x->x_index)
 +	{
++		//fprintf(stderr,"average_index realloc old=%d new=%d\n", (int)x->x_index, (int)f);
 +		int zero_out_new = 0;
 +		int i = 0;
 +
 +		if ((t_int)f > x->x_index)
 +			zero_out_new = x->x_index;
-+		x->x_index = (t_int)f;		
++		x->x_index = (t_int)f;
++		if (x->x_inpointer >= x->x_index)
++		{
++			x->x_inpointer = 0;
++		}
 +		x->x_input = (t_float *)realloc(x->x_input, x->x_index * sizeof(t_float));
 +		if (zero_out_new)
 +		{
@@ -72,7 +77,7 @@
  	x->x_inpointer = 0;
  	x->x_average = 0;
  	x->x_lastaverage = 0;
-@@ -146,28 +166,24 @@
+@@ -146,28 +171,24 @@
  
  static void average_free(t_average *x)
  {

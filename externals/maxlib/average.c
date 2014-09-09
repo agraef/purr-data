@@ -113,12 +113,17 @@ static void average_index(t_average *x, t_floatarg f)
 {
 	if ((t_int)f > 0 && (t_int)f != x->x_index)
 	{
+		//fprintf(stderr,"average_index realloc old=%d new=%d\n", (int)x->x_index, (int)f);
 		int zero_out_new = 0;
 		int i = 0;
 
 		if ((t_int)f > x->x_index)
 			zero_out_new = x->x_index;
-		x->x_index = (t_int)f;		
+		x->x_index = (t_int)f;
+		if (x->x_inpointer >= x->x_index)
+		{
+			x->x_inpointer = 0;
+		}
 		x->x_input = (t_float *)realloc(x->x_input, x->x_index * sizeof(t_float));
 		if (zero_out_new)
 		{
