@@ -2,8 +2,8 @@
 #X obj 22 199 hip~ 5;
 #X text 81 199 high pass filter to cut DC;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array sample-table 44104 float 0;
-#X coords 0 1.02 44103 -1.02 200 130 1;
+#X array sample-table 44104 float 0 black black;
+#X coords 0 1.02 44104 -1.02 200 130 1;
 #X restore 99 243 graph;
 #X obj 22 172 tabread4~ sample-table;
 #X obj 22 142 line~;
@@ -14,10 +14,10 @@
 #X text 64 93 convert to SAMPLES (441 samples in 0.01 sec);
 #X text 168 164 read from the table;
 #X text 169 178 (the input is the index in samples);
-#X text 17 488 For more on reading and writing soundfiles to tables
+#X text 17 493 For more on reading and writing soundfiles to tables
 \, setting their lengths \, etc \, see "arrays" in the "control examples"
 series.;
-#X text 17 526 Fanatics take note: if you want really high-fidelity
+#X text 17 533 Fanatics take note: if you want really high-fidelity
 sampling \, use a high-quality resampling program to up-sample your
 soundfile to 88200 to drastically reduce interpolation error.;
 #X text 65 142 convert smoothly to audio signal;
@@ -61,7 +61,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 7 2 sampler- Related Help Documents;
 #X text 19 37 links:;
 #X restore 103 589 pd References;
-#X text 17 394 This patch introduces the [tabread4~] object \, which
+#X text 17 388 This patch introduces the [tabread4~] object \, which
 reads audio samples out of a floating-point array \, often called a
 "sample table." The input is the index of the sample to read \, counting
 from zero. The output is calculated using 4-point cubic interpolation

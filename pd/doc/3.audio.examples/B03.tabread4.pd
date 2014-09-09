@@ -1,6 +1,6 @@
-#N canvas 374 90 626 581 10;
+#N canvas 374 90 452 581 10;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array waveform12 131 float 1;
+#X array waveform12 131 float 1 black black;
 #A 0 -0.172615 -0.172615 -0.172615 -0.172615 -0.172615 -0.141231 -0.109846
 -0.0941538 -0.0627692 -0.0470769 0.0156923 0.0784615 0.125538 0.188308
 0.235385 0.298154 0.360923 0.392308 0.470769 0.533538 0.596308 0.643385
@@ -18,8 +18,8 @@
 0.219692 0.109846 -0.0156923 -0.0941538 -0.109846 -0.141231 -0.156923
 -0.172615 -0.188308 -0.204 -0.204 -0.219692 -0.204 -0.204 -0.219692
 -0.219692 -0.204 -0.204 -0.204 -0.204 -0.204 -0.188308;
-#X coords 0 1.02 130 -1.02 258 130 1;
-#X restore 311 42 graph;
+#X coords 0 1.02 131 -1.02 150 80 1;
+#X restore 274 39 graph;
 #X floatatom 131 292 0 0 100 0 - - -;
 #N canvas 159 26 532 285 output 0;
 #X obj 338 160 t b;
@@ -91,9 +91,9 @@
 #X text 164 38 squeeze;
 #X text 92 38 frequency;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array wave-out12 441 float 0;
-#X coords 0 1 440 -1 300 140 1;
-#X restore 311 202 graph;
+#X array wave-out12 441 float 0 black black;
+#X coords 0 1 441 -1 150 80 1;
+#X restore 274 124 graph;
 #X obj 127 260 tabwrite~ wave-out12;
 #X msg 127 234 bang;
 #X obj 170 128 +~ 128;
@@ -122,7 +122,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 7 2 wavetable oscillators- Related Help Documents;
 #X text 19 37 list the other tab-objects here;
 #X restore 103 561 pd References;
-#X text 18 352 The [tabread4~] module is available for situations requiring
+#X text 18 343 The [tabread4~] module is available for situations requiring
 more control than [tabosc4~] offers. The relationship between the two
 is the same as between [cos~] and [osc~] \, although the units are
 different between [cos~] and [tabread4~]. [cos~] assumes input is normalized
