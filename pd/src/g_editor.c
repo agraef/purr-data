@@ -5891,7 +5891,7 @@ static void canvas_paste_xyoffset(t_canvas *x)
 static void canvas_paste_atmouse(t_canvas *x)
 {
     t_selection *sel;
-    fprintf(stderr,"paste_atmouse\n");
+    //fprintf(stderr,"paste_atmouse\n");
     /* use safe values for x1 and y1 which are essentially the same as xyoffset */
     int x1 = x->gl_editor->e_xwas+10, y1 = x->gl_editor->e_ywas+10, init = 0;
     t_float sx = 0.0, sy = 0.0;
