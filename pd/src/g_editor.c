@@ -3805,7 +3805,7 @@ int canvas_doconnect_doit(t_canvas *x, t_gobj *y1, t_gobj *y2,
             error("preset_node does not work with messages.");
             return(1);
         }
-        if (obj_noutlets(ob2) == 0)
+        if (obj_noutlets(ob2) == 0 && pd_class(&y2->g_pd) != print_class)
         {
             error("preset_node does not work with objects with zero "
                   "or undefined number of outlets\n");
@@ -3880,7 +3880,11 @@ int canvas_doconnect_doit(t_canvas *x, t_gobj *y1, t_gobj *y2,
     {
         
         //fprintf(stderr,"gotta do auto-connect back to preset_node\n");
+        // second check is to make sure we are not connected to the
+        // second outlet of the preset_node in which case we should not
+        // connect back to it
         if (!canvas_isconnected(x, ob2, 0, ob1, 0) &&
+            !canvas_isconnected(x, ob1, 1, ob2, 0) &&
             pd_class(&y2->g_pd) != print_class)
         {
             oc2 = obj_connect(ob2, 0, ob1, 0);

@@ -529,7 +529,7 @@ static int preset_node_location_changed(t_preset_node *x)
 
 static void preset_node_anything(t_preset_node *x, t_symbol *s, int argc, t_atom *argv)
 {
-    if (PH_DEBUG) fprintf(stderr,"preset_node_anything %lx\n", (t_int)x);
+    if (PH_DEBUG) fprintf(stderr,"preset_node_anything %lx %s %d\n", (t_int)x, s->s_name, argc);
     int i;
     alist_list(&x->pn_val, 0, argc, argv);
     if (PH_DEBUG)
