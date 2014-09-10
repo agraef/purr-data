@@ -1,6 +1,4 @@
 C:
-*update preset_hub/node help files
-
 *messages should be aware of $0?
 *verbosity level for the console
 *Draw SECONDARY redrect on gop scalar patchers to reflect the viewport?
