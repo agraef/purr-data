@@ -46,7 +46,9 @@
 //==================== forward declarations ========================//
 
 void preset_hub_add_a_node(t_preset_hub *h, t_preset_node *x);
-void preset_hub_dirty(t_preset_hub *h);
+void preset_hub_set_status(t_preset_hub *h, t_float f);
+int  preset_hub_get_status(t_preset_hub *h);
+void preset_hub_status(t_preset_hub *h);
 void preset_hub_recall(t_preset_hub *h, t_float f);
 void preset_hub_store(t_preset_hub *h, t_float f);
 void preset_hub_delete_a_node(t_preset_hub *h, t_preset_node *x);
@@ -552,7 +554,7 @@ static void preset_node_anything(t_preset_node *x, t_symbol *s, int argc, t_atom
         }
     }
     if (x->pn_hub)
-        preset_hub_dirty(x->pn_hub);    
+        preset_hub_set_status(x->pn_hub, 1);    
 }
 
 //======== following functions are for interaction with the hub/pd =======//
@@ -719,6 +721,24 @@ void preset_node_sort(t_preset_node *x, t_float f)
         preset_hub_sort(x->pn_hub, f);
 }
 
+void preset_node_status(t_preset_node *x)
+{
+    // in preset node we also have -1 value (unlike hubs)
+    // -1 = node is not paired
+    //  0 = hub is clean
+    //  1 = hub nodes have been changed since preset was stored (dirty)
+    int value = -1;
+    if (x->pn_hub)
+    {
+        preset_hub_status(x->pn_hub);
+        value = preset_hub_get_status(x->pn_hub);
+    }
+
+    t_atom ap[1];
+    SETFLOAT(ap+0, (t_float)value);
+    outlet_anything(x->pn_status_outlet, gensym("status"), 1, ap); 
+}
+
 //=========== end functions are for interaction with the hub ============//
 
 static void preset_node_set(t_preset_node *x, t_symbol *s, int argc,
@@ -801,7 +821,8 @@ static void *preset_node_new(t_symbol *s, int argc, t_atom *argv)
     x->pn_gl_loc = NULL;
     x->pn_old_gl_loc_length = 0;  
     x->pn_old_gl_loc = NULL;
-     x->pn_outlet = outlet_new(&x->pn_obj, 0);
+    x->pn_outlet = outlet_new(&x->pn_obj, 0);
+    x->pn_status_outlet = outlet_new(&x->pn_obj, 0);
 
     glob_preset_node_list_add(x);
 
@@ -873,6 +894,8 @@ void preset_node_setup(void)
         gensym("purge"), A_NULL, 0);
     class_addmethod(preset_node_class, (t_method)preset_node_sort,
         gensym("sort"), A_DEFFLOAT, 0);
+    class_addmethod(preset_node_class, (t_method)preset_node_status,
+        gensym("status"), A_NULL, 0);
 
     class_addmethod(preset_node_class, (t_method)preset_node_request_hub_read,
         gensym("read"), A_DEFSYM, 0);
@@ -999,11 +1022,21 @@ void preset_hub_bang(t_preset_hub *x)
     outlet_anything(x->ph_outlet, gensym("current"), 1, ap);
 }
 
-void preset_hub_dirty(t_preset_hub *x)
+void preset_hub_set_status(t_preset_hub *x, t_float f)
+{
+    x->ph_status = (int)f;
+}
+
+int preset_hub_get_status(t_preset_hub *x)
+{
+    return(x->ph_status);
+}
+
+void preset_hub_status(t_preset_hub *x)
 {
     t_atom ap[1];
-    SETFLOAT(ap+0, (t_float)1);
-    outlet_anything(x->ph_outlet, gensym("dirty"), 1, ap);    
+    SETFLOAT(ap+0, (t_float)x->ph_status);
+    outlet_anything(x->ph_outlet, gensym("status"), 1, ap);    
 }
 
 void preset_hub_recall(t_preset_hub *x, t_float f)
@@ -1054,7 +1087,10 @@ void preset_hub_recall(t_preset_hub *x, t_float f)
             }
         }
         if (valid)
+        {
             x->ph_preset = f;
+            x->ph_status = 0;
+        }
         if(PH_DEBUG) fprintf(stderr,"    done\n");
 
         SETFLOAT(ap+0, f);
@@ -1192,6 +1228,7 @@ void preset_hub_store(t_preset_hub *h, t_float f)
         canvas_resume_dsp(dspstate);
 
         if (changed && !h->ph_extern_file) canvas_dirty(h->ph_canvas, 1);
+        h->ph_status = 0;
 
         SETFLOAT(ap+0, f);
         SETFLOAT(ap+1, 1);
@@ -2489,6 +2526,7 @@ static void *preset_hub_new(t_symbol *s, int argc, t_atom *argv)
     x->ph_obj.te_ypix = 0;
 
     x->ph_preset = -1;
+    x->ph_status = 0;
 
     x->ph_canvas = canvas;
 
@@ -2771,6 +2809,8 @@ void preset_hub_setup(void)
         gensym("purge"), A_NULL, 0);
     class_addmethod(preset_hub_class, (t_method)preset_hub_sort,
         gensym("sort"), A_DEFFLOAT, 0);
+    class_addmethod(preset_hub_class, (t_method)preset_hub_status,
+        gensym("status"), A_NULL, 0);
 
     class_addmethod(preset_hub_class, (t_method)preset_hub_read,
         gensym("read"), A_DEFSYM, 0);

@@ -27,6 +27,7 @@ typedef struct _preset_node
 	int  pn_old_gl_loc_length;
 
 	t_outlet *pn_outlet;
+	t_outlet *pn_status_outlet;
 } t_preset_node;
 
 // stores each of the presets per each preset_node
@@ -54,6 +55,8 @@ struct _preset_hub
 	t_atom *ph_name;
 	int ph_invis;					// make it invisible (only for the k12 mode)
 	int ph_preset;					// last enabled preset (-1 at init time)
+	int ph_status;					//  0 = clean
+									//  1 = dirty (nodes changed values since preset was stored)
 
 	int ph_extern_file;				// are we reading/writing from/to a file
 									// 0 = standard mode (saving with patch) 
@@ -76,7 +79,8 @@ typedef struct _glob_preset_hub_list
 typedef struct _glob_preset_node_list
 {
 	t_preset_node *gpnl_node;
-	int gpnl_paired;				// whether the node is paired with a hub (otherwise don't bother updating its location)
+	int gpnl_paired;				// whether the node is paired with a hub 
+									// otherwise don't bother updating its location
 	struct _glob_preset_node_list *gpnl_next;
 } t_glob_preset_node_list;
 
