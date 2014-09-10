@@ -1122,6 +1122,7 @@ proc pdtk_ping {} {
 proc pdtk_check {canvas x message default} {
     global pd_nt
 	raise $canvas
+	reset_ctrl_on_popup_window
     if {$pd_nt == 1} {
         set answer [tk_messageBox -message $x -type yesno -default $default \
             -icon question]
@@ -1143,6 +1144,7 @@ proc pdtk_check {canvas x message default} {
 proc pdtk_canvas_menuclose {window reply} {
 	global pd_nt
 	raise $window
+	reset_ctrl_on_popup_window
 	set filename [wm title $window]
 	set message [format {Do you wish to save the changes you made in "%s"?} $filename]
 	set answer [tk_messageBox -message $message -type yesnocancel -default "yes" \
@@ -2466,7 +2468,7 @@ proc put_K12_objects {name object} {
 
 	if { $k12_mode == 1 } {
 		pd [concat $name dirty 1 \;]
-		pd [concat $name obj_abstraction K12/$object 0 20 \;]
+		pd [concat $name obj_abstraction @pd_extra/K12/$object 0 20 \;]
 	}
 }
 
