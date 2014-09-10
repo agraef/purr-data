@@ -3702,49 +3702,52 @@ void canvas_drawconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2,
 void canvas_updateconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2,
     t_int tag)
 {
-    int ymax = 0;
-    int halfx = (lx2 - lx1)/2;
-    int halfy = (ly2 - ly1)/2;
-    //int yoff = (abs(halfx)+abs(halfy))/2;
-    int yoff = abs(halfy);
-    //if (yoff < 2) yoff = 2;
-    if (halfy >= 0)
+    if (glist_isvisible(x) && glist_istoplevel(x))
     {
-        //second object is below the first
-        if (abs(halfx) <=10)
+        int ymax = 0;
+        int halfx = (lx2 - lx1)/2;
+        int halfy = (ly2 - ly1)/2;
+        //int yoff = (abs(halfx)+abs(halfy))/2;
+        int yoff = abs(halfy);
+        //if (yoff < 2) yoff = 2;
+        if (halfy >= 0)
         {
-            ymax = abs(halfy * pow((halfx/10.0),2));
-            if (ymax > 10) ymax = 10;
+            //second object is below the first
+            if (abs(halfx) <=10)
+            {
+                ymax = abs(halfy * pow((halfx/10.0),2));
+                if (ymax > 10) ymax = 10;
+            }
+            else ymax = 10;
         }
-        else ymax = 10;
-    }
-    else
-    {
-        //second object is above the first
-        ymax = 20;
-    }
-    //fprintf(stderr,"pow%f halfx%d yoff%d ymax%d\n",
-    //    pow((halfx/10.0),2), halfx, yoff, ymax);
-    if (yoff > ymax) yoff = ymax;
-    if (tag)
-    {
-        //sys_vgui(".x%lx.c coords l%lx %d %d %d %d\n",
-        //    x, tag, lx1, ly1, lx2, ly2);
-        //bezier curves FTW
-        sys_vgui(".x%lx.c coords l%lx "
-                 "\"M %d %d Q %d %d %d %d Q %d %d %d %d\"\n",
-            x, tag, lx1, ly1,
-            lx1, ly1 + yoff, lx1 + halfx, ly1 + halfy,
-            lx2, ly2 - yoff, lx2, ly2);
-    }
-    else
-    {
-        //sys_vgui(".x%lx.c coords x %d %d %d %d\n", x, lx1, ly1, lx2, ly2);
-        //bezier curves FTW
-        sys_vgui(".x%lx.c coords x \"M %d %d Q %d %d %d %d Q %d %d %d %d\"\n",
-            x, lx1, ly1,
-            lx1, ly1 + yoff, lx1 + halfx, ly1 + halfy,
-            lx2, ly2 - yoff, lx2, ly2);
+        else
+        {
+            //second object is above the first
+            ymax = 20;
+        }
+        //fprintf(stderr,"pow%f halfx%d yoff%d ymax%d\n",
+        //    pow((halfx/10.0),2), halfx, yoff, ymax);
+        if (yoff > ymax) yoff = ymax;
+        if (tag)
+        {
+            //sys_vgui(".x%lx.c coords l%lx %d %d %d %d\n",
+            //    x, tag, lx1, ly1, lx2, ly2);
+            //bezier curves FTW
+            sys_vgui(".x%lx.c coords l%lx "
+                     "\"M %d %d Q %d %d %d %d Q %d %d %d %d\"\n",
+                x, tag, lx1, ly1,
+                lx1, ly1 + yoff, lx1 + halfx, ly1 + halfy,
+                lx2, ly2 - yoff, lx2, ly2);
+        }
+        else
+        {
+            //sys_vgui(".x%lx.c coords x %d %d %d %d\n", x, lx1, ly1, lx2, ly2);
+            //bezier curves FTW
+            sys_vgui(".x%lx.c coords x \"M %d %d Q %d %d %d %d Q %d %d %d %d\"\n",
+                x, lx1, ly1,
+                lx1, ly1 + yoff, lx1 + halfx, ly1 + halfy,
+                lx2, ly2 - yoff, lx2, ly2);
+        }
     }
 }
 
@@ -4991,6 +4994,8 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
     glist_setlastxymod(x, xpos, ypos, mod);
     if (x->gl_editor->e_onmotion == MA_MOVE)
     {
+        //fprintf(stderr,"%g %g %d %d\n", xpos - x->gl_editor->e_xwas,
+        //    ypos - x->gl_editor->e_ywas, x->gl_editor->e_xwas, x->gl_editor->e_ywas);
         canvas_displaceselection(x, 
             xpos - x->gl_editor->e_xwas, ypos - x->gl_editor->e_ywas);
         x->gl_editor->e_xwas = xpos;

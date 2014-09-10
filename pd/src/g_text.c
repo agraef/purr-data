@@ -395,11 +395,11 @@ void canvas_obj_abstraction_from_menu(t_glist *gl, t_symbol *s,
     }
     else if (connectme == 0)
     {
+        glist_setlastxy(glist_getcanvas(gl), xpix, ypix);
         canvas_startmotion(glist_getcanvas(gl));
     }
     canvas_undo_add(glist_getcanvas(gl), 9, "create",
         (void *)canvas_undo_set_create(glist_getcanvas(gl)));
-    glist_setlastxy(glist_getcanvas(gl), xpix, ypix);
 }
 
 /* make an object box for an object that's already there. */
