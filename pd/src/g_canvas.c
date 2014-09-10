@@ -457,7 +457,7 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     x->x_mhandle = scalehandle_new((t_object *)x,x,0,canvasgop__clickhook,canvasgop__motionhook);
 
     x->u_queue = canvas_undo_init(x);
-    glist_setlastxy(x, 20, 20);
+    //glist_setlastxy(x, 20, 20);
     return(x);
 }
 

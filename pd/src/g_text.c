@@ -395,7 +395,7 @@ void canvas_obj_abstraction_from_menu(t_glist *gl, t_symbol *s,
     }
     else if (connectme == 0)
     {
-        glist_setlastxy(glist_getcanvas(gl), xpix, ypix);
+        //glist_setlastxy(glist_getcanvas(gl), xpix, ypix);
         canvas_startmotion(glist_getcanvas(gl));
     }
     canvas_undo_add(glist_getcanvas(gl), 9, "create",

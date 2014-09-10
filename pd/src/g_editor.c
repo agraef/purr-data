@@ -31,6 +31,7 @@ char *class_gethelpdir(t_class *c);
 /* ------------------ forward declarations --------------- */
 static void canvas_doclear(t_canvas *x);
 void glist_setlastxymod(t_glist *gl, int xval, int yval, int mod);
+void glist_setlastxy(t_glist *gl, int xval, int yval);
 static void glist_donewloadbangs(t_glist *x);
 static t_binbuf *canvas_docopy(t_canvas *x);
 static void canvas_dopaste(t_canvas *x, t_binbuf *b);
@@ -4994,8 +4995,8 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
     glist_setlastxymod(x, xpos, ypos, mod);
     if (x->gl_editor->e_onmotion == MA_MOVE)
     {
-        //fprintf(stderr,"%g %g %d %d\n", xpos - x->gl_editor->e_xwas,
-        //    ypos - x->gl_editor->e_ywas, x->gl_editor->e_xwas, x->gl_editor->e_ywas);
+        //fprintf(stderr,"x-was=%g y-was=%g xwas=%d ywas=%d x=%g y=%g\n", xpos - x->gl_editor->e_xwas,
+        //    ypos - x->gl_editor->e_ywas, x->gl_editor->e_xwas, x->gl_editor->e_ywas, xpos, ypos);
         canvas_displaceselection(x, 
             xpos - x->gl_editor->e_xwas, ypos - x->gl_editor->e_ywas);
         x->gl_editor->e_xwas = xpos;
@@ -5886,7 +5887,7 @@ static void canvas_paste_xyoffset(t_canvas *x)
 static void canvas_paste_atmouse(t_canvas *x)
 {
     t_selection *sel;
-    //fprintf(stderr,"paste_atmouse\n");
+    fprintf(stderr,"paste_atmouse\n");
     /* use safe values for x1 and y1 which are essentially the same as xyoffset */
     int x1 = x->gl_editor->e_xwas+10, y1 = x->gl_editor->e_ywas+10, init = 0;
     t_float sx = 0.0, sy = 0.0;
@@ -5931,6 +5932,7 @@ static void canvas_paste_atmouse(t_canvas *x)
     canvas_undo_already_set_move = 1;
     canvas_displaceselection(x,
         (x->gl_editor->e_xwas)+5-x1, (x->gl_editor->e_ywas)-y1);
+    //glist_setlastxy(x, (int)((x->gl_editor->e_xwas)+5-x1), (int)((x->gl_editor->e_ywas)-y1));
     canvas_startmotion(x);
 }
 
