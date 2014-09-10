@@ -1,6 +1,7 @@
 C:
-*messages should be aware of $0?
+*what is the ideal offset for startmotion to avoid handles in iemguis?
 
+*messages should be aware of $0?
 *verbosity level for the console
 *Draw SECONDARY redrect on gop scalar patchers to reflect the viewport?
 

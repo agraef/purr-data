@@ -123,19 +123,23 @@ int gobj_filter_highlight_behavior(t_text *y)
 void canvas_raise_all_cords (t_canvas *x) {
     sys_vgui(".x%lx.c raise all_cords\n", x);
 }
+
 static void canvas_enteritem (t_canvas *x, int xpos, int ypos, const char *tag) {
     sys_vgui("pdtk_canvas_enteritem .x%x.c %d %d %s -1\n",
         x, xpos, ypos, tag);
 }
+
 static void canvas_leaveitem (t_canvas *x) {
     sys_vgui("pdtk_canvas_leaveitem .x%x.c\n", x);
 }
+
 static void tooltip_erase (t_canvas *x) {
     if (objtooltip) {
         objtooltip = 0;
         canvas_leaveitem(x);
     }
 }
+
 static void canvas_nlet_conf (t_canvas *x, int type) {
     int filter = type=='o' ? last_outlet_filter : last_inlet_filter;
     int issignal = type=='o' ? outlet_issignal : inlet_issignal;
@@ -145,14 +149,16 @@ static void canvas_nlet_conf (t_canvas *x, int type) {
         (issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)")),
         (issignal ? "$pd_colors(signal_nlet)" : "$pd_colors(control_nlet)"));
 }
-static void canvas_nlet_conf2 (t_canvas *x, int cond) { // because of one exception...
+
+/*static void canvas_nlet_conf2 (t_canvas *x, int cond) { // because of one exception...
     int issignal = inlet_issignal;
     sys_vgui(".x%x.c itemconfigure %s -stroke %s -fill %s -strokewidth 1\n", x,
       x->gl_editor->canvas_cnct_inlet_tag,
       (last_inlet_filter ? "$pd_colors(iemgui_nlet)" : 
         (cond     ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)")),
         (issignal ? "$pd_colors(signal_nlet)" : "$pd_colors(control_nlet)"));
-}
+}*/
+
 void canvas_getscroll (t_canvas *x) {
     sys_vgui("pdtk_canvas_getscroll .x%lx.c\n",(long)x);
 }
@@ -3786,8 +3792,9 @@ int canvas_doconnect_doit(t_canvas *x, t_gobj *y1, t_gobj *y2,
 
     // if the first object is preset_node, check if the object
     // we are connecting to is supported. If not, disallow connection
+    // but only do so from the first outlet
     
-    if (pd_class(&y1->g_pd) == preset_node_class)
+    if (pd_class(&y1->g_pd) == preset_node_class && closest1 == 0)
     {
         if (pd_class(&y2->g_pd) == message_class)
         {
@@ -3837,7 +3844,7 @@ int canvas_doconnect_doit(t_canvas *x, t_gobj *y1, t_gobj *y2,
         oc);*/
     if (x->gl_editor->canvas_cnct_inlet_tag[0] != 0)
     {
-        canvas_nlet_conf2(x,obj_issignalinlet(ob2, closest2));
+        canvas_nlet_conf(x,'i');
         tooltip_erase(x);
         x->gl_editor->canvas_cnct_inlet_tag[0] = 0;                  
     }
@@ -5111,6 +5118,7 @@ void canvas_startmotion(t_canvas *x)
     if (!x->gl_editor) return;
     glist_getnextxy(x, &xval, &yval);
     //if (xval == 0 && yval == 0) return;
+    canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
     x->gl_editor->e_onmotion = MA_MOVE;
     x->gl_editor->e_xwas = xval;
     x->gl_editor->e_ywas = yval;
@@ -6313,8 +6321,9 @@ void canvas_connect(t_canvas *x, t_floatarg fwhoout, t_floatarg foutno,
         goto bad;
     }
         /* now check for illegal connections between preset_node object
-           and other non-supported objects */
-    if (pd_class(&src->g_pd) == preset_node_class)
+           and other non-supported objects from node's first outlet
+           (node's second outlet is for status info) */
+    if (pd_class(&src->g_pd) == preset_node_class && outno == 0)
     {
         if (pd_class(&sink->g_pd) == message_class)
         {

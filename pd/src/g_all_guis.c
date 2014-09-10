@@ -630,6 +630,22 @@ int iem_fstyletoint(t_iemgui *x)
     return ((x->x_font_style << 0) & 63);
 }
 
+char *iem_get_tag(t_canvas *glist, t_iemgui *iem_obj)
+{
+    t_gobj *y = (t_gobj *)iem_obj;
+    t_object *ob = pd_checkobject(&y->g_pd);
+
+    /* GOP objects are unable to call findrtext
+       triggering consistency check error */
+    t_rtext *yyyy = NULL;
+    if (!glist->gl_isgraph || glist_istoplevel(glist))
+        yyyy = glist_findrtext(glist_getcanvas(glist), (t_text *)&ob->ob_g);
+
+    /* on GOP we cause segfault as text_gettag() returns bogus data */
+    if (yyyy) return(rtext_gettag(yyyy));
+    else return("bogus");
+}
+
 //----------------------------------------------------------------
 // SCALEHANDLE COMMON CODE (by Mathieu, refactored from existing code)
 
@@ -997,11 +1013,12 @@ void iemgui_draw_io(t_iemgui *x, int old_sr_flags)
     if(a && !b) for (i=0; i<n; i++)
         sys_vgui(".x%lx.c create prect %d %d %d %d "
                  "-stroke $pd_colors(iemgui_nlet) "
-                 "-tags {x%lxo%d x%lx outlet %s}\n",
+                 "-tags {%so%d x%lx outlet %s}\n",
              canvas, x1+i*k, y2-1, x1+i*k + IOWIDTH, y2,
-             x, i, x, x->x_selected == x->x_glist ? "iemgui selected" : "iemgui");
+             iem_get_tag(canvas, x), i, x,
+             x->x_selected == x->x_glist ? "iemgui selected" : "iemgui");
     if(!a && b) for (i=0; i<n; i++)
-        sys_vgui(".x%lx.c delete x%lxo%d\n", canvas, x, i);
+        sys_vgui(".x%lx.c delete %so%d\n", canvas, iem_get_tag(canvas, x), i);
 
     a=old_sr_flags&IEM_GUI_OLD_RCV_FLAG;
     b=x->x_rcv!=s_empty;
@@ -1009,11 +1026,12 @@ void iemgui_draw_io(t_iemgui *x, int old_sr_flags)
     if(a && !b) for (i=0; i<n; i++)
         sys_vgui(".x%lx.c create prect %d %d %d %d "
                  "-stroke $pd_colors(iemgui_nlet) "
-                 "-tags {x%lxi%d x%lx inlet %s}\n",
+                 "-tags {%si%d x%lx inlet %s}\n",
              canvas, x1+i*k, y1, x1+i*k + IOWIDTH, y1+1,
-             x, i, x, x->x_selected == x->x_glist ? "iemgui selected" : "iemgui");
+             iem_get_tag(canvas, x), i, x,
+             x->x_selected == x->x_glist ? "iemgui selected" : "iemgui");
     if(!a && b) for (i=0; i<n; i++)
-        sys_vgui(".x%lx.c delete x%lxi%d\n", canvas, x, i);
+        sys_vgui(".x%lx.c delete %si%d\n", canvas, iem_get_tag(canvas, x), i);
 }
 
 void iemgui_io_draw_move(t_iemgui *x) {
@@ -1023,11 +1041,11 @@ void iemgui_io_draw_move(t_iemgui *x) {
     c->c_wb->w_getrectfn((t_gobj *)x,canvas,&x1,&y1,&x2,&y2);
     int i, n = c==vu_class ? 2 : 1, k=(x2-x1)-IOWIDTH;
     if(!iemgui_has_snd(x) && canvas == x->x_glist) for (i=0; i<n; i++)
-        sys_vgui(".x%lx.c coords x%lxo%d %d %d %d %d\n",
-            canvas, x, i, x1+i*k, y2-1, x1+i*k+IOWIDTH, y2);
+        sys_vgui(".x%lx.c coords %so%d %d %d %d %d\n",
+            canvas, iem_get_tag(canvas, x), i, x1+i*k, y2-1, x1+i*k+IOWIDTH, y2);
     if(!iemgui_has_rcv(x) && canvas == x->x_glist) for (i=0; i<n; i++)
-        sys_vgui(".x%lx.c coords x%lxi%d %d %d %d %d\n",
-            canvas, x, i, x1+i*k, y1, x1+i*k+IOWIDTH, y1+1);
+        sys_vgui(".x%lx.c coords %si%d %d %d %d %d\n",
+            canvas, iem_get_tag(canvas, x), i, x1+i*k, y1, x1+i*k+IOWIDTH, y1+1);
 }
 
 void iemgui_base_draw_new(t_iemgui *x) {

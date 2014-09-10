@@ -102,7 +102,7 @@ void glist_text(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
                 (void *)canvas_undo_set_create(glist_getcanvas(gl)));
         if (connectme == 0)
         {
-            canvas_displaceselection(glist_getcanvas(gl), -10, -10);
+            canvas_displaceselection(glist_getcanvas(gl), -7, -7);
             canvas_startmotion(glist_getcanvas(gl));
         }
     }
@@ -346,7 +346,7 @@ void canvas_obj(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
         else if (connectme == 0)
         {
             //fprintf(stderr,"canvas_obj calls canvas_startmotion\n");
-            canvas_displaceselection(glist_getcanvas(gl), -10, -10);
+            canvas_displaceselection(glist_getcanvas(gl), -7, -7);
             canvas_startmotion(glist_getcanvas(gl));
         }
         //canvas_setundo(glist_getcanvas(gl),
@@ -446,7 +446,7 @@ void canvas_iemguis(t_glist *gl, t_symbol *guiobjname)
     //canvas_objtext(gl, xpix, ypix, 1, b);
     else if (connectme == 0)
     {
-        canvas_displaceselection(glist_getcanvas(gl), -10, -10);
+        canvas_displaceselection(glist_getcanvas(gl), -7, -7);
         canvas_startmotion(glist_getcanvas(gl));
     }
     //canvas_setundo(glist_getcanvas(gl),
@@ -769,7 +769,7 @@ void canvas_msg(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
             canvas_connect(gl, indx, 0, nobj, 0);
         else if (connectme == 0)
         {
-            canvas_displaceselection(glist_getcanvas(gl), -10, -10);
+            canvas_displaceselection(glist_getcanvas(gl), -7, -7);
             canvas_startmotion(glist_getcanvas(gl));
         }
         //canvas_setundo(glist_getcanvas(gl),
@@ -1268,7 +1268,7 @@ void canvas_atom(t_glist *gl, t_atomtype type,
             canvas_connect(gl, indx, 0, nobj, 0);
         else if (connectme == 0)
         {
-            canvas_displaceselection(glist_getcanvas(gl), -10, -10);
+            canvas_displaceselection(glist_getcanvas(gl), -7, -7);
             canvas_startmotion(glist_getcanvas(gl));
         }
         //canvas_setundo(glist_getcanvas(gl),
