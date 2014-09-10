@@ -871,10 +871,8 @@ void canvas_disconnect(t_canvas *x,
             /* if we are dealing with a preset_node, make sure to also
                disconnect its invisible return node. We trust here that
                the object has been already connected to a valid object
-               so we blindly disconnect first outlet with the first inlet
-               (EXCEPTION: print object that cannot be connected back to) */
-            if (pd_class(&t.tr_ob->ob_g.g_pd) == preset_node_class &&
-                pd_class(&t.tr_ob2->ob_g.g_pd) != print_class)
+               so we blindly disconnect first outlet with the first inlet */
+            if (pd_class(&t.tr_ob->ob_g.g_pd) == preset_node_class && t.tr_outno == 0)
             {
                 //fprintf(stderr,"gotta disconnect hidden one too...\n");
                 obj_disconnect(t.tr_ob2, 0, t.tr_ob, 0);
@@ -3805,7 +3803,7 @@ int canvas_doconnect_doit(t_canvas *x, t_gobj *y1, t_gobj *y2,
             error("preset_node does not work with messages.");
             return(1);
         }
-        if (obj_noutlets(ob2) == 0 && pd_class(&y2->g_pd) != print_class)
+        if (obj_noutlets(ob2) == 0)
         {
             error("preset_node does not work with objects with zero "
                   "or undefined number of outlets\n");
@@ -3876,16 +3874,14 @@ int canvas_doconnect_doit(t_canvas *x, t_gobj *y1, t_gobj *y2,
     // add auto-connect back to preset_node object
     // (by this time we know we are connecting only to legal objects
     // who have at least one outlet)
-    if (pd_class(&y1->g_pd) == preset_node_class)
+    if (pd_class(&y1->g_pd) == preset_node_class && closest1 == 0)
     {
         
         //fprintf(stderr,"gotta do auto-connect back to preset_node\n");
         // second check is to make sure we are not connected to the
         // second outlet of the preset_node in which case we should not
         // connect back to it
-        if (!canvas_isconnected(x, ob2, 0, ob1, 0) &&
-            !canvas_isconnected(x, ob1, 1, ob2, 0) &&
-            pd_class(&y2->g_pd) != print_class)
+        if (!canvas_isconnected(x, ob2, 0, ob1, 0))
         {
             oc2 = obj_connect(ob2, 0, ob1, 0);
             outconnect_setvisible(oc2, 0);
@@ -6364,10 +6360,8 @@ void canvas_connect(t_canvas *x, t_floatarg fwhoout, t_floatarg foutno,
         outconnect_setvisible(oc, 1);
         /* add auto-connect back to preset_node object
            (by this time we know we are connecting only to legal objects
-           who have at least one outlet)
-           EXCEPTION: we do not connect back to the print class */
-        if (pd_class(&objsrc->ob_pd) == preset_node_class &&
-            pd_class(&sink->g_pd) != print_class)
+           who have at least one outlet) */
+        if (pd_class(&objsrc->ob_pd) == preset_node_class && outno == 0)
         {
             //fprintf(stderr,
             //   "canvas_connect: gotta do auto-connect back to preset_node\n");

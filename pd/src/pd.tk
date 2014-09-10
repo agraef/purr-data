@@ -6739,6 +6739,7 @@ proc pdtk_canvas_magicglassval {name value} {
 proc pdtk_canvas_update_edit_menu {name value} {
 	global global_selection global_clipboard k12_mode
 
+	if {![winfo exists $name]} {return}
 	# pdtk_post "update_edit_menu value=$value clipboard=$global_clipboard\n"
 
 	set global_selection $value

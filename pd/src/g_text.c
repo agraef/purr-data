@@ -106,6 +106,8 @@ void glist_text(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
             canvas_startmotion(glist_getcanvas(gl));
         }
     }
+    glob_preset_node_list_seek_hub();
+    glob_preset_node_list_check_loc_and_update();
 }
 
 /* ----------------- the "object" object.  ------------------ */
@@ -229,6 +231,10 @@ static void canvas_objtext(t_glist *gl, int xpix, int ypix,
     if (pd_class(&x->ob_pd) == voutlet_class)
         canvas_resortoutlets(glist_getcanvas(gl));
     canvas_unsetcurrent((t_canvas *)gl);
+
+    glob_preset_node_list_seek_hub();
+    glob_preset_node_list_check_loc_and_update();
+
     // here we recreate data buffer inside previously created undo snapshot
     //canvas_undo_create(glist_getcanvas(gl),
     //    glist_getcanvas(gl)->u_last->data, UNDO_FREE);
@@ -1276,6 +1282,8 @@ void canvas_atom(t_glist *gl, t_atomtype type,
         canvas_undo_add(glist_getcanvas(gl), 9, "create",
             (void *)canvas_undo_set_create(glist_getcanvas(gl)));
     }
+    glob_preset_node_list_seek_hub();
+    glob_preset_node_list_check_loc_and_update();    
 }
 
 void canvas_floatatom(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
@@ -2332,8 +2340,6 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
                 if (newest && pd_class(newest) == canvas_class)
                     canvas_loadbang((t_canvas *)newest);
                 canvas_restoreconnections(glist_getcanvas(glist));
-                glob_preset_node_list_seek_hub();
-                glob_preset_node_list_check_loc_and_update();
                 //canvas_apply_restore_original_position(glist_getcanvas(glist),
                 //    pos);
             }
