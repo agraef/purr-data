@@ -506,7 +506,20 @@ void iemgui_select(t_gobj *z, t_glist *glist, int selected)
     sys_vgui(".x%lx.c itemconfigure {x%lx&&border} -stroke %s\n", canvas, x,
         x->x_selected && x->x_glist == canvas ? selection_color : fcol);
     x->x_draw((void *)z, glist, IEM_GUI_DRAW_MODE_SELECT);
-    scalehandle_draw(x);
+    if (selected < 2)
+    {
+        scalehandle_draw(x);
+    }
+    else
+    {
+        // exception where we get rid of handles when moving tiny objects
+        // because tkpath's slowness sometimes makes mouse pointer go over
+        // a handle and messes things up. we only do this when using
+        // startmotion (see g_editor.c).
+        // LATER: get rid of this because we will deal with this better using
+        // the new toolkit.
+        scalehandle_draw_erase2(x);
+    }
     iemgui_label_draw_select(x);
     iemgui_tag_selected(x);
 }

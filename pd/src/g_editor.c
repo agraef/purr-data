@@ -3073,6 +3073,18 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
         if (x->gl_editor->e_onmotion == MA_MOVE)
         {        
             //fprintf(stderr,"letting go of objects\n");
+            t_selection *sel;
+            for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
+            {
+                if (sel && ((t_text *)sel->sel_what)->te_iemgui)
+                {
+                    // iemgui exception to hide all handles that may interfere
+                    // with the mouse cursor and its ability to move/deselect
+                    // object(s) in question. Here we reinstate them once we've
+                    // let go of the object(s)
+                    gobj_select(sel->sel_what, x, 1);
+                }
+            }
             canvas_raise_all_cords(x);
             scrollbar_update(x);
         }
@@ -5128,6 +5140,17 @@ void canvas_startmotion(t_canvas *x)
     x->gl_editor->e_onmotion = MA_MOVE;
     x->gl_editor->e_xwas = xval;
     x->gl_editor->e_ywas = yval;
+    t_selection *sel;
+    for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
+    {
+        if (sel && ((t_text *)sel->sel_what)->te_iemgui)
+        {
+            // iemgui exception to hide all handles that may interfere
+            // with the mouse cursor and its ability to move/deselect
+            // object(s) in question
+            gobj_select(sel->sel_what, x, 2);
+        }
+    }
 }
 
 /* ----------------------------- window stuff ----------------------- */
