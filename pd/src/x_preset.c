@@ -656,7 +656,7 @@ void preset_node_clear(t_preset_node *x, t_float f)
             {
                 np1 = hd2->phd_npreset;
                 // if it is first one
-                if (np1->np_preset == (int)f)
+                if (np1 && np1->np_preset == (int)f)
                 {
                     hd2->phd_npreset = np1->np_next;
                     if (np1->np_val.l_n)
@@ -687,13 +687,12 @@ void preset_node_clear(t_preset_node *x, t_float f)
                 }
             }
         }
+        SETFLOAT(ap+0, f);
+        SETFLOAT(ap+1, (t_float)changed);
+        outlet_anything(x->pn_hub->ph_outlet, gensym("node_clear"), 2, ap);
     }
-    if (changed && !x->pn_hub->ph_extern_file)
+    if (changed && (!x->pn_hub || !x->pn_hub->ph_extern_file))
         canvas_dirty(x->pn_hub->ph_canvas, 1);
-
-    SETFLOAT(ap+0, f);
-    SETFLOAT(ap+1, (t_float)changed);
-    outlet_anything(x->pn_hub->ph_outlet, gensym("node_clear"), 2, ap);
 }
 
 

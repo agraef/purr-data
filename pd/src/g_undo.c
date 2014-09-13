@@ -89,6 +89,7 @@ void canvas_undo_undo(t_canvas *x)
            their regular call will fail in case their position needed
            to be updated by undo/redo first to reflect the old one */
         glob_preset_node_list_seek_hub();
+        glob_preset_node_list_check_loc_and_update();
         if (glist_isvisible(x) && glist_istoplevel(x))
         {
             sys_vgui("pdtk_undomenu .x%lx %s %s\n",
@@ -133,6 +134,7 @@ void canvas_undo_redo(t_canvas *x)
            regular call will fail in case their position needed to be updated
            by undo/redo first to reflect the old one */
         glob_preset_node_list_seek_hub();
+        glob_preset_node_list_check_loc_and_update();
         if (glist_isvisible(x) && glist_istoplevel(x))
         {
             sys_vgui("pdtk_undomenu .x%lx %s %s\n",

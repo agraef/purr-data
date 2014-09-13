@@ -2384,7 +2384,6 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
 
         //probably don't need this here, but doesn't hurt to leave it in
         glob_preset_node_list_seek_hub();
-
         glob_preset_node_list_check_loc_and_update();
     }
 }
