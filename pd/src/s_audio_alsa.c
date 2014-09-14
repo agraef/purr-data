@@ -847,14 +847,14 @@ void alsa_getdevs(char *indevlist, int *nindevs,
             /* apparently, "cardno" is just a counter; but check that here */
         if (ndev != cardno)
             fprintf(stderr, "oops: ALSA cards not reported in order?\n");
-        sprintf(devname, "hw:%d", cardno );
-        /* fprintf(stderr, "\ntry %s...\n", devname); */
+        sprintf(devname, "hw:%d", cardno);
+        // fprintf(stderr, "\ntry %s...\n", devname);
         if (snd_ctl_open(&ctl, devname, 0) >= 0)
         {
             snd_ctl_card_info_malloc(&info);
             snd_ctl_card_info(ctl, info);
             desc = snd_ctl_card_info_get_name(info);
-            snd_ctl_card_info_free(info);
+            //snd_ctl_card_info_free(info);
         }
         else
         {

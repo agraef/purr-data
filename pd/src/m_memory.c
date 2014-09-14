@@ -55,7 +55,7 @@ void *resizebytes(void *old, size_t oldsize, size_t newsize)
     void *ret;
     if (newsize < 1) newsize = 1;
     if (oldsize < 1) oldsize = 1;
-    ret = (void *)realloc((char *)old, newsize);
+    ret = (void *)realloc((char *)old, newsize * sizeof(char *));
     if (newsize > oldsize && ret)
         memset(((char *)ret) + oldsize, 0, newsize - oldsize);
 #ifdef LOUD

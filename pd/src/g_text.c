@@ -2357,10 +2357,11 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
                 canvas_updatewindowlist();
     }
     else { // T_MESSAGE, T_TEXT, T_ATOM
-        if (x->te_type == T_TEXT)
+        if (buf && x->te_type == T_TEXT)
         {
-            char * c;
-            for(c = buf; *c != '\0'; c++)
+            char *c;
+            int n;
+            for(c = buf, n = 0; n < bufsize; n++, c++)
             {
                 if(*c == '\n')
                 {
@@ -2372,7 +2373,7 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
         t_binbuf *b = binbuf_new();
         binbuf_text(b, buf, bufsize);
         binbuf_gettext(b, &c2, &i2);
-        if (strcmp(c1, c2))
+        if (!c1 || strcmp(c1, c2))
         {
             canvas_undo_add(glist_getcanvas(glist), 10, "typing",
                 (void *)canvas_undo_set_recreate(glist_getcanvas(glist),
