@@ -5954,7 +5954,7 @@ static void canvas_paste_atmouse(t_canvas *x)
     /* redraw objects */
     canvas_undo_already_set_move = 1;
     canvas_displaceselection(x,
-        (x->gl_editor->e_xwas)+5-x1, (x->gl_editor->e_ywas)-y1);
+        (x->gl_editor->e_xwas)-x1-8, (x->gl_editor->e_ywas)-y1-8);
     //glist_setlastxy(x, (int)((x->gl_editor->e_xwas)+5-x1), (int)((x->gl_editor->e_ywas)-y1));
     canvas_startmotion(x);
 }
