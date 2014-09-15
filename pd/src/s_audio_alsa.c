@@ -839,7 +839,7 @@ void alsa_getdevs(char *indevlist, int *nindevs,
     while (!snd_card_next(&cardno) && cardno >= 0)
     {
         snd_ctl_t *ctl;
-        snd_ctl_card_info_t *info;
+        snd_ctl_card_info_t *info = NULL;
         char devname[80];
         const char *desc;
         if (2 * ndev + 2  > maxndev)
@@ -854,7 +854,6 @@ void alsa_getdevs(char *indevlist, int *nindevs,
             snd_ctl_card_info_malloc(&info);
             snd_ctl_card_info(ctl, info);
             desc = snd_ctl_card_info_get_name(info);
-            //snd_ctl_card_info_free(info);
         }
         else
         {
@@ -867,6 +866,11 @@ void alsa_getdevs(char *indevlist, int *nindevs,
         sprintf(outdevlist + 2*ndev * devdescsize, "%s (hardware)", desc);
         sprintf(outdevlist + (2*ndev + 1) * devdescsize, "%s (plug-in)", desc);
         ndev++;
+        if (info)
+        {
+            snd_ctl_card_info_free(info);
+            info = NULL;
+        }
     }
     for (i = 0, j = 2*ndev; i < alsa_nnames; i++, j++)
     {
