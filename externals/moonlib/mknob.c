@@ -265,12 +265,16 @@ static void mknob_draw_io(t_mknob *x,t_glist *glist, int old_snd_rcv_flags)
 static void mknob_draw_select(t_mknob *x,t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
+    //fprintf(stderr,"mknob_draw_select %lx %lx\n", x->x_gui.x_fsf.x_selected, glist);
 
     if(x->x_gui.x_fsf.x_selected)
     {
         //pd_bind(&x->x_gui.x_obj.ob_pd, iemgui_key_sym);
-        sys_vgui(".x%lx.c itemconfigure %xBASE -stroke #%6.6x\n", canvas, x, IEM_GUI_COLOR_SELECTED);
-        sys_vgui(".x%lx.c itemconfigure %xLABEL -fill #%6.6x\n", canvas, x, IEM_GUI_COLOR_SELECTED);
+        if (x->x_gui.x_glist == glist_getcanvas(glist))
+        {
+            sys_vgui(".x%lx.c itemconfigure %xBASE -stroke $pd_colors(selection)\n", canvas, x);
+            sys_vgui(".x%lx.c itemconfigure %xLABEL -fill $pd_colors(selection)\n", canvas, x);
+        }
 		sys_vgui(".x%lx.c addtag selected withtag %lxMKNOB\n", canvas, x);
     }
     else

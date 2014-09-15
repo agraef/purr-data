@@ -114,7 +114,7 @@ typedef struct _iem_fstyle_flags
     unsigned int x_lab_arg_tail_len:6;
     unsigned int x_lab_is_arg_num:6;
     unsigned int x_shiftdown:1;
-    unsigned int x_selected:1;
+    unsigned int x_selected:2;
     unsigned int x_finemoved:1;
     unsigned int x_put_in2out:1;
     unsigned int x_change:1;
