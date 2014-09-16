@@ -1093,7 +1093,7 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
             // all_about_arrays.pd inside custom scalars in an array
             if (pwpix < 8)
                 pwpix = 8;
-            if (xpix >= (int)pxpix1 && xpix <= (int)pxpix2 &&
+            if (xpix >= (int)pxpix1-pwpix && xpix <= (int)pxpix2+pwpix &&
                 ((array_joc) ||
                  (ypix >= pypix-pwpix && ypix <= pypix+pwpix)))
             {
