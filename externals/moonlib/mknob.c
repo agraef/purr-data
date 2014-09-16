@@ -280,7 +280,7 @@ static void mknob_draw_select(t_mknob *x,t_glist *glist)
     else
     {
         //pd_unbind(&x->x_gui.x_obj.ob_pd, iemgui_key_sym);
-        sys_vgui(".x%lx.c itemconfigure %xBASE -stroke #%6.6x\n", canvas, x, IEM_GUI_COLOR_NORMAL);
+        sys_vgui(".x%lx.c itemconfigure %xBASE -stroke #%6.6x\n", canvas, x, x->x_gui.x_fcol);
         sys_vgui(".x%lx.c itemconfigure %xLABEL -fill #%6.6x\n", canvas, x, x->x_gui.x_lcol);
 		sys_vgui(".x%lx.c dtag %lxMKNOB selected\n", canvas, x);
     }
