@@ -2182,19 +2182,22 @@ static char *cursorlist[] = {
 
 void canvas_setcursor(t_canvas *x, unsigned int cursornum)
 {
-    //fprintf(stderr,"canvas_setcursor %d\n", cursornum);
-    static t_canvas *xwas;
-    static unsigned int cursorwas;
-    if (cursornum >= sizeof(cursorlist)/sizeof *cursorlist)
+    if (x->gl_havewindow)
     {
-    bug("canvas_setcursor");
-        return;
-    }
-    if (xwas != x || cursorwas != cursornum)
-    {
-        sys_vgui(".x%lx configure -cursor %s\n", x, cursorlist[cursornum]);
-        xwas = x;
-        cursorwas = cursornum;
+        //fprintf(stderr,"canvas_setcursor %d\n", cursornum);
+        static t_canvas *xwas;
+        static unsigned int cursorwas;
+        if (cursornum >= sizeof(cursorlist)/sizeof *cursorlist)
+        {
+        bug("canvas_setcursor");
+            return;
+        }
+        if (xwas != x || cursorwas != cursornum)
+        {
+            sys_vgui(".x%lx configure -cursor %s\n", x, cursorlist[cursornum]);
+            xwas = x;
+            cursorwas = cursornum;
+        }
     }
 }
 
