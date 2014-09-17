@@ -846,13 +846,14 @@ int scalar_doclick(t_word *data, t_template *template, t_scalar *sc,
     if (xloc != 0.0 || yloc != 0.0)
     {
         //fprintf(stderr,"ignoring\n");
-        basex = 0.0;
-        basey = 0.0;
+        //basex = 0.0;
+        //basey = 0.0;
     }
 
-    hit = scalar_groupclick(templatecanvas, data, template, sc, ap,
-                owner, xloc, yloc, xpix, ypix,
-                shift, alt, dbl, doit, basex, basey);
+    if (templatecanvas)
+        hit = scalar_groupclick(templatecanvas, data, template, sc, ap,
+                    owner, xloc, yloc, xpix, ypix,
+                    shift, alt, dbl, doit, basex, basey);
     return hit;
 }
 
