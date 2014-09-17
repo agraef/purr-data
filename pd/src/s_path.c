@@ -491,10 +491,10 @@ void open_via_helppath(const char *name, const char *dir)
             goto gotone;
 
         /* 3. "objectname.pd" */
-    if ((fd = do_open_via_path(usedir, name, "", dirbuf, &basename, 
-        MAXPDSTRING, 0, sys_helppath)) >= 0)
-            goto gotone;
-    post("sorry, couldn't find help patch for \"%s\"", name);
+    //if ((fd = do_open_via_path(usedir, name, "", dirbuf, &basename, 
+    //    MAXPDSTRING, 0, sys_helppath)) >= 0)
+    //        goto gotone;
+    post("Sorry, couldn't find help patch for \"%s\"", name);
     return;
 gotone:
     close (fd);
