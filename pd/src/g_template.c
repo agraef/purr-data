@@ -5019,11 +5019,15 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 if (ndrawn > 2000 || ixpix >= 3000) break;
             }
             /* end of the path item from above */
+            // Ico 2014-09-17: we keep style the same for both because stroke
+            // already gives us the thickness matching that of vanilla pd
+            // The code is left here in its redundant form for future reference
+            // in case we encounter regressions.
             sys_vgui("} -fill %s -stroke %s -strokewidth %d "
                      "-parent {.dgroup%lx.%lx} "
                      "-tags {.x%lx.x%lx.template%lx array}\n",
                 symfill->s_name, symoutline->s_name,
-                style == PLOTSTYLE_POINTS ? 0 : 1,
+                style == PLOTSTYLE_POINTS ? 0 : 0,
                 x->x_canvas, data,
                 glist_getcanvas(glist), glist, data);
         }
@@ -5725,6 +5729,8 @@ static void old_plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     nelem = array->a_n;
     elem = (char *)array->a_vec;
 
+    //fprintf(stderr,"old_plot_vis style=%g\n", style);
+
     if (tovis)
     {
         /* check if old 3-digit color field is being used... */
@@ -5852,10 +5858,14 @@ static void old_plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 if (ndrawn > 2000 || ixpix >= 3000) break;
             }
             /* end of the path item from above */
+            // Ico 2014-09-17: we keep style the same for both because stroke
+            // already gives us the thickness matching that of vanilla pd
+            // The code is left here in its redundant form for future reference
+            // in case we encounter regressions.
             sys_vgui("} -fill %s -stroke %s -strokewidth %d "
                      "-tags {.x%lx.x%lx.template%lx array}\n",
                 symfill->s_name, symoutline->s_name,
-                style == PLOTSTYLE_POINTS ? 0 : 1,
+                style == PLOTSTYLE_POINTS ? 0 : 0,
                 glist_getcanvas(glist), glist, data);
         }
         else

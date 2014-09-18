@@ -442,8 +442,8 @@ t_garray *graph_array(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
     int flags = fflags;
     int filestyle = ((flags & 6) >> 1);
     //fprintf(stderr,"filestyle = %d\n", filestyle);
-    int style = (filestyle == 0 ? PLOTSTYLE_POINTS :
-        (filestyle == 1 ? PLOTSTYLE_POLY : filestyle));
+    int style = (filestyle == 0 ? PLOTSTYLE_POLY :
+        (filestyle == 1 ? PLOTSTYLE_POINTS : filestyle));
     if (templateargsym != &s_float)
     {
         error("array %s: only 'float' type understood", templateargsym->s_name);
@@ -536,10 +536,13 @@ void garray_properties(t_garray *x, t_glist *canvas)
         /* create dialog window.  LATER fix this to escape '$'
         properly; right now we just detect a leading '$' and escape
         it.  There should be a systematic way of doing this. */
+    int filestyle = (x->x_style == 0 ? PLOTSTYLE_POLY :
+        (x->x_style == 1 ? PLOTSTYLE_POINTS : x->x_style));
+    //fprintf(stderr," garray_properties %d\n", filestyle);
     sprintf(cmdbuf, ((x->x_name->s_name[0] == '$') ?
         "pdtk_array_dialog %%s \\%s %d %d 0 .x%lx %s %s\n" :
         "pdtk_array_dialog %%s %s %d %d 0 .x%lx %s %s\n"), x->x_name->s_name,
-            a->a_n, x->x_saveit +  2 * x->x_style + 8 * x->x_hidename +
+            a->a_n, x->x_saveit +  2 * filestyle + 8 * x->x_hidename +
             16 * x->x_joc, (long unsigned int)glist_getcanvas(canvas),
              x->x_fillcolor->s_name, x->x_outlinecolor->s_name);
     gfxstub_new(&x->x_gobj.g_pd, x, cmdbuf);
@@ -637,7 +640,9 @@ void garray_arraydialog(t_garray *x, t_symbol *s, int argc, t_atom *argv)
         t_symbol *fill = atom_getsymbolarg(6, argc, argv);
         t_symbol *outline = atom_getsymbolarg(7, argc, argv);
         int saveit = ((flags & 1) != 0);
-        int style = ((flags & 6) >> 1);
+        int filestyle = ((flags & 6) >> 1);
+        int style = (filestyle == 0 ? PLOTSTYLE_POLY :
+            (filestyle == 1 ? PLOTSTYLE_POINTS : filestyle));
 
         /* todo: revisit this filestyle business
         if (style < 2) style = !style;
@@ -967,6 +972,7 @@ static void array_motion(void *z, t_floatarg dx, t_floatarg dy)
                         array_motion_elemsize * array_motion_lastx),
                             1);
         // here we block scalar from exceeding the array GOP edges
+        // LATER: see if we need to do the same for an x plot
         if (graph)
         {
             if (graph->gl_y1 > graph->gl_y2)
@@ -1448,8 +1454,8 @@ static void garray_save(t_gobj *z, t_binbuf *b)
     }
     /* style = template_getfloat(scalartemplate, gensym("style"),
             x->x_scalar->sc_vec, 0); */
-    filestyle = (x->x_style == PLOTSTYLE_POINTS ? 0 : 
-        (x->x_style == PLOTSTYLE_POLY ? 1 : x->x_style)); 
+    filestyle = (x->x_style == PLOTSTYLE_POINTS ? 1 : 
+        (x->x_style == PLOTSTYLE_POLY ? 0 : x->x_style)); 
 
     binbuf_addv(b, "sssisiss;", gensym("#X"), gensym("array"),
         x->x_name, array->a_n, &s_float,
