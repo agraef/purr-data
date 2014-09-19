@@ -707,7 +707,7 @@ int glist_selectionindex(t_glist *x, t_gobj *y, int selected)
     return (indx);
 }
 
-static t_gobj *glist_nth(t_glist *x, int n)
+t_gobj *glist_nth(t_glist *x, int n)
 {
     t_gobj *y;
     int indx;

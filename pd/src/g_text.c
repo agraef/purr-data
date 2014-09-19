@@ -253,6 +253,8 @@ static void canvas_objtext(t_glist *gl, int xpix, int ypix,
 }
 
 extern int sys_noautopatch;
+extern t_gobj *glist_nth(t_glist *x, int n);
+extern int glist_getindex(t_glist *x, t_gobj *y);
     /* utility routine to figure out where to put a new text box from menu
     and whether to connect to it automatically */
 void canvas_howputnew(t_canvas *x, int *connectp, int *xpixp, int *ypixp,
@@ -275,14 +277,24 @@ void canvas_howputnew(t_canvas *x, int *connectp, int *xpixp, int *ypixp,
     if (connectme)
     {
         t_gobj *g, *selected = x->gl_editor->e_selection->sel_what;
+        t_text *t = (t_text *)selected;
+        int recreate = 0;
+        // if selected object has not yet been activated we need to recreate it first
+        if (pd_class(&t->te_pd) == text_class && t->te_type != T_TEXT)
+        {
+            glist_noselect(x); // we do this to explicitly activate object
+            glist_select(x, glist_nth(x, glist_getindex(x, 0)-1)); // then reselect it
+            selected = x->gl_editor->e_selection->sel_what;
+            recreate = 1;
+        }
         for (g = x->gl_list, nobj = 0; g; g = g->g_next, nobj++)
             if (g == selected)
-        {
-            gobj_getrect(g, x, &x1, &y1, &x2, &y2);
-            indx = nobj;
-            *xpixp = x1;
-            *ypixp = y2 + 5;
-        }
+            {
+                gobj_getrect(g, x, &x1, &y1, &x2, &y2);
+                indx = nobj;
+                *xpixp = x1;
+                *ypixp = y2 + 5;
+            }
         glist_noselect(x);
             /* search back for 'selected' and if it isn't on the list, 
                 plan just to connect from the last item on the list. */
@@ -1511,7 +1523,7 @@ static void text_select(t_gobj *z, t_glist *glist, int state)
     rtext_select(y, state);
     //fprintf(stderr,"text_select %s %d\n", rtext_gettag(y), state);
 
-    // text_class is either a comment or an object that failed to creates
+    // text_class is either a comment or an object that failed to create
     // so we distinguish between it and comment using T_TEXT type check
     if (pd_class(&x->te_pd) == text_class && x->te_type != T_TEXT)
         outline = "$pd_colors(dash_outline)";
