@@ -297,10 +297,10 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
             nlines++;
         }
         // append new line in case we end our input with an \n
-        if (x_bufsize_c > 0 && x->x_buf[x_bufsize_c - 1] == '\n')
+        if (x_bufsize_c > 0 && (x->x_buf[x_bufsize_c - 1] == '\n' || x->x_buf[x_bufsize_c - 1] == '\v'))
         {
-            //nlines++;
-            //tempbuf[outchars_b++] = '\n';
+            nlines++;
+            tempbuf[outchars_b++] = '\n';
             //tempbuf[outchars_b] = '\0';
             //outchars_b++;
         }
@@ -691,10 +691,11 @@ be printable in whatever 8-bit character set we find ourselves. */
             // allow us to go visually above where we used
             // to be in multiline situations (e.g. comments)
             int right = 0;
-            //printf("start: selstart=%d\n", x->x_selstart);
+            //printf("start: selstart=%d x->x_bufsize=%d\n", x->x_selstart, x->x_bufsize);
             if (x->x_selstart > 0 &&
-                    (x->x_buf[x->x_selstart] == '\n' ||
-                        x->x_buf[x->x_selstart] == '\v'))
+                   (x->x_selstart == x->x_bufsize ||
+                    x->x_buf[x->x_selstart] == '\n' ||
+                    x->x_buf[x->x_selstart] == '\v'))
             {
                 //printf("found break\n");
                 u8_dec(x->x_buf, &x->x_selstart);
