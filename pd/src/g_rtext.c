@@ -297,9 +297,12 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
             nlines++;
         }
         // append new line in case we end our input with an \n
-        if (x->x_buf[x_bufsize_c - 1] == '\n')
+        if (x_bufsize_c > 0 && x->x_buf[x_bufsize_c - 1] == '\n')
         {
-            nlines++;
+            //nlines++;
+            //tempbuf[outchars_b++] = '\n';
+            //tempbuf[outchars_b] = '\0';
+            //outchars_b++;
         }
         if (!reportedindex)
             *indexp = outchars_b;
@@ -317,6 +320,7 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
         else ncolumns = widthspec_c;
         pixwide = ncolumns * fontwidth + (LMARGIN + RMARGIN);
         pixhigh = nlines * fontheight + (TMARGIN + BMARGIN);
+        //printf("outchars_b=%d bufsize=%d %d\n", outchars_b, x->x_bufsize, x->x_buf[outchars_b]);
 
         if (action && x->x_text->te_width && x->x_text->te_type != T_ATOM)
         {
@@ -378,6 +382,7 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
         if (tempbuf != smallbuf)
             t_freebytes(tempbuf, 2 * x->x_bufsize + 1);
     }
+    //printf("END\n");
 }
 
 void rtext_retext(t_rtext *x)
@@ -611,8 +616,8 @@ be printable in whatever 8-bit character set we find ourselves. */
             int ch_nbytes = u8_wc_nbytes(n);
             newsize = x->x_bufsize + ch_nbytes;
             x->x_buf = resizebytes(x->x_buf, x->x_bufsize, newsize);
-            for (i = x->x_bufsize; i > x->x_selstart; i--)
-                x->x_buf[i] = x->x_buf[i-1];
+            for (i = newsize-1; i > x->x_selstart; i--)
+                x->x_buf[i] = x->x_buf[i-ch_nbytes];
             x->x_bufsize = newsize;
             /*-- moo: assume canvas_key() has encoded keysym as UTF-8 */
             strncpy(x->x_buf+x->x_selstart, keysym->s_name, ch_nbytes);
