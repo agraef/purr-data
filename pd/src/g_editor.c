@@ -3008,6 +3008,8 @@ static double canvas_upclicktime;
 static int canvas_upx, canvas_upy;
 #define DCLICKINTERVAL 0.25
 
+extern t_class *my_canvas_class; // for ignoring runtime clicks
+
     /* mouse click */
 void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     int mod, int doit)
@@ -3120,8 +3122,8 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
             if (canvas_hitbox(x, y, xpos, ypos, &x1, &y1, &x2, &y2))
             {
                 ob = pd_checkobject(&y->g_pd);
-                /* do not give clicks to comments during runtime */
-                if (!ob || ob->te_type != T_TEXT) 
+                /* do not give clicks to comments or cnv during runtime */
+                if (!ob || (ob->te_type != T_TEXT && ob->ob_pd != my_canvas_class)) 
                     yclick = y;
                 //fprintf(stderr,"    MAIN found clickable %d\n",
                 //    clickreturned);
