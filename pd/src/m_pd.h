@@ -111,7 +111,8 @@ typedef struct _gpointer           /* pointer to a gobj in a glist */
 {
     union
     {   
-        struct _scalar *gp_scalar;  /* scalar we're in (if glist) */
+        struct _gobj *gp_gobj;      /* header for the t_text or
+                                       scalar we're in (if glist) */
         union word *gp_w;           /* raw data (if array) */
     } gp_un;
     int gp_valid;                   /* number which must match gpointee */

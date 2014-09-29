@@ -131,6 +131,7 @@ typedef struct _objectinfo {
     t_canvas *x_canvas;
     t_float x_index;
     t_float x_depth;
+    t_gobj *x_test;
 } t_objectinfo;
 
 /* used by all the *info objects */
@@ -1004,9 +1005,24 @@ t_gobj *objectinfo_getobject(t_canvas *c, int index)
     return y;
 }
 
-void objectinfo_float(t_floatarg f)
+void objectinfo_bang(t_objectinfo *x)
 {
+    t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
+    t_atom at[1];
+    t_gpointer gp;
+    gpointer_init(&gp);
+    gpointer_setglist(&gp, c, (t_gobj *)x);
+    SETPOINTER(at, &gp);
+    info_out((t_text *)x, &s_pointer, 1, at);
+    gpointer_unset(&gp);
+}
 
+void objectinfo_float(t_objectinfo *x, t_floatarg f)
+{
+    t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
+    t_gobj *obj = objectinfo_getobject(c, (int)f);
+    post("object is .%x", obj);
+    x->x_test = obj;
 }
 
 void objectinfo_parseargs(t_objectinfo *x, int argc, t_atom *argv)
@@ -1156,6 +1172,7 @@ void objectinfo_setup(void)
         sizeof(t_objectinfo),
         CLASS_DEFAULT, A_DEFFLOAT, 0);
 
+    class_addbang(objectinfo_class, objectinfo_bang);
     class_addfloat(objectinfo_class, objectinfo_float);
     class_addmethod(objectinfo_class, (t_method)objectinfo_bbox,
         gensym("bbox"), A_GIMME, 0);
