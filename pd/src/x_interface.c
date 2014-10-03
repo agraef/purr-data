@@ -128,10 +128,8 @@ static t_class *objectinfo_class;
 typedef struct _objectinfo {
     t_object x_obj;
     t_outlet *x_out2;
+    t_gpointer x_gp;
     t_canvas *x_canvas;
-    t_float x_index;
-    t_float x_depth;
-    t_gobj *x_test;
 } t_objectinfo;
 
 /* used by all the *info objects */
@@ -278,24 +276,87 @@ void canvasinfo_filename(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
     info_out((t_text *)x, s, 1, at);
 }
 
-void canvasinfo_hitbox(t_canvasinfo *x, t_floatarg xpos, t_floatarg ypos)
+int binbuf_match(t_binbuf *inbuf, t_binbuf *searchbuf, int wholeword);
+
+void canvasinfo_find(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
+    int i, match = 0;
+    t_atom at[1], *ap;
+    t_gpointer *gp = (t_gpointer *)t_getbytes(500 * sizeof(*gp));
+    t_gobj *y;
+    t_binbuf *searchbuf = binbuf_new();
+    t_binbuf *outbuf = binbuf_new();
+    binbuf_add(searchbuf, argc, argv);
+    for (y = c->gl_list; y && match < 500; y = y->g_next)
+    {
+        t_binbuf *objbuf;
+        /* if it's not t_object (e.g., a scalar), or if it is but
+           does not have any binbuf content, send a bang... */
+        if (pd_checkobject(&y->g_pd) &&
+            (objbuf = ((t_text *)y)->te_binbuf) &&
+            binbuf_match(objbuf, searchbuf, 1))
+        {
+            match++;
+            gpointer_init(gp+match-1);
+            gpointer_setglist(gp+match-1, c, y);
+            SETPOINTER(at, gp+match-1);
+            binbuf_add(outbuf, 1, at); 
+        }
+    }
+    if (match >= 500)
+        post("canvasinfo: warning: find is currently limited to 500 results. "
+             "Truncating the output to 500 elements...");
+    info_out((t_text *)x, s, binbuf_getnatom(outbuf), binbuf_getvec(outbuf));
+    for (i = 0, ap = binbuf_getvec(outbuf); i < binbuf_getnatom(outbuf); i++)
+    {
+        t_gpointer *gp = (ap+i)->a_w.w_gpointer;
+        gpointer_unset(gp);
+    }
+    binbuf_free(outbuf);
+    binbuf_free(searchbuf);
+    freebytes(gp, 500 * sizeof(*gp));
+}
+
+void canvasinfo_gobjs(t_canvasinfo *x, t_float xpos, t_float ypos,
+    int all)
 {
     t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
     int x1, y1, x2, y2, i, atom_count = 0;
-    t_atom at[500]; /* hack to avoid memory allocation. Maybe later... */
+    /* hack to avoid memory allocation. Maybe there's a way to use the
+       XLIST_ATOMS_ALLOCA macro? */
+    t_atom at[500];
+    t_gpointer *gp, *gvec;
+    gp = gvec = (t_gpointer *)t_getbytes(500 * sizeof (*gvec));
     t_gobj *y;
     for (y = c->gl_list, i = 0; y && atom_count < 500; y = y->g_next, i++)
     {
-        if (canvas_hitbox(c, y, xpos, ypos, &x1, &y1, &x2, &y2))
+        if (all || canvas_hitbox(c, y, xpos, ypos, &x1, &y1, &x2, &y2))
         {
-            SETFLOAT(at+atom_count, (t_float)i);
+            gpointer_init(gp);
+            gpointer_setglist(gp, c, y);
+            SETPOINTER(at+atom_count, gp);
             atom_count++;
+            gp++;
         }
     }
     if (atom_count >= 500)
         post("canvasinfo: warning: hitbox is currently limited to 500 objects. "
-             "Truncating the output to 500 indices...");
+             "Truncating the output to 500 elements...");
     info_out((t_text *)x, gensym("hitbox"), atom_count, at);
+    for (i = 0, gp = gvec; i < atom_count; i++, gp++)
+        gpointer_unset(gp);
+    freebytes(gvec, 500 * sizeof(*gvec));
+}
+
+void canvasinfo_bang(t_canvasinfo *x)
+{
+    canvasinfo_gobjs(x, 0, 0, 1);
+}
+
+void canvasinfo_hitbox(t_canvasinfo *x, t_floatarg xpos, t_floatarg ypos)
+{
+    canvasinfo_gobjs(x, xpos, ypos, 0);
 }
 
 void canvasinfo_name(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
@@ -382,6 +443,7 @@ void canvasinfo_setup(void)
         sizeof(t_canvasinfo),
         CLASS_DEFAULT, A_DEFFLOAT, 0);
 
+    class_addbang(canvasinfo_class, canvasinfo_bang);
     class_addmethod(canvasinfo_class, (t_method)canvasinfo_args,
         gensym("args"), A_GIMME, 0);
     class_addmethod(canvasinfo_class, (t_method)canvasinfo_args,
@@ -398,6 +460,8 @@ void canvasinfo_setup(void)
         gensym("editmode"), A_GIMME, 0);
     class_addmethod(canvasinfo_class, (t_method)canvasinfo_filename,
         gensym("filename"), A_GIMME, 0);
+    class_addmethod(canvasinfo_class, (t_method)canvasinfo_find,
+        gensym("find"), A_GIMME, 0);
     class_addmethod(canvasinfo_class, (t_method)canvasinfo_hitbox,
         gensym("hitbox"), A_DEFFLOAT, A_DEFFLOAT, 0);
     class_addmethod(canvasinfo_class, (t_method)canvasinfo_name,
@@ -996,22 +1060,32 @@ void classinfo_setup(void)
 
 /* -------------------------- objectinfo ------------------------------ */
 
-t_gobj *objectinfo_getobject(t_canvas *c, int index)
+int gpointer_check_gobj(const t_gpointer *gp);
+
+t_gobj *objectinfo_getobject(t_objectinfo *x)
 {
-    int i = index;
-    t_gobj *y = c->gl_list;
-    while(i-- && y)
-        y = y->g_next;
-    return y;
+//    if (gpointer_check_gobj(&x->x_gp))
+//        post("we passed the check in getobject");
+    /* needs to pass the check AND point to a gobj */
+    if (gpointer_check_gobj(&x->x_gp) && x->x_gp.gp_stub->gs_which == GP_GLIST)
+    {
+//        post("we passed total check");
+        return x->x_gp.gp_un.gp_gobj;
+    }
+    else
+        return 0;
 }
 
 void objectinfo_bang(t_objectinfo *x)
 {
-    t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
     t_atom at[1];
     t_gpointer gp;
     gpointer_init(&gp);
-    gpointer_setglist(&gp, c, (t_gobj *)x);
+    gpointer_setglist(&gp, x->x_canvas, (t_gobj *)x);
+//    if (gpointer_check_gobj(&gp))
+//        post("creating pointer passed the check");
+//    else
+//        post("didn't create right");
     SETPOINTER(at, &gp);
     info_out((t_text *)x, &s_pointer, 1, at);
     gpointer_unset(&gp);
@@ -1019,10 +1093,12 @@ void objectinfo_bang(t_objectinfo *x)
 
 void objectinfo_float(t_objectinfo *x, t_floatarg f)
 {
+    /*
     t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
-    t_gobj *obj = objectinfo_getobject(c, (int)f);
+    t_gobj *obj = objectinfo_getobject(x);
     post("object is .%x", obj);
     x->x_test = obj;
+    */
 }
 
 void objectinfo_parseargs(t_objectinfo *x, int argc, t_atom *argv)
@@ -1043,6 +1119,7 @@ void objectinfo_parseargs(t_objectinfo *x, int argc, t_atom *argv)
         argv++;
     }
     */
+    /* another stopgap comment out...
     if (argc)
     {
         if (argv->a_type == A_FLOAT)
@@ -1050,16 +1127,15 @@ void objectinfo_parseargs(t_objectinfo *x, int argc, t_atom *argv)
         else
             pd_error(x, "expected float but didn't get a float");
     }
+    */
 }
 
 void objectinfo_boxtext(t_objectinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
-    objectinfo_parseargs(x, argc, argv);
-    t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
-    t_gobj *ob;
-   
-    if(ob = objectinfo_getobject(c, x->x_index))
+    t_gobj *ob = objectinfo_getobject(x);
+    if (ob)
     {
+//        post("it's an obj");
         int n = 0;
         t_atom *a = 0;
         t_binbuf *b;
@@ -1083,16 +1159,19 @@ void objectinfo_boxtext(t_objectinfo *x, t_symbol *s, int argc, t_atom *argv)
 
 void objectinfo_bbox(t_objectinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
-    objectinfo_parseargs(x, argc, argv);
-    t_gobj *ob;
-    t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
+    t_gobj *ob = objectinfo_getobject(x);
     int x1, y1, x2, y2;
-    if(ob = objectinfo_getobject(c, x->x_index))
+    if(ob)
     {
-        /* check for a getrectfn */
+      /* check for a getrectfn */
         if (ob->g_pd->c_wb && ob->g_pd->c_wb->w_getrectfn)
         {
             t_atom at[4];
+            /* objectinfo_getobject will only return a gobj* if the gstub
+               is a GP_GLIST, so we can safely fetch the glist from our
+               gpointer.  Not sure if gobj can ever be inside an array, but
+               if so I'm excluding those cases here... */
+            t_canvas *c = x->x_gp.gp_stub->gs_un.gs_glist;
             gobj_getrect(ob, c, &x1, &y1, &x2, &y2);
             SETFLOAT(at, (t_float)x1);
             SETFLOAT(at+1, (t_float)y1);
@@ -1112,11 +1191,9 @@ void objectinfo_bbox(t_objectinfo *x, t_symbol *s, int argc, t_atom *argv)
 void objectinfo_classname(t_objectinfo *x, t_symbol *s,
     int argc, t_atom *argv)
 {
-    objectinfo_parseargs(x, argc, argv);
+    t_gobj *ob = objectinfo_getobject(x);
     t_atom at[1];
-    t_gobj *ob;
-    t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
-    if(ob = objectinfo_getobject(c, x->x_index))
+    if(ob)
     {
         char *classname = class_getname(ob->g_pd);
         SETSYMBOL(at, gensym(classname));
@@ -1126,17 +1203,44 @@ void objectinfo_classname(t_objectinfo *x, t_symbol *s,
         outlet_bang(x->x_out2);
 }
 
+void objectinfo_index(t_objectinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_gobj *ob = objectinfo_getobject(x);
+    if(ob)
+    {
+        t_atom at[4];
+        t_gobj *y;
+        int i;
+        /* objectinfo_getobject will only return a gobj* if the gstub
+           is a GP_GLIST, so we can safely fetch the glist from our
+           gpointer.  Not sure if gobj can ever be inside an array, but
+           if so I'm excluding those cases here... */
+        t_canvas *c = x->x_gp.gp_stub->gs_un.gs_glist;
+        for (i = 0, y = c->gl_list; y; y = y->g_next, i++)
+        {
+            if (y == ob)
+            {
+                SETFLOAT(at, (t_float)i);
+                info_out((t_text *)x, s, 1, at);
+                return;
+            }
+        }
+        info_out((t_text *)x, s, 0, at);
+    }
+    else
+        outlet_bang(x->x_out2);
+}
+
 void objectinfo_xlets(t_objectinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
-    objectinfo_parseargs(x, argc, argv);
+    t_gobj *ob = objectinfo_getobject(x);
     t_atom at[1];
-    t_gobj *ob;
-    t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
-    if(ob = objectinfo_getobject(c, x->x_index))
+    if(ob)
     {
+        /* we exclude scalars here because they are not patchable */
         if (pd_class(&ob->g_pd) != scalar_class)
         {
-            post("not a scalar...");
+//            post("not a scalar...");
             t_object *o = (t_object *)ob;
             int n = (s == gensym("inlets") ? obj_ninlets(o) : obj_noutlets(o));
             SETFLOAT(at, (t_float)n);
@@ -1146,6 +1250,7 @@ void objectinfo_xlets(t_objectinfo *x, t_symbol *s, int argc, t_atom *argv)
     else
         outlet_bang(x->x_out2);
 }
+
 void objectinfo_print(t_objectinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     objectinfo_parseargs(x, argc, argv);
@@ -1155,11 +1260,8 @@ void objectinfo_print(t_objectinfo *x, t_symbol *s, int argc, t_atom *argv)
 void *objectinfo_new(t_floatarg f)
 {
     t_objectinfo *x = (t_objectinfo *)pd_new(objectinfo_class);
-    t_glist *glist = (t_glist *)canvas_getcurrent();
-    x->x_canvas = (t_canvas*)glist_getcanvas(glist);
-    x->x_depth = f;
-    floatinlet_new(&x->x_obj, &x->x_index);
-    floatinlet_new(&x->x_obj, &x->x_depth);
+    x->x_canvas = canvas_getcurrent();
+    pointerinlet_new(&x->x_obj, &x->x_gp);
     outlet_new(&x->x_obj, &s_anything);
     x->x_out2 = outlet_new(&x->x_obj, &s_bang);
     return (void *)x;
@@ -1180,6 +1282,8 @@ void objectinfo_setup(void)
         gensym("boxtext"), A_GIMME, 0);
     class_addmethod(objectinfo_class, (t_method)objectinfo_classname,
         gensym("class"), A_GIMME, 0);
+    class_addmethod(objectinfo_class, (t_method)objectinfo_index,
+        gensym("index"), A_GIMME, 0);
     class_addmethod(objectinfo_class, (t_method)objectinfo_xlets,
         gensym("inlets"), A_GIMME, 0);
     class_addmethod(objectinfo_class, (t_method)objectinfo_xlets,

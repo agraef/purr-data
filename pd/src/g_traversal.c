@@ -67,12 +67,8 @@ void gstub_cutoff(t_gstub *gs)
     if (!gs->gs_refcount) t_freebytes(gs, sizeof (*gs));
 }
 
-/* call this to verify that a pointer is fresh, i.e., that it either
-points to real data or to the head of a list, and that in either case
-the object hasn't disappeared since this pointer was generated. 
-Unless "headok" is set,  the routine also fails for the head of a list. */
 
-int gpointer_check(const t_gpointer *gp, int headok)
+int gpointer_docheck(const t_gpointer *gp, int headok, int gobjok)
 {
     t_gstub *gs = gp->gp_stub;
     if (!gs) return (0);
@@ -85,7 +81,7 @@ int gpointer_check(const t_gpointer *gp, int headok)
     {
         if (!headok && !((t_scalar *)(gp->gp_un.gp_gobj)))
             return (0);
-        else if (gp->gp_un.gp_gobj &&
+        else if (!gobjok && gp->gp_un.gp_gobj &&
                  pd_class(&gp->gp_un.gp_gobj->g_pd) != scalar_class)
             return (0);
         else if (gs->gs_un.gs_glist->gl_valid != gp->gp_valid)
@@ -94,6 +90,22 @@ int gpointer_check(const t_gpointer *gp, int headok)
             return (1);
     }
     else return (0);
+}
+
+/* call this to verify that a pointer is fresh, i.e., that it either
+points to real data or to the head of a list, and that in either case
+the object hasn't disappeared since this pointer was generated. 
+Unless "headok" is set,  the routine also fails for the head of a list.*/
+
+int gpointer_check(const t_gpointer *gp, int headok)
+{
+    return (gpointer_docheck(gp, headok, 0));
+}
+
+/* more general form for checking for pointers to gobjs */
+int gpointer_check_gobj(const t_gpointer *gp)
+{
+    return (gpointer_docheck(gp, 0, 1));
 }
 
 /* get the template for the object pointer to.  Assumes we've already checked
