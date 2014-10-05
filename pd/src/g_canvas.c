@@ -187,6 +187,13 @@ void canvas_getargs(int *argcp, t_atom **argvp)
     *argvp = e->ce_argv;
 }
 
+void canvas_getargs_after_creation(t_canvas *c, int *argcp, t_atom **argvp)
+{
+    t_canvasenvironment *e = canvas_getenv(c);
+    *argcp = e->ce_argc;
+    *argvp = e->ce_argv;
+}
+
 t_symbol *canvas_realizedollar(t_canvas *x, t_symbol *s)
 {
     t_symbol *ret;

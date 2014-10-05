@@ -189,6 +189,8 @@ t_canvas *canvas_climb(t_canvas *c, int level)
   }
 }
 
+void canvas_getargs_after_creation(t_canvas *c, int *argcp, t_atom **argvp);
+
 void canvasinfo_args(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
@@ -204,12 +206,24 @@ void canvasinfo_args(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
     }
     else
     {
-        n = binbuf_getnatom(b);
-        a = binbuf_getvec(b);
         if (s == gensym("args"))
-            info_out((t_text *)x, s, n-1, a+1);
-        else
+        {
+            canvas_getargs_after_creation(c, &n, &a);
             info_out((t_text *)x, s, n, a);
+        }
+        else
+        {
+            /* For "boxtext" have to escape semi, comma, dollar, and
+               dollsym atoms, which is what binbuf_addbinbuf does.
+               Otherwise the user could pass them around or save them
+               unescaped, which might cause trouble. */
+            t_binbuf *escaped = binbuf_new();
+            binbuf_addbinbuf(escaped, b);
+            n = binbuf_getnatom(escaped);
+            a = binbuf_getvec(escaped);
+            info_out((t_text *)x, s, n, a);
+            binbuf_free(escaped);
+        }
     }
 }
 
@@ -534,7 +548,31 @@ void pdinfo_audio_api(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
     info_out((t_text *)x, s, 1, at);
 }
 
-void pdinfo_classtable(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
+void pdinfo_canvaslist(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_canvas *c;
+    int j, i = 0;
+    t_binbuf *outbuf = binbuf_new();
+    t_atom at[1];
+    for (c = canvas_list; c; c = c->gl_next)
+        i++;
+    t_gpointer *gp = (t_gpointer *)t_getbytes(i * sizeof(*gp));
+    for (c = canvas_list, i = 0; c; c = c->gl_next, i++)
+    {
+        gpointer_init(gp+i);
+        gpointer_setglist(gp+i, c, 0);
+        SETPOINTER(at, gp+i);
+        binbuf_add(outbuf, 1, at); 
+    }
+    info_out((t_text *)x, s, binbuf_getnatom(outbuf), binbuf_getvec(outbuf));
+    binbuf_free(outbuf);
+    for (j = 0; j < i; j++)
+        gpointer_unset(gp+j);
+    freebytes(gp, i * sizeof(*gp));
+}
+
+/* maybe this should be the bang method? */
+void pdinfo_classlist(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     int size = classtable_size();
     if (info_to_console)
@@ -558,7 +596,7 @@ void pdinfo_audioin(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
 //        char i
 }
 
-void pdinfo_audio_api_list_raw(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
+void pdinfo_audio_api_list_all(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_atom at[7];
     int i;
@@ -794,14 +832,6 @@ void pdinfo_version(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
     info_out((t_text *)x, s, 3, at);
 }
 
-void pdinfo_pi(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
-{
-    t_atom at[1];
-    const t_float Pi = 3.141592653589793;
-    SETFLOAT(at, Pi);
-    info_out((t_text *)x, s, 1, at);
-}
-
 void pdinfo_print(t_pdinfo *x)
 {
     info_print((t_text *)x);
@@ -825,8 +855,8 @@ void pdinfo_setup(void)
         gensym("audio-api"), A_DEFFLOAT, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_audio_apilist,
         gensym("audio-apilist"), A_GIMME, 0);
-    class_addmethod(pdinfo_class, (t_method)pdinfo_audio_api_list_raw,
-        gensym("audio-apilist-raw"), A_GIMME, 0);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_audio_api_list_all,
+        gensym("audio-apilist-all"), A_GIMME, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_audio_inchannels,
         gensym("audio-inchannels"), A_GIMME, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_audio_dev,
@@ -845,8 +875,10 @@ void pdinfo_setup(void)
         gensym("blocksize"), A_GIMME, 0);
     /* this needs a better name-- the user doesn't have to know the
        name used in the implementation */
-    class_addmethod(pdinfo_class, (t_method)pdinfo_classtable,
-        gensym("classtable"), A_GIMME, 0);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_canvaslist,
+        gensym("canvaslist"), A_GIMME, 0);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_classlist,
+        gensym("classlist"), A_GIMME, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_dir,
         gensym("dir"), A_GIMME, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_dsp,
@@ -863,8 +895,6 @@ void pdinfo_setup(void)
         gensym("midi-outdev"), A_GIMME, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_midi_listdevs,
         gensym("midi-outdevlist"), A_GIMME, 0);
-    class_addmethod(pdinfo_class, (t_method)pdinfo_pi,
-        gensym("pi"), A_GIMME, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_audio_samplerate,
         gensym("samplerate"), A_GIMME, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_version,
@@ -1148,9 +1178,16 @@ void objectinfo_boxtext(t_objectinfo *x, t_symbol *s, int argc, t_atom *argv)
         }
         else
         {
-            n = binbuf_getnatom(b);
-            a = binbuf_getvec(b);
+            /* We have to escape semi, comma, dollar, and dollsym atoms,
+               which is what binbuf_addbinbuf does.  Otherwise the user
+               could pass them around or save them unescaped, which might 
+               cause trouble. */
+            t_binbuf *escaped = binbuf_new();
+            binbuf_addbinbuf(escaped, b);
+            n = binbuf_getnatom(escaped);
+            a = binbuf_getvec(escaped);
             info_out((t_text *)x, s, n, a);
+            binbuf_free(escaped);
         }
     }
     else
