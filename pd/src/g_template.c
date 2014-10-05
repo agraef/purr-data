@@ -282,7 +282,7 @@ static t_scalar *template_conformscalar(t_template *tfrom, t_template *tto,
             (tto->t_n - 1) * sizeof(*x->sc_vec));
         x->sc_gobj.g_pd = scalar_class;
         x->sc_template = tfrom->t_sym;
-        gpointer_setglist(&gp, glist, x);
+        gpointer_setglist(&gp, glist, &x->sc_gobj);
             /* Here we initialize to the new template, but array and list
             elements will still belong to old template. */
         word_init(x->sc_vec, tto, &gp);
@@ -503,7 +503,7 @@ void template_notifyforscalar(t_template *template, t_glist *owner,
 {
     t_gpointer gp;
     gpointer_init(&gp);
-    gpointer_setglist(&gp, owner, sc);
+    gpointer_setglist(&gp, owner, &sc->sc_gobj);
     SETPOINTER(argv, &gp);
     template_notify(template, s, argc, argv);
     gpointer_unset(&gp);
@@ -3717,7 +3717,7 @@ static int draw_click(t_gobj *z, t_glist *glist,
         draw_motion_template = template;
         if (draw_motion_scalar)
             gpointer_setglist(&draw_motion_gpointer, draw_motion_glist,
-                draw_motion_scalar);
+                &draw_motion_scalar->sc_gobj);
         else gpointer_setarray(&draw_motion_gpointer,
                 draw_motion_array, draw_motion_wp);
         glist_grab(glist, z, draw_motion, 0, xpix, ypix);
@@ -4323,7 +4323,7 @@ static int curve_click(t_gobj *z, t_glist *glist,
         curve_motion_template = template;
         if (curve_motion_scalar)
             gpointer_setglist(&curve_motion_gpointer, curve_motion_glist,
-                curve_motion_scalar);
+                &curve_motion_scalar->sc_gobj);
         else gpointer_setarray(&curve_motion_gpointer,
                 curve_motion_array, curve_motion_wp);
         glist_grab(glist, z, curve_motion, 0, xpix, ypix);
@@ -6551,7 +6551,7 @@ static int drawnumber_click(t_gobj *z, t_glist *glist,
             drawnumber_motion_symbol = ((x->x_flags & DRAW_SYMBOL) != 0);
             if (drawnumber_motion_scalar)
                 gpointer_setglist(&drawnumber_motion_gpointer, 
-                    drawnumber_motion_glist, drawnumber_motion_scalar);
+                    drawnumber_motion_glist, &drawnumber_motion_scalar->sc_gobj);
             else gpointer_setarray(&drawnumber_motion_gpointer,
                     drawnumber_motion_array, drawnumber_motion_wp);
            glist_grab(glist, z, drawnumber_motion, drawnumber_key,
@@ -6977,7 +6977,7 @@ static int drawsymbol_click(t_gobj *z, t_glist *glist,
             drawsymbol_motion_symbol = ((x->x_flags & DRAW_SYMBOL) != 0);
             if (drawsymbol_motion_scalar)
                 gpointer_setglist(&drawsymbol_motion_gpointer, 
-                    drawsymbol_motion_glist, drawsymbol_motion_scalar);
+                    drawsymbol_motion_glist, &drawsymbol_motion_scalar->sc_gobj);
             else gpointer_setarray(&drawsymbol_motion_gpointer,
                     drawsymbol_motion_array, drawsymbol_motion_wp);
            glist_grab(glist, z, drawsymbol_motion, drawsymbol_key,
@@ -7439,7 +7439,7 @@ static int drawimage_click(t_gobj *z, t_glist *glist,
             drawimage_motion_sprite = ((x->x_flags & DRAW_SPRITE) != 0);
             if (drawimage_motion_scalar)
                 gpointer_setglist(&drawimage_motion_gpointer, 
-                    drawimage_motion_glist, drawimage_motion_scalar);
+                    drawimage_motion_glist, &drawimage_motion_scalar->sc_gobj);
             else gpointer_setarray(&drawimage_motion_gpointer,
                     drawimage_motion_array, drawimage_motion_wp);
            glist_grab(glist, z, drawimage_motion, drawimage_key,

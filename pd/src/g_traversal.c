@@ -67,12 +67,8 @@ void gstub_cutoff(t_gstub *gs)
     if (!gs->gs_refcount) t_freebytes(gs, sizeof (*gs));
 }
 
-/* call this to verify that a pointer is fresh, i.e., that it either
-points to real data or to the head of a list, and that in either case
-the object hasn't disappeared since this pointer was generated. 
-Unless "headok" is set,  the routine also fails for the head of a list. */
 
-int gpointer_check(const t_gpointer *gp, int headok)
+int gpointer_docheck(const t_gpointer *gp, int headok, int gobjok)
 {
     t_gstub *gs = gp->gp_stub;
     if (!gs) return (0);
@@ -83,11 +79,33 @@ int gpointer_check(const t_gpointer *gp, int headok)
     }
     else if (gs->gs_which == GP_GLIST)
     {
-        if (!headok && !gp->gp_un.gp_scalar) return (0);
-        else if (gs->gs_un.gs_glist->gl_valid != gp->gp_valid) return (0);
-        else return (1);
+        if (!headok && !((t_scalar *)(gp->gp_un.gp_gobj)))
+            return (0);
+        else if (!gobjok && gp->gp_un.gp_gobj &&
+                 pd_class(&gp->gp_un.gp_gobj->g_pd) != scalar_class)
+            return (0);
+        else if (gs->gs_un.gs_glist->gl_valid != gp->gp_valid)
+            return (0);
+        else
+            return (1);
     }
     else return (0);
+}
+
+/* call this to verify that a pointer is fresh, i.e., that it either
+points to real data or to the head of a list, and that in either case
+the object hasn't disappeared since this pointer was generated. 
+Unless "headok" is set,  the routine also fails for the head of a list.*/
+
+int gpointer_check(const t_gpointer *gp, int headok)
+{
+    return (gpointer_docheck(gp, headok, 0));
+}
+
+/* more general form for checking for pointers to gobjs */
+int gpointer_check_gobj(const t_gpointer *gp)
+{
+    return (gpointer_docheck(gp, 0, 1));
 }
 
 /* get the template for the object pointer to.  Assumes we've already checked
@@ -98,7 +116,7 @@ static t_symbol *gpointer_gettemplatesym(const t_gpointer *gp)
     t_gstub *gs = gp->gp_stub;
     if (gs->gs_which == GP_GLIST)
     {
-        t_scalar *sc = gp->gp_un.gp_scalar;
+        t_scalar *sc = (t_scalar *)(gp->gp_un.gp_gobj);
         if (sc)
             return (sc->sc_template);
         else return (0);
@@ -133,13 +151,13 @@ void gpointer_unset(t_gpointer *gp)
     }
 }
 
-void gpointer_setglist(t_gpointer *gp, t_glist *glist, t_scalar *x)
+void gpointer_setglist(t_gpointer *gp, t_glist *glist, t_gobj *x)
 {
     t_gstub *gs;
     if (gs = gp->gp_stub) gstub_dis(gs);
     gp->gp_stub = gs = glist->gl_stub;
     gp->gp_valid = glist->gl_valid;
-    gp->gp_un.gp_scalar = x;
+    gp->gp_un.gp_gobj = x;
     gs->gs_refcount++;
 }
 
@@ -157,7 +175,7 @@ void gpointer_init(t_gpointer *gp)
 {
     gp->gp_stub = 0;
     gp->gp_valid = 0;
-    gp->gp_un.gp_scalar = 0;
+    gp->gp_un.gp_gobj = 0;
 }
 
 /* ---------------------- pointers ----------------------------- */
@@ -236,7 +254,7 @@ static void ptrobj_vnext(t_ptrobj *x, t_float f)
             "ptrobj_vnext: next-selected only works for a visible window");
         return;
     }
-    gobj = &gp->gp_un.gp_scalar->sc_gobj;
+    gobj = gp->gp_un.gp_gobj;
     
     if (!gobj) gobj = glist->gl_list;
     else gobj = gobj->g_next;
@@ -251,7 +269,7 @@ static void ptrobj_vnext(t_ptrobj *x, t_float f)
         t_scalar *sc = (t_scalar *)gobj;
         t_symbol *templatesym = sc->sc_template;
 
-        gp->gp_un.gp_scalar = sc; 
+        gp->gp_un.gp_gobj = &sc->sc_gobj; 
         for (n = x->x_ntypedout, to = x->x_typedout; n--; to++)
         {
             if (to->to_type == templatesym)
@@ -431,7 +449,7 @@ static void get_pointer(t_get *x, t_gpointer *gp)
         return;
     }
     if (gs->gs_which == GP_ARRAY) vec = gp->gp_un.gp_w;
-    else vec = gp->gp_un.gp_scalar->sc_vec;
+    else vec = ((t_scalar *)(gp->gp_un.gp_gobj))->sc_vec;
     for (i = nitems - 1, vp = x->x_variables + i; i >= 0; i--, vp--)
     {
         int onset, type;
@@ -552,20 +570,20 @@ static void set_bang(t_set *x)
         return;
     if (gs->gs_which == GP_ARRAY)
         vec = gp->gp_un.gp_w;
-    else vec = gp->gp_un.gp_scalar->sc_vec;
+    else vec = ((t_scalar *)(gp->gp_un.gp_gobj))->sc_vec;
     if (x->x_issymbol)
         for (i = 0, vp = x->x_variables; i < nitems; i++, vp++)
             template_setsymbol(template, vp->gv_sym, vec, vp->gv_w.w_symbol, 1);
     else for (i = 0, vp = x->x_variables; i < nitems; i++, vp++)
         template_setfloat(template, vp->gv_sym, vec, vp->gv_w.w_float, 1);
     if (gs->gs_which == GP_GLIST)
-        scalar_redraw(gp->gp_un.gp_scalar, gs->gs_un.gs_glist);  
+        scalar_redraw((t_scalar *)(gp->gp_un.gp_gobj), gs->gs_un.gs_glist);  
     else
     {
         t_array *owner_array = gs->gs_un.gs_array;
         while (owner_array->a_gp.gp_stub->gs_which == GP_ARRAY)
             owner_array = owner_array->a_gp.gp_stub->gs_un.gs_array;
-        scalar_redraw(owner_array->a_gp.gp_un.gp_scalar,
+        scalar_redraw((t_scalar *)(owner_array->a_gp.gp_un.gp_gobj),
             owner_array->a_gp.gp_stub->gs_un.gs_glist);  
     }
 }
@@ -654,7 +672,7 @@ static void elem_float(t_elem *x, t_float f)
         return;
     }
     if (gparent->gp_stub->gs_which == GP_ARRAY) w = gparent->gp_un.gp_w;
-    else w = gparent->gp_un.gp_scalar->sc_vec;
+    else w = ((t_scalar *)(gparent->gp_un.gp_gobj))->sc_vec;
     if (!template)
     {
         pd_error(x, "element: couldn't find template %s", templatesym->s_name);
@@ -761,7 +779,7 @@ static void getsize_pointer(t_getsize *x, t_gpointer *gp)
         return;
     }
     if (gs->gs_which == GP_ARRAY) w = gp->gp_un.gp_w;
-    else w = gp->gp_un.gp_scalar->sc_vec;
+    else w = ((t_scalar *)(gp->gp_un.gp_gobj))->sc_vec;
     
     array = *(t_array **)(((char *)w) + onset);
     outlet_float(x->x_obj.ob_outlet, (t_float)(array->a_n));
@@ -824,7 +842,7 @@ static void setsize_float(t_setsize *x, t_float f)
         return;
     }
     if (gs->gs_which == GP_ARRAY) w = gp->gp_un.gp_w;
-    else w = gp->gp_un.gp_scalar->sc_vec;
+    else w = ((t_scalar *)(gp->gp_un.gp_gobj))->sc_vec;
 
     if (!template)
     {
@@ -869,7 +887,7 @@ static void setsize_float(t_setsize *x, t_float f)
     if (gs->gs_which == GP_GLIST)
     {
         if (glist_isvisible(gs->gs_un.gs_glist))
-            gobj_vis((t_gobj *)(gp->gp_un.gp_scalar), gs->gs_un.gs_glist, 0);  
+            gobj_vis(gp->gp_un.gp_gobj, gs->gs_un.gs_glist, 0);  
     }
     else
     {
@@ -877,7 +895,7 @@ static void setsize_float(t_setsize *x, t_float f)
         while (owner_array->a_gp.gp_stub->gs_which == GP_ARRAY)
             owner_array = owner_array->a_gp.gp_stub->gs_un.gs_array;
         if (glist_isvisible(owner_array->a_gp.gp_stub->gs_un.gs_glist))
-            gobj_vis((t_gobj *)(owner_array->a_gp.gp_un.gp_scalar),
+            gobj_vis(owner_array->a_gp.gp_un.gp_gobj,
                 owner_array->a_gp.gp_stub->gs_un.gs_glist, 0);  
     }
         /* now do the resizing and, if growing, initialize new scalars */
@@ -901,7 +919,7 @@ static void setsize_float(t_setsize *x, t_float f)
     if (gs->gs_which == GP_GLIST)
     {
         if (glist_isvisible(gs->gs_un.gs_glist))
-            gobj_vis((t_gobj *)(gp->gp_un.gp_scalar), gs->gs_un.gs_glist, 1);  
+            gobj_vis(gp->gp_un.gp_gobj, gs->gs_un.gs_glist, 1);  
     }
     else
     {
@@ -909,7 +927,7 @@ static void setsize_float(t_setsize *x, t_float f)
         while (owner_array->a_gp.gp_stub->gs_which == GP_ARRAY)
             owner_array = owner_array->a_gp.gp_stub->gs_un.gs_array;
         if (glist_isvisible(owner_array->a_gp.gp_stub->gs_un.gs_glist))
-            gobj_vis((t_gobj *)(owner_array->a_gp.gp_un.gp_scalar),
+            gobj_vis(owner_array->a_gp.gp_un.gp_gobj,
                 owner_array->a_gp.gp_stub->gs_un.gs_glist, 1);  
     }
 }
@@ -1013,7 +1031,7 @@ static void append_float(t_append *x, t_float f)
         pd_error(x, "%s: couldn't create scalar", templatesym->s_name);
         return;
     }
-    oldsc = gp->gp_un.gp_scalar;
+    oldsc = (t_scalar *)(gp->gp_un.gp_gobj);
     
     if (oldsc)
     {
@@ -1026,7 +1044,7 @@ static void append_float(t_append *x, t_float f)
         glist->gl_list = &sc->sc_gobj;
     }
 
-    gp->gp_un.gp_scalar = sc;
+    gp->gp_un.gp_gobj = (t_gobj *)sc;
     vec = sc->sc_vec;
     for (i = 0, vp = x->x_variables; i < nitems; i++, vp++)
     {
@@ -1106,7 +1124,7 @@ static void sublist_pointer(t_sublist *x, t_gpointer *gp)
         return;
     }
     if (gs->gs_which == GP_ARRAY) w = gp->gp_un.gp_w;
-    else w = gp->gp_un.gp_scalar->sc_vec;
+    else w = ((t_scalar *)(gp->gp_un.gp_gobj))->sc_vec;
     
     gpointer_setglist(&x->x_gp, *(t_glist **)(((char *)w) + onset), 0);
 

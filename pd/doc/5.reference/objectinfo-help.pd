@@ -1,9 +1,9 @@
-#N canvas 0 19 555 619 10;
+#N canvas -9 19 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header objectinfo 3 12
 0 18 -204280 -1 0;
-#X obj 0 403 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+#X obj 0 396 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
 #N canvas 456 104 482 506 META 0;
 #X text 12 175 LIBRARY internal;
@@ -21,13 +21,13 @@ to conform to the PDDP template for Pd version 0.42.;
 #X text 12 115 INLET_2 float;
 #X text 12 155 OUTLET_1 bang;
 #X restore 500 597 pd META;
-#X obj 0 478 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+#X obj 0 491 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
 13 -228856 -1 0;
-#X obj 0 515 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+#X obj 0 528 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
 0 13 -228856 -1 0;
-#X obj 0 555 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+#X obj 0 565 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#X obj 78 411 cnv 17 3 30 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X obj 78 404 cnv 17 3 55 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #N canvas 102 481 428 108 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
@@ -37,22 +37,21 @@ to conform to the PDDP template for Pd version 0.42.;
 #X obj 72 36 classinfo;
 #X obj 142 36 canvasinfo;
 #X restore 101 597 pd Related_objects;
-#X obj 78 487 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X obj 78 500 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
 #X msg 39 62 print;
 #X text 80 61 print all attributes to the console;
-#X msg 101 232 version;
-#X text 98 410 print;
-#X text 168 410 - print out each available message (other than "print")
+#X text 98 403 print;
+#X text 168 403 - print out each available message (other than "print")
 followed by a semicolon and the output for that method.;
-#X text 99 487 list;
-#X text 169 487 - output varies depending on the message sent to [pdinfo]
+#X text 99 500 list;
+#X text 169 500 - output varies depending on the message sent to [pdinfo]
 ;
 #X text 11 20 get info about a Pd object;
 #X obj 473 7 objectinfo;
-#X obj 39 323 objectinfo;
+#X obj 39 303 objectinfo;
 #X msg 72 92 bbox;
 #X text 114 91 list of coordinates-- x1 y1 x2 y2-- for the bounding
 rectangle of the object on the canvas.;
@@ -60,30 +59,28 @@ rectangle of the object on the canvas.;
 #X text 137 121 list of atoms that appear in the object box;
 #X msg 89 152 class;
 #X text 136 152 class of the object;
-#X msg 92 182 inlets;
-#X text 141 181 number of inlets the object has;
-#X msg 95 209 outlets;
-#X text 151 208 number of outlets the object has;
-#X floatatom 98 269 5 0 0 0 - - -, f 5;
-#X text 141 269 index number of the object you want to inspect;
-#X floatatom 104 299 5 0 0 0 - - -, f 5;
-#X text 141 299 canvas level: '0' for this canvas \, '1' for the parent
-canvas \, etc.;
-#X text 201 347 outputs a bang if there isn't an object at this index
+#X msg 112 212 inlets;
+#X text 161 211 number of inlets the object has;
+#X msg 115 239 outlets;
+#X text 171 238 number of outlets the object has;
+#X text 201 327 outputs a bang if there isn't an object at this index
 ;
-#X obj 39 372 print object-info;
-#X obj 96 347 print no-object;
-#X text 168 450 objectinfo's available methods are shown above.;
-#X text 81 532 1) float;
-#X text 169 532 canvas level;
-#X connect 11 0 20 0;
-#X connect 13 0 20 0;
-#X connect 20 0 36 0;
-#X connect 20 1 37 0;
-#X connect 21 0 20 0;
-#X connect 23 0 20 0;
-#X connect 25 0 20 0;
-#X connect 27 0 20 0;
-#X connect 29 0 20 0;
-#X connect 31 0 20 1;
-#X connect 33 0 20 2;
+#X obj 39 352 print object-info;
+#X obj 96 327 print no-object;
+#X text 168 438 objectinfo's available methods are shown above.;
+#X msg 99 182 index;
+#X text 146 182 z-order index of the object on the canvas;
+#X obj 78 464 cnv 17 3 25 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 463 pointer;
+#X text 168 463 pointer to an object on the canvas;
+#X text 81 545 none;
+#X connect 11 0 19 0;
+#X connect 19 0 31 0;
+#X connect 19 1 32 0;
+#X connect 20 0 19 0;
+#X connect 22 0 19 0;
+#X connect 24 0 19 0;
+#X connect 26 0 19 0;
+#X connect 28 0 19 0;
+#X connect 34 0 19 0;
