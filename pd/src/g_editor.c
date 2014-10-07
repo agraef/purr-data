@@ -7060,17 +7060,17 @@ static void canvas_tidy(t_canvas *x)
     canvas_dirty(x, 1);
 }*/
 
-static void canvas_texteditor(t_canvas *x)
-{
-    t_rtext *foo;
-    char *buf;
-    int bufsize;
-    if (foo = x->gl_editor->e_textedfor)
-        rtext_gettext(foo, &buf, &bufsize);
-    else buf = "", bufsize = 0;
-    sys_vgui("pdtk_pd_texteditor {%.*s}\n", bufsize, buf);
-    
-}
+//static void canvas_texteditor(t_canvas *x)
+//{
+//    t_rtext *foo;
+//    char *buf;
+//    int bufsize;
+//    if (foo = x->gl_editor->e_textedfor)
+//        rtext_gettext(foo, &buf, &bufsize);
+//    else buf = "", bufsize = 0;
+//    sys_vgui("pdtk_pd_texteditor {%.*s}\n", bufsize, buf);
+//    
+//}
 
 void glob_key(void *dummy, t_symbol *s, int ac, t_atom *av)
 {
@@ -7405,8 +7405,8 @@ void g_editor_setup(void)
         gensym("redo"), A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_tidy,
         gensym("tidy"), A_NULL);
-    class_addmethod(canvas_class, (t_method)canvas_texteditor,
-        gensym("texteditor"), A_NULL);
+    //class_addmethod(canvas_class, (t_method)canvas_texteditor,
+    //    gensym("texteditor"), A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_editmode,
         gensym("editmode"), A_DEFFLOAT, A_NULL);
     // jsarlo

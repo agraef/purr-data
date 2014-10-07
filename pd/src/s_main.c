@@ -314,9 +314,8 @@ int sys_main(int argc, char **argv)
             // character, we add 3 additional characters per entry
             length = length + strlen(nl->nl_string) + 3;
         }
-        if((filenames = malloc(length)) != NULL)
+        if(length && (filenames = (char*) calloc(length, sizeof(char*)) ) != NULL)
         {
-            filenames[0] = '\0';   // ensures the memory is an empty string
             strcat(filenames,"\"");
             if (sys_openlist)
             {
@@ -328,7 +327,7 @@ int sys_main(int argc, char **argv)
                     else strcat(filenames,"\"\0"); // ensures proper termination
                 }
             }
-            //fprintf(stderr,"final list: <%s>\n", filenames);
+            //fprintf(stderr,"final list: <%s> <%c> %d\n", filenames, filenames[0], length);
         }
         else
         {
@@ -338,6 +337,7 @@ int sys_main(int argc, char **argv)
     }
     sys_vgui("pdtk_check_unique %d {%s}\n", sys_unique,
         (filenames ? filenames : "0"));
+    if (filenames != NULL) free(filenames);
     if (sys_externalschedlib)
         return (sys_run_scheduler(sys_externalschedlibname,
             sys_extraflagsstring));

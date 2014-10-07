@@ -142,10 +142,16 @@ static int firstone(char *s, int c, int n)
     int i = 0;
     while (s != s2)
     {
-        if (*s == c) return (i);
+        //fprintf(stderr,"s=<%s> n=%d s=%d c=%d s2=%d\n", s, n, *s, c, *s2);
+        if (*s == c)
+        {
+            //fprintf(stderr,"DONE\n");
+            return (i);
+        }
         i++;
         s++;
     }
+    //fprintf(stderr,"FAILED\n");
     return (-1);
 }
 
@@ -200,7 +206,7 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
     if (x)
     {
         t_float dispx, dispy;
-        char smallbuf[200], *tempbuf;
+        char smallbuf[200] = { '\0' }, *tempbuf;
         int outchars_b = 0, nlines = 0, ncolumns = 0,
             pixwide, pixhigh, font, fontwidth, fontheight, findx, findy;
         int reportedindex = 0;
@@ -212,6 +218,7 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
         int inindex_c = 0; // index location in the u8 chars
         int selstart_b = 0, selend_b = 0; // selection start and end
         // buffer size in u8 chars
+        //fprintf(stderr,"buf = <%s> | last 2 chars = %d %d\n", x->x_buf, x->x_buf[x->x_bufsize-1], x->x_buf[x->x_bufsize]);
         int x_bufsize_c = u8_charnum(x->x_buf, x->x_bufsize);
             /* if we're a GOP (the new, "goprect" style) borrow the font size
             from the inside to preserve the spacing */
@@ -236,6 +243,7 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
                 (inchars_c > widthlimit_c ? widthlimit_c : inchars_c);
             int maxindex_b = u8_offset(x->x_buf + inindex_b, maxindex_c);
             int eatchar = 1;
+            //fprintf(stderr, "firstone <%s> inindex_b=%d maxindex_b=%d\n", x->x_buf + inindex_b, inindex_b, maxindex_b);
             int foundit_b  = firstone(x->x_buf + inindex_b, '\n', maxindex_b);
             int foundit_c;
             //following deals with \v replacement for \n in multiline comments
@@ -318,6 +326,10 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
             }
         }
         else ncolumns = widthspec_c;
+
+        // add a null character at the end of the string (for u8_charnum)
+        tempbuf[outchars_b++] = '\0';
+
         pixwide = ncolumns * fontwidth + (LMARGIN + RMARGIN);
         pixhigh = nlines * fontheight + (TMARGIN + BMARGIN);
         //printf("outchars_b=%d bufsize=%d %d\n", outchars_b, x->x_bufsize, x->x_buf[outchars_b]);
@@ -523,7 +535,7 @@ void rtext_activate(t_rtext *x, int state)
     t_canvas *canvas = glist_getcanvas(glist);
     //if (state && x->x_active) printf("duplicate rtext_activate\n");
     // the following prevents from selecting all when inside an
-    // object that is already being text for... please *test*
+    // object that is already being texted for... please *test*
     // "fixes" before committing them
     //if (state == x->x_active) return; // avoid excess calls
     if (state)
@@ -583,11 +595,14 @@ void rtext_key(t_rtext *x, int keynum, t_symbol *keysym)
         }
         
         ndel = x->x_selend - x->x_selstart;
-        for (i = x->x_selend; i < x->x_bufsize; i++)
-            x->x_buf[i- ndel] = x->x_buf[i];
-        newsize = x->x_bufsize - ndel;
-        x->x_buf = resizebytes(x->x_buf, x->x_bufsize, newsize);
-        x->x_bufsize = newsize;
+        if (ndel)
+        {
+            for (i = x->x_selend; i < x->x_bufsize; i++)
+                x->x_buf[i- ndel] = x->x_buf[i];
+            newsize = x->x_bufsize - ndel;
+            x->x_buf = resizebytes(x->x_buf, x->x_bufsize, newsize);
+            x->x_bufsize = newsize;
+        }
 
 /* at Guenter's suggestion, use 'n>31' to test wither a character might
 be printable in whatever 8-bit character set we find ourselves. */
@@ -616,8 +631,12 @@ be printable in whatever 8-bit character set we find ourselves. */
             int ch_nbytes = u8_wc_nbytes(n);
             newsize = x->x_bufsize + ch_nbytes;
             x->x_buf = resizebytes(x->x_buf, x->x_bufsize, newsize);
-            for (i = newsize-1; i > x->x_selstart; i--)
-                x->x_buf[i] = x->x_buf[i-ch_nbytes];
+            //fprintf(stderr,"x->x_bufsize=%d newsize=%d\n", x->x_bufsize, newsize);
+            //for (i = newsize-1; i >= x->x_selstart; i--)
+            //{
+                //fprintf(stderr,"%d-%d <%d>\n", i, i-ch_nbytes, x->x_buf[i-ch_nbytes]);
+                //x->x_buf[i] = '\0';
+            //}
             x->x_bufsize = newsize;
             /*-- moo: assume canvas_key() has encoded keysym as UTF-8 */
             strncpy(x->x_buf+x->x_selstart, keysym->s_name, ch_nbytes);
@@ -957,21 +976,37 @@ void rtext_mouse(t_rtext *x, int xval, int yval, int flag)
     }
     else if (flag == RTEXT_DBL)
     {
-        int ws, ns;
+        int whereseparator, newseparator;
         x->x_dragfrom = -1;
-        ws = 0;
-        if ((ns = lastone(x->x_buf, ' ' , indx)) > ws) ws = ns+1;
-        if ((ns = lastone(x->x_buf, '\n', indx)) > ws) ws = ns+1;
-        if ((ns = lastone(x->x_buf, ';' , indx)) > ws) ws = ns+1;
-        if ((ns = lastone(x->x_buf, ',' , indx)) > ws) ws = ns+1;
-        x->x_selstart = ws;
+        whereseparator = 0;
+        if ((newseparator = lastone(x->x_buf, ' ', indx)) > whereseparator)
+            whereseparator = newseparator+1;
+        if ((newseparator = lastone(x->x_buf, '\n', indx)) > whereseparator)
+            whereseparator = newseparator+1;
+        if ((newseparator = lastone(x->x_buf, ';', indx)) > whereseparator)
+            whereseparator = newseparator+1;
+        if ((newseparator = lastone(x->x_buf, ',', indx)) > whereseparator)
+            whereseparator = newseparator+1;
+        x->x_selstart = whereseparator;
         
-        int i = ws = x->x_bufsize - indx;
-        if ((ns = firstone(x->x_buf+indx, ' ' , i)) >= 0 && ns < ws) ws = ns;
-        if ((ns = firstone(x->x_buf+indx, '\n', i)) >= 0 && ns < ws) ws = ns;
-        if ((ns = firstone(x->x_buf+indx, ';',  i)) >= 0 && ns < ws) ws = ns;
-        if ((ns = firstone(x->x_buf+indx, ',',  i)) >= 0 && ns < ws) ws = ns;
-        x->x_selend = indx + ws;
+        whereseparator = x->x_bufsize - indx;
+        if ((newseparator =
+            firstone(x->x_buf+indx, ' ', x->x_bufsize - indx)) >= 0 &&
+                newseparator < whereseparator)
+                    whereseparator = newseparator;
+        if ((newseparator =
+            firstone(x->x_buf+indx, '\n', x->x_bufsize - indx)) >= 0 &&
+                newseparator < whereseparator)
+                    whereseparator = newseparator;
+        if ((newseparator =
+            firstone(x->x_buf+indx, ';', x->x_bufsize - indx)) >= 0 &&
+                newseparator < whereseparator)
+                    whereseparator = newseparator;
+        if ((newseparator =
+            firstone(x->x_buf+indx, ',', x->x_bufsize - indx)) >= 0 &&
+                newseparator < whereseparator)
+                    whereseparator = newseparator;
+        x->x_selend = indx + whereseparator;
     }
     else if (flag == RTEXT_SHIFT)
     {
