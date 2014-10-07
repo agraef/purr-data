@@ -24,7 +24,7 @@ typedef struct _cdplayer
 
 static void *cdplayer_new()
 {
-    char* devicename;
+    char devicename[MAXPDSTRING];
     int fd;
     t_cdplayer *x = (t_cdplayer *)pd_new(cdplayer_class);
 

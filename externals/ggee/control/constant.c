@@ -34,18 +34,21 @@ static void *constant_new(t_symbol* s)
     t_constant *x = (t_constant *)pd_new(constant_class);
     
     if (s == &s_)
-	 x->x_constant = M_PI;
-
-    if (!strcmp(s->s_name,"PI"))
-	 x->x_constant = M_PI;
-
-    if (!strcmp(s->s_name,"TWOPI"))
-	 x->x_constant = 2*M_PI;
-
-    if (!strcmp(s->s_name,"e"))
-	 x->x_constant = exp(1.0);
-	 
-
+        x->x_constant = M_PI;
+    else if (!strcmp(s->s_name,"pi"))
+        x->x_constant = M_PI;
+    else if (!strcmp(s->s_name,"2pi"))
+        x->x_constant = 2*M_PI;
+    else if (!strcmp(s->s_name,"e"))
+        x->x_constant = exp(1.0);
+    else if (!strcmp(s->s_name,"M_PI"))
+        x->x_constant = M_PI;
+    else if (!strcmp(s->s_name,"PI"))
+        x->x_constant = M_PI;
+    else if (!strcmp(s->s_name,"TWOPI"))
+        x->x_constant = 2*M_PI;
+    else
+        pd_error(x, "Unsupported constant '%s'", s->s_name);
 
     outlet_new(&x->x_obj, &s_float);
     return (x);
@@ -53,8 +56,13 @@ static void *constant_new(t_symbol* s)
 
 void constant_setup(void)
 {
-    constant_class = class_new(gensym("constant"), (t_newmethod)constant_new, 0,
-				sizeof(t_constant), 0,0);
+    constant_class = class_new(gensym("constant"),
+                               (t_newmethod)constant_new,
+                               0,
+                               sizeof(t_constant),
+                               0,
+                               A_DEFSYMBOL, 
+                               0);
     class_addbang(constant_class,constant_bang);
 }
 
