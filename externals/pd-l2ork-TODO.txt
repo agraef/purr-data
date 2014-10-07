@@ -22,6 +22,7 @@ MERGE:
 *footils (fluid improvements)
 *ggee (total overhaul)
 *miXed (Scope~, comment, coll, improvements to the textfile viewer)
+*pddp (accelerated view of documentation objects, minor fixes)
 
 TODO:
 test other
