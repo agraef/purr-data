@@ -101,10 +101,10 @@ static void array_resize_and_redraw(t_array *array, t_glist *glist, int n)
     while (a2->a_gp.gp_stub->gs_which == GP_ARRAY)
         a2 = a2->a_gp.gp_stub->gs_un.gs_array;
     if (vis)
-        gobj_vis(&a2->a_gp.gp_un.gp_scalar->sc_gobj, glist, 0);
+        gobj_vis(a2->a_gp.gp_un.gp_gobj, glist, 0);
     array_resize(array, n);
     if (vis)
-        gobj_vis(&a2->a_gp.gp_un.gp_scalar->sc_gobj, glist, 1);
+        gobj_vis(a2->a_gp.gp_un.gp_gobj, glist, 1);
 }
 
 void word_free(t_word *wp, t_template *template);
@@ -841,7 +841,8 @@ void array_redraw(t_array *a, t_glist *glist)
 {
     while (a->a_gp.gp_stub->gs_which == GP_ARRAY)
         a = a->a_gp.gp_stub->gs_un.gs_array;
-    scalar_redraw(a->a_gp.gp_un.gp_scalar, glist);
+    t_scalar *sc = (t_scalar *)(a->a_gp.gp_un.gp_gobj);
+    scalar_redraw(sc, glist);
 }
 
     /* routine to get screen coordinates of a point in an array */

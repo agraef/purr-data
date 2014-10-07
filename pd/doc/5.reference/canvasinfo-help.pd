@@ -3,7 +3,7 @@
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header canvasinfo 3 12
 0 18 -204280 -1 0;
-#X obj 0 431 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+#X obj 0 451 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
 #N canvas 48 165 482 332 META 0;
 #X text 12 145 LIBRARY internal;
@@ -24,7 +24,7 @@ filename hitbox name pointer posonparent screenpos toplevel vis;
 0 13 -228856 -1 0;
 #X obj 0 563 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#X obj 78 439 cnv 17 3 30 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X obj 78 459 cnv 17 3 30 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #N canvas 196 385 428 108 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
@@ -36,15 +36,8 @@ filename hitbox name pointer posonparent screenpos toplevel vis;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
 #X msg 39 48 print;
-#X text 80 47 print all attributes to the console;
-#X text 98 438 print;
-#X text 168 438 - print out each available message (other than "print")
-followed by a semicolon and the output for that method.;
-#X text 168 464 pdinfo's availabe methods are shown above \, with audio-device
-and midi-device message in subpatches.;
+#X text 98 458 print;
 #X text 99 503 list;
-#X text 169 503 - output varies depending on the message sent to [pdinfo].
-;
 #X obj 483 5 canvasinfo;
 #X text 11 20 get info about a canvas;
 #X obj 39 390 canvasinfo;
@@ -72,8 +65,6 @@ it was saved (0 = no \, 1 = yes);
 #X text 233 328 screen position of a visible canvas;
 #X msg 175 368 vis;
 #X text 203 368 whether a canvas is visible on the screen;
-#X text 132 89 full text of the object box for an abstraction or subpatch
-;
 #X text 181 244 see whether a coordinate lies on an object in the canvas
 ;
 #X text 123 130 directory for this canvas' environment;
@@ -130,8 +121,6 @@ so on (if they exist);
 #X connect 11 0 20 0;
 #X connect 19 0 11 0;
 #X restore 101 573 pd canvas_environment;
-#X text 111 68 list of dollarsign arguments for this canvas' environment
-;
 #N canvas 139 127 428 435 hitbox_and_coords 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
@@ -198,20 +187,28 @@ on the canvas that includes the "x y" coordinates you send it:;
 #X text 81 541 1) float;
 #X text 169 541 - canvas stacking level (0 = this canvas \, 1 = parent
 \, etc.);
-#X connect 11 0 20 0;
-#X connect 20 0 48 0;
-#X connect 21 0 20 0;
-#X connect 22 0 20 0;
-#X connect 23 0 20 0;
-#X connect 25 0 20 0;
-#X connect 26 0 20 0;
-#X connect 28 0 20 0;
-#X connect 29 0 20 0;
-#X connect 31 0 20 0;
-#X connect 32 0 20 0;
-#X connect 33 0 20 0;
-#X connect 36 0 20 0;
-#X connect 37 0 20 0;
-#X connect 38 0 20 0;
-#X connect 41 0 20 0;
-#X connect 49 0 20 0;
+#X text 132 89 text of the object box for an abstraction or subpatch
+(raw);
+#X text 111 68 list of dollarsign argument values for this canvas;
+#X text 80 47 print all attributes directly to the console;
+#X text 168 458 - print all "method: value(s)" pairs directly to the
+console;
+#X text 169 503 - varies depending on the message sent to [canvasinfo]
+;
+#X connect 11 0 16 0;
+#X connect 16 0 43 0;
+#X connect 17 0 16 0;
+#X connect 18 0 16 0;
+#X connect 19 0 16 0;
+#X connect 21 0 16 0;
+#X connect 22 0 16 0;
+#X connect 24 0 16 0;
+#X connect 25 0 16 0;
+#X connect 27 0 16 0;
+#X connect 28 0 16 0;
+#X connect 29 0 16 0;
+#X connect 32 0 16 0;
+#X connect 33 0 16 0;
+#X connect 34 0 16 0;
+#X connect 37 0 16 0;
+#X connect 44 0 16 0;

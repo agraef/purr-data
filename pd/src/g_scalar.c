@@ -225,7 +225,7 @@ t_scalar *scalar_new(t_glist *owner, t_symbol *templatesym)
         (template->t_n - 1) * sizeof(*x->sc_vec));
     x->sc_gobj.g_pd = scalar_class;
     x->sc_template = templatesym;
-    gpointer_setglist(&gp, owner, x);
+    gpointer_setglist(&gp, owner, &x->sc_gobj);
     word_init(x->sc_vec, template, &gp);
     char buf[50];
     sprintf(buf, ".x%lx", (long unsigned int)x);
@@ -457,7 +457,7 @@ void scalar_select(t_gobj *z, t_glist *owner, int state)
     //t_canvas *templatecanvas = NULL;
     t_gpointer gp;
     gpointer_init(&gp);
-    gpointer_setglist(&gp, owner, x);
+    gpointer_setglist(&gp, owner, &x->sc_gobj);
     SETPOINTER(&at, &gp);
     if (tmpl = template_findbyname(templatesym))
     {
@@ -523,7 +523,7 @@ static void scalar_displace(t_gobj *z, t_glist *glist, int dx, int dy)
         x->sc_y2 += dy;
     }
     gpointer_init(&gp);
-    gpointer_setglist(&gp, glist, x);
+    gpointer_setglist(&gp, glist, &x->sc_gobj);
     SETPOINTER(&at[0], &gp);
     SETFLOAT(&at[1], (t_float)dx);
     SETFLOAT(&at[2], (t_float)dy);
@@ -576,7 +576,7 @@ static void scalar_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
     //fprintf(stderr,"gotx=%d goty=%d\n", gotx, goty);
     scalar_getbasexy(x, &basex, &basey);
     gpointer_init(&gp);
-    gpointer_setglist(&gp, glist, x);
+    gpointer_setglist(&gp, glist, &x->sc_gobj);
     SETPOINTER(&at[0], &gp);
     SETFLOAT(&at[1], (t_float)dx);
     SETFLOAT(&at[2], (t_float)dy);

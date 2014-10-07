@@ -1,4 +1,4 @@
-#N canvas 425 49 555 619 10;
+#N canvas 0 19 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header classinfo 3 12 0
@@ -36,7 +36,6 @@
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
 #X msg 53 61 print;
-#X text 94 60 print all attributes to the console;
 #X text 98 358 print;
 #X text 168 358 - print out each available message (other than "print")
 followed by a semicolon and the output for that method.;
@@ -45,7 +44,6 @@ followed by a semicolon and the output for that method.;
 ;
 #X msg 83 81 args;
 #X obj 53 264 print;
-#X text 11 20 get info about a class;
 #X obj 462 3 classinfo;
 #X obj 140 264 print reject_outlet;
 #X text 125 81 list of argument types accepted by the object;
@@ -98,14 +96,16 @@ as an argument;
 #X text 81 541 1) symbol;
 #X floatatom 96 210 5 0 0 0 - - -, f 5;
 #X msg 340 201 symbol canvas;
-#X connect 11 0 29 0;
-#X connect 17 0 29 0;
-#X connect 23 0 29 0;
-#X connect 25 0 29 0;
-#X connect 27 0 29 0;
-#X connect 29 0 18 0;
-#X connect 29 1 21 0;
-#X connect 30 0 29 1;
-#X connect 33 0 29 1;
-#X connect 50 0 29 0;
-#X connect 51 0 29 1;
+#X text 11 20 get info about a Pure Data class;
+#X text 94 60 print all attributes directly to the console;
+#X connect 11 0 27 0;
+#X connect 16 0 27 0;
+#X connect 21 0 27 0;
+#X connect 23 0 27 0;
+#X connect 25 0 27 0;
+#X connect 27 0 17 0;
+#X connect 27 1 19 0;
+#X connect 28 0 27 1;
+#X connect 31 0 27 1;
+#X connect 48 0 27 0;
+#X connect 49 0 27 1;
