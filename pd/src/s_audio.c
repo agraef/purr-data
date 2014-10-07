@@ -90,6 +90,11 @@ int audio_isopen(void)
             || (audio_naudiooutdev > 0 && audio_audiochoutdev[0] > 0)));
 }
 
+int sys_audio_get_blocksize(void)
+{
+    return (audio_blocksize);
+}
+
 void sys_get_audio_params(
     int *pnaudioindev, int *paudioindev, int *chindev,
     int *pnaudiooutdev, int *paudiooutdev, int *choutdev,
@@ -146,7 +151,6 @@ void sys_save_audio_params(
     audio_advance = advance;
     audio_callback = callback;
     audio_blocksize = blocksize;
-    fprintf(stderr,"blocksize=%d\n", blocksize);
 }
 
     /* init routines for any API which needs to set stuff up before
@@ -421,7 +425,7 @@ void sys_reopen_audio( void)
 #ifdef USEAPI_PORTAUDIO
     if (sys_audioapi == API_PORTAUDIO)
     {
-        int blksize = (sys_blocksize ? sys_blocksize : 64);
+        int blksize = (audio_blocksize ? audio_blocksize : 64);
         outcome = pa_open_audio((naudioindev > 0 ? chindev[0] : 0),
         (naudiooutdev > 0 ? choutdev[0] : 0), rate, sys_soundin,
             sys_soundout, blksize, sys_advance_samples/blksize, 
@@ -441,7 +445,8 @@ void sys_reopen_audio( void)
 #ifdef USEAPI_OSS
     if (sys_audioapi == API_OSS)
         outcome = oss_open_audio(naudioindev, audioindev, naudioindev,
-            chindev, naudiooutdev, audiooutdev, naudiooutdev, choutdev, rate);
+            chindev, naudiooutdev, audiooutdev, naudiooutdev, choutdev, rate,
+                audio_blocksize);
     else
 #endif
 #ifdef USEAPI_ALSA
@@ -456,7 +461,25 @@ void sys_reopen_audio( void)
 #ifdef USEAPI_MMIO
     if (sys_audioapi == API_MMIO)
         outcome = mmio_open_audio(naudioindev, audioindev, naudioindev,
+            chindev, naudiooutdev, audiooutdev, naudiooutdev, choutdev, rate,
+                audio_blocksize);
+    else
+#endif
+#ifdef USEAPI_AUDIOUNIT
+    if (sys_audioapi == API_AUDIOUNIT)
+        outcome = audiounit_open_audio((naudioindev > 0 ? chindev[0] : 0),
+            (naudioindev > 0 ? choutdev[0] : 0), rate);
+    else
+#endif
+#ifdef USEAPI_ESD
+    if (sys_audioapi == API_ALSA)
+        outcome = esd_open_audio(naudioindev, audioindev, naudioindev,
             chindev, naudiooutdev, audiooutdev, naudiooutdev, choutdev, rate);
+    else 
+#endif
+#ifdef USEAPI_DUMMY
+    if (sys_audioapi == API_DUMMY)
+        outcome = dummy_open_audio(naudioindev, naudiooutdev, rate);
     else
 #endif
     if (sys_audioapi == API_NONE)
@@ -735,7 +758,7 @@ void glob_audio_properties(t_pd *dummy, t_floatarg flongform)
 "pdtk_audio_dialog %%s \
 %d %d %d %d %d %d %d %d \
 %d %d %d %d %d %d %d %d \
-%d %d %d %d %d\n",
+%d %d %d %d %d %d\n",
         audioindev1, audioindev2, audioindev3, audioindev4, 
         audioinchan1, audioinchan2, audioinchan3, audioinchan4, 
         audiooutdev1, audiooutdev2, audiooutdev3, audiooutdev4,

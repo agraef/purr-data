@@ -817,7 +817,7 @@ void pdinfo_audio_samplerate(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 void pdinfo_audio_blocksize(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_atom at[1];
-    SETFLOAT(at, (t_float)sys_getblksize());
+    SETFLOAT(at, (t_float)sys_audio_get_blocksize());
     info_out((t_text *)x, s, 1, at);
 }
 

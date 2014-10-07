@@ -261,7 +261,7 @@ void pa_getdevs(char *indevlist, int *nindevs,
 
 int oss_open_audio(int naudioindev, int *audioindev, int nchindev,
     int *chindev, int naudiooutdev, int *audiooutdev, int nchoutdev,
-    int *choutdev, int rate);
+    int *choutdev, int rate, int blocksize);
 void oss_close_audio(void);
 int oss_send_dacs(void);
 void oss_reportidle(void);
@@ -290,7 +290,7 @@ void jack_listdevs(void);
 
 int mmio_open_audio(int naudioindev, int *audioindev,
     int nchindev, int *chindev, int naudiooutdev, int *audiooutdev,
-    int nchoutdev, int *choutdev, int rate);
+    int nchoutdev, int *choutdev, int rate, int blocksize);
 void mmio_close_audio( void);
 void mmio_reportidle(void);
 int mmio_send_dacs(void);
@@ -309,6 +309,7 @@ void sys_set_audio_state(int onoff);
 void oss_set32bit( void);
 void linux_alsa_devname(char *devname);
 
+EXTERN int sys_audio_get_blocksize(void);
 EXTERN void sys_get_audio_params(
     int *pnaudioindev, int *paudioindev, int *chindev,
     int *pnaudiooutdev, int *paudiooutdev, int *choutdev,

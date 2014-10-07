@@ -11,7 +11,7 @@
 
 #include <windows.h>
 
-#include <MMSYSTEM.H>
+#include <mmsystem.h>
 
 /* ------------------------- audio -------------------------- */
 
@@ -696,11 +696,11 @@ idle:
 
 int mmio_open_audio(int naudioindev, int *audioindev,
     int nchindev, int *chindev, int naudiooutdev, int *audiooutdev,
-    int nchoutdev, int *choutdev, int rate)
+    int nchoutdev, int *choutdev, int rate, int blocksize)
 {
     int nbuf;
 
-    nt_realdacblksize = (sys_blocksize ? sys_blocksize : DEFREALDACBLKSIZE);
+    nt_realdacblksize = (blocksize ? blocksize : DEFREALDACBLKSIZE);
     nbuf = sys_advance_samples/nt_realdacblksize;
     if (nbuf >= MAXBUFFER)
     {

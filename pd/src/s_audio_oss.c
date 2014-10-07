@@ -5,7 +5,14 @@
 
 /* this file inputs and outputs audio using the OSS API available on linux. */
 
-#include <linux/soundcard.h>
+#include <sys/soundcard.h>
+
+#ifndef SNDCTL_DSP_GETISPACE
+#define SNDCTL_DSP_GETISPACE SOUND_PCM_GETISPACE
+#endif
+#ifndef SNDCTL_DSP_GETOSPACE
+#define SNDCTL_DSP_GETOSPACE SOUND_PCM_GETOSPACE
+#endif
 
 #include "m_pd.h"
 #include "s_stuff.h"
@@ -41,8 +48,11 @@ typedef int32_t t_oss_int32;
 #define OSS_XFERSIZE(chans, width) (DEFDACBLKSIZE * (chans) * (width))
 
 /* GLOBALS */
+static int linux_meters;        /* true if we're metering */
+static t_sample linux_inmax;       /* max input amplitude */
+static t_sample linux_outmax;      /* max output amplitude */
 static int linux_fragsize = 0;  /* for block mode; block size (sample frames) */
-
+extern int audio_blocksize;     /* stolen from s_audio.c */
 /* our device handles */
 
 typedef struct _oss_dev
@@ -67,6 +77,7 @@ t_sample *sys_soundin;
 
     /* OSS-specific private variables */
 static int oss_blockmode = 1;   /* flag to use "blockmode"  */
+static char ossdsp[] = "/dev/dsp%d"; 
 
     /* don't assume we can turn all 31 bits when doing float-to-fix; 
     otherwise some audio drivers (e.g. Midiman/ALSA) wrap around. */
@@ -117,10 +128,12 @@ int oss_reset(int fd) {
      return err;
 }
 
-void oss_configure(t_oss_dev *dev, int srate, int dac, int skipblocksize)
+void oss_configure(t_oss_dev *dev, int srate, int dac, int skipblocksize,
+    int suggestedblocksize)
 {
-    int orig, param, fd = dev->d_fd, wantformat;
+    int orig, param, nblk, fd = dev->d_fd, wantformat;
     int nchannels = dev->d_nchannels;
+    int advwas = sys_schedadvance;
 
     audio_buf_info ainfo;
 
@@ -148,7 +161,7 @@ void oss_configure(t_oss_dev *dev, int srate, int dac, int skipblocksize)
     {
         int fragbytes, logfragsize, nfragment;
             /* setting fragment count and size.  */
-        linux_fragsize = sys_blocksize;
+        linux_fragsize = suggestedblocksize;
         if (!linux_fragsize)
         {
             linux_fragsize = OSS_DEFFRAGSIZE;
@@ -192,7 +205,7 @@ void oss_configure(t_oss_dev *dev, int srate, int dac, int skipblocksize)
         out.  */
 
         int defect;
-        if (ioctl(fd, SOUND_PCM_GETOSPACE,&ainfo) < 0)
+        if (ioctl(fd, SNDCTL_DSP_GETOSPACE,&ainfo) < 0)
            fprintf(stderr,"OSS: ioctl on output device failed");
         dev->d_bufsize = ainfo.bytes;
 
@@ -234,7 +247,7 @@ static int oss_setchannels(int fd, int wantchannels, char *devname)
         }
     }
     param = wantchannels;
-//whynot:    
+whynot:    
     while (param > 1)
     {
         int save = param;
@@ -251,15 +264,19 @@ static int oss_setchannels(int fd, int wantchannels, char *devname)
 #define O_AUDIOFLAG O_NDELAY
 
 int oss_open_audio(int nindev,  int *indev,  int nchin,  int *chin,
-    int noutdev, int *outdev, int nchout, int *chout, int rate)
+    int noutdev, int *outdev, int nchout, int *chout, int rate,
+        int blocksize)
 {
     int capabilities = 0;
     int inchannels = 0, outchannels = 0;
     char devname[20];
     int n, i, fd, flags;
     char buf[OSS_MAXSAMPLEWIDTH * DEFDACBLKSIZE * OSS_MAXCHPERDEV];
+    int num_devs = 0;
     int wantmore=0;
-  
+    int spread = 0;
+    audio_buf_info ainfo;
+
     linux_nindevs = linux_noutdevs = 0;
         /* mark devices unopened */
     for (i = 0; i < OSS_MAXDEV; i++)
@@ -350,7 +367,7 @@ int oss_open_audio(int nindev,  int *indev,  int nchin,  int *chin,
         {
             linux_dacs[linux_noutdevs].d_nchannels = gotchans;
             linux_dacs[linux_noutdevs].d_fd = fd;
-            oss_configure(linux_dacs+linux_noutdevs, rate, 1, 0);
+            oss_configure(linux_dacs+linux_noutdevs, rate, 1, 0, blocksize);
 
             linux_noutdevs++;
             outchannels += gotchans;
@@ -425,7 +442,8 @@ int oss_open_audio(int nindev,  int *indev,  int nchin,  int *chin,
 
         linux_adcs[linux_nindevs].d_nchannels = gotchans;
         
-        oss_configure(linux_adcs+linux_nindevs, rate, 0, alreadyopened);
+        oss_configure(linux_adcs+linux_nindevs, rate, 0, alreadyopened,
+            blocksize);
 
         inchannels += gotchans;
         linux_nindevs++;
@@ -499,14 +517,14 @@ static void oss_calcspace(void)
     audio_buf_info ainfo;
     for (dev=0; dev < linux_noutdevs; dev++)
     {
-        if (ioctl(linux_dacs[dev].d_fd, SOUND_PCM_GETOSPACE, &ainfo) < 0)
+        if (ioctl(linux_dacs[dev].d_fd, SNDCTL_DSP_GETOSPACE, &ainfo) < 0)
            fprintf(stderr,"OSS: ioctl on output device %d failed",dev);
         linux_dacs[dev].d_space = ainfo.bytes;
     }
 
     for (dev = 0; dev < linux_nindevs; dev++)
     {
-        if (ioctl(linux_adcs[dev].d_fd, SOUND_PCM_GETISPACE,&ainfo) < 0)
+        if (ioctl(linux_adcs[dev].d_fd, SNDCTL_DSP_GETISPACE,&ainfo) < 0)
             fprintf(stderr, "OSS: ioctl on input device %d, fd %d failed",
                 dev, linux_adcs[dev].d_fd);
         linux_adcs[dev].d_space = ainfo.bytes;
@@ -533,7 +551,7 @@ in audio output and/or input. */
 
 static void oss_doresync( void)
 {
-    int dev, zeroed = 0;
+    int dev, zeroed = 0, wantsize;
     char buf[OSS_MAXSAMPLEWIDTH * DEFDACBLKSIZE * OSS_MAXCHPERDEV];
     audio_buf_info ainfo;
 
@@ -554,7 +572,7 @@ static void oss_doresync( void)
             linux_adcs_read(linux_adcs[dev].d_fd, buf, 
                 OSS_XFERSIZE(linux_adcs[dev].d_nchannels,
                     linux_adcs[dev].d_bytespersamp));
-            if (ioctl(linux_adcs[dev].d_fd, SOUND_PCM_GETISPACE, &ainfo) < 0)
+            if (ioctl(linux_adcs[dev].d_fd, SNDCTL_DSP_GETISPACE, &ainfo) < 0)
             {
                 fprintf(stderr, "OSS: ioctl on input device %d, fd %d failed",
                     dev, linux_adcs[dev].d_fd);
@@ -583,7 +601,7 @@ static void oss_doresync( void)
             linux_dacs_write(linux_dacs[dev].d_fd, buf,
                 OSS_XFERSIZE(linux_dacs[dev].d_nchannels,
                     linux_dacs[dev].d_bytespersamp));
-            if (ioctl(linux_dacs[dev].d_fd, SOUND_PCM_GETOSPACE, &ainfo) < 0)
+            if (ioctl(linux_dacs[dev].d_fd, SNDCTL_DSP_GETOSPACE, &ainfo) < 0)
             {
                 fprintf(stderr, "OSS: ioctl on output device %d, fd %d failed",
                     dev, linux_dacs[dev].d_fd);
@@ -612,9 +630,11 @@ static void oss_doresync( void)
 int oss_send_dacs(void)
 {
     t_sample *fp1, *fp2;
+    long fill;
     int i, j, dev, rtnval = SENDDACS_YES;
     char buf[OSS_MAXSAMPLEWIDTH * DEFDACBLKSIZE * OSS_MAXCHPERDEV];
     t_oss_int16 *sp;
+    t_oss_int32 *lp;
         /* the maximum number of samples we should have in the ADC buffer */
     int idle = 0;
     int thischan;
@@ -655,6 +675,7 @@ int oss_send_dacs(void)
         for (dev = 0;dev < linux_nindevs; dev++) 
             if (linux_adcs[dev].d_space == 0)
         {
+            audio_buf_info ainfo;
             sys_microsleep(2000);
             oss_calcspace();
             if (linux_adcs[dev].d_space != 0) continue;

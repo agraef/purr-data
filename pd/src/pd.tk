@@ -8493,8 +8493,7 @@ proc pdtk_audio_dialog {mytoplevel indev1 indev2 indev3 indev4 \
         inchan1 inchan2 inchan3 inchan4 \
         outdev1 outdev2 outdev3 outdev4 \
         outchan1 outchan2 outchan3 outchan4 sr advance multi callback \
-        longform} {
-    set blocksize 64
+        longform blocksize} {
     ::dialog_audio::pdtk_audio_dialog \
         $mytoplevel $indev1 $indev2 $indev3 $indev4 \
         $inchan1 $inchan2 $inchan3 $inchan4 \

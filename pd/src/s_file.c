@@ -373,6 +373,8 @@ void sys_loadpreferences( void)
         sscanf(prefbuf, "%d", &advance);
     if (sys_getpreference("callback", prefbuf, MAXPDSTRING))
         sscanf(prefbuf, "%d", &callback);
+    if (sys_getpreference("blocksize", prefbuf, MAXPDSTRING))
+        sscanf(prefbuf, "%d", &blocksize);
     sys_set_audio_settings(naudioindev, audioindev, naudioindev, chindev,
         naudiooutdev, audiooutdev, naudiooutdev, choutdev, rate, advance,
         callback, blocksize);

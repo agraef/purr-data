@@ -205,7 +205,7 @@ proc ::dialog_audio::pdtk_audio_dialog {id \
     set audio_callback $callback
     set audio_blocksize $blocksize
     set audio_longform $longform
-
+    
     set mytoplevel .prefs.nb.audio
     set apifr $mytoplevel.api
     if {![winfo exists $apifr]} {
