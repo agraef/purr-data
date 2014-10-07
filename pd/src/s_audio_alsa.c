@@ -233,12 +233,14 @@ static int alsaio_setup(t_alsa_dev *dev, int out, int *channels, int *rate,
     /* return 0 on success */
 int alsa_open_audio(int naudioindev, int *audioindev, int nchindev,
     int *chindev, int naudiooutdev, int *audiooutdev, int nchoutdev,
-    int *choutdev, int rate)
+    int *choutdev, int rate, int blocksize)
 {
     int err, inchans = 0, outchans = 0, subunitdir;
     char devname[512];
-    int frag_size = (sys_blocksize ? sys_blocksize : ALSA_DEFFRAGSIZE);
+    snd_output_t* out;
+    int frag_size = (blocksize ? blocksize : ALSA_DEFFRAGSIZE);
     int nfrags, i, iodev, dev2;
+    int wantinchans, wantoutchans, device;
 
     nfrags = sys_schedadvance * (float)rate / (1e6 * frag_size);
         /* save our belief as to ALSA's buffer size for later */
@@ -254,7 +256,7 @@ int alsa_open_audio(int naudioindev, int *audioindev, int nchindev,
         alsa_numbertoname(audioindev[iodev], devname, 512);
         err = snd_pcm_open(&alsa_indev[alsa_nindev].a_handle, devname,
             SND_PCM_STREAM_CAPTURE, SND_PCM_NONBLOCK);
-        check_error(err, "snd_pcm_open (input)");
+        check_error(err, "snd_pcm_open");
         if (err < 0)
             continue;
         alsa_indev[alsa_nindev].a_devno = audioindev[iodev];
@@ -268,7 +270,7 @@ int alsa_open_audio(int naudioindev, int *audioindev, int nchindev,
         alsa_numbertoname(audiooutdev[iodev], devname, 512);
         err = snd_pcm_open(&alsa_outdev[alsa_noutdev].a_handle, devname,
             SND_PCM_STREAM_PLAYBACK, SND_PCM_NONBLOCK);
-        check_error(err, "snd_pcm_open (output)");
+        check_error(err, "snd_pcm_open");
         if (err < 0)
             continue;
         alsa_outdev[alsa_noutdev].a_devno = audiooutdev[iodev];
@@ -290,7 +292,7 @@ int alsa_open_audio(int naudioindev, int *audioindev, int nchindev,
     if (alsa_usemmap)
     {
         post("using mmap audio interface");
-        if (alsamm_open_audio(rate))
+        if (alsamm_open_audio(rate, blocksize))
             goto blewit;
         else return (0);
     }
@@ -336,7 +338,8 @@ int alsa_open_audio(int naudioindev, int *audioindev, int nchindev,
         check_error(err, "snd_pcm_status_malloc");
     }
 
-        /* fill the buffer with silence */
+        /* fill the buffer with silence and prime the output FIFOs.  This
+        should automatically start the output devices. */
     memset(alsa_snd_buf, 0, alsa_snd_bufsize);
 
     if (outchans)
@@ -349,11 +352,15 @@ int alsa_open_audio(int naudioindev, int *audioindev, int nchindev,
                     DEFDACBLKSIZE);
         }
     }
-    else if (inchans)
+    if (inchans)
     {
+            /* some of the ADC devices might already have been started by
+            starting the outputs above, but others might still need it. */
         for (iodev = 0; iodev < alsa_nindev; iodev++)
-            if ((err = snd_pcm_start(alsa_indev[iodev].a_handle)) < 0)
-                check_error(err, "input start failed\n");
+            if (snd_pcm_state(alsa_indev[iodev].a_handle)
+                != SND_PCM_STATE_RUNNING)
+                    if ((err = snd_pcm_start(alsa_indev[iodev].a_handle)) < 0)
+                        check_error(err, "input start failed");
     }
     return (0);
 blewit:

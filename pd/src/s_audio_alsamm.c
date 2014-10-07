@@ -175,16 +175,23 @@ static void check_error(int err, const char *why)
         error("%s: %s\n", why, snd_strerror(err));
 }
 
-int alsamm_open_audio(int rate)
+int alsamm_open_audio(int rate, int blocksize)
 {
-  int err, i;
+  int err;
+  char devname[80];
+  char *cardname;
   snd_pcm_hw_params_t* hw_params;
   snd_pcm_sw_params_t* sw_params;
+
 
   /* fragsize is an old concept now use periods, used to be called fragments. */
   /* Be aware in ALSA periodsize can be in bytes, where buffersize is in frames, 
      but sometimes buffersize is in bytes and periods in frames, crazy alsa...      
      ...we use periodsize and buffersize in frames */
+
+  int i;
+  short* tmp_buf;
+  unsigned int tmp_uint;
 
   snd_pcm_hw_params_alloca(&hw_params);
   snd_pcm_sw_params_alloca(&sw_params);
@@ -224,16 +231,16 @@ int alsamm_open_audio(int rate)
   
   /* set the asked buffer time (alsa buffertime in us)*/  
   alsamm_buffertime = alsamm_buffersize = 0;
-  if(sys_blocksize == 0)
+  if(blocksize == 0)
     alsamm_buffertime = sys_schedadvance;
   else
-    alsamm_buffersize = sys_blocksize;
+    alsamm_buffersize = blocksize;
    
   if(sys_verbose)
     post("syschedadvance=%d us(%d Samples)so buffertime max should be this=%d" 
          "or sys_blocksize=%d (samples) to use buffersize=%d",
          sys_schedadvance,sys_advance_samples,alsamm_buffertime,
-         sys_blocksize,alsamm_buffersize);
+         blocksize,alsamm_buffersize);
   
   alsamm_periods = 0; /* no one wants periods setting from command line ;-) */
 
@@ -308,6 +315,8 @@ int alsamm_open_audio(int rate)
   /* check for linked handles of input for each output*/
   
   for(i=0; i<(alsa_noutdev < alsa_nindev ? alsa_noutdev:alsa_nindev); i++){
+    t_alsa_dev *ad = &alsa_outdev[i];
+
     if (alsa_outdev[i].a_devno == alsa_indev[i].a_devno){
       if ((err = snd_pcm_link (alsa_indev[i].a_handle,
                                alsa_outdev[i].a_handle)) == 0){

@@ -65,7 +65,7 @@ proc ::dialog_audio::apply {mytoplevel} {
         $audio_sr \
         $audio_advance \
         $audio_callback \
-        $audio_blocksize" \
+        $audio_blocksize \
         \;]
 
     # Pd always makes devices contiguous-- for example, if you only set
