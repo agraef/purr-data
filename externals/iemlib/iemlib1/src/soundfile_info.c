@@ -61,6 +61,186 @@ static unsigned long soundfile_info_string_to_uint32(char *cvec)
   return(ul);
 }
 
+static void soundfile_info_uint32_to_string(char *cvec, unsigned long ul)
+{
+  unsigned char *uc=(unsigned char *)cvec;
+  
+  *uc = (unsigned char)(0x000000ff & ul);
+  *(uc+1) = (unsigned char)(0x000000ff & (ul/256));
+  *(uc+2) = (unsigned char)(0x000000ff & (ul/65536));
+  *(uc+3) = (unsigned char)(0x000000ff & (ul/16777216));
+  return;
+}
+
+static void soundfile_info_overwrite_sr(t_soundfile_info *x, t_symbol *filename, t_floatarg new_sr)
+{
+  char completefilename[400];
+  int i, n, n2, n4, filesize, read_chars, header_size=0, ch, bytesperframe, sr, n_frames;
+  FILE *fh;
+  t_atom *at;
+  char *cvec;
+  unsigned long ul_chunk_size, ul_sr;
+  short ss_format, ss_ch, ss_bytesperframe;
+  
+  if(filename->s_name[0] == '/')/*make complete path + filename*/
+  {
+    strcpy(completefilename, filename->s_name);
+  }
+  else if(((filename->s_name[0] >= 'A')&&(filename->s_name[0] <= 'Z')||
+           (filename->s_name[0] >= 'a')&&(filename->s_name[0] <= 'z'))&&
+          (filename->s_name[1] == ':')&&(filename->s_name[2] == '/'))
+  {
+    strcpy(completefilename, filename->s_name);
+  }
+  else
+  {
+    strcpy(completefilename, canvas_getdir(x->x_canvas)->s_name);
+    strcat(completefilename, "/");
+    strcat(completefilename, filename->s_name);
+  }
+  
+  fh = fopen(completefilename,"r+b");
+  if(!fh)
+  {
+    post("soundfile_info_read: cannot open %s !!\n", completefilename);
+  }
+  else
+  {
+    n = x->x_mem_size; // 10000 bytes
+    n2 = sizeof(short) * x->x_mem_size;
+    n4 = sizeof(long) * x->x_mem_size;
+    fseek(fh, 0, SEEK_END);
+    filesize = ftell(fh);
+    fseek(fh,0,SEEK_SET);
+    read_chars = (int)fread(x->x_begmem, sizeof(char), n4, fh) / 2;
+    //    post("read chars = %d", read_chars);
+    cvec = (char *)x->x_begmem;
+    if(read_chars > 4)
+    {
+      if(strncmp(cvec, "RIFF", 4))
+      {
+        post("soundfile_info_read-error:  %s is no RIFF-WAVE-file", completefilename);
+        goto sr_soundfile_info_end;
+      }
+      header_size += 8; // jump over RIFF chunk size
+      cvec += 8;
+      if(strncmp(cvec, "WAVE", 4))
+      {
+        post("soundfile_info_read-error:  %s is no RIFF-WAVE-file", completefilename);
+        goto sr_soundfile_info_end;
+      }
+      header_size += 4;
+      cvec += 4;
+      
+      for(i=header_size/2; i<read_chars; i++)
+      {
+        if(!strncmp(cvec, "fmt ", 4))
+        {
+          header_size += 4;
+          cvec += 4;
+          goto sr_soundfile_info_fmt;
+        }
+        header_size += 2;
+        cvec += 2;
+      }
+      post("soundfile_info_read-error:  %s has at begin no format-chunk", completefilename);
+      goto sr_soundfile_info_end;
+      
+    sr_soundfile_info_fmt:
+      ul_chunk_size = soundfile_info_string_to_uint32(cvec);
+      if(ul_chunk_size < 16)
+      {
+        post("soundfile_info_read-error:  %s has a format-chunk less than 16", completefilename);
+        goto sr_soundfile_info_end;
+      }
+      header_size += 4;
+      cvec += 4;
+      
+      ss_format = soundfile_info_string_to_int16(cvec);
+      if((ss_format != 1) && (ss_format != 3) && (ss_format != 6) && (ss_format != 7) && (ss_format != -2)) /* PCM = 1 ; IEEE-FLOAT = 3 ; ALAW = 6 ; MULAW = 7 ; WAVE_EX = -2 */
+      {
+        post("soundfile_info_read-error:  %s has unknown format code", completefilename);
+        goto sr_soundfile_info_end;
+      }
+      header_size += 2;
+      cvec += 2;
+      
+      ss_ch = soundfile_info_string_to_int16(cvec); /* channels */
+      if((ss_ch < 1) || (ss_ch > 32000))
+      {
+        post("soundfile_info_read-error:  %s has no common channel-number", completefilename);
+        goto sr_soundfile_info_end;
+      }
+      SETFLOAT(x->x_at_header+SFI_HEADER_CHANNELS, (t_float)ss_ch);
+      ch = (int)ss_ch;
+      header_size += 2;
+      cvec += 2;
+      
+      ul_sr = soundfile_info_string_to_uint32(cvec); /* samplerate */
+      if((ul_sr > 2000000000) || (ul_sr < 1))
+      {
+        post("soundfile_info_read-error:  %s has no common samplerate", completefilename);
+        goto sr_soundfile_info_end;
+      }
+      ul_sr = (unsigned long)new_sr;
+      soundfile_info_uint32_to_string(cvec, ul_sr);
+      
+      fseek(fh,0,SEEK_SET);
+      read_chars = (int)fwrite (x->x_begmem, sizeof(char), n4, fh);
+      fclose(fh);
+      post("written");
+      
+      sr = (int)ul_sr;
+      header_size += 4;
+      cvec += 4;
+      
+      header_size += 4; /* jump over bytes_per_sec */
+      cvec += 4;
+      
+      ss_bytesperframe = soundfile_info_string_to_int16(cvec); /* bytes_per_frame */
+      if((ss_bytesperframe < 1) || (ss_bytesperframe > 32000))
+      {
+        post("soundfile_info_read-error:  %s has no common number of bytes per frame", completefilename);
+        goto sr_soundfile_info_end;
+      }
+      
+      bytesperframe = (int)ss_bytesperframe;
+      header_size += 2;
+      cvec += 2;
+      
+      header_size += 2; /* jump over bits_per_sample */
+      cvec += 2;
+      
+      for(i=header_size/2; i<read_chars; i++) // looking for data chunk
+      {
+        if(!strncmp(cvec, "data", 4))
+          goto sr_soundfile_info_data;
+        header_size += 2;
+        cvec += 2;
+      }
+      post("soundfile_info_read-error:  %s has at begin no data-chunk", completefilename);
+      goto sr_soundfile_info_end;
+      
+    sr_soundfile_info_data:
+      header_size += 8; // ignore data chunk size
+      cvec += 8;
+      
+      
+      
+      /*      post("ch = %d", ch);
+       post("sr = %d", sr);
+       post("bpf = %d", bytesperframe/ch);
+       post("head = %d", header_size);
+       post("len = %d", n_frames);*/
+      
+      
+    sr_soundfile_info_end:
+      
+      ;
+    }
+  }
+}
+
 static void soundfile_info_read(t_soundfile_info *x, t_symbol *filename)
 {
   char completefilename[400];
@@ -255,5 +435,5 @@ void soundfile_info_setup(void)
   soundfile_info_class = class_new(gensym("soundfile_info"), (t_newmethod)soundfile_info_new,
     (t_method)soundfile_info_free, sizeof(t_soundfile_info), 0, 0);
   class_addmethod(soundfile_info_class, (t_method)soundfile_info_read, gensym("read"), A_SYMBOL, 0);
-//  class_sethelpsymbol(soundfile_info_class, gensym("iemhelp/help-soundfile_info"));
+  class_addmethod(soundfile_info_class, (t_method)soundfile_info_overwrite_sr, gensym("overwrite_sr"), A_SYMBOL, A_FLOAT, 0);
 }

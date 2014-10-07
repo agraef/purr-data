@@ -5,7 +5,9 @@ iemlib2 written by Thomas Musil, Copyright (c) IEM KUG Graz Austria 2000 - 2006 
 
 
 #include "m_pd.h"
-#include "g_canvas.h"
+#ifdef HAVE_G_CANVAS_H
+# include "g_canvas.h"
+#endif
 #include "iemlib.h"
 
 
@@ -30,6 +32,7 @@ static void parentdollarzero_bang(t_parentdollarzero *x)
 static void *parentdollarzero_new(void)
 {
   t_parentdollarzero *x = (t_parentdollarzero *)pd_new(parentdollarzero_class);
+#ifdef HAVE_G_CANVAS_H
   t_glist *glist = (t_glist *)canvas_getcurrent();
   t_canvas *this_canvas = glist_getcanvas(glist);
 
@@ -38,6 +41,10 @@ static void *parentdollarzero_new(void)
   if(x->x_is_there_a_parent)
     x->s_parent_unique = canvas_realizedollar((t_canvas *)this_canvas->gl_owner, gensym("$0"));
   else
+#else
+  x->x_is_there_a_parent=0;
+  error("[parentdollarzero]: compiled without g_canvas.h - cannot work properly!");
+#endif
     x->s_parent_unique = gensym("");
   outlet_new(&x->x_obj, &s_symbol);
   return (x);

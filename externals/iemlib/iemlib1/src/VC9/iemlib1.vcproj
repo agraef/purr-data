@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="9,00"
+	Name="iemlib1"
+	ProjectGUID="{5ECC5EEF-09A4-4DDD-B1C8-D4FA1D5B8BD5}"
+	Keyword="MakeFileProj"
+	TargetFrameworkVersion="0"
+	>
+	<Platforms>
+		<Platform
+			Name="Win32"
+		/>
+	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
+	<Configurations>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory=".\Debug"
+			IntermediateDirectory=".\Debug"
+			ConfigurationType="0"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			>
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="NMAKE /f makefile_win"
+				ReBuildCommandLine="NMAKE /f makefile_win /a"
+				CleanCommandLine=""
+				Output="iemlib1.exe"
+				PreprocessorDefinitions=""
+				IncludeSearchPath=""
+				ForcedIncludes=""
+				AssemblySearchPath=""
+				ForcedUsingAssemblies=""
+				CompileAsManaged=""
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory=".\Release"
+			IntermediateDirectory=".\Release"
+			ConfigurationType="0"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			>
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="NMAKE /f makefile_win"
+				ReBuildCommandLine="NMAKE /f makefile_win /a"
+				CleanCommandLine=""
+				Output="iemlib1.exe"
+				PreprocessorDefinitions=""
+				IncludeSearchPath=""
+				ForcedIncludes=""
+				AssemblySearchPath=""
+				ForcedUsingAssemblies=""
+				CompileAsManaged=""
+			/>
+		</Configuration>
+	</Configurations>
+	<References>
+	</References>
+	<Files>
+		<File
+			RelativePath="iemlib1.bsc"
+			>
+		</File>
+		<File
+			RelativePath="makefile_win"
+			>
+		</File>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>

@@ -42,6 +42,7 @@ void list2send_setup(void);
 void m2f_tilde_setup(void);
 void mergefilename_setup(void);
 void modulo_counter_setup(void);
+//void para_bank_csv_setup(void);
 void parentdollarzero_setup(void);
 void post_netreceive_setup(void);
 void pre_inlet_setup(void);
@@ -89,6 +90,7 @@ void iemlib2_setup(void)
   m2f_tilde_setup();
   mergefilename_setup();
   modulo_counter_setup();
+//  para_bank_csv_setup();
   parentdollarzero_setup();
   post_netreceive_setup();
   pre_inlet_setup();
@@ -104,6 +106,6 @@ void iemlib2_setup(void)
   unsymbol_setup();
   wrap_setup();
     
-  post("iemlib2 (R-1.17) library loaded!   (c) Thomas Musil 11.2008");
+  post("iemlib2 (R-1.18) library loaded!   (c) Thomas Musil 02.2012");
 	post("   musil%ciem.at iem KUG Graz Austria", '@');
 }

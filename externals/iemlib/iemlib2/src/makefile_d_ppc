@@ -6,7 +6,7 @@ PD_INSTALL_PATH = "/Applications/Pd.app/Contents/Resources"
 
 INCLUDE = -I. -I$(PD_INSTALL_PATH)/src
 
-CFLAGS =-DPD -O2 -Wall -W -Wshadow -Wstrict-prototypes \
+CFLAGS =-DPD -DHAVE_G_CANVAS_H -O2 -Wall -W -Wshadow -Wstrict-prototypes \
         -Wno-unused -Wno-parentheses -Wno-switch
 
 LFLAGS = -bundle -undefined suppress -flat_namespace

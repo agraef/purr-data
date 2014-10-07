@@ -1,12 +1,13 @@
 /* For information on usage and redistribution, and for a DISCLAIMER OF ALL
 * WARRANTIES, see the file, "LICENSE.txt," in this distribution.
 
-iemlib written by Thomas Musil, Copyright (c) IEM KUG Graz Austria 2000 - 2007 */
+iemlib written by Thomas Musil, Copyright (c) IEM KUG Graz Austria 2000 - 2012 */
 
 #ifndef __IEMLIB_H__
 #define __IEMLIB_H__
 
 
+#define IS_A_NULL(atom,index) ((atom+index)->a_type == A_NULL)
 #define IS_A_POINTER(atom,index) ((atom+index)->a_type == A_POINTER)
 #define IS_A_FLOAT(atom,index) ((atom+index)->a_type == A_FLOAT)
 #define IS_A_SYMBOL(atom,index) ((atom+index)->a_type == A_SYMBOL)
@@ -14,6 +15,8 @@ iemlib written by Thomas Musil, Copyright (c) IEM KUG Graz Austria 2000 - 2007 *
 #define IS_A_DOLLSYM(atom,index) ((atom+index)->a_type == A_DOLLSYM)
 #define IS_A_SEMI(atom,index) ((atom+index)->a_type == A_SEMI)
 #define IS_A_COMMA(atom,index) ((atom+index)->a_type == A_COMMA)
+
+#define SETNULL(atom) ((atom)->a_type = A_NULL)
 
 /* now miller's code starts : 
      for 4 point interpolation
@@ -53,11 +56,11 @@ extern int sys_noloadbang;
 #define int32 long
 #endif /* MSW */
 
-#if defined(__FreeBSD__) || defined(__APPLE__)
+#if defined(__FreeBSD__) || defined(__APPLE__) || defined(__FreeBSD_kernel__)
 #include <machine/endian.h>
 #endif
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__CYGWIN__) || defined(__GNU__) || defined(ANDROID)
 #include <endian.h>
 #endif
 
@@ -97,6 +100,19 @@ union tabfudge_f
 
 #define IEM_DENORMAL(f) 0
 
+#endif
+
+/* on 64bit systems we cannot use garray_getfloatarray... */
+#if ((defined PD_MAJOR_VERSION && defined PD_MINOR_VERSION) && (PD_MAJOR_VERSION > 0 || PD_MINOR_VERSION > 40))
+# define iemarray_t t_word
+# define iemarray_getarray garray_getfloatwords
+# define iemarray_getfloat(pointer, index) (pointer[index].w_float)
+# define iemarray_setfloat(pointer, index, fvalue) (pointer[index].w_float = fvalue)
+#else
+# define iemarray_t t_float
+# define iemarray_getarray garray_getfloatarray
+# define iemarray_getfloat(pointer, index) (pointer[index])
+# define iemarray_setfloat(pointer, index, fvalue) (pointer[index] = fvalue)
 #endif
 
 #endif

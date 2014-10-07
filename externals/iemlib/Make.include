@@ -1,25 +1,39 @@
 current: all
 
+PD_DEFINES = -DPD -DUNIX
+
+#################################
+# path to private Pd-headers 
 PDSOURCE ?= /usr/local/src/pd/src
+
+# path to iemlib.h
+IEMLIB_INCLUDE = ../../include
+
+#define to true if private Pd-header g_canvas.h is in out search-path
+PD_DEFINES += -DHAVE_G_CANVAS_H 
+#################################
+
 
 .SUFFIXES: .pd_linux
 
 EXT = pd_linux
 
-LDFLAGS = --export-dynamic -shared
-LIB = -ldl -lm -lpthread
+STRIP = strip
+
+PD_LDFLAGS = --export-dynamic -shared $(LD_FLAGS)
+PD_LIB = -lm -lc $(LIB)
 
 #select either the DBG and OPT compiler flags below:
-CFLAGS = -DPD -DUNIX -W -Werror -Wno-unused \
-	-Wno-parentheses -Wno-switch -O6 -funroll-loops -fomit-frame-pointer -fno-strict-aliasing \
-	-DDL_OPEN -fPIC -fno-stack-protector
 
+DBG_CFLAGS=-W -Wno-parentheses -Wno-switch -Wno-unused
+CFLAGS=-O6 -funroll-loops -fomit-frame-pointer -fno-strict-aliasing
+PD_CFLAGS = $(PD_DEFINES) -fPIC -fno-stack-protector $(DBG_CFLAGS) $(CFLAGS)
 
-INCLUDE = -I. -I$(PDSOURCE)
+PD_INCLUDES = -I. -I$(IEMLIB_INCLUDE) -I$(PDSOURCE) -I../../../../pd/src
 
 # the sources
-SRC = $(sort $(filter %.c, $(wildcard *.c)))
-
+#SRC = $(sort $(filter %.c, $(wildcard *.c)))
+	
 OBJ = $(SRC:.c=.o) 
 
 #
@@ -27,19 +41,16 @@ OBJ = $(SRC:.c=.o)
 #
 
 clean:
-	-rm ../../lib/$(TARGET).$(EXT) $(TARGET).$(EXT)
-	-rm *.o
+	-rm -f ../../lib/$(TARGET).$(EXT) $(TARGET).$(EXT)
+	-rm -f *.o
 
 all: $(OBJ)
 	@echo :: $(OBJ)
-	ld $(LDFLAGS) -o $(TARGET).$(EXT) *.o $(LIB)
-	strip --strip-unneeded $(TARGET).$(EXT)
+	$(LD) $(PD_LDFLAGS) -o $(TARGET).$(EXT) *.o $(PD_LIB)
+	$(STRIP) --strip-unneeded $(TARGET).$(EXT)
 	-cp $(TARGET).$(EXT) ../../lib/
 
 $(OBJ) : %.o : %.c
 	touch $*.c
-	cc $(CFLAGS) $(INCLUDE) -c -o $*.o $*.c
-
-
-
+	$(CC) $(PD_CFLAGS) $(PD_INCLUDES) -c -o $*.o $*.c
 

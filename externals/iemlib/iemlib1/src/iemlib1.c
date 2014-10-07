@@ -36,6 +36,7 @@ void peakenv_hold_tilde_setup(void);
 void prvu_tilde_setup(void);
 void pvu_tilde_setup(void);
 void rvu_tilde_setup(void);
+void sin_freq_tilde_setup(void);
 void sin_phase_tilde_setup(void);
 void sparse_FIR_tilde_setup(void);
 void soundfile_info_setup(void);
@@ -70,6 +71,7 @@ void iemlib1_setup(void)
   prvu_tilde_setup();
   pvu_tilde_setup();
   rvu_tilde_setup();
+  sin_freq_tilde_setup();
   sin_phase_tilde_setup();
   sparse_FIR_tilde_setup();
   soundfile_info_setup();
@@ -77,6 +79,6 @@ void iemlib1_setup(void)
   v2db_setup();
   vcf_filter_tilde_setup();
   
-	post("iemlib1 (R-1.17) library loaded!   (c) Thomas Musil 11.2010");
+	post("iemlib1 (R-1.20) library loaded!   (c) Thomas Musil 07.2013");
 	post("   musil%ciem.at iem KUG Graz Austria", '@');
 }
