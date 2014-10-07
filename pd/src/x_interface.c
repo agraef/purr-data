@@ -680,9 +680,9 @@ void pdinfo_audio_dev(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
     else devno = 0;
     int naudioindev, audioindev[MAXAUDIOINDEV], chindev[MAXAUDIOINDEV];
     int naudiooutdev, audiooutdev[MAXAUDIOOUTDEV], choutdev[MAXAUDIOOUTDEV];
-    int rate, advance, callback;
+    int rate, advance, callback, blocksize;
     sys_get_audio_params(&naudioindev, audioindev, chindev,
-        &naudiooutdev, audiooutdev, choutdev, &rate, &advance, &callback);
+        &naudiooutdev, audiooutdev, choutdev, &rate, &advance, &callback, &blocksize);
     int *dev, *chan, ndev;
     if (s == gensym("audio-indev"))
         dev = audioindev, chan = chindev, ndev = naudioindev;
@@ -778,9 +778,9 @@ void pdinfo_audio_outdev(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
     else devno = 0;
     int naudioindev, audioindev[MAXAUDIOINDEV], chindev[MAXAUDIOINDEV];
     int naudiooutdev, audiooutdev[MAXAUDIOOUTDEV], choutdev[MAXAUDIOOUTDEV];
-    int rate, advance, callback;
+    int rate, advance, callback, blocksize;
     sys_get_audio_params(&naudioindev, audioindev, chindev,
-        &naudiooutdev, audiooutdev, choutdev, &rate, &advance, &callback);
+        &naudiooutdev, audiooutdev, choutdev, &rate, &advance, &callback, &blocksize);
     if (devno >= 0 && devno < naudioindev)
     {
         t_atom at[2];
@@ -817,7 +817,7 @@ void pdinfo_audio_samplerate(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 void pdinfo_audio_blocksize(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_atom at[1];
-    SETFLOAT(at, (t_float)sys_getblksize());
+    SETFLOAT(at, (t_float)sys_audio_get_blocksize());
     info_out((t_text *)x, s, 1, at);
 }
 

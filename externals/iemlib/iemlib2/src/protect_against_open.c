@@ -6,9 +6,32 @@ iemlib2 written by Thomas Musil, Copyright (c) IEM KUG Graz Austria 2000 - 2006 
 
 #include "m_pd.h"
 #include "iemlib.h"
-#include "g_canvas.h"
-#include "g_all_guis.h"
 #include <string.h>
+
+#ifdef HAVE_G_CANVAS_H
+# include "g_canvas.h"
+#else
+/* no g_canvas.h: declare functions and structs ourselves */
+EXTERN t_canvas *glist_getcanvas(t_glist *x);
+EXTERN t_symbol *canvas_realizedollar(t_canvas *x, t_symbol *s);
+struct _widgetbehavior
+{
+    t_method w_getrectfn;
+    t_method w_displacefn;
+    t_method w_selectfn;
+    t_method w_activatefn;
+    t_method w_deletefn;
+    t_method w_visfn;
+    t_method w_clickfn;
+#if defined(PD_MAJOR_VERSION) && (PD_MINOR_VERSION >= 37)
+#else
+    t_method w_savefn;
+    t_method w_propertiesfn;
+#endif
+};
+
+#endif
+
 
 #ifdef _MSC_VER
 #include <io.h>

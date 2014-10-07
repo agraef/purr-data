@@ -22,22 +22,22 @@ $(IEMLIBS):
 install: install-bin install-doc install-abs
 
 install-bin:
-	-install -d ${INSTALL_BIN}
-	-install -m 644 lib/*.* $(INSTALL_BIN)
+	-install -d $(DESTDIR)$(INSTALL_BIN)
+	-install -m 644 lib/*.* $(DESTDIR)$(INSTALL_BIN)
 
 install-doc:
-	-install -d ${INSTALL_DOC}
-	-for d in ${IEMLIBS}; do \
+	-install -d $(DESTDIR)$(INSTALL_DOC)
+	-for d in $(IEMLIBS); do \
 	 for e in pd wav; do \
-	  install -m644 $$d/*.$$e $(INSTALL_DOC); \
+	  install -m644 $$d/*.$$e $(DESTDIR)$(INSTALL_DOC); \
 	 done; \
 	done
 
 install-abs:
-	-install -d ${INSTALL_BIN}
-	-install -m 644 iemabs/*.pd $(INSTALL_BIN)
+	-install -d $(DESTDIR)$(INSTALL_BIN)
+	-install -m 644 iemabs/*.pd $(DESTDIR)$(INSTALL_BIN)
 
 clean:
-	for d in ${IEMLIBS}; do \
-	  ${MAKE} -C $$d/src clean; \
+	for d in $(IEMLIBS); do \
+	  $(MAKE) -C $$d/src clean; \
 	done

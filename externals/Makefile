@@ -955,7 +955,7 @@ IEMLIB_SRC := $(wildcard $(externals_src)/iemlib/iemlib1/src/*[^1].c) $(wildcard
 
 IEMLIB_OBJECTS := $(IEMLIB_SRC:.c=.o)
 $(IEMLIB_OBJECTS) : %.o : %.c
-	$(CC) $(CFLAGS) -O2 -funroll-loops -fomit-frame-pointer -o "$*.o" -c "$*.c"
+	$(CC) -I$(externals_src)/iemlib/include $(CFLAGS) -O2 -funroll-loops -fomit-frame-pointer -fno-tree-vectorize -fno-strict-aliasing -o "$*.o" -c "$*.c"
 
 iemlib: $(IEMLIB_SRC:.c=.$(EXTENSION))
 
@@ -964,15 +964,11 @@ iemlib_install: iemlib
 	$(scripts_src)/generate-libdir-metafile.sh $(DESTDIR)$(objectsdir) $(IEMLIB_NAME) \
 		--description "a collection of objects written at IEM/KUG" \
 		--license "GNU GPL"
-	install -p $(IEMLIB_SRC:.c=.$(EXTENSION)) $(DESTDIR)$(objectsdir)/$(IEMLIB_NAME)
-	install -p $(externals_src)/iemlib/iemabs/*.pd $(DESTDIR)$(objectsdir)/$(IEMLIB_NAME)
-	install -p $(externals_src)/iemlib/alias/*.pd $(DESTDIR)$(objectsdir)/$(IEMLIB_NAME)
-	install -p $(externals_src)/iemlib/*/*-help.pd $(DESTDIR)$(objectsdir)/$(IEMLIB_NAME)
-	install -p $(externals_src)/iemlib/*/*.mp3 $(DESTDIR)$(objectsdir)/$(IEMLIB_NAME)
-	install -p $(externals_src)/iemlib/*/*.wav $(DESTDIR)$(objectsdir)/$(IEMLIB_NAME)
-	install -d $(DESTDIR)$(examplesdir)/$(IEMLIB_NAME)
-	install -p $(externals_src)/iemlib/examples/*.* \
-		$(DESTDIR)$(examplesdir)/$(IEMLIB_NAME)
+	install -p $(IEMLIB_SRC:.c=.$(EXTENSION)) \
+		$(externals_src)/iemlib/*/*.pd \
+		$(externals_src)/iemlib/*/*.mp3 \
+		$(externals_src)/iemlib/*/*.wav \
+		$(DESTDIR)$(objectsdir)/$(IEMLIB_NAME)
 	install -d $(DESTDIR)$(objectsdir)/$(IEMLIB_NAME)/examples
 	install -p $(externals_src)/iemlib/examples/*.* \
 		$(DESTDIR)$(objectsdir)/$(IEMLIB_NAME)/examples
@@ -985,10 +981,9 @@ iemlib_install: iemlib
 
 
 iemlib_clean: 
-	-rm -f -- $(IEMLIB_OBJECTS:.c=.$(EXTENSION))
+	-rm -f -- $(IEMLIB_OBJECTS)
+	-rm -f -- $(IEMLIB_SRC:.c=.$(EXTENSION))
 	-rmdir -- $(DESTDIR)$(objectsdir)/$(IEMLIB_NAME)
-	-rm -f -- $(DESTDIR)$(examplesdir)/$(IEMLIB_NAME)/*.*
-	-rmdir -- $(DESTDIR)$(examplesdir)/$(IEMLIB_NAME)
 	-rm -f -- $(DESTDIR)$(manualsdir)/$(IEMLIB_NAME)/*.*
 	-rmdir -- $(DESTDIR)$(manualsdir)/$(IEMLIB_NAME)
 

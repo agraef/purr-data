@@ -111,7 +111,7 @@ static void permut_resize_table(t_permut *x, int size)
     {
       if (x->x_ctl.c_permutationtable)
 	free(x->x_ctl.c_permutationtable);
-      x->x_ctl.c_permutationtable = (t_int *)malloc(sizeof(int)*size);
+      x->x_ctl.c_permutationtable = (t_int *)malloc(sizeof(t_int)*size);
       x->x_ctl.c_blocksize = size;
 
       /* make sure it's initialized */

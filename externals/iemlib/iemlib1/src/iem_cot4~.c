@@ -19,7 +19,7 @@ typedef struct _iem_cot4_tilde
 {
   t_object  x_obj;
   t_float   x_sr;
-  t_float   x_msi;
+  t_float   x_float_sig_in;
 } t_iem_cot4_tilde;
 
 static t_int *iem_cot4_tilde_perform(t_int *w)
@@ -152,7 +152,7 @@ static void *iem_cot4_tilde_new(void)
   t_iem_cot4_tilde *x = (t_iem_cot4_tilde *)pd_new(iem_cot4_tilde_class);
   
   outlet_new(&x->x_obj, gensym("signal"));
-  x->x_msi = 0;
+  x->x_float_sig_in = 0.0f;
   return (x);
 }
 
@@ -161,8 +161,7 @@ void iem_cot4_tilde_setup(void)
   iem_cot4_tilde_class = class_new(gensym("iem_cot4~"), (t_newmethod)iem_cot4_tilde_new, 0,
     sizeof(t_iem_cot4_tilde), 0, 0);
   class_addcreator((t_newmethod)iem_cot4_tilde_new, gensym("iem_cot~"), 0);
-  CLASS_MAINSIGNALIN(iem_cot4_tilde_class, t_iem_cot4_tilde, x_msi);
+  CLASS_MAINSIGNALIN(iem_cot4_tilde_class, t_iem_cot4_tilde, x_float_sig_in);
   class_addmethod(iem_cot4_tilde_class, (t_method)iem_cot4_tilde_dsp, gensym("dsp"), 0);
   iem_cot4_tilde_maketable();
-//  class_sethelpsymbol(iem_cot4_tilde_class, gensym("iemhelp/help-iem_cot4~"));
 }

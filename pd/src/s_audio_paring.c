@@ -31,9 +31,9 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- */
-/*
  * modified 2002/07/13 by olaf.matthes@gmx.de to allow any number if channels
+ *
+ * extensively hacked by msp@ucsd.edu for various reasons
  *
  */
 
@@ -43,40 +43,73 @@
 #include "s_audio_paring.h"
 #include <string.h>
 
+/* Clear buffer. Should only be called when buffer is NOT being read. */
+static void sys_ringbuf_Flush(PA_VOLATILE sys_ringbuf *rbuf,
+    PA_VOLATILE void *dataPtr, long nfill);
+
+/* Get address of region(s) to which we can write data.
+** If the region is contiguous, size2 will be zero.
+** If non-contiguous, size2 will be the size of second region.
+** Returns room available to be written or numBytes, whichever is smaller.
+*/
+static long sys_ringbuf_GetWriteRegions(PA_VOLATILE  sys_ringbuf *rbuf,
+    long numBytes, PA_VOLATILE void **dataPtr1, long *sizePtr1,
+    PA_VOLATILE void **dataPtr2, long *sizePtr2, PA_VOLATILE char *buffer);
+static long sys_ringbuf_AdvanceWriteIndex(PA_VOLATILE sys_ringbuf *rbuf,
+    long numBytes);
+
+/* Get address of region(s) from which we can read data.
+** If the region is contiguous, size2 will be zero.
+** If non-contiguous, size2 will be the size of second region.
+** Returns room available to be read or numBytes, whichever is smaller.
+*/
+static long sys_ringbuf_GetReadRegions(PA_VOLATILE sys_ringbuf *rbuf,
+    long numBytes, PA_VOLATILE void **dataPtr1, long *sizePtr1,
+    PA_VOLATILE void **dataPtr2, long *sizePtr2, PA_VOLATILE char *buffer);
+
+static long sys_ringbuf_AdvanceReadIndex(PA_VOLATILE sys_ringbuf *rbuf,
+    long numBytes );
+
 /***************************************************************************
  * Initialize FIFO.
  */
-long sys_ringbuf_Init( sys_ringbuf *rbuf, long numBytes, void *dataPtr )
+long sys_ringbuf_init(PA_VOLATILE sys_ringbuf *rbuf, long numBytes, 
+    PA_VOLATILE char *dataPtr, long nfill)
 {
     rbuf->bufferSize = numBytes;
-    rbuf->buffer = (char *)dataPtr;
-    sys_ringbuf_Flush( rbuf );
+    sys_ringbuf_Flush(rbuf, dataPtr,  nfill);
     return 0;
 }
 /***************************************************************************
 ** Return number of bytes available for reading. */
-long sys_ringbuf_GetReadAvailable( sys_ringbuf *rbuf )
+long sys_ringbuf_getreadavailable(PA_VOLATILE sys_ringbuf *rbuf)
 {
     long ret = rbuf->writeIndex - rbuf->readIndex;
     if (ret < 0)
         ret += 2 * rbuf->bufferSize;
     if (ret < 0 || ret > rbuf->bufferSize)
         fprintf(stderr,
-            "consistency check failed: sys_ringbuf_GetReadAvailable\n");
+            "consistency check failed: sys_ringbuf_getreadavailable\n");
     return ( ret );
 }
 /***************************************************************************
 ** Return number of bytes available for writing. */
-long sys_ringbuf_GetWriteAvailable( sys_ringbuf *rbuf )
+long sys_ringbuf_getwriteavailable(PA_VOLATILE sys_ringbuf *rbuf)
 {
-    return ( rbuf->bufferSize - sys_ringbuf_GetReadAvailable(rbuf));
+    return ( rbuf->bufferSize - sys_ringbuf_getreadavailable(rbuf));
 }
 
 /***************************************************************************
 ** Clear buffer. Should only be called when buffer is NOT being read. */
-void sys_ringbuf_Flush( sys_ringbuf *rbuf )
+static void sys_ringbuf_Flush(PA_VOLATILE sys_ringbuf *rbuf,
+    PA_VOLATILE void *dataPtr, long nfill)
 {
-    rbuf->writeIndex = rbuf->readIndex = 0;
+    PA_VOLATILE char *s;
+    long n;
+    rbuf->readIndex = 0;
+    rbuf->writeIndex = nfill;
+    for (n = nfill, s = dataPtr; n--; s++)
+        *s = 0;
 }
 
 /***************************************************************************
@@ -85,12 +118,12 @@ void sys_ringbuf_Flush( sys_ringbuf *rbuf )
 ** If non-contiguous, size2 will be the size of second region.
 ** Returns room available to be written or numBytes, whichever is smaller.
 */
-long sys_ringbuf_GetWriteRegions( sys_ringbuf *rbuf, long numBytes,
-                                 void **dataPtr1, long *sizePtr1,
-                                 void **dataPtr2, long *sizePtr2 )
+static long sys_ringbuf_GetWriteRegions(PA_VOLATILE  sys_ringbuf *rbuf,
+    long numBytes, PA_VOLATILE void **dataPtr1, long *sizePtr1,
+    PA_VOLATILE void **dataPtr2, long *sizePtr2, PA_VOLATILE char *buffer)
 {
     long   index;
-    long   available = sys_ringbuf_GetWriteAvailable( rbuf );
+    long   available = sys_ringbuf_getwriteavailable( rbuf );
     if( numBytes > available ) numBytes = available;
     /* Check to see if write is not contiguous. */
     index = rbuf->writeIndex;
@@ -100,14 +133,14 @@ long sys_ringbuf_GetWriteRegions( sys_ringbuf *rbuf, long numBytes,
     {
         /* Write data in two blocks that wrap the buffer. */
         long   firstHalf = rbuf->bufferSize - index;
-        *dataPtr1 = &rbuf->buffer[index];
+        *dataPtr1 = &buffer[index];
         *sizePtr1 = firstHalf;
-        *dataPtr2 = &rbuf->buffer[0];
+        *dataPtr2 = &buffer[0];
         *sizePtr2 = numBytes - firstHalf;
     }
     else
     {
-        *dataPtr1 = &rbuf->buffer[index];
+        *dataPtr1 = &buffer[index];
         *sizePtr1 = numBytes;
         *dataPtr2 = NULL;
         *sizePtr2 = 0;
@@ -118,7 +151,8 @@ long sys_ringbuf_GetWriteRegions( sys_ringbuf *rbuf, long numBytes,
 
 /***************************************************************************
 */
-long sys_ringbuf_AdvanceWriteIndex( sys_ringbuf *rbuf, long numBytes )
+static long sys_ringbuf_AdvanceWriteIndex(PA_VOLATILE sys_ringbuf *rbuf,
+    long numBytes)
 {
     long ret = (rbuf->writeIndex + numBytes);
     if ( ret >= 2 * rbuf->bufferSize)
@@ -132,12 +166,12 @@ long sys_ringbuf_AdvanceWriteIndex( sys_ringbuf *rbuf, long numBytes )
 ** If non-contiguous, size2 will be the size of second region.
 ** Returns room available to be written or numBytes, whichever is smaller.
 */
-long sys_ringbuf_GetReadRegions( sys_ringbuf *rbuf, long numBytes,
-                                void **dataPtr1, long *sizePtr1,
-                                void **dataPtr2, long *sizePtr2 )
+static long sys_ringbuf_GetReadRegions(PA_VOLATILE sys_ringbuf *rbuf,
+    long numBytes, PA_VOLATILE void **dataPtr1, long *sizePtr1,
+    PA_VOLATILE void **dataPtr2, long *sizePtr2, PA_VOLATILE char *buffer)
 {
     long   index;
-    long   available = sys_ringbuf_GetReadAvailable( rbuf );
+    long   available = sys_ringbuf_getreadavailable( rbuf );
     if( numBytes > available ) numBytes = available;
     /* Check to see if read is not contiguous. */
     index = rbuf->readIndex;
@@ -148,14 +182,14 @@ long sys_ringbuf_GetReadRegions( sys_ringbuf *rbuf, long numBytes,
     {
         /* Write data in two blocks that wrap the buffer. */
         long firstHalf = rbuf->bufferSize - index;
-        *dataPtr1 = &rbuf->buffer[index];
+        *dataPtr1 = &buffer[index];
         *sizePtr1 = firstHalf;
-        *dataPtr2 = &rbuf->buffer[0];
+        *dataPtr2 = &buffer[0];
         *sizePtr2 = numBytes - firstHalf;
     }
     else
     {
-        *dataPtr1 = &rbuf->buffer[index];
+        *dataPtr1 = &buffer[index];
         *sizePtr1 = numBytes;
         *dataPtr2 = NULL;
         *sizePtr2 = 0;
@@ -164,7 +198,8 @@ long sys_ringbuf_GetReadRegions( sys_ringbuf *rbuf, long numBytes,
 }
 /***************************************************************************
 */
-long sys_ringbuf_AdvanceReadIndex( sys_ringbuf *rbuf, long numBytes )
+static long sys_ringbuf_AdvanceReadIndex(PA_VOLATILE sys_ringbuf *rbuf,
+    long numBytes)
 {
     long ret = (rbuf->readIndex + numBytes);
     if( ret >= 2 * rbuf->bufferSize)
@@ -174,21 +209,23 @@ long sys_ringbuf_AdvanceReadIndex( sys_ringbuf *rbuf, long numBytes )
 
 /***************************************************************************
 ** Return bytes written. */
-long sys_ringbuf_Write( sys_ringbuf *rbuf, const void *data, long numBytes )
+long sys_ringbuf_write(PA_VOLATILE sys_ringbuf *rbuf, const void *data,
+    long numBytes, PA_VOLATILE char *buffer)
 {
     long size1, size2, numWritten;
-    void *data1, *data2;
-    numWritten = sys_ringbuf_GetWriteRegions( rbuf, numBytes, &data1, &size1, &data2, &size2 );
+    PA_VOLATILE void *data1, *data2;
+    numWritten = sys_ringbuf_GetWriteRegions( rbuf, numBytes, &data1, &size1,
+        &data2, &size2, buffer);
     if( size2 > 0 )
     {
 
-        memcpy( data1, data, size1 );
+        memcpy((void *)data1, data, size1 );
         data = ((char *)data) + size1;
-        memcpy( data2, data, size2 );
+        memcpy((void *)data2, data, size2 );
     }
     else
     {
-        memcpy( data1, data, size1 );
+        memcpy((void *)data1, data, size1 );
     }
     sys_ringbuf_AdvanceWriteIndex( rbuf, numWritten );
     return numWritten;
@@ -196,20 +233,22 @@ long sys_ringbuf_Write( sys_ringbuf *rbuf, const void *data, long numBytes )
 
 /***************************************************************************
 ** Return bytes read. */
-long sys_ringbuf_Read( sys_ringbuf *rbuf, void *data, long numBytes )
+long sys_ringbuf_read(PA_VOLATILE sys_ringbuf *rbuf, void *data, long numBytes,
+    PA_VOLATILE char *buffer)
 {
     long size1, size2, numRead;
-    void *data1, *data2;
-    numRead = sys_ringbuf_GetReadRegions( rbuf, numBytes, &data1, &size1, &data2, &size2 );
+    PA_VOLATILE void *data1, *data2;
+    numRead = sys_ringbuf_GetReadRegions( rbuf, numBytes, &data1, &size1,
+        &data2, &size2, buffer);
     if( size2 > 0 )
     {
-        memcpy( data, data1, size1 );
+        memcpy(data, (void *)data1, size1 );
         data = ((char *)data) + size1;
-        memcpy( data, data2, size2 );
+        memcpy(data, (void *)data2, size2 );
     }
     else
     {
-        memcpy( data, data1, size1 );
+        memcpy( data, (void *)data1, size1 );
     }
     sys_ringbuf_AdvanceReadIndex( rbuf, numRead );
     return numRead;

@@ -1,83 +1,97 @@
-#N canvas 125 49 971 642 10;
-#X floatatom 4 133 5 0 0 0 - - -;
-#X text 32 96 % cpu;
-#X obj 4 93 dsp;
-#X obj 4 73 tgl 15 0 empty empty dsp_ON/OFF 2 -8 0 10 -225271 -42246
--90881 1 1;
-#X floatatom 183 494 7 0 0 0 - - -;
-#X obj 112 373 dac~;
-#X obj 112 347 gainvu~ 300;
-#X obj 174 369 vu 15 120 empty empty 8 -8 0 10 -66577 -1 1 0;
-#X obj 294 216 vsl 15 128 0 127 0 0 empty empty gain -7 -8 0 10 -225271
--42246 -90881 7300 1;
-#X obj 113 95 noise~;
-#X floatatom 173 512 7 0 0 0 - - -;
-#X floatatom 17 113 5 0 0 0 - - -;
-#X text 170 567 IEM KUG;
-#X text 146 555 musil;
-#X text 182 555 @;
-#X text 190 555 iem.at;
-#X text 153 577 Graz \, Austria;
-#X floatatom 142 323 5 0 0 0 - - -;
-#X msg 353 118 size 256;
-#X msg 370 523 0 1 1 1;
-#X msg 366 321 0 1 10 1 20 1 30 1 40 1 50 1 60 1 70 1 80 1;
-#X obj 707 38 t b b;
-#X msg 767 101 set;
-#X msg 668 101 add2 \$1 \$2;
-#X obj 707 18 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+#N canvas 125 49 986 684 10;
+#X floatatom 4 149 5 0 0 0 - - -;
+#X text 32 112 % cpu;
+#X obj 4 109 dsp;
+#X obj 4 89 tgl 15 0 empty empty dsp_ON/OFF 2 -8 0 10 -225271 -42246
+-90881 0 1;
+#X floatatom 183 510 7 0 0 0 - - -;
+#X obj 112 389 dac~;
+#X obj 112 363 gainvu~ 300;
+#X obj 174 385 vu 15 120 empty empty 8 -8 0 10 -66577 -1 1 0;
+#X obj 294 232 vsl 15 128 0 127 0 0 empty empty gain -7 -8 0 10 -225271
+-42246 -90881 6000 1;
+#X obj 113 111 noise~;
+#X floatatom 173 528 7 0 0 0 - - -;
+#X floatatom 17 129 5 0 0 0 - - -;
+#X text 170 583 IEM KUG;
+#X text 146 571 musil;
+#X text 182 571 @;
+#X text 190 571 iem.at;
+#X text 153 593 Graz \, Austria;
+#X floatatom 142 339 5 0 0 0 - - -;
+#X msg 353 134 size 256;
+#X msg 409 500 0 1 1 1;
+#X msg 405 348 0 1 10 1 20 1 30 1 40 1 50 1 60 1 70 1 80 1;
+#X obj 707 54 t b b;
+#X msg 767 117 set;
+#X msg 668 117 add2 \$1 \$2;
+#X obj 707 34 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
-#X msg 354 140 order 384;
-#X msg 366 342 matrix 9 2 0 1 10 1 20 1 30 1 40 1 50 1 60 1 70 1 80
+#X msg 354 156 order 384;
+#X msg 405 369 matrix 9 2 0 1 10 1 20 1 30 1 40 1 50 1 60 1 70 1 80
 1;
-#X msg 366 363 matrix 2 9 0 1 10 1 20 1 30 1 40 1 50 1 60 1 70 1 80
-1;
-#X text 17 16 sparse_FIR~;
-#X msg 370 581 0 0;
-#X msg 370 489 0 -0.1 1 -0.18 2 -0.1 3 0.15 4 0.4 5 0.7 6 0.4 7 0.15
+#X text 17 14 sparse_FIR~;
+#X msg 409 560 0 0;
+#X msg 409 466 0 -0.1 1 -0.18 2 -0.1 3 0.15 4 0.4 5 0.7 6 0.4 7 0.15
 8 -0.1 9 -0.18 10 -0.1;
-#X msg 510 126 0 0.04 1 0.04 2 0.04 3 0.04 4 0.04 5 0.04 6 0.04 7 0.04
+#X msg 510 142 0 0.04 1 0.04 2 0.04 3 0.04 4 0.04 5 0.04 6 0.04 7 0.04
 8 0.04 9 0.04 10 0.04 11 0.04 12 0.04 13 0.04 14 0.04 15 0.04 16 0.04
 17 0.04 18 0.04 19 0.04 20 0.04 21 0.04 22 0.04 23 0.04 24 0.04 25
 0.04 26 0.04 27 0.04 28 0.04 29 0.04;
-#X obj 668 81 pack 0 0.04;
-#X obj 668 59 for++ 0 29;
-#X text 366 217 A list of alternating index- and value- doubles will
+#X obj 668 97 pack 0 0.04;
+#X obj 668 75 for++ 0 29;
+#X text 405 204 A list of alternating index- and value- doubles will
 change the coefficients of convolution. The number of pairs should
 be less than the order of FIR.;
-#X text 365 291 A matrix message will do the same.;
-#X obj 568 93 loadbang;
-#X text 134 16 convolve a signal with a coefficent list of non zero
+#X text 404 318 A matrix message will do the same.;
+#X obj 568 109 loadbang;
+#X text 134 14 convolve a signal with a coefficent list of non zero
 index/value pairs. All values between the determined values will be
 set to zero and won't be calculated (sparse).;
-#X text 227 182 1.arg: <float> convolution-length (FIR order or size)
-;
-#X text 175 60 will change the max. order of FIR filter (or size).
-;
-#X text 366 263 Each pair or double begins with an index followed by
+#X text 405 250 Each pair or double begins with an index followed by
 its value.;
-#X obj 113 180 sparse_FIR~ 256;
-#X msg 286 97 size 16;
-#X obj 327 198 init 60;
-#X text 103 543 (c) Thomas Musil 2000 - 2011;
-#X msg 370 544 0 1 40 -1 80 1 120 -1 160 1 200 -1 240 1 280 -1 320
+#X obj 113 196 sparse_FIR~ 256;
+#X msg 286 113 size 16;
+#X obj 327 214 init 60;
+#X text 103 559 (c) Thomas Musil 2000 - 2011;
+#X msg 409 521 0 1 40 -1 80 1 120 -1 160 1 200 -1 240 1 280 -1 320
 1 360 -1 400 1;
-#X msg 353 97 size 128;
-#X msg 287 141 size 64;
-#X msg 287 119 size 32;
-#X msg 221 139 size 8;
-#X msg 222 117 size 4;
-#X text 770 318 same as;
-#X text 771 341 same as;
-#X text 770 363 same as;
-#X msg 35 236 size 0;
-#X msg 223 97 size 3;
-#X msg 163 142 size 2;
-#X msg 165 120 size 1;
-#X text 847 104 sparse list;
-#X text 680 470 sparse list;
-#X text 490 384 sparse matrix;
-#X text 29 219 ignored;
+#X msg 353 113 size 128;
+#X msg 287 157 size 64;
+#X msg 287 135 size 32;
+#X msg 221 155 size 8;
+#X msg 222 133 size 4;
+#X text 799 345 same as;
+#X text 800 368 same as;
+#X msg 35 252 size 0;
+#X msg 223 113 size 3;
+#X msg 163 158 size 2;
+#X msg 165 136 size 1;
+#X text 847 120 sparse list;
+#X text 719 447 sparse list;
+#X text 529 411 sparse matrix;
+#X text 29 235 ignored;
+#X msg 429 134 order 4;
+#X msg 428 156 order 8;
+#X msg 409 436 0 0.1 3 0.1 6 0.1 9 0.1 12 0.1;
+#X msg 408 585 0 0.3 1 0.3 2 0.3 3 0.3;
+#X msg 569 586 10 0.3 11 0.3 12 0.3 13 0.3;
+#X msg 755 585 size 4;
+#X msg 808 586 size 14;
+#X text 183 67 "size" or "order" followed by a number change the max.
+order of FIR filter (or size = order) and the memory-management.;
+#X text 404 283 All other values will reset to zero (not calculated).
+;
+#X text 134 311 (FIR order or size=order);
+#X text 135 297 max. convolution-length;
+#X text 123 283 1.arg: <float>;
+#X text 853 301 matrix 9 2 \; 0 1 \; 10 1 \; 20 1 \; 30 1 \; 40 1 \;
+50 1 \; 60 1 \; 70 1 \; 80 1;
+#X text 1068 321 matrix 2 9 \; 0 10 20 30 40 50 60 70 80 \; 1 1 1 1
+1 1 1 1 1;
+#X msg 1073 368 matrix 2 9 0 1 10 1 20 1 30 1 40 1 50 1 60 1 70 1 80
+1;
+#X text 1073 392 not same as;
 #X connect 2 0 0 0;
 #X connect 2 1 11 0;
 #X connect 3 0 2 0;
@@ -88,34 +102,40 @@ its value.;
 #X connect 7 0 10 0;
 #X connect 7 1 4 0;
 #X connect 8 0 6 1;
-#X connect 9 0 41 0;
-#X connect 18 0 41 0;
-#X connect 19 0 41 0;
-#X connect 20 0 41 0;
-#X connect 21 0 33 0;
+#X connect 9 0 38 0;
+#X connect 18 0 38 0;
+#X connect 19 0 38 0;
+#X connect 20 0 38 0;
+#X connect 21 0 32 0;
 #X connect 21 1 22 0;
-#X connect 22 0 31 0;
-#X connect 23 0 31 0;
+#X connect 22 0 30 0;
+#X connect 23 0 30 0;
 #X connect 24 0 21 0;
-#X connect 25 0 41 0;
-#X connect 26 0 41 0;
-#X connect 27 0 41 0;
-#X connect 29 0 41 0;
-#X connect 30 0 41 0;
-#X connect 31 0 41 0;
-#X connect 32 0 23 0;
-#X connect 33 0 32 0;
-#X connect 36 0 31 0;
-#X connect 41 0 6 0;
-#X connect 42 0 41 0;
-#X connect 43 0 8 0;
-#X connect 45 0 41 0;
-#X connect 46 0 41 0;
-#X connect 47 0 41 0;
-#X connect 48 0 41 0;
-#X connect 49 0 41 0;
-#X connect 50 0 41 0;
-#X connect 54 0 41 0;
-#X connect 55 0 41 0;
-#X connect 56 0 41 0;
-#X connect 57 0 41 0;
+#X connect 25 0 38 0;
+#X connect 26 0 38 0;
+#X connect 28 0 38 0;
+#X connect 29 0 38 0;
+#X connect 30 0 38 0;
+#X connect 31 0 23 0;
+#X connect 32 0 31 0;
+#X connect 35 0 30 0;
+#X connect 38 0 6 0;
+#X connect 39 0 38 0;
+#X connect 40 0 8 0;
+#X connect 42 0 38 0;
+#X connect 43 0 38 0;
+#X connect 44 0 38 0;
+#X connect 45 0 38 0;
+#X connect 46 0 38 0;
+#X connect 47 0 38 0;
+#X connect 50 0 38 0;
+#X connect 51 0 38 0;
+#X connect 52 0 38 0;
+#X connect 53 0 38 0;
+#X connect 58 0 38 0;
+#X connect 59 0 38 0;
+#X connect 60 0 38 0;
+#X connect 61 0 38 0;
+#X connect 62 0 38 0;
+#X connect 63 0 38 0;
+#X connect 64 0 38 0;

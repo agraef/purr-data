@@ -1,7 +1,7 @@
 /* For information on usage and redistribution, and for a DISCLAIMER OF ALL
 * WARRANTIES, see the file, "LICENSE.txt," in this distribution.
 
-iemlib1 written by Thomas Musil, Copyright (c) IEM KUG Graz Austria 2000 - 2006 */
+iemlib1 written by Thomas Musil, Copyright (c) IEM KUG Graz Austria 2000 - 2011 */
 
 #include "m_pd.h"
 #include "iemlib.h"
@@ -41,7 +41,7 @@ typedef struct _para_bp2_tilde
   int      event_mask;
   void     *x_debug_outlet;
   t_atom   x_at[5];
-  t_float  x_msi;
+  t_float  x_float_sig_in;
 } t_para_bp2_tilde;
 
 static t_class *para_bp2_tilde_class;
@@ -51,12 +51,12 @@ static void para_bp2_tilde_calc(t_para_bp2_tilde *x)
   t_float l, al, gal, l2, rcp;
   
   l = x->cur_l;
-  l2 = l*l + 1.0f;
+  l2 = l*l + 1.0;
   al = l*x->cur_a;
   gal = al*x->cur_g;
-  rcp = 1.0f/(al + l2);
+  rcp = 1.0/(al + l2);
   x->a0 = rcp*(l2 + gal);
-  x->a1 = rcp*2.0f*(2.0f - l2);
+  x->a1 = rcp*2.0*(2.0 - l2);
   x->a2 = rcp*(l2 - gal);
   x->b1 = -x->a1;
   x->b2 = rcp*(al - l2);
@@ -84,10 +84,10 @@ static void para_bp2_tilde_dsp_tick(t_para_bp2_tilde *x)
         x->cur_f *= x->delta_f;
       }
       l = x->cur_f * x->sr;
-      if(l < 1.0e-20f)
-        x->cur_l = 1.0e20f;
-      else if(l > 1.57079632f)
-        x->cur_l = 0.0f;
+      if(l < 1.0e-20)
+        x->cur_l = 1.0e20;
+      else if(l > 1.57079632)
+        x->cur_l = 0.0;
       else
       {
         si = sin(l);
@@ -128,31 +128,31 @@ static void para_bp2_tilde_dsp_tick(t_para_bp2_tilde *x)
     
     /* stability check */
     
-    discriminant = x->b1 * x->b1 + 4.0f * x->b2;
-    if(x->b1 <= -1.9999996f)
-      x->b1 = -1.9999996f;
-    else if(x->b1 >= 1.9999996f)
-      x->b1 = 1.9999996f;
+    discriminant = x->b1 * x->b1 + 4.0 * x->b2;
+    if(x->b1 <= -1.9999996)
+      x->b1 = -1.9999996;
+    else if(x->b1 >= 1.9999996)
+      x->b1 = 1.9999996;
     
-    if(x->b2 <= -0.9999998f)
-      x->b2 = -0.9999998f;
-    else if(x->b2 >= 0.9999998f)
-      x->b2 = 0.9999998f;
+    if(x->b2 <= -0.9999998)
+      x->b2 = -0.9999998;
+    else if(x->b2 >= 0.9999998)
+      x->b2 = 0.9999998;
     
-    if(discriminant >= 0.0f)
+    if(discriminant >= 0.0)
     {
-      if(0.9999998f - x->b1 - x->b2 < 0.0f)
-        x->b2 = 0.9999998f - x->b1;
-      if(0.9999998f + x->b1 - x->b2 < 0.0f)
-        x->b2 = 0.9999998f + x->b1;
+      if(0.9999998 - x->b1 - x->b2 < 0.0)
+        x->b2 = 0.9999998 - x->b1;
+      if(0.9999998 + x->b1 - x->b2 < 0.0)
+        x->b2 = 0.9999998 + x->b1;
     }
   }
 }
 
 static t_int *para_bp2_tilde_perform(t_int *w)
 {
-  t_float *in = (t_float *)(w[1]);
-  t_float *out = (t_float *)(w[2]);
+  t_sample *in = (t_sample *)(w[1]);
+  t_sample *out = (t_sample *)(w[2]);
   t_para_bp2_tilde *x = (t_para_bp2_tilde *)(w[3]);
   int i, n = (t_int)(w[4]);
   t_float wn0, wn1=x->wn1, wn2=x->wn2;
@@ -162,16 +162,16 @@ static t_int *para_bp2_tilde_perform(t_int *w)
   para_bp2_tilde_dsp_tick(x);
   for(i=0; i<n; i++)
   {
-    wn0 = *in++ + b1*wn1 + b2*wn2;
-    *out++ = a0*wn0 + a1*wn1 + a2*wn2;
+    wn0 = (t_float)(*in++) + b1*wn1 + b2*wn2;
+    *out++ = (t_sample)(a0*wn0 + a1*wn1 + a2*wn2);
     wn2 = wn1;
     wn1 = wn0;
   }
   /* NAN protect */
   if(IEM_DENORMAL(wn2))
-    wn2 = 0.0f;
+    wn2 = 0.0;
   if(IEM_DENORMAL(wn1))
-    wn1 = 0.0f;
+    wn1 = 0.0;
   
   x->wn1 = wn1;
   x->wn2 = wn2;
@@ -190,8 +190,8 @@ y/x = (a0 + a1*z-1 + a2*z-2)/(1 - b1*z-1 - b2*z-2);*/
 
 static t_int *para_bp2_tilde_perf8(t_int *w)
 {
-  t_float *in = (t_float *)(w[1]);
-  t_float *out = (t_float *)(w[2]);
+  t_sample *in = (t_sample *)(w[1]);
+  t_sample *out = (t_sample *)(w[2]);
   t_para_bp2_tilde *x = (t_para_bp2_tilde *)(w[3]);
   int i, n = (t_int)(w[4]);
   t_float wn[10];
@@ -203,22 +203,22 @@ static t_int *para_bp2_tilde_perf8(t_int *w)
   wn[1] = x->wn1;
   for(i=0; i<n; i+=8, in+=8, out+=8)
   {
-    wn[2] = in[0] + b1*wn[1] + b2*wn[0];
-    out[0] = a0*wn[2] + a1*wn[1] + a2*wn[0];
-    wn[3] = in[1] + b1*wn[2] + b2*wn[1];
-    out[1] = a0*wn[3] + a1*wn[2] + a2*wn[1];
-    wn[4] = in[2] + b1*wn[3] + b2*wn[2];
-    out[2] = a0*wn[4] + a1*wn[3] + a2*wn[2];
-    wn[5] = in[3] + b1*wn[4] + b2*wn[3];
-    out[3] = a0*wn[5] + a1*wn[4] + a2*wn[3];
-    wn[6] = in[4] + b1*wn[5] + b2*wn[4];
-    out[4] = a0*wn[6] + a1*wn[5] + a2*wn[4];
-    wn[7] = in[5] + b1*wn[6] + b2*wn[5];
-    out[5] = a0*wn[7] + a1*wn[6] + a2*wn[5];
-    wn[8] = in[6] + b1*wn[7] + b2*wn[6];
-    out[6] = a0*wn[8] + a1*wn[7] + a2*wn[6];
-    wn[9] = in[7] + b1*wn[8] + b2*wn[7];
-    out[7] = a0*wn[9] + a1*wn[8] + a2*wn[7];
+    wn[2] = (t_float)in[0] + b1*wn[1] + b2*wn[0];
+    out[0] = (t_sample)(a0*wn[2] + a1*wn[1] + a2*wn[0]);
+    wn[3] = (t_float)in[1] + b1*wn[2] + b2*wn[1];
+    out[1] = (t_sample)(a0*wn[3] + a1*wn[2] + a2*wn[1]);
+    wn[4] = (t_float)in[2] + b1*wn[3] + b2*wn[2];
+    out[2] = (t_sample)(a0*wn[4] + a1*wn[3] + a2*wn[2]);
+    wn[5] = (t_float)in[3] + b1*wn[4] + b2*wn[3];
+    out[3] = (t_sample)(a0*wn[5] + a1*wn[4] + a2*wn[3]);
+    wn[6] = (t_float)in[4] + b1*wn[5] + b2*wn[4];
+    out[4] = (t_sample)(a0*wn[6] + a1*wn[5] + a2*wn[4]);
+    wn[7] = (t_float)in[5] + b1*wn[6] + b2*wn[5];
+    out[5] = (t_sample)(a0*wn[7] + a1*wn[6] + a2*wn[5]);
+    wn[8] = (t_float)in[6] + b1*wn[7] + b2*wn[6];
+    out[6] = (t_sample)(a0*wn[8] + a1*wn[7] + a2*wn[6]);
+    wn[9] = (t_float)in[7] + b1*wn[8] + b2*wn[7];
+    out[7] = (t_sample)(a0*wn[9] + a1*wn[8] + a2*wn[7]);
     wn[0] = wn[8];
     wn[1] = wn[9];
   }
@@ -261,9 +261,9 @@ static void para_bp2_tilde_ft2(t_para_bp2_tilde *x, t_floatarg q)
 {
   t_float a;
   
-  if(q <= 0.0f)
-    q = 0.000001f;
-  a = 1.0f/q;
+  if(q <= 0.0)
+    q = 0.000001;
+  a = 1.0/q;
   if(a != x->cur_a)
   {
     x->end_a = a;
@@ -275,14 +275,23 @@ static void para_bp2_tilde_ft2(t_para_bp2_tilde *x, t_floatarg q)
 
 static void para_bp2_tilde_ft1(t_para_bp2_tilde *x, t_floatarg f)
 {
-  if(f <= 0.0f)
-    f = 0.000001f;
+  if(f <= 0.0)
+    f = 0.000001;
   if(f != x->cur_f)
   {
     x->end_f = f;
     x->counter_f = x->ticks;
     x->delta_f = exp(log(f/x->cur_f)*x->rcp_ticks);
     x->event_mask |= 1;/*set event_mask_bit 0 = 1*/
+  }
+}
+
+static void para_bp2_tilde_set(t_para_bp2_tilde *x, t_symbol *s, int argc, t_atom *argv)
+{
+  if((argc >= 2) && IS_A_FLOAT(argv, 1) && IS_A_FLOAT(argv, 0))
+  {
+    x->wn1 = (t_float)atom_getfloatarg(0, argc, argv);
+    x->wn2 = (t_float)atom_getfloatarg(1, argc, argv);
   }
 }
 
@@ -302,18 +311,18 @@ static void para_bp2_tilde_dsp(t_para_bp2_tilde *x, t_signal **sp)
   t_float si, co, f;
   int i, n=(int)sp[0]->s_n;
   
-  x->sr = 3.14159265358979323846f / (t_float)(sp[0]->s_sr);
-  x->ticks_per_interpol_time = 0.001f * (t_float)(sp[0]->s_sr) / (t_float)n;
+  x->sr = 3.14159265358979323846 / (t_float)(sp[0]->s_sr);
+  x->ticks_per_interpol_time = 0.001 * (t_float)(sp[0]->s_sr) / (t_float)n;
   i = (int)((x->ticks_per_interpol_time)*(x->interpol_time));
   if(i <= 0)
     i = 1;
   x->ticks = i;
-  x->rcp_ticks = 1.0f / (t_float)i;
+  x->rcp_ticks = 1.0 / (t_float)i;
   f = x->cur_f * x->sr;
-  if(f < 1.0e-20f)
-    x->cur_l = 1.0e20f;
-  else if(f > 1.57079632f)
-    x->cur_l = 0.0f;
+  if(f < 1.0e-20)
+    x->cur_l = 1.0e20;
+  else if(f > 1.57079632)
+    x->cur_l = 0.0;
   else
   {
     si = sin(f);
@@ -330,7 +339,7 @@ static void *para_bp2_tilde_new(t_symbol *s, int argc, t_atom *argv)
 {
   t_para_bp2_tilde *x = (t_para_bp2_tilde *)pd_new(para_bp2_tilde_class);
   int i;
-  t_float si, co, f=0.0f, q=1.0f, l=0.0f, interpol=0.0f;
+  t_float si, co, f=0.0, q=1.0, l=0.0, interpol=0.0;
   
   inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_float, gensym("ft1"));
   inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_float, gensym("ft2"));
@@ -338,7 +347,7 @@ static void *para_bp2_tilde_new(t_symbol *s, int argc, t_atom *argv)
   inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_float, gensym("ft4"));
   outlet_new(&x->x_obj, &s_signal);
   x->x_debug_outlet = outlet_new(&x->x_obj, &s_list);
-  x->x_msi = 0;
+  x->x_float_sig_in = 0.0;
   
   x->x_at[0].a_type = A_FLOAT;
   x->x_at[1].a_type = A_FLOAT;
@@ -350,19 +359,19 @@ static void *para_bp2_tilde_new(t_symbol *s, int argc, t_atom *argv)
   x->counter_f = 1;
   x->counter_a = 0;
   x->counter_g = 0;
-  x->delta_f = 0.0f;
-  x->delta_a = 0.0f;
-  x->delta_g = 0.0f;
-  x->interpol_time = 500.0f;
-  x->wn1 = 0.0f;
-  x->wn2 = 0.0f;
-  x->a0 = 0.0f;
-  x->a1 = 0.0f;
-  x->a2 = 0.0f;
-  x->b1 = 0.0f;
-  x->b2 = 0.0f;
-  x->sr = 3.14159265358979323846f / 44100.0f;
-  x->cur_a = 1.0f;
+  x->delta_f = 0.0;
+  x->delta_a = 0.0;
+  x->delta_g = 0.0;
+  x->interpol_time = 500.0;
+  x->wn1 = 0.0;
+  x->wn2 = 0.0;
+  x->a0 = 0.0;
+  x->a1 = 0.0;
+  x->a2 = 0.0;
+  x->b1 = 0.0;
+  x->b2 = 0.0;
+  x->sr = 3.14159265358979323846 / 44100.0;
+  x->cur_a = 1.0;
   if((argc == 4)&&IS_A_FLOAT(argv,3)&&IS_A_FLOAT(argv,2)&&IS_A_FLOAT(argv,1)&&IS_A_FLOAT(argv,0))
   {
     f = (t_float)atom_getfloatarg(0, argc, argv);
@@ -370,33 +379,33 @@ static void *para_bp2_tilde_new(t_symbol *s, int argc, t_atom *argv)
     l = (t_float)atom_getfloatarg(2, argc, argv);
     interpol = (t_float)atom_getfloatarg(3, argc, argv);
   }
-  if(f <= 0.0f)
-    f = 0.000001f;
+  if(f <= 0.0)
+    f = 0.000001;
   x->cur_f = f;
   f *= x->sr;
-  if(f < 1.0e-20f)
-    x->cur_l = 1.0e20f;
-  else if(f > 1.57079632f)
-    x->cur_l = 0.0f;
+  if(f < 1.0e-20)
+    x->cur_l = 1.0e20;
+  else if(f > 1.57079632)
+    x->cur_l = 0.0;
   else
   {
     si = sin(f);
     co = cos(f);
     x->cur_l = co/si;
   }
-  if(q <= 0.0f)
-    q = 0.000001f;
-  x->cur_a = 1.0f/q;
+  if(q <= 0.0)
+    q = 0.000001;
+  x->cur_a = 1.0/q;
   x->cur_g = exp(0.11512925465 * l);
-  if(interpol <= 0.0f)
-    interpol = 0.0f;
+  if(interpol <= 0.0)
+    interpol = 0.0;
   x->interpol_time = interpol;
-  x->ticks_per_interpol_time = 0.5f;
+  x->ticks_per_interpol_time = 0.5;
   i = (int)((x->ticks_per_interpol_time)*(x->interpol_time));
   if(i <= 0)
     i = 1;
   x->ticks = i;
-  x->rcp_ticks = 1.0f / (t_float)i;
+  x->rcp_ticks = 1.0 / (t_float)i;
   x->end_f = x->cur_f;
   x->end_a = x->cur_a;
   x->end_g = x->cur_g;
@@ -407,12 +416,12 @@ void para_bp2_tilde_setup(void)
 {
   para_bp2_tilde_class = class_new(gensym("para_bp2~"), (t_newmethod)para_bp2_tilde_new,
         0, sizeof(t_para_bp2_tilde), 0, A_GIMME, 0);
-  CLASS_MAINSIGNALIN(para_bp2_tilde_class, t_para_bp2_tilde, x_msi);
+  CLASS_MAINSIGNALIN(para_bp2_tilde_class, t_para_bp2_tilde, x_float_sig_in);
   class_addmethod(para_bp2_tilde_class, (t_method)para_bp2_tilde_dsp, gensym("dsp"), 0);
   class_addmethod(para_bp2_tilde_class, (t_method)para_bp2_tilde_ft1, gensym("ft1"), A_FLOAT, 0);
   class_addmethod(para_bp2_tilde_class, (t_method)para_bp2_tilde_ft2, gensym("ft2"), A_FLOAT, 0);
   class_addmethod(para_bp2_tilde_class, (t_method)para_bp2_tilde_ft3, gensym("ft3"), A_FLOAT, 0);
   class_addmethod(para_bp2_tilde_class, (t_method)para_bp2_tilde_ft4, gensym("ft4"), A_FLOAT, 0);
+  class_addmethod(para_bp2_tilde_class, (t_method)para_bp2_tilde_set, gensym("set"), A_GIMME, 0);
   class_addmethod(para_bp2_tilde_class, (t_method)para_bp2_tilde_print, gensym("print"), 0);
-//  class_sethelpsymbol(para_bp2_tilde_class, gensym("iemhelp/help-para_bp2~"));
 }

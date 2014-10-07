@@ -4,7 +4,11 @@
 iemlib2 written by Thomas Musil, Copyright (c) IEM KUG Graz Austria 2000 - 2006 */
 
 #include "m_pd.h"
-#include "g_canvas.h"
+#ifdef HAVE_G_CANVAS_H
+# include "g_canvas.h"
+#else
+EXTERN t_canvas *glist_getcanvas(t_glist *x);
+#endif
 #include "iemlib.h"
 
 

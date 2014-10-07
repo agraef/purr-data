@@ -25,7 +25,7 @@ typedef struct _iem_delay_tilde
   int       x_blocksize;
   int       x_delay_samples;
   t_float   x_sr;
-  t_float   x_msi;
+  t_float   x_float_sig_in;
 } t_iem_delay_tilde;
 
 static void iem_delay_tilde_cur_del(t_iem_delay_tilde *x, t_floatarg f)
@@ -182,7 +182,7 @@ static void *iem_delay_tilde_new(t_floatarg max_delay_ms, t_floatarg current_del
   x->x_sr = 0.0f;
   inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_float, gensym("ft1"));
   outlet_new(&x->x_obj, &s_signal);
-  x->x_msi = 0.0f;
+  x->x_float_sig_in = 0.0f;
   return (x);
 }
 
@@ -195,7 +195,7 @@ void iem_delay_tilde_setup(void)
 {
   iem_delay_tilde_class = class_new(gensym("iem_delay~"), (t_newmethod)iem_delay_tilde_new, (t_method)iem_delay_tilde_free,
     sizeof(t_iem_delay_tilde), 0, A_DEFFLOAT, A_DEFFLOAT, 0);
-  CLASS_MAINSIGNALIN(iem_delay_tilde_class, t_iem_delay_tilde, x_msi);
+  CLASS_MAINSIGNALIN(iem_delay_tilde_class, t_iem_delay_tilde, x_float_sig_in);
   class_addmethod(iem_delay_tilde_class, (t_method)iem_delay_tilde_dsp, gensym("dsp"), 0);
   class_addmethod(iem_delay_tilde_class, (t_method)iem_delay_tilde_cur_del, gensym("ft1"), A_FLOAT, 0);
 }

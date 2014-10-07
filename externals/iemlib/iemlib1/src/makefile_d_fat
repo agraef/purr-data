@@ -2,18 +2,24 @@ current: all
 
 .SUFFIXES: .d_fat
 
-PD_INSTALL_PATH ?= "/Applications/Pd.app/Contents/Resources"
+PDSOURCE = "/Applications/Pd.app/Contents/Resources/src"
 
-INCLUDE = -I. -I$(PD_INSTALL_PATH)/src
+IEMLIB_INCLUDE = ../../include
 
-CFLAGS =-DPD -O2 -Wall -W -Wshadow -Wstrict-prototypes \
-        -Wno-unused -Wno-parentheses -Wno-switch
+PD_INCLUDES = -I. -I$(IEMLIB_INCLUDE) -I$(PDSOURCE)
+
+PD_DEFINES = -DPD
+
+CFLAGS =-O2 -Wall -W -Wshadow -Wstrict-prototypes \
+        -Wno-unused -Wno-parentheses -Wno-switch -fPIC
 
 LFLAGS = -bundle -undefined suppress -flat_namespace
 
+ARCH_FLAGS=-arch i386 -arch ppc
+
 # the sources
 
-SRC = biquad_freq_resp.c \
+SRC =	biquad_freq_resp.c \
 	db2v.c \
 	f2note.c \
 	filter~.c \
@@ -33,8 +39,9 @@ SRC = biquad_freq_resp.c \
 	prvu~.c \
 	pvu~.c \
 	rvu~.c \
+	sin_freq~.c \
 	sin_phase~.c \
-	sparse_FIR~ \
+	sparse_FIR~.c \
 	soundfile_info.c \
 	split.c \
 	v2db.c \
@@ -51,19 +58,16 @@ OBJ = $(SRC:.c=.o)
 #
 
 clean:
-	rm ../$(TARGET)
-	rm *.o
+	rm -f ../$(TARGET)
+	rm -f *.o
 
 all: $(OBJ)
 	@echo :: $(OBJ)
-	$(CC) -arch i386 -arch ppc $(LFLAGS) -o $(TARGET) *.o
+	$(CC) $(ARCH_FLAGS) $(LFLAGS) -o $(TARGET) *.o
 	strip -S -x $(TARGET)
 	mv $(TARGET) ..
 
 $(OBJ) : %.o : %.c
-	touch $*.c
-	$(CC) -arch i386 -arch ppc $(CFLAGS) $(INCLUDE) -c -o $*.o $*.c
-
-
+	$(CC) $(ARCH_FLAGS) $(PD_DEFINES) $(CFLAGS) $(PD_INCLUDES) -c -o $*.o $*.c
 
 

@@ -9,6 +9,7 @@ iemlib1 written by Thomas Musil, Copyright (c) IEM KUG Graz Austria 2000 - 2010 
 #include <math.h>
 
 /* ---------------- peakenv_hold~ - simple peak-envelope-converter with peak hold time and release time. ----------------- */
+/* -- now with double precision; for low-frequency filters it is important to calculate the filter in double precision -- */
 
 typedef struct _peakenv_hold_tilde
 {
@@ -20,7 +21,7 @@ typedef struct _peakenv_hold_tilde
   double   x_holdtime;
   t_int    x_n_hold;
   t_int    x_counter;
-  t_float  x_msi;
+  t_float  x_float_sig_in;
 } t_peakenv_hold_tilde;
 
 static t_class *peakenv_hold_tilde_class;
@@ -34,8 +35,8 @@ static void peakenv_hold_tilde_ft1(t_peakenv_hold_tilde *x, t_float t_hold)/* ho
 {
   double dhold;
   
-  if(t_hold < 0.0f)
-    t_hold = 0.0f;
+  if(t_hold < 0.0)
+    t_hold = 0.0;
   x->x_holdtime = (double)t_hold;
   dhold = x->x_sr*0.001*x->x_holdtime;
   if(dhold > 2147483647.0)
@@ -45,16 +46,16 @@ static void peakenv_hold_tilde_ft1(t_peakenv_hold_tilde *x, t_float t_hold)/* ho
 
 static void peakenv_hold_tilde_ft2(t_peakenv_hold_tilde *x, t_float t_rel)/* release-time in ms */
 {
-  if(t_rel < 0.0f)
-    t_rel = 0.0f;
+  if(t_rel < 0.0)
+    t_rel = 0.0;
   x->x_releasetime = (double)t_rel;
   x->x_c1 = exp(-1.0/(x->x_sr*0.001*x->x_releasetime));
 }
 
 static t_int *peakenv_hold_tilde_perform(t_int *w)
 {
-  t_float *in = (t_float *)(w[1]);
-  t_float *out = (t_float *)(w[2]);
+  t_sample *in = (t_sample *)(w[1]);
+  t_sample *out = (t_sample *)(w[2]);
   t_peakenv_hold_tilde *x = (t_peakenv_hold_tilde *)(w[3]);
   int n = (int)(w[4]);
   double peak = x->x_old_peak;
@@ -75,7 +76,7 @@ static t_int *peakenv_hold_tilde_perform(t_int *w)
       peak = absolute;
       counter = x->x_n_hold;// new hold initialisation
     }
-    *out++ = (t_float)peak;
+    *out++ = (t_sample)peak;
   }
   /* NAN protect */
   //if(IEM_DENORMAL(peak))
@@ -105,7 +106,7 @@ static void *peakenv_hold_tilde_new(t_float t_hold, t_float t_rel)
   inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_float, gensym("ft1"));
   inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_float, gensym("ft2"));
   outlet_new(&x->x_obj, &s_signal);
-  x->x_msi = 0;
+  x->x_float_sig_in = 0.0;
   return(x);
 }
 
@@ -113,7 +114,7 @@ void peakenv_hold_tilde_setup(void)
 {
   peakenv_hold_tilde_class = class_new(gensym("peakenv_hold~"), (t_newmethod)peakenv_hold_tilde_new,
     0, sizeof(t_peakenv_hold_tilde), 0, A_DEFFLOAT, A_DEFFLOAT, 0);
-  CLASS_MAINSIGNALIN(peakenv_hold_tilde_class, t_peakenv_hold_tilde, x_msi);
+  CLASS_MAINSIGNALIN(peakenv_hold_tilde_class, t_peakenv_hold_tilde, x_float_sig_in);
   class_addmethod(peakenv_hold_tilde_class, (t_method)peakenv_hold_tilde_dsp, gensym("dsp"), 0);
   class_addmethod(peakenv_hold_tilde_class, (t_method)peakenv_hold_tilde_ft1, gensym("ft1"), A_FLOAT, 0);
    class_addmethod(peakenv_hold_tilde_class, (t_method)peakenv_hold_tilde_ft2, gensym("ft2"), A_FLOAT, 0);

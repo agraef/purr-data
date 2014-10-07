@@ -230,12 +230,12 @@ int u8_charnum(char *s, int offset)
     char *const end = string + offset;
 
     while (string < end && *string != '\0') {
-        if (*string++ & 0x80) {
-            if (!isutf(*string)) {
+        if (*string++ & 0x80 && string != end) {
+            if (string < end && !isutf(*string)) {
                 ++string;
-                if (!isutf(*string)) {
+                if (string < end && !isutf(*string)) {
                     ++string;
-                    if (!isutf(*string)) {
+                    if (string < end && !isutf(*string)) {
                         ++string;
                     }
                 }

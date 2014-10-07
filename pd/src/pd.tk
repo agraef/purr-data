@@ -1764,12 +1764,12 @@ match_linux_wm [list .mbar.edit add separator]
 		-state disabled
 
 match_linux_wm [list .mbar.edit add separator]
-if {$pd_nt == 2} { # no key command for Mac OS X
-	.mbar.edit add command -label {Text Editor} -state disabled
-} else {
-	.mbar.edit add command -label {Text Editor} -accelerator "Ctrl+t" \
-	-state disabled
-}
+#	.mbar.edit add command -label {Text Editor} -state disabled
+#if {$pd_nt == 2} { # no key command for Mac OS X
+#} else {
+#	.mbar.edit add command -label {Text Editor} -accelerator "Ctrl+t" \
+#	-state disabled
+#}
 .mbar.edit add command -label Font -state disabled
 
 .mbar.edit add checkbutton -label {Cord Inspector} \
@@ -3113,14 +3113,14 @@ proc pdtk_canvas_new {name width height geometry editable} {
 
 	if { $k12_mode == 0 } {
 
-		if {$pd_nt == 2} { # no key command on Mac OS X, conflicts with standard
-			$name.m.edit add command -label {Text Editor} \
-				-command [concat menu_texteditor $name]
-		} else {
-			$name.m.edit add command -label {Text Editor} \
-				-accelerator [accel_munge "Ctrl+t"] \
-				-command [concat menu_texteditor $name]
-		}
+		#if {$pd_nt == 2} { # no key command on Mac OS X, conflicts with standard
+		#	$name.m.edit add command -label {Text Editor} \
+		#		-command [concat menu_texteditor $name]
+		#} else {
+		#	$name.m.edit add command -label {Text Editor} \
+		#		-accelerator [accel_munge "Ctrl+t"] \
+		#		-command [concat menu_texteditor $name]
+		#}
 
 		$name.m.edit add command -label Font \
 		    -command [concat menu_font $name] 
@@ -4796,7 +4796,7 @@ proc pdtk_canvas_ctrlkey {name key shift} {
             if {$key == "t" || $key == "T"} {menu_font $topname}
 			if {$key == "m" || $key == "M"} {menu_minimize $topname}
         } else {
-            if {$key == "t" || $key == "T"} {menu_texteditor $topname}
+            # if {$key == "t" || $key == "T"} {menu_texteditor $topname}
 			# minimize window on Mac OS X
 			if {$key == "m" || $key == "M"} {menu_send}
         }
@@ -6803,7 +6803,8 @@ proc pdtk_text_new {canvasname myname x y text font color} {
 	#[encoding convertfrom utf-8 $text]
 	set print_text [string map { \v \n } $text]
     $canvasname create text $x $y -font [get_font_for_size $font] \
-        -tags $myname -text [encoding convertfrom utf-8 $print_text] -fill $color -anchor nw
+        -tags $myname -text $print_text -fill $color -anchor nw
+    #    -tags $myname -text [encoding convertfrom utf-8 $print_text] -fill $color -anchor nw
 	$canvasname addtag text withtag $myname
 	#$canvasname bind $myname <Home> [concat $canvasname icursor $myname 0]
 	#$canvasname bind $myname <End> [concat $canvasname icursor $myname end]
@@ -6819,7 +6820,8 @@ proc pdtk_text_new {canvasname myname x y text font color} {
 ################ pdtk_text_set -- change the text ##################
 proc pdtk_text_set {canvasname myname text} {
     set print_text [string map { \v \n } $text]
-    catch {$canvasname itemconfig $myname -text [encoding convertfrom utf-8 $print_text]}
+    # catch {$canvasname itemconfig $myname -text [encoding convertfrom utf-8 $print_text]}
+    catch {$canvasname itemconfig $myname -text $print_text}
     #    pd [concat $myname size [$canvasname bbox $myname] \;]
 }
 
@@ -8491,8 +8493,7 @@ proc pdtk_audio_dialog {mytoplevel indev1 indev2 indev3 indev4 \
         inchan1 inchan2 inchan3 inchan4 \
         outdev1 outdev2 outdev3 outdev4 \
         outchan1 outchan2 outchan3 outchan4 sr advance multi callback \
-        longform} {
-    set blocksize 64
+        longform blocksize} {
     ::dialog_audio::pdtk_audio_dialog \
         $mytoplevel $indev1 $indev2 $indev3 $indev4 \
         $inchan1 $inchan2 $inchan3 $inchan4 \

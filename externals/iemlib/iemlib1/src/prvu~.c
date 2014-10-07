@@ -30,7 +30,7 @@ typedef struct _prvu_tilde
   t_float   x_release_time;
   t_float   x_c1;
   int       x_started;
-  t_float   x_msi;
+  t_float   x_float_sig_in;
 } t_prvu_tilde;
 
 static t_class *prvu_tilde_class;
@@ -39,16 +39,16 @@ static void prvu_tilde_tick_hold(t_prvu_tilde *x);
 
 static void prvu_tilde_reset(t_prvu_tilde *x)
 {
-  x->x_at[0].a_w.w_float = -99.9f;
-  x->x_at[1].a_w.w_float = -99.9f;
-  x->x_at[2].a_w.w_float = 0.0f;
+  x->x_at[0].a_w.w_float = -99.9;
+  x->x_at[1].a_w.w_float = -99.9;
+  x->x_at[2].a_w.w_float = 0.0;
   outlet_list(x->x_obj.ob_outlet, &s_list, 3, x->x_at);
   x->x_overflow_counter = 0;
-  x->x_cur_peak = 0.0f;
-  x->x_old_peak = 0.0f;
-  x->x_hold_peak = 0.0f;
-  x->x_sum_rms = 0.0f;
-  x->x_old_rms = 0.0f;
+  x->x_cur_peak = 0.0;
+  x->x_old_peak = 0.0;
+  x->x_hold_peak = 0.0;
+  x->x_sum_rms = 0.0;
+  x->x_old_rms = 0.0;
   x->x_hold = 0;
   clock_unset(x->x_clock_hold);
   clock_delay(x->x_clock_metro, x->x_metro_time);
@@ -82,25 +82,25 @@ static void prvu_tilde_float(t_prvu_tilde *x, t_floatarg f)
 
 static void prvu_tilde_t_release(t_prvu_tilde *x, t_floatarg release_time)
 {
-  if(release_time <= 5.0f)
-    release_time = 5.0f;
+  if(release_time <= 5.0)
+    release_time = 5.0;
   x->x_release_time = release_time;
-  x->x_c1 = exp(-2.0f*x->x_metro_time/x->x_release_time);
+  x->x_c1 = exp(-2.0*x->x_metro_time/x->x_release_time);
 }
 
 static void prvu_tilde_t_metro(t_prvu_tilde *x, t_floatarg metro_time)
 {
-  if(metro_time <= 5.0f)
-    metro_time = 5.0f;
+  if(metro_time <= 5.0)
+    metro_time = 5.0;
   x->x_metro_time = metro_time;
-  x->x_c1 = exp(-2.0f*x->x_metro_time/x->x_release_time);
-  x->x_rcp = 1.0f/(x->x_sr*(t_float)x->x_metro_time);
+  x->x_c1 = exp(-2.0*x->x_metro_time/x->x_release_time);
+  x->x_rcp = 1.0/(x->x_sr*(t_float)x->x_metro_time);
 }
 
 static void prvu_tilde_t_hold(t_prvu_tilde *x, t_floatarg hold_time)
 {
-  if(hold_time <= 5.0f)
-    hold_time = 5.0f;
+  if(hold_time <= 5.0)
+    hold_time = 5.0;
   x->x_hold_time = hold_time;
 }
 
@@ -111,7 +111,7 @@ static void prvu_tilde_threshold(t_prvu_tilde *x, t_floatarg thresh)
 
 static t_int *prvu_tilde_perform(t_int *w)
 {
-  t_float *in = (t_float *)(w[1]);
+  t_sample *in = (t_sample *)(w[1]);
   t_prvu_tilde *x = (t_prvu_tilde *)(w[2]);
   int n = (int)(w[3]);
   t_float peak = x->x_cur_peak, power, sum=x->x_sum_rms;
@@ -121,7 +121,7 @@ static t_int *prvu_tilde_perform(t_int *w)
   {
     for(i=0; i<n; i++)
     {
-      power = in[i]*in[i];
+      power = (t_float)(in[i]*in[i]);
       if(power > peak)
         peak = power;
       sum += power;
@@ -135,7 +135,7 @@ static t_int *prvu_tilde_perform(t_int *w)
 static void prvu_tilde_dsp(t_prvu_tilde *x, t_signal **sp)
 {
   x->x_sr = 0.001*(t_float)sp[0]->s_sr;
-  x->x_rcp = 1.0f/(x->x_sr*x->x_metro_time);
+  x->x_rcp = 1.0/(x->x_sr*x->x_metro_time);
   dsp_add(prvu_tilde_perform, 3, sp[0]->s_vec, x, sp[0]->s_n);
   clock_delay(x->x_clock_metro, x->x_metro_time);
 }
@@ -153,7 +153,7 @@ static void prvu_tilde_tick_metro(t_prvu_tilde *x)
   x->x_old_peak *= c1;
   /* NAN protect */
   if(IEM_DENORMAL(x->x_old_peak))
-    x->x_old_peak = 0.0f;
+    x->x_old_peak = 0.0;
   
   if(x->x_cur_peak > x->x_old_peak)
     x->x_old_peak = x->x_cur_peak;
@@ -165,37 +165,37 @@ static void prvu_tilde_tick_metro(t_prvu_tilde *x)
   }
   if(!x->x_hold)
     x->x_hold_peak = x->x_old_peak;
-  if(x->x_hold_peak <= 0.0000000001f)
-    dbp = -99.9f;
-  else if(x->x_hold_peak > 1000000.0f)
+  if(x->x_hold_peak <= 0.0000000001)
+    dbp = -99.9;
+  else if(x->x_hold_peak > 1000000.0)
   {
-    dbp = 60.0f;
-    x->x_hold_peak = 1000000.0f;
-    x->x_old_peak = 1000000.0f;
+    dbp = 60.0;
+    x->x_hold_peak = 1000000.0;
+    x->x_old_peak = 1000000.0;
   }
   else
-    dbp = 4.3429448195f*log(x->x_hold_peak);
-  x->x_cur_peak = 0.0f;
+    dbp = 4.3429448195*log(x->x_hold_peak);
+  x->x_cur_peak = 0.0;
   if(dbp >= x->x_threshold_over)
     x->x_overflow_counter++;
   x->x_at[1].a_w.w_float = dbp;
   x->x_at[2].a_w.w_float = (t_float)x->x_overflow_counter;
   
-  cur_rms = (1.0f - c1)*x->x_sum_rms*x->x_rcp + c1*x->x_old_rms;
+  cur_rms = (1.0 - c1)*x->x_sum_rms*x->x_rcp + c1*x->x_old_rms;
   /* NAN protect */
   if(IEM_DENORMAL(cur_rms))
-    cur_rms = 0.0f;
+    cur_rms = 0.0;
   
-  if(cur_rms <= 0.0000000001f)
-    dbr = -99.9f;
-  else if(cur_rms > 1000000.0f)
+  if(cur_rms <= 0.0000000001)
+    dbr = -99.9;
+  else if(cur_rms > 1000000.0)
   {
-    dbr = 60.0f;
-    x->x_old_rms = 1000000.0f;
+    dbr = 60.0;
+    x->x_old_rms = 1000000.0;
   }
   else
-    dbr = 4.3429448195f*log(cur_rms);
-  x->x_sum_rms = 0.0f;
+    dbr = 4.3429448195*log(cur_rms);
+  x->x_sum_rms = 0.0;
   x->x_old_rms = cur_rms;
   x->x_at[0].a_w.w_float = dbr;
   outlet_list(x->x_obj.ob_outlet, &s_list, 3, x->x_at);
@@ -216,33 +216,33 @@ static void *prvu_tilde_new(t_floatarg metro_time, t_floatarg hold_time,
   int i;
   
   x = (t_prvu_tilde *)pd_new(prvu_tilde_class);
-  if(metro_time <= 0.0f)
-    metro_time = 300.0f;
-  if(metro_time <= 5.0f)
-    metro_time = 5.0f;
-  if(release_time <= 0.0f)
-    release_time = 300.0f;
-  if(release_time <= 5.0f)
-    release_time = 5.0f;
-  if(hold_time <= 0.0f)
-    hold_time = 1000.0f;
-  if(hold_time <= 5.0f)
-    hold_time = 5.0f;
-  if(threshold == 0.0f)
-    threshold = -0.01f;
+  if(metro_time <= 0.0)
+    metro_time = 300.0;
+  if(metro_time <= 5.0)
+    metro_time = 5.0;
+  if(release_time <= 0.0)
+    release_time = 300.0;
+  if(release_time <= 5.0)
+    release_time = 5.0;
+  if(hold_time <= 0.0)
+    hold_time = 1000.0;
+  if(hold_time <= 5.0)
+    hold_time = 5.0;
+  if(threshold == 0.0)
+    threshold = -0.01;
   x->x_metro_time = metro_time;
   x->x_release_time = release_time;
   x->x_hold_time = hold_time;
   x->x_threshold_over = threshold;
-  x->x_c1 = exp(-2.0f*x->x_metro_time/x->x_release_time);
-  x->x_cur_peak = 0.0f;
-  x->x_old_peak = 0.0f;
-  x->x_hold_peak = 0.0f;
+  x->x_c1 = exp(-2.0*x->x_metro_time/x->x_release_time);
+  x->x_cur_peak = 0.0;
+  x->x_old_peak = 0.0;
+  x->x_hold_peak = 0.0;
   x->x_hold = 0;
-  x->x_sum_rms = 0.0f;
-  x->x_old_rms = 0.0f;
-  x->x_sr = 44.1f;
-  x->x_rcp = 1.0f/(x->x_sr*x->x_metro_time);
+  x->x_sum_rms = 0.0;
+  x->x_old_rms = 0.0;
+  x->x_sr = 44.1;
+  x->x_rcp = 1.0/(x->x_sr*x->x_metro_time);
   x->x_overflow_counter = 0;
   x->x_clock_metro = clock_new(x, (t_method)prvu_tilde_tick_metro);
   x->x_clock_hold = clock_new(x, (t_method)prvu_tilde_tick_hold);
@@ -251,7 +251,7 @@ static void *prvu_tilde_new(t_floatarg metro_time, t_floatarg hold_time,
   x->x_at[0].a_type = A_FLOAT;
   x->x_at[1].a_type = A_FLOAT;
   x->x_at[2].a_type = A_FLOAT;
-  x->x_msi = 0.0f;
+  x->x_float_sig_in = 0.0;
   return(x);
 }
 
@@ -260,7 +260,7 @@ void prvu_tilde_setup(void)
   prvu_tilde_class = class_new(gensym("prvu~"), (t_newmethod)prvu_tilde_new,
     (t_method)prvu_tilde_ff, sizeof(t_prvu_tilde), 0,
     A_DEFFLOAT, A_DEFFLOAT, A_DEFFLOAT, A_DEFFLOAT, 0);
-  CLASS_MAINSIGNALIN(prvu_tilde_class, t_prvu_tilde, x_msi);
+  CLASS_MAINSIGNALIN(prvu_tilde_class, t_prvu_tilde, x_float_sig_in);
   class_addmethod(prvu_tilde_class, (t_method)prvu_tilde_dsp, gensym("dsp"), 0);
   class_addfloat(prvu_tilde_class, prvu_tilde_float);
   class_addmethod(prvu_tilde_class, (t_method)prvu_tilde_reset, gensym("reset"), 0);
@@ -270,5 +270,4 @@ void prvu_tilde_setup(void)
   class_addmethod(prvu_tilde_class, (t_method)prvu_tilde_t_metro, gensym("t_metro"), A_FLOAT, 0);
   class_addmethod(prvu_tilde_class, (t_method)prvu_tilde_t_hold, gensym("t_hold"), A_FLOAT, 0);
   class_addmethod(prvu_tilde_class, (t_method)prvu_tilde_threshold, gensym("threshold"), A_FLOAT, 0);
-//  class_sethelpsymbol(prvu_tilde_class, gensym("iemhelp/help-prvu~"));
 }

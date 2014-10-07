@@ -65,7 +65,7 @@ proc ::dialog_audio::apply {mytoplevel} {
         $audio_sr \
         $audio_advance \
         $audio_callback \
-        $audio_blocksize" \
+        $audio_blocksize \
         \;]
 
     # Pd always makes devices contiguous-- for example, if you only set
@@ -205,7 +205,7 @@ proc ::dialog_audio::pdtk_audio_dialog {id \
     set audio_callback $callback
     set audio_blocksize $blocksize
     set audio_longform $longform
-
+    
     set mytoplevel .prefs.nb.audio
     set apifr $mytoplevel.api
     if {![winfo exists $apifr]} {

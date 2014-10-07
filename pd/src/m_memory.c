@@ -22,7 +22,7 @@ void *getbytes(size_t nbytes)
     void *ret;
 
     if (nbytes < 1) nbytes = 1;
-    ret = (void *)calloc(nbytes, 1);
+    ret = (void *)calloc(nbytes, sizeof(char*));
 
 #ifdef LOUD
     fprintf(stderr, "new  %lx %d\n", (int)ret, nbytes);
@@ -55,9 +55,9 @@ void *resizebytes(void *old, size_t oldsize, size_t newsize)
     void *ret;
     if (newsize < 1) newsize = 1;
     if (oldsize < 1) oldsize = 1;
-    ret = (void *)realloc((char *)old, newsize * sizeof(char *));
+    ret = (void *)realloc((char *)old, newsize * sizeof(char*));
     if (newsize > oldsize && ret)
-        memset(((char *)ret) + oldsize, 0, newsize - oldsize);
+        memset(((char *)ret) + oldsize, 0, (newsize - oldsize) * sizeof(char*));
 #ifdef LOUD
     fprintf(stderr, "resize %lx %d --> %lx %d\n", (int)old, oldsize, (int)ret, newsize);
 #endif /* LOUD */

@@ -1,11 +1,12 @@
 Diff status between pd-l2ork externals source tree and main community pd svn
-AS OF Sept 7, 2014
+AS OF October 7, 2014
 
 DONE: (*denotes unique changes)
 creb
 flatgui (disabled, as all externals have various problems)
 gem2pdp
 hcs
+iemlib
 markex
 maxli4
 moonlib
@@ -21,6 +22,7 @@ MERGE:
 *footils (fluid improvements)
 *ggee (total overhaul)
 *miXed (Scope~, comment, coll, improvements to the textfile viewer)
+*pddp (accelerated view of documentation objects, minor fixes)
 
 TODO:
 test other

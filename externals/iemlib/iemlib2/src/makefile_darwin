@@ -8,7 +8,7 @@ INCLUDE = -I. -I$(PD_INSTALL_PATH)/src
 
 LIB = -ldl -lm -lpthread
 
-CFLAGS = -DPD -DUNIX -g -Wall -W -Werror -Wno-unused \
+CFLAGS = -DPD -DUNIX -DHAVE_G_CANVAS_H -g -Wall -W -Werror -Wno-unused \
 	-Wno-parentheses -Wno-switch -O2 -fno-strict-aliasing \
 	$(INCLUDE) $(UCFLAGS) $(AFLAGS) \
 
@@ -81,7 +81,7 @@ all: $(OBJ)
 
 $(OBJ) : %.o : %.c
 	touch $*.c
-	$(CC) $(CFLAGS) -DPD $(INCLUDE) -c -o $*.o $*.c
+	$(CC) $(CFLAGS) $(INCLUDE) -c -o $*.o $*.c
 
 
 

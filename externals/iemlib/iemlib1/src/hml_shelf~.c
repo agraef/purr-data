@@ -1,7 +1,7 @@
 /* For information on usage and redistribution, and for a DISCLAIMER OF ALL
 * WARRANTIES, see the file, "LICENSE.txt," in this distribution.
 
-iemlib1 written by Thomas Musil, Copyright (c) IEM KUG Graz Austria 2000 - 2006 */
+iemlib1 written by Thomas Musil, Copyright (c) IEM KUG Graz Austria 2000 - 2011 */
 
 #include "m_pd.h"
 #include "iemlib.h"
@@ -47,7 +47,7 @@ typedef struct _hml_shelf_tilde
   int       event_mask;
   void      *x_debug_outlet;
   t_atom    x_at[5];
-  t_float   x_msi;
+  t_float   x_float_sig_in;
 } t_hml_shelf_tilde;
 
 static t_class *hml_shelf_tilde_class;
@@ -425,6 +425,15 @@ static void hml_shelf_tilde_ft1(t_hml_shelf_tilde *x, t_floatarg ll)
   }
 }
 
+static void hml_shelf_tilde_set(t_hml_shelf_tilde *x, t_symbol *s, int argc, t_atom *argv)
+{
+  if((argc >= 2) && IS_A_FLOAT(argv, 1) && IS_A_FLOAT(argv, 0))
+  {
+    x->wn1 = (t_float)atom_getfloatarg(0, argc, argv);
+    x->wn2 = (t_float)atom_getfloatarg(1, argc, argv);
+  }
+}
+
 static void hml_shelf_tilde_print(t_hml_shelf_tilde *x)
 {
   //  post("fb1 = %g, fb2 = %g, ff1 = %g, ff2 = %g, ff3 = %g", x->b1, x->b2, x->a0, x->a1, x->a2);
@@ -467,7 +476,7 @@ static void *hml_shelf_tilde_new(t_symbol *s, int argc, t_atom *argv)
   inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_float, gensym("ft6"));
   outlet_new(&x->x_obj, &s_signal);
   x->x_debug_outlet = outlet_new(&x->x_obj, &s_list);
-  x->x_msi = 0;
+  x->x_float_sig_in = 0.0f;
   
   x->x_at[0].a_type = A_FLOAT;
   x->x_at[1].a_type = A_FLOAT;
@@ -535,7 +544,7 @@ void hml_shelf_tilde_setup(void)
 {
   hml_shelf_tilde_class = class_new(gensym("hml_shelf~"), (t_newmethod)hml_shelf_tilde_new,
     0, sizeof(t_hml_shelf_tilde), 0, A_GIMME, 0);
-  CLASS_MAINSIGNALIN(hml_shelf_tilde_class, t_hml_shelf_tilde, x_msi);
+  CLASS_MAINSIGNALIN(hml_shelf_tilde_class, t_hml_shelf_tilde, x_float_sig_in);
   class_addmethod(hml_shelf_tilde_class, (t_method)hml_shelf_tilde_dsp, gensym("dsp"), 0);
   class_addmethod(hml_shelf_tilde_class, (t_method)hml_shelf_tilde_ft1, gensym("ft1"), A_FLOAT, 0);
   class_addmethod(hml_shelf_tilde_class, (t_method)hml_shelf_tilde_ft2, gensym("ft2"), A_FLOAT, 0);
@@ -543,6 +552,6 @@ void hml_shelf_tilde_setup(void)
   class_addmethod(hml_shelf_tilde_class, (t_method)hml_shelf_tilde_ft4, gensym("ft4"), A_FLOAT, 0);
   class_addmethod(hml_shelf_tilde_class, (t_method)hml_shelf_tilde_ft5, gensym("ft5"), A_FLOAT, 0);
   class_addmethod(hml_shelf_tilde_class, (t_method)hml_shelf_tilde_ft6, gensym("ft6"), A_FLOAT, 0);
+  class_addmethod(hml_shelf_tilde_class, (t_method)hml_shelf_tilde_set, gensym("set"), A_GIMME, 0);
   class_addmethod(hml_shelf_tilde_class, (t_method)hml_shelf_tilde_print, gensym("print"), 0);
-//  class_sethelpsymbol(hml_shelf_tilde_class, gensym("iemhelp/help-hml_shelf~"));
 }
