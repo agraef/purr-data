@@ -643,6 +643,9 @@ void ugen_add(t_dspcontext *dc, t_object *obj)
         uout->o_connections = 0, uout->o_nconnect = 0;
 }
 
+extern t_class *text_class;
+#include <stdio.h>
+
     /* and then this to make all the connections. */
 void ugen_connect(t_dspcontext *dc, t_object *x1, int outno, t_object *x2,
     int inno)
@@ -661,8 +664,15 @@ void ugen_connect(t_dspcontext *dc, t_object *x1, int outno, t_object *x2,
     for (u2 = dc->dc_ugenlist; u2 && u2->u_obj != x2; u2 = u2->u_next);
     if (!u1 || !u2 || siginno < 0)
     {
-        pd_error(u1->u_obj,
-            "signal outlet connect to nonsignal inlet (ignored)");
+        t_text *t2 = (t_text *)x2;
+        // The following only happens if the DAC is on while connecting
+        // objects. If this is not yet initialized object we don't
+        // really know if its inlet is signal or not, so we don't post
+        // the error.
+        if (pd_class(&t2->te_pd) != text_class ||
+            (pd_class(&t2->te_pd) == text_class && t2->te_type == T_TEXT))
+                pd_error(u1->u_obj,
+                    "signal outlet connect to nonsignal inlet (ignored)");
         return;
     }
     if (sigoutno < 0 || sigoutno >= u1->u_nout || siginno >= u2->u_nin)
