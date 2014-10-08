@@ -502,9 +502,8 @@ void iemgui_select(t_gobj *z, t_glist *glist, int selected)
         x->x_selected = canvas;
     else
         x->x_selected = NULL;
-    char fcol[8]; sprintf(fcol,"#%6.6x", x->x_fcol);
     sys_vgui(".x%lx.c itemconfigure {x%lx&&border} -stroke %s\n", canvas, x,
-        x->x_selected && x->x_glist == canvas ? selection_color : fcol);
+        x->x_selected && x->x_glist == canvas ? selection_color : border_color);
     x->x_draw((void *)z, glist, IEM_GUI_DRAW_MODE_SELECT);
     if (selected < 2)
     {
@@ -1184,6 +1183,7 @@ void g_iemgui_setup (void) {
 }
 
 const char *selection_color = "$pd_colors(selection)";
+const char *border_color = "$pd_colors(iemgui_border)";
 
 #define GET_OUTLET t_outlet *out = x->x_obj.ob_outlet; /* can't use int o because there's not obj_nth_outlet function */
 #define SEND_BY_SYMBOL (iemgui_has_snd(x) && x->x_snd->s_thing && (!chk_putin || x->x_put_in2out))

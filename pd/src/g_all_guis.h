@@ -267,6 +267,7 @@ EXTERN void wb_init(t_widgetbehavior *wb, t_getrectfn gr, t_clickfn cl); // rena
 
 extern t_symbol *s_empty;
 EXTERN const char *selection_color;
+EXTERN const char *border_color;
 
 static inline int iemgui_has_snd (t_iemgui *x) {return x->x_snd!=s_empty;}
 static inline int iemgui_has_rcv (t_iemgui *x) {return x->x_rcv!=s_empty;}
