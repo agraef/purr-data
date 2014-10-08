@@ -124,7 +124,7 @@ continuously.;
 #X text 97 134 A symbol box allows you to display a single symbol-atom
 or enter one using the mouse and keyboard. Unlike a number box you
 cannot change the value by clicking and dragging.;
-#X text 96 172 The symbol box is called "Symbol" in the "Put" menu.
+#X text 96 174 The symbol box is called "Symbol" in the "Put" menu.
 ;
 #X text 168 239 - sends the current value to the outlet.;
 #X msg 469 156 set foo;
@@ -148,7 +148,7 @@ the value between 0 and the last nonzero value.;
 #X floatatom 59 545 5 0 0 0 - - -, f 5;
 #X text 100 503 You can shift-click a number box and drag to change
 the number by hundredths instead of ones.;
-#X text 62 112 The number box is called "Number" in the "Put" menu.
+#X text 61 118 The number box is called "Number" in the "Put" menu.
 ;
 #X text 67 197 To enter data simply click a number box or symbol box
 and begin typing. Then click "Enter" to finish and output it.;
