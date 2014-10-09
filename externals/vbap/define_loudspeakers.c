@@ -14,14 +14,14 @@ See copyright in file with name LICENSE.txt  */
 // If we are within VBAP (which includes define_loudspeakers), then don't create a main for define_loudspeakres
 void define_loudspeakers_setup(void)
 {
-	def_ls_class = class_new(gensym("define_loudspeakers"), (t_newmethod)def_ls_new, 0, (short)sizeof(t_def_ls), 0, A_GIMME, 0); 
+	def_ls_class = class_new(gensym("define_loudspeakers"), (t_newmethod)def_ls_new, 0, (short)sizeof(t_def_ls), 0, A_GIMME, 0);
 	/* def_ls_new = creation function, A_DEFLONG = its (optional) arguement is a long (32-bit) int */
 	
 	class_addbang(def_ls_class, (t_method)def_ls_bang);			/* the procedure it uses when it gets a bang in the left inlet */
 	class_addmethod(def_ls_class, (t_method)def_ls_read_directions, gensym("ls-directions"), A_GIMME, 0);	
 	class_addmethod(def_ls_class, (t_method)def_ls_read_triplets, gensym("ls-triplets"), A_GIMME, 0);
 
-	post(DFLS_VERSION);
+	logpost(NULL,1, DFLS_VERSION);
 }
 # else /* Max */
 void main(void)
@@ -167,16 +167,21 @@ static void def_ls_read_directions(t_def_ls *x, t_symbol *s, int ac, Atom *av)
 static void ls_angles_to_cart(t_ls *ls)
 // convert angular direction to cartesian
 {
-  float azi = ls->azi;
-  float ele = ls->ele;
-  ls->x = cos((float) azi * atorad) * cos((float) ele * atorad);
-  ls->y = sin((float) azi * atorad) * cos((float) ele * atorad);
-  ls->z = sin((float) ele * atorad);
+  t_float azi = ls->azi;
+  t_float ele = ls->ele;
+  ls->x = cos((t_float) azi * atorad) * cos((t_float) ele * atorad);
+  ls->y = sin((t_float) azi * atorad) * cos((t_float) ele * atorad);
+  ls->z = sin((t_float) ele * atorad);
 }
 
 /* create new instance of object... MUST send it an int even if you do nothing with this int!! */
 static void *def_ls_new(t_symbol *s, int ac, Atom *av)	
 {
+    
+    
+    //post("def_ls_new: AC = %d", ac);
+    
+    
 	// s is object name (we ignore it)
 	t_def_ls *x = (t_def_ls *)newobject(def_ls_class);
 
@@ -195,6 +200,9 @@ static void *def_ls_new(t_symbol *s, int ac, Atom *av)
 void vbap_def_ls(t_def_ls *x, t_symbol *s, int ac, Atom *av)	
 {
 	initContent_ls_directions(x,ac,av); // Initialize object internal data from a ls-directions list
+
+    logpost(NULL,3, "vbap_def_ls:   %ld-D configuration with %ld speakers", x->x_def_ls_dimension, x->x_def_ls_amount );
+    
 	def_ls_bang(x); // calculate and send matrix to vbap
 }
 
@@ -205,7 +213,9 @@ static void initContent_ls_directions(t_def_ls *x,int ac,Atom*av)
 	
 	long d = 0;
 /*	if (av[0].a_type == A_LONG) d = av[0].a_w.w_long;
-	else */ if(av[0].a_type == A_FLOAT) d = (long)av[0].a_w.w_float;
+	else */
+    
+    if(av[0].a_type == A_FLOAT) d = (long)av[0].a_w.w_float;
 	else { error("define-loudspeakers: dimension NaN"); return; }
 
 	if (d==2 || d==3)
@@ -227,7 +237,7 @@ static void initContent_ls_directions(t_def_ls *x,int ac,Atom*av)
     int i;
 	for(i=0; i < x->x_def_ls_amount;i++)
 	{
-		float azi = 0;
+		t_float azi = 0;
 /*		if(av[pointer].a_type == A_LONG) azi = (float) av[pointer].a_w.w_long;
 		else */ if(av[pointer].a_type == A_FLOAT) azi = av[pointer].a_w.w_float;
 		else { error("define-loudspeakers: direction angle #%d NaN",i+1); x->x_ls_read = 0; return; }
@@ -236,7 +246,7 @@ static void initContent_ls_directions(t_def_ls *x,int ac,Atom*av)
 		
 		pointer++;
 
-		float ele = 0; // in 2d elevation is zero
+		t_float ele = 0; // in 2d elevation is zero
 		if(x->x_def_ls_dimension == 3)
 		{  // 3-D 
 /*			if(av[pointer].a_type == A_LONG) ele = (float) av[pointer].a_w.w_long;
@@ -279,10 +289,10 @@ static void choose_ls_triplets(t_def_ls *x)
   int connections[MAX_LS_AMOUNT][MAX_LS_AMOUNT];
   //float angles[MAX_LS_AMOUNT];
   //int sorted_angles[MAX_LS_AMOUNT];
-  float distance_table[((MAX_LS_AMOUNT * (MAX_LS_AMOUNT - 1)) / 2)];
+  t_float distance_table[((MAX_LS_AMOUNT * (MAX_LS_AMOUNT - 1)) / 2)];
   int distance_table_i[((MAX_LS_AMOUNT * (MAX_LS_AMOUNT - 1)) / 2)];
   int distance_table_j[((MAX_LS_AMOUNT * (MAX_LS_AMOUNT - 1)) / 2)];
-  float distance;
+  t_float distance;
   t_ls_set *trip_ptr, *prev, *tmp_ptr;
   int ls_amount = x->x_def_ls_amount;
   t_ls *lss = x->x_ls;
@@ -404,11 +414,11 @@ static void choose_ls_triplets(t_def_ls *x)
 int any_ls_inside_triplet(int a, int b, int c,t_ls lss[MAX_LS_AMOUNT],int ls_amount)
    /* returns 1 if there is loudspeaker(s) inside given ls triplet */
 {
-  float invdet;
+  t_float invdet;
   t_ls *lp1, *lp2, *lp3;
-  float invmx[9];
+  t_float invmx[9];
   int i,j;
-  float tmp;
+  t_float tmp;
   int any_ls_inside, this_inside;
 
   lp1 =  &(lss[a]);
@@ -463,6 +473,9 @@ static void add_ldsp_triplet(int i, int j, int k, t_def_ls *x)
     trip_ptr = trip_ptr->next;
   }
   trip_ptr = (struct t_ls_set*) getbytes (sizeof (struct t_ls_set));
+
+    //post("add_ldsp_triplet getbytes:  %ld", sizeof (struct t_ls_set));
+    
   if(prev == NULL)
     x->x_ls_set = trip_ptr;
   else 
@@ -476,10 +489,10 @@ static void add_ldsp_triplet(int i, int j, int k, t_def_ls *x)
 
 
 
-float vec_angle(t_ls v1, t_ls v2)
+t_float vec_angle(t_ls v1, t_ls v2)
 // angle between two loudspeakers
 {
-  float inner= ((v1.x*v2.x + v1.y*v2.y + v1.z*v2.z)/
+  t_float inner= ((v1.x*v2.x + v1.y*v2.y + v1.z*v2.z)/
               (vec_length(v1) * vec_length(v2)));
   if(inner > 1.0)
     inner= 1.0;
@@ -488,26 +501,26 @@ float vec_angle(t_ls v1, t_ls v2)
   return fabs( acos( inner));
 }
 
-float vec_length(t_ls v1)
+t_float vec_length(t_ls v1)
 // length of a vector
 {
   return (sqrt(v1.x*v1.x + v1.y*v1.y + v1.z*v1.z));
 }
 
-float vec_prod(t_ls v1, t_ls v2)
+t_float vec_prod(t_ls v1, t_ls v2)
 // vector dot product
 {
   return (v1.x*v2.x + v1.y*v2.y + v1.z*v2.z);
 }
 
 
-float vol_p_side_lgth(int i, int j,int k, t_ls  lss[MAX_LS_AMOUNT] )
+t_float vol_p_side_lgth(int i, int j,int k, t_ls  lss[MAX_LS_AMOUNT] )
 {
   /* calculate volume of the parallelepiped defined by the loudspeaker
      direction vectors and divide it with total length of the triangle sides. 
      This is used when removing too narrow triangles. */
 
-  float volper, lgth;
+  t_float volper, lgth;
   t_ls xprod;
   ls_cross_prod(lss[i], lss[j], &xprod);
   volper = fabsf(vec_prod(xprod, lss[k]));
@@ -524,7 +537,7 @@ static void ls_cross_prod(t_ls v1,t_ls v2,
                 t_ls *res) 
 // vector cross product
 {
-  float length;
+  t_float length;
   res->x = (v1.y * v2.z ) - (v1.z * v2.y);
   res->y = (v1.z * v2.x ) - (v1.x * v2.z);
   res->z = (v1.x * v2.y ) - (v1.y * v2.x);
@@ -543,9 +556,11 @@ static int lines_intersect(int i,int j,int k,int l,t_ls  lss[MAX_LS_AMOUNT])
  t_ls v1;
   t_ls v2;
   t_ls v3, neg_v3;
-  //float angle;
-  float dist_ij,dist_kl,dist_iv3,dist_jv3,dist_inv3,dist_jnv3;
-  float dist_kv3,dist_lv3,dist_knv3,dist_lnv3;
+  //t_float angle;
+  t_float dist_ij,dist_kl,dist_iv3,dist_jv3,dist_inv3,dist_jnv3;
+  t_float dist_kv3,dist_lv3,dist_knv3,dist_lnv3;
+  // TODO epsilon needs to be updated for 64-bit/double precision
+  t_float epsilon = 1e-9;
 
   ls_cross_prod(lss[i],lss[j],&v1);
   ls_cross_prod(lss[k],lss[l],&v2);
@@ -567,17 +582,17 @@ static int lines_intersect(int i,int j,int k,int l,t_ls  lss[MAX_LS_AMOUNT])
   dist_lnv3 = (vec_angle(neg_v3,lss[l]));
 
   /* if one of loudspeakers is close to crossing point, don't do anything*/
-  if(fabsf(dist_iv3) <= 0.01 || fabsf(dist_jv3) <= 0.01 || 
-		 fabsf(dist_kv3) <= 0.01 || fabsf(dist_lv3) <= 0.01 ||
-     fabsf(dist_inv3) <= 0.01 || fabsf(dist_jnv3) <= 0.01 || 
-     fabsf(dist_knv3) <= 0.01 || fabsf(dist_lnv3) <= 0.01 )
+  if(fabsf(dist_iv3)  <= epsilon || fabsf(dist_jv3)  <= epsilon || 
+     fabsf(dist_kv3)  <= epsilon || fabsf(dist_lv3)  <= epsilon ||
+     fabsf(dist_inv3) <= epsilon || fabsf(dist_jnv3) <= epsilon || 
+     fabsf(dist_knv3) <= epsilon || fabsf(dist_lnv3) <= epsilon )
     return(0);
 
   // if crossing point is on line between both loudspeakers return 1
-  if (((fabsf(dist_ij - (dist_iv3 + dist_jv3)) <= 0.01 ) &&
-       (fabsf(dist_kl - (dist_kv3 + dist_lv3))  <= 0.01)) ||
-      ((fabsf(dist_ij - (dist_inv3 + dist_jnv3)) <= 0.01)  &&
-       (fabsf(dist_kl - (dist_knv3 + dist_lnv3)) <= 0.01 ))) {
+  if (((fabsf(dist_ij - (dist_iv3 + dist_jv3))   <= epsilon)  &&
+       (fabsf(dist_kl - (dist_kv3 + dist_lv3))   <= epsilon)) ||
+      ((fabsf(dist_ij - (dist_inv3 + dist_jnv3)) <= epsilon)  &&
+       (fabsf(dist_kl - (dist_knv3 + dist_lnv3)) <= epsilon))) {
     return (1);
   } else {
     return (0);
@@ -587,12 +602,15 @@ static int lines_intersect(int i,int j,int k,int l,t_ls  lss[MAX_LS_AMOUNT])
 static void  calculate_3x3_matrixes(t_def_ls *x)
      /* Calculates the inverse matrices for 3D */
 {  
-  float invdet;
+  t_float invdet;
   t_ls *lp1, *lp2, *lp3;
-  float *invmx;
-  //float *ptr;
+  t_float *invmx;
+  //t_float *ptr;
   struct t_ls_set *tr_ptr = x->x_ls_set;
-  int triplet_amount = 0, /*ftable_size,*/i,pointer,list_length=0;
+  
+  unsigned long triplet_amount = 0, /*ftable_size,*/i,pointer,list_length=0; 
+   
+    
   Atom *at;
   t_ls *lss = x->x_ls;
   
@@ -611,7 +629,8 @@ static void  calculate_3x3_matrixes(t_def_ls *x)
   tr_ptr = x->x_ls_set;
   list_length= triplet_amount * 21 + 3;
   at= (Atom *) getbytes(list_length*sizeof(Atom));
-  
+
+
   SETLONG(&at[0], x->x_def_ls_dimension);
   SETLONG(&at[1], x->x_def_ls_amount);
   pointer=2;
@@ -654,11 +673,14 @@ static void  calculate_3x3_matrixes(t_def_ls *x)
     SETFLOAT(&at[pointer], lp2->z); pointer++;
     SETFLOAT(&at[pointer], lp3->z); pointer++;
  
+     
+      
     tr_ptr = tr_ptr->next;
   }
+    
 	sendLoudspeakerMatrices(x,list_length, at);
-//  outlet_anything(x->x_outlet0, gensym("loudspeaker-matrices"), list_length, at);
-  freebytes(at, list_length*sizeof(Atom));
+    
+   freebytes(at, list_length*sizeof(Atom));
 }
 
 
@@ -667,17 +689,17 @@ static void choose_ls_tuplets(t_def_ls *x)
      /* selects the loudspeaker pairs, calculates the inversion
         matrices and stores the data to a global array*/
 {
-  //float atorad = (2 * 3.1415927 / 360) ;
+  //t_float atorad = (2 * 3.1415927 / 360) ;
   int i,j;
-  //float w1,w2;
-  //float p1,p2;
+  //t_float w1,w2;
+  //t_float p1,p2;
   int sorted_lss[MAX_LS_AMOUNT];
   int exist[MAX_LS_AMOUNT];   
   int amount=0;
-  float inv_mat[MAX_LS_AMOUNT][4];  // In 2-D ls amount == max amount of LS pairs
-  float mat[MAX_LS_AMOUNT][4];
-  //float *ptr;   
-  //float *ls_table;
+  t_float inv_mat[MAX_LS_AMOUNT][4];  // In 2-D ls amount == max amount of LS pairs
+  t_float mat[MAX_LS_AMOUNT][4];
+  //t_float *ptr;   
+  //t_float *ls_table;
   t_ls *lss = x->x_ls;
   long ls_amount=x->x_def_ls_amount;
   long list_length;
@@ -718,7 +740,8 @@ static void choose_ls_tuplets(t_def_ls *x)
   // Output
   list_length= amount * 10  + 2;
   at= (Atom *) getbytes(list_length*sizeof(Atom));
-  
+    //post("choose_ls_tuplets getbytes:  %ld", list_length*sizeof(Atom));
+
   SETLONG(&at[0], x->x_def_ls_dimension);
   SETLONG(&at[1], x->x_def_ls_amount);
   pointer=2;
@@ -753,7 +776,9 @@ static void choose_ls_tuplets(t_def_ls *x)
     	pointer++;
     }
   }
-	sendLoudspeakerMatrices(x,list_length, at);
+    //post("choose_ls_tuplets:  before call to sendLoudspeakerMatrices");
+
+    sendLoudspeakerMatrices(x,list_length, at);
   //outlet_anything(x->x_outlet0, gensym("loudspeaker-matrices"), list_length, at);
   freebytes(at, list_length*sizeof(Atom));
 }
@@ -762,10 +787,10 @@ void sort_2D_lss(t_ls lss[MAX_LS_AMOUNT], int sorted_lss[MAX_LS_AMOUNT],
                  int ls_amount)
 // sort loudspeakers according to azimuth angle
 {
-  float tmp, tmp_azi;
-//  float rad2ang = 360.0f / ( 2.0f * M_PI );
+  t_float tmp, tmp_azi;
+//  t_float rad2ang = 360.0f / ( 2.0f * M_PI );
 
-  //float x,y;
+  //t_float x,y;
   /* Transforming angles between -180 and 180 */
   int i;
   for (i=0;i<ls_amount;i++) 
@@ -793,22 +818,22 @@ for (i=0;i<ls_amount;i++)
     }
     sorted_lss[i]=index;
     tmp_azi = (lss[index].azi);
-    lss[index].azi = (tmp_azi + (float) 4000.0);
+    lss[index].azi = (tmp_azi + (t_float) 4000.0);
   }
   for (i=0;i<ls_amount;i++) 
 	{
     tmp_azi = (lss[i].azi);
-    lss[i].azi = (tmp_azi - (float) 4000.0);
+    lss[i].azi = (tmp_azi - (t_float) 4000.0);
   }
 }
   
 
-static int calc_2D_inv_tmatrix(float azi1,float azi2, float inv_mat[4],float mat[4])
+static int calc_2D_inv_tmatrix(t_float azi1,t_float azi2, t_float inv_mat[4],t_float mat[4])
 // calculate inverse 2x2 matrix
 {
-  float x1,x2,x3,x4; /* x1 x3 */
-  //float y1,y2,y3,y4; /* x2 x4 */
-  float det;
+  t_float x1,x2,x3,x4; /* x1 x3 */
+  //t_float y1,y2,y3,y4; /* x2 x4 */
+  t_float det;
   
   mat[0]=x1 = cos(azi1 / rad2ang);
   mat[1]=x2 = sin(azi1 / rad2ang);

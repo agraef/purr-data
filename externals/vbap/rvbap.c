@@ -14,6 +14,7 @@ See copyright in file with name LICENSE.txt  */
 
 #ifdef MAXMSP
 #include "ext.h"                /* you must include this - it contains the external object's link to max */
+#define t_float float
 #endif
 
 #ifdef PD 
@@ -33,22 +34,22 @@ typedef struct vbap             /* This defines the object as an entity made up 
     t_object x_ob;                
     long x_azi;     // panning direction azimuth
     long x_ele;     // panning direction elevation      
-    float x_dist;   // sound source distance    (1.0-infinity)
+    t_float x_dist; // sound source distance    (1.0-infinity)
     void *x_outlet0;                /* outlet creation - inlets are automatic */
     void *x_outlet1;                
     void *x_outlet2;                
     void *x_outlet3;                
     void *x_outlet4;                
-    float x_set_inv_matx[MAX_LS_SETS][9];  // inverse matrice for each loudspeaker set
-    float x_set_matx[MAX_LS_SETS][9];      // matrice for each loudspeaker set
+    t_float x_set_inv_matx[MAX_LS_SETS][9];// inverse matrice for each loudspeaker set
+    t_float x_set_matx[MAX_LS_SETS][9];    // matrice for each loudspeaker set
     long x_lsset[MAX_LS_SETS][3];          // channel numbers of loudspeakers in each LS set 
     long x_lsset_available;                // have loudspeaker sets been defined with define_loudspeakers
     long x_lsset_amount;                   // amount of loudspeaker sets
     long x_ls_amount;                      // amount of loudspeakers
     long x_dimension;                      // 2 or 3
     long x_spread;                         // speading amount of virtual source (0-100)
-    float x_spread_base[3];                // used to create uniform spreading
-    float x_reverb_gs[MAX_LS_SETS];        // correction value for each loudspeaker set to get equal volume
+    t_float x_spread_base[3];              // used to create uniform spreading
+    t_float x_reverb_gs[MAX_LS_SETS];      // correction value for each loudspeaker set to get equal volume
 } t_rvbap;
 #endif
 
@@ -65,23 +66,23 @@ typedef struct vbap             /* This defines the object as an entity made up 
     void *x_outlet2;                
     void *x_outlet3;                
     void *x_outlet4;                
-    float x_set_inv_matx[MAX_LS_SETS][9];  // inverse matrice for each loudspeaker set
-    t_float x_set_matx[MAX_LS_SETS][9];      // matrice for each loudspeaker set
+    t_float x_set_inv_matx[MAX_LS_SETS][9];// inverse matrice for each loudspeaker set
+    t_float x_set_matx[MAX_LS_SETS][9];    // matrice for each loudspeaker set
     long x_lsset[MAX_LS_SETS][3];          // channel numbers of loudspeakers in each LS set 
     long x_lsset_available;                // have loudspeaker sets been defined with define_loudspeakers
     long x_lsset_amount;                   // amount of loudspeaker sets
     long x_ls_amount;                      // amount of loudspeakers
     long x_dimension;                      // 2 or 3
-    t_float x_spread;                         // speading amount of virtual source (0-100)
-    float x_spread_base[3];                // used to create uniform spreading
-    float x_reverb_gs[MAX_LS_SETS];        // correction value for each loudspeaker set to get equal volume
+    t_float x_spread;                      // speading amount of virtual source (0-100)
+    t_float x_spread_base[3];              // used to create uniform spreading
+    t_float x_reverb_gs[MAX_LS_SETS];      // correction value for each loudspeaker set to get equal volume
 } t_rvbap;
 #endif
 
 // Globals
 
-static void new_spread_dir(t_rvbap *x, float spreaddir[3], float vscartdir[3], float spread_base[3]);
-static void new_spread_base(t_rvbap *x, float spreaddir[3], float vscartdir[3]);
+static void new_spread_dir(t_rvbap *x, t_float spreaddir[3], t_float vscartdir[3], t_float spread_base[3]);
+static void new_spread_base(t_rvbap *x, t_float spreaddir[3], t_float vscartdir[3]);
 #ifdef MAXMSP
 static void *rvbap_class;
 static void rvbap_assist(t_rvbap *x, void *b, long m, long a, char *s);
@@ -97,17 +98,17 @@ static void rvbap_ft4(t_rvbap *x, double n);
 #ifdef PD
 static t_class *rvbap_class;
 #endif
-static void cross_prod(float v1[3], float v2[3],
-                float v3[3]);
-static void additive_vbap(float *final_gs, float cartdir[3], t_rvbap *x);
+static void cross_prod(t_float v1[3], t_float v2[3],
+                t_float v3[3]);
+static void additive_vbap(t_float *final_gs, t_float cartdir[3], t_rvbap *x);
 static void rvbap_bang(t_rvbap *x);
 static void rvbap_matrix(t_rvbap *x, t_symbol *s, int ac, t_atom *av);
-static void spread_it(t_rvbap *x, float *final_gs);
+static void spread_it(t_rvbap *x, t_float *final_gs);
 static void *rvbap_new(t_symbol *s, int ac, t_atom *av); // using A_GIMME - typed message list
-static void vbap(float g[3], long ls[3], t_rvbap *x);
-static void angle_to_cart(long azi, long ele, float res[3]);
-static void cart_to_angle(float cvec[3], float avec[3]);
-static void equal_reverb(t_rvbap *x, float *final_gs);
+static void vbap(t_float g[3], long ls[3], t_rvbap *x);
+static void angle_to_cart(long azi, long ele, t_float res[3]);
+static void cart_to_angle(t_float cvec[3], t_float avec[3]);
+static void equal_reverb(t_rvbap *x, t_float *final_gs);
 
 /* above are the prototypes for the methods/procedures/functions you will use */
 
@@ -137,7 +138,7 @@ int main(void)
     addftx((method)rvbap_ft3, 3);
     addftx((method)rvbap_ft4, 4);
     addmess((method)rvbap_matrix, "loudspeaker-matrices", A_GIMME, 0);
-    post("rvbap v1.1, © 2003-2007 by Olaf Matthes, based on vbap by Ville Pulkki");
+    post("rvbap v1.1, Â© 2003-2007 by Olaf Matthes, based on vbap by Ville Pulkki");
 	return 0;
 }
 
@@ -159,7 +160,7 @@ static void rvbap_assist(t_rvbap *x, void *b, long m, long a, char *s)
                 sprintf(s, "(int) spreading");
                 break;
                 case 4:
-                sprintf(s, "(float) distance");
+                sprintf(s, "(t_float) distance");
                 break;
             }
         break;
@@ -178,7 +179,7 @@ static void rvbap_assist(t_rvbap *x, void *b, long m, long a, char *s)
                 sprintf(s, "(int) actual spreading");
                 break;
                 case 4:
-                sprintf(s, "(float) actual distance");
+                sprintf(s, "(t_float) actual distance");
                 break;
             }
         break;
@@ -187,24 +188,24 @@ static void rvbap_assist(t_rvbap *x, void *b, long m, long a, char *s)
 #endif
 /* end MAXMSP */
 
-static void angle_to_cart(long azi, long ele, float res[3])
+static void angle_to_cart(long azi, long ele, t_float res[3])
 /* converts angular coordinates to cartesian */
 {
-  float atorad = (2.0 * 3.1415927 / 360.0) ;
-  res[0] = cos((float) azi * atorad) * cos((float) ele * atorad);
-  res[1] = sin((float) azi * atorad) * cos((float) ele * atorad);
-  res[2] = sin((float) ele * atorad);
+  t_float atorad = (2.0 * 3.141592653589793 / 360.0) ;
+  res[0] = cos((t_float) azi * atorad) * cos((t_float) ele * atorad);
+  res[1] = sin((t_float) azi * atorad) * cos((t_float) ele * atorad);
+  res[2] = sin((t_float) ele * atorad);
 }
 
-static void cart_to_angle(float cvec[3], float avec[3])
+static void cart_to_angle(t_float cvec[3], t_float avec[3])
 // converts cartesian coordinates to angular
 {
-  float tmp, tmp2, tmp3, tmp4;
-  float atorad = (float)(2.0 * 3.1415927 / 360.0) ;
-  float pi =  (float)3.1415927;
-  float power;
-  float dist, atan_y_per_x, atan_x_pl_y_per_z;
-  float azi, ele;
+  t_float tmp, tmp2, tmp3, tmp4;
+  t_float atorad = (t_float)(2.0 * 3.141592653589793 / 360.0) ;
+  t_float pi =  (t_float)3.141592653589793;
+  t_float power;
+  t_float dist, atan_y_per_x, atan_x_pl_y_per_z;
+  t_float azi, ele;
   
   if(cvec[0]==0.0)
     atan_y_per_x = pi / 2;
@@ -224,24 +225,24 @@ static void cart_to_angle(float cvec[3], float avec[3])
     else
       atan_x_pl_y_per_z = pi/2.0;
   ele = atan_x_pl_y_per_z / atorad;
-  dist = sqrtf(cvec[0] * cvec[0] +cvec[1] * cvec[1] +cvec[2]*cvec[2]);
+  dist = sqrt(cvec[0] * cvec[0] +cvec[1] * cvec[1] +cvec[2]*cvec[2]);
   avec[0]=azi;
   avec[1]=ele;
   avec[2]=dist;
 }
 
 
-static void vbap(float g[3], long ls[3], t_rvbap *x)
+static void vbap(t_float g[3], long ls[3], t_rvbap *x)
 {
   /* calculates gain factors using loudspeaker setup and given direction */
-  float power;
+  t_float power;
   int i,j,k, gains_modified;
-  float small_g;
-  float big_sm_g, gtmp[3];
+  t_float small_g;
+  t_float big_sm_g, gtmp[3];
   long winner_set=0;
-  float cartdir[3];
-  float new_cartdir[3];
-  float new_angle_dir[3];
+  t_float cartdir[3];
+  t_float new_cartdir[3];
+  t_float new_angle_dir[3];
   long dim = x->x_dimension;
   long neg_g_am, best_neg_g_am;
   
@@ -334,11 +335,11 @@ static void vbap(float g[3], long ls[3], t_rvbap *x)
 }
 
 
-static void cross_prod(float v1[3], float v2[3],
-                float v3[3]) 
+static void cross_prod(t_float v1[3], t_float v2[3],
+                t_float v3[3]) 
 // vector cross product            
 {
-  float length;
+  t_float length;
   v3[0] = (v1[1] * v2[2] ) - (v1[2] * v2[1]);
   v3[1] = (v1[2] * v2[0] ) - (v1[0] * v2[2]);
   v3[2] = (v1[0] * v2[1] ) - (v1[1] * v2[0]);
@@ -349,20 +350,20 @@ static void cross_prod(float v1[3], float v2[3],
   v3[2] /= length;
 }
 
-static void additive_vbap(float *final_gs, float cartdir[3], t_rvbap *x)
+static void additive_vbap(t_float *final_gs, t_float cartdir[3], t_rvbap *x)
 // calculates gains to be added to previous gains, used in
 // multiple direction panning (source spreading)
 {
-    float power;
+    t_float power;
     int i,j,k, gains_modified;
-    float small_g;
-    float big_sm_g, gtmp[3];
+    t_float small_g;
+    t_float big_sm_g, gtmp[3];
     long winner_set;
-    float new_cartdir[3];
-    float new_angle_dir[3];
+    t_float new_cartdir[3];
+    t_float new_angle_dir[3];
     long dim = x->x_dimension;
     long neg_g_am, best_neg_g_am;
-    float g[3];
+    t_float g[3];
     long ls[3] = { 0, 0, 0 };
     
     big_sm_g = -100000.0;
@@ -423,13 +424,13 @@ static void additive_vbap(float *final_gs, float cartdir[3], t_rvbap *x)
 }
 
 
-static void new_spread_dir(t_rvbap *x, float spreaddir[3], float vscartdir[3], float spread_base[3])
+static void new_spread_dir(t_rvbap *x, t_float spreaddir[3], t_float vscartdir[3], t_float spread_base[3])
 // subroutine for spreading
 {
-    float beta,m_gamma;
-    float a,b;
-    float pi = 3.1415927;
-    float power;
+    t_float beta,m_gamma;
+    t_float a,b;
+    t_float pi = 3.141592653589793;
+    t_float power;
     
     m_gamma = acos(vscartdir[0] * spread_base[0] +
                     vscartdir[1] * spread_base[1] +
@@ -454,12 +455,12 @@ static void new_spread_dir(t_rvbap *x, float spreaddir[3], float vscartdir[3], f
     spreaddir[2] /= power;
 }
 
-static void new_spread_base(t_rvbap *x, float spreaddir[3], float vscartdir[3])
+static void new_spread_base(t_rvbap *x, t_float spreaddir[3], t_float vscartdir[3])
 // subroutine for spreading
 {
-    float d;
-    float pi = 3.1415927;
-    float power;
+    t_float d;
+    t_float pi = 3.141592653589793;
+    t_float power;
     
     d = cos(x->x_spread/180*pi);
     x->x_spread_base[0] = spreaddir[0] - d * vscartdir[0];
@@ -472,18 +473,18 @@ static void new_spread_base(t_rvbap *x, float spreaddir[3], float vscartdir[3])
     x->x_spread_base[2] /= power;
 }
 
-static void spread_it(t_rvbap *x, float *final_gs)
+static void spread_it(t_rvbap *x, t_float *final_gs)
 // apply the sound signal to multiple panning directions
 // that causes some spreading.
 // See theory in paper V. Pulkki "Uniform spreading of amplitude panned
 // virtual sources" in WASPAA 99
 
 {
-    float vscartdir[3];
-    float spreaddir[16][3];
-    float spreadbase[16][3];
+    t_float vscartdir[3];
+    t_float spreaddir[16][3];
+    t_float spreadbase[16][3];
     long i, spreaddirnum;
-    float power;
+    t_float power;
     if(x->x_dimension == 3){
         spreaddirnum=16;
         angle_to_cart(x->x_azi,x->x_ele,vscartdir);
@@ -547,18 +548,18 @@ static void spread_it(t_rvbap *x, float *final_gs)
 }   
     
 
-static void equal_reverb(t_rvbap *x, float *final_gs)
+static void equal_reverb(t_rvbap *x, t_float *final_gs)
 // calculate constant reverb gains for equally distributed
 // reverb levels
 // this is achieved by calculating gains for a sound source 
 // that is everywhere, i.e. present in all directions
 
 {
-    float vscartdir[3];
-    float spreaddir[16][3];
-    float spreadbase[16][3];
+    t_float vscartdir[3];
+    t_float spreaddir[16][3];
+    t_float spreadbase[16][3];
     long i, spreaddirnum;
-    float power;
+    t_float power;
     if(x->x_dimension == 3){
         spreaddirnum=5;     
         
@@ -606,11 +607,11 @@ static void rvbap_bang(t_rvbap *x)
 // top level, vbap gains are calculated and outputted   
 {
     t_atom at[MAX_LS_AMOUNT]; 
-    float g[3];
+    t_float g[3];
     long ls[3];
     long i;
-    float *final_gs, overdist, oversqrtdist;
-    final_gs = (float *) getbytes(x->x_ls_amount * sizeof(float));
+    t_float *final_gs, overdist, oversqrtdist;
+    final_gs = (t_float *) getbytes(x->x_ls_amount * sizeof(t_float));
     if(x->x_lsset_available ==1){
         vbap(g, ls, x);
         for(i=0;i<x->x_ls_amount;i++)
@@ -666,7 +667,7 @@ static void rvbap_bang(t_rvbap *x)
     }
     else
         post("rvbap: Configure loudspeakers first!");
-    freebytes(final_gs, x->x_ls_amount * sizeof(float)); // bug fix added 9/00
+    freebytes(final_gs, x->x_ls_amount * sizeof(t_float)); // bug fix added 9/00
 }
 
 /*--------------------------------------------------------------------------*/
@@ -682,7 +683,7 @@ static void rvbap_matrix(t_rvbap *x, t_symbol *s, int ac, t_atom *av)
     long i;
     long deb=0;
     long azi = x->x_azi, ele = x->x_ele;    // store original values
-    float g[3];
+    t_float g[3];
     long ls[3];
  
     if(ac>0)
@@ -824,7 +825,7 @@ static void rvbap_in4(t_rvbap *x, long n)                /* x = the instance of 
 // distance
 {
     if (n<1) n = 1;
-    x->x_dist = (float)n;                           /* store n in a global variable */
+    x->x_dist = (t_float)n;                           /* store n in a global variable */
     
 }
 
@@ -858,7 +859,7 @@ static void rvbap_ft4(t_rvbap *x, double n)              /* x = the instance of 
 // distance
 {
     if (n<1.0) n = 1.0;
-    x->x_dist = (float)n;                           /* store n in a global variable */
+    x->x_dist = (t_float)n;                           /* store n in a global variable */
 }
 
 
@@ -871,7 +872,7 @@ static void *rvbap_new(t_symbol *s, int ac, t_atom *av)
 #ifdef MAXMSP
     x = (t_rvbap *)newobject(rvbap_class);
     
-    floatin(x,4);       /* takes the distance */
+    t_floatin(x,4);       /* takes the distance */
     intin(x,3); 
     intin(x,2);                 /* create a second (int) inlet... remember right-to-left ordering in Max */
     intin(x,1);                 /* create a second (int) inlet... remember right-to-left ordering in Max */

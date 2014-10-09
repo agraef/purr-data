@@ -14,25 +14,27 @@ See copyright in file with name LICENSE.txt  */
 #include "s_stuff.h"
 
 // Function prototypes
-static void new_spread_dir(t_vbap *x, float spreaddir[3], float vscartdir[3], float spread_base[3]);
-static void new_spread_base(t_vbap *x, float spreaddir[3], float vscartdir[3]);
+static void new_spread_dir(t_vbap *x, t_float spreaddir[3], t_float vscartdir[3], t_float spread_base[3]);
+static void new_spread_base(t_vbap *x, t_float spreaddir[3], t_float vscartdir[3]);
 static void *vbap_class;				
-static void vect_cross_prod(float v1[3], float v2[3],float v3[3]);
-static void additive_vbap(float *final_gs, float cartdir[3], t_vbap *x);
+static void vect_cross_prod(t_float v1[3], t_float v2[3],t_float v3[3]);
+static void additive_vbap(t_float *final_gs, t_float cartdir[3], t_vbap *x);
 static void vbap_bang(t_vbap *x);
+static int vbap_getmem(t_vbap *x, int lsSetCount );
+static void vbap_free(t_vbap *x);
 static void vbap_matrix(t_vbap *x, Symbol *s, int ac, Atom *av);
 #ifndef PD /* Max */
-/* these are for getting data from a cold inlet on Max/MSP, in Pd you use floatinlet_new() in new() */
+/* these are for getting data from a cold inlet on Max/MSP, in Pd you use t_floatinlet_new() in new() */
 void vbap_ft1(t_vbap *x, double n);
 void vbap_ft2(t_vbap *x, double n);
 void vbap_in3(t_vbap *x, long n);
 void vbap_ft4(t_vbap *x, double g);
 #endif
-static void spread_it(t_vbap *x, float *final_gs);
-static void *vbap_new(float azi, float ele, float spread);
-static void vbap(float g[3], long ls[3], t_vbap *x);
-static void angle_to_cart(float azi, float ele, float res[3]);
-static void cart_to_angle(float cvec[3], float avec[3]);
+static void spread_it(t_vbap *x, t_float *final_gs);
+static void *vbap_new(t_float azi, t_float ele, t_float spread);
+static void vbap(t_float g[3], long ls[3], t_vbap *x);
+static void angle_to_cart(t_float azi, t_float ele, t_float res[3]);
+static void cart_to_angle(t_float cvec[3], t_float avec[3]);
 
 /*****************************************************
 	 INCLUDE ALL define_loudspeakers functions directly into VBAP
@@ -77,7 +79,7 @@ void vbap_assist(t_vbap *x, void *b, long m, long a, char *s)
 #ifdef PD
 void vbap_setup(void)
 {
-	vbap_class = class_new(gensym("vbap"), (t_newmethod)vbap_new, 0, (short)sizeof(t_vbap), 0, 
+	vbap_class = class_new(gensym("vbap"), (t_newmethod)vbap_new, (t_method) vbap_free, (short)sizeof(t_vbap), 0,
                            A_DEFFLOAT, A_DEFFLOAT, A_DEFFLOAT, 0); 
 
 	class_addbang(vbap_class, (t_method)vbap_bang);	
@@ -95,7 +97,9 @@ void vbap_setup(void)
     class_addmethod(vbap_class, (t_method)def_ls_read_directions, gensym("ls-directions"), A_GIMME, 0);	
     class_addmethod(vbap_class, (t_method)def_ls_read_triplets, gensym("ls-triplets"), A_GIMME, 0);
 
-	post(VBAP_VERSION);
+	logpost(NULL, 1, VBAP_VERSION);
+    //post(VBAP_VERSION);
+
 }
 #else /* MAX */
 void main(void)
@@ -152,6 +156,14 @@ static void *vbap_new(t_float azi, t_float ele, t_float spread)
 	x->x_outlet1 = outlet_new(&x->x_obj, &s_float);
 	x->x_outlet2 = outlet_new(&x->x_obj, &s_float);
 	x->x_outlet3 = outlet_new(&x->x_obj, &s_float);
+    
+    
+    
+    // allocate space for the runtime matricies
+//    if (!vbap_getmem(x, MAX_LS_SETS))
+//        return( NULL );
+//    
+    
 #else /* Max */
 	t_vbap *x = (t_vbap *)newobject(vbap_class);
 
@@ -167,7 +179,9 @@ static void *vbap_new(t_float azi, t_float ele, t_float spread)
 	x->x_outlet0 = listout(x);
 #endif /* PD */
 	
-	x->x_spread_base[0] = 0.0;
+    x->x_ls_setCount = 0;       // refers to memory dynamically allocated when a define_loudspeakers config is received
+
+    x->x_spread_base[0] = 0.0;
 	x->x_spread_base[1] = 1.0;
 	x->x_spread_base[2] = 0.0;
 	x->x_lsset_available =0;
@@ -180,7 +194,90 @@ static void *vbap_new(t_float azi, t_float ele, t_float spread)
 }
 
 
-static void angle_to_cart(float azi, float ele, float res[3])
+// currently can allocate upto 256K to support up to 44 channels in 3D
+// note:  to save memory, the required memory for a given configuration could instead,  be dynamically allocated by calling this method from the vbap_matrix() method
+static int vbap_getmem(t_vbap *x, int lsSetCount )
+{
+
+#ifdef PD
+
+    int i;
+    
+    if ( x->x_ls_setCount ) vbap_free(x);
+    
+    //was t_float x_set_inv_matx[MAX_LS_SETS][9];
+    x->x_set_inv_matx = getbytes( sizeof( t_float* ) * lsSetCount);
+    
+    if(!x->x_set_inv_matx) {error("vbap_getmem: can't allocate additional %ld bytes", sizeof( t_float* ) * lsSetCount); return(0);}
+    
+    for (i = 0; i < lsSetCount; i++)
+    {
+        x->x_set_inv_matx[i] = getbytes( sizeof(t_float) * MATRIX_DIM );
+        if(!x->x_set_inv_matx[i]) {error("vbap_getmem: can't allocate additional %ld bytes", sizeof(t_float) * MATRIX_DIM ); return(0);}
+    }
+    
+    
+    //was t_float x_set_matx[MAX_LS_SETS][9];
+    x->x_set_matx = getbytes( sizeof( t_float* ) * lsSetCount);
+
+    if(!x->x_set_matx) {error("vbap_getmem: can't allocate additional %ld bytes", sizeof( t_float* ) * lsSetCount); return(0);}
+
+    for (i = 0; i < lsSetCount; i++)
+    {
+        x->x_set_matx[i] = getbytes( sizeof(t_float) * MATRIX_DIM );
+        if(!x->x_set_matx[i]) {error("vbap_getmem: can't allocate additional %ld bytes", sizeof(t_float) * MATRIX_DIM ); return(0);}
+  }
+    
+    
+    //was long x_lsset[MAX_LS_SETS][3];
+    x->x_lsset = getbytes( sizeof( long * ) * lsSetCount);
+    
+    if(!x->x_lsset) {error("vbap_getmem: can't allocate additional %ld bytes", sizeof( long * ) * lsSetCount); return(0);}
+    
+    for (i = 0; i < lsSetCount; i++)
+    {
+        x->x_lsset[i] = getbytes( sizeof( long ) * SPEAKER_SET_DIM );
+        if(!x->x_lsset[i]) {error("vbap_getmem: can't allocate additional %ld bytes", sizeof(long) * SPEAKER_SET_DIM ); return(0);}
+   }
+    
+    unsigned long memallocd = 2 * ( sizeof(t_float *) * lsSetCount  *  sizeof(t_float) * MATRIX_DIM) + ( sizeof(long *) * lsSetCount *  sizeof(long) * SPEAKER_SET_DIM);
+    
+    logpost(NULL, 3, "vbap_new:  %ldK bytes allocated for instance", memallocd /1000);
+    
+    x->x_ls_setCount = lsSetCount;
+
+#endif
+    return(1);
+    
+}
+
+
+// free any allocated memory for instance
+static void vbap_free(t_vbap *x)
+{
+    int i;
+
+    if (! x->x_ls_setCount) return;
+    
+    for (i = 0; i <  x->x_ls_setCount; i++)
+    {
+        freebytes( x->x_set_inv_matx[i], (sizeof(t_float) * MATRIX_DIM ));    // = getbytes( sizeof(t_float) * MATRIX_DIM );
+        freebytes( x->x_set_matx[i],  sizeof(t_float) * MATRIX_DIM);
+   }
+  
+    freebytes(x->x_set_inv_matx, (sizeof( t_float* ) *  x->x_ls_setCount));
+    freebytes(x->x_set_matx, sizeof( t_float* ) *  x->x_ls_setCount);
+
+
+    for (i = 0; i <   x->x_ls_setCount; i++)
+    {
+        freebytes(x->x_lsset[i], sizeof( long ) * SPEAKER_SET_DIM );
+    }
+ 
+    freebytes( x->x_lsset, sizeof( long * ) *  x->x_ls_setCount);
+}
+
+static void angle_to_cart(t_float azi, t_float ele, t_float res[3])
 // converts angular coordinates to cartesian
 { 
   res[0] = cos(azi * atorad) * cos( ele * atorad);
@@ -188,13 +285,13 @@ static void angle_to_cart(float azi, float ele, float res[3])
   res[2] = sin( ele * atorad);
 }
 
-static void cart_to_angle(float cvec[3], float avec[3])
+static void cart_to_angle(t_float cvec[3], t_float avec[3])
 // converts cartesian coordinates to angular
 {
   //float tmp, tmp2, tmp3, tmp4;
   //float power;
-  float dist, atan_y_per_x, atan_x_pl_y_per_z;
-  float azi, ele;
+  t_float dist, atan_y_per_x, atan_x_pl_y_per_z;
+  t_float azi, ele;
   
   if(cvec[0]==0.0)
   	atan_y_per_x = M_PI / 2;
@@ -223,17 +320,17 @@ static void cart_to_angle(float cvec[3], float avec[3])
 }
 
 
-static void vbap(float g[3], long ls[3], t_vbap *x)
+static void vbap(t_float g[3], long ls[3], t_vbap *x)
 {
   /* calculates gain factors using loudspeaker setup and given direction */
-  float power;
+  t_float power;
   int i,j,k, gains_modified;
-  float small_g;
-  float big_sm_g, gtmp[3];
+  t_float small_g;
+  t_float big_sm_g, gtmp[3];
   long winner_set = 0;
-  float cartdir[3];
-  float new_cartdir[3];
-  float new_angle_dir[3];
+  t_float cartdir[3];
+  t_float new_cartdir[3];
+  t_float new_angle_dir[3];
   long dim = x->x_dimension;
   long neg_g_am, best_neg_g_am;
   
@@ -327,7 +424,7 @@ static void vbap(float g[3], long ls[3], t_vbap *x)
  	 	} else new_cartdir[2] = 0;
  	 	cart_to_angle(new_cartdir,new_angle_dir);
  	 	x->x_azi = (new_angle_dir[0] );
-		post("[vbap] use azimuth %g",x->x_azi );
+		//post("[vbap] use azimuth %g",x->x_azi );
  	 	x->x_ele = (new_angle_dir[1]);
  	 }
   //}
@@ -339,11 +436,11 @@ static void vbap(float g[3], long ls[3], t_vbap *x)
 }
 
 
-static void vect_cross_prod(float v1[3], float v2[3],
-                float v3[3]) 
+static void vect_cross_prod(t_float v1[3], t_float v2[3],
+                t_float v3[3]) 
 // vector cross product            
 {
-  float length;
+  t_float length;
   v3[0] = (v1[1] * v2[2] ) - (v1[2] * v2[1]);
   v3[1] = (v1[2] * v2[0] ) - (v1[0] * v2[2]);
   v3[2] = (v1[0] * v2[1] ) - (v1[1] * v2[0]);
@@ -354,20 +451,20 @@ static void vect_cross_prod(float v1[3], float v2[3],
   v3[2] /= length;
 }
 
-static void additive_vbap(float *final_gs, float cartdir[3], t_vbap *x)
+static void additive_vbap(t_float *final_gs, t_float cartdir[3], t_vbap *x)
 // calculates gains to be added to previous gains, used in
 // multiple direction panning (source spreading)
 {
-	float power;
+	t_float power;
     int i,j,k, gains_modified;
-  	float small_g;
-  	float big_sm_g, gtmp[3];
+  	t_float small_g;
+  	t_float big_sm_g, gtmp[3];
   	long winner_set;
   	//float new_cartdir[3];
   	//float new_angle_dir[3];
   	long dim = x->x_dimension;
   	long neg_g_am, best_neg_g_am;
-	float g[3] = {0,0,0};
+	t_float g[3] = {0,0,0};
 	long ls[3] = {0,0,0};
 	
   	big_sm_g = -100000.0;
@@ -415,17 +512,18 @@ static void additive_vbap(float *final_gs, float cartdir[3], t_vbap *x)
   		
   		final_gs[ls[0]-1] += g[0];
   		final_gs[ls[1]-1] += g[1];
-  		final_gs[ls[2]-1] += g[2];
+  		if (dim==3)
+  			final_gs[ls[2]-1] += g[2];
   	}
 }
 
 
-static void new_spread_dir(t_vbap *x, float spreaddir[3], float vscartdir[3], float spread_base[3])
+static void new_spread_dir(t_vbap *x, t_float spreaddir[3], t_float vscartdir[3], t_float spread_base[3])
 // subroutine for spreading
 {
-	float beta,gamma;
-	float a,b;
-	float power;
+	t_float beta,gamma;
+	t_float a,b;
+	t_float power;
 	
 	gamma = acos(vscartdir[0] * spread_base[0] +
 					vscartdir[1] * spread_base[1] +
@@ -450,11 +548,11 @@ static void new_spread_dir(t_vbap *x, float spreaddir[3], float vscartdir[3], fl
   	spreaddir[2] /= power;
 }
 
-static void new_spread_base(t_vbap *x, float spreaddir[3], float vscartdir[3])
+static void new_spread_base(t_vbap *x, t_float spreaddir[3], t_float vscartdir[3])
 // subroutine for spreading
 {
-	float d;
-	float power;
+	t_float d;
+	t_float power;
 	
 	d = cos(x->x_spread/180*M_PI);
 	x->x_spread_base[0] = spreaddir[0] - d * vscartdir[0];
@@ -467,18 +565,18 @@ static void new_spread_base(t_vbap *x, float spreaddir[3], float vscartdir[3])
   	x->x_spread_base[2] /= power;
 }
 
-static void spread_it(t_vbap *x, float *final_gs)
+static void spread_it(t_vbap *x, t_float *final_gs)
 // apply the sound signal to multiple panning directions
 // that causes some spreading.
 // See theory in paper V. Pulkki "Uniform spreading of amplitude panned
 // virtual sources" in WASPAA 99
 
 {
-	float vscartdir[3];
-	float spreaddir[16][3];
-	float spreadbase[16][3];
+	t_float vscartdir[3];
+	t_float spreaddir[16][3];
+	t_float spreadbase[16][3];
 	long i, spreaddirnum;
-	float power;
+	t_float power;
 	if(x->x_dimension == 3){
 		spreaddirnum=16;
 		angle_to_cart(x->x_azi,x->x_ele,vscartdir);
@@ -546,10 +644,11 @@ static void vbap_bang(t_vbap *x)
 // top level, vbap gains are calculated and outputted	
 {
 	Atom at[MAX_LS_AMOUNT]; 
-	float g[3];
+	t_float g[3];
 	long ls[3];
 	long i;
-	float *final_gs = (float *) getbytes(x->x_ls_amount * sizeof(float));
+ 
+	t_float *final_gs = (t_float *) getbytes(x->x_ls_amount * sizeof(t_float));
 
 	if(x->x_lsset_available ==1)
 	{
@@ -558,7 +657,8 @@ static void vbap_bang(t_vbap *x)
 			final_gs[i]=0.0; 			
 		for(i=0;i<x->x_dimension;i++)
 		{
-			final_gs[ls[i]-1]=g[i];  
+			final_gs[ls[i]-1]=g[i];
+            //post("VBAP: PRE_SPREAD: %f", (t_float)final_gs[i]);
 		}
 		if(x->x_spread != 0)
 		{
@@ -567,7 +667,9 @@ static void vbap_bang(t_vbap *x)
 		for(i=0;i<x->x_ls_amount;i++) 
 		{
 #ifdef PD
-			SETFLOAT(&at[0], (t_float)i);	
+            
+
+            SETFLOAT(&at[0], (t_float)i);
 			SETFLOAT(&at[1], (t_float)final_gs[i]);
 			outlet_list(x->x_obj.ob_outlet, &s_list, 2, at);
 #else /* Max */
@@ -584,7 +686,7 @@ static void vbap_bang(t_vbap *x)
 	else
 		error("vbap: Configure loudspeakers first!");
 
-	freebytes(final_gs, x->x_ls_amount * sizeof(float)); // bug fix added 9/00
+	freebytes(final_gs, x->x_ls_amount * sizeof(t_float)); // bug fix added 9/00
 }
 
 /*--------------------------------------------------------------------------*/
@@ -597,8 +699,14 @@ static void vbap_matrix(t_vbap *x, Symbol *s, int ac, Atom *av)
 	{
 		int d = 0;
  		/*if(av[datapointer].a_type == A_LONG) d = av[datapointer++].a_w.w_long;
-		else*/ if(av[datapointer].a_type == A_FLOAT) d = (long)av[datapointer++].a_w.w_float;
-		else { error("vbap: Dimension NaN"); x->x_lsset_available=0; return; }
+		else*/
+        if (av[datapointer].a_type == A_FLOAT)
+            d = (long)av[datapointer++].a_w.w_float;
+		else
+        {
+            error("vbap: Dimension NaN"); x->x_lsset_available=0;
+            return;
+        }
 
 		if (d!=2 && d!=3) { error("vbap %s: Dimension can be only 2 or 3",s->s_name); x->x_lsset_available=0; return; }
 
@@ -616,25 +724,40 @@ static void vbap_matrix(t_vbap *x, Symbol *s, int ac, Atom *av)
 
 		x->x_ls_amount = a;
 	}
- 	
+
 	long counter = (ac - 2) / ((x->x_dimension * x->x_dimension*2) + x->x_dimension);
- 	x->x_lsset_amount=counter;
+    
+    
+ 
+    if (counter-1 > MAX_LS_SETS) { error("vbap %s: loudspeaker definitions exceed maximum number of speakers",s->s_name); x->x_lsset_available=0; return; }
+
+    vbap_getmem(x, counter);        // PD only:  allocate memory (frees any previously allocated memory automatically)
+    
+    x->x_lsset_amount=counter;
+    
 
  	if(counter==0) { error("vbap %s: not enough parameters",s->s_name); x->x_lsset_available=0; return; }
  	
 	long setpointer=0;
 	long i;
- 
- 	while(counter-- > 0)
+    
+    long db_dim = x->x_dimension;
+    
+    while(counter-- > 0)
 	{
- 		for(i=0; i < x->x_dimension; i++)
+ 
+        for(i=0; i < x->x_dimension; i++)
 		{
 # ifdef PD
- 			if(av[datapointer].a_type == A_FLOAT)
+            
+            if(av[datapointer].a_type == A_FLOAT)
 			{
                 x->x_lsset[setpointer][i]=(long)av[datapointer++].a_w.w_float;
- 			}
- 			else { error("vbap %s: param %d is not a float",s->s_name,datapointer); x->x_lsset_available=0; return; }
+  			}
+ 			else { error("vbap AA %s: param %d is not a float",s->s_name,datapointer); x->x_lsset_available=0; return; }
+
+            
+            
 # else /* Max */
  			if(av[datapointer].a_type == A_LONG)
 			{
@@ -643,26 +766,35 @@ static void vbap_matrix(t_vbap *x, Symbol *s, int ac, Atom *av)
  			else { error("vbap %s: param %d is not an in",s->s_name,datapointer); x->x_lsset_available=0; return; }
 # endif /* PD */
  		}	
- 		for(i=0; i < x->x_dimension*x->x_dimension; i++)
+
+ 		
+        for(i=0; i < x->x_dimension*x->x_dimension; i++)
 		{
- 			if(av[datapointer].a_type == A_FLOAT)
+
+            if(av[datapointer].a_type == A_FLOAT)
 			{
  				x->x_set_inv_matx[setpointer][i]=av[datapointer++].a_w.w_float;
  			}
- 			else { error("vbap %s: param %d is not a float",s->s_name,datapointer); x->x_lsset_available=0; return; }
+ 			else { error("vbap BB %s: param %d is not a float",s->s_name,datapointer); x->x_lsset_available=0; return; }
  		}
  		
+
  		for(i=0; i < x->x_dimension*x->x_dimension; i++)
 		{
+            
+            
  			if(av[datapointer].a_type == A_FLOAT)
 			{
  				x->x_set_matx[setpointer][i]=av[datapointer++].a_w.w_float;
  			}
- 			else { error("vbap %s: param %d is not a float",s->s_name,datapointer); x->x_lsset_available=0; return; }
+ 			else {
+                error("vbap %s: param %d is not a float",s->s_name,datapointer); x->x_lsset_available=0;
+                 return;
+            }
  			
  		}
- 	
+	
  		setpointer++;
 	}
 	if (_enable_trace) post("vbap: Loudspeaker setup configured!");
-}
+ }

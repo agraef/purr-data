@@ -1,5 +1,5 @@
 Diff status between pd-l2ork externals source tree and main community pd svn
-AS OF October 7, 2014
+AS OF October 8, 2014
 
 DONE: (*denotes unique changes)
 creb
@@ -16,6 +16,7 @@ pdp_opencv
 pidip
 postlude
 sigpack
+vbap
 zexy
 
 MERGE:
