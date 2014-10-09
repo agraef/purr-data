@@ -75,6 +75,8 @@ do case $Option in
 	esac
 done
 
+export TAR_EM_UP_PREFIX=$inst_dir
+
 cd ../
 
 if [ $core -eq 1 ]
