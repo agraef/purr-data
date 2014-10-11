@@ -112,7 +112,7 @@ ifeq ($(OS_NAME),darwin)
   PD_CONFIGURE_FLAGS = --enable-jack
 else
   ifeq ($(OS_NAME),linux)
-    PD_CONFIGURE_FLAGS = --enable-jack --enable-alsa --enable-fftw --enable-qt
+    PD_CONFIGURE_FLAGS = --enable-jack --enable-alsa --enable-fftw
     ifneq ($(TAR_EM_UP_PREFIX), )
       PD_CONFIGURE_FLAGS +=  --prefix=$(TAR_EM_UP_PREFIX)
     endif
