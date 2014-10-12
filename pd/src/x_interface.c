@@ -821,6 +821,13 @@ void pdinfo_audio_blocksize(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
     info_out((t_text *)x, s, 1, at);
 }
 
+void pdinfo_gui(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_atom at[1];
+    SETFLOAT(at, (t_float)(!sys_nogui));
+    info_out((t_text *)x, s, 1, at);
+}
+
 void pdinfo_version(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     int major=0, minor=0, bugfix=0;
@@ -883,6 +890,8 @@ void pdinfo_setup(void)
         gensym("dir"), A_GIMME, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_dsp,
         gensym("dsp-status"), A_GIMME, 0);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_gui,
+        gensym("gui"), A_GIMME, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_midi_api,
         gensym("midi-api"), A_GIMME, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_midi_apilist,
