@@ -109,7 +109,6 @@
 #X msg 137 245 x;
 #X msg 195 245 y;
 #X msg 166 245 r;
-#X obj 72 144 r blah;
 #X obj 3 366 / 8000;
 #X obj 137 177 hradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144
 -1 -1 0;
@@ -121,9 +120,9 @@
 #X connect 2 3 3 4;
 #X connect 2 4 3 2;
 #X connect 2 5 3 0;
-#X connect 3 0 18 0;
+#X connect 3 0 17 0;
 #X connect 5 0 7 0;
-#X connect 8 0 19 0;
+#X connect 8 0 18 0;
 #X connect 10 0 14 0;
 #X connect 10 1 16 0;
 #X connect 10 2 15 0;
@@ -132,8 +131,7 @@
 #X connect 14 0 11 0;
 #X connect 15 0 11 0;
 #X connect 16 0 11 0;
-#X connect 17 0 2 0;
-#X connect 18 0 4 0;
-#X connect 19 0 10 0;
-#X connect 19 0 3 6;
+#X connect 17 0 4 0;
+#X connect 18 0 10 0;
+#X connect 18 0 3 6;
 #X coords 0 -1 1 1 89 89 2 117 127;
