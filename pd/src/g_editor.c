@@ -1233,7 +1233,7 @@ void canvas_undo_move(t_canvas *x, void *z, int action)
         for (i = 0; i < buf->u_n; i++)
         {
             y = glist_nth(x, buf->u_vec[i].e_index);
-            glist_select(x, y);
+            if (y) glist_select(x, y);
         }
         //do_not_redraw = 0;
         //canvas_redraw(x);
