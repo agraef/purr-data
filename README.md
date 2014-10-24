@@ -43,6 +43,7 @@ methods, as well as for realizing complex systems for large-scale projects.
 ### Pd-l2ork Goals
 
 Pd-l2ork has the following goals:
+
 1. Documentation.  We like documentation.  It's like code, except friendly.
 2. Be reliable.  Binary releases must be usable for performances and
    installations.  The git repo must always be in a workable state that can be
