@@ -81,34 +81,33 @@ Contributing is easy:
 
 Here are some pressing tasks:
 * porting Pd-l2ork's graphical user interface from Tcl/Tk to Qt.
-  * skill requirements: knowledge about Qt5/QML, threading, and Pd's core design
+  * skill level: knowledge about Qt5/QML, threading, and Pd's core design
     and deterministic message-dispatching and scheduling
   * status: under active development
 * designing/implementing regression test template
-  skill requirements: knowledge about... regression tests. :)  But also some
-                      expertise in using Pd so that the tests themselves can
-                      be written in Pure Data.  At the same time, they should
-                      be able to be run as part of the automated packaging
-                      process (i.e., in -nogui mode).
-  status: some externals have their own testing environments, but they are
-          limited as they require manual intervention to run and read the
-          results inside a graphical window.
-          Here's an email thread with Katja Vetter's design, which looks to
-          be automatable:
-          http://markmail.org/message/t7yitfc55anus76i#query:+page:1+mid:chb56ve7kea2qumn+state:results
-          And Mathieu Bouchard's "pure unity" (not sure if this is the most
-          recent link...):
-          http://sourceforge.net/p/pure-data/svn/HEAD/tree/tags/externals/pureunity/pureunity-0.0/
+  * skill level: knowledge about... regression tests. :)  But also some
+    expertise in using Pd so that the tests themselves can
+    be written in Pure Data.  At the same time, they should
+    be able to be run as part of the automated packaging
+    process (i.e., in -nogui mode).
+  * status: some externals have their own testing environments, but they are
+    limited as they require manual intervention to run and read the
+    results inside a graphical window.
+    Here's an email thread with Katja Vetter's design, which looks to
+    be automatable:
+    http://markmail.org/message/t7yitfc55anus76i#query:+page:1+mid:chb56ve7kea2qumn+state:results
+    And Mathieu Bouchard's "pure unity" (not sure if this is the most
+    recent link...):
+    http://sourceforge.net/p/pure-data/svn/HEAD/tree/tags/externals/pureunity/pureunity-0.0/
 * writing small audio/visual Pd games or demos to include in the next release
-  skill requirements: ability to write Pd programs
-  status: I wrote a little sprite-based game that will ship with the next
-          version of Pd-l2ork.  In it, the character walks around in an actual
-          Pd diagram shoots at the objects to progress, and to make realtime
-          changes to the music.
-          
-          What I'd like is to include a new, smallish game with each release
-          that has a link in the Pd console.  It can be a little demo or game,
-          just something fun that shows off what can be done using Pure Data.
+  * skill level: ability to write Pd programs
+  * status: I wrote a little sprite-based game that will ship with the next
+    version of Pd-l2ork.  In it, the character walks around in an actual
+    Pd diagram shoots at the objects to progress, and to make realtime
+    changes to the music.
+    What I'd like is to include a new, smallish game with each release
+    that has a link in the Pd console.  It can be a little demo or game,
+    just something fun that shows off what can be done using Pure Data.
 
 ### Project "Underview" (Implementation and Code Style)
 
