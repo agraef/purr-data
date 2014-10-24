@@ -1,4 +1,4 @@
-## Pure Data L2ork Contributor's Guide
+## Pure Data L2ork
 
 maintainer: Ivica Bukvic <ico@vt.edu>
 
@@ -43,13 +43,13 @@ methods, as well as for realizing complex systems for large-scale projects.
 ### Pd-l2ork Goals
 
 Pd-l2ork has the following goals:
-0. Documentation.  We like documentation.  It's like code, except friendly.
-1. Be reliable.  Binary releases must be usable for performances and
+1. Documentation.  We like documentation.  It's like code, except friendly.
+2. Be reliable.  Binary releases must be usable for performances and
    installations.  The git repo must always be in a workable state that can be
    compiled.  Regressions must be fixed quickly.
-2. Be discoverable.  Undocumented features are buggy.  Missing help files are
+3. Be discoverable.  Undocumented features are buggy.  Missing help files are
    bugs.  Patches for new functionality that lack documentation are spam.
-3. Be consistent.  Consistent interfaces are themselves a kind of
+4. Be consistent.  Consistent interfaces are themselves a kind of
    documentation.  We like documentation, so it follows that we like consistent
    interviews.
 
@@ -81,9 +81,9 @@ Contributing is easy:
 
 Here are some pressing tasks:
 * porting Pd-l2ork's graphical user interface from Tcl/Tk to Qt.
-  skill requirements: knowledge about Qt5/QML, threading, and Pd's core design
-                      and deterministic message-dispatching and scheduling
-  status: under active development
+  * skill requirements: knowledge about Qt5/QML, threading, and Pd's core design
+    and deterministic message-dispatching and scheduling
+  * status: under active development
 * designing/implementing regression test template
   skill requirements: knowledge about... regression tests. :)  But also some
                       expertise in using Pd so that the tests themselves can
