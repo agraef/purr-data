@@ -1,16 +1,16 @@
-# Pure Data L2ork Contributor's Guide
+## Pure Data L2ork Contributor's Guide
 
 maintainer: Ivica Bukvic <ico@vt.edu>
 maintainer: Jonathan Wilkes <jancsika@yahoo.com>
 
-## One Paragraph Project Overview
+### One Paragraph Project Overview
 
 Pure Data (aka Pd) is a visual programming.  That means you can use it to
 create software graphically by drawing diagrams instead of writing lines of
 code.  These diagram shows how data flows through the software, displaying on
 the screen what text-based languages require you to piece together in your mind.
 
-## Three Paragraph Project Overview
+### Three Paragraph Project Overview
 
 Pd has been designed with an emphasis on generating sound, video,
 2D/3D graphics, and connecting through sensors, input devices, and MIDI as well
@@ -28,7 +28,7 @@ wearable technology, motor systems, lighting rigs, and other equipment. Pd is
 also suitable for learning basic multimedia processing and visual programming
 methods, as well as for realizing complex systems for large-scale projects.
 
-## Distributions of Pure Data
+### Distributions of Pure Data
 
 There are currently three main distributions of Pure Data:
 1. Pd-l2ork.  Version used by Ivica Bukvic for his laptop orchestra.  This
@@ -39,7 +39,7 @@ There are currently three main distributions of Pure Data:
 2. Pure Data Extended.  A monolithic distribution which ships with lots of
    external libraries.  At the moment it doesn't look to be maintained.
 
-## Pd-l2ork Goals
+### Pd-l2ork Goals
 
 Pd-l2ork has the following goals:
 0. Documentation.  We like documentation.  It's like code, except friendly.
@@ -52,7 +52,7 @@ Pd-l2ork has the following goals:
    documentation.  We like documentation, so it follows that we like consistent
    interviews.
 
-## Installation Guide
+### Installation Guide
 To install using a pre-compiled binary, follow these instructions:
 http://l2ork.music.vt.edu/main/?page_id=56
 
@@ -63,7 +63,7 @@ http://l2ork.music.vt.edu/main/?page_id=56
 Then follow the steps outlined here:
 http://l2ork.music.vt.edu/main/?page_id=56#install-dev
 
-## Contributor's Guide
+### Contributor's Guide
 Contributing is easy:
 1. Join the development list:
    http://disis.music.vt.edu/cgi-bin/mailman/listinfo/l2ork-dev
@@ -107,7 +107,7 @@ Here are some pressing tasks:
           that has a link in the Pd console.  It can be a little demo or game,
           just something fun that shows off what can be done using Pure Data.
 
-## Project "Underview" (Implementation and Code Style)
+### Project "Underview" (Implementation and Code Style)
 
 The following is adapted from Pd Vanilla's original source notes.  (There,
 they are found in CHANGELOG.txt for some reason...)
