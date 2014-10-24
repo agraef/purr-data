@@ -1,16 +1,28 @@
 ## Pure Data L2ork Contributor's Guide
 
 maintainer: Ivica Bukvic <ico@vt.edu>
+
 maintainer: Jonathan Wilkes <jancsika@yahoo.com>
 
-### One Paragraph Project Overview
+### One Paragraph Overview
 
 Pure Data (aka Pd) is a visual programming.  That means you can use it to
 create software graphically by drawing diagrams instead of writing lines of
 code.  These diagram shows how data flows through the software, displaying on
 the screen what text-based languages require you to piece together in your mind.
 
-### Three Paragraph Project Overview
+### Distributions of Pure Data
+
+There are currently three main distributions of Pure Data:
+1. Pd-l2ork.  Version used by Ivica Bukvic for his laptop orchestra.  This
+   guide is for Pd-l2ork.
+2. Pure Data "Vanilla".  Miller Puckette's personal version which he hosts on
+   his website and maintains.  It doesn't include external libraries like
+   objects for doing graphics, video, etc.
+2. Pure Data Extended.  A monolithic distribution which ships with lots of
+   external libraries.  At the moment it doesn't look to be maintained.
+
+### Three Paragraph Overview
 
 Pd has been designed with an emphasis on generating sound, video,
 2D/3D graphics, and connecting through sensors, input devices, and MIDI as well
@@ -27,17 +39,6 @@ Pd can easily work over local and remote networks.  It can be used to integrate
 wearable technology, motor systems, lighting rigs, and other equipment. Pd is
 also suitable for learning basic multimedia processing and visual programming
 methods, as well as for realizing complex systems for large-scale projects.
-
-### Distributions of Pure Data
-
-There are currently three main distributions of Pure Data:
-1. Pd-l2ork.  Version used by Ivica Bukvic for his laptop orchestra.  This
-   contributor's guide is for Pd-l2ork.
-2. Pure Data "Vanilla".  Miller Puckette's personal version which he hosts on
-   his website and maintains.  It doesn't include external libraries like
-   objects for doing graphics, video, etc.
-2. Pure Data Extended.  A monolithic distribution which ships with lots of
-   external libraries.  At the moment it doesn't look to be maintained.
 
 ### Pd-l2ork Goals
 
@@ -64,7 +65,9 @@ Then follow the steps outlined here:
 http://l2ork.music.vt.edu/main/?page_id=56#install-dev
 
 ### Contributor's Guide
+
 Contributing is easy:
+
 1. Join the development list:
    http://disis.music.vt.edu/cgi-bin/mailman/listinfo/l2ork-dev
 2. Tell us what you'd like to work on.  Unfortunately there are _lots_ of
