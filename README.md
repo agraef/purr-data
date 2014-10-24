@@ -127,6 +127,7 @@ that can be sent messages ("pure data").  (note that t_object and t_text,
 and t_graph and t_canvas, should be unified...)
 
 BEFORE 0.35:
+
     m_pd.h	    t_pd    	    	    anything with a class
                     t_gobj	    	    "graphic object"
                         t_text  	    text object
@@ -135,18 +136,20 @@ BEFORE 0.35:
     g_canvas.c  	    	t_canvas    Pd "document"
 
 AFTER 0.35:
+
     m_pd.h	    t_pd    	    	    anything with a class
                     t_gobj	    	    "graphic object"
                         t_text  	    patchable object, AKA t_object
     g_canvas.h     	    	t_glist     list of graphic objects, AKA t_canvas
 
 Other structures:
-g_canvas.h  t_selection -- linked list of gobjs
-    	    t_editor -- editor state, allocated for visible glists
-m_imp.h     t_methodentry -- method handler
-    	    t_widgetbehavior -- class-dependent editing behavior for gobjs
-    	    t_parentwidgetbehavior -- objects' behavior on parent window
-    	    t_class -- method definitions, instance size, flags, etc.
+
+    g_canvas.h  t_selection -- linked list of gobjs
+                t_editor -- editor state, allocated for visible glists
+    m_imp.h     t_methodentry -- method handler
+                t_widgetbehavior -- class-dependent editing behavior for gobjs
+                t_parentwidgetbehavior -- objects' behavior on parent window
+                t_class -- method definitions, instance size, flags, etc.
 
 #### 1. Coding Style
 
@@ -227,18 +230,19 @@ I hope to provide an include file to alias them when compiling Max externs.
 4.0.  Function name prefixes.
 Many function names have prefixes which indicate what "package" they belong
 to.  The exceptions are:
+
     typedmess, vmess, getfn, gensym (m_class.c)
     getbytes, freebytes, resizebytes (m_memory.c)
     post, error, bug (s_print.c)
 which are all frequently called and which don't fit into simple categories.
 Important packages are:
-(pd-gui:)   pdgui -- everything
-(pd:)	    pd -- functions common to all "pd" objects
-    	    obj -- fuctions common to all "patchable" objects ala Max
-    	    sys -- "system" level functions
-    	    binbuf -- functions manipulating binbufs
-    	    class -- functions manipulating classes
-    	    (other) -- functions common to the named Pd class
+    (pd-gui:)   pdgui -- everything
+    (pd:)	    pd -- functions common to all "pd" objects
+                obj -- fuctions common to all "patchable" objects ala Max
+                sys -- "system" level functions
+                binbuf -- functions manipulating binbufs
+                class -- functions manipulating classes
+                (other) -- functions common to the named Pd class
 
 #### 5. Source file prefixes
 
