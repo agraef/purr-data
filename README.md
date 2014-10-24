@@ -14,6 +14,7 @@ the screen what text-based languages require you to piece together in your mind.
 ### Distributions of Pure Data
 
 There are currently three main distributions of Pure Data:
+
 1. Pd-l2ork.  Version used by Ivica Bukvic for his laptop orchestra.  This
    guide is for Pd-l2ork.
 2. Pure Data "Vanilla".  Miller Puckette's personal version which he hosts on
@@ -80,7 +81,17 @@ Contributing is easy:
 4. If you want to do regular development and have commit access, just request
    it, then follow the Pd-l2ork goals above.
 
-Here are some pressing tasks:
+Here are some of the current tasks:
+
+* writing small audio/visual Pd games or demos to include in the next release
+  * skill level: ability to write Pd programs
+  * status: I wrote a little sprite-based game that will ship with the next
+    version of Pd-l2ork.  In it, the character walks around in an actual
+    Pd diagram shoots at the objects to progress, and to make realtime
+    changes to the music.
+    What I'd like is to include a new, smallish game with each release
+    that has a link in the Pd console.  It can be a little demo or game,
+    just something fun that shows off what can be done using Pure Data.
 * porting Pd-l2ork's graphical user interface from Tcl/Tk to Qt.
   * skill level: knowledge about Qt5/QML, threading, and Pd's core design
     and deterministic message-dispatching and scheduling
@@ -100,25 +111,18 @@ Here are some pressing tasks:
     And Mathieu Bouchard's "pure unity" (not sure if this is the most
     recent link...):
     http://sourceforge.net/p/pure-data/svn/HEAD/tree/tags/externals/pureunity/pureunity-0.0/
-* writing small audio/visual Pd games or demos to include in the next release
-  * skill level: ability to write Pd programs
-  * status: I wrote a little sprite-based game that will ship with the next
-    version of Pd-l2ork.  In it, the character walks around in an actual
-    Pd diagram shoots at the objects to progress, and to make realtime
-    changes to the music.
-    What I'd like is to include a new, smallish game with each release
-    that has a link in the Pd console.  It can be a little demo or game,
-    just something fun that shows off what can be done using Pure Data.
 
 ### Project "Underview" (Implementation and Code Style)
 
-The following is adapted from Pd Vanilla's original source notes.  (There,
-they are found in CHANGELOG.txt for some reason...)
+The following is adapted from Pd Vanilla's original source notes.  (Found
+in pd/src/CHANGELOG.txt for some reason...)
 
 Sections 2-3 below are quite old.  Someone needs to check whether they even
 hold true for Pd Vanilla any more.
 
-0.  structure definition roadmap.  First, the containment tree of things
+#### Structure definition roadmap.
+
+First, the containment tree of things
 that can be sent messages ("pure data").  (note that t_object and t_text,
 and t_graph and t_canvas, should be unified...)
 
@@ -144,8 +148,9 @@ m_imp.h     t_methodentry -- method handler
     	    t_parentwidgetbehavior -- objects' behavior on parent window
     	    t_class -- method definitions, instance size, flags, etc.
 
+#### 1. Coding Style
 
-1.  C coding style.  The source should pass most "warnings" of C compilers
+1.0  C coding style.  The source should pass most "warnings" of C compilers
 (-Wall on linux, for instance; see the makefile.)  Some informalities
 are intentional, for instance the loose use of function prototypes (see
 below) and uncast conversions from longer to shorter numerical formats.
@@ -185,7 +190,9 @@ curly brackets are by themselves on their own lines, as in:
 
 Lines should fit within 80 spaces.
 
-2.  Max patch-level compatibility.  "Import" and "Export" functions are
+#### 2. Compatibility with Max
+
+2.0.  Max patch-level compatibility.  "Import" and "Export" functions are
 provided which aspire to strict compatibility with 0.26 patches (ISPW version),
 but which don't get anywhere close to that yet.  Where possible, features
 appearing on the Mac will someday also be provided; for instance, the connect
@@ -193,7 +200,9 @@ message on the Mac offers segmented patch cords; these will devolve into
 straight lines in Pd.  Many, many UI objects in Opcode Max will not appear in
 Pd, at least at first.
 
-3.  Compatibility with Max 0.26 "externs", i.e., source-level compatibility. Pd
+#### 3. Source-level Compatibility with Max
+
+3.0.  Compatibility with Max 0.26 "externs"-- source-level compatibility. Pd
 objects follow the style of 0.26 objects as closely as possible, making
 exceptions in cases where the 0.26 model is clearly deficient.  These are:
 
@@ -213,7 +222,9 @@ Typedefs are provided:
 3.4.  Many library functions are renamed and have different arguments;
 I hope to provide an include file to alias them when compiling Max externs.
 
-4.  Function name prefixes.
+#### 4. Function name prefixes
+
+4.0.  Function name prefixes.
 Many function names have prefixes which indicate what "package" they belong
 to.  The exceptions are:
     typedmess, vmess, getfn, gensym (m_class.c)
@@ -229,7 +240,9 @@ Important packages are:
     	    class -- functions manipulating classes
     	    (other) -- functions common to the named Pd class
 
-5. Source file prefixes. 
+#### 5. Source file prefixes
+
+5.0. Source file prefixes. 
 PD:
 s    system interface
 m    message system
