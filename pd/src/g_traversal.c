@@ -414,20 +414,39 @@ static void *get_new(t_symbol *why, int argc, t_atom *argv)
     t_get *x = (t_get *)pd_new(get_class);
     int i;
     t_getvariable *sp;
+    int varcount;
     x->x_templatesym = canvas_makebindsym(atom_getsymbolarg(0, argc, argv));
     if (argc) argc--, argv++;
+    varcount = argc ? argc : 1; /* have at least one outlet */
     x->x_variables
-        = (t_getvariable *)getbytes(argc * sizeof (*x->x_variables));
-    x->x_nout = argc;
-    for (i = 0, sp = x->x_variables; i < argc; i++, sp++)
+        = (t_getvariable *)getbytes(varcount * sizeof (*x->x_variables));
+    x->x_nout = varcount;
+    for (i = 0, sp = x->x_variables; i < varcount; i++, sp++)
     {
-        sp->gv_sym = atom_getsymbolarg(i, argc, argv);
+        if (argc)
+            sp->gv_sym = atom_getsymbolarg(i, argc, argv);
+        else
+            sp->gv_sym = &s_; /* just set field to empty symbol if no args */
         sp->gv_outlet = outlet_new(&x->x_obj, 0);
             /* LATER connect with the template and set the outlet's type
             correctly.  We can't yet guarantee that the template is there
             before we hit this routine. */
     }
     return (x);
+}
+
+static void get_set(t_get *x, t_symbol *templatesym, t_symbol *field)
+{
+    if (x->x_nout != 1)
+    {
+        pd_error(x, "get: cannot set multiple fields.");
+        return;
+    }
+    else
+    {
+       x->x_templatesym = canvas_makebindsym(templatesym); 
+       x->x_variables->gv_sym = field;
+    }
 }
 
 static void get_pointer(t_get *x, t_gpointer *gp)
@@ -480,6 +499,8 @@ static void get_setup(void)
     get_class = class_new(gensym("get"), (t_newmethod)get_new,
         (t_method)get_free, sizeof(t_get), 0, A_GIMME, 0);
     class_addpointer(get_class, get_pointer); 
+    class_addmethod(get_class, (t_method)get_set, gensym("set"),
+        A_SYMBOL, A_SYMBOL, 0); 
 }
 
 /* ---------------------- set ----------------------------- */
@@ -507,6 +528,7 @@ static void *set_new(t_symbol *why, int argc, t_atom *argv)
     t_set *x = (t_set *)pd_new(set_class);
     int i;
     t_setvariable *sp;
+    int varcount;
     if (argc && (argv[0].a_type == A_SYMBOL) &&
         !strcmp(argv[0].a_w.w_symbol->s_name, "-symbol"))
     {
@@ -517,28 +539,47 @@ static void *set_new(t_symbol *why, int argc, t_atom *argv)
     else x->x_issymbol = 0;
     x->x_templatesym = canvas_makebindsym(atom_getsymbolarg(0, argc, argv));
     if (argc) argc--, argv++;
+    varcount = argc ? argc : 1; /* have at least one variable */
     x->x_variables
-        = (t_setvariable *)getbytes(argc * sizeof (*x->x_variables));
-    x->x_nin = argc;
-    if (argc)
+        = (t_setvariable *)getbytes(varcount * sizeof (*x->x_variables));
+    x->x_nin = varcount;
+    for (i = 0, sp = x->x_variables; i < varcount; i++, sp++)
     {
-        for (i = 0, sp = x->x_variables; i < argc; i++, sp++)
-        {
+        if (argc)
             sp->gv_sym = atom_getsymbolarg(i, argc, argv);
+        else
+            sp->gv_sym = &s_;
+        if (x->x_issymbol)
+            sp->gv_w.w_symbol = &s_;
+        else sp->gv_w.w_float = 0;
+        if (i)
+        {
             if (x->x_issymbol)
-                sp->gv_w.w_symbol = &s_;
-            else sp->gv_w.w_float = 0;
-            if (i)
-            {
-                if (x->x_issymbol)
-                    symbolinlet_new(&x->x_obj, &sp->gv_w.w_symbol);
-                else floatinlet_new(&x->x_obj, &sp->gv_w.w_float);
-            }
+                symbolinlet_new(&x->x_obj, &sp->gv_w.w_symbol);
+            else floatinlet_new(&x->x_obj, &sp->gv_w.w_float);
         }
     }
     pointerinlet_new(&x->x_obj, &x->x_gp);
     gpointer_init(&x->x_gp);
     return (x);
+}
+
+static void set_set(t_set *x, t_symbol *templatesym, t_symbol *field)
+{
+    if (x->x_nin != 1)
+    {
+        pd_error(x, "set: cannot set multiple fields.");
+        return;
+    }
+    else
+    {
+       x->x_templatesym = canvas_makebindsym(templatesym); 
+       x->x_variables->gv_sym = field;
+       if (x->x_issymbol)
+           x->x_variables->gv_w.w_symbol = &s_;
+       else
+           x->x_variables->gv_w.w_float = 0;
+    }
 }
 
 static void set_bang(t_set *x)
@@ -621,6 +662,8 @@ static void set_setup(void)
     class_addfloat(set_class, set_float); 
     class_addsymbol(set_class, set_symbol); 
     class_addbang(set_class, set_bang); 
+    class_addmethod(set_class, (t_method)set_set, gensym("set"),
+        A_SYMBOL, A_SYMBOL, 0); 
 }
 
 /* ---------------------- elem ----------------------------- */
@@ -646,6 +689,12 @@ static void *elem_new(t_symbol *templatesym, t_symbol *fieldsym)
     pointerinlet_new(&x->x_obj, &x->x_gparent);
     outlet_new(&x->x_obj, &s_pointer);
     return (x);
+}
+
+static void elem_set(t_elem *x, t_symbol *templatesym, t_symbol *fieldsym)
+{
+    x->x_templatesym = canvas_makebindsym(templatesym);
+    x->x_fieldsym = fieldsym;
 }
 
 static void elem_float(t_elem *x, t_float f)
@@ -720,6 +769,8 @@ static void elem_setup(void)
     elem_class = class_new(gensym("element"), (t_newmethod)elem_new,
         (t_method)elem_free, sizeof(t_elem), 0, A_DEFSYM, A_DEFSYM, 0);
     class_addfloat(elem_class, elem_float); 
+    class_addmethod(elem_class, (t_method)elem_set, gensym("set"),
+        A_SYMBOL, A_SYMBOL, 0); 
 }
 
 /* ---------------------- getsize ----------------------------- */
@@ -740,6 +791,12 @@ static void *getsize_new(t_symbol *templatesym, t_symbol *fieldsym)
     x->x_fieldsym = fieldsym;
     outlet_new(&x->x_obj, &s_float);
     return (x);
+}
+
+static void getsize_set(t_getsize *x, t_symbol *templatesym, t_symbol *fieldsym)
+{
+    x->x_templatesym = canvas_makebindsym(templatesym);
+    x->x_fieldsym = fieldsym;
 }
 
 static void getsize_pointer(t_getsize *x, t_gpointer *gp)
@@ -790,6 +847,8 @@ static void getsize_setup(void)
     getsize_class = class_new(gensym("getsize"), (t_newmethod)getsize_new, 0,
         sizeof(t_getsize), 0, A_DEFSYM, A_DEFSYM, 0);
     class_addpointer(getsize_class, getsize_pointer); 
+    class_addmethod(getsize_class, (t_method)getsize_set, gensym("set"),
+        A_SYMBOL, A_SYMBOL, 0); 
 }
 
 /* ---------------------- setsize ----------------------------- */
@@ -814,6 +873,12 @@ static void *setsize_new(t_symbol *templatesym, t_symbol *fieldsym,
     
     pointerinlet_new(&x->x_obj, &x->x_gp);
     return (x);
+}
+
+static void setsize_set(t_setsize *x, t_symbol *templatesym, t_symbol *fieldsym)
+{
+    x->x_templatesym = canvas_makebindsym(templatesym);
+    x->x_fieldsym = fieldsym;
 }
 
 static void setsize_float(t_setsize *x, t_float f)
@@ -944,6 +1009,9 @@ static void setsize_setup(void)
         (t_method)setsize_free, sizeof(t_setsize), 0,
         A_DEFSYM, A_DEFSYM, A_DEFFLOAT, 0);
     class_addfloat(setsize_class, setsize_float);
+    class_addmethod(setsize_class, (t_method)setsize_set, gensym("set"),
+        A_SYMBOL, A_SYMBOL, 0); 
+
 }
 
 /* ---------------------- append ----------------------------- */
@@ -970,24 +1038,41 @@ static void *append_new(t_symbol *why, int argc, t_atom *argv)
     t_append *x = (t_append *)pd_new(append_class);
     int i;
     t_appendvariable *sp;
+    int varcount;
     x->x_templatesym = canvas_makebindsym(atom_getsymbolarg(0, argc, argv));
     if (argc) argc--, argv++;
+    varcount = argc ? argc : 1; /* have at least one variable */
     x->x_variables
-        = (t_appendvariable *)getbytes(argc * sizeof (*x->x_variables));
-    x->x_nin = argc;
-    if (argc)
+        = (t_appendvariable *)getbytes(varcount * sizeof (*x->x_variables));
+    x->x_nin = varcount;
+    for (i = 0, sp = x->x_variables; i < argc; i++, sp++)
     {
-        for (i = 0, sp = x->x_variables; i < argc; i++, sp++)
-        {
+        if (argc)
             sp->gv_sym = atom_getsymbolarg(i, argc, argv);
-            sp->gv_f = 0;
-            if (i) floatinlet_new(&x->x_obj, &sp->gv_f);
-        }
+        else
+            sp->gv_sym = &s_;
+        sp->gv_f = 0;
+        if (i) floatinlet_new(&x->x_obj, &sp->gv_f);
     }
     pointerinlet_new(&x->x_obj, &x->x_gp);
     outlet_new(&x->x_obj, &s_pointer);
     gpointer_init(&x->x_gp);
     return (x);
+}
+
+static void append_set(t_append *x, t_symbol *templatesym, t_symbol *field)
+{
+    if (x->x_nin != 1)
+    {
+        pd_error(x, "set: cannot set multiple fields.");
+        return;
+    }
+    else
+    {
+       x->x_templatesym = canvas_makebindsym(templatesym); 
+       x->x_variables->gv_sym = field;
+       x->x_variables->gv_f = 0;
+    }
 }
 
 static void append_float(t_append *x, t_float f)
@@ -1070,6 +1155,8 @@ static void append_setup(void)
     append_class = class_new(gensym("append"), (t_newmethod)append_new,
         (t_method)append_free, sizeof(t_append), 0, A_GIMME, 0);
     class_addfloat(append_class, append_float); 
+    class_addmethod(append_class, (t_method)append_set, gensym("set"),
+        A_SYMBOL, A_SYMBOL, 0); 
 }
 
 /* ---------------------- sublist ----------------------------- */
