@@ -227,7 +227,7 @@ same scope \, they will see each other regardless of what scope is
 given them at creation time \, including no scope at all (as is the
 case with the rest of pd-l2ork \, \$1 with no argument given reverts
 to 0).;
-#N canvas 186 348 428 332 More_info 0;
+#N canvas 186 348 429 332 More_info 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 7 1 [preset_hub] More info on modular scope;
@@ -241,13 +241,13 @@ to 0).;
 #X floatatom 38 157 5 0 0 0 - - -, f 5;
 #X text 142 39 <-- recall presets 0-5;
 #X text 73 155 <-- note how the value changes with each recall;
-#X text 34 191 Notice how the hub and node are paired even no optional
-argument has been given to this patch?Note that in this case [preset_hub
-\$1] is different from [preset_hub] as latter actually is defined as
-null symbol or "" while former is equal to float 0 (if no argument
-is given. This hub-node pairing is also independent from anything found
-in parent patch since node has found its match in this patcher before
-looking one level up.;
+#X text 34 191 Notice how the hub and node are paired even though no
+optional argument has been given to this patch?Note that in this
+case [preset_hub \$1] is different from [preset_hub] as latter actually
+is defined as null symbol or "" while former is equal to float 0 (if
+no argument is given). This hub-node pairing is also independent from
+anything found in parent patch since node has found its match in this
+patcher before looking one level up.;
 #X connect 3 0 2 0;
 #X connect 4 0 2 0;
 #X connect 5 0 3 0;
