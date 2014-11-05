@@ -1592,7 +1592,7 @@ static void text_select(t_gobj *z, t_glist *glist, int state)
                     glist_getcanvas(glist), rtext_gettag(y));
 
                 if (pd_class(&x->te_pd) == text_class && x->te_type != T_TEXT)
-                       sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 2 -strokedasharray {2 3} "
+                       sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 2  -strokelinecap projecting -strokedasharray {2 3} "
                                 "-fill %s\n",
                         glist_getcanvas(glist), 
                         rtext_gettag(y), invalid_fill);
@@ -2157,7 +2157,7 @@ void text_drawborder_withtag(t_text *x, t_glist *glist,
         if (pd_class(&x->te_pd) == text_class)
         {
             pattern = "-";
-            outline = "$pd_colors(dash_outline) -strokewidth 2";
+            outline = "$pd_colors(dash_outline) -strokewidth 2 -strokelinecap projecting -strokedasharray {2 3}";
             fill = invalid_fill;
         }
         else
