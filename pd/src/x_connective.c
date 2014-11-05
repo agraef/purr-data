@@ -1132,7 +1132,6 @@ static void *trigger_new(t_symbol *s, int argc, t_atom *argv)
 
 static void trigger_list(t_trigger *x, t_symbol *s, int argc, t_atom *argv)
 {
-    //fprintf(stderr,"trigger_list %s\n", s->s_name);
     t_triggerout *u;
     int i;
     for (i = x->x_n, u = x->x_vec + i; u--, i--;)
@@ -1143,7 +1142,7 @@ static void trigger_list(t_trigger *x, t_symbol *s, int argc, t_atom *argv)
             outlet_bang(u->u_outlet);
         else if (u->u_type == TR_SYMBOL)
             outlet_symbol(u->u_outlet,
-                (argc ? atom_getsymbol(argv) : &s_symbol));
+                (argc ? atom_getsymbol(argv) : (s != NULL ? s : &s_symbol)));
         else if (u->u_type == TR_ANYTHING)
             outlet_anything(u->u_outlet, s, argc, argv);
         else if (u->u_type == TR_POINTER)
@@ -1166,9 +1165,10 @@ static void trigger_list(t_trigger *x, t_symbol *s, int argc, t_atom *argv)
 
 static void trigger_anything(t_trigger *x, t_symbol *s, int argc, t_atom *argv)
 {
-    //fprintf(stderr,"trigger_anything %s\n", s->s_name);
+    //fprintf(stderr,"trigger_anything %s %d\n", s->s_name, argc);
+    t_atom *av2 = NULL;
     t_triggerout *u;
-    int i;
+    int i, j = 0;
     for (i = x->x_n, u = x->x_vec + i; u--, i--;)
     {
         if (u->u_type == TR_BANG)
@@ -1186,10 +1186,69 @@ static void trigger_anything(t_trigger *x, t_symbol *s, int argc, t_atom *argv)
         {
             outlet_symbol(u->u_outlet, &u->u_sym);
         }        
+        //else trigger_symbol(x, s);
         else
         {
-            trigger_symbol(x, s);
-            break;
+            // copying trigger_list behavior except that here we keep
+            // the outlet number and therefore avoid redundant printouts
+            if (u->u_type == TR_FLOAT)
+            {
+                //fprintf(stderr,"trigger_anything -> TR_FLOAT %d\n", argc);
+                outlet_float(u->u_outlet, (argc ? atom_getfloat(argv) : 0));
+            }
+            else if (u->u_type == TR_BANG)
+            {
+                //fprintf(stderr,"trigger_anything -> TR_BANG %d\n", argc);
+                outlet_bang(u->u_outlet);
+            }
+            else if (u->u_type == TR_SYMBOL)
+            {
+                //fprintf(stderr,"trigger_anything -> TR_SYMBOL %d\n", argc);
+                outlet_symbol(u->u_outlet,
+                    (s != NULL ? s : (argc ? atom_getsymbol(argv) : &s_symbol)));
+            }
+            else if (u->u_type == TR_ANYTHING)
+            {
+                //fprintf(stderr,"trigger_anything -> TR_ANYTHING %d\n", argc);
+                outlet_anything(u->u_outlet, s, argc, argv);
+            }
+            else if (u->u_type == TR_POINTER)
+            {
+                //fprintf(stderr,"trigger_anything -> TR_POINTER %d\n", argc);
+                if (!argc || argv->a_type != TR_POINTER)
+                    pd_error(x, "unpack: bad pointer");
+                else outlet_pointer(u->u_outlet, argv->a_w.w_gpointer);
+            }
+            else if (u->u_type == TR_STATIC_FLOAT)
+            {
+                //fprintf(stderr,"trigger_anything -> TR_STATIC_FLOAT %d\n", argc);
+                outlet_float(u->u_outlet, u->u_float);
+            }
+            else if (u->u_type == TR_STATIC_SYMBOL)
+            {
+                //fprintf(stderr,"trigger_anything -> TR_STATIC_SYMBOL %d\n", argc);
+                outlet_symbol(u->u_outlet, &u->u_sym);
+            }
+            else
+            {
+                // Ico: don't have to worry about zero element case (AFAICT)
+                av2 = (t_atom *)getbytes((argc + 1) * sizeof(t_atom));
+                SETSYMBOL(av2, s);
+                if (argc == 0)
+                {
+                    //fprintf(stderr,"trigger_anything -> symbol %d\n", argc);
+                    outlet_list(u->u_outlet, &s_symbol, argc+1, av2);
+                }
+                else
+                {
+                    for (j = 0; j < argc; j++)
+                        av2[j + 1] = argv[j];
+                    //fprintf(stderr,"trigger_anything -> list %d\n", argc);
+                    SETSYMBOL(av2, s);
+                    outlet_list(u->u_outlet, &s_list, argc+1, av2);
+                }
+                freebytes(av2, (argc + 1) * sizeof(t_atom));
+            }
         }
     }
 }
