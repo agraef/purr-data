@@ -1425,6 +1425,7 @@ typedef struct _undo_apply
 
 void *canvas_undo_set_apply(t_canvas *x, int n)
 {
+    //fprintf(stderr,"canvas_undo_set_apply\n");
     t_undo_apply *buf;
     t_gobj *obj;
     t_linetraverser t;
@@ -1433,6 +1434,13 @@ void *canvas_undo_set_apply(t_canvas *x, int n)
        we are working on */
     if (!x->gl_edit)
         canvas_editmode(x, 1);
+
+    // deselect all objects (if we are editing one while multiple are
+    // selected, upon undoing this will recreate other selected objects,
+    // effectively resulting in unwanted duplicates)
+    // LATER: consider allowing concurrent editing of multiple objects
+    glist_noselect(x);
+
     obj = glist_nth(x, n);
     if (obj && !glist_isselected(x, obj))
         glist_select(x, obj);
@@ -1470,6 +1478,7 @@ void *canvas_undo_set_apply(t_canvas *x, int n)
 
 void canvas_undo_apply(t_canvas *x, void *z, int action)
 {
+    //fprintf(stderr,"canvas_undo_apply\n");
     t_undo_apply *buf = z;
     if (action == UNDO_UNDO || action == UNDO_REDO)
     {
