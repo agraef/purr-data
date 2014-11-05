@@ -1132,6 +1132,7 @@ static void *trigger_new(t_symbol *s, int argc, t_atom *argv)
 
 static void trigger_list(t_trigger *x, t_symbol *s, int argc, t_atom *argv)
 {
+    //fprintf(stderr,"trigger_list %s\n", s->s_name);
     t_triggerout *u;
     int i;
     for (i = x->x_n, u = x->x_vec + i; u--, i--;)
@@ -1185,7 +1186,11 @@ static void trigger_anything(t_trigger *x, t_symbol *s, int argc, t_atom *argv)
         {
             outlet_symbol(u->u_outlet, &u->u_sym);
         }        
-        else trigger_symbol(x, s);
+        else
+        {
+            trigger_symbol(x, s);
+            break;
+        }
     }
 }
 
