@@ -6385,11 +6385,17 @@ void canvas_connect(t_canvas *x, t_floatarg fwhoout, t_floatarg foutno,
         /* if object creation failed, make dummy inlets or outlets
         as needed */ 
     if (pd_class(&src->g_pd) == text_class && objsrc->te_type == T_OBJECT)
+    {
         while (outno >= obj_noutlets(objsrc))
             outlet_new(objsrc, 0);
+        //fprintf(stderr,"canvas_connect got fake outlets\n");
+    }
     if (pd_class(&sink->g_pd) == text_class && objsink->te_type == T_OBJECT)
+    {
         while (inno >= obj_ninlets(objsink))
             inlet_new(objsink, &objsink->ob_pd, 0, 0);
+        //fprintf(stderr,"canvas_connect got fake inlets\n");
+    }
 
     if (!canvas_isconnected(x, objsrc, outno, objsink, inno))
     {
