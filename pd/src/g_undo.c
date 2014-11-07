@@ -10,6 +10,8 @@ int we_are_undoing = 0;
 
 extern const char *canvas_undo_name;
 extern void glob_preset_node_list_seek_hub(void);
+extern void glob_preset_node_list_check_loc_and_update(void);
+extern void text_checkvalidwidth(t_glist *glist);
 
 t_undo_action *canvas_undo_init(t_canvas *x)
 {
@@ -94,6 +96,7 @@ void canvas_undo_undo(t_canvas *x)
         {
             sys_vgui("pdtk_undomenu .x%lx %s %s\n",
                 x, undo_action, redo_action);
+            text_checkvalidwidth(x);
             canvas_getscroll(x);
         }
         canvas_dirty(x, 1);
@@ -139,6 +142,7 @@ void canvas_undo_redo(t_canvas *x)
         {
             sys_vgui("pdtk_undomenu .x%lx %s %s\n",
                 x, undo_action, redo_action);
+            text_checkvalidwidth(x);
             canvas_getscroll(x);
         }
         canvas_dirty(x, 1);

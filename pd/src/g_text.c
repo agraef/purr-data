@@ -181,8 +181,8 @@ static void canvas_objtext(t_glist *gl, int xpix, int ypix,
     if (!x)
     {
         /* LATER make the color reflect this */
-        //fprintf(stderr,"creating blank object\n");
         x = (t_text *)pd_new(text_class);
+        //fprintf(stderr,"creating blank object %lx\n", x);
     }
     /* special case: an object, like preset_hub, hides its arguments
        beyond the first n, so we modify its binbuf here */
@@ -1407,6 +1407,15 @@ static void text_getrect(t_gobj *z, t_glist *glist,
         int no = obj_noutlets(ob);
         int ni = obj_ninlets(ob);
 
+        /*
+        // debug chunk
+        char *bufdbg;
+        int bufsizedbg;
+        if (y) rtext_gettext(y, &bufdbg, &bufsizedbg);
+        if (!strncmp(bufdbg, "gate", 4) || strlen(bufdbg) == 0)
+            fprintf(stderr,"text_getrect nlets %d %d <%s>\n", ni, no, ( y ? bufdbg : "null" ));
+        */
+
         int m = ( ni > no ? ni : no);
         //let's see if the object has more nlets than
         //its text width and resize them accordingly
@@ -1592,7 +1601,7 @@ static void text_select(t_gobj *z, t_glist *glist, int state)
                     glist_getcanvas(glist), rtext_gettag(y));
 
                 if (pd_class(&x->te_pd) == text_class && x->te_type != T_TEXT)
-                       sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 2 -strokedasharray {2 3} "
+                       sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 2  -strokelinecap projecting -strokedasharray {2 3} "
                                 "-fill %s\n",
                         glist_getcanvas(glist), 
                         rtext_gettag(y), invalid_fill);
@@ -1996,6 +2005,8 @@ void glist_drawiofor_withtag(t_glist *glist, t_object *ob, int firsttime,
 void text_drawborder(t_text *x, t_glist *glist,
     char *tag, int width2, int height2, int firsttime)
 {
+    //fprintf(stderr,"text_drawborder\n");
+
     t_object *ob;
     int x1, y1, x2, y2;
 
@@ -2157,7 +2168,7 @@ void text_drawborder_withtag(t_text *x, t_glist *glist,
         if (pd_class(&x->te_pd) == text_class)
         {
             pattern = "-";
-            outline = "$pd_colors(dash_outline) -strokewidth 2";
+            outline = "$pd_colors(dash_outline) -strokewidth 2 -strokelinecap projecting -strokedasharray {2 3}";
             fill = invalid_fill;
         }
         else
@@ -2205,7 +2216,7 @@ void text_drawborder_withtag(t_text *x, t_glist *glist,
                      x2, y2,  x1, y2,  x1, y1, 
                     tag, tag);
     }
-        /* for comments, just draw a bar on RHS if unlocked; when a visible
+        /* for comments, draw a dotted box; when a visible
         canvas is unlocked we have to call this anew on all comments, and when
         locked we erase them all via the annoying "commentbar" tag. */
     else if (x->te_type == T_TEXT && glist->gl_edit)
@@ -2275,6 +2286,23 @@ static int compare_subpatch_selectors(t_atom *a, t_atom *b)
     }
     else
         return 0;
+}
+
+void text_checkvalidwidth(t_glist *glist)
+{
+    // readjust border in case the new object is invalid and it has more connections
+    // than what the default width allows (this typically happens when there is a valid
+    // object that has been replaced by an invalid one and during recreation the new
+    // object has 0 inlets and outlets and is therefore unaware of its possibly greater
+    // width)
+    t_gobj *yg = glist->gl_list;
+    while (yg->g_next)
+        yg = yg->g_next;
+    t_text *newest_t = (t_text *)yg;
+    //fprintf(stderr, "newest object text class is %lx\n", newest_t);
+    t_rtext *yn = glist_findrtext(glist, newest_t);
+    if (yn && pd_class(&newest_t->te_pd) == text_class && newest_t->te_type != T_TEXT)
+        text_drawborder(newest_t, glist, rtext_gettag(yn), rtext_width(yn), rtext_height(yn), 0);
 }
 
     /* change text; if T_OBJECT, remake it. */
@@ -2354,6 +2382,7 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
                 canvas_restoreconnections(glist_getcanvas(glist));
                 //canvas_apply_restore_original_position(glist_getcanvas(glist),
                 //    pos);
+                text_checkvalidwidth(glist);
             }
             else
             {
