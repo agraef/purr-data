@@ -506,7 +506,7 @@ static char *pdgui_path;
 /* The "pd" command, which cats its args together and throws the result
 * at the Pd interpreter.
 */
-#define MAXWRITE 1024
+#define MAXWRITE 8192
 
 static int pdCmd(ClientData cd, Tcl_Interp *interp, int argc,  char **argv)
 {
