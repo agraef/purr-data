@@ -712,13 +712,16 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
         /* we translate the .scalar%lx group to displace it on the tk side.
            This is the outermost group for the scalar, something like a
            poor man's viewport.
-           Also, the default stroke is supposed to be "none" and default
-           fill is supposed to be black. Unfortunately tkpath does the
-           opposite.  To fix this, we set the correct fill/stroke options
-           here on the .scalar%lx group. Notice also that tkpath doesn't
-           understand "None"-- instead we must send an empty symbol. */
+           Also:
+             * the default stroke is supposed to be "none"
+             * default fill is supposed to be black.
+             * stroke-linejoin should be "miter", not "round"  
+           To fix these, we set the correct fill/stroke/strokelinjoin options
+           here on the .scalar%lx group. (Notice also that tkpath doesn't
+           understand "None"-- instead we must send an empty symbol.) */
         sys_vgui(".x%lx.c create group -tags {.scalar%lx %s} "
-            "-matrix { {%g %g} {%g %g} {%d %d} } -stroke \"\" -fill black\n",
+            "-matrix { {%g %g} {%g %g} {%d %d} } "
+            "-stroke \"\" -fill black -strokelinejoin miter\n",
             glist_getcanvas(owner), x->sc_vec,
             (glist_isselected(owner, &x->sc_gobj) ? "scalar_selected" : ""),
             xscale, 0.0, 0.0, yscale, (int)glist_xtopixels(owner, basex),
@@ -787,6 +790,68 @@ void scalar_redraw(t_scalar *x, t_glist *glist)
         //sys_queuegui(x, glist, scalar_doredraw);
 }
 
+/* here we call the parentclickfns for drawing commands.
+   We recurse all the way to the end of the glist (and, for the
+   groups, as deep as they go) and then call the functions from the bottom up.
+   This way the clicks can "bubble" up from the bottom.  This has the effect
+   that the shape visually closest to the front gets called first.
+
+   This is called "event bubbling" in the HTML5 DOM.  You can also call
+   events in top down order in HTML5/SVG as well (called "capturing" or
+   "trickling"). But because some old version of Internet Explorer only did
+   bubbling, that is the most widely used model today, and the only one
+   I decided to implement here.
+
+   However, [group] doesn't yet have an outlet to report events. Only a
+   single [draw] should report a click here atm.
+*/
+int scalar_groupclick(struct _glist *groupcanvas,
+    t_word *data, t_template *template, t_scalar *sc,
+    t_array *ap, struct _glist *owner,
+    t_float xloc, t_float yloc, int xpix, int ypix,
+    int shift, int alt, int dbl, int doit, t_float basex, t_float basey,
+    t_gobj *obj)
+{
+    int hit = 0;
+    t_gobj *nextobj = obj->g_next;
+    /* let's skip over any objects that aren't drawing instructions
+       or groups */
+    while (nextobj &&
+           !class_isdrawcommand(pd_class((t_pd *)nextobj)) &&
+           !(pd_class(&nextobj->g_pd) == canvas_class &&
+               ((t_glist *)nextobj)->gl_svg))
+        nextobj = nextobj->g_next;
+    /* If there's another link in the list go ahead and recurse with it */
+    if (nextobj)
+    {
+        hit = (scalar_groupclick(groupcanvas, data, template, sc, ap,
+            owner, xloc, yloc, xpix, ypix,
+            shift, alt, dbl, doit, basex, basey, nextobj));
+        if (hit) return hit;
+    }
+    /* recurse inside a [group] object to look for more objects */
+    if (pd_class(&obj->g_pd) == canvas_class && ((t_glist *)obj)->gl_svg)
+    {
+            t_canvas *cnv = (t_canvas *)obj;
+            obj = cnv->gl_list;
+            if (obj)
+                return (scalar_groupclick(cnv, data, template, sc, ap,
+                owner, xloc, yloc, xpix, ypix,
+                shift, alt, dbl, doit, basex, basey, obj));
+    }
+    else /* finally, try to call the parent click function ... */
+    {
+        t_parentwidgetbehavior *wb = pd_getparentwidget(&obj->g_pd);
+        if (!wb) return hit;
+        if ((*wb->w_parentclickfn)(obj, owner,
+            data, template, sc, ap, basex + xloc, basey + yloc,
+            xpix, ypix, shift, alt, dbl, doit))
+                hit = 1;
+    }
+    return (hit);
+}
+
+/*
 int scalar_groupclick(struct _glist *groupcanvas,
     t_word *data, t_template *template, t_scalar *sc,
     t_array *ap, struct _glist *owner,
@@ -818,6 +883,7 @@ int scalar_groupclick(struct _glist *groupcanvas,
     }
     return 0;
 }
+*/
 
 int scalar_doclick(t_word *data, t_template *template, t_scalar *sc,
     t_array *ap, struct _glist *owner,
@@ -827,6 +893,7 @@ int scalar_doclick(t_word *data, t_template *template, t_scalar *sc,
     int hit = 0;
     t_canvas *templatecanvas = template_findcanvas(template);
     t_atom at[2];
+    t_gobj *obj;
     t_float basex = template_getfloat(template, gensym("x"), data, 0);
     t_float basey = template_getfloat(template, gensym("y"), data, 0);
     //fprintf(stderr,"=================scalar_doclick %f %f %f %f %d\n",
@@ -851,9 +918,12 @@ int scalar_doclick(t_word *data, t_template *template, t_scalar *sc,
     }
 
     if (templatecanvas)
+    {
+        if (!(obj = templatecanvas->gl_list)) return 0;
         hit = scalar_groupclick(templatecanvas, data, template, sc, ap,
                     owner, xloc, yloc, xpix, ypix,
-                    shift, alt, dbl, doit, basex, basey);
+                    shift, alt, dbl, doit, basex, basey, obj);
+    }
     return hit;
 }
 

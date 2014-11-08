@@ -828,6 +828,21 @@ void pdinfo_gui(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
     info_out((t_text *)x, s, 1, at);
 }
 
+/* note: this might be wrong.  Not sure whether "libdir" means
+   something like /usr/lib/pd or the path where all the libdir externals
+   live-- i.e., /usr/lib/pd/extra */
+void pdinfo_libdir(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_atom at[1];
+    t_symbol *nsym;
+    t_namelist *nl = pd_extrapath;
+    while (nl->nl_next)
+        nl = nl->nl_next;
+    nsym = gensym(nl->nl_string);
+    SETSYMBOL(at, nsym);
+    info_out((t_text *)x, s, 1, at);
+}
+
 void pdinfo_version(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     int major=0, minor=0, bugfix=0;
@@ -892,6 +907,8 @@ void pdinfo_setup(void)
         gensym("dsp-status"), A_GIMME, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_gui,
         gensym("gui"), A_GIMME, 0);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_libdir,
+        gensym("libdir"), A_GIMME, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_midi_api,
         gensym("midi-api"), A_GIMME, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_midi_apilist,

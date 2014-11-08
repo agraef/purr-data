@@ -1042,11 +1042,38 @@ t_class *draw_class;
 
 t_class *svg_class;
 
+/* this is a wrapper around t_fielddesc-- it adds a flag for two reasons:
+   1) tkpath defaults to inheriting values for options from the parent until
+      you specify them-- after that, there's no way to get back to "inherit".
+      We set the flag to "0" to mean "inherit"-- that way we don't send a tcl
+      string for that option.  There's still the bug that the user can't set
+      an attribute back to "inherit" after they've set something explicitly,
+      however.
+   2) This might be generally useful even with Qt, so that if the user calls
+      a method for an attribute without any arguments, Qt goes back to
+      inheriting the value from the parent.  That gives us a way to
+      differentiate "inherit" from fielddescriptors, the value "none" and
+      "".  (Similar to the way "set" resets a message box.)
+*/
 typedef struct _svg_attr
 {
     int a_flag;
     t_fielddesc a_attr;
 } t_svg_attr;
+
+/* events on which to output a notification from the outlet of [draw] */
+typedef struct _svg_event
+{
+    t_fielddesc e_focusin,
+                e_focusout,
+                e_activate,
+                e_click,
+                e_mousedown,
+                e_mouseup,
+                e_mouseover,
+                e_mousemove,
+                e_mouseout;
+} t_svg_event;
 
 /* svg attributes */
 typedef struct _svg
@@ -1063,6 +1090,9 @@ typedef struct _svg
     int x_stroketype;
     int x_ndash;
     t_fielddesc *x_strokedasharray; /* array of lengths */
+    t_svg_event x_events;
+    t_fielddesc x_drag; /* convenience event, not part of the svg spec */
+    t_svg_attr x_pointerevents;
     t_svg_attr x_strokelinecap;
     t_svg_attr x_strokelinejoin;
     t_svg_attr x_strokemiterlimit;
@@ -1074,6 +1104,7 @@ typedef struct _svg
     t_fielddesc *x_transform;
     t_fielddesc x_width;
     t_svg_attr x_vis;
+    t_fielddesc x_bbox; /* turn bbox calculation on or off */
     int x_pathrect_cache; /* 0 to recalc on next draw_getrect call
                              1 for cached
                             -1 to turn off caching */
@@ -1111,6 +1142,18 @@ typedef struct _drawimage
     t_canvas *x_canvas;
     t_pd *x_attr;
 } t_drawimage;
+
+void draw_notifyforscalar(t_draw *x, t_glist *owner,
+    t_scalar *sc, t_symbol *s, int argc, t_atom *argv)
+{
+    t_gpointer gp;
+    gpointer_init(&gp);
+    gpointer_setglist(&gp, owner, &sc->sc_gobj);
+    SETPOINTER(argv, &gp);
+    if (x)
+        outlet_anything(x->x_obj.ob_outlet, s, argc, argv);
+    gpointer_unset(&gp);
+}
 
 static int is_svgpath_cmd(t_symbol *s)
 {
@@ -1248,9 +1291,13 @@ void *svg_new(t_pd *parent, t_symbol *s, int argc, t_atom *argv)
     }
     if (argc & 1 && x->x_type != gensym("path"))
         fielddesc_setfloat_const(fd, 0);
+    fielddesc_setfloat_const(&x->x_bbox, 1);
+    fielddesc_setfloat_const(&x->x_drag, 0);
     x->x_filltype = 0;
     x->x_fillopacity.a_flag = 0;
     x->x_fillrule.a_flag = 0;
+    fielddesc_setfloat_const(&x->x_pointerevents.a_attr, 1);
+    x->x_pointerevents.a_flag = 0;
     x->x_stroketype = 0;
     x->x_strokelinecap.a_flag = 0;
     x->x_strokelinejoin.a_flag = 0;
@@ -1268,6 +1315,16 @@ void *svg_new(t_pd *parent, t_symbol *s, int argc, t_atom *argv)
     x->x_transform_n = 0;
     x->x_transform = (t_fielddesc *)t_getbytes(x->x_transform_n *
         sizeof(t_fielddesc));
+    /* initialize events */
+    fielddesc_setfloat_const(&x->x_events.e_focusin, 0);
+    fielddesc_setfloat_const(&x->x_events.e_focusout, 0);
+    fielddesc_setfloat_const(&x->x_events.e_activate, 0);
+    fielddesc_setfloat_const(&x->x_events.e_click, 0);
+    fielddesc_setfloat_const(&x->x_events.e_mousedown, 0);
+    fielddesc_setfloat_const(&x->x_events.e_mouseup, 0);
+    fielddesc_setfloat_const(&x->x_events.e_mouseover, 0);
+    fielddesc_setfloat_const(&x->x_events.e_mousemove, 0);
+    fielddesc_setfloat_const(&x->x_events.e_mouseout, 0);
     return (x);
 }
 
@@ -1311,6 +1368,9 @@ static void *draw_new(t_symbol *classsym, t_int argc, t_atom *argv)
     }
 
     t_draw *x = (t_draw *)pd_new(draw_class);
+
+    /* outlet for event notifications */
+    outlet_new(&x->x_obj, &s_anything);
 
     /* create a proxy for drawing/svg attributes */
     if (!(x->x_attr = (t_pd *)svg_new((t_pd *)x, type, argc, argv)))
@@ -1422,7 +1482,9 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
             (long unsigned int)x->x_parent,
             (long unsigned int)data);
     }
-    if (s == gensym("fill"))
+    if (s == gensym("bbox"))
+        *predraw_bbox = 1;
+    else if (s == gensym("fill"))
     {
         t_symbol *fill;
         t_fielddesc *fd = x->x_fill;
@@ -1466,6 +1528,8 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
             glist_getcanvas(c), tag, (int)fielddesc_getcoord(
                 &x->x_fillrule.a_attr, template, data, 1) ?
                     "evenodd" : "nonzero");
+    else if (s == gensym("pointer-events"))
+        *predraw_bbox = 1;
     else if (s == gensym("stroke-linecap"))
         sys_vgui(".x%lx.c itemconfigure %s -strokelinecap %s\n",
             glist_getcanvas(c), tag, get_strokelinecap(
@@ -1648,7 +1712,7 @@ void svg_updatevec(t_canvas *c, t_word *data, t_template *template,
     t_template *target, void *parent, t_symbol *s, t_svg *x, t_scalar *sc,
     int *predraw_bbox)
 {
-    post("updateing vec...");
+    // post("updateing vec...");
     int i, j;
     for (i = 0; i < template->t_n; i++)
     {
@@ -1962,8 +2026,55 @@ void svg_stroke(t_svg *x, t_symbol *s, t_int argc, t_atom *argv)
     svg_update(x, s);
 }
 
-void svg_strokelinecap(t_svg *x, t_symbol *s,
-    t_int argc, t_atom *argv)
+/* "drag" is a convenience method-- to use it the user must turn on the
+   "mousedown" event, too. */
+void svg_drag(t_svg *x, t_symbol *s, int argc, t_atom *argv)
+{
+    if (argc > 0 && (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL))
+    {
+        fielddesc_setfloatarg(&x->x_drag, argc, argv);
+    }
+}
+
+void svg_event(t_svg *x, t_symbol *s, int argc, t_atom *argv)
+{
+    if (argc > 0 && (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL))
+    {
+        if (s == gensym("focusin"))
+            fielddesc_setfloatarg(&x->x_events.e_focusin, argc, argv);
+        else if (s == gensym("focusout"))
+            fielddesc_setfloatarg(&x->x_events.e_focusout, argc, argv);
+        else if (s == gensym("activate"))
+            fielddesc_setfloatarg(&x->x_events.e_activate, argc, argv);
+        else if (s == gensym("click"))
+            fielddesc_setfloatarg(&x->x_events.e_click, argc, argv);
+        else if (s == gensym("mousedown"))
+            fielddesc_setfloatarg(&x->x_events.e_mousedown, argc, argv);
+        else if (s == gensym("mouseup"))
+            fielddesc_setfloatarg(&x->x_events.e_mouseup, argc, argv);
+        else if (s == gensym("mouseover"))
+            fielddesc_setfloatarg(&x->x_events.e_mouseover, argc, argv);
+        else if (s == gensym("mousemove"))
+            fielddesc_setfloatarg(&x->x_events.e_mousemove, argc, argv);
+        else if (s == gensym("mouseout"))
+            fielddesc_setfloatarg(&x->x_events.e_mouseout, argc, argv);
+//        svg_update(x, s);
+    }
+}
+
+void svg_pointerevents(t_svg *x, t_symbol *s, t_int argc, t_atom *argv)
+{
+    if (argc < 1)
+        x->x_pointerevents.a_flag = 0;
+    else if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
+    {
+        fielddesc_setfloatarg(&x->x_pointerevents.a_attr, argc, argv);
+        x->x_pointerevents.a_flag = 1;
+        svg_update(x, s);
+    }
+}
+
+void svg_strokelinecap(t_svg *x, t_symbol *s, t_int argc, t_atom *argv)
 {
     if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
     {
@@ -2117,6 +2228,17 @@ void svg_rectpoints(t_svg *x, t_symbol *s, int argc, t_atom *argv)
         pd_error(x, "draw: %s: no  for '%s'",
             x->x_type->s_name, s->s_name);
         return;
+    }
+}
+
+/* selectively do bbox calculation: 0 = off, 1 = on, instance variable per
+   instance */
+void svg_bbox(t_svg *x, t_symbol *s, t_int argc, t_atom *argv)
+{
+    if (argc > 0 && (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL))
+    {
+        fielddesc_setfloatarg(&x->x_bbox, argc, argv);
+        svg_update(x, s);
     }
 }
 
@@ -2299,14 +2421,16 @@ void svg_parsetransform(t_svg *x, t_template *template, t_word *data,
         }
         else if (type == gensym("skewx"))
         {
-            t_float a = fielddesc_getfloat(fd++, template, data, 0);
+            t_float a = fielddesc_getfloat(fd++, template, data, 0) *
+                3.14159 / 180;
             argc--;
             mset(m2, 1, 0, tan(a), 1, 0, 0);
             mmult(m, m2, m);
         }
         else if (type == gensym("skewy"))
         {
-            t_float a = fielddesc_getfloat(fd++, template, data, 0);
+            t_float a = fielddesc_getfloat(fd++, template, data, 0) *
+                3.14159 / 180;
             argc--;
             mset(m2, 1, tan(a), 0, 1, 0, 0);
             mmult(m, m2, m);
@@ -3111,7 +3235,22 @@ static void draw_getrect(t_gobj *z, t_glist *glist,
 {
     t_draw *x = (t_draw *)z;
     t_svg *sa = (t_svg *)x->x_attr;
-    /* todo: put this after the var inits below */
+
+    /* So in the svg spec, the "display" attribute doesn't actually
+       calculate a bbox, whereas the "visibility" still calcs the bbox.
+       tkpath doesn't have a function for "display" so currently "vis"
+       is filling in for it
+
+    */
+    if (!fielddesc_getfloat(&sa->x_vis.a_attr, template, data, 0) ||
+        !fielddesc_getfloat(&sa->x_bbox, template, data, 0) ||
+        (sa->x_type == gensym("group")))
+    {
+        *xp1 = *yp1 = 0x7fffffff;
+        *xp2 = *yp2 = -0x7fffffff;
+        return;
+    }
+
     if (sa->x_pathrect_cache == 1)
     {
         *xp1 = glist_xtopixels(glist, basex + sa->x_x1);
@@ -3129,13 +3268,6 @@ static void draw_getrect(t_gobj *z, t_glist *glist,
     int i, n = sa->x_nargs;
     t_fielddesc *f = sa->x_vec;
     int x1 = 0x7fffffff, x2 = -0x7fffffff, y1 = 0x7fffffff, y2 = -0x7fffffff;
-    if (!fielddesc_getfloat(&sa->x_vis.a_attr, template, data, 0) ||
-        (sa->x_flags & NOMOUSE) || (sa->x_type == gensym("group")))
-    {
-        *xp1 = *yp1 = 0x7fffffff;
-        *xp2 = *yp2 = -0x7fffffff;
-        return;
-    }
 
     svg_groupmtx(sa, template, data, mtx1);
     if (sa->x_type == gensym("path"))
@@ -3596,6 +3728,70 @@ static void draw_motion(void *z, t_floatarg dx, t_floatarg dy)
 {
     t_draw *x = (t_draw *)z;
     t_svg *sa = (t_svg *)x->x_attr;
+    t_atom at[5];
+    SETFLOAT(at+1, (t_float)dx);
+    SETFLOAT(at+2, (t_float)dy);
+    t_float mtx1[3][3];
+    t_float mtx2[3][3];
+    t_float m1, m2, m3, m4, m5, m6, tdx, tdy;
+
+    /* might use this to output the ctm */
+    svg_groupmtx(sa, draw_motion_template, draw_motion_wp, mtx1);
+    svg_parsetransform(sa, draw_motion_template, draw_motion_wp,
+        &m1, &m2, &m3, &m4, &m5, &m6);
+    mset(mtx2, m1, m2, m3, m4, m5, m6);
+    mmult(mtx1, mtx2, mtx1);
+    minv(mtx1, mtx1);
+    /* get rid of translation so it doesn't factor
+       in to our deltas */
+    mtx1[0][2] = 0;
+    mtx1[1][2] = 0;
+    mset(mtx2, dx, dy, 0, 0, 0, 0);
+    mtx2[2][0] = 1;
+    mmult(mtx1, mtx2, mtx2);
+    tdx = mtx2[0][0];
+    tdy = mtx2[1][0];
+    SETFLOAT(at+3, tdx);
+    SETFLOAT(at+4, tdy);
+    t_fielddesc *f = sa->x_vec; //+ draw_motion_field;
+    if (!gpointer_check(&draw_motion_gpointer, 0))
+    {
+        post("draw_motion: scalar disappeared");
+        return;
+    }
+    draw_motion_xcumulative += dx;
+    draw_motion_ycumulative += dy;
+//    if (f->fd_var && (tdx != 0))
+//    {
+//        fielddesc_setcoord(f, draw_motion_template, draw_motion_wp,
+//            draw_motion_xbase + draw_motion_xcumulative * draw_motion_xper,
+//                1); 
+//    }
+//    if ((f+1)->fd_var && (tdy != 0))
+//    {
+//        fielddesc_setcoord(f+1, draw_motion_template, draw_motion_wp,
+//            draw_motion_ybase + draw_motion_ycumulative * draw_motion_yper,
+//                1); 
+//    }
+        /* LATER figure out what to do to notify for an array? */
+    if (draw_motion_scalar)
+    {
+        template_notifyforscalar(draw_motion_template, draw_motion_glist, 
+            draw_motion_scalar, gensym("change"), 1, at);
+        draw_notifyforscalar(x, draw_motion_glist, draw_motion_scalar,
+            gensym("drag"), 5, at);
+    }
+//    if (draw_motion_scalar)
+//        scalar_redraw(draw_motion_scalar, draw_motion_glist);
+//    if (draw_motion_array)
+//        array_redraw(draw_motion_array, draw_motion_glist);
+}
+
+/*
+static void draw_motion(void *z, t_floatarg dx, t_floatarg dy)
+{
+    t_draw *x = (t_draw *)z;
+    t_svg *sa = (t_svg *)x->x_attr;
 
     t_float mtx1[3][3];
     t_float mtx2[3][3];
@@ -3607,8 +3803,10 @@ static void draw_motion(void *z, t_floatarg dx, t_floatarg dy)
     mset(mtx2, m1, m2, m3, m4, m5, m6);
     mmult(mtx1, mtx2, mtx1);
     minv(mtx1, mtx1);
+    */
     /* get rid of translation so it doesn't factor
        in to our deltas */
+/* 
     mtx1[0][2] = 0;
     mtx1[1][2] = 0;
     mset(mtx2, dx, dy, 0, 0, 0, 0);
@@ -3637,7 +3835,9 @@ static void draw_motion(void *z, t_floatarg dx, t_floatarg dy)
             draw_motion_ybase + draw_motion_ycumulative * draw_motion_yper,
                 1); 
     }
+    */
         /* LATER figure out what to do to notify for an array? */
+    /*
     if (draw_motion_scalar)
         template_notifyforscalar(draw_motion_template, draw_motion_glist, 
             draw_motion_scalar, gensym("change"), 1, &at);
@@ -3646,12 +3846,94 @@ static void draw_motion(void *z, t_floatarg dx, t_floatarg dy)
     if (draw_motion_array)
         array_redraw(draw_motion_array, draw_motion_glist);
 }
+*/
 
 static int draw_click(t_gobj *z, t_glist *glist, 
     t_word *data, t_template *template, t_scalar *sc, t_array *ap,
     t_float basex, t_float basey,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
+    //fprintf(stderr,"draw_click %f %f %d %d %g %g %lx\n",
+    //    basex, basey, xpix, ypix, glist_xtopixels(glist, basex),
+    //    glist_ytopixels(glist, basey), (t_int)data);
+    t_draw *x = (t_draw *)z;
+    t_svg *sa = (t_svg *)x->x_attr;
+    int x1, y1, x2, y2;
+    /* don't register a click if we don't have an event listener, or
+       if our pointer-event is "none" */
+    if (!fielddesc_getfloat(&sa->x_pointerevents.a_attr, template, data, 1) ||
+         (!fielddesc_getfloat(&sa->x_events.e_mousedown, template, data, 1) &&
+          !fielddesc_getfloat(&sa->x_drag, template, data, 1)))
+        return 0;
+    draw_getrect(z, glist, data, template, basex, basey,
+        &x1, &y1, &x2, &y2);
+    if (xpix >= x1 && xpix <= x2 && ypix >= y1 && ypix <= y2)
+    {
+        if (doit)
+        {
+            t_atom at[5];
+            SETFLOAT(at+1, xpix - glist_xtopixels(glist, basex));
+            SETFLOAT(at+2, ypix - glist_ytopixels(glist, basey));
+            t_float mtx1[3][3];
+            t_float mtx2[3][3];
+            t_float m1, m2, m3, m4, m5, m6, tdx, tdy;
+
+            t_svg *sa = (t_svg *)x->x_attr;
+            /* might use this to output the ctm */
+            svg_groupmtx(sa, template, data, mtx1);
+            svg_parsetransform(sa, template, data,
+                &m1, &m2, &m3, &m4, &m5, &m6);
+            mset(mtx2, m1, m2, m3, m4, m5, m6);
+            mmult(mtx1, mtx2, mtx1);
+            minv(mtx1, mtx1);
+            /* get rid of translation so it doesn't factor
+               in to our deltas */
+    //        mtx1[0][2] = 0;
+    //        mtx1[1][2] = 0;
+            /* maybe needs units per pixel here? */
+            mset(mtx2, xpix - glist_xtopixels(glist, basex),
+                ypix - glist_ytopixels(glist, basey), 0, 0, 0, 0);
+            mtx2[2][0] = 1;
+            mmult(mtx1, mtx2, mtx2);
+            SETFLOAT(at+3, mtx2[0][0]); /* user-coordinate x */
+            SETFLOAT(at+4, mtx2[1][0]); /* user-coordinate y */
+
+            if (fielddesc_getfloat(&sa->x_drag, template, data, 1))
+            {
+                draw_motion_xper = glist_pixelstox(glist, 1)
+                    - glist_pixelstox(glist, 0);
+                draw_motion_yper = glist_pixelstoy(glist, 1)
+                    - glist_pixelstoy(glist, 0);
+                draw_motion_xcumulative = 0;
+                draw_motion_ycumulative = 0;
+                draw_motion_glist = glist;
+                draw_motion_scalar = sc;
+                draw_motion_array = ap;
+                draw_motion_wp = data;
+        //        draw_motion_field = 2*bestn;
+                draw_motion_template = template;
+                if (draw_motion_scalar)
+                    gpointer_setglist(&draw_motion_gpointer, draw_motion_glist,
+                        &draw_motion_scalar->sc_gobj);
+                else gpointer_setarray(&draw_motion_gpointer,
+                        draw_motion_array, draw_motion_wp);
+                glist_grab(glist, z, draw_motion, 0, xpix, ypix);
+        //        outlet_anything(x->x_obj.ob_outlet, gensym("click"), 0, 0);
+            }
+            draw_notifyforscalar(x, glist, sc, gensym("mousedown"), 5, at);
+        }
+        return (1);
+    }
+    return (0);
+}
+
+/*
+static int draw_click(t_gobj *z, t_glist *glist, 
+    t_word *data, t_template *template, t_scalar *sc, t_array *ap,
+    t_float basex, t_float basey,
+    int xpix, int ypix, int shift, int alt, int dbl, int doit)
+{
+    post("hello?");
     //fprintf(stderr,"draw_click %f %f %d %d %lx\n",
     //    basex, basey, xpix, ypix, (t_int)data);
     t_draw *x = (t_draw *)z;
@@ -3722,8 +4004,11 @@ static int draw_click(t_gobj *z, t_glist *glist,
                 draw_motion_array, draw_motion_wp);
         glist_grab(glist, z, draw_motion, 0, xpix, ypix);
     }
+    post("we got clicked");
+    outlet_anything(x->x_obj.ob_outlet, gensym("click"), 0, 0);
     return (1);
 }
+*/
 
 t_parentwidgetbehavior draw_widgetbehavior =
 {
@@ -3779,12 +4064,20 @@ static void draw_setup(void)
     /* methods for svg_class-- these will be accessible
        from the inlet of [draw] and the (rightmost) inlet of
        [group] */
+    /* I don't find anything in the spec that will render the
+       shape while turning off the bbox calculations-- i.e., something
+       like the "-n" flag of [drawcurve].  So I've introduced the
+       "bbox" method for this */
+    class_addmethod(svg_class, (t_method)svg_bbox,
+        gensym("bbox"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_ellipsepoints,
         gensym("cx"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_ellipsepoints,
         gensym("cy"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_data,
         gensym("data"), A_GIMME, 0);
+    class_addmethod(svg_class, (t_method)svg_drag,
+        gensym("drag"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_fill,
         gensym("fill"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_fillopacity,
@@ -3793,6 +4086,10 @@ static void draw_setup(void)
         gensym("fill-rule"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_rectpoints,
         gensym("height"), A_GIMME, 0);
+    class_addmethod(svg_class, (t_method)svg_event,
+        gensym("mousedown"), A_GIMME, 0);
+    class_addmethod(svg_class, (t_method)svg_pointerevents,
+        gensym("pointer-events"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_data,
         gensym("points"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_r,
