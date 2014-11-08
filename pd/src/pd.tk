@@ -300,12 +300,12 @@ proc bgerror {message} {
 }     
 
 # make sure the user folder for installing externals exists
-catch {
-	if { ! [file exists $externalsdir] && [file exists [file dirname $externalsdir]] } {
-		puts stderr "Creating folder for user-installed externals: \n\t$externalsdir"
-		file mkdir $externalsdir
-	}
-}
+#catch {
+#	if { ! [file exists $externalsdir] && [file exists [file dirname $externalsdir]] } {
+#		puts stderr "Creating folder for user-installed externals: \n\t$externalsdir"
+#		file mkdir $externalsdir
+#	}
+#}
 
 
 # namespace for general-purpose functions
