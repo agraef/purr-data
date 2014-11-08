@@ -1037,7 +1037,7 @@ static t_class *trigger_class;
 typedef struct triggerout
 {
     int u_type;         /* outlet type from above */
-    t_symbol u_sym;     /* static value */
+    t_symbol *u_sym;     /* static value */
     t_float u_float;    /* static value */
     t_outlet *u_outlet;
 } t_triggerout;
@@ -1117,7 +1117,7 @@ static void *trigger_new(t_symbol *s, int argc, t_atom *argv)
         else if (c == 'S')
         {
             //static symbol
-            u->u_sym = *ap->a_w.w_symbol;
+            u->u_sym = gensym(ap->a_w.w_symbol->s_name);
             u->u_type = TR_STATIC_SYMBOL;
             u->u_outlet = outlet_new(&x->x_obj, &s_symbol);
         }
@@ -1157,7 +1157,7 @@ static void trigger_list(t_trigger *x, t_symbol *s, int argc, t_atom *argv)
         }
         else if (u->u_type == TR_STATIC_SYMBOL)
         {
-            outlet_symbol(u->u_outlet, &u->u_sym);
+            outlet_symbol(u->u_outlet, u->u_sym);
         }
         else outlet_list(u->u_outlet, &s_list, argc, argv);
     }
@@ -1184,7 +1184,7 @@ static void trigger_anything(t_trigger *x, t_symbol *s, int argc, t_atom *argv)
         }
         else if (u->u_type == TR_STATIC_SYMBOL)
         {
-            outlet_symbol(u->u_outlet, &u->u_sym);
+            outlet_symbol(u->u_outlet, u->u_sym);
         }        
         //else trigger_symbol(x, s);
         else
@@ -1227,7 +1227,7 @@ static void trigger_anything(t_trigger *x, t_symbol *s, int argc, t_atom *argv)
             else if (u->u_type == TR_STATIC_SYMBOL)
             {
                 //fprintf(stderr,"trigger_anything -> TR_STATIC_SYMBOL %d\n", argc);
-                outlet_symbol(u->u_outlet, &u->u_sym);
+                outlet_symbol(u->u_outlet, u->u_sym);
             }
             else
             {
