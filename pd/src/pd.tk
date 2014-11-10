@@ -294,10 +294,10 @@ if { $tcl_platform(platform) == "windows" }  {
 	set externalsdir "$::env(HOME)/pd-l2ork-externals"
 }   
 
-proc bgerror {message} {
-	pdtk_post "\ntcl error: $message"
+#proc bgerror {message} {
+#	pdtk_post "\ntcl error: $message"
 	#puts "\033\[0;1;33mtcl error: $::errorInfo\033\[0m"
-}     
+#}     
 
 # make sure the user folder for installing externals exists
 #catch {

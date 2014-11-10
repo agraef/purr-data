@@ -236,7 +236,7 @@ proc ::dialog_search::create_dialog {mytoplevel} {
 	-anchor center -style Foo.TLabel
     text $mytoplevel.navtext -font "$searchfont -12" -height 1 -bd 0 \
         -highlightthickness 0 -bg $::pd_colors(canvas_color) \
-	-padx 8 -pady 3 -fg $::pd_colors(text)
+	-padx 8 -pady 7 -fg $::pd_colors(text)
     text $mytoplevel.resultstext \
         -yscrollcommand "$mytoplevel.yscrollbar set" \
         -bg $::pd_colors(canvas_color) -fg $::pd_colors(text) \
@@ -618,9 +618,10 @@ proc ::dialog_search::search {} {
         -mode determinate
     ttk::button $widget.bcancel -text "Cancel" -padding {0 0 0 0} \
         -command "set ::dialog_search::cancelled 1" -cursor left_ptr
+    ttk::label $widget.building_index -background white -text "  Building index for subsequent searches...  "
 #    $widget insert 1.end "    "
     $widget window create 1.end -window $widget.pbar
-    $widget insert 1.end "  Building index for subsequent searches...  "
+    $widget window create 1.end -window $widget.building_index
     $widget window create 1.end -window $widget.bcancel
     $widget configure -state disabled
 

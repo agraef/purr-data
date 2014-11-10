@@ -131,9 +131,9 @@ deb: $(bindir)
 		$(DESTDIR)/etc/init.d/
 # default prefs file
 	install -d $(DESTDIR)/etc/pd-l2ork
-	ln -s -f $(libpddir)/default.pd-l2ork \
-		$(DESTDIR)/etc/pd-l2ork/default.pd-l2ork
-	install -p $(packages_src)/linux_make/default.pd-l2ork $(DESTDIR)$(libpddir)
+	ln -s -f $(libpddir)/default.settings \
+		$(DESTDIR)/etc/pd-l2ork/default.settings
+	install -p $(packages_src)/linux_make/default.settings $(DESTDIR)$(libpddir)
 # app window icon
 	install -p $(packages_src)/linux_make/pd-l2ork.gif $(DESTDIR)$(libpddir)
 # emacs mode for .pd files
@@ -177,7 +177,7 @@ installer_readme:
 		$(INSTALLER_README_FILE)
 
 installer_settings:
-	install -p $(packages_src)/linux_make/default.pd-l2ork $(DESTDIR)$(libpddir)
+	install -p $(packages_src)/linux_make/default.settings $(DESTDIR)$(libpddir)
 	# app window icon
 	install -p $(packages_src)/linux_make/pd-l2ork.gif $(DESTDIR)$(libpddir)
 #	install -d $(DESTDIR)/usr/share/icons/hicolor/128x128/apps
