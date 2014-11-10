@@ -7693,14 +7693,14 @@ namespace eval dlg_Startup {
         wm geom .inputBox "450x30"
         after idle { center_window .inputBox 10 50 }
 
-        button .inputBox.cmdOK -text "OK" -command { destroy .inputBox }
+        match_linux_wm [list button .inputBox.cmdOK -text "OK" -command { destroy .inputBox } ]
 
-        entry .inputBox.txtInput -width 50 -textvariable cmd 
+        match_linux_wm [list entry .inputBox.txtInput -width 50 -textvariable cmd ]
         pdtk_standardkeybindings .inputBox.txtInput
         bind .inputBox.txtInput <KeyPress-Return> { destroy .inputBox }
         bind .inputBox.txtInput <KeyPress-Escape> { destroy .inputBox }
-        pack .inputBox.txtInput -side left -expand 1 -fill x -padx 2m
-        pack .inputBox.cmdOK -side left 
+        pack .inputBox.txtInput -side left -expand 1 -fill x -padx 3 -pady 3
+        pack .inputBox.cmdOK -side left -padx 3 -pady 3
 
         focus .inputBox.txtInput
 
