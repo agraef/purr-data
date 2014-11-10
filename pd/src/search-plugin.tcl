@@ -41,7 +41,7 @@ namespace eval ::dialog_search:: {
     variable cancelled
     variable database {}
     # the dbpath needs to be made more general for OSX and Windows
-    variable dbpath [file join [file nativename ~] pd-l2ork-externals doc_index]
+    variable dbpath [file join [file nativename ~] .pd-l2ork doc_index]
     variable metakeys { alias XA license XL description XD \
                         release_date XR author A help_patch_author XHA \
                         keywords K \

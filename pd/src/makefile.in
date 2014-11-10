@@ -282,12 +282,12 @@ install: all tkpath tkdnd
 		> $(ABOUT_FILE)
 	rm $(ABOUT_FILE).tmp
 	rsync -ax --exclude=.git --exclude=.svn ../extra $(DESTDIR)$(libpddir)/
-	install -d $(DESTDIR)$(includedir)/pdl2ork
-	install -m644 m_pd.h $(DESTDIR)$(includedir)/pdl2ork/m_pd.h
-	install -m644 m_imp.h $(DESTDIR)$(includedir)/pdl2ork/m_imp.h
-	install -m644 g_canvas.h $(DESTDIR)$(includedir)/pdl2ork/g_canvas.h
-	install -m644 s_stuff.h $(DESTDIR)$(includedir)/pdl2ork/s_stuff.h
-	install -m644 g_all_guis.h $(DESTDIR)$(includedir)/pdl2ork/g_all_guis.h
+	install -d $(DESTDIR)$(includedir)/pd-l2ork
+	install -m644 m_pd.h $(DESTDIR)$(includedir)/pd-l2ork/m_pd.h
+	install -m644 m_imp.h $(DESTDIR)$(includedir)/pd-l2ork/m_imp.h
+	install -m644 g_canvas.h $(DESTDIR)$(includedir)/pd-l2ork/g_canvas.h
+	install -m644 s_stuff.h $(DESTDIR)$(includedir)/pd-l2ork/s_stuff.h
+	install -m644 g_all_guis.h $(DESTDIR)$(includedir)/pd-l2ork/g_all_guis.h
 	install -d $(DESTDIR)$(mandir)/man1
 	gzip < ../man/pd.1 >  $(DESTDIR)$(mandir)/man1/@PDEXEC@.1.gz
 	chmod 644 $(DESTDIR)$(mandir)/man1/@PDEXEC@.1.gz
@@ -333,7 +333,7 @@ uninstall:
 	rm -f $(DESTDIR)$(bindir)/@PDEXEC@
 	rm -f $(DESTDIR)$(bindir)/pdsend
 	rm -f $(DESTDIR)$(bindir)/pdreceive
-	rm -f -r $(DESTDIR)$(includedir)/pdl2ork/
+	rm -f -r $(DESTDIR)$(includedir)/pd-l2ork/
 	rm -f $(DESTDIR)$(mandir)/man1/pd.1.gz
 	rm -f $(DESTDIR)$(mandir)/man1/pdsend.1.gz
 	rm -f $(DESTDIR)$(mandir)/man1/pdreceive.1.gz

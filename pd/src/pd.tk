@@ -307,6 +307,13 @@ proc bgerror {message} {
 #	}
 #}
 
+# make sure the user folder for settings exists
+catch {
+	if { ! [file exists $::env(HOME)/.pd-l2ork] } {
+		puts stderr "Creating settings folder: $::env(HOME)/.pd-l2ork"
+		file mkdir $::env(HOME)/.pd-l2ork
+	}
+}
 
 # namespace for general-purpose functions
 proc pdtk_encode { listdata } {
