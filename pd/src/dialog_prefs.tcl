@@ -152,9 +152,11 @@ proc ::dialog_prefs::set_color {array key op} {
                  .search.resultstext configure -foreground $c
                  .search.navtext configure -foreground $c
              }
-             if {[winfo exists .printout.frame.text]} {
-                 .printout.frame.text configure -foreground $c
-             }
+        }
+        text_in_console { 
+            if {[winfo exists .printout.frame.text]} {
+                .printout.frame.text configure -foureground $c
+            }
         }
         canvas_color {set commands [list "configure -bg $c"]
             if {[winfo exists .search.resultstext]} {

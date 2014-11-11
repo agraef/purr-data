@@ -574,59 +574,6 @@ set pd_array_listview_entry(0) 0
 set pd_array_listview_page(0) 0
 # end jsarlo
 
-# Prefences Dialog
-# dialog_prefs.tcl must come first because dialog_gui.tcl depends on it
-# This is an ugly hack-- it should just be loaded as tcl packages like
-# in 0.43...
-source [file join [file dirname [info script]] dialog_prefs.tcl]
-source [file join [file dirname [info script]] dialog_gui.tcl]
-source [file join [file dirname [info script]] dialog_midi.tcl]
-source [file join [file dirname [info script]] dialog_audio.tcl]
-
-# Add a trace for the color array. This way any gui-plugin can make
-# color changes simply by changing one of the elements of the pd_colors
-# array, and all the preference dialog stuff and open patches will
-# magically update
-trace add variable pd_colors write ::dialog_prefs::set_color
-
-# ... and a trace for the ::gui_preset variable.  There's probably
-# a way to do this inside the dropdown code, which would be better...
-trace add variable gui_preset write "::dialog_gui::set_gui_preset"
-
-# Now that we've got a trace for the colors, we can set a
-# color scheme (defined in dialog_gui.tcl)
-set gui_preset L2Ork
-
-# todo: find a home for these:
-set ::pd_colors(signal_cord_width) 3
-set ::pd_colors(control_cord_width) 1
-
-# color scheme
-# set canvas_fill "white"
-# set text_color "#000"
-# set select_color "#e87216"
-# set dash_outline "#f00"
-# set dash_fill "#f7f7f7"
-# set box_outline "#ccc"
-# set graph_outline "#777"
-# set atom_box_fill "#eee"
-# set msg_box_fill "#f8f8f6"
-# set obj_box_fill "#f6f8f8"
-# Doesn't look like signal_cord_highlight is used
-# set signal_cord_highlight "#58a"
-# set signal_cord "#808095"
-# set signal_nlet $signal_cord
-# Todo: make sure these work in k12 mode
-# set signal_cord_width 3
-# set msg_cord_highlight "#474"
-# set msg_cord "#565"
-# set msg_nlet "white"
-# set mixed_nlet "#88aaff"
-# set msg_cord_width 1
-
-#nlet highlighting stuff
-set select_nlet_color $pd_colors(selection)
-set highlight_width 5
 
 if {$pd_nt == 1} {
     global pd_guidir
@@ -713,6 +660,65 @@ namespace import ::pd_guiprefs::write_recentfiles
 
 set total_recentfiles 5
 ::pd_guiprefs::init
+
+# Prefences Dialog
+# dialog_prefs.tcl must come first because dialog_gui.tcl depends on it
+# This is an ugly hack-- it should just be loaded as tcl packages like
+# in 0.43...
+source [file join [file dirname [info script]] dialog_prefs.tcl]
+source [file join [file dirname [info script]] dialog_gui.tcl]
+source [file join [file dirname [info script]] dialog_midi.tcl]
+source [file join [file dirname [info script]] dialog_audio.tcl]
+
+# Add a trace for the color array. This way any gui-plugin can make
+# color changes simply by changing one of the elements of the pd_colors
+# array, and all the preference dialog stuff and open patches will
+# magically update
+trace add variable pd_colors write ::dialog_prefs::set_color
+
+# ... and a trace for the ::gui_preset variable.  There's probably
+# a way to do this inside the dropdown code, which would be better...
+trace add variable gui_preset write "::dialog_gui::set_gui_preset"
+
+# Now that we've got a trace for the colors, we can set a
+# color scheme if there isn't one in the preferences
+# (defined in dialog_gui.tcl)
+if {$::gui_preset eq ""} {
+    set ::gui_preset L2Ork
+} else {
+    ::dialog_gui::set_gui_preset
+}
+
+# todo: find a home for these:
+set ::pd_colors(signal_cord_width) 3
+set ::pd_colors(control_cord_width) 1
+
+# color scheme
+# set canvas_fill "white"
+# set text_color "#000"
+# set select_color "#e87216"
+# set dash_outline "#f00"
+# set dash_fill "#f7f7f7"
+# set box_outline "#ccc"
+# set graph_outline "#777"
+# set atom_box_fill "#eee"
+# set msg_box_fill "#f8f8f6"
+# set obj_box_fill "#f6f8f8"
+# Doesn't look like signal_cord_highlight is used
+# set signal_cord_highlight "#58a"
+# set signal_cord "#808095"
+# set signal_nlet $signal_cord
+# Todo: make sure these work in k12 mode
+# set signal_cord_width 3
+# set msg_cord_highlight "#474"
+# set msg_cord "#565"
+# set msg_nlet "white"
+# set mixed_nlet "#88aaff"
+# set msg_cord_width 1
+
+#nlet highlighting stuff
+set select_nlet_color $pd_colors(selection)
+set highlight_width 5
 
 # official GNU gettext msgcat shortcut
 proc _ {s} {return [::msgcat::mc $s]}
@@ -895,7 +901,8 @@ wm protocol .printout WM_DELETE_WINDOW { .controls.switches.console invoke }
 match_linux_wm [list frame .printout.frame]
 text .printout.frame.text -relief sunken -bd 1 -font console_font \
     -yscrollcommand ".printout.frame.scroll set"  -width 70 -height 24 \
-	-highlightthickness 0 -takefocus 0 -fg gray20 -state disabled
+	-highlightthickness 0 -takefocus 0 -fg $pd_colors(text_in_console) \
+    -state disabled -bg $pd_colors(canvas_color)
 #.printout.frame.text tag configure sel -background $linux_wm_hlcolor
 
 # .printout.frame.text insert end "\n\n\n\n\n\n\n\n\n\n"
