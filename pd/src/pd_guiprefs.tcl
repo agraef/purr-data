@@ -15,7 +15,8 @@ namespace eval ::pd_guiprefs:: {
 # FIXME should these be globals ?
 set ::recentfiles_key ""
 set ::recentfiles_domain ""
-
+set ::guipreset_key ""
+set ::guipreset_domain ""
 
 #################################################################
 # global procedures
@@ -35,6 +36,9 @@ proc ::pd_guiprefs::init {} {
     set ::recentfiles_list ""
     catch {set ::recentfiles_list [get_config $::recentfiles_domain \
         $::recentfiles_key $arr]}
+    set ::gui_preset ""
+    catch {set ::gui_preset [get_config $::guipreset_domain \
+        $::guipreset_key $arr]}
 }
 
 proc ::pd_guiprefs::init_aqua {} {
@@ -42,18 +46,25 @@ proc ::pd_guiprefs::init_aqua {} {
     set ::recentfiles_domain org.puredata
     set ::recentfiles_key "NSRecentDocuments"
     set ::total_recentfiles 10
+    set ::guipreset_domain org.puredata
+    set ::guipreset_key "GuiPreset"
 }
 
 proc ::pd_guiprefs::init_win {} {
     # windows uses registry
     set ::recentfiles_domain "HKEY_CURRENT_USER\\Software\\Pd-L2Ork"
     set ::recentfiles_key "RecentDocs"
+    set ::guipreset_domain "HKEY_CURRENT_USER\\Software\\Pd-L2Ork"
+    set ::guipreset_key "GuiPreset"
+
 }
 
 proc ::pd_guiprefs::init_x11 {} {
     # linux uses ~/.config/pure-data dir
     set ::recentfiles_domain "~/.config/pd-l2ork"
     set ::recentfiles_key "recentfiles.conf"
+    set ::guipreset_domain "~/.config/pd-l2ork"
+    set ::guipreset_key "guipreset.conf"
     prepare_configdir
 }
 
@@ -62,6 +73,10 @@ proc ::pd_guiprefs::init_x11 {} {
 #
 proc ::pd_guiprefs::write_recentfiles {} {
     write_config $::recentfiles_list $::recentfiles_domain $::recentfiles_key true
+}
+
+proc ::pd_guiprefs::write_guipreset {} {
+    write_config $::gui_preset $::guipreset_domain $::guipreset_key true
 }
 
 # ------------------------------------------------------------------------------
@@ -77,6 +92,11 @@ proc ::pd_guiprefs::update_recentfiles {afile save} {
     set ::recentfiles_list [lrange $::recentfiles_list 0 [expr $::total_recentfiles - 1]]
     #::pd_menus::update_recentfiles_menu .mbar.file $save
     ::pd_guiprefs::write_recentfiles
+}
+
+proc ::pd_guiprefs::update_guipreset {preset} {
+    set ::gui_preset $preset
+    ::pd_guiprefs::write_guipreset
 }
 
 #################################################################

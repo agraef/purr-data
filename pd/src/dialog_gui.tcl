@@ -1,5 +1,8 @@
 package provide dialog_gui 0.1
 package require dialog_prefs
+package require pd_guiprefs
+
+namespace import ::pd_guiprefs::write_guipreset
 
 namespace eval ::dialog_gui:: {
     namespace export create_gui_dialog
@@ -28,6 +31,7 @@ proc ::dialog_gui::setswatch {b swatch} {
 # variable is written to
 proc ::dialog_gui::set_gui_preset {args} {
     set choice $::gui_preset
+    ::pd_guiprefs::write_guipreset
     switch $choice {
         Vanilla {
             set ::pd_colors(atom_box)        white
@@ -35,6 +39,7 @@ proc ::dialog_gui::set_gui_preset {args} {
             set ::pd_colors(canvas_color)    white
             set ::pd_colors(canvas_cursor)   black
             set ::pd_colors(text)            black
+            set ::pd_colors(text_in_console) black
             set ::pd_colors(box)             white
             set ::pd_colors(box_border)      black
             set ::pd_colors(msg)             white
@@ -67,6 +72,7 @@ proc ::dialog_gui::set_gui_preset {args} {
             set ::pd_colors(canvas_color)    black
             set ::pd_colors(canvas_cursor)   white
             set ::pd_colors(text)            white
+            set ::pd_colors(text_in_console) white
             set ::pd_colors(box)             black
             set ::pd_colors(box_border)      white
             set ::pd_colors(msg)             black
@@ -99,6 +105,7 @@ proc ::dialog_gui::set_gui_preset {args} {
             set ::pd_colors(canvas_color)     white
             set ::pd_colors(canvas_cursor)    black
             set ::pd_colors(text)             black
+            set ::pd_colors(text_in_console)  grey40
             set ::pd_colors(box)              "#f6f8f8"
             set ::pd_colors(box_border)       "#ccc"
             set ::pd_colors(msg)              #f8f8f6
@@ -130,6 +137,7 @@ proc ::dialog_gui::set_gui_preset {args} {
             set ::pd_colors(canvas_color)     black
             set ::pd_colors(canvas_cursor) white
             set ::pd_colors(text)          white
+            set ::pd_colors(text_in_console) #999999
             set ::pd_colors(box)           #090707
             set ::pd_colors(box_border)    #3e3e3e
             set ::pd_colors(msg)       #090707
@@ -161,6 +169,7 @@ proc ::dialog_gui::set_gui_preset {args} {
             set ::pd_colors(canvas_color)     white
             set ::pd_colors(canvas_cursor) black
             set ::pd_colors(text)          black
+            set ::pd_colors(text_in_console) black
             set ::pd_colors(box)           #f6f8f8
             set ::pd_colors(box_border)    #c1c1c1
             set ::pd_colors(msg)       #f6f8f8
@@ -193,6 +202,7 @@ proc ::dialog_gui::set_gui_preset {args} {
             set ::pd_colors(canvas_color)     #3e32a2
             set ::pd_colors(canvas_cursor) white
             set ::pd_colors(text)          #a49aea
+            set ::pd_colors(text_in_console) #a49aea
             set ::pd_colors(box)           #3e32a2
             set ::pd_colors(box_border)    #7569d7
             set ::pd_colors(msg)       #3e32a2
@@ -225,6 +235,7 @@ proc ::dialog_gui::set_gui_preset {args} {
             set ::pd_colors(canvas_color)     black
             set ::pd_colors(canvas_cursor) white
             set ::pd_colors(text)          #4bd046
+            set ::pd_colors(text_in_console) #4bd046
             set ::pd_colors(box)           black
             set ::pd_colors(box_border)    #0b560b
             set ::pd_colors(msg)       black
@@ -256,6 +267,7 @@ proc ::dialog_gui::set_gui_preset {args} {
             set ::pd_colors(canvas_color)     #c0dcc0
             set ::pd_colors(canvas_cursor) black
             set ::pd_colors(text)          black
+            set ::pd_colors(text_in_console) black
             set ::pd_colors(box)           #c0dcc0
             set ::pd_colors(box_border)    #666666
             set ::pd_colors(msg)       #c0dcc0
