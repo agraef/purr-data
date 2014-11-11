@@ -1,0 +1,26 @@
+#N canvas 421 184 585 297 10;
+#X obj 94 175 list prepend;
+#X obj 94 197 list trim;
+#X obj 163 67 loadbang;
+#X obj 94 91 inlet;
+#X obj 94 219 outlet;
+#X obj 227 141 inlet;
+#X obj 163 94 list append \$1;
+#X text -1 0 This is a legacy replacement for prepend in cyclone library.
+Please use [list prepend] and [list append] instead.;
+#X obj 94 123 route set;
+#X obj 217 193 loadbang;
+#X obj 217 261 print;
+#X msg 217 214 [prepend] is a legacy replacement for prepend in cyclone
+library that is considered deprecated in pd-l2ork. Please use [list
+prepend] and [list append] instead.;
+#X connect 0 0 1 0;
+#X connect 1 0 4 0;
+#X connect 2 0 6 0;
+#X connect 3 0 8 0;
+#X connect 5 0 0 1;
+#X connect 6 0 0 1;
+#X connect 8 0 0 1;
+#X connect 8 1 0 0;
+#X connect 9 0 11 0;
+#X connect 11 0 10 0;
