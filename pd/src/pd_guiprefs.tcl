@@ -62,9 +62,9 @@ proc ::pd_guiprefs::init_win {} {
 proc ::pd_guiprefs::init_x11 {} {
     # linux uses ~/.config/pure-data dir
     set ::recentfiles_domain "~/.pd-l2ork"
-    set ::recentfiles_key "recent.files"
+    set ::recentfiles_key "recent_files"
     set ::guipreset_domain "~/.pd-l2ork"
-    set ::guipreset_key "gui.theme"
+    set ::guipreset_key "gui_theme"
     prepare_configdir
 }
 
