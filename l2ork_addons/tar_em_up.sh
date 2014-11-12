@@ -125,12 +125,14 @@ if [ $full -gt 0 -o $deb -gt 0 ]
 then
 	echo "Pd full installer... IMPORTANT! When ran for the first time this step requires internet connection to pull sources from other repositories..."
 
-	# check if Gem submodule is empty, and if so do first init
-	if [ "$(ls -A Gem)" ]; then
-		git submodule update
-	else
-		git submodule init
-		git submodule update
+	if [ -d .git ]; then
+		# check if Gem submodule is empty, and if so do first init
+		if [ "$(ls -A Gem)" ]; then
+			git submodule update
+		else
+			git submodule init
+			git submodule update
+		fi
 	fi
 
 	# update the include files to be safe
