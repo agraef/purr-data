@@ -2356,6 +2356,7 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
                 //just retext it
                 t_rtext *yr = glist_findrtext(glist, x);
                 if (yr) rtext_retext(yr);
+                binbuf_free(b);
             }
         }
         else  /* normally, just destroy the old one and make a new one. */
@@ -2397,6 +2398,7 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
                 //fprintf(stderr,"just retext it\n");
                 t_rtext *yr = glist_findrtext(glist, x);
                 if (yr) rtext_retext(yr);
+                binbuf_free(b);
             }
         }
             /* if we made a new "pd" or changed a window name,

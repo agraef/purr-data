@@ -37,8 +37,43 @@ proc ::pd_guiprefs::init {} {
     catch {set ::recentfiles_list [get_config $::recentfiles_domain \
         $::recentfiles_key $arr]}
     set ::gui_preset ""
-    catch {set ::gui_preset [get_config $::guipreset_domain \
-        $::guipreset_key $arr]}
+    catch {
+        set ::gui_preset [get_config $::guipreset_domain $::guipreset_key $arr]
+        if { [lindex $::gui_preset 0] == "Custom" } {
+            set ::pd_colors(atom_box) [lindex $::gui_preset 1]
+            set ::pd_colors(atom_box_border) [lindex $::gui_preset 2]
+            set ::pd_colors(canvas_color) [lindex $::gui_preset 3]
+            set ::pd_colors(canvas_cursor) [lindex $::gui_preset 4]
+            set ::pd_colors(text) [lindex $::gui_preset 5]
+            set ::pd_colors(text_in_console) [lindex $::gui_preset 6]
+            set ::pd_colors(box) [lindex $::gui_preset 7]
+            set ::pd_colors(box_border) [lindex $::gui_preset 8]
+            set ::pd_colors(msg) [lindex $::gui_preset 9]
+            set ::pd_colors(msg_border) [lindex $::gui_preset 10]
+            set ::pd_colors(iemgui_border) [lindex $::gui_preset 11]
+            set ::pd_colors(iemgui_nlet) [lindex $::gui_preset 12]
+            set ::pd_colors(control_cord) [lindex $::gui_preset 13]
+            set ::pd_colors(control_nlet) [lindex $::gui_preset 14]
+            set ::pd_colors(signal_cord) [lindex $::gui_preset 15]
+            set ::pd_colors(signal_nlet) [lindex $::gui_preset 16]
+            set ::pd_colors(xlet_hover) [lindex $::gui_preset 17]
+            set ::pd_colors(link) [lindex $::gui_preset 18]
+            set ::pd_colors(selection) [lindex $::gui_preset 19]
+            set ::pd_colors(selection_rectangle) [lindex $::gui_preset 20]
+            set ::pd_colors(highlighted_text) [lindex $::gui_preset 21]
+            set ::pd_colors(highlighted_text_bg) [lindex $::gui_preset 22]
+            set ::pd_colors(dash_outline) [lindex $::gui_preset 23]
+            set ::pd_colors(dash_fill) [lindex $::gui_preset 24]
+            set ::pd_colors(graph_border) [lindex $::gui_preset 25]
+            set ::pd_colors(graph) [lindex $::gui_preset 26]
+            set ::pd_colors(magic_glass_bg) [lindex $::gui_preset 27]
+            set ::pd_colors(magic_glass_bd) [lindex $::gui_preset 28]
+            set ::pd_colors(magic_glass_text) [lindex $::gui_preset 29]
+            set ::pd_colors(magic_glass_flash) [lindex $::gui_preset 30]
+            set ::gui_preset [lindex $::gui_preset 0]
+        }
+
+    }
 }
 
 proc ::pd_guiprefs::init_aqua {} {
@@ -61,10 +96,10 @@ proc ::pd_guiprefs::init_win {} {
 
 proc ::pd_guiprefs::init_x11 {} {
     # linux uses ~/.config/pure-data dir
-    set ::recentfiles_domain "~/.config/pd-l2ork"
-    set ::recentfiles_key "recentfiles.conf"
-    set ::guipreset_domain "~/.config/pd-l2ork"
-    set ::guipreset_key "guipreset.conf"
+    set ::recentfiles_domain "~/.pd-l2ork"
+    set ::recentfiles_key "recent_files"
+    set ::guipreset_domain "~/.pd-l2ork"
+    set ::guipreset_key "gui_theme"
     prepare_configdir
 }
 
@@ -76,7 +111,40 @@ proc ::pd_guiprefs::write_recentfiles {} {
 }
 
 proc ::pd_guiprefs::write_guipreset {} {
-    write_config $::gui_preset $::guipreset_domain $::guipreset_key true
+    set output $::gui_preset
+    if { $::gui_preset == "Custom" } {
+        lappend output $::pd_colors(atom_box)
+        lappend output $::pd_colors(atom_box_border)
+        lappend output $::pd_colors(canvas_color)
+        lappend output $::pd_colors(canvas_cursor)
+        lappend output $::pd_colors(text)
+        lappend output $::pd_colors(text_in_console)
+        lappend output $::pd_colors(box)
+        lappend output $::pd_colors(box_border)
+        lappend output $::pd_colors(msg)
+        lappend output $::pd_colors(msg_border)
+        lappend output $::pd_colors(iemgui_border)
+        lappend output $::pd_colors(iemgui_nlet)
+        lappend output $::pd_colors(control_cord)
+        lappend output $::pd_colors(control_nlet)
+        lappend output $::pd_colors(signal_cord)
+        lappend output $::pd_colors(signal_nlet)
+        lappend output $::pd_colors(xlet_hover)
+        lappend output $::pd_colors(link)
+        lappend output $::pd_colors(selection)
+        lappend output $::pd_colors(selection_rectangle)
+        lappend output $::pd_colors(highlighted_text)
+        lappend output $::pd_colors(highlighted_text_bg)
+        lappend output $::pd_colors(dash_outline)
+        lappend output $::pd_colors(dash_fill)
+        lappend output $::pd_colors(graph_border)
+        lappend output $::pd_colors(graph)
+        lappend output $::pd_colors(magic_glass_bg)
+        lappend output $::pd_colors(magic_glass_bd)
+        lappend output $::pd_colors(magic_glass_text)
+        lappend output $::pd_colors(magic_glass_flash)
+    }
+    write_config $output $::guipreset_domain $::guipreset_key true
 }
 
 # ------------------------------------------------------------------------------
