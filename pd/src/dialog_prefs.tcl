@@ -155,7 +155,7 @@ proc ::dialog_prefs::set_color {array key op} {
         }
         text_in_console { 
             if {[winfo exists .printout.frame.text]} {
-                .printout.frame.text configure -foureground $c
+                .printout.frame.text configure -foreground $c
             }
         }
         canvas_color {set commands [list "configure -bg $c"]
@@ -292,9 +292,14 @@ proc ::dialog_prefs::swatchmenu_nav {w dir} {
 }
 
 proc ::dialog_prefs::swatchbutton_colorchooser {name variable} {
-    set col [tk_chooseColor -parent $name]
+    set col [tk_chooseColor -parent $name -initialcolor [set $variable]]
     if {$col ne ""} {
         set $variable $col
+        # kludge since the dialog has static name for colors, we refer to it here
+        # with partially modular approach that should hopefully prove universal
+        set combobox [string trimright $name .link] 
+        ::dialog_prefs::dropdown_set $combobox.presets.presets Custom
+        ::pd_guiprefs::write_guipreset
     }
 }
 

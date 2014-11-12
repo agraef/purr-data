@@ -293,6 +293,9 @@ proc ::dialog_gui::set_gui_preset {args} {
             set ::pd_colors(magic_glass_text) white
             set ::pd_colors(magic_glass_flash) "#e87216"
         }
+        Custom {
+            # empty one if we have any custom settings
+        }
     }
 }
 
@@ -303,7 +306,7 @@ proc ::dialog_gui::create_gui_dialog {mytoplevel} {
     ttk::label $p.presetlabel -text "Color Preset"
 #    ttk::combobox $fr.presets -state readonly -values {Inverted L2Ork Foo}
 # todo: set presets in _one_ place
-    ::dialog_prefs::dropdown $p.presets ::gui_preset {Vanilla Inverted L2Ork L2Ork_Inverted Extended C64 Strongbad Subdued}
+    ::dialog_prefs::dropdown $p.presets ::gui_preset {Vanilla Inverted L2Ork L2Ork_Inverted Extended C64 Strongbad Subdued Custom}
     pack $fr -side top
     grid $p -column 0 -columnspan 3 -row 0 -sticky w -pady 21
     pack $p.presetlabel -side left -padx 7
