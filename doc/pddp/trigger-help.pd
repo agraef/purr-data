@@ -1,9 +1,9 @@
 #N canvas 426 34 555 619 10;
-#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+#X obj 0 645 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header trigger 3 12 0 18
 -204280 -1 0;
-#X obj 0 219 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+#X obj 0 269 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
 #N canvas 484 266 494 358 META 0;
 #X text 12 135 LIBRARY internal;
@@ -22,12 +22,12 @@ convert data types;
 #X text 12 5 ALIAS t;
 #X text 12 25 KEYWORDS control needs_work list_op bang_op;
 #X text 12 195 RELEASE_DATE 1997;
-#X restore 500 597 pd META;
-#X obj 0 256 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+#X restore 500 647 pd META;
+#X obj 0 306 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
 13 -228856 -1 0;
-#X obj 0 309 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+#X obj 0 359 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
 0 13 -228856 -1 0;
-#X obj 0 497 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+#X obj 0 547 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #N canvas 215 343 428 283 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
@@ -52,45 +52,41 @@ is:;
 #X text 21 223 or;
 #X text 21 238 iem.kug.ac.at/pdb/;
 #X obj 20 104 pddp/helplink unauthorized/exciter;
-#X restore 102 597 pd Related_objects;
-#X obj 78 228 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X restore 102 647 pd Related_objects;
+#X obj 78 278 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 78 265 cnv 17 3 17 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
+#X obj 78 315 cnv 17 3 17 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
 -162280 0;
 #X obj 446 11 trigger;
 #X obj 516 11 t;
 #X text 496 11 or;
-#X text 98 64 The [trigger] object outputs its input from right to
-left \, converting to the types indicated by its creation arguments.
-There is also a "pointer" argument type (see the [pointer] object.)
-;
-#X obj 339 518 pddp/pddplink all_about_lists_vs_anythings.pd -text
+#X obj 339 568 pddp/pddplink all_about_lists_vs_anythings.pd -text
 all_about_lists_vs_anythings;
-#X text 98 227 anything;
-#X text 168 227 - the inlet to [trigger] takes any type of message.
+#X text 98 277 anything;
+#X text 168 277 - the inlet to [trigger] takes any type of message.
 ;
-#X text 98 264 variable;
-#X text 168 328 - for each creation argument \, a new outlet is created.
+#X text 98 314 variable;
+#X text 168 378 - for each creation argument \, a new outlet is created.
 If no arguments are supplied \, trigger defaults to two outlets that
 output bang messages.;
-#X text 98 371 The [trigger] object can be abbreviated as "t" and the
+#X text 98 421 The [trigger] object can be abbreviated as "t" and the
 creation arguments can be abbreviated as follows:;
-#X obj 214 413 trigger float bang symbol list pointer anything;
-#X text 315 432 is the same as;
-#X obj 318 452 t f b s l p a;
-#X text 97 408 "float" = f;
-#X text 97 420 "bang" = b;
-#X text 96 432 "symbol" = s;
-#X text 97 446 "list" = l;
-#X text 97 474 "anything" = a;
-#X text 97 460 "pointer" = p;
-#X floatatom 230 114 5 0 0 0 - - -, f 5;
-#X obj 230 160 +;
-#X floatatom 230 185 5 0 0 0 - - -, f 5;
-#X obj 230 136 t a a;
+#X obj 214 463 trigger float bang symbol list pointer anything;
+#X text 315 482 is the same as;
+#X obj 318 502 t f b s l p a;
+#X text 97 458 "float" = f;
+#X text 97 470 "bang" = b;
+#X text 96 482 "symbol" = s;
+#X text 97 496 "list" = l;
+#X text 97 524 "anything" = a;
+#X text 97 510 "pointer" = p;
+#X floatatom 230 164 5 0 0 0 - - -, f 5;
+#X obj 230 210 +;
+#X floatatom 230 235 5 0 0 0 - - -, f 5;
+#X obj 230 186 t a a;
 #X text 11 23 sequence messages in right-to-left order/ convert data
 types;
-#X text 168 264 - upon receiving a message to its inlet \, [trigger]
+#X text 168 314 - upon receiving a message to its inlet \, [trigger]
 outputs messages specified by the creation arguments. (Like nearly
 all Pd objects \, messages are sent out from right to left.);
 #N canvas 73 80 428 469 trigger_oddities 0;
@@ -173,8 +169,8 @@ all Pd objects \, messages are sent out from right to left.);
 #X connect 25 0 0 0;
 #X connect 28 0 0 0;
 #X connect 29 0 0 0;
-#X restore 102 572 pd trigger_oddities;
-#N canvas 60 35 428 560 Converting_data_types_with_trigger 0;
+#X restore 102 622 pd trigger_oddities;
+#N canvas 60 35 428 634 Converting_data_types_with_trigger 0;
 #X text 21 38 All sophisticated programming environments provide tools
 to convert data types. For instance \, Visual Basic has:;
 #X text 27 69 - VarType: to check the data type.;
@@ -183,61 +179,59 @@ to convert data types. For instance \, Visual Basic has:;
 #X text 27 114 - isNumeric: to test whether the variable is a number.
 ;
 #X text 27 129 - etc.;
-#X text 20 151 [trigger] is one object in Pd which can convert an incoming
-atom to a different type of atom.;
-#X text 20 182 To prove this \, click on each of the messages below
-and watch your terminal window for the output.;
-#X msg 23 215 bang;
-#X msg 60 215 1;
-#X floatatom 94 215 5 0 0 0 - - -, f 5;
-#X msg 133 215 symbol cat;
-#X msg 207 215 this is anything;
-#X obj 23 264 print all_messages_are_converted_to_bangs;
-#X text 20 293 Another example showing floats and symbols.;
-#X msg 23 317 bang;
-#X floatatom 93 317 5 0 0 0 - - -, f 5;
-#X msg 135 317 symbol cat;
-#X msg 209 317 this is anything;
-#X obj 23 345 t f s;
-#X msg 60 317 1 0;
-#X obj 50 390 print converted_to_symbols;
-#X obj 23 413 print converted_to_floats;
-#X text 65 344 Note that "this is anything" causes an error. That is
-because 'anythings' don't conform to floats \, symbols \, lists \,
-pointers. They can only be converted to "bang".;
-#X text 21 435 In the example above \, note that the trigger object
+#X msg 23 255 bang;
+#X msg 60 255 1;
+#X floatatom 94 255 5 0 0 0 - - -, f 5;
+#X msg 133 255 symbol cat;
+#X msg 207 255 this is anything;
+#X obj 23 304 print all_messages_are_converted_to_bangs;
+#X text 20 333 Another example showing floats and symbols.;
+#X msg 23 357 bang;
+#X floatatom 93 357 5 0 0 0 - - -, f 5;
+#X msg 135 357 symbol cat;
+#X msg 209 357 this is anything;
+#X obj 23 385 t f s;
+#X msg 60 357 1 0;
+#X obj 50 450 print converted_to_symbols;
+#X obj 23 473 print converted_to_floats;
+#X text 21 495 In the example above \, note that the trigger object
 does not split a list among the outlets like [unpack] does. Instead
 it sends all list elements through all outlets and converts them as
 necessary.;
-#X text 22 487 Also note that some messages don't convert as nicely
+#X text 22 550 Also note that some messages don't convert as nicely
 as others. Hence \, the symbol "cat" converts to a ZERO when [trigger]
 converts that symbol into a float. Likewise \, all numbers will convert
 to a symbol called "float" when sent through [trigger]'s right-most
 outlet.;
-#X obj 23 244 t b;
+#X obj 23 284 t b;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [trigger] Converting data types;
-#X connect 8 0 26 0;
-#X connect 9 0 26 0;
-#X connect 10 0 26 0;
-#X connect 11 0 26 0;
-#X connect 12 0 26 0;
-#X connect 15 0 19 0;
-#X connect 16 0 19 0;
-#X connect 17 0 19 0;
-#X connect 18 0 19 0;
-#X connect 19 0 22 0;
-#X connect 19 1 21 0;
-#X connect 20 0 19 0;
-#X connect 26 0 13 0;
-#X restore 102 528 pd Converting_data_types_with_trigger;
+#X text 20 151 [trigger] is one object in Pd which can convert an incoming
+atom to a different type of atom. If a simple conversion is not possible
+\, then trigger tries to do the next best thing (e.g. if a symbol is
+passed into a [t f] \, such a symbol will be converted to a 0).;
+#X text 20 222 Click on each of the messages below and watch your terminal
+window for the output.;
+#X text 65 384 Note that "this is anything" is converted to the most
+sensible option \, which is in this case a 0 That is because it is
+impossible for pd-l2ork to predict what an anything should look like
+when converted into a float.;
+#X connect 6 0 23 0;
+#X connect 7 0 23 0;
+#X connect 8 0 23 0;
+#X connect 9 0 23 0;
+#X connect 10 0 23 0;
+#X connect 13 0 17 0;
+#X connect 14 0 17 0;
+#X connect 15 0 17 0;
+#X connect 16 0 17 0;
+#X connect 17 0 20 0;
+#X connect 17 1 19 0;
+#X connect 18 0 17 0;
+#X connect 23 0 11 0;
+#X restore 102 578 pd Converting_data_types_with_trigger;
 #N canvas 29 67 459 506 Triggering_messages_with_trigger 0;
-#X text 21 77 1 Sequence a series of bangs - or triggers for symbols
-and/or other messages. In the example below \, you should see that
-it is important that it is important that [metro] gets a tempo setting
-before it is started - but let's assume for a moment that you wanted
-to start the [metro] with only a single click.;
 #X obj 23 269 metro;
 #X msg 50 247 1000;
 #X obj 23 289 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
@@ -250,38 +244,30 @@ simultaneously.;
 #X text 64 203 Triggers are sent from right to left...so our tempo
 messages gets sent to [metro] immediately before the numbers from the
 toggle to start and stop the [metro].;
-#X text 20 310 This example is simple \, and may not be very practical
-in most situations \, but it clearly shows how [trigger] can be used
-to create a simple sequence of events. It is important to note however
-that the messages sent from [trigger]'s outlets occur in ZERO time
-with no delay between the events...more at the top right of the page...
-;
 #X obj 23 438 t b b;
 #X msg 23 416 bang;
 #X obj 23 468 timer;
 #X floatatom 23 490 5 0 0 0 - - -, f 5;
 #X text 57 416 Click here.;
 #X text 62 489 Watch here.;
-#X text 20 511 Now \, to prove that I'm not crazy...click here >;
-#X obj 319 560 timer;
-#X floatatom 319 581 5 0 0 0 - - -, f 5;
-#X obj 346 538 delay 2000;
+#X obj 325 560 timer;
+#X floatatom 325 581 5 0 0 0 - - -, f 5;
+#X obj 352 538 delay 2000;
 #X text 136 430 any delay between the first bang and the second bang
 ;
 #X text 137 446 from the trigger.;
 #X text 20 540 object to force a 2 second delay between the;
 #X text 138 416 In this case \, the [timer] object does not perceive
 ;
-#X obj 319 600 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X obj 325 600 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X floatatom 403 518 5 0 0 0 - - -, f 5;
+#X floatatom 409 518 5 0 0 0 - - -, f 5;
 #X text 19 588 at the top-right to clearly see "logical time";
 #X text 19 601 as measured by [timer].;
-#X obj 319 513 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X obj 325 493 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
 #X text 20 384 Below is a simple structure which will measure the "logical
 time" between "bangs" from the [trigger] object.;
-#X text 20 526 In this case \, I've simply patched a [delay];
 #X text 20 554 first and second "bangs" sent to the [timer].;
 #X text 19 574 You can reset the [delay] with the number box;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
@@ -289,26 +275,41 @@ time" between "bangs" from the [trigger] object.;
 #X text 8 2 [trigger] Uses;
 #X text 19 623 Click on the other subpatches in the main window to
 read about [trigger]'s second great purpose...;
+#X obj 325 513 t;
+#X text 21 81 Sequence a series of bangs - or triggers for symbols
+and/or other messages. In the example below \, you should see it is
+essential that [metro] gets a tempo setting before it is started--let's
+assume for a moment that you wanted to start the [metro] with only
+a single click.;
 #X text 21 38 The [trigger] object serves two great purposes which
-aren't really related - but they might be on some level that I don't
-fully understand yet.;
-#X connect 1 0 3 0;
-#X connect 2 0 1 1;
-#X connect 4 0 5 0;
-#X connect 5 0 1 0;
-#X connect 5 1 2 0;
-#X connect 9 0 11 1;
-#X connect 9 1 11 0;
-#X connect 10 0 9 0;
-#X connect 11 0 12 0;
-#X connect 16 0 17 0;
-#X connect 17 0 23 0;
-#X connect 18 0 16 1;
-#X connect 24 0 18 1;
-#X connect 27 0 18 0;
-#X connect 27 0 16 0;
-#X restore 102 506 pd Triggering_messages_with_trigger;
-#N canvas 73 48 428 558 Converting_data_types_(cont.) 0;
+aren't necessarily related. Below is a description of its first purpose
+;
+#X text 20 305 The following example is simple \, and may not be very
+practical in most situations \, but it clearly shows how [trigger]
+can be used to create a simple sequence of events. It is important
+to note however that the messages sent from [trigger]'s outlets occur
+in ZERO time with no delay between the events...more at the top right
+of the page...;
+#X text 20 526 In the following exammple \, we've patched a [delay]
+;
+#X connect 0 0 2 0;
+#X connect 1 0 0 1;
+#X connect 3 0 4 0;
+#X connect 4 0 0 0;
+#X connect 4 1 1 0;
+#X connect 7 0 9 1;
+#X connect 7 1 9 0;
+#X connect 8 0 7 0;
+#X connect 9 0 10 0;
+#X connect 13 0 14 0;
+#X connect 14 0 20 0;
+#X connect 15 0 13 1;
+#X connect 21 0 15 1;
+#X connect 24 0 31 0;
+#X connect 31 0 13 0;
+#X connect 31 1 15 0;
+#X restore 102 556 pd Triggering_messages_with_trigger;
+#N canvas 73 48 428 573 Converting_data_types_(cont.) 0;
 #X msg 23 131 2.5;
 #X msg 110 131 bang;
 #X msg 60 131 23 64;
@@ -339,14 +340,14 @@ that "anythings" are sent to the example below.;
 #X obj 254 278 s anythings;
 #X obj 23 418 route float symbol list;
 #X msg 233 131 symbol cat;
-#X text 20 487 I've used the [route] object to show how "anythings"
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [trigger] Converting data types (cont.);
+#X text 20 487 Here \, we've used the [route] object to show how "anythings"
 are converted as they pass through the above [trigger]. Note that all
 messages converted to floats are displayed here in the number box \,
 all symbols are displayed in the symbol box \, and all lists are printed
 to the terminal window.;
-#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
-14 -204280 -1 0;
-#X text 8 2 [trigger] Converting data types (cont.);
 #X connect 0 0 4 0;
 #X connect 1 0 4 0;
 #X connect 2 0 4 0;
@@ -365,15 +366,26 @@ to the terminal window.;
 #X connect 21 1 15 0;
 #X connect 21 2 16 0;
 #X connect 22 0 4 0;
-#X restore 102 550 pd Converting_data_types_(cont.);
-#X text 80 328 1) symbol atom;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X restore 102 600 pd Converting_data_types_(cont.);
+#X text 80 378 1) symbol atom;
+#X obj 4 647 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X obj 339 501 pddp/pddplink all_about_messages.pd -text all_about_messages
+#X obj 339 551 pddp/pddplink all_about_messages.pd -text all_about_messages
 ;
-#X obj 291 574 pddp/pddplink ../2.control.examples/03.connections.pd
+#X obj 291 624 pddp/pddplink ../2.control.examples/03.connections.pd
 ;
-#X connect 29 0 32 0;
-#X connect 30 0 31 0;
-#X connect 32 0 30 0;
-#X connect 32 1 30 1;
+#X text 5 46 The [trigger] object outputs its input from right to left
+\, converting to the types indicated by its creation arguments. There
+is also a "pointer" argument type (see the [pointer] object). This
+is particularly important because pd-l2ork \, like its pd brethren
+dispatches commands from the same outlet based on the order connections
+were made \, which is impossible to assess by someone who studies the
+code after the fact (including its creator who revisits such a code
+a month later). This is why an essential coding practice in pd-l2ork
+is that whenever a signal flow splits into more than one output \,
+its order of execution is strictly timed by the trigger object., f
+89;
+#X connect 28 0 31 0;
+#X connect 29 0 30 0;
+#X connect 31 0 29 0;
+#X connect 31 1 29 1;
