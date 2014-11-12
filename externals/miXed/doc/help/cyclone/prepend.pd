@@ -9,9 +9,9 @@
 #X text -1 0 This is a legacy replacement for prepend in cyclone library.
 Please use [list prepend] and [list append] instead.;
 #X obj 94 123 route set;
-#X obj 217 193 loadbang;
-#X obj 217 261 print;
-#X msg 217 214 [prepend] is a legacy replacement for prepend in cyclone
+#X obj 207 193 loadbang;
+#X obj 207 261 print [prepend];
+#X msg 207 214 this object is a legacy replacement for prepend in cyclone
 library that is considered deprecated in pd-l2ork. Please use [list
 prepend] and [list append] instead.;
 #X connect 0 0 1 0;
