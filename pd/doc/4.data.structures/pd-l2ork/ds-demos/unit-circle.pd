@@ -1,5 +1,5 @@
 #N struct unit_circle float x float y;
-#N canvas -9 19 683 520 10;
+#N canvas 0 19 683 520 10;
 #X scalar unit_circle 103 387 \;;
 #X obj 310 166 * 6.28;
 #X obj 310 212 sin;
@@ -119,7 +119,7 @@ l 150 0 m -150 100 l 150 0 m 0 20 l 0 -240 0 20 20 0 m -20 100 l 20
 #X obj 140 183 pack 0.42 0;
 #N canvas 0 0 450 300 (subpatch) 0;
 #X array csm 62079 float 2 black black;
-#X coords 0 1 62078 -1 114 59 1;
+#X coords 0 1 62079 -1 114 59 1;
 #X restore 509 6 graph;
 #X obj 422 238 output~;
 #X msg 310 73 0 \, 1 4200;

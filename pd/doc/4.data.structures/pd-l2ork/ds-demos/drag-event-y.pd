@@ -1,0 +1,18 @@
+#N canvas 433 184 450 300 10;
+#X obj 81 25 inlet;
+#X obj 81 46 route drag;
+#X obj 228 89 unpack p;
+#X obj 81 67 trigger anything anything;
+#X obj 81 157 +;
+#X obj 134 110 get \$1 \$2;
+#X obj 81 196 set \$1 \$2;
+#X msg 81 109 \$3;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 2 0 5 0;
+#X connect 2 0 6 1;
+#X connect 3 0 7 0;
+#X connect 3 1 2 0;
+#X connect 4 0 6 0;
+#X connect 5 0 4 1;
+#X connect 7 0 4 0;

@@ -113,6 +113,7 @@ void glist_text(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
 /* ----------------- the "object" object.  ------------------ */
 
 extern t_pd *newest;
+int scalar_in_a_box;
 extern void glist_scalar(t_glist *canvas, t_symbol *s, int argc, t_atom *argv);
 void canvas_getargs(int *argcp, t_atom **argvp);
 
@@ -162,8 +163,9 @@ static void canvas_objtext(t_glist *gl, int xpix, int ypix,
                     glist_scalar(gl, gensym("scalar_from_canvas_objtext"),
                         binbuf_getnatom(b)+2, scalar_create_at);
                     binbuf_free(scalarbuf);
-                    binbuf_free(b);
+                    //binbuf_free(b);
                     canvas_unsetcurrent((t_canvas *)gl);
+                    scalar_in_a_box = 1;
                     return;
                 }
             }
@@ -2386,7 +2388,13 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
                 canvas_restoreconnections(glist_getcanvas(glist));
                 //canvas_apply_restore_original_position(glist_getcanvas(glist),
                 //    pos);
-                text_checkvalidwidth(glist);
+                /* this conditional is here because I'm creating scalars
+                   inside of object boxes using canvas_objtext.  But scalars
+                   aren't technically t_text, and checkvalidwidth expects
+                   to find a new t_text at the end of the glist.
+                 */
+                if (!scalar_in_a_box)
+                    text_checkvalidwidth(glist);
             }
             else
             {
@@ -2401,8 +2409,16 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
         if (natom2 >= 1  && vec2[0].a_type == A_SYMBOL
             && !strcmp(vec2[0].a_w.w_symbol->s_name, "pd"))
                 canvas_updatewindowlist();
+        /* this is a quick bugfix-- we need to free the binbuf "b" if we
+           created a scalar in canvas_objtext */
+        if (scalar_in_a_box)
+        {
+            binbuf_free(b);   
+            scalar_in_a_box = 0;
+        }
     }
-    else { // T_MESSAGE, T_TEXT, T_ATOM
+    else
+    { // T_MESSAGE, T_TEXT, T_ATOM
         if (buf && x->te_type == T_TEXT)
         {
             char *c;
