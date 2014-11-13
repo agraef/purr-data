@@ -1,0 +1,449 @@
+#N struct rocket float x float y;
+#N canvas 79 33 700 559 10;
+#N canvas 815 65 450 486 guts 0;
+#X obj 113 10 struct rocket float x float y;
+#N canvas 502 148 709 504 (subpatch) 0;
+#N canvas 220 31 825 654 rocket 0;
+#N canvas 433 184 450 300 thrust 0;
+#X obj 169 -37 draw path M 271.335 362.637 C 271.335 362.637 284.054
+399.945 298.468 431.318 C 312.883 462.692 338.321 477.954 341.713 477.954
+C 345.104 477.954 348.496 460.148 347.648 449.973 C 346.8 439.798 323.058
+419.447 363.759 451.668 C 404.459 483.889 433.288 497.456 430.744 486.433
+C 434.984 459.299 387.5 402.489 418.026 412.664 C 448.551 422.839 500.274
+446.581 468.053 409.272 C 435.832 371.964 402.763 355.005 430.745 355.853
+C 458.726 356.701 485.859 369.42 472.293 344.83 C 458.726 320.24 393.456
+281.998 365.475 265.887 C 343.429 276.91 300.165 305.826 271.335 362.637
+z;
+#X obj 169 -105 loadbang;
+#X obj 169 176 draw path M 284.054 339.743 C 284.054 339.743 293.381
+384.683 303.556 398.249 C 313.731 411.816 316.275 410.12 318.819 391.466
+C 321.363 372.812 303.556 354.157 334.081 374.508 C 364.607 394.858
+390.892 420.295 375.63 388.922 C 360.367 357.549 356.127 349.918 377.325
+360.941 C 398.523 371.964 418.874 380.443 393.435 349.918 C 373.934
+327.872 412.937 321.936 419.721 319.393 C 435.832 321.937 351.04 274.452
+342.561 274.452 C 333.233 276.148 287.445 332.959 284.054 339.743 z
+;
+#X obj 169 121 loadbang;
+#X msg 169 -84 fill #ff4000 \, fill-rule 0 \, stroke-width 3.75 \,
+transform matrix 1.0041 0 0 1.01474 -1.11186 -7.22347 \, stroke ""
+;
+#X msg 169 142 fill #ffff33 \, fill-opacity 0.696296 \, fill-rule 0
+\, stroke-width 12.5 \, stroke-linejoin 0 \, stroke "";
+#X obj 99 -82 inlet;
+#X connect 1 0 4 0;
+#X connect 3 0 5 0;
+#X connect 4 0 0 0;
+#X connect 5 0 2 0;
+#X connect 6 0 0 0;
+#X connect 6 0 2 0;
+#X restore 27 66 group thrust;
+#X obj 27 504 loadbang;
+#X obj 27 566 draw path M 43.244 60.7763 C 122.101 62.472 321.362 94.6929
+397.675 290.563 C 371.389 295.651 306.948 358.397 296.773 393.161 C
+102.599 293.955 47.4836 137.089 43.244 60.7763 z;
+#X msg 27 525 fill #d9d9d9 \, fill-rule 0 \, stroke #000000 \, stroke-width
+10 \, stroke-linejoin 0 \, transform translate -25.4377 -29.6773;
+#X obj 27 96 loadbang;
+#X obj 27 164 draw path M 189.087 321.936 C 189.087 321.936 192.478
+408.424 192.478 409.272 C 192.478 410.12 296.773 457.604 302.708 460.148
+L 297.621 392.314 C 288.294 393.162 205.197 339.743 189.087 321.936
+z;
+#X msg 27 117 fill #bfbfbf \, fill-rule 0 \, stroke #000000 \, stroke-width
+10 \, stroke-linejoin 0 \, transform translate -25.4377 -29.6773;
+#X obj 27 365 loadbang;
+#X obj 27 433 draw path M 190.761 322.825 C 190.761 322.825 192.478
+408.424 192.478 409.272 C 192.478 410.12 296.773 457.604 302.708 460.148
+L 297.621 392.314 C 264.809 382.406 210.2 343.258 190.761 322.825 z
+;
+#X msg 27 386 fill #bfbfbf \, fill-rule 0 \, stroke #000000 \, stroke-width
+10 \, stroke-linejoin 0 \, transform matrix -0.0245746 0.999698 0.999698
+0.0245746 -13.3061 -47.2839;
+#X obj 434 96 loadbang;
+#X msg 434 117 fill #bfbfbf \, fill-rule 0 \, stroke #000000 \, stroke-width
+10 \, stroke-linejoin 0;
+#X obj 434 218 loadbang;
+#X obj 434 273 draw path M 124.645 131.154 C 95.8152 170.158 155.169
+218.49 183.151 183.725 C 217.068 141.329 158.562 100.629 124.645 131.154
+z;
+#X msg 434 239 fill #bfbfbf \, fill-rule 0 \, stroke #000000 \, stroke-width
+12.5 \, stroke-linejoin 0;
+#X obj 434 342 loadbang;
+#X obj 434 397 draw path M 132.276 135.393 C 153.474 115.043 202.653
+139.633 180.608 176.094 C 156.018 207.466 105.991 167.615 132.276 135.393
+z;
+#X msg 434 363 fill #aeffff \, fill-rule 0 \, stroke #000000 \, stroke-width
+10 \, stroke-linejoin 0;
+#X obj 434 465 loadbang;
+#X obj 434 151 draw path M 232.637 209.399 L 215.868 233.68 L 236.513
+269.414 L 322.267 337.158 L 334.654 318.613 L 252.663 249.373 L 232.637
+209.399 z;
+#X obj 434 535 draw path M 148.386 134.502 C 141.525 139.24 123.485
+154.126 138.211 171.854 C 150.93 175.246 168.736 136.198 148.386 134.502
+z;
+#X obj 27 234 loadbang;
+#X obj 27 296 draw path M 235.317 210.169 C 235.317 210.169 249.577
+244.292 251.984 249.855 C 254.938 253.603 329.573 314.511 335.052 317.929
+L 331.873 296.248 C 323.878 288.55 255.069 228.232 235.317 210.169
+z;
+#X msg 27 255 fill #bfbfbf \, fill-rule 0 \, stroke #000000 \, stroke-width
+10 \, stroke-linejoin 1;
+#X obj 27 16 inlet;
+#N canvas 433 184 540 376 animate 0;
+#X obj 41 16 inlet;
+#X obj 41 295 outlet;
+#X obj 114 295 outlet;
+#X msg 318 254 transform translate 0 0;
+#X msg 114 254 transform scale -1 1 rotate 92;
+#X obj 114 127 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 114 169 f;
+#X obj 154 169 + 1;
+#X obj 114 193 % 2;
+#X obj 114 214 sel 0 1;
+#X obj 114 148 metro 120;
+#X obj 41 134 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 41 154 vis \$1;
+#X obj 41 46 b;
+#X msg 114 92 0;
+#X msg 41 77 1;
+#X obj 114 71 del 2700;
+#X connect 0 0 13 0;
+#X connect 3 0 2 0;
+#X connect 4 0 2 0;
+#X connect 5 0 10 0;
+#X connect 6 0 7 0;
+#X connect 6 0 8 0;
+#X connect 7 0 6 1;
+#X connect 8 0 9 0;
+#X connect 9 0 4 0;
+#X connect 9 1 3 0;
+#X connect 10 0 6 0;
+#X connect 11 0 12 0;
+#X connect 12 0 1 0;
+#X connect 13 0 15 0;
+#X connect 13 0 16 0;
+#X connect 14 0 5 0;
+#X connect 14 0 11 0;
+#X connect 15 0 5 0;
+#X connect 15 0 11 0;
+#X connect 16 0 14 0;
+#X restore 27 40 pd animate;
+#X msg 434 486 fill #ffffff \, fill-opacity 0.75 \, fill-rule 1 \,
+stroke-width 12.5 \, stroke-linejoin 1;
+#X connect 1 0 3 0;
+#X connect 3 0 2 0;
+#X connect 4 0 6 0;
+#X connect 6 0 5 0;
+#X connect 7 0 9 0;
+#X connect 9 0 8 0;
+#X connect 10 0 11 0;
+#X connect 11 0 19 0;
+#X connect 12 0 14 0;
+#X connect 14 0 13 0;
+#X connect 15 0 17 0;
+#X connect 17 0 16 0;
+#X connect 18 0 26 0;
+#X connect 21 0 23 0;
+#X connect 23 0 22 0;
+#X connect 24 0 25 0;
+#X connect 25 0 0 0;
+#X connect 25 1 0 1;
+#X connect 26 0 20 0;
+#X restore 264 287 group rocket;
+#N canvas 547 87 754 501 moon 0;
+#X obj 40 17 loadbang;
+#X obj 40 79 draw path m 10.671 231.42 c 89.543 56.086 188.11 -10.029
+193.33 -94.559 -1.7286 -101.53 -92.171 -150.4 -160.16 -128.01 35.129
+15.844 73.4 62.729 73.871 88.013 -3.4428 7.5157 -5.8714 16.373 1.5286
+18.844 -2 12.857 -18.486 33.571 -21.043 40.643 -2.5571 7.0714 2.2143
+9.8443 5.4429 10.357 0.2 6.0586 -4.4429 8.3572 -5.3572 12.156 -7.9
+3.13 -8.4714 9.9872 -7.3286 14.844 -19.714 18.571 -20.571 27.143 -80.286
+37.714 z;
+#X obj 40 202 loadbang;
+#X obj 40 244 draw path m 98.193 180.83 c 2.5851 -3.421 7.4852 2.5632
+7.1642 5.1572 -0.32201 2.594 -0.67928 4.0227 -3.7143 5.2857;
+#X msg 40 223 stroke #000 \, stroke-width 5;
+#X obj 42 285 loadbang;
+#X obj 42 327 draw path m 104.11 166.92 c 5.5357 -0.49998 14.643 3.8472
+17.75 2.37 3.1072 -1.4771 3.3929 -4.6686 2.3572 -6.5129;
+#X msg 42 306 stroke #000 \, stroke-width 5;
+#X obj 47 371 loadbang;
+#X obj 47 413 draw path m 125.64 171.49 c -3.9286 8.2143 -3.8572 18.987
+4.2143 33.286;
+#X msg 47 392 stroke #000 \, stroke-width 2;
+#X obj 468 26 loadbang;
+#X obj 468 78 draw path m 117.91 97.816 c 9.572 1.8 16.143 -9.0571
+20.8 -10.101 3.057 -1.0986 14.057 27.473 21.057 35.616;
+#X obj 467 147 loadbang;
+#X obj 467 189 draw path m 129.49 105.78 c 7.6428 -3.6429 11.179 6.5357
+12.607 10.929 1.4286 4.3928 7.1428 5.1071 10.857 5.5;
+#X obj 471 255 loadbang;
+#X obj 471 297 draw path m 133.91 114.75 c 0.87856 -0.13215 1.6214
+4.3107 2.5143 6.8236 1.2857 -0.90571 0.82143 -1.5129 1.3928 -1.9771
+0.96429 -0.82143 1.6071 3.6657 2.3572 5.1429 4.8572 -1e-05 5.4643 0.89286
+5.4286 1.9286 -3.25 0.21429 -5.1786 0.67857 -7.5 1.6071 -3.7857 2.3214
+-6.0357 6.6072 -7 5.4286 -0.32143 -1.5 3.3571 -4.5357 4 -5.4286 -3.0714
+-5.1428 -2.0714 -13.393 -1.1929 -13.525 z;
+#X msg 471 276 stroke #000 \, fill #000;
+#X msg 468 47 stroke #000 \, stroke-width 5;
+#X msg 467 168 stroke #000 \, stroke-width 2;
+#X msg 40 38 stroke #000 \, stroke-width 5 \, fill #f6c700;
+#X connect 0 0 20 0;
+#X connect 2 0 4 0;
+#X connect 4 0 3 0;
+#X connect 5 0 7 0;
+#X connect 7 0 6 0;
+#X connect 8 0 10 0;
+#X connect 10 0 9 0;
+#X connect 11 0 18 0;
+#X connect 13 0 19 0;
+#X connect 15 0 17 0;
+#X connect 17 0 16 0;
+#X connect 18 0 12 0;
+#X connect 19 0 14 0;
+#X connect 20 0 1 0;
+#X restore 95 362 group moon;
+#X floatatom 45 167 5 0 0 0 - - -, f 5;
+#X obj 45 238 pack;
+#X floatatom 95 167 5 0 0 0 - - -, f 5;
+#X obj 95 188 t b a;
+#X floatatom 450 173 5 0 0 0 - - -, f 5;
+#X obj 333 234 pack;
+#X floatatom 500 123 5 0 0 0 - - -, f 5;
+#X obj 500 194 t b a;
+#X msg 333 256 transform translate \$1 \$2 scale 0.3;
+#X obj 333 61 line;
+#X obj 333 172 + 255;
+#X obj 383 172 + 224;
+#X obj 333 143 * -368;
+#X obj 333 114 t a a;
+#N canvas 678 96 655 603 easeinout 0;
+#X obj 130 30 inlet;
+#X obj 130 513 outlet;
+#X obj 130 51 / 1.04;
+#X msg 130 72 0.48 \$1;
+#X obj 130 93 -;
+#X obj 130 144 pow 2;
+#X obj 130 165 + 0.1734;
+#X obj 130 186 sqrt;
+#X obj 130 241 -;
+#X obj 130 262 trigger anything anything;
+#X obj 157 306 f 1;
+#X obj 157 327 / 3;
+#X obj 130 355 pow;
+#X obj 130 376 *;
+#X obj 130 306 abs;
+#X obj 244 304 < 0;
+#X obj 244 325 sel 0 1;
+#X obj 244 349 f 1;
+#X obj 277 349 f -1;
+#X obj 130 114 trigger anything anything;
+#X obj 130 210 trigger anything anything;
+#X obj 277 231 * -1;
+#X obj 321 262 -;
+#X obj 348 335 f 1;
+#X obj 348 356 / 3;
+#X obj 321 384 pow;
+#X obj 321 405 *;
+#X obj 321 335 abs;
+#X obj 434 334 < 0;
+#X obj 434 355 sel 0 1;
+#X obj 434 379 f 1;
+#X obj 467 379 f -1;
+#X obj 321 283 trigger anything anything;
+#X obj 130 441 +;
+#X obj 130 462 + 0.5;
+#X obj 130 483 expr (1 - $f1) * 3 * $f1 * $f1 + $f1 * $f1 * $f1;
+#X obj 130 283 t a b;
+#X obj 321 312 t a b;
+#X connect 0 0 2 0;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 4 0 19 0;
+#X connect 5 0 6 0;
+#X connect 6 0 7 0;
+#X connect 7 0 20 0;
+#X connect 8 0 9 0;
+#X connect 9 0 36 0;
+#X connect 9 1 15 0;
+#X connect 10 0 11 0;
+#X connect 11 0 12 1;
+#X connect 12 0 13 0;
+#X connect 13 0 33 0;
+#X connect 14 0 12 0;
+#X connect 15 0 16 0;
+#X connect 16 0 17 0;
+#X connect 16 1 18 0;
+#X connect 17 0 13 1;
+#X connect 18 0 13 1;
+#X connect 19 0 5 0;
+#X connect 19 1 8 1;
+#X connect 19 1 22 1;
+#X connect 20 0 8 0;
+#X connect 20 1 21 0;
+#X connect 21 0 22 0;
+#X connect 22 0 32 0;
+#X connect 23 0 24 0;
+#X connect 24 0 25 1;
+#X connect 25 0 26 0;
+#X connect 26 0 33 1;
+#X connect 27 0 25 0;
+#X connect 28 0 29 0;
+#X connect 29 0 30 0;
+#X connect 29 1 31 0;
+#X connect 30 0 26 1;
+#X connect 31 0 26 1;
+#X connect 32 0 37 0;
+#X connect 32 1 28 0;
+#X connect 33 0 34 0;
+#X connect 34 0 35 0;
+#X connect 35 0 1 0;
+#X connect 36 0 14 0;
+#X connect 36 1 10 0;
+#X connect 37 0 27 0;
+#X connect 37 1 23 0;
+#X restore 333 85 pd easeinout;
+#X msg 333 40 0 \, 1 4000;
+#X obj 159 218 b;
+#X obj 264 -25 inlet;
+#X obj 264 -4 b;
+#X msg 95 293 -110 -1;
+#X msg 159 293 -190 1;
+#X obj 500 144 * -1;
+#X obj 185 251 loadbang;
+#X obj 278 39 loadbang;
+#X obj 278 60 f 0;
+#X obj 383 143 * -248;
+#X msg 95 334 transform translate \$1 -93.5 scale 0.5 scale \$2 1;
+#X obj 95 266 del 3600;
+#X connect 2 0 3 0;
+#X connect 3 0 28 0;
+#X connect 4 0 5 0;
+#X connect 5 0 3 0;
+#X connect 5 1 3 1;
+#X connect 6 0 7 0;
+#X connect 7 0 10 0;
+#X connect 8 0 23 0;
+#X connect 9 0 7 0;
+#X connect 9 1 7 1;
+#X connect 10 0 0 1;
+#X connect 11 0 16 0;
+#X connect 12 0 7 0;
+#X connect 13 0 7 1;
+#X connect 14 0 12 0;
+#X connect 15 0 14 0;
+#X connect 15 1 27 0;
+#X connect 16 0 15 0;
+#X connect 17 0 11 0;
+#X connect 18 0 22 0;
+#X connect 18 0 29 0;
+#X connect 19 0 20 0;
+#X connect 20 0 17 0;
+#X connect 20 0 18 0;
+#X connect 20 0 0 0;
+#X connect 21 0 28 0;
+#X connect 22 0 28 0;
+#X connect 23 0 9 0;
+#X connect 24 0 22 0;
+#X connect 25 0 26 0;
+#X connect 26 0 15 0;
+#X connect 27 0 13 0;
+#X connect 28 0 1 0;
+#X connect 29 0 21 0;
+#X restore 137 320 group;
+#X floatatom 164 138 5 0 0 0 - - -, f 5;
+#X floatatom 203 138 5 0 0 0 - - -, f 5;
+#X obj 203 189 t b a;
+#X obj 137 49 inlet;
+#X obj 195 264 loadbang;
+#X msg 195 285 transform scale 0.7;
+#X obj 113 347 route click;
+#X obj 113 383 b;
+#X obj 113 404 s rocket-bng;
+#X obj 61 404 outlet;
+#X msg 164 237 transform rotate \$2 -105 -20 scale \$1;
+#X obj 303 9 inlet;
+#X obj 303 160 line;
+#X obj 303 54 random 2;
+#X obj 303 75 * 2;
+#X obj 303 96 - 1;
+#X obj 303 117 * 360;
+#X msg 303 139 0 \, \$1 4000;
+#X obj 402 352 bang;
+#X obj 164 219 pack 0.7 0;
+#X obj 303 30 trigger bang bang;
+#X connect 0 0 8 0;
+#X connect 2 0 21 0;
+#X connect 3 0 4 0;
+#X connect 4 0 21 0;
+#X connect 4 1 21 1;
+#X connect 5 0 1 0;
+#X connect 6 0 7 0;
+#X connect 7 0 1 1;
+#X connect 8 0 9 0;
+#X connect 9 0 10 0;
+#X connect 9 0 11 0;
+#X connect 12 0 1 1;
+#X connect 13 0 22 0;
+#X connect 14 0 4 0;
+#X connect 15 0 16 0;
+#X connect 16 0 17 0;
+#X connect 17 0 18 0;
+#X connect 18 0 19 0;
+#X connect 19 0 14 0;
+#X connect 20 0 9 0;
+#X connect 21 0 12 0;
+#X connect 22 0 15 0;
+#X connect 22 1 20 0;
+#X restore 96 299 pd guts;
+#X obj 96 40 bng 90 250 50 0 empty rocket-bng empty 17 7 0 10 -262144
+-1 -1;
+#X obj 96 346 output~;
+#X scalar rocket 247 106 \;;
+#N canvas 433 184 450 351 dsp~ 0;
+#X obj 56 55 inlet;
+#X obj 201 51 noise~;
+#X obj 201 136 samphold~;
+#X obj 202 191 osc~;
+#X floatatom 252 84 5 0 0 0 - - -, f 5;
+#X obj 201 72 +~ 1;
+#X floatatom 254 46 5 0 0 0 - - -, f 5;
+#X obj 201 93 *~ 256;
+#X obj 252 109 phasor~ 477;
+#X obj 143 249 *~;
+#X obj 56 90 b;
+#X msg 56 111 1;
+#X msg 56 132 \$1 100;
+#X obj 56 153 line~;
+#X msg 90 111 0;
+#X obj 90 90 delay 2700;
+#X obj 143 300 outlet~;
+#X obj 143 279 *~ 0.2;
+#X connect 0 0 10 0;
+#X connect 1 0 5 0;
+#X connect 2 0 3 0;
+#X connect 3 0 9 1;
+#X connect 4 0 8 0;
+#X connect 5 0 7 0;
+#X connect 6 0 7 1;
+#X connect 7 0 2 0;
+#X connect 8 0 2 1;
+#X connect 9 0 17 0;
+#X connect 10 0 11 0;
+#X connect 10 0 15 0;
+#X connect 11 0 12 0;
+#X connect 12 0 13 0;
+#X connect 13 0 9 0;
+#X connect 14 0 12 0;
+#X connect 15 0 14 0;
+#X connect 17 0 16 0;
+#X restore 96 320 pd dsp~;
+#X msg 138 233 zazzmatazz;
+#X obj 138 254 t b b;
+#X connect 0 0 4 0;
+#X connect 1 0 0 0;
+#X connect 4 0 2 0;
+#X connect 5 0 6 0;
+#X connect 6 0 0 0;
+#X connect 6 1 0 1;

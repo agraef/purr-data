@@ -1,0 +1,64 @@
+#N struct quick-graph2 float x float y float y0 float y1 float y2 float
+y3 float y4 float y5 float y6;
+#N canvas 0 19 619 638 10;
+#X scalar quick-graph2 35 123 110 84 69 92 103 99 76 \;;
+#X msg 243 97 fill blue \, stroke blue \, stroke-width 2 \, fill-opacity
+0.6;
+#X obj 24 33 struct quick-graph2 float x float y float y0 float y1
+float y2 float y3 float y4 float y5 float y6;
+#X obj 243 76 loadbang;
+#X text 11 618 Quick graph demo showing some mouseover animation.;
+#X text 11 638 When you mouse over a scalar \, Pd will give you two
+new notifications to the struct outlet:;
+#X text 11 668 * "enter" when the mouse first enters the bbox of the
+scalar;
+#X text 11 688 * "leave" when the mouse leaves the bbox of the scalar
+;
+#X text 11 710 Of course \, this would be more robust if the notifications
+only happened with the mouse enters a shape \, rather than the bbox.
+;
+#X obj 243 120 draw path M 0 y0 C 10 y0 10 y1 20 y1 C 30 y1 30 y2 40
+y2 C 50 y2 50 y3 60 y3 C 70 y3 70 y4 80 y4 C 90 y4 90 y5 100 y5 110
+y5 110 y6 120 y6 L 120 150 0 150 z;
+#X obj 233 224 draw circle 0 y0(-150:150)(-160:140) 5;
+#X obj 233 247 drag-event-y quick-graph2 y0;
+#X obj 233 307 drag-event-y quick-graph2 y1;
+#X obj 233 357 drag-event-y quick-graph2 y2;
+#X obj 233 417 drag-event-y quick-graph2 y3;
+#X obj 233 467 drag-event-y quick-graph2 y4;
+#X obj 233 517 drag-event-y quick-graph2 y5;
+#X obj 233 567 drag-event-y quick-graph2 y6;
+#X obj 233 284 draw circle 20 y1(-150:150)(-160:140) 5;
+#X obj 233 334 draw circle 40 y2(-150:150)(-160:140) 5;
+#X obj 233 394 draw circle 60 y3(-150:150)(-160:140) 5;
+#X obj 233 444 draw circle 80 y4(-150:150)(-160:140) 5;
+#X obj 233 494 draw circle 100 y5(-150:150)(-160:140) 5;
+#X obj 233 544 draw circle 120 y6(-150:150)(-160:140) 5;
+#X obj 194 168 loadbang;
+#X msg 194 188 mousedown 1 \, drag 1 \, fill blue \, fill-opacity 0.6
+;
+#X text 19 343 using the quanta fields (i.e. \,;
+#X text 19 363 the (0:1)(2:3) syntax). The;
+#X text 19 383 interaction is simpler because;
+#X text 19 403 all the draw commands belong to;
+#X text 19 423 a single template. But the;
+#X text 19 443 patch is a bit more clunky and;
+#X text 19 463 harder to read.;
+#X text 19 323 Here's another quick graph \,;
+#X connect 1 0 9 0;
+#X connect 3 0 1 0;
+#X connect 10 0 11 0;
+#X connect 18 0 12 0;
+#X connect 19 0 13 0;
+#X connect 20 0 14 0;
+#X connect 21 0 15 0;
+#X connect 22 0 16 0;
+#X connect 23 0 17 0;
+#X connect 24 0 25 0;
+#X connect 25 0 10 0;
+#X connect 25 0 18 0;
+#X connect 25 0 19 0;
+#X connect 25 0 20 0;
+#X connect 25 0 21 0;
+#X connect 25 0 22 0;
+#X connect 25 0 23 0;
