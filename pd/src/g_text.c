@@ -2296,13 +2296,16 @@ void text_checkvalidwidth(t_glist *glist)
     // object has 0 inlets and outlets and is therefore unaware of its possibly greater
     // width)
     t_gobj *yg = glist->gl_list;
-    while (yg->g_next)
-        yg = yg->g_next;
-    t_text *newest_t = (t_text *)yg;
-    //fprintf(stderr, "newest object text class is %lx\n", newest_t);
-    t_rtext *yn = glist_findrtext(glist, newest_t);
-    if (yn && pd_class(&newest_t->te_pd) == text_class && newest_t->te_type != T_TEXT)
-        text_drawborder(newest_t, glist, rtext_gettag(yn), rtext_width(yn), rtext_height(yn), 0);
+    if (yg)
+    {
+        while (yg->g_next)
+            yg = yg->g_next;
+        t_text *newest_t = (t_text *)yg;
+        //fprintf(stderr, "newest object text class is %lx\n", newest_t);
+        t_rtext *yn = glist_findrtext(glist, newest_t);
+        if (yn && pd_class(&newest_t->te_pd) == text_class && newest_t->te_type != T_TEXT)
+            text_drawborder(newest_t, glist, rtext_gettag(yn), rtext_width(yn), rtext_height(yn), 0);
+    }
 }
 
     /* change text; if T_OBJECT, remake it. */
