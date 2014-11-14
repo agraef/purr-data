@@ -149,9 +149,10 @@ static void my_canvas_getrect(t_gobj *z, t_glist *glist,
     
     *xp1 = text_xpix(&x->x_gui.x_obj, glist);
     *yp1 = text_ypix(&x->x_gui.x_obj, glist);
-    if (!glist_istoplevel(glist))
+    if (!glist_istoplevel(glist) || !glist->gl_edit)
     {
         //if we are trying to calculate visibility of a widget inside a GOP
+        //or are calculating getrect during runtime
         *xp2 = *xp1 + x->x_vis_w;
         *yp2 = *yp1 + x->x_vis_h;
     }
