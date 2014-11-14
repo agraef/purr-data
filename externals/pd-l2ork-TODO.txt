@@ -1,5 +1,5 @@
 Diff status between pd-l2ork externals source tree and main community pd svn
-AS OF October 8, 2014
+AS OF November 14, 2014
 
 DONE: (*denotes unique changes)
 creb
@@ -7,6 +7,7 @@ flatgui (disabled, as all externals have various problems)
 gem2pdp
 hcs
 iemlib
+jasch_lib
 markex
 maxli4
 moonlib
