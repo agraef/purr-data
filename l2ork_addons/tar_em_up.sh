@@ -15,6 +15,7 @@ then
 	echo "     -e    everything"
 	echo "     -f    full installer (incremental)"
 	echo "     -F    full installer (complete recompile)"
+	echo "     -n    skip package creation (-bB, -fF)"
 	echo "     -R    build a Raspberry Pi deb (complete recompile)"
 	echo "     -r    build a Raspberry Pi deb (incremental)"
 	echo "     -w    install custom version of cwiid system-wide"
@@ -34,10 +35,11 @@ dev=0
 full=0
 sys_cwiid=0
 rpi=0
+pkg=1
 
 inst_dir=${inst_dir:-/usr/local}
 
-while getopts ":abBcdefFRruw" Option
+while getopts ":abBcdefFnRruw" Option
 do case $Option in
 		a)		addon=1;;
 
@@ -59,6 +61,8 @@ do case $Option in
 		f)		full=1;;
 
 		F)		full=2;;
+
+		n)		pkg=0;;
 
 		R)		deb=2
 				inst_dir=/usr
@@ -309,8 +313,10 @@ cp ../../pd/src/g_all_guis.h ../../externals/build/include
 	cp -f disis_spi/disis_spi-help.pd ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
 	cd ../
 	#fi
+	cd ../
+	if [ $pkg -gt 0 ]; then
 	# finish install
-	cd ../packages/linux_make
+	cd packages/linux_make
 	echo "tar full installer..."
 	rm -f build/usr/local/lib/pd
 	if [ $deb -gt 0 ]
@@ -332,6 +338,7 @@ cp ../../pd/src/g_all_guis.h ../../externals/build/include
 		mv -f build/pd*bz2 ../../..
 	fi
 	cd ../../
+	fi
 fi
 
 if [ $addon -eq 1 ]
