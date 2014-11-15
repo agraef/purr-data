@@ -1,14 +1,8 @@
-pd-l2ork (0.42.6+git20141115+1494-1) trusty; urgency=low
-
-  * Build from latest upstream source.
-
- -- Albert Graef <aggraef@gmail.com>  Sat, 15 Nov 2014 12:03:02 +0100
-
 pd-l2ork (0.42.6+git20141114+1491-1) trusty; urgency=low
 
   * Build from latest upstream source.
 
- -- Albert Graef <aggraef@gmail.com>  Fri, 14 Nov 2014 02:37:26 +0100
+ -- Albert Graef <aggraef@gmail.com>  Sat, 15 Nov 2014 12:03:02 +0100
 
 pd-l2ork (0.42.6+git20141114+1487-1) trusty; urgency=low
 
