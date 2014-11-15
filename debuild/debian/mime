@@ -1,0 +1,2 @@
+text/x-puredata; pd-l2ork '%s'; edit=pd-l2ork '%s'; test=test "$DISPLAY" != ""; priority=2
+text/x-maxmsp; pd-l2ork '%s'; edit=pd-l2ork '%s'; test=test "$DISPLAY" != ""; priority=2
