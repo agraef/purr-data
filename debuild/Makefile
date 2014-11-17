@@ -63,11 +63,20 @@ debclean:
 	rm -f pd-l2ork_$(version)+git* pd-l2ork-*.tar.bz2
 
 deb: $(debsrc) $(gemdebsrc) $(pidebsrc)
+# Unpack the primary source into our temporary build directory.
 	rm -rf $(debdist)
 	tar xfz $(debsrc)
+# This works around some problems compiling externals on Precise and earlier
+# (patch from pd-extended by Hans-Christoph Steiner, modified for pd-l2ork).
+# This can be removed once Ubuntu 12.04 finally goes the way of the dodo.
+	cd $(debdist) && patch -p1 < ../precise-configure.patch
+# Unpack the secondary sources.
 	cd $(debdist) && rm -Rf Gem && tar xfz ../$(gemdebsrc)
 	cd $(debdist) && rm -Rf wiringPi && tar xfz ../$(pidebsrc)
+# Make sure to copy the Debian files which may have uncommitted changes.
+# Then run debuild to create the package.
 	cd $(debdist) && cp -R ../debian . && debuild $(DEBUILD_FLAGS)
+# Get rid of the temporary build directory.
 	rm -rf $(debdist)
 
 debsrc:
