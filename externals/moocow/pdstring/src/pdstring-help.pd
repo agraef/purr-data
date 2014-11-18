@@ -1,4 +1,4 @@
-#N canvas 0 26 483 483 10;
+#N canvas 1 88 483 483 10;
 #X text 199 414 Bryan Jurish <moocow@ling.uni-potsdam.de>;
 #X text 54 3 [pdstring] library : byte and wide-character strings;
 #X obj 51 76 bytes2any;
@@ -72,7 +72,7 @@
 #X connect 11 0 13 0;
 #X connect 13 0 12 0;
 #X restore 90 382 pd pdstring-bytes;
-#N canvas 0 0 584 308 pdstring-wchars 0;
+#N canvas 1 88 584 308 pdstring-wchars 0;
 #X floatatom 56 81 8 0 0 0 - - -;
 #X symbolatom 46 59 10 0 0 0 - - -;
 #X text 201 59 ... no special handling for symbols;
@@ -105,12 +105,12 @@ enabled \, e.g. by the [locale] external.;
 #X obj 43 203 printwchars;
 #X text 148 203 print wide character strings to pd console;
 #X text 149 100 print byte strings to pd console;
-#N canvas 260 141 494 344 META 0;
+#N canvas 258 149 494 344 META 0;
 #X text 12 105 HELP_PATCH_AUTHORS "pd meta" information added by Jonathan
 Wilkes for Pd version 0.42.;
 #X text 12 25 LICENSE GPL v2;
 #X text 12 85 AUTHOR Bryan Jurish <moocow@ling.uni-potsdam.de>;
 #X text 12 45 DESCRIPTION byte and wide-character strings;
 #X text 12 65 INLET_0;
-#X text 12 5 KEYWORDS control symbol_op needs_work (INLET_0?);
+#X text 12 5 KEYWORDS control symbol_op;
 #X restore 421 454 pd META;

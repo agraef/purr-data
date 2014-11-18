@@ -45,7 +45,7 @@ flite_SOURCES = flite.c common/mooPdUtils.h
 #-----------------------------------------------------------------------
 
 flite_LDFLAGS = $(LFLAGS)
-flite_LDADD   = $(FLITE_VOICELIBS) $(FLITE_LANGLIBS) $(FLITE_LEXLIBS) $(FLITE_LIBS)
+#flite_LDADD   = $(FLITE_VOICELIBS) $(FLITE_LANGLIBS) $(FLITE_LEXLIBS) $(FLITE_LIBS)
 
 #-----------------------------------------------------------------------
 # Additional Variables & Rules: PODS

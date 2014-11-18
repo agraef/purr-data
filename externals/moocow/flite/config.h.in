@@ -3,10 +3,6 @@
 /* Define to 1 if you have the `flite_cmulex' library (-lflite_cmulex). */
 #undef HAVE_LIBFLITE_CMULEX
 
-/* Define to 1 if you have the `flite_cmu_us_kal16' library
-   (-lflite_cmu_us_kal16). */
-#undef HAVE_LIBFLITE_CMU_US_KAL16
-
 /* Define to 1 if you have the `flite_usenglish' library (-lflite_usenglish).
    */
 #undef HAVE_LIBFLITE_USENGLISH
@@ -31,6 +27,9 @@
 
 /* Define to the one symbol short name of this package. */
 #undef PACKAGE_TARNAME
+
+/* Define to the home page for this package. */
+#undef PACKAGE_URL
 
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION

@@ -70,9 +70,7 @@ pdextPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(pdext_PROGRAMS)
 am_flite_OBJECTS = flite.$(OBJEXT)
 flite_OBJECTS = $(am_flite_OBJECTS)
-am__DEPENDENCIES_1 =
-flite_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+flite_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I.
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
@@ -133,10 +131,6 @@ ECHO_T = @ECHO_T@
 ENABLE_DEBUG = @ENABLE_DEBUG@
 EXEEXT = .@PDEXT@
 EXTRA_CPPFLAGS = @EXTRA_CPPFLAGS@
-FLITE_LANGLIBS = @FLITE_LANGLIBS@
-FLITE_LEXLIBS = @FLITE_LEXLIBS@
-FLITE_LIBS = @FLITE_LIBS@
-FLITE_VOICELIBS = @FLITE_VOICELIBS@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
@@ -157,6 +151,7 @@ PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
 PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
+PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PDEXT = @PDEXT@
@@ -278,7 +273,7 @@ flite_SOURCES = flite.c common/mooPdUtils.h
 # external compilation : flags
 #-----------------------------------------------------------------------
 flite_LDFLAGS = $(LFLAGS)
-flite_LDADD = $(FLITE_VOICELIBS) $(FLITE_LANGLIBS) $(FLITE_LEXLIBS) $(FLITE_LIBS)
+#flite_LDADD   = $(FLITE_VOICELIBS) $(FLITE_LANGLIBS) $(FLITE_LEXLIBS) $(FLITE_LIBS)
 
 #-----------------------------------------------------------------------
 # Additional Variables & Rules: PODS
@@ -583,7 +578,8 @@ distdir: $(DISTFILES)
 	      || exit 1; \
 	  fi; \
 	done
-	-find $(distdir) -type d ! -perm -777 -exec chmod a+rwx {} \; -o \
+	-find "$(distdir)" -type d ! -perm -755 \
+		-exec chmod u+rwx,go+rx {} \; -o \
 	  ! -type d ! -perm -444 -links 1 -exec chmod a+r {} \; -o \
 	  ! -type d ! -perm -400 -exec chmod a+r {} \; -o \
 	  ! -type d ! -perm -444 -exec $(SHELL) $(install_sh) -c -m a+r {} {} \; \

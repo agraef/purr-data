@@ -3550,9 +3550,6 @@ fi
 
 
 
- pddocdir="${pddir}/doc/5.reference"
-
-
  ##-- pdincludedir
 
 # Check whether --with-pd-include was given.
@@ -3581,6 +3578,10 @@ fi
  ##-- pdextdir: aliases
  pdexternsdir="$pdextdir"
  pdexecdir="$pdextdir"
+
+ ##-- pddocdir
+ # Nowadays the help files usually are installed besides the class files
+ pddocdir="${pdextdir}"
 
 
  ## pd-directory/ies

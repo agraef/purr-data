@@ -26,7 +26,8 @@ INSTALLATION
 BUILD OPTIONS
     The 'configure' script supports the following options, among others:
 
-    * --enable-debug , --disable-debug
+    *   --enable-debug , --disable-debug
+
         Whether to enable verbose debugging messages. Default=no.
 
 ACKNOWLEDGEMENTS
