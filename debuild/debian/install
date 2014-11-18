@@ -1,0 +1,7 @@
+scripts/bash_completion/pd-l2ork	etc/bash_completion.d
+l2ork_addons/K12			usr/lib/pd-l2ork/extra
+packages/linux_make/default.settings	usr/lib/pd-l2ork
+packages/linux_make/pd-l2ork.gif	usr/lib/pd-l2ork
+packages/linux_make/pd-l2ork*.png	usr/share/icons/hicolor/128x128/apps
+packages/linux_make/text-x-puredata.png	usr/share/icons/hicolor/128x128/mimetypes
+packages/linux_make/pd-l2ork*.desktop	usr/share/applications
