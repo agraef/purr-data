@@ -1,5 +1,5 @@
 #!/bin/sh
-# postrm script for pure
+# postrm script for pd-l2ork
 #
 # see: dh_installdeb(1)
 
@@ -22,12 +22,7 @@ set -e
 case "$1" in
     purge|remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
     if [ remove = "$1" -o abort-install = "$1" -o disappear = "$1" ]; then
-       for x in cyclist pdsend pdreceive; do
-	   dpkg-divert --package pd-l2ork --remove --rename --divert /usr/bin/$x.orig /usr/bin/$x
-       done
-       for x in pdsend pdreceive; do
-	   dpkg-divert --package pd-l2ork --remove --rename --divert /usr/share/man/man1/$x.1.orig.gz /usr/share/man/man1/$x.1.gz
-       done
+       dpkg-divert --package pd-l2ork --remove --rename --divert /usr/share/icons/hicolor/128x128/mimetypes/text-x-puredata.png.orig /usr/share/icons/hicolor/128x128/mimetypes/text-x-puredata.png
     fi
     ;;
 
