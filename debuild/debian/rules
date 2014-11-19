@@ -16,14 +16,19 @@ override_dh_auto_build:
 
 override_dh_auto_install:
 	mkdir -p debian/pd-l2ork && mv packages/linux_make/build/usr debian/pd-l2ork
+# Remove some unneeded files.
+	cd debian/pd-l2ork/ && rm -f Makefile README.txt
+	cd debian/pd-l2ork/usr/lib/pd-l2ork/extra && rm -rf */*.pd_linux_o */*.la
+# Remove cyclist and pdsend/pdreceive which are provided by other packages.
+	cd debian/pd-l2ork/usr/bin && rm -rf pdsend pdreceive cyclist
+	cd debian/pd-l2ork/usr/share/man/man1 && rm -rf pdsend.* pdreceive.*
+# Move the Gem include files into the pd-l2ork include directory to prevent
+# conflicts with other packages providing these files.
+	cd debian/pd-l2ork/usr && mv include/Gem include/pd-l2ork
+# Edit the Gem pkgconfig file accordingly and rename it.
+	cd debian/pd-l2ork/usr/lib/pkgconfig && sed -e 's?/include?/include/pd-l2ork?g' -e 's?/lib/pd/extra?/lib/pd-l2ork/extra?g' < Gem.pc > pd-l2ork-Gem.pc && rm -f Gem.pc
 # Default preferences file.
 	install -d debian/pd-l2ork/etc/pd-l2ork && ln -s -f /usr/lib/pd-l2ork/default.settings debian/pd-l2ork/etc/pd-l2ork/default.settings
-# Get rid of the Gem development files (these are provided elsewhere) and
-# other stuff that's neither needed nor wanted.
-	cd debian/pd-l2ork/ && rm -f Makefile README.txt
-	cd debian/pd-l2ork/usr && rm -rf include/Gem lib/pkgconfig lib/pd-l2ork/extra/*/*.pd_linux_o lib/pd-l2ork/extra/*/*.la
-# XXXTODO: Do we want to move these over to the doc hierarchy??
-#	rm -f debian/pd-l2ork/usr/lib/pd-l2ork/extra/*-help.pd
 
 # XXXTODO: This is deprecated, so we might have to migrate to dh_python2 in
 # the future. See http://deb.li/dhs2p.
