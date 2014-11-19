@@ -22,6 +22,8 @@ typedef struct _image
 	int x_img_width;
 	int x_img_height;
 	int x_gop_spill;
+	int x_click;
+	//t_float x_clicked;
 	t_symbol* x_fname;
 	t_symbol* x_receive;
 	//int x_selected;
@@ -110,6 +112,7 @@ static void image_getrect(t_gobj *z, t_glist *glist,
 {
 	int width, height;
 	t_image* x = (t_image*)z;
+	//printf("image_getrect %d %d\n", *xp1, *yp1);
 
 	if (!x->x_gop_spill && (x->x_img_width + x->x_img_height) >= 2) {
 		width = x->x_img_width;
@@ -122,6 +125,22 @@ static void image_getrect(t_gobj *z, t_glist *glist,
 	*yp1 = text_ypix(&x->x_obj, glist) - height/2;
 	*xp2 = text_xpix(&x->x_obj, glist) + width/2;
 	*yp2 = text_ypix(&x->x_obj, glist) + height/2;
+
+	// if we have click detection disabled and we are in runmode,
+	// return 0 size to allow for click relegation to hidden objects below
+	// CAREFUL: this code is not reusable for objects that have more than
+	// one inlet or outlet because it will cram them together
+	if ((glist_getcanvas(glist) != glist && !x->x_click) || (!glist->gl_edit && !x->x_click))
+	{
+		*xp2 = *xp1;
+		// only if we have an image loaded and we are placed within a GOP obliterate the height
+		//if (glist_getcanvas(glist) != glist && (x->x_img_width + x->x_img_height) >= 2)
+		//{
+			//printf("blah\n");
+			//*yp2 = *yp1;
+		//}
+	}
+
 	//fprintf(stderr,"image_getrect %d %d %d %d\n", *xp1, *yp1, *xp2, *yp2);
 }
 
@@ -269,18 +288,51 @@ t_widgetbehavior   image_widgetbehavior;
 
 }*/
 
-/*static int image_newclick(t_gobj *z, struct _glist *glist, int xpix, int ypix, int shift, int alt, int dbl, int doit)
+static int image_newclick(t_gobj *z, struct _glist *glist, int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
+	//printf("doit=%d\n", doit);
 	t_image *x = (t_image *)z;
-	if (doit)
+	if (doit && x->x_click)
 		outlet_bang(x->x_obj.ob_outlet);
+	// LATER: figure out how to do click on and click off
+	// and provide a toggle button behavior insteadS
+	/*{
+		x->x_clicked = 1;
+		outlet_float(x->x_obj.ob_outlet, x->x_clicked);
+	}
+	else if (x->x_clicked)
+	{
+		x->x_clicked = 0;
+		outlet_float(x->x_obj.ob_outlet, x->x_clicked);
+	}*/
 	return(1);
-}*/
+}
+
+static void image_click(t_image *x, t_float f)
+{
+	if (f == 0)
+		x->x_click = 0;
+	else if (f == 1)
+		x->x_click = 1;
+}
 
 void image_gop_spill(t_image* x, t_floatarg f)
 {
-     x->x_gop_spill = (f >= 0 ? f : 0);
-	 image_displace((t_gobj*)x, x->x_glist, 0.0, 0.0);
+    x->x_gop_spill = (f >= 0 ? f : 0);
+	image_displace((t_gobj*)x, x->x_glist, 0.0, 0.0);
+}
+
+void image_gop_spill_size(t_image* x, t_floatarg f)
+{
+	//printf("image_gop_spill_size=%d\n", (int)f);
+	// we need a size of at least 3 to have a meaningful
+	// selection frame around the selection box
+	if ((int)f >= 3)
+	{
+    	x->x_width = (int)f;
+    	x->x_height = x->x_width;
+		image_displace((t_gobj*)x, x->x_glist, 0.0, 0.0);
+	}
 }
 
 void image_open(t_image* x, t_symbol *s, t_int argc, t_atom *argv)
@@ -308,10 +360,11 @@ static void image_imagesize_callback(t_image *x, t_float w, t_float h) {
 			image_erase(x, glist_getcanvas(x->x_glist));
 	} else {
 		//sys_vgui("catch {.x%x.c delete %xMT}\n", glist_getcanvas(x->x_glist), x);
-		//if (x->x_selected) {
-		//image_select((t_gobj *)x, glist_getcanvas(x->x_glist), 0);
-		//image_select((t_gobj *)x, glist_getcanvas(x->x_glist), 1);
-		//}
+		// reselect if we are on a toplevel canvas to adjust the selection rectangle, if necessary
+		if (glist_isselected(x->x_glist, (t_gobj *)x) && glist_getcanvas(x->x_glist) == x->x_glist) {
+			image_select((t_gobj *)x, glist_getcanvas(x->x_glist), 0);
+			image_select((t_gobj *)x, glist_getcanvas(x->x_glist), 1);
+		}
 		canvas_fixlinesfor(x->x_glist,(t_text*) x);
 	}
 }
@@ -324,7 +377,7 @@ static void image_setwidget(void)
     image_widgetbehavior.w_activatefn =   	image_activate;
     image_widgetbehavior.w_deletefn =   	image_delete;
     image_widgetbehavior.w_visfn =   		image_vis;
-    //image_widgetbehavior.w_clickfn = 		image_newclick;
+    image_widgetbehavior.w_clickfn = 		image_newclick;
     image_widgetbehavior.w_displacefnwtag =	image_displace_wtag;
 }
 
@@ -349,6 +402,8 @@ static void *image_new(t_symbol *s, t_int argc, t_atom *argv)
 	x->x_img_width = 0;
 	x->x_img_height = 0;
 	x->x_gop_spill = 0;
+	x->x_click = 0;
+	//x->x_clicked = 0;
 	//x->x_selected = 0;
 
 	x->x_fname = get_filename(argc, argv);
@@ -372,7 +427,9 @@ static void *image_new(t_symbol *s, t_int argc, t_atom *argv)
 	x->x_receive = gensym(buf);
     pd_bind(&x->x_obj.ob_pd, x->x_receive);
 
-    //outlet_new(&x->x_obj, &s_bang);
+    outlet_new(&x->x_obj, &s_bang);
+    //outlet_new(&x->x_obj, &s_float);
+
     return (x);
 }
 
@@ -387,9 +444,13 @@ void image_setup(void)
 	class_addmethod(image_class, (t_method)image_color, gensym("color"),
     	A_SYMBOL, 0);
 */
+	class_addmethod(image_class, (t_method)image_click, gensym("click"),
+    	A_DEFFLOAT, 0);
     class_addmethod(image_class, (t_method)image_open, gensym("open"),
     	A_GIMME, 0);
     class_addmethod(image_class, (t_method)image_gop_spill, gensym("gopspill"),
+    	A_DEFFLOAT, 0);
+	class_addmethod(image_class, (t_method)image_gop_spill_size, gensym("gopspill_size"),
     	A_DEFFLOAT, 0);
     class_addmethod(image_class, (t_method)image_imagesize_callback,\
                      gensym("_imagesize"), A_DEFFLOAT, A_DEFFLOAT, 0);
@@ -398,5 +459,3 @@ void image_setup(void)
     class_setwidget(image_class,&image_widgetbehavior);
     class_setsavefn(image_class,&image_save);
 }
-
-
