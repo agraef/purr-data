@@ -884,7 +884,12 @@ static void gatom_set(t_gatom *x, t_symbol *s, int argc, t_atom *argv)
         x->a_atom.a_w.w_symbol = atom_getsymbol(argv),
             changed = (x->a_atom.a_w.w_symbol != oldatom.a_w.w_symbol);
     if (changed)
-        gatom_retext(x, 1, 0);
+    {
+        if (x->a_atom.a_type == A_FLOAT && x->a_text.te_width == 1)
+            gatom_retext(x, 1, 1);
+        else
+            gatom_retext(x, 1, 0);
+    }
     x->a_buf[0] = 0;
 }
 
@@ -1017,6 +1022,7 @@ static void gatom_key(void *z, t_floatarg f)
         gatom_bang(x);
         gatom_retext(x, 1, 1);
         x->a_buf[0] = 0;
+        glist_grab(x->a_glist, 0, 0, 0, 0, 0);
     }
     else if (len < (ATOMBUFSIZE-1))
     {
@@ -1072,9 +1078,10 @@ static void gatom_click(t_gatom *x,
             {
                 x->a_toggle = x->a_atom.a_w.w_float;
                 gatom_float(x, 0);
-                return;
             }
             else gatom_float(x, x->a_toggle);
+            gatom_retext(x, 0, 1);
+            return;
         }
         x->a_shift = shift;
         x->a_buf[0] = 0;
@@ -1713,11 +1720,11 @@ static int text_click(t_gobj *z, struct _glist *glist,
         t_rtext *y = glist_findrtext(glist, x);
         if (doit)
         {
-            gatom_click((t_gatom *)x, (t_floatarg)xpix, (t_floatarg)ypix,
-                (t_floatarg)shift, (t_floatarg)0, (t_floatarg)alt);
             //fprintf(stderr,"atom click\n");
             sys_vgui(".x%lx.c itemconfigure %s -fill %s\n", canvas, 
                 rtext_gettag(y), "$pd_colors(selection)");
+            gatom_click((t_gatom *)x, (t_floatarg)xpix, (t_floatarg)ypix,
+                (t_floatarg)shift, (t_floatarg)0, (t_floatarg)alt);
         }
         return (1);
     }

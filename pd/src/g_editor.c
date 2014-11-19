@@ -2218,7 +2218,12 @@ int canvas_hitbox(t_canvas *x, t_gobj *y, int xpos, int ypos,
     if (!gobj_shouldvis(y, x))
         return (0);
     gobj_getrect(y, x, &x1, &y1, &x2, &y2);
-    if (xpos >= x1 && xpos <= x2 && ypos >= y1 && ypos <= y2)
+    // we also add a check that width is greater than 0 because we use this
+    // to return value from objects that are designed to ignore clicks and
+    // pass them below, e.g. pd-l2ork's version of ggee/image which uses this
+    // feature in runtime mode only (we can use canvas->gl_edit check for this
+    // within an external)
+    if (x2-x1 > 0 && xpos >= x1 && xpos <= x2 && ypos >= y1 && ypos <= y2)
     {
         *x1p = x1;
         *y1p = y1;
@@ -3017,6 +3022,8 @@ static double canvas_upclicktime;
 static int canvas_upx, canvas_upy;
 #define DCLICKINTERVAL 0.25
 
+extern t_class *my_canvas_class; // for ignoring runtime clicks
+
     /* mouse click */
 void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     int mod, int doit)
@@ -3129,8 +3136,8 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
             if (canvas_hitbox(x, y, xpos, ypos, &x1, &y1, &x2, &y2))
             {
                 ob = pd_checkobject(&y->g_pd);
-                /* do not give clicks to comments during runtime */
-                if (!ob || ob->te_type != T_TEXT) 
+                /* do not give clicks to comments or cnv during runtime */
+                if (!ob || (ob->te_type != T_TEXT && ob->ob_pd != my_canvas_class))
                     yclick = y;
                 //fprintf(stderr,"    MAIN found clickable %d\n",
                 //    clickreturned);
@@ -4760,6 +4767,7 @@ void canvas_displaceselection(t_canvas *x, int dx, int dy)
 void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
 {
     static t_symbol *keynumsym, *keyupsym, *keynamesym;
+    static t_symbol *keynumsym_a, *keyupsym_a, *keynamesym_a;
     int keynum;
     t_symbol *gotkeysym;
         
@@ -4844,6 +4852,10 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
         keynumsym = gensym("#key");
         keyupsym = gensym("#keyup");
         keynamesym = gensym("#keyname");
+
+        keynumsym_a = gensym("#key_a");
+        keyupsym_a = gensym("#keyup_a");
+        keynamesym_a = gensym("#keyname_a");
     }
 #ifdef __APPLE__
         if (keynum == 30)
@@ -4855,6 +4867,10 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
         else if (keynum == 29)
             keynum = 0, gotkeysym = gensym("Right");
 #endif
+    // set the shared variable for broadcasting of keypresses to key et al. objectss
+    t_atom at[2];
+
+    // now broadcast key press to key et al. objects
     if (!autorepeat)
     {
         if (keynumsym->s_thing && down)
@@ -4863,13 +4879,26 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
             pd_float(keyupsym->s_thing, (t_float)keynum);
         if (keynamesym->s_thing)
         {
-            t_atom at[2];
             at[0] = av[0];
             SETFLOAT(at, down);
             SETSYMBOL(at+1, gotkeysym);
             pd_list(keynamesym->s_thing, 0, 2, at);
         }
     }
+
+    // now do the same for autorepeat-enabled objects (key et al. alternative behavior)
+    if (keynumsym_a->s_thing && down)
+        pd_float(keynumsym_a->s_thing, (t_float)keynum);
+    if (keyupsym_a->s_thing && !down)
+        pd_float(keyupsym_a->s_thing, (t_float)keynum);
+    if (keynamesym_a->s_thing)
+    {
+        at[0] = av[0];
+        SETFLOAT(at, down);
+        SETSYMBOL(at+1, gotkeysym);
+        pd_list(keynamesym_a->s_thing, 0, 2, at);
+    }
+
     if (!x->gl_editor)  /* if that 'invis'ed the window, we'd better stop. */
         return;
     if (x && down)

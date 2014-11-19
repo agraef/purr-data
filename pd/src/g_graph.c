@@ -1483,6 +1483,8 @@ static void graph_motion(void *z, t_floatarg dx, t_floatarg dy)
     garray_redraw(a);
 }
 
+extern t_class *my_canvas_class; // for ignoring runtime clicks
+
 static int graph_click(t_gobj *z, struct _glist *glist,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
@@ -1517,8 +1519,8 @@ static int graph_click(t_gobj *z, struct _glist *glist,
                 if (canvas_hitbox(x, y, xpix, ypix, &x1, &y1, &x2, &y2))
                 {
                     ob = pd_checkobject(&y->g_pd);
-                    /* do not give clicks to comments during runtime */
-                    if (!ob || ob->te_type != T_TEXT) 
+                    /* do not give clicks to comments or cnv during runtime */
+                    if (!ob || (ob->te_type != T_TEXT && ob->ob_pd != my_canvas_class)) 
                         clickme = y;
                     //fprintf(stderr,"    found clickable %d\n", clickreturned);
                 }
