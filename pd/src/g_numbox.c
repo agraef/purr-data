@@ -22,8 +22,10 @@ t_widgetbehavior my_numbox_widgetbehavior;
 
 static void my_numbox_tick_reset(t_my_numbox *x)
 {
+    //printf("tick_reset\n");
     if(x->x_gui.x_change && x->x_gui.x_glist)
     {
+        //printf("    success\n");
         x->x_gui.x_change = 0;
         sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
     }
@@ -31,6 +33,7 @@ static void my_numbox_tick_reset(t_my_numbox *x)
 
 static void my_numbox_tick_wait(t_my_numbox *x)
 {
+    //printf("tick_wait\n");
     sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
 }
 
@@ -116,11 +119,18 @@ void my_numbox_ftoa(t_my_numbox *x)
 static void my_numbox_draw_update(t_gobj *client, t_glist *glist)
 {
     t_my_numbox *x = (t_my_numbox *)client;
-    if (!x->x_gui.x_changed) return;
+
+    // we cannot ignore this call even if there is no change
+    // since that will mess up number highlighting while editing
+    // the code is left here as it is similar to other iemguis
+    // but should not be used for this reason
+    // if (!x->x_gui.x_changed) return;
+
     x->x_gui.x_changed = 0;
     if (!glist_isvisible(glist)) return;
     if(x->x_gui.x_change && x->x_buf[0])
     {
+        //printf("draw_update 1\n");
         char *cp=x->x_buf;
         int sl = strlen(x->x_buf);
         x->x_buf[sl] = '>';
@@ -134,6 +144,7 @@ static void my_numbox_draw_update(t_gobj *client, t_glist *glist)
     }
     else
     {
+        //printf("draw_update 2\n");
         char fcol[8]; sprintf(fcol, "#%6.6x",
             x->x_gui.x_change ? IEM_GUI_COLOR_EDITED : x->x_gui.x_fcol);
         my_numbox_ftoa(x);
@@ -510,6 +521,7 @@ static int my_numbox_newclick(t_gobj *z, struct _glist *glist,
 
     if(doit)
     {
+        //printf("newclick doit\n");
         my_numbox_click( x, (t_floatarg)xpix, (t_floatarg)ypix,
             (t_floatarg)shift, 0, (t_floatarg)alt);
         if(shift)
@@ -518,6 +530,7 @@ static int my_numbox_newclick(t_gobj *z, struct _glist *glist,
             x->x_gui.x_finemoved = 0;
         if(!x->x_gui.x_change)
         {
+            //printf("    change=0\n");
             clock_delay(x->x_clock_wait, 50);
             x->x_gui.x_change = 1;
             clock_delay(x->x_clock_reset, 3000);
@@ -526,6 +539,7 @@ static int my_numbox_newclick(t_gobj *z, struct _glist *glist,
         }
         else
         {
+            //printf("    change=1\n");
             x->x_gui.x_change = 0;
             clock_unset(x->x_clock_reset);
             x->x_buf[0] = 0;
