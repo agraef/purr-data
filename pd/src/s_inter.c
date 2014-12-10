@@ -879,12 +879,13 @@ void sys_unqueuegui(void *client)
     t_guiqueue *gq, *gq2;
     if (!sys_guiqueuehead)
         return;
-    if (sys_guiqueuehead->gq_client == client)
+    while (sys_guiqueuehead->gq_client == client)
     {
-        t_freebytes(sys_guiqueuehead, sizeof(*sys_guiqueuehead));
-        sys_guiqueuehead = 0;
+        gq = sys_guiqueuehead;
+        sys_guiqueuehead = sys_guiqueuehead->gq_next;
+        t_freebytes(gq, sizeof(*gq));
     }
-    else for (gq = sys_guiqueuehead; gq2 = gq->gq_next; gq = gq2)
+    for (gq = sys_guiqueuehead; gq2 = gq->gq_next; gq = gq2)
         if (gq2->gq_client == client)
     {
         gq->gq_next = gq2->gq_next;
