@@ -65,6 +65,10 @@ static void doerror(const void *object, const char *s)
         sys_vgui("pdtk_posterror {%s} 1 {%s}\n",
             strnpointerid(obuf, object, MAXPDSTRING),
             strnescape(upbuf, s, MAXPDSTRING));
+        gui_vmess("gui_post_error", "sis",
+            strnpointerid(obuf, object, MAXPDSTRING),
+            1,
+            strnescape(upbuf, s, MAXPDSTRING));
     }
 }
 
@@ -118,7 +122,8 @@ static void dopost(const char *s)
         //if (ptout && upbuf[ptout-1] == '\n')
         //    upbuf[--ptout] = 0, heldcr = 1;
         upbuf[ptout] = 0;
-        sys_vgui("pdtk_post {%s}\n", upbuf);
+//        sys_vgui("pdtk_post {%s}\n", upbuf);
+        gui_vmess("gui_post", "s", upbuf);
     }
 }
 

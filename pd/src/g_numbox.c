@@ -140,6 +140,11 @@ static void my_numbox_draw_update(t_gobj *client, t_glist *glist)
         sys_vgui(
             ".x%lx.c itemconfigure %lxNUMBER -fill #%6.6x -text {%s}\n",
                 glist_getcanvas(glist), x, IEM_GUI_COLOR_EDITED, cp);
+        char tagbuf[MAXPDSTRING];
+        sprintf(tagbuf, "x%lx", (long unsigned int)x);
+        gui_vmess("gui_text_set", "sss", canvas_string(glist_getcanvas(glist)),
+            tagbuf, cp);
+            
         x->x_buf[sl] = 0;
     }
     else
@@ -153,6 +158,10 @@ static void my_numbox_draw_update(t_gobj *client, t_glist *glist)
             glist_getcanvas(glist), x,
             x->x_gui.x_selected == glist_getcanvas(glist) && 
                 !x->x_gui.x_change ? selection_color : fcol, x->x_buf);
+        char tagbuf[MAXPDSTRING];
+        sprintf(tagbuf, "x%lx", (long unsigned int)x);
+        gui_vmess("gui_text_set", "sss", canvas_string(glist_getcanvas(glist)),
+            tagbuf, x->x_buf);
         x->x_buf[0] = 0;
     }
 }
@@ -171,7 +180,10 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
         canvas, x1, y1, x2-4, y1, x2, y1+4, x2, y2, x1, y2,
         x->x_hide_frame <= 1 ? "$pd_colors(iemgui_border)" : bcol,
         bcol, x, x);
-
+    char tagbuf[MAXPDSTRING];
+    sprintf(tagbuf, "x%lx", (long unsigned int)x);
+    gui_vmess("gui_create_numbox", "sssiiiiiiiiiiiii", canvas_string(canvas),
+        tagbuf, bcol, x1, y1, x2-4, y1, x2, y1+4, x2, y2, x1, y2, x1, y1, half);
     if (!x->x_hide_frame || x->x_hide_frame == 2)
         sys_vgui(".x%lx.c create polyline %d %d %d %d %d %d -stroke #%6.6x "
             "-tags {%lxBASE2 x%lx text iemgui}\n",
@@ -182,6 +194,10 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
         "-font %s -fill #%6.6x -tags {%lxNUMBER x%lx noscroll text iemgui}\n",
         canvas, x1+half+2, y1+half+d, x->x_buf, iemgui_font(&x->x_gui),
         x->x_gui.x_fcol, x, x);
+    char colorbuf[MAXPDSTRING];
+    sprintf(colorbuf, "#%6.6x", x->x_gui.x_fcol);
+    gui_vmess("gui_numbox_drawtext", "ssssiiii", canvas_string(canvas), tagbuf,
+        x->x_buf, colorbuf, x1+half+2, y1+half+d, x1, y1);
 }
 
 static void my_numbox_draw_move(t_my_numbox *x, t_glist *glist)

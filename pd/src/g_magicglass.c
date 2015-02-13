@@ -5,6 +5,7 @@
 #include "m_imp.h"
 #include "s_stuff.h"
 #include "g_magicglass.h"
+#include "g_canvas.h"
 
 #define MG_CLOCK_CLEAR_DELAY 500.5
 #define MG_CLOCK_FLASH_DELAY 50
@@ -116,6 +117,12 @@ void magicGlass_updateText(t_magicGlass *x, int moved)
                  x->x_y - (int)(sys_fontheight(x->x_display_font)/2) - 3,
                  bgSize,
                  x->x_y + (int)(sys_fontheight(x->x_display_font)/2) + 3);
+        gui_vmess("gui_cord_inspector_update", "ssiiiiii",
+            canvas_string(x->x_c), x->x_string,
+            x->x_x, x->x_y, bgSize, 
+            x->x_y - (int)(sys_fontheight(x->x_display_font)/2) - 3,
+            x->x_y + (int)(sys_fontheight(x->x_display_font)/2) + 3,
+            moved);
     }
 }
 
@@ -137,6 +144,10 @@ void magicGlass_drawNew(t_magicGlass *x)
              x->x_c);
     sys_vgui(".x%x.c raise magicGlassText\n",
              x->x_c);
+    gui_vmess("gui_text_create_gobj", "ssii",
+        canvas_string(x->x_c), "cord_inspector", 0, 0);
+    gui_vmess("gui_create_cord_inspector", "s",
+        canvas_string(x->x_c)); 
     magicGlass_updateText(x, 0);
     clock_delay(x->x_flashClock, MG_CLOCK_FLASH_DELAY);
 }
@@ -147,6 +158,8 @@ void magicGlass_undraw(t_magicGlass *x)
     sys_vgui(".x%x.c delete magicGlassBg\n", x->x_c);
     sys_vgui(".x%x.c delete magicGlassLine\n", x->x_c);
     sys_vgui(".x%x.c delete magicGlassText\n", x->x_c);
+    gui_vmess("gui_erase_cord_inspector", "s",
+        canvas_string(x->x_c));
 }
 
 void magicGlass_flashText(t_magicGlass *x)
@@ -155,6 +168,8 @@ void magicGlass_flashText(t_magicGlass *x)
     sys_vgui(".x%x.c itemconfigure magicGlassText "
              "-fill $pd_colors(magic_glass_text)\n",
          x->x_c);
+    gui_vmess("gui_cord_inspector_flash", "s",
+        canvas_string(x->x_c));
 }
 
 void magicGlass_clearText(t_magicGlass *x)

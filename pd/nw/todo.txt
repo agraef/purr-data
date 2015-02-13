@@ -1,0 +1,80 @@
+Problems to put off until all (or most) sys_vgui calls are eliminated:
+1) gui-side parser inside -- pdgui.js.  Currently we're splitting on newlines so we can separate
+   gui_vmess from sys_vgui calls.  This makes it very difficult to handle multi-line msg and text
+   boxes.
+2) Semicolons -- currently the parser can't tell the difference between semicolons inside symbols
+   and semicolons that end statements.  Again, this will be easy to solve once we eliminate sys_gui.
+
+HTML5 which may not be standard yet:
+1) mouse.pageX/pageY -- exist in Chromium but maybe not in FF et al.
+2) svg 'overflow' attribute -- probably doesn't work in other browsers
+3) document.body.scrollTop (might be Chromium-specific, not sure)
+3) document.body.scrollLeft (might be Chromium-specific, not sure)
+
+Node-webkit stuff:
+1) popup API
+2) new window API
+3) window menus
+4) (probably) present working directory
+5) command line argv
+
+Everything else:
+* packaging as app, setting correct appname, etc
+* get -unique to work (relied on tcl [send] command)
+* check if patch windows with screenposition (0,0) get stuck underneath Ubuntu/OSX menu.  If so,
+  Node-webkit has a "screen" interface to retrieve the "workable" area of the screen
+* choosing the same directory multiple times (see dialog API page)
+* figure out why there is a "pd_opendir" global var
+* pass k12 mode arg
+* implement recent files (using Pd's prefs loading mechanism instead of reimplementing gui prefs)
+* implement verifyquit
+* save and saveas dialogs aren't defaulting to the present working directory
+* create a loop (maybe every second) to check bbox of patchsvg, and set the height/width to that
+  bbox for the svg.  That should trigger the correct scrollbar behavior.
+* change canvas string to a single int (and investigate any side-effects)
+* destroy (or, more likely, hide) selection rectangle when not needed
+* change gui_text_select to gui_gobj_select
+* make it possible to have the inner cells of hradio change color with the selection, as the border currently does.  Tk just uses the non-hierarchical tags and appends the word "BASE".  (Maybe use an inner <g> to do this.)
+* make mycnv use its own selection logic
+* abstract away appendChild
+* font-size should be set as css property for a class of text, rather than per each gobj in svg
+* remove the "fudge_factor" kludge in g_rtext.c, and handle fonts in a sane manner.  In doing so
+  we must decide whether or not we want to be able to fetch the bounding box of objects from
+  within a Pd patch.  (Currently [canvasinfo] and [objectinfo] are the only objects that can
+  do this, though there might also be)
+* replace things like gui_select_color with css
+* find a better approach to escaping characters for the gui than escape_double_quotes kludge (and handle any other problematic chars)
+* look into using <def> and <use> for scalars.
+* use Atom's selectors for standard OSX behavior (cut, paste, about, etc.)
+* in draw_vis, make circle and ellipse radii attr floats instead of ints
+* should stroke-dasharray values be floats?
+* once garrays are drawn inside a <g> we won't have to individually erase each child of a scalar
+* clean up svg_sendupdate -- put a single gui_vmess at the end
+* svg_sendupdate -- make sure there aren't arbitrary %d's that should actually be %g's
+* svg_sendupdate -- need a gui interface for stuff like stroke-dasharray (and garrays)
+* ibid., for path data, points
+* make pdgui function names more consistent
+* in draw_vis, move tags to front of function call so they don't have to be an ugly array
+* in draw_vis, remove all the coords logic and let svg_togui do that work.  In svg_new,
+  leverage the "d", "points", etc. methods to do the same.
+* remove the draw_vis warning/code about needing 2 points to draw
+* might want to clean up dead windows inside patchwin object (on close)
+* make gui_menu_close filename less hacky (currently includes patch args in the middle) 
+* figure out why -nrt flag causes Pd to bail on the GUI (it wasn't doing this
+  on the amd_64 virtual Jessie machine)
+* make dialogs with [yes/no] instead of [cancel/ok]
+* make a gui_mess interface for the edge cases that don't require args (similar to sys_gui)
+* make sure we're breaking down the socket properly from the GUI side on quit
+* nwworkingdir isn't working with the saveas dialog in pdcanvas.html
+* nwworkingdir only works on the second file open
+* implement the stuff at the end of saveas_callback (recentfiles et al);
+* make an "export" menu command for max patch saving.  That way we can accept a single extension
+  for saving (.pd), and the native save dialog will warn us on potential file overwrites (even when
+  the user neglects to type an extension).
+* draw graph inside gobj group
+* merge gui_text_select and gui_text_deselect
+* in function gui_cord_inspector_update, use parameter "moved" to flash text
+* cord_inspector_flash doesn't seem to be deterministic-- if you move among several cords very fast
+  it will try to flash a non-existent svg item.  (Probably want to either make a permanent item in
+  the pdcanvas.html for it, or hard-code a separate div.)
+* for data structures, change "" to 'none'

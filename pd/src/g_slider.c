@@ -33,10 +33,20 @@ static void slider_draw_update(t_gobj *client, t_glist *glist)
         r=y2-3 - (x->x_val+50)/100;
         sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
             canvas, x, x1+2, r, x2-2, r);
+        char tagbuf[MAXPDSTRING];
+        sprintf(tagbuf, "x%lx", (long unsigned int)x);
+        gui_vmess("gui_slider_update", "ssiiiiii",
+            canvas_string(canvas), tagbuf, x1+2, r, x2-2, r,
+            x1, y1);
     } else {
         r=x1+3 + (x->x_val+50)/100;
         sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
             canvas, x, r, y1+2, r, y2-2);
+        char tagbuf[MAXPDSTRING];
+        sprintf(tagbuf, "x%lx", (long unsigned int)x);
+        gui_vmess("gui_slider_update", "ssiiiiii",
+            canvas_string(canvas), tagbuf, r, y1+2, r, y2-2,
+            x1, y1);
     }
     int t = x->x_thick;
     x->x_thick = x->x_val == x->x_center;
@@ -59,10 +69,22 @@ static void slider_draw_new(t_slider *x, t_glist *glist)
         sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth 3 "
             "-stroke #%6.6x -tags {%lxKNOB x%lx text iemgui}\n",
             canvas, x1+2, r, x2-2, r, x->x_gui.x_fcol, x, x);
+        char tagbuf[MAXPDSTRING];
+        sprintf(tagbuf, "x%lx", (long unsigned int)x);
+        char colorbuf[MAXPDSTRING];
+        sprintf(colorbuf, "#%6.6x", x->x_gui.x_fcol);
+        gui_vmess("gui_create_slider", "sssiiiiii", canvas_string(canvas), tagbuf,
+            colorbuf, x1+2, r, x2-2, r, x1, y1);
     } else {
         sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth 3 "
             "-stroke #%6.6x -tags {%lxKNOB x%lx text iemgui}\n",
             canvas, r, y1+2, r, y2-2, x->x_gui.x_fcol, x, x);
+        char tagbuf[MAXPDSTRING];
+        sprintf(tagbuf, "x%lx", (long unsigned int)x);
+        char colorbuf[MAXPDSTRING];
+        sprintf(colorbuf, "#%6.6x", x->x_gui.x_fcol);
+        gui_vmess("gui_create_slider", "sssiiiiii", canvas_string(canvas), tagbuf,
+            colorbuf, r, y1+2, r, y2-2, x1, y1);
     }
 }
 

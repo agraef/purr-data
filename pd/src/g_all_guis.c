@@ -496,7 +496,9 @@ void iemgui_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
 
 void iemgui_select(t_gobj *z, t_glist *glist, int selected)
 {
+    char tagbuf[MAXPDSTRING];
     t_iemgui *x = (t_iemgui *)z;
+    sprintf(tagbuf, "x%lx", (long unsigned int)x);
     t_canvas *canvas=glist_getcanvas(glist);
     if (selected)
         x->x_selected = canvas;
@@ -504,6 +506,7 @@ void iemgui_select(t_gobj *z, t_glist *glist, int selected)
         x->x_selected = NULL;
     sys_vgui(".x%lx.c itemconfigure {x%lx&&border} -stroke %s\n", canvas, x,
         x->x_selected && x->x_glist == canvas ? selection_color : border_color);
+    gui_vmess("gui_text_select_color", "ss", canvas_string(canvas), tagbuf);
     x->x_draw((void *)z, glist, IEM_GUI_DRAW_MODE_SELECT);
     if (selected < 2)
     {
@@ -941,11 +944,19 @@ static void scalehandle_check_and_redraw(t_iemgui *x)
 // IEMGUI refactor (by Mathieu)
 
 void iemgui_tag_selected(t_iemgui *x) {
+    char tagbuf[MAXPDSTRING];
+    sprintf(tagbuf, "x%lx", (long unsigned int)x);
     t_canvas *canvas=glist_getcanvas(x->x_glist);
     if(x->x_selected)
+    {
         sys_vgui(".x%lx.c addtag selected withtag x%lx\n", canvas, x);
+        gui_vmess("gui_text_select", "ss", canvas_string(canvas), tagbuf);
+    }
     else
+    {
         sys_vgui(".x%lx.c dtag x%lx selected\n", canvas, x);
+        gui_vmess("gui_text_deselect", "ss", canvas_string(canvas), tagbuf);
+    }
 }
 
 void iemgui_label_draw_new(t_iemgui *x) {
@@ -1023,12 +1034,18 @@ void iemgui_draw_io(t_iemgui *x, int old_sr_flags)
     //fprintf(stderr,"%lx SND: old_sr_flags=%d SND_FLAG=%d || OUTCOME: OLD_SND_FLAG=%d not_empty=%d\n", (t_int)x, old_sr_flags, IEM_GUI_OLD_SND_FLAG, a, b);
     
     if(a && !b) for (i=0; i<n; i++)
+    {
         sys_vgui(".x%lx.c create prect %d %d %d %d "
                  "-stroke $pd_colors(iemgui_nlet) "
                  "-tags {%so%d x%lx outlet %s}\n",
              canvas, x1+i*k, y2-1, x1+i*k + IOWIDTH, y2,
              iem_get_tag(canvas, x), i, x,
              x->x_selected == x->x_glist ? "iemgui selected" : "iemgui");
+        char tagbuf[MAXPDSTRING];
+        sprintf(tagbuf, "x%lx", (long unsigned int)x);
+        gui_vmess("gui_canvas_drawio", "sssiiiiii", canvas_string(canvas), tagbuf,
+            iem_get_tag(canvas, x), x1+i*k, y2-1, x1+i*k + IOWIDTH, y2, x1, y1);
+    }
     if(!a && b) for (i=0; i<n; i++)
         sys_vgui(".x%lx.c delete %so%d\n", canvas, iem_get_tag(canvas, x), i);
 
@@ -1036,12 +1053,18 @@ void iemgui_draw_io(t_iemgui *x, int old_sr_flags)
     b=x->x_rcv!=s_empty;
     //fprintf(stderr,"%lx RCV: old_sr_flags=%d RCV_FLAG=%d || OUTCOME: OLD_RCV_FLAG=%d not_empty=%d\n", (t_int)x, old_sr_flags, IEM_GUI_OLD_RCV_FLAG, a, b);
     if(a && !b) for (i=0; i<n; i++)
+    {
         sys_vgui(".x%lx.c create prect %d %d %d %d "
                  "-stroke $pd_colors(iemgui_nlet) "
                  "-tags {%si%d x%lx inlet %s}\n",
              canvas, x1+i*k, y1, x1+i*k + IOWIDTH, y1+1,
              iem_get_tag(canvas, x), i, x,
              x->x_selected == x->x_glist ? "iemgui selected" : "iemgui");
+        char tagbuf[MAXPDSTRING];
+        sprintf(tagbuf, "x%lx", (long unsigned int)x);
+        gui_vmess("gui_canvas_drawio", "sssiiiiii", canvas_string(canvas), tagbuf,
+            iem_get_tag(canvas, x), x1+i*k, y1, x1+i*k + IOWIDTH, y1+1, x1, y1);
+    }
     if(!a && b) for (i=0; i<n; i++)
         sys_vgui(".x%lx.c delete %si%d\n", canvas, iem_get_tag(canvas, x), i);
 }
@@ -1061,6 +1084,8 @@ void iemgui_io_draw_move(t_iemgui *x) {
 }
 
 void iemgui_base_draw_new(t_iemgui *x) {
+    char tagbuf[MAXPDSTRING]; 
+    sprintf(tagbuf, "x%lx", (long unsigned int)x);
     t_canvas *canvas=glist_getcanvas(x->x_glist);
     t_class *c = pd_class((t_pd *)x);
     int x1,y1,x2,y2,gr=gop_redraw; gop_redraw=0;
@@ -1070,6 +1095,12 @@ void iemgui_base_draw_new(t_iemgui *x) {
              "-stroke $pd_colors(iemgui_border) -fill #%6.6x "
              "-tags {%lxBASE x%lx text iemgui border}\n",
          canvas, x1,y1,x2,y2, x->x_bcol, x, x);
+    gui_vmess("gui_text_create_gobj", "ssii", canvas_string(canvas), tagbuf,
+        x1, y1);
+    char colorbuf[MAXPDSTRING];
+    sprintf(colorbuf, "#%6.6x", x->x_bcol);
+    gui_vmess("gui_iemgui_drawborder", "sssiiii", canvas_string(canvas), tagbuf,
+        colorbuf, x1, y1, x2, y2);
 }
 
 void iemgui_base_draw_move(t_iemgui *x) {
@@ -1114,6 +1145,9 @@ void iemgui_draw_move(t_iemgui *x) {
 void iemgui_draw_erase(t_iemgui *x) {
     t_canvas *canvas=glist_getcanvas(x->x_glist);
     sys_vgui(".x%lx.c delete x%lx\n", canvas, x);
+    char tagbuf[MAXPDSTRING];
+    sprintf(tagbuf, "x%lx", (long unsigned int)x);
+    gui_vmess("gui_gobj_erase", "ss", canvas_string(canvas), tagbuf);
     scalehandle_draw_erase2(x);
 }
 

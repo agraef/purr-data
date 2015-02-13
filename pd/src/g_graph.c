@@ -881,14 +881,32 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
     //}
     //fprintf(stderr,"tgt=.x%lx %d\n", (t_int)tgt, exception);
 
-    if (vis && canvas_showtext(x) && gobj_shouldvis(gr, parent_glist))
-        rtext_draw(glist_findrtext(parent_glist, &x->gl_obj));
+    sprintf(tag, "%s", rtext_gettag(glist_findrtext(parent_glist, &x->gl_obj)));
+//post("before rtext_draw: %s", tag);
+
+    if (vis & gobj_shouldvis(gr, parent_glist))
+    {
+        int xpix, ypix;
+        xpix = text_xpix(&x->gl_obj, parent_glist);
+        ypix = text_ypix(&x->gl_obj, parent_glist);
+        gui_vmess("gui_text_create_gobj", "ssii",
+            canvas_string(glist_getcanvas(x->gl_owner)),
+            tag, xpix, ypix);
+        if (canvas_showtext(x))
+            rtext_draw(glist_findrtext(parent_glist, &x->gl_obj));
+    }
+
+//    sprintf(tag, "%s", rtext_gettag(glist_findrtext(parent_glist, &x->gl_obj)));
+//post("after rtext_draw: %s", tag);
+
+    // need the rect to create the gobj, so this should perhaps be above the
+    // conditional
     graph_getrect(gr, parent_glist, &x1, &y1, &x2, &y2);
     //fprintf(stderr,"%d %d %d %d\n", x1, y1, x2, y2);
+
     if (!vis)
         rtext_erase(glist_findrtext(parent_glist, &x->gl_obj));
 
-    sprintf(tag, "%s", rtext_gettag(glist_findrtext(parent_glist, &x->gl_obj)));
     //sprintf(tag, "graph%lx", (t_int)x);
     //fprintf(stderr, "gettag=%s, tag=graph%lx\n",
     //    rtext_gettag(glist_findrtext(parent_glist, &x->gl_obj)),(t_int)x);
@@ -898,19 +916,30 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
     {
         if (vis && gobj_shouldvis(gr, parent_glist))
         {
-            sys_vgui(".x%lx.c create ppolygon %d %d %d %d %d %d %d %d %d %d "
-                     "-tags {%sfill graph} -fill $pd_colors(graph_border) "
-                     "-stroke $pd_colors(graph_border)\n",
-                glist_getcanvas(x->gl_owner),
-                //parent_glist,
-                x1, y1, x1, y2, x2, y2, x2, y1, x1, y1, tag);
+            //sys_vgui(".x%lx.c create ppolygon %d %d %d %d %d %d %d %d %d %d "
+            //         "-tags {%sfill graph} -fill $pd_colors(graph_border) "
+            //         "-stroke $pd_colors(graph_border)\n",
+            //    glist_getcanvas(x->gl_owner),
+                ////parent_glist,
+            //    x1, y1, x1, y2, x2, y2, x2, y1, x1, y1, tag);
+            char tagbuf[MAXPDSTRING];
+            sprintf(tagbuf, "%sfill", tag);
+            gui_vmess("gui_text_drawborder", "ssiiiii",
+                canvas_string(glist_getcanvas(x->gl_owner)),
+                tag,
+                0, x1, y1, x2, y2);
             glist_noselect(x->gl_owner);
         }
         else if (gobj_shouldvis(gr, parent_glist))
         {
-            sys_vgui(".x%lx.c delete %sfill\n",
-                glist_getcanvas(x->gl_owner), tag);
-                //parent_glist, tag);
+            //sys_vgui(".x%lx.c delete %sfill\n",
+            //    glist_getcanvas(x->gl_owner), tag);
+               ////parent_glist, tag);
+            char tagbuf2[MAXPDSTRING];
+            sprintf(tagbuf2, "%sfill", tag);
+            gui_vmess("gui_graph_deleteborder", "ss",
+                canvas_string(glist_getcanvas(x->gl_owner)),
+                tagbuf2);
         }
         return;
     }
@@ -926,12 +955,17 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
                    "-stroke $pd_colors(graph_border) -tags {%sR %s graph}\n",
             glist_getcanvas(x->gl_owner),
             x1, y1, x1, y2, x2, y2, x2, y1, x1, y1, tag, tag);*/
-        sys_vgui(".x%lx.c create prect %d %d %d %d "
-                 "-stroke $pd_colors(graph_border) -tags {%sR graph}\n",
-                 //REMOVED: -fill $pd_colors(graph) 
-            glist_getcanvas(x->gl_owner),
-            x1, y1, x2, y2, tag); // -fill $pd_colors(graph)
-
+        //sys_vgui(".x%lx.c create prect %d %d %d %d "
+        //         "-stroke $pd_colors(graph_border) -tags {%sR graph}\n",
+        //         //REMOVED: -fill $pd_colors(graph) 
+        //    glist_getcanvas(x->gl_owner),
+        //    x1, y1, x2, y2, tag); // -fill $pd_colors(graph)
+        char tagbuf[MAXPDSTRING];
+        sprintf(tagbuf, "%sR", tag);
+        gui_vmess("gui_text_drawborder", "ssiiiii",
+            canvas_string(glist_getcanvas(x->gl_owner)),
+            tag,
+            0, x1, y1, x2, y2);
             /* write garrays' names along the top */
         for (i = (y1 < y2 ? y1 : y2)-1, g = x->gl_list; g; g = g->g_next)
         {
@@ -1380,6 +1414,12 @@ static void graph_select(t_gobj *z, t_glist *glist, int state)
                  canvas, rtext_gettag(y), 
                  (state? "$pd_colors(selection)" : "$pd_colors(graph_border)"),
                  (state? "$pd_colors(selection)" : "$pd_colors(graph_border)"));
+            if (state)
+                gui_vmess("gui_text_select", "ss",
+                    canvas_string(canvas), rtext_gettag(y));
+            else
+                gui_vmess("gui_text_deselect", "ss",
+                    canvas_string(canvas), rtext_gettag(y));
         }
 
         t_gobj *g;

@@ -430,10 +430,13 @@ void glist_selectline(t_glist *x, t_outconnect *oc, int index1,
         x->gl_editor->e_selectline_index2 = index2;
         x->gl_editor->e_selectline_inno = inno;
         x->gl_editor->e_selectline_tag = oc;
-        sys_vgui(".x%lx.c itemconfigure l%lx -stroke $pd_colors(selection)\n",
-            x, x->gl_editor->e_selectline_tag);
-        sys_vgui(".x%lx.c addtag selected withtag l%lx\n",
-            glist_getcanvas(x), x->gl_editor->e_selectline_tag);
+        //sys_vgui(".x%lx.c itemconfigure l%lx -stroke $pd_colors(selection)\n",
+        //    x, x->gl_editor->e_selectline_tag);
+        //sys_vgui(".x%lx.c addtag selected withtag l%lx\n",
+        //    glist_getcanvas(x), x->gl_editor->e_selectline_tag);
+        char tagbuf[MAXPDSTRING];
+        sprintf(tagbuf, "l%lx", (long unsigned int)oc);
+        gui_vmess("gui_canvas_select_line", "ss", canvas_string(x), tagbuf);
         c_selection = x;
         canvas_draw_gop_resize_hooks(x);
     }
@@ -455,14 +458,18 @@ void glist_deselectline(t_glist *x)
             issignal = 1;
         else
             issignal = 0;
-        sys_vgui(".x%lx.c itemconfigure l%lx -stroke %s\n",
-            x, x->gl_editor->e_selectline_tag,
-            (issignal ?
-                "$pd_colors(signal_cord)" : "$pd_colors(control_cord)"));
-        sys_vgui(".x%lx.c dtag l%lx selected\n",
-            glist_getcanvas(x),
-            glist_getcanvas(x)->gl_editor->e_selectline_tag);
+        //sys_vgui(".x%lx.c itemconfigure l%lx -stroke %s\n",
+        //    x, x->gl_editor->e_selectline_tag,
+        //    (issignal ?
+        //        "$pd_colors(signal_cord)" : "$pd_colors(control_cord)"));
+        //sys_vgui(".x%lx.c dtag l%lx selected\n",
+        //    glist_getcanvas(x),
+        //    glist_getcanvas(x)->gl_editor->e_selectline_tag);
         canvas_draw_gop_resize_hooks(x);
+
+        char tagbuf[MAXPDSTRING];
+        sprintf(tagbuf, "l%lx", (long unsigned int)x->gl_editor->e_selectline_tag);
+        gui_vmess("gui_canvas_deselect_line", "ss", canvas_string(x), tagbuf);
     }    
 }
 
@@ -858,7 +865,11 @@ void canvas_disconnect(t_canvas *x,
         if (srcno == index1 && t.tr_outno == outno &&
             sinkno == index2 && t.tr_inno == inno)
         {
-            sys_vgui(".x%lx.c delete l%lx\n", x, oc);
+            //sys_vgui(".x%lx.c delete l%lx\n", x, oc);
+            char tagbuf[MAXPDSTRING];
+            sprintf(tagbuf, "l%lx", (long unsigned int)oc);
+            gui_vmess("gui_canvas_delete_line", "ss",
+                canvas_string(x), tagbuf);
             // jsarlo
             if(x->gl_editor && x->gl_editor->gl_magic_glass)
             {
@@ -2177,16 +2188,16 @@ void canvas_undo_font(t_canvas *x, void *z, int action)
 /* ------------------------ event handling ------------------------ */
 
 static char *cursorlist[] = {
-    "$cursor_runmode_nothing",
-    "$cursor_runmode_clickme",
-    "$cursor_runmode_thicken",
-    "$cursor_runmode_addpoint",
-    "$cursor_editmode_nothing",
-    "$cursor_editmode_connect",
-    "$cursor_editmode_disconnect",
-    "$cursor_editmode_resize",
-    "$cursor_editmode_resize_bottom_right",
-    "$cursor_scroll"
+    "cursor_runmode_nothing",
+    "cursor_runmode_clickme",
+    "cursor_runmode_thicken",
+    "cursor_runmode_addpoint",
+    "cursor_editmode_nothing",
+    "cursor_editmode_connect",
+    "cursor_editmode_disconnect",
+    "cursor_editmode_resize",
+    "cursor_editmode_resize_bottom_right",
+    "cursor_scroll"
 };
 
 void canvas_setcursor(t_canvas *x, unsigned int cursornum)
@@ -2203,7 +2214,9 @@ void canvas_setcursor(t_canvas *x, unsigned int cursornum)
         }
         if (xwas != x || cursorwas != cursornum)
         {
-            sys_vgui(".x%lx configure -cursor %s\n", x, cursorlist[cursornum]);
+            //sys_vgui(".x%lx configure -cursor %s\n", x, cursorlist[cursornum]);
+            gui_vmess("gui_canvas_cursor", "ss", canvas_string(x),
+                cursorlist[cursornum]);
             xwas = x;
             cursorwas = cursornum;
         }
@@ -2305,8 +2318,10 @@ static void canvas_rightclick(t_canvas *x, int xpos, int ypos, t_gobj *y_sel)
         isobject = 1;
     }
     else isobject = 0;
-    sys_vgui("pdtk_canvas_popup .x%lx %d %d %d %d %d\n",
-        x, xpos, ypos, canprop, canopen, isobject);
+    //sys_vgui("pdtk_canvas_popup .x%lx %d %d %d %d %d\n",
+    //    x, xpos, ypos, canprop, canopen, isobject);
+    gui_vmess("gui_canvas_popup", "siiiii",
+        canvas_string(x), xpos, ypos, canprop, canopen, isobject);
 }
 
 /* ----  editors -- perhaps this and "vis" should go to g_editor.c ------- */
@@ -2380,7 +2395,11 @@ void canvas_destroy_editor(t_glist *x)
     }
 }
 
-void canvas_reflecttitle(t_canvas *x);
+
+// void canvas_reflecttitle(t_canvas *x);
+// This should replace canvas_reflecttitle above
+extern void canvas_args_to_string(char *namebuf, t_canvas *x);
+
 void canvas_map(t_canvas *x, t_floatarg f);
 
     /* we call this when we want the window to become visible, mapped, and
@@ -2394,6 +2413,10 @@ void canvas_map(t_canvas *x, t_floatarg f);
 void canvas_vis(t_canvas *x, t_floatarg f)
 {
     //fprintf(stderr,"canvas_vis .x%lx %f\n", (t_int)x, f);
+    char geobuf[MAXPDSTRING];
+    char argsbuf[MAXPDSTRING];
+    sprintf(geobuf, "+%d+%d",
+        (int)(x->gl_screenx1), (int)(x->gl_screeny1));
 
     t_gobj *g;
     t_int properties;
@@ -2408,21 +2431,38 @@ void canvas_vis(t_canvas *x, t_floatarg f)
         if (x->gl_editor && x->gl_havewindow && glist_isvisible(x))
         {           /* just put us in front */
             //fprintf(stderr,"existing\n");
-            sys_vgui("raise .x%lx\n", x);
-            sys_vgui("focus .x%lx.c\n", x);
-            sys_vgui("wm deiconify .x%lx\n", x);  
+            //sys_vgui("raise .x%lx\n", x);
+            //sys_vgui("focus .x%lx.c\n", x);
+            //sys_vgui("wm deiconify .x%lx\n", x);  
+            gui_vmess("gui_raise_window", "s", canvas_string(x));
         }
         else
         {
             //fprintf(stderr,"new\n");
             canvas_create_editor(x);
-            sys_vgui("pdtk_canvas_new .x%lx %d %d +%d+%d %d\n", x,
+//            sys_vgui("pdtk_canvas_new .x%lx %d %d +%d+%d %d\n", x,
+//                (int)(x->gl_screenx2 - x->gl_screenx1),
+//                (int)(x->gl_screeny2 - x->gl_screeny1),
+//                (int)(x->gl_screenx1), (int)(x->gl_screeny1),
+//                x->gl_edit);
+
+            canvas_args_to_string(argsbuf, x);
+
+            gui_vmess("gui_canvas_new", "siisissis",
+                canvas_string(x),
                 (int)(x->gl_screenx2 - x->gl_screenx1),
                 (int)(x->gl_screeny2 - x->gl_screeny1),
-                (int)(x->gl_screenx1), (int)(x->gl_screeny1),
-                x->gl_edit);
+                geobuf,
+                x->gl_edit,
+                x->gl_name->s_name,
+                canvas_getdir(x)->s_name,
+                x->gl_dirty,
+                argsbuf);
+                
+
+
             sys_vgui("pdtk_canvas_set_font .x%lx %d\n", x, x->gl_font);
-            canvas_reflecttitle(x);
+//            canvas_reflecttitle(x);
             x->gl_havewindow = 1;
 
             // check if this is a subpatch with an array
@@ -2507,7 +2547,7 @@ void canvas_vis(t_canvas *x, t_floatarg f)
         if (glist_isvisible(x))
             canvas_map(x, 0);
         canvas_destroy_editor(x);
-        sys_vgui("destroy .x%lx\n", x);
+        gui_vmess("gui_close_window", "s", canvas_string(x));
         // delete properties windows of objects in the patcher we're closing
         g = x->gl_list;
         while (g)
@@ -3289,6 +3329,9 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                             "$pd_colors(signal_cord_width)" :
                             "$pd_colors(control_cord_width)"),
                         (issignal ? "signal" : "control"));
+                        gui_vmess("gui_canvas_line", "ssiiiiiiiiii",
+                            canvas_string(x), "newcord",
+                            xpos, ypos, xpos, ypos, xpos, ypos, xpos, ypos, xpos, ypos);
                     }   
                     else
                     // jsarlo
@@ -3309,7 +3352,6 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                                      "-strokewidth $highlight_width\n",
                                      x,
                                      x->gl_editor->canvas_cnct_outlet_tag);
-                            
                             //sys_vgui(".x%x.c raise %s\n",
                             //         x,
                             //         x->gl_editor->canvas_cnct_outlet_tag);
@@ -3591,6 +3633,8 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
         sys_vgui(".x%lx.c create prect %d %d %d %d -tags x "
                  "-stroke $pd_colors(selection_rectangle)\n",
             x, xpos, ypos, xpos, ypos);
+        gui_vmess("gui_create_selection_rectangle", "siiii", canvas_string(x),
+            xpos, ypos, xpos, ypos);
         x->gl_editor->e_xwas = xpos;
         x->gl_editor->e_ywas = ypos;
         x->gl_editor->e_onmotion = MA_REGION;
@@ -3686,6 +3730,7 @@ void canvas_sort_selection_according_to_location(t_canvas *x)
 void canvas_drawconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2,
     t_int tag, int issignal)
 {
+    char tagbuf[MAXPDSTRING];
     int ymax = 0;
     int halfx = (lx2 - lx1)/2;
     int halfy = (ly2 - ly1)/2;
@@ -3727,11 +3772,16 @@ void canvas_drawconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2,
             "$pd_colors(signal_cord_width)" :
             "$pd_colors(control_cord_width)"), 
         tag, (issignal ? "signal" : "control"));
+    sprintf(tagbuf, "l%lx", (long unsigned int)tag);
+    gui_vmess("gui_canvas_line", "ssiiiiiiiiii",
+        canvas_string(x), tagbuf, lx1, ly1, lx1, ly1 + yoff,
+        lx1 + halfx, ly1 + halfy, lx2, ly2 - yoff, lx2, ly2);
 }
 
 void canvas_updateconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2,
     t_int tag)
 {
+    char cord_tag[MAXPDSTRING];
     if (glist_isvisible(x) && glist_istoplevel(x))
     {
         int ymax = 0;
@@ -3768,6 +3818,11 @@ void canvas_updateconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2,
                 x, tag, lx1, ly1,
                 lx1, ly1 + yoff, lx1 + halfx, ly1 + halfy,
                 lx2, ly2 - yoff, lx2, ly2);
+            sprintf(cord_tag, "l%lx", (long unsigned int)tag);
+            gui_vmess("gui_canvas_updateline", "ssiiiii", canvas_string(x), cord_tag,
+                lx1, ly1, lx2, ly2, yoff);
+//                lx1, ly1, lx1, ly1 + yoff, lx1 + halfx, ly1 + halfy,
+//                lx2, ly2 - yoff, lx2, ly2);
         }
         else
         {
@@ -3777,6 +3832,10 @@ void canvas_updateconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2,
                 x, lx1, ly1,
                 lx1, ly1 + yoff, lx1 + halfx, ly1 + halfy,
                 lx2, ly2 - yoff, lx2, ly2);
+            gui_vmess("gui_canvas_updateline", "ssiiiii", canvas_string(x), "newcord",
+                lx1, ly1, lx2, ly2, yoff);
+//                lx1, ly1, lx1, ly1 + yoff, lx1 + halfx, ly1 + halfy, lx2, ly2 - yoff,
+//                lx2, ly2);
         }
     }
 }
@@ -4371,7 +4430,10 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
     int xwas = x->gl_editor->e_xwas,
         ywas = x->gl_editor->e_ywas;
     if (doit && !glob_shift)
+    {
         sys_vgui(".x%lx.c delete x\n", x);
+        gui_vmess("gui_canvas_delete_line", "ss", canvas_string(x), "newcord");
+    }
     else
     {
         canvas_updateconnection(x, x->gl_editor->e_xwas, x->gl_editor->e_ywas,
@@ -4514,11 +4576,17 @@ static void canvas_doregion(t_canvas *x, int xpos, int ypos, int doit)
         else hiy = x->gl_editor->e_ywas, loy = ypos;
         canvas_selectinrect(x, lox, loy, hix, hiy);
         sys_vgui(".x%lx.c delete x\n", x);
+        gui_vmess("gui_hide_selection_rectangle", "s", canvas_string(x));
         x->gl_editor->e_onmotion = MA_NONE;
     }
-    else sys_vgui(".x%lx.c coords x %d %d %d %d\n",
+    else
+    {
+        sys_vgui(".x%lx.c coords x %d %d %d %d\n",
             x, x->gl_editor->e_xwas,
                 x->gl_editor->e_ywas, xpos, ypos);
+        gui_vmess("gui_move_selection_rectangle", "siiii",
+            canvas_string(x), x->gl_editor->e_xwas, x->gl_editor->e_ywas, xpos, ypos);
+    }
 }
 
 /*
@@ -4744,6 +4812,7 @@ void canvas_displaceselection(t_canvas *x, int dx, int dy)
     if (dx || dy)
     {
         sys_vgui("pdtk_canvas_displace_withtag .x%lx.c %d %d\n", x, dx, dy);
+        gui_vmess("gui_canvas_displace_withtag", "sii", canvas_string(x), dx, dy);
         if (resortin) canvas_resortinlets(x);
         if (resortout) canvas_resortoutlets(x);
         //scrollbar_update(x);
@@ -5254,13 +5323,21 @@ void glob_verifyquit(void *dummy, t_floatarg f)
             if (!glist_istoplevel(g2) && g->gl_env)
             {
                 /* if this is an abstraction */
-                sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 3;}\n",
-                     g2, g2);
+                //sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 3;}\n",
+                //     g2, g2);
+                gui_vmess("gui_canvas_menuclose", "ssi",
+                    canvas_string(g2),
+                    canvas_string(g2),
+                    3);
             }
             else
             {
-                sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 3;}\n",
-                     canvas_getrootfor(g2), g2);
+                //sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 3;}\n",
+                //     canvas_getrootfor(g2), g2);
+                gui_vmess("gui_canvas_menuclose", "ssi",
+                    canvas_string(canvas_getrootfor(g2)),
+                    canvas_string(g2),
+                    3);
             }
             //canvas_vis(g2, 1);
             //sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 3;\n}\n",
@@ -5268,8 +5345,15 @@ void glob_verifyquit(void *dummy, t_floatarg f)
         return;
     }
     if (f == 0 && sys_perf)
-        sys_vgui("pdtk_check . {really quit?} {pd quit;\n} yes\n");
-    else glob_quit(0);
+    {
+        //sys_vgui("pdtk_check . {really quit?} {pd quit;\n} yes\n");
+        gui_vmess("gui_pd_quit_dialog", "");
+    }
+    else
+    {
+        gui_vmess("gui_post", "s", "about to quite seresly dood");
+        glob_quit(0);
+    }
 }
 
 //void canvas_dofree(t_gobj *dummy, t_glist *x)
@@ -5305,6 +5389,7 @@ void canvas_menuclose(t_canvas *x, t_floatarg fforce)
             /* first open window */
             if (!glist_istoplevel(g) && g->gl_env)
             {
+      post("opening menu");
                 /* if this is an abstraction */
                 vmess(&g->gl_pd, gensym("menu-open"), "");
             }
@@ -5316,13 +5401,21 @@ void canvas_menuclose(t_canvas *x, t_floatarg fforce)
             if (!glist_istoplevel(g) && g->gl_env)
             {
                 /* if this is an abstraction */
-                sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 2;}\n",
-                     g, g);
+                //sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 2;}\n",
+                //     g, g);
+                gui_vmess("gui_canvas_menuclose", "ssi",
+                    canvas_string(g),
+                    canvas_string(g),
+                    2);
             }
             else
             {
-                sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 2;}\n",
-                     canvas_getrootfor(g), g);
+                //sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 2;}\n",
+                //     canvas_getrootfor(g), g);
+                gui_vmess("gui_canvas_menuclose", "ssi",
+                    canvas_string(canvas_getrootfor(g)),
+                    canvas_string(g),
+                    2);
             }
             return;
         }
@@ -5359,6 +5452,7 @@ void canvas_menuclose(t_canvas *x, t_floatarg fforce)
         {
             if (!glist_istoplevel(g) && g->gl_env)
             {
+post("opening up the motherfucker x%lx", g);
                 /* if this is an abstraction */
                 vmess(&g->gl_pd, gensym("menu-open"), "");
             }
@@ -5366,18 +5460,29 @@ void canvas_menuclose(t_canvas *x, t_floatarg fforce)
             {
                 /* is this even necessary? */
                 canvas_vis(g, 1);
+post("fuck you canvas_vis x%lx", g);
             }
             //vmess(&g->gl_pd, gensym("menu-open"), "");
             if (!glist_istoplevel(g) && g->gl_env)
             {
+post("farging...");
                 /* if this is an abstraction */
-                sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 2;}\n",
-                     g, g);
+                //sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 2;}\n",
+                //     g, g);
+                gui_vmess("gui_canvas_menuclose", "ssi",
+                    canvas_string(g),
+                    canvas_string(g),
+                    2);
             }
             else
             {
-                sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 2;}\n",
-                     canvas_getrootfor(g), g);
+post("dildo");
+                //sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 2;}\n",
+                //     canvas_getrootfor(g), g);
+                gui_vmess("gui_canvas_menuclose", "ssi",
+                    canvas_string(canvas_getrootfor(g)),
+                    canvas_string(g),
+                    2);
             }
             //sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 2;\n}\n",
             //         canvas_getrootfor(x), g);

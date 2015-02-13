@@ -752,6 +752,124 @@ void sys_gui(const char *s)
     sys_vgui("%s", s);
 }
 
+char *escape_double_quotes(const char *src) {
+    static char ret[MAXPDSTRING*2+1];
+    char *escaped = ret; 
+    int i, len = MAXPDSTRING*2;
+    for (i = 0; i < len-1 && src[i] != 0; i++)
+    {
+        if (src[i] == '\"')
+            *(escaped++) = '\\'; 
+        *(escaped++) = src[i];
+    }
+    *escaped = '\0';
+    if (i >= len) fprintf(stderr, "oops, you caught me statically allocating a string "
+                       "in a lazy attempt to escape double-quotes for the gui. "
+                       "Please call me out publicly for this regression, and/or revise this "
+                       "so it doesn't arbitrarily limit the size of the strings "
+                       "we can send to the gui.");
+    return ret;
+}
+
+/* quick hack to send a parameter list for use as a function call in
+   Node-Webkit */
+void gui_do_vmess(const char *sel, char *fmt, int end, va_list ap)
+{
+    //va_list ap;
+    int nargs = 0;
+    char *fp = fmt;
+
+    //va_start(ap, end);
+    sys_vgui("nn %s ", sel);
+    while (*fp)
+    {
+        // stop-gap-- increase to 20 until we find a way to pass a list or array
+        if (nargs >= 20)
+        {
+            error("sys_gui_vmess: only 10 named parameters allowed");
+            break;
+        }
+        if (nargs > 0) sys_gui(",");
+        switch(*fp++)
+        {
+        case 'f': sys_vgui("%g", va_arg(ap, double)); break;
+        case 's': sys_vgui("\"%s\"", escape_double_quotes(va_arg(ap, const char *))); break;
+        case 'i': sys_vgui("%d", va_arg(ap, t_int)); break;
+        //case 'p': SETPOINTER(at, va_arg(ap, t_gpointer *)); break;
+        default: goto done;
+        }
+        nargs++;
+    }
+done:
+    va_end(ap);
+    if (end)
+        sys_gui(";\n");
+}
+
+void gui_vmess(const char *sel, char *fmt, ...)
+{
+    va_list ap;
+    va_start(ap, fmt);
+    gui_do_vmess(sel, fmt, 1, ap);
+}
+
+void gui_start_vmess(const char *sel, char *fmt, ...)
+{
+    va_list ap;
+    va_start(ap, fmt);
+    gui_do_vmess(sel, fmt, 0, ap);
+}
+
+static int gui_array_head;
+void gui_start_array(void)
+{
+    gui_array_head = 1;
+    sys_gui(",[");
+}
+
+void gui_float_elem(t_float f)
+{
+    if (gui_array_head)
+    {
+        gui_array_head = 0;
+        sys_vgui("%g", f);
+    }
+    else
+        sys_vgui(",%g", f);
+}
+
+void gui_int_elem(int i)
+{
+    if (gui_array_head)
+    {
+        gui_array_head = 0;
+        sys_vgui("%d", i);
+    }
+    else
+        sys_vgui(",%d", i);
+}
+
+void gui_string_elem(const char *s) 
+{
+    if (gui_array_head)
+    {
+        gui_array_head = 0;
+        sys_vgui("\"%s\"", escape_double_quotes(s));
+    }
+    else
+        sys_vgui(",\"%s\"", escape_double_quotes(s));
+}
+
+void gui_end_array(void)
+{
+    sys_gui("]");
+}
+
+void gui_end_vmess(void)
+{
+    sys_gui(";\n");
+}
+
 int sys_flushtogui( void)
 {
     int writesize = sys_guibufhead - sys_guibuftail, nwrote = 0;
@@ -805,6 +923,7 @@ static int sys_flushqueue(void )
         if (sys_bytessincelastping >= GUI_BYTESPERPING)
         {
             sys_gui("pdtk_ping\n");
+            gui_vmess("gui_ping", "");
             sys_bytessincelastping = 0;
             sys_waitingforping = 1;
             return (1);
@@ -1145,6 +1264,16 @@ int sys_startgui(const char *guidir)
                 "TCL_LIBRARY=\"%s/tcl/library\" TK_LIBRARY=\"%s/tk/library\" \
                  \"%s/pd-gui\" %d localhost %s\n",
                  sys_libdir->s_name, sys_libdir->s_name, guidir, portno, (sys_k12_mode ? "pd-l2ork-k12" : "pd-l2ork"));
+
+/* SUPERHACK - let's just load node-webkit and see what happens */
+            sprintf(cmdbuf,
+                  "/home/nu/Downloads/nwjs-v0.12.0-alpha2-linux-ia32/nw "
+//                "/home/user/Downloads/node-webkit-v0.11.6-linux-ia32/nw "
+//                  "/home/user/Downloads/atom/atom/atom "
+                "/home/nu/Downloads/test/ %d localhost %s\n",
+                portno,
+                (sys_k12_mode ? "pd-l2ork-k12" : "pd-l2ork"));
+
 #endif
             sys_guicmd = cmdbuf;
         }
@@ -1179,6 +1308,9 @@ int sys_startgui(const char *guidir)
                 }
             }
 #endif
+
+            fprintf(stderr, "fuck %s", sys_guicmd);
+
             execl("/bin/sh", "sh", "-c", sys_guicmd, (char*)0);
             perror("pd: exec");
             _exit(1);
@@ -1332,12 +1464,19 @@ int sys_startgui(const char *guidir)
             /* here is where we start the pinging. */
 #if defined(__linux__) || defined(IRIX)
          if (sys_hipriority)
-             sys_gui("pdtk_watchdog\n");
+             gui_vmess("gui_watchdog", "");
 #endif
          sys_get_audio_apis(buf);
          sys_get_midi_apis(buf2);
-         sys_vgui("pdtk_pd_startup {%s} %s %s {%s} %s\n", pd_version, buf, buf2, 
-                  sys_font, sys_fontweight); 
+//         sys_vgui("pdtk_pd_startup {%s} %s %s {%s} %s\n", pd_version, buf, buf2, 
+//                  sys_font, sys_fontweight); 
+
+        gui_vmess("gui_startup", "sssss",
+		  pd_version,
+		  buf,
+		  buf2,
+		  sys_font,
+		  sys_fontweight);
     }
     return (0);
 
@@ -1387,7 +1526,8 @@ void glob_quit(void *dummy)
     canvas_suspend_dsp();
     do_not_redraw = 1;
     glob_closeall(0, 1);
-    sys_vgui("exit\n");
+    //sys_vgui("exit\n");
+    gui_vmess("app_quit", "");
     if (!sys_nogui)
     {
         sys_closesocket(sys_guisock);

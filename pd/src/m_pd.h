@@ -667,6 +667,15 @@ EXTERN void sys_vvguid(const char *file, int line, const char *fmt, va_list);
 EXTERN void sys_gui(const char *s);
 #define sys_vgui(args...) sys_vguid(__FILE__,__LINE__,args)
 #define sys_gui(s)        sys_vguid(__FILE__,__LINE__,"%s",s)
+EXTERN void gui_vmess(const char *sel, char *fmt, ...);
+/* some more gui interfaces for building incremental messages */
+EXTERN void gui_start_vmess(const char *sel, char *fmt, ...);
+EXTERN void gui_start_array(void);
+EXTERN void gui_float_elem(t_float f);
+EXTERN void gui_int_elem(int i);
+EXTERN void gui_string_elem(const char *s);
+EXTERN void gui_end_array(void);
+EXTERN void gui_end_vmess(void);
 
 EXTERN void sys_pretendguibytes(int n);
 EXTERN void sys_queuegui(void *client, t_glist *glist, t_guicallbackfn f);

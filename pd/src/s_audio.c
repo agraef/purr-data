@@ -501,7 +501,7 @@ void sys_reopen_audio( void)
         sys_audioapiopened = sys_audioapi;
         audio_callback_is_open = callback;
     }
-    sys_vgui("set pd_whichapi %d\n",  (outcome == 0 ? sys_audioapi : 0));
+    gui_vmess("set_audioapi", "i",  (outcome == 0 ? sys_audioapi : 0));
 }
 
 int sys_send_dacs(void)

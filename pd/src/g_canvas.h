@@ -480,6 +480,7 @@ EXTERN void text_drawborder(t_text *x, t_glist *glist, char *tag,
     int width, int height, int firsttime);
 EXTERN void text_drawborder_withtag(t_text *x, t_glist *glist, char *tag,
     int width, int height, int firsttime);
+EXTERN void text_erase_gobj(t_text *x, t_glist *glist, char *tag);
 EXTERN void text_eraseborder(t_text *x, t_glist *glist, char *tag);
 EXTERN int text_xcoord(t_text *x, t_glist *glist);
 EXTERN int text_ycoord(t_text *x, t_glist *glist);
@@ -561,6 +562,7 @@ EXTERN t_gobj *canvas_findhitbox(t_canvas *x, int xpos, int ypos,
     int *x1p, int *y1p, int *x2p, int *y2p);
 EXTERN int canvas_setdeleting(t_canvas *x, int flag);
 EXTERN int canvas_hasarray(t_canvas *x);
+EXTERN char *canvas_string(t_canvas *x); /* canvas as string to send to gui */
 
 /* ---- for parsing @pd_extra and other sys paths in filenames  --------------------- */
 

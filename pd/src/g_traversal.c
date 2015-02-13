@@ -582,6 +582,8 @@ static void set_set(t_set *x, t_symbol *templatesym, t_symbol *field)
     }
 }
 
+static void scalar_configure(t_scalar *x, t_glist *owner);
+
 static void set_bang(t_set *x)
 {
     int nitems = x->x_nin, i;
@@ -618,7 +620,7 @@ static void set_bang(t_set *x)
     else for (i = 0, vp = x->x_variables; i < nitems; i++, vp++)
         template_setfloat(template, vp->gv_sym, vec, vp->gv_w.w_float, 1);
     if (gs->gs_which == GP_GLIST)
-        scalar_redraw((t_scalar *)(gp->gp_un.gp_gobj), gs->gs_un.gs_glist);  
+        scalar_configure((t_scalar *)(gp->gp_un.gp_gobj), gs->gs_un.gs_glist);  
     else
     {
         t_array *owner_array = gs->gs_un.gs_array;

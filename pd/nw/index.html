@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  </head>
+  <body>
+    <input style="display:none;" id="fileDialog" type="file" nwworkingdir multiple />
+    <script>
+        'use strict';
+        var nw = require('nw.gui');
+        console.log(nw.App.argv);
+        var pdgui = require('./pdgui.js');
+        var port_no = nw.App.argv[0]; // fed to us by the Pd process
+        var pwd = process.env.PWD;
+        pdgui.set_port(port_no);
+        pdgui.set_pwd(pwd);
+        pdgui.set_pd_window(this);
+        pdgui.set_app_quitfn(app_quit);
+
+        console.log("Hello from " + pwd);
+
+        function app_quit () {
+            console.log("quitting for reals");
+            nw.App.quit();
+        }
+
+        var chooser = document.querySelector("#fileDialog");
+        chooser.addEventListener("change", function(evt) {
+            var file_array = this.value;
+            // reset value so that we can open the same file twice
+            this.value = null;
+            pdgui.menu_open(file_array);
+            console.log("tried to open something");
+        }, false);
+
+
+
+//        prompt("hey", "you");
+
+        // Invoke some functions to create main menus, etc.
+
+        nw.Window.get().on("close", function() {
+            pdgui.menu_quit();
+// stop-gap to shutdown properly
+//            this.close(true);
+        });
+        console.log(nw.App.argv); 
+
+        document.getElementById("fileDialog").setAttribute("nwworkingdir", pwd);
+        document.getElementById("fileDialog").setAttribute("accept",
+            Object.keys(pdgui.pd_filetypes).toString());
+
+        nw_create_pd_window_menus();
+
+        pdgui.connect();
+        pdgui.init_socket_events();
+
+        // nw context callbacks (mostly just creating/destroying windows)
+        pdgui.set_new_window_fn(nw_create_window);
+        pdgui.set_close_window_fn(nw_close_window);
+
+
+        function pdmenu_copy () {
+            alert("Please implement pdmenu_copy"); 
+        }
+
+        function pdmenu_selectall () {
+            alert("Please implement pdmenu_selectall"); 
+        }
+
+        function pdmenu_preferences () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+        function pdmenu_next_win () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+        function pdmenu_previous_win () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+        function pdmenu_parent_win () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+        function pdmenu_console_win () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+        function pdmenu_audio_on () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+        function pdmenu_audio_off () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+        function pdmenu_test_audio () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+        function pdmenu_load_meter () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+        function pdmenu_about_pd () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+        function pdmenu_manual () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+        function pdmenu_help_browser () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+        function pdmenu_l2ork_mailinglist () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+        function pdmenu_pd_mailinglists () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+        function pdmenu_forums () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+        function pdmenu_irc () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+// Menus for the main Pd window
+function nw_create_pd_window_menus () {
+    // Window menu
+    var windowMenu = new nw.Menu({
+        type: 'menubar'
+    });
+
+    // File menu
+    var fileMenu = new nw.Menu();
+
+    // Add to window menu
+    windowMenu.append(new nw.MenuItem({
+        label: 'File',
+        submenu: fileMenu
+    }));
+
+    // File sub-entries
+    fileMenu.append(new nw.MenuItem({
+        label: 'New',
+        click: pdgui.menu_new,
+        key: 'n',
+        modifiers: "ctrl"
+    }));
+
+    fileMenu.append(new nw.MenuItem({
+        label: 'Open',
+        key: 'o',
+        modifiers: "ctrl",
+        click: function (){
+            var chooser = document.querySelector('#fileDialog');
+            chooser.click();
+        }
+    }));
+
+    if (pdgui.k12_mode == 1) {
+        fileMenu.append(new nw.MenuItem({
+        label: 'K12 Demos',
+        click: pdgui.menu_k12_open_demos
+        }));
+    }
+
+    fileMenu.append(new nw.MenuItem({
+        type: 'separator'
+    }));
+
+    // Note: this must be different for the main Pd window
+    fileMenu.append(new nw.MenuItem({
+        label: 'Save',
+            click: function () {},
+            enabled: false,
+        key: 's',
+        modifiers: "ctrl"
+    }));
+
+    fileMenu.append(new nw.MenuItem({
+        label: 'Save as...',
+        click: function (){},
+        enabled: false,
+        key: 'S',
+        modifiers: "ctrl"
+    }));
+
+    if (pdgui.k12_mode == 0) {
+        fileMenu.append(new nw.MenuItem({
+            type: 'separator'
+        }));
+    }
+
+    fileMenu.append(new nw.MenuItem({
+        label: 'Message...',
+        click: pdgui.menu_send,
+        key: 'm',
+        modifiers: "ctrl"
+    }));
+
+    if (pdgui.k12_mode == 0) {
+        fileMenu.append(new nw.MenuItem({
+            type: 'separator'
+        }));
+    }
+
+    // recent files go here
+
+    // anther separator goes here if there are any recent files
+
+    // Note: there's no good reason to have this here
+    fileMenu.append(new nw.MenuItem({
+        label: 'Close',
+        click: function () {},
+        enabled: false,
+    }));
+
+    // Quit Pd
+    fileMenu.append(new nw.MenuItem({
+        label: 'Quit',
+        click: pdgui.menu_quit,
+        key: 'q',
+        modifiers: "ctrl"
+    }));
+
+
+    // Edit menu
+    var editMenu = new nw.Menu();
+
+    // Add to window menu
+    windowMenu.append(new nw.MenuItem({
+    label: 'Edit',
+    submenu: editMenu
+    }));
+
+    // Edit sub-entries
+    editMenu.append(new nw.MenuItem({
+        label: 'Copy',
+        click: pdmenu_copy,
+        key: 'c',
+        modifiers: "ctrl"
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        label: 'Select All',
+        click: function () {
+            document.selectAllChildren(document);
+        },
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        type: 'separator'
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        label: 'Zoom In',
+        click: function () {
+            nw.Window.get().zoomLevel += 1;
+            pdgui.gui_post("zoom level is " + nw.Window.get().zoomLevel);
+        },
+        key: '=',
+        modifiers: "ctrl"
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        label: 'Zoom Out',
+        click: function () {
+            nw.Window.get().zoomLevel -= 1;
+            pdgui.gui_post("zoom level is " + nw.Window.get().zoomLevel);
+        },
+        key: '-',
+        modifiers: "ctrl"
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        label: 'Preferences...',
+        click: pdmenu_preferences,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+
+    // Windows menu... call it "winman" (i.e., window management) to avoid confusion
+    var winmanMenu = new nw.Menu();
+
+    // Add to windows menu
+    windowMenu.append(new nw.MenuItem({
+    label: 'Windows',
+    submenu: winmanMenu
+    }));
+
+    // Winman sub-entries
+    winmanMenu.append(new nw.MenuItem({
+        label: 'Next Window',
+        click: pdmenu_next_win,
+        key: 'c',
+        modifiers: "ctrl"
+    }));
+
+    winmanMenu.append(new nw.MenuItem({
+        label: 'Previous Window',
+        click: pdmenu_previous_win,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    winmanMenu.append(new nw.MenuItem({
+        type: 'separator'
+    }));
+
+    winmanMenu.append(new nw.MenuItem({
+        label: 'Parent Window',
+        click: pdmenu_parent_win,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    winmanMenu.append(new nw.MenuItem({
+        label: 'Pd & Console',
+        click: pdmenu_console_win,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    // Media menu
+    var mediaMenu = new nw.Menu();
+
+    // Add to window menu
+    windowMenu.append(new nw.MenuItem({
+    label: 'Media',
+    submenu: mediaMenu
+    }));
+
+    // Media sub-entries
+    mediaMenu.append(new nw.MenuItem({
+        label: 'Audio On',
+        click: function() {
+            pdgui.pdsend("pd dsp 1");
+        },
+        key: 'c',
+        modifiers: "ctrl"
+    }));
+
+    mediaMenu.append(new nw.MenuItem({
+        label: 'Audio Off',
+        click: function() {
+            pdgui.pdsend("pd dsp 0");
+        },
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    mediaMenu.append(new nw.MenuItem({
+        type: 'separator'
+    }));
+
+    mediaMenu.append(new nw.MenuItem({
+        label: 'Test Audio and Midi',
+        click: pdmenu_test_audio,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    mediaMenu.append(new nw.MenuItem({
+        label: 'Load Meter',
+        click: pdmenu_load_meter,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    // Help menu
+    var helpMenu = new nw.Menu();
+
+    // Add to window menu
+    windowMenu.append(new nw.MenuItem({
+    label: 'Help',
+    submenu: helpMenu
+    }));
+
+    // Help sub-entries
+    helpMenu.append(new nw.MenuItem({
+        label: 'About Pd-L2ork',
+        click: pdmenu_about_pd,
+        key: 'c',
+        modifiers: "ctrl"
+    }));
+
+    helpMenu.append(new nw.MenuItem({
+        label: 'Manual',
+        click: pdmenu_manual,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    helpMenu.append(new nw.MenuItem({
+        label: 'Help Browser',
+        click: pdmenu_help_browser,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    helpMenu.append(new nw.MenuItem({
+        type: 'separator'
+    }));
+
+    helpMenu.append(new nw.MenuItem({
+        label: 'Pd-L2ork Mailing List',
+        click: pdmenu_l2ork_mailinglist,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    helpMenu.append(new nw.MenuItem({
+        label: 'Pure Data Mailing Lists',
+        click: pdmenu_pd_mailinglists,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    helpMenu.append(new nw.MenuItem({
+        label: 'Forums',
+        click: pdmenu_forums,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    helpMenu.append(new nw.MenuItem({
+        label: 'IRC Chat',
+        click: pdmenu_irc,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    // Assign to window
+    nw.Window.get().menu = windowMenu;
+}
+
+function nw_close_window(window) {
+    window.close(true);
+}
+
+function nw_create_window(cid, width, height, xpos, ypos, menu_flag, resize, topmost, cnv_color,
+    canvas_string, dir, dirty_flag, cargs) {
+        // todo: make a separate way to format the title for OSX
+    var my_title =  pdgui.format_window_title(canvas_string, dirty_flag, cargs, dir);
+
+    var new_win = nw.Window.open('pdcanvas.html', {
+        title: my_title,
+        position: "center",
+        toolbar: true,
+        focus: true,
+        width: width,
+        height: height,
+        x: xpos,
+        y: ypos
+    });
+    return new_win;
+}
+
+function canvasNew(args) {
+    console.log(args);
+}
+
+
+
+
+
+    </script>
+    <input style="display:none;" id="saveDialog" type="file" nwsaveas />
+
+    <pre id="p1" style="white-space: pre-wrap;">Welcome to Pd GUI using Node-Webkit
+      <script>document.write(process.versions['node-webkit'])</script><br/></pre> 
+
+    <script>
+
+
+    </script>
+  </body>
+</html>

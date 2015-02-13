@@ -776,8 +776,9 @@ static void canvas_savetofile(t_canvas *x, t_symbol *filename, t_symbol *dir)
 static void canvas_menusaveas(t_canvas *x)
 {
     t_canvas *x2 = canvas_getrootfor(x);
-    sys_vgui("pdtk_canvas_saveas .x%lx \"%s\" \"%s\"\n", x2,
-        x2->gl_name->s_name, canvas_getdir(x2)->s_name);
+    gui_vmess("gui_canvas_saveas", "sss", canvas_string(x2), x2->gl_name->s_name, canvas_getdir(x2)->s_name);
+//    sys_vgui("pdtk_canvas_saveas .x%lx \"%s\" \"%s\"\n", x2,
+//        x2->gl_name->s_name, canvas_getdir(x2)->s_name);
 }
 
 static void canvas_menusave(t_canvas *x)

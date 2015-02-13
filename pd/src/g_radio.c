@@ -32,6 +32,10 @@ void radio_draw_update(t_gobj *client, t_glist *glist)
         canvas, x, x->x_drawn, x->x_gui.x_bcol, x->x_gui.x_bcol);
     sys_vgui(".x%lx.c itemconfigure %lxBUT%d -fill #%6.6x -stroke #%6.6x\n",
         canvas, x, x->x_on,    x->x_gui.x_fcol, x->x_gui.x_fcol);
+    char tagbuf[MAXPDSTRING];
+    sprintf(tagbuf, "x%lx", (long unsigned int)x);
+    gui_vmess("gui_radio_update", "ssii", canvas_string(canvas),
+        tagbuf, x->x_drawn, x->x_on);
     x->x_drawn = x->x_on;
 }
 
@@ -44,29 +48,55 @@ void radio_draw_new(t_radio *x, t_glist *glist)
     iemgui_base_draw_new(&x->x_gui);
 
     for(i=0; i<n; i++) if (x->x_orient) {
-        if (i) sys_vgui(".x%lx.c create prect %d %d %d %d "
+        if (i)
+        {
+            sys_vgui(".x%lx.c create prect %d %d %d %d "
             "-stroke $pd_colors(iemgui_border) "
             "-tags {%lxBASE%d %lxBASE x%lx text iemgui border}\n",
             canvas, x1, yi, x1+d, yi, x, i, x, x);
+            char tagbuf[MAXPDSTRING];
+            sprintf(tagbuf, "x%lx", (long unsigned int)x);
+            gui_vmess("gui_create_radio", "ssiiiiiii",
+              canvas_string(canvas), tagbuf, x1, yi, x1+d, yi, i, x1, y1);
+        }
         sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x "
             "-stroke #%6.6x -tags {%lxBUT%d x%lx text iemgui}\n",
             canvas, x1+s, yi+s, x1+d-s, yi+d-s,
             (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol,
             (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol,
             x, i, x);
+        char tagbuf[MAXPDSTRING];
+        sprintf(tagbuf, "x%lx", (long unsigned int)x);
+        char colorbuf[MAXPDSTRING];
+        sprintf(colorbuf, "#%6.6x", x->x_gui.x_fcol);
+        gui_vmess("gui_create_radio_buttons", "sssiiiiiiii", canvas_string(canvas),
+            tagbuf, colorbuf, x1+s, yi+s, x1+d-s, yi+d-s, x1, y1, i, x->x_on==i);
         yi += d;
         x->x_drawn = x->x_on;
     } else {
-        if (i) sys_vgui(".x%lx.c create prect %d %d %d %d "
+        if (i)
+        {
+            sys_vgui(".x%lx.c create prect %d %d %d %d "
             "-stroke $pd_colors(iemgui_border) "
             "-tags {%lxBASE%d %lxBASE x%lx text iemgui border}\n",
             canvas, xi, y1, xi, y1+d, x, i, x, x);
+            char tagbuf[MAXPDSTRING];
+            sprintf(tagbuf, "x%lx", (long unsigned int)x);
+            gui_vmess("gui_create_radio", "ssiiiiiii", canvas_string(canvas),
+                tagbuf, xi, y1, xi, y1+d, i, x1, y1);
+        }
         sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x "
             "-stroke #%6.6x -tags {%lxBUT%d x%lx text iemgui}\n",
             canvas, xi+s, y1+s, xi+d-s, y1+d-s,
             (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol,
             (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol,
             x, i, x);
+        char tagbuf[MAXPDSTRING];
+        sprintf(tagbuf, "x%lx", (long unsigned int)x);
+        char colorbuf[MAXPDSTRING];
+        sprintf(colorbuf, "#%6.6x", x->x_gui.x_fcol);
+        gui_vmess("gui_create_radio_buttons", "sssiiiiiiii", canvas_string(canvas),
+            tagbuf, colorbuf, xi+s, y1+s, xi+d-s, yi+d-s, x1, y1, i, x->x_on==i);
         xi += d;
         x->x_drawn = x->x_on;
     }

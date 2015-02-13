@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  </head>
+  <link rel="stylesheet" type="text/css" href="pdcanvas.css">
+  <body>
+  <input style="display:none;" id="fileDialog" type="file" multiple />
+  <input style="display:none;" id="saveDialog" type="file" nwsaveas nwworkingdir accept=".pd" />
+  <svg xmlns="http://www.w3.org/2000/svg" version="1.1" id="patchsvg" height="1000" width="1000" class="noselect">
+  <rect/>
+  </svg>
+  <script>
+    'use strict';
+    var nw = require('nw.gui'); 
+    var pdgui = require('./pdgui.js');
+
+    var name = pdgui.last_loaded();
+    
+    console.log("my working dire is " + pdgui.get_pwd());
+    document.getElementById("saveDialog").setAttribute("nwworkingdir", pdgui.get_pwd());
+
+    document.getElementById("fileDialog").setAttribute("nwworkingdir", pdgui.get_pwd());
+    document.getElementById("fileDialog").setAttribute("accept",
+        Object.keys(pdgui.pd_filetypes).toString());
+
+
+
+    // The right-click popup menu
+    var popup_menu = new nw.Menu();
+    pdgui.add_popup(name, popup_menu);
+
+    popup_menu.append(new nw.MenuItem({
+        label: 'Properties',
+        click: function() {
+            pdgui.popup_action(name, 0);
+        }
+    }));
+    popup_menu.append(new nw.MenuItem({
+        label: 'Open',
+        click: function() {
+            pdgui.popup_action(name, 1);
+        }
+    }));
+    popup_menu.append(new nw.MenuItem({
+        label: 'Help',
+        click: function() {
+            pdgui.popup_action(name, 2);
+        }
+    }));
+
+    document.querySelector("#saveDialog").addEventListener("change", function(evt) {
+        pdgui.saveas_callback(name, this.value);
+        console.log("tried to open something");
+    }, false);
+
+
+    document.querySelector("#fileDialog").addEventListener("change", function(evt) {
+        var file_array = this.value;
+        // reset value so that we can open the same file twice
+        this.value = null;
+        pdgui.menu_open(file_array);
+        console.log("tried to open something");
+    }, false);
+
+
+    document.addEventListener("mousemove", function(evt) {
+        //pdgui.gui_post("x: " + evt.pageX + " y: " + evt.pageY +
+        //    " modifier: " + (evt.shiftKey + (evt.ctrlKey << 1)));
+        pdgui.pdsend(name + " motion " + evt.pageX + " " + evt.pageY + " " +
+            (evt.shiftKey + (evt.ctrlKey << 1)));
+        evt.stopPropagation();
+//        evt.preventDefault();
+        return false;
+    });
+
+    var last_keydown = "";
+
+
+    function add_keymods(key, evt) {
+        var shift = evt.shiftKey ? "Shift" : "";
+        var ctrl = evt.ctrlKey ? "Ctrl" : "";
+        return shift + ctrl + key;
+    }
+
+    document.addEventListener("keydown", function(evt) {
+        var key_code = evt.keyCode; 
+        var hack = null; // hack for unprintable ascii codes
+        switch(key_code) {
+            case 8:
+            case 9:
+            case 10:
+            case 27:
+//            case 32:
+            case 127: hack = key_code; break;
+
+
+            case 37: hack = add_keymods('Left', evt); break;
+            case 38: hack = add_keymods('Up', evt); break;
+            case 39: hack = add_keymods('Right', evt); break;
+            case 40: hack = add_keymods('Down', evt); break;
+            case 33: hack = add_keymods('Prior', evt); break;
+            case 34: hack = add_keymods('Next', evt); break;
+            case 35: hack = add_keymods('End', evt); break;
+            case 36: hack = add_keymods('Home', evt); break;
+
+            // Need to handle Control key, Alt
+
+            case 16: hack = 'Shift'; break;
+            case 17: hack = 'Control'; break;
+            case 18: hack = 'Alt'; break;
+        }
+        if (hack !== null) {
+            pdgui.gui_canvas_sendkey(name, 1, evt, hack);
+            pdgui.set_keymap(key_code, hack);
+        }
+        pdgui.gui_post("keydown time: keycode is " + evt.keyCode);
+        last_keydown = evt.keyCode;
+        evt.stopPropagation();
+    });
+
+    document.addEventListener("keypress", function(evt) {
+        pdgui.gui_canvas_sendkey(name, 1, evt, evt.charCode);
+        pdgui.set_keymap(last_keydown, evt.charCode);
+        pdgui.gui_post("keypress time: charcode is " + evt.charCode);
+        // Don't do things like scrolling on space, arrow keys, etc.
+        evt.stopPropagation();
+        evt.preventDefault();
+    });
+
+    document.addEventListener("keyup", function(evt) {
+        var my_char_code = pdgui.get_char_code(evt.keyCode);
+        pdgui.gui_canvas_sendkey(name, 0, evt, my_char_code);
+        pdgui.gui_post("keyup time: charcode is: " + my_char_code);
+    });
+
+    // just left-clicks for the moment
+    document.onmousedown = function(evt) {
+        //pdgui.gui_post("mousedown: x: " + evt.pageX + " y: " + evt.pageY +
+        //    " button: " + (evt.button + 1) + " modifier: " + (evt.shiftKey + (evt.ctrlKey << 1)));
+        // tk events are one greater than html5...
+        var b = evt.button + 1;
+        var mod;
+        // For some reason right-click sends a modifier value of "8", and canvas_doclick in
+        // g_editor.c depends on that value to do the right thing.  So let's hack...
+        if (b === 3) { // right-click
+            mod = 8;
+        } else {
+            mod = (evt.shiftKey + (evt.ctrlKey << 1)); 
+        }
+        pdgui.pdsend(name + " mouse " + evt.pageX + " " + evt.pageY + " " +
+            b + " " + mod);
+        evt.stopPropagation();
+        evt.preventDefault();
+    }
+
+    document.onmouseup = function(evt) {
+        //pdgui.gui_post("mouseup: x: " + evt.pageX + " y: " + evt.pageY +
+        //    " button: " + (evt.button + 1));
+        pdgui.pdsend(name + " mouseup " + evt.pageX + " " + evt.pageY + " " +
+            (evt.button + 1));
+    }
+
+
+
+
+    // let's handle some events for this window...
+
+    // closing the Window
+    // this isn't actually closing the window yet
+    nw.Window.get().on("close", function() {
+        pdgui.pdsend(name + " menuclose 0");
+    });
+    // draw the objects in the patch once we've finished loading this boilerplate page
+    // We could probably use the window.onload here, which would make it standard javascript
+    this.onload = function() {
+        pdgui.canvas_map(name);
+    };
+
+
+
+
+
+nw_create_patch_window_menus(name);
+
+        function menu_generic () {
+            alert("Please implement this");
+        }
+
+        function pdmenu_copy () {
+            alert("Please implement pdmenu_copy"); 
+        }
+
+        function pdmenu_selectall () {
+            alert("Please implement pdmenu_selectall"); 
+        }
+
+        function pdmenu_preferences () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+        function pdmenu_next_win () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+        function pdmenu_previous_win () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+        function pdmenu_parent_win () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+        function pdmenu_console_win () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+        function pdmenu_audio_on () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+        function pdmenu_audio_off () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+        function pdmenu_test_audio () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+        function pdmenu_load_meter () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+        function pdmenu_about_pd () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+        function pdmenu_manual () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+        function pdmenu_help_browser () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+        function pdmenu_l2ork_mailinglist () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+        function pdmenu_pd_mailinglists () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+        function pdmenu_forums () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+        function pdmenu_irc () {
+            alert("Please implement pdmenu_preferences"); 
+        }
+
+// Menus for the Patch window
+function nw_create_patch_window_menus () {
+
+    // Window menu
+    var windowMenu = new nw.Menu({
+        type: 'menubar'
+    });
+
+    // File menu
+    var fileMenu = new nw.Menu();
+
+    // Add to window menu
+    windowMenu.append(new nw.MenuItem({
+        label: 'File',
+        submenu: fileMenu
+    }));
+
+    // File sub-entries
+    fileMenu.append(new nw.MenuItem({
+        label: 'New',
+        click: pdgui.menu_new,
+        key: 'n',
+        modifiers: "ctrl"
+    }));
+
+    fileMenu.append(new nw.MenuItem({
+        label: 'Open',
+        key: 'o',
+        modifiers: "ctrl",
+        click: function (){
+            var chooser = document.querySelector('#fileDialog');
+            chooser.click();
+        }
+    }));
+
+    if (pdgui.k12_mode == 1) {
+        fileMenu.append(new nw.MenuItem({
+        label: 'K12 Demos',
+        click: pdgui.menu_k12_open_demos
+        }));
+    }
+
+    fileMenu.append(new nw.MenuItem({
+        type: 'separator'
+    }));
+
+    // Note: this must be different for the main Pd window
+    fileMenu.append(new nw.MenuItem({
+        label: 'Save',
+        click: function () {
+            pdgui.menu_save(name);
+        },
+        key: 's',
+        modifiers: "ctrl"
+    }));
+
+    fileMenu.append(new nw.MenuItem({
+        label: 'Save as...',
+        click: function (){
+            pdgui.menu_saveas(name);
+        },
+        key: 's',
+        modifiers: "ctrl+shift"
+    }));
+
+    if (pdgui.k12_mode == 0) {
+        fileMenu.append(new nw.MenuItem({
+            type: 'separator'
+        }));
+    }
+
+    fileMenu.append(new nw.MenuItem({
+        label: 'Message...',
+        click: pdgui.menu_send,
+        key: 'm',
+        modifiers: "ctrl"
+    }));
+
+    if (pdgui.k12_mode == 0) {
+        fileMenu.append(new nw.MenuItem({
+            type: 'separator'
+        }));
+    }
+
+    // recent files go here
+
+    // anther separator goes here if there are any recent files
+
+    fileMenu.append(new nw.MenuItem({
+        label: 'Close',
+        click: function() {
+            pdgui.menu_close(name);
+        }
+    }));
+
+    // Quit Pd
+    fileMenu.append(new nw.MenuItem({
+        label: 'Quit',
+        click: pdgui.menu_quit,
+        key: 'q',
+        modifiers: "ctrl"
+    }));
+
+
+    // Edit menu
+    var editMenu = new nw.Menu();
+
+    // Add to window menu
+    windowMenu.append(new nw.MenuItem({
+    label: 'Edit',
+    submenu: editMenu
+    }));
+
+    // Edit sub-entries
+    editMenu.append(new nw.MenuItem({
+        label: 'Undo',
+        click: menu_generic,
+        key: 'c',
+        modifiers: "ctrl"
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        label: 'Redo',
+        click: menu_generic,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        type: 'separator'
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        label: 'Cut',
+        click: menu_generic,
+        key: 'c',
+        modifiers: "ctrl"
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        label: 'Copy',
+        click: menu_generic,
+        key: 'c',
+        modifiers: "ctrl"
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        label: 'Paste',
+        click: menu_generic,
+        key: 'c',
+        modifiers: "ctrl"
+    }));
+
+
+    editMenu.append(new nw.MenuItem({
+        label: 'Duplicate',
+        click: menu_generic,
+        key: 'c',
+        modifiers: "ctrl"
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        label: 'Select All',
+        click: menu_generic,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        label: 'Reselect',
+        click: menu_generic,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        type: 'separator'
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        label: 'Zoom In',
+        click: function () {
+            nw.Window.get().zoomLevel += 1;
+            pdgui.gui_post("zoom level is " + nw.Window.get().zoomLevel);
+        },
+        key: '=',
+        modifiers: "ctrl"
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        label: 'Zoom Out',
+        click: function () {
+            nw.Window.get().zoomLevel -= 1;
+            pdgui.gui_post("zoom level is " + nw.Window.get().zoomLevel);
+        },
+        key: '-',
+        modifiers: "ctrl"
+    }));
+
+
+
+
+    editMenu.append(new nw.MenuItem({
+        type: 'separator'
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        label: 'Tidy Up',
+        click: menu_generic,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        label: 'Bring to Front',
+        click: menu_generic,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        label: 'Send to Back',
+        click: menu_generic,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        type: 'separator'
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        label: 'Font',
+        click: menu_generic,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        label: 'Cord Inspector',
+        click: function() {
+            pdgui.pdsend(name + " magicglass 0");
+        },
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        type: 'separator'
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        label: 'Find',
+        click: menu_generic,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        label: 'Find Again',
+        click: menu_generic,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        label: 'Find Last Error',
+        click: menu_generic,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        type: 'separator'
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        label: 'Autotips',
+        click: menu_generic,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        label: 'Editmode',
+        click: function() { pdgui.pdsend(name + " editmode 0"); },
+        key: 'e',
+        modifiers: "ctrl"
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        type: 'separator'
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        label: 'Preferences...',
+        click: menu_generic,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    // Put menu
+    var putMenu = new nw.Menu();
+
+    // Add to window menu
+    windowMenu.append(new nw.MenuItem({
+    label: 'Put',
+    submenu: putMenu
+    }));
+
+    // Put menu sub-entries
+    putMenu.append(new nw.MenuItem({
+        label: 'Object',
+        click: function() {
+                   pdgui.pdsend(name + " dirty 1");
+                   pdgui.pdsend(name + " obj 0");
+        },
+        key: '1',
+        modifiers: "ctrl"
+    }));
+
+/*
+
+proc menu_floatatom {name accel} {
+	pd [concat $name dirty 1 \;]
+    pd [concat $name floatatom $accel \;]
+}
+
+proc menu_symbolatom {name accel} {
+	pd [concat $name dirty 1 \;]
+    pd [concat $name symbolatom $accel \;]
+}
+
+proc menu_comment {name accel} {
+	pd [concat $name dirty 1 \;]
+    pd [concat $name text $accel \;]
+}
+
+proc menu_graph {name} {
+	pd [concat $name dirty 1 \;]
+	set xdraw [expr int([$name.c canvasx 0])]
+	set ydraw [expr int([$name.c canvasy 0])]
+    pd [concat $name graph NULL 0 0 0 0 [expr $xdraw+30] [expr $ydraw+30] 0 [expr $ydraw+30]\;]
+    #pd [concat $name graph \;]
+}
+
+proc menu_array {name} {
+	pd [concat $name dirty 1 \;]
+    pd [concat $name menuarray \;]
+}
+
+
+*/
+
+    putMenu.append(new nw.MenuItem({
+        label: 'Message',
+        click: function() {
+                   pdgui.pdsend(name + " dirty 1");
+                   pdgui.pdsend(name + " msg 0");
+        },
+        key: '2',
+        modifiers: "ctrl"
+    }));
+
+    putMenu.append(new nw.MenuItem({
+        label: 'Number',
+        click: function() { 
+                   pdgui.pdsend(name + " dirty 1");
+                   pdgui.pdsend(name + " floatatom 0");
+        },
+        key: '3',
+        modifiers: "ctrl"
+    }));
+
+    putMenu.append(new nw.MenuItem({
+        label: 'Symbol',
+        click: function() {
+                   pdgui.pdsend(name + " dirty 1");
+                   pdgui.pdsend(name + " symbolatom 0");
+        },
+        key: '4',
+        modifiers: "ctrl"
+    }));
+
+    putMenu.append(new nw.MenuItem({
+        label: 'Comment',
+        click: function() {
+                   pdgui.pdsend(name + " dirty 1");
+                   pdgui.pdsend(name + " text 0");
+        },
+        key: '5',
+        modifiers: "ctrl"
+    }));
+
+    putMenu.append(new nw.MenuItem({
+        type: 'separator'
+    }));
+
+    putMenu.append(new nw.MenuItem({
+        label: 'Bang',
+        click: function(e) {
+                   pdgui.pdsend(name + " dirty 1");
+                   pdgui.pdsend(name + " bng 0");
+        },
+        key: 'b',
+        modifiers: "ctrl-shift"
+    }));
+
+    putMenu.append(new nw.MenuItem({
+        label: 'Toggle',
+        click: function() {
+                   pdgui.pdsend(name + " dirty 1");
+                   pdgui.pdsend(name + " toggle 0");
+        },
+        key: 't',
+        modifiers: "ctrl-shift"
+    }));
+
+    putMenu.append(new nw.MenuItem({
+        label: 'Number2',
+        click: function() {
+                   pdgui.pdsend(name + " dirty 1");
+                   pdgui.pdsend(name + " numbox 0");
+        },
+        key: 'n',
+        modifiers: "ctrl-shift"
+    }));
+
+    putMenu.append(new nw.MenuItem({
+        label: 'Vslider',
+        click: function() {
+                   pdgui.pdsend(name + " dirty 1");
+                   pdgui.pdsend(name + " vslider 0");
+        },
+        key: 'v',
+        modifiers: "ctrl-shift"
+    }));
+
+    putMenu.append(new nw.MenuItem({
+        label: 'Hslider',
+        click: function() {
+                   pdgui.pdsend(name + " dirty 1");
+                   pdgui.pdsend(name + " hslider 0");
+        },
+        key: 'h',
+        modifiers: "ctrl-shift"
+    }));
+
+    putMenu.append(new nw.MenuItem({
+        label: 'Vradio',
+        click: function() {
+                   pdgui.pdsend(name + " dirty 1");
+                   pdgui.pdsend(name + " vradio 0");
+        },
+        key: 'd',
+        modifiers: "ctrl"
+    }));
+
+    putMenu.append(new nw.MenuItem({
+        label: 'Hradio',
+        click: function() {
+                   pdgui.pdsend(name + " dirty 1");
+                   pdgui.pdsend(name + " hradio 0");
+        },
+        key: 'i',
+        modifiers: "ctrl"
+    }));
+
+    putMenu.append(new nw.MenuItem({
+        label: 'VU',
+        click: function() {
+                   pdgui.pdsend(name + " dirty 1");
+                   pdgui.pdsend(name + " vumeter 0");
+        },
+        key: 'u',
+        modifiers: "ctrl"
+    }));
+
+    putMenu.append(new nw.MenuItem({
+        label: 'Canvas',
+        click: function() {
+                   pdgui.pdsend(name + " dirty 1");
+                   pdgui.pdsend(name + " mycnv 0");
+        },
+        key: 'c',
+        modifiers: "ctrl"
+    }));
+
+    putMenu.append(new nw.MenuItem({
+        type: 'separator'
+    }));
+
+    putMenu.append(new nw.MenuItem({
+        label: 'Graph',
+        click: function() {
+            pdgui.pdsend(name + " dirty 1");
+            // leaving out some placement logic... see pd.tk menu_graph
+            pdgui.pdsend(name + " graph NULL 0 0 0 0 30 30 0 30");
+        },
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    putMenu.append(new nw.MenuItem({
+        label: 'Array',
+        click: menu_generic,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+
+    // Windows menu... call it "winman" (i.e., window management) to avoid confusion
+    var winmanMenu = new nw.Menu();
+
+    // Add to windows menu
+    windowMenu.append(new nw.MenuItem({
+    label: 'Windows',
+    submenu: winmanMenu
+    }));
+
+    // Winman sub-entries
+    winmanMenu.append(new nw.MenuItem({
+        label: 'Next Window',
+        click: menu_generic,
+        key: 'c',
+        modifiers: "ctrl"
+    }));
+
+    winmanMenu.append(new nw.MenuItem({
+        label: 'Previous Window',
+        click: menu_generic,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    winmanMenu.append(new nw.MenuItem({
+        type: 'separator'
+    }));
+
+    winmanMenu.append(new nw.MenuItem({
+        label: 'Parent Window',
+        click: menu_generic,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    winmanMenu.append(new nw.MenuItem({
+        label: 'Pd & Console',
+        click: menu_generic,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    // Media menu
+    var mediaMenu = new nw.Menu();
+
+    // Add to window menu
+    windowMenu.append(new nw.MenuItem({
+    label: 'Media',
+    submenu: mediaMenu
+    }));
+
+    // Media sub-entries
+    mediaMenu.append(new nw.MenuItem({
+        label: 'Audio On',
+        click: menu_generic,
+        key: 'c',
+        modifiers: "ctrl"
+    }));
+
+    mediaMenu.append(new nw.MenuItem({
+        label: 'Audio Off',
+        click: menu_generic,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    mediaMenu.append(new nw.MenuItem({
+        type: 'separator'
+    }));
+
+    mediaMenu.append(new nw.MenuItem({
+        label: 'Test Audio and Midi',
+        click: menu_generic,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    mediaMenu.append(new nw.MenuItem({
+        label: 'Load Meter',
+        click: menu_generic,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    // Help menu
+    var helpMenu = new nw.Menu();
+
+    // Add to window menu
+    windowMenu.append(new nw.MenuItem({
+    label: 'Help',
+    submenu: helpMenu
+    }));
+
+    // Help sub-entries
+    helpMenu.append(new nw.MenuItem({
+        label: 'About Pd-L2ork',
+        click: menu_generic,
+        key: 'c',
+        modifiers: "ctrl"
+    }));
+
+    helpMenu.append(new nw.MenuItem({
+        label: 'Manual',
+        click: menu_generic,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    helpMenu.append(new nw.MenuItem({
+        label: 'Help Browser',
+        click: menu_generic,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    helpMenu.append(new nw.MenuItem({
+        type: 'separator'
+    }));
+
+    helpMenu.append(new nw.MenuItem({
+        label: 'Pd-L2ork Mailing List',
+        click: menu_generic,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    helpMenu.append(new nw.MenuItem({
+        label: 'Pure Data Mailing Lists',
+        click: menu_generic,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    helpMenu.append(new nw.MenuItem({
+        label: 'Forums',
+        click: menu_generic,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    helpMenu.append(new nw.MenuItem({
+        label: 'IRC Chat',
+        click: menu_generic,
+        key: 'a',
+        modifiers: "ctrl"
+    }));
+
+    // Assign to window
+    nw.Window.get().menu = windowMenu;
+
+}
+
+
+
+/*
+function nw_create_canvas_window_menus(name) {
+	// Window menu
+	var windowMenu = new nw.Menu;
+	var windowMenu = new nw.Menu({
+	    type: 'menubar'
+	});
+
+
+	// File menu
+	var fileMenu = new nw.Menu();
+
+	// Add to window menu
+	windowMenu.append(new nw.MenuItem({
+	    label: 'File',
+	    submenu: fileMenu
+	}));
+
+	// File sub-entries
+	fileMenu.append(new nw.MenuItem({
+	    label: 'New',
+	    click: pdgui.menu_new,
+	    key: 'n',
+	    modifiers: "ctrl"
+	}));
+
+	fileMenu.append(new nw.MenuItem({
+	    label: 'Open',
+	    key: 'o',
+	    modifiers: "ctrl",
+	    click: function (){
+		var chooser = document.querySelector('#fileDialog');
+		chooser.click();
+		chooser.addEventListener("change", function(evt) {
+		    menu_open(this.value);
+		    console.log("tried to open something");
+		}, false);
+	    }
+	}));
+
+	if (pdgui.k12_mode == 1) {
+	    fileMenu.append(new nw.MenuItem({
+		label: 'K12 Demos',
+		click: pdgui.menu_k12_open_demos
+	    }));
+	}
+
+	fileMenu.append(new nw.MenuItem({
+	    type: 'separator'
+	}));
+
+	// Note: this must be different for the main Pd window
+	fileMenu.append(new nw.MenuItem({
+	    label: 'Save',
+	    click: function (){
+		pdgui.menu_save(name);
+	    },
+	    key: 's',
+	    modifiers: "ctrl"
+	}));
+
+	fileMenu.append(new nw.MenuItem({
+	    label: 'Save as...',
+	    click: function (){
+		pdgui.menu_saveas(name);
+	    },
+	    key: 'S',
+	    modifiers: "ctrl"
+	}));
+
+	if (pdgui.k12_mode == 0) {
+	    fileMenu.append(new nw.MenuItem({
+		type: 'separator'
+	    }));
+	}
+
+	// Assign to window
+	nw.Window.get().menu = windowMenu;
+}
+*/
+
+  </script>
+  </body>
+</html>

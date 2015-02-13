@@ -330,7 +330,12 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
         // add a null character at the end of the string (for u8_charnum)
         tempbuf[outchars_b++] = '\0';
 
-        pixwide = ncolumns * fontwidth + (LMARGIN + RMARGIN);
+        // The following is an enormous hack to get the box width to match size 12px
+        // DejaVu as closely as possible.  A better solution would require a fuller
+        // understanding of the font logic here and in s_main.
+        //pixwide = ncolumns * fontwidth + (LMARGIN + RMARGIN);
+        float fudge_factor = 0.2;
+        pixwide = (int)(ncolumns * (fontwidth + fudge_factor) + (LMARGIN + RMARGIN));
         pixhigh = nlines * fontheight + (TMARGIN + BMARGIN);
         //printf("outchars_b=%d bufsize=%d %d\n", outchars_b, x->x_bufsize, x->x_buf[outchars_b]);
 
@@ -357,11 +362,20 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
                 dispx + LMARGIN, dispy + TMARGIN,
                 outchars_b, tempbuf, sys_hostfontsize(font),
                 (glist_isselected(x->x_glist, ((t_gobj*)x->x_text)) ? "$pd_colors(selection)" : "$pd_colors(text)"));
+            gui_vmess("gui_text_new", "sssiffsi",
+                canvas_string(canvas), x->x_tag, rtext_gettype(x)->s_name,
+                glist_isselected(x->x_glist, ((t_gobj*)x->x_text)),
+                dispx + LMARGIN,
+                dispy + TMARGIN,
+                tempbuf,
+                sys_hostfontsize(font));
+               
         }
         else if (action == SEND_UPDATE)
         {
             sys_vgui("pdtk_text_set .x%lx.c %s {%.*s}\n",
                 canvas, x->x_tag, outchars_b, tempbuf);
+            gui_vmess("gui_text_set", "sss", canvas_string(canvas), x->x_tag, tempbuf);
 
             if (pixwide != x->x_drawnwidth || pixhigh != x->x_drawnheight) 
                 text_drawborder(x->x_text, x->x_glist, x->x_tag,

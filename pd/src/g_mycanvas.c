@@ -33,6 +33,15 @@ void my_canvas_draw_new(t_my_canvas *x, t_glist *glist)
         "-tags {%lxBASE x%lx text iemgui}\n",
         canvas, x1, y1, x1+x->x_gui.x_w, y1+x->x_gui.x_h,
         x->x_gui.x_bcol, x, x);
+    char tagbuf[MAXPDSTRING];
+    sprintf(tagbuf, "x%lx", (long unsigned int)x);
+    char colorbuf[MAXPDSTRING];
+    sprintf(colorbuf, "#%6.6x", x->x_gui.x_bcol);
+    gui_vmess("gui_text_create_gobj", "ssii", canvas_string(canvas),
+        tagbuf, x1, y1);
+    gui_vmess("gui_create_mycanvas", "sssiiiiii", canvas_string(canvas),
+        tagbuf, colorbuf, x1, y1, x1+x->x_vis_w, y1+x->x_vis_h,
+        x1+x->x_gui.x_w, y1+x->x_gui.x_h);
 }
 
 void my_canvas_draw_move(t_my_canvas *x, t_glist *glist)
@@ -67,6 +76,11 @@ void my_canvas_draw_select(t_my_canvas* x, t_glist* glist)
     sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke %s\n", canvas, x,
         x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas ?
         "$pd_colors(selection)" : bcol);
+    char tagbuf[MAXPDSTRING];
+    sprintf(tagbuf, "x%lx", (long unsigned int)x);
+    gui_vmess("gui_mycanvas_select_color", "sss", canvas_string(canvas),
+        tagbuf, x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas ?
+            "blue" : bcol); 
 }
 
 static void my_canvas__clickhook(t_scalehandle *sh, int newstate)

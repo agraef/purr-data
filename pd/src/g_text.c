@@ -709,6 +709,9 @@ static void message_click(t_message *x,
         t_rtext *y = glist_findrtext(x->m_glist, &x->m_text);
         sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 5\n", 
             glist_getcanvas(x->m_glist), rtext_gettag(y));
+        gui_vmess("gui_message_flash", "ssi",
+            canvas_string(glist_getcanvas(x->m_glist)),
+            rtext_gettag(y), 1);
         clock_delay(x->m_clock, 120);
     }
 }
@@ -720,6 +723,9 @@ static void message_tick(t_message *x)
         t_rtext *y = glist_findrtext(x->m_glist, &x->m_text);
         sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 1\n",
             glist_getcanvas(x->m_glist), rtext_gettag(y));
+        gui_vmess("gui_message_flash", "ssi",
+            canvas_string(glist_getcanvas(x->m_glist)),
+            rtext_gettag(y), 0);
     }
 }
 
@@ -1559,6 +1565,8 @@ static void text_select(t_gobj *z, t_glist *glist, int state)
             sys_vgui(".x%lx.c itemconfigure %sR -stroke %s\n",
                 glist_getcanvas(glist), rtext_gettag(y),
                 (state? "$pd_colors(selection)" : outline));
+            gui_vmess("gui_text_select_color", "ss",
+                canvas_string(glist_getcanvas(glist)), rtext_gettag(y));
             if (z->g_pd == gatom_class)
             {
                 sys_vgui(".x%lx.c itemconfigure %lx.l -fill %s\n",
@@ -1578,6 +1586,8 @@ static void text_select(t_gobj *z, t_glist *glist, int state)
                 }
                 sys_vgui(".x%lx.c addtag selected withtag %sR \n",
                     glist_getcanvas(glist), rtext_gettag(y));
+                gui_vmess("gui_text_select", "ss",
+                    canvas_string(glist_getcanvas(glist)), rtext_gettag(y));
 
                 if (pd_class(&x->te_pd) == text_class && x->te_type != T_TEXT && glist_istoplevel(glist))
                     sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 1 -strokedasharray {} "
@@ -1608,6 +1618,9 @@ static void text_select(t_gobj *z, t_glist *glist, int state)
                 }
                 sys_vgui(".x%lx.c dtag %sR selected\n",
                     glist_getcanvas(glist), rtext_gettag(y));
+                gui_vmess("gui_text_deselect", "ss",
+                    canvas_string(glist_getcanvas(glist)),
+                    rtext_gettag(y));
 
                 if (pd_class(&x->te_pd) == text_class && x->te_type != T_TEXT)
                        sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 2  -strokelinecap projecting -strokedasharray {2 3} "
@@ -1651,6 +1664,7 @@ static void text_vis(t_gobj *z, t_glist *glist, int vis)
 {
     //fprintf(stderr,"text_vis %d\n", vis);
     t_text *x = (t_text *)z;
+    int x1, y1, x2, y2;
 
 #ifdef PDL2ORK
     //if we are in k12 mode and this is hub with level 1 (global)
@@ -1675,6 +1689,12 @@ static void text_vis(t_gobj *z, t_glist *glist, int vis)
             {
                 //fprintf(stderr,"    draw it\n");
                 t_rtext *y = glist_findrtext(glist, x);
+
+                // make a group
+                text_getrect(&x->te_g, glist, &x1, &y1, &x2, &y2);
+                gui_vmess("gui_text_create_gobj", "ssii",
+                    canvas_string(glist), rtext_gettag(y), x1, y1);
+
                 if (x->te_type == T_ATOM)
                     glist_retext(glist, x);
                 text_drawborder(x, glist, rtext_gettag(y),
@@ -1688,8 +1708,9 @@ static void text_vis(t_gobj *z, t_glist *glist, int vis)
             if (gobj_shouldvis(&x->te_g, glist))
             {
                 //fprintf(stderr,"    erase it %lx %lx\n", x, glist);
-                text_eraseborder(x, glist, rtext_gettag(y));
-                rtext_erase(y);
+                text_erase_gobj(x, glist, rtext_gettag(y));
+                //text_eraseborder(x, glist, rtext_gettag(y));
+                //rtext_erase(y);
             }
         }
 #ifdef PDL2ORK
@@ -1860,6 +1881,7 @@ static t_widgetbehavior gatom_widgetbehavior =
 void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
     char *tag, int x1, int y1, int x2, int y2)
 {
+    t_rtext *y = glist_findrtext(glist, ob);
     //if this is a comment or we are drawing inside gop on one of
     //our parents return
     if (pd_class(&ob->te_pd) == text_class || glist_getcanvas(glist) != glist)
@@ -1886,8 +1908,12 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
                 tag, i, tag,
                 (issignal ? "signal" : "control"),
                 (selected ? "selected" : ""));
+            gui_vmess("gui_canvas_drawio", "sssiiiiii",
+                canvas_string(glist_getcanvas(glist)), rtext_gettag(y), tag,
+                onset, y2 - 2, onset + IOWIDTH, y2, x1, y1);
         }
-        else {
+        else
+        {
             //fprintf(stderr,"glist_drawiofor o redraw\n");
             sys_vgui(".x%lx.c coords %so%d %d %d %d %d\n",
                 glist_getcanvas(glist), tag, i,
@@ -1921,8 +1947,12 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
                 tag, i, tag,
                 (issignal ? "signal" : "control"),
                 (selected ? "selected" : ""));
+            gui_vmess("gui_canvas_drawio", "sssiiiiii",
+                canvas_string(glist_getcanvas(glist)), rtext_gettag(y), tag,
+                onset, y1, onset + IOWIDTH, y1 + EXTRAPIX, x1, y1);
         }
-        else {
+        else
+        {
             //fprintf(stderr,"glist_drawiofor i firsttime\n");
             sys_vgui(".x%lx.c coords %si%d %d %d %d %d\n",
                 glist_getcanvas(glist), tag, i,
@@ -2018,6 +2048,7 @@ void text_drawborder(t_text *x, t_glist *glist,
 
     t_object *ob;
     int x1, y1, x2, y2;
+    int broken;
 
     int selected = glist_isselected(glist, (t_gobj*)x);
 
@@ -2052,6 +2083,7 @@ void text_drawborder(t_text *x, t_glist *glist,
             outline = "$pd_colors(dash_outline) -strokewidth 2 -strokelinecap projecting -strokedasharray {2 3}"; //-strokedasharray {4 1}
             fill = invalid_fill;
             box_tag = "broken box";
+            broken = 1;
         }
         else
         {
@@ -2059,9 +2091,11 @@ void text_drawborder(t_text *x, t_glist *glist,
             outline = "$pd_colors(box_border)";
             fill = "$pd_colors(box)";
             box_tag = "box";
+            broken = 0;
         }
         if (firsttime)
         {
+            /*
             sys_vgui(".x%lx.c create ppolygon %d %d %d %d %d %d %d %d %d %d \
                     -stroke %s -fill %s -tags {%sR %lx text %s %s}\n", 
                     glist_getcanvas(glist),
@@ -2069,6 +2103,10 @@ void text_drawborder(t_text *x, t_glist *glist,
                     (selected ? "$pd_colors(selection)" : outline),
                     fill, tag, tag, box_tag,
                     (selected ? "selected" : ""));
+            */
+            gui_vmess("gui_text_drawborder", "ssiiiii",
+                canvas_string(glist_getcanvas(glist)), tag, broken, x1, y1, x2, y2);
+               
                 //-dash %s -> pattern disabled for tkpath
         }
         else
@@ -2078,6 +2116,8 @@ void text_drawborder(t_text *x, t_glist *glist,
             sys_vgui(".x%lx.c coords %sR %d %d %d %d %d %d %d %d %d %d\n",
                 glist_getcanvas(glist), tag,
                     x1, y1,  x2, y1,  x2, y2,  x1, y2,  x1, y1);
+            gui_vmess("gui_text_redraw_border", "ssiiii",
+                canvas_string(glist_getcanvas(glist)), tag, x1, y1, x2, y2);
 /* this seems to be totally extraneous  hans@at.or.at
              sys_vgui(".x%lx.c itemconfigure %sR -dash %s -outline %s\n", 
                      glist_getcanvas(glist), tag, pattern, outline); */
@@ -2086,6 +2126,8 @@ void text_drawborder(t_text *x, t_glist *glist,
     else if (x->te_type == T_MESSAGE)
     {
         if (firsttime)
+        {
+            /*
             sys_vgui(".x%lx.c create ppolygon "
                      "%d %d %d %d %d %d %d %d %d %d %d %d %d %d "
                      "-stroke %s -fill $pd_colors(msg) "
@@ -2095,16 +2137,32 @@ void text_drawborder(t_text *x, t_glist *glist,
                 x1, y2,  x1, y1,
                 (selected ? "$pd_colors(selection)" : "$pd_colors(msg_border)"),
                     tag, tag, (selected ? "selected" : ""));
+            */
+
+            // coords are a quick hack to separate gobj's x/y from the polygon's coords
+            // which of course can be greatly simplified
+            gui_vmess("gui_message_drawborder", "ssii",
+                canvas_string(glist_getcanvas(glist)), tag, x2 - x1, y2 - y1);
+//                x1-x1, y1-y1, x2+4-x1, y1-y1, x2-x1,
+//                y1+4-y1, x2-x1, y2-4-y1, x2+4-x1, y2-y1, x1-x1, y2-y1, x1-x1, y1-y1);
+        }
         else
+        {
             sys_vgui(".x%lx.c coords %sR "
                      "%d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
                 glist_getcanvas(glist), tag,
                 x1, y1,  x2+4, y1,  x2, y1+4,  x2, y2-4,  x2+4, y2,
                 x1, y2,  x1, y1);
+            gui_vmess("gui_message_redraw_border", "ssiiiiiiiiiiiiii",
+                canvas_string(glist_getcanvas(glist)), tag,
+                x1-x1, y1-y1,  x2+4-x1, y1-y1,  x2-x1, y1+4-y1, x2-x1, y2-4-y1,  x2+4-x1, y2-y1,
+                x1-x1, y2-y1,  x1-x1, y1-y1);
+        }
     }
     else if (x->te_type == T_ATOM)
     {
         if (firsttime)
+        {
             sys_vgui(".x%lx.c create ppolygon "
                      "%d %d %d %d %d %d %d %d %d %d %d %d "
                      "-stroke %s "
@@ -2114,11 +2172,19 @@ void text_drawborder(t_text *x, t_glist *glist,
                 x1, y1,  x2-4, y1,  x2, y1+4,  x2, y2,  x1, y2,  x1, y1,
                 (selected ? "$pd_colors(selection)" : "$pd_colors(atom_box_border)"),
                     tag, tag, (selected ? "selected" : ""));
+
+            gui_vmess("gui_atom_drawborder", "ssiiiiiiiiiiii",
+                canvas_string(glist_getcanvas(glist)), tag,
+                x1-x1, y1-y1, x2-4-x1, y1-y1, x2-x1,
+                y1+4-y1, x2-x1, y2-y1, x1-x1, y2-y1, x1-x1, y1-y1);
+        }
         else
+        {
             sys_vgui(".x%lx.c coords %sR "
                      "%d %d %d %d %d %d %d %d %d %d %d %d\n",
                 glist_getcanvas(glist), tag,
                 x1, y1,  x2-4, y1,  x2, y1+4,  x2, y2,  x1, y2,  x1, y1);
+        }
     }
         /* for comments, just draw a dotted rectangle unlocked; when a visible
         canvas is unlocked we have to call this anew on all comments, and when
@@ -2272,6 +2338,13 @@ void glist_eraseiofor(t_glist *glist, t_object *ob, char *tag)
     for (i = 0; i < n; i++)
         sys_vgui(".x%lx.c delete %si%d\n",
             glist_getcanvas(glist), tag, i);
+}
+
+// erase the whole gobj in the gui one go
+void text_erase_gobj(t_text *x, t_glist *glist, char *tag)
+{
+    if (x->te_type == T_TEXT && !glist->gl_edit) return;
+    gui_vmess("gui_gobj_erase", "ss", canvas_string(glist_getcanvas(glist)), tag);
 }
 
 void text_eraseborder(t_text *x, t_glist *glist, char *tag)
