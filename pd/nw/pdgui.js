@@ -15,6 +15,12 @@ exports.get_pwd = function() {
 var fs = require('fs');     // for fs.existsSync
 var path = require('path'); // for path.dirname path.extname
 
+var flub = { flash_interrupt_label: "this thing does stuff" };
+exports.tr = function(arg) {
+    return flub[arg];
+}
+
+
 var pd_window; 
 exports.pd_window;
 
@@ -161,7 +167,9 @@ function gui_post(string, color) {
     var text = pd_window.document.createTextNode(string + "\n"); 
     span.appendChild(text);
     myp.appendChild(span);
-    pd_window.window.scrollTo(0, pd_window.document.body.scrollHeight);
+    var printout = pd_window.document.getElementById("bottom");
+    printout.scrollTop = printout.scrollHeight;
+//    printout.scrollTo(0, pd_window.document.body.scrollHeight);
 }
 
 exports.gui_post = gui_post;
@@ -838,11 +846,17 @@ var scroll = {},
     loaded = {},
     popup_menu = {};
 
-    var patchwin = {}; // Associative array of patch windows
+    var patchwin = {}; // object filled with cid: [Window object] pairs
+    var dialogwin = {}; // object filled with did: [Window object] pairs
 
 exports.get_patchwin = function(name) {
     return patchwin[name];
 }
+
+exports.remove_dialogwin = function(name) {
+    dialogwin[name] = null;
+}
+
 
 // stopgap...
 pd_colors['canvas_color'] = "white";
@@ -968,8 +982,8 @@ function gui_canvas_new(cid, width, height, geometry, editable, name, dir, dirty
     }
     last_loaded = cid;
     // Not sure why resize and topmost are here-- but we'll pass them on for the time being...
-    patchwin[cid] = nw_create_window(cid, width, height, xpos, ypos, menu_flag,
-        resize[cid], topmost[cid], my_canvas_color, name, dir, dirty_flag, cargs);
+    patchwin[cid] = nw_create_window(cid, 'pd-canvas', width, height, xpos, ypos, menu_flag,
+        resize[cid], topmost[cid], my_canvas_color, name, dir, dirty_flag, cargs, null);
      
     // initialize variable to reflect that this window has been opened
     loaded[cid] = 1;
@@ -1804,6 +1818,13 @@ function configure_item(item, attributes) {
     }
 }
 
+// A bit of a stopgap. The GUI side probably shouldn't know about "items"
+// on SVG.
+function gui_configure_item(cid, tag, attributes) {
+    var item = get_item(cid, tag);
+    configure_item(item, attributes);
+}
+
 // Most of these map either to pd.tk procs, or in some cases Tk canvas subcommands
 function gui_text_create_gobj(cid, tag, xpos, ypos) {
     var svg = get_item(cid, "patchsvg"); // "patchsvg" is id for the svg in the DOM
@@ -1845,6 +1866,7 @@ function gui_canvas_drawio(cid, parenttag, tag, x1, y1, x2, y2, basex, basey) {
         height: y2 - y1,
         x: x1 - basex,
         y: y1 - basey,
+        id: tag,
         class: 'xlet'
     });
     g.appendChild(rect);
@@ -2000,6 +2022,7 @@ function gui_text_set (cid, tag, text) {
         svg_text.textContent = text;
     } else {
         gui_post("gui_text_set: svg_text doesn't exist!");
+        console.log("gui_text_set: " + cid + " " + tag + " " + text + " :" + "svg_text doesn't exist!");
     }
 }
 
@@ -2115,10 +2138,9 @@ function gui_create_bng(cid, tag, cx, cy, radius) {
     g.appendChild(circle);
 }
 
-function gui_bng_update(cid, tag, flashed) {
+function gui_bng_flash(cid, tag, color) {
     var button = get_item(cid, tag + 'button');
-    var fill = flashed ? 'red' : 'none';
-    configure_item(button, { fill: fill });
+    configure_item(button, { fill: color });
 }
 
 function gui_create_toggle(cid, tag, color, width, p1,p2,p3,p4,p5,p6,p7,p8,basex,basey) {
@@ -2150,15 +2172,36 @@ function gui_create_toggle(cid, tag, color, width, p1,p2,p3,p4,p5,p6,p7,p8,basex
     g.appendChild(cross2);
 }
 
-function gui_toggle_update(cid, tag, state) {
+function gui_toggle_resize_cross(cid,tag,w,p1,p2,p3,p4,p5,p6,p7,p8,basex,basey) {
+    var g = get_gobj(cid, tag);
+    var points_array = [p1 - basex, p2 - basey,
+                        p3 - basex, p4 - basey
+    ];
+    var cross1 = get_item(cid, tag + 'cross1');
+    configure_item(cross1, {
+        points: points_array.join(" "),
+        'stroke-width': w
+    });
+
+    points_array = [p5 - basex, p6 - basey,
+                    p7 - basex, p8 - basey
+    ];
+    var cross2 = get_item(cid, tag + 'cross2');
+    configure_item(cross2, {
+        points: points_array.join(" "),
+        'stroke-width': w
+    });
+}
+
+function gui_toggle_update(cid, tag, state, color) {
     var cross1 = get_item(cid, tag + 'cross1');
     var cross2 = get_item(cid, tag + 'cross2');
     if (state) {
-        configure_item(cross1, { display: 'inline' });
-        configure_item(cross2, { display: 'inline' });
+        configure_item(cross1, { display: 'inline', stroke: color });
+        configure_item(cross2, { display: 'inline', stroke: color });
     } else {
-        configure_item(cross1, { display: 'none' });
-        configure_item(cross2, { display: 'none' });
+        configure_item(cross1, { display: 'none', stroke: color });
+        configure_item(cross2, { display: 'none', stroke: color });
     }
 }
 
@@ -2356,6 +2399,13 @@ function gui_iemgui_drawborder(cid, tag, bgcolor, x1, y1, x2, y2) {
     g.appendChild(rect);
 }
 
+function gui_iemgui_redraw_border(cid, tag, x1, y1, x2, y2) {
+    var item = get_item(cid, tag + 'border');
+    configure_item(item, {
+        width: x2 - x1,
+        height: y2 - y1
+    });
+}
 
 function gui_create_mycanvas(cid,tag,color,x1,y1,x2_vis,y2_vis,x2,y2) {
     var rect_vis = create_item(cid,'rect', {
@@ -2692,4 +2742,48 @@ function gui_cord_inspector_flash(cid) {
 
 function gui_raise_window(cid) {
     patchwin[cid].focus();
+}
+
+// Openpanel and Savepanel
+
+var file_dialog_target;
+
+function file_dialog(cid, type, target, path) {
+    file_dialog_target = target;
+    var query_string = (type === 'open' ?
+        'openpanel_dialog' : 'savepanel_dialog');
+    var d = patchwin[cid].window.document.querySelector('#' + query_string);
+    gui_post("set path to " + path);
+    d.setAttribute("nwworkingdir", path);
+    d.click();
+}
+
+function gui_openpanel(cid, target, path) {
+    file_dialog(cid, "open", target, path);
+}
+
+function gui_savepanel(cid, target, path) {
+    file_dialog(cid, "save", target, path);
+}
+
+exports.file_dialog_callback = function(file_string) {
+    pdsend(file_dialog_target + " callback " + enquote(file_string));
+}
+
+function gui_iemgui_dialog(did, attr_array) {
+    gui_post("got a gfxstub " + did + "!!!");
+   
+    for (var i = 0; i < attr_array.length; i++) {
+        attr_array[i] = '"' + attr_array[i] + '"';
+    }
+    dialogwin[did] = nw_create_window(did, 'pd-properties', 235, 430, 20, 20, 0,
+        0, 1, 'white', 'Properties', '', 0, null, attr_array);
+
+}
+
+function gui_remove_gfxstub(did) {
+    if (dialogwin[did] !== null) {
+        dialogwin[did].window.close(true);
+        dialogwin[did] = null;
+    }
 }

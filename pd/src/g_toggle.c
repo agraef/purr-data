@@ -31,9 +31,11 @@ void toggle_draw_update(t_gobj *xgobj, t_glist *glist)
             sys_vgui(".x%lx.c itemconfigure %lxX2 -stroke #%6.6x\n", canvas, x,
                      (x->x_on!=0.0)?x->x_gui.x_fcol:x->x_gui.x_bcol);
             char tagbuf[MAXPDSTRING];
+            char colorbuf[MAXPDSTRING];
             sprintf(tagbuf, "x%lx", (long unsigned int)x);
-            gui_vmess("gui_toggle_update", "ssi", canvas_string(canvas),
-                tagbuf, x->x_on != 0.0);
+            sprintf(colorbuf, "#%6.6x", x->x_gui.x_fcol);
+            gui_vmess("gui_toggle_update", "ssis", canvas_string(canvas),
+                tagbuf, x->x_on != 0.0, colorbuf);
         }
         x->x_gui.x_changed = 0;
     }
@@ -52,12 +54,12 @@ void toggle_draw_new(t_toggle *x, t_glist *glist)
     sprintf(colorbuf, "#%6.6x", x->x_gui.x_fcol);
 
     iemgui_base_draw_new(&x->x_gui);
-    sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth %d "
-        "-stroke #%6.6x -tags {%lxX1 x%lx text iemgui}\n",
-        canvas, x1+w+1, y1+w+1, x2-w-1, y2-w-1, w, col, x, x);
-    sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth %d "
-        "-stroke #%6.6x -tags {%lxX2 x%lx text iemgui}\n",
-        canvas, x1+w+1, y2-w-1, x2-w-1, y1+w+1, w, col, x, x);
+    //sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth %d "
+    //    "-stroke #%6.6x -tags {%lxX1 x%lx text iemgui}\n",
+    //    canvas, x1+w+1, y1+w+1, x2-w-1, y2-w-1, w, col, x, x);
+    //sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth %d "
+    //    "-stroke #%6.6x -tags {%lxX2 x%lx text iemgui}\n",
+    //    canvas, x1+w+1, y2-w-1, x2-w-1, y1+w+1, w, col, x, x);
     gui_vmess("gui_create_toggle", "sssiiiiiiiiiii", canvas_string(canvas), tagbuf,
         colorbuf, w,
         x1+w+1, y1+w+1, x2-w-1, y2-w-1,
@@ -74,18 +76,32 @@ void toggle_draw_move(t_toggle *x, t_glist *glist)
 
     iemgui_base_draw_move(&x->x_gui);
     sys_vgui(".x%lx.c itemconfigure {%lxX1||%lxX2} -strokewidth %d\n", canvas, x, x, w);
-    sys_vgui(".x%lx.c coords %lxX1 %d %d %d %d\n",
-        canvas, x, x1+s, y1+s, x2-s, y2-s);
-    sys_vgui(".x%lx.c coords %lxX2 %d %d %d %d\n",
-        canvas, x, x1+s, y2-s, x2-s, y1+s);
+    //sys_vgui(".x%lx.c coords %lxX1 %d %d %d %d\n",
+    //    canvas, x, x1+s, y1+s, x2-s, y2-s);
+    //sys_vgui(".x%lx.c coords %lxX2 %d %d %d %d\n",
+    //    canvas, x, x1+s, y2-s, x2-s, y1+s);
+    char tagbuf[MAXPDSTRING];
+    sprintf(tagbuf, "x%lx", (long unsigned int)x);
+    gui_vmess("gui_toggle_resize_cross", "ssiiiiiiiiiii",
+        canvas_string(canvas), tagbuf,
+        w,
+        x1+s, y1+s, x2-s, y2-s,
+        x1+s, y2-s, x2-s, y1+s,
+        x1, y1);
 }
 
 void toggle_draw_config(t_toggle* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
     iemgui_base_draw_config(&x->x_gui);
-    sys_vgui(".x%lx.c itemconfigure {%lxX1||%lxX2} -stroke #%6.6x\n",
-        canvas, x, x, x->x_on?x->x_gui.x_fcol:x->x_gui.x_bcol);
+    //sys_vgui(".x%lx.c itemconfigure {%lxX1||%lxX2} -stroke #%6.6x\n",
+    //    canvas, x, x, x->x_on?x->x_gui.x_fcol:x->x_gui.x_bcol);
+    char tagbuf[MAXPDSTRING];
+    char colorbuf[MAXPDSTRING];
+    sprintf(tagbuf, "x%lx", (long unsigned int)x);
+    sprintf(colorbuf, "#%6.6x", x->x_gui.x_fcol);
+    gui_vmess("gui_toggle_update", "ssis", canvas_string(canvas),
+    tagbuf, x->x_on != 0.0, colorbuf);
 }
 
 static void toggle__clickhook(t_scalehandle *sh, int newstate)
@@ -171,7 +187,7 @@ static void toggle_save(t_gobj *z, t_binbuf *b)
 static void toggle_properties(t_gobj *z, t_glist *owner)
 {
     t_toggle *x = (t_toggle *)z;
-    char buf[800];
+    char buf[800], *gfx_tag;
     t_symbol *srl[3];
     iemgui_properties(&x->x_gui, srl);
     sprintf(buf, "pdtk_iemgui_dialog %%s |tgl| \
@@ -185,7 +201,62 @@ static void toggle_properties(t_gobj *z, t_glist *owner)
         x->x_gui.x_ldx, x->x_gui.x_ldy,
         x->x_gui.x_font_style, x->x_gui.x_fontsize,
         0xffffff & x->x_gui.x_bcol, 0xffffff & x->x_gui.x_fcol, 0xffffff & x->x_gui.x_lcol);
-    gfxstub_new(&x->x_gui.x_obj.ob_pd, x, buf);
+    //gfxstub_new(&x->x_gui.x_obj.ob_pd, x, buf);
+    gfx_tag = gfxstub_new2(&x->x_gui.x_obj.ob_pd, x);
+
+    gui_start_vmess("gui_iemgui_dialog", "s", gfx_tag);
+    gui_start_array();
+
+    gui_string_elem("type");
+    gui_string_elem("tgl");
+
+    gui_string_elem("size");
+    gui_int_elem(x->x_gui.x_w);
+
+    gui_string_elem("minimum-size");
+    gui_int_elem(IEM_GUI_MINSIZE);
+
+    gui_string_elem("nonzero-value");
+    gui_float_elem(x->x_nonzero);
+
+    gui_string_elem("nonzero_schedule");  // no idea what this is...
+    gui_float_elem(1.0);
+
+    gui_string_elem("init");
+    gui_int_elem(x->x_gui.x_loadinit); 
+
+    gui_string_elem("send-symbol");
+    gui_string_elem(srl[0]->s_name);
+
+    gui_string_elem("receive-symbol");
+    gui_string_elem(srl[1]->s_name);
+
+    gui_string_elem("label");
+    gui_string_elem(srl[2]->s_name);
+
+    gui_string_elem("x-offset");
+    gui_int_elem(x->x_gui.x_ldx);
+
+    gui_string_elem("y-offset");
+    gui_int_elem(x->x_gui.x_ldy);
+
+    gui_string_elem("font-style");
+    gui_int_elem(x->x_gui.x_font_style);
+
+    gui_string_elem("font-size");
+    gui_int_elem(x->x_gui.x_fontsize);
+
+    gui_string_elem("background-color");
+    gui_int_elem(0xffffff & x->x_gui.x_bcol);
+
+    gui_string_elem("foreground-color");
+    gui_int_elem(0xffffff & x->x_gui.x_fcol);
+
+    gui_string_elem("label-color");
+    gui_int_elem(0xffffff & x->x_gui.x_lcol);
+
+    gui_end_array();
+    gui_end_vmess();
 }
 
 static void toggle_bang(t_toggle *x)

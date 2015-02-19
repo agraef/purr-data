@@ -78,3 +78,13 @@ Everything else:
   it will try to flash a non-existent svg item.  (Probably want to either make a permanent item in
   the pdcanvas.html for it, or hard-code a separate div.)
 * for data structures, change "" to 'none'
+* fix "Reselect" <ctrl-Enter> Keybinding.  It doesn't work atm because nw.js
+  cannot bind to Enter.
+* looks like nwworkingdir isn't working for open/save dialogs atm
+* keyup doesn't register autokeypresses, but keyname and key do
+* text_set doesn't work when a numbox is first created (but works otherwise)
+* clean up nw_create_window (doesn't need so many parameters)
+* make a nice window API in C.  Window "foo-bar" type maps to "foo-bar.html"
+* implement the crappy iemgui color dialog presets
+* find a simple translation API
+* use underscores for iemgui dialog element names

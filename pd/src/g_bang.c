@@ -25,6 +25,7 @@ static t_class *bng_class;
 void bng_draw_update(t_gobj *xgobj, t_glist *glist)
 {
     char tagbuf[MAXPDSTRING];
+    char flashcol[8];
     t_bng *x = (t_bng *)xgobj;
     sprintf(tagbuf, "x%lx", (long unsigned int)&x->x_gui);
     if (x->x_gui.x_changed != x->x_flashed && glist_isvisible(glist))
@@ -32,8 +33,10 @@ void bng_draw_update(t_gobj *xgobj, t_glist *glist)
 //        sys_vgui(".x%lx.c itemconfigure %lxBUT -fill #%6.6x\n",
 //            glist_getcanvas(glist), x,
 //            x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol);
-        gui_vmess("gui_bng_update", "ssi",
-            canvas_string(glist_getcanvas(glist)), tagbuf, x->x_flashed);
+        sprintf(flashcol, "#%6.6x",
+            x->x_flashed ? x->x_gui.x_fcol : x->x_gui.x_bcol);
+        gui_vmess("gui_bng_flash", "sss",
+            canvas_string(glist_getcanvas(glist)), tagbuf, flashcol);
     }
     x->x_gui.x_changed = x->x_flashed;
 }
@@ -70,17 +73,45 @@ void bng_draw_move(t_bng *x, t_glist *glist)
     t_float cr = (x->x_gui.x_w-2)/2.0;
     t_float cx = x1+cr+1.5;
     t_float cy = y1+cr+1.5;
-    sys_vgui(".x%lx.c coords %lxBUT %f %f\n", canvas, x, cx, cy);
-    sys_vgui(".x%lx.c itemconfigure %lxBUT -fill #%6.6x -r %f\n",
-        canvas, x, x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol, cr);
+    //sys_vgui(".x%lx.c coords %lxBUT %f %f\n", canvas, x, cx, cy);
+    //sys_vgui(".x%lx.c itemconfigure %lxBUT -fill #%6.6x -r %f\n",
+    //    canvas, x, x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol, cr);
+    char tagbuf[MAXPDSTRING];
+    sprintf(tagbuf, "x%lxbutton", (long unsigned int)x);
+    char col[8];
+    sprintf(col, "#%6.6x", x->x_flashed ? x->x_gui.x_fcol : x->x_gui.x_bcol);
+    gui_start_vmess("gui_configure_item", "ss",
+        canvas_string(canvas), tagbuf);
+    gui_start_array();
+    gui_string_elem("cx");
+    gui_float_elem(cx - x1 - 0.5); // 0.5 is fudge factor... might be better
+    gui_string_elem("cy");
+    gui_float_elem(cy - y1 - 0.5); // handled by shape-rendering css attr
+    gui_string_elem("r");
+    gui_float_elem(cr);
+    gui_string_elem("fill");
+    gui_string_elem(col);
+    gui_end_array();
+    gui_end_vmess();
 }
 
 void bng_draw_config(t_bng* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
     iemgui_base_draw_config(&x->x_gui);
-    sys_vgui(".x%lx.c itemconfigure %lxBUT -fill #%6.6x\n",
-        canvas, x, x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol);
+    //sys_vgui(".x%lx.c itemconfigure %lxBUT -fill #%6.6x\n",
+    //    canvas, x, x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol);
+    char tagbuf[MAXPDSTRING];
+    sprintf(tagbuf, "x%lxbutton", (long unsigned int)x);
+    char fcol[8];
+    sprintf(fcol, "#%6.6x", x->x_flashed ? x->x_gui.x_fcol : x->x_gui.x_bcol);
+    gui_start_vmess("gui_configure_item", "ss",
+        canvas_string(canvas), tagbuf);
+    gui_start_array();
+    gui_string_elem("fill");
+    gui_string_elem(fcol);
+    gui_end_array();
+    gui_end_vmess();
 }
 
 static void bng__clickhook(t_scalehandle *sh, int newstate)
@@ -181,7 +212,7 @@ void bng_check_minmax(t_bng *x, int ftbreak, int fthold)
 static void bng_properties(t_gobj *z, t_glist *owner)
 {
     t_bng *x = (t_bng *)z;
-    char buf[800];
+    char buf[800], *gfx_tag;
     t_symbol *srl[3];
 
     iemgui_properties(&x->x_gui, srl);
@@ -189,14 +220,83 @@ static void bng_properties(t_gobj *z, t_glist *owner)
         ----------dimensions(pix):----------- %d %d size: 0 0 empty \
         --------flash-time(ms)(ms):--------- %d intrrpt: %d hold: %d \
         %d empty empty %d %d empty %d {%s} {%s} {%s} %d %d %d %d %d %d %d\n",
-        x->x_gui.x_w, IEM_GUI_MINSIZE,
-        x->x_flashtime_break, x->x_flashtime_hold, 2,/*min_max_schedule+clip*/
-        -1, x->x_gui.x_loadinit, -1, -1,/*no linlog, no multi*/
+
+        x->x_gui.x_w,
+        IEM_GUI_MINSIZE,
+        x->x_flashtime_break,
+        x->x_flashtime_hold,
+        2, /*min_max_schedule+clip*/
+        -1,
+        x->x_gui.x_loadinit,
+        -1,
+        -1, /*no linlog, no multi*/
         srl[0]->s_name, srl[1]->s_name, srl[2]->s_name,
         x->x_gui.x_ldx, x->x_gui.x_ldy,
         x->x_gui.x_font_style, x->x_gui.x_fontsize,
-        0xffffff & x->x_gui.x_bcol, 0xffffff & x->x_gui.x_fcol, 0xffffff & x->x_gui.x_lcol);
-    gfxstub_new(&x->x_gui.x_obj.ob_pd, x, buf);
+        0xffffff & x->x_gui.x_bcol,
+        0xffffff & x->x_gui.x_fcol,
+        0xffffff & x->x_gui.x_lcol);
+
+    gfx_tag = gfxstub_new2(&x->x_gui.x_obj.ob_pd, x);
+    /* todo: send along the x/y of the object here so we can
+       create the window in the right place */
+
+    gui_start_vmess("gui_iemgui_dialog", "s", gfx_tag);
+    gui_start_array();
+
+    gui_string_elem("type");
+    gui_string_elem("bng");
+
+    gui_string_elem("size"); 
+    gui_int_elem(x->x_gui.x_w);
+
+    gui_string_elem("minimum-size");
+    gui_int_elem(IEM_GUI_MINSIZE);
+
+    gui_string_elem("range-schedule"); // no idea what this is...
+    gui_int_elem(2);
+
+    gui_string_elem("flash-interrupt");
+    gui_int_elem(x->x_flashtime_break);
+
+    gui_string_elem("flash-hold");
+    gui_int_elem(x->x_flashtime_hold);
+
+    gui_string_elem("init");
+    gui_int_elem(x->x_gui.x_loadinit);
+
+    gui_string_elem("send-symbol");
+    gui_string_elem(srl[0]->s_name);
+
+    gui_string_elem("receive-symbol");
+    gui_string_elem(srl[1]->s_name);
+
+    gui_string_elem("label");
+    gui_string_elem(srl[2]->s_name);
+
+    gui_string_elem("x-offset");
+    gui_int_elem(x->x_gui.x_ldx);
+
+    gui_string_elem("y-offset");
+    gui_int_elem(x->x_gui.x_ldy);
+
+    gui_string_elem("font-style");
+    gui_int_elem(x->x_gui.x_font_style);
+
+    gui_string_elem("font-size");
+    gui_int_elem(x->x_gui.x_fontsize);
+
+    gui_string_elem("background-color");
+    gui_int_elem(0xffffff & x->x_gui.x_bcol);
+
+    gui_string_elem("foreground-color");
+    gui_int_elem(0xffffff & x->x_gui.x_fcol);
+
+    gui_string_elem("label-color");
+    gui_int_elem(0xffffff & x->x_gui.x_lcol);
+
+    gui_end_array();
+    gui_end_vmess();
 }
 
 static void bng_set(t_bng *x)

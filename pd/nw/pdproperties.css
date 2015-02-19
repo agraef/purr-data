@@ -1,0 +1,50 @@
+@font-face {
+    font-family: "DejaVu Sans Mono";
+    src: url("DejaVuSansMono.ttf");
+}
+
+body {
+    margin: 0px;
+    font-family: "DejaVu Sans Mono";
+}
+
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+text {
+    // fill: red;
+    cursor: default;
+}
+
+.selected_border {
+    stroke: blue;
+    stroke-dasharray: none;
+    stroke-width: 1;
+}
+
+.selected_line {
+    stroke: blue;
+}
+
+.broken_border {
+    fill: #f7f7f7;
+    stroke: red;
+    stroke-dasharray: 3 2;
+}
+
+.xlet {
+    stroke: black;
+    fill: gray;
+    stroke-width: 1;
+    shape-rendering: optimizeSpeed;
+}
+
+//.xlet:hover {
+//    stroke: red;
+//}

@@ -682,6 +682,7 @@ EXTERN void sys_queuegui(void *client, t_glist *glist, t_guicallbackfn f);
 EXTERN void sys_unqueuegui(void *client);
     /* dialog window creation and destruction */
 EXTERN void gfxstub_new(t_pd *owner, void *key, const char *cmd);
+EXTERN char *gfxstub_new2(t_pd *owner, void *key);
 EXTERN void gfxstub_deleteforkey(void *key);
 
 extern t_class *glob_pdobject;  /* object to send "pd" messages */

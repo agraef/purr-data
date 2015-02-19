@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html>
   <head>
-  </head>
   <link rel="stylesheet" type="text/css" href="pdcanvas.css">
+  </head>
   <body>
   <input style="display:none;" id="fileDialog" type="file" multiple />
   <input style="display:none;" id="saveDialog" type="file" nwsaveas nwworkingdir accept=".pd" />
+
+  <input style="display:none;" id="openpanel_dialog" type="file" />
+  <input style="display:none;" id="savepanel_dialog" type="file" nwsaveas nwworkingdir />
+
+
   <svg xmlns="http://www.w3.org/2000/svg" version="1.1" id="patchsvg" height="1000" width="1000" class="noselect">
   <rect/>
   </svg>
@@ -14,7 +19,7 @@
     var nw = require('nw.gui'); 
     var pdgui = require('./pdgui.js');
 
-    var name = pdgui.last_loaded();
+    //var name = pdgui.last_loaded();
     
     console.log("my working dire is " + pdgui.get_pwd());
     document.getElementById("saveDialog").setAttribute("nwworkingdir", pdgui.get_pwd());
@@ -23,8 +28,29 @@
     document.getElementById("fileDialog").setAttribute("accept",
         Object.keys(pdgui.pd_filetypes).toString());
 
+    var last_keydown = "";
+
+    // This gets called from the nw_create_window function in index.html
+    // It provides us with our canvas id from the C side.  Once we have it
+    // we can create the menu and register event callbacks
+    function register_canvas_id(cid) {
+console.log("fuck you");
+        create_popup_menu(cid);
+        add_events(cid);
+        nw_create_patch_window_menus(cid);
+        pdgui.canvas_map(cid);
+    }
 
 
+
+// This could probably be in pdgui.js
+function add_keymods(key, evt) {
+    var shift = evt.shiftKey ? "Shift" : "";
+    var ctrl = evt.ctrlKey ? "Ctrl" : "";
+    return shift + ctrl + key;
+}
+
+function create_popup_menu(name) {
     // The right-click popup menu
     var popup_menu = new nw.Menu();
     pdgui.add_popup(name, popup_menu);
@@ -47,7 +73,9 @@
             pdgui.popup_action(name, 2);
         }
     }));
+}
 
+function add_events(name) {
     document.querySelector("#saveDialog").addEventListener("change", function(evt) {
         pdgui.saveas_callback(name, this.value);
         console.log("tried to open something");
@@ -62,6 +90,26 @@
         console.log("tried to open something");
     }, false);
 
+    document.querySelector("#openpanel_dialog").addEventListener("change",
+        function(evt) {
+            var file_string = this.value;
+            // reset value so that we can open the same file twice
+            this.value = null;
+            pdgui.file_dialog_callback(file_string);
+            console.log("tried to openpanel something");
+        }, false
+    );
+
+    document.querySelector("#savepanel_dialog").addEventListener("change",
+        function(evt) {
+            var file_string = this.value;
+            // reset value so that we can open the same file twice
+            this.value = null;
+            pdgui.file_dialog_callback(file_string);
+            console.log("tried to savepanel something");
+        }, false
+    );
+
 
     document.addEventListener("mousemove", function(evt) {
         //pdgui.gui_post("x: " + evt.pageX + " y: " + evt.pageY +
@@ -72,15 +120,6 @@
 //        evt.preventDefault();
         return false;
     });
-
-    var last_keydown = "";
-
-
-    function add_keymods(key, evt) {
-        var shift = evt.shiftKey ? "Shift" : "";
-        var ctrl = evt.ctrlKey ? "Ctrl" : "";
-        return shift + ctrl + key;
-    }
 
     document.addEventListener("keydown", function(evt) {
         var key_code = evt.keyCode; 
@@ -170,17 +209,16 @@
     nw.Window.get().on("close", function() {
         pdgui.pdsend(name + " menuclose 0");
     });
-    // draw the objects in the patch once we've finished loading this boilerplate page
-    // We could probably use the window.onload here, which would make it standard javascript
-    this.onload = function() {
-        pdgui.canvas_map(name);
-    };
+
+
+}
 
 
 
 
 
-nw_create_patch_window_menus(name);
+
+//nw_create_patch_window_menus(name);
 
         function menu_generic () {
             alert("Please implement this");
@@ -259,7 +297,7 @@ nw_create_patch_window_menus(name);
         }
 
 // Menus for the Patch window
-function nw_create_patch_window_menus () {
+function nw_create_patch_window_menus (name) {
 
     // Window menu
     var windowMenu = new nw.Menu({
@@ -287,7 +325,7 @@ function nw_create_patch_window_menus () {
         label: 'Open',
         key: 'o',
         modifiers: "ctrl",
-        click: function (){
+        click: function() {
             var chooser = document.querySelector('#fileDialog');
             chooser.click();
         }
@@ -392,44 +430,60 @@ function nw_create_patch_window_menus () {
 
     editMenu.append(new nw.MenuItem({
         label: 'Cut',
-        click: menu_generic,
+        click: function () {
+            pdgui.pdsend(name + " cut");
+        },
         key: 'c',
         modifiers: "ctrl"
     }));
 
     editMenu.append(new nw.MenuItem({
         label: 'Copy',
-        click: menu_generic,
-        key: 'c',
+        click: function () {
+            pdgui.pdsend(name + " copy");
+        },
+        key: 'x',
         modifiers: "ctrl"
     }));
 
     editMenu.append(new nw.MenuItem({
         label: 'Paste',
-        click: menu_generic,
-        key: 'c',
+        click: function () {
+            pdgui.pdsend(name + " paste");
+        },
+        key: 'v',
         modifiers: "ctrl"
     }));
 
 
     editMenu.append(new nw.MenuItem({
         label: 'Duplicate',
-        click: menu_generic,
-        key: 'c',
+        click: function () {
+            pdgui.pdsend(name + " duplicate");
+        },
+        key: 'd',
         modifiers: "ctrl"
     }));
 
     editMenu.append(new nw.MenuItem({
         label: 'Select All',
-        click: menu_generic,
+        click: function () {
+            pdgui.pdsend(name + " selectall");
+        },
         key: 'a',
         modifiers: "ctrl"
     }));
 
     editMenu.append(new nw.MenuItem({
         label: 'Reselect',
-        click: menu_generic,
-        key: 'a',
+        // Unfortunately nw.js doesn't allow
+        // key: "Return" or key: "Enter", so we
+        // can't bind to ctrl-Enter here. (Even
+        // tried fromCharCode...)
+        click: function () {
+            pdgui.pdsend(name + " reselect");
+        },
+        key: String.fromCharCode(10),
         modifiers: "ctrl"
     }));
 

@@ -1,0 +1,35 @@
+body {
+    margin: 0px;
+}
+
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#console_controls {
+    background-color: LightGray;
+    height: 50px; 
+} 
+
+#control_frame {
+    padding: 12px;
+}
+
+#printout {
+    margin: 8px;
+}
+
+#bottom {
+    position: absolute;
+    top: 50px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    overflow-y: scroll;    
+
+}

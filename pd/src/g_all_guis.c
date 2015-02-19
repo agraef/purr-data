@@ -1041,10 +1041,12 @@ void iemgui_draw_io(t_iemgui *x, int old_sr_flags)
              canvas, x1+i*k, y2-1, x1+i*k + IOWIDTH, y2,
              iem_get_tag(canvas, x), i, x,
              x->x_selected == x->x_glist ? "iemgui selected" : "iemgui");
+        char parenttagbuf[MAXPDSTRING];
         char tagbuf[MAXPDSTRING];
-        sprintf(tagbuf, "x%lx", (long unsigned int)x);
-        gui_vmess("gui_canvas_drawio", "sssiiiiii", canvas_string(canvas), tagbuf,
-            iem_get_tag(canvas, x), x1+i*k, y2-1, x1+i*k + IOWIDTH, y2, x1, y1);
+        sprintf(parenttagbuf, "x%lx", (long unsigned int)x);
+        sprintf(tagbuf, "%so%d", iem_get_tag(canvas, x), i);
+        gui_vmess("gui_canvas_drawio", "sssiiiiii", canvas_string(canvas), parenttagbuf,
+            tagbuf, x1+i*k, y2-1, x1+i*k + IOWIDTH, y2, x1, y1);
     }
     if(!a && b) for (i=0; i<n; i++)
         sys_vgui(".x%lx.c delete %so%d\n", canvas, iem_get_tag(canvas, x), i);
@@ -1060,10 +1062,12 @@ void iemgui_draw_io(t_iemgui *x, int old_sr_flags)
              canvas, x1+i*k, y1, x1+i*k + IOWIDTH, y1+1,
              iem_get_tag(canvas, x), i, x,
              x->x_selected == x->x_glist ? "iemgui selected" : "iemgui");
+        char parenttagbuf[MAXPDSTRING];
         char tagbuf[MAXPDSTRING];
-        sprintf(tagbuf, "x%lx", (long unsigned int)x);
-        gui_vmess("gui_canvas_drawio", "sssiiiiii", canvas_string(canvas), tagbuf,
-            iem_get_tag(canvas, x), x1+i*k, y1, x1+i*k + IOWIDTH, y1+1, x1, y1);
+        sprintf(parenttagbuf, "x%lx", (long unsigned int)x);
+        sprintf(tagbuf, "%si%d", iem_get_tag(canvas, x), i);
+        gui_vmess("gui_canvas_drawio", "sssiiiiii", canvas_string(canvas), parenttagbuf,
+            tagbuf, x1+i*k, y1, x1+i*k + IOWIDTH, y1+1, x1, y1);
     }
     if(!a && b) for (i=0; i<n; i++)
         sys_vgui(".x%lx.c delete %si%d\n", canvas, iem_get_tag(canvas, x), i);
@@ -1076,11 +1080,36 @@ void iemgui_io_draw_move(t_iemgui *x) {
     c->c_wb->w_getrectfn((t_gobj *)x,canvas,&x1,&y1,&x2,&y2);
     int i, n = c==vu_class ? 2 : 1, k=(x2-x1)-IOWIDTH;
     if(!iemgui_has_snd(x) && canvas == x->x_glist) for (i=0; i<n; i++)
-        sys_vgui(".x%lx.c coords %so%d %d %d %d %d\n",
-            canvas, iem_get_tag(canvas, x), i, x1+i*k, y2-1, x1+i*k+IOWIDTH, y2);
+    {
+        //sys_vgui(".x%lx.c coords %so%d %d %d %d %d\n",
+        //    canvas, iem_get_tag(canvas, x), i, x1+i*k, y2-1, x1+i*k+IOWIDTH, y2);
+        char tagbuf[MAXPDSTRING];
+        sprintf(tagbuf, "%so%d", iem_get_tag(canvas, x), i);
+        gui_start_vmess("gui_configure_item", "ss",
+            canvas_string(canvas), tagbuf);
+        gui_start_array();
+        gui_string_elem("x");
+        gui_int_elem(i*k);
+        gui_string_elem("y");
+        gui_int_elem(y2 - y1 - 1);
+        gui_end_array();
+        gui_end_vmess();
+    }
     if(!iemgui_has_rcv(x) && canvas == x->x_glist) for (i=0; i<n; i++)
+    {
         sys_vgui(".x%lx.c coords %si%d %d %d %d %d\n",
             canvas, iem_get_tag(canvas, x), i, x1+i*k, y1, x1+i*k+IOWIDTH, y1+1);
+        char tagbuf[MAXPDSTRING];
+        sprintf(tagbuf, "%si%d", iem_get_tag(canvas, x), i);
+        gui_start_vmess("gui_configure_item", "ss",
+            canvas_string(canvas), tagbuf);
+        gui_start_array();
+        gui_string_elem("x");
+        gui_int_elem(i*k);
+        gui_end_array();
+        gui_end_vmess();
+
+    }
 }
 
 void iemgui_base_draw_new(t_iemgui *x) {
@@ -1109,13 +1138,27 @@ void iemgui_base_draw_move(t_iemgui *x) {
     int x1,y1,x2,y2,gr=gop_redraw; gop_redraw=0;
     c->c_wb->w_getrectfn((t_gobj *)x,x->x_glist,&x1,&y1,&x2,&y2);
     gop_redraw=gr;
-    sys_vgui(".x%lx.c coords %lxBASE %d %d %d %d\n", canvas, x, x1, y1, x2, y2);
+    //sys_vgui(".x%lx.c coords %lxBASE %d %d %d %d\n", canvas, x, x1, y1, x2, y2);
+    char tagbuf[MAXPDSTRING];
+    sprintf(tagbuf, "x%lx", (long unsigned int)x);
+    gui_vmess("gui_iemgui_redraw_border", "ssiiii",
+        canvas_string(canvas), tagbuf, x1, y1, x2, y2);
 }
 
 void iemgui_base_draw_config(t_iemgui *x) {
     t_canvas *canvas=glist_getcanvas(x->x_glist);
     char fcol[8]; sprintf(fcol,"#%6.6x", x->x_fcol);
-    sys_vgui(".x%lx.c itemconfigure %lxBASE -fill #%6.6x\n", canvas, x, x->x_bcol);
+    //sys_vgui(".x%lx.c itemconfigure %lxBASE -fill #%6.6x\n", canvas, x, x->x_bcol);
+    char tagbuf[MAXPDSTRING];
+    char bcol[8]; sprintf(bcol, "#%6.6x", x->x_bcol);
+    sprintf(tagbuf, "x%lxborder", (long unsigned int)x);
+    gui_start_vmess("gui_configure_item", "ss",
+        canvas_string(canvas), tagbuf);
+    gui_start_array();
+    gui_string_elem("fill");
+    gui_string_elem(bcol);
+    gui_end_array();
+    gui_end_vmess();
 }
 
 void iemgui_draw_update(t_iemgui *x, t_glist *glist) {

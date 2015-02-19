@@ -87,6 +87,32 @@ void gfxstub_new(t_pd *owner, void *key, const char *cmd)
     sys_gui(buf);
 }
 
+/* This is the new API for gfxstub.  We forgo all the
+   string formatting junk and just return the string id */
+char *gfxstub_new2(t_pd *owner, void *key)
+{
+    static char namebuf[80];
+    t_gfxstub *x;
+    t_symbol *s;
+        /* if any exists with matching key, burn it. */
+    for (x = gfxstub_list; x; x = x->x_next)
+        if (x->x_key == key)
+            gfxstub_deleteforkey(key);
+    x = (t_gfxstub *)pd_new(gfxstub_class);
+    sprintf(namebuf, ".gfxstub%lx", (t_int)x);
+    s = gensym(namebuf);
+    pd_bind(&x->x_pd, s);
+    x->x_owner = owner;
+    x->x_sym = s;
+    x->x_key = key;
+    x->x_next = gfxstub_list;
+    gfxstub_list = x;
+    return (namebuf);
+}
+
+
+
+
 int gfxstub_haveproperties(void *key)
 {
     t_gfxstub *x;
@@ -127,7 +153,12 @@ void gfxstub_deleteforkey(void *key)
         {
             if (y->x_key == key)
             {
-                sys_vgui("destroy .gfxstub%lx\n", y);
+                //sys_vgui("destroy .gfxstub%lx\n", y);
+                char tagbuf[MAXPDSTRING];
+                sprintf(tagbuf, ".gfxstub%lx", (long unsigned int)y);
+                gui_vmess("gui_remove_gfxstub", "s",
+                    tagbuf);
+                 
                 y->x_owner = 0;
                 gfxstub_offlist(y);
                 didit = 1;
@@ -206,6 +237,7 @@ static t_class *openpanel_class;
 typedef struct _openpanel
 {
     t_object x_obj;
+    t_canvas *x_canvas;
     t_symbol *x_s;
 } t_openpanel;
 
@@ -213,6 +245,7 @@ static void *openpanel_new( void)
 {
     char buf[50];
     t_openpanel *x = (t_openpanel *)pd_new(openpanel_class);
+    x->x_canvas = canvas_getcurrent();
     sprintf(buf, "d%lx", (t_int)x);
     x->x_s = gensym(buf);
     pd_bind(&x->x_obj.ob_pd, x->x_s);
@@ -220,10 +253,15 @@ static void *openpanel_new( void)
     return (x);
 }
 
+extern char *canvas_string(t_canvas *x);
 static void openpanel_symbol(t_openpanel *x, t_symbol *s)
 {
     char *path = (s && s->s_name) ? s->s_name : "$pd_opendir";
     sys_vgui("pdtk_openpanel {%s} {%s}\n", x->x_s->s_name, path);
+    gui_vmess("gui_openpanel", "sss",
+        canvas_string(x->x_canvas),
+        x->x_s->s_name,
+        path);
 }
 
 static void openpanel_bang(t_openpanel *x)
@@ -280,6 +318,10 @@ static void savepanel_symbol(t_savepanel *x, t_symbol *s)
 {
     char *path = (s && s->s_name) ? s->s_name : "$pd_opendir";
     sys_vgui("pdtk_savepanel {%s} {%s}\n", x->x_s->s_name, path);
+    gui_vmess("gui_savepanel", "sss",
+        canvas_string(x->x_canvas),
+        x->x_s->s_name,
+        path);
 }
 
 static void savepanel_bang(t_savepanel *x)
