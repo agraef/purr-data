@@ -83,14 +83,14 @@ void bng_draw_move(t_bng *x, t_glist *glist)
     gui_start_vmess("gui_configure_item", "ss",
         canvas_string(canvas), tagbuf);
     gui_start_array();
-    gui_string_elem("cx");
-    gui_float_elem(cx - x1 - 0.5); // 0.5 is fudge factor... might be better
-    gui_string_elem("cy");
-    gui_float_elem(cy - y1 - 0.5); // handled by shape-rendering css attr
-    gui_string_elem("r");
-    gui_float_elem(cr);
-    gui_string_elem("fill");
-    gui_string_elem(col);
+    gui_s("cx");
+    gui_f(cx - x1 - 0.5); // 0.5 is fudge factor... might be better
+    gui_s("cy");
+    gui_f(cy - y1 - 0.5); // handled by shape-rendering css attr
+    gui_s("r");
+    gui_f(cr);
+    gui_s("fill");
+    gui_s(col);
     gui_end_array();
     gui_end_vmess();
 }
@@ -108,8 +108,8 @@ void bng_draw_config(t_bng* x, t_glist* glist)
     gui_start_vmess("gui_configure_item", "ss",
         canvas_string(canvas), tagbuf);
     gui_start_array();
-    gui_string_elem("fill");
-    gui_string_elem(fcol);
+    gui_s("fill");
+    gui_s(fcol);
     gui_end_array();
     gui_end_vmess();
 }
@@ -244,56 +244,56 @@ static void bng_properties(t_gobj *z, t_glist *owner)
     gui_start_vmess("gui_iemgui_dialog", "s", gfx_tag);
     gui_start_array();
 
-    gui_string_elem("type");
-    gui_string_elem("bng");
+    gui_s("type");
+    gui_s("bng");
 
-    gui_string_elem("size"); 
-    gui_int_elem(x->x_gui.x_w);
+    gui_s("size"); 
+    gui_i(x->x_gui.x_w);
 
-    gui_string_elem("minimum-size");
-    gui_int_elem(IEM_GUI_MINSIZE);
+    gui_s("minimum-size");
+    gui_i(IEM_GUI_MINSIZE);
 
-    gui_string_elem("range-schedule"); // no idea what this is...
-    gui_int_elem(2);
+    gui_s("range-schedule"); // no idea what this is...
+    gui_i(2);
 
-    gui_string_elem("flash-interrupt");
-    gui_int_elem(x->x_flashtime_break);
+    gui_s("flash-interrupt");
+    gui_i(x->x_flashtime_break);
 
-    gui_string_elem("flash-hold");
-    gui_int_elem(x->x_flashtime_hold);
+    gui_s("flash-hold");
+    gui_i(x->x_flashtime_hold);
 
-    gui_string_elem("init");
-    gui_int_elem(x->x_gui.x_loadinit);
+    gui_s("init");
+    gui_i(x->x_gui.x_loadinit);
 
-    gui_string_elem("send-symbol");
-    gui_string_elem(srl[0]->s_name);
+    gui_s("send-symbol");
+    gui_s(srl[0]->s_name);
 
-    gui_string_elem("receive-symbol");
-    gui_string_elem(srl[1]->s_name);
+    gui_s("receive-symbol");
+    gui_s(srl[1]->s_name);
 
-    gui_string_elem("label");
-    gui_string_elem(srl[2]->s_name);
+    gui_s("label");
+    gui_s(srl[2]->s_name);
 
-    gui_string_elem("x-offset");
-    gui_int_elem(x->x_gui.x_ldx);
+    gui_s("x-offset");
+    gui_i(x->x_gui.x_ldx);
 
-    gui_string_elem("y-offset");
-    gui_int_elem(x->x_gui.x_ldy);
+    gui_s("y-offset");
+    gui_i(x->x_gui.x_ldy);
 
-    gui_string_elem("font-style");
-    gui_int_elem(x->x_gui.x_font_style);
+    gui_s("font-style");
+    gui_i(x->x_gui.x_font_style);
 
-    gui_string_elem("font-size");
-    gui_int_elem(x->x_gui.x_fontsize);
+    gui_s("font-size");
+    gui_i(x->x_gui.x_fontsize);
 
-    gui_string_elem("background-color");
-    gui_int_elem(0xffffff & x->x_gui.x_bcol);
+    gui_s("background-color");
+    gui_i(0xffffff & x->x_gui.x_bcol);
 
-    gui_string_elem("foreground-color");
-    gui_int_elem(0xffffff & x->x_gui.x_fcol);
+    gui_s("foreground-color");
+    gui_i(0xffffff & x->x_gui.x_fcol);
 
-    gui_string_elem("label-color");
-    gui_int_elem(0xffffff & x->x_gui.x_lcol);
+    gui_s("label-color");
+    gui_i(0xffffff & x->x_gui.x_lcol);
 
     gui_end_array();
     gui_end_vmess();

@@ -26,10 +26,10 @@ void toggle_draw_update(t_gobj *xgobj, t_glist *glist)
         {
             t_canvas *canvas=glist_getcanvas(glist);
 
-            sys_vgui(".x%lx.c itemconfigure %lxX1 -stroke #%6.6x\n", canvas, x,
-                     (x->x_on!=0.0)?x->x_gui.x_fcol:x->x_gui.x_bcol);
-            sys_vgui(".x%lx.c itemconfigure %lxX2 -stroke #%6.6x\n", canvas, x,
-                     (x->x_on!=0.0)?x->x_gui.x_fcol:x->x_gui.x_bcol);
+            //sys_vgui(".x%lx.c itemconfigure %lxX1 -stroke #%6.6x\n", canvas, x,
+            //         (x->x_on!=0.0)?x->x_gui.x_fcol:x->x_gui.x_bcol);
+            //sys_vgui(".x%lx.c itemconfigure %lxX2 -stroke #%6.6x\n", canvas, x,
+            //         (x->x_on!=0.0)?x->x_gui.x_fcol:x->x_gui.x_bcol);
             char tagbuf[MAXPDSTRING];
             char colorbuf[MAXPDSTRING];
             sprintf(tagbuf, "x%lx", (long unsigned int)x);
@@ -60,8 +60,9 @@ void toggle_draw_new(t_toggle *x, t_glist *glist)
     //sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth %d "
     //    "-stroke #%6.6x -tags {%lxX2 x%lx text iemgui}\n",
     //    canvas, x1+w+1, y2-w-1, x2-w-1, y1+w+1, w, col, x, x);
-    gui_vmess("gui_create_toggle", "sssiiiiiiiiiii", canvas_string(canvas), tagbuf,
-        colorbuf, w,
+    gui_vmess("gui_create_toggle", "sssiiiiiiiiiiii", canvas_string(canvas),
+        tagbuf, colorbuf, w,
+        (x->x_on != 0.0),
         x1+w+1, y1+w+1, x2-w-1, y2-w-1,
         x1+w+1, y2-w-1, x2-w-1, y1+w+1, x1, y1);
 }
@@ -75,7 +76,7 @@ void toggle_draw_move(t_toggle *x, t_glist *glist)
     int y1=text_ypix(&x->x_gui.x_obj, glist), y2=y1+x->x_gui.x_h;
 
     iemgui_base_draw_move(&x->x_gui);
-    sys_vgui(".x%lx.c itemconfigure {%lxX1||%lxX2} -strokewidth %d\n", canvas, x, x, w);
+    //sys_vgui(".x%lx.c itemconfigure {%lxX1||%lxX2} -strokewidth %d\n", canvas, x, x, w);
     //sys_vgui(".x%lx.c coords %lxX1 %d %d %d %d\n",
     //    canvas, x, x1+s, y1+s, x2-s, y2-s);
     //sys_vgui(".x%lx.c coords %lxX2 %d %d %d %d\n",
@@ -207,53 +208,53 @@ static void toggle_properties(t_gobj *z, t_glist *owner)
     gui_start_vmess("gui_iemgui_dialog", "s", gfx_tag);
     gui_start_array();
 
-    gui_string_elem("type");
-    gui_string_elem("tgl");
+    gui_s("type");
+    gui_s("tgl");
 
-    gui_string_elem("size");
-    gui_int_elem(x->x_gui.x_w);
+    gui_s("size");
+    gui_i(x->x_gui.x_w);
 
-    gui_string_elem("minimum-size");
-    gui_int_elem(IEM_GUI_MINSIZE);
+    gui_s("minimum-size");
+    gui_i(IEM_GUI_MINSIZE);
 
-    gui_string_elem("nonzero-value");
-    gui_float_elem(x->x_nonzero);
+    gui_s("nonzero-value");
+    gui_f(x->x_nonzero);
 
-    gui_string_elem("nonzero_schedule");  // no idea what this is...
-    gui_float_elem(1.0);
+    gui_s("nonzero_schedule");  // no idea what this is...
+    gui_f(1.0);
 
-    gui_string_elem("init");
-    gui_int_elem(x->x_gui.x_loadinit); 
+    gui_s("init");
+    gui_i(x->x_gui.x_loadinit); 
 
-    gui_string_elem("send-symbol");
-    gui_string_elem(srl[0]->s_name);
+    gui_s("send-symbol");
+    gui_s(srl[0]->s_name);
 
-    gui_string_elem("receive-symbol");
-    gui_string_elem(srl[1]->s_name);
+    gui_s("receive-symbol");
+    gui_s(srl[1]->s_name);
 
-    gui_string_elem("label");
-    gui_string_elem(srl[2]->s_name);
+    gui_s("label");
+    gui_s(srl[2]->s_name);
 
-    gui_string_elem("x-offset");
-    gui_int_elem(x->x_gui.x_ldx);
+    gui_s("x-offset");
+    gui_i(x->x_gui.x_ldx);
 
-    gui_string_elem("y-offset");
-    gui_int_elem(x->x_gui.x_ldy);
+    gui_s("y-offset");
+    gui_i(x->x_gui.x_ldy);
 
-    gui_string_elem("font-style");
-    gui_int_elem(x->x_gui.x_font_style);
+    gui_s("font-style");
+    gui_i(x->x_gui.x_font_style);
 
-    gui_string_elem("font-size");
-    gui_int_elem(x->x_gui.x_fontsize);
+    gui_s("font-size");
+    gui_i(x->x_gui.x_fontsize);
 
-    gui_string_elem("background-color");
-    gui_int_elem(0xffffff & x->x_gui.x_bcol);
+    gui_s("background-color");
+    gui_i(0xffffff & x->x_gui.x_bcol);
 
-    gui_string_elem("foreground-color");
-    gui_int_elem(0xffffff & x->x_gui.x_fcol);
+    gui_s("foreground-color");
+    gui_i(0xffffff & x->x_gui.x_fcol);
 
-    gui_string_elem("label-color");
-    gui_int_elem(0xffffff & x->x_gui.x_lcol);
+    gui_s("label-color");
+    gui_i(0xffffff & x->x_gui.x_lcol);
 
     gui_end_array();
     gui_end_vmess();

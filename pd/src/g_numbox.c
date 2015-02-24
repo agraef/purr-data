@@ -137,9 +137,9 @@ static void my_numbox_draw_update(t_gobj *client, t_glist *glist)
         x->x_buf[sl+1] = 0;
         if(sl >= x->x_gui.x_w)
             cp += sl - x->x_gui.x_w + 1;
-        sys_vgui(
-            ".x%lx.c itemconfigure %lxNUMBER -fill #%6.6x -text {%s}\n",
-                glist_getcanvas(glist), x, IEM_GUI_COLOR_EDITED, cp);
+        //sys_vgui(
+        //    ".x%lx.c itemconfigure %lxNUMBER -fill #%6.6x -text {%s}\n",
+        //        glist_getcanvas(glist), x, IEM_GUI_COLOR_EDITED, cp);
         char tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "x%lx", (long unsigned int)x);
         gui_vmess("gui_text_set", "sss", canvas_string(glist_getcanvas(glist)),
@@ -153,11 +153,11 @@ static void my_numbox_draw_update(t_gobj *client, t_glist *glist)
         char fcol[8]; sprintf(fcol, "#%6.6x",
             x->x_gui.x_change ? IEM_GUI_COLOR_EDITED : x->x_gui.x_fcol);
         my_numbox_ftoa(x);
-        sys_vgui(
-            ".x%lx.c itemconfigure %lxNUMBER -fill %s -text {%s} \n",
-            glist_getcanvas(glist), x,
-            x->x_gui.x_selected == glist_getcanvas(glist) && 
-                !x->x_gui.x_change ? selection_color : fcol, x->x_buf);
+        //sys_vgui(
+        //    ".x%lx.c itemconfigure %lxNUMBER -fill %s -text {%s} \n",
+        //    glist_getcanvas(glist), x,
+        //    x->x_gui.x_selected == glist_getcanvas(glist) && 
+        //        !x->x_gui.x_change ? selection_color : fcol, x->x_buf);
         char tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "x%lx", (long unsigned int)x);
         gui_vmess("gui_text_set", "sss", canvas_string(glist_getcanvas(glist)),
@@ -174,15 +174,15 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
     int y1=text_ypix(&x->x_gui.x_obj, glist), y2=y1+x->x_gui.x_h;
     char bcol[8]; sprintf(bcol, "#%6.6x", x->x_gui.x_bcol);
 
-    sys_vgui(
-        ".x%lx.c create ppolygon %d %d %d %d %d %d %d %d %d %d -stroke %s"
-        " -fill %s -tags {%lxBASE1 x%lx text iemgui}\n",
-        canvas, x1, y1, x2-4, y1, x2, y1+4, x2, y2, x1, y2,
-        x->x_hide_frame <= 1 ? "$pd_colors(iemgui_border)" : bcol,
-        bcol, x, x);
+    //sys_vgui(
+    //    ".x%lx.c create ppolygon %d %d %d %d %d %d %d %d %d %d -stroke %s"
+    //    " -fill %s -tags {%lxBASE1 x%lx text iemgui}\n",
+    //    canvas, x1, y1, x2-4, y1, x2, y1+4, x2, y2, x1, y2,
+    //    x->x_hide_frame <= 1 ? "$pd_colors(iemgui_border)" : bcol,
+    //    bcol, x, x);
     char tagbuf[MAXPDSTRING];
     sprintf(tagbuf, "x%lx", (long unsigned int)x);
-    gui_vmess("gui_create_numbox", "sssiiiiiiiiiiiii", canvas_string(canvas),
+    gui_vmess("gui_create_numbox", "isssiiiiiiiiiiiii", x->x_numwidth, canvas_string(canvas),
         tagbuf, bcol, x1, y1, x2-4, y1, x2, y1+4, x2, y2, x1, y2, x1, y1, half);
     if (!x->x_hide_frame || x->x_hide_frame == 2)
         sys_vgui(".x%lx.c create polyline %d %d %d %d %d %d -stroke #%6.6x "
@@ -190,14 +190,14 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
             canvas, x1, y1, x1 + half, y1 + half, x1, y2,
             x->x_gui.x_fcol, x, x);
     my_numbox_ftoa(x);
-    sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w "
-        "-font %s -fill #%6.6x -tags {%lxNUMBER x%lx noscroll text iemgui}\n",
-        canvas, x1+half+2, y1+half+d, x->x_buf, iemgui_font(&x->x_gui),
-        x->x_gui.x_fcol, x, x);
+    //sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w "
+    //    "-font %s -fill #%6.6x -tags {%lxNUMBER x%lx noscroll text iemgui}\n",
+    //    canvas, x1+half+2, y1+half+d, x->x_buf, iemgui_font(&x->x_gui),
+    //    x->x_gui.x_fcol, x, x);
     char colorbuf[MAXPDSTRING];
     sprintf(colorbuf, "#%6.6x", x->x_gui.x_fcol);
-    gui_vmess("gui_numbox_drawtext", "ssssiiii", canvas_string(canvas), tagbuf,
-        x->x_buf, colorbuf, x1+half+2, y1+half+d, x1, y1);
+    gui_vmess("gui_numbox_drawtext", "sssisiiii", canvas_string(canvas), tagbuf,
+        x->x_buf, x->x_gui.x_fontsize, colorbuf, x1+half+2, y1+half+d, x1, y1);
 }
 
 static void my_numbox_draw_move(t_my_numbox *x, t_glist *glist)
@@ -224,12 +224,20 @@ static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
     t_canvas *canvas=glist_getcanvas(glist);
     char fcol[8]; sprintf(fcol, "#%6.6x", x->x_gui.x_fcol);
     int issel = x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas;
-    sys_vgui(".x%lx.c itemconfigure %lxNUMBER -font %s -fill %s\n",
-        canvas, x, iemgui_font(&x->x_gui), issel ? selection_color : fcol);
-    sys_vgui(".x%lx.c itemconfigure %lxBASE2 -stroke %s\n",
-        canvas, x, issel ? selection_color : fcol);
-    sys_vgui(".x%lx.c itemconfigure %lxBASE1 -fill #%6.6x\n", canvas,
-             x, x->x_gui.x_bcol);
+    //sys_vgui(".x%lx.c itemconfigure %lxNUMBER -font %s -fill %s\n",
+    //    canvas, x, iemgui_font(&x->x_gui), issel ? selection_color : fcol);
+    //sys_vgui(".x%lx.c itemconfigure %lxBASE2 -stroke %s\n",
+    //    canvas, x, issel ? selection_color : fcol);
+    //sys_vgui(".x%lx.c itemconfigure %lxBASE1 -fill #%6.6x\n", canvas,
+    //         x, x->x_gui.x_bcol);
+    char tagbuf[MAXPDSTRING];
+    char bgcol[MAXPDSTRING];
+    sprintf(tagbuf, "x%lx", (long unsigned int)x);
+    sprintf(bgcol, "#%6.6x", x->x_gui.x_bcol);
+    
+    gui_vmess("gui_update_numbox", "sssssii",
+        canvas_string(canvas), tagbuf,
+        fcol, bgcol, iemgui_typeface, x->x_gui.x_fontsize, sys_fontweight);
 }
 
 static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist)
@@ -441,7 +449,7 @@ int my_numbox_check_minmax(t_my_numbox *x, double min, double max)
 static void my_numbox_properties(t_gobj *z, t_glist *owner)
 {
     t_my_numbox *x = (t_my_numbox *)z;
-    char buf[800];
+    char buf[800], *gfx_tag;
     t_symbol *srl[3];
 
     iemgui_properties(&x->x_gui, srl);
@@ -466,7 +474,32 @@ static void my_numbox_properties(t_gobj *z, t_glist *owner)
         x->x_gui.x_font_style, x->x_gui.x_fontsize,
         0xffffff & x->x_gui.x_bcol, 0xffffff & x->x_gui.x_fcol,
         0xffffff & x->x_gui.x_lcol);
-    gfxstub_new(&x->x_gui.x_obj.ob_pd, x, buf);
+    //gfxstub_new(&x->x_gui.x_obj.ob_pd, x, buf);
+    gfx_tag = gfxstub_new2(&x->x_gui.x_obj.ob_pd, x);
+
+    gui_start_vmess("gui_iemgui_dialog", "s", gfx_tag);
+    gui_start_array();
+    gui_s("type"); gui_s("nbx");
+    gui_s("width");  gui_i(x->x_gui.x_w);
+    gui_s("height"); gui_i(x->x_gui.x_h);
+    gui_s("minimum-range"); gui_f(x->x_min);
+    gui_s("maximum-range"); gui_f(x->x_max);
+    gui_s("log-scaling"); gui_i(x->x_lin0_log1);
+    gui_s("log-height"); gui_i(x->x_log_height);
+    gui_s("init"); gui_i(x->x_gui.x_loadinit);
+    gui_s("send-symbol");      gui_s(srl[0]->s_name);
+    gui_s("receive-symbol");   gui_s(srl[1]->s_name);
+    gui_s("label");            gui_s(srl[2]->s_name);
+    gui_s("x-offset");         gui_i(x->x_gui.x_ldx);
+    gui_s("y-offset");         gui_i(x->x_gui.x_ldy);
+    gui_s("font-style");       gui_i(x->x_gui.x_font_style);
+    gui_s("font-size");        gui_i(x->x_gui.x_fontsize);
+    gui_s("background-color"); gui_i(0xffffff & x->x_gui.x_bcol);
+    gui_s("foreground-color"); gui_i(0xffffff & x->x_gui.x_fcol);
+    gui_s("label-color");      gui_i(0xffffff & x->x_gui.x_lcol);
+    gui_s("hide-frame");       gui_i(x->x_hide_frame);
+    gui_end_array();
+    gui_end_vmess();
 }
 
 static void my_numbox_bang(t_my_numbox *x)
@@ -488,6 +521,13 @@ static void my_numbox_dialog(t_my_numbox *x, t_symbol *s, int argc,
         x->x_hide_frame = (int)atom_getintarg(18, argc, argv);
     iemgui_dialog(&x->x_gui, argc, argv);
     x->x_numwidth = my_numbox_calc_fontwidth(x);
+
+post("numwidth after dialog is %d", x->x_numwidth);
+post("w is %d", x->x_gui.x_w);
+post("h is %d", x->x_gui.x_h);
+post("font style is %d", x->x_gui.x_font_style);
+post("font size is %d", x->x_gui.x_fontsize);
+
     my_numbox_check_minmax(x, min, max);
     // normally, you'd do move+config, but here you have to do erase+new
     // because iemgui_draw_io does not support changes to x_hide_frame.

@@ -88,3 +88,17 @@ Everything else:
 * implement the crappy iemgui color dialog presets
 * find a simple translation API
 * use underscores for iemgui dialog element names
+* revisit the x_thick logic in g_slider.c.  It thickens the indicator when it's
+  in the middle of the slider, but it's pretty obscure in the current impl.
+* for as many items as possible, hide them instead of removing from DOM (stuff
+  like xlets, etc.)
+* fix iemgui_font so it doesn't use tcl list syntax
+* change all the gui color char[MAXPDSTRING] junk to simple int, and do the conversion to
+  hex html string in the gui
+* implement iemgui labels and its ascetic font chooser
+* think about scaling the svg instead of the page, and making the selection
+  rectangle a div above that
+* change 'visible-width' to 'cnv-width'
+* in pdproperties.html, use an object to store all the prop/value pairs that
+  got sent.  That way we don't have to use all those awful tricks to
+  conditionally fill the slots

@@ -1870,6 +1870,13 @@ function gui_canvas_drawio(cid, parenttag, tag, x1, y1, x2, y2, basex, basey) {
         class: 'xlet'
     });
     g.appendChild(rect);
+    gui_post("the tag for this XLET is " + tag);
+}
+
+function gui_eraseio(cid, tag) {
+    gui_post("the tag for this bout-to-ba-leted XLET is " + tag);
+    var xlet = get_item(cid, tag);
+    xlet.parentNode.removeChild(xlet);
 }
 
 function gui_message_drawborder(cid,tag,width,height) {
@@ -2143,7 +2150,7 @@ function gui_bng_flash(cid, tag, color) {
     configure_item(button, { fill: color });
 }
 
-function gui_create_toggle(cid, tag, color, width, p1,p2,p3,p4,p5,p6,p7,p8,basex,basey) {
+function gui_create_toggle(cid, tag, color, state, width, p1,p2,p3,p4,p5,p6,p7,p8,basex,basey) {
     var g = get_gobj(cid, tag);
     var points_array = [p1 - basex, p2 - basey,
                         p3 - basex, p4 - basey
@@ -2153,7 +2160,7 @@ function gui_create_toggle(cid, tag, color, width, p1,p2,p3,p4,p5,p6,p7,p8,basex
         stroke: color,
         fill: 'none',
         id: tag + 'cross1',
-        display: 'none',
+        display: state ? 'inline' : 'none',
         'stroke-width': width
     });
 
@@ -2165,7 +2172,7 @@ function gui_create_toggle(cid, tag, color, width, p1,p2,p3,p4,p5,p6,p7,p8,basex
         stroke: color,
         fill: 'none',
         id: tag + 'cross2',
-        display: 'none',
+        display: state ? 'inline' : 'none',
         'stroke-width': width
     });
     g.appendChild(cross1);
@@ -2206,7 +2213,8 @@ function gui_toggle_update(cid, tag, state, color) {
 }
 
 // Todo: send fewer parameters from c
-function gui_create_numbox(cid,tag,bgcolor,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,basex,basey,half) {
+function gui_create_numbox(width,cid,tag,bgcolor,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,basex,basey,half) {
+gui_post("numbox width is " + width);
     // numbox doesn't have a standard iemgui border, so we must create its gobj manually
     var g = gui_text_create_gobj(cid, tag, basex, basey)
     var data_array = ['M', p1 - basex, p2 - basey,
@@ -2228,18 +2236,27 @@ function gui_create_numbox(cid,tag,bgcolor,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,basex,
     g.appendChild(border);
 }
 
-function gui_numbox_drawtext(cid,tag,text,color,xpos,ypos,basex,basey) {
+function gui_numbox_drawtext(cid,tag,text,font_size,color,xpos,ypos,basex,basey) {
     var g = get_gobj(cid, tag);
     var svg_text = create_item(cid, 'text', {
         x: xpos - basex,
         y: ypos - basey + 5,
-        'font-size': font,
+        'font-size': font_size,
+        fill: color,
         id: tag + 'text'
     });
 
     var text_node = patchwin[cid].window.document.createTextNode(text);
     svg_text.appendChild(text_node);
     g.appendChild(svg_text);
+}
+
+function gui_update_numbox(cid, tag, fcolor, bgcolor, font_name, font_size, font_weight) {
+gui_post("inside update_numbox fcolor is " + fcolor);
+    var b = get_item(cid, tag + 'border');
+    var text = get_item(cid, tag + 'text');
+    configure_item(b, { fill: bgcolor });
+    configure_item(text, { fill: fcolor, 'font-size': font_size });
 }
 
 function gui_create_slider(cid,tag,color,p1,p2,p3,p4,basex, basey) {
@@ -2268,6 +2285,13 @@ function gui_slider_update(cid,tag,p1,p2,p3,p4,basex,basey) {
     });
 }
 
+function gui_slider_indicator_color(cid, tag, color) {
+    var i = get_item(cid, tag + 'indicator');
+    configure_item(i, {
+        stroke: color
+    });
+}
+
 function gui_create_radio(cid,tag,p1,p2,p3,p4,i,basex,basey) {
     var g = get_gobj(cid, tag);
     var cell = create_item(cid, 'line', {
@@ -2288,7 +2312,7 @@ function gui_create_radio_buttons(cid,tag,color,p1,p2,p3,p4,basex,basey,i,state)
     var g = get_gobj(cid, tag);
     var b = create_item(cid, 'rect', {
         x: p1 - basex,
-        y: p2 -basey,
+        y: p2 - basey,
         width: p3 - p1,
         height: p4 - p2,
         stroke: color,
@@ -2299,11 +2323,32 @@ function gui_create_radio_buttons(cid,tag,color,p1,p2,p3,p4,basex,basey,i,state)
     g.appendChild(b);
 }
 
-function gui_radio_update(cid,tag,prev,next) {
+function gui_radio_button_coords(cid, tag, x1, y1, xi, yi, i, s, d, orient) {
+    var button = get_item(cid, tag + 'button_' + i);
+    var cell = get_item(cid, tag + 'cell_' + i);
+    // the line to draw the cell for i=0 doesn't exist. Probably was not worth
+    // the effort, but it's easier just to check for that here atm.
+    if (i > 0) {
+        configure_item(cell, {
+            x1: orient ? 0 : xi,
+            y1: orient ? yi : 0,
+            x2: orient ? d : xi,
+            y2: orient ? yi : d
+        });
+    }
+    configure_item(button, {
+        x: orient ? s : xi+s,
+        y: orient ? yi+s : s,
+        width: d-(s*2),
+        height: d-(s*2)
+    });
+}
+
+function gui_radio_update(cid,tag,bgcolor,prev,next) {
     var prev = get_item(cid, tag + 'button_' + prev);
     var next = get_item(cid, tag + 'button_' + next);
-    configure_item(prev, { display: 'none' });
-    configure_item(next, { display: 'inline' });
+    configure_item(prev, { display: 'none', fill: bgcolor, stroke: bgcolor });
+    configure_item(next, { display: 'inline', fill: bgcolor, stroke: bgcolor });
 }
 
 function gui_create_vumeter_text(cid,tag,color,xpos,ypos,text,index,basex,basey) {
@@ -2320,7 +2365,36 @@ function gui_create_vumeter_text(cid,tag,color,xpos,ypos,text,index,basex,basey)
     g.appendChild(svg_text);
 }
 
-function gui_create_vumeter_steps(cid,tag,color,p1,p2,p3,p4,width,index,basex,basey) {
+// Oh, what a terrible interface this is!
+// the c API for vumeter was just spewing all kinds of state changes
+// at tcl/tk, depending on it to just ignore non-existent objects.
+// On changes in the Properties dialog, it would
+// a) remove all the labels
+// b) configure a bunch of _non-existent_ labels
+// c) recreate all the missing labels
+// To get on to other work we just parrot the insanity here,
+// and silently ignore calls to update non-existent text.
+function gui_update_vumeter_text(cid, tag, text, font, selected, color, i) {
+    var svg_text = get_item(cid, tag + 'text_' + i);
+    if (!selected) {
+        // Hack...
+        if (svg_text !== null) {
+            configure_item(svg_text, { fill: color });
+        }
+    }
+}
+
+function gui_vumeter_text_coords(cid, tag, i, xpos, ypos, basex, basey) {
+    var t = get_item(cid, tag + 'text_' + i);
+    configure_item(t, { x: xpos - basex, y: ypos - basey });
+}
+
+function gui_erase_vumeter_text(cid, tag, i) {
+    var t = get_item(cid, tag + 'text_' + i);
+    t.parentNode.removeChild(t);
+}
+
+function gui_create_vumeter_steps(cid,tag,color,p1,p2,p3,p4,width,index,basex,basey,i) {
     var g = get_gobj(cid, tag);
     var l = create_item(cid, 'line', {
         x1: p1 - basex,
@@ -2332,6 +2406,22 @@ function gui_create_vumeter_steps(cid,tag,color,p1,p2,p3,p4,width,index,basex,ba
         'id': tag + 'led_' + i
     });
     g.appendChild(l);
+}
+
+function gui_update_vumeter_steps(cid, tag, i, width) {
+    var step = get_item(cid, tag + 'led_' + i);
+    configure_item(step, { 'stroke-width': width });
+}
+
+function gui_update_vumeter_step_coords(cid,tag,i,x1,y1,x2,y2,basex,basey) {
+gui_post("updating step coords...");
+    var l = get_item(cid, tag + 'led_' + i);
+    configure_item(l, {
+        x1: x1 - basex,
+        y1: y1 - basey,
+        x2: x2 - basex,
+        y2: y2 - basey
+    });
 }
 
 function gui_create_vumeter_rect(cid,tag,color,p1,p2,p3,p4,basex,basey) {
@@ -2348,6 +2438,22 @@ function gui_create_vumeter_rect(cid,tag,color,p1,p2,p3,p4,basex,basey) {
     g.appendChild(rect);
 }
 
+function gui_update_vumeter_rect(cid, tag, color) {
+    var r = get_item(cid, tag + 'rect');
+    configure_item(r, { fill: color, stroke: color });
+}
+
+/* Oh hack upon hack... why doesn't the iemgui base_config just take care of this? */
+function gui_vumeter_border_coords(cid, tag, width, height) {
+    var r = get_item(cid, tag + 'border');
+    configure_item(r, { width: width, height: height });
+}
+
+function gui_update_vumeter_peak(cid, tag, width) {
+    var r = get_item(cid, tag + 'rect');
+    configure_item(r, { 'stroke-width': width });
+}
+
 function gui_create_vumeter_peak(cid,tag,color,p1,p2,p3,p4,width,basex,basey) {
     var g = get_gobj(cid, tag);
     var line = create_item(cid, 'line', {
@@ -2362,9 +2468,9 @@ function gui_create_vumeter_peak(cid,tag,color,p1,p2,p3,p4,width,basex,basey) {
     g.appendChild(line);
 }
 
-// change tag from "rect" to "rms"
+// probably should change tag from "rect" to "cover"
 function gui_vumeter_update_rms(cid,tag,p1,p2,p3,p4,basex,basey) {
-    rect = get_item(cid, tag + 'rect');
+    var rect = get_item(cid, tag + 'rect');
     configure_item(rect, {
         x: p1 - basex,
         y: p2 - basey,
@@ -2374,7 +2480,7 @@ function gui_vumeter_update_rms(cid,tag,p1,p2,p3,p4,basex,basey) {
 }
 
 function gui_vumeter_update_peak(cid,tag,color,p1,p2,p3,p4,basex,basey) {
-    line = get_item(cid, tag + 'peak');
+    var line = get_item(cid, tag + 'peak');
     configure_item(line, {
         x1: p1 - basex,
         y1: p2 - basey,
@@ -2412,7 +2518,8 @@ function gui_create_mycanvas(cid,tag,color,x1,y1,x2_vis,y2_vis,x2,y2) {
         width: x2_vis - x1,
         height: y2_vis - y1,
         fill: color,
-        stroke: color
+        stroke: color,
+        id: tag + 'rect'
         }
     );
 
@@ -2421,7 +2528,7 @@ function gui_create_mycanvas(cid,tag,color,x1,y1,x2_vis,y2_vis,x2,y2) {
     var rect = create_item(cid,'rect', {
         width: x2 - x1,
         height: y2 - y1,
-        fill: color,
+        fill: 'none',
         stroke: color,
         id: tag + 'drag_handle'
         }
@@ -2431,8 +2538,24 @@ function gui_create_mycanvas(cid,tag,color,x1,y1,x2_vis,y2_vis,x2,y2) {
     g.appendChild(rect);
 }
 
+function gui_update_mycanvas(cid, tag, color, selected) {
+    var r = get_item(cid, tag + 'rect');
+    var h = get_item(cid, tag + 'drag_handle');
+    configure_item(r, { fill: color, stroke: color });
+    if (!selected) {
+        configure_item(h, { stroke: color });
+    }
+}
+
+function gui_mycanvas_coords(cid, tag, vis_width, vis_height, select_width, select_height) {
+    var r = get_item(cid, tag + 'rect');
+    var h = get_item(cid, tag + 'drag_handle');
+    configure_item(r, { width: vis_width, height: vis_height });
+    configure_item(h, { width: select_width, height: select_height });
+}
+
 function gui_mycanvas_select_color(cid,tag,color) {
-    item = get_item(cid,tag + 'drag_handle');
+    var item = get_item(cid,tag + 'drag_handle');
     configure_item(item, {stroke: color});
 }
 
@@ -2604,7 +2727,7 @@ function gui_draw_configure_all(cid, tag, attr_array) {
 }
 
 function add_popup(cid, popup) {
-    popup_menu[cid] = popup;    
+    popup_menu[cid] = popup;
 }
 
 exports.add_popup = add_popup;
@@ -2612,6 +2735,32 @@ exports.add_popup = add_popup;
 function gui_canvas_popup(cid, xpos, ypos, canprop, canopen, isobject) {
     gui_post("canvas_popup called... " + JSON.stringify(arguments));
     // Set the global popup x/y so they can be retrieved by the relevant doc's event handler
+    var zoom_level = patchwin[cid].zoomLevel;
+    gui_post("zoom level is " + zoom_level);
+    var zoom_factor = 1 + (zoom_level * (zoom_level * 0.02 + 0.18));
+    var zfactor;
+    switch(zoom_level) {
+        case -7: zfactor = 0.279; break;
+        case -6: zfactor = 0.335; break;
+        case -5: zfactor = 0.402; break;
+        case -4: zfactor = 0.483; break;
+        case -3: zfactor = 0.58; break;
+        case -2: zfactor = 0.695; break;
+        case -1: zfactor = 0.834; break;
+        case 1: zfactor = 1.2; break;
+        case 2: zfactor = 1.44; break;
+        case 3: zfactor = 1.73; break;
+        case 4: zfactor = 2.073; break;
+        case 5: zfactor = 2.485; break;
+        case 6: zfactor = 2.98; break;
+        case 7: zfactor = 3.6; break;
+        case 8: zfactor = 4.32; break;
+        default: zfactor = 1;
+    }
+
+    xpos = Math.floor(xpos * zfactor);
+    ypos = Math.floor(ypos * zfactor);
+    gui_post("xpos is " + xpos + " and ypos is " + ypos);
     popup_coords[0] = xpos;
     popup_coords[1] = ypos;
     popup_menu[cid].items[0].enabled = canprop;
@@ -2624,7 +2773,8 @@ function gui_canvas_popup(cid, xpos, ypos, canprop, canopen, isobject) {
     var left = patchwin[cid].window.document.body.scrollLeft;
     var top = patchwin[cid].window.document.body.scrollTop;
 
-    popup_menu[cid].popup(xpos - left, ypos - top);
+    popup_menu[cid].popup(xpos - Math.floor(left * zfactor),
+        ypos - Math.floor(top * zfactor));
 }
 
 function popup_action(cid, index) {

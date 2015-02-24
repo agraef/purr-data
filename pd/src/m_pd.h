@@ -671,9 +671,9 @@ EXTERN void gui_vmess(const char *sel, char *fmt, ...);
 /* some more gui interfaces for building incremental messages */
 EXTERN void gui_start_vmess(const char *sel, char *fmt, ...);
 EXTERN void gui_start_array(void);
-EXTERN void gui_float_elem(t_float f);
-EXTERN void gui_int_elem(int i);
-EXTERN void gui_string_elem(const char *s);
+EXTERN void gui_f(t_float f); /* send a float element in an array */
+EXTERN void gui_i(int i);     /* send an int element in an array */
+EXTERN void gui_s(const char *s); /* send a string element in an array */
 EXTERN void gui_end_array(void);
 EXTERN void gui_end_vmess(void);
 

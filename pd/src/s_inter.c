@@ -827,7 +827,7 @@ void gui_start_array(void)
     sys_gui(",[");
 }
 
-void gui_float_elem(t_float f)
+void gui_f(t_float f)
 {
     if (gui_array_head)
     {
@@ -838,7 +838,7 @@ void gui_float_elem(t_float f)
         sys_vgui(",%g", f);
 }
 
-void gui_int_elem(int i)
+void gui_i(int i)
 {
     if (gui_array_head)
     {
@@ -849,7 +849,7 @@ void gui_int_elem(int i)
         sys_vgui(",%d", i);
 }
 
-void gui_string_elem(const char *s) 
+void gui_s(const char *s) 
 {
     if (gui_array_head)
     {

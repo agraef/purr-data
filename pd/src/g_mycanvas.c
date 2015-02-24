@@ -55,17 +55,28 @@ void my_canvas_draw_move(t_my_canvas *x, t_glist *glist)
         canvas, x, x1, y1, x1+x->x_vis_w, y1+x->x_vis_h);
     sys_vgui(".x%lx.c coords %lxBASE %d %d %d %d\n",
         canvas, x, x1, y1, x1+x->x_gui.x_w, y1+x->x_gui.x_h);
+    char tagbuf[MAXPDSTRING];
+    sprintf(tagbuf, "x%lx", (long unsigned int)x);
+    gui_vmess("gui_mycanvas_coords", "ssiiii",
+        canvas_string(canvas), tagbuf,
+        x->x_vis_w, x->x_vis_h, x->x_gui.x_w, x->x_gui.x_h);
 }
 
 void my_canvas_draw_config(t_my_canvas* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    sys_vgui(".x%lx.c itemconfigure %lxRECT -fill #%6.6x -stroke #%6.6x\n",
-             canvas, x, x->x_gui.x_bcol, x->x_gui.x_bcol);
+    int isselected;
+    //sys_vgui(".x%lx.c itemconfigure %lxRECT -fill #%6.6x -stroke #%6.6x\n",
+    //         canvas, x, x->x_gui.x_bcol, x->x_gui.x_bcol);
     char bcol[8]; sprintf(bcol, "#%6.6x", x->x_gui.x_bcol);
-    sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke %s\n", canvas, x,
-        x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas ?
-        "$pd_colors(selection)" : bcol);
+    //sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke %s\n", canvas, x,
+    //    x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas ?
+    //    "$pd_colors(selection)" : bcol);
+    isselected = x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas;
+    char tagbuf[MAXPDSTRING];
+    sprintf(tagbuf, "x%lx", (long unsigned int)x);
+    gui_vmess("gui_update_mycanvas", "sssi",
+        canvas_string(canvas), tagbuf, bcol, isselected);
 }
 
 void my_canvas_draw_select(t_my_canvas* x, t_glist* glist)
@@ -195,7 +206,7 @@ static void my_canvas_save(t_gobj *z, t_binbuf *b)
 static void my_canvas_properties(t_gobj *z, t_glist *owner)
 {
     t_my_canvas *x = (t_my_canvas *)z;
-    char buf[800];
+    char buf[800], *gfx_tag;
     t_symbol *srl[3];
 
     iemgui_properties(&x->x_gui, srl);
@@ -214,7 +225,37 @@ static void my_canvas_properties(t_gobj *z, t_glist *owner)
             srl[2]->s_name, x->x_gui.x_ldx, x->x_gui.x_ldy,
             x->x_gui.x_font_style, x->x_gui.x_fontsize,
             0xffffff & x->x_gui.x_bcol, -1/*no frontcolor*/, 0xffffff & x->x_gui.x_lcol);
-    gfxstub_new(&x->x_gui.x_obj.ob_pd, x, buf);
+    //gfxstub_new(&x->x_gui.x_obj.ob_pd, x, buf);
+
+    gfx_tag = gfxstub_new2(&x->x_gui.x_obj.ob_pd, x);
+    /* todo: send along the x/y of the object here so we can
+       create the window in the right place */
+
+    gui_start_vmess("gui_iemgui_dialog", "s", gfx_tag);
+    gui_start_array();
+
+    gui_s("type");           gui_s("cnv");
+    gui_s("selection-size"); gui_i(x->x_gui.x_w);
+    gui_s("visible-width");  gui_i(x->x_vis_w);
+    gui_s("visible-height"); gui_i(x->x_vis_h);
+    gui_s("minimum-size");   gui_i(IEM_GUI_MINSIZE);
+
+    gui_s("range-schedule"); // no idea what this is...
+    gui_i(0);
+
+    gui_s("send-symbol"); gui_s(srl[0]->s_name);
+    gui_s("receive-symbol"); gui_s(srl[1]->s_name);
+    gui_s("label"); gui_s(srl[2]->s_name);
+    gui_s("x-offset"); gui_i(x->x_gui.x_ldx);
+    gui_s("y-offset");  gui_i(x->x_gui.x_ldy);
+    gui_s("font-style"); gui_i(x->x_gui.x_font_style);
+    gui_s("font-size"); gui_i(x->x_gui.x_fontsize);
+    gui_s("background-color"); gui_i(0xffffff & x->x_gui.x_bcol);
+    gui_s("foreground-color"); gui_i(0xffffff & x->x_gui.x_fcol);
+    gui_s("label-color"); gui_i(0xffffff & x->x_gui.x_lcol);
+    
+    gui_end_array();
+    gui_end_vmess();
 }
 
 static void my_canvas_get_pos(t_my_canvas *x)
@@ -236,6 +277,7 @@ static void my_canvas_dialog(t_my_canvas *x, t_symbol *s, int argc, t_atom *argv
     x->x_gui.x_w = maxi(atom_getintarg(0, argc, argv),1);
     x->x_vis_w = maxi(atom_getintarg(2, argc, argv),1);
     x->x_vis_h = maxi(atom_getintarg(3, argc, argv),1);
+    post("FUCK OFF ASSHOLE!");
     iemgui_dialog(&x->x_gui, argc, argv);
     x->x_gui.x_loadinit = 0;
     iemgui_draw_config(&x->x_gui);

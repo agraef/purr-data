@@ -28,9 +28,33 @@ input[type="text"]{width:3em;}
           size <input type="text" name="size"></label><br>
       </span>
 
+      <span class="selection-size prop">
+        <label title="size of the selection rectangle used to select and drag the object">
+          selection size <input type="text" name="selection-size"></label><br>
+      </span>
+
+      <span class="width prop">
+        <label title="width of the iemgui">
+          width <input type="text" name="width"></label>
+        <label title="height of the iemgui">
+          height <input type="text" name="height"></label><br>
+      </span>
+
+      <span class="visible-width prop">
+        <label title="width of the rectangle">
+          width <input type="text" name="visible-width"></label>
+        <label title="height of the rectangle">
+          height <input type="text" name="visible-height"></label><br>
+      </span>
+
       <span class="nonzero-value prop">
         <label title="value to output when the toggle shows an 'x'">
           nonzero value <input type="text" name="nonzero-value"></label><br>
+      </span>
+
+      <span class="number prop">
+        <label title="number of buttons">
+          number <input type="text" name="number"></label><br>
       </span>
 
       <span class="flash-interrupt prop">
@@ -43,16 +67,37 @@ input[type="text"]{width:3em;}
           hold <input type="text" name="flash-hold"></label>  <br>
       </span>
 
-      <span class="min-range prop">
+      <span class="minimum-range prop">
         <label title="the lowest number to output. Anything lower will be replaced by this number">
-          minimum <input type="text" name="min-range"></label>
+          minimum <input type="text" name="minimum-range"></label>
         <label title="the largest number to output. Anything higher will be replaced by this number">
-          maximum <input type="text" name="max-range"></label>  <br>
+          maximum <input type="text" name="maximum-range"></label>  <br>
       </span>
 
       <span class="init prop">
         <label title="when checked, this will save the state of the iemgui with the patch, and output a value when the patch is loaded (as if you had an invisible [loadbang] connected to the input).">
-          init <input type="checkbox" name="init" value="on" ></label> <br>
+          init <input type="checkbox" name="init" value="on"></label><br>
+      </span>
+
+      <span class="vu-scale prop">
+        <label title="display scale (numbers) next to the meter">
+          scale <input type="checkbox" name="vu-scale" value="on"></label><br>
+      </span>
+
+
+      <span class="log-scaling prop">
+        <label title="logarithmic scale for values along the slider">
+          logarithmic scaling <input type="checkbox" name="log-scaling" value="on"></label><br>
+      </span>
+
+      <span class="log-height prop">
+        <label title="logarithmic scale for values along the slider">
+          log height<input type="text" name="log-height"></label><br>
+      </span>
+
+      <span class="steady-on-click prop">
+        <label title="don't move the slider on click, only on dragging.">
+          steady on click <input type="checkbox" name="steady-on-click" value="on"></label><br>
       </span>
      </fieldset> 
 
@@ -114,6 +159,7 @@ input[type="text"]{width:3em;}
      <span class="prop">
        <input type="hidden" name="minimum-size">
        <input type="hidden" name="range-schedule">
+       <input type="hidden" name="hide-frame">
      </span>
 
      <div style="text-align: center">
@@ -138,6 +184,10 @@ input[type="text"]{width:3em;}
         apply();
         cancel();
     }
+
+//    function toggler(evt) {
+//        evt.value = evt.checked ? 1 : 0; 
+//    }
 
     function substitute_space(arg) {
         var fake_space = String.fromCharCode(11);
@@ -201,53 +251,94 @@ input[type="text"]{width:3em;}
 
         var height, width;
         var size = document.getElementsByName('size')[0].value;
-        if (size !== null) {
-            height = size;
-            width = size;
+        if (size === '') {
+            var size = document.getElementsByName('selection-size')[0].value;
         }
 
-        var slot3 = document.getElementsByName('min-range')[0].value;
-        var slot4 = document.getElementsByName('max-range')[0].value;
+        if (size !== '') {
+            width = size;
+            height = size;
+        } else {
+            width = document.getElementsByName('width')[0].value;
+            height = document.getElementsByName('height')[0].value;
+        }
 
-        pdgui.gui_post("min-range is " + slot3);
+        var slot3 = document.getElementsByName('minimum-range')[0].value;
+        var slot4 = document.getElementsByName('maximum-range')[0].value;
 
         if (slot3 === '') {
             slot3 = document.getElementsByName('flash-interrupt')[0].value;
             slot4 = document.getElementsByName('flash-hold')[0].value;
-         pdgui.gui_post("slot3 is now " + slot3);
+        }
+
+        if (slot3 === '') {
+            slot3 = document.getElementsByName('visible-width')[0].value;
+            slot4 = document.getElementsByName('visible-height')[0].value;
         }
 
         if (slot3 === '') { // toggle
             slot3 = document.getElementsByName('nonzero-value')[0].value;
+            if (slot3 === '') {
+                slot3 = 0;
+            }
             slot4 = 0;
         }
 
-        var init = document.getElementsByName('init')[0].value;
-        if (init !== null) { init = 0; }
+        var slot5 = +document.getElementsByName('log-scaling')[0].checked;
+        // Hack to accomodate the vu-scale property, which exists in the same
+        // slot as this one
+        var log_scaling_spanner = document.getElementsByClassName('log-scaling')[0];
+        var log_display = log_scaling_spanner.style.getPropertyValue('display');
+
+        if (log_display === null) {
+            slot5 = +document.getElementsByName('vu-scale')[0].checked;
+            pdgui.gui_post('slot five is ' + slot5);
+        }
+        pdgui.gui_post('slot five is ' + slot5);
+
+        var init = +document.getElementsByName('init')[0].checked;
+        if (init === '') { init = 0; }
+
+        var slot7 = document.getElementsByName('log-height')[0].value;
+        if (slot7 === '') {
+            slot7 = document.getElementsByName('number')[0].value;
+        }
+        if (slot7 === '') {
+            slot7 = 0;
+        }
 
         var font_style = document.getElementsByName('font-style')[0].value;
         if (font_style !== null) { font_style = 0; }
 
         var font_size = document.getElementsByName('font-size')[0].value;
-        if (font_size !== null) { font_size = 0; }
+        if (font_size === '') { font_size = 0; }
 
         var foreground_color = parseInt(document.getElementsByName('foreground-color')[0].value.slice(1), 16);
         var background_color = parseInt(document.getElementsByName('background-color')[0].value.slice(1), 16);
         var label_color = parseInt(document.getElementsByName('label-color')[0].value.slice(1), 16);
 
+        var slot18 = +document.getElementsByName('steady-on-click')[0].checked;
+
         pdgui.pdsend([pd_object_callback, 'dialog',
             width, height,
-            slot3, // flash-interrupt, min-range, or nonzero-value
-            slot4, // flash-hold or max-range
-            0, // this should be the lin/log thingy
+            slot3, // bng: flash-interrupt
+                   // slider: min-range
+                   // toggle: nonzero-value
+                   // my_canvas: visible_width
+            slot4, // bng: flash-hold
+                   // slider: max-range
+                   // my_canvas: visible_height
+            slot5, // slider: lin/log thingy
+                   // nbx: lin/log
+                   // vu: vu-scale
             init,
-            0, // this should be the number for toggle
+            slot7, // log-height or vradio/hradio number
             send_symbol, receive_symbol, label,
             label_x_offset, label_y_offset,
             font_style, font_size,
             background_color, foreground_color,
             label_color,
-            0, // steady on click
+            slot18, // steady on click
             0].join(' '));
 /*
 	pd [concat $id dialog \
@@ -309,6 +400,10 @@ function populate_form(attr_array) {
                     var color_string = "#" + (hex_string === '0' ? '000000' : hex_string);
                     pdgui.gui_post("color is " + color_string);
                     elem[0].value = color_string;
+                } else if (elem[0].type === 'checkbox') {
+                    // The attr here is a string, so we need to
+                    // force it to number, hence the "+" below
+                    elem[0].checked = +attr_array[i+1];
                 } else {
                     elem[0].value = attr_array[i+1];
                 }

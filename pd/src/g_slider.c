@@ -31,8 +31,8 @@ static void slider_draw_update(t_gobj *client, t_glist *glist)
     int r;
     if (x->x_orient) {
         r=y2-3 - (x->x_val+50)/100;
-        sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
-            canvas, x, x1+2, r, x2-2, r);
+        //sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
+        //    canvas, x, x1+2, r, x2-2, r);
         char tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "x%lx", (long unsigned int)x);
         gui_vmess("gui_slider_update", "ssiiiiii",
@@ -40,8 +40,8 @@ static void slider_draw_update(t_gobj *client, t_glist *glist)
             x1, y1);
     } else {
         r=x1+3 + (x->x_val+50)/100;
-        sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
-            canvas, x, r, y1+2, r, y2-2);
+        //sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
+        //    canvas, x, r, y1+2, r, y2-2);
         char tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "x%lx", (long unsigned int)x);
         gui_vmess("gui_slider_update", "ssiiiiii",
@@ -51,8 +51,13 @@ static void slider_draw_update(t_gobj *client, t_glist *glist)
     int t = x->x_thick;
     x->x_thick = x->x_val == x->x_center;
     if (t!=x->x_thick)
-        sys_vgui(".x%lx.c itemconfigure %lxKNOB -strokewidth %d\n",
-            canvas, x, 4*x->x_thick+3);
+    {
+        /* the indicator thickens when it's right in the middle... but
+           it's pretty obscure, undocumented, and looks a bit like a bug
+           if you're not expecting it */ 
+        //sys_vgui(".x%lx.c itemconfigure %lxKNOB -strokewidth %d\n",
+        //    canvas, x, 4*x->x_thick+3);
+    }
 }
 
 static void slider_draw_new(t_slider *x, t_glist *glist)
@@ -66,9 +71,9 @@ static void slider_draw_new(t_slider *x, t_glist *glist)
     else             r = x1+3 + (x->x_val + 50)/100;
     iemgui_base_draw_new(&x->x_gui);
     if (x->x_orient) {
-        sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth 3 "
-            "-stroke #%6.6x -tags {%lxKNOB x%lx text iemgui}\n",
-            canvas, x1+2, r, x2-2, r, x->x_gui.x_fcol, x, x);
+        //sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth 3 "
+        //    "-stroke #%6.6x -tags {%lxKNOB x%lx text iemgui}\n",
+        //    canvas, x1+2, r, x2-2, r, x->x_gui.x_fcol, x, x);
         char tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "x%lx", (long unsigned int)x);
         char colorbuf[MAXPDSTRING];
@@ -76,9 +81,9 @@ static void slider_draw_new(t_slider *x, t_glist *glist)
         gui_vmess("gui_create_slider", "sssiiiiii", canvas_string(canvas), tagbuf,
             colorbuf, x1+2, r, x2-2, r, x1, y1);
     } else {
-        sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth 3 "
-            "-stroke #%6.6x -tags {%lxKNOB x%lx text iemgui}\n",
-            canvas, r, y1+2, r, y2-2, x->x_gui.x_fcol, x, x);
+        //sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth 3 "
+        //    "-stroke #%6.6x -tags {%lxKNOB x%lx text iemgui}\n",
+        //    canvas, r, y1+2, r, y2-2, x->x_gui.x_fcol, x, x);
         char tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "x%lx", (long unsigned int)x);
         char colorbuf[MAXPDSTRING];
@@ -100,19 +105,39 @@ static void slider_draw_move(t_slider *x, t_glist *glist)
     else             r = x1+3 + (x->x_val + 50)/100;
     iemgui_base_draw_move(&x->x_gui);
     if (x->x_orient)
-        sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
-            canvas, x, x1+2, r, x2-2, r);
+    {
+        //sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
+        //    canvas, x, x1+2, r, x2-2, r);
+        char tagbuf[MAXPDSTRING];
+        sprintf(tagbuf, "x%lx", (long unsigned int)x);
+        gui_vmess("gui_slider_update", "ssiiiiii",
+            canvas_string(canvas), tagbuf,
+            x1+2, r, x2-2, r, x1, y1);
+    }
     else
-        sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
-            canvas, x, r, y1+2, r, y2-2);
+    {
+        //sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
+        //    canvas, x, r, y1+2, r, y2-2);
+        char tagbuf[MAXPDSTRING];
+        sprintf(tagbuf, "x%lx", (long unsigned int)x);
+        gui_vmess("gui_slider_update", "ssiiiiii",
+            canvas_string(canvas), tagbuf,
+            r, y1+2, r, y2-2, x1, y1);
+    }
 }
 
 static void slider_draw_config(t_slider *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
     iemgui_base_draw_config(&x->x_gui);
-    sys_vgui(".x%lx.c itemconfigure %lxKNOB -stroke #%6.6x\n",
-        canvas, x, x->x_gui.x_fcol);
+    //sys_vgui(".x%lx.c itemconfigure %lxKNOB -stroke #%6.6x\n",
+    //    canvas, x, x->x_gui.x_fcol);
+    char tagbuf[MAXPDSTRING];
+    char colorbuf[MAXPDSTRING];
+    sprintf(tagbuf, "x%lx", (long unsigned int)x);
+    sprintf(colorbuf, "#%6.6x", x->x_gui.x_fcol);
+    gui_vmess("gui_slider_indicator_color", "sss",
+        canvas_string(canvas), tagbuf, colorbuf); 
 }
 
 void slider_check_minmax(t_slider *x, double min, double max);
@@ -268,7 +293,7 @@ void slider_check_minmax(t_slider *x, double min, double max)
 static void slider_properties(t_gobj *z, t_glist *owner)
 {
     t_slider *x = (t_slider *)z;
-    char buf[800];
+    char buf[800], *gfx_tag;
     t_symbol *srl[3];
     int minx = x->x_orient ? IEM_GUI_MINSIZE : IEM_SL_MINSIZE;
     int miny = x->x_orient ? IEM_SL_MINSIZE : IEM_GUI_MINSIZE;
@@ -286,7 +311,32 @@ static void slider_properties(t_gobj *z, t_glist *owner)
         x->x_gui.x_font_style, x->x_gui.x_fontsize,
         0xffffff & x->x_gui.x_bcol, 0xffffff & x->x_gui.x_fcol,
         0xffffff & x->x_gui.x_lcol);
-    gfxstub_new(&x->x_gui.x_obj.ob_pd, x, buf);
+    //gfxstub_new(&x->x_gui.x_obj.ob_pd, x, buf);
+    gfx_tag = gfxstub_new2(&x->x_gui.x_obj.ob_pd, x);
+    gui_start_vmess("gui_iemgui_dialog", "s", gfx_tag);
+    gui_start_array();
+
+    gui_s("type");             gui_s(x->x_orient ? "vsl" : "hsl");
+    gui_s("width");            gui_i(x->x_gui.x_w);
+    gui_s("height");           gui_i(x->x_gui.x_h);
+    gui_s("minimum-range");    gui_f(x->x_min);
+    gui_s("maximum-range");    gui_f(x->x_max);
+    gui_s("log-scaling");      gui_i(x->x_lin0_log1);
+    gui_s("init");             gui_i(x->x_gui.x_loadinit);
+    gui_s("steady-on-click");  gui_i(x->x_steady);
+    gui_s("send-symbol");      gui_s(srl[0]->s_name);
+    gui_s("receive-symbol");   gui_s(srl[1]->s_name);
+    gui_s("label");            gui_s(srl[2]->s_name);
+    gui_s("x-offset");         gui_i(x->x_gui.x_ldx);
+    gui_s("y-offset");         gui_i(x->x_gui.x_ldy);
+    gui_s("font-style");       gui_i(x->x_gui.x_font_style);
+    gui_s("font-size");        gui_i(x->x_gui.x_fontsize);
+    gui_s("background-color"); gui_i(0xffffff & x->x_gui.x_bcol);
+    gui_s("foreground-color"); gui_i(0xffffff & x->x_gui.x_fcol);
+    gui_s("label-color");      gui_i(0xffffff & x->x_gui.x_lcol);
+
+    gui_end_array();
+    gui_end_vmess();
 }
 
 static void slider_bang(t_slider *x)
