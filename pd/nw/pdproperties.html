@@ -1,180 +1,309 @@
 <!DOCTYPE html>
 <html>
   <head>
-  <link rel="stylesheet" type="text/css" href="pdproperties.css">
-
-<style>body{font-family:Verdana;}
-fieldset{font-family:Georgia; background-color:#eeeeee;
-		 border-radius:3px; border:2px solid black;
-		 margin:5px; padding:8px; }
-
-input[type="text"]{width:3em;}
-
-.prop{display: none;}
-
-</style>
-
-
-
+    <link rel="stylesheet" type="text/css" href="pdproperties.css">
   </head>
   <body>
+    <div class="container">
+    <form> 
+      <fieldset> 
+        <legend data-i18n="iem.prop.heading.size"></legend> 
 
- <form> 
-     <fieldset> 
-      <legend>size and behavior</legend> 
+        <table class="pairs">
+          <tr class="size prop hidden">
+            <td>
+              <label data-i18n="[title]iem.prop.size_tt">
+                <span data-i18n="iem.prop.size"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.size_tt">
+              <input type="text" name="size">
+            </td>
+          </tr>
+          <tr class="selection-size prop hidden">
+            <td>
+              <label data-i18n="[title]iem.select_size_tt">
+                <span data-i18n="iem.prop.select_size"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.select_size_tt">
+              <input type="text" name="selection-size">
+            </td>
+          </tr>
+          <tr class="number prop hidden">
+            <td>
+              <label data-i18n="[title]iem.prop.number_tt">
+                <span data-i18n="iem.prop.number"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.number_tt">
+              <input type="number" name="number">
+            </td>
+          </tr>
+          <tr class="nonzero-value prop hidden">
+            <td>
+              <label data-i18n="[title]iem.prop.nonzero_value_tt">
+                <span data-i18n="iem.prop.nonzero_value"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.nonzero_value_tt">
+              <input type="text" name="nonzero-value">
+            </td>
+          </tr>
+          <tr class="width prop hidden">
+            <td>
+              <label data-i18n="[title]iem.prop.width_tt"> 
+                <span data-i18n="iem.prop.width"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.width_tt">
+              <input type="text" name="width">
+            </td>
+            <td>
+              <label data-i18n="[title]iem.prop.height_tt">
+                <span data-i18n="iem.prop.height"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.height_tt">
+              <input type="text" name="height">
+            </td>
+          </tr>
+          <tr class="visible-width prop hidden">
+            <td>
+              <label data-i18n="[title]iem.prop.visible_width_tt">
+                <span data-i18n="iem.prop.visible_width"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.visible_width_tt">
+              <input type="text" name="visible-width">
+            </td>
+            <td>
+              <label data-i18n="iem.prop.visible_height">
+                <span data-i18n="iem.prop.visible_height"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.visible_height_tt">
+              <input type="text" name="visible-height">
+            </td>
+          </tr>
+          <tr class="minimum-range prop pair hidden">
+            <td>
+              <label data-i18n="[title]iem.prop.minimum_tt">
+                <span data-i18n="iem.prop.minimum"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.minimum_tt">
+              <input type="text" name="minimum-range">
+            </td>
+            <td>
+              <label data-i18n="[title]iem.prop.maximum_tt">
+                <span data-i18n="iem.prop.maximum"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.maximum_tt">
+              <input type="text" name="maximum-range">
+            </td>
+          </tr>
+          <tr class="flash-interrupt prop hidden">
+            <td>
+              <label data-i18n="[title]iem.prop.flash_interrupt_tt">
+                <span data-i18n="iem.prop.flash_interrupt"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.flash_interrupt_tt">
+              <input type="text" name="flash-interrupt">
+            </td>
+            <td>
+              <label data-i18n="[title]iem.prop.flash_hold_tt">
+                <span data-i18n="iem.prop.flash_hold"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.flash_hold_tt">
+              <input type="text" name="flash-hold">
+            </td>
+          </tr>
+          <tr class="log-height prop hidden">
+            <td></td><td></td>
+            <td>
+              <label data-i18n="[title]iem.prop.log_height_tt">
+                <span data-i18n="iem.prop.log_height"></span>
+              </label>
+            </td>
+            <td>
+              <input type="text" name="log-height">
+            </td>
+          </tr>
+        </table>
 
-      <span class="size prop">
-        <label title="size of the iemgui">
-          size <input type="text" name="size"></label><br>
-      </span>
+        <div class="init prop hidden">
+          <label data-i18n="[title]iem.prop.init_tt">
+            <input type="checkbox" name="init" value="on">
+            <span data-i18n="iem.prop.init"></span>
+          </label>
+          <br>
+        </div>
 
-      <span class="selection-size prop">
-        <label title="size of the selection rectangle used to select and drag the object">
-          selection size <input type="text" name="selection-size"></label><br>
-      </span>
+        <div class="vu-scale prop hidden">
+          <label data-i18n="[title]iem.prop.vu_scale_tt">
+            <span data-i18n="iem.prop.vu_scale"></span>
+            <input type="checkbox" name="vu-scale" value="on">
+          </label>
+          <br>
+        </div>
 
-      <span class="width prop">
-        <label title="width of the iemgui">
-          width <input type="text" name="width"></label>
-        <label title="height of the iemgui">
-          height <input type="text" name="height"></label><br>
-      </span>
+        <div class="log-scaling prop hidden">
+          <label data-i18n="[title]iem.prop.log_scale_tt">
+            <input type="checkbox" name="log-scaling" value="on">
+            <span data-i18n="iem.prop.log_scale"></span>
+          </label>
+          <br>
+        </div>
 
-      <span class="visible-width prop">
-        <label title="width of the rectangle">
-          width <input type="text" name="visible-width"></label>
-        <label title="height of the rectangle">
-          height <input type="text" name="visible-height"></label><br>
-      </span>
+        <div class="steady-on-click prop hidden">
+          <label data-i18n="[title]iem.prop.steady_tt">
+            <input type="checkbox" name="steady-on-click" value="on">
+            <span data-i18n="iem.prop.steady"></span>
+          </label>
+          <br>
+        </div>
+      </fieldset> 
 
-      <span class="nonzero-value prop">
-        <label title="value to output when the toggle shows an 'x'">
-          nonzero value <input type="text" name="nonzero-value"></label><br>
-      </span>
+      <fieldset> 
+        <legend data-i18n="iem.prop.heading.messages"></legend> 
 
-      <span class="number prop">
-        <label title="number of buttons">
-          number <input type="text" name="number"></label><br>
-      </span>
+        <table>
+          <tr class="send-symbol prop hidden">
+            <td>
+              <label data-i18n="[title]iem.prop.send_tt">
+                <span data-i18n="iem.prop.send"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.send_tt">
+              <input type="text" name="send-symbol">
+            </td>
+            <td>
+          <tr class="receive-symbol prop hidden">
+            <td>
+              <label data-i18n="[title]iem.prop.receive_tt">
+                <span data-i18n="iem.prop.receive"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.receive_tt">
+              <input type="text" name="receive-symbol">
+            </td>
+            <td>
+          </tr>
+        </table>
+      </fieldset> 
 
-      <span class="flash-interrupt prop">
-        <label title="the amount of time (in milliseconds) that Pd will wait before interrupting the flashing of the button">
-          interrupt <input type="text" name="flash-interrupt"></label>
-      </span>
+      <fieldset> 
+        <legend data-i18n="iem.prop.heading.label">wrong stuff</legend> 
 
-      <span class="flash-hold prop">
-        <label title="the amount of time (in milliseconds) that Pd will display the flash animation">
-          hold <input type="text" name="flash-hold"></label>  <br>
-      </span>
+        <table class="pairs">
+          <tr class="label prop hidden">
+            <td>
+              <label data-i18n="[title]iem.prop.label_tt">
+                <span data-i18n="iem.prop.label"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.label_tt">
+              <input type="text" name="label">
+            </td>
+            <td>
+              <label data-i18n="[title]iem.prop.xoffset_tt">
+                <span data-i18n="iem.prop.xoffset"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.xoffset_tt">
+              <input type="text" name="x-offset">
+            </td>
+            <td>
+              <label data-i18n="[title]iem.prop.yoffset_tt">
+                <span data-i18n="iem.prop.yoffset"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.yoffset_tt">
+              <input type="text" name="y-offset">
+            </td>
+          </tr>
+          <tr class="font-style prop hidden">
+            <td>
+              <label data-i18n="[title]iem.prop.font_tt">
+                <span data-i18n="iem.prop.font"></span>
+            </td>
+            <td data-i18n="[title]iem.prop.font_tt">
+              <select name="font-style">
+                <option>Font Number 0</option>
+                <option>Font #1</option>
+                <option>Font 2</option>
+              </select>
+            </td>
+            <td colspan="4">
+              <label data-i18n="[title]iem.prop.fontsize_tt">
+                <span data-i18n="iem.prop.fontsize"></span>
+                <input type="text" name="font-size">
+              <label>
+            </td>
+          </tr>
+        </table>
+      </fieldset> 
 
-      <span class="minimum-range prop">
-        <label title="the lowest number to output. Anything lower will be replaced by this number">
-          minimum <input type="text" name="minimum-range"></label>
-        <label title="the largest number to output. Anything higher will be replaced by this number">
-          maximum <input type="text" name="maximum-range"></label>  <br>
-      </span>
+      <fieldset> 
+      <legend data-i18n="iem.prop.heading.colors"></legend> 
 
-      <span class="init prop">
-        <label title="when checked, this will save the state of the iemgui with the patch, and output a value when the patch is loaded (as if you had an invisible [loadbang] connected to the input).">
-          init <input type="checkbox" name="init" value="on"></label><br>
-      </span>
+      <div class="background-color prop hidden">
+        <label data-i18n="[title]iem.prop.bgcolor_tt">
+          <input type="color" name="background-color">
+          <span data-i18n="iem.prop.bgcolor"></span>
+        </label>
+        <br>
+      </div>
 
-      <span class="vu-scale prop">
-        <label title="display scale (numbers) next to the meter">
-          scale <input type="checkbox" name="vu-scale" value="on"></label><br>
-      </span>
+      <div class="foreground-color prop hidden">
+        <label data-i18n="[title]iem.prop.fgcolor_tt">
+          <input type="color" name="foreground-color">
+          <span data-i18n="iem.prop.fgcolor"></span>
+        </label>
+        <br>
+      </div>
 
+      <div class="label-color prop hidden">
+        <label data-i18n="[title]iem.prop.label_color_tt">
+          <input type="color" name="label-color">
+          <span data-i18n="iem.prop.label_color"></span>
+        </label>
+        <br>
+      </div>
+    </fieldset> 
 
-      <span class="log-scaling prop">
-        <label title="logarithmic scale for values along the slider">
-          logarithmic scaling <input type="checkbox" name="log-scaling" value="on"></label><br>
-      </span>
+    <div class="prop hidden">
+      <input type="hidden" name="minimum-size">
+      <input type="hidden" name="range-schedule">
+      <input type="hidden" name="hide-frame">
+    </div>
 
-      <span class="log-height prop">
-        <label title="logarithmic scale for values along the slider">
-          log height<input type="text" name="log-height"></label><br>
-      </span>
+    <div class="submit_buttons">
+      <button type="button" onClick="ok()" data-i18n="[title]iem.prop.ok_tt">
+        <span data-i18n="iem.prop.ok"></span>
+      </button>
+      <button type="button" onClick="apply()" data-i18n="[title]iem.prop.apply_tt">
+        <span data-i18n="iem.prop.apply"></span>
+      </button>
+      <button type="button" onClick="cancel()" data-i18n="[title]iem.prop.cancel_tt">
+        <span data-i18n="iem.prop.cancel"></span>
+      </button>
+    </div>
 
-      <span class="steady-on-click prop">
-        <label title="don't move the slider on click, only on dragging.">
-          steady on click <input type="checkbox" name="steady-on-click" value="on"></label><br>
-      </span>
-     </fieldset> 
-
-     <fieldset> 
-      <legend>messages</legend> 
-
-      <span class="send-symbol prop">
-        <label title="symbol you can use to send wireless messages to other iemguis (or a [receive] object)">
-          send-symbol <input type="text" name="send-symbol" ></label> <br>
-      </span>
-
-      <span class="receive-symbol prop">
-        <label title="symbol you can use to receive wireless messages from other iemguis (or from a [send] object)">
-          receive-symbol <input type="text" name="receive-symbol" ></label> <br>
-      </span>
-     </fieldset> 
-
-     <fieldset> 
-      <legend>label</legend> 
-
-      <span class="label prop">
-        <label title="a label displayed next to this iemgui">
-          label <input type="text" name="label" > <br>
-      </span>
-
-      <span class="x-offset prop">
-        <label title="horizontal offset (from the top-left corner of the object) for the label">
-          x offset <input type="text" name="x-offset" ></label>
-        <label title="vertical offset (from the top-left corner of the object) for the label">
-          y offset <input type="text" name="y-offset"></label> <br>
-      </span>
-
-      <span class="font-style prop">
-        <label title="which font to use to display the label">
-          font <input type="text" name="font-style"></label>
-        <label title="size of the label">size <input type="text" name="font-size"><label> <br>
-      </span>
-     </fieldset> 
-
-     <fieldset> 
-      <legend>colors</legend> 
-
-      <span class="background-color prop">
-        <label title="background color for the object">
-          background <input type="color" name="background-color"></label> <br>
-      </span>
-
-      <span class="foreground-color prop">
-        <label title="foreground color for the object">
-          foreground <input type="color" name="foreground-color"></label> <br>
-      </span>
-
-      <span class="label-color prop">
-        <label title="color of the label text">
-          label <input type="color" name="label-color"></title> <br>
-      </span>
-     </fieldset> 
-
-     <span class="prop">
-       <input type="hidden" name="minimum-size">
-       <input type="hidden" name="range-schedule">
-       <input type="hidden" name="hide-frame">
-     </span>
-
-     <div style="text-align: center">
-      <button type="button" onClick="ok()" title="Apply these settings and close the window">Ok</button>
-      <button type="button" onClick="apply()" title="Apply these settings without closing the window">Apply</button>
-      <button type="button" onClick="cancel()" title="Close window without applying any changes">Cancel</button>
-     </div>
-
- </form> 
-        
+  </form> 
+  </div>      
 
   <script>
     'use strict';
     var nw = require('nw.gui'); 
     var pdgui = require('./pdgui.js');
+
+    // For translations
+    var l = pdgui.get_local_string;
 
     console.log("my working dire is " + pdgui.get_pwd());
 
@@ -213,7 +342,9 @@ input[type="text"]{width:3em;}
             iemgui_verify_rng $id
             iemgui_sched_rng $id
             iemgui_clip_fontsize $id
-        */	
+        */
+
+
 
         var send_symbol = document.getElementsByName('send-symbol')[0].value;
         var receive_symbol = document.getElementsByName('receive-symbol')[0].value;
@@ -375,17 +506,59 @@ input[type="text"]{width:3em;}
         add_events(gfxstub);
         // not sure that we need this for properties windows
 //        pdgui.canvas_map(gfxstub);
+        translate_form();
         populate_form(attr_array);
+        // We don't turn on rendering of the "container" div until
+        // We've finished displaying all the spans and populating the
+        // labels and form elements.  That makes it more efficient and
+        // snappier, at least on older machines.
+        document.getElementsByClassName('container')[0].style.setProperty('display', 'inline');
 //        document.getElementsByClass("fumbles")[0].setAttribute('style', 'display: inline;');
     }
 
+function tr_text(id) {
+    var elem = document.getElementById('iem.prop.' + id);
+    elem.textContent = l('iem.prop.' + id);
+}
+
+// Stop-gap translator
+function translate_form() {
+    var i
+    var elements = document.querySelectorAll('[data-i18n]');
+    for (i = 0; i < elements.length; i++) {
+        var data = elements[i].dataset.i18n;
+        if (data.slice(0,7) === '[title]') {
+            elements[i].title = l(data.slice(7));
+        } else {
+            elements[i].textContent = l(data);
+        }
+    }
+}
+
 function populate_form(attr_array) {
+
+    // First, let's put the translated text for the form labels:
+
+//    tr_text('heading.size');
+//    tr_text('heading.messages');
+//    tr_text('heading.label');
+//    tr_text('heading.colors');
+//    tr_prop('width');
+//    tr_tooltip('width');
+
+//    var headings = ["size", "messages", "label", "colors"];
+//    for (var i = 0; i < headings.length; i++) {
+//        var str = "iem.prop.heading." + headings[i];
+//        var heading = document.getElementById(str);
+//        heading.textContent = l(str);
+//    }
+
     for(var i = 0; i < attr_array.length; i+=2) {
         // Unhide the span with the class with the same name as the id
         var prop_group = document.getElementsByClassName(attr_array[i])[0];
         if (prop_group !== undefined) {
             console.log("the thing here is " + attr_array[i]);
-            prop_group.style.setProperty('display', 'inline');
+            prop_group.classList.remove('hidden');
         } else {
             pdgui.gui_post("Error: couldn't find iemgui prop group for " + attr_array[i]);
         }

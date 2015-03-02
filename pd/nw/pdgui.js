@@ -15,11 +15,10 @@ exports.get_pwd = function() {
 var fs = require('fs');     // for fs.existsSync
 var path = require('path'); // for path.dirname path.extname
 
-var flub = { flash_interrupt_label: "this thing does stuff" };
-exports.tr = function(arg) {
-    return flub[arg];
-}
+// local strings
+var lang = require('./pdlang.js');
 
+exports.get_local_string = lang.get_local_string;
 
 var pd_window; 
 exports.pd_window;
@@ -2926,7 +2925,7 @@ function gui_iemgui_dialog(did, attr_array) {
     for (var i = 0; i < attr_array.length; i++) {
         attr_array[i] = '"' + attr_array[i] + '"';
     }
-    dialogwin[did] = nw_create_window(did, 'pd-properties', 235, 430, 20, 20, 0,
+    dialogwin[did] = nw_create_window(did, 'pd-properties', 265, 540, 20, 20, 0,
         0, 1, 'white', 'Properties', '', 0, null, attr_array);
 
 }

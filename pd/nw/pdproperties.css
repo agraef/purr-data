@@ -4,8 +4,43 @@
 }
 
 body {
+    font-family:Verdana;
     margin: 0px;
-    font-family: "DejaVu Sans Mono";
+}
+
+fieldset {
+    font-family:Georgia;
+    background-color:#eeeeee;
+    border-radius:3px;
+    border:2px solid black;
+    margin-left:auto;
+    margin-right:auto;
+    padding: 10px;
+}
+
+input[type="text"]{
+    width:3em;
+}
+
+input[type="number"]{
+    width:3em;
+}
+
+
+.prop{
+}
+
+.hidden {
+    display: none;
+}
+
+.container{
+    display: none;
+}
+
+
+
+body {
 }
 
 .noselect {
@@ -28,23 +63,51 @@ text {
     stroke-width: 1;
 }
 
-.selected_line {
-    stroke: blue;
+label {
+    text-align: right;
+//    margin-right: auto;
+//    margin-left: auto;
 }
 
-.broken_border {
-    fill: #f7f7f7;
-    stroke: red;
-    stroke-dasharray: 3 2;
+.pair {
+    width: 75%;
+    text-align: left;
+    align: left;
 }
 
-.xlet {
-    stroke: black;
-    fill: gray;
-    stroke-width: 1;
-    shape-rendering: optimizeSpeed;
+.item1 {
+    width: 50%;
 }
 
-//.xlet:hover {
-//    stroke: red;
-//}
+.item2 {
+    width: 50%;
+}
+
+input[name="x-offset"] {
+    width: 2em;
+}
+
+input[name="y-offset"] {
+    width: 2em;
+}
+
+input[name="send-symbol"] {
+    width: 8em;
+}
+
+input[name="receive-symbol"] {
+    width: 8em;
+}
+
+input[name="label"] {
+    width: 8em;
+}
+
+input[name="font-size"] {
+    width: 3em;
+}
+
+.submit_buttons {
+    text-align: center;
+    padding: 8px;
+}

@@ -21,6 +21,8 @@
 
     //var name = pdgui.last_loaded();
     
+    var l = pdgui.get_local_string;
+
     console.log("my working dire is " + pdgui.get_pwd());
     document.getElementById("saveDialog").setAttribute("nwworkingdir", pdgui.get_pwd());
 
@@ -309,22 +311,24 @@ function nw_create_patch_window_menus (name) {
 
     // Add to window menu
     windowMenu.append(new nw.MenuItem({
-        label: 'File',
+        label: l('menu.file'),
         submenu: fileMenu
     }));
 
     // File sub-entries
     fileMenu.append(new nw.MenuItem({
-        label: 'New',
+        label: l('menu.new'),
         click: pdgui.menu_new,
         key: 'n',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.new_tt')
     }));
 
     fileMenu.append(new nw.MenuItem({
-        label: 'Open',
+        label: l('menu.open'),
         key: 'o',
         modifiers: "ctrl",
+        tooltip: l('menu.open_tt'),
         click: function() {
             var chooser = document.querySelector('#fileDialog');
             chooser.click();
@@ -333,7 +337,8 @@ function nw_create_patch_window_menus (name) {
 
     if (pdgui.k12_mode == 1) {
         fileMenu.append(new nw.MenuItem({
-        label: 'K12 Demos',
+        label: l('menu.k12_demos'),
+        tooltip: l('menu.k12_demos_tt'),
         click: pdgui.menu_k12_open_demos
         }));
     }
@@ -344,21 +349,23 @@ function nw_create_patch_window_menus (name) {
 
     // Note: this must be different for the main Pd window
     fileMenu.append(new nw.MenuItem({
-        label: 'Save',
+        label: l('menu.save'),
         click: function () {
             pdgui.menu_save(name);
         },
         key: 's',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.save_tt')
     }));
 
     fileMenu.append(new nw.MenuItem({
-        label: 'Save as...',
+        label: l('menu.saveas'),
         click: function (){
             pdgui.menu_saveas(name);
         },
         key: 's',
-        modifiers: "ctrl+shift"
+        modifiers: "ctrl+shift",
+        tooltip: l('menu.saveas_tt')
     }));
 
     if (pdgui.k12_mode == 0) {
@@ -368,10 +375,11 @@ function nw_create_patch_window_menus (name) {
     }
 
     fileMenu.append(new nw.MenuItem({
-        label: 'Message...',
+        label: l('menu.message'),
         click: pdgui.menu_send,
         key: 'm',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.message_tt')
     }));
 
     if (pdgui.k12_mode == 0) {
@@ -385,7 +393,8 @@ function nw_create_patch_window_menus (name) {
     // anther separator goes here if there are any recent files
 
     fileMenu.append(new nw.MenuItem({
-        label: 'Close',
+        label: l('menu.close'),
+        tooltip: l('menu.close_tt'),
         click: function() {
             pdgui.menu_close(name);
         }
@@ -393,10 +402,11 @@ function nw_create_patch_window_menus (name) {
 
     // Quit Pd
     fileMenu.append(new nw.MenuItem({
-        label: 'Quit',
+        label: l('menu.quit'),
         click: pdgui.menu_quit,
         key: 'q',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.quit_tt')
     }));
 
 
@@ -405,23 +415,25 @@ function nw_create_patch_window_menus (name) {
 
     // Add to window menu
     windowMenu.append(new nw.MenuItem({
-    label: 'Edit',
+    label: l('menu.edit'),
     submenu: editMenu
     }));
 
     // Edit sub-entries
     editMenu.append(new nw.MenuItem({
-        label: 'Undo',
+        label: l('menu.undo'),
         click: menu_generic,
         key: 'c',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.undo_tt')
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: 'Redo',
+        label: l('menu.redo'),
         click: menu_generic,
         key: 'a',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.redo_tt')
     }));
 
     editMenu.append(new nw.MenuItem({
@@ -429,53 +441,58 @@ function nw_create_patch_window_menus (name) {
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: 'Cut',
+        label: l('menu.cut'),
         click: function () {
             pdgui.pdsend(name + " cut");
         },
         key: 'c',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.cut_tt')
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: 'Copy',
+        label: l('menu.copy'),
         click: function () {
             pdgui.pdsend(name + " copy");
         },
         key: 'x',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.copy_tt')
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: 'Paste',
+        label: l('menu.paste'),
         click: function () {
             pdgui.pdsend(name + " paste");
         },
         key: 'v',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.paste_tt')
     }));
 
 
     editMenu.append(new nw.MenuItem({
-        label: 'Duplicate',
+        label:  l('menu.duplicate'),
         click: function () {
             pdgui.pdsend(name + " duplicate");
         },
         key: 'd',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.duplicate_tt')
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: 'Select All',
+        label: l('menu.selectall'),
         click: function () {
             pdgui.pdsend(name + " selectall");
         },
         key: 'a',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.selectall_tt'),
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: 'Reselect',
+        label: l('menu.reselect'),
         // Unfortunately nw.js doesn't allow
         // key: "Return" or key: "Enter", so we
         // can't bind to ctrl-Enter here. (Even
@@ -484,7 +501,8 @@ function nw_create_patch_window_menus (name) {
             pdgui.pdsend(name + " reselect");
         },
         key: String.fromCharCode(10),
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.reselect_tt')
     }));
 
     editMenu.append(new nw.MenuItem({
@@ -492,7 +510,7 @@ function nw_create_patch_window_menus (name) {
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: 'Zoom In',
+        label: l('menu.zoomin'),
         click: function () {
             var z = nw.Window.get().zoomLevel;
             if (z < 8) { z++; }
@@ -500,11 +518,12 @@ function nw_create_patch_window_menus (name) {
             pdgui.gui_post("zoom level is " + nw.Window.get().zoomLevel);
         },
         key: '=',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.zoomin')
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: 'Zoom Out',
+        label: l('menu.zoomout'),
         click: function () {
             var z = nw.Window.get().zoomLevel;
             if (z > -7) { z--; } 
@@ -512,35 +531,8 @@ function nw_create_patch_window_menus (name) {
             pdgui.gui_post("zoom level is " + nw.Window.get().zoomLevel);
         },
         key: '-',
-        modifiers: "ctrl"
-    }));
-
-
-
-
-    editMenu.append(new nw.MenuItem({
-        type: 'separator'
-    }));
-
-    editMenu.append(new nw.MenuItem({
-        label: 'Tidy Up',
-        click: menu_generic,
-        key: 'a',
-        modifiers: "ctrl"
-    }));
-
-    editMenu.append(new nw.MenuItem({
-        label: 'Bring to Front',
-        click: menu_generic,
-        key: 'a',
-        modifiers: "ctrl"
-    }));
-
-    editMenu.append(new nw.MenuItem({
-        label: 'Send to Back',
-        click: menu_generic,
-        key: 'a',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.zoomout_tt'),
     }));
 
     editMenu.append(new nw.MenuItem({
@@ -548,19 +540,49 @@ function nw_create_patch_window_menus (name) {
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: 'Font',
+        label: l('menu.tidyup'),
         click: menu_generic,
         key: 'a',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.tidyup_tt')
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: 'Cord Inspector',
+        label: l('menu.tofront'),
+        click: menu_generic,
+        key: 'a',
+        modifiers: "ctrl",
+        tooltip: l('menu.tofront_tt'),
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        label: l('menu.toback'),
+        click: menu_generic,
+        key: 'a',
+        modifiers: "ctrl",
+        tooltip: l('menu.toback_tt'),
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        type: 'separator'
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        label: l('menu.font'),
+        click: menu_generic,
+        key: 'a',
+        modifiers: "ctrl",
+        tooltip: l('menu.font_tt'),
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        label: l('menu.cordinspector'),
         click: function() {
             pdgui.pdsend(name + " magicglass 0");
         },
         key: 'a',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.cordinspector_tt'),
     }));
 
     editMenu.append(new nw.MenuItem({
@@ -568,24 +590,27 @@ function nw_create_patch_window_menus (name) {
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: 'Find',
+        label: l('menu.find'),
         click: menu_generic,
         key: 'a',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.find_tt'),
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: 'Find Again',
+        label: l('menu.findagain'),
         click: menu_generic,
         key: 'a',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.findagain')
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: 'Find Last Error',
+        label: l('menu.finderror'),
         click: menu_generic,
         key: 'a',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.finderror_tt'),
     }));
 
     editMenu.append(new nw.MenuItem({
@@ -593,17 +618,19 @@ function nw_create_patch_window_menus (name) {
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: 'Autotips',
+        label: l('menu.autotips'),
         click: menu_generic,
         key: 'a',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.autotips_tt'),
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: 'Editmode',
+        label: l('menu.editmode'),
         click: function() { pdgui.pdsend(name + " editmode 0"); },
         key: 'e',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.editmode_tt')
     }));
 
     editMenu.append(new nw.MenuItem({
@@ -611,10 +638,11 @@ function nw_create_patch_window_menus (name) {
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: 'Preferences...',
+        label: l('menu.preferences'),
         click: menu_generic,
         key: 'a',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.preferences_tt')
     }));
 
     // Put menu
@@ -622,19 +650,20 @@ function nw_create_patch_window_menus (name) {
 
     // Add to window menu
     windowMenu.append(new nw.MenuItem({
-    label: 'Put',
+    label: l('menu.put'),
     submenu: putMenu
     }));
 
     // Put menu sub-entries
     putMenu.append(new nw.MenuItem({
-        label: 'Object',
+        label: l('menu.object'),
         click: function() {
                    pdgui.pdsend(name + " dirty 1");
                    pdgui.pdsend(name + " obj 0");
         },
         key: '1',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.object_tt'),
     }));
 
 /*
@@ -671,43 +700,47 @@ proc menu_array {name} {
 */
 
     putMenu.append(new nw.MenuItem({
-        label: 'Message',
+        label: l('menu.msgbox'),
         click: function() {
                    pdgui.pdsend(name + " dirty 1");
                    pdgui.pdsend(name + " msg 0");
         },
         key: '2',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.msgbox_tt'),
     }));
 
     putMenu.append(new nw.MenuItem({
-        label: 'Number',
+        label: l('menu.number'),
         click: function() { 
                    pdgui.pdsend(name + " dirty 1");
                    pdgui.pdsend(name + " floatatom 0");
         },
         key: '3',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.number_tt')
     }));
 
     putMenu.append(new nw.MenuItem({
-        label: 'Symbol',
+        label: l('menu.symbol'),
         click: function() {
                    pdgui.pdsend(name + " dirty 1");
                    pdgui.pdsend(name + " symbolatom 0");
         },
         key: '4',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.symbol_tt')
     }));
 
     putMenu.append(new nw.MenuItem({
-        label: 'Comment',
+        label: l('menu.comment'),
         click: function() {
                    pdgui.pdsend(name + " dirty 1");
                    pdgui.pdsend(name + " text 0");
         },
         key: '5',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.comment_tt')
     }));
 
     putMenu.append(new nw.MenuItem({
@@ -715,93 +748,102 @@ proc menu_array {name} {
     }));
 
     putMenu.append(new nw.MenuItem({
-        label: 'Bang',
+        label: l('menu.bang'),
         click: function(e) {
                    pdgui.pdsend(name + " dirty 1");
                    pdgui.pdsend(name + " bng 0");
         },
         key: 'b',
-        modifiers: "ctrl-shift"
+        modifiers: "ctrl-shift",
+        tooltip: l('menu.bang_tt')
     }));
 
     putMenu.append(new nw.MenuItem({
-        label: 'Toggle',
+        label: l('menu.toggle'),
         click: function() {
                    pdgui.pdsend(name + " dirty 1");
                    pdgui.pdsend(name + " toggle 0");
         },
         key: 't',
-        modifiers: "ctrl-shift"
+        modifiers: "ctrl-shift",
+        tooltip: l('menu.toggle_tt')
     }));
 
     putMenu.append(new nw.MenuItem({
-        label: 'Number2',
+        label: l('menu.number2'),
         click: function() {
                    pdgui.pdsend(name + " dirty 1");
                    pdgui.pdsend(name + " numbox 0");
         },
         key: 'n',
-        modifiers: "ctrl-shift"
+        modifiers: "ctrl-shift",
+        tooltip: l('menu.number2')
     }));
 
     putMenu.append(new nw.MenuItem({
-        label: 'Vslider',
+        label: l('menu.vslider'),
         click: function() {
                    pdgui.pdsend(name + " dirty 1");
                    pdgui.pdsend(name + " vslider 0");
         },
         key: 'v',
-        modifiers: "ctrl-shift"
+        modifiers: "ctrl-shift",
+        tooltip: l('menu.vslider_tt'),
     }));
 
     putMenu.append(new nw.MenuItem({
-        label: 'Hslider',
+        label: l('menu.hslider'),
         click: function() {
                    pdgui.pdsend(name + " dirty 1");
                    pdgui.pdsend(name + " hslider 0");
         },
         key: 'h',
-        modifiers: "ctrl-shift"
+        modifiers: "ctrl-shift",
+        tooltip: l('menu.hslider_tt'),
     }));
 
     putMenu.append(new nw.MenuItem({
-        label: 'Vradio',
+        label: l('menu.vradio'),
         click: function() {
                    pdgui.pdsend(name + " dirty 1");
                    pdgui.pdsend(name + " vradio 0");
         },
         key: 'd',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.vradio_tt'),
     }));
 
     putMenu.append(new nw.MenuItem({
-        label: 'Hradio',
+        label: l('menu.hradio'),
         click: function() {
                    pdgui.pdsend(name + " dirty 1");
                    pdgui.pdsend(name + " hradio 0");
         },
         key: 'i',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.hradio_tt'),
     }));
 
     putMenu.append(new nw.MenuItem({
-        label: 'VU',
+        label: l('menu.vu'),
         click: function() {
                    pdgui.pdsend(name + " dirty 1");
                    pdgui.pdsend(name + " vumeter 0");
         },
         key: 'u',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.vu_tt'),
     }));
 
     putMenu.append(new nw.MenuItem({
-        label: 'Canvas',
+        label: l('menu.cnv'),
         click: function() {
                    pdgui.pdsend(name + " dirty 1");
                    pdgui.pdsend(name + " mycnv 0");
         },
         key: 'c',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.cnv_tt')
     }));
 
     putMenu.append(new nw.MenuItem({
@@ -809,21 +851,23 @@ proc menu_array {name} {
     }));
 
     putMenu.append(new nw.MenuItem({
-        label: 'Graph',
+        label: l('menu.graph'),
         click: function() {
             pdgui.pdsend(name + " dirty 1");
             // leaving out some placement logic... see pd.tk menu_graph
             pdgui.pdsend(name + " graph NULL 0 0 0 0 30 30 0 30");
         },
         key: 'a',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.graph_tt'),
     }));
 
     putMenu.append(new nw.MenuItem({
-        label: 'Array',
+        label: l('menu.array'),
         click: menu_generic,
         key: 'a',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.array_tt'),
     }));
 
 
@@ -832,23 +876,25 @@ proc menu_array {name} {
 
     // Add to windows menu
     windowMenu.append(new nw.MenuItem({
-    label: 'Windows',
+    label: l('menu.windows'),
     submenu: winmanMenu
     }));
 
     // Winman sub-entries
     winmanMenu.append(new nw.MenuItem({
-        label: 'Next Window',
+        label: l('menu.nextwin'),
         click: menu_generic,
         key: 'c',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.nextwin_tt'),
     }));
 
     winmanMenu.append(new nw.MenuItem({
-        label: 'Previous Window',
+        label: l('menu.prevwin'),
         click: menu_generic,
         key: 'a',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.prevwin_tt'),
     }));
 
     winmanMenu.append(new nw.MenuItem({
@@ -856,17 +902,19 @@ proc menu_array {name} {
     }));
 
     winmanMenu.append(new nw.MenuItem({
-        label: 'Parent Window',
+        label: l('menu.parentwin'),
         click: menu_generic,
         key: 'a',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.parentwin_tt'),
     }));
 
     winmanMenu.append(new nw.MenuItem({
-        label: 'Pd & Console',
+        label: l('menu.pdwin'),
         click: menu_generic,
         key: 'a',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.pdwin_tt'),
     }));
 
     // Media menu
@@ -874,23 +922,25 @@ proc menu_array {name} {
 
     // Add to window menu
     windowMenu.append(new nw.MenuItem({
-    label: 'Media',
+    label: l('menu.media'),
     submenu: mediaMenu
     }));
 
     // Media sub-entries
     mediaMenu.append(new nw.MenuItem({
-        label: 'Audio On',
+        label: l('menu.audio_on'),
         click: menu_generic,
         key: 'c',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.audio_on_tt'),
     }));
 
     mediaMenu.append(new nw.MenuItem({
-        label: 'Audio Off',
+        label: l('menu.audio_off'),
         click: menu_generic,
         key: 'a',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.audio_off_tt'),
     }));
 
     mediaMenu.append(new nw.MenuItem({
@@ -898,17 +948,19 @@ proc menu_array {name} {
     }));
 
     mediaMenu.append(new nw.MenuItem({
-        label: 'Test Audio and Midi',
+        label: l('menu.test'),
         click: menu_generic,
         key: 'a',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.test_tt'),
     }));
 
     mediaMenu.append(new nw.MenuItem({
-        label: 'Load Meter',
+        label: l('menu.loadmeter'),
         click: menu_generic,
         key: 'a',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.loadmeter_tt'),
     }));
 
     // Help menu
@@ -916,30 +968,33 @@ proc menu_array {name} {
 
     // Add to window menu
     windowMenu.append(new nw.MenuItem({
-    label: 'Help',
+    label: l('menu.help'),
     submenu: helpMenu
     }));
 
     // Help sub-entries
     helpMenu.append(new nw.MenuItem({
-        label: 'About Pd-L2ork',
+        label: l('menu.about'),
         click: menu_generic,
         key: 'c',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.about_tt'),
     }));
 
     helpMenu.append(new nw.MenuItem({
-        label: 'Manual',
+        label: l('menu.manual'),
         click: menu_generic,
         key: 'a',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.manual'),
     }));
 
     helpMenu.append(new nw.MenuItem({
-        label: 'Help Browser',
+        label: l('menu.browser'),
         click: menu_generic,
         key: 'a',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.browser_tt'),
     }));
 
     helpMenu.append(new nw.MenuItem({
@@ -947,31 +1002,35 @@ proc menu_array {name} {
     }));
 
     helpMenu.append(new nw.MenuItem({
-        label: 'Pd-L2ork Mailing List',
+        label: l('menu.l2ork_list'),
         click: menu_generic,
         key: 'a',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.l2ork_list_tt'),
     }));
 
     helpMenu.append(new nw.MenuItem({
-        label: 'Pure Data Mailing Lists',
+        label: l('menu.pd_list'),
         click: menu_generic,
         key: 'a',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.pd_list_tt'),
     }));
 
     helpMenu.append(new nw.MenuItem({
-        label: 'Forums',
+        label: l('menu.forums'),
         click: menu_generic,
         key: 'a',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.forums_tt'),
     }));
 
     helpMenu.append(new nw.MenuItem({
-        label: 'IRC Chat',
+        label: l('menu.irc'),
         click: menu_generic,
         key: 'a',
-        modifiers: "ctrl"
+        modifiers: "ctrl",
+        tooltip: l('menu.irc_tt'),
     }));
 
     // Assign to window
