@@ -102,3 +102,5 @@ Everything else:
 * in pdproperties.html, use an object to store all the prop/value pairs that
   got sent.  That way we don't have to use all those awful tricks to
   conditionally fill the slots
+* fix font shits (can't use 'hanging' base-line dominant because it doesn't
+  scale correctly)

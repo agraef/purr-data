@@ -1898,19 +1898,24 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
         {
             //fprintf(stderr,"glist_drawiofor o firsttime\n");
             issignal = obj_issignaloutlet(ob,i);
-            sys_vgui(".x%lx.c create prect %d %d %d %d \
-                      -fill %s -stroke %s -tags {%so%d %lx outlet %s %s}\n",
-                glist_getcanvas(glist), onset, y2 - 2, onset + IOWIDTH, y2,
-                (issignal ? "$pd_colors(signal_nlet)" :
-                   "$pd_colors(control_nlet)"),
-                (issignal ? "$pd_colors(signal_cord)" :
-                    "$pd_colors(control_cord)"),
-                tag, i, tag,
-                (issignal ? "signal" : "control"),
-                (selected ? "selected" : ""));
-            gui_vmess("gui_canvas_drawio", "sssiiiiii",
+            //sys_vgui(".x%lx.c create prect %d %d %d %d \
+            //          -fill %s -stroke %s -tags {%so%d %lx outlet %s %s}\n",
+            //    glist_getcanvas(glist), onset, y2 - 2, onset + IOWIDTH, y2,
+            //    (issignal ? "$pd_colors(signal_nlet)" :
+            //       "$pd_colors(control_nlet)"),
+            //    (issignal ? "$pd_colors(signal_cord)" :
+            //        "$pd_colors(control_cord)"),
+            //    tag, i, tag,
+            //    (issignal ? "signal" : "control"),
+            //    (selected ? "selected" : ""));
+
+/* need to send issignal and is_iemgui here... */
+
+
+            gui_vmess("gui_canvas_drawio", "sssiiiiiisiii",
                 canvas_string(glist_getcanvas(glist)), rtext_gettag(y), tag,
-                onset, y2 - 2, onset + IOWIDTH, y2, x1, y1);
+                onset, y2 - 2, onset + IOWIDTH, y2, x1, y1, "o", i,
+                issignal, 0);
         }
         else
         {
@@ -1936,20 +1941,21 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
         {
             //fprintf(stderr,"glist_drawiofor i firsttime\n");
             issignal = obj_issignalinlet(ob,i);
-            sys_vgui(".x%lx.c create prect %d %d %d %d \
-                      -fill %s -stroke %s -tags {%si%d %lx inlet %s %s}\n",
-                glist_getcanvas(glist), onset, y1,
-                onset + IOWIDTH, y1 + EXTRAPIX,
-                (issignal ? "$pd_colors(signal_nlet)" :
-                    "$pd_colors(control_nlet)"),
-                (issignal ? "$pd_colors(signal_cord)" :
-                    "$pd_colors(control_cord)"),
-                tag, i, tag,
-                (issignal ? "signal" : "control"),
-                (selected ? "selected" : ""));
-            gui_vmess("gui_canvas_drawio", "sssiiiiii",
+            //sys_vgui(".x%lx.c create prect %d %d %d %d \
+            //          -fill %s -stroke %s -tags {%si%d %lx inlet %s %s}\n",
+            //    glist_getcanvas(glist), onset, y1,
+            //    onset + IOWIDTH, y1 + EXTRAPIX,
+            //    (issignal ? "$pd_colors(signal_nlet)" :
+            //        "$pd_colors(control_nlet)"),
+            //    (issignal ? "$pd_colors(signal_cord)" :
+            //        "$pd_colors(control_cord)"),
+            //    tag, i, tag,
+            //    (issignal ? "signal" : "control"),
+            //    (selected ? "selected" : ""));
+            gui_vmess("gui_canvas_drawio", "sssiiiiiisiii",
                 canvas_string(glist_getcanvas(glist)), rtext_gettag(y), tag,
-                onset, y1, onset + IOWIDTH, y1 + EXTRAPIX, x1, y1);
+                onset, y1, onset + IOWIDTH, y1 + EXTRAPIX, x1, y1, "i", i,
+                issignal, 0);
         }
         else
         {

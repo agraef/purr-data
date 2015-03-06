@@ -157,18 +157,30 @@ function set_audioapi(val) {
     pd_whichapi = val;
 }
 
+var last_string = "";
+var last_child = {};
+var duplicate = 0;
+
 function gui_post(string, color) {
-    if (color === undefined) { color = "black" };
-    var myp = pd_window.document.getElementById('p1');
-    var text;
-    var span = pd_window.document.createElement("span");
-    span.style.color = color;
-    var text = pd_window.document.createTextNode(string + "\n"); 
-    span.appendChild(text);
-    myp.appendChild(span);
-    var printout = pd_window.document.getElementById("bottom");
-    printout.scrollTop = printout.scrollHeight;
-//    printout.scrollTo(0, pd_window.document.body.scrollHeight);
+    if (last_string === string) {
+        last_child.textContent = "[" + (duplicate + 2) + "] " + last_string;
+        duplicate++;
+    } else {
+        if (color === undefined) { color = "black" };
+        var myp = pd_window.document.getElementById('p1');
+        var text;
+        var span = pd_window.document.createElement("span");
+        span.style.color = color;
+        var text = pd_window.document.createTextNode(string + "\n"); 
+        span.appendChild(text);
+        myp.appendChild(span);
+        var printout = pd_window.document.getElementById("bottom");
+        printout.scrollTop = printout.scrollHeight;
+
+        last_string = string;
+        last_child = span;
+        duplicate = 0;
+    }
 }
 
 exports.gui_post = gui_post;
@@ -1857,16 +1869,30 @@ function gui_text_drawborder(cid, tag, isbroken, x1, y1, x2, y2) {
     g.appendChild(rect);
 }
 
-function gui_canvas_drawio(cid, parenttag, tag, x1, y1, x2, y2, basex, basey) {
-    var g = get_gobj(cid, parenttag);
-    // probably need to add an id for xlets below
+function gui_canvas_drawio(cid, parenttag, tag, x1, y1, x2, y2, basex, basey, type, i, is_signal, is_iemgui) {
+    var xlet_class, xlet_id, g = get_gobj(cid, parenttag);
+    if (is_iemgui) {
+        xlet_class = 'xlet_iemgui';
+        // We have an inconsistency here.  We're setting the tag using
+        // string concatenation below, but the "tag" for iemguis arrives
+        // to us pre-concatenated.  We need to remove that formatting in c, and
+        // in general try to simplify tag creation on the c side as much
+        // as possible.
+        xlet_id = tag;
+    } else if (is_signal) {
+        xlet_class = 'xlet_signal';
+        xlet_id = tag + type + i;
+    } else {
+        xlet_class = 'xlet_control';
+        xlet_id = tag + type + i;
+    }
     var rect = create_item(cid, 'rect', {
         width: x2 - x1,
         height: y2 - y1,
         x: x1 - basex,
         y: y1 - basey,
-        id: tag,
-        class: 'xlet'
+        id: xlet_id,
+        class: xlet_class,
     });
     g.appendChild(rect);
     gui_post("the tag for this XLET is " + tag);
@@ -1876,6 +1902,32 @@ function gui_eraseio(cid, tag) {
     gui_post("the tag for this bout-to-ba-leted XLET is " + tag);
     var xlet = get_item(cid, tag);
     xlet.parentNode.removeChild(xlet);
+}
+
+function gui_configure_io(cid, tag, is_iemgui, is_signal, width) {
+    var xlet = get_item(cid, tag);
+    configure_item(xlet, {
+        'stroke-width': width,
+//        fill: 'red'
+//        fill: filter ? 'orange' : (is_signal ? 'red' : 'green')
+    });
+    if (is_iemgui) {
+        xlet.classList.add('xlet_iemgui');
+    } else if (is_signal) {
+        xlet.classList.add('xlet_signal');
+    } else {
+        xlet.classList.add('xlet_control');
+    }
+    // remove xlet_selected tag
+    xlet.classList.remove('xlet_selected');
+    // iemgui: black
+    // sig: red
+    // control: green
+}
+
+function gui_highlight_io(cid, tag) {
+    var xlet = get_item(cid, tag);
+    xlet.classList.add('xlet_selected');
 }
 
 function gui_message_drawborder(cid,tag,width,height) {
@@ -1992,8 +2044,11 @@ function gui_text_new(canvasname, myname, type, isselected, x, y, text, font) {
         // at the top-right corner of the text's bbox.  SVG uses the baseline.
         // There's probably a programmatic way to do this, but for now-- fudge factors
         // based on the DejaVu Sans Mono font. :)
-        x: 1,
-        y: 13,
+        x: x,
+        y: y + 10,
+        // Turns out we can't do 'hanging' baseline
+        // because it's borked when scaled. Bummer...
+        // 'dominant-baseline': 'hanging',
         'shape-rendering': 'optimizeSpeed',
         'font-size': font + 'px',
         id: myname + 'text'

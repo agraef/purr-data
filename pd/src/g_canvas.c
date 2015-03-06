@@ -248,6 +248,7 @@ void canvas_makefilename(t_canvas *x, char *file, char *result, int resultsize)
     //fprintf(stderr,"resulting file = <%s>\n", result);          
 }
 
+// Generic tag format to use for the gui
 char *canvas_string(t_canvas *x)
 {
     static char s[MAXPDSTRING];

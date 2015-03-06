@@ -1048,9 +1048,10 @@ void iemgui_draw_io(t_iemgui *x, int old_sr_flags)
         char tagbuf[MAXPDSTRING];
         sprintf(parenttagbuf, "x%lx", (long unsigned int)x);
         sprintf(tagbuf, "%so%d", iem_get_tag(canvas, x), i);
-        gui_vmess("gui_canvas_drawio", "sssiiiiii", canvas_string(canvas),
+        gui_vmess("gui_canvas_drawio", "sssiiiiiisiii", canvas_string(canvas),
             parenttagbuf, tagbuf,
-            x1+i*k, y2-1, x1+i*k + IOWIDTH, y2, x1, y1);
+            x1+i*k, y2-1, x1+i*k + IOWIDTH, y2, x1, y1, "o", i,
+            0, 1);
     }
     if(!a && b)
         for (i=0; i<n; i++)
@@ -1080,9 +1081,10 @@ void iemgui_draw_io(t_iemgui *x, int old_sr_flags)
         char tagbuf[MAXPDSTRING];
         sprintf(parenttagbuf, "x%lx", (long unsigned int)x);
         sprintf(tagbuf, "%si%d", iem_get_tag(canvas, x), i);
-        gui_vmess("gui_canvas_drawio", "sssiiiiii", canvas_string(canvas),
+        gui_vmess("gui_canvas_drawio", "sssiiiiiisiii", canvas_string(canvas),
             parenttagbuf, tagbuf,
-            x1+i*k, y1, x1+i*k + IOWIDTH, y1+1, x1, y1);
+            x1+i*k, y1, x1+i*k + IOWIDTH, y1+1, x1, y1, "i", i,
+            0, 1);
     }
     if(!a && b)
         for (i=0; i<n; i++)

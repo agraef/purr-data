@@ -362,11 +362,13 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
                 dispx + LMARGIN, dispy + TMARGIN,
                 outchars_b, tempbuf, sys_hostfontsize(font),
                 (glist_isselected(x->x_glist, ((t_gobj*)x->x_text)) ? "$pd_colors(selection)" : "$pd_colors(text)"));
-            gui_vmess("gui_text_new", "sssiffsi",
+            gui_vmess("gui_text_new", "sssiiisi",
                 canvas_string(canvas), x->x_tag, rtext_gettype(x)->s_name,
                 glist_isselected(x->x_glist, ((t_gobj*)x->x_text)),
-                dispx + LMARGIN,
-                dispy + TMARGIN,
+                LMARGIN,
+                TMARGIN,
+//                dispx + LMARGIN,
+//                dispy + TMARGIN,
                 tempbuf,
                 sys_hostfontsize(font));
                

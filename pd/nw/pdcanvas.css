@@ -38,11 +38,26 @@ text {
     stroke-dasharray: 3 2;
 }
 
-.xlet {
-    stroke: black;
+.xlet_control {
+    stroke: red;
     fill: gray;
     stroke-width: 1;
-    shape-rendering: optimizeSpeed;
+}
+
+.xlet_signal {
+    stroke: green;
+    fill: green;
+    stroke-width: 1;
+}
+
+.xlet_iemgui {
+    stroke: black;
+    fill: black;
+    stroke-width: 1;
+}
+
+.xlet_selected {
+    stroke: purple !important;
 }
 
 //.xlet:hover {

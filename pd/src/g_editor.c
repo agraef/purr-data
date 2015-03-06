@@ -142,15 +142,23 @@ static void tooltip_erase (t_canvas *x) {
 }
 
 static void canvas_nlet_conf (t_canvas *x, int type) {
-    int filter = type=='o' ? last_outlet_filter : last_inlet_filter;
+    int isiemgui = type=='o' ? last_outlet_filter : last_inlet_filter;
     int issignal = type=='o' ? outlet_issignal : inlet_issignal;
-    sys_vgui(".x%x.c itemconfigure %s -stroke %s -fill %s -strokewidth 1\n", x,
-      type=='o' ? x->gl_editor->canvas_cnct_outlet_tag : x->gl_editor->canvas_cnct_inlet_tag,
-      (filter ? "$pd_colors(iemgui_nlet)" : 
-        (issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)")),
-        (issignal ? "$pd_colors(signal_nlet)" : "$pd_colors(control_nlet)"));
+    //sys_vgui(".x%x.c itemconfigure %s -stroke %s -fill %s -strokewidth 1\n", x,
+    //  type=='o' ? x->gl_editor->canvas_cnct_outlet_tag : x->gl_editor->canvas_cnct_inlet_tag,
+    //  (isiemgui ? "$pd_colors(iemgui_nlet)" : 
+    //    (issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)")),
+    //    (issignal ? "$pd_colors(signal_nlet)" : "$pd_colors(control_nlet)"));
+
+    /* this is rather confusing, but the canvas_cnct_[xlet]_tag already
+       includes the type and index concatenated to the end. */
+    gui_vmess("gui_configure_io", "ssiii",
+        canvas_string(x), type == 'o' ? x->gl_editor->canvas_cnct_outlet_tag :
+            x->gl_editor->canvas_cnct_inlet_tag,
+        isiemgui, issignal, 1);
 }
 
+/* this doesn't seem to be used anywhere */
 /*static void canvas_nlet_conf2 (t_canvas *x, int cond) { // because of one exception...
     int issignal = inlet_issignal;
     sys_vgui(".x%x.c itemconfigure %s -stroke %s -fill %s -strokewidth 1\n", x,
@@ -3304,7 +3312,8 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                         x->gl_editor->e_onmotion = MA_CONNECT;
                         x->gl_editor->e_xwas = xpos;
                         x->gl_editor->e_ywas = ypos;
-                        sys_vgui(
+                        //sys_vgui(
+
                             /*".x%lx.c create polyline %d %d %d %d "
                               "-stroke %s -strokewidth %s -tags x\n",
                             x, xpos, ypos, xpos, ypos,
@@ -3314,21 +3323,22 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                             (issignal ?
                                 "$pd_colors(signal_cord_width)" :
                                 "$pd_colors(control_cord_width)"));*/
+
                             // bezier is too slow for the time being
-                            ".x%lx.c create path "
-                            "\"M %d %d Q %d %d %d %d Q %d %d %d %d\" "
-                            "-stroke %s -strokewidth %s "
-                            "-tags {x all_cords %s}\n",
-                        x, xpos, ypos,
-                        xpos, ypos, xpos, ypos,
-                        xpos, ypos, xpos, ypos,
-                        (issignal ?
-                            "$pd_colors(signal_cord)" :
-                            "$pd_colors(control_cord)"),
-                        (issignal ?
-                            "$pd_colors(signal_cord_width)" :
-                            "$pd_colors(control_cord_width)"),
-                        (issignal ? "signal" : "control"));
+                        //    ".x%lx.c create path "
+                        //    "\"M %d %d Q %d %d %d %d Q %d %d %d %d\" "
+                        //    "-stroke %s -strokewidth %s "
+                        //    "-tags {x all_cords %s}\n",
+                        //x, xpos, ypos,
+                        //xpos, ypos, xpos, ypos,
+                        //xpos, ypos, xpos, ypos,
+                        //(issignal ?
+                        //    "$pd_colors(signal_cord)" :
+                        //    "$pd_colors(control_cord)"),
+                        //(issignal ?
+                        //    "$pd_colors(signal_cord_width)" :
+                        //    "$pd_colors(control_cord_width)"),
+                        //(issignal ? "signal" : "control"));
                         gui_vmess("gui_canvas_line", "ssiiiiiiiiii",
                             canvas_string(x), "newcord",
                             xpos, ypos, xpos, ypos, xpos, ypos, xpos, ypos, xpos, ypos);
@@ -3347,11 +3357,16 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                                     (t_text *)&ob->ob_g);
                             sprintf(x->gl_editor->canvas_cnct_outlet_tag, 
                                 "%so%d", rtext_gettag(yr), closest);
-                            sys_vgui(".x%x.c itemconfigure %s "
-                                     "-stroke $select_nlet_color "
-                                     "-strokewidth $highlight_width\n",
-                                     x,
-                                     x->gl_editor->canvas_cnct_outlet_tag);
+                            //sys_vgui(".x%x.c itemconfigure %s "
+                            //         "-stroke $select_nlet_color "
+                            //         "-strokewidth $highlight_width\n",
+                            //         x,
+                            //         x->gl_editor->canvas_cnct_outlet_tag);
+
+                            gui_vmess("gui_highlight_io", "ss",
+                                canvas_string(x),
+                                x->gl_editor->canvas_cnct_outlet_tag);
+
                             //sys_vgui(".x%x.c raise %s\n",
                             //         x,
                             //         x->gl_editor->canvas_cnct_outlet_tag);
@@ -3405,9 +3420,14 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                             gobj_filter_highlight_behavior((t_text *)&ob->ob_g);
                         sprintf(x->gl_editor->canvas_cnct_inlet_tag, 
                             "%si%d", rtext_gettag(yr), closest);
-                        sys_vgui(".x%x.c itemconfigure %s "
-                                 "-strokewidth $highlight_width\n",
-                            x, x->gl_editor->canvas_cnct_inlet_tag);
+                        //sys_vgui(".x%x.c itemconfigure %s "
+                        //         "-strokewidth $highlight_width\n",
+                        //    x, x->gl_editor->canvas_cnct_inlet_tag);
+
+                        gui_vmess("gui_highlight_io", "ss",
+                            canvas_string(x),
+                            x->gl_editor->canvas_cnct_inlet_tag);
+
                         //sys_vgui(".x%x.c raise %s\n",
                         //         x,
                         //         x->gl_editor->canvas_cnct_inlet_tag);
@@ -3630,9 +3650,9 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
             //buf->u_redo = (t_undo_sel *)canvas_undo_set_selection(x);
             //canvas_undo_add(x, 11, "selection", buf);
         }
-        sys_vgui(".x%lx.c create prect %d %d %d %d -tags x "
-                 "-stroke $pd_colors(selection_rectangle)\n",
-            x, xpos, ypos, xpos, ypos);
+        //sys_vgui(".x%lx.c create prect %d %d %d %d -tags x "
+        //         "-stroke $pd_colors(selection_rectangle)\n",
+        //    x, xpos, ypos, xpos, ypos);
         gui_vmess("gui_create_selection_rectangle", "siiii", canvas_string(x),
             xpos, ypos, xpos, ypos);
         x->gl_editor->e_xwas = xpos;
@@ -3762,16 +3782,16 @@ void canvas_drawconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2,
             "$pd_colors(control_cord_width)"), 
         tag);*/
     //bezier curves FTW
-    sys_vgui(".x%lx.c create path \"M %d %d Q %d %d %d %d Q %d %d %d %d\" "
-             "-stroke %s -strokewidth %s -tags {l%lx all_cords %s}\n",
-        x, lx1, ly1,
-        lx1, ly1 + yoff, lx1 + halfx, ly1 + halfy,
-        lx2, ly2 - yoff, lx2, ly2,
-        (issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)"),
-        (issignal ?
-            "$pd_colors(signal_cord_width)" :
-            "$pd_colors(control_cord_width)"), 
-        tag, (issignal ? "signal" : "control"));
+    //sys_vgui(".x%lx.c create path \"M %d %d Q %d %d %d %d Q %d %d %d %d\" "
+    //         "-stroke %s -strokewidth %s -tags {l%lx all_cords %s}\n",
+    //    x, lx1, ly1,
+    //    lx1, ly1 + yoff, lx1 + halfx, ly1 + halfy,
+    //    lx2, ly2 - yoff, lx2, ly2,
+    //    (issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)"),
+    //    (issignal ?
+    //        "$pd_colors(signal_cord_width)" :
+    //        "$pd_colors(control_cord_width)"), 
+    //    tag, (issignal ? "signal" : "control"));
     sprintf(tagbuf, "l%lx", (long unsigned int)tag);
     gui_vmess("gui_canvas_line", "ssiiiiiiiiii",
         canvas_string(x), tagbuf, lx1, ly1, lx1, ly1 + yoff,
@@ -3813,11 +3833,11 @@ void canvas_updateconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2,
             //sys_vgui(".x%lx.c coords l%lx %d %d %d %d\n",
             //    x, tag, lx1, ly1, lx2, ly2);
             //bezier curves FTW
-            sys_vgui(".x%lx.c coords l%lx "
-                     "\"M %d %d Q %d %d %d %d Q %d %d %d %d\"\n",
-                x, tag, lx1, ly1,
-                lx1, ly1 + yoff, lx1 + halfx, ly1 + halfy,
-                lx2, ly2 - yoff, lx2, ly2);
+            //sys_vgui(".x%lx.c coords l%lx "
+            //         "\"M %d %d Q %d %d %d %d Q %d %d %d %d\"\n",
+            //    x, tag, lx1, ly1,
+            //    lx1, ly1 + yoff, lx1 + halfx, ly1 + halfy,
+            //    lx2, ly2 - yoff, lx2, ly2);
             sprintf(cord_tag, "l%lx", (long unsigned int)tag);
             gui_vmess("gui_canvas_updateline", "ssiiiii", canvas_string(x), cord_tag,
                 lx1, ly1, lx2, ly2, yoff);
@@ -3828,10 +3848,10 @@ void canvas_updateconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2,
         {
             //sys_vgui(".x%lx.c coords x %d %d %d %d\n", x, lx1, ly1, lx2, ly2);
             //bezier curves FTW
-            sys_vgui(".x%lx.c coords x \"M %d %d Q %d %d %d %d Q %d %d %d %d\"\n",
-                x, lx1, ly1,
-                lx1, ly1 + yoff, lx1 + halfx, ly1 + halfy,
-                lx2, ly2 - yoff, lx2, ly2);
+            //sys_vgui(".x%lx.c coords x \"M %d %d Q %d %d %d %d Q %d %d %d %d\"\n",
+            //    x, lx1, ly1,
+            //    lx1, ly1 + yoff, lx1 + halfx, ly1 + halfy,
+            //    lx2, ly2 - yoff, lx2, ly2);
             gui_vmess("gui_canvas_updateline", "ssiiiii", canvas_string(x), "newcord",
                 lx1, ly1, lx2, ly2, yoff);
 //                lx1, ly1, lx1, ly1 + yoff, lx1 + halfx, ly1 + halfy, lx2, ly2 - yoff,
@@ -4497,10 +4517,15 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                             "%si%d",
                             rtext_gettag(y),
                             closest2);
-                    sys_vgui(".x%x.c itemconfigure %s "
-                             "-stroke $select_nlet_color "
-                             "-strokewidth $highlight_width\n",
-                        x, x->gl_editor->canvas_cnct_inlet_tag);
+                    //sys_vgui(".x%x.c itemconfigure %s "
+                    //         "-stroke $select_nlet_color "
+                    //         "-strokewidth $highlight_width\n",
+                    //    x, x->gl_editor->canvas_cnct_inlet_tag);
+
+                    gui_vmess("gui_highlight_io", "ss",
+                        canvas_string(x),
+                        x->gl_editor->canvas_cnct_inlet_tag);
+
                     //sys_vgui(".x%x.c raise %s\n",
                     //         x,
                     //         x->gl_editor->canvas_cnct_inlet_tag);
