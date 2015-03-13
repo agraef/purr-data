@@ -500,10 +500,18 @@ void canvas_resortinlets(t_canvas *x)
         t_rtext *rt = glist_findrtext(x->gl_owner, (t_text *)&ob->ob_g);
         for (i = 0; i < ninlets; i++)
         {
-            sys_vgui(".x%x.c itemconfigure %si%d -fill %s -width 1\n",
-                x, rtext_gettag(rt), i, 
-                (obj_issignalinlet(ob, i) ?
-                    "$signal_nlet" : "$pd_colors_control_nlet)"));
+            //sys_vgui(".x%x.c itemconfigure %si%d -fill %s -width 1\n",
+            //    x, rtext_gettag(rt), i, 
+            //    (obj_issignalinlet(ob, i) ?
+            //        "$signal_nlet" : "$pd_colors_control_nlet)"));
+            sprintf(xlet_tag, "%si%d", rtext_gettag(rt), i);
+            char xlet_tag[MAXPDSTRING];
+            gui_vmess("gui_configure_io", "ssiii",
+                canvas_tag(x),
+                xlet_tag,
+                0,
+                obj_issignalinlet(ob, i),
+                1);
         }
         */
 
@@ -890,7 +898,7 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
         xpix = text_xpix(&x->gl_obj, parent_glist);
         ypix = text_ypix(&x->gl_obj, parent_glist);
         gui_vmess("gui_text_create_gobj", "ssii",
-            canvas_string(glist_getcanvas(x->gl_owner)),
+            canvas_tag(glist_getcanvas(x->gl_owner)),
             tag, xpix, ypix);
         if (canvas_showtext(x))
             rtext_draw(glist_findrtext(parent_glist, &x->gl_obj));
@@ -922,24 +930,23 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
             //    glist_getcanvas(x->gl_owner),
                 ////parent_glist,
             //    x1, y1, x1, y2, x2, y2, x2, y1, x1, y1, tag);
-            char tagbuf[MAXPDSTRING];
-            sprintf(tagbuf, "%sfill", tag);
             gui_vmess("gui_text_drawborder", "ssiiiii",
-                canvas_string(glist_getcanvas(x->gl_owner)),
+                canvas_tag(glist_getcanvas(x->gl_owner)),
                 tag,
                 0, x1, y1, x2, y2);
             glist_noselect(x->gl_owner);
+            gui_vmess("gui_graph_fill_border", "ssi",
+                canvas_tag(glist_getcanvas(x->gl_owner)),
+                tag);
         }
         else if (gobj_shouldvis(gr, parent_glist))
         {
             //sys_vgui(".x%lx.c delete %sfill\n",
             //    glist_getcanvas(x->gl_owner), tag);
                ////parent_glist, tag);
-            char tagbuf2[MAXPDSTRING];
-            sprintf(tagbuf2, "%sfill", tag);
-            gui_vmess("gui_graph_deleteborder", "ss",
-                canvas_string(glist_getcanvas(x->gl_owner)),
-                tagbuf2);
+            gui_vmess("gui_gobj_erase", "ss",
+                canvas_tag(glist_getcanvas(x->gl_owner)),
+                tag);
         }
         return;
     }
@@ -951,19 +958,23 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
         t_gobj *g;
         t_symbol *arrayname;
             /* draw a rectangle around the graph */
+
         /*sys_vgui(".x%lx.c create polyline %d %d %d %d %d %d %d %d %d %d "
                    "-stroke $pd_colors(graph_border) -tags {%sR %s graph}\n",
             glist_getcanvas(x->gl_owner),
             x1, y1, x1, y2, x2, y2, x2, y1, x1, y1, tag, tag);*/
+
         //sys_vgui(".x%lx.c create prect %d %d %d %d "
         //         "-stroke $pd_colors(graph_border) -tags {%sR graph}\n",
         //         //REMOVED: -fill $pd_colors(graph) 
         //    glist_getcanvas(x->gl_owner),
         //    x1, y1, x2, y2, tag); // -fill $pd_colors(graph)
+
         char tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "%sR", tag);
+
         gui_vmess("gui_text_drawborder", "ssiiiii",
-            canvas_string(glist_getcanvas(x->gl_owner)),
+            canvas_tag(glist_getcanvas(x->gl_owner)),
             tag,
             0, x1, y1, x2, y2);
             /* write garrays' names along the top */
@@ -976,13 +987,23 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
                 !garray_getname((t_garray *)g, &arrayname))
             {
                 //i++;
-                sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor nw "
-                         "-font {{%s} -%d %s} -tags {%s label graph} -fill %s\n",
-                    (long)glist_getcanvas(x),  x1+2, i, arrayname->s_name,
-                    sys_font, sys_hostfontsize(glist_getfont(x)), sys_fontweight,
+                //sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor nw "
+                //         "-font {{%s} -%d %s} -tags {%s label graph} -fill %s\n",
+                //    (long)glist_getcanvas(x),  x1+2, i, arrayname->s_name,
+                //    sys_font, sys_hostfontsize(glist_getfont(x)), sys_fontweight,
+                //    tag,
+                //    (glist_isselected(x, gr) ?
+                //        "$pd_colors(selection)" : "$pd_colors(graph_border)"));
+                gui_vmess("gui_graph_label", "ssissisi",
+                    canvas_tag(glist_getcanvas(x)),
                     tag,
-                    (glist_isselected(x, gr) ?
-                        "$pd_colors(selection)" : "$pd_colors(graph_border)"));
+                    i,
+                    arrayname->s_name,
+                    sys_font,
+                    sys_hostfontsize(glist_getfont(x)),
+                    sys_fontweight,
+                    glist_isselected(x, gr));
+
                 i += sys_fontheight(glist_getfont(x));
             }
         }
@@ -999,28 +1020,46 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
                     f += x->gl_xtick.k_inc)
             {
                 int tickpix = (i % x->gl_xtick.k_lperb ? 2 : 4);
-                sys_vgui(".x%lx.c create polyline %d %d %d %d -tags %s\n",
-                    glist_getcanvas(x->gl_owner),
-                    (int)glist_xtopixels(x, f), (int)upix,
-                    (int)glist_xtopixels(x, f), (int)upix - tickpix, tag);
-                sys_vgui(".x%lx.c create polyline %d %d %d %d -tags %s\n",
-                    glist_getcanvas(x->gl_owner),
-                    (int)glist_xtopixels(x, f), (int)lpix,
-                    (int)glist_xtopixels(x, f), (int)lpix + tickpix, tag);
+                //sys_vgui(".x%lx.c create polyline %d %d %d %d -tags %s\n",
+                //    glist_getcanvas(x->gl_owner),
+                //    (int)glist_xtopixels(x, f), (int)upix,
+                //    (int)glist_xtopixels(x, f), (int)upix - tickpix, tag);
+                //sys_vgui(".x%lx.c create polyline %d %d %d %d -tags %s\n",
+                //    glist_getcanvas(x->gl_owner),
+                //    (int)glist_xtopixels(x, f), (int)lpix,
+                //    (int)glist_xtopixels(x, f), (int)lpix + tickpix, tag);
+                gui_vmess("gui_graph_vtick", "ssiiiiii",
+                    canvas_tag(glist_getcanvas(x->gl_owner)),
+                    tag,
+                    (int)glist_xtopixels(x, f),
+                    (int)upix,
+                    (int)lpix,
+                    (int)tickpix,
+                    x1,
+                    y1);
             }
             for (i = 1, f = x->gl_xtick.k_point - x->gl_xtick.k_inc;
                 f > 0.99 * x->gl_x1 + 0.01*x->gl_x2;
                     i++, f -= x->gl_xtick.k_inc)
             {
                 int tickpix = (i % x->gl_xtick.k_lperb ? 2 : 4);
-                sys_vgui(".x%lx.c create polyline %d %d %d %d -tags %s\n",
-                    glist_getcanvas(x->gl_owner),
-                    (int)glist_xtopixels(x, f), (int)upix,
-                    (int)glist_xtopixels(x, f), (int)upix - tickpix, tag);
-                sys_vgui(".x%lx.c create polyline %d %d %d %d -tags %s\n",
-                    glist_getcanvas(x->gl_owner),
-                    (int)glist_xtopixels(x, f), (int)lpix,
-                    (int)glist_xtopixels(x, f), (int)lpix + tickpix, tag);
+                //sys_vgui(".x%lx.c create polyline %d %d %d %d -tags %s\n",
+                //    glist_getcanvas(x->gl_owner),
+                //    (int)glist_xtopixels(x, f), (int)upix,
+                //    (int)glist_xtopixels(x, f), (int)upix - tickpix, tag);
+                //sys_vgui(".x%lx.c create polyline %d %d %d %d -tags %s\n",
+                //    glist_getcanvas(x->gl_owner),
+                //    (int)glist_xtopixels(x, f), (int)lpix,
+                //    (int)glist_xtopixels(x, f), (int)lpix + tickpix, tag);
+                gui_vmess("gui_graph_vtick", "ssiiiiii",
+                    canvas_tag(glist_getcanvas(x->gl_owner)),
+                    tag,
+                    (int)glist_xtopixels(x, f),
+                    (int)upix,
+                    (int)lpix,
+                    (int)tickpix,
+                    x1,
+                    y1);
             }
         }
 
@@ -1036,49 +1075,93 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
                     i++, f += x->gl_ytick.k_inc)
             {
                 int tickpix = (i % x->gl_ytick.k_lperb ? 2 : 4);
-                sys_vgui(".x%lx.c create polyline %d %d %d %d -tags %s\n",
-                    glist_getcanvas(x->gl_owner),
-                    x1, (int)glist_ytopixels(x, f), 
-                    x1 + tickpix, (int)glist_ytopixels(x, f), tag);
-                sys_vgui(".x%lx.c create polyline %d %d %d %d -tags %s\n",
-                    glist_getcanvas(x->gl_owner),
-                    x2, (int)glist_ytopixels(x, f), 
-                    x2 - tickpix, (int)glist_ytopixels(x, f), tag);
+                //sys_vgui(".x%lx.c create polyline %d %d %d %d -tags %s\n",
+                //    glist_getcanvas(x->gl_owner),
+                //    x1, (int)glist_ytopixels(x, f), 
+                //    x1 + tickpix, (int)glist_ytopixels(x, f), tag);
+                //sys_vgui(".x%lx.c create polyline %d %d %d %d -tags %s\n",
+                //    glist_getcanvas(x->gl_owner),
+                //    x2, (int)glist_ytopixels(x, f), 
+                //    x2 - tickpix, (int)glist_ytopixels(x, f), tag);
+                gui_vmess("gui_graph_htick", "ssiiiiii",
+                    canvas_tag(glist_getcanvas(x->gl_owner)),
+                    tag,
+                    (int)glist_ytopixels(x, f),
+                    x1,
+                    x2,
+                    (int)tickpix,
+                    x1,
+                    y1);
             }
             for (i = 1, f = x->gl_ytick.k_point - x->gl_ytick.k_inc;
                 f > 0.99 * lbound + 0.01 * ubound;
                     i++, f -= x->gl_ytick.k_inc)
             {
                 int tickpix = (i % x->gl_ytick.k_lperb ? 2 : 4);
-                sys_vgui(".x%lx.c create polyline %d %d %d %d -tags %s\n",
-                    glist_getcanvas(x->gl_owner),
-                    x1, (int)glist_ytopixels(x, f), 
-                    x1 + tickpix, (int)glist_ytopixels(x, f), tag);
-                sys_vgui(".x%lx.c create polyline %d %d %d %d -tags %s\n",
-                    glist_getcanvas(x->gl_owner),
-                    x2, (int)glist_ytopixels(x, f), 
-                    x2 - tickpix, (int)glist_ytopixels(x, f), tag);
+                //sys_vgui(".x%lx.c create polyline %d %d %d %d -tags %s\n",
+                //    glist_getcanvas(x->gl_owner),
+                //    x1, (int)glist_ytopixels(x, f), 
+                //    x1 + tickpix, (int)glist_ytopixels(x, f), tag);
+                //sys_vgui(".x%lx.c create polyline %d %d %d %d -tags %s\n",
+                //    glist_getcanvas(x->gl_owner),
+                //    x2, (int)glist_ytopixels(x, f), 
+                //    x2 - tickpix, (int)glist_ytopixels(x, f), tag);
+                gui_vmess("gui_graph_htick", "ssiiiiii",
+                    canvas_tag(glist_getcanvas(x->gl_owner)),
+                    tag,
+                    (int)glist_ytopixels(x, f),
+                    x1,
+                    x2,
+                    (int)tickpix,
+                    x1,
+                    y1);
             }
         }
             /* draw x labels */
         for (i = 0; i < x->gl_nxlabels; i++)
-            sys_vgui(".x%lx.c create text\
-        %d %d -text {%s} -font {{%s} %d %s} -tags {%s}\n",
-                glist_getcanvas(x),
+        {
+            //sys_vgui(".x%lx.c create text "
+            //    "%d %d -text {%s} -font {{%s} %d %s} -tags {%s}\n",
+            //    glist_getcanvas(x),
+            //    (int)glist_xtopixels(x, atof(x->gl_xlabel[i]->s_name)),
+            //    (int)glist_ytopixels(x, x->gl_xlabely),
+            //    x->gl_xlabel[i]->s_name, sys_font, 
+            //         glist_getfont(x), sys_fontweight, tag);
+            gui_vmess("gui_graph_tick_label", "ssiissisii",
+                canvas_tag(glist_getcanvas(x)),
+                tag,
                 (int)glist_xtopixels(x, atof(x->gl_xlabel[i]->s_name)),
                 (int)glist_ytopixels(x, x->gl_xlabely),
-                x->gl_xlabel[i]->s_name, sys_font, 
-                     glist_getfont(x), sys_fontweight, tag);
+                x->gl_xlabel[i]->s_name,
+                sys_font, 
+                glist_getfont(x),
+                sys_fontweight,
+                x1,
+                y1);
+        }
 
             /* draw y labels */
         for (i = 0; i < x->gl_nylabels; i++)
-            sys_vgui(".x%lx.c create text\
-        %d %d -text {%s} -font {{%s} %d %s} -tags {%s}\n",
-                glist_getcanvas(x),
+        {
+            //sys_vgui(".x%lx.c create text "
+            //    "%d %d -text {%s} -font {{%s} %d %s} -tags {%s}\n",
+            //    glist_getcanvas(x),
+            //    (int)glist_xtopixels(x, x->gl_ylabelx),
+            //    (int)glist_ytopixels(x, atof(x->gl_ylabel[i]->s_name)),
+            //    x->gl_ylabel[i]->s_name, sys_font,
+            //    glist_getfont(x), sys_fontweight, tag);
+            gui_vmess("gui_graph_tick_label", "ssiissisii",
+                canvas_tag(glist_getcanvas(x)),
+                tag,
                 (int)glist_xtopixels(x, x->gl_ylabelx),
                 (int)glist_ytopixels(x, atof(x->gl_ylabel[i]->s_name)),
-                x->gl_ylabel[i]->s_name, sys_font,
-                glist_getfont(x), sys_fontweight, tag);
+                x->gl_ylabel[i]->s_name,
+                sys_font, 
+                glist_getfont(x),
+                sys_fontweight,
+                x1,
+                y1);
+        }
 
             /* draw contents of graph as glist */
         for (g = x->gl_list; g; g = g->g_next)
@@ -1101,13 +1184,18 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
     }
     else
     {
-        sys_vgui(".x%lx.c delete %s\n",
-            glist_getcanvas(x->gl_owner), tag);
-        sys_vgui(".x%lx.c delete %sR\n",
-            glist_getcanvas(x->gl_owner), tag);
+        //sys_vgui(".x%lx.c delete %s\n",
+        //    glist_getcanvas(x->gl_owner), tag);
+        //sys_vgui(".x%lx.c delete %sR\n",
+        //    glist_getcanvas(x->gl_owner), tag);
         glist_eraseiofor(parent_glist, &x->gl_obj, tag);
         for (g = x->gl_list; g; g = g->g_next)
             gobj_vis(g, x, 0);
+
+        gui_vmess("gui_gobj_erase", "ss",
+            canvas_tag(glist_getcanvas(x->gl_owner)),
+            tag);
+
         // here we check for changes in scrollbar because of legacy
         // objects that can fall outside gop window, e.g. scalars
         canvas_getscroll(glist_getcanvas(x->gl_owner));
@@ -1398,28 +1486,28 @@ static void graph_select(t_gobj *z, t_glist *glist, int state)
         }
         if(glist_istoplevel(glist))
         {
-            sys_vgui(".x%lx.c itemconfigure %sR -stroke %s\n", canvas, 
-                 rtext_gettag(y),
-                 (state? "$pd_colors(selection)" : "$pd_colors(graph_border)"));
+            //sys_vgui(".x%lx.c itemconfigure %sR -stroke %s\n", canvas, 
+            //     rtext_gettag(y),
+            //     (state? "$pd_colors(selection)" : "$pd_colors(graph_border)"));
             /*
             sys_vgui(".x%lx.c itemconfigure graph%lx -fill %s\n",
                  glist_getcanvas(glist), z, 
                  (state? "$pd_colors(selection)" : "$pd_colors(graph_border)"));
             */
-            sys_vgui(".x%lx.c itemconfigure %sT -fill %s\n",
-                 canvas, rtext_gettag(y), 
-                 (state? "$pd_colors(selection)" : "$pd_colors(graph_border)"));
+            //sys_vgui(".x%lx.c itemconfigure %sT -fill %s\n",
+            //     canvas, rtext_gettag(y), 
+            //     (state? "$pd_colors(selection)" : "$pd_colors(graph_border)"));
 
-            sys_vgui(".x%lx.c itemconfigure %sfill -stroke %s -fill %s\n",
-                 canvas, rtext_gettag(y), 
-                 (state? "$pd_colors(selection)" : "$pd_colors(graph_border)"),
-                 (state? "$pd_colors(selection)" : "$pd_colors(graph_border)"));
+            //sys_vgui(".x%lx.c itemconfigure %sfill -stroke %s -fill %s\n",
+            //     canvas, rtext_gettag(y), 
+            //     (state? "$pd_colors(selection)" : "$pd_colors(graph_border)"),
+            //     (state? "$pd_colors(selection)" : "$pd_colors(graph_border)"));
             if (state)
                 gui_vmess("gui_text_select", "ss",
-                    canvas_string(canvas), rtext_gettag(y));
+                    canvas_tag(canvas), rtext_gettag(y));
             else
                 gui_vmess("gui_text_deselect", "ss",
-                    canvas_string(canvas), rtext_gettag(y));
+                    canvas_tag(canvas), rtext_gettag(y));
         }
 
         t_gobj *g;

@@ -356,14 +356,14 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
         if (action == SEND_FIRST)
         {
             //fprintf(stderr,"send_first rtext=%lx t_text=%lx\n", x, x->x_text);
-            sys_vgui("pdtk_text_new .x%lx.c {%s %s text %s} %f %f {%.*s} %d %s\n",
-                canvas, x->x_tag, rtext_gettype(x)->s_name,
-                (glist_isselected(x->x_glist, ((t_gobj*)x->x_text)) ? "selected" : ""),
-                dispx + LMARGIN, dispy + TMARGIN,
-                outchars_b, tempbuf, sys_hostfontsize(font),
-                (glist_isselected(x->x_glist, ((t_gobj*)x->x_text)) ? "$pd_colors(selection)" : "$pd_colors(text)"));
+            //sys_vgui("pdtk_text_new .x%lx.c {%s %s text %s} %f %f {%.*s} %d %s\n",
+            //    canvas, x->x_tag, rtext_gettype(x)->s_name,
+            //    (glist_isselected(x->x_glist, ((t_gobj*)x->x_text)) ? "selected" : ""),
+            //    dispx + LMARGIN, dispy + TMARGIN,
+            //    outchars_b, tempbuf, sys_hostfontsize(font),
+            //    (glist_isselected(x->x_glist, ((t_gobj*)x->x_text)) ? "$pd_colors(selection)" : "$pd_colors(text)"));
             gui_vmess("gui_text_new", "sssiiisi",
-                canvas_string(canvas), x->x_tag, rtext_gettype(x)->s_name,
+                canvas_tag(canvas), x->x_tag, rtext_gettype(x)->s_name,
                 glist_isselected(x->x_glist, ((t_gobj*)x->x_text)),
                 LMARGIN,
                 TMARGIN,
@@ -375,9 +375,9 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
         }
         else if (action == SEND_UPDATE)
         {
-            sys_vgui("pdtk_text_set .x%lx.c %s {%.*s}\n",
-                canvas, x->x_tag, outchars_b, tempbuf);
-            gui_vmess("gui_text_set", "sss", canvas_string(canvas), x->x_tag, tempbuf);
+            //sys_vgui("pdtk_text_set .x%lx.c %s {%.*s}\n",
+            //    canvas, x->x_tag, outchars_b, tempbuf);
+            gui_vmess("gui_text_set", "sss", canvas_tag(canvas), x->x_tag, tempbuf);
 
             if (pixwide != x->x_drawnwidth || pixhigh != x->x_drawnheight) 
                 text_drawborder(x->x_text, x->x_glist, x->x_tag,

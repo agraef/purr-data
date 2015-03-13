@@ -249,10 +249,23 @@ void canvas_makefilename(t_canvas *x, char *file, char *result, int resultsize)
 }
 
 // Generic tag format to use for the gui
-char *canvas_string(t_canvas *x)
+// Try removing the leading dot, since
+// we don't need it anymore
+// Both this and gobj_tag are static which
+// means you shouldn't send twice in the same
+// gui_vmess (and there shouldn't be a reason
+// for doing that anyway)
+char *canvas_tag(t_canvas *x)
 {
     static char s[MAXPDSTRING];
     sprintf(s, ".x%lx", (long unsigned int)x);
+    return s;
+}
+
+char *gobj_tag(void *x)
+{
+    static char s[MAXPDSTRING];
+    sprintf(s, "x%lx", (long unsigned int)x);
     return s;
 }
 
@@ -716,7 +729,8 @@ void canvas_reflecttitle(t_canvas *x)
     //sys_vgui("wm title .x%lx {%s%c%s - %s}\n", 
     //    x, x->gl_name->s_name, (x->gl_dirty? '*' : ' '), namebuf,
     //        canvas_getdir(x)->s_name);
-    gui_vmess("gui_canvas_set_title", "ssssi", canvas_string(x), x->gl_name->s_name,
+    gui_vmess("gui_canvas_set_title", "ssssi",
+        canvas_tag(x), x->gl_name->s_name,
         namebuf, canvas_getdir(x)->s_name, x->gl_dirty);
 //}
 #endif
@@ -791,7 +805,7 @@ void canvas_drawredrect(t_canvas *x, int doit)
         //    "%d %d %d %d %d %d %d %d %d %d -fill #ff8080 -tags GOP\n",
         //    glist_getcanvas(x), x1, y1, x2, y1, x2, y2, x1, y2, x1, y1);
         gui_vmess("gui_canvas_drawredrect", "siiii",
-            canvas_string(glist_getcanvas(x)),
+            canvas_tag(glist_getcanvas(x)),
             x1, y1, x2, y2);
         //dpsaha@vt.edu for drawing the GOP_blobs
         if (x->gl_goprect && x->gl_edit)
@@ -801,7 +815,7 @@ void canvas_drawredrect(t_canvas *x, int doit)
     {
         //sys_vgui(".x%lx.c delete GOP\n",  glist_getcanvas(x));
         gui_vmess("gui_canvas_deleteredrect", "s",
-            canvas_string(glist_getcanvas(x)));
+            canvas_tag(glist_getcanvas(x)));
     }
 }
 
@@ -1055,7 +1069,7 @@ void canvas_eraselinesfor(t_canvas *x, t_text *text)
                 char tagbuf[MAXPDSTRING];
                 sprintf(tagbuf, "l%lx", (long unsigned int)oc);
                 gui_vmess("gui_canvas_delete_line", "ss",
-                    canvas_string(glist_getcanvas(x)), tagbuf);
+                    canvas_tag(glist_getcanvas(x)), tagbuf);
             }
         }
     }

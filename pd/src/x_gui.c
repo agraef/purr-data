@@ -253,13 +253,13 @@ static void *openpanel_new( void)
     return (x);
 }
 
-extern char *canvas_string(t_canvas *x);
+extern char *canvas_tag(t_canvas *x);
 static void openpanel_symbol(t_openpanel *x, t_symbol *s)
 {
     char *path = (s && s->s_name) ? s->s_name : "$pd_opendir";
     sys_vgui("pdtk_openpanel {%s} {%s}\n", x->x_s->s_name, path);
     gui_vmess("gui_openpanel", "sss",
-        canvas_string(x->x_canvas),
+        canvas_tag(x->x_canvas),
         x->x_s->s_name,
         path);
 }
@@ -319,7 +319,7 @@ static void savepanel_symbol(t_savepanel *x, t_symbol *s)
     char *path = (s && s->s_name) ? s->s_name : "$pd_opendir";
     sys_vgui("pdtk_savepanel {%s} {%s}\n", x->x_s->s_name, path);
     gui_vmess("gui_savepanel", "sss",
-        canvas_string(x->x_canvas),
+        canvas_tag(x->x_canvas),
         x->x_s->s_name,
         path);
 }

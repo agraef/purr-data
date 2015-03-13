@@ -36,7 +36,7 @@ void bng_draw_update(t_gobj *xgobj, t_glist *glist)
         sprintf(flashcol, "#%6.6x",
             x->x_flashed ? x->x_gui.x_fcol : x->x_gui.x_bcol);
         gui_vmess("gui_bng_flash", "sss",
-            canvas_string(glist_getcanvas(glist)), tagbuf, flashcol);
+            canvas_tag(glist_getcanvas(glist)), tagbuf, flashcol);
     }
     x->x_gui.x_changed = x->x_flashed;
 }
@@ -58,7 +58,7 @@ void bng_draw_new(t_bng *x, t_glist *glist)
              "-tags {%lxBUT x%lx text iemgui border}\n",
          canvas, cx, cy, cr, x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol,
          x, x);
-    gui_vmess("gui_create_bng", "ssfff", canvas_string(canvas), tagbuf,
+    gui_vmess("gui_create_bng", "ssfff", canvas_tag(canvas), tagbuf,
         cx - x1 - 0.5, cy - y1 - 0.5, cr);
 }
 
@@ -81,7 +81,7 @@ void bng_draw_move(t_bng *x, t_glist *glist)
     char col[8];
     sprintf(col, "#%6.6x", x->x_flashed ? x->x_gui.x_fcol : x->x_gui.x_bcol);
     gui_start_vmess("gui_configure_item", "ss",
-        canvas_string(canvas), tagbuf);
+        canvas_tag(canvas), tagbuf);
     gui_start_array();
     gui_s("cx");
     gui_f(cx - x1 - 0.5); // 0.5 is fudge factor... might be better
@@ -97,16 +97,16 @@ void bng_draw_move(t_bng *x, t_glist *glist)
 
 void bng_draw_config(t_bng* x, t_glist* glist)
 {
+    char tagbuf[MAXPDSTRING];
     t_canvas *canvas=glist_getcanvas(glist);
     iemgui_base_draw_config(&x->x_gui);
     //sys_vgui(".x%lx.c itemconfigure %lxBUT -fill #%6.6x\n",
     //    canvas, x, x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol);
-    char tagbuf[MAXPDSTRING];
     sprintf(tagbuf, "x%lxbutton", (long unsigned int)x);
     char fcol[8];
     sprintf(fcol, "#%6.6x", x->x_flashed ? x->x_gui.x_fcol : x->x_gui.x_bcol);
     gui_start_vmess("gui_configure_item", "ss",
-        canvas_string(canvas), tagbuf);
+        canvas_tag(canvas), tagbuf);
     gui_start_array();
     gui_s("fill");
     gui_s(fcol);

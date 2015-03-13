@@ -2567,6 +2567,58 @@ function gui_iemgui_redraw_border(cid, tag, x1, y1, x2, y2) {
     });
 }
 
+function gui_iemgui_label_new(cid, tag, x, y, color, text, font) {
+    var g = get_gobj(cid, tag);
+    var svg_text = create_item(cid, 'text', {
+        // x and y need to be relative to baseline instead of nw anchor
+        x: x,
+        y: y,
+//        'font-size': font + 'px',
+        id: tag + 'label'
+    });
+
+    var text_node = patchwin[cid].window.document.createTextNode(text);
+    svg_text.appendChild(text_node);
+    g.appendChild(svg_text);
+}
+
+function gui_iemgui_label_set(cid, tag, text) {
+    get_item(cid, tag + 'label').textContent = text;
+}
+
+function gui_iemgui_label_coords(cid, tag, x, y) {
+    var svg_text = get_item(cid, tag + 'label');
+    configure_item(svg_text, {
+        x: x,
+        y: y
+    });
+}
+
+function gui_iemgui_label_color(cid, tag, color) {
+    var svg_text = get_item(cid, tag + 'label');
+    configure_item(svg_text, {
+        fill: color
+    });
+}
+
+function gui_iemgui_label_select(cid, tag, is_selected) {
+    var svg_text = get_item(cid, tag + 'label');
+    if (is_selected) {
+        svg_text.classList.add('iemgui_label_selected'); 
+    } else {
+        svg_text.classList.remove('iemgui_label_selected'); 
+    }
+}
+
+function gui_iemgui_label_font(cid, tag, font) {
+    var svg_text = get_item(cid, tag + 'label');
+    // This has to wait until we remove the tcl formatting
+    // that Pd uses for font name/size
+//    configure_item(svg_text, {
+//        font: font
+//    });
+}
+
 function gui_create_mycanvas(cid,tag,color,x1,y1,x2_vis,y2_vis,x2,y2) {
     var rect_vis = create_item(cid,'rect', {
         width: x2_vis - x1,
@@ -2840,23 +2892,92 @@ exports.popup_action = popup_action;
 
 // Graphs and Arrays
 
-function gui_graph_drawborder(cid, tag, x1, y1, x2, y2) {
-    var svgelem = get_item(cid, 'patchsvg');
-    var b = create_item(cid, 'rect', {
-        x: x1,
-        y: y1,
-        width: x2 - x1,
-        height: y2 - y1,
-        stroke: 'black',
-        fill: 'none',
-        id: tag
+// Doesn't look like we needs this
+
+//function gui_graph_drawborder(cid, tag, x1, y1, x2, y2) {
+//    var g = get_gobj(cid, tag);
+//    var b = create_item(cid, 'rect', {
+//        width: x2 - x1,
+//        height: y2 - y1,
+//        stroke: 'black',
+//        fill: 'none',
+//        id: tag
+//    });
+//    g.appendChild(b);
+//}
+
+function gui_graph_fill_border(cid, tag) {
+    var b = get_item(cid, tag + 'border');
+    configure_item(b, {
+        fill: 'gray'
     });
-    svgelem.appendChild(b);
 }
 
 function gui_graph_deleteborder(cid, tag) {
     var b = get_item(cid, tag);
     b.parentNode.removeChild(b);
+}
+
+function gui_graph_label(cid, tag, y, array_name, font, font_size,
+    font_weight, is_selected) {
+//    var graph = get_item( 
+}
+
+function gui_graph_vtick(cid, tag, x, up_y, down_y, tick_pix, basex, basey) {
+    var g = get_gobj(cid, tag);
+    // Don't think these need an ID...
+    var up_tick = create_item(cid, 'line', {
+        stroke: 'black',
+        x1: x - basex,
+        y1: up_y - basey,
+        x2: x - basex,
+        y2: up_y - tick_pix - basey
+    });
+    var down_tick = create_item(cid, 'line', {
+        stroke: 'black',
+        x1: x - basex,
+        y1: down_y - basey,
+        x2: x - basex,
+        y2: down_y + tick_pix - basey
+    });
+    g.appendChild(up_tick);
+    g.appendChild(down_tick);
+}
+
+function gui_graph_htick(cid, tag, y, r_x, l_x, tick_pix, basex, basey) {
+    var g = get_gobj(cid, tag);
+    // Don't think these need an ID...
+    var left_tick = create_item(cid, 'line', {
+        stroke: 'black',
+        x1: l_x - basex,
+        y1: y - basey,
+        x2: l_x - tick_pix - basex,
+        y2: y - basey,
+        id: "fuckoff" + y
+    });
+    var right_tick = create_item(cid, 'line', {
+        stroke: 'black',
+        x1: r_x - basex,
+        y1: y - basey,
+        x2: r_x + tick_pix - basex,
+        y2: y - basey
+    });
+    g.appendChild(left_tick);
+    g.appendChild(right_tick);
+}
+
+function gui_graph_tick_label(cid, tag, x, y, text, font, font_size, font_weight, basex, basey) {
+    var g = get_gobj(cid, tag);
+    var svg_text = create_item(cid, 'text', {
+        // need a label "y" relative to baseline
+        x: x - basex,
+        y: y - basey,
+        'font-size': font_size,
+    });
+
+    var text_node = patchwin[cid].window.document.createTextNode(text);
+    svg_text.appendChild(text_node);
+    g.appendChild(svg_text);
 }
 
 function gui_canvas_drawredrect(cid, x1, y1, x2, y2) {

@@ -30,12 +30,10 @@ void toggle_draw_update(t_gobj *xgobj, t_glist *glist)
             //         (x->x_on!=0.0)?x->x_gui.x_fcol:x->x_gui.x_bcol);
             //sys_vgui(".x%lx.c itemconfigure %lxX2 -stroke #%6.6x\n", canvas, x,
             //         (x->x_on!=0.0)?x->x_gui.x_fcol:x->x_gui.x_bcol);
-            char tagbuf[MAXPDSTRING];
             char colorbuf[MAXPDSTRING];
-            sprintf(tagbuf, "x%lx", (long unsigned int)x);
             sprintf(colorbuf, "#%6.6x", x->x_gui.x_fcol);
-            gui_vmess("gui_toggle_update", "ssis", canvas_string(canvas),
-                tagbuf, x->x_on != 0.0, colorbuf);
+            gui_vmess("gui_toggle_update", "ssis", canvas_tag(canvas),
+                gobj_tag(x), x->x_on != 0.0, colorbuf);
         }
         x->x_gui.x_changed = 0;
     }
@@ -43,8 +41,7 @@ void toggle_draw_update(t_gobj *xgobj, t_glist *glist)
 
 void toggle_draw_new(t_toggle *x, t_glist *glist)
 {
-    char tagbuf[MAXPDSTRING], colorbuf[MAXPDSTRING];
-    sprintf(tagbuf, "x%lx", (long unsigned int)x);
+    char colorbuf[8];
     t_canvas *canvas=glist_getcanvas(glist);
     int w=(x->x_gui.x_w+29)/30;
     int x1=text_xpix(&x->x_gui.x_obj, glist);
@@ -60,8 +57,8 @@ void toggle_draw_new(t_toggle *x, t_glist *glist)
     //sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth %d "
     //    "-stroke #%6.6x -tags {%lxX2 x%lx text iemgui}\n",
     //    canvas, x1+w+1, y2-w-1, x2-w-1, y1+w+1, w, col, x, x);
-    gui_vmess("gui_create_toggle", "sssiiiiiiiiiiii", canvas_string(canvas),
-        tagbuf, colorbuf, w,
+    gui_vmess("gui_create_toggle", "sssiiiiiiiiiiii", canvas_tag(canvas),
+        gobj_tag(x), colorbuf, w,
         (x->x_on != 0.0),
         x1+w+1, y1+w+1, x2-w-1, y2-w-1,
         x1+w+1, y2-w-1, x2-w-1, y1+w+1, x1, y1);
@@ -81,10 +78,8 @@ void toggle_draw_move(t_toggle *x, t_glist *glist)
     //    canvas, x, x1+s, y1+s, x2-s, y2-s);
     //sys_vgui(".x%lx.c coords %lxX2 %d %d %d %d\n",
     //    canvas, x, x1+s, y2-s, x2-s, y1+s);
-    char tagbuf[MAXPDSTRING];
-    sprintf(tagbuf, "x%lx", (long unsigned int)x);
     gui_vmess("gui_toggle_resize_cross", "ssiiiiiiiiiii",
-        canvas_string(canvas), tagbuf,
+        canvas_tag(canvas), gobj_tag(x),
         w,
         x1+s, y1+s, x2-s, y2-s,
         x1+s, y2-s, x2-s, y1+s,
@@ -97,12 +92,10 @@ void toggle_draw_config(t_toggle* x, t_glist* glist)
     iemgui_base_draw_config(&x->x_gui);
     //sys_vgui(".x%lx.c itemconfigure {%lxX1||%lxX2} -stroke #%6.6x\n",
     //    canvas, x, x, x->x_on?x->x_gui.x_fcol:x->x_gui.x_bcol);
-    char tagbuf[MAXPDSTRING];
     char colorbuf[MAXPDSTRING];
-    sprintf(tagbuf, "x%lx", (long unsigned int)x);
     sprintf(colorbuf, "#%6.6x", x->x_gui.x_fcol);
-    gui_vmess("gui_toggle_update", "ssis", canvas_string(canvas),
-    tagbuf, x->x_on != 0.0, colorbuf);
+    gui_vmess("gui_toggle_update", "ssis", canvas_tag(canvas),
+    gobj_tag(x), x->x_on != 0.0, colorbuf);
 }
 
 static void toggle__clickhook(t_scalehandle *sh, int newstate)

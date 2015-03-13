@@ -104,3 +104,14 @@ Everything else:
   conditionally fill the slots
 * fix font shits (can't use 'hanging' base-line dominant because it doesn't
   scale correctly)
+* iemgui font configuration -- de-tcl-ize the {fontface fontsize} tcl list,
+  then make it work
+* do msg box click animation in css
+* tgl 'X' doesn't show up
+* gui_graph_fill_border: use css class selectors instead of configuration
+* standardize javascript function names
+
+Crashers
+--------
+
+copy/paste from menu gives ECONN

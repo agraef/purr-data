@@ -1502,7 +1502,7 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
         //sys_vgui(".x%lx.c itemconfigure %s -fill %s\n",
         //    glist_getcanvas(c), tag, fill->s_name);
         gui_vmess("gui_draw_configure", "ssss",
-            canvas_string(glist_getcanvas(c)), tag, s->s_name, fill->s_name);
+            canvas_tag(glist_getcanvas(c)), tag, s->s_name, fill->s_name);
     }
     else if (s == gensym("stroke"))
     {
@@ -1521,14 +1521,14 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
         //sys_vgui(".x%lx.c itemconfigure %s -stroke %s\n",
         //    glist_getcanvas(c), tag, stroke->s_name);
         gui_vmess("gui_draw_configure", "ssss",
-            canvas_string(glist_getcanvas(c)), tag, s->s_name, stroke->s_name);
+            canvas_tag(glist_getcanvas(c)), tag, s->s_name, stroke->s_name);
     }
     else if (s == gensym("fill-opacity"))
         //sys_vgui(".x%lx.c itemconfigure %s -fillopacity %g\n",
         //    glist_getcanvas(c), tag,
         //    fielddesc_getcoord(&x->x_fillopacity.a_attr, template, data, 1));
         gui_vmess("gui_draw_configure", "sssf",
-            canvas_string(glist_getcanvas(c)), tag, "fill-opacity",
+            canvas_tag(glist_getcanvas(c)), tag, "fill-opacity",
             fielddesc_getcoord(&x->x_fillopacity.a_attr, template, data, 1));
     else if (s == gensym("fill-rule"))
         //sys_vgui(".x%lx.c itemconfigure %s -fillrule %s\n",
@@ -1536,7 +1536,7 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
         //        &x->x_fillrule.a_attr, template, data, 1) ?
         //            "evenodd" : "nonzero");
         gui_vmess("gui_draw_configure", "sssi",
-            canvas_string(glist_getcanvas(c)), tag, "fill-rule", (int)fielddesc_getcoord(
+            canvas_tag(glist_getcanvas(c)), tag, "fill-rule", (int)fielddesc_getcoord(
                 &x->x_fillrule.a_attr, template, data, 1) ?
                     "evenodd" : "nonzero");
     else if (s == gensym("pointer-events"))
@@ -1547,7 +1547,7 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
         //        (int)fielddesc_getcoord(&x->x_strokelinecap.a_attr,
         //            template, data, 1)));
         gui_vmess("gui_draw_configure", "ssss",
-            canvas_string(glist_getcanvas(c)), tag, "stroke-linecap", get_strokelinecap(
+            canvas_tag(glist_getcanvas(c)), tag, "stroke-linecap", get_strokelinecap(
                 (int)fielddesc_getcoord(&x->x_strokelinecap.a_attr,
                     template, data, 1)));
     else if (s == gensym("stroke-linejoin"))
@@ -1556,7 +1556,7 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
         //        (int)fielddesc_getcoord(&x->x_strokelinejoin.a_attr,
         //            template, data, 1)));
         gui_vmess("gui_draw_configure", "ssss",
-            canvas_string(glist_getcanvas(c)), tag, "stroke-linejoin", get_strokelinejoin(
+            canvas_tag(glist_getcanvas(c)), tag, "stroke-linejoin", get_strokelinejoin(
                 (int)fielddesc_getcoord(&x->x_strokelinejoin.a_attr,
                     template, data, 1)));
     else if (s == gensym("stroke-miterlimit"))
@@ -1564,14 +1564,14 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
         //    glist_getcanvas(c), tag, fielddesc_getcoord(
         //        &x->x_strokemiterlimit.a_attr, template, data, 1));
         gui_vmess("gui_draw_configure", "sssf",
-            canvas_string(glist_getcanvas(c)), tag, "stroke-miterlimit", fielddesc_getcoord(
+            canvas_tag(glist_getcanvas(c)), tag, "stroke-miterlimit", fielddesc_getcoord(
                 &x->x_strokemiterlimit.a_attr, template, data, 1));
     else if (s == gensym("stroke-opacity"))
         //sys_vgui(".x%lx.c itemconfigure %s -strokeopacity %g\n",
         //    glist_getcanvas(c), tag, fielddesc_getcoord(
         //        &x->x_strokeopacity.a_attr, template, data, 1));
         gui_vmess("gui_draw_configure", "sssg",
-            canvas_string(glist_getcanvas(c)), tag, "stroke-opacity", fielddesc_getcoord(
+            canvas_tag(glist_getcanvas(c)), tag, "stroke-opacity", fielddesc_getcoord(
                 &x->x_strokeopacity.a_attr, template, data, 1));
     else if (s == gensym("stroke-width"))
     {
@@ -1579,7 +1579,7 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
         //    glist_getcanvas(c), tag, fielddesc_getcoord(
         //        &x->x_strokewidth.a_attr, template, data, 1));
         gui_vmess("gui_draw_configure", "sssf",
-            canvas_string(glist_getcanvas(c)), tag, "stroke-width", fielddesc_getcoord(
+            canvas_tag(glist_getcanvas(c)), tag, "stroke-width", fielddesc_getcoord(
                 &x->x_strokewidth.a_attr, template, data, 1));
         *predraw_bbox = 1;
     }
@@ -1590,7 +1590,7 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
         //fielddesc_getcoord(x->x_vec+2, template, data, 1),
         //fielddesc_getcoord(x->x_vec+2, template, data, 1));
         gui_vmess("gui_draw_configure", "sssf",
-            canvas_string(glist_getcanvas(c)), tag, s->s_name,
+            canvas_tag(glist_getcanvas(c)), tag, s->s_name,
             fielddesc_getcoord(x->x_vec+2, template, data, 1));
         *predraw_bbox = 1;
     }
@@ -1601,7 +1601,7 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
             //    glist_getcanvas(c), tag, (int)fielddesc_getcoord(
             //        &x->x_rx.a_attr, template, data, 1));
             gui_vmess("gui_draw_configure", "sssi",
-                canvas_string(glist_getcanvas(c)), tag, s->s_name, (int)fielddesc_getcoord(
+                canvas_tag(glist_getcanvas(c)), tag, s->s_name, (int)fielddesc_getcoord(
                     &x->x_rx.a_attr, template, data, 1));
         else
         {
@@ -1609,7 +1609,7 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
             //    glist_getcanvas(c), tag, fielddesc_getcoord(
             //    x->x_vec+2, template, data, 1));
             gui_vmess("gui_draw_configure", "sssf",
-                canvas_string(glist_getcanvas(c)), tag, s->s_name, fielddesc_getcoord(
+                canvas_tag(glist_getcanvas(c)), tag, s->s_name, fielddesc_getcoord(
                     x->x_vec+2, template, data, 1));
             *predraw_bbox = 1;
         }
@@ -1621,7 +1621,7 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
             //    glist_getcanvas(c), tag, (int)fielddesc_getcoord(
             //    &x->x_ry.a_attr, template, data, 1));
             gui_vmess("gui_draw_configure", "sssi",
-                canvas_string(glist_getcanvas(c)), tag, s->s_name, (int)fielddesc_getcoord(
+                canvas_tag(glist_getcanvas(c)), tag, s->s_name, (int)fielddesc_getcoord(
                     &x->x_ry.a_attr, template, data, 1));
         else
         {
@@ -1629,7 +1629,7 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
             //    glist_getcanvas(c), tag, fielddesc_getcoord(
             //    x->x_vec+3, template, data, 1));
             gui_vmess("gui_draw_configure", "sssf",
-                canvas_string(glist_getcanvas(c)), tag, fielddesc_getcoord(
+                canvas_tag(glist_getcanvas(c)), tag, fielddesc_getcoord(
                     x->x_vec+3, template, data, 1));
             *predraw_bbox = 1;
         }
@@ -1657,7 +1657,7 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
         char mbuf[MAXPDSTRING];
         sprintf(mbuf, "matrix(%g %g %g %g %g %g)", m1, m2, m3, m4, m5, m6);
         gui_vmess("gui_draw_configure", "ssss",
-            canvas_string(glist_getcanvas(c)), tag, s->s_name,
+            canvas_tag(glist_getcanvas(c)), tag, s->s_name,
             mbuf);
         *predraw_bbox = 1;
     }
@@ -1667,7 +1667,7 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
         //    glist_getcanvas(c), tag, (int)fielddesc_getcoord(
         //    &x->x_vis.a_attr, template, data, 1) ? "normal" : "hidden");
         gui_vmess("gui_draw_configure", "ssss",
-            canvas_string(glist_getcanvas(c)), tag, "visibility", (int)fielddesc_getcoord(
+            canvas_tag(glist_getcanvas(c)), tag, "visibility", (int)fielddesc_getcoord(
             &x->x_vis.a_attr, template, data, 1) ? "visible" : "hidden");
         *predraw_bbox = 1;
     }
@@ -1681,7 +1681,7 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
             //sys_vgui(".x%lx.c itemconfigure %s -strokedasharray {",
             //    glist_getcanvas(c), tag);
             gui_start_vmess("gui_draw_configure", "sss",
-                canvas_string(glist_getcanvas(c)), tag, s->s_name);
+                canvas_tag(glist_getcanvas(c)), tag, s->s_name);
             gui_start_array();
             for (i = 0; i < x->x_ndash; i++)
             {
@@ -1700,7 +1700,7 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
         char tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "draw%lx.%lx", (long unsigned int)parent, (long unsigned int)data);
         gui_start_vmess("gui_draw_configure", "sss",
-            canvas_string(glist_getcanvas(c)), tagbuf, "d"); 
+            canvas_tag(glist_getcanvas(c)), tagbuf, "d"); 
         /* let's turn off bbox caching so we can recalculate the bbox */
         if (x->x_pathrect_cache != -1)
            x->x_pathrect_cache = 0;
@@ -3757,7 +3757,7 @@ void svg_parentwidgettogui(t_gobj *z, t_glist *owner, t_word *data,
         sprintf(tagbuf, "draw%lx.%lx", (long unsigned int)x,
             (long unsigned int)data);
         gui_start_vmess("gui_draw_configure_all", "ss",
-            canvas_string(glist_getcanvas(owner)), tagbuf);
+            canvas_tag(glist_getcanvas(owner)), tagbuf);
         svg_togui((t_svg *)x->x_attr, template, data);
         gui_end_vmess();
     }
@@ -3843,7 +3843,7 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                arrays) */
             //sys_vgui("nn gui_draw_vis \".x%lx\",\"%s\",\"", glist_getcanvas(glist),
             //    sa->x_type->s_name);
-            gui_start_vmess("gui_draw_vis", "ss", canvas_string(glist_getcanvas(glist)),
+            gui_start_vmess("gui_draw_vis", "ss", canvas_tag(glist_getcanvas(glist)),
                 sa->x_type->s_name);
 
             /* next send the gui drawing arguments: commands and points
@@ -4016,7 +4016,7 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             char itemtagbuf[MAXPDSTRING];
             sprintf(itemtagbuf, "draw%lx.%lx", (long unsigned int)x,
                 (long unsigned int)data);
-            gui_vmess("gui_draw_erase_item", "ss", canvas_string(glist_getcanvas(glist)),
+            gui_vmess("gui_draw_erase_item", "ss", canvas_tag(glist_getcanvas(glist)),
                 itemtagbuf);
         }
                 
