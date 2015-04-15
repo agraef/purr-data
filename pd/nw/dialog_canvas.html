@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="dialog_canvas.css">
+  </head>
+  <body>
+    <div class="container noselect">
+    <form> 
+
+      <fieldset> 
+        <legend data-i18n="canvas.prop.heading.gop"></legend> 
+
+        <table class="pairs">
+          <tr class="display-flags prop hidden" data-i18n="[title]canvas.prop.gop_tt">
+            <td>
+              <input type="checkbox" name="gop" value="on">
+            </td>
+            <td>
+              <span id="gop_label" data-i18n="canvas.prop.gop"></span>
+            </td>
+          </tr>
+          <tr class="x-pix prop hidden">
+            <td>
+            </td>
+            <td>
+              <table>
+                <tr>
+                  <td> 
+                    <label class="gop_opt" data-i18n="[title]canvas.prop.x_pix_tt">
+                      <span data-i18n="canvas.prop.x_pix"></span>
+                    </label>
+                  </td>
+                  <td data-i18n="[title]canvas.prop.x_pix_tt">
+                    <input class="gop_opt" type="text" name="x-pix">
+                  </td>
+                  <td>
+                    <label class="gop_opt" data-i18n="[title]canvas.prop.y_pix_tt">
+                      <span data-i18n="canvas.prop.y_pix"></span>
+                    </label>
+                  </td>
+                  <td data-i18n="[title]canvas.prop.y_pix_tt">
+                    <input class="gop_opt" type="text" name="y-pix">
+                  </td>
+                </tr>
+                <tr class="x-margin prop hidden">
+                  <td>
+                    <label class="gop_opt" data-i18n="[title]canvas.prop.x_margin_tt">
+                      <span data-i18n="canvas.prop.x_margin"></span>
+                    </label>
+                  </td>
+                  <td data-i18n="[title]canvas.prop.x_margin_tt">
+                    <input class="gop_opt" type="text" name="x-margin">
+                  </td>
+                  <td>
+                    <label class="gop_opt" data-i18n="[title]canvas.prop.y_margin_tt">
+                      <span data-i18n="canvas.prop.y_margin"></span>
+                    </label>
+                  </td>
+                  <td data-i18n="[title]canvas.prop.y_margin_tt">
+                    <input class="gop_opt" type="text" name="y-margin">
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr class="display-flags prop">
+            <td>
+            </td>
+            <td>
+              <label class="gop_opt" data-i18n="[title]canvas.prop.hide_name_tt">
+                <input class="gop_opt" type="checkbox" name="hide-name" value="on">
+                <span data-i18n="canvas.prop.hide_name"></span>
+              </label>
+            </td>
+          </tr>
+        </table>
+      </fieldset> 
+
+
+      <fieldset> 
+        <legend data-i18n="canvas.prop.heading.data_scaling"></legend> 
+
+          <div class="x-scale prop hidden">
+            <label class="no_gop_opt" data-i18n="[title]canvas.prop.x_scale_tt">
+              <span data-i18n="canvas.prop.x_scale"></span>
+              <input class="no_gop_opt" type="text" name="x-scale">
+            </label>
+            <label class="no_gop_opt" data-i18n="[title]canvas.prop.y_scale_tt">
+              <span data-i18n="canvas.prop.y_scale"></span>
+              <input class="no_gop_opt" type="text" name="y-scale">
+            </label>
+          </div>
+
+    <div class="gop-range">
+        <div class="y1 prop hidden">
+          <label class="gop_opt" data-i18n="[title]canvas.prop.y1_tt">
+            <span data-i18n="canvas.prop.y1"></span>
+            <br>
+          <input class="gop_opt" type="text" name="y1">
+          </label>
+          <br>
+        </div>
+
+        <div class="x1 prop hidden">
+          <label class="gop_opt" data-i18n="[title]canvas.prop.x1_tt">
+            <span data-i18n="canvas.prop.x1"></span>
+            <input class="gop_opt" type="text" name="x1">
+          </label>
+          <label class="gop_opt" data-i18n="[title]canvas.prop.x2_tt">
+            <input class="gop_opt" type="text" name="x2">
+            <span data-i18n="canvas.prop.x2"></span>
+          </label>
+          <br>
+       </div>
+
+       <div class="y2">
+         <label class="gop_opt" data-i18n="[title]canvas.prop.y2_tt">
+           <input class="gop_opt" type="text" name="y2">
+           <br>
+           <span data-i18n="canvas.prop.y2"></span>
+         </label>
+       </div>
+    </div>
+
+      </fieldset> 
+
+
+      <fieldset id="arrays" class="hidden">
+        <legend data-i18n="canvas.prop.heading.arrays"></legend> 
+
+        <label class="arrays" data-i18n="[title]canvas.prop.array_name">
+          <select id="arrays_select" class="hidden"></select>
+        </label>
+
+          <div class="array-name prop">
+            <label class="array-name" data-i18n="[title]canvas.prop.array_name_tt">
+              <span data-i18n="canvas.prop.array_name"></span>
+              <input onchange="attr_change(this);" class="array-name" type="text" name="array_name">
+            </label>
+            <label class="array-size" data-i18n="[title]canvas.prop.array_size_tt">
+              <span data-i18n="canvas.prop.array_size"></span>
+              <input onchange="attr_change(this);" class="array-size" type="text" name="array_size">
+            </label>
+
+            <label class="array-save" data-i18n="[title]canvas.prop.array_save_tt">
+              <span data-i18n="canvas.prop.array_save"></span>
+              <input onchange="flag_change(this);" type="checkbox" name="array_save" value="on">
+            </label>
+
+            <label class="array-jump" data-i18n="[title]canvas.prop.array_jump_tt">
+              <span data-i18n="canvas.prop.array_jump"></span>
+              <input onchange="flag_change(this);" type="checkbox" name="array_jump" value="on">
+            </label>
+
+              <span data-i18n="canvas.prop.array_style"></span>
+
+            <label class="polygon" data-i18n="[title]canvas.prop.array_polygon_tt">
+              <span data-i18n="canvas.prop.array_polygon"></span>
+              <input class="array-style"
+                     type="radio"
+                     id="polygon"
+                     value="0"
+                     name="array_style"
+                     onchange="flag_change(this);">
+            </label>
+
+
+            <label class="points" data-i18n="[title]canvas.prop.array_points_tt">
+              <span data-i18n="canvas.prop.array_points"></span>
+              <input class="array-style"
+                     type="radio"
+                     id="points"
+                     value="1"
+                     name="array_style"
+                     onchange="flag_change(this);">
+            </label>
+
+
+            <label class="bezier-curve" data-i18n="[title]canvas.prop.array_bezier_tt">
+              <span data-i18n="canvas.prop.array_bezier"></span>
+              <input class="array-style"
+                     type="radio"
+                     id="bezier"
+                     value="2"
+                     name="array_style"
+                     onchange="flag_change(this);">
+            </label>
+
+
+            <label class="bar-graph" data-i18n="[title]canvas.prop.array_bars_tt">
+              <span data-i18n="canvas.prop.array_bars"></span>
+              <input class="array-style"
+                     type="radio"
+                     id="bar-graph"
+                     value="3"
+                     name="array_style"
+                     onchange="flag_change(this);">
+            </label>
+
+
+          </div>
+
+      <div class="array-fill">
+        <label data-i18n="[title]canvas.prop.array_fill_tt">
+          <input onchange="attr_change(this);" type="color" name="array_fill">
+          <span data-i18n="canvas.prop.array_fill"></span>
+        </label>
+        <br>
+      </div>
+
+      <div class="array-outline">
+        <label data-i18n="[title]canvas.prop.array_outline_tt">
+          <input onchange="attr_change(this);" type="color" name="array_outline">
+          <span data-i18n="canvas.prop.array_outline"></span>
+        </label>
+        <br>
+      </div>
+
+
+
+    <div class="gop-range">
+        <div class="y1 prop hidden">
+          <label class="gop_opt" data-i18n="[title]canvas.prop.y1_tt">
+            <span data-i18n="canvas.prop.y1"></span>
+            <br>
+          <input class="gop_opt" type="text" name="y1">
+          </label>
+          <br>
+        </div>
+
+        <div class="x1 prop hidden">
+          <label class="gop_opt" data-i18n="[title]canvas.prop.x1_tt">
+            <span data-i18n="canvas.prop.x1"></span>
+            <input class="gop_opt" type="text" name="x1">
+          </label>
+          <label class="gop_opt" data-i18n="[title]canvas.prop.x2_tt">
+            <input class="gop_opt" type="text" name="x2">
+            <span data-i18n="canvas.prop.x2"></span>
+          </label>
+          <br>
+       </div>
+
+       <div class="y2">
+         <label class="gop_opt" data-i18n="[title]canvas.prop.y2_tt">
+           <input class="gop_opt" type="text" name="y2">
+           <br>
+           <span data-i18n="canvas.prop.y2"></span>
+         </label>
+       </div>
+    </div>
+
+      </fieldset> 
+
+
+    <div class="submit_buttons">
+      <button type="button" onClick="ok()" data-i18n="[title]iem.prop.ok_tt">
+        <span data-i18n="iem.prop.ok"></span>
+      </button>
+      <button type="button" onClick="apply()" data-i18n="[title]iem.prop.apply_tt">
+        <span data-i18n="iem.prop.apply"></span>
+      </button>
+      <button type="button" onClick="cancel()" data-i18n="[title]iem.prop.cancel_tt">
+        <span data-i18n="iem.prop.cancel"></span>
+      </button>
+    </div>
+
+  </form> 
+  </div>      
+
+  <script>
+    'use strict';
+    var nw = require('nw.gui'); 
+    var pdgui = require('./pdgui.js');
+
+    // For translations
+    var l = pdgui.get_local_string;
+
+    console.log("my working dire is " + pdgui.get_pwd());
+
+    var pd_object_callback;
+
+    // nested arrays of attributes for each garray
+    // in this canvas
+    var pd_garray_attrs;
+
+    function ok() {
+        apply();
+        cancel();
+    }
+
+//    function toggler(evt) {
+//        evt.value = evt.checked ? 1 : 0; 
+//    }
+
+    function flag_change(elem) {
+        var attr, arrays_select, name, value, flag;
+        arrays_select = document.getElementById('arrays_select');
+        attr = pd_garray_attrs[arrays_select.value];
+        name = elem.name;
+//        pdgui.gui_post("name is " + name);
+        // get value from radio group, checked from checkboxes
+        if (name === 'array_style') {
+            value = document.querySelector('input[name="array_style"]:checked').value;
+            pdgui.gui_post("array style found: " + value);
+        } else {
+            // '+' for casting boolean to number
+            value = +elem.checked;
+        }
+//        pdgui.gui_post("value is " + value);
+        flag = attr[attr.indexOf('array_flags') + 1];
+        pdgui.gui_post("flag before is " + flag);
+        switch (name) {
+            case "array_save":
+                flag &= ~1;    // clear the save bit
+                flag |= value; // set it
+                break;
+            case "array_style":
+                flag &= ~(1 << 2); // clear style bit 2...
+                flag &= ~(1 << 1); // ... and 1 ...
+                flag += (2 * value); // set them
+                break;
+            case "array_jump":
+                flag &= ~(1 << 3);
+                flag += (16 * value);
+                break;
+        }
+        attr[attr.indexOf('array_flags') + 1] = flag;
+        pdgui.gui_post("array is " + attr);
+    }
+
+    function attr_change(elem) {
+        var array_index, attr, arrays_select, name;
+        arrays_select = document.getElementById('arrays_select');
+        attr = pd_garray_attrs[arrays_select.value];
+        name = elem.name;
+        attr[attr.indexOf(name) + 1] = elem.value;
+        pdgui.gui_post("name is " + elem.name);
+        pdgui.gui_post("value is " + elem.value);
+    }
+
+    function array_choose(array_index) {
+        var i, name, value, elem, style_index, style_opts,
+            array_attr = pd_garray_attrs[array_index];
+        for (i = 0; i < array_attr.length; i+=2) {
+            name = array_attr[i];
+            value = array_attr[i+1];
+            switch (name) {
+                case "array_gfxstub": break;
+                case "array_flags":
+                    // save contents
+                    elem = document.getElementsByName('array_save')[0];
+                    elem.checked = (value & 1) != 0;
+                    // jump on click
+                    elem = document.getElementsByName('array_jump')[0];
+                    elem.checked = (value & 16) != 0;
+                    // draw style
+                    style_opts = document.getElementsByName('array_style');
+                    style_index = (value & 6) >> 1;
+                    elem = style_opts[style_index];
+                    elem.checked = true;
+                    break;
+                default:
+                    // name, size, fill, and outline
+                    pdgui.gui_post("name is " + name);
+                    elem = document.getElementsByName(name)[0];
+                    elem.value = value;
+                    break;
+            }
+        }
+    }
+
+    var arrays_select = document.getElementById('arrays_select');
+    arrays_select.addEventListener('change', function() {
+        pdgui.gui_post('changed the thing is ' + this.value);
+        array_choose(this.value);
+    });
+
+    var gop_label = document.getElementById('gop_label');
+    gop_label.addEventListener('click', function() {
+        document.getElementsByName('gop')[0].click();
+    });
+
+    var gop_button = document.getElementsByName('gop')[0];
+    gop_button.addEventListener('click', function(evt) {
+        set_gop(this.checked);
+    });
+
+    function update_gop_form(opts, state) {
+        var elem, i;
+        for(i = 0; i < opts.length; i++) {
+            elem = opts[i];
+            if (elem.type === 'checkbox' ||
+                elem.type === 'text') {
+                elem.disabled = state ? false : true;
+            }
+            if (state) {
+                elem.classList.remove('disabled');
+            } else {
+                elem.classList.add('disabled');
+            }
+        }
+    }
+
+    var gop_click_count = 0;
+
+    function show_sane_defaults() {
+        var w, h, xoff, yoff;
+        w = document.getElementsByName('x-pix')[0];
+        h = document.getElementsByName('y-pix')[0];
+        xoff = document.getElementsByName('x-margin')[0];
+        yoff = document.getElementsByName('y-margin')[0];
+        if (w.value === '0' && h.value === '0') {
+            w.value = 85;
+            h.value = 60;
+            xoff.value = 100;
+            yoff.value = 100;
+        }
+        gop_click_count++;
+    }
+
+    function set_gop(state) {
+        var gop_opts, no_gop_opts;
+        if (state === true && gop_click_count === 0) {
+            show_sane_defaults();
+        }
+        gop_opts = document.getElementsByClassName('gop_opt');
+        no_gop_opts = document.getElementsByClassName('no_gop_opt');
+        update_gop_form(gop_opts, state);
+        update_gop_form(no_gop_opts, state === false);
+    }
+
+
+    function substitute_space(arg) {
+        var fake_space = String.fromCharCode(11);
+        return arg.split(' ').join(fake_space);
+    }
+
+    function strip_problem_chars(arg) {
+        var problem_chars = [';', ',', '{', '}', '\\'];
+        var ret = arg;
+        for(var i = 0; i < problem_chars.length; i++) {
+            ret = ret.split(';').join('');
+        }
+        return ret;
+    }
+
+    function get_input(name) {
+        var val = document.getElementsByName(name)[0].value;
+        return val === 0 ? '0' : val;
+    }
+
+    // get a value from the garray attr array
+    function get_array_value(name, attrs) {
+        return attrs[attrs.indexOf(name) + 1];
+    }
+
+
+    function apply() {
+        var i, attrs;
+        pdgui.gui_post("we're applying shits!");
+
+        // Note: the "+" casts Boolean to Number
+        var gop = +document.getElementsByName('gop')[0].checked;
+        var hide_name = +document.getElementsByName('hide-name')[0].checked;
+
+        pdgui.pdsend([pd_object_callback, 'donecanvasdialog',
+            get_input('x-scale'),
+            get_input('y-scale'),
+            (gop + 2 * hide_name),
+            get_input('x1'),
+            get_input('y1'),
+            get_input('x2'),
+            get_input('y2'),
+            get_input('x-pix'),
+            get_input('y-pix'),
+            get_input('x-margin'),
+            get_input('y-margin'),
+            ].join(' '));
+
+        // Now send the array properties, in a separate
+        // message for each array
+        for (i = 0; i < pd_garray_attrs.length; i++) {
+            attrs = pd_garray_attrs[i];
+            name = get_array_value('array_name', attrs);
+            if (name.slice(0, 1) === '$') {
+                name = '#' + name.slice(1);
+            }
+            pdgui.pdsend([
+                get_array_value('array_gfxstub', attrs),
+                'arraydialog',
+                name,
+                get_array_value('array_size', attrs),
+                get_array_value('array_flags', attrs),
+                0, // create an array in a new graph -- we don't
+                   // need this in a prexisting graph
+                0, // xdraw-- not sure if this is still used
+                0, // ydraw-- not sure if this is still used
+                get_array_value('array_fill', attrs),
+                get_array_value('array_outline', attrs),
+            ].join(' '));
+
+        }
+/*
+    pd [concat $id donecanvasdialog \
+            $::dialog($vid:xscale) \
+            $::dialog($vid:yscale) \
+            [expr $::dialog($vid:graphme)+2*$::dialog($vid:hidetext)] \
+            $::dialog($vid:x1) \
+            $::dialog($vid:y1) \
+            $::dialog($vid:x2) \
+            $::dialog($vid:y2) \
+            $::dialog($vid:xpix) \
+            $::dialog($vid:ypix) \
+            $::dialog($vid:xmargin) \
+            $::dialog($vid:ymargin) \
+            \;]
+}
+*/
+    }
+
+    function cancel() {
+        var i, attrs, gfxstub;
+        pdgui.gui_post("closing the window at this point");
+//        window.close(true);
+        pdgui.pdsend(pd_object_callback + " cancel");
+        for (i = 0; i < pd_garray_attrs.length; i++) {
+            attrs = pd_garray_attrs[i];
+            gfxstub = attrs[attrs.indexOf("array_gfxstub") + 1];
+pdgui.gui_post("guistub is " + gfxstub);
+            pdgui.pdsend(gfxstub + " cancel");
+        }
+    }
+
+    function populate_array_form(arrays) {
+        var arrays_select, a_field = document.getElementById('arrays');
+        var i, opt;
+        a_field.classList.remove('hidden');
+        arrays_select = document.getElementById('arrays_select');
+        for (i = 0; i < arrays.length; i++) {
+            if (i > 0) {
+                // unhide select element if there's more than one array
+                arrays_select.classList.remove('hidden');
+            }
+            opt = document.createElement('option');
+            opt.setAttribute('value', i);
+            opt.textContent = 'Array #' + (i+1);
+            arrays_select.appendChild(opt);
+        }
+        array_choose(0);
+    }
+
+    // Set up arrays in an object
+    
+    function init_arrays(attr_arrays) {
+        pd_garray_attrs = attr_arrays; 
+        if (attr_arrays.length > 0) {
+            // populate form with first array
+            populate_array_form(attr_arrays);
+        }
+    }
+
+    // This gets called from the nw_create_window function in index.html
+    // It provides us with our window id from the C side.  Once we have it
+    // we can create the menu and register event callbacks
+    function register_canvas_id(gfxstub, attr_arrays) {
+        pd_object_callback = gfxstub;
+
+        // attr_arrays[0]: canvas properties
+        // attr_arrays[1...n-1]: array properties
+        for (var i = 0; i < attr_arrays.length; i+=2) {
+            pdgui.gui_post(attr_arrays[i] + ": " + attr_arrays[i+1]);
+        }
+        add_events(gfxstub);
+        // not sure that we need this for properties windows
+//        pdgui.canvas_map(gfxstub);
+        translate_form();
+        populate_form(attr_arrays[0]);
+        init_arrays(attr_arrays.slice(1));
+        // We don't turn on rendering of the "container" div until
+        // We've finished displaying all the spans and populating the
+        // labels and form elements.  That makes it more efficient and
+        // snappier, at least on older machines.
+        document.getElementsByClassName('container')[0].style.setProperty('display', 'inline');
+//        document.getElementsByClass("fumbles")[0].setAttribute('style', 'display: inline;');
+    }
+
+function tr_text(id) {
+    var elem = document.getElementById('iem.prop.' + id);
+    elem.textContent = l('iem.prop.' + id);
+}
+
+// Stop-gap translator
+function translate_form() {
+    var i
+    var elements = document.querySelectorAll('[data-i18n]');
+    for (i = 0; i < elements.length; i++) {
+        var data = elements[i].dataset.i18n;
+        if (data.slice(0,7) === '[title]') {
+            elements[i].title = l(data.slice(7));
+        } else {
+            elements[i].textContent = l(data);
+        }
+    }
+}
+
+function populate_form(attr_array) {
+
+    // First, let's put the translated text for the form labels:
+
+//    tr_text('heading.size');
+//    tr_text('heading.messages');
+//    tr_text('heading.label');
+//    tr_text('heading.colors');
+//    tr_prop('width');
+//    tr_tooltip('width');
+
+//    var headings = ["size", "messages", "label", "colors"];
+//    for (var i = 0; i < headings.length; i++) {
+//        var str = "iem.prop.heading." + headings[i];
+//        var heading = document.getElementById(str);
+//        heading.textContent = l(str);
+//    }
+
+    for(var i = 0; i < attr_array.length; i+=2) {
+        // Unhide the span with the class with the same name as the id
+        var prop_group = document.getElementsByClassName(attr_array[i])[0];
+        if (prop_group !== undefined) {
+            console.log("the thing here is " + attr_array[i]);
+            prop_group.classList.remove('hidden');
+        } else {
+            pdgui.gui_post("Error: couldn't find iemgui prop group for " + attr_array[i]);
+        }
+
+        if (attr_array[i] === 'display-flags') {
+            // protip: '!!' forces Boolean, '+' forces Number type
+            var flag = +attr_array[i+1];
+            document.getElementsByName('gop')[0].checked = !!flag;
+            document.getElementsByName('hide-name')[0].checked = !!(flag & 2);
+            // Set the gop-related parts of the form to be enabled/disabled based on state
+            set_gop(!!flag);
+        }            
+
+        var elem = document.getElementsByName(attr_array[i]);
+        if (elem.length > 0) {
+            if(attr_array[i].slice(-5) === 'color') {
+                var hex_string = Number(attr_array[i+1]).toString(16);
+                var color_string = "#" + (hex_string === '0' ? '000000' : hex_string);
+                pdgui.gui_post("color is " + color_string);
+                elem[0].value = color_string;
+            } else if (elem[0].type === 'checkbox') {
+                // The attr here is a string, so we need to
+                // force it to number, hence the "+" below
+                gui_post("found a CHECKED ITEM!!!");
+                elem[0].checked = +attr_array[i+1];
+            } else {
+                elem[0].value = attr_array[i+1];
+            }
+        }
+    }
+}
+
+function add_events(name) {
+    // let's handle some events for this window...
+
+    // closing the Window
+    nw.Window.get().on("close", function() {
+        // this needs to do whatever the "cancel" button does
+//        pdgui.pdsend(name + " menuclose 0");
+//        cancel();
+        pdgui.remove_dialogwin(pd_object_callback);
+        this.close(true);
+    });
+
+}
+
+  </script>
+  </body>
+</html>

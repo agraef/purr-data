@@ -823,8 +823,11 @@ void gui_start_vmess(const char *sel, char *fmt, ...)
 static int gui_array_head;
 void gui_start_array(void)
 {
+    if (gui_array_head)
+        sys_gui("[");
+    else
+        sys_gui(",[");
     gui_array_head = 1;
-    sys_gui(",[");
 }
 
 void gui_f(t_float f)
@@ -1267,9 +1270,8 @@ int sys_startgui(const char *guidir)
 
 /* SUPERHACK - let's just load node-webkit and see what happens */
             sprintf(cmdbuf,
-                  "/home/nu/Downloads/nwjs-v0.12.0-alpha2-linux-ia32/nw "
-//                "/home/user/Downloads/node-webkit-v0.11.6-linux-ia32/nw "
-//                  "/home/user/Downloads/atom/atom/atom "
+                  "/home/nu/Downloads/nwjs-v0.12.0-linux-ia32/nw "
+//                  "/home/nu/Downloads/nwjs-v0.12.0-alpha2-linux-ia32/nw "
                 "/home/nu/Downloads/test/ %d localhost %s\n",
                 portno,
                 (sys_k12_mode ? "pd-l2ork-k12" : "pd-l2ork"));

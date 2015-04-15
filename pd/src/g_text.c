@@ -1562,6 +1562,7 @@ static void text_select(t_gobj *z, t_glist *glist, int state)
     {
         if (glist_istoplevel(glist))
         {
+post("inside text selecting...");
             sys_vgui(".x%lx.c itemconfigure %sR -stroke %s\n",
                 glist_getcanvas(glist), rtext_gettag(y),
                 (state? "$pd_colors(selection)" : outline));
@@ -1660,12 +1661,25 @@ static void text_delete(t_gobj *z, t_glist *glist)
     canvas_deletelinesfor(glist, x);
 }
 
+static void text_get_typestring(int type, char *buf)
+{
+    if (type == T_OBJECT)
+        sprintf(buf, "%s", "obj");
+    else if (type == T_MESSAGE)
+        sprintf(buf, "%s", "msg");
+    else if (type == T_TEXT)
+        sprintf(buf, "%s", "comment");
+    else
+        sprintf(buf, "%s", "atom");
+}
+
 static void text_vis(t_gobj *z, t_glist *glist, int vis)
 {
     //fprintf(stderr,"text_vis %d\n", vis);
     t_text *x = (t_text *)z;
     int x1, y1, x2, y2;
-
+    char type[8];
+    text_get_typestring(x->te_type, type);
 #ifdef PDL2ORK
     //if we are in k12 mode and this is hub with level 1 (global)
     //don't draw it and make its width/height 0
@@ -1692,8 +1706,9 @@ static void text_vis(t_gobj *z, t_glist *glist, int vis)
 
                 // make a group
                 text_getrect(&x->te_g, glist, &x1, &y1, &x2, &y2);
-                gui_vmess("gui_text_create_gobj", "ssii",
-                    canvas_tag(glist), rtext_gettag(y), x1, y1);
+                gui_vmess("gui_text_create_gobj", "sssiii",
+                    canvas_tag(glist_getcanvas(glist)),
+                    rtext_gettag(y), type, x1, y1, glist_istoplevel(glist));
 
                 if (x->te_type == T_ATOM)
                     glist_retext(glist, x);
@@ -1920,16 +1935,20 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
         else
         {
             //fprintf(stderr,"glist_drawiofor o redraw\n");
-            sys_vgui(".x%lx.c coords %so%d %d %d %d %d\n",
-                glist_getcanvas(glist), tag, i,
-                onset, y2 - 2,
-                onset + IOWIDTH, y2);
+            //sys_vgui(".x%lx.c coords %so%d %d %d %d %d\n",
+            //    glist_getcanvas(glist), tag, i,
+            //    onset, y2 - 2,
+            //    onset + IOWIDTH, y2);
                 // jsarlo
                 /*sys_vgui(".x%x.c raise %so%d\n",
                          glist_getcanvas(glist),
                          tag,
                          i);*/
                 // end jsarlo
+
+            gui_vmess("gui_canvas_redraw_io", "sssisii",
+                canvas_tag(glist_getcanvas(glist)), rtext_gettag(y), tag,
+                onset, "o", i, x1);
         }
     }
     n = obj_ninlets(ob);
@@ -1960,16 +1979,20 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
         else
         {
             //fprintf(stderr,"glist_drawiofor i firsttime\n");
-            sys_vgui(".x%lx.c coords %si%d %d %d %d %d\n",
-                glist_getcanvas(glist), tag, i,
-                onset, y1,
-                onset + IOWIDTH, y1 + EXTRAPIX);
+            //sys_vgui(".x%lx.c coords %si%d %d %d %d %d\n",
+            //    glist_getcanvas(glist), tag, i,
+            //    onset, y1,
+            //    onset + IOWIDTH, y1 + EXTRAPIX);
                 // jsarlo   
                 /*sys_vgui(".x%x.c raise %si%d\n",
                          glist_getcanvas(glist),
                          tag,
                          i);*/
                 // end jsarlo
+
+            gui_vmess("gui_canvas_redraw_io", "sssisii",
+                canvas_tag(glist_getcanvas(glist)), rtext_gettag(y), tag,
+                onset, "i", i, x1);
         }
     }
 }
@@ -2110,8 +2133,9 @@ void text_drawborder(t_text *x, t_glist *glist,
                     fill, tag, tag, box_tag,
                     (selected ? "selected" : ""));
             */
-            gui_vmess("gui_text_drawborder", "ssiiiii",
-                canvas_tag(glist_getcanvas(glist)), tag, broken, x1, y1, x2, y2);
+            gui_vmess("gui_text_drawborder", "sssiiiii",
+                canvas_tag(glist_getcanvas(glist)), tag, "none",
+                broken, x1, y1, x2, y2);
                
                 //-dash %s -> pattern disabled for tkpath
         }

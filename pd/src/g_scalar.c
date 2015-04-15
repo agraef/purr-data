@@ -861,13 +861,14 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
         //    );
         char tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "scalar%lx", (long unsigned int)x->sc_vec);
-        gui_vmess("gui_create_scalar", "ssiffffii",
+        gui_vmess("gui_create_scalar", "ssiffffiii",
             canvas_tag(glist_getcanvas(owner)), 
             tagbuf,
             glist_isselected(owner, &x->sc_gobj),
             xscale, 0.0, 0.0, yscale,
             (int)glist_xtopixels(owner, basex),
-            (int)glist_ytopixels(owner, basey));
+            (int)glist_ytopixels(owner, basey),
+            glist_istoplevel(owner));
         //sys_vgui(".x%lx.c create group -tags {.dgroup%lx.%lx} "
         //         "-parent {.scalar%lx}\n",
         //    glist_getcanvas(owner), templatecanvas, x->sc_vec, x->sc_vec);

@@ -1858,6 +1858,7 @@ void canvas_undo_canvas_apply(t_canvas *x, void *z, int action)
         //redraw
         canvas_setgraph(x, x->gl_isgraph + 2*x->gl_hidetext, 0);
         canvas_dirty(x, 1);
+
         if (x->gl_havewindow)
         {
             canvas_redraw(x);
@@ -2658,13 +2659,15 @@ void canvas_setgraph(t_glist *x, int flag, int nogoprect)
         }
         if (x->gl_owner && !x->gl_loading && glist_isvisible(x->gl_owner))
         {
+            gobj_vis(&x->gl_gobj, x->gl_owner, 0);
             gobj_vis(&x->gl_gobj, x->gl_owner, 1);
             canvas_fixlinesfor(x->gl_owner, &x->gl_obj);
         }
     }
 }
 
-void garray_properties(t_garray *x, t_glist *canvas);
+int garray_properties(t_garray *x, t_symbol **gfxstubp, t_symbol **namep,
+    int *sizep, int *flagsp, t_symbol **fillp, t_symbol **outlinep);
 
     /* tell GUI to create a properties dialog on the canvas.  We tell
     the user the negative of the "pixel" y scale to make it appear to grow
@@ -2672,27 +2675,98 @@ void garray_properties(t_garray *x, t_glist *canvas);
 void canvas_properties(t_glist *x)
 {
     t_gobj *y;
-    char graphbuf[200];
-    if (glist_isgraph(x) != 0)
-        sprintf(graphbuf,
-            "pdtk_canvas_dialog %%s %g %g %d %g %g %g %g %d %d %d %d\n",
-                0., 0.,
-                glist_isgraph(x) ,//1,
-                x->gl_x1, x->gl_y1, x->gl_x2, x->gl_y2, 
-                (int)x->gl_pixwidth, (int)x->gl_pixheight,
-                (int)x->gl_xmargin, (int)x->gl_ymargin);
-    else sprintf(graphbuf,
-            "pdtk_canvas_dialog %%s %g %g %d %g %g %g %g %d %d %d %d\n",
-                glist_dpixtodx(x, 1), -glist_dpixtody(x, 1),
-                0,
-                0., -1., 1., 1., 
-                (int)x->gl_pixwidth, (int)x->gl_pixheight,
-                (int)x->gl_xmargin, (int)x->gl_ymargin);
-    gfxstub_new(&x->gl_pd, x, graphbuf);
-        /* if any arrays are in the graph, put out their dialogs too */
+    char graphbuf[200], *gfx_tag;
+
+    gfx_tag = gfxstub_new2(&x->gl_pd, x);
+
+    /* We need to go through and delete any
+       gfxstubs for the arrays in this glist.
+       Otherwise we could get a message to the
+       GUI in the middle of our properties
+       message below.  This is needed because
+       the array properties just share the
+       same window with the canvas properties.
+    */
     for (y = x->gl_list; y; y = y->g_next)
         if (pd_class(&y->g_pd) == garray_class) 
-            garray_properties((t_garray *)y, x);
+            gfxstub_deleteforkey((t_garray *)y);
+
+    gui_start_vmess("gui_canvas_dialog", "s", gfx_tag);
+    gui_start_array(); /* Main array for nested arrays of attributes */
+
+    gui_start_array(); /* Nested array for canvas attributes */
+    if (glist_isgraph(x) != 0)
+    {
+        //sprintf(graphbuf,
+        //    "pdtk_canvas_dialog %%s %g %g %d %g %g %g %g %d %d %d %d\n",
+        //        0., 0.,
+        //        glist_isgraph(x) ,//1,
+        //        x->gl_x1, x->gl_y1, x->gl_x2, x->gl_y2, 
+        //        (int)x->gl_pixwidth, (int)x->gl_pixheight,
+        //        (int)x->gl_xmargin, (int)x->gl_ymargin);
+        gui_s("x-scale");  gui_f(0.);
+        gui_s("y-scale");  gui_f(0.);
+        gui_s("display-flags"); gui_i(glist_isgraph(x));
+        gui_s("x1");       gui_f(x->gl_x1);
+        gui_s("y1");       gui_f(x->gl_y1);
+        gui_s("x2");       gui_f(x->gl_x2);
+        gui_s("y2");       gui_f(x->gl_y2);
+        gui_s("x-pix");    gui_i((int)x->gl_pixwidth);
+        gui_s("y-pix");    gui_i((int)x->gl_pixheight);
+        gui_s("x-margin"); gui_i((int)x->gl_xmargin);
+        gui_s("y-margin"); gui_i((int)x->gl_ymargin);
+    }
+    else
+    {
+        //sprintf(graphbuf,
+        //    "pdtk_canvas_dialog %%s %g %g %d %g %g %g %g %d %d %d %d\n",
+        //        glist_dpixtodx(x, 1), -glist_dpixtody(x, 1),
+        //        0,
+        //        0., -1., 1., 1., 
+        //        (int)x->gl_pixwidth, (int)x->gl_pixheight,
+        //        (int)x->gl_xmargin, (int)x->gl_ymargin);
+        gui_s("x-scale");  gui_f(glist_dpixtodx(x, 1));
+        gui_s("y-scale");  gui_f(-glist_dpixtody(x, 1));
+        gui_s("display-flags"); gui_i(0);
+        gui_s("x1");       gui_f(0.);
+        gui_s("y1");       gui_f(-1.);
+        gui_s("x2");       gui_f(1.);
+        gui_s("y2");       gui_f(1.);
+        gui_s("x-pix");    gui_i((int)x->gl_pixwidth);
+        gui_s("y-pix");    gui_i((int)x->gl_pixheight);
+        gui_s("x-margin"); gui_i((int)x->gl_xmargin);
+        gui_s("y-margin"); gui_i((int)x->gl_ymargin);
+    }
+    //gfxstub_new(&x->gl_pd, x, graphbuf);
+
+    gui_end_array(); /* end of nested array for canvas attributes */
+
+        /* if any arrays are in the graph, pull out their attributes */
+    for (y = x->gl_list; y; y = y->g_next)
+    {
+        if (pd_class(&y->g_pd) == garray_class) 
+        {
+            t_garray *garray = (t_garray *)y;
+            t_symbol *gfxstub, *name, *fill, *outline;
+            int size, flags;
+            /* garray_properties can fail to find an array, so we won't
+               send props if it has a return value of zero */
+            if (garray_properties((t_garray *)y, &gfxstub, &name, &size, &flags,
+                &fill, &outline))
+            {
+                gui_start_array(); /* inner array for this array's attributes */
+                gui_s("array_gfxstub"); gui_s(gfxstub->s_name);
+                gui_s("array_name"); gui_s(name->s_name);
+                gui_s("array_size"); gui_i(size);
+                gui_s("array_flags"); gui_i(flags);
+                gui_s("array_fill"); gui_s(fill->s_name);
+                gui_s("array_outline"); gui_s(outline->s_name);
+                gui_end_array();
+            }
+        }
+    }
+    gui_end_array();
+    gui_end_vmess();
 }
 
     /* called from the gui when "OK" is selected on the canvas properties
@@ -2797,6 +2871,8 @@ static void canvas_donecanvasdialog(t_glist *x,
         /* LATER avoid doing 2 redraws here (possibly one inside setgraph) */
     canvas_setgraph(x, graphme, 0);
     canvas_dirty(x, 1);
+
+// we're drawn at this point
 
     // make sure gop is never smaller than its text
     // if one wants smaller gop window, make sure to disable text

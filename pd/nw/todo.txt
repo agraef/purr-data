@@ -110,6 +110,26 @@ Everything else:
 * tgl 'X' doesn't show up
 * gui_graph_fill_border: use css class selectors instead of configuration
 * standardize javascript function names
+* in gui_plot_vis, we have to check for gobj existence.  For some reason, at
+  very fast drawing rates we end up with two svg elements if we don't check
+  for this.  Not sure why
+* add garray_update for changing the path coords without having to recreate
+  the entire scalar edifice
+* add "p" type to gui_vmess for pointers
+* when duplicating a large number of iemguis, the label or border will eventually try to append to null.
+  It looks like it's receiving the correct gui calls from Pd, in the correct order.  But for some reason the
+  calls from Pd are getting split in the middle of a string.  Not sure why, probably something to do
+  with the hacky parser I wrote to split on newlines.  Anyway, when we can just split on semis this problem
+  should hopefully go away.  Make sure to test for it once that happens.
+
+  Some gui_posts that show the problem-- the string is split between lines 2 and 3:
+    nextCmd is gui_create_toggle ".x98be5e8","x99c0740","#000000",1,0,181,67,192,78,181,78,192,67,179,65;
+    nextCmd is gui_iemgui_label_new ".x98be5e
+    8","x99c0740",17,7,"#000000","","{{DejaVu Sans Mono} -10 normal}";
+    nextCmd is gui_canvas_drawio ".x98be5e8","x99c0740",".x98be5e8.t99c0de0o0",179,79,186,80,179,65,"o",0,0,1;
+    the tag for this XLET is .x98be5e8.t99c0de0o0
+
+remove gui_text_select_color (css takes care of this)
 
 Crashers
 --------

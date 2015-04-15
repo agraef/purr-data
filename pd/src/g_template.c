@@ -5456,6 +5456,20 @@ static void plot_groupvis(t_scalar *x, t_glist *owner, t_word *data,
     }
 }
 
+/* see if the elements we're plotting have any drawing commands */
+int plot_has_drawcommand(t_canvas *elemtemplatecanvas)
+{
+    t_gobj *y;
+    for (y = elemtemplatecanvas->gl_list; y; y = y->g_next)
+    {
+        if (pd_class(&y->g_pd) == canvas_class && ((t_glist *)y)->gl_svg)
+            return 1;
+        else if (class_isdrawcommand(y->g_pd))
+            return 1;
+    }
+    return 0;
+}
+
 static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     t_scalar *sc, t_word *data, t_template *template,
     t_float basex, t_float basey, int tovis)
@@ -5515,6 +5529,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     if (tovis)
     {
         int in_array = (sc->sc_vec == data) ? 0 : 1;
+        int draw_scalars = plot_has_drawcommand(elemtemplatecanvas);
         /* check if old 3-digit color field is being used... */
         int dscolor = fielddesc_getfloat(&x->x_outlinecolor, template, data, 1);
         if (dscolor != 0)
@@ -5525,12 +5540,26 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         }
         if (symoutline == &s_) symoutline = gensym("#000000");
         if (symfill == &s_) symfill = gensym("#000000");
+
         if (style == PLOTSTYLE_POINTS || style == PLOTSTYLE_BARS)
         {
+            t_float xscale = glist_xtopixels(glist, 1) - glist_xtopixels(glist, 0);
+            t_float yscale = glist_ytopixels(glist, 1) - glist_ytopixels(glist, 0);
+            t_float testy_y = 1 / yscale;
+//            post("testy_y is %g", testy_y);
+
             symfill = (style == PLOTSTYLE_POINTS ? symoutline : symfill);
             t_float minyval = 1e20, maxyval = -1e20;
             int ndrawn = 0;
-            sys_vgui(".x%lx.c create path { \\\n", glist_getcanvas(glist));
+            //sys_vgui(".x%lx.c create path { \\\n", glist_getcanvas(glist));
+
+            gui_start_vmess("gui_plot_vis", "sii",
+                canvas_tag(glist_getcanvas(glist)),
+                basex,
+                basey);
+                
+            gui_start_array();
+
             for (xsum = xloc, i = 0; i < nelem; i++)
             {
                 t_float yval;
@@ -5618,12 +5647,30 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                     /* For efficiency, we make a single path item
                        for the trace or bargraph */
                     int mex1 = ixpix;
-                    int mey1 = (int)fielddesc_cvttocoord(yfielddesc, minyval) - 1;
+                    t_float mey1 = fielddesc_cvttocoord(yfielddesc, minyval) - 1;
 
                     int mex2 = inextx;
                     int mey2 = py2;
-                    sys_vgui("M %d %d H %d V %d H %d z \\\n",
-                        mex1, mey1, mex2, mey2, mex1);
+                    //sys_vgui("M %d %d H %d V %d H %d z \\\n",
+                    //    mex1, mey1, mex2, mey2, mex1);
+
+                    gui_s("M");
+                    gui_i(mex1);
+                    gui_f(yval);
+//                    gui_f(mey1);
+
+                    gui_s("H");
+                    gui_i(mex2);
+
+                    gui_s("V");
+                    gui_f(yval + testy_y * linewidth);
+//                    gui_i(mey2);
+
+                    gui_s("H");
+                    gui_i(mex1);
+
+                    gui_s("z");
+
                //} //part of experimental code above
                     ndrawn++;
                     minyval = 1e20;
@@ -5636,13 +5683,41 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             // already gives us the thickness matching that of vanilla pd
             // The code is left here in its redundant form for future reference
             // in case we encounter regressions.
-            sys_vgui("} -fill %s -stroke %s -strokewidth %d "
-                     "-parent {.dgroup%lx.%lx} "
-                     "-tags {.x%lx.x%lx.template%lx array}\n",
-                symfill->s_name, symoutline->s_name,
-                style == PLOTSTYLE_POINTS ? 0 : 0,
-                x->x_canvas, data,
-                glist_getcanvas(glist), glist, data);
+            //sys_vgui("} -fill %s -stroke %s -strokewidth %d "
+            //         "-parent {.dgroup%lx.%lx} "
+            //         "-tags {.x%lx.x%lx.template%lx array}\n",
+            //    symfill->s_name, symoutline->s_name,
+            //    style == PLOTSTYLE_POINTS ? 0 : 0,
+            //    x->x_canvas, data,
+            //    glist_getcanvas(glist), glist, data);
+
+            gui_end_array();
+
+            gui_start_array();
+            gui_s("fill");
+            gui_s(symfill->s_name);
+
+            gui_s("stroke");
+            gui_s(symoutline->s_name);
+
+            gui_s("stroke-width");
+            gui_i(style == PLOTSTYLE_POINTS ? 0 : 0);
+            gui_end_array();
+
+            gui_start_array();
+            char pbuf[MAXPDSTRING];
+            char tbuf[MAXPDSTRING];
+            sprintf(pbuf, "dgroup%lx.%lx", (long unsigned int)x->x_canvas,
+                (long unsigned int)data);
+            sprintf(tbuf, ".x%lx.x%lx.template%lx",
+                (long unsigned int)glist_getcanvas(glist),
+                (long unsigned int)glist,
+                (long unsigned int)data);
+            gui_s(pbuf);
+            gui_s(pbuf);
+            gui_end_array();
+
+            gui_end_vmess();
         }
         else
         {
@@ -5794,7 +5869,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             /* We're done with the outline; now draw all the points.
             This code is inefficient since the template has to be
             searched for drawing instructions for every last point. */
-        if (scalarvis != 0)
+        if (scalarvis != 0 && draw_scalars)
         {
             //t_float xoffset = in_array ? basex: 0;
             //t_float yoffset = in_array ? basey: 0;

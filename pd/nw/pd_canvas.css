@@ -1,0 +1,102 @@
+@font-face {
+    font-family: "DejaVu Sans Mono";
+    src: url("DejaVuSansMono.ttf");
+}
+
+body {
+    margin: 0px;
+    font-family: "DejaVu Sans Mono";
+}
+
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+text {
+    // fill: red;
+    cursor: default;
+}
+
+.selected_border {
+    stroke: blue;
+    stroke-dasharray: none;
+    stroke-width: 1;
+}
+
+/* a message when it flashes on a mouse-click */
+.msg.flashed .border {
+    stroke-width: 4;
+}
+
+/* Border color for selected objects
+   In plain English:
+       Any element with a class 'border' that is contained inside
+       a parent element that is not in class 'gop' but is
+       in class 'selected' (whew!)
+*/
+:not(.gop).selected .border {
+    stroke: blue;
+}
+
+.selected_line {
+    stroke: blue;
+}
+
+.broken_border {
+    fill: #f7f7f7;
+    stroke: red;
+    stroke-dasharray: 3 2;
+}
+
+.xlet_control {
+    stroke: red;
+    fill: gray;
+//    stroke-width: 1;
+}
+
+.xlet_signal {
+    stroke: green;
+    fill: green;
+    stroke-width: 1;
+}
+
+.xlet_iemgui {
+    stroke: black;
+    fill: black;
+    stroke-width: 1;
+}
+
+.iemgui_label_selected {
+    fill: blue;
+}
+
+@-webkit-keyframes fizzle {
+    0% {
+        stroke-width: 1;
+        stroke-opacity: 1;
+        x: 0;
+        rx: 1;
+        ry: 1;
+    }
+    100% {
+        stroke-width: 20;
+        stroke-opacity: 0.2;
+        x: 100;
+        rx: 50;
+        ry: 50;
+    }
+}
+
+.xlet_selected {
+    stroke: purple !important;
+    -webkit-animation: fizzle 0.5s linear 1;
+}
+
+//.xlet:hover {
+//    stroke: red;
+//}

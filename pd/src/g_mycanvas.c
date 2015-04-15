@@ -35,8 +35,8 @@ void my_canvas_draw_new(t_my_canvas *x, t_glist *glist)
         x->x_gui.x_bcol, x, x);
     char colorbuf[MAXPDSTRING];
     sprintf(colorbuf, "#%6.6x", x->x_gui.x_bcol);
-    gui_vmess("gui_text_create_gobj", "ssii", canvas_tag(canvas),
-        gobj_tag(x), x1, y1);
+    gui_vmess("gui_text_create_gobj", "sssiii", canvas_tag(canvas),
+        gobj_tag(x), "iemgui", x1, y1, glist_istoplevel(canvas));
     gui_vmess("gui_create_mycanvas", "sssiiiiii", canvas_tag(canvas),
         gobj_tag(x), colorbuf, x1, y1, x1+x->x_vis_w, y1+x->x_vis_h,
         x1+x->x_gui.x_w, y1+x->x_gui.x_h);

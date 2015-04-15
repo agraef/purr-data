@@ -862,6 +862,9 @@ int garray_getname(t_garray *x, t_symbol **namep);
     graph decorations in toplevels... */
 static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
 {
+
+post("inside graph vis");
+
     t_glist *x = (t_glist *)gr;
     //fprintf(stderr,"graph vis canvas=%lx gobj=%lx %d\n",
     //    (t_int)parent_glist, (t_int)gr, vis);
@@ -897,9 +900,9 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
         int xpix, ypix;
         xpix = text_xpix(&x->gl_obj, parent_glist);
         ypix = text_ypix(&x->gl_obj, parent_glist);
-        gui_vmess("gui_text_create_gobj", "ssii",
+        gui_vmess("gui_text_create_gobj", "sssiii",
             canvas_tag(glist_getcanvas(x->gl_owner)),
-            tag, xpix, ypix);
+            tag, "graph", xpix, ypix, 1);
         if (canvas_showtext(x))
             rtext_draw(glist_findrtext(parent_glist, &x->gl_obj));
     }
@@ -930,9 +933,10 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
             //    glist_getcanvas(x->gl_owner),
                 ////parent_glist,
             //    x1, y1, x1, y2, x2, y2, x2, y1, x1, y1, tag);
-            gui_vmess("gui_text_drawborder", "ssiiiii",
+            gui_vmess("gui_text_drawborder", "sssiiiii",
                 canvas_tag(glist_getcanvas(x->gl_owner)),
                 tag,
+                "none",
                 0, x1, y1, x2, y2);
             glist_noselect(x->gl_owner);
             gui_vmess("gui_graph_fill_border", "ssi",
@@ -973,9 +977,10 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
         char tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "%sR", tag);
 
-        gui_vmess("gui_text_drawborder", "ssiiiii",
+        gui_vmess("gui_text_drawborder", "sssiiiii",
             canvas_tag(glist_getcanvas(x->gl_owner)),
             tag,
+            "none",
             0, x1, y1, x2, y2);
             /* write garrays' names along the top */
         for (i = (y1 < y2 ? y1 : y2)-1, g = x->gl_list; g; g = g->g_next)
@@ -1521,6 +1526,7 @@ static void graph_select(t_gobj *z, t_glist *glist, int state)
                     (g->g_pd->c_wb->w_displacefnwtag != NULL) ||
                     (g && pd_class((t_pd *)g) == garray_class)))
                 {
+                    post("inside flub... selecting a fluarg");
                     gobj_select(g, x, state);
                 }
             }
@@ -1558,6 +1564,7 @@ static void graph_delete(t_gobj *z, t_glist *glist)
 static void graph_delete(t_gobj *z, t_glist *glist)
 {
     //fprintf(stderr,"graph_delete\n");
+    post("how many more times...");
     t_glist *x = (t_glist *)z;
     t_gobj *y;
     text_widgetbehavior.w_deletefn(z, glist);

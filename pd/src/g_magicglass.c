@@ -144,8 +144,8 @@ void magicGlass_drawNew(t_magicGlass *x)
              x->x_c);
     sys_vgui(".x%x.c raise magicGlassText\n",
              x->x_c);
-    gui_vmess("gui_text_create_gobj", "ssii",
-        canvas_tag(x->x_c), "cord_inspector", 0, 0);
+    gui_vmess("gui_text_create_gobj", "sssiii",
+        canvas_tag(x->x_c), "cord_inspector", "cord_inspector", 0, 0, 0);
     gui_vmess("gui_create_cord_inspector", "s",
         canvas_tag(x->x_c)); 
     magicGlass_updateText(x, 0);

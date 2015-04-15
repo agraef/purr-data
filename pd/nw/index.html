@@ -494,7 +494,8 @@ function nw_create_window(cid, type, width, height, xpos, ypos, menu_flag, resiz
     canvas_string, dir, dirty_flag, cargs, attr_array) {
         // todo: make a separate way to format the title for OSX
     var my_title =  pdgui.format_window_title(canvas_string, dirty_flag, cargs, dir);
-    var my_file = (type === 'pd-canvas' ? 'pdcanvas.html' : 'pdproperties.html');
+    var my_file =
+        type === 'pd_canvas' ? 'pd_canvas.html' : 'dialog_' + type + '.html';
 
     var new_win = nw.Window.open(my_file, {
         title: my_title,
@@ -506,7 +507,8 @@ function nw_create_window(cid, type, width, height, xpos, ypos, menu_flag, resiz
         x: xpos,
         y: ypos
     });
-    var eval_string = "register_canvas_id('" + cid + "', [" + attr_array + "]);";
+    pdgui.gui_post("attr_array is " + attr_array);
+    var eval_string = "register_canvas_id(" + JSON.stringify(cid) + ", " + JSON.stringify(attr_array) + ");";
     pdgui.gui_post("eval string is " + eval_string);
     if (attr_array !== null) {
         pdgui.gui_post("attr_array is " + attr_array.toString());

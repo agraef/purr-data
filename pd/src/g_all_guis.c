@@ -1209,13 +1209,16 @@ void iemgui_base_draw_new(t_iemgui *x) {
     //         "-stroke $pd_colors(iemgui_border) -fill #%6.6x "
     //         "-tags {%lxBASE x%lx text iemgui border}\n",
     //     canvas, x1,y1,x2,y2, x->x_bcol, x, x);
-    gui_vmess("gui_text_create_gobj", "ssii", canvas_tag(canvas), gobj_tag(x),
-        x1, y1);
+    gui_vmess("gui_text_create_gobj", "sssiii", canvas_tag(canvas), gobj_tag(x),
+        "iemgui", x1, y1, glist_istoplevel(x->x_glist));
     char colorbuf[MAXPDSTRING];
     sprintf(colorbuf, "#%6.6x", x->x_bcol);
-    gui_vmess("gui_iemgui_drawborder", "sssiiii",
-        canvas_tag(canvas), gobj_tag(x),
-        colorbuf, x1, y1, x2, y2);
+    gui_vmess("gui_text_drawborder", "sssiiiii",
+        canvas_tag(canvas),
+        gobj_tag(x),
+        colorbuf,
+        0,
+        x1, y1, x2, y2);
 }
 
 void iemgui_base_draw_move(t_iemgui *x) {

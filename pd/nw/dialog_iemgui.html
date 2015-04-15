@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="dialog_iemgui.css">
+  </head>
+  <body>
+    <div class="container">
+    <form> 
+      <fieldset> 
+        <legend data-i18n="iem.prop.heading.size"></legend> 
+
+        <table class="pairs">
+          <tr class="size prop hidden">
+            <td>
+              <label data-i18n="[title]iem.prop.size_tt">
+                <span data-i18n="iem.prop.size"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.size_tt">
+              <input type="text" name="size">
+            </td>
+          </tr>
+          <tr class="selection-size prop hidden">
+            <td>
+              <label data-i18n="[title]iem.select_size_tt">
+                <span data-i18n="iem.prop.select_size"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.select_size_tt">
+              <input type="text" name="selection-size">
+            </td>
+          </tr>
+          <tr class="number prop hidden">
+            <td>
+              <label data-i18n="[title]iem.prop.number_tt">
+                <span data-i18n="iem.prop.number"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.number_tt">
+              <input type="number" name="number">
+            </td>
+          </tr>
+          <tr class="nonzero-value prop hidden">
+            <td>
+              <label data-i18n="[title]iem.prop.nonzero_value_tt">
+                <span data-i18n="iem.prop.nonzero_value"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.nonzero_value_tt">
+              <input type="text" name="nonzero-value">
+            </td>
+          </tr>
+          <tr class="width prop hidden">
+            <td>
+              <label data-i18n="[title]iem.prop.width_tt"> 
+                <span data-i18n="iem.prop.width"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.width_tt">
+              <input type="text" name="width">
+            </td>
+            <td>
+              <label data-i18n="[title]iem.prop.height_tt">
+                <span data-i18n="iem.prop.height"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.height_tt">
+              <input type="text" name="height">
+            </td>
+          </tr>
+          <tr class="visible-width prop hidden">
+            <td>
+              <label data-i18n="[title]iem.prop.visible_width_tt">
+                <span data-i18n="iem.prop.visible_width"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.visible_width_tt">
+              <input type="text" name="visible-width">
+            </td>
+            <td>
+              <label data-i18n="iem.prop.visible_height">
+                <span data-i18n="iem.prop.visible_height"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.visible_height_tt">
+              <input type="text" name="visible-height">
+            </td>
+          </tr>
+          <tr class="minimum-range prop pair hidden">
+            <td>
+              <label data-i18n="[title]iem.prop.minimum_tt">
+                <span data-i18n="iem.prop.minimum"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.minimum_tt">
+              <input type="text" name="minimum-range">
+            </td>
+            <td>
+              <label data-i18n="[title]iem.prop.maximum_tt">
+                <span data-i18n="iem.prop.maximum"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.maximum_tt">
+              <input type="text" name="maximum-range">
+            </td>
+          </tr>
+          <tr class="flash-interrupt prop hidden">
+            <td>
+              <label data-i18n="[title]iem.prop.flash_interrupt_tt">
+                <span data-i18n="iem.prop.flash_interrupt"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.flash_interrupt_tt">
+              <input type="text" name="flash-interrupt">
+            </td>
+            <td>
+              <label data-i18n="[title]iem.prop.flash_hold_tt">
+                <span data-i18n="iem.prop.flash_hold"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.flash_hold_tt">
+              <input type="text" name="flash-hold">
+            </td>
+          </tr>
+          <tr class="log-height prop hidden">
+            <td></td><td></td>
+            <td>
+              <label data-i18n="[title]iem.prop.log_height_tt">
+                <span data-i18n="iem.prop.log_height"></span>
+              </label>
+            </td>
+            <td>
+              <input type="text" name="log-height">
+            </td>
+          </tr>
+        </table>
+
+        <div class="init prop hidden">
+          <label data-i18n="[title]iem.prop.init_tt">
+            <input type="checkbox" name="init" value="on">
+            <span data-i18n="iem.prop.init"></span>
+          </label>
+          <br>
+        </div>
+
+        <div class="vu-scale prop hidden">
+          <label data-i18n="[title]iem.prop.vu_scale_tt">
+            <span data-i18n="iem.prop.vu_scale"></span>
+            <input type="checkbox" name="vu-scale" value="on">
+          </label>
+          <br>
+        </div>
+
+        <div class="log-scaling prop hidden">
+          <label data-i18n="[title]iem.prop.log_scale_tt">
+            <input type="checkbox" name="log-scaling" value="on">
+            <span data-i18n="iem.prop.log_scale"></span>
+          </label>
+          <br>
+        </div>
+
+        <div class="steady-on-click prop hidden">
+          <label data-i18n="[title]iem.prop.steady_tt">
+            <input type="checkbox" name="steady-on-click" value="on">
+            <span data-i18n="iem.prop.steady"></span>
+          </label>
+          <br>
+        </div>
+      </fieldset> 
+
+      <fieldset> 
+        <legend data-i18n="iem.prop.heading.messages"></legend> 
+
+        <table>
+          <tr class="send-symbol prop hidden">
+            <td>
+              <label data-i18n="[title]iem.prop.send_tt">
+                <span data-i18n="iem.prop.send"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.send_tt">
+              <input type="text" name="send-symbol">
+            </td>
+            <td>
+          <tr class="receive-symbol prop hidden">
+            <td>
+              <label data-i18n="[title]iem.prop.receive_tt">
+                <span data-i18n="iem.prop.receive"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.receive_tt">
+              <input type="text" name="receive-symbol">
+            </td>
+            <td>
+          </tr>
+        </table>
+      </fieldset> 
+
+      <fieldset> 
+        <legend data-i18n="iem.prop.heading.label">wrong stuff</legend> 
+
+        <table class="pairs">
+          <tr class="label prop hidden">
+            <td>
+              <label data-i18n="[title]iem.prop.label_tt">
+                <span data-i18n="iem.prop.label"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.label_tt">
+              <input type="text" name="label">
+            </td>
+            <td>
+              <label data-i18n="[title]iem.prop.xoffset_tt">
+                <span data-i18n="iem.prop.xoffset"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.xoffset_tt">
+              <input type="text" name="x-offset">
+            </td>
+            <td>
+              <label data-i18n="[title]iem.prop.yoffset_tt">
+                <span data-i18n="iem.prop.yoffset"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.yoffset_tt">
+              <input type="text" name="y-offset">
+            </td>
+          </tr>
+          <tr class="font-style prop hidden">
+            <td>
+              <label data-i18n="[title]iem.prop.font_tt">
+                <span data-i18n="iem.prop.font"></span>
+            </td>
+            <td data-i18n="[title]iem.prop.font_tt">
+              <select name="font-style">
+                <option>Font Number 0</option>
+                <option>Font #1</option>
+                <option>Font 2</option>
+              </select>
+            </td>
+            <td colspan="4">
+              <label data-i18n="[title]iem.prop.fontsize_tt">
+                <span data-i18n="iem.prop.fontsize"></span>
+                <input type="text" name="font-size">
+              <label>
+            </td>
+          </tr>
+        </table>
+      </fieldset> 
+
+      <fieldset> 
+      <legend data-i18n="iem.prop.heading.colors"></legend> 
+
+      <div class="background-color prop hidden">
+        <label data-i18n="[title]iem.prop.bgcolor_tt">
+          <input type="color" name="background-color">
+          <span data-i18n="iem.prop.bgcolor"></span>
+        </label>
+        <br>
+      </div>
+
+      <div class="foreground-color prop hidden">
+        <label data-i18n="[title]iem.prop.fgcolor_tt">
+          <input type="color" name="foreground-color">
+          <span data-i18n="iem.prop.fgcolor"></span>
+        </label>
+        <br>
+      </div>
+
+      <div class="label-color prop hidden">
+        <label data-i18n="[title]iem.prop.label_color_tt">
+          <input type="color" name="label-color">
+          <span data-i18n="iem.prop.label_color"></span>
+        </label>
+        <br>
+      </div>
+    </fieldset> 
+
+    <div class="prop hidden">
+      <input type="hidden" name="minimum-size">
+      <input type="hidden" name="range-schedule">
+      <input type="hidden" name="hide-frame">
+    </div>
+
+    <div class="submit_buttons">
+      <button type="button" onClick="ok()" data-i18n="[title]iem.prop.ok_tt">
+        <span data-i18n="iem.prop.ok"></span>
+      </button>
+      <button type="button" onClick="apply()" data-i18n="[title]iem.prop.apply_tt">
+        <span data-i18n="iem.prop.apply"></span>
+      </button>
+      <button type="button" onClick="cancel()" data-i18n="[title]iem.prop.cancel_tt">
+        <span data-i18n="iem.prop.cancel"></span>
+      </button>
+    </div>
+
+  </form> 
+  </div>      
+
+  <script>
+    'use strict';
+    var nw = require('nw.gui'); 
+    var pdgui = require('./pdgui.js');
+
+    // For translations
+    var l = pdgui.get_local_string;
+
+    console.log("my working dire is " + pdgui.get_pwd());
+
+    var pd_object_callback;
+
+    function ok() {
+        apply();
+        cancel();
+    }
+
+//    function toggler(evt) {
+//        evt.value = evt.checked ? 1 : 0; 
+//    }
+
+    function substitute_space(arg) {
+        var fake_space = String.fromCharCode(11);
+        return arg.split(' ').join(fake_space);
+    }
+
+    function strip_problem_chars(arg) {
+        var problem_chars = [';', ',', '{', '}', '\\'];
+        var ret = arg;
+        for(var i = 0; i < problem_chars.length; i++) {
+            ret = ret.split(';').join('');
+        }
+        return ret;
+    }
+
+    function apply() {
+        pdgui.gui_post("we're applying shits!");
+
+        /* Not sure what these are...
+            iemgui_clip_dim $id
+            iemgui_clip_num $id
+            iemgui_sched_rng $id
+            iemgui_verify_rng $id
+            iemgui_sched_rng $id
+            iemgui_clip_fontsize $id
+        */
+
+
+
+        var send_symbol = document.getElementsByName('send-symbol')[0].value;
+        var receive_symbol = document.getElementsByName('receive-symbol')[0].value;
+        var label =  document.getElementsByName('label')[0].value;
+        if (send_symbol === null || send_symbol === '') { send_symbol = 'empty'; }
+        if (receive_symbol === null || receive_symbol === '') { receive_symbol = 'empty'; }
+        if (label === null || label === '') { label = 'empty'; }
+
+        console.log("send_symbol is " + send_symbol);
+
+        if (send_symbol.charAt(0) === '$') {
+            send_symbol = '#' + send_symbol.slice(1);
+        }
+        if (receive_symbol.charAt(0) === '$') {
+            receive_symbol = '#' + receive_symbol.slice(1);
+        }
+        if (label.charAt(0) === '$') {
+            label = '#' + label.slice(1);
+        }
+
+        send_symbol = substitute_space(send_symbol);
+        receive_symbol = substitute_space(receive_symbol);
+        label = substitute_space(label);
+
+        send_symbol = strip_problem_chars(send_symbol);
+        receive_symbol = strip_problem_chars(receive_symbol);
+        label = strip_problem_chars(label);
+
+        var label_x_offset =  document.getElementsByName('x-offset')[0].value;
+        var label_y_offset =  document.getElementsByName('y-offset')[0].value;
+
+	// make sure the offset boxes have a value
+        if (label_x_offset === null) { label_x_offset = 0; }
+        if (label_y_offset === null) { label_y_offset = 0; }
+
+        var height, width;
+        var size = document.getElementsByName('size')[0].value;
+        if (size === '') {
+            var size = document.getElementsByName('selection-size')[0].value;
+        }
+
+        if (size !== '') {
+            width = size;
+            height = size;
+        } else {
+            width = document.getElementsByName('width')[0].value;
+            height = document.getElementsByName('height')[0].value;
+        }
+
+        var slot3 = document.getElementsByName('minimum-range')[0].value;
+        var slot4 = document.getElementsByName('maximum-range')[0].value;
+
+        if (slot3 === '') {
+            slot3 = document.getElementsByName('flash-interrupt')[0].value;
+            slot4 = document.getElementsByName('flash-hold')[0].value;
+        }
+
+        if (slot3 === '') {
+            slot3 = document.getElementsByName('visible-width')[0].value;
+            slot4 = document.getElementsByName('visible-height')[0].value;
+        }
+
+        if (slot3 === '') { // toggle
+            slot3 = document.getElementsByName('nonzero-value')[0].value;
+            if (slot3 === '') {
+                slot3 = 0;
+            }
+            slot4 = 0;
+        }
+
+        var slot5 = +document.getElementsByName('log-scaling')[0].checked;
+        // Hack to accomodate the vu-scale property, which exists in the same
+        // slot as this one
+        var log_scaling_spanner = document.getElementsByClassName('log-scaling')[0];
+        var log_display = log_scaling_spanner.style.getPropertyValue('display');
+
+        if (log_display === null) {
+            slot5 = +document.getElementsByName('vu-scale')[0].checked;
+            pdgui.gui_post('slot five is ' + slot5);
+        }
+        pdgui.gui_post('slot five is ' + slot5);
+
+        var init = +document.getElementsByName('init')[0].checked;
+        if (init === '') { init = 0; }
+
+        var slot7 = document.getElementsByName('log-height')[0].value;
+        if (slot7 === '') {
+            slot7 = document.getElementsByName('number')[0].value;
+        }
+        if (slot7 === '') {
+            slot7 = 0;
+        }
+
+        var font_style = document.getElementsByName('font-style')[0].value;
+        if (font_style !== null) { font_style = 0; }
+
+        var font_size = document.getElementsByName('font-size')[0].value;
+        if (font_size === '') { font_size = 0; }
+
+        var foreground_color = parseInt(document.getElementsByName('foreground-color')[0].value.slice(1), 16);
+        var background_color = parseInt(document.getElementsByName('background-color')[0].value.slice(1), 16);
+        var label_color = parseInt(document.getElementsByName('label-color')[0].value.slice(1), 16);
+
+        var slot18 = +document.getElementsByName('steady-on-click')[0].checked;
+
+        pdgui.pdsend([pd_object_callback, 'dialog',
+            width, height,
+            slot3, // bng: flash-interrupt
+                   // slider: min-range
+                   // toggle: nonzero-value
+                   // my_canvas: visible_width
+            slot4, // bng: flash-hold
+                   // slider: max-range
+                   // my_canvas: visible_height
+            slot5, // slider: lin/log thingy
+                   // nbx: lin/log
+                   // vu: vu-scale
+            init,
+            slot7, // log-height or vradio/hradio number
+            send_symbol, receive_symbol, label,
+            label_x_offset, label_y_offset,
+            font_style, font_size,
+            background_color, foreground_color,
+            label_color,
+            slot18, // steady on click
+            0].join(' '));
+/*
+	pd [concat $id dialog \
+		$::dialog($vid:wdt) $::dialog($vid:hgt) \
+		$::dialog($vid:min_rng) $::dialog($vid:max_rng) \
+		$::dialog($vid:lin0_log1) $::dialog($vid:loadbang) \
+		$::dialog($vid:num) \
+		$hhhsnd $hhhrcv $hhhgui_nam \
+		$::dialog($vid:gn_dx) $::dialog($vid:gn_dy) \
+		$::dialog($vid:gn_f) $::dialog($vid:gn_fs) \
+		$::dialog($vid:bcol) $::dialog($vid:fcol) \
+		$::dialog($vid:lcol) \
+		$::dialog($vid:steady) $::dialog($vid:hide) \;]
+*/
+
+    }
+
+    function cancel() {
+        pdgui.gui_post("closing the window at this point");
+//        window.close(true);
+        pdgui.pdsend(pd_object_callback + " cancel");
+    }
+
+    // This gets called from the nw_create_window function in index.html
+    // It provides us with our window id from the C side.  Once we have it
+    // we can create the menu and register event callbacks
+    function register_canvas_id(gfxstub, attr_array) {
+        pd_object_callback = gfxstub;
+
+        console.log('attr array is ' + attr_array.toString());
+        for (var i = 0; i < attr_array.length; i+=2) {
+            console.log(attr_array[i] + ": " + attr_array[i+1]);
+        }
+        add_events(gfxstub);
+        // not sure that we need this for properties windows
+//        pdgui.canvas_map(gfxstub);
+        translate_form();
+        populate_form(attr_array);
+        // We don't turn on rendering of the "container" div until
+        // We've finished displaying all the spans and populating the
+        // labels and form elements.  That makes it more efficient and
+        // snappier, at least on older machines.
+        document.getElementsByClassName('container')[0].style.setProperty('display', 'inline');
+//        document.getElementsByClass("fumbles")[0].setAttribute('style', 'display: inline;');
+    }
+
+function tr_text(id) {
+    var elem = document.getElementById('iem.prop.' + id);
+    elem.textContent = l('iem.prop.' + id);
+}
+
+// Stop-gap translator
+function translate_form() {
+    var i
+    var elements = document.querySelectorAll('[data-i18n]');
+    for (i = 0; i < elements.length; i++) {
+        var data = elements[i].dataset.i18n;
+        if (data.slice(0,7) === '[title]') {
+            elements[i].title = l(data.slice(7));
+        } else {
+            elements[i].textContent = l(data);
+        }
+    }
+}
+
+function populate_form(attr_array) {
+
+    // First, let's put the translated text for the form labels:
+
+//    tr_text('heading.size');
+//    tr_text('heading.messages');
+//    tr_text('heading.label');
+//    tr_text('heading.colors');
+//    tr_prop('width');
+//    tr_tooltip('width');
+
+//    var headings = ["size", "messages", "label", "colors"];
+//    for (var i = 0; i < headings.length; i++) {
+//        var str = "iem.prop.heading." + headings[i];
+//        var heading = document.getElementById(str);
+//        heading.textContent = l(str);
+//    }
+
+    for(var i = 0; i < attr_array.length; i+=2) {
+        // Unhide the span with the class with the same name as the id
+        var prop_group = document.getElementsByClassName(attr_array[i])[0];
+        if (prop_group !== undefined) {
+            console.log("the thing here is " + attr_array[i]);
+            prop_group.classList.remove('hidden');
+        } else {
+            pdgui.gui_post("Error: couldn't find iemgui prop group for " + attr_array[i]);
+        }
+        // iemguis use the string 'empty' for null because of
+        // the limitations of Pd's state-saving API.  So we have
+        // to filter that one out
+        if(attr_array[i+1] !== 'empty') {
+            var elem = document.getElementsByName(attr_array[i]);
+            if (elem.length > 0) {
+                if(attr_array[i].slice(-5) === 'color') {
+                    var hex_string = Number(attr_array[i+1]).toString(16);
+                    var color_string = "#" + (hex_string === '0' ? '000000' : hex_string);
+                    pdgui.gui_post("color is " + color_string);
+                    elem[0].value = color_string;
+                } else if (elem[0].type === 'checkbox') {
+                    // The attr here is a string, so we need to
+                    // force it to number, hence the "+" below
+                    elem[0].checked = +attr_array[i+1];
+                } else {
+                    elem[0].value = attr_array[i+1];
+                }
+            }
+        }
+    }
+}
+
+function add_events(name) {
+    // let's handle some events for this window...
+
+    // closing the Window
+    nw.Window.get().on("close", function() {
+        // this needs to do whatever the "cancel" button does
+//        pdgui.pdsend(name + " menuclose 0");
+//        cancel();
+        pdgui.remove_dialogwin(pd_object_callback);
+        this.close(true);
+    });
+
+}
+
+  </script>
+  </body>
+</html>

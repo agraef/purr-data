@@ -993,7 +993,7 @@ function gui_canvas_new(cid, width, height, geometry, editable, name, dir, dirty
     }
     last_loaded = cid;
     // Not sure why resize and topmost are here-- but we'll pass them on for the time being...
-    patchwin[cid] = nw_create_window(cid, 'pd-canvas', width, height, xpos, ypos, menu_flag,
+    patchwin[cid] = nw_create_window(cid, 'pd_canvas', width, height, xpos, ypos, menu_flag,
         resize[cid], topmost[cid], my_canvas_color, name, dir, dirty_flag, cargs, null);
      
     // initialize variable to reflect that this window has been opened
@@ -1004,6 +1004,14 @@ function gui_canvas_new(cid, width, height, geometry, editable, name, dir, dirty
 function canvas_map(name) {
     console.log("canvas mapping " + name + "...");
     pdsend(name + " map 1");
+}
+
+function gui_canvas_erase_all_gobjs(cid) {
+    var top = get_item(cid, 'patchsvg');
+    var elem;
+    while (elem = top.firstChild) {
+        top.removeChild(elem);
+    }
 }
 
 exports.canvas_map = canvas_map;
@@ -1709,16 +1717,29 @@ exports.connect = connect;
 
 // can be removed.
 
+var plums = require('string_decoder').StringDecoder;
+var rufus = new plums('utf8');
+
 var nextCmd = ""; // Build up a command across lines (or buffers)
+var cmdHeader = 0;
 
 function init_socket_events () {
 	client.on('data', function(data) {
 	//    console.log('DATA: ' + data);
 	      var dataStr = data.toString('utf-8');
+
+              var mumps = rufus.write(data);
+              if (rufus.end() !== "") {
+                  console.log("fuckkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk, we got hitchikers... " + rufus.end());
+              }
+
+
 //	      console.log("The whole buffer is " + dataStr);
+//              if (nextCmd !== "") {
+//                  console.log("fuckkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk nextCmd is " + nextCmd);
+//              }
 	      var arr = dataStr.split("\n");
 	      var arrLen = arr.length;
-	      var cmdHeader = 0;
 	      for (var i = 0; i < arrLen; i++) {
 		  var prefix = arr[i].substring(0, 2);
 		  if (prefix == 'nw' || prefix == 'nn') {
@@ -1733,12 +1754,12 @@ function init_socket_events () {
 		  }
 		  // check if we end with a semicolon followed by a newline
 		  if (nextCmd.slice(-1) === ";" && nextCmd.slice(-2) !== '\\') {
-// console.log("raw cmd is: " + nextCmd);
-		      nextCmd = nextCmd.replace(/\n/g, "\\n");
+//console.log("raw cmd is: " + nextCmd);
+//		      nextCmd = nextCmd.replace(/\n/g, "\\n");
 //		      nextCmd = nextCmd.replace(/'/g, "\\\'");
 		      var selector = nextCmd.slice(0, nextCmd.indexOf(" "));
 		      var args = nextCmd.slice(selector.length + 1, -1);
-//                      console.log(selector + '(' + args + ');');
+//                      console.log("About to eval: " + selector + '(' + args + ');');
                       eval(selector + '(' + args + ');');
 		      nextCmd = "";
 		      cmdHeader = 0;
@@ -1837,22 +1858,25 @@ function gui_configure_item(cid, tag, attributes) {
 }
 
 // Most of these map either to pd.tk procs, or in some cases Tk canvas subcommands
-function gui_text_create_gobj(cid, tag, xpos, ypos) {
+function gui_text_create_gobj(cid, tag, type, xpos, ypos, is_toplevel) {
     var svg = get_item(cid, "patchsvg"); // "patchsvg" is id for the svg in the DOM
     // Put objects on half-pixels to make them crisp (look in to the difference between
     // this and the object-rendering 'crispEdges' attribute)
     xpos += 0.5;
     ypos += 0.5;
-    var transform_string = 'translate(' + xpos + ',' + ypos + ')';
+    var transform_string = 'matrix(1,0,0,1,' + xpos + ',' + ypos + ')';
     var g = create_item(cid, 'g', {
             id: tag + 'gobj',
-            transform: transform_string
+            transform: transform_string,
+            class: type + (is_toplevel !== 0 ? '' : ' gop')
     });
     svg.appendChild(g);
+// hm... why returning g and not the return value of appendChild?
+//    console.log("create gobj tag is " + tag + " and ret is " + g);
     return g;
 }
 
-function gui_text_drawborder(cid, tag, isbroken, x1, y1, x2, y2) {
+function gui_text_drawborder(cid, tag, bgcolor, isbroken, x1, y1, x2, y2) {
     var g = get_gobj(cid, tag);
     // isbroken means either
     //     a) the object couldn't create or
@@ -1863,9 +1887,11 @@ function gui_text_drawborder(cid, tag, isbroken, x1, y1, x2, y2) {
         stroke: 'black',
         fill: 'none',
         'shape-rendering': 'optimizeSpeed',
-        id: tag + 'border',
-        class: (isbroken ? 'broken_border' : '')
+        class: 'border'
     });
+    if (isbroken === 1) {
+        rect.classList.add('broken_border');
+    }
     g.appendChild(rect);
 }
 
@@ -1896,6 +1922,11 @@ function gui_canvas_drawio(cid, parenttag, tag, x1, y1, x2, y2, basex, basey, ty
     });
     g.appendChild(rect);
     gui_post("the tag for this XLET is " + tag);
+}
+
+function gui_canvas_redraw_io(cid, parenttag, tag, x, type, i, basex) {
+    var xlet = get_item(cid, tag + type + i); 
+    configure_item(xlet, { x: x - basex});
 }
 
 function gui_eraseio(cid, tag) {
@@ -1943,21 +1974,29 @@ function gui_message_drawborder(cid,tag,width,height) {
         points: p_array.join(),
         fill: 'none',
         stroke: 'black',
-        'stroke-width': 1,
-        id: tag + 'border'
+//        'stroke-width': 1,
+        class: 'border'
+//        id: tag + 'border'
     });
     g.appendChild(polygon);
 }
 
 function gui_message_flash(cid, tag, state) {
-    var b = get_item(cid, tag + 'border');
-    var w;
-    if (state != 0) { w = 4; } else { w = 1; }
-    configure_item(b, { 'stroke-width': w });
+    var g = get_gobj(cid, tag);
+    if (state !== 0) {
+        g.classList.add('flashed');
+    } else {
+        g.classList.remove('flashed');
+    }
+//    var b = get_item(cid, tag + 'border');
+//    var w;
+//    if (state != 0) { w = 4; } else { w = 1; }
+//    configure_item(b, { 'stroke-width': w });
 }
 
 function gui_message_redraw_border(cid,tag,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14) {
-    var b = get_item(cid, tag + 'border');
+    var g = get_gobj(cid, tag);
+    var b = g.querySelector('.border');
     var p_array = [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14];
     configure_item(b, {
         points: p_array.join(" "),
@@ -2035,7 +2074,8 @@ function gui_canvas_updateline(cid,tag,x1,y1,x2,y2,yoff) {
     configure_item(cord, { d: d_array.join(" ") });
 }
 
-function gui_text_new(canvasname, myname, type, isselected, x, y, text, font) {
+function gui_text_new(canvasname, myname, type, isselected, left_margin, top_margin,
+    bottom_margin, pix_high, text, font) {
 //    gui_post("font is " + font);
 
     var g = get_gobj(canvasname, myname);
@@ -2044,8 +2084,8 @@ function gui_text_new(canvasname, myname, type, isselected, x, y, text, font) {
         // at the top-right corner of the text's bbox.  SVG uses the baseline.
         // There's probably a programmatic way to do this, but for now-- fudge factors
         // based on the DejaVu Sans Mono font. :)
-        x: x,
-        y: y + 10,
+        x: left_margin,
+        y: pix_high - bottom_margin - top_margin - 1,
         // Turns out we can't do 'hanging' baseline
         // because it's borked when scaled. Bummer...
         // 'dominant-baseline': 'hanging',
@@ -2068,6 +2108,8 @@ function gui_text_new(canvasname, myname, type, isselected, x, y, text, font) {
     }
 }
 
+// Because of the overly complex code path inside
+// canvas_setgraph, multiple erasures can be triggered in a row.
 function gui_gobj_erase(cid, tag) {
     var g = get_gobj(cid, tag);
     if (g !== null) {
@@ -2087,41 +2129,39 @@ function gui_text_set (cid, tag, text) {
     }
 }
 
-// Not sure whether this is even used anymore
 function gui_text_redraw_border(cid, tag, x1, y1, x2, y2) {
-    var b = get_item(cid, tag + 'border');
-    configure_item(b, {
-        width: x2 - x1,
-        height: y2 - y1
-    });
+    var i;
+    var g = get_gobj(cid, tag);
+    var b = g.querySelectorAll('.border');
+    for (i = 0; i < b.length; b++) {
+        configure_item(b[i], {
+            width: x2 - x1,
+            height: y2 - y1
+        });
+    }
 }
 
 function gui_text_select(cid, tag) {
     var g = get_gobj(cid, tag);
-    var b = get_item(cid, tag + 'border');
+//    var b = get_item(cid, tag + 'border');
     if (g !== null) {
-        configure_item(g, { class: 'selected' });
+        g.classList.add('selected');
+//        configure_item(g, { class: 'selected' });
     } else {
         console.log("text_select: something wrong with group tag: " + tag);
     }
-    if (b !== null) {
-        configure_item(b, { class: 'selected_border' });
-    }
+//    if (b !== null) {
+//        configure_item(b, { class: 'selected_border' });
+//    }
 }
 
 function gui_text_deselect(cid, tag) {
-    gui_post("deselecting text with tag..." + tag);
+//    gui_post("deselecting text with tag..." + tag);
     var gobj = get_gobj(cid, tag)
-    var border = get_item(cid, tag + 'border');
     if (gobj !== null) {
-        configure_item(gobj, { class: "" });
+        gobj.classList.remove('selected');
     } else {
         console.log("text_deselect: something wrong with tag: " + tag + 'gobj');
-    }
-    if (border !== null) {
-        configure_item(border, { class: "" });
-    } else {
-        console.log("text_select: something wrong with tag: " + tag + 'border');
     }
 }
 
@@ -2144,11 +2184,15 @@ function gui_canvas_displace_withtag(name, dx, dy) {
     var pwin = patchwin[name];
     var ol = pwin.window.document.getElementsByClassName('selected');
     for (var i = 0; i < ol.length; i++) {
-        var new_tx = dx + ol[i].transform.baseVal.getItem(0).matrix.e; 
-        var new_ty = dy + ol[i].transform.baseVal.getItem(0).matrix.f; 
-        ol[i].setAttributeNS(null, 'transform',
-            'translate(' + new_tx + ',' + new_ty + ')');
+        var elem = ol[i].transform.baseVal.getItem(0);
+        var new_tx = dx + elem.matrix.e; 
+        var new_ty = dy + elem.matrix.f; 
+        elem.matrix.e = new_tx;
+        elem.matrix.f = new_ty;
     }
+//        elem.setAttributeNS(null, 'transform',
+//            'translate(' + new_tx + ',' + new_ty + ')');
+//    }
 }
 
 function gui_create_selection_rectangle(cid, x1, y1, x2, y2) {
@@ -2204,7 +2248,7 @@ function gui_bng_flash(cid, tag, color) {
     configure_item(button, { fill: color });
 }
 
-function gui_create_toggle(cid, tag, color, state, width, p1,p2,p3,p4,p5,p6,p7,p8,basex,basey) {
+function gui_create_toggle(cid, tag, color, width, state, p1,p2,p3,p4,p5,p6,p7,p8,basex,basey) {
     var g = get_gobj(cid, tag);
     var points_array = [p1 - basex, p2 - basey,
                         p3 - basex, p4 - basey
@@ -2257,7 +2301,7 @@ function gui_toggle_resize_cross(cid,tag,w,p1,p2,p3,p4,p5,p6,p7,p8,basex,basey) 
 function gui_toggle_update(cid, tag, state, color) {
     var cross1 = get_item(cid, tag + 'cross1');
     var cross2 = get_item(cid, tag + 'cross2');
-    if (state) {
+    if (!!state) {
         configure_item(cross1, { display: 'inline', stroke: color });
         configure_item(cross2, { display: 'inline', stroke: color });
     } else {
@@ -2554,7 +2598,8 @@ function gui_iemgui_drawborder(cid, tag, bgcolor, x1, y1, x2, y2) {
         stroke: 'black',
         'shape-rendering': 'optimizeSpeed',
         'stroke-width': 1,
-        id: tag + 'border'
+        class: 'border'
+//        id: tag + 'border'
     });
     g.appendChild(rect);
 }
@@ -2580,6 +2625,9 @@ function gui_iemgui_label_new(cid, tag, x, y, color, text, font) {
     var text_node = patchwin[cid].window.document.createTextNode(text);
     svg_text.appendChild(text_node);
     g.appendChild(svg_text);
+    var foo = patchwin[cid].window.document.getElementById(tag + 'label');
+//    console.log("foo is " + foo);
+//    console.log("label_new tag is " + tag);
 }
 
 function gui_iemgui_label_set(cid, tag, text) {
@@ -2603,6 +2651,7 @@ function gui_iemgui_label_color(cid, tag, color) {
 
 function gui_iemgui_label_select(cid, tag, is_selected) {
     var svg_text = get_item(cid, tag + 'label');
+//    console.log("tag is " + tag + " and svg_text is " + svg_text);
     if (is_selected) {
         svg_text.classList.add('iemgui_label_selected'); 
     } else {
@@ -2664,9 +2713,13 @@ function gui_mycanvas_select_color(cid,tag,color) {
     var item = get_item(cid,tag + 'drag_handle');
     configure_item(item, {stroke: color});
 }
-
-// This should be merged with gui_create_gobj somehow
-function gui_create_scalar(cid, tag, isselected, t1, t2, t3, t4, t5, t6) {
+ 
+function gui_create_scalar(cid, tag, isselected, t1, t2, t3, t4, t5, t6,
+    is_toplevel) {
+gui_post("creating a scalar...");
+gui_post("is_toplevel is " + is_toplevel);
+    // we should probably use create_gobj here, but we're doing some initial 
+    // scaling that normal gobjs don't need...
     var svg = get_item(cid, "patchsvg"); // "patchsvg" is id for the svg in the DOM
     // Normally put objects on half-pixels to make them crisp, but if we create a
     // scalar in an object box we already did that. This unfortunately creates a 0.5
@@ -2680,26 +2733,34 @@ function gui_create_scalar(cid, tag, isselected, t1, t2, t3, t4, t5, t6) {
     var g = create_item(cid, 'g', {
             id: tag + 'gobj',
             transform: transform_string,
-            class: (isselected ? 'selected' : '')
     });
+    if (isselected !== 0) {
+        g.classList.add('selected');
+    }
+    if (is_toplevel === 0) {
+        g.classList.add('gop');
+    }
     // Let's make a selection rect... but we can't make it
     // a child of the gobj group because the getrect fn gives
     // us a bbox in the canvas coord system
     var selection_rect = create_item(cid, 'rect', {
-        id: tag + 'selection_rect',
+//        id: tag + 'selection_rect',
+        class: 'border',
         display: 'none',
         fill: 'none',
         'pointer-events': 'none'
     });
     g.appendChild(selection_rect);
     svg.appendChild(g);
-    gui_post("made a scalar...");
+//    gui_post("made a scalar...");
     return g;
 }
 
 function gui_scalar_erase(cid, tag) {
     var g = get_gobj(cid, tag);
-    g.parentNode.removeChild(g);
+    if (g !== null) {
+        g.parentNode.removeChild(g);
+    }
     // selection rect...
 //    var sr = get_item(cid, tag + 'selection_rect');
 //    sr.parentNode.removeChild(sr);
@@ -2712,14 +2773,15 @@ function gui_scalar_draw_select_rect(cid, tag, state, x1, y1, x2, y2, basex, bas
     // the coords relative to the scalar's x/y-- hence we subtract the scalar's basex/basey
     // from the coords below
     //gui_post("drawselectrect: " + x1 + " " + y1 + " " + x2 + " " + y2 + " " + basex + " " + basey);
-    var r = get_item(cid, tag + 'selection_rect');
-    configure_item(r, {
+    var g = get_gobj(cid, tag);
+    var b = g.querySelector('.border');
+    configure_item(b, {
         display: (state ? 'inline' : 'none'),
         x: (x1 - basex),
         y: (y1 - basey),
         width: x2 - x1,
         height: y2 - y1,
-        stroke: 'blue',
+//        stroke: 'blue',
     });
 }
 
@@ -2731,7 +2793,6 @@ function gui_create_scalar_group(cid, tag, parent_tag, attr_array) {
     attr_array.push("id", tag);
     var g = create_item(cid, 'g', attr_array);
     parent.appendChild(g);
-    gui_post("made an innder scalar group");
     return g; 
 }
 
@@ -2832,6 +2893,22 @@ function gui_draw_configure_all(cid, tag, attr_array) {
     configure_item(item, attr_array);
 }
 
+// Plots for arrays and data structures
+function gui_plot_vis(cid, basex, basey, data_array, attr_array, tag_array) {
+    var g = get_item(cid, tag_array[0]);
+    var p = create_item(cid, 'path', {
+        d: data_array.join(" "),
+        id: tag_array[1],
+//        stroke: 'red',
+//        fill: 'black',
+//        'stroke-width': '0'
+    });
+    configure_item(p, attr_array);
+    if (g !== null) {
+        g.appendChild(p);
+    }
+}
+
 function add_popup(cid, popup) {
     popup_menu[cid] = popup;
 }
@@ -2906,11 +2983,16 @@ exports.popup_action = popup_action;
 //    g.appendChild(b);
 //}
 
+// refactor-- use a class so this can happen in css
 function gui_graph_fill_border(cid, tag) {
-    var b = get_item(cid, tag + 'border');
-    configure_item(b, {
-        fill: 'gray'
-    });
+    var i;
+    var g = get_gobj(cid, tag);
+    var b = g.querySelectorAll('.border');
+    for (i = 0; i < b.length; i++) {
+        configure_item(b[i], {
+            fill: 'gray'
+        });
+    }
 }
 
 function gui_graph_deleteborder(cid, tag) {
@@ -2995,7 +3077,18 @@ function gui_canvas_drawredrect(cid, x1, y1, x2, y2) {
 
 function gui_canvas_deleteredrect(cid) {
     var r = get_item(cid, 'GOP');
-    r.parentNode.removeChild(r);
+    // We need to check for existence here, because the first
+    // time setting GOP in properties, there is no red rect yet.
+    // But setting properties when the subpatch's window is
+    // visible calls glist_redraw, and glist_redraw will try to delete
+    // the red rect _before_ it's been drawn in this case.
+    // Unfortunately, it's quite difficult to refactor those c
+    // functions without knowing the side effects.  But ineffectual
+    // gui calls should really be minimized-- otherwise it's simply
+    // too difficult to debug what's being passed over the socket.
+    if (r !== null) {
+        r.parentNode.removeChild(r);
+    }
 }
 
 // Magic Glass (aka Cord Inspector)
@@ -3098,16 +3191,33 @@ exports.file_dialog_callback = function(file_string) {
 function gui_iemgui_dialog(did, attr_array) {
     gui_post("got a gfxstub " + did + "!!!");
    
-    for (var i = 0; i < attr_array.length; i++) {
-        attr_array[i] = '"' + attr_array[i] + '"';
-    }
-    dialogwin[did] = nw_create_window(did, 'pd-properties', 265, 540, 20, 20, 0,
+//    for (var i = 0; i < attr_array.length; i++) {
+//        attr_array[i] = '"' + attr_array[i] + '"';
+//    }
+    dialogwin[did] = nw_create_window(did, 'iemgui', 265, 540, 20, 20, 0,
         0, 1, 'white', 'Properties', '', 0, null, attr_array);
 
 }
 
+function gui_canvas_dialog(did, attr_arrays) {
+    var i, j, inner_array;
+    gui_post("got a gfxstub " + did + "!!!");
+    gui_post("attr_arrays are " + attr_arrays);
+//    for (i = 0; i < attr_arrays.length; i++) {
+//        inner_array = attr_arrays[i];
+//        if (inner_array !== undefined) {
+//            for (j = 0; j < inner_array.length; j++) {
+//                inner_array[i] = '"' + inner_array[i] + '"';
+//            }
+//        }
+//    }
+    dialogwin[did] = nw_create_window(did, 'canvas', 265, 540, 20, 20, 0,
+        0, 1, 'white', 'Properties', '', 0, null, attr_arrays);
+}
+
 function gui_remove_gfxstub(did) {
-    if (dialogwin[did] !== null) {
+gui_post("did is " + did + " and dialogwin[did] is " + dialogwin[did]);
+    if (dialogwin[did] !== undefined && dialogwin[did] !== null) {
         dialogwin[did].window.close(true);
         dialogwin[did] = null;
     }

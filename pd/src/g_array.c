@@ -152,7 +152,7 @@ static char garray_arraytemplatefile[] = "\
 #N canvas 0 0 458 153 10;\n\
 #X obj 43 31 struct _float_array array z float float style\n\
 float linewidth float color symbol fillcolor symbol outlinecolor;\n\
-#X obj 43 70 old_plot z color linewidth 0 0 1 style fillcolor outlinecolor;\n\
+#X obj 43 70 plot z color linewidth 0 0 1 style fillcolor outlinecolor;\n\
 ";
 static char garray_floattemplatefile[] = "\
 #N canvas 0 0 458 153 10;\n\
@@ -525,27 +525,49 @@ void canvas_menuarray(t_glist *canvas)
     gfxstub_new(&x->gl_pd, x, cmdbuf);
 }
 
-    /* called from graph_dialog to set properties */
-void garray_properties(t_garray *x, t_glist *canvas)
+    /* called from canvas_dialog to return array properties for the gui */
+int garray_properties(t_garray *x, t_symbol **gfxstubp, t_symbol **namep,
+    int *sizep, int *flagsp, t_symbol **fillp, t_symbol **outlinep)
 {
-    char cmdbuf[200];
+    char namebuf[MAXPDSTRING];
     t_array *a = garray_getarray(x);
     if (!a)
-        return;
-    gfxstub_deleteforkey(x);
-        /* create dialog window.  LATER fix this to escape '$'
+        return 0;
+    //gfxstub_deleteforkey(x);
+        /* LATER fix this to escape '$'
         properly; right now we just detect a leading '$' and escape
         it.  There should be a systematic way of doing this. */
+    /* still don't understand this filestyle business... */
     int filestyle = (x->x_style == 0 ? PLOTSTYLE_POLY :
         (x->x_style == 1 ? PLOTSTYLE_POINTS : x->x_style));
-    //fprintf(stderr," garray_properties %d\n", filestyle);
-    sprintf(cmdbuf, ((x->x_name->s_name[0] == '$') ?
-        "pdtk_array_dialog %%s \\%s %d %d 0 .x%lx %s %s\n" :
-        "pdtk_array_dialog %%s %s %d %d 0 .x%lx %s %s\n"), x->x_name->s_name,
-            a->a_n, x->x_saveit +  2 * filestyle + 8 * x->x_hidename +
-            16 * x->x_joc, (long unsigned int)glist_getcanvas(canvas),
-             x->x_fillcolor->s_name, x->x_outlinecolor->s_name);
-    gfxstub_new(&x->x_gobj.g_pd, x, cmdbuf);
+    int flags = x->x_saveit + 2 * filestyle + 8 * x->x_hidename + 16 * x->x_joc;
+
+    if (x->x_name->s_name[0] == '$')
+    {
+        sprintf(namebuf, "\\%s", x->x_name->s_name);
+    }
+    else
+    {
+        sprintf(namebuf, "%s", x->x_name->s_name);
+    }
+
+    *gfxstubp = gensym(gfxstub_new2(&x->x_gobj.g_pd, x));
+    *namep = gensym(namebuf);
+    *sizep = a->a_n;
+    *flagsp = flags;
+    *fillp = x->x_fillcolor;
+    *outlinep = x->x_outlinecolor;
+    //sprintf(cmdbuf, ((x->x_name->s_name[0] == '$') ?
+    //    "pdtk_array_dialog %%s \\%s %d %d 0 .x%lx %s %s\n" :
+    //    "pdtk_array_dialog %%s %s %d %d 0 .x%lx %s %s\n"),
+    //        x->x_name->s_name,
+    //        a->a_n,
+    //        x->x_saveit +  2 * filestyle + 8 * x->x_hidename + 16 * x->x_joc,
+    //        (long unsigned int)glist_getcanvas(canvas),
+    //        x->x_fillcolor->s_name,
+    //        x->x_outlinecolor->s_name);
+    //gfxstub_new(&x->x_gobj.g_pd, x, cmdbuf);
+    return 1;
 }
 
     /* this is called back from the dialog window to create a garray. 
@@ -1386,7 +1408,8 @@ static void garray_select(t_gobj *z, t_glist *glist, int state)
     t_garray *x = (t_garray *)z;
     sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n",
         glist_getcanvas(glist), x->x_glist, state);
-    /* fill in later */
+
+    scalar_select((t_gobj *)x->x_scalar, glist, state);
 }
 
 static void garray_activate(t_gobj *z, t_glist *glist, int state)
@@ -1564,7 +1587,7 @@ void garray_redraw(t_garray *x)
     /* } jsarlo */
 }
 
-   /* This functiopn gets the template of an array; if we can't figure
+   /* This function gets the template of an array; if we can't figure
    out what template an array's elements belong to we're in grave trouble
    when it's time to free or resize it.  */
 t_template *garray_template(t_garray *x)

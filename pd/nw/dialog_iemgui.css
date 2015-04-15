@@ -1,0 +1,113 @@
+@font-face {
+    font-family: "DejaVu Sans Mono";
+    src: url("DejaVuSansMono.ttf");
+}
+
+body {
+    font-family:Verdana;
+    margin: 0px;
+}
+
+fieldset {
+    font-family:Georgia;
+    background-color:#eeeeee;
+    border-radius:3px;
+    border:2px solid black;
+    margin-left:auto;
+    margin-right:auto;
+    padding: 10px;
+}
+
+input[type="text"]{
+    width:3em;
+}
+
+input[type="number"]{
+    width:3em;
+}
+
+
+.prop{
+}
+
+.hidden {
+    display: none;
+}
+
+.container{
+    display: none;
+}
+
+
+
+body {
+}
+
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+text {
+    // fill: red;
+    cursor: default;
+}
+
+.selected_border {
+    stroke: blue;
+    stroke-dasharray: none;
+    stroke-width: 1;
+}
+
+label {
+    text-align: right;
+//    margin-right: auto;
+//    margin-left: auto;
+}
+
+.pair {
+    width: 75%;
+    text-align: left;
+    align: left;
+}
+
+.item1 {
+    width: 50%;
+}
+
+.item2 {
+    width: 50%;
+}
+
+input[name="x-offset"] {
+    width: 2em;
+}
+
+input[name="y-offset"] {
+    width: 2em;
+}
+
+input[name="send-symbol"] {
+    width: 8em;
+}
+
+input[name="receive-symbol"] {
+    width: 8em;
+}
+
+input[name="label"] {
+    width: 8em;
+}
+
+input[name="font-size"] {
+    width: 3em;
+}
+
+.submit_buttons {
+    text-align: center;
+    padding: 8px;
+}

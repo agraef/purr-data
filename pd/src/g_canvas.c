@@ -862,6 +862,8 @@ void canvas_map(t_canvas *x, t_floatarg f)
             sys_vgui(".x%lx.c dtag all selected\n", x);
             //sys_vgui(".x%lx.c delete all\n", x);
             sys_vgui("foreach item [.x%lx.c find withtag {(!root)}] { .x%lx.c delete $item }\n", x, x);
+            gui_vmess("gui_canvas_erase_all_gobjs", "s",
+                canvas_tag(x));
             x->gl_mapped = 0;
         }
     }
