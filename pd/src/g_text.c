@@ -1946,9 +1946,9 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
                          i);*/
                 // end jsarlo
 
-            gui_vmess("gui_canvas_redraw_io", "sssisii",
+            gui_vmess("gui_canvas_redraw_io", "sssiisiii",
                 canvas_tag(glist_getcanvas(glist)), rtext_gettag(y), tag,
-                onset, "o", i, x1);
+                onset, y2 - 2, "o", i, x1, y1);
         }
     }
     n = obj_ninlets(ob);
@@ -1990,9 +1990,9 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
                          i);*/
                 // end jsarlo
 
-            gui_vmess("gui_canvas_redraw_io", "sssisii",
+            gui_vmess("gui_canvas_redraw_io", "sssiisiii",
                 canvas_tag(glist_getcanvas(glist)), rtext_gettag(y), tag,
-                onset, "i", i, x1);
+                onset, y1, "i", i, x1, y1);
         }
     }
 }

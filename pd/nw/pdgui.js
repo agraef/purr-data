@@ -1924,7 +1924,7 @@ function gui_canvas_drawio(cid, parenttag, tag, x1, y1, x2, y2, basex, basey, ty
     gui_post("the tag for this XLET is " + tag);
 }
 
-function gui_canvas_redraw_io(cid, parenttag, tag, x, type, i, basex) {
+function gui_canvas_redraw_io(cid, parenttag, tag, x, y, type, i, basex, basey) {
     var xlet = get_item(cid, tag + type + i); 
     // We have to check for null. Here's why...
     // if you create a gatom:
@@ -1933,8 +1933,9 @@ function gui_canvas_redraw_io(cid, parenttag, tag, x, type, i, basex) {
     //       text_drawborder (firsttime=0) -> glist_drawiofor (firsttime=0)
     // This means that a new gatom tries to redraw its inlets before
     // it has created them.
+    gui_post("y is " + (y - basey));
     if (xlet !== null) {
-        configure_item(xlet, { x: x - basex});
+        configure_item(xlet, { x: x - basex, y: y - basey });
     }
 }
 
