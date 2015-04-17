@@ -1926,7 +1926,16 @@ function gui_canvas_drawio(cid, parenttag, tag, x1, y1, x2, y2, basex, basey, ty
 
 function gui_canvas_redraw_io(cid, parenttag, tag, x, type, i, basex) {
     var xlet = get_item(cid, tag + type + i); 
-    configure_item(xlet, { x: x - basex});
+    // We have to check for null. Here's why...
+    // if you create a gatom:
+    //   canvas_atom -> glist_add -> text_vis -> glist_retext ->
+    //     rtext_retext -> rtext_senditup ->
+    //       text_drawborder (firsttime=0) -> glist_drawiofor (firsttime=0)
+    // This means that a new gatom tries to redraw its inlets before
+    // it has created them.
+    if (xlet !== null) {
+        configure_item(xlet, { x: x - basex});
+    }
 }
 
 function gui_eraseio(cid, tag) {
@@ -2012,7 +2021,8 @@ function gui_atom_drawborder(cid,tag,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12) {
         fill: 'none',
         stroke: 'gray',
         'stroke-width': 1,
-        id: tag + 'border'
+        class: 'border'
+//        id: tag + 'border'
     });
     g.appendChild(polygon);
 }
@@ -3197,6 +3207,10 @@ function gui_iemgui_dialog(did, attr_array) {
     dialogwin[did] = nw_create_window(did, 'iemgui', 265, 540, 20, 20, 0,
         0, 1, 'white', 'Properties', '', 0, null, attr_array);
 
+}
+
+function gui_create_array(did, gfxstub, count) {
+    gui_post("trying to create an array...");
 }
 
 function gui_canvas_dialog(did, attr_arrays) {

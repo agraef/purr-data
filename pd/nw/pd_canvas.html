@@ -863,7 +863,10 @@ proc menu_array {name} {
 
     putMenu.append(new nw.MenuItem({
         label: l('menu.array'),
-        click: menu_generic,
+        click: function() {
+                pdgui.pdsend(name + " dirty 1");
+                pdgui.pdsend(name + " menuarray");
+            },
         key: 'a',
         modifiers: "ctrl",
         tooltip: l('menu.array_tt'),
