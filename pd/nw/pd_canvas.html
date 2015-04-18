@@ -931,7 +931,9 @@ proc menu_array {name} {
     // Media sub-entries
     mediaMenu.append(new nw.MenuItem({
         label: l('menu.audio_on'),
-        click: menu_generic,
+        click: function() {
+            pdgui.pdsend("pd dsp 1");
+        },
         key: '/',
         modifiers: "ctrl",
         tooltip: l('menu.audio_on_tt'),
@@ -939,8 +941,10 @@ proc menu_array {name} {
 
     mediaMenu.append(new nw.MenuItem({
         label: l('menu.audio_off'),
-        click: menu_generic,
-        key: 'a',
+        click: function() {
+            pdgui.pdsend("pd dsp 0");
+        },
+        key: '.',
         modifiers: "ctrl",
         tooltip: l('menu.audio_off_tt'),
     }));

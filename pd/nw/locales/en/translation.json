@@ -267,7 +267,9 @@
       "array_outline": "outline color",
       "array_outline_tt": "color for outline around the bars",
       "array_fill": "fill color",
-      "array_fill_tt": "inner color of the bars"
+      "array_fill_tt": "inner color of the bars",
+      "array_in_existing_graph": "put in last graph",
+      "array_in_existing_graph_tt": "draw the array inside the last graph that was created. This is a way to have multiple arrays drawn in the same graph."
     }
   }
 }

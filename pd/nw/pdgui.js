@@ -1859,6 +1859,7 @@ function gui_configure_item(cid, tag, attributes) {
 
 // Most of these map either to pd.tk procs, or in some cases Tk canvas subcommands
 function gui_text_create_gobj(cid, tag, type, xpos, ypos, is_toplevel) {
+    gui_post("creating a gobj");
     var svg = get_item(cid, "patchsvg"); // "patchsvg" is id for the svg in the DOM
     // Put objects on half-pixels to make them crisp (look in to the difference between
     // this and the object-rendering 'crispEdges' attribute)
@@ -2729,6 +2730,7 @@ function gui_create_scalar(cid, tag, isselected, t1, t2, t3, t4, t5, t6,
     is_toplevel) {
 gui_post("creating a scalar...");
 gui_post("is_toplevel is " + is_toplevel);
+gui_post("isselected is " + isselected);
     // we should probably use create_gobj here, but we're doing some initial 
     // scaling that normal gobjs don't need...
     var svg = get_item(cid, "patchsvg"); // "patchsvg" is id for the svg in the DOM
@@ -3210,8 +3212,19 @@ function gui_iemgui_dialog(did, attr_array) {
 
 }
 
-function gui_create_array(did, gfxstub, count) {
+function gui_create_array(did, count) {
     gui_post("trying to create an array...");
+    var attr_array = [
+        "array_gfxstub", did,
+        "array_name", 'array' + count,
+        "array_size", 100,
+        "array_flags", 3,
+        "array_fill", 'black',
+        "array_outline", 'black',
+        "array_in_existing_graph", 0
+    ];
+    dialogwin[did] = nw_create_window(did, 'canvas', 265, 540, 20, 20, 0,
+        0, 1, 'white', 'Properties', '', 0, null, attr_array);    
 }
 
 function gui_canvas_dialog(did, attr_arrays) {
@@ -3235,5 +3248,13 @@ gui_post("did is " + did + " and dialogwin[did] is " + dialogwin[did]);
     if (dialogwin[did] !== undefined && dialogwin[did] !== null) {
         dialogwin[did].window.close(true);
         dialogwin[did] = null;
+    }
+}
+
+// Global settings
+
+function gui_pd_dsp(state) {
+    if (pd_window !== undefined) {
+        pd_window.document.getElementById('dsp_control').checked = !!state;
     }
 }

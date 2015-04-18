@@ -7,7 +7,7 @@
     <div class="container noselect">
     <form> 
 
-      <fieldset> 
+      <fieldset class="canvas"> 
         <legend data-i18n="canvas.prop.heading.gop"></legend> 
 
         <table class="pairs">
@@ -77,7 +77,7 @@
       </fieldset> 
 
 
-      <fieldset> 
+      <fieldset class="canvas"> 
         <legend data-i18n="canvas.prop.heading.data_scaling"></legend> 
 
           <div class="x-scale prop hidden">
@@ -133,76 +133,93 @@
         </label>
 
           <div class="array-name prop">
-            <label class="array-name" data-i18n="[title]canvas.prop.array_name_tt">
+            <label class="array-name"
+                   data-i18n="[title]canvas.prop.array_name_tt">
               <span data-i18n="canvas.prop.array_name"></span>
-              <input onchange="attr_change(this);" class="array-name" type="text" name="array_name">
+              <input onchange="attr_change(this);"
+                     class="array-name"
+                     type="text"
+                     name="array_name">
             </label>
-            <label class="array-size" data-i18n="[title]canvas.prop.array_size_tt">
+            <label class="array-size"
+                   data-i18n="[title]canvas.prop.array_size_tt">
               <span data-i18n="canvas.prop.array_size"></span>
-              <input onchange="attr_change(this);" class="array-size" type="text" name="array_size">
+              <input onchange="attr_change(this);"
+                     class="array-size"
+                     type="text"
+                     name="array_size">
             </label>
-
-            <label class="array-save" data-i18n="[title]canvas.prop.array_save_tt">
+            <br/>
+            <label class="array-save"
+                   data-i18n="[title]canvas.prop.array_save_tt">
+              <input onchange="flag_change(this);"
+                     type="checkbox"
+                     name="array_save"
+                     value="on">
               <span data-i18n="canvas.prop.array_save"></span>
-              <input onchange="flag_change(this);" type="checkbox" name="array_save" value="on">
             </label>
-
-            <label class="array-jump" data-i18n="[title]canvas.prop.array_jump_tt">
+            <br/>
+            <label class="array-jump"
+                   data-i18n="[title]canvas.prop.array_jump_tt">
+              <input onchange="flag_change(this);"
+                     type="checkbox" name="array_jump" value="on">
               <span data-i18n="canvas.prop.array_jump"></span>
-              <input onchange="flag_change(this);" type="checkbox" name="array_jump" value="on">
             </label>
+            <br/>
 
-              <span data-i18n="canvas.prop.array_style"></span>
-
-            <label class="polygon" data-i18n="[title]canvas.prop.array_polygon_tt">
-              <span data-i18n="canvas.prop.array_polygon"></span>
+            <span data-i18n="canvas.prop.array_style"></span>
+            <br/>
+            <label class="polygon"
+                   data-i18n="[title]canvas.prop.array_polygon_tt">
               <input class="array-style"
                      type="radio"
                      id="polygon"
                      value="0"
                      name="array_style"
                      onchange="flag_change(this);">
+              <span data-i18n="canvas.prop.array_polygon"></span>
             </label>
-
-
-            <label class="points" data-i18n="[title]canvas.prop.array_points_tt">
-              <span data-i18n="canvas.prop.array_points"></span>
+            <br/>
+            <label class="points"
+                   data-i18n="[title]canvas.prop.array_points_tt">
               <input class="array-style"
                      type="radio"
                      id="points"
                      value="1"
                      name="array_style"
                      onchange="flag_change(this);">
+              <span data-i18n="canvas.prop.array_points"></span>
             </label>
-
-
-            <label class="bezier-curve" data-i18n="[title]canvas.prop.array_bezier_tt">
-              <span data-i18n="canvas.prop.array_bezier"></span>
+            <br/>
+            <label class="bezier-curve"
+                   data-i18n="[title]canvas.prop.array_bezier_tt">
               <input class="array-style"
                      type="radio"
                      id="bezier"
                      value="2"
                      name="array_style"
                      onchange="flag_change(this);">
+              <span data-i18n="canvas.prop.array_bezier"></span>
             </label>
-
-
-            <label class="bar-graph" data-i18n="[title]canvas.prop.array_bars_tt">
-              <span data-i18n="canvas.prop.array_bars"></span>
+            <br/>
+            <label class="bar-graph"
+                   data-i18n="[title]canvas.prop.array_bars_tt">
               <input class="array-style"
                      type="radio"
                      id="bar-graph"
                      value="3"
                      name="array_style"
                      onchange="flag_change(this);">
+              <span data-i18n="canvas.prop.array_bars"></span>
             </label>
-
-
+            <br/>
           </div>
 
       <div class="array-fill">
         <label data-i18n="[title]canvas.prop.array_fill_tt">
-          <input onchange="attr_change(this);" type="color" name="array_fill">
+          <input onchange="attr_change(this);"
+                 type="color"
+                 name="array_fill">
           <span data-i18n="canvas.prop.array_fill"></span>
         </label>
         <br>
@@ -210,47 +227,25 @@
 
       <div class="array-outline">
         <label data-i18n="[title]canvas.prop.array_outline_tt">
-          <input onchange="attr_change(this);" type="color" name="array_outline">
+          <input onchange="attr_change(this);"
+                 type="color"
+                 name="array_outline">
           <span data-i18n="canvas.prop.array_outline"></span>
         </label>
         <br>
       </div>
 
-
-
-    <div class="gop-range">
-        <div class="y1 prop hidden">
-          <label class="gop_opt" data-i18n="[title]canvas.prop.y1_tt">
-            <span data-i18n="canvas.prop.y1"></span>
-            <br>
-          <input class="gop_opt" type="text" name="y1">
-          </label>
-          <br>
-        </div>
-
-        <div class="x1 prop hidden">
-          <label class="gop_opt" data-i18n="[title]canvas.prop.x1_tt">
-            <span data-i18n="canvas.prop.x1"></span>
-            <input class="gop_opt" type="text" name="x1">
-          </label>
-          <label class="gop_opt" data-i18n="[title]canvas.prop.x2_tt">
-            <input class="gop_opt" type="text" name="x2">
-            <span data-i18n="canvas.prop.x2"></span>
-          </label>
-          <br>
-       </div>
-
-       <div class="y2">
-         <label class="gop_opt" data-i18n="[title]canvas.prop.y2_tt">
-           <input class="gop_opt" type="text" name="y2">
-           <br>
-           <span data-i18n="canvas.prop.y2"></span>
-         </label>
-       </div>
-    </div>
-
+      <div class="array_in_existing_graph">
+        <label class="array-in-existing-graph"
+               data-i18n="[title]canvas.prop.array_in_existing_graph_tt">
+          <input onchange="flag2_change(this);"
+                 type="checkbox"
+                 name="array_in_existing_graph"
+                 value="on">
+          <span data-i18n="canvas.prop.array_in_existing_graph"></span>
+        </label>
+      </div>
       </fieldset> 
-
 
     <div class="submit_buttons">
       <button type="button" onClick="ok()" data-i18n="[title]iem.prop.ok_tt">
@@ -325,6 +320,20 @@
                 break;
         }
         attr[attr.indexOf('array_flags') + 1] = flag;
+        pdgui.gui_post("array is " + attr);
+    }
+
+    function flag2_change(elem) {
+        var attr, arrays_select, name, value, flag;
+        arrays_select = document.getElementById('arrays_select');
+        attr = pd_garray_attrs[arrays_select.value];
+        name = elem.name;
+//        pdgui.gui_post("name is " + name);
+        // get value from radio group, checked from checkboxes
+        // '+' for casting boolean to number
+        value = +elem.checked;
+//        pdgui.gui_post("value is " + value);
+        attr[attr.indexOf(name) + 1] = value;
         pdgui.gui_post("array is " + attr);
     }
 
@@ -456,26 +465,31 @@
 
 
     function apply() {
-        var i, attrs;
+        var i, attrs, gop, hide_name;
         pdgui.gui_post("we're applying shits!");
 
-        // Note: the "+" casts Boolean to Number
-        var gop = +document.getElementsByName('gop')[0].checked;
-        var hide_name = +document.getElementsByName('hide-name')[0].checked;
+        // If this is a dialog to create a new array, we
+        // skip the canvas dialog callback
+        if (pd_garray_attrs.length < 1 || pd_garray_attrs[0][0] !== 'array_gfxstub')
+        {
+            // Note: the "+" casts Boolean to Number
+            gop = +document.getElementsByName('gop')[0].checked;
+            hide_name = +document.getElementsByName('hide-name')[0].checked;
 
-        pdgui.pdsend([pd_object_callback, 'donecanvasdialog',
-            get_input('x-scale'),
-            get_input('y-scale'),
-            (gop + 2 * hide_name),
-            get_input('x1'),
-            get_input('y1'),
-            get_input('x2'),
-            get_input('y2'),
-            get_input('x-pix'),
-            get_input('y-pix'),
-            get_input('x-margin'),
-            get_input('y-margin'),
-            ].join(' '));
+            pdgui.pdsend([pd_object_callback, 'donecanvasdialog',
+                get_input('x-scale'),
+                get_input('y-scale'),
+                (gop + 2 * hide_name),
+                get_input('x1'),
+                get_input('y1'),
+                get_input('x2'),
+                get_input('y2'),
+                get_input('x-pix'),
+                get_input('y-pix'),
+                get_input('x-margin'),
+                get_input('y-margin'),
+                ].join(' '));
+        }
 
         // Now send the array properties, in a separate
         // message for each array
@@ -564,7 +578,7 @@ pdgui.gui_post("guistub is " + gfxstub);
     // we can create the menu and register event callbacks
     function register_canvas_id(gfxstub, attr_arrays) {
         pd_object_callback = gfxstub;
-
+        var canvas_fieldsets, i;
         // attr_arrays[0]: canvas properties
         // attr_arrays[1...n-1]: array properties
         for (var i = 0; i < attr_arrays.length; i+=2) {
@@ -574,8 +588,17 @@ pdgui.gui_post("guistub is " + gfxstub);
         // not sure that we need this for properties windows
 //        pdgui.canvas_map(gfxstub);
         translate_form();
-        populate_form(attr_arrays[0]);
-        init_arrays(attr_arrays.slice(1));
+        if (attr_arrays[0] === 'array_gfxstub') {
+            canvas_fieldsets = document.getElementsByClassName('canvas');
+            for (i = 0; i < canvas_fieldsets.length; i++) {
+                canvas_fieldsets[i].classList.add('hidden');
+            }
+            init_arrays([attr_arrays]);
+        } else {
+            populate_form(attr_arrays[0]);
+            init_arrays(attr_arrays.slice(1));
+        }
+
         // We don't turn on rendering of the "container" div until
         // We've finished displaying all the spans and populating the
         // labels and form elements.  That makes it more efficient and

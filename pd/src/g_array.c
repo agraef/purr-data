@@ -521,8 +521,8 @@ void canvas_menuarray(t_glist *canvas)
     pd_vmess(&x->gl_pd, gensym("editmode"), "i", 1);
     //char cmdbuf[200];
     gcount++;
-    gui_vmess("gui_create_array", "ssi",
-        canvas_tag(x), gfxstub_new2(&x->gl_pd, x),
+    gui_vmess("gui_create_array", "si",
+        gfxstub_new2(&x->gl_pd, x),
         gcount);
     //sprintf(cmdbuf, "pdtk_array_dialog %%s array%d 100 3 1 .x%lx black black\n",
     //    ++gcount, (long unsigned int)canvas);

@@ -761,7 +761,6 @@ static void scalar_groupvis(t_scalar *x, t_glist *owner, t_template *template,
         svg_grouptogui(gl, template, x->sc_vec);
         gui_end_vmess();
         //sys_gui("\n");
-
     }
     for (y = gl->gl_list; y; y = y->g_next)
     {
@@ -922,6 +921,7 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
         // we removed this because it caused infinite recursion
         // in the scalar-help.pd example
         //scalar_select(z, owner, 1);
+        post("here we are in scalar vis, selected...");
         scalar_drawselectrect(x, owner, 0);
         scalar_drawselectrect(x, owner, 1);
     }

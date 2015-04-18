@@ -130,7 +130,13 @@ Everything else:
     the tag for this XLET is .x98be5e8.t99c0de0o0
 
 remove gui_text_select_color (css takes care of this)
-
+add a canvas message to set a transform on the patchsvg.  Good for:
+  * obscure display needs (zooming past the browser limits)
+  * rotating for a display
+  * transforming or scaling all scalars on a patch at once
+change 'array_element_fill' to 'element_fill', array_outline to 'array_element_outline' 
+either nw_create_window should take fewer parameters or it should take an
+    object with name: value pairs
 Crashers
 --------
 

@@ -1605,8 +1605,11 @@ static void canvas_dsp(t_canvas *x, t_signal **sp)
 static void canvas_start_dsp(void)
 {
     t_canvas *x;
-    if (canvas_dspstate) ugen_stop();
-    else sys_gui("pdtk_pd_dsp ON\n");
+    if (canvas_dspstate)
+        ugen_stop();
+    else
+        //sys_gui("pdtk_pd_dsp ON\n");
+        gui_vmess("gui_pd_dsp", "i", 1);
     ugen_start();
     
     for (x = canvas_list; x; x = x->gl_next)
@@ -1620,7 +1623,8 @@ static void canvas_stop_dsp(void)
     if (canvas_dspstate)
     {
         ugen_stop();
-        sys_gui("pdtk_pd_dsp OFF\n");
+        //sys_gui("pdtk_pd_dsp OFF\n");
+        gui_vmess("gui_pd_dsp", "i", 0);
         canvas_dspstate = 0;
     }
 }
