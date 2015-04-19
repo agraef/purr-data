@@ -1533,7 +1533,7 @@ static void garray_doredraw(t_gobj *client, t_glist *glist)
     t_garray *x = (t_garray *)client;
     if (glist_isvisible(x->x_glist))
     {
-        garray_vis(&x->x_gobj, x->x_glist, 0); 
+        garray_vis(&x->x_gobj, x->x_glist, 0);
         garray_vis(&x->x_gobj, x->x_glist, 1);
 
         /* we do this to reposition objects back where they belong */
@@ -1545,7 +1545,8 @@ static void garray_doredraw(t_gobj *client, t_glist *glist)
         //fprintf(stderr,"check if we need to reselect %lx %lx %lx\n",
         //    glist_getcanvas(glist), (t_gobj *)glist, glist->gl_owner);
         int selected = 0;
-        t_glist *sel = glist->gl_owner;
+//        t_glist *sel = glist->gl_owner;
+        t_glist *sel = glist;
         while (sel && sel != glist_getcanvas(glist))
         {
             if (glist_isselected(glist_getcanvas(glist), (t_gobj *)sel))
@@ -1560,6 +1561,14 @@ static void garray_doredraw(t_gobj *client, t_glist *glist)
             //fprintf(stderr,"garray_doredraw isselected\n");
             sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n",
                 glist_getcanvas(glist), glist, 1);
+            // a giant kludge-- we really just need gop items
+            // to be children of their gop <group>
+            t_scalar *sc = x->x_scalar;
+            char tagbuf[MAXPDSTRING];
+            post("did we make it here?");
+            sprintf(tagbuf, "scalar%lx", (long unsigned int)sc->sc_vec);
+            gui_vmess("gui_text_select", "ss",
+                canvas_tag(glist_getcanvas(glist)), tagbuf);
         }
     }
 }

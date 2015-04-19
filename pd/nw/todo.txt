@@ -137,6 +137,8 @@ add a canvas message to set a transform on the patchsvg.  Good for:
 change 'array_element_fill' to 'element_fill', array_outline to 'array_element_outline' 
 either nw_create_window should take fewer parameters or it should take an
     object with name: value pairs
+getting the sense that glist_isselected should _always_ have
+    glist_getcanvas(x) as its first parameter
 Crashers
 --------
 
