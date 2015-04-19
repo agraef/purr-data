@@ -2192,15 +2192,27 @@ return;
     }
 }
 
+function elem_displace(elem, dx, dy) {
+        var t = elem.transform.baseVal.getItem(0);
+        t.matrix.e += dx; 
+        t.matrix.f += dy; 
+}
+
+    // used for tidy up 
+function gui_text_displace(name, tag, dx, dy) {
+    elem_displace(get_gobj(name, tag), dx, dy);
+}
+
 function gui_canvas_displace_withtag(name, dx, dy) {
-    var pwin = patchwin[name];
+    var pwin = patchwin[name], i;
     var ol = pwin.window.document.getElementsByClassName('selected');
-    for (var i = 0; i < ol.length; i++) {
-        var elem = ol[i].transform.baseVal.getItem(0);
-        var new_tx = dx + elem.matrix.e; 
-        var new_ty = dy + elem.matrix.f; 
-        elem.matrix.e = new_tx;
-        elem.matrix.f = new_ty;
+    for (i = 0; i < ol.length; i++) {
+        elem_displace(ol[i], dx, dy);
+//        var elem = ol[i].transform.baseVal.getItem(0);
+//        var new_tx = dx + elem.matrix.e; 
+//        var new_ty = dy + elem.matrix.f; 
+//        elem.matrix.e = new_tx;
+//        elem.matrix.f = new_ty;
     }
 //        elem.setAttributeNS(null, 'transform',
 //            'translate(' + new_tx + ',' + new_ty + ')');

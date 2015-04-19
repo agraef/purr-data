@@ -430,7 +430,7 @@ function nw_create_patch_window_menus (name) {
     editMenu.append(new nw.MenuItem({
         label: l('menu.redo'),
         click: menu_generic,
-        key: 'a',
+//        key: 'a',
         modifiers: "ctrl",
         tooltip: l('menu.redo_tt')
     }));
@@ -540,8 +540,10 @@ function nw_create_patch_window_menus (name) {
 
     editMenu.append(new nw.MenuItem({
         label: l('menu.tidyup'),
-        click: menu_generic,
-        key: 'a',
+        click: function() {
+            pdgui.pdsend(name + " tidy");
+        },
+        key: 'y',
         modifiers: "ctrl",
         tooltip: l('menu.tidyup_tt')
     }));
@@ -549,7 +551,7 @@ function nw_create_patch_window_menus (name) {
     editMenu.append(new nw.MenuItem({
         label: l('menu.tofront'),
         click: menu_generic,
-        key: 'a',
+//        key: 'a',
         modifiers: "ctrl",
         tooltip: l('menu.tofront_tt'),
     }));
@@ -557,7 +559,7 @@ function nw_create_patch_window_menus (name) {
     editMenu.append(new nw.MenuItem({
         label: l('menu.toback'),
         click: menu_generic,
-        key: 'a',
+//        key: 'a',
         modifiers: "ctrl",
         tooltip: l('menu.toback_tt'),
     }));
@@ -569,7 +571,7 @@ function nw_create_patch_window_menus (name) {
     editMenu.append(new nw.MenuItem({
         label: l('menu.font'),
         click: menu_generic,
-        key: 'a',
+//        key: 'a',
         modifiers: "ctrl",
         tooltip: l('menu.font_tt'),
     }));
@@ -579,7 +581,7 @@ function nw_create_patch_window_menus (name) {
         click: function() {
             pdgui.pdsend(name + " magicglass 0");
         },
-        key: 'a',
+//        key: 'a',
         modifiers: "ctrl",
         tooltip: l('menu.cordinspector_tt'),
     }));
@@ -591,7 +593,7 @@ function nw_create_patch_window_menus (name) {
     editMenu.append(new nw.MenuItem({
         label: l('menu.find'),
         click: menu_generic,
-        key: 'a',
+//        key: 'a',
         modifiers: "ctrl",
         tooltip: l('menu.find_tt'),
     }));
@@ -599,7 +601,7 @@ function nw_create_patch_window_menus (name) {
     editMenu.append(new nw.MenuItem({
         label: l('menu.findagain'),
         click: menu_generic,
-        key: 'a',
+//        key: 'a',
         modifiers: "ctrl",
         tooltip: l('menu.findagain')
     }));
@@ -607,7 +609,7 @@ function nw_create_patch_window_menus (name) {
     editMenu.append(new nw.MenuItem({
         label: l('menu.finderror'),
         click: menu_generic,
-        key: 'a',
+//        key: 'a',
         modifiers: "ctrl",
         tooltip: l('menu.finderror_tt'),
     }));
@@ -619,7 +621,7 @@ function nw_create_patch_window_menus (name) {
     editMenu.append(new nw.MenuItem({
         label: l('menu.autotips'),
         click: menu_generic,
-        key: 'a',
+//        key: 'a',
         modifiers: "ctrl",
         tooltip: l('menu.autotips_tt'),
     }));
@@ -639,7 +641,7 @@ function nw_create_patch_window_menus (name) {
     editMenu.append(new nw.MenuItem({
         label: l('menu.preferences'),
         click: menu_generic,
-        key: 'a',
+//        key: 'a',
         modifiers: "ctrl",
         tooltip: l('menu.preferences_tt')
     }));
@@ -856,7 +858,7 @@ proc menu_array {name} {
             // leaving out some placement logic... see pd.tk menu_graph
             pdgui.pdsend(name + " graph NULL 0 0 0 0 30 30 0 30");
         },
-        key: 'a',
+//        key: 'a',
         modifiers: "ctrl",
         tooltip: l('menu.graph_tt'),
     }));
@@ -867,7 +869,7 @@ proc menu_array {name} {
                 pdgui.pdsend(name + " dirty 1");
                 pdgui.pdsend(name + " menuarray");
             },
-        key: 'a',
+//        key: 'a',
         modifiers: "ctrl",
         tooltip: l('menu.array_tt'),
     }));
@@ -906,7 +908,7 @@ proc menu_array {name} {
     winmanMenu.append(new nw.MenuItem({
         label: l('menu.parentwin'),
         click: menu_generic,
-        key: 'a',
+//        key: 'a',
         modifiers: "ctrl",
         tooltip: l('menu.parentwin_tt'),
     }));
@@ -914,7 +916,7 @@ proc menu_array {name} {
     winmanMenu.append(new nw.MenuItem({
         label: l('menu.pdwin'),
         click: menu_generic,
-        key: 'a',
+//        key: 'a',
         modifiers: "ctrl",
         tooltip: l('menu.pdwin_tt'),
     }));
@@ -956,7 +958,7 @@ proc menu_array {name} {
     mediaMenu.append(new nw.MenuItem({
         label: l('menu.test'),
         click: menu_generic,
-        key: 'a',
+//        key: 'a',
         modifiers: "ctrl",
         tooltip: l('menu.test_tt'),
     }));
@@ -964,7 +966,7 @@ proc menu_array {name} {
     mediaMenu.append(new nw.MenuItem({
         label: l('menu.loadmeter'),
         click: menu_generic,
-        key: 'a',
+//        key: 'a',
         modifiers: "ctrl",
         tooltip: l('menu.loadmeter_tt'),
     }));
@@ -990,7 +992,7 @@ proc menu_array {name} {
     helpMenu.append(new nw.MenuItem({
         label: l('menu.manual'),
         click: menu_generic,
-        key: 'a',
+//        key: 'a',
         modifiers: "ctrl",
         tooltip: l('menu.manual'),
     }));
@@ -998,7 +1000,7 @@ proc menu_array {name} {
     helpMenu.append(new nw.MenuItem({
         label: l('menu.browser'),
         click: menu_generic,
-        key: 'a',
+//        key: 'a',
         modifiers: "ctrl",
         tooltip: l('menu.browser_tt'),
     }));
@@ -1010,7 +1012,7 @@ proc menu_array {name} {
     helpMenu.append(new nw.MenuItem({
         label: l('menu.l2ork_list'),
         click: menu_generic,
-        key: 'a',
+//        key: 'a',
         modifiers: "ctrl",
         tooltip: l('menu.l2ork_list_tt'),
     }));
@@ -1018,7 +1020,7 @@ proc menu_array {name} {
     helpMenu.append(new nw.MenuItem({
         label: l('menu.pd_list'),
         click: menu_generic,
-        key: 'a',
+//        key: 'a',
         modifiers: "ctrl",
         tooltip: l('menu.pd_list_tt'),
     }));
@@ -1026,7 +1028,7 @@ proc menu_array {name} {
     helpMenu.append(new nw.MenuItem({
         label: l('menu.forums'),
         click: menu_generic,
-        key: 'a',
+//        key: 'a',
         modifiers: "ctrl",
         tooltip: l('menu.forums_tt'),
     }));
@@ -1034,7 +1036,7 @@ proc menu_array {name} {
     helpMenu.append(new nw.MenuItem({
         label: l('menu.irc'),
         click: menu_generic,
-        key: 'a',
+//        key: 'a',
         modifiers: "ctrl",
         tooltip: l('menu.irc_tt'),
     }));

@@ -1474,9 +1474,12 @@ static void text_displace(t_gobj *z, t_glist *glist,
     if (glist_isvisible(glist))
     {
         t_rtext *y = glist_findrtext(glist, x);
-        rtext_displace(y, dx, dy);
-        text_drawborder(x, glist, rtext_gettag(y),
-            rtext_width(y), rtext_height(y), 0);
+        gui_vmess("gui_text_displace", "ssii",
+            canvas_tag(glist), rtext_gettag(y), dx, dy);
+//        t_rtext *y = glist_findrtext(glist, x);
+//        rtext_displace(y, dx, dy);
+//        text_drawborder(x, glist, rtext_gettag(y),
+//            rtext_width(y), rtext_height(y), 0);
         canvas_fixlinesfor(glist_getcanvas(glist), x);
     }
 }
