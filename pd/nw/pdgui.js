@@ -3270,3 +3270,35 @@ function gui_pd_dsp(state) {
         pd_window.document.getElementById('dsp_control').checked = !!state;
     }
 }
+
+function open_prefs() {
+    dialogwin['prefs'] = nw_create_window('prefs', 'prefs', 265, 540, 20, 20, 0,
+        0, 1, 'white', 'Properties', '', 0, null, null);
+}
+
+exports.open_prefs = open_prefs;
+
+function gui_audio_properties(gfxstub, sys_indevs, sys_outdevs, 
+    pd_indevs, pd_inchans, pd_outdevs, pd_outchans, audio_attrs) {
+    
+    var attrs = audio_attrs.concat([
+        "sys_indevs", sys_indevs,
+        "sys_outdevs", sys_outdevs,
+        "pd_indevs", pd_indevs,
+        "pd_inchans", pd_inchans,
+        "pd_outdevs", pd_outdevs,
+        "pd_outchans", pd_outchans
+        ]);
+
+    gui_post("got back some audio props...");
+    for (var i = 0; i < arguments.length; i++) {
+        gui_post("arg " + i + " is " + arguments[i]);
+    }
+
+    if (dialogwin['prefs'] !== null) {
+        dialogwin['prefs'].eval(null,
+            'audio_prefs_callback('  +
+            JSON.stringify(attrs) + ');'
+        );
+    }
+}

@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="dialog_prefs.css">
+  </head>
+  <body>
+    <div class="container noselect">
+      <div class="menu">
+        <span data-i18n="[title]prefs.heading.audio_tt">
+          <a onclick="display_pref('audio');"
+             data-i18n="prefs.heading.audio">
+          </a> 
+        </span>
+        <span data-i18n="[title]prefs.heading.midi_tt">
+          <a onclick="display_pref('midi');"
+             data-i18n="prefs.heading.midi"></a> 
+        </span>
+        <span data-i18n="[title]prefs.heading.gui_tt">
+          <a onclick="display_pref('gui');"
+             data-i18n="prefs.heading.gui"></a> 
+        </span>
+      </div>
+
+      <fieldset id="audio">
+        <legend data-i18n="prefs.heading.audio"></legend>
+        Audio stuff
+      </fieldset>
+
+      <fieldset id="midi">
+        <legend data-i18n="prefs.heading.midi"></legend>
+        midi stuff
+      </fieldset>
+
+      <fieldset id="gui">
+        <legend data-i18n="prefs.heading.gui"></legend>
+
+          <label data-i18n="[title]prefs.gui.presets.gui_preset_tt">
+            <span data-i18n="prefs.gui.presets.gui_preset"></span>
+          </label>
+          <select id="gui_preset">
+            <option data-i18n="prefs.gui.presets.vanilla" value="0">
+            </option>
+            <option data-i18n="prefs.gui.presets.extended" value="1">
+            </option>
+            <option data-i18n="prefs.gui.presets.l2ork" value="2">
+            </option>
+          </select>
+
+      </fieldset>
+
+    </div>
+  <script>
+    'use strict';
+    var nw = require('nw.gui'); 
+    var pdgui = require('./pdgui.js');
+
+    // For translations
+    var l = pdgui.get_local_string;
+
+    console.log("my working dire is " + pdgui.get_pwd());
+
+    var pd_object_callback;
+
+    // nested arrays of attributes for each garray
+    // in this canvas
+    var pd_garray_attrs;
+
+    function ok() {
+        apply();
+        cancel();
+    }
+
+//    function toggler(evt) {
+//        evt.value = evt.checked ? 1 : 0; 
+//    }
+
+    function display_pref(type) {
+        pdgui.gui_post("here i am with " + type);
+        var all, i, this_elem;
+        all = document.getElementsByTagName('fieldset');
+        this_elem = document.getElementById(type);
+        for (i = 0; i < all.length; i++) {
+            all[i].style.setProperty('display', 'none');
+        }
+            this_elem.style.setProperty('display', 'inline');
+    }
+
+    function flag_change(elem) {
+        var attr, arrays_select, name, value, flag;
+        arrays_select = document.getElementById('arrays_select');
+        attr = pd_garray_attrs[arrays_select.value];
+        name = elem.name;
+//        pdgui.gui_post("name is " + name);
+        // get value from radio group, checked from checkboxes
+        if (name === 'array_style') {
+            value = document.querySelector('input[name="array_style"]:checked').value;
+            pdgui.gui_post("array style found: " + value);
+        } else {
+            // '+' for casting boolean to number
+            value = +elem.checked;
+        }
+//        pdgui.gui_post("value is " + value);
+        flag = attr[attr.indexOf('array_flags') + 1];
+        pdgui.gui_post("flag before is " + flag);
+        switch (name) {
+            case "array_save":
+                flag &= ~1;    // clear the save bit
+                flag |= value; // set it
+                break;
+            case "array_style":
+                flag &= ~(1 << 2); // clear style bit 2...
+                flag &= ~(1 << 1); // ... and 1 ...
+                flag += (2 * value); // set them
+                break;
+            case "array_jump":
+                flag &= ~(1 << 3);
+                flag += (16 * value);
+                break;
+        }
+        attr[attr.indexOf('array_flags') + 1] = flag;
+        pdgui.gui_post("array is " + attr);
+    }
+
+    function flag2_change(elem) {
+        var attr, arrays_select, name, value, flag;
+        arrays_select = document.getElementById('arrays_select');
+        attr = pd_garray_attrs[arrays_select.value];
+        name = elem.name;
+//        pdgui.gui_post("name is " + name);
+        // get value from radio group, checked from checkboxes
+        // '+' for casting boolean to number
+        value = +elem.checked;
+//        pdgui.gui_post("value is " + value);
+        attr[attr.indexOf(name) + 1] = value;
+        pdgui.gui_post("array is " + attr);
+    }
+
+    function attr_change(elem) {
+        var array_index, attr, arrays_select, name;
+        arrays_select = document.getElementById('arrays_select');
+        attr = pd_garray_attrs[arrays_select.value];
+        name = elem.name;
+        attr[attr.indexOf(name) + 1] = elem.value;
+        pdgui.gui_post("name is " + elem.name);
+        pdgui.gui_post("value is " + elem.value);
+    }
+
+    function array_choose(array_index) {
+        var i, name, value, elem, style_index, style_opts,
+            array_attr = pd_garray_attrs[array_index];
+        for (i = 0; i < array_attr.length; i+=2) {
+            name = array_attr[i];
+            value = array_attr[i+1];
+            switch (name) {
+                case "array_gfxstub": break;
+                case "array_flags":
+                    // save contents
+                    elem = document.getElementsByName('array_save')[0];
+                    elem.checked = (value & 1) != 0;
+                    // jump on click
+                    elem = document.getElementsByName('array_jump')[0];
+                    elem.checked = (value & 16) != 0;
+                    // draw style
+                    style_opts = document.getElementsByName('array_style');
+                    style_index = (value & 6) >> 1;
+                    elem = style_opts[style_index];
+                    elem.checked = true;
+                    break;
+                default:
+                    // name, size, fill, and outline
+                    pdgui.gui_post("name is " + name);
+                    elem = document.getElementsByName(name)[0];
+                    elem.value = value;
+                    break;
+            }
+        }
+    }
+
+    function update_gop_form(opts, state) {
+        var elem, i;
+        for(i = 0; i < opts.length; i++) {
+            elem = opts[i];
+            if (elem.type === 'checkbox' ||
+                elem.type === 'text') {
+                elem.disabled = state ? false : true;
+            }
+            if (state) {
+                elem.classList.remove('disabled');
+            } else {
+                elem.classList.add('disabled');
+            }
+        }
+    }
+
+    var gop_click_count = 0;
+
+    function show_sane_defaults() {
+        var w, h, xoff, yoff;
+        w = document.getElementsByName('x-pix')[0];
+        h = document.getElementsByName('y-pix')[0];
+        xoff = document.getElementsByName('x-margin')[0];
+        yoff = document.getElementsByName('y-margin')[0];
+        if (w.value === '0' && h.value === '0') {
+            w.value = 85;
+            h.value = 60;
+            xoff.value = 100;
+            yoff.value = 100;
+        }
+        gop_click_count++;
+    }
+
+    function set_gop(state) {
+        var gop_opts, no_gop_opts;
+        if (state === true && gop_click_count === 0) {
+            show_sane_defaults();
+        }
+        gop_opts = document.getElementsByClassName('gop_opt');
+        no_gop_opts = document.getElementsByClassName('no_gop_opt');
+        update_gop_form(gop_opts, state);
+        update_gop_form(no_gop_opts, state === false);
+    }
+
+
+    function substitute_space(arg) {
+        var fake_space = String.fromCharCode(11);
+        return arg.split(' ').join(fake_space);
+    }
+
+    function strip_problem_chars(arg) {
+        var problem_chars = [';', ',', '{', '}', '\\'];
+        var ret = arg;
+        for(var i = 0; i < problem_chars.length; i++) {
+            ret = ret.split(';').join('');
+        }
+        return ret;
+    }
+
+    function get_input(name) {
+        var val = document.getElementsByName(name)[0].value;
+        return val === 0 ? '0' : val;
+    }
+
+    // get a value from the garray attr array
+    function get_array_value(name, attrs) {
+        return attrs[attrs.indexOf(name) + 1];
+    }
+
+
+    function apply() {
+        var i, attrs, gop, hide_name;
+        pdgui.gui_post("we're applying shits!");
+
+        // If this is a dialog to create a new array, we
+        // skip the canvas dialog callback
+        if (pd_garray_attrs.length < 1 || pd_garray_attrs[0][0] !== 'array_gfxstub')
+        {
+            // Note: the "+" casts Boolean to Number
+            gop = +document.getElementsByName('gop')[0].checked;
+            hide_name = +document.getElementsByName('hide-name')[0].checked;
+
+            pdgui.pdsend([pd_object_callback, 'donecanvasdialog',
+                get_input('x-scale'),
+                get_input('y-scale'),
+                (gop + 2 * hide_name),
+                get_input('x1'),
+                get_input('y1'),
+                get_input('x2'),
+                get_input('y2'),
+                get_input('x-pix'),
+                get_input('y-pix'),
+                get_input('x-margin'),
+                get_input('y-margin'),
+                ].join(' '));
+        }
+
+        // Now send the array properties, in a separate
+        // message for each array
+        for (i = 0; i < pd_garray_attrs.length; i++) {
+            attrs = pd_garray_attrs[i];
+            name = get_array_value('array_name', attrs);
+            if (name.slice(0, 1) === '$') {
+                name = '#' + name.slice(1);
+            }
+            pdgui.pdsend([
+                get_array_value('array_gfxstub', attrs),
+                'arraydialog',
+                name,
+                get_array_value('array_size', attrs),
+                get_array_value('array_flags', attrs),
+                0, // create an array in a new graph -- we don't
+                   // need this in a prexisting graph
+                0, // xdraw-- not sure if this is still used
+                0, // ydraw-- not sure if this is still used
+                get_array_value('array_fill', attrs),
+                get_array_value('array_outline', attrs),
+            ].join(' '));
+
+        }
+    }
+
+    function cancel() {
+        var i, attrs, gfxstub;
+        pdgui.gui_post("closing the window at this point");
+//        window.close(true);
+        pdgui.pdsend(pd_object_callback + " cancel");
+        for (i = 0; i < pd_garray_attrs.length; i++) {
+            attrs = pd_garray_attrs[i];
+            gfxstub = attrs[attrs.indexOf("array_gfxstub") + 1];
+pdgui.gui_post("guistub is " + gfxstub);
+            pdgui.pdsend(gfxstub + " cancel");
+        }
+    }
+
+    function audio_prefs_callback(attrs) {
+        pdgui.gui_post("attrs are " + attrs);
+        pdgui.gui_post("attrs length " + attrs.length);
+    }
+
+    // This gets called from the nw_create_window function in index.html
+    // It provides us with our window id from the C side.  Once we have it
+    // we can create the menu and register event callbacks
+    function register_canvas_id(gfxstub, attr_arrays) {
+        pd_object_callback = gfxstub;
+        add_events(gfxstub);
+        translate_form();
+
+        // default to audio preference panel
+        display_pref('audio');
+        // We don't turn on rendering of the "container" div until
+        // We've finished displaying all the spans and populating the
+        // labels and form elements.  That makes it more efficient and
+        // snappier, at least on older machines.  However, we still have
+        // to asynchronously request the form values from Pd for audio
+        // and MIDI...
+
+        pdgui.pdsend("pd audio-properties"); // request audio pref attrs
+        pdgui.pdsend("pd midi-properties");  // request midi pref attrs
+        document.getElementsByClassName('container')[0].style.setProperty('display', 'inline');
+    }
+
+function tr_text(id) {
+    var elem = document.getElementById('iem.prop.' + id);
+    elem.textContent = l('iem.prop.' + id);
+}
+
+// Stop-gap translator
+function translate_form() {
+    var i
+    var elements = document.querySelectorAll('[data-i18n]');
+    for (i = 0; i < elements.length; i++) {
+        var data = elements[i].dataset.i18n;
+        if (data.slice(0,7) === '[title]') {
+            elements[i].title = l(data.slice(7));
+        } else {
+            elements[i].textContent = l(data);
+        }
+    }
+}
+
+function populate_form(attr_array) {
+
+    // First, let's put the translated text for the form labels:
+
+//    tr_text('heading.size');
+//    tr_text('heading.messages');
+//    tr_text('heading.label');
+//    tr_text('heading.colors');
+//    tr_prop('width');
+//    tr_tooltip('width');
+
+//    var headings = ["size", "messages", "label", "colors"];
+//    for (var i = 0; i < headings.length; i++) {
+//        var str = "iem.prop.heading." + headings[i];
+//        var heading = document.getElementById(str);
+//        heading.textContent = l(str);
+//    }
+
+    for(var i = 0; i < attr_array.length; i+=2) {
+        // Unhide the span with the class with the same name as the id
+        var prop_group = document.getElementsByClassName(attr_array[i])[0];
+        if (prop_group !== undefined) {
+            console.log("the thing here is " + attr_array[i]);
+            prop_group.classList.remove('hidden');
+        } else {
+            pdgui.gui_post("Error: couldn't find iemgui prop group for " + attr_array[i]);
+        }
+
+        if (attr_array[i] === 'display-flags') {
+            // protip: '!!' forces Boolean, '+' forces Number type
+            var flag = +attr_array[i+1];
+            document.getElementsByName('gop')[0].checked = !!flag;
+            document.getElementsByName('hide-name')[0].checked = !!(flag & 2);
+            // Set the gop-related parts of the form to be enabled/disabled based on state
+            set_gop(!!flag);
+        }            
+
+        var elem = document.getElementsByName(attr_array[i]);
+        if (elem.length > 0) {
+            if(attr_array[i].slice(-5) === 'color') {
+                var hex_string = Number(attr_array[i+1]).toString(16);
+                var color_string = "#" + (hex_string === '0' ? '000000' : hex_string);
+                pdgui.gui_post("color is " + color_string);
+                elem[0].value = color_string;
+            } else if (elem[0].type === 'checkbox') {
+                // The attr here is a string, so we need to
+                // force it to number, hence the "+" below
+                gui_post("found a CHECKED ITEM!!!");
+                elem[0].checked = +attr_array[i+1];
+            } else {
+                elem[0].value = attr_array[i+1];
+            }
+        }
+    }
+}
+
+function add_events(name) {
+    // let's handle some events for this window...
+
+    // closing the Window
+    nw.Window.get().on("close", function() {
+        // this needs to do whatever the "cancel" button does
+//        pdgui.pdsend(name + " menuclose 0");
+//        cancel();
+        pdgui.remove_dialogwin(pd_object_callback);
+        this.close(true);
+    });
+
+}
+
+  </script>
+  </body>
+</html>

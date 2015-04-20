@@ -712,15 +712,30 @@ void glob_audio_properties(t_pd *dummy, t_floatarg flongform)
     audio_getdevs(indevlist, &nindevs, outdevlist, &noutdevs, &canmulti,
          &cancallback, MAXNDEV, DEVDESCSIZE);
 
-    sys_gui("global audio_indevlist; set audio_indevlist {}\n");
-    for (i = 0; i < nindevs; i++)
-        sys_vgui("lappend audio_indevlist {%s}\n",
-            indevlist + i * DEVDESCSIZE);
 
-    sys_gui("global audio_outdevlist; set audio_outdevlist {}\n");
+    gui_start_vmess("gui_audio_properties", "s",
+        gfxstub_new2(&glob_pdobject, (void *)glob_audio_properties));
+
+    //sys_gui("global audio_indevlist; set audio_indevlist {}\n");
+
+    gui_start_array(); // input devices
+    for (i = 0; i < nindevs; i++)
+    {
+        //sys_vgui("lappend audio_indevlist {%s}\n",
+        //    indevlist + i * DEVDESCSIZE);
+        gui_s(indevlist + i * DEVDESCSIZE);
+    }
+    gui_end_array();
+
+//    sys_gui("global audio_outdevlist; set audio_outdevlist {}\n");
+    gui_start_array(); // output devices
     for (i = 0; i < noutdevs; i++)
-        sys_vgui("lappend audio_outdevlist {%s}\n",
-            outdevlist + i * DEVDESCSIZE);
+    {
+        //sys_vgui("lappend audio_outdevlist {%s}\n",
+        //    outdevlist + i * DEVDESCSIZE);
+        gui_s(outdevlist + i * DEVDESCSIZE);
+    }
+    gui_end_array();
 
     sys_get_audio_params(&naudioindev, audioindev, chindev,
         &naudiooutdev, audiooutdev, choutdev, &rate, &advance, &callback,
@@ -754,19 +769,53 @@ void glob_audio_properties(t_pd *dummy, t_floatarg flongform)
     audiooutchan2 = (naudiooutdev > 1 ? choutdev[1] : 0);
     audiooutchan3 = (naudiooutdev > 2 ? choutdev[2] : 0);
     audiooutchan4 = (naudiooutdev > 3 ? choutdev[3] : 0);
-    sprintf(buf,
-"pdtk_audio_dialog %%s \
-%d %d %d %d %d %d %d %d \
-%d %d %d %d %d %d %d %d \
-%d %d %d %d %d %d\n",
-        audioindev1, audioindev2, audioindev3, audioindev4, 
-        audioinchan1, audioinchan2, audioinchan3, audioinchan4, 
-        audiooutdev1, audiooutdev2, audiooutdev3, audiooutdev4,
-        audiooutchan1, audiooutchan2, audiooutchan3, audiooutchan4, 
-        rate, advance, canmulti, (cancallback ? callback : -1),
-        (flongform != 0), blocksize);
-    gfxstub_deleteforkey(0);
-    gfxstub_new(&glob_pdobject, (void *)glob_audio_properties, buf);
+
+//    sprintf(buf,
+//"pdtk_audio_dialog %%s \
+//%d %d %d %d %d %d %d %d \
+//%d %d %d %d %d %d %d %d \
+//%d %d %d %d %d %d\n",
+//        audioindev1, audioindev2, audioindev3, audioindev4, 
+//        audioinchan1, audioinchan2, audioinchan3, audioinchan4, 
+//        audiooutdev1, audiooutdev2, audiooutdev3, audiooutdev4,
+//        audiooutchan1, audiooutchan2, audiooutchan3, audiooutchan4, 
+//        rate, advance, canmulti, (cancallback ? callback : -1),
+//        (flongform != 0), blocksize);
+
+    gui_start_array(); // audio input devices
+    gui_i(audioindev1); gui_i(audioindev2);
+    gui_i(audioindev3); gui_i(audioindev4);
+    gui_end_array();
+
+    gui_start_array(); // audio input channels
+    gui_i(audioinchan1); gui_i(audioinchan2);
+    gui_i(audioinchan3); gui_i(audioinchan4);
+    gui_end_array();
+
+    gui_start_array(); // audio output devices
+    gui_i(audiooutdev1); gui_i(audiooutdev2);
+    gui_i(audiooutdev3); gui_i(audiooutdev4);
+    gui_end_array();
+
+    gui_start_array(); // audio output channels
+    gui_i(audiooutchan1); gui_i(audiooutchan2);
+    gui_i(audiooutchan3); gui_i(audiooutchan4);
+    gui_end_array();
+
+    gui_start_array();
+    gui_s("rate");        gui_i(rate);
+    gui_s("advance");     gui_i(advance);
+    gui_s("canmulti");    gui_i(canmulti);
+    gui_s("cancallback"); gui_i(cancallback ? callback : -1);
+    gui_s("flongform");   gui_i(flongform != 0);
+    gui_s("blocksize");   gui_i(blocksize);
+    gui_end_array();
+
+    gui_end_vmess();
+
+    // not sure why we were deleting the key 0 here...
+//    gfxstub_deleteforkey(0);
+//    gfxstub_new(&glob_pdobject, (void *)glob_audio_properties, buf);
 }
 
 extern int pa_foo;
