@@ -3273,8 +3273,11 @@ function gui_pd_dsp(state) {
 }
 
 function open_prefs() {
-    dialogwin['prefs'] = nw_create_window('prefs', 'prefs', 265, 540, 20, 20, 0,
-        0, 1, 'white', 'Properties', '', 0, null, null);
+    if (!dialogwin['prefs']) {
+        dialogwin['prefs'] = nw_create_window('prefs', 'prefs',
+            265, 540, 20, 20, 0,
+            0, 1, 'white', 'Properties', '', 0, null, null);
+    }
 }
 
 exports.open_prefs = open_prefs;

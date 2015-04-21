@@ -23,6 +23,8 @@
 
       <fieldset id="audio">
         <legend data-i18n="prefs.heading.audio"></legend>
+        <select id="audio_api">
+        </select>
         Audio stuff
       </fieldset>
 
@@ -311,9 +313,21 @@ pdgui.gui_post("guistub is " + gfxstub);
         }
     }
 
+    function populate_audio_apis(apis) {
+        var i, opt, api_select = document.getElementById('audio_api');
+        pdgui.gui_post('apis are ' + apis);
+        for (i = 0; i < apis.length; i += 2) {
+            opt = document.createElement('option');
+            opt.textContent = apis[i];
+            opt.setAttribute('value', apis[i+1]);
+            api_select.appendChild(opt);
+        }
+    }
+
     function audio_prefs_callback(attrs) {
-        pdgui.gui_post("audio attrs are " + attrs);
+        pdgui.gui_post("audio attrs FUCK " + attrs);
         pdgui.gui_post("attrs length " + attrs.length);
+        populate_audio_apis(attrs[attrs.indexOf('audio_apis') + 1]);
     }
 
     function midi_prefs_callback(attrs) {
