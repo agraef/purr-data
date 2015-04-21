@@ -139,6 +139,8 @@ either nw_create_window should take fewer parameters or it should take an
     object with name: value pairs
 getting the sense that glist_isselected should _always_ have
     glist_getcanvas(x) as its first parameter
+get rid of the old tcl specific sys_get_audio_apis
+
 Crashers
 --------
 

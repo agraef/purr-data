@@ -312,9 +312,15 @@ pdgui.gui_post("guistub is " + gfxstub);
     }
 
     function audio_prefs_callback(attrs) {
-        pdgui.gui_post("attrs are " + attrs);
+        pdgui.gui_post("audio attrs are " + attrs);
         pdgui.gui_post("attrs length " + attrs.length);
     }
+
+    function midi_prefs_callback(attrs) {
+        pdgui.gui_post("midi attrs are " + attrs);
+        pdgui.gui_post("attrs length " + attrs.length);
+    }
+
 
     // This gets called from the nw_create_window function in index.html
     // It provides us with our window id from the C side.  Once we have it

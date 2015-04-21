@@ -1029,6 +1029,38 @@ void sys_get_audio_apis(char *buf)
         strcpy(buf, "{}");
 }
 
+void sys_get_audio_apis2(t_binbuf *buf)
+{
+    int n = 0;
+#ifdef USEAPI_OSS
+    binbuf_addv(buf, "si", gensym("OSS"), API_OSS); n++;
+#endif
+#ifdef USEAPI_MMIO
+    binbuf_addv(buf, "si", gensym("standard (MMIO)"), API_MMIO); n++;
+#endif
+#ifdef USEAPI_ALSA
+    binbuf_addv(buf, "si", gensym("ALSA"), API_ALSA); n++;
+#endif
+#ifdef USEAPI_PORTAUDIO
+#ifdef MSW
+    binbuf_addv(buf, "si", gensym("ASIO (via portaudio)"), API_PORTAUDIO);
+#else
+#ifdef OSX
+    binbuf_addv(buf, "si", gensym("standard (portaudio)"), API_PORTAUDIO);
+#else
+    binbuf_addv(buf, "si", gensym("portaudio"), API_PORTAUDIO);
+#endif
+#endif
+     n++;
+#endif
+#ifdef USEAPI_JACK
+    binbuf_addv(buf, "si", gensym("JACK"), API_JACK); n++;
+#endif
+       /* then again, if only one API (or none) we don't offer any choice. */
+//    if (n < 2)
+//        strcpy(buf, "{}");
+}
+
 #ifdef USEAPI_ALSA
 void alsa_putzeros(int n);
 void alsa_getzeros(int n);

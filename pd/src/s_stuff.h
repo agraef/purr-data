@@ -112,6 +112,7 @@ EXTERN void sys_get_audio_devs(char *indevlist, int *nindevs,
                           char *outdevlist, int *noutdevs, int *canmulti, int *cancallback, 
                           int maxndev, int devdescsize);
 EXTERN void sys_get_audio_apis(char *buf);
+EXTERN void sys_get_audio_apis2(t_binbuf *buf);
 
 /* s_midi.c */
 #define MAXMIDIINDEV 16         /* max. number of input ports */
@@ -126,6 +127,7 @@ void sys_open_midi(int nmidiin, int *midiinvec,
     int nmidiout, int *midioutvec, int enable);
 
 EXTERN void sys_get_midi_apis(char *buf);
+EXTERN void sys_get_midi_apis2(t_binbuf *buf);
 EXTERN void sys_get_midi_devs(char *indevlist, int *nindevs,
     char *outdevlist, int *noutdevs, 
    int maxndev, int devdescsize);
@@ -133,6 +135,7 @@ void sys_get_midi_params(int *pnmidiindev, int *pmidiindev,
     int *pnmidioutdev, int *pmidioutdev);
 
 void sys_get_midi_apis(char *buf);
+void sys_get_midi_apis2(t_binbuf *buf);
 
 void sys_reopen_midi( void);
 void sys_close_midi( void);
@@ -302,6 +305,7 @@ void sys_listmididevs(void);
 void sys_set_midi_api(int whichapi);
 void sys_set_audio_api(int whichapi);
 void sys_get_audio_apis(char *buf);
+void sys_get_audio_apis2(t_binbuf *buf);
 extern int sys_audioapi;
 void sys_set_audio_state(int onoff);
 

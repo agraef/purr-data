@@ -501,7 +501,8 @@ function gui_check_unique (unique) {
 
 
 
-function gui_startup(version, apilist, midiapilist, fontname_from_pd, fontweight_from_pd) {
+function gui_startup(version, fontname_from_pd, fontweight_from_pd,
+    apilist, midiapilist) {
     console.log("we're starting up...");
     // # tb: user defined typefaces
     // our args:
@@ -3282,6 +3283,7 @@ function gui_audio_properties(gfxstub, sys_indevs, sys_outdevs,
     pd_indevs, pd_inchans, pd_outdevs, pd_outchans, audio_attrs) {
     
     var attrs = audio_attrs.concat([
+        "audio_apis", pd_apilist,
         "sys_indevs", sys_indevs,
         "sys_outdevs", sys_outdevs,
         "pd_indevs", pd_indevs,
@@ -3298,6 +3300,30 @@ function gui_audio_properties(gfxstub, sys_indevs, sys_outdevs,
     if (dialogwin['prefs'] !== null) {
         dialogwin['prefs'].eval(null,
             'audio_prefs_callback('  +
+            JSON.stringify(attrs) + ');'
+        );
+    }
+}
+
+function gui_midi_properties(gfxstub, sys_indevs, sys_outdevs,
+    pd_indevs, pd_outdevs, midi_attrs) {
+    
+    var attrs = midi_attrs.concat([
+        "midi_apis", pd_midiapilist,
+        "sys_indevs", sys_indevs,
+        "sys_outdevs", sys_outdevs,
+        "pd_indevs", pd_indevs,
+        "pd_outdevs", pd_outdevs,
+        ]);
+
+    gui_post("got back some midi props...");
+    for (var i = 0; i < arguments.length; i++) {
+        gui_post("arg " + i + " is " + arguments[i]);
+    }
+
+    if (dialogwin['prefs'] !== null) {
+        dialogwin['prefs'].eval(null,
+            'midi_prefs_callback('  +
             JSON.stringify(attrs) + ');'
         );
     }

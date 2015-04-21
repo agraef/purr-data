@@ -821,13 +821,15 @@ void gui_start_vmess(const char *sel, char *fmt, ...)
 }
 
 static int gui_array_head;
+static int gui_array_tail;
 void gui_start_array(void)
 {
-    if (gui_array_head)
+    if (gui_array_head && !gui_array_tail)
         sys_gui("[");
     else
         sys_gui(",[");
     gui_array_head = 1;
+    gui_array_tail = 0;
 }
 
 void gui_f(t_float f)
@@ -839,6 +841,7 @@ void gui_f(t_float f)
     }
     else
         sys_vgui(",%g", f);
+    gui_array_tail = 0;
 }
 
 void gui_i(int i)
@@ -850,6 +853,7 @@ void gui_i(int i)
     }
     else
         sys_vgui(",%d", i);
+    gui_array_tail = 0;
 }
 
 void gui_s(const char *s) 
@@ -861,11 +865,13 @@ void gui_s(const char *s)
     }
     else
         sys_vgui(",\"%s\"", escape_double_quotes(s));
+    gui_array_tail = 0;
 }
 
 void gui_end_array(void)
 {
     sys_gui("]");
+    gui_array_tail = 1;
 }
 
 void gui_end_vmess(void)
@@ -1270,9 +1276,9 @@ int sys_startgui(const char *guidir)
 
 /* SUPERHACK - let's just load node-webkit and see what happens */
             sprintf(cmdbuf,
-                  "/home/nu/Downloads/nwjs-v0.12.0-linux-ia32/nw "
+                  "/home/bud/Downloads/nwjs-v0.12.1-linux-x64/nw "
 //                  "/home/nu/Downloads/nwjs-v0.12.0-alpha2-linux-ia32/nw "
-                "/home/nu/Downloads/test/ %d localhost %s\n",
+                "/home/bud/pd-nw/pd/nw/ %d localhost %s\n",
                 portno,
                 (sys_k12_mode ? "pd-l2ork-k12" : "pd-l2ork"));
 
@@ -1473,12 +1479,34 @@ int sys_startgui(const char *guidir)
 //         sys_vgui("pdtk_pd_startup {%s} %s %s {%s} %s\n", pd_version, buf, buf2, 
 //                  sys_font, sys_fontweight); 
 
-        gui_vmess("gui_startup", "sssss",
+        t_binbuf *aapis = binbuf_new(), *mapis = binbuf_new();
+        sys_get_audio_apis2(aapis);
+        sys_get_midi_apis2(mapis);
+        gui_start_vmess("gui_startup", "sss",
 		  pd_version,
-		  buf,
-		  buf2,
 		  sys_font,
 		  sys_fontweight);
+
+        int i;
+        gui_start_array(); // audio apis
+        for (i = 0; i < binbuf_getnatom(aapis); i+=2)
+        {
+            gui_s(atom_getsymbol(binbuf_getvec(aapis)+i)->s_name);
+            gui_i(atom_getint(binbuf_getvec(aapis)+i+1));
+        }
+        gui_end_array();
+
+        gui_start_array(); // midi apis
+        for (i = 0; i < binbuf_getnatom(mapis); i+=2)
+        {
+            gui_s(atom_getsymbol(binbuf_getvec(mapis)+i)->s_name);
+            gui_i(atom_getint(binbuf_getvec(mapis)+i+1));
+        }
+        gui_end_array();
+
+        gui_end_vmess();
+        binbuf_free(aapis);
+        binbuf_free(mapis);
     }
     return (0);
 
