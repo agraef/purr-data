@@ -313,7 +313,8 @@ pdgui.gui_post("guistub is " + gfxstub);
         }
     }
 
-    function populate_audio_apis(apis) {
+    function populate_audio_apis(apis, current_api) {
+        pdgui.gui_post("curent api is " + current_api);
         var i, opt, api_select = document.getElementById('audio_api');
         pdgui.gui_post('apis are ' + apis);
         for (i = 0; i < apis.length; i += 2) {
@@ -322,12 +323,14 @@ pdgui.gui_post("guistub is " + gfxstub);
             opt.setAttribute('value', apis[i+1]);
             api_select.appendChild(opt);
         }
+        api_select.value = current_api;
     }
 
     function audio_prefs_callback(attrs) {
-        pdgui.gui_post("audio attrs FUCK " + attrs);
+        pdgui.gui_post("audio attrs are " + attrs);
         pdgui.gui_post("attrs length " + attrs.length);
-        populate_audio_apis(attrs[attrs.indexOf('audio_apis') + 1]);
+        populate_audio_apis(attrs[attrs.indexOf('audio-apis') + 1],
+            attrs[attrs.indexOf('current-api') + 1]);
     }
 
     function midi_prefs_callback(attrs) {

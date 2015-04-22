@@ -3286,13 +3286,13 @@ function gui_audio_properties(gfxstub, sys_indevs, sys_outdevs,
     pd_indevs, pd_inchans, pd_outdevs, pd_outchans, audio_attrs) {
     
     var attrs = audio_attrs.concat([
-        "audio_apis", pd_apilist,
-        "sys_indevs", sys_indevs,
-        "sys_outdevs", sys_outdevs,
-        "pd_indevs", pd_indevs,
-        "pd_inchans", pd_inchans,
-        "pd_outdevs", pd_outdevs,
-        "pd_outchans", pd_outchans
+        "audio-apis", pd_apilist,
+        "sys-indevs", sys_indevs,
+        "sys-outdevs", sys_outdevs,
+        "pd-indevs", pd_indevs,
+        "pd-inchans", pd_inchans,
+        "pd-outdevs", pd_outdevs,
+        "pd-outchans", pd_outchans
         ]);
 
     gui_post("got back some audio props...");
@@ -3312,11 +3312,11 @@ function gui_midi_properties(gfxstub, sys_indevs, sys_outdevs,
     pd_indevs, pd_outdevs, midi_attrs) {
     
     var attrs = midi_attrs.concat([
-        "midi_apis", pd_midiapilist,
-        "sys_indevs", sys_indevs,
-        "sys_outdevs", sys_outdevs,
-        "pd_indevs", pd_indevs,
-        "pd_outdevs", pd_outdevs,
+        "midi-apis", pd_midiapilist,
+        "sys-indevs", sys_indevs,
+        "sys-outdevs", sys_outdevs,
+        "pd-indevs", pd_indevs,
+        "pd-outdevs", pd_outdevs,
         ]);
 
     gui_post("got back some midi props...");

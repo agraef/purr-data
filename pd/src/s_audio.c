@@ -809,6 +809,8 @@ void glob_audio_properties(t_pd *dummy, t_floatarg flongform)
     gui_s("cancallback"); gui_i(cancallback ? callback : -1);
     gui_s("flongform");   gui_i(flongform != 0);
     gui_s("blocksize");   gui_i(blocksize);
+    gui_s("current-api"); gui_i(sys_audioapi); // cannot figure out how this
+                                               // originally got set
     gui_end_array();
 
     gui_end_vmess();
