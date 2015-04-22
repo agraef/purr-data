@@ -23,7 +23,26 @@
 
       <fieldset id="audio">
         <legend data-i18n="prefs.heading.audio"></legend>
-        <select id="audio_api">
+        <select id="audio_api" onchange="change_api(this.value);">
+        </select>
+        <br/>
+        <label data-i18n="[title]prefs.audio.sr">
+          <span data-i18n="prefs.audio.sr"></span>
+          <input type="text" id="rate" name="rate">
+        </label>
+        <br/>
+        <label data-i18n="[title]prefs.audio.advance">
+          <span data-i18n="prefs.audio.advance"></span>
+          <input type="text" id="advance" name="advance">
+        </label>
+
+        <select id="blocksize" onchange="attr_change(this);">
+          <option value="64">64</option>
+          <option value="128">128</option>
+          <option value="256">256</option>
+          <option value="512">512</option>
+          <option value="1024">1024</option>
+          <option value="2048">2048</option>
         </select>
         Audio stuff
       </fieldset>
@@ -50,6 +69,19 @@
 
       </fieldset>
 
+
+    <div class="submit_buttons">
+      <button type="button" onClick="ok()" data-i18n="[title]prefs.ok_tt">
+        <span data-i18n="prefs.ok"></span>
+      </button>
+      <button type="button" onClick="apply()" data-i18n="[title]prefs.apply_tt">
+      <span data-i18n="prefs.apply"></span>
+      </button>
+      <button type="button" onClick="cancel()" data-i18n="[title]prefs.cancel_tt">
+      <span data-i18n="prefs.cancel"></span>
+      </button>
+      </div>
+
     </div>
   <script>
     'use strict';
@@ -63,9 +95,7 @@
 
     var pd_object_callback;
 
-    // nested arrays of attributes for each garray
-    // in this canvas
-    var pd_garray_attrs;
+    var pd_audio_attrs;
 
     function ok() {
         apply();
@@ -138,12 +168,11 @@
     }
 
     function attr_change(elem) {
-        var array_index, attr, arrays_select, name;
-        arrays_select = document.getElementById('arrays_select');
-        attr = pd_garray_attrs[arrays_select.value];
-        name = elem.name;
+        var attr, name;
+        attr = pd_audio_attrs;
+        name = elem.id;
         attr[attr.indexOf(name) + 1] = elem.value;
-        pdgui.gui_post("name is " + elem.name);
+        pdgui.gui_post("id is " + elem.id);
         pdgui.gui_post("value is " + elem.value);
     }
 
@@ -313,6 +342,14 @@ pdgui.gui_post("guistub is " + gfxstub);
         }
     }
 
+    function change_api(api_id) {
+        pdgui.pdsend("pd audio-setapi " + api_id);
+    }
+
+    function get_attr(name, attrs) {
+        return attrs[attrs.indexOf(name) + 1];
+    }
+
     function populate_audio_apis(apis, current_api) {
         pdgui.gui_post("curent api is " + current_api);
         var i, opt, api_select = document.getElementById('audio_api');
@@ -327,10 +364,23 @@ pdgui.gui_post("guistub is " + gfxstub);
     }
 
     function audio_prefs_callback(attrs) {
+        pd_audio_attrs = attrs;
+        var api_select = document.getElementById('audio_api');
         pdgui.gui_post("audio attrs are " + attrs);
         pdgui.gui_post("attrs length " + attrs.length);
-        populate_audio_apis(attrs[attrs.indexOf('audio-apis') + 1],
-            attrs[attrs.indexOf('current-api') + 1]);
+        // We can get this callback multiple times while the dialog
+        // is open.  This is because an API change requires a query
+        // for new properties. So we only populate the api options
+        // if they don't already exist
+        if (api_select.getElementsByTagName('option').length < 1) {
+            populate_audio_apis(attrs[attrs.indexOf('audio-apis') + 1],
+                attrs[attrs.indexOf('current-api') + 1]);
+        }
+
+        document.getElementById('rate').value = get_attr('rate', attrs);
+        document.getElementById('blocksize').value = get_attr('blocksize', attrs);
+        document.getElementById('advance').value = get_attr('advance', attrs);
+
     }
 
     function midi_prefs_callback(attrs) {
