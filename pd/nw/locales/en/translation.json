@@ -292,7 +292,9 @@
       "sr": "sample rate",
       "sr_tt": "number of samples per second",
       "advance": "delay",
-      "advance_tt": "delay"
+      "advance_tt": "delay",
+      "channels": "channels",
+      "channels_tt": "number of channels for this device"
     },
     "ok": "ok",
     "ok_tt": "Update the audio properties and close the dialog",

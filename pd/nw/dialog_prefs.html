@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="dialog_prefs.css">
+    <link rel="stylesheet" type="text/css" href="dialog_iemgui.css">
   </head>
   <body>
     <div class="container noselect">
@@ -26,15 +26,22 @@
         <select id="audio_api" onchange="change_api(this.value);">
         </select>
         <br/>
-        <label data-i18n="[title]prefs.audio.sr">
+        <label data-i18n="[title]prefs.audio.sr_tt">
           <span data-i18n="prefs.audio.sr"></span>
           <input type="text" id="rate" name="rate">
         </label>
         <br/>
-        <label data-i18n="[title]prefs.audio.advance">
+        <label data-i18n="[title]prefs.audio.advance_tt">
           <span data-i18n="prefs.audio.advance"></span>
           <input type="text" id="advance" name="advance">
         </label>
+        <br/>
+        <div id="callback_container" class="hidden">
+          <label data-i18n="[title]prefs.audio.callback_tt">
+            <span data-i18n="prefs.audio.callback"></span>
+            <input type="checkbox" id="callback" name="callback">
+          </label>
+        </div>
 
         <select id="blocksize" onchange="attr_change(this);">
           <option value="64">64</option>
@@ -44,7 +51,59 @@
           <option value="1024">1024</option>
           <option value="2048">2048</option>
         </select>
-        Audio stuff
+        <br/>
+        <select id="in1"></select>
+        <label data-i18n="[title]prefs.audio.channels_tt">
+          <span data-i18n="prefs.audio.channels"></span>
+          <input type="text" id="inchan1" name="inchan1">
+        </label>
+        <br/>
+        <select id="in2"></select>
+        <label data-i18n="[title]prefs.audio.channels_tt">
+          <span data-i18n="prefs.audio.channels"></span>
+          <input type="text" id="inchan2" name="inchan2">
+        </label>
+        <br/>
+        <select id="in3"></select>
+        <label data-i18n="[title]prefs.audio.channels_tt">
+          <span data-i18n="prefs.audio.channels"></span>
+          <input type="text" id="inchan3" name="inchan3">
+        </label>
+        <br/>
+        <select id="in4"></select>
+        <label data-i18n="[title]prefs.audio.channels_tt">
+          <span data-i18n="prefs.audio.channels"></span>
+          <input type="text" id="inchan4" name="inchan4">
+        </label>
+        <br/>
+
+        <select id="out1"></select>
+        <label data-i18n="[title]prefs.audio.channels_tt">
+          <span data-i18n="prefs.audio.channels"></span>
+          <input type="text" id="outchan1" name="outchan1">
+        </label>
+        <br/>
+        <select id="out2"></select>
+        <label data-i18n="[title]prefs.audio.channels_tt">
+          <span data-i18n="prefs.audio.channels"></span>
+          <input type="text" id="outchan2" name="outchan2">
+        </label>
+        <br/>
+        <select id="out3"></select>
+        <label data-i18n="[title]prefs.audio.channels_tt">
+          <span data-i18n="prefs.audio.channels"></span>
+          <input type="text" id="outchan3" name="outchan3">
+        </label>
+        <br/>
+        <select id="out4"></select>
+        <label data-i18n="[title]prefs.audio.channels_tt">
+          <span data-i18n="prefs.audio.channels"></span>
+          <input type="text" id="outchan4" name="outchan4">
+        </label>
+        <br/>
+
+
+
       </fieldset>
 
       <fieldset id="midi">
@@ -363,9 +422,31 @@ pdgui.gui_post("guistub is " + gfxstub);
         api_select.value = current_api;
     }
 
+function populate_devs(type, attrs) {
+        var devs = get_attr(type === 'in' ? 'sys-indevs' : 'sys-outdevs', attrs);
+        var i, j, opt, elem;
+        pdgui.gui_post("devs are " + devs);
+        pdgui.gui_post("type is " + type + 1);
+        for (i = 1; i < 5; i++) {
+            elem = document.getElementById(type + i);
+            // if the user changed the API, we need to
+            // remove the old devs
+            while (elem.firstChild) {
+                elem.removeChild(elem.firstChild);
+            }
+            for (j = 0; j < devs.length; j++) {
+                opt = document.createElement('option');
+                opt.value = j; 
+                opt.textContent = devs[j];
+                elem.appendChild(opt);
+            }
+        }
+}
+
     function audio_prefs_callback(attrs) {
         pd_audio_attrs = attrs;
         var api_select = document.getElementById('audio_api');
+        var callback, i, j, elem, devs, opt;
         pdgui.gui_post("audio attrs are " + attrs);
         pdgui.gui_post("attrs length " + attrs.length);
         // We can get this callback multiple times while the dialog
@@ -380,6 +461,35 @@ pdgui.gui_post("guistub is " + gfxstub);
         document.getElementById('rate').value = get_attr('rate', attrs);
         document.getElementById('blocksize').value = get_attr('blocksize', attrs);
         document.getElementById('advance').value = get_attr('advance', attrs);
+
+        var callback = get_attr('cancallback', attrs);
+        //show the checkbox if the API allows 
+        if (callback !== -1) {
+            document.getElementById('callback_container')
+                .classList.remove('hidden');
+            document.getElementById('callback').checked = !!callback;
+        }
+
+        populate_devs('in', attrs);
+        populate_devs('out', attrs);
+/*
+        devs = get_attr('sys-indevs', attrs);
+        pdgui.gui_post("devs are " + devs);
+        for (i = 1; i < 5; i++) {
+            elem = document.getElementById('in' + i);
+            // if the user changed the API, we need to
+            // remove the old devs
+            while (elem.firstChild) {
+                elem.removeChild(elem.firstChild);
+            }
+            for (j = 0; j < devs.length; j++) {
+                opt = document.createElement('option');
+                opt.value = j; 
+                opt.textContent = devs[j];
+                elem.appendChild(opt);
+            }
+        }
+*/
 
     }
 
