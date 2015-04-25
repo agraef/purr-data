@@ -190,10 +190,6 @@
         cancel();
     }
 
-//    function toggler(evt) {
-//        evt.value = evt.checked ? 1 : 0; 
-//    }
-
     function display_pref(type) {
         pdgui.gui_post("here i am with " + type);
         var all, i, this_elem;
@@ -284,96 +280,6 @@
         pdgui.gui_post("value is " + elem.value);
     }
 
-    function array_choose(array_index) {
-        var i, name, value, elem, style_index, style_opts,
-            array_attr = pd_garray_attrs[array_index];
-        for (i = 0; i < array_attr.length; i+=2) {
-            name = array_attr[i];
-            value = array_attr[i+1];
-            switch (name) {
-                case "array_gfxstub": break;
-                case "array_flags":
-                    // save contents
-                    elem = document.getElementsByName('array_save')[0];
-                    elem.checked = (value & 1) != 0;
-                    // jump on click
-                    elem = document.getElementsByName('array_jump')[0];
-                    elem.checked = (value & 16) != 0;
-                    // draw style
-                    style_opts = document.getElementsByName('array_style');
-                    style_index = (value & 6) >> 1;
-                    elem = style_opts[style_index];
-                    elem.checked = true;
-                    break;
-                default:
-                    // name, size, fill, and outline
-                    pdgui.gui_post("name is " + name);
-                    elem = document.getElementsByName(name)[0];
-                    elem.value = value;
-                    break;
-            }
-        }
-    }
-
-    function update_gop_form(opts, state) {
-        var elem, i;
-        for(i = 0; i < opts.length; i++) {
-            elem = opts[i];
-            if (elem.type === 'checkbox' ||
-                elem.type === 'text') {
-                elem.disabled = state ? false : true;
-            }
-            if (state) {
-                elem.classList.remove('disabled');
-            } else {
-                elem.classList.add('disabled');
-            }
-        }
-    }
-
-    var gop_click_count = 0;
-
-    function show_sane_defaults() {
-        var w, h, xoff, yoff;
-        w = document.getElementsByName('x-pix')[0];
-        h = document.getElementsByName('y-pix')[0];
-        xoff = document.getElementsByName('x-margin')[0];
-        yoff = document.getElementsByName('y-margin')[0];
-        if (w.value === '0' && h.value === '0') {
-            w.value = 85;
-            h.value = 60;
-            xoff.value = 100;
-            yoff.value = 100;
-        }
-        gop_click_count++;
-    }
-
-    function set_gop(state) {
-        var gop_opts, no_gop_opts;
-        if (state === true && gop_click_count === 0) {
-            show_sane_defaults();
-        }
-        gop_opts = document.getElementsByClassName('gop_opt');
-        no_gop_opts = document.getElementsByClassName('no_gop_opt');
-        update_gop_form(gop_opts, state);
-        update_gop_form(no_gop_opts, state === false);
-    }
-
-
-    function substitute_space(arg) {
-        var fake_space = String.fromCharCode(11);
-        return arg.split(' ').join(fake_space);
-    }
-
-    function strip_problem_chars(arg) {
-        var problem_chars = [';', ',', '{', '}', '\\'];
-        var ret = arg;
-        for(var i = 0; i < problem_chars.length; i++) {
-            ret = ret.split(';').join('');
-        }
-        return ret;
-    }
-
     function get_input(name) {
         var val = document.getElementsByName(name)[0].value;
         return val === 0 ? '0' : val;
@@ -384,70 +290,60 @@
         return attrs[attrs.indexOf(name) + 1];
     }
 
+    // If dev is -1, just change it to 0. Not sure if the Pd audio
+    // backend requires this, but it's how it works currently.
+    function kludge_dev(type, attrs, index) {
+        var dev = get_attr('pd-' + type + 'devs', attrs)[index];
+        if (dev < 0) { dev = 0; }
+        return dev;
+    }
+
+    // If the device is -1 ('None'), make the number of channels negative.
+    // This is the way Pd's audio back end turns off the device. (It works
+    // this way so you can remember your number of channels even if
+    // you turn off the device.)
+    function kludge_chans(type, attrs, index) {
+        var dev = get_attr('pd-' + type + 'devs', attrs)[index],
+            chans = get_attr('pd-' + type + 'chans', attrs)[index];
+        if (dev < 0 && chans >= 0) { chans *= -1; }
+        return chans;
+    }
 
     function apply() {
-        var i, attrs, gop, hide_name;
+        var attrs = pd_audio_attrs;
         pdgui.gui_post("we're applying shits!");
 
-        // If this is a dialog to create a new array, we
-        // skip the canvas dialog callback
-        if (pd_garray_attrs.length < 1 || pd_garray_attrs[0][0] !== 'array_gfxstub')
-        {
-            // Note: the "+" casts Boolean to Number
-            gop = +document.getElementsByName('gop')[0].checked;
-            hide_name = +document.getElementsByName('hide-name')[0].checked;
-
-            pdgui.pdsend([pd_object_callback, 'donecanvasdialog',
-                get_input('x-scale'),
-                get_input('y-scale'),
-                (gop + 2 * hide_name),
-                get_input('x1'),
-                get_input('y1'),
-                get_input('x2'),
-                get_input('y2'),
-                get_input('x-pix'),
-                get_input('y-pix'),
-                get_input('x-margin'),
-                get_input('y-margin'),
-                ].join(' '));
-        }
-
-        // Now send the array properties, in a separate
-        // message for each array
-        for (i = 0; i < pd_garray_attrs.length; i++) {
-            attrs = pd_garray_attrs[i];
-            name = get_array_value('array_name', attrs);
-            if (name.slice(0, 1) === '$') {
-                name = '#' + name.slice(1);
-            }
-            pdgui.pdsend([
-                get_array_value('array_gfxstub', attrs),
-                'arraydialog',
-                name,
-                get_array_value('array_size', attrs),
-                get_array_value('array_flags', attrs),
-                0, // create an array in a new graph -- we don't
-                   // need this in a prexisting graph
-                0, // xdraw-- not sure if this is still used
-                0, // ydraw-- not sure if this is still used
-                get_array_value('array_fill', attrs),
-                get_array_value('array_outline', attrs),
+        // Audio dialog
+        pdgui.pdsend([
+            'pd audio-dialog',
+            kludge_dev('in', attrs, 0),
+            kludge_dev('in', attrs, 1),
+            kludge_dev('in', attrs, 2),
+            kludge_dev('in', attrs, 3),
+            kludge_chans('in', attrs, 0),
+            kludge_chans('in', attrs, 1),
+            kludge_chans('in', attrs, 2),
+            kludge_chans('in', attrs, 3),
+            kludge_dev('out', attrs, 0),
+            kludge_dev('out', attrs, 1),
+            kludge_dev('out', attrs, 2),
+            kludge_dev('out', attrs, 3),
+            kludge_chans('out', attrs, 0),
+            kludge_chans('out', attrs, 1),
+            kludge_chans('out', attrs, 2),
+            kludge_chans('out', attrs, 3),
+            get_attr('rate', attrs),
+            get_attr('advance', attrs),
+            get_attr('cancallback', attrs),
+            get_attr('blocksize', attrs)
             ].join(' '));
-
-        }
     }
 
     function cancel() {
         var i, attrs, gfxstub;
         pdgui.gui_post("closing the window at this point");
-//        window.close(true);
-        pdgui.pdsend(pd_object_callback + " cancel");
-        for (i = 0; i < pd_garray_attrs.length; i++) {
-            attrs = pd_garray_attrs[i];
-            gfxstub = attrs[attrs.indexOf("array_gfxstub") + 1];
-pdgui.gui_post("guistub is " + gfxstub);
-            pdgui.pdsend(gfxstub + " cancel");
-        }
+        window.close(true);
+//        pdgui.pdsend(pd_object_callback + " cancel");
     }
 
     function change_api(api_id) {
@@ -481,11 +377,15 @@ function populate_devs(type, attrs) {
         elem = document.getElementById(type + (i+1));
         chan_elem = document.getElementById(type + 'chans' + (i+1));
         chan_elem.value = chans[i];
-        // if the user changed the API, we need to
-        // remove the old devs
+        // if the user changed the API, we need to remove the old devs
         while (elem.firstChild) {
             elem.removeChild(elem.firstChild);
         }
+        // make a dummy device named 'None' with value -1
+        opt = document.createElement('option');
+        opt.value = -1;
+        opt.textContent = 'None';
+        elem.appendChild(opt);
         for (j = 0; j < devs.length; j++) {
             opt = document.createElement('option');
             opt.value = j; 
@@ -525,6 +425,31 @@ function populate_devs(type, attrs) {
         populate_devs('in', attrs);
         populate_devs('out', attrs);
 
+        set_devs('in', get_attr('pd-indevs', attrs));
+        set_devs('out', get_attr('pd-outdevs', attrs));
+
+        // Set chans after the devs (because they may
+        // have the side-effect of setting the dev to 'None')
+        set_chans('in', get_attr('pd-inchans', attrs));
+        set_chans('out', get_attr('pd-outchans', attrs));
+    }
+
+    function set_devs(type, devs) {
+        var i;
+        for (i = 0; i < devs.length; i++) {
+            document.getElementById(type + (i+1)).value = devs[i];
+        }
+    }
+
+    function set_chans(type, chans_array) {
+        var i;
+        for (i = 0; i < chans_array.length; i++) {
+            document.getElementById(type + 'chans' + (i+1)).value = chans_array[i];
+            // If no chans, set device to -1 (None)
+            if (chans_array[i] < 1) {
+                document.getElementById(type + (i+1)).value = -1;
+            }
+        }
     }
 
     function midi_prefs_callback(attrs) {
