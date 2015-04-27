@@ -23,7 +23,7 @@
 
       <fieldset id="audio">
         <legend data-i18n="prefs.heading.audio"></legend>
-        <select id="audio_api" onchange="change_api(this.value);">
+        <select id="audio_api" onchange="change_api(this);">
         </select>
         <br/>
         <label data-i18n="[title]prefs.audio.sr_tt">
@@ -59,85 +59,154 @@
           <option value="2048">2048</option>
         </select>
         <br/>
-        <select id="in1" onchange="dev_change(this);"></select>
-        <label data-i18n="[title]prefs.audio.channels_tt">
-          <span data-i18n="prefs.audio.channels"></span>
-          <input type="text"
+        <table>
+          <tr>
+            <td>
+              Input Devices
+            </td>
+            <td>
+              <span data-i18n="prefs.audio.channels"></span>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <select id="in1" onchange="dev_change(this);"></select>
+            </td>
+            <td>
+              <label data-i18n="[title]prefs.audio.channels_tt">
+                <input type="text"
                  id="inchans1"
                  name="inchans1"
                  onchange="dev_change(this);">
-        </label>
-        <br/>
-        <select id="in2" onchange="dev_change(this);"></select>
-        <label data-i18n="[title]prefs.audio.channels_tt">
-          <span data-i18n="prefs.audio.channels"></span>
-          <input type="text"
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <select id="in2" onchange="dev_change(this);"></select>
+            </td>
+            <td>
+              <label data-i18n="[title]prefs.audio.channels_tt">
+                <input type="text"
                  id="inchans2"
                  name="inchans2"
                  onchange="dev_change(this);">
-        </label>
-        <br/>
-        <select id="in3" onchange="dev_change(this);"></select>
-        <label data-i18n="[title]prefs.audio.channels_tt">
-          <span data-i18n="prefs.audio.channels"></span>
-          <input type="text"
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <select id="in3" onchange="dev_change(this);"></select>
+            </td>
+            <td>
+              <label data-i18n="[title]prefs.audio.channels_tt">
+                <input type="text"
                  id="inchans3"
                  name="inchans3"
                  onchange="dev_change(this);">
-        </label>
-        <br/>
-        <select id="in4" onchange="dev_change(this);"></select>
-        <label data-i18n="[title]prefs.audio.channels_tt">
-          <span data-i18n="prefs.audio.channels"></span>
-          <input type="text"
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <select id="in4" onchange="dev_change(this);"></select>
+            </td>
+            <td>
+              <label data-i18n="[title]prefs.audio.channels_tt">
+                <input type="text"
                  id="inchans4"
                  name="inchans4"
                  onchange="dev_change(this);">
-        </label>
-        <br/>
-
-        <select id="out1" onchange="dev_change(this);"></select>
-        <label data-i18n="[title]prefs.audio.channels_tt">
-          <span data-i18n="prefs.audio.channels"></span>
-          <input type="text"
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Output Devices
+            </td>
+            <td>
+              <span data-i18n="prefs.audio.channels"></span>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <select id="out1" onchange="dev_change(this);"></select>
+            </td>
+            <td>
+              <label data-i18n="[title]prefs.audio.channels_tt">
+                <input type="text"
                  id="outchans1"
                  name="outchans1"
                  onchange="dev_change(this);">
-        </label>
-        <br/>
-        <select id="out2" onchange="dev_change(this);"></select>
-        <label data-i18n="[title]prefs.audio.channels_tt">
-          <span data-i18n="prefs.audio.channels"></span>
-          <input type="text"
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <select id="out2" onchange="dev_change(this);"></select>
+            </td>
+            <td>
+              <label data-i18n="[title]prefs.audio.channels_tt">
+                <input type="text"
                  id="outchans2"
                  name="outchans2"
                  onchange="dev_change(this);">
-        </label>
-        <br/>
-        <select id="out3" onchange="dev_change(this);"></select>
-        <label data-i18n="[title]prefs.audio.channels_tt">
-          <span data-i18n="prefs.audio.channels"></span>
-          <input type="text"
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <select id="out3" onchange="dev_change(this);"></select>
+            </td>
+            <td>
+              <label data-i18n="[title]prefs.audio.channels_tt">
+                <input type="text"
                  id="outchans3"
                  name="outchans3"
                  onchange="dev_change(this);">
-        </label>
-        <br/>
-        <select id="out4" onchange="dev_change(this);"></select>
-        <label data-i18n="[title]prefs.audio.channels_tt">
-          <span data-i18n="prefs.audio.channels"></span>
-          <input type="text"
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <select id="out4" onchange="dev_change(this);"></select>
+            </td>
+            <td>
+              <label data-i18n="[title]prefs.audio.channels_tt">
+                <input type="text"
                  id="outchans4"
                  name="outchans4"
                  onchange="dev_change(this);">
-        </label>
-        <br/>
+              </label>
+            </td>
+          </tr>
+        </table>
 
       </fieldset>
 
       <fieldset id="midi">
         <legend data-i18n="prefs.heading.midi"></legend>
-        midi stuff
+        <select id="midi_api" onchange="change_api(this);">
+        </select>
+        <br/>
+        <select id="midi_in1" onchange="dev_change(this);"></select>
+        <br/>
+        <select id="midi_in2" onchange="dev_change(this);"></select>
+        <br/>
+        <select id="midi_in3" onchange="dev_change(this);"></select>
+        <br/>
+        <select id="midi_in4" onchange="dev_change(this);"></select>
+        <br/>
+
+        <select id="midi_out1" onchange="dev_change(this);"></select>
+        <br/>
+        <select id="midi_out2" onchange="dev_change(this);"></select>
+        <br/>
+        <select id="midi_out3" onchange="dev_change(this);"></select>
+        <br/>
+        <select id="midi_out4" onchange="dev_change(this);"></select>
+        <br/>
+
       </fieldset>
 
       <fieldset id="gui">
@@ -184,6 +253,7 @@
     var pd_object_callback;
 
     var pd_audio_attrs;
+    var pd_midi_attrs;
 
     function ok() {
         apply();
@@ -337,6 +407,22 @@
             get_attr('cancallback', attrs),
             get_attr('blocksize', attrs)
             ].join(' '));
+
+        attrs = pd_midi_attrs;
+        // Midi dialog
+        pdgui.pdsend([
+            'pd midi-dialog',
+            get_attr('pd-indevs', attrs)[0],
+            get_attr('pd-indevs', attrs)[1],
+            get_attr('pd-indevs', attrs)[2],
+            get_attr('pd-indevs', attrs)[3],
+            get_attr('pd-outdevs', attrs)[0],
+            get_attr('pd-outdevs', attrs)[1],
+            get_attr('pd-outdevs', attrs)[2],
+            get_attr('pd-outdevs', attrs)[3],
+            0, // midi_alsain
+            0  // midi_alsaout
+        ].join(' '));
     }
 
     function cancel() {
@@ -346,17 +432,23 @@
 //        pdgui.pdsend(pd_object_callback + " cancel");
     }
 
-    function change_api(api_id) {
-        pdgui.pdsend("pd audio-setapi " + api_id);
+    function change_api(elem) {
+        var id = elem.getAttribute('id'),
+            value = elem.getAttribute('value');
+        if (id === 'audio_api') {
+            pdgui.pdsend("pd audio-setapi " + value);
+        } else {
+            pdgui.pdsend("pd midi-setapi " + value);
+        }
     }
 
     function get_attr(name, attrs) {
         return attrs[attrs.indexOf(name) + 1];
     }
 
-    function populate_audio_apis(apis, current_api) {
+    function populate_apis(elem, apis, current_api) {
         pdgui.gui_post("curent api is " + current_api);
-        var i, opt, api_select = document.getElementById('audio_api');
+        var i, opt, api_select = elem;
         pdgui.gui_post('apis are ' + apis);
         for (i = 0; i < apis.length; i += 2) {
             opt = document.createElement('option');
@@ -395,6 +487,34 @@ function populate_devs(type, attrs) {
     }
 }
 
+function populate_midi_devs(type, attrs) {
+    var devs = get_attr(type === 'in' ? 'sys-indevs' : 'sys-outdevs', attrs);
+    var i, j, opt, elem, chan_elem, chans;
+    pdgui.gui_post("devs are " + devs);
+    pdgui.gui_post("type is " + type + 1);
+    chans = get_attr('pd-' + type + 'chans', attrs);
+    for (i = 0; i < 4; i++) {
+        elem = document.getElementById(type + (i+1));
+        chan_elem = document.getElementById(type + 'chans' + (i+1));
+        chan_elem.value = chans[i];
+        // if the user changed the API, we need to remove the old devs
+        while (elem.firstChild) {
+            elem.removeChild(elem.firstChild);
+        }
+        // make a dummy device named 'None' with value -1
+        opt = document.createElement('option');
+        opt.value = -1;
+        opt.textContent = 'None';
+        elem.appendChild(opt);
+        for (j = 0; j < devs.length; j++) {
+            opt = document.createElement('option');
+            opt.value = j; 
+            opt.textContent = devs[j];
+            elem.appendChild(opt);
+        }
+    }
+}
+
     function audio_prefs_callback(attrs) {
         pd_audio_attrs = attrs;
         var api_select = document.getElementById('audio_api');
@@ -406,7 +526,9 @@ function populate_devs(type, attrs) {
         // for new properties. So we only populate the api options
         // if they don't already exist
         if (api_select.getElementsByTagName('option').length < 1) {
-            populate_audio_apis(attrs[attrs.indexOf('audio-apis') + 1],
+            populate_apis(
+                api_select,
+                attrs[attrs.indexOf('audio-apis') + 1],
                 attrs[attrs.indexOf('current-api') + 1]);
         }
 
@@ -453,8 +575,20 @@ function populate_devs(type, attrs) {
     }
 
     function midi_prefs_callback(attrs) {
+        pd_midi_attrs = attrs;
+        var api_select = document.getElementById('midi_api');
         pdgui.gui_post("midi attrs are " + attrs);
         pdgui.gui_post("attrs length " + attrs.length);
+
+        if (api_select.getElementsByTagName('option').length < 1) {
+            populate_apis(
+                api_select,
+                get_attr('midi-apis', attrs),
+                get_attr('current-api', attrs)
+            );
+        }
+
+
     }
 
 

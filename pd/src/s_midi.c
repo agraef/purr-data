@@ -751,6 +751,8 @@ void glob_midi_properties(t_pd *dummy, t_floatarg flongform)
     gui_start_array();
     gui_s("flongform");
     gui_i(flongform != 0);
+    gui_s("current-api");
+    gui_i(sys_midiapi);
     gui_s("use_alsa");
 
 #ifdef USEAPI_ALSA
