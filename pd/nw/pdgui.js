@@ -1861,9 +1861,9 @@ function gui_configure_item(cid, tag, attributes) {
 // Most of these map either to pd.tk procs, or in some cases Tk canvas subcommands
 function gui_text_create_gobj(cid, tag, type, xpos, ypos, is_toplevel) {
     gui_post("creating a gobj");
-    var svg = get_item(cid, "patchsvg"); // "patchsvg" is id for the svg in the DOM
-    // Put objects on half-pixels to make them crisp (look in to the difference between
-    // this and the object-rendering 'crispEdges' attribute)
+    var svg = get_item(cid, "patchsvg"); // "patchsvg" is id for the svg element
+    // Put objects on half-pixels to make them crisp (look in to the
+    // difference between this and the object-rendering 'crispEdges' attribute)
     xpos += 0.5;
     ypos += 0.5;
     var transform_string = 'matrix(1,0,0,1,' + xpos + ',' + ypos + ')';

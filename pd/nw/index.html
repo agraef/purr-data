@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="index.css">
+  <link id="page_style" rel="stylesheet" type="text/css" href="css/default.css">
   </head>
   <body id="console_body">
     <input style="display:none;" id="fileDialog" type="file" nwworkingdir multiple />
@@ -21,6 +21,9 @@
         pdgui.set_pwd(pwd);
         pdgui.set_pd_window(this);
         pdgui.set_app_quitfn(app_quit);
+
+        // gui preset
+        pdgui.skin.apply(this);
 
         // For translations
         var l = pdgui.get_local_string;
