@@ -283,9 +283,11 @@
       "presets": {
         "gui_preset": "GUI preset",
         "gui_preset_tt": "Collection of patch colors and styles",
+        "default": "default",
         "vanilla": "Vanilla",
         "extended": "Pd-Extended",
-        "l2ork": "Pd-L2ork"
+        "l2ork": "Pd-L2ork",
+        "inverted": "inverted"
       }
     },
     "audio": {

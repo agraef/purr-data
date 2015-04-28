@@ -3,7 +3,7 @@
   <head>
     <link rel="stylesheet" type="text/css" href="index.css">
   </head>
-  <body>
+  <body id="console_body">
     <input style="display:none;" id="fileDialog" type="file" nwworkingdir multiple />
     <div id="console_controls" class="noselect">
       <div id="control_frame">
@@ -529,7 +529,7 @@ function canvasNew(args) {
 
     </script>
     <input style="display:none;" id="saveDialog" type="file" nwsaveas />
-    <div id = "bottom">
+    <div id = "console_bottom">
       <div id = "printout">
       <pre id="p1" style="white-space: pre-wrap;">Welcome to Pd GUI using Node-Webkit
         <script>document.write(process.versions['node-webkit'])</script><br/></pre> 

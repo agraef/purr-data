@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-  <link rel="stylesheet" type="text/css" href="pd_canvas.css">
+  <link id="page_style" rel="stylesheet" type="text/css" href="css/default.css">
   </head>
-  <body>
+  <body id="patch_body">
   <input style="display:none;" id="fileDialog" type="file" multiple />
   <input style="display:none;" id="saveDialog" type="file" nwsaveas nwworkingdir accept=".pd" />
 
@@ -17,6 +17,9 @@
     'use strict';
     var nw = require('nw.gui'); 
     var pdgui = require('./pdgui.js');
+
+    // Apply gui preset to this canvas
+    pdgui.skin.apply(this);
 
     //var name = pdgui.last_loaded();
     

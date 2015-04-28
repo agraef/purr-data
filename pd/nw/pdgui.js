@@ -174,7 +174,7 @@ function gui_post(string, color) {
         var text = pd_window.document.createTextNode(string + "\n"); 
         span.appendChild(text);
         myp.appendChild(span);
-        var printout = pd_window.document.getElementById("bottom");
+        var printout = pd_window.document.getElementById("console_bottom");
         printout.scrollTop = printout.scrollHeight;
 
         last_string = string;
@@ -3331,3 +3331,32 @@ function gui_midi_properties(gfxstub, sys_indevs, sys_outdevs,
         );
     }
 }
+
+// Let's try a closure for gui skins
+exports.skin = (function () {
+    var dir = 'css/';
+    var preset = 'default';
+    var w;
+    function apply(win) {
+        win.window.document.getElementById('page_style')
+            .setAttribute('href', dir + preset + '.css');
+    }
+    return {
+        get: function () {
+            gui_post("getting preset: " + dir + preset + '.css');
+            return dir + preset + '.css';
+        },
+        set: function (name) {
+            preset = name;
+            gui_post("trying to set...");
+            for (w in patchwin) {
+                if (patchwin.hasOwnProperty(w)) {
+                    apply(patchwin[w]);
+                }
+            }
+        },
+        apply: function (nw_window) {
+            apply(nw_window);
+        }
+    };
+}());
