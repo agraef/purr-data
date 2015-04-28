@@ -1873,6 +1873,13 @@ function gui_text_create_gobj(cid, tag, type, xpos, ypos, is_toplevel) {
             class: type + (is_toplevel !== 0 ? '' : ' gop')
     });
     svg.appendChild(g);
+    var bluh = svg.getBBox();
+    var bbox_rect = svg.getElementById('bbox_rect');
+    bbox_rect.setAttributeNS(null, 'width', bluh.width);
+    bbox_rect.setAttributeNS(null, 'height', bluh.height);
+    bbox_rect.setAttributeNS(null, 'fill', 'none');
+    bbox_rect.setAttributeNS(null, 'stroke', 'black');
+    
 // hm... why returning g and not the return value of appendChild?
 //    console.log("create gobj tag is " + tag + " and ret is " + g);
     return g;
@@ -3212,6 +3219,12 @@ function gui_savepanel(cid, target, path) {
 
 exports.file_dialog_callback = function(file_string) {
     pdsend(file_dialog_target + " callback " + enquote(file_string));
+}
+
+function gui_gatom_dialog(did, attr_array) {
+    gui_post("fuck tits");
+    dialogwin[did] = nw_create_window(did, 'gatom', 265, 540, 20, 20, 0,
+        0, 1, 'white', 'Properties', '', 0, null, attr_array);
 }
 
 function gui_iemgui_dialog(did, attr_array) {
