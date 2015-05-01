@@ -72,7 +72,17 @@
   },
   "gatom": {
     "prop": {
-      "gatom": "atom box"
+      "gatom": "atom box",
+      "label": "label",
+      "label_left": "left",
+      "label_right": "right",
+      "label_tt": "text label to display next to this object",
+      "labelpos": "label position",
+      "labelpos_tt": "position the label to the left or right of the object",
+      "label_top": "top",
+      "label_bottom": "bottom",
+      "label_left": "left",
+      "label_right": "right"
     }
   },
   "menu": {

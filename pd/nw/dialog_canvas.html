@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="dialog_canvas.css">
+    <link id="page_style" rel="stylesheet" type="text/css" href="css/default.css">
   </head>
   <body>
     <div class="container noselect">
@@ -269,6 +269,9 @@
 
     // For translations
     var l = pdgui.get_local_string;
+
+    // gui preset
+    pdgui.skin.apply(this);
 
     console.log("my working dire is " + pdgui.get_pwd());
 

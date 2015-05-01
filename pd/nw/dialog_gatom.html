@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="dialog_iemgui.css">
+    <link id="page_style" rel="stylesheet" type="text/css" href="css/default.css">
   </head>
   <body id="iemgui_dialog_body">
     <div class="container">
@@ -20,12 +20,8 @@
               <input type="text" name="width">
             </td>
             <td>
-              <label data-i18n="[title]iem.prop.height_tt">
-                <span data-i18n="iem.prop.height"></span>
-              </label>
             </td>
-            <td data-i18n="[title]iem.prop.height_tt">
-              <input type="text" name="height">
+            <td>
             </td>
           </tr>
           <tr class="draglo prop pair hidden">
@@ -46,43 +42,86 @@
               <input type="text" name="maximum-range">
             </td>
           </tr>
-          <tr class="send-symbol prop hidden">
+          <tr>
             <td>
               <label data-i18n="[title]iem.prop.send_tt">
                 <span data-i18n="iem.prop.send"></span>
               </label>
             </td>
-            <td data-i18n="[title]iem.prop.send_tt">
+            <td colspan="3">
               <input type="text" name="send-symbol">
             </td>
-            <td>
-          <tr class="receive-symbol prop hidden">
+          </tr>
+          <tr>
             <td>
               <label data-i18n="[title]iem.prop.receive_tt">
                 <span data-i18n="iem.prop.receive"></span>
               </label>
             </td>
-            <td data-i18n="[title]iem.prop.receive_tt">
-              <input type="text" name="receive-symbol">
+            <td colspan="3">
+            <input type="text" name="receive-symbol">
             </td>
-            <td>
           </tr>
-          <tr class="label prop hidden">
+          <tr>
             <td>
-              <label data-i18n="[title]iem.prop.label_tt">
-                <span data-i18n="iem.prop.label"></span>
+              <label data-i18n="[title]gatom.prop.label_tt">
+                <span data-i18n="gatom.prop.label"></span>
               </label>
             </td>
-            <td data-i18n="[title]iem.prop.label_tt">
+            <td colspan="3">
               <input type="text" name="label">
             </td>
-            <td>
-              <label data-i18n="[title]iem.prop.labelpos">
-                <span data-i18n="iem.prop.labelpos"></span>
-              </label>
-            </td>
           </tr>
+          <tr>
+            <td>
+              <label data-i18n="[title]gatom.prop.labelpos_tt">
+                <span data-i18n="gatom.prop.labelpos"></span>
+              </label> 
+            </td>
+            <td colspan="3">
+              <label class="points"
+                     data-i18n="[title]gatom.prop.labelpos_tt">
+
+                <input class="label-pos"
+                       type="radio"
+                       id="labelpos_left"
+                       value="2"
+                       name="labelpos"
+                       onchange="labelpos_change(this);">
+                <span data-i18n="gatom.prop.label_top"></span>
+
+                <br/>
+
+                <input class="array-style"
+                       type="radio"
+                       id="labelpos_left"
+                       value="0"
+                       name="labelpos"
+                       onchange="labelpos_change(this);">
+                <span data-i18n="gatom.prop.label_left"></span>
+
+              <input class="array-style"
+                     type="radio"
+                     id="labelpos_right"
+                     value="1"
+                     name="labelpos"
+                     onchange="labelpos_change(this);">
+              <span data-i18n="gatom.prop.label_right"></span>
+
+              <br/>
+
+              <input class="array-style"
+                     type="radio"
+                     id="labelpos_bottom"
+                     value="3"
+                     name="labelpos"
+                     onchange="labelpos_change(this);">
+              <span data-i18n="gatom.prop.label_bottom"></span>
+
+            </label>
+
         </table>
+
       </fieldset> 
 
     <div class="submit_buttons">
@@ -109,6 +148,8 @@
     var l = pdgui.get_local_string;
 
     console.log("my working dire is " + pdgui.get_pwd());
+
+    pdgui.skin.apply(this);
 
     var pd_object_callback;
 

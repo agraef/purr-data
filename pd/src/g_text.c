@@ -1349,8 +1349,8 @@ static void gatom_properties(t_gobj *z, t_glist *owner)
     gui_s("draghi");   gui_f(x->a_draghi);
     gui_s("labelpos"); gui_i(x->a_wherelabel);
     gui_s("label");    gui_s(gatom_escapit(x->a_label)->s_name);
-    gui_s("receive");  gui_s(gatom_escapit(x->a_symfrom)->s_name);
-    gui_s("send");     gui_s(gatom_escapit(x->a_symto)->s_name);
+    gui_s("receive-symbol");  gui_s(gatom_escapit(x->a_symfrom)->s_name);
+    gui_s("send-symbol");     gui_s(gatom_escapit(x->a_symto)->s_name);
     gui_end_array();
     gui_end_vmess();
 }
