@@ -1956,23 +1956,25 @@ function gui_eraseio(cid, tag) {
 
 function gui_configure_io(cid, tag, is_iemgui, is_signal, width) {
     var xlet = get_item(cid, tag);
-    configure_item(xlet, {
-        'stroke-width': width,
-//        fill: 'red'
-//        fill: filter ? 'orange' : (is_signal ? 'red' : 'green')
-    });
-    if (is_iemgui) {
-        xlet.classList.add('xlet_iemgui');
-    } else if (is_signal) {
-        xlet.classList.add('xlet_signal');
-    } else {
-        xlet.classList.add('xlet_control');
+    // We have to check for null here. Empty/broken object boxes
+    // can have "phantom" xlets as placeholders for connections
+    // to other objects. This may happen due to:
+    //   * autopatching
+    //   * objects which fail to create when loading a patch
+    if (xlet !== null) { 
+        configure_item(xlet, {
+            'stroke-width': width,
+        });
+        if (is_iemgui) {
+            xlet.classList.add('xlet_iemgui');
+        } else if (is_signal) {
+            xlet.classList.add('xlet_signal');
+        } else {
+            xlet.classList.add('xlet_control');
+        }
+        // remove xlet_selected tag
+        xlet.classList.remove('xlet_selected');
     }
-    // remove xlet_selected tag
-    xlet.classList.remove('xlet_selected');
-    // iemgui: black
-    // sig: red
-    // control: green
 }
 
 function gui_highlight_io(cid, tag) {
