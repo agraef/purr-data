@@ -1979,7 +1979,10 @@ function gui_configure_io(cid, tag, is_iemgui, is_signal, width) {
 
 function gui_highlight_io(cid, tag) {
     var xlet = get_item(cid, tag);
-    xlet.classList.add('xlet_selected');
+    // must check for null (see gui_configure_io)
+    if (xlet !== null) {
+        xlet.classList.add('xlet_selected');
+    }
 }
 
 function gui_message_drawborder(cid,tag,width,height) {
