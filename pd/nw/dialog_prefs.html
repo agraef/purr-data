@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="dialog_iemgui.css">
+    <link id="page_style" rel="stylesheet" type="text/css" href="css/default.css">
   </head>
   <body>
     <div class="container noselect">
@@ -246,228 +246,179 @@
 
     </div>
   <script>
-    'use strict';
-    var nw = require('nw.gui'); 
-    var pdgui = require('./pdgui.js');
+'use strict';
+var nw = require('nw.gui'); 
+var pdgui = require('./pdgui.js');
 
-    // For translations
-    var l = pdgui.get_local_string;
+// For translations
+var l = pdgui.get_local_string;
 
-    console.log("my working dire is " + pdgui.get_pwd());
+// Gui presets
+pdgui.skin.apply(this);
+console.log("my working dire is " + pdgui.get_pwd());
 
-    var pd_object_callback;
+var pd_object_callback;
 
-    var pd_audio_attrs;
-    var pd_midi_attrs;
+var pd_audio_attrs;
+var pd_midi_attrs;
 
-    function ok() {
-        apply();
-        cancel();
+function ok() {
+    apply();
+    cancel();
+}
+
+function display_pref(type) {
+    pdgui.gui_post("here i am with " + type);
+    var all, i, this_elem;
+    all = document.getElementsByTagName('fieldset');
+    this_elem = document.getElementById(type);
+    for (i = 0; i < all.length; i++) {
+        all[i].style.setProperty('display', 'none');
     }
+        this_elem.style.setProperty('display', 'inline');
+}
 
-    function display_pref(type) {
-        pdgui.gui_post("here i am with " + type);
-        var all, i, this_elem;
-        all = document.getElementsByTagName('fieldset');
-        this_elem = document.getElementById(type);
-        for (i = 0; i < all.length; i++) {
-            all[i].style.setProperty('display', 'none');
-        }
-            this_elem.style.setProperty('display', 'inline');
-    }
+function gui_preset_change(elem) {
+    pdgui.skin.set(elem.value);
+}
 
-    function gui_preset_change(elem) {
-        pdgui.skin.set(elem.value);
-    }
+// callbacks for devices and/or their number of channels
+function dev_change(elem) {
+    var attrs, id, direction, index;
+    // the same logic works for both channels and
+    // devices-- we use the variable 'type' to
+    // choose the parameter acoordingly
+    var type;
+    id = elem.id;
+    direction = id.slice(0,2) === 'in' ? 'in' : 'out';
+    type = id.indexOf('chans') !== -1 ? 'chans' : 'devs';
+    // This would need to change if there could ever be more than
+    // 9 devices
+    index = +(id.slice(-1)) - 1;
+    pdgui.gui_post("direction is " + direction);
+    attrs = get_attr('pd-' + direction + type, pd_audio_attrs);
+    attrs[index] = elem.value;
+    pdgui.gui_post("id is " + elem.id);
+    pdgui.gui_post("new chan attrs is " + attrs);
+}
 
+function attr_change(elem) {
+    var attr, id;
+    attr = pd_audio_attrs;
+    id = elem.id;
+    attr[attr.indexOf(id) + 1] = elem.value;
+    pdgui.gui_post("id is " + elem.id);
+    pdgui.gui_post("value is " + elem.value);
+}
 
-    function flag_change(elem) {
-        var attr, arrays_select, name, value, flag;
-        arrays_select = document.getElementById('arrays_select');
-        attr = pd_garray_attrs[arrays_select.value];
-        name = elem.name;
-//        pdgui.gui_post("name is " + name);
-        // get value from radio group, checked from checkboxes
-        if (name === 'array_style') {
-            value = document.querySelector('input[name="array_style"]:checked').value;
-            pdgui.gui_post("array style found: " + value);
-        } else {
-            // '+' for casting boolean to number
-            value = +elem.checked;
-        }
-//        pdgui.gui_post("value is " + value);
-        flag = attr[attr.indexOf('array_flags') + 1];
-        pdgui.gui_post("flag before is " + flag);
-        switch (name) {
-            case "array_save":
-                flag &= ~1;    // clear the save bit
-                flag |= value; // set it
-                break;
-            case "array_style":
-                flag &= ~(1 << 2); // clear style bit 2...
-                flag &= ~(1 << 1); // ... and 1 ...
-                flag += (2 * value); // set them
-                break;
-            case "array_jump":
-                flag &= ~(1 << 3);
-                flag += (16 * value);
-                break;
-        }
-        attr[attr.indexOf('array_flags') + 1] = flag;
-        pdgui.gui_post("array is " + attr);
-    }
+function get_input(name) {
+    var val = document.getElementsByName(name)[0].value;
+    return val === 0 ? '0' : val;
+}
 
-    function flag2_change(elem) {
-        var attr, arrays_select, name, value, flag;
-        arrays_select = document.getElementById('arrays_select');
-        attr = pd_garray_attrs[arrays_select.value];
-        name = elem.name;
-//        pdgui.gui_post("name is " + name);
-        // get value from radio group, checked from checkboxes
-        // '+' for casting boolean to number
-        value = +elem.checked;
-//        pdgui.gui_post("value is " + value);
-        attr[attr.indexOf(name) + 1] = value;
-        pdgui.gui_post("array is " + attr);
-    }
+// get a value from the garray attr array
+function get_array_value(name, attrs) {
+    return attrs[attrs.indexOf(name) + 1];
+}
 
-    // callbacks for devices and/or their number of channels
-    function dev_change(elem) {
-        var attrs, id, direction, index;
-        // the same logic works for both channels and
-        // devices-- we use the variable 'type' to
-        // choose the parameter acoordingly
-        var type;
-        id = elem.id;
-        direction = id.slice(0,2) === 'in' ? 'in' : 'out';
-        type = id.indexOf('chans') !== -1 ? 'chans' : 'devs';
-        // This would need to change if there could ever be more than
-        // 9 devices
-        index = +(id.slice(-1)) - 1;
-        pdgui.gui_post("direction is " + direction);
-        attrs = get_attr('pd-' + direction + type, pd_audio_attrs);
-        attrs[index] = elem.value;
-        pdgui.gui_post("id is " + elem.id);
-        pdgui.gui_post("new chan attrs is " + attrs);
-    }
+// If dev is -1, just change it to 0. Not sure if the Pd audio
+// backend requires this, but it's how it works currently.
+function kludge_dev(type, attrs, index) {
+    var dev = get_attr('pd-' + type + 'devs', attrs)[index];
+    if (dev < 0) { dev = 0; }
+    return dev;
+}
 
-    function attr_change(elem) {
-        var attr, id;
-        attr = pd_audio_attrs;
-        id = elem.id;
-        attr[attr.indexOf(id) + 1] = elem.value;
-        pdgui.gui_post("id is " + elem.id);
-        pdgui.gui_post("value is " + elem.value);
-    }
+// If the device is -1 ('None'), make the number of channels negative.
+// This is the way Pd's audio back end turns off the device. (It works
+// this way so you can remember your number of channels even if
+// you turn off the device.)
+function kludge_chans(type, attrs, index) {
+    var dev = get_attr('pd-' + type + 'devs', attrs)[index],
+        chans = get_attr('pd-' + type + 'chans', attrs)[index];
+    if (dev < 0 && chans >= 0) { chans *= -1; }
+    return chans;
+}
 
-    function get_input(name) {
-        var val = document.getElementsByName(name)[0].value;
-        return val === 0 ? '0' : val;
-    }
+function apply() {
+    var attrs = pd_audio_attrs;
+    pdgui.gui_post("we're applying shits!");
 
-    // get a value from the garray attr array
-    function get_array_value(name, attrs) {
-        return attrs[attrs.indexOf(name) + 1];
-    }
-
-    // If dev is -1, just change it to 0. Not sure if the Pd audio
-    // backend requires this, but it's how it works currently.
-    function kludge_dev(type, attrs, index) {
-        var dev = get_attr('pd-' + type + 'devs', attrs)[index];
-        if (dev < 0) { dev = 0; }
-        return dev;
-    }
-
-    // If the device is -1 ('None'), make the number of channels negative.
-    // This is the way Pd's audio back end turns off the device. (It works
-    // this way so you can remember your number of channels even if
-    // you turn off the device.)
-    function kludge_chans(type, attrs, index) {
-        var dev = get_attr('pd-' + type + 'devs', attrs)[index],
-            chans = get_attr('pd-' + type + 'chans', attrs)[index];
-        if (dev < 0 && chans >= 0) { chans *= -1; }
-        return chans;
-    }
-
-    function apply() {
-        var attrs = pd_audio_attrs;
-        pdgui.gui_post("we're applying shits!");
-
-        // Audio dialog
-        pdgui.pdsend([
-            'pd audio-dialog',
-            kludge_dev('in', attrs, 0),
-            kludge_dev('in', attrs, 1),
-            kludge_dev('in', attrs, 2),
-            kludge_dev('in', attrs, 3),
-            kludge_chans('in', attrs, 0),
-            kludge_chans('in', attrs, 1),
-            kludge_chans('in', attrs, 2),
-            kludge_chans('in', attrs, 3),
-            kludge_dev('out', attrs, 0),
-            kludge_dev('out', attrs, 1),
-            kludge_dev('out', attrs, 2),
-            kludge_dev('out', attrs, 3),
-            kludge_chans('out', attrs, 0),
-            kludge_chans('out', attrs, 1),
-            kludge_chans('out', attrs, 2),
-            kludge_chans('out', attrs, 3),
-            get_attr('rate', attrs),
-            get_attr('advance', attrs),
-            get_attr('cancallback', attrs),
-            get_attr('blocksize', attrs)
-            ].join(' '));
-
-        attrs = pd_midi_attrs;
-        // Midi dialog
-        pdgui.pdsend([
-            'pd midi-dialog',
-            get_attr('pd-indevs', attrs)[0],
-            get_attr('pd-indevs', attrs)[1],
-            get_attr('pd-indevs', attrs)[2],
-            get_attr('pd-indevs', attrs)[3],
-            get_attr('pd-outdevs', attrs)[0],
-            get_attr('pd-outdevs', attrs)[1],
-            get_attr('pd-outdevs', attrs)[2],
-            get_attr('pd-outdevs', attrs)[3],
-            0, // midi_alsain
-            0  // midi_alsaout
+    // Audio dialog
+    pdgui.pdsend([
+        'pd audio-dialog',
+        kludge_dev('in', attrs, 0),
+        kludge_dev('in', attrs, 1),
+        kludge_dev('in', attrs, 2),
+        kludge_dev('in', attrs, 3),
+        kludge_chans('in', attrs, 0),
+        kludge_chans('in', attrs, 1),
+        kludge_chans('in', attrs, 2),
+        kludge_chans('in', attrs, 3),
+        kludge_dev('out', attrs, 0),
+        kludge_dev('out', attrs, 1),
+        kludge_dev('out', attrs, 2),
+        kludge_dev('out', attrs, 3),
+        kludge_chans('out', attrs, 0),
+        kludge_chans('out', attrs, 1),
+        kludge_chans('out', attrs, 2),
+        kludge_chans('out', attrs, 3),
+        get_attr('rate', attrs),
+        get_attr('advance', attrs),
+        get_attr('cancallback', attrs),
+        get_attr('blocksize', attrs)
         ].join(' '));
-    }
 
-    function cancel() {
-        var i, attrs, gfxstub;
-        pdgui.gui_post("closing the window at this point");
-        window.close(true);
-//        pdgui.pdsend(pd_object_callback + " cancel");
-    }
+    attrs = pd_midi_attrs;
+    // Midi dialog
+    pdgui.pdsend([
+        'pd midi-dialog',
+        get_attr('pd-indevs', attrs)[0],
+        get_attr('pd-indevs', attrs)[1],
+        get_attr('pd-indevs', attrs)[2],
+        get_attr('pd-indevs', attrs)[3],
+        get_attr('pd-outdevs', attrs)[0],
+        get_attr('pd-outdevs', attrs)[1],
+        get_attr('pd-outdevs', attrs)[2],
+        get_attr('pd-outdevs', attrs)[3],
+        0, // midi_alsain
+        0  // midi_alsaout
+    ].join(' '));
+}
 
-    function change_api(elem) {
-        var id = elem.getAttribute('id'),
-            value = elem.getAttribute('value');
-        if (id === 'audio_api') {
-            pdgui.pdsend("pd audio-setapi " + value);
-        } else {
-            pdgui.pdsend("pd midi-setapi " + value);
-        }
-    }
+function cancel() {
+    var i, attrs, gfxstub;
+    pdgui.gui_post("closing the window at this point");
+    window.close(true);
+    //pdgui.pdsend(pd_object_callback + " cancel");
+}
 
-    function get_attr(name, attrs) {
-        return attrs[attrs.indexOf(name) + 1];
+function change_api(elem) {
+    var id = elem.getAttribute('id'),
+        value = elem.getAttribute('value');
+    if (id === 'audio_api') {
+        pdgui.pdsend("pd audio-setapi " + value);
+    } else {
+        pdgui.pdsend("pd midi-setapi " + value);
     }
+}
 
-    function populate_apis(elem, apis, current_api) {
-        pdgui.gui_post("curent api is " + current_api);
-        var i, opt, api_select = elem;
-        pdgui.gui_post('apis are ' + apis);
-        for (i = 0; i < apis.length; i += 2) {
-            opt = document.createElement('option');
-            opt.textContent = apis[i];
-            opt.setAttribute('value', apis[i+1]);
-            api_select.appendChild(opt);
-        }
-        api_select.value = current_api;
+function get_attr(name, attrs) {
+    return attrs[attrs.indexOf(name) + 1];
+}
+
+function populate_apis(elem, apis, current_api) {
+    pdgui.gui_post("curent api is " + current_api);
+    var i, opt, api_select = elem;
+    pdgui.gui_post('apis are ' + apis);
+    for (i = 0; i < apis.length; i += 2) {
+        opt = document.createElement('option');
+        opt.textContent = apis[i];
+        opt.setAttribute('value', apis[i+1]);
+        api_select.appendChild(opt);
     }
+    api_select.value = current_api;
+}
 
 function populate_devs(type, attrs) {
     var devs = get_attr(type === 'in' ? 'sys-indevs' : 'sys-outdevs', attrs);
@@ -525,104 +476,104 @@ function populate_midi_devs(type, attrs) {
     }
 }
 
-    function audio_prefs_callback(attrs) {
-        pd_audio_attrs = attrs;
-        var api_select = document.getElementById('audio_api');
-        var callback, i, j, elem, devs, opt;
-        pdgui.gui_post("audio attrs are " + attrs);
-        pdgui.gui_post("attrs length " + attrs.length);
-        // We can get this callback multiple times while the dialog
-        // is open.  This is because an API change requires a query
-        // for new properties. So we only populate the api options
-        // if they don't already exist
-        if (api_select.getElementsByTagName('option').length < 1) {
-            populate_apis(
-                api_select,
-                attrs[attrs.indexOf('audio-apis') + 1],
-                attrs[attrs.indexOf('current-api') + 1]);
-        }
-
-        document.getElementById('rate').value = get_attr('rate', attrs);
-        document.getElementById('blocksize').value = get_attr('blocksize', attrs);
-        document.getElementById('advance').value = get_attr('advance', attrs);
-
-        var callback = get_attr('cancallback', attrs);
-        //show the checkbox if the API allows 
-        if (callback !== -1) {
-            document.getElementById('callback_container')
-                .classList.remove('hidden');
-            document.getElementById('callback').checked = !!callback;
-        }
-
-        populate_devs('in', attrs);
-        populate_devs('out', attrs);
-
-        set_devs('in', get_attr('pd-indevs', attrs));
-        set_devs('out', get_attr('pd-outdevs', attrs));
-
-        // Set chans after the devs (because they may
-        // have the side-effect of setting the dev to 'None')
-        set_chans('in', get_attr('pd-inchans', attrs));
-        set_chans('out', get_attr('pd-outchans', attrs));
+function audio_prefs_callback(attrs) {
+    pd_audio_attrs = attrs;
+    var api_select = document.getElementById('audio_api');
+    var callback, i, j, elem, devs, opt;
+    pdgui.gui_post("audio attrs are " + attrs);
+    pdgui.gui_post("attrs length " + attrs.length);
+    // We can get this callback multiple times while the dialog
+    // is open.  This is because an API change requires a query
+    // for new properties. So we only populate the api options
+    // if they don't already exist
+    if (api_select.getElementsByTagName('option').length < 1) {
+        populate_apis(
+            api_select,
+            attrs[attrs.indexOf('audio-apis') + 1],
+            attrs[attrs.indexOf('current-api') + 1]);
     }
 
-    function set_devs(type, devs) {
-        var i;
-        for (i = 0; i < devs.length; i++) {
-            document.getElementById(type + (i+1)).value = devs[i];
-        }
+    document.getElementById('rate').value = get_attr('rate', attrs);
+    document.getElementById('blocksize').value = get_attr('blocksize', attrs);
+    document.getElementById('advance').value = get_attr('advance', attrs);
+
+    var callback = get_attr('cancallback', attrs);
+    //show the checkbox if the API allows 
+    if (callback !== -1) {
+        document.getElementById('callback_container')
+            .classList.remove('hidden');
+        document.getElementById('callback').checked = !!callback;
     }
 
-    function set_chans(type, chans_array) {
-        var i;
-        for (i = 0; i < chans_array.length; i++) {
-            document.getElementById(type + 'chans' + (i+1)).value = chans_array[i];
-            // If no chans, set device to -1 (None)
-            if (chans_array[i] < 1) {
-                document.getElementById(type + (i+1)).value = -1;
-            }
+    populate_devs('in', attrs);
+    populate_devs('out', attrs);
+
+    set_devs('in', get_attr('pd-indevs', attrs));
+    set_devs('out', get_attr('pd-outdevs', attrs));
+
+    // Set chans after the devs (because they may
+    // have the side-effect of setting the dev to 'None')
+    set_chans('in', get_attr('pd-inchans', attrs));
+    set_chans('out', get_attr('pd-outchans', attrs));
+}
+
+function set_devs(type, devs) {
+    var i;
+    for (i = 0; i < devs.length; i++) {
+        document.getElementById(type + (i+1)).value = devs[i];
+    }
+}
+
+function set_chans(type, chans_array) {
+    var i;
+    for (i = 0; i < chans_array.length; i++) {
+        document.getElementById(type + 'chans' + (i+1)).value = chans_array[i];
+        // If no chans, set device to -1 (None)
+        if (chans_array[i] < 1) {
+            document.getElementById(type + (i+1)).value = -1;
         }
     }
+}
 
-    function midi_prefs_callback(attrs) {
-        pd_midi_attrs = attrs;
-        var api_select = document.getElementById('midi_api');
-        pdgui.gui_post("midi attrs are " + attrs);
-        pdgui.gui_post("attrs length " + attrs.length);
+function midi_prefs_callback(attrs) {
+    pd_midi_attrs = attrs;
+    var api_select = document.getElementById('midi_api');
+    pdgui.gui_post("midi attrs are " + attrs);
+    pdgui.gui_post("attrs length " + attrs.length);
 
-        if (api_select.getElementsByTagName('option').length < 1) {
-            populate_apis(
-                api_select,
-                get_attr('midi-apis', attrs),
-                get_attr('current-api', attrs)
-            );
-        }
-
-
+    if (api_select.getElementsByTagName('option').length < 1) {
+        populate_apis(
+            api_select,
+            get_attr('midi-apis', attrs),
+            get_attr('current-api', attrs)
+        );
     }
 
 
-    // This gets called from the nw_create_window function in index.html
-    // It provides us with our window id from the C side.  Once we have it
-    // we can create the menu and register event callbacks
-    function register_canvas_id(gfxstub, attr_arrays) {
-        pd_object_callback = gfxstub;
-        add_events(gfxstub);
-        translate_form();
+}
 
-        // default to audio preference panel
-        display_pref('audio');
-        // We don't turn on rendering of the "container" div until
-        // We've finished displaying all the spans and populating the
-        // labels and form elements.  That makes it more efficient and
-        // snappier, at least on older machines.  However, we still have
-        // to asynchronously request the form values from Pd for audio
-        // and MIDI...
 
-        pdgui.pdsend("pd audio-properties"); // request audio pref attrs
-        pdgui.pdsend("pd midi-properties");  // request midi pref attrs
-        document.getElementsByClassName('container')[0].style.setProperty('display', 'inline');
-    }
+// This gets called from the nw_create_window function in index.html
+// It provides us with our window id from the C side.  Once we have it
+// we can create the menu and register event callbacks
+function register_canvas_id(gfxstub, attr_arrays) {
+    pd_object_callback = gfxstub;
+    add_events(gfxstub);
+    translate_form();
+
+    // default to audio preference panel
+    display_pref('audio');
+    // We don't turn on rendering of the "container" div until
+    // We've finished displaying all the spans and populating the
+    // labels and form elements.  That makes it more efficient and
+    // snappier, at least on older machines.  However, we still have
+    // to asynchronously request the form values from Pd for audio
+    // and MIDI...
+
+    pdgui.pdsend("pd audio-properties"); // request audio pref attrs
+    pdgui.pdsend("pd midi-properties");  // request midi pref attrs
+    document.getElementsByClassName('container')[0].style.setProperty('display', 'inline');
+}
 
 function tr_text(id) {
     var elem = document.getElementById('iem.prop.' + id);
@@ -644,22 +595,7 @@ function translate_form() {
 }
 
 function populate_form(attr_array) {
-
     // First, let's put the translated text for the form labels:
-
-//    tr_text('heading.size');
-//    tr_text('heading.messages');
-//    tr_text('heading.label');
-//    tr_text('heading.colors');
-//    tr_prop('width');
-//    tr_tooltip('width');
-
-//    var headings = ["size", "messages", "label", "colors"];
-//    for (var i = 0; i < headings.length; i++) {
-//        var str = "iem.prop.heading." + headings[i];
-//        var heading = document.getElementById(str);
-//        heading.textContent = l(str);
-//    }
 
     for(var i = 0; i < attr_array.length; i+=2) {
         // Unhide the span with the class with the same name as the id
@@ -671,23 +607,9 @@ function populate_form(attr_array) {
             pdgui.gui_post("Error: couldn't find iemgui prop group for " + attr_array[i]);
         }
 
-        if (attr_array[i] === 'display-flags') {
-            // protip: '!!' forces Boolean, '+' forces Number type
-            var flag = +attr_array[i+1];
-            document.getElementsByName('gop')[0].checked = !!flag;
-            document.getElementsByName('hide-name')[0].checked = !!(flag & 2);
-            // Set the gop-related parts of the form to be enabled/disabled based on state
-            set_gop(!!flag);
-        }            
-
         var elem = document.getElementsByName(attr_array[i]);
         if (elem.length > 0) {
-            if(attr_array[i].slice(-5) === 'color') {
-                var hex_string = Number(attr_array[i+1]).toString(16);
-                var color_string = "#" + (hex_string === '0' ? '000000' : hex_string);
-                pdgui.gui_post("color is " + color_string);
-                elem[0].value = color_string;
-            } else if (elem[0].type === 'checkbox') {
+            if (elem[0].type === 'checkbox') {
                 // The attr here is a string, so we need to
                 // force it to number, hence the "+" below
                 gui_post("found a CHECKED ITEM!!!");
@@ -705,8 +627,6 @@ function add_events(name) {
     // closing the Window
     nw.Window.get().on("close", function() {
         // this needs to do whatever the "cancel" button does
-//        pdgui.pdsend(name + " menuclose 0");
-//        cancel();
         pdgui.remove_dialogwin(pd_object_callback);
         this.close(true);
     });
