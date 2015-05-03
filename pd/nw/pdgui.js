@@ -1715,70 +1715,64 @@ exports.connect = connect;
 // characters from pd->gui messages.  Because of this a newline is added in
 // gui_post.  Once all the old tcl messages are removed we can parse solely
 // on ";", and the side effect can be removed.
-
 // can be removed.
 
-var plums = require('string_decoder').StringDecoder;
-var rufus = new plums('utf8');
-
-var nextCmd = ""; // Build up a command across lines (or buffers)
-var cmdHeader = 0;
+// StringDecoder is used to make sure UTF8 characters which happen to
+// straddle buffers get handled correctly.  If this proves too slow, there's
+// a Buffer Tools lib in Node.js that's more powerful.  But for now this seems
+// fine...
+var StringDecoder = require('string_decoder').StringDecoder;
 
 function init_socket_events () {
-	client.on('data', function(data) {
-	//    console.log('DATA: ' + data);
-	      var dataStr = data.toString('utf-8');
+    var decoder = new StringDecoder('utf8');
+    var nextCmd = ""; // Build up a command across lines (or buffers)
+    var cmdHeader = 0;
 
-              var mumps = rufus.write(data);
-              if (rufus.end() !== "") {
-                  console.log("fuckkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk, we got hitchikers... " + rufus.end());
-              }
+    client.on('data', function(data) {
+        var dataStr = decoder.write(data);
+        // For debugging the buffer...
+        //if (decoder.end() !== "") {
+        //    console.log("utf8 multi-byte character split across buffer");
+        //    console.log("end bytes are " + decoder.end());
+        //}
+        var arr = dataStr.split("\n");
+        var arrLen = arr.length;
+        for (var i = 0; i < arrLen; i++) {
+            var prefix = arr[i].substring(0, 2);
+            if (prefix == 'nw' || prefix == 'nn') {
+                nextCmd = arr[i].substring(3);
+                //console.log("nextCmd is " + nextCmd);
+                cmdHeader = 1;
+            } else if (cmdHeader) {
+	        nextCmd += arr[i];
+                //console.log("2nd part of cmd is " + arr[i]);
+            } else {
+                // Show the remaining old tcl/tk messages in blue
+                //gui_post(arr[i], "blue");
+            }
+            // check if we end with a semicolon followed by a newline
+            if (nextCmd.slice(-1) === ";" && nextCmd.slice(-2) !== '\\') {
+                //nextCmd = nextCmd.replace(/\n/g, "\\n");
+                //nextCmd = nextCmd.replace(/'/g, "\\\'");
+                var selector = nextCmd.slice(0, nextCmd.indexOf(" "));
+                var args = nextCmd.slice(selector.length + 1, -1);
+                //console.log("About to eval: " + selector + '(' + args + ');');
+                 eval(selector + '(' + args + ');');
+                 nextCmd = "";
+                 cmdHeader = 0;
+            }
+	}
+	// client.destroy();
+	// console.log('Connection closed');
 
+    });
 
-//	      console.log("The whole buffer is " + dataStr);
-//              if (nextCmd !== "") {
-//                  console.log("fuckkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk nextCmd is " + nextCmd);
-//              }
-	      var arr = dataStr.split("\n");
-	      var arrLen = arr.length;
-	      for (var i = 0; i < arrLen; i++) {
-		  var prefix = arr[i].substring(0, 2);
-		  if (prefix == 'nw' || prefix == 'nn') {
-		      nextCmd = arr[i].substring(3);
-//	              console.log("nextCmd is " + nextCmd);
-		      cmdHeader = 1;
-		  } else if (cmdHeader) {
-		      nextCmd += arr[i];
-	//              console.log("2nd part of cmd is " + arr[i]);
-		  } else {
-//		      gui_post(arr[i], "blue");
-		  }
-		  // check if we end with a semicolon followed by a newline
-		  if (nextCmd.slice(-1) === ";" && nextCmd.slice(-2) !== '\\') {
-//console.log("raw cmd is: " + nextCmd);
-//		      nextCmd = nextCmd.replace(/\n/g, "\\n");
-//		      nextCmd = nextCmd.replace(/'/g, "\\\'");
-		      var selector = nextCmd.slice(0, nextCmd.indexOf(" "));
-		      var args = nextCmd.slice(selector.length + 1, -1);
-//                      console.log("About to eval: " + selector + '(' + args + ');');
-                      eval(selector + '(' + args + ');');
-		      nextCmd = "";
-		      cmdHeader = 0;
-		  }
-
-	      }
-	    // Close the client socket completely
-	//    client.destroy();
-	//    console.log('Connection closed');
-
-	 });
-
-	// Add a 'close' event handler for the client socket
-	 client.on('close', function() {
-	     //console.log('Connection closed');
-             //client.destroy();
-             nw_app_quit(); // set a timeout here if you need to debug
-	 });
+    // Add a 'close' event handler for the client socket
+    client.on('close', function() {
+        //console.log('Connection closed');
+        //client.destroy();
+        nw_app_quit(); // set a timeout here if you need to debug
+    });
 }
 
 exports.init_socket_events = init_socket_events;
@@ -1787,7 +1781,7 @@ exports.init_socket_events = init_socket_events;
 function pdsend(string) {
     client.write(string + ';');
     // for now, let's reprint the outgoing string to the pdwindow
-//    gui_post(string + ';', "red");
+    // gui_post(string + ';', "red");
 }
 
 exports.pdsend = pdsend;
