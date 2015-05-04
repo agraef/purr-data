@@ -1090,6 +1090,7 @@ typedef struct _svg
     int x_stroketype;
     int x_ndash;
     t_fielddesc *x_strokedasharray; /* array of lengths */
+    t_svg_attr x_strokedashoffset;
     t_svg_event x_events;
     t_fielddesc x_drag; /* convenience event, not part of the svg spec */
     t_svg_attr x_pointerevents;
@@ -1313,6 +1314,7 @@ void *svg_new(t_pd *parent, t_symbol *s, int argc, t_atom *argv)
     x->x_strokedasharray =
         (t_fielddesc *)t_getbytes(x->x_ndash * sizeof(t_fielddesc));
     x->x_transform_n = 0;
+    x->x_strokedashoffset.a_flag = 0;
     x->x_transform = (t_fielddesc *)t_getbytes(x->x_transform_n *
         sizeof(t_fielddesc));
     /* initialize events */
@@ -1570,9 +1572,17 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
         //sys_vgui(".x%lx.c itemconfigure %s -strokeopacity %g\n",
         //    glist_getcanvas(c), tag, fielddesc_getcoord(
         //        &x->x_strokeopacity.a_attr, template, data, 1));
-        gui_vmess("gui_draw_configure", "sssg",
+        gui_vmess("gui_draw_configure", "sssf",
             canvas_tag(glist_getcanvas(c)), tag, "stroke-opacity", fielddesc_getcoord(
                 &x->x_strokeopacity.a_attr, template, data, 1));
+    else if (s == gensym("stroke-dashoffset"))
+        //sys_vgui(".x%lx.c itemconfigure %s -strokeopacity %g\n",
+        //    glist_getcanvas(c), tag, fielddesc_getcoord(
+        //        &x->x_strokeopacity.a_attr, template, data, 1));
+        gui_vmess("gui_draw_configure", "sssf",
+            canvas_tag(glist_getcanvas(c)), tag, "stroke-dashoffset",
+                fielddesc_getcoord(
+                    &x->x_strokedashoffset.a_attr, template, data, 1));
     else if (s == gensym("stroke-width"))
     {
         //sys_vgui(".x%lx.c itemconfigure %s -strokewidth %g\n",
@@ -1993,6 +2003,16 @@ void svg_strokeopacity(t_svg *x, t_symbol *s,
     {
         fielddesc_setfloatarg(&x->x_strokeopacity.a_attr, argc, argv);
         x->x_strokeopacity.a_flag = 1;
+        svg_update(x, s);
+    }
+}
+
+void svg_strokedashoffset(t_svg *x, t_symbol *s, int argc, t_atom *argv)
+{
+    if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
+    {
+        fielddesc_setfloatarg(&x->x_strokedashoffset.a_attr, argc, argv);
+        x->x_strokedashoffset.a_flag = 1;
         svg_update(x, s);
     }
 }
@@ -3499,72 +3519,38 @@ static void draw_activate(t_gobj *z, t_glist *glist,
 
 static void svg_togui(t_svg *x, t_template *template, t_word *data)
 {
-    // Hack to send parameter as an object to the GUI. Not sure yet if
+    // Hack to send parameters to the GUI. Not sure yet if
     // we want to generalize that...
-    //sys_gui(",{ "); 
     gui_start_array();
-    if (x->x_type != gensym("line"))
+    if (x->x_filltype)
     {
-        if (x->x_filltype)
+        t_fielddesc *fd = x->x_fill;
+        if (x->x_filltype == 1)
         {
-            t_fielddesc *fd = x->x_fill;
-            if (x->x_filltype == 1)
-            {
-                t_symbol *f = fielddesc_getsymbol(fd, template, data, 1);
-                //sys_vgui("-fill %s ", f->s_name);
-                //sys_vgui("fill: '%s',", f->s_name);
-                gui_s("fill");
-                gui_s(f->s_name);
-            }
-            else if (x->x_filltype == 2)
-            {
-                //sys_vgui("-fill %s ", rgb_to_hex(
-                //    (int)fielddesc_getfloat(fd,
-                //    template, data, 1),
-                //    (int)fielddesc_getfloat(fd+1,
-                //    template, data, 1),
-                //    (int)fielddesc_getfloat(fd+2,
-                //    template, data, 1)));
-
-                //sys_vgui("fill: '%s',", rgb_to_hex(
-                //    (int)fielddesc_getfloat(fd,
-                //    template, data, 1),
-                //    (int)fielddesc_getfloat(fd+1,
-                //    template, data, 1),
-                //    (int)fielddesc_getfloat(fd+2,
-                //    template, data, 1)));
-                gui_s("fill");
-                gui_s(rgb_to_hex(
-                    (int)fielddesc_getfloat(fd,
-                    template, data, 1),
-                    (int)fielddesc_getfloat(fd+1,
-                    template, data, 1),
-                    (int)fielddesc_getfloat(fd+2,
-                    template, data, 1)));
-            }
+            t_symbol *f = fielddesc_getsymbol(fd, template, data, 1);
+            gui_s("fill");
+            gui_s(f->s_name);
         }
-        if (x->x_fillopacity.a_flag)
+        else if (x->x_filltype == 2)
         {
-            //sys_vgui("-fillopacity %g ",
-            //   fielddesc_getfloat(&x->x_fillopacity.a_attr, template, data, 1));
-            //sys_vgui("fill-opacity: %g,",
-            //   fielddesc_getfloat(&x->x_fillopacity.a_attr, template, data, 1));
-            gui_s("fill-opacity");
-            gui_f(fielddesc_getfloat(&x->x_fillopacity.a_attr, template, data, 1));
+            gui_s("fill");
+            gui_s(rgb_to_hex(
+                (int)fielddesc_getfloat(fd, template, data, 1),
+                (int)fielddesc_getfloat(fd+1, template, data, 1),
+                (int)fielddesc_getfloat(fd+2, template, data, 1)));
         }
-        if (x->x_fillrule.a_flag)
-        {
-            //sys_vgui("-fillrule %s ", (int)fielddesc_getfloat(
-            //    &x->x_fillrule.a_attr, template, data, 1) ?
-            //        "evenodd" : "nonzero");
-            //sys_vgui("'fill-rule': '%s',", (int)fielddesc_getfloat(
-            //    &x->x_fillrule.a_attr, template, data, 1) ?
-            //        "evenodd" : "nonzero");
-            gui_s("fill-rule");
-            gui_s((int)fielddesc_getfloat(
-                &x->x_fillrule.a_attr, template, data, 1) ?
-                    "evenodd" : "nonzero");
-        }
+    }
+    if (x->x_fillopacity.a_flag)
+    {
+        gui_s("fill-opacity");
+        gui_f(fielddesc_getfloat(&x->x_fillopacity.a_attr, template, data, 1));
+    }
+    if (x->x_fillrule.a_flag)
+    {
+        gui_s("fill-rule");
+        gui_s((int)fielddesc_getfloat(
+            &x->x_fillrule.a_attr, template, data, 1) ?
+                "evenodd" : "nonzero");
     }
     if (x->x_stroketype)
     {
@@ -3572,44 +3558,20 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
         if (x->x_stroketype == 1)
         {
             t_symbol *s = fielddesc_getsymbol(fd, template, data, 1);
-            //sys_vgui("-stroke %s ", s->s_name);
-            //sys_vgui("stroke: '%s',", s->s_name);
             gui_s("stroke");
             gui_s(s->s_name);
         }
         else if (x->x_stroketype == 2)
         {
-            //sys_vgui("-stroke %s ", rgb_to_hex(
-            //    (int)fielddesc_getfloat(fd,
-            //    template, data, 1),
-            //    (int)fielddesc_getfloat(fd+1,
-            //    template, data, 1),
-            //    (int)fielddesc_getfloat(fd+2,
-            //    template, data, 1)));
-            //sys_vgui("stroke: '%s',", rgb_to_hex(
-            //    (int)fielddesc_getfloat(fd,
-            //    template, data, 1),
-            //    (int)fielddesc_getfloat(fd+1,
-            //    template, data, 1),
-            //    (int)fielddesc_getfloat(fd+2,
-            //    template, data, 1)));
-
             gui_s("stroke");
             gui_s(rgb_to_hex(
-                (int)fielddesc_getfloat(fd,
-                template, data, 1),
-                (int)fielddesc_getfloat(fd+1,
-                template, data, 1),
-                (int)fielddesc_getfloat(fd+2,
-                template, data, 1)));
+                (int)fielddesc_getfloat(fd, template, data, 1),
+                (int)fielddesc_getfloat(fd+1, template, data, 1),
+                (int)fielddesc_getfloat(fd+2, template, data, 1)));
         }
     }
     if (x->x_strokewidth.a_flag)
     {
-        //sys_vgui("-strokewidth %g\\\n",
-        //    fielddesc_getfloat(&x->x_strokewidth.a_attr, template, data, 1));
-        //sys_vgui("stroke-width: %g,",
-        //    fielddesc_getfloat(&x->x_strokewidth.a_attr, template, data, 1));
         gui_s("stroke-width");
         gui_f(fielddesc_getfloat(&x->x_strokewidth.a_attr, template, data, 1));
     }
@@ -3623,23 +3585,11 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
     }
     if (x->x_strokeopacity.a_flag)
     {
-        //sys_vgui("-strokeopacity %g ",
-        //    fielddesc_getfloat(&x->x_strokeopacity.a_attr, template, data, 1));
-        //sys_vgui("'stroke-opacity': %g,",
-        //    fielddesc_getfloat(&x->x_strokeopacity.a_attr, template, data, 1));
-
         gui_s("stroke-opacity");
         gui_f(fielddesc_getfloat(&x->x_strokeopacity.a_attr, template, data, 1));
     }
     if (x->x_strokelinecap.a_flag)
     {
-        //sys_vgui("-strokelinecap %s ", get_strokelinecap(
-        //    (int)fielddesc_getcoord(&x->x_strokelinecap.a_attr,
-        //    template, data, 1)));
-        //sys_vgui("'stroke-linecap': '%s',", get_strokelinecap(
-        //    (int)fielddesc_getcoord(&x->x_strokelinecap.a_attr,
-        //    template, data, 1)));
-
         gui_s("stroke-linecap");
         gui_s(get_strokelinecap(
             (int)fielddesc_getcoord(&x->x_strokelinecap.a_attr,
@@ -3647,13 +3597,6 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
     }
     if (x->x_strokelinejoin.a_flag)
     {
-        //sys_vgui("-strokelinejoin %s ", get_strokelinejoin(
-        //    (int)fielddesc_getfloat(&x->x_strokelinejoin.a_attr,
-        //template, data, 1)));
-        //sys_vgui("'stroke-linejoin': '%s',", get_strokelinejoin(
-        //    (int)fielddesc_getfloat(&x->x_strokelinejoin.a_attr,
-        //template, data, 1)));
-
         gui_s("stroke-linejoin");
         gui_s(get_strokelinejoin(
             (int)fielddesc_getfloat(&x->x_strokelinejoin.a_attr,
@@ -3661,12 +3604,6 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
     }
     if (x->x_strokemiterlimit.a_flag)
     {
-        //sys_vgui("-strokemiterlimit %g ",
-        //    fielddesc_getfloat(&x->x_strokemiterlimit.a_attr,
-        //    template, data, 1));
-        //sys_vgui("'stroke-miterlimit': %g,",
-        //    fielddesc_getfloat(&x->x_strokemiterlimit.a_attr,
-        //    template, data, 1));
         gui_s("stroke-miterlimit");
         gui_f(fielddesc_getfloat(&x->x_strokemiterlimit.a_attr,
             template, data, 1));
@@ -3675,20 +3612,13 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
     {
         int i;
         t_fielddesc *fd;
-        // inner array...
-        //sys_gui(" -strokedasharray {\\\n");
-        //sys_gui("'stroke-dasharray': \"");
         gui_s("stroke-dasharray");
         gui_start_array();
         for (i = 0, fd = x->x_strokedasharray; i < x->x_ndash; i++)
         {
             // Should this be a float?
-            //sys_vgui("%d ", (int)fielddesc_getfloat(fd+i,
-            //template, data, 1));
-            gui_i((int)fielddesc_getfloat(fd+i,
-            template, data, 1));
+            gui_f(fielddesc_getfloat(fd+i, template, data, 1));
         }
-        //sys_gui("\",");
         gui_end_array();
     }
     if (x->x_transform_n > 0)
@@ -3697,8 +3627,6 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
         t_float m1, m2, m3, m4, m5, m6;
         svg_parsetransform(x, template, data, &m1, &m2, &m3,
             &m4, &m5, &m6);
-        //sys_vgui("-matrix { {%g %g} {%g %g} {%g %g} }\\\n",
-        //    m1, m2, m3, m4, m5, m6);
         gui_s("transform");
         char transbuf[MAXPDSTRING];
         sprintf(transbuf, "matrix(%g,%g,%g,%g,%g,%g)",
@@ -3707,37 +3635,25 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
     }
     if (x->x_vis.a_flag) 
     { 
-        //sys_vgui("-state %s ", fielddesc_getfloat(&x->x_vis.a_attr, 
-        //    template, data, 1) ? "normal" : "hidden"); 
-        //sys_vgui("visibility: '%s',", fielddesc_getfloat(&x->x_vis.a_attr, 
-        //    template, data, 1) ? "visible" : "hidden"); 
         gui_s("visibility");
         gui_s(fielddesc_getfloat(&x->x_vis.a_attr, 
             template, data, 1) ? "visible" : "hidden"); 
     }
     if (x->x_rx.a_flag)
     {
-        //sys_vgui("-rx %d ", (int)fielddesc_getfloat(&x->x_rx.a_attr,
-        //    template, data, 1));
-        //sys_vgui("rx: %d,", (int)fielddesc_getfloat(&x->x_rx.a_attr,
-        //    template, data, 1));
         gui_s("rx");
         gui_i((int)fielddesc_getfloat(&x->x_rx.a_attr,
             template, data, 1));
     }
     if (x->x_ry.a_flag)
     {
-        //sys_vgui("-ry %d ", (int)fielddesc_getfloat(&x->x_ry.a_attr,
-        //    template, data, 1));
-        //sys_vgui("ry: %d,", (int)fielddesc_getfloat(&x->x_ry.a_attr,
-        //    template, data, 1));
         gui_s("ry");
         gui_f((int)fielddesc_getfloat(&x->x_ry.a_attr,
             template, data, 1));
     }
+    // Not sure why display attr is here...
     gui_s("display");
     gui_s("inline");
-    //sys_gui("display: 'inline'},");
     gui_end_array();
 }
 
@@ -4420,6 +4336,8 @@ static void draw_setup(void)
         gensym("stroke-dasharray"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_strokeopacity,
         gensym("stroke-opacity"), A_GIMME, 0);
+    class_addmethod(svg_class, (t_method)svg_strokedashoffset,
+        gensym("stroke-dashoffset"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_strokelinecap,
         gensym("stroke-linecap"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_strokelinejoin,

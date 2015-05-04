@@ -142,6 +142,7 @@ Everything else: (A [*] means we've fixed it)
 [ ] getting the sense that glist_isselected should _always_ have
     glist_getcanvas(x) as its first parameter
 [x] get rid of the old tcl specific sys_get_audio_apis
+[ ] have a single function to set t_svg_attr
 
 Crashers
 --------
