@@ -1093,6 +1093,7 @@ typedef struct _svg
     t_svg_attr x_strokedashoffset;
     t_svg_event x_events;
     t_fielddesc x_drag; /* convenience event, not part of the svg spec */
+    t_svg_attr x_opacity;
     t_svg_attr x_pointerevents;
     t_svg_attr x_strokelinecap;
     t_svg_attr x_strokelinejoin;
@@ -1541,6 +1542,10 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
             canvas_tag(glist_getcanvas(c)), tag, "fill-rule", (int)fielddesc_getcoord(
                 &x->x_fillrule.a_attr, template, data, 1) ?
                     "evenodd" : "nonzero");
+    else if (s == gensym("opacity"))
+        gui_vmess("gui_draw_configure", "sssf",
+            canvas_tag(glist_getcanvas(c)), tag, "opacity",
+                fielddesc_getcoord(&x->x_opacity.a_attr, template, data, 1));
     else if (s == gensym("pointer-events"))
         *predraw_bbox = 1;
     else if (s == gensym("stroke-linecap"))
@@ -1750,8 +1755,13 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
     }
     else if (s == gensym("points"))
     {
-        sys_vgui(".x%lx.c coords .draw%lx.%lx \\\n",
-            glist_getcanvas(c), parent, data);
+        char tagbuf[MAXPDSTRING];
+        sprintf(tagbuf, "draw%lx.%lx", parent, data);
+        //sys_vgui(".x%lx.c coords .draw%lx.%lx \\\n",
+        //    glist_getcanvas(c), parent, data);
+        gui_start_vmess("gui_draw_coords", "sss",
+            canvas_tag(glist_getcanvas(c)), tagbuf, x->x_type->s_name);
+        gui_start_array();
         /* let's turn off bbox caching so we can recalculate the bbox */
         if (x->x_pathrect_cache != -1)
            x->x_pathrect_cache = 0;
@@ -1768,11 +1778,17 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
             {
                 w = xval + (fielddesc_getcoord(f+2, template, data, 1));
                 h = yval + (fielddesc_getcoord(f+3, template, data, 1));
-                sys_vgui("%g %g %g %g\\\n", xval, yval, w, h);
+                gui_f(xval);
+                gui_f(yval);
+                gui_f(w);
+                gui_f(h);
+                //sys_vgui("%g %g %g %g\\\n", xval, yval, w, h);
             }
             else
             {
-                sys_vgui("%g %g\\\n", xval, yval);
+                //sys_vgui("%g %g\\\n", xval, yval);
+                gui_f(xval);
+                gui_f(yval);
             }
         }
         else
@@ -1780,11 +1796,14 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
             int n = (x->x_type == gensym("circle")) ? 2 : x->x_nargs;
             for (i = 0; i < n; i++)
             {
-                sys_vgui("%g\\\n", fielddesc_getcoord(
-                    f+i, template, data, 1));
+                //sys_vgui("%g\\\n", fielddesc_getcoord(
+                //    f+i, template, data, 1));
+                gui_f(fielddesc_getcoord(f+i, template, data, 1));
             }
         }
-        sys_gui("\n");
+        //sys_gui("\n");
+        gui_end_array();
+        gui_end_vmess();
     }
 }
 
@@ -1899,6 +1918,43 @@ void svg_update(t_svg *x, t_symbol *s)
         svg_doupdate(x, c, s);
 }
 
+t_svg_attr *svg_getattr(t_svg *x, t_symbol *s)
+{
+    if (s == gensym("fill-opacity")) return &x->x_fillopacity;
+    else if (s == gensym("fill-rule")) return &x->x_fillrule;
+    else if (s == gensym("opacity")) return &x->x_opacity;
+    else if (s == gensym("pointer-events")) return &x->x_pointerevents;
+    else if (s == gensym("rx")) return &x->x_rx;
+    else if (s == gensym("ry")) return &x->x_ry;
+    else if (s == gensym("stroke-opacity")) return &x->x_strokeopacity;
+    else if (s == gensym("stroke-dashoffset")) return &x->x_strokedashoffset;
+    else if (s == gensym("stroke-linecap")) return &x->x_strokelinecap;
+    else if (s == gensym("stroke-linejoin")) return &x->x_strokelinejoin;
+    else if (s == gensym("stroke-miterlimit")) return &x->x_strokemiterlimit;
+    else if (s == gensym("stroke-width")) return &x->x_strokewidth;
+    else if (s == gensym("vis")) return &x->x_vis;
+    else return 0;
+}
+
+void svg_setattr(t_svg *x, t_symbol *s, t_int argc, t_atom *argv)
+{
+    t_svg_attr *attr = svg_getattr(x, s);
+    if (!attr)
+    {
+        pd_error(x, "draw: can't find attribute %s", s->s_name);
+        return;
+    }
+    if (argc < 1)
+        attr->a_flag = 0;
+    else if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
+    {
+        fielddesc_setfloatarg(&attr->a_attr, argc, argv);
+        attr->a_flag = 1;
+        svg_update(x, s);
+    }
+}
+
+
 void svg_vis(t_svg *x, t_symbol *s, int argc, t_atom *argv)
 {
     if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
@@ -1985,38 +2041,6 @@ void svg_data(t_svg *x, t_symbol *s, int argc, t_atom *argv)
     svg_update(x, s);
 }
 
-void svg_fillopacity(t_svg *x, t_symbol *s, t_int argc, t_atom *argv)
-{
-    if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
-    {
-        /* the svg_attr stuff should probably be set with a function */
-        fielddesc_setfloatarg(&x->x_fillopacity.a_attr, argc, argv);
-        x->x_fillopacity.a_flag = 1;
-        svg_update(x, s);
-    }
-}
-
-void svg_strokeopacity(t_svg *x, t_symbol *s,
-    t_int argc, t_atom *argv)
-{
-    if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
-    {
-        fielddesc_setfloatarg(&x->x_strokeopacity.a_attr, argc, argv);
-        x->x_strokeopacity.a_flag = 1;
-        svg_update(x, s);
-    }
-}
-
-void svg_strokedashoffset(t_svg *x, t_symbol *s, int argc, t_atom *argv)
-{
-    if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
-    {
-        fielddesc_setfloatarg(&x->x_strokedashoffset.a_attr, argc, argv);
-        x->x_strokedashoffset.a_flag = 1;
-        svg_update(x, s);
-    }
-}
-
 void svg_strokedasharray(t_svg *x, t_symbol *s,
     int argc, t_atom *argv)
 {
@@ -2067,7 +2091,7 @@ void svg_fill(t_svg *x, t_symbol *s, t_int argc, t_atom *argv)
         }
         if (argc && (argv->a_type == A_FLOAT || argv->a_type == A_SYMBOL))
         {
-            svg_fillopacity(x, gensym("fill-opacity"), argc, argv);
+            svg_setattr(x, gensym("fill-opacity"), argc, argv);
         }
     }
     svg_update(x, s);
@@ -2109,7 +2133,7 @@ void svg_stroke(t_svg *x, t_symbol *s, t_int argc, t_atom *argv)
         }
         if (argc && (argv->a_type == A_FLOAT || argv->a_type == A_SYMBOL))
         {
-            svg_strokeopacity(x, s, argc, argv);
+            svg_setattr(x, gensym("stroke-opacity"), argc, argv);
             return;
         }
     }
@@ -2152,70 +2176,6 @@ void svg_event(t_svg *x, t_symbol *s, int argc, t_atom *argv)
     }
 }
 
-void svg_pointerevents(t_svg *x, t_symbol *s, t_int argc, t_atom *argv)
-{
-    if (argc < 1)
-        x->x_pointerevents.a_flag = 0;
-    else if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
-    {
-        fielddesc_setfloatarg(&x->x_pointerevents.a_attr, argc, argv);
-        x->x_pointerevents.a_flag = 1;
-        svg_update(x, s);
-    }
-}
-
-void svg_strokelinecap(t_svg *x, t_symbol *s, t_int argc, t_atom *argv)
-{
-    if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
-    {
-        fielddesc_setfloatarg(&x->x_strokelinecap.a_attr, argc, argv);
-        x->x_strokelinecap.a_flag = 1;
-        svg_update(x, s);
-    }
-}
-
-void svg_strokelinejoin(t_svg *x, t_symbol *s,
-    t_int argc, t_atom *argv)
-{
-    if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
-    {
-        fielddesc_setfloatarg(&x->x_strokelinejoin.a_attr, argc, argv);
-        x->x_strokelinejoin.a_flag = 1;
-        svg_update(x, s);
-    }
-}
-
-void svg_strokemiterlimit(t_svg *x, t_symbol *s,
-    t_int argc, t_atom *argv)
-{
-    if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
-    {
-        fielddesc_setfloatarg(&x->x_strokemiterlimit.a_attr, argc, argv);
-        x->x_strokemiterlimit.a_flag = 1;
-        svg_update(x, s);
-    }
-}
-
-void svg_strokewidth(t_svg *x, t_symbol *s, t_int argc, t_atom *argv)
-{
-    if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
-    {
-        fielddesc_setfloatarg(&x->x_strokewidth.a_attr, argc, argv);
-        x->x_strokewidth.a_flag = 1;
-        svg_update(x, s);
-    }
-}
-
-void svg_fillrule(t_svg *x, t_symbol *s, t_int argc, t_atom *argv)
-{
-    if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
-    {
-        fielddesc_setfloatarg(&x->x_fillrule.a_attr, argc, argv);
-        x->x_fillrule.a_flag = 1;
-        svg_update(x, s);
-    }
-}
-
 void svg_r(t_svg *x, t_symbol *s, int argc, t_atom *argv)
 {
     if (x->x_type != gensym("circle"))
@@ -2228,58 +2188,6 @@ void svg_r(t_svg *x, t_symbol *s, int argc, t_atom *argv)
         t_fielddesc *fd = x->x_vec;
         fielddesc_setfloatarg(fd+2, argc, argv);
         svg_update(x, s);
-    }
-}
-
-void svg_rx(t_svg *x, t_symbol *s, int argc, t_atom *argv)
-{
-    t_symbol *type = x->x_type;
-    if (type == gensym("rect") || type == gensym("ellipse"))
-    {
-        if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
-        {
-            if (type == gensym("rect"))
-            {
-                fielddesc_setfloatarg(&x->x_rx.a_attr, argc, argv);
-                x->x_rx.a_flag = 1;
-            }
-            else
-            {
-                fielddesc_setfloatarg(x->x_vec+2, argc, argv);
-            }
-            svg_update(x, s);
-        }
-    }
-    else
-    {
-        pd_error(x, "draw: %s: no method for 'rx'", x->x_type->s_name);
-        return;
-    }
-}
-
-void svg_ry(t_svg *x, t_symbol *s, int argc, t_atom *argv)
-{
-    t_symbol *type = x->x_type;
-    if (type == gensym("rect") || type == gensym("ellipse"))
-    {
-        if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
-        {
-            if (type == gensym("rect"))
-            {
-                fielddesc_setfloatarg(&x->x_ry.a_attr, argc, argv);
-                x->x_rx.a_flag = 1;
-            }
-            else
-            {
-                fielddesc_setfloatarg(x->x_vec+3, argc, argv);
-            }
-            svg_update(x, s);
-        }
-    }
-    else
-    {
-        pd_error(x, "draw: %s: no method for 'ry'", x->x_type->s_name);
-        return;
     }
 }
 
@@ -4312,43 +4220,45 @@ static void draw_setup(void)
         gensym("drag"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_fill,
         gensym("fill"), A_GIMME, 0);
-    class_addmethod(svg_class, (t_method)svg_fillopacity,
+    class_addmethod(svg_class, (t_method)svg_setattr,
         gensym("fill-opacity"), A_GIMME, 0);
-    class_addmethod(svg_class, (t_method)svg_fillrule,
+    class_addmethod(svg_class, (t_method)svg_setattr,
         gensym("fill-rule"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_rectpoints,
         gensym("height"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_event,
         gensym("mousedown"), A_GIMME, 0);
-    class_addmethod(svg_class, (t_method)svg_pointerevents,
+    class_addmethod(svg_class, (t_method)svg_setattr,
+        gensym("opacity"), A_GIMME, 0);
+    class_addmethod(svg_class, (t_method)svg_setattr,
         gensym("pointer-events"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_data,
         gensym("points"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_r,
         gensym("r"), A_GIMME, 0);
-    class_addmethod(svg_class, (t_method)svg_rx,
+    class_addmethod(svg_class, (t_method)svg_setattr,
         gensym("rx"), A_GIMME, 0);
-    class_addmethod(svg_class, (t_method)svg_ry,
+    class_addmethod(svg_class, (t_method)svg_setattr,
         gensym("ry"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_stroke,
         gensym("stroke"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_strokedasharray,
         gensym("stroke-dasharray"), A_GIMME, 0);
-    class_addmethod(svg_class, (t_method)svg_strokeopacity,
+    class_addmethod(svg_class, (t_method)svg_setattr,
         gensym("stroke-opacity"), A_GIMME, 0);
-    class_addmethod(svg_class, (t_method)svg_strokedashoffset,
+    class_addmethod(svg_class, (t_method)svg_setattr,
         gensym("stroke-dashoffset"), A_GIMME, 0);
-    class_addmethod(svg_class, (t_method)svg_strokelinecap,
+    class_addmethod(svg_class, (t_method)svg_setattr,
         gensym("stroke-linecap"), A_GIMME, 0);
-    class_addmethod(svg_class, (t_method)svg_strokelinejoin,
+    class_addmethod(svg_class, (t_method)svg_setattr,
         gensym("stroke-linejoin"), A_GIMME, 0);
-    class_addmethod(svg_class, (t_method)svg_strokemiterlimit,
+    class_addmethod(svg_class, (t_method)svg_setattr,
         gensym("stroke-miterlimit"), A_GIMME, 0);
-    class_addmethod(svg_class, (t_method)svg_strokewidth,
+    class_addmethod(svg_class, (t_method)svg_setattr,
         gensym("stroke-width"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_transform,
         gensym("transform"), A_GIMME, 0);
-    class_addmethod(svg_class, (t_method)svg_vis,
+    class_addmethod(svg_class, (t_method)svg_setattr,
         gensym("vis"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_rectpoints,
         gensym("width"), A_GIMME, 0);
