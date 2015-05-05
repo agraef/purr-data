@@ -1831,10 +1831,13 @@ function create_item(cid,type,args) {
 function configure_item(item, attributes) {
     // draw_vis from g_template sends attributes as a ['attr1',val1, 'attr2', val2, etc.] array,
     // so we check for that here
+    var value;
     if (Array.isArray(attributes)) {
         // we should check to make sure length is even here...
         for (var i = 0; i < attributes.length; i+=2) {
-            item.setAttributeNS(null, attributes[i], attributes[i+1]); 
+            value = attributes[i+1];
+            item.setAttributeNS(null, attributes[i],
+                Array.isArray(value) ? value.join(" "): value); 
         }
     } else {
         for (var attr in attributes) {
@@ -2835,15 +2838,15 @@ function gui_scalar_configure_gobj(cid, tag, isselected, t1, t2, t3, t4, t5, t6)
     configure_item(gobj, { transform: transform_string });
 }
 
-function gui_draw_vis(cid, type, coords, attr_array, tag_array) {
+function gui_draw_vis(cid, type, attr_array, tag_array) {
     gui_post("inside gui_draw_vis");
     for(var i = 0; i < arguments.length; i++) {
         gui_post("arg1 is " + arguments[i]);
     } 
-    gui_post("coords is " + coords);
-    gui_post("coords is array: " + Array.isArray(coords));
+//    gui_post("coords is " + coords);
+//    gui_post("coords is array: " + Array.isArray(coords));
     gui_post("arguments[2] is " + arguments[2]);
-    gui_post("type of coords is " + typeof coords);
+//    gui_post("type of coords is " + typeof coords);
     gui_post("type of arguments[2] is " + typeof arguments[2]);
     gui_post("arguments[2] is array: " + Array.isArray(arguments[2]));
     var g = get_item(cid, tag_array[0]);
@@ -2853,6 +2856,9 @@ function gui_draw_vis(cid, type, coords, attr_array, tag_array) {
         gui_post("our parent doe not exists.");
     }
     //var ca = coords;
+
+
+/*
     switch(type) {
         case 'rect':
             attr_array.push('x', coords[0]);
@@ -2860,9 +2866,6 @@ function gui_draw_vis(cid, type, coords, attr_array, tag_array) {
             attr_array.push('width', coords[2]);
             attr_array.push('height',coords[3]);
             break;
-        // we originally treated circle as an ellipse because we were manually changing the
-        // aspect ratio using coordinates (with glist_xtopixels/ytopixels). That can probably
-        // be changed now that we're applying that in the parent group transform...
         case 'circle':
             type = 'ellipse';
         case 'ellipse':
@@ -2885,6 +2888,7 @@ function gui_draw_vis(cid, type, coords, attr_array, tag_array) {
             attr_array.push('d',coords.join(" ")); 
             break;
     }
+*/
     attr_array.push('id', tag_array[1]);
     gui_post("create is " + tag_array[1]);
     var item = create_item(cid, type, attr_array);
@@ -2903,6 +2907,26 @@ function gui_draw_erase_item(cid, tag) {
         item.parentNode.removeChild(item);
     } else {
         gui_post("uh oh... gui_draw_erase_item couldn't find the item...");
+    }
+}
+
+function gui_draw_coords(cid, tag, shape, points) {
+    var elem = get_item(cid, tag);
+    switch (shape) {
+        case "rect":
+            configure_item(elem, {
+                x: points[0],
+                y: points[1],
+                width: points[2],
+                height: points[3]
+            });
+            break;
+        case "circle":
+            configure_item(elem, {
+                cx: points[0],
+                cy: points[1]
+            });
+            break;
     }
 }
 

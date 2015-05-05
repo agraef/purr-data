@@ -1185,18 +1185,10 @@ static int path_ncmds(int argc, t_atom *argv)
     return j;
 }
 
-void svg_initvec(t_svg *x)
-{
-    t_fielddesc *fd = x->x_vec;
-    int i;
-    for (i = 0; i < 4; i++)
-        fielddesc_setfloat_const(fd+i, 0);
-}
-
 void *svg_new(t_pd *parent, t_symbol *s, int argc, t_atom *argv)
 {
     t_fielddesc *fd;
-    int nxy, i, flags = 0;
+    int i, flags = 0;
     t_svg *x = (t_svg *)pd_new(svg_class);
     x->x_flags = flags;
     x->x_type = s;
@@ -1212,49 +1204,18 @@ void *svg_new(t_pd *parent, t_symbol *s, int argc, t_atom *argv)
         x->x_pathcmds = (char *)t_getbytes(ncmds * sizeof(char));
         x->x_nargs_per_cmd = (int *)t_getbytes(ncmds * sizeof(int));
         for (i = 0; i < ncmds; i++) x->x_nargs_per_cmd[i] = 0;
-        nxy = x->x_nargs = argc - ncmds;
+        x->x_nargs = argc - ncmds;
     }
     else if (x->x_type == gensym("group"))
     {
-        nxy = 0;
         x->x_nargs = 0;
         x->x_vec = 0;
     }
-    else /* all other shapes */
+    else
     {
-        nxy =  (argc + (argc & 1));
-        /* give basic shapes at least 4 points */
-        if (x->x_type == gensym("rect") ||
-            x->x_type == gensym("line") ||
-            x->x_type == gensym("circle") ||
-            x->x_type == gensym("ellipse"))
-        {
-            nxy = 4;
-            if (argc > 4) argc = 4;
-        }
-        if (x->x_type == gensym("polygon") ||
-            x->x_type == gensym("polyline"))
-        {
-            if (argc < 4)
-            {
-                argc = 4;
-                nxy = 4;
-            }
-        }
-        x->x_nargs = nxy;
+        x->x_nargs = argc;
     }
-    x->x_vec = (t_fielddesc *)t_getbytes(nxy * sizeof(t_fielddesc));
-    if (x->x_type == gensym("rect") ||
-        x->x_type == gensym("line") ||
-        x->x_type == gensym("circle") ||
-        x->x_type == gensym("ellipse") ||
-        x->x_type == gensym("polygon") ||
-        x->x_type == gensym("polyline"))
-    {
-        /* set x_vec to all zeros in case the user didn't provide
-           enough arguments */
-        svg_initvec(x);
-    }
+    x->x_vec = (t_fielddesc *)t_getbytes(x->x_nargs * sizeof(t_fielddesc));
     if (argc && x->x_type == gensym("path"))
     {
         if (argv->a_type != A_SYMBOL ||
@@ -1267,7 +1228,6 @@ void *svg_new(t_pd *parent, t_symbol *s, int argc, t_atom *argv)
             return 0;
         }
     }
-
     int cmdn = -1; /* hack */
     for (i = 0, fd = x->x_vec; i < argc; i++, argv++)
     {
@@ -1291,8 +1251,6 @@ void *svg_new(t_pd *parent, t_symbol *s, int argc, t_atom *argv)
             }
         }
     }
-    if (argc & 1 && x->x_type != gensym("path"))
-        fielddesc_setfloat_const(fd, 0);
     fielddesc_setfloat_const(&x->x_bbox, 1);
     fielddesc_setfloat_const(&x->x_drag, 0);
     x->x_filltype = 0;
@@ -1756,7 +1714,8 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
     else if (s == gensym("points"))
     {
         char tagbuf[MAXPDSTRING];
-        sprintf(tagbuf, "draw%lx.%lx", parent, data);
+        sprintf(tagbuf, "draw%lx.%lx",
+            (long unsigned int)parent, (long unsigned int)data);
         //sys_vgui(".x%lx.c coords .draw%lx.%lx \\\n",
         //    glist_getcanvas(c), parent, data);
         gui_start_vmess("gui_draw_coords", "sss",
@@ -3460,6 +3419,40 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
             &x->x_fillrule.a_attr, template, data, 1) ?
                 "evenodd" : "nonzero");
     }
+    if (x->x_type == gensym("path"))
+    {
+        int i;
+        /* let's turn off bbox caching so we can recalculate
+           the bbox */
+        if (x->x_pathrect_cache != -1)
+            x->x_pathrect_cache = 0;
+        t_fielddesc *f;
+        char *cmd, cmdbuf[2];
+        int totalpoints = 0; /* running tally */
+
+        gui_s("d");
+        gui_start_array();
+        /* path parser: no error checking yet */
+        for (i = 0, cmd = x->x_pathcmds; i < x->x_npathcmds; i++, cmd++)
+        {
+            int j;
+            int cargs = x->x_nargs_per_cmd[i];
+            f = (x->x_vec)+totalpoints;
+            //sys_vgui("%c\\\n", *(cmd));
+            //sys_vgui("%c ", *(cmd));
+            sprintf(cmdbuf, "%c", *(cmd));
+            gui_s(cmdbuf);
+            for (j = 0; j < x->x_nargs_per_cmd[i]; j++)
+                //sys_vgui("%g\\\n", fielddesc_getcoord(
+                //    f+j, template, data, 1));
+                //sys_vgui("%g ", fielddesc_getcoord(f+j, template, data, 1));
+                gui_f(fielddesc_getcoord(f+j, template, data, 0));
+            totalpoints += x->x_nargs_per_cmd[i];
+        }
+        //sys_gui("}\\\n");
+        //sys_gui("\",");
+        gui_end_array();
+    }
     if (x->x_stroketype)
     {
         t_fielddesc *fd = x->x_stroke;
@@ -3490,6 +3483,95 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
             gui_s("cx");
             gui_f(fielddesc_getfloat(&x->x_vec[0], template, data, 1));
         }
+        if (x->x_nargs > 1)
+        {
+            gui_s("cy");
+            gui_f(fielddesc_getfloat(&x->x_vec[1], template, data, 1));
+        }
+        if (x->x_nargs > 2)
+        {
+            gui_s("r");
+            gui_f(fielddesc_getfloat(&x->x_vec[2], template, data, 1));
+        }
+    }
+    if (x->x_type == gensym("ellipse"))
+    {
+        if (x->x_nargs > 0)
+        {
+            gui_s("cx");
+            gui_f(fielddesc_getfloat(&x->x_vec[0], template, data, 1));
+        }
+        if (x->x_nargs > 1)
+        {
+            gui_s("cy");
+            gui_f(fielddesc_getfloat(&x->x_vec[1], template, data, 1));
+        }
+        if (x->x_nargs > 2)
+        {
+            gui_s("rx");
+            gui_f(fielddesc_getfloat(&x->x_vec[2], template, data, 1));
+        }
+        if (x->x_nargs > 3)
+        {
+            gui_s("ry");
+            gui_f(fielddesc_getfloat(&x->x_vec[3], template, data, 1));
+        }
+    }
+    if (x->x_type == gensym("rect"))
+    {
+        if (x->x_nargs > 0)
+        {
+            gui_s("x");
+            gui_f(fielddesc_getfloat(&x->x_vec[0], template, data, 1));
+        }
+        if (x->x_nargs > 1)
+        {
+            gui_s("y");
+            gui_f(fielddesc_getfloat(&x->x_vec[1], template, data, 1));
+        }
+        if (x->x_nargs > 2)
+        {
+            gui_s("width");
+            gui_f(fielddesc_getfloat(&x->x_vec[2], template, data, 1));
+        }
+        if (x->x_nargs > 3)
+        {
+            gui_s("height");
+            gui_f(fielddesc_getfloat(&x->x_vec[3], template, data, 1));
+        }
+    }
+    if (x->x_type == gensym("line"))
+    {
+        if (x->x_nargs > 0)
+        {
+            gui_s("x1");
+            gui_f(fielddesc_getfloat(&x->x_vec[0], template, data, 1));
+        }
+        if (x->x_nargs > 1)
+        {
+            gui_s("y1");
+            gui_f(fielddesc_getfloat(&x->x_vec[1], template, data, 1));
+        }
+        if (x->x_nargs > 2)
+        {
+            gui_s("x2");
+            gui_f(fielddesc_getfloat(&x->x_vec[2], template, data, 1));
+        }
+        if (x->x_nargs > 3)
+        {
+            gui_s("y2");
+            gui_f(fielddesc_getfloat(&x->x_vec[3], template, data, 1));
+        }
+    }
+    if (x->x_type == gensym("polyline") ||
+        x->x_type == gensym("polygon"))
+    {
+        int i, n = x->x_nargs;
+        gui_s("points");
+        gui_start_array();
+        for (i = 0; i < x->x_nargs; i++)
+            gui_f(fielddesc_getcoord(&x->x_vec[i], template, data, 1));
+        gui_end_array();
     }
     if (x->x_strokeopacity.a_flag)
     {
@@ -3615,221 +3697,88 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         return; */
     if (vis)
     {
-        if (n > 2)
+        /* Hack to figure out whether we're inside an
+           array. See curve_vis comment for more info
+           and feel free to revise this to make it a
+           more sane approach.
+
+           [plot] doesn't work completely with [group]s yet. But
+           as far as I can tell, all the old ds tutorials and
+           patches work and look fine.
+        */
+
+        int in_array = (sc->sc_vec == data) ? 0 : 1;
+        //int flags = sa->x_flags;
+        t_float pix[500];
+        if (n > 500)
+            n = 500;
+            /* calculate the pixel values before we start printing
+            out the TK message so that "error" printout won't be
+            interspersed with it.  Only show up to 100 points so we don't
+            have to allocate memory here. */
+        if (sa->x_type != gensym("path"))
         {
-            /* Hack to figure out whether we're inside an
-               array. See curve_vis comment for more info
-               and feel free to revise this to make it a
-               more sane approach.
-
-               [plot] doesn't work completely with [group]s yet. But
-               as far as I can tell, all the old ds tutorials and
-               patches work and look fine.
-            */
-
-            int in_array = (sc->sc_vec == data) ? 0 : 1;
-            //int flags = sa->x_flags;
-            t_float pix[500];
-            if (n > 500)
-                n = 500;
-                /* calculate the pixel values before we start printing
-                out the TK message so that "error" printout won't be
-                interspersed with it.  Only show up to 100 points so we don't
-                have to allocate memory here. */
-            if (sa->x_type != gensym("path"))
-            {
-                int nxy = n >> 1;
-                for (i = 0, f = sa->x_vec; i < nxy; i++, f += 2)
-                {
-                    pix[2*i] = fielddesc_getcoord(f, template, data, 1);
-                    pix[2*i+1] = fielddesc_getcoord(f+1, template, data, 1);
-                    if (sa->x_type == gensym("circle")) break;
-                }
-            }
-            /* begin the gui drawing command */
-            if (sa->x_type == gensym("rect"))
-                sys_vgui(".x%lx.c create prect\\\n", glist_getcanvas(glist));
-            else if (sa->x_type == gensym("ellipse"))
-                sys_vgui(".x%lx.c create ellipse\\\n", glist_getcanvas(glist));
-            else if (sa->x_type == gensym("line"))
-                sys_vgui(".x%lx.c create pline\\\n", glist_getcanvas(glist));
-            else if (sa->x_type == gensym("polyline"))
-                sys_vgui(".x%lx.c create polyline\\\n", glist_getcanvas(glist));
-            else if (sa->x_type == gensym("polygon"))
-                sys_vgui(".x%lx.c create ppolygon\\\n", glist_getcanvas(glist));
-            else if (sa->x_type == gensym("path"))
-                sys_vgui(".x%lx.c create path {\\\n", glist_getcanvas(glist));
-            else if (sa->x_type == gensym("circle"))
-                sys_vgui(".x%lx.c create ellipse\\\n", glist_getcanvas(glist));
-
-            /* cheap hack... there should instead be a gui_vmess style function
-               for incrementally building a message to the GUI (possibly with atom 
-               arrays) */
-            //sys_vgui("nn gui_draw_vis \".x%lx\",\"%s\",\"", glist_getcanvas(glist),
-            //    sa->x_type->s_name);
-            gui_start_vmess("gui_draw_vis", "ss", canvas_tag(glist_getcanvas(glist)),
-                sa->x_type->s_name);
-
-            /* next send the gui drawing arguments: commands and points
-               for paths, points for everything else */
-            if (sa->x_type == gensym("path"))
-            {
-                /* let's turn off bbox caching so we can recalculate
-                   the bbox */
-                if (sa->x_pathrect_cache != -1)
-                    sa->x_pathrect_cache = 0;
-                char *cmd, cmdbuf[2];
-                int totalpoints = 0; /* running tally */
-                gui_start_array();
-                /* path parser: no error checking yet */
-                for (i = 0, cmd = sa->x_pathcmds; i < sa->x_npathcmds; i++, cmd++)
-                {
-                    int j;
-                    int cargs = sa->x_nargs_per_cmd[i];
-                    f = (sa->x_vec)+totalpoints;
-                    //sys_vgui("%c\\\n", *(cmd));
-                    //sys_vgui("%c ", *(cmd));
-                    sprintf(cmdbuf, "%c", *(cmd));
-                    gui_s(cmdbuf);
-                    for (j = 0; j < sa->x_nargs_per_cmd[i]; j++)
-                        //sys_vgui("%g\\\n", fielddesc_getcoord(
-                        //    f+j, template, data, 1));
-                        //sys_vgui("%g ", fielddesc_getcoord(f+j, template, data, 1));
-                        gui_f(fielddesc_getcoord(f+j, template, data, 0));
-                    totalpoints += sa->x_nargs_per_cmd[i];
-                }
-                //sys_gui("}\\\n");
-                //sys_gui("\",");
-                gui_end_array();
-            }
-            else /* all other shapes */
-            {
-                gui_start_array();
-                int nxy = n >> 1;
-                for (i = 0; i < nxy; i++)
-                {
-                    //sys_vgui("%g %g\\\n", pix[2*i], pix[2*i+1]);
-                    //sys_vgui("%g %g ", pix[2*i], pix[2*i+1]);
-                    gui_f(pix[2*i]);
-                    gui_f(pix[2*i+1]);
-                    if ((sa->x_type == gensym("ellipse") ||
-                         sa->x_type == gensym("circle")) && n > 1)
-                    {
-                        //sys_vgui("-rx %d -ry %d\\\n",
-                        //    (int)(fielddesc_getcoord(sa->x_vec+2,
-                        //        template, data, 1)),
-                        //    (int)(fielddesc_getcoord(sa->x_vec +
-                        //        (sa->x_type == gensym("ellipse")?
-                        //         3 : 2),
-                        //        template, data, 1)));
-                        // These should be floats...
-                        //sys_vgui("%d %d ",
-                        //    (int)(fielddesc_getcoord(sa->x_vec+2,
-                        //        template, data, 1)),
-                        //    (int)(fielddesc_getcoord(sa->x_vec +
-                        //        (sa->x_type == gensym("ellipse")?
-                        //         3 : 2),
-                        //        template, data, 1)));
-
-                        gui_f(fielddesc_getcoord(sa->x_vec+2,
-                                template, data, 0));
-                        gui_f(fielddesc_getcoord(sa->x_vec +
-                                (sa->x_type == gensym("ellipse")?
-                                 3 : 2),
-                                template, data, 1));
-                        break;
-                    }
-                    else if (sa->x_type == gensym("rect") && n > 1)
-                    {
-                        //sys_vgui("%g %g\\\n",
-                        //    fielddesc_getcoord(sa->x_vec,
-                        //        template, data, 1) +
-                        //        fielddesc_getcoord(sa->x_vec+2,
-                        //        template, data, 1),
-                        //    fielddesc_getcoord(sa->x_vec+1,
-                        //        template, data, 1) +
-                        //        fielddesc_getcoord(sa->x_vec+3,
-                        //        template, data, 1));
-
-                        //sys_vgui("%g %g ",
-                        //        fielddesc_getcoord(sa->x_vec+2,
-                        //        template, data, 1),
-                        //        fielddesc_getcoord(sa->x_vec+3,
-                        //        template, data, 1));
-
-                        gui_f(fielddesc_getcoord(sa->x_vec+2,
-                                template, data, 0));
-                        gui_f(fielddesc_getcoord(sa->x_vec+3,
-                                template, data, 0));
-                        break;
-                    }
-                    else if (sa->x_type == gensym("circle"))
-                    {
-                        //sys_vgui("-r %d\\\n",
-                        //    (t_int)fielddesc_getcoord(sa->x_vec+2,
-                        //        template, data, 1));
-                        //sys_vgui("%d ",
-                        //    (t_int)fielddesc_getcoord(sa->x_vec+2,
-                        //        template, data, 1));
-                        gui_i((t_int)fielddesc_getcoord(sa->x_vec+2,
-                            template, data, 1));
-                        break;
-                    }
-                }
-                //sys_gui("\",");
-                gui_end_array();
-            }
-
-            svg_togui(sa, template, data);
-
-
-            gui_start_array();
-            char parent_tagbuf[MAXPDSTRING];
-            if (in_array)
-            {
-                //sys_vgui(" -parent .scelem%lx.%lx \\\n", parentglist, data);
-                //sys_vgui("\"scelem%lx.%lx\",", parentglist, data);
-                sprintf(parent_tagbuf, "scelem%lx.%lx", (long unsigned int)parentglist,
-                    (long unsigned int)data);
-                gui_s(parent_tagbuf);
-            }
-            else
-            {
-                //sys_vgui(" -parent .dgroup%lx.%lx \\\n",
-                //sys_vgui("\"dgroup%lx.%lx\",",
-                //    x->x_canvas, data);
-                sprintf(parent_tagbuf, "dgroup%lx.%lx", (long unsigned int)x->x_canvas,
-                    (long unsigned int)data);
-                gui_s(parent_tagbuf);
-            }
-            /* tags - one for this scalar (not sure why the double glist thingy)
-              one for this specific draw item
-            */
-            //sys_vgui("-tags {.x%lx.x%lx.template%lx .draw%lx.%lx}\n",
-            //    glist_getcanvas(glist), glist, data, x, data);
-
-            // Let's try to get rid of Ico's tag
-            //sys_vgui("\"draw%lx.%lx\"", x, data);
-            char tagbuf[MAXPDSTRING];
-            sprintf(tagbuf, "draw%lx.%lx", (long unsigned int)x,
-                (long unsigned int)data);
-            gui_s(tagbuf);
-            if (!glist_istoplevel(glist))
-            {
-                t_canvas *gl = glist_getcanvas(glist);
-                //glist_noselect(gl);
-                //glist_select(gl, (t_gobj *)glist);
-                char objtag[64];
-                sprintf(objtag, ".x%lx.x%lx.template%lx",
-                    (t_int)gl, (t_int)glist, (t_int)data);
-                canvas_restore_original_position(gl, (t_gobj *)glist,
-                    objtag, -1);
-            }
-            //sys_gui(";\n");
-            gui_end_array();
-            gui_end_vmess();
+            //int nxy = n >> 1;
+            for (i = 0, f = sa->x_vec; i < n; i++, f++)
+                pix[i] = fielddesc_getcoord(f, template, data, 1);
         }
-        else post("warning: draws need at least two points to be graphed");
+        /* begin the gui drawing command */
+
+        //sys_vgui("nn gui_draw_vis \".x%lx\",\"%s\",\"", glist_getcanvas(glist),
+        //    sa->x_type->s_name);
+        gui_start_vmess("gui_draw_vis", "ss", canvas_tag(glist_getcanvas(glist)),
+            sa->x_type->s_name);
+
+        /* next send the gui drawing arguments: commands and points
+           for paths, points for everything else */
+
+        svg_togui(sa, template, data);
+
+        gui_start_array();
+        char parent_tagbuf[MAXPDSTRING];
+        if (in_array)
+        {
+            //sys_vgui(" -parent .scelem%lx.%lx \\\n", parentglist, data);
+            //sys_vgui("\"scelem%lx.%lx\",", parentglist, data);
+            sprintf(parent_tagbuf, "scelem%lx.%lx", (long unsigned int)parentglist,
+                (long unsigned int)data);
+            gui_s(parent_tagbuf);
+        }
+        else
+        {
+            //sys_vgui(" -parent .dgroup%lx.%lx \\\n",
+            //sys_vgui("\"dgroup%lx.%lx\",",
+            //    x->x_canvas, data);
+            sprintf(parent_tagbuf, "dgroup%lx.%lx", (long unsigned int)x->x_canvas,
+                (long unsigned int)data);
+            gui_s(parent_tagbuf);
+        }
+        /* tags - one for this scalar (not sure why the double glist thingy)
+          one for this specific draw item
+        */
+        //sys_vgui("-tags {.x%lx.x%lx.template%lx .draw%lx.%lx}\n",
+        //    glist_getcanvas(glist), glist, data, x, data);
+
+        // Let's try to get rid of Ico's tag
+        //sys_vgui("\"draw%lx.%lx\"", x, data);
+        char tagbuf[MAXPDSTRING];
+        sprintf(tagbuf, "draw%lx.%lx", (long unsigned int)x,
+            (long unsigned int)data);
+        gui_s(tagbuf);
+        if (!glist_istoplevel(glist))
+        {
+            t_canvas *gl = glist_getcanvas(glist);
+            //glist_noselect(gl);
+            //glist_select(gl, (t_gobj *)glist);
+            char objtag[64];
+            sprintf(objtag, ".x%lx.x%lx.template%lx",
+                (t_int)gl, (t_int)glist, (t_int)data);
+            canvas_restore_original_position(gl, (t_gobj *)glist,
+                objtag, -1);
+        }
+        //sys_gui(";\n");
+        gui_end_array();
+        gui_end_vmess();
     }
     else
     {
