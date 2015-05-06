@@ -1598,18 +1598,18 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
                 &x->x_strokewidth.a_attr, template, data, 1));
         *predraw_bbox = 1;
     }
-    else if (s == gensym("rx") || s == gensym("r"))
+    else if (s == gensym("rx") || s == gensym("r") || s == gensym("x2"))
     {
         //sys_vgui(".x%lx.c itemconfigure %s -rx %g\n",
         //    glist_getcanvas(c), tag, fielddesc_getcoord(
         //    x->x_vec+2, template, data, 1));
         gui_vmess("gui_draw_configure", "sssf",
             canvas_tag(glist_getcanvas(c)), tag,
-                s == gensym("r") ? "r" : "rx", fielddesc_getcoord(
+                s->s_name, fielddesc_getcoord(
                     &x->x_rx.a_attr, template, data, 1));
         *predraw_bbox = 1;
     }
-    else if (s == gensym("ry"))
+    else if (s == gensym("ry") || s == gensym("y2"))
     {
         //sys_vgui(".x%lx.c itemconfigure %s -ry %g\n",
         //    glist_getcanvas(c), tag, fielddesc_getcoord(
@@ -1666,26 +1666,26 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
             &x->x_width.a_attr, template, data, 1));
         *predraw_bbox = 1;
     }
-    else if (s == gensym("x") || s == gensym("cx"))
+    else if (s == gensym("x") || s == gensym("cx") || s == gensym("x1"))
     {
         //sys_vgui(".x%lx.c itemconfigure %s -state %s\n",
         //    glist_getcanvas(c), tag, (int)fielddesc_getcoord(
         //    &x->x_vis.a_attr, template, data, 1) ? "normal" : "hidden");
         gui_vmess("gui_draw_configure", "sssf",
             canvas_tag(glist_getcanvas(c)), tag,
-                s == gensym("x") ? "x" : "cx", fielddesc_getcoord(
+                s->s_name, fielddesc_getcoord(
                     &x->x_x.a_attr, template, data, 1));
         *predraw_bbox = 1;
     }
 
-    else if (s == gensym("y") || s == gensym("cy"))
+    else if (s == gensym("y") || s == gensym("cy") || s == gensym("y1"))
     {
         //sys_vgui(".x%lx.c itemconfigure %s -state %s\n",
         //    glist_getcanvas(c), tag, (int)fielddesc_getcoord(
         //    &x->x_vis.a_attr, template, data, 1) ? "normal" : "hidden");
         gui_vmess("gui_draw_configure", "sssf",
             canvas_tag(glist_getcanvas(c)), tag,
-                s == gensym("y") ? "y" : "cy", fielddesc_getcoord(
+                s->s_name, fielddesc_getcoord(
                     &x->x_y.a_attr, template, data, 1));
         *predraw_bbox = 1;
     }
@@ -1942,8 +1942,10 @@ t_svg_attr *svg_getattr(t_svg *x, t_symbol *s)
     else if (s == gensym("height")) return &x->x_height;
     else if (s == gensym("opacity")) return &x->x_opacity;
     else if (s == gensym("pointer-events")) return &x->x_pointerevents;
-    else if (s == gensym("rx") || s == gensym("r")) return &x->x_rx;
-    else if (s == gensym("ry")) return &x->x_ry;
+    else if (s == gensym("rx") || s == gensym("r") || s == gensym("x2"))
+        return &x->x_rx;
+    else if (s == gensym("ry") || s == gensym("y2"))
+        return &x->x_ry;
     else if (s == gensym("stroke-opacity")) return &x->x_strokeopacity;
     else if (s == gensym("stroke-dashoffset")) return &x->x_strokedashoffset;
     else if (s == gensym("stroke-linecap")) return &x->x_strokelinecap;
@@ -1952,8 +1954,10 @@ t_svg_attr *svg_getattr(t_svg *x, t_symbol *s)
     else if (s == gensym("stroke-width")) return &x->x_strokewidth;
     else if (s == gensym("vis")) return &x->x_vis;
     else if (s == gensym("width")) return &x->x_width;
-    else if (s == gensym("x") || s == gensym("cx")) return &x->x_x;
-    else if (s == gensym("y") || s == gensym("cy")) return &x->x_y;
+    else if (s == gensym("x") || s == gensym("cx") || s == gensym("x1"))
+        return &x->x_x;
+    else if (s == gensym("y") || s == gensym("cy") || s == gensym("y1"))
+        return &x->x_y;
     return 0;
 }
 
@@ -3297,7 +3301,6 @@ static void draw_getrect(t_gobj *z, t_glist *glist,
             &x1, &y1, &x2, &y2);
     }
     else if (sa->x_type == gensym("polyline") ||
-             sa->x_type == gensym("line") ||
              sa->x_type == gensym("polygon"))
     {
         int nxy = n >> 1;
@@ -3334,21 +3337,32 @@ static void draw_getrect(t_gobj *z, t_glist *glist,
     }
     else if (sa->x_type == gensym("rect") ||
              sa->x_type == gensym("circle") ||
-             sa->x_type == gensym("ellipse"))
+             sa->x_type == gensym("ellipse") ||
+             sa->x_type == gensym("line"))
     {
         t_float m1, m2, m3, m4, m5, m6; /* matrix */
         t_float xx1, yy1, xx2, yy2;
         t_float tx1, ty1, tx2, ty2, t5, t6; /* transformed points */
-        if (sa->x_type == gensym("rect"))
+        if (sa->x_type == gensym("rect") || sa->x_type == gensym("line"))
         {
             xx1 = fielddesc_getcoord(&sa->x_x.a_attr, template, data, 0);
             yy1 = fielddesc_getcoord(&sa->x_y.a_attr, template, data, 0);
-            t_float rwidth = fielddesc_getcoord(&sa->x_width.a_attr,
-                template, data, 0);
-            t_float rheight = fielddesc_getcoord(&sa->x_height.a_attr,
-                template, data, 0);
-            xx2 = xx1 + rwidth;
-            yy2 = yy1 + rheight;
+            if (sa->x_type == gensym("rect"))
+            {
+                t_float rwidth = fielddesc_getcoord(&sa->x_width.a_attr,
+                    template, data, 0);
+                t_float rheight = fielddesc_getcoord(&sa->x_height.a_attr,
+                    template, data, 0);
+                xx2 = xx1 + rwidth;
+                yy2 = yy1 + rheight;
+            }
+            else
+            {
+                xx2 = fielddesc_getcoord(&sa->x_rx.a_attr,
+                    template, data, 0);
+                yy2 = fielddesc_getcoord(&sa->x_ry.a_attr,
+                    template, data, 0);
+            }
         }
         else
         {
@@ -3378,7 +3392,7 @@ static void draw_getrect(t_gobj *z, t_glist *glist,
            transformed.  Since the shapes could be crazy skewed/rotated
            I have to check each coordinate of the rect, so I do it again
            below. */
-        if (sa->x_type == gensym("rect"))
+        if (sa->x_type == gensym("rect") || sa->x_type == gensym("line"))
             mset(mtx2, xx1, yy1, xx2, yy1, 0, 0);
         else
             mset(mtx2, xx1, yy1 + yy2, xx1 + xx2, yy1, 0, 0);
@@ -3393,7 +3407,7 @@ static void draw_getrect(t_gobj *z, t_glist *glist,
         if (tx2 > x2) x2 = tx2;
         if (ty1 > y2) y2 = ty1;
         if (ty2 > y2) y2 = ty2;
-        if (sa->x_type == gensym("rect"))
+        if (sa->x_type == gensym("rect") || sa->x_type == gensym("line"))
             mset(mtx2, xx2, yy2, xx1, yy2, 0, 0);
         else
             mset(mtx2, xx1, yy1 - yy2, xx1 - xx2, yy1, 0, 0);
@@ -3544,22 +3558,25 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
     }
     if (x->x_rx.a_flag)
     {
-        gui_s(x->x_type == gensym("circle") ? "r" : "rx");
+        gui_s(x->x_type == gensym("circle") ? "r" :
+            x->x_type == gensym("line") ? "x2" : "rx");
         gui_f(fielddesc_getfloat(&x->x_rx.a_attr, template, data, 1));
     }
     if (x->x_ry.a_flag)
         {
-            gui_s("ry");
+            gui_s(x->x_type == gensym("ellipse") ? "ry" : "y2");
             gui_f(fielddesc_getfloat(&x->x_ry.a_attr, template, data, 1));
         }
     if (x->x_x.a_flag)
     {
-        gui_s(x->x_type == gensym("rect") ? "x" : "cx");
+        gui_s(x->x_type == gensym("rect") ? "x" :
+            x->x_type == gensym("line") ? "x1" : "cx");
         gui_f(fielddesc_getfloat(&x->x_x.a_attr, template, data, 1));
     }
     if (x->x_y.a_flag)
     {
-        gui_s(x->x_type == gensym("rect") ? "y" : "cy");
+        gui_s(x->x_type == gensym("rect") ? "y" :
+            x->x_type == gensym("line") ? "y1" : "cy");
         gui_f(fielddesc_getfloat(&x->x_y.a_attr, template, data, 1));
     }
     if (x->x_width.a_flag)
@@ -4244,15 +4261,15 @@ static void draw_setup(void)
         gensym("width"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_setattr,
         gensym("x"), A_GIMME, 0);
-    class_addmethod(svg_class, (t_method)svg_linepoints,
+    class_addmethod(svg_class, (t_method)svg_setattr,
         gensym("x1"), A_GIMME, 0);
-    class_addmethod(svg_class, (t_method)svg_linepoints,
+    class_addmethod(svg_class, (t_method)svg_setattr,
         gensym("x2"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_setattr,
         gensym("y"), A_GIMME, 0);
-    class_addmethod(svg_class, (t_method)svg_linepoints,
+    class_addmethod(svg_class, (t_method)svg_setattr,
         gensym("y1"), A_GIMME, 0);
-    class_addmethod(svg_class, (t_method)svg_linepoints,
+    class_addmethod(svg_class, (t_method)svg_setattr,
         gensym("y2"), A_GIMME, 0);
 }
 
