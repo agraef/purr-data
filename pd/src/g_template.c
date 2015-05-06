@@ -1454,6 +1454,32 @@ char *get_strokelinejoin(int a)
     return (strokelinejoin);
 }
 
+t_svg_attr *svg_getattr(t_svg *x, t_symbol *s)
+{
+    if (s == gensym("fill-opacity")) return &x->x_fillopacity;
+    else if (s == gensym("fill-rule")) return &x->x_fillrule;
+    else if (s == gensym("height")) return &x->x_height;
+    else if (s == gensym("opacity")) return &x->x_opacity;
+    else if (s == gensym("pointer-events")) return &x->x_pointerevents;
+    else if (s == gensym("rx") || s == gensym("r") || s == gensym("x2"))
+        return &x->x_rx;
+    else if (s == gensym("ry") || s == gensym("y2"))
+        return &x->x_ry;
+    else if (s == gensym("stroke-opacity")) return &x->x_strokeopacity;
+    else if (s == gensym("stroke-dashoffset")) return &x->x_strokedashoffset;
+    else if (s == gensym("stroke-linecap")) return &x->x_strokelinecap;
+    else if (s == gensym("stroke-linejoin")) return &x->x_strokelinejoin;
+    else if (s == gensym("stroke-miterlimit")) return &x->x_strokemiterlimit;
+    else if (s == gensym("stroke-width")) return &x->x_strokewidth;
+    else if (s == gensym("vis")) return &x->x_vis;
+    else if (s == gensym("width")) return &x->x_width;
+    else if (s == gensym("x") || s == gensym("cx") || s == gensym("x1"))
+        return &x->x_x;
+    else if (s == gensym("y") || s == gensym("cy") || s == gensym("y1"))
+        return &x->x_y;
+    return 0;
+}
+
 void svg_parsetransform(t_svg *x, t_template *template, t_word *data,
     t_float *mp1, t_float *mp2, t_float *mp3,
     t_float *mp4, t_float *mp5, t_float *mp6);
@@ -1466,7 +1492,7 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
     t_template *template, t_word *data, int *predraw_bbox, void *parent,
     t_scalar *sc)
 {
-   /* todo-- I'm mixing "c" with glist_getcanvas(c) a little too freely...
+   /* todo-- I'm mixing "c" with glist_getcanvas(c) too freely...
       need to experiment with gop scalars to make sure I'm not breaking
       anything */ 
     int in_array = (sc->sc_vec != data);
@@ -1521,102 +1547,49 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
                 (int)fielddesc_getfloat(fd+2, template, data, 1)));
         }
         else stroke = &s_;
-        //sys_vgui(".x%lx.c itemconfigure %s -stroke %s\n",
-        //    glist_getcanvas(c), tag, stroke->s_name);
         gui_vmess("gui_draw_configure", "ssss",
             canvas_tag(glist_getcanvas(c)), tag, s->s_name, stroke->s_name);
     }
-    else if (s == gensym("fill-opacity"))
-        //sys_vgui(".x%lx.c itemconfigure %s -fillopacity %g\n",
-        //    glist_getcanvas(c), tag,
-        //    fielddesc_getcoord(&x->x_fillopacity.a_attr, template, data, 1));
-        gui_vmess("gui_draw_configure", "sssf",
-            canvas_tag(glist_getcanvas(c)), tag, "fill-opacity",
-            fielddesc_getcoord(&x->x_fillopacity.a_attr, template, data, 1));
     else if (s == gensym("fill-rule"))
-        //sys_vgui(".x%lx.c itemconfigure %s -fillrule %s\n",
-        //    glist_getcanvas(c), tag, (int)fielddesc_getcoord(
-        //        &x->x_fillrule.a_attr, template, data, 1) ?
-        //            "evenodd" : "nonzero");
         gui_vmess("gui_draw_configure", "sssi",
-            canvas_tag(glist_getcanvas(c)), tag, "fill-rule", (int)fielddesc_getcoord(
+            canvas_tag(glist_getcanvas(c)), tag, "fill-rule",
+            (int)fielddesc_getcoord(
                 &x->x_fillrule.a_attr, template, data, 1) ?
                     "evenodd" : "nonzero");
-    else if (s == gensym("opacity"))
+    else if (s == gensym("fill-opacity") ||
+             s == gensym("opacity") ||
+             s == gensym("stroke-dashoffset") ||
+             s == gensym("stroke-miterlimit") ||
+             s == gensym("stroke-opacity"))
         gui_vmess("gui_draw_configure", "sssf",
-            canvas_tag(glist_getcanvas(c)), tag, "opacity",
-                fielddesc_getcoord(&x->x_opacity.a_attr, template, data, 1));
+            canvas_tag(glist_getcanvas(c)), tag, s->s_name,
+            fielddesc_getcoord(
+                &(svg_getattr(x, s)->a_attr), template, data, 1));
     else if (s == gensym("pointer-events"))
         *predraw_bbox = 1;
     else if (s == gensym("stroke-linecap"))
-        //sys_vgui(".x%lx.c itemconfigure %s -strokelinecap %s\n",
-        //   glist_getcanvas(c), tag, get_strokelinecap(
-        //        (int)fielddesc_getcoord(&x->x_strokelinecap.a_attr,
-        //            template, data, 1)));
         gui_vmess("gui_draw_configure", "ssss",
-            canvas_tag(glist_getcanvas(c)), tag, "stroke-linecap", get_strokelinecap(
-                (int)fielddesc_getcoord(&x->x_strokelinecap.a_attr,
-                    template, data, 1)));
+            canvas_tag(glist_getcanvas(c)), tag, "stroke-linecap",
+                get_strokelinecap(
+                    (int)fielddesc_getcoord(&x->x_strokelinecap.a_attr,
+                        template, data, 1)));
     else if (s == gensym("stroke-linejoin"))
-        //sys_vgui(".x%lx.c itemconfigure %s -strokelinejoin %s\n",
-        //    glist_getcanvas(c), tag, get_strokelinejoin(
-        //        (int)fielddesc_getcoord(&x->x_strokelinejoin.a_attr,
-        //            template, data, 1)));
         gui_vmess("gui_draw_configure", "ssss",
-            canvas_tag(glist_getcanvas(c)), tag, "stroke-linejoin", get_strokelinejoin(
-                (int)fielddesc_getcoord(&x->x_strokelinejoin.a_attr,
-                    template, data, 1)));
-    else if (s == gensym("stroke-miterlimit"))
-        //sys_vgui(".x%lx.c itemconfigure %s -strokemiterlimit %g\n",
-        //    glist_getcanvas(c), tag, fielddesc_getcoord(
-        //        &x->x_strokemiterlimit.a_attr, template, data, 1));
-        gui_vmess("gui_draw_configure", "sssf",
-            canvas_tag(glist_getcanvas(c)), tag, "stroke-miterlimit", fielddesc_getcoord(
-                &x->x_strokemiterlimit.a_attr, template, data, 1));
-    else if (s == gensym("stroke-opacity"))
-        //sys_vgui(".x%lx.c itemconfigure %s -strokeopacity %g\n",
-        //    glist_getcanvas(c), tag, fielddesc_getcoord(
-        //        &x->x_strokeopacity.a_attr, template, data, 1));
-        gui_vmess("gui_draw_configure", "sssf",
-            canvas_tag(glist_getcanvas(c)), tag, "stroke-opacity", fielddesc_getcoord(
-                &x->x_strokeopacity.a_attr, template, data, 1));
-    else if (s == gensym("stroke-dashoffset"))
-        //sys_vgui(".x%lx.c itemconfigure %s -strokeopacity %g\n",
-        //    glist_getcanvas(c), tag, fielddesc_getcoord(
-        //        &x->x_strokeopacity.a_attr, template, data, 1));
-        gui_vmess("gui_draw_configure", "sssf",
-            canvas_tag(glist_getcanvas(c)), tag, "stroke-dashoffset",
-                fielddesc_getcoord(
-                    &x->x_strokedashoffset.a_attr, template, data, 1));
-    else if (s == gensym("stroke-width"))
+            canvas_tag(glist_getcanvas(c)), tag, "stroke-linejoin",
+                get_strokelinejoin(
+                    (int)fielddesc_getcoord(&x->x_strokelinejoin.a_attr,
+                        template, data, 1)));
+    else if (s == gensym("stroke-width") ||
+             s == gensym("rx") || s == gensym("r") || s == gensym("x2") ||
+             s == gensym("ry") || s == gensym("y2") ||
+             s == gensym("x") || s == gensym("cx") || s == gensym("x1") ||
+             s == gensym("y") || s == gensym("cy") || s == gensym("y1") ||
+             s == gensym("height") || s == gensym("width"))
     {
-        //sys_vgui(".x%lx.c itemconfigure %s -strokewidth %g\n",
-        //    glist_getcanvas(c), tag, fielddesc_getcoord(
-        //        &x->x_strokewidth.a_attr, template, data, 1));
         gui_vmess("gui_draw_configure", "sssf",
-            canvas_tag(glist_getcanvas(c)), tag, "stroke-width", fielddesc_getcoord(
-                &x->x_strokewidth.a_attr, template, data, 1));
-        *predraw_bbox = 1;
-    }
-    else if (s == gensym("rx") || s == gensym("r") || s == gensym("x2"))
-    {
-        //sys_vgui(".x%lx.c itemconfigure %s -rx %g\n",
-        //    glist_getcanvas(c), tag, fielddesc_getcoord(
-        //    x->x_vec+2, template, data, 1));
-        gui_vmess("gui_draw_configure", "sssf",
-            canvas_tag(glist_getcanvas(c)), tag,
-                s->s_name, fielddesc_getcoord(
-                    &x->x_rx.a_attr, template, data, 1));
-        *predraw_bbox = 1;
-    }
-    else if (s == gensym("ry") || s == gensym("y2"))
-    {
-        //sys_vgui(".x%lx.c itemconfigure %s -ry %g\n",
-        //    glist_getcanvas(c), tag, fielddesc_getcoord(
-        //    x->x_vec+3, template, data, 1));
-        gui_vmess("gui_draw_configure", "sssf",
-            canvas_tag(glist_getcanvas(c)), tag, s->s_name, fielddesc_getcoord(
-                &x->x_ry.a_attr, template, data, 1));
+            canvas_tag(glist_getcanvas(c)), tag, s->s_name,
+            fielddesc_getcoord(
+                &(svg_getattr(x, s)->a_attr), template, data, 1));
         *predraw_bbox = 1;
     }
     else if (s == gensym("transform"))
@@ -1635,10 +1608,6 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
             x->x_pathrect_cache = 0;
         }
         svg_parsetransform(x, template, data, &m1, &m2, &m3, &m4, &m5, &m6);
-        //sys_vgui(".x%lx.c itemconfigure %s -matrix "
-        //         "{ {%g %g} {%g %g} {%g %g} }\n",
-        //            glist_getcanvas(c), tag,
-        //            m1, m2, m3, m4, m5, m6);
         char mbuf[MAXPDSTRING];
         sprintf(mbuf, "matrix(%g %g %g %g %g %g)", m1, m2, m3, m4, m5, m6);
         gui_vmess("gui_draw_configure", "ssss",
@@ -1648,88 +1617,32 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
     }
     else if (s == gensym("vis"))
     {
-        //sys_vgui(".x%lx.c itemconfigure %s -state %s\n",
-        //    glist_getcanvas(c), tag, (int)fielddesc_getcoord(
-        //    &x->x_vis.a_attr, template, data, 1) ? "normal" : "hidden");
         gui_vmess("gui_draw_configure", "ssss",
-            canvas_tag(glist_getcanvas(c)), tag, "visibility", (int)fielddesc_getcoord(
-            &x->x_vis.a_attr, template, data, 1) ? "visible" : "hidden");
+            canvas_tag(glist_getcanvas(c)), tag, "visibility",
+            (int)fielddesc_getcoord(
+                &x->x_vis.a_attr, template, data, 1) ? "visible" : "hidden");
         *predraw_bbox = 1;
     }
-    else if (s == gensym("width"))
-    {
-        //sys_vgui(".x%lx.c itemconfigure %s -state %s\n",
-        //    glist_getcanvas(c), tag, (int)fielddesc_getcoord(
-        //    &x->x_vis.a_attr, template, data, 1) ? "normal" : "hidden");
-        gui_vmess("gui_draw_configure", "sssf",
-            canvas_tag(glist_getcanvas(c)), tag, "width", fielddesc_getcoord(
-            &x->x_width.a_attr, template, data, 1));
-        *predraw_bbox = 1;
-    }
-    else if (s == gensym("x") || s == gensym("cx") || s == gensym("x1"))
-    {
-        //sys_vgui(".x%lx.c itemconfigure %s -state %s\n",
-        //    glist_getcanvas(c), tag, (int)fielddesc_getcoord(
-        //    &x->x_vis.a_attr, template, data, 1) ? "normal" : "hidden");
-        gui_vmess("gui_draw_configure", "sssf",
-            canvas_tag(glist_getcanvas(c)), tag,
-                s->s_name, fielddesc_getcoord(
-                    &x->x_x.a_attr, template, data, 1));
-        *predraw_bbox = 1;
-    }
-
-    else if (s == gensym("y") || s == gensym("cy") || s == gensym("y1"))
-    {
-        //sys_vgui(".x%lx.c itemconfigure %s -state %s\n",
-        //    glist_getcanvas(c), tag, (int)fielddesc_getcoord(
-        //    &x->x_vis.a_attr, template, data, 1) ? "normal" : "hidden");
-        gui_vmess("gui_draw_configure", "sssf",
-            canvas_tag(glist_getcanvas(c)), tag,
-                s->s_name, fielddesc_getcoord(
-                    &x->x_y.a_attr, template, data, 1));
-        *predraw_bbox = 1;
-    }
-
-    else if (s == gensym("height"))
-    {
-        //sys_vgui(".x%lx.c itemconfigure %s -state %s\n",
-        //    glist_getcanvas(c), tag, (int)fielddesc_getcoord(
-        //    &x->x_vis.a_attr, template, data, 1) ? "normal" : "hidden");
-        gui_vmess("gui_draw_configure", "sssf",
-            canvas_tag(glist_getcanvas(c)), tag, "height", fielddesc_getcoord(
-            &x->x_height.a_attr, template, data, 1));
-        *predraw_bbox = 1;
-    }
-
-
     else if (s == gensym("stroke-dasharray"))
     {
-        // not ready yet... need a gui interface for variable size attrs
         if (x->x_ndash)
         {
             t_fielddesc *fd = x->x_strokedasharray;
             int i;
-            //sys_vgui(".x%lx.c itemconfigure %s -strokedasharray {",
-            //    glist_getcanvas(c), tag);
             gui_start_vmess("gui_draw_configure", "sss",
                 canvas_tag(glist_getcanvas(c)), tag, s->s_name);
             gui_start_array();
             for (i = 0; i < x->x_ndash; i++)
-            {
-                //sys_vgui(" %g ", fielddesc_getcoord(fd+i, template, data, 1));
                 gui_f(fielddesc_getcoord(fd+i, template, data, 1));
-            }
-            //sys_gui("}\n");
             gui_end_array();
             gui_end_vmess();
         }
     }
     else if (s == gensym("data"))
     {
-        //sys_vgui(".x%lx.c coords .draw%lx.%lx {\\\n",
-        //    glist_getcanvas(c), parent, data);
         char tagbuf[MAXPDSTRING];
-        sprintf(tagbuf, "draw%lx.%lx", (long unsigned int)parent, (long unsigned int)data);
+        sprintf(tagbuf, "draw%lx.%lx",
+            (long unsigned int)parent, (long unsigned int)data);
         gui_start_vmess("gui_draw_configure", "sss",
             canvas_tag(glist_getcanvas(c)), tagbuf, "d"); 
         /* let's turn off bbox caching so we can recalculate the bbox */
@@ -1774,8 +1687,6 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
         char tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "draw%lx.%lx",
             (long unsigned int)parent, (long unsigned int)data);
-        //sys_vgui(".x%lx.c coords .draw%lx.%lx \\\n",
-        //    glist_getcanvas(c), parent, data);
         gui_start_vmess("gui_draw_coords", "sss",
             canvas_tag(glist_getcanvas(c)), tagbuf, x->x_type->s_name);
         gui_start_array();
@@ -1799,11 +1710,9 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
                 gui_f(yval);
                 gui_f(w);
                 gui_f(h);
-                //sys_vgui("%g %g %g %g\\\n", xval, yval, w, h);
             }
             else
             {
-                //sys_vgui("%g %g\\\n", xval, yval);
                 gui_f(xval);
                 gui_f(yval);
             }
@@ -1812,13 +1721,8 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
         {
             int n = (x->x_type == gensym("circle")) ? 2 : x->x_nargs;
             for (i = 0; i < n; i++)
-            {
-                //sys_vgui("%g\\\n", fielddesc_getcoord(
-                //    f+i, template, data, 1));
                 gui_f(fielddesc_getcoord(f+i, template, data, 1));
-            }
         }
-        //sys_gui("\n");
         gui_end_array();
         gui_end_vmess();
     }
@@ -1935,31 +1839,6 @@ void svg_update(t_svg *x, t_symbol *s)
         svg_doupdate(x, c, s);
 }
 
-t_svg_attr *svg_getattr(t_svg *x, t_symbol *s)
-{
-    if (s == gensym("fill-opacity")) return &x->x_fillopacity;
-    else if (s == gensym("fill-rule")) return &x->x_fillrule;
-    else if (s == gensym("height")) return &x->x_height;
-    else if (s == gensym("opacity")) return &x->x_opacity;
-    else if (s == gensym("pointer-events")) return &x->x_pointerevents;
-    else if (s == gensym("rx") || s == gensym("r") || s == gensym("x2"))
-        return &x->x_rx;
-    else if (s == gensym("ry") || s == gensym("y2"))
-        return &x->x_ry;
-    else if (s == gensym("stroke-opacity")) return &x->x_strokeopacity;
-    else if (s == gensym("stroke-dashoffset")) return &x->x_strokedashoffset;
-    else if (s == gensym("stroke-linecap")) return &x->x_strokelinecap;
-    else if (s == gensym("stroke-linejoin")) return &x->x_strokelinejoin;
-    else if (s == gensym("stroke-miterlimit")) return &x->x_strokemiterlimit;
-    else if (s == gensym("stroke-width")) return &x->x_strokewidth;
-    else if (s == gensym("vis")) return &x->x_vis;
-    else if (s == gensym("width")) return &x->x_width;
-    else if (s == gensym("x") || s == gensym("cx") || s == gensym("x1"))
-        return &x->x_x;
-    else if (s == gensym("y") || s == gensym("cy") || s == gensym("y1"))
-        return &x->x_y;
-    return 0;
-}
 
 void svg_setattr(t_svg *x, t_symbol *s, t_int argc, t_atom *argv)
 {
@@ -2422,7 +2301,7 @@ void svg_parsetransform(t_svg *x, t_template *template, t_word *data,
         /* this doesn't jibe with glist_xtopixels, ytopixels, etc. */
         else if (type == gensym("rotate"))
         {
-            /* we need to convert degrees to radians */
+            /* we need to convert degrees to radians for the matrix */
             t_float a = (fielddesc_getfloat(fd++, template, data, 0)) *
                 3.14159 / 180;
             argc--;
