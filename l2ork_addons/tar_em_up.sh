@@ -127,7 +127,7 @@ fi
 
 if [ $full -gt 0 -o $deb -gt 0 ]
 then
-	echo "Pd full installer... IMPORTANT! When ran for the first time this step requires internet connection to pull sources from other repositories..."
+	echo "Pd full installer... IMPORTANT! When run for the first time this step requires internet connection to pull sources from other repositories..."
 
 	if [ -d .git ]; then
 		# check if Gem submodule is empty, and if so do first init
