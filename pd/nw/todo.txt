@@ -143,6 +143,8 @@ Everything else: (A [*] means we've fixed it)
     glist_getcanvas(x) as its first parameter
 [x] get rid of the old tcl specific sys_get_audio_apis
 [ ] have a single function to set t_svg_attr
+[ ] change x_x1..y2 to simple x_bbox[4], and change current x_bbox to
+    x_cachebbox (or something like that)
 
 Crashers
 --------
