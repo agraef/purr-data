@@ -145,6 +145,7 @@ Everything else: (A [*] means we've fixed it)
 [ ] have a single function to set t_svg_attr
 [ ] change x_x1..y2 to simple x_bbox[4], and change current x_bbox to
     x_cachebbox (or something like that)
+[ ] figure out why gatom_retext sends a fill color to GUI
 
 Crashers
 --------

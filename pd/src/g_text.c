@@ -707,8 +707,8 @@ static void message_click(t_message *x,
     if (glist_isvisible(x->m_glist))
     {
         t_rtext *y = glist_findrtext(x->m_glist, &x->m_text);
-        sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 5\n", 
-            glist_getcanvas(x->m_glist), rtext_gettag(y));
+        //sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 5\n", 
+        //    glist_getcanvas(x->m_glist), rtext_gettag(y));
         gui_vmess("gui_message_flash", "ssi",
             canvas_tag(glist_getcanvas(x->m_glist)),
             rtext_gettag(y), 1);
@@ -721,8 +721,8 @@ static void message_tick(t_message *x)
     if (glist_isvisible(x->m_glist))
     {
         t_rtext *y = glist_findrtext(x->m_glist, &x->m_text);
-        sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 1\n",
-            glist_getcanvas(x->m_glist), rtext_gettag(y));
+        //sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 1\n",
+        //    glist_getcanvas(x->m_glist), rtext_gettag(y));
         gui_vmess("gui_message_flash", "ssi",
             canvas_tag(glist_getcanvas(x->m_glist)),
             rtext_gettag(y), 0);
@@ -870,8 +870,10 @@ static void gatom_retext(t_gatom *x, int senditup, int recolor)
     t_canvas *canvas = glist_getcanvas(x->a_glist);
     t_rtext *y = glist_findrtext(x->a_glist, &x->a_text);
     if (recolor)
-        sys_vgui(".x%lx.c itemconfigure %s -fill %s\n", canvas, 
-            rtext_gettag(y), "$pd_colors(text)");
+    {
+        //sys_vgui(".x%lx.c itemconfigure %s -fill %s\n", canvas, 
+        //    rtext_gettag(y), "$pd_colors(text)");
+    }
     binbuf_clear(x->a_text.te_binbuf);
     binbuf_add(x->a_text.te_binbuf, 1, &x->a_atom);
     if (senditup && glist_isvisible(x->a_glist))
@@ -1157,7 +1159,7 @@ static void gatom_param(t_gatom *x, t_symbol *sel, int argc, t_atom *argv)
 }
 
     /* ---------------- gatom-specific widget functions --------------- */
-static void gatom_getwherelabel(t_gatom *x, t_glist *glist, int *xp, int *yp)
+static void gatom_getwherelabel_delme(t_gatom *x, t_glist *glist, int *xp, int *yp)
 {
     int x1, y1, x2, y2;
     text_getrect(&x->a_text.te_g, glist, &x1, &y1, &x2, &y2);
@@ -1185,6 +1187,35 @@ static void gatom_getwherelabel(t_gatom *x, t_glist *glist, int *xp, int *yp)
     }
 }
 
+static void gatom_getwherelabel(t_gatom *x, t_glist *glist, int *xp, int *yp)
+{
+    int x1, y1, x2, y2;
+    text_getrect(&x->a_text.te_g, glist, &x1, &y1, &x2, &y2);
+    if (x->a_wherelabel == ATOM_LABELLEFT)
+    {
+        *xp = 3 -
+            strlen(canvas_realizedollar(x->a_glist, x->a_label)->s_name) *
+            sys_fontwidth(glist_getfont(glist));
+        *yp = 2 + sys_fontheight(glist_getfont(glist));
+    }
+    else if (x->a_wherelabel == ATOM_LABELRIGHT)
+    {
+        *xp = x2 - x1 + 2;
+        *yp = y2 - y1 + 2;
+    }
+    else if (x->a_wherelabel == ATOM_LABELUP)
+    {
+        *xp = -1;
+        *yp = -1;
+    }
+    else
+    {
+        *xp = -1;
+        *yp = y2 - y1 + 3;
+    }
+}
+
+
 static void gatom_displace(t_gobj *z, t_glist *glist,
     int dx, int dy)
 {
@@ -1193,11 +1224,12 @@ static void gatom_displace(t_gobj *z, t_glist *glist,
     text_displace(z, glist, dx, dy);
     if (glist_isvisible(glist))
     {
-        sys_vgui(".x%lx.c move %lx.l %d %d\n", glist_getcanvas(glist), 
-            x, dx, dy);
+        //sys_vgui(".x%lx.c move %lx.l %d %d\n", glist_getcanvas(glist), 
+        //    x, dx, dy);
     }
 }
 
+/* for gatom's label */
 static void gatom_vis(t_gobj *z, t_glist *glist, int vis)
 {
     //fprintf(stderr,"gatom_vis\n");
@@ -1208,13 +1240,28 @@ static void gatom_vis(t_gobj *z, t_glist *glist, int vis)
         if (vis)
         {
             int x1, y1;
+            t_rtext *y = glist_findrtext(x->a_glist, &x->a_text);
             gatom_getwherelabel(x, glist, &x1, &y1);
-            sys_vgui("pdtk_text_new .x%lx.c %lx.l %f %f {%s} %d %s\n",
-                glist_getcanvas(glist), x,
-                (double)x1, (double)y1,
+            //sys_vgui("pdtk_text_new .x%lx.c %lx.l %f %f {%s} %d %s\n",
+            //    glist_getcanvas(glist), x,
+            //    (double)x1, (double)y1,
+            //    canvas_realizedollar(x->a_glist, x->a_label)->s_name,
+            //    sys_hostfontsize(glist_getfont(glist)),
+            //    "$pd_colors(text)");
+            gui_vmess("gui_text_new", "sssiiiiisi",
+                canvas_tag(glist_getcanvas(glist)),
+                rtext_gettag(y),
+                "gatom",
+                0,
+                x1, // left margin
+                y1, // top margin
+                0, // bottom margin
+                sys_fontwidth(glist_getfont(glist)),
                 canvas_realizedollar(x->a_glist, x->a_label)->s_name,
-                sys_hostfontsize(glist_getfont(glist)),
-                "$pd_colors(text)");
+                sys_hostfontsize(glist_getfont(glist))
+            );
+
+
         }
         else sys_vgui(".x%lx.c delete %lx.l\n", glist_getcanvas(glist), x);
     }
