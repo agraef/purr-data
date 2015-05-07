@@ -1,6 +1,6 @@
 #N struct splines float x float y float qmid float c1 float c2;
 #N canvas 480 58 700 527 10;
-#X scalar splines 92 86 -6.2043 184.445 329.234 \;;
+#X scalar splines 92 86 2.7957 174.445 329.234 \;;
 #X floatatom 311 161 5 0 0 0 - - -, f 5;
 #N canvas 253 138 810 446 (subpatch) 0;
 #X obj 129 -207 draw path M 75 qmid h 10 m -5 -5 v 10;
@@ -31,10 +31,10 @@
 #X obj 679 -210 draw path M 95 c2 h 10 m -5 -5 v 10;
 #X obj 449 -418 draw path M 20 250 L 60 c1 100 c2 140 250;
 #X obj 449 -351 draw path M 20 250 C 60 c1 100 c2 140 250;
-#X msg 129 -441 stroke blue \, stroke-width 1 \, fill "";
-#X msg 129 -371 stroke black \, stroke-width 3 \, fill "";
-#X msg 449 -441 stroke blue \, stroke-width 1 \, fill "";
-#X msg 449 -371 stroke black \, stroke-width 3 \, fill "";
+#X msg 129 -441 stroke blue \, stroke-width 1 \, fill none;
+#X msg 129 -371 stroke black \, stroke-width 3 \, fill none;
+#X msg 449 -441 stroke blue \, stroke-width 1 \, fill none;
+#X msg 449 -371 stroke black \, stroke-width 3 \, fill none;
 #X obj 129 -186 outlet;
 #X obj 449 -188 outlet;
 #X obj 679 -189 outlet;

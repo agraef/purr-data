@@ -1,7 +1,7 @@
 #N struct quick-graph2 float x float y float y0 float y1 float y2 float
 y3 float y4 float y5 float y6;
 #N canvas 0 19 619 638 10;
-#X scalar quick-graph2 35 123 110 84 69 92 103 99 76 \;;
+#X scalar quick-graph2 35 123 98 89 72 125 58 79 109 \;;
 #X msg 243 97 fill blue \, stroke blue \, stroke-width 2 \, fill-opacity
 0.6;
 #X obj 24 33 struct quick-graph2 float x float y float y0 float y1

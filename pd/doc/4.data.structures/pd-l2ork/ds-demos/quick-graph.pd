@@ -1,8 +1,8 @@
 #N struct quick-graph float x float y float y0 float y1 float y2 float
 y3 float y4 float y5 float y6;
 #N struct hotspot float x float y float radius;
-#N canvas -9 19 619 390 10;
-#X scalar quick-graph 30 105 99 89 83 41 80 69 23 \;;
+#N canvas 0 19 619 390 10;
+#X scalar quick-graph 30 105 99 89 83 57 79 61 32 \;;
 #X msg 243 97 fill blue \, stroke blue \, stroke-width 2 \, fill-opacity
 0.6;
 #X obj 24 33 struct quick-graph float x float y float y0 float y1 float
@@ -74,10 +74,10 @@ y2 float y3 float y4 float y5 float y6;
 #X scalar hotspot 30 194 4 \;;
 #X scalar hotspot 50 185 4 \;;
 #X scalar hotspot 70 178 4 \;;
-#X scalar hotspot 90 136 4 \;;
-#X scalar hotspot 110 175 4 \;;
-#X scalar hotspot 130 164 4 \;;
-#X scalar hotspot 150 117 4 \;;
+#X scalar hotspot 90 152 4 \;;
+#X scalar hotspot 110 173 4 \;;
+#X scalar hotspot 130 156 4 \;;
+#X scalar hotspot 150 127 4 \;;
 #X text 241 217 Quick graph demo showing some mouseover animation.
 ;
 #X text 241 237 When you mouse over a scalar \, Pd will give you two

@@ -4,9 +4,9 @@
 #X obj 600 124 pointer;
 #X floatatom 427 138 5 0 0 0 - - -, f 5;
 #X floatatom 553 136 5 0 0 0 - - -, f 5;
-#X scalar instance-attr 81 355 12 \;;
+#X scalar instance-attr 81 355 23 \;;
 #X obj 159 109 draw path M 0 0 l 100 0 0 -100;
-#X scalar instance-attr 328 421 -18 \;;
+#X scalar instance-attr 328 421 -31 \;;
 #X obj 159 59 loadbang;
 #X obj 466 83 loadbang;
 #X obj 600 83 loadbang;
@@ -22,7 +22,7 @@ you have to choose a variable name that isn't a drawing command (M
 #X msg 466 103 traverse ob \, next;
 #X msg 600 103 traverse ob \, next \, next;
 #X obj 466 32 namecanvas ob;
-#X msg 159 84 transform rotate a \, fill "" \, stroke black;
+#X msg 159 83 transform rotate a \, fill none \, stroke black;
 #X connect 0 0 13 1;
 #X connect 1 0 14 1;
 #X connect 2 0 13 0;
