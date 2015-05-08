@@ -2344,10 +2344,10 @@ function gui_toggle_update(cid, tag, state, color) {
 }
 
 // Todo: send fewer parameters from c
-function gui_create_numbox(width,cid,tag,bgcolor,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,basex,basey,half) {
-gui_post("numbox width is " + width);
+function gui_create_numbox(width,cid,tag,bgcolor,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,basex,basey,half, is_toplevel) {
+gui_post("basex is " + basex + " and basey is " + basey);
     // numbox doesn't have a standard iemgui border, so we must create its gobj manually
-    var g = gui_text_create_gobj(cid, tag, basex, basey)
+    var g = gui_text_create_gobj(cid, tag, "iemgui", basex, basey, is_toplevel)
     var data_array = ['M', p1 - basex, p2 - basey,
                       'L', p3 - basex, p4 - basey,
                            p5 - basex, p6 - basey,

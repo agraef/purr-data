@@ -176,9 +176,10 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
     //    canvas, x1, y1, x2-4, y1, x2, y1+4, x2, y2, x1, y2,
     //    x->x_hide_frame <= 1 ? "$pd_colors(iemgui_border)" : bcol,
     //    bcol, x, x);
-    gui_vmess("gui_create_numbox", "isssiiiiiiiiiiiii", x->x_numwidth,
+    gui_vmess("gui_create_numbox", "isssiiiiiiiiiiiiii", x->x_numwidth,
         canvas_tag(canvas), gobj_tag(x),
-        bcol, x1, y1, x2-4, y1, x2, y1+4, x2, y2, x1, y2, x1, y1, half);
+        bcol, x1, y1, x2-4, y1, x2, y1+4, x2, y2, x1, y2, x1, y1, half,
+        glist_istoplevel(canvas));
     /* Not sure when it is necessary to hide the frame... */
     if (!x->x_hide_frame || x->x_hide_frame == 2)
         sys_vgui(".x%lx.c create polyline %d %d %d %d %d %d -stroke #%6.6x "
