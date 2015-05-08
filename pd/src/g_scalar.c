@@ -482,20 +482,20 @@ void scalar_select(t_gobj *z, t_glist *owner, int state)
     if (state)
     {
         x->sc_selected = owner;
-        sys_vgui(".x%lx.c addtag selected withtag blankscalar%lx\n",
-            glist_getcanvas(owner), x);
-        sys_vgui(".x%lx.c addtag scalar_selected withtag {.scalar%lx}\n",
-            glist_getcanvas(owner), x->sc_vec);
+        //sys_vgui(".x%lx.c addtag selected withtag blankscalar%lx\n",
+        //    glist_getcanvas(owner), x);
+        //sys_vgui(".x%lx.c addtag scalar_selected withtag {.scalar%lx}\n",
+        //    glist_getcanvas(owner), x->sc_vec);
         gui_vmess("gui_text_select", "ss",
             canvas_tag(glist_getcanvas(owner)), tagbuf);
     }
     else
     {
         x->sc_selected = 0;
-        sys_vgui(".x%lx.c dtag blankscalar%lx selected\n",
-            glist_getcanvas(owner), x);
-        sys_vgui(".x%lx.c dtag .scalar%lx scalar_selected\n",
-            glist_getcanvas(owner), x->sc_vec);
+        //sys_vgui(".x%lx.c dtag blankscalar%lx selected\n",
+        //    glist_getcanvas(owner), x);
+        //sys_vgui(".x%lx.c dtag .scalar%lx scalar_selected\n",
+        //    glist_getcanvas(owner), x->sc_vec);
         gui_vmess("gui_text_deselect", "ss",
             canvas_tag(glist_getcanvas(owner)), tagbuf);
     }

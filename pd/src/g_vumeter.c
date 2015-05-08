@@ -301,6 +301,7 @@ static void vu_draw_config(t_vu* x, t_glist* glist)
     iemgui_base_draw_config(&x->x_gui);
 }
 
+/* Not sure if this is necessary anymore */
 static void vu_draw_select(t_vu* x,t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
@@ -505,7 +506,7 @@ static void vu_scale(t_vu *x, t_floatarg fscale)
                 }
             }
             i=IEM_VU_STEPS+1;
-            sys_vgui(".x%lx.c delete %lxSCALE%d\n", canvas, x, i);
+            //sys_vgui(".x%lx.c delete %lxSCALE%d\n", canvas, x, i);
             gui_vmess("gui_erase_vumeter_text", "ssi",
                 canvas_tag(canvas), gobj_tag(x), i);
         }
