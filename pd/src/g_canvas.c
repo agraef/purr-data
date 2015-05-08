@@ -859,9 +859,9 @@ void canvas_map(t_canvas *x, t_floatarg f)
         if (glist_isvisible(x))
         {
             /* just clear out the whole canvas */
-            sys_vgui(".x%lx.c dtag all selected\n", x);
-            //sys_vgui(".x%lx.c delete all\n", x);
-            sys_vgui("foreach item [.x%lx.c find withtag {(!root)}] { .x%lx.c delete $item }\n", x, x);
+            //sys_vgui(".x%lx.c dtag all selected\n", x);
+            //sys_vgui("foreach item [.x%lx.c find withtag {(!root)}] "
+            //         "{ .x%lx.c delete $item }\n", x, x);
             gui_vmess("gui_canvas_erase_all_gobjs", "s",
                 canvas_tag(x));
             x->gl_mapped = 0;
@@ -912,6 +912,7 @@ void glist_menu_open(t_glist *x)
         }
         else
         {
+            /* Not sure if this is still needed */
             sys_vgui("focus .x%lx\n", (t_int)x);
         }
     }
@@ -1047,6 +1048,7 @@ void canvas_deletelinesfor(t_canvas *x, t_text *text)
             {
                 sys_vgui(".x%lx.c delete l%lx\n",
                     glist_getcanvas(x), oc);
+                /* probably need a gui_vmess here */
             }
             obj_disconnect(t.tr_ob, t.tr_outno, t.tr_ob2, t.tr_inno);
         }
@@ -1721,7 +1723,10 @@ static void glist_redrawall(t_template *template, t_glist *gl, int action)
         else if (g->g_pd == canvas_class)
             glist_redrawall(template, (t_glist *)g, action);
     }
-    if (glist_isselected(glist_getcanvas(gl), (t_gobj *)gl)) {
+    if (glist_isselected(glist_getcanvas(gl), (t_gobj *)gl))
+    {
+        /* Haven't tested scalars inside gop yet, but we
+           probably need a gui_vmess here */
         sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n",
             glist_getcanvas(gl), gl, 1);
     }
@@ -1998,6 +2003,7 @@ static void canvas_f(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     }
 }
 
+/* Not sure if this is still used... */
 void canvasgop_draw_move(t_canvas *x, int doit)
 {
     //delete the earlier GOP window so that when dragging 

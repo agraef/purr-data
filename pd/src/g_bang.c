@@ -53,11 +53,11 @@ void bng_draw_new(t_bng *x, t_glist *glist)
     t_float cr = (x->x_gui.x_w-2)/2.0;
     t_float cx = x1+cr+1.5;
     t_float cy = y1+cr+1.5;
-    sys_vgui(".x%lx.c create circle %f %f -r %f "
-             "-stroke $pd_colors(iemgui_border) -fill #%6.6x "
-             "-tags {%lxBUT x%lx text iemgui border}\n",
-         canvas, cx, cy, cr, x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol,
-         x, x);
+    //sys_vgui(".x%lx.c create circle %f %f -r %f "
+    //         "-stroke $pd_colors(iemgui_border) -fill #%6.6x "
+    //         "-tags {%lxBUT x%lx text iemgui border}\n",
+    //     canvas, cx, cy, cr, x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol,
+    //     x, x);
     gui_vmess("gui_create_bng", "ssfff", canvas_tag(canvas), tagbuf,
         cx - x1 - 0.5, cy - y1 - 0.5, cr);
 }

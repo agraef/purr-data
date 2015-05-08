@@ -2468,7 +2468,7 @@ void canvas_vis(t_canvas *x, t_floatarg f)
                 argsbuf);
                 
 
-
+            // This probably needs a gui_vmess */
             sys_vgui("pdtk_canvas_set_font .x%lx %d\n", x, x->gl_font);
 //            canvas_reflecttitle(x);
             x->gl_havewindow = 1;
@@ -4914,7 +4914,7 @@ void canvas_displaceselection(t_canvas *x, int dx, int dy)
     }
     if (dx || dy)
     {
-        sys_vgui("pdtk_canvas_displace_withtag .x%lx.c %d %d\n", x, dx, dy);
+        //sys_vgui("pdtk_canvas_displace_withtag .x%lx.c %d %d\n", x, dx, dy);
         gui_vmess("gui_canvas_displace_withtag", "sii", canvas_tag(x), dx, dy);
         if (resortin) canvas_resortinlets(x);
         if (resortout) canvas_resortoutlets(x);

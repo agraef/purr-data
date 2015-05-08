@@ -99,24 +99,24 @@ void magicGlass_updateText(t_magicGlass *x, int moved)
         //fprintf(stderr,"%d %d %d : %d %d\n",
         //    sys_fontheight(x->x_display_font),
         //    sys_fontwidth(x->x_display_font), x->x_maxSize, x->x_x, bgSize);
-        sys_vgui(".x%x.c coords magicGlassText %d %d\n",
-                 x->x_c,
-                 x->x_x + 20,
-                 x->x_y);
-        sys_vgui(".x%x.c coords magicGlassLine %d %d %d %d %d %d\n",
-                 x->x_c,
-                 x->x_x + 8,
-                 x->x_y,
-                 x->x_x + 13,
-                 x->x_y + 5,
-                 x->x_x + 13,
-                 x->x_y - 5);
-        sys_vgui(".x%x.c coords magicGlassBg %d %d %d %d\n",
-                 x->x_c,
-                 x->x_x + 13,
-                 x->x_y - (int)(sys_fontheight(x->x_display_font)/2) - 3,
-                 bgSize,
-                 x->x_y + (int)(sys_fontheight(x->x_display_font)/2) + 3);
+        //sys_vgui(".x%x.c coords magicGlassText %d %d\n",
+        //         x->x_c,
+        //         x->x_x + 20,
+        //         x->x_y);
+        //sys_vgui(".x%x.c coords magicGlassLine %d %d %d %d %d %d\n",
+        //         x->x_c,
+        //         x->x_x + 8,
+        //         x->x_y,
+        //         x->x_x + 13,
+        //         x->x_y + 5,
+        //         x->x_x + 13,
+        //         x->x_y - 5);
+        //sys_vgui(".x%x.c coords magicGlassBg %d %d %d %d\n",
+        //         x->x_c,
+        //         x->x_x + 13,
+        //         x->x_y - (int)(sys_fontheight(x->x_display_font)/2) - 3,
+        //         bgSize,
+        //         x->x_y + (int)(sys_fontheight(x->x_display_font)/2) + 3);
         gui_vmess("gui_cord_inspector_update", "ssiiiiii",
             canvas_tag(x->x_c), x->x_string,
             x->x_x, x->x_y, bgSize, 
@@ -129,21 +129,21 @@ void magicGlass_updateText(t_magicGlass *x, int moved)
 void magicGlass_drawNew(t_magicGlass *x)
 {
     //fprintf(stderr,"magicglass_drawNew\n");
-    sys_vgui(".x%x.c create prect 0 0 0 0 -stroke $pd_colors(magic_glass_bg) "
-             "-fill $pd_colors(magic_glass_bg) -tags magicGlassBg\n",
-             x->x_c);
-    sys_vgui(".x%x.c create ppolygon 0 0 0 0 0 0 "
-             "-fill $pd_colors(magic_glass_bd) -strokewidth 1 "
-             "-tags magicGlassLine\n",
-             x->x_c);
-    sys_vgui(".x%x.c create text 0 0 -text {} -anchor w "
-             "-fill $pd_colors(magic_glass_flash) "
-             "-font {{%s} -%d %s} -tags magicGlassText\n",
-             x->x_c, sys_font, x->x_display_font, sys_fontweight);
-    sys_vgui(".x%x.c raise magicGlassBg\n",
-             x->x_c);
-    sys_vgui(".x%x.c raise magicGlassText\n",
-             x->x_c);
+    //sys_vgui(".x%x.c create prect 0 0 0 0 -stroke $pd_colors(magic_glass_bg) "
+    //         "-fill $pd_colors(magic_glass_bg) -tags magicGlassBg\n",
+    //         x->x_c);
+    //sys_vgui(".x%x.c create ppolygon 0 0 0 0 0 0 "
+    //         "-fill $pd_colors(magic_glass_bd) -strokewidth 1 "
+    //         "-tags magicGlassLine\n",
+    //         x->x_c);
+    //sys_vgui(".x%x.c create text 0 0 -text {} -anchor w "
+    //         "-fill $pd_colors(magic_glass_flash) "
+    //         "-font {{%s} -%d %s} -tags magicGlassText\n",
+    //        x->x_c, sys_font, x->x_display_font, sys_fontweight);
+    //sys_vgui(".x%x.c raise magicGlassBg\n",
+    //         x->x_c);
+    //sys_vgui(".x%x.c raise magicGlassText\n",
+    //         x->x_c);
     gui_vmess("gui_text_create_gobj", "sssiii",
         canvas_tag(x->x_c), "cord_inspector", "cord_inspector", 0, 0, 0);
     gui_vmess("gui_create_cord_inspector", "s",
@@ -155,9 +155,9 @@ void magicGlass_drawNew(t_magicGlass *x)
 void magicGlass_undraw(t_magicGlass *x)
 {
     //fprintf(stderr,"magicglass_undraw\n");
-    sys_vgui(".x%x.c delete magicGlassBg\n", x->x_c);
-    sys_vgui(".x%x.c delete magicGlassLine\n", x->x_c);
-    sys_vgui(".x%x.c delete magicGlassText\n", x->x_c);
+    //sys_vgui(".x%x.c delete magicGlassBg\n", x->x_c);
+    //sys_vgui(".x%x.c delete magicGlassLine\n", x->x_c);
+    //sys_vgui(".x%x.c delete magicGlassText\n", x->x_c);
     gui_vmess("gui_erase_cord_inspector", "s",
         canvas_tag(x->x_c));
 }
@@ -165,9 +165,9 @@ void magicGlass_undraw(t_magicGlass *x)
 void magicGlass_flashText(t_magicGlass *x)
 {
     //fprintf(stderr,"magicglass_flashText\n");
-    sys_vgui(".x%x.c itemconfigure magicGlassText "
-             "-fill $pd_colors(magic_glass_text)\n",
-         x->x_c);
+    //sys_vgui(".x%x.c itemconfigure magicGlassText "
+    //         "-fill $pd_colors(magic_glass_text)\n",
+    //     x->x_c);
     gui_vmess("gui_cord_inspector_flash", "s",
         canvas_tag(x->x_c));
 }

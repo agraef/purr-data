@@ -179,6 +179,7 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
     gui_vmess("gui_create_numbox", "isssiiiiiiiiiiiii", x->x_numwidth,
         canvas_tag(canvas), gobj_tag(x),
         bcol, x1, y1, x2-4, y1, x2, y1+4, x2, y2, x1, y2, x1, y1, half);
+    /* Not sure when it is necessary to hide the frame... */
     if (!x->x_hide_frame || x->x_hide_frame == 2)
         sys_vgui(".x%lx.c create polyline %d %d %d %d %d %d -stroke #%6.6x "
             "-tags {%lxBASE2 x%lx text iemgui}\n",
@@ -196,6 +197,7 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
         x->x_buf, x->x_gui.x_fontsize, colorbuf, x1+half+2, y1+half+d, x1, y1);
 }
 
+/* Not sure that this is needed anymore */
 static void my_numbox_draw_move(t_my_numbox *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
@@ -204,15 +206,17 @@ static void my_numbox_draw_move(t_my_numbox *x, t_glist *glist)
     int x1=text_xpix(&x->x_gui.x_obj, glist), x2=x1+x->x_numwidth;
     int y1=text_ypix(&x->x_gui.x_obj, glist), y2=y1+x->x_gui.x_h;
 
-    sys_vgui(".x%lx.c coords %lxBASE1 %d %d %d %d %d %d %d %d %d %d\n",
-        canvas, x, x1, y1, x2-4, y1, x2, y1+4, x2, y2, x1, y2);
+    //sys_vgui(".x%lx.c coords %lxBASE1 %d %d %d %d %d %d %d %d %d %d\n",
+    //    canvas, x, x1, y1, x2-4, y1, x2, y1+4, x2, y2, x1, y2);
     if (x->x_hide_frame <= 1)
         iemgui_io_draw_move(&x->x_gui);
     if (!x->x_hide_frame || x->x_hide_frame == 2)
-        sys_vgui(".x%lx.c coords %lxBASE2 %d %d %d %d %d %d\n",
-            canvas, x, x1, y1, x1 + half, y1 + half, x1, y2);
-    sys_vgui(".x%lx.c coords %lxNUMBER %d %d\n",
-        canvas, x, x1+half+2, y1+half+d);
+    {
+        //sys_vgui(".x%lx.c coords %lxBASE2 %d %d %d %d %d %d\n",
+        //    canvas, x, x1, y1, x1 + half, y1 + half, x1, y2);
+    }
+    //sys_vgui(".x%lx.c coords %lxNUMBER %d %d\n",
+    //    canvas, x, x1+half+2, y1+half+d);
 }
 
 static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
@@ -247,6 +251,8 @@ static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist)
     }
     char fcol[8]; sprintf(fcol, "#%6.6x", x->x_gui.x_fcol);
     char bcol[8]; sprintf(bcol, "#%6.6x", x->x_gui.x_bcol);
+    // The logic in these sys_vgui calls is being taken care
+    // of in the gui now...
     sys_vgui(".x%lx.c itemconfigure %lxBASE1 -stroke %s\n", canvas, x,
         issel ? selection_color : x->x_hide_frame <= 1 ? "$pd_colors(iemgui_border)" : bcol);
     sys_vgui(".x%lx.c itemconfigure %lxBASE2 -stroke %s\n", canvas, x,

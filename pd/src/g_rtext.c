@@ -515,18 +515,21 @@ void rtext_draw(t_rtext *x)
     rtext_senditup(x, SEND_FIRST, &w, &h, &indx);
 }
 
+/* Not needed since the rtext gets erased along with the parent gobj group */
 void rtext_erase(t_rtext *x)
 {
-    if (x && x->x_glist)
-        sys_vgui(".x%lx.c delete %s\n", glist_getcanvas(x->x_glist), x->x_tag);
+    //if (x && x->x_glist)
+    //    sys_vgui(".x%lx.c delete %s\n", glist_getcanvas(x->x_glist), x->x_tag);
 }
 
+/* Not needed since the rtext gets erased along with the parent gobj group */
 void rtext_displace(t_rtext *x, int dx, int dy)
 {
-    sys_vgui(".x%lx.c move %s %d %d\n", glist_getcanvas(x->x_glist), 
-        x->x_tag, dx, dy);
+    //sys_vgui(".x%lx.c move %s %d %d\n", glist_getcanvas(x->x_glist), 
+    //    x->x_tag, dx, dy);
 }
 
+/* Not sure if this is still used */
 void rtext_select(t_rtext *x, int state)
 {
     t_glist *glist = x->x_glist;
