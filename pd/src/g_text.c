@@ -1159,33 +1159,6 @@ static void gatom_param(t_gatom *x, t_symbol *sel, int argc, t_atom *argv)
 }
 
     /* ---------------- gatom-specific widget functions --------------- */
-static void gatom_getwherelabel_delme(t_gatom *x, t_glist *glist, int *xp, int *yp)
-{
-    int x1, y1, x2, y2;
-    text_getrect(&x->a_text.te_g, glist, &x1, &y1, &x2, &y2);
-    if (x->a_wherelabel == ATOM_LABELLEFT)
-    {
-        *xp = x1 - 3 -
-            strlen(canvas_realizedollar(x->a_glist, x->a_label)->s_name) *
-            sys_fontwidth(glist_getfont(glist));
-        *yp = y1 + 2;
-    }
-    else if (x->a_wherelabel == ATOM_LABELRIGHT)
-    {
-        *xp = x2 + 2;
-        *yp = y1 + 2;
-    }
-    else if (x->a_wherelabel == ATOM_LABELUP)
-    {
-        *xp = x1 - 1;
-        *yp = y1 - 1 - sys_fontheight(glist_getfont(glist));;
-    }
-    else
-    {
-        *xp = x1 - 1;
-        *yp = y2 + 3;
-    }
-}
 
 static void gatom_getwherelabel(t_gatom *x, t_glist *glist, int *xp, int *yp)
 {
@@ -1193,25 +1166,25 @@ static void gatom_getwherelabel(t_gatom *x, t_glist *glist, int *xp, int *yp)
     text_getrect(&x->a_text.te_g, glist, &x1, &y1, &x2, &y2);
     if (x->a_wherelabel == ATOM_LABELLEFT)
     {
-        *xp = 3 -
+        *xp = -3 -
             strlen(canvas_realizedollar(x->a_glist, x->a_label)->s_name) *
             sys_fontwidth(glist_getfont(glist));
-        *yp = 2 + sys_fontheight(glist_getfont(glist));
+        *yp = y2 - y1 - 4;
     }
     else if (x->a_wherelabel == ATOM_LABELRIGHT)
     {
-        *xp = x2 - x1 + 2;
-        *yp = y2 - y1 + 2;
+        *xp = x2 - x1 + 3;
+        *yp = y2 - y1 - 4;
     }
     else if (x->a_wherelabel == ATOM_LABELUP)
     {
         *xp = -1;
-        *yp = -1;
+        *yp = -3;
     }
     else
     {
         *xp = -1;
-        *yp = y2 - y1 + 3;
+        *yp = y2 - y1 + sys_fontheight(glist_getfont(glist));
     }
 }
 
@@ -1248,15 +1221,13 @@ static void gatom_vis(t_gobj *z, t_glist *glist, int vis)
             //    canvas_realizedollar(x->a_glist, x->a_label)->s_name,
             //    sys_hostfontsize(glist_getfont(glist)),
             //    "$pd_colors(text)");
-            gui_vmess("gui_text_new", "sssiiiiisi",
+            gui_vmess("gui_text_new", "sssiiisi",
                 canvas_tag(glist_getcanvas(glist)),
                 rtext_gettag(y),
                 "gatom",
                 0,
                 x1, // left margin
                 y1, // top margin
-                0, // bottom margin
-                sys_fontwidth(glist_getfont(glist)),
                 canvas_realizedollar(x->a_glist, x->a_label)->s_name,
                 sys_hostfontsize(glist_getfont(glist))
             );

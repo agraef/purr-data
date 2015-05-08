@@ -2096,8 +2096,7 @@ function gui_canvas_updateline(cid,tag,x1,y1,x2,y2,yoff) {
     configure_item(cord, { d: d_array.join(" ") });
 }
 
-function gui_text_new(canvasname, myname, type, isselected, left_margin, top_margin,
-    bottom_margin, pix_high, text, font) {
+function gui_text_new(canvasname, myname, type, isselected, x, y, text, font) {
 //    gui_post("font is " + font);
 
     var g = get_gobj(canvasname, myname);
@@ -2106,8 +2105,8 @@ function gui_text_new(canvasname, myname, type, isselected, left_margin, top_mar
         // at the top-right corner of the text's bbox.  SVG uses the baseline.
         // There's probably a programmatic way to do this, but for now-- fudge factors
         // based on the DejaVu Sans Mono font. :)
-        x: left_margin,
-        y: pix_high - bottom_margin - top_margin - 1,
+        x: x,
+        y: y,
         // Turns out we can't do 'hanging' baseline
         // because it's borked when scaled. Bummer...
         // 'dominant-baseline': 'hanging',
