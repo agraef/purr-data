@@ -1234,7 +1234,13 @@ static void gatom_vis(t_gobj *z, t_glist *glist, int vis)
 
 
         }
-        else sys_vgui(".x%lx.c delete %lx.l\n", glist_getcanvas(glist), x);
+        else
+        {
+            /* We're just deleting the parent gobj in the GUI, which takes
+               care of removing all the children. So we don't need to send
+               a message here */
+            //sys_vgui(".x%lx.c delete %lx.l\n", glist_getcanvas(glist), x);
+        }
     }
     if (!vis)
         sys_unqueuegui(x);
@@ -1594,17 +1600,16 @@ static void text_select(t_gobj *z, t_glist *glist, int state)
     {
         if (glist_istoplevel(glist))
         {
-post("inside text selecting...");
-            sys_vgui(".x%lx.c itemconfigure %sR -stroke %s\n",
-                glist_getcanvas(glist), rtext_gettag(y),
-                (state? "$pd_colors(selection)" : outline));
+            //sys_vgui(".x%lx.c itemconfigure %sR -stroke %s\n",
+            //    glist_getcanvas(glist), rtext_gettag(y),
+            //    (state? "$pd_colors(selection)" : outline));
             gui_vmess("gui_text_select_color", "ss",
                 canvas_tag(glist_getcanvas(glist)), rtext_gettag(y));
             if (z->g_pd == gatom_class)
             {
-                sys_vgui(".x%lx.c itemconfigure %lx.l -fill %s\n",
-                    glist_getcanvas(glist), x,
-                    (state? "$pd_colors(selection)" : "$pd_colors(text)"));
+                //sys_vgui(".x%lx.c itemconfigure %lx.l -fill %s\n",
+                //    glist_getcanvas(glist), x,
+                //    (state? "$pd_colors(selection)" : "$pd_colors(text)"));
             }
         }
         if (z->g_pd->c_wb && z->g_pd->c_wb->w_displacefnwtag)
@@ -1614,18 +1619,26 @@ post("inside text selecting...");
             {
                 if (z->g_pd == gatom_class)
                 {
-                    sys_vgui(".x%lx.c addtag selected withtag %lx.l\n",
-                        glist_getcanvas(glist), x);                    
+                    /* Since the label is a child of the parent gobj, we
+                       only need to select the gobj to displace it */
+                    //sys_vgui(".x%lx.c addtag selected withtag %lx.l\n",
+                    //    glist_getcanvas(glist), x);                    
                 }
-                sys_vgui(".x%lx.c addtag selected withtag %sR \n",
-                    glist_getcanvas(glist), rtext_gettag(y));
+                //sys_vgui(".x%lx.c addtag selected withtag %sR \n",
+                //    glist_getcanvas(glist), rtext_gettag(y));
                 gui_vmess("gui_text_select", "ss",
                     canvas_tag(glist_getcanvas(glist)), rtext_gettag(y));
 
-                if (pd_class(&x->te_pd) == text_class && x->te_type != T_TEXT && glist_istoplevel(glist))
-                    sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 1 -strokedasharray {} "
+                if (pd_class(&x->te_pd) == text_class &&
+                             x->te_type != T_TEXT &&
+                             glist_istoplevel(glist))
+                {
+                    /* Not sure yet what this is doing... */
+                    sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 1 "
+                             "-strokedasharray {} "
                              "-fill $pd_colors(box)\n",
                         glist_getcanvas(glist), rtext_gettag(y));
+                }
 
                 t_object *ob = pd_checkobject(&x->te_pd);
                 int no = obj_noutlets(ob);
@@ -1633,33 +1646,40 @@ post("inside text selecting...");
 
                 for (i = 0; i < no; i++)
                 {
-                    sys_vgui(".x%lx.c addtag selected withtag %so%d \n",
-                                    glist_getcanvas(glist), rtext_gettag(y), i);
+                    /* Not necessary since xlet rect is child of gobj */
+                    //sys_vgui(".x%lx.c addtag selected withtag %so%d \n",
+                    //                glist_getcanvas(glist), rtext_gettag(y), i);
                 }
                 for (i = 0; i < ni; i++)
                 {
-                    sys_vgui(".x%lx.c addtag selected withtag %si%d \n",
-                        glist_getcanvas(glist), rtext_gettag(y), i);
+                    /* Not necessary since xlet rect is child of gobj */
+                    //sys_vgui(".x%lx.c addtag selected withtag %si%d \n",
+                    //    glist_getcanvas(glist), rtext_gettag(y), i);
                 }
             }
             else
             {
                 if (z->g_pd == gatom_class)
                 {
-                    sys_vgui(".x%lx.c dtag %lx.l selected\n",
-                        glist_getcanvas(glist), x);                    
+                    //sys_vgui(".x%lx.c dtag %lx.l selected\n",
+                    //    glist_getcanvas(glist), x);                    
                 }
-                sys_vgui(".x%lx.c dtag %sR selected\n",
-                    glist_getcanvas(glist), rtext_gettag(y));
+                //sys_vgui(".x%lx.c dtag %sR selected\n",
+                //    glist_getcanvas(glist), rtext_gettag(y));
                 gui_vmess("gui_text_deselect", "ss",
                     canvas_tag(glist_getcanvas(glist)),
                     rtext_gettag(y));
 
-                if (pd_class(&x->te_pd) == text_class && x->te_type != T_TEXT)
-                       sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 2  -strokelinecap projecting -strokedasharray {2 3} "
-                                "-fill %s\n",
+                if (pd_class(&x->te_pd) == text_class &&
+                    x->te_type != T_TEXT)
+                {
+                    /* This might be for broken objects... */
+                    sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 2 "
+                        "-strokelinecap projecting -strokedasharray {2 3} "
+                        "-fill %s\n",
                         glist_getcanvas(glist), 
                         rtext_gettag(y), invalid_fill);
+                }
 
                 t_object *ob = pd_checkobject(&x->te_pd);
                 int no = obj_noutlets(ob);
@@ -1667,13 +1687,13 @@ post("inside text selecting...");
 
                 for (i = 0; i < no; i++)
                 {
-                    sys_vgui(".x%lx.c dtag %so%d selected\n",
-                        glist_getcanvas(glist), rtext_gettag(y), i);
+                    //sys_vgui(".x%lx.c dtag %so%d selected\n",
+                    //    glist_getcanvas(glist), rtext_gettag(y), i);
                 }
                 for (i = 0; i < ni; i++)
                 {
-                    sys_vgui(".x%lx.c dtag %si%d selected\n",
-                        glist_getcanvas(glist), rtext_gettag(y), i);
+                    //sys_vgui(".x%lx.c dtag %si%d selected\n",
+                    //    glist_getcanvas(glist), rtext_gettag(y), i);
                 }
             }
         }
@@ -1789,6 +1809,7 @@ static int text_click(t_gobj *z, struct _glist *glist,
         if (doit)
         {
             //fprintf(stderr,"atom click\n");
+            /* Change the gatom blue when it's clicked? Need to test... */
             sys_vgui(".x%lx.c itemconfigure %s -fill %s\n", canvas, 
                 rtext_gettag(y), "$pd_colors(selection)");
             gatom_click((t_gatom *)x, (t_floatarg)xpix, (t_floatarg)ypix,
@@ -2046,6 +2067,9 @@ void glist_drawiofor_withtag(t_glist *glist, t_object *ob, int firsttime,
         {
             //fprintf(stderr,"drawiofor_withtag o firsttime\n");
             issignal = obj_issignaloutlet(ob,i);
+            /* Hm, I can't seem to find a case where this is needed
+               yet.  All the xlets in nw.js port load and get created
+               correctly without it... */
             sys_vgui(".x%lx.c create prect %d %d %d %d \
                       -fill %s -stroke %s -tags {%so%d %lx outlet}\n",
                 glist_getcanvas(glist), onset, y2 - 2, onset + IOWIDTH, y2,
@@ -2175,9 +2199,9 @@ void text_drawborder(t_text *x, t_glist *glist,
         {
             //fprintf(stderr, "redrawing rectangle? .x%lx.c %sR\n",
             //    (t_int)glist_getcanvas(glist), tag);
-            sys_vgui(".x%lx.c coords %sR %d %d %d %d %d %d %d %d %d %d\n",
-                glist_getcanvas(glist), tag,
-                    x1, y1,  x2, y1,  x2, y2,  x1, y2,  x1, y1);
+            //sys_vgui(".x%lx.c coords %sR %d %d %d %d %d %d %d %d %d %d\n",
+            //    glist_getcanvas(glist), tag,
+            //        x1, y1,  x2, y1,  x2, y2,  x1, y2,  x1, y1);
             gui_vmess("gui_text_redraw_border", "ssiiii",
                 canvas_tag(glist_getcanvas(glist)), tag, x1, y1, x2, y2);
 /* this seems to be totally extraneous  hans@at.or.at
@@ -2210,11 +2234,11 @@ void text_drawborder(t_text *x, t_glist *glist,
         }
         else
         {
-            sys_vgui(".x%lx.c coords %sR "
-                     "%d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
-                glist_getcanvas(glist), tag,
-                x1, y1,  x2+4, y1,  x2, y1+4,  x2, y2-4,  x2+4, y2,
-                x1, y2,  x1, y1);
+            //sys_vgui(".x%lx.c coords %sR "
+            //         "%d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
+            //    glist_getcanvas(glist), tag,
+            //    x1, y1,  x2+4, y1,  x2, y1+4,  x2, y2-4,  x2+4, y2,
+            //    x1, y2,  x1, y1);
             gui_vmess("gui_message_redraw_border", "ssiiiiiiiiiiiiii",
                 canvas_tag(glist_getcanvas(glist)), tag,
                 x1-x1, y1-y1,  x2+4-x1, y1-y1,  x2-x1, y1+4-y1, x2-x1, y2-4-y1,  x2+4-x1, y2-y1,
@@ -2225,15 +2249,15 @@ void text_drawborder(t_text *x, t_glist *glist,
     {
         if (firsttime)
         {
-            sys_vgui(".x%lx.c create ppolygon "
-                     "%d %d %d %d %d %d %d %d %d %d %d %d "
-                     "-stroke %s "
-                     "-fill $pd_colors(atom_box) "
-                     "-tags {%sR %lx text atom box %s}\n",
-                glist_getcanvas(glist),
-                x1, y1,  x2-4, y1,  x2, y1+4,  x2, y2,  x1, y2,  x1, y1,
-                (selected ? "$pd_colors(selection)" : "$pd_colors(atom_box_border)"),
-                    tag, tag, (selected ? "selected" : ""));
+            //sys_vgui(".x%lx.c create ppolygon "
+            //         "%d %d %d %d %d %d %d %d %d %d %d %d "
+            //         "-stroke %s "
+            //         "-fill $pd_colors(atom_box) "
+            //         "-tags {%sR %lx text atom box %s}\n",
+            //    glist_getcanvas(glist),
+            //    x1, y1,  x2-4, y1,  x2, y1+4,  x2, y2,  x1, y2,  x1, y1,
+            //    (selected ? "$pd_colors(selection)" : "$pd_colors(atom_box_border)"),
+            //        tag, tag, (selected ? "selected" : ""));
 
             gui_vmess("gui_atom_drawborder", "ssiiiiiiiiiiii",
                 canvas_tag(glist_getcanvas(glist)), tag,
@@ -2272,8 +2296,9 @@ void text_drawborder(t_text *x, t_glist *glist,
         }
         else
         {
-            sys_vgui(".x%lx.c coords %sR %d %d %d %d %d %d %d %d %d %d\n",
-                glist_getcanvas(glist), tag, x1, y1,  x2, y1,  x2, y2,  x1, y2,  x1, y1);
+            /* Not needed... only the parent gobj group needs to be displaced */
+            //sys_vgui(".x%lx.c coords %sR %d %d %d %d %d %d %d %d %d %d\n",
+            //    glist_getcanvas(glist), tag, x1, y1,  x2, y1,  x2, y2,  x1, y2,  x1, y1);
         }
     }
 
@@ -2316,6 +2341,7 @@ void text_drawborder_withtag(t_text *x, t_glist *glist,
         }
         if (firsttime)
         {
+            /* Can't figure out if this is needed... */
             sys_vgui(".x%lx.c create ppolygon %d %d %d %d %d %d %d %d %d %d"
                      "-stroke %s -fill %s -tags {%sR %lx text}\n", 
                 glist_getcanvas(glist),
@@ -2329,6 +2355,7 @@ void text_drawborder_withtag(t_text *x, t_glist *glist,
         msg_draw_const = ((y2-y1)/4);
         if (msg_draw_const > 10) msg_draw_const = 10; /* looks bad if too big */
         if (firsttime)
+            /* Can't figure out if this is needed... */
             sys_vgui(".x%lx.c create ppolygon "
                      "%d %d %d %d %d %d %d %d %d %d %d %d %d %d "
                      "-stroke $pd_colors(msg_border) -fill $pd_colors(msg) "
@@ -2343,6 +2370,7 @@ void text_drawborder_withtag(t_text *x, t_glist *glist,
     {
         atom_draw_const = ((y2-y1)/3);
         if (firsttime)
+            /* Can't figure out where this is needed */
             sys_vgui(".x%lx.c create ppolygon "
                      "%d %d %d %d %d %d %d %d %d %d %d %d "
                      "-stroke $pd_colors(atom_box_border) "
@@ -2391,15 +2419,21 @@ void text_drawborder_withtag(t_text *x, t_glist *glist,
 void glist_eraseiofor(t_glist *glist, t_object *ob, char *tag)
 {
     //fprintf(stderr,"glist_eraseiofor\n");
+    /* This whole function seems unnecessary now... xlets
+       get erased with the parent gobj group */
     int i, n;
     n = obj_noutlets(ob);
     for (i = 0; i < n; i++)
-        sys_vgui(".x%lx.c delete %so%d\n",
-            glist_getcanvas(glist), tag, i);
+    {
+        //sys_vgui(".x%lx.c delete %so%d\n",
+        //    glist_getcanvas(glist), tag, i);
+    }
     n = obj_ninlets(ob);
     for (i = 0; i < n; i++)
-        sys_vgui(".x%lx.c delete %si%d\n",
-            glist_getcanvas(glist), tag, i);
+    {
+        //sys_vgui(".x%lx.c delete %si%d\n",
+        //    glist_getcanvas(glist), tag, i);
+    }
 }
 
 // erase the whole gobj in the gui one go
@@ -2409,12 +2443,14 @@ void text_erase_gobj(t_text *x, t_glist *glist, char *tag)
     gui_vmess("gui_gobj_erase", "ss", canvas_tag(glist_getcanvas(glist)), tag);
 }
 
+/* Another function that's unnecessary... parent gobj group will
+   erase this for us */
 void text_eraseborder(t_text *x, t_glist *glist, char *tag)
 {
     if (x->te_type == T_TEXT && !glist->gl_edit) return;
     //if (!glist_isvisible(glist)) return;
-    sys_vgui(".x%lx.c delete %sR\n",
-        glist_getcanvas(glist), tag);
+    //sys_vgui(".x%lx.c delete %sR\n",
+    //    glist_getcanvas(glist), tag);
     glist_eraseiofor(glist, x, tag);
 }
 
