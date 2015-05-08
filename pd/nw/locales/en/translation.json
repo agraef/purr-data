@@ -165,7 +165,7 @@
     "comment_tt": "Write a comment on the canvas",
     "bang": "Bang",
     "bang_tt": "Add a graphical button to the canvas for sending bang messages",
-    "bang": "Toggle",
+    "toggle": "Toggle",
     "bang_tt": "Add a graphical checkbox to the canvas for toggling between two values",
     "number2": "Number2",
     "number2_tt": "Add a fancy graphical box to the canvas for displaying and scrolling numbers",
