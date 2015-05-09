@@ -140,8 +140,8 @@ static void my_numbox_draw_update(t_gobj *client, t_glist *glist)
         //sys_vgui(
         //    ".x%lx.c itemconfigure %lxNUMBER -fill #%6.6x -text {%s}\n",
         //        glist_getcanvas(glist), x, IEM_GUI_COLOR_EDITED, cp);
-        gui_vmess("gui_text_set", "sss", canvas_tag(glist_getcanvas(glist)),
-            gobj_tag(x), cp);
+        gui_vmess("gui_text_set", "xxs", glist_getcanvas(glist),
+            x, cp);
             
         x->x_buf[sl] = 0;
     }
@@ -156,8 +156,8 @@ static void my_numbox_draw_update(t_gobj *client, t_glist *glist)
         //    glist_getcanvas(glist), x,
         //    x->x_gui.x_selected == glist_getcanvas(glist) && 
         //        !x->x_gui.x_change ? selection_color : fcol, x->x_buf);
-        gui_vmess("gui_text_set", "sss", canvas_tag(glist_getcanvas(glist)),
-            gobj_tag(x), x->x_buf);
+        gui_vmess("gui_text_set", "xxs", glist_getcanvas(glist),
+            x, x->x_buf);
         x->x_buf[0] = 0;
     }
 }
@@ -176,8 +176,8 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
     //    canvas, x1, y1, x2-4, y1, x2, y1+4, x2, y2, x1, y2,
     //    x->x_hide_frame <= 1 ? "$pd_colors(iemgui_border)" : bcol,
     //    bcol, x, x);
-    gui_vmess("gui_create_numbox", "isssiiiiiiiiiiiiii", x->x_numwidth,
-        canvas_tag(canvas), gobj_tag(x),
+    gui_vmess("gui_create_numbox", "ixxsiiiiiiiiiiiiii", x->x_numwidth,
+        canvas, x,
         bcol, x1, y1, x2-4, y1, x2, y1+4, x2, y2, x1, y2, x1, y1, half,
         glist_istoplevel(canvas));
     /* Not sure when it is necessary to hide the frame... */
@@ -193,8 +193,8 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
     //    x->x_gui.x_fcol, x, x);
     char colorbuf[MAXPDSTRING];
     sprintf(colorbuf, "#%6.6x", x->x_gui.x_fcol);
-    gui_vmess("gui_numbox_drawtext", "sssisiiii",
-        canvas_tag(canvas), gobj_tag(x),
+    gui_vmess("gui_numbox_drawtext", "xxsisiiii",
+        canvas, x,
         x->x_buf, x->x_gui.x_fontsize, colorbuf, x1+half+2, y1+half+d, x1, y1);
 }
 
@@ -234,8 +234,8 @@ static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
     char bgcol[MAXPDSTRING];
     sprintf(bgcol, "#%6.6x", x->x_gui.x_bcol);
     
-    gui_vmess("gui_update_numbox", "sssssii",
-        canvas_tag(canvas), gobj_tag(x),
+    gui_vmess("gui_update_numbox", "xxsssii",
+        canvas, x,
         fcol, bgcol, iemgui_typeface, x->x_gui.x_fontsize, sys_fontweight);
 }
 

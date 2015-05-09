@@ -506,8 +506,8 @@ void canvas_resortinlets(t_canvas *x)
             //        "$signal_nlet" : "$pd_colors_control_nlet)"));
             sprintf(xlet_tag, "%si%d", rtext_gettag(rt), i);
             char xlet_tag[MAXPDSTRING];
-            gui_vmess("gui_configure_io", "ssiii",
-                canvas_tag(x),
+            gui_vmess("gui_configure_io", "xsiii",
+                x,
                 xlet_tag,
                 0,
                 obj_issignalinlet(ob, i),
@@ -900,8 +900,8 @@ post("inside graph vis");
         int xpix, ypix;
         xpix = text_xpix(&x->gl_obj, parent_glist);
         ypix = text_ypix(&x->gl_obj, parent_glist);
-        gui_vmess("gui_text_create_gobj", "sssiii",
-            canvas_tag(glist_getcanvas(x->gl_owner)),
+        gui_vmess("gui_text_create_gobj", "xssiii",
+            glist_getcanvas(x->gl_owner),
             tag, "graph", xpix, ypix, 1);
         if (canvas_showtext(x))
             rtext_draw(glist_findrtext(parent_glist, &x->gl_obj));
@@ -933,14 +933,14 @@ post("inside graph vis");
             //    glist_getcanvas(x->gl_owner),
                 ////parent_glist,
             //    x1, y1, x1, y2, x2, y2, x2, y1, x1, y1, tag);
-            gui_vmess("gui_text_drawborder", "sssiiiii",
-                canvas_tag(glist_getcanvas(x->gl_owner)),
+            gui_vmess("gui_text_drawborder", "xssiiiii",
+                glist_getcanvas(x->gl_owner),
                 tag,
                 "none",
                 0, x1, y1, x2, y2);
             glist_noselect(x->gl_owner);
-            gui_vmess("gui_graph_fill_border", "ssi",
-                canvas_tag(glist_getcanvas(x->gl_owner)),
+            gui_vmess("gui_graph_fill_border", "xsi",
+                glist_getcanvas(x->gl_owner),
                 tag);
         }
         else if (gobj_shouldvis(gr, parent_glist))
@@ -948,8 +948,8 @@ post("inside graph vis");
             //sys_vgui(".x%lx.c delete %sfill\n",
             //    glist_getcanvas(x->gl_owner), tag);
                ////parent_glist, tag);
-            gui_vmess("gui_gobj_erase", "ss",
-                canvas_tag(glist_getcanvas(x->gl_owner)),
+            gui_vmess("gui_gobj_erase", "xs",
+                glist_getcanvas(x->gl_owner),
                 tag);
         }
         return;
@@ -977,8 +977,8 @@ post("inside graph vis");
         char tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "%sR", tag);
 
-        gui_vmess("gui_text_drawborder", "sssiiiii",
-            canvas_tag(glist_getcanvas(x->gl_owner)),
+        gui_vmess("gui_text_drawborder", "xssiiiii",
+            glist_getcanvas(x->gl_owner),
             tag,
             "none",
             0, x1, y1, x2, y2);
@@ -999,8 +999,8 @@ post("inside graph vis");
                 //    tag,
                 //    (glist_isselected(x, gr) ?
                 //        "$pd_colors(selection)" : "$pd_colors(graph_border)"));
-                gui_vmess("gui_graph_label", "ssissisi",
-                    canvas_tag(glist_getcanvas(x)),
+                gui_vmess("gui_graph_label", "xsissisi",
+                    glist_getcanvas(x),
                     tag,
                     i,
                     arrayname->s_name,
@@ -1033,8 +1033,8 @@ post("inside graph vis");
                 //    glist_getcanvas(x->gl_owner),
                 //    (int)glist_xtopixels(x, f), (int)lpix,
                 //    (int)glist_xtopixels(x, f), (int)lpix + tickpix, tag);
-                gui_vmess("gui_graph_vtick", "ssiiiiii",
-                    canvas_tag(glist_getcanvas(x->gl_owner)),
+                gui_vmess("gui_graph_vtick", "xsiiiiii",
+                    glist_getcanvas(x->gl_owner),
                     tag,
                     (int)glist_xtopixels(x, f),
                     (int)upix,
@@ -1056,8 +1056,8 @@ post("inside graph vis");
                 //    glist_getcanvas(x->gl_owner),
                 //    (int)glist_xtopixels(x, f), (int)lpix,
                 //    (int)glist_xtopixels(x, f), (int)lpix + tickpix, tag);
-                gui_vmess("gui_graph_vtick", "ssiiiiii",
-                    canvas_tag(glist_getcanvas(x->gl_owner)),
+                gui_vmess("gui_graph_vtick", "xsiiiiii",
+                    glist_getcanvas(x->gl_owner),
                     tag,
                     (int)glist_xtopixels(x, f),
                     (int)upix,
@@ -1088,8 +1088,8 @@ post("inside graph vis");
                 //    glist_getcanvas(x->gl_owner),
                 //    x2, (int)glist_ytopixels(x, f), 
                 //    x2 - tickpix, (int)glist_ytopixels(x, f), tag);
-                gui_vmess("gui_graph_htick", "ssiiiiii",
-                    canvas_tag(glist_getcanvas(x->gl_owner)),
+                gui_vmess("gui_graph_htick", "xsiiiiii",
+                    glist_getcanvas(x->gl_owner),
                     tag,
                     (int)glist_ytopixels(x, f),
                     x1,
@@ -1111,8 +1111,8 @@ post("inside graph vis");
                 //    glist_getcanvas(x->gl_owner),
                 //    x2, (int)glist_ytopixels(x, f), 
                 //    x2 - tickpix, (int)glist_ytopixels(x, f), tag);
-                gui_vmess("gui_graph_htick", "ssiiiiii",
-                    canvas_tag(glist_getcanvas(x->gl_owner)),
+                gui_vmess("gui_graph_htick", "xsiiiiii",
+                    glist_getcanvas(x->gl_owner),
                     tag,
                     (int)glist_ytopixels(x, f),
                     x1,
@@ -1132,8 +1132,8 @@ post("inside graph vis");
             //    (int)glist_ytopixels(x, x->gl_xlabely),
             //    x->gl_xlabel[i]->s_name, sys_font, 
             //         glist_getfont(x), sys_fontweight, tag);
-            gui_vmess("gui_graph_tick_label", "ssiissisii",
-                canvas_tag(glist_getcanvas(x)),
+            gui_vmess("gui_graph_tick_label", "xsiissisii",
+                glist_getcanvas(x),
                 tag,
                 (int)glist_xtopixels(x, atof(x->gl_xlabel[i]->s_name)),
                 (int)glist_ytopixels(x, x->gl_xlabely),
@@ -1155,8 +1155,8 @@ post("inside graph vis");
             //    (int)glist_ytopixels(x, atof(x->gl_ylabel[i]->s_name)),
             //    x->gl_ylabel[i]->s_name, sys_font,
             //    glist_getfont(x), sys_fontweight, tag);
-            gui_vmess("gui_graph_tick_label", "ssiissisii",
-                canvas_tag(glist_getcanvas(x)),
+            gui_vmess("gui_graph_tick_label", "xsiissisii",
+                glist_getcanvas(x),
                 tag,
                 (int)glist_xtopixels(x, x->gl_ylabelx),
                 (int)glist_ytopixels(x, atof(x->gl_ylabel[i]->s_name)),
@@ -1197,8 +1197,8 @@ post("inside graph vis");
         for (g = x->gl_list; g; g = g->g_next)
             gobj_vis(g, x, 0);
 
-        gui_vmess("gui_gobj_erase", "ss",
-            canvas_tag(glist_getcanvas(x->gl_owner)),
+        gui_vmess("gui_gobj_erase", "xs",
+            glist_getcanvas(x->gl_owner),
             tag);
 
         // here we check for changes in scrollbar because of legacy
@@ -1508,11 +1508,11 @@ static void graph_select(t_gobj *z, t_glist *glist, int state)
             //     (state? "$pd_colors(selection)" : "$pd_colors(graph_border)"),
             //     (state? "$pd_colors(selection)" : "$pd_colors(graph_border)"));
             if (state)
-                gui_vmess("gui_text_select", "ss",
-                    canvas_tag(canvas), rtext_gettag(y));
+                gui_vmess("gui_text_select", "xs",
+                    canvas, rtext_gettag(y));
             else
-                gui_vmess("gui_text_deselect", "ss",
-                    canvas_tag(canvas), rtext_gettag(y));
+                gui_vmess("gui_text_deselect", "xs",
+                    canvas, rtext_gettag(y));
         }
 
         t_gobj *g;

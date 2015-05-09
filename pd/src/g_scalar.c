@@ -431,8 +431,8 @@ void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state)
             //         "-tags {select%lx selected}\n",
             //        glist_getcanvas(glist), x1, y1, x2, y2,
             //        x);
-            gui_vmess("gui_scalar_draw_select_rect", "ssiiiiiff",
-                canvas_tag(glist_getcanvas(glist)), tagbuf,
+            gui_vmess("gui_scalar_draw_select_rect", "xsiiiiiff",
+                glist_getcanvas(glist), tagbuf,
                 state,
                 x1, y1, x2, y2, basex, basey);
         }
@@ -442,8 +442,8 @@ void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state)
         if (glist_istoplevel(glist))
         {
             //sys_vgui(".x%lx.c delete select%lx\n", glist_getcanvas(glist), x);
-            gui_vmess("gui_scalar_draw_select_rect", "ssiiiiiii",
-                canvas_tag(glist_getcanvas(glist)), tagbuf,
+            gui_vmess("gui_scalar_draw_select_rect", "xsiiiiiii",
+                glist_getcanvas(glist), tagbuf,
                 state,
                 0, 0, 0, 0, 0, 0);
         }
@@ -486,8 +486,8 @@ void scalar_select(t_gobj *z, t_glist *owner, int state)
         //    glist_getcanvas(owner), x);
         //sys_vgui(".x%lx.c addtag scalar_selected withtag {.scalar%lx}\n",
         //    glist_getcanvas(owner), x->sc_vec);
-        gui_vmess("gui_text_select", "ss",
-            canvas_tag(glist_getcanvas(owner)), tagbuf);
+        gui_vmess("gui_text_select", "xs",
+            glist_getcanvas(owner), tagbuf);
     }
     else
     {
@@ -496,8 +496,8 @@ void scalar_select(t_gobj *z, t_glist *owner, int state)
         //    glist_getcanvas(owner), x);
         //sys_vgui(".x%lx.c dtag .scalar%lx scalar_selected\n",
         //    glist_getcanvas(owner), x->sc_vec);
-        gui_vmess("gui_text_deselect", "ss",
-            canvas_tag(glist_getcanvas(owner)), tagbuf);
+        gui_vmess("gui_text_deselect", "xs",
+            glist_getcanvas(owner), tagbuf);
     }
     //sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n",
     //    glist_getcanvas(owner), owner, state);
@@ -647,8 +647,8 @@ static void scalar_group_configure(t_scalar *x, t_glist *owner,
     char parentbuf[MAXPDSTRING];
     sprintf(parentbuf, "dgroup%lx.%lx", (long unsigned int)parent,
         (long unsigned int)x->sc_vec);
-    gui_start_vmess("gui_draw_configure_all", "ss",
-        canvas_tag(glist_getcanvas(owner)), tagbuf);
+    gui_start_vmess("gui_draw_configure_all", "xs",
+        glist_getcanvas(owner), tagbuf);
     svg_grouptogui(gl, template, x->sc_vec);
     gui_end_vmess();
     for (y = gl->gl_list; y; y = y->g_next)
@@ -686,8 +686,8 @@ void scalar_configure(t_scalar *x, t_glist *owner)
 
         char tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "scalar%lx", (long unsigned int)x->sc_vec);
-        gui_vmess("gui_scalar_configure_gobj", "ssiffffii",
-            canvas_tag(glist_getcanvas(owner)), 
+        gui_vmess("gui_scalar_configure_gobj", "xsiffffii",
+            glist_getcanvas(owner), 
             tagbuf,
             glist_isselected(owner, &x->sc_gobj),
             xscale, 0.0, 0.0, yscale,
@@ -703,8 +703,8 @@ void scalar_configure(t_scalar *x, t_glist *owner)
         //sprintf(tagbuf, "scalar%lxgobj", (long unsigned int)x->sc_vec);
         //sprintf(groupbuf, "dgroup%lx.%lx", (long unsigned int)templatecanvas,
         //    (long unsigned int)x->sc_vec);
-        //gui_vmess("gui_create_scalar_group", "sss",
-        //    canvas_tag(glist_getcanvas(owner)), groupbuf, tagbuf); 
+        //gui_vmess("gui_create_scalar_group", "xss",
+        //    glist_getcanvas(owner), groupbuf, tagbuf); 
         //sys_vgui("pdtk_bind_scalar_mouseover "
         //         ".x%lx.c .x%lx.x%lx.template%lx {.x%lx}\n",
         //    glist_getcanvas(owner), glist_getcanvas(owner),
@@ -756,8 +756,8 @@ static void scalar_groupvis(t_scalar *x, t_glist *owner, t_template *template,
         char parentbuf[MAXPDSTRING];
         sprintf(parentbuf, "dgroup%lx.%lx", (long unsigned int)parent,
             (long unsigned int)x->sc_vec);
-        gui_start_vmess("gui_create_scalar_group", "sss",
-            canvas_tag(glist_getcanvas(owner)), tagbuf, parentbuf);
+        gui_start_vmess("gui_create_scalar_group", "xss",
+            glist_getcanvas(owner), tagbuf, parentbuf);
         svg_grouptogui(gl, template, x->sc_vec);
         gui_end_vmess();
         //sys_gui("\n");
@@ -860,8 +860,8 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
         //    );
         char tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "scalar%lx", (long unsigned int)x->sc_vec);
-        gui_vmess("gui_create_scalar", "ssiffffiii",
-            canvas_tag(glist_getcanvas(owner)), 
+        gui_vmess("gui_create_scalar", "xsiffffiii",
+            glist_getcanvas(owner), 
             tagbuf,
             glist_isselected(owner, &x->sc_gobj),
             xscale, 0.0, 0.0, yscale,
@@ -877,8 +877,8 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
         sprintf(tagbuf, "scalar%lxgobj", (long unsigned int)x->sc_vec);
         sprintf(groupbuf, "dgroup%lx.%lx", (long unsigned int)templatecanvas,
             (long unsigned int)x->sc_vec);
-        gui_vmess("gui_create_scalar_group", "sss",
-            canvas_tag(glist_getcanvas(owner)), groupbuf, tagbuf);
+        gui_vmess("gui_create_scalar_group", "xss",
+            glist_getcanvas(owner), groupbuf, tagbuf);
 
         sys_vgui("pdtk_bind_scalar_mouseover "
                  ".x%lx.c .x%lx.x%lx.template%lx {.x%lx}\n",
@@ -911,8 +911,8 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
         //    x->sc_vec);
         char tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "scalar%lx", (long unsigned int)x->sc_vec);
-        gui_vmess("gui_scalar_erase", "ss",
-            canvas_tag(glist_getcanvas(owner)), tagbuf);
+        gui_vmess("gui_scalar_erase", "xs",
+            glist_getcanvas(owner), tagbuf);
     }
 
     sys_unqueuegui(x);

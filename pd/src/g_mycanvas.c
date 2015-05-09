@@ -35,10 +35,10 @@ void my_canvas_draw_new(t_my_canvas *x, t_glist *glist)
     //    x->x_gui.x_bcol, x, x);
     char colorbuf[MAXPDSTRING];
     sprintf(colorbuf, "#%6.6x", x->x_gui.x_bcol);
-    gui_vmess("gui_text_create_gobj", "sssiii", canvas_tag(canvas),
-        gobj_tag(x), "iemgui", x1, y1, glist_istoplevel(canvas));
-    gui_vmess("gui_create_mycanvas", "sssiiiiii", canvas_tag(canvas),
-        gobj_tag(x), colorbuf, x1, y1, x1+x->x_vis_w, y1+x->x_vis_h,
+    gui_vmess("gui_text_create_gobj", "xxsiii", canvas,
+        x, "iemgui", x1, y1, glist_istoplevel(canvas));
+    gui_vmess("gui_create_mycanvas", "xxsiiiiii", canvas,
+        x, colorbuf, x1, y1, x1+x->x_vis_w, y1+x->x_vis_h,
         x1+x->x_gui.x_w, y1+x->x_gui.x_h);
 }
 
@@ -53,8 +53,8 @@ void my_canvas_draw_move(t_my_canvas *x, t_glist *glist)
     //    canvas, x, x1, y1, x1+x->x_vis_w, y1+x->x_vis_h);
     //sys_vgui(".x%lx.c coords %lxBASE %d %d %d %d\n",
     //    canvas, x, x1, y1, x1+x->x_gui.x_w, y1+x->x_gui.x_h);
-    gui_vmess("gui_mycanvas_coords", "ssiiii",
-        canvas_tag(canvas), gobj_tag(x),
+    gui_vmess("gui_mycanvas_coords", "xxiiii",
+        canvas, x,
         x->x_vis_w, x->x_vis_h, x->x_gui.x_w, x->x_gui.x_h);
 }
 
@@ -69,8 +69,8 @@ void my_canvas_draw_config(t_my_canvas* x, t_glist* glist)
     //    x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas ?
     //    "$pd_colors(selection)" : bcol);
     isselected = x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas;
-    gui_vmess("gui_update_mycanvas", "sssi",
-        canvas_tag(canvas), gobj_tag(x), bcol, isselected);
+    gui_vmess("gui_update_mycanvas", "xxsi",
+        canvas, x, bcol, isselected);
 }
 
 void my_canvas_draw_select(t_my_canvas* x, t_glist* glist)
@@ -81,8 +81,8 @@ void my_canvas_draw_select(t_my_canvas* x, t_glist* glist)
     //sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke %s\n", canvas, x,
     //    x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas ?
     //    "$pd_colors(selection)" : bcol);
-    gui_vmess("gui_mycanvas_select_color", "sss",
-        canvas_tag(canvas), gobj_tag(x),
+    gui_vmess("gui_mycanvas_select_color", "xxs",
+        canvas, x,
         x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas ?
             "blue" : bcol); 
 }

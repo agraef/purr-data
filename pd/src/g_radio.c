@@ -35,8 +35,8 @@ void radio_draw_update(t_gobj *client, t_glist *glist)
     char fcol[8], bcol[8];
     sprintf(fcol, "#%6.6x", x->x_gui.x_fcol);
     sprintf(bcol, "#%6.6x", x->x_gui.x_bcol);
-    gui_vmess("gui_radio_update", "sssii", canvas_tag(canvas),
-        gobj_tag(x), fcol, x->x_drawn, x->x_on);
+    gui_vmess("gui_radio_update", "xxsii", canvas,
+        x, fcol, x->x_drawn, x->x_on);
     x->x_drawn = x->x_on;
 }
 
@@ -55,8 +55,8 @@ void radio_draw_new(t_radio *x, t_glist *glist)
             //"-stroke $pd_colors(iemgui_border) "
             //"-tags {%lxBASE%d %lxBASE x%lx text iemgui border}\n",
             //canvas, x1, yi, x1+d, yi, x, i, x, x);
-            gui_vmess("gui_create_radio", "ssiiiiiii",
-              canvas_tag(canvas), gobj_tag(x), x1, yi, x1+d, yi, i, x1, y1);
+            gui_vmess("gui_create_radio", "xxiiiiiii",
+              canvas, x, x1, yi, x1+d, yi, i, x1, y1);
         }
         //sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x "
         //    "-stroke #%6.6x -tags {%lxBUT%d x%lx text iemgui}\n",
@@ -68,8 +68,8 @@ void radio_draw_new(t_radio *x, t_glist *glist)
         sprintf(tagbuf, "x%lx", (long unsigned int)x);
         char colorbuf[MAXPDSTRING];
         sprintf(colorbuf, "#%6.6x", x->x_gui.x_fcol);
-        gui_vmess("gui_create_radio_buttons", "sssiiiiiiii",
-            canvas_tag(canvas), gobj_tag(x),
+        gui_vmess("gui_create_radio_buttons", "xxsiiiiiiii",
+            canvas, x,
             colorbuf, x1+s, yi+s, x1+d-s, yi+d-s, x1, y1, i, x->x_on==i);
         yi += d;
         x->x_drawn = x->x_on;
@@ -80,8 +80,8 @@ void radio_draw_new(t_radio *x, t_glist *glist)
             //"-stroke $pd_colors(iemgui_border) "
             //"-tags {%lxBASE%d %lxBASE x%lx text iemgui border}\n",
             //canvas, xi, y1, xi, y1+d, x, i, x, x);
-            gui_vmess("gui_create_radio", "ssiiiiiii", canvas_tag(canvas),
-                gobj_tag(x), xi, y1, xi, y1+d, i, x1, y1);
+            gui_vmess("gui_create_radio", "xxiiiiiii", canvas,
+                x, xi, y1, xi, y1+d, i, x1, y1);
         }
         //sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x "
         //    "-stroke #%6.6x -tags {%lxBUT%d x%lx text iemgui}\n",
@@ -91,8 +91,8 @@ void radio_draw_new(t_radio *x, t_glist *glist)
         //    x, i, x);
         char colorbuf[MAXPDSTRING];
         sprintf(colorbuf, "#%6.6x", x->x_gui.x_fcol);
-        gui_vmess("gui_create_radio_buttons", "sssiiiiiiii",
-            canvas_tag(canvas), gobj_tag(x),
+        gui_vmess("gui_create_radio_buttons", "xxsiiiiiiii",
+            canvas, x,
             colorbuf, xi+s, y1+s, xi+d-s, yi+d-s, x1, y1, i, x->x_on==i);
         xi += d;
         x->x_drawn = x->x_on;
@@ -112,8 +112,8 @@ void radio_draw_move(t_radio *x, t_glist *glist)
         //    canvas, x, i, x1, yi, x1+d, yi);
         //sys_vgui(".x%lx.c coords %lxBUT%d %d %d %d %d\n",
         //    canvas, x, i, x1+s, yi+s, x1+d-s, yi+d-s);
-        gui_vmess("gui_radio_button_coords", "ssiiiiiiii",
-            canvas_tag(canvas), gobj_tag(x),
+        gui_vmess("gui_radio_button_coords", "xxiiiiiiii",
+            canvas, x,
             x1, y1, xi, yi, i, s, d, x->x_orient);
         yi += d;
     } else {
@@ -121,8 +121,8 @@ void radio_draw_move(t_radio *x, t_glist *glist)
         //    canvas, x, i, xi, y1, xi, y1+d);
         //sys_vgui(".x%lx.c coords %lxBUT%d %d %d %d %d\n",
         //    canvas, x, i, xi+s, y1+s, xi+d-s, y1+d-s);
-        gui_vmess("gui_radio_button_coords", "ssiiiiiiii",
-            canvas_tag(canvas), gobj_tag(x),
+        gui_vmess("gui_radio_button_coords", "xxiiiiiiii",
+            canvas, x,
             x1, y1, xi, yi, i, s, d, x->x_orient);
         xi += d;
     }
@@ -142,8 +142,8 @@ void radio_draw_config(t_radio *x, t_glist *glist)
     }
         char col[8];
         sprintf(col, "#%6.6x", x->x_gui.x_fcol);
-        gui_vmess("gui_radio_update", "sssii",
-            canvas_tag(canvas), gobj_tag(x), col, 0, x->x_on);
+        gui_vmess("gui_radio_update", "xxsii",
+            canvas, x, col, 0, x->x_on);
 
 }
 

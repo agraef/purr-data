@@ -362,8 +362,8 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
             //    dispx + LMARGIN, dispy + TMARGIN,
             //    outchars_b, tempbuf, sys_hostfontsize(font),
             //    (glist_isselected(x->x_glist, ((t_gobj*)x->x_text)) ? "$pd_colors(selection)" : "$pd_colors(text)"));
-            gui_vmess("gui_text_new", "sssiiisi",
-                canvas_tag(canvas), x->x_tag, rtext_gettype(x)->s_name,
+            gui_vmess("gui_text_new", "xssiiisi",
+                canvas, x->x_tag, rtext_gettype(x)->s_name,
                 glist_isselected(x->x_glist, ((t_gobj*)x->x_text)),
                 LMARGIN,
                 pixhigh - BMARGIN - TMARGIN - 1,
@@ -380,7 +380,7 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
         {
             //sys_vgui("pdtk_text_set .x%lx.c %s {%.*s}\n",
             //    canvas, x->x_tag, outchars_b, tempbuf);
-            gui_vmess("gui_text_set", "sss", canvas_tag(canvas), x->x_tag, tempbuf);
+            gui_vmess("gui_text_set", "xss", canvas, x->x_tag, tempbuf);
 
             if (pixwide != x->x_drawnwidth || pixhigh != x->x_drawnheight) 
                 text_drawborder(x->x_text, x->x_glist, x->x_tag,

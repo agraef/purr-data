@@ -152,8 +152,8 @@ static void canvas_nlet_conf (t_canvas *x, int type) {
 
     /* this is rather confusing, but the canvas_cnct_[xlet]_tag already
        includes the type and index concatenated to the end. */
-    gui_vmess("gui_configure_io", "ssiii",
-        canvas_tag(x), type == 'o' ? x->gl_editor->canvas_cnct_outlet_tag :
+    gui_vmess("gui_configure_io", "xsiii",
+        x, type == 'o' ? x->gl_editor->canvas_cnct_outlet_tag :
             x->gl_editor->canvas_cnct_inlet_tag,
         isiemgui, issignal, 1);
 }
@@ -444,7 +444,7 @@ void glist_selectline(t_glist *x, t_outconnect *oc, int index1,
         //sys_vgui(".x%lx.c addtag selected withtag l%lx\n",
         //    glist_getcanvas(x), x->gl_editor->e_selectline_tag);
         sprintf(tagbuf, "l%lx", (long unsigned int)oc);
-        gui_vmess("gui_canvas_select_line", "ss", canvas_tag(x), tagbuf);
+        gui_vmess("gui_canvas_select_line", "xs", x, tagbuf);
         c_selection = x;
         canvas_draw_gop_resize_hooks(x);
     }
@@ -476,7 +476,7 @@ void glist_deselectline(t_glist *x)
         //    glist_getcanvas(x)->gl_editor->e_selectline_tag);
         canvas_draw_gop_resize_hooks(x);
         sprintf(tagbuf, "l%lx", (long unsigned int)x->gl_editor->e_selectline_tag);
-        gui_vmess("gui_canvas_deselect_line", "ss", canvas_tag(x), tagbuf);
+        gui_vmess("gui_canvas_deselect_line", "xs", x, tagbuf);
     }    
 }
 
@@ -875,8 +875,8 @@ void canvas_disconnect(t_canvas *x,
         {
             //sys_vgui(".x%lx.c delete l%lx\n", x, oc);
             sprintf(tagbuf, "l%lx", (long unsigned int)oc);
-            gui_vmess("gui_canvas_delete_line", "ss",
-                canvas_tag(x), tagbuf);
+            gui_vmess("gui_canvas_delete_line", "xs",
+                x, tagbuf);
             // jsarlo
             if(x->gl_editor && x->gl_editor->gl_magic_glass)
             {
@@ -2223,7 +2223,7 @@ void canvas_setcursor(t_canvas *x, unsigned int cursornum)
         if (xwas != x || cursorwas != cursornum)
         {
             //sys_vgui(".x%lx configure -cursor %s\n", x, cursorlist[cursornum]);
-            gui_vmess("gui_canvas_cursor", "ss", canvas_tag(x),
+            gui_vmess("gui_canvas_cursor", "xs", x,
                 cursorlist[cursornum]);
             xwas = x;
             cursorwas = cursornum;
@@ -2328,8 +2328,8 @@ static void canvas_rightclick(t_canvas *x, int xpos, int ypos, t_gobj *y_sel)
     else isobject = 0;
     //sys_vgui("pdtk_canvas_popup .x%lx %d %d %d %d %d\n",
     //    x, xpos, ypos, canprop, canopen, isobject);
-    gui_vmess("gui_canvas_popup", "siiiii",
-        canvas_tag(x), xpos, ypos, canprop, canopen, isobject);
+    gui_vmess("gui_canvas_popup", "xiiiii",
+        x, xpos, ypos, canprop, canopen, isobject);
 }
 
 /* ----  editors -- perhaps this and "vis" should go to g_editor.c ------- */
@@ -2341,7 +2341,7 @@ static t_editor *editor_new(t_glist *owner)
     x->e_connectbuf = binbuf_new();
     x->e_deleted = binbuf_new();
     x->e_glist = owner;
-    sprintf(buf, ".x%lx", (t_int)owner);
+    sprintf(buf, "x%.6lx", (t_int)owner);
     x->e_guiconnect = guiconnect_new(&owner->gl_pd, gensym(buf));
     x->gl_magic_glass = magicGlass_new(owner);
     x->canvas_cnct_inlet_tag[0] = 0;
@@ -2442,7 +2442,7 @@ void canvas_vis(t_canvas *x, t_floatarg f)
             //sys_vgui("raise .x%lx\n", x);
             //sys_vgui("focus .x%lx.c\n", x);
             //sys_vgui("wm deiconify .x%lx\n", x);  
-            gui_vmess("gui_raise_window", "s", canvas_tag(x));
+            gui_vmess("gui_raise_window", "x", x);
         }
         else
         {
@@ -2456,8 +2456,8 @@ void canvas_vis(t_canvas *x, t_floatarg f)
 
             canvas_args_to_string(argsbuf, x);
 
-            gui_vmess("gui_canvas_new", "siisissis",
-                canvas_tag(x),
+            gui_vmess("gui_canvas_new", "xiisissis",
+                x,
                 (int)(x->gl_screenx2 - x->gl_screenx1),
                 (int)(x->gl_screeny2 - x->gl_screeny1),
                 geobuf,
@@ -2555,7 +2555,7 @@ void canvas_vis(t_canvas *x, t_floatarg f)
         if (glist_isvisible(x))
             canvas_map(x, 0);
         canvas_destroy_editor(x);
-        gui_vmess("gui_close_window", "s", canvas_tag(x));
+        gui_vmess("gui_close_window", "x", x);
         // delete properties windows of objects in the patcher we're closing
         g = x->gl_list;
         while (g)
@@ -3414,8 +3414,8 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                         //    "$pd_colors(signal_cord_width)" :
                         //    "$pd_colors(control_cord_width)"),
                         //(issignal ? "signal" : "control"));
-                        gui_vmess("gui_canvas_line", "ssiiiiiiiiii",
-                            canvas_tag(x), "newcord",
+                        gui_vmess("gui_canvas_line", "xsiiiiiiiiii",
+                            x, "newcord",
                             xpos, ypos, xpos, ypos, xpos, ypos, xpos, ypos, xpos, ypos);
                     }   
                     else
@@ -3438,8 +3438,8 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                             //         x,
                             //         x->gl_editor->canvas_cnct_outlet_tag);
 
-                            gui_vmess("gui_highlight_io", "ss",
-                                canvas_tag(x),
+                            gui_vmess("gui_highlight_io", "xs",
+                                x,
                                 x->gl_editor->canvas_cnct_outlet_tag);
 
                             //sys_vgui(".x%x.c raise %s\n",
@@ -3499,8 +3499,8 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                         //         "-strokewidth $highlight_width\n",
                         //    x, x->gl_editor->canvas_cnct_inlet_tag);
 
-                        gui_vmess("gui_highlight_io", "ss",
-                            canvas_tag(x),
+                        gui_vmess("gui_highlight_io", "xs",
+                            x,
                             x->gl_editor->canvas_cnct_inlet_tag);
 
                         //sys_vgui(".x%x.c raise %s\n",
@@ -3728,7 +3728,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
         //sys_vgui(".x%lx.c create prect %d %d %d %d -tags x "
         //         "-stroke $pd_colors(selection_rectangle)\n",
         //    x, xpos, ypos, xpos, ypos);
-        gui_vmess("gui_create_selection_rectangle", "siiii", canvas_tag(x),
+        gui_vmess("gui_create_selection_rectangle", "xiiii", x,
             xpos, ypos, xpos, ypos);
         x->gl_editor->e_xwas = xpos;
         x->gl_editor->e_ywas = ypos;
@@ -3868,8 +3868,8 @@ void canvas_drawconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2,
     //        "$pd_colors(control_cord_width)"), 
     //    tag, (issignal ? "signal" : "control"));
     sprintf(tagbuf, "l%lx", (long unsigned int)tag);
-    gui_vmess("gui_canvas_line", "ssiiiiiiiiii",
-        canvas_tag(x), tagbuf, lx1, ly1, lx1, ly1 + yoff,
+    gui_vmess("gui_canvas_line", "xsiiiiiiiiii",
+        x, tagbuf, lx1, ly1, lx1, ly1 + yoff,
         lx1 + halfx, ly1 + halfy, lx2, ly2 - yoff, lx2, ly2);
 }
 
@@ -3914,8 +3914,8 @@ void canvas_updateconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2,
             //    lx1, ly1 + yoff, lx1 + halfx, ly1 + halfy,
             //    lx2, ly2 - yoff, lx2, ly2);
             sprintf(cord_tag, "l%lx", (long unsigned int)tag);
-            gui_vmess("gui_canvas_updateline", "ssiiiii",
-                canvas_tag(x), cord_tag,
+            gui_vmess("gui_canvas_updateline", "xsiiiii",
+                x, cord_tag,
                 lx1, ly1, lx2, ly2, yoff);
 //                lx1, ly1, lx1, ly1 + yoff, lx1 + halfx, ly1 + halfy,
 //                lx2, ly2 - yoff, lx2, ly2);
@@ -3928,8 +3928,8 @@ void canvas_updateconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2,
             //    x, lx1, ly1,
             //    lx1, ly1 + yoff, lx1 + halfx, ly1 + halfy,
             //    lx2, ly2 - yoff, lx2, ly2);
-            gui_vmess("gui_canvas_updateline", "ssiiiii",
-                canvas_tag(x), "newcord",
+            gui_vmess("gui_canvas_updateline", "xsiiiii",
+                x, "newcord",
                 lx1, ly1, lx2, ly2, yoff);
 //                lx1, ly1, lx1, ly1 + yoff, lx1 + halfx, ly1 + halfy, lx2, ly2 - yoff,
 //                lx2, ly2);
@@ -4529,7 +4529,7 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
     if (doit && !glob_shift)
     {
         sys_vgui(".x%lx.c delete x\n", x);
-        gui_vmess("gui_canvas_delete_line", "ss", canvas_tag(x), "newcord");
+        gui_vmess("gui_canvas_delete_line", "xs", x, "newcord");
     }
     else
     {
@@ -4599,8 +4599,8 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                     //         "-strokewidth $highlight_width\n",
                     //    x, x->gl_editor->canvas_cnct_inlet_tag);
 
-                    gui_vmess("gui_highlight_io", "ss",
-                        canvas_tag(x),
+                    gui_vmess("gui_highlight_io", "xs",
+                        x,
                         x->gl_editor->canvas_cnct_inlet_tag);
 
                     //sys_vgui(".x%x.c raise %s\n",
@@ -4678,7 +4678,7 @@ static void canvas_doregion(t_canvas *x, int xpos, int ypos, int doit)
         else hiy = x->gl_editor->e_ywas, loy = ypos;
         canvas_selectinrect(x, lox, loy, hix, hiy);
         //sys_vgui(".x%lx.c delete x\n", x);
-        gui_vmess("gui_hide_selection_rectangle", "s", canvas_tag(x));
+        gui_vmess("gui_hide_selection_rectangle", "x", x);
         x->gl_editor->e_onmotion = MA_NONE;
     }
     else
@@ -4686,8 +4686,8 @@ static void canvas_doregion(t_canvas *x, int xpos, int ypos, int doit)
         //sys_vgui(".x%lx.c coords x %d %d %d %d\n",
         //    x, x->gl_editor->e_xwas,
         //        x->gl_editor->e_ywas, xpos, ypos);
-        gui_vmess("gui_move_selection_rectangle", "siiii",
-            canvas_tag(x),
+        gui_vmess("gui_move_selection_rectangle", "xiiii",
+            x,
             x->gl_editor->e_xwas, x->gl_editor->e_ywas, xpos, ypos);
     }
 }
@@ -4915,7 +4915,7 @@ void canvas_displaceselection(t_canvas *x, int dx, int dy)
     if (dx || dy)
     {
         //sys_vgui("pdtk_canvas_displace_withtag .x%lx.c %d %d\n", x, dx, dy);
-        gui_vmess("gui_canvas_displace_withtag", "sii", canvas_tag(x), dx, dy);
+        gui_vmess("gui_canvas_displace_withtag", "xii", x, dx, dy);
         if (resortin) canvas_resortinlets(x);
         if (resortout) canvas_resortoutlets(x);
         //scrollbar_update(x);
@@ -5428,18 +5428,18 @@ void glob_verifyquit(void *dummy, t_floatarg f)
                 /* if this is an abstraction */
                 //sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 3;}\n",
                 //     g2, g2);
-                gui_vmess("gui_canvas_menuclose", "ssi",
-                    canvas_tag(g2),
-                    canvas_tag(g2),
+                gui_vmess("gui_canvas_menuclose", "xxi",
+                    g2,
+                    g2,
                     3);
             }
             else
             {
                 //sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 3;}\n",
                 //     canvas_getrootfor(g2), g2);
-                gui_vmess("gui_canvas_menuclose", "ssi",
-                    canvas_tag(canvas_getrootfor(g2)),
-                    canvas_tag(g2),
+                gui_vmess("gui_canvas_menuclose", "xxi",
+                    canvas_getrootfor(g2),
+                    g2,
                     3);
             }
             //canvas_vis(g2, 1);
@@ -5506,18 +5506,18 @@ void canvas_menuclose(t_canvas *x, t_floatarg fforce)
                 /* if this is an abstraction */
                 //sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 2;}\n",
                 //     g, g);
-                gui_vmess("gui_canvas_menuclose", "ssi",
-                    canvas_tag(g),
-                    canvas_tag(g),
+                gui_vmess("gui_canvas_menuclose", "xxi",
+                    g,
+                    g,
                     2);
             }
             else
             {
                 //sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 2;}\n",
                 //     canvas_getrootfor(g), g);
-                gui_vmess("gui_canvas_menuclose", "ssi",
-                    canvas_tag(canvas_getrootfor(g)),
-                    canvas_tag(g),
+                gui_vmess("gui_canvas_menuclose", "xxi",
+                    canvas_getrootfor(g),
+                    g,
                     2);
             }
             return;
@@ -5572,9 +5572,9 @@ post("farging...");
                 /* if this is an abstraction */
                 //sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 2;}\n",
                 //     g, g);
-                gui_vmess("gui_canvas_menuclose", "ssi",
-                    canvas_tag(g),
-                    canvas_tag(g),
+                gui_vmess("gui_canvas_menuclose", "xxi",
+                    g,
+                    g,
                     2);
             }
             else
@@ -5582,9 +5582,9 @@ post("farging...");
 post("dildo");
                 //sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 2;}\n",
                 //     canvas_getrootfor(g), g);
-                gui_vmess("gui_canvas_menuclose", "ssi",
-                    canvas_tag(canvas_getrootfor(g)),
-                    canvas_tag(g),
+                gui_vmess("gui_canvas_menuclose", "xxi",
+                    canvas_getrootfor(g),
+                    g,
                     2);
             }
             //sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 2;\n}\n",

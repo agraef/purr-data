@@ -146,6 +146,10 @@ Everything else: (A [*] means we've fixed it)
 [ ] change x_x1..y2 to simple x_bbox[4], and change current x_bbox to
     x_cachebbox (or something like that)
 [ ] figure out why gatom_retext sends a fill color to GUI
+[ ] look into changing 'x' format specifier from \"x%.6lx\" to more generic
+    \"%.6lx\". (Not exactly sure what good the "x" does there.)  It's only
+    specified in s_inter and in editor_new, so it should be easy to amend
+    if need be.
 
 Crashers
 --------

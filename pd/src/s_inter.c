@@ -795,6 +795,7 @@ void gui_do_vmess(const char *sel, char *fmt, int end, va_list ap)
         case 'f': sys_vgui("%g", va_arg(ap, double)); break;
         case 's': sys_vgui("\"%s\"", escape_double_quotes(va_arg(ap, const char *))); break;
         case 'i': sys_vgui("%d", va_arg(ap, t_int)); break;
+        case 'x': sys_vgui("\"x%.6lx\"", va_arg(ap, long unsigned int)); break;
         //case 'p': SETPOINTER(at, va_arg(ap, t_gpointer *)); break;
         default: goto done;
         }
@@ -1276,9 +1277,9 @@ int sys_startgui(const char *guidir)
 
 /* SUPERHACK - let's just load node-webkit and see what happens */
             sprintf(cmdbuf,
-                  "/home/bud/Downloads/nwjs-v0.12.1-linux-x64/nw "
+                  "/home/user/Downloads/nwjs-v0.12.1-linux-ia32/nw "
 //                  "/home/nu/Downloads/nwjs-v0.12.0-alpha2-linux-ia32/nw "
-                "/home/bud/pd-nw/pd/nw/ %d localhost %s\n",
+                "/home/user/pd-nw/pd/nw/ %d localhost %s\n",
                 portno,
                 (sys_k12_mode ? "pd-l2ork-k12" : "pd-l2ork"));
 
