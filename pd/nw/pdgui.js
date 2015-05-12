@@ -1870,12 +1870,12 @@ function gui_text_create_gobj(cid, tag, type, xpos, ypos, is_toplevel) {
             class: type + (is_toplevel !== 0 ? '' : ' gop')
     });
     svg.appendChild(g);
-    var bluh = svg.getBBox();
-    var bbox_rect = svg.getElementById('bbox_rect');
-    bbox_rect.setAttributeNS(null, 'width', bluh.width);
-    bbox_rect.setAttributeNS(null, 'height', bluh.height);
-    bbox_rect.setAttributeNS(null, 'fill', 'none');
-    bbox_rect.setAttributeNS(null, 'stroke', 'black');
+//    var bluh = svg.getBBox();
+//    var bbox_rect = svg.getElementById('bbox_rect');
+//    bbox_rect.setAttributeNS(null, 'width', bluh.width);
+//    bbox_rect.setAttributeNS(null, 'height', bluh.height);
+//    bbox_rect.setAttributeNS(null, 'fill', 'none');
+//    bbox_rect.setAttributeNS(null, 'stroke', 'black');
     
 // hm... why returning g and not the return value of appendChild?
 //    console.log("create gobj tag is " + tag + " and ret is " + g);
