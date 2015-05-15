@@ -461,7 +461,7 @@ void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state)
                 glist_xtopixels(glist, 0);
             t_float yscale = glist_ytopixels(glist, 1) -
                 glist_ytopixels(glist, 0);
-
+post("xsclae is %g and yscale is %g", xscale, yscale);
             //sys_vgui(".x%lx.c create prect %d %d %d %d "
             //         "-strokewidth 1 -stroke $pd_colors(selection) "
             //         "-tags {select%lx selected}\n",
@@ -470,7 +470,12 @@ void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state)
             gui_vmess("gui_scalar_draw_select_rect", "xsiiiiiff",
                 glist_getcanvas(glist), tagbuf,
                 state,
-                x1, y1, x2, y2, basex, basey);
+                (int)(x1 / xscale + 0.499),
+                (int)(y1 / yscale + 0.499),
+                (int)(x2 / xscale + 0.499),
+                (int)(y2 / yscale + 0.499),
+                basex,
+                basey);
         }
     }
     else
