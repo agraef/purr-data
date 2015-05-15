@@ -5119,7 +5119,7 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
             //    x1, y1, x2, y2);
         }
     }
-    fprintf(stderr,"FINAL plot_getrect %d %d %d %d\n", x1, y1, x2, y2);
+    //fprintf(stderr,"FINAL plot_getrect %d %d %d %d\n", x1, y1, x2, y2);
     //fprintf(stderr,"basex %g basey %g\n", basex, basey);
     *xp1 = x1;
     *yp1 = y1;
