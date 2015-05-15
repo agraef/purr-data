@@ -1,7 +1,7 @@
 #N struct ball-and-bat float x float y;
 #N canvas 0 19 624 562 10;
 #X obj 132 -12 struct ball-and-bat float x float y;
-#X scalar ball-and-bat -80 40 \;;
+#X scalar ball-and-bat -79 55 \;;
 #X obj 132 9 route displace;
 #X obj 132 30 unpack p f;
 #X obj 189 82 t a b;
@@ -35,10 +35,10 @@ c -11.9306 -11.9304 -20.8335 -27.0833 -29.1667 -35.4167 -4.16667 -4.16666
 #X obj 432 36 * 180;
 #X obj 432 57 / 3.14;
 #X floatatom 432 78 5 0 0 0 - - -, f 5;
-#X msg 260 336 stroke-width 2 \, stroke black \, fill "";
-#X msg -45 325 stroke-dasharray 5 5 \, stroke black \, fill "";
+#X msg 260 336 stroke-width 2 \, stroke black \, fill none;
 #X msg -45 388 transform translate 590 -1800 rotate 32.67 65 1010 scale
-2 \, stroke black \, fill "";
+2 \, stroke black \, fill none;
+#X msg -45 325 stroke-dasharray 5 5 \, stroke black \, fill none;
 #X connect 0 0 2 0;
 #X connect 2 0 3 0;
 #X connect 3 1 19 0;
@@ -55,17 +55,17 @@ c -11.9306 -11.9304 -20.8335 -27.0833 -29.1667 -35.4167 -4.16667 -4.16666
 #X connect 11 0 23 0;
 #X connect 12 0 11 0;
 #X connect 13 0 16 0;
-#X connect 15 0 30 0;
+#X connect 15 0 31 0;
 #X connect 16 0 17 0;
 #X connect 17 0 11 0;
 #X connect 18 0 13 0;
 #X connect 19 1 4 0;
-#X connect 21 0 31 0;
+#X connect 21 0 30 0;
 #X connect 22 0 29 0;
 #X connect 23 0 14 0;
 #X connect 25 0 26 0;
 #X connect 26 0 27 0;
 #X connect 27 0 28 0;
 #X connect 29 0 14 0;
-#X connect 30 0 24 0;
-#X connect 31 0 20 0;
+#X connect 30 0 20 0;
+#X connect 31 0 24 0;

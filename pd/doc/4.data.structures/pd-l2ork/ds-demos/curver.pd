@@ -1,6 +1,6 @@
 #N struct rcurver float x float y float x1 float y1 float ax float
 ay float bx float by float zx float zy float r float g float b;
-#N canvas -9 19 813 626 10;
+#N canvas 0 19 813 626 10;
 #X obj 92 401 cnv 15 461 213 empty empty empty 20 12 0 14 -33289 -66577
 0;
 #X scalar rcurver 150 439 42 137 -18 141 29 -3 -29 -2 255 40 100 \;
@@ -42,8 +42,6 @@ would like it for some but not all of them. Or you may want some other
 behavior than dragging a vertice of the polygon underneath the mouse.
 At present you can't define any other behavior-- only turn off mouse
 interaction altogether.;
-#X msg 95 90 stroke-width 4 \, stroke-linecap 1 \, stroke r g b \,
-fill "";
 #X msg 16 203 fill white \, mousedown 1 \, drag 1;
 #X obj 95 249 drag-event rcurver x1 y1;
 #X text 465 24 Note: this can be improved with a set method for [set]:the
@@ -51,16 +49,18 @@ fill "";
 #X obj 95 289 drag-event rcurver ax ay;
 #X obj 95 329 drag-event rcurver bx by;
 #X obj 95 373 drag-event rcurver zx zy;
-#X connect 2 0 22 0;
+#X msg 95 90 stroke-width 4 \, stroke-linecap 1 \, stroke r g b \,
+fill none;
+#X connect 2 0 28 0;
 #X connect 5 0 4 0;
 #X connect 6 0 5 0;
-#X connect 11 0 24 0;
-#X connect 12 0 26 0;
-#X connect 13 0 27 0;
-#X connect 14 0 28 0;
-#X connect 15 0 23 0;
-#X connect 22 0 3 0;
-#X connect 23 0 11 0;
-#X connect 23 0 12 0;
-#X connect 23 0 13 0;
-#X connect 23 0 14 0;
+#X connect 11 0 23 0;
+#X connect 12 0 25 0;
+#X connect 13 0 26 0;
+#X connect 14 0 27 0;
+#X connect 15 0 22 0;
+#X connect 22 0 11 0;
+#X connect 22 0 12 0;
+#X connect 22 0 13 0;
+#X connect 22 0 14 0;
+#X connect 28 0 3 0;

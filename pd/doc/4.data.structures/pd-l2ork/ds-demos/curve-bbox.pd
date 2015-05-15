@@ -1,7 +1,7 @@
 #N struct curvebbox float x float y;
-#N canvas -9 19 619 300 10;
+#N canvas 0 19 619 300 10;
 #X obj 151 34 struct curvebbox float x float y;
-#X scalar curvebbox 47 43 \;;
+#X scalar curvebbox 71 53 \;;
 #X text 197 181 Short demo showing that Pd should find the correct
 bounding box for a transformed scalar in edit-mode.;
 #X text 197 221 Unfortunately it doesn't quite get it right for curves.

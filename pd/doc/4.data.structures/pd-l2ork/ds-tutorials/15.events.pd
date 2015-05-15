@@ -33,7 +33,7 @@ bounding box (i.e. \, the selection rectangle that appears when you
 select it in edit-mode.;
 #X obj 343 129 draw rect 0 0 60 60;
 #X obj 343 221 draw circle 30 120 25;
-#X msg 343 178 stroke-width 20 \, stroke black \, fill "";
+#X msg 343 178 stroke-width 20 \, stroke black \, fill none;
 #X connect 4 0 5 0;
 #X connect 5 0 23 0;
 #X connect 15 0 14 0;
