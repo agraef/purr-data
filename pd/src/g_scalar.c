@@ -399,10 +399,10 @@ static void scalar_getrect(t_gobj *z, t_glist *owner,
 
                 //fprintf(stderr,"CACHED FINAL scalar_getrect "
                 //               "x1 %g y1 %g x2 %g y2 %g\n",
-                    screenx1,
-                    screeny1,
-                    screenx2,
-                    screeny2);
+                //    screenx1,
+                //    screeny1,
+                //    screenx2,
+                //    screeny2);
 
                 return;
             }
