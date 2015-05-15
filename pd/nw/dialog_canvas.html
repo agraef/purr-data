@@ -314,11 +314,11 @@
                 break;
             case "array_style":
                 flag &= ~(1 << 2); // clear style bit 2...
-                flag &= ~(1 << 1); // ... and 1 ...
+                flag &= ~(1 << 1); // ... and style bit 1 ...
                 flag += (2 * value); // set them
                 break;
             case "array_jump":
-                flag &= ~(1 << 3);
+                flag &= ~(1 << 4);
                 flag += (16 * value);
                 break;
         }
