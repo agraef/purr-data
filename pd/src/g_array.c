@@ -872,11 +872,17 @@ void array_redraw(t_array *a, t_glist *glist)
 }
 
     /* routine to get screen coordinates of a point in an array */
+    /* glist_topixels parameter was added because of t_scalar
+       and t_draw caching mechanism. For scalers, we're only
+       converting to pixels in scalar_getrect. So in plot_getrect
+       we need to get the coordinate without regard to the x/y
+       offset (and scaling factor) of a gop window */
 void array_getcoordinate(t_glist *glist,
     char *elem, int xonset, int yonset, int wonset, int indx,
     t_float basex, t_float basey, t_float xinc,
     t_fielddesc *xfielddesc, t_fielddesc *yfielddesc, t_fielddesc *wfielddesc,
-    t_float *xp1, t_float *xp2, t_float *yp, t_float *wp)
+    t_float *xp1, t_float *xp2, t_float *yp, t_float *wp,
+    int glist_topixels)
 {
     t_float xval, yval, ypix, wpix;
     if (xonset >= 0)
@@ -885,23 +891,39 @@ void array_getcoordinate(t_glist *glist,
     if (yonset >= 0)
         yval = *(t_float *)(elem + yonset);
     else yval = 0;
-    ypix = glist_ytopixels(glist, basey +
-        fielddesc_cvttocoord(yfielddesc, yval));
+//    ypix = glist_ytopixels(glist, basey +
+//        fielddesc_cvttocoord(yfielddesc, yval));
+    ypix = basey + fielddesc_cvttocoord(yfielddesc, yval);
+    if (glist_topixels)
+        ypix = glist_ytopixels(glist, ypix);
     if (wonset >= 0)
     {
             /* found "w" field which controls linewidth. */
         t_float wval = *(t_float *)(elem + wonset);
-        wpix = glist_ytopixels(glist, basey + 
-            fielddesc_cvttocoord(yfielddesc, yval) +
-                fielddesc_cvttocoord(wfielddesc, wval)) - ypix;
+//        wpix = glist_ytopixels(glist, basey + 
+//            fielddesc_cvttocoord(yfielddesc, yval) +
+//                fielddesc_cvttocoord(wfielddesc, wval)) - ypix;
+        wpix = basey + fielddesc_cvttocoord(yfielddesc, yval) +
+            fielddesc_cvttocoord(wfielddesc, wval);
+        if (glist_topixels)
+            wpix = glist_ytopixels(glist, wpix);
+        wpix -= ypix;
         if (wpix < 0)
             wpix = -wpix;
     }
     else wpix = 1;
-    *xp1 = glist_xtopixels(glist, basex +
-        fielddesc_cvttocoord(xfielddesc, xval));
-    *xp2 = glist_xtopixels(glist, basex +
-        fielddesc_cvttocoord(xfielddesc, xval+1))-1;
+    if (glist_topixels)
+    {
+        *xp1 = glist_xtopixels(glist, basex +
+            fielddesc_cvttocoord(xfielddesc, xval));
+        *xp2 = glist_xtopixels(glist, basex +
+            fielddesc_cvttocoord(xfielddesc, xval+1))-1;
+    }
+    else
+    {
+        *xp1 = basex + fielddesc_cvttocoord(xfielddesc, xval);
+        *xp2 = basex + fielddesc_cvttocoord(xfielddesc, xval+1)-1;
+    }
     *yp = ypix;
     // increased following on 20140830 to 8 (+4 and -4) and 
     // so that the smallest hitbox is always at least 8x8
@@ -1119,13 +1141,14 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
         {
             array_getcoordinate(glist, (char *)(array->a_vec) + i * elemsize,
                 xonset, yonset, wonset, i, xloc, yloc, xinc,
-                xfield, yfield, wfield, &pxpix1, &pxpix2, &pypix, &pwpix);
+                xfield, yfield, wfield, &pxpix1, &pxpix2, &pypix, &pwpix, 1);
             //fprintf(stderr,"    array_getcoordinate %d: pxpix1:%f pxpix2:%f pypix:%f pwpix:%f dx:%f dy:%f elemsize:%d yonset:%d wonset:%d xonset:%d xloc:%f yloc:%f xinc:%f\n", i, pxpix1, pxpix2, pypix, pwpix, dx, dy, elemsize, yonset, wonset, xonset, xloc, yloc, xinc);
             // increased following on 20140830 to 8 and updated array_getcoordinate
             // so that the smallest hitbox is always at least 8x8--check with
             // all_about_arrays.pd inside custom scalars in an array
             if (pwpix < 8)
                 pwpix = 8;
+
             if (xpix >= (int)pxpix1-pwpix && xpix <= (int)pxpix2+pwpix &&
                 ((array_joc) ||
                  (ypix >= pypix-pwpix && ypix <= pypix+pwpix)))
@@ -1180,7 +1203,7 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
         //{
             //array_getcoordinate(glist, (char *)(array->a_vec) + i * elemsize,
             //    xonset, yonset, wonset, i, xloc, yloc, xinc,
-            //    xfield, yfield, wfield, &pxpix1, &pxpix2, &pypix, &pwpix);
+            //    xfield, yfield, wfield, &pxpix1, &pxpix2, &pypix, &pwpix, 1);
             //dx = pxpix1 - xpix;
             //if (dx < 0) dx = -dx;
             dy = pypix - ypix;
@@ -1371,7 +1394,7 @@ static void array_getrect(t_array *array, t_glist *glist,
                 i * elemsize,
                 xonset, yonset, wonset, i, 0, 0, 1,
                 0, 0, 0,
-                &pxpix1, &pxpix2, &pypix, &pwpix);
+                &pxpix1, &pxpix2, &pypix, &pwpix, 1);
             if (pwpix < 2)
                 pwpix = 2;
             if (pxpix1 < x1)
@@ -1452,7 +1475,6 @@ static void garray_vis(t_gobj *z, t_glist *glist, int vis)
 static int garray_click(t_gobj *z, t_glist *glist,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
-    //fprintf(stderr,"garray_click\n");
     t_garray *x = (t_garray *)z;
     array_garray = x;
     return (gobj_click(&x->x_scalar->sc_gobj, glist,

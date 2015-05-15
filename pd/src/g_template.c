@@ -2323,16 +2323,16 @@ void svg_parsetransform(t_svg *x, t_template *template, t_word *data,
         }
         else if (type == gensym("skewx"))
         {
-            t_float a = fielddesc_getfloat(fd++, template, data, 0); // *
-            //    3.14159 / 180;
+            t_float a = fielddesc_getfloat(fd++, template, data, 0) *
+                3.14159 / 180;
             argc--;
             mset(m2, 1, 0, tan(a), 1, 0, 0);
             mmult(m, m2, m);
         }
         else if (type == gensym("skewy"))
         {
-            t_float a = fielddesc_getfloat(fd++, template, data, 0); // *
-            //    3.14159 / 180;
+            t_float a = fielddesc_getfloat(fd++, template, data, 0) *
+                3.14159 / 180;
             argc--;
             mset(m2, 1, tan(a), 0, 1, 0, 0);
             mmult(m, m2, m);
@@ -3121,14 +3121,14 @@ static void svg_getpathrect(t_svg *x, t_glist *glist,
     x->x_y2 = finaly2;
     if (x->x_pathrect_cache != -1)
         x->x_pathrect_cache = 1;
-    finalx1 = glist_xtopixels(glist, basex + finalx1);
-    finalx2 = glist_xtopixels(glist, basex + finalx2);
-    finaly1 = glist_ytopixels(glist, basey + finaly1);
-    finaly2 = glist_ytopixels(glist, basey + finaly2);
-    *xp1 = (int)finalx1;
-    *xp2 = (int)finalx2;
-    *yp1 = (int)finaly1;
-    *yp2 = (int)finaly2;
+    //finalx1 = glist_xtopixels(glist, basex + finalx1);
+    //finalx2 = glist_xtopixels(glist, basex + finalx2);
+    //finaly1 = glist_ytopixels(glist, basey + finaly1);
+    //finaly2 = glist_ytopixels(glist, basey + finaly2);
+    *xp1 = (int)(finalx1 + basex);
+    *xp2 = (int)(finalx2 + basex);
+    *yp1 = (int)(finaly1 + basey);
+    *yp2 = (int)(finaly2 + basey);
 }
 
 static void draw_getrect(t_gobj *z, t_glist *glist,
@@ -3155,10 +3155,16 @@ static void draw_getrect(t_gobj *z, t_glist *glist,
 
     if (sa->x_pathrect_cache == 1)
     {
-        *xp1 = glist_xtopixels(glist, basex + sa->x_x1);
-        *xp2 = glist_xtopixels(glist, basex + sa->x_x2);
-        *yp1 = glist_ytopixels(glist, basey + sa->x_y1);
-        *yp2 = glist_ytopixels(glist, basey + sa->x_y2);
+        //*xp1 = glist_xtopixels(glist, basex + sa->x_x1);
+        //*xp2 = glist_xtopixels(glist, basex + sa->x_x2);
+        //*yp1 = glist_ytopixels(glist, basey + sa->x_y1);
+        //*yp2 = glist_ytopixels(glist, basey + sa->x_y2);
+
+        *xp1 = basex + sa->x_x1;
+        *xp2 = basex + sa->x_x2;
+        *yp1 = basey + sa->x_y1;
+        *yp2 = basey + sa->x_y2;
+
         return;
     }
 
@@ -3208,10 +3214,15 @@ static void draw_getrect(t_gobj *z, t_glist *glist,
         }
         if (n)
         {
-            x1 = glist_xtopixels(glist, basex + x1);
-            x2 = glist_xtopixels(glist, basex + x2);
-            y1 = glist_ytopixels(glist, basey + y1);
-            y2 = glist_ytopixels(glist, basey + y2);
+            //x1 = glist_xtopixels(glist, basex + x1);
+            //x2 = glist_xtopixels(glist, basex + x2);
+            //y1 = glist_ytopixels(glist, basey + y1);
+            //y2 = glist_ytopixels(glist, basey + y2);
+
+            x1 = basex + x1;
+            x2 = basex + x2;
+            y1 = basey + y1;
+            y2 = basey + y2;
         }
     }
     else if (sa->x_type == gensym("rect") ||
@@ -3301,10 +3312,15 @@ static void draw_getrect(t_gobj *z, t_glist *glist,
         if (tx2 > x2) x2 = tx2;
         if (ty1 > y2) y2 = ty1;
         if (ty2 > y2) y2 = ty2;
-        x1 = glist_xtopixels(glist, basex + x1);
-        x2 = glist_xtopixels(glist, basex + x2);
-        y1 = glist_ytopixels(glist, basey + y1);
-        y2 = glist_ytopixels(glist, basey + y2);
+        //x1 = glist_xtopixels(glist, basex + x1);
+        //x2 = glist_xtopixels(glist, basex + x2);
+        //y1 = glist_ytopixels(glist, basey + y1);
+        //y2 = glist_ytopixels(glist, basey + y2);
+
+        x1 = basex + x1;
+        x2 = basex + x2;
+        y1 = basey + y1;
+        y2 = basey + y2;
     }
     if (fielddesc_getfloat(&sa->x_strokewidth.a_attr, template, data, 0))
     {
@@ -4342,10 +4358,8 @@ static void curve_getrect(t_gobj *z, t_glist *glist,
     }
     for (i = 0, f = x->x_vec; i < n; i++, f += 2)
     {
-        int xloc = glist_xtopixels(glist,
-            basex + fielddesc_getcoord(f, template, data, 0));
-        int yloc = glist_ytopixels(glist,
-            basey + fielddesc_getcoord(f+1, template, data, 0));
+        int xloc = basex + fielddesc_getcoord(f, template, data, 0);
+        int yloc = basey + fielddesc_getcoord(f+1, template, data, 0);
         if (xloc < x1) x1 = xloc;
         if (xloc > x2) x2 = xloc;
         if (yloc < y1) y1 = yloc;
@@ -4977,7 +4991,8 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
     mset(mtx1, 1, 0, 0, 1, 0, 0);
     if (x->x_canvas->gl_owner && x->x_canvas->gl_svg)
         svg_dogroupmtx(x->x_canvas, template, data, mtx1);
-//post("plot_getrect matrix: %g %g %g %g %g %g", mtx1[0][0], mtx1[1][0], mtx1[0][1], mtx1[1][1], mtx1[0][2], mtx1[2][1]);
+    //post("plot_getrect matrix: %g %g %g %g %g %g",
+    //  mtx1[0][0], mtx1[1][0], mtx1[0][1], mtx1[1][1], mtx1[0][2], mtx1[2][1]);
     int elemsize, yonset, wonset, xonset;
     t_canvas *elemtemplatecanvas;
     t_template *elemtemplate;
@@ -5016,7 +5031,7 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
             array_getcoordinate(glist, (char *)(array->a_vec) + i * elemsize,
                 xonset, yonset, wonset, i, basex + xloc, basey + yloc, xinc,
                 xfielddesc, yfielddesc, wfielddesc,
-                &xpix1, &xpix2, &ypix, &wpix);
+                &xpix1, &xpix2, &ypix, &wpix, 0);
             //fprintf(stderr,"elemsize%d yonset%d wonset%d xonset%d "
             //               "i%d basex%f xloc%f basey%f yloc%f xinc%f "
             //               "xpix%f ypix%f wpix%f\n",
@@ -5104,7 +5119,7 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
             //    x1, y1, x2, y2);
         }
     }
-    //fprintf(stderr,"FINAL plot_getrect %d %d %d %d\n", x1, y1, x2, y2);
+    fprintf(stderr,"FINAL plot_getrect %d %d %d %d\n", x1, y1, x2, y2);
     //fprintf(stderr,"basex %g basey %g\n", basex, basey);
     *xp1 = x1;
     *yp1 = y1;
@@ -6765,7 +6780,7 @@ static void drawimage_getrect(t_gobj *z, t_glist *glist,
     x1 = y1 = 0x7fffffff;
     x2 = y2 = -0x7fffffff;
 
-//    char buf[DRAWNUMBER_BUFSIZE];
+    //char buf[DRAWNUMBER_BUFSIZE];
     t_float mtx1[3][3] = { {1, 0, 0}, {0, 1, 0}, {0, 0, 1} };
     t_float mtx2[3][3] = { {1, 0, 0}, {0, 1, 0}, {1, 0, 1} };
     t_float m1, m2, m3, m4, m5, m6,
@@ -6811,10 +6826,15 @@ static void drawimage_getrect(t_gobj *z, t_glist *glist,
     if (tx2 > x2) x2 = tx2;
     if (ty1 > y2) y2 = ty1;
     if (ty2 > y2) y2 = ty2;
-    x1 = glist_xtopixels(glist, basex + x1);
-    x2 = glist_xtopixels(glist, basex + x2);
-    y1 = glist_ytopixels(glist, basey + y1);
-    y2 = glist_ytopixels(glist, basey + y2);
+    //x1 = glist_xtopixels(glist, basex + x1);
+    //x2 = glist_xtopixels(glist, basex + x2);
+    //y1 = glist_ytopixels(glist, basey + y1);
+    //y2 = glist_ytopixels(glist, basey + y2);
+
+    x1 = basex + x1;
+    x2 = basex + x2;
+    y1 = basey + y1;
+    y2 = basey + y2;
 
     /* todo: put these up top */
     if (!fielddesc_getfloat(&x->x_vis, template, data, 0))

@@ -638,7 +638,8 @@ EXTERN void array_getcoordinate(t_glist *glist,
     char *elem, int xonset, int yonset, int wonset, int indx,
     t_float basex, t_float basey, t_float xinc,
     t_fielddesc *xfielddesc, t_fielddesc *yfielddesc, t_fielddesc *wfielddesc,
-    t_float *xp1, t_float *xp2, t_float *yp, t_float *wp);
+    t_float *xp1, t_float *xp2, t_float *yp, t_float *wp,
+    int glist_topixels);
 
 EXTERN int array_getfields(t_symbol *elemtemplatesym,
     t_canvas **elemtemplatecanvasp,

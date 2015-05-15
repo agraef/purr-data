@@ -361,6 +361,7 @@ static void scalar_getrect(t_gobj *z, t_glist *owner,
     t_canvas *templatecanvas = template_findcanvas(template);
     int x1 = 0x7fffffff, x2 = -0x7fffffff, y1 = 0x7fffffff, y2 = -0x7fffffff;
     t_float basex, basey;
+    t_float screenx1, screeny1, screenx2, screeny2;
 
     // EXPERIMENTAL: we assume that entire canvas is within
     // the rectangle--this is for arrays
@@ -371,7 +372,6 @@ static void scalar_getrect(t_gobj *z, t_glist *owner,
     {
         x1 = -0x7fffffff, y1 = -0x7fffffff, x2 = 0x7fffffff, y2 = 0x7fffffff;
     }
-
     else
     {
         scalar_getbasexy(x, &basex, &basey);
@@ -385,12 +385,25 @@ static void scalar_getrect(t_gobj *z, t_glist *owner,
         else
         {
             /* todo: bad flow with internal return here. make it cleaner */
-            if (x->sc_bboxcache)
+            if (x->sc_bboxcache && 0)
             {
-                *xp1 = x->sc_x1;
-                *yp1 = x->sc_y1;
-                *xp2 = x->sc_x2;
-                *yp2 = x->sc_y2;
+                screenx1 = glist_xtopixels(owner, x->sc_x1);
+                screeny1 = glist_ytopixels(owner, x->sc_y1);
+                screenx2 = glist_xtopixels(owner, x->sc_x2);
+                screeny2 = glist_ytopixels(owner, x->sc_y2);
+
+                *xp1 = (int)(screenx1 < screenx2 ? screenx1 : screenx2);
+                *yp1 = (int)(screeny1 < screeny2 ? screeny1 : screeny2);
+                *xp2 = (int)(screenx2 > screenx1 ? screenx2 : screenx1);
+                *yp2 = (int)(screeny2 > screeny1 ? screeny2 : screeny1);
+
+                //fprintf(stderr,"CACHED FINAL scalar_getrect "
+                //               "x1 %g y1 %g x2 %g y2 %g\n",
+                    screenx1,
+                    screeny1,
+                    screenx2,
+                    screeny2);
+
                 return;
             }
             x1 = y1 = 0x7fffffff;
@@ -401,13 +414,31 @@ static void scalar_getrect(t_gobj *z, t_glist *owner,
                 x1 = y1 = x2 = y2 = 0;
         }
     }
-    //fprintf(stderr,"FINAL scalar_getrect x1 %d y1 %d x2 %d y2 %d\n",
-    //    x1, y1, x2, y2);
-    *xp1 = x->sc_x1 = x1;
-    *yp1 = x->sc_y1 = y1;
-    *xp2 = x->sc_x2 = x2;
-    *yp2 = x->sc_y2 = y2; 
-    x->sc_bboxcache = 1;
+    screenx1 = glist_xtopixels(owner, x1);
+    screeny1 = glist_ytopixels(owner, y1);
+    screenx2 = glist_xtopixels(owner, x2);
+    screeny2 = glist_ytopixels(owner, y2);
+
+    // Values for screen bounding box
+    *xp1 = (int)(screenx1 < screenx2 ? screenx1 : screenx2);
+    *xp2 = (int)(screenx2 > screenx1 ? screenx2 : screenx1);
+    *yp1 = (int)(screeny1 < screeny2 ? screeny1 : screeny2);
+    *yp2 = (int)(screeny2 > screeny1 ? screeny2 : screeny1);
+
+    // Cache without glist_topixel (in case a gop is moved, for example)
+    x->sc_x1 = x1;
+    x->sc_x2 = x2;
+    x->sc_y1 = y1;
+    x->sc_y2 = y2;
+
+    //fprintf(stderr,"COMPUTED FINAL scalar_getrect "
+    //    "x1 %g y1 %g x2 %g y2 %g\n",
+    //    screenx1,
+    //    screeny1,
+    //    screenx2,
+    //    screeny2);
+
+    x->sc_bboxcache = 1; // We now have cached values for the next call
 }
 
 void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state)
@@ -426,6 +457,11 @@ void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state)
         x1--; x2++; y1--; y2++;
         if (glist_istoplevel(glist))
         {
+            t_float xscale = glist_xtopixels(glist, 1) -
+                glist_xtopixels(glist, 0);
+            t_float yscale = glist_ytopixels(glist, 1) -
+                glist_ytopixels(glist, 0);
+
             //sys_vgui(".x%lx.c create prect %d %d %d %d "
             //         "-strokewidth 1 -stroke $pd_colors(selection) "
             //         "-tags {select%lx selected}\n",
