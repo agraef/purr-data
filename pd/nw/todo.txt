@@ -18,12 +18,12 @@ Node-webkit stuff:
 4) (probably) present working directory
 5) command line argv
 
-Everything else: (A [*] means we've fixed it)
+Everything else: (A [x] means we've fixed it)
 [ ] packaging as app, setting correct appname, etc
 [ ] get -unique to work (relied on tcl [send] command)
 [ ] check if patch windows with screenposition (0,0) get stuck underneath Ubuntu/OSX menu.  If so,
 [ ] Node-webkit has a "screen" interface to retrieve the "workable" area of the screen
-[*] choosing the same directory multiple times doesn't work (see dialog API page)
+[x] choosing the same directory multiple times doesn't work (see dialog API page)
 [ ] "Save As" on an overwrite doesn't seem to clear the dirty flag
 [ ] figure out why there is a "pd_opendir" global var
 [ ] pass k12 mode arg
@@ -142,10 +142,10 @@ Everything else: (A [*] means we've fixed it)
 [ ] getting the sense that glist_isselected should _always_ have
     glist_getcanvas(x) as its first parameter
 [x] get rid of the old tcl specific sys_get_audio_apis
-[ ] have a single function to set t_svg_attr
-[ ] change x_x1..y2 to simple x_bbox[4], and change current x_bbox to
+[x] have a single function to set t_svg_attr
+[ ] t_svg: change x_x1..y2 to simple x_bbox[4], and change current x_bbox to
     x_cachebbox (or something like that)
-[ ] figure out why gatom_retext sends a fill color to GUI
+[x] figure out why gatom_retext sends a fill color to GUI
 [ ] look into changing 'x' format specifier from \"x%.6lx\" to more generic
     \"%.6lx\". (Not exactly sure what good the "x" does there.)  It's only
     specified in s_inter and in editor_new, so it should be easy to amend

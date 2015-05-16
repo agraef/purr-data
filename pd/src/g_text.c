@@ -355,7 +355,9 @@ void canvas_obj(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
         int connectme, xpix, ypix, indx, nobj;
         canvas_howputnew(gl, &connectme, &xpix, &ypix, &indx, &nobj);
         pd_vmess(&gl->gl_pd, gensym("editmode"), "i", 1);
-        canvas_objtext(gl, xpix, ypix, 0, 1, b);
+        canvas_objtext(gl,
+            connectme ? xpix : xpix - 8,
+            connectme ? ypix : ypix - 8, 0, 1, b);
         if (connectme == 1)
         {
             //fprintf(stderr,"canvas_obj calls canvas_connect\n");
@@ -366,7 +368,7 @@ void canvas_obj(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
         else if (connectme == 0)
         {
             //fprintf(stderr,"canvas_obj calls canvas_startmotion\n");
-            canvas_displaceselection(glist_getcanvas(gl), -8, -8);
+//            canvas_displaceselection(glist_getcanvas(gl), -8, -8);
             canvas_startmotion(glist_getcanvas(gl));
         }
         //canvas_setundo(glist_getcanvas(gl),

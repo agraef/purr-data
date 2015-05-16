@@ -532,6 +532,7 @@ void rtext_displace(t_rtext *x, int dx, int dy)
 /* Not sure if this is still used */
 void rtext_select(t_rtext *x, int state)
 {
+post("selected an rtext");
     t_glist *glist = x->x_glist;
     t_canvas *canvas = glist_getcanvas(glist);
     if (glist_istoplevel(glist))
@@ -551,7 +552,7 @@ void rtext_select(t_rtext *x, int state)
 
 void rtext_activate(t_rtext *x, int state)
 {
-    //fprintf(stderr,"rtext_activate\n");
+    fprintf(stderr,"rtext_activate state=%d\n", state);
     int w = 0, h = 0, indx;
     t_glist *glist = x->x_glist;
     t_canvas *canvas = glist_getcanvas(glist);
@@ -562,7 +563,7 @@ void rtext_activate(t_rtext *x, int state)
     //if (state == x->x_active) return; // avoid excess calls
     if (state)
     {
-        sys_vgui(".x%lx.c focus %s\n", canvas, x->x_tag);
+        //sys_vgui(".x%lx.c focus %s\n", canvas, x->x_tag);
         glist->gl_editor->e_textedfor = x;
         glist->gl_editor->e_textdirty = 0;
         x->x_dragfrom = x->x_selstart = 0;
@@ -571,13 +572,22 @@ void rtext_activate(t_rtext *x, int state)
     }
     else
     {
-        sys_vgui("selection clear .x%lx.c\n", canvas);
-        sys_vgui(".x%lx.c focus \"\"\n", canvas);
+        //sys_vgui("selection clear .x%lx.c\n", canvas);
+        //sys_vgui(".x%lx.c focus \"\"\n", canvas);
         if (glist->gl_editor->e_textedfor == x)
             glist->gl_editor->e_textedfor = 0;
         x->x_active = 0;
     }
+    /* so I guess the following would need to be commented out
+       if we want to use the textarea junk to feed to Pd... */
     rtext_senditup(x, SEND_UPDATE, &w, &h, &indx);
+    gui_vmess("gui_textarea", "xsiiii",
+        canvas,
+        x->x_tag,
+        x->x_text->te_xpix,
+        x->x_text->te_ypix,
+        sys_hostfontsize(glist_getfont(glist)),
+        state);
 }
 
 // outputs 1 if found one of the special chars

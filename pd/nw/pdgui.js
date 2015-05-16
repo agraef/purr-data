@@ -3395,3 +3395,29 @@ exports.skin = (function () {
         }
     };
 }());
+
+function gui_textarea(cid, tag, x, y, font_size, state) {
+    gui_post("x/y is " + x + '/' + y);
+    if (state === 1) {
+        var p = patchwin[cid].window.document.createElement('p');
+        configure_item(p, {
+            id: 'new_object_textentry'
+        });
+        p.contentEditable = 'true';
+        p.style.setProperty('left', x + 'px');
+        p.style.setProperty('top', y + 'px');
+        p.style.setProperty('font-size', font_size + 'px');
+        p.textContent = "Fuck Butts";
+        patchwin[cid].window.document.body.appendChild(p);
+        p.focus();
+        patchwin[cid].window.canvas_events.text();
+        /* here we need to make sure that events inside the
+           <p> don't propogate down to the svg below... */
+    } else {
+        var p = patchwin[cid].window.document.getElementById('new_object_textentry');
+        if (p !== null) {
+            p.parentNode.removeChild(p);
+        }
+        patchwin[cid].window.canvas_events.normal();
+    }
+}
