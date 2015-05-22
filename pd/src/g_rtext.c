@@ -108,7 +108,7 @@ void rtext_gettext(t_rtext *x, char **buf, int *bufsize)
 
 void rtext_settext(t_rtext *x, char *buf, int bufsize)
 {
-    freebytes(x->x_buf, x->x_bufsize);
+    if (x->x_bufsize) freebytes(x->x_buf, x->x_bufsize);
     x->x_buf = buf;
     x->x_bufsize = bufsize;
 }
@@ -597,12 +597,13 @@ void rtext_activate(t_rtext *x, int state)
     */
 
     widthspec = x->x_text->te_width; // width if any specified
-    gui_vmess("gui_textarea", "xsiiiii",
+    gui_vmess("gui_textarea", "xsiiisii",
         canvas,
         x->x_tag,
         x->x_text->te_xpix,
         x->x_text->te_ypix,
         widthspec,
+        x->x_buf,
         sys_hostfontsize(glist_getfont(glist)),
         state);
 }

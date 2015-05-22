@@ -3415,9 +3415,23 @@ exports.skin = (function () {
     };
 }());
 
-function gui_textarea(cid, tag, x, y, max_char_width, font_size, state) {
+function select_text(cid, elem) {
+        var range, win = patchwin[cid].window;
+        if (win.document.selection) {
+            range = win.document.body.createTextRange();
+            range.moveToElementText(elem);
+            range.select();
+        } else if (win.getSelection) {
+            range = win.document.createRange();
+            range.selectNodeContents(elem);
+            win.getSelection().addRange(range);
+        }
+}
+
+function gui_textarea(cid, tag, x, y, max_char_width, text, font_size, state) {
     gui_post("x/y is " + x + '/' + y);
     gui_post("state? " + state);
+    var range;
     if (state !== 0) {
         var p = patchwin[cid].window.document.createElement('p');
         configure_item(p, {
@@ -3432,9 +3446,10 @@ function gui_textarea(cid, tag, x, y, max_char_width, font_size, state) {
             max_char_width === 0 ? '60ch' : max_char_width + 'ch');
         p.style.setProperty('min-width',
             max_char_width === 0 ? '3ch' : max_char_width + 'ch');
-//        p.textContent = "Fuck Butts";
+        p.textContent = text;
         patchwin[cid].window.document.body.appendChild(p);
         p.focus();
+        select_text(cid, p);
         if (state === 1) {
             patchwin[cid].window.canvas_events.text();
         } else {

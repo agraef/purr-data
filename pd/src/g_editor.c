@@ -571,14 +571,14 @@ void glist_deselect(t_glist *x, t_gobj *y)
         int pos = glist_getindex(glist_getcanvas(x), y);
         if (x->gl_editor->e_textedfor)
         {
-            //fprintf(stderr, "e_textedfor\n");
+            fprintf(stderr, "e_textedfor\n");
             fuddy = glist_findrtext(x, (t_text *)y);
             if (x->gl_editor->e_textedfor == fuddy)
             {
-                //fprintf(stderr, "e_textedfor == fuddy\n");
+                fprintf(stderr, "e_textedfor == fuddy\n");
                 if (x->gl_editor->e_textdirty)
                 {
-                    //fprintf(stderr, "textdirty yes\n");
+                    fprintf(stderr, "textdirty yes\n");
                     z = fuddy;
                     canvas_stowconnections(glist_getcanvas(x));
                     glist_checkanddeselectall(x, y);
@@ -618,7 +618,7 @@ void glist_deselect(t_glist *x, t_gobj *y)
 
         if (z)
         {
-            //fprintf(stderr, "setto\n");
+            fprintf(stderr, "setto\n");
             char *buf;
             int bufsize;
 
@@ -7619,7 +7619,7 @@ static void canvas_stringforobj(t_canvas *x, t_symbol *s, int argc, t_atom *argv
     char *buf;
     t_gobj *y;
     t_rtext *rtext;
-    if (!x->gl_editor || argc < 1) return;
+    if (!x->gl_editor) return;
     for (y = x->gl_list; y; y = y->g_next)
     {
         if (glist_isselected(x, y) && (rtext = glist_findrtext(x, (t_text *)y)))
@@ -7630,7 +7630,10 @@ static void canvas_stringforobj(t_canvas *x, t_symbol *s, int argc, t_atom *argv
             binbuf_gettext(b, &buf, &length);
             rtext_settext(rtext, buf, length);
             binbuf_free(b);
+            // Set the dirty flag since we've changed the rtext content...
+            x->gl_editor->e_textdirty = 1;
             glist_deselect(x, y);
+            break;
         }
     }
 }
