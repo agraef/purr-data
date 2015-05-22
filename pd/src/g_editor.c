@@ -7613,6 +7613,28 @@ static void canvas_tip(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     }
 }
 
+static void canvas_stringforobj(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
+{
+    int length;
+    char *buf;
+    t_gobj *y;
+    t_rtext *rtext;
+    if (!x->gl_editor || argc < 1) return;
+    for (y = x->gl_list; y; y = y->g_next)
+    {
+        if (glist_isselected(x, y) && (rtext = glist_findrtext(x, (t_text *)y)))
+        {
+            rtext_gettext(rtext, &buf, &length);
+            t_binbuf *b = binbuf_new();
+            binbuf_add(b, argc, argv);
+            binbuf_gettext(b, &buf, &length);
+            rtext_settext(rtext, buf, length);
+            binbuf_free(b);
+            glist_deselect(x, y);
+        }
+    }
+}
+
 void g_editor_setup(void)
 {
 /* ------------------------ events ---------------------------------- */
@@ -7634,6 +7656,8 @@ void g_editor_setup(void)
     A_GIMME, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_tip, gensym("echo"),
         A_GIMME, A_NULL);
+    class_addmethod(canvas_class, (t_method)canvas_stringforobj,
+        gensym("stringforobj"), A_GIMME, A_NULL);
 /* ------------------------ menu actions ---------------------------- */
     class_addmethod(canvas_class, (t_method)canvas_menuclose,
         gensym("menuclose"), A_DEFFLOAT, 0);

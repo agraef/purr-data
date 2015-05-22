@@ -509,6 +509,7 @@ EXTERN void rtext_mouse(t_rtext *x, int xval, int yval, int flag); //5
 EXTERN void rtext_retext(t_rtext *x); //5
 EXTERN char *rtext_gettag(t_rtext *x); //47
 EXTERN void rtext_gettext(t_rtext *x, char **buf, int *bufsize); //9
+EXTERN void rtext_settext(t_rtext *x, char *buf, int bufsize); //1
 EXTERN void rtext_getseltext(t_rtext *x, char **buf, int *bufsize); //4
 
 /* -------------------- functions on canvases ------------------------ */

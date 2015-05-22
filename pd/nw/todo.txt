@@ -1,3 +1,26 @@
+Event settings for edit mode
+----------------------------
+
+1) No box - normal editmode behavior
+   * moving/selecting
+   * setting a bounding rect
+   * mouse cannot select text
+   * text is not editable
+   * clicking a box triggers #2 below
+2) Editing a box in place
+  * x/y is set
+   * can type inside box
+   * can select text with the mouse
+   * mouse motion doesn't change box position
+   * applies to all boxes which already exist and are being edited
+3) Editing a new box before it's anchored
+   * x/y follows mouse
+   * can type new text into the box
+   * a click in the box will anchor the box and trigger #2 above
+
+*need to be able to tell the difference between new obj and retexted
+obj
+
 Problems to put off until all (or most) sys_vgui calls are eliminated:
 1) gui-side parser inside -- pdgui.js.  Currently we're splitting on newlines so we can separate
    gui_vmess from sys_vgui calls.  This makes it very difficult to handle multi-line msg and text
@@ -150,6 +173,7 @@ Everything else: (A [x] means we've fixed it)
     \"%.6lx\". (Not exactly sure what good the "x" does there.)  It's only
     specified in s_inter and in editor_new, so it should be easy to amend
     if need be.
+[ ] make "rtext" textarea <div> static, and turn display on/off
 
 Crashers
 --------

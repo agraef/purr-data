@@ -226,7 +226,8 @@ static void canvas_objtext(t_glist *gl, int xpix, int ypix,
     {
             /* this is called if we've been created from the menu. */
         glist_select(gl, &x->te_g);
-        gobj_activate(&x->te_g, gl, 1);
+        gobj_activate(&x->te_g, gl,
+            2); // <-- hack to signal that we're a new object
     }
     if (pd_class(&x->ob_pd) == vinlet_class)
         canvas_resortinlets(glist_getcanvas(gl));
@@ -357,7 +358,8 @@ void canvas_obj(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
         pd_vmess(&gl->gl_pd, gensym("editmode"), "i", 1);
         canvas_objtext(gl,
             connectme ? xpix : xpix - 8,
-            connectme ? ypix : ypix - 8, 0, 1, b);
+            connectme ? ypix : ypix - 8,
+            0, 1, b);
         if (connectme == 1)
         {
             //fprintf(stderr,"canvas_obj calls canvas_connect\n");

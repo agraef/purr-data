@@ -2212,8 +2212,22 @@ function gui_text_displace(name, tag, dx, dy) {
     elem_displace(get_gobj(name, tag), dx, dy);
 }
 
+function textentry_displace(t, dx, dy) {
+    var transform = t.style.getPropertyValue('transform')
+        .split('(')[1]    // get everything after the '('
+        .replace(')', '') // remove trailing ')'
+        .split(',');      // split into x and y
+    var x = +transform[0].trim().replace('px', ''),
+        y = +transform[1].trim().replace('px', '');
+gui_post("x is " + x + " and y is " + y);
+    t.style.setProperty('transform',
+        'translate(' +
+        (x + dx) + 'px, ' +
+        (y + dy) + 'px)');
+}
+
 function gui_canvas_displace_withtag(name, dx, dy) {
-    var pwin = patchwin[name], i;
+    var pwin = patchwin[name], i, textentry;
     var ol = pwin.window.document.getElementsByClassName('selected');
     for (i = 0; i < ol.length; i++) {
         elem_displace(ol[i], dx, dy);
@@ -2223,6 +2237,11 @@ function gui_canvas_displace_withtag(name, dx, dy) {
 //        elem.matrix.e = new_tx;
 //        elem.matrix.f = new_ty;
     }
+    textentry = patchwin[name].window.document.getElementById('new_object_textentry');
+    if (textentry !== null) {
+        textentry_displace(textentry, dx, dy); 
+    }
+
 //        elem.setAttributeNS(null, 'transform',
 //            'translate(' + new_tx + ',' + new_ty + ')');
 //    }
@@ -3396,9 +3415,10 @@ exports.skin = (function () {
     };
 }());
 
-function gui_textarea(cid, tag, x, y, font_size, state) {
+function gui_textarea(cid, tag, x, y, max_char_width, font_size, state) {
     gui_post("x/y is " + x + '/' + y);
-    if (state === 1) {
+    gui_post("state? " + state);
+    if (state !== 0) {
         var p = patchwin[cid].window.document.createElement('p');
         configure_item(p, {
             id: 'new_object_textentry'
@@ -3407,12 +3427,19 @@ function gui_textarea(cid, tag, x, y, font_size, state) {
         p.style.setProperty('left', x + 'px');
         p.style.setProperty('top', y + 'px');
         p.style.setProperty('font-size', font_size + 'px');
-        p.textContent = "Fuck Butts";
+        p.style.setProperty('transform', 'translate(0px, 0px)');
+        p.style.setProperty('max-width',
+            max_char_width === 0 ? '60ch' : max_char_width + 'ch');
+        p.style.setProperty('min-width',
+            max_char_width === 0 ? '3ch' : max_char_width + 'ch');
+//        p.textContent = "Fuck Butts";
         patchwin[cid].window.document.body.appendChild(p);
         p.focus();
-        patchwin[cid].window.canvas_events.text();
-        /* here we need to make sure that events inside the
-           <p> don't propogate down to the svg below... */
+        if (state === 1) {
+            patchwin[cid].window.canvas_events.text();
+        } else {
+            patchwin[cid].window.canvas_events.floating_text();
+        }
     } else {
         var p = patchwin[cid].window.document.getElementById('new_object_textentry');
         if (p !== null) {

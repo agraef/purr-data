@@ -43,120 +43,155 @@ function add_keymods(key, evt) {
 
 var canvas_events = (function() {
     var name,
-        mousemove = function(evt) {
-            //pdgui.gui_post("x: " + evt.pageX + " y: " + evt.pageY +
-            //    " modifier: " + (evt.shiftKey + (evt.ctrlKey << 1)));
-            pdgui.pdsend(name +
-            " motion " + evt.pageX + " " + evt.pageY + " " +
-            (evt.shiftKey + (evt.ctrlKey << 1)));
-            evt.stopPropagation();
-            evt.preventDefault();
-            return false;
+        textbox = function () {
+            return document.getElementById('new_object_textentry');
         },
-        mousedown = function(evt) {
-            // tk events are one greater than html5...
-            var b = evt.button + 1;
-            var mod;
-            // For some reason right-click sends a modifier value of "8",
-            // and canvas_doclick in g_editor.c depends on that value to
-            // do the right thing.  So let's hack...
-            if (b === 3) { // right-click
-                mod = 8;
-            } else {
-                mod = (evt.shiftKey + (evt.ctrlKey << 1)); 
-            }
-            pdgui.pdsend(name + " mouse " + evt.pageX + " " + evt.pageY + " " +
-                b + " " + mod);
-            //evt.stopPropagation();
-            evt.preventDefault();
-        },
-        mouseup = function(evt) {
-            //pdgui.gui_post("mouseup: x: " + evt.pageX + " y: " + evt.pageY +
-            //    " button: " + (evt.button + 1));
-            pdgui.pdsend(name +
-                " mouseup " + evt.pageX + " " + evt.pageY + " " +
-                (evt.button + 1));
-            evt.stopPropagation();
-            evt.preventDefault();
-        },
-        keydown = function(evt) {
-            var key_code = evt.keyCode; 
-            var hack = null; // hack for unprintable ascii codes
-            switch(key_code) {
-                case 8:
-                case 9:
-                case 10:
-                case 27:
-                //case 32:
-                case 127: hack = key_code; break;
-                case 37: hack = add_keymods('Left', evt); break;
-                case 38: hack = add_keymods('Up', evt); break;
-                case 39: hack = add_keymods('Right', evt); break;
-                case 40: hack = add_keymods('Down', evt); break;
-                case 33: hack = add_keymods('Prior', evt); break;
-                case 34: hack = add_keymods('Next', evt); break;
-                case 35: hack = add_keymods('End', evt); break;
-                case 36: hack = add_keymods('Home', evt); break;
+        events = {
+            mousemove: function(evt) {
+                //pdgui.gui_post("x: " + evt.pageX + " y: " + evt.pageY +
+                //    " modifier: " + (evt.shiftKey + (evt.ctrlKey << 1)));
+                pdgui.pdsend(name +
+                " motion " + evt.pageX + " " + evt.pageY + " " +
+                (evt.shiftKey + (evt.ctrlKey << 1)));
+                evt.stopPropagation();
+                evt.preventDefault();
+                return false;
+            },
+            mousedown: function(evt) {
+                // tk events are one greater than html5...
+                var b = evt.button + 1;
+                var mod;
+                // For some reason right-click sends a modifier value of "8",
+                // and canvas_doclick in g_editor.c depends on that value to
+                // do the right thing.  So let's hack...
+                if (b === 3) { // right-click
+                    mod = 8;
+                } else {
+                    mod = (evt.shiftKey + (evt.ctrlKey << 1)); 
+                }
+                pdgui.pdsend(name +
+                    " mouse " + evt.pageX + " " + evt.pageY + " " +
+                    b + " " + mod);
+                //evt.stopPropagation();
+                evt.preventDefault();
+            },
+            mouseup: function(evt) {
+                //pdgui.gui_post("mouseup: x: " +
+                //    evt.pageX + " y: " + evt.pageY +
+                //    " button: " + (evt.button + 1));
+                pdgui.pdsend(name +
+                    " mouseup " + evt.pageX + " " + evt.pageY + " " +
+                    (evt.button + 1));
+                evt.stopPropagation();
+                evt.preventDefault();
+            },
+            keydown: function(evt) {
+                var key_code = evt.keyCode; 
+                var hack = null; // hack for unprintable ascii codes
+                switch(key_code) {
+                    case 8:
+                    case 9:
+                    case 10:
+                    case 27:
+                    //case 32:
+                    case 127: hack = key_code; break;
+                    case 37: hack = add_keymods('Left', evt); break;
+                    case 38: hack = add_keymods('Up', evt); break;
+                    case 39: hack = add_keymods('Right', evt); break;
+                    case 40: hack = add_keymods('Down', evt); break;
+                    case 33: hack = add_keymods('Prior', evt); break;
+                    case 34: hack = add_keymods('Next', evt); break;
+                    case 35: hack = add_keymods('End', evt); break;
+                    case 36: hack = add_keymods('Home', evt); break;
 
-                // Need to handle Control key, Alt
+                    // Need to handle Control key, Alt
 
-                case 16: hack = 'Shift'; break;
-                case 17: hack = 'Control'; break;
-                case 18: hack = 'Alt'; break;
+                    case 16: hack = 'Shift'; break;
+                    case 17: hack = 'Control'; break;
+                    case 18: hack = 'Alt'; break;
+                }
+                if (hack !== null) {
+                    pdgui.gui_canvas_sendkey(name, 1, evt, hack);
+                    pdgui.set_keymap(key_code, hack);
+                }
+                pdgui.gui_post("keydown time: keycode is " + evt.keyCode);
+                last_keydown = evt.keyCode;
+                //evt.stopPropagation();
+                //evt.preventDefault();
+            },
+            keypress: function(evt) {
+                pdgui.gui_canvas_sendkey(name, 1, evt, evt.charCode);
+                pdgui.set_keymap(last_keydown, evt.charCode);
+                pdgui.gui_post("keypress time: charcode is " + evt.charCode);
+                // Don't do things like scrolling on space, arrow keys, etc.
+                //evt.stopPropagation();
+                evt.preventDefault();
+            },
+            keyup: function(evt) {
+                var my_char_code = pdgui.get_char_code(evt.keyCode);
+                pdgui.gui_canvas_sendkey(name, 0, evt, my_char_code);
+                pdgui.gui_post("keyup time: charcode is: " + my_char_code);
+                evt.stopPropagation();
+                evt.preventDefault();
+            },
+            text_mousemove: function(evt) { // we may not need this one
+                evt.stopPropagation();    
+                //evt.preventDefault();
+                return false;
+            },
+            text_mousedown: function(evt) {
+                if (textbox() !== evt.target) {
+                    pdgui.gui_post("my content was " + textbox().textContent);
+                    pdgui.pdsend(name + " stringforobj "
+                        + textbox().textContent);
+                    events.mousedown(evt);
+                    canvas_events.normal();
+                }
+                evt.stopPropagation();    
+                //evt.preventDefault();
+                return false;
+            },
+            text_mouseup: function(evt) {
+                pdgui.gui_post("mouseup target is " +
+                    evt.target + " and textbox is " + textbox());
+    //            if (evt.target === textbox) {
+    //                pdgui.gui_post("it's a mouseup in a textbox");
+    //            } else {
+    //                pdgui.gui_post("it's a mouseup outside a textbox");
+    //            }
+    //            evt.stopPropagation();    
+                //evt.preventDefault();
+                return false;
+            },
+            text_keydown: function(evt) {
+                evt.stopPropagation();    
+                //evt.preventDefault();
+                return false;
+            },
+            text_keyup: function(evt) {
+                evt.stopPropagation();    
+                //evt.preventDefault();
+                return false;
+            },
+            text_keypress: function(evt) {
+                evt.stopPropagation();    
+                //evt.preventDefault();
+                return false;
+            },
+            floating_text_click: function(evt) {
+               pdgui.gui_post("leaving floating mode");
+                canvas_events.text();
+                evt.stopPropagation();
+                evt.preventDefault();
+                return false;
+            },
+            floating_text_keypress: function(evt) {
+               pdgui.gui_post("leaving floating mode");
+                canvas_events.text();
+                evt.stopPropagation();
+                evt.preventDefault();
+                return false;
             }
-            if (hack !== null) {
-                pdgui.gui_canvas_sendkey(name, 1, evt, hack);
-                pdgui.set_keymap(key_code, hack);
-            }
-            pdgui.gui_post("keydown time: keycode is " + evt.keyCode);
-            last_keydown = evt.keyCode;
-            //evt.stopPropagation();
-            //evt.preventDefault();
-        },
-        keypress = function(evt) {
-            pdgui.gui_canvas_sendkey(name, 1, evt, evt.charCode);
-            pdgui.set_keymap(last_keydown, evt.charCode);
-            pdgui.gui_post("keypress time: charcode is " + evt.charCode);
-            // Don't do things like scrolling on space, arrow keys, etc.
-            //evt.stopPropagation();
-            evt.preventDefault();
-        },
-        keyup = function(evt) {
-            var my_char_code = pdgui.get_char_code(evt.keyCode);
-            pdgui.gui_canvas_sendkey(name, 0, evt, my_char_code);
-            pdgui.gui_post("keyup time: charcode is: " + my_char_code);
-            evt.stopPropagation();
-            evt.preventDefault();
-        },
-        text_mousemove = function(evt) {
-            evt.stopPropagation();    
-            //evt.preventDefault();
-            return false;
-        },
-        text_mousedown = function(evt) {
-            evt.stopPropagation();    
-            //evt.preventDefault();
-            return false;
-        },
-        text_mouseup = function(evt) {
-            evt.stopPropagation();    
-            //evt.preventDefault();
-            return false;
-        },
-        text_keydown = function(evt) {
-            evt.stopPropagation();    
-            //evt.preventDefault();
-            return false;
-        },
-        text_keyup = function(evt) {
-            evt.stopPropagation();    
-            //evt.preventDefault();
-            return false;
-        },
-        text_keypress = function(evt) {
-            evt.stopPropagation();    
-            //evt.preventDefault();
-            return false;
         }
     ;
 
@@ -195,7 +230,6 @@ var canvas_events = (function() {
         }, false
     );
 
-
     // closing the Window
     // this isn't actually closing the window yet
     nw.Window.get().on("close", function() {
@@ -203,35 +237,48 @@ var canvas_events = (function() {
     });
 
     return {
+        none: function() {
+            var name;
+            for (var prop in events) {
+                if (events.hasOwnProperty(prop)) {
+                    name = prop.split('_');
+                    name = name[name.length -1];
+                    document.removeEventListener(name, events[prop], false);
+                }
+            }
+        },
         normal: function() {
-            document.removeEventListener("mousemove", text_mousemove, false);
-            document.removeEventListener("keydown", text_keydown, false);
-            document.removeEventListener("keypress", text_keypress, false);
-            document.removeEventListener("keyup", text_keyup, false);
-            document.removeEventListener("mousedown", text_mousedown, false);
-            document.removeEventListener("mouseup", text_mouseup, false);
+            pdgui.gui_post("resetting to normal...");
+            this.none();
 
-            document.addEventListener("mousemove", mousemove, false);
-            document.addEventListener("keydown", keydown, false);
-            document.addEventListener("keypress", keypress, false);
-            document.addEventListener("keyup", keyup, false);
-            document.addEventListener("mousedown", mousedown, false);
-            document.addEventListener("mouseup", mouseup, false);
+            document.addEventListener("mousemove", events.mousemove, false);
+            document.addEventListener("keydown", events.keydown, false);
+            document.addEventListener("keypress", events.keypress, false);
+            document.addEventListener("keyup", events.keyup, false);
+            document.addEventListener("mousedown", events.mousedown, false);
+            document.addEventListener("mouseup", events.mouseup, false);
         },
         text: function() {
-            document.removeEventListener("mousemove", mousemove, false);
-            document.removeEventListener("keydown", keydown, false);
-            document.removeEventListener("keypress", keypress, false);
-            document.removeEventListener("keyup", keyup, false);
-            document.removeEventListener("mousedown", mousedown, false);
-            document.removeEventListener("mouseup", mouseup, false);
+            this.none();
 
-            document.addEventListener("mousemove", text_mousemove, false);
-            document.addEventListener("keydown", text_keydown, false);
-            document.addEventListener("keypress", text_keypress, false);
-            document.addEventListener("keyup", text_keyup, false);
-            document.addEventListener("mousedown", text_mousedown, false);
-            document.addEventListener("mouseup", mouseup, false);
+            document.addEventListener("mousemove", events.text_mousemove, false);
+            document.addEventListener("keydown", events.text_keydown, false);
+            document.addEventListener("keypress", events.text_keypress, false);
+            document.addEventListener("keyup", events.text_keyup, false);
+            document.addEventListener("mousedown", events.text_mousedown, false);
+            document.addEventListener("mouseup", events.text_mouseup, false);
+        },
+        floating_text: function() {
+            this.none();
+            this.text();
+            document.removeEventListener("mousedown", events.text_mousedown, false);
+            document.removeEventListener("mouseup", events.text_mouseup, false);
+            document.removeEventListener("mousemove", events.text_mousemove, false);
+            document.removeEventListener("keypress", events.text_keypress, false);
+            document.addEventListener("click", events.floating_text_click, false);
+
+            document.addEventListener("keypress", events.floating_text_keypress, false);
+            document.addEventListener("mousemove", events.mousemove, false);
         },
         register: function(n) {
             name = n;

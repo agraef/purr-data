@@ -106,6 +106,13 @@ void rtext_gettext(t_rtext *x, char **buf, int *bufsize)
     *bufsize = x->x_bufsize;
 }
 
+void rtext_settext(t_rtext *x, char *buf, int bufsize)
+{
+    freebytes(x->x_buf, x->x_bufsize);
+    x->x_buf = buf;
+    x->x_bufsize = bufsize;
+}
+
 void rtext_getseltext(t_rtext *x, char **buf, int *bufsize)
 {
     *buf = x->x_buf + x->x_selstart;
@@ -553,7 +560,7 @@ post("selected an rtext");
 void rtext_activate(t_rtext *x, int state)
 {
     fprintf(stderr,"rtext_activate state=%d\n", state);
-    int w = 0, h = 0, indx;
+    int w = 0, h = 0, widthspec, indx;
     t_glist *glist = x->x_glist;
     t_canvas *canvas = glist_getcanvas(glist);
     //if (state && x->x_active) printf("duplicate rtext_activate\n");
@@ -578,14 +585,24 @@ void rtext_activate(t_rtext *x, int state)
             glist->gl_editor->e_textedfor = 0;
         x->x_active = 0;
     }
-    /* so I guess the following would need to be commented out
-       if we want to use the textarea junk to feed to Pd... */
     rtext_senditup(x, SEND_UPDATE, &w, &h, &indx);
-    gui_vmess("gui_textarea", "xsiiii",
+    /* hack...
+       state = 0 no editing
+       state = 1 editing
+       state = 2 editing a new object
+       State 2 isn't necessary, except that Pd has
+       traditionally had this "floating" state for
+       new objects where the box text also happens
+       to be editable
+    */
+
+    widthspec = x->x_text->te_width; // width if any specified
+    gui_vmess("gui_textarea", "xsiiiii",
         canvas,
         x->x_tag,
         x->x_text->te_xpix,
         x->x_text->te_ypix,
+        widthspec,
         sys_hostfontsize(glist_getfont(glist)),
         state);
 }
