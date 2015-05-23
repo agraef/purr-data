@@ -82,7 +82,7 @@ void binbuf_clear(t_binbuf *x)
     /* convert text to a binbuf */
 void binbuf_text(t_binbuf *x, char *text, size_t size)
 {
-    //fprintf(stderr, "current text: %s\n", text);
+    //fprintf(stderr, "current text: %.*s\n", size, text);
     char buf[MAXPDSTRING+1], *bufp, *ebuf = buf+MAXPDSTRING;
     const char *textp = text, *etext = text+size;
     t_atom *ap;

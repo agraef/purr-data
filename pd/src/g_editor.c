@@ -7624,9 +7624,8 @@ static void canvas_stringforobj(t_canvas *x, t_symbol *s, int argc, t_atom *argv
     {
         if (glist_isselected(x, y) && (rtext = glist_findrtext(x, (t_text *)y)))
         {
-            rtext_gettext(rtext, &buf, &length);
             t_binbuf *b = binbuf_new();
-            binbuf_add(b, argc, argv);
+            binbuf_restore(b, argc, argv);
             binbuf_gettext(b, &buf, &length);
             rtext_settext(rtext, buf, length);
             binbuf_free(b);

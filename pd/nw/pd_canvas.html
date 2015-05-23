@@ -41,6 +41,15 @@ function add_keymods(key, evt) {
     return shift + ctrl + key;
 }
 
+function text_to_fudi(text) {
+    text = text.trim();
+    text = text.replace(/(\$[0-9]+)/g, '\\$1');    // escape dollar signs
+    text = text.replace(/(?!\\)(,|;)/g, ' \\$1 '); // escape ',' and ';'
+    text = text.replace(/\{|\}/g, '');             // filter '{' and '}'
+    text = text.replace(/\s+/g, ' ');              // filter consecutive /s
+    return text;
+}
+
 var canvas_events = (function() {
     var name,
         textbox = function () {
@@ -141,9 +150,9 @@ var canvas_events = (function() {
             },
             text_mousedown: function(evt) {
                 if (textbox() !== evt.target) {
-                    pdgui.gui_post("my content was " + textbox().textContent);
-                    pdgui.pdsend(name + " stringforobj "
-                        + textbox().textContent);
+                    var fudi_msg = text_to_fudi(textbox().textContent);
+                    pdgui.pdsend(name + " stringforobj " + fudi_msg);
+                    pdgui.gui_post("formatted content is " + fudi_msg);
                     events.mousedown(evt);
                     canvas_events.normal();
                 }
