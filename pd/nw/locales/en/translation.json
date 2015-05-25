@@ -319,5 +319,16 @@
     "apply_tt": "Update audio properties without closing this dialog",
     "cancel": "cancel",
     "cancel_tt": "Cancel updating the properties"
+  },
+  "font": {
+    "prop": {
+      "size": "font size",
+      "8": "8",
+      "10": "10",
+      "12": "12",
+      "16": "16",
+      "24": "24",
+      "36": "36"
+    }
   }
 }

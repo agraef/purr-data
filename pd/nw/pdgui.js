@@ -3318,6 +3318,12 @@ gui_post("did is " + did + " and dialogwin[did] is " + dialogwin[did]);
     }
 }
 
+function gui_font_dialog(cid, gfxstub, font_size) {
+    var attrs = { canvas: cid, font_size: font_size };
+    dialogwin[gfxstub] = nw_create_window(gfxstub, 'font', 265, 540, 20, 20, 0,
+        0, 1, 'white', 'Properties', '', 0, null, attrs);
+}
+
 // Global settings
 
 function gui_pd_dsp(state) {

@@ -5609,8 +5609,12 @@ static void canvas_menufont(t_canvas *x)
     char buf[80];
     t_canvas *x2 = canvas_getrootfor(x);
     gfxstub_deleteforkey(x2);
-    sprintf(buf, "pdtk_canvas_dofont %%s .x%lx %d\n", (t_int)x2, x2->gl_font);
-    gfxstub_new(&x2->gl_pd, &x2->gl_pd, buf);
+//    sprintf(buf, "pdtk_canvas_dofont %%s .x%lx %d\n", (t_int)x2, x2->gl_font);
+    char *gfxstub = gfxstub_new2(&x2->gl_pd, &x2->gl_pd);
+    gui_vmess("gui_font_dialog", "xsi",
+        x2,
+        gfxstub,
+        x2->gl_font);
 }
 
 static int canvas_find_index1, canvas_find_index2, canvas_find_wholeword;

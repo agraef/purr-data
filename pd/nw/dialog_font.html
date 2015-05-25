@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link id="page_style" rel="stylesheet" type="text/css" href="css/default.css">
+  </head>
+  <body id="iemgui_dialog_body">
+    <div class="container">
+    <form> 
+      <fieldset> 
+        <legend data-i18n="font.prop.size"></legend> 
+
+        <label>
+          <input type="radio"
+                 id="8"
+                 value="8"
+                 name="font_size"
+                 onchange="change_size();">
+          <span data-i18n="font.prop.8"></span>
+        </label>
+
+        <br/>
+
+        <label>
+          <input type="radio"
+                 id="10"
+                 value="10"
+                 name="font_size"
+                 onchange="change_size();">
+          <span data-i18n="font.prop.10"></span>
+        </label>
+
+        <br/>
+
+        <label>
+          <input type="radio"
+                 id="12"
+                 value="12"
+                 name="font_size"
+                 onchange="change_size();">
+          <span data-i18n="font.prop.12"></span>
+        </label>
+
+        <br/>
+
+        <label>
+          <input type="radio"
+                 id="16"
+                 value="16"
+                 name="font_size"
+                 onchange="change_size();">
+          <span data-i18n="font.prop.16"></span>
+        </label>
+
+        <br/>
+
+        <label>
+          <input type="radio"
+                 id="24"
+                 value="24"
+                 name="font_size"
+                 onchange="change_size();">
+          <span data-i18n="font.prop.24"></span>
+        </label>
+
+        <br/>
+
+        <label>
+          <input type="radio"
+                 id="36"
+                 value="36"
+                 name="font_size"
+                 onchange="change_size();">
+          <span data-i18n="font.prop.36"></span>
+        </label>
+
+        <br/>
+
+      </fieldset> 
+
+    <div class="submit_buttons">
+      <button type="button" onClick="ok()" data-i18n="[title]iem.prop.ok_tt">
+        <span data-i18n="iem.prop.ok"></span>
+      </button>
+      <button type="button" onClick="apply()" data-i18n="[title]iem.prop.apply_tt">
+        <span data-i18n="iem.prop.apply"></span>
+      </button>
+      <button type="button" onClick="cancel()" data-i18n="[title]iem.prop.cancel_tt">
+        <span data-i18n="iem.prop.cancel"></span>
+      </button>
+    </div>
+
+  </form> 
+  </div>      
+
+  <script>
+    'use strict';
+    var nw = require('nw.gui'); 
+    var pdgui = require('./pdgui.js');
+
+    // For translations
+    var l = pdgui.get_local_string;
+
+    console.log("my working dire is " + pdgui.get_pwd());
+
+    pdgui.skin.apply(this);
+
+    var pd_object_callback;
+
+    function ok() {
+        apply();
+        cancel();
+    }
+
+function change_size() {
+    pdgui.gui_post("changing the size");
+}
+
+function apply() {
+        pdgui.gui_post("we're applying shits!");
+
+/*
+    set cmd [concat $id param \
+        $::dialog($vid:width) $::dialog($vid:lo) $::dialog($vid:hi) \
+        [gatom_escape $::dialog($vid:label)] $::dialog($vid:wherelabel) \
+        [gatom_escape $::dialog($vid:symfrom)] \
+        [gatom_escape $::dialog($vid:symto)] \;]
+*/
+ 
+    pdgui.pdsend([pd_object_callback, 'param', 
+        +document.getElementById('width').value,
+        +document.getElementById('minimum-range').value,
+        +document.getElementById('maximum-range').value,
+        gatom_escape(document.getElementById('label').value),
+        document.querySelector('input[name="labelpos"]:checked').value,
+        gatom_escape(document.getElementById('receive-symbol').value),
+        gatom_escape(document.getElementById('send-symbol').value)
+    ].join(' '));
+}
+
+    function cancel() {
+        pdgui.gui_post("closing the window at this point");
+//        window.close(true);
+        pdgui.pdsend(pd_object_callback + " cancel");
+    }
+
+    // This gets called from the nw_create_window function in index.html
+    // It provides us with our window id from the C side.  Once we have it
+    // we can create the menu and register event callbacks
+    function register_canvas_id(gfxstub, attrs) {
+        pd_object_callback = gfxstub;
+
+        console.log('attrs are ' + attrs.toString());
+        add_events(gfxstub);
+        // not sure that we need this for properties windows
+//        pdgui.canvas_map(gfxstub);
+        translate_form();
+        populate_form(attrs);
+        // We don't turn on rendering of the "container" div until
+        // We've finished displaying all the spans and populating the
+        // labels and form elements.  That makes it more efficient and
+        // snappier, at least on older machines.
+        document.getElementsByClassName('container')[0].style.setProperty('display', 'inline');
+//        document.getElementsByClass("fumbles")[0].setAttribute('style', 'display: inline;');
+    }
+
+// Stop-gap translator
+function translate_form() {
+    var i
+    var elements = document.querySelectorAll('[data-i18n]');
+    for (i = 0; i < elements.length; i++) {
+        var data = elements[i].dataset.i18n;
+        if (data.slice(0,7) === '[title]') {
+            elements[i].title = l(data.slice(7));
+        } else {
+            elements[i].textContent = l(data);
+        }
+    }
+}
+
+function get_attr(name, attrs) {
+    return attrs[attrs.indexOf(name)+1];
+}
+
+function get_elem(name) {
+    return document.getElementById(name);
+}
+
+function populate_form(attrs) {
+    get_elem(attrs.font_size).checked = true;
+}
+
+function add_events(name) {
+    // let's handle some events for this window...
+
+    // closing the Window
+    nw.Window.get().on("close", function() {
+        // this needs to do whatever the "cancel" button does
+//        pdgui.pdsend(name + " menuclose 0");
+//        cancel();
+        pdgui.remove_dialogwin(pd_object_callback);
+        this.close(true);
+    });
+
+}
+
+  </script>
+  </body>
+</html>

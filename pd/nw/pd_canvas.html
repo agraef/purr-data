@@ -694,7 +694,9 @@ function nw_create_patch_window_menus (name) {
 
     editMenu.append(new nw.MenuItem({
         label: l('menu.font'),
-        click: menu_generic,
+        click: function () {
+            pdgui.pdsend(name + " menufont");
+        },
 //        key: 'a',
         modifiers: "ctrl",
         tooltip: l('menu.font_tt'),
