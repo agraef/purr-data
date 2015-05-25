@@ -105,6 +105,8 @@
     pdgui.skin.apply(this);
 
     var pd_object_callback;
+    var current_size;
+    var canvas;
 
     function ok() {
         apply();
@@ -113,6 +115,7 @@
 
 function change_size() {
     pdgui.gui_post("changing the size");
+    apply();
 }
 
 function apply() {
@@ -126,14 +129,11 @@ function apply() {
         [gatom_escape $::dialog($vid:symto)] \;]
 */
  
-    pdgui.pdsend([pd_object_callback, 'param', 
-        +document.getElementById('width').value,
-        +document.getElementById('minimum-range').value,
-        +document.getElementById('maximum-range').value,
-        gatom_escape(document.getElementById('label').value),
-        document.querySelector('input[name="labelpos"]:checked').value,
-        gatom_escape(document.getElementById('receive-symbol').value),
-        gatom_escape(document.getElementById('send-symbol').value)
+    pdgui.pdsend([canvas, 'font', 
+        +document.querySelector('input[name="font_size"]:checked').value,
+        current_size,
+        100,
+        0, // "$noundo" from pd.tk-- not sure what it does
     ].join(' '));
 }
 
@@ -187,6 +187,8 @@ function get_elem(name) {
 
 function populate_form(attrs) {
     get_elem(attrs.font_size).checked = true;
+    current_size = attrs.font_size;
+    canvas = attrs.canvas;
 }
 
 function add_events(name) {
