@@ -2989,12 +2989,8 @@ function add_popup(cid, popup) {
 
 exports.add_popup = add_popup;
 
-function gui_canvas_popup(cid, xpos, ypos, canprop, canopen, isobject) {
-    gui_post("canvas_popup called... " + JSON.stringify(arguments));
-    // Set the global popup x/y so they can be retrieved by the relevant doc's event handler
-    var zoom_level = patchwin[cid].zoomLevel;
-    gui_post("zoom level is " + zoom_level);
-    var zoom_factor = 1 + (zoom_level * (zoom_level * 0.02 + 0.18));
+// Kludge to get popup coords to fit the browser's zoom level
+function zoom_kludge(zoom_level) {
     var zfactor;
     switch(zoom_level) {
         case -7: zfactor = 0.279; break;
@@ -3014,12 +3010,21 @@ function gui_canvas_popup(cid, xpos, ypos, canprop, canopen, isobject) {
         case 8: zfactor = 4.32; break;
         default: zfactor = 1;
     }
+    return zfactor;
+}
 
+function gui_canvas_popup(cid, xpos, ypos, canprop, canopen, isobject) {
+    gui_post("canvas_popup called... " + JSON.stringify(arguments));
+    // Set the global popup x/y so they can be retrieved by the relevant doc's event handler
+    var zoom_level = patchwin[cid].zoomLevel;
+    var zfactor = zoom_kludge(zoom_level);
+    popup_coords[0] = xpos;
+    popup_coords[1] = ypos;
     xpos = Math.floor(xpos * zfactor);
     ypos = Math.floor(ypos * zfactor);
     gui_post("xpos is " + xpos + " and ypos is " + ypos);
-    popup_coords[0] = xpos;
-    popup_coords[1] = ypos;
+//    popup_coords[0] = xpos;
+//    popup_coords[1] = ypos;
     popup_menu[cid].items[0].enabled = canprop;
     popup_menu[cid].items[1].enabled = canopen;
 
@@ -3035,6 +3040,7 @@ function gui_canvas_popup(cid, xpos, ypos, canprop, canopen, isobject) {
 }
 
 function popup_action(cid, index) {
+gui_post("popup coords are: " + popup_coords.join(" "));
     pdsend(cid + " done-popup " + index + " " + popup_coords.join(" "));
 }
 
