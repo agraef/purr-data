@@ -1730,6 +1730,7 @@ function init_socket_events () {
 
     client.on('data', function(data) {
         var dataStr = decoder.write(data);
+        //var dataStr = data.toString();
         // For debugging the buffer...
         //if (decoder.end() !== "") {
         //    console.log("utf8 multi-byte character split across buffer");

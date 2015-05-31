@@ -179,3 +179,17 @@ Everything else: (A [x] means we've fixed it)
 
 Crashers
 --------
+
+***
+
+Differences in Purrd and Pd
+---------------------------
+
+When editing box content, you cannot currently trigger xlet highlight when
+mousing over xlets.  This is a consequence of the current iteration of moving
+gui behavior from the core to the GUI.
+
+When editing box content, the text will wrap if it gets close to the right
+border of the window.  (Probably same for the bottom of the window.) But
+when you activate the box the svg text still gets rendered in the correct
+location.  (I see this as an improvement over the old behavior.)

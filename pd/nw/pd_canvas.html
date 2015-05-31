@@ -143,7 +143,7 @@ var canvas_events = (function() {
                 evt.stopPropagation();
                 evt.preventDefault();
             },
-            text_mousemove: function(evt) { // we may not need this one
+            text_mousemove: function(evt) {
                 evt.stopPropagation();    
                 //evt.preventDefault();
                 return false;
@@ -282,10 +282,9 @@ var canvas_events = (function() {
             this.text();
             document.removeEventListener("mousedown", events.text_mousedown, false);
             document.removeEventListener("mouseup", events.text_mouseup, false);
-            document.removeEventListener("mousemove", events.text_mousemove, false);
             document.removeEventListener("keypress", events.text_keypress, false);
+            document.removeEventListener("mousemove", events.text_mousemove, false);
             document.addEventListener("click", events.floating_text_click, false);
-
             document.addEventListener("keypress", events.floating_text_keypress, false);
             document.addEventListener("mousemove", events.mousemove, false);
         },

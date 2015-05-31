@@ -389,7 +389,14 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
             //    canvas, x->x_tag, outchars_b, tempbuf);
             gui_vmess("gui_text_set", "xss", canvas, x->x_tag, tempbuf);
 
-            if (pixwide != x->x_drawnwidth || pixhigh != x->x_drawnheight) 
+            // We add the check for T_MESSAGE below so that the box border
+            // gets resized correctly using our interim event handling in
+            // pd_canvas.html.  I could remove the conditional, but
+            // this part of Pd is convoluted enough that I'm not sure
+            // if there'd be any side effects.
+            if (pixwide != x->x_drawnwidth ||
+                pixhigh != x->x_drawnheight ||
+                x->x_text->te_type == T_MESSAGE) 
                 text_drawborder(x->x_text, x->x_glist, x->x_tag,
                     pixwide, pixhigh, 0);
             if (x->x_active)
