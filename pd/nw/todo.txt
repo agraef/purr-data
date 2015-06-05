@@ -176,6 +176,8 @@ Everything else: (A [x] means we've fixed it)
 [ ] make "rtext" textarea <div> static, and turn display on/off
 [ ] what to do about character sets other than utf-8 that come from Pd
     side? Example: ISO-8859 from the string posted by hexloader.c
+[ ] for the clipboard shortcut keys inside pd_canvas.html keydown, not sure
+    what code should be sent to Pd on keyup...
 
 Crashers
 --------

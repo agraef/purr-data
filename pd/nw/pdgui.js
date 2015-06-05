@@ -85,8 +85,30 @@ var pd_myversion,    // Pd version string
 
     var startup_files = []; // Array of files to be opened at startup (from the command line)
 
-    var pd_keymap = {}; // to iteratively map keydown/keyup keys
-                        // to keypress char codes
+// Keycode vs Charcode: A Primer
+// -----------------------------
+// * keycode is a unique number assigned to a physical key on the keyboard
+// * charcode is the ASCII character (printable or otherwise) that gets output
+//     when you depress a particular key
+// * keydown and keyup events report keycodes but not charcodes
+// * keypress events report charcodes but not keycodes
+// * keypress events do _not_ report non-ASCII chars like arrow keys,
+//     Alt keypress, Ctrl, (possibly) the keypad Delete key, and others
+// * in Pd, we want to send ASCII codes + arrow keys et al to Pd for
+//     both keydown and keyup events
+// * events (without an auto-repeat) happen in this order:
+//       1) keydown
+//       2) keypress
+//       3) keyup
+// Therefore...
+// * solution #1: we check for non-ASCII keycodes like arrow keys inside
+//     the keydown event
+// * solution #2: in the keypress event, we map the charcode to the last
+//     last keydown keycode we received
+// * solution #3: on keyup, we use the keycode to look up the corresponding
+//     charcode, and send the charcode on to Pd
+var pd_keymap = {}; // to iteratively map keydown/keyup keys
+                    // to keypress char codes
 
 function set_keymap(keycode, charcode) {
     pd_keymap[keycode] = charcode;
