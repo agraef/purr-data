@@ -2680,7 +2680,7 @@ function gui_iemgui_drawborder(cid, tag, bgcolor, x1, y1, x2, y2) {
 }
 
 function gui_iemgui_redraw_border(cid, tag, x1, y1, x2, y2) {
-    var item = get_item(cid, tag + 'border');
+    var item = get_gobj(cid, tag).querySelector('.border');
     configure_item(item, {
         width: x2 - x1,
         height: y2 - y1

@@ -93,25 +93,25 @@
   </div>      
 
   <script>
-    'use strict';
-    var nw = require('nw.gui'); 
-    var pdgui = require('./pdgui.js');
+'use strict';
+var nw = require('nw.gui'); 
+var pdgui = require('./pdgui.js');
 
-    // For translations
-    var l = pdgui.get_local_string;
+// For translations
+var l = pdgui.get_local_string;
 
-    console.log("my working dire is " + pdgui.get_pwd());
+console.log("my working dire is " + pdgui.get_pwd());
 
-    pdgui.skin.apply(this);
+pdgui.skin.apply(this);
 
-    var pd_object_callback;
-    var current_size;
-    var canvas;
+var pd_object_callback;
+var current_size;
+var canvas;
 
-    function ok() {
-        apply();
-        cancel();
-    }
+function ok() {
+    apply();
+    cancel();
+}
 
 function change_size() {
     pdgui.gui_post("changing the size");
@@ -119,16 +119,7 @@ function change_size() {
 }
 
 function apply() {
-        pdgui.gui_post("we're applying shits!");
-
-/*
-    set cmd [concat $id param \
-        $::dialog($vid:width) $::dialog($vid:lo) $::dialog($vid:hi) \
-        [gatom_escape $::dialog($vid:label)] $::dialog($vid:wherelabel) \
-        [gatom_escape $::dialog($vid:symfrom)] \
-        [gatom_escape $::dialog($vid:symto)] \;]
-*/
- 
+    pdgui.gui_post("we're applying font size changes!");
     pdgui.pdsend([canvas, 'font', 
         +document.querySelector('input[name="font_size"]:checked').value,
         current_size,
@@ -137,31 +128,30 @@ function apply() {
     ].join(' '));
 }
 
-    function cancel() {
-        pdgui.gui_post("closing the window at this point");
-//        window.close(true);
-        pdgui.pdsend(pd_object_callback + " cancel");
-    }
+function cancel() {
+    pdgui.gui_post("closing the window at this point");
+    //window.close(true);
+    pdgui.pdsend(pd_object_callback + " cancel");
+}
 
-    // This gets called from the nw_create_window function in index.html
-    // It provides us with our window id from the C side.  Once we have it
-    // we can create the menu and register event callbacks
-    function register_canvas_id(gfxstub, attrs) {
-        pd_object_callback = gfxstub;
-
-        console.log('attrs are ' + attrs.toString());
-        add_events(gfxstub);
-        // not sure that we need this for properties windows
-//        pdgui.canvas_map(gfxstub);
-        translate_form();
-        populate_form(attrs);
-        // We don't turn on rendering of the "container" div until
-        // We've finished displaying all the spans and populating the
-        // labels and form elements.  That makes it more efficient and
-        // snappier, at least on older machines.
-        document.getElementsByClassName('container')[0].style.setProperty('display', 'inline');
-//        document.getElementsByClass("fumbles")[0].setAttribute('style', 'display: inline;');
-    }
+// This gets called from the nw_create_window function in index.html
+// It provides us with our window id from the C side.  Once we have it
+// we can create the menu and register event callbacks
+function register_canvas_id(gfxstub, attrs) {
+    pd_object_callback = gfxstub;
+    console.log('attrs are ' + attrs.toString());
+    add_events(gfxstub);
+    // not sure that we need this for properties windows
+    //pdgui.canvas_map(gfxstub);
+    translate_form();
+    populate_form(attrs);
+    // We don't turn on rendering of the "container" div until
+    // We've finished displaying all the spans and populating the
+    // labels and form elements.  That makes it more efficient and
+    // snappier, at least on older machines.
+    document.getElementsByClassName('container')[0]
+        .style.setProperty('display', 'inline');
+}
 
 // Stop-gap translator
 function translate_form() {
@@ -192,19 +182,15 @@ function populate_form(attrs) {
 }
 
 function add_events(name) {
-    // let's handle some events for this window...
-
     // closing the Window
     nw.Window.get().on("close", function() {
         // this needs to do whatever the "cancel" button does
-//        pdgui.pdsend(name + " menuclose 0");
-//        cancel();
+        //pdgui.pdsend(name + " menuclose 0");
+        //cancel();
         pdgui.remove_dialogwin(pd_object_callback);
         this.close(true);
     });
-
 }
-
   </script>
   </body>
 </html>
