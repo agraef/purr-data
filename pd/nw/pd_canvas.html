@@ -61,8 +61,8 @@ var canvas_events = (function() {
                 //pdgui.gui_post("x: " + evt.pageX + " y: " + evt.pageY +
                 //    " modifier: " + (evt.shiftKey + (evt.ctrlKey << 1)));
                 pdgui.pdsend(name +
-                " motion " + evt.pageX + " " + evt.pageY + " " +
-                (evt.shiftKey + (evt.ctrlKey << 1)));
+                    " motion " + evt.pageX + " " + evt.pageY + " " +
+                    (evt.shiftKey + (evt.ctrlKey << 1)));
                 evt.stopPropagation();
                 evt.preventDefault();
                 return false;

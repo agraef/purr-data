@@ -794,7 +794,8 @@ void canvas_msg(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
         glist_add(gl, &x->m_text.te_g);
         glist_noselect(gl);
         glist_select(gl, &x->m_text.te_g);
-        gobj_activate(&x->m_text.te_g, gl, 1);
+        gobj_activate(&x->m_text.te_g, gl,
+            2); // <-- hack to signal we're a new message box
         if (connectme == 1)
             canvas_connect(gl, indx, 0, nobj, 0);
         else if (connectme == 0)

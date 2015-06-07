@@ -599,8 +599,8 @@ void rtext_activate(t_rtext *x, int state)
        state = 2 editing a new object
        State 2 isn't necessary, except that Pd has
        traditionally had this "floating" state for
-       new objects where the box text also happens
-       to be editable
+       new objects where the box text is editable and
+       the box position follows the mouse
     */
 
     widthspec = x->x_text->te_width; // width if any specified
