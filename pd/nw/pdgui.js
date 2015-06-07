@@ -1764,11 +1764,11 @@ function init_socket_events () {
             var prefix = arr[i].substring(0, 2);
             if (prefix == 'nw' || prefix == 'nn') {
                 nextCmd = arr[i].substring(3);
-                //console.log("nextCmd is " + nextCmd);
+                console.log("nextCmd is " + nextCmd);
                 cmdHeader = 1;
             } else if (cmdHeader) {
 	        nextCmd += arr[i];
-                //console.log("2nd part of cmd is " + arr[i]);
+                console.log("2nd part of cmd is " + arr[i]);
             } else {
                 // Show the remaining old tcl/tk messages in blue
                 //gui_post(arr[i], "blue");
@@ -1779,9 +1779,9 @@ function init_socket_events () {
                 //nextCmd = nextCmd.replace(/'/g, "\\\'");
                 var selector = nextCmd.slice(0, nextCmd.indexOf(" "));
                 var args = nextCmd.slice(selector.length + 1, -1);
-                //console.log("About to eval: " + selector + '(' + args + ');');
+                //console.log('About to eval: ' + selector + '(' + args + ');');
                  eval(selector + '(' + args + ');');
-                 nextCmd = "";
+                 nextCmd = '';
                  cmdHeader = 0;
             }
 	}
@@ -1804,7 +1804,7 @@ exports.init_socket_events = init_socket_events;
 function pdsend(string) {
     client.write(string + ';');
     // for now, let's reprint the outgoing string to the pdwindow
-    // gui_post(string + ';', "red");
+    // gui_post(string + ';', 'red');
 }
 
 exports.pdsend = pdsend;
@@ -2119,9 +2119,26 @@ function gui_canvas_updateline(cid,tag,x1,y1,x2,y2,yoff) {
     configure_item(cord, { d: d_array.join(" ") });
 }
 
+function text_to_tspans(canvasname, svg_text, text) {
+    var lines, i, len, tspan;
+    lines = text.split('\v'); 
+    len = lines.length;
+gui_post("text length: " + text.length);
+gui_post("lines: " + len);
+    for (i = 0; i < len; i++) {
+        tspan = create_item(canvasname, 'tspan', {
+            dy: i == 0 ? 0 : 10
+        });
+        // find a way to abstract away the canvas array and the DOM here
+        var text_node = patchwin[canvasname].window.document.createTextNode(lines[i]);
+        tspan.appendChild(text_node);
+        svg_text.appendChild(tspan);
+    }
+}
+
 function gui_text_new(canvasname, myname, type, isselected, x, y, text, font) {
 //    gui_post("font is " + font);
-
+    var lines, i, len, tspan;
     var g = get_gobj(canvasname, myname);
     var svg_text = create_item(canvasname, 'text', {
         // x and y are fudge factors. Text on the tk canvas used an anchor
@@ -2138,9 +2155,9 @@ function gui_text_new(canvasname, myname, type, isselected, x, y, text, font) {
         id: myname + 'text'
     });
 
-    // find a way to abstract away the canvas array and the DOM here
-    var text_node = patchwin[canvasname].window.document.createTextNode(text);
-    svg_text.appendChild(text_node);
+    // fill svg_text with tspan content by splitting on '\v'
+    text_to_tspans(canvasname, svg_text, text);
+
     if (g !== null) {
         g.appendChild(svg_text);
     } else {
@@ -2166,7 +2183,8 @@ function gui_gobj_erase(cid, tag) {
 function gui_text_set (cid, tag, text) {
     var svg_text = get_item(cid, tag + 'text');
     if (svg_text !== null) {
-        svg_text.textContent = text;
+        svg_text.textContent = '';
+        text_to_tspans(cid, svg_text, text);
     } else {
         gui_post("gui_text_set: svg_text doesn't exist!");
         console.log("gui_text_set: " + cid + " " + tag + " " + text + " :" + "svg_text doesn't exist!");

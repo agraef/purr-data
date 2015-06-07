@@ -47,6 +47,7 @@ function text_to_fudi(text) {
     text = text.replace(/(?!\\)(,|;)/g, ' \\$1 '); // escape ',' and ';'
     text = text.replace(/\{|\}/g, '');             // filter '{' and '}'
     text = text.replace(/\s+/g, ' ');              // filter consecutive /s
+
     return text;
 }
 
@@ -191,7 +192,11 @@ var canvas_events = (function() {
             },
             text_mousedown: function(evt) {
                 if (textbox() !== evt.target) {
-                    var fudi_msg = text_to_fudi(textbox().textContent);
+                    // Yes: I _really_ want .innerText and NOT .textContent
+                    // here.  I want those newlines: although that isn't
+                    // standard in Pd-Vanilla, Pd-l2ork uses and preserves
+                    // them inside comments
+                    var fudi_msg = text_to_fudi(textbox().innerText);
                     pdgui.pdsend(name + " stringforobj " + fudi_msg);
                     pdgui.gui_post("formatted content is " + fudi_msg);
                     events.mousedown(evt);
