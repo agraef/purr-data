@@ -178,6 +178,10 @@ Everything else: (A [x] means we've fixed it)
     side? Example: ISO-8859 from the string posted by hexloader.c
 [ ] for the clipboard shortcut keys inside pd_canvas.html keydown, not sure
     what code should be sent to Pd on keyup...
+[ ] revis message box after updating the text in the editor. We didn't have
+    to do this with the old API because it updated the box on every keystroke.
+    But we're doing an end-run around that entire edifice so we need to
+    force it, probably inside text_setto
 
 Crashers
 --------
