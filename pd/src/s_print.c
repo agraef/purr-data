@@ -62,9 +62,9 @@ static void doerror(const void *object, const char *s)
     else
     {
         char obuf[MAXPDSTRING];
-        sys_vgui("pdtk_posterror {%s} 1 {%s}\n",
-            strnpointerid(obuf, object, MAXPDSTRING),
-            strnescape(upbuf, s, MAXPDSTRING));
+        //sys_vgui("pdtk_posterror {%s} 1 {%s}\n",
+        //    strnpointerid(obuf, object, MAXPDSTRING),
+        //    strnescape(upbuf, s, MAXPDSTRING));
         gui_vmess("gui_post_error", "sis",
             strnpointerid(obuf, object, MAXPDSTRING),
             1,
@@ -93,7 +93,9 @@ static void dologpost(const void *object, const int level, const char *s)
         //sys_vgui("::pdwindow::logpost {%s} %d {%s}\n", 
                  //strnpointerid(obuf, object, MAXPDSTRING), 
                  //level, strnescape(upbuf, s, MAXPDSTRING));
-        sys_vgui("pdtk_post {%s}\n", 
+        //sys_vgui("pdtk_post {%s}\n", 
+        //         strnescape(upbuf, s, MAXPDSTRING));
+        gui_vmess("gui_post", "s",
                  strnescape(upbuf, s, MAXPDSTRING));
     }
 }

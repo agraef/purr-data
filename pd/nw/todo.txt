@@ -183,6 +183,8 @@ Everything else: (A [x] means we've fixed it)
     But we're doing an end-run around that entire edifice so we need to
     force it, probably inside text_setto
 [ ] abstract out multi-line text loop, use for text_new and text_set
+[ ] think about translating the undo/redo actions as they appear in the menu.
+    (Might be tricky to do)
 
 Crashers
 --------

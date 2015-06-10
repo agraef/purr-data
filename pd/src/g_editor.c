@@ -760,10 +760,19 @@ void canvas_setundo(t_canvas *x, t_undofn undofn, void *buf,
     canvas_undo_name = name;
     //if (x && glist_isvisible(x) && glist_istoplevel(x))
     if (x)
+    {
         // enable undo in menu
-        sys_vgui("pdtk_undomenu .x%lx %s no\n", x, name);
+        //sys_vgui("pdtk_undomenu .x%lx %s no\n", x, name);
+        gui_vmess("gui_undo_menu", "xss",
+            x, name, "no");
+    }
     else if (hadone)
-        sys_vgui("pdtk_undomenu nobody no no\n");
+    {
+        /* can't figure out what this does... */
+        //sys_vgui("pdtk_undomenu nobody no no\n");
+        gui_vmess("gui_undo_menu ", "xss",
+            "nobody", "no", "no");
+    }
 }
 
     /* clear undo if it happens to be for the canvas x.

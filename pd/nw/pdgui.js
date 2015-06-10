@@ -1764,14 +1764,14 @@ function init_socket_events () {
             var prefix = arr[i].substring(0, 2);
             if (prefix == 'nw' || prefix == 'nn') {
                 nextCmd = arr[i].substring(3);
-                console.log("nextCmd is " + nextCmd);
+                //console.log("nextCmd is " + nextCmd);
                 cmdHeader = 1;
             } else if (cmdHeader) {
 	        nextCmd += arr[i];
-                console.log("2nd part of cmd is " + arr[i]);
+                //console.log("2nd part of cmd is " + arr[i]);
             } else {
                 // Show the remaining old tcl/tk messages in blue
-                //gui_post(arr[i], "blue");
+                gui_post(arr[i], "blue");
             }
             // check if we end with a semicolon followed by a newline
             if (nextCmd.slice(-1) === ";" && nextCmd.slice(-2) !== '\\') {
@@ -1779,10 +1779,10 @@ function init_socket_events () {
                 //nextCmd = nextCmd.replace(/'/g, "\\\'");
                 var selector = nextCmd.slice(0, nextCmd.indexOf(" "));
                 var args = nextCmd.slice(selector.length + 1, -1);
-                //console.log('About to eval: ' + selector + '(' + args + ');');
-                 eval(selector + '(' + args + ');');
-                 nextCmd = '';
-                 cmdHeader = 0;
+                console.log('About to eval: ' + selector + '(' + args + ');');
+                eval(selector + '(' + args + ');');
+                nextCmd = '';
+                cmdHeader = 0;
             }
 	}
 	// client.destroy();
@@ -3514,5 +3514,13 @@ function gui_textarea(cid, tag, x, y, max_char_width, text, font_size, state) {
             p.parentNode.removeChild(p);
         }
         patchwin[cid].window.canvas_events.normal();
+    }
+}
+
+function gui_undo_menu(cid, undo_text, redo_text) {
+    // we have to check if the window exists, because Pd starts
+    // up with two unvis'd patch windows used for garrays
+    if (cid !== 'nobody' && patchwin[cid] !== undefined) {
+        patchwin[cid].window.nw_undo_menu(undo_text, redo_text);
     }
 }
