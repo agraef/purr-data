@@ -1779,7 +1779,7 @@ function init_socket_events () {
                 //nextCmd = nextCmd.replace(/'/g, "\\\'");
                 var selector = nextCmd.slice(0, nextCmd.indexOf(" "));
                 var args = nextCmd.slice(selector.length + 1, -1);
-                console.log('About to eval: ' + selector + '(' + args + ');');
+                //console.log('About to eval: ' + selector + '(' + args + ');');
                 eval(selector + '(' + args + ');');
                 nextCmd = '';
                 cmdHeader = 0;
