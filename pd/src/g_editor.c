@@ -122,7 +122,11 @@ int gobj_filter_highlight_behavior(t_text *y)
 /* ---------------- mathieu 2014.08 --------------------------------- */
 
 void canvas_raise_all_cords (t_canvas *x) {
-    sys_vgui(".x%lx.c raise all_cords\n", x);
+    /* I think this is deprecated... instead of raising cords, we
+       just insert all gobjs (and scalars) before the first patch
+       cord.  This way we don't have to constantly raise all the
+       patch cords above everything else. */
+    //sys_vgui(".x%lx.c raise all_cords\n", x);
 }
 
 static void canvas_enteritem (t_canvas *x, int xpos, int ypos, const char *tag) {
