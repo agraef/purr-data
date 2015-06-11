@@ -1878,6 +1878,10 @@ function gui_configure_item(cid, tag, attributes) {
     configure_item(item, attributes);
 }
 
+function add_gobj_to_svg(svg, gobj) {
+    svg.insertBefore(gobj, svg.querySelector('.cord'));
+}
+
 // Most of these map either to pd.tk procs, or in some cases Tk canvas subcommands
 function gui_text_create_gobj(cid, tag, type, xpos, ypos, is_toplevel) {
     gui_post("creating a gobj");
@@ -1892,7 +1896,7 @@ function gui_text_create_gobj(cid, tag, type, xpos, ypos, is_toplevel) {
             transform: transform_string,
             class: type + (is_toplevel !== 0 ? '' : ' gop')
     });
-    svg.appendChild(g);
+    add_gobj_to_svg(svg, g);
 //    var bluh = svg.getBBox();
 //    var bbox_rect = svg.getElementById('bbox_rect');
 //    bbox_rect.setAttributeNS(null, 'width', bluh.width);
@@ -2074,7 +2078,8 @@ function gui_canvas_line(cid,tag,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10) {
         stroke: 'gray',
         'stroke-width': 1,
         'shape-rendering': 'optimizeSpeed',
-        id: tag
+        id: tag,
+        'class': 'cord'
     });
     svg.appendChild(path);
 }
@@ -2845,7 +2850,7 @@ gui_post("isselected is " + isselected);
         'pointer-events': 'none'
     });
     g.appendChild(selection_rect);
-    svg.appendChild(g);
+    add_gobj_to_svg(svg, g);
 //    gui_post("made a scalar...");
     return g;
 }
