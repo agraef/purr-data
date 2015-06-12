@@ -1886,15 +1886,12 @@ function add_gobj_to_svg(svg, gobj) {
 function gui_text_create_gobj(cid, tag, type, xpos, ypos, is_toplevel) {
     gui_post("creating a gobj");
     var svg = get_item(cid, "patchsvg"); // "patchsvg" is id for the svg element
-    // Put objects on half-pixels to make them crisp (look in to the
-    // difference between this and the object-rendering 'crispEdges' attribute)
-    xpos += 0.5;
-    ypos += 0.5;
     var transform_string = 'matrix(1,0,0,1,' + xpos + ',' + ypos + ')';
     var g = create_item(cid, 'g', {
             id: tag + 'gobj',
             transform: transform_string,
-            class: type + (is_toplevel !== 0 ? '' : ' gop')
+            class: type + (is_toplevel !== 0 ? '' : ' gop'),
+            //'shape-rendering': 'crispEdges'
     });
     add_gobj_to_svg(svg, g);
 //    var bluh = svg.getBBox();
@@ -1919,7 +1916,7 @@ function gui_text_drawborder(cid, tag, bgcolor, isbroken, x1, y1, x2, y2) {
         height: y2 - y1,
         stroke: 'black',
         fill: 'none',
-        'shape-rendering': 'optimizeSpeed',
+        'shape-rendering': 'crispEdges',
         class: 'border'
     });
     if (isbroken === 1) {
@@ -1952,6 +1949,7 @@ function gui_canvas_drawio(cid, parenttag, tag, x1, y1, x2, y2, basex, basey, ty
         y: y1 - basey,
         id: xlet_id,
         class: xlet_class,
+        'shape-rendering': 'crispEdges'
     });
     g.appendChild(rect);
     gui_post("the tag for this XLET is " + tag);
@@ -3528,4 +3526,21 @@ function gui_undo_menu(cid, undo_text, redo_text) {
     if (cid !== 'nobody' && patchwin[cid] !== undefined) {
         patchwin[cid].window.nw_undo_menu(undo_text, redo_text);
     }
+}
+
+function gui_canvas_getscroll(cid) {
+    var svg = get_item(cid, 'patchsvg');
+    var bbox = svg.getBBox();
+    configure_item(svg, {
+        viewBox: [bbox.x > 0 ? 0 : bbox.x,
+                  bbox.y > 0 ? 0 : bbox.y,
+                  bbox.x > 0 ? bbox.x + bbox.width : bbox.width,
+                  bbox.y > 0 ? bbox.y + bbox.height: bbox.height].join(" ")
+    });
+    svg.width.baseVal.valueAsString = bbox.x > 0 ? bbox.x + bbox.width : bbox.width;
+    svg.height.baseVal.valueAsString = bbox.y > 0 ? bbox.y + bbox.height : bbox.height;
+    console.log("x is " + bbox.x);
+    console.log("y is " + bbox.x);
+    console.log("width is " + bbox.width);
+    console.log("height is " + bbox.height);
 }

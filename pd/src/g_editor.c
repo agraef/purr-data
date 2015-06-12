@@ -173,7 +173,8 @@ static void canvas_nlet_conf (t_canvas *x, int type) {
 }*/
 
 void canvas_getscroll (t_canvas *x) {
-    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n",(long)x);
+    //sys_vgui("pdtk_canvas_getscroll .x%lx.c\n",(long)x);
+    gui_vmess("gui_canvas_getscroll", "x", x);
 }
 
 /* ---------------- generic widget behavior ------------------------- */

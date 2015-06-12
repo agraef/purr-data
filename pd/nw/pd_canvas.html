@@ -10,7 +10,7 @@
   <input style="display:none;" id="openpanel_dialog" type="file" />
   <input style="display:none;" id="savepanel_dialog" type="file" nwsaveas nwworkingdir />
 
-  <svg xmlns="http://www.w3.org/2000/svg" version="1.1" id="patchsvg" height="1000" width="1000" class="noselect">
+  <svg xmlns="http://www.w3.org/2000/svg" version="1.1" id="patchsvg" height="1000" width="1000" overflow="visible" class="noselect">
   </svg>
   <script>
 'use strict';
@@ -54,6 +54,7 @@ function text_to_fudi(text) {
 var canvas_events = (function() {
     var name,
         state,
+        svg_view = document.getElementById('patchsvg').viewBox.baseVal,
         textbox = function () {
             return document.getElementById('new_object_textentry');
         },
@@ -62,8 +63,9 @@ var canvas_events = (function() {
                 //pdgui.gui_post("x: " + evt.pageX + " y: " + evt.pageY +
                 //    " modifier: " + (evt.shiftKey + (evt.ctrlKey << 1)));
                 pdgui.pdsend(name +
-                    " motion " + evt.pageX + " " + evt.pageY + " " +
-                    (evt.shiftKey + (evt.ctrlKey << 1)));
+                    " motion " + (evt.pageX + svg_view.x) + " " +
+                                 (evt.pageY + svg_view.y) + " " +
+                                 (evt.shiftKey + (evt.ctrlKey << 1)));
                 evt.stopPropagation();
                 evt.preventDefault();
                 return false;
@@ -81,8 +83,9 @@ var canvas_events = (function() {
                     mod = (evt.shiftKey + (evt.ctrlKey << 1)); 
                 }
                 pdgui.pdsend(name +
-                    " mouse " + evt.pageX + " " + evt.pageY + " " +
-                    b + " " + mod);
+                    " mouse " + (evt.pageX + svg_view.x) + " " +
+                                (evt.pageY + svg_view.y) + " " +
+                                 b + " " + mod);
                 //evt.stopPropagation();
                 evt.preventDefault();
             },
