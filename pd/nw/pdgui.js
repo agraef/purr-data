@@ -3544,3 +3544,76 @@ function gui_canvas_getscroll(cid) {
     console.log("width is " + bbox.width);
     console.log("height is " + bbox.height);
 }
+
+// handling the selection
+function gui_lower(cid, tag) {
+    var svg = patchwin[cid].window.document.getElementById('patchsvg'),
+        first_child = svg.firstElementChild,
+        selection = null,
+        gobj, len, i;
+    if (tag === 'selected') {
+        selection = svg.getElementsByClassName('selected');
+    } else {
+        gobj = get_gobj(cid, tag);
+        if (gobj !== null) {
+            selection = [gobj];
+        }
+    }
+    if (selection !== null) {
+        len = selection.length;
+        for (i = len - 1; i >= 0; i--) {
+            svg.insertBefore(selection[i], first_child);
+        }
+    }
+}
+
+// This only differs from gui_raise by setting first_child to
+// the cord element instead of the first element in the svg.  Really,
+// all three of these should be combined into a single function (plus
+// all the silly logic on the C side moved here
+function gui_raise(cid, tag) {
+    var svg = patchwin[cid].window.document.getElementById('patchsvg'),
+        first_child = svg.querySelector('.cord'),
+        selection = null,
+        gobj, len, i;
+    if (tag === 'selected') {
+        selection = svg.getElementsByClassName('selected');
+    } else {
+        gobj = get_gobj(cid, tag);
+        if (gobj !== null) {
+            selection = [gobj];
+        }
+    }
+    if (selection !== null) {
+        len = selection.length;
+        for (i = len - 1; i >= 0; i--) {
+            svg.insertBefore(selection[i], first_child);
+        }
+    }
+}
+
+function gui_find_lowest_and_arrange(cid, reference_element_tag, objtag) {
+    var ref_elem = get_gobj(cid, reference_element_tag),
+        svg = patchwin[cid].window.document.getElementsByClassName('patchsvg'),
+        selection = null,
+        gobj,
+        len,
+        i;
+    if (ref_elem !== null) {
+        if (objtag === 'selected') {
+            selection = 
+            svg.getElementsByClassName('selected');
+        } else {
+            gobj = get_gobj(cid, objtag);
+            if (gobj !== null) {
+                selection = [get_gobj(cid, objtag)];
+            }
+        }
+        if (selection !== null) {
+            len = selection.length;
+            for (i = len - 1; i >= 0; i--) {
+                svg.insertBefore(selection[i], ref_elem);
+            }
+        }
+    }
+}

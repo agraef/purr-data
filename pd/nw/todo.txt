@@ -186,7 +186,10 @@ Everything else: (A [x] means we've fixed it)
 [ ] think about translating the undo/redo actions as they appear in the menu.
     (Might be tricky to do)
 [ ] set svg viewBox/width/height to the window size when window gets created
-
+[ ] revisit pdtk_check_scroll_on_motion.  It's not implemented in the port
+    yet.  Perhaps there's a better way to do it, without triggering a bunch
+    of layouts.
+[ ] implement pdtk_canvas_editval and magicglassval
 Crashers
 --------
 

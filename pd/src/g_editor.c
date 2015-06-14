@@ -347,20 +347,24 @@ int canvas_restore_original_position(t_glist *x, t_gobj *y, const char* objtag,
                 {
                     /* we get here if we are supposed to go all the way
                        to the bottom */
-                    sys_vgui(".x%lx.c addtag arrange withtag %s\n",
-                        x, objtag ? objtag : "selected");
-                    sys_vgui(".x%lx.c lower arrange\n", x);
-                    sys_vgui(".x%lx.c dtag %s arrange\n",
+                    //sys_vgui(".x%lx.c addtag arrange withtag %s\n",
+                    //    x, objtag ? objtag : "selected");
+                    //sys_vgui(".x%lx.c lower arrange\n", x);
+                    //sys_vgui(".x%lx.c dtag %s arrange\n",
+                    //    x, objtag ? objtag : "selected");
+                    gui_vmess("gui_lower", "xs",
                         x, objtag ? objtag : "selected");
                 }
                 else if (yrnxt)
                 {
                     /* lower into middle */
-                    if (!objtag)
-                        sys_vgui(".x%lx.c addtag arrange withtag selected\n",x);
-                    sys_vgui("pdtk_find_lowest_widget_withtag_and_arrange "
-                        ".x%lx.c %s %s %s\n", x, rtext_gettag(yrnxt),
-                        rtext_gettag(yr), objtag ? objtag : "0");
+                    //if (!objtag)
+                    //    sys_vgui(".x%lx.c addtag arrange withtag selected\n",x);
+                    //sys_vgui("pdtk_find_lowest_widget_withtag_and_arrange "
+                    //    ".x%lx.c %s %s %s\n", x, rtext_gettag(yrnxt),
+                    //    rtext_gettag(yr), objtag ? objtag : "0");
+                    gui_vmess("gui_find_lowest_and_arrange", "xss",
+                        x, rtext_gettag(yrnxt), objtag ? objtag : "selected");
                 }
                 else
                 {
@@ -375,22 +379,26 @@ int canvas_restore_original_position(t_glist *x, t_gobj *y, const char* objtag,
                 if (yrnxt)
                 {
                     /* raise into middle */
-                    if (!objtag)
-                        sys_vgui(".x%lx.c addtag arrange withtag selected\n",x);
-                    sys_vgui("pdtk_find_lowest_widget_withtag_and_arrange "
-                        ".x%lx.c %s %s %s\n", x, rtext_gettag(yrnxt),
-                        rtext_gettag(yr), objtag ? objtag : "0");
+                    //if (!objtag)
+                    //    sys_vgui(".x%lx.c addtag arrange withtag selected\n",x);
+                    //sys_vgui("pdtk_find_lowest_widget_withtag_and_arrange "
+                    //    ".x%lx.c %s %s %s\n", x, rtext_gettag(yrnxt),
+                    //    rtext_gettag(yr), objtag ? objtag : "0");
+                    gui_vmess("gui_find_lowest_and_arrange", "xss",
+                        x, rtext_gettag(yrnxt), objtag ? objtag : "selected");
                 }
                 else if (y->g_next == NULL)
                 {
                     /* we get here if we are supposed to go all the way
                        to the top */
-                    sys_vgui(".x%lx.c addtag arrange withtag %s\n",
+                    //sys_vgui(".x%lx.c addtag arrange withtag %s\n",
+                    //    x, objtag ? objtag : "selected");
+                    //sys_vgui(".x%lx.c raise arrange\n", x);
+                    //sys_vgui(".x%lx.c dtag %s arrange\n", x,
+                    //    objtag ? objtag : "selected");
+                    //canvas_raise_all_cords(x);
+                    gui_vmess("gui_raise", "xs",
                         x, objtag ? objtag : "selected");
-                    sys_vgui(".x%lx.c raise arrange\n", x);
-                    sys_vgui(".x%lx.c dtag %s arrange\n", x,
-                        objtag ? objtag : "selected");
-                    canvas_raise_all_cords(x);
                 }
                 else
                 {
@@ -890,7 +898,7 @@ void canvas_disconnect(t_canvas *x,
             //sys_vgui(".x%lx.c delete l%lx\n", x, oc);
             sprintf(tagbuf, "l%lx", (long unsigned int)oc);
             gui_vmess("gui_canvas_delete_line", "xs",
-                x, tagbuf);
+                x, "tagbuf");
             // jsarlo
             if(x->gl_editor && x->gl_editor->gl_magic_glass)
             {
@@ -2949,8 +2957,9 @@ static void canvas_doarrange(t_canvas *x, t_float which, t_gobj *oldy,
 
         // and finally redraw
         //fprintf(stderr,"raise\n");
-        sys_vgui(".x%lx.c raise selected\n", x);
-        canvas_raise_all_cords(x);
+        //sys_vgui(".x%lx.c raise selected\n", x);
+        //canvas_raise_all_cords(x);
+        gui_vmess("gui_raise", "xs", x, "selected");
     }
     if (which == 4) /* to back */
     {
@@ -2965,7 +2974,8 @@ static void canvas_doarrange(t_canvas *x, t_float which, t_gobj *oldy,
 
         // and finally redraw
         //fprintf(stderr,"lower\n");
-        sys_vgui(".x%lx.c lower selected\n", x);
+        //sys_vgui(".x%lx.c lower selected\n", x);
+        gui_vmess("gui_lower", "xs", x, "selected");
         //canvas_redraw(x);
     }
     canvas_dirty(x, 1);
@@ -4109,7 +4119,11 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
     int i;
     int return_val = 1;
 
-    if (!glob_shift) sys_vgui(".x%lx.c delete x\n", x);
+    if (!glob_shift)
+    {
+        //sys_vgui(".x%lx.c delete x\n", x);
+        gui_vmess("gui_canvas_delete_line", "xs", x, "newcord");
+    }
 
     if ((y1 = canvas_findhitbox(x, xwas, ywas, &x11, &y11, &x12, &y12))
             && (y2 = canvas_findhitbox(x, xpos, ypos, &x21, &y21, &x22, &y22)))
@@ -4542,7 +4556,7 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
         ywas = x->gl_editor->e_ywas;
     if (doit && !glob_shift)
     {
-        sys_vgui(".x%lx.c delete x\n", x);
+        //sys_vgui(".x%lx.c delete x\n", x);
         gui_vmess("gui_canvas_delete_line", "xs", x, "newcord");
     }
     else
@@ -4981,7 +4995,8 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     if (x->gl_editor->e_onmotion == MA_CONNECT && !glob_shift && !glob_lmclick)
     {
         //fprintf(stderr,"shift released during connect\n");
-        sys_vgui(".x%lx.c delete x\n", x);
+        //sys_vgui(".x%lx.c delete x\n", x);
+        gui_vmess("gui_canvas_delete_line", "xs", x, "newcord");
         canvas_mouseup(x, canvas_last_glist_x, canvas_last_glist_y, 0);
     }
 
