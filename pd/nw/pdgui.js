@@ -1891,7 +1891,7 @@ function gui_text_create_gobj(cid, tag, type, xpos, ypos, is_toplevel) {
             id: tag + 'gobj',
             transform: transform_string,
             class: type + (is_toplevel !== 0 ? '' : ' gop'),
-            //'shape-rendering': 'crispEdges'
+            'shape-rendering': 'crispEdges'
     });
     add_gobj_to_svg(svg, g);
 //    var bluh = svg.getBBox();
@@ -2020,6 +2020,7 @@ function gui_message_drawborder(cid,tag,width,height) {
         points: p_array.join(),
         fill: 'none',
         stroke: 'black',
+//        'shape-rendering': 'crispEdges',
 //        'stroke-width': 1,
         class: 'border'
 //        id: tag + 'border'
@@ -2328,9 +2329,10 @@ function gui_hide_selection_rectangle(cid) {
 function gui_create_bng(cid, tag, cx, cy, radius) {
     var g = get_gobj(cid, tag);
     var circle = create_item(cid, 'circle', {
-        cx: cx,
-        cy: cy,
+        cx: cx + 0.5,
+        cy: cy + 0.5,
         r: radius,
+        'shape-rendering': 'auto',
         fill: 'none',
         stroke: 'black',
         'stroke-width': 1,
