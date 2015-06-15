@@ -898,7 +898,7 @@ void canvas_disconnect(t_canvas *x,
             //sys_vgui(".x%lx.c delete l%lx\n", x, oc);
             sprintf(tagbuf, "l%lx", (long unsigned int)oc);
             gui_vmess("gui_canvas_delete_line", "xs",
-                x, "tagbuf");
+                x, tagbuf);
             // jsarlo
             if(x->gl_editor && x->gl_editor->gl_magic_glass)
             {
