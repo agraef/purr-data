@@ -604,6 +604,9 @@ void rtext_activate(t_rtext *x, int state)
     */
 
     widthspec = x->x_text->te_width; // width if any specified
+    /* we need to get scroll to make sure we've got the
+       correct bbox for the svg */
+    canvas_getscroll(glist_getcanvas(canvas));
     gui_vmess("gui_textarea", "xsiiisii",
         canvas,
         x->x_tag,

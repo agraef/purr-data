@@ -3489,15 +3489,17 @@ function select_text(cid, elem) {
 function gui_textarea(cid, tag, x, y, max_char_width, text, font_size, state) {
     gui_post("x/y is " + x + '/' + y);
     gui_post("state? " + state);
-    var range;
+    var range, svg_view;
     if (state !== 0) {
         var p = patchwin[cid].window.document.createElement('p');
         configure_item(p, {
             id: 'new_object_textentry'
         });
+        svg_view = patchwin[cid].window.document.getElementById('patchsvg')
+            .viewBox.baseVal;
         p.contentEditable = 'true';
-        p.style.setProperty('left', x + 'px');
-        p.style.setProperty('top', y + 'px');
+        p.style.setProperty('left', (x - svg_view.x) + 'px');
+        p.style.setProperty('top', (y - svg_view.y) + 'px');
         p.style.setProperty('font-size', font_size + 'px');
         p.style.setProperty('transform', 'translate(0px, 0px)');
         p.style.setProperty('max-width',
