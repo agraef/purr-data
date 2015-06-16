@@ -190,6 +190,8 @@ Everything else: (A [x] means we've fixed it)
     yet.  Perhaps there's a better way to do it, without triggering a bunch
     of layouts.
 [ ] implement pdtk_canvas_editval and magicglassval
+[ ] move crispEdges value to CSS
+
 Crashers
 --------
 

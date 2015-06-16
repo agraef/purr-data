@@ -2871,16 +2871,17 @@ function gui_scalar_draw_select_rect(cid, tag, state, x1, y1, x2, y2, basex, bas
     // means all the coordinate parameters are in the screen position. But we need
     // the coords relative to the scalar's x/y-- hence we subtract the scalar's basex/basey
     // from the coords below
+    // Additionally, we're not actually drawing the rect here.  It's drawn
+    // as part of the scalar_vis function.  We're merely changing its coords
+    // and size
     //gui_post("drawselectrect: " + x1 + " " + y1 + " " + x2 + " " + y2 + " " + basex + " " + basey);
     var g = get_gobj(cid, tag);
     var b = g.querySelector('.border');
     configure_item(b, {
-        display: (state ? 'inline' : 'none'),
         x: (x1 - basex),
         y: (y1 - basey),
         width: x2 - x1,
         height: y2 - y1,
-//        stroke: 'blue',
     });
 }
 
