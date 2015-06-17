@@ -2873,7 +2873,10 @@ function gui_scalar_draw_select_rect(cid, tag, state, x1, y1, x2, y2, basex, bas
     // from the coords below
     // Additionally, we're not actually drawing the rect here.  It's drawn
     // as part of the scalar_vis function.  We're merely changing its coords
-    // and size
+    // and size.
+    // Finally, we have this awful display attribute toggling in css
+    // for selected borders because somehow calling properties on a graph
+    // triggers this function.  I have no idea why it does that.
     //gui_post("drawselectrect: " + x1 + " " + y1 + " " + x2 + " " + y2 + " " + basex + " " + basey);
     var g = get_gobj(cid, tag);
     var b = g.querySelector('.border');
