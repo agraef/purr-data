@@ -1228,7 +1228,7 @@ void iemgui_base_draw_move(t_iemgui *x) {
     c->c_wb->w_getrectfn((t_gobj *)x,x->x_glist,&x1,&y1,&x2,&y2);
     gop_redraw=gr;
     //sys_vgui(".x%lx.c coords %lxBASE %d %d %d %d\n", canvas, x, x1, y1, x2, y2);
-    gui_vmess("gui_iemgui_redraw_border", "xxiiii",
+    gui_vmess("gui_iemgui_move_and_resize", "xxiiii",
         canvas, x, x1, y1, x2, y2);
 }
 

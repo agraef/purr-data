@@ -2246,6 +2246,12 @@ return;
     }
 }
 
+function elem_move(elem, x, y) {
+    var t = elem.transform.baseVal.getItem(0);
+    t.matrix.e = x;
+    t.matrix.f = y;
+}
+
 function elem_displace(elem, dx, dy) {
         var t = elem.transform.baseVal.getItem(0);
         t.matrix.e += dx; 
@@ -2702,8 +2708,10 @@ function gui_iemgui_drawborder(cid, tag, bgcolor, x1, y1, x2, y2) {
     g.appendChild(rect);
 }
 
-function gui_iemgui_redraw_border(cid, tag, x1, y1, x2, y2) {
-    var item = get_gobj(cid, tag).querySelector('.border');
+function gui_iemgui_move_and_resize(cid, tag, x1, y1, x2, y2) {
+    var gobj = get_gobj(cid, tag);
+    var item = gobj.querySelector('.border');
+    elem_move(gobj, x1, y1);
     configure_item(item, {
         width: x2 - x1,
         height: y2 - y1
