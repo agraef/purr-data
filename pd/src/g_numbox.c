@@ -207,6 +207,8 @@ static void my_numbox_draw_move(t_my_numbox *x, t_glist *glist)
     int x1=text_xpix(&x->x_gui.x_obj, glist), x2=x1+x->x_numwidth;
     int y1=text_ypix(&x->x_gui.x_obj, glist), y2=y1+x->x_gui.x_h;
 
+    iemgui_base_draw_move(&x->x_gui);
+
     //sys_vgui(".x%lx.c coords %lxBASE1 %d %d %d %d %d %d %d %d %d %d\n",
     //    canvas, x, x1, y1, x2-4, y1, x2, y1+4, x2, y2, x1, y2);
     if (x->x_hide_frame <= 1)

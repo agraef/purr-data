@@ -2335,8 +2335,8 @@ function gui_hide_selection_rectangle(cid) {
 function gui_create_bng(cid, tag, cx, cy, radius) {
     var g = get_gobj(cid, tag);
     var circle = create_item(cid, 'circle', {
-        cx: cx + 0.5,
-        cy: cy + 0.5,
+        cx: cx,
+        cy: cy,
         r: radius,
         'shape-rendering': 'auto',
         fill: 'none',
@@ -2433,7 +2433,8 @@ gui_post("basex is " + basex + " and basey is " + basey);
         fill: bgcolor,
         stroke: 'black',
         'stroke-width': 1,
-        id: (tag + 'border')
+        id: (tag + 'border'),
+        'class': 'border'
     });
     g.appendChild(border);
 }

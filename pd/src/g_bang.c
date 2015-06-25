@@ -59,7 +59,7 @@ void bng_draw_new(t_bng *x, t_glist *glist)
     //     canvas, cx, cy, cr, x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol,
     //     x, x);
     gui_vmess("gui_create_bng", "xsfff", canvas, tagbuf,
-        cx - x1 - 0.5, cy - y1 - 0.5, cr);
+        cx - x1, cy - y1, cr);
 }
 
 void bng_draw_move(t_bng *x, t_glist *glist)
@@ -84,9 +84,9 @@ void bng_draw_move(t_bng *x, t_glist *glist)
         canvas, tagbuf);
     gui_start_array();
     gui_s("cx");
-    gui_f(cx - x1 - 0.5); // 0.5 is fudge factor... might be better
+    gui_f(cx - x1); // 0.5 is fudge factor... might be better
     gui_s("cy");
-    gui_f(cy - y1 - 0.5); // handled by shape-rendering css attr
+    gui_f(cy - y1); // handled by shape-rendering css attr
     gui_s("r");
     gui_f(cr);
     gui_s("fill");
