@@ -49,6 +49,8 @@ void my_canvas_draw_move(t_my_canvas *x, t_glist *glist)
     int x1=text_xpix(&x->x_gui.x_obj, glist);
     int y1=text_ypix(&x->x_gui.x_obj, glist);
 
+    iemgui_base_draw_move(&x->x_gui);
+
     //sys_vgui(".x%lx.c coords %lxRECT %d %d %d %d\n",
     //    canvas, x, x1, y1, x1+x->x_vis_w, y1+x->x_vis_h);
     //sys_vgui(".x%lx.c coords %lxBASE %d %d %d %d\n",

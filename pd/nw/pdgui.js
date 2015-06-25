@@ -2792,7 +2792,8 @@ function gui_create_mycanvas(cid,tag,color,x1,y1,x2_vis,y2_vis,x2,y2) {
         height: y2 - y1,
         fill: 'none',
         stroke: color,
-        id: tag + 'drag_handle'
+        id: tag + 'drag_handle',
+        'class': 'border'
         }
     );
     var g = get_gobj(cid,tag);
@@ -2804,9 +2805,9 @@ function gui_update_mycanvas(cid, tag, color, selected) {
     var r = get_item(cid, tag + 'rect');
     var h = get_item(cid, tag + 'drag_handle');
     configure_item(r, { fill: color, stroke: color });
-    if (!selected) {
-        configure_item(h, { stroke: color });
-    }
+//    if (!selected) {
+//        configure_item(h, { stroke: color });
+//    }
 }
 
 function gui_mycanvas_coords(cid, tag, vis_width, vis_height, select_width, select_height) {
@@ -2817,8 +2818,8 @@ function gui_mycanvas_coords(cid, tag, vis_width, vis_height, select_width, sele
 }
 
 function gui_mycanvas_select_color(cid,tag,color) {
-    var item = get_item(cid,tag + 'drag_handle');
-    configure_item(item, {stroke: color});
+//    var item = get_item(cid,tag + 'drag_handle');
+//    configure_item(item, {stroke: color});
 }
  
 function gui_create_scalar(cid, tag, isselected, t1, t2, t3, t4, t5, t6,
