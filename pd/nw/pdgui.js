@@ -3547,14 +3547,23 @@ function gui_undo_menu(cid, undo_text, redo_text) {
 function gui_canvas_getscroll(cid) {
     var svg = get_item(cid, 'patchsvg');
     var bbox = svg.getBBox();
+    var width = bbox.x > 0 ? bbox.x + bbox.width : bbox.width,
+        height = bbox.y > 0 ? bbox.y + bbox.height : bbox.height;
+    if (width === 0) {
+        width = patchwin[cid].window.innerWidth;
+    }
+    if (height === 0) {
+        height = patchwin[cid].window.innerHeight;
+    }
     configure_item(svg, {
         viewBox: [bbox.x > 0 ? 0 : bbox.x,
                   bbox.y > 0 ? 0 : bbox.y,
-                  bbox.x > 0 ? bbox.x + bbox.width : bbox.width,
-                  bbox.y > 0 ? bbox.y + bbox.height: bbox.height].join(" ")
+                  width,
+                  height] 
+                  .join(" ")
     });
-    svg.width.baseVal.valueAsString = bbox.x > 0 ? bbox.x + bbox.width : bbox.width;
-    svg.height.baseVal.valueAsString = bbox.y > 0 ? bbox.y + bbox.height : bbox.height;
+    svg.width.baseVal.valueAsString = width;
+    svg.height.baseVal.valueAsString = height;
     console.log("x is " + bbox.x);
     console.log("y is " + bbox.x);
     console.log("width is " + bbox.width);
