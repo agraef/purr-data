@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="dialog_iemgui.css">
+    <link id="page_style" rel="stylesheet" type="text/css" href="dialog_iemgui.css">
   </head>
   <body id="iemgui_dialog_body">
     <div class="container">
@@ -306,6 +306,10 @@ var pdgui = require('./pdgui.js');
 var l = pdgui.get_local_string;
 
 console.log("my working dire is " + pdgui.get_pwd());
+
+// gui preset
+pdgui.skin.apply(this);
+
 
 var pd_object_callback;
 
