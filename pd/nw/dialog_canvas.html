@@ -469,17 +469,17 @@
             hide_name = +document.getElementsByName('hide-name')[0].checked;
 
             pdgui.pdsend([pd_object_callback, 'donecanvasdialog',
-                get_input('x-scale'),
-                get_input('y-scale'),
+                +get_input('x-scale'),
+                +get_input('y-scale'),
                 (gop + 2 * hide_name),
-                get_input('x1'),
-                get_input('y1'),
-                get_input('x2'),
-                get_input('y2'),
-                get_input('x-pix'),
-                get_input('y-pix'),
-                get_input('x-margin'),
-                get_input('y-margin'),
+                +get_input('x1'),
+                +get_input('y1'),
+                +get_input('x2'),
+                +get_input('y2'),
+                +get_input('x-pix'),
+                +get_input('y-pix'),
+                +get_input('x-margin'),
+                +get_input('y-margin'),
                 ].join(' '));
         }
 
