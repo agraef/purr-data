@@ -5264,7 +5264,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         {
             t_float xscale = glist_xtopixels(glist, 1) - glist_xtopixels(glist, 0);
             t_float yscale = glist_ytopixels(glist, 1) - glist_ytopixels(glist, 0);
-            t_float y_factor = 1 / yscale;
+            t_float y_inverse = 1 / yscale;
 
             symfill = (style == PLOTSTYLE_POINTS ? symoutline : symfill);
             t_float minyval = 1e20, maxyval = -1e20;
@@ -5321,10 +5321,11 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
 
                         if(glist->gl_isgraph && !glist->gl_havewindow)
                         {
-                            int x1, y1, x2, y2;
-                            graph_graphrect(&glist->gl_gobj, glist->gl_owner,
-                                &x1, &y1, &x2, &y2);
-                            py2 = y2 - y1;
+//                            int x1, y1, x2, y2;
+//                            graph_graphrect(&glist->gl_gobj, glist->gl_owner,
+//                                &x1, &y1, &x2, &y2);
+//                            py2 = y2 - y1;
+                            py2 = glist->gl_y2;
                             //border = 1;
                         }
                     }
@@ -5369,7 +5370,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
 
                     int mex2 = inextx;
                     t_float mey2 = style == PLOTSTYLE_POINTS ?
-                        yval + y_factor * linewidth : py2 * y_factor;
+                        yval + y_inverse * linewidth : py2;
                     //sys_vgui("M %d %d H %d V %d H %d z \\\n",
                     //    mex1, mey1, mex2, mey2, mex1);
 
@@ -5382,7 +5383,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                     gui_i(mex2);
 
                     gui_s("V");
-//                    gui_f(yval + y_factor * linewidth);
+//                    gui_f(yval + y_inverse* linewidth);
                     gui_f(mey2);
 
                     gui_s("H");
@@ -5420,7 +5421,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             gui_s(symoutline->s_name);
 
             gui_s("stroke-width");
-            gui_i(style == PLOTSTYLE_POINTS ? 0 : 0);
+            gui_f(style == PLOTSTYLE_POINTS ? 0 : y_inverse);
             gui_end_array();
 
             gui_start_array();
