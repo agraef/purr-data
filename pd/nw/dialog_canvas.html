@@ -280,6 +280,7 @@
     // nested arrays of attributes for each garray
     // in this canvas
     var pd_garray_attrs;
+    var new_array_dialog;
 
     function ok() {
         apply();
@@ -450,7 +451,7 @@
 
     function get_input(name) {
         var val = document.getElementsByName(name)[0].value;
-        return val === 0 ? '0' : val;
+        return val;
     }
 
     // get a value from the garray attr array
@@ -460,13 +461,9 @@
 
     function apply() {
         var i, attrs, gop, hide_name;
-        pdgui.gui_post("we're applying shits!");
-
         // If this is a dialog to create a new array, we
         // skip the canvas dialog callback
-        if (pd_garray_attrs.length < 1 ||
-            pd_garray_attrs[0][0] !== 'array_gfxstub')
-        {
+        if (!new_array_dialog) {
             // Note: the "+" casts Boolean to Number
             gop = +document.getElementsByName('gop')[0].checked;
             hide_name = +document.getElementsByName('hide-name')[0].checked;
@@ -567,12 +564,14 @@
         // pdgui.canvas_map(gfxstub);
         translate_form();
         if (attr_arrays[0] === 'array_gfxstub') {
+            new_array_dialog = true; // this is a new array dialog
             canvas_fieldsets = document.getElementsByClassName('canvas');
             for (i = 0; i < canvas_fieldsets.length; i++) {
                 canvas_fieldsets[i].classList.add('hidden');
             }
             init_arrays([attr_arrays]);
         } else {
+            new_array_dialog = false; // this is a canvas/array props dialog
             populate_form(attr_arrays[0]);
             init_arrays(attr_arrays.slice(1));
         }
