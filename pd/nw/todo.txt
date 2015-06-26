@@ -191,6 +191,8 @@ Everything else: (A [x] means we've fixed it)
     of layouts.
 [ ] implement pdtk_canvas_editval and magicglassval
 [ ] move crispEdges value to CSS
+[ ] look into problems with object z-order on the C side when deleting objects
+    and then undoing the delete
 
 Crashers
 --------
