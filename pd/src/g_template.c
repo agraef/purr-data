@@ -5194,21 +5194,6 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     t_float basex, t_float basey, int tovis)
 {
     t_plot *x = (t_plot *)z;
-    /*// get the universal tag for all nested objects
-    t_canvas *tag = x->x_canvas;
-    while (tag->gl_owner)
-    {
-        tag = tag->gl_owner;
-    }*/
-
-    //fprintf(stderr,"===============plot %lx glist %lx glist_getcanvas %lx "
-    //                 "plot->x_obj %lx plot->x_canvas %lx "
-    //                 "glist_getcanvas(plot->x_canvas) %lx\n",
-    //    (t_int)x, (t_int)glist, (t_int)glist_getcanvas(glist),
-    //    (t_int)&x->x_obj, (t_int)x->x_canvas, (t_int)x->x_canvas->gl_owner);
-
-    /* used for experimental disabling of drawing outside GOP bounds */
-    //int draw_me = 1;
     int elemsize, yonset, wonset, xonset, i;
     t_canvas *elemtemplatecanvas;
     t_template *elemtemplate;
@@ -5260,11 +5245,13 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         if (symoutline == &s_) symoutline = gensym("#000000");
         if (symfill == &s_) symfill = gensym("#000000");
 
+
+        t_float xscale = glist_xtopixels(glist, 1) - glist_xtopixels(glist, 0);
+        t_float yscale = glist_ytopixels(glist, 1) - glist_ytopixels(glist, 0);
+        t_float y_inverse = 1 / yscale; /* for the stroke-width */
+
         if (style == PLOTSTYLE_POINTS || style == PLOTSTYLE_BARS)
         {
-            t_float xscale = glist_xtopixels(glist, 1) - glist_xtopixels(glist, 0);
-            t_float yscale = glist_ytopixels(glist, 1) - glist_ytopixels(glist, 0);
-            t_float y_inverse = 1 / yscale; /* for the stroke-width */
 
             symfill = (style == PLOTSTYLE_POINTS ? symoutline : symfill);
             t_float minyval = 1e20, maxyval = -1e20;
@@ -5296,7 +5283,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                     xsum += xinc;
                     ixpix = fielddesc_cvttocoord(xfielddesc, usexloc);
                     inextx = fielddesc_cvttocoord(xfielddesc, xsum);
-               }
+                }
 
                 if (yonset >= 0)
                     yval = yloc + *(t_float *)((elem + elemsize * i) + yonset);
@@ -5308,82 +5295,36 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 if (i == nelem-1 || inextx != ixpix)
                 {
                     int py2 = 0;
-                    //int border = 0;
                     if (style == PLOTSTYLE_POINTS)
                         py2 = (int)fielddesc_cvttocoord(yfielddesc, maxyval)
                                 + linewidth - 1;
                     else
                     {
-                        /* this should probably be changed to anchor to the
-                           y-minimum instead of the bottom of the graph. That
-                           way the user can invert the y min/max to get a graph
-                           anchored from the top */
-
-                        if(glist->gl_isgraph && !glist->gl_havewindow)
+                        if (glist->gl_isgraph && !glist->gl_havewindow)
                         {
-//                            int x1, y1, x2, y2;
-//                            graph_graphrect(&glist->gl_gobj, glist->gl_owner,
-//                                &x1, &y1, &x2, &y2);
-//                            py2 = y2 - y1;
                             py2 = glist->gl_y2;
-                            //border = 1;
+                        }
+                        else
+                        {
+                            /* case for open window displaying the array */
+                            /* tbd */
                         }
                     }
-                //fprintf(stderr,"%f %f %f %f %f\n", basey, minyval, maxyval,glist->gl_y2,glist->gl_y1);
-                // with the following experimental code we can prevent drawing outside the gop window (preferred but needs to be further tested)
-                /*if (glist->gl_y2 > glist->gl_y1)
-                {
-                    if (minyval >= glist->gl_y1 && maxyval <= glist->gl_y2)
-                        draw_me = 1;
-                    else
-                        draw_me = 0; 
-                }
-                else
-                {
-                    if (minyval >= glist->gl_y2 && maxyval <= glist->gl_y1)
-                        draw_me = 1;
-                    else
-                        draw_me = 0; 
-                }
-                if (draw_me)
-                {*/
-                    //we subtract 1 from y to keep it in sync with
-                    //the rest of the types of templates
-                    /* This is the old, inefficient code that creates
-                       a separate canvas item for each element... 
-                    sys_vgui(".x%lx.c create prect %d %d %d %d -fill %s "
-                             "-stroke %s -strokewidth %d "
-                             "-parent .dgroup%lx "
-                             "-tags {.x%lx.x%lx.template%lx array}\n",
-                        glist_getcanvas(glist),
-                        ixpix, (int)glist_ytopixels(glist, 
-                        fielddesc_cvttocoord(yfielddesc, minyval)) - 1,
-                        inextx, py2, symfill->s_name, symoutline->s_name,
-                        border, data,
-                        glist_getcanvas(glist), glist, data);
-                    */
-
-                    /* For efficiency, we make a single path item
-                       for the trace or bargraph */
                     int mex1 = ixpix;
                     t_float mey1 = fielddesc_cvttocoord(yfielddesc, minyval) - 1;
 
                     int mex2 = inextx;
                     t_float mey2 = style == PLOTSTYLE_POINTS ?
                         yval + y_inverse * linewidth : py2;
-                    //sys_vgui("M %d %d H %d V %d H %d z \\\n",
-                    //    mex1, mey1, mex2, mey2, mex1);
 
                     gui_s("M");
                     gui_i(mex1);
                     gui_f(yval);
-//                    gui_f(mey1);
 
                     gui_s("H");
                     gui_i(mex2);
 
                     gui_s("V");
-//                    gui_f(yval + y_inverse* linewidth);
                     gui_f(mey2);
 
                     gui_s("H");
@@ -5391,28 +5332,16 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
 
                     gui_s("z");
 
-               //} //part of experimental code above
                     ndrawn++;
                     minyval = 1e20;
                     maxyval = -1e20;
                 }
                 if (ndrawn > 2000 || ixpix >= 3000) break;
             }
-            /* end of the path item from above */
-            // Ico 2014-09-17: we keep style the same for both because stroke
-            // already gives us the thickness matching that of vanilla pd
-            // The code is left here in its redundant form for future reference
-            // in case we encounter regressions.
-            //sys_vgui("} -fill %s -stroke %s -strokewidth %d "
-            //         "-parent {.dgroup%lx.%lx} "
-            //         "-tags {.x%lx.x%lx.template%lx array}\n",
-            //    symfill->s_name, symoutline->s_name,
-            //    style == PLOTSTYLE_POINTS ? 0 : 0,
-            //    x->x_canvas, data,
-            //    glist_getcanvas(glist), glist, data);
 
             gui_end_array();
 
+            /* stroke and fill */
             gui_start_array();
             gui_s("fill");
             gui_s(symfill->s_name);
@@ -5424,10 +5353,12 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             gui_f(style == PLOTSTYLE_POINTS ? 0 : y_inverse);
             gui_end_array();
 
+            /* tags */
             gui_start_array();
             char pbuf[MAXPDSTRING];
             char tbuf[MAXPDSTRING];
-            sprintf(pbuf, "dgroup%lx.%lx", (long unsigned int)x->x_canvas,
+            sprintf(pbuf, in_array ? "scelem%lx.%lx" : "dgroup%lx.%lx",
+                (long unsigned int)x->x_canvas,
                 (long unsigned int)data);
             sprintf(tbuf, ".x%lx.x%lx.template%lx",
                 (long unsigned int)glist_getcanvas(glist),
@@ -5448,12 +5379,21 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 /* draw the trace */
             //numbertocolor(fielddesc_getfloat(&x->x_outlinecolor, template,
             //    data, 1), outline);
+
+            gui_start_vmess("gui_plot_vis", "xii",
+                glist_getcanvas(glist),
+                basex,
+                basey);
+                
             if (wonset >= 0)
             {
-                    /* found "w" field which controls linewidth.  The trace is
-                    a filled polygon with 2n points. */
-                sys_vgui(".x%lx.c create ppolygon \\\n",
-                    glist_getcanvas(glist));
+                /* found "w" field which controls linewidth.  The trace is
+                   a filled polygon with 2n points. */
+                //sys_vgui(".x%lx.c create ppolygon \\\n",
+                //    glist_getcanvas(glist));
+
+                gui_start_array();
+                gui_s("M");
 
                 for (i = 0, xsum = xloc; i < nelem; i++)
                 {
@@ -5470,10 +5410,15 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                     ixpix = xpix + 0.5;
                     if (xonset >= 0 || ixpix != lastpixel)
                     {
-                        sys_vgui("%d %f \\\n", ixpix,
-                                fielddesc_cvttocoord(yfielddesc, 
-                                    yloc + yval) -
-                                        fielddesc_cvttocoord(wfielddesc,wval));
+                        //sys_vgui("%d %f \\\n", ixpix,
+                        //        fielddesc_cvttocoord(yfielddesc, 
+                        //        yloc + yval) -
+                        //        fielddesc_cvttocoord(wfielddesc,wval));
+
+                        gui_i(ixpix);
+                        gui_f(fielddesc_cvttocoord(yfielddesc, 
+                                  yloc + yval) -
+                                      fielddesc_cvttocoord(wfielddesc,wval));
                         ndrawn++;
                     }
                     lastpixel = ixpix;
@@ -5496,11 +5441,15 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                     ixpix = xpix + 0.5;
                     if (xonset >= 0 || ixpix != lastpixel)
                     {
-                        sys_vgui("%d %f \\\n", ixpix,
-                            yloc + fielddesc_cvttocoord(yfielddesc,
-                                yval) +
-                                    fielddesc_cvttocoord(wfielddesc, wval));
+                        //sys_vgui("%d %f \\\n", ixpix,
+                        //    yloc + fielddesc_cvttocoord(yfielddesc,
+                        //        yval) +
+                        //            fielddesc_cvttocoord(wfielddesc, wval));
 
+                        gui_i(ixpix);
+                        gui_f(yloc + fielddesc_cvttocoord(yfielddesc,
+                                  yval) +
+                                      fielddesc_cvttocoord(wfielddesc, wval));
                         ndrawn++;
                     }
                     lastpixel = ixpix;
@@ -5510,33 +5459,72 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                     There should be at least two already. */
                 if (ndrawn < 4)
                 {
-                    sys_vgui("%d %f \\\n", ixpix + 10,
-                        yloc + fielddesc_cvttocoord(yfielddesc,
-                            yval) +
-                                fielddesc_cvttocoord(wfielddesc, wval));
-                    sys_vgui("%d %f \\\n", ixpix + 10,
-                        yloc + fielddesc_cvttocoord(yfielddesc,
-                            yval) -
-                                fielddesc_cvttocoord(wfielddesc, wval));
+                    //sys_vgui("%d %f \\\n", ixpix + 10,
+                    //    yloc + fielddesc_cvttocoord(yfielddesc,
+                    //        yval) +
+                    //            fielddesc_cvttocoord(wfielddesc, wval));
+                    //sys_vgui("%d %f \\\n", ixpix + 10,
+                    //    yloc + fielddesc_cvttocoord(yfielddesc,
+                    //        yval) -
+                    //            fielddesc_cvttocoord(wfielddesc, wval));
+
+                    gui_i(ixpix + 10);
+                    gui_f(yloc + fielddesc_cvttocoord(yfielddesc,
+                              yval) +
+                                  fielddesc_cvttocoord(wfielddesc, wval));
+                    gui_i(ixpix + 10);
+                    gui_f(yloc + fielddesc_cvttocoord(yfielddesc,
+                              yval) -
+                                  fielddesc_cvttocoord(wfielddesc, wval));
                 }
+                gui_end_array();
             ouch:
-                sys_vgui(" -strokewidth 1 -fill %s -stroke %s \\\n",
-                    symoutline->s_name, symoutline->s_name);
+                //sys_vgui(" -strokewidth 1 -fill %s -stroke %s \\\n",
+                //    symoutline->s_name, symoutline->s_name);
+                gui_start_array();
+
+                gui_s("stroke-width");
+                gui_f(y_inverse);
+                gui_s("stroke");
+                gui_s(symoutline->s_name);
+                gui_s("fill");
+                gui_s(symoutline->s_name);
+
+                gui_end_array();
                 // this doesn't work with tkpath...
                 //if (style == PLOTSTYLE_BEZ) sys_vgui("-smooth 1 \\\n");
-                if (in_array)
-                    sys_vgui(" -parent .scelem%lx \\\n", data);
-                else
-                    sys_vgui(" -parent .dgroup%lx.%lx \\\n", x->x_canvas, sc->sc_vec);
-                sys_vgui("-tags {.x%lx.x%lx.template%lx scalar%lx}\n",
-                    glist_getcanvas(glist), glist, data, sc);
+
+                //if (in_array)
+                //    sys_vgui(" -parent .scelem%lx \\\n", data);
+                //else
+                //    sys_vgui(" -parent .dgroup%lx.%lx \\\n", x->x_canvas, sc->sc_vec);
+                //sys_vgui("-tags {.x%lx.x%lx.template%lx scalar%lx}\n",
+                //    glist_getcanvas(glist), glist, data, sc);
+
+                /* tags */
+                gui_start_array();
+                char pbuf[MAXPDSTRING];
+                char tbuf[MAXPDSTRING];
+                sprintf(pbuf, in_array ? "scelem%lx.%lx" : "dgroup%lx.%lx",
+                    (long unsigned int)x->x_canvas,
+                    (long unsigned int)data);
+                sprintf(tbuf, ".x%lx.x%lx.template%lx",
+                    (long unsigned int)glist_getcanvas(glist),
+                    (long unsigned int)glist,
+                    (long unsigned int)data);
+                gui_s(pbuf);
+                gui_s(pbuf);
+                gui_end_array();
+                gui_end_vmess();
             }
             else if (linewidth > 0)
             {
                     /* no "w" field.  If the linewidth is positive, draw a
                     segmented line with the requested width; otherwise don't
                     draw the trace at all. */
-                sys_vgui(".x%lx.c create polyline \\\n", glist_getcanvas(glist));
+                //sys_vgui(".x%lx.c create polyline \\\n", glist_getcanvas(glist));
+                gui_start_array();
+                gui_s("M");
 
                 for (xsum = xloc, i = 0; i < nelem; i++)
                 {
@@ -5554,9 +5542,14 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                     ixpix = xpix + 0.5;
                     if (xonset >= 0 || ixpix != lastpixel)
                     {
-                        sys_vgui("%d %f \\\n", ixpix,
-                                yloc + fielddesc_cvttocoord(yfielddesc,
-                                    yval));
+                        //sys_vgui("%d %f \\\n", ixpix,
+                        //        yloc + fielddesc_cvttocoord(yfielddesc,
+                        //            yval));
+
+                        gui_i(ixpix);
+                        gui_f(yloc + fielddesc_cvttocoord(yfielddesc,
+                                  yval));
+
                         ndrawn++;
                     }
                     lastpixel = ixpix;
@@ -5566,22 +5559,51 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 if (ndrawn == 0) sys_vgui("0 0 0 0 \\\n");
                 else if (ndrawn == 1)
                 {
-                    sys_vgui("%d %f \\\n", ixpix + 10,
-                    yloc + 
-                        fielddesc_cvttocoord(yfielddesc, yval));
-                }
+                    //sys_vgui("%d %f \\\n", ixpix + 10,
+                    //yloc + 
+                    //    fielddesc_cvttocoord(yfielddesc, yval));
 
-                sys_vgui("-strokewidth %f -stroke %s -fill \"\" \\\n", linewidth, symoutline->s_name);
+                    gui_i(ixpix + 10);
+                    gui_f(yloc + fielddesc_cvttocoord(yfielddesc, yval));
+                }
+                gui_end_array();
+
+                //sys_vgui("-strokewidth %f -stroke %s -fill \"\" \\\n", linewidth, symoutline->s_name);
+
+                gui_start_array();
+                gui_s("stroke-width");
+                gui_f(linewidth * y_inverse);
+                gui_s("stroke");
+                gui_s(symoutline->s_name);
+                gui_s("fill");
+                gui_s("none");
+                gui_end_array();
                 //if (style == PLOTSTYLE_BEZ) sys_vgui("-smooth 1 \\\n"); //this doesn't work with tkpath
-                if (in_array)
-                    sys_vgui(" -parent .scelem%lx \\\n", data);
-                else
-                    sys_vgui(" -parent .dgroup%lx.%lx \\\n", x->x_canvas, sc->sc_vec);
- 
-                sys_vgui("-tags {.x%lx.x%lx.template%lx scalar%lx}\n",
-                          glist_getcanvas(glist), glist, data,sc);
+                //if (in_array)
+                //    sys_vgui(" -parent .scelem%lx \\\n", data);
+                //else
+                //    sys_vgui(" -parent .dgroup%lx.%lx \\\n", x->x_canvas, sc->sc_vec);
+                //sys_vgui("-tags {.x%lx.x%lx.template%lx scalar%lx}\n",
+                //          glist_getcanvas(glist), glist, data,sc);
+
+                /* tags */
+                gui_start_array();
+                char pbuf[MAXPDSTRING];
+                char tbuf[MAXPDSTRING];
+                sprintf(pbuf, in_array ? "scelem%lx.%lx" : "dgroup%lx.%lx",
+                    (long unsigned int)x->x_canvas,
+                    (long unsigned int)data);
+                sprintf(tbuf, ".x%lx.x%lx.template%lx",
+                    (long unsigned int)glist_getcanvas(glist),
+                    (long unsigned int)glist,
+                    (long unsigned int)data);
+                gui_s(pbuf);
+                gui_s(pbuf);
+                gui_end_array();
+                gui_end_vmess();
             }
         }
+
         /* make sure the array drawings are behind the graph */
         sys_vgui(".x%lx.c lower plot%lx graph%lx\n", glist_getcanvas(glist),
             data, glist);
