@@ -5264,7 +5264,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         {
             t_float xscale = glist_xtopixels(glist, 1) - glist_xtopixels(glist, 0);
             t_float yscale = glist_ytopixels(glist, 1) - glist_ytopixels(glist, 0);
-            t_float y_inverse = 1 / yscale;
+            t_float y_inverse = 1 / yscale; /* for the stroke-width */
 
             symfill = (style == PLOTSTYLE_POINTS ? symoutline : symfill);
             t_float minyval = 1e20, maxyval = -1e20;
@@ -5439,7 +5439,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
 
             gui_end_vmess();
         }
-        else
+        else /* polygon style */
         {
             //char outline[20];
             int lastpixel = -1, ndrawn = 0;
