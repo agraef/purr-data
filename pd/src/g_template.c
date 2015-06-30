@@ -5248,6 +5248,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
 
         t_float xscale = glist_xtopixels(glist, 1) - glist_xtopixels(glist, 0);
         t_float yscale = glist_ytopixels(glist, 1) - glist_ytopixels(glist, 0);
+        t_float x_inverse = 1 / xscale;
         t_float y_inverse = 1 / yscale; /* for the stroke-width */
 
         if (style == PLOTSTYLE_POINTS || style == PLOTSTYLE_BARS)
@@ -5268,7 +5269,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             for (xsum = xloc, i = 0; i < nelem; i++)
             {
                 t_float yval;
-                int ixpix, inextx;
+                int ixpix, inextx, render;
 
                 if (xonset >= 0)
                 {
@@ -5276,13 +5277,28 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                         *(t_float *)((elem + elemsize * i) + xonset);
                     ixpix = fielddesc_cvttocoord(xfielddesc, usexloc);
                     inextx = ixpix + 2;
+                    /* we use 'render' as a stopgap to choose whether
+                       or not to draw this point in the trace. For
+                       templates that have an x field we always render */
+                    render = 1;
                 }
                 else
                 {
                     usexloc = xsum;
                     xsum += xinc;
-                    ixpix = fielddesc_cvttocoord(xfielddesc, usexloc);
-                    inextx = fielddesc_cvttocoord(xfielddesc, xsum);
+                    ixpix = (int)(glist_xtopixels(glist,
+                            fielddesc_cvttocoord(xfielddesc, usexloc)));
+                    inextx = (int)(glist_xtopixels(glist,
+                            fielddesc_cvttocoord(xfielddesc, xsum)));
+
+                    /* For y-only templates, we only render the point
+                       if its at a different x-coordinate than the
+                       previous one. (For example, if you try to fit
+                       a 44,100 point array into a 100 pixel wide
+                       graph.) We're doing the scaling on the GUI side,
+                       but we must still use glist_xtopixels in order
+                       to test for a new x-pixel value. */
+                    render = ixpix != inextx;
                 }
 
                 if (yonset >= 0)
@@ -5292,7 +5308,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                     maxyval = yval;
                 if (yval < minyval)
                     minyval = yval;
-                if (i == nelem-1 || inextx != ixpix)
+                if (i == nelem-1 || render)
                 {
                     int py2 = 0;
                     if (style == PLOTSTYLE_POINTS)
@@ -5310,10 +5326,10 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                             /* tbd */
                         }
                     }
-                    int mex1 = ixpix;
+                    int mex1 = fielddesc_cvttocoord(xfielddesc, usexloc);
                     t_float mey1 = fielddesc_cvttocoord(yfielddesc, minyval) - 1;
+                    int mex2 = fielddesc_cvttocoord(xfielddesc, xsum + x_inverse);
 
-                    int mex2 = inextx;
                     t_float mey2 = style == PLOTSTYLE_POINTS ?
                         yval + y_inverse * linewidth : py2;
 
@@ -5712,6 +5728,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         sys_vgui(".x%lx.c delete .x%lx.x%lx.template%lx\n",
             glist_getcanvas(glist), glist_getcanvas(glist), glist, data);      
     }
+    post("nelem is %d", nelem);
 }
 
 static int plot_click(t_gobj *z, t_glist *glist, 
