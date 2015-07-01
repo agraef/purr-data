@@ -535,6 +535,11 @@
             opt.textContent = 'Array #' + (i+1);
             arrays_select.appendChild(opt);
         }
+        // Hide checkbutton for existing graph if this isn't a new array dialog
+        if (!new_array_dialog) {
+            document.getElementsByClassName('array_in_existing_graph')[0]
+                .classList.add('hidden');
+        }
         array_choose(0);
     }
 
