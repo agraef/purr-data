@@ -193,6 +193,7 @@ Everything else: (A [x] means we've fixed it)
 [ ] move crispEdges value to CSS
 [ ] look into problems with object z-order on the C side when deleting objects
     and then undoing the delete
+[ ] implement magicglass edit menu indicator
 
 Crashers
 --------
