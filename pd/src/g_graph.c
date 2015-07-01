@@ -862,9 +862,6 @@ int garray_getname(t_garray *x, t_symbol **namep);
     graph decorations in toplevels... */
 static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
 {
-
-post("inside graph vis");
-
     t_glist *x = (t_glist *)gr;
     //fprintf(stderr,"graph vis canvas=%lx gobj=%lx %d\n",
     //    (t_int)parent_glist, (t_int)gr, vis);

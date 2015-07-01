@@ -510,12 +510,12 @@ function nw_create_window(cid, type, width, height, xpos, ypos, menu_flag, resiz
         x: xpos,
         y: ypos
     });
-    pdgui.gui_post("attr_array is " + attr_array);
+    //pdgui.gui_post("attr_array is " + attr_array);
     var eval_string = "register_canvas_id(" + JSON.stringify(cid) + ", " + JSON.stringify(attr_array) + ");";
-    pdgui.gui_post("eval string is " + eval_string);
-    if (attr_array !== null) {
-        pdgui.gui_post("attr_array is " + attr_array.toString());
-    }
+    //pdgui.gui_post("eval string is " + eval_string);
+    //if (attr_array !== null) {
+    //    pdgui.gui_post("attr_array is " + attr_array.toString());
+    //}
     new_win.on("loaded", function() {
         new_win.eval(null, eval_string);
     });

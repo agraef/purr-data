@@ -5734,7 +5734,6 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         sys_vgui(".x%lx.c delete .x%lx.x%lx.template%lx\n",
             glist_getcanvas(glist), glist_getcanvas(glist), glist, data);      
     }
-    post("nelem is %d", nelem);
 }
 
 static int plot_click(t_gobj *z, t_glist *glist, 

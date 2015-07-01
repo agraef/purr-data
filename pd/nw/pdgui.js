@@ -973,11 +973,6 @@ function gui_canvas_set_title(cid, name, args, dir, dirty_flag) {
 // create a new canvas
 // todo: rename parameter "name" to "cid"
 function gui_canvas_new(cid, width, height, geometry, editable, name, dir, dirty_flag, cargs) {
-    gui_post("canvas name is " + name);
-    gui_post("canvas string is " + name);
-    gui_post("canvas dir " + dir);
-    gui_post("canvas dirty_flag is " + dirty_flag);
-    gui_post("canvas cargsis " + cargs);
     // hack for buggy tcl popups... should go away for node-webkit
     //reset_ctrl_on_popup_window
 
@@ -1884,7 +1879,6 @@ function add_gobj_to_svg(svg, gobj) {
 
 // Most of these map either to pd.tk procs, or in some cases Tk canvas subcommands
 function gui_text_create_gobj(cid, tag, type, xpos, ypos, is_toplevel) {
-    gui_post("creating a gobj");
     var svg = get_item(cid, "patchsvg"); // "patchsvg" is id for the svg element
     var transform_string = 'matrix(1,0,0,1,' + xpos + ',' + ypos + ')';
     var g = create_item(cid, 'g', {
@@ -1952,7 +1946,6 @@ function gui_canvas_drawio(cid, parenttag, tag, x1, y1, x2, y2, basex, basey, ty
         'shape-rendering': 'crispEdges'
     });
     g.appendChild(rect);
-    gui_post("the tag for this XLET is " + tag);
 }
 
 function gui_canvas_redraw_io(cid, parenttag, tag, x, y, type, i, basex, basey) {
@@ -1964,7 +1957,6 @@ function gui_canvas_redraw_io(cid, parenttag, tag, x, y, type, i, basex, basey) 
     //       text_drawborder (firsttime=0) -> glist_drawiofor (firsttime=0)
     // This means that a new gatom tries to redraw its inlets before
     // it has created them.
-    gui_post("y is " + (y - basey));
     if (xlet !== null) {
         configure_item(xlet, { x: x - basex, y: y - basey });
     }
@@ -2127,8 +2119,6 @@ function text_to_tspans(canvasname, svg_text, text) {
     var lines, i, len, tspan;
     lines = text.split('\v'); 
     len = lines.length;
-gui_post("text length: " + text.length);
-gui_post("lines: " + len);
     for (i = 0; i < len; i++) {
         tspan = create_item(canvasname, 'tspan', {
             dy: i == 0 ? 0 : 10
@@ -2190,8 +2180,13 @@ function gui_text_set (cid, tag, text) {
         svg_text.textContent = '';
         text_to_tspans(cid, svg_text, text);
     } else {
-        gui_post("gui_text_set: svg_text doesn't exist!");
-        console.log("gui_text_set: " + cid + " " + tag + " " + text + " :" + "svg_text doesn't exist!");
+        // In tk, setting an option for a non-existent canvas
+        // item is ignored. Because of that, Miller didn't pay
+        // attention to parts of the implementation which attempted
+        // to set options before creating the item. To get a sense
+        // of where this is happening, uncomment the following line:
+
+        //gui_post("gui_text_set: svg_text doesn't exist: tag: " + tag);
     }
 }
 
@@ -2824,9 +2819,6 @@ function gui_mycanvas_select_color(cid,tag,color) {
  
 function gui_create_scalar(cid, tag, isselected, t1, t2, t3, t4, t5, t6,
     is_toplevel) {
-gui_post("creating a scalar...");
-gui_post("is_toplevel is " + is_toplevel);
-gui_post("isselected is " + isselected);
     // we should probably use create_gobj here, but we're doing some initial 
     // scaling that normal gobjs don't need...
     var svg = get_item(cid, "patchsvg"); // "patchsvg" is id for the svg in the DOM
@@ -3422,9 +3414,9 @@ function gui_audio_properties(gfxstub, sys_indevs, sys_outdevs,
         ]);
 
     gui_post("got back some audio props...");
-    for (var i = 0; i < arguments.length; i++) {
-        gui_post("arg " + i + " is " + arguments[i]);
-    }
+    //for (var i = 0; i < arguments.length; i++) {
+    //    gui_post("arg " + i + " is " + arguments[i]);
+    //}
 
     if (dialogwin['prefs'] !== null) {
         dialogwin['prefs'].eval(null,
@@ -3445,10 +3437,10 @@ function gui_midi_properties(gfxstub, sys_indevs, sys_outdevs,
         "pd-outdevs", pd_outdevs,
         ]);
 
-    gui_post("got back some midi props...");
-    for (var i = 0; i < arguments.length; i++) {
-        gui_post("arg " + i + " is " + arguments[i]);
-    }
+    //gui_post("got back some midi props...");
+    //for (var i = 0; i < arguments.length; i++) {
+    //    gui_post("arg " + i + " is " + arguments[i]);
+    //}
 
     if (dialogwin['prefs'] !== null) {
         dialogwin['prefs'].eval(null,
