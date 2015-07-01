@@ -5556,7 +5556,13 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                     xpix = fielddesc_cvttocoord(xfielddesc, usexloc);
 
                     ixpix = xpix + 0.5;
-                    if (xonset >= 0 || ixpix != lastpixel)
+
+                    int render;
+
+                    render = (int)(glist_xtopixels(glist, ixpix)) !=
+                             (int)(glist_xtopixels(glist, lastpixel));
+
+                    if (xonset >= 0 || render)
                     {
                         //sys_vgui("%d %f \\\n", ixpix,
                         //        yloc + fielddesc_cvttocoord(yfielddesc,
