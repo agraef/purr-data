@@ -5731,8 +5731,8 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         }
 
             /* and then the trace */
-        sys_vgui(".x%lx.c delete .x%lx.x%lx.template%lx\n",
-            glist_getcanvas(glist), glist_getcanvas(glist), glist, data);      
+        //sys_vgui(".x%lx.c delete .x%lx.x%lx.template%lx\n",
+        //    glist_getcanvas(glist), glist_getcanvas(glist), glist, data);      
     }
 }
 
