@@ -194,6 +194,9 @@ Everything else: (A [x] means we've fixed it)
 [ ] look into problems with object z-order on the C side when deleting objects
     and then undoing the delete
 [ ] implement magicglass edit menu indicator
+[ ] clip garray to gl_x1 and gl_x2 by:
+    a) checking if we're in a gop, and
+    b) if so, only render if element number is > gl_x1 and < gl_x2
 
 Crashers
 --------
