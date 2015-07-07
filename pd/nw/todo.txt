@@ -197,6 +197,8 @@ Everything else: (A [x] means we've fixed it)
 [ ] clip garray to gl_x1 and gl_x2 by:
     a) checking if we're in a gop, and
     b) if so, only render if element number is > gl_x1 and < gl_x2
+[ ] fix bug where utf_8 snowmen in an object box can cause a buffer overflow
+    in the lib loading routine
 
 Crashers
 --------

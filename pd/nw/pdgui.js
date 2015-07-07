@@ -1734,55 +1734,71 @@ exports.connect = connect;
 // on ";", and the side effect can be removed.
 // can be removed.
 
-// StringDecoder is used to make sure UTF8 characters which happen to
-// straddle buffers get handled correctly.  If this proves too slow, there's
-// a Buffer Tools lib in Node.js that's more powerful.  But for now this seems
-// fine...
-var StringDecoder = require('string_decoder').StringDecoder;
-
 function init_socket_events () {
-    var decoder = new StringDecoder('utf8');
-    var nextCmd = ""; // Build up a command across lines (or buffers)
-    var cmdHeader = 0;
+    var next_command = ''; // A not-quite-FUDI command: selector arg1,arg2,etc.
+                           // These are formatted on the C side to be easy
+                           // to parse here in javascript
+    var old_command = '';  // Old-style sys_vgui cmds (and print to console)
+    var cmdHeader = false;
 
     client.on('data', function(data) {
-        var dataStr = decoder.write(data);
+        var i, len, selector, args;
         //var dataStr = data.toString();
         // For debugging the buffer...
         //if (decoder.end() !== "") {
         //    console.log("utf8 multi-byte character split across buffer");
         //    console.log("end bytes are " + decoder.end());
         //}
-        var arr = dataStr.split("\n");
-        var arrLen = arr.length;
-        for (var i = 0; i < arrLen; i++) {
-            var prefix = arr[i].substring(0, 2);
-            if (prefix == 'nw' || prefix == 'nn') {
-                nextCmd = arr[i].substring(3);
-                //console.log("nextCmd is " + nextCmd);
-                cmdHeader = 1;
-            } else if (cmdHeader) {
-	        nextCmd += arr[i];
-                //console.log("2nd part of cmd is " + arr[i]);
+        
+        len = data.length;
+        for (i = 0; i < len; i++) {
+            if (cmdHeader) {
+                // check for end of command: \v
+                if (data[i] === 11) { // vertical tab '\v'
+                    // decode next_command
+                    try {
+                        // This should work for all utf-8 content
+                        next_command = decodeURIComponent(next_command);
+                    }
+                    catch(err) {
+                        // This should work for ISO-8859-1
+                        next_command = unescape(next_command);
+                    }
+                    // Turn newlines into backslash + 'n' so
+                    // eval will do the right thing
+                    next_command = next_command.replace(/\n/g, '\\n');
+                    selector = next_command.slice(0, next_command.indexOf(" "));
+                    args = next_command.slice(selector.length + 1);
+                    cmdHeader = false;
+                    next_command = '';
+                    // Now evaluate it 
+                    //gui_post('Evaling: ' + selector + '(' + args + ');');
+                    eval(selector + '(' + args + ');');
+                } else {
+                    next_command += '%' +
+                        ('0' // leading zero (for rare case of single digit)
+                         + data[i].toString(16)) // to hex
+                           .slice(-2); // remove extra leading zero
+                }
+            } else if (data[i] === 7) { // ASCII alarm bell '\a'
+                // if we have an old-style message, print it out
+                if (old_command !== '') {
+                    var old_command_output;
+                    try {
+                        old_command_output = decodeURIComponent(old_command);
+                    }
+                    catch(err) {
+                        old_command_output = unescape(old_command);
+                    }
+                    old_command= '';
+                    gui_post("warning: old command: " + old_command_output);
+                }
+                cmdHeader = true; 
             } else {
-                // Show the remaining old tcl/tk messages in blue
-                gui_post(arr[i], "blue");
+                // this is an old-style sys_vgui
+                old_command += '%' + ('0' + data[i].toString(16)).slice(-2);
             }
-            // check if we end with a semicolon followed by a newline
-            if (nextCmd.slice(-1) === ";" && nextCmd.slice(-2) !== '\\') {
-                //nextCmd = nextCmd.replace(/\n/g, "\\n");
-                //nextCmd = nextCmd.replace(/'/g, "\\\'");
-                var selector = nextCmd.slice(0, nextCmd.indexOf(" "));
-                var args = nextCmd.slice(selector.length + 1, -1);
-                //console.log('About to eval: ' + selector + '(' + args + ');');
-                eval(selector + '(' + args + ');');
-                nextCmd = '';
-                cmdHeader = 0;
-            }
-	}
-	// client.destroy();
-	// console.log('Connection closed');
-
+        }
     });
 
     // Add a 'close' event handler for the client socket
@@ -2131,7 +2147,7 @@ function text_to_tspans(canvasname, svg_text, text) {
 }
 
 function gui_text_new(canvasname, myname, type, isselected, x, y, text, font) {
-//    gui_post("font is " + font);
+    gui_post("font is " + font);
     var lines, i, len, tspan;
     var g = get_gobj(canvasname, myname);
     var svg_text = create_item(canvasname, 'text', {
@@ -3558,10 +3574,10 @@ function gui_canvas_getscroll(cid) {
     });
     svg.width.baseVal.valueAsString = width;
     svg.height.baseVal.valueAsString = height;
-    console.log("x is " + bbox.x);
-    console.log("y is " + bbox.x);
-    console.log("width is " + bbox.width);
-    console.log("height is " + bbox.height);
+//    console.log("x is " + bbox.x);
+//    console.log("y is " + bbox.x);
+//    console.log("width is " + bbox.width);
+//    console.log("height is " + bbox.height);
 }
 
 // handling the selection

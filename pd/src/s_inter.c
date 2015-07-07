@@ -771,6 +771,12 @@ char *escape_double_quotes(const char *src) {
     return ret;
 }
 
+void gui_end_vmess(void)
+{
+    sys_gui("\v");
+}
+
+
 /* quick hack to send a parameter list for use as a function call in
    Node-Webkit */
 void gui_do_vmess(const char *sel, char *fmt, int end, va_list ap)
@@ -780,7 +786,9 @@ void gui_do_vmess(const char *sel, char *fmt, int end, va_list ap)
     char *fp = fmt;
 
     //va_start(ap, end);
-    sys_vgui("nn %s ", sel);
+    sys_vgui("\a%s ", sel); /* use a bell to signal the beginning of msg
+                               (this can be replaced with any other obscure
+                                ascii escape)                            */
     while (*fp)
     {
         // stop-gap-- increase to 20 until we find a way to pass a list or array
@@ -804,7 +812,7 @@ void gui_do_vmess(const char *sel, char *fmt, int end, va_list ap)
 done:
     va_end(ap);
     if (end)
-        sys_gui(";\n");
+        gui_end_vmess();
 }
 
 void gui_vmess(const char *sel, char *fmt, ...)
@@ -873,11 +881,6 @@ void gui_end_array(void)
 {
     sys_gui("]");
     gui_array_tail = 1;
-}
-
-void gui_end_vmess(void)
-{
-    sys_gui(";\n");
 }
 
 int sys_flushtogui( void)
