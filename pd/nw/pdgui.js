@@ -193,7 +193,7 @@ function gui_post(string, color) {
         var text;
         var span = pd_window.document.createElement("span");
         span.style.color = color;
-        var text = pd_window.document.createTextNode(string + "\n"); 
+        var text = pd_window.document.createTextNode(string); 
         span.appendChild(text);
         myp.appendChild(span);
         var printout = pd_window.document.getElementById("console_bottom");
@@ -1781,7 +1781,8 @@ function init_socket_events () {
                         old_command_output = unescape(old_command);
                     }
                     old_command= '';
-                    gui_post("warning: old command: " + old_command_output);
+                    gui_post("warning: old command: " + old_command_output,
+                        'blue');
                 }
                 cmdHeader = true; 
             } else {
