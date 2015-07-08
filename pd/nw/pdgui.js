@@ -3501,10 +3501,14 @@ function select_text(cid, elem) {
 }
 
 function gui_textarea(cid, tag, x, y, max_char_width, text, font_size, state) {
-    gui_post("x/y is " + x + '/' + y);
-    gui_post("state? " + state);
+    //gui_post("x/y is " + x + '/' + y);
+    //gui_post("state? " + state);
+    gui_post("tag is " + tag);
     var range, svg_view;
+    var gobj = get_gobj(cid, tag);
     if (state !== 0) {
+        // Hide the gobj while we edit
+        configure_item(gobj, { display: 'none' });
         var p = patchwin[cid].window.document.createElement('p');
         configure_item(p, {
             id: 'new_object_textentry'
@@ -3530,6 +3534,7 @@ function gui_textarea(cid, tag, x, y, max_char_width, text, font_size, state) {
             patchwin[cid].window.canvas_events.floating_text();
         }
     } else {
+        configure_item(gobj, { display: 'inline' });
         var p = patchwin[cid].window.document.getElementById('new_object_textentry');
         if (p !== null) {
             p.parentNode.removeChild(p);
