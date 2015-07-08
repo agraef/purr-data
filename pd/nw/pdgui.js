@@ -1723,37 +1723,27 @@ exports.connect = connect;
 
 // Pd can send us different types of data:
 // 1) The old style tcl commands with "\n" at end (or "\\\n" for continuation)
-// 2) new style commands: "nw selector { param1: 'value', param2: 42, etc. };\n"
-// 3) raw javascript (not implemented yet)
+// 2) new style commands: selector "stringarg",42,"stringarg3",etc.
 // Below we separate the wheat from chaff, eval'ing the new commands and just
 // printing the old ones in blue to the console
 
-// This wheat/chaff setup has the side-effect of stripping all newline
-// characters from pd->gui messages.  Because of this a newline is added in
-// gui_post.  Once all the old tcl messages are removed we can parse solely
-// on ";", and the side effect can be removed.
-// can be removed.
+// To facilitate this, the new style commands are always preceded with an
+// alarm bell '\a', and end with a vertical tab '\v'. These should produce
+// a decent stop-gap since they are rarely used in Pd patch text.
 
 function init_socket_events () {
     var next_command = ''; // A not-quite-FUDI command: selector arg1,arg2,etc.
                            // These are formatted on the C side to be easy
                            // to parse here in javascript
-    var old_command = '';  // Old-style sys_vgui cmds (and print to console)
+    var old_command = '';  // Old-style sys_vgui cmds (printed to console)
     var cmdHeader = false;
 
     client.on('data', function(data) {
         var i, len, selector, args;
-        //var dataStr = data.toString();
-        // For debugging the buffer...
-        //if (decoder.end() !== "") {
-        //    console.log("utf8 multi-byte character split across buffer");
-        //    console.log("end bytes are " + decoder.end());
-        //}
-        
         len = data.length;
         for (i = 0; i < len; i++) {
             if (cmdHeader) {
-                // check for end of command: \v
+                // check for end of command:
                 if (data[i] === 11) { // vertical tab '\v'
                     // decode next_command
                     try {
@@ -2133,11 +2123,12 @@ function gui_canvas_updateline(cid,tag,x1,y1,x2,y2,yoff) {
 
 function text_to_tspans(canvasname, svg_text, text) {
     var lines, i, len, tspan;
-    lines = text.split('\v'); 
+    lines = text.split('\n'); 
     len = lines.length;
     for (i = 0; i < len; i++) {
         tspan = create_item(canvasname, 'tspan', {
-            dy: i == 0 ? 0 : 10
+            dy: i == 0 ? 0 : 10,
+            x: 0
         });
         // find a way to abstract away the canvas array and the DOM here
         var text_node = patchwin[canvasname].window.document.createTextNode(lines[i]);
@@ -2155,7 +2146,7 @@ function gui_text_new(canvasname, myname, type, isselected, x, y, text, font) {
         // at the top-right corner of the text's bbox.  SVG uses the baseline.
         // There's probably a programmatic way to do this, but for now-- fudge factors
         // based on the DejaVu Sans Mono font. :)
-        x: x,
+        transform: 'translate(' + x + ')',
         y: y,
         // Turns out we can't do 'hanging' baseline
         // because it's borked when scaled. Bummer...
@@ -2165,7 +2156,7 @@ function gui_text_new(canvasname, myname, type, isselected, x, y, text, font) {
         id: myname + 'text'
     });
 
-    // fill svg_text with tspan content by splitting on '\v'
+    // fill svg_text with tspan content by splitting on '\n'
     text_to_tspans(canvasname, svg_text, text);
 
     if (g !== null) {
