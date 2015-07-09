@@ -18,7 +18,7 @@
       "visible_height_tt": "height of the rectangle",
       "nonzero_value": "nonzero value",
       "nonzero_value_tt": "value to output when the toggle shows an 'x'",
-      "flash_interrupt": "flash interrupt",
+      "flash_interrupt": "interrupt",
       "flash_interrupt_tt": "the amount of time (in milliseconds) that Pd will wait before interrupting the flashing of the button",
       "flash_hold":  "hold",
       "flash_hold_tt": "the amount of time (in milliseconds) that Pd will display the flash animation",
