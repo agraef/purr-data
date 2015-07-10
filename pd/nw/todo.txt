@@ -199,6 +199,8 @@ Everything else: (A [x] means we've fixed it)
     b) if so, only render if element number is > gl_x1 and < gl_x2
 [ ] fix bug where utf_8 snowmen in an object box can cause a buffer overflow
     in the lib loading routine
+[ ] Fix layout on dialogs so that height/width of the document doesn't
+    reflow when the window gets resized
 
 Crashers
 --------
