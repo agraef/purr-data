@@ -103,7 +103,7 @@ var pd_myversion,    // Pd version string
 // Therefore...
 // * solution #1: we check for non-ASCII keycodes like arrow keys inside
 //     the keydown event
-// * solution #2: in the keypress event, we map the charcode to the last
+// * solution #2: in the keypress event, we map the charcode to the
 //     last keydown keycode we received
 // * solution #3: on keyup, we use the keycode to look up the corresponding
 //     charcode, and send the charcode on to Pd
