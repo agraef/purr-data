@@ -887,6 +887,10 @@ exports.get_patchwin = function(name) {
     return patchwin[name];
 }
 
+exports.get_dialogwin = function(name) {
+    return dialogwin[name];
+}
+
 exports.remove_dialogwin = function(name) {
     dialogwin[name] = null;
 }
@@ -3340,7 +3344,7 @@ function gui_iemgui_dialog(did, attr_array) {
 //    for (var i = 0; i < attr_array.length; i++) {
 //        attr_array[i] = '"' + attr_array[i] + '"';
 //    }
-    dialogwin[did] = nw_create_window(did, 'iemgui', 265, 540, 20, 20, 0,
+    dialogwin[did] = nw_create_window(did, 'iemgui', 265, 450, 20, 20, 0,
         0, 1, 'white', 'Properties', '', 0, null, attr_array);
 
 }
@@ -3356,7 +3360,7 @@ function gui_create_array(did, count) {
         "array_outline", 'black',
         "array_in_existing_graph", 0
     ];
-    dialogwin[did] = nw_create_window(did, 'canvas', 265, 540, 20, 20, 0,
+    dialogwin[did] = nw_create_window(did, 'canvas', 265, 340, 20, 20, 0,
         0, 1, 'white', 'Properties', '', 0, null, attr_array);    
 }
 
@@ -3372,8 +3376,14 @@ function gui_canvas_dialog(did, attr_arrays) {
 //            }
 //        }
 //    }
-    dialogwin[did] = nw_create_window(did, 'canvas', 265, 540, 20, 20, 0,
+//    dialogwin[did] = nw_create_window(did, 'canvas', 265, 340, 20, 20, 0,
+//        0, 1, 'white', 'Properties', '', 0, null, attr_arrays);
+
+    dialogwin[did] = nw_create_window(did, 'canvas', 250, 100, 20, 20, 0,
         0, 1, 'white', 'Properties', '', 0, null, attr_arrays);
+
+
+
 }
 
 function gui_remove_gfxstub(did) {
