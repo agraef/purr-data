@@ -2,6 +2,7 @@
 <html>
   <head>
     <link id="page_style" rel="stylesheet" type="text/css" href="css/default.css">
+    <title>Pd Preferences</title>
   </head>
   <body>
     <div class="container noselect">
@@ -520,6 +521,16 @@
         }
     }
 
+function resize_window() {
+    var w = document.body.scrollWidth,
+        h = document.body.scrollHeight,
+        win = pdgui.get_dialogwin(pd_object_callback);
+    win.width = w;
+    win.height = h;
+}
+
+
+
     function populate_array_form(arrays) {
         var arrays_select, a_field = document.getElementById('arrays');
         var i, opt;
@@ -586,6 +597,7 @@
         // labels and form elements.  That makes it more efficient and
         // snappier, at least on older machines.
         document.getElementsByClassName('container')[0].style.setProperty('display', 'inline');
+        resize_window();
     }
 
 function tr_text(id) {

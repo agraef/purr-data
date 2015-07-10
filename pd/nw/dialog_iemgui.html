@@ -479,6 +479,14 @@ function cancel() {
     pdgui.pdsend(pd_object_callback + " cancel");
 }
 
+function resize_window() {
+    var w = document.body.scrollWidth,
+        h = document.body.scrollHeight,
+        win = pdgui.get_dialogwin(pd_object_callback);
+    win.width = w;
+    win.height = h;
+}
+
 // This gets called from the nw_create_window function in index.html
 // It provides us with our window id from the C side.  Once we have it
 // we can create the menu and register event callbacks
@@ -499,6 +507,7 @@ function register_canvas_id(gfxstub, attr_array) {
     // labels and form elements.  That makes it more efficient and
     // snappier, at least on older machines.
     document.getElementsByClassName('container')[0].style.setProperty('display', 'inline');
+    resize_window();
 }
 
 function tr_text(id) {
