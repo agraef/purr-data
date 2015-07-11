@@ -3561,7 +3561,8 @@ function gui_undo_menu(cid, undo_text, redo_text) {
     }
 }
 
-function gui_canvas_getscroll(cid) {
+function do_getscroll(cid) {
+return;
     var svg = get_item(cid, 'patchsvg');
     var bbox = svg.getBBox();
     var width = bbox.x > 0 ? bbox.x + bbox.width : bbox.width,
@@ -3585,6 +3586,25 @@ function gui_canvas_getscroll(cid) {
 //    console.log("y is " + bbox.x);
 //    console.log("width is " + bbox.width);
 //    console.log("height is " + bbox.height);
+}
+
+var getscroll_var = {};
+
+// We use a setTimeout here for two reasons:
+// 1. nw.js has a nasty Renderer bug  when you try to modify the
+//    window before the document has finished loading. To get
+//    the error get rid of the setTimeout
+// 2. This should protect the user from triggering a bunch of
+//    re-layouts.  But this only works because I'm not updating
+//    the view to follow the mouse-- for example, when
+//    the user is dragging an object beyond the bounds of the
+//    viewport. The tcl/tk version actually does follow the
+//    mouse. In that case this setTimeout could keep the
+//    graphics from displaying until the user releases the mouse,
+//    which would be a buggy UI
+function gui_canvas_getscroll(cid) {
+    clearTimeout(getscroll_var);
+    getscroll_var = setTimeout(do_getscroll, 100, cid);
 }
 
 // handling the selection
