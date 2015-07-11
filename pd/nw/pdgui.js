@@ -3576,10 +3576,10 @@ function do_getscroll(cid) {
     var width = bbox.x > 0 ? bbox.x + bbox.width : bbox.width,
         height = bbox.y > 0 ? bbox.y + bbox.height : bbox.height;
     if (width === 0) {
-        width = patchwin[cid].window.clientWidth;
+        width = patchwin[cid].window.document.body.clientWidth;
     }
     if (height === 0) {
-        height = patchwin[cid].window.clientHeight;
+        height = patchwin[cid].window.document.body.clientHeight;
     }
     configure_item(svg, {
         viewBox: [bbox.x > 0 ? 0 : bbox.x,
