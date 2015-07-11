@@ -3517,8 +3517,17 @@ function gui_textarea(cid, tag, x, y, max_char_width, text, font_size, state) {
     var range, svg_view;
     var gobj = get_gobj(cid, tag);
     if (state !== 0) {
-        // Hide the gobj while we edit
-        configure_item(gobj, { display: 'none' });
+        // Hide the gobj while we edit.  However, we want the gobj to
+        // contribute to the svg's bbox-- that way when the new_object_textentry
+        // goes away we still have the same dimensions.  Otherwise the user
+        // can get strange jumps in the viewport when instantiating an object
+        // at the extremities of the patch.
+        // To solve this, we use 'visibility' instead of 'display', since it
+        // still uses the hidden item when calculating the bbox.
+        // (We can probably solve this problem by throwing in yet another
+        // gui_canvas_getscroll, but this seems like the right way to go
+        // anyway.)
+        configure_item(gobj, { visibility: 'hidden' });
         var p = patchwin[cid].window.document.createElement('p');
         configure_item(p, {
             id: 'new_object_textentry'
@@ -3544,7 +3553,7 @@ function gui_textarea(cid, tag, x, y, max_char_width, text, font_size, state) {
             patchwin[cid].window.canvas_events.floating_text();
         }
     } else {
-        configure_item(gobj, { display: 'inline' });
+        configure_item(gobj, { visibility: 'normal' });
         var p = patchwin[cid].window.document.getElementById('new_object_textentry');
         if (p !== null) {
             p.parentNode.removeChild(p);
@@ -3562,12 +3571,12 @@ function gui_undo_menu(cid, undo_text, redo_text) {
 }
 
 function do_getscroll(cid) {
-return;
     var svg = get_item(cid, 'patchsvg');
     var bbox = svg.getBBox();
     var width = bbox.x > 0 ? bbox.x + bbox.width : bbox.width,
         height = bbox.y > 0 ? bbox.y + bbox.height : bbox.height;
     if (width === 0) {
+gui_post("our width is 0");
         width = patchwin[cid].window.innerWidth;
     }
     if (height === 0) {
@@ -3604,7 +3613,7 @@ var getscroll_var = {};
 //    which would be a buggy UI
 function gui_canvas_getscroll(cid) {
     clearTimeout(getscroll_var);
-    getscroll_var = setTimeout(do_getscroll, 100, cid);
+    getscroll_var = setTimeout(do_getscroll, 250, cid);
 }
 
 // handling the selection
