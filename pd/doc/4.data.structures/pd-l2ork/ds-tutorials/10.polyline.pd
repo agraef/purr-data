@@ -23,19 +23,21 @@ on the w3 website \, which was scaled down \, so we are using the "transform"
 message to scale it accordingly. There's a tutorial specifically on
 the "transform" message \, but here you can already see how it makes
 the [draw] object quite powerful.;
-#X msg 440 72 0.3;
 #X msg 53 137 stroke purple;
 #X msg 142 137 fill gray;
 #X msg 228 95 10;
 #X obj 53 103 loadbang;
+#X obj 440 114 * 0.001;
+#X msg 440 72 300;
 #X connect 0 0 6 0;
 #X connect 1 0 0 0;
-#X connect 9 0 14 0;
-#X connect 9 0 17 0;
-#X connect 11 0 12 0;
+#X connect 9 0 19 0;
+#X connect 9 0 16 0;
+#X connect 11 0 18 0;
 #X connect 12 0 6 0;
-#X connect 14 0 11 0;
+#X connect 14 0 6 0;
 #X connect 15 0 6 0;
-#X connect 16 0 6 0;
-#X connect 17 0 1 0;
-#X connect 18 0 15 0;
+#X connect 16 0 1 0;
+#X connect 17 0 14 0;
+#X connect 18 0 12 0;
+#X connect 19 0 11 0;
