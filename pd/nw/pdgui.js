@@ -3582,9 +3582,17 @@ function do_getscroll(cid) {
         height = bbox.y > 0 ? bbox.y + bbox.height : bbox.height;
     if (width === 0) {
         width = patchwin[cid].window.document.body.clientWidth;
+        // Convert to int by dropping everything after the decimal place.
+        // Previously I was having trouble with the DOM height and width
+        // setters having a different precision than the viewBox, leading
+        // to a subtle rendering bug.
+        // Since the patchsvg isn't going to be transformed at all, ints
+        // should work just fine here.
+        width |= 0;
     }
     if (height === 0) {
         height = patchwin[cid].window.document.body.clientHeight;
+        height |= 0;
     }
     configure_item(svg, {
         viewBox: [bbox.x > 0 ? 0 : bbox.x,
