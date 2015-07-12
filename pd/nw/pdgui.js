@@ -2716,7 +2716,7 @@ function gui_iemgui_drawborder(cid, tag, bgcolor, x1, y1, x2, y2) {
     g.appendChild(rect);
 }
 
-function gui_iemgui_border_color(cid, tag, color) {
+function gui_iemgui_base_color(cid, tag, color) {
     var b = get_gobj(cid, tag).querySelector('.border');
     configure_item(b, { fill: color });
 }

@@ -1219,6 +1219,8 @@ void iemgui_base_draw_new(t_iemgui *x) {
         colorbuf,
         0,
         x1, y1, x2, y2);
+    gui_vmess("gui_iemgui_base_color", "xxs",
+        canvas, x, colorbuf);
 }
 
 void iemgui_base_draw_move(t_iemgui *x) {
@@ -1249,7 +1251,7 @@ void iemgui_base_draw_config(t_iemgui *x) {
 //    gui_s(bcol);
 //    gui_end_array();
 //    gui_end_vmess();
-    gui_vmess("gui_iemgui_border_color", "xxs",
+    gui_vmess("gui_iemgui_base_color", "xxs",
         canvas, x, bcol); 
 }
 
