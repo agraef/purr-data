@@ -2926,21 +2926,21 @@ function gui_scalar_configure_gobj(cid, tag, isselected, t1, t2, t3, t4, t5, t6)
 }
 
 function gui_draw_vis(cid, type, attr_array, tag_array) {
-    gui_post("inside gui_draw_vis");
+//    gui_post("inside gui_draw_vis");
     for(var i = 0; i < arguments.length; i++) {
-        gui_post("arg1 is " + arguments[i]);
+//        gui_post("arg1 is " + arguments[i]);
     } 
 //    gui_post("coords is " + coords);
 //    gui_post("coords is array: " + Array.isArray(coords));
-    gui_post("arguments[2] is " + arguments[2]);
+//    gui_post("arguments[2] is " + arguments[2]);
 //    gui_post("type of coords is " + typeof coords);
-    gui_post("type of arguments[2] is " + typeof arguments[2]);
-    gui_post("arguments[2] is array: " + Array.isArray(arguments[2]));
+//    gui_post("type of arguments[2] is " + typeof arguments[2]);
+//    gui_post("arguments[2] is array: " + Array.isArray(arguments[2]));
     var g = get_item(cid, tag_array[0]);
     if (g !== null) {
-        gui_post("our parent exists.");
+//        gui_post("our parent exists.");
     } else {
-        gui_post("our parent doe not exists.");
+//        gui_post("our parent doe not exists.");
     }
     //var ca = coords;
 
@@ -2977,12 +2977,12 @@ function gui_draw_vis(cid, type, attr_array, tag_array) {
     }
 */
     attr_array.push('id', tag_array[1]);
-    gui_post("create is " + tag_array[1]);
+//    gui_post("create is " + tag_array[1]);
     var item = create_item(cid, type, attr_array);
     if (item !== null) {
-        gui_post("we got create.");
+//        gui_post("we got create.");
     } else {
-        gui_post("we doe not got creat.");
+//        gui_post("we doe not got creat.");
     }
     g.appendChild(item);
 }
