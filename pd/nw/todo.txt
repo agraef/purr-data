@@ -203,7 +203,7 @@ Everything else: (A [x] means we've fixed it)
     reflow when the window gets resized
 [ ] ds-demos unit-circle node throws an "unexpected string" error when
     trying to open it
-
+[ ] gui_canvas_getscroll isn't called upon patch load
 Crashers
 --------
 
