@@ -112,9 +112,9 @@ stroke-opacity 0.6 \, rx 30 \, ry 30;
 #X connect 50 0 51 0;
 #X connect 51 0 52 0;
 #X connect 52 0 0 0;
-#X restore 104 64 pd render;
+#X restore 14 4 pd render;
 #X scalar leaf 1000 1000 \;;
-#X obj 528 399 bng 56 250 50 0 empty empty empty 17 7 0 10 -262144
+#X obj 438 339 bng 56 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;
 #N canvas 856 281 450 384 make-sound 0;
 #X msg 286 73 traverse spinner \, next;
@@ -161,19 +161,19 @@ stroke-opacity 0.6 \, rx 30 \, ry 30;
 #X connect 19 0 11 0;
 #X connect 19 0 20 0;
 #X connect 20 0 14 0;
-#X restore 528 460 pd make-sound;
-#X obj 104 87 namecanvas spinner;
-#X obj 528 501 output~;
-#X text 343 116 Waiting for Godot;
-#X text 343 116 _________________;
-#X text 343 136 This is another demo inspired by a Raphael.js demo.
+#X restore 438 400 pd make-sound;
+#X obj 14 27 namecanvas spinner;
+#X obj 438 441 output~;
+#X text 253 56 Waiting for Godot;
+#X text 253 56 _________________;
+#X text 253 76 This is another demo inspired by a Raphael.js demo.
 It's just the little spinner that's all the rave in HTML5 interfaces.
 ;
-#X text 343 236 Additionally \, I did the animation with "struct-wide"
+#X text 253 176 Additionally \, I did the animation with "struct-wide"
 changes to the drawing instructions. You can also use a separate scalar
 for each pedal of the spinner flower \, but then you lose the ability
 to move it as one entity.;
-#X text 343 176 Notice \, however \, that in Pd the concept is as absurd
+#X text 253 116 Notice \, however \, that in Pd the concept is as absurd
 as this example demo. Pd's control diagrams are deterministic \, so
 unless you actually schedule time for the spinner to spin-- as I do
 here-- you'll never actually get any animation.;

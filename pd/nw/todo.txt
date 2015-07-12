@@ -201,6 +201,8 @@ Everything else: (A [x] means we've fixed it)
     in the lib loading routine
 [ ] Fix layout on dialogs so that height/width of the document doesn't
     reflow when the window gets resized
+[ ] ds-demos unit-circle node throws an "unexpected string" error when
+    trying to open it
 
 Crashers
 --------
