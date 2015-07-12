@@ -1232,25 +1232,25 @@ void iemgui_base_draw_move(t_iemgui *x) {
         canvas, x, x1, y1, x2, y2);
 }
 
-/* I don't think this is needed anymore */
 void iemgui_base_draw_config(t_iemgui *x) {
-    /*
+    
     t_canvas *canvas=glist_getcanvas(x->x_glist);
     char fcol[8]; sprintf(fcol,"#%6.6x", x->x_fcol);
-    */
+    
     //sys_vgui(".x%lx.c itemconfigure %lxBASE -fill #%6.6x\n", canvas, x, x->x_bcol);
-    /*
+    
     char tagbuf[MAXPDSTRING];
     char bcol[8]; sprintf(bcol, "#%6.6x", x->x_bcol);
     sprintf(tagbuf, "x%lxborder", (long unsigned int)x);
-    gui_start_vmess("gui_configure_item", "xs",
-        canvas, tagbuf);
-    gui_start_array();
-    gui_s("fill");
-    gui_s(bcol);
-    gui_end_array();
-    gui_end_vmess();
-    */
+//    gui_start_vmess("gui_configure_item", "xs",
+//        canvas, tagbuf);
+//    gui_start_array();
+//    gui_s("fill");
+//    gui_s(bcol);
+//    gui_end_array();
+//    gui_end_vmess();
+    gui_vmess("gui_iemgui_border_color", "xxs",
+        canvas, x, bcol); 
 }
 
 void iemgui_draw_update(t_iemgui *x, t_glist *glist) {
