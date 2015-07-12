@@ -1561,7 +1561,6 @@ static void graph_delete(t_gobj *z, t_glist *glist)
 static void graph_delete(t_gobj *z, t_glist *glist)
 {
     //fprintf(stderr,"graph_delete\n");
-    post("how many more times...");
     t_glist *x = (t_glist *)z;
     t_gobj *y;
     text_widgetbehavior.w_deletefn(z, glist);
