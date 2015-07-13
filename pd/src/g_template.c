@@ -4225,6 +4225,10 @@ void curve_smooth_to_q(int *pix, int n, int closed)
     int overlap = 0;
     int current = 0;
     // >>1 is used instead of /2 or *0.5, because of slight difference in rounding.
+
+    gui_s("d");
+    gui_start_array();
+
     if (closed)
     {
         int a=0, b=0;
@@ -4244,30 +4248,58 @@ void curve_smooth_to_q(int *pix, int n, int closed)
             a = (p[0].x+p[n-1].x)>>1;
             b = (p[0].y+p[n-1].y)>>1;
         }
-        sys_vgui("M %d %d \\\n", a, b);
+        //sys_vgui("M %d %d \\\n", a, b);
+        gui_s("M");
+        gui_i(a);
+        gui_i(b);
     }
     else // need to test non-closed smooth curves
-        sys_vgui("M %d %d \\\n", p[0].x, p[0].y);
+    {
+        //sys_vgui("M %d %d \\\n", p[0].x, p[0].y);
+        gui_s("M");
+        gui_i(p[0].x);
+        gui_i(p[0].y);
+    }
     intxy o = closed ? p[0+overlap] : p[1];
     int n2 = (closed?n:n-1); // need to test this for non-closed smooth curves
     for (i = (closed?(1+overlap):2); i < n2; i++)
     {
-        sys_vgui("Q %d %d %d %d \\\n",
-            o.x, o.y,
-            (o.x + p[i].x)>>1,
-            (o.y + p[i].y)>>1);
+        //sys_vgui("Q %d %d %d %d \\\n",
+        //    o.x, o.y,
+        //    (o.x + p[i].x)>>1,
+        //    (o.y + p[i].y)>>1);
+        gui_s("Q");
+        gui_i(o.x);
+        gui_i(o.y);
+        gui_i(((o.x + p[i].x)>>1));
+        gui_i(((o.y + p[i].y)>>1));
+
         o = p[i];
     }
     if (closed)
     {
         // here we repurpose overlap for an additional check
         overlap = (p[0].x == p[n-1].x && p[0].y == p[n-1].y && n-1 != 0);
-        sys_vgui("Q %d %d %d %d \\\n", p[n-1].x, p[n-1].y,
-            (p[n-1].x+p[0+overlap].x)>>1,
-            (p[n-1].y+p[0+overlap].y)>>1);
+        //sys_vgui("Q %d %d %d %d \\\n", p[n-1].x, p[n-1].y,
+        //    (p[n-1].x+p[0+overlap].x)>>1,
+        //    (p[n-1].y+p[0+overlap].y)>>1);
+        gui_s("Q");
+        gui_i(p[n-1].x);
+        gui_i(p[n-1].y);
+        gui_i((p[n-1].x+p[0+overlap].x)>>1);
+        gui_i((p[n-1].y+p[0+overlap].y)>>1);
     }
     else
-       sys_vgui("Q %d %d %d %d \\\n", p[n-2].x, p[n-2].y, p[n-1].x, p[n-1].y); // need ot test this for non-closed smooth curves
+    {
+        // need ot test this for non-closed smooth curves
+        //sys_vgui("Q %d %d %d %d \\\n", p[n-2].x, p[n-2].y, p[n-1].x, p[n-1].y);
+        gui_s("Q");
+        gui_i(p[n-2].x);
+        gui_i(p[n-2].y);
+        gui_i(p[n-1].x);
+        gui_i(p[n-1].y);
+    }
+    gui_end_array();
 }
 
 static void *curve_new(t_symbol *classsym, t_int argc, t_atom *argv)
@@ -4462,6 +4494,7 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             t_float width = fielddesc_getfloat(&x->x_width, template, data, 1);
             char outline[20], fill[20];
             int pix[200];
+            char type[9];
             if (n > 100)
                 n = 100;
                 /* calculate the pixel values before we start printing
@@ -4487,45 +4520,85 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                     fielddesc_getfloat(&x->x_fillcolor, template, data, 1),
                     fill);
                 if (flags & BEZ)
-                    sys_vgui(".x%lx.c create path {\\\n",
-                        glist_getcanvas(glist));
+                    sprintf(type, "path");
                 else
-                    sys_vgui(".x%lx.c create ppolygon \\\n",
-                        glist_getcanvas(glist));
+                    sprintf(type, "polygon");
             }
             else
             {
                 if(flags & BEZ)
-                    sys_vgui(".x%lx.c create path {\\\n",
-                        glist_getcanvas(glist));
+                    sprintf(type, "path");
                 else
-                    sys_vgui(".x%lx.c create polyline \\\n",
-                        glist_getcanvas(glist));
+                    sprintf(type, "polyline");
             }
+
+            gui_start_vmess("gui_draw_vis", "xs",
+                glist_getcanvas(glist), type);
+
+            // Attributes array
+            gui_start_array();
+
             if (flags & BEZ)
             {
                 curve_smooth_to_q(pix, n, (flags & CLOSED));
-                sys_gui("}\\\n");
             }
             else
             {
+                gui_s("points");
+                gui_start_array();
                 for (i = 0; i < n; i++)
                 {
-                    sys_vgui("%d %d \\\n",
-                        pix[2*i],
-                        pix[2*i+1]);
+                    //sys_vgui("%d %d \\\n",
+                    //    pix[2*i],
+                    //    pix[2*i+1]);
+                    gui_i(pix[2*i]);
+                    gui_i(pix[2*i+1]);
                 }
+                gui_end_array();
             }
-            sys_vgui("-strokewidth %f \\\n", width);
-            if (flags & CLOSED) sys_vgui("-fill %s -stroke %s \\\n",
-                fill, outline);
-            else sys_vgui("-stroke %s -fill \"\" \\\n", outline);
-            if (in_array)
-                sys_vgui("-parent .scelem%lx.%lx \\\n", parentglist, data);
+            //sys_vgui("-strokewidth %f \\\n", width);
+            gui_s("stroke-width");
+            gui_f(width);
+            if (flags & CLOSED)
+            {
+                //sys_vgui("-fill %s -stroke %s \\\n",
+                //    fill, outline);
+                gui_s("fill");
+                gui_s(fill);
+                gui_s("stroke");
+                gui_s(outline);
+            }
             else
-                sys_vgui("-parent .dgroup%lx.%lx \\\n", x->x_canvas, sc->sc_vec);
-            sys_vgui("-tags {.x%lx.x%lx.template%lx scalar%lx}\n",
-                glist_getcanvas(glist), glist, data, sc);
+            {
+                //sys_vgui("-stroke %s -fill \"\" \\\n", outline);
+                gui_s("stroke");
+                gui_s(outline);
+                gui_s("fill");
+                gui_s("none");
+            }
+            gui_end_array();
+
+            // Tags Array
+            gui_start_array();
+            char parent_tagbuf[MAXPDSTRING];
+            if (in_array)
+            {
+                //sys_vgui("-parent .scelem%lx.%lx \\\n", parentglist, data);
+                sprintf(parent_tagbuf, "scelem%lx.%lx", (long unsigned int)parentglist, (long unsigned int)data);
+                gui_s(parent_tagbuf);
+            }
+            else
+            {
+                //sys_vgui("-parent .dgroup%lx.%lx \\\n", x->x_canvas, sc->sc_vec);
+                sprintf(parent_tagbuf, "dgroup%lx.%lx", (long unsigned int)x->x_canvas, (long unsigned int)data);
+                gui_s(parent_tagbuf);
+            }
+            //sys_vgui("-tags {.x%lx.x%lx.template%lx scalar%lx}\n",
+            //    glist_getcanvas(glist), glist, data, sc);
+            char tagbuf[MAXPDSTRING];
+            sprintf(tagbuf, "curve%lx.%lx", (long unsigned int)x,
+                (long unsigned int)data);
+            gui_s(tagbuf);
             if (!glist_istoplevel(glist))
             {
                 t_canvas *gl = glist_getcanvas(glist);
@@ -4537,13 +4610,21 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 canvas_restore_original_position(gl, (t_gobj *)glist,
                     objtag, -1);
             }
+            gui_end_array(); /* end of tags array */
+            gui_end_vmess();
         }
         else post("warning: curves need at least two points to be graphed");
     }
     else
     {
-        if (n > 1) sys_vgui(".x%lx.c delete .x%lx.x%lx.template%lx\n",
-            glist_getcanvas(glist), glist_getcanvas(glist), glist, data);      
+        if (n > 1)
+        {
+            //sys_vgui(".x%lx.c delete .x%lx.x%lx.template%lx\n",
+            //    glist_getcanvas(glist), glist_getcanvas(glist), glist, data);
+            char itemtagbuf[MAXPDSTRING];
+            sprintf(itemtagbuf, "curve%lx.%lx", (long unsigned int)x,
+                (long unsigned int)data);
+        }
     }
 }
 
