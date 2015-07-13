@@ -21,18 +21,17 @@ Event settings for edit mode
 *need to be able to tell the difference between new obj and retexted
 obj
 
-Problems to put off until all (or most) sys_vgui calls are eliminated:
-1) gui-side parser inside -- pdgui.js.  Currently we're splitting on newlines so we can separate
-   gui_vmess from sys_vgui calls.  This makes it very difficult to handle multi-line msg and text
-   boxes.
-2) Semicolons -- currently the parser can't tell the difference between semicolons inside symbols
-   and semicolons that end statements.  Again, this will be easy to solve once we eliminate sys_gui.
-
 HTML5 which may not be standard yet:
 1) mouse.pageX/pageY -- exist in Chromium but maybe not in FF et al.
 2) svg 'overflow' attribute -- probably doesn't work in other browsers
 3) document.body.scrollTop (might be Chromium-specific, not sure)
-3) document.body.scrollLeft (might be Chromium-specific, not sure)
+4) document.body.scrollLeft (might be Chromium-specific, not sure)
+
+Problems to put off until all (or most) sys_vgui calls are eliminated:
+[x] gui-side parser inside -- pdgui.js
+[ ] Semicolons -- currently the parser can't tell the difference between
+    semicolons inside symbols and semicolons that end statements. Again,
+    this will be easy to solve once we eliminate sys_gui altogether
 
 Node-webkit stuff:
 1) popup API
@@ -44,10 +43,12 @@ Node-webkit stuff:
 Everything else: (A [x] means we've fixed it)
 [ ] packaging as app, setting correct appname, etc
 [ ] get -unique to work (relied on tcl [send] command)
-[ ] check if patch windows with screenposition (0,0) get stuck underneath Ubuntu/OSX menu.  If so,
+[ ] check if patch windows with screenposition (0,0) get stuck underneath
+    Ubuntu/OSX menu.
 [ ] Node-webkit has a "screen" interface to retrieve the "workable" area of the screen
-[x] choosing the same directory multiple times doesn't work (see dialog API page)
-[ ] "Save As" on an overwrite doesn't seem to clear the dirty flag
+[x] choosing the same directory multiple times doesn't work
+    (see dialog API page)
+[x] "Save As" on an overwrite doesn't seem to clear the dirty flag
 [ ] figure out why there is a "pd_opendir" global var
 [ ] pass k12 mode arg
 [ ] implement recent files (using Pd's prefs loading mechanism instead of reimplementing gui prefs)

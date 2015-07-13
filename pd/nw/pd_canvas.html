@@ -252,6 +252,8 @@ var canvas_events = (function() {
     document.querySelector("#saveDialog").addEventListener("change",
         function(evt) {
             pdgui.saveas_callback(name, this.value);
+            // reset value so that we can open the same file twice
+            this.value = null;
             console.log("tried to open something");
         }, false
     );
