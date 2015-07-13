@@ -959,12 +959,12 @@ void iemgui_tag_selected(t_iemgui *x) {
     if(x->x_selected)
     {
         //sys_vgui(".x%lx.c addtag selected withtag x%lx\n", canvas, x);
-        gui_vmess("gui_text_select", "xx", canvas, x);
+        gui_vmess("gui_gobj_select", "xx", canvas, x);
     }
     else
     {
         //sys_vgui(".x%lx.c dtag x%lx selected\n", canvas, x);
-        gui_vmess("gui_text_deselect", "xx", canvas, x);
+        gui_vmess("gui_gobj_deselect", "xx", canvas, x);
     }
 }
 

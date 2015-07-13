@@ -2171,7 +2171,7 @@ function gui_text_new(canvasname, myname, type, isselected, x, y, text, font) {
     }
 
     if (isselected) {
-        gui_text_select(canvasname, myname);
+        gui_gobj_select(canvasname, myname);
     }
 }
 
@@ -2214,7 +2214,7 @@ function gui_text_redraw_border(cid, tag, x1, y1, x2, y2) {
     }
 }
 
-function gui_text_select(cid, tag) {
+function gui_gobj_select(cid, tag) {
     var g = get_gobj(cid, tag);
 //    var b = get_item(cid, tag + 'border');
     if (g !== null) {
@@ -2228,7 +2228,7 @@ function gui_text_select(cid, tag) {
 //    }
 }
 
-function gui_text_deselect(cid, tag) {
+function gui_gobj_deselect(cid, tag) {
 //    gui_post("deselecting text with tag..." + tag);
     var gobj = get_gobj(cid, tag)
     if (gobj !== null) {

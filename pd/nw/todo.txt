@@ -51,16 +51,17 @@ Everything else: (A [x] means we've fixed it)
 [x] "Save As" on an overwrite doesn't seem to clear the dirty flag
 [ ] figure out why there is a "pd_opendir" global var
 [ ] pass k12 mode arg
-[ ] implement recent files (using Pd's prefs loading mechanism instead of reimplementing gui prefs)
+[ ] implement recent files (using Pd's prefs loading mechanism instead of
+    reimplementing gui prefs)
 [ ] implement verifyquit
 [ ] save and saveas dialogs aren't defaulting to the present working directory
-[ ] implement automatic scrollbars and svg canvas resizing
-[ ] add 'x' type to gui_vmess for saving canvas names, etc., as hex values
+[x] implement automatic scrollbars and svg canvas resizing
+[x] add 'x' type to gui_vmess for saving canvas names, etc., as hex values
 [x] destroy (or, more likely, hide) selection rectangle when not needed
 [ ] change gui_text_select to gui_gobj_select
-[ ] make it possible to have the inner cells of hradio change color with the selection,
-    as the border currently does.  Tk just uses the non-hierarchical tags and appends the word
-    "BASE".  (Maybe use an inner <g> to do this.)
+[ ] make it possible to have the inner cells of hradio change color with the
+    selection, as the border currently does.  Tk just uses the non-hierarchical
+    tags and appends the word "BASE".  (Maybe use an inner <g> to do this.)
 [x] make mycnv use its own selection logic
 [ ] abstract away appendChild
 [ ] font-size should be set as css property for a class of text, rather than per each gobj in svg

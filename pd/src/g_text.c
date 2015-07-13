@@ -1631,7 +1631,7 @@ static void text_select(t_gobj *z, t_glist *glist, int state)
                 }
                 //sys_vgui(".x%lx.c addtag selected withtag %sR \n",
                 //    glist_getcanvas(glist), rtext_gettag(y));
-                gui_vmess("gui_text_select", "xs",
+                gui_vmess("gui_gobj_select", "xs",
                     glist_getcanvas(glist), rtext_gettag(y));
 
                 if (pd_class(&x->te_pd) == text_class &&
@@ -1671,7 +1671,7 @@ static void text_select(t_gobj *z, t_glist *glist, int state)
                 }
                 //sys_vgui(".x%lx.c dtag %sR selected\n",
                 //    glist_getcanvas(glist), rtext_gettag(y));
-                gui_vmess("gui_text_deselect", "xs",
+                gui_vmess("gui_gobj_deselect", "xs",
                     glist_getcanvas(glist),
                     rtext_gettag(y));
 

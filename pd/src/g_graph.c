@@ -1505,10 +1505,10 @@ static void graph_select(t_gobj *z, t_glist *glist, int state)
             //     (state? "$pd_colors(selection)" : "$pd_colors(graph_border)"),
             //     (state? "$pd_colors(selection)" : "$pd_colors(graph_border)"));
             if (state)
-                gui_vmess("gui_text_select", "xs",
+                gui_vmess("gui_gobj_select", "xs",
                     canvas, rtext_gettag(y));
             else
-                gui_vmess("gui_text_deselect", "xs",
+                gui_vmess("gui_gobj_deselect", "xs",
                     canvas, rtext_gettag(y));
         }
 

@@ -1588,7 +1588,7 @@ static void garray_doredraw(t_gobj *client, t_glist *glist)
             t_scalar *sc = x->x_scalar;
             char tagbuf[MAXPDSTRING];
             sprintf(tagbuf, "scalar%lx", (long unsigned int)sc->sc_vec);
-            gui_vmess("gui_text_select", "xs",
+            gui_vmess("gui_gobj_select", "xs",
                 glist_getcanvas(glist), tagbuf);
         }
     }

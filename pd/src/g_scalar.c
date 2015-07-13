@@ -527,7 +527,7 @@ void scalar_select(t_gobj *z, t_glist *owner, int state)
         //    glist_getcanvas(owner), x);
         //sys_vgui(".x%lx.c addtag scalar_selected withtag {.scalar%lx}\n",
         //    glist_getcanvas(owner), x->sc_vec);
-        gui_vmess("gui_text_select", "xs",
+        gui_vmess("gui_gobj_select", "xs",
             glist_getcanvas(owner), tagbuf);
     }
     else
@@ -537,7 +537,7 @@ void scalar_select(t_gobj *z, t_glist *owner, int state)
         //    glist_getcanvas(owner), x);
         //sys_vgui(".x%lx.c dtag .scalar%lx scalar_selected\n",
         //    glist_getcanvas(owner), x->sc_vec);
-        gui_vmess("gui_text_deselect", "xs",
+        gui_vmess("gui_gobj_deselect", "xs",
             glist_getcanvas(owner), tagbuf);
     }
     //sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n",
