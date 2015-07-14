@@ -6122,30 +6122,54 @@ static void drawnumber_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             SETSYMBOL(&at, fielddesc_getsymbol(&x->x_value, template, data, 0));
         else SETFLOAT(&at, fielddesc_getfloat(&x->x_value, template, data, 0));
         drawnumber_sprintf(x, buf, &at);
-        /*sys_vgui(".x%lx.c create text %d %d -anchor nw -fill %s -text {%s}",
-                glist_getcanvas(glist), xloc, yloc, colorstring, buf);
-        sys_vgui(" -font {{%s} -%d %s}", sys_font,
-            sys_hostfontsize(fontsize), sys_fontweight);*/
-        sys_vgui(".x%lx.c create ptext %d "
-                 "[expr {[font metrics {{%s} %d} -ascent] + %d}] "
-                 "-textanchor start -fill %s -text {%s}\\\n",
-               glist_getcanvas(glist), xloc, sys_font,
-               sys_hostfontsize(fontsize), yloc, colorstring, buf);
+        //sys_vgui(".x%lx.c create ptext %d "
+        //         "[expr {[font metrics {{%s} %d} -ascent] + %d}] "
+        //         "-textanchor start -fill %s -text {%s}\\\n",
+        //       glist_getcanvas(glist), xloc, sys_font,
+        //       sys_hostfontsize(fontsize), yloc, colorstring, buf);
         /* have to remove fontweight for the time being... */
-        sys_vgui(" -fontfamily {%s} -fontsize %d", sys_font, fontsize);
-        sys_vgui(" -matrix { {%g 0} {0 %g} {0 0} }", xscale, yscale);
+        //sys_vgui(" -fontfamily {%s} -fontsize %d", sys_font, fontsize);
+        //sys_vgui(" -matrix { {%g 0} {0 %g} {0 0} }", xscale, yscale);
 
+
+        char parent_tagbuf[MAXPDSTRING];
         if (in_array)
-            sys_vgui(" -parent .scelem%lx.%lx \\\n", parentglist, data);
+        {
+            //sys_vgui(" -parent .scelem%lx.%lx \\\n", parentglist, data);
+            sprintf(parent_tagbuf,"scelem%lx.%lx", (long unsigned int)parentglist, (long unsigned int)data);
+        }
         else
-            sys_vgui(" -parent .dgroup%lx.%lx \\\n",
-                x->x_canvas, data);
+        {
+            //sys_vgui(" -parent .dgroup%lx.%lx \\\n",
+            //    x->x_canvas, data);
+            sprintf(parent_tagbuf, "dgroup%lx.%lx", (long unsigned int)x->x_canvas, (long unsigned int)data);
+        }
+        char tagbuf[MAXPDSTRING];
+        //sys_vgui(" -tags {.x%lx.x%lx.template%lx scalar%lx}\n", 
+        //    glist_getcanvas(glist), glist, data, sc);
+        sprintf(tagbuf, "drawnumber%lx.%lx", (long unsigned int)x, (long unsigned int)data);
 
-        sys_vgui(" -tags {.x%lx.x%lx.template%lx scalar%lx}\n", 
-            glist_getcanvas(glist), glist, data, sc);
+        gui_vmess("gui_drawnumber_vis", "xssiiffsis",
+            glist_getcanvas(glist),
+            parent_tagbuf,
+            tagbuf,
+            xloc,
+            yloc, // Wrong-- we need to take font height into account
+            xscale,
+            yscale,
+            sys_font,
+            fontsize,
+            buf);
     }
-    else sys_vgui(".x%lx.c delete .x%lx.x%lx.template%lx\n",
-        glist_getcanvas(glist), glist_getcanvas(glist), glist, data);
+    else
+    {
+        //sys_vgui(".x%lx.c delete .x%lx.x%lx.template%lx\n",
+        //    glist_getcanvas(glist), glist_getcanvas(glist), glist, data);
+        char tagbuf[MAXPDSTRING];
+        sprintf(tagbuf, "drawnumber%lx.%lx", (long unsigned int)x, (long unsigned int)data);
+        gui_vmess("gui_draw_erase_item", "xs", glist_getcanvas(glist),
+            tagbuf);
+    }
 }
 
 static t_float drawnumber_motion_ycumulative;

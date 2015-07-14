@@ -2167,7 +2167,7 @@ function gui_text_new(canvasname, myname, type, isselected, x, y, text, font) {
     if (g !== null) {
         g.appendChild(svg_text);
     } else {
-        gui_post("gui_text_new: can't find parent group");
+        gui_post("gui_text_new: can't find parent group " + myname);
     }
 
     if (isselected) {
@@ -3049,6 +3049,37 @@ function gui_plot_vis(cid, basex, basey, data_array, attr_array, tag_array) {
     configure_item(p, attr_array);
     if (g !== null) {
         g.appendChild(p);
+    }
+}
+
+function gui_drawnumber_vis(cid, parent_tag, tag, x, y, scale_x, scale_y,
+    font, fontsize, text) {
+    gui_post("font is " + font);
+    var lines, i, len, tspan;
+    var g = get_item(cid, parent_tag);
+    var svg_text = create_item(cid, 'text', {
+        // x and y are fudge factors. Text on the tk canvas used an anchor
+        // at the top-right corner of the text's bbox.  SVG uses the baseline.
+        // There's probably a programmatic way to do this, but for now-- fudge factors
+        // based on the DejaVu Sans Mono font. :)
+        transform: 'scale(' + scale_x + ',' + scale_y + ') ' +
+                   'translate(' + x + ')',
+        y: y,
+        // Turns out we can't do 'hanging' baseline
+        // because it's borked when scaled. Bummer...
+        // 'dominant-baseline': 'hanging',
+        'shape-rendering': 'optimizeSpeed',
+        'font-size': font + 'px',
+        id: tag
+    });
+
+    // fill svg_text with tspan content by splitting on '\n'
+    text_to_tspans(cid, svg_text, text);
+
+    if (g !== null) {
+        g.appendChild(svg_text);
+    } else {
+        gui_post("gui_drawnumber: can't find parent group" + parent_tag);
     }
 }
 
