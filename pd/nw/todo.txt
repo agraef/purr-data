@@ -207,6 +207,7 @@ Everything else: (A [x] means we've fixed it)
     trying to open it
 [ ] gui_canvas_getscroll isn't called upon patch load
 [ ] sprite-game character tears when moving around
+[ ] look into using requestAnimationFrame
 
 Crashers
 --------
