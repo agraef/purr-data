@@ -206,6 +206,7 @@ Everything else: (A [x] means we've fixed it)
 [ ] ds-demos unit-circle node throws an "unexpected string" error when
     trying to open it
 [ ] gui_canvas_getscroll isn't called upon patch load
+[ ] sprite-game character tears when moving around
 
 Crashers
 --------
