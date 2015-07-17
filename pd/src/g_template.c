@@ -1678,9 +1678,11 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
     }
     else if (s == gensym("index"))
     {
-        sys_vgui("pdtk_drawimage_index .x%lx.c .x%lx .draw%lx.%lx %d\n",
-            glist_getcanvas(c), parent, parent, data, drawimage_getindex(parent,
-                template, data)); 
+        //sys_vgui("pdtk_drawimage_index .x%lx.c .x%lx .draw%lx.%lx %d\n",
+        //    glist_getcanvas(c), parent, parent, data, drawimage_getindex(parent,
+        //        template, data)); 
+        gui_vmess("gui_drawimage_index", "xxi",
+            glist_getcanvas(c), parent, drawimage_getindex(parent, template, data));
     }
     else if (s == gensym("points"))
     {
@@ -6825,7 +6827,7 @@ static void *drawimage_new(t_symbol *classsym, int argc, t_atom *argv)
     x->x_deleteme = 0;
     char *classname = classsym->s_name;
     char buf[50];
-    sprintf(buf, ".x%lx", (t_int)x);
+    sprintf(buf, "x%lx", (t_int)x);
     pd_bind(&x->x_obj.ob_pd, gensym(buf));
     int flags = 0;
     
@@ -6848,8 +6850,13 @@ static void *drawimage_new(t_symbol *classsym, int argc, t_atom *argv)
        the source. ".x%lx" is the name for the parent tk image and
        ".x%lx.i" is the tag given to a scalar's canvas image item.
     */
-    sys_vgui("pdtk_drawimage_new .x%lx {%s} {%s} %d\n", (t_int)x,
-        x->x_img->s_name, dir->s_name, x->x_flags);
+    //sys_vgui("pdtk_drawimage_new .x%lx {%s} {%s} %d\n", (t_int)x,
+    //    x->x_img->s_name, dir->s_name, x->x_flags);
+    gui_vmess("gui_drawimage_new", "xssi",
+        x,
+        x->x_img->s_name,
+        dir->s_name,
+        x->x_flags);
     post("deleteme is %d", x->x_deleteme);
     return (x);
 }
@@ -6858,6 +6865,7 @@ void drawimage_size(t_drawimage *x, t_float w, t_float h)
 {
     x->x_w = w;
     x->x_h = h;
+post("w is %g and h is %g", w, h);
 }
 
 static int drawimage_getindex(void *z, t_template *template, t_word *data)
@@ -7068,17 +7076,31 @@ static void drawimage_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         sys_vgui("pdtk_drawimage_vis .x%lx.c %d %d .x%lx .x%lx.i %d ",*/
         int xloc = fielddesc_getcoord(&x->x_xloc, template, data, 0);
         int yloc = fielddesc_getcoord(&x->x_yloc, template, data, 0);
-        sys_vgui("pdtk_drawimage_vis .x%lx.c %d %d .x%lx .x%lx.i %d \\\n",
-            glist_getcanvas(glist), xloc, yloc, x, data,
-            (int)fielddesc_getfloat(&x->x_value, template, data, 0));
-        //sys_vgui(".x%lx.x%lx.template%lx scalar%lx\n", glist_getcanvas(glist),
-        //    glist, data, sc);
-        sys_vgui(".x%lx.x%lx.template%lx scalar%lx %s%lx.%lx "
-                 ".draw%lx.%lx\n", glist_getcanvas(glist),
-            glist, data, sc,
-            (in_array ? ".scelem" : ".dgroup"),
-            (in_array ? parentglist : parent), data,
-            x, data);
+
+        //sys_vgui("pdtk_drawimage_vis .x%lx.c %d %d .x%lx .x%lx.i %d \\\n",
+        //    glist_getcanvas(glist), xloc, yloc, x, data,
+        //    (int)fielddesc_getfloat(&x->x_value, template, data, 0));
+        //sys_vgui(".x%lx.x%lx.template%lx scalar%lx %s%lx.%lx "
+        //         ".draw%lx.%lx\n", glist_getcanvas(glist),
+        //    glist, data, sc,
+        //    (in_array ? ".scelem" : ".dgroup"),
+        //    (in_array ? parentglist : parent), data,
+        //    x, data);
+
+        char parent_tagbuf[MAXPDSTRING];
+        sprintf(parent_tagbuf,"%s%lx.%lx",
+            in_array ? "scelem" : "dgroup",
+            in_array ? (long unsigned int)parentglist : (long unsigned int)parent,
+            (long unsigned int)data);
+
+        gui_vmess("gui_drawimage_vis", "xiixis",
+            glist_getcanvas(glist),
+            xloc,
+            yloc,
+            x,
+            (int)fielddesc_getfloat(&x->x_value, template, data, 0),
+            parent_tagbuf);
+
         /* need to revisit all these tags, they are getting confusing... */
 //        sys_vgui(".x%lx.c itemconfigure .x%lx.x%lx.template%lx\\\n",
 //            glist_getcanvas(glist), glist_getcanvas(glist), glist, data);

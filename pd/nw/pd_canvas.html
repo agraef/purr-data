@@ -156,7 +156,7 @@ var canvas_events = (function() {
                     pdgui.gui_canvas_sendkey(name, 1, evt, hack);
                     pdgui.set_keymap(key_code, hack);
                 }
-                pdgui.gui_post("keydown time: keycode is " + evt.keyCode);
+//                pdgui.gui_post("keydown time: keycode is " + evt.keyCode);
                 last_keydown = evt.keyCode;
                 //evt.stopPropagation();
                 //evt.preventDefault();
@@ -176,7 +176,7 @@ var canvas_events = (function() {
 
                 pdgui.gui_canvas_sendkey(name, 1, evt, evt.charCode);
                 pdgui.set_keymap(last_keydown, evt.charCode);
-                pdgui.gui_post("keypress time: charcode is " + evt.charCode);
+//                pdgui.gui_post("keypress time: charcode is " + evt.charCode);
                 // Don't do things like scrolling on space, arrow keys, etc.
                 //evt.stopPropagation();
                 evt.preventDefault();
@@ -184,7 +184,7 @@ var canvas_events = (function() {
             keyup: function(evt) {
                 var my_char_code = pdgui.get_char_code(evt.keyCode);
                 pdgui.gui_canvas_sendkey(name, 0, evt, my_char_code);
-                pdgui.gui_post("keyup time: charcode is: " + my_char_code);
+//                pdgui.gui_post("keyup time: charcode is: " + my_char_code);
                 evt.stopPropagation();
                 evt.preventDefault();
             },

@@ -13,7 +13,7 @@ exports.get_pwd = function() {
 }
 
 var fs = require('fs');     // for fs.existsSync
-var path = require('path'); // for path.dirname path.extname
+var path = require('path'); // for path.dirname path.extname path.join
 
 // local strings
 var lang = require('./pdlang.js');
@@ -3081,6 +3081,124 @@ function gui_drawnumber_vis(cid, parent_tag, tag, x, y, scale_x, scale_y,
     } else {
         gui_post("gui_drawnumber: can't find parent group" + parent_tag);
     }
+}
+
+var drawimage_data = {}; // for storing base64 image data associated with
+                         // each [draw image] command
+exports.flub = drawimage_data;
+
+function gui_drawimage_new(obj_tag, file_path, canvasdir, flags) {
+    var drawsprite = 1,
+        image_seq,
+        i,
+        matchchar = '*',
+        files,
+        ext,
+        img; // dummy image to measure width and height
+    image_seq = flags & drawsprite;
+    if (!path.isAbsolute(file_path)) {
+        file_path = path.join(canvasdir, file_path);
+    }
+    file_path = path.normalize(file_path);
+    if (fs.existsSync(file_path) && fs.lstatSync(file_path).isDirectory()) {
+
+    }
+    files = fs.readdirSync(file_path)
+                .sort(); // Note that js's 'sort' method doesn't do the
+                         // "right thing" for numbers. For that we'd need
+                         // to provide our own sorting function
+    drawimage_data[obj_tag] = []; // create empty array for base64 image data
+    for (i = 0; i < files.length && i < 1000; i++) {
+        ext = path.extname(files[i]);
+
+// todo: tolower()
+
+        if (ext === '.gif' ||
+            ext === '.jpg' ||
+            ext === '.png' ||
+            ext === '.jpeg' ||
+            ext === '.svg') {
+
+            gui_post("we got an image at index " + i + ": " + files[i]);
+            // Now add an element to that array with the image data
+            drawimage_data[obj_tag].push({
+                type: ext === '.jpeg' ? 'jpg' : ext.slice(1),
+                data: fs.readFileSync(path.join(file_path, files[i]),'base64')
+            });
+        }
+    }
+    gui_post("no of files: " + i);
+    if (i > 0) {
+        img = new pd_window.Image(); // create an image in the pd_window context
+        img.onload = function() {
+            pdsend(obj_tag + ' size ' + this.width + ' ' + this.height);
+        };
+        img.src = 'data:image/' + drawimage_data[obj_tag][0].type +
+            ';base64,' + drawimage_data[obj_tag][0].data;
+    } else {
+        gui_post("drawimage: warning: no images loaded");
+    }
+}
+
+function gui_drawimage_vis(cid, x, y, obj_tag, seqno, parent_tag) {
+    var item,
+        g = get_item(cid, parent_tag), // main <g> within the scalar
+        len = drawimage_data[obj_tag].length,
+        i,
+        img,
+        image_container;
+    if (len < 1) {
+        return;
+    }
+    // Wrap around for out-of-bounds sequence numbers
+    if (seqno >= len || seqno < 0) {
+        seqno %= len;
+    }
+    image_container = create_item(cid, 'g', {
+        id: obj_tag + 'image_container'
+    });
+    for (i = 0; i < len; i++) {
+        item = create_item(cid, 'image', {
+            x: x,
+            y: y,
+            id: obj_tag + i,
+            visibility: seqno === i ? 'visible' : 'hidden',
+            preserveAspectRatio: "xMinYMin meet"
+        });
+        item.setAttributeNS('http://www.w3.org/1999/xlink', 'href', 
+            'data:image/' + drawimage_data[obj_tag][i].type + ';base64,' +
+             drawimage_data[obj_tag][i].data);
+        image_container.appendChild(item);
+    }
+    g.appendChild(image_container);
+
+    // Hack to set correct width and height
+    img = new pd_window.Image();
+    img.onload = function() {
+        var w = this.width,
+            h = this.height;
+        for (i = 0; i < len; i++) {
+            configure_item(get_item(cid, obj_tag + i), {
+                width: w,
+                height: h
+            });
+        }
+    };
+    img.src = 'data:image/' + drawimage_data[obj_tag][0].type +
+        ';base64,' + drawimage_data[obj_tag][0].data;
+}
+
+function gui_drawimage_index(cid, obj_tag, index) {
+    var i,
+        len = drawimage_data[obj_tag].length,
+        image_container = get_item(cid, obj_tag + 'image_container'),
+        last_image,
+        image = image_container.childNodes[index],
+        last_image = image_container.querySelectorAll('[visibility="visible"]');
+        for (i = 0; i < last_image.length; i++) {
+            configure_item(last_image[i], { visibility: 'hidden' });
+        }
+    configure_item(image, { visibility: 'visible' });
 }
 
 function add_popup(cid, popup) {
