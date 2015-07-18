@@ -3140,13 +3140,28 @@ function gui_drawimage_new(obj_tag, file_path, canvasdir, flags) {
     }
 }
 
-function gui_drawimage_vis(cid, x, y, obj_tag, seqno, parent_tag) {
+function img_size_setter(cid, obj, obj_tag, i) {
+    var img = new pd_window.window.Image();
+    img.onload = function() {
+        var w = this.width,
+            h = this.height;
+        configure_item(get_item(cid, obj_tag + i), {
+            width: w,
+            height: h
+        });
+    };
+    img.src = 'data:image/' + drawimage_data[obj][i].type +
+        ';base64,' + drawimage_data[obj][i].data;
+}
+
+function gui_drawimage_vis(cid, x, y, obj, data, seqno, parent_tag) {
     var item,
         g = get_item(cid, parent_tag), // main <g> within the scalar
-        len = drawimage_data[obj_tag].length,
+        len = drawimage_data[obj].length,
         i,
-        img,
-        image_container;
+        image_container,
+        obj_tag = 'draw' + obj.slice(1) + '.' + data.slice(1);
+console.log("obj_tag is " + obj_tag);
     if (len < 1) {
         return;
     }
@@ -3155,7 +3170,7 @@ function gui_drawimage_vis(cid, x, y, obj_tag, seqno, parent_tag) {
         seqno %= len;
     }
     image_container = create_item(cid, 'g', {
-        id: obj_tag + 'image_container'
+        id: obj_tag
     });
     for (i = 0; i < len; i++) {
         item = create_item(cid, 'image', {
@@ -3163,42 +3178,33 @@ function gui_drawimage_vis(cid, x, y, obj_tag, seqno, parent_tag) {
             y: y,
             id: obj_tag + i,
             visibility: seqno === i ? 'visible' : 'hidden',
-            preserveAspectRatio: "xMinYMin meet"
+//            preserveAspectRatio: "xMinYMin meet"
         });
         item.setAttributeNS('http://www.w3.org/1999/xlink', 'href', 
-            'data:image/' + drawimage_data[obj_tag][i].type + ';base64,' +
-             drawimage_data[obj_tag][i].data);
+            'data:image/' + drawimage_data[obj][i].type + ';base64,' +
+             drawimage_data[obj][i].data);
         image_container.appendChild(item);
     }
     g.appendChild(image_container);
 
     // Hack to set correct width and height
-    img = new pd_window.Image();
-    img.onload = function() {
-        var w = this.width,
-            h = this.height;
-        for (i = 0; i < len; i++) {
-            configure_item(get_item(cid, obj_tag + i), {
-                width: w,
-                height: h
-            });
-        }
-    };
-    img.src = 'data:image/' + drawimage_data[obj_tag][0].type +
-        ';base64,' + drawimage_data[obj_tag][0].data;
+    for (i = 0; i < len; i++) {
+        img_size_setter(cid, obj, obj_tag, i);
+    }
 }
 
-function gui_drawimage_index(cid, obj_tag, index) {
+function gui_drawimage_index(cid, obj, data, index) {
+    var obj_tag = 'draw' + obj.slice(1) + '.' + data.slice(1);
     var i,
-        len = drawimage_data[obj_tag].length,
-        image_container = get_item(cid, obj_tag + 'image_container'),
+        len = drawimage_data[obj].length,
+        image_container = get_item(cid, obj_tag),
         last_image,
         image = image_container.childNodes[index],
         last_image = image_container.querySelectorAll('[visibility="visible"]');
         for (i = 0; i < last_image.length; i++) {
             configure_item(last_image[i], { visibility: 'hidden' });
         }
-    configure_item(image, { visibility: 'visible' });
+        configure_item(image, { visibility: 'visible' });
 }
 
 function add_popup(cid, popup) {

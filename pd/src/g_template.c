@@ -1681,8 +1681,8 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
         //sys_vgui("pdtk_drawimage_index .x%lx.c .x%lx .draw%lx.%lx %d\n",
         //    glist_getcanvas(c), parent, parent, data, drawimage_getindex(parent,
         //        template, data)); 
-        gui_vmess("gui_drawimage_index", "xxi",
-            glist_getcanvas(c), parent, drawimage_getindex(parent, template, data));
+        gui_vmess("gui_drawimage_index", "xxxi",
+            glist_getcanvas(c), parent, data, drawimage_getindex(parent, template, data));
     }
     else if (s == gensym("points"))
     {
@@ -7093,11 +7093,12 @@ static void drawimage_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             in_array ? (long unsigned int)parentglist : (long unsigned int)parent,
             (long unsigned int)data);
 
-        gui_vmess("gui_drawimage_vis", "xiixis",
+        gui_vmess("gui_drawimage_vis", "xiixxis",
             glist_getcanvas(glist),
             xloc,
             yloc,
             x,
+            data,
             (int)fielddesc_getfloat(&x->x_value, template, data, 0),
             parent_tagbuf);
 
