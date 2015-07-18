@@ -377,7 +377,7 @@ void canvasinfo_name(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
     char buf[MAXPDSTRING];
-    snprintf(buf, MAXPDSTRING, ".x%lx", (long unsigned int)c);
+    snprintf(buf, MAXPDSTRING, "x%lx", (long unsigned int)c);
     t_atom at[1];
     SETSYMBOL(at, gensym(buf));
     info_out((t_text *)x, s, 1, at);
