@@ -208,6 +208,12 @@ Everything else: (A [x] means we've fixed it)
 [ ] gui_canvas_getscroll isn't called upon patch load
 [ ] sprite-game character tears when moving around
 [ ] look into using requestAnimationFrame
+[ ] when mapping inside a new nw window, sometimes it stops rendering
+    the svg, or the svg becomes corrupted.
+    * when you drag the nw window, it will update the svg contents
+    * sometimes parts of the window aren't rendered
+    * sometimes the rendering is buggy (part of a gobj rect
+      appears/disappears mysteriously)
 
 Crashers
 --------
