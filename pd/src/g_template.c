@@ -1079,7 +1079,7 @@ typedef struct _svg_event
 typedef struct _svg
 {
     t_pd x_pd;
-    void *x_parent; /* parent object-- currently either [group] or [draw] */
+    void *x_parent; /* parent object-- [group], [draw] or [draw image] */
     int x_flags;
     t_symbol *x_type;
     t_fielddesc x_fill[3];
@@ -7130,6 +7130,7 @@ static int drawimage_motion_firstkey;
 static void drawimage_motion(void *z, t_floatarg dx, t_floatarg dy)
 {
     t_drawimage *x = (t_drawimage *)z;
+    t_svg *sa = (t_svg *)x->x_attr;
     t_fielddesc *f = &x->x_value;
     t_atom at;
     if (!gpointer_check(&drawimage_motion_gpointer, 0))
@@ -7154,7 +7155,10 @@ static void drawimage_motion(void *z, t_floatarg dx, t_floatarg dy)
                 gensym("change"), 1, &at);
 
     if (drawimage_motion_scalar)
-        scalar_redraw(drawimage_motion_scalar, drawimage_motion_glist);
+    {
+        //scalar_configure(drawimage_motion_scalar, drawimage_motion_glist);
+        svg_update(sa, gensym("index"));
+    }
     if (drawimage_motion_array)
         array_redraw(drawimage_motion_array, drawimage_motion_glist);
 }
