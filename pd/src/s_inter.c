@@ -1280,7 +1280,7 @@ int sys_startgui(const char *guidir)
 
 /* SUPERHACK - let's just load node-webkit and see what happens */
             sprintf(cmdbuf,
-                  "/home/user/Downloads/nwjs-v0.12.1-linux-ia32/nw "
+                  "/home/user/Downloads/nwjs-v0.12.2-linux-ia32/nw "
 //                  "/home/nu/Downloads/nwjs-v0.12.0-alpha2-linux-ia32/nw "
                 "/home/user/pd-nw/pd/nw/ %d localhost %s\n",
                 portno,
