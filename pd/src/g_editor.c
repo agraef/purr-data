@@ -7646,10 +7646,27 @@ static void canvas_tip(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     }
 }
 
-static void canvas_stringforobj(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
+static void canvas_stringforobj(t_rtext *rtext, int argc, t_atom *argv)
 {
     int length;
     char *buf;
+    t_binbuf *b = binbuf_new();
+    binbuf_restore(b, argc, argv);
+    binbuf_gettext(b, &buf, &length);
+    /* We hand off "buf" to rtext as
+       its x_buf member, and "length"
+       as x_bufsize. Pd will handle
+       deallocation of those members
+       automatically, so we don't need
+       to free the "buf" here. */
+    rtext_settext(rtext, buf, length);
+    binbuf_free(b);
+}
+
+static void canvas_createobj(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
+{
+//    int length;
+//    char *buf;
     t_gobj *y;
     t_rtext *rtext;
     if (!x->gl_editor) return;
@@ -7657,14 +7674,16 @@ static void canvas_stringforobj(t_canvas *x, t_symbol *s, int argc, t_atom *argv
     {
         if (glist_isselected(x, y) && (rtext = glist_findrtext(x, (t_text *)y)))
         {
-            t_binbuf *b = binbuf_new();
-            binbuf_restore(b, argc, argv);
-            binbuf_gettext(b, &buf, &length);
-            rtext_settext(rtext, buf, length);
-            binbuf_free(b);
+            canvas_stringforobj(rtext, argc, argv);
+//            t_binbuf *b = binbuf_new();
+//            binbuf_restore(b, argc, argv);
+//            binbuf_gettext(b, &buf, &length);
+//            rtext_settext(rtext, buf, length);
+//            binbuf_free(b);
             // Set the dirty flag since we've changed the rtext content...
             x->gl_editor->e_textdirty = 1;
-            glist_deselect(x, y);
+            if (s == gensym("createobj"))
+                glist_deselect(x, y); // instantiate
             break;
         }
     }
@@ -7691,8 +7710,10 @@ void g_editor_setup(void)
     A_GIMME, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_tip, gensym("echo"),
         A_GIMME, A_NULL);
-    class_addmethod(canvas_class, (t_method)canvas_stringforobj,
-        gensym("stringforobj"), A_GIMME, A_NULL);
+    class_addmethod(canvas_class, (t_method)canvas_createobj,
+        gensym("setobj"), A_GIMME, A_NULL);
+    class_addmethod(canvas_class, (t_method)canvas_createobj,
+        gensym("createobj"), A_GIMME, A_NULL);
 /* ------------------------ menu actions ---------------------------- */
     class_addmethod(canvas_class, (t_method)canvas_menuclose,
         gensym("menuclose"), A_DEFFLOAT, 0);

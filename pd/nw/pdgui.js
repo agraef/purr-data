@@ -3178,7 +3178,7 @@ console.log("obj_tag is " + obj_tag);
             y: y,
             id: obj_tag + i,
             visibility: seqno === i ? 'visible' : 'hidden',
-//            preserveAspectRatio: "xMinYMin meet"
+            preserveAspectRatio: "xMinYMin meet"
         });
         item.setAttributeNS('http://www.w3.org/1999/xlink', 'href', 
             'data:image/' + drawimage_data[obj][i].type + ';base64,' +
@@ -3201,10 +3201,11 @@ function gui_drawimage_index(cid, obj, data, index) {
         last_image,
         image = image_container.childNodes[index],
         last_image = image_container.querySelectorAll('[visibility="visible"]');
-        for (i = 0; i < last_image.length; i++) {
-            configure_item(last_image[i], { visibility: 'hidden' });
-        }
-        configure_item(image, { visibility: 'visible' });
+
+    for (i = 0; i < last_image.length; i++) {
+        configure_item(last_image[i], { visibility: 'hidden' });
+    }
+    configure_item(image, { visibility: 'visible' });
 }
 
 function add_popup(cid, popup) {

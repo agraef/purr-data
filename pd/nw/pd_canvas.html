@@ -199,9 +199,10 @@ var canvas_events = (function() {
                     // here.  I want those newlines: although that isn't
                     // standard in Pd-Vanilla, Pd-l2ork uses and preserves
                     // them inside comments
-                    var fudi_msg = text_to_fudi(textbox().innerText);
-                    pdgui.pdsend(name + " stringforobj " + fudi_msg);
-                    pdgui.gui_post("formatted content is " + fudi_msg);
+                    utils.create_obj();
+//                    var fudi_msg = text_to_fudi(textbox().innerText);
+//                    pdgui.pdsend(name + " createobj " + fudi_msg);
+//                    pdgui.gui_post("formatted content is " + fudi_msg);
                     events.mousedown(evt);
                     canvas_events.normal();
                 }
@@ -244,6 +245,18 @@ var canvas_events = (function() {
                 //evt.stopPropagation();
                 //evt.preventDefault();
                 //return false;
+            }
+        },
+        utils = {
+            create_obj: function() {
+                var fudi_msg = text_to_fudi(textbox().innerText);
+                pdgui.pdsend(name + " createobj " + fudi_msg);
+                pdgui.gui_post("formatted content is " + fudi_msg);
+            },
+            set_obj: function() {
+                var fudi_msg = text_to_fudi(textbox().innerText);
+                pdgui.pdsend(name + " setobj " + fudi_msg);
+                pdgui.gui_post("formatted content is " + fudi_msg);
             }
         }
     ;
@@ -346,6 +359,9 @@ var canvas_events = (function() {
         },
         get_state: function() {
             return state;
+        },
+        set_obj: function() {
+            utils.set_obj();
         }
     }
 }());
@@ -775,8 +791,12 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.object'),
         click: function() {
-                   pdgui.pdsend(name + " dirty 1");
-                   pdgui.pdsend(name + " obj 0");
+            var state = canvas_events.get_state();
+            if (state === 'text' || state === 'floating_text') {
+                canvas_events.set_obj();
+            }
+            pdgui.pdsend(name + " dirty 1");
+            pdgui.pdsend(name + " obj 0");
         },
         key: '1',
         modifiers: "ctrl",
