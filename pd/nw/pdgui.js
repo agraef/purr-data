@@ -3733,6 +3733,11 @@ function gui_undo_menu(cid, undo_text, redo_text) {
 
 function do_getscroll(cid) {
     var svg = get_item(cid, 'patchsvg');
+    // Not sure why I need to check for null here... I'm waiting for the
+    // nw window to load before mapping the Pd canvas, so the patchsvg
+    // should always exist.  Perhaps I also need to set an event for
+    // document.onload as well...
+    if (svg === null) { return; }
     var bbox = svg.getBBox();
     var width = bbox.x > 0 ? bbox.x + bbox.width : bbox.width,
         height = bbox.y > 0 ? bbox.y + bbox.height : bbox.height;
