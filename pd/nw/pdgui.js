@@ -3671,7 +3671,7 @@ function select_text(cid, elem) {
         }
 }
 
-function gui_textarea(cid, tag, x, y, max_char_width, text, font_size, state) {
+function gui_textarea(cid, tag, type, x, y, max_char_width, text, font_size, state) {
     //gui_post("x/y is " + x + '/' + y);
     //gui_post("state? " + state);
     gui_post("tag is " + tag);
@@ -3695,6 +3695,7 @@ function gui_textarea(cid, tag, x, y, max_char_width, text, font_size, state) {
         });
         svg_view = patchwin[cid].window.document.getElementById('patchsvg')
             .viewBox.baseVal;
+        p.classList.add(type);
         p.contentEditable = 'true';
         p.style.setProperty('left', (x - svg_view.x) + 'px');
         p.style.setProperty('top', (y - svg_view.y) + 'px');

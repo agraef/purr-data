@@ -608,9 +608,10 @@ void rtext_activate(t_rtext *x, int state)
     /* we need to get scroll to make sure we've got the
        correct bbox for the svg */
     canvas_getscroll(glist_getcanvas(canvas));
-    gui_vmess("gui_textarea", "xsiiisii",
+    gui_vmess("gui_textarea", "xssiiisii",
         canvas,
         x->x_tag,
+        (pd_class((t_pd *)x->x_text) == message_class ? "msg" : "obj"),
         x->x_text->te_xpix,
         x->x_text->te_ypix,
         widthspec,
