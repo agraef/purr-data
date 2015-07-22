@@ -3438,8 +3438,8 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                         //    "$pd_colors(signal_cord_width)" :
                         //    "$pd_colors(control_cord_width)"),
                         //(issignal ? "signal" : "control"));
-                        gui_vmess("gui_canvas_line", "xsiiiiiiiiii",
-                            x, "newcord",
+                        gui_vmess("gui_canvas_line", "xssiiiiiiiiii",
+                            x, "newcord", (issignal ? "signal" : "control"),
                             xpos, ypos, xpos, ypos, xpos, ypos, xpos, ypos, xpos, ypos);
                     }   
                     else
@@ -3892,8 +3892,8 @@ void canvas_drawconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2,
     //        "$pd_colors(control_cord_width)"), 
     //    tag, (issignal ? "signal" : "control"));
     sprintf(tagbuf, "l%lx", (long unsigned int)tag);
-    gui_vmess("gui_canvas_line", "xsiiiiiiiiii",
-        x, tagbuf, lx1, ly1, lx1, ly1 + yoff,
+    gui_vmess("gui_canvas_line", "xssiiiiiiiiii",
+        x, tagbuf, (issignal ? "signal" : "control"), lx1, ly1, lx1, ly1 + yoff,
         lx1 + halfx, ly1 + halfy, lx2, ly2 - yoff, lx2, ly2);
 }
 

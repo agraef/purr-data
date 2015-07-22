@@ -214,6 +214,8 @@ Everything else: (A [x] means we've fixed it)
     * sometimes parts of the window aren't rendered
     * sometimes the rendering is buggy (part of a gobj rect
       appears/disappears mysteriously)
+[ ] sometimes straight control cords are pixel-aligned, sometimes they aren't. (If pixel-aligned, try nudging
+    one pixel to the right and they become non-aligned.)
 
 Crashers
 --------

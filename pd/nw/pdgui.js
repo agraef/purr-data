@@ -2069,7 +2069,7 @@ function gui_atom_drawborder(cid,tag,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12) {
 }
 
 // draw a patch cord
-function gui_canvas_line(cid,tag,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10) {
+function gui_canvas_line(cid,tag,type,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10) {
     var d_array = ['M', p1 + 0.5, p2 + 0.5,
                    'Q', p3 + 0.5, p4 + 0.5, p5 + 0.5, p6 + 0.5,
                    'Q', p7 + 0.5, p8 + 0.5 ,p9 + 0.5, p10 + 0.5];
@@ -2078,10 +2078,10 @@ function gui_canvas_line(cid,tag,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10) {
         d: d_array.join(" "),
         fill: 'none',
         stroke: 'gray',
-        'stroke-width': 1,
+//        'stroke-width': 1,
         'shape-rendering': 'optimizeSpeed',
         id: tag,
-        'class': 'cord'
+        'class': 'cord ' + type
     });
     svg.appendChild(path);
 }
@@ -2089,7 +2089,7 @@ function gui_canvas_line(cid,tag,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10) {
 function gui_canvas_select_line(cid, tag) {
     var line = get_item(cid, tag);
     if (line !== null) {
-        configure_item(line, { class: 'selected_line' });
+        line.classList.add('selected_line');
     } else {
         gui_post("gui_canvas_select_line: can't find line");
     }
@@ -2098,7 +2098,7 @@ function gui_canvas_select_line(cid, tag) {
 function gui_canvas_deselect_line(cid, tag) {
     var line = get_item(cid, tag);
     if (line !== null) {
-        configure_item(line, { class: '' });
+        line.classList.remove('selected_line');
     } else {
         gui_post("gui_canvas_select_line: can't find line");
     }
