@@ -58,20 +58,13 @@
 }
 
 #new_object_textentry {
-/*    left: 65px; */
-/*    top: 4px;   */
-/*    max-width: 10ch; */
+    /* max-width: 10ch; */
     min-width: 3ch;
     position: absolute;
     display: table-cell;
     padding: 3px 2px 3px 2px;
-/*    outline: 0px solid transparent; */
-/*    border: 1px solid red; */
-/*    box-shadow: inset 1px 0px 0px 1px #000; */
+    /* box-shadow: inset 1px 0px 0px 1px #000; */
     background-color: white;
-/*    opacity: 0.5; */
-/*    font-family: Verdana; */
-/*    font-size: 20px; */
     white-space: normal;
     word-wrap: break-word;
     -webkit-margin-before: 0px;
@@ -83,7 +76,6 @@
 
 #new_object_textentry.msg {
     outline: 0px solid transparent;
-/*    box-shadow: inset 1px 0px 0px 1px #000; */
     background-image: url(../msg-box.svg);
 }
 
@@ -110,7 +102,7 @@ text {
     stroke-width: 1;
 }
 
-/* a message when it flashes on a mouse-click */
+/* state of msg box when clicking it */
 .msg.flashed .border {
     stroke-width: 4;
 }
