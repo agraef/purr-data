@@ -3578,13 +3578,13 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
     if (x->x_rx.a_flag)
     {
         gui_s("rx");
-        gui_i((int)fielddesc_getfloat(&x->x_rx.a_attr,
+        gui_f(fielddesc_getfloat(&x->x_rx.a_attr,
             template, data, 1));
     }
     if (x->x_ry.a_flag)
     {
         gui_s("ry");
-        gui_f((int)fielddesc_getfloat(&x->x_ry.a_attr,
+        gui_f(fielddesc_getfloat(&x->x_ry.a_attr,
             template, data, 1));
     }
     // Not sure why display attr is here...
