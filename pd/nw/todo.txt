@@ -216,6 +216,8 @@ Everything else: (A [x] means we've fixed it)
       appears/disappears mysteriously)
 [ ] sometimes straight control cords are pixel-aligned, sometimes they aren't. (If pixel-aligned, try nudging
     one pixel to the right and they become non-aligned.)
+[ ] autopatch creates a new box, but if you try to instantiate the empty box
+    you have to click twice to get it to leave text entry mode
 
 Crashers
 --------
