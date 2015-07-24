@@ -219,6 +219,8 @@ Everything else: (A [x] means we've fixed it)
 [ ] autopatch creates a new box, but if you try to instantiate the empty box
     you have to click twice to get it to leave text entry mode
 [ ] look into pasting only text inside text entry
+[ ] canvas_check_geometry doesn't seem to do the right thing for canvases that are far to the right
+    of the screen. Can't think of anything except maybe a bug in nw.js Window.x?
 
 Crashers
 --------
