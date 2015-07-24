@@ -31,7 +31,7 @@ Problems to put off until all (or most) sys_vgui calls are eliminated:
 [x] gui-side parser inside -- pdgui.js
 [ ] Semicolons -- currently the parser can't tell the difference between
     semicolons inside symbols and semicolons that end statements. Again,
-    this will be easy to solve once we eliminate sys_gui altogether
+    this will be easy to solve once we eliminate naked sys_gui altogether
 
 Node-webkit stuff:
 1) popup API
@@ -44,21 +44,22 @@ Everything else: (A [x] means we've fixed it)
 [ ] packaging as app, setting correct appname, etc
 [ ] get -unique to work (relied on tcl [send] command)
 [ ] check if patch windows with screenposition (0,0) get stuck underneath
-    Ubuntu/OSX menu.
-[ ] Node-webkit has a "screen" interface to retrieve the "workable" area of the screen
+    OSX menu.
+[x] check if patch windows with screenposition (0,0) get stuck underneath
+    Ubuntu menu.
 [x] choosing the same directory multiple times doesn't work
     (see dialog API page)
 [x] "Save As" on an overwrite doesn't seem to clear the dirty flag
-[ ] figure out why there is a "pd_opendir" global var
+[x] figure out why there is a "pd_opendir" global var
 [ ] pass k12 mode arg
 [ ] implement recent files (using Pd's prefs loading mechanism instead of
     reimplementing gui prefs)
-[ ] implement verifyquit
+[x] implement verifyquit
 [ ] save and saveas dialogs aren't defaulting to the present working directory
 [x] implement automatic scrollbars and svg canvas resizing
 [x] add 'x' type to gui_vmess for saving canvas names, etc., as hex values
 [x] destroy (or, more likely, hide) selection rectangle when not needed
-[ ] change gui_text_select to gui_gobj_select
+[x] change gui_text_select to gui_gobj_select
 [ ] make it possible to have the inner cells of hradio change color with the
     selection, as the border currently does.  Tk just uses the non-hierarchical
     tags and appends the word "BASE".  (Maybe use an inner <g> to do this.)
@@ -80,8 +81,8 @@ Everything else: (A [x] means we've fixed it)
 [x] should stroke-dasharray values be floats? (Yes.)
 [ ] once garrays are drawn inside a <g> we won't have to individually erase
     each child of a scalar
-[ ] clean up svg_sendupdate -- put a single gui_vmess at the end
-[ ] svg_sendupdate -- make sure there aren't arbitrary %d's that should actually be %g's
+[x] clean up svg_sendupdate -- put a single gui_vmess at the end (not necessary for now)
+[x] svg_sendupdate -- make sure there aren't arbitrary %d's that should actually be %g's
 [x] svg_sendupdate -- need a gui interface for stuff like stroke-dasharray
     (and garrays)
 [x] ibid., for path data, points
@@ -97,8 +98,8 @@ Everything else: (A [x] means we've fixed it)
 [ ] figure out why -nrt flag causes Pd to bail on the GUI (it wasn't doing this
     on the amd_64 virtual Jessie machine, nor on my 32-bit machine).
 [ ] make dialogs with [yes/no] instead of [cancel/ok]
-[ ] make a gui_mess interface for the edge cases that don't require args
-    (similar to sys_gui)
+[x] make a gui_mess interface for the edge cases that don't require args
+    (similar to sys_gui) (not necessary)
 [ ] make sure we're breaking down the socket properly from the GUI side on quit
 [ ] looks like nwworkingdir isn't working for open/save dialogs atm
 [ ] nwworkingdir only works on the second file open
@@ -115,8 +116,9 @@ Everything else: (A [x] means we've fixed it)
     (Probably want to either make a permanent item in the pd_canvas.html for it,
     or hard-code a separate div.)
 [x] for data structure demos, change "" to 'none'
-[ ] fix "Reselect" <ctrl-Enter> Keybinding.  It doesn't work atm because nw.js
+[x] fix "Reselect" <ctrl-Enter> Keybinding.  It doesn't work atm because nw.js
     cannot bind to Enter. But canvas_events should make this pretty easy.
+[ ] fix bug where Reselecting a floating text doesn't stop it from floating
 [ ] keyup doesn't register autokeypresses, but keyname and key do
 [ ] text_set doesn't work when a numbox is first created (but works otherwise)
 [ ] clean up nw_create_window (doesn't need so many parameters)
@@ -127,7 +129,7 @@ Everything else: (A [x] means we've fixed it)
 [ ] revisit the x_thick logic in g_slider.c.  It thickens the indicator when
     it's in the middle of the slider, but it's pretty obscure in the current
     implementation.
-[ ] for as many items as possible, hide them instead of removing from DOM
+[x] for as many items as possible, hide them instead of removing from DOM
 [ ] fix iemgui_font so it doesn't use tcl list syntax
 [ ] change all the gui color char[MAXPDSTRING] junk to simple int, and do the
     conversion to hex html string in the gui.
@@ -176,15 +178,15 @@ Everything else: (A [x] means we've fixed it)
     specified in s_inter and in editor_new, so it should be easy to amend
     if need be.
 [ ] make "rtext" textarea <div> static, and turn display on/off
-[ ] what to do about character sets other than utf-8 that come from Pd
+[x] what to do about character sets other than utf-8 that come from Pd
     side? Example: ISO-8859 from the string posted by hexloader.c
 [ ] for the clipboard shortcut keys inside pd_canvas.html keydown, not sure
     what code should be sent to Pd on keyup...
-[ ] revis message box after updating the text in the editor. We didn't have
+[x] revis message box after updating the text in the editor. We didn't have
     to do this with the old API because it updated the box on every keystroke.
     But we're doing an end-run around that entire edifice so we need to
     force it, probably inside text_setto
-[ ] abstract out multi-line text loop, use for text_new and text_set
+[x] abstract out multi-line text loop, use for text_new and text_set
 [ ] think about translating the undo/redo actions as they appear in the menu.
     (Might be tricky to do)
 [ ] set svg viewBox/width/height to the window size when window gets created
@@ -205,7 +207,7 @@ Everything else: (A [x] means we've fixed it)
     reflow when the window gets resized
 [ ] ds-demos unit-circle node throws an "unexpected string" error when
     trying to open it
-[ ] gui_canvas_getscroll isn't called upon patch load
+[x] gui_canvas_getscroll isn't called upon patch load
 [ ] sprite-game character tears when moving around
 [ ] look into using requestAnimationFrame
 [ ] when mapping inside a new nw window, sometimes it stops rendering
@@ -214,7 +216,7 @@ Everything else: (A [x] means we've fixed it)
     * sometimes parts of the window aren't rendered
     * sometimes the rendering is buggy (part of a gobj rect
       appears/disappears mysteriously)
-[ ] sometimes straight control cords are pixel-aligned, sometimes they aren't. (If pixel-aligned, try nudging
+[ ] sometimes straight control cords are pixel-aligned, sometimes they aren't. (If not pixel-aligned, try nudging
     one pixel to the right and they become non-aligned.)
 [ ] autopatch creates a new box, but if you try to instantiate the empty box
     you have to click twice to get it to leave text entry mode
@@ -222,6 +224,7 @@ Everything else: (A [x] means we've fixed it)
 [ ] canvas_check_geometry doesn't seem to do the right thing for canvases that are far to the right
     of the screen. Can't think of anything except maybe a bug in nw.js Window.x?
 [ ] work on resizing dialog windows to the document content (currently some do, some don't)
+[ ] add Mac support by changing evt.ctrlKey to evt.ctrlKey||evt.metaKey
 
 Crashers
 --------
