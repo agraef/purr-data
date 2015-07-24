@@ -83,14 +83,15 @@
 
 #new_object_textentry.msg {
     outline: 0px solid transparent;
-    box-shadow: inset 1px 0px 0px 1px #000;
+/*    box-shadow: inset 1px 0px 0px 1px #000; */
+    background-image: url(../msg-box.svg);
 }
 
 p.msg::after {
     content: "";
     height: 100%;
     width: 5px;
-    background-image: url(../msg-box.svg);
+    background-image: url(../msg-box-flag.svg);
     position: absolute;
     top: 0%;
     left: 100%;
