@@ -18,16 +18,15 @@ by Bleed;
 #X obj 38 558 draw polyline 100 42 200 32 200 52 100 42;
 #X obj 61 427 r \$0-direction;
 #X obj 39 245 loadbang;
-#X obj 39 325 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj 39 305 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X obj 50 292 r \$0-flashlight;
-#X msg 39 361 vis \$1;
-#X msg 259 432 vis \$1;
+#X msg 39 391 vis \$1;
+#X msg 259 434 vis \$1;
 #X obj 259 460 draw path M 60 -5 l 0 0 5 0 0 -5 -5 0 z M 60 -15 l 0
 0 5 0 0 -25 -5 0 z;
-#X obj 259 410 &&;
-#X obj 273 353 t b a;
-#X obj 259 380 f;
+#X obj 259 393 &&;
+#X obj 273 343 t b a;
+#X obj 259 368 f;
 #X obj 438 126 loadbang;
 #X msg 438 159 vis 0;
 #X obj 219 5 r the_answer;
@@ -369,60 +368,65 @@ z m -10.2 6.76 c -16.409 -1.07188 2.85868 -24.3778 6.81644 -7.79128
 #X obj 367 401 loadbang;
 #X obj 411 224 loadbang;
 #X obj 606 168 loadbang;
-#X obj 259 324 r \$0-hit-object;
+#X obj 259 314 r \$0-hit-object;
 #X msg 367 422 fill yellow \, transform translate 27 -7 scale 0.57
 \, stroke black;
 #X msg 411 245 fill black \, transform translate -130 100 scale 0.75
 \, fill-opacity 0.6 \, stroke-opacity 0.6 \, stroke black;
-#X connect 5 0 22 0;
-#X connect 8 0 23 0;
-#X connect 9 0 27 0;
-#X connect 10 0 12 0;
-#X connect 10 0 16 0;
-#X connect 11 0 10 0;
-#X connect 12 0 7 0;
-#X connect 13 0 14 0;
-#X connect 15 0 13 0;
-#X connect 16 0 17 0;
-#X connect 16 1 15 1;
-#X connect 17 0 15 0;
-#X connect 18 0 19 0;
-#X connect 19 0 25 0;
-#X connect 19 0 26 0;
-#X connect 20 0 31 0;
-#X connect 20 0 37 0;
-#X connect 21 0 25 0;
-#X connect 22 0 6 0;
-#X connect 23 0 7 0;
-#X connect 24 0 46 0;
-#X connect 27 0 10 0;
-#X connect 28 0 26 1;
-#X connect 29 0 30 0;
-#X connect 31 0 32 0;
-#X connect 32 0 21 0;
-#X connect 32 0 29 0;
-#X connect 32 0 45 0;
-#X connect 34 0 25 0;
-#X connect 35 0 41 0;
-#X connect 36 0 26 0;
-#X connect 37 0 41 0;
-#X connect 40 0 26 0;
-#X connect 41 0 36 0;
+#X obj 125 259 r \$0-flashlight;
+#X obj 39 358 change -1;
+#X obj 259 414 change -1;
+#X connect 5 0 21 0;
+#X connect 8 0 22 0;
+#X connect 9 0 26 0;
+#X connect 10 0 15 0;
+#X connect 10 0 53 0;
+#X connect 11 0 7 0;
+#X connect 12 0 13 0;
+#X connect 14 0 54 0;
+#X connect 15 0 16 0;
+#X connect 15 1 14 1;
+#X connect 16 0 14 0;
+#X connect 17 0 18 0;
+#X connect 18 0 24 0;
+#X connect 18 0 25 0;
+#X connect 19 0 30 0;
+#X connect 19 0 36 0;
+#X connect 20 0 24 0;
+#X connect 21 0 6 0;
+#X connect 22 0 7 0;
+#X connect 23 0 45 0;
+#X connect 26 0 10 0;
+#X connect 27 0 25 1;
+#X connect 28 0 29 0;
+#X connect 30 0 31 0;
+#X connect 31 0 20 0;
+#X connect 31 0 28 0;
+#X connect 31 0 44 0;
+#X connect 33 0 24 0;
+#X connect 34 0 40 0;
+#X connect 35 0 25 0;
+#X connect 36 0 40 0;
+#X connect 39 0 25 0;
+#X connect 40 0 35 0;
+#X connect 40 0 41 0;
+#X connect 40 0 43 0;
 #X connect 41 0 42 0;
-#X connect 41 0 44 0;
-#X connect 42 0 43 0;
-#X connect 44 0 38 0;
-#X connect 44 0 39 0;
-#X connect 44 0 40 0;
-#X connect 45 0 33 0;
-#X connect 45 0 34 0;
-#X connect 46 0 7 0;
+#X connect 43 0 37 0;
+#X connect 43 0 38 0;
+#X connect 43 0 39 0;
+#X connect 44 0 32 0;
+#X connect 44 0 33 0;
+#X connect 45 0 7 0;
+#X connect 46 0 50 0;
 #X connect 47 0 51 0;
-#X connect 48 0 52 0;
-#X connect 49 0 28 0;
-#X connect 50 0 17 0;
-#X connect 51 0 14 0;
-#X connect 52 0 25 1;
+#X connect 48 0 27 0;
+#X connect 49 0 16 0;
+#X connect 50 0 13 0;
+#X connect 51 0 24 1;
+#X connect 52 0 10 0;
+#X connect 53 0 11 0;
+#X connect 54 0 12 0;
 #X restore 734 138 group;
 #N canvas 333 68 1002 543 guts 0;
 #X obj 155 292 * 6;
@@ -2005,7 +2009,7 @@ shooting the final [s the_answer] object;
 #N canvas 244 22 703 657 pluck1 0;
 #X msg 77 402 \$1 0 \$2 \$1 0 \$2 \$1 0 \$2 \$1 0 \$2 \$1 0 \$1 \$1
 ;
-#X msg 77 463 \$2;
+#X msg 77 463 \$3;
 #X msg 359 402 set \, adddollar \$1;
 #X obj 77 514 mtof;
 #X obj 158 92 mod 64;
@@ -2170,7 +2174,7 @@ shooting the final [s the_answer] object;
 #X obj 142 123 + 1;
 #X msg 53 333 \$1 0 \$2 \$1 0 \$2 \$1 0 \$2 \$1 0 \$2 \$1 0 \$1 \$1
 ;
-#X msg 53 384 \$2;
+#X msg 53 384 \$3;
 #X obj 53 426 mtof;
 #X obj 54 256 route 0 1 2 3;
 #X obj 53 405 + 24;
@@ -2360,7 +2364,7 @@ shooting the final [s the_answer] object;
 #X restore 541 170 pd simple-snare;
 #N canvas 115 68 1190 634 baseline 0;
 #X obj 326 343 phasor~;
-#X msg 326 186 \$3;
+#X msg 326 186 \$14;
 #X obj 326 227 mtof;
 #X obj 326 279 line~;
 #X obj 1065 87 + 1;
@@ -2428,8 +2432,8 @@ shooting the final [s the_answer] object;
 #X obj 78 -5 mod 7;
 #X obj 546 118 t a;
 #X obj 325 -146 trigger anything anything;
-#X msg 326 150 \$1 0 0 \$1 0 0 0 \$2 \$2 \$2 \$2 \$2 \$2 \$2 \$2 0
-;
+#X msg 326 150 \$1 0 0 \$1 0 0 \$2 \$2 \$2 \$2 \$2 \$2 \$2 \$2 \$2
+\$2;
 #X msg 545 3 adddollar 1 \, add2 0 0 \, adddollar 1 \, add2 0 0 0 \,
 adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, add2 0;
@@ -2533,7 +2537,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X connect 72 0 11 0;
 #X restore 543 401 pd baseline;
 #N canvas 1 37 682 683 siren 0;
-#X msg 269 204 \$1;
+#X msg 269 204 \$4;
 #X obj 269 235 mtof;
 #X obj 269 287 line~;
 #X obj 479 152 + 1;
@@ -2551,7 +2555,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X obj 350 -2 f;
 #X msg 269 173 \$1 \$2 \$2 \$2;
 #X obj 269 -87 trigger anything anything;
-#X msg 789 274 \$1;
+#X msg 789 274 \$4;
 #X obj 789 298 mtof;
 #X obj 789 346 line~;
 #X obj 969 182 + 1;
@@ -2704,7 +2708,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X restore 599 314 pd siren;
 #N canvas 19 60 947 608 simple-bass 0;
 #X obj 195 273 phasor~;
-#X msg 195 166 \$3;
+#X msg 195 166 \$14;
 #X obj 195 197 mtof;
 #X obj 195 249 line~;
 #X msg 195 74 40 52;
@@ -2742,7 +2746,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X obj 60 279 change;
 #X msg 130 203 set -1;
 #X msg 66 257 set -1;
-#X msg 196 135 \$1 0 0 \$1 0 0 0 0 0 0 0 0 0 0 0 0;
+#X msg 196 135 \$1 0 0 \$1 0 0 \$1 0 0 0 0 0 0 0 0 0;
 #X obj 536 -54 sel 0 1;
 #X obj 472 -82 t a b;
 #X msg 499 -55 set;
@@ -2816,7 +2820,7 @@ adddollar 1 \, add2 0 0 0 0 0 0 0 0 0;
 #X restore 459 542 pd simple-bass;
 #N canvas 0 19 1366 684 stepwise-bass 0;
 #X obj 215 303 phasor~;
-#X msg 215 146 \$3;
+#X msg 215 146 \$14;
 #X obj 215 177 mtof;
 #X obj 215 229 line~;
 #X obj 565 13 + 1;
@@ -2878,8 +2882,8 @@ adddollar 1 \, add2 0 0 0 0 0 0 0 0 0;
 #X obj 392 318 osc~ 8;
 #X obj 378 218 * 32;
 #X obj 342 353 *~ 30;
-#X msg 216 115 \$1 0 0 \$1 0 0 0 \$2 \$2 \$2 \$2 \$2 \$2 \$2 \$2 0
-;
+#X msg 216 115 \$1 0 0 \$1 0 0 \$2 \$2 \$2 \$2 \$2 \$2 \$3 \$3 \$3
+\$3;
 #X msg 710 -43 adddollar 1 \, add2 0 0 \, adddollar 1 \, add2 0 0 0
 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, add2 0;
@@ -3043,7 +3047,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X restore 501 473 pd stepwise-bass;
 #N canvas 288 49 565 650 siren-to-bass 0;
 #X obj 200 380 phasor~;
-#X msg 75 179 \$1;
+#X msg 75 179 \$4;
 #X obj 200 264 mtof;
 #X obj 200 311 line~;
 #X msg 75 55 40 52;
@@ -3150,7 +3154,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X restore 529 422 pd siren-to-bass;
 #N canvas 440 34 584 635 siren-fade 0;
 #X obj 192 372 phasor~;
-#X msg 95 246 \$1;
+#X msg 95 246 \$4;
 #X obj 192 300 mtof;
 #X obj 192 348 line~;
 #X msg 95 109 40 52;
@@ -3270,7 +3274,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X restore 585 335 pd siren-fade;
 #N canvas 440 34 584 670 siren-fade-long 0;
 #X obj 192 372 phasor~;
-#X msg 95 246 \$1;
+#X msg 95 246 \$4;
 #X obj 192 300 mtof;
 #X obj 192 348 line~;
 #X msg 95 109 40 52;
@@ -3390,7 +3394,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X restore 571 356 pd siren-fade-long;
 #N canvas 440 34 584 670 siren-fade-single 0;
 #X obj 192 372 phasor~;
-#X msg 95 246 \$1;
+#X msg 95 246 \$4;
 #X obj 192 300 mtof;
 #X obj 192 348 line~;
 #X msg 95 109 40 52;
@@ -3537,7 +3541,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #N canvas 434 41 703 657 pluck-fade 0;
 #X msg 77 422 \$1 0 \$2 \$1 0 \$2 \$1 0 \$2 \$1 0 \$2 \$1 0 \$1 \$1
 ;
-#X msg 77 453 \$2;
+#X msg 77 453 \$3;
 #X msg 359 422 set \, adddollar \$1;
 #X obj 77 504 mtof;
 #X obj 158 112 mod 64;
@@ -3697,7 +3701,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X restore 493 233 pd pluck-fade;
 #N canvas 0 19 797 634 level8-bass 0;
 #X obj 326 343 phasor~;
-#X msg 326 186 \$3;
+#X msg 326 186 \$14;
 #X obj 326 227 mtof;
 #X obj 326 279 line~;
 #X obj 645 127 + 1;
@@ -3822,7 +3826,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X obj 96 419 *~ 0.5;
 #X obj 303 419 *~ 0.5;
 #N canvas 76 51 1221 608 stepwise-osc 0;
-#X msg 215 146 \$3;
+#X msg 215 146 \$14;
 #X obj 215 177 mtof;
 #X obj 215 229 line~;
 #X obj 565 13 + 1;
@@ -3883,8 +3887,8 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X obj 392 318 osc~ 8;
 #X obj 378 218 * 32;
 #X obj 342 353 *~ 30;
-#X msg 216 115 \$1 0 0 \$1 0 0 0 \$2 \$2 \$2 \$2 \$2 \$2 \$2 \$2 0
-;
+#X msg 216 115 \$1 0 0 \$1 0 0 \$2 \$2 \$2 \$2 \$2 \$2 \$3 \$3 \$3
+\$3;
 #X msg 710 -43 adddollar 1 \, add2 0 0 \, adddollar 1 \, add2 0 0 0
 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, add2 0;
@@ -4109,7 +4113,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X connect 16 0 7 0;
 #X restore 674 191 pd shuffle;
 #N canvas 76 51 1221 608 stepwise-fm 0;
-#X msg 215 146 \$3;
+#X msg 215 146 \$14;
 #X obj 215 177 mtof;
 #X obj 215 229 line~;
 #X obj 565 13 + 1;
@@ -4170,8 +4174,8 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X obj 392 318 osc~ 8;
 #X obj 378 218 * 32;
 #X obj 342 353 *~ 30;
-#X msg 216 115 \$1 0 0 \$1 0 0 0 \$2 \$2 \$2 \$2 \$2 \$2 \$2 \$2 0
-;
+#X msg 216 115 \$1 0 0 \$1 0 0 \$2 \$2 \$2 \$2 \$2 \$2 \$3 \$3 \$3
+\$3;
 #X msg 710 -43 adddollar 1 \, add2 0 0 \, adddollar 1 \, add2 0 0 0
 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, add2 0;
@@ -4382,7 +4386,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #N canvas 434 41 755 657 pluck-fade-long 0;
 #X msg 77 422 \$1 0 \$2 \$1 0 \$2 \$1 0 \$2 \$1 0 \$2 \$1 0 \$1 \$1
 ;
-#X msg 77 453 \$2;
+#X msg 77 453 \$3;
 #X msg 359 422 set \, adddollar \$1;
 #X obj 77 504 mtof;
 #X obj 158 112 mod 64;
@@ -4725,56 +4729,18 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X coords 0 -1 1 1 115 61 1 262 284;
 #X restore 734 61 pd guts;
 #X obj 734 15 struct foo;
-#X obj 448 249 line;
-#X msg 448 144 0;
-#X obj 490 376 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+#X obj 450 200 bng 61 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;
-#X obj 403 431 spigot 0;
-#X msg 490 396 0;
-#X obj 448 354 moses 1;
-#X obj 153 118 bng 37 250 50 0 empty empty empty 17 7 0 10 -262144
--1 -1;
-#X obj 448 84 bng 42 250 50 0 empty empty empty 17 7 0 10 -262144 -1
--1;
-#X obj 448 291 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 0 1;
-#X msg 448 198 1 4242;
-#X msg 153 160 0;
-#X msg 153 202 1 2121;
-#X obj 153 243 line;
-#X obj 153 338 * 42;
-#X obj 153 264 vsl 15 64 0 1 0 0 empty empty empty 0 -9 0 10 -262144
--1 -1 0 1;
-#X obj 153 359 select 42;
-#X obj 403 452 send the_answer;
-#X obj 448 171 trigger bang float;
-#X obj 153 181 trigger bang float;
-#X obj 153 390 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
--1 -1;
-#X text 200 20 Level 13: Line Dancing;
-#X text 200 20 ______________________;
+#X obj 450 370 float 42;
+#X obj 450 390 send the_answer;
+#X text 200 50 Use the arrow keys to move;
+#X text 200 80 Click 'f' to turn on the flashlight. When you hit an
+object that you can shoot you'll see an exclamation mark.;
+#X text 200 120 Click 'b' to shoot!;
+#X text 200 20 Level 1: Send the Answer;
+#X text 200 20 ________________________;
 #X scalar foo \;;
 #X connect 2 0 1 0;
 #X connect 2 1 1 1;
-#X connect 4 0 12 0;
-#X connect 5 0 21 0;
-#X connect 6 0 8 0;
-#X connect 7 0 20 0;
-#X connect 8 0 7 1;
-#X connect 9 0 7 1;
-#X connect 9 1 6 0;
-#X connect 10 0 14 0;
-#X connect 11 0 5 0;
-#X connect 12 0 9 0;
-#X connect 13 0 4 0;
-#X connect 14 0 22 0;
-#X connect 15 0 16 0;
-#X connect 16 0 18 0;
-#X connect 17 0 19 0;
-#X connect 18 0 17 0;
-#X connect 19 0 7 0;
-#X connect 19 0 23 0;
-#X connect 21 0 13 0;
-#X connect 21 1 4 0;
-#X connect 22 0 15 0;
-#X connect 22 1 16 0;
+#X connect 4 0 5 0;
+#X connect 5 0 6 0;
