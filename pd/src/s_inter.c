@@ -784,7 +784,6 @@ void gui_do_vmess(const char *sel, char *fmt, int end, va_list ap)
     //va_list ap;
     int nargs = 0;
     char *fp = fmt;
-
     //va_start(ap, end);
     sys_vgui("\a%s ", sel); /* use a bell to signal the beginning of msg
                                (this can be replaced with any other obscure
