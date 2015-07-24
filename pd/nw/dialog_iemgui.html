@@ -310,7 +310,6 @@ console.log("my working dire is " + pdgui.get_pwd());
 // gui preset
 pdgui.skin.apply(this);
 
-
 var pd_object_callback;
 
 function ok() {
@@ -573,6 +572,13 @@ function add_events(name) {
         pdgui.remove_dialogwin(pd_object_callback);
         this.close(true);
     });
+    document.onkeydown = function(evt) {
+        if (evt.keyCode === 13) { // enter
+            ok();
+        } else if (evt.keyCode === 27) { // escape
+            cancel();
+        }
+    };
 }
 
   </script>
