@@ -221,6 +221,7 @@ Everything else: (A [x] means we've fixed it)
 [ ] look into pasting only text inside text entry
 [ ] canvas_check_geometry doesn't seem to do the right thing for canvases that are far to the right
     of the screen. Can't think of anything except maybe a bug in nw.js Window.x?
+[ ] work on resizing dialog windows to the document content (currently some do, some don't)
 
 Crashers
 --------
