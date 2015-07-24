@@ -237,6 +237,39 @@ function gui_post_error(objectid, loglevel, errormsg) {
     */
 }
 
+// convert canvas dimensions to old tcl/tk geometry
+// string format. Unfortunately this is exposed (and
+// documented) to the user with the "relocate" message
+// in both Pd-Extended and Pd-Vanilla.  So we have to
+// keep it here for backwards compatibility.
+function pd_geo_string(w, h, x, y) {
+    return  [w,'x',h,'+',x,'+',y].join("");
+}
+
+// In tcl/tk, this function had some checks to apparently
+// keep from sending a "relocate" message to Pd, but I'm
+// not exactly clear on how it works. If this ends up being
+// a cpu hog, check out pdtk_canvas_checkgeometry in the old
+// pd.tk
+function canvas_check_geometry(cid) {
+    var win_w = patchwin[cid].width,
+        win_h = patchwin[cid].height,
+        win_x = patchwin[cid].x,
+        win_y = patchwin[cid].y,
+        cnv_width = patchwin[cid].window.innerWidth,
+        cnv_height = patchwin[cid].window.innerHeight;
+gui_post("win_x " + win_x + " win_y " + win_y);
+    pdsend([cid, "relocate",
+            pd_geo_string(win_w, win_h, win_x, win_y),
+            // We're reusing win_x and win_y here, as it
+            // shouldn't make a difference to the bounds
+            // algorithm in Pd
+            pd_geo_string(cnv_width, cnv_height, win_x, win_y),
+           ].join(" "));
+}
+
+exports.canvas_check_geometry = canvas_check_geometry;
+
 function menu_save(name) {
 //    gui_post(name + " menusave");
     pdsend(name + " menusave");
@@ -1810,7 +1843,7 @@ exports.init_socket_events = init_socket_events;
 function pdsend(string) {
     client.write(string + ';');
     // for now, let's reprint the outgoing string to the pdwindow
-    // gui_post(string + ';', 'red');
+    //gui_post(string + ';', 'red');
 }
 
 exports.pdsend = pdsend;
