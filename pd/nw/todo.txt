@@ -218,6 +218,7 @@ Everything else: (A [x] means we've fixed it)
     one pixel to the right and they become non-aligned.)
 [ ] autopatch creates a new box, but if you try to instantiate the empty box
     you have to click twice to get it to leave text entry mode
+[ ] look into pasting only text inside text entry
 
 Crashers
 --------
