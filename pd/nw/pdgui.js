@@ -3894,3 +3894,15 @@ function gui_find_lowest_and_arrange(cid, reference_element_tag, objtag) {
         }
     }
 }
+
+// Bindings for dialog menu of iemgui, canvas, etc.
+exports.dialog_bindings = function(did) {
+    var dwin = dialogwin[did].window;
+    dwin.document.onkeydown = function(evt) {
+        if (evt.keyCode === 13) { // enter
+            dwin.ok();
+        } else if (evt.keyCode === 27) { // escape
+            dwin.cancel();
+        }
+    };
+}

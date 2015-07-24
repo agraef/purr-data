@@ -572,13 +572,7 @@ function add_events(name) {
         pdgui.remove_dialogwin(pd_object_callback);
         this.close(true);
     });
-    document.onkeydown = function(evt) {
-        if (evt.keyCode === 13) { // enter
-            ok();
-        } else if (evt.keyCode === 27) { // escape
-            cancel();
-        }
-    };
+    pdgui.dialog_bindings(name);
 }
 
   </script>
