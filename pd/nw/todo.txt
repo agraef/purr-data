@@ -112,7 +112,7 @@ Everything else: (A [x] means we've fixed it)
 [ ] in function gui_cord_inspector_update, use parameter "moved" to flash text
 [ ] cord_inspector_flash doesn't seem to be deterministic-- if you move among
     several cords very fast it will try to flash a non-existent svg item.
-    (Probably want to either make a permanent item in the pdcanvas.html for it,
+    (Probably want to either make a permanent item in the pd_canvas.html for it,
     or hard-code a separate div.)
 [x] for data structure demos, change "" to 'none'
 [ ] fix "Reselect" <ctrl-Enter> Keybinding.  It doesn't work atm because nw.js
