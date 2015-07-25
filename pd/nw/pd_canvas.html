@@ -814,8 +814,12 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.msgbox'),
         click: function() {
-                   pdgui.pdsend(name + " dirty 1");
-                   pdgui.pdsend(name + " msg 0");
+            var state = canvas_events.get_state();
+            if (state === 'text' || state === 'float_text') {
+                canvas_events.set_obj();
+            }
+            pdgui.pdsend(name + " dirty 1");
+            pdgui.pdsend(name + " msg 0");
         },
         key: '2',
         modifiers: "ctrl",
