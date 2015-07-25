@@ -134,15 +134,15 @@ text {
 
 /* control inlet */
 .xlet_control {
-    stroke: red;
-    fill: gray;
+    stroke: black;
+    fill: white;
 //    stroke-width: 1;
 }
 
 /* signal inlet */
 .xlet_signal {
-    stroke: green;
-    fill: green;
+    stroke: black;
+    fill: #808095;
     stroke-width: 1;
 }
 
