@@ -3514,10 +3514,13 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
     {
         int i, n = x->x_nargs;
         gui_s("points");
-        gui_start_array();
-        for (i = 0; i < x->x_nargs; i++)
-            gui_f(fielddesc_getcoord(&x->x_vec[i], template, data, 1));
-        gui_end_array();
+        if (x->x_nargs)
+        {
+            gui_start_array();
+            for (i = 0; i < x->x_nargs; i++)
+                gui_f(fielddesc_getcoord(&x->x_vec[i], template, data, 1));
+            gui_end_array();
+        }
     }
     if (x->x_strokeopacity.a_flag)
     {
