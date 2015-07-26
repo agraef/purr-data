@@ -73,6 +73,7 @@ void magicGlass_updateText(t_magicGlass *x, int moved)
             else
             {
                 color = "$pd_colors(magic_glass_flash)";
+                gui_vmess("gui_cord_inspector_flash", "xi", x->x_c, 1);
                 clock_delay(x->x_flashClock, MG_CLOCK_FLASH_DELAY);
             }
             sys_vgui(".x%x.c itemconfigure magicGlassText -text {%s} "
@@ -162,14 +163,17 @@ void magicGlass_undraw(t_magicGlass *x)
         x->x_c);
 }
 
+/* Note: this is a misnomer. This actually changes
+   the text back to the original color _after_ the
+   flash happened. (Unflash?) */
 void magicGlass_flashText(t_magicGlass *x)
 {
     //fprintf(stderr,"magicglass_flashText\n");
     //sys_vgui(".x%x.c itemconfigure magicGlassText "
     //         "-fill $pd_colors(magic_glass_text)\n",
     //     x->x_c);
-    gui_vmess("gui_cord_inspector_flash", "x",
-        x->x_c);
+    gui_vmess("gui_cord_inspector_flash", "xi",
+        x->x_c, 0);
 }
 
 void magicGlass_clearText(t_magicGlass *x)

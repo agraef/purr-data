@@ -2348,7 +2348,7 @@ function gui_create_selection_rectangle(cid, x1, y1, x2, y2) {
     var rect = create_item(cid, 'polygon', {
         points: points_array.join(" "),
         fill: 'none',
-        stroke: 'black',
+//        stroke: 'black', // set in css now
         'shape-rendering': 'optimizeSpeed',
         'stroke-width': 1,
         id: 'selection_rectangle',
@@ -3450,6 +3450,7 @@ function gui_cord_inspector_update(cid, text, basex, basey, bg_size, y1, y2, mov
     gobj.setAttributeNS(null, 'transform',
             'translate(' + (basex + 10.5) + ',' + (basey + 0.5) + ')');
     gobj.setAttributeNS(null, 'pointer-events', 'none');
+    gobj.classList.remove('flash');
     var rect = get_item(cid, 'cord_inspector_rect');
     var poly = get_item(cid, 'cord_inspector_polygon');
     var svg_text = get_item(cid, 'cord_inspector_text');
@@ -3458,9 +3459,9 @@ function gui_cord_inspector_update(cid, text, basex, basey, bg_size, y1, y2, mov
         x: 13,
         y: y1 - basey,
         width: bg_size - basex,
-        height: y2 - basey + 10,
-        fill: 'none',
-        stroke: 'black'
+        height: y2 - basey + 10
+//        fill: 'none', // set in css now
+//        stroke: 'black' // set in css now
     });
     var polypoints_array = [8,0,13,5,13,-5];
      configure_item(poly, {
@@ -3469,7 +3470,7 @@ function gui_cord_inspector_update(cid, text, basex, basey, bg_size, y1, y2, mov
     configure_item(svg_text, {
         x: 20,
         y: 5,
-        fill: 'black'
+//        fill: 'black' // set in css now
     });
     // set the text
     svg_text.textContent = text;
@@ -3484,10 +3485,15 @@ function gui_erase_cord_inspector(cid) {
     }
 }
 
-function gui_cord_inspector_flash(cid) {
+function gui_cord_inspector_flash(cid, state) {
     var ct = get_item(cid, 'cord_inspector_text');
     if (ct !== null) {
-        configure_item(ct, { fill: 'red' });
+        if (state === 1) {
+            ct.classList.add('flash');
+        } else {
+            ct.classList.remove('flash');
+        }
+//        configure_item(ct, { fill: 'red' });
     } else {
         gui_post("gui_cord_inspector_flash: trying to flash a non-existent cord inspector!");
     }
