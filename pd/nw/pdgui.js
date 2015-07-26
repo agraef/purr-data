@@ -1932,15 +1932,9 @@ function gui_text_create_gobj(cid, tag, type, xpos, ypos, is_toplevel) {
             'shape-rendering': 'crispEdges'
     });
     add_gobj_to_svg(svg, g);
-//    var bluh = svg.getBBox();
-//    var bbox_rect = svg.getElementById('bbox_rect');
-//    bbox_rect.setAttributeNS(null, 'width', bluh.width);
-//    bbox_rect.setAttributeNS(null, 'height', bluh.height);
-//    bbox_rect.setAttributeNS(null, 'fill', 'none');
-//    bbox_rect.setAttributeNS(null, 'stroke', 'black');
     
-// hm... why returning g and not the return value of appendChild?
-//    console.log("create gobj tag is " + tag + " and ret is " + g);
+    // hm... why returning g and not the return value of appendChild?
+    //    console.log("create gobj tag is " + tag + " and ret is " + g);
     return g;
 }
 
@@ -1952,8 +1946,6 @@ function gui_text_drawborder(cid, tag, bgcolor, isbroken, x1, y1, x2, y2) {
     var rect = create_item(cid, 'rect', {
         width: x2 - x1,
         height: y2 - y1,
-        //stroke: 'black', // done in css now
-        //fill: 'none', // done in css now
         'shape-rendering': 'crispEdges',
         class: 'border'
     });
@@ -2056,10 +2048,8 @@ function gui_message_drawborder(cid,tag,width,height) {
         points: p_array.join(),
         fill: 'none',
         stroke: 'black',
-//        'shape-rendering': 'crispEdges',
-//        'stroke-width': 1,
         class: 'border'
-//        id: tag + 'border'
+        //id: tag + 'border'
     });
     g.appendChild(polygon);
 }
@@ -2096,7 +2086,7 @@ function gui_atom_drawborder(cid,tag,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12) {
         stroke: 'gray',
         'stroke-width': 1,
         class: 'border'
-//        id: tag + 'border'
+        //id: tag + 'border'
     });
     g.appendChild(polygon);
 }
@@ -2110,8 +2100,6 @@ function gui_canvas_line(cid,tag,type,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10) {
     var path = create_item(cid, 'path', {
         d: d_array.join(" "),
         fill: 'none',
-//        stroke: 'gray', // done in css now
-//        'stroke-width': 1,
         'shape-rendering': 'optimizeSpeed',
         id: tag,
         'class': 'cord ' + type
@@ -2148,13 +2136,11 @@ function gui_canvas_delete_line(cid, tag) {
 }
 
 function gui_canvas_updateline(cid,tag,x1,y1,x2,y2,yoff) {
-//    console.log("cord tag in gui_canvas_updateline is " + tag);
     var halfx = parseInt((x2 - x1)/2);
     var halfy = parseInt((y2 - y1)/2);
     var d_array = ['M',x1,y1,
                   'Q',x1,y1+yoff,x1+halfx,y1+halfy,
                   'Q',x2,y2-yoff,x2,y2];
-//    gui_post(d_array.toString());
     var cord = get_item(cid, tag);
     configure_item(cord, { d: d_array.join(" ") });
 }
@@ -2249,20 +2235,14 @@ function gui_text_redraw_border(cid, tag, x1, y1, x2, y2) {
 
 function gui_gobj_select(cid, tag) {
     var g = get_gobj(cid, tag);
-//    var b = get_item(cid, tag + 'border');
     if (g !== null) {
         g.classList.add('selected');
-//        configure_item(g, { class: 'selected' });
     } else {
         console.log("text_select: something wrong with group tag: " + tag);
     }
-//    if (b !== null) {
-//        configure_item(b, { class: 'selected_border' });
-//    }
 }
 
 function gui_gobj_deselect(cid, tag) {
-//    gui_post("deselecting text with tag..." + tag);
     var gobj = get_gobj(cid, tag)
     if (gobj !== null) {
         gobj.classList.remove('selected');
@@ -2298,7 +2278,7 @@ function elem_displace(elem, dx, dy) {
         t.matrix.f += dy; 
 }
 
-    // used for tidy up 
+// used for tidy up 
 function gui_text_displace(name, tag, dx, dy) {
     elem_displace(get_gobj(name, tag), dx, dy);
 }
@@ -2310,7 +2290,6 @@ function textentry_displace(t, dx, dy) {
         .split(',');      // split into x and y
     var x = +transform[0].trim().replace('px', ''),
         y = +transform[1].trim().replace('px', '');
-gui_post("x is " + x + " and y is " + y);
     t.style.setProperty('transform',
         'translate(' +
         (x + dx) + 'px, ' +
@@ -2322,20 +2301,19 @@ function gui_canvas_displace_withtag(name, dx, dy) {
     var ol = pwin.window.document.getElementsByClassName('selected');
     for (i = 0; i < ol.length; i++) {
         elem_displace(ol[i], dx, dy);
-//        var elem = ol[i].transform.baseVal.getItem(0);
-//        var new_tx = dx + elem.matrix.e; 
-//        var new_ty = dy + elem.matrix.f; 
-//        elem.matrix.e = new_tx;
-//        elem.matrix.f = new_ty;
+        //var elem = ol[i].transform.baseVal.getItem(0);
+        //var new_tx = dx + elem.matrix.e; 
+        //var new_ty = dy + elem.matrix.f; 
+        //elem.matrix.e = new_tx;
+        //elem.matrix.f = new_ty;
     }
     textentry = patchwin[name].window.document.getElementById('new_object_textentry');
     if (textentry !== null) {
         textentry_displace(textentry, dx, dy); 
     }
-
-//        elem.setAttributeNS(null, 'transform',
-//            'translate(' + new_tx + ',' + new_ty + ')');
-//    }
+    //elem.setAttributeNS(null, 'transform',
+    //'translate(' + new_tx + ',' + new_ty + ')');
+    //}
 }
 
 function gui_create_selection_rectangle(cid, x1, y1, x2, y2) {
@@ -2348,7 +2326,6 @@ function gui_create_selection_rectangle(cid, x1, y1, x2, y2) {
     var rect = create_item(cid, 'polygon', {
         points: points_array.join(" "),
         fill: 'none',
-//        stroke: 'black', // set in css now
         'shape-rendering': 'optimizeSpeed',
         'stroke-width': 1,
         id: 'selection_rectangle',
@@ -2365,7 +2342,6 @@ function gui_move_selection_rectangle(cid, x1, y1, x2, y2) {
 }
 
 function gui_hide_selection_rectangle(cid) {
-//    gui_post("hiding selection");
     var rect = get_item(cid, 'selection_rectangle');
     rect.parentElement.removeChild(rect);
 }
@@ -2744,7 +2720,7 @@ function gui_iemgui_drawborder(cid, tag, bgcolor, x1, y1, x2, y2) {
         'shape-rendering': 'optimizeSpeed',
         'stroke-width': 1,
         class: 'border'
-//        id: tag + 'border'
+        //id: tag + 'border'
     });
     g.appendChild(rect);
 }
@@ -2770,16 +2746,15 @@ function gui_iemgui_label_new(cid, tag, x, y, color, text, font) {
         // x and y need to be relative to baseline instead of nw anchor
         x: x,
         y: y,
-//        'font-size': font + 'px',
+        //'font-size': font + 'px',
         id: tag + 'label'
     });
-
     var text_node = patchwin[cid].window.document.createTextNode(text);
     svg_text.appendChild(text_node);
     g.appendChild(svg_text);
     var foo = patchwin[cid].window.document.getElementById(tag + 'label');
-//    console.log("foo is " + foo);
-//    console.log("label_new tag is " + tag);
+    //console.log("foo is " + foo);
+    //console.log("label_new tag is " + tag);
 }
 
 function gui_iemgui_label_set(cid, tag, text) {
@@ -2803,7 +2778,6 @@ function gui_iemgui_label_color(cid, tag, color) {
 
 function gui_iemgui_label_select(cid, tag, is_selected) {
     var svg_text = get_item(cid, tag + 'label');
-//    console.log("tag is " + tag + " and svg_text is " + svg_text);
     if (is_selected) {
         svg_text.classList.add('iemgui_label_selected'); 
     } else {
@@ -2815,9 +2789,9 @@ function gui_iemgui_label_font(cid, tag, font) {
     var svg_text = get_item(cid, tag + 'label');
     // This has to wait until we remove the tcl formatting
     // that Pd uses for font name/size
-//    configure_item(svg_text, {
-//        font: font
-//    });
+    //    configure_item(svg_text, {
+    //        font: font
+    //    });
 }
 
 function gui_create_mycanvas(cid,tag,color,x1,y1,x2_vis,y2_vis,x2,y2) {
@@ -2838,7 +2812,7 @@ function gui_create_mycanvas(cid,tag,color,x1,y1,x2_vis,y2_vis,x2,y2) {
         fill: 'none',
         stroke: color,
         id: tag + 'drag_handle',
-        'class': 'border'
+        'class': 'border mycanvas_border'
         }
     );
     var g = get_gobj(cid,tag);
@@ -2850,9 +2824,6 @@ function gui_update_mycanvas(cid, tag, color, selected) {
     var r = get_item(cid, tag + 'rect');
     var h = get_item(cid, tag + 'drag_handle');
     configure_item(r, { fill: color, stroke: color });
-//    if (!selected) {
-//        configure_item(h, { stroke: color });
-//    }
 }
 
 function gui_mycanvas_coords(cid, tag, vis_width, vis_height, select_width, select_height) {
@@ -2862,9 +2833,10 @@ function gui_mycanvas_coords(cid, tag, vis_width, vis_height, select_width, sele
     configure_item(h, { width: select_width, height: select_height });
 }
 
+// Not needed anymore
 function gui_mycanvas_select_color(cid,tag,color) {
-//    var item = get_item(cid,tag + 'drag_handle');
-//    configure_item(item, {stroke: color});
+    //var item = get_item(cid,tag + 'drag_handle');
+    //configure_item(item, {stroke: color});
 }
  
 function gui_create_scalar(cid, tag, isselected, t1, t2, t3, t4, t5, t6,
@@ -2895,7 +2867,7 @@ function gui_create_scalar(cid, tag, isselected, t1, t2, t3, t4, t5, t6,
     // a child of the gobj group because the getrect fn gives
     // us a bbox in the canvas coord system
     var selection_rect = create_item(cid, 'rect', {
-//        id: tag + 'selection_rect',
+        //id: tag + 'selection_rect',
         class: 'border',
         display: 'none',
         fill: 'none',
@@ -2903,7 +2875,6 @@ function gui_create_scalar(cid, tag, isselected, t1, t2, t3, t4, t5, t6,
     });
     g.appendChild(selection_rect);
     add_gobj_to_svg(svg, g);
-//    gui_post("made a scalar...");
     return g;
 }
 
@@ -2913,8 +2884,8 @@ function gui_scalar_erase(cid, tag) {
         g.parentNode.removeChild(g);
     }
     // selection rect...
-//    var sr = get_item(cid, tag + 'selection_rect');
-//    sr.parentNode.removeChild(sr);
+    //    var sr = get_item(cid, tag + 'selection_rect');
+    //    sr.parentNode.removeChild(sr);
 }
 
 function gui_scalar_draw_select_rect(cid, tag, state, x1, y1, x2, y2, basex, basey) {
@@ -2959,69 +2930,36 @@ function gui_scalar_configure_gobj(cid, tag, isselected, t1, t2, t3, t4, t5, t6)
 }
 
 function gui_draw_vis(cid, type, attr_array, tag_array) {
-//    gui_post("inside gui_draw_vis");
-    for(var i = 0; i < arguments.length; i++) {
-//        gui_post("arg1 is " + arguments[i]);
-    } 
-//    gui_post("coords is " + coords);
-//    gui_post("coords is array: " + Array.isArray(coords));
-//    gui_post("arguments[2] is " + arguments[2]);
-//    gui_post("type of coords is " + typeof coords);
-//    gui_post("type of arguments[2] is " + typeof arguments[2]);
-//    gui_post("arguments[2] is array: " + Array.isArray(arguments[2]));
+    //gui_post("inside gui_draw_vis");
+    //for(var i = 0; i < arguments.length; i++) {
+    //    gui_post("arg1 is " + arguments[i]);
+    //} 
+    //gui_post("coords is " + coords);
+    //gui_post("coords is array: " + Array.isArray(coords));
+    //gui_post("arguments[2] is " + arguments[2]);
+    //gui_post("type of coords is " + typeof coords);
+    //gui_post("type of arguments[2] is " + typeof arguments[2]);
+    //gui_post("arguments[2] is array: " + Array.isArray(arguments[2]));
     var g = get_item(cid, tag_array[0]);
-    if (g !== null) {
-//        gui_post("our parent exists.");
-    } else {
-//        gui_post("our parent doe not exists.");
-    }
+    //if (g !== null) {
+    //    gui_post("our parent exists.");
+    //} else {
+    //    gui_post("our parent doe not exists.");
+    //}
     //var ca = coords;
 
-
-/*
-    switch(type) {
-        case 'rect':
-            attr_array.push('x', coords[0]);
-            attr_array.push('y', coords[1]);
-            attr_array.push('width', coords[2]);
-            attr_array.push('height',coords[3]);
-            break;
-        case 'circle':
-            type = 'ellipse';
-        case 'ellipse':
-            attr_array.push('cx',coords[0]);
-            attr_array.push('cy',coords[1]);
-            attr_array.push('rx',coords[2]);
-            attr_array.push('ry',coords[3]);
-            break;
-        case 'line':
-            attr_array.push('x1',coords[0]); 
-            attr_array.push('y1',coords[1]);
-            attr_array.push('x2',coords[2]);
-            attr_array.push('y2',coords[3]);
-            break;
-        case 'polyline':
-        case 'polygon':
-            attr_array.push('points',coords.join(" "));
-            break;
-        case 'path':
-            attr_array.push('d',coords.join(" ")); 
-            break;
-    }
-*/
     attr_array.push('id', tag_array[1]);
-//    gui_post("create is " + tag_array[1]);
+    //gui_post("create is " + tag_array[1]);
     var item = create_item(cid, type, attr_array);
-    if (item !== null) {
-//        gui_post("we got create.");
-    } else {
-//        gui_post("we doe not got creat.");
-    }
+    //if (item !== null) {
+    //    gui_post("we got create.");
+    //} else {
+    //    gui_post("we doe not got creat.");
+    //}
     g.appendChild(item);
 }
 
 function gui_draw_erase_item(cid, tag) {
-    gui_post("baleting... tag is " + tag);
     var item = get_item(cid, tag);
     if (item !== null) {
         item.parentNode.removeChild(item);
@@ -3075,9 +3013,9 @@ function gui_plot_vis(cid, basex, basey, data_array, attr_array, tag_array) {
     var p = create_item(cid, 'path', {
         d: data_array.join(" "),
         id: tag_array[1],
-//        stroke: 'red',
-//        fill: 'black',
-//        'stroke-width': '0'
+        //stroke: 'red',
+        //fill: 'black',
+        //'stroke-width': '0'
     });
     configure_item(p, attr_array);
     if (g !== null) {
@@ -3144,7 +3082,7 @@ function gui_drawimage_new(obj_tag, file_path, canvasdir, flags) {
     for (i = 0; i < files.length && i < 1000; i++) {
         ext = path.extname(files[i]);
 
-// todo: tolower()
+    // todo: tolower()
 
         if (ext === '.gif' ||
             ext === '.jpg' ||
@@ -3194,7 +3132,7 @@ function gui_drawimage_vis(cid, x, y, obj, data, seqno, parent_tag) {
         i,
         image_container,
         obj_tag = 'draw' + obj.slice(1) + '.' + data.slice(1);
-console.log("obj_tag is " + obj_tag);
+    //console.log("obj_tag is " + obj_tag);
     if (len < 1) {
         return;
     }
@@ -3281,8 +3219,8 @@ function gui_canvas_popup(cid, xpos, ypos, canprop, canopen, isobject) {
     xpos = Math.floor(xpos * zfactor);
     ypos = Math.floor(ypos * zfactor);
     gui_post("xpos is " + xpos + " and ypos is " + ypos);
-//    popup_coords[0] = xpos;
-//    popup_coords[1] = ypos;
+    //popup_coords[0] = xpos;
+    //popup_coords[1] = ypos;
     popup_menu[cid].items[0].enabled = canprop;
     popup_menu[cid].items[1].enabled = canopen;
 
@@ -3429,7 +3367,7 @@ function gui_canvas_deleteredrect(cid) {
     }
 }
 
-// Magic Glass (aka Cord Inspector)
+//  Cord Inspector (a.k.a. Magic Glass)
 
 // For clarity, this probably shouldn't be a gobj.  Also, it might be easier to
 // make it a div that lives on top of the patchsvg
@@ -3460,8 +3398,6 @@ function gui_cord_inspector_update(cid, text, basex, basey, bg_size, y1, y2, mov
         y: y1 - basey,
         width: bg_size - basex,
         height: y2 - basey + 10
-//        fill: 'none', // set in css now
-//        stroke: 'black' // set in css now
     });
     var polypoints_array = [8,0,13,5,13,-5];
      configure_item(poly, {
@@ -3470,7 +3406,6 @@ function gui_cord_inspector_update(cid, text, basex, basey, bg_size, y1, y2, mov
     configure_item(svg_text, {
         x: 20,
         y: 5,
-//        fill: 'black' // set in css now
     });
     // set the text
     svg_text.textContent = text;
@@ -3493,7 +3428,6 @@ function gui_cord_inspector_flash(cid, state) {
         } else {
             ct.classList.remove('flash');
         }
-//        configure_item(ct, { fill: 'red' });
     } else {
         gui_post("gui_cord_inspector_flash: trying to flash a non-existent cord inspector!");
     }
@@ -3540,13 +3474,11 @@ function gui_gatom_dialog(did, attr_array) {
 
 function gui_iemgui_dialog(did, attr_array) {
     gui_post("got a gfxstub " + did + "!!!");
-   
-//    for (var i = 0; i < attr_array.length; i++) {
-//        attr_array[i] = '"' + attr_array[i] + '"';
-//    }
+    //for (var i = 0; i < attr_array.length; i++) {
+    //    attr_array[i] = '"' + attr_array[i] + '"';
+    //}
     dialogwin[did] = nw_create_window(did, 'iemgui', 265, 450, 20, 20, 0,
         0, 1, 'white', 'Properties', '', 0, null, attr_array);
-
 }
 
 function gui_create_array(did, count) {
@@ -3568,22 +3500,19 @@ function gui_canvas_dialog(did, attr_arrays) {
     var i, j, inner_array;
     gui_post("got a gfxstub " + did + "!!!");
     gui_post("attr_arrays are " + attr_arrays);
-//    for (i = 0; i < attr_arrays.length; i++) {
-//        inner_array = attr_arrays[i];
-//        if (inner_array !== undefined) {
-//            for (j = 0; j < inner_array.length; j++) {
-//                inner_array[i] = '"' + inner_array[i] + '"';
-//            }
-//        }
-//    }
-//    dialogwin[did] = nw_create_window(did, 'canvas', 265, 340, 20, 20, 0,
-//        0, 1, 'white', 'Properties', '', 0, null, attr_arrays);
+    //for (i = 0; i < attr_arrays.length; i++) {
+    //    inner_array = attr_arrays[i];
+    //    if (inner_array !== undefined) {
+    //        for (j = 0; j < inner_array.length; j++) {
+    //            inner_array[i] = '"' + inner_array[i] + '"';
+    //        }
+    //    }
+    //}
+    //dialogwin[did] = nw_create_window(did, 'canvas', 265, 340, 20, 20, 0,
+    //    0, 1, 'white', 'Properties', '', 0, null, attr_arrays);
 
     dialogwin[did] = nw_create_window(did, 'canvas', 250, 100, 20, 20, 0,
         0, 1, 'white', 'Properties', '', 0, null, attr_arrays);
-
-
-
 }
 
 function gui_remove_gfxstub(did) {
