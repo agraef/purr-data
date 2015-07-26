@@ -147,7 +147,12 @@ text {
     stroke: #ccc;
 }
 
-.iemgui .border {
+/* A little hack for special canvas of [cnv].
+   All other iemguis have a black border, but
+   [cnv] sets its selection rectangle to the
+   user-supplied fill color when the object
+   isn't selected */
+.iemgui .border:not(.mycanvas_border) {
     stroke: black;
 }
 
