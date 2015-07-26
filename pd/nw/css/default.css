@@ -151,6 +151,11 @@ text {
     stroke: black;
 }
 
+.graph .border {
+    stroke: black;
+    fill: none;
+}
+
 /* border color for selected objects
       * an element with the class 'border'
       * the element is contained within a parent element of class 'selected'
