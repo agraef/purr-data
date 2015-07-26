@@ -8,5 +8,5 @@
    preserveAspectRatio="none"
 >
 
-<polyline vector-effect="non-scaling-stroke" fill="none" stroke="black" stroke-width="1" points="10 0 0 0 0 10 10 10"></polyline>
+<polyline vector-effect="non-scaling-stroke" fill="none" stroke="blue" stroke-width="1" points="10 0 0 0 0 10 10 10"></polyline>
 </svg>
