@@ -225,6 +225,8 @@ Everything else: (A [x] means we've fixed it)
     of the screen. Can't think of anything except maybe a bug in nw.js Window.x?
 [ ] work on resizing dialog windows to the document content (currently some do, some don't)
 [ ] add Mac support by changing evt.ctrlKey to evt.ctrlKey||evt.metaKey
+[ ] when editing message box contents, the background svg image is hardcoded with a border color of blue.
+    look into using mask-image in order to make this background color theme-able
 
 Crashers
 --------
