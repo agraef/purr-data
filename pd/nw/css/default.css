@@ -49,6 +49,7 @@
 
 /* Pure Data Patch Window (aka canvas) */
 
+/* patch font and background color. (Note: margin needs to stay at zero.) */
 #patch_body {
     margin: 0px;
     font-family: "DejaVu Sans Mono";
