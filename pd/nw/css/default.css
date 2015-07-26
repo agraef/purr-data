@@ -50,11 +50,13 @@
 }
 
 .cord.signal {
-    stroke-width: 2
+    stroke-width: 2;
+    stroke: #808095;
 }
 
 .cord.control {
-    stroke-width: 1
+    stroke-width: 1;
+    stroke: #565;
 }
 
 #new_object_textentry {
@@ -71,7 +73,7 @@
 }
 
 #new_object_textentry.obj {
-    outline: 1px solid #000;
+    outline: 1px solid blue;
 }
 
 #new_object_textentry.msg {
@@ -102,9 +104,25 @@ text {
     stroke-width: 1;
 }
 
+.msg .border {
+    stroke: #ccc;
+    fill: #f8f8f6;
+}
+
 /* state of msg box when clicking it */
 .msg.flashed .border {
     stroke-width: 4;
+}
+
+/* atom box */
+.atom .border {
+    stroke: #ccc;
+    fill: #eee;
+}
+
+.obj .border {
+    fill: #f6f8f8;
+    stroke: #ccc;
 }
 
 /* border color for selected objects
@@ -126,7 +144,7 @@ text {
 }
 
 /* for an object that didn't create */
-.broken_border {
+.obj .border.broken_border {
     fill: #f7f7f7;
     stroke: red;
     stroke-dasharray: 3 2;
@@ -224,7 +242,6 @@ input[type="text"]{
 input[type="number"]{
     width:3em;
 }
-
 
 label {
     text-align: right;

@@ -1952,8 +1952,8 @@ function gui_text_drawborder(cid, tag, bgcolor, isbroken, x1, y1, x2, y2) {
     var rect = create_item(cid, 'rect', {
         width: x2 - x1,
         height: y2 - y1,
-        stroke: 'black',
-        fill: 'none',
+        //stroke: 'black', // done in css now
+        //fill: 'none', // done in css now
         'shape-rendering': 'crispEdges',
         class: 'border'
     });
@@ -2110,7 +2110,7 @@ function gui_canvas_line(cid,tag,type,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10) {
     var path = create_item(cid, 'path', {
         d: d_array.join(" "),
         fill: 'none',
-        stroke: 'gray',
+//        stroke: 'gray', // done in css now
 //        'stroke-width': 1,
         'shape-rendering': 'optimizeSpeed',
         id: tag,
