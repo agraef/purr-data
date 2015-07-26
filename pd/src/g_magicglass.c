@@ -76,18 +76,18 @@ void magicGlass_updateText(t_magicGlass *x, int moved)
                 gui_vmess("gui_cord_inspector_flash", "xi", x->x_c, 1);
                 clock_delay(x->x_flashClock, MG_CLOCK_FLASH_DELAY);
             }
-            sys_vgui(".x%x.c itemconfigure magicGlassText -text {%s} "
-                     "-fill %s -font {{%s} -%d %s}\n",
-                    x->x_c,
-                    x->x_string,
-                    color,
-                    sys_font, x->x_display_font, sys_fontweight);
+            //sys_vgui(".x%x.c itemconfigure magicGlassText -text {%s} "
+            //         "-fill %s -font {{%s} -%d %s}\n",
+            //        x->x_c,
+            //        x->x_string,
+            //        color,
+            //        sys_font, x->x_display_font, sys_fontweight);
         }
         else
         {
-            sys_vgui(".x%x.c itemconfigure magicGlassText -text {%s}\n",
-                    x->x_c,
-                    x->x_string);
+            //sys_vgui(".x%x.c itemconfigure magicGlassText -text {%s}\n",
+            //        x->x_c,
+            //        x->x_string);
         }
 
         if (strlen(x->x_string) > 0)
