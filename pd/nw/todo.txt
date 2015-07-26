@@ -228,6 +228,7 @@ Everything else: (A [x] means we've fixed it)
 [ ] when editing message box contents, the background svg image is hardcoded with a border color of blue.
     look into using mask-image in order to make this background color theme-able
 [ ] integrate the inlet mouseover animation with a change of fill color
+[ ] make a css entry for colors for the new_object_textentry border, background, and cursor
 
 Crashers
 --------
