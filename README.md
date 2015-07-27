@@ -57,7 +57,7 @@ Pd-l2ork has the following goals:
    documentation.  We like documentation, so it follows that we like consistent
    interviews.
 
-### Installation Guide <a id="installation-guide"></a>
+### Installation Guide
 To install using a pre-compiled binary, follow these instructions:
 http://l2ork.music.vt.edu/main/?page_id=56
 
