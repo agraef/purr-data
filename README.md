@@ -4,6 +4,8 @@ maintainer: Ivica Bukvic <ico@vt.edu>
 
 maintainer: Jonathan Wilkes <jancsika@yahoo.com>
 
+[test link] (#Installation-Guide)
+
 ### One Paragraph Overview
 
 Pure Data (aka Pd) is a visual programming.  That means you can use it to
