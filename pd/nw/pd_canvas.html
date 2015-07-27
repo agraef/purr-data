@@ -443,6 +443,13 @@ function nw_undo_menu(undo_text, redo_text) {
     }
 }
 
+function check_box_for_text() {
+    var state = canvas_events.get_state();
+    if (state === 'text' || state === 'floating_text') {
+        canvas_events.set_obj();
+    }
+}
+
 // Menus for the Patch window
 function nw_create_patch_window_menus (name) {
 
@@ -799,10 +806,7 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.object'),
         click: function() {
-            var state = canvas_events.get_state();
-            if (state === 'text' || state === 'floating_text') {
-                canvas_events.set_obj();
-            }
+            check_box_for_text();
             pdgui.pdsend(name + " dirty 1");
             pdgui.pdsend(name + " obj 0");
         },
@@ -814,10 +818,7 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.msgbox'),
         click: function() {
-            var state = canvas_events.get_state();
-            if (state === 'text' || state === 'float_text') {
-                canvas_events.set_obj();
-            }
+            check_box_for_text();
             pdgui.pdsend(name + " dirty 1");
             pdgui.pdsend(name + " msg 0");
         },
@@ -829,8 +830,9 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.number'),
         click: function() { 
-                   pdgui.pdsend(name + " dirty 1");
-                   pdgui.pdsend(name + " floatatom 0");
+            check_box_for_text();
+            pdgui.pdsend(name + " dirty 1");
+            pdgui.pdsend(name + " floatatom 0");
         },
         key: '3',
         modifiers: "ctrl",
@@ -840,8 +842,9 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.symbol'),
         click: function() {
-                   pdgui.pdsend(name + " dirty 1");
-                   pdgui.pdsend(name + " symbolatom 0");
+            check_box_for_text();
+            pdgui.pdsend(name + " dirty 1");
+            pdgui.pdsend(name + " symbolatom 0");
         },
         key: '4',
         modifiers: "ctrl",
@@ -851,8 +854,9 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.comment'),
         click: function() {
-                   pdgui.pdsend(name + " dirty 1");
-                   pdgui.pdsend(name + " text 0");
+            check_box_for_text();
+            pdgui.pdsend(name + " dirty 1");
+            pdgui.pdsend(name + " text 0");
         },
         key: '5',
         modifiers: "ctrl",
@@ -866,8 +870,9 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.bang'),
         click: function(e) {
-                   pdgui.pdsend(name + " dirty 1");
-                   pdgui.pdsend(name + " bng 0");
+            check_box_for_text();
+            pdgui.pdsend(name + " dirty 1");
+            pdgui.pdsend(name + " bng 0");
         },
         key: 'b',
         modifiers: "ctrl-shift",
@@ -877,8 +882,9 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.toggle'),
         click: function() {
-                   pdgui.pdsend(name + " dirty 1");
-                   pdgui.pdsend(name + " toggle 0");
+            check_box_for_text();
+            pdgui.pdsend(name + " dirty 1");
+            pdgui.pdsend(name + " toggle 0");
         },
         key: 't',
         modifiers: "ctrl-shift",
@@ -888,8 +894,9 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.number2'),
         click: function() {
-                   pdgui.pdsend(name + " dirty 1");
-                   pdgui.pdsend(name + " numbox 0");
+            check_box_for_text();
+            pdgui.pdsend(name + " dirty 1");
+            pdgui.pdsend(name + " numbox 0");
         },
         key: 'n',
         modifiers: "ctrl-shift",
@@ -899,8 +906,9 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.vslider'),
         click: function() {
-                   pdgui.pdsend(name + " dirty 1");
-                   pdgui.pdsend(name + " vslider 0");
+            check_box_for_text();
+            pdgui.pdsend(name + " dirty 1");
+            pdgui.pdsend(name + " vslider 0");
         },
         key: 'v',
         modifiers: "ctrl-shift",
@@ -910,8 +918,9 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.hslider'),
         click: function() {
-                   pdgui.pdsend(name + " dirty 1");
-                   pdgui.pdsend(name + " hslider 0");
+            check_box_for_text();
+            pdgui.pdsend(name + " dirty 1");
+            pdgui.pdsend(name + " hslider 0");
         },
         key: 'h',
         modifiers: "ctrl-shift",
@@ -921,8 +930,9 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.vradio'),
         click: function() {
-                   pdgui.pdsend(name + " dirty 1");
-                   pdgui.pdsend(name + " vradio 0");
+            check_box_for_text();
+            pdgui.pdsend(name + " dirty 1");
+            pdgui.pdsend(name + " vradio 0");
         },
         key: 'd',
         modifiers: "ctrl-shift",
@@ -932,8 +942,9 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.hradio'),
         click: function() {
-                   pdgui.pdsend(name + " dirty 1");
-                   pdgui.pdsend(name + " hradio 0");
+            check_box_for_text();
+            pdgui.pdsend(name + " dirty 1");
+            pdgui.pdsend(name + " hradio 0");
         },
         key: 'i',
         modifiers: "ctrl",
@@ -943,8 +954,9 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.vu'),
         click: function() {
-                   pdgui.pdsend(name + " dirty 1");
-                   pdgui.pdsend(name + " vumeter 0");
+            check_box_for_text();
+            pdgui.pdsend(name + " dirty 1");
+            pdgui.pdsend(name + " vumeter 0");
         },
         key: 'u',
         modifiers: "ctrl",
@@ -954,8 +966,9 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.cnv'),
         click: function() {
-                   pdgui.pdsend(name + " dirty 1");
-                   pdgui.pdsend(name + " mycnv 0");
+            check_box_for_text();
+            pdgui.pdsend(name + " dirty 1");
+            pdgui.pdsend(name + " mycnv 0");
         },
         key: 'c',
         modifiers: "ctrl-shift",
@@ -969,6 +982,7 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.graph'),
         click: function() {
+            check_box_for_text();
             pdgui.pdsend(name + " dirty 1");
             // leaving out some placement logic... see pd.tk menu_graph
             pdgui.pdsend(name + " graph NULL 0 0 0 0 30 30 0 30");
@@ -979,6 +993,7 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.array'),
         click: function() {
+                check_box_for_text();
                 pdgui.pdsend(name + " dirty 1");
                 pdgui.pdsend(name + " menuarray");
             },
