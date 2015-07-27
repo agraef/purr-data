@@ -1319,9 +1319,6 @@ int sys_startgui(const char *guidir)
                 }
             }
 #endif
-
-            fprintf(stderr, "fuck %s", sys_guicmd);
-
             execl("/bin/sh", "sh", "-c", sys_guicmd, (char*)0);
             perror("pd: exec");
             _exit(1);

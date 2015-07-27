@@ -2131,7 +2131,7 @@ function gui_canvas_delete_line(cid, tag) {
     if (line !== null) {
         line.parentNode.removeChild(line);
     } else {
-        gui_post("canvas_delete_line: something is fucked up because the line doesn't exist");
+        gui_post("canvas_delete_line: something is borked because the line doesn't exist");
     }
 }
 
@@ -3311,7 +3311,7 @@ function gui_graph_htick(cid, tag, y, r_x, l_x, tick_pix, basex, basey) {
         y1: y - basey,
         x2: l_x - tick_pix - basex,
         y2: y - basey,
-        id: "fuckoff" + y
+        id: "tick" + y
     });
     var right_tick = create_item(cid, 'line', {
         stroke: 'black',
@@ -3467,7 +3467,6 @@ exports.file_dialog_callback = function(file_string) {
 }
 
 function gui_gatom_dialog(did, attr_array) {
-    gui_post("fuck tits");
     dialogwin[did] = nw_create_window(did, 'gatom', 265, 540, 20, 20, 0,
         0, 1, 'white', 'Properties', '', 0, null, attr_array);
 }

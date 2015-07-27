@@ -5584,7 +5584,6 @@ void canvas_menuclose(t_canvas *x, t_floatarg fforce)
         {
             if (!glist_istoplevel(g) && g->gl_env)
             {
-post("opening up the motherfucker x%lx", g);
                 /* if this is an abstraction */
                 vmess(&g->gl_pd, gensym("menu-open"), "");
             }
@@ -5592,12 +5591,10 @@ post("opening up the motherfucker x%lx", g);
             {
                 /* is this even necessary? */
                 canvas_vis(g, 1);
-post("fuck you canvas_vis x%lx", g);
             }
             //vmess(&g->gl_pd, gensym("menu-open"), "");
             if (!glist_istoplevel(g) && g->gl_env)
             {
-post("farging...");
                 /* if this is an abstraction */
                 //sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 2;}\n",
                 //     g, g);
@@ -5608,7 +5605,6 @@ post("farging...");
             }
             else
             {
-post("dildo");
                 //sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 2;}\n",
                 //     canvas_getrootfor(g), g);
                 gui_vmess("gui_canvas_menuclose", "xxi",
