@@ -53,6 +53,7 @@
 #patch_body {
     margin: 0px;
     font-family: "DejaVu Sans Mono";
+    background-color: white;
 }
 
 #selection_rectangle {
