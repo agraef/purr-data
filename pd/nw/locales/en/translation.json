@@ -303,6 +303,7 @@
         "vanilla_inverted": "Vanilla (Inverted)",
         "extended": "Pd-Extended",
         "inverted": "Inverted",
+        "subdued": "Subdued",
         "c64": "C64"
       }
     },

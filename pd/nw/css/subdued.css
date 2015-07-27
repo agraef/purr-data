@@ -1,0 +1,354 @@
+/* Global CSS */
+
+@font-face {
+    font-family: "DejaVu Sans Mono";
+    src: url("../DejaVuSansMono.ttf");
+}
+
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+::selection {
+    background: #c3c3c3;
+    color: black;
+}
+
+/* The main Pd Window */
+
+#console_body {
+    margin: 0px;
+}
+
+#console_controls {
+    background-color: LightGray;
+    height: 50px; 
+} 
+
+#control_frame {
+    padding: 12px;
+}
+
+#printout {
+    margin: 8px;
+}
+
+#console_bottom {
+    position: absolute;
+    top: 50px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    overflow-y: scroll;    
+}
+
+/* Pure Data Patch Window (aka canvas) */
+
+/* patch font and background color. (Note: margin needs to stay at zero.) */
+#patch_body {
+    margin: 0px;
+    font-family: "DejaVu Sans Mono";
+    background-color:  #c0dcc0;
+}
+
+#selection_rectangle {
+    stroke: #333333;
+}
+
+.cord.signal {
+    stroke-width: 2;
+    stroke: #666666;
+}
+
+.cord.control {
+    stroke-width: 1;
+    stroke: #333333;
+}
+
+#cord_inspector_rect {
+    fill: black;
+    stroke: black;
+}
+
+#cord_inspector_text {
+    fill: white;
+}
+
+#cord_inspector_text.flash {
+    fill: #e87216;
+}
+
+#new_object_textentry {
+    /* max-width: 10ch; */
+    min-width: 3ch;
+    position: absolute;
+    display: table-cell;
+    padding: 3px 2px 3px 2px;
+    /* box-shadow: inset 1px 0px 0px 1px #000; */
+    background-color: white;
+    white-space: normal;
+    word-wrap: break-word;
+    -webkit-margin-before: 0px;
+}
+
+#new_object_textentry.obj {
+    outline: 1px solid blue;
+}
+
+#new_object_textentry.msg {
+    outline: 0px solid transparent;
+    background-image: url(../msg-box.svg);
+}
+
+p.msg::after {
+    content: "";
+    height: 100%;
+    width: 5px;
+    background-image: url(../msg-box-flag.svg);
+    position: absolute;
+    top: 0%;
+    left: 100%;
+}
+
+/* not sure what this is doing here... */
+text {
+    // fill: red;
+    cursor: default;
+}
+
+/* not sure if this is still needed */
+.selected_border {
+    stroke: blue;
+    stroke-dasharray: none;
+    stroke-width: 1;
+}
+
+.msg .border {
+    stroke: #666666;
+    fill: #c0dcc0;
+}
+
+/* state of msg box when clicking it */
+.msg.flashed .border {
+    stroke-width: 4;
+}
+
+/* atom box */
+.atom .border {
+    stroke: #b1d3b1;
+    fill: #9fc79f;
+}
+
+.obj .border {
+    fill: #c0dcc0;
+    stroke: #666666;
+}
+
+/* A little hack for special canvas of [cnv].
+   All other iemguis have a black border, but
+   [cnv] sets its selection rectangle to the
+   user-supplied fill color when the object
+   isn't selected */
+.iemgui .border:not(.mycanvas_border) {
+    stroke: #666666;
+}
+
+.graph .border {
+    stroke: #777;
+    fill: none;
+}
+
+/* border color for selected objects
+      * an element with the class 'border'
+      * the element is contained within a parent element of class 'selected'
+      * that parent element is not in class 'gop'
+   in plain English:
+      This lets us highlight an objects border, unless it is inside a gop
+      canvas.
+*/
+:not(.gop).selected .border {
+    stroke: blue;
+    display: inline;
+}
+
+/* selected connection between objects */
+.selected_line {
+    stroke: blue;
+}
+
+/* for an object that didn't create */
+.obj .border.broken_border {
+    fill: #f7f7f7;
+    stroke: #f00;
+    stroke-dasharray: 3 2;
+}
+
+/* control inlet */
+.xlet_control {
+    stroke: #333333;
+    fill: #333333;
+//    stroke-width: 1;
+}
+
+/* signal inlet */
+.xlet_signal {
+    stroke: #666666;
+    fill: #666666;
+    stroke-width: 1;
+}
+
+/* iemgui inlet or outlet */
+.xlet_iemgui {
+    stroke: #666666;
+    fill: #666666;
+    stroke-width: 1;
+}
+
+/* text label for an iemgui */
+.iemgui_label_selected {
+    fill: blue;
+}
+
+/* test of xlet hover animation... this should 
+   probably use the web animation API instead. That
+   way the animation won't get cut off when you
+   move off the object */
+@-webkit-keyframes fizzle {
+    0% {
+        stroke-width: 1;
+        stroke-opacity: 1;
+        x: 0;
+        rx: 1;
+        ry: 1;
+    }
+    100% {
+        stroke-width: 20;
+        stroke-opacity: 0.2;
+        x: 100;
+        rx: 50;
+        ry: 50;
+    }
+}
+
+/* can't remember why this was tagged !important */
+.xlet_selected {
+    stroke: purple !important;
+    -webkit-animation: fizzle 0.5s linear 1;
+}
+
+/* Common to all dialogs */
+
+.submit_buttons {
+    text-align: center;
+    padding: 8px;
+}
+
+fieldset {
+    font-family:Georgia;
+    background-color:#eeeeee;
+    border-radius:3px;
+    border:2px solid black;
+    margin-left:auto;
+    margin-right:auto;
+    padding: 10px;
+}
+
+.hidden {
+    display: none;
+}
+
+.container{
+    display: none;
+}
+
+/* Iemgui dialog */
+
+#iemgui_dialog_body {
+    font-family:Verdana;
+    margin: 0px;
+}
+
+input[type="text"]{
+    width:3em;
+}
+
+input[type="number"]{
+    width:3em;
+}
+
+label {
+    text-align: right;
+}
+
+/* Pair of properties that are related */
+.pair {
+    width: 75%;
+    text-align: left;
+    align: left;
+}
+
+.item1 {
+    width: 50%;
+}
+
+.item2 {
+    width: 50%;
+}
+
+input[name="x-offset"] {
+    width: 2em;
+}
+
+input[name="y-offset"] {
+    width: 2em;
+}
+
+input[name="send-symbol"] {
+    width: 8em;
+}
+
+input[name="receive-symbol"] {
+    width: 8em;
+}
+
+input[name="label"] {
+    width: 8em;
+}
+
+input[name="font-size"] {
+    width: 3em;
+}
+
+/* Canvas dialog */
+
+div.x-scale {
+    padding: 3px;
+    text-align: center;
+}
+
+div.gop-range {
+}
+
+div.y1 {
+    text-align: center;
+    padding: 3px;
+}
+
+div.x1 {
+    text-align: center;
+    padding: 3px;
+}
+
+div.y2 {
+    text-align: center;
+    padding: 3px;
+}
+
+.disabled {
+    color: #aaa;
+}
