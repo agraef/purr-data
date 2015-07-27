@@ -302,8 +302,8 @@
         "vanilla": "Vanilla",
         "vanilla_inverted": "Vanilla (Inverted)",
         "extended": "Pd-Extended",
-        "l2ork": "Pd-L2ork",
-        "inverted": "Inverted"
+        "inverted": "Inverted",
+        "c64": "C64"
       }
     },
     "audio": {
