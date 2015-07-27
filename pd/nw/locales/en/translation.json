@@ -304,6 +304,7 @@
         "extended": "Pd-Extended",
         "inverted": "Inverted",
         "subdued": "Subdued",
+        "extended": "Extended",
         "c64": "C64"
       }
     },
