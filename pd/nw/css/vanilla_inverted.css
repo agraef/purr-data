@@ -14,10 +14,9 @@
     user-select: none;
 }
 
-/* selected text */
 ::selection {
     background: #3c3c3c;
-    color: white; /* selected text color */
+    color: white;
 }
 
 /* The main Pd Window */
@@ -50,7 +49,7 @@
 
 /* Pure Data Patch Window (aka canvas) */
 
-/* patch font and background color. (Note: margin needs to stay at zero.) */
+/* canvas font and background color. (Note: margin needs to stay at zero.) */
 #patch_body {
     margin: 0px;
     font-family: "DejaVu Sans Mono";
@@ -63,12 +62,12 @@
 
 .cord.signal {
     stroke-width: 2;
-    stroke: #7d7d68;
+    stroke: white;
 }
 
 .cord.control {
     stroke-width: 1;
-    stroke: #a9a;
+    stroke: white;
 }
 
 #cord_inspector_rect {
@@ -98,7 +97,7 @@
 }
 
 #new_object_textentry.obj {
-    outline: 1px solid #ffff00;
+    outline: 1px solid yellow;
 }
 
 #new_object_textentry.msg {
@@ -130,8 +129,8 @@ text {
 }
 
 .msg .border {
-    stroke: #3e3e3e;
-    fill: #090707;
+    stroke: white;
+    fill: none;
 }
 
 /* state of msg box when clicking it */
@@ -141,13 +140,13 @@ text {
 
 /* atom box */
 .atom .border {
-    stroke: #333;
-    fill: #111;
+    stroke: white;
+    fill: none;
 }
 
 .obj .border {
-    fill: #090707;
-    stroke: #3e3e3e;
+    fill: none;
+    stroke: white;
 }
 
 /* A little hack for special canvas of [cnv].
@@ -160,7 +159,7 @@ text {
 }
 
 .graph .border {
-    stroke: #777;
+    stroke: white;
     fill: none;
 }
 
@@ -173,7 +172,7 @@ text {
       canvas.
 */
 :not(.gop).selected .border {
-    stroke: #ffff00;
+    stroke: yellow;
     display: inline;
 }
 
@@ -184,22 +183,22 @@ text {
 
 /* for an object that didn't create */
 .obj .border.broken_border {
-    fill: #002222;
+    fill: none;
     stroke: #f00;
     stroke-dasharray: 3 2;
 }
 
 /* control inlet */
 .xlet_control {
-    stroke: #a294a2;
-    fill: black;
+    stroke: white;
+    fill: white;
 //    stroke-width: 1;
 }
 
 /* signal inlet */
 .xlet_signal {
-    stroke: #7d7d68;
-    fill: #808095;
+    stroke: white;
+    fill: white;
     stroke-width: 1;
 }
 
