@@ -299,8 +299,8 @@ For some of Pd's internals like array visualization, the message length may
 vary. For these _special_ cases, the following functions allow the developer
 to iteratively build up a message to send to the GUI.
 
-```
-gui_start_vmess(const char *msg, const char *format, ...); // send a message to the gui without terminating it
+```c
+gui_start_vmess(const char *msg, const char *format, ...);
 gui_start_array(); // start an array
 gui_f(t_float float); // floating point array element (t_float)
 gui_i(int int); // integer array element (int)
