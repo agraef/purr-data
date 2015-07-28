@@ -271,7 +271,7 @@ PD-GUI:
 t    TK front end
 
 ### GUI Messaging Specification
-#### GUI interface
+#### Public GUI interface
 
 Purpose: a set of functions to communicate with the gui without putting
 language-specific strings (like tcl) into the C code.  The new interface is a
@@ -319,7 +319,7 @@ The array element functions gui_f, gui_i, and gui_s may only be used inside an
 array.  Arrays may be nested, but this adds complexity and should be avoided if
 possible.
 
-#### Current Wrappers (private)
+#### Private Wrapper for Nw.js Port
 
 The public functions above should fit any sensible message format.
 Unfortunately, Pd's message format (FUDI) is too simplistic to handle arbitrary
