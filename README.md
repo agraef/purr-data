@@ -301,12 +301,12 @@ to iteratively build up a message to send to the GUI.
 
 ```c
 gui_start_vmess(const char *msg, const char *format, ...);
-gui_start_array(); // start an array
-gui_f(t_float float); // floating point array element (t_float)
-gui_i(int int); // integer array element (int)
-gui_s(const char *cstring); // c string array element
-gui_end_array(); // end an array
-gui_end_vmess(); // terminate the message
+gui_start_array();      // start an array
+gui_f(t_float float);   // floating point array element (t_float)
+gui_i(int int);         // integer array element (int)
+gui_s(const char *str); // c string array element
+gui_end_array();        // end an array
+gui_end_vmess();        // terminate the message
 ```
 
 The above will send a well-formed message to the GUI, where the number of array
