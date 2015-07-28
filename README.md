@@ -4,13 +4,13 @@ maintainer: Ivica Bukvic <ico@vt.edu>
 
 maintainer: Jonathan Wilkes <jancsika@yahoo.com>
 
-*[One Paragraph Overview](#one-paragraph-overview)
-*[Flavors of Pure Data](#flavors-of-pure-data)
-*[Three Paragraph Overview](#three-paragraph-overview)
-*[Goals](#goals)
-*[Installation Guide](#installation-guide)
-*[Contributor Guide](#contributor-guide)
-*[Core Pd Notes](#core-pd-notes)
+* [One Paragraph Overview](#one-paragraph-overview)
+* [Flavors of Pure Data](#flavors-of-pure-data)
+* [Three Paragraph Overview](#three-paragraph-overview)
+* [Goals](#goals)
+* [Installation Guide](#installation-guide)
+* [Contributor Guide](#contributor-guide)
+* [Core Pd Notes](#core-pd-notes)
 
 ### One Paragraph Overview
 
