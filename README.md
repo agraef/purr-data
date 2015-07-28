@@ -4,7 +4,13 @@ maintainer: Ivica Bukvic <ico@vt.edu>
 
 maintainer: Jonathan Wilkes <jancsika@yahoo.com>
 
-[test link](#installation-guide)
+[One Paragraph Overview](#one-paragraph-overview)
+[Flavors of Pure Data](#flavors-of-pure-data)
+[Three Paragraph Overview](#three-paragraph-overview)
+[Goals](#goals)
+[Installation Guide](#installation-guide)
+[Contributor Guide](#contributor-guide)
+[Core Pd Notes](#core-pd-notes)
 
 ### One Paragraph Overview
 
@@ -13,7 +19,7 @@ create software graphically by drawing diagrams instead of writing lines of
 code.  These diagram shows how data flows through the software, displaying on
 the screen what text-based languages require you to piece together in your mind.
 
-### Distributions of Pure Data
+### Flavors of Pure Data
 
 There are currently three main distributions of Pure Data:
 
@@ -43,7 +49,7 @@ wearable technology, motor systems, lighting rigs, and other equipment. Pd is
 also suitable for learning basic multimedia processing and visual programming
 methods, as well as for realizing complex systems for large-scale projects.
 
-### Pd-l2ork Goals
+### Goals
 
 Pd-l2ork has the following goals:
 
@@ -68,7 +74,7 @@ http://l2ork.music.vt.edu/main/?page_id=56
 Then follow the steps outlined here:
 http://l2ork.music.vt.edu/main/?page_id=56#install-dev
 
-### Contributor's Guide
+### Contributor Guide
 
 Contributing is easy:
 
@@ -117,7 +123,7 @@ Here are some of the current tasks:
     recent link...):
     http://sourceforge.net/p/pure-data/svn/HEAD/tree/tags/externals/pureunity/pureunity-0.0/
 
-### Project "Underview" (Implementation and Code Style)
+### Core Pd Notes
 
 The following is adapted from Pd Vanilla's original source notes.  (Found
 in pd/src/CHANGELOG.txt for some reason...)
@@ -262,3 +268,71 @@ z    other
 
 PD-GUI:
 t    TK front end
+
+### GUI Messaging Specification
+
+#### GUI interface
+
+Purpose: a set of functions to communicate with the gui without putting
+language-specific strings (like tcl) into the C code.  The new interface is a
+step toward separating some (but not all) of the GUI logic out from the C code.
+Of course the GUI can still be designed to parse and evaluate incoming messages
+as commands.  But the idiosyncracies of the GUI toolkit can be limited to
+either the GUI code itself or to a small set of modular wrappers around
+sys_vgui.
+
+The public interface consists of the following:
+
+```c
+gui_vmess(const char *msg, const char *format, ...);
+```
+
+where const char *format consists of zero or more of the following:
+
+* f - floating point value (t_float)
+* i - integer (int)
+* s - c string (char*)
+* x - hexadecimal integer value, with a precision of at least six digits.
+      (hex value is preceded by an 'x', like "x123456"
+
+For some of Pd's internals like array visualization, the message length may
+vary. For these _special_ cases, the following functions allow the developer
+to iteratively build up a message to send to the GUI.
+
+```
+gui_start_vmess(const char *msg, const char *format, ...); // send a message to the gui without terminating it
+gui_start_array(); // start an array
+gui_f(t_float float); // floating point array element (t_float)
+gui_i(int int); // integer array element (int)
+gui_s(const char *cstring); // c string array element
+gui_end_array(); // end an array
+gui_end_vmess(); // terminate the message
+```
+
+The above will send a well-formed message to the GUI, where the number of array
+elements are limited by the amount of memory available to the GUI. Because of
+the complexity of this approach, it may _only_ be used when it is necessary to
+send a variable length message to the GUI. (Some of the current code may
+violate this rule, but that can be viewed as a bug which needs to get fixed.)
+
+The array element functions gui_f, gui_i, and gui_s may only be used inside an
+array.  Arrays may be nested, but this adds complexity and should be avoided if
+possible.
+
+#### Current Wrappers (private)
+--------------------------
+
+The public functions above should fit any sensible message format.
+Unfortunately, Pd's message format (FUDI) is too simplistic to handle arbitrary
+c-strings and arrays, so it cannot be used here. (But if it happens to improve
+in the future it should be trivial to make a wrapper for the public interface
+above.)
+
+The current wrapper was made with the assumption that there is a Javascript
+Engine at the other end of the message. Messages consist of a selector,
+followed by whitespace, followed by a comman-delimited list of valid Javascript
+primitives (numbers, strings, and arrays). For the arrays, Javascript's array
+notation is used. This is a highly idiosyncratic, quick-and-dirty approach.
+But the point is that the idiosyncracy exists in a single file of the source
+code, and can be easily made more modular (or replaced entirely by something
+else) without affecting _any_ of the rest of the C code.
