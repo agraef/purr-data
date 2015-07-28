@@ -198,10 +198,12 @@ relevant programs, notably "ugen" (which is just a tilde object; see d_ugen.c.)
 1.5.  Spacing.  Tabs are 8 spaces; indentation is 4 spaces.  Indenting
 curly brackets are by themselves on their own lines, as in:
 
-    if (x)
-    {
-	x = 0;
-    }
+```c
+if (x)
+{
+    x = 0;
+}
+```
 
 Lines should fit within 80 spaces.
 
