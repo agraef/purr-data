@@ -12,6 +12,7 @@ maintainer: Jonathan Wilkes <jancsika@yahoo.com>
 * [Contributor Guide](#contributor-guide)
 * [Core Pd Notes](#core-pd-notes)
 * [GUI Message Spec](#gui-messaging-specification)
+
 ### One Paragraph Overview
 
 Pure Data (aka Pd) is a visual programming.  That means you can use it to
