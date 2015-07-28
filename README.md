@@ -11,7 +11,7 @@ maintainer: Jonathan Wilkes <jancsika@yahoo.com>
 * [Installation Guide](#installation-guide)
 * [Contributor Guide](#contributor-guide)
 * [Core Pd Notes](#core-pd-notes)
-
+* [GUI Message Spec](#gui-messaging-specification)
 ### One Paragraph Overview
 
 Pure Data (aka Pd) is a visual programming.  That means you can use it to
@@ -270,7 +270,6 @@ PD-GUI:
 t    TK front end
 
 ### GUI Messaging Specification
-
 #### GUI interface
 
 Purpose: a set of functions to communicate with the gui without putting
@@ -320,7 +319,6 @@ array.  Arrays may be nested, but this adds complexity and should be avoided if
 possible.
 
 #### Current Wrappers (private)
---------------------------
 
 The public functions above should fit any sensible message format.
 Unfortunately, Pd's message format (FUDI) is too simplistic to handle arbitrary
