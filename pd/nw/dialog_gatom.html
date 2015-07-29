@@ -224,6 +224,7 @@ function register_canvas_id(gfxstub, attr_array) {
     // snappier, at least on older machines.
     document.getElementsByClassName('container')[0]
         .style.setProperty('display', 'inline');
+    pdgui.resize_window(pd_object_callback);
 }
 
 function tr_text(id) {

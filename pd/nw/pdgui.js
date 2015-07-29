@@ -3524,7 +3524,7 @@ gui_post("did is " + did + " and dialogwin[did] is " + dialogwin[did]);
 
 function gui_font_dialog(cid, gfxstub, font_size) {
     var attrs = { canvas: cid, font_size: font_size };
-    dialogwin[gfxstub] = nw_create_window(gfxstub, 'font', 265, 540, 20, 20, 0,
+    dialogwin[gfxstub] = nw_create_window(gfxstub, 'font', 265, 265, 20, 20, 0,
         0, 1, 'white', 'Properties', '', 0, null, attrs);
 }
 
@@ -3839,4 +3839,11 @@ exports.dialog_bindings = function(did) {
             dwin.cancel();
         }
     };
+}
+
+exports.resize_window = function(did) {
+    var w = dialogwin[did].window.document.body.scrollWidth,
+        h = dialogwin[did].window.document.body.scrollHeight;
+    dialogwin[did].width = w;
+    dialogwin[did].height = h;
 }
