@@ -5482,10 +5482,6 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             //numbertocolor(fielddesc_getfloat(&x->x_outlinecolor, template,
             //    data, 1), outline);
 
-            gui_start_vmess("gui_plot_vis", "xii",
-                glist_getcanvas(glist),
-                basex,
-                basey);
                 
             if (wonset >= 0)
             {
@@ -5493,6 +5489,11 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                    a filled polygon with 2n points. */
                 //sys_vgui(".x%lx.c create ppolygon \\\n",
                 //    glist_getcanvas(glist));
+
+                gui_start_vmess("gui_plot_vis", "xii",
+                    glist_getcanvas(glist),
+                    basex,
+                    basey);
 
                 gui_start_array();
                 gui_s("M");
@@ -5625,6 +5626,12 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                     segmented line with the requested width; otherwise don't
                     draw the trace at all. */
                 //sys_vgui(".x%lx.c create polyline \\\n", glist_getcanvas(glist));
+                gui_start_vmess("gui_plot_vis", "xii",
+                    glist_getcanvas(glist),
+                    basex,
+                    basey);
+
+
                 gui_start_array();
                 gui_s("M");
 
@@ -5744,19 +5751,40 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
 
 
                    /* todo: need to check if plot itself is in an array */
-                sys_vgui(".x%lx.c create group -tags {.scelem%lx.%lx} "
-                         "-matrix {{1.0 0.0} {0.0 1.0} {%g %g}} ",
-                    glist_getcanvas(glist), elemtemplatecanvas,
-                    (t_word *)(elem + elemsize * i),
-                    usexloc, useyloc);
+                //sys_vgui(".x%lx.c create group -tags {.scelem%lx.%lx} "
+                //         "-matrix {{1.0 0.0} {0.0 1.0} {%g %g}} ",
+                //    glist_getcanvas(glist), elemtemplatecanvas,
+                //    (t_word *)(elem + elemsize * i),
+                //    usexloc, useyloc);
+                char tagbuf[MAXPDSTRING];
+                sprintf(tagbuf, "scelem%lx.%lx", elemtemplatecanvas,
+                    (t_word *)(elem + elemsize * i));
+                char parent_tagbuf[MAXPDSTRING];
                 if (in_array)
                 {
-                    sys_vgui("-parent {.scelem%lx.%lx}\n", parentglist, data);
+                    //sys_vgui("-parent {.scelem%lx.%lx}\n", parentglist, data);
+                    sprintf(parent_tagbuf, "scelem%lx.%lx", parentglist, data);
                 }
                 else
                 {
-                    sys_vgui("-parent {.dgroup%lx.%lx}\n", x->x_canvas, data);
+                    //sys_vgui("-parent {.dgroup%lx.%lx}\n", x->x_canvas, data);
+                    sprintf(parent_tagbuf, "dgroup%lx.%lx", x->x_canvas, data);
                 }
+                char transform_buf[MAXPDSTRING];
+                sprintf(transform_buf, "translate(%g,%g)", usexloc, useyloc);
+
+                gui_start_vmess("gui_draw_vis", "xs",
+                    glist_getcanvas(glist), "g");
+                gui_start_array();
+                gui_s("transform");
+                gui_s(transform_buf);
+                gui_end_array();
+                gui_start_array();
+                gui_s(parent_tagbuf);
+                gui_s(tagbuf);
+                gui_end_array();
+                gui_end_vmess();
+
                 for (y = elemtemplatecanvas->gl_list; y; y = y->g_next)
                 {
                     if (pd_class(&y->g_pd) == canvas_class &&

@@ -2930,6 +2930,7 @@ function gui_scalar_configure_gobj(cid, tag, isselected, t1, t2, t3, t4, t5, t6)
 }
 
 function gui_draw_vis(cid, type, attr_array, tag_array) {
+    // tag_array: [0] = parent_tag, [1] = tag
     //gui_post("inside gui_draw_vis");
     //for(var i = 0; i < arguments.length; i++) {
     //    gui_post("arg1 is " + arguments[i]);
