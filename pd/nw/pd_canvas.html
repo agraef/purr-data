@@ -775,7 +775,10 @@ function nw_create_patch_window_menus (name) {
 
     editMenu.append(new nw.MenuItem({
         label: l('menu.editmode'),
-        click: function() { pdgui.pdsend(name + " editmode 0"); },
+        click: function() {
+            check_box_for_text();
+            pdgui.pdsend(name + " editmode 0");
+        },
         key: 'e',
         modifiers: "ctrl",
         tooltip: l('menu.editmode_tt')
