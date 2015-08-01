@@ -231,6 +231,7 @@ Everything else: (A [x] means we've fixed it)
 [ ] make a css entry for colors for the new_object_textentry border, background, and cursor
 [ ] control main object font color from css
 [x] check new_object_textentry on editmode change
+[ ] check if [key] and [keyup] handle autorepeat the same way
 
 Crashers
 --------
