@@ -1040,6 +1040,8 @@ todo: some better way than drawcurve has for defining click widgetbehaviors
 
 t_class *draw_class;
 
+t_class *drawimage_class;
+
 t_class *svg_class;
 
 /* this is a wrapper around t_fielddesc-- it adds a flag for two reasons:
@@ -3605,16 +3607,29 @@ void svg_grouptogui(t_glist *g, t_template *template, t_word *data)
 void svg_parentwidgettogui(t_gobj *z, t_glist *owner, t_word *data,
     t_template *template)
 {
+    char tagbuf[MAXPDSTRING];
     if (pd_class(&z->g_pd) == draw_class)
     {
         t_draw *x = (t_draw *)z;
-        char tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "draw%lx.%lx", (long unsigned int)x,
             (long unsigned int)data);
         gui_start_vmess("gui_draw_configure_all", "xs",
             glist_getcanvas(owner), tagbuf);
         svg_togui((t_svg *)x->x_attr, template, data);
         gui_end_vmess();
+    }
+    else if (pd_class(&z->g_pd) == drawimage_class)
+    {
+        t_drawimage *x = (t_drawimage *)z;
+        sprintf(tagbuf, "draw%lx.%lx", (long unsigned int)x,
+            (long unsigned int)data);
+        gui_start_vmess("gui_draw_configure_all", "xs",
+            glist_getcanvas(owner), tagbuf);
+        svg_togui((t_svg *)x->x_attr, template, data);
+        gui_end_vmess();
+        gui_vmess("gui_drawimage_index", "xxxi",
+            glist_getcanvas(owner), x, data,
+            drawimage_getindex(x, template, data));
     }
 }
     
@@ -6842,7 +6857,6 @@ static void drawsymbol_setup(void)
     (drawimage|drawsprite) [-v <visible>] variable x y directory
 */
 
-t_class *drawimage_class;
 
 #define DRAW_SPRITE 1
 
