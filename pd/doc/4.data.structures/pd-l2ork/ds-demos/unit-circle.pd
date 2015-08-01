@@ -1,5 +1,5 @@
 #N struct unit_circle float x float y;
-#N canvas 0 19 683 520 10;
+#N canvas 11 47 683 520 10;
 #X scalar unit_circle 103 387 \;;
 #X obj 310 166 * 6.28;
 #X obj 310 212 sin;
@@ -11,7 +11,7 @@
 #X obj 310 5 bng 21 250 50 0 empty empty Go! 28 10 0 10 -4034 -1 -1
 ;
 #X obj 52 101 loadbang;
-#N canvas 274 34 770 578 (subpatch) 0;
+#N canvas 111 79 770 578 (subpatch) 0;
 #X obj 117 -58 draw path m -120 0 l 120 0 m 0 120 l 0 -240 0 20 150
 0 m -150 100 l 150 0 m -150 100 l 150 0 m 0 20 l 0 -240 0 20 150 0
 m -150 100 l 150 0 m -150 100 l 150 0 m 0 20 l 0 -240 0 20 150 0 m
@@ -59,7 +59,7 @@ l 150 0 m -150 100 l 150 0 m 0 20 l 0 -240 0 20 20 0 m -20 100 l 20
 #X text 624 329 <- guide line;
 #X msg 117 -79 stroke-width 2 \, stroke gray \, stroke-opacity 0.6
 \, fill white;
-#X msg 525 110 stroke-width 3 \, stroke red \, fill "";
+#X msg 525 110 stroke-width 3 \, stroke red \, fill none;
 #X connect 2 0 1 0;
 #X connect 3 0 2 0;
 #X connect 4 0 36 0;
