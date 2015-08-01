@@ -71,7 +71,7 @@ var canvas_events = (function() {
                 return false;
             },
             mousedown: function(evt) {
-                // tk events are one greater than html5...
+                // tk events (and, therefore, Pd evnets) are one greater than html5...
                 var b = evt.button + 1;
                 var mod;
                 // For some reason right-click sends a modifier value of "8",
@@ -94,8 +94,9 @@ var canvas_events = (function() {
                 //    evt.pageX + " y: " + evt.pageY +
                 //    " button: " + (evt.button + 1));
                 pdgui.pdsend(name +
-                    " mouseup " + evt.pageX + " " + evt.pageY + " " +
-                    (evt.button + 1));
+                    " mouseup " + (evt.pageX + svg_view.x) + " " +
+                                  (evt.pageY + svg_view.y) + " " +
+                                  (evt.button + 1));
                 evt.stopPropagation();
                 evt.preventDefault();
             },
