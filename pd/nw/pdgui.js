@@ -2986,6 +2986,13 @@ function gui_draw_coords(cid, tag, shape, points) {
                 cy: points[1]
             });
             break;
+        case "polyline":
+        case "polygon":
+            configure_item(elem, {
+                points: points
+            });
+            break;
+        default:
     }
 }
 
