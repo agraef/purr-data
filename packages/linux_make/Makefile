@@ -1,5 +1,5 @@
 #
-# for making a tar.bz2 that installs using a Makefile
+# for making a .deb, or a tar.bz2 that installs using a Makefile
 #
 
 CWD := $(shell pwd)
