@@ -232,6 +232,10 @@ Everything else: (A [x] means we've fixed it)
 [ ] control main object font color from css
 [x] check new_object_textentry on editmode change
 [ ] check if [key] and [keyup] handle autorepeat the same way
+[ ] gui_vmess: should it look like this:
+        (void *x, "msg", "arg_format", ...)
+    or as it currently looks, like this:
+        ("msg", "arg_format", ...)
 
 Crashers
 --------
