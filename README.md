@@ -295,7 +295,7 @@ where const char *format consists of zero or more of the following:
 * i - integer (int)
 * s - c string (char*)
 * x - hexadecimal integer value, with a precision of at least six digits.
-      (hex value is preceded by an 'x', like "x123456"
+      (hex value is preceded by an 'x', like "x123456")
 
 For some of Pd's internals like array visualization, the message length may
 vary. For these _special_ cases, the following functions allow the developer
