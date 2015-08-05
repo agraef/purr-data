@@ -236,7 +236,8 @@ Everything else: (A [x] means we've fixed it)
         (void *x, "msg", "arg_format", ...)
     or as it currently looks, like this:
         ("msg", "arg_format", ...)
-
+[ ] figure out difference between deb install location /usr
+    vs tarball /usr/local
 Crashers
 --------
 
