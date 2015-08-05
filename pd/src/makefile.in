@@ -255,6 +255,17 @@ install: all tkpath tkdnd
 	install -m644 ../tkdnd/library/tkdnd_unix.tcl $(DESTDIR)$(libpdbindir)/tkdnd_unix.tcl
 	install -m644 ../tkdnd/library/tkdnd_compat.tcl $(DESTDIR)$(libpdbindir)/tkdnd_compat.tcl
 	install -m644 ../tkdnd/libtkdnd*so $(DESTDIR)$(libpdbindir)/
+	install -d $(DESTDIR)$(libpdbindir)/nw
+	install -d $(DESTDIR)$(libpdbindir)/css
+	install -d $(DESTDIR)$(libpdbindir)/locales
+	install -m644 ../nw/*.* $(DESTDIR)$(libpdbindir)/
+	install -m755 ../nw/nw/* $(DESTDIR)$(libpdbindir)/nw/
+	install -m644 ../nw/css/*.* $(DESTDIR)$(libpdbindir)/css/
+	for dir in $(shell ls -1 ../nw/locales); do \
+		echo "installing locale $$dir"; \
+		install -d $(DESTDIR)$(libpdbindir)/locales/$$dir ; \
+		install -m644 -p ../nw/locales/$$dir/*.* $(DESTDIR)$(libpdbindir)/locales/$$dir ; \
+	done
 	install -d $(DESTDIR)$(bindir)
 	install $(BINARYMODE) $(PDEXEC) $(DESTDIR)$(bindir)/@PDEXEC@
 # kludge to allow pd~ to work by default in pd-l2ork
