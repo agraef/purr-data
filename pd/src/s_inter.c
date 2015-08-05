@@ -1278,11 +1278,17 @@ int sys_startgui(const char *guidir)
                  sys_libdir->s_name, sys_libdir->s_name, guidir, portno, (sys_k12_mode ? "pd-l2ork-k12" : "pd-l2ork"));
 
 /* SUPERHACK - let's just load node-webkit and see what happens */
-            sprintf(cmdbuf,
-                  "/home/user/Downloads/nwjs-v0.12.2-linux-ia32/nw "
+//            sprintf(cmdbuf,
+//                  "/home/user/Downloads/nwjs-v0.12.2-linux-ia32/nw "
 //                  "/home/nu/Downloads/nwjs-v0.12.0-alpha2-linux-ia32/nw "
-                "/home/user/pd-nw/pd/nw/ %d localhost %s\n",
-                portno,
+//                "/home/user/pd-nw/pd/nw/ %d localhost %s\n",
+//                portno,
+//                (sys_k12_mode ? "pd-l2ork-k12" : "pd-l2ork"));
+
+
+            sprintf(cmdbuf,
+                "%s/nw/nw %s %d localhost %s\n",
+                guidir, guidir, portno,
                 (sys_k12_mode ? "pd-l2ork-k12" : "pd-l2ork"));
 
 #endif
