@@ -71,6 +71,12 @@
     stroke: #a9a;
 }
 
+/* selected connection between objects */
+.cord.signal.selected_line,
+.cord.control.selected_line {
+    stroke: blue;
+}
+
 #cord_inspector_rect {
     fill: white;
     stroke: white;
@@ -175,11 +181,6 @@ text {
 :not(.gop).selected .border {
     stroke: #ffff00;
     display: inline;
-}
-
-/* selected connection between objects */
-.selected_line {
-    stroke: blue;
 }
 
 /* for an object that didn't create */
