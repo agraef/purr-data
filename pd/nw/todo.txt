@@ -272,6 +272,9 @@ Everything else: (A [x] means we've fixed it)
     Hunks failed.  Need to patch manually.
 [ ] 00021cccae81854a6e107141e828cec3b1107e6b
     Hunks failed.  Patch manually
+[ ] 930414ea5a2330dfa5d581e92514ece05aca1ebf
+    Has to do with font positioning inside objects boxes... probably
+    need to address this manually.
 [ ] same for all commits up to Jul 31, 2015
 
 Crashers
