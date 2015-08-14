@@ -2495,7 +2495,7 @@ proc pdtk_k12_show_data_icons {name} {
 	$name.k12frame.datasound.data configure -image i.data_on
 	$name.k12frame.datasound.sound configure -image i.sound
 	catch {
-		pack forget $name.k12frame.signal_1 $name.k12frame.signal_2 $name.k12frame.signal_3 $name.k12frame.instr $name.k12frame.fx $name.k12frame.output
+		pack forget $name.k12frame.signal_1 $name.k12frame.signal_2 $name.k12frame.signal_3 $name.k12frame.instr $name.k12frame.midi $name.k12frame.fx $name.k12frame.output
 		pack $name.k12frame.wii $name.k12frame.wii2 $name.k12frame.arduino $name.k12frame.math_1 $name.k12frame.math_2 $name.k12frame.math_3 $name.k12frame.logic $name.k12frame.other -side top -expand 0 -fill x
 	}
 }
