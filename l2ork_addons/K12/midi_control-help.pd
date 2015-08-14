@@ -1,0 +1,62 @@
+#N canvas 248 30 509 652 10;
+#X obj 244 233 cnv 15 447 141 empty empty empty 20 12 0 14 -233017
+-66577 0;
+#X obj 470 -236 preset_hub k12 %hidden% %node% 2 13 8 %preset% 0 440
+%preset% 1 440 %preset% 2 440 %preset% 3 440 %node% 2 2 14 %preset%
+0 100 %preset% 1 100 %preset% 2 72.093 %preset% 3 72.093 %node% 2 7
+5 %preset% 0 10 %preset% 1 20 %preset% 2 30 %preset% 3 40 %node% 2
+7 7 %preset% 0 60 %preset% 1 60 %preset% 2 30 %preset% 3 40 %node%
+2 2 28 %preset% 0 1 %preset% 1 1 %node% 2 8 8 %node% 2 9 8 %node% 2
+10 4 %preset% 0 1 %preset% 1 1 %node% 2 10 5 %preset% 0 5000 %preset%
+1 5000 %node% 2 11 6 %preset% 0 1 %preset% 1 1 %node% 2 13 6 %preset%
+0 1 %node% 2 13 5 %preset% 0 1 %node% 2 12 7 %preset% 0 60 %preset%
+1 60 %node% 2 11 7 %preset% 0 0 %preset% 1 90 %node% 2 13 7 %preset%
+0 127 %preset% 1 127 %node% 2 13 7 %node% 2 14 5 %preset% 0 1 %preset%
+1 1 %node% 2 14 6 %preset% 0 1 %preset% 1 1 %node% 2 15 0 %preset%
+0 10000 %preset% 1 10000 %node% 2 15 4 %preset% 0 0 %preset% 1 1 %node%
+2 16 3 %preset% 0 0 %preset% 1 0 %node% 2 16 19 %preset% 0 127 %preset%
+1 127;
+#X obj 231 593 K12/output;
+#N canvas 569 322 379 204 META 0;
+#X text 7 5 DESCRIPTION MIDI control works exclusively with the MIDI
+synth and allows configuring of instrument's properties on a specified
+channel (MIDI synth supports channels 1-16);
+#X text 7 61 INLET_0 Set control value (0-127);
+#X text 7 91 OUTLET_0 Connect to MIDI synth to issue control command
+on a specified channel;
+#X restore 649 667 pd META;
+#X obj 209 -215 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
+0;
+#X obj 209 -243 cnv 15 501 28 empty empty MIDI/Control 5 14 0 20 -139274
+-262144 0;
+#X obj 680 -212 ggee/image @pd_extra/K12/icons/l2ork.png 0;
+#X obj 447 -182 cnv 15 250 99 empty empty empty 20 12 0 14 -233017
+-66577 0;
+#X obj 602 -177 K12/preset;
+#X obj 230 465 K12/midi_synth;
+#X obj 230 -56 K12/midi_note;
+#X obj 595 156 K12/math_number;
+#X obj 230 -161 K12/math_number;
+#X obj 336 -161 K12/math_number;
+#X obj 595 279 K12/midi_control;
+#X obj 595 -63 K12/logic_metronome;
+#X obj 595 49 K12/logic_counter;
+#X text 453 -131 Recall zeroth preset \, then compare with the first
+preset., f 24;
+#X obj 254 349 pddplink doc/MIDI_Standard_Controller_Numbers.html;
+#X text 253 240 MIDI control works exclusively with the MIDI synth
+object. It allows for changing of instrument's properties on a specified
+channel. The channel can be customized by changing channel value (1-16)
+on the object \, while the control number (0-127) can be passed using
+object's left inlet. For more info on possible MIDI control messages
+open the page below (please note that not all controls will work on
+all instruments):, f 55;
+#X connect 9 0 2 0;
+#X connect 9 1 2 0;
+#X connect 10 0 9 0;
+#X connect 11 0 14 0;
+#X connect 12 0 10 0;
+#X connect 13 0 10 1;
+#X connect 14 0 9 0;
+#X connect 15 0 16 0;
+#X connect 16 0 11 0;

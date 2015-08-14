@@ -1,0 +1,27 @@
+#N canvas 385 201 480 270 10;
+#X obj 375 103 ggee/image @pd_extra/K12/objects/midi_control.png 1
+;
+#X obj 368 6 loadbang;
+#X obj 388 105 nbx 2 14 1 16 0 1 empty empty empty -7 -8 0 10 -262144
+-1 -1 1 256 3;
+#X obj 200 70 inlet;
+#X obj 200 241 outlet;
+#X obj 426 71 preset_node k12;
+#X obj 427 97 preset_node k12;
+#X obj 200 199 pack f f f;
+#X text 335 104 Channel:;
+#X obj 382 122 nbx 3 14 0 127 0 1 empty empty empty -4 -8 0 10 -262144
+-1 -1 0 256 3;
+#X text 335 121 Control:;
+#X msg 368 28 open @pd_extra/K12/objects/midi_control.png;
+#X msg 200 220 cc \$2 \$3 \$1;
+#X connect 1 0 11 0;
+#X connect 2 0 7 1;
+#X connect 3 0 7 0;
+#X connect 5 0 2 0;
+#X connect 6 0 9 0;
+#X connect 7 0 12 0;
+#X connect 9 0 7 2;
+#X connect 11 0 0 0;
+#X connect 12 0 4 0;
+#X coords 0 -1 1 1 89 89 2 330 71;

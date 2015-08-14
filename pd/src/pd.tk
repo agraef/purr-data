@@ -464,6 +464,11 @@ proc pdtk_enable_k12_mode {extra_dir} {
 	image create photo i.instr_sustained1 -file $extra_dir/K12/icons/instr_sustained1.png
 	image create photo i.instr_sustained2 -file $extra_dir/K12/icons/instr_sustained2.png
 
+	image create photo i.midi_synth -file $extra_dir/K12/icons/midi_synth.png
+	image create photo i.midi_note -file $extra_dir/K12/icons/midi_note.png
+	image create photo i.midi_instrument -file $extra_dir/K12/icons/midi_instrument.png
+	image create photo i.midi_control -file $extra_dir/K12/icons/midi_control.png
+
 	image create photo i.fx_filter -file $extra_dir/K12/icons/fx_filter.png
 	image create photo i.fx_multitap -file $extra_dir/K12/icons/fx_multitap.png
 	image create photo i.fx_reverb -file $extra_dir/K12/icons/fx_reverb.png
@@ -2500,7 +2505,7 @@ proc pdtk_k12_show_sound_icons {name} {
 	$name.k12frame.datasound.sound configure -image i.sound_on
 	catch {
 		pack forget $name.k12frame.wii $name.k12frame.wii2 $name.k12frame.arduino $name.k12frame.math_1 $name.k12frame.math_2 $name.k12frame.math_3 $name.k12frame.logic $name.k12frame.other
-		pack $name.k12frame.signal_1 $name.k12frame.signal_2 $name.k12frame.signal_3 $name.k12frame.instr $name.k12frame.fx $name.k12frame.output -side top -expand 0 -fill x
+		pack $name.k12frame.signal_1 $name.k12frame.signal_2 $name.k12frame.signal_3 $name.k12frame.instr $name.k12frame.midi $name.k12frame.fx $name.k12frame.output -side top -expand 0 -fill x
 	}
 }
 
@@ -2930,6 +2935,26 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		pdtk_k12panel_standardkeybindings $name.k12frame.instr.b_instr_short2
 		pdtk_k12panel_standardkeybindings $name.k12frame.instr.b_instr_sustained1
 		pdtk_k12panel_standardkeybindings $name.k12frame.instr.b_instr_sustained2
+
+		# ---------------------------------- MIDI INSTRUMENTS ------------------------------------
+		match_linux_wm [list frame $name.k12frame.midi -relief flat]
+		match_linux_wm [list button $name.k12frame.midi.b_midi_synth -image i.midi_synth \
+			-command [concat put_K12_objects $name midi_synth]]
+		match_linux_wm [list button $name.k12frame.midi.b_midi_note -image i.midi_note \
+			-command [concat put_K12_objects $name midi_note]]
+		match_linux_wm [list button $name.k12frame.midi.b_midi_instrument -image i.midi_instrument \
+			-command [concat put_K12_objects $name midi_instrument]]
+		match_linux_wm [list button $name.k12frame.midi.b_midi_control -image i.midi_control \
+			-command [concat put_K12_objects $name midi_control]]
+		pack $name.k12frame.midi.b_midi_synth $name.k12frame.midi.b_midi_note $name.k12frame.midi.b_midi_instrument $name.k12frame.midi.b_midi_control -side left -expand 0 -padx 1 -pady 1
+		setTooltip $name.k12frame.midi.b_midi_synth "MIDI Synth: create a synthesizer with up to 128 unique sounds"
+		setTooltip $name.k12frame.midi.b_midi_note "MIDI Note: connect this to MIDI synth to issue note on and off commands"
+		setTooltip $name.k12frame.midi.b_midi_instrument "MIDI Instrument: connect this to MIDI synth to issue instrument change commands"
+		setTooltip $name.k12frame.midi.b_midi_control "MIDI Control: connect this to MIDI synth to change instrument properties"
+		pdtk_k12panel_standardkeybindings $name.k12frame.midi.b_midi_synth
+		pdtk_k12panel_standardkeybindings $name.k12frame.midi.b_midi_note
+		pdtk_k12panel_standardkeybindings $name.k12frame.midi.b_midi_instrument
+		pdtk_k12panel_standardkeybindings $name.k12frame.midi.b_midi_control
 
 		# ---------------------------------- F/X -----------------------------------------
 		match_linux_wm [list frame $name.k12frame.fx -relief flat]

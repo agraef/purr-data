@@ -1,0 +1,51 @@
+#N canvas 351 15 509 652 10;
+#X obj 244 134 cnv 15 447 102 empty empty empty 20 12 0 14 -233017
+-66577 0;
+#X obj 470 -236 preset_hub k12 %hidden% %node% 2 13 8 %preset% 0 440
+%preset% 1 440 %preset% 2 440 %preset% 3 440 %node% 2 2 14 %preset%
+0 100 %preset% 1 100 %preset% 2 72.093 %preset% 3 72.093 %node% 2 7
+5 %preset% 0 10 %preset% 1 20 %preset% 2 30 %preset% 3 40 %node% 2
+7 7 %preset% 0 60 %preset% 1 60 %preset% 2 30 %preset% 3 40 %node%
+2 2 28 %preset% 0 1 %preset% 1 1 %node% 2 8 8 %node% 2 9 8 %node% 2
+10 4 %preset% 0 1 %preset% 1 1 %node% 2 10 5 %preset% 0 250 %preset%
+1 250 %node% 2 11 6 %preset% 0 1 %preset% 1 1 %node% 2 13 6 %preset%
+0 1 %node% 2 13 5 %preset% 0 1 %node% 2 13 7 %preset% 0 127 %preset%
+1 127 %node% 2 12 7 %preset% 0 1 %preset% 1 15 %node% 2 15 7 %preset%
+0 127 %preset% 1 127 %node% 2 14 7 %preset% 0 60 %preset% 1 60;
+#X obj 231 463 K12/output;
+#N canvas 530 280 379 204 META 0;
+#X text 7 5 DESCRIPTION MIDI instrument works exclusively with the
+MIDI synth and allows configuring of the instrument on a specified
+channel (MIDI synth supports channels 1-16);
+#X text 7 91 OUTLET_0 Connect to MIDI synth to issue instrument change
+command on a specified channel;
+#X text 7 61 INLET_0 Set instrument number (1-128. default 1);
+#X restore 649 537 pd META;
+#X obj 209 -215 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
+0;
+#X obj 209 -243 cnv 15 501 28 empty empty MIDI/Instrument 5 14 0 20
+-139274 -262144 0;
+#X obj 680 -212 ggee/image @pd_extra/K12/icons/l2ork.png 0;
+#X obj 447 -182 cnv 15 250 99 empty empty empty 20 12 0 14 -233017
+-66577 0;
+#X obj 602 -177 K12/preset;
+#X obj 230 335 K12/midi_synth;
+#X obj 230 34 K12/midi_note;
+#X obj 595 140 K12/midi_instrument;
+#X obj 595 57 K12/math_number;
+#X text 452 -131 Recall leftmost presetと start the example. Then
+\, try the second., f 23;
+#X obj 230 -161 K12/math_number;
+#X obj 336 -161 K12/math_number;
+#X text 253 141 MIDI instrument works exclusively with the MIDI synth
+object. It allows for changing of the instrument on a specified channel.
+The channel can be customized by changing channel value (1-16) on the
+object \, while the instrument number (1-128) can be passed using object's
+left inlet., f 55;
+#X connect 9 0 2 0;
+#X connect 9 1 2 0;
+#X connect 10 0 9 0;
+#X connect 11 0 9 0;
+#X connect 12 0 11 0;
+#X connect 14 0 10 0;
+#X connect 15 0 10 1;

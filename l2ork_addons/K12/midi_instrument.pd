@@ -1,0 +1,23 @@
+#N canvas 319 273 480 253 10;
+#X obj 375 103 ggee/image @pd_extra/K12/objects/midi_instrument.png
+1;
+#X obj 368 6 loadbang;
+#X obj 190 71 inlet;
+#X obj 190 226 outlet;
+#X obj 359 118 nbx 2 14 1 16 0 1 empty empty Channel: -7 -8 0 10 -262144
+-1 -1 1 256 3;
+#X obj 190 184 pack f f;
+#X obj 229 71 preset_node k12;
+#X msg 190 205 pgmout \$2 \$1;
+#X msg 368 28 open @pd_extra/K12/objects/midi_instrument.png;
+#X obj 190 92 - 1;
+#X connect 1 0 8 0;
+#X connect 2 0 9 0;
+#X connect 4 0 5 1;
+#X connect 4 0 6 0;
+#X connect 5 0 7 0;
+#X connect 6 0 4 0;
+#X connect 7 0 3 0;
+#X connect 8 0 0 0;
+#X connect 9 0 5 0;
+#X coords 0 -1 1 1 89 89 2 330 71;
