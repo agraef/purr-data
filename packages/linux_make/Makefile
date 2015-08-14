@@ -89,6 +89,8 @@ deb: DEB_PD_VERSION := $(shell echo $(PD_VERSION) | sed 's|\(.*\)-l2ork-\(.*\)|\
 deb: $(bindir)
 # add K12 mode
 	cp -rf ../../l2ork_addons/K12/ $(DESTDIR)$(libpddir)/extra/
+# add arduino library
+	cp -rf ../../externals/hardware/arduino $(DESTDIR)$(libpddir)/extra/
 # free desktop menu, mime, and icon support
 # perhaps the icons should go in /usr/share/pixmaps like 'scribus'
 	install -d $(DESTDIR)/usr/share/icons/hicolor/128x128/apps
