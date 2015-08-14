@@ -275,6 +275,8 @@ Everything else: (A [x] means we've fixed it)
 [ ] 930414ea5a2330dfa5d581e92514ece05aca1ebf
     Has to do with font positioning inside objects boxes... probably
     need to address this manually.
+[ ] 60e06b3155458b561f3fb1ace17874eac9c5592a
+    Hunks failed.  Patch manually.
 [ ] same for all commits up to Jul 31, 2015
 
 Crashers
