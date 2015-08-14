@@ -245,6 +245,8 @@ Everything else: (A [x] means we've fixed it)
 [ ] same for a620228554d1662bacd0f2f8cfc65259049164ec
 [ ] same for "*fixed spaces in old UI objects that were converted to \t..."
     262447434c3548c53bc0b52e7f5bb5431b233311
+[ ] same for "*fixed font positioning on 14.04+ releases"
+    9edc6ca98e141174b86ebe5cdf406fe7e47845d5
 
 Crashers
 --------
