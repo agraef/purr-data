@@ -38,6 +38,7 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b);
 static void canvas_paste(t_canvas *x);
 static void canvas_clearline(t_canvas *x);
 static t_binbuf *copy_binbuf;
+static int clipboard_istext = 0;
 //static char *canvas_textcopybuf;
 //static int canvas_textcopybufsize;
 static t_glist *glist_finddirty(t_glist *x);
@@ -5982,6 +5983,7 @@ static void canvas_copy(t_canvas *x)
     screeny2 = 0;
     copiedfont = 0;
     binbuf_free(copy_binbuf);
+    clipboard_istext = 0;
     //fprintf(stderr, "canvas_copy\n");
     sys_vgui("pdtk_canvas_reset_last_clipboard\n");
     copy_binbuf = canvas_docopy(x);
@@ -5994,6 +5996,7 @@ static void canvas_copy(t_canvas *x)
     {
         char *buf;
         int bufsize;
+        clipboard_istext = 1;
         rtext_getseltext(x->gl_editor->e_textedfor, &buf, &bufsize);
 
 //#if defined(MSW) || defined(__APPLE__)
@@ -6424,7 +6427,7 @@ static void canvas_paste(t_canvas *x)
         }*/
 //#endif
     }
-    else
+    else if (!clipboard_istext)
     {
         //canvas_setundo(x, canvas_undo_paste, canvas_undo_set_paste(x),
         //    "paste");
