@@ -408,12 +408,12 @@ proc pdtk_enable_k12_mode {extra_dir} {
 	image create photo i.wii_nunchuk_accelerometer -file $extra_dir/K12/icons/wii_nunchuk_accelerometer.png
 	image create photo i.wii_nunchuk_stick -file $extra_dir/K12/icons/wii_nunchuk_stick.png
 
-	image create photo i.sarcduino -file $extra_dir/K12/icons/sarcduino_on.png
-	image create photo i.sarcduino_digital -file $extra_dir/K12/icons/sarcduino_digital.png
-	image create photo i.sarcduino_analog -file $extra_dir/K12/icons/sarcduino_analog.png
-	image create photo i.sarcduino_hit -file $extra_dir/K12/icons/sarcduino_hit.png
-	image create photo i.sarcduino_piezo -file $extra_dir/K12/icons/sarcduino_piezo.png
-	#image create photo i.sarcduino_net -file $extra_dir/K12/icons/sarcduino_net.png
+	image create photo i.arduino -file $extra_dir/K12/icons/arduino_on.png
+	image create photo i.arduino_digital_in -file $extra_dir/K12/icons/arduino_digital.png
+	image create photo i.arduino_digital_out -file $extra_dir/K12/icons/arduino_digital.png
+	image create photo i.arduino_analog_in -file $extra_dir/K12/icons/arduino_analog.png
+	image create photo i.arduino_analog_out -file $extra_dir/K12/icons/arduino_analog.png
+	#image create photo i.arduino_net -file $extra_dir/K12/icons/arduino_net.png
 
 	image create photo i.raspberry_digital -file $extra_dir/K12/icons/raspberrypi_gpio_digital_on.png
 	image create photo i.raspberry_analog_out -file $extra_dir/K12/icons/raspberrypi_gpio_analog_out_on.png
@@ -437,8 +437,9 @@ proc pdtk_enable_k12_mode {extra_dir} {
 	image create photo i.logic_mapper -file $extra_dir/K12/icons/logic_mapper.png
 	image create photo i.logic_metronome -file $extra_dir/K12/icons/logic_metronome.png
 	image create photo i.logic_counter -file $extra_dir/K12/icons/logic_counter.png
-	image create photo i.logic_sequencer -file $extra_dir/K12/icons/logic_sequencer.png
+	image create photo i.logic_hit -file $extra_dir/K12/icons/logic_hit.png
 
+	image create photo i.logic_sequencer -file $extra_dir/K12/icons/logic_sequencer.png
 	image create photo i.preset -file $extra_dir/K12/icons/preset.png
 	image create photo i.comment -file $extra_dir/K12/icons/comment.png
 
@@ -2708,27 +2709,31 @@ proc pdtk_canvas_new {name width height geometry editable} {
 
 		# ---------------------------------- ARDUINO -----------------------------------------
 		match_linux_wm [list frame $name.k12frame.arduino -relief flat]
-		match_linux_wm [list button $name.k12frame.arduino.b_sarcduino -image i.sarcduino \
-			-command [concat put_K12_objects $name sarcduino_connect]]
-		match_linux_wm [list button $name.k12frame.arduino.b_sarcduino_digital -image i.sarcduino_digital \
-			-command [concat put_K12_objects $name sarcduino_digital]]
-		match_linux_wm [list button $name.k12frame.arduino.b_sarcduino_analog -image i.sarcduino_analog \
-			-command [concat put_K12_objects $name sarcduino_analog]]
-		match_linux_wm [list button $name.k12frame.arduino.b_sarcduino_hit -image i.sarcduino_hit \
-			-command [concat put_K12_objects $name sarcduino_hit]]
-		match_linux_wm [list button $name.k12frame.arduino.b_sarcduino_piezo -image i.sarcduino_piezo \
-			-command [concat put_K12_objects $name sarcduino_piezo]]
-		pack $name.k12frame.arduino.b_sarcduino $name.k12frame.arduino.b_sarcduino_digital $name.k12frame.arduino.b_sarcduino_analog $name.k12frame.arduino.b_sarcduino_hit $name.k12frame.arduino.b_sarcduino_piezo -side left -expand 0 -padx 1 -pady 1
-		setTooltip $name.k12frame.arduino.b_sarcduino "Arduino Connect: Use this to arduino to the computer"
-		setTooltip $name.k12frame.arduino.b_sarcduino_digital "Arduino Digital: Use this to detect on/off states of a digital sensor"
-		setTooltip $name.k12frame.arduino.b_sarcduino_analog "Arduino Analog: Use this to monitor analog sensor speed"
-		setTooltip $name.k12frame.arduino.b_sarcduino_hit "Arduino Hit: Use this to detect when the arduino analog sensor data has rapidly changed"
-		setTooltip $name.k12frame.arduino.b_sarcduino_piezo "Arduino Piezo: Use this to analyze data coming from a piezo microphone sensor"
-		pdtk_k12panel_standardkeybindings $name.k12frame.arduino.b_sarcduino
-		pdtk_k12panel_standardkeybindings $name.k12frame.arduino.b_sarcduino_digital
-		pdtk_k12panel_standardkeybindings $name.k12frame.arduino.b_sarcduino_analog
-		pdtk_k12panel_standardkeybindings $name.k12frame.arduino.b_sarcduino_hit
-		pdtk_k12panel_standardkeybindings $name.k12frame.arduino.b_sarcduino_piezo
+		match_linux_wm [list button $name.k12frame.arduino.b_arduino -image i.arduino \
+			-command [concat put_K12_objects $name arduino_connect]]
+		match_linux_wm [list button $name.k12frame.arduino.b_arduino_digital_in -image i.arduino_digital_in \
+			-command [concat put_K12_objects $name arduino_digital_in]]
+		match_linux_wm [list button $name.k12frame.arduino.b_arduino_digital_out -image i.arduino_digital_out \
+			-command [concat put_K12_objects $name arduino_digital_out]]
+		match_linux_wm [list button $name.k12frame.arduino.b_arduino_analog_in -image i.arduino_analog_in \
+			-command [concat put_K12_objects $name arduino_analog_in]]
+		match_linux_wm [list button $name.k12frame.arduino.b_arduino_analog_out -image i.arduino_analog_out \
+			-command [concat put_K12_objects $name arduino_analog_out]]
+		#match_linux_wm [list button $name.k12frame.arduino.b_arduino_piezo -image i.arduino_piezo \
+		#	-command [concat put_K12_objects $name arduino_piezo]]
+		pack $name.k12frame.arduino.b_arduino $name.k12frame.arduino.b_arduino_digital_in $name.k12frame.arduino.b_arduino_digital_out $name.k12frame.arduino.b_arduino_analog_in $name.k12frame.arduino.b_arduino_analog_out -side left -expand 0 -padx 1 -pady 1
+		setTooltip $name.k12frame.arduino.b_arduino "Arduino Connect: Use this to arduino to the computer"
+		setTooltip $name.k12frame.arduino.b_arduino_digital_in "Arduino Digital In: Use this to detect on/off states of a digital sensor"
+		setTooltip $name.k12frame.arduino.b_arduino_digital_out "Arduino Digital Out: Use this to send on/off state to an outgoing device (e.g. LED)"
+		setTooltip $name.k12frame.arduino.b_arduino_analog_in "Arduino Analog In: Use this to monitor analog sensor"
+		setTooltip $name.k12frame.arduino.b_arduino_analog_out "Arduino Analog Out: Use this to send analog signal over a PWM-enabled digital pin"
+		#setTooltip $name.k12frame.arduino.b_arduino_hit "Arduino Hit: Use this to detect when the arduino analog sensor data has rapidly changed"
+		#setTooltip $name.k12frame.arduino.b_arduino_piezo "Arduino Piezo: Use this to analyze data coming from a piezo microphone sensor"
+		pdtk_k12panel_standardkeybindings $name.k12frame.arduino.b_arduino
+		pdtk_k12panel_standardkeybindings $name.k12frame.arduino.b_arduino_digital_in
+		pdtk_k12panel_standardkeybindings $name.k12frame.arduino.b_arduino_digital_out
+		pdtk_k12panel_standardkeybindings $name.k12frame.arduino.b_arduino_analog_in
+		pdtk_k12panel_standardkeybindings $name.k12frame.arduino.b_arduino_analog_out
 
 		# ---------------------------------- RPI & MATH ROW 1 -----------------------------------------
 		match_linux_wm [list frame $name.k12frame.math_1 -relief flat]
@@ -2815,29 +2820,33 @@ proc pdtk_canvas_new {name width height geometry editable} {
 			-command [concat put_K12_objects $name logic_metronome]]
 		match_linux_wm [list button $name.k12frame.logic.b_logic_counter -image i.logic_counter \
 			-command [concat put_K12_objects $name logic_counter]]
-		match_linux_wm [list button $name.k12frame.logic.b_logic_sequencer -image i.logic_sequencer \
-			-command [concat put_K12_objects $name logic_sequencer]]
-		pack $name.k12frame.logic.b_logic_compare $name.k12frame.logic.b_logic_mapper $name.k12frame.logic.b_logic_metronome $name.k12frame.logic.b_logic_counter $name.k12frame.logic.b_logic_sequencer -side left -expand 0 -padx 1 -pady 1
+		match_linux_wm [list button $name.k12frame.logic.b_logic_hit -image i.logic_hit \
+			-command [concat put_K12_objects $name logic_hit]]
+		pack $name.k12frame.logic.b_logic_compare $name.k12frame.logic.b_logic_mapper $name.k12frame.logic.b_logic_metronome $name.k12frame.logic.b_logic_counter $name.k12frame.logic.b_logic_hit -side left -expand 0 -padx 1 -pady 1
 		setTooltip $name.k12frame.logic.b_logic_compare "Compare: Use this to compare two values"
 		setTooltip $name.k12frame.logic.b_logic_mapper "Mapper: Use this to map one value to two different but related values"
 		setTooltip $name.k12frame.logic.b_logic_metronome "Metronome: Use this to create a steady pulse"
 		setTooltip $name.k12frame.logic.b_logic_counter "Counter: Use this to count events"
-		setTooltip $name.k12frame.logic.b_logic_sequencer "Sequencer: Use this to map values to MIDI pitches"
+		setTooltip $name.k12frame.logic.b_logic_hit "Hit: Use this to detect a hit on a non-audio data stream"
 		pdtk_k12panel_standardkeybindings $name.k12frame.logic.b_logic_compare
 		pdtk_k12panel_standardkeybindings $name.k12frame.logic.b_logic_mapper
 		pdtk_k12panel_standardkeybindings $name.k12frame.logic.b_logic_metronome
 		pdtk_k12panel_standardkeybindings $name.k12frame.logic.b_logic_counter
-		pdtk_k12panel_standardkeybindings $name.k12frame.logic.b_logic_sequencer
+		pdtk_k12panel_standardkeybindings $name.k12frame.logic.b_logic_hit
 
-		# ---------------------------------- OTHER -----------------------------------------
+		# ---------------------------------- LOGIC + OTHER -----------------------------------------
 		match_linux_wm [list frame $name.k12frame.other -relief flat]
+		match_linux_wm [list button $name.k12frame.other.b_logic_sequencer -image i.logic_sequencer \
+			-command [concat put_K12_objects $name logic_sequencer]]
 		match_linux_wm [list button $name.k12frame.other.b_preset -image i.preset \
 			-command [concat put_K12_objects $name preset]] 
 		match_linux_wm [list button $name.k12frame.other.b_comment -image i.comment \
 			-command [concat menu_comment $name 1]]
-		pack $name.k12frame.other.b_preset $name.k12frame.other.b_comment -side left -expand 0 -padx 1 -pady 1
+		pack $name.k12frame.other.b_logic_sequencer $name.k12frame.other.b_preset $name.k12frame.other.b_comment -side left -expand 0 -padx 1 -pady 1
+		setTooltip $name.k12frame.other.b_logic_sequencer "Sequencer: Use this to map values to MIDI pitches"
 		setTooltip $name.k12frame.other.b_preset "Preset: Use this to store and recall up to four different states of your instrument"
 		setTooltip $name.k12frame.other.b_comment "Comment: Use this to post comments inside your patch"
+		pdtk_k12panel_standardkeybindings $name.k12frame.other.b_logic_sequencer
 		pdtk_k12panel_standardkeybindings $name.k12frame.other.b_preset
 		pdtk_k12panel_standardkeybindings $name.k12frame.other.b_comment
 
