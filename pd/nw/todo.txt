@@ -247,6 +247,8 @@ Everything else: (A [x] means we've fixed it)
     262447434c3548c53bc0b52e7f5bb5431b233311
 [ ] same for "*fixed font positioning on 14.04+ releases"
     9edc6ca98e141174b86ebe5cdf406fe7e47845d5
+[ ] same for "*fixed copying dialog text and pasting it onto a canvas crasher"
+    96e2fa5605a2d87ab99c5c2c8df9bca53c23c401
 
 Crashers
 --------
