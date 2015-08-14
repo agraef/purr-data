@@ -1,21 +1,25 @@
-#N canvas 739 169 438 262 10;
+#N canvas 710 159 457 281 10;
 #X obj 285 42 ggee/image @pd_extra/K12/objects/instr_sustained1.png
 1;
-#X obj 147 131 outlet~;
-#X obj 146 -77 noise~;
-#X obj 147 57 svf~ 500 0.95;
-#X obj 199 -107 inlet;
-#X obj 199 -82 * 0.5;
-#X obj 147 32 *~ 0.1;
-#X obj 147 -5 *~;
-#X obj 199 -34 line~;
+#X obj 137 131 outlet~;
+#X obj 136 -97 noise~;
+#X obj 137 97 svf~ 500 0.95;
+#X obj 209 -127 inlet;
+#X obj 209 -102 * 0.5;
+#X obj 137 72 *~ 0.1;
+#X obj 137 42 *~;
+#X obj 209 -54 line~;
 #X obj 251 49 cnv 15 51 21 empty empty Air 20 12 1 20 -262144 -66577
 0;
-#X obj 250 -107 inlet;
-#X obj 285 -70 loadbang;
-#X msg 285 -49 open @pd_extra/K12/objects/instr_sustained1.png;
-#X obj 250 -85 mtof;
-#X msg 199 -58 \$1 25;
+#X obj 260 -127 inlet;
+#X obj 294 -56 loadbang;
+#X msg 294 -33 open @pd_extra/K12/objects/instr_sustained1.png;
+#X obj 260 -55 mtof;
+#X msg 209 -78 \$1 25;
+#X obj 152 -54 loadbang;
+#X msg 152 -32 0;
+#X obj 299 -127 loadbang;
+#X msg 299 -105 60;
 #X connect 2 0 7 0;
 #X connect 3 0 1 0;
 #X connect 4 0 5 0;
@@ -27,4 +31,8 @@
 #X connect 11 0 12 0;
 #X connect 13 0 3 1;
 #X connect 14 0 8 0;
+#X connect 15 0 16 0;
+#X connect 16 0 7 1;
+#X connect 17 0 18 0;
+#X connect 18 0 13 0;
 #X coords 0 -1 1 1 89 89 2 240 10;

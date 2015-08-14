@@ -1,26 +1,22 @@
-#N canvas 96 21 502 652 10;
-#X obj 224 -61 cnv 15 469 101 empty empty empty 20 12 0 14 -233017
+#N canvas 47 14 502 652 10;
+#X obj 425 -238 preset_hub k12 1 %hidden% %node% 2 2 14 %preset% 0
+100 %preset% 1 100 %preset% 2 100 %preset% 3 100 %node% 2 2 28 %preset%
+0 1 %preset% 1 1 %preset% 2 1 %preset% 3 1 %node% 2 8 8 %node% 2 9
+8 %node% 2 10 4 %preset% 0 1 %preset% 1 1 %preset% 2 1 %preset% 3 1
+%node% 2 10 5 %preset% 0 250 %preset% 1 2000 %preset% 2 0 %preset%
+3 0 %node% 2 11 7 %preset% 0 127 %preset% 1 80 %preset% 2 127 %preset%
+3 0 %node% 2 12 7 %preset% 0 60 %preset% 1 67 %preset% 2 40 %preset%
+3 40;
+#X obj 224 -61 cnv 15 469 268 empty empty empty 20 12 0 14 -233017
 -66577 0;
-#X obj 470 -236 preset_hub k12 %hidden% %node% 2 13 8 %preset% 0 440
-%preset% 1 440 %preset% 2 440 %preset% 3 440 %node% 2 2 14 %preset%
-0 100 %preset% 1 100 %preset% 2 72.093 %preset% 3 72.093 %node% 2 7
-5 %preset% 0 10 %preset% 1 20 %preset% 2 30 %preset% 3 40 %node% 2
-7 7 %preset% 0 60 %preset% 1 67 %preset% 2 30 %preset% 3 40 %node%
-2 2 28 %preset% 0 1 %preset% 1 1 %node% 2 8 8 %node% 2 9 8 %node% 2
-10 4 %preset% 0 1 %preset% 1 1 %node% 2 10 5 %preset% 0 250 %preset%
-1 2000 %node% 2 11 6 %preset% 0 1 %preset% 1 1 %node% 2 14 6 %preset%
-0 1 %node% 2 14 5 %preset% 0 1 %node% 2 13 7 %preset% 0 127 %preset%
-1 80 %node% 2 12 7 %node% 2 17 7 %node% 2 15 7 %preset% 0 60 %preset%
-1 67 %node% 2 14 7 %preset% 0 127 %preset% 1 80 %node% 2 15 7 %preset%
-0 60 %preset% 1 67;
-#X obj 231 433 K12/output;
-#N canvas 540 290 379 204 META 0;
+#X obj 231 353 K12/output;
+#N canvas 520 270 379 204 META 0;
 #X text 7 5 DESCRIPTION MIDI note works exclusively with the MIDI synth
 object and sends note on and off messages;
 #X text 7 53 INLET_0 Enter pitch (0-127);
-#X text 7 79 INLET_0 Enter loudness (0-127 \, default 127);
 #X text 7 110 OUTLET_0 Connect to MIDI synth to create a note;
-#X restore 649 507 pd META;
+#X text 7 79 INLET_1 Enter loudness (0-127 \, default 127);
+#X restore 655 429 pd META;
 #X obj 209 -215 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
 0;
 #X obj 209 -243 cnv 15 501 28 empty empty MIDI/Note 5 14 0 20 -139274
@@ -29,23 +25,28 @@ object and sends note on and off messages;
 #X obj 445 -183 cnv 15 253 102 empty empty empty 20 12 0 14 -233017
 -66577 0;
 #X obj 602 -177 K12/preset;
-#X obj 230 275 K12/midi_synth;
+#X obj 230 225 K12/midi_synth;
 #X obj 230 -56 K12/midi_note;
-#X obj 258 154 K12/midi_instrument;
-#X obj 258 71 K12/math_number;
-#X text 453 -130 Recall 0th presetと start the example \, then try
-preset 1, f 23;
 #X obj 336 -158 K12/math_number;
 #X obj 230 -158 K12/math_number;
 #X text 327 -53 MIDI note issues notes to the soundfont player (MIDI
 synth). You can specify pitch (left inlet \, 0-127) \, loudness (right
 inlet \, 0-127 \, by default set to 127) \, and inside the object you
 can specify duration of each note in milliseconds (default 250ms or
-1/4 of a second)., f 59;
+1/4 of a second).SPECIAL CASE: if you set the duration to 0 \, notes
+with loudness greater than 0 will play forever until the note object
+receives the same pitch with the loudness of 0.In order for loudness
+to affect the next note (since it by itself does not trigger a note
+but rather defines how loud the next note will be) \, it needs to be
+sent before the pitch. Otherwise loudness will trail one note behind.
+Because presets do not guarantee the order by which the data is sent
+to various objects \, and as such should be used strictly for general
+setup. You can control the order by using objects that a readily available
+in the default (non-K12) mode., f 59;
+#X text 453 -157 Recall 0th presetto start the example \, then try
+preset 1 Use presets 2 and for the SPECIAL CASE example., f 23;
 #X connect 9 0 2 0;
 #X connect 9 1 2 0;
 #X connect 10 0 9 0;
-#X connect 11 0 9 0;
-#X connect 12 0 11 0;
-#X connect 14 0 10 1;
-#X connect 15 0 10 0;
+#X connect 11 0 10 1;
+#X connect 12 0 10 0;

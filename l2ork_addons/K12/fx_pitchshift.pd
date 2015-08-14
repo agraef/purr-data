@@ -1,0 +1,23 @@
+#N canvas 304 119 406 320 10;
+#X obj 210 111 inlet~;
+#X obj 210 157 outlet~;
+#X obj 296 -118 inlet;
+#X obj 338 36 ggee/image @pd_extra/K12/objects/fx_pitchshift.png 1
+;
+#X obj 331 -56 loadbang;
+#X obj 391 4 preset_node k12;
+#X obj 297 40 nbx 5 19 -127 127 0 1 \$0-s-null \$0-r-null empty 0 -8
+0 16 -262144 -1 -1 0 256 1;
+#X text 321 57 pitch;
+#X obj 210 134 rj/e_pitchshift;
+#X msg 297 111 pitch \$1;
+#X msg 331 -33 open @pd_extra/K12/objects/fx_pitchshift.png;
+#X connect 0 0 8 0;
+#X connect 2 0 6 0;
+#X connect 4 0 10 0;
+#X connect 5 0 6 0;
+#X connect 6 0 9 0;
+#X connect 8 0 1 0;
+#X connect 9 0 8 1;
+#X connect 10 0 3 0;
+#X coords 0 -1 1 1 89 89 2 293 4;

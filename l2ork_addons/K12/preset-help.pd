@@ -35,7 +35,7 @@ have different numbers in this Math Number object. Click on recall
 in the Preset object and notice that the number changes. Then \, change
 the number in the number box and click on one of the store boxes. When
 you click on the recall box for that store \, you will see that it
-recalls the number you set.IMPORTANT! When recalling presets \, values
+recalls the number you set.IMPORTANT! When recalling presets \, values
 will be distributed to objects in the order they were created. This
 could mean that the pitch (for instance) will reach a MIDI instrument
 before loudness and as such \, the loudness change will only affect

@@ -38,7 +38,7 @@ can mix it with the left if you are not interested in panning the sound)
 #X obj 230 -56 K12/midi_note;
 #X obj 342 27 K12/midi_instrument;
 #X obj 342 -56 K12/math_number;
-#X text 453 -130 Recall 0th presetと start the example \, then try
+#X text 453 -130 Recall 0th presetto start the example \, then try
 preset 1, f 23;
 #X obj 336 -158 K12/math_number;
 #X obj 454 -56 K12/math_number;
@@ -50,9 +50,9 @@ exclusively from MIDI note (note on/off information) \, MIDI instrument
 (change instrument) \, and MIDI control (change instrument properties)
 objects. It outputs left (left outlet) and right (right outlet) audio
 channels \, thus allowing for sounds to be panned to different speakers
-\, or (as is the case in this demo) mixed to the same speaker.You
+\, or (as is the case in this demo) mixed to the same speaker.You
 can also open other custom sf2 soundfonts by clicking no the "open"
-button. Such custom choices can be saved using the preset object.For
+button. Such custom choices can be saved using the preset object.For
 a complete list of General MIDI sounds see:;
 #X obj 328 372 pddplink doc/GM_instrument_list.html;
 #X connect 9 0 2 0;

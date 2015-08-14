@@ -1,5 +1,5 @@
-#N canvas 575 42 500 407 10;
-#X obj 58 308 outlet;
+#N canvas 297 149 500 423 10;
+#X obj 58 328 outlet;
 #X obj 228 45 ggee/image @pd_extra/K12/objects/arduino_analog_out_off.png
 1;
 #X obj 228 -60 loadbang;
@@ -61,7 +61,7 @@
 #X connect 17 0 3 0;
 #X connect 18 0 3 0;
 #X restore 284 160 pd pin_parser;
-#X msg 267 237 pinMode \$1 pwm;
+#X msg 267 257 pinMode \$1 pwm;
 #X obj 284 182 t f f;
 #X msg 58 244 pwm \$2 \$1;
 #X obj 58 221 pack 0 0;
@@ -72,20 +72,23 @@
 #X text 200 71 servo:;
 #X text 196 42 PWM OUTPUT;
 #X obj 280 13 preset_node k12;
-#X obj 266 214 gate 2 1;
-#X msg 311 258 pinMode \$1 servo;
+#X obj 266 234 gate 2 1;
+#X msg 311 278 pinMode \$1 servo;
 #X obj 239 130 t f f;
 #X obj 239 108 + 1;
 #X msg 228 -37 open @pd_extra/K12/objects/arduino_analog_out_off.png
 ;
+#X obj 58 84 split 0 1;
+#X obj 109 110 > 1;
+#X obj 311 208 pipe 1000;
 #X connect 2 0 20 0;
-#X connect 3 0 10 0;
+#X connect 3 0 21 0;
 #X connect 4 0 11 0;
 #X connect 6 0 8 0;
 #X connect 6 1 1 0;
 #X connect 7 0 0 0;
 #X connect 8 0 10 1;
-#X connect 8 1 16 1;
+#X connect 8 1 23 0;
 #X connect 9 0 0 0;
 #X connect 10 0 9 0;
 #X connect 11 0 6 1;
@@ -98,4 +101,8 @@
 #X connect 18 1 16 0;
 #X connect 19 0 18 0;
 #X connect 20 0 1 0;
+#X connect 21 0 10 0;
+#X connect 21 1 22 0;
+#X connect 22 0 10 0;
+#X connect 23 0 16 1;
 #X coords 0 -1 1 1 89 89 2 183 13;

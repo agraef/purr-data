@@ -1,0 +1,51 @@
+#N canvas 298 49 509 619 10;
+#X obj 261 73 cnv 15 231 103 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 233 -22 preset_hub k12 %hidden% %node% 2 5 14 %preset% 0 100
+%preset% 1 100 %node% 2 5 28 %preset% 0 0 %preset% 1 0 %node% 2 11
+10 %node% 2 8 5 %preset% 0 0 %preset% 1 -12 %node% 2 9 7 %preset% 0
+60 %preset% 1 60 %node% 2 10 7 %preset% 0 1 %preset% 1 1 %node% 2 12
+7 %preset% 1 -12 %preset% 0 0 %node% 2 13 8 %node% 2 15 8 %preset%
+0 100 %preset% 1 100 %node% 2 15 9 %preset% 0 0 %preset% 1 0 %node%
+3 15 17 14 %preset% 0 /home/ico/K12/voice2.wav %preset% 1 /home/ico/K12/voice2.wav
+;
+#X obj 11 318 cnv 15 483 133 empty empty empty 20 12 0 14 -228856 -66577
+0;
+#X obj 0 -2 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
+0;
+#X obj 0 -30 cnv 15 501 28 empty empty FX/Pitchshift 5 14 0 20 -139274
+-262144 0;
+#X obj 19 470 K12/output;
+#N canvas 425 288 392 172 META 0;
+#X text 7 120 OUTLET_0 Connect this to a sound object or sound output
+;
+#X text 8 55 INLET_0 Connect a sound input here (like an instrument
+or sound generator);
+#X text 7 7 DESCRIPTION This changes the pitch of the incoming sound
+by a desired number of semitones;
+#X text 8 86 INLET_1 Connect a control object here to adjust the amount
+of detune (-127 to 127 \, default 0);
+#X restore 447 556 pd META;
+#X obj 471 1 ggee/image @pd_extra/K12/icons/l2ork.png 0;
+#X obj 19 325 K12/fx_pitchshift;
+#X obj 19 115 K12/math_number;
+#X obj 137 115 K12/math_number;
+#X text 121 324 Pitchshift is used to transpose \, or change the pitch
+of the incoming sound in real-time. This process is also known as detune.
+Use left inlet to connect sound you wish to detune. Use the right inlet
+to change the pitch (range -127 to 127 \, default 0). Each whole number
+corresponds to a half-step (e.g. C to C#). You can also use decimal
+numbers for pitches in between half-steps (e.g. 0.5 will detune by
+a 1/4 of a step). Connect the outgoing sound to output or other effects.
+;
+#X obj 173 237 K12/math_number;
+#X obj 396 79 K12/preset;
+#X text 268 111 Use preset 0 to play original sound \, then recall
+preset 1 to hear detuned sound., f 20;
+#X obj 19 207 @pd_extra/K12/signal_player 0;
+#X connect 8 0 5 0;
+#X connect 9 0 15 0;
+#X connect 10 0 15 1;
+#X connect 12 0 8 1;
+#X connect 15 0 8 0;
+#X connect 15 1 10 0;

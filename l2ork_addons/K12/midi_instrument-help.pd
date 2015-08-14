@@ -33,7 +33,7 @@ command on a specified channel;
 #X obj 230 34 K12/midi_note;
 #X obj 595 140 K12/midi_instrument;
 #X obj 595 57 K12/math_number;
-#X text 452 -131 Recall leftmost presetと start the example. Then
+#X text 452 -131 Recall leftmost presetto start the example. Then
 \, try the second., f 23;
 #X obj 230 -161 K12/math_number;
 #X obj 336 -161 K12/math_number;

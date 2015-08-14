@@ -1,4 +1,4 @@
-#N canvas 295 154 503 355 10;
+#N canvas 275 134 503 389 10;
 #X obj 110 64 outlet;
 #X obj 228 45 ggee/image @pd_extra/K12/objects/arduino_digital_in_off.png
 1;
@@ -29,12 +29,12 @@
 #X connect 6 0 2 0;
 #X restore 277 104 pd pin_parser;
 #X obj 110 41 route -1;
-#X obj 77 258 send, f 25;
+#X obj 77 288 send, f 25;
 #X text 211 45 INPUT;
 #X text 206 61 pin:;
 #X obj 230 64 nbx 3 14 -1 13 0 1 empty empty empty 0 -8 0 10 -262144
 -1 -1 -1 256 3;
-#X msg 77 228 pinMode \$1 input;
+#X msg 77 248 pinMode \$1 input;
 #X obj 110 8 route d;
 #X msg 228 -37 open @pd_extra/K12/objects/arduino_digital_in_off.png
 ;
