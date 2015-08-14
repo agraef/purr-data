@@ -63,6 +63,37 @@ static t_int *sighip_perform(t_int *w)
     t_sample coef = c->c_coef;
     if (coef < 1)
     {
+        t_sample normal = 0.5*(1+coef);
+        for (i = 0; i < n; i++)
+        {
+            t_sample new = *in++ + coef * last;
+            *out++ = normal * (new - last);
+            last = new;
+        }
+        if (PD_BIGORSMALL(last))
+            last = 0; 
+        c->c_x = last;
+    }
+    else
+    {
+        for (i = 0; i < n; i++)
+            *out++ = *in++;
+        c->c_x = 0;
+    }
+    return (w+5);
+}
+
+static t_int *sighip_perform_old(t_int *w)
+{
+    t_sample *in = (t_sample *)(w[1]);
+    t_sample *out = (t_sample *)(w[2]);
+    t_hipctl *c = (t_hipctl *)(w[3]);
+    int n = (t_int)(w[4]);
+    int i;
+    t_sample last = c->c_x;
+    t_sample coef = c->c_coef;
+    if (coef < 1)
+    {
         for (i = 0; i < n; i++)
         {
             t_sample new = *in++ + coef * last;
@@ -86,10 +117,9 @@ static void sighip_dsp(t_sighip *x, t_signal **sp)
 {
     x->x_sr = sp[0]->s_sr;
     sighip_ft1(x,  x->x_hz);
-    dsp_add(sighip_perform, 4,
-        sp[0]->s_vec, sp[1]->s_vec, 
-            x->x_ctl, sp[0]->s_n);
-
+    dsp_add((pd_compatibilitylevel > 43 ?
+        sighip_perform : sighip_perform_old),
+            4, sp[0]->s_vec, sp[1]->s_vec, x->x_ctl, sp[0]->s_n);
 }
 
 static void sighip_clear(t_sighip *x, t_floatarg q)
@@ -102,8 +132,8 @@ void sighip_setup(void)
     sighip_class = class_new(gensym("hip~"), (t_newmethod)sighip_new, 0,
         sizeof(t_sighip), 0, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(sighip_class, t_sighip, x_f);
-    class_addmethod(sighip_class, (t_method)sighip_dsp, gensym("dsp"),
-        A_CANT, 0);
+    class_addmethod(sighip_class, (t_method)sighip_dsp,
+        gensym("dsp"), A_CANT, 0);
     class_addmethod(sighip_class, (t_method)sighip_ft1,
         gensym("ft1"), A_FLOAT, 0);
     class_addmethod(sighip_class, (t_method)sighip_clear, gensym("clear"), 0);
@@ -193,8 +223,8 @@ void siglop_setup(void)
     siglop_class = class_new(gensym("lop~"), (t_newmethod)siglop_new, 0,
         sizeof(t_siglop), 0, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(siglop_class, t_siglop, x_f);
-    class_addmethod(siglop_class, (t_method)siglop_dsp, gensym("dsp"),
-        A_CANT, 0);
+    class_addmethod(siglop_class, (t_method)siglop_dsp,
+        gensym("dsp"), A_CANT, 0);
     class_addmethod(siglop_class, (t_method)siglop_ft1,
         gensym("ft1"), A_FLOAT, 0);
     class_addmethod(siglop_class, (t_method)siglop_clear, gensym("clear"), 0);
@@ -328,8 +358,8 @@ void sigbp_setup(void)
     sigbp_class = class_new(gensym("bp~"), (t_newmethod)sigbp_new, 0,
         sizeof(t_sigbp), 0, A_DEFFLOAT, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(sigbp_class, t_sigbp, x_f);
-    class_addmethod(sigbp_class, (t_method)sigbp_dsp, gensym("dsp"),
-        A_CANT,  0);
+    class_addmethod(sigbp_class, (t_method)sigbp_dsp,
+        gensym("dsp"), A_CANT, 0);
     class_addmethod(sigbp_class, (t_method)sigbp_ft1,
         gensym("ft1"), A_FLOAT, 0);
     class_addmethod(sigbp_class, (t_method)sigbp_ft2,
@@ -455,8 +485,8 @@ void sigbiquad_setup(void)
     sigbiquad_class = class_new(gensym("biquad~"), (t_newmethod)sigbiquad_new,
         0, sizeof(t_sigbiquad), 0, A_GIMME, 0);
     CLASS_MAINSIGNALIN(sigbiquad_class, t_sigbiquad, x_f);
-    class_addmethod(sigbiquad_class, (t_method)sigbiquad_dsp, gensym("dsp"),
-        A_CANT, 0);
+    class_addmethod(sigbiquad_class, (t_method)sigbiquad_dsp,
+        gensym("dsp"), A_CANT, 0);
     class_addlist(sigbiquad_class, sigbiquad_list);
     class_addmethod(sigbiquad_class, (t_method)sigbiquad_set, gensym("set"),
         A_GIMME, 0);
@@ -497,7 +527,7 @@ static t_int *sigsamphold_perform(t_int *w)
     int i;
     t_sample lastin = x->x_lastin;
     t_sample lastout = x->x_lastout;
-    for (i = 0; i < n; i++, *in1++)
+    for (i = 0; i < n; i++, in1++)
     {
         t_sample next = *in2++;
         if (next < lastin) lastout = *in1;
