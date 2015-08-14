@@ -1,6 +1,6 @@
 #N canvas 316 152 503 325 10;
 #X obj 58 237 outlet;
-#X obj 228 45 ggee/image @pd_extra/K12/objects/sarcduino_digital_off.png
+#X obj 228 45 ggee/image @pd_extra/K12/objects/arduino_digital_off.png
 1;
 #X obj 228 -60 loadbang;
 #X obj 58 -60 inlet;
@@ -11,8 +11,8 @@
 #X obj 228 220 outlet;
 #X obj 171 59 split 0 13;
 #X obj 171 81 t f b;
-#X msg 198 139 open @pd_extra/K12/objects/sarcduino_digital.png;
-#X msg 228 109 open @pd_extra/K12/objects/sarcduino_digital_off.png
+#X msg 198 139 open @pd_extra/K12/objects/arduino_digital.png;
+#X msg 228 109 open @pd_extra/K12/objects/arduino_digital_off.png
 ;
 #X connect 0 0 3 0;
 #X connect 3 0 4 0;

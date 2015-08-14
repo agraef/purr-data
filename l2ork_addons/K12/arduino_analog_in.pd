@@ -1,6 +1,6 @@
 #N canvas 291 41 496 325 10;
 #X obj 110 64 outlet;
-#X obj 228 45 ggee/image @pd_extra/K12/objects/sarcduino_analog_off.png
+#X obj 228 45 ggee/image @pd_extra/K12/objects/arduino_analog_off.png
 1;
 #X obj 228 -60 loadbang;
 #X obj 58 -60 inlet;
@@ -26,8 +26,8 @@
 #X msg 355 67 19;
 #X obj 307 198 t b;
 #X obj 423 198 t b;
-#X msg 307 250 open @pd_extra/K12/objects/sarcduino_analog.png;
-#X msg 423 220 open @pd_extra/K12/objects/sarcduino_analog_off.png
+#X msg 307 250 open @pd_extra/K12/objects/arduino_analog.png;
+#X msg 423 220 open @pd_extra/K12/objects/arduino_analog_off.png
 ;
 #X obj 18 45 sel A0 A1 A2 A3 A4 A5, f 68;
 #X connect 0 0 13 0;
@@ -61,7 +61,7 @@
 #X obj 340 -15 loadbang;
 #X msg 340 7 symbol ---;
 #X text 209 45 INPUT;
-#X msg 228 -37 open @pd_extra/K12/objects/sarcduino_analog_off.png
+#X msg 228 -37 open @pd_extra/K12/objects/arduino_analog_off.png
 ;
 #X connect 2 0 21 0;
 #X connect 3 0 6 0;
