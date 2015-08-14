@@ -266,16 +266,16 @@ Everything else: (A [x] means we've fixed it)
 [x] same for "*bug fixes for the new k12 arduino library"
     d8902d4f90ee5a7f965d205e897963b7c5dcd42e
 [x] same for all commits to pd-l2ork made on Jul 23, 2015
-[ ] eda1cb3f115833d61c7b48c5aff4bf4178f02803
+[x] eda1cb3f115833d61c7b48c5aff4bf4178f02803
     Need to patch this manually, as gnu patch fails for some reason
-[ ] 95bb59b246fbcca3faf05b8bc06e77319fd9e6a5
+[x] 95bb59b246fbcca3faf05b8bc06e77319fd9e6a5
     Hunks failed.  Need to patch manually.
-[ ] 00021cccae81854a6e107141e828cec3b1107e6b
+[x] 00021cccae81854a6e107141e828cec3b1107e6b
     Hunks failed.  Patch manually
 [ ] 930414ea5a2330dfa5d581e92514ece05aca1ebf
     Has to do with font positioning inside objects boxes... probably
     need to address this manually.
-[ ] 60e06b3155458b561f3fb1ace17874eac9c5592a
+[x] 60e06b3155458b561f3fb1ace17874eac9c5592a
     Hunks failed.  Patch manually.
 [ ] same for all commits up to Jul 31, 2015
 
