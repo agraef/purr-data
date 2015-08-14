@@ -244,7 +244,7 @@ Everything else: (A [x] means we've fixed it)
 [x] same for 50719c4c455291be3ac679486f7e4d72706bd9e4
     (note: we didn't update the major/minor release
      macros to 0.43 here.)
-[ ] same for a620228554d1662bacd0f2f8cfc65259049164ec
+[x] same for a620228554d1662bacd0f2f8cfc65259049164ec
 [ ] same for "*fixed spaces in old UI objects that were converted to \t..."
     262447434c3548c53bc0b52e7f5bb5431b233311
 [ ] same for "*fixed font positioning on 14.04+ releases"
