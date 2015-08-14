@@ -1,8 +1,8 @@
-#N canvas 105 55 502 410 10;
+#N canvas 95 45 508 417 10;
 #X obj 443 -181 cnv 15 246 101 empty empty empty 20 12 0 14 -233017
 -66577 0;
 #X obj 593 -175 K12/preset;
-#X obj 225 -62 cnv 15 464 102 empty empty empty 20 12 0 14 -233017
+#X obj 225 -62 cnv 15 471 101 empty empty empty 20 12 0 14 -233017
 -66577 0;
 #X obj 470 -236 preset_hub k12 %hidden% %node% 2 1 16 %preset% 0 0
 %node% 2 1 8 %preset% 0 440 %preset% 1 440 %preset% 2 440 %preset%
@@ -12,7 +12,7 @@
 %node% 2 9 7 %preset% 0 60 %preset% 1 62 %preset% 2 63 %preset% 3 65
 %node% 2 10 4 %preset% 0 60 %preset% 1 62 %preset% 2 63 %preset% 3
 65 %node% 2 4 28;
-#X obj 230 63 K12/output;
+#X obj 231 63 K12/output;
 #N canvas 635 172 450 514 META 0;
 #X text 33 12 DESCRIPTION This generates a sine wave;
 #X text 33 37 INLET_0 Send values between 0 and 127 to set the pitch
@@ -27,10 +27,11 @@ object \, signal math object \, or the sound object;
 #X obj 680 -212 ggee/image @pd_extra/K12/icons/l2ork.png 0;
 #X obj 231 -180 K12/math_number;
 #X obj 231 -57 K12/signal_sine;
-#X text 326 -43 The Signal Sine object is a sound generator that generates
-a sin wave. Use the left inlet to set the frequency with a signal.
-Connect the outlet to any signal math objects \, any effects \, or
-the sound output object.;
 #X text 451 -123 Recall leftmost presetto start the example.;
+#X text 325 -52 The Signal Sine object is a sound generator that generates
+a sine wave. Use the left inlet to set the pitch or enter it in the
+number box. The pitch is expressed in MIDI compatible format with normal
+pitches being between 0 and 127 Connect the outlet to any signal math
+objects \, any effects \, or the sound output object.;
 #X connect 9 0 10 0;
 #X connect 10 0 4 0;

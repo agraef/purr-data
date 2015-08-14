@@ -1,7 +1,7 @@
-#N canvas 359 41 501 456 10;
+#N canvas 349 31 501 456 10;
 #X obj 269 -24 preset_hub k12 %hidden% %node% 2 3 14 %node% 2 3 28
-%node% 2 14 25 %node% 2 16 10 %node% 2 17 7 %node% 2 8 7 %node% 2 9
-7 %node% 2 10 7;
+%node% 2 14 25 %node% 2 16 10 %node% 2 17 7 %node% 2 7 7 %node% 2 8
+7 %node% 2 9 7;
 #X obj 32 162 cnv 15 479 105 empty empty empty 20 12 0 14 -233017 -66577
 0;
 #X obj 39 169 K12/math_add;
@@ -17,14 +17,15 @@ the inlets;
 0;
 #X obj 18 -31 cnv 15 501 28 empty empty Math/Add 5 14 0 20 -139274
 -262144 0;
-#X obj 489 0 ggee/image @pd_extra/K12/icons/l2ork.png;
-#X text 141 182 The Math Addition object works with non-signal numbers.
-Send the number you want to be added into the right inlet. It will
-be added to whatever number you connect to the left input and the result
-will be sent out of the outlet.;
+#X obj 489 0 ggee/image @pd_extra/K12/icons/l2ork.png 0;
 #X obj 39 33 K12/math_number;
 #X obj 145 34 K12/math_number;
 #X obj 39 297 K12/math_number;
-#X connect 2 0 10 0;
-#X connect 8 0 2 0;
-#X connect 9 0 2 1;
+#X text 137 178 The Math Add object works with non-sound data only.
+Send the number you want to be added into either inlet. It will be
+added to whatever number you connect to the other input and the result
+will be sent out of the outlet. The default value for both inlets is
+0;
+#X connect 2 0 9 0;
+#X connect 7 0 2 0;
+#X connect 8 0 2 1;

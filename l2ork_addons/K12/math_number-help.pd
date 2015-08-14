@@ -1,7 +1,7 @@
-#N canvas 363 50 501 501 10;
-#X obj 354 -31 preset_hub k12 %hidden% %node% 2 7 7 %node% 2 8 7 %node%
-2 9 7 %node% 2 6 5 %node% 2 7 7;
-#X obj 133 241 cnv 15 479 188 empty empty empty 20 12 0 14 -233017
+#N canvas 353 40 507 614 10;
+#X obj 354 -31 preset_hub k12 %hidden% %node% 2 6 7 %node% 2 8 7 %node%
+2 9 7 %node% 2 6 5 %node% 2 7 7 %node% 2 8 7 %node% 2 9 7;
+#X obj 133 190 cnv 15 479 301 empty empty empty 20 12 0 14 -233017
 -66577 0;
 #X obj 123 -7 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
 0;
@@ -18,20 +18,28 @@ set inside the object whenever a non-zero value is sent;
 through this object;
 #X text 6 99 OUTLET_0 Connect this to any math or instrument object
 ;
-#X restore 566 439 pd META;
-#X obj 138 135 K12/sarcduino_analog;
-#X obj 138 244 K12/math_number;
-#X text 239 245 The Math Number object simply displays the current
+#X restore 572 551 pd META;
+#X obj 138 194 K12/math_number;
+#X text 239 195 The Math Number object simply displays the current
 value of the numbers passing through it. You can set the value of the
 number by clicking the number and dragging the mouse up or down. The
 outlet outputs the same number that is connected to the inlet \, unless
 you change it by clicking on the number box and dragging to a different
 number. In that case \, the output will be whatever you set the number
 to.;
-#X text 238 345 You can also use its right inlet to transform any NON-ZERO
-value into the value currently stored inside the number object.;
-#X obj 138 26 K12/sarcduino_connect;
-#X text 238 390 The number can also output continuous values via blue
-outlet that can be used in manipulating audio.;
-#X connect 6 0 7 0;
-#X connect 10 0 6 0;
+#X obj 138 71 K12/math_number;
+#X obj 248 71 K12/math_number;
+#X text 238 295 You can also use its right inlet to transform any NON-ZERO
+value (e.g. 1 \, 50 \, or -27) into the value currently stored inside
+the number object.;
+#X text 238 340 The number can also output continuous values via blue
+outlet that can be used in manipulating sound.;
+#X text 238 373 IMPORTANT! Like any other control data \, the number
+data is sent only in that moment when the number is entered and the
+user has pressed enter and not continuously \, like audio signal does.
+This means if you change a value inside a number and connect that number
+to an object afterwards \, the receiving object will have never received
+entered value unless you re-enter such value and send it through the
+newly formed connection.;
+#X connect 8 0 6 0;
+#X connect 9 0 6 0;
