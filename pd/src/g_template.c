@@ -6902,7 +6902,7 @@ static void *drawimage_new(t_symbol *classsym, int argc, t_atom *argv)
         x->x_img->s_name,
         dir->s_name,
         x->x_flags);
-    post("deleteme is %d", x->x_deleteme);
+    //post("deleteme is %d", x->x_deleteme);
     return (x);
 }
 

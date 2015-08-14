@@ -41,7 +41,7 @@ proc pdtk_drawimage_new {obj path canvasdir flags} {
         if {[file extension $filename] eq ".gif" ||
             [file extension $filename] eq ".png"} {
             image create photo ::drawimage_${obj}$i -file "$filename"
-            pdtk_post "image is ::drawimage_${obj}$i\n"
+            #pdtk_post "image is ::drawimage_${obj}$i\n"
             incr i
         }
         if {$i > 1000 || !$image_seq} {break}
@@ -56,7 +56,7 @@ proc pdtk_drawimage_new {obj path canvasdir flags} {
     if {$i > 0} {
     pdtk_post "image width is [image width ::drawimage_${obj}0]\n"
     pdtk_post "image height is [image height ::drawimage_${obj}0]\n"
-    pdtk_post "obj is $obj\n"
+    #pdtk_post "obj is $obj\n"
         pd [concat $obj size [image width ::drawimage_${obj}0] \
             [image height ::drawimage_${obj}0] \;]
     } else {
