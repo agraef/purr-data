@@ -150,7 +150,7 @@ deb: $(bindir)
 	rm -f $(DESTDIR)/usr/share/man/man1/pdsend.1.gz
 	rm -f $(DESTDIR)/usr/share/man/man1/pdreceive.1.gz
 #migrate Gem.pc to remove conflict with pd-vanilla and other variants
-	mv -f $(DESTDIR)$(libpddir)/../pkgconfig $(DESTDIR)$(libpddir)/
+	-mv -f $(DESTDIR)$(libpddir)/../pkgconfig $(DESTDIR)$(libpddir)/
 # debian packaging
 	test -d $(DESTDIR)/DEBIAN || mkdir -p $(DESTDIR)/DEBIAN
 	cp $(packages_src)/linux_make/debian/control $(DESTDIR)/DEBIAN
