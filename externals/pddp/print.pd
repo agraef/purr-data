@@ -1,4 +1,4 @@
-#N canvas 388 179 439 354 10;
+#N canvas 338 129 439 354 10;
 #X obj 169 48 inlet;
 #X obj 226 266 send \$0-pddp_print;
 #X obj 226 140 zexy/list2symbol;
@@ -24,9 +24,9 @@
 #X connect 7 0 1 0;
 #X restore 169 222 pd reset;
 #X msg 129 169 bang;
-#X obj 85 0 cnv 15 15 20 empty empty empty 2 7 0 14 -262144 -262144
+#X obj 84 1 cnv 15 15 18 empty empty empty 2 7 0 14 -262144 -262144
 0;
-#X obj 1 3 cnv 15 98 15 empty \$0-pddp_print (gpointer) 2 7 0 14 -262144
+#X obj 1 3 cnv 15 98 15 empty \$0-pddp_print empty 2 7 0 14 -262144
 -1 0;
 #X obj 226 170 list prepend label;
 #X obj 226 194 list trim;
