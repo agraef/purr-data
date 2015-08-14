@@ -67,6 +67,7 @@ void canvas_undo_undo(t_canvas *x)
     {
         we_are_undoing = 1;
         //fprintf(stderr,"canvas_undo_undo %d\n", x->u_last->type);
+        canvas_editmode(x, 1);
         glist_noselect(x);
         canvas_undo_name = x->u_last->name;
         switch(x->u_last->type)
@@ -116,6 +117,7 @@ void canvas_undo_redo(t_canvas *x)
         we_are_undoing = 1;
         x->u_last = x->u_last->next;
         //fprintf(stderr,"canvas_undo_redo %d\n", x->u_last->type);
+        canvas_editmode(x, 1);
         glist_noselect(x);
         canvas_undo_name = x->u_last->name;
         switch(x->u_last->type)
