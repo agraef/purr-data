@@ -268,6 +268,8 @@ Everything else: (A [x] means we've fixed it)
 [x] same for all commits to pd-l2ork made on Jul 23, 2015
 [ ] eda1cb3f115833d61c7b48c5aff4bf4178f02803
     Need to patch this manually, as gnu patch fails for some reason
+[ ] 95bb59b246fbcca3faf05b8bc06e77319fd9e6a5
+    Hunks failed.  Need to patch manually.
 [ ] same for all commits up to Jul 31, 2015
 
 Crashers
