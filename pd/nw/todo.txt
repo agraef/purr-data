@@ -257,7 +257,7 @@ Everything else: (A [x] means we've fixed it)
     one to see whether it's still necessary.
 [x] same for "*fixed copying dialog text and pasting it onto a canvas crasher"
     96e2fa5605a2d87ab99c5c2c8df9bca53c23c401
-[ ] same for "*revamped arduino connectivity to use Firmata firmware and allow for"
+[x] same for "*revamped arduino connectivity to use Firmata firmware and allow for"
     70b9043e6cd6de914379d77f591b57e2c9a34661
     (NB: this should be relatively painless... it's just that github
      wouldn't load the patch in the browser)
