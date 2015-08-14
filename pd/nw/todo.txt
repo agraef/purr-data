@@ -257,6 +257,7 @@ Everything else: (A [x] means we've fixed it)
     e2a864d135e825c0253d5c3612ec2d0db495b2be
 [ ] same for "*bug fixes for the new k12 arduino library"
     d8902d4f90ee5a7f965d205e897963b7c5dcd42e
+[ ] same for all commits to pd-l2ork made on Jul 23, 2015
 
 Crashers
 --------
