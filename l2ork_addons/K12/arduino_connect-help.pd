@@ -1,10 +1,11 @@
-#N canvas 181 28 507 650 10;
+#N canvas 116 23 507 650 10;
 #X obj 348 51 cnv 15 250 117 empty empty empty 20 12 0 14 -233017 -66577
 0;
-#X obj 366 -26 preset_hub k12 %hidden% %node% 2 7 18 %preset% 0 0 %node%
-2 9 4 %preset% 0 a0 %node% 2 9 4 %preset% 0 a0 %node% 2 10 4 %preset%
+#X obj 366 -26 preset_hub k12 %hidden% %node% 2 7 17 %preset% 0 0 %node%
+2 9 4 %preset% 0 A0 %node% 2 9 4 %preset% 0 a0 %node% 2 10 4 %preset%
 0 2 %node% 2 11 4 %preset% 0 10 %node% 2 12 4 %preset% 0 4 %node% 2
-13 7 %node% 2 14 7 %node% 2 15 7 %node% 2 16 7 %node% 2 17 8;
+13 7 %preset% 0 0 %node% 2 14 7 %preset% 0 1 %node% 2 15 7 %preset%
+0 1 %node% 2 16 7 %preset% 0 0.197458 %node% 2 17 8;
 #X obj 124 218 cnv 15 479 320 empty empty empty 20 12 0 14 -233017
 -66577 0;
 #X obj 112 -3 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
