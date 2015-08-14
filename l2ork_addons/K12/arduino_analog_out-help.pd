@@ -1,34 +1,36 @@
-#N canvas 286 58 508 537 10;
+#N canvas 276 48 508 537 10;
 #X obj 375 -29 preset_hub k12 %hidden% %node% 2 5 5 %node% 2 6 7 %node%
 2 6 7 %node% 2 7 5 %node% 2 7 18 %node% 2 8 4 %node% 2 8 4 %node% 2
-8 4;
-#X obj 139 119 cnv 15 473 210 empty empty empty 20 12 0 14 -233017
+8 4 %node% 2 7 17;
+#X obj 139 119 cnv 15 471 263 empty empty empty 20 12 0 14 -233017
 -66577 0;
 #X obj 123 -7 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
 0;
 #X obj 123 -35 cnv 15 501 28 empty empty Arduino/DigitalOut 5 14 0
 20 -139274 -262144 0;
 #X obj 594 -4 ggee/image @pd_extra/K12/icons/l2ork.png 0;
-#N canvas 482 144 385 225 META 0;
+#N canvas 472 134 385 225 META 0;
 #X text 8 38 INLET_0 Connect the data stream you wish to send to Arduino
 ;
 #X text 7 58 OUTLET_0 Connect to Arduino Connect object's inlet;
 #X text 6 5 DESCRIPTION Use this object to send analog data (between
 0 and 1) to the specified Arduino Uno pin;
-#X restore 571 473 pd META;
+#X restore 571 485 pd META;
 #X obj 147 40 K12/math_number;
-#X obj 147 358 K12/arduino_connect;
+#X obj 147 408 K12/arduino_connect;
 #X obj 147 127 K12/arduino_analog_out;
 #X text 245 128 The Arcduino Analog Out object takes in the incoming
 analog data with a range betwen 0 and 1 and sends it to a desired Arduino
-digital pin that is PWM enabled (the pin has a ~ next to the pin number).
-You can specify pin 3 \, 5 \, 6 \, 9 \, 10 \, and 11 (default -1=off)
-by clicking on the pin number and dragging it up and down or by clicking
-onto the number \, typing the value \, and pressing enter/return. Connect
-the data stream with values between 0 and 1 that you wish to send to
-the pin into object's inlet. Connect the outlet to the Arduino Connect's
-inlet.Object's color will change from red to Aruino bluish-green
-indicating valid pin selection (e.g. not all pins allow for PWM analog
-output)., f 59;
+digital pin that is PWM enabled (pins 3 \, 5 \, 6 \, 9 \, 10 \, and
+11 \, marked with ~) or if you want to control a servo motor \, you
+can use any pin between 2 and 13 \, in which case you need to enable
+the servo option. Selecting pin -1 will turn off the output.For PWM
+output you can specify by clicking on the pin number and dragging it
+up and down or by clicking onto the number \, typing the value \, and
+pressing enter/return. Connect the data stream with values between
+0 and 1 that you wish to send to the pin into object's inlet. Connect
+the outlet to the Arduino Connect's inlet.Object's color will change
+from red to Aruino bluish-green indicating valid pin selection (e.g.
+not all pins allow for PWM analog output)., f 59;
 #X connect 6 0 8 0;
 #X connect 8 0 7 0;
