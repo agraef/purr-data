@@ -2832,7 +2832,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		setTooltip $name.k12frame.logic.b_logic_mapper "Mapper: Use this to map one value to two different but related values"
 		setTooltip $name.k12frame.logic.b_logic_metronome "Metronome: Use this to create a steady pulse"
 		setTooltip $name.k12frame.logic.b_logic_counter "Counter: Use this to count events"
-		setTooltip $name.k12frame.logic.b_logic_hit "Hit: Use this to detect a hit on a non-audio data stream"
+		setTooltip $name.k12frame.logic.b_logic_hit "Hit: Use this to detect a hit on a control data stream"
 		pdtk_k12panel_standardkeybindings $name.k12frame.logic.b_logic_compare
 		pdtk_k12panel_standardkeybindings $name.k12frame.logic.b_logic_mapper
 		pdtk_k12panel_standardkeybindings $name.k12frame.logic.b_logic_metronome
