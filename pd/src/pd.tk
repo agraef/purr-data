@@ -1022,6 +1022,8 @@ proc pdtk_panelkeybindings {id panelname} {
     bind $id <KeyPress-Escape> [format "%s_cancel %s" $panelname $id]
     bind $id <KeyPress-Return> [format "%s_ok %s" $panelname $id]
     bind $id <$ctrl_key-Key-w> [format "%s_cancel %s" $panelname $id]
+    bind $id <$ctrl_key-Key-x> [format "menu_cut %s" $id]
+    bind $id <$ctrl_key-Key-c> [format "menu_copy %s" $id]
 }
 
 pdtk_standardkeybindings .
@@ -2021,6 +2023,7 @@ proc menu_redo {name} {
 }
 
 proc menu_cut {name} {
+	#puts stderr "menu_cut $name"
 	global copytexttocanvas
 	if {![string match .gfxstub* $name] && ![string match .printout* $name] && ![string match *entry $name]} {
 		pd [concat $name cut \;]
@@ -2029,12 +2032,13 @@ proc menu_cut {name} {
 		clipboard clear
 	} else {
 		set copytexttocanvas 1
+		pd [concat pd clipboardtext  1 \;]
 	}
 	pdtk_canvas_update_paste_menu 1
 }
 
 proc menu_copy {name} {
-	# pdtk_post menu_copy
+	#puts stderr menu_copy
 	global copytexttocanvas
 	if {![string match .gfxstub* $name] && ![string match .printout* $name] && ![string match *entry $name]} {
 	    pd [concat $name copy \;]
@@ -2042,7 +2046,8 @@ proc menu_copy {name} {
 		clipboard clear
 	} else {
 		# pdtk_post "this_is_text\n"
-		set copytexttocanvas 1
+		set clipboardtext 1
+		pd [concat pd clipboardtext 1 \;]
 	}
 	pdtk_canvas_update_paste_menu 1
 }

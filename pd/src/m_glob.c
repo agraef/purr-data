@@ -71,6 +71,9 @@ static void glob_perf(t_pd *dummy, float f)
     sys_perf = (f != 0);
 }
 
+// ths one lives inside g_editor so that it can access the clipboard
+extern void glob_clipboard_text(t_pd *dummy, float f);
+
 void max_default(t_pd *x, t_symbol *s, int argc, t_atom *argv)
 {
     int i;
@@ -142,6 +145,8 @@ void glob_init(void)
         gensym("version"), A_FLOAT, 0);
     class_addmethod(glob_pdobject, (t_method)glob_perf,
         gensym("perf"), A_FLOAT, 0);
+    class_addmethod(glob_pdobject, (t_method)glob_clipboard_text,
+        gensym("clipboardtext"), A_FLOAT, 0);
 #ifdef UNIX
     class_addmethod(glob_pdobject, (t_method)glob_watchdog,
         gensym("watchdog"), 0);

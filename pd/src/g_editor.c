@@ -5972,6 +5972,11 @@ static void canvas_copyfromexternalbuffer(t_canvas *x, t_symbol *s,
     }
 }
 
+void glob_clipboard_text(t_pd *dummy, float f)
+{
+    clipboard_istext = (int)f;
+}
+
 static void canvas_copy(t_canvas *x)
 {
     if (!x->gl_editor || !x->gl_editor->e_selection)
