@@ -2628,6 +2628,14 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
         binbuf_text(x->te_binbuf, buf, bufsize);
         binbuf_free(b);
 
+        // we redraw retexted messages and comments so that they visually
+        // match their stack position (namely, they are now on top)
+        if (glist_istoplevel(glist))
+        {
+            gobj_vis(&x->te_g, glist, 0);
+            gobj_vis(&x->te_g, glist, 1);
+        }
+
         //probably don't need this here, but doesn't hurt to leave it in
         glob_preset_node_list_seek_hub();
         glob_preset_node_list_check_loc_and_update();
