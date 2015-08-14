@@ -479,9 +479,9 @@ proc pdtk_enable_k12_mode {extra_dir} {
 	image create photo i.edit -file $extra_dir/K12/icons/edit.png
 	image create photo i.perform -file $extra_dir/K12/icons/perform.png
 
-	image create photo i.data -file $extra_dir/K12/icons/data.png
+	image create photo i.data -file $extra_dir/K12/icons/control.png
 	image create photo i.sound -file $extra_dir/K12/icons/sound.png
-	image create photo i.data_on -file $extra_dir/K12/icons/data_on.png
+	image create photo i.data_on -file $extra_dir/K12/icons/control_on.png
 	image create photo i.sound_on -file $extra_dir/K12/icons/sound_on.png
 
 	.mbar.file insert 2 command -label {K12 Demos} -command {menu_k12_open_demos}
@@ -2650,10 +2650,10 @@ proc pdtk_canvas_new {name width height geometry editable} {
 
 		# ---------------------------------- DATA VS SOUND BUTTONS ----------------------------------
 		match_linux_wm [list frame $name.k12frame.datasound -relief flat]
-		match_linux_wm [list button $name.k12frame.datasound.data -text "DATA" -image i.data_on -command [concat pdtk_k12_show_data_icons $name]]
+		match_linux_wm [list button $name.k12frame.datasound.data -text "CONTROL" -image i.data_on -command [concat pdtk_k12_show_data_icons $name]]
 		match_linux_wm [list button $name.k12frame.datasound.sound -text "SOUND" -image i.sound -command [concat pdtk_k12_show_sound_icons $name]]
 		pack $name.k12frame.datasound.data $name.k12frame.datasound.sound -side left -pady 1 -padx 1 -expand 0
-		setTooltip $name.k12frame.datasound.data "Show DATA objects"
+		setTooltip $name.k12frame.datasound.data "Show CONTROL objects"
 		setTooltip $name.k12frame.datasound.sound "Show SOUND objects"
 		pdtk_k12panel_standardkeybindings $name.k12frame.datasound.data
 		pdtk_k12panel_standardkeybindings $name.k12frame.datasound.sound
@@ -2992,7 +2992,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		match_linux_wm [list button $name.k12frame.output.b_output -image i.output \
 			-command [concat put_K12_objects $name output]] 	
 		pack $name.k12frame.output.b_output -side left -expand 0 -padx 1 -pady 1
-		setTooltip $name.k12frame.output.b_output "Output: Use this to send audio from computer into speakers"
+		setTooltip $name.k12frame.output.b_output "Output: Use this to send sound from computer into speakers"
 		pdtk_k12panel_standardkeybindings $name.k12frame.output.b_output
 
 		# ---------------------------------------- NOW PACK THEM ALL -----------------------------------------
