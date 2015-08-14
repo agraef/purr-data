@@ -9,7 +9,7 @@ hcs
 iemlib
 jasch_lib
 markex
-maxli4
+maxlib
 moonlib
 mrpeach
 pdp
