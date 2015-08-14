@@ -241,7 +241,8 @@ Everything else: (A [x] means we've fixed it)
 [ ] port the bug fix from pd-l2ork git repo in commit
     6084c8e5f86d1521edde3a899a6d5b5821aa27c6
     "*fixed bug reported by Gilberto in..."
-
+[ ] same for 50719c4c455291be3ac679486f7e4d72706bd9e4
+[ ] same for a620228554d1662bacd0f2f8cfc65259049164ec
 Crashers
 --------
 
