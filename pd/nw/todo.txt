@@ -261,7 +261,7 @@ Everything else: (A [x] means we've fixed it)
     70b9043e6cd6de914379d77f591b57e2c9a34661
     (NB: this should be relatively painless... it's just that github
      wouldn't load the patch in the browser)
-[ ] same for "*additional clean-up and improvements to the K12 library"
+[x] same for "*additional clean-up and improvements to the K12 library"
     e2a864d135e825c0253d5c3612ec2d0db495b2be
 [ ] same for "*bug fixes for the new k12 arduino library"
     d8902d4f90ee5a7f965d205e897963b7c5dcd42e
