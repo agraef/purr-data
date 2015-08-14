@@ -409,10 +409,10 @@ proc pdtk_enable_k12_mode {extra_dir} {
 	image create photo i.wii_nunchuk_stick -file $extra_dir/K12/icons/wii_nunchuk_stick.png
 
 	image create photo i.arduino -file $extra_dir/K12/icons/arduino_on.png
-	image create photo i.arduino_digital_in -file $extra_dir/K12/icons/arduino_digital.png
-	image create photo i.arduino_digital_out -file $extra_dir/K12/icons/arduino_digital.png
-	image create photo i.arduino_analog_in -file $extra_dir/K12/icons/arduino_analog.png
-	image create photo i.arduino_analog_out -file $extra_dir/K12/icons/arduino_analog.png
+	image create photo i.arduino_digital_in -file $extra_dir/K12/icons/arduino_digital_in.png
+	image create photo i.arduino_digital_out -file $extra_dir/K12/icons/arduino_digital_out.png
+	image create photo i.arduino_analog_in -file $extra_dir/K12/icons/arduino_analog_in.png
+	image create photo i.arduino_analog_out -file $extra_dir/K12/icons/arduino_analog_out.png
 	#image create photo i.arduino_net -file $extra_dir/K12/icons/arduino_net.png
 
 	image create photo i.raspberry_digital -file $extra_dir/K12/icons/raspberrypi_gpio_digital_on.png

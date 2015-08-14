@@ -1,7 +1,7 @@
-#N canvas 212 26 496 348 10;
+#N canvas 202 16 496 407 10;
 #X obj 110 64 outlet;
-#X obj 228 45 ggee/image @pd_extra/K12/objects/arduino_analog.png 1
-;
+#X obj 228 45 ggee/image @pd_extra/K12/objects/arduino_analog_in_off.png
+1;
 #X obj 228 -60 loadbang;
 #X obj 58 -60 inlet;
 #X obj 240 -15 preset_node k12;
@@ -14,7 +14,7 @@
 #X msg 224 202 symbol arduino-\$1;
 #X symbolatom 228 62 3 0 0 0 - - -, f 3;
 #X text 203 61 pin:;
-#N canvas 310 207 755 313 pin_parser 0;
+#N canvas 300 197 755 407 pin_parser 0;
 #X obj 18 18 inlet;
 #X obj 148 202 outlet;
 #X obj 306 275 outlet;
@@ -26,10 +26,11 @@
 #X msg 355 67 19;
 #X obj 307 198 t b;
 #X obj 423 198 t b;
-#X msg 307 250 open @pd_extra/K12/objects/arduino_analog.png;
-#X msg 423 220 open @pd_extra/K12/objects/arduino_analog_off.png;
 #X obj 18 45 sel A0 A1 A2 A3 A4 A5, f 68;
-#X connect 0 0 13 0;
+#X msg 423 220 open @pd_extra/K12/objects/arduino_analog_in_off.png
+;
+#X msg 307 250 open @pd_extra/K12/objects/arduino_analog_in.png;
+#X connect 0 0 11 0;
 #X connect 3 0 1 0;
 #X connect 3 0 9 0;
 #X connect 4 0 1 0;
@@ -42,32 +43,33 @@
 #X connect 7 0 9 0;
 #X connect 8 0 1 0;
 #X connect 8 0 9 0;
-#X connect 9 0 11 0;
+#X connect 9 0 13 0;
 #X connect 10 0 12 0;
-#X connect 11 0 2 0;
+#X connect 11 0 3 0;
+#X connect 11 1 4 0;
+#X connect 11 2 5 0;
+#X connect 11 3 6 0;
+#X connect 11 4 7 0;
+#X connect 11 5 8 0;
+#X connect 11 6 10 0;
 #X connect 12 0 2 0;
-#X connect 13 0 3 0;
-#X connect 13 1 4 0;
-#X connect 13 2 5 0;
-#X connect 13 3 6 0;
-#X connect 13 4 7 0;
-#X connect 13 5 8 0;
-#X connect 13 6 10 0;
+#X connect 13 0 2 0;
 #X restore 277 104 pd pin_parser;
 #X obj 110 41 route -1;
 #X obj 77 258 send, f 25;
 #X obj 340 -15 loadbang;
 #X msg 340 7 symbol ---;
 #X text 209 45 INPUT;
-#X msg 228 -37 open @pd_extra/K12/objects/arduino_analog_off.png;
 #X msg 77 228 pinMode \$1 analog;
-#X connect 2 0 20 0;
+#X msg 228 -37 open @pd_extra/K12/objects/arduino_analog_in_off.png
+;
+#X connect 2 0 21 0;
 #X connect 3 0 6 0;
 #X connect 4 0 12 0;
 #X connect 5 0 15 0;
 #X connect 6 0 8 0;
 #X connect 6 1 5 0;
-#X connect 7 0 21 0;
+#X connect 7 0 20 0;
 #X connect 8 0 9 0;
 #X connect 8 1 7 0;
 #X connect 8 2 10 0;
@@ -81,6 +83,6 @@
 #X connect 15 0 0 0;
 #X connect 17 0 18 0;
 #X connect 18 0 12 0;
-#X connect 20 0 1 0;
-#X connect 21 0 16 0;
+#X connect 20 0 16 0;
+#X connect 21 0 1 0;
 #X coords 0 -1 1 1 89 89 2 183 13;
