@@ -270,6 +270,8 @@ Everything else: (A [x] means we've fixed it)
     Need to patch this manually, as gnu patch fails for some reason
 [ ] 95bb59b246fbcca3faf05b8bc06e77319fd9e6a5
     Hunks failed.  Need to patch manually.
+[ ] 00021cccae81854a6e107141e828cec3b1107e6b
+    Hunks failed.  Patch manually
 [ ] same for all commits up to Jul 31, 2015
 
 Crashers
