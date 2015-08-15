@@ -1,0 +1,10 @@
+s_blsaw
+s_blsquare
+s_buzz
+s_fplaytable
+s_fplaytable2
+s_guitar
+s_looper
+s_playtable
+s_playtable2
+s_rhodey

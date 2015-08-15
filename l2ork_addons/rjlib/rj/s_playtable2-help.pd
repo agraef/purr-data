@@ -1,0 +1,75 @@
+#N canvas 289 87 898 692 10;
+#X obj 604 377 openpanel;
+#X obj 604 424 soundfiler;
+#X obj 604 350 bng 20 250 50 0 empty empty open-sample 0 -6 1 10 -262144
+-1 -1;
+#X obj 122 574 soundoutput;
+#X msg 158 209 play-samp 0.5 2;
+#X text 356 235 original gain \, original pitch \, start at 500 ms
+;
+#X msg 171 261 play-samp 1 1 500 250;
+#X msg 167 238 play-samp 1 1 500;
+#X msg 178 355 bang;
+#X text 220 355 repeat last instruction;
+#X obj 240 554 spigot;
+#X obj 295 555 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 240 582 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X msg 177 319 play-samp 0.8 -1 8000 8000;
+#X text 175 295 attenuated \, reversed \, starting at 8000ms \, playing
+for 8000ms;
+#X text 233 532 last outlet: bang at end of duration;
+#X text 355 259 original gain \, original pitch \, start at 500 ms
+\, play for 250ms;
+#X msg 122 158 play-samp;
+#X msg 278 420 sr 44100;
+#X msg 203 419 sr 22050;
+#X text 201 399 adjust file samplerate (Hz \, default 22050);
+#X text 303 203 attenuated \, transposed up an octave.Transposition
+is doen by resampling;
+#X msg 142 183 play-samp 1 1 0 8000;
+#X text 203 158 play all with original gain and original pitch;
+#X msg 220 511 stop;
+#X text 261 512 stop playing;
+#X text 96 26 s_playtable2;
+#X obj 602 537 table play-samp-1;
+#X obj 602 559 table play-samp-2;
+#X msg 604 398 read -resize \$1 play-samp-1 play-samp-2;
+#X text 115 50 Low level \, but flexible table-sample stereo player.
+Plays two tables called "basename-1" and "basename-2";
+#X text 117 111 <table base name> <gain> <transposition> <start location
+(ms)> <duration (ms)> <looping 0/1>;
+#X text 99 92 s_playtable2 is controlled through messages composed
+of:;
+#X obj 122 513 s_playtable2;
+#X text 395 591 The tables to play must have the same basename with
+"-1 " for left and "-2" for right channel appended.;
+#X obj 397 630 u_samplebank2 \$0-stereo-sample;
+#X text 617 630 does this automatically for you.;
+#X text 301 180 original gain \, original pitch \, start at 0 \, play
+for 8000ms;
+#X msg 280 461 fade \$1;
+#X floatatom 280 443 5 0 0 0 - - -;
+#X text 344 452 fade in/out time (default is 2msec);
+#X connect 0 0 29 0;
+#X connect 2 0 0 0;
+#X connect 4 0 33 0;
+#X connect 6 0 33 0;
+#X connect 7 0 33 0;
+#X connect 8 0 33 0;
+#X connect 10 0 12 0;
+#X connect 10 0 33 0;
+#X connect 11 0 10 1;
+#X connect 13 0 33 0;
+#X connect 17 0 33 0;
+#X connect 18 0 33 1;
+#X connect 19 0 33 1;
+#X connect 22 0 33 0;
+#X connect 24 0 33 1;
+#X connect 29 0 1 0;
+#X connect 33 0 3 0;
+#X connect 33 1 3 1;
+#X connect 33 2 10 0;
+#X connect 38 0 33 1;
+#X connect 39 0 38 0;

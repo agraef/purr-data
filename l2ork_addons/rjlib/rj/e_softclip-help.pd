@@ -1,0 +1,54 @@
+#N canvas 277 61 759 541 10;
+#X obj 87 241 s_guitar myguit;
+#X obj 223 283 osc~;
+#X msg 365 289 drive \$1;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0-scope 441 float 2;
+#X coords 0 1 441 -1 200 140 1;
+#X restore 485 289 graph;
+#X obj 318 425 tabwrite~ \$0-scope;
+#X obj 335 375 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 223 251 mtof;
+#X floatatom 223 230 5 0 0 0 - - -;
+#X obj 185 407 soundoutput;
+#X obj 335 397 metro 100;
+#X obj 261 303 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 223 302 *~ 0;
+#X floatatom 87 194 5 0 0 0 - - -;
+#X obj 342 209 hsl 128 15 0 1 0 0 empty empty wet____________dry 5
+6 1 10 -262144 -1 -1 0 1;
+#X msg 339 237 dry \$1;
+#X obj 223 324 e_softclip mydist;
+#X text 109 15 e_softclip;
+#X text 159 44 Clips incoming signal with a tanh-based waveshaper.
+;
+#X text 157 68 Args: NAME;
+#X text 158 86 Inlet0~: signal to clip;
+#X text 158 107 Inlet1: dry 0...1: dry/wet factor. 0 (default) is complete
+wet.;
+#X text 155 144 Inlet1: drive: additional amplification;
+#X obj 87 213 mtof;
+#X floatatom 365 265 5 0 0 0 - - -;
+#X obj 189 185 loadbang;
+#X msg 189 208 feedback 0.98;
+#X connect 0 0 15 0;
+#X connect 1 0 11 0;
+#X connect 2 0 15 1;
+#X connect 5 0 9 0;
+#X connect 6 0 1 0;
+#X connect 7 0 6 0;
+#X connect 9 0 4 0;
+#X connect 10 0 11 1;
+#X connect 11 0 15 0;
+#X connect 12 0 22 0;
+#X connect 13 0 14 0;
+#X connect 14 0 15 1;
+#X connect 15 0 4 0;
+#X connect 15 0 8 0;
+#X connect 15 0 8 1;
+#X connect 22 0 0 0;
+#X connect 23 0 2 0;
+#X connect 24 0 25 0;
+#X connect 25 0 0 1;

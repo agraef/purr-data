@@ -1,0 +1,23 @@
+#N canvas 230 196 783 283 10;
+#X obj 76 87 inlet~;
+#X obj 142 87 inlet~;
+#X obj 77 198 outlet~;
+#X obj 201 87 inlet;
+#X obj 201 127 vline~;
+#X obj 141 136 -~;
+#X obj 141 156 *~;
+#X text 371 150 (1-x)*a + x*b;
+#X text 371 167 = a - x*a + x*b;
+#X text 371 184 = a + x*(b - a);
+#X text 366 119 x: fade factor (0-1);
+#X text 366 90 a: sig from inlet~ 0;
+#X text 339 50 Linear crossfade according to the following calculation:
+;
+#X text 367 104 b: sig from inlet~ 1;
+#X connect 0 0 5 1;
+#X connect 0 0 2 0;
+#X connect 1 0 5 0;
+#X connect 3 0 4 0;
+#X connect 4 0 6 1;
+#X connect 5 0 6 0;
+#X connect 6 0 2 0;

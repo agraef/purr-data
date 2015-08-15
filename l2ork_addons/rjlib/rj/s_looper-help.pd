@@ -1,0 +1,72 @@
+#N canvas 84 86 1015 642 10;
+#X msg 93 128 open;
+#X obj 92 434 soundoutput;
+#X msg 151 209 stop;
+#X msg 182 255 loop \$1;
+#X obj 182 235 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X msg 146 185 play 500;
+#X obj 589 249 random 32;
+#X obj 589 226 metro 125;
+#X obj 589 203 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X floatatom 498 485 8 0 0 3 dur_in_smps - -;
+#X floatatom 424 485 8 0 0 3 dur_in_ms - -;
+#X symbolatom 349 485 10 0 0 3 table_name - -;
+#X obj 349 435 unpack s f f f;
+#X floatatom 582 485 6 0 0 3 samplerate - -;
+#X obj 424 534 s \$0-duration;
+#X obj 649 170 r \$0-duration;
+#X obj 649 197 / 32;
+#X obj 263 452 bng 15 50 50 0 empty empty bang_on_start 0 25 1 10 -262144
+-1 -1;
+#X msg 133 160 play;
+#X text 176 160 all from start;
+#X text 217 185 play all starting 500 ms into sample;
+#X text 156 50 sample player with looping and file storage.;
+#X text 139 129 open a file;
+#X text 241 256 loop file;
+#X text 561 98 "playdiv <divs> <part> <duration in parts>" divides
+the file into as many equal length parts as the <divs> number following
+it specifies. Then it start playing part <part> and stops after <duration>
+parts.;
+#X msg 183 284 sr 22050;
+#X msg 589 307 playdiv 32 \$1 1;
+#X text 239 334 adjust fade-in time (default 2ms);
+#X text 155 83 Args: <NAME> <soundfile to autoload>;
+#X obj 729 275 hradio 15 1 0 8 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X msg 729 303 playdiv 16 \$1 0.5;
+#X text 253 284 set samplerate of file (default 22050 Hz);
+#X text 533 73 The "playdiv" message:;
+#X text 461 434 sample file info;
+#X msg 185 306 sr 44100;
+#X obj 82 52 s_looper;
+#X obj 93 389 s_looper \$0-mysample filenotfound.wav;
+#X msg 186 334 fade 0;
+#X connect 0 0 36 0;
+#X connect 2 0 36 0;
+#X connect 3 0 36 0;
+#X connect 4 0 3 0;
+#X connect 5 0 36 0;
+#X connect 6 0 26 0;
+#X connect 7 0 6 0;
+#X connect 8 0 7 0;
+#X connect 10 0 14 0;
+#X connect 12 0 11 0;
+#X connect 12 1 10 0;
+#X connect 12 2 9 0;
+#X connect 12 3 13 0;
+#X connect 15 0 16 0;
+#X connect 16 0 7 1;
+#X connect 18 0 36 0;
+#X connect 25 0 36 0;
+#X connect 26 0 36 0;
+#X connect 29 0 30 0;
+#X connect 30 0 36 0;
+#X connect 34 0 36 0;
+#X connect 36 0 1 0;
+#X connect 36 1 1 1;
+#X connect 36 2 17 0;
+#X connect 36 3 12 0;
+#X connect 37 0 36 0;

@@ -1,0 +1,47 @@
+#N canvas 66 126 1037 545 10;
+#X obj 132 187 vline~;
+#X obj 150 209 noise~;
+#X obj 131 231 *~;
+#X obj 129 454 soundoutput;
+#X obj 375 153 vsl 15 100 0 100 0 0 empty empty q_(peakiness) 0 -9
+1 10 -262144 -1 -1 0 1;
+#X obj 132 134 bng 24 250 50 0 empty empty empty 17 7 0 10 -4034 -1
+-1;
+#X msg 132 162 0.8 10 \, 0 20 10;
+#X floatatom 392 283 5 0 0 0 - - -;
+#X obj 260 152 vsl 15 128 0 100 0 0 empty empty lowpass_frequency 0
+-9 1 10 -262144 -1 -1 0 1;
+#X obj 260 293 mtof;
+#X floatatom 274 316 8 0 0 0 - - -;
+#X obj 132 84 r \$0-trigger;
+#X obj 132 108 bang;
+#X obj 453 277 hsl 50 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X floatatom 450 297 5 0 0 0 - - -;
+#X msg 450 314 dry \$1;
+#X text 451 334 default is dry=0 i.e. fully wet;
+#X obj 130 397 e_reslop mylop 2000;
+#X msg 260 344 freq \$1;
+#X text 35 39 Resonant lowpass filter.;
+#X text 25 13 e_reslop;
+#X text 35 54 use as: e_reslop <NAME> <default freq>;
+#X msg 374 313 q \$1;
+#X connect 0 0 2 0;
+#X connect 1 0 2 1;
+#X connect 2 0 17 0;
+#X connect 4 0 22 0;
+#X connect 4 0 7 0;
+#X connect 5 0 6 0;
+#X connect 6 0 0 0;
+#X connect 8 0 9 0;
+#X connect 9 0 18 0;
+#X connect 9 0 10 0;
+#X connect 11 0 12 0;
+#X connect 12 0 5 0;
+#X connect 13 0 14 0;
+#X connect 14 0 15 0;
+#X connect 15 0 17 1;
+#X connect 17 0 3 0;
+#X connect 17 0 3 1;
+#X connect 18 0 17 1;
+#X connect 22 0 17 1;

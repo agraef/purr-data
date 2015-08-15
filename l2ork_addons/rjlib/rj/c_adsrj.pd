@@ -1,0 +1,40 @@
+#N canvas 255 130 736 454 10;
+#X obj 101 204 inlet;
+#X obj 101 254 t a a;
+#X obj 128 284 abs;
+#X obj 101 229 / 127;
+#X obj 451 59 inlet;
+#X obj 451 84 rjdispatch \$0 A;
+#X obj 451 109 rjdispatch \$0 D;
+#X obj 451 134 rjdispatch \$0 S;
+#X obj 451 159 rjdispatch \$0 R;
+#X obj 508 59 rjloader c_adsrj-\$1 \$0;
+#X obj 106 132 nbx 3 14 -1e+37 1e+37 0 0 \$0-A \$0-A A 0 -8 1 10 -262144
+-1 -1 151 256;
+#X obj 155 282 r \$0-A;
+#X obj 183 301 r \$0-D;
+#X obj 210 326 r \$0-S;
+#X obj 238 348 r \$0-R;
+#X obj 101 407 outlet~;
+#X obj 142 132 nbx 3 14 -1e+37 1e+37 0 0 \$0-D \$0-D D 0 -8 1 10 -262144
+-1 -1 53 256;
+#X obj 178 132 nbx 3 14 -1e+37 1e+37 0 0 \$0-S \$0-S S 0 -8 1 10 -262144
+-1 -1 41 256;
+#X obj 214 132 nbx 4 14 -1e+37 1e+37 0 0 \$0-R \$0-R R 0 -8 1 10 -262144
+-1 -1 74 256;
+#X obj 101 377 c_adsr 1 \$2 \$3 \$4 \$5;
+#X connect 0 0 3 0;
+#X connect 1 0 19 0;
+#X connect 1 1 2 0;
+#X connect 2 0 19 1;
+#X connect 3 0 1 0;
+#X connect 4 0 5 0;
+#X connect 5 0 6 0;
+#X connect 6 0 7 0;
+#X connect 7 0 8 0;
+#X connect 11 0 19 2;
+#X connect 12 0 19 3;
+#X connect 13 0 19 4;
+#X connect 14 0 19 5;
+#X connect 19 0 15 0;
+#X coords 0 -1 1 1 160 50 1 100 100;

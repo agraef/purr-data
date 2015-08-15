@@ -1,0 +1,15 @@
+#N canvas 579 259 581 342 10;
+#X obj 77 120 rj/e_pitchshift;
+#X obj 77 91 osc~ 220;
+#X obj 76 150 *~ 0.1;
+#X msg 178 96 pitch \$1;
+#X floatatom 179 75 5 0 0 0 - - -;
+#X obj 60 190 soundoutput;
+#X text 221 75 desired pitch shift in semitones;
+#X text 29 18 pitchshift: shift pitch of incoming signal;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 2 0 5 0;
+#X connect 2 0 5 1;
+#X connect 3 0 0 1;
+#X connect 4 0 3 0;

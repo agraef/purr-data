@@ -1,0 +1,59 @@
+#N canvas 238 97 781 672 10;
+#X declare -path .;
+#X floatatom 255 507 8 0 0 3 dur_in_smps - -;
+#X floatatom 181 507 8 0 0 3 dur_in_ms - -;
+#X msg 140 302 info;
+#X msg 106 233 open;
+#X msg 142 355 sr 44100 \, info;
+#X msg 141 380 sr 22050 \, info;
+#X obj 440 537 soundoutput;
+#X msg 584 463 sr 44100;
+#X msg 585 440 sr 22050;
+#X symbolatom 106 547 12 0 0 3 table_base_name - -;
+#X msg 585 495 stop;
+#X text 148 232 load a sample with opendialog;
+#X text 308 266 load a sample by path;
+#X text 262 359 Change the file samplerate \, that is used to calculate
+the duration in milliseconds;
+#X text 68 131 Arguments:;
+#X msg 123 266 open file_not_found.wav;
+#X text 202 295 output list containing: <table name> <duration in ms>
+<duration in samples> <samplerate>;
+#X obj 106 457 unpack s f f f;
+#X floatatom 339 507 6 0 0 3 samplerate - -;
+#X text 108 150 <table name - required!> <path to soundfile - optional>
+;
+#X obj 440 443 symbol \$0-sample;
+#X msg 440 421 bang;
+#X text 56 16 u_samplebank2;
+#X text 95 43 Utility patch to load sample stereo files into Pd tables.
+Also calculates duration in milliseconds. Available in mono as [u_samplebank]
+as well.;
+#X obj 106 417 u_samplebank2 \$0-sample;
+#X text 95 92 Left channel will be in table "ARGUMENT-1" \, right channel
+is in table "ARGUMENT-2";
+#X obj 440 495 s_playtable2;
+#X text 315 600 s_playtable2 can be used to play stereo samples in
+the samplebank.;
+#X obj 183 199 declare -path .;
+#X text 111 175 You can add paths to search for soundfiles using "declare".
+;
+#X text 111 200 Just add;
+#X text 299 199 to your _main.pd patch.;
+#X connect 2 0 24 0;
+#X connect 3 0 24 0;
+#X connect 4 0 24 0;
+#X connect 5 0 24 0;
+#X connect 7 0 26 1;
+#X connect 8 0 26 1;
+#X connect 10 0 26 1;
+#X connect 15 0 24 0;
+#X connect 17 0 9 0;
+#X connect 17 1 1 0;
+#X connect 17 2 0 0;
+#X connect 17 3 18 0;
+#X connect 20 0 26 0;
+#X connect 21 0 20 0;
+#X connect 24 0 17 0;
+#X connect 26 0 6 0;
+#X connect 26 1 6 1;

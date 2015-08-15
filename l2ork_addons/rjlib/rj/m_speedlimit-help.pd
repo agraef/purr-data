@@ -1,0 +1,26 @@
+#N canvas 357 235 570 396 10;
+#X obj 128 264 t b b;
+#X obj 128 298 timer;
+#X floatatom 128 325 5 0 0 0 - - -;
+#X obj 128 130 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X floatatom 188 130 5 0 0 0 - - -;
+#X obj 128 354 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X floatatom 237 167 5 0 0 1 limit(ms) - -;
+#X obj 128 192 m_speedlimit 150;
+#X text 37 9 m_speedlimit;
+#X text 73 95 Works for any data that can be stored in [list].;
+#X obj 128 155 metro 100;
+#X text 73 34 Impose a limit on the speed of messages.;
+#X text 73 58 Fast changing values are mapped to slower changing values
+by dropping everything for the limit duration.;
+#X connect 0 0 1 0;
+#X connect 0 1 1 1;
+#X connect 1 0 2 0;
+#X connect 2 0 5 0;
+#X connect 3 0 10 0;
+#X connect 4 0 10 1;
+#X connect 6 0 7 1;
+#X connect 7 0 0 0;
+#X connect 10 0 7 0;

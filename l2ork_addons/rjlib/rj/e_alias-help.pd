@@ -1,0 +1,30 @@
+#N canvas 0 0 709 451 10;
+#X obj 162 189 osc~ 220;
+#X obj 161 212 *~ 0.5;
+#X floatatom 256 206 5 0 0 0 - - -;
+#X obj 161 316 soundoutput;
+#X obj 161 248 e_alias name 4;
+#X msg 256 225 alias \$1;
+#X obj 72 41 e_alias;
+#X text 152 42 distort by reducing the sample rate to generate aliasing
+;
+#X text 145 85 Args: <name> <aliasing factor>;
+#X text 147 117 Inlet0~: signal to distort;
+#X text 154 135 Inlet1: alias <number>;
+#X obj 303 310 tabwrite~ \$0-scope;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0-scope 441 float 2;
+#X coords 0 1 441 -1 200 140 1;
+#X restore 446 188 graph;
+#X obj 303 288 metro 100;
+#X obj 303 269 tgl 15 0 empty empty scope 17 7 1 10 -262144 -1 -1 1
+1;
+#X connect 0 0 1 0;
+#X connect 1 0 4 0;
+#X connect 2 0 5 0;
+#X connect 4 0 3 0;
+#X connect 4 0 3 1;
+#X connect 4 0 11 0;
+#X connect 5 0 4 1;
+#X connect 13 0 11 0;
+#X connect 14 0 13 0;

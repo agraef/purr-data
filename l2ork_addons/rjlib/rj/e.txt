@@ -1,0 +1,14 @@
+e_alias
+e_chorus
+e_chorusr
+e_fbdelay
+e_fbdelay2
+e_freqshift
+e_pan
+e_phaser
+e_pingpong
+e_pitchshift
+e_reslop
+e_reverb
+e_softclip
+e_vocoder

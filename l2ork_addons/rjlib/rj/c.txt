@@ -1,0 +1,5 @@
+c_adsr
+c_adsrj
+c_mphasor
+c_multimetro
+c_xfade

@@ -1,0 +1,25 @@
+#N canvas 365 203 597 514 10;
+#X obj 116 245 noise~;
+#X floatatom 171 275 8 0 0 0 - - -;
+#X obj 171 245 / 127;
+#X obj 174 220 hsl 128 15 0 127 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 6600 1;
+#X text 177 202 L < < < M > > > R;
+#X text 260 238 controller value;
+#X obj 115 275 *~ 0.3;
+#X obj 115 343 soundoutput;
+#X obj 115 305 e_pan;
+#X text 91 23 Constant power panner (cosine law);
+#X text 64 110 Inlets: 1) signal to pan;
+#X text 121 132 2) panning position (0 = left \, 1 = right). Default
+is center (0.5);
+#X obj 39 23 e_pan;
+#X text 65 63 Argument: panning position (0 = left \, 1 = right). Default
+with empty argument is center (i.e. 0.5);
+#X connect 0 0 6 0;
+#X connect 1 0 8 1;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;
+#X connect 6 0 8 0;
+#X connect 8 0 7 0;
+#X connect 8 1 7 1;

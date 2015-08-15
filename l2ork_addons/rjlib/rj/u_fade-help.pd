@@ -1,0 +1,10 @@
+#N canvas 279 168 450 300 10;
+#X text 14 21 Create a named fader \, useful for automatic mixing;
+#X obj 63 60 osc~ 220;
+#X obj 63 131 u_fade myfade 0.1;
+#X obj 39 199 soundoutput;
+#X msg 268 60 \; myfade 0 500;
+#X msg 269 111 \; myfade 0.3 500;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 2 0 3 1;

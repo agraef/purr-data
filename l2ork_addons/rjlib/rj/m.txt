@@ -1,0 +1,3 @@
+m_bpm2ms
+m_scale
+m_speedlimit

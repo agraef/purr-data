@@ -1,0 +1,6 @@
+u_fade
+u_record
+u_samplebank
+u_samplebank2
+u_splicetrans
+u_stereo

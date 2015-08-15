@@ -1,0 +1,54 @@
+#N canvas 282 52 718 684 10;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0-adsr 44100 float 2;
+#X coords 0 1 44100 -1 200 140 1;
+#X restore 118 488 graph;
+#X obj 119 443 tabwrite~ \$0-adsr;
+#X obj 87 232 t a b;
+#X msg 87 210 80;
+#X obj 87 275 makenote 100 400;
+#X floatatom 141 251 5 0 0 2 velocity - -;
+#X floatatom 349 218 5 0 0 1 A - -;
+#X floatatom 413 218 5 0 0 1 D - -;
+#X floatatom 475 218 5 0 0 1 S(%) - -;
+#X floatatom 547 218 5 0 0 1 R - -;
+#X msg 349 237 A \$1;
+#X msg 413 237 D \$1;
+#X msg 475 238 S \$1;
+#X msg 547 238 R \$1;
+#X text 51 13 c_adsrj: ADSR ENVELOPE with GUI and state saving;
+#X floatatom 153 316 5 0 0 0 - - -;
+#X text 475 336 Remote control;
+#X obj 478 453 s RJ_SCENE_LOAD;
+#X obj 196 351 c_adsrj myadsr;
+#X text 85 46 This is a variation on the classical Miller S. Puckette
+linear ADSR envelope which has a GUI included and is rj-save enabled.
+;
+#X text 86 102 Arguments: NAME \, attack time \, decay time \, sustain
+level \, release time. A \, D \, and R are in msec and S is in percent!
+;
+#X obj 478 406 list prepend c_adsrj-myadsr;
+#X obj 478 430 list trim;
+#X msg 478 362 A 50 \, D 80 \, S 70 \, R 300;
+#X text 378 568 Also see;
+#X obj 448 566 c_adsr 1 20 30 90 300;
+#X text 86 152 Trigger input is taken to be a number specifiying midi
+velocity (0-127) which will also set the peak level.;
+#X connect 2 0 4 0;
+#X connect 2 1 1 0;
+#X connect 3 0 2 0;
+#X connect 4 1 15 0;
+#X connect 4 1 18 0;
+#X connect 5 0 4 1;
+#X connect 6 0 10 0;
+#X connect 7 0 11 0;
+#X connect 8 0 12 0;
+#X connect 9 0 13 0;
+#X connect 10 0 18 1;
+#X connect 11 0 18 1;
+#X connect 12 0 18 1;
+#X connect 13 0 18 1;
+#X connect 18 0 1 0;
+#X connect 21 0 22 0;
+#X connect 22 0 17 0;
+#X connect 23 0 21 0;

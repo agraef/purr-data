@@ -1,0 +1,17 @@
+#N canvas 0 22 450 300 10;
+#X obj 73 59 inlet~;
+#X obj 131 59 inlet~;
+#X obj 201 61 inlet~;
+#X obj 262 66 inlet;
+#X obj 35 199 outlet~;
+#X obj 189 194 outlet~;
+#X obj 36 130 rj/e_fbdelay \$1-1 \$2;
+#X obj 190 129 rj/e_fbdelay \$1-2 \$2;
+#X connect 0 0 6 0;
+#X connect 1 0 7 0;
+#X connect 2 0 7 1;
+#X connect 2 0 6 1;
+#X connect 3 0 7 2;
+#X connect 3 0 6 2;
+#X connect 6 0 4 0;
+#X connect 7 0 5 0;

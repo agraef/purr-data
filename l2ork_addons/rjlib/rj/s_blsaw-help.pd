@@ -1,0 +1,25 @@
+#N canvas 371 298 534 487 10;
+#X floatatom 156 208 5 0 0 0 - - -;
+#X floatatom 264 209 5 0 0 0 - - -;
+#X obj 156 227 s_blsaw;
+#X obj 264 227 phasor~;
+#X obj 194 179 mtof;
+#X floatatom 194 161 5 0 0 0 - - -;
+#X obj 264 268 soundoutput;
+#X obj 156 269 soundoutput;
+#X obj 80 39 s_blsaw;
+#X text 98 71 s_blsaw generates a bandlimited sawtooth wave similar
+to the Pd builtin phasor~;
+#X text 326 226 this is aliased;
+#X text 44 227 less aliasing:;
+#X text 99 113 inlet 0: signal or float to set frequency in Hz;
+#X text 98 134 inlet 1: float to set phase (0-1);
+#X connect 0 0 2 0;
+#X connect 1 0 3 0;
+#X connect 2 0 7 0;
+#X connect 2 0 7 1;
+#X connect 3 0 6 0;
+#X connect 3 0 6 1;
+#X connect 4 0 0 0;
+#X connect 4 0 1 0;
+#X connect 5 0 4 0;

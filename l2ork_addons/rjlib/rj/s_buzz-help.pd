@@ -1,0 +1,39 @@
+#N canvas 274 60 646 649 10;
+#X floatatom 111 66 5 0 0 0 - - -;
+#X obj 151 332 tabwrite~ \$0-scope;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0-scope 2205 float 0;
+#X coords 0 1 2204 -1 200 140 1;
+#X restore 288 210 graph;
+#X obj 151 265 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 111 93 mtof;
+#X obj 194 64 hsl 128 15 0 0.9 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 6300 1;
+#X obj 191 94 moses 1;
+#X text 206 45 Harmonicity-Env;
+#X text 252 95 don't go equal or over 1!;
+#X floatatom 199 118 5 0 0 0 - - -;
+#X obj 191 189 line~;
+#X obj 191 165 pack 0 100;
+#X msg 164 308 bang;
+#X obj 151 286 metro 100;
+#X text 87 498 out = sqrt[(1-a^2)(1+a^2)] * [sin(x) / (1+a^2 - 2a*cos(x))]
+;
+#X text 85 545 cf: James A. Moorer: "Synthesis of Complex Audio Spectra"
+and Dodge/Jerse: "Computer Music" page 163f;
+#X obj 111 228 s_buzz;
+#X obj 68 374 soundoutput;
+#X connect 0 0 4 0;
+#X connect 3 0 13 0;
+#X connect 4 0 16 0;
+#X connect 5 0 6 0;
+#X connect 6 0 9 0;
+#X connect 6 0 11 0;
+#X connect 10 0 16 1;
+#X connect 11 0 10 0;
+#X connect 12 0 1 0;
+#X connect 13 0 1 0;
+#X connect 16 0 1 0;
+#X connect 16 0 17 0;
+#X connect 16 0 17 1;

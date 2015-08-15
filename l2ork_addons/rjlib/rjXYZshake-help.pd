@@ -1,0 +1,41 @@
+#N canvas 173 22 516 331 10;
+#X obj 16 257 rjXYZshake;
+#X obj 14 298 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 50 298 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 83 297 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 16 283 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 50 283 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 83 281 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X msg 18 196 sensitivity \$1;
+#X obj 19 136 hradio 15 1 0 8 empty rjXYZ-sensitiv-r empty 0 -8 0 10
+-262144 -1 -1 1;
+#X obj 169 136 hradio 15 1 0 8 empty rjXYZ-timeout-r empty 0 -8 0 10
+-262144 -1 -1 3;
+#X msg 169 196 timeout \$1;
+#X obj 169 166 * 100;
+#X msg 321 154 \; rjXYZ-sensitiv-r 1 \; rjXYZ-timeout-r 3;
+#X obj 320 132 loadbang;
+#X text 14 12 rjXYZshake 0.1 alpha written by enrique erne. inspired
+by roman haefeli's amenshake. gives 0 or 1 for each axis.;
+#X text 110 287 gives 0 or 1 for each axis.;
+#X text 12 55 2008.10.08 initial release \, port from TheWhiteRoom
+\, eerne;
+#X text 66 115 needs testing!!!;
+#X connect 0 0 1 0;
+#X connect 0 0 4 0;
+#X connect 0 1 2 0;
+#X connect 0 1 5 0;
+#X connect 0 2 3 0;
+#X connect 0 2 6 0;
+#X connect 7 0 0 0;
+#X connect 8 0 7 0;
+#X connect 9 0 11 0;
+#X connect 10 0 0 0;
+#X connect 11 0 10 0;
+#X connect 13 0 12 0;

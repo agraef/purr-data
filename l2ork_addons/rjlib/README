@@ -1,0 +1,28 @@
+
+Global messages from rjlib:
+
+1) receiver "accelerate", 
+   module accelerate.pd
+   - magnitude float: gives the magnitude of an accelerator motion
+   - pitch float: the pitch 
+   - roll float: the roll 
+   - x float: raw x value
+   - y float: raw y value
+   - z loat: raw z value
+
+2) receiver "touch"  ??? TODO: document
+   module touch.pd
+   - tap float: 
+   - speed1.delta.1 float
+   - speed2.delta.2 float
+   - speed float float
+
+3) receiver analyse 
+   module analysepitch.pd
+   - pitch float: a pitch value when a pitched sound is detected
+   - continuouspitch float: always delivers a pitch
+   - onset bang: bang if an onset is detected
+   module analysesimpleonset.pd
+   configuration: onset_threshold float: default value 10
+   - simpleonset bang: cheap, basic onset detector
+

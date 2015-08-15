@@ -1,0 +1,31 @@
+#N canvas 386 259 738 465 10;
+#X obj 232 201 hsl 128 15 0 1 0 0 empty empty 0-1 -2 -8 1 10 -262144
+-1 -1 0 1;
+#X obj 229 252 pack 0 10;
+#X obj 150 182 osc~ 440;
+#X obj 173 232 noise~;
+#X obj 151 374 soundoutput;
+#X floatatom 229 230 5 0 0 0 - - -;
+#X obj 151 313 c_xfade;
+#X text 84 24 c_xfade;
+#X text 110 52 Linear crossfader. 0 to last inlet gives left signal
+\, 1 gives only right signal. Values in between get interpolated linearly.
+;
+#X text 109 111 A list of two or three numbers in last inlet can be
+used to set interpolation time and delay - internally this is connected
+to [vline~];
+#X obj 395 196 hsl 128 15 0 1 0 0 empty empty 0-1 -2 -8 1 10 -262144
+-1 -1 0 1;
+#X floatatom 392 224 5 0 0 0 - - -;
+#X obj 392 253 pack 0 200 500;
+#X text 508 252 third number is predelay;
+#X connect 0 0 5 0;
+#X connect 1 0 6 2;
+#X connect 2 0 6 0;
+#X connect 3 0 6 1;
+#X connect 5 0 1 0;
+#X connect 6 0 4 0;
+#X connect 6 0 4 1;
+#X connect 10 0 11 0;
+#X connect 11 0 12 0;
+#X connect 12 0 6 2;

@@ -1,0 +1,93 @@
+#N canvas 66 126 1095 623 10;
+#X obj 132 237 vline~;
+#X obj 150 259 noise~;
+#X obj 131 281 *~;
+#X obj 129 504 soundoutput;
+#X obj 281 333 / 100;
+#X obj 281 227 vsl 15 100 0 100 0 0 empty empty x_feedback_1+2 0 -9
+1 10 -262144 -1 -1 9400 1;
+#X obj 204 417 sig~ 0;
+#X obj 132 184 bng 24 250 50 0 empty empty empty 17 7 0 10 -4034 -1
+-1;
+#X msg 132 212 0.8 10 \, 0 20 10;
+#X obj 562 205 vsl 15 100 0 2000 0 0 empty empty delay_time2_(ms) 0
+-9 1 10 -262144 -1 -1 3100 1;
+#X floatatom 569 310 8 0 0 0 - - -;
+#X floatatom 298 357 5 0 0 0 - - -;
+#X obj 661 203 vsl 15 128 0 127 0 0 empty empty delay_frequency_1+2
+0 -9 1 10 -262144 -1 -1 2100 1;
+#X obj 661 344 mtof;
+#X text 553 578 Delays set through last inlet will be added to the
+delay of the audio delay inlet (second inlet);
+#X floatatom 699 343 5 0 0 1 pitch - -;
+#X obj 387 194 vsl 15 128 0 127 0 0 empty empty lowpass_cutoff_fr._1+2
+0 -9 1 10 -262144 -1 -1 7000 1;
+#X obj 387 335 mtof;
+#X floatatom 401 358 8 0 0 0 - - -;
+#X obj 661 416 s \$0-trigger;
+#X obj 132 134 r \$0-trigger;
+#X obj 132 158 bang;
+#X text 657 164 sets delaytime as a frequency value;
+#X obj 204 303 vsl 15 100 0 2000 0 0 empty empty delay_time(ms) -10
+-9 1 10 -262144 -1 -1 0 1;
+#X floatatom 677 367 8 0 0 1 freq - -;
+#X obj 130 447 e_pingpong myping 2000;
+#X msg 661 385 delayfreq1 \$1 \, delayfreq2 \$1;
+#X obj 487 205 vsl 15 100 0 2000 0 0 empty empty delay_time1 0 -9 1
+10 -262144 -1 -1 1100 1;
+#X floatatom 494 314 8 0 0 0 - - -;
+#X msg 487 355 delay1 \$1;
+#X msg 562 354 delay2 \$1;
+#X msg 387 386 lpfreq1 \$1 \, lpfreq2 \$1;
+#X obj 888 334 / 100;
+#X obj 888 228 vsl 15 100 0 100 0 0 empty empty direct_feedback_1+2
+0 -9 1 10 -262144 -1 -1 0 1;
+#X floatatom 905 358 5 0 0 0 - - -;
+#X msg 281 415 x-feedback1 \$1 \, x-feedback2 \$1;
+#X msg 888 396 feedback1 \$1 \, feedback2 \$1;
+#X text 25 13 e_pingpong;
+#X text 35 39 pingpong feedback delay line with lowpass filtered feedback
+path.;
+#X text 41 81 use as: e_pingpong <NAME> <max delay time in ms>;
+#X text 561 30 WARNING: For stable operation the sum of direct feedback
+and cross-feedback on each channel must not be greater than 1;
+#X obj 167 286 *~;
+#X obj 199 258 osc~ 880;
+#X connect 0 0 2 0;
+#X connect 0 0 41 0;
+#X connect 1 0 2 1;
+#X connect 2 0 25 0;
+#X connect 4 0 35 0;
+#X connect 4 0 11 0;
+#X connect 5 0 4 0;
+#X connect 6 0 25 2;
+#X connect 7 0 8 0;
+#X connect 8 0 0 0;
+#X connect 9 0 30 0;
+#X connect 9 0 10 0;
+#X connect 12 0 13 0;
+#X connect 12 0 15 0;
+#X connect 13 0 26 0;
+#X connect 13 0 24 0;
+#X connect 16 0 17 0;
+#X connect 17 0 31 0;
+#X connect 17 0 18 0;
+#X connect 20 0 21 0;
+#X connect 21 0 7 0;
+#X connect 23 0 6 0;
+#X connect 25 0 3 0;
+#X connect 25 1 3 1;
+#X connect 26 0 19 0;
+#X connect 26 0 25 4;
+#X connect 27 0 29 0;
+#X connect 27 0 28 0;
+#X connect 29 0 25 4;
+#X connect 30 0 25 4;
+#X connect 31 0 25 4;
+#X connect 32 0 36 0;
+#X connect 32 0 34 0;
+#X connect 33 0 32 0;
+#X connect 35 0 25 4;
+#X connect 36 0 25 4;
+#X connect 41 0 25 1;
+#X connect 42 0 41 1;

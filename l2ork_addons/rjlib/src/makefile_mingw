@@ -1,0 +1,36 @@
+current: all
+
+.SUFFIXES: .dll
+
+PDPATH = "c:/pd_41_4"
+
+INCLUDE = -I. -I$(PDPATH)/src
+
+LDFLAGS = --export-dynamic -shared
+
+#select either the DBG and OPT compiler flags below:
+
+CFLAGS = -DPD -DNT -W -Wno-unused -mms-bitfields\
+	-Wno-parentheses -Wno-switch -O6 -funroll-loops -fomit-frame-pointer
+
+SYSTEM = $(shell uname -m)
+
+# the sources:
+
+SRC = rj_accum.c rj_centroid~.c rj_zcr~.c rj_senergy~.c rj_barkflux_accum~.c
+
+OBJ = $(SRC:.c=.dll)
+
+
+#  ------------------ targets ------------------------------------
+
+
+clean:
+	rm -f *.a *.def *.o *.dll
+
+all: $(OBJ)
+
+.c.dll:
+	gcc $(CFLAGS) $(INCLUDE) -c -o $*.o  $*.c
+	g++ $(LDFLAGS) -o ../$*.dll $*.o $(PDPATH)/bin/pd.dll -lc
+	strip --strip-unneeded $*.dll

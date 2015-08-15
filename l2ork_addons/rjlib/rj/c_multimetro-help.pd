@@ -1,0 +1,45 @@
+#N canvas 201 94 943 509 10;
+#X obj 172 194 tgl 15 0 empty empty on/off 17 7 1 10 -262144 -1 -1
+0 1;
+#X floatatom 172 309 5 0 0 0 - - -;
+#X floatatom 237 221 5 0 0 2 length - -;
+#X text 184 60 args: 1) pattern length;
+#X text 236 131 2) pattern length;
+#X text 234 152 3) (list of) periods \, will be cycled.;
+#X floatatom 302 223 5 0 0 2 period - -;
+#X text 228 76 2) single period;
+#X obj 172 361 timer;
+#X obj 172 384 list prepend;
+#X obj 172 336 t b b a;
+#X msg 172 437;
+#X msg 172 410 set \$1 \$2;
+#X text 369 209 also lists are possible;
+#X msg 367 232 200 300 400 150;
+#X text 502 229 == duration of beat0==200 \, duration of beat1=300
+\, duration of beat2=400 \, duration of beat3=150 and so on for beat([modulo
+pattern length] modulo period list-length).;
+#X msg 132 409 set;
+#X text 366 60 or "set POS" message;
+#X msg 97 219 set 3;
+#X msg 183 230 bang;
+#X msg 185 252 stop;
+#X text 182 109 inlets: 1) 0/1 rsp bang/stop for start/stop;
+#X obj 172 278 c_multimetro 16 125;
+#X text 161 26 variable period metro with counter inside.;
+#X obj 60 26 c_multimetro;
+#X connect 0 0 22 0;
+#X connect 1 0 10 0;
+#X connect 2 0 22 1;
+#X connect 6 0 22 2;
+#X connect 8 0 9 0;
+#X connect 9 0 12 0;
+#X connect 10 0 8 0;
+#X connect 10 1 8 1;
+#X connect 10 2 9 1;
+#X connect 12 0 11 0;
+#X connect 14 0 22 2;
+#X connect 16 0 11 0;
+#X connect 18 0 22 0;
+#X connect 19 0 22 0;
+#X connect 20 0 22 0;
+#X connect 22 0 1 0;

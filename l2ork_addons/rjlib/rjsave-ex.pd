@@ -1,0 +1,19 @@
+#N canvas 260 172 882 355 10;
+#X obj 62 127 rjdispatch \$0 a;
+#X obj 62 148 rjdispatch \$0 b;
+#X obj 62 99 inlet;
+#X obj 412 118 hsl 64 15 0 127 0 0 \$0-a \$0-a a 20 8 1 10 -262144
+-1 -1 1488 1;
+#X obj 412 139 hsl 64 15 0 127 0 0 \$0-b \$0-b b 20 8 1 10 -262144
+-1 -1 0 1;
+#X text 36 63 1) add dispatchers for all your variables.;
+#X text 35 16 State saving in three steps;
+#X text 395 63 2) optionally add controls for \$0-a \, \$0-b sender/receiver
+pairs;
+#X obj 169 301 rjloader rjsave-ex-\$1 \$0;
+#X text 169 256 Here we also added the abstraction name to make nameclashes
+even less likely.;
+#X text 149 233 3) add rjloader with \$1 \$0.;
+#X connect 0 0 1 0;
+#X connect 2 0 0 0;
+#X coords 0 -1 1 1 85 60 1 400 100;

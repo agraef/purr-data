@@ -1,0 +1,87 @@
+#N canvas 66 126 1037 545 10;
+#X text 35 54 use as: e_fbdelay <NAME> <max delay time in ms>;
+#X obj 132 187 vline~;
+#X obj 150 209 noise~;
+#X obj 131 231 *~;
+#X obj 129 454 soundoutput;
+#X obj 130 397 e_fbdelay mydelay 2000;
+#X msg 281 337 feedback \$1;
+#X obj 281 283 / 100;
+#X obj 281 177 vsl 15 100 0 100 0 0 empty empty feedback 0 -9 1 10
+-262144 -1 -1 0 1;
+#X obj 204 367 sig~ 0;
+#X obj 132 134 bng 24 250 50 0 empty empty empty 17 7 0 10 -4034 -1
+-1;
+#X msg 132 162 0.8 10 \, 0 20 10;
+#X obj 557 177 vsl 15 100 0 2000 0 0 empty empty delay_time(ms) 0 -9
+1 10 -262144 -1 -1 0 1;
+#X msg 557 327 delay \$1;
+#X floatatom 564 286 8 0 0 0 - - -;
+#X floatatom 298 307 5 0 0 0 - - -;
+#X obj 656 146 vsl 15 128 0 127 0 0 empty empty delay_frequency 0 -9
+1 10 -262144 -1 -1 0 1;
+#X msg 656 328 delayfreq \$1;
+#X obj 656 287 mtof;
+#X text 560 393 Delays set through last inlet will be added to the
+delay of the audio delay inlet (second inlet);
+#X floatatom 694 286 5 0 0 1 pitch - -;
+#X obj 387 144 vsl 15 128 0 127 0 0 empty empty lowpass_cutoff_fr.
+0 -9 1 10 -262144 -1 -1 0 1;
+#X obj 387 285 mtof;
+#X floatatom 401 308 8 0 0 0 - - -;
+#X msg 387 336 lpfreq \$1;
+#X obj 656 359 s \$0-trigger;
+#X obj 132 84 r \$0-trigger;
+#X obj 132 108 bang;
+#X text 685 181 sets delaytime as a frequency value;
+#X text 35 39 feedback delay line with lowpass filtered feedback path.
+;
+#X text 25 13 e_fbdelay;
+#X obj 204 253 vsl 15 100 0 2000 0 0 empty empty delay_time(ms) -10
+-9 1 10 -262144 -1 -1 0 1;
+#X floatatom 672 310 8 0 0 1 freq - -;
+#X obj 321 402 hsl 50 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X floatatom 318 422 5 0 0 0 - - -;
+#X msg 318 439 dry \$1;
+#X text 319 459 default is dry=0 i.e. fully wet;
+#X msg 478 324 input \$1;
+#X obj 478 279 / 100;
+#X obj 478 173 vsl 15 100 0 100 0 0 empty empty inputlevel 0 -9 1 10
+-262144 -1 -1 0 1;
+#X floatatom 495 303 5 0 0 0 - - -;
+#X connect 1 0 3 0;
+#X connect 2 0 3 1;
+#X connect 3 0 5 0;
+#X connect 5 0 4 0;
+#X connect 5 0 4 1;
+#X connect 6 0 5 2;
+#X connect 7 0 6 0;
+#X connect 7 0 15 0;
+#X connect 8 0 7 0;
+#X connect 9 0 5 1;
+#X connect 10 0 11 0;
+#X connect 11 0 1 0;
+#X connect 12 0 13 0;
+#X connect 12 0 14 0;
+#X connect 13 0 5 2;
+#X connect 16 0 18 0;
+#X connect 16 0 20 0;
+#X connect 17 0 5 2;
+#X connect 17 0 25 0;
+#X connect 18 0 17 0;
+#X connect 18 0 32 0;
+#X connect 21 0 22 0;
+#X connect 22 0 24 0;
+#X connect 22 0 23 0;
+#X connect 24 0 5 2;
+#X connect 26 0 27 0;
+#X connect 27 0 10 0;
+#X connect 31 0 9 0;
+#X connect 33 0 34 0;
+#X connect 34 0 35 0;
+#X connect 35 0 5 2;
+#X connect 37 0 5 2;
+#X connect 38 0 40 0;
+#X connect 38 0 37 0;
+#X connect 39 0 38 0;

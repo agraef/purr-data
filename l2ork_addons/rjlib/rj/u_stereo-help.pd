@@ -1,0 +1,16 @@
+#N canvas 520 91 852 486 10;
+#X text 61 41 A quick way to convert a mono effect into a stereo effect.
+Works for effects with 1 audio in and 1 audio out.;
+#X obj 63 170 u_stereo e_alias ali1;
+#X obj 63 122 osc~ 220;
+#X msg 236 141 freq \$1;
+#X obj 63 246 soundoutput;
+#X obj 135 121 osc~ 280;
+#X floatatom 237 122 5 0 0 0 - - -;
+#X text 283 123 Parameters depend on the effect used;
+#X connect 1 0 4 0;
+#X connect 1 1 4 1;
+#X connect 2 0 1 0;
+#X connect 3 0 1 2;
+#X connect 5 0 1 1;
+#X connect 6 0 3 0;

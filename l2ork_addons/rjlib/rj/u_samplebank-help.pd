@@ -1,0 +1,57 @@
+#N canvas 238 97 769 616 10;
+#X declare -path .;
+#X floatatom 255 487 8 0 0 3 dur_in_smps - -;
+#X floatatom 181 487 8 0 0 3 dur_in_ms - -;
+#X msg 140 282 info;
+#X msg 106 213 open;
+#X msg 142 335 sr 44100 \, info;
+#X msg 141 360 sr 22050 \, info;
+#X obj 440 475 s_playtable;
+#X obj 440 517 soundoutput;
+#X msg 584 443 sr 44100;
+#X msg 585 420 sr 22050;
+#X symbolatom 106 487 10 0 0 3 table_name - -;
+#X msg 585 475 stop;
+#X text 148 212 load a sample with opendialog;
+#X text 308 246 load a sample by path;
+#X text 262 339 Change the file samplerate \, that is used to calculate
+the duration in milliseconds;
+#X text 315 580 s_playtable can be used to play tables in the samplebank.
+;
+#X text 56 16 u_samplebank;
+#X text 68 101 Arguments:;
+#X msg 123 246 open file_not_found.wav;
+#X text 95 43 Utility patch to load sample files into Pd tables. Also
+calculates duration in milliseconds. Available in stereo as [u_samplebank2]
+as well.;
+#X text 202 275 output list containing: <table name> <duration in ms>
+<duration in samples> <samplerate>;
+#X obj 106 437 unpack s f f f;
+#X floatatom 339 487 6 0 0 3 samplerate - -;
+#X text 108 120 <table name - required!> <path to soundfile - optional>
+;
+#X obj 440 423 symbol \$0-sample;
+#X obj 106 397 u_samplebank \$0-sample;
+#X msg 440 401 bang;
+#X obj 173 169 declare -path .;
+#X text 101 145 You can add paths to search for soundfiles using "declare".
+;
+#X text 101 170 Just add;
+#X text 289 169 to your _main.pd patch.;
+#X connect 2 0 25 0;
+#X connect 3 0 25 0;
+#X connect 4 0 25 0;
+#X connect 5 0 25 0;
+#X connect 6 0 7 0;
+#X connect 6 0 7 1;
+#X connect 8 0 6 1;
+#X connect 9 0 6 1;
+#X connect 11 0 6 1;
+#X connect 18 0 25 0;
+#X connect 21 0 10 0;
+#X connect 21 1 1 0;
+#X connect 21 2 0 0;
+#X connect 21 3 22 0;
+#X connect 24 0 6 0;
+#X connect 25 0 21 0;
+#X connect 26 0 24 0;

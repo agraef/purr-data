@@ -68,4 +68,5 @@ path30: /usr/lib/pd-l2ork/extra/ext13
 path31: /usr/lib/pd-l2ork/extra/ggee
 path32: /usr/lib/pd-l2ork/extra/ekext
 path33: /usr/lib/pd-l2ork/extra/flext
-npath: 33
+path34: /usr/lib/pd-l2ork/extra/rjlib
+npath: 34

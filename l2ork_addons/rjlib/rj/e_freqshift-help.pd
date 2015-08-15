@@ -1,0 +1,22 @@
+#N canvas 196 66 492 362 10;
+#X obj 85 144 osc~ 220;
+#X floatatom 197 140 5 0 0 0 - - -;
+#X obj 84 214 *~ 0.1;
+#X floatatom 84 123 5 0 0 0 - - -;
+#X obj 68 254 soundoutput;
+#X obj 84 182 rj/e_freqshift;
+#X msg 254 155 freq \$1;
+#X floatatom 255 134 5 0 0 0 - - -;
+#X text 29 25 e_freqshift: shift all frequencies by a certain amount
+;
+#X text 30 53 This effect distroys the harmonic structure of a tone
+\, if you want to keep that use pitchshift.;
+#X text 252 113 shift amount in Hz;
+#X connect 0 0 5 0;
+#X connect 1 0 5 1;
+#X connect 2 0 4 0;
+#X connect 2 0 4 1;
+#X connect 3 0 0 0;
+#X connect 5 0 2 0;
+#X connect 6 0 5 1;
+#X connect 7 0 6 0;
