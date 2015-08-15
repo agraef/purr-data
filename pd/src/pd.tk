@@ -470,7 +470,9 @@ proc pdtk_enable_k12_mode {extra_dir} {
 	image create photo i.midi_instrument -file $extra_dir/K12/icons/midi_instrument.png
 	image create photo i.midi_control -file $extra_dir/K12/icons/midi_control.png
 
+	image create photo i.fx_pitchshift -file $extra_dir/K12/icons/fx_pitchshift.png
 	image create photo i.fx_filter -file $extra_dir/K12/icons/fx_filter.png
+	image create photo i.fx_phaser -file $extra_dir/K12/icons/fx_phaser.png
 	image create photo i.fx_multitap -file $extra_dir/K12/icons/fx_multitap.png
 	image create photo i.fx_reverb -file $extra_dir/K12/icons/fx_reverb.png
 
@@ -2972,17 +2974,25 @@ proc pdtk_canvas_new {name width height geometry editable} {
 
 		# ---------------------------------- F/X -----------------------------------------
 		match_linux_wm [list frame $name.k12frame.fx -relief flat]
+		match_linux_wm [list button $name.k12frame.fx.b_fx_pitchshift -image i.fx_pitchshift \
+			-command [concat put_K12_objects $name fx_pitchshift]]
 		match_linux_wm [list button $name.k12frame.fx.b_fx_filter -image i.fx_filter \
 			-command [concat put_K12_objects $name fx_filter]]
+		match_linux_wm [list button $name.k12frame.fx.b_fx_phaser -image i.fx_phaser \
+			-command [concat put_K12_objects $name fx_phaser]]
 		match_linux_wm [list button $name.k12frame.fx.b_fx_multitap -image i.fx_multitap \
 			-command [concat put_K12_objects $name fx_multitap]]
 		match_linux_wm [list button $name.k12frame.fx.b_fx_reverb -image i.fx_reverb \
 			-command [concat put_K12_objects $name fx_reverb]]
-		pack $name.k12frame.fx.b_fx_filter $name.k12frame.fx.b_fx_multitap $name.k12frame.fx.b_fx_reverb -side left -expand 0 -padx 1 -pady 1
+		pack $name.k12frame.fx.b_fx_pitchshift $name.k12frame.fx.b_fx_filter $name.k12frame.fx.b_fx_phaser $name.k12frame.fx.b_fx_multitap $name.k12frame.fx.b_fx_reverb -side left -expand 0 -padx 1 -pady 1
+		setTooltip $name.k12frame.fx.b_fx_pitchshift "Pitch Shift: Use this to change pitch of an incoming sound"
 		setTooltip $name.k12frame.fx.b_fx_filter "Filter: Use this to make sound appear muffled or brighter"
+		setTooltip $name.k12frame.fx.b_fx_phaser "Phaser: Use this to add a flanger-like wavy effect to a sound"
 		setTooltip $name.k12frame.fx.b_fx_multitap "Echo: Use this to make sound echo"
 		setTooltip $name.k12frame.fx.b_fx_reverb "Reverb: Use this to make sound appear as if it is being played in a large space"
+		pdtk_k12panel_standardkeybindings $name.k12frame.fx.b_fx_pitchshift
 		pdtk_k12panel_standardkeybindings $name.k12frame.fx.b_fx_filter
+		pdtk_k12panel_standardkeybindings $name.k12frame.fx.b_fx_phaser
 		pdtk_k12panel_standardkeybindings $name.k12frame.fx.b_fx_multitap
 		pdtk_k12panel_standardkeybindings $name.k12frame.fx.b_fx_reverb
 
