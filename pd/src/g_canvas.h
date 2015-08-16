@@ -213,16 +213,18 @@ struct _glist
     unsigned int gl_goprect:1;      /* draw rectangle for graph-on-parent */
     unsigned int gl_isgraph:1;      /* show as graph on parent */
     unsigned int gl_hidetext:1;     /* hide object-name + args when doing graph on parent */
-	unsigned int gl_gop_initialized:1;     /* used for tagged moving of gop-ed objects to avoid redundant reinit */
-	//global preset array pointer
-	t_preset_hub *gl_phub;
-	//infinite undo goodies (have to stay here rather than the editor to prevent its obliteration when editor is deleted)
-	t_undo_action *u_queue;
-	t_undo_action *u_last;
-	//dpsaha@vt.edu for the gop dynamic resizing & move handle (refactored by mathieu)
-	struct _scalehandle *x_handle;
-	struct _scalehandle *x_mhandle;
-	t_pd *gl_svg;
+    unsigned int gl_gop_initialized:1;     /* used for tagged moving of gop-ed objects to avoid redundant reinit */
+    //global preset array pointer
+    t_preset_hub *gl_phub;
+    //infinite undo goodies (have to stay here rather than the editor to prevent its obliteration when editor is deleted)
+    t_undo_action *u_queue;
+    t_undo_action *u_last;
+    //dpsaha@vt.edu for the gop dynamic resizing & move handle (refactored by mathieu)
+    struct _scalehandle *x_handle;
+    struct _scalehandle *x_mhandle;
+    t_pd *gl_svg;
+    t_symbol *gl_templatename; /* for "canvas" data type */
+    t_word *gl_vec;            /* for "canvas" data type */
 };
 
 #define gl_gobj gl_obj.te_g
