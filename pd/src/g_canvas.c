@@ -1877,7 +1877,7 @@ static void canvas_declare(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     patches), then down the system one.  The filename is the concatenation of
     "name" and "ext".  "Name" may be absolute, or may be relative with
     slashes.  If anything can be opened, the true directory
-    ais put in the buffer dirresult (provided by caller), which should
+    is put in the buffer dirresult (provided by caller), which should
     be "size" bytes.  The "nameresult" pointer will be set somewhere in
     the interior of "dirresult" and will give the file basename (with
     slashes trimmed).  If "bin" is set a 'binary' open is
