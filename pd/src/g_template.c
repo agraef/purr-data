@@ -58,7 +58,7 @@ static int dataslot_matches(t_dataslot *ds1, t_dataslot *ds2,
     return ((!nametoo || ds1->ds_name == ds2->ds_name) &&
         ds1->ds_type == ds2->ds_type &&
             (ds1->ds_type != DT_ARRAY ||
-                ds1->ds_arraytemplate == ds2->ds_arraytemplate));
+                ds1->ds_fieldtemplate == ds2->ds_fieldtemplate));
 }
 
 /* -- templates, the active ingredient in gtemplates defined below. ------- */
@@ -108,7 +108,7 @@ t_template *template_new(t_symbol *templatesym, int argc, t_atom *argv)
         x->t_n = newn;
         x->t_vec[oldn].ds_type = newtype;
         x->t_vec[oldn].ds_name = newname;
-        x->t_vec[oldn].ds_arraytemplate = newarraytemplate;
+        x->t_vec[oldn].ds_fieldtemplate = newarraytemplate;
     bad: 
         argc -= 2; argv += 2;
     }
@@ -141,7 +141,7 @@ int template_find_field(t_template *x, t_symbol *name, int *p_onset,
     {
         *p_onset = i * sizeof(t_word);
         *p_type = x->t_vec[i].ds_type;
-        *p_arraytype = x->t_vec[i].ds_arraytemplate;
+        *p_arraytype = x->t_vec[i].ds_fieldtemplate;
         return (1);
     }
     return (0);
@@ -329,7 +329,7 @@ static t_scalar *template_conformscalar(t_template *tfrom, t_template *tto,
         }
         else if (ds->ds_type == DT_ARRAY)
         {
-            t_symbol *arraytemplate = ds->ds_arraytemplate;
+            t_symbol *arraytemplate = ds->ds_fieldtemplate;
             if (arraytemplate == tfrom->t_sym ||
                 arraytemplate == tto->t_sym)
             {

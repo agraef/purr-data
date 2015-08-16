@@ -71,7 +71,7 @@ static void glist_readatoms(t_glist *x, int natoms, t_atom *vec,
         {
             t_array *a = w[i].w_array;
             int elemsize = a->a_elemsize, nitems = 0;
-            t_symbol *arraytemplatesym = template->t_vec[i].ds_arraytemplate;
+            t_symbol *arraytemplatesym = template->t_vec[i].ds_fieldtemplate;
             t_template *arraytemplate =
                 template_findbyname(arraytemplatesym);
             if (!arraytemplate)
@@ -420,7 +420,7 @@ void canvas_writescalar(t_symbol *templatesym, t_word *w, t_binbuf *b,
             int j;
             t_array *a = w[i].w_array;
             int elemsize = a->a_elemsize, nitems = a->a_n;
-            t_symbol *arraytemplatesym = template->t_vec[i].ds_arraytemplate;
+            t_symbol *arraytemplatesym = template->t_vec[i].ds_fieldtemplate;
             for (j = 0; j < nitems; j++)
                 canvas_writescalar(arraytemplatesym,
                     (t_word *)(((char *)a->a_vec) + elemsize * j), b, 1);
@@ -467,7 +467,7 @@ static void canvas_addtemplatesforscalar(t_symbol *templatesym,
             int j;
             t_array *a = w->w_array;
             int elemsize = a->a_elemsize, nitems = a->a_n;
-            t_symbol *arraytemplatesym = ds->ds_arraytemplate;
+            t_symbol *arraytemplatesym = ds->ds_fieldtemplate;
             canvas_doaddtemplate(arraytemplatesym, p_ntemplates, p_templatevec);
             for (j = 0; j < nitems; j++)
                 canvas_addtemplatesforscalar(arraytemplatesym,
@@ -492,7 +492,7 @@ static void canvas_addtemplatesforstruct(t_template *template,
     {
         if (ds->ds_type == DT_ARRAY)
         {
-            t_symbol *arraytemplatesym = ds->ds_arraytemplate;
+            t_symbol *arraytemplatesym = ds->ds_fieldtemplate;
             t_template *arraytemplate = template_findbyname(arraytemplatesym);
             if (arraytemplate)
             {
@@ -562,7 +562,7 @@ t_binbuf *glist_writetobinbuf(t_glist *x, int wholething)
             }
             if (template->t_vec[j].ds_type == DT_ARRAY)
                 binbuf_addv(b, "sss;", type, template->t_vec[j].ds_name,
-                    gensym(template->t_vec[j].ds_arraytemplate->s_name + 3));
+                    gensym(template->t_vec[j].ds_fieldtemplate->s_name + 3));
             else binbuf_addv(b, "ss;", type, template->t_vec[j].ds_name);
         }
         binbuf_addsemi(b);
@@ -737,7 +737,7 @@ static void canvas_savetemplatesto(t_canvas *x, t_binbuf *b, int wholething)
             }
             if (template->t_vec[j].ds_type == DT_ARRAY)
                 binbuf_addv(b, "sss", type, template->t_vec[j].ds_name,
-                    gensym(template->t_vec[j].ds_arraytemplate->s_name + 3));
+                    gensym(template->t_vec[j].ds_fieldtemplate->s_name + 3));
             else binbuf_addv(b, "ss", type, template->t_vec[j].ds_name);
         }
         binbuf_addsemi(b);

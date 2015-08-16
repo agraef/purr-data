@@ -29,7 +29,7 @@ void word_init(t_word *wp, t_template *template, t_gpointer *gp)
             wp->w_symbol = &s_symbol;
         else if (type == DT_ARRAY)
         {
-            wp->w_array = array_new(datatypes->ds_arraytemplate, gp);
+            wp->w_array = array_new(datatypes->ds_fieldtemplate, gp);
         }
         else if (type == DT_LIST)
         {
@@ -167,19 +167,19 @@ int template_check_array_fields(t_symbol *structname, t_template *template)
     {
         if (datatypes->ds_type == DT_ARRAY)
         {
-            elemtemplate = template_findbyname(datatypes->ds_arraytemplate);
+            elemtemplate = template_findbyname(datatypes->ds_fieldtemplate);
             if (!(elemtemplate))
             {
                 t_object *ob = template_getstruct(template);
                 pd_error(ob, "%s: no such template",
-                    datatypes->ds_arraytemplate->s_name);
+                    datatypes->ds_fieldtemplate->s_name);
                 return (-1);
             }
             else if (elemtemplate->t_sym == structname)
             {
                 t_object *ob = template_getstruct(template);
                 pd_error(ob, "%s: circular dependency",
-                    datatypes->ds_arraytemplate->s_name);
+                    datatypes->ds_fieldtemplate->s_name);
                 return (0);
             }
             else
@@ -276,7 +276,7 @@ int template_has_elemtemplate(t_template *t, t_template *elemtemplate)
         {
             if (d->ds_type == DT_ARRAY)
             {
-                if (d->ds_arraytemplate == elemtemplate->t_sym)
+                if (d->ds_fieldtemplate == elemtemplate->t_sym)
                 {
                     returnval = 1;
                     break;
@@ -284,7 +284,7 @@ int template_has_elemtemplate(t_template *t, t_template *elemtemplate)
                 else
                 {
                     returnval = template_has_elemtemplate(
-                        template_findbyname(d->ds_arraytemplate),
+                        template_findbyname(d->ds_fieldtemplate),
                         elemtemplate);
                 }
             }
