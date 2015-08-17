@@ -278,6 +278,8 @@ Everything else: (A [x] means we've fixed it)
 [x] 60e06b3155458b561f3fb1ace17874eac9c5592a
     Hunks failed.  Patch manually.
 [ ] same for all commits up to Jul 31, 2015
+[ ] address double-free when closing a canvas that is a canvas field
+    of a scalar
 
 Crashers
 --------
