@@ -95,12 +95,12 @@ static void glist_readatoms(t_glist *x, int natoms, t_atom *vec,
         }
         else if (template->t_vec[i].ds_type == DT_LIST)
         {
-            while (1)
-            {
-                if (!glist_readscalar(w->w_list, natoms, vec,
-                    p_nextmsg, 0))
-                        break;
-            }
+//            while (1)
+//            {
+//                if (!glist_readscalar(w->w_list, natoms, vec,
+//                    p_nextmsg, 0))
+//                        break;
+//            }
         }
     }
 }
@@ -428,7 +428,7 @@ void canvas_writescalar(t_symbol *templatesym, t_word *w, t_binbuf *b,
         }
         else if (template->t_vec[i].ds_type == DT_LIST)
         {
-            glist_writelist(w->w_list->gl_list, b);
+//            glist_writelist(w->w_list->gl_list, b);
             binbuf_addsemi(b);
         }
     }
@@ -475,8 +475,10 @@ static void canvas_addtemplatesforscalar(t_symbol *templatesym,
                         p_ntemplates, p_templatevec);
         }
         else if (ds->ds_type == DT_LIST)
-            canvas_addtemplatesforlist(w->w_list->gl_list,
-                p_ntemplates, p_templatevec);
+        {
+//            canvas_addtemplatesforlist(w->w_list->gl_list,
+//                p_ntemplates, p_templatevec);
+        }
     }
 }
 

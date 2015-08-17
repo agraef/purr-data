@@ -16,6 +16,8 @@ can contain numbers, sublists, and arrays.
 
 t_class *scalar_class;
 
+void pd_doloadbang(void);
+
 void word_init(t_word *wp, t_template *template, t_gpointer *gp)
 {
     int i, nitems = template->t_n;
@@ -33,8 +35,47 @@ void word_init(t_word *wp, t_template *template, t_gpointer *gp)
         }
         else if (type == DT_LIST)
         {
-                /* LATER test this and get it to work */
-            wp->w_list = canvas_new(0, 0, 0, 0);
+            /* copied from glob_evalfile... */
+            t_pd *x = 0;
+            /* even though binbuf_evalfile appears to take care of dspstate,
+            we have to do it again here, because canvas_startdsp() assumes
+            that all toplevel canvases are visible.  LATER check if this
+            is still necessary -- probably not. */
+            int dspstate = canvas_suspend_dsp();
+// this needs to be set to sane symbols, possibly stored in the dataslot...
+            glob_setfilename(0, gensym("foo"), gensym("bar"));
+            t_pd *boundx = s__X.s_thing;
+            s__X.s_thing = 0;       /* don't save #X; we'll need to leave it
+                                       bound for the caller to grab it. */
+
+            /* copied from binbuf_evalfile... we need to refactor at some
+               point... */
+            /* save bindings of symbols #N, #A (and restore afterward) */
+            t_pd *bounda = gensym("#A")->s_thing, *boundn = s__N.s_thing;
+            gensym("#A")->s_thing = 0;
+            s__N.s_thing = &pd_canvasmaker;
+            binbuf_eval(datatypes->ds_binbuf, 0, 0, 0);
+            gensym("#A")->s_thing = bounda;
+            s__N.s_thing = boundn;
+            glob_setfilename(0, &s_, &s_);
+
+            wp->w_list = canvas_getcurrent();
+
+            while ((x != s__X.s_thing) && s__X.s_thing) 
+            {
+                x = s__X.s_thing;
+                vmess(x, gensym("pop"), "i", 1);
+            }
+            /* oops, can't actually do a loadbang here.
+               Why?
+               Consider getting the value of a fielddesc that hasn't
+               been init'd yet... */
+            /* pd_doloadbang(); */
+            canvas_resume_dsp(dspstate);
+
+            s__X.s_thing = boundx;
+            post("eval'd a canvas with addy x%lx", (long unsigned int)
+                wp->w_list);
         }
     }
 }

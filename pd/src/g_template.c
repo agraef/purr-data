@@ -74,6 +74,7 @@ t_template *template_new(t_symbol *templatesym, int argc, t_atom *argv)
     {
         int newtype, oldn, newn;
         t_symbol *newname, *newarraytemplate = &s_, *newtypesym;
+        t_binbuf *newbinbuf = NULL;
         if (argc < 2 || argv[0].a_type != A_SYMBOL ||
             argv[1].a_type != A_SYMBOL)
                 goto bad;
@@ -83,8 +84,27 @@ t_template *template_new(t_symbol *templatesym, int argc, t_atom *argv)
             newtype = DT_FLOAT;
         else if (newtypesym == &s_symbol)
             newtype = DT_SYMBOL;
-        else if (newtypesym == &s_list)
+//        else if (newtypesym == &s_list)
+//            newtype = DT_LIST;
+        else if (newtypesym == gensym("canvas"))
+        {
+            t_symbol *filename;
+            t_binbuf *b = binbuf_new();
+            if (argc < 3 || argv[2].a_type != A_SYMBOL)
+            {
+                pd_error(x, "canvas lacks template or name");
+                goto bad;
+            }
+//            filename = canvas_makebindsym(argv[2].a_w.w_symbol);
+            filename = argv[2].a_w.w_symbol;
+            if (binbuf_read_via_canvas(b, filename->s_name, canvas_getcurrent(), 0))
+                post("warning: abstraction %s not found", filename->s_name);
+            else
+                newbinbuf = b;
             newtype = DT_LIST;
+            argc--;
+            argv++;
+        }
         else if (newtypesym == gensym("array"))
         {
             if (argc < 3 || argv[2].a_type != A_SYMBOL)
@@ -109,6 +129,7 @@ t_template *template_new(t_symbol *templatesym, int argc, t_atom *argv)
         x->t_vec[oldn].ds_type = newtype;
         x->t_vec[oldn].ds_name = newname;
         x->t_vec[oldn].ds_fieldtemplate = newarraytemplate;
+        x->t_vec[oldn].ds_binbuf = newbinbuf;
     bad: 
         argc -= 2; argv += 2;
     }
