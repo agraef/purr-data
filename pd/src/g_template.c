@@ -88,7 +88,7 @@ t_template *template_new(t_symbol *templatesym, int argc, t_atom *argv)
 //            newtype = DT_LIST;
         else if (newtypesym == gensym("canvas"))
         {
-            t_symbol *filename;
+            char filename[MAXPDSTRING+3];
             t_binbuf *b = binbuf_new();
             if (argc < 3 || argv[2].a_type != A_SYMBOL)
             {
@@ -96,9 +96,9 @@ t_template *template_new(t_symbol *templatesym, int argc, t_atom *argv)
                 goto bad;
             }
 //            filename = canvas_makebindsym(argv[2].a_w.w_symbol);
-            filename = argv[2].a_w.w_symbol;
-            if (binbuf_read_via_canvas(b, filename->s_name, canvas_getcurrent(), 0))
-                post("warning: abstraction %s not found", filename->s_name);
+            sprintf(filename, "%s.pd", argv[2].a_w.w_symbol->s_name);
+            if (binbuf_read_via_canvas(b, filename, canvas_getcurrent(), 0))
+                post("warning: abstraction %s not found", filename);
             else
                 newbinbuf = b;
             newtype = DT_LIST;
