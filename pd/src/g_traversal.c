@@ -178,6 +178,19 @@ void gpointer_init(t_gpointer *gp)
     gp->gp_un.gp_gobj = 0;
 }
 
+    /* templates are named using the name-bashing by which canvases bind
+    thenselves, with a leading "pd-".  LATER see if we can have templates
+    occupy their real names.  Meanwhile, if a template has an empty name
+    or is named "-" (as when passed as a "-" argument to "get", etc.), just
+    return &s_; objects should check for this and allow it as a wild
+    card when appropriate. */
+static t_symbol *template_getbindsym(t_symbol *s)
+{
+    if (!*s->s_name || !strcmp(s->s_name, "-"))
+        return (&s_);
+    else return (canvas_makebindsym(s));
+}
+
 /* ---------------------- pointers ----------------------------- */
 
 static t_class *ptrobj_class;
@@ -412,21 +425,24 @@ typedef struct _get
 static void *get_new(t_symbol *why, int argc, t_atom *argv)
 {
     t_get *x = (t_get *)pd_new(get_class);
-    int i;
+    int varcount, i;
+    t_atom at, *varvec;
     t_getvariable *sp;
-    int varcount;
+
     x->x_templatesym = canvas_makebindsym(atom_getsymbolarg(0, argc, argv));
-    if (argc) argc--, argv++;
-    varcount = argc ? argc : 1; /* have at least one outlet */
+    if (argc < 2) /* have at least one outlet */
+    {
+        varcount = 1;
+        varvec = &at;
+        SETSYMBOL(&at, &s_); /* set field to empty symbol */
+    }
+    else varcount = argc - 1, varvec = argv + 1;
     x->x_variables
         = (t_getvariable *)getbytes(varcount * sizeof (*x->x_variables));
     x->x_nout = varcount;
     for (i = 0, sp = x->x_variables; i < varcount; i++, sp++)
     {
-        if (argc)
-            sp->gv_sym = atom_getsymbolarg(i, argc, argv);
-        else
-            sp->gv_sym = &s_; /* just set field to empty symbol if no args */
+        sp->gv_sym = atom_getsymbolarg(i, varcount, varvec);
         sp->gv_outlet = outlet_new(&x->x_obj, 0);
             /* LATER connect with the template and set the outlet's type
             correctly.  We can't yet guarantee that the template is there
@@ -438,13 +454,10 @@ static void *get_new(t_symbol *why, int argc, t_atom *argv)
 static void get_set(t_get *x, t_symbol *templatesym, t_symbol *field)
 {
     if (x->x_nout != 1)
-    {
         pd_error(x, "get: cannot set multiple fields.");
-        return;
-    }
     else
     {
-       x->x_templatesym = canvas_makebindsym(templatesym); 
+       x->x_templatesym = template_getbindsym(templatesym); 
        x->x_variables->gv_sym = field;
     }
 }
@@ -452,19 +465,30 @@ static void get_set(t_get *x, t_symbol *templatesym, t_symbol *field)
 static void get_pointer(t_get *x, t_gpointer *gp)
 {
     int nitems = x->x_nout, i;
-    t_symbol *templatesym = x->x_templatesym;
-    t_template *template = template_findbyname(templatesym);
+    t_symbol *templatesym;
+    t_template *template;
     t_gstub *gs = gp->gp_stub;
-    t_word *vec; 
+    t_word *vec;
     t_getvariable *vp;
-    if (!template)
-    {
-        pd_error(x, "get: couldn't find template %s", templatesym->s_name);
-        return;
-    }
+
     if (!gpointer_check(gp, 0))
     {
         pd_error(x, "get: stale or empty pointer");
+        return;
+    }
+    if (*x->x_templatesym->s_name)
+    {
+        if ((templatesym = x->x_templatesym) != gpointer_gettemplatesym(gp))
+        {
+            pd_error(x, "get %s: got wrong template (%s)",
+                templatesym->s_name, gpointer_gettemplatesym(gp)->s_name);
+            return;
+        }
+    }
+    else templatesym = gpointer_gettemplatesym(gp);
+    if (!(template = template_findbyname(templatesym)))
+    {
+        pd_error(x, "get: couldn't find template %s", templatesym->s_name);
         return;
     }
     if (gs->gs_which == GP_ARRAY) vec = gp->gp_un.gp_w;
@@ -526,9 +550,9 @@ typedef struct _set
 static void *set_new(t_symbol *why, int argc, t_atom *argv)
 {
     t_set *x = (t_set *)pd_new(set_class);
-    int i;
+    int i, varcount;
     t_setvariable *sp;
-    int varcount;
+    t_atom at, *varvec;
     if (argc && (argv[0].a_type == A_SYMBOL) &&
         !strcmp(argv[0].a_w.w_symbol->s_name, "-symbol"))
     {
@@ -537,18 +561,20 @@ static void *set_new(t_symbol *why, int argc, t_atom *argv)
         argv++;
     }
     else x->x_issymbol = 0;
-    x->x_templatesym = canvas_makebindsym(atom_getsymbolarg(0, argc, argv));
-    if (argc) argc--, argv++;
-    varcount = argc ? argc : 1; /* have at least one variable */
+    x->x_templatesym = template_getbindsym(atom_getsymbolarg(0, argc, argv));
+    if (argc < 2)
+    {
+        varcount = 1;
+        varvec = &at;
+        SETSYMBOL(&at, &s_);
+    }
+    else varcount = argc - 1, varvec = argv + 1;
     x->x_variables
         = (t_setvariable *)getbytes(varcount * sizeof (*x->x_variables));
     x->x_nin = varcount;
     for (i = 0, sp = x->x_variables; i < varcount; i++, sp++)
     {
-        if (argc)
-            sp->gv_sym = atom_getsymbolarg(i, argc, argv);
-        else
-            sp->gv_sym = &s_;
+        sp->gv_sym = atom_getsymbolarg(i, varcount, varvec);
         if (x->x_issymbol)
             sp->gv_w.w_symbol = &s_;
         else sp->gv_w.w_float = 0;
@@ -567,13 +593,10 @@ static void *set_new(t_symbol *why, int argc, t_atom *argv)
 static void set_set(t_set *x, t_symbol *templatesym, t_symbol *field)
 {
     if (x->x_nin != 1)
-    {
         pd_error(x, "set: cannot set multiple fields.");
-        return;
-    }
     else
     {
-       x->x_templatesym = canvas_makebindsym(templatesym); 
+       x->x_templatesym = template_getbindsym(templatesym); 
        x->x_variables->gv_sym = field;
        if (x->x_issymbol)
            x->x_variables->gv_w.w_symbol = &s_;
@@ -582,31 +605,35 @@ static void set_set(t_set *x, t_symbol *templatesym, t_symbol *field)
     }
 }
 
-static void scalar_configure(t_scalar *x, t_glist *owner);
+extern void scalar_configure(t_scalar *x, t_glist *owner);
 
 static void set_bang(t_set *x)
 {
     int nitems = x->x_nin, i;
-    t_symbol *templatesym = x->x_templatesym;
-    t_template *template = template_findbyname(templatesym);
+    t_symbol *templatesym;
+    t_template *template;
     t_setvariable *vp;
     t_gpointer *gp = &x->x_gp;
     t_gstub *gs = gp->gp_stub;
     t_word *vec;
-    if (!template)
-    {
-        pd_error(x, "set: couldn't find template %s", templatesym->s_name);
-        return;
-    }
     if (!gpointer_check(gp, 0))
     {
         pd_error(x, "set: empty pointer");
         return;
     }
-    if (gpointer_gettemplatesym(gp) != x->x_templatesym)
+    if (*x->x_templatesym->s_name)
     {
-        pd_error(x, "set %s: got wrong template (%s)",
-            x->x_templatesym->s_name, gpointer_gettemplatesym(gp)->s_name);
+        if ((templatesym = x->x_templatesym) != gpointer_gettemplatesym(gp))
+        {
+            pd_error(x, "set %s: got wrong template (%s)",
+                templatesym->s_name, gpointer_gettemplatesym(gp)->s_name);
+            return;
+        }
+    }
+    else templatesym = gpointer_gettemplatesym(gp);
+    if (!(template = template_findbyname(templatesym)))
+    {
+        pd_error(x, "set: couldn't find template %s", templatesym->s_name);
         return;
     }
     if (!nitems)
