@@ -896,7 +896,7 @@ static void *setsize_new(t_symbol *templatesym, t_symbol *fieldsym,
     t_floatarg newsize)
 {
     t_setsize *x = (t_setsize *)pd_new(setsize_class);
-    x->x_templatesym = canvas_makebindsym(templatesym);
+    x->x_templatesym = template_getbindsym(templatesym);
     x->x_fieldsym = fieldsym;
     gpointer_init(&x->x_gp);
     
@@ -906,18 +906,18 @@ static void *setsize_new(t_symbol *templatesym, t_symbol *fieldsym,
 
 static void setsize_set(t_setsize *x, t_symbol *templatesym, t_symbol *fieldsym)
 {
-    x->x_templatesym = canvas_makebindsym(templatesym);
+    x->x_templatesym = template_getbindsym(templatesym);
     x->x_fieldsym = fieldsym;
 }
 
 static void setsize_float(t_setsize *x, t_float f)
 {
     int nitems, onset, type;
-    t_symbol *templatesym = x->x_templatesym, *fieldsym = x->x_fieldsym,
-        *elemtemplatesym;
-    t_template *template = template_findbyname(templatesym);
+    t_symbol *templatesym, *fieldsym = x->x_fieldsym, *elemtemplatesym;
+    t_template *template;
     t_template *elemtemplate;
     t_word *w;
+    t_atom *at;
     t_array *array;
     int elemsize;
     int newsize = f;
@@ -928,25 +928,26 @@ static void setsize_float(t_setsize *x, t_float f)
         pd_error(x, "setsize: empty pointer");
         return;
     }
-    if (gpointer_gettemplatesym(&x->x_gp) != x->x_templatesym)
+    if (*x->x_templatesym->s_name)
     {
-        pd_error(x, "setsize %s: got wrong template (%s)",
-            x->x_templatesym->s_name,
-                gpointer_gettemplatesym(&x->x_gp)->s_name);
-        return;
+        if ((templatesym = x->x_templatesym) !=
+            gpointer_gettemplatesym(gp))
+        {
+            pd_error(x, "elem %s: got wrong template (%s)",
+                templatesym->s_name, gpointer_gettemplatesym(gp)->s_name);
+            return;
+        }
     }
-    if (gs->gs_which == GP_ARRAY) w = gp->gp_un.gp_w;
-    else w = ((t_scalar *)(gp->gp_un.gp_gobj))->sc_vec;
-
-    if (!template)
+    else templatesym = gpointer_gettemplatesym(gp);
+    if (!(template = template_findbyname(templatesym)))
     {
-        pd_error(x,"setsize: couldn't find template %s", templatesym->s_name);
+        pd_error(x, "elem: couldn't find template %s", templatesym->s_name);
         return;
     }
     if (!template_find_field(template, fieldsym,
         &onset, &type, &elemtemplatesym))
     {
-        pd_error(x,"setsize: couldn't find array field %s", fieldsym->s_name);
+        pd_error(x, "setsize: couldn't find array field %s", fieldsym->s_name);
         return;
     }
     if (type != DT_ARRAY)
@@ -954,6 +955,8 @@ static void setsize_float(t_setsize *x, t_float f)
         pd_error(x,"setsize: field %s not of type array", fieldsym->s_name);
         return;
     }
+    if (gs->gs_which == GP_ARRAY) w = gp->gp_un.gp_w;
+    else w = ((t_scalar *)(gp->gp_un.gp_gobj))->sc_vec;
 
     if (!(elemtemplate = template_findbyname(elemtemplatesym)))
     {
@@ -992,21 +995,27 @@ static void setsize_float(t_setsize *x, t_float f)
             gobj_vis(owner_array->a_gp.gp_un.gp_gobj,
                 owner_array->a_gp.gp_stub->gs_un.gs_glist, 0);  
     }
-        /* now do the resizing and, if growing, initialize new scalars */
+        /* if shrinking, free the scalars that will disappear */
+    if (newsize < nitems)
+    {
+        char *elem;
+        int count;
+        for (elem = ((char *)array->a_vec) + newsize * elemsize,
+            count = nitems = newsize; count--; elem += elemsize)
+                word_free((t_word *)elem, elemtemplate);
+    } 
+        /* resize the array */
     array->a_vec = (char *)resizebytes(array->a_vec,
         elemsize * nitems, elemsize * newsize);
     array->a_n = newsize;
+        /* if growing, initialize new scalars */
     if (newsize > nitems)
     {
-        char *newelem = ((char *)array->a_vec) + nitems * elemsize;
-        int nnew = newsize - nitems;
-        
-        while (nnew--)
-        {
-            word_init((t_word *)newelem, elemtemplate, gp);
-            newelem += elemsize;
-            /* post("new %lx %lx, ntypes %d", newelem, *(int *)newelem, ntypes); */
-        }
+        char *elem;
+        int count;
+        for (elem = ((char *)array->a_vec) + nitems * elemsize,
+            count = newsize - nitems; count--; elem += elemsize)
+                word_init((t_word *)elem, elemtemplate, gp);
     }
 
     /* redraw again. */
