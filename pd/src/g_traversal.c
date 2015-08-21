@@ -725,7 +725,7 @@ typedef struct _elem
 static void *elem_new(t_symbol *templatesym, t_symbol *fieldsym)
 {
     t_elem *x = (t_elem *)pd_new(elem_class);
-    x->x_templatesym = canvas_makebindsym(templatesym);
+    x->x_templatesym = template_getbindsym(templatesym);
     x->x_fieldsym = fieldsym;
     gpointer_init(&x->x_gp);
     gpointer_init(&x->x_gparent);
@@ -736,16 +736,15 @@ static void *elem_new(t_symbol *templatesym, t_symbol *fieldsym)
 
 static void elem_set(t_elem *x, t_symbol *templatesym, t_symbol *fieldsym)
 {
-    x->x_templatesym = canvas_makebindsym(templatesym);
+    x->x_templatesym = template_getbindsym(templatesym);
     x->x_fieldsym = fieldsym;
 }
 
 static void elem_float(t_elem *x, t_float f)
 {
     int indx = f, nitems, onset;
-    t_symbol *templatesym = x->x_templatesym, *fieldsym = x->x_fieldsym,
-        *elemtemplatesym;
-    t_template *template = template_findbyname(templatesym);
+    t_symbol *templatesym, *fieldsym = x->x_fieldsym, *elemtemplatesym;
+    t_template *template;
     t_template *elemtemplate;
     t_gpointer *gparent = &x->x_gparent;
     t_word *w;
@@ -757,10 +756,20 @@ static void elem_float(t_elem *x, t_float f)
         pd_error(x, "element: empty pointer");
         return;
     }
-    if (gpointer_gettemplatesym(gparent) != x->x_templatesym)
+    if (*x->x_templatesym->s_name)
     {
-        pd_error(x, "element %s: got wrong template (%s)",
-            x->x_templatesym->s_name, gpointer_gettemplatesym(gparent)->s_name);
+        if ((templatesym = x->x_templatesym) !=
+            gpointer_gettemplatesym(gparent))
+        {
+            pd_error(x, "elem %s: got wrong template (%s)",
+                templatesym->s_name, gpointer_gettemplatesym(gparent)->s_name);
+            return;
+        }
+    }
+    else templatesym = gpointer_gettemplatesym(gparent);
+    if (!(template = template_findbyname(templatesym)))
+    {
+        pd_error(x, "elem: couldn't find template %s", templatesym->s_name);
         return;
     }
     if (gparent->gp_stub->gs_which == GP_ARRAY) w = gparent->gp_un.gp_w;
