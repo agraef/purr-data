@@ -816,7 +816,7 @@ typedef struct _getsize
 static void *getsize_new(t_symbol *templatesym, t_symbol *fieldsym)
 {
     t_getsize *x = (t_getsize *)pd_new(getsize_class);
-    x->x_templatesym = canvas_makebindsym(templatesym);
+    x->x_templatesym = template_getbindsym(templatesym);
     x->x_fieldsym = fieldsym;
     outlet_new(&x->x_obj, &s_float);
     return (x);
@@ -824,22 +824,38 @@ static void *getsize_new(t_symbol *templatesym, t_symbol *fieldsym)
 
 static void getsize_set(t_getsize *x, t_symbol *templatesym, t_symbol *fieldsym)
 {
-    x->x_templatesym = canvas_makebindsym(templatesym);
+    x->x_templatesym = template_getbindsym(templatesym);
     x->x_fieldsym = fieldsym;
 }
 
 static void getsize_pointer(t_getsize *x, t_gpointer *gp)
 {
-    int onset, type;
-    t_symbol *templatesym = x->x_templatesym, *fieldsym = x->x_fieldsym,
-        *elemtemplatesym;
-    t_template *template = template_findbyname(templatesym);
+    int nitems, onset, type;
+    t_symbol *templatesym, *fieldsym = x->x_fieldsym, *elemtemplatesym;
+    t_template *template;
     t_word *w;
     t_array *array;
+    int elemsize;
     t_gstub *gs = gp->gp_stub;
-    if (!template)
+    if (!gpointer_check(gp, 0))
     {
-        pd_error(x, "getsize: couldn't find template %s", templatesym->s_name);
+        pd_error(x, "get: stale or empty pointer");
+        return;
+    }
+    if (*x->x_templatesym->s_name)
+    {
+        if ((templatesym = x->x_templatesym) !=
+            gpointer_gettemplatesym(gp))
+        {
+            pd_error(x, "elem %s: got wrong template (%s)",
+                templatesym->s_name, gpointer_gettemplatesym(gp)->s_name);
+            return;
+        }
+    }
+    else templatesym = gpointer_gettemplatesym(gp);
+    if (!(template = template_findbyname(templatesym)))
+    {
+        pd_error(x, "elem: couldn't find template %s", templatesym->s_name);
         return;
     }
     if (!template_find_field(template, fieldsym,
@@ -851,17 +867,6 @@ static void getsize_pointer(t_getsize *x, t_gpointer *gp)
     if (type != DT_ARRAY)
     {
         pd_error(x, "getsize: field %s not of type array", fieldsym->s_name);
-        return;
-    }
-    if (!gpointer_check(gp, 0))
-    {
-        pd_error(x, "get: stale or empty pointer");
-        return;
-    }
-    if (gpointer_gettemplatesym(gp) != x->x_templatesym)
-    {
-        pd_error(x, "getsize %s: got wrong template (%s)",
-            x->x_templatesym->s_name, gpointer_gettemplatesym(gp)->s_name);
         return;
     }
     if (gs->gs_which == GP_ARRAY) w = gp->gp_un.gp_w;
