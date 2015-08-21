@@ -222,7 +222,7 @@ static void *ptrobj_new(t_symbol *classname, int argc, t_atom *argv)
     for (; n--; to++)
     {
         to->to_outlet = outlet_new(&x->x_obj, &s_pointer);
-        to->to_type = canvas_makebindsym(atom_getsymbol(argv++));
+        to->to_type = template_getbindsym(atom_getsymbol(argv++));
     }
     x->x_otherout = outlet_new(&x->x_obj, &s_pointer);
     x->x_bangout = outlet_new(&x->x_obj, &s_bang);
@@ -304,6 +304,8 @@ static void ptrobj_next(t_ptrobj *x)
 {
     ptrobj_vnext(x, 0);
 }
+
+    /* send a message to the window containing the object pointed to */ 
 static void ptrobj_sendwindow(t_ptrobj *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_glist *glist;
@@ -328,6 +330,16 @@ static void ptrobj_sendwindow(t_ptrobj *x, t_symbol *s, int argc, t_atom *argv)
     if (argc && argv->a_type == A_SYMBOL)
         pd_typedmess(canvas, argv->a_w.w_symbol, argc-1, argv+1);
     else pd_error(x, "send-window: no message?");
+}
+
+    /* send the pointer to the named object */
+static void ptrobj_send(t_ptrobj *x, t_symbol *s)
+{
+    if (!s->s_thing)
+        pd_error(x, "%s: no such object", s->s_name);
+    else if (!gpointer_check(&x->x_gp, 1))
+        pd_error(x, "pointer_send: empty pointer");
+    else pd_pointer(s->s_thing, &x->x_gp);
 }
 
 static void ptrobj_bang(t_ptrobj *x)
@@ -391,9 +403,11 @@ static void ptrobj_setup(void)
 {
     ptrobj_class = class_new(gensym("pointer"), (t_newmethod)ptrobj_new,
         (t_method)ptrobj_free, sizeof(t_ptrobj), 0, A_GIMME, 0);
+    class_addmethod(ptrobj_class, (t_method)ptrobj_next, gensym("next"), 0); 
+    class_addmethod(ptrobj_class, (t_method)ptrobj_send, gensym("send"),
+        A_SYMBOL, 0);
     class_addmethod(ptrobj_class, (t_method)ptrobj_traverse, gensym("traverse"),
         A_SYMBOL, 0); 
-    class_addmethod(ptrobj_class, (t_method)ptrobj_next, gensym("next"), 0); 
     class_addmethod(ptrobj_class, (t_method)ptrobj_vnext, gensym("vnext"), 
         A_DEFFLOAT, 0); 
     class_addmethod(ptrobj_class, (t_method)ptrobj_sendwindow,
