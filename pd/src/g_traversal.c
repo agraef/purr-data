@@ -1093,21 +1093,24 @@ typedef struct _append
 static void *append_new(t_symbol *why, int argc, t_atom *argv)
 {
     t_append *x = (t_append *)pd_new(append_class);
-    int i;
+    int varcount, i;
+    t_atom at, *varvec;
     t_appendvariable *sp;
-    int varcount;
-    x->x_templatesym = canvas_makebindsym(atom_getsymbolarg(0, argc, argv));
-    if (argc) argc--, argv++;
-    varcount = argc ? argc : 1; /* have at least one variable */
+
+    x->x_templatesym = template_getbindsym(atom_getsymbolarg(0, argc, argv));
+    if (argc < 2)
+    {
+        varcount = 1;
+        varvec = &at;
+        SETSYMBOL(&at, &s_);
+    }
+    else varcount = argc - 1, varvec = argv + 1;
     x->x_variables
         = (t_appendvariable *)getbytes(varcount * sizeof (*x->x_variables));
     x->x_nin = varcount;
-    for (i = 0, sp = x->x_variables; i < argc; i++, sp++)
+    for (i = 0, sp = x->x_variables; i < varcount; i++, sp++)
     {
-        if (argc)
-            sp->gv_sym = atom_getsymbolarg(i, argc, argv);
-        else
-            sp->gv_sym = &s_;
+        sp->gv_sym = atom_getsymbolarg(i, varcount, varvec);
         sp->gv_f = 0;
         if (i) floatinlet_new(&x->x_obj, &sp->gv_f);
     }
@@ -1122,11 +1125,10 @@ static void append_set(t_append *x, t_symbol *templatesym, t_symbol *field)
     if (x->x_nin != 1)
     {
         pd_error(x, "set: cannot set multiple fields.");
-        return;
     }
     else
     {
-       x->x_templatesym = canvas_makebindsym(templatesym); 
+       x->x_templatesym = template_getbindsym(templatesym); 
        x->x_variables->gv_sym = field;
        x->x_variables->gv_f = 0;
     }
@@ -1136,13 +1138,20 @@ static void append_float(t_append *x, t_float f)
 {
     int nitems = x->x_nin, i;
     t_symbol *templatesym = x->x_templatesym;
-    t_template *template = template_findbyname(templatesym);
+    t_template *template;
     t_appendvariable *vp;
     t_gpointer *gp = &x->x_gp;
     t_gstub *gs = gp->gp_stub;
     t_word *vec;
     t_scalar *sc, *oldsc;
     t_glist *glist;
+
+    if (!templatesym->s_name)
+    {
+        pd_error(x, "append: no template supplied");
+        return;
+    }
+    template = template_findbyname(templatesym);
     if (!template)
     {
         pd_error(x, "append: couldn't find template %s", templatesym->s_name);
