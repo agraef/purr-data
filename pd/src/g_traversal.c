@@ -13,6 +13,7 @@ getsize - get the size of an array
 setsize - change the size of an array
 append -  add an element to a list
 sublist - get a pointer into a list which is an element of another scalar
+field -   get numeric/symbolic field while within a canvas field
 
 */
 
@@ -1305,6 +1306,112 @@ static void sublist_setup(void)
     class_addpointer(sublist_class, sublist_pointer); 
 }
 
+/* ---------------------- field ----------------------------- */
+
+static t_class *field_class;
+
+typedef struct _field
+{
+    t_object x_obj;
+    t_symbol *x_s;
+    t_template *x_template;
+    t_canvas *x_canvas;
+} t_field;
+
+static void *field_new(t_symbol *s)
+{
+    t_field *x = (t_field *)pd_new(field_class);
+    x->x_s = s;
+    x->x_canvas = canvas_getcurrent();
+    // do some error checking here
+    x->x_template = template_findbyname(x->x_canvas->gl_templatesym);
+    outlet_new(&x->x_obj, &s_list);
+    return (x);
+}
+
+static void field_set(t_field *x, t_symbol *s)
+{
+    x->x_s = s;
+}
+
+static void field_bang(t_field *x)
+{
+    post("sanity is %d", x->x_canvas->sanity);
+    t_word *vec = x->x_canvas->gl_vec;
+    t_template *template = x->x_template;
+    t_symbol *fieldsym = x->x_s;
+    int onset, type;
+    t_symbol *arraytype;
+    if (template_find_field(template, fieldsym, &onset, &type, &arraytype))
+    {
+        if (type == DT_FLOAT)
+            outlet_float(x->x_obj.ob_outlet,
+                *(t_float *)(((char *)vec) + onset));
+        else if (type == DT_SYMBOL)
+            outlet_symbol(x->x_obj.ob_outlet,
+                *(t_symbol **)(((char *)vec)+ onset));
+        else pd_error(x, "field: %s.%s is not a number or symbol",
+                template->t_sym->s_name, fieldsym->s_name);
+    }
+    else pd_error(x, "field: %s.%s: no such field",
+        template->t_sym->s_name, fieldsym->s_name);
+}
+
+static void field_setvalue(t_field *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_template *template = x->x_template;
+    t_word *vec = x->x_canvas->gl_vec;
+    t_gpointer *gp = &x->x_canvas->gl_gp;
+    t_gstub *gs = gp->gp_stub;
+    int onset, type;
+    t_symbol *arraytype, *fieldsym = x->x_s;
+    if (argc)
+    {
+        if (argv->a_type == A_FLOAT)
+            template_setfloat(template, fieldsym, vec,
+                atom_getfloatarg(0, argc, argv), 1);
+        else if (argv->a_type == A_SYMBOL)
+            template_setsymbol(template, fieldsym, vec,
+                atom_getsymbolarg(0, argc, argv), 1);
+        else pd_error(x, "field: incoming value must be float or symbol");
+    }
+    if (gp->gp_stub->gs_which == GP_GLIST)
+        scalar_configure((t_scalar *)(gp->gp_un.gp_gobj), gs->gs_un.gs_glist);  
+    else
+    {
+        t_array *owner_array = gs->gs_un.gs_array;
+        while (owner_array->a_gp.gp_stub->gs_which == GP_ARRAY)
+            owner_array = owner_array->a_gp.gp_stub->gs_un.gs_array;
+        scalar_redraw((t_scalar *)(owner_array->a_gp.gp_un.gp_gobj),
+            owner_array->a_gp.gp_stub->gs_un.gs_glist);  
+    }
+}
+
+static void field_symbol(t_field *x, t_symbol *s)
+{
+    t_atom at[1];
+    SETSYMBOL(at, s);
+    field_setvalue(x, gensym("symbol"), 1, at);
+}
+
+static void field_float(t_field *x, t_floatarg f)
+{
+    t_atom at[1];
+    SETFLOAT(at, f);
+    field_setvalue(x, gensym("float"), 1, at);
+}
+
+static void field_setup(void)
+{
+    field_class = class_new(gensym("field"), (t_newmethod)field_new,
+        0, sizeof(t_field), 0, A_DEFSYM, 0);
+    class_addfloat(field_class, field_float); 
+    class_addsymbol(field_class, field_symbol); 
+    class_addbang(field_class, field_bang); 
+    class_addmethod(field_class, (t_method)field_set, gensym("set"),
+        A_SYMBOL, 0); 
+}
+
 /* ----------------- setup function ------------------- */
 
 void g_traversal_setup(void)
@@ -1317,4 +1424,5 @@ void g_traversal_setup(void)
     setsize_setup();
     append_setup();
     sublist_setup();
+    field_setup();
 }

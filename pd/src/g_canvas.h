@@ -223,8 +223,9 @@ struct _glist
     struct _scalehandle *x_handle;
     struct _scalehandle *x_mhandle;
     t_pd *gl_svg;
-    t_symbol *gl_templatename; /* for "canvas" data type */
+    t_symbol *gl_templatesym; /* for "canvas" data type */
     t_word *gl_vec;            /* for "canvas" data type */
+    t_gpointer gl_gp;            /* parent for "canvas" data type */
 };
 
 #define gl_gobj gl_obj.te_g

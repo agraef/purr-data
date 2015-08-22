@@ -18,10 +18,11 @@ t_class *scalar_class;
 
 void pd_doloadbang(void);
 
-void word_init(t_word *wp, t_template *template, t_gpointer *gp)
+void word_init(t_word *data, t_template *template, t_gpointer *gp)
 {
     int i, nitems = template->t_n;
     t_dataslot *datatypes = template->t_vec;
+    t_word *wp = data;
     for (i = 0; i < nitems; i++, datatypes++, wp++)
     {
         int type = datatypes->ds_type;
@@ -60,11 +61,23 @@ void word_init(t_word *wp, t_template *template, t_gpointer *gp)
             glob_setfilename(0, &s_, &s_);
 
             wp->w_list = canvas_getcurrent();
+            wp->w_list->gl_templatesym = template->t_sym;
+            /* this is bad-- we're storing a reference to a position in
+               a dynamically allocated byte array when realloc can potentially
+               move this data.  Essentially, we're depending on gcc to never
+               move it, which is a bad assumption.  Unfortunately gpointers
+               do the same thing, and I haven't heard back from Miller yet
+               on how he plans to deal with this problem. Hopefully that same
+               solution will be usable here. */
+            wp->w_list->gl_vec = data;
+            /* Here too we're being dangerous-- I'm not unsetting this
+               gpointer yet. */
+            gpointer_copy(gp, &wp->w_list->gl_gp);
 
             while ((x != s__X.s_thing) && s__X.s_thing) 
             {
                 x = s__X.s_thing;
-                vmess(x, gensym("pop"), "i", 1);
+                vmess(x, gensym("pop"), "i", 0);
             }
             /* oops, can't actually do a loadbang here.
                Why?
@@ -242,12 +255,27 @@ int template_cancreate(t_template *template)
     return (template_check_array_fields(0, template) == 1);
 }
 
+int scalar_hascanvasfield(t_scalar *x)
+{
+    t_template *template = template_findbyname(x->sc_template);
+    if (template)
+    {
+        int i, nitems = template->t_n;
+        t_dataslot *datatypes = template->t_vec;
+        for (i = 0; i < nitems; i++, datatypes++)
+        {
+            if (datatypes->ds_type == DT_LIST)
+                return 1;
+        }
+    }
+    return 0;
+}
+
     /* make a new scalar and add to the glist.  We create a "gp" here which
     will be used for array items to point back here.  This gp doesn't do
     reference counting or "validation" updates though; the parent won't go away
     without the contained arrays going away too.  The "gp" is copied out
     by value in the word_init() routine so we can throw our copy away. */
-
 t_scalar *scalar_new(t_glist *owner, t_symbol *templatesym)
 {
     t_scalar *x;
@@ -1197,6 +1225,11 @@ static void scalar_save(t_gobj *z, t_binbuf *b)
     binbuf_free(b2);
 }
 
+static void scalar_menuopen(t_scalar *x)
+{
+    post("tried to open a thing");
+}
+
 static void scalar_properties(t_gobj *z, struct _glist *owner)
 {
     t_scalar *x = (t_scalar *)z;
@@ -1256,6 +1289,8 @@ void g_scalar_setup(void)
         CLASS_GOBJ, 0);
     class_addmethod(scalar_class, (t_method)scalar_mouseover,
         gensym("mouseover"), A_FLOAT, A_NULL);
+    class_addmethod(scalar_class, (t_method)scalar_menuopen,
+        gensym("menu-open"), 0);
     class_setwidget(scalar_class, &scalar_widgetbehavior);
     class_setsavefn(scalar_class, scalar_save);
     class_setpropertiesfn(scalar_class, scalar_properties);

@@ -2307,6 +2307,8 @@ t_gobj *canvas_findhitbox(t_canvas *x, int xpos, int ypos,
     return (rval);
 }
 
+extern int scalar_hascanvasfield(t_scalar *x);
+
     /* right-clicking on a canvas object pops up a menu. */
 static void canvas_rightclick(t_canvas *x, int xpos, int ypos, t_gobj *y_sel)
 {
@@ -2314,7 +2316,7 @@ static void canvas_rightclick(t_canvas *x, int xpos, int ypos, t_gobj *y_sel)
     if (x->gl_editor->e_onmotion != MA_NONE) return;
     int canprop, canopen, isobject;
     t_gobj *y = NULL;
-    int x1, y1, x2, y2;
+    int x1, y1, x2, y2, scalar_has_canvas = 0;
     if (x->gl_editor->e_selection)
     {
         glist_noselect(x);
@@ -2344,6 +2346,14 @@ static void canvas_rightclick(t_canvas *x, int xpos, int ypos, t_gobj *y_sel)
     canprop = (!y || (y && class_getpropertiesfn(pd_class(&y->g_pd)))
                /*&& !canvas_isabstraction( ((t_glist*)y) )*/ );
     canopen = (y && zgetfn(&y->g_pd, gensym("menu-open")));
+    /* we add an extra check for scalars to enable the "Open" button
+       if they happen to have a canvas field inside them. */
+    if (pd_class(&y->g_pd) == scalar_class)
+    {
+        if (scalar_hascanvasfield((t_scalar *)y))
+            scalar_has_canvas = 1;
+        canopen = scalar_has_canvas;
+    }
     if (y || x->gl_editor->e_selection)
     {
         isobject = 1;
