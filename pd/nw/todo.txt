@@ -51,7 +51,7 @@ Everything else: (A [x] means we've fixed it)
     (see dialog API page)
 [x] "Save As" on an overwrite doesn't seem to clear the dirty flag
 [x] figure out why there is a "pd_opendir" global var
-[ ] pass k12 mode arg
+[x] pass k12 mode arg
 [ ] implement recent files (using Pd's prefs loading mechanism instead of
     reimplementing gui prefs)
 [x] implement verifyquit
