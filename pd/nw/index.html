@@ -31,7 +31,7 @@
         console.log("Hello from " + pwd);
 
         function app_quit () {
-            console.log("quitting for reals");
+            console.log("quitting Pd...");
             nw.App.quit();
         }
 
@@ -51,14 +51,9 @@
             }
         );
 
-//        prompt("hey", "you");
-
         // Invoke some functions to create main menus, etc.
-
         nw.Window.get().on("close", function() {
             pdgui.menu_quit();
-// stop-gap to shutdown properly
-//            this.close(true);
         });
         console.log(nw.App.argv); 
 
