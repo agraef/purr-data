@@ -1336,7 +1336,6 @@ static void field_set(t_field *x, t_symbol *s)
 
 static void field_bang(t_field *x)
 {
-    post("sanity is %d", x->x_canvas->sanity);
     t_word *vec = x->x_canvas->gl_vec;
     t_template *template = x->x_template;
     t_symbol *fieldsym = x->x_s;

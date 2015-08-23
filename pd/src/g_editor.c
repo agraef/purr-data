@@ -2307,7 +2307,7 @@ t_gobj *canvas_findhitbox(t_canvas *x, int xpos, int ypos,
     return (rval);
 }
 
-extern int scalar_hascanvasfield(t_scalar *x);
+extern int scalar_getcanvasfield(t_scalar *x);
 
     /* right-clicking on a canvas object pops up a menu. */
 static void canvas_rightclick(t_canvas *x, int xpos, int ypos, t_gobj *y_sel)
@@ -2350,7 +2350,7 @@ static void canvas_rightclick(t_canvas *x, int xpos, int ypos, t_gobj *y_sel)
        if they happen to have a canvas field inside them. */
     if (pd_class(&y->g_pd) == scalar_class)
     {
-        if (scalar_hascanvasfield((t_scalar *)y))
+        if (scalar_getcanvasfield((t_scalar *)y))
             scalar_has_canvas = 1;
         canopen = scalar_has_canvas;
     }

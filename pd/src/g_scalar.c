@@ -255,7 +255,8 @@ int template_cancreate(t_template *template)
     return (template_check_array_fields(0, template) == 1);
 }
 
-int scalar_hascanvasfield(t_scalar *x)
+    /* get the first canvas field for a scalar */
+t_canvas *scalar_getcanvasfield(t_scalar *x)
 {
     t_template *template = template_findbyname(x->sc_template);
     if (template)
@@ -265,7 +266,7 @@ int scalar_hascanvasfield(t_scalar *x)
         for (i = 0; i < nitems; i++, datatypes++)
         {
             if (datatypes->ds_type == DT_LIST)
-                return 1;
+                return x->sc_vec[i].w_list;
         }
     }
     return 0;
@@ -1227,7 +1228,8 @@ static void scalar_save(t_gobj *z, t_binbuf *b)
 
 static void scalar_menuopen(t_scalar *x)
 {
-    post("tried to open a thing");
+    t_canvas *c = scalar_getcanvasfield(x);
+    canvas_vis(c, 1);
 }
 
 static void scalar_properties(t_gobj *z, struct _glist *owner)
