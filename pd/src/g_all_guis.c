@@ -979,14 +979,16 @@ void iemgui_label_draw_new(t_iemgui *x) {
     //     x->x_lab!=s_empty?x->x_lab->s_name:"",
     //     iemgui_font(x), x->x_lcol, x, x);
     sprintf(col, "#%6.6x", x->x_lcol);
-    gui_vmess("gui_iemgui_label_new", "xxiisss",
+    gui_vmess("gui_iemgui_label_new", "xxiissssi",
         canvas,
         x,
         x->x_ldx,
         x->x_ldy,
         col,
         x->x_lab != s_empty ? x->x_lab->s_name : "",
-        iemgui_font(x));
+        iemgui_typeface(x),
+        sys_fontweight,
+        x->x_fontsize);
 }
 
 void iemgui_label_draw_move(t_iemgui *x) {
@@ -1314,6 +1316,10 @@ const char *iemgui_typeface(t_iemgui *x) {
 // this uses a static buffer, so don't use it twice in the same sys_vgui.
 // the static buffer could be replaced by a malloc when sys_vgui is replaced
 // by something that frees that memory.
+/* this is probably obsolete now-- we want to just send each one as a
+   separate arg so we don't have to parse on the gui side.
+   Once we check to make sure all iemguis work without it we can safely
+   remove it */
 const char *iemgui_font(t_iemgui *x) {
     static char buf[64];
     sprintf(buf, "{{%s} -%d %s}", iemgui_typeface(x), x->x_fontsize, sys_fontweight);

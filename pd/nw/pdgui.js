@@ -151,7 +151,6 @@ var font_fixed_metrics = "\
 30 18 37 \
 36 22 44";
 
-
 // Utility Functions
 
 // originally used to enquote a string to send it to a tcl function
@@ -2740,13 +2739,71 @@ function gui_iemgui_move_and_resize(cid, tag, x1, y1, x2, y2) {
     });
 }
 
-function gui_iemgui_label_new(cid, tag, x, y, color, text, font) {
+function iemgui_font_height(name, size) {
+    return size;
+    var dejaVuSansMono = {
+        6: [3, 4], 7: [4, 5], 8: [5, 7], 9: [5, 7], 10: [6, 8],
+        11: [7, 8], 12: [7, 9], 13: [8, 9], 14: [8, 10], 15: [9, 12],
+        16: [9, 12], 17: [10, 13], 18: [10, 13], 19: [11, 14], 20: [12, 14],
+        21: [12, 16], 22: [13, 16], 23: [13, 17], 24: [14, 18], 25: [14, 18],
+        26: [15, 20], 27: [16, 20], 28: [16, 21], 29: [17, 21], 30: [17, 22],
+        31: [18, 22], 32: [18, 23], 33: [19, 25], 34: [19, 25], 35: [20, 26],
+        36: [21, 26], 37: [21, 27], 38: [22, 27], 39: [22, 29], 40: [23, 30],
+        41: [23, 30], 42: [24, 31], 43: [24, 31], 44: [25, 33], 45: [26, 33],
+        46: [25, 34], 47: [26, 34], 48: [26, 35], 49: [27, 36], 50: [26, 36],
+        51: [28, 37], 52: [29, 38], 53: [29, 39], 54: [30, 39], 55: [30, 41],
+        56: [31, 41], 57: [31, 42], 58: [32, 43], 59: [32, 43], 60: [32, 45],
+        61: [34, 45], 62: [34, 46], 63: [35, 46], 64: [35, 47], 65: [36, 49],
+        66: [36, 49], 67: [36, 50], 68: [37, 50], 69: [38, 51], 70: [38, 51],
+        71: [38, 52], 72: [39, 52]
+    };
+    // We use these heights for both the monotype and iemgui's "Helvetica"
+    // which, at least on linux, has the same height
+    if (name === 'DejaVu Sans Mono' || name == 'helvetica') {
+        return dejaVuSansMono[size][1];
+    } else {
+        return size;
+    }
+}
+
+function iemgui_fontfamily(name) {
+    var family;
+    if (name === "DejaVu Sans Mono") {
+        family = "DejaVu Sans Mono"; // probably should add some fallbacks here 
+    }
+    else if (name === "helvetica") {
+        family = "Helvetica, 'DejaVu Sans'";
+    }
+    else if (name === "times") {
+        family = "'Times New Roman', 'DejaVu Serif', 'FreeSerif', serif";
+    }
+}
+
+function gui_iemgui_label_new(cid, tag, x, y, color, text, fontname, fontweight,
+    fontsize) {
     var g = get_gobj(cid, tag);
+    gui_post("fontname is " + fontname);
+//    var fontheight = 
     var svg_text = create_item(cid, 'text', {
         // x and y need to be relative to baseline instead of nw anchor
         x: x,
         y: y,
         //'font-size': font + 'px',
+        'font-family': iemgui_fontfamily(fontname),
+        // for some reason the font looks bold in Pd-Vanilla-- not sure why
+        'font-weight': fontweight,
+        'font-size': fontsize + 'px',
+        // Iemgui labels are anchored "w" (left-aligned to non-tclers).
+        // For no good reason, they are also centered vertically, unlike
+        // object box text. Since svg text uses the baseline as a reference
+        // by default, we just take half the pixel font size and use that
+        // as an additional offset.
+        //
+        // There is an alignment-baseline property in svg that
+        // is supposed to do this for us. However, when I tried choosing
+        // "hanging" to get tcl's equivalent of "n", I ran into a bug
+        // where the text gets positioned incorrectly when zooming.
+        transform: 'translate(0,' + iemgui_font_height(fontname, fontsize) / 2 + ')',
         id: tag + 'label'
     });
     var text_node = patchwin[cid].window.document.createTextNode(text);
