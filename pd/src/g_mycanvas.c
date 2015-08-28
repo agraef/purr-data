@@ -272,7 +272,6 @@ static void my_canvas_dialog(t_my_canvas *x, t_symbol *s, int argc, t_atom *argv
     x->x_gui.x_w = maxi(atom_getintarg(0, argc, argv),1);
     x->x_vis_w = maxi(atom_getintarg(2, argc, argv),1);
     x->x_vis_h = maxi(atom_getintarg(3, argc, argv),1);
-    post("FUCK OFF ASSHOLE!");
     iemgui_dialog(&x->x_gui, argc, argv);
     x->x_gui.x_loadinit = 0;
     iemgui_draw_config(&x->x_gui);
