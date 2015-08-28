@@ -1323,8 +1323,7 @@ static void *field_new(t_symbol *s)
     t_field *x = (t_field *)pd_new(field_class);
     x->x_s = s;
     x->x_canvas = canvas_getcurrent();
-    // do some error checking here
-    x->x_template = template_findbyname(x->x_canvas->gl_templatesym);
+    x->x_template = NULL;
     outlet_new(&x->x_obj, &s_list);
     return (x);
 }
@@ -1334,31 +1333,56 @@ static void field_set(t_field *x, t_symbol *s)
     x->x_s = s;
 }
 
+    /* Contortions to get and possibly cache template after
+       the first lookup. We can't get it in field_new because
+       word_init only sets the template after we've been created. */
+static t_template *field_gettemplate(t_field *x)
+{
+    if (x->x_template)
+        return x->x_template;
+    else
+    {
+        if (x->x_canvas->gl_templatesym)
+        {
+            x->x_template = template_findbyname(x->x_canvas->gl_templatesym);
+            return x->x_template;
+        }
+        else
+            return 0;
+    }
+}
+
 static void field_bang(t_field *x)
 {
-    t_word *vec = x->x_canvas->gl_vec;
-    t_template *template = x->x_template;
-    t_symbol *fieldsym = x->x_s;
-    int onset, type;
-    t_symbol *arraytype;
-    if (template_find_field(template, fieldsym, &onset, &type, &arraytype))
+    t_template *template = field_gettemplate(x);
+    if (template)
     {
-        if (type == DT_FLOAT)
-            outlet_float(x->x_obj.ob_outlet,
-                *(t_float *)(((char *)vec) + onset));
-        else if (type == DT_SYMBOL)
-            outlet_symbol(x->x_obj.ob_outlet,
-                *(t_symbol **)(((char *)vec)+ onset));
-        else pd_error(x, "field: %s.%s is not a number or symbol",
-                template->t_sym->s_name, fieldsym->s_name);
+        t_word *vec = x->x_canvas->gl_vec;
+        t_symbol *fieldsym = x->x_s;
+        int onset, type;
+        t_symbol *arraytype;
+        if (template_find_field(template, fieldsym, &onset, &type, &arraytype))
+        {
+            if (type == DT_FLOAT)
+                outlet_float(x->x_obj.ob_outlet,
+                    *(t_float *)(((char *)vec) + onset));
+            else if (type == DT_SYMBOL)
+                outlet_symbol(x->x_obj.ob_outlet,
+                    *(t_symbol **)(((char *)vec)+ onset));
+            else pd_error(x, "field: %s.%s is not a number or symbol",
+                    template->t_sym->s_name, fieldsym->s_name);
+        }
+        else pd_error(x, "field: %s.%s: no such field",
+            template->t_sym->s_name, fieldsym->s_name);
     }
-    else pd_error(x, "field: %s.%s: no such field",
-        template->t_sym->s_name, fieldsym->s_name);
+    else /* send a bang to signal that we're not in a scalar */
+        outlet_bang(x->x_obj.ob_outlet);
 }
 
 static void field_setvalue(t_field *x, t_symbol *s, int argc, t_atom *argv)
 {
-    t_template *template = x->x_template;
+    t_template *template = field_gettemplate(x);
+    if (!template) return;
     t_word *vec = x->x_canvas->gl_vec;
     t_gpointer *gp = &x->x_canvas->gl_gp;
     t_gstub *gs = gp->gp_stub;

@@ -105,6 +105,8 @@ static void glist_readatoms(t_glist *x, int natoms, t_atom *vec,
     }
 }
 
+void scalar_doloadbang(t_scalar *x);
+
 int glist_readscalar(t_glist *x, int natoms, t_atom *vec,
     int *p_nextmsg, int selectit)
 {
@@ -158,6 +160,8 @@ int glist_readscalar(t_glist *x, int natoms, t_atom *vec,
     {
         glist_select(x, &sc->sc_gobj);
     }
+    /* send a loadbang for any canvas fields in this scalar */
+    scalar_doloadbang(sc);
     return (1);
 }
 

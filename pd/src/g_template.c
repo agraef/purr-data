@@ -3410,7 +3410,7 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
     if (x->x_fillopacity.a_flag)
     {
         gui_s("fill-opacity");
-        gui_f(fielddesc_getfloat(&x->x_fillopacity.a_attr, template, data, 1));
+        gui_f(fielddesc_getcoord(&x->x_fillopacity.a_attr, template, data, 1));
     }
     if (x->x_fillrule.a_flag)
     {

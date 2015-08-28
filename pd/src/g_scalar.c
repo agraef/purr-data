@@ -73,6 +73,8 @@ void word_init(t_word *data, t_template *template, t_gpointer *gp)
             /* Here too we're being dangerous-- I'm not unsetting this
                gpointer yet. */
             gpointer_copy(gp, &wp->w_list->gl_gp);
+            /* make the parent glist the parent of our canvas field */
+            wp->w_list->gl_owner = gp->gp_stub->gs_un.gs_glist;
 
             while ((x != s__X.s_thing) && s__X.s_thing) 
             {
@@ -89,6 +91,22 @@ void word_init(t_word *data, t_template *template, t_gpointer *gp)
             s__X.s_thing = boundx;
             post("eval'd a canvas with addy x%lx", (long unsigned int)
                 wp->w_list);
+        }
+    }
+}
+
+void scalar_doloadbang(t_scalar *x)
+{
+    t_template *template = template_findbyname(x->sc_template);
+    t_dataslot *datatypes = template->t_vec;
+    t_word *wp = x->sc_vec;
+    int i, nitems = template->t_n;
+    for (i = 0; i < nitems; i++, datatypes++, wp++)
+    {
+        if (datatypes->ds_type == DT_LIST)
+        {
+            t_canvas *c = wp->w_list;
+            pd_vmess((t_pd *)c, gensym("loadbang"), "");
         }
     }
 }
