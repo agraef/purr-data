@@ -2348,7 +2348,7 @@ static void canvas_rightclick(t_canvas *x, int xpos, int ypos, t_gobj *y_sel)
     canopen = (y && zgetfn(&y->g_pd, gensym("menu-open")));
     /* we add an extra check for scalars to enable the "Open" button
        if they happen to have a canvas field inside them. */
-    if (pd_class(&y->g_pd) == scalar_class)
+    if (y && pd_class(&y->g_pd) == scalar_class)
     {
         if (scalar_getcanvasfield((t_scalar *)y))
             scalar_has_canvas = 1;
