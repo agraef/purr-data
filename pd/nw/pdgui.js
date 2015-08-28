@@ -2767,7 +2767,7 @@ function iemgui_font_height(name, size) {
 }
 
 function iemgui_fontfamily(name) {
-    var family;
+    var family = "DejaVu Sans Mono";
     if (name === "DejaVu Sans Mono") {
         family = "DejaVu Sans Mono"; // probably should add some fallbacks here 
     }
@@ -2777,6 +2777,7 @@ function iemgui_fontfamily(name) {
     else if (name === "times") {
         family = "'Times New Roman', 'DejaVu Serif', 'FreeSerif', serif";
     }
+    return family;
 }
 
 function gui_iemgui_label_new(cid, tag, x, y, color, text, fontname, fontweight,
@@ -2842,13 +2843,15 @@ function gui_iemgui_label_select(cid, tag, is_selected) {
     }
 }
 
-function gui_iemgui_label_font(cid, tag, font) {
+function gui_iemgui_label_font(cid, tag, fontname, fontweight, fontsize) {
+gui_post("googoo: fontsize is " + fontsize);
     var svg_text = get_item(cid, tag + 'label');
-    // This has to wait until we remove the tcl formatting
-    // that Pd uses for font name/size
-    //    configure_item(svg_text, {
-    //        font: font
-    //    });
+    configure_item(svg_text, {
+        'font-family': iemgui_fontfamily(fontname),
+        'font-weight': fontweight,
+        'font-size': fontsize + 'px',
+        transform: 'translate(0,' + iemgui_font_height(fontname, fontsize) / 2 + ')'
+    });
 }
 
 function gui_create_mycanvas(cid,tag,color,x1,y1,x2_vis,y2_vis,x2,y2) {

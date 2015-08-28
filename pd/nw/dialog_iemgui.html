@@ -233,9 +233,9 @@
             </td>
             <td data-i18n="[title]iem.prop.font_tt">
               <select name="font-style">
-                <option>Font Number 0</option>
-                <option>Font #1</option>
-                <option>Font 2</option>
+                <option>DejaVu Sans Mono</option>
+                <option>Helvetica</option>
+                <option>Times</option>
               </select>
             </td>
             <td colspan="4">
@@ -435,8 +435,9 @@ function apply() {
         slot7 = 0;
     }
 
-    var font_style = document.getElementsByName('font-style')[0].value;
-    if (font_style !== null) { font_style = 0; }
+    var font_style = document.getElementsByName('font-style')[0].
+        selectedIndex;
+//    if (font_style !== null) { font_style = 0; }
 
     var font_size = document.getElementsByName('font-size')[0].value;
     if (font_size === '') { font_size = 0; }
@@ -545,6 +546,8 @@ function populate_form(attr_array) {
                     // The attr here is a string, so we need to
                     // force it to number, hence the "+" below
                     elem[0].checked = +attr_array[i+1];
+                } else if (elem[0].type === 'select-one') {
+                    elem[0].selectedIndex = +attr_array[i+1];
                 } else {
                     elem[0].value = attr_array[i+1];
                 }

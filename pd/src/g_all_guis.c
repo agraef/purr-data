@@ -270,10 +270,12 @@ void iemgui_label_font(t_iemgui *x, t_symbol *s, int ac, t_atom *av)
     {
         //sys_vgui(".x%lx.c itemconfigure %lxLABEL -font %s\n",
         //    glist_getcanvas(x->x_glist), x, iemgui_font(x));
-        gui_vmess("gui_iemgui_label_font", "xxs",
+        gui_vmess("gui_iemgui_label_font", "xxssi",
             glist_getcanvas(x->x_glist),
             x,
-            iemgui_font(x));
+            iemgui_typeface(x),
+            sys_fontweight,
+            x->x_fontsize);
         iemgui_shouldvis(x, IEM_GUI_DRAW_MODE_CONFIG);
     }
 }
@@ -1013,10 +1015,12 @@ void iemgui_label_draw_config(t_iemgui *x) {
         //         "-fill $pd_colors(selection) -text {%s} \n",
         //     canvas, x, iemgui_font(x), 
         //     x->x_lab!=s_empty?x->x_lab->s_name:"");
-        gui_vmess("gui_iemgui_label_font", "xxs",
+        gui_vmess("gui_iemgui_label_font", "xxssi",
             glist_getcanvas(x->x_glist),
             x,
-            iemgui_font(x));
+            iemgui_typeface(x),
+            sys_fontweight,
+            x->x_fontsize);
         gui_vmess("gui_iemgui_label_set", "xxs",
             glist_getcanvas(x->x_glist),
             x,
@@ -1033,10 +1037,12 @@ void iemgui_label_draw_config(t_iemgui *x) {
         //         "-fill #%6.6x -text {%s} \n",
         //     canvas, x, iemgui_font(x),
         //     x->x_lcol, x->x_lab!=s_empty?x->x_lab->s_name:"");
-        gui_vmess("gui_iemgui_label_font", "xxs",
+        gui_vmess("gui_iemgui_label_font", "xxssi",
             glist_getcanvas(x->x_glist),
             x,
-            iemgui_font(x));
+            iemgui_typeface(x),
+            sys_fontweight,
+            x->x_fontsize);
         gui_vmess("gui_iemgui_label_set", "xxs",
             glist_getcanvas(x->x_glist),
             x,
