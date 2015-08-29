@@ -280,6 +280,9 @@ Everything else: (A [x] means we've fixed it)
 [ ] same for all commits up to Jul 31, 2015
 [ ] address double-free when closing a canvas that is a canvas field
     of a scalar
+[ ] current try/catch parser in the socket receiver is too slow. For lots of
+    data it can end up freezing the GUI. (Test if requestAnimationFrame makes
+    any difference...)
 
 Crashers
 --------
