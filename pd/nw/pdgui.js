@@ -1748,10 +1748,6 @@ function connect () {
     client.setNoDelay(true);
     client.connect(PORT, HOST, function() {
         console.log('CONNECTED TO: ' + HOST + ':' + PORT);
-        // Write a test message to the socket as soon as the client is connected,
-        //the server will receive it as message from the client. This can be removed
-        // once it's obvious it works...
-        client.write('I am Chuck Norris!;');
     });
 }
 
