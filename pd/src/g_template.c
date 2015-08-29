@@ -1545,9 +1545,9 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
         else if (x->x_filltype == 2)
         {
             fill = gensym(rgb_to_hex(
-                (int)fielddesc_getfloat(fd, template, data, 1),
-                (int)fielddesc_getfloat(fd+1, template, data, 1),
-                (int)fielddesc_getfloat(fd+2, template, data, 1)));
+                (int)fielddesc_getcoord(fd, template, data, 1),
+                (int)fielddesc_getcoord(fd+1, template, data, 1),
+                (int)fielddesc_getcoord(fd+2, template, data, 1)));
         }
         else
             fill = &s_;
@@ -1565,9 +1565,9 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
         else if (x->x_stroketype == 2)
         {
             stroke = gensym(rgb_to_hex(
-                (int)fielddesc_getfloat(fd, template, data, 1),
-                (int)fielddesc_getfloat(fd+1, template, data, 1),
-                (int)fielddesc_getfloat(fd+2, template, data, 1)));
+                (int)fielddesc_getcoord(fd, template, data, 1),
+                (int)fielddesc_getcoord(fd+1, template, data, 1),
+                (int)fielddesc_getcoord(fd+2, template, data, 1)));
         }
         else stroke = &s_;
         gui_vmess("gui_draw_configure", "xsss",
@@ -2302,21 +2302,21 @@ void svg_parsetransform(t_svg *x, t_template *template, t_word *data,
         argc --;
         if (type == gensym("translate"))
         {
-           t_float tx = fielddesc_getfloat(fd++, template, data, 0);
+           t_float tx = fielddesc_getcoord(fd++, template, data, 0);
            argc--;
-           t_float ty = fielddesc_getfloat(fd++, template, data, 0);
+           t_float ty = fielddesc_getcoord(fd++, template, data, 0);
            argc--;
            mset(m2, 1, 0, 0, 1, tx, ty);
            mmult(m, m2, m);
         }
         else if (type == gensym("scale"))
         {
-           t_float sx = fielddesc_getfloat(fd++, template, data, 0);
+           t_float sx = fielddesc_getcoord(fd++, template, data, 0);
            argc--;
            t_float sy = sx;
            if (argc && fd->fd_type == A_FLOAT)
            {
-               sy = fielddesc_getfloat(fd++, template, data, 0);
+               sy = fielddesc_getcoord(fd++, template, data, 0);
                argc--;
            }
            mset(m2, sx, 0, 0, sy, 0, 0);
@@ -2327,18 +2327,18 @@ void svg_parsetransform(t_svg *x, t_template *template, t_word *data,
         else if (type == gensym("rotate"))
         {
             /* we need to convert degrees to radians for the matrix */
-            t_float a = (fielddesc_getfloat(fd++, template, data, 0)) *
+            t_float a = (fielddesc_getcoord(fd++, template, data, 0)) *
                 3.14159 / 180;
             argc--;
             t_float cx = 0, cy = 0;
             if (argc && fd->fd_type == A_FLOAT)
             {
-                cx = fielddesc_getfloat(fd++, template, data, 0);
+                cx = fielddesc_getcoord(fd++, template, data, 0);
                 argc--;
             }
             if (argc && fd->fd_type == A_FLOAT)
             {
-                cy = fielddesc_getfloat(fd++, template, data, 0);
+                cy = fielddesc_getcoord(fd++, template, data, 0);
                 argc--;
             }
             mset(m2, cos(a), sin(a), sin(a) * -1, cos(a),
@@ -2348,7 +2348,7 @@ void svg_parsetransform(t_svg *x, t_template *template, t_word *data,
         }
         else if (type == gensym("skewx"))
         {
-            t_float a = fielddesc_getfloat(fd++, template, data, 0) *
+            t_float a = fielddesc_getcoord(fd++, template, data, 0) *
                 3.14159 / 180;
             argc--;
             mset(m2, 1, 0, tan(a), 1, 0, 0);
@@ -2356,7 +2356,7 @@ void svg_parsetransform(t_svg *x, t_template *template, t_word *data,
         }
         else if (type == gensym("skewy"))
         {
-            t_float a = fielddesc_getfloat(fd++, template, data, 0) *
+            t_float a = fielddesc_getcoord(fd++, template, data, 0) *
                 3.14159 / 180;
             argc--;
             mset(m2, 1, tan(a), 0, 1, 0, 0);
@@ -2365,12 +2365,12 @@ void svg_parsetransform(t_svg *x, t_template *template, t_word *data,
         else if (type == gensym("matrix"))
         {
             t_float a, b, c, d, e, f;
-            a = fielddesc_getfloat(fd++, template, data, 0); argc--;
-            b = fielddesc_getfloat(fd++, template, data, 0); argc--;
-            c = fielddesc_getfloat(fd++, template, data, 0); argc--;
-            d = fielddesc_getfloat(fd++, template, data, 0); argc--;
-            e = fielddesc_getfloat(fd++, template, data, 0); argc--;
-            f = fielddesc_getfloat(fd++, template, data, 0); argc--;
+            a = fielddesc_getcoord(fd++, template, data, 0); argc--;
+            b = fielddesc_getcoord(fd++, template, data, 0); argc--;
+            c = fielddesc_getcoord(fd++, template, data, 0); argc--;
+            d = fielddesc_getcoord(fd++, template, data, 0); argc--;
+            e = fielddesc_getcoord(fd++, template, data, 0); argc--;
+            f = fielddesc_getcoord(fd++, template, data, 0); argc--;
             mset(m2, a, b, c, d, e, f);
             mmult(m, m2, m);
         }
@@ -3402,9 +3402,9 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
         {
             gui_s("fill");
             gui_s(rgb_to_hex(
-                (int)fielddesc_getfloat(fd, template, data, 1),
-                (int)fielddesc_getfloat(fd+1, template, data, 1),
-                (int)fielddesc_getfloat(fd+2, template, data, 1)));
+                (int)fielddesc_getcoord(fd, template, data, 1),
+                (int)fielddesc_getcoord(fd+1, template, data, 1),
+                (int)fielddesc_getcoord(fd+2, template, data, 1)));
         }
     }
     if (x->x_fillopacity.a_flag)
@@ -3466,70 +3466,70 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
         {
             gui_s("stroke");
             gui_s(rgb_to_hex(
-                (int)fielddesc_getfloat(fd, template, data, 1),
-                (int)fielddesc_getfloat(fd+1, template, data, 1),
-                (int)fielddesc_getfloat(fd+2, template, data, 1)));
+                (int)fielddesc_getcoord(fd, template, data, 1),
+                (int)fielddesc_getcoord(fd+1, template, data, 1),
+                (int)fielddesc_getcoord(fd+2, template, data, 1)));
         }
     }
     if (x->x_strokewidth.a_flag)
     {
         gui_s("stroke-width");
-        gui_f(fielddesc_getfloat(&x->x_strokewidth.a_attr, template, data, 1));
+        gui_f(fielddesc_getcoord(&x->x_strokewidth.a_attr, template, data, 1));
     }
     if (x->x_rx.a_flag)
     {
         gui_s(x->x_type == gensym("circle") ? "r" :
             x->x_type == gensym("line") ? "x2" : "rx");
-        gui_f(fielddesc_getfloat(&x->x_rx.a_attr, template, data, 1));
+        gui_f(fielddesc_getcoord(&x->x_rx.a_attr, template, data, 1));
     }
     if (x->x_ry.a_flag)
         {
             gui_s(x->x_type == gensym("ellipse") ? "ry" : "y2");
-            gui_f(fielddesc_getfloat(&x->x_ry.a_attr, template, data, 1));
+            gui_f(fielddesc_getcoord(&x->x_ry.a_attr, template, data, 1));
         }
     if (x->x_x.a_flag)
     {
         gui_s(x->x_type == gensym("rect") ? "x" :
             x->x_type == gensym("line") ? "x1" : "cx");
-        gui_f(fielddesc_getfloat(&x->x_x.a_attr, template, data, 1));
+        gui_f(fielddesc_getcoord(&x->x_x.a_attr, template, data, 1));
     }
     if (x->x_y.a_flag)
     {
         gui_s(x->x_type == gensym("rect") ? "y" :
             x->x_type == gensym("line") ? "y1" : "cy");
-        gui_f(fielddesc_getfloat(&x->x_y.a_attr, template, data, 1));
+        gui_f(fielddesc_getcoord(&x->x_y.a_attr, template, data, 1));
     }
     if (x->x_width.a_flag)
     {
         gui_s("width");
-        gui_f(fielddesc_getfloat(&x->x_width.a_attr, template, data, 1));
+        gui_f(fielddesc_getcoord(&x->x_width.a_attr, template, data, 1));
     }
     if (x->x_height.a_flag)
     {
         gui_s("height");
-        gui_f(fielddesc_getfloat(&x->x_height.a_attr, template, data, 1));
+        gui_f(fielddesc_getcoord(&x->x_height.a_attr, template, data, 1));
     }
     if (x->x_type == gensym("line"))
     {
         if (x->x_nargs > 0)
         {
             gui_s("x1");
-            gui_f(fielddesc_getfloat(&x->x_vec[0], template, data, 1));
+            gui_f(fielddesc_getcoord(&x->x_vec[0], template, data, 1));
         }
         if (x->x_nargs > 1)
         {
             gui_s("y1");
-            gui_f(fielddesc_getfloat(&x->x_vec[1], template, data, 1));
+            gui_f(fielddesc_getcoord(&x->x_vec[1], template, data, 1));
         }
         if (x->x_nargs > 2)
         {
             gui_s("x2");
-            gui_f(fielddesc_getfloat(&x->x_vec[2], template, data, 1));
+            gui_f(fielddesc_getcoord(&x->x_vec[2], template, data, 1));
         }
         if (x->x_nargs > 3)
         {
             gui_s("y2");
-            gui_f(fielddesc_getfloat(&x->x_vec[3], template, data, 1));
+            gui_f(fielddesc_getcoord(&x->x_vec[3], template, data, 1));
         }
     }
     if (x->x_type == gensym("polyline") ||
@@ -3548,7 +3548,7 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
     if (x->x_strokeopacity.a_flag)
     {
         gui_s("stroke-opacity");
-        gui_f(fielddesc_getfloat(&x->x_strokeopacity.a_attr, template, data, 1));
+        gui_f(fielddesc_getcoord(&x->x_strokeopacity.a_attr, template, data, 1));
     }
     if (x->x_strokelinecap.a_flag)
     {
@@ -3567,7 +3567,7 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
     if (x->x_strokemiterlimit.a_flag)
     {
         gui_s("stroke-miterlimit");
-        gui_f(fielddesc_getfloat(&x->x_strokemiterlimit.a_attr,
+        gui_f(fielddesc_getcoord(&x->x_strokemiterlimit.a_attr,
             template, data, 1));
     }
     if (x->x_ndash)
@@ -3578,8 +3578,7 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
         gui_start_array();
         for (i = 0, fd = x->x_strokedasharray; i < x->x_ndash; i++)
         {
-            // Should this be a float?
-            gui_f(fielddesc_getfloat(fd+i, template, data, 1));
+            gui_f(fielddesc_getcoord(fd+i, template, data, 1));
         }
         gui_end_array();
     }
@@ -3604,13 +3603,13 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
     if (x->x_rx.a_flag)
     {
         gui_s("rx");
-        gui_f(fielddesc_getfloat(&x->x_rx.a_attr,
+        gui_f(fielddesc_getcoord(&x->x_rx.a_attr,
             template, data, 1));
     }
     if (x->x_ry.a_flag)
     {
         gui_s("ry");
-        gui_f(fielddesc_getfloat(&x->x_ry.a_attr,
+        gui_f(fielddesc_getcoord(&x->x_ry.a_attr,
             template, data, 1));
     }
     // Not sure why display attr is here...
