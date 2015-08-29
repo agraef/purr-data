@@ -1055,6 +1055,9 @@ function gui_canvas_new(cid, width, height, geometry, editable, name, dir, dirty
     //#pdtk_standardkeybindings $cid.c
 }
 
+/* This gets sent to Pd to trigger each object on the canvas
+   to do its "vis" function. The result will be a flood of messages
+   back from Pd to the GUI to draw these objects */
 function canvas_map(name) {
     console.log("canvas mapping " + name + "...");
     pdsend(name + " map 1");
@@ -2161,7 +2164,7 @@ function text_to_tspans(canvasname, svg_text, text) {
 }
 
 function gui_text_new(canvasname, myname, type, isselected, x, y, text, font) {
-    gui_post("font is " + font);
+//    gui_post("font is " + font);
     var lines, i, len, tspan;
     var g = get_gobj(canvasname, myname);
     var svg_text = create_item(canvasname, 'text', {
@@ -3093,7 +3096,7 @@ function gui_plot_vis(cid, basex, basey, data_array, attr_array, tag_array) {
 
 function gui_drawnumber_vis(cid, parent_tag, tag, x, y, scale_x, scale_y,
     font, fontsize, text) {
-    gui_post("font is " + font);
+//    gui_post("font is " + font);
     var lines, i, len, tspan;
     var g = get_item(cid, parent_tag);
     var svg_text = create_item(cid, 'text', {

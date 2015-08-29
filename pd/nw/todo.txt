@@ -71,7 +71,7 @@ Everything else: (A [x] means we've fixed it)
     manner.  In doing so we must decide whether or not we want to be able to
     fetch the bounding box of objects from within a Pd patch.
     (Currently [canvasinfo] and [objectinfo] are the only objects that can
-    do this, though there might also be)
+    do this, though there might also be some externals)
 [x] replace things like gui_select_color with css
 [ ] find a better approach to escaping characters for the gui than
     escape_double_quotes kludge (and handle any other problematic chars)
