@@ -5792,18 +5792,23 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 //    (t_word *)(elem + elemsize * i),
                 //    usexloc, useyloc);
                 char tagbuf[MAXPDSTRING];
-                sprintf(tagbuf, "scelem%lx.%lx", elemtemplatecanvas,
-                    (t_word *)(elem + elemsize * i));
+                sprintf(tagbuf, "scelem%lx.%lx",
+                    (long unsigned int)elemtemplatecanvas,
+                    (long unsigned int)((t_word *)(elem + elemsize * i)));
                 char parent_tagbuf[MAXPDSTRING];
                 if (in_array)
                 {
                     //sys_vgui("-parent {.scelem%lx.%lx}\n", parentglist, data);
-                    sprintf(parent_tagbuf, "scelem%lx.%lx", parentglist, data);
+                    sprintf(parent_tagbuf, "scelem%lx.%lx",
+                        (long unsigned int)parentglist,
+                        (long unsigned int)data);
                 }
                 else
                 {
                     //sys_vgui("-parent {.dgroup%lx.%lx}\n", x->x_canvas, data);
-                    sprintf(parent_tagbuf, "dgroup%lx.%lx", x->x_canvas, data);
+                    sprintf(parent_tagbuf, "dgroup%lx.%lx",
+                        (long unsigned int)x->x_canvas,
+                        (long unsigned int)data);
                 }
                 char transform_buf[MAXPDSTRING];
                 sprintf(transform_buf, "translate(%g,%g)", usexloc, useyloc);
