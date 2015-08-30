@@ -187,8 +187,6 @@ Everything else: (A [x] means we've fixed it)
     But we're doing an end-run around that entire edifice so we need to
     force it, probably inside text_setto
 [x] abstract out multi-line text loop, use for text_new and text_set
-[ ] think about translating the undo/redo actions as they appear in the menu.
-    (Might be tricky to do)
 [ ] set svg viewBox/width/height to the window size when window gets created
 [ ] revisit pdtk_check_scroll_on_motion.  It's not implemented in the port
     yet.  Perhaps there's a better way to do it, without triggering a bunch
@@ -205,17 +203,22 @@ Everything else: (A [x] means we've fixed it)
     in the lib loading routine
 [ ] Fix layout on dialogs so that height/width of the document doesn't
     reflow when the window gets resized
-[ ] ds-demos unit-circle node throws an "unexpected string" error when
+[x] ds-demos unit-circle node throws an "unexpected string" error when
     trying to open it
 [x] gui_canvas_getscroll isn't called upon patch load
-[ ] sprite-game character tears when moving around
+[x] sprite-game character tears when moving around
+    This appears to be related to a problem with my graphics card on the X60.
+    The SVG stacked-sprite I'm using isn't super efficient, but it should
+    perform ok for simple graphics.
 [ ] look into using requestAnimationFrame
-[ ] when mapping inside a new nw window, sometimes it stops rendering
+[x] when mapping inside a new nw window, sometimes it stops rendering
     the svg, or the svg becomes corrupted.
     * when you drag the nw window, it will update the svg contents
     * sometimes parts of the window aren't rendered
     * sometimes the rendering is buggy (part of a gobj rect
       appears/disappears mysteriously)
+    (This appears to be a problem with the graphics card on my X60 as other
+     GUI progs seem to be having problems with updating the display)
 [ ] sometimes straight control cords are pixel-aligned, sometimes they aren't. (If not pixel-aligned, try nudging
     one pixel to the right and they become non-aligned.)
 [ ] autopatch creates a new box, but if you try to instantiate the empty box
@@ -223,12 +226,12 @@ Everything else: (A [x] means we've fixed it)
 [ ] look into pasting only text inside text entry
 [ ] canvas_check_geometry doesn't seem to do the right thing for canvases that are far to the right
     of the screen. Can't think of anything except maybe a bug in nw.js Window.x?
-[ ] work on resizing dialog windows to the document content (currently some do, some don't)
+[x] work on resizing dialog windows to the document content (currently some do, some don't)
 [ ] add Mac support by changing evt.ctrlKey to evt.ctrlKey||evt.metaKey
-[ ] when editing message box contents, the background svg image is hardcoded with a border color of blue.
+[x] when editing message box contents, the background svg image is hardcoded with a border color of blue.
     look into using mask-image in order to make this background color theme-able
 [ ] integrate the inlet mouseover animation with a change of fill color
-[ ] make a css entry for colors for the new_object_textentry border, background, and cursor
+[x] make a css entry for colors for the new_object_textentry border, background, and cursor
 [ ] control main object font color from css
 [x] check new_object_textentry on editmode change
 [ ] check if [key] and [keyup] handle autorepeat the same way
@@ -283,6 +286,8 @@ Everything else: (A [x] means we've fixed it)
 [ ] current try/catch parser in the socket receiver is too slow. For lots of
     data it can end up freezing the GUI. (Test if requestAnimationFrame makes
     any difference...)
+[ ] create a function in pdgui to change ["name", value] arrays to Javascript
+    objects.  This will greatly simplify things like dialog_iemgui.html
 
 Crashers
 --------
