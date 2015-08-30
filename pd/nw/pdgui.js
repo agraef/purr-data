@@ -3533,6 +3533,16 @@ exports.file_dialog_callback = function(file_string) {
     pdsend(file_dialog_target + " callback " + enquote(file_string));
 }
 
+function attr_array_to_object(attr_array) {
+    var i,
+        len = attr_array.length,
+        obj = {};
+    for (i = 0; i < len; i += 2) {
+        obj[attr_array[i]] = attr_array[i+1];
+    }
+    return obj;
+}
+
 function gui_gatom_dialog(did, attr_array) {
     dialogwin[did] = nw_create_window(did, 'gatom', 265, 540, 20, 20, 0,
         0, 1, 'white', 'Properties', '', 0, null, attr_array);
@@ -3549,34 +3559,32 @@ function gui_iemgui_dialog(did, attr_array) {
 
 function gui_create_array(did, count) {
     gui_post("trying to create an array...");
-    var attr_array = [
-        "array_gfxstub", did,
-        "array_name", 'array' + count,
-        "array_size", 100,
-        "array_flags", 3,
-        "array_fill", 'black',
-        "array_outline", 'black',
-        "array_in_existing_graph", 0
-    ];
+    var attr_array = [{
+        array_gfxstub: did,
+        array_name: 'array' + count,
+        array_size: 100,
+        array_flags: 3,
+        array_fill: 'black',
+        array_outline: 'black',
+        array_in_existing_graph: 0
+    }];
     dialogwin[did] = nw_create_window(did, 'canvas', 265, 340, 20, 20, 0,
         0, 1, 'white', 'Properties', '', 0, null, attr_array);    
 }
 
 function gui_canvas_dialog(did, attr_arrays) {
-    var i, j, inner_array;
+    var i, j, inner_array, prop;
     gui_post("got a gfxstub " + did + "!!!");
     gui_post("attr_arrays are " + attr_arrays);
-    //for (i = 0; i < attr_arrays.length; i++) {
-    //    inner_array = attr_arrays[i];
-    //    if (inner_array !== undefined) {
-    //        for (j = 0; j < inner_array.length; j++) {
-    //            inner_array[i] = '"' + inner_array[i] + '"';
-    //        }
-    //    }
-    //}
-    //dialogwin[did] = nw_create_window(did, 'canvas', 265, 340, 20, 20, 0,
-    //    0, 1, 'white', 'Properties', '', 0, null, attr_arrays);
-
+    // Convert array of arrays to an array of objects
+    for (i = 0; i < attr_arrays.length; i++) {
+        attr_arrays[i] = attr_array_to_object(attr_arrays[i]);
+        for (prop in attr_arrays[i]) {
+            if (attr_arrays[i].hasOwnProperty(prop)) {
+                console.log("array: prop is " + prop);
+            }
+        }
+    }
     dialogwin[did] = nw_create_window(did, 'canvas', 250, 100, 20, 20, 0,
         0, 1, 'white', 'Properties', '', 0, null, attr_arrays);
 }

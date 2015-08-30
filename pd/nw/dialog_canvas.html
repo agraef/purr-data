@@ -286,21 +286,33 @@ function ok() {
     cancel();
 }
 
+function toggle_fill_color(value) {
+    var fill_color_div =  document.getElementsByClassName('array-fill')[0];
+    if (value === 3) {
+        fill_color_div.classList.remove('hidden');
+    } else {
+        fill_color_div.classList.add('hidden');
+    }
+}
+
 function flag_change(elem) {
-    var attr, arrays_select, name, value, flag;
+    var array_attr, arrays_select, name, value, flag;
     arrays_select = document.getElementById('arrays_select');
-    attr = pd_garray_attrs[arrays_select.value];
+    array_attr = pd_garray_attrs[arrays_select.value];
     name = elem.name;
     // get value from radio group, checked from checkboxes
     if (name === 'array_style') {
         value = document.querySelector('input[name="array_style"]:checked').value;
         pdgui.gui_post("array style found: " + value);
+        // Toggle visibility of the fill color button-- only show for bar
+        // graph style (= 3)
+        toggle_fill_color(+value);
     } else {
         // '+' for casting boolean to number
         value = +elem.checked;
     }
     //pdgui.gui_post("value is " + value);
-    flag = attr[attr.indexOf('array_flags') + 1];
+    flag = array_attr.array_flags;
     pdgui.gui_post("flag before is " + flag);
     switch (name) {
         case "array_save":
@@ -317,28 +329,31 @@ function flag_change(elem) {
             flag += (16 * value);
             break;
     }
-    attr[attr.indexOf('array_flags') + 1] = flag;
-    pdgui.gui_post("array is " + attr);
+    array_attr.array_flags = flag;
+    pdgui.gui_post("array is " + array_attr);
 }
 
 function flag2_change(elem) {
-    var attr, arrays_select, name, value, flag;
+    var array_attr, arrays_select, name, value, flag;
     arrays_select = document.getElementById('arrays_select');
-    attr = pd_garray_attrs[arrays_select.value];
+    array_attr = pd_garray_attrs[arrays_select.value];
     name = elem.name;
     // get value from radio group, checked from checkboxes
     // '+' for casting boolean to number
     value = +elem.checked;
-    attr[attr.indexOf(name) + 1] = value;
-    pdgui.gui_post("array is " + attr);
+    array_attr[name] = value;
+    pdgui.gui_post("array is " + array_attr);
 }
 
 function attr_change(elem) {
-    var array_index, attr, arrays_select, name;
+    var array_index, array_attr, arrays_select, name;
     arrays_select = document.getElementById('arrays_select');
-    attr = pd_garray_attrs[arrays_select.value];
+    array_attr = pd_garray_attrs[arrays_select.value];
     name = elem.name;
-    attr[attr.indexOf(name) + 1] = elem.value;
+    array_attr[name] = elem.value;
+    if (elem.name === 'array-fill') {
+        array-fill
+    }
     pdgui.gui_post("name is " + elem.name);
     pdgui.gui_post("value is " + elem.value);
 }
@@ -346,30 +361,39 @@ function attr_change(elem) {
 function array_choose(array_index) {
     var i, name, value, elem, style_index, style_opts,
         array_attr = pd_garray_attrs[array_index];
-    for (i = 0; i < array_attr.length; i+=2) {
-        name = array_attr[i];
-        value = array_attr[i+1];
-        switch (name) {
-            case "array_gfxstub": break;
-            case "array_flags":
-                // save contents
-                elem = document.getElementsByName('array_save')[0];
-                elem.checked = (value & 1) != 0;
-                // jump on click
-                elem = document.getElementsByName('array_jump')[0];
-                elem.checked = (value & 16) != 0;
-                // draw style
-                style_opts = document.getElementsByName('array_style');
-                style_index = (value & 6) >> 1;
-                elem = style_opts[style_index];
-                elem.checked = true;
-                break;
-            default:
-                // name, size, fill, and outline
-                pdgui.gui_post("name is " + name);
-                elem = document.getElementsByName(name)[0];
-                elem.value = value;
-                break;
+    for (name in array_attr) {
+        if (array_attr.hasOwnProperty(name)) {
+            console.log("name is " + name);
+        }
+    }
+    for (name in array_attr) {
+        if (array_attr.hasOwnProperty(name)) {
+console.log("namer is " + name);
+            value = array_attr[name];
+            switch (name) {
+                case "array_gfxstub": break;
+                case "array_flags":
+                    // save contents
+                    elem = document.getElementsByName('array_save')[0];
+                    elem.checked = (value & 1) != 0;
+                    // jump on click
+                    elem = document.getElementsByName('array_jump')[0];
+                    elem.checked = (value & 16) != 0;
+                    // draw style
+                    style_opts = document.getElementsByName('array_style');
+                    style_index = (value & 6) >> 1;
+                    elem = style_opts[style_index];
+                    elem.checked = true;
+                      // hide "fill" color if we're a bar graph style (= 3)
+                    toggle_fill_color(style_index);
+                    break;
+                default:
+                    // name, size, fill, and outline
+                    pdgui.gui_post("name is " + name);
+                    elem = document.getElementsByName(name)[0];
+                    elem.value = value;
+                    break;
+            }
         }
     }
 }
@@ -455,7 +479,7 @@ function get_input(name) {
 
 // get a value from the garray attr array
 function get_array_value(name, attrs) {
-    return attrs[attrs.indexOf(name) + 1];
+    return attrs[name];
 }
 
 function apply() {
@@ -514,21 +538,21 @@ function cancel() {
     pdgui.pdsend(pd_object_callback + " cancel");
     for (i = 0; i < pd_garray_attrs.length; i++) {
         attrs = pd_garray_attrs[i];
-        gfxstub = attrs[attrs.indexOf("array_gfxstub") + 1];
+        gfxstub = attrs.array_gfxstub;
         pdgui.pdsend(gfxstub + " cancel");
     }
 }
 
-function populate_array_form(arrays) {
+function populate_array_form(objects) {
     var arrays_select, a_field = document.getElementById('arrays');
     var i, opt;
     a_field.classList.remove('hidden');
     arrays_select = document.getElementById('arrays_select');
-    for (i = 0; i < arrays.length; i++) {
-        if (i > 0) {
-            // unhide select element if there's more than one array
-            arrays_select.classList.remove('hidden');
-        }
+    if (i > 0) {
+        // unhide select element if there's more than one array
+        arrays_select.classList.remove('hidden');
+    }
+    for (i = 0; i < objects.length; i++) {
         opt = document.createElement('option');
         opt.setAttribute('value', i);
         opt.textContent = 'Array #' + (i+1);
@@ -544,40 +568,44 @@ function populate_array_form(arrays) {
 
 // Set up arrays in an object
     
-function init_arrays(attr_arrays) {
-    pd_garray_attrs = attr_arrays; 
-    if (attr_arrays.length > 0) {
+function init_arrays(attr_objects) {
+    pd_garray_attrs = attr_objects; 
+    if (attr_objects.length > 0) {
         // populate form with first array
-        populate_array_form(attr_arrays);
+        populate_array_form(attr_objects);
     }
 }
 
 // This gets called from the nw_create_window function in index.html
 // It provides us with our window id from the C side.  Once we have it
 // we can create the menu and register event callbacks
-function register_canvas_id(gfxstub, attr_arrays) {
+function register_canvas_id(gfxstub, attr_objects) {
     pd_object_callback = gfxstub;
-    var canvas_fieldsets, i;
-    // attr_arrays[0]: canvas properties
-    // attr_arrays[1...n-1]: array properties
-    for (var i = 0; i < attr_arrays.length; i+=2) {
-        pdgui.gui_post(attr_arrays[i] + ": " + attr_arrays[i+1]);
+    var canvas_fieldsets, i, prop;
+    // attr_objects[0]: canvas properties
+    // attr_objects[1...n-1]: array properties
+    for (prop in attr_objects[0]) {
+        if (attr_objects[0].hasOwnProperty(prop)) {
+            pdgui.gui_post(prop + ": " + attr_objects[0][prop]);
+        }
     }
     add_events(gfxstub);
     // not sure that we need this for properties windows...
     // pdgui.canvas_map(gfxstub);
     translate_form();
-    if (attr_arrays[0] === 'array_gfxstub') {
+    // If this is a new array dialog we might not have any canvas
+    // properties to set. If so, just show the array form elements
+    if (attr_objects[0].hasOwnProperty('array_gfxstub')) {
         new_array_dialog = true; // this is a new array dialog
         canvas_fieldsets = document.getElementsByClassName('canvas');
         for (i = 0; i < canvas_fieldsets.length; i++) {
             canvas_fieldsets[i].classList.add('hidden');
         }
-        init_arrays([attr_arrays]);
+        init_arrays(attr_objects);
     } else {
         new_array_dialog = false; // this is a canvas/array props dialog
-        populate_form(attr_arrays[0]);
-        init_arrays(attr_arrays.slice(1));
+        init_arrays(attr_objects.slice(1));
+        populate_form(attr_objects[0]);
     }
 
     // We don't turn on rendering of the "container" div until
@@ -607,44 +635,62 @@ function translate_form() {
     }
 }
 
-function populate_form(attr_array) {
-    // First, let's put the translated text for the form labels:
-    for(var i = 0; i < attr_array.length; i+=2) {
-        // Unhide the span with the class with the same name as the id
-        var prop_group = document.getElementsByClassName(attr_array[i])[0];
-        if (prop_group !== undefined) {
-            console.log("the thing here is " + attr_array[i]);
-            prop_group.classList.remove('hidden');
-        } else {
-            pdgui.gui_post("Error: couldn't find iemgui prop group for " +
-                attr_array[i]);
-        }
-        if (attr_array[i] === 'display-flags') {
-            // protip: '!!' forces Boolean, '+' forces Number type
-            var flag = +attr_array[i+1];
-            document.getElementsByName('gop')[0].checked = !!flag;
-            document.getElementsByName('hide-name')[0].checked = !!(flag & 2);
-            // Set the gop-related parts of the form to be
-            // enabled/disabled based on state
-            set_gop(!!flag);
-        }            
-        var elem = document.getElementsByName(attr_array[i]);
-        if (elem.length > 0) {
-            if(attr_array[i].slice(-5) === 'color') {
-                var hex_string = Number(attr_array[i+1]).toString(16);
-                var color_string = "#" +
-                    (hex_string === '0' ? '000000' : hex_string);
-                pdgui.gui_post("color is " + color_string);
-                elem[0].value = color_string;
-            } else if (elem[0].type === 'checkbox') {
-                // The attr here is a string, so we need to
-                // force it to number, hence the "+" below
-                gui_post("found a CHECKED ITEM!!!");
-                elem[0].checked = +attr_array[i+1];
+function populate_form(attr_object) {
+    var prop;
+    for (prop in attr_object) {
+        if (attr_object.hasOwnProperty(prop)) {
+            // Unhide the span with the class with the same name as the id
+            var prop_group = document.getElementsByClassName(prop)[0];
+            if (prop_group !== undefined) {
+                console.log("the thing here is " + prop);
+                prop_group.classList.remove('hidden');
             } else {
-                elem[0].value = attr_array[i+1];
+                pdgui.gui_post("Error: couldn't find iemgui prop group for " +
+                    prop);
+            }
+            if (prop === 'display-flags') {
+                // protip: '!!' forces Boolean, '+' forces Number type
+                var flag = +attr_object[prop];
+                document.getElementsByName('gop')[0].checked = !!flag;
+                document.getElementsByName('hide-name')[0].checked = !!(flag & 2);
+                // Set the gop-related parts of the form to be
+                // enabled/disabled based on state
+                set_gop(!!flag);
+            }            
+            var elem = document.getElementsByName(prop);
+            if (elem.length > 0) {
+                if(prop.slice(-5) === 'color') {
+                    var hex_string = Number(attr_object[prop]).toString(16);
+                    var color_string = "#" +
+                        (hex_string === '0' ? '000000' : hex_string);
+                    pdgui.gui_post("color is " + color_string);
+                    elem[0].value = color_string;
+                } else if (elem[0].type === 'checkbox') {
+                    // The attr here is a string, so we need to
+                    // force it to number, hence the "+" below
+                    gui_post("found a CHECKED ITEM!!!");
+                    elem[0].checked = +attr_object[prop];
+                } else {
+                    elem[0].value = attr_object[prop];
+                }
             }
         }
+    }
+    // Some special cases for hiding options for garray dialogs
+    if (pd_garray_attrs.length > 0) {
+console.log("fungyfungyfungyfungy");
+        // Graph-on-parent toggle
+        document.getElementsByClassName('display-flags')[0]
+            .classList.add('hidden');
+        // Graph-on-parent flag for hiding object name/args
+        document.getElementsByClassName('display-flags')[1]
+            .classList.add('hidden');
+        // GOP-rect margins don't make sense for garrays, so hide them
+        document.getElementsByClassName('x-margin')[0]
+            .classList.add('hidden');
+        // X/Y scaling-- garray is always in a gop so not needed
+        document.getElementsByClassName('x-scale')[0]
+            .classList.add('hidden');
     }
 }
 
