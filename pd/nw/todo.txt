@@ -286,7 +286,7 @@ Everything else: (A [x] means we've fixed it)
 [ ] current try/catch parser in the socket receiver is too slow. For lots of
     data it can end up freezing the GUI. (Test if requestAnimationFrame makes
     any difference...)
-[ ] create a function in pdgui to change ["name", value] arrays to Javascript
+[x] create a function in pdgui to change ["name", value] arrays to Javascript
     objects.  This will greatly simplify things like dialog_iemgui.html
 
 Crashers
