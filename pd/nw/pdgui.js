@@ -3533,6 +3533,8 @@ exports.file_dialog_callback = function(file_string) {
     pdsend(file_dialog_target + " callback " + enquote(file_string));
 }
 
+// Used to convert the ["key", "value"...] arrays coming from
+// Pd to a javascript object
 function attr_array_to_object(attr_array) {
     var i,
         len = attr_array.length,
@@ -3556,7 +3558,8 @@ function gui_iemgui_dialog(did, attr_array) {
     //    attr_array[i] = '"' + attr_array[i] + '"';
     //}
     dialogwin[did] = nw_create_window(did, 'iemgui', 265, 450, 20, 20, 0,
-        0, 1, 'white', 'Properties', '', 0, null, attr_array);
+        0, 1, 'white', 'Properties', '', 0, null,
+        attr_array_to_object(attr_array));
 }
 
 function gui_create_array(did, count) {

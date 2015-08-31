@@ -480,23 +480,19 @@ function cancel() {
 // This gets called from the nw_create_window function in index.html
 // It provides us with our window id from the C side.  Once we have it
 // we can create the menu and register event callbacks
-function register_canvas_id(gfxstub, attr_array) {
+function register_canvas_id(gfxstub, attr_object) {
     pd_object_callback = gfxstub;
 
-    console.log('attr array is ' + attr_array.toString());
-    for (var i = 0; i < attr_array.length; i+=2) {
-        console.log(attr_array[i] + ": " + attr_array[i+1]);
-    }
+    console.log('attr object is ' + attr_object.toString());
     add_events(gfxstub);
-    // not sure that we need this for properties windows
-    //pdgui.canvas_map(gfxstub);
     translate_form();
-    populate_form(attr_array);
+    populate_form(attr_object);
     // We don't turn on rendering of the "container" div until
     // We've finished displaying all the spans and populating the
     // labels and form elements.  That makes it more efficient and
     // snappier, at least on older machines.
-    document.getElementsByClassName('container')[0].style.setProperty('display', 'inline');
+    document.getElementsByClassName('container')[0]
+        .style.setProperty('display', 'inline');
     pdgui.resize_window(pd_object_callback);
 }
 
@@ -519,25 +515,26 @@ function translate_form() {
     }
 }
 
-function populate_form(attr_array) {
-    for(var i = 0; i < attr_array.length; i+=2) {
+function populate_form(attr_object) {
+    var attr;
+    for(attr in attr_object) {
         // Unhide the span with the class with the same name as the id
-        var prop_group = document.getElementsByClassName(attr_array[i])[0];
+        var prop_group = document.getElementsByClassName(attr)[0];
         if (prop_group !== undefined) {
-            console.log("the thing here is " + attr_array[i]);
+            console.log("the thing here is " + attr);
             prop_group.classList.remove('hidden');
         } else {
             pdgui.gui_post("Error: couldn't find iemgui prop group for " +
-                attr_array[i]);
+                attr);
         }
         // iemguis use the string 'empty' for null because of
         // the limitations of Pd's state-saving API.  So we have
         // to filter that one out
-        if(attr_array[i+1] !== 'empty') {
-            var elem = document.getElementsByName(attr_array[i]);
+        if(attr_object[attr] !== 'empty') {
+            var elem = document.getElementsByName(attr);
             if (elem.length > 0) {
-                if(attr_array[i].slice(-5) === 'color') {
-                    var hex_string = Number(attr_array[i+1]).toString(16);
+                if(attr.slice(-5) === 'color') {
+                    var hex_string = Number(attr_object[attr]).toString(16);
                     var color_string = "#" +
                         (hex_string === '0' ? '000000' : hex_string);
                     pdgui.gui_post("color is " + color_string);
@@ -545,11 +542,11 @@ function populate_form(attr_array) {
                 } else if (elem[0].type === 'checkbox') {
                     // The attr here is a string, so we need to
                     // force it to number, hence the "+" below
-                    elem[0].checked = +attr_array[i+1];
+                    elem[0].checked = +attr_object[attr];
                 } else if (elem[0].type === 'select-one') {
-                    elem[0].selectedIndex = +attr_array[i+1];
+                    elem[0].selectedIndex = +attr_object[attr];
                 } else {
-                    elem[0].value = attr_array[i+1];
+                    elem[0].value = attr_object[attr];
                 }
             }
         }
