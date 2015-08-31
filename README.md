@@ -15,9 +15,9 @@ maintainer: Jonathan Wilkes <jancsika@yahoo.com>
 
 ### One Paragraph Overview
 
-Pure Data (aka Pd) is a visual programming.  That means you can use it to
+Pure Data (aka Pd) is a visual programming language.  That means you can use it to
 create software graphically by drawing diagrams instead of writing lines of
-code.  These diagram shows how data flows through the software, displaying on
+code.  These diagrams show how data flows through the software, displaying on
 the screen what text-based languages require you to piece together in your mind.
 
 ### Flavors of Pure Data
@@ -30,7 +30,7 @@ There are currently three main distributions of Pure Data:
    his website and maintains.  It doesn't include external libraries like
    objects for doing graphics, video, etc.
 2. Pure Data Extended.  A monolithic distribution which ships with lots of
-   external libraries.  At the moment it doesn't look to be maintained.
+   external libraries.  As of August 2015 it hasn't been updated since January 2014.
 
 ### Three Paragraph Overview
 
@@ -62,7 +62,7 @@ Pd-l2ork has the following goals:
    bugs.  Patches for new functionality that lack documentation are spam.
 4. Be consistent.  Consistent interfaces are themselves a kind of
    documentation.  We like documentation, so it follows that we like consistent
-   interviews.
+   interface.s
 
 ### Installation Guide
 To install using a pre-compiled binary, follow these instructions:
