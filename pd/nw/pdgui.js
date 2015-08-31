@@ -3544,8 +3544,10 @@ function attr_array_to_object(attr_array) {
 }
 
 function gui_gatom_dialog(did, attr_array) {
-    dialogwin[did] = nw_create_window(did, 'gatom', 265, 540, 20, 20, 0,
-        0, 1, 'white', 'Properties', '', 0, null, attr_array);
+    dialogwin[did] = nw_create_window(did, 'gatom', 265, 300, 20, 20, 0,
+        0, 1, 'white', 'Properties', '', 0, null,
+        attr_array_to_object(attr_array)
+    );
 }
 
 function gui_iemgui_dialog(did, attr_array) {

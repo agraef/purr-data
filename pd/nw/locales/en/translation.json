@@ -82,7 +82,9 @@
       "label_top": "top",
       "label_bottom": "bottom",
       "label_left": "left",
-      "label_right": "right"
+      "label_right": "right",
+      "width": "width",
+      "width_tt": "width (in characters)"
     }
   },
   "menu": {

@@ -12,11 +12,11 @@
         <table class="pairs">
           <tr class="width prop">
             <td>
-              <label data-i18n="[title]iem.prop.width_tt"> 
-                <span data-i18n="iem.prop.width"></span>
+              <label data-i18n="[title]gatom.prop.width_tt"> 
+                <span data-i18n="gatom.prop.width"></span>
               </label>
             </td>
-            <td data-i18n="[title]iem.prop.width_tt">
+            <td data-i18n="[title]gatom.prop.width_tt">
               <input type="text" id="width" name="width">
             </td>
             <td>
@@ -206,18 +206,11 @@ function cancel() {
 // This gets called from the nw_create_window function in index.html
 // It provides us with our window id from the C side.  Once we have it
 // we can create the menu and register event callbacks
-function register_canvas_id(gfxstub, attr_array) {
+function register_canvas_id(gfxstub, attributes) {
     pd_object_callback = gfxstub;
-
-    console.log('attr array is ' + attr_array.toString());
-    for (var i = 0; i < attr_array.length; i+=2) {
-        console.log(attr_array[i] + ": " + attr_array[i+1]);
-    }
     add_events(gfxstub);
-    // not sure that we need this for properties windows
-    //pdgui.canvas_map(gfxstub);
     translate_form();
-    populate_form(attr_array);
+    populate_form(attributes);
     // We don't turn on rendering of the "container" div until
     // We've finished displaying all the spans and populating the
     // labels and form elements.  That makes it more efficient and
@@ -254,19 +247,19 @@ function get_elem(name) {
     return document.getElementById(name);
 }
 
-function populate_form(attr_array) {
+function populate_form(attributes) {
     var label, snd, rcv, labelpos, i, radios;
-    get_elem('width').value = get_attr('width', attr_array);
-    get_elem('minimum-range').value = get_attr('draglo', attr_array);
-    get_elem('maximum-range').value = get_attr('draghi', attr_array);
-    label = get_attr('label', attr_array);
+    get_elem('width').value = attributes.width;
+    get_elem('minimum-range').value = attributes.draglo;
+    get_elem('maximum-range').value = attributes.draghi;
+    label = attributes.label;
     get_elem('label').value = label === '-' ? '' : label;
-    snd = get_attr('send-symbol', attr_array);
+    snd = attributes['send-symbol'];
     get_elem('send-symbol').value = snd === '-' ? '' : snd;
-    rcv = get_attr('receive-symbol', attr_array);
+    rcv = attributes['receive-symbol'];
     get_elem('receive-symbol').value = rcv === '-' ? '' : rcv;
 
-    labelpos = get_attr('labelpos', attr_array);
+    labelpos = attributes['labelpos'];
     radios = document.getElementsByName('labelpos');
     for (i = 0; i < radios.length; i++) {
         if (+radios[i].value === labelpos) {
