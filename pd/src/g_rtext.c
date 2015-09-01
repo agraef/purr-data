@@ -334,7 +334,12 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
         }
         else ncolumns = widthspec_c;
 
-        // add a null character at the end of the string (for u8_charnum)
+        // add a null character at the end of the string --for u8_charnum
+        // _and_ for the new gui_vmess calls which don't use the %.*s syntax.
+        // Because of the way binbuf_gettext works, we should always have
+        // a space before this null character. But I'm not 100% sure this
+        // space is guaranteed to be there, so we'll just filter it out on
+        // the GUI side for now.
         tempbuf[outchars_b++] = '\0';
 
         // The following is an enormous hack to get the box width to match size 12px

@@ -2178,6 +2178,10 @@ function gui_text_new(canvasname, myname, type, isselected, x, y, text, font) {
         id: myname + 'text'
     });
 
+    // trim off any extraneous leading/trailing whitespace. Because of
+    // the way binbuf_gettext works we almost always have a trailing
+    // whitespace.
+    text = text.trim();
     // fill svg_text with tspan content by splitting on '\n'
     text_to_tspans(canvasname, svg_text, text);
 
@@ -3721,6 +3725,7 @@ function select_text(cid, elem) {
 function gui_textarea(cid, tag, type, x, y, max_char_width, text, font_size, state) {
     //gui_post("x/y is " + x + '/' + y);
     //gui_post("state? " + state);
+console.log("fuck butts... do we have a trailing space? " + ((text.slice(-1) === ' ') ? "Yes" : "No"));
     gui_post("tag is " + tag);
     var range, svg_view;
     var gobj = get_gobj(cid, tag);
