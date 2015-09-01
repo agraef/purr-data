@@ -3725,7 +3725,6 @@ function select_text(cid, elem) {
 function gui_textarea(cid, tag, type, x, y, max_char_width, text, font_size, state) {
     //gui_post("x/y is " + x + '/' + y);
     //gui_post("state? " + state);
-console.log("fuck butts... do we have a trailing space? " + ((text.slice(-1) === ' ') ? "Yes" : "No"));
     gui_post("tag is " + tag);
     var range, svg_view;
     var gobj = get_gobj(cid, tag);
