@@ -2210,6 +2210,8 @@ function gui_gobj_erase(cid, tag) {
 function gui_text_set (cid, tag, text) {
     var svg_text = get_item(cid, tag + 'text');
     if (svg_text !== null) {
+        // trim leading/trailing whitespace
+        text = text.trim();
         svg_text.textContent = '';
         text_to_tspans(cid, svg_text, text);
     } else {
@@ -3756,6 +3758,8 @@ function gui_textarea(cid, tag, type, x, y, max_char_width, text, font_size, sta
             max_char_width === 0 ? '60ch' : max_char_width + 'ch');
         p.style.setProperty('min-width',
             max_char_width === 0 ? '3ch' : max_char_width + 'ch');
+        // remove leading/trailing whitespace
+        text = text.trim();
         p.textContent = text;
         patchwin[cid].window.document.body.appendChild(p);
         p.focus();
