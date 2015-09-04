@@ -167,7 +167,7 @@ void rvu_tilde_setup(void)
     (t_method)rvu_tilde_ff, sizeof(t_rvu_tilde), 0,
     A_DEFFLOAT, A_DEFFLOAT, 0);
   CLASS_MAINSIGNALIN(rvu_tilde_class, t_rvu_tilde, x_float_sig_in);
-  class_addmethod(rvu_tilde_class, (t_method)rvu_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(rvu_tilde_class, (t_method)rvu_tilde_dsp, gensym("dsp"), A_CANT, 0);
   class_addfloat(rvu_tilde_class, rvu_tilde_float);
   class_addmethod(rvu_tilde_class, (t_method)rvu_tilde_reset, gensym("reset"), 0);
   class_addmethod(rvu_tilde_class, (t_method)rvu_tilde_start, gensym("start"), 0);

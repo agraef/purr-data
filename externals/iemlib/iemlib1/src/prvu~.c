@@ -261,7 +261,7 @@ void prvu_tilde_setup(void)
     (t_method)prvu_tilde_ff, sizeof(t_prvu_tilde), 0,
     A_DEFFLOAT, A_DEFFLOAT, A_DEFFLOAT, A_DEFFLOAT, 0);
   CLASS_MAINSIGNALIN(prvu_tilde_class, t_prvu_tilde, x_float_sig_in);
-  class_addmethod(prvu_tilde_class, (t_method)prvu_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(prvu_tilde_class, (t_method)prvu_tilde_dsp, gensym("dsp"), A_CANT, 0);
   class_addfloat(prvu_tilde_class, prvu_tilde_float);
   class_addmethod(prvu_tilde_class, (t_method)prvu_tilde_reset, gensym("reset"), 0);
   class_addmethod(prvu_tilde_class, (t_method)prvu_tilde_start, gensym("start"), 0);

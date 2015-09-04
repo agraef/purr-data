@@ -86,7 +86,7 @@ void sin_freq_tilde_setup(void)
   sin_freq_tilde_class = class_new(gensym("sin_freq~"), (t_newmethod)sin_freq_tilde_new,
         0, sizeof(t_sin_freq_tilde), 0, 0);
   CLASS_MAINSIGNALIN(sin_freq_tilde_class, t_sin_freq_tilde, x_float_sig_in);
-  class_addmethod(sin_freq_tilde_class, (t_method)sin_freq_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(sin_freq_tilde_class, (t_method)sin_freq_tilde_dsp, gensym("dsp"), A_CANT, 0);
 }
 
 /*

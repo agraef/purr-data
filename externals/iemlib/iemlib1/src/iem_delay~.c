@@ -196,6 +196,6 @@ void iem_delay_tilde_setup(void)
   iem_delay_tilde_class = class_new(gensym("iem_delay~"), (t_newmethod)iem_delay_tilde_new, (t_method)iem_delay_tilde_free,
     sizeof(t_iem_delay_tilde), 0, A_DEFFLOAT, A_DEFFLOAT, 0);
   CLASS_MAINSIGNALIN(iem_delay_tilde_class, t_iem_delay_tilde, x_float_sig_in);
-  class_addmethod(iem_delay_tilde_class, (t_method)iem_delay_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(iem_delay_tilde_class, (t_method)iem_delay_tilde_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(iem_delay_tilde_class, (t_method)iem_delay_tilde_cur_del, gensym("ft1"), A_FLOAT, 0);
 }

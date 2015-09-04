@@ -417,7 +417,7 @@ void para_bp2_tilde_setup(void)
   para_bp2_tilde_class = class_new(gensym("para_bp2~"), (t_newmethod)para_bp2_tilde_new,
         0, sizeof(t_para_bp2_tilde), 0, A_GIMME, 0);
   CLASS_MAINSIGNALIN(para_bp2_tilde_class, t_para_bp2_tilde, x_float_sig_in);
-  class_addmethod(para_bp2_tilde_class, (t_method)para_bp2_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(para_bp2_tilde_class, (t_method)para_bp2_tilde_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(para_bp2_tilde_class, (t_method)para_bp2_tilde_ft1, gensym("ft1"), A_FLOAT, 0);
   class_addmethod(para_bp2_tilde_class, (t_method)para_bp2_tilde_ft2, gensym("ft2"), A_FLOAT, 0);
   class_addmethod(para_bp2_tilde_class, (t_method)para_bp2_tilde_ft3, gensym("ft3"), A_FLOAT, 0);

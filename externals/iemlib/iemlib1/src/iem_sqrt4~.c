@@ -95,5 +95,5 @@ void iem_sqrt4_tilde_setup(void)
   iem_sqrt4_tilde_class = class_new(gensym("iem_sqrt4~"), (t_newmethod)iem_sqrt4_tilde_new, 0,
     sizeof(t_iem_sqrt4_tilde), 0, 0);
   CLASS_MAINSIGNALIN(iem_sqrt4_tilde_class, t_iem_sqrt4_tilde, x_float_sig_in);
-  class_addmethod(iem_sqrt4_tilde_class, (t_method)iem_sqrt4_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(iem_sqrt4_tilde_class, (t_method)iem_sqrt4_tilde_dsp, gensym("dsp"), A_CANT, 0);
 }

@@ -173,6 +173,6 @@ void FIR_tilde_setup(void)
   FIR_tilde_class = class_new(gensym("FIR~"), (t_newmethod)FIR_tilde_new,
     (t_method)FIR_tilde_free, sizeof(t_FIR_tilde), 0, A_DEFSYM, A_DEFFLOAT, 0);
   CLASS_MAINSIGNALIN(FIR_tilde_class, t_FIR_tilde, x_float_sig_in);
-  class_addmethod(FIR_tilde_class, (t_method)FIR_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(FIR_tilde_class, (t_method)FIR_tilde_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(FIR_tilde_class, (t_method)FIR_tilde_set, gensym("set"), A_SYMBOL, A_FLOAT, 0);
 }

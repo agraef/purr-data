@@ -116,7 +116,7 @@ void sin_phase_tilde_setup(void)
   sin_phase_tilde_class = class_new(gensym("sin_phase~"), (t_newmethod)sin_phase_tilde_new,
         0, sizeof(t_sin_phase_tilde), 0, 0);
   CLASS_MAINSIGNALIN(sin_phase_tilde_class, t_sin_phase_tilde, x_float_sig_in);
-  class_addmethod(sin_phase_tilde_class, (t_method)sin_phase_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(sin_phase_tilde_class, (t_method)sin_phase_tilde_dsp, gensym("dsp"), A_CANT, 0);
 }
 
 /*

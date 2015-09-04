@@ -186,7 +186,7 @@ void pvu_tilde_setup(void )
   pvu_tilde_class = class_new(gensym("pvu~"), (t_newmethod)pvu_tilde_new,
     (t_method)pvu_tilde_ff, sizeof(t_pvu_tilde), 0, A_DEFFLOAT, A_DEFFLOAT, A_DEFFLOAT, 0);
   CLASS_MAINSIGNALIN(pvu_tilde_class, t_pvu_tilde, x_float_sig_in);
-  class_addmethod(pvu_tilde_class, (t_method)pvu_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(pvu_tilde_class, (t_method)pvu_tilde_dsp, gensym("dsp"), A_CANT, 0);
   class_addfloat(pvu_tilde_class, pvu_tilde_float);
   class_addmethod(pvu_tilde_class, (t_method)pvu_tilde_reset, gensym("reset"), 0);
   class_addmethod(pvu_tilde_class, (t_method)pvu_tilde_start, gensym("start"), 0);

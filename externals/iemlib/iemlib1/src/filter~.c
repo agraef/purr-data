@@ -1651,7 +1651,7 @@ void filter_tilde_setup(void)
   filter_tilde_class = class_new(gensym("filter~"), (t_newmethod)filter_tilde_new,
         0, sizeof(t_filter_tilde), 0, A_GIMME, 0);
   CLASS_MAINSIGNALIN(filter_tilde_class, t_filter_tilde, x_float_sig_in);
-  class_addmethod(filter_tilde_class, (t_method)filter_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(filter_tilde_class, (t_method)filter_tilde_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(filter_tilde_class, (t_method)filter_tilde_ft1, gensym("ft1"), A_FLOAT, 0);
   class_addmethod(filter_tilde_class, (t_method)filter_tilde_ft2, gensym("ft2"), A_FLOAT, 0);
   class_addmethod(filter_tilde_class, (t_method)filter_tilde_ft3, gensym("ft3"), A_FLOAT, 0);

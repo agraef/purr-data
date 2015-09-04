@@ -83,6 +83,6 @@ void iem_pow4_tilde_setup(void)
   iem_pow4_tilde_class = class_new(gensym("iem_pow4~"), (t_newmethod)iem_pow4_tilde_new, 0,
     sizeof(t_iem_pow4_tilde), 0, A_DEFFLOAT, 0);
   CLASS_MAINSIGNALIN(iem_pow4_tilde_class, t_iem_pow4_tilde, x_float_sig_in);
-  class_addmethod(iem_pow4_tilde_class, (t_method)iem_pow4_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(iem_pow4_tilde_class, (t_method)iem_pow4_tilde_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(iem_pow4_tilde_class, (t_method)iem_pow4_tilde_ft1, gensym("ft1"), A_FLOAT, 0);
 }

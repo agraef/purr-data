@@ -310,7 +310,7 @@ void sparse_FIR_tilde_setup(void)
   sparse_FIR_tilde_class = class_new(gensym("sparse_FIR~"), (t_newmethod)sparse_FIR_tilde_new,
     (t_method)sparse_FIR_tilde_free, sizeof(t_sparse_FIR_tilde), 0, A_DEFFLOAT, 0);
   CLASS_MAINSIGNALIN(sparse_FIR_tilde_class, t_sparse_FIR_tilde, x_float_sig_in);
-  class_addmethod(sparse_FIR_tilde_class, (t_method)sparse_FIR_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(sparse_FIR_tilde_class, (t_method)sparse_FIR_tilde_dsp, gensym("dsp"), A_CANT, 0);
   class_addlist(sparse_FIR_tilde_class, (t_method)sparse_FIR_tilde_list);
   class_addmethod(sparse_FIR_tilde_class, (t_method)sparse_FIR_tilde_matrix, gensym("matrix"), A_GIMME, 0);
   class_addmethod(sparse_FIR_tilde_class, (t_method)sparse_FIR_tilde_order, gensym("order"), A_FLOAT, 0);

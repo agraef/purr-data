@@ -89,7 +89,7 @@ void peakenv_tilde_setup(void)
   peakenv_tilde_class = class_new(gensym("peakenv~"), (t_newmethod)peakenv_tilde_new,
     0, sizeof(t_peakenv_tilde), 0, A_DEFFLOAT, 0);
   CLASS_MAINSIGNALIN(peakenv_tilde_class, t_peakenv_tilde, x_float_sig_in);
-  class_addmethod(peakenv_tilde_class, (t_method)peakenv_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(peakenv_tilde_class, (t_method)peakenv_tilde_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(peakenv_tilde_class, (t_method)peakenv_tilde_ft1, gensym("ft1"), A_FLOAT, 0);
   class_addmethod(peakenv_tilde_class, (t_method)peakenv_tilde_reset, gensym("reset"), 0);
 }

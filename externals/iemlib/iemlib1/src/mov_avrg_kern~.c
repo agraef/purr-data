@@ -129,7 +129,7 @@ void mov_avrg_kern_tilde_setup(void)
   mov_avrg_kern_tilde_class = class_new(gensym("mov_avrg_kern~"), (t_newmethod)mov_avrg_kern_tilde_new,
         0, sizeof(t_mov_avrg_kern_tilde), 0, A_FLOAT, 0);
   CLASS_MAINSIGNALIN(mov_avrg_kern_tilde_class, t_mov_avrg_kern_tilde, x_float_sig_in);
-  class_addmethod(mov_avrg_kern_tilde_class, (t_method)mov_avrg_kern_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(mov_avrg_kern_tilde_class, (t_method)mov_avrg_kern_tilde_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(mov_avrg_kern_tilde_class, (t_method)mov_avrg_kern_tilde_ft1, gensym("ft1"), A_FLOAT, 0);
   class_addmethod(mov_avrg_kern_tilde_class, (t_method)mov_avrg_kern_tilde_reset, gensym("reset"), 0);
 }

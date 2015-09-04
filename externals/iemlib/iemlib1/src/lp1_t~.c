@@ -213,7 +213,7 @@ void lp1_t_tilde_setup(void)
   lp1_t_tilde_class = class_new(gensym("lp1_t~"), (t_newmethod)lp1_t_tilde_new,
         0, sizeof(t_lp1_t_tilde), 0, A_GIMME, 0);
   CLASS_MAINSIGNALIN(lp1_t_tilde_class, t_lp1_t_tilde, x_float_sig_in);
-  class_addmethod(lp1_t_tilde_class, (t_method)lp1_t_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(lp1_t_tilde_class, (t_method)lp1_t_tilde_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(lp1_t_tilde_class, (t_method)lp1_t_tilde_ft1, gensym("ft1"), A_FLOAT, 0);
   class_addmethod(lp1_t_tilde_class, (t_method)lp1_t_tilde_ft2, gensym("ft2"), A_FLOAT, 0);
   class_addmethod(lp1_t_tilde_class, (t_method)lp1_t_tilde_set, gensym("set"), A_FLOAT, 0);

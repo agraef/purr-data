@@ -162,6 +162,6 @@ void iem_cot4_tilde_setup(void)
     sizeof(t_iem_cot4_tilde), 0, 0);
   class_addcreator((t_newmethod)iem_cot4_tilde_new, gensym("iem_cot~"), 0);
   CLASS_MAINSIGNALIN(iem_cot4_tilde_class, t_iem_cot4_tilde, x_float_sig_in);
-  class_addmethod(iem_cot4_tilde_class, (t_method)iem_cot4_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(iem_cot4_tilde_class, (t_method)iem_cot4_tilde_dsp, gensym("dsp"), A_CANT, 0);
   iem_cot4_tilde_maketable();
 }

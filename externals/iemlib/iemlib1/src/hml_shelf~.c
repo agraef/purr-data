@@ -545,7 +545,7 @@ void hml_shelf_tilde_setup(void)
   hml_shelf_tilde_class = class_new(gensym("hml_shelf~"), (t_newmethod)hml_shelf_tilde_new,
     0, sizeof(t_hml_shelf_tilde), 0, A_GIMME, 0);
   CLASS_MAINSIGNALIN(hml_shelf_tilde_class, t_hml_shelf_tilde, x_float_sig_in);
-  class_addmethod(hml_shelf_tilde_class, (t_method)hml_shelf_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(hml_shelf_tilde_class, (t_method)hml_shelf_tilde_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(hml_shelf_tilde_class, (t_method)hml_shelf_tilde_ft1, gensym("ft1"), A_FLOAT, 0);
   class_addmethod(hml_shelf_tilde_class, (t_method)hml_shelf_tilde_ft2, gensym("ft2"), A_FLOAT, 0);
   class_addmethod(hml_shelf_tilde_class, (t_method)hml_shelf_tilde_ft3, gensym("ft3"), A_FLOAT, 0);
