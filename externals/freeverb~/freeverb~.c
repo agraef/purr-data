@@ -803,7 +803,7 @@ void freeverb_tilde_setup(void)
     freeverb_class = class_new(gensym("freeverb~"), (t_newmethod)freeverb_new, (t_method)freeverb_free,
     	sizeof(t_freeverb), 0, A_DEFFLOAT, 0);
 	CLASS_MAINSIGNALIN(freeverb_class, t_freeverb, x_float);
-    class_addmethod(freeverb_class, (t_method)freeverb_dsp, gensym("dsp"), A_NULL);
+    class_addmethod(freeverb_class, (t_method)freeverb_dsp, gensym("dsp"), A_CANT, A_NULL);
     class_addmethod(freeverb_class, (t_method)freeverb_setroomsize, gensym("roomsize"), A_FLOAT, A_NULL);
     class_addmethod(freeverb_class, (t_method)freeverb_setdamp, gensym("damping"), A_FLOAT, A_NULL);
     class_addmethod(freeverb_class, (t_method)freeverb_setwidth, gensym("width"), A_FLOAT, A_NULL);
