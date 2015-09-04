@@ -85,7 +85,7 @@ void clone_sigout_setup(void)
     clone_sigout_class = class_new(gensym("cloneout~"), (t_newmethod)clone_sigout_new, 0,
 				   sizeof(t_clone_sigout), 0, 0);
     CLASS_MAINSIGNALIN(clone_sigout_class, t_clone_sigout, x_f);
-    class_addmethod(clone_sigout_class, (t_method)clone_sigout_dsp, gensym("dsp"), 0);
+    class_addmethod(clone_sigout_class, (t_method)clone_sigout_dsp, gensym("dsp"), A_CANT, 0);
 }
 
 /* signal inlets */

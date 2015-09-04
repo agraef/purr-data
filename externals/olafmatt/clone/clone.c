@@ -769,7 +769,7 @@ void clone_setup(void)
     class_addmethod(clone_class, (t_method)clone_click, gensym("click"),
 		    A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, 0);
 
-	class_addmethod(clone_class, (t_method)clone_dsp, gensym("dsp"), 0);
+	class_addmethod(clone_class, (t_method)clone_dsp, gensym("dsp"), A_CANT, 0);
     class_addfloat(clone_class, (t_method)clone_float);
     class_addsymbol(clone_class, (t_method)clone_symbol);
     class_addlist(clone_class, (t_method)clone_list);
