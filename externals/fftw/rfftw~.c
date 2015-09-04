@@ -78,6 +78,6 @@ EXTERNAL_SETUP rfftw_tilde_setup(void)
                              sizeof(t_sigrfftw), 0, 0);
   CLASS_MAINSIGNALIN(sigrfftw_class, t_sigrfftw, x_f);
   class_addmethod(sigrfftw_class, (t_method)sigrfftw_dsp, 
-                  gensym("dsp"), 0);
+                  gensym("dsp"), A_CANT, 0);
 }
 #endif

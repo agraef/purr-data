@@ -67,7 +67,7 @@ EXTERNAL_SETUP ifftw_tilde_setup(void)
 			       sizeof(t_sigifftw), 0, 0);
     CLASS_MAINSIGNALIN(sigifftw_class, t_sigifftw, x_f);
     class_addmethod(sigifftw_class, (t_method)sigifftw_dsp, 
-		    gensym("dsp"), 0);
+		    gensym("dsp"), A_CANT, 0);
 }
 
 #endif

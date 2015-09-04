@@ -76,6 +76,6 @@ EXTERNAL_SETUP rifftw_tilde_setup(void)
                               sizeof(t_sigrifftw), 0, 0);
   CLASS_MAINSIGNALIN(sigrifftw_class, t_sigrifftw, x_f);
   class_addmethod(sigrifftw_class, (t_method)sigrifftw_dsp, 
-                  gensym("dsp"), 0);
+                  gensym("dsp"), A_CANT, 0);
 }
 #endif
