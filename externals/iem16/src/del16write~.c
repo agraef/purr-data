@@ -82,7 +82,7 @@ static void sigdel16write_setup(void){
 				  sizeof(t_sigdel16write), 0, A_DEFSYM, A_DEFFLOAT, 0);
   CLASS_MAINSIGNALIN(sigdel16write_class, t_sigdel16write, x_f);
   class_addmethod(sigdel16write_class, (t_method)sigdel16write_dsp,
-		  gensym("dsp"), 0);
+		  gensym("dsp"), A_CANT, 0);
 }
 
 // G.Holzmann: for PD-extended build system

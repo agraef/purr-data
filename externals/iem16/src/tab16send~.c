@@ -73,7 +73,7 @@ static void tab16send_setup(void){
   tab16send_class = class_new(gensym("tab16send~"), (t_newmethod)tab16send_new,
 			      (t_method)tab16send_free, sizeof(t_tab16send), 0, A_DEFSYM, 0);
   CLASS_MAINSIGNALIN(tab16send_class, t_tab16send, x_f);
-  class_addmethod(tab16send_class, (t_method)tab16send_dsp, gensym("dsp"), 0);
+  class_addmethod(tab16send_class, (t_method)tab16send_dsp, gensym("dsp"), A_CANT, 0);
 }
 
 // G.Holzmann: for PD-extended build system

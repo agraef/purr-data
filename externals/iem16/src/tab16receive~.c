@@ -58,7 +58,7 @@ static void tab16receive_setup(void){
 				 (t_newmethod)tab16receive_new, 0,
 				 sizeof(t_tab16receive), 0, A_DEFSYM, 0);
   class_addmethod(tab16receive_class, (t_method)tab16receive_dsp,
-		  gensym("dsp"), 0);
+		  gensym("dsp"), A_CANT, 0);
 }
 
 // G.Holzmann: for PD-extended build system

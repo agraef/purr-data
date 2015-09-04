@@ -103,7 +103,7 @@ void tab16play_tilde_setup(void){
 				    (t_newmethod)tab16play_tilde_new, (t_method)tab16play_tilde_free,
 				    sizeof(t_tab16play_tilde), 0, A_DEFSYM, 0);
   class_addmethod(tab16play_tilde_class, (t_method)tab16play_tilde_dsp,
-		  gensym("dsp"), 0);
+		  gensym("dsp"), A_CANT, 0);
   class_addmethod(tab16play_tilde_class, (t_method)tab16play_tilde_stop,
 		  gensym("stop"), 0);
   class_addmethod(tab16play_tilde_class, (t_method)tab16play_tilde_set,

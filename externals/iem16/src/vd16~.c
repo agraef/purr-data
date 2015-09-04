@@ -86,7 +86,7 @@ static void sig16vd_dsp(t_sig16vd *x, t_signal **sp){
 static void sig16vd_setup(void){
   sig16vd_class = class_new(gensym("vd16~"), (t_newmethod)sig16vd_new, 0,
 			    sizeof(t_sig16vd), 0, A_DEFSYM, 0);
-  class_addmethod(sig16vd_class, (t_method)sig16vd_dsp, gensym("dsp"), 0);
+  class_addmethod(sig16vd_class, (t_method)sig16vd_dsp, gensym("dsp"), A_CANT, 0);
   CLASS_MAINSIGNALIN(sig16vd_class, t_sig16vd, x_f);
 }
 

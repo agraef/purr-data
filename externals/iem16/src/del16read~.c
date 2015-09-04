@@ -86,7 +86,7 @@ static void sigdel16read_setup(void){
 				 (t_newmethod)sigdel16read_new, 0,
 				 sizeof(t_sigdel16read), 0, A_DEFSYM, A_DEFFLOAT, 0);
   class_addmethod(sigdel16read_class, (t_method)sigdel16read_dsp,
-		  gensym("dsp"), 0);
+		  gensym("dsp"), A_CANT, 0);
   class_addfloat(sigdel16read_class, (t_method)sigdel16read_16bit);
 }
 
