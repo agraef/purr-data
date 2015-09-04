@@ -288,6 +288,7 @@ Everything else: (A [x] means we've fixed it)
     any difference...)
 [x] create a function in pdgui to change ["name", value] arrays to Javascript
     objects.  This will greatly simplify things like dialog_iemgui.html
+[ ] Figure out what pdtk_ping does
 
 Crashers
 --------
