@@ -1455,7 +1455,7 @@ void oggcast_tilde_setup(void)
     CLASS_MAINSIGNALIN(oggcast_class, t_oggcast, x_f );
     class_addfloat(oggcast_class, (t_method)oggcast_float);
     class_addmethod(oggcast_class, (t_method)oggcast_disconnect, gensym("disconnect"), 0);
-    class_addmethod(oggcast_class, (t_method)oggcast_dsp, gensym("dsp"), 0);
+    class_addmethod(oggcast_class, (t_method)oggcast_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(oggcast_class, (t_method)oggcast_connect, gensym("connect"), A_GIMME, 0);
     class_addmethod(oggcast_class, (t_method)oggcast_print, gensym("print"), 0);
     class_addmethod(oggcast_class, (t_method)oggcast_password, gensym("passwd"), A_SYMBOL, 0);

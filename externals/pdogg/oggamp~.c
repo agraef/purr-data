@@ -1419,7 +1419,7 @@ void oggamp_tilde_setup(void)
     	(t_method)oggamp_free, sizeof(t_oggamp), 0, A_DEFFLOAT, A_DEFFLOAT, A_DEFFLOAT, 0);
     class_addfloat(oggamp_class, (t_method)oggamp_float);
     class_addmethod(oggamp_class, (t_method)oggamp_disconnect, gensym("disconnect"), 0);
-    class_addmethod(oggamp_class, (t_method)oggamp_dsp, gensym("dsp"), 0);
+    class_addmethod(oggamp_class, (t_method)oggamp_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(oggamp_class, (t_method)oggamp_connect, gensym("connect"), A_GIMME, 0);
     class_addmethod(oggamp_class, (t_method)oggamp_connect_url, gensym("connecturl"), A_SYMBOL, 0);
     class_addmethod(oggamp_class, (t_method)oggamp_recover, gensym("recover"), A_FLOAT, 0);

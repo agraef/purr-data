@@ -407,7 +407,7 @@ void oggread_tilde_setup(void)
         sizeof(t_oggread), 0, A_DEFFLOAT, A_NULL);
 	class_addfloat(oggread_class, (t_method)oggread_float);
     class_addmethod(oggread_class, nullfn, gensym("signal"), 0);
-    class_addmethod(oggread_class, (t_method)oggread_dsp, gensym("dsp"), 0);
+    class_addmethod(oggread_class, (t_method)oggread_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(oggread_class, (t_method)oggread_open, gensym("open"), A_SYMBOL, 0);
     class_addmethod(oggread_class, (t_method)oggread_start, gensym("start"), 0);
     class_addmethod(oggread_class, (t_method)oggread_resume, gensym("resume"), 0);

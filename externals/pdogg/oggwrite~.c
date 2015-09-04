@@ -738,7 +738,7 @@ void oggwrite_tilde_setup(void)
     oggwrite_class = class_new(gensym("oggwrite~"), (t_newmethod)oggwrite_new, (t_method)oggwrite_free,
         sizeof(t_oggwrite), 0, 0);
     CLASS_MAINSIGNALIN(oggwrite_class, t_oggwrite, x_f );
-    class_addmethod(oggwrite_class, (t_method)oggwrite_dsp, gensym("dsp"), 0);
+    class_addmethod(oggwrite_class, (t_method)oggwrite_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(oggwrite_class, (t_method)oggwrite_open, gensym("open"), A_SYMBOL, 0);
     class_addmethod(oggwrite_class, (t_method)oggwrite_start, gensym("start"), 0);
     class_addmethod(oggwrite_class, (t_method)oggwrite_stop, gensym("stop"), 0);
