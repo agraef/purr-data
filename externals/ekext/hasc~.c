@@ -94,7 +94,7 @@ void hasc_tilde_setup(void)
   post("|=====edward======kelly======2005=====|");
 
   class_addmethod(hasc_tilde_class, (t_method)hasc_tilde_dsp,
-		  gensym("dsp"), 0);
+		  gensym("dsp"), A_CANT, 0);
 
   CLASS_MAINSIGNALIN(hasc_tilde_class, t_hasc_tilde, f);
 }

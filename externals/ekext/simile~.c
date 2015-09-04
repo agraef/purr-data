@@ -79,6 +79,6 @@ void simile_tilde_setup(void) {
 
 
   class_addmethod(simile_tilde_class,
-  (t_method)simile_tilde_dsp, gensym("dsp"), 0);
+  (t_method)simile_tilde_dsp, gensym("dsp"), A_CANT, 0);
   CLASS_MAINSIGNALIN(simile_tilde_class, t_simile_tilde, x_dummy);
 }

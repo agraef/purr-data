@@ -126,7 +126,7 @@ void voicing_detector_tilde_setup(void)
   
   class_addmethod(voicing_detector_tilde_class, (t_method)voicing_detector_tilde_bound, gensym("bound"), A_DEFFLOAT, A_DEFFLOAT, 0);
   class_addmethod(voicing_detector_tilde_class, (t_method)voicing_detector_tilde_method, gensym("method"), A_DEFFLOAT, 0);
-  class_addmethod(voicing_detector_tilde_class, (t_method)voicing_detector_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(voicing_detector_tilde_class, (t_method)voicing_detector_tilde_dsp, gensym("dsp"), A_CANT, 0);
 
   CLASS_MAINSIGNALIN(voicing_detector_tilde_class, t_voicing_detector_tilde, f_dummy);
 }

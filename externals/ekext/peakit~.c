@@ -141,7 +141,7 @@ void peakit_tilde_setup(void)
   post("|-<>-<edward>-<kelly>---<>-<2005>--|");
 
 
-  class_addmethod(peakit_tilde_class, (t_method)peakit_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(peakit_tilde_class, (t_method)peakit_tilde_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(peakit_tilde_class, (t_method)peakit_tilde_iexp, &s_float, A_DEFFLOAT, 0);
   CLASS_MAINSIGNALIN(peakit_tilde_class, t_peakit_tilde, f_dummy);
 }

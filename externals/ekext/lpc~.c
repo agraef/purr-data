@@ -196,7 +196,7 @@ void lpc_tilde_setup(void)
   post(". . by Nicolas Chetry <okin@altern.org> . .");
   post(". & Edward Kelly <morph_2016@yahoo.co.uk> .");
   
-  class_addmethod(lpc_tilde_class, (t_method)lpc_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(lpc_tilde_class, (t_method)lpc_tilde_dsp, gensym("dsp"), A_CANT, 0);
 
 
   CLASS_MAINSIGNALIN(lpc_tilde_class, t_lpc_tilde, f_dummy);

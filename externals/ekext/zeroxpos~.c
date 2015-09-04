@@ -187,7 +187,7 @@ void zeroxpos_tilde_setup(void)
 
 
   class_addbang(zeroxpos_tilde_class, zeroxpos_tilde_bang);
-  class_addmethod(zeroxpos_tilde_class, (t_method)zeroxpos_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(zeroxpos_tilde_class, (t_method)zeroxpos_tilde_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(zeroxpos_tilde_class, (t_method)zeroxpos_tilde_mode, gensym("mode"), A_DEFFLOAT, 0);
   CLASS_MAINSIGNALIN(zeroxpos_tilde_class, t_zeroxpos_tilde, f_dummy);
 }

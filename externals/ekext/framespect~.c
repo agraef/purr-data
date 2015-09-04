@@ -105,7 +105,7 @@ void framespect_tilde_setup(void)
   post("|'''edward'''''''kelly'''''''2005'''|");
 
   class_addmethod(framespect_tilde_class, (t_method)framespect_tilde_dsp,
-		  gensym("dsp"), 0);
+		  gensym("dsp"), A_CANT, 0);
 
   CLASS_MAINSIGNALIN(framespect_tilde_class, t_framespect_tilde, f);
 }

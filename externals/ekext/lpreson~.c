@@ -123,7 +123,7 @@ void lpreson_tilde_setup(void)
   post(". . by Nicolas Chetry <okin@altern.org> . .");
   post(". & Edward Kelly <morph_2016@yahoo.co.uk> .");
   
-  class_addmethod(lpreson_tilde_class, (t_method)lpreson_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(lpreson_tilde_class, (t_method)lpreson_tilde_dsp, gensym("dsp"), A_CANT, 0);
 
   class_addlist(lpreson_tilde_class, lpreson_tilde_list);
 

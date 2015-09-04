@@ -92,7 +92,7 @@ void hssc_tilde_setup(void)
   post("|======edward=======kelly=======2005=====|");
 
   class_addmethod(hssc_tilde_class, (t_method)hssc_tilde_dsp,
-		  gensym("dsp"), 0);
+		  gensym("dsp"), A_CANT, 0);
 
   CLASS_MAINSIGNALIN(hssc_tilde_class, t_hssc_tilde, f);
 }
