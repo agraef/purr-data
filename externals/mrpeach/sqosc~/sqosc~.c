@@ -341,7 +341,7 @@ void sqosc_tilde_setup(void)
     sqosc_class = class_new(gensym("sqosc~"), (t_newmethod)sqosc_new, 0,
         sizeof(t_sqosc), 0, A_DEFFLOAT, A_DEFFLOAT, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(sqosc_class, t_sqosc, x_f);/* x_f is used when no signal is input */
-    class_addmethod(sqosc_class, (t_method)sqosc_dsp, gensym("dsp"), 0);
+    class_addmethod(sqosc_class, (t_method)sqosc_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(sqosc_class, (t_method)sqosc_ft1, gensym("ft1"), A_FLOAT, 0);
     class_addmethod(sqosc_class, (t_method)sqosc_pw, gensym("pw"), A_FLOAT, 0);
 
