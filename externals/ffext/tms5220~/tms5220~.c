@@ -264,7 +264,7 @@ void tms5220_tilde_setup(void) {
 
 	CLASS_MAINSIGNALIN(tms5220_tilde_class, t_tms5220_tilde, dummy);
 
-	class_addmethod(tms5220_tilde_class, (t_method)tms5220_tilde_dsp, gensym("dsp"), 0);
+	class_addmethod(tms5220_tilde_class, (t_method)tms5220_tilde_dsp, gensym("dsp"), A_CANT, 0);
 	//class_addfloat(tms5220_tilde_class, (t_method)tms5220_tilde_write);
 	class_addmethod(tms5220_tilde_class, (t_method)tms5220_tilde_write, gensym("write"), A_DEFFLOAT, 0);
 	class_addmethod(tms5220_tilde_class, (t_method)tms5220_tilde_reset, gensym("reset"), 0);
