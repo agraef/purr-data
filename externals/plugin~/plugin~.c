@@ -77,7 +77,7 @@ void plugin_tilde_setup (void)
 
   assert (sizeof (float) == sizeof (LADSPA_Data));
 
-  class_addmethod (plugin_tilde_class,(t_method)plugin_tilde_dsp,gensym ("dsp"),0);
+  class_addmethod (plugin_tilde_class,(t_method)plugin_tilde_dsp,gensym ("dsp"),A_CANT, 0);
   class_addmethod (plugin_tilde_class,(t_method)plugin_tilde_control,gensym ("control"),A_SYMBOL, A_FLOAT, 0);
   class_addmethod (plugin_tilde_class,(t_method)plugin_tilde_info,gensym ("info"),0);
   class_addmethod (plugin_tilde_class,(t_method)plugin_tilde_list,gensym ("listplugins"),0);
