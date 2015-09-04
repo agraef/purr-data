@@ -158,7 +158,7 @@ void promiscous_tilde_setup(void)
 {
 	promiscous_tilde_class = class_new(gensym("promiscous~"), (t_newmethod) promiscous_tilde_new, 0,
 		sizeof(t_promiscous_tilde), CLASS_NOINLET, A_DEFSYM, 0);
-	class_addmethod(promiscous_tilde_class, (t_method) promiscous_tilde_dsp, gensym("dsp"), 0);
+	class_addmethod(promiscous_tilde_class, (t_method) promiscous_tilde_dsp, gensym("dsp"), A_CANT, 0);
 }
 
 #endif

@@ -87,7 +87,7 @@ void sigthrow13_setup(void)
     class_addmethod(sigthrow13_class, (t_method)sigthrow13_set, gensym("set"),
     	A_SYMBOL, 0);
     class_addmethod(sigthrow13_class, nullfn, gensym("signal"), 0);
-    class_addmethod(sigthrow13_class, (t_method)sigthrow13_dsp, gensym("dsp"), 0);
+    class_addmethod(sigthrow13_class, (t_method)sigthrow13_dsp, gensym("dsp"), A_CANT, 0);
 }
 
 void throw13_tilde_setup()

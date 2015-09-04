@@ -157,7 +157,7 @@ void piperead_tilde_setup(void)
     	sizeof(t_piperead_tilde), 0,A_DEFFLOAT,A_DEFFLOAT,0);
     class_addmethod(piperead_tilde_class, nullfn, gensym("signal"), 0);
     
-    class_addmethod(piperead_tilde_class, (t_method) piperead_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(piperead_tilde_class, (t_method) piperead_tilde_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(piperead_tilde_class, (t_method) piperead_tilde_open, gensym("open"), A_SYMBOL,A_NULL);
     class_addfloat(piperead_tilde_class, piperead_tilde_float);
 }

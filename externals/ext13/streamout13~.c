@@ -386,7 +386,7 @@ void streamout13_setup(void)
     class_addmethod(streamout13_class, nullfn, gensym("signal"), 0);
     class_addmethod(streamout13_class, (t_method)streamout13_format,gensym("format"),A_SYMBOL,0);
     class_addmethod(streamout13_class, (t_method)streamout13_grain,gensym("grain"),A_DEFFLOAT,0);
-    class_addmethod(streamout13_class, (t_method) streamout13_dsp, gensym("dsp"), 0);
+    class_addmethod(streamout13_class, (t_method) streamout13_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(streamout13_class, (t_method)streamout13_host,gensym("host"),A_DEFSYM,0);
 
 }

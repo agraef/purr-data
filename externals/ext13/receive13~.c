@@ -116,7 +116,7 @@ void sigreceive13_setup(void)
     class_addmethod(sigreceive13_class, (t_method)sigreceive13_set, gensym("set"),
     	A_SYMBOL, 0);
     class_addmethod(sigreceive13_class, (t_method)sigreceive13_dsp, gensym("dsp"),
-    	0);
+    	A_CANT, 0);
 }
 
 void receive13_tilde_setup()

@@ -631,7 +631,7 @@ void scramble_tilde_setup(void)
     	sizeof(t_scramble_tilde), 0, A_DEFFLOAT,A_DEFFLOAT, 0);
     class_addfloat(scramble_tilde_class,scramble_tilde_float);
     class_addmethod(scramble_tilde_class, nullfn, gensym("signal"), 0);
-    class_addmethod(scramble_tilde_class, (t_method) scramble_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(scramble_tilde_class, (t_method) scramble_tilde_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(scramble_tilde_class, (t_method) scramble_tilde_buffer, gensym("buffer"), A_DEFFLOAT,0);
     class_addmethod(scramble_tilde_class, (t_method) scramble_tilde_threshold, gensym("threshold"), A_DEFFLOAT,0);
     class_addmethod(scramble_tilde_class, (t_method) scramble_tilde_grains, gensym("grains"), A_DEFFLOAT,0);

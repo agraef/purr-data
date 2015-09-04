@@ -274,7 +274,7 @@ void pipewrite_tilde_setup(void)
     	sizeof(t_pipewrite_tilde), 0,A_DEFFLOAT,0);
      class_addmethod(pipewrite_tilde_class,nullfn,gensym("signal"), 0);
      
-     class_addmethod(pipewrite_tilde_class, (t_method) pipewrite_tilde_dsp, gensym("dsp"), 0);
+     class_addmethod(pipewrite_tilde_class, (t_method) pipewrite_tilde_dsp, gensym("dsp"), A_CANT, 0);
      class_addmethod(pipewrite_tilde_class, (t_method) pipewrite_tilde_open, gensym("open"), A_SYMBOL,A_NULL);
      class_addmethod(pipewrite_tilde_class, (t_method) pipewrite_tilde_close, gensym("close"), 0);
      class_addmethod(pipewrite_tilde_class, (t_method)pipewrite_tilde_block,gensym("block"),A_DEFFLOAT,0);

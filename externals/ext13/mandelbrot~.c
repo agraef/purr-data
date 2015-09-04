@@ -116,7 +116,7 @@ void mandelbrot_tilde_setup(void)
 {
     mandelbrot_tilde_class = class_new(gensym("mandelbrot~"), (t_newmethod)mandelbrot_tilde_new,
     0, sizeof(t_mandelbrot_tilde), 0, A_DEFFLOAT, 0);
-    class_addmethod(mandelbrot_tilde_class, (t_method)mandelbrot_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(mandelbrot_tilde_class, (t_method)mandelbrot_tilde_dsp, gensym("dsp"), A_CANT, 0);
     CLASS_MAINSIGNALIN(mandelbrot_tilde_class, t_mandelbrot_tilde, k);
 }
 

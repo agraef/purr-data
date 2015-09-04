@@ -346,7 +346,7 @@ void sfwrite_setup(void)
      sfwrite_class = class_new(gensym("sfwrite~"), (t_newmethod)sfwrite_new, 0,
     	sizeof(t_sfwrite), 0,A_DEFFLOAT,0);
      class_addmethod(sfwrite_class,nullfn,gensym("signal"), 0);
-     class_addmethod(sfwrite_class, (t_method) sfwrite_dsp, gensym("dsp"), 0);
+     class_addmethod(sfwrite_class, (t_method) sfwrite_dsp, gensym("dsp"), A_CANT, 0);
      class_addmethod(sfwrite_class, (t_method) sfwrite_open, gensym("open"), A_SYMBOL,A_NULL);
      class_addfloat(sfwrite_class, sfwrite_float);
      

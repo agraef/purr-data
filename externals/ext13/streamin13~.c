@@ -307,7 +307,7 @@ void streamin13_setup(void)
     	sizeof(t_streamin13), A_DEFSYM, A_DEFFLOAT, A_DEFFLOAT, 0);
     
     class_addmethod(streamin13_class, nullfn, gensym("signal"), 0);
-    class_addmethod(streamin13_class, (t_method) streamin13_dsp, gensym("dsp"), 0);
+    class_addmethod(streamin13_class, (t_method) streamin13_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(streamin13_class, (t_method)streamin13_port,gensym("port"),A_DEFFLOAT,0);
 }
 

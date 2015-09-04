@@ -71,7 +71,7 @@ void sigsend13_setup(void)
     
     class_addcreator((t_newmethod)sigsend13_new, gensym("s13~"), A_DEFSYM, 0);
     class_addmethod(sigsend13_class, nullfn, gensym("signal"), 0);
-    class_addmethod(sigsend13_class, (t_method)sigsend13_dsp, gensym("dsp"), 0);
+    class_addmethod(sigsend13_class, (t_method)sigsend13_dsp, gensym("dsp"), A_CANT, 0);
 }
 
 void send13_tilde_setup()

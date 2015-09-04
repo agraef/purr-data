@@ -289,7 +289,7 @@ void sfwrite13_setup(void)
      sfwrite13_class = class_new(gensym("sfwrite13~"), (t_newmethod)sfwrite13_new, (t_method)sfwrite13_free,
     	sizeof(t_sfwrite13), 0,A_DEFFLOAT,0);
      class_addmethod(sfwrite13_class,nullfn,gensym("signal"), 0);
-     class_addmethod(sfwrite13_class, (t_method) sfwrite13_dsp, gensym("dsp"), 0);
+     class_addmethod(sfwrite13_class, (t_method) sfwrite13_dsp, gensym("dsp"), A_CANT, 0);
      class_addmethod(sfwrite13_class, (t_method) sfwrite13_open, gensym("open"), A_SYMBOL,A_NULL);
      class_addmethod(sfwrite13_class, (t_method) sfwrite13_close, gensym("close"), 0);
      class_addmethod(sfwrite13_class, (t_method) sfwrite13_block,gensym("block"),A_DEFFLOAT,0);
