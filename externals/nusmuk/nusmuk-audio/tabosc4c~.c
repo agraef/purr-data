@@ -235,7 +235,7 @@ void tabosc4c_tilde_setup(void)
         sizeof(t_tabosc4c_tilde), 0, A_DEFSYM, 0);
     CLASS_MAINSIGNALIN(tabosc4c_tilde_class, t_tabosc4c_tilde, x_f);
     class_addmethod(tabosc4c_tilde_class, (t_method)tabosc4c_tilde_dsp,
-        gensym("dsp"), 0);
+        gensym("dsp"), A_CANT, 0);
     class_addmethod(tabosc4c_tilde_class, (t_method)tabosc4c_tilde_set,
         gensym("set"), A_SYMBOL, 0);
     class_addmethod(tabosc4c_tilde_class, (t_method)tabosc4c_tilde_ft1,

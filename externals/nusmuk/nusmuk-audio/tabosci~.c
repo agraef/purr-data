@@ -307,7 +307,7 @@ void tabosci_tilde_setup(void)
         sizeof(t_tabosci_tilde), 0, A_DEFSYM, 0);
     CLASS_MAINSIGNALIN(tabosci_tilde_class, t_tabosci_tilde, x_f);
     class_addmethod(tabosci_tilde_class, (t_method)tabosci_tilde_dsp,
-        gensym("dsp"), 0);
+        gensym("dsp"), A_CANT, 0);
     class_addmethod(tabosci_tilde_class, (t_method)tabosci_tilde_set,
         gensym("set"), A_SYMBOL, 0);
     class_addmethod(tabosci_tilde_class, (t_method)tabosci_tilde_cutoff,

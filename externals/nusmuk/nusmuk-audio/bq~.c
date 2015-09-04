@@ -102,7 +102,7 @@ void bq_tilde_setup(void)
     bq_tilde_class = class_new(gensym("bq~"), (t_newmethod)bq_tilde_new,
         0, sizeof(t_bq_tilde), 0, A_GIMME, 0);
     CLASS_MAINSIGNALIN(bq_tilde_class, t_bq_tilde, x_f);
-    class_addmethod(bq_tilde_class, (t_method)bq_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(bq_tilde_class, (t_method)bq_tilde_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(bq_tilde_class, (t_method)bq_tilde_set, gensym("set"),
         A_GIMME, 0);
     class_addmethod(bq_tilde_class, (t_method)bq_tilde_set, gensym("clear"),

@@ -170,7 +170,7 @@ void tabread4c_tilde_setup(void)
         sizeof(t_tabread4c_tilde), 0, A_DEFSYM, 0);
     CLASS_MAINSIGNALIN(tabread4c_tilde_class, t_tabread4c_tilde, x_f);
     class_addmethod(tabread4c_tilde_class, (t_method)tabread4c_tilde_dsp,
-        gensym("dsp"), 0);
+        gensym("dsp"), A_CANT, 0);
     class_addmethod(tabread4c_tilde_class, (t_method)tabread4c_tilde_set,
         gensym("set"), A_SYMBOL, 0);
 }
