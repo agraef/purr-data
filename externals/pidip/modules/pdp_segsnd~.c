@@ -397,7 +397,7 @@ void pdp_segsnd_tilde_setup(void)
     pdp_segsnd_class = class_new(gensym("pdp_segsnd~"), (t_newmethod)pdp_segsnd_new,
     	(t_method)pdp_segsnd_free, sizeof(t_pdp_segsnd), 0, A_NULL);
 
-    class_addmethod(pdp_segsnd_class, (t_method)pdp_segsnd_dsp, gensym("dsp"), 0);
+    class_addmethod(pdp_segsnd_class, (t_method)pdp_segsnd_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(pdp_segsnd_class, (t_method)pdp_segsnd_input_0, gensym("pdp"),  
                              A_SYMBOL, A_DEFFLOAT, A_NULL);
     class_addmethod(pdp_segsnd_class, (t_method)pdp_segsnd_x1, gensym("x1"),  A_DEFFLOAT, A_NULL);

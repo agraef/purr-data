@@ -450,7 +450,7 @@ void pdp_yqt_setup(void)
     class_addfloat (pdp_yqt_class, (t_method)pdp_yqt_frame);
     class_addmethod(pdp_yqt_class, (t_method)pdp_yqt_frame_cold, gensym("frame_cold"), A_FLOAT, A_NULL);
     class_addmethod(pdp_yqt_class, nullfn, gensym("signal"), 0);
-    class_addmethod(pdp_yqt_class, (t_method)pdp_yqt_dsp, gensym("dsp"), 0);
+    class_addmethod(pdp_yqt_class, (t_method)pdp_yqt_dsp, gensym("dsp"), A_CANT, 0);
     class_sethelpsymbol( pdp_yqt_class, gensym("pdp_yqt.pd") );
 
 }

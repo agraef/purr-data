@@ -985,7 +985,7 @@ void pdp_theorin_tilde_setup(void)
     pdp_theorin_class = class_new(gensym("pdp_theorin~"), (t_newmethod)pdp_theorin_new,
     	(t_method)pdp_theorin_free, sizeof(t_pdp_theorin), 0, A_NULL);
 
-    class_addmethod(pdp_theorin_class, (t_method)pdp_theorin_dsp, gensym("dsp"), A_NULL);
+    class_addmethod(pdp_theorin_class, (t_method)pdp_theorin_dsp, gensym("dsp"), A_CANT, A_NULL);
     class_addmethod(pdp_theorin_class, (t_method)pdp_theorin_open, gensym("open"), A_SYMBOL, A_NULL);
     class_addmethod(pdp_theorin_class, (t_method)pdp_theorin_close, gensym("close"), A_NULL);
     class_addmethod(pdp_theorin_class, (t_method)pdp_theorin_priority, gensym("priority"), A_FLOAT, A_NULL);

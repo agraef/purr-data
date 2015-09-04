@@ -1363,7 +1363,7 @@ void pdp_theonice_tilde_setup(void)
     	(t_method)pdp_theonice_free, sizeof(t_pdp_theonice), 0, A_NULL);
 
     CLASS_MAINSIGNALIN(pdp_theonice_class, t_pdp_theonice, x_f );
-    class_addmethod(pdp_theonice_class, (t_method)pdp_theonice_dsp, gensym("dsp"), 0);
+    class_addmethod(pdp_theonice_class, (t_method)pdp_theonice_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(pdp_theonice_class, (t_method)pdp_theonice_input_0, gensym("pdp"),  A_SYMBOL, A_DEFFLOAT, A_NULL);
     class_addmethod(pdp_theonice_class, (t_method)pdp_theonice_connect, gensym("connect"), A_SYMBOL, A_SYMBOL, A_DEFFLOAT, A_NULL);
     class_addmethod(pdp_theonice_class, (t_method)pdp_theonice_disconnect, gensym("disconnect"), A_NULL);

@@ -1381,7 +1381,7 @@ void pdp_icedthe_tilde_setup(void)
     pdp_icedthe_class = class_new(gensym("pdp_icedthe~"), (t_newmethod)pdp_icedthe_new,
     	(t_method)pdp_icedthe_free, sizeof(t_pdp_icedthe), 0, A_NULL);
 
-    class_addmethod(pdp_icedthe_class, (t_method)pdp_icedthe_dsp, gensym("dsp"), A_NULL);
+    class_addmethod(pdp_icedthe_class, (t_method)pdp_icedthe_dsp, gensym("dsp"), A_CANT, A_NULL);
     class_addmethod(pdp_icedthe_class, (t_method)pdp_icedthe_connect, gensym("connect"), A_SYMBOL, A_NULL);
     class_addmethod(pdp_icedthe_class, (t_method)pdp_icedthe_disconnect, gensym("disconnect"), A_NULL);
     class_addmethod(pdp_icedthe_class, (t_method)pdp_icedthe_priority, gensym("priority"), A_FLOAT, A_NULL);

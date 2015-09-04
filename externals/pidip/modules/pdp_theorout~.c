@@ -914,7 +914,7 @@ void pdp_theorout_tilde_setup(void)
     	(t_method)pdp_theorout_free, sizeof(t_pdp_theorout), 0, A_NULL);
 
     CLASS_MAINSIGNALIN(pdp_theorout_class, t_pdp_theorout, x_f );
-    class_addmethod(pdp_theorout_class, (t_method)pdp_theorout_dsp, gensym("dsp"), 0);
+    class_addmethod(pdp_theorout_class, (t_method)pdp_theorout_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(pdp_theorout_class, (t_method)pdp_theorout_input_0, gensym("pdp"),  A_SYMBOL, A_DEFFLOAT, A_NULL);
     class_addmethod(pdp_theorout_class, (t_method)pdp_theorout_open, gensym("open"), A_SYMBOL, A_NULL);
     class_addmethod(pdp_theorout_class, (t_method)pdp_theorout_close, gensym("close"), A_NULL);

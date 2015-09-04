@@ -702,7 +702,7 @@ void pdp_rec_tilde_setup(void)
     	(t_method)pdp_rec_free, sizeof(t_pdp_rec), 0, A_NULL);
 
     CLASS_MAINSIGNALIN(pdp_rec_class, t_pdp_rec, x_f );
-    class_addmethod(pdp_rec_class, (t_method)pdp_rec_dsp, gensym("dsp"), 0);
+    class_addmethod(pdp_rec_class, (t_method)pdp_rec_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(pdp_rec_class, (t_method)pdp_rec_input_0, gensym("pdp"),  A_SYMBOL, A_DEFFLOAT, A_NULL);
     class_addmethod(pdp_rec_class, (t_method)pdp_rec_open, gensym("open"), A_SYMBOL, A_NULL);
     class_addmethod(pdp_rec_class, (t_method)pdp_rec_close, gensym("close"), A_NULL);
