@@ -102,5 +102,5 @@ void lanczos_tilde_setup(void) {
 			    A_DEFFLOAT,
 			    0);
   class_addmethod(lanczos_class, nullfn, gensym("signal"), 0);
-  class_addmethod(lanczos_class, (t_method)lanczos_dsp, gensym("dsp"), 0);
+  class_addmethod(lanczos_class, (t_method)lanczos_dsp, gensym("dsp"), A_CANT, 0);
 }

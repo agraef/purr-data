@@ -93,5 +93,5 @@ void bartlett_tilde_setup(void) {
 			    A_DEFFLOAT,
 			    0);
   class_addmethod(bartlett_class, nullfn, gensym("signal"), 0);
-  class_addmethod(bartlett_class, (t_method)bartlett_dsp, gensym("dsp"), 0);
+  class_addmethod(bartlett_class, (t_method)bartlett_dsp, gensym("dsp"), A_CANT, 0);
 }

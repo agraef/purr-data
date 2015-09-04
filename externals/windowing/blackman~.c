@@ -97,5 +97,5 @@ void blackman_tilde_setup(void) {
 			    A_DEFFLOAT,
 			    0);
   class_addmethod(blackman_class, nullfn, gensym("signal"), 0);
-  class_addmethod(blackman_class, (t_method)blackman_dsp, gensym("dsp"), 0);
+  class_addmethod(blackman_class, (t_method)blackman_dsp, gensym("dsp"), A_CANT, 0);
 }

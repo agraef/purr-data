@@ -110,7 +110,7 @@ void kaiser_tilde_setup(void) {
 			    A_DEFFLOAT,
 			    0);
   class_addmethod(kaiser_class, nullfn, gensym("signal"), 0);
-  class_addmethod(kaiser_class, (t_method)kaiser_dsp, gensym("dsp"), 0);
+  class_addmethod(kaiser_class, (t_method)kaiser_dsp, gensym("dsp"), A_CANT, 0);
   class_addfloat(kaiser_class, (t_method)kaiser_float);
 }
 

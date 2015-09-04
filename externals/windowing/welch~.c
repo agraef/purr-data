@@ -92,5 +92,5 @@ void welch_tilde_setup(void) {
 			    A_DEFFLOAT,
 			    0);
   class_addmethod(welch_class, nullfn, gensym("signal"), 0);
-  class_addmethod(welch_class, (t_method)welch_dsp, gensym("dsp"), 0);
+  class_addmethod(welch_class, (t_method)welch_dsp, gensym("dsp"), A_CANT, 0);
 }

@@ -92,5 +92,5 @@ void connes_tilde_setup(void) {
 			    A_DEFFLOAT,
 			    0);
   class_addmethod(connes_class, nullfn, gensym("signal"), 0);
-  class_addmethod(connes_class, (t_method)connes_dsp, gensym("dsp"), 0);
+  class_addmethod(connes_class, (t_method)connes_dsp, gensym("dsp"), A_CANT, 0);
 }

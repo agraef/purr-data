@@ -116,6 +116,6 @@ void gaussian_tilde_setup(void) {
 			    A_DEFFLOAT,
 			    0);
   class_addmethod(gaussian_class, nullfn, gensym("signal"), 0);
-  class_addmethod(gaussian_class, (t_method)gaussian_dsp, gensym("dsp"), 0);
+  class_addmethod(gaussian_class, (t_method)gaussian_dsp, gensym("dsp"), A_CANT, 0);
   class_addfloat(gaussian_class, (t_method)gaussian_float);
 }

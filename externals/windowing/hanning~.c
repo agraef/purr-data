@@ -97,5 +97,5 @@ void hanning_tilde_setup(void) {
 			    A_DEFFLOAT,
 			    0);
   class_addmethod(hanning_class, nullfn, gensym("signal"), 0);
-  class_addmethod(hanning_class, (t_method)hanning_dsp, gensym("dsp"), 0);
+  class_addmethod(hanning_class, (t_method)hanning_dsp, gensym("dsp"), A_CANT, 0);
 }
