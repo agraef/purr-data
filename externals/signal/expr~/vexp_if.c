@@ -809,7 +809,7 @@ expr_setup(void)
 	    (t_method)expr_ff, sizeof(t_expr), 0, A_GIMME, 0);
 	class_addmethod(expr_tilde_class, nullfn, gensym("signal"), 0);
 	CLASS_MAINSIGNALIN(expr_tilde_class, t_expr, exp_f);
-	class_addmethod(expr_tilde_class,(t_method)expr_dsp, gensym("dsp"), 0);
+	class_addmethod(expr_tilde_class,(t_method)expr_dsp, gensym("dsp"), A_CANT, 0);
     	class_sethelpsymbol(expr_tilde_class, gensym("expr"));
 	/*
 	 * fexpr~ initialization

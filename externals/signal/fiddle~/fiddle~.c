@@ -1501,7 +1501,7 @@ void fiddle_tilde_setup(void)
     	(t_method)sigfiddle_ff, sizeof(t_sigfiddle), 0,
     	    A_DEFFLOAT, A_DEFFLOAT, A_DEFFLOAT, A_DEFFLOAT, 0);
     class_addmethod(sigfiddle_class, (t_method)sigfiddle_dsp,
-    	gensym("dsp"), 0);
+    	gensym("dsp"), A_CANT, 0);
     class_addmethod(sigfiddle_class, (t_method)sigfiddle_debug,
     	gensym("debug"), 0);
     class_addmethod(sigfiddle_class, (t_method)sigfiddle_setnpoints,

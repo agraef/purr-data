@@ -105,6 +105,6 @@ void lrshift_tilde_setup(void)
 	    A_DEFFLOAT, 0);
     class_addmethod(lrshift_tilde_class, nullfn, gensym("signal"), 0);
     class_addmethod(lrshift_tilde_class, (t_method)lrshift_tilde_dsp,
-    	gensym("dsp"), 0);
+    	gensym("dsp"), A_CANT, 0);
 	class_addfloat(lrshift_tilde_class, (t_method)lrshift_tilde_float);
 }
