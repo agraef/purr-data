@@ -113,7 +113,7 @@ void m2f_tilde_setup(void)
   m2f_tilde_class = class_new(gensym("m2f~"), (t_newmethod)m2f_tilde_new, 0,
     sizeof(t_m2f_tilde), 0, 0);
   CLASS_MAINSIGNALIN(m2f_tilde_class, t_m2f_tilde, x_msi);
-  class_addmethod(m2f_tilde_class, (t_method)m2f_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(m2f_tilde_class, (t_method)m2f_tilde_dsp, gensym("dsp"), A_CANT, 0);
   m2f_tilde_maketable();
 //  class_sethelpsymbol(m2f_tilde_class, gensym("iemhelp/help-m2f~"));
 }

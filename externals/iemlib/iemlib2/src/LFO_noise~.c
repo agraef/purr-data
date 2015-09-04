@@ -116,7 +116,7 @@ void LFO_noise_tilde_setup(void)
     (t_newmethod)LFO_noise_tilde_new, 0,
     sizeof(t_LFO_noise_tilde), 0, A_DEFFLOAT, 0);
   class_addmethod(LFO_noise_tilde_class, (t_method)LFO_noise_tilde_dsp,
-    gensym("dsp"), 0);
+    gensym("dsp"), A_CANT, 0);
   class_addfloat(LFO_noise_tilde_class, (t_method)LFO_noise_tilde_float);
 //  class_sethelpsymbol(LFO_noise_tilde_class, gensym("iemhelp/help-LFO_noise~"));
 }

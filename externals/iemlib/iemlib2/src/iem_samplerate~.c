@@ -51,5 +51,5 @@ void iem_samplerate_tilde_setup(void)
   iem_samplerate_tilde_class = class_new(gensym("iem_samplerate~"), (t_newmethod)iem_samplerate_tilde_new,
     (t_method)iem_samplerate_tilde_free, sizeof(t_iem_samplerate_tilde), 0, 0);
   CLASS_MAINSIGNALIN(iem_samplerate_tilde_class, t_iem_samplerate_tilde, x_f);
-  class_addmethod(iem_samplerate_tilde_class, (t_method)iem_samplerate_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(iem_samplerate_tilde_class, (t_method)iem_samplerate_tilde_dsp, gensym("dsp"), A_CANT, 0);
 }

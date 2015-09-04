@@ -169,7 +169,7 @@ void fade_tilde_setup(void)
   fade_tilde_class = class_new(gensym("fade~"), (t_newmethod)fade_tilde_new, 0,
     sizeof(t_fade_tilde), 0, A_DEFSYM, 0);
   CLASS_MAINSIGNALIN(fade_tilde_class, t_fade_tilde, x_f);
-  class_addmethod(fade_tilde_class, (t_method)fade_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(fade_tilde_class, (t_method)fade_tilde_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(fade_tilde_class, (t_method)fade_tilde_set, gensym("set"), A_DEFSYM, 0);
 //  class_sethelpsymbol(fade_tilde_class, gensym("iemhelp/help-fade~"));
   fade_tilde_maketable();

@@ -51,5 +51,5 @@ void iem_blocksize_tilde_setup(void)
   iem_blocksize_tilde_class = class_new(gensym("iem_blocksize~"), (t_newmethod)iem_blocksize_tilde_new,
     (t_method)iem_blocksize_tilde_free, sizeof(t_iem_blocksize_tilde), 0, 0);
   CLASS_MAINSIGNALIN(iem_blocksize_tilde_class, t_iem_blocksize_tilde, x_f);
-  class_addmethod(iem_blocksize_tilde_class, (t_method)iem_blocksize_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(iem_blocksize_tilde_class, (t_method)iem_blocksize_tilde_dsp, gensym("dsp"), A_CANT, 0);
 }
