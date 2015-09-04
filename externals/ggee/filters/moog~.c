@@ -178,5 +178,5 @@ void moog_tilde_setup(void)
     	sizeof(t_moog), 0, A_GIMME, 0);
     class_addmethod(moog_class, nullfn, gensym("signal"), 0);
     class_addmethod(moog_class, (t_method)moog_reset, gensym("reset"), 0);
-    class_addmethod(moog_class, (t_method)moog_dsp, gensym("dsp"), A_NULL);
+    class_addmethod(moog_class, (t_method)moog_dsp, gensym("dsp"), A_CANT, A_NULL);
 }

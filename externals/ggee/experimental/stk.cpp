@@ -190,7 +190,7 @@ extern "C" {
 	  stk_class = class_new(gensym("stk"), (t_newmethod)stk_new, 0,
 				sizeof(t_stk), 0,A_DEFSYM,A_NULL);
 	  class_addmethod(stk_class, nullfn, gensym("signal"), A_NULL);
-	  class_addmethod(stk_class, (t_method) stk_dsp, gensym("dsp"), A_NULL);
+	  class_addmethod(stk_class, (t_method) stk_dsp, gensym("dsp"), A_CANT, A_NULL);
 	  
 	  class_addbang(stk_class,stk_bang);
 	  class_addfloat(stk_class,stk_float);

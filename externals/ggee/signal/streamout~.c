@@ -354,7 +354,7 @@ void streamout_tilde_setup(void)
     	gensym("disconnect"), 0);
     class_addfloat(streamout_class,streamout_float);
     class_addmethod(streamout_class, nullfn, gensym("signal"), 0);
-    class_addmethod(streamout_class, (t_method) streamout_dsp, gensym("dsp"), 0);
+    class_addmethod(streamout_class, (t_method) streamout_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(streamout_class, (t_method)streamout_format,gensym("format"),A_SYMBOL,0);
     class_addmethod(streamout_class, (t_method)streamout_host,gensym("host"),A_DEFSYM,0);
 

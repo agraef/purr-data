@@ -415,7 +415,7 @@ void streamin_tilde_setup(void)
     	sizeof(t_streamin),  0, A_DEFFLOAT,A_DEFFLOAT, A_NULL);
 
     class_addmethod(streamin_class, nullfn, gensym("signal"), 0);
-    class_addmethod(streamin_class, (t_method) streamin_dsp, gensym("dsp"), 0);
+    class_addmethod(streamin_class, (t_method) streamin_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(streamin_class, (t_method) streamin_print, 
 		    gensym("print"), 0);
     class_addmethod(streamin_class, (t_method) streamin_reset, 

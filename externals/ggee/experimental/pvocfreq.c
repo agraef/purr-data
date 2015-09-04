@@ -106,7 +106,7 @@ void shuffle_setup(void)
 				sizeof(t_shuffle), 0,0);
     
     class_addmethod(shuffle_class, nullfn, gensym("signal"), 0);
-    class_addmethod(shuffle_class, (t_method) shuffle_dsp, gensym("dsp"), 0);
+    class_addmethod(shuffle_class, (t_method) shuffle_dsp, gensym("dsp"), A_CANT, 0);
     
     class_addfloat(shuffle_class,shuffle_float);
 }

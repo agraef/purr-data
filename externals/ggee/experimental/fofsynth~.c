@@ -348,7 +348,7 @@ void fofsynth_tilde_setup(void)
 				sizeof(t_fofsynth), 0,A_DEFSYM, A_DEFFLOAT,A_DEFFLOAT,A_DEFFLOAT,A_DEFFLOAT,0);
      class_addcreator((t_newmethod)fofsynth_new,gensym("fofsynth~"),A_DEFSYM, A_DEFFLOAT,A_DEFFLOAT,A_DEFFLOAT,A_DEFFLOAT,0);
      class_addmethod(fofsynth_class, nullfn, gensym("signal"), 0);
-     class_addmethod(fofsynth_class, (t_method) fofsynth_dsp, gensym("dsp"), 0);
+     class_addmethod(fofsynth_class, (t_method) fofsynth_dsp, gensym("dsp"), A_CANT, 0);
      class_addfloat(fofsynth_class, (t_method) fofsynth_float);
      class_addmethod(fofsynth_class,(t_method) fofsynth_debug, gensym("debug"),0);
      cos_maketable();

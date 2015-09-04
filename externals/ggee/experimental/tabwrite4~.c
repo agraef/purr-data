@@ -185,7 +185,7 @@ void tabwrite4_tilde_setup(void)
         sizeof(t_tabwrite4_tilde), 0, A_DEFSYM, 0);
     CLASS_MAINSIGNALIN(tabwrite4_tilde_class, t_tabwrite4_tilde, x_f);
     class_addmethod(tabwrite4_tilde_class, (t_method)tabwrite4_tilde_dsp,
-        gensym("dsp"), 0);
+        gensym("dsp"), A_CANT, 0);
     class_addmethod(tabwrite4_tilde_class, (t_method)tabwrite4_tilde_set,
         gensym("set"), A_SYMBOL, 0);
     class_addmethod(tabwrite4_tilde_class, (t_method)tabwrite4_tilde_stop,

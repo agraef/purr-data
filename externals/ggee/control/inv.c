@@ -41,7 +41,7 @@ void inv_tilde_setup(void)
     class_addcreator(inv_new,gensym("1/x~"),0);
     
     class_addmethod(inv_class, nullfn, gensym("signal"), 0);
-    class_addmethod(inv_class, (t_method)inv_dsp, gensym("dsp"), 0);
+    class_addmethod(inv_class, (t_method)inv_dsp, gensym("dsp"), A_CANT, 0);
 }
 
 
