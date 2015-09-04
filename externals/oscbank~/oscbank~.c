@@ -279,7 +279,7 @@ void oscbank_tilde_setup(void)
     class_addfloat(oscbank_class, oscbank_index);
     class_addmethod(oscbank_class, (t_method)oscbank_table, gensym("table"), A_SYMBOL);
     class_addmethod(oscbank_class, (t_method)oscbank_interpMs, gensym("interp"), A_FLOAT, 0);
-    class_addmethod(oscbank_class, (t_method)oscbank_dsp, gensym("dsp"), (t_atomtype)0);
+    class_addmethod(oscbank_class, (t_method)oscbank_dsp, gensym("dsp"), A_CANT, (t_atomtype)0);
     class_addmethod(oscbank_class, (t_method)oscbank_print, gensym("print"), 0);
     class_addmethod(oscbank_class, (t_method)oscbank_reset, gensym("reset"), 0);
     class_addmethod(oscbank_class, (t_method)oscbank_nPartials, gensym("partials"), A_FLOAT, 0);
