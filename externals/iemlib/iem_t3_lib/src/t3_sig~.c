@@ -185,7 +185,7 @@ void t3_sig_tilde_setup(void)
 {
   t3_sig_tilde_class = class_new(gensym("t3_sig~"), (t_newmethod)t3_sig_tilde_new,
         (t_method)t3_sig_tilde_free, sizeof(t_t3_sig_tilde), 0, A_DEFFLOAT, 0);
-  class_addmethod(t3_sig_tilde_class, (t_method)t3_sig_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(t3_sig_tilde_class, (t_method)t3_sig_tilde_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(t3_sig_tilde_class, (t_method)t3_sig_tilde_stop, gensym("stop"), 0);
   class_addlist(t3_sig_tilde_class, (t_method)t3_sig_tilde_list);
 //  class_sethelpsymbol(t3_sig_tilde_class, gensym("iemhelp/help-t3_sig~"));
