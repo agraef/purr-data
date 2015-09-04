@@ -47,6 +47,6 @@ void abs_tilde_setup(void)
     abs_class = class_new(gensym("abs~"), (t_newmethod)abs_new, 0,
     	sizeof(t_abs), 0, A_NULL);
     class_addmethod(abs_class, (t_method)nullfn, &s_signal, A_NULL);
-    class_addmethod(abs_class, (t_method)abs_dsp, gensym("dsp"), A_NULL);
+    class_addmethod(abs_class, (t_method)abs_dsp, gensym("dsp"), A_CANT, A_NULL);
 }
 
