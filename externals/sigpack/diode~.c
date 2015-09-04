@@ -74,5 +74,5 @@ void diode_tilde_setup(void)
     diode_tilde_class = class_new(gensym("diode~"), (t_newmethod)diode_tilde_new, 0,
     	sizeof(t_diode_tilde), 0, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(diode_tilde_class, t_diode_tilde, x_f);
-    class_addmethod(diode_tilde_class, (t_method)diode_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(diode_tilde_class, (t_method)diode_tilde_dsp, gensym("dsp"), A_CANT, 0);
 }

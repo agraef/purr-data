@@ -101,5 +101,5 @@ void sieve_tilde_setup(void)
     sieve_tilde_class = class_new(gensym("sieve~"), (t_newmethod)sieve_tilde_new, 0,
     	sizeof(t_sieve_tilde), 0, A_DEFFLOAT, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(sieve_tilde_class, t_sieve_tilde, x_f);
-    class_addmethod(sieve_tilde_class, (t_method)sieve_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(sieve_tilde_class, (t_method)sieve_tilde_dsp, gensym("dsp"), A_CANT, 0);
 }

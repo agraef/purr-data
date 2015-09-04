@@ -68,5 +68,5 @@ void split_tilde_setup(void)
     split_tilde_class = class_new(gensym("split~"), (t_newmethod)split_tilde_new, 0,
     	sizeof(t_split_tilde), 0, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(split_tilde_class, t_split_tilde, x_f);
-    class_addmethod(split_tilde_class, (t_method)split_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(split_tilde_class, (t_method)split_tilde_dsp, gensym("dsp"), A_CANT, 0);
 }

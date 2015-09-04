@@ -72,5 +72,5 @@ void decimate_tilde_setup(void)
     decimate_tilde_class = class_new(gensym("decimate~"), (t_newmethod)decimate_tilde_new, 0,
     	sizeof(t_decimate_tilde), 0, A_DEFFLOAT, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(decimate_tilde_class, t_decimate_tilde, x_f);
-    class_addmethod(decimate_tilde_class, (t_method)decimate_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(decimate_tilde_class, (t_method)decimate_tilde_dsp, gensym("dsp"), A_CANT, 0);
 }

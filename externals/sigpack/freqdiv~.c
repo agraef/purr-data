@@ -96,5 +96,5 @@ void freqdiv_tilde_setup(void)
     freqdiv_tilde_class = class_new(gensym("freqdiv~"), (t_newmethod)freqdiv_tilde_new, 0,
     	sizeof(t_freqdiv_tilde), 0, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(freqdiv_tilde_class, t_freqdiv_tilde, x_f);
-    class_addmethod(freqdiv_tilde_class, (t_method)freqdiv_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(freqdiv_tilde_class, (t_method)freqdiv_tilde_dsp, gensym("dsp"), A_CANT, 0);
 }

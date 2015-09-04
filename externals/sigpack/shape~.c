@@ -75,5 +75,5 @@ void shape_tilde_setup(void)
     shape_tilde_class = class_new(gensym("shape~"), (t_newmethod)shape_tilde_new, 0,
     	sizeof(t_shape_tilde), 0, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(shape_tilde_class, t_shape_tilde, x_f);
-    class_addmethod(shape_tilde_class, (t_method)shape_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(shape_tilde_class, (t_method)shape_tilde_dsp, gensym("dsp"), A_CANT, 0);
 }

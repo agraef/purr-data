@@ -66,5 +66,5 @@ void foldback_tilde_setup(void)
     foldback_tilde_class = class_new(gensym("foldback~"), (t_newmethod)foldback_tilde_new, 0,
     	sizeof(t_foldback_tilde), 0, A_DEFFLOAT, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(foldback_tilde_class, t_foldback_tilde, x_f);
-    class_addmethod(foldback_tilde_class, (t_method)foldback_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(foldback_tilde_class, (t_method)foldback_tilde_dsp, gensym("dsp"), A_CANT, 0);
 }

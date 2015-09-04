@@ -73,6 +73,6 @@ void impulse_tilde_setup(void)
     impulse_tilde_class = class_new(gensym("impulse~"), (t_newmethod)impulse_tilde_new, 0,
     	sizeof(t_impulse_tilde), 0, A_DEFFLOAT, 0);
 	CLASS_MAINSIGNALIN(impulse_tilde_class, t_impulse_tilde, x_f);
-    class_addmethod(impulse_tilde_class, (t_method)impulse_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(impulse_tilde_class, (t_method)impulse_tilde_dsp, gensym("dsp"), A_CANT, 0);
 	class_addmethod(impulse_tilde_class, (t_method)impulse_tilde_ft1, gensym("ft1"), A_FLOAT, 0);
 }

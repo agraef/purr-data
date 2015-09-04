@@ -79,5 +79,5 @@ void ustep_tilde_setup(void)
     ustep_tilde_class = class_new(gensym("ustep~"), (t_newmethod)ustep_tilde_new, 0,
     	sizeof(t_ustep_tilde), 0, A_DEFFLOAT, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(ustep_tilde_class, t_ustep_tilde, x_f);
-    class_addmethod(ustep_tilde_class, (t_method)ustep_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(ustep_tilde_class, (t_method)ustep_tilde_dsp, gensym("dsp"), A_CANT, 0);
 }

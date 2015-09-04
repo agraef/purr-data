@@ -113,6 +113,6 @@ void vowel_tilde_setup(void)
     vowel_tilde_class = class_new(gensym("vowel~"), (t_newmethod)vowel_tilde_new, 0,
     	sizeof(t_vowel_tilde), 0, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(vowel_tilde_class, t_vowel_tilde, x_f);
-    class_addmethod(vowel_tilde_class, (t_method)vowel_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(vowel_tilde_class, (t_method)vowel_tilde_dsp, gensym("dsp"), A_CANT, 0);
 	class_addmethod(vowel_tilde_class, (t_method)formant_filter, gensym("formant_filter"), A_GIMME, A_NULL); 
 }

@@ -72,5 +72,5 @@ void wavewrap_tilde_setup(void)
     wavewrap_tilde_class = class_new(gensym("wavewrap~"), (t_newmethod)wavewrap_tilde_new, 0,
     	sizeof(t_wavewrap_tilde), 0, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(wavewrap_tilde_class, t_wavewrap_tilde, x_f);
-    class_addmethod(wavewrap_tilde_class, (t_method)wavewrap_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(wavewrap_tilde_class, (t_method)wavewrap_tilde_dsp, gensym("dsp"), A_CANT, 0);
 }

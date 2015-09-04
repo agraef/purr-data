@@ -157,5 +157,5 @@ void harmgen_tilde_setup(void)
     harmgen_tilde_class = class_new(gensym("harmgen~"), (t_newmethod)harmgen_tilde_new, 0,
     	sizeof(t_harmgen_tilde), 0, A_GIMME, 0);
     CLASS_MAINSIGNALIN(harmgen_tilde_class, t_harmgen_tilde, x_f);
-    class_addmethod(harmgen_tilde_class, (t_method)harmgen_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(harmgen_tilde_class, (t_method)harmgen_tilde_dsp, gensym("dsp"), A_CANT, 0);
 }

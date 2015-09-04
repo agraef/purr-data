@@ -77,5 +77,5 @@ void hardlimit_tilde_setup(void)
     hardlimit_tilde_class = class_new(gensym("hardlimit~"), (t_newmethod)hardlimit_tilde_new, 0,
     	sizeof(t_hardlimit_tilde), 0, A_DEFFLOAT, A_DEFFLOAT, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(hardlimit_tilde_class, t_hardlimit_tilde, x_f);
-    class_addmethod(hardlimit_tilde_class, (t_method)hardlimit_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(hardlimit_tilde_class, (t_method)hardlimit_tilde_dsp, gensym("dsp"), A_CANT, 0);
 }

@@ -151,5 +151,5 @@ void valverect_tilde_setup(void)
     valverect_tilde_class = class_new(gensym("valverect~"), (t_newmethod)valverect_tilde_new, (t_method)valverect_tilde_free,
     	sizeof(t_valverect_tilde), 0, A_DEFFLOAT, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(valverect_tilde_class, t_valverect_tilde, x_f);
-    class_addmethod(valverect_tilde_class, (t_method)valverect_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(valverect_tilde_class, (t_method)valverect_tilde_dsp, gensym("dsp"), A_CANT, 0);
 }

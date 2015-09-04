@@ -129,5 +129,5 @@ void transient_tilde_setup(void)
     transient_tilde_class = class_new(gensym("transient~"), (t_newmethod)transient_tilde_new, 0,
     	sizeof(t_transient_tilde), 0, A_DEFFLOAT, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(transient_tilde_class, t_transient_tilde, x_f);
-    class_addmethod(transient_tilde_class, (t_method)transient_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(transient_tilde_class, (t_method)transient_tilde_dsp, gensym("dsp"), A_CANT, 0);
 }

@@ -208,5 +208,5 @@ void freqshift_tilde_setup(void)
     freqshift_tilde_class = class_new(gensym("freqshift~"), (t_newmethod)freqshift_tilde_new, (t_method)freqshift_tilde_free,
     	sizeof(t_freqshift_tilde), 0, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(freqshift_tilde_class, t_freqshift_tilde, x_f);
-    class_addmethod(freqshift_tilde_class, (t_method)freqshift_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(freqshift_tilde_class, (t_method)freqshift_tilde_dsp, gensym("dsp"), A_CANT, 0);
 }

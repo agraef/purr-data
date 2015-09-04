@@ -57,5 +57,5 @@ void rectify_tilde_setup(void)
     rectify_tilde_class = class_new(gensym("rectify~"), (t_newmethod)rectify_tilde_new, 0,
     	sizeof(t_rectify_tilde), 0, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(rectify_tilde_class, t_rectify_tilde, x_f);
-    class_addmethod(rectify_tilde_class, (t_method)rectify_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(rectify_tilde_class, (t_method)rectify_tilde_dsp, gensym("dsp"), A_CANT, 0);
 }
