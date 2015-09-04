@@ -1271,7 +1271,7 @@ void netreceive_tilde_setup(void)
 
 	class_addmethod(netreceive_tilde_class, nullfn, gensym("signal"), 0);
 	class_addbang(netreceive_tilde_class, (t_method)netreceive_tilde_bang);
-	class_addmethod(netreceive_tilde_class, (t_method)netreceive_tilde_dsp, gensym("dsp"), 0);
+	class_addmethod(netreceive_tilde_class, (t_method)netreceive_tilde_dsp, gensym("dsp"), A_CANT, 0);
 	class_addmethod(netreceive_tilde_class, (t_method)netreceive_tilde_print, gensym("print"), 0);
 	class_addmethod(netreceive_tilde_class, (t_method)netreceive_tilde_kick, gensym("kick"), 0);
 	class_addmethod(netreceive_tilde_class, (t_method)netreceive_tilde_reset, gensym("reset"), A_DEFFLOAT, 0);

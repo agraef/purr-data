@@ -958,7 +958,7 @@ void netsend_tilde_setup(void)
     netsend_tilde_class = class_new(gensym("netsend~"), (t_newmethod)netsend_tilde_new, (t_method)netsend_tilde_free,
         sizeof(t_netsend_tilde), 0, A_DEFFLOAT, A_DEFFLOAT, A_NULL);
     class_addmethod(netsend_tilde_class, nullfn, gensym("signal"), 0);
-    class_addmethod(netsend_tilde_class, (t_method)netsend_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(netsend_tilde_class, (t_method)netsend_tilde_dsp, gensym("dsp"), A_CANT, 0);
     class_addfloat(netsend_tilde_class, netsend_tilde_float);
     class_addbang(netsend_tilde_class, netsend_tilde_bang);
     class_addmethod(netsend_tilde_class, (t_method)netsend_tilde_connect, gensym("connect"), A_DEFSYM, A_DEFFLOAT, 0);
