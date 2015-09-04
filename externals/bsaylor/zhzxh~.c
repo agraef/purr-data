@@ -78,5 +78,5 @@ void zhzxh_tilde_setup(void)
 {
 	zhzxh_class = class_new(gensym("zhzxh~"), (t_newmethod)zhzxh_new, 0, sizeof(t_zhzxh), 0, A_GIMME, 0);
 	CLASS_MAINSIGNALIN(zhzxh_class, t_zhzxh, f);
-	class_addmethod(zhzxh_class, (t_method)zhzxh_dsp, gensym("dsp"), 0);
+	class_addmethod(zhzxh_class, (t_method)zhzxh_dsp, gensym("dsp"), A_CANT, 0);
 }

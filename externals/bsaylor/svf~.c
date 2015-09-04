@@ -157,7 +157,7 @@ void svf_tilde_setup(void)
 	fs = sys_getsr();
 	svf_class = class_new(gensym("svf~"), (t_newmethod)svf_new, 0, sizeof(t_svf), 0, A_GIMME, 0);
 	class_addmethod(svf_class, nullfn, gensym("signal"), 0);
-	class_addmethod(svf_class, (t_method)svf_dsp, gensym("dsp"), 0);
+	class_addmethod(svf_class, (t_method)svf_dsp, gensym("dsp"), A_CANT, 0);
 	class_addmethod(svf_class, (t_method)svf_setstate_LP, gensym("low"), 0);
 	class_addmethod(svf_class, (t_method)svf_setstate_HP, gensym("high"), 0);
 	class_addmethod(svf_class, (t_method)svf_setstate_BP, gensym("band"), 0);

@@ -384,7 +384,7 @@ void pvoc_tilde_setup(void)
 {
 	pvoc_class = class_new(gensym("pvoc~"), (t_newmethod)pvoc_new, (t_method)pvoc_free, sizeof(t_pvoc), 0, A_GIMME, 0);
 	class_addmethod(pvoc_class, nullfn, gensym("signal"), 0);
-	class_addmethod(pvoc_class, (t_method) pvoc_dsp, gensym("dsp"), 0);
+	class_addmethod(pvoc_class, (t_method) pvoc_dsp, gensym("dsp"), A_CANT, 0);
 	class_addmethod(pvoc_class, (t_method) setarray, gensym("setarray"), A_DEFSYMBOL, 0);
 	class_addmethod(pvoc_class, (t_method) locking, gensym("locking"), A_DEFFLOAT, 0);
 	class_addmethod(pvoc_class, (t_method) transients, gensym("transients"), A_GIMME, 0);

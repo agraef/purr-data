@@ -157,7 +157,7 @@ static void aenv_zero(t_aenv *x)
 void aenv_tilde_setup(void)
 {
 	aenv_class = class_new(gensym("aenv~"), (t_newmethod)aenv_new, 0, sizeof(t_aenv), 0, A_GIMME, 0);
-	class_addmethod(aenv_class, (t_method)aenv_dsp, gensym("dsp"), 0);
+	class_addmethod(aenv_class, (t_method)aenv_dsp, gensym("dsp"), A_CANT, 0);
 	class_addfloat(aenv_class, (t_method)aenv_float);
 	class_addmethod(aenv_class, (t_method)aenv_lina, gensym("lina"), 0);
 	class_addmethod(aenv_class, (t_method)aenv_loga, gensym("loga"), 0);
