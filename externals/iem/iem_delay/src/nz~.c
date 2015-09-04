@@ -238,6 +238,6 @@ void nz_tilde_setup(void)
 		sizeof(t_nz_tilde), 0, A_DEFFLOAT, A_DEFFLOAT, 0);
 	CLASS_MAINSIGNALIN(nz_tilde_class, t_nz_tilde, x_msi);
 	class_addlist(nz_tilde_class, (t_method)nz_tilde_list);
-	class_addmethod(nz_tilde_class, (t_method)nz_tilde_dsp, gensym("dsp"), 0);
+	class_addmethod(nz_tilde_class, (t_method)nz_tilde_dsp, gensym("dsp"), A_CANT, 0);
 //	class_sethelpsymbol(nz_tilde_class, gensym("iemhelp2/nz~-help"));
 }

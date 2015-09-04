@@ -119,6 +119,6 @@ void block_delay_tilde_setup(void)
 	block_delay_tilde_class = class_new(gensym("block_delay~"), (t_newmethod)block_delay_tilde_new, (t_method)block_delay_tilde_free,
 		sizeof(t_block_delay_tilde), 0, 0);
 	CLASS_MAINSIGNALIN(block_delay_tilde_class, t_block_delay_tilde, x_msi);
-	class_addmethod(block_delay_tilde_class, (t_method)block_delay_tilde_dsp, gensym("dsp"), 0);
+	class_addmethod(block_delay_tilde_class, (t_method)block_delay_tilde_dsp, gensym("dsp"), A_CANT, 0);
 //	class_sethelpsymbol(block_delay_tilde_class, gensym("iemhelp2/block_delay~-help"));
 }

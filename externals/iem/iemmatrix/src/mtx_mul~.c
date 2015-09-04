@@ -928,7 +928,7 @@ void mtx_mul_tilde_setup(void)
   class_addcreator((t_newmethod)matrix_multilde_new, gensym("matrix~"), A_GIMME, 0);
 
 
-  class_addmethod(matrix_multilde_class, (t_method)matrix_multilde_dsp, gensym("dsp"), 0);
+  class_addmethod(matrix_multilde_class, (t_method)matrix_multilde_dsp, gensym("dsp"), A_CANT, 0);
   CLASS_MAINSIGNALIN(matrix_multilde_class, t_matrix_multilde, x_msi);
 
   class_addmethod(matrix_multilde_class, (t_method)matrix_multilde_matrix, gensym("matrix"), A_GIMME, 0);

@@ -277,7 +277,7 @@ void spec2_matrix_bundle_stat_tilde_setup(void)
   spec2_matrix_bundle_stat_tilde_class = class_new(gensym("spec2_matrix_bundle_stat~"), (t_newmethod)spec2_matrix_bundle_stat_tilde_new, (t_method)spec2_matrix_bundle_stat_tilde_free,
     sizeof(t_spec2_matrix_bundle_stat_tilde), 0, A_GIMME, 0);
   CLASS_MAINSIGNALIN(spec2_matrix_bundle_stat_tilde_class, t_spec2_matrix_bundle_stat_tilde, x_msi);
-  class_addmethod(spec2_matrix_bundle_stat_tilde_class, (t_method)spec2_matrix_bundle_stat_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(spec2_matrix_bundle_stat_tilde_class, (t_method)spec2_matrix_bundle_stat_tilde_dsp, gensym("dsp"), A_CANT, 0);
   class_addlist(spec2_matrix_bundle_stat_tilde_class, (t_method)spec2_matrix_bundle_stat_tilde_list);
   class_addmethod(spec2_matrix_bundle_stat_tilde_class, (t_method)spec2_matrix_bundle_stat_tilde_element, gensym("element"), A_GIMME, 0);
   class_addmethod(spec2_matrix_bundle_stat_tilde_class, (t_method)spec2_matrix_bundle_stat_tilde_bundle, gensym("bundle"), A_GIMME, 0);

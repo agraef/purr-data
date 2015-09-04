@@ -455,7 +455,7 @@ void n_delay2p_line_tilde_setup(void)
 		sizeof(t_n_delay2p_line_tilde), 0, A_DEFFLOAT, A_DEFFLOAT, A_DEFFLOAT, 0);
 	CLASS_MAINSIGNALIN(n_delay2p_line_tilde_class, t_n_delay2p_line_tilde, x_msi);
 	class_addlist(n_delay2p_line_tilde_class, (t_method)n_delay2p_line_tilde_list);
-	class_addmethod(n_delay2p_line_tilde_class, (t_method)n_delay2p_line_tilde_dsp, gensym("dsp"), 0);
+	class_addmethod(n_delay2p_line_tilde_class, (t_method)n_delay2p_line_tilde_dsp, gensym("dsp"), A_CANT, 0);
 	class_addmethod(n_delay2p_line_tilde_class, (t_method)n_delay2p_line_tilde_stop, gensym("stop"), 0);
 	class_addmethod(n_delay2p_line_tilde_class, (t_method)n_delay2p_line_tilde_time, gensym("time"), A_FLOAT, 0);
 //	class_sethelpsymbol(n_delay2p_line_tilde_class, gensym("iemhelp2/n_delay2p_line~-help"));

@@ -99,7 +99,7 @@ void spec2_stretch_tilde_setup(void)
   spec2_stretch_tilde_class = class_new(gensym("spec2_stretch~"), (t_newmethod)spec2_stretch_tilde_new,
     0, sizeof(t_spec2_stretch_tilde), 0, A_DEFFLOAT, 0);
   CLASS_MAINSIGNALIN(spec2_stretch_tilde_class, t_spec2_stretch_tilde, x_msi);
-  class_addmethod(spec2_stretch_tilde_class, (t_method)spec2_stretch_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(spec2_stretch_tilde_class, (t_method)spec2_stretch_tilde_dsp, gensym("dsp"), A_CANT, 0);
   class_addfloat(spec2_stretch_tilde_class, (t_method)spec2_stretch_tilde_mul);
 //  class_sethelpsymbol(spec2_stretch_tilde_class, gensym("iemhelp/spec2_stretch~-help"));
 }

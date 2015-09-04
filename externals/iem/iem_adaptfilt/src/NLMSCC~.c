@@ -382,7 +382,7 @@ void NLMSCC_tilde_setup(void)
     NLMSCC_tilde_class = class_new(gensym("NLMSCC~"), (t_newmethod)NLMSCC_tilde_new, (t_method)NLMSCC_tilde_free,
         sizeof(t_NLMSCC_tilde), 0, A_GIMME, 0);
     CLASS_MAINSIGNALIN(NLMSCC_tilde_class, t_NLMSCC_tilde, x_msi);
-    class_addmethod(NLMSCC_tilde_class, (t_method)NLMSCC_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(NLMSCC_tilde_class, (t_method)NLMSCC_tilde_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(NLMSCC_tilde_class, (t_method)NLMSCC_tilde_update, gensym("update"), A_FLOAT, 0); // method: downsampling factor of learning (multiple of 2^N)
     class_addmethod(NLMSCC_tilde_class, (t_method)NLMSCC_tilde_beta, gensym("beta"), A_FLOAT, 0); //method: normalized learning rate
     class_addmethod(NLMSCC_tilde_class, (t_method)NLMSCC_tilde_gamma, gensym("gamma"), A_FLOAT, 0);   // method: dithering noise related to signal

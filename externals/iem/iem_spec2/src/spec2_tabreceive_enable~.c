@@ -163,7 +163,7 @@ void spec2_tabreceive_enable_tilde_setup(void)
 {
   spec2_tabreceive_enable_tilde_class = class_new(gensym("spec2_tabreceive_enable~"), (t_newmethod)spec2_tabreceive_enable_tilde_new,
     0, sizeof(t_spec2_tabreceive_enable_tilde), 0, A_GIMME, 0);
-  class_addmethod(spec2_tabreceive_enable_tilde_class, (t_method)spec2_tabreceive_enable_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(spec2_tabreceive_enable_tilde_class, (t_method)spec2_tabreceive_enable_tilde_dsp, gensym("dsp"), A_CANT, 0);
   class_addsymbol(spec2_tabreceive_enable_tilde_class, (t_method)spec2_tabreceive_enable_tilde_symbol);
   class_addfloat(spec2_tabreceive_enable_tilde_class, (t_method)spec2_tabreceive_enable_tilde_float);
 //  class_sethelpsymbol(spec2_tabreceive_enable_tilde_class, gensym("iemhelp2/spec2_tabreceive_enable~-help"));

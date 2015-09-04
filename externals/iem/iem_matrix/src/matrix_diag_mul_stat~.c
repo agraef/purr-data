@@ -226,7 +226,7 @@ void matrix_diag_mul_stat_tilde_setup(void)
   matrix_diag_mul_stat_tilde_class = class_new(gensym("matrix_diag_mul_stat~"), (t_newmethod)matrix_diag_mul_stat_tilde_new, (t_method)matrix_diag_mul_stat_tilde_free,
     sizeof(t_matrix_diag_mul_stat_tilde), 0, A_GIMME, 0);
   CLASS_MAINSIGNALIN(matrix_diag_mul_stat_tilde_class, t_matrix_diag_mul_stat_tilde, x_msi);
-  class_addmethod(matrix_diag_mul_stat_tilde_class, (t_method)matrix_diag_mul_stat_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(matrix_diag_mul_stat_tilde_class, (t_method)matrix_diag_mul_stat_tilde_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(matrix_diag_mul_stat_tilde_class, (t_method)matrix_diag_mul_stat_tilde_diag, gensym("diag"), A_GIMME, 0);
   class_addmethod(matrix_diag_mul_stat_tilde_class, (t_method)matrix_diag_mul_stat_tilde_element, gensym("element"), A_GIMME, 0);
   class_addlist(matrix_diag_mul_stat_tilde_class, (t_method)matrix_diag_mul_stat_tilde_list);

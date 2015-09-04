@@ -221,7 +221,7 @@ void stream_setup()
 	amp_class = class_new(gensym("amp~"),(t_newmethod)amp_new,(t_method)amp_free,sizeof(t_amp),0, A_DEFFLOAT,A_NULL);
 
 	// register methods
-	class_addmethod(amp_class, (t_method)amp_dsp, gensym("dsp"), A_NULL);
+	class_addmethod(amp_class, (t_method)amp_dsp, gensym("dsp"), A_CANT, A_NULL);
 
     class_addmethod(amp_class, (t_method)amp_connect, gensym("connect"), A_SYMBOL, A_NULL);
 	class_addmethod(amp_class, (t_method)amp_disconnect, gensym("disconnect"), A_NULL);

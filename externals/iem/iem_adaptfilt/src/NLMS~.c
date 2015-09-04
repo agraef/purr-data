@@ -329,7 +329,7 @@ void NLMS_tilde_setup(void)
     NLMS_tilde_class = class_new(gensym("NLMS~"), (t_newmethod)NLMS_tilde_new, (t_method)NLMS_tilde_free,
         sizeof(t_NLMS_tilde), 0, A_GIMME, 0);
     CLASS_MAINSIGNALIN(NLMS_tilde_class, t_NLMS_tilde, x_msi);
-    class_addmethod(NLMS_tilde_class, (t_method)NLMS_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(NLMS_tilde_class, (t_method)NLMS_tilde_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(NLMS_tilde_class, (t_method)NLMS_tilde_update, gensym("update"), A_FLOAT, 0); // method: downsampling factor of learning (multiple of 2^N)
     class_addmethod(NLMS_tilde_class, (t_method)NLMS_tilde_beta, gensym("beta"), A_FLOAT, 0); //method: normalized learning rate
     class_addmethod(NLMS_tilde_class, (t_method)NLMS_tilde_gamma, gensym("gamma"), A_FLOAT, 0);   // method: dithering noise related to signal

@@ -646,7 +646,7 @@ void matrix_mul_line8_tilde_setup(void)
   matrix_mul_line8_tilde_class = class_new(gensym("matrix_mul_line8~"), (t_newmethod)matrix_mul_line8_tilde_new, (t_method)matrix_mul_line8_tilde_free,
     sizeof(t_matrix_mul_line8_tilde), 0, A_GIMME, 0);
   CLASS_MAINSIGNALIN(matrix_mul_line8_tilde_class, t_matrix_mul_line8_tilde, x_msi);
-  class_addmethod(matrix_mul_line8_tilde_class, (t_method)matrix_mul_line8_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(matrix_mul_line8_tilde_class, (t_method)matrix_mul_line8_tilde_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(matrix_mul_line8_tilde_class, (t_method)matrix_mul_line8_tilde_matrix, gensym("matrix"), A_GIMME, 0);
   class_addmethod(matrix_mul_line8_tilde_class, (t_method)matrix_mul_line8_tilde_element, gensym("element"), A_GIMME, 0);
   class_addmethod(matrix_mul_line8_tilde_class, (t_method)matrix_mul_line8_tilde_row, gensym("row"), A_GIMME, 0);

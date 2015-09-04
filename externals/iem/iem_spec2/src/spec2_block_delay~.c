@@ -152,6 +152,6 @@ void spec2_block_delay_tilde_setup(void)
   spec2_block_delay_tilde_class = class_new(gensym("spec2_block_delay~"), (t_newmethod)spec2_block_delay_tilde_new, (t_method)spec2_block_delay_tilde_free,
     sizeof(t_spec2_block_delay_tilde), 0, 0);
   CLASS_MAINSIGNALIN(spec2_block_delay_tilde_class, t_spec2_block_delay_tilde, x_msi);
-  class_addmethod(spec2_block_delay_tilde_class, (t_method)spec2_block_delay_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(spec2_block_delay_tilde_class, (t_method)spec2_block_delay_tilde_dsp, gensym("dsp"), A_CANT, 0);
 //  class_sethelpsymbol(spec2_block_delay_tilde_class, gensym("iemhelp2/spec2_block_delay~-help"));
 }
