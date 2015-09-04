@@ -549,7 +549,6 @@ void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state)
                 glist_xtopixels(glist, 0);
             t_float yscale = glist_ytopixels(glist, 1) -
                 glist_ytopixels(glist, 0);
-post("xsclae is %g and yscale is %g", xscale, yscale);
             //sys_vgui(".x%lx.c create prect %d %d %d %d "
             //         "-strokewidth 1 -stroke $pd_colors(selection) "
             //         "-tags {select%lx selected}\n",
@@ -795,8 +794,9 @@ static void scalar_group_configure(t_scalar *x, t_glist *owner,
     }
 }
 
-void scalar_configure(t_scalar *x, t_glist *owner)
+void scalar_doconfigure(t_gobj *xgobj, t_glist *owner)
 {
+    t_scalar *x = (t_scalar *)xgobj;
     int vis = glist_isvisible(owner);
     if (vis)
     {
@@ -867,6 +867,11 @@ void scalar_configure(t_scalar *x, t_glist *owner)
             scalar_drawselectrect(x, owner, 1);
         }
     }
+}
+
+void scalar_configure(t_scalar *x, t_glist *owner)
+{
+    sys_queuegui(x, owner, scalar_doconfigure);
 }
 
 static void scalar_groupvis(t_scalar *x, t_glist *owner, t_template *template,
