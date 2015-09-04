@@ -65,7 +65,7 @@ void rojo_tilde_setup(void)
 {
     rojo_class = class_new(gensym("rojo~"), (t_newmethod)rojo_new, 0,
         sizeof(t_rojo), CLASS_NOINLET, A_GIMME, 0);
-    class_addmethod(rojo_class, (t_method)rojo_dsp, gensym("dsp"), 0);
+    class_addmethod(rojo_class, (t_method)rojo_dsp, gensym("dsp"), A_CANT, 0);
 }
 /*------------------------------------------------------------------*/
 static t_int *perform0(t_int *w)
