@@ -914,7 +914,7 @@ void udpsend_tilde_setup(void)
     udpsend_tilde_class = class_new(gensym("udpsend~"), (t_newmethod)udpsend_tilde_new, (t_method)udpsend_tilde_free,
         sizeof(t_udpsend_tilde), 0, A_DEFFLOAT, A_DEFFLOAT, A_NULL);
     class_addmethod(udpsend_tilde_class, nullfn, gensym("signal"), 0);
-    class_addmethod(udpsend_tilde_class, (t_method)udpsend_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(udpsend_tilde_class, (t_method)udpsend_tilde_dsp, gensym("dsp"), A_CANT, 0);
     class_addfloat(udpsend_tilde_class, udpsend_tilde_float);
     class_addmethod(udpsend_tilde_class, (t_method)udpsend_tilde_info, gensym("info"), 0);
     class_addmethod(udpsend_tilde_class, (t_method)udpsend_tilde_connect, gensym("connect"), A_DEFSYM, A_DEFFLOAT, 0);

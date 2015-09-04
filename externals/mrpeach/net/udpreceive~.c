@@ -797,7 +797,7 @@ void udpreceive_tilde_setup(void)
 
     class_addmethod(udpreceive_tilde_class, nullfn, gensym("signal"), 0);
     class_addmethod(udpreceive_tilde_class, (t_method)udpreceive_tilde_info, gensym("info"), 0);
-    class_addmethod(udpreceive_tilde_class, (t_method)udpreceive_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(udpreceive_tilde_class, (t_method)udpreceive_tilde_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(udpreceive_tilde_class, (t_method)udpreceive_tilde_reset, gensym("reset"), A_DEFFLOAT, 0);
     class_addmethod(udpreceive_tilde_class, (t_method)udpreceive_tilde_reset, gensym("buffer"), A_DEFFLOAT, 0);
     class_addmethod(udpreceive_tilde_class, (t_method)udpreceive_tilde_setsocket, gensym("port"), A_DEFFLOAT, 0);
