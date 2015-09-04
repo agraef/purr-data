@@ -243,7 +243,7 @@ void formant_tilde_setup(void)
     post(formant_version);
     formant_class = class_new(gensym("formant~"), (t_newmethod)formant_new, (t_method)formant_free,
                     sizeof(t_formant), 0, A_DEFFLOAT, A_DEFFLOAT, A_DEFFLOAT, A_DEFFLOAT, 0);
-    class_addmethod(formant_class, (t_method)formant_dsp, gensym("dsp"), 0);
+    class_addmethod(formant_class, (t_method)formant_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(formant_class, (t_method)formant_size, gensym("size"), A_FLOAT, 0);
     class_addmethod(formant_class, (t_method)formant_bang, gensym("bang"), 0);
     class_addmethod(formant_class, (t_method)formant_central_freq, gensym("freq"), A_FLOAT, 0);

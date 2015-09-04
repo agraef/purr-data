@@ -1372,7 +1372,7 @@ void cooled_tilde_setup(void)
     class_setsavefn(cooled_class, cooled_save);
 
     CLASS_MAINSIGNALIN( cooled_class, t_cooled, x_f );
-    class_addmethod(cooled_class, (t_method)cooled_dsp, gensym("dsp"), A_NULL);
+    class_addmethod(cooled_class, (t_method)cooled_dsp, gensym("dsp"), A_CANT, A_NULL);
     class_addmethod(cooled_class, (t_method)cooled_record, gensym("record"), A_NULL);
     class_addmethod(cooled_class, (t_method)cooled_resize, gensym("resize"), A_FLOAT, A_NULL);
     class_addmethod(cooled_class, (t_method)cooled_zoom, gensym("zoom"), A_FLOAT, A_NULL);

@@ -447,7 +447,7 @@ void speexout_tilde_setup(void)
     speexout_class = class_new(gensym("speexout~"), (t_newmethod)speexout_new, (t_method)speexout_free,
         sizeof(t_speexout), 0, A_GIMME, 0);
     CLASS_MAINSIGNALIN(speexout_class, t_speexout, x_f );
-    class_addmethod(speexout_class, (t_method)speexout_dsp, gensym("dsp"), 0);
+    class_addmethod(speexout_class, (t_method)speexout_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(speexout_class, (t_method)speexout_connect, gensym("connect"), A_SYMBOL, A_FLOAT, 0);
     class_addmethod(speexout_class, (t_method)speexout_disconnect, gensym("disconnect"), 0);
     class_addmethod(speexout_class, (t_method)speexout_quality, gensym("quality"), A_FLOAT, 0);

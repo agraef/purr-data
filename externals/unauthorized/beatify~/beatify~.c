@@ -168,7 +168,7 @@ void beatify_tilde_setup(void)
     beatify_class = class_new(gensym("beatify~"), (t_newmethod)beatify_new, 0,
     	sizeof(t_beatify), 0, 0);
     CLASS_MAINSIGNALIN( beatify_class, t_beatify, x_f );
-    class_addmethod(beatify_class, (t_method)beatify_dsp, gensym("dsp"), 0);
+    class_addmethod(beatify_class, (t_method)beatify_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(beatify_class, (t_method)beatify_attack, gensym("attack"), A_FLOAT, 0);
     class_addmethod(beatify_class, (t_method)beatify_sustain, gensym("sustain"), A_FLOAT, 0);
     class_addmethod(beatify_class, (t_method)beatify_decay, gensym("decay"), A_FLOAT, 0);

@@ -608,7 +608,7 @@ void mp3streamout_tilde_setup(void)
     mp3streamout_class = class_new(gensym("mp3streamout~"), (t_newmethod)mp3streamout_new, (t_method)mp3streamout_free,
         sizeof(t_mp3streamout), 0, 0);
     CLASS_MAINSIGNALIN(mp3streamout_class, t_mp3streamout, x_f );
-    class_addmethod(mp3streamout_class, (t_method)mp3streamout_dsp, gensym("dsp"), 0);
+    class_addmethod(mp3streamout_class, (t_method)mp3streamout_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(mp3streamout_class, (t_method)mp3streamout_connect, gensym("connect"), A_SYMBOL, A_FLOAT, 0);
     class_addmethod(mp3streamout_class, (t_method)mp3streamout_disconnect, gensym("disconnect"), 0);
     class_addmethod(mp3streamout_class, (t_method)mp3streamout_mpeg, gensym("mpeg"), A_FLOAT, A_FLOAT, A_FLOAT, 0);

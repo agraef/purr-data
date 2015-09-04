@@ -111,7 +111,7 @@ extern "C" void stkdrone_tilde_setup(void)
     stkdrone_class = class_new(gensym("stkdrone~"), (t_newmethod)stkdrone_new, 0,
     	sizeof(t_stkdrone), 0, A_NULL);
     class_sethelpsymbol(stkdrone_class, gensym("help-stkdrone~.pd") );
-    class_addmethod(stkdrone_class, (t_method)stkdrone_dsp, gensym("dsp"), A_NULL);
+    class_addmethod(stkdrone_class, (t_method)stkdrone_dsp, gensym("dsp"), A_CANT, A_NULL);
     class_addmethod(stkdrone_class, (t_method)stkdrone_play, gensym("play") , A_NULL);
     class_addmethod(stkdrone_class, (t_method)stkdrone_stop, gensym("stop") , A_NULL);
     class_addmethod(stkdrone_class, (t_method)stkdrone_freq, gensym("freq") , A_DEFFLOAT, A_NULL);

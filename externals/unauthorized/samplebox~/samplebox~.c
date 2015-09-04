@@ -515,7 +515,7 @@ void samplebox_tilde_setup(void)
     samplebox_class = class_new(gensym("samplebox~"), (t_newmethod)samplebox_new, (t_method)samplebox_free,
                     sizeof(t_samplebox), 0, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN( samplebox_class, t_samplebox, x_f );
-    class_addmethod(samplebox_class, (t_method)samplebox_dsp, gensym("dsp"), 0);
+    class_addmethod(samplebox_class, (t_method)samplebox_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(samplebox_class, (t_method)samplebox_record, gensym("record"), 0);
     class_addmethod(samplebox_class, (t_method)samplebox_resize, gensym("resize"), A_FLOAT, 0);
     class_addmethod(samplebox_class, (t_method)samplebox_swapblocks, gensym("swapblocks"), A_FLOAT, A_FLOAT, A_FLOAT, 0);

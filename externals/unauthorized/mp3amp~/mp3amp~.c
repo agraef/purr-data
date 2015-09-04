@@ -1254,7 +1254,7 @@ void mp3amp_tilde_setup(void)
         sizeof(t_mp3amp), 0, A_DEFFLOAT, A_NULL);
 
     class_addmethod(mp3amp_class, nullfn, gensym("signal"), 0);
-    class_addmethod(mp3amp_class, (t_method)mp3amp_dsp, gensym("dsp"), 0);
+    class_addmethod(mp3amp_class, (t_method)mp3amp_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(mp3amp_class, (t_method)mp3amp_connect, gensym("connect"), A_SYMBOL, A_SYMBOL, A_FLOAT, 0);
     class_addmethod(mp3amp_class, (t_method)mp3amp_connect_url, gensym("connecturl"), A_SYMBOL, 0);
     class_addmethod(mp3amp_class, (t_method)mp3amp_standby, gensym("standby"), A_DEFFLOAT, 0);

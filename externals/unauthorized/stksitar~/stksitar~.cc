@@ -111,7 +111,7 @@ extern "C" void stksitar_tilde_setup(void)
     stksitar_class = class_new(gensym("stksitar~"), (t_newmethod)stksitar_new, 0,
     	sizeof(t_stksitar), 0, A_NULL);
     class_sethelpsymbol(stksitar_class, gensym("help-stksitar~.pd"));
-    class_addmethod(stksitar_class, (t_method)stksitar_dsp, gensym("dsp"), A_NULL);
+    class_addmethod(stksitar_class, (t_method)stksitar_dsp, gensym("dsp"), A_CANT, A_NULL);
     class_addmethod(stksitar_class, (t_method)stksitar_play, gensym("play") , A_NULL);
     class_addmethod(stksitar_class, (t_method)stksitar_stop, gensym("stop") , A_NULL);
     class_addmethod(stksitar_class, (t_method)stksitar_freq, gensym("freq") , A_DEFFLOAT, A_NULL);

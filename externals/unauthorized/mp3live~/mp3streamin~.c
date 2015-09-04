@@ -667,5 +667,5 @@ void mp3streamin_tilde_setup(void)
     	sizeof(t_mp3streamin),  CLASS_NOINLET, A_DEFFLOAT, A_DEFFLOAT, A_NULL);
 
     class_addmethod(mp3streamin_class, nullfn, gensym("signal"), 0);
-    class_addmethod(mp3streamin_class, (t_method) mp3streamin_dsp, gensym("dsp"), 0);
+    class_addmethod(mp3streamin_class, (t_method) mp3streamin_dsp, gensym("dsp"), A_CANT, 0);
 }

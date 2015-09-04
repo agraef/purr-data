@@ -69,6 +69,6 @@ void spigot_tilde_setup(void)
     spigot_class = class_new(gensym("spigot~"), (t_newmethod)spigot_new, 0,
     	sizeof(t_spigot), 0, 0);
     CLASS_MAINSIGNALIN( spigot_class, t_spigot, x_f );
-    class_addmethod(spigot_class, (t_method)spigot_dsp, gensym("dsp"), 0);
+    class_addmethod(spigot_class, (t_method)spigot_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(spigot_class, (t_method)spigot_set, gensym("seton"), A_FLOAT, 0);
 }

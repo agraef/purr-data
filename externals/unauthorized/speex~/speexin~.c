@@ -608,5 +608,5 @@ void speexin_tilde_setup(void)
     	sizeof(t_speexin),  CLASS_NOINLET, A_DEFFLOAT, A_DEFFLOAT, A_NULL);
 
     class_addmethod(speexin_class, nullfn, gensym("signal"), 0);
-    class_addmethod(speexin_class, (t_method) speexin_dsp, gensym("dsp"), 0);
+    class_addmethod(speexin_class, (t_method) speexin_dsp, gensym("dsp"), A_CANT, 0);
 }

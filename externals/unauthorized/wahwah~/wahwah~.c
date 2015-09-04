@@ -403,6 +403,6 @@ void wahwah_tilde_setup(void)
     class_addmethod(wahwah_class, (t_method)wahwah_maxstep, gensym("maxstep"), A_FLOAT, 0);
     class_addmethod(wahwah_class, (t_method)wahwah_dbgain, gensym("dbgain"), A_FLOAT, 0);
     class_addmethod(wahwah_class, (t_method)wahwah_bandwidth, gensym("bandwidth"), A_FLOAT, 0);
-    class_addmethod(wahwah_class, (t_method)wahwah_dsp, gensym("dsp"), 0);
+    class_addmethod(wahwah_class, (t_method)wahwah_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(wahwah_class, (t_method)wahwah_preset, gensym("preset"), A_FLOAT, 0);
 }

@@ -800,7 +800,7 @@ void exciter_setup(void)
     class_addmethod(exciter_class, (t_method)exciter_reset, gensym("reset"), 0);
     class_addmethod(exciter_class, (t_method)exciter_pause, gensym("pause"), 0);
     class_addmethod(exciter_class, (t_method)exciter_resume, gensym("resume"), 0);
-    class_addmethod(exciter_class, (t_method)exciter_dsp, gensym("dsp"), A_NULL);
+    class_addmethod(exciter_class, (t_method)exciter_dsp, gensym("dsp"), A_CANT, A_NULL);
     exciter_widgetbehavior.w_getrectfn =    exciter_getrect;
     exciter_widgetbehavior.w_displacefn =   exciter_displace;
     exciter_widgetbehavior.w_selectfn =     exciter_select;
