@@ -3851,7 +3851,7 @@ void mp3play_tilde_setup(void)
 {
     mp3play_tilde_class = class_new(gensym("mp3play~"), (t_newmethod)mp3play_tilde_new,
          (t_method)mp3play_tilde_free, sizeof(t_mp3play_tilde), 0, 0);
-    class_addmethod(mp3play_tilde_class, (t_method)mp3play_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(mp3play_tilde_class, (t_method)mp3play_tilde_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(mp3play_tilde_class, (t_method)mp3play_tilde_start, gensym("start"), 0);
     class_addmethod(mp3play_tilde_class, (t_method)mp3play_tilde_ft1,
         gensym("ft1"), A_FLOAT, 0);
