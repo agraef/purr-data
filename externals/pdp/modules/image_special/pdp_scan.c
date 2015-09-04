@@ -221,7 +221,7 @@ void pdp_scan_setup(void)
 
     class_addmethod(pdp_scan_class, (t_method)pdp_scan_interpolate, gensym("interpolate"), A_FLOAT, A_NULL);
     class_addmethod(pdp_scan_class, (t_method)pdp_scan_input_0, gensym("pdp"),  A_SYMBOL, A_DEFFLOAT, A_NULL);
-    class_addmethod(pdp_scan_class, (t_method)pdp_scan_dsp, gensym("dsp"),  A_NULL);
+    class_addmethod(pdp_scan_class, (t_method)pdp_scan_dsp, gensym("dsp"), A_CANT, A_NULL);
 
 
 }

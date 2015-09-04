@@ -522,7 +522,7 @@ void pdp_rawout_setup(void){
 
     /* add signal input */
     CLASS_MAINSIGNALIN(rawout_dsp_class, t_rawout, x_f); 
-    class_addmethod(rawout_dsp_class, (t_method)rawout_dsp, gensym("dsp"), 0);   
+    class_addmethod(rawout_dsp_class, (t_method)rawout_dsp, gensym("dsp"), A_CANT, 0);   
     COMMON(rawout_dsp_class);
 
 }

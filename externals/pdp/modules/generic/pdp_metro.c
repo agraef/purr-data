@@ -125,7 +125,7 @@ void pdp_metro_setup(void)
 
     CLASS_MAINSIGNALIN(metro_class, t_metro, x_f);   
     class_addmethod(metro_class, (t_method)metro_tick,   gensym("tick"),  A_NULL);
-    class_addmethod(metro_class, (t_method)metro_dsp,    gensym("dsp"),  A_NULL);
+    class_addmethod(metro_class, (t_method)metro_dsp,    gensym("dsp"),  A_CANT, A_NULL);
     class_addmethod(metro_class, (t_method)metro_fps,    gensym("fps"),  A_FLOAT, A_DEFFLOAT, A_NULL);
 
 

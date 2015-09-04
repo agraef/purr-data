@@ -971,7 +971,7 @@ void pdp_qt_setup(void)
     	(t_method)pdp_qt_free, sizeof(t_pdp_qt), 0, A_NULL);
     pdp_qt_setup_common(pdp_qt_tilde_class);
 
-    class_addmethod(pdp_qt_tilde_class, (t_method)pdp_qt_dsp, gensym("dsp"), 0);
+    class_addmethod(pdp_qt_tilde_class, (t_method)pdp_qt_dsp, gensym("dsp"), A_CANT, 0);
 
 #ifdef __APPLE__
     /* this is necessary for pdp_qt to find the embedded libquicktime plugins */

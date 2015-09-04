@@ -197,7 +197,7 @@ void pdp_scanxy_setup(void)
 
     class_addmethod(pdp_scanxy_class, (t_method)pdp_scanxy_interpolate, gensym("interpolate"), A_FLOAT, A_NULL);
     class_addmethod(pdp_scanxy_class, (t_method)pdp_scanxy_input_0, gensym("pdp"),  A_SYMBOL, A_DEFFLOAT, A_NULL);
-    class_addmethod(pdp_scanxy_class, (t_method)pdp_scanxy_dsp, gensym("dsp"),  A_NULL);
+    class_addmethod(pdp_scanxy_class, (t_method)pdp_scanxy_dsp, gensym("dsp"), A_CANT, A_NULL);
 
 
 }

@@ -309,7 +309,7 @@ void pdp_scope_setup(void)
     class_addmethod(pdp_scope_class, (t_method)pdp_scope_type, gensym("type"), A_SYMBOL, A_NULL);
     class_addmethod(pdp_scope_class, (t_method)pdp_scope_dim, gensym("dim"), A_FLOAT, A_FLOAT, A_NULL);
     class_addmethod(pdp_scope_class, (t_method)pdp_scope_bang, gensym("bang"), A_NULL);
-    class_addmethod(pdp_scope_class, (t_method)pdp_scope_dsp, gensym("dsp"), 0); 
+    class_addmethod(pdp_scope_class, (t_method)pdp_scope_dsp, gensym("dsp"), A_CANT, 0); 
 }
 
 #ifdef __cplusplus
