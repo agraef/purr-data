@@ -102,6 +102,7 @@ void bitsplit_tilde_setup(void)
     bitsplit_class = class_new(gensym("bitsplit~"), (t_newmethod)bitsplit_new,
     	(t_method)bitsplit_free, sizeof(t_bitsplit), 0, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(bitsplit_class, t_bitsplit, x_f); 
-    class_addmethod(bitsplit_class, (t_method)bitsplit_dsp, gensym("dsp"), 0); 
+    class_addmethod(bitsplit_class, (t_method)bitsplit_dsp, gensym("dsp"),
+        A_CANT, 0); 
 }
 

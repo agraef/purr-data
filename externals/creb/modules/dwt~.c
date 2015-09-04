@@ -828,7 +828,7 @@ void dwt_tilde_setup(void)
     CLASS_MAINSIGNALIN(dwt_class, t_dwt, x_f);
     class_addmethod(dwt_class, (t_method)dwt_print, gensym("print"), 0);
     class_addmethod(dwt_class, (t_method)dwt_reset, gensym("reset"), 0);
-    class_addmethod(dwt_class, (t_method)dwt_dsp, gensym("dsp"), 0); 
+    class_addmethod(dwt_class, (t_method)dwt_dsp, gensym("dsp"), A_CANT, 0); 
 
     class_addmethod(dwt_class, (t_method)dwt_filter, gensym("predict"), A_GIMME, 0); 
     class_addmethod(dwt_class, (t_method)dwt_filter, gensym("update"), A_GIMME, 0); 

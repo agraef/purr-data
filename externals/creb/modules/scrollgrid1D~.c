@@ -218,7 +218,7 @@ void scrollgrid1D_tilde_setup(void)
     	(t_method)scrollgrid1D_free, sizeof(t_scrollgrid1D), 0, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(scrollgrid1D_class, t_scrollgrid1D, x_f);
     class_addmethod(scrollgrid1D_class, (t_method)scrollgrid1D_dsp,
-		    gensym("dsp"), 0); 
+		    gensym("dsp"), A_CANT, 0); 
     class_addmethod(scrollgrid1D_class, (t_method)scrollgrid1D_reset,
 		    gensym("reset"), 0); 
 

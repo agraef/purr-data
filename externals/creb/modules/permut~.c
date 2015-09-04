@@ -182,7 +182,8 @@ void permut_tilde_setup(void)
     CLASS_MAINSIGNALIN(permut_class, t_permut, x_f); 
     class_addmethod(permut_class, (t_method)permut_random, gensym("random"), A_FLOAT, 0);
     class_addmethod(permut_class, (t_method)permut_bang, gensym("bang"), 0);
-    class_addmethod(permut_class, (t_method)permut_dsp, gensym("dsp"), 0); 
+    class_addmethod(permut_class, (t_method)permut_dsp, gensym("dsp"),
+        A_CANT, 0); 
 
 }
 

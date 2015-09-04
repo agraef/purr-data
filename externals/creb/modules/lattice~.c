@@ -137,7 +137,8 @@ void lattice_tilde_setup(void)
     lattice_class = class_new(gensym("lattice~"), (t_newmethod)lattice_new,
     	(t_method)lattice_free, sizeof(t_lattice), 0, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(lattice_class, t_lattice, x_f); 
-    class_addmethod(lattice_class, (t_method)lattice_dsp, gensym("dsp"), 0); 
+    class_addmethod(lattice_class, (t_method)lattice_dsp, gensym("dsp"),
+        A_CANT, 0); 
     class_addmethod(lattice_class, (t_method)lattice_reset, gensym("reset"), 0); 
     class_addmethod(lattice_class, (t_method)lattice_rc,
 		    gensym("rc"), A_FLOAT, A_FLOAT, 0); 

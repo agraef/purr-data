@@ -165,7 +165,7 @@ void eadsr_tilde_setup(void)
 		    gensym("start"), 0);
     class_addmethod(eadsr_class, (t_method)eadsr_start, gensym("bang"), 0);
     class_addmethod(eadsr_class, (t_method)eadsr_stop, gensym("stop"), 0);
-    class_addmethod(eadsr_class, (t_method)eadsr_dsp, gensym("dsp"), 0); 
+    class_addmethod(eadsr_class, (t_method)eadsr_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(eadsr_class, (t_method)eadsr_attack,
 		    gensym("attack"), A_FLOAT, 0);
     class_addmethod(eadsr_class, (t_method)eadsr_decay,

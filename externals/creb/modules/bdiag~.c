@@ -267,7 +267,7 @@ void bdiag_tilde_setup(void)
     class_addmethod(bdiag_class, (t_method)bdiag_random, gensym("random"), 0);
     class_addmethod(bdiag_class, (t_method)bdiag_random, gensym("bang"), 0);
     class_addmethod(bdiag_class, (t_method)bdiag_reset, gensym("reset"), 0);
-    class_addmethod(bdiag_class, (t_method)bdiag_dsp, gensym("dsp"), 0); 
+    class_addmethod(bdiag_class, (t_method)bdiag_dsp, gensym("dsp"), A_CANT, 0);
 
     class_addmethod(bdiag_class, (t_method)bdiag_eigen, gensym("eigen"), 
 		    A_DEFFLOAT, A_DEFFLOAT, A_DEFFLOAT, 0); 

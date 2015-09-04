@@ -263,7 +263,7 @@ void xfm_tilde_setup(void)
     	(t_method)xfm_free, sizeof(t_xfm), 0, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(xfm_class, t_xfm, x_f);
     class_addmethod(xfm_class, (t_method)xfm_type, gensym("type"), A_FLOAT, 0);
-    class_addmethod(xfm_class, (t_method)xfm_dsp, gensym("dsp"), 0); 
+    class_addmethod(xfm_class, (t_method)xfm_dsp, gensym("dsp"), A_CANT, 0); 
     class_addmethod(xfm_class, (t_method)xfm_reset, gensym("reset"), 0); 
 
 

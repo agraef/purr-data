@@ -201,7 +201,8 @@ void junction_tilde_setup(void)
     CLASS_MAINSIGNALIN(junction_class, t_junction, x_f); 
     class_addmethod(junction_class, (t_method)junction_bang, gensym("bang"), 0);
     class_addmethod(junction_class, (t_method)junction_random, gensym("random"), A_FLOAT, 0);
-    class_addmethod(junction_class, (t_method)junction_dsp, gensym("dsp"), 0); 
+    class_addmethod(junction_class, (t_method)junction_dsp, gensym("dsp"),
+        A_CANT, 0); 
 
 }
 

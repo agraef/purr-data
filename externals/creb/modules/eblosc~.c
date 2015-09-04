@@ -603,7 +603,7 @@ extern "C"
 				 0, A_DEFSYMBOL, A_NULL);
 	CLASS_MAINSIGNALIN(eblosc_class, t_eblosc, x_f);
 	class_addmethod(eblosc_class, (t_method)eblosc_dsp,
-			gensym("dsp"), A_NULL); 
+			gensym("dsp"), A_CANT, 0); 
 	class_addmethod(eblosc_class, (t_method)eblosc_phase,
 			gensym("phase"), A_FLOAT, A_NULL); 
 	class_addmethod(eblosc_class, (t_method)eblosc_phase2,

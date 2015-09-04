@@ -110,7 +110,7 @@ void ramp_tilde_setup(void)
     class_addcreator((t_newmethod)blockramp_new, gensym("blockramp~"), A_NULL);
 
     class_addmethod(ramp_class, (t_method)ramp_bang, gensym("bang"), 0);
-    class_addmethod(ramp_class, (t_method)ramp_dsp, gensym("dsp"), 0); 
+    class_addmethod(ramp_class, (t_method)ramp_dsp, gensym("dsp"), A_CANT, 0); 
     class_addfloat(ramp_class, (t_method)ramp_offset); 
 }
 

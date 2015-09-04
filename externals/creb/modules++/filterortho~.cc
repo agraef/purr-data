@@ -117,7 +117,7 @@ void filterortho_tilde_setup(void)
 
     class_addmethod(filterortho_class, (t_method)filterortho_bang, gensym("bang"), A_NULL);
 
-    class_addmethod(filterortho_class, (t_method)filterortho_dsp, gensym("dsp"), A_NULL); 
+    class_addmethod(filterortho_class, (t_method)filterortho_dsp, gensym("dsp"),A_CANT, A_NULL); 
 
     class_addmethod(filterortho_class, (t_method)setLP, gensym("setLP"), A_FLOAT, A_FLOAT, A_NULL); 
     class_addmethod(filterortho_class, (t_method)setHP, gensym("setHP"), A_FLOAT, A_FLOAT, A_NULL); 

@@ -168,7 +168,7 @@ void sbosc_tilde_setup(void)
         sizeof(t_sbosc_tilde), 0, A_DEFSYM, 0);
     CLASS_MAINSIGNALIN(sbosc_tilde_class, t_sbosc_tilde, x_f);
     class_addmethod(sbosc_tilde_class, (t_method)sbosc_tilde_dsp,
-        gensym("dsp"), 0);
+        gensym("dsp"), A_CANT, 0);
     class_addmethod(sbosc_tilde_class, (t_method)sbosc_tilde_phase,
         gensym("phase"), A_FLOAT, 0);
 }

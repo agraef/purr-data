@@ -310,7 +310,7 @@ void tabreadmix_tilde_setup(void)
         sizeof(t_tabreadmix_tilde), 0, A_DEFSYM, 0);
     CLASS_MAINSIGNALIN(tabreadmix_tilde_class, t_tabreadmix_tilde, x_f);
     class_addmethod(tabreadmix_tilde_class, (t_method)tabreadmix_tilde_dsp,
-        gensym("dsp"), 0);
+        gensym("dsp"), A_CANT, 0);
     class_addmethod(tabreadmix_tilde_class, (t_method)tabreadmix_tilde_set,
         gensym("set"), A_SYMBOL, 0);
     class_addmethod(tabreadmix_tilde_class, (t_method)tabreadmix_tilde_blocksize,

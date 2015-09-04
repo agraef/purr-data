@@ -146,7 +146,8 @@ void bmatrix_tilde_setup(void)
     matrix_class = class_new(gensym("bmatrix~"), (t_newmethod)matrix_new,
     	(t_method)matrix_free, sizeof(t_matrix), 0, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(matrix_class, t_matrix, x_f);
-    class_addmethod(matrix_class, (t_method)matrix_dsp, gensym("dsp"), 0); 
+    class_addmethod(matrix_class, (t_method)matrix_dsp, gensym("dsp"),
+        A_CANT, 0); 
     class_addmethod(matrix_class, (t_method)matrix_load, gensym("load"), A_SYMBOL,0); 
 
 

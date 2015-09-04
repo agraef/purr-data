@@ -131,7 +131,7 @@ void ear_tilde_setup(void)
     class_addmethod(ear_class, (t_method)ear_start, gensym("start"), 0);
     class_addmethod(ear_class, (t_method)ear_start, gensym("bang"), 0);
     class_addmethod(ear_class, (t_method)ear_stop, gensym("stop"), 0);
-    class_addmethod(ear_class, (t_method)ear_dsp, gensym("dsp"), 0); 
+    class_addmethod(ear_class, (t_method)ear_dsp, gensym("dsp"), A_CANT, 0); 
     class_addmethod(ear_class, 
 		    (t_method)ear_attack, gensym("attack"), A_FLOAT, 0);
     class_addmethod(ear_class, 

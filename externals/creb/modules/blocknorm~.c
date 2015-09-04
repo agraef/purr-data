@@ -127,6 +127,7 @@ void blocknorm_tilde_setup(void)
     blocknorm_class = class_new(gensym("blocknorm~"), (t_newmethod)blocknorm_new,
     	(t_method)blocknorm_free, sizeof(t_blocknorm), 0, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(blocknorm_class, t_blocknorm, x_f); 
-    class_addmethod(blocknorm_class, (t_method)blocknorm_dsp, gensym("dsp"), 0); 
+    class_addmethod(blocknorm_class, (t_method)blocknorm_dsp, gensym("dsp"),
+        A_CANT, 0); 
 }
 

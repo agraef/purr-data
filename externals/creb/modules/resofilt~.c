@@ -403,6 +403,7 @@ void resofilt_tilde_setup(void)
     resofilt_class = class_new(gensym("resofilt~"), (t_newmethod)resofilt_new,
     	(t_method)resofilt_free, sizeof(t_resofilt), 0, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(resofilt_class, t_resofilt, x_f);
-    class_addmethod(resofilt_class, (t_method)resofilt_dsp, gensym("dsp"), 0); 
+    class_addmethod(resofilt_class, (t_method)resofilt_dsp, gensym("dsp"),
+        A_CANT, 0); 
 }
 

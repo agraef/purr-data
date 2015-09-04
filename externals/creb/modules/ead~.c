@@ -150,7 +150,7 @@ void ead_tilde_setup(void)
 
     class_addmethod(ead_class, (t_method)ead_start, gensym("start"), 0);
     class_addmethod(ead_class, (t_method)ead_start, gensym("bang"), 0);
-    class_addmethod(ead_class, (t_method)ead_dsp, gensym("dsp"), 0); 
+    class_addmethod(ead_class, (t_method)ead_dsp, gensym("dsp"), A_CANT, 0); 
     class_addmethod(ead_class, (t_method)ead_attack,
 		    gensym("attack"), A_FLOAT, 0);
     class_addmethod(ead_class, (t_method)ead_decay,

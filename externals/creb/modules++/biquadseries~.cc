@@ -118,7 +118,7 @@ void biquadseries_tilde_setup(void)
 
     class_addmethod(biquadseries_class, (t_method)biquadseries_bang, gensym("bang"), (t_atomtype)0);
 
-    class_addmethod(biquadseries_class, (t_method)biquadseries_dsp, gensym("dsp"), (t_atomtype)0); 
+    class_addmethod(biquadseries_class, (t_method)biquadseries_dsp, gensym("dsp"), A_CANT, A_NULL); 
 
     class_addmethod(biquadseries_class, (t_method)biquadseries_butterLP, gensym("butterLP"), A_FLOAT, A_NULL); 
     class_addmethod(biquadseries_class, (t_method)biquadseries_butterHP, gensym("butterHP"), A_FLOAT, A_NULL); 

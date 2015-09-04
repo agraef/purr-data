@@ -132,7 +132,7 @@ void cheby_tilde_setup(void)
     	(t_method)cheby_free, sizeof(t_cheby), 0, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(cheby_class, t_cheby, x_f); 
     class_addmethod(cheby_class, (t_method)cheby_bang, gensym("bang"), 0);
-    class_addmethod(cheby_class, (t_method)cheby_dsp, gensym("dsp"), 0); 
+    class_addmethod(cheby_class, (t_method)cheby_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(cheby_class, (t_method)cheby_coef, gensym("coef"), 
 		    A_DEFFLOAT, A_DEFFLOAT, 0); 
 

@@ -268,7 +268,7 @@ void dist_tilde_setup(void)
     	(t_method)dist_free, sizeof(t_dist), 0, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(dist_class, t_dist, x_f); 
     class_addmethod(dist_class, (t_method)dist_bang, gensym("bang"), 0);
-    class_addmethod(dist_class, (t_method)dist_dsp, gensym("dsp"), 0); 
+    class_addmethod(dist_class, (t_method)dist_dsp, gensym("dsp"), A_CANT, 0); 
     class_addmethod(dist_class, (t_method)dist_gain, gensym("gain"), A_FLOAT, 0); 
 
 }

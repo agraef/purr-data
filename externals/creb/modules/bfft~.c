@@ -299,7 +299,7 @@ void bfft_tilde_setup(void)
     bfft_class = class_new(gensym("bfft~"), (t_newmethod)bfft_new,
     	(t_method)bfft_free, sizeof(t_bfft), 0, 0);
     CLASS_MAINSIGNALIN(bfft_class, t_bfft, x_f);
-    class_addmethod(bfft_class, (t_method)bfft_dsp, gensym("dsp"), 0); 
+    class_addmethod(bfft_class, (t_method)bfft_dsp, gensym("dsp"), A_CANT, 0); 
 
 
 

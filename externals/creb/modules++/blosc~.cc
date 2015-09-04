@@ -761,7 +761,8 @@ extern "C"
 	blosc_class = class_new(gensym("blosc~"), (t_newmethod)blosc_new,
 				(t_method)blosc_free, sizeof(t_blosc), 0, A_DEFSYMBOL, A_NULL);
 	CLASS_MAINSIGNALIN(blosc_class, t_blosc, x_f);
-	class_addmethod(blosc_class, (t_method)blosc_dsp, gensym("dsp"), A_NULL); 
+	class_addmethod(blosc_class, (t_method)blosc_dsp, gensym("dsp"),
+            A_CANT, A_NULL); 
 	class_addmethod(blosc_class, (t_method)blosc_phase, gensym("phase"), A_FLOAT, A_NULL); 
 	class_addmethod(blosc_class, (t_method)blosc_phase2, gensym("phase2"), A_FLOAT, A_NULL); 
 

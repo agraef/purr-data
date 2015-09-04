@@ -381,6 +381,6 @@ void partconv_tilde_setup(void)
 	partconv_class = class_new(gensym("partconv~"), (t_newmethod)partconv_new,
 			(t_method)partconv_free, sizeof(t_partconv), 0, A_GIMME, 0);
 	class_addmethod(partconv_class, nullfn, gensym("signal"), 0);
-	class_addmethod(partconv_class, (t_method) partconv_dsp, gensym("dsp"), 0);
+	class_addmethod(partconv_class, (t_method) partconv_dsp, gensym("dsp"), A_CANT, 0);
 	class_addmethod(partconv_class, (t_method) partconv_set, gensym("set"), A_DEFSYMBOL, 0);
 }

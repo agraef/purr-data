@@ -171,6 +171,6 @@ void cmath_tilde_setup(void)
 
     CLASS_MAINSIGNALIN(cmath_class, t_cmath, x_f);
 
-    class_addmethod(cmath_class, (t_method)cmath_dsp, gensym("dsp"), 0); 
+    class_addmethod(cmath_class, (t_method)cmath_dsp, gensym("dsp"), A_CANT, 0); 
 }
 

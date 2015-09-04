@@ -132,7 +132,7 @@ void qnorm_tilde_setup(void)
     qnorm_class = class_new(gensym("qnorm~"), (t_newmethod)qnorm_new,
     	(t_method)qnorm_free, sizeof(t_qnorm), 0, 0);
     CLASS_MAINSIGNALIN(qnorm_class, t_qnorm, x_f); 
-    class_addmethod(qnorm_class, (t_method)qnorm_dsp, gensym("dsp"), 0); 
+    class_addmethod(qnorm_class, (t_method)qnorm_dsp, gensym("dsp"), A_CANT, 0); 
 
 }
 

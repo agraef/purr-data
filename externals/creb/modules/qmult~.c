@@ -160,7 +160,7 @@ void qmult_tilde_setup(void)
     qmult_class = class_new(gensym("qmult~"), (t_newmethod)qmult_new,
     	(t_method)qmult_free, sizeof(t_qmult), 0, 0);
     CLASS_MAINSIGNALIN(qmult_class, t_qmult, x_f); 
-    class_addmethod(qmult_class, (t_method)qmult_dsp, gensym("dsp"), 0); 
+    class_addmethod(qmult_class, (t_method)qmult_dsp, gensym("dsp"), A_CANT, 0); 
 
 }
 

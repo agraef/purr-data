@@ -205,7 +205,7 @@ void diag_tilde_setup(void)
     diag_class = class_new(gensym("diag~"), (t_newmethod)diag_new,
     	(t_method)diag_free, sizeof(t_diag), 0, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(diag_class, t_diag, x_f);
-    class_addmethod(diag_class, (t_method)diag_dsp, gensym("dsp"), 0); 
+    class_addmethod(diag_class, (t_method)diag_dsp, gensym("dsp"), A_CANT, 0); 
     class_addmethod(diag_class, (t_method)diag_reset, gensym("reset"), 0); 
     class_addmethod(diag_class, (t_method)diag_random, gensym("random"), 0); 
     class_addmethod(diag_class, (t_method)diag_random, gensym("bang"), 0); 

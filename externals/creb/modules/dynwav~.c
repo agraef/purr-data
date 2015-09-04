@@ -312,7 +312,8 @@ void dynwav_tilde_setup(void)
     dynwav_class = class_new(gensym("dynwav~"), (t_newmethod)dynwav_new,
     	(t_method)dynwav_free, sizeof(t_dynwav), 0, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(dynwav_class, t_dynwav, x_f);
-    class_addmethod(dynwav_class, (t_method)dynwav_dsp, gensym("dsp"), 0); 
+    class_addmethod(dynwav_class, (t_method)dynwav_dsp, gensym("dsp"),
+        A_CANT, 0); 
 
 
 }

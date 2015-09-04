@@ -499,7 +499,7 @@ void fdn_tilde_setup(void)
     class_addmethod(fdn_class, (t_method)fdn_timelow,
 		    gensym("timelow"), A_DEFFLOAT, 0);
     class_addmethod(fdn_class, (t_method)fdn_list, gensym("lines"), A_GIMME, 0);
-    class_addmethod(fdn_class, (t_method)fdn_dsp, gensym("dsp"), 0); 
+    class_addmethod(fdn_class, (t_method)fdn_dsp, gensym("dsp"), A_CANT, 0); 
     class_addmethod(fdn_class, (t_method)fdn_linear,
 		    gensym("linear"), A_FLOAT, A_FLOAT, A_FLOAT, 0); 
     class_addmethod(fdn_class, (t_method)fdn_exponential,
