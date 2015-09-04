@@ -66,7 +66,7 @@ void pluginhost_tilde_setup(void)
             (t_method)ph_free, sizeof(ph), 0, A_GIMME, 0);
     class_addlist(ph_class, handle_pd_list);
     class_addbang(ph_class, handle_pd_bang);
-    class_addmethod(ph_class, (t_method)handle_pd_dsp, gensym("dsp"), 0);
+    class_addmethod(ph_class, (t_method)handle_pd_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod (ph_class,(t_method)handle_pd_info, gensym ("info"), 0);
     class_addmethod(ph_class, (t_method)handle_pd_dssi, 
             gensym("dssi"), A_GIMME, 0);

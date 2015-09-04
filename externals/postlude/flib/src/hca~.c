@@ -100,7 +100,7 @@ void hca_tilde_setup(void) {
         CLASS_DEFAULT, A_DEFFLOAT, 0);
 
   class_addmethod(hca_class,
-        (t_method)hca_dsp, gensym("dsp"), 0);
+        (t_method)hca_dsp, gensym("dsp"), A_CANT, 0);
  
   CLASS_MAINSIGNALIN(hca_class, t_hca,f);
   

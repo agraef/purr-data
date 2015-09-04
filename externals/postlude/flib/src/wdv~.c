@@ -228,7 +228,7 @@ void wdv_tilde_setup(void) {
         0, sizeof(t_wdv),
         CLASS_DEFAULT, A_GIMME, 0); 
   
-  class_addmethod(wdv_class, (t_method)wdv_dsp, gensym("dsp"), 0); 
+  class_addmethod(wdv_class, (t_method)wdv_dsp, gensym("dsp"), A_CANT, 0); 
   CLASS_MAINSIGNALIN(wdv_class, t_wdv,f); 
   class_sethelpsymbol(wdv_class, gensym("help-flib"));
 }

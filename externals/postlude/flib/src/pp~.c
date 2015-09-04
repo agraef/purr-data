@@ -64,7 +64,7 @@ void pp_tilde_setup(void) {
 
   class_addcreator((t_newmethod)pp_new, gensym("++~"), A_DEFFLOAT, 0);
   class_addmethod(pp_class,
-        (t_method)pp_dsp, gensym("dsp"), 0);
+        (t_method)pp_dsp, gensym("dsp"), A_CANT, 0);
   CLASS_MAINSIGNALIN(pp_class, t_pp,f);
   class_sethelpsymbol(pp_class, gensym("help-flib"));
 }

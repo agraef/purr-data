@@ -71,7 +71,7 @@ void pspec_tilde_setup(void) {
         CLASS_DEFAULT, 0);
 
   class_addmethod(pspec_class,
-        (t_method)pspec_dsp, gensym("dsp"), 0);
+        (t_method)pspec_dsp, gensym("dsp"), A_CANT, 0);
   CLASS_MAINSIGNALIN(pspec_class, t_pspec,f);
   class_sethelpsymbol(pspec_class, gensym("help-flib"));
 }

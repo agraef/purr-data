@@ -101,6 +101,6 @@ void clean_tilde_setup(void) {
   CLASS_MAINSIGNALIN(clean_class, t_clean,f);
   class_addfloat(clean_class, clean_float);
   class_addmethod(clean_class,
-        (t_method)clean_dsp, gensym("dsp"), 0);
+        (t_method)clean_dsp, gensym("dsp"), A_CANT, 0);
   class_sethelpsymbol(clean_class, gensym("help-flib"));
 }

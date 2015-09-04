@@ -212,7 +212,7 @@ void melf_tilde_setup(void) {
         CLASS_DEFAULT, A_GIMME, 0);
 
   class_addmethod(melf_class,
-        (t_method)melf_dsp, gensym("dsp"), 0);
+        (t_method)melf_dsp, gensym("dsp"), A_CANT, 0);
   CLASS_MAINSIGNALIN(melf_class, t_melf,f);
   class_sethelpsymbol(melf_class, gensym("help-mfcc"));
 }

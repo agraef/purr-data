@@ -97,7 +97,7 @@ void bmax_tilde_setup(void) {
         CLASS_DEFAULT, A_DEFFLOAT, 0);
 
   class_addmethod(bmax_class,
-        (t_method)bmax_dsp, gensym("dsp"), 0);
+        (t_method)bmax_dsp, gensym("dsp"), A_CANT, 0);
   CLASS_MAINSIGNALIN(bmax_class, t_bmax,f);
   class_sethelpsymbol(bmax_class, gensym("help-flib"));
 }

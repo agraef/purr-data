@@ -83,7 +83,7 @@ void mspec_tilde_setup(void) {
         CLASS_DEFAULT, A_DEFFLOAT, 0);
 
   class_addmethod(mspec_class,
-        (t_method)mspec_dsp, gensym("dsp"), 0);
+        (t_method)mspec_dsp, gensym("dsp"), A_CANT, 0);
   CLASS_MAINSIGNALIN(mspec_class, t_mspec,f);
   class_sethelpsymbol(mspec_class, gensym("help-flib"));
 }

@@ -122,7 +122,7 @@ void peak_tilde_setup(void) {
         (t_method)peak_free, sizeof(t_peak),
         CLASS_DEFAULT, A_GIMME, 0);
 
-	class_addmethod(peak_class, (t_method)peak_dsp, gensym("dsp"), 0);
+	class_addmethod(peak_class, (t_method)peak_dsp, gensym("dsp"), A_CANT, 0);
     CLASS_MAINSIGNALIN(peak_class, t_peak,f);
 	class_sethelpsymbol(peak_class, gensym("help-flib"));
 	

@@ -86,7 +86,7 @@ void trist_tilde_setup(void) {
         CLASS_DEFAULT, A_DEFSYMBOL, 0);
 
   class_addmethod(trist_class,
-        (t_method)trist_dsp, gensym("dsp"), 0);
+        (t_method)trist_dsp, gensym("dsp"), A_CANT, 0);
   CLASS_MAINSIGNALIN(trist_class, t_trist,f);
   class_sethelpsymbol(trist_class, gensym("help-flib"));
 }

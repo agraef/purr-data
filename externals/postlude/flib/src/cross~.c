@@ -193,7 +193,7 @@ void cross_tilde_setup(void) {
 	    CLASS_DEFAULT, A_GIMME, 0);
 
     class_addmethod(cross_class,
-	    (t_method)cross_dsp, gensym("dsp"), 0);
+	    (t_method)cross_dsp, gensym("dsp"), A_CANT, 0);
     CLASS_MAINSIGNALIN(cross_class, t_cross,f);
     class_sethelpsymbol(cross_class, gensym("help-flib"));
 }

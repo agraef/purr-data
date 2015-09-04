@@ -69,7 +69,7 @@ void sfm_tilde_setup(void) {
         CLASS_DEFAULT,0);
 
   class_addmethod(sfm_class,
-        (t_method)sfm_dsp, gensym("dsp"), 0);
+        (t_method)sfm_dsp, gensym("dsp"), A_CANT, 0);
   CLASS_MAINSIGNALIN(sfm_class, t_sfm,f);
   class_sethelpsymbol(sfm_class, gensym("help-flib"));
 }

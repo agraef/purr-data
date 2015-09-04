@@ -64,7 +64,7 @@ void irreg_tilde_setup(void) {
         CLASS_DEFAULT,0);
 
   class_addmethod(irreg_class,
-        (t_method)irreg_dsp, gensym("dsp"), 0);
+        (t_method)irreg_dsp, gensym("dsp"), A_CANT, 0);
   CLASS_MAINSIGNALIN(irreg_class, t_irreg,f);
   class_sethelpsymbol(irreg_class, gensym("help-flib"));
 }

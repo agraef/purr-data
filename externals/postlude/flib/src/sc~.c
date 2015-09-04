@@ -71,7 +71,7 @@ void sc_tilde_setup(void) {
         A_DEFFLOAT, 0);
 
   class_addmethod(sc_class,
-        (t_method)sc_dsp, gensym("dsp"), 0);
+        (t_method)sc_dsp, gensym("dsp"), A_CANT, 0);
   CLASS_MAINSIGNALIN(sc_class, t_sc,f);
   class_sethelpsymbol(sc_class, gensym("help-flib"));
 }

@@ -300,7 +300,7 @@ void cc_tilde_setup(void) {
 
     class_addbang(cc_class, (t_method)cc_bang);
     class_addmethod(cc_class,
-	    (t_method)cc_dsp, gensym("dsp"), 0);
+	    (t_method)cc_dsp, gensym("dsp"), A_CANT, 0);
     CLASS_MAINSIGNALIN(cc_class, t_cc,f);
     class_sethelpsymbol(cc_class, gensym("help-flib"));
 }
