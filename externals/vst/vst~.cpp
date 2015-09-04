@@ -303,7 +303,7 @@ static const char * findFilePath( const char * path , const char * dllname )
     vst_tilde_class = class_new(gensym("vst~"), (t_newmethod) vst_tilde_new, (t_method) vst_tilde_free,
     	sizeof(t_vst_tilde), 0, A_GIMME , 0);    
     CLASS_MAINSIGNALIN( vst_tilde_class, t_vst_tilde, x_f);
-    class_addmethod(vst_tilde_class, (t_method) vst_tilde_dsp, gensym("dsp"), (t_atomtype)0);    	
+    class_addmethod(vst_tilde_class, (t_method) vst_tilde_dsp, gensym("dsp"), A_CANT, (t_atomtype)0);    	
 	class_addmethod (vst_tilde_class,(t_method)vst_tilde_control,gensym ("control"),A_DEFSYM, A_DEFFLOAT, 0);
 	class_addmethod (vst_tilde_class,(t_method)vst_tilde_pitchbend,gensym ("pitchbend"),A_DEFFLOAT, 0);
 	class_addmethod (vst_tilde_class,(t_method)vst_tilde_program,gensym ("program"),A_DEFFLOAT, 0);
