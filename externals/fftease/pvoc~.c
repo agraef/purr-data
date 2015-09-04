@@ -97,7 +97,7 @@ void pvoc_tilde_setup(void)
 	pvoc_class = class_new(gensym("pvoc~"), (t_newmethod)pvoc_new, 
 						   (t_method)pvoc_free ,sizeof(t_pvoc), 0,A_GIMME,0);
 	CLASS_MAINSIGNALIN(pvoc_class, t_pvoc, x_f);
-	class_addmethod(pvoc_class, (t_method)pvoc_dsp, gensym("dsp"), 0);
+	class_addmethod(pvoc_class, (t_method)pvoc_dsp, gensym("dsp"), A_CANT, 0);
 	class_addmethod(pvoc_class, (t_method)pvoc_mute, gensym("mute"), A_DEFFLOAT,0);
 	class_addmethod(pvoc_class, (t_method)pvoc_bypass, gensym("bypass"), A_DEFFLOAT,0);
 	class_addmethod(pvoc_class, (t_method)pvoc_highfreq, gensym("highfreq"), A_DEFFLOAT,0);

@@ -122,7 +122,7 @@ void dentist_tilde_setup(void)
   dentist_class = class_new(gensym("dentist~"), (t_newmethod)dentist_new, 
 			 (t_method)dentist_free ,sizeof(t_dentist), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(dentist_class, t_dentist, x_f);
-  class_addmethod(dentist_class,(t_method)dentist_dsp,gensym("dsp"),0);
+  class_addmethod(dentist_class,(t_method)dentist_dsp,gensym("dsp"),A_CANT,0);
   class_addmethod(dentist_class,(t_method)dentist_mute,gensym("mute"),A_FLOAT,0);
   class_addmethod(dentist_class,(t_method)dentist_showstate,gensym("showstate"),0);
 //  class_addmethod(dentist_class,(t_method)dentist_direct_update,gensym("direct_update"),A_FLOAT,0);

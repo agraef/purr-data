@@ -133,7 +133,7 @@ void taint_tilde_setup(void)
 	taint_class = class_new(gensym("taint~"), (t_newmethod)taint_new, 
 							(t_method)taint_free ,sizeof(t_taint), 0,A_GIMME,0);
 	CLASS_MAINSIGNALIN(taint_class, t_taint, x_f);
-	class_addmethod(taint_class, (t_method)taint_dsp, gensym("dsp"), 0);
+	class_addmethod(taint_class, (t_method)taint_dsp, gensym("dsp"), A_CANT, 0);
 	class_addmethod(taint_class, (t_method)taint_assist, gensym("assist"), 0);
 	class_addmethod(taint_class, (t_method)taint_invert, gensym("invert"), A_FLOAT,0);
 	class_addmethod(taint_class, (t_method)taint_overlap, gensym("overlap"), A_FLOAT,0);

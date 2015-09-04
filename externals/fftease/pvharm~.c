@@ -129,7 +129,7 @@ void pvharm_tilde_setup(void)
 	pvharm_class = class_new(gensym("pvharm~"), (t_newmethod)pvharm_new, 
 							 (t_method)pvharm_free ,sizeof(t_pvharm), 0,A_GIMME,0);
 	CLASS_MAINSIGNALIN(pvharm_class, t_pvharm, x_f);
-	class_addmethod(pvharm_class, (t_method)pvharm_dsp, gensym("dsp"), 0);
+	class_addmethod(pvharm_class, (t_method)pvharm_dsp, gensym("dsp"), A_CANT, 0);
 	class_addmethod(pvharm_class, (t_method)pvharm_assist, gensym("assist"), 0);
 	class_addmethod(pvharm_class, (t_method)pvharm_mute, gensym("mute"), A_DEFFLOAT,0);
 	class_addmethod(pvharm_class, (t_method)pvharm_highfreq, gensym("highfreq"), A_DEFFLOAT,0);

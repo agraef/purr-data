@@ -119,7 +119,7 @@ void multyq_tilde_setup(void)
   multyq_class = class_new(gensym("multyq~"), (t_newmethod)multyq_new, 
 			 (t_method)multyq_free ,sizeof(t_multyq), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(multyq_class, t_multyq, x_f);
-  class_addmethod(multyq_class,(t_method)multyq_dsp,gensym("dsp"),0);
+  class_addmethod(multyq_class,(t_method)multyq_dsp,gensym("dsp"),A_CANT,0);
   class_addmethod(multyq_class,(t_method)multyq_mute,gensym("mute"),A_FLOAT,0);
   class_addmethod(multyq_class,(t_method)multyq_bypass,gensym("bypass"),A_FLOAT,0);
   class_addmethod(multyq_class,(t_method)multyq_overlap,gensym("overlap"),A_FLOAT,0);

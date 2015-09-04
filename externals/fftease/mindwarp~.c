@@ -126,7 +126,7 @@ void mindwarp_tilde_setup(void)
   mindwarp_class = class_new(gensym("mindwarp~"), (t_newmethod)mindwarp_new, 
 			     (t_method)mindwarp_free ,sizeof(t_mindwarp), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(mindwarp_class, t_mindwarp, x_f);
-  class_addmethod(mindwarp_class, (t_method)mindwarp_dsp, gensym("dsp"), 0);
+  class_addmethod(mindwarp_class, (t_method)mindwarp_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(mindwarp_class, (t_method)mindwarp_assist, gensym("assist"), 0);
   class_addmethod(mindwarp_class, (t_method)mindwarp_overlap, gensym("overlap"), A_FLOAT,0);
  class_addmethod(mindwarp_class, (t_method)mindwarp_winfac, gensym("winfac"), A_FLOAT,0);

@@ -95,7 +95,7 @@ void scrape_tilde_setup(void)
 	scrape_class = class_new(gensym("scrape~"), (t_newmethod)scrape_new, 
 							 (t_method)scrape_dsp_free ,sizeof(t_scrape), 0,A_GIMME,0);
 	CLASS_MAINSIGNALIN(scrape_class, t_scrape, x_f);
-	class_addmethod(scrape_class, (t_method)scrape_dsp, gensym("dsp"), 0);
+	class_addmethod(scrape_class, (t_method)scrape_dsp, gensym("dsp"), A_CANT, 0);
 	class_addmethod(scrape_class, (t_method)scrape_assist, gensym("assist"), 0);
 	class_addmethod(scrape_class, (t_method)scrape_mute, gensym("mute"), A_DEFFLOAT,0);
 	class_addmethod(scrape_class, (t_method)scrape_bypass, gensym("bypass"), A_DEFFLOAT,0);

@@ -134,7 +134,7 @@ void reanimator_tilde_setup(void)
 	reanimator_class = class_new(gensym("reanimator~"), (t_newmethod)reanimator_new, 
 								 (t_method)reanimator_dsp_free ,sizeof(t_reanimator), 0,A_GIMME,0);
 	CLASS_MAINSIGNALIN(reanimator_class, t_reanimator, x_f);
-	class_addmethod(reanimator_class, (t_method)reanimator_dsp, gensym("dsp"), 0);
+	class_addmethod(reanimator_class, (t_method)reanimator_dsp, gensym("dsp"), A_CANT, 0);
 	class_addmethod(reanimator_class, (t_method)reanimator_mute, gensym("mute"), A_FLOAT,0);
 	class_addmethod(reanimator_class, (t_method)reanimator_inverse, gensym("inverse"), A_FLOAT,0);
 	class_addmethod(reanimator_class, (t_method)reanimator_topbin, gensym("topbin"), A_FLOAT,0);

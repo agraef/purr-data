@@ -119,7 +119,7 @@ void residency_tilde_setup(void)
 	residency_class = class_new(gensym("residency~"), (t_newmethod)residency_new, 
 								(t_method)residency_free ,sizeof(t_residency), 0,A_GIMME,0);
 	CLASS_MAINSIGNALIN(residency_class, t_residency, x_f);
-	class_addmethod(residency_class,(t_method)residency_dsp,gensym("dsp"),0);
+	class_addmethod(residency_class,(t_method)residency_dsp,gensym("dsp"),A_CANT,0);
 	class_addmethod(residency_class,(t_method)residency_mute,gensym("mute"),A_FLOAT,0);
 	class_addmethod(residency_class,(t_method)residency_fftinfo,gensym("fftinfo"),0);
 	class_addmethod(residency_class,(t_method)residency_meminfo,gensym("meminfo"),0);

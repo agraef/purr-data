@@ -107,7 +107,7 @@ void thresher_tilde_setup(void)
 							   (t_method)thresher_free ,sizeof(t_thresher), 0,A_GIMME,0);
 	
 	CLASS_MAINSIGNALIN(thresher_class, t_thresher, x_f );
-	class_addmethod(thresher_class, (t_method)thresher_dsp, gensym("dsp"), 0);
+	class_addmethod(thresher_class, (t_method)thresher_dsp, gensym("dsp"), A_CANT, 0);
 	class_addmethod(thresher_class, (t_method)thresher_mute, gensym("mute"), A_DEFFLOAT,0);
 	class_addmethod(thresher_class, (t_method)thresher_bypass, gensym("bypass"), A_DEFFLOAT,0);
 	class_addmethod(thresher_class, (t_method)thresher_assist, gensym("assist"), 0);

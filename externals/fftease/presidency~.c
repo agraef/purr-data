@@ -146,7 +146,7 @@ void presidency_tilde_setup(void)
   presidency_class = class_new(gensym("presidency~"), (t_newmethod)presidency_new, 
 			 (t_method)presidency_free ,sizeof(t_presidency), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(presidency_class, t_presidency, x_f);
-  class_addmethod(presidency_class,(t_method)presidency_dsp,gensym("dsp"),0);
+  class_addmethod(presidency_class,(t_method)presidency_dsp,gensym("dsp"),A_CANT,0);
   class_addmethod(presidency_class,(t_method)presidency_mute,gensym("mute"),A_FLOAT,0);
   class_addmethod(presidency_class,(t_method)presidency_fftinfo,gensym("fftinfo"),0);
   class_addmethod(presidency_class,(t_method)presidency_playthrough,gensym("playthrough"),A_FLOAT,0); 

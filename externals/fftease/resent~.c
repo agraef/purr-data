@@ -146,7 +146,7 @@ void resent_tilde_setup(void)
   resent_class = class_new(gensym("resent~"), (t_newmethod)resent_new, 
 			 (t_method)resent_free ,sizeof(t_resent), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(resent_class, t_resent, x_f);
-  class_addmethod(resent_class,(t_method)resent_dsp,gensym("dsp"),0);
+  class_addmethod(resent_class,(t_method)resent_dsp,gensym("dsp"),A_CANT,0);
   class_addmethod(resent_class,(t_method)resent_mute,gensym("mute"),A_FLOAT,0);
   class_addmethod(resent_class,(t_method)resent_linespeed,gensym("linespeed"),A_GIMME,0);
   class_addmethod(resent_class,(t_method)resent_linephase,gensym("linephase"),A_GIMME,0);

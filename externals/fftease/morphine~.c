@@ -139,7 +139,7 @@ void morphine_tilde_setup(void)
   morphine_class = class_new(gensym("morphine~"), (t_newmethod)morphine_new, 
 			     (t_method)morphine_free ,sizeof(t_morphine), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(morphine_class, t_morphine, x_f);
-  class_addmethod(morphine_class, (t_method)morphine_dsp, gensym("dsp"), 0);
+  class_addmethod(morphine_class, (t_method)morphine_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(morphine_class, (t_method)morphine_assist, gensym("assist"), 0);
   class_addmethod(morphine_class, (t_method)morphine_overlap, gensym("overlap"), A_FLOAT,0);
   class_addmethod(morphine_class, (t_method)morphine_winfac, gensym("winfac"), A_FLOAT,0);

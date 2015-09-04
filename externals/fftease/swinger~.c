@@ -88,7 +88,7 @@ void swinger_tilde_setup(void)
 	swinger_class = class_new(gensym("swinger~"), (t_newmethod)swinger_new, 
 							  (t_method)swinger_dsp_free ,sizeof(t_swinger), 0,A_GIMME,0);
 	CLASS_MAINSIGNALIN(swinger_class, t_swinger, x_f);
-	class_addmethod(swinger_class, (t_method)swinger_dsp, gensym("dsp"), 0);
+	class_addmethod(swinger_class, (t_method)swinger_dsp, gensym("dsp"), A_CANT, 0);
 	class_addmethod(swinger_class, (t_method)swinger_mute, gensym("mute"), A_DEFFLOAT,0);
 	class_addmethod(swinger_class, (t_method)swinger_overlap, gensym("overlap"), A_DEFFLOAT,0);
 	class_addmethod(swinger_class, (t_method)swinger_winfac, gensym("winfac"), A_DEFFLOAT,0);

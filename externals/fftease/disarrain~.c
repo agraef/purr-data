@@ -142,7 +142,7 @@ void disarrain_tilde_setup(void)
   disarrain_class = class_new(gensym("disarrain~"), (t_newmethod)disarrain_new, 
 			 (t_method)disarrain_free ,sizeof(t_disarrain), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(disarrain_class, t_disarrain, x_f);
-  class_addmethod(disarrain_class, (t_method)disarrain_dsp, gensym("dsp"), 0);
+  class_addmethod(disarrain_class, (t_method)disarrain_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(disarrain_class, (t_method)disarrain_showstate, gensym("showstate"), 0);
   class_addmethod(disarrain_class, (t_method)disarrain_list, gensym("list"), A_GIMME, 0);
   class_addmethod(disarrain_class, (t_method)disarrain_setstate, gensym("setstate"), A_GIMME, 0);

@@ -101,7 +101,7 @@ void ether_tilde_setup(void)
   ether_class = class_new(gensym("ether~"), (t_newmethod)ether_new, 
 			     (t_method)ether_free ,sizeof(t_ether), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(ether_class, t_ether, x_f);
-  class_addmethod(ether_class, (t_method)ether_dsp, gensym("dsp"), 0);
+  class_addmethod(ether_class, (t_method)ether_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(ether_class, (t_method)ether_assist, gensym("assist"), 0);
   class_addmethod(ether_class, (t_method)ether_invert, gensym("invert"), A_FLOAT,0);
   class_addmethod(ether_class, (t_method)ether_overlap, gensym("overlap"), A_FLOAT,0);

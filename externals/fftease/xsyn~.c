@@ -118,7 +118,7 @@ void xsyn_tilde_setup(void)
 	xsyn_class = class_new(gensym("xsyn~"), (t_newmethod)xsyn_new, 
 						   (t_method)xsyn_dsp_free ,sizeof(t_xsyn), 0,A_GIMME,0);
 	CLASS_MAINSIGNALIN(xsyn_class, t_xsyn, x_f);
-	class_addmethod(xsyn_class, (t_method)xsyn_dsp, gensym("dsp"), 0);
+	class_addmethod(xsyn_class, (t_method)xsyn_dsp, gensym("dsp"), A_CANT, 0);
 	class_addmethod(xsyn_class, (t_method)xsyn_assist, gensym("assist"), 0);
 	class_addmethod(xsyn_class, (t_method)xsyn_mute, gensym("mute"), A_DEFFLOAT,0);
 	class_addmethod(xsyn_class, (t_method)xsyn_overlap, gensym("overlap"), A_DEFFLOAT,0);

@@ -103,7 +103,7 @@ void pvcompand_tilde_setup(void)
   pvcompand_class = class_new(gensym("pvcompand~"), (t_newmethod)pvcompand_new, 
 			 (t_method)pvcompand_free ,sizeof(t_pvcompand), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(pvcompand_class, t_pvcompand, x_f);
-  class_addmethod(pvcompand_class,(t_method)pvcompand_dsp,gensym("dsp"),0);
+  class_addmethod(pvcompand_class,(t_method)pvcompand_dsp,gensym("dsp"),A_CANT,0);
   class_addmethod(pvcompand_class,(t_method)pvcompand_mute,gensym("mute"),A_FLOAT,0);
   class_addmethod(pvcompand_class,(t_method)pvcompand_bypass,gensym("bypass"),A_FLOAT,0);
   class_addmethod(pvcompand_class,(t_method)pvcompand_overlap,gensym("overlap"),A_FLOAT,0);

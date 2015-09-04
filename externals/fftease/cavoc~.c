@@ -113,7 +113,7 @@ void cavoc_tilde_setup(void){
   cavoc_class = class_new(gensym("cavoc~"), (t_newmethod)cavoc_new, 
       (t_method)cavoc_free ,sizeof(t_cavoc), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(cavoc_class, t_cavoc, x_f);
-  class_addmethod(cavoc_class,(t_method)cavoc_dsp,gensym("dsp"),0);
+  class_addmethod(cavoc_class,(t_method)cavoc_dsp,gensym("dsp"),A_CANT,0);
   class_addmethod(cavoc_class,(t_method)cavoc_mute,gensym("mute"),A_FLOAT,0);
   class_addmethod(cavoc_class,(t_method)cavoc_overlap,gensym("overlap"),A_FLOAT,0);
   class_addmethod(cavoc_class,(t_method)cavoc_winfac,gensym("winfac"),A_FLOAT,0);

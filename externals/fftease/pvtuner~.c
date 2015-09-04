@@ -1190,7 +1190,7 @@ void pvtuner_tilde_setup(void)
 	pvtuner_class = class_new(gensym("pvtuner~"), (t_newmethod)pvtuner_new, 
 							  (t_method)pvtuner_free ,sizeof(t_pvtuner), 0,A_GIMME,0);
 	CLASS_MAINSIGNALIN(pvtuner_class, t_pvtuner, x_f );
-	class_addmethod(pvtuner_class, (t_method)pvtuner_dsp, gensym("dsp"), 0);
+	class_addmethod(pvtuner_class, (t_method)pvtuner_dsp, gensym("dsp"), A_CANT, 0);
 	class_addmethod(pvtuner_class, (t_method)pvtuner_mute, gensym("mute"), A_DEFFLOAT,0);
 	class_addmethod(pvtuner_class, (t_method)pvtuner_bypass, gensym("bypass"), A_DEFFLOAT,0);
 	class_addmethod(pvtuner_class, (t_method)pvtuner_assist, gensym("assist"), 0);

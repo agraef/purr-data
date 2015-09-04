@@ -124,7 +124,7 @@ void pvgrain_tilde_setup(void)
   pvgrain_class = class_new(gensym("pvgrain~"), (t_newmethod)pvgrain_new, 
 			 (t_method)pvgrain_free ,sizeof(t_pvgrain), 0, A_GIMME, 0);
   CLASS_MAINSIGNALIN(pvgrain_class, t_pvgrain, x_f);
-  class_addmethod(pvgrain_class, (t_method)pvgrain_dsp, gensym("dsp"), 0);
+  class_addmethod(pvgrain_class, (t_method)pvgrain_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(pvgrain_class, (t_method)pvgrain_mute, gensym("mute"), A_FLOAT, 0);
   class_addmethod(pvgrain_class, (t_method)pvgrain_topfreq, gensym("topfreq"), A_FLOAT, 0);
   class_addmethod(pvgrain_class, (t_method)pvgrain_bottomfreq, gensym("bottomfreq"), A_FLOAT, 0);

@@ -116,7 +116,7 @@ void vacancy_tilde_setup(void)
   vacancy_class = class_new(gensym("vacancy~"), (t_newmethod)vacancy_new, 
 			     (t_method)vacancy_free ,sizeof(t_vacancy), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(vacancy_class, t_vacancy, x_f);
-  class_addmethod(vacancy_class, (t_method)vacancy_dsp, gensym("dsp"), 0);
+  class_addmethod(vacancy_class, (t_method)vacancy_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(vacancy_class, (t_method)vacancy_assist, gensym("assist"), 0);
   class_addmethod(vacancy_class, (t_method)vacancy_invert, gensym("invert"), A_FLOAT,0);
   class_addmethod(vacancy_class, (t_method)vacancy_swapphase, gensym("swapphase"), A_FLOAT,0);

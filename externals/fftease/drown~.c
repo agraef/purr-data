@@ -110,7 +110,7 @@ void drown_tilde_setup(void)
   drown_class = class_new(gensym("drown~"), (t_newmethod)drown_new, 
 			  (t_method)drown_free ,sizeof(t_drown), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(drown_class, t_drown, x_f);
-  class_addmethod(drown_class, (t_method)drown_dsp, gensym("dsp"), 0);
+  class_addmethod(drown_class, (t_method)drown_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(drown_class, (t_method)drown_assist, gensym("assist"), 0);
   class_addmethod(drown_class, (t_method)drown_mute, gensym("mute"), A_FLOAT,0);
   class_addmethod(drown_class, (t_method)drown_overlap, gensym("overlap"), A_FLOAT,0);

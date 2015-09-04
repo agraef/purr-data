@@ -102,7 +102,7 @@ void shapee_tilde_setup(void)
   shapee_class = class_new(gensym("shapee~"), (t_newmethod)shapee_new, 
 			 (t_method)shapee_free ,sizeof(t_shapee), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(shapee_class, t_shapee, x_f);
-  class_addmethod(shapee_class, (t_method)shapee_dsp, gensym("dsp"), 0);
+  class_addmethod(shapee_class, (t_method)shapee_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(shapee_class, (t_method)shapee_mute, gensym("mute"), A_DEFFLOAT,0);
   class_addmethod(shapee_class, (t_method)shapee_overlap, gensym("overlap"), A_DEFFLOAT,0);
   class_addmethod(shapee_class, (t_method)shapee_winfac, gensym("winfac"), A_DEFFLOAT,0);

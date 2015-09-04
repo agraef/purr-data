@@ -102,7 +102,7 @@ void crossx_tilde_setup(void)
   crossx_class = class_new(gensym("crossx~"), (t_newmethod)crossx_new, 
 			 (t_method)crossx_free ,sizeof(t_crossx), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(crossx_class, t_crossx, x_f);
-  class_addmethod(crossx_class, (t_method)crossx_dsp, gensym("dsp"), 0);
+  class_addmethod(crossx_class, (t_method)crossx_dsp, gensym("dsp"),A_CANT,0);
   class_addmethod(crossx_class, (t_method)crossx_assist, gensym("assist"), 0);
   class_addmethod(crossx_class, (t_method)crossx_mute, gensym("mute"), A_DEFFLOAT,0);
   class_addmethod(crossx_class, (t_method)crossx_overlap, gensym("overlap"), A_DEFFLOAT,0);
