@@ -1693,7 +1693,7 @@ void readsfv_tilde_setup(void)
     class_addmethod(readsfv_class, (t_method)readsf_speed, gensym("speed"), A_FLOAT,0);
     class_addmethod(readsfv_class, (t_method)readsf_start, gensym("start"), 0);
     class_addmethod(readsfv_class, (t_method)readsf_stop, gensym("stop"), 0);
-    class_addmethod(readsfv_class, (t_method)readsf_dsp, gensym("dsp"), 0);
+    class_addmethod(readsfv_class, (t_method)readsf_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(readsfv_class, (t_method)readsf_open, gensym("open"),
                     A_GIMME, 0);
     class_addmethod(readsfv_class, (t_method)readsf_print, gensym("print"), 0);

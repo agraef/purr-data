@@ -209,7 +209,7 @@ void ssaw_tilde_setup(void)
     ssaw_class = class_new(gensym("ssaw~"), (t_newmethod)ssaw_new, 0,
                            sizeof(t_ssaw), 0, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(ssaw_class, t_ssaw, x_f);
-    class_addmethod(ssaw_class, (t_method)ssaw_dsp, gensym("dsp"), 0);
+    class_addmethod(ssaw_class, (t_method)ssaw_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(ssaw_class, (t_method)ssaw_ft1,
                     gensym("ft1"), A_FLOAT, 0);
     ssaw_initarray();

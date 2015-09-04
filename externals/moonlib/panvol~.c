@@ -113,7 +113,7 @@ void panvol_tilde_setup(void)
 
     class_addmethod(pan_class, nullfn, gensym("signal"), 0);
 
-    class_addmethod(pan_class, (t_method)pan_dsp, gensym("dsp"), 0);
+    class_addmethod(pan_class, (t_method)pan_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(pan_class, (t_method)pan_f, gensym("panf"), A_FLOAT, 0);
     class_addmethod(pan_class, (t_method)vol_f, gensym("volf"), A_FLOAT, 0);
 }

@@ -415,7 +415,7 @@ void sfread2_tilde_setup(void)
                              (t_method)sfread_free,sizeof(t_sfread), 0,A_DEFFLOAT,A_DEFFLOAT,0);
 
     class_addmethod(sfread_class, nullfn, gensym("signal"), 0);
-    class_addmethod(sfread_class, (t_method) sfread_dsp, gensym("dsp"), 0);
+    class_addmethod(sfread_class, (t_method) sfread_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(sfread_class, (t_method) sfread_open, gensym("open"), A_SYMBOL,A_NULL);
     class_addmethod(sfread_class, (t_method) sfread_size, gensym("size"), 0);
     class_addmethod(sfread_class, (t_method) sfread_state, gensym("state"), 0);
