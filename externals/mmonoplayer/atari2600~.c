@@ -122,7 +122,7 @@ void atari_2600_tilde_setup(void)
 {
 	atari_2600_class = class_new(gensym("atari_2600~"),
 			(t_newmethod)atari_2600_new, 0, sizeof(t_atari_2600), CLASS_DEFAULT, A_DEFFLOAT, 0);
-	class_addmethod(atari_2600_class, (t_method)atari_2600_dsp, gensym("dsp"), 0);
+	class_addmethod(atari_2600_class, (t_method)atari_2600_dsp, gensym("dsp"), A_CANT, 0);
 }
 
 void *atari_2600_new(void)
