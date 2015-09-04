@@ -499,7 +499,7 @@ void polygate_tilde_setup(void)
   polygate_class = class_new(gensym("polygate~"), (t_newmethod)polygate_new, (t_method)polygate_free,
 			     sizeof(t_polygate), 0, A_GIMME, 0);
   class_addmethod(polygate_class, nullfn, gensym("signal"), 0);
-  class_addmethod(polygate_class, (t_method)polygate_dsp, gensym("dsp"), 0);
+  class_addmethod(polygate_class, (t_method)polygate_dsp, gensym("dsp"), A_CANT, 0);
   CLASS_MAINSIGNALIN(polygate_class, t_polygate, x_f);
   class_addmethod(polygate_class, (t_method)polygate_f, gensym("choice"), A_FLOAT, 0);  
   class_addmethod(polygate_class, (t_method)polygate_ftimeepower, gensym("ftime-epower"), A_FLOAT, (t_atomtype) 0);

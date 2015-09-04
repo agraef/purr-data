@@ -131,6 +131,6 @@ void pansig_tilde_setup(void)
 			sizeof(t_pansig), 0, A_GIMME, 0);
   class_addmethod(pansig_class, nullfn, gensym("signal"), 0);
 
-  class_addmethod(pansig_class, (t_method)pansig_dsp, gensym("dsp"), 0);
+  class_addmethod(pansig_class, (t_method)pansig_dsp, gensym("dsp"), A_CANT, 0);
   //  class_addmethod(pansig_class, (t_method)pansig_f, gensym("pansigf"), A_FLOAT, 0);  
 }

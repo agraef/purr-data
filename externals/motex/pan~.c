@@ -99,6 +99,6 @@ void pan_tilde_setup(void)
 			sizeof(t_pan), 0, A_GIMME, 0);
   class_addmethod(pan_class, nullfn, gensym("signal"), 0);
 
-  class_addmethod(pan_class, (t_method)pan_dsp, gensym("dsp"), 0);
+  class_addmethod(pan_class, (t_method)pan_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(pan_class, (t_method)pan_f, gensym("panf"), A_FLOAT, 0);  
 }

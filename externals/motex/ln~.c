@@ -126,5 +126,5 @@ void ln_tilde_setup(void)
     ln_class = class_new(gensym("ln~"), (t_newmethod)ln_new, 0,
     	sizeof(t_ln), 0, A_DEFFLOAT, 0);
     class_addmethod(ln_class, nullfn, gensym("signal"), 0);
-    class_addmethod(ln_class, (t_method)ln_dsp, gensym("dsp"), 0);
+    class_addmethod(ln_class, (t_method)ln_dsp, gensym("dsp"), A_CANT, 0);
 }

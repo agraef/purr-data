@@ -124,7 +124,7 @@ void rec2pol_tilde_setup(void)
 			    sizeof(t_rec2pol), 0, A_GIMME, 0);
   class_addmethod(rec2pol_class, nullfn, gensym("signal"), 0);
 
-  class_addmethod(rec2pol_class, (t_method)rec2pol_dsp, gensym("dsp"), 0);
+  class_addmethod(rec2pol_class, (t_method)rec2pol_dsp, gensym("dsp"), A_CANT, 0);
   CLASS_MAINSIGNALIN(rec2pol_class, t_rec2pol, x_f);
 }
 
