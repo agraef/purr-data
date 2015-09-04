@@ -104,6 +104,6 @@ void pan_gogins_tilde_setup(void)
 			sizeof(t_pan_gogins), 0, A_GIMME, 0);
   class_addmethod(pan_gogins_class, nullfn, gensym("signal"), 0);
 
-  class_addmethod(pan_gogins_class, (t_method)pan_gogins_dsp, gensym("dsp"), 0);
+  class_addmethod(pan_gogins_class, (t_method)pan_gogins_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(pan_gogins_class, (t_method)pan_gogins_f, gensym("panf"), A_FLOAT, 0);  
 }
