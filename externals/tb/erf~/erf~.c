@@ -60,5 +60,5 @@ void erf_tilde_setup(void)
     erf_class = class_new(gensym("erf~"), (t_newmethod)erf_new, 0,
         sizeof(t_erf), 0, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(erf_class, t_erf, x_f);
-    class_addmethod(erf_class, (t_method)erf_dsp, gensym("dsp"), 0);
+    class_addmethod(erf_class, (t_method)erf_dsp, gensym("dsp"), A_CANT, 0);
 }

@@ -95,5 +95,5 @@ void block_delay_tilde_setup(void)
 	block_delay_tilde_class = class_new(gensym("block_delay~"), (t_newmethod)block_delay_tilde_new, (t_method)block_delay_tilde_free,
 		sizeof(t_block_delay), 0, A_DEFFLOAT, 0);
 	class_addmethod(block_delay_tilde_class, nullfn, gensym("signal"), 0);
-	class_addmethod(block_delay_tilde_class, (t_method)block_delay_tilde_dsp, gensym("dsp"), 0);
+	class_addmethod(block_delay_tilde_class, (t_method)block_delay_tilde_dsp, gensym("dsp"), A_CANT, 0);
 }

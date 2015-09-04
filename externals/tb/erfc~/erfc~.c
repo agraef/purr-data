@@ -60,5 +60,5 @@ void erfc_tilde_setup(void)
     erfc_class = class_new(gensym("erfc~"), (t_newmethod)erfc_new, 0,
         sizeof(t_erfc), 0, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(erfc_class, t_erfc, x_f);
-    class_addmethod(erfc_class, (t_method)erfc_dsp, gensym("dsp"), 0);
+    class_addmethod(erfc_class, (t_method)erfc_dsp, gensym("dsp"), A_CANT, 0);
 }

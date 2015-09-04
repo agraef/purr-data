@@ -363,7 +363,7 @@ void volctl_tilde_setup(void)
     volctl_class = class_new(gensym("volctl~"), (t_newmethod)volctl_new, 
 							 (t_method)volctl_free, sizeof(t_volctl), 0, A_GIMME, 0);
     CLASS_MAINSIGNALIN(volctl_class, t_volctl, x_f);
-    class_addmethod(volctl_class, (t_method)volctl_dsp, gensym("dsp"), 0);
+    class_addmethod(volctl_class, (t_method)volctl_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(volctl_class, (t_method)volctl_set, gensym("f1"),A_FLOAT,0);
     class_settip(volctl_class,gensym("signal"));
 }
