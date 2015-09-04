@@ -414,7 +414,7 @@ void k_jack_tilde_setup(void){
   k_jack_class = class_new(gensym("k_jack~"), (t_newmethod)k_jack_new, (t_method)k_jack_free,
 			  sizeof(t_k_jack), 0, A_SYMBOL, 0);
   CLASS_MAINSIGNALIN(k_jack_class, t_k_jack, x_float);
-  class_addmethod(k_jack_class, (t_method)k_jack_dsp, gensym("dsp"), 0);
+  class_addmethod(k_jack_class, (t_method)k_jack_dsp, gensym("dsp"), A_CANT, 0);
   
   class_sethelpsymbol(k_jack_class, gensym("help-k_jack~.pd"));
 
