@@ -255,5 +255,5 @@ void earplug_tilde_setup(void)
    
     CLASS_MAINSIGNALIN(earplug_class, t_earplug, f);
    
-    class_addmethod(earplug_class, (t_method)earplug_dsp, gensym("dsp"), 0);
+    class_addmethod(earplug_class, (t_method)earplug_dsp, gensym("dsp"), A_CANT, 0);
 }
