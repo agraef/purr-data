@@ -145,7 +145,7 @@ static void *crossfade_tilde_new(t_floatarg f)
 		
   CLASS_MAINSIGNALIN(crossfade_tilde_class, t_crossfade_tilde, f);
   class_addmethod(crossfade_tilde_class,
-        (t_method)crossfade_tilde_dsp, gensym("dsp"), 0);
+        (t_method)crossfade_tilde_dsp, gensym("dsp"), A_CANT, 0);
  // class_addmethod(crossfade_tilde_class, nullfn, gensym("signal"), 0);
  
 }

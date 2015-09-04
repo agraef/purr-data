@@ -379,7 +379,7 @@ void breakpoints_tilde_setup(void)
    CLASS_MAINSIGNALIN(breakpoints_class, t_breakpoints, x_f);
     	/* here we tell Pd about the "dsp" method, which is called back
 	when DSP is turned on. */
-    class_addmethod(breakpoints_class, (t_method)breakpointssig_dsp, gensym("dsp"), 0);
+    class_addmethod(breakpoints_class, (t_method)breakpointssig_dsp, gensym("dsp"), A_CANT, 0);
 
 
     //class_addcreator((t_newmethod)breakpoints_new,gensym("breakpoints~"),A_GIMME,0);

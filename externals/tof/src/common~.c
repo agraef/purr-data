@@ -238,7 +238,7 @@ void common_tilde_setup(void) {
         0, A_DEFSYM, 0);
   
   class_addmethod(common_tilde_class,
-        (t_method)common_tilde_dsp, gensym("dsp"), 0);
+        (t_method)common_tilde_dsp, gensym("dsp"), A_CANT, 0);
 		
   class_addmethod(common_tilde_class,
         (t_method)common_tilde_set, gensym("set"), A_SYMBOL, 0);

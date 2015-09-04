@@ -203,7 +203,7 @@ void phasorshot_free(t_phasorshot *x)
     phasorshot_class = class_new(gensym("phasorshot~"), (t_newmethod)phasorshot_new, (t_method)phasorshot_free,
         sizeof(t_phasorshot), 0,A_GIMME,0);
     CLASS_MAINSIGNALIN(phasorshot_class, t_phasorshot, x_f);
-    class_addmethod(phasorshot_class, (t_method)phasorshot_dsp, gensym("dsp"), 0);
+    class_addmethod(phasorshot_class, (t_method)phasorshot_dsp, gensym("dsp"), A_CANT, 0);
     
     class_addmethod(phasorshot_class, (t_method)phasorshot_ft1,
         gensym("ft1"), A_FLOAT, 0);
