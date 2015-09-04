@@ -431,7 +431,7 @@ void mean_tilde_setup(void)
   class_addmethod(mean_tilde_class, nullfn, gensym("signal"), 0);
   class_addmethod(mean_tilde_class,
 		  (t_method)mean_tilde_dsp,
-		  gensym("dsp"), 0);
+		  gensym("dsp"), A_CANT, 0);
   class_addmethod(mean_tilde_class, (t_method)mean_tilde_set,
 		  gensym("set"), A_DEFSYM, 0);
   class_addmethod(mean_tilde_class, (t_method)mean_tilde_mean,

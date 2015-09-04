@@ -151,6 +151,6 @@ void reson_tilde_setup()
 	class_addfloat(sigreson_class, (t_method)sigreson_float);
 	class_addmethod(sigreson_class, (t_method)sigreson_ft1, gensym("ft1"), A_FLOAT, 0);
 	class_addmethod(sigreson_class, (t_method)nullfn, &s_signal, A_NULL);
-	class_addmethod(sigreson_class, (t_method)sigreson_dsp, gensym("dsp"), A_NULL);
+	class_addmethod(sigreson_class, (t_method)sigreson_dsp, gensym("dsp"), A_CANT, A_NULL);
 }
 

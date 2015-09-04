@@ -111,5 +111,5 @@ void random1_tilde_setup(void)
 				  (t_newmethod)random1_tilde_new,
 				  0, sizeof(t_random1_tilde), 0, 0);
   class_addmethod(random1_tilde_class, (t_method)random1_tilde_seed,gensym("seed"), A_FLOAT, 0);
-  class_addmethod(random1_tilde_class, (t_method)random1_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(random1_tilde_class, (t_method)random1_tilde_dsp, gensym("dsp"), A_CANT, 0);
 }

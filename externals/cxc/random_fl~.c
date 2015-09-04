@@ -96,5 +96,5 @@ void random_fl_tilde_setup(void)
 				    sizeof(t_random_fl_tilde), 0, 0);
   class_addmethod(random_fl_tilde_class, (t_method)random_fl_tilde_seed,
 		  gensym("seed"), A_FLOAT, 0);
-  class_addmethod(random_fl_tilde_class, (t_method)random_fl_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(random_fl_tilde_class, (t_method)random_fl_tilde_dsp, gensym("dsp"), A_CANT, 0);
 }

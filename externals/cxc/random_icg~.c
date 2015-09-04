@@ -160,5 +160,5 @@ void random_icg_tilde_setup(void)
 			    sizeof(t_random_icg_tilde), 0, A_DEFFLOAT, A_DEFFLOAT, 0);
   class_addmethod(random_icg_tilde_class, (t_method)random_icg_tilde_seed,
 		  gensym("seed"), A_FLOAT, 0);
-  class_addmethod(random_icg_tilde_class, (t_method)random_icg_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(random_icg_tilde_class, (t_method)random_icg_tilde_dsp, gensym("dsp"), A_CANT, 0);
 }
