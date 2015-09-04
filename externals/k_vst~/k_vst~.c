@@ -200,7 +200,7 @@ k_vst_tilde_setup (void)
     class_addmethod (plugin_tilde_class,
 		     (t_method)plugin_tilde_dsp,
 		     gensym ("dsp"),
-		     0);
+		     A_CANT, 0);
 
     /* Set the callback for "control" messages in the first inlet;
        this is a message of our own for changing LADSPA control
