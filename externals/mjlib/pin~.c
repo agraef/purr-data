@@ -197,7 +197,7 @@ void pin_tilde_setup(void)
     pin_tilde_class = class_new(gensym("pin~"), (t_newmethod) pin_tilde_new, (t_method) pin_tilde_free,
     	sizeof(t_pin_tilde), 0, A_DEFFLOAT, A_DEFFLOAT, 0);    
     CLASS_MAINSIGNALIN( pin_tilde_class, t_pin_tilde, x_f);
-    class_addmethod(pin_tilde_class, (t_method) pin_tilde_dsp, gensym("dsp"), (t_atomtype)0);    	
+    class_addmethod(pin_tilde_class, (t_method) pin_tilde_dsp, gensym("dsp"), A_CANT, (t_atomtype)0);    	
 	class_addmethod(pin_tilde_class, (t_method) pin_tilde_ticktime, gensym("tick") , A_DEFFLOAT , (t_atomtype)0 );
 	class_addmethod(pin_tilde_class, (t_method) pin_tilde_prob, gensym("prob") , A_DEFFLOAT , (t_atomtype)0 );
 	

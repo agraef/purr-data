@@ -111,7 +111,7 @@ static void *synapseA_tilde_new(t_floatarg prob , t_floatarg tick)
     synapseA_tilde_class = class_new(gensym("synapseA~"), (t_newmethod) synapseA_tilde_new, (t_method) synapseA_tilde_free,
     	sizeof(t_synapseA_tilde), 0, A_DEFFLOAT, A_DEFFLOAT, 0);    
     CLASS_MAINSIGNALIN( synapseA_tilde_class, t_synapseA_tilde, x_f);
-    class_addmethod(synapseA_tilde_class, (t_method) synapseA_tilde_dsp, gensym("dsp"), (t_atomtype)0);    	
+    class_addmethod(synapseA_tilde_class, (t_method) synapseA_tilde_dsp, gensym("dsp"), A_CANT, (t_atomtype)0);    	
 	class_addmethod(synapseA_tilde_class, (t_method) synapseA_tilde_threshold, gensym("threshold") , A_DEFFLOAT , (t_atomtype)0 );
 	
 }
