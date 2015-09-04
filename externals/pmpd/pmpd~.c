@@ -413,5 +413,5 @@ void pmpd_tilde_setup(void) {
 	class_addmethod(pmpd_tilde_class, (t_method)pmpd_tilde_posX, gensym("posX"), A_DEFFLOAT, A_DEFFLOAT, 0);
 	class_addmethod(pmpd_tilde_class, (t_method)pmpd_tilde_forceX, gensym("forceX"), A_DEFFLOAT, A_DEFFLOAT, 0);
 	class_addmethod(pmpd_tilde_class, (t_method)pmpd_tilde_reset, gensym("reset"), 0);
-	class_addmethod(pmpd_tilde_class, (t_method)pmpd_tilde_dsp, gensym("dsp"), 0);
+	class_addmethod(pmpd_tilde_class, (t_method)pmpd_tilde_dsp, gensym("dsp"), A_CANT, 0);
 }
