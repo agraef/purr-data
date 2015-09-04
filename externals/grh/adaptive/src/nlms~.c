@@ -317,7 +317,7 @@ void nlms_tilde_setup(void)
   class_addmethod(nlms_tilde_class, (t_method)nlms_tilde_read, 
                   gensym("read"), A_DEFSYMBOL, 0);
 
-  class_addmethod(nlms_tilde_class, (t_method)nlms_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(nlms_tilde_class, (t_method)nlms_tilde_dsp, gensym("dsp"), A_CANT, 0);
   CLASS_MAINSIGNALIN(nlms_tilde_class, t_nlms_tilde, f);
   
   class_addmethod(nlms_tilde_class, (t_method)nlms_tilde_helper, gensym("help"), 0);

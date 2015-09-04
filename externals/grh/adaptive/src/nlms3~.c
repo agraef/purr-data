@@ -416,7 +416,7 @@ void nlms3_tilde_setup(void)
   class_addmethod(nlms3_tilde_class, (t_method)nlms3_tilde_read, 
                   gensym("read"), A_DEFSYMBOL, 0);
 
-  class_addmethod(nlms3_tilde_class, (t_method)nlms3_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(nlms3_tilde_class, (t_method)nlms3_tilde_dsp, gensym("dsp"), A_CANT, 0);
   CLASS_MAINSIGNALIN(nlms3_tilde_class, t_nlms3_tilde, f);
   
   class_addmethod(nlms3_tilde_class, (t_method)nlms3_tilde_helper, gensym("help"), 0);

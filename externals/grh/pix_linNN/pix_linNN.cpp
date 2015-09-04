@@ -441,7 +441,7 @@ void pix_linNN::obj_setupCallback(t_class *classPtr)
 		  gensym("load"), A_SYMBOL, A_NULL);
 
   class_addmethod(classPtr, (t_method)pix_linNN::dspMessCallback, 
-		  gensym("dsp"), A_NULL);
+		  gensym("dsp"), A_CANT, A_NULL);
   class_addmethod(classPtr, nullfn, gensym("signal"), A_NULL);
 }
 
