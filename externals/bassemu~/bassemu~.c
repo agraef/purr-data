@@ -484,7 +484,8 @@ void bassemu_tilde_setup(void)
 
     CLASS_MAINSIGNALIN(bassemu_class, t_bassemu, dummy);
 
-    class_addmethod(bassemu_class, (t_method)bassemu_dsp,	gensym("dsp"), 0);
+    class_addmethod(bassemu_class, (t_method)bassemu_dsp,	gensym("dsp"),
+	A_CANT, 0);
 	class_addfloat (bassemu_class, (t_method)bassemu_note); // start/stop using a toggle
 	class_addmethod(bassemu_class, (t_method)bassemu_list,	gensym("list"),		A_GIMME, 	0);
 	class_addmethod(bassemu_class, (t_method)bassemu_vco,	gensym("vco"), 		A_DEFFLOAT, 0);
