@@ -116,6 +116,6 @@ void sic_setup(t_class *c, void *dspfn, void *floatfn)
 	}
 	else CLASS_MAINSIGNALIN(c, t_sic, s_f);
     }
-    class_addmethod(c, (t_method)dspfn, gensym("dsp"), 0);
+    class_addmethod(c, (t_method)dspfn, gensym("dsp"), A_CANT, 0);
     class_addmethod(c, (t_method)sic_enable, gensym("enable"), 0);
 }
