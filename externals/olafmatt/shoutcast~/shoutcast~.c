@@ -1281,7 +1281,7 @@ void shoutcast_tilde_setup(void)
     CLASS_MAINSIGNALIN(shoutcast_class, t_shoutcast, x_f );
     class_addfloat(shoutcast_class, (t_method)shoutcast_float);
     class_addmethod(shoutcast_class, (t_method)shoutcast_disconnect, gensym("disconnect"), 0);
-    class_addmethod(shoutcast_class, (t_method)shoutcast_dsp, gensym("dsp"), 0);
+    class_addmethod(shoutcast_class, (t_method)shoutcast_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(shoutcast_class, (t_method)shoutcast_connect, gensym("connect"), A_GIMME, 0);
     class_addmethod(shoutcast_class, (t_method)shoutcast_print, gensym("print"), 0);
     class_addmethod(shoutcast_class, (t_method)shoutcast_printlame, gensym("printlame"), 0);
