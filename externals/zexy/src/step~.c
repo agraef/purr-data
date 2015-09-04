@@ -136,7 +136,7 @@ void step_tilde_setup(void)
   class_addfloat(step_class, step_float);
   class_addbang(step_class, step_bang); 
   class_addmethod(step_class, (t_method)step_setlength, gensym("ft1"), A_FLOAT, 0);
-  class_addmethod(step_class, (t_method)step_dsp, gensym("dsp"), 0);
+  class_addmethod(step_class, (t_method)step_dsp, gensym("dsp"), A_CANT, 0);
 
   class_addmethod(step_class, (t_method)step_helper, gensym("help"), 0);
 

@@ -114,7 +114,7 @@ void unpack_tilde_setup(void)
 {
   sigunpack_class = class_new(gensym("unpack~"), (t_newmethod)sigunpack_new, 0,
                               sizeof(t_sigunpack), 0, A_DEFFLOAT, 0);
-  class_addmethod(sigunpack_class, (t_method)sigunpack_dsp, gensym("dsp"), 0);
+  class_addmethod(sigunpack_class, (t_method)sigunpack_dsp, gensym("dsp"), A_CANT, 0);
   class_addfloat(sigunpack_class, (t_method)sigunpack_float);
   class_addlist (sigunpack_class, (t_method)sigunpack_list);
 

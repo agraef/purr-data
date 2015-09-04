@@ -106,7 +106,7 @@ void sigzero_tilde_setup(void)
   class_addmethod(sigzero_class, (t_method)sigzero_off, gensym("off"), 0);
 
   class_addmethod(sigzero_class, nullfn, gensym("signal"), 0);
-  class_addmethod(sigzero_class, (t_method)sigzero_dsp, gensym("dsp"), 0);
+  class_addmethod(sigzero_class, (t_method)sigzero_dsp, gensym("dsp"), A_CANT, 0);
 
   class_addmethod(sigzero_class, (t_method)sigzero_tilde_helper, gensym("help"), 0);
   zexy_register("sigzero~");

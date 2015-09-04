@@ -77,7 +77,7 @@ void tavg_tilde_setup(void)
   tavg_class = class_new(gensym("tavg~"), (t_newmethod)tavg_new, 0,
                          sizeof(t_tavgtilde), 0, A_DEFFLOAT, 0);
   class_addmethod(tavg_class, nullfn, gensym("signal"), 0);
-  class_addmethod(tavg_class, (t_method)tavg_dsp, gensym("dsp"), 0);
+  class_addmethod(tavg_class, (t_method)tavg_dsp, gensym("dsp"), A_CANT, 0);
 
   class_addbang(tavg_class, tavg_bang);
 

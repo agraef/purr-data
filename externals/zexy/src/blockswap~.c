@@ -100,7 +100,7 @@ void blockswap_tilde_setup(void)
   blockswap_class = class_new(gensym("blockswap~"), (t_newmethod)blockswap_new, (t_method)blockswap_free,
                               sizeof(t_blockswap), 0, A_NULL);
   class_addmethod(blockswap_class, nullfn, gensym("signal"), 0);
-  class_addmethod(blockswap_class, (t_method)blockswap_dsp, gensym("dsp"), 0);
+  class_addmethod(blockswap_class, (t_method)blockswap_dsp, gensym("dsp"), A_CANT, 0);
   
   class_addfloat(blockswap_class, blockswap_float);
   

@@ -273,7 +273,7 @@ void setup_0x260x260x7e(void)
 {
   andand_tilde_class = class_new(gensym("&&~"), (t_newmethod)andand_tilde_new, 0,
 			   sizeof(t_andand_tilde), 0, A_GIMME, 0);
-  class_addmethod(andand_tilde_class, (t_method)andand_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(andand_tilde_class, (t_method)andand_tilde_dsp, gensym("dsp"), A_CANT, 0);
   CLASS_MAINSIGNALIN(andand_tilde_class, t_andand_tilde, x_f);
   class_addmethod  (andand_tilde_class, (t_method)andand_tilde_help, gensym("help"), A_NULL);
   class_sethelpsymbol(andand_tilde_class, gensym("zigbinops"));

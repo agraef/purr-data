@@ -106,7 +106,7 @@ void demultiplex_tilde_setup(void)
   class_addcreator((t_newmethod)demux_new, gensym("demux~"), A_GIMME, 0);
 
   class_addfloat(demux_class, demux_output);
-  class_addmethod(demux_class, (t_method)demux_dsp, gensym("dsp"), 0);
+  class_addmethod(demux_class, (t_method)demux_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(demux_class, nullfn, gensym("signal"), 0);
 
   class_addmethod(demux_class, (t_method)demux_helper, gensym("help"), 0);

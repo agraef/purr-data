@@ -232,7 +232,7 @@ void setup_0x3c0x7e(void)
 {
   lt_tilde_class = class_new(gensym("<~"), (t_newmethod)lt_tilde_new, 0,
 			    sizeof(t_lt_tilde), 0, A_GIMME, 0);
-  class_addmethod(lt_tilde_class, (t_method)lt_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(lt_tilde_class, (t_method)lt_tilde_dsp, gensym("dsp"), A_CANT, 0);
   CLASS_MAINSIGNALIN(lt_tilde_class, t_lt_tilde, x_f);
   class_addmethod  (lt_tilde_class, (t_method)lt_tilde_help, gensym("help"), A_NULL);
   class_sethelpsymbol(lt_tilde_class, gensym("zigbinops"));

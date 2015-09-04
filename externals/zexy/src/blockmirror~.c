@@ -100,7 +100,7 @@ void blockmirror_tilde_setup(void)
                                 (t_method)blockmirror_free,
                                 sizeof(t_blockmirror), 0, A_NULL);
   class_addmethod(blockmirror_class, nullfn, gensym("signal"), 0);
-  class_addmethod(blockmirror_class, (t_method)blockmirror_dsp, gensym("dsp"), 0);
+  class_addmethod(blockmirror_class, (t_method)blockmirror_dsp, gensym("dsp"), A_CANT, 0);
   
   class_addfloat(blockmirror_class, blockmirror_float);
   

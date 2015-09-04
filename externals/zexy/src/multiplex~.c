@@ -101,7 +101,7 @@ void multiplex_tilde_setup(void)
   class_addcreator((t_newmethod)mux_tilde_new, gensym("mux~"), A_GIMME, 0);
 
   class_addfloat(mux_tilde_class, mux_tilde_input);
-  class_addmethod(mux_tilde_class, (t_method)mux_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(mux_tilde_class, (t_method)mux_tilde_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(mux_tilde_class, nullfn, gensym("signal"), 0);
 
   class_addmethod(mux_tilde_class, (t_method)mux_tilde_helper, gensym("help"), 0);

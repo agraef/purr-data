@@ -103,7 +103,7 @@ void quantize_tilde_setup(void)
   quantize_class = class_new(gensym("quantize~"), (t_newmethod)quantize_new, 0,
 			     sizeof(t_quantize), 0, A_DEFFLOAT, 0);
   class_addmethod(quantize_class, nullfn, gensym("signal"), 0);
-  class_addmethod(quantize_class, (t_method)quantize_dsp, gensym("dsp"), 0);
+  class_addmethod(quantize_class, (t_method)quantize_dsp, gensym("dsp"), A_CANT, 0);
 
   class_addfloat(quantize_class, quantize_float);
   class_addmethod(quantize_class, (t_method)quantize_8bit, gensym("8bit"), 0);

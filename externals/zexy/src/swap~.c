@@ -94,7 +94,7 @@ void swap_tilde_setup(void)
   swap_class = class_new(gensym("swap~"), (t_newmethod)swap_new, 0,
 			 sizeof(t_swap), 0, A_NULL);
   class_addmethod(swap_class, nullfn, gensym("signal"), 0);
-  class_addmethod(swap_class, (t_method)swap_dsp, gensym("dsp"), 0);
+  class_addmethod(swap_class, (t_method)swap_dsp, gensym("dsp"), A_CANT, 0);
   
   class_addfloat(swap_class, swap_float);
   class_addbang(swap_class, swap_bang);

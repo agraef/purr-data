@@ -647,7 +647,7 @@ void sfplay_setup(void)
    sfplay_class = class_new(gensym("sfplay"), (t_newmethod)sfplay_new, (t_method)sfplay_free,
       sizeof(t_sfplay), 0, A_DEFFLOAT, A_DEFFLOAT,0);
    class_addmethod(sfplay_class, nullfn, gensym("signal"), 0);
-   class_addmethod(sfplay_class, (t_method)sfplay_dsp, gensym("dsp"), 0);
+   class_addmethod(sfplay_class, (t_method)sfplay_dsp, gensym("dsp"), A_CANT, 0);
 
    class_addmethod(sfplay_class, (t_method)sfplay_helper, gensym("help"), A_NULL);
    class_sethelpsymbol(sfplay_class, gensym("sf-play_record"));

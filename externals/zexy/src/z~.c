@@ -127,7 +127,7 @@ void z_tilde_setup(void)
   zNdelay_class = class_new(gensym("z~"), (t_newmethod)zNdelay_new, (t_method)zNdelay_free,
 			    sizeof(t_zNdelay), 0, A_DEFFLOAT, 0);
   class_addmethod(zNdelay_class, nullfn, gensym("signal"), 0);
-  class_addmethod(zNdelay_class, (t_method)zNdelay_dsp, gensym("dsp"), 0);
+  class_addmethod(zNdelay_class, (t_method)zNdelay_dsp, gensym("dsp"), A_CANT, 0);
 
   class_addfloat(zNdelay_class, zdel_float);
   class_addmethod(zNdelay_class, (t_method)zdel_float, gensym("ft1"), A_FLOAT, 0);

@@ -152,7 +152,7 @@ void abs_tilde_setup(void)
   sigABS_class = class_new(gensym("abs~"), (t_newmethod)sigABS_new, 0,
 			   sizeof(t_abs), 0, A_DEFFLOAT, 0);
   CLASS_MAINSIGNALIN(sigABS_class, t_abs, x_f);
-  class_addmethod(sigABS_class, (t_method)sigABS_dsp, gensym("dsp"), 0);
+  class_addmethod(sigABS_class, (t_method)sigABS_dsp, gensym("dsp"), A_CANT, 0);
   
   class_addmethod(sigABS_class, (t_method)sigABS_helper, gensym("help"), 0);
   class_sethelpsymbol(sigABS_class, gensym("zigbinops"));
