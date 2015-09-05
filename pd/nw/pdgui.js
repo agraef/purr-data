@@ -2911,7 +2911,7 @@ function gui_raise(cid, tag) {
 
 function gui_find_lowest_and_arrange(cid, reference_element_tag, objtag) {
     var ref_elem = get_gobj(cid, reference_element_tag),
-        svg = patchwin[cid].window.document.getElementsByClassName('patchsvg'),
+        svg = patchwin[cid].window.document.getElementById('patchsvg'),
         selection = null,
         gobj,
         len,
