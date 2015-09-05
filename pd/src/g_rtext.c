@@ -552,7 +552,6 @@ void rtext_displace(t_rtext *x, int dx, int dy)
 /* Not sure if this is still used */
 void rtext_select(t_rtext *x, int state)
 {
-post("selected an rtext");
     t_glist *glist = x->x_glist;
     t_canvas *canvas = glist_getcanvas(glist);
     if (glist_istoplevel(glist))
@@ -572,7 +571,7 @@ post("selected an rtext");
 
 void rtext_activate(t_rtext *x, int state)
 {
-    fprintf(stderr,"rtext_activate state=%d\n", state);
+    //fprintf(stderr,"rtext_activate state=%d\n", state);
     int w = 0, h = 0, widthspec, indx;
     t_glist *glist = x->x_glist;
     t_canvas *canvas = glist_getcanvas(glist);

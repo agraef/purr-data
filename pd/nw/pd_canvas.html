@@ -242,14 +242,14 @@ var canvas_events = (function() {
                 return false;
             },
             floating_text_click: function(evt) {
-               pdgui.gui_post("leaving floating mode");
+                //pdgui.gui_post("leaving floating mode");
                 canvas_events.text();
                 evt.stopPropagation();
                 evt.preventDefault();
                 return false;
             },
             floating_text_keypress: function(evt) {
-               pdgui.gui_post("leaving floating mode");
+                //pdgui.gui_post("leaving floating mode");
                 canvas_events.text();
                 //evt.stopPropagation();
                 //evt.preventDefault();
@@ -260,12 +260,12 @@ var canvas_events = (function() {
             create_obj: function() {
                 var fudi_msg = text_to_fudi(textbox().innerText);
                 pdgui.pdsend(name + " createobj " + fudi_msg);
-                pdgui.gui_post("formatted content is " + fudi_msg);
+                //pdgui.gui_post("formatted content is " + fudi_msg);
             },
             set_obj: function() {
                 var fudi_msg = text_to_fudi(textbox().innerText);
                 pdgui.pdsend(name + " setobj " + fudi_msg);
-                pdgui.gui_post("formatted content is " + fudi_msg);
+                //pdgui.gui_post("formatted content is " + fudi_msg);
             }
         }
     ;

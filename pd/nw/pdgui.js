@@ -2788,7 +2788,7 @@ function iemgui_fontfamily(name) {
 function gui_iemgui_label_new(cid, tag, x, y, color, text, fontname, fontweight,
     fontsize) {
     var g = get_gobj(cid, tag);
-    gui_post("fontname is " + fontname);
+    //gui_post("fontname is " + fontname);
 //    var fontheight = 
     var svg_text = create_item(cid, 'text', {
         // x and y need to be relative to baseline instead of nw anchor
@@ -2849,7 +2849,6 @@ function gui_iemgui_label_select(cid, tag, is_selected) {
 }
 
 function gui_iemgui_label_font(cid, tag, fontname, fontweight, fontsize) {
-gui_post("googoo: fontsize is " + fontsize);
     var svg_text = get_item(cid, tag + 'label');
     configure_item(svg_text, {
         'font-family': iemgui_fontfamily(fontname),
@@ -3727,7 +3726,7 @@ function select_text(cid, elem) {
 function gui_textarea(cid, tag, type, x, y, max_char_width, text, font_size, state) {
     //gui_post("x/y is " + x + '/' + y);
     //gui_post("state? " + state);
-    gui_post("tag is " + tag);
+    //gui_post("tag is " + tag);
     var range, svg_view;
     var gobj = get_gobj(cid, tag);
     if (state !== 0) {

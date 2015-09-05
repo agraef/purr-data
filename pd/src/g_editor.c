@@ -585,14 +585,14 @@ void glist_deselect(t_glist *x, t_gobj *y)
         int pos = glist_getindex(glist_getcanvas(x), y);
         if (x->gl_editor->e_textedfor)
         {
-            fprintf(stderr, "e_textedfor\n");
+            //fprintf(stderr, "e_textedfor\n");
             fuddy = glist_findrtext(x, (t_text *)y);
             if (x->gl_editor->e_textedfor == fuddy)
             {
-                fprintf(stderr, "e_textedfor == fuddy\n");
+                //fprintf(stderr, "e_textedfor == fuddy\n");
                 if (x->gl_editor->e_textdirty)
                 {
-                    fprintf(stderr, "textdirty yes\n");
+                    //fprintf(stderr, "textdirty yes\n");
                     z = fuddy;
                     canvas_stowconnections(glist_getcanvas(x));
                     glist_checkanddeselectall(x, y);
@@ -632,7 +632,7 @@ void glist_deselect(t_glist *x, t_gobj *y)
 
         if (z)
         {
-            fprintf(stderr, "setto\n");
+            //fprintf(stderr, "setto\n");
             char *buf;
             int bufsize;
 
