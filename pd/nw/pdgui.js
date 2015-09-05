@@ -879,8 +879,8 @@ function init_socket_events () {
                         old_command_output = unescape(old_command);
                     }
                     old_command= '';
-                    gui_post("warning: old command: " + old_command_output,
-                        'blue');
+                    //gui_post("warning: old command: " + old_command_output,
+                    //    'blue');
                 }
                 cmdHeader = true; 
             } else {
