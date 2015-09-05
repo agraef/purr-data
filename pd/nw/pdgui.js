@@ -166,7 +166,8 @@ function enquote (x) {
 // from stackoverflow.com/questions/21698906/how-to-check-if-a-path-is-absolute-or-relative
 // this doesn't seem to be needed atm
 function path_is_absolute(myPath) {
-    var ret = (path.resolve(myPath) === path.normalize(myPath).replace(/(.+)([\/]\\])$/, '$1'));
+    var ret = (path.resolve(myPath) ===
+        path.normalize(myPath).replace(/(.+)([\/]\\])$/, '$1'));
     return ret;
 }
 
@@ -211,6 +212,7 @@ function pd_error_select_by_id(objectid) {
         pdsend("pd findinstance " + objectid);
     }
 }
+
 exports.pd_error_select_by_id = pd_error_select_by_id
 
 function gui_post_error(objectid, loglevel, errormsg) {
@@ -219,7 +221,8 @@ function gui_post_error(objectid, loglevel, errormsg) {
     var error_title = pd_window.document.createTextNode("error");
     if (objectid.length > 0) {
         var my_a = pd_window.document.createElement('a');
-        my_a.href = "javascript:pdgui.pd_error_select_by_id('" + objectid + "')";
+        my_a.href =
+            "javascript:pdgui.pd_error_select_by_id('" + objectid + "')";
         my_a.appendChild(error_title);
         my_p.appendChild(my_a);
     } else {
@@ -257,7 +260,6 @@ function canvas_check_geometry(cid) {
         win_y = patchwin[cid].y,
         cnv_width = patchwin[cid].window.innerWidth,
         cnv_height = patchwin[cid].window.innerHeight;
-gui_post("win_x " + win_x + " win_y " + win_y);
     pdsend([cid, "relocate",
             pd_geo_string(win_w, win_h, win_x, win_y),
             // We're reusing win_x and win_y here, as it
@@ -270,7 +272,6 @@ gui_post("win_x " + win_x + " win_y " + win_y);
 exports.canvas_check_geometry = canvas_check_geometry;
 
 function menu_save(name) {
-//    gui_post(name + " menusave");
     pdsend(name + " menusave");
 }
 
@@ -285,10 +286,6 @@ function gui_canvas_saveas (name, initfile, initdir) {
 //    patchwin[name].window.document.getElementById("fileDialog").setAttribute("nwworkingdir", pwd);
     var chooser = patchwin[name].window.document.querySelector('#saveDialog');
     chooser.click();
-//    chooser.addEventListener("change", function(evt) {
-//        saveas_callback(name, this.value);
-//        console.log("tried to open something");
-//    }, false);
 }
 
 function saveas_callback(cid, file) {
@@ -344,7 +341,9 @@ exports.menu_saveas = menu_saveas;
 function menu_new () {
     //if { ! [file isdirectory $untitled_directory]} {set untitled_directory $::env(HOME)}
     untitled_directory = pwd;
-    pdsend("pd filename " + "Untitled-" + untitled_number + " " + enquote(untitled_directory));
+    pdsend("pd filename " +
+           "Untitled-" + untitled_number + " " +
+           enquote(untitled_directory));
     if (k12_mode == 1) {
         k12_saveas_on_new = 1;
         pdsend("#N canvas");
@@ -395,7 +394,8 @@ function canvas_menuclose_callback(cid_for_dialog, cid, force) {
     // Hacky-- this should really be dir/filename here instead of
     // filename/args/dir which is ugly
     var title = patchwin[cid_for_dialog].window.document.title;
-    var reply = patchwin[cid_for_dialog].window.confirm("Save changes to " + title + "?");
+    var reply = patchwin[cid_for_dialog].window
+        .confirm("Save changes to " + title + "?");
     if (reply) {
         pdsend(cid_for_dialog + " menusave");
     } else {
@@ -450,22 +450,20 @@ exports.set_app_quitfn = function(quitfn) {
 function open_file(file) {
     //from tcl...
     //global pd_opendir pd_guidir pd_nt
-    gui_post("open_file: " + file);
     var directory = path.dirname(file);
     var basename = path.basename(file);
     var cyclist;
     if (basename.match(/\.(pat|mxb|help)$/) !=null) {
         gui_post("warning: opening pat|mxb|help not implemented yet");
-        //gui_post("converting " + filename);
         if (pd_nt == 0) {
             // on GNU/Linux, cyclist is installed into /usr/bin usually
             cyclist = "/usr/bin/cyclist";
         } else {
             cyclist = pd_guidir + "/bin/cyclist"
         }
-        //gui_post(cyclist + filename);
         //convert Max binary to text .pat
-        // The following is tcl code which needs to get converted to javascript...
+        // The following is tcl code which needs to get converted
+        // to javascript...
         //set binport [open "| \"$cyclist\" \"$filename\""]
         //set convertedtext [read $binport]
         //if { ! [catch {close $binport} err]} {
@@ -484,8 +482,8 @@ function open_file(file) {
     }
 }
 
-// Doesn't work yet... need to figure out how to send command line args (files) to be opened by
-// the unique instance 
+// Doesn't work yet... need to figure out how to send command line args
+// (files) to be opened by the unique instance 
 function gui_open_files_via_unique(filenames)
 {
     gui_post("pdtk_open_files_via_unique " + filenames);
@@ -503,10 +501,9 @@ function gui_build_filelist(file) {
     startup_files.push(file);
 }
 
-// This doesn't work at the moment.  Not sure how to feed the command line filelist to a single
-// instance of node-webkit.
+// This doesn't work at the moment.  Not sure how to feed the command line
+// filelist to a single instance of node-webkit.
 function gui_check_unique (unique) {
-        // gui_post("pdtk_check_unique " + unique);
     // global appname
     return;
     var final_filenames = new Array;
@@ -516,7 +513,6 @@ function gui_check_unique (unique) {
         for (var i = 0; i < filelist_length; i++) {
             var file = startup_files[i];
             var dir;
-            //gui_post (file [file dirname $file] $startup_dir"
             if (!pathIsAbsolute(file)) {
                 file = fs.join(pwd, file);
             }
@@ -557,13 +553,8 @@ function gui_check_unique (unique) {
 
 function gui_startup(version, fontname_from_pd, fontweight_from_pd,
     apilist, midiapilist) {
-    console.log("we're starting up...");
+    console.log("Starting up...");
     // # tb: user defined typefaces
-    // our args:
-//    console.log(version);
-//    console.log(apilist);
-//    console.log(fontname);
-
     // set some global variables
     pd_myversion = version;
     pd_apilist =  apilist;
@@ -624,276 +615,6 @@ function gui_startup(version, fontname_from_pd, fontweight_from_pd,
 //    }
 }
 
-
-
-
-
- 
-
-/*
-    // Some other menu
-    var fooMenu = new nw.Menu();
-
-    // Add to window menu
-    windowMenu.append(new nw.MenuItem({
-        label: 'Foo',
-        submenu: fooMenu
-    }));
-
-    // Foo sub-entry
-    fooMenu.append(new nw.MenuItem({
-        label: 'flub',
-        click: function(){
-            alert('Foo flub');
-        }
-    }));
-
-    // Another Foo sub-entry
-    fooMenu.append(new nw.MenuItem({
-        label: 'bub',
-        click: function(){
-            alert('Foo bub');
-        }
-    }));
-}
-
-
-/*
-function canvas_create_menus(name) {
-    // the "File" menu
-	
-    // The menus are instantiated here for the patch windows.
-    // For the main window, they are created on load, at the 
-    // top of this file.
-    match_linux_wm [list menu $name.m -relief flat]
-    match_linux_wm [list menu $name.m.file  -postcommand [concat pdtk_fixfilemenu $name.m.file] -tearoff $pd_tearoff]
-    $name.m add cascade -label File -menu $name.m.file
-
-    $name.m.file add command -label New -command {menu_new} \
-        -accelerator [accel_munge "Ctrl+n"]
-
-    $name.m.file add command -label Open -command {menu_open} \
-        -accelerator [accel_munge "Ctrl+o"]
-
-	if { $k12_mode == 1 } {
-		$name.m.file add command -label {K12 Demos} -command {menu_k12_open_demos}
-	}
-
-    match_linux_wm [list $name.m.file add separator]
-
-    $name.m.file add command -label Save -command [concat menu_save $name] \
-        -accelerator [accel_munge "Ctrl+s"]
-
-    $name.m.file add command -label "Save as..." \
-        -command [concat menu_saveas $name] \
-        -accelerator [accel_munge "Ctrl+S"]
-	if { $k12_mode == 0 } {
-		match_linux_wm [list $name.m.file add separator]
-
-		# arrange menus according to Apple HIG
-		if {$pd_nt != 2 } {
-			$name.m.file add command -label "Message..." -command {menu_send} \
-				-accelerator [accel_munge "Ctrl+m"]
-			# these are now part of Preferences... on Mac OS X
-		    $name.m.file add command -label Path... \
-		        -command {pd pd start-path-dialog \;} 
-		    $name.m.file add command -label Startup... \
-		        -command {pd pd start-startup-dialog \;} 
-		} else { 
-			# Cmd-m is minimize window on Mac OS X		
-			$name.m.file add command -label "Message..." -command {menu_send}
-			match_linux_wm [list $name.m.file add  separator]
-			$name.m.file add command -label "Make app from patch..." \
-				-command {menu_makeapp 0}
-			$name.m.file add command -label "Make app from folder..." \
-				-command {menu_makeapp 1}
-		}
-		match_linux_wm [list $name.m.file add separator]
-		$name.m.file add command -label "Print..." -command [concat menu_print $name] \
-		    -accelerator [accel_munge "Ctrl+p"]
-	}
-    # update recent files
-    match_linux_wm [list $name.m.file add separator]
-    $name.m.file add command -label "No Recent Files" -state disabled
-    #match_linux_wm [list $name.m.file add separator]
-    #if {[llength $::recentfiles_list] > 0} {
-    #    ::pd_menus::update_recentfiles_menu $name.m.file false
-    #}
-
-	match_linux_wm [list $name.m.file add separator]
-    $name.m.file add command -label Close \
-        -command [concat menu_close $name] \
-        -accelerator [accel_munge "Ctrl+w"]
-
-	if {$pd_nt != 2} {
-		# Mac OS X doesn't put Quit on the File menu
-		$name.m.file add command -label Quit -command {menu_quit} \
-			-accelerator [accel_munge "Ctrl+q"]
-	}
-
-    # the "Edit" menu
-    match_linux_wm [list menu $name.m.edit -postcommand [concat menu_fixeditmenu $name] -tearoff $pd_tearoff]
-    $name.m add cascade -label Edit -menu $name.m.edit
-    
-    $name.m.edit add command -label Undo -command [concat menu_undo $name] \
-        -accelerator [accel_munge "Ctrl+z"]
-
-    $name.m.edit add command -label Redo -command [concat menu_redo $name] \
-        -accelerator [accel_munge "Ctrl+Z"]
-
-    match_linux_wm [list $name.m.edit add separator]
-
-    $name.m.edit add command -label Cut -command [concat menu_cut $name] \
-        -accelerator [accel_munge "Ctrl+x"] -state disabled
-
-    $name.m.edit add command -label Copy -command [concat menu_copy $name] \
-        -accelerator [accel_munge "Ctrl+c"] -state disabled
-
-    $name.m.edit add command -label Paste \
-        -command [concat menu_paste $name] \
-        -accelerator [accel_munge "Ctrl+v"]
-
-	if {!$global_clipboard} {
-		$name.m.edit entryconfigure "Paste" -state disabled
-	} else {
-		$name.m.edit entryconfigure "Paste" -state normal
-	}
-
-    $name.m.edit add command -label Duplicate \
-        -command [concat menu_duplicate $name] \
-        -accelerator [accel_munge "Ctrl+d"]
-
-	if {!$global_selection} {
-		$name.m.edit entryconfigure "Duplicate" -state disabled
-	} else {
-		$name.m.edit entryconfigure "Duplicate" -state normal
-	}
-
-    $name.m.edit add command -label {Select all} \
-        -command [concat menu_selectall $name] \
-        -accelerator [accel_munge "Ctrl+a"]
-
-	if { $k12_mode == 0 } {
-		$name.m.edit add command -label {Reselect} \
-		    -command [concat menu_reselect $name] \
-		    -accelerator "Ctrl+Enter" -state disabled
-	}
-
-    match_linux_wm [list $name.m.edit add separator]
-
-	$name.m.edit add command -label {Tidy Up} \
-		-command [concat menu_tidyup $name] \
-	    -accelerator [accel_munge "Ctrl+y"] -state disabled
-
-	if { $k12_mode == 0 } {
-
-		$name.m.edit add command -label {Bring To Front} \
-			-command [concat popup_action $name 3] \
-		    -accelerator [accel_munge "Ctrl+Up"] -state disabled
-
-		$name.m.edit add command -label {Send To Back} \
-			-command [concat popup_action $name 4] \
-		    -accelerator [accel_munge "Ctrl+Down"] -state disabled
-	}
-
-	match_linux_wm [list $name.m.edit add separator]
-
-	if { $k12_mode == 0 } {
-
-		#if {$pd_nt == 2} { # no key command on Mac OS X, conflicts with standard
-		#	$name.m.edit add command -label {Text Editor} \
-		#		-command [concat menu_texteditor $name]
-		#} else {
-		#	$name.m.edit add command -label {Text Editor} \
-		#		-accelerator [accel_munge "Ctrl+t"] \
-		#		-command [concat menu_texteditor $name]
-		#}
-
-		$name.m.edit add command -label Font \
-		    -command [concat menu_font $name] 
-	}
-
-## jsarlo
-    $name.m.edit add checkbutton -label "Cord Inspector" \
-        -indicatoron false -selectcolor black \
-        -command [concat menu_magicglass $name] \
-        -accelerator [accel_munge "Ctrl+r"]
-
-    #if { $editable == 0 } {
-    #       $name.m.edit entryconfigure "Cord Inspector" -indicatoron false }
-  
-    match_linux_wm [list $name.m.edit add separator]
-## end jsarlo
-
-	$name.m.edit add command -label "Toggle console" \
-	    -accelerator [accel_munge "Ctrl+R"] \
-	    -command [concat .controls.switches.console invoke]
-
-	$name.m.edit add command -label "Clear console" \
-	    -accelerator [accel_munge "Ctrl+L"] \
-	    -command [concat menu_clear_console]
-
-	match_linux_wm [list $name.m.edit add separator]
-
-	if { $k12_mode == 0 } {
-    
-		# Apple, Microsoft, and others put find functions in the Edit menu.
-		$name.m.edit add command -label {Find...} \
-		    -accelerator [accel_munge "Ctrl+f"] \
-		    -command [concat menu_findobject $name] 
-		$name.m.edit add command -label {Find Again} \
-		    -accelerator [accel_munge "Ctrl+g"] \
-		    -command [concat menu_findagain $name] 
-		$name.m.edit add command -label {Find last error} \
-		    -command [concat menu_finderror] 
-
-		match_linux_wm [list $name.m.edit add separator]
-
-		############iemlib##################
-		# instead of "red = #BC3C60" we take "grey85", so there is no difference,
-		# if widget is selected or not.
-
-		$name.m.edit add checkbutton -label "Autotips" \
-		    -indicatoron false -selectcolor black \
-		    -command [concat menu_tooltips $name] \
-		    -accelerator [accel_munge "Ctrl+E"]
-	}
-
-    $name.m.edit add checkbutton -label "Edit mode" \
-        -indicatoron false -selectcolor black \
-        -command [concat menu_editmode $name] \
-        -accelerator [accel_munge "Ctrl+e"]
-    if {$k12_mode == 0} {
-    	match_linux_wm [list $name.m.edit add separator]
-        $name.m.edit add command -label {Preferences...} \
-        -command {::dialog_prefs::open_prefs_dialog .}
-    }
-
-	if { $editable == 1 } {
-    	$name.m.edit entryconfigure "Edit mode" -background "#7dd37d" -foreground black
-	}
-
-	if { $k12_mode == 0 && $autotips == 1 } {
-    	$name.m.edit entryconfigure "Autotips" -background "#7dd37d" -foreground "#dddddd"
-	}
-
-	set ::editmode($name) $editable
-
-	#if { $magicglass == 1 } {
-    #	$name.m.edit entryconfigure "Cord Inspector" -background "#7dd37d"
-	#	menu_magicglass $name
-	#}
-
-    #if { $editable == 0 } {
-    #    $name.m.edit entryconfigure "Edit mode" -indicatoron false 
-    #}
-
-*/
-
-
-
-// From what used to be canvas.js
-
 // Global canvas associative arrays (aka javascript objects)
 var scroll = {},
     menu = {},
@@ -926,7 +647,6 @@ exports.get_dialogwin = function(name) {
 exports.remove_dialogwin = function(name) {
     dialogwin[name] = null;
 }
-
 
 // stopgap...
 pd_colors['canvas_color'] = "white";
@@ -1000,7 +720,8 @@ function format_window_title(name, dirty_flag, args, dir) {
 
 exports.format_window_title = format_window_title;
 
-// This should be used when a file is saved with the name changed (and maybe in other situations)
+// This should be used when a file is saved with the name changed
+// (and maybe in other situations)
 function gui_canvas_set_title(cid, name, args, dir, dirty_flag) {
     var title = format_window_title(name, dirty_flag, args, dir);
     patchwin[cid].title = title;
@@ -1046,10 +767,11 @@ function gui_canvas_new(cid, width, height, geometry, editable, name, dir, dirty
         menu_flag = false;
     }
     last_loaded = cid;
-    // Not sure why resize and topmost are here-- but we'll pass them on for the time being...
-    patchwin[cid] = nw_create_window(cid, 'pd_canvas', width, height, xpos, ypos, menu_flag,
-        resize[cid], topmost[cid], my_canvas_color, name, dir, dirty_flag, cargs, null);
-     
+    // Not sure why resize and topmost are here-- but we'll pass them on for
+    // the time being...
+    patchwin[cid] = nw_create_window(cid, 'pd_canvas', width, height,
+        xpos, ypos, menu_flag, resize[cid], topmost[cid], my_canvas_color,
+        name, dir, dirty_flag, cargs, null);
     // initialize variable to reflect that this window has been opened
     loaded[cid] = 1;
     //#pdtk_standardkeybindings $cid.c
@@ -1073,664 +795,6 @@ function gui_canvas_erase_all_gobjs(cid) {
 
 exports.canvas_map = canvas_map;
 
-/*    
-    ############iemlib##################
-
-	if { $k12_mode == 0 } {
-
-		# the "Put" menu
-		match_linux_wm [list menu $name.m.put -tearoff $put_tearoff]
-		$name.m add cascade -label Put -menu $name.m.put
-
-		$name.m.put add command -label Object \
-		    -command [concat menu_object $name 0] \
-		    -accelerator [accel_munge "Ctrl+1"]
-
-		$name.m.put add command -label Message \
-		    -command [concat menu_message $name 0] \
-		    -accelerator [accel_munge "Ctrl+2"]
-
-		$name.m.put add command -label Number \
-		    -command [concat menu_floatatom $name 0] \
-		    -accelerator [accel_munge "Ctrl+3"]
-
-		$name.m.put add command -label Symbol \
-		    -command [concat menu_symbolatom $name 0] \
-		    -accelerator [accel_munge "Ctrl+4"]
-
-		$name.m.put add command -label Comment \
-		    -command [concat menu_comment $name 0] \
-		    -accelerator [accel_munge "Ctrl+5"]
-
-		match_linux_wm [list $name.m.put add separator]
-		
-		############iemlib##################
-
-		$name.m.put add command -label Bang \
-		    -command [concat menu_bng $name 0] \
-		    -accelerator [accel_munge "Shift+Ctrl+b"]
-		
-		$name.m.put add command -label Toggle \
-		    -command [concat menu_toggle $name 0] \
-		    -accelerator [accel_munge "Shift+Ctrl+t"]
-		
-		$name.m.put add command -label Number2 \
-		    -command [concat menu_numbox $name 0] \
-		    -accelerator [accel_munge "Shift+Ctrl+n"]
-		
-		$name.m.put add command -label Vslider \
-		    -command [concat menu_vslider $name 0] \
-		    -accelerator [accel_munge "Shift+Ctrl+v"]
-		
-		$name.m.put add command -label Hslider \
-		    -command [concat menu_hslider $name 0] \
-		    -accelerator [accel_munge "Shift+Ctrl+h"]
-		
-		$name.m.put add command -label Vradio \
-		    -command [concat menu_vradio $name 0] \
-		    -accelerator [accel_munge "Shift+Ctrl+d"]
-		
-		$name.m.put add command -label Hradio \
-		    -command [concat menu_hradio $name 0] \
-		    -accelerator [accel_munge "Shift+Ctrl+i"]
-		
-		$name.m.put add command -label VU \
-		    -command [concat menu_vumeter $name 0] \
-		    -accelerator [accel_munge "Shift+Ctrl+u"]
-		
-		$name.m.put add command -label Canvas \
-		    -command [concat menu_mycnv $name 0] \
-		    -accelerator [accel_munge "Shift+Ctrl+c"]
-
-		############iemlib##################
-		
-		match_linux_wm [list $name.m.put add separator]
-		
-		$name.m.put add command -label Graph \
-		    -command [concat menu_graph $name] 
-
-		$name.m.put add command -label Array \
-		    -command [concat menu_array $name] 
-
-		# the find menu
-		# Apple, Microsoft, and others put find functions in the Edit menu.
-		# But in order to move these items to the Edit menu, the Find menu
-		# handling needs to be dealt with, including this line in g_canvas.c:
-		#         sys_vgui(".mbar.find delete %d\n", i);
-		# <hans@at.or.at>
-		#match_linux_wm [list menu $name.m.find -tearoff $put_tearoff]
-		#$name.m add cascade -label Find -menu $name.m.find
-		#
-		#$name.m.find add command -label {Find...} \
-		#    -accelerator [accel_munge "Ctrl+f"] \
-		#    -command [concat menu_findobject $name] 
-		#$name.m.find add command -label {Find Again} \
-		#    -accelerator [accel_munge "Ctrl+g"] \
-		#    -command [concat menu_findagain $name] 
-		#$name.m.find add command -label {Find last error} \
-		#    -command [concat menu_finderror] 
-		
-		# the window menu
-		match_linux_wm [list menu $name.m.windows -postcommand \
-			[concat menu_fixwindowmenu $name] -tearoff $pd_tearoff]
-
-		if {$pd_nt == 2} {
-			$name.m.windows add command -label {Minimize} \
-				-command "menu_minimize $name" -accelerator [accel_munge "Ctrl+m"]
-			$name.m.windows add command -label {Zoom} -command "menu_zoom $name"
-		} else {
-			$name.m.windows add command -label "Next Window" -command {menu_raisenextwindow} \
-				-accelerator "Ctrl+PageDown"
-			$name.m.windows add command -label "Previous Window" -command {menu_raisepreviouswindow} \
-				-accelerator "Ctrl+PageUp"
-		}
-		match_linux_wm [list $name.m.windows add separator]
-		$name.m.windows add command -label {parent window}\
-		    -command [concat menu_windowparent $name] 
-		$name.m.windows add command -label {Pd & Console} -command menu_raise_console \
-			-accelerator [accel_munge "Ctrl+;"]
-		match_linux_wm [list $name.m.windows add separator]
-
-		# the audio menu
-		match_linux_wm [list menu $name.m.audio -tearoff $pd_tearoff]
-
-		if {$pd_nt != 2} {
-		    $name.m add cascade -label Windows -menu $name.m.windows
-		    $name.m add cascade -label Media -menu $name.m.audio
-		} else {
-		    $name.m add cascade -label Media -menu $name.m.audio
-		    $name.m add cascade -label Window -menu $name.m.windows
-		    # the MacOS X app menu
-		    menu $name.m.apple -tearoff $pd_tearoff
-		    $name.m add cascade -label "Apple" -menu $name.m.apple 
-		}
-
-		# the "Help" menu
-
-		match_linux_wm [list menu $name.m.help -tearoff $pd_tearoff]
-		$name.m add cascade -label Help -menu $name.m.help
-
-		menu_addstd $name.m
-	}
-
-    # the popup menu
-	match_linux_wm [list menu $name.popup -tearoff false]
-	if { $k12_mode == 0 } {
-		$name.popup add command -label {Properties} \
-		    -command [concat popup_action $name 0]
-		$name.popup add command -label {Open} \
-		    -command [concat popup_action $name 1]
-		$name.popup add command -label {Help} \
-		    -command [concat popup_action $name 2]
-		match_linux_wm [list $name.popup add separator]
-		$name.popup add command -label {To Front} \
-		    -command [concat popup_action $name 3]
-		$name.popup add command -label {To Back} \
-		    -command [concat popup_action $name 4]
-	} else {
-		$name.popup add command -label {Properties} -state disabled \
-		    -command [concat popup_action $name 0] 
-		$name.popup add command -label {Open} -state disabled \
-		    -command [concat popup_action $name 1]
-		$name.popup add command -label {Help} \
-		    -command [concat popup_action $name 2]
-		match_linux_wm [list $name.popup add separator]
-		$name.popup add command -label {To Front} -state disabled \
-		    -command [concat popup_action $name 3]
-		$name.popup add command -label {To Back} -state disabled \
-		    -command [concat popup_action $name 4]
-	}
-
-    # fix menu font size on Windows with tk scaling = 1
-    if {$pd_nt == 1} {
-        $name.m.file configure -font menuFont
-        $name.m.edit configure -font menuFont
-        $name.m.find configure -font menuFont
-        $name.m.put configure -font menuFont
-        $name.m.windows configure -font menuFont
-        $name.m.audio configure -font menuFont
-        $name.m.help configure -font menuFont
-        $name.popup configure -font menuFont
-    }
-
-    # WM protocol
-    wm protocol $name WM_DELETE_WINDOW [concat menu_close $name]
-
-    # bindings.
-    # this is idiotic -- how do you just sense what mod keys are down and
-    # pass them on? I can't find it anywhere.
-    # Here we encode shift as 1, control 2, alt 4, in agreement
-    # with definitions in g_canvas.c.  The third button gets "8" but we don't
-    # bother with modifiers there.
-    # We don't handle multiple clicks yet.
-
-    bind $name.c <Configure> {pdtk_canvas_getscroll %W}
-	#bind $name.c <Configure> {after 100 pdtk_canvas_getscroll_configure %W}
-    bind $name.c <Button> {pdtk_canvas_click %W %x %y %b 0}
-    bind $name.c <Shift-Button> {pdtk_canvas_click %W %x %y %b 1}
-    bind $name.c <Control-Shift-Button> {pdtk_canvas_click %W %x %y %b 3}
-    # Alt key is called Option on the Mac
-    if {$pd_nt == 2} {
-        bind $name.c <Option-Button> {pdtk_canvas_click %W %x %y %b 4}
-        bind $name.c <Option-Shift-Button> {pdtk_canvas_click %W %x %y %b 5}
-        bind $name.c <Option-Control-Button> {pdtk_canvas_click %W %x %y %b 6}
-        bind $name.c <Mod1-Button> {pdtk_canvas_click %W %x %y %b 6}
-        bind $name.c <Option-Control-Shift-Button> \
-            {pdtk_canvas_click %W %x %y %b 7}
-    } else {
-        bind $name.c <Alt-Button> {pdtk_canvas_click %W %x %y %b 4}
-        bind $name.c <Alt-Shift-Button> {pdtk_canvas_click %W %x %y %b 5}
-        bind $name.c <Alt-Control-Button> {pdtk_canvas_click %W %x %y %b 6}
-        bind $name.c <Alt-Control-Shift-Button> \
-            {pdtk_canvas_click %W %x %y %b 7}
-    }
-    # button 2 is the right button on Mac; on other platforms it's button 3.
-    if {$pd_nt == 2} {
-        bind $name.c <Button-2> {pdtk_canvas_rightclick %W %x %y %b}
-        bind $name.c <Control-Button> {pdtk_canvas_rightclick %W %x %y %b}
-    } else {
-        bind $name.c <Button-3> {pdtk_canvas_rightclick %W %x %y %b}
-        bind $name.c <Control-Button> {pdtk_canvas_click %W %x %y %b 2}
-    }
-    #on linux, button 2 "pastes" from the X windows clipboard
-    if {$pd_nt == 0} {
-        bind $name.c <Button-2> {pdtk_canvas_middleclick %W %x %y %b 0;}
-    }
-
-    bind $name.c <ButtonRelease> {pdtk_canvas_mouseup %W %x %y %b}
-    bind $name.c <Control-Key> {pdtk_canvas_ctrlkey %W %K 0}
-    bind $name.c <Control-Shift-Key> {pdtk_canvas_ctrlkey %W %K 1}
-    #    bind $name.c <Mod1-Key> {puts stderr [concat mod1 %W %K %A]}
-    if {$pd_nt == 2} {
-        bind $name.c <Mod1-Key> {pdtk_canvas_ctrlkey %W %K 0}
-        bind $name.c <Mod1-Shift-Key> {pdtk_canvas_ctrlkey %W %K 1}
-        bind $name.c <Mod1-BackSpace> {pdtk_canvas_sendkey %W 1 %K %A 0 1 %t}
-        bind $name.c <Mod1-quoteleft> {menu_raisenextwindow}
-    } else {
-        bind $name.c <Control-Next>   {menu_raisenextwindow}
-        bind $name.c <Control-Prior>  {menu_raisepreviouswindow} ;# needs Tcl/Tk 8.5
-	}
-    bind $name.c <Key> {pdtk_canvas_sendkey %W 1 %K %A 0 1 %t}
-    bind $name.c <Shift-Key> {pdtk_canvas_sendkey %W 1 %K %A 1 1 %t}
-    bind $name.c <KeyRelease> {pdtk_canvas_sendkey %W 0 %K %A 0 1 %t}
-    bind $name.c <Motion> {pdtk_canvas_motion %W %x %y 0}
-    bind $name.c <Shift-Motion> {pdtk_canvas_motion %W %x %y 1}
-    bind $name.c <Control-Motion> {pdtk_canvas_motion %W %x %y 2}
-    bind $name.c <Control-Shift-Motion> {pdtk_canvas_motion %W %x %y 3}
-
-    # canvas bindings ---------------------------------------------------------
-    # just for tooltips right now
-	#$name.c bind all <Enter> "puts stderr {%x %y}"
-    #$name.c bind inlet <Enter> "pdtk_canvas_enteritem %W %x %y inlet %t"
-    #$name.c bind outlet <Enter> "pdtk_canvas_enteritem %W %x %y outlet %t"
-    #$name.c bind text <Enter> "pdtk_canvas_enteritem %W %x %y text %t"
-    #$name.c bind inlet <Leave> "pdtk_canvas_leaveitem %W inlet 0"
-    #$name.c bind outlet <Leave> "pdtk_canvas_leaveitem %W outlet 0"
-    #$name.c bind text <Leave> "pdtk_canvas_leaveitem %W text 0"
-	
-    if {$pd_nt == 2} {
-        bind $name.c <Option-Motion> {pdtk_canvas_motion %W %x %y 4}
-    } else { 
-        bind $name.c <Alt-Motion> {pdtk_canvas_motion %W %x %y 4}
-    }
-    bind $name.c <Map> {pdtk_canvas_map %W}
-    bind $name.c <Unmap> {pdtk_canvas_unmap %W}
-
-    switch $pd_nt { 0 {
-        bind $name.c <Button-4>  "pdtk_canvas_scroll $name.c y -1"
-        bind $name.c <Button-5>  "pdtk_canvas_scroll $name.c y +1"
-        bind $name.c <Shift-Button-4>  "pdtk_canvas_scroll $name.c x -1"
-        bind $name.c <Shift-Button-5>  "pdtk_canvas_scroll $name.c x +1"
-		#if { $k12_mode == 0 } {
-		#    bind $name.c <Control-Button-4>  "pdtk_zoom $name 1"
-		#    bind $name.c <Control-Button-5>  "pdtk_zoom $name -1"
-		#}
-    } default {
-        bind $name.c  <MouseWheel> \
-            "pdtk_canvas_scroll $name.c y \[expr -abs(%D)/%D\]"
-        bind $name.c  <Shift-MouseWheel> \
-            "pdtk_canvas_scroll $name.c x \[expr -abs(%D)/%D\]"
-    }}
-
-    #dnd bindtarget $name.c text/uri-list <Drop> { pdtk_canvas_makeobjs $name %D %x %y }
-    after idle [list dnd bindtarget $name text/uri-list <Drop> { foreach file %D {open_file $file} }]
-
-    #    puts stderr "all done"
-    #   after 1 [concat raise $name]
-    set pdtk_canvas_mouseup_name ""
-
-	bind $name <FocusIn> "menu_fixeditmenu $name"
-	bind $name <FocusOut> "pdtk_canvas_leaveitem $name.c"
-	if { $k12_mode == 1 } { pd [concat $name tooltips 1 \;] }
-    after idle [concat focus $name.c]
-
-	if { $k12_mode == 1 && $k12_saveas_on_new == 1 } {
-		after 1000 [concat pdtk_k12_saveas_on_new $name]
-	}
-
-	set ::scroll_on($name) 0
-	set ::hit_scrollbar($name) 0
-	#set ::scroll_was_cursor($name) 0
-	set ::last_scroll_x($name) 0
-	set ::last_scroll_y($name) 0
-	set ::canvaswidth($name) 0
-	set ::canvasheight($name) 0
-
-
-/*
-	if { $k12_mode == 1 } {
-		# K-12 menu
-
-		match_linux_wm [list frame $name.k12frame]
-		pack $name.k12frame -side left -fill y
-
-		# ---------------------------------- EDIT BUTTON -----------------------------------------
-		match_linux_wm [list frame $name.k12frame.edit -relief flat]
-		if {$editable==1} {
-			match_linux_wm [list button $name.k12frame.edit.b -image i.edit \
-				-command [concat menu_editmode $name]]
-		} else {
-			match_linux_wm [list button $name.k12frame.edit.b -image i.perform \
-				-command [concat menu_editmode $name]]
-		}
-		pack $name.k12frame.edit.b -side left -expand 1 -padx 1 -pady 0
-		setTooltip $name.k12frame.edit.b "Toggle between building and playing an instrument"
-		pdtk_k12panel_standardkeybindings $name.k12frame.edit.b
-		bind $name.k12frame.edit.b <Key> [list pdtk_canvas_sendkey $name.c 1 %K %A 0 1 %t]
-    	bind $name.k12frame.edit.b <KeyRelease> [list pdtk_canvas_sendkey $name.c 0 %K %A 0 1 %t]
-
-		# ---------------------------------- DATA VS SOUND BUTTONS ----------------------------------
-		match_linux_wm [list frame $name.k12frame.datasound -relief flat]
-		match_linux_wm [list button $name.k12frame.datasound.data -text "DATA" -image i.data_on -command [concat pdtk_k12_show_data_icons $name]]
-		match_linux_wm [list button $name.k12frame.datasound.sound -text "SOUND" -image i.sound -command [concat pdtk_k12_show_sound_icons $name]]
-		pack $name.k12frame.datasound.data $name.k12frame.datasound.sound -side left -pady 1 -padx 1 -expand 0
-		setTooltip $name.k12frame.datasound.data "Show DATA objects"
-		setTooltip $name.k12frame.datasound.sound "Show SOUND objects"
-		pdtk_k12panel_standardkeybindings $name.k12frame.datasound.data
-		pdtk_k12panel_standardkeybindings $name.k12frame.datasound.sound
-
-		# ---------------------------------- MESSAGES LABEL -----------------------------------------
-
-		#match_linux_wm [list frame $name.k12frame.msgs -relief flat]
-		#match_linux_wm [list label $name.k12frame.msgs.label -relief flat -text "MESSAGES"]
-		#pack $name.k12frame.msgs.label -fill x -pady 0 -padx 1
-
-		# ---------------------------------- WII -----------------------------------------
-		match_linux_wm [list frame $name.k12frame.wii -relief flat]
-		match_linux_wm [list button $name.k12frame.wii.b_wii_connect -image i.wii_connect \
-			-command [concat put_K12_objects $name wii_connect]]
-		match_linux_wm [list button $name.k12frame.wii.b_wii_buttons -image i.wii_buttons \
-			-command [concat put_K12_objects $name wii_buttons]]
-		match_linux_wm [list button $name.k12frame.wii.b_wii_hit -image i.wii_hit \
-			-command [concat put_K12_objects $name wii_hit]]
-		match_linux_wm [list button $name.k12frame.wii.b_wii_accelerometer -image i.wii_accelerometer \
-			-command [concat put_K12_objects $name wii_accelerometer]]
-		match_linux_wm [list button $name.k12frame.wii.b_wii_speed_xry -image i.wii_speed_xry \
-			-command [concat put_K12_objects $name wii_speed_xry]]
-		pack $name.k12frame.wii.b_wii_connect $name.k12frame.wii.b_wii_buttons $name.k12frame.wii.b_wii_hit $name.k12frame.wii.b_wii_accelerometer $name.k12frame.wii.b_wii_speed_xry -side left -expand 0 -padx 1 -pady 1
-		setTooltip $name.k12frame.wii.b_wii_connect "Wiimote Connect: Use this to connect wiimote to the computer"
-		setTooltip $name.k12frame.wii.b_wii_buttons "Wiimote Buttons: Use this to select which Wiimote button should activate objects connected to this object"
-		setTooltip $name.k12frame.wii.b_wii_hit "Wiimote Hit: Use this to detect when the wiimote has been shaken like a mallet"
-		setTooltip $name.k12frame.wii.b_wii_accelerometer "Wiimote Accelerometer: Use this to monitor Wiimotes acceleration across X, Y, and Z axes"
-		setTooltip $name.k12frame.wii.b_wii_speed_xry "Wiimote Speed X, Roll, Y: Use this to detect how quickly is Wiimote moving across individual axes x, roll, and y (requires motion plus)"
-		pdtk_k12panel_standardkeybindings $name.k12frame.wii.b_wii_connect
-		pdtk_k12panel_standardkeybindings $name.k12frame.wii.b_wii_buttons
-		pdtk_k12panel_standardkeybindings $name.k12frame.wii.b_wii_hit
-		pdtk_k12panel_standardkeybindings $name.k12frame.wii.b_wii_accelerometer
-		pdtk_k12panel_standardkeybindings $name.k12frame.wii.b_wii_speed_xry
-
-		# ---------------------------------- WII2 -----------------------------------------
-		match_linux_wm [list frame $name.k12frame.wii2 -relief flat]
-		match_linux_wm [list button $name.k12frame.wii2.b_wii_speed -image i.wii_speed \
-			-command [concat put_K12_objects $name wii_speed]]
-		match_linux_wm [list button $name.k12frame.wii2.b_wii_nunchuk_buttons -image i.wii_nunchuk_buttons \
-			-command [concat put_K12_objects $name wii_nunchuk_buttons]]
-		match_linux_wm [list button $name.k12frame.wii2.b_wii_nunchuk_hit -image i.wii_nunchuk_hit \
-			-command [concat put_K12_objects $name wii_nunchuk_hit]]
-		match_linux_wm [list button $name.k12frame.wii2.b_wii_nunchuk_accelerometer -image i.wii_nunchuk_accelerometer \
-			-command [concat put_K12_objects $name wii_nunchuk_accelerometer]]
-		match_linux_wm [list button $name.k12frame.wii2.b_wii_nunchuk_stick -image i.wii_nunchuk_stick \
-			-command [concat put_K12_objects $name wii_nunchuk_stick]]
-		pack $name.k12frame.wii2.b_wii_speed $name.k12frame.wii2.b_wii_nunchuk_buttons $name.k12frame.wii2.b_wii_nunchuk_hit $name.k12frame.wii2.b_wii_nunchuk_accelerometer $name.k12frame.wii2.b_wii_nunchuk_stick -side left -expand 0 -padx 1 -pady 1
-		setTooltip $name.k12frame.wii2.b_wii_speed "Wiimote Speed: Use this to detect how quickly is Wiimote moving (requires motion plus)"
-		setTooltip $name.k12frame.wii2.b_wii_nunchuk_buttons "Wiimote Nunchuk Buttons: Use this to select which Nunchuk button should activate objects connected to this object (requires nunchuk extension)"
-		setTooltip $name.k12frame.wii2.b_wii_nunchuk_hit "Wiimote Nunchuk Hit: Use this to detect when the wiimote has been shaken like a mallet (requires nunchuk extension)"
-		setTooltip $name.k12frame.wii2.b_wii_nunchuk_accelerometer "Wiimote Nunchuk Accelerometer: Use this to monitor Nunchuk acceleration across X, Y, and Z axes (requires nunchuk extension)"
-		setTooltip $name.k12frame.wii2.b_wii_nunchuk_stick "Wiimote Nunchuk stick: Use this to monitor Nunchuk stick motion across X and Y axes (requires nunchuk extension)"
-		pdtk_k12panel_standardkeybindings $name.k12frame.wii2.b_wii_speed
-		pdtk_k12panel_standardkeybindings $name.k12frame.wii2.b_wii_nunchuk_buttons
-		pdtk_k12panel_standardkeybindings $name.k12frame.wii2.b_wii_nunchuk_hit
-		pdtk_k12panel_standardkeybindings $name.k12frame.wii2.b_wii_nunchuk_accelerometer
-		pdtk_k12panel_standardkeybindings $name.k12frame.wii2.b_wii_nunchuk_stick
-
-		# ---------------------------------- ARDUINO -----------------------------------------
-		match_linux_wm [list frame $name.k12frame.arduino -relief flat]
-		match_linux_wm [list button $name.k12frame.arduino.b_sarcduino -image i.sarcduino \
-			-command [concat put_K12_objects $name sarcduino_connect]]
-		match_linux_wm [list button $name.k12frame.arduino.b_sarcduino_digital -image i.sarcduino_digital \
-			-command [concat put_K12_objects $name sarcduino_digital]]
-		match_linux_wm [list button $name.k12frame.arduino.b_sarcduino_analog -image i.sarcduino_analog \
-			-command [concat put_K12_objects $name sarcduino_analog]]
-		match_linux_wm [list button $name.k12frame.arduino.b_sarcduino_hit -image i.sarcduino_hit \
-			-command [concat put_K12_objects $name sarcduino_hit]]
-		match_linux_wm [list button $name.k12frame.arduino.b_sarcduino_piezo -image i.sarcduino_piezo \
-			-command [concat put_K12_objects $name sarcduino_piezo]]
-		pack $name.k12frame.arduino.b_sarcduino $name.k12frame.arduino.b_sarcduino_digital $name.k12frame.arduino.b_sarcduino_analog $name.k12frame.arduino.b_sarcduino_hit $name.k12frame.arduino.b_sarcduino_piezo -side left -expand 0 -padx 1 -pady 1
-		setTooltip $name.k12frame.arduino.b_sarcduino "Arduino Connect: Use this to arduino to the computer"
-		setTooltip $name.k12frame.arduino.b_sarcduino_digital "Arduino Digital: Use this to detect on/off states of a digital sensor"
-		setTooltip $name.k12frame.arduino.b_sarcduino_analog "Arduino Analog: Use this to monitor analog sensor speed"
-		setTooltip $name.k12frame.arduino.b_sarcduino_hit "Arduino Hit: Use this to detect when the arduino analog sensor data has rapidly changed"
-		setTooltip $name.k12frame.arduino.b_sarcduino_piezo "Arduino Piezo: Use this to analyze data coming from a piezo microphone sensor"
-		pdtk_k12panel_standardkeybindings $name.k12frame.arduino.b_sarcduino
-		pdtk_k12panel_standardkeybindings $name.k12frame.arduino.b_sarcduino_digital
-		pdtk_k12panel_standardkeybindings $name.k12frame.arduino.b_sarcduino_analog
-		pdtk_k12panel_standardkeybindings $name.k12frame.arduino.b_sarcduino_hit
-		pdtk_k12panel_standardkeybindings $name.k12frame.arduino.b_sarcduino_piezo
-
-		# ---------------------------------- RPI & MATH ROW 1 -----------------------------------------
-		match_linux_wm [list frame $name.k12frame.math_1 -relief flat]
-		#match_linux_wm [list button $name.k12frame.math_1.b_sarcduino_net -image i.sarcduino_net \
-		#	-command [concat put_K12_objects $name sarcduino_net]]
-		match_linux_wm [list button $name.k12frame.math_1.b_rpi_digital -image i.raspberry_digital \
-			-command [concat put_K12_objects $name raspberrypi_digital]]
-		match_linux_wm [list button $name.k12frame.math_1.b_rpi_analog_out -image i.raspberry_analog_out \
-			-command [concat put_K12_objects $name raspberrypi_analog_out]]
-		match_linux_wm [list button $name.k12frame.math_1.b_rpi_analog_in -image i.raspberry_analog_in \
-			-command [concat put_K12_objects $name raspberrypi_analog_in]]
-		match_linux_wm [list button $name.k12frame.math_1.b_math_number -image i.math_number \
-			-command [concat put_K12_objects $name math_number]]
-		match_linux_wm [list button $name.k12frame.math_1.b_math_netsend -image i.math_netsend \
-			-command [concat put_K12_objects $name math_netsend]]
-		pack $name.k12frame.math_1.b_rpi_digital $name.k12frame.math_1.b_rpi_analog_out $name.k12frame.math_1.b_rpi_analog_in $name.k12frame.math_1.b_math_number $name.k12frame.math_1.b_math_netsend -side left -expand 0 -padx 1 -pady 1
-		#setTooltip $name.k12frame.math_1.b_sarcduino_net "Arduino Net: Use this to retrieve data from arduino devices connected via network"
-		setTooltip $name.k12frame.math_1.b_rpi_digital "RaspberryPi Digital: Use this to read from or write to GPIO pins in digital format"
-		setTooltip $name.k12frame.math_1.b_rpi_analog_out "RaspberryPi Analog Out: Use this to write to GPIO pins in analog format using PWM"
-		setTooltip $name.k12frame.math_1.b_rpi_analog_in "RaspberryPi Analog In: Use this to read from RaspberryPi LOP Shield's analog inputs"
-		setTooltip $name.k12frame.math_1.b_math_number "Number: Use this to assign a value to other objects"
-		setTooltip $name.k12frame.math_1.b_math_netsend "Netsend: Use this to send data over network to another computer"
-		pdtk_k12panel_standardkeybindings $name.k12frame.math_1.b_rpi_digital
-		pdtk_k12panel_standardkeybindings $name.k12frame.math_1.b_rpi_analog_out
-		pdtk_k12panel_standardkeybindings $name.k12frame.math_1.b_rpi_analog_in
-		pdtk_k12panel_standardkeybindings $name.k12frame.math_1.b_math_number
-		pdtk_k12panel_standardkeybindings $name.k12frame.math_1.b_math_netsend
-
-		# ---------------------------------- MATH ROW 2 -----------------------------------------
-		match_linux_wm [list frame $name.k12frame.math_2 -relief flat]
-		match_linux_wm [list button $name.k12frame.math_2.b_math_netreceive -image i.math_netreceive \
-			-command [concat put_K12_objects $name math_netreceive]]
-		match_linux_wm [list button $name.k12frame.math_2.b_math_tag -image i.math_tag \
-			-command [concat put_K12_objects $name math_tag]]
-		match_linux_wm [list button $name.k12frame.math_2.b_math_routebytag -image i.math_routebytag \
-			-command [concat put_K12_objects $name math_routebytag]]
-		match_linux_wm [list button $name.k12frame.math_2.b_math_add -image i.math_add \
-			-command [concat put_K12_objects $name math_add]]
-		match_linux_wm [list button $name.k12frame.math_2.b_math_subtract -image i.math_subtract \
-			-command [concat put_K12_objects $name math_subtract]]
-		pack $name.k12frame.math_2.b_math_netreceive $name.k12frame.math_2.b_math_tag $name.k12frame.math_2.b_math_routebytag $name.k12frame.math_2.b_math_add $name.k12frame.math_2.b_math_subtract -side left -expand 0 -padx 1 -pady 1
-		setTooltip $name.k12frame.math_2.b_math_netreceive "Netreceive: Use this to receive data from another computer over network"
-		setTooltip $name.k12frame.math_2.b_math_tag "Tag: Use this to tag data to be sent over network"
-		setTooltip $name.k12frame.math_2.b_math_routebytag "Route By Tag: Use this to filter incoming network data by tag"
-		setTooltip $name.k12frame.math_2.b_math_add "Add: Use this to add two values"
-		setTooltip $name.k12frame.math_2.b_math_subtract "Subtract: Use this to subtract two values"
-		pdtk_k12panel_standardkeybindings $name.k12frame.math_2.b_math_netreceive
-		pdtk_k12panel_standardkeybindings $name.k12frame.math_2.b_math_tag
-		pdtk_k12panel_standardkeybindings $name.k12frame.math_2.b_math_routebytag
-		pdtk_k12panel_standardkeybindings $name.k12frame.math_2.b_math_add
-		pdtk_k12panel_standardkeybindings $name.k12frame.math_2.b_math_subtract
-
-		# ---------------------------------- MATH ROW 3 -----------------------------------------
-		match_linux_wm [list frame $name.k12frame.math_3 -relief flat]
-		match_linux_wm [list button $name.k12frame.math_3.b_math_multiply -image i.math_multiply \
-			-command [concat put_K12_objects $name math_multiply]]
-		match_linux_wm [list button $name.k12frame.math_3.b_math_divide -image i.math_divide \
-			-command [concat put_K12_objects $name math_divide]]
-		match_linux_wm [list button $name.k12frame.math_3.b_math_random -image i.math_random \
-			-command [concat put_K12_objects $name math_random]]
-		match_linux_wm [list button $name.k12frame.math_3.b_math_average -image i.math_average \
-			-command [concat put_K12_objects $name math_average]]
-		match_linux_wm [list button $name.k12frame.math_3.b_math_scale -image i.math_scale \
-			-command [concat put_K12_objects $name math_scale]]
-		pack $name.k12frame.math_3.b_math_multiply $name.k12frame.math_3.b_math_divide $name.k12frame.math_3.b_math_random $name.k12frame.math_3.b_math_average $name.k12frame.math_3.b_math_scale -side left -expand 0 -padx 1 -pady 1
-		setTooltip $name.k12frame.math_3.b_math_multiply "Multiply: Use this to multiply two values"
-		setTooltip $name.k12frame.math_3.b_math_divide "Divide: Use this to divide two values"
-		setTooltip $name.k12frame.math_3.b_math_random "Random: Use this to generate random numbers"
-		setTooltip $name.k12frame.math_3.b_math_average "Average: Use this to calculate average from a stream of numbers"
-		setTooltip $name.k12frame.math_3.b_math_scale "Scale: Use this to scale incoming values to a new range and direction"
-		pdtk_k12panel_standardkeybindings $name.k12frame.math_3.b_math_multiply
-		pdtk_k12panel_standardkeybindings $name.k12frame.math_3.b_math_divide
-		pdtk_k12panel_standardkeybindings $name.k12frame.math_3.b_math_random
-		pdtk_k12panel_standardkeybindings $name.k12frame.math_3.b_math_average
-		pdtk_k12panel_standardkeybindings $name.k12frame.math_3.b_math_scale
-
-		# ---------------------------------- LOGIC -----------------------------------------
-		match_linux_wm [list frame $name.k12frame.logic -relief flat]
-		match_linux_wm [list button $name.k12frame.logic.b_logic_compare -image i.logic_compare \
-			-command [concat put_K12_objects $name logic_compare]]
-		match_linux_wm [list button $name.k12frame.logic.b_logic_mapper -image i.logic_mapper \
-			-command [concat put_K12_objects $name logic_mapper]]
-		match_linux_wm [list button $name.k12frame.logic.b_logic_metronome -image i.logic_metronome \
-			-command [concat put_K12_objects $name logic_metronome]]
-		match_linux_wm [list button $name.k12frame.logic.b_logic_counter -image i.logic_counter \
-			-command [concat put_K12_objects $name logic_counter]]
-		match_linux_wm [list button $name.k12frame.logic.b_logic_sequencer -image i.logic_sequencer \
-			-command [concat put_K12_objects $name logic_sequencer]]
-		pack $name.k12frame.logic.b_logic_compare $name.k12frame.logic.b_logic_mapper $name.k12frame.logic.b_logic_metronome $name.k12frame.logic.b_logic_counter $name.k12frame.logic.b_logic_sequencer -side left -expand 0 -padx 1 -pady 1
-		setTooltip $name.k12frame.logic.b_logic_compare "Compare: Use this to compare two values"
-		setTooltip $name.k12frame.logic.b_logic_mapper "Mapper: Use this to map one value to two different but related values"
-		setTooltip $name.k12frame.logic.b_logic_metronome "Metronome: Use this to create a steady pulse"
-		setTooltip $name.k12frame.logic.b_logic_counter "Counter: Use this to count events"
-		setTooltip $name.k12frame.logic.b_logic_sequencer "Sequencer: Use this to map values to MIDI pitches"
-		pdtk_k12panel_standardkeybindings $name.k12frame.logic.b_logic_compare
-		pdtk_k12panel_standardkeybindings $name.k12frame.logic.b_logic_mapper
-		pdtk_k12panel_standardkeybindings $name.k12frame.logic.b_logic_metronome
-		pdtk_k12panel_standardkeybindings $name.k12frame.logic.b_logic_counter
-		pdtk_k12panel_standardkeybindings $name.k12frame.logic.b_logic_sequencer
-
-		# ---------------------------------- OTHER -----------------------------------------
-		match_linux_wm [list frame $name.k12frame.other -relief flat]
-		match_linux_wm [list button $name.k12frame.other.b_preset -image i.preset \
-			-command [concat put_K12_objects $name preset]] 
-		match_linux_wm [list button $name.k12frame.other.b_comment -image i.comment \
-			-command [concat menu_comment $name 1]]
-		pack $name.k12frame.other.b_preset $name.k12frame.other.b_comment -side left -expand 0 -padx 1 -pady 1
-		setTooltip $name.k12frame.other.b_preset "Preset: Use this to store and recall up to four different states of your instrument"
-		setTooltip $name.k12frame.other.b_comment "Comment: Use this to post comments inside your patch"
-		pdtk_k12panel_standardkeybindings $name.k12frame.other.b_preset
-		pdtk_k12panel_standardkeybindings $name.k12frame.other.b_comment
-
-		# ---------------------------------- SOUND LABEL -----------------------------------------
-		#match_linux_wm [list frame $name.k12frame.sound -relief flat]
-		#match_linux_wm [list label $name.k12frame.sound.label -relief flat -text "SOUND"]
-		#pack $name.k12frame.sound.label -fill x -pady 0 -padx 1
-
-		# ---------------------------------- SIGNAL ROW 1 -----------------------------------------
-		match_linux_wm [list frame $name.k12frame.signal_1 -relief flat]
-		match_linux_wm [list button $name.k12frame.signal_1.b_signal_microphone -image i.signal_microphone \
-			-command [concat put_K12_objects $name signal_microphone]]
-
-		match_linux_wm [list button $name.k12frame.signal_1.b_signal_netsend -image i.signal_netsend \
-			-command [concat put_K12_objects $name signal_netsend]]
-		match_linux_wm [list button $name.k12frame.signal_1.b_signal_netreceive -image i.signal_netreceive \
-			-command [concat put_K12_objects $name signal_netreceive]]
-
-		match_linux_wm [list button $name.k12frame.signal_1.b_signal_sampler -image i.signal_sampler \
-			-command [concat put_K12_objects $name signal_sampler]]
-		match_linux_wm [list button $name.k12frame.signal_1.b_signal_player -image i.signal_player \
-			-command [concat put_K12_objects $name signal_player]]
-		pack $name.k12frame.signal_1.b_signal_microphone $name.k12frame.signal_1.b_signal_netsend $name.k12frame.signal_1.b_signal_netreceive $name.k12frame.signal_1.b_signal_sampler $name.k12frame.signal_1.b_signal_player -side left -expand 0 -padx 1 -pady 1
-		setTooltip $name.k12frame.signal_1.b_signal_microphone "Microphone: Use this to capture and monitor microphone input"
-		setTooltip $name.k12frame.signal_1.b_signal_netsend "Netsend Sound: Use this to send your sound over network to another computer"
-		setTooltip $name.k12frame.signal_1.b_signal_netreceive "Netreceive Sound: Use this to receive sound from another computer over network"
-		setTooltip $name.k12frame.signal_1.b_signal_sampler "Sampler: Use this to record audio from microphone and play it back in various ways"
-		setTooltip $name.k12frame.signal_1.b_signal_player "Player: Use this to play WAV files in various ways"
-		pdtk_k12panel_standardkeybindings $name.k12frame.signal_1.b_signal_microphone
-		pdtk_k12panel_standardkeybindings $name.k12frame.signal_1.b_signal_netsend
-		pdtk_k12panel_standardkeybindings $name.k12frame.signal_1.b_signal_netreceive
-		pdtk_k12panel_standardkeybindings $name.k12frame.signal_1.b_signal_sampler
-		pdtk_k12panel_standardkeybindings $name.k12frame.signal_1.b_signal_player
-
-		# ---------------------------------- SIGNAL ROW 2 -----------------------------------------
-		match_linux_wm [list frame $name.k12frame.signal_2 -relief flat]
-		match_linux_wm [list button $name.k12frame.signal_2.b_signal_sine -image i.signal_sine \
-			-command [concat put_K12_objects $name signal_sine]]
-		match_linux_wm [list button $name.k12frame.signal_2.b_signal_saw -image i.signal_saw \
-			-command [concat put_K12_objects $name signal_saw]]
-		match_linux_wm [list button $name.k12frame.signal_2.b_signal_square -image i.signal_square \
-			-command [concat put_K12_objects $name signal_square]]
-		match_linux_wm [list button $name.k12frame.signal_2.b_signal_triangle -image i.signal_triangle \
-			-command [concat put_K12_objects $name signal_triangle]]
-		match_linux_wm [list button $name.k12frame.signal_2.b_signal_envelope -image i.signal_envelope \
-			-command [concat put_K12_objects $name signal_envelope]]
-		pack $name.k12frame.signal_2.b_signal_sine $name.k12frame.signal_2.b_signal_saw $name.k12frame.signal_2.b_signal_square $name.k12frame.signal_2.b_signal_triangle $name.k12frame.signal_2.b_signal_envelope -side left -expand 0 -padx 1 -pady 1
-		setTooltip $name.k12frame.signal_2.b_signal_sine "Sine: Use this to generate sine tone"
-		setTooltip $name.k12frame.signal_2.b_signal_saw "Sawtooth: Use this to generate sawtooth tone"
-		setTooltip $name.k12frame.signal_2.b_signal_square "Square: Use this to generate square tone"
-		setTooltip $name.k12frame.signal_2.b_signal_triangle "Triangle: Use this to generate triangle tone"
-		setTooltip $name.k12frame.signal_2.b_signal_envelope "Envelope: Use this to shape sound loudness"
-		pdtk_k12panel_standardkeybindings $name.k12frame.signal_2.b_signal_sine
-		pdtk_k12panel_standardkeybindings $name.k12frame.signal_2.b_signal_saw
-		pdtk_k12panel_standardkeybindings $name.k12frame.signal_2.b_signal_square
-		pdtk_k12panel_standardkeybindings $name.k12frame.signal_2.b_signal_triangle
-		pdtk_k12panel_standardkeybindings $name.k12frame.signal_2.b_signal_envelope
-
-		# ---------------------------------- SIGNAL ROW 3 -----------------------------------------
-		match_linux_wm [list frame $name.k12frame.signal_3 -relief flat]
-		match_linux_wm [list button $name.k12frame.signal_3.b_signal_noise -image i.signal_noise \
-			-command [concat put_K12_objects $name signal_noise]]
-		match_linux_wm [list button $name.k12frame.signal_3.b_signal_pink -image i.signal_pink \
-			-command [concat put_K12_objects $name signal_pink]]
-		match_linux_wm [list button $name.k12frame.signal_3.b_signal_add -image i.signal_add \
-			-command [concat put_K12_objects $name signal_add]]
-		match_linux_wm [list button $name.k12frame.signal_3.b_signal_multiply -image i.signal_multiply \
-			-command [concat put_K12_objects $name signal_multiply]]
-		pack $name.k12frame.signal_3.b_signal_noise $name.k12frame.signal_3.b_signal_pink $name.k12frame.signal_3.b_signal_add $name.k12frame.signal_3.b_signal_multiply -side left -expand 0 -padx 1 -pady 1
-		setTooltip $name.k12frame.signal_3.b_signal_noise "Noise: Use this to generate white (harsh) noise"
-		setTooltip $name.k12frame.signal_3.b_signal_pink "Pink: Use this to generate pink (softer) noise"
-		setTooltip $name.k12frame.signal_3.b_signal_add "Signal Add: Use this to add two sounds (signals)"
-		setTooltip $name.k12frame.signal_3.b_signal_multiply "Signal Multiply: Use this to multiply two sounds (signals)"
-		pdtk_k12panel_standardkeybindings $name.k12frame.signal_3.b_signal_noise 
-		pdtk_k12panel_standardkeybindings $name.k12frame.signal_3.b_signal_pink
-		pdtk_k12panel_standardkeybindings $name.k12frame.signal_3.b_signal_add
-		pdtk_k12panel_standardkeybindings $name.k12frame.signal_3.b_signal_multiply
-
-		# ---------------------------------- INSTRUMENTS -----------------------------------------
-		match_linux_wm [list frame $name.k12frame.instr -relief flat]
-		match_linux_wm [list button $name.k12frame.instr.b_instr_short1 -image i.instr_short1 \
-			-command [concat put_K12_objects $name instr_short1]]
-		match_linux_wm [list button $name.k12frame.instr.b_instr_short2 -image i.instr_short2 \
-			-command [concat put_K12_objects $name instr_short2]]
-		match_linux_wm [list button $name.k12frame.instr.b_instr_sustained1 -image i.instr_sustained1 \
-			-command [concat put_K12_objects $name instr_sustained1]]
-		match_linux_wm [list button $name.k12frame.instr.b_instr_sustained2 -image i.instr_sustained2 \
-			-command [concat put_K12_objects $name instr_sustained2]]
-		pack $name.k12frame.instr.b_instr_short1 $name.k12frame.instr.b_instr_short2 $name.k12frame.instr.b_instr_sustained1 $name.k12frame.instr.b_instr_sustained2 -side left -expand 0 -padx 1 -pady 1
-		setTooltip $name.k12frame.instr.b_instr_short1 "Bass Drum: Use this to produce short sounds like a single bass drum hit"
-		setTooltip $name.k12frame.instr.b_instr_short2 "Snare Drum: Use this to produce short sounds like a single snare drum hit"
-		setTooltip $name.k12frame.instr.b_instr_sustained1 "Air Instrument: Use this to produce long sustained sound like a sound of a woodwind instrument"
-		setTooltip $name.k12frame.instr.b_instr_sustained2 "Brass Instrument: Use this to produce long sustained sound like a sound of brass instrument"
-		pdtk_k12panel_standardkeybindings $name.k12frame.instr.b_instr_short1
-		pdtk_k12panel_standardkeybindings $name.k12frame.instr.b_instr_short2
-		pdtk_k12panel_standardkeybindings $name.k12frame.instr.b_instr_sustained1
-		pdtk_k12panel_standardkeybindings $name.k12frame.instr.b_instr_sustained2
-
-		# ---------------------------------- F/X -----------------------------------------
-		match_linux_wm [list frame $name.k12frame.fx -relief flat]
-		match_linux_wm [list button $name.k12frame.fx.b_fx_filter -image i.fx_filter \
-			-command [concat put_K12_objects $name fx_filter]]
-		match_linux_wm [list button $name.k12frame.fx.b_fx_multitap -image i.fx_multitap \
-			-command [concat put_K12_objects $name fx_multitap]]
-		match_linux_wm [list button $name.k12frame.fx.b_fx_reverb -image i.fx_reverb \
-			-command [concat put_K12_objects $name fx_reverb]]
-		pack $name.k12frame.fx.b_fx_filter $name.k12frame.fx.b_fx_multitap $name.k12frame.fx.b_fx_reverb -side left -expand 0 -padx 1 -pady 1
-		setTooltip $name.k12frame.fx.b_fx_filter "Filter: Use this to make sound appear muffled or brighter"
-		setTooltip $name.k12frame.fx.b_fx_multitap "Echo: Use this to make sound echo"
-		setTooltip $name.k12frame.fx.b_fx_reverb "Reverb: Use this to make sound appear as if it is being played in a large space"
-		pdtk_k12panel_standardkeybindings $name.k12frame.fx.b_fx_filter
-		pdtk_k12panel_standardkeybindings $name.k12frame.fx.b_fx_multitap
-		pdtk_k12panel_standardkeybindings $name.k12frame.fx.b_fx_reverb
-
-		# ---------------------------------- OUTPUT/OTHER -----------------------------------------
-
-		match_linux_wm [list frame $name.k12frame.output -relief flat]
-		match_linux_wm [list button $name.k12frame.output.b_output -image i.output \
-			-command [concat put_K12_objects $name output]] 	
-		pack $name.k12frame.output.b_output -side left -expand 0 -padx 1 -pady 1
-		setTooltip $name.k12frame.output.b_output "Output: Use this to send audio from computer into speakers"
-		pdtk_k12panel_standardkeybindings $name.k12frame.output.b_output
-
-		# ---------------------------------------- NOW PACK THEM ALL -----------------------------------------
-		pack $name.k12frame.edit $name.k12frame.datasound $name.k12frame.wii $name.k12frame.wii2 $name.k12frame.arduino $name.k12frame.math_1 $name.k12frame.math_2 $name.k12frame.math_3 $name.k12frame.logic $name.k12frame.other -side top -expand 0 -fill x
-	}
-
-	if { $k12_mode == 0 } {
-    	wm minsize $name 50 20
-	} else {
-		wm minsize $name 580 407
-	}
-*/
-
-
-
 // net stuff
 var net = require('net');
 
@@ -1741,7 +805,6 @@ var client;
 exports.set_port = function (port_no) {
     PORT = port_no;
 }
-
 
 function connect () {
     client = new net.Socket();
@@ -1880,16 +943,19 @@ function get_item(cid,item_id) {
 
 // Similar to [canvas create] in tk
 function create_item(cid,type,args) {
-    var item = patchwin[cid].window.document.createElementNS('http://www.w3.org/2000/svg', type);
+    var item = patchwin[cid].window.document
+        .createElementNS('http://www.w3.org/2000/svg', type);
     if (args !== null) {
         configure_item(item, args);
     }
     return item;
 }
 
-// Similar to [canvas itemconfigure], without the need for a reference to the canvas
+// Similar to [canvas itemconfigure], without the need for a reference
+// to the canvas
 function configure_item(item, attributes) {
-    // draw_vis from g_template sends attributes as a ['attr1',val1, 'attr2', val2, etc.] array,
+    // draw_vis from g_template sends attributes
+    // as a ['attr1',val1, 'attr2', val2, etc.] array,
     // so we check for that here
     var value;
     if (Array.isArray(attributes)) {
@@ -1908,8 +974,7 @@ function configure_item(item, attributes) {
     }
 }
 
-// A bit of a stopgap. The GUI side probably shouldn't know about "items"
-// on SVG.
+// The GUI side probably shouldn't know about "items" on SVG.
 function gui_configure_item(cid, tag, attributes) {
     var item = get_item(cid, tag);
     configure_item(item, attributes);
@@ -1919,7 +984,8 @@ function add_gobj_to_svg(svg, gobj) {
     svg.insertBefore(gobj, svg.querySelector('.cord'));
 }
 
-// Most of these map either to pd.tk procs, or in some cases Tk canvas subcommands
+// Most of these map either to pd.tk procs, or in some cases
+// Tk canvas subcommands
 function gui_text_create_gobj(cid, tag, type, xpos, ypos, is_toplevel) {
     var svg = get_item(cid, "patchsvg"); // "patchsvg" is id for the svg element
     var transform_string = 'matrix(1,0,0,1,' + xpos + ',' + ypos + ')';
@@ -1932,7 +998,6 @@ function gui_text_create_gobj(cid, tag, type, xpos, ypos, is_toplevel) {
     add_gobj_to_svg(svg, g);
     
     // hm... why returning g and not the return value of appendChild?
-    //    console.log("create gobj tag is " + tag + " and ret is " + g);
     return g;
 }
 
@@ -1953,7 +1018,8 @@ function gui_text_drawborder(cid, tag, bgcolor, isbroken, x1, y1, x2, y2) {
     g.appendChild(rect);
 }
 
-function gui_canvas_drawio(cid, parenttag, tag, x1, y1, x2, y2, basex, basey, type, i, is_signal, is_iemgui) {
+function gui_canvas_drawio(cid, parenttag, tag, x1, y1, x2, y2, basex, basey,
+    type, i, is_signal, is_iemgui) {
     var xlet_class, xlet_id, g = get_gobj(cid, parenttag);
     if (is_iemgui) {
         xlet_class = 'xlet_iemgui';
@@ -2059,10 +1125,6 @@ function gui_message_flash(cid, tag, state) {
     } else {
         g.classList.remove('flashed');
     }
-//    var b = get_item(cid, tag + 'border');
-//    var w;
-//    if (state != 0) { w = 4; } else { w = 1; }
-//    configure_item(b, { 'stroke-width': w });
 }
 
 function gui_message_redraw_border(cid,tag,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14) {
@@ -2203,7 +1265,8 @@ function gui_gobj_erase(cid, tag) {
     if (g !== null) {
         g.parentNode.removeChild(g);
     } else {
-        gui_post("gui_gobj_erase: gobj " + tag + " didn't exist in the first place!");
+        gui_post("gui_gobj_erase: gobj " + tag +
+            " didn't exist in the first place!");
     }
 }
 
@@ -2666,7 +1729,8 @@ function gui_update_vumeter_rect(cid, tag, color) {
     configure_item(r, { fill: color, stroke: color });
 }
 
-/* Oh hack upon hack... why doesn't the iemgui base_config just take care of this? */
+// Oh hack upon hack... why doesn't the iemgui base_config just take care
+// of this?
 function gui_vumeter_border_coords(cid, tag, width, height) {
     var r = get_item(cid, tag + 'border');
     configure_item(r, { width: width, height: height });
@@ -2788,8 +1852,6 @@ function iemgui_fontfamily(name) {
 function gui_iemgui_label_new(cid, tag, x, y, color, text, fontname, fontweight,
     fontsize) {
     var g = get_gobj(cid, tag);
-    //gui_post("fontname is " + fontname);
-//    var fontheight = 
     var svg_text = create_item(cid, 'text', {
         // x and y need to be relative to baseline instead of nw anchor
         x: x,
@@ -2809,15 +1871,14 @@ function gui_iemgui_label_new(cid, tag, x, y, color, text, fontname, fontweight,
         // is supposed to do this for us. However, when I tried choosing
         // "hanging" to get tcl's equivalent of "n", I ran into a bug
         // where the text gets positioned incorrectly when zooming.
-        transform: 'translate(0,' + iemgui_font_height(fontname, fontsize) / 2 + ')',
+        transform: 'translate(0,' +
+            iemgui_font_height(fontname, fontsize) / 2 + ')',
         id: tag + 'label'
     });
     var text_node = patchwin[cid].window.document.createTextNode(text);
     svg_text.appendChild(text_node);
     g.appendChild(svg_text);
     var foo = patchwin[cid].window.document.getElementById(tag + 'label');
-    //console.log("foo is " + foo);
-    //console.log("label_new tag is " + tag);
 }
 
 function gui_iemgui_label_set(cid, tag, text) {
@@ -2907,12 +1968,12 @@ function gui_create_scalar(cid, tag, isselected, t1, t2, t3, t4, t5, t6,
     is_toplevel) {
     // we should probably use create_gobj here, but we're doing some initial 
     // scaling that normal gobjs don't need...
-    var svg = get_item(cid, "patchsvg"); // "patchsvg" is id for the svg in the DOM
-    // Normally put objects on half-pixels to make them crisp, but if we create a
-    // scalar in an object box we already did that. This unfortunately creates a 0.5
-    // pix discrepancy between scalars created in object boxes and ones created with
-    // [append].  Think about just using shape-rendering value of 'crispEdges' in the
-    // places where it matters...
+    var svg = get_item(cid, "patchsvg"); // id for the svg in the DOM
+    // Normally put objects on half-pixels to make them crisp, but if we create
+    // a scalar in an object box we already did that. This unfortunately
+    // creates a 0.5 pix discrepancy between scalars created in object boxes
+    // and ones created with [append].  Think about just using shape-rendering
+    // value of 'crispEdges' in the places where it matters...
     t5 += 0.5;
     t6 += 0.5;
     var matrix = [t1,t2,t3,t4,t5,t6];
@@ -2954,17 +2015,18 @@ function gui_scalar_erase(cid, tag) {
 
 function gui_scalar_draw_select_rect(cid, tag, state, x1, y1, x2, y2, basex, basey) {
     // This is unnecessarily complex-- the select rect is a child of the parent
-    // scalar group, but in the initial Tkpath API the rect was free-standing.  This
-    // means all the coordinate parameters are in the screen position. But we need
-    // the coords relative to the scalar's x/y-- hence we subtract the scalar's basex/basey
-    // from the coords below
+    // scalar group, but in the initial Tkpath API the rect was free-standing.
+    // This means all the coordinate parameters are in the screen position. But
+    // we need the coords relative to the scalar's x/y-- hence we subtract the
+    // scalar's basex/basey from the coords below.
+
     // Additionally, we're not actually drawing the rect here.  It's drawn
     // as part of the scalar_vis function.  We're merely changing its coords
     // and size.
+
     // Finally, we have this awful display attribute toggling in css
     // for selected borders because somehow calling properties on a graph
     // triggers this function.  I have no idea why it does that.
-    //gui_post("drawselectrect: " + x1 + " " + y1 + " " + x2 + " " + y2 + " " + basex + " " + basey);
     var g = get_gobj(cid, tag);
     var b = g.querySelector('.border');
     configure_item(b, {
@@ -2994,33 +2056,9 @@ function gui_scalar_configure_gobj(cid, tag, isselected, t1, t2, t3, t4, t5, t6)
 }
 
 function gui_draw_vis(cid, type, attr_array, tag_array) {
-    // tag_array: [0] = parent_tag, [1] = tag
-    //gui_post("inside gui_draw_vis");
-    //for(var i = 0; i < arguments.length; i++) {
-    //    gui_post("arg1 is " + arguments[i]);
-    //} 
-    //gui_post("coords is " + coords);
-    //gui_post("coords is array: " + Array.isArray(coords));
-    //gui_post("arguments[2] is " + arguments[2]);
-    //gui_post("type of coords is " + typeof coords);
-    //gui_post("type of arguments[2] is " + typeof arguments[2]);
-    //gui_post("arguments[2] is array: " + Array.isArray(arguments[2]));
     var g = get_item(cid, tag_array[0]);
-    //if (g !== null) {
-    //    gui_post("our parent exists.");
-    //} else {
-    //    gui_post("our parent doe not exists.");
-    //}
-    //var ca = coords;
-
     attr_array.push('id', tag_array[1]);
-    //gui_post("create is " + tag_array[1]);
     var item = create_item(cid, type, attr_array);
-    //if (item !== null) {
-    //    gui_post("we got create.");
-    //} else {
-    //    gui_post("we doe not got creat.");
-    //}
     g.appendChild(item);
 }
 
@@ -3097,19 +2135,18 @@ function gui_plot_vis(cid, basex, basey, data_array, attr_array, tag_array) {
 
 function gui_drawnumber_vis(cid, parent_tag, tag, x, y, scale_x, scale_y,
     font, fontsize, text) {
-//    gui_post("font is " + font);
     var lines, i, len, tspan;
     var g = get_item(cid, parent_tag);
     var svg_text = create_item(cid, 'text', {
         // x and y are fudge factors. Text on the tk canvas used an anchor
         // at the top-right corner of the text's bbox.  SVG uses the baseline.
-        // There's probably a programmatic way to do this, but for now-- fudge factors
-        // based on the DejaVu Sans Mono font. :)
+        // There's probably a programmatic way to do this, but for now--
+        // fudge factors based on the DejaVu Sans Mono font. :)
         transform: 'scale(' + scale_x + ',' + scale_y + ') ' +
                    'translate(' + x + ')',
         y: y,
-        // Turns out we can't do 'hanging' baseline
-        // because it's borked when scaled. Bummer...
+        // Turns out we can't do 'hanging' baseline because it's borked when
+        // scaled. Bummer...
         // 'dominant-baseline': 'hanging',
         'shape-rendering': 'optimizeSpeed',
         'font-size': font + 'px',
@@ -3204,7 +2241,6 @@ function gui_drawimage_vis(cid, x, y, obj, data, seqno, parent_tag) {
         i,
         image_container,
         obj_tag = 'draw' + obj.slice(1) + '.' + data.slice(1);
-    //console.log("obj_tag is " + obj_tag);
     if (len < 1) {
         return;
     }
@@ -3282,15 +2318,14 @@ function zoom_kludge(zoom_level) {
 }
 
 function gui_canvas_popup(cid, xpos, ypos, canprop, canopen, isobject) {
-    gui_post("canvas_popup called... " + JSON.stringify(arguments));
-    // Set the global popup x/y so they can be retrieved by the relevant doc's event handler
+    // Set the global popup x/y so they can be retrieved by the relevant
+    // document's event handler
     var zoom_level = patchwin[cid].zoomLevel;
     var zfactor = zoom_kludge(zoom_level);
     popup_coords[0] = xpos;
     popup_coords[1] = ypos;
     xpos = Math.floor(xpos * zfactor);
     ypos = Math.floor(ypos * zfactor);
-    gui_post("xpos is " + xpos + " and ypos is " + ypos);
     //popup_coords[0] = xpos;
     //popup_coords[1] = ypos;
     popup_menu[cid].items[0].enabled = canprop;
@@ -3308,7 +2343,6 @@ function gui_canvas_popup(cid, xpos, ypos, canprop, canopen, isobject) {
 }
 
 function popup_action(cid, index) {
-gui_post("popup coords are: " + popup_coords.join(" "));
     pdsend(cid + " done-popup " + index + " " + popup_coords.join(" "));
 }
 
@@ -3350,7 +2384,6 @@ function gui_graph_deleteborder(cid, tag) {
 
 function gui_graph_label(cid, tag, y, array_name, font, font_size,
     font_weight, is_selected) {
-//    var graph = get_item( 
 }
 
 function gui_graph_vtick(cid, tag, x, up_y, down_y, tick_pix, basex, basey) {
@@ -3558,7 +2591,6 @@ function gui_gatom_dialog(did, attr_array) {
 }
 
 function gui_iemgui_dialog(did, attr_array) {
-    gui_post("got a gfxstub " + did + "!!!");
     //for (var i = 0; i < attr_array.length; i++) {
     //    attr_array[i] = '"' + attr_array[i] + '"';
     //}
@@ -3568,7 +2600,6 @@ function gui_iemgui_dialog(did, attr_array) {
 }
 
 function gui_create_array(did, count) {
-    gui_post("trying to create an array...");
     var attr_array = [{
         array_gfxstub: did,
         array_name: 'array' + count,
@@ -3584,8 +2615,6 @@ function gui_create_array(did, count) {
 
 function gui_canvas_dialog(did, attr_arrays) {
     var i, j, inner_array, prop;
-    gui_post("got a gfxstub " + did + "!!!");
-    gui_post("attr_arrays are " + attr_arrays);
     // Convert array of arrays to an array of objects
     for (i = 0; i < attr_arrays.length; i++) {
         attr_arrays[i] = attr_array_to_object(attr_arrays[i]);
@@ -3600,7 +2629,6 @@ function gui_canvas_dialog(did, attr_arrays) {
 }
 
 function gui_remove_gfxstub(did) {
-gui_post("did is " + did + " and dialogwin[did] is " + dialogwin[did]);
     if (dialogwin[did] !== undefined && dialogwin[did] !== null) {
         dialogwin[did].window.close(true);
         dialogwin[did] = null;
@@ -3644,7 +2672,6 @@ function gui_audio_properties(gfxstub, sys_indevs, sys_outdevs,
         "pd-outchans", pd_outchans
         ]);
 
-    gui_post("got back some audio props...");
     //for (var i = 0; i < arguments.length; i++) {
     //    gui_post("arg " + i + " is " + arguments[i]);
     //}
@@ -3723,10 +2750,8 @@ function select_text(cid, elem) {
         }
 }
 
-function gui_textarea(cid, tag, type, x, y, max_char_width, text, font_size, state) {
-    //gui_post("x/y is " + x + '/' + y);
-    //gui_post("state? " + state);
-    //gui_post("tag is " + tag);
+function gui_textarea(cid, tag, type, x, y, max_char_width, text,
+    font_size, state) {
     var range, svg_view;
     var gobj = get_gobj(cid, tag);
     if (state !== 0) {
@@ -3816,12 +2841,6 @@ function do_getscroll(cid) {
         width: width,
         height: height
     });
-//    svg.width.baseVal.valueAsString = width;
-//    svg.height.baseVal.valueAsString = height;
-//    console.log("x is " + bbox.x);
-//    console.log("y is " + bbox.x);
-//    console.log("width is " + bbox.width);
-//    console.log("height is " + bbox.height);
 }
 
 var getscroll_var = {};
