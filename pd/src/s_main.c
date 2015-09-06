@@ -509,9 +509,9 @@ void sys_findprogdir(char *progname)
 {
     char sbuf[FILENAME_MAX], sbuf2[FILENAME_MAX];
     //char *lastslash; 
-#ifdef UNISTD
+#ifndef MSW
     struct stat statbuf;
-#endif
+#endif /* NOT MSW */
 
     /* find out by what string Pd was invoked; put answer in "sbuf". */
 #ifdef MSW
@@ -519,10 +519,10 @@ void sys_findprogdir(char *progname)
     sbuf2[FILENAME_MAX-1] = 0;
     sys_unbashfilename(sbuf2, sbuf);
 #endif /* MSW */
-#ifdef UNISTD
+#ifndef MSW
     strncpy(sbuf, progname, FILENAME_MAX);
     sbuf[FILENAME_MAX-1] = 0;
-#endif
+#endif /* NOT MSW */
 #ifdef INSTALL_PREFIX
     strcpy(sbuf2, INSTALL_PREFIX);
 //#else
