@@ -2,7 +2,7 @@
 * For information on usage and redistribution, and for a DISCLAIMER OF ALL
 * WARRANTIES, see the file, "LICENSE.txt," in this distribution.  */
 
-#ifdef DL_OPEN
+#ifdef HAVE_LIBDL
 #include <dlfcn.h>
 #endif
 #ifdef UNISTD
@@ -173,7 +173,7 @@ gotone:
     strncat(filename, nameptr, FILENAME_MAX-strlen(filename));
     filename[FILENAME_MAX-1] = 0;
 
-#ifdef DL_OPEN
+#ifdef HAVE_LIBDL
     dlobj = dlopen(filename, RTLD_NOW | RTLD_GLOBAL);
     if (!dlobj)
     {
