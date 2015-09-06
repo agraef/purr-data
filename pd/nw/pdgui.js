@@ -1063,7 +1063,6 @@ function gui_canvas_redraw_io(cid, parenttag, tag, x, y, type, i, basex, basey) 
 }
 
 function gui_eraseio(cid, tag) {
-    gui_post("the tag for this bout-to-ba-leted XLET is " + tag);
     var xlet = get_item(cid, tag);
     xlet.parentNode.removeChild(xlet);
 }
@@ -1222,7 +1221,6 @@ function text_to_tspans(canvasname, svg_text, text) {
 }
 
 function gui_text_new(canvasname, myname, type, isselected, x, y, text, font) {
-//    gui_post("font is " + font);
     var lines, i, len, tspan;
     var g = get_gobj(canvasname, myname);
     var svg_text = create_item(canvasname, 'text', {
@@ -1499,7 +1497,6 @@ function gui_toggle_update(cid, tag, state, color) {
 
 // Todo: send fewer parameters from c
 function gui_create_numbox(width,cid,tag,bgcolor,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,basex,basey,half, is_toplevel) {
-gui_post("basex is " + basex + " and basey is " + basey);
     // numbox doesn't have a standard iemgui border, so we must create its gobj manually
     var g = gui_text_create_gobj(cid, tag, "iemgui", basex, basey, is_toplevel)
     var data_array = ['M', p1 - basex, p2 - basey,
@@ -1538,7 +1535,6 @@ function gui_numbox_drawtext(cid,tag,text,font_size,color,xpos,ypos,basex,basey)
 }
 
 function gui_update_numbox(cid, tag, fcolor, bgcolor, font_name, font_size, font_weight) {
-gui_post("inside update_numbox fcolor is " + fcolor);
     var b = get_item(cid, tag + 'border');
     var text = get_item(cid, tag + 'text');
     configure_item(b, { fill: bgcolor });
@@ -1700,7 +1696,6 @@ function gui_update_vumeter_steps(cid, tag, i, width) {
 }
 
 function gui_update_vumeter_step_coords(cid,tag,i,x1,y1,x2,y2,basex,basey) {
-gui_post("updating step coords...");
     var l = get_item(cid, tag + 'led_' + i);
     configure_item(l, {
         x1: x1 - basex,
