@@ -62,10 +62,11 @@ var canvas_events = (function() {
             mousemove: function(evt) {
                 //pdgui.gui_post("x: " + evt.pageX + " y: " + evt.pageY +
                 //    " modifier: " + (evt.shiftKey + (evt.ctrlKey << 1)));
-                pdgui.pdsend(name +
-                    " motion " + (evt.pageX + svg_view.x) + " " +
-                                 (evt.pageY + svg_view.y) + " " +
-                                 (evt.shiftKey + (evt.ctrlKey << 1)));
+                pdgui.pdsend(name, "motion",
+                    (evt.pageX + svg_view.x),
+                    (evt.pageY + svg_view.y),
+                    (evt.shiftKey + (evt.ctrlKey << 1))
+                );
                 evt.stopPropagation();
                 evt.preventDefault();
                 return false;
@@ -82,10 +83,11 @@ var canvas_events = (function() {
                 } else {
                     mod = (evt.shiftKey + (evt.ctrlKey << 1)); 
                 }
-                pdgui.pdsend(name +
-                    " mouse " + (evt.pageX + svg_view.x) + " " +
-                                (evt.pageY + svg_view.y) + " " +
-                                 b + " " + mod);
+                pdgui.pdsend(name, "mouse",
+                    (evt.pageX + svg_view.x),
+                    (evt.pageY + svg_view.y),
+                    b, mod
+                );
                 //evt.stopPropagation();
                 evt.preventDefault();
             },
@@ -93,10 +95,11 @@ var canvas_events = (function() {
                 //pdgui.gui_post("mouseup: x: " +
                 //    evt.pageX + " y: " + evt.pageY +
                 //    " button: " + (evt.button + 1));
-                pdgui.pdsend(name +
-                    " mouseup " + (evt.pageX + svg_view.x) + " " +
-                                  (evt.pageY + svg_view.y) + " " +
-                                  (evt.button + 1));
+                pdgui.pdsend(name, "mouseup",
+                    (evt.pageX + svg_view.x),
+                    (evt.pageY + svg_view.y),
+                    (evt.button + 1)
+                );
                 evt.stopPropagation();
                 evt.preventDefault();
             },
@@ -124,25 +127,25 @@ var canvas_events = (function() {
 
                     case 65:
                         if (evt.ctrlKey === true) {
-                            pdgui.pdsend(name + " selectall");
+                            pdgui.pdsend(name, "selectall");
                             hack = 0; // not sure what to report here...
                         }
                         break;
                     case 88:
                         if (evt.ctrlKey === true) {
-                            pdgui.pdsend(name + " cut");
+                            pdgui.pdsend(name, "cut");
                             hack = 0; // not sure what to report here...
                         }
                         break;
                     case 67:
                         if (evt.ctrlKey === true) {
-                            pdgui.pdsend(name + " copy");
+                            pdgui.pdsend(name, "copy");
                             hack = 0; // not sure what to report here...
                         }
                         break;
                     case 86:
                         if (evt.ctrlKey === true) {
-                            pdgui.pdsend(name + " paste");
+                            pdgui.pdsend(name, "paste");
                             hack = 0; // not sure what to report here...
                         }
                         break;
@@ -167,9 +170,9 @@ var canvas_events = (function() {
                 if (evt.charCode === 26) {
                     if (evt.ctrlKey === true) {
                         if (evt.shiftKey === true) { // ctrl-Shift-z
-                            pdgui.pdsend(name + " redo");
+                            pdgui.pdsend(name, "redo");
                         } else { // ctrl-z
-                            pdgui.pdsend(name + " undo");
+                            pdgui.pdsend(name, "undo");
                         }
                         return;
                     }
@@ -187,7 +190,7 @@ var canvas_events = (function() {
                 pdgui.gui_canvas_sendkey(name, 0, evt, my_char_code);
 //                pdgui.gui_post("keyup time: charcode is: " + my_char_code);
                 if (evt.keyCode === 13 && evt.ctrlKey) {
-                    pdgui.pdsend(name + " reselect");
+                    pdgui.pdsend(name, "reselect");
                 }
                 evt.stopPropagation();
                 evt.preventDefault();
@@ -205,7 +208,7 @@ var canvas_events = (function() {
                     // them inside comments
                     utils.create_obj();
 //                    var fudi_msg = text_to_fudi(textbox().innerText);
-//                    pdgui.pdsend(name + " createobj " + fudi_msg);
+//                    pdgui.pdsend(name, "createobj", fudi_msg);
 //                    pdgui.gui_post("formatted content is " + fudi_msg);
                     events.mousedown(evt);
                     canvas_events.normal();
@@ -232,7 +235,7 @@ var canvas_events = (function() {
                 // ctrl-Enter to reselect
                 if (evt.keyCode === 13 && evt.ctrlKey) {
                     canvas_events.set_obj();
-                    pdgui.pdsend(name + " reselect");
+                    pdgui.pdsend(name, "reselect");
                 }
                 return false;
             },
@@ -259,12 +262,12 @@ var canvas_events = (function() {
         utils = {
             create_obj: function() {
                 var fudi_msg = text_to_fudi(textbox().innerText);
-                pdgui.pdsend(name + " createobj " + fudi_msg);
+                pdgui.pdsend(name, "createobj", fudi_msg);
                 //pdgui.gui_post("formatted content is " + fudi_msg);
             },
             set_obj: function() {
                 var fudi_msg = text_to_fudi(textbox().innerText);
-                pdgui.pdsend(name + " setobj " + fudi_msg);
+                pdgui.pdsend(name, "setobj", fudi_msg);
                 //pdgui.gui_post("formatted content is " + fudi_msg);
             }
         }
@@ -310,7 +313,7 @@ var canvas_events = (function() {
     // closing the Window
     // this isn't actually closing the window yet
     nw.Window.get().on("close", function() {
-        pdgui.pdsend(name + " menuclose 0");
+        pdgui.pdsend(name, "menuclose 0");
     });
 
     return {
@@ -579,7 +582,7 @@ function nw_create_patch_window_menus (name) {
     editMenu.append(modals.undo = new nw.MenuItem({
         label: l('menu.undo'),
         click: function () {
-            pdgui.pdsend(name + " undo");
+            pdgui.pdsend(name, "undo");
         },
         tooltip: l('menu.undo_tt'),
     }));
@@ -587,7 +590,7 @@ function nw_create_patch_window_menus (name) {
     editMenu.append(modals.redo = new nw.MenuItem({
         label: l('menu.redo'),
         click: function () {
-            pdgui.pdsend(name + " redo");
+            pdgui.pdsend(name, "redo");
         },
         tooltip: l('menu.redo_tt'),
     }));
@@ -599,7 +602,7 @@ function nw_create_patch_window_menus (name) {
     editMenu.append(modals.cut = new nw.MenuItem({
         label: l('menu.cut'),
         click: function () {
-            pdgui.pdsend(name + " cut");
+            pdgui.pdsend(name, "cut");
         },
         tooltip: l('menu.cut_tt'),
     }));
@@ -607,7 +610,7 @@ function nw_create_patch_window_menus (name) {
     editMenu.append(modals.copy = new nw.MenuItem({
         label: l('menu.copy'),
         click: function () {
-            pdgui.pdsend(name + " copy");
+            pdgui.pdsend(name, "copy");
         },
         tooltip: l('menu.copy_tt'),
     }));
@@ -615,7 +618,7 @@ function nw_create_patch_window_menus (name) {
     editMenu.append(modals.paste = new nw.MenuItem({
         label: l('menu.paste'),
         click: function () {
-            pdgui.pdsend(name + " paste");
+            pdgui.pdsend(name, "paste");
         },
         tooltip: l('menu.paste_tt'),
     }));
@@ -623,7 +626,7 @@ function nw_create_patch_window_menus (name) {
     editMenu.append(new nw.MenuItem({
         label:  l('menu.duplicate'),
         click: function () {
-            pdgui.pdsend(name + " duplicate");
+            pdgui.pdsend(name, "duplicate");
         },
         key: 'd',
         modifiers: "ctrl",
@@ -634,7 +637,7 @@ function nw_create_patch_window_menus (name) {
         label: l('menu.selectall'),
         click: function (evt) {
             if (canvas_events.get_state() === 'normal') {
-                pdgui.pdsend(name + " selectall");
+                pdgui.pdsend(name, "selectall");
             }
         },
         tooltip: l('menu.selectall_tt'),
@@ -647,7 +650,7 @@ function nw_create_patch_window_menus (name) {
         // can't bind to ctrl-Enter here. (Even
         // tried fromCharCode...)
         click: function () {
-            pdgui.pdsend(name + " reselect");
+            pdgui.pdsend(name, "reselect");
         },
         key: String.fromCharCode(10),
         modifiers: "ctrl",
@@ -691,7 +694,7 @@ function nw_create_patch_window_menus (name) {
     editMenu.append(new nw.MenuItem({
         label: l('menu.tidyup'),
         click: function() {
-            pdgui.pdsend(name + " tidy");
+            pdgui.pdsend(name, "tidy");
         },
         key: 'y',
         modifiers: "ctrl",
@@ -721,7 +724,7 @@ function nw_create_patch_window_menus (name) {
     editMenu.append(new nw.MenuItem({
         label: l('menu.font'),
         click: function () {
-            pdgui.pdsend(name + " menufont");
+            pdgui.pdsend(name, "menufont");
         },
         tooltip: l('menu.font_tt'),
     }));
@@ -729,7 +732,7 @@ function nw_create_patch_window_menus (name) {
     editMenu.append(new nw.MenuItem({
         label: l('menu.cordinspector'),
         click: function() {
-            pdgui.pdsend(name + " magicglass 0");
+            pdgui.pdsend(name, "magicglass 0");
         },
         key: 'r',
         modifiers: "ctrl",
@@ -778,7 +781,7 @@ function nw_create_patch_window_menus (name) {
         label: l('menu.editmode'),
         click: function() {
             check_box_for_text();
-            pdgui.pdsend(name + " editmode 0");
+            pdgui.pdsend(name, "editmode 0");
         },
         key: 'e',
         modifiers: "ctrl",
@@ -811,8 +814,8 @@ function nw_create_patch_window_menus (name) {
         label: l('menu.object'),
         click: function() {
             check_box_for_text();
-            pdgui.pdsend(name + " dirty 1");
-            pdgui.pdsend(name + " obj 0");
+            pdgui.pdsend(name, "dirty 1");
+            pdgui.pdsend(name, "obj 0");
         },
         key: '1',
         modifiers: "ctrl",
@@ -823,8 +826,8 @@ function nw_create_patch_window_menus (name) {
         label: l('menu.msgbox'),
         click: function() {
             check_box_for_text();
-            pdgui.pdsend(name + " dirty 1");
-            pdgui.pdsend(name + " msg 0");
+            pdgui.pdsend(name, "dirty 1");
+            pdgui.pdsend(name, "msg 0");
         },
         key: '2',
         modifiers: "ctrl",
@@ -835,8 +838,8 @@ function nw_create_patch_window_menus (name) {
         label: l('menu.number'),
         click: function() { 
             check_box_for_text();
-            pdgui.pdsend(name + " dirty 1");
-            pdgui.pdsend(name + " floatatom 0");
+            pdgui.pdsend(name, "dirty 1");
+            pdgui.pdsend(name, "floatatom 0");
         },
         key: '3',
         modifiers: "ctrl",
@@ -847,8 +850,8 @@ function nw_create_patch_window_menus (name) {
         label: l('menu.symbol'),
         click: function() {
             check_box_for_text();
-            pdgui.pdsend(name + " dirty 1");
-            pdgui.pdsend(name + " symbolatom 0");
+            pdgui.pdsend(name, "dirty 1");
+            pdgui.pdsend(name, "symbolatom 0");
         },
         key: '4',
         modifiers: "ctrl",
@@ -859,8 +862,8 @@ function nw_create_patch_window_menus (name) {
         label: l('menu.comment'),
         click: function() {
             check_box_for_text();
-            pdgui.pdsend(name + " dirty 1");
-            pdgui.pdsend(name + " text 0");
+            pdgui.pdsend(name, "dirty 1");
+            pdgui.pdsend(name, "text 0");
         },
         key: '5',
         modifiers: "ctrl",
@@ -875,8 +878,8 @@ function nw_create_patch_window_menus (name) {
         label: l('menu.bang'),
         click: function(e) {
             check_box_for_text();
-            pdgui.pdsend(name + " dirty 1");
-            pdgui.pdsend(name + " bng 0");
+            pdgui.pdsend(name, "dirty 1");
+            pdgui.pdsend(name, "bng 0");
         },
         key: 'b',
         modifiers: "ctrl-shift",
@@ -887,8 +890,8 @@ function nw_create_patch_window_menus (name) {
         label: l('menu.toggle'),
         click: function() {
             check_box_for_text();
-            pdgui.pdsend(name + " dirty 1");
-            pdgui.pdsend(name + " toggle 0");
+            pdgui.pdsend(name, "dirty 1");
+            pdgui.pdsend(name, "toggle 0");
         },
         key: 't',
         modifiers: "ctrl-shift",
@@ -899,8 +902,8 @@ function nw_create_patch_window_menus (name) {
         label: l('menu.number2'),
         click: function() {
             check_box_for_text();
-            pdgui.pdsend(name + " dirty 1");
-            pdgui.pdsend(name + " numbox 0");
+            pdgui.pdsend(name, "dirty 1");
+            pdgui.pdsend(name, "numbox 0");
         },
         key: 'n',
         modifiers: "ctrl-shift",
@@ -911,8 +914,8 @@ function nw_create_patch_window_menus (name) {
         label: l('menu.vslider'),
         click: function() {
             check_box_for_text();
-            pdgui.pdsend(name + " dirty 1");
-            pdgui.pdsend(name + " vslider 0");
+            pdgui.pdsend(name, "dirty 1");
+            pdgui.pdsend(name, "vslider 0");
         },
         key: 'v',
         modifiers: "ctrl-shift",
@@ -923,8 +926,8 @@ function nw_create_patch_window_menus (name) {
         label: l('menu.hslider'),
         click: function() {
             check_box_for_text();
-            pdgui.pdsend(name + " dirty 1");
-            pdgui.pdsend(name + " hslider 0");
+            pdgui.pdsend(name, "dirty 1");
+            pdgui.pdsend(name, "hslider 0");
         },
         key: 'h',
         modifiers: "ctrl-shift",
@@ -935,8 +938,8 @@ function nw_create_patch_window_menus (name) {
         label: l('menu.vradio'),
         click: function() {
             check_box_for_text();
-            pdgui.pdsend(name + " dirty 1");
-            pdgui.pdsend(name + " vradio 0");
+            pdgui.pdsend(name, "dirty 1");
+            pdgui.pdsend(name, "vradio 0");
         },
         key: 'd',
         modifiers: "ctrl-shift",
@@ -947,8 +950,8 @@ function nw_create_patch_window_menus (name) {
         label: l('menu.hradio'),
         click: function() {
             check_box_for_text();
-            pdgui.pdsend(name + " dirty 1");
-            pdgui.pdsend(name + " hradio 0");
+            pdgui.pdsend(name, "dirty 1");
+            pdgui.pdsend(name, "hradio 0");
         },
         key: 'i',
         modifiers: "ctrl",
@@ -959,8 +962,8 @@ function nw_create_patch_window_menus (name) {
         label: l('menu.vu'),
         click: function() {
             check_box_for_text();
-            pdgui.pdsend(name + " dirty 1");
-            pdgui.pdsend(name + " vumeter 0");
+            pdgui.pdsend(name, "dirty 1");
+            pdgui.pdsend(name, "vumeter 0");
         },
         key: 'u',
         modifiers: "ctrl",
@@ -971,8 +974,8 @@ function nw_create_patch_window_menus (name) {
         label: l('menu.cnv'),
         click: function() {
             check_box_for_text();
-            pdgui.pdsend(name + " dirty 1");
-            pdgui.pdsend(name + " mycnv 0");
+            pdgui.pdsend(name, "dirty 1");
+            pdgui.pdsend(name, "mycnv 0");
         },
         key: 'c',
         modifiers: "ctrl-shift",
@@ -987,9 +990,9 @@ function nw_create_patch_window_menus (name) {
         label: l('menu.graph'),
         click: function() {
             check_box_for_text();
-            pdgui.pdsend(name + " dirty 1");
+            pdgui.pdsend(name, "dirty 1");
             // leaving out some placement logic... see pd.tk menu_graph
-            pdgui.pdsend(name + " graph NULL 0 0 0 0 30 30 0 30");
+            pdgui.pdsend(name, "graph NULL 0 0 0 0 30 30 0 30");
         },
         tooltip: l('menu.graph_tt'),
     }));
@@ -998,8 +1001,8 @@ function nw_create_patch_window_menus (name) {
         label: l('menu.array'),
         click: function() {
                 check_box_for_text();
-                pdgui.pdsend(name + " dirty 1");
-                pdgui.pdsend(name + " menuarray");
+                pdgui.pdsend(name, "dirty 1");
+                pdgui.pdsend(name, "menuarray");
             },
         tooltip: l('menu.array_tt'),
     }));

@@ -122,7 +122,7 @@ function apply() {
         +document.querySelector('input[name="font_size"]:checked').value,
         current_size,
         100,
-        0, // "$noundo" from pd.tk-- not sure what it does
+        0 // "$noundo" from pd.tk-- not sure what it does
     );
 }
 
@@ -183,7 +183,7 @@ function add_events(name) {
     // closing the Window
     nw.Window.get().on("close", function() {
         // this needs to do whatever the "cancel" button does
-        //pdgui.pdsend(name + " menuclose 0");
+        //pdgui.pdsend(name, "menuclose 0");
         //cancel();
         pdgui.remove_dialogwin(pd_object_callback);
         this.close(true);

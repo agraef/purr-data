@@ -260,13 +260,13 @@ function canvas_check_geometry(cid) {
         win_y = patchwin[cid].y,
         cnv_width = patchwin[cid].window.innerWidth,
         cnv_height = patchwin[cid].window.innerHeight;
+    // We're reusing win_x and win_y below, as it
+    // shouldn't make a difference to the bounds
+    // algorithm in Pd
     pdsend(cid, "relocate",
-            pd_geo_string(win_w, win_h, win_x, win_y),
-            // We're reusing win_x and win_y here, as it
-            // shouldn't make a difference to the bounds
-            // algorithm in Pd
-            pd_geo_string(cnv_width, cnv_height, win_x, win_y),
-           );
+           pd_geo_string(win_w, win_h, win_x, win_y),
+           pd_geo_string(cnv_width, cnv_height, win_x, win_y)
+    );
 }
 
 exports.canvas_check_geometry = canvas_check_geometry;
