@@ -351,7 +351,7 @@ function apply() {
     pdgui.gui_post("we're applying shits!");
 
     // Audio dialog
-    pdgui.pdsend([
+    pdgui.pdsend(
         'pd audio-dialog',
         kludge_dev('in', attrs, 0),
         kludge_dev('in', attrs, 1),
@@ -373,11 +373,11 @@ function apply() {
         get_attr('advance', attrs),
         get_attr('cancallback', attrs),
         get_attr('blocksize', attrs)
-        ].join(' '));
+        );
 
     attrs = pd_midi_attrs;
     // Midi dialog
-    pdgui.pdsend([
+    pdgui.pdsend(
         'pd midi-dialog',
         get_attr('pd-indevs', attrs)[0],
         get_attr('pd-indevs', attrs)[1],
@@ -389,23 +389,23 @@ function apply() {
         get_attr('pd-outdevs', attrs)[3],
         0, // midi_alsain
         0  // midi_alsaout
-    ].join(' '));
+    );
 }
 
 function cancel() {
     var i, attrs, gfxstub;
     pdgui.gui_post("closing the window at this point");
     window.close(true);
-    //pdgui.pdsend(pd_object_callback + " cancel");
+    //pdgui.pdsend(pd_object_callback, "cancel");
 }
 
 function change_api(elem) {
     var id = elem.getAttribute('id'),
         value = elem.getAttribute('value');
     if (id === 'audio_api') {
-        pdgui.pdsend("pd audio-setapi " + value);
+        pdgui.pdsend("pd audio-setapi", value);
     } else {
-        pdgui.pdsend("pd midi-setapi " + value);
+        pdgui.pdsend("pd midi-setapi", value);
     }
 }
 

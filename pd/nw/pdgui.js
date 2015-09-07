@@ -260,13 +260,13 @@ function canvas_check_geometry(cid) {
         win_y = patchwin[cid].y,
         cnv_width = patchwin[cid].window.innerWidth,
         cnv_height = patchwin[cid].window.innerHeight;
-    pdsend([cid, "relocate",
+    pdsend(cid, "relocate",
             pd_geo_string(win_w, win_h, win_x, win_y),
             // We're reusing win_x and win_y here, as it
             // shouldn't make a difference to the bounds
             // algorithm in Pd
             pd_geo_string(cnv_width, cnv_height, win_x, win_y),
-           ].join(" "));
+           );
 }
 
 exports.canvas_check_geometry = canvas_check_geometry;
@@ -321,8 +321,7 @@ function saveas_callback(cid, file) {
     //}
     var directory = path.dirname(filename);
     var basename = path.basename(filename);
-    pdsend(cid + " savetofile " + enquote(basename) + " " +
-        enquote(directory));
+    pdsend(cid, "savetofile", enquote(basename), enquote(directory));
 
     // haven't implemented these last few commands yet...
     // set untitled_directory $directory
@@ -341,8 +340,8 @@ exports.menu_saveas = menu_saveas;
 function menu_new () {
     //if { ! [file isdirectory $untitled_directory]} {set untitled_directory $::env(HOME)}
     untitled_directory = pwd;
-    pdsend("pd filename " +
-           "Untitled-" + untitled_number + " " +
+    pdsend("pd filename",
+           "Untitled-" + untitled_number,
            enquote(untitled_directory));
     if (k12_mode == 1) {
         k12_saveas_on_new = 1;
@@ -476,7 +475,7 @@ function open_file(file) {
         //}
     }
     if (basename.match(/\.(pd|pat|mxt)$/i) != null) {
-        pdsend("pd open" + " " + enquote(basename) + " " + enquote(directory));
+        pdsend("pd open", enquote(basename), enquote(directory));
         pd_opendir = directory;
         //::pd_guiprefs::update_recentfiles "$filename" 1
     }
@@ -597,7 +596,7 @@ function gui_startup(version, fontname_from_pd, fontweight_from_pd,
 //    } else {
 //        set oldtclversion 0
 //    }
-    pdsend("pd init " + enquote(pwd) + " 0 " + font_fixed_metrics);
+    pdsend("pd init", enquote(pwd), "0", font_fixed_metrics);
 
 //    # add the audio and help menus to the Pd window.  We delayed this
 //    # so that we'd know the value of "apilist".
@@ -698,14 +697,9 @@ function gui_canvas_cursor(cid, pd_event_type) {
 }
 
 function gui_canvas_sendkey(cid, state, evt, char_code) {
-    pdsend(
-        cid + " key " +
-        state + " " +
-        char_code + " " +
-        (evt.shiftKey ? 1 : 0) + " " +
-        1 + " " +
-        (evt.repeat ? 1 : 0)
-    );
+    var shift = evt.shiftKey ? 1 : 0,
+        repeat = evt.repeat ? 1 : 0;
+    pdsend(cid, "key", state, char_code, shift, 1, repeat);
 }
 
 exports.gui_canvas_sendkey = gui_canvas_sendkey;
@@ -901,7 +895,8 @@ function init_socket_events () {
 exports.init_socket_events = init_socket_events;
 
 // Send commands to Pd
-function pdsend(string) {
+function pdsend() {
+    var string = Array.prototype.join.call(arguments, ' ');
     client.write(string + ';');
     // for now, let's reprint the outgoing string to the pdwindow
     //gui_post(string + ';', 'red');
@@ -2206,7 +2201,7 @@ function gui_drawimage_new(obj_tag, file_path, canvasdir, flags) {
     if (i > 0) {
         img = new pd_window.Image(); // create an image in the pd_window context
         img.onload = function() {
-            pdsend(obj_tag + ' size ' + this.width + ' ' + this.height);
+            pdsend(obj_tag, "size", this.width, this.height);
         };
         img.src = 'data:image/' + drawimage_data[obj_tag][0].type +
             ';base64,' + drawimage_data[obj_tag][0].data;
@@ -2338,7 +2333,7 @@ function gui_canvas_popup(cid, xpos, ypos, canprop, canopen, isobject) {
 }
 
 function popup_action(cid, index) {
-    pdsend(cid + " done-popup " + index + " " + popup_coords.join(" "));
+    pdsend(cid, "done-popup", index, popup_coords.join(" "));
 }
 
 exports.popup_action = popup_action;
@@ -2563,7 +2558,7 @@ function gui_savepanel(cid, target, path) {
 }
 
 exports.file_dialog_callback = function(file_string) {
-    pdsend(file_dialog_target + " callback " + enquote(file_string));
+    pdsend(file_dialog_target, "callback", enquote(file_string));
 }
 
 // Used to convert the ["key", "value"...] arrays coming from

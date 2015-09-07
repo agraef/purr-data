@@ -186,7 +186,7 @@ function gatom_escape(str) {
 
 function apply() {
     pdgui.gui_post("we're applying gatom changes!");
-    pdgui.pdsend([pd_object_callback, 'param', 
+    pdgui.pdsend(pd_object_callback, 'param', 
         +document.getElementById('width').value,
         +document.getElementById('minimum-range').value,
         +document.getElementById('maximum-range').value,
@@ -194,13 +194,13 @@ function apply() {
         document.querySelector('input[name="labelpos"]:checked').value,
         gatom_escape(document.getElementById('receive-symbol').value),
         gatom_escape(document.getElementById('send-symbol').value)
-    ].join(' '));
+    );
 }
 
 function cancel() {
     pdgui.gui_post("closing the window at this point");
     //window.close(true);
-    pdgui.pdsend(pd_object_callback + " cancel");
+    pdgui.pdsend(pd_object_callback, "cancel");
 }
 
 // This gets called from the nw_create_window function in index.html
@@ -272,7 +272,7 @@ function add_events(name) {
     // closing the Window
     nw.Window.get().on("close", function() {
         // this needs to do whatever the "cancel" button does
-        //pdgui.pdsend(name + " menuclose 0");
+        //pdgui.pdsend(name, "menuclose 0");
         //cancel();
         pdgui.remove_dialogwin(pd_object_callback);
         this.close(true);

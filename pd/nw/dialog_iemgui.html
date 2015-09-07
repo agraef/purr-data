@@ -448,7 +448,7 @@ function apply() {
 
     var slot18 = +document.getElementsByName('steady-on-click')[0].checked;
 
-    pdgui.pdsend([pd_object_callback, 'dialog',
+    pdgui.pdsend(pd_object_callback, 'dialog',
         width, height,
         slot3, // bng: flash-interrupt
                // slider: min-range
@@ -468,13 +468,13 @@ function apply() {
         background_color, foreground_color,
         label_color,
         slot18, // steady on click
-        0].join(' '));
+        0);
 }
 
 function cancel() {
     pdgui.gui_post("closing the window at this point");
     //window.close(true);
-    pdgui.pdsend(pd_object_callback + " cancel");
+    pdgui.pdsend(pd_object_callback, "cancel");
 }
 
 // This gets called from the nw_create_window function in index.html
@@ -557,7 +557,7 @@ function add_events(name) {
     // closing the Window
     nw.Window.get().on("close", function() {
         // this needs to do whatever the "cancel" button does
-        //pdgui.pdsend(name + " menuclose 0");
+        //pdgui.pdsend(name, "menuclose 0");
         //cancel();
         pdgui.remove_dialogwin(pd_object_callback);
         this.close(true);

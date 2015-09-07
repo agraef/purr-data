@@ -45,7 +45,7 @@
         document.getElementById("dsp_control").addEventListener("click",
             function(evt) {
                 var dsp_state = this.checked ? 1 : 0;
-                pdgui.pdsend("pd dsp " + dsp_state);
+                pdgui.pdsend("pd dsp", dsp_state);
             }
         );
 

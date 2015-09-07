@@ -491,7 +491,7 @@ function apply() {
         gop = +document.getElementsByName('gop')[0].checked;
         hide_name = +document.getElementsByName('hide-name')[0].checked;
 
-        pdgui.pdsend([pd_object_callback, 'donecanvasdialog',
+        pdgui.pdsend(pd_object_callback, 'donecanvasdialog',
             +get_input('x-scale'),
             +get_input('y-scale'),
             (gop + 2 * hide_name),
@@ -503,7 +503,7 @@ function apply() {
             +get_input('y-pix'),
             +get_input('x-margin'),
             +get_input('y-margin'),
-            ].join(' '));
+            );
     }
 
     // Now send the array properties, in a separate
@@ -514,7 +514,7 @@ function apply() {
         if (name.slice(0, 1) === '$') {
             name = '#' + name.slice(1);
         }
-        pdgui.pdsend([
+        pdgui.pdsend(
             get_array_value('array_gfxstub', attrs),
             'arraydialog',
             name,
@@ -526,7 +526,7 @@ function apply() {
             0, // ydraw-- not sure if this is still used
             get_array_value('array_fill', attrs),
             get_array_value('array_outline', attrs),
-        ].join(' '));
+        );
 
     }
 }
@@ -535,11 +535,11 @@ function cancel() {
     var i, attrs, gfxstub;
     pdgui.gui_post("closing the window at this point");
     //window.close(true);
-    pdgui.pdsend(pd_object_callback + " cancel");
+    pdgui.pdsend(pd_object_callback, "cancel");
     for (i = 0; i < pd_garray_attrs.length; i++) {
         attrs = pd_garray_attrs[i];
         gfxstub = attrs.array_gfxstub;
-        pdgui.pdsend(gfxstub + " cancel");
+        pdgui.pdsend(gfxstub, "cancel");
     }
 }
 

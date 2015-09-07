@@ -118,18 +118,18 @@ function change_size() {
 
 function apply() {
     pdgui.gui_post("we're applying font size changes!");
-    pdgui.pdsend([canvas, 'font', 
+    pdgui.pdsend(canvas, 'font', 
         +document.querySelector('input[name="font_size"]:checked').value,
         current_size,
         100,
         0, // "$noundo" from pd.tk-- not sure what it does
-    ].join(' '));
+    );
 }
 
 function cancel() {
     pdgui.gui_post("closing the window at this point");
     //window.close(true);
-    pdgui.pdsend(pd_object_callback + " cancel");
+    pdgui.pdsend(pd_object_callback, "cancel");
 }
 
 // This gets called from the nw_create_window function in index.html
