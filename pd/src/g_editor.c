@@ -5494,7 +5494,7 @@ void glob_verifyquit(void *dummy, t_floatarg f)
     }
     else
     {
-        gui_vmess("gui_post", "s", "about to quite seresly dood");
+        post("Quitting Pd...");
         glob_quit(0);
     }
 }
@@ -5532,7 +5532,6 @@ void canvas_menuclose(t_canvas *x, t_floatarg fforce)
             /* first open window */
             if (!glist_istoplevel(g) && g->gl_env)
             {
-      post("opening menu");
                 /* if this is an abstraction */
                 vmess(&g->gl_pd, gensym("menu-open"), "");
             }
