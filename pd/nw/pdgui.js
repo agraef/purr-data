@@ -1199,13 +1199,31 @@ function gui_canvas_updateline(cid,tag,x1,y1,x2,y2,yoff) {
     configure_item(cord, { d: d_array.join(" ") });
 }
 
+function text_inter_line_spacing_kludge(gui_fontsize) {
+    var pd_fontsize = gobj_fontsize_kludge(gui_fontsize, 'pd');
+    switch (pd_fontsize) {
+        case 8: return 11;
+        case 10: return 13;
+        case 12: return 16;
+        case 16: return 19;
+        case 24: return 29;
+        case 36: return 44;
+        default: return gui_fontsize + 2;
+    }
+}
+
 function text_to_tspans(canvasname, svg_text, text) {
-    var lines, i, len, tspan;
+    var lines, i, len, tspan, fontsize;
     lines = text.split('\n'); 
     len = lines.length;
+    // Get fontsize (minus the trailing "px")
+    fontsize = svg_text.getAttribute('font-size').slice(0, -2);
+
+gui_post("font size is " + (fontsize + 2));
+
     for (i = 0; i < len; i++) {
         tspan = create_item(canvasname, 'tspan', {
-            dy: i == 0 ? 0 : 10,
+            dy: i == 0 ? 0 : text_inter_line_spacing_kludge(+fontsize) + 'px',
             x: 0
         });
         // find a way to abstract away the canvas array and the DOM here
@@ -1221,16 +1239,30 @@ function text_to_tspans(canvasname, svg_text, text) {
 // we can revisit the issue. Even Pd-Vanilla's box sizing
 // changed at version 0.43, so we can break as well if
 // it comes to that.
-function gobj_fontsize_kludge(fontsize) {
+function gobj_fontsize_kludge(fontsize, return_type) {
     // These were tested on an X60 running Trisquel (based
     // on Ubuntu)
-    switch (fontsize) {
-        case 8: return 8.33;
-        case 12: return 11.65;
-        case 16: return 16.65;
-        case 24: return 23.3;
-        case 36: return 36.6;
-        default: return fontsize;
+    var fontmap = {
+        // pd_size: gui_size
+        8: 8.33,
+        12: 11.65,
+        16: 16.65,
+        24: 23.3,
+        36: 36.6
+    };
+    var ret, prop;
+    if (return_type === 'gui') {
+        ret = fontmap[fontsize];
+        return ret ? ret : fontsize;
+    } else {
+        for (prop in fontmap) {
+            if (fontmap.hasOwnProperty(prop)) {
+                if (fontmap[prop] == fontsize) {
+                    return +prop;
+                }
+            }
+        }
+        return fontsize;
     }
 }
 
@@ -1257,7 +1289,7 @@ function gui_text_new(canvasname, myname, type, isselected, left_margin, font_he
         // because it's borked when scaled. Bummer...
         // 'dominant-baseline': 'hanging',
         'shape-rendering': 'optimizeSpeed',
-        'font-size': gobj_fontsize_kludge(font) + 'px',
+        'font-size': gobj_fontsize_kludge(font, 'gui') + 'px',
         'font-weight': 'normal',
         id: myname + 'text'
     });
@@ -2795,7 +2827,7 @@ function gui_textarea(cid, tag, type, x, y, max_char_width, text,
         p.contentEditable = 'true';
         p.style.setProperty('left', (x - svg_view.x) + 'px');
         p.style.setProperty('top', (y - svg_view.y) + 'px');
-        p.style.setProperty('font-size', font_size + 'px');
+        p.style.setProperty('font-size', gobj_fontsize_kludge(font_size, 'gui') + 'px');
         p.style.setProperty('transform', 'translate(0px, 0px)');
         p.style.setProperty('max-width',
             max_char_width === 0 ? '60ch' : max_char_width + 'ch');
