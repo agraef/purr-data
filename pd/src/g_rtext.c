@@ -342,12 +342,7 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
         // the GUI side for now.
         tempbuf[outchars_b++] = '\0';
 
-        // The following is an enormous hack to get the box width to match size 12px
-        // DejaVu as closely as possible.  A better solution would require a fuller
-        // understanding of the font logic here and in s_main.
-        //pixwide = ncolumns * fontwidth + (LMARGIN + RMARGIN);
-        float fudge_factor = 0.2;
-        pixwide = (int)(ncolumns * (fontwidth + fudge_factor) + (LMARGIN + RMARGIN));
+        pixwide = ncolumns * fontwidth + (LMARGIN + RMARGIN);
         pixhigh = nlines * fontheight + (TMARGIN + BMARGIN);
         //printf("outchars_b=%d bufsize=%d %d\n", outchars_b, x->x_bufsize, x->x_buf[outchars_b]);
 

@@ -1215,21 +1215,50 @@ function text_to_tspans(canvasname, svg_text, text) {
     }
 }
 
-function gui_text_new(canvasname, myname, type, isselected, x, y, text, font) {
+// To keep the object and message box size consistent
+// with Pd-Vanilla, we make small changes to the font
+// sizes before rendering. If this impedes readability
+// we can revisit the issue. Even Pd-Vanilla's box sizing
+// changed at version 0.43, so we can break as well if
+// it comes to that.
+function gobj_fontsize_kludge(fontsize) {
+    // These were tested on an X60 running Trisquel (based
+    // on Ubuntu)
+    switch (fontsize) {
+        case 8: return 8.33;
+        case 12: return 11.65;
+        case 16: return 16.65;
+        case 24: return 23.3;
+        case 36: return 36.6;
+        default: return fontsize;
+    }
+}
+
+// Another hack, similar to above
+function gobj_font_y_kludge(fontsize) {
+    switch (fontsize) {
+        case 8: return -0.5;
+        case 10: return -1;
+        case 12: return -1;
+        case 16: return -1.5;
+        case 24: return -3;
+        case 36: return -6;
+        default: return 0;
+    }
+}
+
+function gui_text_new(canvasname, myname, type, isselected, left_margin, font_height, text, font) {
     var lines, i, len, tspan;
     var g = get_gobj(canvasname, myname);
     var svg_text = create_item(canvasname, 'text', {
-        // x and y are fudge factors. Text on the tk canvas used an anchor
-        // at the top-right corner of the text's bbox.  SVG uses the baseline.
-        // There's probably a programmatic way to do this, but for now-- fudge factors
-        // based on the DejaVu Sans Mono font. :)
-        transform: 'translate(' + x + ')',
-        y: y,
+        transform: 'translate(' + left_margin + ')',
+        y: font_height + gobj_font_y_kludge(font),
         // Turns out we can't do 'hanging' baseline
         // because it's borked when scaled. Bummer...
         // 'dominant-baseline': 'hanging',
         'shape-rendering': 'optimizeSpeed',
-        'font-size': font + 'px',
+        'font-size': gobj_fontsize_kludge(font) + 'px',
+        'font-weight': 'normal',
         id: myname + 'text'
     });
 
