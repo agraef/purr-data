@@ -753,9 +753,9 @@ void sys_gui(const char *s)
 }
 
 char *escape_double_quotes(const char *src) {
-    static char ret[MAXPDSTRING*2+1];
+    static char ret[MAXPDSTRING*4+1];
     char *escaped = ret; 
-    int i, len = MAXPDSTRING*2;
+    int i, len = MAXPDSTRING*4;
     for (i = 0; i < len-1 && src[i] != 0; i++)
     {
         if (src[i] == '\"')
@@ -767,7 +767,7 @@ char *escape_double_quotes(const char *src) {
                        "in a lazy attempt to escape double-quotes for the gui. "
                        "Please call me out publicly for this regression, and/or revise this "
                        "so it doesn't arbitrarily limit the size of the strings "
-                       "we can send to the gui.");
+                       "we can send to the gui.\n");
     return ret;
 }
 

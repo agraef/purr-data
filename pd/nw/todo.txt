@@ -291,6 +291,21 @@ Everything else: (A [x] means we've fixed it)
 [ ] Figure out what pdtk_ping does
 [ ] Instead of hardcoded gui_post colors, set a class (warning, error, etc.)
 [x] make pdsend able to take an arbitrary number of arguments
+[ ] revisit the function for escaping double-quotes inside s_inter.c, see
+    if there's a cleaner way to do it
+[ ] the socket reader has a buffer capped at 4096. This is plenty for most
+    purposes, but it may choke if the user tries to enter a humongous amount
+    of text inside, say, a message box.  Pd Vanilla handles this by sending
+    every single character that's typed into the box as a separate message
+    (which of course causes other problems, like copy/paste potentially flood-
+    ing the socket and freezing Pd.) Here, I am sending as a single message
+    "stringforobj" with the msg/obj box contents as the arguments. If that
+    message ends up being bigger than 4096 Pd will truncate the message.
+
+    A solution would be to send the box contents in smaller chunks-- bigger
+    than single chars but smaller than 4096. This will complicate the
+    interface, but the chunks should get sent in sequence so it might not
+    be too bad.
 
 Crashers
 --------
