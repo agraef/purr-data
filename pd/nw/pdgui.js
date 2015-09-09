@@ -1199,8 +1199,10 @@ function gui_canvas_updateline(cid,tag,x1,y1,x2,y2,yoff) {
     configure_item(cord, { d: d_array.join(" ") });
 }
 
-function text_inter_line_spacing_kludge(gui_fontsize) {
-    var pd_fontsize = gobj_fontsize_kludge(gui_fontsize, 'pd');
+function text_line_height_kludge(fontsize, fontsize_type) {
+    var pd_fontsize = fontsize_type === 'gui' ?
+        gui_fontsize_to_pd_fontsize(fontsize) :
+        fontsize;
     switch (pd_fontsize) {
         case 8: return 11;
         case 10: return 13;
@@ -1223,7 +1225,7 @@ gui_post("font size is " + (fontsize + 2));
 
     for (i = 0; i < len; i++) {
         tspan = create_item(canvasname, 'tspan', {
-            dy: i == 0 ? 0 : text_inter_line_spacing_kludge(+fontsize) + 'px',
+            dy: i == 0 ? 0 : text_line_height_kludge(+fontsize, 'gui') + 'px',
             x: 0
         });
         // find a way to abstract away the canvas array and the DOM here
@@ -1266,6 +1268,14 @@ function gobj_fontsize_kludge(fontsize, return_type) {
     }
 }
 
+function pd_fontsize_to_gui_fontsize(fontsize) {
+    return gobj_fontsize_kludge(fontsize, 'gui');
+}
+
+function gui_fontsize_to_pd_fontsize(fontsize) {
+    return gobj_fontsize_kludge(fontsize, 'pd');
+}
+
 // Another hack, similar to above
 function gobj_font_y_kludge(fontsize) {
     switch (fontsize) {
@@ -1289,7 +1299,7 @@ function gui_text_new(canvasname, myname, type, isselected, left_margin, font_he
         // because it's borked when scaled. Bummer...
         // 'dominant-baseline': 'hanging',
         'shape-rendering': 'optimizeSpeed',
-        'font-size': gobj_fontsize_kludge(font, 'gui') + 'px',
+        'font-size': pd_fontsize_to_gui_fontsize(font) + 'px',
         'font-weight': 'normal',
         id: myname + 'text'
     });
@@ -2827,7 +2837,10 @@ function gui_textarea(cid, tag, type, x, y, max_char_width, text,
         p.contentEditable = 'true';
         p.style.setProperty('left', (x - svg_view.x) + 'px');
         p.style.setProperty('top', (y - svg_view.y) + 'px');
-        p.style.setProperty('font-size', gobj_fontsize_kludge(font_size, 'gui') + 'px');
+        p.style.setProperty('font-size',
+            pd_fontsize_to_gui_fontsize(font_size) + 'px');
+        p.style.setProperty('line-height',
+            text_line_height_kludge(font_size, 'pd') + 'px');
         p.style.setProperty('transform', 'translate(0px, 0px)');
         p.style.setProperty('max-width',
             max_char_width === 0 ? '60ch' : max_char_width + 'ch');
