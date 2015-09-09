@@ -842,37 +842,37 @@ void gui_start_array(void)
 
 void gui_f(t_float f)
 {
-    if (gui_array_head)
+    if (gui_array_head && !gui_array_tail)
     {
-        gui_array_head = 0;
         sys_vgui("%g", f);
     }
     else
         sys_vgui(",%g", f);
+    gui_array_head = 0;
     gui_array_tail = 0;
 }
 
 void gui_i(int i)
 {
-    if (gui_array_head)
+    if (gui_array_head && !gui_array_tail)
     {
-        gui_array_head = 0;
         sys_vgui("%d", i);
     }
     else
         sys_vgui(",%d", i);
+    gui_array_head = 0;
     gui_array_tail = 0;
 }
 
 void gui_s(const char *s) 
 {
-    if (gui_array_head)
+    if (gui_array_head && !gui_array_tail)
     {
-        gui_array_head = 0;
         sys_vgui("\"%s\"", escape_double_quotes(s));
     }
     else
         sys_vgui(",\"%s\"", escape_double_quotes(s));
+    gui_array_head = 0;
     gui_array_tail = 0;
 }
 
@@ -1285,6 +1285,7 @@ int sys_startgui(const char *guidir)
 //                portno,
 //                (sys_k12_mode ? "pd-l2ork-k12" : "pd-l2ork"));
 
+fprintf(stderr, "guidir is %s\n", guidir);
 
             sprintf(cmdbuf,
                 "%s/nw/nw %s %d localhost %s\n",
