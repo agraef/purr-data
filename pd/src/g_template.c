@@ -1178,12 +1178,18 @@ void draw_notifyforscalar(t_draw *x, t_glist *owner,
     t_scalar *sc, t_symbol *s, int argc, t_atom *argv)
 {
     t_gpointer gp;
+    t_binbuf *b = binbuf_new();
+    t_atom at[1];
     gpointer_init(&gp);
     gpointer_setglist(&gp, owner, &sc->sc_gobj);
-    SETPOINTER(argv, &gp);
+    SETPOINTER(at, &gp);
+    binbuf_add(b, 1, at);
+    binbuf_add(b, argc, argv);
     if (x)
-        outlet_anything(x->x_obj.ob_outlet, s, argc, argv);
+        outlet_anything(x->x_obj.ob_outlet, s, binbuf_getnatom(b),
+            binbuf_getvec(b));
     gpointer_unset(&gp);
+    binbuf_free(b);
 }
 
 static int is_svgpath_cmd(t_symbol *s)
@@ -1412,6 +1418,11 @@ static void *draw_new(t_symbol *classsym, t_int argc, t_atom *argv)
     inlet_new(&x->x_obj, &sa->x_pd, 0, 0);
     /* x_canvas can stay here */
     x->x_canvas = canvas_getcurrent();
+
+    char buf[50];
+    sprintf(buf, "x%lx", (long unsigned int)x);
+    pd_bind(&x->x_obj.te_pd, gensym(buf));
+
     return (x);
 }
 
@@ -1637,6 +1648,41 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
             glist_getcanvas(c), tag, s->s_name,
             mbuf);
         *predraw_bbox = 1;
+    }
+    else if (s == gensym("mouseover"))
+    {
+        gui_vmess("gui_draw_event", "xsxxsi",
+            glist_getcanvas(c), tag, sc, x->x_parent, "mouseover",
+            (int)fielddesc_getcoord(
+                &x->x_events.e_mouseover, template, data, 1));
+    }
+    else if (s == gensym("mouseout"))
+    {
+        gui_vmess("gui_draw_event", "xsxxsi",
+            glist_getcanvas(c), tag, sc, x->x_parent, "mouseout",
+            (int)fielddesc_getcoord(
+                &x->x_events.e_mouseout, template, data, 1));
+    }
+    else if (s == gensym("mousemove"))
+    {
+        gui_vmess("gui_draw_event", "xsxxsi",
+            glist_getcanvas(c), tag, sc, x->x_parent, "mousemove",
+            (int)fielddesc_getcoord(
+                &x->x_events.e_mousemove, template, data, 1));
+    }
+    else if (s == gensym("mouseup"))
+    {
+        gui_vmess("gui_draw_event", "xsxxsi",
+            glist_getcanvas(c), tag, sc, x->x_parent, "mouseup",
+            (int)fielddesc_getcoord(
+                &x->x_events.e_mouseup, template, data, 1));
+    }
+    else if (s == gensym("mousedown"))
+    {
+        gui_vmess("gui_draw_event", "xsxxsi",
+            glist_getcanvas(c), tag, sc, x->x_parent, "mousedown",
+            (int)fielddesc_getcoord(
+                &x->x_events.e_mousedown, template, data, 1));
     }
     else if (s == gensym("vis"))
     {
@@ -2101,7 +2147,7 @@ void svg_event(t_svg *x, t_symbol *s, int argc, t_atom *argv)
             fielddesc_setfloatarg(&x->x_events.e_mousemove, argc, argv);
         else if (s == gensym("mouseout"))
             fielddesc_setfloatarg(&x->x_events.e_mouseout, argc, argv);
-//        svg_update(x, s);
+        svg_update(x, s);
     }
 }
 
@@ -3993,11 +4039,35 @@ static int draw_click(t_gobj *z, t_glist *glist,
                 glist_grab(glist, z, draw_motion, 0, xpix, ypix);
         //        outlet_anything(x->x_obj.ob_outlet, gensym("click"), 0, 0);
             }
-            draw_notifyforscalar(x, glist, sc, gensym("mousedown"), 5, at);
+//            draw_notifyforscalar(x, glist, sc, gensym("mousedown"), 5, at);
         }
         return (1);
     }
     return (0);
+}
+
+void draw_notify(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_symbol *scalarsym = atom_getsymbolarg(0, argc--, argv++);
+    t_symbol *drawsym = atom_getsymbolarg(0, argc--, argv++);
+    t_symbol *event_name = atom_getsymbolarg(0, argc--, argv++);
+    t_scalar *sc;
+    t_draw *d;
+    if (scalarsym->s_thing)
+        sc = (t_scalar *)scalarsym->s_thing;
+    else
+    {
+        error("draw_notify: can't get scalar from symbol");
+        return;
+    }
+    if (drawsym->s_thing)
+        d = (t_draw *)drawsym->s_thing;
+    else
+    {
+        error("draw_notify: can't get draw object from symbol");
+        return;
+    }
+    draw_notifyforscalar(d, x, sc, event_name, argc, argv);
 }
 
 /*
@@ -4119,6 +4189,9 @@ void canvas_group_free(t_pd *x)
 
 static void draw_free(t_draw *x)
 {
+    char buf[50];
+    sprintf(buf, "x%lx", (long unsigned int)x);
+    pd_unbind(&x->x_obj.te_pd, gensym(buf));
     t_svg *sa = (t_svg *)x->x_attr;
     svg_free(sa);
 }
@@ -4160,6 +4233,14 @@ static void draw_setup(void)
         gensym("height"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_event,
         gensym("mousedown"), A_GIMME, 0);
+    class_addmethod(svg_class, (t_method)svg_event,
+        gensym("mousemove"), A_GIMME, 0);
+    class_addmethod(svg_class, (t_method)svg_event,
+        gensym("mouseover"), A_GIMME, 0);
+    class_addmethod(svg_class, (t_method)svg_event,
+        gensym("mouseout"), A_GIMME, 0);
+    class_addmethod(svg_class, (t_method)svg_event,
+        gensym("mouseup"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_setattr,
         gensym("opacity"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_setattr,

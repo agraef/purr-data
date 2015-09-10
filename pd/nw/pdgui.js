@@ -2159,6 +2159,20 @@ function gui_draw_coords(cid, tag, shape, points) {
     }
 }
 
+function gui_draw_event(cid, tag, scalar_sym, draw_sym, event_name, state) {
+    var item = get_item(cid, tag),
+        event_type = "on" + event_name; 
+    if (state === 1) {
+        item[event_type] = function(e) {
+//            gui_post("Entered! Tag is " + tag);
+            pdsend(cid, "scalar_event", scalar_sym, draw_sym, event_name,
+                e.pageX, e.pageY);
+        };
+    } else {
+        item[event_type] = null;
+    }
+}
+
 // Configure one attr/val pair at a time, received from Pd
 function gui_draw_configure(cid, tag, attr, val) {
     var item = get_item(cid, tag);

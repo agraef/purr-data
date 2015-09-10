@@ -316,7 +316,7 @@ t_scalar *scalar_new(t_glist *owner, t_symbol *templatesym)
     gpointer_setglist(&gp, owner, &x->sc_gobj);
     word_init(x->sc_vec, template, &gp);
     char buf[50];
-    sprintf(buf, ".x%lx", (long unsigned int)x);
+    sprintf(buf, "x%lx", (long unsigned int)x);
     pd_bind(&x->sc_gobj.g_pd, gensym(buf));
     return (x);
 }
@@ -1298,7 +1298,7 @@ static void scalar_free(t_scalar *x)
     }
     word_free(x->sc_vec, template);
     char buf[50];
-    sprintf(buf, ".x%lx", (long unsigned int)x);
+    sprintf(buf, "x%lx", (long unsigned int)x);
     pd_unbind(&x->sc_gobj.g_pd, gensym(buf));
     gfxstub_deleteforkey(x);
         /* the "size" field in the class is zero, so Pd doesn't try to free

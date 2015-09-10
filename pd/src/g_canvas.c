@@ -729,14 +729,12 @@ void canvas_dirty(t_canvas *x, t_floatarg n)
     }
 }
 
-extern t_canvas *sc_mouseover_canvas;
-void canvas_scalar_mouseover(t_canvas *x, t_symbol *sendsym, t_floatarg state)
+extern t_canvas *sc_mouseover_canvas; /* not needed */
+
+void draw_notify(t_canvas *x, t_symbol *s, int argc, t_atom *argv);
+void canvas_scalar_event(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 {
-    t_atom at[1];
-    SETFLOAT(&at[0], state);
-    sc_mouseover_canvas = x;
-    if (sendsym->s_thing) typedmess(sendsym->s_thing, gensym("mouseover"),
-        1, at);
+    draw_notify(x, s, argc, argv);
 }
 
 extern void canvas_check_nlet_highlights(t_canvas *x);
@@ -2327,8 +2325,8 @@ void g_canvas_setup(void)
         gensym("dirty"), A_FLOAT, A_NULL);
     class_setpropertiesfn(canvas_class, (t_propertiesfn)canvas_properties);
 
-    class_addmethod(canvas_class, (t_method)canvas_scalar_mouseover,
-        gensym("scalar_mouseover"), A_SYMBOL, A_FLOAT, 0);
+    class_addmethod(canvas_class, (t_method)canvas_scalar_event,
+        gensym("scalar_event"), A_GIMME, 0);
 
 /* ---------------------- list handling ------------------------ */
     class_addmethod(canvas_class, (t_method)glist_clear, gensym("clear"),
