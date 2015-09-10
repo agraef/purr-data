@@ -1280,7 +1280,7 @@ function gui_fontsize_to_pd_fontsize(fontsize) {
 function gobj_font_y_kludge(fontsize) {
     switch (fontsize) {
         case 8: return -0.5;
-        case 10: return -1;
+        case 10: return -2;
         case 12: return -1;
         case 16: return -1.5;
         case 24: return -3;
@@ -1298,7 +1298,7 @@ function gui_text_new(canvasname, myname, type, isselected, left_margin, font_he
         // Turns out we can't do 'hanging' baseline
         // because it's borked when scaled. Bummer...
         // 'dominant-baseline': 'hanging',
-        'shape-rendering': 'optimizeSpeed',
+        'shape-rendering': 'crispEdges',
         'font-size': pd_fontsize_to_gui_fontsize(font) + 'px',
         'font-weight': 'normal',
         id: myname + 'text'
