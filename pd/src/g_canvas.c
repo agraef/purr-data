@@ -729,9 +729,8 @@ void canvas_dirty(t_canvas *x, t_floatarg n)
     }
 }
 
-extern t_canvas *sc_mouseover_canvas; /* not needed */
-
 void draw_notify(t_canvas *x, t_symbol *s, int argc, t_atom *argv);
+
 void canvas_scalar_event(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 {
     draw_notify(x, s, argc, argv);

@@ -394,19 +394,6 @@ extern int array_joc;
 extern void template_notifyforscalar(t_template *template, t_glist *owner,
     t_scalar *sc, t_symbol *s, int argc, t_atom *argv);
 
-t_canvas *sc_mouseover_canvas;
-static void scalar_mouseover(t_scalar *x, t_floatarg state)
-{
-    t_atom at[1];
-    t_template *template = template_findbyname(x->sc_template);
-    if (state)
-        template_notifyforscalar(template, sc_mouseover_canvas,
-            x, gensym("leave"), 1, at);
-    else
-        template_notifyforscalar(template, sc_mouseover_canvas,
-            x, gensym("enter"), 1, at);
-}
-
 static void scalar_getgrouprect(t_glist *owner, t_glist *groupcanvas,
     t_word *data, t_template *template, int basex, int basey,
     int *x1, int *x2, int *y1, int *y2)
@@ -834,10 +821,6 @@ void scalar_doconfigure(t_gobj *xgobj, t_glist *owner)
         //    (long unsigned int)x->sc_vec);
         //gui_vmess("gui_create_scalar_group", "xss",
         //    glist_getcanvas(owner), groupbuf, tagbuf); 
-        //sys_vgui("pdtk_bind_scalar_mouseover "
-        //         ".x%lx.c .x%lx.x%lx.template%lx {.x%lx}\n",
-        //    glist_getcanvas(owner), glist_getcanvas(owner),
-        //    owner, x->sc_vec, x);
 
         for (y = templatecanvas->gl_list; y; y = y->g_next)
         {
@@ -1013,11 +996,6 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
             (long unsigned int)x->sc_vec);
         gui_vmess("gui_create_scalar_group", "xss",
             glist_getcanvas(owner), groupbuf, tagbuf);
-
-        sys_vgui("pdtk_bind_scalar_mouseover "
-                 ".x%lx.c .x%lx.x%lx.template%lx {.x%lx}\n",
-            glist_getcanvas(owner), glist_getcanvas(owner),
-            owner, x->sc_vec, x);
     }
 
     /* warning: don't need--- have recursive func. */
@@ -1312,8 +1290,6 @@ void g_scalar_setup(void)
 {
     scalar_class = class_new(gensym("scalar"), 0, (t_method)scalar_free, 0,
         CLASS_GOBJ, 0);
-    class_addmethod(scalar_class, (t_method)scalar_mouseover,
-        gensym("mouseover"), A_FLOAT, A_NULL);
     class_addmethod(scalar_class, (t_method)scalar_menuopen,
         gensym("menu-open"), 0);
     class_setwidget(scalar_class, &scalar_widgetbehavior);
