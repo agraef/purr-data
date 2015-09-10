@@ -1322,7 +1322,7 @@ static void *field_new(t_symbol *s)
 {
     t_field *x = (t_field *)pd_new(field_class);
     x->x_s = s;
-    x->x_canvas = canvas_getcurrent();
+    x->x_canvas = canvas_getrootfor(canvas_getcurrent());
     x->x_template = NULL;
     outlet_new(&x->x_obj, &s_list);
     return (x);
