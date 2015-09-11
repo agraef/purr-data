@@ -1,44 +1,44 @@
 #N struct drawtut-events float x float y;
-#N canvas 0 19 591 620 10;
-#X scalar drawtut-events 54 240 \;;
+#N canvas 230 46 591 620 10;
+#X scalar drawtut-events 54 255 \;;
 #X text 1 1 __________________________________;
 #X text 0 1 New Drawing Commands: mouse events;
-#X text 53 43 When the user mouses over or clicks a scalar a message
-gets sent to the outlet of the corresponding [struct] object.;
-#X obj 343 87 loadbang;
-#X msg 343 108 fill blue;
-#X text 53 430 The following events are reported:;
-#X text 53 490 click - clicking the scalar in "Run mode";
-#X text 53 550 enter - moving the mouse over a scalar;
-#X text 53 570 leave - moving the mouse out of a scalar's area;
-#X text 53 590 select - select a scalar in "Edit mode";
-#X text 53 510 deselect - deselect a scalar in "Edit mode";
-#X text 53 530 displace - move a scalar in "Edit mode";
-#X text 53 460 change - click-drag an area of a scalar to change its
-shape or value;
-#X symbolatom 53 203 10 0 0 1 event_type - -, f 10;
-#X obj 53 138 list split 1;
-#X obj 63 113 print;
+#X obj 53 117 loadbang;
+#X text 53 400 The following events are reported:;
+#X symbolatom 53 227 10 0 0 1 event_type - -, f 10;
 #X obj 53 87 struct drawtut-events float x float y;
-#X msg 381 200 fill white;
-#X text 149 261 <- Click and move the mouse over these shapes;
-#X obj 343 157 loadbang;
-#X text 149 299 Notice that when you move from the circle's border
-to its center \, you generate a "leave" event. This is because the
-circle has no fill color. Once you set a fill color-- even white--
-then the middle will count as part of the shape.;
-#X text 149 359 Unfortunately this creates a discrepancy with the "click"
-event \, which will register a click for anything inside the scalar's
-bounding box (i.e. \, the selection rectangle that appears when you
-select it in edit-mode.;
-#X obj 343 129 draw rect 0 0 60 60;
-#X obj 343 221 draw circle 30 120 25;
-#X msg 343 178 stroke-width 20 \, stroke black \, fill none;
-#X connect 4 0 5 0;
-#X connect 5 0 23 0;
-#X connect 15 0 14 0;
-#X connect 17 0 15 0;
-#X connect 17 0 16 0;
-#X connect 18 0 24 0;
-#X connect 20 0 25 0;
-#X connect 25 0 24 0;
+#X msg 341 164 fill white;
+#X obj 303 117 loadbang;
+#X obj 53 204 unpack s;
+#X msg 53 140 fill blue;
+#X msg 143 140 mouseover 1 \, mouseout 1;
+#X obj 143 117 loadbang;
+#X obj 303 206 unpack s;
+#X symbolatom 303 227 10 0 0 1 event_type - -, f 10;
+#X text 130 272 <- mouse over these shapes ->;
+#X text 53 329 When you move to the center of the center \, you generate
+a "mouseout" event. This is because the circle has no fill color. Once
+you set a fill color-- even white-- then the middle will count as part
+of the shape.;
+#X text 53 465 mouseover - mouse enters a shape;
+#X text 53 485 mouseout - mouse leaves a shape;
+#X text 53 505 mousemove - mouse moves inside a shape;
+#X text 53 425 mousedown - mouse button is pressed;
+#X text 53 445 mouseup - mousebutton is released;
+#X obj 53 173 draw rect 0 0 60 60;
+#X obj 303 185 draw circle 300 30 25;
+#X msg 303 140 stroke-width 20 \, stroke black \, fill none;
+#X text 53 43 When the user mouses over or clicks a shape a message
+gets sent to the outlet of the corresponding [draw] object.;
+#X connect 3 0 10 0;
+#X connect 7 0 23 0;
+#X connect 8 0 24 0;
+#X connect 9 0 5 0;
+#X connect 10 0 22 0;
+#X connect 11 0 22 0;
+#X connect 11 0 23 0;
+#X connect 12 0 11 0;
+#X connect 13 0 14 0;
+#X connect 22 0 9 0;
+#X connect 23 0 13 0;
+#X connect 24 0 23 0;
