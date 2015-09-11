@@ -1280,7 +1280,7 @@ function gui_fontsize_to_pd_fontsize(fontsize) {
 function gobj_font_y_kludge(fontsize) {
     switch (fontsize) {
         case 8: return -0.5;
-        case 10: return -2;
+        case 10: return -1;
         case 12: return -1;
         case 16: return -1.5;
         case 24: return -3;
