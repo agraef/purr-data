@@ -306,6 +306,12 @@ Everything else: (A [x] means we've fixed it)
     than single chars but smaller than 4096. This will complicate the
     interface, but the chunks should get sent in sequence so it might not
     be too bad.
+[ ] the outlet of [group] doesn't get reordered correctly when adding [inlet]
+    inside the subpatch.  It's supposed to always be the rightmost one, but
+    it stays to the left.  Either figure out how to fix it or how to get
+    the [group] inlet to always stay at the left so that the two behave the
+    same.
+    to always be the rightmost outlet
 
 Crashers
 --------
