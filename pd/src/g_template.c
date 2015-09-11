@@ -1174,7 +1174,7 @@ typedef struct _drawimage
     t_pd *x_attr;
 } t_drawimage;
 
-void draw_notifyforscalar(t_draw *x, t_glist *owner,
+void draw_notifyforscalar(t_object *x, t_glist *owner,
     t_scalar *sc, t_symbol *s, int argc, t_atom *argv)
 {
     t_gpointer gp;
@@ -1186,7 +1186,7 @@ void draw_notifyforscalar(t_draw *x, t_glist *owner,
     binbuf_add(b, 1, at);
     binbuf_add(b, argc, argv);
     if (x)
-        outlet_anything(x->x_obj.ob_outlet, s, binbuf_getnatom(b),
+        outlet_anything(x->ob_outlet, s, binbuf_getnatom(b),
             binbuf_getvec(b));
     gpointer_unset(&gp);
     binbuf_free(b);
@@ -1357,6 +1357,14 @@ void *svg_new(t_pd *parent, t_symbol *s, int argc, t_atom *argv)
     fielddesc_setfloat_const(&x->x_events.e_mouseover, 0);
     fielddesc_setfloat_const(&x->x_events.e_mousemove, 0);
     fielddesc_setfloat_const(&x->x_events.e_mouseout, 0);
+
+    char buf[50];
+    // Here we bind the parent object to the addy for
+    // the svg. This way both [group] and [draw] will have
+    // the same binding symbol
+    sprintf(buf, "x%lx", (long unsigned int)x);
+    pd_bind(parent, gensym(buf));
+
     return (x);
 }
 
@@ -1401,8 +1409,6 @@ static void *draw_new(t_symbol *classsym, t_int argc, t_atom *argv)
 
     t_draw *x = (t_draw *)pd_new(draw_class);
 
-    /* outlet for event notifications */
-    outlet_new(&x->x_obj, &s_anything);
 
     /* create a proxy for drawing/svg attributes */
     if (!(x->x_attr = (t_pd *)svg_new((t_pd *)x, type, argc, argv)))
@@ -1416,12 +1422,13 @@ static void *draw_new(t_symbol *classsym, t_int argc, t_atom *argv)
        to the inlet. */
     t_svg *sa = (t_svg *)x->x_attr;
     inlet_new(&x->x_obj, &sa->x_pd, 0, 0);
+
+    /* outlet for event notifications */
+    outlet_new(&x->x_obj, &s_anything);
+
     /* x_canvas can stay here */
     x->x_canvas = canvas_getcurrent();
 
-    char buf[50];
-    sprintf(buf, "x%lx", (long unsigned int)x);
-    pd_bind(&x->x_obj.te_pd, gensym(buf));
 
     return (x);
 }
@@ -1652,35 +1659,35 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
     else if (s == gensym("mouseover"))
     {
         gui_vmess("gui_draw_event", "xsxxsi",
-            glist_getcanvas(c), tag, sc, x->x_parent, "mouseover",
+            glist_getcanvas(c), tag, sc, x, "mouseover",
             (int)fielddesc_getcoord(
                 &x->x_events.e_mouseover, template, data, 1));
     }
     else if (s == gensym("mouseout"))
     {
         gui_vmess("gui_draw_event", "xsxxsi",
-            glist_getcanvas(c), tag, sc, x->x_parent, "mouseout",
+            glist_getcanvas(c), tag, sc, x, "mouseout",
             (int)fielddesc_getcoord(
                 &x->x_events.e_mouseout, template, data, 1));
     }
     else if (s == gensym("mousemove"))
     {
         gui_vmess("gui_draw_event", "xsxxsi",
-            glist_getcanvas(c), tag, sc, x->x_parent, "mousemove",
+            glist_getcanvas(c), tag, sc, x, "mousemove",
             (int)fielddesc_getcoord(
                 &x->x_events.e_mousemove, template, data, 1));
     }
     else if (s == gensym("mouseup"))
     {
         gui_vmess("gui_draw_event", "xsxxsi",
-            glist_getcanvas(c), tag, sc, x->x_parent, "mouseup",
+            glist_getcanvas(c), tag, sc, x, "mouseup",
             (int)fielddesc_getcoord(
                 &x->x_events.e_mouseup, template, data, 1));
     }
     else if (s == gensym("mousedown"))
     {
         gui_vmess("gui_draw_event", "xsxxsi",
-            glist_getcanvas(c), tag, sc, x->x_parent, "mousedown",
+            glist_getcanvas(c), tag, sc, x, "mousedown",
             (int)fielddesc_getcoord(
                 &x->x_events.e_mousedown, template, data, 1));
     }
@@ -3897,7 +3904,7 @@ static void draw_motion(void *z, t_floatarg dx, t_floatarg dy)
     {
         template_notifyforscalar(draw_motion_template, draw_motion_glist, 
             draw_motion_scalar, gensym("change"), 1, at);
-        draw_notifyforscalar(x, draw_motion_glist, draw_motion_scalar,
+        draw_notifyforscalar(&x->x_obj, draw_motion_glist, draw_motion_scalar,
             gensym("drag"), 5, at);
     }
 //    if (draw_motion_scalar)
@@ -4049,10 +4056,10 @@ static int draw_click(t_gobj *z, t_glist *glist,
 void draw_notify(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_symbol *scalarsym = atom_getsymbolarg(0, argc--, argv++);
-    t_symbol *drawsym = atom_getsymbolarg(0, argc--, argv++);
+    t_symbol *drawcommand_sym = atom_getsymbolarg(0, argc--, argv++);
     t_symbol *event_name = atom_getsymbolarg(0, argc--, argv++);
     t_scalar *sc;
-    t_draw *d;
+    t_object *ob = 0;
     if (scalarsym->s_thing)
         sc = (t_scalar *)scalarsym->s_thing;
     else
@@ -4060,14 +4067,27 @@ void draw_notify(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
         error("draw_notify: can't get scalar from symbol");
         return;
     }
-    if (drawsym->s_thing)
-        d = (t_draw *)drawsym->s_thing;
+    if (drawcommand_sym->s_thing)
+    {
+        t_pd *drawcommand = (t_pd *)drawcommand_sym->s_thing;
+        if (pd_class(drawcommand) == draw_class)
+        {
+            t_draw *d = (t_draw *)drawcommand;
+            ob = &d->x_obj;
+        }
+        else
+        {
+            t_canvas *group = (t_canvas *)drawcommand;
+            ob = &group->gl_obj;
+        }
+    }
     else
     {
         error("draw_notify: can't get draw object from symbol");
         return;
     }
-    draw_notifyforscalar(d, x, sc, event_name, argc, argv);
+    if (ob)
+        draw_notifyforscalar(ob, x, sc, event_name, argc, argv);
 }
 
 /*
@@ -4179,6 +4199,9 @@ static void svg_free(t_svg *x)
         t_freebytes(x->x_pathcmds, x->x_npathcmds * sizeof(*x->x_pathcmds));
         t_freebytes(x->x_nargs_per_cmd, x->x_npathcmds * sizeof(*x->x_nargs_per_cmd));
     }
+    char buf[50];
+    sprintf(buf, "x%lx", (long unsigned int)x);
+    pd_unbind((t_pd *)x->x_parent, gensym(buf));
 }
 
 void canvas_group_free(t_pd *x)
@@ -4189,9 +4212,6 @@ void canvas_group_free(t_pd *x)
 
 static void draw_free(t_draw *x)
 {
-    char buf[50];
-    sprintf(buf, "x%lx", (long unsigned int)x);
-    pd_unbind(&x->x_obj.te_pd, gensym(buf));
     t_svg *sa = (t_svg *)x->x_attr;
     svg_free(sa);
 }

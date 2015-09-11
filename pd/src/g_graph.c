@@ -563,7 +563,7 @@ void canvas_resortoutlets(t_canvas *x)
     for (noutlets = 0, y = x->gl_list; y; y = y->g_next)
         if (pd_class(&y->g_pd) == voutlet_class) noutlets++;
 
-    if (noutlets < 2) return;
+    if (noutlets < 2 && !(canvas_isgroup(x))) return;
     
     vec = (t_gobj **)getbytes(noutlets * sizeof(*vec));
     
