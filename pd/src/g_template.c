@@ -3854,9 +3854,9 @@ static void draw_motion(void *z, t_floatarg dx, t_floatarg dy)
 {
     t_draw *x = (t_draw *)z;
     t_svg *sa = (t_svg *)x->x_attr;
-    t_atom at[5];
-    SETFLOAT(at+1, (t_float)dx);
-    SETFLOAT(at+2, (t_float)dy);
+    t_atom at[4];
+    SETFLOAT(at, (t_float)dx);
+    SETFLOAT(at+1, (t_float)dy);
     t_float mtx1[3][3];
     t_float mtx2[3][3];
     t_float m1, m2, m3, m4, m5, m6, tdx, tdy;
@@ -3877,8 +3877,8 @@ static void draw_motion(void *z, t_floatarg dx, t_floatarg dy)
     mmult(mtx1, mtx2, mtx2);
     tdx = mtx2[0][0];
     tdy = mtx2[1][0];
-    SETFLOAT(at+3, tdx);
-    SETFLOAT(at+4, tdy);
+    SETFLOAT(at+2, tdx);
+    SETFLOAT(at+3, tdy);
     t_fielddesc *f = sa->x_vec; //+ draw_motion_field;
     if (!gpointer_check(&draw_motion_gpointer, 0))
     {
@@ -3902,10 +3902,10 @@ static void draw_motion(void *z, t_floatarg dx, t_floatarg dy)
         /* LATER figure out what to do to notify for an array? */
     if (draw_motion_scalar)
     {
+        draw_notifyforscalar(&x->x_obj, draw_motion_glist, draw_motion_scalar,
+            gensym("drag"), 4, at);
         template_notifyforscalar(draw_motion_template, draw_motion_glist, 
             draw_motion_scalar, gensym("change"), 1, at);
-        draw_notifyforscalar(&x->x_obj, draw_motion_glist, draw_motion_scalar,
-            gensym("drag"), 5, at);
     }
 //    if (draw_motion_scalar)
 //        scalar_redraw(draw_motion_scalar, draw_motion_glist);
