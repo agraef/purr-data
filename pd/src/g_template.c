@@ -3677,34 +3677,6 @@ void svg_grouptogui(t_glist *g, t_template *template, t_word *data)
     svg_togui(x, template, data);
 }
 
-void svg_parentwidgettogui(t_gobj *z, t_glist *owner, t_word *data,
-    t_template *template)
-{
-    char tagbuf[MAXPDSTRING];
-    if (pd_class(&z->g_pd) == draw_class)
-    {
-        t_draw *x = (t_draw *)z;
-        sprintf(tagbuf, "draw%lx.%lx", (long unsigned int)x,
-            (long unsigned int)data);
-        gui_start_vmess("gui_draw_configure_all", "xs",
-            glist_getcanvas(owner), tagbuf);
-        svg_togui((t_svg *)x->x_attr, template, data);
-        gui_end_vmess();
-    }
-    else if (pd_class(&z->g_pd) == drawimage_class)
-    {
-        t_drawimage *x = (t_drawimage *)z;
-        sprintf(tagbuf, "draw%lx.%lx", (long unsigned int)x,
-            (long unsigned int)data);
-        gui_start_vmess("gui_draw_configure_all", "xs",
-            glist_getcanvas(owner), tagbuf);
-        svg_togui((t_svg *)x->x_attr, template, data);
-        gui_end_vmess();
-        gui_vmess("gui_drawimage_index", "xxxi",
-            glist_getcanvas(owner), x, data,
-            drawimage_getindex(x, template, data));
-    }
-}
     
 
 static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
@@ -4089,6 +4061,7 @@ void draw_notify(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     if (ob)
         draw_notifyforscalar(ob, x, sc, event_name, argc, argv);
 }
+
 
 /*
 static int draw_click(t_gobj *z, t_glist *glist, 
@@ -4614,8 +4587,11 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     }*/
     
         /* see comment in plot_vis() */
-    if (vis && !fielddesc_getfloat(&x->x_vis, template, data, 0))
-        return;
+    /* Note: we can probably get a slight acceleration here-- if vis
+       is -1 and x->x_vis is 0, we can just send a "visibility:0" attribute
+       instead of the coords and stuff */
+    //if (vis && !fielddesc_getfloat(&x->x_vis, template, data, 0))
+    //    return;
     if (vis)
     {
         if (n > 1)
@@ -4672,13 +4648,21 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 else
                     sprintf(type, "polyline");
             }
-
-            gui_start_vmess("gui_draw_vis", "xs",
-                glist_getcanvas(glist), type);
-
+            if (vis != -1) /* draw for the first time */
+                gui_start_vmess("gui_draw_vis", "xs",
+                    glist_getcanvas(glist), type);
+            else /* just update the attributes for an existing object */
+                gui_start_vmess("gui_draw_configure_old_command", "xs",
+                    glist_getcanvas(glist), type);
             // Attributes array
             gui_start_array();
 
+            // visibility
+            gui_s("visibility");
+            gui_s((int)fielddesc_getfloat(&x->x_vis, template, data, 0) ?
+                "normal" : "hidden");
+
+            // points data
             if (flags & BEZ)
             {
                 curve_smooth_to_q(pix, n, (flags & CLOSED));
@@ -4724,6 +4708,8 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             char parent_tagbuf[MAXPDSTRING];
             if (in_array)
             {
+                /* If we're in an array we want to use the element template
+                   in the tag */
                 //sys_vgui("-parent .scelem%lx.%lx \\\n", parentglist, data);
                 sprintf(parent_tagbuf, "scelem%lx.%lx", (long unsigned int)parentglist, (long unsigned int)data);
                 gui_s(parent_tagbuf);
@@ -4731,6 +4717,8 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             else
             {
                 //sys_vgui("-parent .dgroup%lx.%lx \\\n", x->x_canvas, sc->sc_vec);
+                /* Here we can just use x->x_canvas since curves can't appear
+                   inside groups */
                 sprintf(parent_tagbuf, "dgroup%lx.%lx", (long unsigned int)x->x_canvas, (long unsigned int)data);
                 gui_s(parent_tagbuf);
             }
@@ -7576,6 +7564,45 @@ t_template *template_findbydrawcommand(t_gobj *g)
         return (template_findbyname(canvas_makebindsym(argv[1].a_w.w_symbol)));
     }
     return (0);
+}
+
+/* set attributes for a scalar's parent draw command. This is handy
+   because it saves having to erase and redraw the object. */
+void svg_parentwidgettogui(t_gobj *z, t_scalar *sc, t_glist *owner,
+    t_word *data, t_template *template)
+{
+    char tagbuf[MAXPDSTRING];
+    if (pd_class(&z->g_pd) == draw_class)
+    {
+        t_draw *x = (t_draw *)z;
+        sprintf(tagbuf, "draw%lx.%lx", (long unsigned int)x,
+            (long unsigned int)data);
+        gui_start_vmess("gui_draw_configure_all", "xs",
+            glist_getcanvas(owner), tagbuf);
+        svg_togui((t_svg *)x->x_attr, template, data);
+        gui_end_vmess();
+    }
+    else if (pd_class(&z->g_pd) == drawimage_class)
+    {
+        t_drawimage *x = (t_drawimage *)z;
+        sprintf(tagbuf, "draw%lx.%lx", (long unsigned int)x,
+            (long unsigned int)data);
+        gui_start_vmess("gui_draw_configure_all", "xs",
+            glist_getcanvas(owner), tagbuf);
+        svg_togui((t_svg *)x->x_attr, template, data);
+        gui_end_vmess();
+        gui_vmess("gui_drawimage_index", "xxxi",
+            glist_getcanvas(owner), x, data,
+            drawimage_getindex(x, template, data));
+    }
+    else if (pd_class(&z->g_pd) == curve_class)
+    {
+        /* We just call the visfn with a flag of -1 to signal
+           changing attributes instead of creating a new one.
+           Not sure what to do with arrays yet-- we'll probably
+           need a parentglist below instead of a "0" */
+        curve_vis(z, owner, 0, sc, data, template, 0, 0, -1);
+    }
 }
 
 /* ---------------------- setup function ---------------------------- */

@@ -2123,6 +2123,15 @@ function gui_draw_vis(cid, type, attr_array, tag_array) {
     g.appendChild(item);
 }
 
+// This is a stop gap to update the old draw commands like [drawpolygon]
+// without having to erase and recreate their DOM elements
+function gui_draw_configure_old_command(cid, type, attr_array, tag_array) {
+    var elem = get_item(cid, tag_array[1]);
+    if (elem !== null) {
+    configure_item(elem, attr_array);
+    }
+}
+
 function gui_draw_erase_item(cid, tag) {
     var item = get_item(cid, tag);
     if (item !== null) {

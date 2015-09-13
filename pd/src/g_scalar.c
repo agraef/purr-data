@@ -749,8 +749,8 @@ static void scalar_delete(t_gobj *z, t_glist *glist)
 
 extern void svg_grouptogui(t_glist *g, t_template *template, t_word *data);
 
-extern void svg_parentwidgettogui(t_gobj *z, t_glist *owner, t_word *data,
-    t_template *template);
+extern void svg_parentwidgettogui(t_gobj *z, t_scalar *sc, t_glist *owner,
+    t_word *data, t_template *template);
 
 static void scalar_group_configure(t_scalar *x, t_glist *owner,
     t_template *template, t_glist *gl, t_glist *parent)
@@ -777,7 +777,7 @@ static void scalar_group_configure(t_scalar *x, t_glist *owner,
         if (!wb) continue;
         //(*wb->w_parentvisfn)(y, owner, gl, x, x->sc_vec, template,
         //   0, 0, vis);
-        svg_parentwidgettogui(y, owner, x->sc_vec, template);
+        svg_parentwidgettogui(y, x, owner, x->sc_vec, template);
     }
 }
 
@@ -839,7 +839,7 @@ void scalar_doconfigure(t_gobj *xgobj, t_glist *owner)
             }
             //(*wb->w_parentvisfn)(y, owner, 0, x, x->sc_vec, template,
             //    basex, basey, vis);
-            svg_parentwidgettogui(y, owner, x->sc_vec, template);
+            svg_parentwidgettogui(y, x, owner, x->sc_vec, template);
         }
         if (glist_isselected(owner, &x->sc_gobj))
         {
