@@ -6252,8 +6252,8 @@ static void drawnumber_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     }*/
     
         /* see comment in plot_vis() */
-    if (vis && !fielddesc_getfloat(&x->x_vis, template, data, 0))
-        return;
+    //if (vis && !fielddesc_getfloat(&x->x_vis, template, data, 0))
+    //    return;
     if (vis)
     {
         t_atom at;
@@ -6310,8 +6310,7 @@ static void drawnumber_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         //sys_vgui(" -tags {.x%lx.x%lx.template%lx scalar%lx}\n", 
         //    glist_getcanvas(glist), glist, data, sc);
         sprintf(tagbuf, "drawnumber%lx.%lx", (long unsigned int)x, (long unsigned int)data);
-
-        gui_vmess("gui_drawnumber_vis", "xssiiffsis",
+        gui_vmess("gui_drawnumber_vis", "xssiiffsissii",
             glist_getcanvas(glist),
             parent_tagbuf,
             tagbuf,
@@ -6321,7 +6320,10 @@ static void drawnumber_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             yscale,
             sys_font,
             fontsize,
-            buf);
+            colorstring,
+            buf,
+            vis,
+            (int)fielddesc_getfloat(&x->x_vis, template, data, 0));
     }
     else
     {
@@ -6705,8 +6707,8 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     }*/
     
         /* see comment in plot_vis() */
-    if (vis && !fielddesc_getfloat(&x->x_vis, template, data, 0))
-        return;
+    //if (vis && !fielddesc_getfloat(&x->x_vis, template, data, 0))
+    //    return;
     if (vis)
     {
         t_atom at;
@@ -6764,7 +6766,7 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         //    glist_getcanvas(glist), glist, data, sc);
         sprintf(tagbuf, "drawnumber%lx.%lx", (long unsigned int)x, (long unsigned int)data);
 
-        gui_vmess("gui_drawnumber_vis", "xssiiffsis",
+        gui_vmess("gui_drawnumber_vis", "xssiiffsissii",
             glist_getcanvas(glist),
             parent_tagbuf,
             tagbuf,
@@ -6774,7 +6776,10 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             yscale,
             sys_font,
             fontsize,
-            buf);
+            colorstring,
+            buf,
+            vis,
+            (int)fielddesc_getfloat(&x->x_vis, template, data, 0));
     }
     else
     {
@@ -7597,12 +7602,16 @@ void svg_parentwidgettogui(t_gobj *z, t_scalar *sc, t_glist *owner,
     }
     else if (pd_class(&z->g_pd) == curve_class)
     {
-        /* We just call the visfn with a flag of -1 to signal
+        /* For old commands we call the visfn with a flag of -1 to signal
            changing attributes instead of creating a new one.
            Not sure what to do with arrays yet-- we'll probably
            need a parentglist below instead of a "0" */
         curve_vis(z, owner, 0, sc, data, template, 0, 0, -1);
     }
+    else if (pd_class(&z->g_pd) == drawnumber_class)
+        drawnumber_vis(z, owner, 0, sc, data, template, 0, 0, -1);
+    else if (pd_class(&z->g_pd) == drawsymbol_class)
+        drawsymbol_vis(z, owner, 0, sc, data, template, 0, 0, -1);
 }
 
 /* ---------------------- setup function ---------------------------- */

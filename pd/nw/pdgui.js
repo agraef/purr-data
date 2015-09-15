@@ -1221,8 +1221,6 @@ function text_to_tspans(canvasname, svg_text, text) {
     // Get fontsize (minus the trailing "px")
     fontsize = svg_text.getAttribute('font-size').slice(0, -2);
 
-gui_post("font size is " + (fontsize + 2));
-
     for (i = 0; i < len; i++) {
         tspan = create_item(canvasname, 'tspan', {
             dy: i == 0 ? 0 : text_line_height_kludge(+fontsize, 'gui') + 'px',
@@ -1293,6 +1291,10 @@ function gui_text_new(canvasname, myname, type, isselected, left_margin, font_he
     var lines, i, len, tspan;
     var g = get_gobj(canvasname, myname);
     var svg_text = create_item(canvasname, 'text', {
+        // Maybe it's just me, but the svg spec's explanation of how
+        // text x/y and tspan x/y interact is difficult to understand.
+        // So here we just translate by the right amount for the left-margin,
+        // guaranteeing all tspan children will line up where they should be
         transform: 'translate(' + left_margin + ')',
         y: font_height + gobj_font_y_kludge(font),
         // Turns out we can't do 'hanging' baseline
@@ -2218,33 +2220,60 @@ function gui_plot_vis(cid, basex, basey, data_array, attr_array, tag_array) {
     }
 }
 
+// This function doubles as a visfn for drawnumber. Furthermore it doubles
+// as a way to update attributes for drawnumber/symbol without having to
+// recreate the object. The "flag" argument is 1 for creating a new element,
+// and -1 to set attributes on the existing object.
 function gui_drawnumber_vis(cid, parent_tag, tag, x, y, scale_x, scale_y,
-    font, fontsize, text) {
+    font, fontsize, fontcolor, text, flag, visibility) {
     var lines, i, len, tspan;
     var g = get_item(cid, parent_tag);
-    var svg_text = create_item(cid, 'text', {
-        // x and y are fudge factors. Text on the tk canvas used an anchor
-        // at the top-right corner of the text's bbox.  SVG uses the baseline.
-        // There's probably a programmatic way to do this, but for now--
-        // fudge factors based on the DejaVu Sans Mono font. :)
-        transform: 'scale(' + scale_x + ',' + scale_y + ') ' +
-                   'translate(' + x + ')',
-        y: y,
-        // Turns out we can't do 'hanging' baseline because it's borked when
-        // scaled. Bummer...
-        // 'dominant-baseline': 'hanging',
-        'shape-rendering': 'optimizeSpeed',
-        'font-size': font + 'px',
-        id: tag
-    });
+    var svg_text;
+    if (flag === 1) {
+        svg_text = create_item(cid, 'text', {
+            // x and y are fudge factors. Text on the tk canvas used an anchor
+            // at the top-right corner of the text's bbox.  SVG uses the
+            // baseline. There's probably a programmatic way to do this, but
+            // for now-- fudge factors based on the DejaVu Sans Mono font. :)
 
-    // fill svg_text with tspan content by splitting on '\n'
-    text_to_tspans(cid, svg_text, text);
-
-    if (g !== null) {
-        g.appendChild(svg_text);
+            // For an explanation of why we translate by "x" instead of setting
+            // the x attribute, see comment in gui_text_new
+            transform: 'scale(' + scale_x + ',' + scale_y + ') ' +
+                       'translate(' + x + ')',
+            y: y,
+            // Turns out we can't do 'hanging' baseline because it's borked
+            // when scaled. Bummer...
+            // 'dominant-baseline': 'hanging',
+            'shape-rendering': 'optimizeSpeed',
+            'font-size': font + 'px',
+            fill: fontcolor,
+            visibility: visibility === 1 ? 'normal' : 'hidden',
+            id: tag
+        });
+        // fill svg_text with tspan content by splitting on '\n'
+        text_to_tspans(cid, svg_text, text);
+        if (g !== null) {
+            g.appendChild(svg_text);
+        } else {
+            gui_post("gui_drawnumber: can't find parent group" + parent_tag);
+        }
     } else {
-        gui_post("gui_drawnumber: can't find parent group" + parent_tag);
+        svg_text = get_item(cid, tag);
+        configure_item(svg_text, {
+            transform: 'scale(' + scale_x + ',' + scale_y + ') ' +
+                       'translate(' + x + ')',
+            y: y,
+            // Turns out we can't do 'hanging' baseline because it's borked
+            // when scaled. Bummer...
+            // 'dominant-baseline': 'hanging',
+            'shape-rendering': 'optimizeSpeed',
+            'font-size': font + 'px',
+            fill: fontcolor,
+            visibility: visibility === 1 ? 'normal' : 'hidden',
+            id: tag
+        });
+        svg_text.textContent = "";
+        text_to_tspans(cid, svg_text, text);
     }
 }
 
