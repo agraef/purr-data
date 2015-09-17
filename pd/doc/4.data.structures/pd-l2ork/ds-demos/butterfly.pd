@@ -1,5 +1,5 @@
 #N struct butterfly float x float y;
-#N canvas 0 19 817 566 10;
+#N canvas -6 44 820 632 10;
 #N canvas 592 105 581 503 butterfly 0;
 #X obj 117 197 draw path M 204.33 139.83 C 196.33 133.33 206.68 132.82
 206.58 132.58 C 192.33 97.08 169.35 81.41 167.58 80.58 C 162.12 78.02
@@ -480,14 +480,10 @@ C 204.8 154.93 205.38 154.3 204 154.3 z;
 #X restore 46 25 pd butterfly;
 #X obj 32 506 s group;
 #X msg 32 485 transform translate \$1 \$2 scale \$3 rotate \$4;
-#X floatatom 32 314 5 0 0 0 - - -, f 5;
-#X floatatom 88 314 5 0 0 0 - - -, f 5;
-#X floatatom 148 317 5 0 0 0 - - -, f 5;
-#X floatatom 202 316 5 0 0 0 - - -, f 5;
-#X obj 202 337 t b a;
-#X obj 148 364 t b a;
-#X obj 88 385 t b a;
-#X obj 32 406 f;
+#X floatatom 32 304 5 0 0 0 - - -, f 5;
+#X floatatom 76 304 5 0 0 0 - - -, f 5;
+#X floatatom 130 304 5 0 0 0 - - -, f 5;
+#X floatatom 184 304 5 0 0 0 - - -, f 5;
 #X scalar butterfly 374 -20 \;;
 #X text 22 70 The new drawing commands can be used to make quite complex
 graphics. The current implementation does some crude caching to keep
@@ -501,17 +497,27 @@ the transform for _each_ individual drawing instruction that makes
 up the butterfly. For this there is the [draw group] object which does
 a single transformation for the entire set of drawing instructions.
 ;
-#X obj 33 439 pack 0 0 1 0;
+#X obj 32 465 pack 0 0 1 0;
+#X obj 184 325 t b a;
+#X obj 130 375 t b a;
+#X obj 76 415 t b a;
+#X obj 76 395 f;
+#X obj 32 445 f;
+#X obj 130 355 f 1;
+#X obj 130 325 * 0.01;
 #X connect 2 0 1 0;
-#X connect 3 0 10 0;
-#X connect 4 0 9 0;
-#X connect 5 0 8 0;
-#X connect 6 0 7 0;
-#X connect 7 0 10 0;
-#X connect 7 1 15 3;
-#X connect 8 0 10 0;
-#X connect 8 1 15 2;
-#X connect 9 0 10 0;
-#X connect 9 1 15 1;
-#X connect 10 0 15 0;
-#X connect 15 0 2 0;
+#X connect 3 0 16 0;
+#X connect 4 0 15 0;
+#X connect 5 0 18 0;
+#X connect 6 0 12 0;
+#X connect 11 0 2 0;
+#X connect 12 0 17 0;
+#X connect 12 1 11 3;
+#X connect 13 0 15 0;
+#X connect 13 1 11 2;
+#X connect 14 0 16 0;
+#X connect 14 1 11 1;
+#X connect 15 0 14 0;
+#X connect 16 0 11 0;
+#X connect 17 0 13 0;
+#X connect 18 0 17 0;
