@@ -312,6 +312,9 @@ Everything else: (A [x] means we've fixed it)
     the [group] inlet to always stay at the left so that the two behave the
     same.
     to always be the rightmost outlet
+[ ] don't implement tooltips until we have a single call to create an object
+    plus all xlets. That way we can add an arg or two for the name and dir
+    to find the help patch and get all descriptions in one goy
 
 Crashers
 --------
