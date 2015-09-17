@@ -122,6 +122,20 @@ var canvas_events = (function() {
                     case 35: hack = add_keymods('End', evt); break;
                     case 36: hack = add_keymods('Home', evt); break;
 
+                    // These may be different on Safari...
+                    case 112: hack = add_keymods('F1', evt); break;
+                    case 113: hack = add_keymods('F2', evt); break;
+                    case 114: hack = add_keymods('F3', evt); break;
+                    case 115: hack = add_keymods('F4', evt); break;
+                    case 116: hack = add_keymods('F5', evt); break;
+                    case 117: hack = add_keymods('F6', evt); break;
+                    case 118: hack = add_keymods('F7', evt); break;
+                    case 119: hack = add_keymods('F8', evt); break;
+                    case 120: hack = add_keymods('F9', evt); break;
+                    case 121: hack = add_keymods('F10', evt); break;
+                    case 122: hack = add_keymods('F11', evt); break;
+                    case 123: hack = add_keymods('F12', evt); break;
+
                     // Handle weird behavior for clipboard shortcuts
                     // Which don't fire a keypress for some odd reason
 
