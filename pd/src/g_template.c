@@ -1087,15 +1087,15 @@ typedef struct _svg_attr
 /* events on which to output a notification from the outlet of [draw] */
 typedef struct _svg_event
 {
-    t_fielddesc e_focusin,
-                e_focusout,
-                e_activate,
-                e_click,
-                e_mousedown,
-                e_mouseup,
-                e_mouseover,
-                e_mousemove,
-                e_mouseout;
+    t_svg_attr e_focusin,
+               e_focusout,
+               e_activate,
+               e_click,
+               e_mousedown,
+               e_mouseup,
+               e_mouseover,
+               e_mousemove,
+               e_mouseout;
 } t_svg_event;
 
 /* svg attributes */
@@ -1348,15 +1348,24 @@ void *svg_new(t_pd *parent, t_symbol *s, int argc, t_atom *argv)
     x->x_transform = (t_fielddesc *)t_getbytes(x->x_transform_n *
         sizeof(t_fielddesc));
     /* initialize events */
-    fielddesc_setfloat_const(&x->x_events.e_focusin, 0);
-    fielddesc_setfloat_const(&x->x_events.e_focusout, 0);
-    fielddesc_setfloat_const(&x->x_events.e_activate, 0);
-    fielddesc_setfloat_const(&x->x_events.e_click, 0);
-    fielddesc_setfloat_const(&x->x_events.e_mousedown, 0);
-    fielddesc_setfloat_const(&x->x_events.e_mouseup, 0);
-    fielddesc_setfloat_const(&x->x_events.e_mouseover, 0);
-    fielddesc_setfloat_const(&x->x_events.e_mousemove, 0);
-    fielddesc_setfloat_const(&x->x_events.e_mouseout, 0);
+    fielddesc_setfloat_const(&x->x_events.e_focusin.a_attr, 0);
+    x->x_events.e_focusin.a_flag = 0;
+    fielddesc_setfloat_const(&x->x_events.e_focusout.a_attr, 0);
+    x->x_events.e_focusout.a_flag = 0;
+    fielddesc_setfloat_const(&x->x_events.e_activate.a_attr, 0);
+    x->x_events.e_activate.a_flag = 0;
+    fielddesc_setfloat_const(&x->x_events.e_click.a_attr, 0);
+    x->x_events.e_click.a_flag = 0;
+    fielddesc_setfloat_const(&x->x_events.e_mousedown.a_attr, 0);
+    x->x_events.e_mousedown.a_flag = 0;
+    fielddesc_setfloat_const(&x->x_events.e_mouseup.a_attr, 0);
+    x->x_events.e_mouseup.a_flag = 0;
+    fielddesc_setfloat_const(&x->x_events.e_mouseover.a_attr, 0);
+    x->x_events.e_mouseover.a_flag = 0;
+    fielddesc_setfloat_const(&x->x_events.e_mousemove.a_attr, 0);
+    x->x_events.e_mousemove.a_flag = 0;
+    fielddesc_setfloat_const(&x->x_events.e_mouseout.a_attr, 0);
+    x->x_events.e_mouseout.a_flag = 0;
 
     char buf[50];
     // Here we bind the parent object to the addy for
@@ -1661,35 +1670,35 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
         gui_vmess("gui_draw_event", "xsxxsi",
             glist_getcanvas(c), tag, sc, x, "mouseover",
             (int)fielddesc_getcoord(
-                &x->x_events.e_mouseover, template, data, 1));
+                &x->x_events.e_mouseover.a_attr, template, data, 1));
     }
     else if (s == gensym("mouseout"))
     {
         gui_vmess("gui_draw_event", "xsxxsi",
             glist_getcanvas(c), tag, sc, x, "mouseout",
             (int)fielddesc_getcoord(
-                &x->x_events.e_mouseout, template, data, 1));
+                &x->x_events.e_mouseout.a_attr, template, data, 1));
     }
     else if (s == gensym("mousemove"))
     {
         gui_vmess("gui_draw_event", "xsxxsi",
             glist_getcanvas(c), tag, sc, x, "mousemove",
             (int)fielddesc_getcoord(
-                &x->x_events.e_mousemove, template, data, 1));
+                &x->x_events.e_mousemove.a_attr, template, data, 1));
     }
     else if (s == gensym("mouseup"))
     {
         gui_vmess("gui_draw_event", "xsxxsi",
             glist_getcanvas(c), tag, sc, x, "mouseup",
             (int)fielddesc_getcoord(
-                &x->x_events.e_mouseup, template, data, 1));
+                &x->x_events.e_mouseup.a_attr, template, data, 1));
     }
     else if (s == gensym("mousedown"))
     {
         gui_vmess("gui_draw_event", "xsxxsi",
             glist_getcanvas(c), tag, sc, x, "mousedown",
             (int)fielddesc_getcoord(
-                &x->x_events.e_mousedown, template, data, 1));
+                &x->x_events.e_mousedown.a_attr, template, data, 1));
     }
     else if (s == gensym("vis"))
     {
@@ -1917,6 +1926,61 @@ void svg_update(t_svg *x, t_symbol *s)
         svg_doupdate(x, c, s);
 }
 
+/* not sure if this will work with array elements */
+void svg_register_events(t_gobj *z, t_canvas *c, t_scalar *sc,
+    t_template *template, t_word *data)
+{
+    t_svg *svg;
+    char tagbuf[MAXPDSTRING];
+    if (pd_class(&z->g_pd) == canvas_class)
+    {
+        svg = (t_svg *)((t_glist *)z)->gl_svg;
+        sprintf(tagbuf, "dgroup%lx.%lx", (long unsigned int)z,
+            (long unsigned int)data);
+    }
+    else if (pd_class(&z->g_pd) == draw_class)
+    {
+        svg = (t_svg *)((t_draw *)z)->x_attr;
+        sprintf(tagbuf, "draw%lx.%lx", (long unsigned int)z,
+            (long unsigned int)data);
+    }
+    else if (pd_class(&z->g_pd) == drawimage_class)
+    {
+        svg = (t_svg *)((t_drawimage *)z)->x_attr;
+        sprintf(tagbuf, "draw%lx.%lx", (long unsigned int)z,
+            (long unsigned int)data);
+    }
+    else
+    {
+        error("scalar: can't set event for unknown drawing command");
+        return;
+    }
+    if (svg->x_events.e_mouseover.a_flag)
+        gui_vmess("gui_draw_event", "xsxxsi",
+            glist_getcanvas(c), tagbuf, sc, svg, "mouseover",
+            (int)fielddesc_getcoord(&svg->x_events.e_mouseover.a_attr, template,
+            data, 1));
+    if (svg->x_events.e_mouseout.a_flag)
+        gui_vmess("gui_draw_event", "xsxxsi",
+            glist_getcanvas(c), tagbuf, sc, svg, "mouseout",
+            (int)fielddesc_getcoord(&svg->x_events.e_mouseout.a_attr, template,
+            data, 1));
+    if (svg->x_events.e_mousemove.a_flag)
+        gui_vmess("gui_draw_event", "xsxxsi",
+            glist_getcanvas(c), tagbuf, sc, svg, "mousemove",
+            (int)fielddesc_getcoord(&svg->x_events.e_mousemove.a_attr, template,
+            data, 1));
+    if (svg->x_events.e_mousemove.a_flag)
+        gui_vmess("gui_draw_event", "xsxxsi",
+            glist_getcanvas(c), tagbuf, sc, svg, "mousemove",
+            (int)fielddesc_getcoord(&svg->x_events.e_mousemove.a_attr, template,
+            data, 1));
+    if (svg->x_events.e_mouseup.a_flag)
+        gui_vmess("gui_draw_event", "xsxxsi",
+            glist_getcanvas(c), tagbuf, sc, svg, "mouseup",
+            (int)fielddesc_getcoord(&svg->x_events.e_mouseup.a_attr, template,
+            data, 1));
+}
 
 void svg_setattr(t_svg *x, t_symbol *s, t_int argc, t_atom *argv)
 {
@@ -2137,23 +2201,50 @@ void svg_event(t_svg *x, t_symbol *s, int argc, t_atom *argv)
     if (argc > 0 && (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL))
     {
         if (s == gensym("focusin"))
-            fielddesc_setfloatarg(&x->x_events.e_focusin, argc, argv);
+        {
+            fielddesc_setfloatarg(&x->x_events.e_focusin.a_attr, argc, argv);
+            x->x_events.e_focusin.a_flag = 1;
+        }
         else if (s == gensym("focusout"))
-            fielddesc_setfloatarg(&x->x_events.e_focusout, argc, argv);
+        {
+            fielddesc_setfloatarg(&x->x_events.e_focusout.a_attr, argc, argv);
+            x->x_events.e_focusout.a_flag = 1;
+        }
         else if (s == gensym("activate"))
-            fielddesc_setfloatarg(&x->x_events.e_activate, argc, argv);
+        {
+            fielddesc_setfloatarg(&x->x_events.e_activate.a_attr, argc, argv);
+            x->x_events.e_activate.a_flag = 1;
+        }
         else if (s == gensym("click"))
-            fielddesc_setfloatarg(&x->x_events.e_click, argc, argv);
+        {
+            fielddesc_setfloatarg(&x->x_events.e_click.a_attr, argc, argv);
+            x->x_events.e_click.a_flag = 1;
+        }
         else if (s == gensym("mousedown"))
-            fielddesc_setfloatarg(&x->x_events.e_mousedown, argc, argv);
+        {
+            fielddesc_setfloatarg(&x->x_events.e_mousedown.a_attr, argc, argv);
+            x->x_events.e_mousedown.a_flag = 1;
+        }
         else if (s == gensym("mouseup"))
-            fielddesc_setfloatarg(&x->x_events.e_mouseup, argc, argv);
+        {
+            fielddesc_setfloatarg(&x->x_events.e_mouseup.a_attr, argc, argv);
+            x->x_events.e_mouseup.a_flag = 1;
+        }
         else if (s == gensym("mouseover"))
-            fielddesc_setfloatarg(&x->x_events.e_mouseover, argc, argv);
+        {
+            fielddesc_setfloatarg(&x->x_events.e_mouseover.a_attr, argc, argv);
+            x->x_events.e_mouseover.a_flag = 1;
+        }
         else if (s == gensym("mousemove"))
-            fielddesc_setfloatarg(&x->x_events.e_mousemove, argc, argv);
+        {
+            fielddesc_setfloatarg(&x->x_events.e_mousemove.a_attr, argc, argv);
+            x->x_events.e_mousemove.a_flag = 1;
+        }
         else if (s == gensym("mouseout"))
-            fielddesc_setfloatarg(&x->x_events.e_mouseout, argc, argv);
+        {
+            fielddesc_setfloatarg(&x->x_events.e_mouseout.a_attr, argc, argv);
+            x->x_events.e_mouseout.a_flag = 1;
+        }
         svg_update(x, s);
     }
 }
@@ -3677,8 +3768,6 @@ void svg_grouptogui(t_glist *g, t_template *template, t_word *data)
     svg_togui(x, template, data);
 }
 
-    
-
 static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     t_scalar *sc, t_word *data, t_template *template,
     t_float basex, t_float basey, int vis)
@@ -3788,6 +3877,9 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         //sys_gui(";\n");
         gui_end_array();
         gui_end_vmess();
+
+        /* register events */
+        svg_register_events(z, glist, sc, template, data);
     }
     else
     {
@@ -3960,7 +4052,7 @@ static int draw_click(t_gobj *z, t_glist *glist,
     /* don't register a click if we don't have an event listener, or
        if our pointer-event is "none" */
     if (!fielddesc_getfloat(&sa->x_pointerevents.a_attr, template, data, 1) ||
-         (!fielddesc_getfloat(&sa->x_events.e_mousedown, template, data, 1) &&
+         (!fielddesc_getfloat(&sa->x_events.e_mousedown.a_attr, template, data, 1) &&
           !fielddesc_getfloat(&sa->x_drag, template, data, 1)))
         return 0;
     draw_getrect(z, glist, data, template, basex, basey,

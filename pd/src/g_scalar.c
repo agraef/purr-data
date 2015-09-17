@@ -752,6 +752,9 @@ extern void svg_grouptogui(t_glist *g, t_template *template, t_word *data);
 extern void svg_parentwidgettogui(t_gobj *z, t_scalar *sc, t_glist *owner,
     t_word *data, t_template *template);
 
+extern void svg_register_events(t_gobj *z, t_canvas *c, t_scalar *sc,
+    t_template *template, t_word *data);
+
 static void scalar_group_configure(t_scalar *x, t_glist *owner,
     t_template *template, t_glist *gl, t_glist *parent)
 {
@@ -766,6 +769,7 @@ static void scalar_group_configure(t_scalar *x, t_glist *owner,
         glist_getcanvas(owner), tagbuf);
     svg_grouptogui(gl, template, x->sc_vec);
     gui_end_vmess();
+    svg_register_events((t_gobj *)gl, owner, x, template, x->sc_vec);
     for (y = gl->gl_list; y; y = y->g_next)
     {
         if (pd_class(&y->g_pd) == canvas_class &&
