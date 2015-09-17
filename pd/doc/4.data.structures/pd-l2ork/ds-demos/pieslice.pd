@@ -1,7 +1,7 @@
 #N struct pieslicer float x float y float cx float cy float x1 float
 y1 float r float flag float x2 float y2 float r1 float g float b float
 s float tx float ty;
-#N canvas 0 19 929 640 10;
+#N canvas 1 44 929 640 10;
 #X scalar pieslicer 380 -50 300 300 500 300 200 1 237.416 489.956 10
 80 250 1 0 0 \;;
 #X scalar pieslicer 380 -50 300 300 237.416 489.956 200 0 491.793 356.705
@@ -96,18 +96,15 @@ cy + r * sin(-1 * endangle * rad) \; (endangle - startangle) > 180
 #X floatatom 139 474 0 0 0 0 cy - -;
 #X floatatom 184 474 5 0 0 0 r - -, f 5;
 #X obj 228 477 +;
-#X obj 69 200 draw path M cx cy L x1 y1 A r r 0 flag 0 x2 y2 z;
+#X obj 69 140 draw path M cx cy L x1 y1 A r r 0 flag 0 x2 y2 z;
 #X obj 228 441 t a b;
-#X obj 69 143 loadbang;
-#X obj 69 55 route enter leave;
-#X obj 69 115 set pieslicer tx ty s;
-#X msg 69 166 fill r1 g b \, fill-opacity 0.4 \, stroke black \, stroke-width
-3 \, stroke-opacity 0.4 \, transform translate tx ty scale s;
+#X obj 69 63 loadbang;
+#X obj 69 225 set pieslicer tx ty s;
 #X obj 69 8 struct pieslicer float x float y float cx float cy float
 x1 float y1 float r float flag float x2 float y2 float r1 float g float
 b float s float tx float ty;
-#X msg 69 84 -30 -30 1.1 \$1;
-#X msg 174 84 0 0 1 \$1;
+#X msg 69 194 -30 -30 1.1 \$1;
+#X msg 174 194 0 0 1 \$1;
 #X text 638 3 draw;
 #X text 906 282 curve;
 #X text 787 452 canvas;
@@ -123,6 +120,10 @@ Editing a long list of floats is simply too prone to error.;
 #X text 778 516 Based on:;
 #X obj 778 537 pddp/pddplink http://raphaeljs.com/pie.html;
 #X obj 69 -16 namecanvas pieslice-canvas;
+#X msg 69 86 fill r1 g b \, fill-opacity 0.4 \, stroke black \, stroke-width
+3 \, stroke-opacity 0.4 \, transform translate tx ty scale s \, mouseover
+1 \, mouseout 1;
+#X obj 69 165 route mouseover mouseout;
 #X connect 3 0 9 0;
 #X connect 3 0 13 0;
 #X connect 4 0 3 0;
@@ -147,12 +148,12 @@ Editing a long list of floats is simply too prone to error.;
 #X connect 21 0 18 2;
 #X connect 22 0 18 4;
 #X connect 22 0 17 1;
+#X connect 23 0 40 0;
 #X connect 24 0 22 0;
 #X connect 24 1 17 0;
-#X connect 25 0 28 0;
-#X connect 26 0 30 0;
-#X connect 26 1 31 0;
-#X connect 28 0 23 0;
+#X connect 25 0 39 0;
+#X connect 28 0 26 0;
 #X connect 29 0 26 0;
-#X connect 30 0 27 0;
-#X connect 31 0 27 0;
+#X connect 39 0 23 0;
+#X connect 40 0 28 0;
+#X connect 40 1 29 0;
