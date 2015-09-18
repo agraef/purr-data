@@ -64,7 +64,7 @@ a float s;
 #X msg 34 102 fill r g b a \, stroke-width s \, stroke r g b;
 #X connect 0 0 20 0;
 #X connect 20 0 1 0;
-#X restore 88 133 group;
+#X restore 88 133 draw group;
 #X obj 88 154 outlet;
 #X msg 88 98 transform scale 0.5 \, fill none \, stroke black \, mouseover
 1 \, mouseout 1;

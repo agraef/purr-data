@@ -1,7 +1,7 @@
 #N struct tiger float x float y;
 #N struct tiger-array float x float y array a tiger;
-#N canvas -9 19 741 374 10;
-#X floatatom 309 80 5 0 0 0 - - -, f 5;
+#N canvas 1 44 741 374 10;
+#X floatatom 295 80 5 0 0 0 - - -, f 5;
 #X obj 63 36 struct tiger float x float y;
 #N canvas 0 27 1366 684 (subpatch) 0;
 #X obj 160 20 loadbang;
@@ -2175,16 +2175,16 @@ C 256 273.5 269.5 292 269.5 299 C 269.5 299 272 291.5 270.5 287 z;
 #X connect 464 0 463 0;
 #X connect 466 0 465 0;
 #X connect 468 0 467 0;
-#X restore 309 157 group;
-#X text 354 157 <-- an awful lot of paths inside here. In a case like
+#X restore 295 157 draw group;
+#X text 364 157 <-- an awful lot of paths inside here. In a case like
 this it would probably be preferable to have a [draw svg] where you
 can just specify the file name. A GUI toolkit like Qt might be able
 to do this \, but tcl/tk cannot.;
 #X scalar tiger 157 216 \;;
 #X obj 100 303 output~;
-#X obj 309 36 loadbang;
-#X obj 309 101 * 0.01;
-#X msg 309 57 30;
+#X obj 295 36 loadbang;
+#X obj 295 101 * 0.01;
+#X msg 295 57 30;
 #X obj 63 78 bang;
 #N canvas 654 71 531 545 roar~ 0;
 #X obj 181 402 osc~;
@@ -2355,7 +2355,7 @@ to do this \, but tcl/tk cannot.;
 #X connect 31 1 32 0;
 #X connect 32 0 29 1;
 #X restore 63 259 pd roar~;
-#X msg 309 126 transform scale \$1 rotate -45;
+#X msg 295 126 transform scale \$1 rotate -45;
 #X text 144 98 Enter the Tiger!;
 #X obj 63 57 route enter;
 #N canvas 609 64 706 300 tiger-array 0;

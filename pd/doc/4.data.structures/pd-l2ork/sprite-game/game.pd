@@ -200,7 +200,7 @@ z;
 #X connect 15 0 0 0;
 #X connect 16 0 17 0;
 #X connect 17 0 0 0;
-#X restore 288 284 group level-completed;
+#X restore 288 284 draw group level-completed;
 #N canvas 690 179 450 300 level-failed 0;
 #N canvas 770 19 450 683 out-of-bullets 0;
 #X obj 49 40 draw path m 109.196 123.09 c -17.9481 -2.15321 2.34765
@@ -277,7 +277,7 @@ z m -10.2 6.76 c -16.409 -1.07188 2.85868 -24.3778 6.81644 -7.79128
 #X connect 13 0 3 0;
 #X connect 13 0 2 0;
 #X connect 13 0 1 0;
-#X restore 152 115 group out-of-bullets;
+#X restore 152 115 draw group out-of-bullets;
 #N canvas 831 86 450 472 go-to-jail 0;
 #X obj 48 86 draw path m 163.521 171.89 c -18.0526 10.1245 -15.1912
 -29.9926 0.19314 -13.8101 9.7597 -7.53129 -12.8866 -9.97304 -15.248
@@ -331,7 +331,7 @@ z m -10.2 6.76 c -16.409 -1.07188 2.85868 -24.3778 6.81644 -7.79128
 #X connect 8 0 10 0;
 #X connect 8 0 9 0;
 #X connect 10 0 9 0;
-#X restore 152 197 group go-to-jail;
+#X restore 152 197 draw group go-to-jail;
 #X obj 269 68 loadbang;
 #X msg 269 89 fill black;
 #X obj 245 151 loadbang;
@@ -343,7 +343,7 @@ z m -10.2 6.76 c -16.409 -1.07188 2.85868 -24.3778 6.81644 -7.79128
 #X connect 5 0 1 1;
 #X connect 6 0 0 0;
 #X connect 6 0 1 0;
-#X restore 501 214 group level-failed;
+#X restore 501 214 draw group level-failed;
 #X msg 39 266 0;
 #X msg 606 189 transform translate -140 70 scale 0.75;
 #X msg 219 126 0;
@@ -427,7 +427,7 @@ z m -10.2 6.76 c -16.409 -1.07188 2.85868 -24.3778 6.81644 -7.79128
 #X connect 52 0 10 0;
 #X connect 53 0 11 0;
 #X connect 54 0 12 0;
-#X restore 734 138 group;
+#X restore 734 138 draw group;
 #N canvas 333 68 1002 543 guts 0;
 #X obj 155 292 * 6;
 #X obj 181 254 + 1;

@@ -865,7 +865,7 @@ c 0.631 -0.071 0.188 0.931 0.96 0.72 c -0.03 -0.601 -0.458 -0.751 0.24
 #X connect 84 0 85 0;
 #X connect 85 0 86 0;
 #X connect 86 0 87 0;
-#X restore 137 114 group;
+#X restore 137 114 draw group;
 #X obj 137 50 struct violin float x float y;
 #X obj 137 72 loadbang;
 #X msg 137 93 transform rotate -26 59 113 scale 0.5;

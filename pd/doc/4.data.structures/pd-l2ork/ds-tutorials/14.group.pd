@@ -30,7 +30,7 @@ of individually.;
 #X connect 7 0 1 0;
 #X connect 8 0 1 0;
 #X connect 9 0 2 0;
-#X restore 434 236 group;
+#X restore 434 236 draw group;
 #X text 53 263 The [group] object is essentially just a subpatch with
 an inlet. You can send it all the same messages that you can send to
 shapes. This will set the attributes for any drawing commands inside
