@@ -881,6 +881,9 @@ static void scalar_groupvis(t_scalar *x, t_glist *owner, t_template *template,
             glist_getcanvas(owner), tagbuf, parentbuf);
         svg_grouptogui(gl, template, x->sc_vec);
         gui_end_vmess();
+
+        /* register events */
+        svg_register_events((t_gobj *)gl, owner, x, template, x->sc_vec);
         //sys_gui("\n");
     }
     for (y = gl->gl_list; y; y = y->g_next)
