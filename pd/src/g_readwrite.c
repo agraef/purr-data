@@ -623,9 +623,17 @@ static void canvas_saveto(t_canvas *x, t_binbuf *b)
         /* have to go to original binbuf to find out how we were named. */
         //fprintf(stderr,"saving subpatch\n");
         t_binbuf *bz = binbuf_new();
-        t_symbol *patchsym;
+        t_symbol *patchsym, *selector;
+        int name_index;
         binbuf_addbinbuf(bz, x->gl_obj.ob_binbuf);
-        patchsym = atom_getsymbolarg(1, binbuf_getnatom(bz), binbuf_getvec(bz));
+        selector = atom_getsymbolarg(0, binbuf_getnatom(bz), binbuf_getvec(bz));
+        /* For [draw group] we save the name as the third argument. This
+           is rather obscure but it might be handy if people want to
+           dynamically create objects inside a [draw group] */
+        if (selector == gensym("draw")) name_index = 2;
+        else name_index = 1;
+        patchsym = atom_getsymbolarg(name_index,
+            binbuf_getnatom(bz), binbuf_getvec(bz));
         binbuf_free(bz);
         binbuf_addv(b, "ssiiiisi;", gensym("#N"), gensym("canvas"),
             (int)(x->gl_screenx1),

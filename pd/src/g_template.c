@@ -1388,7 +1388,7 @@ static int symbol_isdrawtype(t_symbol *s)
         s == gensym("line")    || s == gensym("path")     ||
         s == gensym("polygon") || s == gensym("polyline") ||
         s == gensym("rect")    || s == gensym("image")    ||
-        s == gensym("sprite"))
+        s == gensym("sprite")  || s == gensym("group"))
     {
         return 1;
     }
@@ -1397,6 +1397,7 @@ static int symbol_isdrawtype(t_symbol *s)
 }
 
 static void *drawimage_new(t_symbol *classsym, int argc, t_atom *argv);
+extern void *group_new(t_symbol *s);
 
 static void *draw_new(t_symbol *classsym, t_int argc, t_atom *argv)
 {
@@ -1409,6 +1410,15 @@ static void *draw_new(t_symbol *classsym, t_int argc, t_atom *argv)
         have their own class and new function */
         if (type == gensym("sprite") || type == gensym("image"))
             return (drawimage_new(type, argc, argv));
+        else if (type == gensym("group"))
+        {
+            t_symbol *group_name;
+            if (argc > 0 && argv->a_type == A_SYMBOL)
+                group_name = atom_getsymbolarg(0, argc, argv);
+            else group_name = &s_;
+            post("group name is %s", group_name->s_name);
+            return (group_new(group_name));
+        }
     }
     else
     {

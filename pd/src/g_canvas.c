@@ -1106,15 +1106,18 @@ void canvas_objfor(t_glist *gl, t_text *x, int argc, t_atom *argv);
 void canvas_restore(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_pd *z;
+    int is_draw_command = 0;
     //fprintf(stderr,"canvas_restore %lx\n", x);
-    /* for [group] we add an inlet to the svg attr proxy */
-    if (argc > 2 && argv[2].a_w.w_symbol == gensym("group"))
+    /* for [draw group] we add an inlet to the svg attr proxy */
+    if (argc > 2 && argv[2].a_w.w_symbol == gensym("draw"))
     {
         group_svginit(x);
+        is_draw_command = 1;
     }
-    if (argc > 3)
+    if (argc > 3 || (is_draw_command && argc > 4))
     {
-        t_atom *ap=argv+3;
+        int offset = is_draw_command ? 4 : 3;
+        t_atom *ap=argv+offset;
         if (ap->a_type == A_SYMBOL)
         {
             t_canvasenvironment *e = canvas_getenv(canvas_getcurrent());
@@ -1348,7 +1351,7 @@ static void *subcanvas_new(t_symbol *s)
     return (x);
 }
 
-static void *group_new(t_symbol *s)
+void *group_new(t_symbol *s)
 {
     t_canvas *x = subcanvas_new(s);
     group_svginit(x);
@@ -2335,7 +2338,6 @@ void g_canvas_setup(void)
 /* ----- subcanvases, which you get by typing "pd" in a box ---- */
     class_addcreator((t_newmethod)subcanvas_new, gensym("pd"), A_DEFSYMBOL, 0);
     class_addcreator((t_newmethod)subcanvas_new, gensym("page"),  A_DEFSYMBOL, 0);
-    class_addcreator((t_newmethod)group_new, gensym("group"), A_DEFSYM, 0);
 
     class_addmethod(canvas_class, (t_method)canvas_click,
         gensym("click"), A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, 0);
@@ -2351,11 +2353,6 @@ void g_canvas_setup(void)
 /*---------------------------- tables -- GG ------------------- */
 
     class_addcreator((t_newmethod)table_new, gensym("table"),
-        A_DEFSYM, A_DEFFLOAT, 0);
-
-/*--------------------------- svg groups ---------------------- */
-
-    class_addcreator((t_newmethod)group_new, gensym("group"),
         A_DEFSYM, A_DEFFLOAT, 0);
 
 /*---------------------------- declare ------------------- */

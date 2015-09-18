@@ -2466,8 +2466,8 @@ static int compare_subpatch_selectors(t_atom *a, t_atom *b)
         return (!strcmp(a[0].a_w.w_symbol->s_name, "pd") &&
                 !strcmp(b[0].a_w.w_symbol->s_name, "pd"))
                ||
-               (!strcmp(a[0].a_w.w_symbol->s_name, "group") &&
-                !strcmp(b[0].a_w.w_symbol->s_name, "group"));
+               (!strcmp(a[0].a_w.w_symbol->s_name, "draw") &&
+                !strcmp(b[0].a_w.w_symbol->s_name, "draw"));
     }
     else
         return 0;
