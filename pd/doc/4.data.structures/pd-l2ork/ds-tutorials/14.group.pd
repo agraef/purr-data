@@ -1,5 +1,5 @@
 #N struct drawtut-group float x float y;
-#N canvas 0 19 648 468 10;
+#N canvas 1 44 648 468 10;
 #X scalar drawtut-group 54 159 \;;
 #X text 1 1 ___________________________;
 #X text 0 1 New Drawing Commands: group;
@@ -31,14 +31,14 @@ of individually.;
 #X connect 8 0 1 0;
 #X connect 9 0 2 0;
 #X restore 434 236 draw group;
-#X text 53 263 The [group] object is essentially just a subpatch with
-an inlet. You can send it all the same messages that you can send to
-shapes. This will set the attributes for any drawing commands inside
-the [group] which you haven't already set explicitly.;
 #X text 53 343 Like [pd] subpatches \, you can use [inlet] and [outlet].
 The "main" inlet for the group-- the one that sets attributes-- is
 always the furthest to the right.;
-#X text 485 236 <- click to open;
+#X text 505 236 <- click to open;
+#X text 53 263 The [draw group] object is essentially just a subpatch
+with an inlet. You can send it all the same messages that you can send
+to shapes. This will set the attributes for any drawing commands inside
+the [draw group] which you haven't already set explicitly.;
 #X connect 5 0 6 0;
 #X connect 6 0 7 0;
 #X connect 7 0 10 0;
