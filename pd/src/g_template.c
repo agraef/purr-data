@@ -7625,11 +7625,14 @@ t_canvas *canvas_templatecanvas_forgroup(t_canvas *c)
     t_binbuf *b = c->gl_obj.te_binbuf;
     if (!b)
     {
-    return c;
+        return c;
     }
-    t_atom *argv = binbuf_getvec(c->gl_obj.te_binbuf);
-    if (argv[0].a_type == A_SYMBOL &&
-        argv[0].a_w.w_symbol == gensym("group"))
+    t_atom *argv = binbuf_getvec(b);
+    if (binbuf_getnatom(b) > 1 &&
+        argv[0].a_type == A_SYMBOL &&
+        argv[0].a_w.w_symbol == gensym("draw") &&
+        argv[1].a_type == A_SYMBOL &&
+        argv[1].a_w.w_symbol == gensym("group"))
     {
         templatecanvas = canvas_templatecanvas_forgroup(c->gl_owner);
     }
