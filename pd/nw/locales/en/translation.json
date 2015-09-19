@@ -191,6 +191,7 @@
 
     "windows": "Windows",
 
+    "fullscreen": "Fullscreen",
     "nextwin": "Next Window",
     "nextwin_tt": "Give focus to the next open window in the stacking order",
     "prevwin": "Previous Window",

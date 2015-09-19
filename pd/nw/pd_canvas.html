@@ -1034,6 +1034,19 @@ function nw_create_patch_window_menus (name) {
 
     // Winman sub-entries
     winmanMenu.append(new nw.MenuItem({
+        label: l('menu.fullscreen'),
+        click: function() {
+            var win = nw.Window.get();
+            var fullscreen = win.isFullscreen;
+            win.isFullscreen = !fullscreen;
+            pdgui.gui_post("fullscreen is " + fullscreen);
+        },
+        key: "f11",
+        //modifiers: "ctrl",
+        tooltip: l('menu.nextwin_tt'),
+    }));
+
+    winmanMenu.append(new nw.MenuItem({
         label: l('menu.nextwin'),
         click: menu_generic,
         key: String.fromCharCode(12), // Page down
