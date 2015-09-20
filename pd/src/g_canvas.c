@@ -733,7 +733,11 @@ void draw_notify(t_canvas *x, t_symbol *s, int argc, t_atom *argv);
 
 void canvas_scalar_event(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 {
-    draw_notify(x, s, argc, argv);
+    /* These events only get sent when we're not in edit mode.  Once
+       we get editmode status sync'd in the GUI we can just prevent
+       sending any messages when in edit mode. */
+    if (!x->gl_edit)
+        draw_notify(x, s, argc, argv);
 }
 
 extern void canvas_check_nlet_highlights(t_canvas *x);

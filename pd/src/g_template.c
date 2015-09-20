@@ -1095,7 +1095,8 @@ typedef struct _svg_event
                e_mouseup,
                e_mouseover,
                e_mousemove,
-               e_mouseout;
+               e_mouseout,
+               e_drag; /* not in the svg spec, but should have been */
 } t_svg_event;
 
 /* svg attributes */
@@ -1366,6 +1367,8 @@ void *svg_new(t_pd *parent, t_symbol *s, int argc, t_atom *argv)
     x->x_events.e_mousemove.a_flag = 0;
     fielddesc_setfloat_const(&x->x_events.e_mouseout.a_attr, 0);
     x->x_events.e_mouseout.a_flag = 0;
+    fielddesc_setfloat_const(&x->x_events.e_drag.a_attr, 0);
+    x->x_events.e_drag.a_flag = 0;
 
     char buf[50];
     // Here we bind the parent object to the addy for
@@ -1710,6 +1713,13 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
             (int)fielddesc_getcoord(
                 &x->x_events.e_mousedown.a_attr, template, data, 1));
     }
+    else if (s == gensym("drag"))
+    {
+        gui_vmess("gui_draw_drag_event", "xsxxsi",
+            glist_getcanvas(c), tag, sc, x, "drag",
+            (int)fielddesc_getcoord(
+                &x->x_events.e_drag.a_attr, template, data, 1));
+    }
     else if (s == gensym("vis"))
     {
         gui_vmess("gui_draw_configure", "xsss",
@@ -1980,15 +1990,20 @@ void svg_register_events(t_gobj *z, t_canvas *c, t_scalar *sc,
             glist_getcanvas(c), tagbuf, sc, svg, "mousemove",
             (int)fielddesc_getcoord(&svg->x_events.e_mousemove.a_attr, template,
             data, 1));
-    if (svg->x_events.e_mousemove.a_flag)
+    if (svg->x_events.e_mousedown.a_flag)
         gui_vmess("gui_draw_event", "xsxxsi",
-            glist_getcanvas(c), tagbuf, sc, svg, "mousemove",
-            (int)fielddesc_getcoord(&svg->x_events.e_mousemove.a_attr, template,
+            glist_getcanvas(c), tagbuf, sc, svg, "mousedown",
+            (int)fielddesc_getcoord(&svg->x_events.e_mousedown.a_attr, template,
             data, 1));
     if (svg->x_events.e_mouseup.a_flag)
         gui_vmess("gui_draw_event", "xsxxsi",
             glist_getcanvas(c), tagbuf, sc, svg, "mouseup",
             (int)fielddesc_getcoord(&svg->x_events.e_mouseup.a_attr, template,
+            data, 1));
+    if (svg->x_events.e_drag.a_flag)
+        gui_vmess("gui_draw_drag_event", "xsxxsi",
+            glist_getcanvas(c), tagbuf, sc, svg, "drag",
+            (int)fielddesc_getcoord(&svg->x_events.e_drag.a_attr, template,
             data, 1));
 }
 
@@ -2254,6 +2269,11 @@ void svg_event(t_svg *x, t_symbol *s, int argc, t_atom *argv)
         {
             fielddesc_setfloatarg(&x->x_events.e_mouseout.a_attr, argc, argv);
             x->x_events.e_mouseout.a_flag = 1;
+        }
+        else if (s == gensym("drag"))
+        {
+            fielddesc_setfloatarg(&x->x_events.e_drag.a_attr, argc, argv);
+            x->x_events.e_drag.a_flag = 1;
         }
         svg_update(x, s);
     }
@@ -4316,7 +4336,9 @@ static void draw_setup(void)
         gensym("cy"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_data,
         gensym("data"), A_GIMME, 0);
-    class_addmethod(svg_class, (t_method)svg_drag,
+//    class_addmethod(svg_class, (t_method)svg_drag,
+//        gensym("drag"), A_GIMME, 0);
+    class_addmethod(svg_class, (t_method)svg_event,
         gensym("drag"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_fill,
         gensym("fill"), A_GIMME, 0);
