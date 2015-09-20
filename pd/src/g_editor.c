@@ -7695,7 +7695,7 @@ static void canvas_createobj(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 //            binbuf_free(b);
             // Set the dirty flag since we've changed the rtext content...
             canvas_dirty(x, 1);
-            //x->gl_editor->e_textdirty = 1;
+            x->gl_editor->e_textdirty = 1;
             if (s == gensym("createobj"))
                 glist_deselect(x, y); // instantiate
             break;
