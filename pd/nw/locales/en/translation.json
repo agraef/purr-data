@@ -130,6 +130,8 @@
     "zoomin_tt": "Make the patch visually larger",
     "zoomout": "Zoom Out",
     "zoomout_tt": "Make the patch visually smaller",
+    "find": "Find",
+    "find_tt": "Find text in the console output",
     "tidyup": "Tidy Up",
     "tidyup_tt": "Line up the selected objects in straight rows and columns",
     "tofront": "Bring to Front",

@@ -55,6 +55,20 @@ pdgui.init_socket_events();
 pdgui.set_new_window_fn(nw_create_window);
 pdgui.set_close_window_fn(nw_close_window);
 
+// Greyed out text for the "Find" bar
+function console_find_input_focus(e) {
+    if (e.value === e.defaultValue) {
+        e.value = '';
+        e.style.color = "#000";
+    }
+}
+
+function console_find_input_blur(e) {
+    if (e.value === '' || e.value === e.defaultValue) {
+        e.value = e.defaultValue;
+        e.style.color = "#888";
+    }
+}
 
 function pdmenu_copy () {
     alert("Please implement pdmenu_copy"); 
@@ -288,6 +302,31 @@ function nw_create_pd_window_menus () {
         key: '-',
         modifiers: "ctrl",
         tooltip: l('menu.zoomout_tt')
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        type: 'separator'
+    }));
+
+    editMenu.append(new nw.MenuItem({
+        label: l('menu.find'),
+        click: function () {
+            var find_bar = document.getElementById('console_find'),
+                text_container = document.getElementById('console_bottom'),
+                state = find_bar.style.getPropertyValue('display');
+            if (state === 'none') {
+                text_container.style.setProperty('bottom', '1em');
+                find_bar.style.setProperty('display', 'inline');
+                find_bar.style.setProperty('height', '1em');
+                text_container.scrollTop = text_container.scrollHeight;
+            } else {
+                text_container.style.setProperty('bottom', '0px');
+                find_bar.style.setProperty('display', 'none');
+            }
+        },
+        key: 'f',
+        modifiers: "ctrl",
+        tooltip: l('menu.find_tt')
     }));
 
     editMenu.append(new nw.MenuItem({

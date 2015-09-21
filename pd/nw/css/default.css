@@ -38,6 +38,7 @@
     margin: 8px;
 }
 
+/* This needs to be renamed, since the "Find" bar is actually at the bottom */
 #console_bottom {
     position: absolute;
     top: 50px;
@@ -45,6 +46,14 @@
     right: 0px;
     bottom: 0px;
     overflow-y: scroll;    
+}
+
+#console_find {
+    width: 100%;
+    height: 1em;
+    background: red;
+    position: fixed;
+    bottom: 0;
 }
 
 /* Pure Data Patch Window (aka canvas) */

@@ -1,27 +1,44 @@
 <!DOCTYPE html>
 <html>
   <head>
-  <link id="page_style" rel="stylesheet" type="text/css" href="css/default.css">
+    <link id="page_style" rel="stylesheet"
+          type="text/css" href="css/default.css">
   </head>
   <body id="console_body">
-    <input style="display:none;" id="fileDialog" type="file" nwworkingdir multiple />
+    <input style="display:none;" id="fileDialog" type="file"
+           nwworkingdir multiple />
     <div id="console_controls" class="noselect">
       <div id="control_frame">
-    <label><input type="checkbox" id="dsp_control" name="dsp_control" value="on"/>Compute Audio</label>
+        <label><input type="checkbox" id="dsp_control" name="dsp_control"
+                      value="on"/>Compute Audio
+        </label>
       </div>
     </div>
-    <script type="text/javascript" src="index.js">
-    </script>
+    <script type="text/javascript" src="index.js"></script>
     <input style="display:none;" id="saveDialog" type="file" nwsaveas />
     <div id = "console_bottom">
       <div id = "printout">
-      <pre id="p1" style="white-space: pre-wrap;">Welcome to Pd GUI using Node-Webkit
+        <pre id="p1"
+             style="white-space: pre-wrap;">Welcome to Pd GUI using Node-Webkit
         <script>document.write(process.versions['node-webkit'])</script><br/></pre> 
       </div>
     </div>
+    <div id = "console_find" style="display:none;">
+      <div>
+        <label><input type="text"
+                      id="console_find_text"
+                      name="console_find_text"
+                      defaultValue="Search in Console"
+                      style="width:10em;"
+                      onfocus="console_find_input_focus(this)"
+                      onblur="console_find_input_blur(this)"/>XXXXXX   
+        </label>
+      </div>
+    </div>
     <script>
-
-
+       var t = document.getElementById('console_find_text');
+       t.defaultValue = "Search in Console";
+       console_find_input_blur(t);
     </script>
   </body>
 </html>
