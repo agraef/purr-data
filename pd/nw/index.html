@@ -14,7 +14,6 @@
         </label>
       </div>
     </div>
-    <script type="text/javascript" src="index.js"></script>
     <input style="display:none;" id="saveDialog" type="file" nwsaveas />
     <div id = "console_bottom">
       <div id = "printout">
@@ -29,16 +28,17 @@
                       id="console_find_text"
                       name="console_find_text"
                       defaultValue="Search in Console"
-                      style="width:10em;"
-                      onfocus="console_find_input_focus(this)"
-                      onblur="console_find_input_blur(this)"/>XXXXXX   
+                      style="width:10em;"/>
+        </label>
+        <label>Highlight All
+               <input type="checkbox"
+                      id="console_find_highlight"
+                      name="console_find_highlight"
+                      onchange="console_find_highlight_all(this);"/>
         </label>
       </div>
     </div>
-    <script>
-       var t = document.getElementById('console_find_text');
-       t.defaultValue = "Search in Console";
-       console_find_input_blur(t);
-    </script>
+    <script src="./console_search.js"></script>
+    <script type="text/javascript" src="index.js"></script>
   </body>
 </html>

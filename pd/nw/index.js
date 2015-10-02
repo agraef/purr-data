@@ -36,6 +36,24 @@ document.getElementById("dsp_control").addEventListener("click",
     }
 );
 
+var find_bar = document.getElementById('console_find_text');
+find_bar.addEventListener("keydown",
+    function(e) {
+        return console_find_keydown(this, e);
+    }, false
+);
+
+find_bar.addEventListener("keypress",
+    function(e) {
+        console_find_keypress(this, e);
+    }, false
+);
+
+find_bar.defaultValue = "Search in Console";
+
+console_find_set_default(find_bar);
+
+
 // Invoke some functions to create main menus, etc.
 nw.Window.get().on("close", function() {
     pdgui.menu_quit();
@@ -55,18 +73,138 @@ pdgui.init_socket_events();
 pdgui.set_new_window_fn(nw_create_window);
 pdgui.set_close_window_fn(nw_close_window);
 
-// Greyed out text for the "Find" bar
-function console_find_input_focus(e) {
+function console_find_check_default(e) {
     if (e.value === e.defaultValue) {
-        e.value = '';
-        e.style.color = "#000";
+        return true;
+    } else {
+        return false;
     }
 }
 
-function console_find_input_blur(e) {
-    if (e.value === '' || e.value === e.defaultValue) {
-        e.value = e.defaultValue;
-        e.style.color = "#888";
+function console_find_set_default(e) {
+    e.value = e.defaultValue;
+    e.setSelectionRange(0,0);
+    e.style.color = "#888";
+}
+
+function console_unwrap_tag(console_elem, tag_name) {
+    var b = console_elem.getElementsByTagName(tag_name),
+        parent_elem;
+    while (b.length) {
+        parent_elem = b[0].parentNode;
+        while(b[0].firstChild) {
+            parent_elem.insertBefore(b[0].firstChild, b[0]);
+        }
+        parent_elem.removeChild(b[0]); 
+        parent_elem.normalize();
+    }
+}
+
+function console_find_text(elem, evt, callback) {
+    var console_text = document.getElementById('p1'),
+        wrap_tag = 'mark',
+        wrapper_count;
+    // Check the input for default text before the event happens
+    if (console_find_check_default(elem)) {
+       // if so, erase it
+        elem.value = '';
+        // put this in css and use class here
+        elem.style.color = "#000";
+    }
+    window.setTimeout(function () {
+        console_unwrap_tag(console_text, wrap_tag);
+
+        // Check after the event if the value is empty, and if
+        // so set it to default value
+        if (elem.value === undefined || elem.value === '') {
+            console_find_set_default(elem);
+        } else if (!console_find_check_default(elem)) {
+            window.findAndReplaceDOMText(console_text, {
+                //preset: 'prose',
+                find: elem.value.toLowerCase(),
+                wrap: wrap_tag
+            });
+            // The searchAndReplace API is so bad you can't even know how
+            // many matches there were without traversing the DOM and
+            // counting the wrappers!
+            wrapper_count = console_text.getElementsByTagName(wrap_tag).length;
+            if (wrapper_count < 1) {
+                elem.style.setProperty('background', 'red');
+            } else {
+                elem.style.setProperty('background', 'white');
+            }
+        }
+        if (callback) {
+            callback();
+        }
+    }, 0);
+}
+
+// start at top and highlight the first result after a search
+function console_find_callback() {
+    console_find_traverse.set_index(0);
+    console_find_traverse.next();
+}
+
+function console_find_keypress(elem, e) {
+    console_find_text(elem, e, console_find_callback);
+}
+
+function console_find_highlight_all(elem) {
+    var matches = document.getElementById('p1').getElementsByTagName('mark'),
+        highlight_tag = 'console_find_highlighted',
+        state = elem.checked,
+        i;
+    for (i = 0; i < matches.length; i++) {
+        if (state) {
+            matches[i].classList.add(highlight_tag);
+        } else {
+            matches[i].classList.remove(highlight_tag);
+        }
+    }
+}
+
+var console_find_traverse = (function() {
+    var count = 0,
+        console_text = document.getElementById('p1'),
+        wrap_tag = 'mark';
+    return {
+        next: function() {
+            var i, last, next,
+                elements = console_text.getElementsByTagName(wrap_tag);
+            if (elements.length > 0) {
+                i = count % elements.length;
+                elements[i].classList.add('console_find_current');
+                if (elements.length > 1) {
+                    last = i === 0 ? elements.length - 1 : i - 1;
+                    next = (i + 1) % elements.length;
+                    elements[last].classList.remove('console_find_current');
+                    elements[next].classList.remove('console_find_current');
+                }
+                // adjust the scrollbar to make sure the element is visible,
+                // but only if necessary.
+                // I don't think this is available on all browsers...
+                elements[i].scrollIntoViewIfNeeded();
+                count++;
+            }
+        },
+        set_index: function(c) {
+            count = c;
+        }
+    }
+}());
+
+function console_find_keydown(elem, evt) {
+    if (evt.keyCode === 13) {
+        console_find_traverse.next();
+        evt.stopPropagation();
+        evt.preventDefault();
+        return false;
+    } else if (evt.keyCode === 27) { // escape
+
+    } else if (evt.keyCode === 8 || // backspace or delete
+               evt.keyCode === 46) {
+        console_find_text(elem, evt, console_find_callback);
     }
 }
 
@@ -312,6 +450,7 @@ function nw_create_pd_window_menus () {
         label: l('menu.find'),
         click: function () {
             var find_bar = document.getElementById('console_find'),
+                find_bar_text = document.getElementById('console_find_text'),
                 text_container = document.getElementById('console_bottom'),
                 state = find_bar.style.getPropertyValue('display');
             if (state === 'none') {
@@ -319,6 +458,8 @@ function nw_create_pd_window_menus () {
                 find_bar.style.setProperty('display', 'inline');
                 find_bar.style.setProperty('height', '1em');
                 text_container.scrollTop = text_container.scrollHeight;
+                find_bar_text.focus();
+                find_bar_text.select();
             } else {
                 text_container.style.setProperty('bottom', '0px');
                 find_bar.style.setProperty('display', 'none');
