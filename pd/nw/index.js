@@ -142,6 +142,8 @@ function console_find_text(elem, evt, callback) {
 
 // start at top and highlight the first result after a search
 function console_find_callback() {
+    var highlight_checkbox = document.getElementById('console_find_highlight');
+    console_find_highlight_all(highlight_checkbox);
     console_find_traverse.set_index(0);
     console_find_traverse.next();
 }
@@ -151,15 +153,25 @@ function console_find_keypress(elem, e) {
 }
 
 function console_find_highlight_all(elem) {
-    var matches = document.getElementById('p1').getElementsByTagName('mark'),
+    var matches,
         highlight_tag = 'console_find_highlighted',
         state = elem.checked,
-        i;
-    for (i = 0; i < matches.length; i++) {
-        if (state) {
+        i, len;
+    matches = document.getElementById('p1')
+        .getElementsByClassName(highlight_tag);
+    // remember-- matches is a _live_ collection, not an array.
+    // If you remove the highlight_tag from an element, it is
+    // automatically removed from the collection. I cannot yet
+    // see a single benefit to this behavior-- here, it means
+    // we must decrement i to keep from skipping over every
+    // other element... :(
+    for (i = matches.length - 1; i >= 0; i--) {
+        matches[i].classList.remove(highlight_tag);
+    }
+    if (state) {
+        matches = document.getElementById('p1').getElementsByTagName('mark');
+        for (i = 0; i < matches.length; i++) {
             matches[i].classList.add(highlight_tag);
-        } else {
-            matches[i].classList.remove(highlight_tag);
         }
     }
 }
