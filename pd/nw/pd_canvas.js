@@ -65,6 +65,7 @@ pdgui.gui_post("flub!");
 var canvas_events = (function() {
     var name,
         state,
+        previous_state = 'none', /* last state, excluding explicit 'none' */
         match_words_state = false,
         last_search_term = '',
         svg_view = document.getElementById('patchsvg').viewBox.baseVal,
@@ -373,6 +374,9 @@ var canvas_events = (function() {
     return {
         none: function() {
             var name;
+            if (state !== 'none') {
+                previous_state = state;
+            }
             state = 'none';
             for (var prop in events) {
                 if (events.hasOwnProperty(prop)) {
@@ -383,7 +387,6 @@ var canvas_events = (function() {
             }
         },
         normal: function() {
-            //pdgui.gui_post("resetting to normal...");
             this.none();
 
             document.addEventListener("mousemove", events.mousemove, false);
@@ -423,12 +426,16 @@ var canvas_events = (function() {
         search: function() {
             this.none();
             document.addEventListener("keydown", events.find_keydown, false);
+            state = 'search';
         },
         register: function(n) {
             name = n;
         },
         get_state: function() {
             return state;
+        },
+        get_previous_state: function() {
+            return previous_state;
         },
         set_obj: function() {
             utils.set_obj();
@@ -838,6 +845,8 @@ function nw_create_patch_window_menus(name) {
                 canvas_events.search();
             } else {
                 find_bar.style.setProperty('display', 'none');
+// this is wrong and causes bug... we need to set back to whatever state
+// we used to be in... probably need a last_state var
                 canvas_events.none();
             }
         },
