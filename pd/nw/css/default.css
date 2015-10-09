@@ -1,9 +1,8 @@
 /* Global CSS */
 
 @font-face {
-    font-family: "Droid Sans Mono Dotted";
-/*    src: url("../DejaVuSansMono.ttf"); */
-    src: url("../DroidSansMonoDotted.ttf");
+    font-family: "DejaVu Sans Mono";
+    src: url("../DejaVuSansMono.ttf");
 }
 
 .noselect {
@@ -69,6 +68,7 @@ mark.console_find_highlighted {
     background: red;
     position: fixed;
     bottom: 0;
+    left: 0;
 }
 
 /* Pure Data Patch Window (aka canvas) */
@@ -264,6 +264,15 @@ text {
 .xlet_selected {
     stroke: purple !important;
     -webkit-animation: fizzle 0.5s linear 1;
+}
+
+#canvas_find {
+    width: 100%;
+    height: 1em;
+    background: red;
+    position: fixed;
+    bottom: 0;
+    left: 0;
 }
 
 /* Common to all dialogs */

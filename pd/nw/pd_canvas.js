@@ -36,9 +36,37 @@ function text_to_fudi(text) {
     return text;
 }
 
+// Should probably be in pdgui.js
+function encode_for_dialog(s) {
+    s = s.replace(/\s/g, '+_');
+    s = s.replace(/\$/g, '+d');
+    s = s.replace(/;/g, '+s');
+    s = s.replace(/,/g, '+c');
+    s = s.replace(/\+/g, '++');
+    s = '+' + s;
+    return s;
+}
+
+// These three functions need to be inside canvas_events closure
+function canvas_find_whole_word(elem) {
+    canvas_events.match_words(elem.checked);
+}
+
+function canvas_find_blur() {
+    canvas_events.normal();
+}
+
+function canvas_find_focus() {
+pdgui.gui_post("flub!");
+    var state = canvas_events.get_state();
+    canvas_events.search();
+}
+
 var canvas_events = (function() {
     var name,
         state,
+        match_words_state = false,
+        last_search_term = '',
         svg_view = document.getElementById('patchsvg').viewBox.baseVal,
         textbox = function () {
             return document.getElementById('new_object_textentry');
@@ -57,7 +85,8 @@ var canvas_events = (function() {
                 return false;
             },
             mousedown: function(evt) {
-                // tk events (and, therefore, Pd evnets) are one greater than html5...
+                // tk events (and, therefore, Pd evnets) are one greater
+                // than html5...
                 var b = evt.button + 1;
                 var mod;
                 // For some reason right-click sends a modifier value of "8",
@@ -74,7 +103,7 @@ var canvas_events = (function() {
                     b, mod
                 );
                 //evt.stopPropagation();
-                evt.preventDefault();
+                //evt.preventDefault();
             },
             mouseup: function(evt) {
                 //pdgui.gui_post("mouseup: x: " +
@@ -159,7 +188,7 @@ var canvas_events = (function() {
                     pdgui.gui_canvas_sendkey(name, 1, evt, hack);
                     pdgui.set_keymap(key_code, hack);
                 }
-//                pdgui.gui_post("keydown time: keycode is " + evt.keyCode);
+                //pdgui.gui_post("keydown time: keycode is " + evt.keyCode);
                 last_keydown = evt.keyCode;
                 //evt.stopPropagation();
                 //evt.preventDefault();
@@ -179,7 +208,7 @@ var canvas_events = (function() {
 
                 pdgui.gui_canvas_sendkey(name, 1, evt, evt.charCode);
                 pdgui.set_keymap(last_keydown, evt.charCode);
-//                pdgui.gui_post("keypress time: charcode is " + evt.charCode);
+                //pdgui.gui_post("keypress time: charcode is " + evt.charCode);
                 // Don't do things like scrolling on space, arrow keys, etc.
                 //evt.stopPropagation();
                 evt.preventDefault();
@@ -187,7 +216,7 @@ var canvas_events = (function() {
             keyup: function(evt) {
                 var my_char_code = pdgui.get_char_code(evt.keyCode);
                 pdgui.gui_canvas_sendkey(name, 0, evt, my_char_code);
-//                pdgui.gui_post("keyup time: charcode is: " + my_char_code);
+                //pdgui.gui_post("keyup time: charcode is: " + my_char_code);
                 if (evt.keyCode === 13 && evt.ctrlKey) {
                     pdgui.pdsend(name, "reselect");
                 }
@@ -206,9 +235,9 @@ var canvas_events = (function() {
                     // standard in Pd-Vanilla, Pd-l2ork uses and preserves
                     // them inside comments
                     utils.create_obj();
-//                    var fudi_msg = text_to_fudi(textbox().innerText);
-//                    pdgui.pdsend(name, "createobj", fudi_msg);
-//                    pdgui.gui_post("formatted content is " + fudi_msg);
+                    //var fudi_msg = text_to_fudi(textbox().innerText);
+                    //pdgui.pdsend(name, "createobj", fudi_msg);
+                    //pdgui.gui_post("formatted content is " + fudi_msg);
                     events.mousedown(evt);
                     canvas_events.normal();
                 }
@@ -256,6 +285,24 @@ var canvas_events = (function() {
                 //evt.stopPropagation();
                 //evt.preventDefault();
                 //return false;
+            },
+            find_click: function(evt) {
+                var t = document.getElementById('canvas_find_text').value;
+                if (t !== '') {
+                    if (t === last_search_term) {
+                        pdgui.pdsend(name, 'findagain');
+                    } else {
+                        pdgui.pdsend(name, 'find',
+                        encode_for_dialog(t),
+                        match_words_state ? '1' : '0');
+                    }
+                }
+                last_search_term = t;
+            },
+            find_keydown: function(evt) {
+                if (evt.keyCode === 13) {
+                    events.find_click(evt);
+                }
             }
         },
         utils = {
@@ -308,7 +355,15 @@ var canvas_events = (function() {
             console.log("tried to savepanel something");
         }, false
     );
+    document.querySelector("#canvas_find_text").addEventListener("focusin",
+        canvas_find_focus, false
+    );
 
+    document.querySelector("#canvas_find_text").addEventListener("blur",
+        canvas_find_blur, false
+    );
+    document.querySelector("#canvas_find_button").addEventListener("click",
+        events.find_click);
     // closing the Window
     // this isn't actually closing the window yet
     nw.Window.get().on("close", function() {
@@ -365,6 +420,10 @@ var canvas_events = (function() {
             state = 'floating_text';
             set_edit_menu_modals(false);
         },
+        search: function() {
+            this.none();
+            document.addEventListener("keydown", events.find_keydown, false);
+        },
         register: function(n) {
             name = n;
         },
@@ -373,6 +432,12 @@ var canvas_events = (function() {
         },
         set_obj: function() {
             utils.set_obj();
+        },
+        create_obj: function() {
+            utils.create_obj();
+        },
+        match_words: function(state) {
+            match_words_state = state;
         }
     }
 }());
@@ -446,15 +511,31 @@ function nw_undo_menu(undo_text, redo_text) {
     }
 }
 
-function check_box_for_text() {
+function have_live_box() {
     var state = canvas_events.get_state();
     if (state === 'text' || state === 'floating_text') {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// If there's a box being edited, send the box's text to Pd
+function update_live_box() {
+    if (have_live_box()) {
         canvas_events.set_obj();
     }
 }
 
+// If there's a box being edited, try to instantiate it in Pd
+function instantiate_live_box() {
+    if (have_live_box()) {
+        canvas_events.create_obj();
+    }
+}
+
 // Menus for the Patch window
-function nw_create_patch_window_menus (name) {
+function nw_create_patch_window_menus(name) {
 
     // Window menu
     var windowMenu = new nw.Menu({
@@ -744,7 +825,22 @@ function nw_create_patch_window_menus (name) {
 
     editMenu.append(new nw.MenuItem({
         label: l('menu.find'),
-        click: menu_generic,
+        click: function () {
+            var find_bar = document.getElementById('canvas_find'),
+                find_bar_text = document.getElementById('canvas_find_text'),
+                state = find_bar.style.getPropertyValue('display');
+            // if there's a box being edited, try to instantiate it in Pd
+            instantiate_live_box();
+            if (state === 'none') {
+                find_bar.style.setProperty('display', 'inline');
+                find_bar_text.focus();
+                find_bar_text.select();
+                canvas_events.search();
+            } else {
+                find_bar.style.setProperty('display', 'none');
+                canvas_events.none();
+            }
+        },
         key: 'f',
         modifiers: "ctrl",
         tooltip: l('menu.find_tt'),
@@ -779,7 +875,7 @@ function nw_create_patch_window_menus (name) {
     editMenu.append(new nw.MenuItem({
         label: l('menu.editmode'),
         click: function() {
-            check_box_for_text();
+            update_live_box();
             pdgui.pdsend(name, "editmode 0");
         },
         key: 'e',
@@ -812,7 +908,7 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.object'),
         click: function() {
-            check_box_for_text();
+            update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "obj 0");
         },
@@ -824,7 +920,7 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.msgbox'),
         click: function() {
-            check_box_for_text();
+            update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "msg 0");
         },
@@ -836,7 +932,7 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.number'),
         click: function() { 
-            check_box_for_text();
+            update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "floatatom 0");
         },
@@ -848,7 +944,7 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.symbol'),
         click: function() {
-            check_box_for_text();
+            update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "symbolatom 0");
         },
@@ -860,7 +956,7 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.comment'),
         click: function() {
-            check_box_for_text();
+            update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "text 0");
         },
@@ -876,7 +972,7 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.bang'),
         click: function(e) {
-            check_box_for_text();
+            update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "bng 0");
         },
@@ -888,7 +984,7 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.toggle'),
         click: function() {
-            check_box_for_text();
+            update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "toggle 0");
         },
@@ -900,7 +996,7 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.number2'),
         click: function() {
-            check_box_for_text();
+            update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "numbox 0");
         },
@@ -912,7 +1008,7 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.vslider'),
         click: function() {
-            check_box_for_text();
+            update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "vslider 0");
         },
@@ -924,7 +1020,7 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.hslider'),
         click: function() {
-            check_box_for_text();
+            update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "hslider 0");
         },
@@ -936,7 +1032,7 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.vradio'),
         click: function() {
-            check_box_for_text();
+            update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "vradio 0");
         },
@@ -948,7 +1044,7 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.hradio'),
         click: function() {
-            check_box_for_text();
+            update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "hradio 0");
         },
@@ -960,7 +1056,7 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.vu'),
         click: function() {
-            check_box_for_text();
+            update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "vumeter 0");
         },
@@ -972,7 +1068,7 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.cnv'),
         click: function() {
-            check_box_for_text();
+            update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "mycnv 0");
         },
@@ -988,7 +1084,7 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.graph'),
         click: function() {
-            check_box_for_text();
+            update_live_box();
             pdgui.pdsend(name, "dirty 1");
             // leaving out some placement logic... see pd.tk menu_graph
             pdgui.pdsend(name, "graph NULL 0 0 0 0 30 30 0 30");
@@ -999,7 +1095,7 @@ function nw_create_patch_window_menus (name) {
     putMenu.append(new nw.MenuItem({
         label: l('menu.array'),
         click: function() {
-                check_box_for_text();
+                update_live_box();
                 pdgui.pdsend(name, "dirty 1");
                 pdgui.pdsend(name, "menuarray");
             },

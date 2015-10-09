@@ -17,6 +17,25 @@
          overflow="visible"
          class="noselect">
     </svg>
+    <div id="canvas_find" style="display:none;">
+      <label><input type="text"
+                    id="canvas_find_text"
+                    name="canvas_find_text"
+                    defaultValue="Search in Canvas"
+                    style="width:10em"/>
+      </label>
+      <label>Match Whole Word
+        <input type="checkbox"
+               id="canvas_find_whole_word"
+               name="canvas_find_whole_word"
+               onchange="canvas_find_whole_word(this);"/> 
+      </label>
+      <input type="button"
+             id="canvas_find_button"
+             name="canvas_find_button"
+             value="Search"/>
+      </input>
+    </div>
     <script type="text/javascript" src="./pd_canvas.js"></script>
   </body>
 </html>

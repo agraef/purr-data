@@ -1274,7 +1274,10 @@ function gui_fontsize_to_pd_fontsize(fontsize) {
     return gobj_fontsize_kludge(fontsize, 'pd');
 }
 
-// Another hack, similar to above
+// Another hack, similar to above. We use this to
+// make sure that there is enough vertical space
+// between lines to fill the box when there is
+// multi-line text.
 function gobj_font_y_kludge(fontsize) {
     switch (fontsize) {
         case 8: return -0.5;
