@@ -404,19 +404,19 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
             {
                 if (selend_b > selstart_b)
                 {
-                    sys_vgui(".x%lx.c select from %s %d\n", canvas, 
-                        x->x_tag, u8_charnum(tempbuf, selstart_b));
-                    sys_vgui(".x%lx.c select to %s %d\n", canvas, 
-                        x->x_tag, u8_charnum(tempbuf, selend_b)
-                          + (sys_oldtclversion ? 0 : -1));
-                    sys_vgui(".x%lx.c focus \"\"\n", canvas);        
+                    //sys_vgui(".x%lx.c select from %s %d\n", canvas, 
+                    //    x->x_tag, u8_charnum(tempbuf, selstart_b));
+                    //sys_vgui(".x%lx.c select to %s %d\n", canvas, 
+                    //    x->x_tag, u8_charnum(tempbuf, selend_b)
+                    //      + (sys_oldtclversion ? 0 : -1));
+                    //sys_vgui(".x%lx.c focus \"\"\n", canvas);        
                 }
                 else
                 {
-                    sys_vgui(".x%lx.c select clear\n", canvas);
-                    sys_vgui(".x%lx.c icursor %s %d\n", canvas, x->x_tag,
-                        u8_charnum(tempbuf, selstart_b));
-                    sys_vgui(".x%lx.c focus %s\n", canvas, x->x_tag);        
+                    //sys_vgui(".x%lx.c select clear\n", canvas);
+                    //sys_vgui(".x%lx.c icursor %s %d\n", canvas, x->x_tag,
+                    //    u8_charnum(tempbuf, selstart_b));
+                    //sys_vgui(".x%lx.c focus %s\n", canvas, x->x_tag);        
                 }
             }
         }
