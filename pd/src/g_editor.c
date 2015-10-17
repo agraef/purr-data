@@ -2501,8 +2501,9 @@ void canvas_vis(t_canvas *x, t_floatarg f)
                 argsbuf);
                 
 
-            // This probably needs a gui_vmess */
-            sys_vgui("pdtk_canvas_set_font .x%lx %d\n", x, x->gl_font);
+            /* It looks like this font size call is no longer needed,
+               but I'm not sure why it was needed in the first place... */
+            //sys_vgui("pdtk_canvas_set_font .x%lx %d\n", x, x->gl_font);
 //            canvas_reflecttitle(x);
             x->gl_havewindow = 1;
 
