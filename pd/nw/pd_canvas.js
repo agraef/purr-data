@@ -1090,16 +1090,16 @@ function nw_create_patch_window_menus(name) {
         type: 'separator'
     }));
 
-    putMenu.append(new nw.MenuItem({
-        label: l('menu.graph'),
-        click: function() {
-            update_live_box();
-            pdgui.pdsend(name, "dirty 1");
-            // leaving out some placement logic... see pd.tk menu_graph
-            pdgui.pdsend(name, "graph NULL 0 0 0 0 30 30 0 30");
-        },
-        tooltip: l('menu.graph_tt'),
-    }));
+    //putMenu.append(new nw.MenuItem({
+    //    label: l('menu.graph'),
+    //    click: function() {
+    //        update_live_box();
+    //        pdgui.pdsend(name, "dirty 1");
+    //        // leaving out some placement logic... see pd.tk menu_graph
+    //        pdgui.pdsend(name, "graph NULL 0 0 0 0 30 30 0 30");
+    //    },
+    //    tooltip: l('menu.graph_tt'),
+    //}));
 
     putMenu.append(new nw.MenuItem({
         label: l('menu.array'),
