@@ -2543,8 +2543,10 @@ function gui_graph_deleteborder(cid, tag) {
     b.parentNode.removeChild(b);
 }
 
-function gui_graph_label(cid, tag, y, array_name, font, font_size,
-    font_weight, is_selected) {
+function gui_graph_label(cid, tag, label_number, font_height, array_name,
+    font, font_size, font_weight, is_selected) {
+    var y = font_height * label_number * -1;
+    gui_text_new(cid, tag, "graph_label", 0, 0, y, array_name, font_size);
 }
 
 function gui_graph_vtick(cid, tag, x, up_y, down_y, tick_pix, basex, basey) {

@@ -241,9 +241,22 @@
                data-i18n="[title]canvas.prop.array_in_existing_graph_tt">
           <input onchange="flag2_change(this);"
                  type="checkbox"
+                 id="array_in_existing_graph"
                  name="array_in_existing_graph"
                  value="on">
           <span data-i18n="canvas.prop.array_in_existing_graph"></span>
+        </label>
+      </div>
+
+      <div class="array_delete">
+        <label class="array-delete"
+               data-i18n="[title]canvas.prop.array_delete_tt">
+          <input onchange="array_delete_change(this);"
+                 type="checkbox"
+                 id="array_delete"
+                 name="array_delete"
+                 value="on">
+          <span data-i18n="canvas.prop.array_delete"></span>
         </label>
       </div>
       </fieldset> 
@@ -343,6 +356,12 @@ function flag2_change(elem) {
     value = +elem.checked;
     array_attr[name] = value;
     pdgui.gui_post("array is " + array_attr);
+}
+
+function array_delete_change(elem) {
+    var arrays_select = document.getElementById('arrays_select'),
+        array_attr = pd_garray_attrs[arrays_select.value];
+    array_attr.array_delete = elem.checked;
 }
 
 function attr_change(elem) {
@@ -482,8 +501,28 @@ function get_array_value(name, attrs) {
     return attrs[name];
 }
 
+
+// for a new array, slot 4 is:
+//   "0" to create the array in a new graph
+//   "1" to create the array in existing graph
+// for a graph with more than one array in it, slot 4 is:
+//   "0" to do nothing
+//   "1" to delete the array when the dialog is finished
+// The deletion interface is bad, but it is also an obscure
+// feature probably not worth improving.
+function get_array_slot_4(attrs) {
+    if (new_array_dialog) {
+        return document.getElementById('array_in_existing_graph').checked ?
+            "1" : "0";
+    } else if (pd_garray_attrs.length > 1) {
+        return attrs.array_delete ? "1" : "0";
+    } else {
+        return "0";
+    }
+}
+
 function apply() {
-    var i, attrs, gop, hide_name;
+    var i, attrs, gop, hide_name, slot_4;
     // If this is a dialog to create a new array, we
     // skip the canvas dialog callback
     if (!new_array_dialog) {
@@ -520,8 +559,7 @@ function apply() {
             name,
             get_array_value('array_size', attrs),
             get_array_value('array_flags', attrs),
-            0, // create an array in a new graph -- we don't
-               // need this in a prexisting graph
+            get_array_slot_4(attrs),
             0, // xdraw-- not sure if this is still used
             0, // ydraw-- not sure if this is still used
             get_array_value('array_fill', attrs),
@@ -544,12 +582,12 @@ function cancel() {
 }
 
 function populate_array_form(objects) {
-    var arrays_select, a_field = document.getElementById('arrays');
-    var i, opt;
+    var arrays_select = document.getElementById('arrays_select'),
+        a_field = document.getElementById('arrays'),
+        opt, i;
     a_field.classList.remove('hidden');
-    arrays_select = document.getElementById('arrays_select');
-    if (i > 0) {
-        // unhide select element if there's more than one array
+    if (objects.length > 1) {
+        // show the select element if there's more than one array
         arrays_select.classList.remove('hidden');
     }
     for (i = 0; i < objects.length; i++) {
@@ -562,6 +600,11 @@ function populate_array_form(objects) {
     if (!new_array_dialog) {
         document.getElementsByClassName('array_in_existing_graph')[0]
             .classList.add('hidden');
+    }
+    // Hide the "delete this array" button if we don't have
+    // more than one array
+    if (new_array_dialog || objects.length < 2) {
+        document.getElementsByClassName('array_delete')[0].classList.add('hidden');
     }
     array_choose(0);
 }

@@ -646,10 +646,11 @@ void garray_arraydialog(t_garray *x, t_symbol *s, int argc, t_atom *argv)
         //glist_select(x->x_glist, &x->x_gobj);
         //canvas_undo_add(x->x_glist, 3, "delete", canvas_undo_set_cut(x->x_glist, 2)); // 2 = UCUT_CLEAR (from g_editor.c)
 //currently cannot be undo'd until we do a new kind of undo
+        t_canvas *c = x->x_glist;
         int dspwas = canvas_suspend_dsp();
         glist_delete(x->x_glist, &x->x_gobj);
         canvas_resume_dsp(dspwas);
-        canvas_redraw(glist_getcanvas(x->x_glist));
+        canvas_redraw(glist_getcanvas(c));
     }
     else 
     {

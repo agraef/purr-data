@@ -980,7 +980,7 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
             "none",
             0, x1, y1, x2, y2);
             /* write garrays' names along the top */
-        for (i = (y1 < y2 ? y1 : y2)-1, g = x->gl_list; g; g = g->g_next)
+        for (i = 0, g = x->gl_list; g; g = g->g_next, i++)
         {
             //fprintf(stderr,".\n");
             //if (g->g_pd == garray_class)
@@ -996,17 +996,16 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
                 //    tag,
                 //    (glist_isselected(x, gr) ?
                 //        "$pd_colors(selection)" : "$pd_colors(graph_border)"));
-                gui_vmess("gui_graph_label", "xsissisi",
+                gui_vmess("gui_graph_label", "xsiissisi",
                     glist_getcanvas(x),
                     tag,
                     i,
+                    sys_fontheight(glist_getfont(x)),
                     arrayname->s_name,
                     sys_font,
                     sys_hostfontsize(glist_getfont(x)),
                     sys_fontweight,
                     glist_isselected(x, gr));
-
-                i += sys_fontheight(glist_getfont(x));
             }
         }
             /* draw ticks on horizontal borders.  If lperb field is
