@@ -596,8 +596,12 @@ function populate_array_form(objects) {
         opt.textContent = 'Array #' + (i+1);
         arrays_select.appendChild(opt);
     }
-    // Hide checkbutton for existing graph if this isn't a new array dialog
-    if (!new_array_dialog) {
+    // We're permanently hiding the checkbutton for creating a new array 
+    // inside an existing graph. It's just a weird interface with very
+    // few benefits. However, patches that already have multiple arrays 
+    // inside a graph will continue to work.  (And if users really want 
+    // this feature back it's easy to turn it back on.
+    if (!new_array_dialog || 1) {  // to re-enable, remove the '|| 1'
         document.getElementsByClassName('array_in_existing_graph')[0]
             .classList.add('hidden');
     }
