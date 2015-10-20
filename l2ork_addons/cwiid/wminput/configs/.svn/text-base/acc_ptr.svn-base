@@ -1,6 +1,0 @@
-#acc_ptr
-
-include buttons
-
-Plugin.acc.X	= REL_X
-Plugin.acc.Y	= REL_Y

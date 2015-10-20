@@ -1,4 +1,5 @@
 Copyright (C) 2007 L. Donnie Smith <cwiid@abstrakraft.org>
+Copyright (C) 2011-2015 Ivica Ico Bukvic <ico@vt.edu> and Deba Pratim Saha <dpsaha@vt.edu>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -49,7 +50,7 @@ Many distributions do not have /usr/local/lib in the library search path, and on
 
 I prefer the second method since it keeps local software in the local directory where it should be, and it fixes the problem for every package using /usr/local/lib, not just CWiid.  Until someone offers a convincing argument for the omission of /usr/local/lib from /etc/ld.so.conf, I consider this to be a distribution bug, and method #2 above is the fix.
 
-Please report any compilation errors at http://www.abstrakraft.org/cwiid or to <cwiid@abstrakraft.org>, with preference for the former.
+Please report any problems and/or errors to <ico@vt.edu>.
 
 EXECUTION
 ------------------------------------------------------------------------------------------------
@@ -62,10 +63,4 @@ See wminput/README for more information on wminput configuration and execution.
 FUTURE IDEAS/IMPROVEMENTS
 ------------------------------------------------------------------------------------------------
 The following list is neither complete nor ordered:
-wmcp (copy data between files and wiimotes)
-Move wiimote communications into a separate daemon (wiimoted) with which applications communicate via sockets (or some other means)
-wmgui logging
-Implement speaker
-gui/control interface to wminput
-Implement other drivers such as gesture recognition.
-
+Implement/test speaker
