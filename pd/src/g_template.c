@@ -4449,13 +4449,18 @@ static void *event_new(void)
         x->x_bindsym = gensym(namebuf);
         pd_bind(&x->x_obj.ob_pd, x->x_bindsym);
     }
+    else
+    {
+        x->x_bindsym = 0;
+    }
     outlet_new(&x->x_obj, &s_anything);
     return (x);
 }
 
 static void event_free(t_event *x)
 {
-    pd_unbind(&x->x_obj.ob_pd, x->x_bindsym);
+    if (x->x_bindsym)
+        pd_unbind(&x->x_obj.ob_pd, x->x_bindsym);
 }
 
 void event_setup(void)
