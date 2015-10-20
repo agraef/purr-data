@@ -2,7 +2,7 @@
 #N struct IR-blobs float x float y symbol s;
 #N struct CL-L-stick float x float y;
 #N struct CL-R-stick float x float y;
-#N canvas 383 66 872 633 10;
+#N canvas 262 27 872 653 10;
 #X msg 6 388 disconnect;
 #X msg 27 87 discover;
 #X obj 187 186 tgl 25 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
@@ -128,9 +128,9 @@ case. The total acceleration is given by:;
 ;
 #X obj 325 186 tgl 25 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X text 191 588 You can also specify the address as a creation argument:
+#X text 184 605 You can also specify the address as a creation argument:
 ;
-#X text 203 602 (make sure to enable discover mode before creation)
+#X text 196 619 (make sure to enable discover mode before creation)
 ;
 #N canvas 4 136 920 244 \$0-nunchuck-stuff 0;
 #X obj 559 61 inlet;
@@ -161,17 +161,17 @@ case. The total acceleration is given by:;
 #X connect 9 2 10 0;
 #X connect 15 0 1 0;
 #X restore 106 444 pd \$0-nunchuck-stuff;
-#X obj 579 406 cnv 15 275 230 empty empty Expansion: 10 15 0 14 -228992
+#X obj 579 406 cnv 15 275 241 empty empty Expansion: 10 15 0 14 -228992
 -355 0;
 #X floatatom 718 468 7 0 0 1 - #0-nc-accX-set #0-nc-accX, f 7;
 #X floatatom 718 482 7 0 0 1 - #0-nc-accY-set #0-nc-accY, f 7;
 #X floatatom 718 496 7 0 0 1 - #0-nc-accZ-set #0-nc-accZ, f 7;
 #X obj 588 468 hsl 128 14 -1 1 0 0 \$0-nc-accX \$0-nc-accX-set X 4
-8 0 10 -261681 -1 -1 0 1;
+8 0 10 -261681 -1 -1 488 1;
 #X obj 588 482 hsl 128 14 -1 1 0 0 \$0-nc-accY \$0-nc-accY-set Y 4
-8 0 10 -261681 -1 -1 0 1;
+8 0 10 -261681 -1 -1 6731 1;
 #X obj 588 496 hsl 128 14 -1 1 0 0 \$0-nc-accZ \$0-nc-accZ-set Z 4
-8 0 10 -261681 -1 -1 0 1;
+8 0 10 -261681 -1 -1 8670 1;
 #X obj 723 530 nbx 3 16 -1e+37 1e+37 0 0 empty \$0-nc-btn-set empty
 -80 8 0 10 -261681 -1 -1 0 256 0;
 #X text 584 452 Acceleration:;
@@ -188,16 +188,16 @@ case. The total acceleration is given by:;
 #X floatatom 742 94 7 0 0 1 _Y #0-wii-accY-set #0-wii-accY, f 7;
 #X floatatom 742 108 7 0 0 1 _Z #0-wii-accZ-set #0-wii-accZ, f 7;
 #X obj 612 80 hsl 128 14 -1 1 0 0 \$0-wii-accX \$0-wii-accX-set empty
--2 -8 0 10 -225271 -1 -1 0 1;
+-2 -8 0 10 -225271 -1 -1 6350 1;
 #X obj 612 94 hsl 128 14 -1 1 0 0 \$0-wii-accY \$0-wii-accY-set empty
--2 -8 0 10 -225271 -1 -1 0 1;
+-2 -8 0 10 -225271 -1 -1 6350 1;
 #X obj 612 108 hsl 128 14 -1 1 0 0 \$0-wii-accZ \$0-wii-accZ-set empty
--2 -8 0 10 -225271 -1 -1 0 1;
-#N canvas 526 148 481 416 IR-data 0;
-#X scalar IR-blobs 616 680 blob1 \;;
-#X scalar IR-blobs 211 368 blob2 \;;
-#X scalar IR-blobs 943 759 blob3 \;;
-#X scalar IR-blobs 419 760 blob4 \;;
+-2 -8 0 10 -225271 -1 -1 6350 1;
+#N canvas 506 128 481 416 IR-data 0;
+#X scalar IR-blobs 262.603 259.077 blob1 \;;
+#X scalar IR-blobs 383.441 388.308 blob2 \;;
+#X scalar IR-blobs 623.665 511.615 blob3 \;;
+#X scalar IR-blobs 821.362 457.231 blob4 \;;
 #X coords 0 0 1024 768 256 196 1;
 #X restore 590 183 pd IR-data;
 #N canvas 136 244 342 204 IR-blobs 0;
@@ -209,11 +209,11 @@ case. The total acceleration is given by:;
 #X floatatom 742 128 7 0 0 1 _PITCH #0-wii-pitch-set #0-wii-pitch,
 f 7;
 #X obj 612 128 hsl 128 14 -3.14156 3.14159 0 0 \$0-wii-pitch \$0-wii-pitch-set
-empty -2 -8 0 10 -225280 -1 -1 0 1;
+empty -2 -8 0 10 -225280 -1 -1 12700 1;
 #X floatatom 742 142 7 0 0 1 _ROLL #0-wii-roll-set #0-wii-roll, f
 7;
 #X obj 612 142 hsl 128 14 -3.14156 3.14159 0 0 \$0-wii-roll \$0-wii-roll-set
-empty -2 -8 0 10 -225280 -1 -1 0 1;
+empty -2 -8 0 10 -225280 -1 -1 12700 1;
 #X text 608 64 Acceleration (-1 to 1):;
 #X obj 779 23 nbx 2 16 -1e+37 1e+37 0 0 empty \$0-wii-btn01-set empty
 -100 10 0 12 -225280 -1 -1 0 256 0;
@@ -230,25 +230,24 @@ empty -2 -8 0 10 -225280 -1 -1 0 1;
 #X restore 21 506 pd \$0-button-stuff;
 #X text 783 5 Buttons:;
 #N canvas 185 133 481 416 NC-data 0;
-#X scalar NC-stick 0 0 \;;
+#X scalar NC-stick 127 130 \;;
 #X coords 0 256 256 0 80 80 1 0 0;
 #X restore 768 468 pd NC-data;
-#X obj -4 611 print;
+#X obj -9 623 print;
 #X obj 15 203 tgl 25 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X text -2 254 Enable metro to get accelerometer uppdates;
 #X obj 117 365 disis_wiimote;
-#X obj -4 589 disis_wiimote 00:19:1D:BE:6A:66;
+#X obj -9 601 disis_wiimote 00:19:1D:BE:6A:66;
 #X obj 231 333 tgl 25 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X text 212 357 connection;
 #X text 217 367 indicator;
-#X text 276 472 TO CONNECT:;
-#X text 277 484 1 click on connect or discover;
-#X text 277 495 2 press 1&2 on the wiimote;
-#X text 277 506 3 upon connect wiimote will vibrate;
-#X text 288 517 if wiimote fails to connect check;
-#X text 289 539 (e.g. using shell command "hcitool scan");
+#X text 278 464 TO CONNECT:;
+#X text 279 476 1 click on connect or discover;
+#X text 279 527 3 upon connect wiimote will vibrate;
+#X text 290 538 if wiimote fails to connect check;
+#X text 291 560 (e.g. using shell command "hcitool scan");
 #X obj 423 240 cnv 15 150 150 empty empty Feedback 6 12 0 10 -233017
 -66577 0;
 #X obj 479 336 tgl 25 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
@@ -257,11 +256,11 @@ empty -2 -8 0 10 -225280 -1 -1 0 1;
 #X msg 478 313 setLED \$1;
 #X obj 478 264 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X obj 502 264 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj 501 264 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X obj 526 264 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj 524 264 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X obj 550 264 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj 547 264 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X text 440 263 LEDs:;
 #N canvas 0 0 409 401 bytemask 0;
@@ -309,26 +308,26 @@ empty -2 -8 0 10 -225280 -1 -1 0 1;
 #X connect 17 0 9 0;
 #X connect 18 0 10 0;
 #X connect 19 0 11 0;
-#X restore 478 290 pd bytemask;
+#X restore 478 290 pd bytemask, f 12;
 #X text 430 337 RUMBLE:;
-#X text 277 551 4 start metro and enable "reportAcceleration";
+#X text 279 572 4 start metro and enable "reportAcceleration";
 #X text -2 294 NB: setting metro below 20 makes little sense as even
 at max rate I was unable to get more than 50 updates/second from the
 bluetooth stack.;
 #X text -4 265 (buttons \, xyz wiimote \, xyz nunchuk \, ir).;
-#X obj 585 560 unpack 0 0 0;
-#X obj 658 583 hsl 180 15 0 16000 0 0 empty empty empty -2 -8 0 10
--261681 -1 -1 0 1;
-#X obj 658 598 hsl 180 15 0 16000 0 0 empty empty empty -2 -8 0 10
--261681 -1 -1 0 1;
-#X obj 658 613 hsl 180 15 0 16000 0 0 empty empty empty -2 -8 0 10
--261681 -1 -1 0 1;
-#X text 660 581 up/down;
-#X text 659 611 left/right;
-#X text 659 596 rotate around y axis (wrist);
-#X text 277 562 5 connect nunchuk and enable "reportExtension";
+#X obj 585 570 unpack 0 0 0;
+#X obj 658 593 hsl 180 15 0 16000 0 0 empty empty empty -2 -8 0 10
+-261681 -1 -1 9180 1;
+#X obj 658 608 hsl 180 15 0 16000 0 0 empty empty empty -2 -8 0 10
+-261681 -1 -1 9265 1;
+#X obj 658 623 hsl 180 15 0 16000 0 0 empty empty empty -2 -8 0 10
+-261681 -1 -1 9174 1;
+#X text 660 591 up/down;
+#X text 659 621 left/right;
+#X text 659 606 rotate around y axis (wrist);
+#X text 279 583 5 connect nunchuk and enable "reportExtension";
 #X text 594 439 NUNCHUK;
-#X text 586 543 MOTION PLUS;
+#X text 586 553 MOTION PLUS;
 #X text -14 2 Threaded implementation of Wiimote object by DISIS &
 L2Ork by Ivica Ico Bukvic <ico@vt.edu> <http://disis.music.vt.edu>
 <http://l2ork.music.vt.edu>;
@@ -400,7 +399,7 @@ balance battery;
 #X msg 445 216 togglePassthrough \$1;
 #X msg 4 64 connect 00:19:1D:CA:73:29;
 #X obj 15 234 metro 100;
-#X text 289 528 console and your bluetooth settings;
+#X text 291 549 console and your bluetooth settings;
 #N canvas 35 30 815 233 \$0-classic 0;
 #X obj 60 -19 inlet;
 #X obj 690 -17 inlet;
@@ -455,48 +454,53 @@ balance battery;
 #X connect 19 0 20 0;
 #X connect 19 1 21 0;
 #X restore 182 422 pd \$0-classic;
+#X text 279 487 2 press 1&2 on the wiimote;
+#X obj 292 504 cnv 15 279 28 empty empty empty 20 12 0 14 -259090 -66577
+0;
+#X text 292 502 IMPORTANT! to connect new wiimoteplus you mustすe
+the pair button isnide the battery pack;
 #X connect 0 0 48 0;
 #X connect 1 0 48 0;
 #X connect 2 0 4 0;
 #X connect 3 0 5 0;
 #X connect 4 0 48 0;
 #X connect 5 0 48 0;
-#X connect 9 0 85 0;
-#X connect 46 0 102 0;
-#X connect 48 0 86 0;
+#X connect 9 0 84 0;
+#X connect 46 0 101 0;
+#X connect 48 0 85 0;
 #X connect 48 1 50 0;
 #X connect 49 0 45 0;
-#X connect 60 0 61 0;
+#X connect 59 0 60 0;
+#X connect 60 0 48 0;
 #X connect 61 0 48 0;
-#X connect 62 0 48 0;
-#X connect 63 0 68 0;
-#X connect 64 0 68 1;
-#X connect 65 0 68 2;
-#X connect 66 0 68 3;
-#X connect 68 0 62 0;
-#X connect 73 0 74 0;
-#X connect 73 1 75 0;
-#X connect 73 2 76 0;
-#X connect 85 0 48 0;
-#X connect 86 0 42 0;
-#X connect 86 1 6 0;
-#X connect 86 2 7 0;
-#X connect 86 3 12 0;
-#X connect 86 4 12 1;
-#X connect 86 5 12 2;
-#X connect 86 6 73 0;
-#X connect 86 8 104 0;
-#X connect 86 9 104 1;
-#X connect 86 10 104 2;
-#X connect 86 11 90 0;
-#X connect 86 12 91 0;
-#X connect 86 13 92 0;
-#X connect 86 14 93 0;
-#X connect 86 15 94 0;
+#X connect 62 0 67 0;
+#X connect 63 0 67 1;
+#X connect 64 0 67 2;
+#X connect 65 0 67 3;
+#X connect 67 0 61 0;
+#X connect 72 0 73 0;
+#X connect 72 1 74 0;
+#X connect 72 2 75 0;
+#X connect 84 0 48 0;
+#X connect 85 0 42 0;
+#X connect 85 1 6 0;
+#X connect 85 2 7 0;
+#X connect 85 3 12 0;
+#X connect 85 4 12 1;
+#X connect 85 5 12 2;
+#X connect 85 6 72 0;
+#X connect 85 8 103 0;
+#X connect 85 9 103 1;
+#X connect 85 10 103 2;
+#X connect 85 11 89 0;
+#X connect 85 12 90 0;
+#X connect 85 13 91 0;
+#X connect 85 14 92 0;
+#X connect 85 15 93 0;
+#X connect 87 0 48 0;
 #X connect 88 0 48 0;
-#X connect 89 0 48 0;
-#X connect 94 0 98 0;
-#X connect 99 0 100 0;
+#X connect 93 0 97 0;
+#X connect 98 0 99 0;
+#X connect 99 0 48 0;
 #X connect 100 0 48 0;
 #X connect 101 0 48 0;
-#X connect 102 0 48 0;
