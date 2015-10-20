@@ -106,7 +106,7 @@ deb: $(bindir)
 #	install -p -m0644 $(packages_src)/linux_make/pd-48x48.png \
 #		$(DESTDIR)/usr/share/icons/hicolor/48x48/apps/pd-l2ork.png
 	install -d $(DESTDIR)/usr/share/icons/hicolor/128x128/mimetypes
-	install -p -m0644 $(packages_src)/linux_make/text-x-puredata.png \
+	install -p -m0644 $(packages_src)/linux_make/text-x-pd-l2ork.png \
 		$(DESTDIR)/usr/share/icons/hicolor/128x128/mimetypes
 	install -d $(DESTDIR)/usr/share/applications/ 
 	install -p -m0644 $(packages_src)/linux_make/pd-l2ork.desktop \
@@ -140,7 +140,7 @@ deb: $(bindir)
 	install -p $(packages_src)/linux_make/pd-l2ork.gif $(DESTDIR)$(libpddir)
 # emacs mode for .pd files
 	install -d $(DESTDIR)/usr/share/emacs/site-lisp/
-	install -p -m0644 $(scripts_src)/pd-mode.el \
+	install -p -m0644 $(scripts_src)/pd-l2ork-mode.el \
 		$(DESTDIR)/usr/share/emacs/site-lisp/
 # Pd-related scripts
 	#install -p $(scripts_src)/pd-diff $(DESTDIR)$(bindir)
@@ -193,7 +193,7 @@ installer_settings:
 #	install -p -m0644 $(packages_src)/linux_make/pd-48x48.png \
 #		$(DESTDIR)/usr/share/icons/hicolor/48x48/apps/pd-l2ork.png
 #	install -d $(DESTDIR)/usr/share/icons/hicolor/128x128/mimetypes
-#	install -p -m0644 $(packages_src)/linux_make/text-x-puredata.png \
+#	install -p -m0644 $(packages_src)/linux_make/text-x-pd-l2ork.png \
 #		$(DESTDIR)/usr/share/icons/hicolor/128x128/mimetypes
 #	install -d $(DESTDIR)/usr/share/applications/ 
 #	install -p -m0644 $(packages_src)/linux_make/pd-l2ork.desktop \
@@ -208,7 +208,7 @@ installer_makefile:
 	cp -f $(packages_src)/linux_make/pd-l2ork-red.png $(DESTDIR)$(libpddir)
 	cp -f $(packages_src)/linux_make/pd-l2ork-k12.png $(DESTDIR)$(libpddir)
 	cp -f $(packages_src)/linux_make/pd-l2ork-k12-red.png $(DESTDIR)$(libpddir)
-	cp -f $(packages_src)/linux_make/text-x-puredata.png $(DESTDIR)$(libpddir)
+	cp -f $(packages_src)/linux_make/text-x-pd-l2ork.png $(DESTDIR)$(libpddir)
 	cp -f $(packages_src)/linux_make/pd-l2ork.desktop $(DESTDIR)$(libpddir)
 	cp -f $(packages_src)/linux_make/pd-l2ork-k12.desktop $(DESTDIR)$(libpddir)
 	cp -f $(packages_src)/linux_make/pd-l2ork-debug.desktop $(DESTDIR)$(libpddir)

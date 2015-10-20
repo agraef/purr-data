@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
-  <mime-type type="text/x-puredata">
+  <mime-type type="text/x-pd-l2ork">
     <sub-class-of type="text/plain"/>
     <glob pattern="*.pd"/>
-	<alias type="application/x-puredata"/>
+	<alias type="application/x-pd-l2ork"/>
 	<magic priority="50">
 	  <match type="string" value="#N " offset="0"/>
 	</magic>
@@ -24,22 +24,22 @@
 	<comment xml:lang="tr">Pure Data Belgesi</comment>
 	<comment xml:lang="ru">Документ Pure Data</comment>
   </mime-type>
-  <mime-type type="text/x-puredata-help">
-    <sub-class-of type="text/x-puredata"/>
+  <mime-type type="text/x-pd-l2ork-help">
+    <sub-class-of type="text/x-pd-l2ork"/>
     <glob pattern="*-help.pd"/>
     <comment>Pure Data Help</comment>
   </mime-type>
-  <mime-type type="text/x-puredata-meta">
-    <sub-class-of type="text/x-puredata"/>
+  <mime-type type="text/x-pd-l2ork-meta">
+    <sub-class-of type="text/x-pd-l2ork"/>
     <glob pattern="*-meta.pd"/>
     <comment>Pure Data Meta Marker for Libraries</comment>
   </mime-type>
-  <mime-type type="application/x-puredata-external-linux">
+  <mime-type type="application/x-pd-l2ork-external-linux">
     <sub-class-of type="application/octet-stream"/>
     <glob pattern="*.pd_linux"/>
     <comment>Pure Data External (Linux Binary)</comment>
   </mime-type>
-  <mime-type type="application/x-puredata-external-darwin">
+  <mime-type type="application/x-pd-l2ork-external-darwin">
     <sub-class-of type="application/octet-stream"/>
     <glob pattern="*.pd_darwin"/>
     <comment>Pure Data External (Mac OS X Binary)</comment>
