@@ -18,6 +18,10 @@ t_class *scalar_class;
 
 void pd_doloadbang(void);
 
+extern t_symbol *canvas_field_templatesym; /* for "canvas" data type */
+extern t_word *canvas_field_vec;           /* for "canvas" data type */
+extern t_gpointer *canvas_field_gp;        /* parent for "canvas" data type */
+
 void word_init(t_word *data, t_template *template, t_gpointer *gp)
 {
     int i, nitems = template->t_n;
@@ -36,6 +40,23 @@ void word_init(t_word *data, t_template *template, t_gpointer *gp)
         }
         else if (type == DT_LIST)
         {
+            /* we feed these values to global vars so that we can 
+               read them from inside canvas_new.  This is very hacky, 
+               but I couldn't figure out a better way to do it. */
+            canvas_field_templatesym = template->t_sym;
+            /* this is bad-- we're storing a reference to a position in
+               a dynamically allocated byte array when realloc can potentially
+               move this data.  Essentially, we're depending on gcc to never
+               move it, which is a bad assumption.  Unfortunately gpointers
+               do the same thing, and I haven't heard back from Miller yet
+               on how he plans to deal with this problem. Hopefully that same
+               solution will be usable here. */
+            canvas_field_vec = data;
+            /* Here too we're being dangerous-- I'm copying the gpointer
+               without recounting, and I'm not unsetting the one that's 
+               part of the _glist struct (t_gpointer gl_gp). */
+            canvas_field_gp = gp;
+
             /* copied from glob_evalfile... */
             t_pd *x = 0;
             /* even though binbuf_evalfile appears to take care of dspstate,
@@ -62,17 +83,6 @@ void word_init(t_word *data, t_template *template, t_gpointer *gp)
 
             wp->w_list = canvas_getcurrent();
             wp->w_list->gl_templatesym = template->t_sym;
-            /* this is bad-- we're storing a reference to a position in
-               a dynamically allocated byte array when realloc can potentially
-               move this data.  Essentially, we're depending on gcc to never
-               move it, which is a bad assumption.  Unfortunately gpointers
-               do the same thing, and I haven't heard back from Miller yet
-               on how he plans to deal with this problem. Hopefully that same
-               solution will be usable here. */
-            wp->w_list->gl_vec = data;
-            /* Here too we're being dangerous-- I'm not unsetting this
-               gpointer yet. */
-            gpointer_copy(gp, &wp->w_list->gl_gp);
             /* make the parent glist the parent of our canvas field */
             wp->w_list->gl_owner = gp->gp_stub->gs_un.gs_glist;
 

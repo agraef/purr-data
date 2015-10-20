@@ -360,6 +360,13 @@ void canvasgop__clickhook(t_scalehandle *sh, int newstate);
 void canvasgop__motionhook(t_scalehandle *sh,t_floatarg f1, t_floatarg f2);
 extern void glist_setlastxy(t_glist *gl, int xval, int yval);
 
+/* These globals are used to set state for the "canvas" field in a
+   struct. We try below to make sure they only get set for the toplevel
+   canvas, and then set them to NULL for everything else. */
+t_symbol *canvas_field_templatesym; /* for "canvas" data type */
+t_word *canvas_field_vec;           /* for "canvas" data type */
+t_gpointer *canvas_field_gp;        /* parent for "canvas" data type */
+
     /* make a new glist.  It will either be a "root" canvas or else
     it appears as a "text" object in another window (canvas_getcurrent() 
     tells us which.) */
@@ -465,6 +472,16 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
 
     x->u_queue = canvas_undo_init(x);
     //glist_setlastxy(x, 20, 20);
+
+    x->gl_templatesym = canvas_field_templatesym;
+    x->gl_vec = canvas_field_vec;
+    if (canvas_field_gp) gpointer_copy(canvas_field_gp, &x->gl_gp);
+
+    // unset the globals in case this was a canvas field
+    canvas_field_templatesym = NULL;
+    canvas_field_vec = NULL;
+    canvas_field_gp = NULL;
+
     return(x);
 }
 

@@ -4149,9 +4149,10 @@ static int draw_click(t_gobj *z, t_glist *glist,
 
 void draw_notify(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 {
+    char canvas_field_namebuf[20];
+    t_symbol *canvas_field_event;
     t_symbol *scalarsym = atom_getsymbolarg(0, argc--, argv++);
     t_symbol *drawcommand_sym = atom_getsymbolarg(0, argc--, argv++);
-    t_symbol *event_name = atom_getsymbolarg(0, argc--, argv++);
     t_scalar *sc;
     t_object *ob = 0;
     if (scalarsym->s_thing)
@@ -4161,6 +4162,20 @@ void draw_notify(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
         error("draw_notify: can't get scalar from symbol");
         return;
     }
+
+    /* Generate the symbol that would be bound by any [event] inside
+       a canvas field.  If there's any in existence, forward the event
+       notification. pd_bind takes care of the details of this-- if 
+       there are multiple [event] objects it will dispatch to each */
+    sprintf(canvas_field_namebuf, "%lx_event", (long unsigned int)sc->sc_vec);
+    canvas_field_event = gensym(canvas_field_namebuf);
+    t_pd *target = canvas_field_event->s_thing;
+    if (target)
+        pd_forwardmess(target, argc, argv);
+
+    /* need to revisit popping this off the args, it's a little confusing... */
+    t_symbol *event_name = atom_getsymbolarg(0, argc--, argv++);
+
     if (drawcommand_sym->s_thing)
     {
         t_pd *drawcommand = (t_pd *)drawcommand_sym->s_thing;
@@ -4404,6 +4419,50 @@ static void draw_setup(void)
         gensym("y1"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_setattr,
         gensym("y2"), A_GIMME, 0);
+}
+
+/* ------------------------------ event --------------------------------- */
+/* This is a very simple class used to dispatch events inside a
+   canvas field. */
+
+t_class *event_class;
+
+typedef struct _event
+{
+    t_object x_obj;
+    t_symbol *x_bindsym;
+} t_event;
+
+static void event_anything(t_event *x, t_symbol *s, int argc, t_atom *argv)
+{
+    outlet_anything(x->x_obj.ob_outlet, s, argc, argv);
+}
+
+static void *event_new(void)
+{
+    char namebuf[20];
+    t_event *x = (t_event *)pd_new(event_class);
+    t_canvas *c = canvas_getcurrent();
+    if (c->gl_vec)
+    {
+        sprintf(namebuf, "%lx_event", (long unsigned int)c->gl_vec);
+        x->x_bindsym = gensym(namebuf);
+        pd_bind(&x->x_obj.ob_pd, x->x_bindsym);
+    }
+    outlet_new(&x->x_obj, &s_anything);
+    return (x);
+}
+
+static void event_free(t_event *x)
+{
+    pd_unbind(&x->x_obj.ob_pd, x->x_bindsym);
+}
+
+void event_setup(void)
+{
+    event_class = class_new(gensym("event"), (t_newmethod)event_new,
+        (t_method)event_free, sizeof(t_event), 0, 0);
+    class_addanything(event_class, event_anything);
 }
 
 /* ---------------- curves and polygons (joined segments) ---------------- */
@@ -7749,6 +7808,7 @@ void g_template_setup(void)
     gtemplate_setup();
     curve_setup();
     draw_setup();
+    event_setup();
     plot_setup();
     drawnumber_setup();
     drawsymbol_setup();
