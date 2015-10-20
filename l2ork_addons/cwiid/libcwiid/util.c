@@ -16,6 +16,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  *  ChangeLog:
+ *	2015-09-22 Ivica Ico Bukvic <ico@vt.edu>
+ * * Made old wiimotes use old way of connecting as some of them fail to do so using 1+2 when using new method
+ * * Removed error report thats tend to unnecessarily spam the console
+ *
  *	2015-09-17 Ivica Ico Bukvic <ico@vt.edu>
  * * Added Wii MotionPlus Inside support, thereby completing support for all known Wii devices
  * * Version bump to 0.7.00
@@ -94,10 +98,9 @@ void cwiid_err(struct wiimote *wiimote, const char *str, ...)
 	}
 }
 
-/*
+/* used only for old versions of Wiimotes, including Wii Board */
 int verify_handshake(struct wiimote *wiimote)
 {
-	// disabled because we don't use ctl_socket any more
 	unsigned char handshake;
 	if (read(wiimote->ctl_socket, &handshake, 1) != 1) {
 		cwiid_err(wiimote, "Socket read error (handshake)");
@@ -114,7 +117,7 @@ int verify_handshake(struct wiimote *wiimote)
 
 	return 0;
 }
-*/
+
 
 int exec_write_seq(struct wiimote *wiimote, unsigned int len,
                    struct write_seq *seq)

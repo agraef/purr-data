@@ -16,6 +16,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  *  ChangeLog:
+ *	2015-09-22 Ivica Ico Bukvic <ico@vt.edu>
+ * * Made old wiimotes use old way of connecting as some of them fail to do so using 1+2 when using new method
+ * * Removed error report thats tend to unnecessarily spam the console
+ *
  *	2015-09-17 Ivica Ico Bukvic <ico@vt.edu>
  * * Added Wii MotionPlus Inside support, thereby completing support for all known Wii devices
  * * Version bump to 0.7.00
@@ -65,7 +69,7 @@
 /* Bluetooth magic numbers */
 #define BT_TRANS_MASK		0xF0
 #define BT_TRANS_HANDSHAKE	0x00
-#define BT_TRANS_SET_REPORT	0xA0
+#define BT_TRANS_SET_REPORT	0x50
 #define BT_TRANS_DATA		0xA0
 #define BT_TRANS_DATAC		0xB0
 
@@ -157,6 +161,10 @@
 #define WII_L5_IR_BLOCK_1			"\x02\x00\x00\x71\x01\x00\x72\x00\x20"
 #define WII_L5_IR_BLOCK_2			"\x1F\x03"
 
+/* Type of Wiimote */
+ #define WIIMOTE_OLD	0
+ #define WIIMOTE_NEW	1
+
 /* Write Sequences */
 enum write_seq_type {
 	WRITE_SEQ_RPT,
@@ -216,9 +224,10 @@ struct wiimote {
 	pthread_mutex_t rpt_mutex;
 	int id;
 	const void *data;
-	int ext;	//extension identifier already added to wiimote
+	int ext;	// extension identifier already added to wiimote
 	pthread_t passthrough_polling_thread;
 	int passthrough_activate_flag;
+	int type; 	// type of wiimote, 0 = old, 1 = new
 	pthread_mutex_t poll_mutex;
 	pthread_cond_t condition_var;
 };
@@ -232,7 +241,7 @@ void *mesg_callback_thread(struct wiimote *wiimote);
 
 /* util.c */
 void cwiid_err(struct wiimote *wiimote, const char *str, ...);
-//int verify_handshake(struct wiimote *wiimote);
+int verify_handshake(struct wiimote *wiimote);
 int exec_write_seq(struct wiimote *wiimote, unsigned int len,
                    struct write_seq *seq);
 int full_read(int fd, void *buf, size_t len);

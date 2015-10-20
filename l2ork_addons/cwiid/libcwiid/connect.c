@@ -15,6 +15,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  *  ChangeLog:
+ *	2015-09-22 Ivica Ico Bukvic <ico@vt.edu>
+ * * Made old wiimotes use old way of connecting as some of them fail to do so using 1+2 when using new method
+ * * Removed error report thats tend to unnecessarily spam the console
+ *
  *	2015-09-17 Ivica Ico Bukvic <ico@vt.edu>
  * * Added Wii MotionPlus Inside support, thereby completing support for all known Wii devices
  * * Version bump to 0.7.00
@@ -88,8 +92,9 @@ cwiid_wiimote_t *cwiid_open_timeout(bdaddr_t *bdaddr, int flags, int timeout)
 	char mesg_pipe_init = 0, status_pipe_init = 0, rw_pipe_init = 0,
 	     state_mutex_init = 0, rw_mutex_init = 0, rpt_mutex_init = 0,
 	     router_thread_init = 0, status_thread_init = 0, ext_passthrough_polling_thread_init = 0,
-		 poll_mutex_init = 0, poll_cond_init = 0;
+		 poll_mutex_init = 0, poll_cond_init = 0, name[BT_NAME_LEN] = { 0 };
 	void *pthread_ret;
+	int sock; 
 
 	/* Allocate wiimote */
 	if ((wiimote = malloc(sizeof *wiimote)) == NULL) {
@@ -122,6 +127,22 @@ cwiid_wiimote_t *cwiid_open_timeout(bdaddr_t *bdaddr, int flags, int timeout)
 		}
 		sleep(1);
 	}
+
+	/* Figure out if the device is old or new version by looking up its name */
+	sock = hci_open_dev(wiimote->id);
+	if (!hci_read_remote_name(sock, bdaddr, BT_NAME_LEN, name, 0)) {
+		if (!strncmp(name, WIIMOTE_PLUS_NAME, BT_NAME_LEN)) {
+			fprintf(stderr,"Found new version of the wiimote (%s)\n", name);
+			wiimote->type = WIIMOTE_NEW;
+		}
+		else {
+			fprintf(stderr,"Found old version of the wiimote (%s)\n", name);
+			wiimote->type = WIIMOTE_OLD;
+		}
+	}
+	else
+		fprintf(stderr,"Error reading wiimote name, unable to determine version\n");
+	close(sock);
 
 	/* Connect to Wiimote */
 	/* Control Channel */

@@ -15,6 +15,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  *  ChangeLog:
+  *	2015-09-22 Ivica Ico Bukvic <ico@vt.edu>
+ * * Made old wiimotes use old way of connecting as some of them fail to do so using 1+2 when using new method
+ * * Removed error report thats tend to unnecessarily spam the console
+ *
  *	2015-09-17 Ivica Ico Bukvic <ico@vt.edu>
  * * Added Wii MotionPlus Inside support, thereby completing support for all known Wii devices
  * * Version bump to 0.7.00
@@ -98,21 +102,36 @@ int cwiid_send_rpt(cwiid_wiimote_t *wiimote, uint8_t flags, uint8_t report,
 		return -1;
 	}
 
-	buf[0] = BT_TRANS_SET_REPORT | BT_PARAM_OUTPUT;
+	if (wiimote->type == WIIMOTE_NEW)
+		buf[0] = BT_TRANS_DATA | BT_PARAM_OUTPUT;
+	else
+		buf[0] = BT_TRANS_SET_REPORT | BT_PARAM_OUTPUT;
 	buf[1] = report;
 	memcpy(buf+2, data, len);
 	if (!(flags & CWIID_SEND_RPT_NO_RUMBLE)) {
 		buf[2] |= wiimote->state.rumble;
 	}
 
-	if (write(wiimote->int_socket, buf, len+2) != (ssize_t)(len+2)) {
-		free(buf);
-		return -1;
+	// if this is a new version of the wiimote
+	if (wiimote->type == WIIMOTE_NEW)
+	{
+		if (write(wiimote->int_socket, buf, len+2) != (ssize_t)(len+2)) {
+			free(buf);
+			return -1;
+		}
 	}
-	/*else if (verify_handshake(wiimote)) {
-		free(buf);
-		return -1;
-	}*/
+	// otherwise it is WIIMOTE_OLD which also includes Wii Board
+	else
+	{
+		if (write(wiimote->ctl_socket, buf, len+2) != (ssize_t)(len+2)) {
+			free(buf);
+			return -1;
+		}
+		else if (verify_handshake(wiimote)) {
+			free(buf);
+			return -1;
+		}
+	}
 
 	return 0;
 }
@@ -391,11 +410,11 @@ int cwiid_write(cwiid_wiimote_t *wiimote, uint8_t flags, uint32_t offset,
 			goto CODA;
 		}
 
-		if (mesg.error) {
+		/*if (mesg.error) {
 			cwiid_err(wiimote, "Wiimote write error");
 			ret = -1;
 			goto CODA;
-		};
+		};*/
 
 		sent+=buf[4];
 	}

@@ -16,6 +16,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  *  ChangeLog:
+ *	2015-09-22 Ivica Ico Bukvic <ico@vt.edu>
+ * * Made old wiimotes use old way of connecting as some of them fail to do so using 1+2 when using new method
+ * * Removed error report thats tend to unnecessarily spam the console
+ *
  *	2015-09-17 Ivica Ico Bukvic <ico@vt.edu>
  * * Added Wii MotionPlus Inside support, thereby completing support for all known Wii devices
  * * Version bump to 0.7.00
@@ -376,7 +380,7 @@ int process_write(struct wiimote *wiimote, unsigned char *data)
 
 	if (wiimote->rw_status != RW_WRITE) {
 		cwiid_err(wiimote, "Received unexpected write report %d", wiimote->rw_status);
-		//return -1;
+		return -1;
 	}
 
 	rw_mesg.type = RW_WRITE;
@@ -385,7 +389,7 @@ int process_write(struct wiimote *wiimote, unsigned char *data)
 	if (write(wiimote->rw_pipe[1], &rw_mesg, sizeof rw_mesg) !=
 	  sizeof rw_mesg) {
 		cwiid_err(wiimote, "RW pipe write error");
-		//return -1;
+		return -1;
 	}
 
 	return 0;
