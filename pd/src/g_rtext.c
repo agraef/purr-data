@@ -395,9 +395,9 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
             // pd_canvas.html.  I could remove the conditional, but
             // this part of Pd is convoluted enough that I'm not sure
             // if there'd be any side effects.
-            if (pixwide != x->x_drawnwidth ||
+            if (glist_isvisible(x->x_glist) && (pixwide != x->x_drawnwidth ||
                 pixhigh != x->x_drawnheight ||
-                x->x_text->te_type == T_MESSAGE) 
+                x->x_text->te_type == T_MESSAGE)) 
                 text_drawborder(x->x_text, x->x_glist, x->x_tag,
                     pixwide, pixhigh, 0);
             if (x->x_active)
