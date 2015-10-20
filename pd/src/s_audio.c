@@ -119,6 +119,8 @@ void sys_get_audio_params(
         else paudiooutdev[i] = audio_audiooutdev[i];
         choutdev[i] = audio_audiochoutdev[i]; 
     }
+    if (audio_rate != sys_dacsr && sys_dacsr != 0)
+        audio_rate = sys_dacsr;
     *prate = audio_rate;
     *padvance = audio_advance;
     *pcallback = audio_callback;
@@ -147,6 +149,7 @@ void sys_save_audio_params(
         sys_audiodevnumbertoname(1, audiooutdev[i],
             &audio_outdevnames[i * DEVDESCSIZE], DEVDESCSIZE);
     }
+    sys_dacsr = rate;
     audio_rate = rate;
     audio_advance = advance;
     audio_callback = callback;
@@ -190,6 +193,7 @@ void sys_setchsr(int chin, int chout, int sr)
     sys_inchannels = chin;
     sys_outchannels = chout;
     sys_dacsr = sr;
+    audio_rate = sr;
     sys_advance_samples = (sys_schedadvance * sys_dacsr) / (1000000.);
     if (sys_advance_samples < 3 * DEFDACBLKSIZE)
         sys_advance_samples = 3 * DEFDACBLKSIZE;
@@ -561,7 +565,7 @@ t_float sys_getsr(void)
 {
     // when starting with -nogui option, it is conceivable that sys_dacsr
     // is not initialized even though the audio_rate by this time has
-    // proper sample rate entered. Hence we check for this here and avoid
+    // proper sample rate entered. Hence, we check for this here and avoid
     // the -nogui nonsense where we have to do various workarounds to make
     // sure that audio objects that depend on this call get the proper sr
     if (sys_dacsr == 0 && audio_rate > 0)
@@ -740,6 +744,7 @@ void glob_audio_properties(t_pd *dummy, t_floatarg flongform)
     sys_get_audio_params(&naudioindev, audioindev, chindev,
         &naudiooutdev, audiooutdev, choutdev, &rate, &advance, &callback,
             &blocksize);
+    //rate = (int)sys_getsr();
 
 #ifdef USEAPI_JACK
     if (sys_audioapiopened == API_JACK)
