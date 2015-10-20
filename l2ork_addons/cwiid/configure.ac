@@ -1,4 +1,7 @@
 # ChangeLog:
+# 2015-09-17 Ivica Ico Bukvic <ico@vt.edu>
+# * updated version and contact info
+#
 # 2007-07-28 L. Donnie Smith <cwiid@abstrakraft.org>
 # * added config.h header
 # * added with-python argument and associated logic
@@ -24,7 +27,7 @@
 # * Initial ChangeLog
 # * Check for stdint.h
 
-AC_INIT(CWiid,0.6.00,cwiid@abstrakraft.org)
+AC_INIT(CWiid,0.7.00,ico@vt.edu)
 AC_CONFIG_HEADER(common/include/config.h)
 
 AC_PROG_CC

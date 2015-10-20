@@ -1,4 +1,5 @@
 /* Copyright (C) 2007 L. Donnie Smith <cwiid@abstrakraft.org>
+ * Copyright (C) 2011-2015 Ivica Ico Bukvic <ico@vt.edu> and Deba Pratim Saha <dpsaha@vt.edu>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -15,6 +16,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  *  ChangeLog:
+ *	2015-09-17 Ivica Ico Bukvic <ico@vt.edu>
+ * * Added Wii MotionPlus Inside support, thereby completing support for all known Wii devices
+ * * Version bump to 0.7.00
+ * * Updated build and contact info
+ *
  *  2008-08-14 L. Donnie Smith <cwiid@abstrakraft.org>
  *  * make cwiid_err_default public
  *  * clean up cwiid_err
@@ -88,8 +94,10 @@ void cwiid_err(struct wiimote *wiimote, const char *str, ...)
 	}
 }
 
+/*
 int verify_handshake(struct wiimote *wiimote)
 {
+	// disabled because we don't use ctl_socket any more
 	unsigned char handshake;
 	if (read(wiimote->ctl_socket, &handshake, 1) != 1) {
 		cwiid_err(wiimote, "Socket read error (handshake)");
@@ -106,6 +114,7 @@ int verify_handshake(struct wiimote *wiimote)
 
 	return 0;
 }
+*/
 
 int exec_write_seq(struct wiimote *wiimote, unsigned int len,
                    struct write_seq *seq)

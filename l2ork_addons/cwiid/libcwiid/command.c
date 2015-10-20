@@ -15,6 +15,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  *  ChangeLog:
+ *	2015-09-17 Ivica Ico Bukvic <ico@vt.edu>
+ * * Added Wii MotionPlus Inside support, thereby completing support for all known Wii devices
+ * * Version bump to 0.7.00
+ * * Updated build and contact info
+ *
  *  2012-04-11 Deba Pratim Saha <dpsaha@vt.edu> and Ivica Ico Bukvic <ico@vt.edu>
  * * implemented passthrough toggle
  * * implemented Mplus + Nunchuk passthrough support
@@ -100,14 +105,14 @@ int cwiid_send_rpt(cwiid_wiimote_t *wiimote, uint8_t flags, uint8_t report,
 		buf[2] |= wiimote->state.rumble;
 	}
 
-	if (write(wiimote->ctl_socket, buf, len+2) != (ssize_t)(len+2)) {
+	if (write(wiimote->int_socket, buf, len+2) != (ssize_t)(len+2)) {
 		free(buf);
 		return -1;
 	}
-	else if (verify_handshake(wiimote)) {
+	/*else if (verify_handshake(wiimote)) {
 		free(buf);
 		return -1;
-	}
+	}*/
 
 	return 0;
 }
