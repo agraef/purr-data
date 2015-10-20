@@ -568,9 +568,11 @@ t_float sys_getsr(void)
     // proper sample rate entered. Hence, we check for this here and avoid
     // the -nogui nonsense where we have to do various workarounds to make
     // sure that audio objects that depend on this call get the proper sr
-    if (sys_dacsr == 0 && audio_rate > 0)
+    if (sys_dacsr == 0)
     {
-        sys_dacsr = (t_float)audio_rate;
+        if (audio_rate > 0)
+            sys_dacsr = (t_float)audio_rate;
+        else sys_dacsr = 44100; // safe fallback
     }
     return (sys_dacsr);
 }
