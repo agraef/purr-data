@@ -896,9 +896,10 @@ function nw_create_patch_window_menus(name) {
                 canvas_events.search();
             } else {
                 find_bar.style.setProperty('display', 'none');
-// this is wrong and causes bug... we need to set back to whatever state
-// we used to be in... probably need a last_state var
-                canvas_events.none();
+                // "normal" seems to be the only viable state for the
+                // canvas atm.  But if there are other states added later,
+                // we might need to fetch the previous state here.
+                canvas_events.normal();
             }
         },
         key: 'f',

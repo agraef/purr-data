@@ -2936,7 +2936,6 @@ function gui_textarea(cid, tag, type, x, y, max_char_width, text,
         if (p !== null) {
             p.parentNode.removeChild(p);
         }
-// this is wrong and causes bug... we need it to go back to previous state
         if (patchwin[cid].window.canvas_events.get_previous_state() === 
                'search') {
             patchwin[cid].window.canvas_events.search();
