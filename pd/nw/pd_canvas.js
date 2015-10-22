@@ -67,7 +67,7 @@ var canvas_events = (function() {
         state,
         scalar_draggables = {}, // elements of a scalar which have the "drag" event enabled
         draggable_elem,         // the current scalar element being dragged
-        last_draggable_x,       // last x position for the element we're dragging
+        last_draggable_x,       // last x coord for the element we're dragging
         last_draggable_y,       // last y 
         previous_state = 'none', /* last state, excluding explicit 'none' */
         match_words_state = false,
@@ -483,7 +483,8 @@ var canvas_events = (function() {
         match_words: function(state) {
             match_words_state = state;
         },
-        add_scalar_draggable: function(cid, tag, scalar_sym, drawcommand_sym, event_name) {
+        add_scalar_draggable: function(cid, tag, scalar_sym, drawcommand_sym,
+            event_name) {
             scalar_draggables[tag] = {
                 cid: cid,
                 scalar_sym: scalar_sym,
