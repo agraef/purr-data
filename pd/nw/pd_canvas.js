@@ -65,6 +65,10 @@ pdgui.gui_post("flub!");
 var canvas_events = (function() {
     var name,
         state,
+        scalar_draggables = {}, // elements of a scalar which have the "drag" event enabled
+        draggable_elem,         // the current scalar element being dragged
+        last_draggable_x,       // last x position for the element we're dragging
+        last_draggable_y,       // last y 
         previous_state = 'none', /* last state, excluding explicit 'none' */
         match_words_state = false,
         last_search_term = '',
@@ -90,6 +94,17 @@ var canvas_events = (function() {
                 // than html5...
                 var b = evt.button + 1;
                 var mod;
+                // See if there are any draggable scalar shapes...
+                if (Object.keys(scalar_draggables)) {
+                    // if so, see if our target is one of them...
+                    if (scalar_draggables[evt.target.id]) {
+                        // then set some state and turn on the drag events
+                        draggable_elem = evt.target;
+                        last_draggable_x = evt.pageX;
+                        last_draggable_y = evt.pageY;
+                        canvas_events.scalar_drag();
+                    }
+                }
                 // For some reason right-click sends a modifier value of "8",
                 // and canvas_doclick in g_editor.c depends on that value to
                 // do the right thing.  So let's hack...
@@ -304,6 +319,19 @@ var canvas_events = (function() {
                 if (evt.keyCode === 13) {
                     events.find_click(evt);
                 }
+            },
+            scalar_draggable_mousemove: function(evt) {
+                var new_x = evt.pageX,
+                    new_y = evt.pageY;
+                var obj = scalar_draggables[draggable_elem.id];
+                pdgui.pdsend(obj.cid, "scalar_event", obj.scalar_sym, 
+                    obj.drawcommand_sym, obj.event_name, new_x - last_draggable_x,
+                    new_y - last_draggable_y);
+                last_draggable_x = new_x;
+                last_draggable_y = new_y;
+            },
+            scalar_draggable_mouseup: function(evt) {
+                canvas_events.normal();
             }
         },
         utils = {
@@ -398,6 +426,15 @@ var canvas_events = (function() {
             state = 'normal';
             set_edit_menu_modals(true);
         },
+        scalar_drag: function() {
+            // This scalar_drag is a prototype for moving more of the editing environment 
+            // directly to the GUI.  At the moment we're leaving the other "normal" 
+            // events live, since behavior like editmode selection still happens from
+            // the Pd engine.
+            //this.none();
+            document.addEventListener("mousemove", events.scalar_draggable_mousemove, false);
+            document.addEventListener("mouseup", events.scalar_draggable_mouseup, false);
+        },
         text: function() {
             this.none();
 
@@ -445,6 +482,19 @@ var canvas_events = (function() {
         },
         match_words: function(state) {
             match_words_state = state;
+        },
+        add_scalar_draggable: function(cid, tag, scalar_sym, drawcommand_sym, event_name) {
+            scalar_draggables[tag] = {
+                cid: cid,
+                scalar_sym: scalar_sym,
+                drawcommand_sym, drawcommand_sym,
+                event_name: event_name
+            };
+        },
+        remove_scalar_draggable: function(id) {
+            if (scalar_draggables[id]) {
+                scalar_draggables[id] = null;
+            }
         }
     }
 }());

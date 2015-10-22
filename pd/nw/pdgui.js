@@ -2173,51 +2173,22 @@ function gui_draw_coords(cid, tag, shape, points) {
     }
 }
 
-var gui_draw_drag_event = (function() {
-    var last_mousedown,
-        last_mouseup,
-        last_mousemove;
-    return function gui_draw_drag_event(cid, tag, scalar_sym,
-        drawcommand_sym, event_name, state) {
-        var last_x,
-            last_y,
-            item = get_item(cid, tag),
-            doc = patchwin[cid].window.document,
-            mousemove = function(e) {
-                var new_x = e.pageX,
-                    new_y = e.pageY;
-                pdsend(cid, "scalar_event", scalar_sym, drawcommand_sym,
-                    event_name, new_x - last_x, new_y - last_y);
-                last_x = new_x;
-                last_y = new_y;
-            },
-            mousedown = function(e) {
-                if (e.target === item) {
-                    last_x = e.pageX;
-                    last_y = e.pageY;
-                    doc.addEventListener("mousemove", mousemove, false);
-                }
-            },
-            mouseup = function(e) {
-                doc.removeEventListener("mousemove", mousemove, false);
-            }
-        ;
-        // Go ahead and remove any event listeners
-        doc.removeEventListener("mousedown", last_mousedown, false);
-        doc.removeEventListener("mouseup", last_mouseup, false);
-        doc.removeEventListener("mousemove", last_mousemove, false);
-
-        // Set mousedown and mouseup events to create our "drag" event
-        if (state === 1) {
-            doc.addEventListener("mousedown", mousedown, false);
-            doc.addEventListener("mouseup", mouseup, false);
-            last_mousemove = mousemove;
-            last_mouseup = mouseup;
-            last_mousedown = mousedown;
-        }
+// set a drag event for a shape that's part of a scalar.
+// this is a convenience method for the user, so that dragging outside
+// of the bbox of the shape will still register as part of the event.
+// (Attempting to set the event more than once is ignored.)
+function gui_draw_drag_event(cid, tag, scalar_sym, drawcommand_sym,
+    event_name, state) {
+    var win = patchwin[cid].window;
+    if (state === 0) {
+        win.canvas_events.remove_scalar_draggable(tag); 
+    } else {
+        win.canvas_events.add_scalar_draggable(cid, tag, scalar_sym,
+            drawcommand_sym, event_name);
     }
-}());
+}
 
+// Events for scalars-- mouseover, mouseout, etc.
 function gui_draw_event(cid, tag, scalar_sym, drawcommand_sym, event_name,
     state) {
     var item = get_item(cid, tag),
