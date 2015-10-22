@@ -4442,7 +4442,7 @@ static void *event_new(void)
 {
     char namebuf[20];
     t_event *x = (t_event *)pd_new(event_class);
-    t_canvas *c = canvas_getcurrent();
+    t_canvas *c = canvas_getrootfor(canvas_getcurrent());
     if (c->gl_vec)
     {
         sprintf(namebuf, "%lx_event", (long unsigned int)c->gl_vec);
