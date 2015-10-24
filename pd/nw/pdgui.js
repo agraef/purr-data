@@ -2954,34 +2954,63 @@ function gui_undo_menu(cid, undo_text, redo_text) {
 }
 
 function do_getscroll(cid) {
-    var svg = get_item(cid, 'patchsvg');
+    var bbox, width, height, min_width, min_height, x, y,
+        svg = get_item(cid, 'patchsvg');
     // Not sure why I need to check for null here... I'm waiting for the
     // nw window to load before mapping the Pd canvas, so the patchsvg
     // should always exist.  Perhaps I also need to set an event for
     // document.onload as well...
     if (svg === null) { return; }
-    var bbox = svg.getBBox();
-    var width = bbox.x > 0 ? bbox.x + bbox.width : bbox.width,
-        height = bbox.y > 0 ? bbox.y + bbox.height : bbox.height;
-    if (width === 0) {
-        width = patchwin[cid].window.document.body.clientWidth;
-    }
-    if (height === 0) {
-        height = patchwin[cid].window.document.body.clientHeight;
-    }
+    bbox = svg.getBBox();
+    // We try to do Pd-extended style canvas origins. That is, coord (0, 0) 
+    // should be in the top-left corner unless there are objects with a 
+    // negative x or y.
+    // To implement the Pd-l2ork behavior, the top-left of the canvas should
+    // always be the topmost, leftmost object.
+    width = bbox.x > 0 ? bbox.x + bbox.width : bbox.width,
+    height = bbox.y > 0 ? bbox.y + bbox.height : bbox.height;
+    x = bbox.x > 0 ? 0 : bbox.x,
+    y = bbox.y > 0 ? 0 : bbox.y;
+
+    // The svg "overflow" attribute on an <svg> seems to be buggy-- for example,
+    // you can't trigger a mouseover event for a <rect> that is outside of the
+    // explicit bounds of the svg.
+    // To deal with this, we want to set the svg width/height to always be 
+    // at least as large as the browser's viewport. There are a few ways to 
+    // do this this, like documentElement.clientWidth, but window.innerWidth 
+    // seems to give the best results.
+    // However, there is either a bug or some strange behavior regarding 
+    // the viewport size: setting both the height and width of an <svg> to
+    // the viewport height/width will display the scrollbars. The height or
+    // width must be set to 4 less than the viewport size in order to keep
+    // the scrollbars from appearing. Here, we just subtract 4 from both
+    // of them. This could lead to some problems with event handlers but I 
+    // haven't had a problem with it yet.
+    min_width = patchwin[cid].window.innerWidth - 4;
+    min_height = patchwin[cid].window.innerHeight - 4;
+
     // Since we don't do any transformations on the patchsvg,
     // let's try just using ints for the height/width/viewBox
     // to keep things simple.
     width |= 0; // drop everything to the right of the decimal point
     height |= 0;
+    min_width |= 0;
+    min_height |= 0;
+    if (width < min_width) {
+        width = min_width;
+    }
+    // If the svg extends beyond the viewport, it might be nice to pad
+    // both the height/width and the x/y coords so that there is extra
+    // room for making connections and manipulating the objects.  As it
+    // stands objects will be flush with the scrollbars and window
+    // edges.
+    if (height < min_height) {
+        height = min_height;
+    }
     configure_item(svg, {
-        viewBox: [bbox.x > 0 ? 0 : bbox.x,
-                  bbox.y > 0 ? 0 : bbox.y,
-                  width,
-                  height] 
-                  .join(" "),
+        viewBox: [x, y, width, height].join(" "),
         width: width,
-        height: height
+        height: height 
     });
 }
 
