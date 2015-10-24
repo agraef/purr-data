@@ -1175,6 +1175,8 @@ typedef struct _drawimage
     t_pd *x_attr;
 } t_drawimage;
 
+extern t_outlet *obj_rightmost_outlet(t_object *x);
+
 void draw_notifyforscalar(t_object *x, t_glist *owner,
     t_scalar *sc, t_symbol *s, int argc, t_atom *argv)
 {
@@ -1187,8 +1189,15 @@ void draw_notifyforscalar(t_object *x, t_glist *owner,
     binbuf_add(b, 1, at);
     binbuf_add(b, argc, argv);
     if (x)
-        outlet_anything(x->ob_outlet, s, binbuf_getnatom(b),
+    {
+        t_outlet *out;
+        if (pd_class(&x->te_pd) == canvas_class)
+            out = obj_rightmost_outlet(x);
+        else
+            out = x->ob_outlet;
+        outlet_anything(out, s, binbuf_getnatom(b),
             binbuf_getvec(b));
+    }
     gpointer_unset(&gp);
     binbuf_free(b);
 }

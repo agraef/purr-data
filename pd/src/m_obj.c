@@ -579,6 +579,20 @@ int obj_noutlets(t_object *x)
     return (n);
 }
 
+/* used for draw_notify */
+t_outlet *obj_rightmost_outlet(t_object *x)
+{
+    t_outlet *o = x->ob_outlet;
+    if (o)
+    {
+        while (o->o_next)
+            o = o->o_next;
+        return o;
+    }
+    else
+        return 0;
+}
+
 int obj_ninlets(t_object *x)
 {
     int n;
