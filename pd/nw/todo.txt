@@ -41,7 +41,8 @@ Node-webkit stuff:
 5) command line argv
 
 Everything else: (A [x] means we've fixed it)
-[ ] set svg bounds to whatever the window size happens to be
+[x] set svg bounds to whatever the window size happens to be
+[ ] trigger a canvas_getscroll when the nw.js window is resized
 [ ] packaging as app, setting correct appname, etc
 [ ] get -unique to work (relied on tcl [send] command)
 [ ] check if patch windows with screenposition (0,0) get stuck underneath
