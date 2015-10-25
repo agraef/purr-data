@@ -183,7 +183,7 @@ var last_string = "";
 var last_child = {};
 var duplicate = 0;
 
-function gui_post(string, color) {
+function do_post(string, color) {
     if (last_string === string) {
         last_child.textContent = "[" + (duplicate + 2) + "] " + last_string;
         duplicate++;
@@ -205,7 +205,17 @@ function gui_post(string, color) {
     }
 }
 
-exports.gui_post = gui_post;
+// print message to console-- add a newline for convenience
+function post(string, color) {
+    do_post(string + "\n", color);
+}
+
+exports.post = post;
+
+// print message to console from Pd-- don't add newline
+function gui_post(string, color) {
+    do_post(string, color);
+}
 
 function pd_error_select_by_id(objectid) {
     if (objectid !== null) {
@@ -278,7 +288,7 @@ function menu_save(name) {
 exports.menu_save = menu_save;
 
 function gui_canvas_saveas (name, initfile, initdir) {
-    gui_post("working directory is " + pwd);
+    post("working directory is " + pwd);
     //global pd_nt filetypes untitled_directory
     if (!fs.existsSync(initdir)) {
         initdir = pwd;
@@ -289,7 +299,7 @@ function gui_canvas_saveas (name, initfile, initdir) {
 }
 
 function saveas_callback(cid, file) {
-    gui_post("tried a saveas, and the file chosen is " + file);
+    post("tried a saveas, and the file chosen is " + file);
     var filename = file;
     // It probably isn't possible to arrive at the callback with an
     // empty string.  But I've only tested on Debian so far...
@@ -369,10 +379,10 @@ exports.menu_k12_open_demos = menu_k12_open_demos;
 
 
 function menu_open (filenames_string) {
-    gui_post("menu_open " + filenames_string);
+    post("menu_open " + filenames_string);
     var file_array = filenames_string.split(";");
     var length = file_array.length;
-    gui_post("file_array is " + file_array);
+    post("file_array is " + file_array);
     for (var i = 0; i < length; i++) {
         open_file(file_array[i]);
     }
@@ -420,10 +430,10 @@ function gui_pd_quit_dialog() {
 
 // send a message to Pd
 function menu_send() {
-    gui_post("message...pdwindow is " + pd_window);
+    post("message...pdwindow is " + pd_window);
     var message = pd_window.window.prompt("Type a message to send to Pd");
     if (message != undefined && message.length) {
-        gui_post("Sending message to Pd: " + message + ";");
+        post("Sending message to Pd: " + message + ";");
         pdsend(message);
     }
 }
@@ -453,7 +463,7 @@ function open_file(file) {
     var basename = path.basename(file);
     var cyclist;
     if (basename.match(/\.(pat|mxb|help)$/) !=null) {
-        gui_post("warning: opening pat|mxb|help not implemented yet");
+        post("warning: opening pat|mxb|help not implemented yet");
         if (pd_nt == 0) {
             // on GNU/Linux, cyclist is installed into /usr/bin usually
             cyclist = "/usr/bin/cyclist";
@@ -485,12 +495,12 @@ function open_file(file) {
 // (files) to be opened by the unique instance 
 function gui_open_files_via_unique(filenames)
 {
-    gui_post("pdtk_open_files_via_unique " + filenames);
+    post("pdtk_open_files_via_unique " + filenames);
     length = filenames.length;
     if (length != 0) {
         for (var i = 0; i < length; i++) {
             var file = filenames[i];
-            //gui_post("open_file " + file);
+            //post("open_file " + file);
             open_file(file);
         }
     }
@@ -854,7 +864,7 @@ function init_socket_events () {
                     cmdHeader = false;
                     next_command = "";
                     // Now evaluate it 
-                    //gui_post("Evaling: " + selector + "(" + args + ");");
+                    //post("Evaling: " + selector + "(" + args + ");");
                     eval(selector + "(" + args + ");");
                 } else {
                     next_command += "%" +
@@ -873,7 +883,7 @@ function init_socket_events () {
                         old_command_output = unescape(old_command);
                     }
                     old_command= "";
-                    //gui_post("warning: old command: " + old_command_output,
+                    //post("warning: old command: " + old_command_output,
                     //    "blue");
                 }
                 cmdHeader = true; 
@@ -898,8 +908,8 @@ exports.init_socket_events = init_socket_events;
 function pdsend() {
     var string = Array.prototype.join.call(arguments, " ");
     client.write(string + ";");
-    // for now, let's reprint the outgoing string to the pdwindow
-    //gui_post(string + ";", "red");
+    // reprint the outgoing string to the pdwindow
+    //post(string + ";", "red");
 }
 
 exports.pdsend = pdsend;
@@ -1166,7 +1176,7 @@ function gui_canvas_select_line(cid, tag) {
     if (line !== null) {
         line.classList.add("selected_line");
     } else {
-        gui_post("gui_canvas_select_line: can't find line");
+        post("gui_canvas_select_line: can't find line");
     }
 }
 
@@ -1175,7 +1185,7 @@ function gui_canvas_deselect_line(cid, tag) {
     if (line !== null) {
         line.classList.remove("selected_line");
     } else {
-        gui_post("gui_canvas_select_line: can't find line");
+        post("gui_canvas_select_line: can't find line");
     }
 }
 
@@ -1185,7 +1195,7 @@ function gui_canvas_delete_line(cid, tag) {
     if (line !== null) {
         line.parentNode.removeChild(line);
     } else {
-        gui_post("canvas_delete_line: something is borked because the line doesn't exist");
+        post("canvas_delete_line: something is borked because the line doesn't exist");
     }
 }
 
@@ -1319,7 +1329,7 @@ function gui_text_new(canvasname, myname, type, isselected, left_margin, font_he
     if (g !== null) {
         g.appendChild(svg_text);
     } else {
-        gui_post("gui_text_new: can't find parent group " + myname);
+        post("gui_text_new: can't find parent group " + myname);
     }
 
     if (isselected) {
@@ -1334,7 +1344,7 @@ function gui_gobj_erase(cid, tag) {
     if (g !== null) {
         g.parentNode.removeChild(g);
     } else {
-        gui_post("gui_gobj_erase: gobj " + tag +
+        post("gui_gobj_erase: gobj " + tag +
             " didn't exist in the first place!");
     }
 }
@@ -1353,7 +1363,7 @@ function gui_text_set (cid, tag, text) {
         // to set options before creating the item. To get a sense
         // of where this is happening, uncomment the following line:
 
-        //gui_post("gui_text_set: svg_text doesn't exist: tag: " + tag);
+        //post("gui_text_set: svg_text doesn't exist: tag: " + tag);
     }
 }
 
@@ -1398,7 +1408,7 @@ return;
             "stroke-dasharray": "none"
         });
     } else {
-        gui_post("select_color: something wrong with tag: " + tag + "border");
+        post("select_color: something wrong with tag: " + tag + "border");
     }
 }
 
@@ -2142,7 +2152,7 @@ function gui_draw_erase_item(cid, tag) {
     if (item !== null) {
         item.parentNode.removeChild(item);
     } else {
-        gui_post("uh oh... gui_draw_erase_item couldn't find the item...");
+        post("uh oh... gui_draw_erase_item couldn't find the item...");
     }
 }
 
@@ -2273,7 +2283,7 @@ function gui_drawnumber_vis(cid, parent_tag, tag, x, y, scale_x, scale_y,
         if (g !== null) {
             g.appendChild(svg_text);
         } else {
-            gui_post("gui_drawnumber: can't find parent group" + parent_tag);
+            post("gui_drawnumber: can't find parent group" + parent_tag);
         }
     } else {
         svg_text = get_item(cid, tag);
@@ -2331,7 +2341,7 @@ function gui_drawimage_new(obj_tag, file_path, canvasdir, flags) {
             ext === ".jpeg" ||
             ext === ".svg") {
 
-            gui_post("we got an image at index " + i + ": " + files[i]);
+            post("we got an image at index " + i + ": " + files[i]);
             // Now add an element to that array with the image data
             drawimage_data[obj_tag].push({
                 type: ext === ".jpeg" ? "jpg" : ext.slice(1),
@@ -2339,7 +2349,7 @@ function gui_drawimage_new(obj_tag, file_path, canvasdir, flags) {
             });
         }
     }
-    gui_post("no of files: " + i);
+    post("no of files: " + i);
     if (i > 0) {
         img = new pd_window.Image(); // create an image in the pd_window context
         img.onload = function() {
@@ -2348,7 +2358,7 @@ function gui_drawimage_new(obj_tag, file_path, canvasdir, flags) {
         img.src = "data:image/" + drawimage_data[obj_tag][0].type +
             ";base64," + drawimage_data[obj_tag][0].data;
     } else {
-        gui_post("drawimage: warning: no images loaded");
+        post("drawimage: warning: no images loaded");
     }
 }
 
@@ -2655,7 +2665,7 @@ function gui_erase_cord_inspector(cid) {
     if (ci !== null) {
         ci.parentNode.removeChild(ci);
     } else {
-        gui_post("oops, trying to erase cord inspector that doesn't exist!");
+        post("oops, trying to erase cord inspector that doesn't exist!");
     }
 }
 
@@ -2668,7 +2678,7 @@ function gui_cord_inspector_flash(cid, state) {
             ct.classList.remove("flash");
         }
     } else {
-        gui_post("gui_cord_inspector_flash: trying to flash a non-existent cord inspector!");
+        post("gui_cord_inspector_flash: trying to flash a non-existent cord inspector!");
     }
 }
 
@@ -2688,7 +2698,7 @@ function file_dialog(cid, type, target, path) {
     var query_string = (type === "open" ?
         "openpanel_dialog" : "savepanel_dialog");
     var d = patchwin[cid].window.document.querySelector("#" + query_string);
-    gui_post("set path to " + path);
+    post("set path to " + path);
     d.setAttribute("nwworkingdir", path);
     d.click();
 }
@@ -2807,7 +2817,7 @@ function gui_audio_properties(gfxstub, sys_indevs, sys_outdevs,
         ]);
 
     //for (var i = 0; i < arguments.length; i++) {
-    //    gui_post("arg " + i + " is " + arguments[i]);
+    //    post("arg " + i + " is " + arguments[i]);
     //}
 
     if (dialogwin["prefs"] !== null) {
@@ -2829,9 +2839,9 @@ function gui_midi_properties(gfxstub, sys_indevs, sys_outdevs,
         "pd-outdevs", pd_outdevs,
         ]);
 
-    //gui_post("got back some midi props...");
+    //post("got back some midi props...");
     //for (var i = 0; i < arguments.length; i++) {
-    //    gui_post("arg " + i + " is " + arguments[i]);
+    //    post("arg " + i + " is " + arguments[i]);
     //}
 
     if (dialogwin["prefs"] !== null) {
@@ -2853,12 +2863,12 @@ exports.skin = (function () {
     }
     return {
         get: function () {
-            gui_post("getting preset: " + dir + preset + ".css");
+            post("getting preset: " + dir + preset + ".css");
             return dir + preset + ".css";
         },
         set: function (name) {
             preset = name;
-            gui_post("trying to set...");
+            post("trying to set...");
             for (w in patchwin) {
                 if (patchwin.hasOwnProperty(w)) {
                     apply(patchwin[w]);
