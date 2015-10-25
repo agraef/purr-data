@@ -93,9 +93,9 @@
   </div>      
 
   <script>
-'use strict';
-var nw = require('nw.gui'); 
-var pdgui = require('./pdgui.js');
+"use strict";
+var nw = require("nw.gui"); 
+var pdgui = require("./pdgui.js");
 
 // For translations
 var l = pdgui.get_local_string;
@@ -118,7 +118,7 @@ function change_size() {
 
 function apply() {
     pdgui.gui_post("we're applying font size changes!");
-    pdgui.pdsend(canvas, 'font', 
+    pdgui.pdsend(canvas, "font", 
         +document.querySelector('input[name="font_size"]:checked').value,
         current_size,
         100,
@@ -137,7 +137,7 @@ function cancel() {
 // we can create the menu and register event callbacks
 function register_canvas_id(gfxstub, attrs) {
     pd_object_callback = gfxstub;
-    console.log('attrs are ' + attrs.toString());
+    console.log("attrs are " + attrs.toString());
     add_events(gfxstub);
     // not sure that we need this for properties windows
     //pdgui.canvas_map(gfxstub);
@@ -147,17 +147,17 @@ function register_canvas_id(gfxstub, attrs) {
     // We've finished displaying all the spans and populating the
     // labels and form elements.  That makes it more efficient and
     // snappier, at least on older machines.
-    document.getElementsByClassName('container')[0]
-        .style.setProperty('display', 'inline');
+    document.getElementsByClassName("container")[0]
+        .style.setProperty("display", "inline");
 }
 
 // Stop-gap translator
 function translate_form() {
     var i
-    var elements = document.querySelectorAll('[data-i18n]');
+    var elements = document.querySelectorAll("[data-i18n]");
     for (i = 0; i < elements.length; i++) {
         var data = elements[i].dataset.i18n;
-        if (data.slice(0,7) === '[title]') {
+        if (data.slice(0,7) === "[title]") {
             elements[i].title = l(data.slice(7));
         } else {
             elements[i].textContent = l(data);
