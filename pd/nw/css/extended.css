@@ -169,9 +169,9 @@ text {
 }
 
 /* border color for selected objects
-      * an element with the class 'border'
-      * the element is contained within a parent element of class 'selected'
-      * that parent element is not in class 'gop'
+      * an element with the class "border"
+      * the element is contained within a parent element of class "selected"
+      * that parent element is not in class "gop"
    in plain English:
       This lets us highlight an objects border, unless it is inside a gop
       canvas.
