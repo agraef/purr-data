@@ -1,6 +1,6 @@
-'use strict';
-var nw = require('nw.gui'); 
-var pdgui = require('./pdgui.js');
+"use strict";
+var nw = require("nw.gui"); 
+var pdgui = require("./pdgui.js");
 
 // Apply gui preset to this canvas
 pdgui.skin.apply(this);
@@ -28,22 +28,22 @@ function add_keymods(key, evt) {
 
 function text_to_fudi(text) {
     text = text.trim();
-    text = text.replace(/(\$[0-9]+)/g, '\\$1');    // escape dollar signs
-    text = text.replace(/(?!\\)(,|;)/g, ' \\$1 '); // escape ',' and ';'
-    text = text.replace(/\{|\}/g, '');             // filter '{' and '}'
-    text = text.replace(/\s+/g, ' ');              // filter consecutive /s
+    text = text.replace(/(\$[0-9]+)/g, "\\$1");    // escape dollar signs
+    text = text.replace(/(?!\\)(,|;)/g, " \\$1 "); // escape "," and ";"
+    text = text.replace(/\{|\}/g, "");             // filter "{" and "}"
+    text = text.replace(/\s+/g, " ");              // filter consecutive /s
 
     return text;
 }
 
 // Should probably be in pdgui.js
 function encode_for_dialog(s) {
-    s = s.replace(/\s/g, '+_');
-    s = s.replace(/\$/g, '+d');
-    s = s.replace(/;/g, '+s');
-    s = s.replace(/,/g, '+c');
-    s = s.replace(/\+/g, '++');
-    s = '+' + s;
+    s = s.replace(/\s/g, "+_");
+    s = s.replace(/\$/g, "+d");
+    s = s.replace(/;/g, "+s");
+    s = s.replace(/,/g, "+c");
+    s = s.replace(/\+/g, "++");
+    s = "+" + s;
     return s;
 }
 
@@ -69,12 +69,12 @@ var canvas_events = (function() {
         draggable_elem,         // the current scalar element being dragged
         last_draggable_x,       // last x coord for the element we're dragging
         last_draggable_y,       // last y 
-        previous_state = 'none', /* last state, excluding explicit 'none' */
+        previous_state = "none", /* last state, excluding explicit 'none' */
         match_words_state = false,
-        last_search_term = '',
-        svg_view = document.getElementById('patchsvg').viewBox.baseVal,
+        last_search_term = "",
+        svg_view = document.getElementById("patchsvg").viewBox.baseVal,
         textbox = function () {
-            return document.getElementById('new_object_textentry');
+            return document.getElementById("new_object_textentry");
         },
         events = {
             mousemove: function(evt) {
@@ -143,28 +143,28 @@ var canvas_events = (function() {
                     case 27:
                     //case 32:
                     case 127: hack = key_code; break;
-                    case 37: hack = add_keymods('Left', evt); break;
-                    case 38: hack = add_keymods('Up', evt); break;
-                    case 39: hack = add_keymods('Right', evt); break;
-                    case 40: hack = add_keymods('Down', evt); break;
-                    case 33: hack = add_keymods('Prior', evt); break;
-                    case 34: hack = add_keymods('Next', evt); break;
-                    case 35: hack = add_keymods('End', evt); break;
-                    case 36: hack = add_keymods('Home', evt); break;
+                    case 37: hack = add_keymods("Left", evt); break;
+                    case 38: hack = add_keymods("Up", evt); break;
+                    case 39: hack = add_keymods("Right", evt); break;
+                    case 40: hack = add_keymods("Down", evt); break;
+                    case 33: hack = add_keymods("Prior", evt); break;
+                    case 34: hack = add_keymods("Next", evt); break;
+                    case 35: hack = add_keymods("End", evt); break;
+                    case 36: hack = add_keymods("Home", evt); break;
 
                     // These may be different on Safari...
-                    case 112: hack = add_keymods('F1', evt); break;
-                    case 113: hack = add_keymods('F2', evt); break;
-                    case 114: hack = add_keymods('F3', evt); break;
-                    case 115: hack = add_keymods('F4', evt); break;
-                    case 116: hack = add_keymods('F5', evt); break;
-                    case 117: hack = add_keymods('F6', evt); break;
-                    case 118: hack = add_keymods('F7', evt); break;
-                    case 119: hack = add_keymods('F8', evt); break;
-                    case 120: hack = add_keymods('F9', evt); break;
-                    case 121: hack = add_keymods('F10', evt); break;
-                    case 122: hack = add_keymods('F11', evt); break;
-                    case 123: hack = add_keymods('F12', evt); break;
+                    case 112: hack = add_keymods("F1", evt); break;
+                    case 113: hack = add_keymods("F2", evt); break;
+                    case 114: hack = add_keymods("F3", evt); break;
+                    case 115: hack = add_keymods("F4", evt); break;
+                    case 116: hack = add_keymods("F5", evt); break;
+                    case 117: hack = add_keymods("F6", evt); break;
+                    case 118: hack = add_keymods("F7", evt); break;
+                    case 119: hack = add_keymods("F8", evt); break;
+                    case 120: hack = add_keymods("F9", evt); break;
+                    case 121: hack = add_keymods("F10", evt); break;
+                    case 122: hack = add_keymods("F11", evt); break;
+                    case 123: hack = add_keymods("F12", evt); break;
 
                     // Handle weird behavior for clipboard shortcuts
                     // Which don't fire a keypress for some odd reason
@@ -196,9 +196,9 @@ var canvas_events = (function() {
 
                     // Need to handle Control key, Alt
 
-                    case 16: hack = 'Shift'; break;
-                    case 17: hack = 'Control'; break;
-                    case 18: hack = 'Alt'; break;
+                    case 16: hack = "Shift"; break;
+                    case 17: hack = "Control"; break;
+                    case 18: hack = "Alt"; break;
                 }
                 if (hack !== null) {
                     pdgui.gui_canvas_sendkey(name, 1, evt, hack);
@@ -303,14 +303,14 @@ var canvas_events = (function() {
                 //return false;
             },
             find_click: function(evt) {
-                var t = document.getElementById('canvas_find_text').value;
-                if (t !== '') {
+                var t = document.getElementById("canvas_find_text").value;
+                if (t !== "") {
                     if (t === last_search_term) {
-                        pdgui.pdsend(name, 'findagain');
+                        pdgui.pdsend(name, "findagain");
                     } else {
-                        pdgui.pdsend(name, 'find',
+                        pdgui.pdsend(name, "find",
                         encode_for_dialog(t),
-                        match_words_state ? '1' : '0');
+                        match_words_state ? "1" : "0");
                     }
                 }
                 last_search_term = t;
@@ -402,13 +402,13 @@ var canvas_events = (function() {
     return {
         none: function() {
             var name;
-            if (state !== 'none') {
+            if (state !== "none") {
                 previous_state = state;
             }
-            state = 'none';
+            state = "none";
             for (var prop in events) {
                 if (events.hasOwnProperty(prop)) {
-                    name = prop.split('_');
+                    name = prop.split("_");
                     name = name[name.length -1];
                     document.removeEventListener(name, events[prop], false);
                 }
@@ -423,7 +423,7 @@ var canvas_events = (function() {
             document.addEventListener("keyup", events.keyup, false);
             document.addEventListener("mousedown", events.mousedown, false);
             document.addEventListener("mouseup", events.mouseup, false);
-            state = 'normal';
+            state = "normal";
             set_edit_menu_modals(true);
         },
         scalar_drag: function() {
@@ -444,7 +444,7 @@ var canvas_events = (function() {
             document.addEventListener("keyup", events.text_keyup, false);
             document.addEventListener("mousedown", events.text_mousedown, false);
             document.addEventListener("mouseup", events.text_mouseup, false);
-            state = 'text';
+            state = "text";
             set_edit_menu_modals(false);
         },
         floating_text: function() {
@@ -457,13 +457,13 @@ var canvas_events = (function() {
             document.addEventListener("click", events.floating_text_click, false);
             document.addEventListener("keypress", events.floating_text_keypress, false);
             document.addEventListener("mousemove", events.mousemove, false);
-            state = 'floating_text';
+            state = "floating_text";
             set_edit_menu_modals(false);
         },
         search: function() {
             this.none();
             document.addEventListener("keydown", events.find_keydown, false);
-            state = 'search';
+            state = "search";
         },
         register: function(n) {
             name = n;
@@ -518,19 +518,19 @@ function create_popup_menu(name) {
     pdgui.add_popup(name, popup_menu);
 
     popup_menu.append(new nw.MenuItem({
-        label: 'Properties',
+        label: "Properties",
         click: function() {
             pdgui.popup_action(name, 0);
         }
     }));
     popup_menu.append(new nw.MenuItem({
-        label: 'Open',
+        label: "Open",
         click: function() {
             pdgui.popup_action(name, 1);
         }
     }));
     popup_menu.append(new nw.MenuItem({
-        label: 'Help',
+        label: "Help",
         click: function() {
             pdgui.popup_action(name, 2);
         }
@@ -555,23 +555,23 @@ function set_edit_menu_modals(state) {
 }
 
 function nw_undo_menu(undo_text, redo_text) {
-    if (undo_text === 'no') {
+    if (undo_text === "no") {
         modals.undo.enabled = false;
     } else {
         modals.undo.enabled = true;
-        modals.undo.label = l('menu.undo') + " " + undo_text;
+        modals.undo.label = l("menu.undo") + " " + undo_text;
     }
-    if (redo_text === 'no') {
+    if (redo_text === "no") {
         modals.redo.enabled = false;
     } else {
         modals.redo.enabled = true;
-        modals.redo.label = l('menu.redo') + " " + redo_text;
+        modals.redo.label = l("menu.redo") + " " + redo_text;
     }
 }
 
 function have_live_box() {
     var state = canvas_events.get_state();
-    if (state === 'text' || state === 'floating_text') {
+    if (state === "text" || state === "floating_text") {
         return true;
     } else {
         return false;
@@ -597,7 +597,7 @@ function nw_create_patch_window_menus(name) {
 
     // Window menu
     var windowMenu = new nw.Menu({
-        type: 'menubar'
+        type: "menubar"
     });
 
     // File menu
@@ -605,82 +605,82 @@ function nw_create_patch_window_menus(name) {
 
     // Add to window menu
     windowMenu.append(new nw.MenuItem({
-        label: l('menu.file'),
+        label: l("menu.file"),
         submenu: fileMenu
     }));
 
     // File sub-entries
     fileMenu.append(new nw.MenuItem({
-        label: l('menu.new'),
+        label: l("menu.new"),
         click: pdgui.menu_new,
-        key: 'n',
+        key: "n",
         modifiers: "ctrl",
-        tooltip: l('menu.new_tt')
+        tooltip: l("menu.new_tt")
     }));
 
     fileMenu.append(new nw.MenuItem({
-        label: l('menu.open'),
-        key: 'o',
+        label: l("menu.open"),
+        key: "o",
         modifiers: "ctrl",
-        tooltip: l('menu.open_tt'),
+        tooltip: l("menu.open_tt"),
         click: function() {
-            var chooser = document.querySelector('#fileDialog');
+            var chooser = document.querySelector("#fileDialog");
             chooser.click();
         }
     }));
 
     if (pdgui.k12_mode == 1) {
         fileMenu.append(new nw.MenuItem({
-        label: l('menu.k12_demos'),
-        tooltip: l('menu.k12_demos_tt'),
+        label: l("menu.k12_demos"),
+        tooltip: l("menu.k12_demos_tt"),
         click: pdgui.menu_k12_open_demos
         }));
     }
 
     fileMenu.append(new nw.MenuItem({
-        type: 'separator'
+        type: "separator"
     }));
 
     // Note: this must be different for the main Pd window
     fileMenu.append(new nw.MenuItem({
-        label: l('menu.save'),
+        label: l("menu.save"),
         click: function () {
             pdgui.canvas_check_geometry(name);
             pdgui.menu_save(name);
         },
-        key: 's',
+        key: "s",
         modifiers: "ctrl",
-        tooltip: l('menu.save_tt')
+        tooltip: l("menu.save_tt")
     }));
 
     fileMenu.append(new nw.MenuItem({
-        label: l('menu.saveas'),
+        label: l("menu.saveas"),
         click: function (){
             pdgui.canvas_check_geometry(name);
             pdgui.menu_saveas(name);
         },
-        key: 's',
+        key: "s",
         modifiers: "ctrl+shift",
-        tooltip: l('menu.saveas_tt')
+        tooltip: l("menu.saveas_tt")
     }));
 
     if (pdgui.k12_mode == 0) {
         fileMenu.append(new nw.MenuItem({
-            type: 'separator'
+            type: "separator"
         }));
     }
 
     fileMenu.append(new nw.MenuItem({
-        label: l('menu.message'),
+        label: l("menu.message"),
         click: pdgui.menu_send,
-        key: 'm',
+        key: "m",
         modifiers: "ctrl",
-        tooltip: l('menu.message_tt')
+        tooltip: l("menu.message_tt")
     }));
 
     if (pdgui.k12_mode == 0) {
         fileMenu.append(new nw.MenuItem({
-            type: 'separator'
+            type: "separator"
         }));
     }
 
@@ -689,22 +689,22 @@ function nw_create_patch_window_menus(name) {
     // anther separator goes here if there are any recent files
 
     fileMenu.append(new nw.MenuItem({
-        label: l('menu.close'),
-        tooltip: l('menu.close_tt'),
+        label: l("menu.close"),
+        tooltip: l("menu.close_tt"),
         click: function() {
             pdgui.menu_close(name);
         },
-        key: 'w',
+        key: "w",
         modifiers: "ctrl"
     }));
 
     // Quit Pd
     fileMenu.append(new nw.MenuItem({
-        label: l('menu.quit'),
+        label: l("menu.quit"),
         click: pdgui.menu_quit,
-        key: 'q',
+        key: "q",
         modifiers: "ctrl",
-        tooltip: l('menu.quit_tt')
+        tooltip: l("menu.quit_tt")
     }));
 
     // Edit menu
@@ -712,77 +712,77 @@ function nw_create_patch_window_menus(name) {
 
     // Add to window menu
     windowMenu.append(new nw.MenuItem({
-    label: l('menu.edit'),
+    label: l("menu.edit"),
     submenu: editMenu
     }));
 
     // Edit sub-entries
     editMenu.append(modals.undo = new nw.MenuItem({
-        label: l('menu.undo'),
+        label: l("menu.undo"),
         click: function () {
             pdgui.pdsend(name, "undo");
         },
-        tooltip: l('menu.undo_tt'),
+        tooltip: l("menu.undo_tt"),
     }));
 
     editMenu.append(modals.redo = new nw.MenuItem({
-        label: l('menu.redo'),
+        label: l("menu.redo"),
         click: function () {
             pdgui.pdsend(name, "redo");
         },
-        tooltip: l('menu.redo_tt'),
+        tooltip: l("menu.redo_tt"),
     }));
 
     editMenu.append(new nw.MenuItem({
-        type: 'separator'
+        type: "separator"
     }));
 
     editMenu.append(modals.cut = new nw.MenuItem({
-        label: l('menu.cut'),
+        label: l("menu.cut"),
         click: function () {
             pdgui.pdsend(name, "cut");
         },
-        tooltip: l('menu.cut_tt'),
+        tooltip: l("menu.cut_tt"),
     }));
 
     editMenu.append(modals.copy = new nw.MenuItem({
-        label: l('menu.copy'),
+        label: l("menu.copy"),
         click: function () {
             pdgui.pdsend(name, "copy");
         },
-        tooltip: l('menu.copy_tt'),
+        tooltip: l("menu.copy_tt"),
     }));
 
     editMenu.append(modals.paste = new nw.MenuItem({
-        label: l('menu.paste'),
+        label: l("menu.paste"),
         click: function () {
             pdgui.pdsend(name, "paste");
         },
-        tooltip: l('menu.paste_tt'),
+        tooltip: l("menu.paste_tt"),
     }));
 
     editMenu.append(new nw.MenuItem({
-        label:  l('menu.duplicate'),
+        label:  l("menu.duplicate"),
         click: function () {
             pdgui.pdsend(name, "duplicate");
         },
-        key: 'd',
+        key: "d",
         modifiers: "ctrl",
-        tooltip: l('menu.duplicate_tt')
+        tooltip: l("menu.duplicate_tt")
     }));
 
     editMenu.append(modals.selectall = new nw.MenuItem({
-        label: l('menu.selectall'),
+        label: l("menu.selectall"),
         click: function (evt) {
-            if (canvas_events.get_state() === 'normal') {
+            if (canvas_events.get_state() === "normal") {
                 pdgui.pdsend(name, "selectall");
             }
         },
-        tooltip: l('menu.selectall_tt'),
+        tooltip: l("menu.selectall_tt"),
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: l('menu.reselect'),
+        label: l("menu.reselect"),
         // Unfortunately nw.js doesn't allow
         // key: "Return" or key: "Enter", so we
         // can't bind to ctrl-Enter here. (Even
@@ -792,168 +792,168 @@ function nw_create_patch_window_menus(name) {
         },
         key: String.fromCharCode(10),
         modifiers: "ctrl",
-        tooltip: l('menu.reselect_tt')
+        tooltip: l("menu.reselect_tt")
     }));
 
     editMenu.append(new nw.MenuItem({
-        type: 'separator'
+        type: "separator"
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: l('menu.zoomin'),
+        label: l("menu.zoomin"),
         click: function () {
             var z = nw.Window.get().zoomLevel;
             if (z < 8) { z++; }
             nw.Window.get().zoomLevel = z;
             pdgui.gui_post("zoom level is " + nw.Window.get().zoomLevel);
         },
-        key: '=',
+        key: "=",
         modifiers: "ctrl",
-        tooltip: l('menu.zoomin')
+        tooltip: l("menu.zoomin")
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: l('menu.zoomout'),
+        label: l("menu.zoomout"),
         click: function () {
             var z = nw.Window.get().zoomLevel;
             if (z > -7) { z--; } 
             nw.Window.get().zoomLevel = z;
             pdgui.gui_post("zoom level is " + nw.Window.get().zoomLevel);
         },
-        key: '-',
+        key: "-",
         modifiers: "ctrl",
-        tooltip: l('menu.zoomout_tt'),
+        tooltip: l("menu.zoomout_tt"),
     }));
 
     editMenu.append(new nw.MenuItem({
-        type: 'separator'
+        type: "separator"
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: l('menu.tidyup'),
+        label: l("menu.tidyup"),
         click: function() {
             pdgui.pdsend(name, "tidy");
         },
-        key: 'y',
+        key: "y",
         modifiers: "ctrl",
-        tooltip: l('menu.tidyup_tt')
+        tooltip: l("menu.tidyup_tt")
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: l('menu.tofront'),
+        label: l("menu.tofront"),
         click: function() {
             pdgui.popup_action(name, 3);
         },
-        tooltip: l('menu.tofront_tt'),
+        tooltip: l("menu.tofront_tt"),
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: l('menu.toback'),
+        label: l("menu.toback"),
         click: function() {
             pdgui.popup_action(name, 4);
         },
-        tooltip: l('menu.toback_tt'),
+        tooltip: l("menu.toback_tt"),
     }));
 
     editMenu.append(new nw.MenuItem({
-        type: 'separator'
+        type: "separator"
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: l('menu.font'),
+        label: l("menu.font"),
         click: function () {
             pdgui.pdsend(name, "menufont");
         },
-        tooltip: l('menu.font_tt'),
+        tooltip: l("menu.font_tt"),
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: l('menu.cordinspector'),
+        label: l("menu.cordinspector"),
         click: function() {
             pdgui.pdsend(name, "magicglass 0");
         },
-        key: 'r',
+        key: "r",
         modifiers: "ctrl",
-        tooltip: l('menu.cordinspector_tt'),
+        tooltip: l("menu.cordinspector_tt"),
     }));
 
     editMenu.append(new nw.MenuItem({
-        type: 'separator'
+        type: "separator"
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: l('menu.find'),
+        label: l("menu.find"),
         click: function () {
-            var find_bar = document.getElementById('canvas_find'),
-                find_bar_text = document.getElementById('canvas_find_text'),
-                state = find_bar.style.getPropertyValue('display');
+            var find_bar = document.getElementById("canvas_find"),
+                find_bar_text = document.getElementById("canvas_find_text"),
+                state = find_bar.style.getPropertyValue("display");
             // if there's a box being edited, try to instantiate it in Pd
             instantiate_live_box();
-            if (state === 'none') {
-                find_bar.style.setProperty('display', 'inline');
+            if (state === "none") {
+                find_bar.style.setProperty("display", "inline");
                 find_bar_text.focus();
                 find_bar_text.select();
                 canvas_events.search();
             } else {
-                find_bar.style.setProperty('display', 'none');
+                find_bar.style.setProperty("display", "none");
                 // "normal" seems to be the only viable state for the
                 // canvas atm.  But if there are other states added later,
                 // we might need to fetch the previous state here.
                 canvas_events.normal();
             }
         },
-        key: 'f',
+        key: "f",
         modifiers: "ctrl",
-        tooltip: l('menu.find_tt'),
+        tooltip: l("menu.find_tt"),
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: l('menu.findagain'),
+        label: l("menu.findagain"),
         click: menu_generic,
-        key: 'g',
+        key: "g",
         modifiers: "ctrl",
-        tooltip: l('menu.findagain')
+        tooltip: l("menu.findagain")
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: l('menu.finderror'),
+        label: l("menu.finderror"),
         click: function() {
             pdgui.pdsend("pd finderror");
         },
-        tooltip: l('menu.finderror_tt'),
+        tooltip: l("menu.finderror_tt"),
     }));
 
     editMenu.append(new nw.MenuItem({
-        type: 'separator'
+        type: "separator"
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: l('menu.autotips'),
+        label: l("menu.autotips"),
         click: menu_generic,
-        tooltip: l('menu.autotips_tt'),
+        tooltip: l("menu.autotips_tt"),
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: l('menu.editmode'),
+        label: l("menu.editmode"),
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "editmode 0");
         },
-        key: 'e',
+        key: "e",
         modifiers: "ctrl",
-        tooltip: l('menu.editmode_tt')
+        tooltip: l("menu.editmode_tt")
     }));
 
     editMenu.append(new nw.MenuItem({
-        type: 'separator'
+        type: "separator"
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: l('menu.preferences'),
+        label: l("menu.preferences"),
         click: pdgui.open_prefs,
-        key: 'p',
+        key: "p",
         modifiers: "ctrl",
-        tooltip: l('menu.preferences_tt')
+        tooltip: l("menu.preferences_tt")
     }));
 
     // Put menu
@@ -961,206 +961,206 @@ function nw_create_patch_window_menus(name) {
 
     // Add to window menu
     windowMenu.append(new nw.MenuItem({
-    label: l('menu.put'),
+    label: l("menu.put"),
     submenu: putMenu
     }));
 
     // Put menu sub-entries
     putMenu.append(new nw.MenuItem({
-        label: l('menu.object'),
+        label: l("menu.object"),
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "obj 0");
         },
-        key: '1',
+        key: "1",
         modifiers: "ctrl",
-        tooltip: l('menu.object_tt'),
+        tooltip: l("menu.object_tt"),
     }));
 
     putMenu.append(new nw.MenuItem({
-        label: l('menu.msgbox'),
+        label: l("menu.msgbox"),
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "msg 0");
         },
-        key: '2',
+        key: "2",
         modifiers: "ctrl",
-        tooltip: l('menu.msgbox_tt'),
+        tooltip: l("menu.msgbox_tt"),
     }));
 
     putMenu.append(new nw.MenuItem({
-        label: l('menu.number'),
+        label: l("menu.number"),
         click: function() { 
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "floatatom 0");
         },
-        key: '3',
+        key: "3",
         modifiers: "ctrl",
-        tooltip: l('menu.number_tt')
+        tooltip: l("menu.number_tt")
     }));
 
     putMenu.append(new nw.MenuItem({
-        label: l('menu.symbol'),
+        label: l("menu.symbol"),
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "symbolatom 0");
         },
-        key: '4',
+        key: "4",
         modifiers: "ctrl",
-        tooltip: l('menu.symbol_tt')
+        tooltip: l("menu.symbol_tt")
     }));
 
     putMenu.append(new nw.MenuItem({
-        label: l('menu.comment'),
+        label: l("menu.comment"),
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "text 0");
         },
-        key: '5',
+        key: "5",
         modifiers: "ctrl",
-        tooltip: l('menu.comment_tt')
+        tooltip: l("menu.comment_tt")
     }));
 
     putMenu.append(new nw.MenuItem({
-        type: 'separator'
+        type: "separator"
     }));
 
     putMenu.append(new nw.MenuItem({
-        label: l('menu.bang'),
+        label: l("menu.bang"),
         click: function(e) {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "bng 0");
         },
-        key: 'b',
+        key: "b",
         modifiers: "ctrl-shift",
-        tooltip: l('menu.bang_tt')
+        tooltip: l("menu.bang_tt")
     }));
 
     putMenu.append(new nw.MenuItem({
-        label: l('menu.toggle'),
+        label: l("menu.toggle"),
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "toggle 0");
         },
-        key: 't',
+        key: "t",
         modifiers: "ctrl-shift",
-        tooltip: l('menu.toggle_tt')
+        tooltip: l("menu.toggle_tt")
     }));
 
     putMenu.append(new nw.MenuItem({
-        label: l('menu.number2'),
+        label: l("menu.number2"),
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "numbox 0");
         },
-        key: 'n',
+        key: "n",
         modifiers: "ctrl-shift",
-        tooltip: l('menu.number2')
+        tooltip: l("menu.number2")
     }));
 
     putMenu.append(new nw.MenuItem({
-        label: l('menu.vslider'),
+        label: l("menu.vslider"),
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "vslider 0");
         },
-        key: 'v',
+        key: "v",
         modifiers: "ctrl-shift",
-        tooltip: l('menu.vslider_tt'),
+        tooltip: l("menu.vslider_tt"),
     }));
 
     putMenu.append(new nw.MenuItem({
-        label: l('menu.hslider'),
+        label: l("menu.hslider"),
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "hslider 0");
         },
-        key: 'h',
+        key: "h",
         modifiers: "ctrl-shift",
-        tooltip: l('menu.hslider_tt'),
+        tooltip: l("menu.hslider_tt"),
     }));
 
     putMenu.append(new nw.MenuItem({
-        label: l('menu.vradio'),
+        label: l("menu.vradio"),
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "vradio 0");
         },
-        key: 'd',
+        key: "d",
         modifiers: "ctrl-shift",
-        tooltip: l('menu.vradio_tt'),
+        tooltip: l("menu.vradio_tt"),
     }));
 
     putMenu.append(new nw.MenuItem({
-        label: l('menu.hradio'),
+        label: l("menu.hradio"),
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "hradio 0");
         },
-        key: 'i',
+        key: "i",
         modifiers: "ctrl",
-        tooltip: l('menu.hradio_tt'),
+        tooltip: l("menu.hradio_tt"),
     }));
 
     putMenu.append(new nw.MenuItem({
-        label: l('menu.vu'),
+        label: l("menu.vu"),
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "vumeter 0");
         },
-        key: 'u',
+        key: "u",
         modifiers: "ctrl",
-        tooltip: l('menu.vu_tt'),
+        tooltip: l("menu.vu_tt"),
     }));
 
     putMenu.append(new nw.MenuItem({
-        label: l('menu.cnv'),
+        label: l("menu.cnv"),
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "mycnv 0");
         },
-        key: 'c',
+        key: "c",
         modifiers: "ctrl-shift",
-        tooltip: l('menu.cnv_tt')
+        tooltip: l("menu.cnv_tt")
     }));
 
     putMenu.append(new nw.MenuItem({
-        type: 'separator'
+        type: "separator"
     }));
 
     //putMenu.append(new nw.MenuItem({
-    //    label: l('menu.graph'),
+    //    label: l("menu.graph"),
     //    click: function() {
     //        update_live_box();
     //        pdgui.pdsend(name, "dirty 1");
     //        // leaving out some placement logic... see pd.tk menu_graph
     //        pdgui.pdsend(name, "graph NULL 0 0 0 0 30 30 0 30");
     //    },
-    //    tooltip: l('menu.graph_tt'),
+    //    tooltip: l("menu.graph_tt"),
     //}));
 
     putMenu.append(new nw.MenuItem({
-        label: l('menu.array'),
+        label: l("menu.array"),
         click: function() {
                 update_live_box();
                 pdgui.pdsend(name, "dirty 1");
                 pdgui.pdsend(name, "menuarray");
             },
-        tooltip: l('menu.array_tt'),
+        tooltip: l("menu.array_tt"),
     }));
 
 
@@ -1170,13 +1170,13 @@ function nw_create_patch_window_menus(name) {
 
     // Add to windows menu
     windowMenu.append(new nw.MenuItem({
-    label: l('menu.windows'),
+    label: l("menu.windows"),
     submenu: winmanMenu
     }));
 
     // Winman sub-entries
     winmanMenu.append(new nw.MenuItem({
-        label: l('menu.fullscreen'),
+        label: l("menu.fullscreen"),
         click: function() {
             var win = nw.Window.get();
             var fullscreen = win.isFullscreen;
@@ -1185,39 +1185,39 @@ function nw_create_patch_window_menus(name) {
         },
         key: "f11",
         //modifiers: "ctrl",
-        tooltip: l('menu.nextwin_tt'),
+        tooltip: l("menu.nextwin_tt"),
     }));
 
     winmanMenu.append(new nw.MenuItem({
-        label: l('menu.nextwin'),
+        label: l("menu.nextwin"),
         click: menu_generic,
         key: String.fromCharCode(12), // Page down
         modifiers: "ctrl",
-        tooltip: l('menu.nextwin_tt'),
+        tooltip: l("menu.nextwin_tt"),
     }));
 
     winmanMenu.append(new nw.MenuItem({
-        label: l('menu.prevwin'),
+        label: l("menu.prevwin"),
         click: menu_generic,
         key: String.fromCharCode(11), // Page up
         modifiers: "ctrl",
-        tooltip: l('menu.prevwin_tt'),
+        tooltip: l("menu.prevwin_tt"),
     }));
 
     winmanMenu.append(new nw.MenuItem({
-        type: 'separator'
+        type: "separator"
     }));
 
     winmanMenu.append(new nw.MenuItem({
-        label: l('menu.parentwin'),
+        label: l("menu.parentwin"),
         click: menu_generic,
-        tooltip: l('menu.parentwin_tt'),
+        tooltip: l("menu.parentwin_tt"),
     }));
 
     winmanMenu.append(new nw.MenuItem({
-        label: l('menu.pdwin'),
+        label: l("menu.pdwin"),
         click: menu_generic,
-        tooltip: l('menu.pdwin_tt'),
+        tooltip: l("menu.pdwin_tt"),
     }));
 
     // Media menu
@@ -1225,45 +1225,45 @@ function nw_create_patch_window_menus(name) {
 
     // Add to window menu
     windowMenu.append(new nw.MenuItem({
-    label: l('menu.media'),
+    label: l("menu.media"),
     submenu: mediaMenu
     }));
 
     // Media sub-entries
     mediaMenu.append(new nw.MenuItem({
-        label: l('menu.audio_on'),
+        label: l("menu.audio_on"),
         click: function() {
             pdgui.pdsend("pd dsp 1");
         },
-        key: '/',
+        key: "/",
         modifiers: "ctrl",
-        tooltip: l('menu.audio_on_tt'),
+        tooltip: l("menu.audio_on_tt"),
     }));
 
     mediaMenu.append(new nw.MenuItem({
-        label: l('menu.audio_off'),
+        label: l("menu.audio_off"),
         click: function() {
             pdgui.pdsend("pd dsp 0");
         },
-        key: '.',
+        key: ".",
         modifiers: "ctrl",
-        tooltip: l('menu.audio_off_tt'),
+        tooltip: l("menu.audio_off_tt"),
     }));
 
     mediaMenu.append(new nw.MenuItem({
-        type: 'separator'
+        type: "separator"
     }));
 
     mediaMenu.append(new nw.MenuItem({
-        label: l('menu.test'),
+        label: l("menu.test"),
         click: menu_generic,
-        tooltip: l('menu.test_tt'),
+        tooltip: l("menu.test_tt"),
     }));
 
     mediaMenu.append(new nw.MenuItem({
-        label: l('menu.loadmeter'),
+        label: l("menu.loadmeter"),
         click: menu_generic,
-        tooltip: l('menu.loadmeter_tt'),
+        tooltip: l("menu.loadmeter_tt"),
     }));
 
     // Help menu
@@ -1271,57 +1271,57 @@ function nw_create_patch_window_menus(name) {
 
     // Add to window menu
     windowMenu.append(new nw.MenuItem({
-    label: l('menu.help'),
+    label: l("menu.help"),
     submenu: helpMenu
     }));
 
     // Help sub-entries
     helpMenu.append(new nw.MenuItem({
-        label: l('menu.about'),
+        label: l("menu.about"),
         click: menu_generic,
-        //key: 'c',
+        //key: "c",
         //modifiers: "ctrl",
-        tooltip: l('menu.about_tt'),
+        tooltip: l("menu.about_tt"),
     }));
 
     helpMenu.append(new nw.MenuItem({
-        label: l('menu.manual'),
+        label: l("menu.manual"),
         click: menu_generic,
-        tooltip: l('menu.manual'),
+        tooltip: l("menu.manual"),
     }));
 
     helpMenu.append(new nw.MenuItem({
-        label: l('menu.browser'),
+        label: l("menu.browser"),
         click: menu_generic,
-        tooltip: l('menu.browser_tt'),
+        tooltip: l("menu.browser_tt"),
     }));
 
     helpMenu.append(new nw.MenuItem({
-        type: 'separator'
+        type: "separator"
     }));
 
     helpMenu.append(new nw.MenuItem({
-        label: l('menu.l2ork_list'),
+        label: l("menu.l2ork_list"),
         click: menu_generic,
-        tooltip: l('menu.l2ork_list_tt'),
+        tooltip: l("menu.l2ork_list_tt"),
     }));
 
     helpMenu.append(new nw.MenuItem({
-        label: l('menu.pd_list'),
+        label: l("menu.pd_list"),
         click: menu_generic,
-        tooltip: l('menu.pd_list_tt'),
+        tooltip: l("menu.pd_list_tt"),
     }));
 
     helpMenu.append(new nw.MenuItem({
-        label: l('menu.forums'),
+        label: l("menu.forums"),
         click: menu_generic,
-        tooltip: l('menu.forums_tt'),
+        tooltip: l("menu.forums_tt"),
     }));
 
     helpMenu.append(new nw.MenuItem({
-        label: l('menu.irc'),
+        label: l("menu.irc"),
         click: menu_generic,
-        tooltip: l('menu.irc_tt'),
+        tooltip: l("menu.irc_tt"),
     }));
 
     // Assign to window
