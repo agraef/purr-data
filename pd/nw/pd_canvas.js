@@ -57,7 +57,7 @@ function canvas_find_blur() {
 }
 
 function canvas_find_focus() {
-pdgui.gui_post("flub!");
+pdgui.post("flub!");
     var state = canvas_events.get_state();
     canvas_events.search();
 }
@@ -78,7 +78,7 @@ var canvas_events = (function() {
         },
         events = {
             mousemove: function(evt) {
-                //pdgui.gui_post("x: " + evt.pageX + " y: " + evt.pageY +
+                //pdgui.post("x: " + evt.pageX + " y: " + evt.pageY +
                 //    " modifier: " + (evt.shiftKey + (evt.ctrlKey << 1)));
                 pdgui.pdsend(name, "motion",
                     (evt.pageX + svg_view.x),
@@ -122,7 +122,7 @@ var canvas_events = (function() {
                 //evt.preventDefault();
             },
             mouseup: function(evt) {
-                //pdgui.gui_post("mouseup: x: " +
+                //pdgui.post("mouseup: x: " +
                 //    evt.pageX + " y: " + evt.pageY +
                 //    " button: " + (evt.button + 1));
                 pdgui.pdsend(name, "mouseup",
@@ -204,7 +204,7 @@ var canvas_events = (function() {
                     pdgui.gui_canvas_sendkey(name, 1, evt, hack);
                     pdgui.set_keymap(key_code, hack);
                 }
-                //pdgui.gui_post("keydown time: keycode is " + evt.keyCode);
+                //pdgui.post("keydown time: keycode is " + evt.keyCode);
                 last_keydown = evt.keyCode;
                 //evt.stopPropagation();
                 //evt.preventDefault();
@@ -224,7 +224,7 @@ var canvas_events = (function() {
 
                 pdgui.gui_canvas_sendkey(name, 1, evt, evt.charCode);
                 pdgui.set_keymap(last_keydown, evt.charCode);
-                //pdgui.gui_post("keypress time: charcode is " + evt.charCode);
+                //pdgui.post("keypress time: charcode is " + evt.charCode);
                 // Don't do things like scrolling on space, arrow keys, etc.
                 //evt.stopPropagation();
                 evt.preventDefault();
@@ -232,7 +232,7 @@ var canvas_events = (function() {
             keyup: function(evt) {
                 var my_char_code = pdgui.get_char_code(evt.keyCode);
                 pdgui.gui_canvas_sendkey(name, 0, evt, my_char_code);
-                //pdgui.gui_post("keyup time: charcode is: " + my_char_code);
+                //pdgui.post("keyup time: charcode is: " + my_char_code);
                 if (evt.keyCode === 13 && evt.ctrlKey) {
                     pdgui.pdsend(name, "reselect");
                 }
@@ -253,7 +253,7 @@ var canvas_events = (function() {
                     utils.create_obj();
                     //var fudi_msg = text_to_fudi(textbox().innerText);
                     //pdgui.pdsend(name, "createobj", fudi_msg);
-                    //pdgui.gui_post("formatted content is " + fudi_msg);
+                    //pdgui.post("formatted content is " + fudi_msg);
                     events.mousedown(evt);
                     canvas_events.normal();
                 }
@@ -262,7 +262,7 @@ var canvas_events = (function() {
                 return false;
             },
             text_mouseup: function(evt) {
-                pdgui.gui_post("mouseup target is " +
+                pdgui.post("mouseup target is " +
                     evt.target + " and textbox is " + textbox());
                 //evt.stopPropagation();    
                 //evt.preventDefault();
@@ -289,14 +289,14 @@ var canvas_events = (function() {
                 return false;
             },
             floating_text_click: function(evt) {
-                //pdgui.gui_post("leaving floating mode");
+                //pdgui.post("leaving floating mode");
                 canvas_events.text();
                 evt.stopPropagation();
                 evt.preventDefault();
                 return false;
             },
             floating_text_keypress: function(evt) {
-                //pdgui.gui_post("leaving floating mode");
+                //pdgui.post("leaving floating mode");
                 canvas_events.text();
                 //evt.stopPropagation();
                 //evt.preventDefault();
@@ -338,12 +338,12 @@ var canvas_events = (function() {
             create_obj: function() {
                 var fudi_msg = text_to_fudi(textbox().innerText);
                 pdgui.pdsend(name, "createobj", fudi_msg);
-                //pdgui.gui_post("formatted content is " + fudi_msg);
+                //pdgui.post("formatted content is " + fudi_msg);
             },
             set_obj: function() {
                 var fudi_msg = text_to_fudi(textbox().innerText);
                 pdgui.pdsend(name, "setobj", fudi_msg);
-                //pdgui.gui_post("formatted content is " + fudi_msg);
+                //pdgui.post("formatted content is " + fudi_msg);
             }
         }
     ;
@@ -805,7 +805,7 @@ function nw_create_patch_window_menus(name) {
             var z = nw.Window.get().zoomLevel;
             if (z < 8) { z++; }
             nw.Window.get().zoomLevel = z;
-            pdgui.gui_post("zoom level is " + nw.Window.get().zoomLevel);
+            pdgui.post("zoom level is " + nw.Window.get().zoomLevel);
         },
         key: "=",
         modifiers: "ctrl",
@@ -818,7 +818,7 @@ function nw_create_patch_window_menus(name) {
             var z = nw.Window.get().zoomLevel;
             if (z > -7) { z--; } 
             nw.Window.get().zoomLevel = z;
-            pdgui.gui_post("zoom level is " + nw.Window.get().zoomLevel);
+            pdgui.post("zoom level is " + nw.Window.get().zoomLevel);
         },
         key: "-",
         modifiers: "ctrl",
@@ -1181,7 +1181,7 @@ function nw_create_patch_window_menus(name) {
             var win = nw.Window.get();
             var fullscreen = win.isFullscreen;
             win.isFullscreen = !fullscreen;
-            pdgui.gui_post("fullscreen is " + fullscreen);
+            pdgui.post("fullscreen is " + fullscreen);
         },
         key: "f11",
         //modifiers: "ctrl",

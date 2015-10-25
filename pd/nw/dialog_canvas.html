@@ -316,7 +316,7 @@ function flag_change(elem) {
     // get value from radio group, checked from checkboxes
     if (name === "array_style") {
         value = document.querySelector('input[name="array_style"]:checked').value;
-        pdgui.gui_post("array style found: " + value);
+        pdgui.post("array style found: " + value);
         // Toggle visibility of the fill color button-- only show for bar
         // graph style (= 3)
         toggle_fill_color(+value);
@@ -324,9 +324,9 @@ function flag_change(elem) {
         // "+" for casting boolean to number
         value = +elem.checked;
     }
-    //pdgui.gui_post("value is " + value);
+    //pdgui.post("value is " + value);
     flag = array_attr.array_flags;
-    pdgui.gui_post("flag before is " + flag);
+    pdgui.post("flag before is " + flag);
     switch (name) {
         case "array_save":
             flag &= ~1;    // clear the save bit
@@ -343,7 +343,7 @@ function flag_change(elem) {
             break;
     }
     array_attr.array_flags = flag;
-    pdgui.gui_post("array is " + array_attr);
+    pdgui.post("array is " + array_attr);
 }
 
 function flag2_change(elem) {
@@ -355,7 +355,7 @@ function flag2_change(elem) {
     // "+" for casting boolean to number
     value = +elem.checked;
     array_attr[name] = value;
-    pdgui.gui_post("array is " + array_attr);
+    pdgui.post("array is " + array_attr);
 }
 
 function array_delete_change(elem) {
@@ -373,8 +373,8 @@ function attr_change(elem) {
     if (elem.name === "array-fill") {
         array-fill
     }
-    pdgui.gui_post("name is " + elem.name);
-    pdgui.gui_post("value is " + elem.value);
+    pdgui.post("name is " + elem.name);
+    pdgui.post("value is " + elem.value);
 }
 
 function array_choose(array_index) {
@@ -408,7 +408,7 @@ console.log("namer is " + name);
                     break;
                 default:
                     // name, size, fill, and outline
-                    pdgui.gui_post("name is " + name);
+                    pdgui.post("name is " + name);
                     elem = document.getElementsByName(name)[0];
                     elem.value = value;
                     break;
@@ -419,7 +419,7 @@ console.log("namer is " + name);
 
 var arrays_select = document.getElementById("arrays_select");
 arrays_select.addEventListener("change", function() {
-    pdgui.gui_post("changed the thing is " + this.value);
+    pdgui.post("changed the thing is " + this.value);
     array_choose(this.value);
 });
 
@@ -571,7 +571,7 @@ function apply() {
 
 function cancel() {
     var i, attrs, gfxstub;
-    pdgui.gui_post("closing the window at this point");
+    pdgui.post("closing the window at this point");
     //window.close(true);
     pdgui.pdsend(pd_object_callback, "cancel");
     for (i = 0; i < pd_garray_attrs.length; i++) {
@@ -633,7 +633,7 @@ function register_canvas_id(gfxstub, attr_objects) {
     // attr_objects[1...n-1]: array properties
     for (prop in attr_objects[0]) {
         if (attr_objects[0].hasOwnProperty(prop)) {
-            pdgui.gui_post(prop + ": " + attr_objects[0][prop]);
+            pdgui.post(prop + ": " + attr_objects[0][prop]);
         }
     }
     add_events(gfxstub);
@@ -692,7 +692,7 @@ function populate_form(attr_object) {
                 console.log("the thing here is " + prop);
                 prop_group.classList.remove("hidden");
             } else {
-                pdgui.gui_post("Error: couldn't find iemgui prop group for " +
+                pdgui.post("Error: couldn't find iemgui prop group for " +
                     prop);
             }
             if (prop === "display-flags") {
@@ -710,12 +710,12 @@ function populate_form(attr_object) {
                     var hex_string = Number(attr_object[prop]).toString(16);
                     var color_string = "#" +
                         (hex_string === "0" ? "000000" : hex_string);
-                    pdgui.gui_post("color is " + color_string);
+                    pdgui.post("color is " + color_string);
                     elem[0].value = color_string;
                 } else if (elem[0].type === "checkbox") {
                     // The attr here is a string, so we need to
                     // force it to number, hence the "+" below
-                    gui_post("found a CHECKED ITEM!!!");
+                    pdgui.post("found a CHECKED ITEM!!!");
                     elem[0].checked = +attr_object[prop];
                 } else {
                     elem[0].value = attr_object[prop];

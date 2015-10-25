@@ -330,7 +330,7 @@ function strip_problem_chars(arg) {
 }
 
 function apply() {
-    pdgui.gui_post("we're applying iemgui changes!");
+    pdgui.post("we're applying iemgui changes!");
     /* Not sure what these are...
         iemgui_clip_dim $id
         iemgui_clip_num $id
@@ -420,9 +420,9 @@ function apply() {
 
     if (log_display === null) {
         slot5 = +document.getElementsByName("vu-scale")[0].checked;
-        pdgui.gui_post("slot five is " + slot5);
+        pdgui.post("slot five is " + slot5);
     }
-    pdgui.gui_post("slot five is " + slot5);
+    pdgui.post("slot five is " + slot5);
 
     var init = +document.getElementsByName("init")[0].checked;
     if (init === "") { init = 0; }
@@ -472,7 +472,7 @@ function apply() {
 }
 
 function cancel() {
-    pdgui.gui_post("closing the window at this point");
+    pdgui.post("closing the window at this point");
     //window.close(true);
     pdgui.pdsend(pd_object_callback, "cancel");
 }
@@ -524,7 +524,7 @@ function populate_form(attr_object) {
             console.log("the thing here is " + attr);
             prop_group.classList.remove("hidden");
         } else {
-            pdgui.gui_post("Error: couldn't find iemgui prop group for " +
+            pdgui.post("Error: couldn't find iemgui prop group for " +
                 attr);
         }
         // iemguis use the string 'empty' for null because of
@@ -537,7 +537,7 @@ function populate_form(attr_object) {
                     var hex_string = Number(attr_object[attr]).toString(16);
                     var color_string = "#" +
                         (hex_string === "0" ? "000000" : hex_string);
-                    pdgui.gui_post("color is " + color_string);
+                    pdgui.post("color is " + color_string);
                     elem[0].value = color_string;
                 } else if (elem[0].type === "checkbox") {
                     // The attr here is a string, so we need to

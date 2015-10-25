@@ -274,7 +274,7 @@ function ok() {
 }
 
 function display_pref(type) {
-    pdgui.gui_post("here i am with " + type);
+    pdgui.post("here i am with " + type);
     var all, i, this_elem;
     all = document.getElementsByTagName("fieldset");
     this_elem = document.getElementById(type);
@@ -301,11 +301,11 @@ function dev_change(elem) {
     // This would need to change if there could ever be more than
     // 9 devices
     index = +(id.slice(-1)) - 1;
-    pdgui.gui_post("direction is " + direction);
+    pdgui.post("direction is " + direction);
     attrs = get_attr("pd-" + direction + type, pd_audio_attrs);
     attrs[index] = elem.value;
-    pdgui.gui_post("id is " + elem.id);
-    pdgui.gui_post("new chan attrs is " + attrs);
+    pdgui.post("id is " + elem.id);
+    pdgui.post("new chan attrs is " + attrs);
 }
 
 function attr_change(elem) {
@@ -313,8 +313,8 @@ function attr_change(elem) {
     attr = pd_audio_attrs;
     id = elem.id;
     attr[attr.indexOf(id) + 1] = elem.value;
-    pdgui.gui_post("id is " + elem.id);
-    pdgui.gui_post("value is " + elem.value);
+    pdgui.post("id is " + elem.id);
+    pdgui.post("value is " + elem.value);
 }
 
 function get_input(name) {
@@ -348,7 +348,7 @@ function kludge_chans(type, attrs, index) {
 
 function apply() {
     var attrs = pd_audio_attrs;
-    pdgui.gui_post("we're applying shits!");
+    pdgui.post("we're applying shits!");
 
     // Audio dialog
     pdgui.pdsend(
@@ -394,7 +394,7 @@ function apply() {
 
 function cancel() {
     var i, attrs, gfxstub;
-    pdgui.gui_post("closing the window at this point");
+    pdgui.post("closing the window at this point");
     window.close(true);
     //pdgui.pdsend(pd_object_callback, "cancel");
 }
@@ -414,9 +414,9 @@ function get_attr(name, attrs) {
 }
 
 function populate_apis(elem, apis, current_api) {
-    pdgui.gui_post("curent api is " + current_api);
+    pdgui.post("curent api is " + current_api);
     var i, opt, api_select = elem;
-    pdgui.gui_post("apis are " + apis);
+    pdgui.post("apis are " + apis);
     for (i = 0; i < apis.length; i += 2) {
         opt = document.createElement("option");
         opt.textContent = apis[i];
@@ -429,8 +429,8 @@ function populate_apis(elem, apis, current_api) {
 function populate_devs(type, attrs) {
     var devs = get_attr(type === "in" ? "sys-indevs" : "sys-outdevs", attrs);
     var i, j, opt, elem, chan_elem, chans;
-    pdgui.gui_post("devs are " + devs);
-    pdgui.gui_post("type is " + type + 1);
+    pdgui.post("devs are " + devs);
+    pdgui.post("type is " + type + 1);
     chans = get_attr("pd-" + type + "chans", attrs);
     for (i = 0; i < 4; i++) {
         elem = document.getElementById(type + (i+1));
@@ -457,8 +457,8 @@ function populate_devs(type, attrs) {
 function populate_midi_devs(type, attrs) {
     var devs = get_attr(type === "in" ? "sys-indevs" : "sys-outdevs", attrs);
     var i, j, opt, elem, chan_elem, chans;
-    pdgui.gui_post("devs are " + devs);
-    pdgui.gui_post("type is " + type + 1);
+    pdgui.post("devs are " + devs);
+    pdgui.post("type is " + type + 1);
     chans = get_attr("pd-" + type + "chans", attrs);
     for (i = 0; i < 4; i++) {
         elem = document.getElementById(type + (i+1));
@@ -486,8 +486,8 @@ function audio_prefs_callback(attrs) {
     pd_audio_attrs = attrs;
     var api_select = document.getElementById("audio_api");
     var callback, i, j, elem, devs, opt;
-    pdgui.gui_post("audio attrs are " + attrs);
-    pdgui.gui_post("attrs length " + attrs.length);
+    pdgui.post("audio attrs are " + attrs);
+    pdgui.post("attrs length " + attrs.length);
     // We can get this callback multiple times while the dialog
     // is open.  This is because an API change requires a query
     // for new properties. So we only populate the api options
@@ -546,8 +546,8 @@ function set_chans(type, chans_array) {
 function midi_prefs_callback(attrs) {
     pd_midi_attrs = attrs;
     var api_select = document.getElementById("midi_api");
-    pdgui.gui_post("midi attrs are " + attrs);
-    pdgui.gui_post("attrs length " + attrs.length);
+    pdgui.post("midi attrs are " + attrs);
+    pdgui.post("attrs length " + attrs.length);
 
     if (api_select.getElementsByTagName("option").length < 1) {
         populate_apis(
@@ -612,7 +612,7 @@ function populate_form(attr_array) {
             console.log("the thing here is " + attr_array[i]);
             prop_group.classList.remove("hidden");
         } else {
-            pdgui.gui_post("Error: couldn't find iemgui prop group for " + attr_array[i]);
+            pdgui.post("Error: couldn't find iemgui prop group for " + attr_array[i]);
         }
 
         var elem = document.getElementsByName(attr_array[i]);
@@ -620,7 +620,7 @@ function populate_form(attr_array) {
             if (elem[0].type === "checkbox") {
                 // The attr here is a string, so we need to
                 // force it to number, hence the "+" below
-                gui_post("found a CHECKED ITEM!!!");
+                pdgui.post("found a CHECKED ITEM!!!");
                 elem[0].checked = +attr_array[i+1];
             } else {
                 elem[0].value = attr_array[i+1];

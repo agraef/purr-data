@@ -185,7 +185,7 @@ function gatom_escape(str) {
 }
 
 function apply() {
-    pdgui.gui_post("we're applying gatom changes!");
+    pdgui.post("we're applying gatom changes!");
     pdgui.pdsend(pd_object_callback, "param", 
         +document.getElementById("width").value,
         +document.getElementById("minimum-range").value,
@@ -198,7 +198,7 @@ function apply() {
 }
 
 function cancel() {
-    pdgui.gui_post("closing the window at this point");
+    pdgui.post("closing the window at this point");
     //window.close(true);
     pdgui.pdsend(pd_object_callback, "cancel");
 }

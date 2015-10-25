@@ -112,12 +112,12 @@ function ok() {
 }
 
 function change_size() {
-    pdgui.gui_post("changing the size");
+    pdgui.post("changing the size");
     apply();
 }
 
 function apply() {
-    pdgui.gui_post("we're applying font size changes!");
+    pdgui.post("we're applying font size changes!");
     pdgui.pdsend(canvas, "font", 
         +document.querySelector('input[name="font_size"]:checked').value,
         current_size,
@@ -127,7 +127,7 @@ function apply() {
 }
 
 function cancel() {
-    pdgui.gui_post("closing the window at this point");
+    pdgui.post("closing the window at this point");
     //window.close(true);
     pdgui.pdsend(pd_object_callback, "cancel");
 }

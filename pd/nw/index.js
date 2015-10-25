@@ -455,7 +455,7 @@ function nw_create_pd_window_menus () {
         label: l("menu.zoomin"),
         click: function () {
             nw.Window.get().zoomLevel += 1;
-            pdgui.gui_post("zoom level is " + nw.Window.get().zoomLevel);
+            pdgui.post("zoom level is " + nw.Window.get().zoomLevel);
         },
         key: "=",
         modifiers: "ctrl",
@@ -466,7 +466,7 @@ function nw_create_pd_window_menus () {
         label: l("menu.zoomout"),
         click: function () {
             nw.Window.get().zoomLevel -= 1;
-            pdgui.gui_post("zoom level is " + nw.Window.get().zoomLevel);
+            pdgui.post("zoom level is " + nw.Window.get().zoomLevel);
         },
         key: "-",
         modifiers: "ctrl",
@@ -705,13 +705,13 @@ function nw_create_window(cid, type, width, height, xpos, ypos, menu_flag,
         x: xpos,
         y: ypos
     });
-    //pdgui.gui_post("attr_array is " + attr_array);
+    //pdgui.post("attr_array is " + attr_array);
     var eval_string = "register_canvas_id(" +
                       JSON.stringify(cid) + ", " +
                       JSON.stringify(attr_array) + ");";
-    //pdgui.gui_post("eval string is " + eval_string);
+    //pdgui.post("eval string is " + eval_string);
     //if (attr_array !== null) {
-    //    pdgui.gui_post("attr_array is " + attr_array.toString());
+    //    pdgui.post("attr_array is " + attr_array.toString());
     //}
     new_win.on("loaded", function() {
         new_win.eval(null, eval_string);
