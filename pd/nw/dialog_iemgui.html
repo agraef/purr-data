@@ -298,9 +298,9 @@
   </div>      
 
   <script>
-'use strict';
-var nw = require('nw.gui'); 
-var pdgui = require('./pdgui.js');
+"use strict";
+var nw = require("nw.gui"); 
+var pdgui = require("./pdgui.js");
 
 // For translations
 var l = pdgui.get_local_string;
@@ -317,14 +317,14 @@ function ok() {
 
 function substitute_space(arg) {
     var fake_space = String.fromCharCode(11);
-    return arg.split(' ').join(fake_space);
+    return arg.split(" ").join(fake_space);
 }
 
 function strip_problem_chars(arg) {
-    var problem_chars = [';', ',', '{', '}', '\\'];
+    var problem_chars = [";", ",", "{", "}", "\\"];
     var ret = arg;
     for(var i = 0; i < problem_chars.length; i++) {
-        ret = ret.split(';').join('');
+        ret = ret.split(";").join("");
     }
     return ret;
 }
@@ -339,27 +339,27 @@ function apply() {
         iemgui_sched_rng $id
         iemgui_clip_fontsize $id
     */
-    var send_symbol = document.getElementsByName('send-symbol')[0].value;
-    var receive_symbol = document.getElementsByName('receive-symbol')[0].value;
-    var label =  document.getElementsByName('label')[0].value;
-    if (send_symbol === null || send_symbol === '') {
-        send_symbol = 'empty';
+    var send_symbol = document.getElementsByName("send-symbol")[0].value;
+    var receive_symbol = document.getElementsByName("receive-symbol")[0].value;
+    var label =  document.getElementsByName("label")[0].value;
+    if (send_symbol === null || send_symbol === "") {
+        send_symbol = "empty";
     }
-    if (receive_symbol === null || receive_symbol === '') {
-        receive_symbol = 'empty';
+    if (receive_symbol === null || receive_symbol === "") {
+        receive_symbol = "empty";
     }
-    if (label === null || label === '') {
-        label = 'empty';
+    if (label === null || label === "") {
+        label = "empty";
     }
     console.log("send_symbol is " + send_symbol);
-    if (send_symbol.charAt(0) === '$') {
-        send_symbol = '#' + send_symbol.slice(1);
+    if (send_symbol.charAt(0) === "$") {
+        send_symbol = "#" + send_symbol.slice(1);
     }
-    if (receive_symbol.charAt(0) === '$') {
-        receive_symbol = '#' + receive_symbol.slice(1);
+    if (receive_symbol.charAt(0) === "$") {
+        receive_symbol = "#" + receive_symbol.slice(1);
     }
-    if (label.charAt(0) === '$') {
-        label = '#' + label.slice(1);
+    if (label.charAt(0) === "$") {
+        label = "#" + label.slice(1);
     }
 
     send_symbol = substitute_space(send_symbol);
@@ -370,85 +370,85 @@ function apply() {
     receive_symbol = strip_problem_chars(receive_symbol);
     label = strip_problem_chars(label);
 
-    var label_x_offset =  document.getElementsByName('x-offset')[0].value;
-    var label_y_offset =  document.getElementsByName('y-offset')[0].value;
+    var label_x_offset =  document.getElementsByName("x-offset")[0].value;
+    var label_y_offset =  document.getElementsByName("y-offset")[0].value;
 
     // make sure the offset boxes have a value
     if (label_x_offset === null) { label_x_offset = 0; }
     if (label_y_offset === null) { label_y_offset = 0; }
 
     var height, width;
-    var size = document.getElementsByName('size')[0].value;
-    if (size === '') {
-        var size = document.getElementsByName('selection-size')[0].value;
+    var size = document.getElementsByName("size")[0].value;
+    if (size === "") {
+        var size = document.getElementsByName("selection-size")[0].value;
     }
 
-    if (size !== '') {
+    if (size !== "") {
         width = size;
         height = size;
     } else {
-        width = document.getElementsByName('width')[0].value;
-        height = document.getElementsByName('height')[0].value;
+        width = document.getElementsByName("width")[0].value;
+        height = document.getElementsByName("height")[0].value;
     }
 
-    var slot3 = document.getElementsByName('minimum-range')[0].value;
-    var slot4 = document.getElementsByName('maximum-range')[0].value;
+    var slot3 = document.getElementsByName("minimum-range")[0].value;
+    var slot4 = document.getElementsByName("maximum-range")[0].value;
 
-    if (slot3 === '') {
-        slot3 = document.getElementsByName('flash-interrupt')[0].value;
-        slot4 = document.getElementsByName('flash-hold')[0].value;
+    if (slot3 === "") {
+        slot3 = document.getElementsByName("flash-interrupt")[0].value;
+        slot4 = document.getElementsByName("flash-hold")[0].value;
     }
 
-    if (slot3 === '') {
-        slot3 = document.getElementsByName('visible-width')[0].value;
-        slot4 = document.getElementsByName('visible-height')[0].value;
+    if (slot3 === "") {
+        slot3 = document.getElementsByName("visible-width")[0].value;
+        slot4 = document.getElementsByName("visible-height")[0].value;
     }
 
-    if (slot3 === '') { // toggle
-        slot3 = document.getElementsByName('nonzero-value')[0].value;
-        if (slot3 === '') {
+    if (slot3 === "") { // toggle
+        slot3 = document.getElementsByName("nonzero-value")[0].value;
+        if (slot3 === "") {
             slot3 = 0;
         }
         slot4 = 0;
     }
 
-    var slot5 = +document.getElementsByName('log-scaling')[0].checked;
+    var slot5 = +document.getElementsByName("log-scaling")[0].checked;
     // Hack to accomodate the vu-scale property, which exists in the same
     // slot as this one
-    var log_scaling_spanner = document.getElementsByClassName('log-scaling')[0];
-    var log_display = log_scaling_spanner.style.getPropertyValue('display');
+    var log_scaling_spanner = document.getElementsByClassName("log-scaling")[0];
+    var log_display = log_scaling_spanner.style.getPropertyValue("display");
 
     if (log_display === null) {
-        slot5 = +document.getElementsByName('vu-scale')[0].checked;
-        pdgui.gui_post('slot five is ' + slot5);
+        slot5 = +document.getElementsByName("vu-scale")[0].checked;
+        pdgui.gui_post("slot five is " + slot5);
     }
-    pdgui.gui_post('slot five is ' + slot5);
+    pdgui.gui_post("slot five is " + slot5);
 
-    var init = +document.getElementsByName('init')[0].checked;
-    if (init === '') { init = 0; }
+    var init = +document.getElementsByName("init")[0].checked;
+    if (init === "") { init = 0; }
 
-    var slot7 = document.getElementsByName('log-height')[0].value;
-    if (slot7 === '') {
-        slot7 = document.getElementsByName('number')[0].value;
+    var slot7 = document.getElementsByName("log-height")[0].value;
+    if (slot7 === "") {
+        slot7 = document.getElementsByName("number")[0].value;
     }
-    if (slot7 === '') {
+    if (slot7 === "") {
         slot7 = 0;
     }
 
-    var font_style = document.getElementsByName('font-style')[0].
+    var font_style = document.getElementsByName("font-style")[0].
         selectedIndex;
 //    if (font_style !== null) { font_style = 0; }
 
-    var font_size = document.getElementsByName('font-size')[0].value;
-    if (font_size === '') { font_size = 0; }
+    var font_size = document.getElementsByName("font-size")[0].value;
+    if (font_size === "") { font_size = 0; }
 
-    var foreground_color = parseInt(document.getElementsByName('foreground-color')[0].value.slice(1), 16);
-    var background_color = parseInt(document.getElementsByName('background-color')[0].value.slice(1), 16);
-    var label_color = parseInt(document.getElementsByName('label-color')[0].value.slice(1), 16);
+    var foreground_color = parseInt(document.getElementsByName("foreground-color")[0].value.slice(1), 16);
+    var background_color = parseInt(document.getElementsByName("background-color")[0].value.slice(1), 16);
+    var label_color = parseInt(document.getElementsByName("label-color")[0].value.slice(1), 16);
 
-    var slot18 = +document.getElementsByName('steady-on-click')[0].checked;
+    var slot18 = +document.getElementsByName("steady-on-click")[0].checked;
 
-    pdgui.pdsend(pd_object_callback, 'dialog',
+    pdgui.pdsend(pd_object_callback, "dialog",
         width, height,
         slot3, // bng: flash-interrupt
                // slider: min-range
@@ -483,7 +483,7 @@ function cancel() {
 function register_canvas_id(gfxstub, attr_object) {
     pd_object_callback = gfxstub;
 
-    console.log('attr object is ' + attr_object.toString());
+    console.log("attr object is " + attr_object.toString());
     add_events(gfxstub);
     translate_form();
     populate_form(attr_object);
@@ -491,23 +491,23 @@ function register_canvas_id(gfxstub, attr_object) {
     // We've finished displaying all the spans and populating the
     // labels and form elements.  That makes it more efficient and
     // snappier, at least on older machines.
-    document.getElementsByClassName('container')[0]
-        .style.setProperty('display', 'inline');
+    document.getElementsByClassName("container")[0]
+        .style.setProperty("display", "inline");
     pdgui.resize_window(pd_object_callback);
 }
 
 function tr_text(id) {
-    var elem = document.getElementById('iem.prop.' + id);
-    elem.textContent = l('iem.prop.' + id);
+    var elem = document.getElementById("iem.prop." + id);
+    elem.textContent = l("iem.prop." + id);
 }
 
 // Stop-gap translator
 function translate_form() {
     var i
-    var elements = document.querySelectorAll('[data-i18n]');
+    var elements = document.querySelectorAll("[data-i18n]");
     for (i = 0; i < elements.length; i++) {
         var data = elements[i].dataset.i18n;
-        if (data.slice(0,7) === '[title]') {
+        if (data.slice(0,7) === "[title]") {
             elements[i].title = l(data.slice(7));
         } else {
             elements[i].textContent = l(data);
@@ -522,7 +522,7 @@ function populate_form(attr_object) {
         var prop_group = document.getElementsByClassName(attr)[0];
         if (prop_group !== undefined) {
             console.log("the thing here is " + attr);
-            prop_group.classList.remove('hidden');
+            prop_group.classList.remove("hidden");
         } else {
             pdgui.gui_post("Error: couldn't find iemgui prop group for " +
                 attr);
@@ -530,20 +530,20 @@ function populate_form(attr_object) {
         // iemguis use the string 'empty' for null because of
         // the limitations of Pd's state-saving API.  So we have
         // to filter that one out
-        if(attr_object[attr] !== 'empty') {
+        if(attr_object[attr] !== "empty") {
             var elem = document.getElementsByName(attr);
             if (elem.length > 0) {
-                if(attr.slice(-5) === 'color') {
+                if(attr.slice(-5) === "color") {
                     var hex_string = Number(attr_object[attr]).toString(16);
                     var color_string = "#" +
-                        (hex_string === '0' ? '000000' : hex_string);
+                        (hex_string === "0" ? "000000" : hex_string);
                     pdgui.gui_post("color is " + color_string);
                     elem[0].value = color_string;
-                } else if (elem[0].type === 'checkbox') {
+                } else if (elem[0].type === "checkbox") {
                     // The attr here is a string, so we need to
                     // force it to number, hence the "+" below
                     elem[0].checked = +attr_object[attr];
-                } else if (elem[0].type === 'select-one') {
+                } else if (elem[0].type === "select-one") {
                     elem[0].selectedIndex = +attr_object[attr];
                 } else {
                     elem[0].value = attr_object[attr];
