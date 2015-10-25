@@ -136,9 +136,9 @@
   </div>      
 
   <script>
-'use strict';
-var nw = require('nw.gui'); 
-var pdgui = require('./pdgui.js');
+"use strict";
+var nw = require("nw.gui"); 
+var pdgui = require("./pdgui.js");
 
 // For translations
 var l = pdgui.get_local_string;
@@ -154,14 +154,14 @@ function ok() {
 
 function substitute_space(arg) {
     var fake_space = String.fromCharCode(11);
-    return arg.split(' ').join(fake_space);
+    return arg.split(" ").join(fake_space);
 }
 
 function strip_problem_chars(arg) {
-    var problem_chars = [';', ',', '{', '}', '\\'];
+    var problem_chars = [";", ",", "{", "}", "\\"];
     var ret = arg;
     for(var i = 0; i < problem_chars.length; i++) {
-        ret = ret.split(';').join('');
+        ret = ret.split(";").join("");
     }
     return ret;
 }
@@ -169,31 +169,31 @@ function strip_problem_chars(arg) {
 function gatom_escape(str) {
     var arr, i, ret;
     if (str.length === 0) {
-        ret = '-';
-    } else if (str.slice(0,1) === '-') {
-        ret = '-' + str;
+        ret = "-";
+    } else if (str.slice(0,1) === "-") {
+        ret = "-" + str;
     } else {
-        arr = str.split('');
+        arr = str.split("");
         for (i = 0; i < arr.length; i++) {
-            if (arr[i] === '$') {
-                arr[i] = '#';
+            if (arr[i] === "$") {
+                arr[i] = "#";
             }
         }
-        ret = arr.join('');
+        ret = arr.join("");
     }
     return strip_problem_chars(ret);
 }
 
 function apply() {
     pdgui.gui_post("we're applying gatom changes!");
-    pdgui.pdsend(pd_object_callback, 'param', 
-        +document.getElementById('width').value,
-        +document.getElementById('minimum-range').value,
-        +document.getElementById('maximum-range').value,
-        gatom_escape(document.getElementById('label').value),
+    pdgui.pdsend(pd_object_callback, "param", 
+        +document.getElementById("width").value,
+        +document.getElementById("minimum-range").value,
+        +document.getElementById("maximum-range").value,
+        gatom_escape(document.getElementById("label").value),
         document.querySelector('input[name="labelpos"]:checked').value,
-        gatom_escape(document.getElementById('receive-symbol').value),
-        gatom_escape(document.getElementById('send-symbol').value)
+        gatom_escape(document.getElementById("receive-symbol").value),
+        gatom_escape(document.getElementById("send-symbol").value)
     );
 }
 
@@ -215,23 +215,23 @@ function register_canvas_id(gfxstub, attributes) {
     // We've finished displaying all the spans and populating the
     // labels and form elements.  That makes it more efficient and
     // snappier, at least on older machines.
-    document.getElementsByClassName('container')[0]
-        .style.setProperty('display', 'inline');
+    document.getElementsByClassName("container")[0]
+        .style.setProperty("display", "inline");
     pdgui.resize_window(pd_object_callback);
 }
 
 function tr_text(id) {
-    var elem = document.getElementById('iem.prop.' + id);
-    elem.textContent = l('iem.prop.' + id);
+    var elem = document.getElementById("iem.prop." + id);
+    elem.textContent = l("iem.prop." + id);
 }
 
 // Stop-gap translator
 function translate_form() {
     var i
-    var elements = document.querySelectorAll('[data-i18n]');
+    var elements = document.querySelectorAll("[data-i18n]");
     for (i = 0; i < elements.length; i++) {
         var data = elements[i].dataset.i18n;
-        if (data.slice(0,7) === '[title]') {
+        if (data.slice(0,7) === "[title]") {
             elements[i].title = l(data.slice(7));
         } else {
             elements[i].textContent = l(data);
@@ -249,18 +249,18 @@ function get_elem(name) {
 
 function populate_form(attributes) {
     var label, snd, rcv, labelpos, i, radios;
-    get_elem('width').value = attributes.width;
-    get_elem('minimum-range').value = attributes.draglo;
-    get_elem('maximum-range').value = attributes.draghi;
+    get_elem("width").value = attributes.width;
+    get_elem("minimum-range").value = attributes.draglo;
+    get_elem("maximum-range").value = attributes.draghi;
     label = attributes.label;
-    get_elem('label').value = label === '-' ? '' : label;
-    snd = attributes['send-symbol'];
-    get_elem('send-symbol').value = snd === '-' ? '' : snd;
-    rcv = attributes['receive-symbol'];
-    get_elem('receive-symbol').value = rcv === '-' ? '' : rcv;
+    get_elem("label").value = label === "-" ? "" : label;
+    snd = attributes["send-symbol"];
+    get_elem("send-symbol").value = snd === "-" ? "" : snd;
+    rcv = attributes["receive-symbol"];
+    get_elem("receive-symbol").value = rcv === "-" ? "" : rcv;
 
-    labelpos = attributes['labelpos'];
-    radios = document.getElementsByName('labelpos');
+    labelpos = attributes["labelpos"];
+    radios = document.getElementsByName("labelpos");
     for (i = 0; i < radios.length; i++) {
         if (+radios[i].value === labelpos) {
             radios[i].checked = true;
