@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 // Modules
 
@@ -12,11 +12,11 @@ exports.get_pwd = function() {
     return pwd;
 }
 
-var fs = require('fs');     // for fs.existsSync
-var path = require('path'); // for path.dirname path.extname path.join
+var fs = require("fs");     // for fs.existsSync
+var path = require("path"); // for path.dirname path.extname path.join
 
 // local strings
-var lang = require('./pdlang.js');
+var lang = require("./pdlang.js");
 
 exports.get_local_string = lang.get_local_string;
 
@@ -59,7 +59,7 @@ var pd_myversion,    // Pd version string
     colors,          //
     global_clipboard, //
     global_selection, //
-    k12_mode = 0,         // should be set from argv ('0' is just a stopgap)
+    k12_mode = 0,         // should be set from argv ("0" is just a stopgap)
     k12_saveas_on_new, //
     autotips,          // tooltips
     magicglass,        // cord inspector
@@ -167,7 +167,7 @@ function enquote (x) {
 // this doesn't seem to be needed atm
 function path_is_absolute(myPath) {
     var ret = (path.resolve(myPath) ===
-        path.normalize(myPath).replace(/(.+)([\/]\\])$/, '$1'));
+        path.normalize(myPath).replace(/(.+)([\/]\\])$/, "$1"));
     return ret;
 }
 
@@ -189,7 +189,7 @@ function gui_post(string, color) {
         duplicate++;
     } else {
         if (color === undefined) { color = "black" };
-        var myp = pd_window.document.getElementById('p1');
+        var myp = pd_window.document.getElementById("p1");
         var text;
         var span = pd_window.document.createElement("span");
         span.style.color = color;
@@ -216,11 +216,11 @@ function pd_error_select_by_id(objectid) {
 exports.pd_error_select_by_id = pd_error_select_by_id
 
 function gui_post_error(objectid, loglevel, errormsg) {
-    var my_p = pd_window.document.getElementById('p1');
+    var my_p = pd_window.document.getElementById("p1");
     // if we have an object id, make a friendly link...
     var error_title = pd_window.document.createTextNode("error");
     if (objectid.length > 0) {
-        var my_a = pd_window.document.createElement('a');
+        var my_a = pd_window.document.createElement("a");
         my_a.href =
             "javascript:pdgui.pd_error_select_by_id('" + objectid + "')";
         my_a.appendChild(error_title);
@@ -245,7 +245,7 @@ function gui_post_error(objectid, loglevel, errormsg) {
 // in both Pd-Extended and Pd-Vanilla.  So we have to
 // keep it here for backwards compatibility.
 function pd_geo_string(w, h, x, y) {
-    return  [w,'x',h,'+',x,'+',y].join("");
+    return  [w,"x",h,"+",x,"+",y].join("");
 }
 
 // In tcl/tk, this function had some checks to apparently
@@ -284,7 +284,7 @@ function gui_canvas_saveas (name, initfile, initdir) {
         initdir = pwd;
     }
 //    patchwin[name].window.document.getElementById("fileDialog").setAttribute("nwworkingdir", pwd);
-    var chooser = patchwin[name].window.document.querySelector('#saveDialog');
+    var chooser = patchwin[name].window.document.querySelector("#saveDialog");
     chooser.click();
 }
 
@@ -303,13 +303,13 @@ function saveas_callback(cid, file) {
     // 90s.
     //var lc = filename.toLowerCase();
     //if (lc.slice(-3) !== '.pd' &&
-    //    lc.slice(-4) !== '.pat' &&
-    //    lc.slice(-4) !== '.mxt') {
+    //    lc.slice(-4) !== ".pat" &&
+    //    lc.slice(-4) !== ".mxt") {
         // remove any other extensions
     //    filename = filename.slice(0,
     //        (filename.length - path.extname(filename).length));
         // add ".pd"
-    //    filename = filename + '.pd';
+    //    filename = filename + ".pd";
     //}
     // test again after downcasing and maybe adding a ".pd" on the end
     //if (fs.existsSync(filename)) {
@@ -648,7 +648,7 @@ exports.remove_dialogwin = function(name) {
 }
 
 // stopgap...
-pd_colors['canvas_color'] = "white";
+pd_colors["canvas_color"] = "white";
 
 exports.last_loaded = function () {
     return last_loaded;
@@ -663,34 +663,34 @@ function gui_canvas_cursor(cid, pd_event_type) {
     // be revised later
     switch(pd_event_type) {
         case "cursor_runmode_nothing":
-            c = 'default';
+            c = "default";
             break;
         case "cursor_runmode_clickme":
-            c = 'pointer';
+            c = "pointer";
             break;
         case "cursor_runmode_thicken":
-            c = 'inherit';
+            c = "inherit";
             break;
         case "cursor_runmode_addpoint":
-            c = 'cell';
+            c = "cell";
             break;
         case "cursor_editmode_nothing":
-            c = 'pointer';
+            c = "pointer";
             break;
         case "cursor_editmode_connect":
-            c = '-webkit-grabbing';
+            c = "-webkit-grabbing";
             break;
         case "cursor_editmode_disconnect":
-            c = 'no-drop';
+            c = "no-drop";
             break;
         case "cursor_editmode_resize":
-            c = 'ew-resize';
+            c = "ew-resize";
             break;
         case "cursor_editmode_resize_bottom_right":
-            c = 'se-resize';
+            c = "se-resize";
             break;
         case "cursor_scroll":
-            c = 'all-scroll'; 
+            c = "all-scroll"; 
             break;
     }
     patch.style.cursor = c;
@@ -735,7 +735,7 @@ function gui_canvas_new(cid, width, height, geometry, editable, name, dir, dirty
     // well with local settings.
     var my_canvas_color = "";
     //canvas_color[cid] = orange;
-    my_canvas_color = pd_colors['canvas_color'];
+    my_canvas_color = pd_colors["canvas_color"];
     topmost[cid] = 0;
     resize[cid] = 1;
     xscrollable[cid] = 0;
@@ -763,7 +763,7 @@ function gui_canvas_new(cid, width, height, geometry, editable, name, dir, dirty
     last_loaded = cid;
     // Not sure why resize and topmost are here-- but we'll pass them on for
     // the time being...
-    patchwin[cid] = nw_create_window(cid, 'pd_canvas', width, height,
+    patchwin[cid] = nw_create_window(cid, "pd_canvas", width, height,
         xpos, ypos, menu_flag, resize[cid], topmost[cid], my_canvas_color,
         name, dir, dirty_flag, cargs, null);
     // initialize variable to reflect that this window has been opened
@@ -780,7 +780,7 @@ function canvas_map(name) {
 }
 
 function gui_canvas_erase_all_gobjs(cid) {
-    var top = get_item(cid, 'patchsvg');
+    var top = get_item(cid, "patchsvg");
     var elem;
     while (elem = top.firstChild) {
         top.removeChild(elem);
@@ -790,9 +790,9 @@ function gui_canvas_erase_all_gobjs(cid) {
 exports.canvas_map = canvas_map;
 
 // net stuff
-var net = require('net');
+var net = require("net");
 
-var HOST = '127.0.0.1';
+var HOST = "127.0.0.1";
 var PORT;
 var client;
 
@@ -804,7 +804,7 @@ function connect () {
     client = new net.Socket();
     client.setNoDelay(true);
     client.connect(PORT, HOST, function() {
-        console.log('CONNECTED TO: ' + HOST + ':' + PORT);
+        console.log("CONNECTED TO: " + HOST + ":" + PORT);
     });
 }
 
@@ -824,19 +824,19 @@ exports.connect = connect;
 // a decent stop-gap since they are rarely used in Pd patch text.
 
 function init_socket_events () {
-    var next_command = ''; // A not-quite-FUDI command: selector arg1,arg2,etc.
+    var next_command = ""; // A not-quite-FUDI command: selector arg1,arg2,etc.
                            // These are formatted on the C side to be easy
                            // to parse here in javascript
-    var old_command = '';  // Old-style sys_vgui cmds (printed to console)
+    var old_command = "";  // Old-style sys_vgui cmds (printed to console)
     var cmdHeader = false;
 
-    client.on('data', function(data) {
+    client.on("data", function(data) {
         var i, len, selector, args;
         len = data.length;
         for (i = 0; i < len; i++) {
             if (cmdHeader) {
                 // check for end of command:
-                if (data[i] === 11) { // vertical tab '\v'
+                if (data[i] === 11) { // vertical tab "\v"
                     // decode next_command
                     try {
                         // This should work for all utf-8 content
@@ -846,25 +846,25 @@ function init_socket_events () {
                         // This should work for ISO-8859-1
                         next_command = unescape(next_command);
                     }
-                    // Turn newlines into backslash + 'n' so
+                    // Turn newlines into backslash + "n" so
                     // eval will do the right thing
-                    next_command = next_command.replace(/\n/g, '\\n');
+                    next_command = next_command.replace(/\n/g, "\\n");
                     selector = next_command.slice(0, next_command.indexOf(" "));
                     args = next_command.slice(selector.length + 1);
                     cmdHeader = false;
-                    next_command = '';
+                    next_command = "";
                     // Now evaluate it 
-                    //gui_post('Evaling: ' + selector + '(' + args + ');');
-                    eval(selector + '(' + args + ');');
+                    //gui_post("Evaling: " + selector + "(" + args + ");");
+                    eval(selector + "(" + args + ");");
                 } else {
-                    next_command += '%' +
-                        ('0' // leading zero (for rare case of single digit)
+                    next_command += "%" +
+                        ("0" // leading zero (for rare case of single digit)
                          + data[i].toString(16)) // to hex
                            .slice(-2); // remove extra leading zero
                 }
-            } else if (data[i] === 7) { // ASCII alarm bell '\a'
+            } else if (data[i] === 7) { // ASCII alarm bell "\a"
                 // if we have an old-style message, print it out
-                if (old_command !== '') {
+                if (old_command !== "") {
                     var old_command_output;
                     try {
                         old_command_output = decodeURIComponent(old_command);
@@ -872,21 +872,21 @@ function init_socket_events () {
                     catch(err) {
                         old_command_output = unescape(old_command);
                     }
-                    old_command= '';
+                    old_command= "";
                     //gui_post("warning: old command: " + old_command_output,
-                    //    'blue');
+                    //    "blue");
                 }
                 cmdHeader = true; 
             } else {
                 // this is an old-style sys_vgui
-                old_command += '%' + ('0' + data[i].toString(16)).slice(-2);
+                old_command += "%" + ("0" + data[i].toString(16)).slice(-2);
             }
         }
     });
 
-    // Add a 'close' event handler for the client socket
-    client.on('close', function() {
-        //console.log('Connection closed');
+    // Add a "close" event handler for the client socket
+    client.on("close", function() {
+        //console.log("Connection closed");
         //client.destroy();
         nw_app_quit(); // set a timeout here if you need to debug
     });
@@ -896,10 +896,10 @@ exports.init_socket_events = init_socket_events;
 
 // Send commands to Pd
 function pdsend() {
-    var string = Array.prototype.join.call(arguments, ' ');
-    client.write(string + ';');
+    var string = Array.prototype.join.call(arguments, " ");
+    client.write(string + ";");
     // for now, let's reprint the outgoing string to the pdwindow
-    //gui_post(string + ';', 'red');
+    //gui_post(string + ";", "red");
 }
 
 exports.pdsend = pdsend;
@@ -928,7 +928,7 @@ function gui_watchdog() {
 // Gobj container, so that all drawn items are contained in a <g> which
 // handles displacing (and in the future, possibly clicks and other events)
 function get_gobj(cid, object) {
-    return patchwin[cid].window.document.getElementById(object + 'gobj');
+    return patchwin[cid].window.document.getElementById(object + "gobj");
 }
 
 // Convenience function to get a drawn item of gobj
@@ -939,7 +939,7 @@ function get_item(cid,item_id) {
 // Similar to [canvas create] in tk
 function create_item(cid,type,args) {
     var item = patchwin[cid].window.document
-        .createElementNS('http://www.w3.org/2000/svg', type);
+        .createElementNS("http://www.w3.org/2000/svg", type);
     if (args !== null) {
         configure_item(item, args);
     }
@@ -950,7 +950,7 @@ function create_item(cid,type,args) {
 // to the canvas
 function configure_item(item, attributes) {
     // draw_vis from g_template sends attributes
-    // as a ['attr1',val1, 'attr2', val2, etc.] array,
+    // as a ["attr1",val1, "attr2", val2, etc.] array,
     // so we check for that here
     var value;
     if (Array.isArray(attributes)) {
@@ -976,19 +976,19 @@ function gui_configure_item(cid, tag, attributes) {
 }
 
 function add_gobj_to_svg(svg, gobj) {
-    svg.insertBefore(gobj, svg.querySelector('.cord'));
+    svg.insertBefore(gobj, svg.querySelector(".cord"));
 }
 
 // Most of these map either to pd.tk procs, or in some cases
 // Tk canvas subcommands
 function gui_text_create_gobj(cid, tag, type, xpos, ypos, is_toplevel) {
     var svg = get_item(cid, "patchsvg"); // "patchsvg" is id for the svg element
-    var transform_string = 'matrix(1,0,0,1,' + xpos + ',' + ypos + ')';
-    var g = create_item(cid, 'g', {
-            id: tag + 'gobj',
+    var transform_string = "matrix(1,0,0,1," + xpos + "," + ypos + ")";
+    var g = create_item(cid, "g", {
+            id: tag + "gobj",
             transform: transform_string,
-            class: type + (is_toplevel !== 0 ? '' : ' gop'),
-            'shape-rendering': 'crispEdges'
+            class: type + (is_toplevel !== 0 ? "" : " gop"),
+            "shape-rendering": "crispEdges"
     });
     add_gobj_to_svg(svg, g);
     
@@ -1001,14 +1001,14 @@ function gui_text_drawborder(cid, tag, bgcolor, isbroken, x1, y1, x2, y2) {
     // isbroken means either
     //     a) the object couldn't create or
     //     b) the box is empty
-    var rect = create_item(cid, 'rect', {
+    var rect = create_item(cid, "rect", {
         width: x2 - x1,
         height: y2 - y1,
-        'shape-rendering': 'crispEdges',
-        class: 'border'
+        "shape-rendering": "crispEdges",
+        class: "border"
     });
     if (isbroken === 1) {
-        rect.classList.add('broken_border');
+        rect.classList.add("broken_border");
     }
     g.appendChild(rect);
 }
@@ -1017,7 +1017,7 @@ function gui_canvas_drawio(cid, parenttag, tag, x1, y1, x2, y2, basex, basey,
     type, i, is_signal, is_iemgui) {
     var xlet_class, xlet_id, g = get_gobj(cid, parenttag);
     if (is_iemgui) {
-        xlet_class = 'xlet_iemgui';
+        xlet_class = "xlet_iemgui";
         // We have an inconsistency here.  We're setting the tag using
         // string concatenation below, but the "tag" for iemguis arrives
         // to us pre-concatenated.  We need to remove that formatting in c, and
@@ -1025,20 +1025,20 @@ function gui_canvas_drawio(cid, parenttag, tag, x1, y1, x2, y2, basex, basey,
         // as possible.
         xlet_id = tag;
     } else if (is_signal) {
-        xlet_class = 'xlet_signal';
+        xlet_class = "xlet_signal";
         xlet_id = tag + type + i;
     } else {
-        xlet_class = 'xlet_control';
+        xlet_class = "xlet_control";
         xlet_id = tag + type + i;
     }
-    var rect = create_item(cid, 'rect', {
+    var rect = create_item(cid, "rect", {
         width: x2 - x1,
         height: y2 - y1,
         x: x1 - basex,
         y: y1 - basey,
         id: xlet_id,
         class: xlet_class,
-        'shape-rendering': 'crispEdges'
+        "shape-rendering": "crispEdges"
     });
     g.appendChild(rect);
 }
@@ -1071,17 +1071,17 @@ function gui_configure_io(cid, tag, is_iemgui, is_signal, width) {
     //   * objects which fail to create when loading a patch
     if (xlet !== null) { 
         configure_item(xlet, {
-            'stroke-width': width,
+            "stroke-width": width,
         });
         if (is_iemgui) {
-            xlet.classList.add('xlet_iemgui');
+            xlet.classList.add("xlet_iemgui");
         } else if (is_signal) {
-            xlet.classList.add('xlet_signal');
+            xlet.classList.add("xlet_signal");
         } else {
-            xlet.classList.add('xlet_control');
+            xlet.classList.add("xlet_control");
         }
         // remove xlet_selected tag
-        xlet.classList.remove('xlet_selected');
+        xlet.classList.remove("xlet_selected");
     }
 }
 
@@ -1089,7 +1089,7 @@ function gui_highlight_io(cid, tag) {
     var xlet = get_item(cid, tag);
     // must check for null (see gui_configure_io)
     if (xlet !== null) {
-        xlet.classList.add('xlet_selected');
+        xlet.classList.add("xlet_selected");
     }
 }
 
@@ -1102,12 +1102,12 @@ function gui_message_drawborder(cid,tag,width,height) {
                    width+4, height,
                    0, height,
                    0, 0];
-    var polygon = create_item(cid, 'polygon', {
+    var polygon = create_item(cid, "polygon", {
         points: p_array.join(),
-        fill: 'none',
-        stroke: 'black',
-        class: 'border'
-        //id: tag + 'border'
+        fill: "none",
+        stroke: "black",
+        class: "border"
+        //id: tag + "border"
     });
     g.appendChild(polygon);
 }
@@ -1115,15 +1115,15 @@ function gui_message_drawborder(cid,tag,width,height) {
 function gui_message_flash(cid, tag, state) {
     var g = get_gobj(cid, tag);
     if (state !== 0) {
-        g.classList.add('flashed');
+        g.classList.add("flashed");
     } else {
-        g.classList.remove('flashed');
+        g.classList.remove("flashed");
     }
 }
 
 function gui_message_redraw_border(cid,tag,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14) {
     var g = get_gobj(cid, tag);
-    var b = g.querySelector('.border');
+    var b = g.querySelector(".border");
     var p_array = [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14];
     configure_item(b, {
         points: p_array.join(" "),
@@ -1134,29 +1134,29 @@ function gui_message_redraw_border(cid,tag,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p1
 function gui_atom_drawborder(cid,tag,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12) {
     var p_array = [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12];
     var g = get_gobj(cid, tag);
-    var polygon = create_item(cid, 'polygon', {
+    var polygon = create_item(cid, "polygon", {
         points: p_array.join(" "),
-        fill: 'none',
-        stroke: 'gray',
-        'stroke-width': 1,
-        class: 'border'
-        //id: tag + 'border'
+        fill: "none",
+        stroke: "gray",
+        "stroke-width": 1,
+        class: "border"
+        //id: tag + "border"
     });
     g.appendChild(polygon);
 }
 
 // draw a patch cord
 function gui_canvas_line(cid,tag,type,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10) {
-    var d_array = ['M', p1 + 0.5, p2 + 0.5,
-                   'Q', p3 + 0.5, p4 + 0.5, p5 + 0.5, p6 + 0.5,
-                   'Q', p7 + 0.5, p8 + 0.5 ,p9 + 0.5, p10 + 0.5];
+    var d_array = ["M", p1 + 0.5, p2 + 0.5,
+                   "Q", p3 + 0.5, p4 + 0.5, p5 + 0.5, p6 + 0.5,
+                   "Q", p7 + 0.5, p8 + 0.5 ,p9 + 0.5, p10 + 0.5];
     var svg = get_item(cid, "patchsvg");
-    var path = create_item(cid, 'path', {
+    var path = create_item(cid, "path", {
         d: d_array.join(" "),
-        fill: 'none',
-        'shape-rendering': 'optimizeSpeed',
+        fill: "none",
+        "shape-rendering": "optimizeSpeed",
         id: tag,
-        'class': 'cord ' + type
+        "class": "cord " + type
     });
     svg.appendChild(path);
 }
@@ -1164,7 +1164,7 @@ function gui_canvas_line(cid,tag,type,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10) {
 function gui_canvas_select_line(cid, tag) {
     var line = get_item(cid, tag);
     if (line !== null) {
-        line.classList.add('selected_line');
+        line.classList.add("selected_line");
     } else {
         gui_post("gui_canvas_select_line: can't find line");
     }
@@ -1173,7 +1173,7 @@ function gui_canvas_select_line(cid, tag) {
 function gui_canvas_deselect_line(cid, tag) {
     var line = get_item(cid, tag);
     if (line !== null) {
-        line.classList.remove('selected_line');
+        line.classList.remove("selected_line");
     } else {
         gui_post("gui_canvas_select_line: can't find line");
     }
@@ -1192,15 +1192,15 @@ function gui_canvas_delete_line(cid, tag) {
 function gui_canvas_updateline(cid,tag,x1,y1,x2,y2,yoff) {
     var halfx = parseInt((x2 - x1)/2);
     var halfy = parseInt((y2 - y1)/2);
-    var d_array = ['M',x1,y1,
-                  'Q',x1,y1+yoff,x1+halfx,y1+halfy,
-                  'Q',x2,y2-yoff,x2,y2];
+    var d_array = ["M",x1,y1,
+                  "Q",x1,y1+yoff,x1+halfx,y1+halfy,
+                  "Q",x2,y2-yoff,x2,y2];
     var cord = get_item(cid, tag);
     configure_item(cord, { d: d_array.join(" ") });
 }
 
 function text_line_height_kludge(fontsize, fontsize_type) {
-    var pd_fontsize = fontsize_type === 'gui' ?
+    var pd_fontsize = fontsize_type === "gui" ?
         gui_fontsize_to_pd_fontsize(fontsize) :
         fontsize;
     switch (pd_fontsize) {
@@ -1216,14 +1216,14 @@ function text_line_height_kludge(fontsize, fontsize_type) {
 
 function text_to_tspans(canvasname, svg_text, text) {
     var lines, i, len, tspan, fontsize;
-    lines = text.split('\n'); 
+    lines = text.split("\n"); 
     len = lines.length;
     // Get fontsize (minus the trailing "px")
-    fontsize = svg_text.getAttribute('font-size').slice(0, -2);
+    fontsize = svg_text.getAttribute("font-size").slice(0, -2);
 
     for (i = 0; i < len; i++) {
-        tspan = create_item(canvasname, 'tspan', {
-            dy: i == 0 ? 0 : text_line_height_kludge(+fontsize, 'gui') + 'px',
+        tspan = create_item(canvasname, "tspan", {
+            dy: i == 0 ? 0 : text_line_height_kludge(+fontsize, "gui") + "px",
             x: 0
         });
         // find a way to abstract away the canvas array and the DOM here
@@ -1251,7 +1251,7 @@ function gobj_fontsize_kludge(fontsize, return_type) {
         36: 36.6
     };
     var ret, prop;
-    if (return_type === 'gui') {
+    if (return_type === "gui") {
         ret = fontmap[fontsize];
         return ret ? ret : fontsize;
     } else {
@@ -1267,11 +1267,11 @@ function gobj_fontsize_kludge(fontsize, return_type) {
 }
 
 function pd_fontsize_to_gui_fontsize(fontsize) {
-    return gobj_fontsize_kludge(fontsize, 'gui');
+    return gobj_fontsize_kludge(fontsize, "gui");
 }
 
 function gui_fontsize_to_pd_fontsize(fontsize) {
-    return gobj_fontsize_kludge(fontsize, 'pd');
+    return gobj_fontsize_kludge(fontsize, "pd");
 }
 
 // Another hack, similar to above. We use this to
@@ -1293,20 +1293,20 @@ function gobj_font_y_kludge(fontsize) {
 function gui_text_new(canvasname, myname, type, isselected, left_margin, font_height, text, font) {
     var lines, i, len, tspan;
     var g = get_gobj(canvasname, myname);
-    var svg_text = create_item(canvasname, 'text', {
+    var svg_text = create_item(canvasname, "text", {
         // Maybe it's just me, but the svg spec's explanation of how
         // text x/y and tspan x/y interact is difficult to understand.
         // So here we just translate by the right amount for the left-margin,
         // guaranteeing all tspan children will line up where they should be
-        transform: 'translate(' + left_margin + ')',
+        transform: "translate(" + left_margin + ")",
         y: font_height + gobj_font_y_kludge(font),
         // Turns out we can't do 'hanging' baseline
         // because it's borked when scaled. Bummer...
         // 'dominant-baseline': 'hanging',
-        'shape-rendering': 'crispEdges',
-        'font-size': pd_fontsize_to_gui_fontsize(font) + 'px',
-        'font-weight': 'normal',
-        id: myname + 'text'
+        "shape-rendering": "crispEdges",
+        "font-size": pd_fontsize_to_gui_fontsize(font) + "px",
+        "font-weight": "normal",
+        id: myname + "text"
     });
 
     // trim off any extraneous leading/trailing whitespace. Because of
@@ -1340,11 +1340,11 @@ function gui_gobj_erase(cid, tag) {
 }
 
 function gui_text_set (cid, tag, text) {
-    var svg_text = get_item(cid, tag + 'text');
+    var svg_text = get_item(cid, tag + "text");
     if (svg_text !== null) {
         // trim leading/trailing whitespace
         text = text.trim();
-        svg_text.textContent = '';
+        svg_text.textContent = "";
         text_to_tspans(cid, svg_text, text);
     } else {
         // In tk, setting an option for a non-existent canvas
@@ -1360,7 +1360,7 @@ function gui_text_set (cid, tag, text) {
 function gui_text_redraw_border(cid, tag, x1, y1, x2, y2) {
     var i;
     var g = get_gobj(cid, tag);
-    var b = g.querySelectorAll('.border');
+    var b = g.querySelectorAll(".border");
     for (i = 0; i < b.length; b++) {
         configure_item(b[i], {
             width: x2 - x1,
@@ -1372,7 +1372,7 @@ function gui_text_redraw_border(cid, tag, x1, y1, x2, y2) {
 function gui_gobj_select(cid, tag) {
     var g = get_gobj(cid, tag);
     if (g !== null) {
-        g.classList.add('selected');
+        g.classList.add("selected");
     } else {
         console.log("text_select: something wrong with group tag: " + tag);
     }
@@ -1381,24 +1381,24 @@ function gui_gobj_select(cid, tag) {
 function gui_gobj_deselect(cid, tag) {
     var gobj = get_gobj(cid, tag)
     if (gobj !== null) {
-        gobj.classList.remove('selected');
+        gobj.classList.remove("selected");
     } else {
-        console.log("text_deselect: something wrong with tag: " + tag + 'gobj');
+        console.log("text_deselect: something wrong with tag: " + tag + "gobj");
     }
 }
 
 function gui_text_select_color(cid, tag) {
 // nb: this is handled in css now
 return;
-    var rect = get_item(cid, tag + 'border');
+    var rect = get_item(cid, tag + "border");
     if (rect !== null) {
         configure_item(rect, {
-            stroke: 'blue',
-            'stroke-width': 1,
-            'stroke-dasharray': 'none'
+            stroke: "blue",
+            "stroke-width": 1,
+            "stroke-dasharray": "none"
         });
     } else {
-        gui_post("select_color: something wrong with tag: " + tag + 'border');
+        gui_post("select_color: something wrong with tag: " + tag + "border");
     }
 }
 
@@ -1420,21 +1420,21 @@ function gui_text_displace(name, tag, dx, dy) {
 }
 
 function textentry_displace(t, dx, dy) {
-    var transform = t.style.getPropertyValue('transform')
-        .split('(')[1]    // get everything after the '('
-        .replace(')', '') // remove trailing ')'
-        .split(',');      // split into x and y
-    var x = +transform[0].trim().replace('px', ''),
-        y = +transform[1].trim().replace('px', '');
-    t.style.setProperty('transform',
-        'translate(' +
-        (x + dx) + 'px, ' +
-        (y + dy) + 'px)');
+    var transform = t.style.getPropertyValue("transform")
+        .split("(")[1]    // get everything after the "("
+        .replace(")", "") // remove trailing ")"
+        .split(",");      // split into x and y
+    var x = +transform[0].trim().replace("px", ""),
+        y = +transform[1].trim().replace("px", "");
+    t.style.setProperty("transform",
+        "translate(" +
+        (x + dx) + "px, " +
+        (y + dy) + "px)");
 }
 
 function gui_canvas_displace_withtag(name, dx, dy) {
     var pwin = patchwin[name], i, textentry;
-    var ol = pwin.window.document.getElementsByClassName('selected');
+    var ol = pwin.window.document.getElementsByClassName("selected");
     for (i = 0; i < ol.length; i++) {
         elem_displace(ol[i], dx, dy);
         //var elem = ol[i].transform.baseVal.getItem(0);
@@ -1443,12 +1443,12 @@ function gui_canvas_displace_withtag(name, dx, dy) {
         //elem.matrix.e = new_tx;
         //elem.matrix.f = new_ty;
     }
-    textentry = patchwin[name].window.document.getElementById('new_object_textentry');
+    textentry = patchwin[name].window.document.getElementById("new_object_textentry");
     if (textentry !== null) {
         textentry_displace(textentry, dx, dy); 
     }
-    //elem.setAttributeNS(null, 'transform',
-    //'translate(' + new_tx + ',' + new_ty + ')');
+    //elem.setAttributeNS(null, "transform",
+    //"translate(" + new_tx + "," + new_ty + ")");
     //}
 }
 
@@ -1459,13 +1459,13 @@ function gui_create_selection_rectangle(cid, x1, y1, x2, y2) {
                         x2 + 0.5, y2 + 0.5,
                         x1 + 0.5, y2 + 0.5
     ];
-    var rect = create_item(cid, 'polygon', {
+    var rect = create_item(cid, "polygon", {
         points: points_array.join(" "),
-        fill: 'none',
-        'shape-rendering': 'optimizeSpeed',
-        'stroke-width': 1,
-        id: 'selection_rectangle',
-        display: 'inline' 
+        fill: "none",
+        "shape-rendering": "optimizeSpeed",
+        "stroke-width": 1,
+        id: "selection_rectangle",
+        display: "inline" 
     });
     svg.appendChild(rect);
 }
@@ -1473,12 +1473,12 @@ function gui_create_selection_rectangle(cid, x1, y1, x2, y2) {
 function gui_move_selection_rectangle(cid, x1, y1, x2, y2) {
     var points_array = [x1 + 0.5, y1 + 0.5, x2 + 0.5, y1 + 0.5,
                   x2 + 0.5, y2 + 0.5, x1 + 0.5, y2 + 0.5];
-    var rect = get_item(cid, 'selection_rectangle');
+    var rect = get_item(cid, "selection_rectangle");
     configure_item(rect, { points: points_array });
 }
 
 function gui_hide_selection_rectangle(cid) {
-    var rect = get_item(cid, 'selection_rectangle');
+    var rect = get_item(cid, "selection_rectangle");
     rect.parentElement.removeChild(rect);
 }
 
@@ -1486,21 +1486,21 @@ function gui_hide_selection_rectangle(cid) {
 
 function gui_create_bng(cid, tag, cx, cy, radius) {
     var g = get_gobj(cid, tag);
-    var circle = create_item(cid, 'circle', {
+    var circle = create_item(cid, "circle", {
         cx: cx,
         cy: cy,
         r: radius,
-        'shape-rendering': 'auto',
-        fill: 'none',
-        stroke: 'black',
-        'stroke-width': 1,
-        id: tag + 'button'
+        "shape-rendering": "auto",
+        fill: "none",
+        stroke: "black",
+        "stroke-width": 1,
+        id: tag + "button"
     });
     g.appendChild(circle);
 }
 
 function gui_bng_flash(cid, tag, color) {
-    var button = get_item(cid, tag + 'button');
+    var button = get_item(cid, tag + "button");
     configure_item(button, { fill: color });
 }
 
@@ -1509,25 +1509,25 @@ function gui_create_toggle(cid, tag, color, width, state, p1,p2,p3,p4,p5,p6,p7,p
     var points_array = [p1 - basex, p2 - basey,
                         p3 - basex, p4 - basey
     ];
-    var cross1 = create_item(cid, 'polyline', {
+    var cross1 = create_item(cid, "polyline", {
         points: points_array.join(" "),
         stroke: color,
-        fill: 'none',
-        id: tag + 'cross1',
-        display: state ? 'inline' : 'none',
-        'stroke-width': width
+        fill: "none",
+        id: tag + "cross1",
+        display: state ? "inline" : "none",
+        "stroke-width": width
     });
 
     points_array = [p5 - basex, p6 - basey,
                     p7 - basex, p8 - basey
     ];
-    var cross2 = create_item(cid, 'polyline', {
+    var cross2 = create_item(cid, "polyline", {
         points: points_array.join(" "),
         stroke: color,
-        fill: 'none',
-        id: tag + 'cross2',
-        display: state ? 'inline' : 'none',
-        'stroke-width': width
+        fill: "none",
+        id: tag + "cross2",
+        display: state ? "inline" : "none",
+        "stroke-width": width
     });
     g.appendChild(cross1);
     g.appendChild(cross2);
@@ -1538,31 +1538,31 @@ function gui_toggle_resize_cross(cid,tag,w,p1,p2,p3,p4,p5,p6,p7,p8,basex,basey) 
     var points_array = [p1 - basex, p2 - basey,
                         p3 - basex, p4 - basey
     ];
-    var cross1 = get_item(cid, tag + 'cross1');
+    var cross1 = get_item(cid, tag + "cross1");
     configure_item(cross1, {
         points: points_array.join(" "),
-        'stroke-width': w
+        "stroke-width": w
     });
 
     points_array = [p5 - basex, p6 - basey,
                     p7 - basex, p8 - basey
     ];
-    var cross2 = get_item(cid, tag + 'cross2');
+    var cross2 = get_item(cid, tag + "cross2");
     configure_item(cross2, {
         points: points_array.join(" "),
-        'stroke-width': w
+        "stroke-width": w
     });
 }
 
 function gui_toggle_update(cid, tag, state, color) {
-    var cross1 = get_item(cid, tag + 'cross1');
-    var cross2 = get_item(cid, tag + 'cross2');
+    var cross1 = get_item(cid, tag + "cross1");
+    var cross2 = get_item(cid, tag + "cross2");
     if (!!state) {
-        configure_item(cross1, { display: 'inline', stroke: color });
-        configure_item(cross2, { display: 'inline', stroke: color });
+        configure_item(cross1, { display: "inline", stroke: color });
+        configure_item(cross2, { display: "inline", stroke: color });
     } else {
-        configure_item(cross1, { display: 'none', stroke: color });
-        configure_item(cross2, { display: 'none', stroke: color });
+        configure_item(cross1, { display: "none", stroke: color });
+        configure_item(cross2, { display: "none", stroke: color });
     }
 }
 
@@ -1570,34 +1570,34 @@ function gui_toggle_update(cid, tag, state, color) {
 function gui_create_numbox(width,cid,tag,bgcolor,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,basex,basey,half, is_toplevel) {
     // numbox doesn't have a standard iemgui border, so we must create its gobj manually
     var g = gui_text_create_gobj(cid, tag, "iemgui", basex, basey, is_toplevel)
-    var data_array = ['M', p1 - basex, p2 - basey,
-                      'L', p3 - basex, p4 - basey,
+    var data_array = ["M", p1 - basex, p2 - basey,
+                      "L", p3 - basex, p4 - basey,
                            p5 - basex, p6 - basey,
                            p7 - basex, p8 - basey,
                            p9 - basex, p10 - basey,
-                      'z',
-                      'L', basex - basex, basey - basey,
+                      "z",
+                      "L", basex - basex, basey - basey,
                            half, half,
                            p9 - basex, p10 - basey];
-    var border = create_item(cid, 'path', {
+    var border = create_item(cid, "path", {
         d: data_array.join(" "),
         fill: bgcolor,
-        stroke: 'black',
-        'stroke-width': 1,
-        id: (tag + 'border'),
-        'class': 'border'
+        stroke: "black",
+        "stroke-width": 1,
+        id: (tag + "border"),
+        "class": "border"
     });
     g.appendChild(border);
 }
 
 function gui_numbox_drawtext(cid,tag,text,font_size,color,xpos,ypos,basex,basey) {
     var g = get_gobj(cid, tag);
-    var svg_text = create_item(cid, 'text', {
+    var svg_text = create_item(cid, "text", {
         x: xpos - basex,
         y: ypos - basey + 5,
-        'font-size': font_size,
+        "font-size": font_size,
         fill: color,
-        id: tag + 'text'
+        id: tag + "text"
     });
 
     var text_node = patchwin[cid].window.document.createTextNode(text);
@@ -1606,30 +1606,30 @@ function gui_numbox_drawtext(cid,tag,text,font_size,color,xpos,ypos,basex,basey)
 }
 
 function gui_update_numbox(cid, tag, fcolor, bgcolor, font_name, font_size, font_weight) {
-    var b = get_item(cid, tag + 'border');
-    var text = get_item(cid, tag + 'text');
+    var b = get_item(cid, tag + "border");
+    var text = get_item(cid, tag + "text");
     configure_item(b, { fill: bgcolor });
-    configure_item(text, { fill: fcolor, 'font-size': font_size });
+    configure_item(text, { fill: fcolor, "font-size": font_size });
 }
 
 function gui_create_slider(cid,tag,color,p1,p2,p3,p4,basex, basey) {
     var g = get_gobj(cid, tag);
-    var indicator = create_item(cid, 'line', {
+    var indicator = create_item(cid, "line", {
         x1: p1 - basex,
         y1: p2 - basey,
         x2: p3 - basex,
         y2: p4 - basey,
         stroke: color,
-        'stroke-width': 3,
-        fill: 'none',
-        id: tag + 'indicator'
+        "stroke-width": 3,
+        fill: "none",
+        id: tag + "indicator"
     });
     g.appendChild(indicator);
 
 }
 
 function gui_slider_update(cid,tag,p1,p2,p3,p4,basex,basey) {
-    var indicator = get_item(cid, tag + 'indicator');
+    var indicator = get_item(cid, tag + "indicator");
     configure_item(indicator, {
         x1: p1 - basex,
         y1: p2 - basey,
@@ -1639,7 +1639,7 @@ function gui_slider_update(cid,tag,p1,p2,p3,p4,basex,basey) {
 }
 
 function gui_slider_indicator_color(cid, tag, color) {
-    var i = get_item(cid, tag + 'indicator');
+    var i = get_item(cid, tag + "indicator");
     configure_item(i, {
         stroke: color
     });
@@ -1647,38 +1647,38 @@ function gui_slider_indicator_color(cid, tag, color) {
 
 function gui_create_radio(cid,tag,p1,p2,p3,p4,i,basex,basey) {
     var g = get_gobj(cid, tag);
-    var cell = create_item(cid, 'line', {
+    var cell = create_item(cid, "line", {
         x1: p1 - basex,
         y1: p2 - basey,
         x2: p3 - basex,
         y2: p4 - basey,
         // stroke is just black for now
-        stroke: 'black',
-        'stroke-width': 1,
-        fill: 'none',
-        id: tag + 'cell_' + i
+        stroke: "black",
+        "stroke-width": 1,
+        fill: "none",
+        id: tag + "cell_" + i
     });
     g.appendChild(cell);
 }
 
 function gui_create_radio_buttons(cid,tag,color,p1,p2,p3,p4,basex,basey,i,state) {
     var g = get_gobj(cid, tag);
-    var b = create_item(cid, 'rect', {
+    var b = create_item(cid, "rect", {
         x: p1 - basex,
         y: p2 - basey,
         width: p3 - p1,
         height: p4 - p2,
         stroke: color,
         fill: color,
-        id: tag + 'button_' + i,
-        display: state ? 'inline' : 'none'
+        id: tag + "button_" + i,
+        display: state ? "inline" : "none"
     });
     g.appendChild(b);
 }
 
 function gui_radio_button_coords(cid, tag, x1, y1, xi, yi, i, s, d, orient) {
-    var button = get_item(cid, tag + 'button_' + i);
-    var cell = get_item(cid, tag + 'cell_' + i);
+    var button = get_item(cid, tag + "button_" + i);
+    var cell = get_item(cid, tag + "cell_" + i);
     // the line to draw the cell for i=0 doesn't exist. Probably was not worth
     // the effort, but it's easier just to check for that here atm.
     if (i > 0) {
@@ -1698,19 +1698,19 @@ function gui_radio_button_coords(cid, tag, x1, y1, xi, yi, i, s, d, orient) {
 }
 
 function gui_radio_update(cid,tag,bgcolor,prev,next) {
-    var prev = get_item(cid, tag + 'button_' + prev);
-    var next = get_item(cid, tag + 'button_' + next);
-    configure_item(prev, { display: 'none', fill: bgcolor, stroke: bgcolor });
-    configure_item(next, { display: 'inline', fill: bgcolor, stroke: bgcolor });
+    var prev = get_item(cid, tag + "button_" + prev);
+    var next = get_item(cid, tag + "button_" + next);
+    configure_item(prev, { display: "none", fill: bgcolor, stroke: bgcolor });
+    configure_item(next, { display: "inline", fill: bgcolor, stroke: bgcolor });
 }
 
 function gui_create_vumeter_text(cid,tag,color,xpos,ypos,text,index,basex,basey) {
     var g = get_gobj(cid, tag);
-    var svg_text = create_item(cid, 'text', {
+    var svg_text = create_item(cid, "text", {
         x: xpos - basex,
         y: ypos - basey,
         //  font-size: font);
-        id: tag + 'text_' + index
+        id: tag + "text_" + index
     });
 
     var text_node = patchwin[cid].window.document.createTextNode(text);
@@ -1728,7 +1728,7 @@ function gui_create_vumeter_text(cid,tag,color,xpos,ypos,text,index,basex,basey)
 // To get on to other work we just parrot the insanity here,
 // and silently ignore calls to update non-existent text.
 function gui_update_vumeter_text(cid, tag, text, font, selected, color, i) {
-    var svg_text = get_item(cid, tag + 'text_' + i);
+    var svg_text = get_item(cid, tag + "text_" + i);
     if (!selected) {
         // Hack...
         if (svg_text !== null) {
@@ -1738,36 +1738,36 @@ function gui_update_vumeter_text(cid, tag, text, font, selected, color, i) {
 }
 
 function gui_vumeter_text_coords(cid, tag, i, xpos, ypos, basex, basey) {
-    var t = get_item(cid, tag + 'text_' + i);
+    var t = get_item(cid, tag + "text_" + i);
     configure_item(t, { x: xpos - basex, y: ypos - basey });
 }
 
 function gui_erase_vumeter_text(cid, tag, i) {
-    var t = get_item(cid, tag + 'text_' + i);
+    var t = get_item(cid, tag + "text_" + i);
     t.parentNode.removeChild(t);
 }
 
 function gui_create_vumeter_steps(cid,tag,color,p1,p2,p3,p4,width,index,basex,basey,i) {
     var g = get_gobj(cid, tag);
-    var l = create_item(cid, 'line', {
+    var l = create_item(cid, "line", {
         x1: p1 - basex,
         y1: p2 - basey,
         x2: p3 - basex,
         y2: p4 - basey,
         stroke: color,
-        'stroke-width': width,
-        'id': tag + 'led_' + i
+        "stroke-width": width,
+        "id": tag + "led_" + i
     });
     g.appendChild(l);
 }
 
 function gui_update_vumeter_steps(cid, tag, i, width) {
-    var step = get_item(cid, tag + 'led_' + i);
-    configure_item(step, { 'stroke-width': width });
+    var step = get_item(cid, tag + "led_" + i);
+    configure_item(step, { "stroke-width": width });
 }
 
 function gui_update_vumeter_step_coords(cid,tag,i,x1,y1,x2,y2,basex,basey) {
-    var l = get_item(cid, tag + 'led_' + i);
+    var l = get_item(cid, tag + "led_" + i);
     configure_item(l, {
         x1: x1 - basex,
         y1: y1 - basey,
@@ -1778,52 +1778,52 @@ function gui_update_vumeter_step_coords(cid,tag,i,x1,y1,x2,y2,basex,basey) {
 
 function gui_create_vumeter_rect(cid,tag,color,p1,p2,p3,p4,basex,basey) {
     var g = get_gobj(cid, tag);
-    var rect = create_item(cid, 'rect', {
+    var rect = create_item(cid, "rect", {
         x: p1 - basex,
         y: p2 - basey,
         width: p3 - p1,
         height: p4 + 1 - p2,
         stroke: color,
         fill: color,
-        id: tag + 'rect'
+        id: tag + "rect"
     });
     g.appendChild(rect);
 }
 
 function gui_update_vumeter_rect(cid, tag, color) {
-    var r = get_item(cid, tag + 'rect');
+    var r = get_item(cid, tag + "rect");
     configure_item(r, { fill: color, stroke: color });
 }
 
 // Oh hack upon hack... why doesn't the iemgui base_config just take care
 // of this?
 function gui_vumeter_border_coords(cid, tag, width, height) {
-    var r = get_item(cid, tag + 'border');
+    var r = get_item(cid, tag + "border");
     configure_item(r, { width: width, height: height });
 }
 
 function gui_update_vumeter_peak(cid, tag, width) {
-    var r = get_item(cid, tag + 'rect');
-    configure_item(r, { 'stroke-width': width });
+    var r = get_item(cid, tag + "rect");
+    configure_item(r, { "stroke-width": width });
 }
 
 function gui_create_vumeter_peak(cid,tag,color,p1,p2,p3,p4,width,basex,basey) {
     var g = get_gobj(cid, tag);
-    var line = create_item(cid, 'line', {
+    var line = create_item(cid, "line", {
         x1: p1 - basex,
         y1: p2 - basey,
         x2: p3 - basex,
         y2: p4 - basey,
         stroke: color,
-        'stroke-width': width,
-        id: tag + 'peak'
+        "stroke-width": width,
+        id: tag + "peak"
     });
     g.appendChild(line);
 }
 
 // probably should change tag from "rect" to "cover"
 function gui_vumeter_update_rms(cid,tag,p1,p2,p3,p4,basex,basey) {
-    var rect = get_item(cid, tag + 'rect');
+    var rect = get_item(cid, tag + "rect");
     configure_item(rect, {
         x: p1 - basex,
         y: p2 - basey,
@@ -1833,7 +1833,7 @@ function gui_vumeter_update_rms(cid,tag,p1,p2,p3,p4,basex,basey) {
 }
 
 function gui_vumeter_update_peak(cid,tag,color,p1,p2,p3,p4,basex,basey) {
-    var line = get_item(cid, tag + 'peak');
+    var line = get_item(cid, tag + "peak");
     configure_item(line, {
         x1: p1 - basex,
         y1: p2 - basey,
@@ -1846,27 +1846,27 @@ function gui_vumeter_update_peak(cid,tag,color,p1,p2,p3,p4,basex,basey) {
 // Think about merging with gui_text_drawborder
 function gui_iemgui_drawborder(cid, tag, bgcolor, x1, y1, x2, y2) {
     var g = get_gobj(cid, tag);
-    var rect = create_item(cid, 'rect', {
+    var rect = create_item(cid, "rect", {
         width: x2 - x1,
         height: y2 - y1,
         fill: bgcolor,
-        stroke: 'black',
-        'shape-rendering': 'optimizeSpeed',
-        'stroke-width': 1,
-        class: 'border'
-        //id: tag + 'border'
+        stroke: "black",
+        "shape-rendering": "optimizeSpeed",
+        "stroke-width": 1,
+        class: "border"
+        //id: tag + "border"
     });
     g.appendChild(rect);
 }
 
 function gui_iemgui_base_color(cid, tag, color) {
-    var b = get_gobj(cid, tag).querySelector('.border');
+    var b = get_gobj(cid, tag).querySelector(".border");
     configure_item(b, { fill: color });
 }
 
 function gui_iemgui_move_and_resize(cid, tag, x1, y1, x2, y2) {
     var gobj = get_gobj(cid, tag);
-    var item = gobj.querySelector('.border');
+    var item = gobj.querySelector(".border");
     elem_move(gobj, x1, y1);
     configure_item(item, {
         width: x2 - x1,
@@ -1894,7 +1894,7 @@ function iemgui_font_height(name, size) {
     };
     // We use these heights for both the monotype and iemgui's "Helvetica"
     // which, at least on linux, has the same height
-    if (name === 'DejaVu Sans Mono' || name == 'helvetica') {
+    if (name === "DejaVu Sans Mono" || name == "helvetica") {
         return dejaVuSansMono[size][1];
     } else {
         return size;
@@ -1918,15 +1918,15 @@ function iemgui_fontfamily(name) {
 function gui_iemgui_label_new(cid, tag, x, y, color, text, fontname, fontweight,
     fontsize) {
     var g = get_gobj(cid, tag);
-    var svg_text = create_item(cid, 'text', {
+    var svg_text = create_item(cid, "text", {
         // x and y need to be relative to baseline instead of nw anchor
         x: x,
         y: y,
-        //'font-size': font + 'px',
-        'font-family': iemgui_fontfamily(fontname),
+        //"font-size": font + "px",
+        "font-family": iemgui_fontfamily(fontname),
         // for some reason the font looks bold in Pd-Vanilla-- not sure why
-        'font-weight': fontweight,
-        'font-size': fontsize + 'px',
+        "font-weight": fontweight,
+        "font-size": fontsize + "px",
         // Iemgui labels are anchored "w" (left-aligned to non-tclers).
         // For no good reason, they are also centered vertically, unlike
         // object box text. Since svg text uses the baseline as a reference
@@ -1937,22 +1937,22 @@ function gui_iemgui_label_new(cid, tag, x, y, color, text, fontname, fontweight,
         // is supposed to do this for us. However, when I tried choosing
         // "hanging" to get tcl's equivalent of "n", I ran into a bug
         // where the text gets positioned incorrectly when zooming.
-        transform: 'translate(0,' +
-            iemgui_font_height(fontname, fontsize) / 2 + ')',
-        id: tag + 'label'
+        transform: "translate(0," +
+            iemgui_font_height(fontname, fontsize) / 2 + ")",
+        id: tag + "label"
     });
     var text_node = patchwin[cid].window.document.createTextNode(text);
     svg_text.appendChild(text_node);
     g.appendChild(svg_text);
-    var foo = patchwin[cid].window.document.getElementById(tag + 'label');
+    var foo = patchwin[cid].window.document.getElementById(tag + "label");
 }
 
 function gui_iemgui_label_set(cid, tag, text) {
-    get_item(cid, tag + 'label').textContent = text;
+    get_item(cid, tag + "label").textContent = text;
 }
 
 function gui_iemgui_label_coords(cid, tag, x, y) {
-    var svg_text = get_item(cid, tag + 'label');
+    var svg_text = get_item(cid, tag + "label");
     configure_item(svg_text, {
         x: x,
         y: y
@@ -1960,50 +1960,50 @@ function gui_iemgui_label_coords(cid, tag, x, y) {
 }
 
 function gui_iemgui_label_color(cid, tag, color) {
-    var svg_text = get_item(cid, tag + 'label');
+    var svg_text = get_item(cid, tag + "label");
     configure_item(svg_text, {
         fill: color
     });
 }
 
 function gui_iemgui_label_select(cid, tag, is_selected) {
-    var svg_text = get_item(cid, tag + 'label');
+    var svg_text = get_item(cid, tag + "label");
     if (is_selected) {
-        svg_text.classList.add('iemgui_label_selected'); 
+        svg_text.classList.add("iemgui_label_selected"); 
     } else {
-        svg_text.classList.remove('iemgui_label_selected'); 
+        svg_text.classList.remove("iemgui_label_selected"); 
     }
 }
 
 function gui_iemgui_label_font(cid, tag, fontname, fontweight, fontsize) {
-    var svg_text = get_item(cid, tag + 'label');
+    var svg_text = get_item(cid, tag + "label");
     configure_item(svg_text, {
-        'font-family': iemgui_fontfamily(fontname),
-        'font-weight': fontweight,
-        'font-size': fontsize + 'px',
-        transform: 'translate(0,' + iemgui_font_height(fontname, fontsize) / 2 + ')'
+        "font-family": iemgui_fontfamily(fontname),
+        "font-weight": fontweight,
+        "font-size": fontsize + "px",
+        transform: "translate(0," + iemgui_font_height(fontname, fontsize) / 2 + ")"
     });
 }
 
 function gui_create_mycanvas(cid,tag,color,x1,y1,x2_vis,y2_vis,x2,y2) {
-    var rect_vis = create_item(cid,'rect', {
+    var rect_vis = create_item(cid,"rect", {
         width: x2_vis - x1,
         height: y2_vis - y1,
         fill: color,
         stroke: color,
-        id: tag + 'rect'
+        id: tag + "rect"
         }
     );
 
     // we use a drag_handle-- unlike a 'border' it takes
     // the same color as the visible rectangle when deselected
-    var rect = create_item(cid,'rect', {
+    var rect = create_item(cid,"rect", {
         width: x2 - x1,
         height: y2 - y1,
-        fill: 'none',
+        fill: "none",
         stroke: color,
-        id: tag + 'drag_handle',
-        'class': 'border mycanvas_border'
+        id: tag + "drag_handle",
+        "class": "border mycanvas_border"
         }
     );
     var g = get_gobj(cid,tag);
@@ -2012,57 +2012,57 @@ function gui_create_mycanvas(cid,tag,color,x1,y1,x2_vis,y2_vis,x2,y2) {
 }
 
 function gui_update_mycanvas(cid, tag, color, selected) {
-    var r = get_item(cid, tag + 'rect');
-    var h = get_item(cid, tag + 'drag_handle');
+    var r = get_item(cid, tag + "rect");
+    var h = get_item(cid, tag + "drag_handle");
     configure_item(r, { fill: color, stroke: color });
 }
 
 function gui_mycanvas_coords(cid, tag, vis_width, vis_height, select_width, select_height) {
-    var r = get_item(cid, tag + 'rect');
-    var h = get_item(cid, tag + 'drag_handle');
+    var r = get_item(cid, tag + "rect");
+    var h = get_item(cid, tag + "drag_handle");
     configure_item(r, { width: vis_width, height: vis_height });
     configure_item(h, { width: select_width, height: select_height });
 }
 
 // Not needed anymore
 function gui_mycanvas_select_color(cid,tag,color) {
-    //var item = get_item(cid,tag + 'drag_handle');
+    //var item = get_item(cid,tag + "drag_handle");
     //configure_item(item, {stroke: color});
 }
  
 function gui_create_scalar(cid, tag, isselected, t1, t2, t3, t4, t5, t6,
     is_toplevel) {
-    // we should probably use create_gobj here, but we're doing some initial 
+    // we should probably use create_gobj here, but we"re doing some initial 
     // scaling that normal gobjs don't need...
     var svg = get_item(cid, "patchsvg"); // id for the svg in the DOM
     // Normally put objects on half-pixels to make them crisp, but if we create
     // a scalar in an object box we already did that. This unfortunately
     // creates a 0.5 pix discrepancy between scalars created in object boxes
     // and ones created with [append].  Think about just using shape-rendering
-    // value of 'crispEdges' in the places where it matters...
+    // value of "crispEdges" in the places where it matters...
     t5 += 0.5;
     t6 += 0.5;
     var matrix = [t1,t2,t3,t4,t5,t6];
-    var transform_string = 'matrix(' + matrix.join() + ')';
-    var g = create_item(cid, 'g', {
-            id: tag + 'gobj',
+    var transform_string = "matrix(" + matrix.join() + ")";
+    var g = create_item(cid, "g", {
+            id: tag + "gobj",
             transform: transform_string,
     });
     if (isselected !== 0) {
-        g.classList.add('selected');
+        g.classList.add("selected");
     }
     if (is_toplevel === 0) {
-        g.classList.add('gop');
+        g.classList.add("gop");
     }
     // Let's make a selection rect... but we can't make it
     // a child of the gobj group because the getrect fn gives
     // us a bbox in the canvas coord system
-    var selection_rect = create_item(cid, 'rect', {
-        //id: tag + 'selection_rect',
-        class: 'border',
-        display: 'none',
-        fill: 'none',
-        'pointer-events': 'none'
+    var selection_rect = create_item(cid, "rect", {
+        //id: tag + "selection_rect",
+        class: "border",
+        display: "none",
+        fill: "none",
+        "pointer-events": "none"
     });
     g.appendChild(selection_rect);
     add_gobj_to_svg(svg, g);
@@ -2075,7 +2075,7 @@ function gui_scalar_erase(cid, tag) {
         g.parentNode.removeChild(g);
     }
     // selection rect...
-    //    var sr = get_item(cid, tag + 'selection_rect');
+    //    var sr = get_item(cid, tag + "selection_rect");
     //    sr.parentNode.removeChild(sr);
 }
 
@@ -2094,7 +2094,7 @@ function gui_scalar_draw_select_rect(cid, tag, state, x1, y1, x2, y2, basex, bas
     // for selected borders because somehow calling properties on a graph
     // triggers this function.  I have no idea why it does that.
     var g = get_gobj(cid, tag);
-    var b = g.querySelector('.border');
+    var b = g.querySelector(".border");
     configure_item(b, {
         x: (x1 - basex),
         y: (y1 - basey),
@@ -2109,7 +2109,7 @@ function gui_create_scalar_group(cid, tag, parent_tag, attr_array) {
         attr_array = [];
     }
     attr_array.push("id", tag);
-    var g = create_item(cid, 'g', attr_array);
+    var g = create_item(cid, "g", attr_array);
     parent.appendChild(g);
     return g; 
 }
@@ -2117,13 +2117,13 @@ function gui_create_scalar_group(cid, tag, parent_tag, attr_array) {
 function gui_scalar_configure_gobj(cid, tag, isselected, t1, t2, t3, t4, t5, t6) {
     var gobj = get_gobj(cid, tag);
     var matrix = [t1,t2,t3,t4,t5,t6];
-    var transform_string = 'matrix(' + matrix.join() + ')';
+    var transform_string = "matrix(" + matrix.join() + ")";
     configure_item(gobj, { transform: transform_string });
 }
 
 function gui_draw_vis(cid, type, attr_array, tag_array) {
     var g = get_item(cid, tag_array[0]);
-    attr_array.push('id', tag_array[1]);
+    attr_array.push("id", tag_array[1]);
     var item = create_item(cid, type, attr_array);
     g.appendChild(item);
 }
@@ -2225,12 +2225,12 @@ function gui_draw_configure_all(cid, tag, attr_array) {
 // Plots for arrays and data structures
 function gui_plot_vis(cid, basex, basey, data_array, attr_array, tag_array) {
     var g = get_item(cid, tag_array[0]);
-    var p = create_item(cid, 'path', {
+    var p = create_item(cid, "path", {
         d: data_array.join(" "),
         id: tag_array[1],
-        //stroke: 'red',
-        //fill: 'black',
-        //'stroke-width': '0'
+        //stroke: "red",
+        //fill: "black",
+        //"stroke-width": "0"
     });
     configure_item(p, attr_array);
     if (g !== null) {
@@ -2248,7 +2248,7 @@ function gui_drawnumber_vis(cid, parent_tag, tag, x, y, scale_x, scale_y,
     var g = get_item(cid, parent_tag);
     var svg_text;
     if (flag === 1) {
-        svg_text = create_item(cid, 'text', {
+        svg_text = create_item(cid, "text", {
             // x and y are fudge factors. Text on the tk canvas used an anchor
             // at the top-right corner of the text's bbox.  SVG uses the
             // baseline. There's probably a programmatic way to do this, but
@@ -2256,19 +2256,19 @@ function gui_drawnumber_vis(cid, parent_tag, tag, x, y, scale_x, scale_y,
 
             // For an explanation of why we translate by "x" instead of setting
             // the x attribute, see comment in gui_text_new
-            transform: 'scale(' + scale_x + ',' + scale_y + ') ' +
-                       'translate(' + x + ')',
+            transform: "scale(" + scale_x + "," + scale_y + ") " +
+                       "translate(" + x + ")",
             y: y + fontsize,
             // Turns out we can't do 'hanging' baseline because it's borked
             // when scaled. Bummer...
-            // 'dominant-baseline': 'hanging',
-            'shape-rendering': 'optimizeSpeed',
-            'font-size': fontsize + 'px',
+            // "dominant-baseline": "hanging",
+            "shape-rendering": "optimizeSpeed",
+            "font-size": fontsize + "px",
             fill: fontcolor,
-            visibility: visibility === 1 ? 'normal' : 'hidden',
+            visibility: visibility === 1 ? "normal" : "hidden",
             id: tag
         });
-        // fill svg_text with tspan content by splitting on '\n'
+        // fill svg_text with tspan content by splitting on "\n"
         text_to_tspans(cid, svg_text, text);
         if (g !== null) {
             g.appendChild(svg_text);
@@ -2278,16 +2278,16 @@ function gui_drawnumber_vis(cid, parent_tag, tag, x, y, scale_x, scale_y,
     } else {
         svg_text = get_item(cid, tag);
         configure_item(svg_text, {
-            transform: 'scale(' + scale_x + ',' + scale_y + ') ' +
-                       'translate(' + x + ')',
+            transform: "scale(" + scale_x + "," + scale_y + ") " +
+                       "translate(" + x + ")",
             y: y,
             // Turns out we can't do 'hanging' baseline because it's borked
             // when scaled. Bummer...
-            // 'dominant-baseline': 'hanging',
-            'shape-rendering': 'optimizeSpeed',
-            'font-size': font + 'px',
+            // "dominant-baseline": "hanging",
+            "shape-rendering": "optimizeSpeed",
+            "font-size": font + "px",
             fill: fontcolor,
-            visibility: visibility === 1 ? 'normal' : 'hidden',
+            visibility: visibility === 1 ? "normal" : "hidden",
             id: tag
         });
         svg_text.textContent = "";
@@ -2303,7 +2303,7 @@ function gui_drawimage_new(obj_tag, file_path, canvasdir, flags) {
     var drawsprite = 1,
         image_seq,
         i,
-        matchchar = '*',
+        matchchar = "*",
         files,
         ext,
         img; // dummy image to measure width and height
@@ -2316,7 +2316,7 @@ function gui_drawimage_new(obj_tag, file_path, canvasdir, flags) {
 
     }
     files = fs.readdirSync(file_path)
-                .sort(); // Note that js's 'sort' method doesn't do the
+                .sort(); // Note that js's "sort" method doesn't do the
                          // "right thing" for numbers. For that we'd need
                          // to provide our own sorting function
     drawimage_data[obj_tag] = []; // create empty array for base64 image data
@@ -2325,17 +2325,17 @@ function gui_drawimage_new(obj_tag, file_path, canvasdir, flags) {
 
     // todo: tolower()
 
-        if (ext === '.gif' ||
-            ext === '.jpg' ||
-            ext === '.png' ||
-            ext === '.jpeg' ||
-            ext === '.svg') {
+        if (ext === ".gif" ||
+            ext === ".jpg" ||
+            ext === ".png" ||
+            ext === ".jpeg" ||
+            ext === ".svg") {
 
             gui_post("we got an image at index " + i + ": " + files[i]);
             // Now add an element to that array with the image data
             drawimage_data[obj_tag].push({
-                type: ext === '.jpeg' ? 'jpg' : ext.slice(1),
-                data: fs.readFileSync(path.join(file_path, files[i]),'base64')
+                type: ext === ".jpeg" ? "jpg" : ext.slice(1),
+                data: fs.readFileSync(path.join(file_path, files[i]),"base64")
             });
         }
     }
@@ -2345,8 +2345,8 @@ function gui_drawimage_new(obj_tag, file_path, canvasdir, flags) {
         img.onload = function() {
             pdsend(obj_tag, "size", this.width, this.height);
         };
-        img.src = 'data:image/' + drawimage_data[obj_tag][0].type +
-            ';base64,' + drawimage_data[obj_tag][0].data;
+        img.src = "data:image/" + drawimage_data[obj_tag][0].type +
+            ";base64," + drawimage_data[obj_tag][0].data;
     } else {
         gui_post("drawimage: warning: no images loaded");
     }
@@ -2362,8 +2362,8 @@ function img_size_setter(cid, obj, obj_tag, i) {
             height: h
         });
     };
-    img.src = 'data:image/' + drawimage_data[obj][i].type +
-        ';base64,' + drawimage_data[obj][i].data;
+    img.src = "data:image/" + drawimage_data[obj][i].type +
+        ";base64," + drawimage_data[obj][i].data;
 }
 
 function gui_drawimage_vis(cid, x, y, obj, data, seqno, parent_tag) {
@@ -2372,7 +2372,7 @@ function gui_drawimage_vis(cid, x, y, obj, data, seqno, parent_tag) {
         len = drawimage_data[obj].length,
         i,
         image_container,
-        obj_tag = 'draw' + obj.slice(1) + '.' + data.slice(1);
+        obj_tag = "draw" + obj.slice(1) + "." + data.slice(1);
     if (len < 1) {
         return;
     }
@@ -2380,19 +2380,19 @@ function gui_drawimage_vis(cid, x, y, obj, data, seqno, parent_tag) {
     if (seqno >= len || seqno < 0) {
         seqno %= len;
     }
-    image_container = create_item(cid, 'g', {
+    image_container = create_item(cid, "g", {
         id: obj_tag
     });
     for (i = 0; i < len; i++) {
-        item = create_item(cid, 'image', {
+        item = create_item(cid, "image", {
             x: x,
             y: y,
             id: obj_tag + i,
-            visibility: seqno === i ? 'visible' : 'hidden',
+            visibility: seqno === i ? "visible" : "hidden",
             preserveAspectRatio: "xMinYMin meet"
         });
-        item.setAttributeNS('http://www.w3.org/1999/xlink', 'href', 
-            'data:image/' + drawimage_data[obj][i].type + ';base64,' +
+        item.setAttributeNS("http://www.w3.org/1999/xlink", "href", 
+            "data:image/" + drawimage_data[obj][i].type + ";base64," +
              drawimage_data[obj][i].data);
         image_container.appendChild(item);
     }
@@ -2405,7 +2405,7 @@ function gui_drawimage_vis(cid, x, y, obj, data, seqno, parent_tag) {
 }
 
 function gui_drawimage_index(cid, obj, data, index) {
-    var obj_tag = 'draw' + obj.slice(1) + '.' + data.slice(1);
+    var obj_tag = "draw" + obj.slice(1) + "." + data.slice(1);
     var i,
         len = drawimage_data[obj].length,
         image_container = get_item(cid, obj_tag),
@@ -2414,9 +2414,9 @@ function gui_drawimage_index(cid, obj, data, index) {
         last_image = image_container.querySelectorAll('[visibility="visible"]');
 
     for (i = 0; i < last_image.length; i++) {
-        configure_item(last_image[i], { visibility: 'hidden' });
+        configure_item(last_image[i], { visibility: "hidden" });
     }
-    configure_item(image, { visibility: 'visible' });
+    configure_item(image, { visibility: "visible" });
 }
 
 function add_popup(cid, popup) {
@@ -2487,11 +2487,11 @@ exports.popup_action = popup_action;
 
 //function gui_graph_drawborder(cid, tag, x1, y1, x2, y2) {
 //    var g = get_gobj(cid, tag);
-//    var b = create_item(cid, 'rect', {
+//    var b = create_item(cid, "rect", {
 //        width: x2 - x1,
 //        height: y2 - y1,
-//        stroke: 'black',
-//        fill: 'none',
+//        stroke: "black",
+//        fill: "none",
 //        id: tag
 //    });
 //    g.appendChild(b);
@@ -2501,10 +2501,10 @@ exports.popup_action = popup_action;
 function gui_graph_fill_border(cid, tag) {
     var i;
     var g = get_gobj(cid, tag);
-    var b = g.querySelectorAll('.border');
+    var b = g.querySelectorAll(".border");
     for (i = 0; i < b.length; i++) {
         configure_item(b[i], {
-            fill: 'gray'
+            fill: "gray"
         });
     }
 }
@@ -2523,15 +2523,15 @@ function gui_graph_label(cid, tag, label_number, font_height, array_name,
 function gui_graph_vtick(cid, tag, x, up_y, down_y, tick_pix, basex, basey) {
     var g = get_gobj(cid, tag);
     // Don't think these need an ID...
-    var up_tick = create_item(cid, 'line', {
-        stroke: 'black',
+    var up_tick = create_item(cid, "line", {
+        stroke: "black",
         x1: x - basex,
         y1: up_y - basey,
         x2: x - basex,
         y2: up_y - tick_pix - basey
     });
-    var down_tick = create_item(cid, 'line', {
-        stroke: 'black',
+    var down_tick = create_item(cid, "line", {
+        stroke: "black",
         x1: x - basex,
         y1: down_y - basey,
         x2: x - basex,
@@ -2544,16 +2544,16 @@ function gui_graph_vtick(cid, tag, x, up_y, down_y, tick_pix, basex, basey) {
 function gui_graph_htick(cid, tag, y, r_x, l_x, tick_pix, basex, basey) {
     var g = get_gobj(cid, tag);
     // Don't think these need an ID...
-    var left_tick = create_item(cid, 'line', {
-        stroke: 'black',
+    var left_tick = create_item(cid, "line", {
+        stroke: "black",
         x1: l_x - basex,
         y1: y - basey,
         x2: l_x - tick_pix - basex,
         y2: y - basey,
         id: "tick" + y
     });
-    var right_tick = create_item(cid, 'line', {
-        stroke: 'black',
+    var right_tick = create_item(cid, "line", {
+        stroke: "black",
         x1: r_x - basex,
         y1: y - basey,
         x2: r_x + tick_pix - basex,
@@ -2565,11 +2565,11 @@ function gui_graph_htick(cid, tag, y, r_x, l_x, tick_pix, basex, basey) {
 
 function gui_graph_tick_label(cid, tag, x, y, text, font, font_size, font_weight, basex, basey) {
     var g = get_gobj(cid, tag);
-    var svg_text = create_item(cid, 'text', {
+    var svg_text = create_item(cid, "text", {
         // need a label "y" relative to baseline
         x: x - basex,
         y: y - basey,
-        'font-size': font_size,
+        "font-size": font_size,
     });
 
     var text_node = patchwin[cid].window.document.createTextNode(text);
@@ -2578,20 +2578,20 @@ function gui_graph_tick_label(cid, tag, x, y, text, font, font_size, font_weight
 }
 
 function gui_canvas_drawredrect(cid, x1, y1, x2, y2) {
-    var svgelem = get_item(cid, 'patchsvg');
-    var b = create_item(cid, 'rect', {
+    var svgelem = get_item(cid, "patchsvg");
+    var b = create_item(cid, "rect", {
         x: x1,
         y: y1,
         width: x2 - x1,
         height: y2 - y1,
-        stroke: 'red',
-        id: 'GOP'
+        stroke: "red",
+        id: "GOP"
     });
     svgelem.appendChild(b);
 }
 
 function gui_canvas_deleteredrect(cid) {
-    var r = get_item(cid, 'GOP');
+    var r = get_item(cid, "GOP");
     // We need to check for existence here, because the first
     // time setting GOP in properties, there is no red rect yet.
     // But setting properties when the subpatch's window is
@@ -2611,11 +2611,11 @@ function gui_canvas_deleteredrect(cid) {
 // For clarity, this probably shouldn't be a gobj.  Also, it might be easier to
 // make it a div that lives on top of the patchsvg
 function gui_create_cord_inspector(cid) {
-    var g = get_gobj(cid, 'cord_inspector');
-    var ci_rect = create_item(cid, 'rect', { id: 'cord_inspector_rect' });
-    var ci_poly = create_item(cid, 'polygon', { id: 'cord_inspector_polygon' });
-    var ci_text = create_item(cid, 'text', { id: 'cord_inspector_text' });
-    var text_node = patchwin[cid].window.document.createTextNode('');
+    var g = get_gobj(cid, "cord_inspector");
+    var ci_rect = create_item(cid, "rect", { id: "cord_inspector_rect" });
+    var ci_poly = create_item(cid, "polygon", { id: "cord_inspector_polygon" });
+    var ci_text = create_item(cid, "text", { id: "cord_inspector_text" });
+    var text_node = patchwin[cid].window.document.createTextNode("");
     ci_text.appendChild(text_node);
     g.appendChild(ci_rect);
     g.appendChild(ci_poly);
@@ -2623,14 +2623,14 @@ function gui_create_cord_inspector(cid) {
 }
 
 function gui_cord_inspector_update(cid, text, basex, basey, bg_size, y1, y2, moved) {
-    var gobj = get_gobj(cid, 'cord_inspector');
-    gobj.setAttributeNS(null, 'transform',
-            'translate(' + (basex + 10.5) + ',' + (basey + 0.5) + ')');
-    gobj.setAttributeNS(null, 'pointer-events', 'none');
-    gobj.classList.remove('flash');
-    var rect = get_item(cid, 'cord_inspector_rect');
-    var poly = get_item(cid, 'cord_inspector_polygon');
-    var svg_text = get_item(cid, 'cord_inspector_text');
+    var gobj = get_gobj(cid, "cord_inspector");
+    gobj.setAttributeNS(null, "transform",
+            "translate(" + (basex + 10.5) + "," + (basey + 0.5) + ")");
+    gobj.setAttributeNS(null, "pointer-events", "none");
+    gobj.classList.remove("flash");
+    var rect = get_item(cid, "cord_inspector_rect");
+    var poly = get_item(cid, "cord_inspector_polygon");
+    var svg_text = get_item(cid, "cord_inspector_text");
     // Lots of fudge factors here, tailored to the current default font size
     configure_item(rect, {
         x: 13,
@@ -2651,7 +2651,7 @@ function gui_cord_inspector_update(cid, text, basex, basey, bg_size, y1, y2, mov
 }
 
 function gui_erase_cord_inspector(cid) {
-    var ci = get_gobj(cid, 'cord_inspector');
+    var ci = get_gobj(cid, "cord_inspector");
     if (ci !== null) {
         ci.parentNode.removeChild(ci);
     } else {
@@ -2660,12 +2660,12 @@ function gui_erase_cord_inspector(cid) {
 }
 
 function gui_cord_inspector_flash(cid, state) {
-    var ct = get_item(cid, 'cord_inspector_text');
+    var ct = get_item(cid, "cord_inspector_text");
     if (ct !== null) {
         if (state === 1) {
-            ct.classList.add('flash');
+            ct.classList.add("flash");
         } else {
-            ct.classList.remove('flash');
+            ct.classList.remove("flash");
         }
     } else {
         gui_post("gui_cord_inspector_flash: trying to flash a non-existent cord inspector!");
@@ -2685,9 +2685,9 @@ var file_dialog_target;
 
 function file_dialog(cid, type, target, path) {
     file_dialog_target = target;
-    var query_string = (type === 'open' ?
-        'openpanel_dialog' : 'savepanel_dialog');
-    var d = patchwin[cid].window.document.querySelector('#' + query_string);
+    var query_string = (type === "open" ?
+        "openpanel_dialog" : "savepanel_dialog");
+    var d = patchwin[cid].window.document.querySelector("#" + query_string);
     gui_post("set path to " + path);
     d.setAttribute("nwworkingdir", path);
     d.click();
@@ -2718,8 +2718,8 @@ function attr_array_to_object(attr_array) {
 }
 
 function gui_gatom_dialog(did, attr_array) {
-    dialogwin[did] = nw_create_window(did, 'gatom', 265, 300, 20, 20, 0,
-        0, 1, 'white', 'Properties', '', 0, null,
+    dialogwin[did] = nw_create_window(did, "gatom", 265, 300, 20, 20, 0,
+        0, 1, "white", "Properties", "", 0, null,
         attr_array_to_object(attr_array)
     );
 }
@@ -2728,23 +2728,23 @@ function gui_iemgui_dialog(did, attr_array) {
     //for (var i = 0; i < attr_array.length; i++) {
     //    attr_array[i] = '"' + attr_array[i] + '"';
     //}
-    dialogwin[did] = nw_create_window(did, 'iemgui', 265, 450, 20, 20, 0,
-        0, 1, 'white', 'Properties', '', 0, null,
+    dialogwin[did] = nw_create_window(did, "iemgui", 265, 450, 20, 20, 0,
+        0, 1, "white", "Properties", "", 0, null,
         attr_array_to_object(attr_array));
 }
 
 function gui_create_array(did, count) {
     var attr_array = [{
         array_gfxstub: did,
-        array_name: 'array' + count,
+        array_name: "array" + count,
         array_size: 100,
         array_flags: 3,
-        array_fill: 'black',
-        array_outline: 'black',
+        array_fill: "black",
+        array_outline: "black",
         array_in_existing_graph: 0
     }];
-    dialogwin[did] = nw_create_window(did, 'canvas', 265, 340, 20, 20, 0,
-        0, 1, 'white', 'Properties', '', 0, null, attr_array);    
+    dialogwin[did] = nw_create_window(did, "canvas", 265, 340, 20, 20, 0,
+        0, 1, "white", "Properties", "", 0, null, attr_array);    
 }
 
 function gui_canvas_dialog(did, attr_arrays) {
@@ -2758,8 +2758,8 @@ function gui_canvas_dialog(did, attr_arrays) {
             }
         }
     }
-    dialogwin[did] = nw_create_window(did, 'canvas', 250, 100, 20, 20, 0,
-        0, 1, 'white', 'Properties', '', 0, null, attr_arrays);
+    dialogwin[did] = nw_create_window(did, "canvas", 250, 100, 20, 20, 0,
+        0, 1, "white", "Properties", "", 0, null, attr_arrays);
 }
 
 function gui_remove_gfxstub(did) {
@@ -2771,23 +2771,23 @@ function gui_remove_gfxstub(did) {
 
 function gui_font_dialog(cid, gfxstub, font_size) {
     var attrs = { canvas: cid, font_size: font_size };
-    dialogwin[gfxstub] = nw_create_window(gfxstub, 'font', 265, 265, 20, 20, 0,
-        0, 1, 'white', 'Properties', '', 0, null, attrs);
+    dialogwin[gfxstub] = nw_create_window(gfxstub, "font", 265, 265, 20, 20, 0,
+        0, 1, "white", "Properties", "", 0, null, attrs);
 }
 
 // Global settings
 
 function gui_pd_dsp(state) {
     if (pd_window !== undefined) {
-        pd_window.document.getElementById('dsp_control').checked = !!state;
+        pd_window.document.getElementById("dsp_control").checked = !!state;
     }
 }
 
 function open_prefs() {
-    if (!dialogwin['prefs']) {
-        dialogwin['prefs'] = nw_create_window('prefs', 'prefs',
+    if (!dialogwin["prefs"]) {
+        dialogwin["prefs"] = nw_create_window("prefs", "prefs",
             265, 540, 20, 20, 0,
-            0, 1, 'white', 'Properties', '', 0, null, null);
+            0, 1, "white", "Properties", "", 0, null, null);
     }
 }
 
@@ -2810,10 +2810,10 @@ function gui_audio_properties(gfxstub, sys_indevs, sys_outdevs,
     //    gui_post("arg " + i + " is " + arguments[i]);
     //}
 
-    if (dialogwin['prefs'] !== null) {
-        dialogwin['prefs'].eval(null,
-            'audio_prefs_callback('  +
-            JSON.stringify(attrs) + ');'
+    if (dialogwin["prefs"] !== null) {
+        dialogwin["prefs"].eval(null,
+            "audio_prefs_callback("  +
+            JSON.stringify(attrs) + ");"
         );
     }
 }
@@ -2834,27 +2834,27 @@ function gui_midi_properties(gfxstub, sys_indevs, sys_outdevs,
     //    gui_post("arg " + i + " is " + arguments[i]);
     //}
 
-    if (dialogwin['prefs'] !== null) {
-        dialogwin['prefs'].eval(null,
-            'midi_prefs_callback('  +
-            JSON.stringify(attrs) + ');'
+    if (dialogwin["prefs"] !== null) {
+        dialogwin["prefs"].eval(null,
+            "midi_prefs_callback("  +
+            JSON.stringify(attrs) + ");"
         );
     }
 }
 
 // Let's try a closure for gui skins
 exports.skin = (function () {
-    var dir = 'css/';
-    var preset = 'default';
+    var dir = "css/";
+    var preset = "default";
     var w;
     function apply(win) {
-        win.window.document.getElementById('page_style')
-            .setAttribute('href', dir + preset + '.css');
+        win.window.document.getElementById("page_style")
+            .setAttribute("href", dir + preset + ".css");
     }
     return {
         get: function () {
-            gui_post("getting preset: " + dir + preset + '.css');
-            return dir + preset + '.css';
+            gui_post("getting preset: " + dir + preset + ".css");
+            return dir + preset + ".css";
         },
         set: function (name) {
             preset = name;
@@ -2899,26 +2899,26 @@ function gui_textarea(cid, tag, type, x, y, max_char_width, text,
         // (We can probably solve this problem by throwing in yet another
         // gui_canvas_getscroll, but this seems like the right way to go
         // anyway.)
-        configure_item(gobj, { visibility: 'hidden' });
-        var p = patchwin[cid].window.document.createElement('p');
+        configure_item(gobj, { visibility: "hidden" });
+        var p = patchwin[cid].window.document.createElement("p");
         configure_item(p, {
-            id: 'new_object_textentry'
+            id: "new_object_textentry"
         });
-        svg_view = patchwin[cid].window.document.getElementById('patchsvg')
+        svg_view = patchwin[cid].window.document.getElementById("patchsvg")
             .viewBox.baseVal;
         p.classList.add(type);
-        p.contentEditable = 'true';
-        p.style.setProperty('left', (x - svg_view.x) + 'px');
-        p.style.setProperty('top', (y - svg_view.y) + 'px');
-        p.style.setProperty('font-size',
-            pd_fontsize_to_gui_fontsize(font_size) + 'px');
-        p.style.setProperty('line-height',
-            text_line_height_kludge(font_size, 'pd') + 'px');
-        p.style.setProperty('transform', 'translate(0px, 0px)');
-        p.style.setProperty('max-width',
-            max_char_width === 0 ? '60ch' : max_char_width + 'ch');
-        p.style.setProperty('min-width',
-            max_char_width === 0 ? '3ch' : max_char_width + 'ch');
+        p.contentEditable = "true";
+        p.style.setProperty("left", (x - svg_view.x) + "px");
+        p.style.setProperty("top", (y - svg_view.y) + "px");
+        p.style.setProperty("font-size",
+            pd_fontsize_to_gui_fontsize(font_size) + "px");
+        p.style.setProperty("line-height",
+            text_line_height_kludge(font_size, "pd") + "px");
+        p.style.setProperty("transform", "translate(0px, 0px)");
+        p.style.setProperty("max-width",
+            max_char_width === 0 ? "60ch" : max_char_width + "ch");
+        p.style.setProperty("min-width",
+            max_char_width === 0 ? "3ch" : max_char_width + "ch");
         // remove leading/trailing whitespace
         text = text.trim();
         p.textContent = text;
@@ -2931,13 +2931,13 @@ function gui_textarea(cid, tag, type, x, y, max_char_width, text,
             patchwin[cid].window.canvas_events.floating_text();
         }
     } else {
-        configure_item(gobj, { visibility: 'normal' });
-        var p = patchwin[cid].window.document.getElementById('new_object_textentry');
+        configure_item(gobj, { visibility: "normal" });
+        var p = patchwin[cid].window.document.getElementById("new_object_textentry");
         if (p !== null) {
             p.parentNode.removeChild(p);
         }
         if (patchwin[cid].window.canvas_events.get_previous_state() === 
-               'search') {
+               "search") {
             patchwin[cid].window.canvas_events.search();
         } else { 
             patchwin[cid].window.canvas_events.normal();
@@ -2948,14 +2948,14 @@ function gui_textarea(cid, tag, type, x, y, max_char_width, text,
 function gui_undo_menu(cid, undo_text, redo_text) {
     // we have to check if the window exists, because Pd starts
     // up with two unvis'd patch windows used for garrays
-    if (cid !== 'nobody' && patchwin[cid] !== undefined) {
+    if (cid !== "nobody" && patchwin[cid] !== undefined) {
         patchwin[cid].window.nw_undo_menu(undo_text, redo_text);
     }
 }
 
 function do_getscroll(cid) {
     var bbox, width, height, min_width, min_height, x, y,
-        svg = get_item(cid, 'patchsvg');
+        svg = get_item(cid, "patchsvg");
     // Not sure why I need to check for null here... I'm waiting for the
     // nw window to load before mapping the Pd canvas, so the patchsvg
     // should always exist.  Perhaps I also need to set an event for
@@ -3035,12 +3035,12 @@ function gui_canvas_getscroll(cid) {
 
 // handling the selection
 function gui_lower(cid, tag) {
-    var svg = patchwin[cid].window.document.getElementById('patchsvg'),
+    var svg = patchwin[cid].window.document.getElementById("patchsvg"),
         first_child = svg.firstElementChild,
         selection = null,
         gobj, len, i;
-    if (tag === 'selected') {
-        selection = svg.getElementsByClassName('selected');
+    if (tag === "selected") {
+        selection = svg.getElementsByClassName("selected");
     } else {
         gobj = get_gobj(cid, tag);
         if (gobj !== null) {
@@ -3060,12 +3060,12 @@ function gui_lower(cid, tag) {
 // all three of these should be combined into a single function (plus
 // all the silly logic on the C side moved here
 function gui_raise(cid, tag) {
-    var svg = patchwin[cid].window.document.getElementById('patchsvg'),
-        first_child = svg.querySelector('.cord'),
+    var svg = patchwin[cid].window.document.getElementById("patchsvg"),
+        first_child = svg.querySelector(".cord"),
         selection = null,
         gobj, len, i;
-    if (tag === 'selected') {
-        selection = svg.getElementsByClassName('selected');
+    if (tag === "selected") {
+        selection = svg.getElementsByClassName("selected");
     } else {
         gobj = get_gobj(cid, tag);
         if (gobj !== null) {
@@ -3082,15 +3082,15 @@ function gui_raise(cid, tag) {
 
 function gui_find_lowest_and_arrange(cid, reference_element_tag, objtag) {
     var ref_elem = get_gobj(cid, reference_element_tag),
-        svg = patchwin[cid].window.document.getElementById('patchsvg'),
+        svg = patchwin[cid].window.document.getElementById("patchsvg"),
         selection = null,
         gobj,
         len,
         i;
     if (ref_elem !== null) {
-        if (objtag === 'selected') {
+        if (objtag === "selected") {
             selection = 
-            svg.getElementsByClassName('selected');
+            svg.getElementsByClassName("selected");
         } else {
             gobj = get_gobj(cid, objtag);
             if (gobj !== null) {
