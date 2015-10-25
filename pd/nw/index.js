@@ -1,7 +1,7 @@
-'use strict';
-var nw = require('nw.gui');
+"use strict";
+var nw = require("nw.gui");
 console.log(nw.App.argv);
-var pdgui = require('./pdgui.js');
+var pdgui = require("./pdgui.js");
 var port_no = nw.App.argv[0]; // fed to us by the Pd process
 var pwd = process.env.PWD;
 pdgui.set_port(port_no);
@@ -36,7 +36,7 @@ document.getElementById("dsp_control").addEventListener("click",
     }
 );
 
-var find_bar = document.getElementById('console_find_text');
+var find_bar = document.getElementById("console_find_text");
 find_bar.addEventListener("keydown",
     function(e) {
         return console_find_keydown(this, e);
@@ -101,13 +101,13 @@ function console_unwrap_tag(console_elem, tag_name) {
 }
 
 function console_find_text(elem, evt, callback) {
-    var console_text = document.getElementById('p1'),
-        wrap_tag = 'mark',
+    var console_text = document.getElementById("p1"),
+        wrap_tag = "mark",
         wrapper_count;
     // Check the input for default text before the event happens
     if (console_find_check_default(elem)) {
        // if so, erase it
-        elem.value = '';
+        elem.value = "";
         // put this in css and use class here
         elem.style.color = "#000";
     }
@@ -116,11 +116,11 @@ function console_find_text(elem, evt, callback) {
 
         // Check after the event if the value is empty, and if
         // so set it to default value
-        if (elem.value === undefined || elem.value === '') {
+        if (elem.value === undefined || elem.value === "") {
             console_find_set_default(elem);
         } else if (!console_find_check_default(elem)) {
             window.findAndReplaceDOMText(console_text, {
-                //preset: 'prose',
+                //preset: "prose",
                 find: elem.value.toLowerCase(),
                 wrap: wrap_tag
             });
@@ -129,9 +129,9 @@ function console_find_text(elem, evt, callback) {
             // counting the wrappers!
             wrapper_count = console_text.getElementsByTagName(wrap_tag).length;
             if (wrapper_count < 1) {
-                elem.style.setProperty('background', 'red');
+                elem.style.setProperty("background", "red");
             } else {
-                elem.style.setProperty('background', 'white');
+                elem.style.setProperty("background", "white");
             }
         }
         if (callback) {
@@ -142,7 +142,7 @@ function console_find_text(elem, evt, callback) {
 
 // start at top and highlight the first result after a search
 function console_find_callback() {
-    var highlight_checkbox = document.getElementById('console_find_highlight');
+    var highlight_checkbox = document.getElementById("console_find_highlight");
     console_find_highlight_all(highlight_checkbox);
     console_find_traverse.set_index(0);
     console_find_traverse.next();
@@ -154,10 +154,10 @@ function console_find_keypress(elem, e) {
 
 function console_find_highlight_all(elem) {
     var matches,
-        highlight_tag = 'console_find_highlighted',
+        highlight_tag = "console_find_highlighted",
         state = elem.checked,
         i, len;
-    matches = document.getElementById('p1')
+    matches = document.getElementById("p1")
         .getElementsByClassName(highlight_tag);
     // remember-- matches is a _live_ collection, not an array.
     // If you remove the highlight_tag from an element, it is
@@ -169,7 +169,7 @@ function console_find_highlight_all(elem) {
         matches[i].classList.remove(highlight_tag);
     }
     if (state) {
-        matches = document.getElementById('p1').getElementsByTagName('mark');
+        matches = document.getElementById("p1").getElementsByTagName("mark");
         for (i = 0; i < matches.length; i++) {
             matches[i].classList.add(highlight_tag);
         }
@@ -178,20 +178,20 @@ function console_find_highlight_all(elem) {
 
 var console_find_traverse = (function() {
     var count = 0,
-        console_text = document.getElementById('p1'),
-        wrap_tag = 'mark';
+        console_text = document.getElementById("p1"),
+        wrap_tag = "mark";
     return {
         next: function() {
             var i, last, next,
                 elements = console_text.getElementsByTagName(wrap_tag);
             if (elements.length > 0) {
                 i = count % elements.length;
-                elements[i].classList.add('console_find_current');
+                elements[i].classList.add("console_find_current");
                 if (elements.length > 1) {
                     last = i === 0 ? elements.length - 1 : i - 1;
                     next = (i + 1) % elements.length;
-                    elements[last].classList.remove('console_find_current');
-                    elements[next].classList.remove('console_find_current');
+                    elements[last].classList.remove("console_find_current");
+                    elements[next].classList.remove("console_find_current");
                 }
                 // adjust the scrollbar to make sure the element is visible,
                 // but only if necessary.
@@ -296,7 +296,7 @@ function pdmenu_irc () {
 function nw_create_pd_window_menus () {
     // Window menu
     var windowMenu = new nw.Menu({
-        type: 'menubar'
+        type: "menubar"
     });
 
     // File menu
@@ -304,78 +304,78 @@ function nw_create_pd_window_menus () {
 
     // Add to window menu
     windowMenu.append(new nw.MenuItem({
-        label: l('menu.file'),
+        label: l("menu.file"),
         submenu: fileMenu
     }));
 
     // File sub-entries
     fileMenu.append(new nw.MenuItem({
-        label: l('menu.new'),
+        label: l("menu.new"),
         click: pdgui.menu_new,
-        key: 'n',
-        modifiers: 'ctrl',
-        tooltip: l('menu.new.tt')
+        key: "n",
+        modifiers: "ctrl",
+        tooltip: l("menu.new.tt")
     }));
 
     fileMenu.append(new nw.MenuItem({
-        label: l('menu.open'),
-        key: 'o',
+        label: l("menu.open"),
+        key: "o",
         modifiers: "ctrl",
-        tooltip: l('menu.open.tt'),
+        tooltip: l("menu.open.tt"),
         click: function (){
-            var chooser = document.querySelector('#fileDialog');
+            var chooser = document.querySelector("#fileDialog");
             chooser.click();
         }
     }));
 
     if (pdgui.k12_mode == 1) {
         fileMenu.append(new nw.MenuItem({
-        label: l('menu.k12.demos'),
-        tooltip: l('menu.k12.demos_tt'),
+        label: l("menu.k12.demos"),
+        tooltip: l("menu.k12.demos_tt"),
         click: pdgui.menu_k12_open_demos
         }));
     }
 
     fileMenu.append(new nw.MenuItem({
-        type: 'separator'
+        type: "separator"
     }));
 
     // Note: this must be different for the main Pd window
     fileMenu.append(new nw.MenuItem({
-        label: l('menu.save'),
+        label: l("menu.save"),
             click: function () {},
             enabled: false,
-        key: 's',
-        tooltip: l('menu.save.tt'),
+        key: "s",
+        tooltip: l("menu.save.tt"),
         modifiers: "ctrl"
     }));
 
     fileMenu.append(new nw.MenuItem({
-        label: l('menu.saveas'),
+        label: l("menu.saveas"),
         click: function (){},
         enabled: false,
-        key: 'S',
-        tooltip: l('menu.saveas_tt'),
+        key: "S",
+        tooltip: l("menu.saveas_tt"),
         modifiers: "ctrl"
     }));
 
     if (pdgui.k12_mode == 0) {
         fileMenu.append(new nw.MenuItem({
-            type: 'separator'
+            type: "separator"
         }));
     }
 
     fileMenu.append(new nw.MenuItem({
-        label: l('menu.message'),
+        label: l("menu.message"),
         click: pdgui.menu_send,
-        key: 'm',
+        key: "m",
         modifiers: "ctrl",
-        tooltip: l('menu.message_tt')
+        tooltip: l("menu.message_tt")
     }));
 
     if (pdgui.k12_mode == 0) {
         fileMenu.append(new nw.MenuItem({
-            type: 'separator'
+            type: "separator"
         }));
     }
 
@@ -385,18 +385,18 @@ function nw_create_pd_window_menus () {
 
     // Note: there's no good reason to have this here
     fileMenu.append(new nw.MenuItem({
-        label: l('menu.close'),
+        label: l("menu.close"),
         click: function () {},
         enabled: false,
     }));
 
     // Quit Pd
     fileMenu.append(new nw.MenuItem({
-        label: l('menu.quit'),
+        label: l("menu.quit"),
         click: pdgui.menu_quit,
-        key: 'q',
+        key: "q",
         modifiers: "ctrl",
-        tooltip: l('menu.quit_tt')
+        tooltip: l("menu.quit_tt")
     }));
 
 
@@ -405,25 +405,25 @@ function nw_create_pd_window_menus () {
 
     // Add to window menu
     windowMenu.append(new nw.MenuItem({
-    label: l('menu.edit'),
+    label: l("menu.edit"),
     submenu: editMenu
     }));
 
     // Edit sub-entries
     editMenu.append(new nw.MenuItem({
-        label: l('menu.copy'),
+        label: l("menu.copy"),
         click: function() {
-            document.execCommand('copy');
+            document.execCommand("copy");
         },
-        key: 'c',
-        modifiers: 'ctrl',
-        tooltip: l('menu.copy_tt')
+        key: "c",
+        modifiers: "ctrl",
+        tooltip: l("menu.copy_tt")
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: l('menu.selectall'),
+        label: l("menu.selectall"),
         click: function () {
-            var container_id = 'p1', range;
+            var container_id = "p1", range;
             // This should work across browsers
             if (document.selection) {
                 range = document.body.createTextRange();
@@ -442,71 +442,71 @@ function nw_create_pd_window_menus () {
                 window.getSelection().addRange(range);
             }
         },
-        key: 'a',
+        key: "a",
         modifiers: "ctrl",
-        tooltip: l('menu.selectall_tt')
+        tooltip: l("menu.selectall_tt")
     }));
 
     editMenu.append(new nw.MenuItem({
-        type: 'separator'
+        type: "separator"
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: l('menu.zoomin'),
+        label: l("menu.zoomin"),
         click: function () {
             nw.Window.get().zoomLevel += 1;
             pdgui.gui_post("zoom level is " + nw.Window.get().zoomLevel);
         },
-        key: '=',
+        key: "=",
         modifiers: "ctrl",
-        tooltip: l('menu.zoomin_tt')
+        tooltip: l("menu.zoomin_tt")
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: l('menu.zoomout'),
+        label: l("menu.zoomout"),
         click: function () {
             nw.Window.get().zoomLevel -= 1;
             pdgui.gui_post("zoom level is " + nw.Window.get().zoomLevel);
         },
-        key: '-',
+        key: "-",
         modifiers: "ctrl",
-        tooltip: l('menu.zoomout_tt')
+        tooltip: l("menu.zoomout_tt")
     }));
 
     editMenu.append(new nw.MenuItem({
-        type: 'separator'
+        type: "separator"
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: l('menu.find'),
+        label: l("menu.find"),
         click: function () {
-            var find_bar = document.getElementById('console_find'),
-                find_bar_text = document.getElementById('console_find_text'),
-                text_container = document.getElementById('console_bottom'),
-                state = find_bar.style.getPropertyValue('display');
-            if (state === 'none') {
-                text_container.style.setProperty('bottom', '1em');
-                find_bar.style.setProperty('display', 'inline');
-                find_bar.style.setProperty('height', '1em');
+            var find_bar = document.getElementById("console_find"),
+                find_bar_text = document.getElementById("console_find_text"),
+                text_container = document.getElementById("console_bottom"),
+                state = find_bar.style.getPropertyValue("display");
+            if (state === "none") {
+                text_container.style.setProperty("bottom", "1em");
+                find_bar.style.setProperty("display", "inline");
+                find_bar.style.setProperty("height", "1em");
                 text_container.scrollTop = text_container.scrollHeight;
                 find_bar_text.focus();
                 find_bar_text.select();
             } else {
-                text_container.style.setProperty('bottom', '0px');
-                find_bar.style.setProperty('display', 'none');
+                text_container.style.setProperty("bottom", "0px");
+                find_bar.style.setProperty("display", "none");
             }
         },
-        key: 'f',
+        key: "f",
         modifiers: "ctrl",
-        tooltip: l('menu.find_tt')
+        tooltip: l("menu.find_tt")
     }));
 
     editMenu.append(new nw.MenuItem({
-        label: l('menu.preferences'),
+        label: l("menu.preferences"),
         click: pdgui.open_prefs,
-        key: 'p',
+        key: "p",
         modifiers: "ctrl",
-        tooltip: l('menu.preferences_tt')
+        tooltip: l("menu.preferences_tt")
     }));
 
 
@@ -516,45 +516,45 @@ function nw_create_pd_window_menus () {
 
     // Add to windows menu
     windowMenu.append(new nw.MenuItem({
-    label: l('menu.windows'),
+    label: l("menu.windows"),
     submenu: winmanMenu
     }));
 
     // Winman sub-entries
     winmanMenu.append(new nw.MenuItem({
-        label: l('menu.nextwin'),
+        label: l("menu.nextwin"),
         click: pdmenu_next_win,
-        //key: 'c',
+        //key: "c",
         //modifiers: "ctrl",
-        tooltip: l('menu.nextwin_tt')
+        tooltip: l("menu.nextwin_tt")
     }));
 
     winmanMenu.append(new nw.MenuItem({
-        label: l('menu.prevwin'),
+        label: l("menu.prevwin"),
         click: pdmenu_previous_win,
-        //key: 'a',
+        //key: "a",
         //modifiers: "ctrl",
-        tooltip: l('menu.prevwin_tt')
+        tooltip: l("menu.prevwin_tt")
     }));
 
     winmanMenu.append(new nw.MenuItem({
-        type: 'separator'
+        type: "separator"
     }));
 
     winmanMenu.append(new nw.MenuItem({
-        label: l('menu.parentwin'),
+        label: l("menu.parentwin"),
         click: pdmenu_parent_win,
-        //key: 'a',
+        //key: "a",
         //modifiers: "ctrl",
-        tooltip: l('menu.parentwin_tt')
+        tooltip: l("menu.parentwin_tt")
     }));
 
     winmanMenu.append(new nw.MenuItem({
-        label: l('menu.pdwin'),
+        label: l("menu.pdwin"),
         click: pdmenu_console_win,
-        //key: 'a',
+        //key: "a",
         //modifiers: "ctrl",
-        tooltip: l('menu.pdwin_tt')
+        tooltip: l("menu.pdwin_tt")
     }));
 
     // Media menu
@@ -562,49 +562,49 @@ function nw_create_pd_window_menus () {
 
     // Add to window menu
     windowMenu.append(new nw.MenuItem({
-    label: l('menu.media'),
+    label: l("menu.media"),
     submenu: mediaMenu
     }));
 
     // Media sub-entries
     mediaMenu.append(new nw.MenuItem({
-        label: l('menu.audio_on'),
+        label: l("menu.audio_on"),
         click: function() {
             pdgui.pdsend("pd dsp 1");
         },
-        key: '/',
+        key: "/",
         modifiers: "ctrl",
-        tooltip: l('menu.audio_on_tt')
+        tooltip: l("menu.audio_on_tt")
     }));
 
     mediaMenu.append(new nw.MenuItem({
-        label: l('menu.audio_off'),
+        label: l("menu.audio_off"),
         click: function() {
             pdgui.pdsend("pd dsp 0");
         },
-        key: '.',
+        key: ".",
         modifiers: "ctrl",
-        tooltip: l('menu.audio_off_tt')
+        tooltip: l("menu.audio_off_tt")
     }));
 
     mediaMenu.append(new nw.MenuItem({
-        type: 'separator'
+        type: "separator"
     }));
 
     mediaMenu.append(new nw.MenuItem({
-        label: l('menu.test'),
+        label: l("menu.test"),
         click: pdmenu_test_audio,
-        //key: 'a',
+        //key: "a",
         //modifiers: "ctrl",
-        tooltip: l('menu.test_tt')
+        tooltip: l("menu.test_tt")
     }));
 
     mediaMenu.append(new nw.MenuItem({
-        label: l('menu.loadmeter'),
+        label: l("menu.loadmeter"),
         click: pdmenu_load_meter,
-        //key: 'a',
+        //key: "a",
         //modifiers: "ctrl",
-        tooltip: l('menu.loadmeter_tt')
+        tooltip: l("menu.loadmeter_tt")
     }));
 
     // Help menu
@@ -612,69 +612,69 @@ function nw_create_pd_window_menus () {
 
     // Add to window menu
     windowMenu.append(new nw.MenuItem({
-    label: l('menu.help'),
+    label: l("menu.help"),
     submenu: helpMenu
     }));
 
     // Help sub-entries
     helpMenu.append(new nw.MenuItem({
-        label: l('menu.about'),
+        label: l("menu.about"),
         click: pdmenu_about_pd,
-        //key: 'c',
+        //key: "c",
         //modifiers: "ctrl",
-        tooltip: l('menu.about_tt')
+        tooltip: l("menu.about_tt")
     }));
 
     helpMenu.append(new nw.MenuItem({
-        label: l('menu.manual'),
+        label: l("menu.manual"),
         click: pdmenu_manual,
-        //key: 'a',
+        //key: "a",
         //modifiers: "ctrl",
-        tooltip: l('menu.manual_tt')
+        tooltip: l("menu.manual_tt")
     }));
 
     helpMenu.append(new nw.MenuItem({
-        label: l('menu.browser'),
+        label: l("menu.browser"),
         click: pdmenu_help_browser,
-        //key: 'a',
+        //key: "a",
         //modifiers: "ctrl",
-        tooltip: l('menu.browser_tt')
+        tooltip: l("menu.browser_tt")
     }));
 
     helpMenu.append(new nw.MenuItem({
-        type: 'separator'
+        type: "separator"
     }));
 
     helpMenu.append(new nw.MenuItem({
-        label: l('menu.l2ork_list'),
+        label: l("menu.l2ork_list"),
         click: pdmenu_l2ork_mailinglist,
-        //key: 'a',
+        //key: "a",
         //modifiers: "ctrl",
-        tooltip: l('menu.l2ork_list_tt')
+        tooltip: l("menu.l2ork_list_tt")
     }));
 
     helpMenu.append(new nw.MenuItem({
-        label: l('menu.pd_list'),
+        label: l("menu.pd_list"),
         click: pdmenu_pd_mailinglists,
-        //key: 'a',
+        //key: "a",
         //modifiers: "ctrl",
-        tooltip: l('menu.pd_list_tt')
+        tooltip: l("menu.pd_list_tt")
     }));
 
     helpMenu.append(new nw.MenuItem({
-        label: l('menu.forums'),
+        label: l("menu.forums"),
         click: pdmenu_forums,
-        //key: 'a',
+        //key: "a",
         //modifiers: "ctrl",
-        tooltip: l('menu.forums_tt')
+        tooltip: l("menu.forums_tt")
     }));
 
     helpMenu.append(new nw.MenuItem({
-        label: l('menu.irc'),
+        label: l("menu.irc"),
         click: pdmenu_irc,
-        //key: 'a',
+        //key: "a",
         //modifiers: "ctrl",
-        tooltip: l('menu.irc_tt')
+        tooltip: l("menu.irc_tt")
     }));
 
     // Assign to window
@@ -693,7 +693,7 @@ function nw_create_window(cid, type, width, height, xpos, ypos, menu_flag,
     var my_title =  pdgui.format_window_title(canvas_string, dirty_flag,
         cargs, dir);
     var my_file =
-        type === 'pd_canvas' ? 'pd_canvas.html' : 'dialog_' + type + '.html';
+        type === "pd_canvas" ? "pd_canvas.html" : "dialog_" + type + ".html";
 
     var new_win = nw.Window.open(my_file, {
         title: my_title,
