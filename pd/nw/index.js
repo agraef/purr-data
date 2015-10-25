@@ -412,16 +412,35 @@ function nw_create_pd_window_menus () {
     // Edit sub-entries
     editMenu.append(new nw.MenuItem({
         label: l('menu.copy'),
-        click: pdmenu_copy,
+        click: function() {
+            document.execCommand('copy');
+        },
         key: 'c',
-        modifiers: "ctrl",
+        modifiers: 'ctrl',
         tooltip: l('menu.copy_tt')
     }));
 
     editMenu.append(new nw.MenuItem({
         label: l('menu.selectall'),
         click: function () {
-            document.selectAllChildren(document);
+            var container_id = 'p1', range;
+            // This should work across browsers
+            if (document.selection) {
+                range = document.body.createTextRange();
+                range.moveToElementText(document.getElementById(container_id));
+                range.select();
+            } else if (window.getSelection) {
+                range = document.createRange();
+                range.selectNode(document.getElementById(container_id));
+                // we need to empty the current selection to avoid a strange
+                // error when trying to select all right after Pd starts:
+                // "The given range and the current selection belong to two
+                //  different document fragments."
+                // (I guess nw.js somehow starts up with the selection being 
+                // somewhere outside the window...)
+                window.getSelection().empty();
+                window.getSelection().addRange(range);
+            }
         },
         key: 'a',
         modifiers: "ctrl",
@@ -505,16 +524,16 @@ function nw_create_pd_window_menus () {
     winmanMenu.append(new nw.MenuItem({
         label: l('menu.nextwin'),
         click: pdmenu_next_win,
-        key: 'c',
-        modifiers: "ctrl",
+        //key: 'c',
+        //modifiers: "ctrl",
         tooltip: l('menu.nextwin_tt')
     }));
 
     winmanMenu.append(new nw.MenuItem({
         label: l('menu.prevwin'),
         click: pdmenu_previous_win,
-        key: 'a',
-        modifiers: "ctrl",
+        //key: 'a',
+        //modifiers: "ctrl",
         tooltip: l('menu.prevwin_tt')
     }));
 
@@ -525,16 +544,16 @@ function nw_create_pd_window_menus () {
     winmanMenu.append(new nw.MenuItem({
         label: l('menu.parentwin'),
         click: pdmenu_parent_win,
-        key: 'a',
-        modifiers: "ctrl",
+        //key: 'a',
+        //modifiers: "ctrl",
         tooltip: l('menu.parentwin_tt')
     }));
 
     winmanMenu.append(new nw.MenuItem({
         label: l('menu.pdwin'),
         click: pdmenu_console_win,
-        key: 'a',
-        modifiers: "ctrl",
+        //key: 'a',
+        //modifiers: "ctrl",
         tooltip: l('menu.pdwin_tt')
     }));
 
@@ -575,16 +594,16 @@ function nw_create_pd_window_menus () {
     mediaMenu.append(new nw.MenuItem({
         label: l('menu.test'),
         click: pdmenu_test_audio,
-        key: 'a',
-        modifiers: "ctrl",
+        //key: 'a',
+        //modifiers: "ctrl",
         tooltip: l('menu.test_tt')
     }));
 
     mediaMenu.append(new nw.MenuItem({
         label: l('menu.loadmeter'),
         click: pdmenu_load_meter,
-        key: 'a',
-        modifiers: "ctrl",
+        //key: 'a',
+        //modifiers: "ctrl",
         tooltip: l('menu.loadmeter_tt')
     }));
 
@@ -601,24 +620,24 @@ function nw_create_pd_window_menus () {
     helpMenu.append(new nw.MenuItem({
         label: l('menu.about'),
         click: pdmenu_about_pd,
-        key: 'c',
-        modifiers: "ctrl",
+        //key: 'c',
+        //modifiers: "ctrl",
         tooltip: l('menu.about_tt')
     }));
 
     helpMenu.append(new nw.MenuItem({
         label: l('menu.manual'),
         click: pdmenu_manual,
-        key: 'a',
-        modifiers: "ctrl",
+        //key: 'a',
+        //modifiers: "ctrl",
         tooltip: l('menu.manual_tt')
     }));
 
     helpMenu.append(new nw.MenuItem({
         label: l('menu.browser'),
         click: pdmenu_help_browser,
-        key: 'a',
-        modifiers: "ctrl",
+        //key: 'a',
+        //modifiers: "ctrl",
         tooltip: l('menu.browser_tt')
     }));
 
@@ -629,32 +648,32 @@ function nw_create_pd_window_menus () {
     helpMenu.append(new nw.MenuItem({
         label: l('menu.l2ork_list'),
         click: pdmenu_l2ork_mailinglist,
-        key: 'a',
-        modifiers: "ctrl",
+        //key: 'a',
+        //modifiers: "ctrl",
         tooltip: l('menu.l2ork_list_tt')
     }));
 
     helpMenu.append(new nw.MenuItem({
         label: l('menu.pd_list'),
         click: pdmenu_pd_mailinglists,
-        key: 'a',
-        modifiers: "ctrl",
+        //key: 'a',
+        //modifiers: "ctrl",
         tooltip: l('menu.pd_list_tt')
     }));
 
     helpMenu.append(new nw.MenuItem({
         label: l('menu.forums'),
         click: pdmenu_forums,
-        key: 'a',
-        modifiers: "ctrl",
+        //key: 'a',
+        //modifiers: "ctrl",
         tooltip: l('menu.forums_tt')
     }));
 
     helpMenu.append(new nw.MenuItem({
         label: l('menu.irc'),
         click: pdmenu_irc,
-        key: 'a',
-        modifiers: "ctrl",
+        //key: 'a',
+        //modifiers: "ctrl",
         tooltip: l('menu.irc_tt')
     }));
 
