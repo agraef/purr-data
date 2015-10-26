@@ -813,6 +813,8 @@ exports.set_port = function (port_no) {
 function connect () {
     client = new net.Socket();
     client.setNoDelay(true);
+    // uncomment the next line to use fast_parser (then set its callback below)
+    // client.setEncoding("utf8");
     client.connect(PORT, HOST, function() {
         console.log("CONNECTED TO: " + HOST + ":" + PORT);
     });
@@ -840,7 +842,7 @@ function init_socket_events () {
     var old_command = "";  // Old-style sys_vgui cmds (printed to console)
     var cmdHeader = false;
 
-    client.on("data", function(data) {
+    var perfect_parser = function(data) {
         var i, len, selector, args;
         len = data.length;
         for (i = 0; i < len; i++) {
@@ -892,7 +894,47 @@ function init_socket_events () {
                 old_command += "%" + ("0" + data[i].toString(16)).slice(-2);
             }
         }
-    });
+    };
+
+    var fast_parser = function(data) {
+        var i, len, selector, args;
+        len = data.length;
+        for (i = 0; i < len; i++) {
+            if (cmdHeader) {
+                // check for end of command:
+                if (data[i] === "\v") { // vertical tab
+                    // we have the next_command...
+                    // Turn newlines into backslash + "n" so
+                    // eval will do the right thing
+                    next_command = next_command.replace(/\n/g, "\\n");
+                    selector = next_command.slice(0, next_command.indexOf(" "));
+                    args = next_command.slice(selector.length + 1);
+                    cmdHeader = false;
+                    next_command = "";
+                    // Now evaluate it-- unfortunately the V8 engine can't 
+                    // optimize this eval call.
+                    //post("Evaling: " + selector + "(" + args + ");");
+                    eval(selector + "(" + args + ");");
+                } else {
+                    next_command += data[i];
+                }
+            } else if (data[i] === String.fromCharCode(7)) {
+                // ASCII alarm bell "\a"
+                // if we have an old-style message, print it out
+                if (old_command !== "") {
+                    //post("warning: old command: " + old_command_output,
+                    //    "blue");
+                    old_command= "";
+                }
+                cmdHeader = true; 
+            } else {
+                // this is an old-style sys_vgui
+                old_command += data[i];
+            }
+        }
+    };
+
+    client.on("data", perfect_parser);
 
     // Add a "close" event handler for the client socket
     client.on("close", function() {
@@ -906,6 +948,9 @@ exports.init_socket_events = init_socket_events;
 
 // Send commands to Pd
 function pdsend() {
+    // Using arguments in this way disables V8 optimization for
+    // some reason.  But it doesn't look like it makes that much
+    // of a difference
     var string = Array.prototype.join.call(arguments, " ");
     client.write(string + ";");
     // reprint the outgoing string to the pdwindow
