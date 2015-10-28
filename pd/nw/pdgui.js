@@ -3,6 +3,7 @@
 // Modules
 
 var pwd;
+var gui_dir;
 
 exports.set_pwd = function(pwd_string) {
     pwd = pwd_string;
@@ -10,6 +11,14 @@ exports.set_pwd = function(pwd_string) {
 
 exports.get_pwd = function() {
     return pwd;
+}
+
+exports.set_gui_dir = function(dir_string) {
+    gui_dir = path.normalize(path.join(dir_string, ".."));
+}
+
+exports.get_gui_dir = function() {
+    return gui_dir;
 }
 
 var fs = require("fs");     // for fs.existsSync
@@ -505,6 +514,31 @@ function gui_open_files_via_unique(filenames)
         }
     }
 }
+
+// Think about renaming this and pd_doc_open...
+
+// Open a file-- html, text, or Pd.
+function doc_open (dir, basename) {
+    // Just Pd files at the moment... we'll add the others later
+    var norm_path = path.normalize(dir);
+    if (basename.slice(-4) === ".txt"
+        || basename.slice(-2) === ".c") {
+        open_text(path.join(norm_path, basename));
+    } else if (basename.slice(-5) === ".html"
+               || basename.slice(-4) === ".htm"
+               || basename.slice(-4) === ".pdf") {
+        open_html(path.join(norm_path, basename));
+    } else {
+        pdsend("pd open", enquote(basename), enquote(norm_path));
+    }
+}
+
+// Open a file relative to the main directory where "doc/" and "extra/" live
+function pd_doc_open(dir, basename) {
+    doc_open(path.join(gui_dir, dir), basename);
+}
+
+exports.pd_doc_open = pd_doc_open;
 
 function gui_build_filelist(file) {
     startup_files.push(file);

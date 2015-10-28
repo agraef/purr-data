@@ -1,11 +1,14 @@
 "use strict";
 var nw = require("nw.gui");
-console.log(nw.App.argv);
+console.log("foo is foo");
+console.log("gurgle is " + nw.App.argv);
 var pdgui = require("./pdgui.js");
 var port_no = nw.App.argv[0]; // fed to us by the Pd process
+var gui_dir = nw.App.argv[3];
 var pwd = process.env.PWD;
 pdgui.set_port(port_no);
 pdgui.set_pwd(pwd);
+pdgui.set_gui_dir(gui_dir);
 pdgui.set_pd_window(this);
 pdgui.set_app_quitfn(app_quit);
 
@@ -593,7 +596,9 @@ function nw_create_pd_window_menus () {
 
     mediaMenu.append(new nw.MenuItem({
         label: l("menu.test"),
-        click: pdmenu_test_audio,
+        click: function() {
+            pdgui.pd_doc_open("doc/7.stuff/tools", "testtone.pd");
+        },
         //key: "a",
         //modifiers: "ctrl",
         tooltip: l("menu.test_tt")
@@ -601,7 +606,9 @@ function nw_create_pd_window_menus () {
 
     mediaMenu.append(new nw.MenuItem({
         label: l("menu.loadmeter"),
-        click: pdmenu_load_meter,
+        click: function() {
+            pdgui.pd_doc_open("doc/7.stuff/tools", "load-meter.pd");
+        },
         //key: "a",
         //modifiers: "ctrl",
         tooltip: l("menu.loadmeter_tt")
@@ -619,7 +626,9 @@ function nw_create_pd_window_menus () {
     // Help sub-entries
     helpMenu.append(new nw.MenuItem({
         label: l("menu.about"),
-        click: pdmenu_about_pd,
+        click: function() {
+//            pd_doc_open("doc/1.manual", "1.introduc
+        },
         //key: "c",
         //modifiers: "ctrl",
         tooltip: l("menu.about_tt")

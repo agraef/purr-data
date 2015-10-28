@@ -1287,13 +1287,19 @@ int sys_startgui(const char *guidir)
 
 fprintf(stderr, "guidir is %s\n", guidir);
 
+            /* For some reason, the nw binary doesn't give you access to
+               the first argument-- this is the path to the directory where
+               package.json lives (or the zip file if it's compressed). So
+               we add it again as the last argument to make sure we can fetch
+               it on the GUI side. */
             sprintf(cmdbuf,
-                "%s/nw/nw %s %d localhost %s\n",
+                "%s/nw/nw %s %d localhost %s %s\n",
                 guidir,
                 guidir,
 //                "/home/user/pd-nw/pd/nw",
                 portno,
-                (sys_k12_mode ? "pd-l2ork-k12" : "pd-l2ork"));
+                (sys_k12_mode ? "pd-l2ork-k12" : "pd-l2ork"),
+                guidir);
 
 #endif
             sys_guicmd = cmdbuf;
