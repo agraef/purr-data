@@ -11,6 +11,9 @@ pdgui.set_pwd(pwd);
 pdgui.set_gui_dir(gui_dir);
 pdgui.set_pd_window(this);
 pdgui.set_app_quitfn(app_quit);
+pdgui.set_open_html_fn(open_html);
+pdgui.set_open_textfile_fn(open_textfile);
+pdgui.set_open_external_doc_fn(open_external_doc);
 
 // gui preset
 pdgui.skin.apply(this);
@@ -21,6 +24,18 @@ var l = pdgui.get_local_string;
 function app_quit () {
     console.log("quitting Pd...");
     gui.App.quit();
+}
+
+function open_html(target) {
+    gui.Shell.openItem(target);
+}
+
+function open_textfile(target) {
+    gui.Shell.openItem(target);
+}
+
+function open_external_doc(target) {
+    gui.Shell.openExternal(target);
 }
 
 var chooser = document.querySelector("#fileDialog");
@@ -627,7 +642,7 @@ function nw_create_pd_window_menus () {
     helpMenu.append(new gui.MenuItem({
         label: l("menu.about"),
         click: function() {
-//            pd_doc_open("doc/1.manual", "1.introduc
+            pdgui.pd_doc_open("doc/1.manual", "1.introduction.txt");
         },
         //key: "c",
         //modifiers: "ctrl",
@@ -636,7 +651,9 @@ function nw_create_pd_window_menus () {
 
     helpMenu.append(new gui.MenuItem({
         label: l("menu.manual"),
-        click: pdmenu_manual,
+        click: function() {
+            pdgui.pd_doc_open("doc/1.manual", "index.htm");
+        },
         //key: "a",
         //modifiers: "ctrl",
         tooltip: l("menu.manual_tt")
@@ -656,7 +673,9 @@ function nw_create_pd_window_menus () {
 
     helpMenu.append(new gui.MenuItem({
         label: l("menu.l2ork_list"),
-        click: pdmenu_l2ork_mailinglist,
+        click: function() {
+            pdgui.external_doc_open("http://disis.music.vt.edu/listinfo/l2ork-dev");
+        },
         //key: "a",
         //modifiers: "ctrl",
         tooltip: l("menu.l2ork_list_tt")
@@ -664,7 +683,9 @@ function nw_create_pd_window_menus () {
 
     helpMenu.append(new gui.MenuItem({
         label: l("menu.pd_list"),
-        click: pdmenu_pd_mailinglists,
+        click: function() {
+            pdgui.external_doc_open("http://puredata.info/community/lists");
+        },
         //key: "a",
         //modifiers: "ctrl",
         tooltip: l("menu.pd_list_tt")
@@ -672,19 +693,23 @@ function nw_create_pd_window_menus () {
 
     helpMenu.append(new gui.MenuItem({
         label: l("menu.forums"),
-        click: pdmenu_forums,
+        click: function() {
+            pdgui.external_doc_open("http://forum.pdpatchrepo.info/");
+        },
         //key: "a",
         //modifiers: "ctrl",
         tooltip: l("menu.forums_tt")
     }));
 
-    helpMenu.append(new gui.MenuItem({
-        label: l("menu.irc"),
-        click: pdmenu_irc,
-        //key: "a",
-        //modifiers: "ctrl",
-        tooltip: l("menu.irc_tt")
-    }));
+    //helpMenu.append(new gui.MenuItem({
+    //    label: l("menu.irc"),
+    //    click: function() {
+    //        pdgui.external_doc_open("irc://irc.freenode.net/dataflow");
+    //    },
+    //    //key: "a",
+    //    //modifiers: "ctrl",
+    //    tooltip: l("menu.irc_tt")
+    //}));
 
     // Assign to window
     gui.Window.get().menu = windowMenu;

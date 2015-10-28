@@ -40,6 +40,9 @@ exports.set_pd_window = function(win) {
 var nw_create_window;
 var nw_close_window;
 var nw_app_quit;
+var nw_open_html;
+var nw_open_textfile;
+var nw_open_external_doc;
 
 exports.set_new_window_fn = function (nw_context_fn) {
     nw_create_window = nw_context_fn;
@@ -47,6 +50,18 @@ exports.set_new_window_fn = function (nw_context_fn) {
 
 exports.set_close_window_fn = function (nw_context_fn) {
     nw_close_window = nw_context_fn;
+}
+
+exports.set_open_html_fn = function (nw_context_fn) {
+    nw_open_html = nw_context_fn;
+}
+
+exports.set_open_textfile_fn = function (nw_context_fn) {
+    nw_open_textfile = nw_context_fn;
+}
+
+exports.set_open_external_doc_fn = function (nw_context_fn) {
+    nw_open_external_doc = nw_context_fn;
 }
 
 // Global variables from tcl
@@ -515,6 +530,14 @@ function gui_open_files_via_unique(filenames)
     }
 }
 
+function open_html(target) {
+    nw_open_html(target);
+}
+
+function open_textfile(target) {
+    nw_open_textfile(target);
+}
+
 // Think about renaming this and pd_doc_open...
 
 // Open a file-- html, text, or Pd.
@@ -523,11 +546,12 @@ function doc_open (dir, basename) {
     var norm_path = path.normalize(dir);
     if (basename.slice(-4) === ".txt"
         || basename.slice(-2) === ".c") {
-        open_text(path.join(norm_path, basename));
+        open_textfile(path.join(norm_path, basename));
     } else if (basename.slice(-5) === ".html"
                || basename.slice(-4) === ".htm"
                || basename.slice(-4) === ".pdf") {
         open_html(path.join(norm_path, basename));
+
     } else {
         pdsend("pd open", enquote(basename), enquote(norm_path));
     }
@@ -539,6 +563,12 @@ function pd_doc_open(dir, basename) {
 }
 
 exports.pd_doc_open = pd_doc_open;
+
+function external_doc_open(url) {
+    nw_open_external_doc(url);
+}
+
+exports.external_doc_open = external_doc_open;
 
 function gui_build_filelist(file) {
     startup_files.push(file);
