@@ -1266,10 +1266,16 @@ function gui_atom_drawborder(cid,tag,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12) {
 
 // draw a patch cord
 function gui_canvas_line(cid,tag,type,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10) {
-    var d_array = ["M", p1 + 0.5, p2 + 0.5,
-                   "Q", p3 + 0.5, p4 + 0.5, p5 + 0.5, p6 + 0.5,
-                   "Q", p7 + 0.5, p8 + 0.5 ,p9 + 0.5, p10 + 0.5];
     var svg = get_item(cid, "patchsvg");
+    // xoff is for making sure straight lines are crisp.  An SVG stroke
+    // straddles the coordinate, with 1/2 the width on each side.
+    // Control cords are 1 px wide, which requires a 0.5 x-offset to align
+    // the stroke to the pixel grid.
+    // Signal cords are 2 px wide = 1px on each side-- no need for x-offset.
+    var xoff = type === 'signal' ? 0 : 0.5;
+    var d_array = ["M", p1 + xoff, p2 + xoff,
+                   "Q", p3 + xoff, p4 + xoff, p5 + xoff, p6 + xoff,
+                   "Q", p7 + xoff, p8 + xoff, p9 + xoff, p10 + xoff];
     var path = create_item(cid, "path", {
         d: d_array.join(" "),
         fill: "none",
@@ -1311,10 +1317,12 @@ function gui_canvas_delete_line(cid, tag) {
 function gui_canvas_updateline(cid,tag,x1,y1,x2,y2,yoff) {
     var halfx = parseInt((x2 - x1)/2);
     var halfy = parseInt((y2 - y1)/2);
-    var d_array = ["M",x1,y1,
-                  "Q",x1,y1+yoff,x1+halfx,y1+halfy,
-                  "Q",x2,y2-yoff,x2,y2];
     var cord = get_item(cid, tag);
+    // see comment in gui_canvas_line about xoff
+    var xoff= cord.classList.contains("signal") ? 0: 0.5;
+    var d_array = ["M",x1+xoff,y1+xoff,
+                   "Q",x1+xoff,y1+yoff+xoff,x1+halfx+xoff,y1+halfy+xoff,
+                   "Q",x2+xoff,y2-yoff+xoff,x2+xoff,y2+xoff];
     configure_item(cord, { d: d_array.join(" ") });
 }
 
