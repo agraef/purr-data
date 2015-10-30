@@ -706,7 +706,7 @@ function nw_create_pd_window_menus () {
         click: function() {
             gui.Window.get().showDevTools();
         },
-        key: "b",
+        key: "b", // temporary convenience shortcut-- can change if needed
         modifiers: "ctrl",
         tooltip: l("menu.devtools_tt")
     }));
