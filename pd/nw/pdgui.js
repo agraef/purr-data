@@ -292,11 +292,13 @@ function pd_geo_string(w, h, x, y) {
 // pd.tk
 function canvas_check_geometry(cid) {
     var win_w = patchwin[cid].width,
-        win_h = patchwin[cid].height,
+        // "23" is a kludge to account for the menubar size.  See comment
+        // in nw_create_window of index.js
+        win_h = patchwin[cid].height - 23,
         win_x = patchwin[cid].x,
         win_y = patchwin[cid].y,
         cnv_width = patchwin[cid].window.innerWidth,
-        cnv_height = patchwin[cid].window.innerHeight;
+        cnv_height = patchwin[cid].window.innerHeight - 23;
     // We're reusing win_x and win_y below, as it
     // shouldn't make a difference to the bounds
     // algorithm in Pd

@@ -747,7 +747,11 @@ function nw_create_window(cid, type, width, height, xpos, ypos, menu_flag,
         toolbar: false,
         focus: true,
         width: width,
-        height: height,
+        // We add 23 as a kludge to account for the menubar at the top of
+        // the window.  Ideally we would just get rid of the canvas menu
+        // altogether to simplify things. But we'd have to add some kind of
+        // widget for the "Put" menu.
+        height: height + 23,
         x: xpos,
         y: ypos
     });
