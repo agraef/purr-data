@@ -398,6 +398,7 @@ var canvas_events = (function() {
     gui.Window.get().on("close", function() {
         pdgui.pdsend(name, "menuclose 0");
     });
+    // update viewport size when window size changes
     gui.Window.get().on("maximize", function() {
         pdgui.gui_canvas_getscroll(name);
     });
@@ -407,6 +408,8 @@ var canvas_events = (function() {
     gui.Window.get().on("resize", function() {
         pdgui.gui_canvas_getscroll(name);
     });
+    // set minimum window size
+    gui.Window.get().setMinimumSize(150, 100); 
 
 
     return {

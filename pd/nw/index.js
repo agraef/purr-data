@@ -84,6 +84,8 @@ document.getElementById("fileDialog").setAttribute("accept",
 
 nw_create_pd_window_menus();
 
+gui.Window.get().setMinimumSize(350,250);
+
 pdgui.connect();
 pdgui.init_socket_events();
 
