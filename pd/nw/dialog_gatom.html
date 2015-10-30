@@ -137,7 +137,7 @@
 
   <script>
 "use strict";
-var nw = require("nw.gui"); 
+var gui = require("nw.gui"); 
 var pdgui = require("./pdgui.js");
 
 // For translations
@@ -270,7 +270,7 @@ function populate_form(attributes) {
 
 function add_events(name) {
     // closing the Window
-    nw.Window.get().on("close", function() {
+    gui.Window.get().on("close", function() {
         // this needs to do whatever the "cancel" button does
         //pdgui.pdsend(name, "menuclose 0");
         //cancel();
