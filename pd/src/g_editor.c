@@ -2513,7 +2513,15 @@ void canvas_vis(t_canvas *x, t_floatarg f)
             //if (g && (pd_class(&g->g_pd) == garray_class)
             //    sys_vgui("pdtk_canvas_set_scrollless .x%lx\n", x);
             //else
-            scrollbar_update(x);
+
+            /* We can't update the scrollbars here, because we have to wait
+               for the canvas window to load before anything else can happen.
+               So we just call canvas_getscroll in the GUI after the window
+               finishes loading. I'm not sure if there's an ulterior motive
+               to this scrollbar_update here-- possibly related to graphs-- 
+               so let's keep it here for reference in case we run into a
+               but later. */
+            //scrollbar_update(x);
 
 /*
             //newly opened arrays created prior to pd-l2ork require fittograph

@@ -387,7 +387,6 @@ var canvas_events = (function() {
     document.querySelector("#canvas_find_text").addEventListener("focusin",
         canvas_find_focus, false
     );
-
     document.querySelector("#canvas_find_text").addEventListener("blur",
         canvas_find_blur, false
     );
@@ -410,7 +409,6 @@ var canvas_events = (function() {
     });
     // set minimum window size
     gui.Window.get().setMinimumSize(150, 100); 
-
 
     return {
         none: function() {
@@ -518,11 +516,17 @@ var canvas_events = (function() {
 // we can create the menu and register event callbacks
 function register_canvas_id(cid) {
     name = cid; // hack
+    // We create the window menus and popup menu before doing anything else
+    // to ensure that we don't try to set the svg size before these are done.
+    // Otherwise we might set the svg size to the window viewport, only to have
+    // the menu push down the svg viewport and create scrollbars. Those same
+    // scrollbars will get erased once canvas_map triggers, causing a quick
+    // (and annoying) scrollbar flash
+    nw_create_patch_window_menus(cid);
     create_popup_menu(cid);
     canvas_events.register(cid);
     canvas_events.normal();
-    nw_create_patch_window_menus(cid);
-    pdgui.canvas_map(cid);
+    pdgui.canvas_map(cid); // side-effect: triggers gui_canvas_getscroll from Pd
 }
 
 function create_popup_menu(name) {
