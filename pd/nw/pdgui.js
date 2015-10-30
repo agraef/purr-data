@@ -3160,6 +3160,8 @@ function gui_canvas_getscroll(cid) {
     getscroll_var = setTimeout(do_getscroll, 250, cid);
 }
 
+exports.gui_canvas_getscroll = gui_canvas_getscroll;
+
 // handling the selection
 function gui_lower(cid, tag) {
     var svg = patchwin[cid].window.document.getElementById("patchsvg"),

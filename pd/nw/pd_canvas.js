@@ -398,6 +398,16 @@ var canvas_events = (function() {
     gui.Window.get().on("close", function() {
         pdgui.pdsend(name, "menuclose 0");
     });
+    gui.Window.get().on("maximize", function() {
+        pdgui.gui_canvas_getscroll(name);
+    });
+    gui.Window.get().on("unmaximize", function() {
+        pdgui.gui_canvas_getscroll(name);
+    });
+    gui.Window.get().on("resize", function() {
+        pdgui.gui_canvas_getscroll(name);
+    });
+
 
     return {
         none: function() {
