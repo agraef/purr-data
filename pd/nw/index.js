@@ -701,6 +701,16 @@ function nw_create_pd_window_menus () {
         tooltip: l("menu.forums_tt")
     }));
 
+    helpMenu.append(new gui.MenuItem({
+        label: l("menu.devtools"),
+        click: function() {
+            gui.Window.get().showDevTools();
+        },
+        key: "b",
+        modifiers: "ctrl",
+        tooltip: l("menu.devtools_tt")
+    }));
+
     //helpMenu.append(new gui.MenuItem({
     //    label: l("menu.irc"),
     //    click: function() {
@@ -732,7 +742,7 @@ function nw_create_window(cid, type, width, height, xpos, ypos, menu_flag,
     var new_win = gui.Window.open(my_file, {
         title: my_title,
         position: "center",
-        toolbar: true,
+        toolbar: false,
         focus: true,
         width: width,
         height: height,

@@ -1334,6 +1334,16 @@ function nw_create_patch_window_menus(name) {
         tooltip: l("menu.irc_tt"),
     }));
 
+    helpMenu.append(new gui.MenuItem({
+        label: l("menu.devtools"),
+        key: "b",
+        modifiers: "ctrl",
+        click: function () {
+            gui.Window.get().showDevTools();
+        },
+        tooltip: l("menu.devtools_tt"),
+    }));
+
     // Assign to window
     gui.Window.get().menu = windowMenu;
 

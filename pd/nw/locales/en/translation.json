@@ -229,7 +229,9 @@
     "forums": "Forums",
     "forums_tt": "Open a link in a browser for the Pd Forum",
     "irc": "IRC Chat",
-    "irc_tt": "Open a link in a browser for IRC Chat"
+    "irc_tt": "Open a link in a browser for IRC Chat",
+    "devtools": "Show DevTools",
+    "devtools_tt": "Show the DevTools window (for debugging)"
   },
   "canvas": {
     "prop": {
