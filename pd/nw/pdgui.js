@@ -265,6 +265,9 @@ function gui_post_error(objectid, loglevel, errormsg) {
     var rest = pd_window.document.createTextNode(": " + errormsg + "\n");
     my_p.appendChild(rest);
 
+    var printout = pd_window.document.getElementById("console_bottom");
+    printout.scrollTop = printout.scrollHeight;
+
     // looks like tcl/tk tried to throttle this... maybe we should, too...
     /*
     after cancel .printout.frame.text yview end-2char
