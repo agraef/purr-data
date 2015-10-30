@@ -682,7 +682,9 @@ function nw_create_patch_window_menus(name) {
 
     fileMenu.append(new gui.MenuItem({
         label: l("menu.message"),
-        click: pdgui.menu_send,
+        click: function() {
+            pdgui.menu_send(name);
+        },
         key: "m",
         modifiers: "ctrl",
         tooltip: l("menu.message_tt")

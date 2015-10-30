@@ -456,9 +456,10 @@ function gui_pd_quit_dialog() {
 }
 
 // send a message to Pd
-function menu_send() {
-    post("message...pdwindow is " + pd_window);
-    var message = pd_window.window.prompt("Type a message to send to Pd");
+function menu_send(name) {
+    var message,
+        win = name ? patchwin[name] : pd_window;
+    message = win.window.prompt("Type a message to send to Pd", name);
     if (message != undefined && message.length) {
         post("Sending message to Pd: " + message + ";");
         pdsend(message);
