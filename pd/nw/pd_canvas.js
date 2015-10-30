@@ -658,7 +658,7 @@ function nw_create_patch_window_menus(name) {
     fileMenu.append(new gui.MenuItem({
         label: l("menu.save"),
         click: function () {
-            pdgui.canvas_check_geometry(name);
+            pdgui.canvas_check_geometry(name); // should this go in menu_save?
             pdgui.menu_save(name);
         },
         key: "s",
@@ -1271,13 +1271,17 @@ function nw_create_patch_window_menus(name) {
 
     mediaMenu.append(new gui.MenuItem({
         label: l("menu.test"),
-        click: menu_generic,
+        click: function() {
+            pdgui.pd_doc_open("doc/7.stuff/tools", "testtone.pd");
+        },
         tooltip: l("menu.test_tt"),
     }));
 
     mediaMenu.append(new gui.MenuItem({
         label: l("menu.loadmeter"),
-        click: menu_generic,
+        click: function() {
+            pdgui.pd_doc_open("doc/7.stuff/tools", "load-meter.pd");
+        },
         tooltip: l("menu.loadmeter_tt"),
     }));
 
