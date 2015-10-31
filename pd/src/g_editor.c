@@ -2592,7 +2592,11 @@ void canvas_vis(t_canvas *x, t_floatarg f)
                 canvas_destroy_editor(x);
             return;
         }
-        scrollbar_update(x);
+        /* can't imagine why we're updating the scrollbar on a canvas
+           that's about to be unvis'd. Anyhow, if there happens to be some
+           weird scrollbar bug try uncommenting the following line (and please
+           documented why this has to be here if that's the case). */
+        //scrollbar_update(x);
         glist_noselect(x);
         if (glist_isvisible(x))
             canvas_map(x, 0);
