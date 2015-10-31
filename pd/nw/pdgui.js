@@ -398,6 +398,8 @@ exports.menu_new = menu_new;
 
 function gui_close_window(cid) {
     nw_close_window(patchwin[cid]);
+    // remove reference to the window from patchwin object
+    patchwin[cid] = null;
 }
 
 function menu_k12_open_demos () {
@@ -3088,12 +3090,16 @@ function gui_undo_menu(cid, undo_text, redo_text) {
 
 function do_getscroll(cid) {
     var bbox, width, height, min_width, min_height, x, y,
-        svg = get_item(cid, "patchsvg");
-    // Not sure why I need to check for null here... I'm waiting for the
-    // nw window to load before mapping the Pd canvas, so the patchsvg
-    // should always exist.  Perhaps I also need to set an event for
-    // document.onload as well...
-    if (svg === null) { return; }
+        svg;
+    // Since we're throttling these getscroll calls, they can happen after 
+    // the patch has been closed. We remove the cid from the patchwin 
+    // object on close, so we can just check to see if our Window object has
+    // been set to null, and if so just return.
+    // This is an awfully bad pattern. The whole scroll-checking mechanism
+    // needs to be rethought, but in the meantime this should prevent any
+    // errors wrt the rendering context disappearing.
+    if (!patchwin[cid]) { return; }
+    svg = get_item(cid, "patchsvg");
     bbox = svg.getBBox();
     // We try to do Pd-extended style canvas origins. That is, coord (0, 0) 
     // should be in the top-left corner unless there are objects with a 
