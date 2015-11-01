@@ -343,6 +343,19 @@ function nw_create_pd_window_menus () {
         modifiers: "ctrl",
         tooltip: l("menu.open.tt"),
         click: function (){
+            var input, chooser,
+                span = document.querySelector("#fileDialogSpan");
+            // Complicated workaround-- see comment in build_file_dialog_string
+            input = pdgui.build_file_dialog_string({
+                style: "display: none;",
+                type: "file",
+                id: "fileDialog",
+                nwworkingdir: pwd,
+                multiple: null,
+                // These are copied from pd_filetypes in pdgui.js
+                accept: ".pd,.pat,.mxt,.mxb,.help"
+            });
+            span.innerHTML = input;
             var chooser = document.querySelector("#fileDialog");
             chooser.click();
         }

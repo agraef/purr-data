@@ -21,6 +21,14 @@ exports.get_gui_dir = function() {
     return gui_dir;
 }
 
+exports.get_pd_opendir = function() {
+    if (pd_opendir) {
+        return pd_opendir;
+    } else {
+        return pwd;
+    }
+}
+
 var fs = require("fs");     // for fs.existsSync
 var path = require("path"); // for path.dirname path.extname path.join
 
@@ -316,14 +324,50 @@ function menu_save(name) {
 
 exports.menu_save = menu_save;
 
+// This is an enormous workaround based off of the comment for this bug:
+//   https://github.com/nwjs/nw.js/issues/3372
+// Essentially nwworkingdir won't work if you set it through a javascript
+// object like a normal human being. Instead, you have to let it get parsed
+// by the browser, which means adding a <span> tag as a parent just so we
+// can set its innerHTML.
+// If this bug is ever resolved then this function can go away, as you should
+// be able to just set nwsaveas and nwworkingdir through the setAttribute
+// DOM interface.
+function build_file_dialog_string(obj) {
+    var prop, input = "<input ";
+    for (prop in obj) {
+        if (obj.hasOwnProperty(prop)) {
+            input += prop;
+            if (obj[prop]) {
+                input += '="' + obj[prop] + '"'; 
+            }
+            input += ' ';
+        }
+    }
+    input += "/>";
+    return input;
+}
+
+exports.build_file_dialog_string = build_file_dialog_string;
+
 function gui_canvas_saveas (name, initfile, initdir) {
-    post("working directory is " + pwd);
-    //global pd_nt filetypes untitled_directory
+    var input, chooser,
+        span = patchwin[name].window.document.querySelector("#saveDialogSpan");
     if (!fs.existsSync(initdir)) {
         initdir = pwd;
     }
-//    patchwin[name].window.document.getElementById("fileDialog").setAttribute("nwworkingdir", pwd);
-    var chooser = patchwin[name].window.document.querySelector("#saveDialog");
+    // This is complicated because of a bug... see above
+    input = build_file_dialog_string({
+        style: "display: none;",
+        type: "file",
+        id: "saveDialog",
+        nwsaveas: initdir + '/' +  initfile + ".pd",
+        nwworkingdir: initdir,
+        accept: ".pd"
+    });
+    post("input is " + input);
+    span.innerHTML = input;
+    chooser = patchwin[name].window.document.querySelector("#saveDialog"); 
     chooser.click();
 }
 

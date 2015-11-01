@@ -5,16 +5,19 @@
           type="text/css" href="css/default.css">
   </head>
   <body id="patch_body">
-    <input style="display:none;" id="fileDialog" type="file" multiple />
-    <input style="display:none;" id="saveDialog" type="file"
-           nwsaveas nwworkingdir accept=".pd" />
+    <span id = fileDialogSpan>
+      <input style="display:none;" id="fileDialog" type="file" multiple />
+    </span>
+    <span id = saveDialogSpan>
+      <input style="display:none;" id="saveDialog" type="file"
+             nwsaveas nwworkingdir accept=".pd" />
+    </span>
     <input style="display:none;" id="openpanel_dialog" type="file" />
     <input style="display:none;" id="savepanel_dialog" type="file"
            nwsaveas nwworkingdir />
     <svg xmlns="http://www.w3.org/2000/svg"
          version="1.1"
          id="patchsvg"
-         overflow="visible"
          class="noselect">
     </svg>
     <div id="canvas_find" style="display:none;">

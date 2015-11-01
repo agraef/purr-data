@@ -641,7 +641,16 @@ function nw_create_patch_window_menus(name) {
         modifiers: "ctrl",
         tooltip: l("menu.open_tt"),
         click: function() {
-            var chooser = document.querySelector("#fileDialog");
+            var input, chooser,
+                span = document.querySelector("#fileDialogSpan");
+            input = pdgui.build_file_dialog_string({
+                id: "fileDialog",
+                nwworkingdir: "/user/home",
+                style: "display: none;",
+                type: "file",
+            });
+            span.innerHTML = input;
+            chooser = document.querySelector("#fileDialog");
             chooser.click();
         }
     }));
