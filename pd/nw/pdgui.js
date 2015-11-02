@@ -3126,8 +3126,11 @@ function gui_textarea(cid, tag, type, x, y, max_char_width, text,
 
 function gui_undo_menu(cid, undo_text, redo_text) {
     // we have to check if the window exists, because Pd starts
-    // up with two unvis'd patch windows used for garrays
-    if (cid !== "nobody" && patchwin[cid] !== undefined) {
+    // up with two unvis'd patch windows used for garrays. Plus
+    // there may be some calls to subpatches after updating a dialog
+    // (like turning on GOP) which call this for a canvas that has
+    // been destroyed.
+    if (cid !== "nobody" && patchwin[cid]) {
         patchwin[cid].window.nw_undo_menu(undo_text, redo_text);
     }
 }
