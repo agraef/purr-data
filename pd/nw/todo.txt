@@ -321,6 +321,10 @@ Everything else: (A [x] means we've fixed it)
 [ ] make scalars dig inside abstractions when they search the templatecanvas
     for drawing commands.  This will make it possible to build abstraction
     libraries for ds-gui widgets.
+[ ] getscroll_var assumes we're only loading a single patch at a time, but
+    that isn't true. Thus if we open many patches at a time, the getscroll
+    call for the most recent window will cancel the old one, leaving the 
+    older window with the wrong viewport.
 
 Crashers
 --------
