@@ -1,7 +1,7 @@
 #ifndef PA_ASIO_H
 #define PA_ASIO_H
 /*
- * $Id: pa_asio.h 1083 2006-08-23 07:30:49Z rossb $
+ * $Id: pa_asio.h 1667 2011-05-02 15:49:20Z rossb $
  * PortAudio Portable Real-Time Audio Library
  * ASIO specific extensions
  *
@@ -40,9 +40,9 @@
 
 
 /** @file
+ @ingroup public_header
  @brief ASIO-specific PortAudio API extension header file.
 */
-
 
 #include "portaudio.h"
 
@@ -52,24 +52,32 @@ extern "C"
 #endif /* __cplusplus */
 
 
-/** Retrieve legal latency settings for the specificed device, in samples.
+/** Retrieve legal native buffer sizes for the specificed device, in sample frames.
 
  @param device The global index of the device about which the query is being made.
- @param minLatency A pointer to the location which will recieve the minimum latency value.
- @param maxLatency A pointer to the location which will recieve the maximum latency value.
- @param preferredLatency A pointer to the location which will recieve the preferred latency value.
- @param granularity A pointer to the location which will recieve the granularity. This value 
- determines which values between minLatency and maxLatency are available. ie the step size,
- if granularity is -1 then available latency settings are powers of two.
+ @param minBufferSizeFrames A pointer to the location which will receive the minimum buffer size value.
+ @param maxBufferSizeFrames A pointer to the location which will receive the maximum buffer size value.
+ @param preferredBufferSizeFrames A pointer to the location which will receive the preferred buffer size value.
+ @param granularity A pointer to the location which will receive the "granularity". This value determines
+ the step size used to compute the legal values between minBufferSizeFrames and maxBufferSizeFrames.
+ If granularity is -1 then available buffer size values are powers of two.
 
  @see ASIOGetBufferSize in the ASIO SDK.
 
- @todo This function should have a better name, any suggestions?
+ @note: this function used to be called PaAsio_GetAvailableLatencyValues. There is a
+ #define that maps PaAsio_GetAvailableLatencyValues to this function for backwards compatibility.
 */
-PaError PaAsio_GetAvailableLatencyValues( PaDeviceIndex device,
-		long *minLatency, long *maxLatency, long *preferredLatency, long *granularity );
+PaError PaAsio_GetAvailableBufferSizes( PaDeviceIndex device,
+		long *minBufferSizeFrames, long *maxBufferSizeFrames, long *preferredBufferSizeFrames, long *granularity );
 
-        
+
+/** Backwards compatibility alias for PaAsio_GetAvailableBufferSizes
+
+ @see PaAsio_GetAvailableBufferSizes
+*/
+#define PaAsio_GetAvailableLatencyValues PaAsio_GetAvailableBufferSizes
+
+
 /** Display the ASIO control panel for the specified device.
 
   @param device The global index of the device whose control panel is to be displayed.
@@ -97,6 +105,19 @@ PaError PaAsio_GetInputChannelName( PaDeviceIndex device, int channelIndex,
 */
 PaError PaAsio_GetOutputChannelName( PaDeviceIndex device, int channelIndex,
         const char** channelName );
+
+
+/** Set the sample rate of an open paASIO stream.
+ 
+ @param stream The stream to operate on.
+ @param sampleRate The new sample rate. 
+
+ Note that this function may fail if the stream is alredy running and the 
+ ASIO driver does not support switching the sample rate of a running stream.
+
+ Returns paIncompatibleStreamHostApi if stream is not a paASIO stream.
+*/
+PaError PaAsio_SetStreamSampleRate( PaStream* stream, double sampleRate );
 
 
 #define paAsioUseChannelSelectors      (0x01)

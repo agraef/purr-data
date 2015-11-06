@@ -1,9 +1,9 @@
 /*
- * $Id: pa_mac_hostapis.c 1097 2006-08-26 08:27:53Z rossb $
- * Portable Audio I/O Library Macintosh initialization table
+ * Portable Audio I/O Library
+ * Java Binding for PortAudio
  *
  * Based on the Open Source API proposed by Ross Bencina
- * Copyright (c) 1999-2002 Ross Bencina, Phil Burk
+ * Copyright (c) 2008 Ross Bencina
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files
@@ -36,52 +36,27 @@
  * license above.
  */
 
-/** @file
- @ingroup macosx_src
-Mac OS host API initialization function table.
-*/
+#include "com_portaudio_PortAudio.h"
+#include "portaudio.h"
 
+#ifndef JPA_TOOLS_H
+#define JPA_TOOLS_H
 
-#include "pa_hostapi.h"
+jint jpa_GetIntField( JNIEnv *env, jclass cls, jobject obj, const char *fieldName );
+void jpa_SetIntField( JNIEnv *env, jclass cls, jobject obj, const char *fieldName, jint value );
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-    
-    PaError PaSkeleton_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex index );
-    PaError PaMacCore_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex index );
-    PaError PaMacSm_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex index );
-    PaError PaJack_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex index );
-    PaError PaMacAsio_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex index );
-    
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+jlong jpa_GetLongField( JNIEnv *env, jclass cls, jobject obj, const char *fieldName );
+void jpa_SetLongField( JNIEnv *env, jclass cls, jobject obj, const char *fieldName, jlong value );
 
+jdouble jpa_GetDoubleField( JNIEnv *env, jclass cls, jobject obj, const char *fieldName );
+void jpa_SetDoubleField( JNIEnv *env, jclass cls, jobject obj, const char *fieldName, jdouble value );
 
-PaUtilHostApiInitializer *paHostApiInitializers[] =
-{
-#ifdef PA_USE_COREAUDIO
-    PaMacCore_Initialize,
-#endif
-    
-#ifdef PA_USE_SM
-    PaMacSm_Initialize,
-#endif
-    
-#ifdef PA_USE_JACK
-    PaJack_Initialize,
-#endif
+void jpa_SetStringField( JNIEnv *env, jclass cls, jobject obj, const char *fieldName, const char *value );
+PaStreamParameters *jpa_FillStreamParameters( JNIEnv *env, jobject jstreamParam, PaStreamParameters *myParams );
 
-#ifdef PA_USE_ASIO
-    PaMacAsio_Initialize,
-#endif
-    
-    PaSkeleton_Initialize, /* just for testing */
-    
-    0   /* NULL terminated array */
-};
+jint jpa_CheckError( JNIEnv *env, PaError err );
+jint jpa_ThrowError( JNIEnv *env, const char *message );
 
+PaStream *jpa_GetStreamPointer( JNIEnv *env, jobject blockingStream );
 
-int paDefaultHostApiIndex = 0;
+#endif /* JPA_TOOLS_H */

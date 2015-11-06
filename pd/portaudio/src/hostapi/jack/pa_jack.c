@@ -1,5 +1,5 @@
 /*
- * $Id: pa_jack.c 1238 2007-07-15 16:58:50Z aknudsen $
+ * $Id: pa_jack.c 1912 2013-11-15 12:27:07Z gineera $
  * PortAudio Portable Real-Time Audio Library
  * Latest Version at: http://www.portaudio.com
  * JACK Implementation by Joshua Haberman
@@ -71,8 +71,6 @@
 #include "pa_ringbuffer.h"
 #include "pa_debugprint.h"
 
-static int aErr_;
-static PaError paErr_;     /* For use with ENSURE_PA */
 static pthread_t mainThread_;
 static char *jackErr_ = NULL;
 static const char* clientName_ = "PortAudio";
@@ -83,15 +81,17 @@ static const char* clientName_ = "PortAudio";
 /* Check PaError */
 #define ENSURE_PA(expr) \
     do { \
-        if( (paErr_ = (expr)) < paNoError ) \
+        PaError paErr; \
+        if( (paErr = (expr)) < paNoError ) \
         { \
-            if( (paErr_) == paUnanticipatedHostError && pthread_self() == mainThread_ ) \
+            if( (paErr) == paUnanticipatedHostError && pthread_self() == mainThread_ ) \
             { \
-                if (! jackErr_ ) jackErr_ = "unknown error";\
-                PaUtil_SetLastHostErrorInfo( paJACK, -1, jackErr_ ); \
+                const char *err = jackErr_; \
+                if (! err ) err = "unknown error"; \
+                PaUtil_SetLastHostErrorInfo( paJACK, -1, err ); \
             } \
             PaUtil_DebugPrint(( "Expression '" #expr "' failed in '" __FILE__ "', line: " STRINGIZE( __LINE__ ) "\n" )); \
-            result = paErr_; \
+            result = paErr; \
             goto error; \
         } \
     } while( 0 )
@@ -102,8 +102,9 @@ static const char* clientName_ = "PortAudio";
         { \
             if( (code) == paUnanticipatedHostError && pthread_self() == mainThread_ ) \
             { \
-                if (!jackErr_) jackErr_ = "unknown error";\
-                PaUtil_SetLastHostErrorInfo( paJACK, -1, jackErr_ ); \
+                const char *err = jackErr_; \
+                if (!err) err = "unknown error"; \
+                PaUtil_SetLastHostErrorInfo( paJACK, -1, err ); \
             } \
             PaUtil_DebugPrint(( "Expression '" #expr "' failed in '" __FILE__ "', line: " STRINGIZE( __LINE__ ) "\n" )); \
             result = (code); \
@@ -112,8 +113,10 @@ static const char* clientName_ = "PortAudio";
     } while( 0 )
 
 #define ASSERT_CALL(expr, success) \
-    aErr_ = (expr); \
-    assert( aErr_ == success );
+    do { \
+        int err = (expr); \
+        assert( err == success ); \
+    } while( 0 )
 
 /*
  * Functions that directly map to the PortAudio stream interface
@@ -229,6 +232,10 @@ typedef struct PaJackStream
 }
 PaJackStream;
 
+/* In calls to jack_get_ports() this filter expression is used instead of ""
+ * to prevent any other types (eg Midi ports etc) being listed */
+#define JACK_PORT_TYPE_FILTER "audio"
+
 #define TRUE 1
 #define FALSE 0
 
@@ -254,7 +261,7 @@ static PaError BlockingInitFIFO( PaUtilRingBuffer *rbuf, long numFrames, long by
     char *buffer = (char *) malloc( numBytes );
     if( buffer == NULL ) return paInsufficientMemory;
     memset( buffer, 0, numBytes );
-    return (PaError) PaUtil_InitializeRingBuffer( rbuf, numBytes, buffer );
+    return (PaError) PaUtil_InitializeRingBuffer( rbuf, 1, numBytes, buffer );
 }
 
 /* Free buffer. */
@@ -489,7 +496,7 @@ static PaError BuildDeviceList( PaJackHostApiRepresentation *jackApi )
      * according to the client_name:port_name convention (which is
      * enforced by jackd)
      * A: If jack_get_ports returns NULL, there's nothing for us to do */
-    UNLESS( (jack_ports = jack_get_ports( jackApi->jack_client, "", "", 0 )) && jack_ports[0], paNoError );
+    UNLESS( (jack_ports = jack_get_ports( jackApi->jack_client, "", JACK_PORT_TYPE_FILTER, 0 )) && jack_ports[0], paNoError );
     /* Find number of ports */
     while( jack_ports[numPorts] )
         ++numPorts;
@@ -580,7 +587,7 @@ static PaError BuildDeviceList( PaJackHostApiRepresentation *jackApi )
 
         /* ... what are your output ports (that we could input from)? */
         clientPorts = jack_get_ports( jackApi->jack_client, regex_pattern,
-                                     NULL, JackPortIsOutput);
+                                     JACK_PORT_TYPE_FILTER, JackPortIsOutput);
         curDevInfo->maxInputChannels = 0;
         curDevInfo->defaultLowInputLatency = 0.;
         curDevInfo->defaultHighInputLatency = 0.;
@@ -601,7 +608,7 @@ static PaError BuildDeviceList( PaJackHostApiRepresentation *jackApi )
 
         /* ... what are your input ports (that we could output to)? */
         clientPorts = jack_get_ports( jackApi->jack_client, regex_pattern,
-                                     NULL, JackPortIsInput);
+                                     JACK_PORT_TYPE_FILTER, JackPortIsInput);
         curDevInfo->maxOutputChannels = 0;
         curDevInfo->defaultLowOutputLatency = 0.;
         curDevInfo->defaultHighOutputLatency = 0.;
@@ -717,14 +724,19 @@ PaError PaJack_Initialize( PaUtilHostApiRepresentation **hostApi,
     ASSERT_CALL( pthread_cond_init( &jackHostApi->cond, NULL ), 0 );
 
     /* Try to become a client of the JACK server.  If we cannot do
-     * this, then this API cannot be used. */
+     * this, then this API cannot be used.
+     *
+     * Without the JackNoStartServer option, the jackd server is started
+     * automatically which we do not want.
+     */
 
-    jackHostApi->jack_client = jack_client_open( clientName_, 0, &jackStatus );
+    jackHostApi->jack_client = jack_client_open( clientName_, JackNoStartServer, &jackStatus );
     if( !jackHostApi->jack_client )
     {
         /* the V19 development docs say that if an implementation
          * detects that it cannot be used, it should return a NULL
          * interface and paNoError */
+        PA_DEBUG(( "%s: Couldn't connect to JACK, status: %d\n", __FUNCTION__, jackStatus ));
         result = paNoError;
         goto error;
     }
@@ -737,7 +749,6 @@ PaError PaJack_Initialize( PaUtilHostApiRepresentation **hostApi,
     (*hostApi)->info.name = "JACK Audio Connection Kit";
 
     /* Build a device list by querying the JACK server */
-
     ENSURE_PA( BuildDeviceList( jackHostApi ) );
 
     /* Register functions */
@@ -822,6 +833,7 @@ static void Terminate( struct PaUtilHostApiRepresentation *hostApi )
     PaUtil_FreeMemory( jackHostApi );
 
     free( jackErr_ );
+    jackErr_ = NULL;
 }
 
 static PaError IsFormatSupported( struct PaUtilHostApiRepresentation *hostApi,
@@ -996,7 +1008,7 @@ static PaError WaitCondition( PaJackHostApiRepresentation *hostApi )
     PaTime pt = PaUtil_GetTime();
     struct timespec ts;
 
-    ts.tv_sec = (time_t) floor( pt + 1 );
+    ts.tv_sec = (time_t) floor( pt + 10 * 60 /* 10 minutes */ );
     ts.tv_nsec = (long) ((pt - floor( pt )) * 1000000000);
     /* XXX: Best enclose in loop, in case of spurious wakeups? */
     err = pthread_cond_timedwait( &hostApi->cond, &hostApi->mtx, &ts );
@@ -1173,7 +1185,7 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
             minimum_buffer_frames = jackHostApi->jack_buffer_size * 3;
 
         /* setup blocking API data structures (FIXME: can fail) */
-	BlockingBegin( stream, minimum_buffer_frames );
+        BlockingBegin( stream, minimum_buffer_frames );
 
         /* install our own callback for the blocking API */
         streamCallback = BlockingCallback;
@@ -1227,7 +1239,7 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
         /* Get output ports of our capture device */
         snprintf( regex_pattern, regexSz, "%s:.*", hostApi->deviceInfos[ inputParameters->device ]->name );
         UNLESS( jack_ports = jack_get_ports( jackHostApi->jack_client, regex_pattern,
-                                     NULL, JackPortIsOutput ), paUnanticipatedHostError );
+                                     JACK_PORT_TYPE_FILTER, JackPortIsOutput ), paUnanticipatedHostError );
         for( i = 0; i < inputChannelCount && jack_ports[i]; i++ )
         {
             if( (stream->remote_output_ports[i] = jack_port_by_name(
@@ -1251,7 +1263,7 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
         /* Get input ports of our playback device */
         snprintf( regex_pattern, regexSz, "%s:.*", hostApi->deviceInfos[ outputParameters->device ]->name );
         UNLESS( jack_ports = jack_get_ports( jackHostApi->jack_client, regex_pattern,
-                                     NULL, JackPortIsInput ), paUnanticipatedHostError );
+                                     JACK_PORT_TYPE_FILTER, JackPortIsInput ), paUnanticipatedHostError );
         for( i = 0; i < outputChannelCount && jack_ports[i]; i++ )
         {
             if( (stream->remote_input_ports[i] = jack_port_by_name(
@@ -1272,10 +1284,10 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
                   &stream->bufferProcessor,
                   inputChannelCount,
                   inputSampleFormat,
-                  paFloat32,            /* hostInputSampleFormat */
+                  paFloat32 | paNonInterleaved, /* hostInputSampleFormat */
                   outputChannelCount,
                   outputSampleFormat,
-                  paFloat32,            /* hostOutputSampleFormat */
+                  paFloat32 | paNonInterleaved, /* hostOutputSampleFormat */
                   jackSr,
                   streamFlags,
                   framesPerBuffer,
@@ -1288,11 +1300,11 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
     if( stream->num_incoming_connections > 0 )
         stream->streamRepresentation.streamInfo.inputLatency = (jack_port_get_latency( stream->remote_output_ports[0] )
                 - jack_get_buffer_size( jackHostApi->jack_client )  /* One buffer is not counted as latency */
-            + PaUtil_GetBufferProcessorInputLatency( &stream->bufferProcessor )) / sampleRate;
+            + PaUtil_GetBufferProcessorInputLatencyFrames( &stream->bufferProcessor )) / sampleRate;
     if( stream->num_outgoing_connections > 0 )
         stream->streamRepresentation.streamInfo.outputLatency = (jack_port_get_latency( stream->remote_input_ports[0] )
                 - jack_get_buffer_size( jackHostApi->jack_client )  /* One buffer is not counted as latency */
-            + PaUtil_GetBufferProcessorOutputLatency( &stream->bufferProcessor )) / sampleRate;
+            + PaUtil_GetBufferProcessorOutputLatencyFrames( &stream->bufferProcessor )) / sampleRate;
 
     stream->streamRepresentation.streamInfo.sampleRate = jackSr;
     stream->t0 = jack_frame_time( jackHostApi->jack_client );   /* A: Time should run from Pa_OpenStream */
@@ -1748,7 +1760,8 @@ PaError PaJack_GetClientName(const char** clientName)
 {
     PaError result = paNoError;
     PaJackHostApiRepresentation* jackHostApi = NULL;
-    ENSURE_PA( PaUtil_GetHostApiRepresentation( (PaUtilHostApiRepresentation**)&jackHostApi, paJACK ) );
+    PaJackHostApiRepresentation** ref = &jackHostApi;
+    ENSURE_PA( PaUtil_GetHostApiRepresentation( (PaUtilHostApiRepresentation**)ref, paJACK ) );
     *clientName = jack_get_client_name( jackHostApi->jack_client );
 
 error:

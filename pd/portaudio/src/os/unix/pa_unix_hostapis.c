@@ -1,5 +1,5 @@
 /*
- * $Id: pa_unix_hostapis.c 1097 2006-08-26 08:27:53Z rossb $
+ * $Id: pa_unix_hostapis.c 1740 2011-08-25 07:17:48Z philburk $
  * Portable Audio I/O Library UNIX initialization table
  *
  * Based on the Open Source API proposed by Ross Bencina
@@ -49,30 +49,55 @@ PaError PaOSS_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex 
 PaError PaSGI_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex index );
 /* Linux AudioScience HPI */
 PaError PaAsiHpi_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex index );
+PaError PaMacCore_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex index );
+PaError PaSkeleton_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex index );
 
+/** Note that on Linux, ALSA is placed before OSS so that the former is preferred over the latter.
+ */
 
 PaUtilHostApiInitializer *paHostApiInitializers[] =
     {
-#ifdef PA_USE_OSS
-        PaOSS_Initialize,
-#endif
+#ifdef __linux__
 
-#ifdef PA_USE_ALSA
+#if PA_USE_ALSA
         PaAlsa_Initialize,
 #endif
 
-#ifdef PA_USE_JACK
+#if PA_USE_OSS
+        PaOSS_Initialize,
+#endif
+
+#else   /* __linux__ */
+
+#if PA_USE_OSS
+        PaOSS_Initialize,
+#endif
+
+#if PA_USE_ALSA
+        PaAlsa_Initialize,
+#endif
+
+#endif  /* __linux__ */
+
+#if PA_USE_JACK
         PaJack_Initialize,
 #endif
                     /* Added for IRIX, Pieter, oct 2, 2003: */
-#ifdef PA_USE_SGI 
+#if PA_USE_SGI 
         PaSGI_Initialize,
 #endif
 
-#ifdef PA_USE_ASIHPI
+#if PA_USE_ASIHPI
         PaAsiHpi_Initialize,
 #endif
+
+#if PA_USE_COREAUDIO
+        PaMacCore_Initialize,
+#endif
+
+#if PA_USE_SKELETON
+        PaSkeleton_Initialize,
+#endif
+
         0   /* NULL terminated array */
     };
-
-int paDefaultHostApiIndex = 0;
