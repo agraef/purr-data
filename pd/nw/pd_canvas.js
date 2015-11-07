@@ -32,7 +32,6 @@ function text_to_fudi(text) {
     text = text.replace(/(?!\\)(,|;)/g, " \\$1 "); // escape "," and ";"
     text = text.replace(/\{|\}/g, "");             // filter "{" and "}"
     text = text.replace(/\s+/g, " ");              // filter consecutive /s
-
     return text;
 }
 
@@ -348,7 +347,8 @@ var canvas_events = (function() {
         }
     ;
 
-    // Dialog events
+    // Dialog events -- these are set elsewhere now because of a bug
+    // with nwworkingdir
     document.querySelector("#saveDialog").addEventListener("change",
         function(evt) {
             pdgui.saveas_callback(name, this.value);

@@ -38,15 +38,6 @@ function open_external_doc(target) {
     gui.Shell.openExternal(target);
 }
 
-var chooser = document.querySelector("#fileDialog");
-chooser.addEventListener("change", function(evt) {
-    var file_array = this.value;
-    // reset value so that we can open the same file twice
-    this.value = null;
-    pdgui.menu_open(file_array);
-    console.log("tried to open something");
-}, false);
-
 document.getElementById("dsp_control").addEventListener("click",
     function(evt) {
         var dsp_state = this.checked ? 1 : 0;
@@ -357,6 +348,13 @@ function nw_create_pd_window_menus () {
             });
             span.innerHTML = input;
             var chooser = document.querySelector("#fileDialog");
+            chooser.onchange = function() {
+                var file_array = this.value;
+                // reset value so that we can open the same file twice
+                this.value = null;
+                pdgui.menu_open(file_array);
+                console.log("tried to open something");
+            };
             chooser.click();
         }
     }));

@@ -356,18 +356,28 @@ function gui_canvas_saveas (name, initfile, initdir) {
     if (!fs.existsSync(initdir)) {
         initdir = pwd;
     }
+    // If we don't have a ".pd" file extension (e.g., "Untitled-1", add one)
+    if (initfile.slice(-3) !== ".pd") {
+        initfile += ".pd";
+    }
     // This is complicated because of a bug... see above
     input = build_file_dialog_string({
         style: "display: none;",
         type: "file",
         id: "saveDialog",
-        nwsaveas: initdir + '/' +  initfile + ".pd",
+        nwsaveas: initdir + '/' +  initfile,
         nwworkingdir: initdir,
         accept: ".pd"
     });
     post("input is " + input);
     span.innerHTML = input;
     chooser = patchwin[name].window.document.querySelector("#saveDialog"); 
+    chooser.onchange = function() {
+        saveas_callback(name, this.value);
+        // reset value so that we can open the same file twice
+        this.value = null;
+        console.log("tried to save something");
+    }
     chooser.click();
 }
 
@@ -930,7 +940,7 @@ function connect () {
     client = new net.Socket();
     client.setNoDelay(true);
     // uncomment the next line to use fast_parser (then set its callback below)
-    // client.setEncoding("utf8");
+    //client.setEncoding("utf8");
     client.connect(PORT, HOST, function() {
         console.log("CONNECTED TO: " + HOST + ":" + PORT);
     });
