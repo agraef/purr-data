@@ -453,7 +453,7 @@ static int envgen_newclick(t_envgen *x, struct _glist *glist,
          if (x->resizeable && (xpos > wxpos + x->w.width) && 
              (ypos > wypos)) {
              x->resizing = 1;     
-             return;
+             return (0);
          }
          
          x->w.shift = shift;
