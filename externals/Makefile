@@ -53,7 +53,7 @@ ifeq ($(OS_NAME),darwin)
 # 10.5 Leopard
 #  FAT_FLAGS = -arch ppc -arch ppc7400 -arch ppc64 -arch i386 -arch x86_64
   CFLAGS += -I/sw/include -I$(externals_src)/pdp/include -DMACOSX -DUNIX -Dunix -DDL_OPEN
-  LDFLAGS += -bundle -bundle_loader $(pd_src)/bin/pd -undefined dynamic_lookup \
+  LDFLAGS += -bundle -bundle_loader $(pd_src)/bin/pd-l2ork -undefined dynamic_lookup \
 		-L/sw/lib -weak_framework Carbon
   LIBS += -lc 
   DYLIB_LDFLAGS = -dynamiclib -undefined dynamic_lookup -read_only_relocs warning -L/sw/lib
