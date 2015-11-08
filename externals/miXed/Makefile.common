@@ -63,7 +63,7 @@ DEFINES = -DUNIX -DMACOSX
 OPT_CFLAGS = -O2 -funroll-loops -fomit-frame-pointer
 # perhaps "-undefined suppress" would be a better choice, when we go dynamic
 # with our own common code? (not likely to happen soon...)
-LFLAGS = -bundle -bundle_loader $(PD_DIR)/../bin/pd -flat_namespace
+LFLAGS = -bundle -bundle_loader $(PD_DIR)/../bin/pd-l2ork -flat_namespace
 endif
 
 SHARED_DIR = $(ROOT_DIR)/shared
