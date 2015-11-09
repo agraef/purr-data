@@ -4302,8 +4302,61 @@ t_parentwidgetbehavior draw_widgetbehavior =
     draw_click,
 };
 
+static void svg_free_events(t_svg *x)
+{
+    /* This is pretty simplistic-- if the flag is set then we set the
+       event to zero and send the update to the GUI. */
+    if (x->x_events.e_focusin.a_flag == 1)
+    {
+        fielddesc_setfloat_const(&x->x_events.e_focusin.a_attr, 0);
+        svg_update(x, gensym("focusin"));
+    }
+    if (x->x_events.e_activate.a_flag == 1)
+    {
+        fielddesc_setfloat_const(&x->x_events.e_activate.a_attr, 0);
+        svg_update(x, gensym("focusout"));
+    }
+    if (x->x_events.e_click.a_flag == 1)
+    {
+        fielddesc_setfloat_const(&x->x_events.e_click.a_attr, 0);
+        svg_update(x, gensym("click"));
+    }
+    if (x->x_events.e_mousedown.a_flag == 1)
+    {
+        fielddesc_setfloat_const(&x->x_events.e_mousedown.a_attr, 0);
+        svg_update(x, gensym("mousedown"));
+    }
+    if (x->x_events.e_mouseup.a_flag == 1)
+    {
+        fielddesc_setfloat_const(&x->x_events.e_mouseup.a_attr, 0);
+        svg_update(x, gensym("mouseup"));
+    }
+    if (x->x_events.e_mouseover.a_flag == 1)
+    {
+        fielddesc_setfloat_const(&x->x_events.e_mouseover.a_attr, 0);
+        svg_update(x, gensym("mouseover"));
+    }
+    if (x->x_events.e_mousemove.a_flag == 1)
+    {
+        fielddesc_setfloat_const(&x->x_events.e_mousemove.a_attr, 0);
+        svg_update(x, gensym("mousemove"));
+    }
+    if (x->x_events.e_mouseout.a_flag == 1)
+    {
+        fielddesc_setfloat_const(&x->x_events.e_mouseout.a_attr, 0);
+        svg_update(x, gensym("mouseout"));
+    }
+    if (x->x_events.e_drag.a_flag == 1)
+    {
+        fielddesc_setfloat_const(&x->x_events.e_drag.a_attr, 0);
+        svg_update(x, gensym("drag"));
+    }
+}
+
 static void svg_free(t_svg *x)
 {
+    /* free any events we have registered with the GUI */
+    svg_free_events(x);
     /* [group] has no pts in x_attr->a_vec, but it looks like
        t_freebytes allocates a single byte so freeing it
        should be fine */
@@ -4352,6 +4405,9 @@ static void draw_setup(void)
        shape while turning off the bbox calculations-- i.e., something
        like the "-n" flag of [drawcurve].  So I've introduced the
        "bbox" method for this */
+    /* future method for animation */
+    //class_addmethod(svg_class, (t_method)svg_animate,
+    //    gensym("animate"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_bbox,
         gensym("bbox"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_setattr,
