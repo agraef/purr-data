@@ -1245,11 +1245,11 @@ function nw_create_patch_window_menus(name) {
     }));
 
     winmanMenu.append(new gui.MenuItem({
-        label: l("menu.visible_parentwin"),
+        label: l("menu.visible_ancestor"),
         click: function() {
             pdgui.pdsend(name, "findparent", 1);
         },
-        tooltip: l("menu.visible_parentwin_tt"),
+        tooltip: l("menu.visible_ancestor_tt"),
     }));
 
     winmanMenu.append(new gui.MenuItem({
