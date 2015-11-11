@@ -230,9 +230,9 @@ void iemgui_label(t_iemgui *x, t_symbol *s)
 
     if(glist_isvisible(x->x_glist))
     {
-        sys_vgui(".x%lx.c itemconfigure %lxLABEL -text {%s} \n",
-            glist_getcanvas(x->x_glist), x,
-            s!=s_empty?x->x_lab->s_name:"");
+        //sys_vgui(".x%lx.c itemconfigure %lxLABEL -text {%s} \n",
+        //    glist_getcanvas(x->x_glist), x,
+        //    s!=s_empty?x->x_lab->s_name:"");
         gui_vmess("gui_iemgui_label_set", "xxs",
             glist_getcanvas(x->x_glist),
             x,
