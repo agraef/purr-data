@@ -211,29 +211,37 @@ function set_audioapi(val) {
     pd_whichapi = val;
 }
 
+// Hmm, probably need a closure here...
+var current_string = "";
 var last_string = "";
 var last_child = {};
+var last_object_id = "";
 var duplicate = 0;
 
 function do_post(string, color) {
-    if (last_string === string) {
-        last_child.textContent = "[" + (duplicate + 2) + "] " + last_string;
-        duplicate++;
-    } else {
-        if (color === undefined) { color = "black" };
-        var myp = pd_window.document.getElementById("p1");
-        var text;
-        var span = pd_window.document.createElement("span");
-        span.style.color = color;
-        var text = pd_window.document.createTextNode(string); 
-        span.appendChild(text);
-        myp.appendChild(span);
-        var printout = pd_window.document.getElementById("console_bottom");
-        printout.scrollTop = printout.scrollHeight;
-
-        last_string = string;
-        last_child = span;
-        duplicate = 0;
+    var myp, span, text, printout;
+    current_string += string;
+    if (string.slice(-1) === "\n") {
+        if (current_string === last_string) {
+            last_child.textContent = "[" + (duplicate + 2) + "] " + last_string;
+            duplicate++;
+            current_string = "";
+        } else {
+            if (color === undefined) { color = "black" };
+            myp = pd_window.document.getElementById("p1"),
+            span = pd_window.document.createElement("span");
+            span.style.color = color;
+            text = pd_window.document.createTextNode(current_string); 
+            span.appendChild(text);
+            myp.appendChild(span);
+            printout = pd_window.document.getElementById("console_bottom");
+            printout.scrollTop = printout.scrollHeight;
+            last_string = current_string;
+            current_string = "";
+            last_child = span;
+            last_object_id = "";
+            duplicate = 0;
+        }
     }
 }
 
@@ -257,31 +265,51 @@ function pd_error_select_by_id(objectid) {
 
 exports.pd_error_select_by_id = pd_error_select_by_id
 
+// We're just copying the do_post vars here. We need to combine these
+// so we're not duplicating functionality.
+var error_last_string = "";
+var error_last_object_id = "";
+var error_last_child = {};
+var error_duplicate = 0;
+
 function gui_post_error(objectid, loglevel, errormsg) {
-    var my_p = pd_window.document.getElementById("p1");
-    // if we have an object id, make a friendly link...
-    var error_title = pd_window.document.createTextNode("error");
-    if (objectid.length > 0) {
-        var my_a = pd_window.document.createElement("a");
-        my_a.href =
-            "javascript:pdgui.pd_error_select_by_id('" + objectid + "')";
-        my_a.appendChild(error_title);
-        my_p.appendChild(my_a);
+    var my_p, error_span, error_title, my_a, rest, printout, dup_span;
+    if (last_object_id === objectid
+        && last_string === errormsg)
+    {
+        dup_span = last_child.firstElementChild;
+        dup_span.textContent = "[" + (duplicate + 2) + "] ";
+        duplicate++;
     } else {
-        my_p.appendChild(error_title);
+        my_p = pd_window.document.getElementById("p1");
+        // if we have an object id, make a friendly link...
+        error_span = pd_window.document.createElement("span");
+        dup_span = pd_window.document.createElement("span");
+        last_child = error_span;
+        error_title = pd_window.document.createTextNode("error");
+        if (objectid.length > 0) {
+            my_a = pd_window.document.createElement("a");
+            my_a.href =
+                "javascript:pdgui.pd_error_select_by_id('" + objectid + "')";
+            my_a.appendChild(error_title);
+            error_span.appendChild(dup_span); // for duplicate tally
+            error_span.appendChild(my_a);
+            my_p.appendChild(error_span);
+        } else {
+            error_span.appendChild(dup_span);
+            error_span.appendChild(error_title);
+            my_p.appendChild(error_span);
+        }
+        rest = pd_window.document.createTextNode(": " + errormsg);
+        error_span.appendChild(rest);
+
+        printout = pd_window.document.getElementById("console_bottom");
+        printout.scrollTop = printout.scrollHeight;
+        last_string = errormsg;
+        last_object_id = objectid;
+        current_string = "";
+        duplicate = 0;
     }
-    var rest = pd_window.document.createTextNode(": " + errormsg + "\n");
-    my_p.appendChild(rest);
-
-    var printout = pd_window.document.getElementById("console_bottom");
-    printout.scrollTop = printout.scrollHeight;
-
-    // looks like tcl/tk tried to throttle this... maybe we should, too...
-    /*
-    after cancel .printout.frame.text yview end-2char
-    after idle .printout.frame.text yview end-2char
-        .printout.frame.text configure -state disabled
-    */
 }
 
 // convert canvas dimensions to old tcl/tk geometry
