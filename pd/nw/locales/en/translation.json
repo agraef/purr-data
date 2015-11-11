@@ -200,7 +200,7 @@
     "prevwin_tt": "Give focus to the previous window in the stacking order",
     "parentwin": "Parent Window",
     "parentwin_tt": "give focus to the parent window of the current window",
-    "pdwin": "Pd & Console",
+    "pdwin": "Pd Window",
     "pdwin_tt": "Give focus to the main Pd window",
 
     "media": "Media",

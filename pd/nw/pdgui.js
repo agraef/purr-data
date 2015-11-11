@@ -2896,6 +2896,12 @@ function gui_raise_window(cid) {
     patchwin[cid].focus();
 }
 
+function raise_pd_window() {
+    pd_window.focus();
+}
+
+exports.raise_pd_window= raise_pd_window;
+
 // Openpanel and Savepanel
 
 var file_dialog_target;

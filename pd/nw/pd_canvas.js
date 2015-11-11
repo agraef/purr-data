@@ -1244,8 +1244,12 @@ function nw_create_patch_window_menus(name) {
 
     winmanMenu.append(new gui.MenuItem({
         label: l("menu.pdwin"),
-        click: menu_generic,
+        click: function() {
+            pdgui.raise_pd_window();
+        },
         tooltip: l("menu.pdwin_tt"),
+        key: "r",
+        modifiers: "ctrl"
     }));
 
     // Media menu
