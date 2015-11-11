@@ -200,6 +200,8 @@
     "prevwin_tt": "Give focus to the previous window in the stacking order",
     "parentwin": "Parent Window",
     "parentwin_tt": "give focus to the parent window of the current window",
+    "visible_parentwin": "Visible Parent Window",
+    "visible_parentwin_tt": "give focus to the closest ancestor of this window that is visible",
     "pdwin": "Pd Window",
     "pdwin_tt": "Give focus to the main Pd window",
 

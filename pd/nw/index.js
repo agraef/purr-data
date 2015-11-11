@@ -231,55 +231,11 @@ function console_find_keydown(elem, evt) {
     }
 }
 
-function pdmenu_copy () {
-    alert("Please implement pdmenu_copy"); 
-}
-
-function pdmenu_selectall () {
-    alert("Please implement pdmenu_selectall"); 
-}
-
-function pdmenu_preferences () {
-    alert("Please implement pdmenu_preferences"); 
-}
-
 function pdmenu_next_win () {
     alert("Please implement pdmenu_preferences"); 
 }
 
 function pdmenu_previous_win () {
-    alert("Please implement pdmenu_preferences"); 
-}
-
-function pdmenu_parent_win () {
-    alert("Please implement pdmenu_preferences"); 
-}
-
-function pdmenu_console_win () {
-    alert("Please implement pdmenu_preferences"); 
-}
-
-function pdmenu_audio_on () {
-    alert("Please implement pdmenu_preferences"); 
-}
-
-function pdmenu_audio_off () {
-    alert("Please implement pdmenu_preferences"); 
-}
-
-function pdmenu_test_audio () {
-    alert("Please implement pdmenu_preferences"); 
-}
-
-function pdmenu_load_meter () {
-    alert("Please implement pdmenu_preferences"); 
-}
-
-function pdmenu_about_pd () {
-    alert("Please implement pdmenu_preferences"); 
-}
-
-function pdmenu_manual () {
     alert("Please implement pdmenu_preferences"); 
 }
 
@@ -566,26 +522,6 @@ function nw_create_pd_window_menus () {
         //key: "a",
         //modifiers: "ctrl",
         tooltip: l("menu.prevwin_tt")
-    }));
-
-    winmanMenu.append(new gui.MenuItem({
-        type: "separator"
-    }));
-
-    winmanMenu.append(new gui.MenuItem({
-        label: l("menu.parentwin"),
-        click: pdmenu_parent_win,
-        //key: "a",
-        //modifiers: "ctrl",
-        tooltip: l("menu.parentwin_tt")
-    }));
-
-    winmanMenu.append(new gui.MenuItem({
-        label: l("menu.pdwin"),
-        click: pdmenu_console_win,
-        //key: "a",
-        //modifiers: "ctrl",
-        tooltip: l("menu.pdwin_tt")
     }));
 
     // Media menu

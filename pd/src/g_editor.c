@@ -5744,19 +5744,28 @@ static void canvas_find_again(t_canvas *x)
 }
 
 /* following function serves mainly as a helper function for tcl/tk
- and focuses first visible parent (not the immediate parent) */
-static void canvas_find_parent(t_canvas *x)
+   f = 0: show immediate parent
+   f = 1: show visible parent */
+static void canvas_find_parent(t_canvas *x, t_floatarg f)
 {
     if (x->gl_owner)
     {
-        t_glist *owner = x->gl_owner;
-        while (!glist_isvisible(owner) &&
-               !owner->gl_havewindow && owner->gl_owner)
-            owner = owner->gl_owner;
-        if (glist_isvisible(owner) && owner->gl_havewindow)
-            canvas_vis(owner, 1);
+        if (f != 0) /* find visible parent */
+        {
+            t_glist *owner = x->gl_owner;
+            while (!glist_isvisible(owner) &&
+                   !owner->gl_havewindow && owner->gl_owner)
+                owner = owner->gl_owner;
+            if (glist_isvisible(owner) && owner->gl_havewindow)
+                canvas_vis(owner, 1);
+        }
+        else /* find immediate parent */
+        {
+            canvas_vis(glist_getcanvas(x->gl_owner), 1);
+        }
     }
-    else {
+    else
+    {
         sys_gui("menu_raise_console\n");
     }
 }
@@ -7783,7 +7792,7 @@ void g_editor_setup(void)
     class_addmethod(canvas_class, (t_method)canvas_find_again,
         gensym("findagain"), A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_find_parent,
-        gensym("findparent"), A_NULL);
+        gensym("findparent"), A_DEFFLOAT, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_done_popup,
         gensym("done-popup"), A_FLOAT, A_FLOAT, A_FLOAT, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_donecanvasdialog,

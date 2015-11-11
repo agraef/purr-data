@@ -1238,8 +1238,18 @@ function nw_create_patch_window_menus(name) {
 
     winmanMenu.append(new gui.MenuItem({
         label: l("menu.parentwin"),
-        click: menu_generic,
+        click: function() {
+            pdgui.pdsend(name, "findparent", 0);
+        },
         tooltip: l("menu.parentwin_tt"),
+    }));
+
+    winmanMenu.append(new gui.MenuItem({
+        label: l("menu.visible_parentwin"),
+        click: function() {
+            pdgui.pdsend(name, "findparent", 1);
+        },
+        tooltip: l("menu.visible_parentwin_tt"),
     }));
 
     winmanMenu.append(new gui.MenuItem({
