@@ -40,6 +40,16 @@ exports.get_local_string = lang.get_local_string;
 var pd_window; 
 exports.pd_window;
 
+// Turns out I messed this up. pd_window should really be an
+// "nw window", so that you can use it to access all the
+// nw window methods and settings.  Instead I set it to the
+// DOM window object. This complicates things-- for example,
+// in walk_window_list I have to take care when comparing
+// patchwin[]-- which are nw windows-- and pd_window.
+// I'm not sure of the best way to fix this. Probably we want to
+// just deal with DOM windows, but that would mean abstracting
+// out the stuff that deals with nw window size and
+// positioning.
 exports.set_pd_window = function(win) {
     pd_window = win;
     exports.pd_window = win;
@@ -2897,8 +2907,46 @@ function gui_raise_window(cid) {
 }
 
 function gui_raise_pd_window() {
-    pd_window.focus();
+    pd_window.focus(-1);
 }
+
+// Walk the list of open patch windows. They are walked in the order
+// they were created.
+// This is a bit complicated because of the way I set pd_window above
+function walk_window_list(cid, offset) {
+    var win_store = global.__nwWindowsStore,
+        my_win = cid === "pd_window" ? pd_window : patchwin[cid].window,
+        id_array = [],
+        my_id, id, next_id;
+    for (id in win_store) {
+        if (win_store.hasOwnProperty(id)) {
+            id_array.push(+id); // build array of numbers
+            if (win_store[id].window === my_win) {
+                my_id = +id; // cast as number to match against array
+            }
+        }
+    }
+    id_array.sort(function(a, b) { return a-b; }); // sort numerically
+    next_id = (id_array.indexOf(my_id) + offset);
+    if (next_id < 0) {
+        next_id += id_array.length;
+    } else {
+        next_id %= id_array.length;
+    }
+    win_store[id_array[next_id]].focus();
+}
+
+function raise_next(cid) {
+    walk_window_list(cid, 1);
+}
+
+exports.raise_next = raise_next;
+
+function raise_prev(cid) {
+    walk_window_list(cid, -1);
+}
+
+exports.raise_prev = raise_prev;
 
 exports.raise_pd_window= gui_raise_pd_window;
 

@@ -510,7 +510,9 @@ function nw_create_pd_window_menus () {
     // Winman sub-entries
     winmanMenu.append(new gui.MenuItem({
         label: l("menu.nextwin"),
-        click: pdmenu_next_win,
+        click: function() {
+            pdgui.raise_next("pd_window");
+        },
         //key: "c",
         //modifiers: "ctrl",
         tooltip: l("menu.nextwin_tt")
@@ -518,7 +520,9 @@ function nw_create_pd_window_menus () {
 
     winmanMenu.append(new gui.MenuItem({
         label: l("menu.prevwin"),
-        click: pdmenu_previous_win,
+        click: function() {
+            pdgui.raise_prev("pd_window");
+        },
         //key: "a",
         //modifiers: "ctrl",
         tooltip: l("menu.prevwin_tt")

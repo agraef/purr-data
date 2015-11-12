@@ -1218,7 +1218,9 @@ function nw_create_patch_window_menus(name) {
 
     winmanMenu.append(new gui.MenuItem({
         label: l("menu.nextwin"),
-        click: menu_generic,
+        click: function() {
+            pdgui.raise_next(name);
+        },
         key: String.fromCharCode(12), // Page down
         modifiers: "ctrl",
         tooltip: l("menu.nextwin_tt"),
@@ -1226,7 +1228,9 @@ function nw_create_patch_window_menus(name) {
 
     winmanMenu.append(new gui.MenuItem({
         label: l("menu.prevwin"),
-        click: menu_generic,
+        click: function() {
+            pdgui.raise_prev(name);
+        },
         key: String.fromCharCode(11), // Page up
         modifiers: "ctrl",
         tooltip: l("menu.prevwin_tt"),
