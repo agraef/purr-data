@@ -327,6 +327,7 @@ Everything else: (A [x] means we've fixed it)
     older window with the wrong viewport.
 [ ] fix the Next Window/Previous Window keybindings. For some reason they
     don't work.
+[ ] unnecessary scrollbars appear when many patches are opened at once.
 
 Crashers
 --------
