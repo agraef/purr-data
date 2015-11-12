@@ -3266,7 +3266,6 @@ function do_getscroll(cid) {
     // haven't had a problem with it yet.
     min_width = patchwin[cid].window.innerWidth - 4;
     min_height = patchwin[cid].window.innerHeight - 4;
-
     // Since we don't do any transformations on the patchsvg,
     // let's try just using ints for the height/width/viewBox
     // to keep things simple.
@@ -3299,7 +3298,7 @@ var getscroll_var = {};
 //    window before the document has finished loading. To get
 //    the error get rid of the setTimeout
 // 2. This should protect the user from triggering a bunch of
-//    re-layouts.  But this only works because I'm not updating
+//    layouts.  But this only works because I'm not updating
 //    the view to follow the mouse-- for example, when
 //    the user is dragging an object beyond the bounds of the
 //    viewport. The tcl/tk version actually does follow the
@@ -3307,8 +3306,8 @@ var getscroll_var = {};
 //    graphics from displaying until the user releases the mouse,
 //    which would be a buggy UI
 function gui_canvas_getscroll(cid) {
-    clearTimeout(getscroll_var);
-    getscroll_var = setTimeout(do_getscroll, 250, cid);
+    clearTimeout(getscroll_var[cid]);
+    getscroll_var[cid] = setTimeout(do_getscroll, 250, cid);
 }
 
 exports.gui_canvas_getscroll = gui_canvas_getscroll;
