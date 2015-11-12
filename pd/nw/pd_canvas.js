@@ -833,7 +833,6 @@ function nw_create_patch_window_menus(name) {
             var z = gui.Window.get().zoomLevel;
             if (z < 8) { z++; }
             gui.Window.get().zoomLevel = z;
-            pdgui.post("zoom level is " + gui.Window.get().zoomLevel);
         },
         key: "=",
         modifiers: "ctrl",
@@ -846,7 +845,6 @@ function nw_create_patch_window_menus(name) {
             var z = gui.Window.get().zoomLevel;
             if (z > -7) { z--; } 
             gui.Window.get().zoomLevel = z;
-            pdgui.post("zoom level is " + gui.Window.get().zoomLevel);
         },
         key: "-",
         modifiers: "ctrl",

@@ -442,7 +442,6 @@ function nw_create_pd_window_menus () {
         label: l("menu.zoomin"),
         click: function () {
             gui.Window.get().zoomLevel += 1;
-            pdgui.post("zoom level is " + gui.Window.get().zoomLevel);
         },
         key: "=",
         modifiers: "ctrl",
@@ -453,7 +452,6 @@ function nw_create_pd_window_menus () {
         label: l("menu.zoomout"),
         click: function () {
             gui.Window.get().zoomLevel -= 1;
-            pdgui.post("zoom level is " + gui.Window.get().zoomLevel);
         },
         key: "-",
         modifiers: "ctrl",
