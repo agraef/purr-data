@@ -262,7 +262,7 @@
       </fieldset> 
 
     <div class="submit_buttons">
-      <button type="button" onClick="ok()" data-i18n="[title]iem.prop.ok_tt">
+      <button type="button" id="ok_button" onClick="ok()" data-i18n="[title]iem.prop.ok_tt">
         <span data-i18n="iem.prop.ok"></span>
       </button>
       <button type="button" onClick="apply()" data-i18n="[title]iem.prop.apply_tt">
@@ -295,6 +295,12 @@ var pd_garray_attrs;
 var new_array_dialog;
 
 function ok() {
+    // Put the focus on the "ok" button, to make sure we call the change
+    // method for an attribute. For some reason I don't need to do this
+    // in the iemgui dialog, but I haven't looked close to figure out why.
+    // A lot of this could probably be abstracted out, but I'm not sure of
+    // the best way to do that yet.
+    document.getElementById("ok_button").focus();
     apply();
     cancel();
 }

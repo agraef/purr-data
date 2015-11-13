@@ -746,9 +746,34 @@ void garray_arraydialog(t_garray *x, t_symbol *s, int argc, t_atom *argv)
         x->x_outlinecolor = outline;
         x->x_style = style;
         if (size != a->a_n)
+        {
             garray_resize(x, size);
+        }
         else
+        {
+            /* So, this next function call is here _solely_ to get the
+               the new array name to show up in the graph label if the user
+               happened to change it. Let me emphasize-- in order to
+               redraw array labels, we must call a function that redraws
+               not only the _entire_ array and its graph, but also redraws
+               the parent canvas in which the graph is displayed. There is
+               no interface I can find to just say, "redraw the label".
+
+               Worse, Pd redraws a single array at least 3 times, and maybe
+               even the graph and the containing glist-- it's hard to tell
+               because so much data is sent over the wire that I run out of
+               buffer in my terminal window. These are a side-effect of
+               garray_redraw, as well as the garray_resize branch above. (And 
+               don't forget that the canvas dialog callback probably causes
+               as many redraws as well.)
+
+               Until the Pd codebase handles redrawing in a sane fashion,
+               without depending on a vast array of side-effects, there's
+               simply no way to effectively maintain it. */
+            glist_redraw(x->x_glist);
             garray_redraw(x);
+        }
+
         //fprintf(stderr,"garray_arraydialog garray_redraw done\n");
         garray_select((t_gobj *)x,glist_getcanvas(x->x_glist),1);
         canvas_dirty(x->x_glist, 1);
