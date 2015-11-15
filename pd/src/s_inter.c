@@ -944,7 +944,7 @@ static int sys_flushqueue(void )
     {
         if (sys_bytessincelastping >= GUI_BYTESPERPING)
         {
-            sys_gui("pdtk_ping\n");
+            //sys_gui("pdtk_ping\n");
             gui_vmess("gui_ping", "");
             sys_bytessincelastping = 0;
             sys_waitingforping = 1;
