@@ -2393,8 +2393,9 @@ function gui_draw_configure_all(cid, tag, attr_array) {
 
 // Plots for arrays and data structures
 function gui_plot_vis(cid, basex, basey, data_array, attr_array, tag_array) {
-    var g = get_item(cid, tag_array[0]);
-    var p = create_item(cid, "path", {
+    var g = get_item(cid, tag_array[0]),
+        p;
+    p = create_item(cid, "path", {
         d: data_array.join(" "),
         id: tag_array[1],
         //stroke: "red",
@@ -2413,9 +2414,9 @@ function gui_plot_vis(cid, basex, basey, data_array, attr_array, tag_array) {
 // and -1 to set attributes on the existing object.
 function gui_drawnumber_vis(cid, parent_tag, tag, x, y, scale_x, scale_y,
     font, fontsize, fontcolor, text, flag, visibility) {
-    var lines, i, len, tspan;
-    var g = get_item(cid, parent_tag);
-    var svg_text;
+    var lines, i, len, tspan,
+        g = get_item(cid, parent_tag),
+        svg_text;
     if (flag === 1) {
         svg_text = create_item(cid, "text", {
             // x and y are fudge factors. Text on the tk canvas used an anchor
@@ -2522,10 +2523,11 @@ function gui_drawimage_new(obj_tag, file_path, canvasdir, flags) {
 }
 
 function img_size_setter(cid, obj, obj_tag, i) {
-    var img = new pd_window.window.Image();
+    var img = new pd_window.window.Image(),
+        w, h;
     img.onload = function() {
-        var w = this.width,
-            h = this.height;
+        w = this.width,
+        h = this.height;
         configure_item(get_item(cid, obj_tag + i), {
             width: w,
             height: h
@@ -2574,14 +2576,12 @@ function gui_drawimage_vis(cid, x, y, obj, data, seqno, parent_tag) {
 }
 
 function gui_drawimage_index(cid, obj, data, index) {
-    var obj_tag = "draw" + obj.slice(1) + "." + data.slice(1);
-    var i,
+    var obj_tag = "draw" + obj.slice(1) + "." + data.slice(1),
+        i,
         len = drawimage_data[obj].length,
         image_container = get_item(cid, obj_tag),
-        last_image,
         image = image_container.childNodes[index],
         last_image = image_container.querySelectorAll('[visibility="visible"]');
-
     for (i = 0; i < last_image.length; i++) {
         configure_item(last_image[i], { visibility: "hidden" });
     }
@@ -2621,8 +2621,8 @@ function zoom_kludge(zoom_level) {
 function gui_canvas_popup(cid, xpos, ypos, canprop, canopen, isobject) {
     // Set the global popup x/y so they can be retrieved by the relevant
     // document's event handler
-    var zoom_level = patchwin[cid].zoomLevel;
-    var zfactor = zoom_kludge(zoom_level);
+    var zoom_level = patchwin[cid].zoomLevel,
+        zfactor = zoom_kludge(zoom_level);
     popup_coords[0] = xpos;
     popup_coords[1] = ypos;
     xpos = Math.floor(xpos * zfactor);
@@ -2668,9 +2668,9 @@ exports.popup_action = popup_action;
 
 // refactor-- use a class so this can happen in css
 function gui_graph_fill_border(cid, tag) {
-    var i;
-    var g = get_gobj(cid, tag);
-    var b = g.querySelectorAll(".border");
+    var g = get_gobj(cid, tag),
+        b = g.querySelectorAll(".border"),
+        i;
     for (i = 0; i < b.length; i++) {
         configure_item(b[i], {
             fill: "gray"
@@ -2690,16 +2690,18 @@ function gui_graph_label(cid, tag, label_number, font_height, array_name,
 }
 
 function gui_graph_vtick(cid, tag, x, up_y, down_y, tick_pix, basex, basey) {
-    var g = get_gobj(cid, tag);
+    var g = get_gobj(cid, tag),
+        up_tick,
+        down_tick;
     // Don't think these need an ID...
-    var up_tick = create_item(cid, "line", {
+    up_tick = create_item(cid, "line", {
         stroke: "black",
         x1: x - basex,
         y1: up_y - basey,
         x2: x - basex,
         y2: up_y - tick_pix - basey
     });
-    var down_tick = create_item(cid, "line", {
+    down_tick = create_item(cid, "line", {
         stroke: "black",
         x1: x - basex,
         y1: down_y - basey,
@@ -2711,9 +2713,11 @@ function gui_graph_vtick(cid, tag, x, up_y, down_y, tick_pix, basex, basey) {
 }
 
 function gui_graph_htick(cid, tag, y, r_x, l_x, tick_pix, basex, basey) {
-    var g = get_gobj(cid, tag);
+    var g = get_gobj(cid, tag),
+        left_tick,
+        right_tick;
     // Don't think these need an ID...
-    var left_tick = create_item(cid, "line", {
+    left_tick = create_item(cid, "line", {
         stroke: "black",
         x1: l_x - basex,
         y1: y - basey,
@@ -2721,7 +2725,7 @@ function gui_graph_htick(cid, tag, y, r_x, l_x, tick_pix, basex, basey) {
         y2: y - basey,
         id: "tick" + y
     });
-    var right_tick = create_item(cid, "line", {
+    right_tick = create_item(cid, "line", {
         stroke: "black",
         x1: r_x - basex,
         y1: y - basey,
@@ -2733,22 +2737,23 @@ function gui_graph_htick(cid, tag, y, r_x, l_x, tick_pix, basex, basey) {
 }
 
 function gui_graph_tick_label(cid, tag, x, y, text, font, font_size, font_weight, basex, basey) {
-    var g = get_gobj(cid, tag);
-    var svg_text = create_item(cid, "text", {
+    var g = get_gobj(cid, tag),
+        svg_text, text_node;
+    svg_text = create_item(cid, "text", {
         // need a label "y" relative to baseline
         x: x - basex,
         y: y - basey,
         "font-size": font_size,
     });
-
-    var text_node = patchwin[cid].window.document.createTextNode(text);
+    text_node = patchwin[cid].window.document.createTextNode(text);
     svg_text.appendChild(text_node);
     g.appendChild(svg_text);
 }
 
 function gui_canvas_drawredrect(cid, x1, y1, x2, y2) {
-    var svgelem = get_item(cid, "patchsvg");
-    var b = create_item(cid, "rect", {
+    var svgelem = get_item(cid, "patchsvg"),
+        b;
+    b = create_item(cid, "rect", {
         x: x1,
         y: y1,
         width: x2 - x1,
@@ -2780,11 +2785,11 @@ function gui_canvas_deleteredrect(cid) {
 // For clarity, this probably shouldn't be a gobj.  Also, it might be easier to
 // make it a div that lives on top of the patchsvg
 function gui_create_cord_inspector(cid) {
-    var g = get_gobj(cid, "cord_inspector");
-    var ci_rect = create_item(cid, "rect", { id: "cord_inspector_rect" });
-    var ci_poly = create_item(cid, "polygon", { id: "cord_inspector_polygon" });
-    var ci_text = create_item(cid, "text", { id: "cord_inspector_text" });
-    var text_node = patchwin[cid].window.document.createTextNode("");
+    var g = get_gobj(cid, "cord_inspector"),
+        ci_rect = create_item(cid, "rect", { id: "cord_inspector_rect" }),
+        ci_poly = create_item(cid, "polygon", { id: "cord_inspector_polygon" }),
+        ci_text = create_item(cid, "text", { id: "cord_inspector_text" }),
+        text_node = patchwin[cid].window.document.createTextNode("");
     ci_text.appendChild(text_node);
     g.appendChild(ci_rect);
     g.appendChild(ci_poly);
@@ -2792,14 +2797,15 @@ function gui_create_cord_inspector(cid) {
 }
 
 function gui_cord_inspector_update(cid, text, basex, basey, bg_size, y1, y2, moved) {
-    var gobj = get_gobj(cid, "cord_inspector");
+    var gobj = get_gobj(cid, "cord_inspector"),
+        rect = get_item(cid, "cord_inspector_rect"),
+        poly = get_item(cid, "cord_inspector_polygon"),
+        svg_text = get_item(cid, "cord_inspector_text"),
+        polypoints_array;
     gobj.setAttributeNS(null, "transform",
             "translate(" + (basex + 10.5) + "," + (basey + 0.5) + ")");
     gobj.setAttributeNS(null, "pointer-events", "none");
     gobj.classList.remove("flash");
-    var rect = get_item(cid, "cord_inspector_rect");
-    var poly = get_item(cid, "cord_inspector_polygon");
-    var svg_text = get_item(cid, "cord_inspector_text");
     // Lots of fudge factors here, tailored to the current default font size
     configure_item(rect, {
         x: 13,
@@ -2807,8 +2813,8 @@ function gui_cord_inspector_update(cid, text, basex, basey, bg_size, y1, y2, mov
         width: bg_size - basex,
         height: y2 - basey + 10
     });
-    var polypoints_array = [8,0,13,5,13,-5];
-     configure_item(poly, {
+    polypoints_array = [8,0,13,5,13,-5];
+    configure_item(poly, {
         points: polypoints_array.join()
     });
     configure_item(svg_text, {
@@ -2837,10 +2843,9 @@ function gui_cord_inspector_flash(cid, state) {
             ct.classList.remove("flash");
         }
     } else {
-        post("gui_cord_inspector_flash: trying to flash a non-existent cord inspector!");
+        post("gui_cord_inspector_flash: cord inspector doesn't exist!");
     }
 }
-
 
 // Window functions
 
@@ -2899,9 +2904,8 @@ var file_dialog_target;
 function file_dialog(cid, type, target, path) {
     file_dialog_target = target;
     var query_string = (type === "open" ?
-        "openpanel_dialog" : "savepanel_dialog");
-    var d = patchwin[cid].window.document.querySelector("#" + query_string);
-    post("set path to " + path);
+                        "openpanel_dialog" : "savepanel_dialog"),
+        d = patchwin[cid].window.document.querySelector("#" + query_string);
     d.setAttribute("nwworkingdir", path);
     d.click();
 }
@@ -3008,7 +3012,6 @@ exports.open_prefs = open_prefs;
 
 function gui_audio_properties(gfxstub, sys_indevs, sys_outdevs, 
     pd_indevs, pd_inchans, pd_outdevs, pd_outchans, audio_attrs) {
-    
     var attrs = audio_attrs.concat([
         "audio-apis", pd_apilist,
         "sys-indevs", sys_indevs,
@@ -3018,11 +3021,9 @@ function gui_audio_properties(gfxstub, sys_indevs, sys_outdevs,
         "pd-outdevs", pd_outdevs,
         "pd-outchans", pd_outchans
         ]);
-
     //for (var i = 0; i < arguments.length; i++) {
     //    post("arg " + i + " is " + arguments[i]);
     //}
-
     if (dialogwin["prefs"] !== null) {
         dialogwin["prefs"].eval(null,
             "audio_prefs_callback("  +
@@ -3033,7 +3034,6 @@ function gui_audio_properties(gfxstub, sys_indevs, sys_outdevs,
 
 function gui_midi_properties(gfxstub, sys_indevs, sys_outdevs,
     pd_indevs, pd_outdevs, midi_attrs) {
-    
     var attrs = midi_attrs.concat([
         "midi-apis", pd_midiapilist,
         "sys-indevs", sys_indevs,
@@ -3041,12 +3041,10 @@ function gui_midi_properties(gfxstub, sys_indevs, sys_outdevs,
         "pd-indevs", pd_indevs,
         "pd-outdevs", pd_outdevs,
         ]);
-
     //post("got back some midi props...");
     //for (var i = 0; i < arguments.length; i++) {
     //    post("arg " + i + " is " + arguments[i]);
     //}
-
     if (dialogwin["prefs"] !== null) {
         dialogwin["prefs"].eval(null,
             "midi_prefs_callback("  +
@@ -3099,8 +3097,8 @@ function select_text(cid, elem) {
 
 function gui_textarea(cid, tag, type, x, y, max_char_width, text,
     font_size, state) {
-    var range, svg_view;
-    var gobj = get_gobj(cid, tag);
+    var range, svg_view, p,
+        gobj = get_gobj(cid, tag);
     if (state !== 0) {
         // Hide the gobj while we edit.  However, we want the gobj to
         // contribute to the svg's bbox-- that way when the new_object_textentry
@@ -3113,7 +3111,7 @@ function gui_textarea(cid, tag, type, x, y, max_char_width, text,
         // gui_canvas_getscroll, but this seems like the right way to go
         // anyway.)
         configure_item(gobj, { visibility: "hidden" });
-        var p = patchwin[cid].window.document.createElement("p");
+        p = patchwin[cid].window.document.createElement("p");
         configure_item(p, {
             id: "new_object_textentry"
         });
@@ -3145,7 +3143,7 @@ function gui_textarea(cid, tag, type, x, y, max_char_width, text,
         }
     } else {
         configure_item(gobj, { visibility: "normal" });
-        var p = patchwin[cid].window.document.getElementById("new_object_textentry");
+        p = patchwin[cid].window.document.getElementById("new_object_textentry");
         if (p !== null) {
             p.parentNode.removeChild(p);
         }
