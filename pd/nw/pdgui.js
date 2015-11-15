@@ -412,44 +412,15 @@ function gui_canvas_saveas (name, initfile, initdir) {
 }
 
 function saveas_callback(cid, file) {
-    post("tried a saveas, and the file chosen is " + file);
-    var filename = file;
+    var filename = file,
+        directory = path.dirname(filename),
+        basename = path.basename(filename);
     // It probably isn't possible to arrive at the callback with an
     // empty string.  But I've only tested on Debian so far...
     if (filename === null) {
         return;
     }
-    // We don't need to use the codepath below because node-webkit
-    // let's us specify the allowed files extensions.  Lo and behold,
-    // nw just does the "right thing" whether the user types an extension
-    // or not.  This should put us on part with Microsoft Word in the late
-    // 90s.
-    //var lc = filename.toLowerCase();
-    //if (lc.slice(-3) !== '.pd' &&
-    //    lc.slice(-4) !== ".pat" &&
-    //    lc.slice(-4) !== ".mxt") {
-        // remove any other extensions
-    //    filename = filename.slice(0,
-    //        (filename.length - path.extname(filename).length));
-        // add ".pd"
-    //    filename = filename + ".pd";
-    //}
-    // test again after downcasing and maybe adding a ".pd" on the end
-    //if (fs.existsSync(filename)) {
-    //    var reply = patchwin[cid].window.confirm(filename +
-    //        " already exists. Do you want to replace it?");
-    //    if (!reply) {
-    //        return;
-    //    }
-    //}
-    var directory = path.dirname(filename);
-    var basename = path.basename(filename);
     pdsend(cid, "savetofile", enquote(basename), enquote(directory));
-
-    // haven't implemented these last few commands yet...
-    // set untitled_directory $directory
-    // add to recentfiles
-    //::pd_guiprefs::update_recentfiles "$filename" 1
 }
 
 exports.saveas_callback = saveas_callback;
@@ -461,11 +432,12 @@ function menu_saveas(name) {
 exports.menu_saveas = menu_saveas;
 
 function menu_new () {
-    //if { ! [file isdirectory $untitled_directory]} {set untitled_directory $::env(HOME)}
+    // try not to use a global here
     untitled_directory = pwd;
     pdsend("pd filename",
            "Untitled-" + untitled_number,
            enquote(untitled_directory));
+    // I don't think k12_mode works yet. Need to test this.
     if (k12_mode == 1) {
         k12_saveas_on_new = 1;
         pdsend("#N canvas");
@@ -494,11 +466,10 @@ exports.menu_k12_open_demos = menu_k12_open_demos;
 
 
 function menu_open (filenames_string) {
-    post("menu_open " + filenames_string);
-    var file_array = filenames_string.split(";");
-    var length = file_array.length;
-    post("file_array is " + file_array);
-    for (var i = 0; i < length; i++) {
+    var file_array = filenames_string.split(";"),
+        length = file_array.length,
+        i;
+    for (i = 0; i < length; i++) {
         open_file(file_array[i]);
     }
 }
@@ -516,10 +487,12 @@ exports.menu_close = menu_close;
 
 function canvas_menuclose_callback(cid_for_dialog, cid, force) {
     // Hacky-- this should really be dir/filename here instead of
-    // filename/args/dir which is ugly
-    var title = patchwin[cid_for_dialog].window.document.title;
-    var reply = patchwin[cid_for_dialog].window
-        .confirm("Save changes to " + title + "?");
+    // filename/args/dir which is ugly. Also, this should use the
+    // html5 dialog-- or some CSS equivalent-- instead of the
+    // confusing OK/Cancel javascript prompt.
+    var title = patchwin[cid_for_dialog].window.document.title,
+        reply = patchwin[cid_for_dialog].window
+                .confirm("Save changes to " + title + "?");
     if (reply) {
         pdsend(cid_for_dialog + " menusave");
     } else {
@@ -573,11 +546,9 @@ exports.set_app_quitfn = function(quitfn) {
 } 
 
 function open_file(file) {
-    //from tcl...
-    //global pd_opendir pd_guidir pd_nt
-    var directory = path.dirname(file);
-    var basename = path.basename(file);
-    var cyclist;
+    var directory = path.dirname(file),
+        basename = path.basename(file),
+        cyclist;
     if (basename.match(/\.(pat|mxb|help)$/) !=null) {
         post("warning: opening pat|mxb|help not implemented yet");
         if (pd_nt == 0) {
@@ -586,6 +557,8 @@ function open_file(file) {
         } else {
             cyclist = pd_guidir + "/bin/cyclist"
         }
+        //The following is from tcl and still needs to be ported...
+
         //convert Max binary to text .pat
         // The following is tcl code which needs to get converted
         // to javascript...
@@ -607,17 +580,15 @@ function open_file(file) {
     }
 }
 
-// Doesn't work yet... need to figure out how to send command line args
+// This doesn't work yet... need to figure out how to send command line args
 // (files) to be opened by the unique instance 
 function gui_open_files_via_unique(filenames)
 {
-    post("pdtk_open_files_via_unique " + filenames);
+    var i;
     length = filenames.length;
     if (length != 0) {
-        for (var i = 0; i < length; i++) {
-            var file = filenames[i];
-            //post("open_file " + file);
-            open_file(file);
+        for (i = 0; i < length; i++) {
+            open_file(filenames[i]);
         }
     }
 }
@@ -634,7 +605,6 @@ function open_textfile(target) {
 
 // Open a file-- html, text, or Pd.
 function doc_open (dir, basename) {
-    // Just Pd files at the moment... we'll add the others later
     var norm_path = path.normalize(dir);
     if (basename.slice(-4) === ".txt"
         || basename.slice(-2) === ".c") {
@@ -671,13 +641,17 @@ function gui_build_filelist(file) {
 function gui_check_unique (unique) {
     // global appname
     return;
-    var final_filenames = new Array;
-    var startup_dir = pwd;
+    var final_filenames = new Array,
+        startup_dir = pwd,
+        filelist_length,
+        i,
+        file,
+        dir;
     if (unique == 0) {
-        var filelist_length = startup_files.length;
-        for (var i = 0; i < filelist_length; i++) {
-            var file = startup_files[i];
-            var dir;
+        filelist_length = startup_files.length;
+        for (i = 0; i < filelist_length; i++) {
+            file = startup_files[i];
+            dir;
             if (!pathIsAbsolute(file)) {
                 file = fs.join(pwd, file);
             }
@@ -714,8 +688,6 @@ function gui_check_unique (unique) {
 	//        #puts stderr "this is unique instance [tk appname]"
 }
 
-
-
 function gui_startup(version, fontname_from_pd, fontweight_from_pd,
     apilist, midiapilist) {
     console.log("Starting up...");
@@ -730,54 +702,55 @@ function gui_startup(version, fontname_from_pd, fontweight_from_pd,
     pd_fontlist = "";
     untitled_number = 1; // global variable to increment for each new patch
 
-    // From tcl, not sure if needed...
-       // # on Mac OS X, lower the Pd window to the background so patches open on top
-       // if {$pd_nt == 2} { lower . }
-       // # on Windows, raise the Pd window so that it has focused when launched
-       // if {$pd_nt == 1} { raise . }
+    // From tcl, not sure if all of it is still needed...
 
-//    set fontlist ""
-//        if {[info tclversion] >= 8.5} {find_default_font}
-//        set_base_font $fontname_from_pd $fontweight_from_pd
-//        fit_font_into_metrics
+    // # on Mac OS X, lower the Pd window to the background so patches open on top
+    // if {$pd_nt == 2} { lower . }
+    // # on Windows, raise the Pd window so that it has focused when launched
+    // if {$pd_nt == 1} { raise . }
 
-//    # UBUNTU MONO 6 6 8 10 11 14 14 19 22 30
-//        # DEJAVU SANS MONO 6 6 8 9 10 12 14 18 22 29
+    // set fontlist ""
+    // if {[info tclversion] >= 8.5} {find_default_font}
+    //        set_base_font $fontname_from_pd $fontweight_from_pd
+    //        fit_font_into_metrics
 
-//#    foreach i {6 6 8 10 11 14 14 19 22 30} {
-//#        set font [format {{%s} %d %s} $fontname_from_pd $i $fontweight_from_pd]
-//#        set pd_fontlist [linsert $pd_fontlist 100000 $font]
-//#        set width0 [font measure  $font x]
-//#        set height0 [lindex [font metrics $font] 5]
-//#        set fontlist [concat $fontlist $i [font measure  $font x] \
-//#                          [lindex [font metrics $font] 5]]
-//#    }
+    //    # UBUNTU MONO 6 6 8 10 11 14 14 19 22 30
+    //        # DEJAVU SANS MONO 6 6 8 9 10 12 14 18 22 29
 
-//    set tclpatch [info patchlevel]
-//    if {$tclpatch == "8.3.0" || \
-//            $tclpatch == "8.3.1" || \
-//            $tclpatch == "8.3.2" || \
-//            $tclpatch == "8.3.3" } {
-//        set oldtclversion 1
-//    } else {
-//        set oldtclversion 0
-//    }
+    //#    foreach i {6 6 8 10 11 14 14 19 22 30} {
+    //#        set font [format {{%s} %d %s} $fontname_from_pd $i $fontweight_from_pd]
+    //#        set pd_fontlist [linsert $pd_fontlist 100000 $font]
+    //#        set width0 [font measure  $font x]
+    //#        set height0 [lindex [font metrics $font] 5]
+    //#        set fontlist [concat $fontlist $i [font measure  $font x] \
+    //#                          [lindex [font metrics $font] 5]]
+    //#    }
+
+    //    set tclpatch [info patchlevel]
+    //    if {$tclpatch == "8.3.0" || \
+    //            $tclpatch == "8.3.1" || \
+    //            $tclpatch == "8.3.2" || \
+    //            $tclpatch == "8.3.3" } {
+    //        set oldtclversion 1
+    //    } else {
+    //        set oldtclversion 0
+    //    }
     pdsend("pd init", enquote(pwd), "0", font_fixed_metrics);
 
-//    # add the audio and help menus to the Pd window.  We delayed this
-//    # so that we'd know the value of "apilist".
-//    menu_addstd .mbar
+    //    # add the audio and help menus to the Pd window.  We delayed this
+    //    # so that we'd know the value of "apilist".
+    //    menu_addstd .mbar
 
-//    global pd_nt
-//    if {$pd_nt == 2} {
-//        global pd_macdropped pd_macready
-//        set pd_macready 1
-//        foreach file $pd_macdropped {
-//            pd [concat pd open [pdtk_enquote [file tail $file]] \
-//                    [pdtk_enquote  [file dirname $file]] \;]
-//            menu_doc_open [file dirname $file] [file tail $file]
-//        }
-//    }
+    //    global pd_nt
+    //    if {$pd_nt == 2} {
+    //        global pd_macdropped pd_macready
+    //        set pd_macready 1
+    //        foreach file $pd_macdropped {
+    //            pd [concat pd open [pdtk_enquote [file tail $file]] \
+    //                    [pdtk_enquote  [file dirname $file]] \;]
+    //            menu_doc_open [file dirname $file] [file tail $file]
+    //        }
+    //    }
 }
 
 // Global canvas associative arrays (aka javascript objects)
@@ -823,8 +796,8 @@ exports.last_loaded = function () {
 // close a canvas window
 
 function gui_canvas_cursor(cid, pd_event_type) {
-    var patch = get_item(cid, "patchsvg");
-    var c;
+    var patch = get_item(cid, "patchsvg"),
+        c;
     // A quick mapping of events to pointers-- these can
     // be revised later
     switch(pd_event_type) {
@@ -852,8 +825,7 @@ function gui_canvas_cursor(cid, pd_event_type) {
         case "cursor_editmode_resize":
             c = "ew-resize";
             break;
-        case "cursor_editmode_resize_bottom_right":
-            c = "se-resize";
+        case "cursor_editmode_resize_bottom_right": c = "se-resize";
             break;
         case "cursor_scroll":
             c = "all-scroll"; 
@@ -934,7 +906,6 @@ function gui_canvas_new(cid, width, height, geometry, editable, name, dir, dirty
         name, dir, dirty_flag, cargs, null);
     // initialize variable to reflect that this window has been opened
     loaded[cid] = 1;
-    //#pdtk_standardkeybindings $cid.c
 }
 
 /* This gets sent to Pd to trigger each object on the canvas
@@ -946,10 +917,10 @@ function canvas_map(name) {
 }
 
 function gui_canvas_erase_all_gobjs(cid) {
-    var top = get_item(cid, "patchsvg");
-    var elem;
-    while (elem = top.firstChild) {
-        top.removeChild(elem);
+    var svg_elem = get_item(cid, "patchsvg"),
+        elem;
+    while (elem = svg_elem.firstChild) {
+        svg_elem.removeChild(elem);
     }
 }
 
@@ -1121,16 +1092,16 @@ function configure_item(item, attributes) {
     // draw_vis from g_template sends attributes
     // as a ["attr1",val1, "attr2", val2, etc.] array,
     // so we check for that here
-    var value;
+    var value, i, attr;
     if (Array.isArray(attributes)) {
         // we should check to make sure length is even here...
-        for (var i = 0; i < attributes.length; i+=2) {
+        for (i = 0; i < attributes.length; i+=2) {
             value = attributes[i+1];
             item.setAttributeNS(null, attributes[i],
                 Array.isArray(value) ? value.join(" "): value); 
         }
     } else {
-        for (var attr in attributes) {
+        for (attr in attributes) {
             if (attributes.hasOwnProperty(attr)) {
                 item.setAttributeNS(null, attr, attributes[attr]);
             }
@@ -1149,28 +1120,29 @@ function add_gobj_to_svg(svg, gobj) {
 }
 
 // Most of these map either to pd.tk procs, or in some cases
-// Tk canvas subcommands
+// tk canvas subcommands
 function gui_text_create_gobj(cid, tag, type, xpos, ypos, is_toplevel) {
-    var svg = get_item(cid, "patchsvg"); // "patchsvg" is id for the svg element
-    var transform_string = "matrix(1,0,0,1," + xpos + "," + ypos + ")";
-    var g = create_item(cid, "g", {
+    var svg = get_item(cid, "patchsvg"), // id for the svg element
+        transform_string = "matrix(1,0,0,1," + xpos + "," + ypos + ")",
+        g;
+    g = create_item(cid, "g", {
             id: tag + "gobj",
             transform: transform_string,
             class: type + (is_toplevel !== 0 ? "" : " gop"),
             "shape-rendering": "crispEdges"
     });
     add_gobj_to_svg(svg, g);
-    
     // hm... why returning g and not the return value of appendChild?
     return g;
 }
 
 function gui_text_drawborder(cid, tag, bgcolor, isbroken, x1, y1, x2, y2) {
-    var g = get_gobj(cid, tag);
+    var g = get_gobj(cid, tag),
+        rect;
     // isbroken means either
     //     a) the object couldn't create or
     //     b) the box is empty
-    var rect = create_item(cid, "rect", {
+    rect = create_item(cid, "rect", {
         width: x2 - x1,
         height: y2 - y1,
         "shape-rendering": "crispEdges",
@@ -1184,7 +1156,7 @@ function gui_text_drawborder(cid, tag, bgcolor, isbroken, x1, y1, x2, y2) {
 
 function gui_canvas_drawio(cid, parenttag, tag, x1, y1, x2, y2, basex, basey,
     type, i, is_signal, is_iemgui) {
-    var xlet_class, xlet_id, g = get_gobj(cid, parenttag);
+    var xlet_class, xlet_id, rect, g = get_gobj(cid, parenttag);
     if (is_iemgui) {
         xlet_class = "xlet_iemgui";
         // We have an inconsistency here.  We're setting the tag using
@@ -1200,7 +1172,7 @@ function gui_canvas_drawio(cid, parenttag, tag, x1, y1, x2, y2, basex, basey,
         xlet_class = "xlet_control";
         xlet_id = tag + type + i;
     }
-    var rect = create_item(cid, "rect", {
+    rect = create_item(cid, "rect", {
         width: x2 - x1,
         height: y2 - y1,
         x: x1 - basex,
@@ -1263,15 +1235,16 @@ function gui_highlight_io(cid, tag) {
 }
 
 function gui_message_drawborder(cid,tag,width,height) {
-    var g = get_gobj(cid, tag);
-    var p_array = [0,0,
+    var g = get_gobj(cid, tag),
+        p_array = [0,0,
                    width+4, 0,
                    width, 4,
                    width, height-4,
                    width+4, height,
                    0, height,
-                   0, 0];
-    var polygon = create_item(cid, "polygon", {
+                   0, 0],
+        polygon;
+    polygon = create_item(cid, "polygon", {
         points: p_array.join(),
         fill: "none",
         stroke: "black",
@@ -1291,9 +1264,9 @@ function gui_message_flash(cid, tag, state) {
 }
 
 function gui_message_redraw_border(cid,tag,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14) {
-    var g = get_gobj(cid, tag);
-    var b = g.querySelector(".border");
-    var p_array = [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14];
+    var g = get_gobj(cid, tag),
+        b = g.querySelector(".border"),
+        p_array = [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14];
     configure_item(b, {
         points: p_array.join(" "),
     });
@@ -1301,9 +1274,10 @@ function gui_message_redraw_border(cid,tag,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p1
 
 
 function gui_atom_drawborder(cid,tag,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12) {
-    var p_array = [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12];
-    var g = get_gobj(cid, tag);
-    var polygon = create_item(cid, "polygon", {
+    var p_array = [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12],
+        g = get_gobj(cid, tag),
+        polygon;
+    polygon = create_item(cid, "polygon", {
         points: p_array.join(" "),
         fill: "none",
         stroke: "gray",
@@ -1316,17 +1290,18 @@ function gui_atom_drawborder(cid,tag,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12) {
 
 // draw a patch cord
 function gui_canvas_line(cid,tag,type,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10) {
-    var svg = get_item(cid, "patchsvg");
+    var svg = get_item(cid, "patchsvg"),
     // xoff is for making sure straight lines are crisp.  An SVG stroke
     // straddles the coordinate, with 1/2 the width on each side.
     // Control cords are 1 px wide, which requires a 0.5 x-offset to align
     // the stroke to the pixel grid.
     // Signal cords are 2 px wide = 1px on each side-- no need for x-offset.
-    var xoff = type === 'signal' ? 0 : 0.5;
-    var d_array = ["M", p1 + xoff, p2 + xoff,
+        xoff = type === 'signal' ? 0 : 0.5,
+        d_array = ["M", p1 + xoff, p2 + xoff,
                    "Q", p3 + xoff, p4 + xoff, p5 + xoff, p6 + xoff,
-                   "Q", p7 + xoff, p8 + xoff, p9 + xoff, p10 + xoff];
-    var path = create_item(cid, "path", {
+                   "Q", p7 + xoff, p8 + xoff, p9 + xoff, p10 + xoff],
+        path;
+    path = create_item(cid, "path", {
         d: d_array.join(" "),
         fill: "none",
         "shape-rendering": "optimizeSpeed",
@@ -1360,17 +1335,17 @@ function gui_canvas_delete_line(cid, tag) {
     if (line !== null) {
         line.parentNode.removeChild(line);
     } else {
-        post("canvas_delete_line: something is borked because the line doesn't exist");
+        post("canvas_delete_line: error: the line doesn't exist");
     }
 }
 
 function gui_canvas_updateline(cid,tag,x1,y1,x2,y2,yoff) {
-    var halfx = parseInt((x2 - x1)/2);
-    var halfy = parseInt((y2 - y1)/2);
-    var cord = get_item(cid, tag);
+    var halfx = parseInt((x2 - x1)/2),
+        halfy = parseInt((y2 - y1)/2),
+        cord = get_item(cid, tag),
     // see comment in gui_canvas_line about xoff
-    var xoff= cord.classList.contains("signal") ? 0: 0.5;
-    var d_array = ["M",x1+xoff,y1+xoff,
+        xoff= cord.classList.contains("signal") ? 0: 0.5,
+        d_array = ["M",x1+xoff,y1+xoff,
                    "Q",x1+xoff,y1+yoff+xoff,x1+halfx+xoff,y1+halfy+xoff,
                    "Q",x2+xoff,y2-yoff+xoff,x2+xoff,y2+xoff];
     configure_item(cord, { d: d_array.join(" ") });
@@ -1392,19 +1367,19 @@ function text_line_height_kludge(fontsize, fontsize_type) {
 }
 
 function text_to_tspans(canvasname, svg_text, text) {
-    var lines, i, len, tspan, fontsize;
+    var lines, i, len, tspan, fontsize, text_node;
     lines = text.split("\n"); 
     len = lines.length;
     // Get fontsize (minus the trailing "px")
     fontsize = svg_text.getAttribute("font-size").slice(0, -2);
-
     for (i = 0; i < len; i++) {
         tspan = create_item(canvasname, "tspan", {
             dy: i == 0 ? 0 : text_line_height_kludge(+fontsize, "gui") + "px",
             x: 0
         });
         // find a way to abstract away the canvas array and the DOM here
-        var text_node = patchwin[canvasname].window.document.createTextNode(lines[i]);
+        text_node = patchwin[canvasname].window.document
+                    .createTextNode(lines[i]);
         tspan.appendChild(text_node);
         svg_text.appendChild(tspan);
     }
@@ -1419,15 +1394,14 @@ function text_to_tspans(canvasname, svg_text, text) {
 function gobj_fontsize_kludge(fontsize, return_type) {
     // These were tested on an X60 running Trisquel (based
     // on Ubuntu)
-    var fontmap = {
-        // pd_size: gui_size
-        8: 8.33,
-        12: 11.65,
-        16: 16.65,
-        24: 23.3,
-        36: 36.6
-    };
-    var ret, prop;
+    var ret, prop,
+        fontmap = {
+            // pd_size: gui_size
+            8: 8.33,
+            12: 11.65,
+            16: 16.65,
+            24: 23.3,
+            36: 36.6 };
     if (return_type === "gui") {
         ret = fontmap[fontsize];
         return ret ? ret : fontsize;
@@ -1468,9 +1442,10 @@ function gobj_font_y_kludge(fontsize) {
 }
 
 function gui_text_new(canvasname, myname, type, isselected, left_margin, font_height, text, font) {
-    var lines, i, len, tspan;
-    var g = get_gobj(canvasname, myname);
-    var svg_text = create_item(canvasname, "text", {
+    var lines, i, len, tspan,
+        g = get_gobj(canvasname, myname),
+        svt_text;
+    svg_text = create_item(canvasname, "text", {
         // Maybe it's just me, but the svg spec's explanation of how
         // text x/y and tspan x/y interact is difficult to understand.
         // So here we just translate by the right amount for the left-margin,
@@ -1485,20 +1460,17 @@ function gui_text_new(canvasname, myname, type, isselected, left_margin, font_he
         "font-weight": "normal",
         id: myname + "text"
     });
-
     // trim off any extraneous leading/trailing whitespace. Because of
     // the way binbuf_gettext works we almost always have a trailing
     // whitespace.
     text = text.trim();
     // fill svg_text with tspan content by splitting on '\n'
     text_to_tspans(canvasname, svg_text, text);
-
     if (g !== null) {
         g.appendChild(svg_text);
     } else {
         post("gui_text_new: can't find parent group " + myname);
     }
-
     if (isselected) {
         gui_gobj_select(canvasname, myname);
     }
@@ -1535,9 +1507,9 @@ function gui_text_set (cid, tag, text) {
 }
 
 function gui_text_redraw_border(cid, tag, x1, y1, x2, y2) {
-    var i;
-    var g = get_gobj(cid, tag);
-    var b = g.querySelectorAll(".border");
+    var g = get_gobj(cid, tag),
+        b = g.querySelectorAll(".border"),
+        i;
     for (i = 0; i < b.length; b++) {
         configure_item(b[i], {
             width: x2 - x1,
@@ -1565,8 +1537,9 @@ function gui_gobj_deselect(cid, tag) {
 }
 
 function gui_text_select_color(cid, tag) {
-// nb: this is handled in css now
-return;
+    // nb: this is handled in css now-- we should do a final check to make
+    // sure this isn't called, then get rid of it.
+    return;
     var rect = get_item(cid, tag + "border");
     if (rect !== null) {
         configure_item(rect, {
@@ -1610,8 +1583,8 @@ function textentry_displace(t, dx, dy) {
 }
 
 function gui_canvas_displace_withtag(name, dx, dy) {
-    var pwin = patchwin[name], i, textentry;
-    var ol = pwin.window.document.getElementsByClassName("selected");
+    var pwin = patchwin[name], i, textentry,
+        ol = pwin.window.document.getElementsByClassName("selected");
     for (i = 0; i < ol.length; i++) {
         elem_displace(ol[i], dx, dy);
         //var elem = ol[i].transform.baseVal.getItem(0);
@@ -1620,7 +1593,8 @@ function gui_canvas_displace_withtag(name, dx, dy) {
         //elem.matrix.e = new_tx;
         //elem.matrix.f = new_ty;
     }
-    textentry = patchwin[name].window.document.getElementById("new_object_textentry");
+    textentry = patchwin[name].window.document
+                .getElementById("new_object_textentry");
     if (textentry !== null) {
         textentry_displace(textentry, dx, dy); 
     }
@@ -1630,13 +1604,14 @@ function gui_canvas_displace_withtag(name, dx, dy) {
 }
 
 function gui_create_selection_rectangle(cid, x1, y1, x2, y2) {
-    var svg = get_item(cid, "patchsvg");
-    var points_array = [x1 + 0.5, y1 + 0.5,
+    var svg = get_item(cid, "patchsvg"),
+        rect,
+        points_array = [x1 + 0.5, y1 + 0.5,
                         x2 + 0.5, y1 + 0.5,
                         x2 + 0.5, y2 + 0.5,
                         x1 + 0.5, y2 + 0.5
     ];
-    var rect = create_item(cid, "polygon", {
+    rect = create_item(cid, "polygon", {
         points: points_array.join(" "),
         fill: "none",
         "shape-rendering": "optimizeSpeed",
@@ -1648,9 +1623,9 @@ function gui_create_selection_rectangle(cid, x1, y1, x2, y2) {
 }
 
 function gui_move_selection_rectangle(cid, x1, y1, x2, y2) {
-    var points_array = [x1 + 0.5, y1 + 0.5, x2 + 0.5, y1 + 0.5,
-                  x2 + 0.5, y2 + 0.5, x1 + 0.5, y2 + 0.5];
-    var rect = get_item(cid, "selection_rectangle");
+    var rect = get_item(cid, "selection_rectangle"),
+        points_array = [x1 + 0.5, y1 + 0.5, x2 + 0.5, y1 + 0.5,
+                        x2 + 0.5, y2 + 0.5, x1 + 0.5, y2 + 0.5];
     configure_item(rect, { points: points_array });
 }
 
@@ -1662,16 +1637,16 @@ function gui_hide_selection_rectangle(cid) {
 // iemguis
 
 function gui_create_bng(cid, tag, cx, cy, radius) {
-    var g = get_gobj(cid, tag);
-    var circle = create_item(cid, "circle", {
-        cx: cx,
-        cy: cy,
-        r: radius,
-        "shape-rendering": "auto",
-        fill: "none",
-        stroke: "black",
-        "stroke-width": 1,
-        id: tag + "button"
+    var g = get_gobj(cid, tag),
+        circle = create_item(cid, "circle", {
+            cx: cx,
+            cy: cy,
+            r: radius,
+            "shape-rendering": "auto",
+            fill: "none",
+            stroke: "black",
+            "stroke-width": 1,
+            id: tag + "button"
     });
     g.appendChild(circle);
 }
@@ -1682,11 +1657,13 @@ function gui_bng_flash(cid, tag, color) {
 }
 
 function gui_create_toggle(cid, tag, color, width, state, p1,p2,p3,p4,p5,p6,p7,p8,basex,basey) {
-    var g = get_gobj(cid, tag);
-    var points_array = [p1 - basex, p2 - basey,
-                        p3 - basex, p4 - basey
+    var g = get_gobj(cid, tag),
+        points_array,
+        cross1, cross2;
+    points_array = [p1 - basex, p2 - basey,
+                    p3 - basex, p4 - basey
     ];
-    var cross1 = create_item(cid, "polyline", {
+    cross1 = create_item(cid, "polyline", {
         points: points_array.join(" "),
         stroke: color,
         fill: "none",
@@ -1694,11 +1671,10 @@ function gui_create_toggle(cid, tag, color, width, state, p1,p2,p3,p4,p5,p6,p7,p
         display: state ? "inline" : "none",
         "stroke-width": width
     });
-
     points_array = [p5 - basex, p6 - basey,
                     p7 - basex, p8 - basey
     ];
-    var cross2 = create_item(cid, "polyline", {
+    cross2 = create_item(cid, "polyline", {
         points: points_array.join(" "),
         stroke: color,
         fill: "none",
@@ -1711,11 +1687,13 @@ function gui_create_toggle(cid, tag, color, width, state, p1,p2,p3,p4,p5,p6,p7,p
 }
 
 function gui_toggle_resize_cross(cid,tag,w,p1,p2,p3,p4,p5,p6,p7,p8,basex,basey) {
-    var g = get_gobj(cid, tag);
-    var points_array = [p1 - basex, p2 - basey,
-                        p3 - basex, p4 - basey
+    var g = get_gobj(cid, tag),
+        points_array,
+        cross1, cross2;
+    points_array = [p1 - basex, p2 - basey,
+                    p3 - basex, p4 - basey
     ];
-    var cross1 = get_item(cid, tag + "cross1");
+    cross1 = get_item(cid, tag + "cross1");
     configure_item(cross1, {
         points: points_array.join(" "),
         "stroke-width": w
@@ -1724,7 +1702,7 @@ function gui_toggle_resize_cross(cid,tag,w,p1,p2,p3,p4,p5,p6,p7,p8,basex,basey) 
     points_array = [p5 - basex, p6 - basey,
                     p7 - basex, p8 - basey
     ];
-    var cross2 = get_item(cid, tag + "cross2");
+    cross2 = get_item(cid, tag + "cross2");
     configure_item(cross2, {
         points: points_array.join(" "),
         "stroke-width": w
@@ -1732,8 +1710,8 @@ function gui_toggle_resize_cross(cid,tag,w,p1,p2,p3,p4,p5,p6,p7,p8,basex,basey) 
 }
 
 function gui_toggle_update(cid, tag, state, color) {
-    var cross1 = get_item(cid, tag + "cross1");
-    var cross2 = get_item(cid, tag + "cross2");
+    var cross1 = get_item(cid, tag + "cross1"),
+        cross2 = get_item(cid, tag + "cross2");
     if (!!state) {
         configure_item(cross1, { display: "inline", stroke: color });
         configure_item(cross2, { display: "inline", stroke: color });
@@ -1746,17 +1724,19 @@ function gui_toggle_update(cid, tag, state, color) {
 // Todo: send fewer parameters from c
 function gui_create_numbox(width,cid,tag,bgcolor,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,basex,basey,half, is_toplevel) {
     // numbox doesn't have a standard iemgui border, so we must create its gobj manually
-    var g = gui_text_create_gobj(cid, tag, "iemgui", basex, basey, is_toplevel)
-    var data_array = ["M", p1 - basex, p2 - basey,
-                      "L", p3 - basex, p4 - basey,
-                           p5 - basex, p6 - basey,
-                           p7 - basex, p8 - basey,
-                           p9 - basex, p10 - basey,
-                      "z",
-                      "L", basex - basex, basey - basey,
-                           half, half,
-                           p9 - basex, p10 - basey];
-    var border = create_item(cid, "path", {
+    var g = gui_text_create_gobj(cid, tag, "iemgui", basex, basey, is_toplevel),
+        data_array,
+        border;
+    data_array = ["M", p1 - basex, p2 - basey,
+                  "L", p3 - basex, p4 - basey,
+                       p5 - basex, p6 - basey,
+                       p7 - basex, p8 - basey,
+                       p9 - basex, p10 - basey,
+                  "z",
+                  "L", basex - basex, basey - basey,
+                       half, half,
+                       p9 - basex, p10 - basey];
+    border = create_item(cid, "path", {
         d: data_array.join(" "),
         fill: bgcolor,
         stroke: "black",
@@ -1768,30 +1748,30 @@ function gui_create_numbox(width,cid,tag,bgcolor,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,
 }
 
 function gui_numbox_drawtext(cid,tag,text,font_size,color,xpos,ypos,basex,basey) {
-    var g = get_gobj(cid, tag);
-    var svg_text = create_item(cid, "text", {
-        x: xpos - basex,
-        y: ypos - basey + 5,
-        "font-size": font_size,
-        fill: color,
-        id: tag + "text"
-    });
-
-    var text_node = patchwin[cid].window.document.createTextNode(text);
+    var g = get_gobj(cid, tag),
+        svg_text = create_item(cid, "text", {
+            x: xpos - basex,
+            y: ypos - basey + 5,
+            "font-size": font_size,
+            fill: color,
+            id: tag + "text"
+        }),
+        text_node = patchwin[cid].window.document.createTextNode(text);
     svg_text.appendChild(text_node);
     g.appendChild(svg_text);
 }
 
 function gui_update_numbox(cid, tag, fcolor, bgcolor, font_name, font_size, font_weight) {
-    var b = get_item(cid, tag + "border");
-    var text = get_item(cid, tag + "text");
+    var b = get_item(cid, tag + "border"),
+        text = get_item(cid, tag + "text");
     configure_item(b, { fill: bgcolor });
     configure_item(text, { fill: fcolor, "font-size": font_size });
 }
 
 function gui_create_slider(cid,tag,color,p1,p2,p3,p4,basex, basey) {
-    var g = get_gobj(cid, tag);
-    var indicator = create_item(cid, "line", {
+    var g = get_gobj(cid, tag),
+        indicator;
+    indicator = create_item(cid, "line", {
         x1: p1 - basex,
         y1: p2 - basey,
         x2: p3 - basex,
@@ -1823,8 +1803,9 @@ function gui_slider_indicator_color(cid, tag, color) {
 }
 
 function gui_create_radio(cid,tag,p1,p2,p3,p4,i,basex,basey) {
-    var g = get_gobj(cid, tag);
-    var cell = create_item(cid, "line", {
+    var g = get_gobj(cid, tag),
+        cell;
+    cell = create_item(cid, "line", {
         x1: p1 - basex,
         y1: p2 - basey,
         x2: p3 - basex,
@@ -1839,8 +1820,9 @@ function gui_create_radio(cid,tag,p1,p2,p3,p4,i,basex,basey) {
 }
 
 function gui_create_radio_buttons(cid,tag,color,p1,p2,p3,p4,basex,basey,i,state) {
-    var g = get_gobj(cid, tag);
-    var b = create_item(cid, "rect", {
+    var g = get_gobj(cid, tag),
+        b;
+    b = create_item(cid, "rect", {
         x: p1 - basex,
         y: p2 - basey,
         width: p3 - p1,
@@ -1854,8 +1836,8 @@ function gui_create_radio_buttons(cid,tag,color,p1,p2,p3,p4,basex,basey,i,state)
 }
 
 function gui_radio_button_coords(cid, tag, x1, y1, xi, yi, i, s, d, orient) {
-    var button = get_item(cid, tag + "button_" + i);
-    var cell = get_item(cid, tag + "cell_" + i);
+    var button = get_item(cid, tag + "button_" + i),
+        cell = get_item(cid, tag + "cell_" + i);
     // the line to draw the cell for i=0 doesn't exist. Probably was not worth
     // the effort, but it's easier just to check for that here atm.
     if (i > 0) {
@@ -1875,22 +1857,21 @@ function gui_radio_button_coords(cid, tag, x1, y1, xi, yi, i, s, d, orient) {
 }
 
 function gui_radio_update(cid,tag,bgcolor,prev,next) {
-    var prev = get_item(cid, tag + "button_" + prev);
-    var next = get_item(cid, tag + "button_" + next);
+    var prev = get_item(cid, tag + "button_" + prev),
+        next = get_item(cid, tag + "button_" + next);
     configure_item(prev, { display: "none", fill: bgcolor, stroke: bgcolor });
     configure_item(next, { display: "inline", fill: bgcolor, stroke: bgcolor });
 }
 
 function gui_create_vumeter_text(cid,tag,color,xpos,ypos,text,index,basex,basey) {
-    var g = get_gobj(cid, tag);
-    var svg_text = create_item(cid, "text", {
-        x: xpos - basex,
-        y: ypos - basey,
-        //  font-size: font);
-        id: tag + "text_" + index
-    });
-
-    var text_node = patchwin[cid].window.document.createTextNode(text);
+    var g = get_gobj(cid, tag),
+        svg_text = create_item(cid, "text", {
+            x: xpos - basex,
+            y: ypos - basey,
+            //  font-size: font);
+            id: tag + "text_" + index
+        }),
+        text_node = patchwin[cid].window.document.createTextNode(text);
     svg_text.appendChild(text_node);
     g.appendChild(svg_text);
 }
@@ -1925,8 +1906,9 @@ function gui_erase_vumeter_text(cid, tag, i) {
 }
 
 function gui_create_vumeter_steps(cid,tag,color,p1,p2,p3,p4,width,index,basex,basey,i) {
-    var g = get_gobj(cid, tag);
-    var l = create_item(cid, "line", {
+    var g = get_gobj(cid, tag),
+        l;
+    l = create_item(cid, "line", {
         x1: p1 - basex,
         y1: p2 - basey,
         x2: p3 - basex,
@@ -1954,8 +1936,9 @@ function gui_update_vumeter_step_coords(cid,tag,i,x1,y1,x2,y2,basex,basey) {
 }
 
 function gui_create_vumeter_rect(cid,tag,color,p1,p2,p3,p4,basex,basey) {
-    var g = get_gobj(cid, tag);
-    var rect = create_item(cid, "rect", {
+    var g = get_gobj(cid, tag),
+        rect;
+    rect = create_item(cid, "rect", {
         x: p1 - basex,
         y: p2 - basey,
         width: p3 - p1,
@@ -1985,8 +1968,9 @@ function gui_update_vumeter_peak(cid, tag, width) {
 }
 
 function gui_create_vumeter_peak(cid,tag,color,p1,p2,p3,p4,width,basex,basey) {
-    var g = get_gobj(cid, tag);
-    var line = create_item(cid, "line", {
+    var g = get_gobj(cid, tag),
+        line;
+    line = create_item(cid, "line", {
         x1: p1 - basex,
         y1: p2 - basey,
         x2: p3 - basex,
@@ -2022,8 +2006,9 @@ function gui_vumeter_update_peak(cid,tag,color,p1,p2,p3,p4,basex,basey) {
 
 // Think about merging with gui_text_drawborder
 function gui_iemgui_drawborder(cid, tag, bgcolor, x1, y1, x2, y2) {
-    var g = get_gobj(cid, tag);
-    var rect = create_item(cid, "rect", {
+    var g = get_gobj(cid, tag),
+        rect;
+    rect = create_item(cid, "rect", {
         width: x2 - x1,
         height: y2 - y1,
         fill: bgcolor,
@@ -2042,8 +2027,8 @@ function gui_iemgui_base_color(cid, tag, color) {
 }
 
 function gui_iemgui_move_and_resize(cid, tag, x1, y1, x2, y2) {
-    var gobj = get_gobj(cid, tag);
-    var item = gobj.querySelector(".border");
+    var gobj = get_gobj(cid, tag),
+        item = gobj.querySelector(".border");
     elem_move(gobj, x1, y1);
     configure_item(item, {
         width: x2 - x1,
@@ -2094,8 +2079,9 @@ function iemgui_fontfamily(name) {
 
 function gui_iemgui_label_new(cid, tag, x, y, color, text, fontname, fontweight,
     fontsize) {
-    var g = get_gobj(cid, tag);
-    var svg_text = create_item(cid, "text", {
+    var g = get_gobj(cid, tag),
+        svg_text, text_node;
+    svg_text = create_item(cid, "text", {
         // x and y need to be relative to baseline instead of nw anchor
         x: x,
         y: y,
@@ -2118,10 +2104,9 @@ function gui_iemgui_label_new(cid, tag, x, y, color, text, fontname, fontweight,
             iemgui_font_height(fontname, fontsize) / 2 + ")",
         id: tag + "label"
     });
-    var text_node = patchwin[cid].window.document.createTextNode(text);
+    text_node = patchwin[cid].window.document.createTextNode(text);
     svg_text.appendChild(text_node);
     g.appendChild(svg_text);
-    var foo = patchwin[cid].window.document.getElementById(tag + "label");
 }
 
 function gui_iemgui_label_set(cid, tag, text) {
@@ -2163,7 +2148,8 @@ function gui_iemgui_label_font(cid, tag, fontname, fontweight, fontsize) {
 }
 
 function gui_create_mycanvas(cid,tag,color,x1,y1,x2_vis,y2_vis,x2,y2) {
-    var rect_vis = create_item(cid,"rect", {
+    var rect_vis, rect, g;
+    rect_vis = create_item(cid,"rect", {
         width: x2_vis - x1,
         height: y2_vis - y1,
         fill: color,
@@ -2174,7 +2160,7 @@ function gui_create_mycanvas(cid,tag,color,x1,y1,x2_vis,y2_vis,x2,y2) {
 
     // we use a drag_handle-- unlike a 'border' it takes
     // the same color as the visible rectangle when deselected
-    var rect = create_item(cid,"rect", {
+    rect = create_item(cid,"rect", {
         width: x2 - x1,
         height: y2 - y1,
         fill: "none",
@@ -2183,20 +2169,20 @@ function gui_create_mycanvas(cid,tag,color,x1,y1,x2_vis,y2_vis,x2,y2) {
         "class": "border mycanvas_border"
         }
     );
-    var g = get_gobj(cid,tag);
+    g = get_gobj(cid,tag);
     g.appendChild(rect_vis);
     g.appendChild(rect);
 }
 
 function gui_update_mycanvas(cid, tag, color, selected) {
-    var r = get_item(cid, tag + "rect");
-    var h = get_item(cid, tag + "drag_handle");
+    var r = get_item(cid, tag + "rect"),
+        h = get_item(cid, tag + "drag_handle");
     configure_item(r, { fill: color, stroke: color });
 }
 
 function gui_mycanvas_coords(cid, tag, vis_width, vis_height, select_width, select_height) {
-    var r = get_item(cid, tag + "rect");
-    var h = get_item(cid, tag + "drag_handle");
+    var r = get_item(cid, tag + "rect"),
+        h = get_item(cid, tag + "drag_handle");
     configure_item(r, { width: vis_width, height: vis_height });
     configure_item(h, { width: select_width, height: select_height });
 }
@@ -2211,7 +2197,11 @@ function gui_create_scalar(cid, tag, isselected, t1, t2, t3, t4, t5, t6,
     is_toplevel) {
     // we should probably use create_gobj here, but we"re doing some initial 
     // scaling that normal gobjs don't need...
-    var svg = get_item(cid, "patchsvg"); // id for the svg in the DOM
+    var svg = get_item(cid, "patchsvg"), // id for the svg in the DOM
+        matrix,
+        transform_string,
+        g,
+        selection_rect;
     // Normally put objects on half-pixels to make them crisp, but if we create
     // a scalar in an object box we already did that. This unfortunately
     // creates a 0.5 pix discrepancy between scalars created in object boxes
@@ -2219,9 +2209,9 @@ function gui_create_scalar(cid, tag, isselected, t1, t2, t3, t4, t5, t6,
     // value of "crispEdges" in the places where it matters...
     t5 += 0.5;
     t6 += 0.5;
-    var matrix = [t1,t2,t3,t4,t5,t6];
-    var transform_string = "matrix(" + matrix.join() + ")";
-    var g = create_item(cid, "g", {
+    matrix = [t1,t2,t3,t4,t5,t6];
+    transform_string = "matrix(" + matrix.join() + ")";
+    g = create_item(cid, "g", {
             id: tag + "gobj",
             transform: transform_string,
     });
@@ -2234,7 +2224,7 @@ function gui_create_scalar(cid, tag, isselected, t1, t2, t3, t4, t5, t6,
     // Let's make a selection rect... but we can't make it
     // a child of the gobj group because the getrect fn gives
     // us a bbox in the canvas coord system
-    var selection_rect = create_item(cid, "rect", {
+    selection_rect = create_item(cid, "rect", {
         //id: tag + "selection_rect",
         class: "border",
         display: "none",
@@ -2270,8 +2260,8 @@ function gui_scalar_draw_select_rect(cid, tag, state, x1, y1, x2, y2, basex, bas
     // Finally, we have this awful display attribute toggling in css
     // for selected borders because somehow calling properties on a graph
     // triggers this function.  I have no idea why it does that.
-    var g = get_gobj(cid, tag);
-    var b = g.querySelector(".border");
+    var g = get_gobj(cid, tag),
+        b = g.querySelector(".border");
     configure_item(b, {
         x: (x1 - basex),
         y: (y1 - basey),
@@ -2281,27 +2271,29 @@ function gui_scalar_draw_select_rect(cid, tag, state, x1, y1, x2, y2, basex, bas
 }
 
 function gui_create_scalar_group(cid, tag, parent_tag, attr_array) {
-    var parent = get_item(cid, parent_tag);
+    var parent_elem = get_item(cid, parent_tag),
+        g;
     if (attr_array === undefined) {
         attr_array = [];
     }
     attr_array.push("id", tag);
-    var g = create_item(cid, "g", attr_array);
-    parent.appendChild(g);
+    g = create_item(cid, "g", attr_array);
+    parent_elem.appendChild(g);
     return g; 
 }
 
 function gui_scalar_configure_gobj(cid, tag, isselected, t1, t2, t3, t4, t5, t6) {
-    var gobj = get_gobj(cid, tag);
-    var matrix = [t1,t2,t3,t4,t5,t6];
-    var transform_string = "matrix(" + matrix.join() + ")";
+    var gobj = get_gobj(cid, tag),
+        matrix = [t1,t2,t3,t4,t5,t6],
+        transform_string = "matrix(" + matrix.join() + ")";
     configure_item(gobj, { transform: transform_string });
 }
 
 function gui_draw_vis(cid, type, attr_array, tag_array) {
-    var g = get_item(cid, tag_array[0]);
+    var g = get_item(cid, tag_array[0]),
+        item;
     attr_array.push("id", tag_array[1]);
-    var item = create_item(cid, type, attr_array);
+    item = create_item(cid, type, attr_array);
     g.appendChild(item);
 }
 
