@@ -328,6 +328,13 @@ Everything else: (A [x] means we've fixed it)
 [ ] fix the Next Window/Previous Window keybindings. For some reason they
     don't work.
 [ ] unnecessary scrollbars appear when many patches are opened at once.
+[ ] some menuitem shortcuts don't pass their events on to the dom, while
+    others do. I think it happens when a double-modifier has keys in common
+    with a single-modifier. Example: <ctrl-shift-v> creates a vsl, but the
+    key gets sent to Pd. However, <ctrl-shift-h> creates an hsl, and
+    does _not_ send a key to Pd. Since <ctrl-v> is bound to "paste" and
+    <ctrl-h> isn't bound to anything, that may somehow be causing an
+    inconsistency.
 
 Crashers
 --------
