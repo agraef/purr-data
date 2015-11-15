@@ -1444,7 +1444,7 @@ function gobj_font_y_kludge(fontsize) {
 function gui_text_new(canvasname, myname, type, isselected, left_margin, font_height, text, font) {
     var lines, i, len, tspan,
         g = get_gobj(canvasname, myname),
-        svt_text;
+        svg_text;
     svg_text = create_item(canvasname, "text", {
         // Maybe it's just me, but the svg spec's explanation of how
         // text x/y and tspan x/y interact is difficult to understand.
