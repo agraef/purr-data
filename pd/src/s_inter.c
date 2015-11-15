@@ -458,9 +458,9 @@ static int socketreceiver_doread(t_socketreceiver *x)
             binbuf_text(inbinbuf, messbuf, bp - messbuf);
             if (sys_debuglevel & DEBUG_MESSDOWN) {
                 if (stderr_isatty)
-                    fprintf(stderr,"<- \e[0;1;36m%.*s\e[0m\n", bp - messbuf, messbuf);
+                    fprintf(stderr,"\n<- \e[0;1;36m%.*s\e[0m", bp - messbuf, messbuf);
                 else
-                    fprintf(stderr,"<- %.*s\n", bp - messbuf, messbuf);
+                    fprintf(stderr,"\n<- %.*s", bp - messbuf, messbuf);
             }
             x->sr_inhead = inhead;
             x->sr_intail = intail;
@@ -715,13 +715,14 @@ void sys_vvgui(const char *fmt, va_list ap) {
     }
     if (sys_debuglevel & DEBUG_MESSUP) {
         //blargh();
-        int begin = lastend=='\n' || lastend=='\r' || lastend==-1;
+        //int begin = lastend=='\n' || lastend=='\r' || lastend==-1;
+        int begin = lastend=='\a' || lastend==-1;
         if (stderr_isatty)
             fprintf(stderr, "%s\e[0;1;35m%s\e[0m",
-                begin ? "-> " : "", sys_guibuf + sys_guibufhead);
+                begin ? "\n-> " : "", sys_guibuf + sys_guibufhead);
         else
             fprintf(stderr, "%s%s",
-                begin ? "-> " : "", sys_guibuf + sys_guibufhead);
+                begin ? "\n-> " : "", sys_guibuf + sys_guibufhead);
     }
     sys_guibufhead += msglen;
     sys_bytessincelastping += msglen;
@@ -736,16 +737,25 @@ void sys_vgui(const char *fmt, ...) {
     va_start(ap, fmt);
     sys_vvgui(fmt,ap);
 }
+
+/* This was used by the old command interface, but is no longer used. */
 void sys_vvguid(const char *file, int line, const char *fmt, va_list ap) {
     if ((sys_debuglevel&4) && /*line>=0 &&*/ (lastend=='\n' || lastend=='\r' || lastend==-1)) {
         sys_vgui("AT %s:%d; ",file,line);
     }
     sys_vvgui(fmt,ap);
 }
+
+/* Old GUI command interface... */
 void sys_vguid(const char *file, int line, const char *fmt, ...) {
-	va_list ap;
+    va_list ap;
+    char buf[MAXPDSTRING];
     va_start(ap, fmt);
-    sys_vvguid(file,line,fmt,ap);
+    vsnprintf(buf, MAXPDSTRING-1, fmt, ap);
+    va_end(ap);
+    /* For old commands, we're just posting them to the pd console */
+    post("Old command at %s:%d:%s", file, line, buf);
+    //sys_vvguid(file,line,fmt,ap);
 }
 void sys_gui(const char *s)
 {
@@ -773,7 +783,7 @@ char *escape_double_quotes(const char *src) {
 
 void gui_end_vmess(void)
 {
-    sys_gui("\v");
+    sys_gui("\a");
 }
 
 
@@ -785,7 +795,7 @@ void gui_do_vmess(const char *sel, char *fmt, int end, va_list ap)
     int nargs = 0;
     char *fp = fmt;
     //va_start(ap, end);
-    sys_vgui("\a%s ", sel); /* use a bell to signal the beginning of msg
+    sys_vgui("%s ", sel); /* use a bell to signal the beginning of msg
                                (this can be replaced with any other obscure
                                 ascii escape)                            */
     while (*fp)

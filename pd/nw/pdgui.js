@@ -989,73 +989,46 @@ exports.connect = connect;
 // Add a 'data' event handler for the client socket
 // data parameter is what the server sent to this socket
 
-// Pd can send us different types of data:
-// 1) The old style tcl commands with "\n" at end (or "\\\n" for continuation)
-// 2) new style commands: selector "stringarg",42,"stringarg3",etc.
-// Below we separate the wheat from chaff, eval'ing the new commands and just
-// printing the old ones in blue to the console
-
-// To facilitate this, the new style commands are always preceded with an
-// alarm bell '\a', and end with a vertical tab '\v'. These should produce
-// a decent stop-gap since they are rarely used in Pd patch text.
+// We're not receiving FUDI (i.e., Pd) messages. Right now we're just using
+// an alarm bell '\a' to signal the end of a message. This is easier than
+// checking for unescaped semicolons, since it only requires a check for a
+// single byte. Of course this makes it more brittle, so it can be changed
+// later if needed.
 
 function init_socket_events () {
     var next_command = ""; // A not-quite-FUDI command: selector arg1,arg2,etc.
                            // These are formatted on the C side to be easy
                            // to parse here in javascript
-    var old_command = "";  // Old-style sys_vgui cmds (printed to console)
-    var cmdHeader = false;
 
     var perfect_parser = function(data) {
         var i, len, selector, args;
         len = data.length;
         for (i = 0; i < len; i++) {
-            if (cmdHeader) {
-                // check for end of command:
-                if (data[i] === 11) { // vertical tab "\v"
-                    // decode next_command
-                    try {
-                        // This should work for all utf-8 content
-                        next_command = decodeURIComponent(next_command);
-                    }
-                    catch(err) {
-                        // This should work for ISO-8859-1
-                        next_command = unescape(next_command);
-                    }
-                    // Turn newlines into backslash + "n" so
-                    // eval will do the right thing
-                    next_command = next_command.replace(/\n/g, "\\n");
-                    selector = next_command.slice(0, next_command.indexOf(" "));
-                    args = next_command.slice(selector.length + 1);
-                    cmdHeader = false;
-                    next_command = "";
-                    // Now evaluate it 
-                    //post("Evaling: " + selector + "(" + args + ");");
-                    eval(selector + "(" + args + ");");
-                } else {
-                    next_command += "%" +
-                        ("0" // leading zero (for rare case of single digit)
-                         + data[i].toString(16)) // to hex
-                           .slice(-2); // remove extra leading zero
+            // check for end of command:
+            if (data[i] === 7) { // alarm bell
+                // decode next_command
+                try {
+                    // This should work for all utf-8 content
+                    next_command = decodeURIComponent(next_command);
                 }
-            } else if (data[i] === 7) { // ASCII alarm bell "\a"
-                // if we have an old-style message, print it out
-                if (old_command !== "") {
-                    var old_command_output;
-                    try {
-                        old_command_output = decodeURIComponent(old_command);
-                    }
-                    catch(err) {
-                        old_command_output = unescape(old_command);
-                    }
-                    old_command= "";
-                    //post("warning: old command: " + old_command_output,
-                    //    "blue");
+                catch(err) {
+                    // This should work for ISO-8859-1
+                    next_command = unescape(next_command);
                 }
-                cmdHeader = true; 
+                // Turn newlines into backslash + "n" so
+                // eval will do the right thing with them
+                next_command = next_command.replace(/\n/g, "\\n");
+                selector = next_command.slice(0, next_command.indexOf(" "));
+                args = next_command.slice(selector.length + 1);
+                next_command = "";
+                // Now evaluate it
+                //post("Evaling: " + selector + "(" + args + ");");
+                eval(selector + "(" + args + ");");
             } else {
-                // this is an old-style sys_vgui
-                old_command += "%" + ("0" + data[i].toString(16)).slice(-2);
+                next_command += "%" +
+                    ("0" // leading zero (for rare case of single digit)
+                     + data[i].toString(16)) // to hex
+                       .slice(-2); // remove extra leading zero
             }
         }
     };
@@ -1064,36 +1037,21 @@ function init_socket_events () {
         var i, len, selector, args;
         len = data.length;
         for (i = 0; i < len; i++) {
-            if (cmdHeader) {
-                // check for end of command:
-                if (data[i] === "\v") { // vertical tab
-                    // we have the next_command...
-                    // Turn newlines into backslash + "n" so
-                    // eval will do the right thing
-                    next_command = next_command.replace(/\n/g, "\\n");
-                    selector = next_command.slice(0, next_command.indexOf(" "));
-                    args = next_command.slice(selector.length + 1);
-                    cmdHeader = false;
-                    next_command = "";
-                    // Now evaluate it-- unfortunately the V8 engine can't 
-                    // optimize this eval call.
-                    //post("Evaling: " + selector + "(" + args + ");");
-                    eval(selector + "(" + args + ");");
-                } else {
-                    next_command += data[i];
-                }
-            } else if (data[i] === String.fromCharCode(7)) {
-                // ASCII alarm bell "\a"
-                // if we have an old-style message, print it out
-                if (old_command !== "") {
-                    //post("warning: old command: " + old_command_output,
-                    //    "blue");
-                    old_command= "";
-                }
-                cmdHeader = true; 
+            // check for end of command:
+            if (data[i] === String.fromCharCode(7)) { // vertical tab
+                // we have the next_command...
+                // Turn newlines into backslash + "n" so
+                // eval will do the right thing
+                next_command = next_command.replace(/\n/g, "\\n");
+                selector = next_command.slice(0, next_command.indexOf(" "));
+                args = next_command.slice(selector.length + 1);
+                next_command = "";
+                // Now evaluate it-- unfortunately the V8 engine can't
+                // optimize this eval call.
+                //post("Evaling: " + selector + "(" + args + ");");
+                eval(selector + "(" + args + ");");
             } else {
-                // this is an old-style sys_vgui
-                old_command += data[i];
+                next_command += data[i];
             }
         }
     };
