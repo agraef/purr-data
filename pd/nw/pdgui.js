@@ -275,13 +275,6 @@ function pd_error_select_by_id(objectid) {
 
 exports.pd_error_select_by_id = pd_error_select_by_id
 
-// We're just copying the do_post vars here. We need to combine these
-// so we're not duplicating functionality.
-var error_last_string = "";
-var error_last_object_id = "";
-var error_last_child = {};
-var error_duplicate = 0;
-
 function gui_post_error(objectid, loglevel, errormsg) {
     var my_p, error_span, error_title, my_a, rest, printout, dup_span;
     if (last_object_id === objectid
@@ -312,7 +305,6 @@ function gui_post_error(objectid, loglevel, errormsg) {
         }
         rest = pd_window.document.createTextNode(": " + errormsg);
         error_span.appendChild(rest);
-
         printout = pd_window.document.getElementById("console_bottom");
         printout.scrollTop = printout.scrollHeight;
         last_string = errormsg;
