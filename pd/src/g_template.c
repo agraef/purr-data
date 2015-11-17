@@ -7504,7 +7504,10 @@ static void drawimage_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         //    (in_array ? parentglist : parent), data,
         //    x, data);
 
+        char tagbuf[MAXPDSTRING];
         char parent_tagbuf[MAXPDSTRING];
+        sprintf(tagbuf, "draw%lx.%lx",
+            (long unsigned int)x, (long unsigned int)data);
         sprintf(parent_tagbuf,"%s%lx.%lx",
             in_array ? "scelem" : "dgroup",
             in_array ? (long unsigned int)parentglist : (long unsigned int)parent,
@@ -7520,12 +7523,14 @@ static void drawimage_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             parent_tagbuf);
 
         /* need to revisit all these tags, they are getting confusing... */
-//        sys_vgui(".x%lx.c itemconfigure .x%lx.x%lx.template%lx\\\n",
-//            glist_getcanvas(glist), glist_getcanvas(glist), glist, data);
-        sys_vgui(".x%lx.c itemconfigure .draw%lx.%lx\\\n",
-            glist_getcanvas(glist), x, data);
+        //sys_vgui(".x%lx.c itemconfigure .x%lx.x%lx.template%lx\\\n",
+        //    glist_getcanvas(glist), glist_getcanvas(glist), glist, data);
+        //sys_vgui(".x%lx.c itemconfigure .draw%lx.%lx\\\n",
+        //    glist_getcanvas(glist), x, data);
+        gui_start_vmess("gui_draw_configure_all", "xs",
+            glist_getcanvas(glist), tagbuf);
         svg_togui(svg, template, data);
-        sys_gui("\n");
+        gui_end_vmess();
     }
     else sys_vgui("pdtk_drawimage_unvis .x%lx.c .x%lx.i\n",
         glist_getcanvas(glist), data);
