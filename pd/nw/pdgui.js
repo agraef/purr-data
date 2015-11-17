@@ -1750,8 +1750,9 @@ function gui_create_numbox(width,cid,tag,bgcolor,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,
 function gui_numbox_drawtext(cid,tag,text,font_size,color,xpos,ypos,basex,basey) {
     var g = get_gobj(cid, tag),
         svg_text = create_item(cid, "text", {
-            x: xpos - basex,
-            y: ypos - basey + 5,
+            transform: "translate(" +
+                        (xpos - basex) + "," +
+                        (ypos - basey + 5) + ")",
             "font-size": font_size,
             fill: color,
             id: tag + "text"
