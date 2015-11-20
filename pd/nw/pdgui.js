@@ -931,23 +931,35 @@ var net = require("net");
 
 var HOST = "127.0.0.1";
 var PORT;
-var client;
+var socket;
 
 exports.set_port = function (port_no) {
     PORT = port_no;
 }
 
-function connect () {
-    client = new net.Socket();
+function create_client() {
+    var client = new net.Socket();
     client.setNoDelay(true);
     // uncomment the next line to use fast_parser (then set its callback below)
     //client.setEncoding("utf8");
     client.connect(PORT, HOST, function() {
         console.log("CONNECTED TO: " + HOST + ":" + PORT);
     });
+    socket = client;
 }
 
-exports.connect = connect;
+exports.create_client = create_client;
+
+function create_server() {
+    var server = net.createServer(function(c) {
+        console.log("server connected");
+    });
+    server.listen(PORT, HOST);
+    console.log("listening on port " + PORT + " on host " + HOST);
+    socket = server;
+}
+
+exports.create_server= create_server;
 
 // Add a 'data' event handler for the client socket
 // data parameter is what the server sent to this socket
@@ -1019,12 +1031,12 @@ function init_socket_events () {
         }
     };
 
-    client.on("data", perfect_parser);
+    socket.on("data", perfect_parser);
 
-    // Add a "close" event handler for the client socket
-    client.on("close", function() {
+    // Add a "close" event handler for the socket
+    socket.on("close", function() {
         //console.log("Connection closed");
-        //client.destroy();
+        //socket.destroy();
         nw_app_quit(); // set a timeout here if you need to debug
     });
 }
@@ -1037,7 +1049,7 @@ function pdsend() {
     // some reason.  But it doesn't look like it makes that much
     // of a difference
     var string = Array.prototype.join.call(arguments, " ");
-    client.write(string + ";");
+    socket.write(string + ";");
     // reprint the outgoing string to the pdwindow
     //post(string + ";", "red");
 }

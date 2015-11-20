@@ -1,19 +1,9 @@
 "use strict";
 var gui = require("nw.gui");
-console.log("foo is foo");
-console.log("gurgle is " + gui.App.argv);
 var pdgui = require("./pdgui.js");
-var port_no = gui.App.argv[0]; // fed to us by the Pd process
-var gui_dir = gui.App.argv[3];
+
+// we're using pwd in fileDialog
 var pwd = process.env.PWD;
-pdgui.set_port(port_no);
-pdgui.set_pwd(pwd);
-pdgui.set_gui_dir(gui_dir);
-pdgui.set_pd_window(this);
-pdgui.set_app_quitfn(app_quit);
-pdgui.set_open_html_fn(open_html);
-pdgui.set_open_textfile_fn(open_textfile);
-pdgui.set_open_external_doc_fn(open_external_doc);
 
 // gui preset
 pdgui.skin.apply(this);
@@ -21,7 +11,49 @@ pdgui.skin.apply(this);
 // For translations
 var l = pdgui.get_local_string;
 
-function app_quit () {
+// Set up the Pd Window
+set_vars(this);
+add_events();
+nw_create_pd_window_menus();
+gui.Window.get().setMinimumSize(350,250);
+// This part depends on whether the GUI is starting Pd, or whether it's
+// the other way around.
+connect();
+
+function have_args() {
+    return !!gui.App.argv.length;
+}
+
+function set_vars(global) {
+    var port_no, gui_dir;
+    // If the GUI was started by Pd, our port number is going to be
+    // the first argument. If the GUI is supposed to start Pd, we won't
+    // have any arguments and need to set it here.
+    if (have_args()) {
+        port_no = gui.App.argv[0]; // fed to us by the Pd process
+        // looks like this is the same as pwd below
+        gui_dir = gui.App.argv[3];
+    } else {
+        // If we're starting Pd, this is the first port number to try. (We'll
+        // increment it if that port happens to be taken.
+        port_no = 5400; 
+        gui_dir = pwd;
+    }
+    pdgui.set_port(port_no);
+    pdgui.set_pwd(pwd);
+    pdgui.set_gui_dir(gui_dir);
+    pdgui.set_pd_window(global);
+    pdgui.set_app_quitfn(app_quit);
+    pdgui.set_open_html_fn(open_html);
+    pdgui.set_open_textfile_fn(open_textfile);
+    pdgui.set_open_external_doc_fn(open_external_doc);
+
+    // nw context callbacks (mostly just creating/destroying windows)
+    pdgui.set_new_window_fn(nw_create_window);
+    pdgui.set_close_window_fn(nw_close_window);
+}
+
+function app_quit() {
     console.log("quitting Pd...");
     gui.App.quit();
 }
@@ -38,51 +70,53 @@ function open_external_doc(target) {
     gui.Shell.openExternal(target);
 }
 
-document.getElementById("dsp_control").addEventListener("click",
-    function(evt) {
-        var dsp_state = this.checked ? 1 : 0;
-        pdgui.pdsend("pd dsp", dsp_state);
+function add_events() {
+    // Find bar
+    var find_bar = document.getElementById("console_find_text");
+    find_bar.defaultValue = "Search in Console";
+    console_find_set_default(find_bar);
+    find_bar.addEventListener("keydown",
+        function(e) {
+            return console_find_keydown(this, e);
+        }, false
+    );
+    find_bar.addEventListener("keypress",
+        function(e) {
+            console_find_keypress(this, e);
+        }, false
+    );
+    // DSP toggle
+    document.getElementById("dsp_control").addEventListener("click",
+        function(evt) {
+            var dsp_state = this.checked ? 1 : 0;
+            pdgui.pdsend("pd dsp", dsp_state);
+        }
+    );
+    // Browser Window Close
+    gui.Window.get().on("close", function() {
+        pdgui.menu_quit();
+    });
+    // Open dialog
+    document.getElementById("fileDialog").setAttribute("nwworkingdir", pwd);
+    document.getElementById("fileDialog").setAttribute("accept",
+        Object.keys(pdgui.pd_filetypes).toString());
+}
+
+function connect() {
+    // When the GUI is started by core Pd, it gives it some command
+    // line args. In that case we just need to create a client and
+    // connect to Pd on the port it gave us as an arg.
+    // If we have no command line args, it means we need to create a
+    // server, and also create the Pd process with the command line
+    // arg -guiport and providing the port we are listening on.
+    if (have_args()) {
+        pdgui.create_client();
+    } else {
+        pdgui.post("creating server");
+        pdgui.create_server();
     }
-);
-
-var find_bar = document.getElementById("console_find_text");
-find_bar.addEventListener("keydown",
-    function(e) {
-        return console_find_keydown(this, e);
-    }, false
-);
-
-find_bar.addEventListener("keypress",
-    function(e) {
-        console_find_keypress(this, e);
-    }, false
-);
-
-find_bar.defaultValue = "Search in Console";
-
-console_find_set_default(find_bar);
-
-
-// Invoke some functions to create main menus, etc.
-gui.Window.get().on("close", function() {
-    pdgui.menu_quit();
-});
-console.log(gui.App.argv); 
-
-document.getElementById("fileDialog").setAttribute("nwworkingdir", pwd);
-document.getElementById("fileDialog").setAttribute("accept",
-    Object.keys(pdgui.pd_filetypes).toString());
-
-nw_create_pd_window_menus();
-
-gui.Window.get().setMinimumSize(350,250);
-
-pdgui.connect();
-pdgui.init_socket_events();
-
-// nw context callbacks (mostly just creating/destroying windows)
-pdgui.set_new_window_fn(nw_create_window);
-pdgui.set_close_window_fn(nw_close_window);
+    pdgui.init_socket_events();
+}
 
 function console_find_check_default(e) {
     if (e.value === e.defaultValue) {
@@ -716,8 +750,4 @@ function nw_create_window(cid, type, width, height, xpos, ypos, menu_flag,
         new_win.eval(null, eval_string);
     });
     return new_win;
-}
-
-function canvasNew(args) {
-    console.log(args);
 }
