@@ -335,6 +335,7 @@ Everything else: (A [x] means we've fixed it)
     does _not_ send a key to Pd. Since <ctrl-v> is bound to "paste" and
     <ctrl-h> isn't bound to anything, that may somehow be causing an
     inconsistency.
+[ ] make GUI server try again if the port is already in use
 
 Crashers
 --------

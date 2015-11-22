@@ -16,8 +16,13 @@ set_vars(this);
 add_events();
 nw_create_pd_window_menus();
 gui.Window.get().setMinimumSize(350,250);
-// This part depends on whether the GUI is starting Pd, or whether it's
-// the other way around.
+// Now we create a connection from the GUI to Pd, in one of two ways:
+// 1) If the GUI was started by Pd, then we create a tcp client and
+//    connect on the port Pd fed us in our command line arguments.
+// 2) If Pd hasn't started yet, then the GUI creates a tcp server and spawns
+//    Pd using the "-guiport" flag with the port the GUI is listening on.
+// Pd always starts the GUI with a certain set of command line arguments. If
+// those arguments aren't present then we assume we need to start Pd.
 connect();
 
 function have_args() {
@@ -103,19 +108,15 @@ function add_events() {
 }
 
 function connect() {
-    // When the GUI is started by core Pd, it gives it some command
-    // line args. In that case we just need to create a client and
-    // connect to Pd on the port it gave us as an arg.
-    // If we have no command line args, it means we need to create a
-    // server, and also create the Pd process with the command line
-    // arg -guiport and providing the port we are listening on.
-    if (have_args()) {
-        pdgui.create_client();
+    if (have_args()) { 
+        // Pd started the GUI, so connect to it on port provided in our args
+        pdgui.post("Pd has started the GUI");
+        pdgui.connect_as_client();
     } else {
-        pdgui.post("creating server");
-        pdgui.create_server();
+        // create a tcp server, then spawn Pd with "-guiport" flag and port
+        pdgui.post("GUI is starting Pd...");
+        pdgui.connect_as_server();
     }
-    pdgui.init_socket_events();
 }
 
 function console_find_check_default(e) {

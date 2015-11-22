@@ -1,7 +1,5 @@
 "use strict";
 
-// Modules
-
 var pwd;
 var gui_dir;
 
@@ -29,8 +27,11 @@ exports.get_pd_opendir = function() {
     }
 }
 
+// Modules
+
 var fs = require("fs");     // for fs.existsSync
 var path = require("path"); // for path.dirname path.extname path.join
+var cp = require("child_process"); // for starting core Pd from GUI in OSX
 
 // local strings
 var lang = require("./pdlang.js");
@@ -691,6 +692,7 @@ function gui_check_unique (unique) {
 function gui_startup(version, fontname_from_pd, fontweight_from_pd,
     apilist, midiapilist) {
     console.log("Starting up...");
+    console.log("gui_startup from GUI...");
     // # tb: user defined typefaces
     // set some global variables
     pd_myversion = version;
@@ -926,18 +928,32 @@ function gui_canvas_erase_all_gobjs(cid) {
 
 exports.canvas_map = canvas_map;
 
+// Start Pd
+
+// If the GUI is started first (as in a Mac OSX Bundle) we use this
+// function to actually start the core
+function spawn_pd() {
+    var pd_binary = "/home/user/pd-nw/packages/linux_make/build/usr/bin/pd-l2ork";
+    var child = cp.spawn(pd_binary, ["-guiport", PORT, "-nrt"], {
+        stdio: "inherit",
+        detached: true
+    });
+    child.unref();
+    post("Pd started.");
+}
+
 // net stuff
 var net = require("net");
 
 var HOST = "127.0.0.1";
 var PORT;
-var socket;
+var connection; // the GUI's socket connection to Pd
 
 exports.set_port = function (port_no) {
     PORT = port_no;
 }
 
-function create_client() {
+function connect_as_client() {
     var client = new net.Socket();
     client.setNoDelay(true);
     // uncomment the next line to use fast_parser (then set its callback below)
@@ -945,21 +961,25 @@ function create_client() {
     client.connect(PORT, HOST, function() {
         console.log("CONNECTED TO: " + HOST + ":" + PORT);
     });
-    socket = client;
+    connection = client;
+    init_socket_events();
 }
 
-exports.create_client = create_client;
+exports.connect_as_client = connect_as_client;
 
-function create_server() {
+function connect_as_server() {
     var server = net.createServer(function(c) {
-        console.log("server connected");
+        post("incoming connection to GUI");
+        connection = c;
+        init_socket_events();
     });
-    server.listen(PORT, HOST);
-    console.log("listening on port " + PORT + " on host " + HOST);
-    socket = server;
+    server.listen(PORT, HOST, function() {
+        post("GUI listening on port " + PORT + " on host " + HOST);
+        spawn_pd();
+    });
 }
 
-exports.create_server= create_server;
+exports.connect_as_server = connect_as_server;
 
 // Add a 'data' event handler for the client socket
 // data parameter is what the server sent to this socket
@@ -1031,12 +1051,12 @@ function init_socket_events () {
         }
     };
 
-    socket.on("data", perfect_parser);
+    connection.on("data", perfect_parser);
 
     // Add a "close" event handler for the socket
-    socket.on("close", function() {
+    connection.on("close", function() {
         //console.log("Connection closed");
-        //socket.destroy();
+        //connection.destroy();
         nw_app_quit(); // set a timeout here if you need to debug
     });
 }
@@ -1049,7 +1069,7 @@ function pdsend() {
     // some reason.  But it doesn't look like it makes that much
     // of a difference
     var string = Array.prototype.join.call(arguments, " ");
-    socket.write(string + ";");
+    connection.write(string + ";");
     // reprint the outgoing string to the pdwindow
     //post(string + ";", "red");
 }
