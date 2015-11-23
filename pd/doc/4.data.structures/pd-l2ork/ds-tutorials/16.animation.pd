@@ -1,5 +1,5 @@
 #N struct drawtut-animation float x float y;
-#N canvas 0 19 537 571 10;
+#N canvas 1 44 537 571 10;
 #X scalar drawtut-animation 47 309 \;;
 #X obj 47 279 draw rect 0 0 40 40;
 #X obj 47 131 struct drawtut-animation float x float y;
@@ -12,10 +12,9 @@ attributes.;
 #X text 47 82 However \, if you can do the same thing using some of
 Pd's core objects. For example \, with [line] you can create a ramp
 between values.;
-#X obj 47 168 tgl 23 0 empty empty empty 17 7 0 10 -4034 -1 -1 0 1
+#X obj 47 158 tgl 23 0 empty empty empty 17 7 0 10 -4034 -1 -1 0 1
 ;
-#X msg 47 220 \$1 500;
-#X text 171 279 <- use the 2nd argument to set the "grain" rate;
+#X msg 47 210 \$1 500;
 #X text 47 371 This is less efficient than svg's animation interface.
 Here \, Pd must send a message for each change in value during the
 ramp. However \, you can use the 2nd argument to [line] to tell it
@@ -26,20 +25,32 @@ Use the objects below to convert between "grain" rate and frames-per-second.
 #X msg 50 480 1000 \$1;
 #X obj 50 501 /;
 #X floatatom 50 522 5 0 0 1 - - -, f 5;
-#X obj 47 240 line 0 33.333;
+#X obj 47 230 line 0 33.333;
 #X text 112 458 <-- If you want to convert grain-rate to fps \, type
 the grain-rate in the box and read out the answer in the bottom box.
 On the other hand if you want to convert fps to grain-rate simply think
 your desire at the patch and Pd will automatically do the conversion
 in the other direction!;
 #X text 112 524 How does it know?;
-#X msg 47 260 fill \$1 \$1 \$1;
-#X obj 47 198 * 255;
-#X connect 7 0 19 0;
-#X connect 8 0 15 0;
+#X msg 47 250 fill \$1 \$1 \$1;
+#X obj 47 188 * 255;
+#X obj 177 158 tgl 23 0 empty empty empty 17 7 0 10 -4034 -1 -1 0 1
+;
+#X msg 177 210 \$1 500;
+#X obj 177 188 * 255;
+#X msg 177 250 transform matrix 1 0 0 1 \$1 0;
+#X obj 177 230 line 0 16.7;
+#X text 255 229 <- 2nd argument sets the "grain" rate;
+#X connect 7 0 18 0;
+#X connect 8 0 14 0;
+#X connect 10 0 11 0;
 #X connect 11 0 12 0;
 #X connect 12 0 13 0;
-#X connect 13 0 14 0;
-#X connect 15 0 18 0;
-#X connect 18 0 1 0;
-#X connect 19 0 8 0;
+#X connect 14 0 17 0;
+#X connect 17 0 1 0;
+#X connect 18 0 8 0;
+#X connect 19 0 21 0;
+#X connect 20 0 23 0;
+#X connect 21 0 20 0;
+#X connect 22 0 1 0;
+#X connect 23 0 22 0;
