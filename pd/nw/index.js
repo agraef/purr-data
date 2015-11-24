@@ -75,6 +75,10 @@ function open_external_doc(target) {
     gui.Shell.openExternal(target);
 }
 
+function nw_window_focus_callback() {
+    pdgui.post("pd window was focused");
+}
+
 function add_events() {
     // Find bar
     var find_bar = document.getElementById("console_find_text");
@@ -100,6 +104,10 @@ function add_events() {
     // Browser Window Close
     gui.Window.get().on("close", function() {
         pdgui.menu_quit();
+    });
+    // Focus callback for OSX
+    gui.Window.get().on("focus", function() {
+        nw_window_focus_callback();
     });
     // Open dialog
     document.getElementById("fileDialog").setAttribute("nwworkingdir", pwd);
@@ -296,6 +304,8 @@ function pdmenu_irc () {
 
 // Menus for the main Pd window
 function nw_create_pd_window_menus () {
+    // Command key for OSX, Control for GNU/Linux and Windows
+    var cmd_or_ctrl = process.platform === "darwin" ? "cmd" : "ctrl";
     // Window menu
     var windowMenu = new gui.Menu({
         type: "menubar"
@@ -315,14 +325,14 @@ function nw_create_pd_window_menus () {
         label: l("menu.new"),
         click: pdgui.menu_new,
         key: "n",
-        modifiers: "ctrl",
+        modifiers: cmd_or_ctrl,
         tooltip: l("menu.new.tt")
     }));
 
     fileMenu.append(new gui.MenuItem({
         label: l("menu.open"),
         key: "o",
-        modifiers: "ctrl",
+        modifiers: cmd_or_ctrl,
         tooltip: l("menu.open.tt"),
         click: function (){
             var input, chooser,
@@ -369,7 +379,7 @@ function nw_create_pd_window_menus () {
             enabled: false,
         key: "s",
         tooltip: l("menu.save.tt"),
-        modifiers: "ctrl"
+        modifiers: cmd_or_ctrl
     }));
 
     fileMenu.append(new gui.MenuItem({
@@ -378,7 +388,7 @@ function nw_create_pd_window_menus () {
         enabled: false,
         key: "S",
         tooltip: l("menu.saveas_tt"),
-        modifiers: "ctrl"
+        modifiers: cmd_or_ctrl
     }));
 
     if (pdgui.k12_mode == 0) {
@@ -391,7 +401,7 @@ function nw_create_pd_window_menus () {
         label: l("menu.message"),
         click: pdgui.menu_send,
         key: "m",
-        modifiers: "ctrl",
+        modifiers: cmd_or_ctrl,
         tooltip: l("menu.message_tt")
     }));
 
@@ -417,7 +427,7 @@ function nw_create_pd_window_menus () {
         label: l("menu.quit"),
         click: pdgui.menu_quit,
         key: "q",
-        modifiers: "ctrl",
+        modifiers: cmd_or_ctrl,
         tooltip: l("menu.quit_tt")
     }));
 
@@ -438,7 +448,7 @@ function nw_create_pd_window_menus () {
             document.execCommand("copy");
         },
         key: "c",
-        modifiers: "ctrl",
+        modifiers: cmd_or_ctrl,
         tooltip: l("menu.copy_tt")
     }));
 
@@ -465,7 +475,7 @@ function nw_create_pd_window_menus () {
             }
         },
         key: "a",
-        modifiers: "ctrl",
+        modifiers: cmd_or_ctrl,
         tooltip: l("menu.selectall_tt")
     }));
 
@@ -479,7 +489,7 @@ function nw_create_pd_window_menus () {
             gui.Window.get().zoomLevel += 1;
         },
         key: "=",
-        modifiers: "ctrl",
+        modifiers: cmd_or_ctrl,
         tooltip: l("menu.zoomin_tt")
     }));
 
@@ -489,7 +499,7 @@ function nw_create_pd_window_menus () {
             gui.Window.get().zoomLevel -= 1;
         },
         key: "-",
-        modifiers: "ctrl",
+        modifiers: cmd_or_ctrl,
         tooltip: l("menu.zoomout_tt")
     }));
 
@@ -517,7 +527,7 @@ function nw_create_pd_window_menus () {
             }
         },
         key: "f",
-        modifiers: "ctrl",
+        modifiers: cmd_or_ctrl,
         tooltip: l("menu.find_tt")
     }));
 
@@ -525,7 +535,7 @@ function nw_create_pd_window_menus () {
         label: l("menu.preferences"),
         click: pdgui.open_prefs,
         key: "p",
-        modifiers: "ctrl",
+        modifiers: cmd_or_ctrl,
         tooltip: l("menu.preferences_tt")
     }));
 
@@ -547,7 +557,7 @@ function nw_create_pd_window_menus () {
             pdgui.raise_next("pd_window");
         },
         //key: "c",
-        //modifiers: "ctrl",
+        //modifiers: cmd_or_ctrl,
         tooltip: l("menu.nextwin_tt")
     }));
 
@@ -557,7 +567,7 @@ function nw_create_pd_window_menus () {
             pdgui.raise_prev("pd_window");
         },
         //key: "a",
-        //modifiers: "ctrl",
+        //modifiers: cmd_or_ctrl,
         tooltip: l("menu.prevwin_tt")
     }));
 
@@ -577,7 +587,7 @@ function nw_create_pd_window_menus () {
             pdgui.pdsend("pd dsp 1");
         },
         key: "/",
-        modifiers: "ctrl",
+        modifiers: cmd_or_ctrl,
         tooltip: l("menu.audio_on_tt")
     }));
 
@@ -587,7 +597,7 @@ function nw_create_pd_window_menus () {
             pdgui.pdsend("pd dsp 0");
         },
         key: ".",
-        modifiers: "ctrl",
+        modifiers: cmd_or_ctrl,
         tooltip: l("menu.audio_off_tt")
     }));
 
@@ -601,7 +611,7 @@ function nw_create_pd_window_menus () {
             pdgui.pd_doc_open("doc/7.stuff/tools", "testtone.pd");
         },
         //key: "a",
-        //modifiers: "ctrl",
+        //modifiers: cmd_or_ctrl,
         tooltip: l("menu.test_tt")
     }));
 
@@ -611,7 +621,7 @@ function nw_create_pd_window_menus () {
             pdgui.pd_doc_open("doc/7.stuff/tools", "load-meter.pd");
         },
         //key: "a",
-        //modifiers: "ctrl",
+        //modifiers: cmd_or_ctrl,
         tooltip: l("menu.loadmeter_tt")
     }));
 
@@ -631,7 +641,7 @@ function nw_create_pd_window_menus () {
             pdgui.pd_doc_open("doc/1.manual", "1.introduction.txt");
         },
         //key: "c",
-        //modifiers: "ctrl",
+        //modifiers: cmd_or_ctrl,
         tooltip: l("menu.about_tt")
     }));
 
@@ -641,7 +651,7 @@ function nw_create_pd_window_menus () {
             pdgui.pd_doc_open("doc/1.manual", "index.htm");
         },
         //key: "a",
-        //modifiers: "ctrl",
+        //modifiers: cmd_or_ctrl,
         tooltip: l("menu.manual_tt")
     }));
 
@@ -649,7 +659,7 @@ function nw_create_pd_window_menus () {
         label: l("menu.browser"),
         click: pdmenu_help_browser,
         //key: "a",
-        //modifiers: "ctrl",
+        //modifiers: cmd_or_ctrl,
         tooltip: l("menu.browser_tt")
     }));
 
@@ -663,7 +673,7 @@ function nw_create_pd_window_menus () {
             pdgui.external_doc_open("http://disis.music.vt.edu/listinfo/l2ork-dev");
         },
         //key: "a",
-        //modifiers: "ctrl",
+        //modifiers: cmd_or_ctrl,
         tooltip: l("menu.l2ork_list_tt")
     }));
 
@@ -673,7 +683,7 @@ function nw_create_pd_window_menus () {
             pdgui.external_doc_open("http://puredata.info/community/lists");
         },
         //key: "a",
-        //modifiers: "ctrl",
+        //modifiers: cmd_or_ctrl,
         tooltip: l("menu.pd_list_tt")
     }));
 
@@ -683,7 +693,7 @@ function nw_create_pd_window_menus () {
             pdgui.external_doc_open("http://forum.pdpatchrepo.info/");
         },
         //key: "a",
-        //modifiers: "ctrl",
+        //modifiers: cmd_or_ctrl,
         tooltip: l("menu.forums_tt")
     }));
 
@@ -693,7 +703,7 @@ function nw_create_pd_window_menus () {
             gui.Window.get().showDevTools();
         },
         key: "b", // temporary convenience shortcut-- can change if needed
-        modifiers: "ctrl",
+        modifiers: cmd_or_ctrl,
         tooltip: l("menu.devtools_tt")
     }));
 
@@ -703,7 +713,7 @@ function nw_create_pd_window_menus () {
     //        pdgui.external_doc_open("irc://irc.freenode.net/dataflow");
     //    },
     //    //key: "a",
-    //    //modifiers: "ctrl",
+    //    //modifiers: cmd_or_ctrl,
     //    tooltip: l("menu.irc_tt")
     //}));
 

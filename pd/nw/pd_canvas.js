@@ -46,6 +46,10 @@ function encode_for_dialog(s) {
     return s;
 }
 
+function nw_window_focus_callback() {
+    pdgui.post("window was focused");
+}
+
 // These three functions need to be inside canvas_events closure
 function canvas_find_whole_word(elem) {
     canvas_events.match_words(elem.checked);
@@ -392,6 +396,7 @@ var canvas_events = (function() {
     );
     document.querySelector("#canvas_find_button").addEventListener("click",
         events.find_click);
+    // We need to separate these into nw_window events and html5 DOM events
     // closing the Window
     // this isn't actually closing the window yet
     gui.Window.get().on("close", function() {
@@ -406,6 +411,9 @@ var canvas_events = (function() {
     });
     gui.Window.get().on("resize", function() {
         pdgui.gui_canvas_getscroll(name);
+    });
+    gui.Window.get().on("focus", function() {
+        nw_window_focus_callback();
     });
     // set minimum window size
     gui.Window.get().setMinimumSize(150, 100); 
@@ -521,10 +529,16 @@ function register_canvas_id(cid) {
     // Otherwise we might set the svg size to the window viewport, only to have
     // the menu push down the svg viewport and create scrollbars. Those same
     // scrollbars will get erased once canvas_map triggers, causing a quick
-    // (and annoying) scrollbar flash
-    nw_create_patch_window_menus(cid);
+    // (and annoying) scrollbar flash.
+    // For OSX, we have a single menu and just track which window has the
+    // focus.
+    if (process.platform !== "darwin") {
+        nw_create_patch_window_menus(cid);
+    }
     create_popup_menu(cid);
     canvas_events.register(cid);
+    // Trigger a "focus" event so that OSX updates the menu for this window
+    nw_window_focus_callback();
     canvas_events.normal();
     pdgui.canvas_map(cid); // side-effect: triggers gui_canvas_getscroll from Pd
 }
