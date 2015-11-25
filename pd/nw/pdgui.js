@@ -932,9 +932,20 @@ exports.canvas_map = canvas_map;
 
 // If the GUI is started first (as in a Mac OSX Bundle) we use this
 // function to actually start the core
-function spawn_pd() {
-    var pd_binary = "/home/user/pd-nw/packages/linux_make/build/usr/bin/pd-l2ork";
-    var child = cp.spawn(pd_binary, ["-guiport", PORT, "-nrt"], {
+function spawn_pd(gui_path) {
+    post("gui_path is " + gui_path);
+    var pd_binary,
+        platform = process.platform,
+        flags = ["-guiport", PORT];
+    if (platform === "darwin") {
+        // OSX
+        pd_binary = path.join(gui_path, "pd-l2ork");
+    } else {
+        pd_binary = path.join(gui_path, "..", "bin", "pd-l2ork");
+        flags.push("-nrt"); // for some reason realtime causes watchdog to die
+    }
+    post("binary is " + pd_binary);
+    var child = cp.spawn(pd_binary, flags, {
         stdio: "inherit",
         detached: true
     });
@@ -967,7 +978,7 @@ function connect_as_client() {
 
 exports.connect_as_client = connect_as_client;
 
-function connect_as_server() {
+function connect_as_server(gui_path) {
     var server = net.createServer(function(c) {
         post("incoming connection to GUI");
         connection = c;
@@ -975,7 +986,7 @@ function connect_as_server() {
     });
     server.listen(PORT, HOST, function() {
         post("GUI listening on port " + PORT + " on host " + HOST);
-        spawn_pd();
+        spawn_pd(gui_path);
     });
 }
 

@@ -116,14 +116,17 @@ function add_events() {
 }
 
 function connect() {
+    var gui_path;
     if (have_args()) { 
         // Pd started the GUI, so connect to it on port provided in our args
         pdgui.post("Pd has started the GUI");
         pdgui.connect_as_client();
     } else {
         // create a tcp server, then spawn Pd with "-guiport" flag and port
+        gui_path = window.location.pathname;
+        gui_path = gui_path.substr(0, gui_path.lastIndexOf('/'));
         pdgui.post("GUI is starting Pd...");
-        pdgui.connect_as_server();
+        pdgui.connect_as_server(gui_path);
     }
 }
 
