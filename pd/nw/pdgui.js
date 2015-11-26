@@ -3115,7 +3115,7 @@ exports.skin = (function () {
             preset = name;
             post("trying to set...");
             for (w in patchwin) {
-                if (patchwin.hasOwnProperty(w)) {
+                if (patchwin.hasOwnProperty(w) && patchwin[w]) {
                     apply(patchwin[w]);
                 }
             }
