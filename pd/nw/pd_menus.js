@@ -3,8 +3,8 @@ var pdgui = require("./pdgui.js");
 // For translations
 var l = pdgui.get_local_string;
 
-function pdmenu_help_browser () {
-    alert("Please implement pdmenu_preferences"); 
+function pdmenu_help_browser (w) {
+    w.alert("Please implement pdmenu_preferences"); 
 }
 
 function pdmenu_l2ork_mailinglist () {
@@ -57,19 +57,19 @@ function nw_create_pd_window_menus(gui, w) {
         tooltip: l("menu.open.tt"),
         click: function (){
             var input, chooser,
-                span = document.querySelector("#fileDialogSpan");
+                span = w.document.querySelector("#fileDialogSpan");
             // Complicated workaround-- see comment in build_file_dialog_string
             input = pdgui.build_file_dialog_string({
                 style: "display: none;",
                 type: "file",
                 id: "fileDialog",
-                nwworkingdir: pwd,
+                nwworkingdir: pdgui.get_pwd(),
                 multiple: null,
                 // These are copied from pd_filetypes in pdgui.js
                 accept: ".pd,.pat,.mxt,.mxb,.help"
             });
             span.innerHTML = input;
-            var chooser = document.querySelector("#fileDialog");
+            var chooser = w.document.querySelector("#fileDialog");
             chooser.onchange = function() {
                 var file_array = this.value;
                 // reset value so that we can open the same file twice
@@ -166,7 +166,7 @@ function nw_create_pd_window_menus(gui, w) {
     editMenu.append(new gui.MenuItem({
         label: l("menu.copy"),
         click: function() {
-            document.execCommand("copy");
+            w.document.execCommand("copy");
         },
         key: "c",
         modifiers: cmd_or_ctrl,
@@ -178,21 +178,21 @@ function nw_create_pd_window_menus(gui, w) {
         click: function () {
             var container_id = "p1", range;
             // This should work across browsers
-            if (document.selection) {
-                range = document.body.createTextRange();
-                range.moveToElementText(document.getElementById(container_id));
+            if (w.document.selection) {
+                range = w.document.body.createTextRange();
+                range.moveToElementText(w.document.getElementById(container_id));
                 range.select();
-            } else if (window.getSelection) {
-                range = document.createRange();
-                range.selectNode(document.getElementById(container_id));
+            } else if (w.getSelection) {
+                range = w.document.createRange();
+                range.selectNode(w.document.getElementById(container_id));
                 // we need to empty the current selection to avoid a strange
                 // error when trying to select all right after Pd starts:
                 // "The given range and the current selection belong to two
                 //  different document fragments."
                 // (I guess nw.js somehow starts up with the selection being 
                 // somewhere outside the window...)
-                window.getSelection().empty();
-                window.getSelection().addRange(range);
+                w.getSelection().empty();
+                w.getSelection().addRange(range);
             }
         },
         key: "a",
@@ -231,9 +231,9 @@ function nw_create_pd_window_menus(gui, w) {
     editMenu.append(new gui.MenuItem({
         label: l("menu.find"),
         click: function () {
-            var find_bar = document.getElementById("console_find"),
-                find_bar_text = document.getElementById("console_find_text"),
-                text_container = document.getElementById("console_bottom"),
+            var find_bar = w.document.getElementById("console_find"),
+                find_bar_text = w.document.getElementById("console_find_text"),
+                text_container = w.document.getElementById("console_bottom"),
                 state = find_bar.style.getPropertyValue("display");
             if (state === "none") {
                 text_container.style.setProperty("bottom", "1em");
@@ -378,7 +378,9 @@ function nw_create_pd_window_menus(gui, w) {
 
     helpMenu.append(new gui.MenuItem({
         label: l("menu.browser"),
-        click: pdmenu_help_browser,
+        click: function() {
+            pdmenu_help_browser(w);
+        },
         //key: "a",
         //modifiers: cmd_or_ctrl,
         tooltip: l("menu.browser_tt")
