@@ -1,4 +1,5 @@
 "use strict";
+
 var gui = require("nw.gui"); 
 var pdgui = require("./pdgui.js");
 
@@ -533,7 +534,7 @@ function register_canvas_id(cid) {
     // For OSX, we have a single menu and just track which window has the
     // focus.
     if (process.platform !== "darwin") {
-        nw_create_patch_window_menus(cid);
+        nw_create_patch_window_menus(gui, window, cid);
     }
     create_popup_menu(cid);
     canvas_events.register(cid);
@@ -566,23 +567,6 @@ function create_popup_menu(name) {
             pdgui.popup_action(name, 2);
         }
     }));
-}
-
-// stop-gap
-function menu_generic () {
-    alert("Please implement this");
-}
-
-var modals = {}; // Edit menu items that should be disabled when editing
-                 // an object box
-
-function set_edit_menu_modals(state) {
-    var item;
-    for (item in modals) {
-        if (modals.hasOwnProperty(item)) {
-            modals[item].enabled = state; 
-        }
-    }
 }
 
 function nw_undo_menu(undo_text, redo_text) {
@@ -624,7 +608,25 @@ function instantiate_live_box() {
 }
 
 // Menus for the Patch window
-function nw_create_patch_window_menus(name) {
+
+var modals = {}; // Edit menu items that should be disabled when editing
+                 // an object box
+
+function set_edit_menu_modals(state) {
+    var item;
+    for (item in modals) {
+        if (modals.hasOwnProperty(item)) {
+            modals[item].enabled = state;
+        }
+    }
+}
+
+// stop-gap
+function menu_generic () {
+    alert("Please implement this");
+}
+
+function nw_create_patch_window_menus(gui, w, name) {
 
     // Window menu
     var windowMenu = new gui.Menu({
@@ -656,7 +658,7 @@ function nw_create_patch_window_menus(name) {
         tooltip: l("menu.open_tt"),
         click: function() {
             var input, chooser,
-                span = document.querySelector("#fileDialogSpan");
+                span = w.document.querySelector("#fileDialogSpan");
             input = pdgui.build_file_dialog_string({
                 id: "fileDialog",
                 nwworkingdir: "/user/home",
@@ -664,7 +666,7 @@ function nw_create_patch_window_menus(name) {
                 type: "file",
             });
             span.innerHTML = input;
-            chooser = document.querySelector("#fileDialog");
+            chooser = w.document.querySelector("#fileDialog");
             chooser.click();
         }
     }));
@@ -924,8 +926,8 @@ function nw_create_patch_window_menus(name) {
     editMenu.append(new gui.MenuItem({
         label: l("menu.find"),
         click: function () {
-            var find_bar = document.getElementById("canvas_find"),
-                find_bar_text = document.getElementById("canvas_find_text"),
+            var find_bar = w.document.getElementById("canvas_find"),
+                find_bar_text = w.document.getElementById("canvas_find_text"),
                 state = find_bar.style.getPropertyValue("display");
             // if there's a box being edited, try to instantiate it in Pd
             instantiate_live_box();
