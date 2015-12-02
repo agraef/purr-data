@@ -2,6 +2,7 @@
 
 var gui = require("nw.gui"); 
 var pdgui = require("./pdgui.js");
+var pd_menus = require("./pd_menus.js");
 
 // Apply gui preset to this canvas
 pdgui.skin.apply(this);
@@ -626,32 +627,29 @@ function menu_generic () {
     alert("Please implement this");
 }
 
+function minit(menu_item, options) {
+    var o;
+    for (o in options) {
+        if (options.hasOwnProperty(o)) {
+            menu_item[o] = options[o];
+        }
+    }
+}
+
 function nw_create_patch_window_menus(gui, w, name) {
 
-    // Window menu
-    var windowMenu = new gui.Menu({
-        type: "menubar"
-    });
-
-    // File menu
-    var fileMenu = new gui.Menu();
-
-    // Add to window menu
-    windowMenu.append(new gui.MenuItem({
-        label: l("menu.file"),
-        submenu: fileMenu
-    }));
+    // if we're on GNU/Linux or Windows, create the menus:
+    var m = pd_menus.create_menu(gui);
 
     // File sub-entries
-    fileMenu.append(new gui.MenuItem({
+    minit(m.file.new_file, {
         label: l("menu.new"),
         click: pdgui.menu_new,
         key: "n",
         modifiers: "ctrl",
         tooltip: l("menu.new_tt")
-    }));
-
-    fileMenu.append(new gui.MenuItem({
+    });
+    minit(m.file.open, {
         label: l("menu.open"),
         key: "o",
         modifiers: "ctrl",
@@ -669,22 +667,15 @@ function nw_create_patch_window_menus(gui, w, name) {
             chooser = w.document.querySelector("#fileDialog");
             chooser.click();
         }
-    }));
-
+    });
     if (pdgui.k12_mode == 1) {
-        fileMenu.append(new gui.MenuItem({
+        minit(m.file.k12, {
         label: l("menu.k12_demos"),
         tooltip: l("menu.k12_demos_tt"),
         click: pdgui.menu_k12_open_demos
-        }));
+        });
     }
-
-    fileMenu.append(new gui.MenuItem({
-        type: "separator"
-    }));
-
-    // Note: this must be different for the main Pd window
-    fileMenu.append(new gui.MenuItem({
+    minit(m.file.save, {
         label: l("menu.save"),
         click: function () {
             pdgui.canvas_check_geometry(name); // should this go in menu_save?
@@ -693,9 +684,8 @@ function nw_create_patch_window_menus(gui, w, name) {
         key: "s",
         modifiers: "ctrl",
         tooltip: l("menu.save_tt")
-    }));
-
-    fileMenu.append(new gui.MenuItem({
+    });
+    minit(m.file.saveas, {
         label: l("menu.saveas"),
         click: function (){
             pdgui.canvas_check_geometry(name);
@@ -704,15 +694,8 @@ function nw_create_patch_window_menus(gui, w, name) {
         key: "s",
         modifiers: "ctrl+shift",
         tooltip: l("menu.saveas_tt")
-    }));
-
-    if (pdgui.k12_mode == 0) {
-        fileMenu.append(new gui.MenuItem({
-            type: "separator"
-        }));
-    }
-
-    fileMenu.append(new gui.MenuItem({
+    });
+    minit(m.file.message, {
         label: l("menu.message"),
         click: function() {
             pdgui.menu_send(name);
@@ -720,19 +703,8 @@ function nw_create_patch_window_menus(gui, w, name) {
         key: "m",
         modifiers: "ctrl",
         tooltip: l("menu.message_tt")
-    }));
-
-    if (pdgui.k12_mode == 0) {
-        fileMenu.append(new gui.MenuItem({
-            type: "separator"
-        }));
-    }
-
-    // recent files go here
-
-    // anther separator goes here if there are any recent files
-
-    fileMenu.append(new gui.MenuItem({
+    });
+    minit(m.file.close, {
         label: l("menu.close"),
         tooltip: l("menu.close_tt"),
         click: function() {
@@ -740,72 +712,52 @@ function nw_create_patch_window_menus(gui, w, name) {
         },
         key: "w",
         modifiers: "ctrl"
-    }));
-
-    // Quit Pd
-    fileMenu.append(new gui.MenuItem({
+    });
+    minit(m.file.quit, {
         label: l("menu.quit"),
         click: pdgui.menu_quit,
         key: "q",
         modifiers: "ctrl",
         tooltip: l("menu.quit_tt")
-    }));
+    });
 
     // Edit menu
-    var editMenu = new gui.Menu();
-
-    // Add to window menu
-    windowMenu.append(new gui.MenuItem({
-    label: l("menu.edit"),
-    submenu: editMenu
-    }));
-
-    // Edit sub-entries
-    editMenu.append(modals.undo = new gui.MenuItem({
+    minit(m.edit.undo, {
         label: l("menu.undo"),
         click: function () {
             pdgui.pdsend(name, "undo");
         },
         tooltip: l("menu.undo_tt"),
-    }));
-
-    editMenu.append(modals.redo = new gui.MenuItem({
+    });
+    minit(m.edit.redo, {
         label: l("menu.redo"),
         click: function () {
             pdgui.pdsend(name, "redo");
         },
         tooltip: l("menu.redo_tt"),
-    }));
-
-    editMenu.append(new gui.MenuItem({
-        type: "separator"
-    }));
-
-    editMenu.append(modals.cut = new gui.MenuItem({
+    });
+    minit(m.edit.cut, {
         label: l("menu.cut"),
         click: function () {
             pdgui.pdsend(name, "cut");
         },
         tooltip: l("menu.cut_tt"),
-    }));
-
-    editMenu.append(modals.copy = new gui.MenuItem({
+    });
+    minit(m.edit.copy, {
         label: l("menu.copy"),
         click: function () {
             pdgui.pdsend(name, "copy");
         },
         tooltip: l("menu.copy_tt"),
-    }));
-
-    editMenu.append(modals.paste = new gui.MenuItem({
+    });
+    minit(m.edit.paste, {
         label: l("menu.paste"),
         click: function () {
             pdgui.pdsend(name, "paste");
         },
         tooltip: l("menu.paste_tt"),
-    }));
-
-    editMenu.append(new gui.MenuItem({
+    });
+    minit(m.edit.duplicate, {
         label:  l("menu.duplicate"),
         click: function () {
             pdgui.pdsend(name, "duplicate");
@@ -813,9 +765,8 @@ function nw_create_patch_window_menus(gui, w, name) {
         key: "d",
         modifiers: "ctrl",
         tooltip: l("menu.duplicate_tt")
-    }));
-
-    editMenu.append(modals.selectall = new gui.MenuItem({
+    });
+    minit(m.edit.selectall, {
         label: l("menu.selectall"),
         click: function (evt) {
             if (canvas_events.get_state() === "normal") {
@@ -823,9 +774,8 @@ function nw_create_patch_window_menus(gui, w, name) {
             }
         },
         tooltip: l("menu.selectall_tt"),
-    }));
-
-    editMenu.append(new gui.MenuItem({
+    });
+    minit(m.edit.reselect, {
         label: l("menu.reselect"),
         // Unfortunately nw.js doesn't allow
         // key: "Return" or key: "Enter", so we
@@ -837,13 +787,8 @@ function nw_create_patch_window_menus(gui, w, name) {
         key: String.fromCharCode(10),
         modifiers: "ctrl",
         tooltip: l("menu.reselect_tt")
-    }));
-
-    editMenu.append(new gui.MenuItem({
-        type: "separator"
-    }));
-
-    editMenu.append(new gui.MenuItem({
+    });
+    minit(m.edit.zoomin, {
         label: l("menu.zoomin"),
         click: function () {
             var z = gui.Window.get().zoomLevel;
@@ -853,9 +798,8 @@ function nw_create_patch_window_menus(gui, w, name) {
         key: "=",
         modifiers: "ctrl",
         tooltip: l("menu.zoomin")
-    }));
-
-    editMenu.append(new gui.MenuItem({
+    });
+    minit(m.edit.zoomout, {
         label: l("menu.zoomout"),
         click: function () {
             var z = gui.Window.get().zoomLevel;
@@ -865,13 +809,8 @@ function nw_create_patch_window_menus(gui, w, name) {
         key: "-",
         modifiers: "ctrl",
         tooltip: l("menu.zoomout_tt"),
-    }));
-
-    editMenu.append(new gui.MenuItem({
-        type: "separator"
-    }));
-
-    editMenu.append(new gui.MenuItem({
+    });
+    minit(m.edit.tidyup, {
         label: l("menu.tidyup"),
         click: function() {
             pdgui.pdsend(name, "tidy");
@@ -879,37 +818,29 @@ function nw_create_patch_window_menus(gui, w, name) {
         key: "y",
         modifiers: "ctrl",
         tooltip: l("menu.tidyup_tt")
-    }));
-
-    editMenu.append(new gui.MenuItem({
+    });
+    minit(m.edit.tofront, {
         label: l("menu.tofront"),
         click: function() {
             pdgui.popup_action(name, 3);
         },
         tooltip: l("menu.tofront_tt"),
-    }));
-
-    editMenu.append(new gui.MenuItem({
+    });
+    minit(m.edit.toback, {
         label: l("menu.toback"),
         click: function() {
             pdgui.popup_action(name, 4);
         },
         tooltip: l("menu.toback_tt"),
-    }));
-
-    editMenu.append(new gui.MenuItem({
-        type: "separator"
-    }));
-
-    editMenu.append(new gui.MenuItem({
+    });
+    minit(m.edit.font, {
         label: l("menu.font"),
         click: function () {
             pdgui.pdsend(name, "menufont");
         },
         tooltip: l("menu.font_tt"),
-    }));
-
-    editMenu.append(new gui.MenuItem({
+    });
+    minit(m.edit.cordinspector, {
         label: l("menu.cordinspector"),
         click: function() {
             pdgui.pdsend(name, "magicglass 0");
@@ -917,13 +848,8 @@ function nw_create_patch_window_menus(gui, w, name) {
         key: "r",
         modifiers: "ctrl",
         tooltip: l("menu.cordinspector_tt"),
-    }));
-
-    editMenu.append(new gui.MenuItem({
-        type: "separator"
-    }));
-
-    editMenu.append(new gui.MenuItem({
+    });
+    minit(m.edit.find, {
         label: l("menu.find"),
         click: function () {
             var find_bar = w.document.getElementById("canvas_find"),
@@ -947,35 +873,27 @@ function nw_create_patch_window_menus(gui, w, name) {
         key: "f",
         modifiers: "ctrl",
         tooltip: l("menu.find_tt"),
-    }));
-
-    editMenu.append(new gui.MenuItem({
+    });
+    minit(m.edit.findagain, {
         label: l("menu.findagain"),
         click: menu_generic,
         key: "g",
         modifiers: "ctrl",
         tooltip: l("menu.findagain")
-    }));
-
-    editMenu.append(new gui.MenuItem({
+    });
+    minit(m.edit.finderror, {
         label: l("menu.finderror"),
         click: function() {
             pdgui.pdsend("pd finderror");
         },
         tooltip: l("menu.finderror_tt"),
-    }));
-
-    editMenu.append(new gui.MenuItem({
-        type: "separator"
-    }));
-
-    editMenu.append(new gui.MenuItem({
+    });
+    minit(m.edit.autotips, {
         label: l("menu.autotips"),
         click: menu_generic,
         tooltip: l("menu.autotips_tt"),
-    }));
-
-    editMenu.append(new gui.MenuItem({
+    });
+    minit(m.edit.editmode, {
         label: l("menu.editmode"),
         click: function() {
             update_live_box();
@@ -984,31 +902,17 @@ function nw_create_patch_window_menus(gui, w, name) {
         key: "e",
         modifiers: "ctrl",
         tooltip: l("menu.editmode_tt")
-    }));
-
-    editMenu.append(new gui.MenuItem({
-        type: "separator"
-    }));
-
-    editMenu.append(new gui.MenuItem({
+    });
+    minit(m.edit.preferences, {
         label: l("menu.preferences"),
         click: pdgui.open_prefs,
         key: "p",
         modifiers: "ctrl",
         tooltip: l("menu.preferences_tt")
-    }));
+    });
 
     // Put menu
-    var putMenu = new gui.Menu();
-
-    // Add to window menu
-    windowMenu.append(new gui.MenuItem({
-    label: l("menu.put"),
-    submenu: putMenu
-    }));
-
-    // Put menu sub-entries
-    putMenu.append(new gui.MenuItem({
+    minit(m.put.object, {
         label: l("menu.object"),
         click: function() {
             update_live_box();
@@ -1018,9 +922,8 @@ function nw_create_patch_window_menus(gui, w, name) {
         key: "1",
         modifiers: "ctrl",
         tooltip: l("menu.object_tt"),
-    }));
-
-    putMenu.append(new gui.MenuItem({
+    });
+    minit(m.put.message, {
         label: l("menu.msgbox"),
         click: function() {
             update_live_box();
@@ -1030,9 +933,8 @@ function nw_create_patch_window_menus(gui, w, name) {
         key: "2",
         modifiers: "ctrl",
         tooltip: l("menu.msgbox_tt"),
-    }));
-
-    putMenu.append(new gui.MenuItem({
+    });
+    minit(m.put.number, {
         label: l("menu.number"),
         click: function() { 
             update_live_box();
@@ -1042,9 +944,8 @@ function nw_create_patch_window_menus(gui, w, name) {
         key: "3",
         modifiers: "ctrl",
         tooltip: l("menu.number_tt")
-    }));
-
-    putMenu.append(new gui.MenuItem({
+    });
+    minit(m.put.symbol, {
         label: l("menu.symbol"),
         click: function() {
             update_live_box();
@@ -1054,9 +955,8 @@ function nw_create_patch_window_menus(gui, w, name) {
         key: "4",
         modifiers: "ctrl",
         tooltip: l("menu.symbol_tt")
-    }));
-
-    putMenu.append(new gui.MenuItem({
+    });
+    minit(m.put.comment, {
         label: l("menu.comment"),
         click: function() {
             update_live_box();
@@ -1066,13 +966,8 @@ function nw_create_patch_window_menus(gui, w, name) {
         key: "5",
         modifiers: "ctrl",
         tooltip: l("menu.comment_tt")
-    }));
-
-    putMenu.append(new gui.MenuItem({
-        type: "separator"
-    }));
-
-    putMenu.append(new gui.MenuItem({
+    });
+    minit(m.put.bang, {
         label: l("menu.bang"),
         click: function(e) {
             update_live_box();
@@ -1082,9 +977,8 @@ function nw_create_patch_window_menus(gui, w, name) {
         key: "b",
         modifiers: "ctrl-shift",
         tooltip: l("menu.bang_tt")
-    }));
-
-    putMenu.append(new gui.MenuItem({
+    });
+    minit(m.put.toggle, {
         label: l("menu.toggle"),
         click: function() {
             update_live_box();
@@ -1094,9 +988,8 @@ function nw_create_patch_window_menus(gui, w, name) {
         key: "t",
         modifiers: "ctrl-shift",
         tooltip: l("menu.toggle_tt")
-    }));
-
-    putMenu.append(new gui.MenuItem({
+    });
+    minit(m.put.number2, {
         label: l("menu.number2"),
         click: function() {
             update_live_box();
@@ -1106,9 +999,8 @@ function nw_create_patch_window_menus(gui, w, name) {
         key: "n",
         modifiers: "ctrl-shift",
         tooltip: l("menu.number2")
-    }));
-
-    putMenu.append(new gui.MenuItem({
+    });
+    minit(m.put.vslider, {
         label: l("menu.vslider"),
         click: function() {
             update_live_box();
@@ -1118,9 +1010,8 @@ function nw_create_patch_window_menus(gui, w, name) {
         key: "v",
         modifiers: "ctrl-shift",
         tooltip: l("menu.vslider_tt"),
-    }));
-
-    putMenu.append(new gui.MenuItem({
+    });
+    minit(m.put.hslider, {
         label: l("menu.hslider"),
         click: function() {
             update_live_box();
@@ -1130,9 +1021,8 @@ function nw_create_patch_window_menus(gui, w, name) {
         key: "h",
         modifiers: "ctrl-shift",
         tooltip: l("menu.hslider_tt"),
-    }));
-
-    putMenu.append(new gui.MenuItem({
+    });
+    minit(m.put.vradio, {
         label: l("menu.vradio"),
         click: function() {
             update_live_box();
@@ -1142,9 +1032,8 @@ function nw_create_patch_window_menus(gui, w, name) {
         key: "d",
         modifiers: "ctrl-shift",
         tooltip: l("menu.vradio_tt"),
-    }));
-
-    putMenu.append(new gui.MenuItem({
+    });
+    minit(m.put.hradio, {
         label: l("menu.hradio"),
         click: function() {
             update_live_box();
@@ -1154,9 +1043,8 @@ function nw_create_patch_window_menus(gui, w, name) {
         key: "i",
         modifiers: "ctrl",
         tooltip: l("menu.hradio_tt"),
-    }));
-
-    putMenu.append(new gui.MenuItem({
+    });
+    minit(m.put.vu, {
         label: l("menu.vu"),
         click: function() {
             update_live_box();
@@ -1166,9 +1054,8 @@ function nw_create_patch_window_menus(gui, w, name) {
         key: "u",
         modifiers: "ctrl",
         tooltip: l("menu.vu_tt"),
-    }));
-
-    putMenu.append(new gui.MenuItem({
+    });
+    minit(m.put.cnv, {
         label: l("menu.cnv"),
         click: function() {
             update_live_box();
@@ -1178,13 +1065,8 @@ function nw_create_patch_window_menus(gui, w, name) {
         key: "c",
         modifiers: "ctrl-shift",
         tooltip: l("menu.cnv_tt")
-    }));
-
-    putMenu.append(new gui.MenuItem({
-        type: "separator"
-    }));
-
-    //putMenu.append(new gui.MenuItem({
+    });
+    //minit(m.put.graph, {
     //    label: l("menu.graph"),
     //    click: function() {
     //        update_live_box();
@@ -1193,9 +1075,8 @@ function nw_create_patch_window_menus(gui, w, name) {
     //        pdgui.pdsend(name, "graph NULL 0 0 0 0 30 30 0 30");
     //    },
     //    tooltip: l("menu.graph_tt"),
-    //}));
-
-    putMenu.append(new gui.MenuItem({
+    //});
+    minit(m.put.array, {
         label: l("menu.array"),
         click: function() {
                 update_live_box();
@@ -1203,21 +1084,10 @@ function nw_create_patch_window_menus(gui, w, name) {
                 pdgui.pdsend(name, "menuarray");
             },
         tooltip: l("menu.array_tt"),
-    }));
+    });
 
-
-    // Windows menu... call it "winman" (i.e., window management)
-    // to avoid confusion
-    var winmanMenu = new gui.Menu();
-
-    // Add to windows menu
-    windowMenu.append(new gui.MenuItem({
-    label: l("menu.windows"),
-    submenu: winmanMenu
-    }));
-
-    // Winman sub-entries
-    winmanMenu.append(new gui.MenuItem({
+    // Window
+    minit(m.win.fullscreen, {
         label: l("menu.fullscreen"),
         click: function() {
             var win = gui.Window.get();
@@ -1228,9 +1098,8 @@ function nw_create_patch_window_menus(gui, w, name) {
         key: "f11",
         //modifiers: "ctrl",
         tooltip: l("menu.nextwin_tt"),
-    }));
-
-    winmanMenu.append(new gui.MenuItem({
+    });
+    minit(m.win.nextwin, {
         label: l("menu.nextwin"),
         click: function() {
             pdgui.raise_next(name);
@@ -1238,9 +1107,8 @@ function nw_create_patch_window_menus(gui, w, name) {
         key: String.fromCharCode(12), // Page down
         modifiers: "ctrl",
         tooltip: l("menu.nextwin_tt"),
-    }));
-
-    winmanMenu.append(new gui.MenuItem({
+    });
+    minit(m.win.prevwin, {
         label: l("menu.prevwin"),
         click: function() {
             pdgui.raise_prev(name);
@@ -1248,29 +1116,22 @@ function nw_create_patch_window_menus(gui, w, name) {
         key: String.fromCharCode(11), // Page up
         modifiers: "ctrl",
         tooltip: l("menu.prevwin_tt"),
-    }));
-
-    winmanMenu.append(new gui.MenuItem({
-        type: "separator"
-    }));
-
-    winmanMenu.append(new gui.MenuItem({
+    });
+    minit(m.win.parentwin, {
         label: l("menu.parentwin"),
         click: function() {
             pdgui.pdsend(name, "findparent", 0);
         },
         tooltip: l("menu.parentwin_tt"),
-    }));
-
-    winmanMenu.append(new gui.MenuItem({
+    });
+    minit(m.win.visible_ancestor, {
         label: l("menu.visible_ancestor"),
         click: function() {
             pdgui.pdsend(name, "findparent", 1);
         },
         tooltip: l("menu.visible_ancestor_tt"),
-    }));
-
-    winmanMenu.append(new gui.MenuItem({
+    });
+    minit(m.win.pdwin, {
         label: l("menu.pdwin"),
         click: function() {
             pdgui.raise_pd_window();
@@ -1278,19 +1139,10 @@ function nw_create_patch_window_menus(gui, w, name) {
         tooltip: l("menu.pdwin_tt"),
         key: "r",
         modifiers: "ctrl"
-    }));
+    });
 
     // Media menu
-    var mediaMenu = new gui.Menu();
-
-    // Add to window menu
-    windowMenu.append(new gui.MenuItem({
-    label: l("menu.media"),
-    submenu: mediaMenu
-    }));
-
-    // Media sub-entries
-    mediaMenu.append(new gui.MenuItem({
+    minit(m.media.audio_on, {
         label: l("menu.audio_on"),
         click: function() {
             pdgui.pdsend("pd dsp 1");
@@ -1298,9 +1150,8 @@ function nw_create_patch_window_menus(gui, w, name) {
         key: "/",
         modifiers: "ctrl",
         tooltip: l("menu.audio_on_tt"),
-    }));
-
-    mediaMenu.append(new gui.MenuItem({
+    });
+    minit(m.media.audio_off, {
         label: l("menu.audio_off"),
         click: function() {
             pdgui.pdsend("pd dsp 0");
@@ -1308,87 +1159,61 @@ function nw_create_patch_window_menus(gui, w, name) {
         key: ".",
         modifiers: "ctrl",
         tooltip: l("menu.audio_off_tt"),
-    }));
-
-    mediaMenu.append(new gui.MenuItem({
-        type: "separator"
-    }));
-
-    mediaMenu.append(new gui.MenuItem({
+    });
+    minit(m.media.test, {
         label: l("menu.test"),
         click: function() {
             pdgui.pd_doc_open("doc/7.stuff/tools", "testtone.pd");
         },
         tooltip: l("menu.test_tt"),
-    }));
-
-    mediaMenu.append(new gui.MenuItem({
+    });
+    minit(m.media.loadmeter, {
         label: l("menu.loadmeter"),
         click: function() {
             pdgui.pd_doc_open("doc/7.stuff/tools", "load-meter.pd");
         },
         tooltip: l("menu.loadmeter_tt"),
-    }));
+    });
 
     // Help menu
-    var helpMenu = new gui.Menu();
-
-    // Add to window menu
-    windowMenu.append(new gui.MenuItem({
-    label: l("menu.help"),
-    submenu: helpMenu
-    }));
-
-    // Help sub-entries
-    helpMenu.append(new gui.MenuItem({
+    minit(m.help.about, {
         label: l("menu.about"),
         click: menu_generic,
         //key: "c",
         //modifiers: "ctrl",
         tooltip: l("menu.about_tt"),
-    }));
-
-    helpMenu.append(new gui.MenuItem({
+    });
+    minit(m.help.manual, {
         label: l("menu.manual"),
         click: menu_generic,
         tooltip: l("menu.manual"),
-    }));
-
-    helpMenu.append(new gui.MenuItem({
+    });
+    minit(m.help.browser, {
         label: l("menu.browser"),
         click: menu_generic,
         tooltip: l("menu.browser_tt"),
-    }));
-
-    helpMenu.append(new gui.MenuItem({
-        type: "separator"
-    }));
-
-    helpMenu.append(new gui.MenuItem({
+    });
+    minit(m.help.l2ork_list, {
         label: l("menu.l2ork_list"),
         click: menu_generic,
         tooltip: l("menu.l2ork_list_tt"),
-    }));
-
-    helpMenu.append(new gui.MenuItem({
+    });
+    minit(m.help.pd_list, {
         label: l("menu.pd_list"),
         click: menu_generic,
         tooltip: l("menu.pd_list_tt"),
-    }));
-
-    helpMenu.append(new gui.MenuItem({
+    });
+    minit(m.help.forums, {
         label: l("menu.forums"),
         click: menu_generic,
         tooltip: l("menu.forums_tt"),
-    }));
-
-    helpMenu.append(new gui.MenuItem({
+    });
+    minit(m.help.irc, {
         label: l("menu.irc"),
         click: menu_generic,
         tooltip: l("menu.irc_tt"),
-    }));
-
-    helpMenu.append(new gui.MenuItem({
+    });
+    minit(m.help.devtools, {
         label: l("menu.devtools"),
         key: "b", // temporary convenience shortcut-- can change if needed
         modifiers: "ctrl",
@@ -1396,9 +1221,5 @@ function nw_create_patch_window_menus(gui, w, name) {
             gui.Window.get().showDevTools();
         },
         tooltip: l("menu.devtools_tt"),
-    }));
-
-    // Assign to window
-    gui.Window.get().menu = windowMenu;
-
+    });
 }
