@@ -2,12 +2,11 @@
 
 var pdgui = require("./pdgui.js");
 var l = pdgui.get_local_string; // For menu names
-var osx_menu = null; // OSX App menu
+var osx_menu = null; // OSX App menu -- a single one per running instance
 
 function create_menu(gui, type) {
-    // type is "console" only on Windows and GNU/Linux. On OSX we
-    // create a menu only once, and then enable/disable menuitems and
-    // switch out functions as needed.
+    // On OSX we create a menu only once, and then enable/disable menuitems
+    // and switch out functions as needed.
 
     // We specify the label here because nw.js won't create a menu item
     // without one. We also specify the keyboard shortcuts here because
@@ -16,11 +15,15 @@ function create_menu(gui, type) {
     // won't let you update the keyboard shortcut binding later.)
     var m = {};
 
-    // Command key for OSX, Control for GNU/Linux and Windows
-    var cmd_or_ctrl = process.platform === "darwin" ? "cmd" : "ctrl";
+    var osx = process.platform === "darwin",
+        cmd_or_ctrl = osx ? "cmd" : "ctrl"; // for keybindings
+
+    // OSX just spawns a single canvas menu and then enables/disables
+    // the various menu items as needed.
+    var canvas_menu = osx || (type !== "console");
 
     if (osx_menu) {
-        return osx_menu;
+        return osx_menu; // don't spawn multiple menus on OSX
     }
     // Window menu
     var windowMenu = new gui.Menu({ type: "menubar" });
@@ -56,7 +59,7 @@ function create_menu(gui, type) {
     }
     fileMenu.append(new gui.MenuItem({ type: "separator" }));
 
-    if (type !== "console") {
+    if (canvas_menu) {
         fileMenu.append(m.file.save = new gui.MenuItem({
             label: l("menu.save"),
             key: "s",
@@ -82,7 +85,7 @@ function create_menu(gui, type) {
     if (pdgui.k12_mode == 0) {
         fileMenu.append(new gui.MenuItem({ type: "separator" }));
     }
-    if (type !== "console") {
+    if (canvas_menu) {
         fileMenu.append(m.file.close = new gui.MenuItem({
             label: l("menu.close"),
             key: "w",
@@ -107,7 +110,7 @@ function create_menu(gui, type) {
 
     // Edit sub-entries
     m.edit = {};
-    if (type !== "console") {
+    if (canvas_menu) {
         editMenu.append(m.edit.undo = new gui.MenuItem({
             label: l("menu.undo"),
             tooltip: l("menu.undo_tt")
@@ -126,7 +129,7 @@ function create_menu(gui, type) {
         label: l("menu.copy"),
         tooltip: l("menu.copy_tt")
     }));
-    if (type !== "console") {
+    if (canvas_menu) {
         editMenu.append(m.edit.paste = new gui.MenuItem({
             label: l("menu.paste"),
             tooltip: l("menu.paste_tt")
@@ -142,7 +145,7 @@ function create_menu(gui, type) {
         label: l("menu.selectall"),
         tooltip: l("menu.selectall_tt")
     }));
-    if (type !== "console") {
+    if (canvas_menu) {
         // Unfortunately nw.js doesn't allow
         // key: "Return" or key: "Enter", so we
         // can't bind to ctrl-Enter here. (Even
@@ -168,7 +171,7 @@ function create_menu(gui, type) {
         tooltip: l("menu.zoomout_tt")
     }));
     editMenu.append(new gui.MenuItem({ type: "separator" }));
-    if (type !== "console") {
+    if (canvas_menu) {
         editMenu.append(m.edit.tidyup = new gui.MenuItem({
             label: l("menu.tidyup"),
             key: "y",
@@ -202,7 +205,7 @@ function create_menu(gui, type) {
         modifiers: cmd_or_ctrl,
         tooltip: l("menu.find_tt")
     }));
-    if (type !== "console") {
+    if (canvas_menu) {
         editMenu.append(m.edit.findagain = new gui.MenuItem({
             label: l("menu.findagain"),
             key: "g",
@@ -233,7 +236,7 @@ function create_menu(gui, type) {
         tooltip: l("menu.preferences_tt")
     }));
 
-    if (type !== "console") {
+    if (canvas_menu) {
         // Put menu
         var putMenu = new gui.Menu();
 
@@ -350,13 +353,11 @@ function create_menu(gui, type) {
 
     // Win sub-entries
     m.win = {};
-    if (type !== "console") {
-        winmanMenu.append(m.win.fullscreen = new gui.MenuItem({
-            label: l("menu.fullscreen"),
-            key: "f11",
-            tooltip: l("menu.nextwin_tt")
-        }));
-    }
+    winmanMenu.append(m.win.fullscreen = new gui.MenuItem({
+        label: l("menu.fullscreen"),
+        key: "f11",
+        tooltip: l("menu.nextwin_tt")
+    }));
     winmanMenu.append(m.win.nextwin = new gui.MenuItem({
         label: l("menu.nextwin"),
         key: String.fromCharCode(12), // Page down
@@ -369,7 +370,7 @@ function create_menu(gui, type) {
         modifiers: cmd_or_ctrl,
         tooltip: l("menu.prevwin_tt")
     }));
-    if (type !== "console") {
+    if (canvas_menu) {
         winmanMenu.append(new gui.MenuItem({ type: "separator" }));
         winmanMenu.append(m.win.parentwin = new gui.MenuItem({
             label: l("menu.parentwin"),

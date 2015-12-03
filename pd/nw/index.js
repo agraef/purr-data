@@ -1,6 +1,8 @@
 "use strict";
 var gui = require("nw.gui");
 var pdgui = require("./pdgui.js");
+var pd_menus = require("./pd_menus.js");
+
 // we're using pwd in fileDialog
 var pwd = process.env.PWD;
 
@@ -340,37 +342,25 @@ function pdmenu_irc () {
     alert("Please implement pdmenu_preferences"); 
 }
 
+function minit(menu_item, options) {
+    var o;
+    for (o in options) {
+        if (options.hasOwnProperty(o)) {
+            menu_item[o] = options[o];
+        }
+    }
+}
+
 function nw_create_pd_window_menus(gui, w) {
-    // Command key for OSX, Control for GNU/Linux and Windows
-    var cmd_or_ctrl = process.platform === "darwin" ? "cmd" : "ctrl";
-    // Window menu
-    var windowMenu = new gui.Menu({
-        type: "menubar"
-    });
+    var m = pd_menus.create_menu(gui, "console");
 
-    // File menu
-    var fileMenu = new gui.Menu();
-
-    // Add to window menu
-    windowMenu.append(new gui.MenuItem({
-        label: l("menu.file"),
-        submenu: fileMenu
-    }));
+    // On OSX we have menu items for canvas operations-- we need to disable
+    // them when the console gets focus.
+    var osx = process.platform === "darwin";
 
     // File sub-entries
-    fileMenu.append(new gui.MenuItem({
-        label: l("menu.new"),
-        click: pdgui.menu_new,
-        key: "n",
-        modifiers: cmd_or_ctrl,
-        tooltip: l("menu.new.tt")
-    }));
-
-    fileMenu.append(new gui.MenuItem({
-        label: l("menu.open"),
-        key: "o",
-        modifiers: cmd_or_ctrl,
-        tooltip: l("menu.open.tt"),
+    minit(m.file.new_file, { click: pdgui.menu_new });
+    minit(m.file.open, {
         click: function (){
             var input, chooser,
                 span = w.document.querySelector("#fileDialogSpan");
@@ -395,102 +385,38 @@ function nw_create_pd_window_menus(gui, w) {
             };
             chooser.click();
         }
-    }));
-
+    });
     if (pdgui.k12_mode == 1) {
-        fileMenu.append(new gui.MenuItem({
-        label: l("menu.k12.demos"),
-        tooltip: l("menu.k12.demos_tt"),
-        click: pdgui.menu_k12_open_demos
-        }));
+        minit(m.file.k12, { click: pdgui.menu_k12_open_demos });
     }
-
-    fileMenu.append(new gui.MenuItem({
-        type: "separator"
-    }));
-
     // Note: this must be different for the main Pd window
-    fileMenu.append(new gui.MenuItem({
-        label: l("menu.save"),
-            click: function () {},
-            enabled: false,
-        key: "s",
-        tooltip: l("menu.save.tt"),
-        modifiers: cmd_or_ctrl
-    }));
-
-    fileMenu.append(new gui.MenuItem({
-        label: l("menu.saveas"),
-        click: function (){},
-        enabled: false,
-        key: "S",
-        tooltip: l("menu.saveas_tt"),
-        modifiers: cmd_or_ctrl
-    }));
-
-    if (pdgui.k12_mode == 0) {
-        fileMenu.append(new gui.MenuItem({
-            type: "separator"
-        }));
+    if (osx) {
+        minit(m.file.save, { enabled: false });
+        minit(m.file.saveas, { enabled: false });
     }
-
-    fileMenu.append(new gui.MenuItem({
-        label: l("menu.message"),
-        click: pdgui.menu_send,
-        key: "m",
-        modifiers: cmd_or_ctrl,
-        tooltip: l("menu.message_tt")
-    }));
-
-    if (pdgui.k12_mode == 0) {
-        fileMenu.append(new gui.MenuItem({
-            type: "separator"
-        }));
+    minit(m.file.message, { click: pdgui.menu_send });
+    if (osx) {
+        minit(m.file.close, { enabled: false });
     }
-
-    // recent files go here
-
-    // anther separator goes here if there are any recent files
-
-    // Note: there's no good reason to have this here
-    fileMenu.append(new gui.MenuItem({
-        label: l("menu.close"),
-        click: function () {},
-        enabled: false,
-    }));
-
-    // Quit Pd
-    fileMenu.append(new gui.MenuItem({
-        label: l("menu.quit"),
-        click: pdgui.menu_quit,
-        key: "q",
-        modifiers: cmd_or_ctrl,
-        tooltip: l("menu.quit_tt")
-    }));
-
-
-    // Edit menu
-    var editMenu = new gui.Menu();
-
-    // Add to window menu
-    windowMenu.append(new gui.MenuItem({
-    label: l("menu.edit"),
-    submenu: editMenu
-    }));
+    minit(m.file.quit, { click: pdgui.menu_quit });
 
     // Edit sub-entries
-    editMenu.append(new gui.MenuItem({
-        label: l("menu.copy"),
+    if (osx) {
+        minit(m.edit.undo, { enabled: false });
+        minit(m.edit.redo, { enabled: false });
+        minit(m.edit.cut, { enabled: false });
+    }
+    minit(m.edit.copy, { enabled: true,
         click: function() {
             w.document.execCommand("copy");
-        },
-        key: "c",
-        modifiers: cmd_or_ctrl,
-        tooltip: l("menu.copy_tt")
-    }));
-
-    editMenu.append(new gui.MenuItem({
-        label: l("menu.selectall"),
+        }
+    });
+    if (osx) {
+        minit(m.edit.paste, { enabled: false });
+        minit(m.edit.duplicate, { enabled: false });
+    }
+    minit(m.edit.selectall, {
+        enabled: true,
         click: function () {
             var container_id = "p1", range;
             // This should work across browsers
@@ -510,42 +436,33 @@ function nw_create_pd_window_menus(gui, w) {
                 w.getSelection().empty();
                 w.getSelection().addRange(range);
             }
-        },
-        key: "a",
-        modifiers: cmd_or_ctrl,
-        tooltip: l("menu.selectall_tt")
-    }));
-
-    editMenu.append(new gui.MenuItem({
-        type: "separator"
-    }));
-
-    editMenu.append(new gui.MenuItem({
-        label: l("menu.zoomin"),
+        }
+    });
+    if (osx) {
+        minit(m.edit.reselect, { enabled: false });
+    }
+    minit(m.edit.zoomin, {
         click: function () {
-            gui.Window.get().zoomLevel += 1;
-        },
-        key: "=",
-        modifiers: cmd_or_ctrl,
-        tooltip: l("menu.zoomin_tt")
-    }));
-
-    editMenu.append(new gui.MenuItem({
-        label: l("menu.zoomout"),
+            var z = gui.Window.get().zoomLevel;
+            if (z < 8) { z++; }
+            gui.Window.get().zoomLevel = z;
+        }
+    });
+    minit(m.edit.zoomout, {
         click: function () {
-            gui.Window.get().zoomLevel -= 1;
-        },
-        key: "-",
-        modifiers: cmd_or_ctrl,
-        tooltip: l("menu.zoomout_tt")
-    }));
-
-    editMenu.append(new gui.MenuItem({
-        type: "separator"
-    }));
-
-    editMenu.append(new gui.MenuItem({
-        label: l("menu.find"),
+            var z = gui.Window.get().zoomLevel;
+            if (z > -7) { z--; }
+            gui.Window.get().zoomLevel = z;
+        }
+    });
+    if (osx) {
+        minit(m.edit.tidyup, { enabled: false });
+        minit(m.edit.tofront, { enabled: false });
+        minit(m.edit.toback, { enabled: false });
+        minit(m.edit.font, { enabled: false });
+        minit(m.edit.cordinspector, { enabled: false });
+    }
+    minit(m.edit.find, {
         click: function () {
             var find_bar = w.document.getElementById("console_find"),
                 find_bar_text = w.document.getElementById("console_find_text"),
@@ -562,200 +479,122 @@ function nw_create_pd_window_menus(gui, w) {
                 text_container.style.setProperty("bottom", "0px");
                 find_bar.style.setProperty("display", "none");
             }
-        },
-        key: "f",
-        modifiers: cmd_or_ctrl,
-        tooltip: l("menu.find_tt")
-    }));
-
-    editMenu.append(new gui.MenuItem({
-        label: l("menu.preferences"),
+        }
+    });
+    if (osx) {
+        minit(m.edit.findagain, { enabled: false });
+        minit(m.edit.finderror, { enabled: false });
+        minit(m.edit.autotips, { enabled: false });
+        minit(m.edit.editmode, { enabled: false });
+    }
+    minit(m.edit.preferences, {
         click: pdgui.open_prefs,
-        key: "p",
-        modifiers: cmd_or_ctrl,
-        tooltip: l("menu.preferences_tt")
-    }));
+    });
 
-
-    // Windows menu... call it "winman" (i.e., window management)
-    // to avoid confusion
-    var winmanMenu = new gui.Menu();
-
-    // Add to windows menu
-    windowMenu.append(new gui.MenuItem({
-    label: l("menu.windows"),
-    submenu: winmanMenu
-    }));
+    // Put menu
+    if (osx) {
+        minit(m.put.object, { enabled: false });
+        minit(m.put.message, { enabled: false });
+        minit(m.put.number, { enabled: false });
+        minit(m.put.symbol, { enabled: false });
+        minit(m.put.comment, { enabled: false });
+        minit(m.put.bang, { enabled: false });
+        minit(m.put.toggle, { enabled: false });
+        minit(m.put.number2, { enabled: false });
+        minit(m.put.vslider, { enabled: false });
+        minit(m.put.hslider, { enabled: false });
+        minit(m.put.vradio, { enabled: false });
+        minit(m.put.hradio, { enabled: false });
+        minit(m.put.vu, { enabled: false });
+        minit(m.put.cnv, { enabled: false });
+        //minit(m.put.graph, { enabled: false });
+        minit(m.put.array, { enabled: false });
+    }
 
     // Winman sub-entries
-    winmanMenu.append(new gui.MenuItem({
-        label: l("menu.nextwin"),
+    minit(m.win.fullscreen, {
+        click: function() {
+            var win = gui.Window.get(),
+                fullscreen = win.isFullscreen;
+            win.isFullscreen = !fullscreen;
+            pdgui.post("fullscreen is " + !fullscreen);
+        }
+    });
+    minit(m.win.nextwin, {
         click: function() {
             pdgui.raise_next("pd_window");
-        },
-        //key: "c",
-        //modifiers: cmd_or_ctrl,
-        tooltip: l("menu.nextwin_tt")
-    }));
-
-    winmanMenu.append(new gui.MenuItem({
-        label: l("menu.prevwin"),
+        }
+    });
+    minit(m.win.prevwin, {
         click: function() {
             pdgui.raise_prev("pd_window");
-        },
-        //key: "a",
-        //modifiers: cmd_or_ctrl,
-        tooltip: l("menu.prevwin_tt")
-    }));
-
-    // Media menu
-    var mediaMenu = new gui.Menu();
-
-    // Add to window menu
-    windowMenu.append(new gui.MenuItem({
-    label: l("menu.media"),
-    submenu: mediaMenu
-    }));
+        }
+    });
+    if (osx) {
+        minit(m.win.parentwin, { enabled: false });
+        minit(m.win.visible_ancestor, { enabled: false });
+        minit(m.win.pdwin, { enabled: false });
+    }
 
     // Media sub-entries
-    mediaMenu.append(new gui.MenuItem({
-        label: l("menu.audio_on"),
+    minit(m.media.audio_on, {
         click: function() {
             pdgui.pdsend("pd dsp 1");
-        },
-        key: "/",
-        modifiers: cmd_or_ctrl,
-        tooltip: l("menu.audio_on_tt")
-    }));
-
-    mediaMenu.append(new gui.MenuItem({
-        label: l("menu.audio_off"),
+        }
+    });
+    minit(m.media.audio_off, {
         click: function() {
             pdgui.pdsend("pd dsp 0");
-        },
-        key: ".",
-        modifiers: cmd_or_ctrl,
-        tooltip: l("menu.audio_off_tt")
-    }));
-
-    mediaMenu.append(new gui.MenuItem({
-        type: "separator"
-    }));
-
-    mediaMenu.append(new gui.MenuItem({
-        label: l("menu.test"),
+        }
+    });
+    minit(m.media.test, {
         click: function() {
             pdgui.pd_doc_open("doc/7.stuff/tools", "testtone.pd");
-        },
-        //key: "a",
-        //modifiers: cmd_or_ctrl,
-        tooltip: l("menu.test_tt")
-    }));
-
-    mediaMenu.append(new gui.MenuItem({
-        label: l("menu.loadmeter"),
+        }
+    });
+    minit(m.media.loadmeter, {
         click: function() {
             pdgui.pd_doc_open("doc/7.stuff/tools", "load-meter.pd");
-        },
-        //key: "a",
-        //modifiers: cmd_or_ctrl,
-        tooltip: l("menu.loadmeter_tt")
-    }));
-
-    // Help menu
-    var helpMenu = new gui.Menu();
-
-    // Add to window menu
-    windowMenu.append(new gui.MenuItem({
-    label: l("menu.help"),
-    submenu: helpMenu
-    }));
+        }
+    });
 
     // Help sub-entries
-    helpMenu.append(new gui.MenuItem({
-        label: l("menu.about"),
+    minit(m.help.about, {
         click: function() {
             pdgui.pd_doc_open("doc/1.manual", "1.introduction.txt");
-        },
-        //key: "c",
-        //modifiers: cmd_or_ctrl,
-        tooltip: l("menu.about_tt")
-    }));
-
-    helpMenu.append(new gui.MenuItem({
-        label: l("menu.manual"),
+        }
+    });
+    minit(m.help.manual, {
         click: function() {
             pdgui.pd_doc_open("doc/1.manual", "index.htm");
-        },
-        //key: "a",
-        //modifiers: cmd_or_ctrl,
-        tooltip: l("menu.manual_tt")
-    }));
-
-    helpMenu.append(new gui.MenuItem({
-        label: l("menu.browser"),
+        }
+    });
+    minit(m.help.browser, {
         click: function() {
-            pdmenu_help_browser(w);
-        },
-        //key: "a",
-        //modifiers: cmd_or_ctrl,
-        tooltip: l("menu.browser_tt")
-    }));
-
-    helpMenu.append(new gui.MenuItem({
-        type: "separator"
-    }));
-
-    helpMenu.append(new gui.MenuItem({
-        label: l("menu.l2ork_list"),
+            alert("please implement a help browser");
+        }
+    });
+    minit(m.help.l2ork_list, {
         click: function() {
             pdgui.external_doc_open("http://disis.music.vt.edu/listinfo/l2ork-dev");
-        },
-        //key: "a",
-        //modifiers: cmd_or_ctrl,
-        tooltip: l("menu.l2ork_list_tt")
-    }));
-
-    helpMenu.append(new gui.MenuItem({
-        label: l("menu.pd_list"),
+        }
+    });
+    minit(m.help.pd_list, {
         click: function() {
             pdgui.external_doc_open("http://puredata.info/community/lists");
-        },
-        //key: "a",
-        //modifiers: cmd_or_ctrl,
-        tooltip: l("menu.pd_list_tt")
-    }));
-
-    helpMenu.append(new gui.MenuItem({
-        label: l("menu.forums"),
+        }
+    });
+    minit(m.help.forums, {
         click: function() {
             pdgui.external_doc_open("http://forum.pdpatchrepo.info/");
-        },
-        //key: "a",
-        //modifiers: cmd_or_ctrl,
-        tooltip: l("menu.forums_tt")
-    }));
-
-    helpMenu.append(new gui.MenuItem({
-        label: l("menu.devtools"),
-        click: function() {
+        }
+    });
+    minit(m.help.irc, {
+        click: function() { alert("Please link to the irc page") }
+    });
+    minit(m.help.devtools, {
+        click: function () {
             gui.Window.get().showDevTools();
-        },
-        key: "b", // temporary convenience shortcut-- can change if needed
-        modifiers: cmd_or_ctrl,
-        tooltip: l("menu.devtools_tt")
-    }));
-
-    //helpMenu.append(new gui.MenuItem({
-    //    label: l("menu.irc"),
-    //    click: function() {
-    //        pdgui.external_doc_open("irc://irc.freenode.net/dataflow");
-    //    },
-    //    //key: "a",
-    //    //modifiers: cmd_or_ctrl,
-    //    tooltip: l("menu.irc_tt")
-    //}));
-
-    // Assign to window
-    gui.Window.get(w).menu = windowMenu;
+        }
+    });
 }

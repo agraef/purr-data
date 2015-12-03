@@ -639,7 +639,6 @@ function minit(menu_item, options) {
 
 
 function nw_create_patch_window_menus(gui, w, name) {
-
     // if we're on GNU/Linux or Windows, create the menus:
     var m = canvas_menu = pd_menus.create_menu(gui);
 
