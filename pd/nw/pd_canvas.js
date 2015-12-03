@@ -215,7 +215,10 @@ var canvas_events = (function() {
                 //evt.preventDefault();
             },
             keypress: function(evt) {
-                // Hack to handle undo/redo shortcuts
+                // Hack to handle undo/redo shortcuts. Other menu shortcuts are
+                // in pd_menus. It'd be best to have a JSON file called
+                // pd_shortcuts.js so we can keep them all in a central
+                // location, but that's a bigger project.
                 if (evt.charCode === 26) {
                     if (evt.ctrlKey === true) {
                         if (evt.shiftKey === true) { // ctrl-Shift-z
@@ -572,16 +575,16 @@ function create_popup_menu(name) {
 
 function nw_undo_menu(undo_text, redo_text) {
     if (undo_text === "no") {
-        modals.undo.enabled = false;
+        canvas_menu.edit.undo.enabled = false;
     } else {
-        modals.undo.enabled = true;
-        modals.undo.label = l("menu.undo") + " " + undo_text;
+        canvas_menu.edit.undo.enabled = true;
+        canvas_menu.edit.undo.label = l("menu.undo") + " " + undo_text;
     }
     if (redo_text === "no") {
-        modals.redo.enabled = false;
+        canvas_menu.edit.redo.enabled = false;
     } else {
-        modals.redo.enabled = true;
-        modals.redo.label = l("menu.redo") + " " + redo_text;
+        canvas_menu.edit.redo.enabled = true;
+        canvas_menu.edit.redo.label = l("menu.redo") + " " + redo_text;
     }
 }
 
@@ -610,16 +613,14 @@ function instantiate_live_box() {
 
 // Menus for the Patch window
 
-var modals = {}; // Edit menu items that should be disabled when editing
-                 // an object box
+var canvas_menu = {};
 
 function set_edit_menu_modals(state) {
-    var item;
-    for (item in modals) {
-        if (modals.hasOwnProperty(item)) {
-            modals[item].enabled = state;
-        }
-    }
+    canvas_menu.edit.undo.enabled = state;
+    canvas_menu.edit.redo.enabled = state;
+    canvas_menu.edit.cut.enabled = state;
+    canvas_menu.edit.copy.enabled = state;
+    canvas_menu.edit.paste.enabled = state;
 }
 
 // stop-gap
@@ -636,24 +637,15 @@ function minit(menu_item, options) {
     }
 }
 
+
 function nw_create_patch_window_menus(gui, w, name) {
 
     // if we're on GNU/Linux or Windows, create the menus:
-    var m = pd_menus.create_menu(gui);
+    var m = canvas_menu = pd_menus.create_menu(gui);
 
     // File sub-entries
-    minit(m.file.new_file, {
-        label: l("menu.new"),
-        click: pdgui.menu_new,
-        key: "n",
-        modifiers: "ctrl",
-        tooltip: l("menu.new_tt")
-    });
+    minit(m.file.new_file, { click: pdgui.menu_new });
     minit(m.file.open, {
-        label: l("menu.open"),
-        key: "o",
-        modifiers: "ctrl",
-        tooltip: l("menu.open_tt"),
         click: function() {
             var input, chooser,
                 span = w.document.querySelector("#fileDialogSpan");
@@ -669,188 +661,89 @@ function nw_create_patch_window_menus(gui, w, name) {
         }
     });
     if (pdgui.k12_mode == 1) {
-        minit(m.file.k12, {
-        label: l("menu.k12_demos"),
-        tooltip: l("menu.k12_demos_tt"),
-        click: pdgui.menu_k12_open_demos
-        });
+        minit(m.file.k12, { click: pdgui.menu_k12_open_demos });
     }
     minit(m.file.save, {
-        label: l("menu.save"),
         click: function () {
             pdgui.canvas_check_geometry(name); // should this go in menu_save?
             pdgui.menu_save(name);
         },
-        key: "s",
-        modifiers: "ctrl",
-        tooltip: l("menu.save_tt")
     });
     minit(m.file.saveas, {
-        label: l("menu.saveas"),
         click: function (){
             pdgui.canvas_check_geometry(name);
             pdgui.menu_saveas(name);
         },
-        key: "s",
-        modifiers: "ctrl+shift",
-        tooltip: l("menu.saveas_tt")
     });
     minit(m.file.message, {
-        label: l("menu.message"),
-        click: function() {
-            pdgui.menu_send(name);
-        },
-        key: "m",
-        modifiers: "ctrl",
-        tooltip: l("menu.message_tt")
+        click: function() { pdgui.menu_send(name); }
     });
     minit(m.file.close, {
-        label: l("menu.close"),
-        tooltip: l("menu.close_tt"),
-        click: function() {
-            pdgui.menu_close(name);
-        },
-        key: "w",
-        modifiers: "ctrl"
+        click: function() { pdgui.menu_close(name); }
     });
     minit(m.file.quit, {
-        label: l("menu.quit"),
         click: pdgui.menu_quit,
-        key: "q",
-        modifiers: "ctrl",
-        tooltip: l("menu.quit_tt")
     });
 
     // Edit menu
     minit(m.edit.undo, {
-        label: l("menu.undo"),
-        click: function () {
-            pdgui.pdsend(name, "undo");
-        },
-        tooltip: l("menu.undo_tt"),
+        click: function () { pdgui.pdsend(name, "undo"); }
     });
     minit(m.edit.redo, {
-        label: l("menu.redo"),
-        click: function () {
-            pdgui.pdsend(name, "redo");
-        },
-        tooltip: l("menu.redo_tt"),
+        click: function () { pdgui.pdsend(name, "redo"); }
     });
     minit(m.edit.cut, {
-        label: l("menu.cut"),
-        click: function () {
-            pdgui.pdsend(name, "cut");
-        },
-        tooltip: l("menu.cut_tt"),
+        click: function () { pdgui.pdsend(name, "cut"); }
     });
     minit(m.edit.copy, {
-        label: l("menu.copy"),
-        click: function () {
-            pdgui.pdsend(name, "copy");
-        },
-        tooltip: l("menu.copy_tt"),
+        click: function () { pdgui.pdsend(name, "copy"); }
     });
     minit(m.edit.paste, {
-        label: l("menu.paste"),
-        click: function () {
-            pdgui.pdsend(name, "paste");
-        },
-        tooltip: l("menu.paste_tt"),
+        click: function () { pdgui.pdsend(name, "paste"); }
     });
     minit(m.edit.duplicate, {
-        label:  l("menu.duplicate"),
-        click: function () {
-            pdgui.pdsend(name, "duplicate");
-        },
-        key: "d",
-        modifiers: "ctrl",
-        tooltip: l("menu.duplicate_tt")
+        click: function () { pdgui.pdsend(name, "duplicate"); }
     });
     minit(m.edit.selectall, {
-        label: l("menu.selectall"),
         click: function (evt) {
             if (canvas_events.get_state() === "normal") {
                 pdgui.pdsend(name, "selectall");
             }
-        },
-        tooltip: l("menu.selectall_tt"),
+        }
     });
     minit(m.edit.reselect, {
-        label: l("menu.reselect"),
-        // Unfortunately nw.js doesn't allow
-        // key: "Return" or key: "Enter", so we
-        // can't bind to ctrl-Enter here. (Even
-        // tried fromCharCode...)
-        click: function () {
-            pdgui.pdsend(name, "reselect");
-        },
-        key: String.fromCharCode(10),
-        modifiers: "ctrl",
-        tooltip: l("menu.reselect_tt")
+        click: function () { pdgui.pdsend(name, "reselect"); }
     });
     minit(m.edit.zoomin, {
-        label: l("menu.zoomin"),
         click: function () {
             var z = gui.Window.get().zoomLevel;
             if (z < 8) { z++; }
             gui.Window.get().zoomLevel = z;
-        },
-        key: "=",
-        modifiers: "ctrl",
-        tooltip: l("menu.zoomin")
+        }
     });
     minit(m.edit.zoomout, {
-        label: l("menu.zoomout"),
         click: function () {
             var z = gui.Window.get().zoomLevel;
             if (z > -7) { z--; } 
             gui.Window.get().zoomLevel = z;
-        },
-        key: "-",
-        modifiers: "ctrl",
-        tooltip: l("menu.zoomout_tt"),
+        }
     });
     minit(m.edit.tidyup, {
-        label: l("menu.tidyup"),
-        click: function() {
-            pdgui.pdsend(name, "tidy");
-        },
-        key: "y",
-        modifiers: "ctrl",
-        tooltip: l("menu.tidyup_tt")
+        click: function() { pdgui.pdsend(name, "tidy"); }
     });
     minit(m.edit.tofront, {
-        label: l("menu.tofront"),
-        click: function() {
-            pdgui.popup_action(name, 3);
-        },
-        tooltip: l("menu.tofront_tt"),
+        click: function() { pdgui.popup_action(name, 3); }
     });
     minit(m.edit.toback, {
-        label: l("menu.toback"),
-        click: function() {
-            pdgui.popup_action(name, 4);
-        },
-        tooltip: l("menu.toback_tt"),
+        click: function() { pdgui.popup_action(name, 4); }
     });
     minit(m.edit.font, {
-        label: l("menu.font"),
-        click: function () {
-            pdgui.pdsend(name, "menufont");
-        },
-        tooltip: l("menu.font_tt"),
+        click: function () { pdgui.pdsend(name, "menufont"); }
     });
     minit(m.edit.cordinspector, {
-        label: l("menu.cordinspector"),
-        click: function() {
-            pdgui.pdsend(name, "magicglass 0");
-        },
-        key: "r",
-        modifiers: "ctrl",
-        tooltip: l("menu.cordinspector_tt"),
+        click: function() { pdgui.pdsend(name, "magicglass 0"); }
     });
     minit(m.edit.find, {
-        label: l("menu.find"),
         click: function () {
             var find_bar = w.document.getElementById("canvas_find"),
                 find_bar_text = w.document.getElementById("canvas_find_text"),
@@ -869,202 +762,129 @@ function nw_create_patch_window_menus(gui, w, name) {
                 // we might need to fetch the previous state here.
                 canvas_events.normal();
             }
-        },
-        key: "f",
-        modifiers: "ctrl",
-        tooltip: l("menu.find_tt"),
+        }
     });
     minit(m.edit.findagain, {
-        label: l("menu.findagain"),
-        click: menu_generic,
-        key: "g",
-        modifiers: "ctrl",
-        tooltip: l("menu.findagain")
+        click: function() {
+            pdgui.pdsend(name, "findagain");
+        }
     });
     minit(m.edit.finderror, {
-        label: l("menu.finderror"),
         click: function() {
             pdgui.pdsend("pd finderror");
-        },
-        tooltip: l("menu.finderror_tt"),
+        }
     });
     minit(m.edit.autotips, {
-        label: l("menu.autotips"),
-        click: menu_generic,
-        tooltip: l("menu.autotips_tt"),
+        click: menu_generic
     });
     minit(m.edit.editmode, {
-        label: l("menu.editmode"),
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "editmode 0");
-        },
-        key: "e",
-        modifiers: "ctrl",
-        tooltip: l("menu.editmode_tt")
+        }
     });
     minit(m.edit.preferences, {
-        label: l("menu.preferences"),
-        click: pdgui.open_prefs,
-        key: "p",
-        modifiers: "ctrl",
-        tooltip: l("menu.preferences_tt")
+        click: pdgui.open_prefs
     });
 
     // Put menu
     minit(m.put.object, {
-        label: l("menu.object"),
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "obj 0");
-        },
-        key: "1",
-        modifiers: "ctrl",
-        tooltip: l("menu.object_tt"),
+        }
     });
     minit(m.put.message, {
-        label: l("menu.msgbox"),
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "msg 0");
-        },
-        key: "2",
-        modifiers: "ctrl",
-        tooltip: l("menu.msgbox_tt"),
+        }
     });
     minit(m.put.number, {
-        label: l("menu.number"),
         click: function() { 
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "floatatom 0");
-        },
-        key: "3",
-        modifiers: "ctrl",
-        tooltip: l("menu.number_tt")
+        }
     });
     minit(m.put.symbol, {
-        label: l("menu.symbol"),
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "symbolatom 0");
-        },
-        key: "4",
-        modifiers: "ctrl",
-        tooltip: l("menu.symbol_tt")
+        }
     });
     minit(m.put.comment, {
-        label: l("menu.comment"),
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "text 0");
-        },
-        key: "5",
-        modifiers: "ctrl",
-        tooltip: l("menu.comment_tt")
+        }
     });
     minit(m.put.bang, {
-        label: l("menu.bang"),
         click: function(e) {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "bng 0");
-        },
-        key: "b",
-        modifiers: "ctrl-shift",
-        tooltip: l("menu.bang_tt")
+        }
     });
     minit(m.put.toggle, {
-        label: l("menu.toggle"),
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "toggle 0");
-        },
-        key: "t",
-        modifiers: "ctrl-shift",
-        tooltip: l("menu.toggle_tt")
+        }
     });
     minit(m.put.number2, {
-        label: l("menu.number2"),
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "numbox 0");
-        },
-        key: "n",
-        modifiers: "ctrl-shift",
-        tooltip: l("menu.number2")
+        }
     });
     minit(m.put.vslider, {
-        label: l("menu.vslider"),
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "vslider 0");
-        },
-        key: "v",
-        modifiers: "ctrl-shift",
-        tooltip: l("menu.vslider_tt"),
+        }
     });
     minit(m.put.hslider, {
-        label: l("menu.hslider"),
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "hslider 0");
-        },
-        key: "h",
-        modifiers: "ctrl-shift",
-        tooltip: l("menu.hslider_tt"),
+        }
     });
     minit(m.put.vradio, {
-        label: l("menu.vradio"),
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "vradio 0");
-        },
-        key: "d",
-        modifiers: "ctrl-shift",
-        tooltip: l("menu.vradio_tt"),
+        }
     });
     minit(m.put.hradio, {
-        label: l("menu.hradio"),
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "hradio 0");
-        },
-        key: "i",
-        modifiers: "ctrl",
-        tooltip: l("menu.hradio_tt"),
+        }
     });
     minit(m.put.vu, {
-        label: l("menu.vu"),
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "vumeter 0");
-        },
-        key: "u",
-        modifiers: "ctrl",
-        tooltip: l("menu.vu_tt"),
+        }
     });
     minit(m.put.cnv, {
-        label: l("menu.cnv"),
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "mycnv 0");
-        },
-        key: "c",
-        modifiers: "ctrl-shift",
-        tooltip: l("menu.cnv_tt")
+        }
     });
     //minit(m.put.graph, {
     //    label: l("menu.graph"),
@@ -1077,149 +897,107 @@ function nw_create_patch_window_menus(gui, w, name) {
     //    tooltip: l("menu.graph_tt"),
     //});
     minit(m.put.array, {
-        label: l("menu.array"),
         click: function() {
                 update_live_box();
                 pdgui.pdsend(name, "dirty 1");
                 pdgui.pdsend(name, "menuarray");
-            },
-        tooltip: l("menu.array_tt"),
+            }
     });
 
     // Window
     minit(m.win.fullscreen, {
-        label: l("menu.fullscreen"),
         click: function() {
             var win = gui.Window.get();
             var fullscreen = win.isFullscreen;
             win.isFullscreen = !fullscreen;
             pdgui.post("fullscreen is " + fullscreen);
-        },
-        key: "f11",
-        //modifiers: "ctrl",
-        tooltip: l("menu.nextwin_tt"),
+        }
     });
     minit(m.win.nextwin, {
-        label: l("menu.nextwin"),
         click: function() {
             pdgui.raise_next(name);
-        },
-        key: String.fromCharCode(12), // Page down
-        modifiers: "ctrl",
-        tooltip: l("menu.nextwin_tt"),
+        }
     });
     minit(m.win.prevwin, {
-        label: l("menu.prevwin"),
         click: function() {
             pdgui.raise_prev(name);
-        },
-        key: String.fromCharCode(11), // Page up
-        modifiers: "ctrl",
-        tooltip: l("menu.prevwin_tt"),
+        }
     });
     minit(m.win.parentwin, {
-        label: l("menu.parentwin"),
         click: function() {
             pdgui.pdsend(name, "findparent", 0);
-        },
-        tooltip: l("menu.parentwin_tt"),
+        }
     });
     minit(m.win.visible_ancestor, {
-        label: l("menu.visible_ancestor"),
         click: function() {
             pdgui.pdsend(name, "findparent", 1);
-        },
-        tooltip: l("menu.visible_ancestor_tt"),
+        }
     });
     minit(m.win.pdwin, {
-        label: l("menu.pdwin"),
         click: function() {
             pdgui.raise_pd_window();
-        },
-        tooltip: l("menu.pdwin_tt"),
-        key: "r",
-        modifiers: "ctrl"
+        }
     });
 
     // Media menu
     minit(m.media.audio_on, {
-        label: l("menu.audio_on"),
         click: function() {
             pdgui.pdsend("pd dsp 1");
-        },
-        key: "/",
-        modifiers: "ctrl",
-        tooltip: l("menu.audio_on_tt"),
+        }
     });
     minit(m.media.audio_off, {
-        label: l("menu.audio_off"),
         click: function() {
             pdgui.pdsend("pd dsp 0");
-        },
-        key: ".",
-        modifiers: "ctrl",
-        tooltip: l("menu.audio_off_tt"),
+        }
     });
     minit(m.media.test, {
-        label: l("menu.test"),
         click: function() {
             pdgui.pd_doc_open("doc/7.stuff/tools", "testtone.pd");
-        },
-        tooltip: l("menu.test_tt"),
+        }
     });
     minit(m.media.loadmeter, {
-        label: l("menu.loadmeter"),
         click: function() {
             pdgui.pd_doc_open("doc/7.stuff/tools", "load-meter.pd");
-        },
-        tooltip: l("menu.loadmeter_tt"),
+        }
     });
 
     // Help menu
     minit(m.help.about, {
-        label: l("menu.about"),
-        click: menu_generic,
-        //key: "c",
-        //modifiers: "ctrl",
-        tooltip: l("menu.about_tt"),
+        click: function() {
+            pdgui.pd_doc_open("doc/1.manual", "1.introduction.txt");
+        }
     });
     minit(m.help.manual, {
-        label: l("menu.manual"),
-        click: menu_generic,
-        tooltip: l("menu.manual"),
+        click: function() {
+            pdgui.pd_doc_open("doc/1.manual", "index.htm");
+        }
     });
     minit(m.help.browser, {
-        label: l("menu.browser"),
-        click: menu_generic,
-        tooltip: l("menu.browser_tt"),
+        click: function() {
+            alert("please implement a help browser");
+        }
     });
     minit(m.help.l2ork_list, {
-        label: l("menu.l2ork_list"),
-        click: menu_generic,
-        tooltip: l("menu.l2ork_list_tt"),
+        click: function() {
+            pdgui.external_doc_open("http://disis.music.vt.edu/listinfo/l2ork-dev");
+        }
     });
     minit(m.help.pd_list, {
-        label: l("menu.pd_list"),
-        click: menu_generic,
-        tooltip: l("menu.pd_list_tt"),
+        click: function() {
+            pdgui.external_doc_open("http://puredata.info/community/lists");
+        }
     });
     minit(m.help.forums, {
-        label: l("menu.forums"),
-        click: menu_generic,
-        tooltip: l("menu.forums_tt"),
+        click: function() {
+            pdgui.external_doc_open("http://forum.pdpatchrepo.info/");
+        }
     });
     minit(m.help.irc, {
-        label: l("menu.irc"),
-        click: menu_generic,
-        tooltip: l("menu.irc_tt"),
+        click: menu_generic
     });
     minit(m.help.devtools, {
-        label: l("menu.devtools"),
-        key: "b", // temporary convenience shortcut-- can change if needed
-        modifiers: "ctrl",
         click: function () {
             gui.Window.get().showDevTools();
-        },
-        tooltip: l("menu.devtools_tt"),
+        }
     });
 }
