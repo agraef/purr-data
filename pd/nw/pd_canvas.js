@@ -50,6 +50,10 @@ function encode_for_dialog(s) {
 
 function nw_window_focus_callback() {
     pdgui.post("window was focused");
+    // on OSX, update the menu on focus
+    if (process.platform === "darwin") {
+        nw_create_patch_window_menus(gui, window, name);
+    }
 }
 
 // These three functions need to be inside canvas_events closure
@@ -637,12 +641,13 @@ function minit(menu_item, options) {
     }
 }
 
-
 function nw_create_patch_window_menus(gui, w, name) {
     // if we're on GNU/Linux or Windows, create the menus:
     var m = canvas_menu = pd_menus.create_menu(gui);
 
     // File sub-entries
+    // We explicitly enable these menu items because on OSX
+    // the console menu disables them. (Same for Edit and Put menu)
     minit(m.file.new_file, { click: pdgui.menu_new });
     minit(m.file.open, {
         click: function() {
@@ -663,12 +668,14 @@ function nw_create_patch_window_menus(gui, w, name) {
         minit(m.file.k12, { click: pdgui.menu_k12_open_demos });
     }
     minit(m.file.save, {
+        enabled: true,
         click: function () {
             pdgui.canvas_check_geometry(name); // should this go in menu_save?
             pdgui.menu_save(name);
         },
     });
     minit(m.file.saveas, {
+        enabled: true,
         click: function (){
             pdgui.canvas_check_geometry(name);
             pdgui.menu_saveas(name);
@@ -678,6 +685,7 @@ function nw_create_patch_window_menus(gui, w, name) {
         click: function() { pdgui.menu_send(name); }
     });
     minit(m.file.close, {
+        enabled: true,
         click: function() { pdgui.menu_close(name); }
     });
     minit(m.file.quit, {
@@ -686,24 +694,31 @@ function nw_create_patch_window_menus(gui, w, name) {
 
     // Edit menu
     minit(m.edit.undo, {
+        enabled: true,
         click: function () { pdgui.pdsend(name, "undo"); }
     });
     minit(m.edit.redo, {
+        enabled: true,
         click: function () { pdgui.pdsend(name, "redo"); }
     });
     minit(m.edit.cut, {
+        enabled: true,
         click: function () { pdgui.pdsend(name, "cut"); }
     });
     minit(m.edit.copy, {
+        enabled: true,
         click: function () { pdgui.pdsend(name, "copy"); }
     });
     minit(m.edit.paste, {
+        enabled: true,
         click: function () { pdgui.pdsend(name, "paste"); }
     });
     minit(m.edit.duplicate, {
+        enabled: true,
         click: function () { pdgui.pdsend(name, "duplicate"); }
     });
     minit(m.edit.selectall, {
+        enabled: true,
         click: function (evt) {
             if (canvas_events.get_state() === "normal") {
                 pdgui.pdsend(name, "selectall");
@@ -711,9 +726,11 @@ function nw_create_patch_window_menus(gui, w, name) {
         }
     });
     minit(m.edit.reselect, {
+        enabled: true,
         click: function () { pdgui.pdsend(name, "reselect"); }
     });
     minit(m.edit.zoomin, {
+        enabled: true,
         click: function () {
             var z = gui.Window.get().zoomLevel;
             if (z < 8) { z++; }
@@ -721,6 +738,7 @@ function nw_create_patch_window_menus(gui, w, name) {
         }
     });
     minit(m.edit.zoomout, {
+        enabled: true,
         click: function () {
             var z = gui.Window.get().zoomLevel;
             if (z > -7) { z--; } 
@@ -728,18 +746,23 @@ function nw_create_patch_window_menus(gui, w, name) {
         }
     });
     minit(m.edit.tidyup, {
+        enabled: true,
         click: function() { pdgui.pdsend(name, "tidy"); }
     });
     minit(m.edit.tofront, {
+        enabled: true,
         click: function() { pdgui.popup_action(name, 3); }
     });
     minit(m.edit.toback, {
+        enabled: true,
         click: function() { pdgui.popup_action(name, 4); }
     });
     minit(m.edit.font, {
+        enabled: true,
         click: function () { pdgui.pdsend(name, "menufont"); }
     });
     minit(m.edit.cordinspector, {
+        enabled: true,
         click: function() { pdgui.pdsend(name, "magicglass 0"); }
     });
     minit(m.edit.find, {
@@ -764,19 +787,23 @@ function nw_create_patch_window_menus(gui, w, name) {
         }
     });
     minit(m.edit.findagain, {
+        enabled: true,
         click: function() {
             pdgui.pdsend(name, "findagain");
         }
     });
     minit(m.edit.finderror, {
+        enabled: true,
         click: function() {
             pdgui.pdsend("pd finderror");
         }
     });
     minit(m.edit.autotips, {
+        enabled: true,
         click: menu_generic
     });
     minit(m.edit.editmode, {
+        enabled: true,
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "editmode 0");
@@ -788,6 +815,7 @@ function nw_create_patch_window_menus(gui, w, name) {
 
     // Put menu
     minit(m.put.object, {
+        enabled: true,
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
@@ -795,6 +823,7 @@ function nw_create_patch_window_menus(gui, w, name) {
         }
     });
     minit(m.put.message, {
+        enabled: true,
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
@@ -802,6 +831,7 @@ function nw_create_patch_window_menus(gui, w, name) {
         }
     });
     minit(m.put.number, {
+        enabled: true,
         click: function() { 
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
@@ -809,6 +839,7 @@ function nw_create_patch_window_menus(gui, w, name) {
         }
     });
     minit(m.put.symbol, {
+        enabled: true,
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
@@ -816,6 +847,7 @@ function nw_create_patch_window_menus(gui, w, name) {
         }
     });
     minit(m.put.comment, {
+        enabled: true,
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
@@ -823,6 +855,7 @@ function nw_create_patch_window_menus(gui, w, name) {
         }
     });
     minit(m.put.bang, {
+        enabled: true,
         click: function(e) {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
@@ -830,6 +863,7 @@ function nw_create_patch_window_menus(gui, w, name) {
         }
     });
     minit(m.put.toggle, {
+        enabled: true,
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
@@ -837,6 +871,7 @@ function nw_create_patch_window_menus(gui, w, name) {
         }
     });
     minit(m.put.number2, {
+        enabled: true,
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
@@ -844,6 +879,7 @@ function nw_create_patch_window_menus(gui, w, name) {
         }
     });
     minit(m.put.vslider, {
+        enabled: true,
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
@@ -851,6 +887,7 @@ function nw_create_patch_window_menus(gui, w, name) {
         }
     });
     minit(m.put.hslider, {
+        enabled: true,
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
@@ -858,6 +895,7 @@ function nw_create_patch_window_menus(gui, w, name) {
         }
     });
     minit(m.put.vradio, {
+        enabled: true,
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
@@ -865,6 +903,7 @@ function nw_create_patch_window_menus(gui, w, name) {
         }
     });
     minit(m.put.hradio, {
+        enabled: true,
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
@@ -872,6 +911,7 @@ function nw_create_patch_window_menus(gui, w, name) {
         }
     });
     minit(m.put.vu, {
+        enabled: true,
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
@@ -879,6 +919,7 @@ function nw_create_patch_window_menus(gui, w, name) {
         }
     });
     minit(m.put.cnv, {
+        enabled: true,
         click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
@@ -886,16 +927,16 @@ function nw_create_patch_window_menus(gui, w, name) {
         }
     });
     //minit(m.put.graph, {
-    //    label: l("menu.graph"),
+    //    enabled: true,
     //    click: function() {
     //        update_live_box();
     //        pdgui.pdsend(name, "dirty 1");
     //        // leaving out some placement logic... see pd.tk menu_graph
     //        pdgui.pdsend(name, "graph NULL 0 0 0 0 30 30 0 30");
     //    },
-    //    tooltip: l("menu.graph_tt"),
     //});
     minit(m.put.array, {
+        enabled: true,
         click: function() {
                 update_live_box();
                 pdgui.pdsend(name, "dirty 1");
@@ -923,16 +964,19 @@ function nw_create_patch_window_menus(gui, w, name) {
         }
     });
     minit(m.win.parentwin, {
+        enabled: true,
         click: function() {
             pdgui.pdsend(name, "findparent", 0);
         }
     });
     minit(m.win.visible_ancestor, {
+        enabled: true,
         click: function() {
             pdgui.pdsend(name, "findparent", 1);
         }
     });
     minit(m.win.pdwin, {
+        enabled: true,
         click: function() {
             pdgui.raise_pd_window();
         }
