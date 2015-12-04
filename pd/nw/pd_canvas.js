@@ -125,7 +125,7 @@ var canvas_events = (function() {
                 // For some reason right-click sends a modifier value of "8",
                 // and canvas_doclick in g_editor.c depends on that value to
                 // do the right thing.  So let's hack...
-                if (b === 3 || (process.platform === "darwin" && evt.ctrl)) {
+                if (b === 3 || (process.platform === "darwin" && evt.ctrlKey)) {
                     // right-click
                     mod = 8;
                 } else {
