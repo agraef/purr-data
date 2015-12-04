@@ -252,7 +252,7 @@
       "gop": "graph on parent",
       "gop_tt": "show the inner contents of this canvas in a rectangle on the containing canvas",
       "hide_name": "hide object name and arguments",
-      "hide_name_tt": "blah blah blah",
+      "hide_name_tt": "hide the text that appears in the object box",
       "gop_0": "Object",
       "gop_1": "Window",
       "gop_2": "Window (no text)",
