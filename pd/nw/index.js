@@ -3,8 +3,10 @@ var gui = require("nw.gui");
 var pdgui = require("./pdgui.js");
 var pd_menus = require("./pd_menus.js");
 
-// we're using pwd in fileDialog
-var pwd = process.env.PWD;
+// we're using pwd in fileDialog. If you start Pd by clicking the app bundle
+// in OSX, the PWD environment variable doesn't exist. In that case we use
+// HOME instead.
+var pwd = process.env.PWD !== undefined ? process.env.PWD : process.env.HOME;
 
 // gui preset
 pdgui.skin.apply(this);
