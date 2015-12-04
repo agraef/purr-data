@@ -337,6 +337,9 @@ Everything else: (A [x] means we've fixed it)
     inconsistency.
 [ ] make GUI server try again if the port is already in use
 [ ] fix ds-demos/splines.pd (arg number out of range)
+[ ] figure out why OSX app bundle runs when using "open" from the terminal,
+    but not when you click it
+[ ] vsl dialog shows "undefined" for one of the tooltips
 
 Crashers
 --------
