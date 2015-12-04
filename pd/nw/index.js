@@ -78,6 +78,9 @@ function open_external_doc(target) {
 
 function nw_window_focus_callback() {
     pdgui.post("pd window was focused");
+    if (process.platform === "darwin") {
+        nw_create_pd_window_menus(gui, window);
+    }
 }
 
 function add_events() {
