@@ -71,6 +71,14 @@ pdgui.post("flub!");
     canvas_events.search();
 }
 
+function cmd_or_ctrl_key(evt) {
+    if (process.platform === "darwin") {
+        return evt.metaKey;
+    } else {
+        return evt.ctrlKey;
+    }
+}
+
 var canvas_events = (function() {
     var name,
         state,
@@ -88,11 +96,11 @@ var canvas_events = (function() {
         events = {
             mousemove: function(evt) {
                 //pdgui.post("x: " + evt.pageX + " y: " + evt.pageY +
-                //    " modifier: " + (evt.shiftKey + (evt.ctrlKey << 1)));
+                //    " modifier: " + (evt.shiftKey + (cmd_or_ctrl_key(evt) << 1)));
                 pdgui.pdsend(name, "motion",
                     (evt.pageX + svg_view.x),
                     (evt.pageY + svg_view.y),
-                    (evt.shiftKey + (evt.ctrlKey << 1))
+                    (evt.shiftKey + (cmd_or_ctrl_key(evt) << 1))
                 );
                 evt.stopPropagation();
                 evt.preventDefault();
@@ -120,7 +128,7 @@ var canvas_events = (function() {
                 if (b === 3) { // right-click
                     mod = 8;
                 } else {
-                    mod = (evt.shiftKey + (evt.ctrlKey << 1)); 
+                    mod = (evt.shiftKey + (cmd_or_ctrl_key(evt) << 1)); 
                 }
                 pdgui.pdsend(name, "mouse",
                     (evt.pageX + svg_view.x),
@@ -179,25 +187,25 @@ var canvas_events = (function() {
                     // Which don't fire a keypress for some odd reason
 
                     case 65:
-                        if (evt.ctrlKey === true) {
+                        if (cmd_or_ctrl_key(evt)) {
                             pdgui.pdsend(name, "selectall");
                             hack = 0; // not sure what to report here...
                         }
                         break;
                     case 88:
-                        if (evt.ctrlKey === true) {
+                        if (cmd_or_ctrl_key(evt)) {
                             pdgui.pdsend(name, "cut");
                             hack = 0; // not sure what to report here...
                         }
                         break;
                     case 67:
-                        if (evt.ctrlKey === true) {
+                        if (cmd_or_ctrl_key(evt)) {
                             pdgui.pdsend(name, "copy");
                             hack = 0; // not sure what to report here...
                         }
                         break;
                     case 86:
-                        if (evt.ctrlKey === true) {
+                        if (cmd_or_ctrl_key(evt)) {
                             pdgui.pdsend(name, "paste");
                             hack = 0; // not sure what to report here...
                         }
@@ -224,7 +232,7 @@ var canvas_events = (function() {
                 // pd_shortcuts.js so we can keep them all in a central
                 // location, but that's a bigger project.
                 if (evt.charCode === 26) {
-                    if (evt.ctrlKey === true) {
+                    if (cmd_or_ctrl_key(evt)) {
                         if (evt.shiftKey === true) { // ctrl-Shift-z
                             pdgui.pdsend(name, "redo");
                         } else { // ctrl-z
@@ -245,7 +253,7 @@ var canvas_events = (function() {
                 var my_char_code = pdgui.get_char_code(evt.keyCode);
                 pdgui.gui_canvas_sendkey(name, 0, evt, my_char_code);
                 //pdgui.post("keyup time: charcode is: " + my_char_code);
-                if (evt.keyCode === 13 && evt.ctrlKey) {
+                if (evt.keyCode === 13 && cmd_or_ctrl_key(evt)) {
                     pdgui.pdsend(name, "reselect");
                 }
                 evt.stopPropagation();
@@ -289,7 +297,7 @@ var canvas_events = (function() {
                 evt.stopPropagation();    
                 //evt.preventDefault();
                 // ctrl-Enter to reselect
-                if (evt.keyCode === 13 && evt.ctrlKey) {
+                if (evt.keyCode === 13 && cmd_or_ctrl_key(evt)) {
                     canvas_events.set_obj();
                     pdgui.pdsend(name, "reselect");
                 }
