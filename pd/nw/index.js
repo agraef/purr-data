@@ -444,20 +444,6 @@ function nw_create_pd_window_menus(gui, w) {
     if (osx) {
         minit(m.edit.reselect, { enabled: false });
     }
-    minit(m.edit.zoomin, {
-        click: function () {
-            var z = gui.Window.get().zoomLevel;
-            if (z < 8) { z++; }
-            gui.Window.get().zoomLevel = z;
-        }
-    });
-    minit(m.edit.zoomout, {
-        click: function () {
-            var z = gui.Window.get().zoomLevel;
-            if (z > -7) { z--; }
-            gui.Window.get().zoomLevel = z;
-        }
-    });
     if (osx) {
         minit(m.edit.tidyup, { enabled: false });
         minit(m.edit.tofront, { enabled: false });
@@ -494,6 +480,35 @@ function nw_create_pd_window_menus(gui, w) {
         click: pdgui.open_prefs,
     });
 
+    // View menu
+    minit(m.view.zoomin, {
+        click: function () {
+            var z = gui.Window.get().zoomLevel;
+            if (z < 8) { z++; }
+            gui.Window.get().zoomLevel = z;
+        }
+    });
+    minit(m.view.zoomout, {
+        click: function () {
+            var z = gui.Window.get().zoomLevel;
+            if (z > -7) { z--; }
+            gui.Window.get().zoomLevel = z;
+        }
+    });
+    minit(m.view.zoomreset, {
+        click: function () {
+            gui.Window.get().zoomLevel = 0;
+        }
+    });
+    minit(m.view.fullscreen, {
+        click: function() {
+            var win = gui.Window.get(),
+                fullscreen = win.isFullscreen;
+            win.isFullscreen = !fullscreen;
+            pdgui.post("fullscreen is " + !fullscreen);
+        }
+    });
+
     // Put menu
     if (osx) {
         minit(m.put.object, { enabled: false });
@@ -515,14 +530,6 @@ function nw_create_pd_window_menus(gui, w) {
     }
 
     // Winman sub-entries
-    minit(m.win.fullscreen, {
-        click: function() {
-            var win = gui.Window.get(),
-                fullscreen = win.isFullscreen;
-            win.isFullscreen = !fullscreen;
-            pdgui.post("fullscreen is " + !fullscreen);
-        }
-    });
     minit(m.win.nextwin, {
         click: function() {
             pdgui.raise_next("pd_window");

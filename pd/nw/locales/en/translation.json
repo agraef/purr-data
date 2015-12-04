@@ -126,10 +126,6 @@
     "selectall_tt": "Select all objects in a patch",
     "reselect": "Reselect",
     "reselect_tt": "Restore the previous selection",
-    "zoomin": "Zoom In",
-    "zoomin_tt": "Make the patch visually larger",
-    "zoomout": "Zoom Out",
-    "zoomout_tt": "Make the patch visually smaller",
     "find": "Find",
     "find_tt": "Find text in the console output",
     "tidyup": "Tidy Up",
@@ -154,6 +150,16 @@
     "autotips_tt": "Toggle Editmode",
     "preferences": "Preferences",
     "preferences_tt": "Open a dialog window to configure the running instance of Pd",
+
+    "view": "View",
+
+    "zoomin": "Zoom In",
+    "zoomin_tt": "Make the patch visually larger",
+    "zoomout": "Zoom Out",
+    "zoomout_tt": "Make the patch visually smaller",
+    "zoomreset": "Reset Zoom",
+    "zoomreset_tt": "Reset the zoom to the original level",
+    "fullscreen": "Fullscreen",
 
     "put": "Put",
 
@@ -193,7 +199,6 @@
 
     "windows": "Windows",
 
-    "fullscreen": "Fullscreen",
     "nextwin": "Next Window",
     "nextwin_tt": "Give focus to the next open window in the stacking order",
     "prevwin": "Previous Window",

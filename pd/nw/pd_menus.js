@@ -158,18 +158,6 @@ function create_menu(gui, type) {
         }));
     }
     editMenu.append(new gui.MenuItem({ type: "separator" }));
-    editMenu.append(m.edit.zoomin = new gui.MenuItem({
-        label: l("menu.zoomin"),
-        key: "=",
-        modifiers: cmd_or_ctrl,
-        tooltip: l("menu.zoomin_tt")
-    }));
-    editMenu.append(m.edit.zoomout = new gui.MenuItem({
-        label: l("menu.zoomout"),
-        key: "-",
-        modifiers: cmd_or_ctrl,
-        tooltip: l("menu.zoomout_tt")
-    }));
     editMenu.append(new gui.MenuItem({ type: "separator" }));
     if (canvas_menu) {
         editMenu.append(m.edit.tidyup = new gui.MenuItem({
@@ -234,6 +222,44 @@ function create_menu(gui, type) {
         key: "p",
         modifiers: cmd_or_ctrl,
         tooltip: l("menu.preferences_tt")
+    }));
+
+    // View menu
+    var viewMenu = new gui.Menu();
+
+    // Add to window menu
+    windowMenu.append(new gui.MenuItem({
+        label: l("menu.view"),
+        submenu: viewMenu
+    }));
+
+    // View sub-entries
+    m.view= {};
+    viewMenu.append(m.view.zoomin = new gui.MenuItem({
+        label: l("menu.zoomin"),
+        key: "=",
+        modifiers: cmd_or_ctrl,
+        tooltip: l("menu.zoomin_tt")
+    }));
+    viewMenu.append(m.view.zoomout = new gui.MenuItem({
+        label: l("menu.zoomout"),
+        key: "-",
+        modifiers: cmd_or_ctrl,
+        tooltip: l("menu.zoomout_tt")
+    }));
+    viewMenu.append(new gui.MenuItem({ type: "separator" }));
+    viewMenu.append(m.view.zoomreset = new gui.MenuItem({
+        label: l("menu.zoomreset"),
+        key: "0",
+        modifiers: cmd_or_ctrl,
+        tooltip: l("menu.zoomreset_tt")
+    }));
+    viewMenu.append(new gui.MenuItem({ type: "separator" }));
+    viewMenu.append(m.view.fullscreen = new gui.MenuItem({
+        label: l("menu.fullscreen"),
+        key: process.platform === "darwin" ? "f" : "f11",
+        modifiers: process.platform === "darwin" ? "cmd+shift" : null,
+        tooltip: l("menu.fullscreen_tt")
     }));
 
     if (canvas_menu) {
@@ -353,11 +379,6 @@ function create_menu(gui, type) {
 
     // Win sub-entries
     m.win = {};
-    winmanMenu.append(m.win.fullscreen = new gui.MenuItem({
-        label: l("menu.fullscreen"),
-        key: "f11",
-        tooltip: l("menu.nextwin_tt")
-    }));
     winmanMenu.append(m.win.nextwin = new gui.MenuItem({
         label: l("menu.nextwin"),
         key: String.fromCharCode(12), // Page down

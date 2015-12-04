@@ -737,22 +737,6 @@ function nw_create_patch_window_menus(gui, w, name) {
         enabled: true,
         click: function () { pdgui.pdsend(name, "reselect"); }
     });
-    minit(m.edit.zoomin, {
-        enabled: true,
-        click: function () {
-            var z = gui.Window.get().zoomLevel;
-            if (z < 8) { z++; }
-            gui.Window.get().zoomLevel = z;
-        }
-    });
-    minit(m.edit.zoomout, {
-        enabled: true,
-        click: function () {
-            var z = gui.Window.get().zoomLevel;
-            if (z > -7) { z--; } 
-            gui.Window.get().zoomLevel = z;
-        }
-    });
     minit(m.edit.tidyup, {
         enabled: true,
         click: function() { pdgui.pdsend(name, "tidy"); }
@@ -819,6 +803,38 @@ function nw_create_patch_window_menus(gui, w, name) {
     });
     minit(m.edit.preferences, {
         click: pdgui.open_prefs
+    });
+
+    // View menu
+    minit(m.view.zoomin, {
+        enabled: true,
+        click: function () {
+            var z = gui.Window.get().zoomLevel;
+            if (z < 8) { z++; }
+            gui.Window.get().zoomLevel = z;
+        }
+    });
+    minit(m.view.zoomout, {
+        enabled: true,
+        click: function () {
+            var z = gui.Window.get().zoomLevel;
+            if (z > -7) { z--; } 
+            gui.Window.get().zoomLevel = z;
+        }
+    });
+    minit(m.view.zoomreset, {
+        enabled: true,
+        click: function () {
+            gui.Window.get().zoomLevel = 0;
+        }
+    });
+    minit(m.view.fullscreen, {
+        click: function() {
+            var win = gui.Window.get();
+            var fullscreen = win.isFullscreen;
+            win.isFullscreen = !fullscreen;
+            pdgui.post("fullscreen is " + fullscreen);
+        }
     });
 
     // Put menu
@@ -953,14 +969,6 @@ function nw_create_patch_window_menus(gui, w, name) {
     });
 
     // Window
-    minit(m.win.fullscreen, {
-        click: function() {
-            var win = gui.Window.get();
-            var fullscreen = win.isFullscreen;
-            win.isFullscreen = !fullscreen;
-            pdgui.post("fullscreen is " + fullscreen);
-        }
-    });
     minit(m.win.nextwin, {
         click: function() {
             pdgui.raise_next(name);
