@@ -258,7 +258,7 @@ function create_menu(gui, type) {
     viewMenu.append(m.view.fullscreen = new gui.MenuItem({
         label: l("menu.fullscreen"),
         key: process.platform === "darwin" ? "f" : "f11",
-        modifiers: process.platform === "darwin" ? "cmd+shift" : null,
+        modifiers: process.platform === "darwin" ? "cmd+ctrl" : null,
         tooltip: l("menu.fullscreen_tt")
     }));
 
