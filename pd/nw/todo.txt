@@ -335,7 +335,9 @@ Everything else: (A [x] means we've fixed it)
     does _not_ send a key to Pd. Since <ctrl-v> is bound to "paste" and
     <ctrl-h> isn't bound to anything, that may somehow be causing an
     inconsistency.
-[ ] make GUI server try again if the port is already in use
+    After some more research, it appears this problem doesn't happen
+    in OSX.
+[x] make GUI server try again if the port is already in use
 [ ] fix ds-demos/splines.pd (arg number out of range)
 [x] figure out why OSX app bundle runs when using "open" from the terminal,
     but not when you click it
