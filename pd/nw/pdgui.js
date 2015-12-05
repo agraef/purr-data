@@ -932,11 +932,11 @@ exports.canvas_map = canvas_map;
 
 // If the GUI is started first (as in a Mac OSX Bundle) we use this
 // function to actually start the core
-function spawn_pd(gui_path) {
+function spawn_pd(gui_path, port) {
     post("gui_path is " + gui_path);
     var pd_binary,
         platform = process.platform,
-        flags = ["-guiport", PORT];
+        flags = ["-guiport", port];
     if (platform === "darwin") {
         // OSX
         pd_binary = path.join(gui_path, "pd-l2ork");
@@ -980,13 +980,33 @@ exports.connect_as_client = connect_as_client;
 
 function connect_as_server(gui_path) {
     var server = net.createServer(function(c) {
-        post("incoming connection to GUI");
-        connection = c;
-        init_socket_events();
-    });
-    server.listen(PORT, HOST, function() {
-        post("GUI listening on port " + PORT + " on host " + HOST);
-        spawn_pd(gui_path);
+            post("incoming connection to GUI");
+            connection = c;
+            init_socket_events();
+        }),
+        port = PORT,
+        ntries = 0,
+        listener_callback = function() {
+            post("GUI listening on port " + port + " on host " + HOST);
+            spawn_pd(gui_path, port);
+        };
+    server.listen(port, HOST, listener_callback);
+    // try to reconnect if necessary
+    server.on('error', function (e) {
+        if (e.code === "EADDRINUSE" && ntries++ < 20) {
+            post("Address in use, retrying...");
+            port++;
+            setTimeout(function () {
+                server.close();
+                server.listen(port, HOST); // (already have the callback above)
+            }, 30); // Not sure we really need a delay here
+        } else {
+            pd_window.alert("Error: couldn't bind to a port. Either port nos " +
+                  PORT + " through " + port + " are taken or you don't have " +
+                  "networking turned on. (See Pd's html doc for details.)");
+            server.close();
+            process.exit(1);
+        }
     });
 }
 
