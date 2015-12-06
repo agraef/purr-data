@@ -376,18 +376,23 @@ var canvas_events = (function() {
             pdgui.saveas_callback(name, this.value);
             // reset value so that we can open the same file twice
             this.value = null;
-            console.log("tried to open something");
+            console.log("tried to save something");
         }, false
     );
-    document.querySelector("#fileDialog").addEventListener("change",
-        function(evt) {
-            var file_array = this.value;
-            // reset value so that we can open the same file twice
-            this.value = null;
-            pdgui.menu_open(file_array);
-            console.log("tried to open something");
-        }, false
-    );
+
+    // The following is commented out because we have to set the
+    // event listener inside nw_create_pd_window_menus due to a
+    // bug with nwworkingdir
+
+    //document.querySelector("#fileDialog").addEventListener("change",
+    //    function(evt) {
+    //        var file_array = this.value;
+    //        // reset value so that we can open the same file twice
+    //        this.value = null;
+    //        pdgui.menu_open(file_array);
+    //        console.log("tried to open something\n\n\n\n\n\n\n\n");
+    //    }, false
+    //);
     document.querySelector("#openpanel_dialog").addEventListener("change",
         function(evt) {
             var file_string = this.value;
@@ -663,13 +668,24 @@ function nw_create_patch_window_menus(gui, w, name) {
             var input, chooser,
                 span = w.document.querySelector("#fileDialogSpan");
             input = pdgui.build_file_dialog_string({
-                id: "fileDialog",
-                nwworkingdir: "/user/home",
                 style: "display: none;",
                 type: "file",
+                id: "fileDialog",
+                nwworkingdir: "/user/home",
+                multiple: null,
+                accept: ".pd,.pat,.mxt,.mxb,.help"
             });
             span.innerHTML = input;
             chooser = w.document.querySelector("#fileDialog");
+            // Hack-- we have to set the event listener here because we
+            // changed out the innerHTML above
+            chooser.onchange = function() {
+                var file_array = this.value;
+                // reset value so that we can open the same file twice
+                this.value = null;
+                pdgui.menu_open(file_array);
+                console.log("tried to open something");
+            };
             chooser.click();
         }
     });

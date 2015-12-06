@@ -381,6 +381,8 @@ function nw_create_pd_window_menus(gui, w) {
             });
             span.innerHTML = input;
             var chooser = w.document.querySelector("#fileDialog");
+            // Hack-- we have to set the event listener here because we
+            // changed out the innerHTML above
             chooser.onchange = function() {
                 var file_array = this.value;
                 // reset value so that we can open the same file twice
