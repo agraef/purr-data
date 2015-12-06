@@ -1182,17 +1182,41 @@ function add_gobj_to_svg(svg, gobj) {
     svg.insertBefore(gobj, svg.querySelector(".cord"));
 }
 
-// Most of these map either to pd.tk procs, or in some cases
+// Most of the following functions map either to pd.tk procs, or in some cases
 // tk canvas subcommands
+
+// The "gobj" is a container for all the shapes and/or paths used to display
+// a graphical object on the canvas. This comes in handy-- for example, we
+// can displace the object just by translating its "gobj".
+// Object, message, and xlet boxes should be crisp (i.e., no anti-aliasing).
+// The "shape-rendering" attribute of "crispEdges" acheives this. However,
+// that will also create asymmetric line-widths when scaling-- for example,
+// the left edge of a rect may be 3 pixels while the right edge is 4. I'm not
+// sure whether this is a bug or just the quirky behavior of value "crispEdges".
+// As a workaround, we explicitly add "0.5" to the gobj's translation
+// coordinates below.
+// Also-- note that we have a separate function for creating a scalar.
+// This is because the user may be drawing lines or paths as
+// part of a scalar, in which case we want to leave it up to them to align
+// their drawing to the pixel grid. For example, imagine a user pasting a
+// path command from the web. If that path already employs the "0.5" offset
+// to align to the pixel-grid, a gobj offset would cancel it out. That
+// would mean the Pd user always has to do the _opposite_ of what they read
+// in SVG tutorials in order to get crisp lines, which is bad.
+// In the future, it might make sense to combine the scalar and object
+// creation, in which case a flag to toggle the offset would be appropriate.
 function gui_text_create_gobj(cid, tag, type, xpos, ypos, is_toplevel) {
     var svg = get_item(cid, "patchsvg"), // id for the svg element
-        transform_string = "matrix(1,0,0,1," + xpos + "," + ypos + ")",
-        g;
+        g,
+        transform_string;
+    xpos += 0.5;
+    ypos += 0.5;
+    transform_string = "matrix(1,0,0,1," + xpos + "," + ypos + ")",
     g = create_item(cid, "g", {
             id: tag + "gobj",
             transform: transform_string,
-            class: type + (is_toplevel !== 0 ? "" : " gop"),
-            "shape-rendering": "crispEdges"
+            class: type + (is_toplevel !== 0 ? "" : " gop")
+            //"shape-rendering": "crispEdges"
     });
     add_gobj_to_svg(svg, g);
     // hm... why returning g and not the return value of appendChild?
@@ -1208,7 +1232,7 @@ function gui_text_drawborder(cid, tag, bgcolor, isbroken, x1, y1, x2, y2) {
     rect = create_item(cid, "rect", {
         width: x2 - x1,
         height: y2 - y1,
-        "shape-rendering": "crispEdges",
+        //"shape-rendering": "crispEdges",
         class: "border"
     });
     if (isbroken === 1) {
@@ -1242,7 +1266,7 @@ function gui_canvas_drawio(cid, parenttag, tag, x1, y1, x2, y2, basex, basey,
         y: y1 - basey,
         id: xlet_id,
         class: xlet_class,
-        "shape-rendering": "crispEdges"
+        //"shape-rendering": "crispEdges"
     });
     g.appendChild(rect);
 }
@@ -2266,13 +2290,6 @@ function gui_create_scalar(cid, tag, isselected, t1, t2, t3, t4, t5, t6,
         transform_string,
         g,
         selection_rect;
-    // Normally put objects on half-pixels to make them crisp, but if we create
-    // a scalar in an object box we already did that. This unfortunately
-    // creates a 0.5 pix discrepancy between scalars created in object boxes
-    // and ones created with [append].  Think about just using shape-rendering
-    // value of "crispEdges" in the places where it matters...
-    t5 += 0.5;
-    t6 += 0.5;
     matrix = [t1,t2,t3,t4,t5,t6];
     transform_string = "matrix(" + matrix.join() + ")";
     g = create_item(cid, "g", {
