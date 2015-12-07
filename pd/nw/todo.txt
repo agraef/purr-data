@@ -285,9 +285,9 @@ Everything else: (A [x] means we've fixed it)
 [ ] same for all commits up to Jul 31, 2015
 [x] address double-free when closing a canvas that is a canvas field
     of a scalar
-[ ] current try/catch parser in the socket receiver is too slow. For lots of
-    data it can end up freezing the GUI. (Test if requestAnimationFrame makes
-    any difference...)
+[ ] test if try/catch parser in the socket receiver is a performance hog. (For
+    lots of data it can end up freezing the GUI. Test if requestAnimationFrame
+    makes any difference...)
 [x] create a function in pdgui to change ["name", value] arrays to Javascript
     objects.  This will greatly simplify things like dialog_iemgui.html
 [ ] Figure out what pdtk_ping does
@@ -317,11 +317,11 @@ Everything else: (A [x] means we've fixed it)
 [ ] don't implement tooltips until we have a single call to create an object
     plus all xlets. That way we can add an arg or two for the name and dir
     to find the help patch and get all descriptions in one goy
-[ ] make sure to free events in svg_free
+[x] make sure to free events in svg_free
 [ ] make scalars dig inside abstractions when they search the templatecanvas
     for drawing commands.  This will make it possible to build abstraction
     libraries for ds-gui widgets.
-[ ] getscroll_var assumes we're only loading a single patch at a time, but
+[x] getscroll_var assumes we're only loading a single patch at a time, but
     that isn't true. Thus if we open many patches at a time, the getscroll
     call for the most recent window will cancel the old one, leaving the 
     older window with the wrong viewport.
