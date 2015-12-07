@@ -16,7 +16,7 @@
 
 ::selection {
     background: #a49aea;
-    color: #3e32a2;
+    color: #cc9933;
 }
 
 /* The main Pd Window */
@@ -89,6 +89,11 @@
     fill: #e87216;
 }
 
+/* text inside boxes: message boxes, object boxes, graphs, comments, etc. */
+.box_text {
+    fill: #a49aea;
+}
+
 #new_object_textentry {
     /* max-width: 10ch; */
     min-width: 3ch;
@@ -96,7 +101,8 @@
     display: table-cell;
     padding: 3px 2px 3px 2px;
     /* box-shadow: inset 1px 0px 0px 1px #000; */
-    background-color: white;
+    color: #a49aea; /* text color */
+    background-color: #3a32a2;
     white-space: normal;
     word-wrap: break-word;
     -webkit-margin-before: 0px;
@@ -151,8 +157,8 @@ text {
 }
 
 .obj .border {
-    fill: #7569d7;
-    stroke: #3e32a2;
+    fill: #3e32a2;
+    stroke: #7569d7;
 }
 
 /* A little hack for special canvas of [cnv].

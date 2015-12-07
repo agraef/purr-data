@@ -1548,7 +1548,8 @@ function gui_text_new(canvasname, myname, type, isselected, left_margin, font_he
         "shape-rendering": "crispEdges",
         "font-size": pd_fontsize_to_gui_fontsize(font) + "px",
         "font-weight": "normal",
-        id: myname + "text"
+        id: myname + "text",
+        "class": "box_text"
     });
     // trim off any extraneous leading/trailing whitespace. Because of
     // the way binbuf_gettext works we almost always have a trailing
