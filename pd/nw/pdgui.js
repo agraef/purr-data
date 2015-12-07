@@ -1185,16 +1185,19 @@ function add_gobj_to_svg(svg, gobj) {
 // Most of the following functions map either to pd.tk procs, or in some cases
 // tk canvas subcommands
 
-// The "gobj" is a container for all the shapes and/or paths used to display
+// The "gobj" is a container for all the shapes/paths used to display
 // a graphical object on the canvas. This comes in handy-- for example, we
-// can displace the object just by translating its "gobj".
-// Object, message, and xlet boxes should be crisp (i.e., no anti-aliasing).
-// The "shape-rendering" attribute of "crispEdges" acheives this. However,
+// can displace an object just by translating its "gobj".
+
+// Object, message, and xlet boxes should be crisp (i.e., no anti-aliasing),
+// and the "shape-rendering" attribute of "crispEdges" acheives this. However,
 // that will also create asymmetric line-widths when scaling-- for example,
 // the left edge of a rect may be 3 pixels while the right edge is 4. I'm not
 // sure whether this is a bug or just the quirky behavior of value "crispEdges".
 // As a workaround, we explicitly add "0.5" to the gobj's translation
-// coordinates below.
+// coordinates below. This aligns the shapes-- lines, polygons, and rects 
+// with a 1px stroke-- to the pixel grid, making them crisp.
+
 // Also-- note that we have a separate function for creating a scalar.
 // This is because the user may be drawing lines or paths as
 // part of a scalar, in which case we want to leave it up to them to align
@@ -1205,6 +1208,7 @@ function add_gobj_to_svg(svg, gobj) {
 // in SVG tutorials in order to get crisp lines, which is bad.
 // In the future, it might make sense to combine the scalar and object
 // creation, in which case a flag to toggle the offset would be appropriate.
+
 function gui_text_create_gobj(cid, tag, type, xpos, ypos, is_toplevel) {
     var svg = get_item(cid, "patchsvg"), // id for the svg element
         g,
@@ -1216,7 +1220,6 @@ function gui_text_create_gobj(cid, tag, type, xpos, ypos, is_toplevel) {
             id: tag + "gobj",
             transform: transform_string,
             class: type + (is_toplevel !== 0 ? "" : " gop")
-            //"shape-rendering": "crispEdges"
     });
     add_gobj_to_svg(svg, g);
     // hm... why returning g and not the return value of appendChild?
