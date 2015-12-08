@@ -297,8 +297,9 @@ var canvas_events = (function() {
             text_keyup: function(evt) {
                 evt.stopPropagation();    
                 //evt.preventDefault();
-                // ctrl-Enter to reselect
+                // ctrl-Enter to instantiate object
                 if (evt.keyCode === 13 && cmd_or_ctrl_key(evt)) {
+                    canvas_events.text(); // anchor the object
                     canvas_events.set_obj();
                     pdgui.pdsend(name, "reselect");
                 }
@@ -451,7 +452,7 @@ var canvas_events = (function() {
             for (var prop in events) {
                 if (events.hasOwnProperty(prop)) {
                     name = prop.split("_");
-                    name = name[name.length -1];
+                    name = name[name.length - 1];
                     document.removeEventListener(name, events[prop], false);
                 }
             }
