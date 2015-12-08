@@ -992,7 +992,7 @@ function connect_as_server(gui_path) {
         };
     server.listen(port, HOST, listener_callback);
     // try to reconnect if necessary
-    server.on('error', function (e) {
+    server.on("error", function (e) {
         if (e.code === "EADDRINUSE" && ntries++ < 20) {
             post("Address in use, retrying...");
             port++;
@@ -1083,6 +1083,11 @@ function init_socket_events () {
     };
 
     connection.on("data", perfect_parser);
+
+    connection.on("error", function(e) {
+        console.log("Socket error: " + e.code);
+        nw_app_quit();
+    });
 
     // Add a "close" event handler for the socket
     connection.on("close", function() {
