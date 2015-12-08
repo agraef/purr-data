@@ -836,13 +836,16 @@ function gui_canvas_cursor(cid, pd_event_type) {
     patch.style.cursor = c;
 }
 
-function gui_canvas_sendkey(cid, state, evt, char_code) {
+// Not sure why this has the "gui_" prefix. It doesn't get called by Pd
+function canvas_sendkey(cid, state, evt, char_code, repeat) {
     var shift = evt.shiftKey ? 1 : 0,
-        repeat = evt.repeat ? 1 : 0;
-    pdsend(cid, "key", state, char_code, shift, 1, repeat);
+        repeat_number = repeat ? 1 : 0;
+post("key repeat is " + repeat);
+post("shift is " + evt.shiftKey);
+    pdsend(cid, "key", state, char_code, shift, 1, repeat_number);
 }
 
-exports.gui_canvas_sendkey = gui_canvas_sendkey;
+exports.canvas_sendkey = canvas_sendkey;
 
 function title_callback(cid, title) {
     patchwin[cid].window.document.title = title;

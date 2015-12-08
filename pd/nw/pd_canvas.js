@@ -89,6 +89,7 @@ var canvas_events = (function() {
         previous_state = "none", /* last state, excluding explicit 'none' */
         match_words_state = false,
         last_search_term = "",
+        keydown_autorepeat = false,
         svg_view = document.getElementById("patchsvg").viewBox.baseVal,
         textbox = function () {
             return document.getElementById("new_object_textentry");
@@ -152,8 +153,9 @@ var canvas_events = (function() {
                 evt.preventDefault();
             },
             keydown: function(evt) {
-                var key_code = evt.keyCode; 
-                var hack = null; // hack for unprintable ascii codes
+                var key_code = evt.keyCode,
+                    hack = null; // hack for unprintable ascii codes
+                keydown_autorepeat = evt.repeat;
                 switch(key_code) {
                     case 8:
                     case 9:
@@ -219,9 +221,10 @@ var canvas_events = (function() {
                     case 18: hack = "Alt"; break;
                 }
                 if (hack !== null) {
-                    pdgui.gui_canvas_sendkey(name, 1, evt, hack);
+                    pdgui.canvas_sendkey(name, 1, evt, hack, keydown_autorepeat);
                     pdgui.set_keymap(key_code, hack);
                 }
+
                 //pdgui.post("keydown time: keycode is " + evt.keyCode);
                 last_keydown = evt.keyCode;
                 //evt.stopPropagation();
@@ -242,9 +245,9 @@ var canvas_events = (function() {
                         return;
                     }
                 }
-
-                pdgui.gui_canvas_sendkey(name, 1, evt, evt.charCode);
-                pdgui.set_keymap(last_keydown, evt.charCode);
+                pdgui.canvas_sendkey(name, 1, evt, evt.charCode,
+                    keydown_autorepeat);
+                pdgui.set_keymap(last_keydown, evt.charCode, keydown_autorepeat);
                 //pdgui.post("keypress time: charcode is " + evt.charCode);
                 // Don't do things like scrolling on space, arrow keys, etc.
                 //evt.stopPropagation();
@@ -252,7 +255,7 @@ var canvas_events = (function() {
             },
             keyup: function(evt) {
                 var my_char_code = pdgui.get_char_code(evt.keyCode);
-                pdgui.gui_canvas_sendkey(name, 0, evt, my_char_code);
+                pdgui.canvas_sendkey(name, 0, evt, my_char_code, evt.repeat);
                 //pdgui.post("keyup time: charcode is: " + my_char_code);
                 if (evt.keyCode === 13 && cmd_or_ctrl_key(evt)) {
                     pdgui.pdsend(name, "reselect");
