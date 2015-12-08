@@ -840,8 +840,6 @@ function gui_canvas_cursor(cid, pd_event_type) {
 function canvas_sendkey(cid, state, evt, char_code, repeat) {
     var shift = evt.shiftKey ? 1 : 0,
         repeat_number = repeat ? 1 : 0;
-post("key repeat is " + repeat);
-post("shift is " + evt.shiftKey);
     pdsend(cid, "key", state, char_code, shift, 1, repeat_number);
 }
 
