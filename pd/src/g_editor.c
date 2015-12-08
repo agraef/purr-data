@@ -7719,6 +7719,7 @@ static void canvas_createobj(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
             // Set the dirty flag since we've changed the rtext content...
             canvas_dirty(x, 1);
             x->gl_editor->e_textdirty = 1;
+            x->gl_editor->e_onmotion = MA_NONE; // undo any mouse actions
             if (s == gensym("createobj"))
                 glist_deselect(x, y); // instantiate
             break;
