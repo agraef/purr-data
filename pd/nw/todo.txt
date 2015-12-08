@@ -131,23 +131,23 @@ Everything else: (A [x] means we've fixed it)
 [ ] implement the crappy iemgui color dialog presets
 [x] find a simple translation API
 [ ] use underscores for iemgui dialog element names
-[ ] revisit the x_thick logic in g_slider.c.  It thickens the indicator when
+[x] revisit the x_thick logic in g_slider.c.  It thickens the indicator when
     it's in the middle of the slider, but it's pretty obscure in the current
     implementation.
 [x] for as many items as possible, hide them instead of removing from DOM
-[ ] fix iemgui_font so it doesn't use tcl list syntax
+[x] fix iemgui_font so it doesn't use tcl list syntax
 [ ] change all the gui color char[MAXPDSTRING] junk to simple int, and do the
     conversion to hex html string in the gui.
-[ ] implement iemgui labels and its ascetic font chooser
+[x] implement iemgui labels and its ascetic font chooser
 [ ] think about scaling the svg instead of the page, and making the selection
     rectangle a div above that
 [ ] change 'visible-width' to 'cnv-width'
 [ ] in dialog_iemgui.html, use an object to store all the prop/value pairs that
     got sent.  That way we don't have to use all those awful tricks to
     conditionally fill the slots
-[ ] look into the font metrics, see if we can use floating point fonts to
+[x] look into the font metrics, see if we can use floating point fonts to
     simplify things
-[ ] iemgui font configuration -- de-tcl-ize the {fontface fontsize} tcl list,
+[x] iemgui font configuration -- de-tcl-ize the {fontface fontsize} tcl list,
     then make it work
 [x] do msg box click animation in css
 [x] tgl 'X' doesn't show up
@@ -192,12 +192,12 @@ Everything else: (A [x] means we've fixed it)
     But we're doing an end-run around that entire edifice so we need to
     force it, probably inside text_setto
 [x] abstract out multi-line text loop, use for text_new and text_set
-[ ] set svg viewBox/width/height to the window size when window gets created
+[x] set svg viewBox/width/height to the window size when window gets created
 [ ] revisit pdtk_check_scroll_on_motion.  It's not implemented in the port
     yet.  Perhaps there's a better way to do it, without triggering a bunch
     of layouts.
 [ ] implement pdtk_canvas_editval and magicglassval
-[ ] move crispEdges value to CSS
+[x] move crispEdges value to CSS
 [ ] look into problems with object z-order on the C side when deleting objects
     and then undoing the delete
 [ ] implement magicglass edit menu indicator
@@ -224,7 +224,7 @@ Everything else: (A [x] means we've fixed it)
       appears/disappears mysteriously)
     (This appears to be a problem with the graphics card on my X60 as other
      GUI progs seem to be having problems with updating the display)
-[ ] sometimes straight control cords are pixel-aligned, sometimes they aren't. (If not pixel-aligned, try nudging
+[x] sometimes straight control cords are pixel-aligned, sometimes they aren't. (If not pixel-aligned, try nudging
     one pixel to the right and they become non-aligned.)
 [ ] autopatch creates a new box, but if you try to instantiate the empty box
     you have to click twice to get it to leave text entry mode
@@ -232,14 +232,14 @@ Everything else: (A [x] means we've fixed it)
 [ ] canvas_check_geometry doesn't seem to do the right thing for canvases that are far to the right
     of the screen. Can't think of anything except maybe a bug in nw.js Window.x?
 [x] work on resizing dialog windows to the document content (currently some do, some don't)
-[ ] add Mac support by changing evt.ctrlKey to evt.ctrlKey||evt.metaKey
+[x] add Mac support by changing evt.ctrlKey to evt.ctrlKey||evt.metaKey
 [x] when editing message box contents, the background svg image is hardcoded with a border color of blue.
     look into using mask-image in order to make this background color theme-able
 [ ] integrate the inlet mouseover animation with a change of fill color
 [x] make a css entry for colors for the new_object_textentry border, background, and cursor
-[ ] control main object font color from css
+[x] control main object font color from css
 [x] check new_object_textentry on editmode change
-[ ] check if [key] and [keyup] handle autorepeat the same way
+[x] check if [key] and [keyup] handle autorepeat the same way
 [ ] gui_vmess: should it look like this:
         (void *x, "msg", "arg_format", ...)
     or as it currently looks, like this:
@@ -319,7 +319,7 @@ Everything else: (A [x] means we've fixed it)
     to always be the rightmost outlet
 [ ] don't implement tooltips until we have a single call to create an object
     plus all xlets. That way we can add an arg or two for the name and dir
-    to find the help patch and get all descriptions in one goy
+    to find the help patch and get all descriptions in one go
 [x] make sure to free events in svg_free
 [ ] make scalars dig inside abstractions when they search the templatecanvas
     for drawing commands.  This will make it possible to build abstraction
