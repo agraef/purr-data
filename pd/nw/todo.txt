@@ -41,12 +41,165 @@ Node-webkit stuff:
 5) command line argv
 
 Everything else: (A [x] means we've fixed it)
-[x] set svg bounds to whatever the window size happens to be
-[x] trigger a canvas_getscroll when the nw.js window is resized
 [ ] packaging as app, setting correct appname, etc
 [ ] get -unique to work (relied on tcl [send] command)
-[ ] check if patch windows with screenposition (0,0) get stuck underneath
-    OSX menu.
+[ ] check if patch windows with screenposition (0,0) get stuck underneath OSX
+    menu.
+[ ] abstract away appendChild
+[ ] font-size should be set as css property for a class of text, rather than
+    per each gobj in svg
+[ ] find a better approach to escaping characters for the gui than
+    escape_double_quotes kludge (and handle any other problematic chars)
+[ ] once garrays are drawn inside a <g> we won't have to individually erase
+    each child of a scalar
+[ ] make pdgui function names more consistent
+[ ] in draw_vis, move tags to front of function call so they don't have to
+    be in an array
+[ ] in draw_vis, remove all the coords logic and let svg_togui do that work.
+    In svg_new, leverage the "d", "points", etc. methods to do the same.
+[ ] remove the draw_vis warning/code about needing 2 points to draw
+[ ] make gui_menu_close message less hacky (currently includes patch args in
+    the middle) 
+[ ] figure out why -nrt flag causes Pd to bail on the GUI (it wasn't doing this
+    on the amd_64 virtual Jessie machine, nor on my 32-bit machine).
+[ ] make dialogs with [yes/no] instead of [cancel/ok]
+[ ] draw graph inside gobj group
+[ ] merge gui_text_select and gui_text_deselect
+[ ] in function gui_cord_inspector_update, use parameter "moved" to flash text
+[ ] cord_inspector_flash doesn't seem to be deterministic-- if you move among
+    several cords very fast it will try to flash a non-existent svg item.
+    (Probably want to either make a permanent item in the pd_canvas.html for it,
+    or hard-code a separate div.)
+[ ] looks like nwworkingdir isn't working for open/save dialogs atm
+[ ] text_set doesn't work when a numbox is first created (but works otherwise)
+[ ] clean up nw_create_window (doesn't need so many parameters)
+[ ] make it possible to have the inner cells of hradio change color with the
+    selection, as the border currently does.  Tk just uses the non-hierarchical
+    tags and appends the word "BASE".  (Maybe use an inner <g> to do this.)
+[ ] implement the crappy iemgui color dialog presets
+[ ] use underscores for iemgui dialog element names
+[ ] change all the gui color char[MAXPDSTRING] junk to simple int, and do the
+    conversion to hex html string in the gui.
+[ ] think about scaling the svg instead of the page, and making the selection
+    rectangle a div above that
+[ ] change 'visible-width' to 'cnv-width'
+[ ] in dialog_iemgui.html, use an object to store all the prop/value pairs that
+    got sent.  That way we don't have to use all those awful tricks to
+    conditionally fill the slots
+[ ] gui_graph_fill_border: use css class selectors instead of configuration
+[ ] standardize javascript function names
+[ ] remove gui_text_select_color (css takes care of this)
+[ ] add a canvas message to set a transform on the patchsvg.  Good for:
+    * obscure display needs (zooming past the browser limits)
+    * rotating for a display
+    * transforming or scaling all scalars on a patch at once
+    However: This will require more math on the mousemotion.
+    So this should probably wait until
+    moving a lot of the editing code out of C and into the GUI
+[ ] change 'array_element_fill' to 'element_fill', array_outline to
+    'array_element_outline' 
+[ ] either nw_create_window should take fewer parameters or it should take an
+    object with name: value pairs
+[ ] getting the sense that glist_isselected should _always_ have
+    glist_getcanvas(x) as its first parameter
+[ ] t_svg: change x_x1..y2 to simple x_bbox[4], and change current x_bbox to
+    x_cachebbox (or something like that)
+[ ] look into changing 'x' format specifier from \"x%.6lx\" to more generic
+    \"%.6lx\". (Not exactly sure what good the "x" does there.)  It's only
+    specified in s_inter and in editor_new, so it should be easy to amend
+    if need be.
+[ ] make "rtext" textarea <div> static, and turn display on/off
+[ ] for the clipboard shortcut keys inside pd_canvas.html keydown, not sure
+    what code should be sent to Pd on keyup...
+[ ] revisit pdtk_check_scroll_on_motion.  It's not implemented in the port
+    yet.  Perhaps there's a better way to do it, without triggering a bunch
+    of layouts.
+[ ] implement pdtk_canvas_editval and magicglassval
+[ ] look into problems with object z-order on the C side when deleting objects
+    and then undoing the delete
+[ ] implement magicglass edit menu indicator
+[ ] clip garray to gl_x1 and gl_x2 by:
+    a) checking if we're in a gop, and
+    b) if so, only render if element number is > gl_x1 and < gl_x2
+[ ] fix bug where utf_8 snowmen in an object box can cause a buffer overflow
+    in the lib loading routine
+[ ] Fix layout on dialogs so that height/width of the document doesn't
+    reflow when the window gets resized
+[ ] look into using requestAnimationFrame
+[ ] autopatch creates a new box, but if you try to instantiate the empty box
+    you have to click twice to get it to leave text entry mode
+[ ] look into pasting only text inside text entry
+[ ] canvas_check_geometry doesn't seem to do the right thing for canvases that
+    are far to the right of the screen. Can't think of anything except maybe a
+    bug in nw.js Window.x?
+[ ] look into using mask-image in order to make this background color theme-able
+[ ] integrate the inlet mouseover animation with a change of fill color
+[ ] figure out difference between deb install location /usr
+    vs tarball /usr/local
+[ ] port the bug fix from pd-l2ork git repo in commit
+    6084c8e5f86d1521edde3a899a6d5b5821aa27c6
+    "*fixed bug reported by Gilberto in..."
+[ ] gui_vmess: should it look like this:
+        (void *x, "msg", "arg_format", ...)
+    or as it currently looks, like this:
+        ("msg", "arg_format", ...)
+[ ] same for "*fixed spaces in old UI objects that were converted to \t..."
+    262447434c3548c53bc0b52e7f5bb5431b233311
+    NB: this commit uses the vertical tab as a hack for putting spaces
+    inside gatom labels. But I'm currently using vertical tab as a hack
+    to delimit commands sent to the GUI.  So for now, this commit will
+    will not get ported.
+[ ] same for "*fixed font positioning on 14.04+ releases"
+    9edc6ca98e141174b86ebe5cdf406fe7e47845d5
+    NB: this commit affects the old GUI.  Need to revisit it with the new
+    one to see whether it's still necessary.
+[ ] same for all commits up to Jul 31, 2015
+[ ] 930414ea5a2330dfa5d581e92514ece05aca1ebf
+    Has to do with font positioning inside objects boxes... probably
+    need to address this manually.
+[ ] test if try/catch parser in the socket receiver is a performance hog. (For
+    lots of data it can end up freezing the GUI. Test if requestAnimationFrame
+    makes any difference...)
+[ ] Figure out what pdtk_ping does
+[ ] Instead of hardcoded gui_post colors, set a class (warning, error, etc.)
+[ ] revisit the function for escaping double-quotes inside s_inter.c, see
+    if there's a cleaner way to do it
+[ ] the socket reader has a buffer capped at 4096. This is plenty for most
+    purposes, but it may choke if the user tries to enter a humongous amount
+    of text inside, say, a message box.  Pd Vanilla handles this by sending
+    every single character that's typed into the box as a separate message
+    (which of course causes other problems, like copy/paste potentially flood-
+    ing the socket and freezing Pd.) Here, I am sending as a single message
+    "stringforobj" with the msg/obj box contents as the arguments. If that
+    message ends up being bigger than 4096 Pd will truncate the message.
+
+    A solution would be to send the box contents in smaller chunks-- bigger
+    than single chars but smaller than 4096. This will complicate the
+    interface, but the chunks should get sent in sequence so it might not
+    be too bad.
+[ ] don't implement tooltips until we have a single call to create an object
+    plus all xlets. That way we can add an arg or two for the name and dir
+    to find the help patch and get all descriptions in one go
+[ ] make scalars dig inside abstractions when they search the templatecanvas
+    for drawing commands.  This will make it possible to build abstraction
+    libraries for ds-gui widgets.
+[ ] fix the Next Window/Previous Window keybindings. For some reason they
+    don't work.
+[ ] unnecessary scrollbars appear when many patches are opened at once.
+[ ] some menuitem shortcuts don't pass their events on to the dom, while
+    others do. I think it happens when a double-modifier has keys in common
+    with a single-modifier. Example: <ctrl-shift-v> creates a vsl, but the
+    key gets sent to Pd. However, <ctrl-shift-h> creates an hsl, and
+    does _not_ send a key to Pd. Since <ctrl-v> is bound to "paste" and
+    <ctrl-h> isn't bound to anything, that may somehow be causing an
+    inconsistency.
+    After some more research, it appears this problem doesn't happen
+    in OSX.
+[ ] fix ds-demos/splines.pd (arg number out of range)
+[ ] vsl dialog shows "undefined" for one of the tooltips
+
+[x] set svg bounds to whatever the window size happens to be
+[x] trigger a canvas_getscroll when the nw.js window is resized
 [x] check if patch windows with screenposition (0,0) get stuck underneath
     Ubuntu menu.
 [x] choosing the same directory multiple times doesn't work
@@ -63,13 +216,7 @@ Everything else: (A [x] means we've fixed it)
 [x] add 'x' type to gui_vmess for saving canvas names, etc., as hex values
 [x] destroy (or, more likely, hide) selection rectangle when not needed
 [x] change gui_text_select to gui_gobj_select
-[ ] make it possible to have the inner cells of hradio change color with the
-    selection, as the border currently does.  Tk just uses the non-hierarchical
-    tags and appends the word "BASE".  (Maybe use an inner <g> to do this.)
 [x] make mycnv use its own selection logic
-[ ] abstract away appendChild
-[ ] font-size should be set as css property for a class of text, rather than
-    per each gobj in svg
 [x] remove the "fudge_factor" kludge in g_rtext.c, and handle fonts in a sane
     manner.  In doing so we must decide whether or not we want to be able to
     fetch the bounding box of objects from within a Pd patch.
@@ -77,35 +224,21 @@ Everything else: (A [x] means we've fixed it)
     do this, though there might also be some externals). Note: we just
     moved the kludge to the GUI.
 [x] replace things like gui_select_color with css
-[ ] find a better approach to escaping characters for the gui than
-    escape_double_quotes kludge (and handle any other problematic chars)
 [x] look into using <def> and <use> for scalars. (Looked into it-- doesn't
     seem necessary or helpful...)
 [x] in draw_vis, make circle and ellipse radii attr floats instead of ints
 [x] should stroke-dasharray values be floats? (Yes.)
-[ ] once garrays are drawn inside a <g> we won't have to individually erase
-    each child of a scalar
-[x] clean up svg_sendupdate -- put a single gui_vmess at the end (not necessary for now)
-[x] svg_sendupdate -- make sure there aren't arbitrary %d's that should actually be %g's
+[x] clean up svg_sendupdate -- put a single gui_vmess at the end (not necessary
+    for now)
+[x] svg_sendupdate -- make sure there aren't arbitrary %d's that should actually
+    be %g's
 [x] svg_sendupdate -- need a gui interface for stuff like stroke-dasharray
     (and garrays)
 [x] ibid., for path data, points
-[ ] make pdgui function names more consistent
-[ ] in draw_vis, move tags to front of function call so they don't have to
-    be in an array
-[ ] in draw_vis, remove all the coords logic and let svg_togui do that work.
-    In svg_new, leverage the "d", "points", etc. methods to do the same.
-[ ] remove the draw_vis warning/code about needing 2 points to draw
 [x] need to clean up dead windows inside patchwin object (on close)
-[ ] make gui_menu_close message less hacky (currently includes patch args in
-    the middle) 
-[ ] figure out why -nrt flag causes Pd to bail on the GUI (it wasn't doing this
-    on the amd_64 virtual Jessie machine, nor on my 32-bit machine).
-[ ] make dialogs with [yes/no] instead of [cancel/ok]
 [x] make a gui_mess interface for the edge cases that don't require args
     (similar to sys_gui) (not necessary)
 [x] make sure we're breaking down the socket properly from the GUI side on quit
-[ ] looks like nwworkingdir isn't working for open/save dialogs atm
 [x] nwworkingdir only works on the second file open
 [x] implement the stuff at the end of saveas_callback (recentfiles et al)
 [x] make an "export" menu command for max patch saving.  That way we can accept
@@ -113,101 +246,43 @@ Everything else: (A [x] means we've fixed it)
     us on potential file overwrites (even when the user neglects to type an
     extension). (Note: this was solved by putting a ".pd" extension in the
     saveas name by default.)
-[ ] draw graph inside gobj group
-[ ] merge gui_text_select and gui_text_deselect
-[ ] in function gui_cord_inspector_update, use parameter "moved" to flash text
-[ ] cord_inspector_flash doesn't seem to be deterministic-- if you move among
-    several cords very fast it will try to flash a non-existent svg item.
-    (Probably want to either make a permanent item in the pd_canvas.html for it,
-    or hard-code a separate div.)
 [x] for data structure demos, change "" to 'none'
 [x] fix "Reselect" <ctrl-Enter> Keybinding.  It doesn't work atm because nw.js
     cannot bind to Enter. But canvas_events should make this pretty easy.
 [x] fix bug where Reselecting a floating text doesn't stop it from floating
 [x] keyup doesn't register autokeypresses, but keyname and key do
-[ ] text_set doesn't work when a numbox is first created (but works otherwise)
-[ ] clean up nw_create_window (doesn't need so many parameters)
 [x] make a nice window API in C.  Window "foo-bar" type maps to "foo-bar.html"
-[ ] implement the crappy iemgui color dialog presets
 [x] find a simple translation API
-[ ] use underscores for iemgui dialog element names
 [x] revisit the x_thick logic in g_slider.c.  It thickens the indicator when
     it's in the middle of the slider, but it's pretty obscure in the current
     implementation.
 [x] for as many items as possible, hide them instead of removing from DOM
 [x] fix iemgui_font so it doesn't use tcl list syntax
-[ ] change all the gui color char[MAXPDSTRING] junk to simple int, and do the
-    conversion to hex html string in the gui.
 [x] implement iemgui labels and its ascetic font chooser
-[ ] think about scaling the svg instead of the page, and making the selection
-    rectangle a div above that
-[ ] change 'visible-width' to 'cnv-width'
-[ ] in dialog_iemgui.html, use an object to store all the prop/value pairs that
-    got sent.  That way we don't have to use all those awful tricks to
-    conditionally fill the slots
 [x] look into the font metrics, see if we can use floating point fonts to
     simplify things
 [x] iemgui font configuration -- de-tcl-ize the {fontface fontsize} tcl list,
     then make it work
 [x] do msg box click animation in css
 [x] tgl 'X' doesn't show up
-[ ] gui_graph_fill_border: use css class selectors instead of configuration
-[ ] standardize javascript function names
 [x] in gui_plot_vis, we have to check for gobj existence.  For some reason, at
     very fast drawing rates we end up with two svg elements if we don't check
     for this.  This would be simplified if gop stuff was just children of
     parent <group>
 [x] add garray_update for changing the path coords without having to recreate
     the entire scalar edifice
-[ ] remove gui_text_select_color (css takes care of this)
-[ ] add a canvas message to set a transform on the patchsvg.  Good for:
-    * obscure display needs (zooming past the browser limits)
-    * rotating for a display
-    * transforming or scaling all scalars on a patch at once
-    However: This will require more math on the mousemotion.
-    So this should probably wait until
-    moving a lot of the editing code out of C and into the GUI
-[ ] change 'array_element_fill' to 'element_fill', array_outline to
-    'array_element_outline' 
-[ ] either nw_create_window should take fewer parameters or it should take an
-    object with name: value pairs
-[ ] getting the sense that glist_isselected should _always_ have
-    glist_getcanvas(x) as its first parameter
 [x] get rid of the old tcl specific sys_get_audio_apis
 [x] have a single function to set t_svg_attr
-[ ] t_svg: change x_x1..y2 to simple x_bbox[4], and change current x_bbox to
-    x_cachebbox (or something like that)
 [x] figure out why gatom_retext sends a fill color to GUI
-[ ] look into changing 'x' format specifier from \"x%.6lx\" to more generic
-    \"%.6lx\". (Not exactly sure what good the "x" does there.)  It's only
-    specified in s_inter and in editor_new, so it should be easy to amend
-    if need be.
-[ ] make "rtext" textarea <div> static, and turn display on/off
 [x] what to do about character sets other than utf-8 that come from Pd
     side? Example: ISO-8859 from the string posted by hexloader.c
-[ ] for the clipboard shortcut keys inside pd_canvas.html keydown, not sure
-    what code should be sent to Pd on keyup...
 [x] revis message box after updating the text in the editor. We didn't have
     to do this with the old API because it updated the box on every keystroke.
     But we're doing an end-run around that entire edifice so we need to
     force it, probably inside text_setto
 [x] abstract out multi-line text loop, use for text_new and text_set
 [x] set svg viewBox/width/height to the window size when window gets created
-[ ] revisit pdtk_check_scroll_on_motion.  It's not implemented in the port
-    yet.  Perhaps there's a better way to do it, without triggering a bunch
-    of layouts.
-[ ] implement pdtk_canvas_editval and magicglassval
 [x] move crispEdges value to CSS
-[ ] look into problems with object z-order on the C side when deleting objects
-    and then undoing the delete
-[ ] implement magicglass edit menu indicator
-[ ] clip garray to gl_x1 and gl_x2 by:
-    a) checking if we're in a gop, and
-    b) if so, only render if element number is > gl_x1 and < gl_x2
-[ ] fix bug where utf_8 snowmen in an object box can cause a buffer overflow
-    in the lib loading routine
-[ ] Fix layout on dialogs so that height/width of the document doesn't
-    reflow when the window gets resized
 [x] ds-demos unit-circle node throws an "unexpected string" error when
     trying to open it
 [x] gui_canvas_getscroll isn't called upon patch load
@@ -215,7 +290,6 @@ Everything else: (A [x] means we've fixed it)
     This appears to be related to a problem with my graphics card on the X60.
     The SVG stacked-sprite I'm using isn't super efficient, but it should
     perform ok for simple graphics.
-[ ] look into using requestAnimationFrame
 [x] when mapping inside a new nw window, sometimes it stops rendering
     the svg, or the svg becomes corrupted.
     * when you drag the nw window, it will update the svg contents
@@ -224,48 +298,27 @@ Everything else: (A [x] means we've fixed it)
       appears/disappears mysteriously)
     (This appears to be a problem with the graphics card on my X60 as other
      GUI progs seem to be having problems with updating the display)
-[x] sometimes straight control cords are pixel-aligned, sometimes they aren't. (If not pixel-aligned, try nudging
-    one pixel to the right and they become non-aligned.)
-[ ] autopatch creates a new box, but if you try to instantiate the empty box
-    you have to click twice to get it to leave text entry mode
-[ ] look into pasting only text inside text entry
-[ ] canvas_check_geometry doesn't seem to do the right thing for canvases that are far to the right
-    of the screen. Can't think of anything except maybe a bug in nw.js Window.x?
-[x] work on resizing dialog windows to the document content (currently some do, some don't)
+[x] sometimes straight control cords are pixel-aligned, sometimes they aren't.
+    (If not pixel-aligned, try nudging one pixel to the right and they become
+    non-aligned.)
+[x] work on resizing dialog windows to the document content (currently some do,
+    some don't)
 [x] add Mac support by changing evt.ctrlKey to evt.ctrlKey||evt.metaKey
-[x] when editing message box contents, the background svg image is hardcoded with a border color of blue.
-    look into using mask-image in order to make this background color theme-able
-[ ] integrate the inlet mouseover animation with a change of fill color
-[x] make a css entry for colors for the new_object_textentry border, background, and cursor
+[x] when editing message box contents, the background svg image is hardcoded
+    with a border color of blue.
+[x] make a css entry for colors for the new_object_textentry border, background,
+    and cursor
 [x] control main object font color from css
 [x] check new_object_textentry on editmode change
 [x] check if [key] and [keyup] handle autorepeat the same way
-[ ] gui_vmess: should it look like this:
-        (void *x, "msg", "arg_format", ...)
-    or as it currently looks, like this:
-        ("msg", "arg_format", ...)
-[ ] figure out difference between deb install location /usr
-    vs tarball /usr/local
-[ ] port the bug fix from pd-l2ork git repo in commit
-    6084c8e5f86d1521edde3a899a6d5b5821aa27c6
-    "*fixed bug reported by Gilberto in..."
 [x] same for 50719c4c455291be3ac679486f7e4d72706bd9e4
     (note: we didn't update the major/minor release
      macros to 0.43 here.)
 [x] same for a620228554d1662bacd0f2f8cfc65259049164ec
-[ ] same for "*fixed spaces in old UI objects that were converted to \t..."
-    262447434c3548c53bc0b52e7f5bb5431b233311
-    NB: this commit uses the vertical tab as a hack for putting spaces
-    inside gatom labels. But I'm currently using vertical tab as a hack
-    to delimit commands sent to the GUI.  So for now, this commit will
-    will not get ported.
-[ ] same for "*fixed font positioning on 14.04+ releases"
-    9edc6ca98e141174b86ebe5cdf406fe7e47845d5
-    NB: this commit affects the old GUI.  Need to revisit it with the new
-    one to see whether it's still necessary.
 [x] same for "*fixed copying dialog text and pasting it onto a canvas crasher"
     96e2fa5605a2d87ab99c5c2c8df9bca53c23c401
-[x] same for "*revamped arduino connectivity to use Firmata firmware and allow for"
+[x] same for "*revamped arduino connectivity to use Firmata firmware and allow
+    for"
     70b9043e6cd6de914379d77f591b57e2c9a34661
     (NB: this should be relatively painless... it's just that github
      wouldn't load the patch in the browser)
@@ -280,71 +333,27 @@ Everything else: (A [x] means we've fixed it)
     Hunks failed.  Need to patch manually.
 [x] 00021cccae81854a6e107141e828cec3b1107e6b
     Hunks failed.  Patch manually
-[ ] 930414ea5a2330dfa5d581e92514ece05aca1ebf
-    Has to do with font positioning inside objects boxes... probably
-    need to address this manually.
 [x] 60e06b3155458b561f3fb1ace17874eac9c5592a
     Hunks failed.  Patch manually.
-[ ] same for all commits up to Jul 31, 2015
 [x] address double-free when closing a canvas that is a canvas field
     of a scalar
-[ ] test if try/catch parser in the socket receiver is a performance hog. (For
-    lots of data it can end up freezing the GUI. Test if requestAnimationFrame
-    makes any difference...)
 [x] create a function in pdgui to change ["name", value] arrays to Javascript
     objects.  This will greatly simplify things like dialog_iemgui.html
-[ ] Figure out what pdtk_ping does
-[ ] Instead of hardcoded gui_post colors, set a class (warning, error, etc.)
 [x] make pdsend able to take an arbitrary number of arguments
-[ ] revisit the function for escaping double-quotes inside s_inter.c, see
-    if there's a cleaner way to do it
-[ ] the socket reader has a buffer capped at 4096. This is plenty for most
-    purposes, but it may choke if the user tries to enter a humongous amount
-    of text inside, say, a message box.  Pd Vanilla handles this by sending
-    every single character that's typed into the box as a separate message
-    (which of course causes other problems, like copy/paste potentially flood-
-    ing the socket and freezing Pd.) Here, I am sending as a single message
-    "stringforobj" with the msg/obj box contents as the arguments. If that
-    message ends up being bigger than 4096 Pd will truncate the message.
-
-    A solution would be to send the box contents in smaller chunks-- bigger
-    than single chars but smaller than 4096. This will complicate the
-    interface, but the chunks should get sent in sequence so it might not
-    be too bad.
 [x] the outlet of [group] doesn't get reordered correctly when adding [inlet]
     inside the subpatch.  It's supposed to always be the rightmost one, but
     it stays to the left.  Either figure out how to fix it or how to get
     the [group] inlet to always stay at the left so that the two behave the
     same.
     to always be the rightmost outlet
-[ ] don't implement tooltips until we have a single call to create an object
-    plus all xlets. That way we can add an arg or two for the name and dir
-    to find the help patch and get all descriptions in one go
 [x] make sure to free events in svg_free
-[ ] make scalars dig inside abstractions when they search the templatecanvas
-    for drawing commands.  This will make it possible to build abstraction
-    libraries for ds-gui widgets.
 [x] getscroll_var assumes we're only loading a single patch at a time, but
     that isn't true. Thus if we open many patches at a time, the getscroll
     call for the most recent window will cancel the old one, leaving the 
     older window with the wrong viewport.
-[ ] fix the Next Window/Previous Window keybindings. For some reason they
-    don't work.
-[ ] unnecessary scrollbars appear when many patches are opened at once.
-[ ] some menuitem shortcuts don't pass their events on to the dom, while
-    others do. I think it happens when a double-modifier has keys in common
-    with a single-modifier. Example: <ctrl-shift-v> creates a vsl, but the
-    key gets sent to Pd. However, <ctrl-shift-h> creates an hsl, and
-    does _not_ send a key to Pd. Since <ctrl-v> is bound to "paste" and
-    <ctrl-h> isn't bound to anything, that may somehow be causing an
-    inconsistency.
-    After some more research, it appears this problem doesn't happen
-    in OSX.
 [x] make GUI server try again if the port is already in use
-[ ] fix ds-demos/splines.pd (arg number out of range)
 [x] figure out why OSX app bundle runs when using "open" from the terminal,
     but not when you click it
-[ ] vsl dialog shows "undefined" for one of the tooltips
 
 Crashers
 --------
