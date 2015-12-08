@@ -4983,21 +4983,21 @@ void canvas_displaceselection(t_canvas *x, int dx, int dy)
 }
 
     /* this routine is called whenever a key is pressed or released.  "x"
-    may be zero if there's no current canvas.  The first argument is true or
-    false for down/up; the second one is either a symbolic key name (e.g.,
-    "Right" or an Ascii key number.  The third is the shift key. 
+    may be zero if there's no current canvas.
+    Arguments:
+      0) 0 = key up, nonzero = key down
+      1) either a symbolic key name (e.g., "Right") or an Ascii key number
+      2) shift key: nonzero = pressed
+      3) focus (not sure what this does)
+      4) autorepeat: 0 = off, nonzero = on
     In Pd-L2Ork additional argument is to determine whether we're pasting
     to ignore unnecessary getscroll calls at paste time */
 void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
 {
-    static t_symbol *keynumsym, *keyupsym, *keynamesym;
-    static t_symbol *keynumsym_a, *keyupsym_a, *keynamesym_a;
-    int keynum;
+    static t_symbol *keynumsym, *keyupsym, *keynamesym,
+        *keynumsym_a, *keyupsym_a, *keynamesym_a;
     t_symbol *gotkeysym;
-        
-    int down, shift;
-    int focus = 1;
-    int autorepeat = 0;
+    int keynum, down, shift, focus = 1, autorepeat = 0;
 
     tooltip_erase(x);
     
