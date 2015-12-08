@@ -104,7 +104,7 @@ Everything else: (A [x] means we've fixed it)
 [ ] make dialogs with [yes/no] instead of [cancel/ok]
 [x] make a gui_mess interface for the edge cases that don't require args
     (similar to sys_gui) (not necessary)
-[ ] make sure we're breaking down the socket properly from the GUI side on quit
+[x] make sure we're breaking down the socket properly from the GUI side on quit
 [ ] looks like nwworkingdir isn't working for open/save dialogs atm
 [x] nwworkingdir only works on the second file open
 [x] implement the stuff at the end of saveas_callback (recentfiles et al)
@@ -123,8 +123,8 @@ Everything else: (A [x] means we've fixed it)
 [x] for data structure demos, change "" to 'none'
 [x] fix "Reselect" <ctrl-Enter> Keybinding.  It doesn't work atm because nw.js
     cannot bind to Enter. But canvas_events should make this pretty easy.
-[ ] fix bug where Reselecting a floating text doesn't stop it from floating
-[ ] keyup doesn't register autokeypresses, but keyname and key do
+[x] fix bug where Reselecting a floating text doesn't stop it from floating
+[x] keyup doesn't register autokeypresses, but keyname and key do
 [ ] text_set doesn't work when a numbox is first created (but works otherwise)
 [ ] clean up nw_create_window (doesn't need so many parameters)
 [x] make a nice window API in C.  Window "foo-bar" type maps to "foo-bar.html"
