@@ -3186,6 +3186,86 @@ function select_text(cid, elem) {
         }
 }
 
+// CSS: Cleanly separate style from content.
+// Arnold: Get down!
+// Me: Ahhhh!
+// CSS: Impossible...
+// Arnold: Style this. *kappakappakappa*
+// Me: Hey, you can't just go around killing people!
+// Arnold: It's not human. It's a W3C Standard.
+// Me: But how did it get here?
+// Arnold: It travelled hear from the past.
+//         It won't stop until you are eliminated.
+// Me: So what now?
+// Arnold: Use this to find what you need then get the heck out of here.
+function get_style_by_selector(w, selector) {
+    var sheet_list = w.document.styleSheets,
+        rule_list, i, j,
+        len = sheet_list.length;
+    for (i = 0; i < len; i++) {
+        rule_list = sheet_list[i].cssRules;
+        for (j = 0; j < rule_list.length; j++) {
+            if (rule_list[j].type == w.CSSRule.STYLE_RULE &&
+                rule_list[j].selectorText == selector) {
+                return rule_list[j].style;
+            }
+        }
+    }
+    return null;
+}
+
+// for debugging purposes
+exports.get_style_by_selector = get_style_by_selector;
+
+// Big, stupid, ugly SVG data url to shove into CSS when
+// the user clicks a box in edit mode. One set of points for
+// the "head", or main box, and the other for the "tail", or
+// message flag at the right.
+function generate_msg_box_bg_data(type, stroke) {
+   return 'url(\"data:image/svg+xml;utf8,' +
+            '<svg ' + 
+              "xmlns:svg='http://www.w3.org/2000/svg' " +
+              "xmlns='http://www.w3.org/2000/svg' " +
+              "xmlns:xlink='http://www.w3.org/1999/xlink' " +
+              "version='1.0' " +
+              "viewBox='0 0 10 10' " +
+              "preserveAspectRatio='none'" +
+            ">" +
+              "<polyline vector-effect='non-scaling-stroke' " +
+                "id='bubbles' " +
+                "fill='none' " +
+                "stroke=' " +
+                  stroke + // Here's our stroke color
+                "' " +
+                "stroke-width='1' " +
+                (type === "head" ?
+                    "points='10 0 0 0 0 10 10 10' " : // box
+                    "points='0 0 10 0 0 2 0 8 10 10 0 10' ") + // flag
+              "/>" +
+            "</svg>" +
+          '")';
+}
+
+// Big problem here-- CSS fails miserably at something as simple as the
+// message box flag. We use a backgroundImage svg to address this, but
+// for security reasons HTML5 doesn't provide access to svg image styles.
+// As a workaround we just seek out the relevant CSS rules and shove the
+// whole damned svg data url into them. We do this each time the user
+// clicks a box to edit.
+// Also, notice that both CSS and SVG _still_ fail miserably at drawing a
+// message box flag that expands in the middle while retaining the same angles
+// at the edges. As the message spans more and more lines the ugliness becomes
+// more and more apparent.
+// Anyhow, this enormous workaround makes it possible to just specify the
+// edit box color in CSS for the presets.
+function shove_svg_background_data_into_css(w) {
+    var head_style = get_style_by_selector(w, "#new_object_textentry.msg"),
+        tail_style = get_style_by_selector(w, "p.msg::after"),
+        stroke = head_style.outlineColor;
+    head_style.backgroundImage = generate_msg_box_bg_data("head", stroke);
+    tail_style.backgroundImage = generate_msg_box_bg_data("tail", stroke);
+}
+
 function gui_textarea(cid, tag, type, x, y, max_char_width, text,
     font_size, state) {
     var range, svg_view, p,
@@ -3221,9 +3301,14 @@ function gui_textarea(cid, tag, type, x, y, max_char_width, text,
             max_char_width === 0 ? "60ch" : max_char_width + "ch");
         p.style.setProperty("min-width",
             max_char_width === 0 ? "3ch" : max_char_width + "ch");
+        // set backgroundimage for message box
+        if (type === "msg") {
+            shove_svg_background_data_into_css(patchwin[cid].window);
+        }
         // remove leading/trailing whitespace
         text = text.trim();
         p.textContent = text;
+        // append to doc body
         patchwin[cid].window.document.body.appendChild(p);
         p.focus();
         select_text(cid, p);
