@@ -716,7 +716,7 @@ void sys_vvgui(const char *fmt, va_list ap) {
     if (sys_debuglevel & DEBUG_MESSUP) {
         //blargh();
         //int begin = lastend=='\n' || lastend=='\r' || lastend==-1;
-        int begin = lastend=='\a' || lastend==-1;
+        int begin = lastend=='\x1f' || lastend==-1;
         if (stderr_isatty)
             fprintf(stderr, "%s\e[0;1;35m%s\e[0m",
                 begin ? "\n-> " : "", sys_guibuf + sys_guibufhead);
@@ -783,7 +783,7 @@ char *escape_double_quotes(const char *src) {
 
 void gui_end_vmess(void)
 {
-    sys_gui("\a");
+    sys_gui("\x1f"); /* unit separator */
 }
 
 
