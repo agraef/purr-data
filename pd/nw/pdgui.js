@@ -1033,7 +1033,6 @@ function init_socket_events () {
         for (i = 0; i < len; i++) {
             // check for end of command:
             if (data[i] === 31) { // unit separator
-post("got a datum");
                 // decode next_command
                 try {
                     // This should work for all utf-8 content
