@@ -598,10 +598,10 @@ static void *slider_new(t_symbol *s, int argc, t_atom *argv)
     if (x->x_orient)
     {
         x->x_gui.legacy_x = 0;
-        x->x_gui.legacy_y = 0;
+        x->x_gui.legacy_y = -2;
     } else {
         x->x_gui.legacy_x = -3;
-        x->x_gui.legacy_y = 2;        
+        x->x_gui.legacy_y = 0;        
     }
 
 
