@@ -59,6 +59,13 @@
     stroke: black;
 }
 
+/* The outline to show the visible area for a Graph-On-Parent canvas,
+   i.e., the "red rectangle" */
+#gop_rect {
+    fill: none;
+    stroke: red;
+}
+
 .cord.signal {
     stroke-width: 2;
     stroke: #828297;

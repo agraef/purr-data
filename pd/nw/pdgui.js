@@ -2846,18 +2846,17 @@ function gui_canvas_drawredrect(cid, x1, y1, x2, y2) {
     var svgelem = get_item(cid, "patchsvg"),
         b;
     b = create_item(cid, "rect", {
-        x: x1,
-        y: y1,
+        x: x1 + 0.5, // align to pixel grid
+        y: y1 + 0.5, // align to pixel grid
         width: x2 - x1,
         height: y2 - y1,
-        stroke: "red",
-        id: "GOP"
+        id: "gop_rect" // Note: the old tk tag was "GOP"
     });
     svgelem.appendChild(b);
 }
 
 function gui_canvas_deleteredrect(cid) {
-    var r = get_item(cid, "GOP");
+    var r = get_item(cid, "gop_rect");
     // We need to check for existence here, because the first
     // time setting GOP in properties, there is no red rect yet.
     // But setting properties when the subpatch's window is
