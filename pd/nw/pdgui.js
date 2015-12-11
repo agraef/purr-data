@@ -950,6 +950,11 @@ function spawn_pd(gui_path, port) {
         stdio: "inherit",
         detached: true
     });
+    child.on("error", function(err) {
+        pd_window.alert("Couldn't successfully start Pd due to an error:\n\n" +
+          err + "\n\nClick Ok to close Pd.");
+        process.exit(1);
+    });
     child.unref();
     post("Pd started.");
 }
