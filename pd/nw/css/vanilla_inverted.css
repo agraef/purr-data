@@ -94,6 +94,10 @@
     fill: white;
 }
 
+#bubbles {
+    stroke: red;
+}
+
 #new_object_textentry {
     /* max-width: 10ch; */
     min-width: 3ch;
@@ -113,7 +117,7 @@
 }
 
 #new_object_textentry.msg {
-    outline: 0px solid transparent;
+    outline: 0px solid yellow;
     background-image: url(../msg-box.svg);
 }
 

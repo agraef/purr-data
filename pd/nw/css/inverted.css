@@ -114,7 +114,7 @@
 }
 
 #new_object_textentry.msg {
-    outline: 0px solid transparent;
+    outline: 0px solid #ffff00;
     background-image: url(../msg-box.svg);
 }
 

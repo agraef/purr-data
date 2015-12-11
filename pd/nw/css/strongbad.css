@@ -109,11 +109,11 @@
 }
 
 #new_object_textentry.obj {
-    outline: 1px solid blue;
+    outline: 1px solid #0b560b;
 }
 
 #new_object_textentry.msg {
-    outline: 0px solid transparent;
+    outline: 0px solid #0b560b;
     background-image: url(../msg-box.svg);
 }
 
@@ -190,7 +190,7 @@ text {
 
 /* for an object that didn't create */
 .obj .border.broken_border {
-    fill: #f7f7f7;
+    fill: transparent;
     stroke: #f00;
     stroke-dasharray: 3 2;
 }

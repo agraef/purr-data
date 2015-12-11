@@ -137,16 +137,22 @@ mark.console_find_highlighted {
     outline: 1px solid blue;
 }
 
+/* We're dynamically creating the svg background data in javascript
+   (in pdgui.js) so that we can change the stroke color of the svg msg box.
+   We store the color as the third argument to "outline" below. Since the
+   outline is 0px it won't show up-- this allows us specify the color here
+   in the style sheet and retrieve it in javascript when we build the svg
+   background. */
 #new_object_textentry.msg {
-    outline: 0px solid transparent;
-    background-image: url(../msg-box.svg);
+    outline: 0px solid blue;
+    /* background-image: url(../msg-box.svg); */
 }
 
 p.msg::after {
     content: "";
     height: 100%;
     width: 5px;
-    background-image: url(../msg-box-flag.svg);
+    /* background-image: url(../msg-box-flag.svg); */
     position: absolute;
     top: 0%;
     left: 100%;

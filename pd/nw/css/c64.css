@@ -109,11 +109,11 @@
 }
 
 #new_object_textentry.obj {
-    outline: 1px solid blue;
+    outline: 1px solid #a49aea;
 }
 
 #new_object_textentry.msg {
-    outline: 0px solid transparent;
+    outline: 0px solid #a49aea;
     background-image: url(../msg-box.svg);
 }
 
