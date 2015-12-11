@@ -595,6 +595,16 @@ static void *slider_new(t_symbol *s, int argc, t_atom *argv)
     x->x_gui.x_obj.te_iemgui = 1;
     x->x_gui.x_changed = 0;
 
+    if (x->x_orient)
+    {
+        x->x_gui.legacy_x = 0;
+        x->x_gui.legacy_y = 0;
+    } else {
+        x->x_gui.legacy_x = -3;
+        x->x_gui.legacy_y = 2;        
+    }
+
+
     return (x);
 }
 

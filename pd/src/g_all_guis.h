@@ -97,6 +97,10 @@ typedef struct _iemgui
     unsigned int x_locked:1;      //  7 matches ([bng] only)
     unsigned int x_reverse:1;     //  4 matches (sliders only)
     unsigned int dummy:20;
+    int legacy_x;                 // legacy x offset
+    int legacy_y;                 // legacy y offset
+    //int click_x;                  // click getrect x offset
+    //int click_y;                  // click getrect y offset
 } t_iemgui;
 
 typedef struct _bng
@@ -282,3 +286,4 @@ EXTERN void iemgui_out_bang(t_iemgui *x, int o, int chk_putin);
 EXTERN void iemgui_out_float(t_iemgui *x, int o, int chk_putin, t_float f);
 EXTERN void iemgui_out_list(t_iemgui *x, int o, int chk_putin, t_symbol *s, int argc, t_atom *argv);
 
+EXTERN int sys_legacy; // found in s_main.c, used for legacy iemgui positioning 

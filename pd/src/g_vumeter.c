@@ -747,6 +747,9 @@ static void *vu_new(t_symbol *s, int argc, t_atom *argv)
     x->x_gui.x_lhandle = scalehandle_new((t_object *)x,x->x_gui.x_glist,0,vu__clickhook,vu__motionhook);
     x->x_gui.x_obj.te_iemgui = 1;
 
+    x->x_gui.legacy_x = -1;
+    x->x_gui.legacy_y = 0;
+
     return (x);
 }
 

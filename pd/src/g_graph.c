@@ -780,26 +780,34 @@ t_float glist_dpixtody(t_glist *x, t_float dypix)
     proportional-style GOP.  In this case we do a coordinate transformation. */
 int text_xpix(t_text *x, t_glist *glist)
 {
+    int xpix = 0; 
     if (glist->gl_havewindow || !glist->gl_isgraph)
-        return (x->te_xpix);
+        xpix = x->te_xpix; 
     else if (glist->gl_goprect)
-        return (glist_xtopixels(glist, glist->gl_x1) +
-            x->te_xpix - glist->gl_xmargin);
-    else return (glist_xtopixels(glist, 
+        xpix = glist_xtopixels(glist, glist->gl_x1) +
+            x->te_xpix - glist->gl_xmargin;
+    else xpix = (glist_xtopixels(glist, 
             glist->gl_x1 + (glist->gl_x2 - glist->gl_x1) * 
                 x->te_xpix / (glist->gl_screenx2 - glist->gl_screenx1)));
+    if (x->te_iemgui == 1)
+        xpix += ((t_iemgui *)x)->legacy_x*sys_legacy;
+    return(xpix);
 }
 
 int text_ypix(t_text *x, t_glist *glist)
 {
+    int ypix = 0; 
     if (glist->gl_havewindow || !glist->gl_isgraph)
-        return (x->te_ypix);
+        ypix = x->te_ypix; 
     else if (glist->gl_goprect)
-        return (glist_ytopixels(glist, glist->gl_y1) +
-            x->te_ypix - glist->gl_ymargin);
-    else return (glist_ytopixels(glist, 
+        ypix = glist_ytopixels(glist, glist->gl_y1) +
+            x->te_ypix - glist->gl_ymargin;
+    else ypix = (glist_ytopixels(glist, 
             glist->gl_y1 + (glist->gl_y2 - glist->gl_y1) * 
                 x->te_ypix / (glist->gl_screeny2 - glist->gl_screeny1)));
+    if (x->te_iemgui == 1)
+        ypix += ((t_iemgui *)x)->legacy_y*sys_legacy;
+    return(ypix);
 }
 
 extern void canvas_updateconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2, t_int tag);

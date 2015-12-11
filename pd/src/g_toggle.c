@@ -396,6 +396,12 @@ static void *toggle_new(t_symbol *s, int argc, t_atom *argv)
     x->x_gui.x_obj.te_iemgui = 1;
     x->x_gui.x_changed = 1;
 
+    x->x_gui.legacy_x = 0;
+    x->x_gui.legacy_y = 2;
+
+    //x->x_gui.click_x = 1;
+    //x->x_gui.click_y = 2;
+
     return (x);
 }
 

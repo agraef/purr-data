@@ -30,6 +30,14 @@ int iemgui_clip_size(int size) {return maxi(size,IEM_GUI_MINSIZE);}
 int iemgui_clip_font(int size) {return maxi(size,IEM_FONT_MINSIZE);}
 static void scalehandle_check_and_redraw(t_iemgui *x);
 
+/* helper function to negate legacy draw offset for labels
+*/
+void iemgui_getrect_legacy_label(t_iemgui *x, int *xp1, int *yp1)
+{
+    *xp1 -= x->legacy_x;
+    *yp1 -= x->legacy_y;
+}
+
 static int iemgui_modulo_color(int col)
 {
     const int IEM_GUI_MAX_COLOR = 30;
@@ -247,6 +255,10 @@ void iemgui_label_pos(t_iemgui *x, t_symbol *s, int ac, t_atom *av)
     x->x_ldy = atom_getintarg(1, ac, av);
     if(glist_isvisible(x->x_glist))
     {
+        int x1 = x->x_ldx;
+        int y1 = x->x_ldy;
+        //iemgui_getrect_legacy_label(x, &x1, &y1);
+
         //sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
         //    glist_getcanvas(x->x_glist), x,
         //    text_xpix((t_object *)x,x->x_glist)+x->x_ldx,
@@ -254,8 +266,8 @@ void iemgui_label_pos(t_iemgui *x, t_symbol *s, int ac, t_atom *av)
         gui_vmess("gui_iemgui_label_coords", "xxii",
             glist_getcanvas(x->x_glist),
             x,
-            x->x_ldx,
-            x->x_ldy);
+            x1,
+            y1);
         iemgui_shouldvis(x, IEM_GUI_DRAW_MODE_CONFIG);
     }
 }
@@ -730,9 +742,21 @@ void scalehandle_draw_select(t_scalehandle *h, int px, int py) {
             sprintf(tags,"x%lx %lx%s iemgui selected", (long)x,
                 (long)x,pd_class((t_pd *)x)==canvas_class?"MOVE":"LABELH");
         }
+        int xpos = 0, ypos = 0;
+        if (pd_class((t_pd *)x) == canvas_class)
+        {
+            xpos = x->te_xpix;
+            ypos = x->te_ypix;
+        }
+        else
+        {
+            t_iemgui *y = (t_iemgui *)(h->h_master);
+            xpos = text_xpix(&y->x_obj, y->x_glist);
+            ypos = text_ypix(&y->x_obj, y->x_glist);
+        }
         sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d "
             "-window %s -tags {%s}\n", canvas,
-            x->te_xpix+px-sx, x->te_ypix+py-sy, sx, sy,
+            xpos+px-sx, ypos+py-sy, sx, sy,
             h->h_pathname, tags);
         scalehandle_bind(h);
         h->h_vis = 1;
@@ -750,12 +774,16 @@ void scalehandle_draw_select2(t_iemgui *x) {
     t_canvas *canvas=glist_getcanvas(x->x_glist);
     t_class *c = pd_class((t_pd *)x);
     int sx,sy;
-    if (c==my_canvas_class) {
+    if (c==my_canvas_class)
+    {
         t_my_canvas *y = (t_my_canvas *)x;
         sx=y->x_vis_w; sy=y->x_vis_h;
-    } else {
+    }
+    else
+    {
         int x1,y1,x2,y2;
         c->c_wb->w_getrectfn((t_gobj *)x,canvas,&x1,&y1,&x2,&y2);
+        //iemgui_getrect_draw(x, &x1, &y1, &x2, &y2);
         sx=x2-x1; sy=y2-y1;
     }
     scalehandle_draw_select(x->x_handle,sx-1,sy-1);
@@ -834,6 +862,7 @@ void scalehandle_dragon_label(t_scalehandle *h, float f1, float f2) {
         {
             int xpos=text_xpix(&x->x_obj, x->x_glist);
             int ypos=text_ypix(&x->x_obj, x->x_glist);
+            //iemgui_getrect_legacy_label(x, &xpos, &ypos);
             t_canvas *canvas=glist_getcanvas(x->x_glist);
             sys_vgui(".x%lx.c coords %lxLABEL %d %d\n", canvas, x,
                 xpos+x->x_ldx + h->h_dragx,
@@ -876,6 +905,9 @@ void scalehandle_getrect_master(t_scalehandle *h, int *x1, int *y1, int *x2, int
     t_iemgui *x = (t_iemgui *)h->h_master;
     t_class *c = pd_class((t_pd *)x);
     c->c_wb->w_getrectfn((t_gobj *)x,x->x_glist,x1,y1,x2,y2);
+    //fprintf(stderr,"%d %d %d %d\n",*x1,*y1,*x2,*y2);
+    //iemgui_getrect_draw((t_iemgui *)x, x1, y1, x2, y2);
+    //fprintf(stderr,"%d %d %d %d\n",*x1,*y1,*x2,*y2);
     //printf("%s\n",c->c_name->s_name);
     if (c==my_canvas_class) {
         t_my_canvas *xx = (t_my_canvas *)x;
@@ -973,8 +1005,9 @@ void iemgui_tag_selected(t_iemgui *x) {
 void iemgui_label_draw_new(t_iemgui *x) {
     char col[8];
     t_canvas *canvas=glist_getcanvas(x->x_glist);
-    int x1=text_xpix(&x->x_obj, x->x_glist);
-    int y1=text_ypix(&x->x_obj, x->x_glist);
+    int x1=text_xpix(&x->x_obj, x->x_glist)+x->legacy_x;
+    int y1=text_ypix(&x->x_obj, x->x_glist)+x->legacy_y;
+    iemgui_getrect_legacy_label(x, &x1, &y1);
     //sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w "
     //         "-font %s -fill #%6.6x -tags {%lxLABEL x%lx text iemgui}\n",
     //     canvas, x1+x->x_ldx, y1+x->x_ldy,
@@ -995,15 +1028,20 @@ void iemgui_label_draw_new(t_iemgui *x) {
 
 void iemgui_label_draw_move(t_iemgui *x) {
     t_canvas *canvas=glist_getcanvas(x->x_glist);
-    int x1=text_xpix(&x->x_obj, x->x_glist);
-    int y1=text_ypix(&x->x_obj, x->x_glist);
+    int x1=text_xpix(&x->x_obj, x->x_glist)+x->legacy_x;
+    int y1=text_ypix(&x->x_obj, x->x_glist)+x->legacy_y;
+    //iemgui_getrect_legacy_label(x, &x1, &y1);
     //sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
     //    canvas, x, x1+x->x_ldx, y1+x->x_ldy);
+
+    /* Note-- since we're not using x1/y1 above in the new GUI call,
+       Ivica's legacy logic isn't affecting us. Quick fix below by
+       just adding the legacy offsets... */
     gui_vmess("gui_iemgui_label_coords", "xxii",
         glist_getcanvas(x->x_glist),
         x,
-        x->x_ldx,
-        x->x_ldy);
+        x->x_ldx + x->legacy_x,
+        x->x_ldy + x->legacy_y);
 }
 
 void iemgui_label_draw_config(t_iemgui *x) {
@@ -1103,6 +1141,7 @@ void iemgui_draw_io(t_iemgui *x, int old_sr_flags)
 
     int x1,y1,x2,y2;
     c->c_wb->w_getrectfn((t_gobj *)x,canvas,&x1,&y1,&x2,&y2);
+    //iemgui_getrect_draw(x, &x1, &y1, &x2, &y2); 
 
     int i, n = c==vu_class ? 2 : 1, k=(x2-x1)-IOWIDTH;
     /* cnv has no inlets */
@@ -1172,6 +1211,8 @@ void iemgui_io_draw_move(t_iemgui *x) {
     t_class *c = pd_class((t_pd *)x);
     int x1,y1,x2,y2;
     c->c_wb->w_getrectfn((t_gobj *)x,canvas,&x1,&y1,&x2,&y2);
+    //iemgui_getrect_draw(x, &x1, &y1, &x2, &y2);
+
     int i, n = c==vu_class ? 2 : 1, k=(x2-x1)-IOWIDTH;
     /* cnv has no xlets */
     if (c == my_canvas_class)
@@ -1212,6 +1253,7 @@ void iemgui_base_draw_new(t_iemgui *x) {
     t_class *c = pd_class((t_pd *)x);
     int x1,y1,x2,y2,gr=gop_redraw; gop_redraw=0;
     c->c_wb->w_getrectfn((t_gobj *)x,x->x_glist,&x1,&y1,&x2,&y2);
+    //iemgui_getrect_draw(x, &x1, &y1, &x2, &y2); 
     gop_redraw=gr;
     //sys_vgui(".x%lx.c create prect %d %d %d %d "
     //         "-stroke $pd_colors(iemgui_border) -fill #%6.6x "
@@ -1236,6 +1278,7 @@ void iemgui_base_draw_move(t_iemgui *x) {
     t_class *c = pd_class((t_pd *)x);
     int x1,y1,x2,y2,gr=gop_redraw; gop_redraw=0;
     c->c_wb->w_getrectfn((t_gobj *)x,x->x_glist,&x1,&y1,&x2,&y2);
+    //iemgui_getrect_draw(x, &x1, &y1, &x2, &y2);
     gop_redraw=gr;
     //sys_vgui(".x%lx.c coords %lxBASE %d %d %d %d\n", canvas, x, x1, y1, x2, y2);
     gui_vmess("gui_iemgui_move_and_resize", "xxiiii",

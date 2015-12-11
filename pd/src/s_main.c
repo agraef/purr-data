@@ -52,6 +52,8 @@ int sys_console = 0;    /* default settings for the console is off */
 int sys_k12_mode = 0;   /* by default k12 mode is off */
 int sys_unique = 0;     /* by default off, prevents multiple instances
                            of pd-l2ork */
+int sys_legacy = 0;     /* by default off, used to enable legacy features,
+                           such as offsets in iemgui object positioning */
 
 #ifdef QTGUI
 int sys_qtcanvas = 0; /* enable Qt */
@@ -460,6 +462,7 @@ static char *(usagemessage[]) = {
 "-autopatch       -- enable auto-patching new from selected objects\n",
 "-k12             -- enable K-12 education mode (requires L2Ork K12 lib)\n",
 "-unique          -- enable multiple instances (disabled by default)\n",
+"-legacy          -- enable legacy features (disabled by default)\n", 
 "\n",
 };
 
@@ -871,6 +874,12 @@ int sys_argparse(int argc, char **argv)
         else if (!strcmp(*argv, "-unique"))
         {
             sys_unique = 1;
+            argc -= 1;
+            argv += 1;
+        }
+        else if (!strcmp(*argv, "-legacy"))
+        {
+            sys_legacy = 1;
             argc -= 1;
             argv += 1;
         }

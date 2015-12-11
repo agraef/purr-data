@@ -82,6 +82,9 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
 extern void glob_preset_node_list_check_loc_and_update(void);
 // for preset_node
 extern t_class *text_class;
+// for iemgui objects' wonky click area
+//extern void iemgui_getrect_mouse(t_gobj *x, int *xp1, int *yp1,
+//    int *xp2, int *yp2);
 
 int do_not_redraw = 0;     // used to optimize redrawing
 int old_displace = 0;      // for legacy displaces within gop that are not
@@ -2262,6 +2265,9 @@ int canvas_hitbox(t_canvas *x, t_gobj *y, int xpos, int ypos,
     if (!gobj_shouldvis(y, x))
         return (0);
     gobj_getrect(y, x, &x1, &y1, &x2, &y2);
+    //if (((t_text *)y)->te_iemgui)
+    //    iemgui_getrect_mouse(y, &x1, &y1, &x2, &y2);
+   
     // we also add a check that width is greater than 0 because we use this
     // to return value from objects that are designed to ignore clicks and
     // pass them below, e.g. pd-l2ork's version of ggee/image which uses this
@@ -3266,7 +3272,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
             t_selection *sel;
             for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
             {
-                if (sel && ((t_text *)sel->sel_what)->te_iemgui)
+                if (sel && ((t_text *)sel->sel_what)->te_iemgui == 1)
                 {
                     // iemgui exception to hide all handles that may interfere
                     // with the mouse cursor and its ability to move/deselect
@@ -4000,7 +4006,17 @@ int canvas_doconnect_doit(t_canvas *x, t_gobj *y1, t_gobj *y2,
     noutlet1 = obj_noutlets(ob1);
     ninlet2 = obj_ninlets(ob2);
     gobj_getrect(y1, x, &x11, &y11, &x12, &y12);
+    /*if (ob1->te_iemgui)
+    {
+        //fprintf(stderr,"1 is iemgui\n");
+        iemgui_getrect_draw((t_iemgui *)ob1, &x11, &y11, &x12, &y12);
+    }*/
     gobj_getrect(y2, x, &x21, &y21, &x22, &y22);
+    /*if (ob2->te_iemgui)
+    {
+        //fprintf(stderr,"2 is iemgui\n");
+        iemgui_getrect_draw((t_iemgui *)ob2, &x21, &y21, &x22, &y22);
+    }*/
 
     if (canvas_isconnected (x, ob1, closest1, ob2, closest2))
     {
@@ -4698,6 +4714,8 @@ void canvas_selectinrect(t_canvas *x, int lox, int loy, int hix, int hiy)
     {
         int x1, y1, x2, y2;
         gobj_getrect(y, x, &x1, &y1, &x2, &y2);
+        //if (((t_text *)y)->te_iemgui)
+        //    iemgui_getrect_mouse(y, &x1, &y1, &x2, &y2);
         if (hix >= x1 && lox <= x2 && hiy >= y1 && loy <= y2)
         {
             if (!selection_changed)
@@ -5409,7 +5427,7 @@ void canvas_startmotion(t_canvas *x)
     t_selection *sel;
     for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
     {
-        if (sel && ((t_text *)sel->sel_what)->te_iemgui)
+        if (sel && ((t_text *)sel->sel_what)->te_iemgui == 1)
         {
             // iemgui exception to hide all handles that may interfere
             // with the mouse cursor and its ability to move/deselect

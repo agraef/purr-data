@@ -429,7 +429,7 @@ static void radio_click(t_radio *x, t_floatarg xpos, t_floatarg ypos,
         int yy = (int)ypos - text_ypix(&x->x_gui.x_obj, x->x_gui.x_glist);
         radio_fout(x, (t_float)(yy / x->x_gui.x_h));
     } else {
-        int xx = (int)xpos - text_xpix(&x->x_gui.x_obj, x->x_gui.x_glist);
+        int xx = (int)xpos - text_xpix(&x->x_gui.x_obj, x->x_gui.x_glist)-1; 
         radio_fout(x, (t_float)(xx / x->x_gui.x_w));
     }
 }
@@ -532,6 +532,9 @@ static void *radio_new(t_symbol *s, int argc, t_atom *argv)
     x->x_gui. x_handle = scalehandle_new((t_object *)x,x->x_gui.x_glist,1,radio__clickhook,radio__motionhook);
     x->x_gui.x_lhandle = scalehandle_new((t_object *)x,x->x_gui.x_glist,0,radio__clickhook,radio__motionhook);
     x->x_gui.x_obj.te_iemgui = 1;
+
+    x->x_gui.legacy_x = 0;
+    x->x_gui.legacy_y = 2;   
 
     return (x);
 }
