@@ -744,7 +744,7 @@ static void *vu_new(t_symbol *s, int argc, t_atom *argv)
     x->x_out_rms = outlet_new(&x->x_gui.x_obj, &s_float);
     x->x_out_peak = outlet_new(&x->x_gui.x_obj, &s_float);
 
-    x->x_gui. x_handle = scalehandle_new((t_object *)x,x->x_gui.x_glist,1,vu__clickhook,vu__motionhook);
+    x->x_gui.x_handle = scalehandle_new((t_object *)x,x->x_gui.x_glist,1,vu__clickhook,vu__motionhook);
     x->x_gui.x_lhandle = scalehandle_new((t_object *)x,x->x_gui.x_glist,0,vu__clickhook,vu__motionhook);
     x->x_gui.x_obj.te_iemgui = 1;
 

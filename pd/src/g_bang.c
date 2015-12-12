@@ -473,7 +473,7 @@ static void *bng_new(t_symbol *s, int argc, t_atom *argv)
     x->x_clock_lck = clock_new(x, (t_method)bng_tick_lck);
     outlet_new(&x->x_gui.x_obj, &s_bang);
 
-    x->x_gui. x_handle = scalehandle_new((t_object *)x,x->x_gui.x_glist,1,bng__clickhook,bng__motionhook);
+    x->x_gui.x_handle = scalehandle_new((t_object *)x,x->x_gui.x_glist,1,bng__clickhook,bng__motionhook);
     x->x_gui.x_lhandle = scalehandle_new((t_object *)x,x->x_gui.x_glist,0,bng__clickhook,bng__motionhook);
     x->x_gui.x_obj.te_iemgui = 1;
     x->x_gui.x_changed = -1;

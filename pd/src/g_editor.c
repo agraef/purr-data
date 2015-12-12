@@ -5376,7 +5376,7 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
                 else
                 {
                     tmp_x_final = tmpx2;
-                    tmp_y_final    = tmpy2;
+                    tmp_y_final = tmpy2;
                 }
                 if (tmp_x_final > ((t_canvas *)ob)->gl_pixwidth)
                     ((t_canvas *)ob)->gl_pixwidth = tmp_x_final;

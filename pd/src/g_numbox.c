@@ -829,7 +829,7 @@ static void *my_numbox_new(t_symbol *s, int argc, t_atom *argv)
     x->x_gui.x_change = 0;
     outlet_new(&x->x_gui.x_obj, &s_float);
 
-    x->x_gui. x_handle = scalehandle_new((t_object *)x,x->x_gui.x_glist,1,my_numbox__clickhook,my_numbox__motionhook);
+    x->x_gui.x_handle = scalehandle_new((t_object *)x,x->x_gui.x_glist,1,my_numbox__clickhook,my_numbox__motionhook);
     x->x_gui.x_lhandle = scalehandle_new((t_object *)x,x->x_gui.x_glist,0,my_numbox__clickhook,my_numbox__motionhook);
     x->x_scalewidth = 0;
     x->x_scaleheight = 0;

@@ -590,7 +590,7 @@ static void *slider_new(t_symbol *s, int argc, t_atom *argv)
     iemgui_verify_snd_ne_rcv(&x->x_gui);
     outlet_new(&x->x_gui.x_obj, &s_float);
 
-    x->x_gui. x_handle = scalehandle_new((t_object *)x,x->x_gui.x_glist,1,slider__clickhook,slider__motionhook);
+    x->x_gui.x_handle = scalehandle_new((t_object *)x,x->x_gui.x_glist,1,slider__clickhook,slider__motionhook);
     x->x_gui.x_lhandle = scalehandle_new((t_object *)x,x->x_gui.x_glist,0,slider__clickhook,slider__motionhook);
     x->x_gui.x_obj.te_iemgui = 1;
     x->x_gui.x_changed = 0;
