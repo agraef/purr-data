@@ -94,6 +94,16 @@ var canvas_events = (function() {
         textbox = function () {
             return document.getElementById("new_object_textentry");
         },
+        target_is_scrollbar = function(evt) {
+            // Don't send the event to Pd if we click on the scrollbars.
+            // This is a bit fragile because we're suppressing on
+            // HTMLHtmlElement which is too broad...
+            if (evt.target.constructor.name === "HTMLHtmlElement") {
+                return 1;
+            } else {
+                return 0;
+            }
+        },
         events = {
             mousemove: function(evt) {
                 //pdgui.post("x: " + evt.pageX + " y: " + evt.pageY +
@@ -108,6 +118,9 @@ var canvas_events = (function() {
                 return false;
             },
             mousedown: function(evt) {
+                if (target_is_scrollbar(evt)) {
+                    return;
+                }
                 // tk events (and, therefore, Pd evnets) are one greater
                 // than html5...
                 var b = evt.button + 1;
@@ -269,7 +282,7 @@ var canvas_events = (function() {
                 return false;
             },
             text_mousedown: function(evt) {
-                if (textbox() !== evt.target) {
+                if (textbox() !== evt.target && !target_is_scrollbar(evt)) {
                     // Yes: I _really_ want .innerText and NOT .textContent
                     // here.  I want those newlines: although that isn't
                     // standard in Pd-Vanilla, Pd-l2ork uses and preserves
@@ -314,6 +327,9 @@ var canvas_events = (function() {
                 return false;
             },
             floating_text_click: function(evt) {
+                if (target_is_scrollbar(evt)) {
+                    return;
+                }
                 //pdgui.post("leaving floating mode");
                 canvas_events.text();
                 evt.stopPropagation();
