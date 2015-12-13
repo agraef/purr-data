@@ -2359,8 +2359,8 @@ function gui_scalar_draw_select_rect(cid, tag, state, x1, y1, x2, y2, basex, bas
     var g = get_gobj(cid, tag),
         b = g.querySelector(".border");
     configure_item(b, {
-        x: (x1 - basex),
-        y: (y1 - basey),
+        x: (x1 - basex) + 0.5,
+        y: (y1 - basey) + 0.5,
         width: x2 - x1,
         height: y2 - y1,
     });

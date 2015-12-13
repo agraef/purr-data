@@ -554,10 +554,10 @@ void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state)
             gui_vmess("gui_scalar_draw_select_rect", "xsiiiiiff",
                 glist_getcanvas(glist), tagbuf,
                 state,
-                (int)(x1 / xscale + 0.499),
-                (int)(y1 / yscale + 0.499),
-                (int)(x2 / xscale + 0.499),
-                (int)(y2 / yscale + 0.499),
+                (int)(x1 / xscale),
+                (int)(y1 / yscale),
+                (int)(x2 / xscale),
+                (int)(y2 / yscale),
                 basex,
                 basey);
         }
