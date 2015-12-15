@@ -92,6 +92,11 @@ void my_canvas_draw_select(t_my_canvas* x, t_glist* glist)
 static void my_canvas__clickhook(t_scalehandle *sh, int newstate)
 {
     t_my_canvas *x = (t_my_canvas *)(sh->h_master);
+    if (newstate && sh->h_scale)
+    {
+        canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
+    }
+    /* the rest is unused */
     if (sh->h_dragon && newstate == 0 && sh->h_scale)
     {
         canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
@@ -122,17 +127,27 @@ static void my_canvas__clickhook(t_scalehandle *sh, int newstate)
     iemgui__clickhook3(sh,newstate);
 }
 
-static void my_canvas__motionhook(t_scalehandle *sh, t_floatarg f1, t_floatarg f2)
+static void my_canvas__motionhook(t_scalehandle *sh, t_floatarg mouse_x, t_floatarg mouse_y)
 {
-    if (sh->h_dragon && sh->h_scale)
+    if (sh->h_scale)
     {
         t_my_canvas *x = (t_my_canvas *)(sh->h_master);
-        int dx = (int)f1, dy = (int)f2;
+        int dx = (int)(mouse_x - sh->h_offset_x),
+            dy = (int)(mouse_y - sh->h_offset_y);
         dx = maxi(dx,1-x->x_vis_w);
         dy = maxi(dy,1-x->x_vis_h);        
         sh->h_dragx = dx;
         sh->h_dragy = dy;
         scalehandle_drag_scale(sh);
+
+        x->x_gui.x_w += dx;
+        x->x_gui.x_h += dy;
+
+        if (glist_isvisible(x->x_gui.x_glist))
+        {
+            my_canvas_draw_move(x, x->x_gui.x_glist);
+            scalehandle_unclick_scale(sh);
+        }
 
         int properties = gfxstub_haveproperties((void *)x);
         if (properties)
@@ -149,7 +164,7 @@ static void my_canvas__motionhook(t_scalehandle *sh, t_floatarg f1, t_floatarg f
             }
         }
     }
-    scalehandle_dragon_label(sh,f1,f2);
+    scalehandle_dragon_label(sh,mouse_x - sh->h_offset_x,mouse_y - sh->h_offset_y);
 }
 
 void my_canvas_draw(t_my_canvas *x, t_glist *glist, int mode)
