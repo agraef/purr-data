@@ -101,7 +101,11 @@ void toggle_draw_config(t_toggle* x, t_glist* glist)
 static void toggle__clickhook(t_scalehandle *sh, int newstate)
 {
     t_toggle *x = (t_toggle *)(sh->h_master);
-    if (sh->h_dragon && newstate == 0 && sh->h_scale)
+    if (newstate && sh->h_scale)
+    {
+        canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
+    }
+    else if (newstate == 0 && sh->h_scale)
     {
         canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
         if (sh->h_dragx || sh->h_dragy)
@@ -119,16 +123,53 @@ static void toggle__clickhook(t_scalehandle *sh, int newstate)
     iemgui__clickhook3(sh,newstate);
 }
 
-static void toggle__motionhook(t_scalehandle *sh, t_floatarg f1, t_floatarg f2)
+static void toggle__motionhook(t_scalehandle *sh, t_floatarg mouse_x, t_floatarg mouse_y)
 {
-    if (sh->h_dragon && sh->h_scale)
+    if (sh->h_scale)
     {
         t_toggle *x = (t_toggle *)(sh->h_master);
-        int d = maxi((int)f1,(int)f2);
-        d = maxi(d,IEM_GUI_MINSIZE-x->x_gui.x_w);
+        int width = x->x_gui.x_w,
+            height = x->x_gui.x_h;
+        int x1, y1, x2, y2, d;
+        x1 = text_xpix(&x->x_gui.x_obj, x->x_gui.x_glist);
+        y1 = text_ypix(&x->x_gui.x_obj, x->x_gui.x_glist);
+        x2 = x1 + width;
+        y2 = y1 + height;
+
+        if (mouse_x <= x2)
+        {
+            if (mouse_y > y2)
+                d = mouse_y - y2;
+            else if (abs(mouse_y - y2) < abs(mouse_x - x2))
+                d = mouse_y - y2;
+            else
+                d = mouse_x - x2;
+        }
+        else
+        {
+            if (mouse_y <= y2)
+                d = mouse_x - x2;
+            else
+                d = maxi(mouse_y - y2, mouse_x - x2);
+        }
         sh->h_dragx = d;
         sh->h_dragy = d;
         scalehandle_drag_scale(sh);
+
+        width = maxi(width + d, IEM_GUI_MINSIZE);
+        height = width;
+
+        x->x_gui.x_w = width;
+        x->x_gui.x_h = height;
+
+        sh->h_offset_x = mouse_x;
+        sh->h_offset_y = mouse_y;
+
+        if (glist_isvisible(x->x_gui.x_glist))
+        {
+            toggle_draw_move(x, x->x_gui.x_glist);
+            scalehandle_unclick_scale(sh);
+        }
 
         int properties = gfxstub_haveproperties((void *)x);
         if (properties)
@@ -137,7 +178,7 @@ static void toggle__motionhook(t_scalehandle *sh, t_floatarg f1, t_floatarg f2)
             properties_set_field_int(properties,"dim.w_ent",new_w);
         }
     }
-    scalehandle_dragon_label(sh,f1,f2);
+    scalehandle_dragon_label(sh,mouse_x,mouse_y);
 }
 
 

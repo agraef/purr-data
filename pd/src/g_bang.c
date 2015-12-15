@@ -136,6 +136,7 @@ static void bng__clickhook_old(t_scalehandle *sh, int newstate)
     iemgui__clickhook3(sh,newstate);
 }
 
+/* we may no longer need h_dragon... */
 static void bng__clickhook(t_scalehandle *sh, int newstate)
 {
     t_bng *x = (t_bng *)(sh->h_master);
@@ -169,13 +170,12 @@ static void bng__motionhook(t_scalehandle *sh,
         t_bng *x = (t_bng *)(sh->h_master);
         int width = x->x_gui.x_w,
             height = x->x_gui.x_h;
-        int x1, y1, x2, y2;
+        int x1, y1, x2, y2, d;
         x1 = text_xpix(&x->x_gui.x_obj, x->x_gui.x_glist);
         y1 = text_ypix(&x->x_gui.x_obj, x->x_gui.x_glist);
         x2 = x1 + width;
         y2 = y1 + height;
 
-        int d;
         if (mouse_x <= x2)
         {
             if (mouse_y > y2)
