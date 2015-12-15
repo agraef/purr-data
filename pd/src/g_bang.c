@@ -202,9 +202,6 @@ static void bng__motionhook(t_scalehandle *sh,
         x->x_gui.x_w = width;
         x->x_gui.x_h = height;
 
-        sh->h_offset_x = mouse_x;
-        sh->h_offset_y = mouse_y;
-
         if (glist_isvisible(x->x_gui.x_glist))
         {
             bng_draw_move(x, x->x_gui.x_glist);
@@ -218,7 +215,7 @@ static void bng__motionhook(t_scalehandle *sh,
             properties_set_field_int(properties,"dim.w_ent",new_w);
         }
     }
-    scalehandle_dragon_label(sh,mouse_x,mouse_y);
+    scalehandle_dragon_label(sh,mouse_x - sh->h_offset_x, mouse_y - sh->h_offset_y);
 }
 
 void bng_draw(t_bng *x, t_glist *glist, int mode)

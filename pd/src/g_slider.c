@@ -150,7 +150,14 @@ static void vslider__clickhook2(t_scalehandle *sh, t_slider *x) {
 
 static void slider__clickhook(t_scalehandle *sh, int newstate)
 {
-    if (sh->h_dragon && newstate == 0 && sh->h_scale)
+    t_slider *x = (t_slider *)(sh->h_master);
+    if (newstate && sh->h_scale)
+    {
+        canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
+    }
+    /* the rest is no longer used and can be trashed once all iemguis
+       are working */
+    else if (sh->h_dragon && newstate == 0 && sh->h_scale)
     {
         t_slider *x = (t_slider *)(sh->h_master);
         canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
@@ -169,12 +176,13 @@ static void slider__clickhook(t_scalehandle *sh, int newstate)
     iemgui__clickhook3(sh,newstate);
 }
 
-static void slider__motionhook(t_scalehandle *sh, t_floatarg f1, t_floatarg f2)
+static void slider__motionhook(t_scalehandle *sh, t_floatarg mouse_x, t_floatarg mouse_y)
 {
     if (sh->h_dragon && sh->h_scale)
     {
         t_slider *x = (t_slider *)(sh->h_master);
-        int dx = (int)f1, dy = (int)f2;
+        int dx = (int)(mouse_x - sh->h_offset_x),
+            dy = (int)(mouse_y - sh->h_offset_y);
         int minx = x->x_orient ? IEM_GUI_MINSIZE : IEM_SL_MINSIZE;
         int miny = x->x_orient ? IEM_SL_MINSIZE : IEM_GUI_MINSIZE;
         
@@ -183,6 +191,15 @@ static void slider__motionhook(t_scalehandle *sh, t_floatarg f1, t_floatarg f2)
         sh->h_dragx = dx;
         sh->h_dragy = dy;
         scalehandle_drag_scale(sh);
+
+        x->x_gui.x_w += dx;
+        x->x_gui.x_h += dy;
+
+        if (glist_isvisible(x->x_gui.x_glist))
+        {
+            slider_draw_move(x, x->x_gui.x_glist);
+            scalehandle_unclick_scale(sh);
+        }
 
         int properties = gfxstub_haveproperties((void *)x);
         if (properties)
@@ -193,7 +210,8 @@ static void slider__motionhook(t_scalehandle *sh, t_floatarg f1, t_floatarg f2)
             properties_set_field_int(properties,"dim.h_ent",new_h);
         }
     }
-    scalehandle_dragon_label(sh,f1,f2);
+    scalehandle_dragon_label(sh,mouse_x - sh->h_offset_x,
+        mouse_y - sh->h_offset_y);
 }
 
 void slider_draw(t_slider *x, t_glist *glist, int mode)
