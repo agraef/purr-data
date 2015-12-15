@@ -149,9 +149,14 @@ void radio_draw_config(t_radio *x, t_glist *glist)
 
 static void radio__clickhook(t_scalehandle *sh, int newstate)
 {
-    if (sh->h_dragon && newstate == 0 && sh->h_scale)
+    t_radio *x = (t_radio *)(sh->h_master);
+    if (newstate && sh->h_scale)
     {
-        t_radio *x = (t_radio *)(sh->h_master);
+        canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
+    }
+    /* this part isn't needed */
+    else if (sh->h_dragon && newstate == 0 && sh->h_scale)
+    {
         canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
         if (sh->h_dragx || sh->h_dragy)
         {
@@ -173,22 +178,33 @@ static void radio__clickhook(t_scalehandle *sh, int newstate)
     iemgui__clickhook3(sh,newstate);
 }
 
-static void radio__motionhook(t_scalehandle *sh, t_floatarg f1, t_floatarg f2)
+static void radio__motionhook(t_scalehandle *sh, t_floatarg mouse_x, t_floatarg mouse_y)
 {
-    if (sh->h_dragon && sh->h_scale)
+    if (sh->h_scale)
     {
         t_radio *x = (t_radio *)(sh->h_master);
-        int dx = (int)f1, dy = (int)f2;
-        if (x->x_orient) {
-            dy = maxi(dy,(IEM_GUI_MINSIZE-x->x_gui.x_h)*x->x_number);
-            dx = dy/x->x_number;
-        } else {
-            dx = maxi(dx,(IEM_GUI_MINSIZE-x->x_gui.x_w)*x->x_number);
-            dy = dx/x->x_number;
+        int width = x->x_gui.x_w,
+            height = x->x_gui.x_h;
+        int x1, y1, x2, y2, d;
+        x1 = text_xpix(&x->x_gui.x_obj, x->x_gui.x_glist);
+        y1 = text_ypix(&x->x_gui.x_obj, x->x_gui.x_glist);
+        x2 = x->x_orient ? x1 + width : x1 + width * x->x_number;
+        y2 = x->x_orient ? y1 + height * x->x_number : y1 + height;
+
+        d = x->x_orient ? (int)mouse_y - y2: (int)mouse_x - x2;
+
+        width = width + d / x->x_number;
+        width = maxi(width, IEM_GUI_MINSIZE);
+        height = width;
+
+        x->x_gui.x_w = width;
+        x->x_gui.x_h = height;
+
+        if (glist_isvisible(x->x_gui.x_glist))
+        {
+            radio_draw_move(x, x->x_gui.x_glist);
+            scalehandle_unclick_scale(sh);
         }
-        sh->h_dragx = dx;
-        sh->h_dragy = dy;
-        scalehandle_drag_scale(sh);
 
         int properties = gfxstub_haveproperties((void *)x);
         if (properties)
@@ -198,7 +214,7 @@ static void radio__motionhook(t_scalehandle *sh, t_floatarg f1, t_floatarg f2)
                 x->x_gui.x_w + sh->h_dragx);
         }
     }
-    scalehandle_dragon_label(sh,f1,f2);
+    scalehandle_dragon_label(sh,mouse_x - sh->h_offset_x,mouse_y - sh->h_offset_y);
 }
 
 void radio_draw(t_radio *x, t_glist *glist, int mode)
