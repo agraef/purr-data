@@ -3385,10 +3385,30 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
             int noutlet;
             int ninlet;
                 /* resize?  only for "true" text boxes or canvases*/
-            if (!sys_k12_mode && ob && !x->gl_editor->e_textedfor &&
+            if (ob && ob->te_iemgui && xpos >= x2-4 && ypos > y2-6)
+            {
+                if (doit)
+                {
+                    x->gl_editor->e_onmotion = MA_RESIZE;
+                    x->gl_editor->e_xwas = x1;
+                    x->gl_editor->e_ywas = y1;
+                    x->gl_editor->e_xnew = xpos;
+                    x->gl_editor->e_ynew = ypos;
+                    t_pd *sh = (t_pd *)((t_iemgui *)ob)->x_handle;
+                    pd_vmess(sh, gensym("_click"), "fff",
+                        (t_float)1, (t_float)xpos, (t_float)ypos);
+                }
+                else
+                {
+                    canvas_setcursor(x,
+                        CURSOR_EDITMODE_RESIZE_BOTTOM_RIGHT);
+                }
+                canvas_check_nlet_highlights(x);
+            }
+            else if (!sys_k12_mode && ob && !x->gl_editor->e_textedfor &&
                 (ob->te_pd->c_wb == &text_widgetbehavior ||
-                    ob->ob_pd == canvas_class) &&
-                        xpos >= x2-4 && ypos < y2-4 && ypos > y1+4)
+                 ob->ob_pd == canvas_class) &&
+                 xpos >= x2-4 && ypos < y2-4 && ypos > y1+4)
             {
                 if (doit)
                 {
@@ -5387,6 +5407,12 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
                 canvas_fixlinesfor(x, ob);
                 gobj_vis(y1, x, 1);
                 canvas_dirty(x, 1);
+            }
+            else if (ob && ob->te_iemgui)
+            {
+                t_pd *sh = (t_pd *)((t_iemgui *)ob)->x_handle;
+                pd_vmess(sh, gensym("_motion"), "ff", (t_float)xpos, (t_float)ypos);
+                //pd_vmess(sh, gensym("_click"), "fff", 0, xpos, ypos);
             }
             else post("not resizable");
         }

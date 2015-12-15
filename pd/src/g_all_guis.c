@@ -963,7 +963,11 @@ static void scalehandle_clickhook(t_scalehandle *h, t_floatarg f,
 static void scalehandle_motionhook(t_scalehandle *h,
     t_floatarg f1, t_floatarg f2)
 {
-    h->h_motionfn(h,f1-h->h_offset_x,f2-h->h_offset_y);
+    h->h_motionfn(h,f1,f2);
+    // Now set the offset to the new mouse position
+    h->h_offset_x = f1;
+    h->h_offset_y = f2;
+
 }
 
 void iemgui__clickhook3(t_scalehandle *sh, int newstate) {
