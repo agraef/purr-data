@@ -178,7 +178,7 @@ static void slider__clickhook(t_scalehandle *sh, int newstate)
 
 static void slider__motionhook(t_scalehandle *sh, t_floatarg mouse_x, t_floatarg mouse_y)
 {
-    if (sh->h_dragon && sh->h_scale)
+    if (sh->h_scale)
     {
         t_slider *x = (t_slider *)(sh->h_master);
         int dx = (int)(mouse_x - sh->h_offset_x),
