@@ -354,6 +354,9 @@ Everything else: (A [x] means we've fixed it)
 [x] make GUI server try again if the port is already in use
 [x] figure out why OSX app bundle runs when using "open" from the terminal,
     but not when you click it
+[ ] when scaling, bng and tgl retain the correct mouse position if you
+    try to make it smaller than the minimum size. But slider and vu create
+    an offset in that case.
 
 Crashers
 --------
