@@ -271,7 +271,12 @@ static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist)
 static void my_numbox__clickhook(t_scalehandle *sh, int newstate)
 {
     t_my_numbox *x = (t_my_numbox *)(sh->h_master);
-    if (sh->h_dragon && newstate == 0 && sh->h_scale)
+    if (newstate && sh->h_scale)
+    {
+        canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
+    }
+    /* the rest is no longer used */
+    else if (sh->h_dragon && newstate == 0 && sh->h_scale)
     {
         canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
         if (sh->h_dragx || sh->h_dragy)
@@ -309,12 +314,13 @@ static void my_numbox__clickhook(t_scalehandle *sh, int newstate)
 }
 
 static void my_numbox__motionhook(t_scalehandle *sh,
-                    t_floatarg f1, t_floatarg f2)
+                    t_floatarg mouse_x, t_floatarg mouse_y)
 {
-    if (sh->h_dragon && sh->h_scale)
+    if (sh->h_scale)
     {
         t_my_numbox *x = (t_my_numbox *)(sh->h_master);
-        int dx = (int)f1, dy = (int)f2;
+        int dx = (int)mouse_x - sh->h_offset_x,
+            dy = (int)mouse_y - sh->h_offset_y;
 
         /* first calculate y */
         int newy = maxi(x->x_gui.x_obj.te_ypix + x->x_gui.x_h +
@@ -350,6 +356,30 @@ static void my_numbox__motionhook(t_scalehandle *sh,
         //    dx,dy,x->x_scalewidth,x->x_scaleheight,numwidth,sh->h_dragx);
         scalehandle_drag_scale(sh);
 
+
+
+        x->x_gui.x_fontsize = x->x_tmpfontsize;
+        x->x_gui.x_w = x->x_scalewidth;
+        x->x_gui.x_h = x->x_scaleheight;
+        x->x_numwidth = my_numbox_calc_fontwidth(x);
+        canvas_dirty(x->x_gui.x_glist, 1);
+
+
+
+        if (glist_isvisible(x->x_gui.x_glist))
+        {
+            /*
+            my_numbox_draw_move(x, x->x_gui.x_glist);
+            my_numbox_draw_config(x, x->x_gui.x_glist);
+            my_numbox_draw_update((t_gobj*)x, x->x_gui.x_glist);
+            */
+            gobj_vis(x, x->x_gui.x_glist, 0);
+            gobj_vis(x, x->x_gui.x_glist, 1);
+            scalehandle_unclick_scale(sh);
+        }
+
+
+
         int properties = gfxstub_haveproperties((void *)x);
         if (properties)
         {
@@ -358,7 +388,7 @@ static void my_numbox__motionhook(t_scalehandle *sh,
             properties_set_field_int(properties,"label.fontsize_entry",x->x_tmpfontsize);
         }
     }
-    scalehandle_dragon_label(sh,f1,f2);
+    scalehandle_dragon_label(sh,mouse_x - sh->h_offset_x, mouse_y - sh->h_offset_y);
 }
 
 void my_numbox_draw(t_my_numbox *x, t_glist *glist, int mode)
