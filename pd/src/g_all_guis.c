@@ -700,18 +700,21 @@ float maxf(float a, float b) {return a>b?a:b;}
 // [bng], [tgl], [hradio], [vradio], [hsl], [vsl], [cnv], [nbx], [vu]
 // for both scale & label, plus canvas' scale & move.
 void scalehandle_bind(t_scalehandle *h) {
-    sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
-        h->h_pathname, h->h_bindsym->s_name);
-    sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
-        h->h_pathname, h->h_bindsym->s_name);
-    sys_vgui("bind %s <Motion> {pd [concat %s _motion %%x %%y \\;]}\n",
-        h->h_pathname, h->h_bindsym->s_name);
+    //sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
+    //    h->h_pathname, h->h_bindsym->s_name);
+    //sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
+    //    h->h_pathname, h->h_bindsym->s_name);
+    //sys_vgui("bind %s <Motion> {pd [concat %s _motion %%x %%y \\;]}\n",
+    //    h->h_pathname, h->h_bindsym->s_name);
+    gui_vmess("gui_add_iemgui_label_resize_listener", "xs",
+        h->h_glist, h->h_pathname);
 }
 
 // in 18 cases only, because canvas does not fit the pattern below.
 // canvas has no label handle and has a motion handle
 // but in the case of canvas, the "iemgui" tag is added (it wasn't the case originally)
 void scalehandle_draw_select(t_scalehandle *h, int px, int py) {
+    char tagbuf[MAXPDSTRING];
     char tags[128]; // BNG may need up to 100 chars in 64-bit mode, for example
     t_object *x = h->h_master;
     t_canvas *canvas=glist_getcanvas(h->h_glist);
@@ -758,6 +761,10 @@ void scalehandle_draw_select(t_scalehandle *h, int px, int py) {
             "-window %s -tags {%s}\n", canvas,
             xpos+px-sx, ypos+py-sy, sx, sy,
             h->h_pathname, tags);
+
+        sprintf(tagbuf, "x%lx", (long unsigned int)x);
+        gui_vmess("gui_iemgui_label_show_drag_handle", "xsiii",
+            canvas, tagbuf, 1, px - sx, py - sy);
         scalehandle_bind(h);
         h->h_vis = 1;
     /* not yet (this is not supported by the current implementation) */
@@ -786,7 +793,9 @@ void scalehandle_draw_select2(t_iemgui *x) {
         //iemgui_getrect_draw(x, &x1, &y1, &x2, &y2);
         sx=x2-x1; sy=y2-y1;
     }
-    scalehandle_draw_select(x->x_handle,sx-1,sy-1);
+    /* we're not drawing the scalehandle for the actual iemgui-- just
+       the one for the label. */
+//    scalehandle_draw_select(x->x_handle,sx-1,sy-1);
     if (x->x_lab!=s_empty)
         scalehandle_draw_select(x->x_lhandle,x->x_ldx,x->x_ldy);
 }
@@ -797,6 +806,8 @@ void scalehandle_draw_erase(t_scalehandle *h) {
     sys_vgui("destroy %s\n", h->h_pathname);
     sys_vgui(".x%lx.c delete %lx%s\n", canvas, h->h_master,
         h->h_scale ? "SCALE" : pd_class((t_pd *)h->h_master)==canvas_class?"MOVE":"LABELH");
+    gui_vmess("gui_iemgui_label_show_drag_handle", "xsiii",
+        h->h_glist, "dummy_tag", 0, 0, 0);
     h->h_vis = 0;
 }
 
@@ -809,7 +820,7 @@ void scalehandle_draw_erase2(t_iemgui *x) {
 
 void scalehandle_draw(t_iemgui *x) {
     if (x->x_glist == glist_getcanvas(x->x_glist)) {
-        if(x->x_selected == x->x_glist) scalehandle_draw_select2(x);
+        if (x->x_selected == x->x_glist) scalehandle_draw_select2(x);
         else scalehandle_draw_erase2(x);
     }
 }

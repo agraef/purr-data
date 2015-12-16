@@ -2253,6 +2253,34 @@ function gui_iemgui_label_font(cid, tag, fontname, fontweight, fontsize) {
     });
 }
 
+// Show or hide little handle for dragging around iemgui labels
+function gui_iemgui_label_show_drag_handle(cid, tag, state, x, y) {
+    var gobj = get_gobj(cid, tag),
+        rect;
+    if (state !== 0) {
+post("did thisbranch with cid as " + cid);
+        rect = create_item(cid, "rect", {
+            x: x,
+            y: y,
+            width: 10,
+            height: 10,
+            id: "iemgui_label_handle"
+        });
+        gobj.appendChild(rect);
+    } else {
+post("did delete branch with cid as " + cid);
+        rect = get_item(cid, "iemgui_label_handle");
+        rect.parentNode.removeChild(rect);
+    }
+}
+
+// A workaround for making iemgui labels draggable. Obnoxiously long name
+// to remind me how much of a pain it is to be handling stuff like this
+// going between the GUI and Pd (as opposed to doing it completely in the GUI).
+function gui_add_iemgui_label_resize_listener(cid, tag) {
+    post("received a message to add a binding for an iemgui handle...");
+}
+
 function gui_create_mycanvas(cid,tag,color,x1,y1,x2_vis,y2_vis,x2,y2) {
     var rect_vis, rect, g;
     rect_vis = create_item(cid,"rect", {

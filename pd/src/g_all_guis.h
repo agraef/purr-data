@@ -184,7 +184,7 @@ typedef struct _my_numbox
     double   x_k;
     int      x_lin0_log1; // bool
     char     x_buf[IEMGUI_MAX_NUM_LEN];
-    int      x_numwidth; // unsigned
+    int      x_numwidth; // unsigned (width in pixels)
     int      x_scalewidth;  /* temporary value for scalehandle */
     int      x_scaleheight; /* temporary value for scalehandle */
     int      x_tmpfontsize; /* temporary value for scalehandle */
