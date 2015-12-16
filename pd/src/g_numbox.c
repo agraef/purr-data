@@ -336,8 +336,9 @@ static void my_numbox__motionhook(t_scalehandle *sh,
         int char_w = (x->x_tmpfontsize * f) / 36;
 
         /* get the new total width */
-        int new_total_width = x->x_numwidth + dx;
-        
+        int new_total_width = x->x_numwidth + (int)mouse_x -
+            (text_xpix(&x->x_gui.x_obj, x->x_gui.x_glist) + x->x_numwidth);
+
         /* now figure out what does this translate into in terms of
            character length */
         int new_char_len = (new_total_width -
@@ -356,10 +357,8 @@ static void my_numbox__motionhook(t_scalehandle *sh,
         //    dx,dy,x->x_scalewidth,x->x_scaleheight,numwidth,sh->h_dragx);
         scalehandle_drag_scale(sh);
 
-
-
         x->x_gui.x_fontsize = x->x_tmpfontsize;
-        x->x_gui.x_w = x->x_scalewidth;
+        x->x_gui.x_w = new_char_len;
         x->x_gui.x_h = x->x_scaleheight;
         x->x_numwidth = my_numbox_calc_fontwidth(x);
         canvas_dirty(x->x_gui.x_glist, 1);
@@ -412,7 +411,6 @@ static void my_numbox_getrect(t_gobj *z, t_glist *glist,
     *yp1 = text_ypix(&x->x_gui.x_obj, glist);
     *xp2 = *xp1 + x->x_numwidth;
     *yp2 = *yp1 + x->x_gui.x_h;
-
     iemgui_label_getrect(x->x_gui, glist, xp1, yp1, xp2, yp2);
 }
 
@@ -554,12 +552,6 @@ static void my_numbox_dialog(t_my_numbox *x, t_symbol *s, int argc,
         x->x_hide_frame = (int)atom_getintarg(18, argc, argv);
     iemgui_dialog(&x->x_gui, argc, argv);
     x->x_numwidth = my_numbox_calc_fontwidth(x);
-
-post("numwidth after dialog is %d", x->x_numwidth);
-post("w is %d", x->x_gui.x_w);
-post("h is %d", x->x_gui.x_h);
-post("font style is %d", x->x_gui.x_font_style);
-post("font size is %d", x->x_gui.x_fontsize);
 
     my_numbox_check_minmax(x, min, max);
     // normally, you'd do move+config, but here you have to do erase+new
