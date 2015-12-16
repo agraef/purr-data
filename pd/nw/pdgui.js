@@ -1654,10 +1654,13 @@ function gui_text_select_color(cid, tag) {
     }
 }
 
+// This adds a 0.5 offset to align to pixel grid, so it should
+// only be used to move gobjs to a new position.  (Should probably
+// be renamed to gobj_move to make this more obvious.)
 function elem_move(elem, x, y) {
     var t = elem.transform.baseVal.getItem(0);
-    t.matrix.e = x;
-    t.matrix.f = y;
+    t.matrix.e = x+0.5;
+    t.matrix.f = y+0.5;
 }
 
 function elem_displace(elem, dx, dy) {
