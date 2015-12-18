@@ -357,6 +357,9 @@ Everything else: (A [x] means we've fixed it)
 [ ] when scaling, bng and tgl retain the correct mouse position if you
     try to make it smaller than the minimum size. But slider and vu create
     an offset in that case.
+[ ] revisit cursor logic-- when you leave the boundaries of an object 
+    being dragged, for example, the cursor changes to whatever is set for
+    the parent (svg, document, etc.).
 
 Crashers
 --------
