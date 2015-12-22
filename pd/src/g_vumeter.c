@@ -314,29 +314,13 @@ static void vu_draw_select(t_vu* x,t_glist* glist)
 static void vu__clickhook(t_scalehandle *sh, int newstate)
 {
     t_vu *x = (t_vu *)(sh->h_master);
-    if (newstate && sh->h_scale)
+    if (newstate)
     {
         canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
+        if (!sh->h_scale)
+            scalehandle_click_label(sh);
     }
-    else if (sh->h_dragon && newstate == 0  && sh->h_scale)
-    {
-        canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
-        if (sh->h_dragx || sh->h_dragy)
-        {
-            x->x_gui.x_w += sh->h_dragx;
-            x->x_gui.x_h += sh->h_dragy;
-            canvas_dirty(x->x_gui.x_glist, 1);
-        }
-        if (glist_isvisible(x->x_gui.x_glist))
-        {
-            vu_check_height(x, x->x_gui.x_h);
-            vu_draw_move(x, x->x_gui.x_glist);
-            vu_draw_config(x, x->x_gui.x_glist);
-            vu_draw_update((t_gobj *)x, x->x_gui.x_glist);
-            scalehandle_unclick_scale(sh);
-        }
-    }
-    iemgui__clickhook3(sh,newstate);
+    sh->h_dragon = newstate;
 }
 
 static void vu__motionhook(t_scalehandle *sh, t_floatarg mouse_x, t_floatarg mouse_y)
@@ -374,7 +358,7 @@ static void vu__motionhook(t_scalehandle *sh, t_floatarg mouse_x, t_floatarg mou
             properties_set_field_int(properties,"dim.h_ent",new_h);
         }
     }
-    scalehandle_dragon_label(sh,mouse_x - sh->h_offset_x, mouse_y - sh->h_offset_y);
+    scalehandle_dragon_label(sh,mouse_x, mouse_y);
 }
 
 void vu_draw(t_vu *x, t_glist *glist, int mode)

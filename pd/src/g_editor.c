@@ -3679,6 +3679,31 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
             // end jsarlo
         }
         return;
+    } else if (x->gl_isgraph && x->gl_goprect &&
+               xpos <= x->gl_xmargin + x->gl_pixwidth + 4 &&
+               xpos >= x->gl_xmargin + x->gl_pixwidth - 2 &&
+               ypos <= x->gl_ymargin + x->gl_pixheight + 4 &&
+               ypos > x->gl_ymargin + x->gl_pixheight - 2)
+    {
+// refactor the if into a function call...
+        if (doit)
+        {
+            x->gl_editor->e_onmotion = MA_RESIZE;
+            x->gl_editor->e_xwas = x1;
+            x->gl_editor->e_ywas = y1;
+            x->gl_editor->e_xnew = xpos;
+            x->gl_editor->e_ynew = ypos;
+            t_pd *sh = (t_pd *)x->x_handle; // scale handle
+            pd_vmess(sh, gensym("_click"), "fff",
+                (t_float)1, (t_float)xpos, (t_float)ypos);
+        }
+        else
+        {
+            canvas_setcursor(x,
+                CURSOR_EDITMODE_RESIZE_BOTTOM_RIGHT);
+        }
+        canvas_check_nlet_highlights(x);
+        return;
     }
         /* if right click doesn't hit any boxes, call rightclick
             routine anyway */
@@ -5415,6 +5440,12 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
                 //pd_vmess(sh, gensym("_click"), "fff", 0, xpos, ypos);
             }
             else post("not resizable");
+        }
+        else // resizing a gop rectangle
+        {
+            t_pd *sh = (t_pd *)x->x_handle;
+            pd_vmess(sh, gensym("_motion"), "ff", (t_float)xpos, (t_float)ypos);
+            post("moving a gop rect");
         }
     }
     else if (x->gl_editor->e_onmotion == MA_SCROLL || mod == -1)

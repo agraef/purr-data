@@ -140,26 +140,14 @@ static void bng__clickhook_old(t_scalehandle *sh, int newstate)
 static void bng__clickhook(t_scalehandle *sh, int newstate)
 {
     t_bng *x = (t_bng *)(sh->h_master);
-    if (newstate && sh->h_scale)
+    if (newstate)
     {
         canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
+        if (!sh->h_scale) /* click on a label handle */
+            scalehandle_click_label(sh);
     }
-    /* not sure we need this anymore... */
-    else if (newstate == 0 && sh->h_scale)
-    {
-        if (sh->h_dragx || sh->h_dragy)
-        {
-            x->x_gui.x_w += sh->h_dragx;
-            x->x_gui.x_h += sh->h_dragy;
-            canvas_dirty(x->x_gui.x_glist, 1);
-        }
-        if (glist_isvisible(x->x_gui.x_glist))
-        {
-            bng_draw_move(x, x->x_gui.x_glist);
-            scalehandle_unclick_scale(sh);
-        }
-    }
-    iemgui__clickhook3(sh,newstate);
+//    iemgui__clickhook3(sh,newstate);
+    sh->h_dragon = newstate;
 }
 
 static void bng__motionhook(t_scalehandle *sh,
@@ -215,7 +203,7 @@ static void bng__motionhook(t_scalehandle *sh,
             properties_set_field_int(properties,"dim.w_ent",new_w);
         }
     }
-    scalehandle_dragon_label(sh,mouse_x - sh->h_offset_x, mouse_y - sh->h_offset_y);
+    scalehandle_dragon_label(sh,mouse_x, mouse_y);
 }
 
 void bng_draw(t_bng *x, t_glist *glist, int mode)

@@ -92,39 +92,13 @@ void my_canvas_draw_select(t_my_canvas* x, t_glist* glist)
 static void my_canvas__clickhook(t_scalehandle *sh, int newstate)
 {
     t_my_canvas *x = (t_my_canvas *)(sh->h_master);
-    if (newstate && sh->h_scale)
+    if (newstate)
     {
         canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
+        if (!sh->h_scale)
+            scalehandle_click_label(sh);
     }
-    /* the rest is unused */
-    if (sh->h_dragon && newstate == 0 && sh->h_scale)
-    {
-        canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
-        if (sh->h_dragx || sh->h_dragy)
-        {
-            x->x_vis_w += sh->h_dragx;
-            x->x_vis_h += sh->h_dragy;
-            canvas_dirty(x->x_gui.x_glist, 1);
-        }
-        // if select area is larger tahn the visible arae
-        // make select area match that of the dragged one
-        // so that we don't have to go into properties to 
-        // manually adjust this
-        if (x->x_vis_w < x->x_gui.x_w)
-            x->x_gui.x_w = x->x_vis_w;
-        if (x->x_vis_h < x->x_gui.x_h)
-            x->x_gui.x_h = x->x_vis_h;
-        if (x->x_gui.x_w < x->x_gui.x_h)
-            x->x_gui.x_h = x->x_gui.x_w;
-        else
-            x->x_gui.x_w = x->x_gui.x_h;
-        if (glist_isvisible(x->x_gui.x_glist))
-        {
-            my_canvas_draw_move(x, x->x_gui.x_glist);
-            scalehandle_unclick_scale(sh);
-        }
-    }
-    iemgui__clickhook3(sh,newstate);
+    sh->h_dragon = newstate;
 }
 
 static void my_canvas__motionhook(t_scalehandle *sh, t_floatarg mouse_x, t_floatarg mouse_y)
@@ -164,7 +138,7 @@ static void my_canvas__motionhook(t_scalehandle *sh, t_floatarg mouse_x, t_float
             }
         }
     }
-    scalehandle_dragon_label(sh,mouse_x - sh->h_offset_x,mouse_y - sh->h_offset_y);
+    scalehandle_dragon_label(sh,mouse_x, mouse_y);
 }
 
 void my_canvas_draw(t_my_canvas *x, t_glist *glist, int mode)

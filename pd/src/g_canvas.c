@@ -775,12 +775,18 @@ void canvas_draw_gop_resize_hooks(t_canvas* x)
         sprintf(sh->h_pathname, ".x%lx.h%lx", (t_int)x, (t_int)sh);
         sprintf(mh->h_pathname, ".x%lx.h%lx", (t_int)x, (t_int)mh);
 
-        scalehandle_draw_select(sh,
-            -1-x->gl_obj.te_xpix+x->gl_xmargin + x->gl_pixwidth,
-            -1-x->gl_obj.te_ypix+x->gl_ymargin + x->gl_pixheight/*,GOP_resblob*/);
+//        scalehandle_draw_select(sh,
+//            -1-x->gl_obj.te_xpix+x->gl_xmargin + x->gl_pixwidth,
+//            -1-x->gl_obj.te_ypix+x->gl_ymargin + x->gl_pixheight/*,GOP_resblob*/);
+//        scalehandle_draw_select(mh,
+//            2+SCALEHANDLE_WIDTH -x->gl_obj.te_xpix+x->gl_xmargin,
+//            2+SCALEHANDLE_HEIGHT-x->gl_obj.te_ypix+x->gl_ymargin /*,"GOP_movblob"*/);
+
+        /* these constants don't actually reflect the actual size of the
+           click rectangle-- we should probably change them... */
+
         scalehandle_draw_select(mh,
-            2+SCALEHANDLE_WIDTH -x->gl_obj.te_xpix+x->gl_xmargin,
-            2+SCALEHANDLE_HEIGHT-x->gl_obj.te_ypix+x->gl_ymargin /*,"GOP_movblob"*/);
+            SCALEHANDLE_WIDTH - 4, SCALEHANDLE_HEIGHT - 11);
     }
     else
     {
@@ -2160,6 +2166,9 @@ void canvasgop__clickhook(t_scalehandle *sh, int newstate)
     }
     else if (!sh->h_dragon && newstate)
     {
+        /* set undo */
+        canvas_undo_add(x, 8, "apply", canvas_undo_set_canvas(x));
+
         if(sh->h_scale) //enter if resize_gop hook
         {
             sys_vgui("lower %s\n", sh->h_pathname);
@@ -2184,17 +2193,18 @@ void canvasgop__clickhook(t_scalehandle *sh, int newstate)
     sh->h_dragon = newstate;
 }
 
-void canvasgop__motionhook(t_scalehandle *sh,t_floatarg f1, t_floatarg f2)
+void canvasgop__motionhook(t_scalehandle *sh,t_floatarg mouse_x, t_floatarg mouse_y)
 {
     t_canvas *x = (t_canvas *)(sh->h_master);
-    int dx = (int)f1, dy = (int)f2;
+    int dx = (int)mouse_x - sh->h_offset_x,
+        dy = (int)mouse_y - sh->h_offset_y;
     
     if (sh->h_dragon)
     {
         if(sh->h_scale) //enter if resize_gop hook
         {
-            int sx = maxi(SCALE_GOP_MINWIDTH ,x->gl_pixwidth +dx);
-            int sy = maxi(SCALE_GOP_MINHEIGHT,x->gl_pixheight+dy);
+            int sx = maxi(SCALE_GOP_MINWIDTH ,x->gl_pixwidth + dx);
+            int sy = maxi(SCALE_GOP_MINHEIGHT,x->gl_pixheight + dy);
             //int x1=0, y1=0, x2=0, y2=0;
             // if text is not hidden, use it as min height & width.
             /*if (!x->gl_hidetext)
@@ -2206,11 +2216,21 @@ void canvasgop__motionhook(t_scalehandle *sh,t_floatarg f1, t_floatarg f2)
                 sx = maxi(sx,x2-x1);
                 sy = maxi(sy,y2-y1);
             }*/ // does not work, needs a gobj_getrect that does not use pixwidth & pixheight
-            int newx = x->gl_xmargin + sx;
-            int newy = x->gl_ymargin + sy;
 
-            sys_vgui(".x%x.c coords %s %d %d %d %d\n",
-                x, sh->h_outlinetag, x->gl_xmargin, x->gl_ymargin, newx, newy);
+            x->gl_pixwidth = sx;
+            x->gl_pixheight= sy;
+
+            int newx = sx;
+            int newy = sy;
+
+            //sys_vgui(".x%x.c coords %s %d %d %d %d\n",
+            //    x, sh->h_outlinetag, x->gl_xmargin, x->gl_ymargin, newx, newy);
+            gui_vmess("gui_canvas_redrect_coords", "xiiii",
+                x,
+                x->gl_xmargin,
+                x->gl_ymargin,
+                x->gl_xmargin + newx,
+                x->gl_ymargin + newy);
 
             sh->h_dragx = sx-x->gl_pixwidth;
             sh->h_dragy = sy-x->gl_pixheight;
@@ -2234,10 +2254,18 @@ void canvasgop__motionhook(t_scalehandle *sh,t_floatarg f1, t_floatarg f2)
                 properties_set_field_int(properties,
                     "n.canvasdialog.y.f2.entry4",x->gl_ymargin + dy);
             }
-            int x1 = x->gl_xmargin+dx, x2 = x1+x->gl_pixwidth;
-            int y1 = x->gl_ymargin+dy, y2 = y1+x->gl_pixheight;
-            sys_vgui(".x%x.c coords GOP %d %d %d %d %d %d %d %d %d %d\n",
-                        x, x1, y1, x2, y1, x2, y2, x1, y2, x1, y1);
+
+            x->gl_xmargin += dx;
+            x->gl_ymargin += dy;
+
+            int x1 = x->gl_xmargin, x2 = x1+x->gl_pixwidth;
+            int y1 = x->gl_ymargin, y2 = y1+x->gl_pixheight;
+
+
+            //sys_vgui(".x%x.c coords GOP %d %d %d %d %d %d %d %d %d %d\n",
+            //            x, x1, y1, x2, y1, x2, y2, x1, y2, x1, y1);
+            gui_vmess("gui_canvas_redrect_coords", "xiiii",
+                x, x1, y1, x2, y2);
             sh->h_dragx = dx;
             sh->h_dragy = dy;            
         }

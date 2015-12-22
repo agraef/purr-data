@@ -83,7 +83,7 @@ var canvas_events = (function() {
     var name,
         state,
         scalar_draggables = {}, // elements of a scalar which have the "drag" event enabled
-        draggable_elem,         // the current scalar element being dragged
+        draggable_elem,         // last scalar we dragged
         last_draggable_x,       // last x coord for the element we're dragging
         last_draggable_y,       // last y 
         previous_state = "none", /* last state, excluding explicit 'none' */
@@ -118,7 +118,19 @@ var canvas_events = (function() {
                 return false;
             },
             mousedown: function(evt) {
+                var target_id;
                 if (target_is_scrollbar(evt)) {
+                    return;
+                } else if (evt.target.id === "clickable_resize_handle") {
+                    // get id ("x123456etcgobj" without the "x" or "gobj")
+                    target_id = "_h" +
+                        evt.target.parentNode.id.slice(0,-4).slice(1);
+                    last_draggable_x = evt.pageX + svg_view.x;
+                    last_draggable_y = evt.pageY + svg_view.y;
+                    pdgui.pdsend(target_id, "_click", 1,
+                        (evt.pageX + svg_view.x),
+                        (evt.pageY + svg_view.y));
+                    canvas_events.iemgui_label_drag();
                     return;
                 }
                 // tk events (and, therefore, Pd evnets) are one greater
@@ -373,6 +385,35 @@ var canvas_events = (function() {
             },
             scalar_draggable_mouseup: function(evt) {
                 canvas_events.normal();
+            },
+            iemgui_label_mousemove: function(evt) {
+                var dx = (evt.pageX + svg_view.x) - last_draggable_x,
+                    dy = (evt.pageY + svg_view.y) - last_draggable_y,
+                    handle_elem =
+                        document.getElementById("clickable_resize_handle"),
+                    target_id = "_h" +
+                        handle_elem.parentNode.id.slice(0,-4).slice(1),
+                    is_canvas_gop_rect = document.
+                        getElementsByClassName("gop_drag_handle").length ?
+                        true : false;
+
+                last_draggable_x = evt.pageX + svg_view.x;
+                last_draggable_y = evt.pageY + svg_view.y;
+
+                if (!is_canvas_gop_rect) {
+                    handle_elem.x.baseVal.value += dx;
+                    handle_elem.y.baseVal.value += dy;
+                }
+
+                pdgui.pdsend(target_id, "_motion",
+                    (evt.pageX + svg_view.x),
+                    (evt.pageY + svg_view.y));
+            },
+            iemgui_label_mouseup: function(evt) {
+                pdgui.post("lifting the mousebutton on an iemgui label");
+                // Set last state (none doesn't count as a state)
+                pdgui.post("previous state is " + canvas_events.get_previous_state());
+                canvas_events[canvas_events.get_previous_state()]();
             }
         },
         utils = {
@@ -497,6 +538,16 @@ var canvas_events = (function() {
             document.addEventListener("mousemove", events.scalar_draggable_mousemove, false);
             document.addEventListener("mouseup", events.scalar_draggable_mouseup, false);
         },
+        iemgui_label_drag: function() {
+            // This is a workaround for dragging iemgui labels. Resizing iemguis
+            // currently happens in Pd (canvas_doclick and canvas_motion). (Look
+            // for MA_RESIZE.)
+            this.none();
+            document.addEventListener("mousemove",
+                events.iemgui_label_mousemove, false);
+            document.addEventListener("mouseup",
+                events.iemgui_label_mouseup, false);
+        },
         text: function() {
             this.none();
 
@@ -558,7 +609,8 @@ var canvas_events = (function() {
             if (scalar_draggables[id]) {
                 scalar_draggables[id] = null;
             }
-        }
+        },
+        clickable_resize_handle: false // this can be removed...
     }
 }());
 

@@ -101,26 +101,13 @@ void toggle_draw_config(t_toggle* x, t_glist* glist)
 static void toggle__clickhook(t_scalehandle *sh, int newstate)
 {
     t_toggle *x = (t_toggle *)(sh->h_master);
-    if (newstate && sh->h_scale)
+    if (newstate)
     {
         canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
+        if (!sh->h_scale)
+            scalehandle_click_label(sh);
     }
-    else if (newstate == 0 && sh->h_scale)
-    {
-        canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
-        if (sh->h_dragx || sh->h_dragy)
-        {
-            x->x_gui.x_w += sh->h_dragx;
-            x->x_gui.x_h += sh->h_dragy;
-            canvas_dirty(x->x_gui.x_glist, 1);
-        }
-        if (glist_isvisible(x->x_gui.x_glist))
-        {
-            toggle_draw_move(x, x->x_gui.x_glist);
-            scalehandle_unclick_scale(sh);
-        }
-    }
-    iemgui__clickhook3(sh,newstate);
+    sh->h_dragon = newstate;
 }
 
 static void toggle__motionhook(t_scalehandle *sh, t_floatarg mouse_x, t_floatarg mouse_y)
@@ -175,7 +162,7 @@ static void toggle__motionhook(t_scalehandle *sh, t_floatarg mouse_x, t_floatarg
             properties_set_field_int(properties,"dim.w_ent",new_w);
         }
     }
-    scalehandle_dragon_label(sh,mouse_x - sh->h_offset_x, mouse_y - sh->h_offset_y);
+    scalehandle_dragon_label(sh,mouse_x, mouse_y);
 }
 
 

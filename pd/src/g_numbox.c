@@ -176,9 +176,14 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
     //    canvas, x1, y1, x2-4, y1, x2, y1+4, x2, y2, x1, y2,
     //    x->x_hide_frame <= 1 ? "$pd_colors(iemgui_border)" : bcol,
     //    bcol, x, x);
-    gui_vmess("gui_create_numbox", "ixxsiiiiiiiiiiiiii", x->x_numwidth,
-        canvas, x,
-        bcol, x1, y1, x2-4, y1, x2, y1+4, x2, y2, x1, y2, x1, y1, half,
+    gui_vmess("gui_create_numbox", "xxsiiiii",
+        canvas,
+        x,
+        bcol,
+        x1,
+        y1,
+        x2 - x1,
+        y2 - y1,
         glist_istoplevel(canvas));
     /* Not sure when it is necessary to hide the frame... */
     if (!x->x_hide_frame || x->x_hide_frame == 2)
@@ -218,6 +223,18 @@ static void my_numbox_draw_move(t_my_numbox *x, t_glist *glist)
         //sys_vgui(".x%lx.c coords %lxBASE2 %d %d %d %d %d %d\n",
         //    canvas, x, x1, y1, x1 + half, y1 + half, x1, y2);
     }
+
+    gui_vmess("gui_numbox_coords", "xxii",
+        canvas,
+        x,
+        x2 - x1,
+        y2 - y1);
+
+    gui_vmess("gui_update_numbox_text_position", "xxii",
+        canvas,
+        x,
+        half + 2,
+        half + d);
     //sys_vgui(".x%lx.c coords %lxNUMBER %d %d\n",
     //    canvas, x, x1+half+2, y1+half+d);
 }
@@ -271,45 +288,13 @@ static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist)
 static void my_numbox__clickhook(t_scalehandle *sh, int newstate)
 {
     t_my_numbox *x = (t_my_numbox *)(sh->h_master);
-    if (newstate && sh->h_scale)
+    if (newstate)
     {
         canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
+        if (!sh->h_scale)
+            scalehandle_click_label(sh);
     }
-    /* the rest is no longer used */
-    else if (sh->h_dragon && newstate == 0 && sh->h_scale)
-    {
-        canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
-        if (sh->h_dragx || sh->h_dragy)
-        {
-            x->x_gui.x_fontsize = x->x_tmpfontsize;
-            x->x_gui.x_w = x->x_scalewidth;
-            x->x_gui.x_h = x->x_scaleheight;
-            x->x_numwidth = my_numbox_calc_fontwidth(x);
-            canvas_dirty(x->x_gui.x_glist, 1);
-        }
-        if (glist_isvisible(x->x_gui.x_glist))
-        {
-            my_numbox_draw_move(x, x->x_gui.x_glist);
-            my_numbox_draw_config(x, x->x_gui.x_glist);
-            my_numbox_draw_update((t_gobj*)x, x->x_gui.x_glist);
-            scalehandle_unclick_scale(sh);
-        }
-    }
-    else if (!sh->h_dragon && newstate && sh->h_scale)
-    {
-        scalehandle_click_scale(sh);
-        x->x_scalewidth = x->x_gui.x_w;
-        x->x_scaleheight = x->x_gui.x_h;
-        x->x_tmpfontsize = x->x_gui.x_fontsize;
-    }
-    else if (sh->h_dragon && newstate == 0 && !sh->h_scale)
-    {
-        scalehandle_unclick_label(sh);
-    }
-    else if (!sh->h_dragon && newstate && !sh->h_scale)
-    {
-        scalehandle_click_label(sh);
-    }
+    /* not sure if we need this */
     sh->h_dragon = newstate;
 }
 
@@ -367,13 +352,15 @@ static void my_numbox__motionhook(t_scalehandle *sh,
 
         if (glist_isvisible(x->x_gui.x_glist))
         {
-            /*
+            
             my_numbox_draw_move(x, x->x_gui.x_glist);
             my_numbox_draw_config(x, x->x_gui.x_glist);
             my_numbox_draw_update((t_gobj*)x, x->x_gui.x_glist);
-            */
+            
+/*
             gobj_vis(x, x->x_gui.x_glist, 0);
             gobj_vis(x, x->x_gui.x_glist, 1);
+*/
             scalehandle_unclick_scale(sh);
         }
 
@@ -387,7 +374,7 @@ static void my_numbox__motionhook(t_scalehandle *sh,
             properties_set_field_int(properties,"label.fontsize_entry",x->x_tmpfontsize);
         }
     }
-    scalehandle_dragon_label(sh,mouse_x - sh->h_offset_x, mouse_y - sh->h_offset_y);
+    scalehandle_dragon_label(sh,mouse_x, mouse_y);
 }
 
 void my_numbox_draw(t_my_numbox *x, t_glist *glist, int mode)

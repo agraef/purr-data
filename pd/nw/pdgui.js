@@ -1826,23 +1826,29 @@ function gui_toggle_update(cid, tag, state, color) {
     }
 }
 
+function numbox_data_string(w, h) {
+    return ["M", 0, 0,
+            "L", w - 4, 0,
+                 w, 4,
+                 w, h,
+                 0, h,
+            "z",
+            "L", 0, 0,
+                 (h / 2)|0, (h / 2)|0, // |0 to force int
+                 0, h]
+    .join(" ");
+}
+
 // Todo: send fewer parameters from c
-function gui_create_numbox(width,cid,tag,bgcolor,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,basex,basey,half, is_toplevel) {
-    // numbox doesn't have a standard iemgui border, so we must create its gobj manually
-    var g = gui_text_create_gobj(cid, tag, "iemgui", basex, basey, is_toplevel),
-        data_array,
+function gui_create_numbox(cid, tag, bgcolor, x, y, w, h, is_toplevel) {
+    // numbox doesn't have a standard iemgui border,
+    // so we must create its gobj manually
+    var g = gui_text_create_gobj(cid, tag, "iemgui", x, y, is_toplevel),
+        data,
         border;
-    data_array = ["M", p1 - basex, p2 - basey,
-                  "L", p3 - basex, p4 - basey,
-                       p5 - basex, p6 - basey,
-                       p7 - basex, p8 - basey,
-                       p9 - basex, p10 - basey,
-                  "z",
-                  "L", basex - basex, basey - basey,
-                       half, half,
-                       p9 - basex, p10 - basey];
+    data = numbox_data_string(w, h);
     border = create_item(cid, "path", {
-        d: data_array.join(" "),
+        d: data,
         fill: bgcolor,
         stroke: "black",
         "stroke-width": 1,
@@ -1852,12 +1858,21 @@ function gui_create_numbox(width,cid,tag,bgcolor,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,
     g.appendChild(border);
 }
 
+function gui_numbox_coords(cid, tag, w, h) {
+    var b = get_item(cid, tag + "border");
+    configure_item(b, {
+        d: numbox_data_string(w, h)
+    });
+}
+
 function gui_numbox_drawtext(cid,tag,text,font_size,color,xpos,ypos,basex,basey) {
+    // kludge alert -- I'm not sure why I need to add half to the ypos
+    // below. But it works for most font sizes.
     var g = get_gobj(cid, tag),
         svg_text = create_item(cid, "text", {
             transform: "translate(" +
                         (xpos - basex) + "," +
-                        (ypos - basey + 5) + ")",
+                        ((ypos - basey + (ypos - basey) * 0.5)|0) + ")",
             "font-size": font_size,
             fill: color,
             id: tag + "text"
@@ -1869,9 +1884,21 @@ function gui_numbox_drawtext(cid,tag,text,font_size,color,xpos,ypos,basex,basey)
 
 function gui_update_numbox(cid, tag, fcolor, bgcolor, font_name, font_size, font_weight) {
     var b = get_item(cid, tag + "border"),
-        text = get_item(cid, tag + "text");
+        text = get_item(cid, tag + "text"),
+        label = get_item(cid, tag + "label");
     configure_item(b, { fill: bgcolor });
     configure_item(text, { fill: fcolor, "font-size": font_size });
+    // Update the label if one exists
+    if (label) {
+        gui_iemgui_label_font(cid, tag, font_name, font_weight, font_size);
+    }
+}
+
+function gui_update_numbox_text_position(cid, tag, x, y) {
+    var text = get_item(cid, tag + "text");
+    configure_item(text, {
+        transform: "translate( " + x + "," + ((y + y*0.5)|0) + ")"
+    });
 }
 
 function gui_create_slider(cid,tag,color,p1,p2,p3,p4,basex, basey) {
@@ -2065,7 +2092,11 @@ function gui_update_vumeter_rect(cid, tag, color) {
 // of this?
 function gui_vumeter_border_coords(cid, tag, width, height) {
     var r = get_item(cid, tag + "border");
-    configure_item(r, { width: width, height: height });
+    // also need to check for existence-- apparently the iemgui
+    // dialog will delete the vu and try to set this before recreating it...
+    if (r) {
+        configure_item(r, { width: width, height: height });
+    }
 }
 
 function gui_update_vumeter_peak(cid, tag, width) {
@@ -2260,17 +2291,25 @@ function gui_iemgui_label_show_drag_handle(cid, tag, state, x, y) {
     if (state !== 0) {
 post("did thisbranch with cid as " + cid);
         rect = create_item(cid, "rect", {
-            x: x,
-            y: y,
-            width: 10,
-            height: 10,
-            id: "iemgui_label_handle"
+            x: x - 4,
+            y: y + 3,
+            width: 7,
+            height: 7,
+            id: "clickable_resize_handle",
+            class: (cid === tag) ? "gop_drag_handle" : "label_drag_handle"
         });
         gobj.appendChild(rect);
+        patchwin[cid].window.canvas_events.clickable_resize_handle = true;
     } else {
 post("did delete branch with cid as " + cid);
-        rect = get_item(cid, "iemgui_label_handle");
-        rect.parentNode.removeChild(rect);
+        rect = get_item(cid, "clickable_resize_handle");
+        // Need to check for null here...
+        if (rect) {
+            rect.parentNode.removeChild(rect);
+            patchwin[cid].window.canvas_events.clickable_resize_handle = false;
+        } else {
+post("couldnt delete the thing!");
+        }
     }
 }
 
@@ -2279,6 +2318,9 @@ post("did delete branch with cid as " + cid);
 // going between the GUI and Pd (as opposed to doing it completely in the GUI).
 function gui_add_iemgui_label_resize_listener(cid, tag) {
     post("received a message to add a binding for an iemgui handle...");
+    var handle = get_item(cid, "clickable_resize_handle");
+
+    patchwin[cid].window.canvas_events.clickable_resize_handle = true;
 }
 
 function gui_create_mycanvas(cid,tag,color,x1,y1,x2_vis,y2_vis,x2,y2) {
@@ -2879,19 +2921,19 @@ function gui_graph_tick_label(cid, tag, x, y, text, font, font_size, font_weight
 
 function gui_canvas_drawredrect(cid, x1, y1, x2, y2) {
     var svgelem = get_item(cid, "patchsvg"),
-        b;
-    b = create_item(cid, "rect", {
-        x: x1 + 0.5, // align to pixel grid
-        y: y1 + 0.5, // align to pixel grid
+        g = gui_text_create_gobj(cid, cid, "gop_rect", x1, y1, 1),
+        r;
+    r = create_item(cid, "rect", {
         width: x2 - x1,
         height: y2 - y1,
-        id: "gop_rect" // Note: the old tk tag was "GOP"
+        id: "gop_rect"
     });
-    svgelem.appendChild(b);
+    g.appendChild(r);
+    svgelem.appendChild(g);
 }
 
 function gui_canvas_deleteredrect(cid) {
-    var r = get_item(cid, "gop_rect");
+    var r = get_gobj(cid, cid);
     // We need to check for existence here, because the first
     // time setting GOP in properties, there is no red rect yet.
     // But setting properties when the subpatch's window is
@@ -2904,6 +2946,16 @@ function gui_canvas_deleteredrect(cid) {
     if (r !== null) {
         r.parentNode.removeChild(r);
     }
+}
+
+function gui_canvas_redrect_coords(cid, x1, y1, x2, y2) {
+    var g = get_gobj(cid, cid),
+        r = get_item(cid, "gop_rect");
+    elem_move(g, x1, y1);
+    configure_item(r, {
+        width: x2 - x1,
+        height: y2 - y1
+    });
 }
 
 //  Cord Inspector (a.k.a. Magic Glass)

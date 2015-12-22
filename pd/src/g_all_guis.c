@@ -806,8 +806,8 @@ void scalehandle_draw_erase(t_scalehandle *h) {
     sys_vgui("destroy %s\n", h->h_pathname);
     sys_vgui(".x%lx.c delete %lx%s\n", canvas, h->h_master,
         h->h_scale ? "SCALE" : pd_class((t_pd *)h->h_master)==canvas_class?"MOVE":"LABELH");
-    gui_vmess("gui_iemgui_label_show_drag_handle", "xsiii",
-        h->h_glist, "dummy_tag", 0, 0, 0);
+    gui_vmess("gui_iemgui_label_show_drag_handle", "xxiii",
+        h->h_glist, h->h_master, 0, 0, 0);
     h->h_vis = 0;
 }
 
@@ -830,13 +830,16 @@ t_scalehandle *scalehandle_new(t_object *x, t_glist *glist, int scale, t_clickha
     char buf[19]; // 3 + max size of %lx
     h->h_master = x;
     h->h_glist = glist;
-    sprintf(buf, "_h%lx", (t_int)h);
-    pd_bind((t_pd *)h, h->h_bindsym = gensym(buf));
+    if (!scale) /* Only bind for labels-- scaling uses pd_vmess in g_editor.c */
+    {
+        sprintf(buf, "_h%lx", (t_int)x);
+        pd_bind((t_pd *)h, h->h_bindsym = gensym(buf));
+    }
     sprintf(h->h_outlinetag, "h%lx", (t_int)h);
     h->h_dragon = 0;
     h->h_scale = scale;
-    //h->h_offset_x = 0; // unused (maybe keep for later)
-    //h->h_offset_y = 0; // unused (maybe keep for later)
+    h->h_offset_x = 0;
+    h->h_offset_y = 0;
     h->h_vis = 0;
     sprintf(h->h_pathname, ".x%lx.h%lx", (t_int)h->h_glist, (t_int)h);
     h->h_clickfn = chf;
@@ -845,7 +848,9 @@ t_scalehandle *scalehandle_new(t_object *x, t_glist *glist, int scale, t_clickha
 }
 
 void scalehandle_free(t_scalehandle *h) {
-    pd_unbind((t_pd *)h, h->h_bindsym);
+    if (!h->h_scale) { /* only binding handles labels, not for scaling guis */
+        pd_unbind((t_pd *)h, h->h_bindsym);
+    }
     pd_free((t_pd *)h);
 }
 
@@ -854,13 +859,16 @@ void properties_set_field_int(long props, const char *gui_field, int value) {
     sys_vgui(".gfxstub%lx.%s insert 0 %d\n", props, gui_field, value);
 };
 
-void scalehandle_dragon_label(t_scalehandle *h, float f1, float f2) {
+void scalehandle_dragon_label(t_scalehandle *h, float mouse_x, float mouse_y) {
     if (h->h_dragon && !h->h_scale)
     {
         t_iemgui *x = (t_iemgui *)(h->h_master);
-        int dx = (int)f1, dy = (int)f2;
+        int dx = (int)mouse_x - (int)h->h_offset_x,
+            dy = (int)mouse_y - (int)h->h_offset_y;
         h->h_dragx = dx;
         h->h_dragy = dy;
+
+
         int properties = gfxstub_haveproperties((void *)x);
         if (properties)
         {
@@ -869,6 +877,12 @@ void scalehandle_dragon_label(t_scalehandle *h, float f1, float f2) {
             properties_set_field_int(properties,"label.xy.x_entry",new_x);
             properties_set_field_int(properties,"label.xy.y_entry",new_y);
         }
+
+        x->x_ldx += dx;
+        x->x_ldy += dy;
+
+
+
         if (glist_isvisible(x->x_glist))
         {
             int xpos=text_xpix(&x->x_obj, x->x_glist);
@@ -878,6 +892,11 @@ void scalehandle_dragon_label(t_scalehandle *h, float f1, float f2) {
             sys_vgui(".x%lx.c coords %lxLABEL %d %d\n", canvas, x,
                 xpos+x->x_ldx + h->h_dragx,
                 ypos+x->x_ldy + h->h_dragy);
+            gui_vmess("gui_iemgui_label_coords", "xxii",
+                canvas,
+                x,
+                x->x_ldx,
+                x->x_ldy);
         }
     }
 }
