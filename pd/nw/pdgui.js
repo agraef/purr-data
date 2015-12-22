@@ -2289,7 +2289,6 @@ function gui_iemgui_label_show_drag_handle(cid, tag, state, x, y) {
     var gobj = get_gobj(cid, tag),
         rect;
     if (state !== 0) {
-post("did thisbranch with cid as " + cid);
         rect = create_item(cid, "rect", {
             x: x - 4,
             y: y + 3,
@@ -2301,14 +2300,13 @@ post("did thisbranch with cid as " + cid);
         gobj.appendChild(rect);
         patchwin[cid].window.canvas_events.clickable_resize_handle = true;
     } else {
-post("did delete branch with cid as " + cid);
         rect = get_item(cid, "clickable_resize_handle");
         // Need to check for null here...
         if (rect) {
             rect.parentNode.removeChild(rect);
             patchwin[cid].window.canvas_events.clickable_resize_handle = false;
         } else {
-post("couldnt delete the thing!");
+            post("couldnt delete the iemgui drag handle!");
         }
     }
 }
