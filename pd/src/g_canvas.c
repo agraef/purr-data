@@ -802,7 +802,7 @@ void canvas_drawredrect(t_canvas *x, int doit)
 {
     if (doit)
     {
-        int x1=x->gl_xmargin, y1=x->gl_ymargin;
+        int x1=x->gl_xmargin, y1=x->gl_ymargin + sys_legacy;
         int x2=x1+x->gl_pixwidth, y2=y1+x->gl_pixheight;
         //sys_vgui(".x%lx.c create line "
         //    "%d %d %d %d %d %d %d %d %d %d -fill #ff8080 -tags GOP\n",

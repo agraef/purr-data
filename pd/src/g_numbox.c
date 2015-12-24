@@ -847,7 +847,7 @@ static void *my_numbox_new(t_symbol *s, int argc, t_atom *argv)
     x->x_gui.x_changed = 0;
 
     x->x_gui.legacy_x = 0;
-    x->x_gui.legacy_y = 0;
+    x->x_gui.legacy_y = 1;
 
     return (x);
 }
