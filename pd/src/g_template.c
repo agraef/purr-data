@@ -4981,6 +4981,8 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             sprintf(tagbuf, "curve%lx.%lx", (long unsigned int)x,
                 (long unsigned int)data);
             gui_s(tagbuf);
+            gui_end_array(); /* end of tags array */
+            gui_end_vmess();
             if (!glist_istoplevel(glist))
             {
                 t_canvas *gl = glist_getcanvas(glist);
@@ -4992,8 +4994,6 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 canvas_restore_original_position(gl, (t_gobj *)glist,
                     objtag, -1);
             }
-            gui_end_array(); /* end of tags array */
-            gui_end_vmess();
         }
         else post("warning: curves need at least two points to be graphed");
     }
