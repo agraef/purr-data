@@ -1045,7 +1045,7 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
     }
 
     sys_unqueuegui(x);
-    if (glist_isselected(owner, &x->sc_gobj))
+    if (vis && glist_isselected(owner, &x->sc_gobj))
     {
         // we removed this because it caused infinite recursion
         // in the scalar-help.pd example
