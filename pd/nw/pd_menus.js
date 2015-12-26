@@ -158,7 +158,13 @@ function create_menu(gui, type) {
         }));
     }
     editMenu.append(new gui.MenuItem({ type: "separator" }));
-    editMenu.append(new gui.MenuItem({ type: "separator" }));
+    if (!canvas_menu) {
+        editMenu.append(m.edit.clear_console = new gui.MenuItem({
+            label: l("menu.clear_console"),
+            tooltip: l("menu.clear_console")
+        }));
+        editMenu.append(new gui.MenuItem({ type: "separator" }));
+    }
     if (canvas_menu) {
         editMenu.append(m.edit.tidyup = new gui.MenuItem({
             label: l("menu.tidyup"),

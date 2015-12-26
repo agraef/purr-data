@@ -130,6 +130,8 @@
     "find_tt": "Find text in the console output",
     "tidyup": "Tidy Up",
     "tidyup_tt": "Line up the selected objects in straight rows and columns",
+    "clear_console": "Clear Console",
+    "clear_console_tt": "Clear the Pd Window Console",
     "tofront": "Bring to Front",
     "tofront_tt": "Bring the selected object visually in front of all other objects",
     "toback": "Send to Back",
