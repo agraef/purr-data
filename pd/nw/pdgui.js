@@ -3451,7 +3451,7 @@ function do_getscroll(cid) {
     // negative x or y.
     // To implement the Pd-l2ork behavior, the top-left of the canvas should
     // always be the topmost, leftmost object.
-    width = bbox.x > 0 ? bbox.x + bbox.width : bbox.width,
+    width = bbox.x > 0 ? bbox.x + bbox.width : bbox.width;
     height = bbox.y > 0 ? bbox.y + bbox.height : bbox.height;
     x = bbox.x > 0 ? 0 : bbox.x,
     y = bbox.y > 0 ? 0 : bbox.y;
@@ -3479,6 +3479,8 @@ function do_getscroll(cid) {
     height |= 0;
     min_width |= 0;
     min_height |= 0;
+    x |= 0;
+    y |= 0;
     if (width < min_width) {
         width = min_width;
     }
