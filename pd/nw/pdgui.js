@@ -315,6 +315,13 @@ function gui_post_error(objectid, loglevel, errormsg) {
     }
 }
 
+function clear_console() {
+    var container = pd_window.document.getElementById("p1");
+    container.textContent = "";
+}
+
+exports.clear_console = clear_console;
+
 // convert canvas dimensions to old tcl/tk geometry
 // string format. Unfortunately this is exposed (and
 // documented) to the user with the "relocate" message

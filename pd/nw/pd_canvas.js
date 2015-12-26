@@ -822,9 +822,13 @@ function nw_create_patch_window_menus(gui, w, name) {
             }
         }
     });
+    minit(m.edit.clear_console, {
+        enabled: true,
+        click: pdgui.clear_console
+    });
     minit(m.edit.reselect, {
         enabled: true,
-        click: function () { pdgui.pdsend(name, "reselect"); }
+        click: function() { pdgui.pdsend(name, "reselect"); }
     });
     minit(m.edit.tidyup, {
         enabled: true,

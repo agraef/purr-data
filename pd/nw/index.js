@@ -445,6 +445,10 @@ function nw_create_pd_window_menus(gui, w) {
             }
         }
     });
+    minit(m.edit.clear_console, {
+        enabled: true,
+        click: pdgui.clear_console
+    });
     if (osx) {
         minit(m.edit.reselect, { enabled: false });
     }
@@ -455,12 +459,6 @@ function nw_create_pd_window_menus(gui, w) {
         minit(m.edit.font, { enabled: false });
         minit(m.edit.cordinspector, { enabled: false });
     }
-    minit(m.edit.clear_console, {
-        click: function() {
-            var container = w.document.getElementById("p1");
-            container.textContent = "";
-        }
-    });
     minit(m.edit.find, {
         click: function () {
             var find_bar = w.document.getElementById("console_find"),
