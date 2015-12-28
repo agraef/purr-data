@@ -49,7 +49,6 @@ function encode_for_dialog(s) {
 }
 
 function nw_window_focus_callback() {
-    pdgui.post("window was focused");
     // on OSX, update the menu on focus
     if (process.platform === "darwin") {
         nw_create_patch_window_menus(gui, window, name);
