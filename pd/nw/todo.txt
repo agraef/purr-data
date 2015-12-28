@@ -360,6 +360,20 @@ Everything else: (A [x] means we've fixed it)
 [ ] revisit cursor logic-- when you leave the boundaries of an object 
     being dragged, for example, the cursor changes to whatever is set for
     the parent (svg, document, etc.).
+[ ] currently you can't send a message to the GUI with a single
+    array parameter:
+    gui_start_vmess("some_message", "");
+    gui_start_array();
+    gui_s("hello world");
+    gui_end_array();
+    gui_end_vmess();
+
+    Will output:
+    "some_message ,[\"hello world\"]"
+    which will cause a parser error
+
+    Practically, this isn't a big deal since most messages to the GUI
+    require a leading parameter before the array is sent.
 
 Crashers
 --------
