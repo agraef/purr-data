@@ -67,46 +67,28 @@ static t_symbol *canvas_newdirectory = &s_;
 static int canvas_newargc;
 static t_atom *canvas_newargv;
 
-static void glist_doupdatewindowlist(t_glist *gl, char *sbuf)
-{
-    t_gobj *g;
-    if (glist_amreloadingabstractions)  /* not if we're in a reload */
-        return;
-    if (!gl->gl_owner)
-    {
-        /* this is a canvas; if we have a window, put on "windows" list */
-        t_canvas *canvas = (t_canvas *)gl;
-        if (canvas->gl_havewindow)
-        {
-            if (strlen(sbuf) + strlen(gl->gl_name->s_name) + 100 <= 1024)
-            {
-                char tbuf[1024];
-                sprintf(tbuf, "{{%s} .x%lx} ", gl->gl_name->s_name,
-                    (t_int)canvas);
-                strcat(sbuf, tbuf);
-            }
-        }
-    }
-    for (g = gl->gl_list; g; g = g->g_next)
-    {
-        if (pd_class(&g->g_pd) == canvas_class)
-            glist_doupdatewindowlist((t_glist *)g, sbuf);
-    }
-    return;
-}
-
     /* maintain the list of visible toplevels for the GUI's "windows" menu */
 void canvas_updatewindowlist( void)
 {
     t_canvas *x;
-    char sbuf[1024];
-    strcpy(sbuf, "set menu_windowlist {");
-        /* find all root canvases */
+    if (glist_amreloadingabstractions)  /* not if we're in a reload */
+        return;
+    gui_start_vmess("gui_set_toplevel_window_list", "s", "dummy");
+    gui_start_array();
     for (x = canvas_list; x; x = x->gl_next)
-        glist_doupdatewindowlist(x, sbuf);
-    /* next line updates the window menu state before -postcommand tries it */
-    strcat(sbuf, "}\npdtk_fixwindowmenu\n");
-    sys_gui(sbuf);
+    {
+        if (!x->gl_owner)
+        {
+            /* this is a canvas; if we have a window, put on "windows" list */
+            if (x->gl_havewindow)
+            {
+                gui_s(x->gl_name->s_name);
+                gui_x((long unsigned int)x);
+            }
+        }
+    }
+    gui_end_array();
+    gui_end_vmess();
 }
 
     /* add a glist the list of "root" canvases (toplevels without parents.) */

@@ -886,6 +886,16 @@ void gui_s(const char *s)
     gui_array_tail = 0;
 }
 
+void gui_x(long unsigned int i)
+{
+    if (gui_array_head && !gui_array_tail)
+        sys_vgui("\"x%.6lx\"", i);
+    else
+        sys_vgui(",\"x%.6lx\"", i);
+    gui_array_head = 0;
+    gui_array_tail = 0;
+}
+
 void gui_end_array(void)
 {
     sys_gui("]");

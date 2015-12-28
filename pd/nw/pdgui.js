@@ -537,6 +537,18 @@ function menu_send(name) {
 
 exports.menu_send = menu_send;
 
+function gui_set_toplevel_window_list(dummy, attr_array) {
+    // We receive an array in the form:
+    // ["Name", "address", etc.]
+    // where "address" is the cid (x123456etc.)
+    // We don't do anything with it at the moment,
+    // but they could be added to the "Windows" menu
+    // if desired. (Pd Vanilla doesn't do this, but
+    // Pd-l2ork (and possibly Pd-extended) did.
+
+    // the "dummy" parameter is just to work around a bug in the gui_vmess API
+}
+
 function menu_quit() {
     pdsend("pd verifyquit");
 }
