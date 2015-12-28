@@ -198,6 +198,11 @@ text {
     display: inline;
 }
 
+/* text inside selected objects */
+:not(.gop).selected text {
+    fill: #ffff00;
+}
+
 /* for an object that didn't create */
 .obj .border.broken_border {
     fill: #002222;

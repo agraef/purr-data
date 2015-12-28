@@ -546,7 +546,8 @@ void glist_select(t_glist *x, t_gobj *y)
         gobj_select(y, x, 1);
         c_selection = x;
 
-        sys_vgui("pdtk_canvas_update_edit_menu .x%lx 1\n", x);
+        /* Not sure if this is still needed */
+        //sys_vgui("pdtk_canvas_update_edit_menu .x%lx 1\n", x);
         canvas_draw_gop_resize_hooks(x);
     }
     //fprintf(stderr,"select done\n");
@@ -646,8 +647,9 @@ void glist_deselect(t_glist *x, t_gobj *y)
         }
         if (fixdsp)
             canvas_resume_dsp(1);
-        if (!x->gl_editor->e_selection)
-            sys_vgui("pdtk_canvas_update_edit_menu .x%lx 0\n", x);
+        /* Not sure if this is still needed */
+        //if (!x->gl_editor->e_selection)
+        //    sys_vgui("pdtk_canvas_update_edit_menu .x%lx 0\n", x);
         canvas_draw_gop_resize_hooks(x);
     }
     //reenter = 0;

@@ -1639,10 +1639,10 @@ static void text_select(t_gobj *z, t_glist *glist, int state)
                              glist_istoplevel(glist))
                 {
                     /* Not sure yet what this is doing... */
-                    sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 1 "
-                             "-strokedasharray {} "
-                             "-fill $pd_colors(box)\n",
-                        glist_getcanvas(glist), rtext_gettag(y));
+                    //sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 1 "
+                    //         "-strokedasharray {} "
+                    //         "-fill $pd_colors(box)\n",
+                    //    glist_getcanvas(glist), rtext_gettag(y));
                 }
 
                 t_object *ob = pd_checkobject(&x->te_pd);
@@ -1678,12 +1678,13 @@ static void text_select(t_gobj *z, t_glist *glist, int state)
                 if (pd_class(&x->te_pd) == text_class &&
                     x->te_type != T_TEXT)
                 {
-                    /* This might be for broken objects... */
-                    sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 2 "
-                        "-strokelinecap projecting -strokedasharray {2 3} "
-                        "-fill %s\n",
-                        glist_getcanvas(glist), 
-                        rtext_gettag(y), invalid_fill);
+                    /* This is for broken objects, but we're doing
+                       it in CSS now... */
+                    //sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 2 "
+                    //    "-strokelinecap projecting -strokedasharray {2 3} "
+                    //    "-fill %s\n",
+                    //    glist_getcanvas(glist),
+                    //    rtext_gettag(y), invalid_fill);
                 }
 
                 t_object *ob = pd_checkobject(&x->te_pd);

@@ -182,6 +182,11 @@ text {
     stroke: white;
 }
 
+/* text inside selected objects */
+:not(.gop).selected text {
+    fill: white;
+}
+
 .graph .border {
     stroke: white;
     fill: none;

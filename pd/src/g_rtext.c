@@ -544,24 +544,27 @@ void rtext_displace(t_rtext *x, int dx, int dy)
     //    x->x_tag, dx, dy);
 }
 
-/* Not sure if this is still used */
+/* This is no longer used-- we do this with CSS now. But keeping the code
+   here until we test a bit more. */
 void rtext_select(t_rtext *x, int state)
 {
-    t_glist *glist = x->x_glist;
-    t_canvas *canvas = glist_getcanvas(glist);
-    if (glist_istoplevel(glist))
-        sys_vgui(".x%lx.c itemconfigure %s -fill %s\n", canvas, 
-            x->x_tag, (state? "$pd_colors(selection)" : "$pd_colors(text)"));
-    if (x->x_text->te_pd->c_wb && x->x_text->te_pd->c_wb->w_displacefnwtag)
-    {
-        if (state)
-            sys_vgui(".x%lx.c addtag selected withtag %s\n",
-                   glist_getcanvas(glist), x->x_tag);
-        else
-            sys_vgui(".x%lx.c dtag %s selected\n",
-                   glist_getcanvas(glist), x->x_tag);
-    }
-    canvas_editing = canvas;
+//    t_glist *glist = x->x_glist;
+//    t_canvas *canvas = glist_getcanvas(glist);
+//    if (glist_istoplevel(glist))
+//        sys_vgui(".x%lx.c itemconfigure %s -fill %s\n", canvas, 
+//            x->x_tag, (state? "$pd_colors(selection)" : "$pd_colors(text)"));
+//    if (x->x_text->te_pd->c_wb && x->x_text->te_pd->c_wb->w_displacefnwtag)
+//    {
+//        if (state)
+//            sys_vgui(".x%lx.c addtag selected withtag %s\n",
+//                   glist_getcanvas(glist), x->x_tag);
+//        else
+//            sys_vgui(".x%lx.c dtag %s selected\n",
+//                   glist_getcanvas(glist), x->x_tag);
+//    }
+    /* Not sure the following is needed anymore either-- commenting it
+       out to test what (if any) side-effects there are */
+//    canvas_editing = canvas;
 }
 
 void rtext_activate(t_rtext *x, int state)
