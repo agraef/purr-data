@@ -888,7 +888,7 @@ function gui_canvas_set_title(cid, name, args, dir, dirty_flag) {
 
 // create a new canvas
 // todo: rename parameter "name" to "cid"
-function gui_canvas_new(cid, width, height, geometry, editable, name, dir, dirty_flag, cargs) {
+function gui_canvas_new(cid, width, height, geometry, editmode, name, dir, dirty_flag, cargs) {
     // hack for buggy tcl popups... should go away for node-webkit
     //reset_ctrl_on_popup_window
 
@@ -937,7 +937,8 @@ function gui_canvas_new(cid, width, height, geometry, editable, name, dir, dirty
             name: name,
             dir: dir,
             dirty: dirty_flag,
-            args: cargs
+            args: cargs,
+            editmode: editmode
     });
     // initialize variable to reflect that this window has been opened
     loaded[cid] = 1;

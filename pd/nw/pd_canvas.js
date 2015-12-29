@@ -627,7 +627,7 @@ var canvas_events = (function() {
 // This gets called from the nw_create_window function in index.html
 // It provides us with our canvas id from the C side.  Once we have it
 // we can create the menu and register event callbacks
-function register_canvas_id(cid) {
+function register_canvas_id(cid, attr_array) {
     name = cid; // hack
     // We create the window menus and popup menu before doing anything else
     // to ensure that we don't try to set the svg size before these are done.
@@ -646,6 +646,7 @@ function register_canvas_id(cid) {
     nw_window_focus_callback();
     canvas_events.normal();
     pdgui.canvas_map(cid); // side-effect: triggers gui_canvas_getscroll from Pd
+    set_editmode_checkbox(attr_array.editmode !== 0 ? true : false);
 }
 
 function create_popup_menu(name) {
