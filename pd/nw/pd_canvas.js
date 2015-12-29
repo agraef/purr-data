@@ -269,9 +269,14 @@ var canvas_events = (function() {
                         return;
                     }
                 }
-                pdgui.canvas_sendkey(name, 1, evt, evt.charCode,
-                    keydown_autorepeat);
+                // For some reasons <ctrl-e> registers a keypress with
+                // charCode of 5. We filter that out here so it doesn't
+                // cause trouble when toggling editmode.
+                if (evt.charCode !== 5) {
+                    pdgui.canvas_sendkey(name, 1, evt, evt.charCode,
+                        keydown_autorepeat);
                 pdgui.set_keymap(last_keydown, evt.charCode, keydown_autorepeat);
+                }
                 //pdgui.post("keypress time: charcode is " + evt.charCode);
                 // Don't do things like scrolling on space, arrow keys, etc.
                 //evt.stopPropagation();
@@ -279,7 +284,13 @@ var canvas_events = (function() {
             },
             keyup: function(evt) {
                 var my_char_code = pdgui.get_char_code(evt.keyCode);
-                pdgui.canvas_sendkey(name, 0, evt, my_char_code, evt.repeat);
+                // Sometimes we don't have char_code. For example, the
+                // nw menu doesn't propogate shortcut events, so we don't get
+                // to map a charcode on keydown/keypress. In those cases we'll
+                // get null, so we check for that here...
+                if (my_char_code) {
+                    pdgui.canvas_sendkey(name, 0, evt, my_char_code, evt.repeat);
+                }
                 //pdgui.post("keyup time: charcode is: " + my_char_code);
                 if (evt.keyCode === 13 && cmd_or_ctrl_key(evt)) {
                     pdgui.pdsend(name, "reselect");
@@ -710,6 +721,10 @@ function set_edit_menu_modals(state) {
     canvas_menu.edit.cut.enabled = state;
     canvas_menu.edit.copy.enabled = state;
     canvas_menu.edit.paste.enabled = state;
+}
+
+function set_editmode_checkbox(state) {
+    canvas_menu.edit.editmode.checked = state;
 }
 
 // stop-gap

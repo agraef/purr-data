@@ -216,6 +216,7 @@ function create_menu(gui, type) {
             tooltip: l("menu.autotips_tt")
         }));
         editMenu.append(m.edit.editmode = new gui.MenuItem({
+            type: "checkbox",
             label: l("menu.editmode"),
             key: "e",
             modifiers: cmd_or_ctrl,

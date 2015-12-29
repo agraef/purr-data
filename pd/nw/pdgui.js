@@ -535,6 +535,11 @@ function menu_send(name) {
     }
 }
 
+function gui_set_editmode(cid, state) {
+post("set the mode");
+    patchwin[cid].window.set_editmode_checkbox(state !== 0 ? true : false);
+}
+
 exports.menu_send = menu_send;
 
 function gui_set_toplevel_window_list(dummy, attr_array) {

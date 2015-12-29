@@ -5289,11 +5289,14 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     {
         //fprintf(stderr,"ctrl\n");
         glob_ctrl = down;
-        if(x->gl_edit && x->gl_editor->e_onmotion == MA_NONE)
+        if (x->gl_edit && x->gl_editor->e_onmotion == MA_NONE)
         {
             canvas_setcursor(x, down ?
                 CURSOR_RUNMODE_NOTHING : CURSOR_EDITMODE_NOTHING);
-            sys_vgui("pdtk_canvas_editval .x%lx %d\n", (t_int)x, down ? 0 : 1);
+            //sys_vgui("pdtk_canvas_editval .x%lx %d\n", (t_int)x, down ? 0 : 1);
+            gui_vmess("gui_set_editmode", "xi",
+                x,
+                down ? 0 : 1);
             if(x->gl_editor && x->gl_editor->gl_magic_glass)
             {
                 if (down)
@@ -7548,8 +7551,11 @@ void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
     if (glist_isvisible(x))
     {
         int edit = !glob_ctrl && x->gl_edit;
-        sys_vgui("pdtk_canvas_editval .x%lx %d\n",
-            glist_getcanvas(x), edit);
+        //sys_vgui("pdtk_canvas_editval .x%lx %d\n",
+        //    glist_getcanvas(x), edit);
+        gui_vmess("gui_set_editmode", "xi",
+            glist_getcanvas(x),
+            edit);
     }
     /*if (!x->gl_edit) {
         sys_vgui(".x%lx.m.edit entryconfigure \"Cord Inspector\" "
