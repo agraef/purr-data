@@ -287,12 +287,18 @@ function nw_close_window(window) {
 }
 
 // Way too many arguments here-- rethink this interface
-function nw_create_window(cid, type, width, height, xpos, ypos, menu_flag,
-    resize, topmost, cnv_color, canvas_string, dir, dirty_flag, cargs,
-    attr_array) {
+function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
         // todo: make a separate way to format the title for OSX
-    var my_title =  pdgui.format_window_title(canvas_string, dirty_flag,
-        cargs, dir);
+    var my_title;
+    if (type === "pd_canvas") {
+        my_title = pdgui.format_window_title(
+            attr_array.name,
+            attr_array.dirty,
+            attr_array.args,
+            attr_array.dir);
+    } else {
+        my_title = type;
+    }
     var my_file =
         type === "pd_canvas" ? "pd_canvas.html" : "dialog_" + type + ".html";
 

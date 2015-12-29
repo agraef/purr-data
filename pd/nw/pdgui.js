@@ -929,8 +929,16 @@ function gui_canvas_new(cid, width, height, geometry, editable, name, dir, dirty
     // Not sure why resize and topmost are here-- but we'll pass them on for
     // the time being...
     patchwin[cid] = nw_create_window(cid, "pd_canvas", width, height,
-        xpos, ypos, menu_flag, resize[cid], topmost[cid], my_canvas_color,
-        name, dir, dirty_flag, cargs, null);
+        xpos, ypos, {
+            menu_flag: menu_flag,
+            resize: resize[cid],
+            topmost: topmost[cid],
+            color: my_canvas_color,
+            name: name,
+            dir: dir,
+            dirty: dirty_flag,
+            args: cargs
+    });
     // initialize variable to reflect that this window has been opened
     loaded[cid] = 1;
 }
@@ -3140,18 +3148,15 @@ function attr_array_to_object(attr_array) {
 }
 
 function gui_gatom_dialog(did, attr_array) {
-    dialogwin[did] = nw_create_window(did, "gatom", 265, 300, 20, 20, 0,
-        0, 1, "white", "Properties", "", 0, null,
-        attr_array_to_object(attr_array)
-    );
+    dialogwin[did] = nw_create_window(did, "gatom", 265, 300, 20, 20,
+        attr_array_to_object(attr_array));
 }
 
 function gui_iemgui_dialog(did, attr_array) {
     //for (var i = 0; i < attr_array.length; i++) {
     //    attr_array[i] = '"' + attr_array[i] + '"';
     //}
-    dialogwin[did] = nw_create_window(did, "iemgui", 265, 450, 20, 20, 0,
-        0, 1, "white", "Properties", "", 0, null,
+    dialogwin[did] = nw_create_window(did, "iemgui", 265, 450, 20, 20,
         attr_array_to_object(attr_array));
 }
 
@@ -3165,8 +3170,8 @@ function gui_create_array(did, count) {
         array_outline: "black",
         array_in_existing_graph: 0
     }];
-    dialogwin[did] = nw_create_window(did, "canvas", 265, 340, 20, 20, 0,
-        0, 1, "white", "Properties", "", 0, null, attr_array);    
+    dialogwin[did] = nw_create_window(did, "canvas", 265, 340, 20, 20,
+        attr_array);
 }
 
 function gui_canvas_dialog(did, attr_arrays) {
@@ -3180,8 +3185,8 @@ function gui_canvas_dialog(did, attr_arrays) {
             }
         }
     }
-    dialogwin[did] = nw_create_window(did, "canvas", 250, 100, 20, 20, 0,
-        0, 1, "white", "Properties", "", 0, null, attr_arrays);
+    dialogwin[did] = nw_create_window(did, "canvas", 250, 100, 20, 20,
+        attr_arrays);
 }
 
 function gui_remove_gfxstub(did) {
@@ -3193,8 +3198,8 @@ function gui_remove_gfxstub(did) {
 
 function gui_font_dialog(cid, gfxstub, font_size) {
     var attrs = { canvas: cid, font_size: font_size };
-    dialogwin[gfxstub] = nw_create_window(gfxstub, "font", 265, 265, 20, 20, 0,
-        0, 1, "white", "Properties", "", 0, null, attrs);
+    dialogwin[gfxstub] = nw_create_window(gfxstub, "font", 265, 265, 20, 20,
+        attrs);
 }
 
 // Global settings
@@ -3208,8 +3213,7 @@ function gui_pd_dsp(state) {
 function open_prefs() {
     if (!dialogwin["prefs"]) {
         dialogwin["prefs"] = nw_create_window("prefs", "prefs",
-            265, 540, 20, 20, 0,
-            0, 1, "white", "Properties", "", 0, null, null);
+            265, 540, 20, 20, null);
     }
 }
 
