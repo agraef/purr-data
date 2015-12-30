@@ -14,10 +14,6 @@ extern int glob_lmclick;
 static void garray_select(t_gobj *z, t_glist *glist, int state);
 static void garray_doredraw(t_gobj *client, t_glist *glist);
 
-/* jsarlo { */
-#define ARRAYPAGESIZE 1000  /* this should match the page size in u_main.tk */
-/* } jsarlo */
-
 /* see also the "plot" object in g_scalar.c which deals with graphing
 arrays which are fields in scalars.  Someday we should unify the
 two, but how? */
@@ -63,10 +59,6 @@ t_array *array_new(t_symbol *templatesym, t_gpointer *parent)
     word_init((t_word *)(x->a_vec), template, parent);
     return (x);
 }
-
-/* jsarlo { */
-void garray_arrayviewlist_close(t_garray *x);
-/* } jsarlo */
 
 void array_resize(t_array *x, int n)
 {
@@ -138,7 +130,6 @@ struct _garray
     char x_usedindsp;       /* true if some DSP routine is using this */
     char x_saveit;          /* true if we should save this with parent */
     char x_joc;             /* true if we should "jump on click" in a graph */
-    char x_listviewing;     /* true if list view window is open */
     char x_hidename;        /* don't print name above graph */
     int x_style;            /* so much simpler to keep it here */
     t_symbol *x_send;       /* send_changed hook */
@@ -204,7 +195,6 @@ static t_garray *graph_scalar(t_glist *gl, t_symbol *s, t_symbol *templatesym,
     pd_bind(&x->x_gobj.g_pd, x->x_realname);
     x->x_usedindsp = 0;
     x->x_saveit = saveit;
-    x->x_listviewing = 0;
     template_setsymbol(template, gensym("fillcolor"), x->x_scalar->sc_vec,
         fill, 1);
     template_setsymbol(template, gensym("outlinecolor"), x->x_scalar->sc_vec,
@@ -699,12 +689,6 @@ void garray_arraydialog(t_garray *x, t_symbol *s, int argc, t_atom *argv)
         }
         if (argname != x->x_name)
         {
-            /* jsarlo { */
-            if (x->x_listviewing)
-            {
-              garray_arrayviewlist_close(x);
-            }
-            /* } jsarlo */
             x->x_name = argname;
             pd_unbind(&x->x_gobj.g_pd, x->x_realname);
             x->x_realname = canvas_realizedollar(x->x_glist, argname);
@@ -780,105 +764,10 @@ void garray_arraydialog(t_garray *x, t_symbol *s, int argc, t_atom *argv)
     }
 }
 
-/* jsarlo { */
-void garray_arrayviewlist_new(t_garray *x)
-{
-    int i, type=0, elemsize=0, yonset=0;
-    t_float yval;
-    char cmdbuf[200];
-    t_array *a = garray_getarray_floatonly(x, &yonset, &elemsize);
-
-    if (!a)
-    {
-        /* FIXME */
-        error("error in garray_arrayviewlist_new()");
-    }
-    x->x_listviewing = 1;
-    sprintf(cmdbuf,
-            "pdtk_array_listview_new %%s %s %d\n",
-            x->x_realname->s_name,
-            0);
-    gfxstub_new(&x->x_gobj.g_pd, x, cmdbuf);
-    for (i = 0; i < ARRAYPAGESIZE && i < a->a_n; i++)
-    {
-        yval = *(t_float *)(a->a_vec +
-               elemsize * i + yonset);
-        sys_vgui(".%sArrayWindow.lb insert %d {%d) %g}\n",
-                 x->x_realname->s_name,
-                 i,
-                 i,
-                 yval);
-    }
-}
-
-void garray_arrayviewlist_fillpage(t_garray *x,
-                                   t_float page,
-                                   t_float fTopItem)
-{
-    //fprintf(stderr,"garray_fillpage %g %g\n", page, fTopItem);
-    int i, yonset=0, elemsize=0, topItem;
-    t_float yval;
-    t_array *a = garray_getarray_floatonly(x, &yonset, &elemsize);
-    
-    topItem = (int)fTopItem;
-    if (!a)
-    {
-        /* FIXME */
-        error("error in garray_arrayviewlist_new()");
-    }
-
-    if (page < 0)
-    {
-      page = 0;
-      sys_vgui("pdtk_array_listview_setpage %s %d\n",
-               x->x_realname->s_name,
-               (int)page);
-    }
-    else if ((page * ARRAYPAGESIZE) >= a->a_n)
-    {
-      page = (int)(((int)a->a_n - 1)/ (int)ARRAYPAGESIZE);
-      sys_vgui("pdtk_array_listview_setpage %s %d\n",
-               x->x_realname->s_name,
-               (int)page);
-    }
-    sys_vgui(".%sArrayWindow.lb delete 0 %d\n",
-             x->x_realname->s_name,
-             ARRAYPAGESIZE - 1);
-    for (i = page * ARRAYPAGESIZE;
-         (i < (page + 1) * ARRAYPAGESIZE && i < a->a_n);
-         i++)
-    {
-        yval = *(t_float *)(a->a_vec + \
-               elemsize * i + yonset);
-        sys_vgui(".%sArrayWindow.lb insert %d {%d) %g}\n",
-                 x->x_realname->s_name,
-                 i % ARRAYPAGESIZE,
-                 i,
-                 yval);
-    }
-    sys_vgui(".%sArrayWindow.lb yview %d\n",
-             x->x_realname->s_name,
-             topItem);
-}
-
-void garray_arrayviewlist_close(t_garray *x)
-{
-    x->x_listviewing = 0;
-    sys_vgui("pdtk_array_listview_closeWindow %s\n",
-             x->x_realname->s_name);
-}
-/* } jsarlo */
-
 static void garray_free(t_garray *x)
 {
     t_pd *x2;
         sys_unqueuegui(&x->x_gobj);
-    /* jsarlo { */
-        if (x->x_listviewing)
-    {
-        garray_arrayviewlist_close(x);
-    }
-    /* } jsarlo */
     gfxstub_deleteforkey(x);
     pd_unbind(&x->x_gobj.g_pd, x->x_realname);
         /* LATER find a way to get #A unbound earlier (at end of load?) */
@@ -1634,17 +1523,6 @@ void garray_redraw(t_garray *x)
         // this is useful so that things get redrawn before they are selected
         // so that we don't have to fake yet another selection after the fact
         garray_doredraw(&x->x_gobj, x->x_glist);
-    /* jsarlo { */
-    /* this happens in garray_vis() when array is visible for
-       performance reasons */
-    else
-    {
-        //fprintf(stderr,"garray_redraw_listviewing\n");
-        if (x->x_listviewing)
-            sys_vgui("pdtk_array_listview_fillpage %s\n",
-                 x->x_realname->s_name);
-    }
-    /* } jsarlo */
 }
 
    /* This function gets the template of an array; if we can't figure
@@ -1914,12 +1792,6 @@ static void garray_ylabel(t_garray *x, t_symbol *s, int argc, t_atom *argv)
     /* change the name of a garray. */
 static void garray_rename(t_garray *x, t_symbol *s)
 {
-    /* jsarlo { */
-    if (x->x_listviewing)
-    {
-        garray_arrayviewlist_close(x);
-    }
-    /* } jsarlo */
     pd_unbind(&x->x_gobj.g_pd, x->x_realname);
 
     x->x_name = s;
@@ -2070,15 +1942,5 @@ void g_array_setup(void)
         gensym("normalize"), A_DEFFLOAT, 0);
     class_addmethod(garray_class, (t_method)garray_arraydialog,
         gensym("arraydialog"), A_GIMME, 0);
-/* jsarlo { */
-    class_addmethod(garray_class, (t_method)garray_arrayviewlist_new,
-        gensym("arrayviewlistnew"), A_NULL);
-    class_addmethod(garray_class, (t_method)garray_arrayviewlist_fillpage,
-        gensym("arrayviewlistfillpage"), A_FLOAT, A_DEFFLOAT, A_NULL);
-    class_addmethod(garray_class, (t_method)garray_arrayviewlist_close,
-      gensym("arrayviewclose"), A_NULL);
-/* } jsarlo */
     class_setsavefn(garray_class, garray_save);
 }
-
-
