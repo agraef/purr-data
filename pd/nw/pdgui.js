@@ -1583,11 +1583,21 @@ function gui_text_new(canvasname, myname, type, isselected, left_margin, font_he
         // Maybe it's just me, but the svg spec's explanation of how
         // text x/y and tspan x/y interact is difficult to understand.
         // So here we just translate by the right amount for the left-margin,
-        // guaranteeing all tspan children will line up where they should be
-        transform: "translate(" + left_margin + ")",
+        // guaranteeing all tspan children will line up where they should be.
+
+        // Another anomaly-- we add 0.5 to the translation so that the font
+        // hinting works correctly. This effectively cancels out the 0.5 pixel
+        // alignment done in the gobj, so it might be better to specify the
+        // offset in whatever is calling this function.
+
+        // I don't know how svg text grid alignment relates to other svg shapes,
+        // and I haven't yet found any documentation for it. All I know is
+        // an integer offset results in blurry text, and the 0.5 offset doesn't.
+        transform: "translate(" + (left_margin - 0.5) + ")",
         y: font_height + gobj_font_y_kludge(font),
         // Turns out we can't do 'hanging' baseline
-        // because it's borked when scaled. Bummer...
+        // because it's borked when scaled. Bummer, because that's how Pd's
+        // text is handled under tk...
         // 'dominant-baseline': 'hanging',
         "shape-rendering": "crispEdges",
         "font-size": pd_fontsize_to_gui_fontsize(font) + "px",
