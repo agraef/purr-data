@@ -804,6 +804,10 @@ exports.get_patchwin = function(name) {
     return patchwin[name];
 }
 
+exports.set_patchwin = function(cid, win) {
+    patchwin[cid] = win;
+}
+
 exports.get_dialogwin = function(name) {
     return dialogwin[name];
 }
@@ -928,7 +932,7 @@ function gui_canvas_new(cid, width, height, geometry, editmode, name, dir, dirty
     last_loaded = cid;
     // Not sure why resize and topmost are here-- but we'll pass them on for
     // the time being...
-    patchwin[cid] = nw_create_window(cid, "pd_canvas", width, height,
+    nw_create_window(cid, "pd_canvas", width, height,
         xpos, ypos, {
             menu_flag: menu_flag,
             resize: resize[cid],
@@ -942,6 +946,7 @@ function gui_canvas_new(cid, width, height, geometry, editmode, name, dir, dirty
     });
     // initialize variable to reflect that this window has been opened
     loaded[cid] = 1;
+    // we call set_patchwin from the callback in pd_canvas
 }
 
 /* This gets sent to Pd to trigger each object on the canvas
@@ -2863,7 +2868,6 @@ function popup_action(cid, index) {
 }
 
 exports.popup_action = popup_action;
-
 
 // Graphs and Arrays
 

@@ -302,10 +302,12 @@ function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
     var my_file =
         type === "pd_canvas" ? "pd_canvas.html" : "dialog_" + type + ".html";
 
-    var new_win = gui.Window.open(my_file, {
+    var eval_string = "register_canvas_id(" +
+                      JSON.stringify(cid) + ", " +
+                      JSON.stringify(attr_array) + ");";
+    gui.Window.open(my_file, {
         title: my_title,
         position: "center",
-        toolbar: false,
         focus: true,
         width: width,
         // We add 23 as a kludge to account for the menubar at the top of
@@ -315,19 +317,17 @@ function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
         height: height + 23,
         x: xpos,
         y: ypos
+    }, function (new_win) {
+        pdgui.set_patchwin(cid, new_win);
+        new_win.on("loaded", function() {
+            new_win.eval(null, eval_string);
+        });
     });
     //pdgui.post("attr_array is " + attr_array);
-    var eval_string = "register_canvas_id(" +
-                      JSON.stringify(cid) + ", " +
-                      JSON.stringify(attr_array) + ");";
     //pdgui.post("eval string is " + eval_string);
     //if (attr_array !== null) {
     //    pdgui.post("attr_array is " + attr_array.toString());
     //}
-    new_win.on("loaded", function() {
-        new_win.eval(null, eval_string);
-    });
-    return new_win;
 }
 
 // Pd Window Menu Bar

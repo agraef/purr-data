@@ -451,6 +451,31 @@ var canvas_events = (function() {
         }, false
     );
 
+    // Whoa-- huge workaround!
+    // Right now we're getting the popup menu the way Pd Vanilla does it:
+    // 1) send a mouse(down) message to Pd
+    // 2) Pd checks whether it wants to send us a popup
+    // 3) Pd checks what popup menu items are available for this object/canvas
+    // 4) Pd sends GUI back a message with this info
+    // 5) GUI finally displays the popup
+    // 6) GUI keeps a _global_ _variable_ to remember where the popup coords
+    // 7) User clicks an option in the popup
+    // 8) GUI sends a message back to Pd with the popup index and coords
+    // 9) Pd walks the linked list of objects to look up the object
+    // 10) Pd asks that object if it reacts to popups, and if it reacts to the
+    //     selected item in the popup
+    // 11) Pd sends a message to the relevant object for the item in question
+    // nw.js has a nice little "contextmenu" event handler, but it's too
+    // difficult to use when we're passing between GUI and Pd (twice). In the
+    // future we should just do all the popup menu event handling in the GUI,
+    // and only pass a message to Pd when the user has clicked an item.
+    // For now, however, we just turn off its default behavior and control
+    // it with a bunch of complicated callbacks. :(
+    document.addEventListener("contextmenu", function(evt) {
+        console.log("got a context menu evt...");
+        evt.preventDefault();
+    });
+
     // The following is commented out because we have to set the
     // event listener inside nw_create_pd_window_menus due to a
     // bug with nwworkingdir
