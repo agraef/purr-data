@@ -4650,7 +4650,10 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
     {
         canvas_updateconnection(x, x->gl_editor->e_xwas, x->gl_editor->e_ywas,
             xpos, ypos, 0);
-        sys_vgui("pdtk_check_scroll_on_motion .x%lx.c 0\n", x);
+        //sys_vgui("pdtk_check_scroll_on_motion .x%lx.c 0\n", x);
+        /* tried canvas_getscroll here instead, but it doesn't seem to add
+           much value. Can revisit later if need be... */
+        //canvas_getscroll(x);
     }
 
     if ((y1 = canvas_findhitbox(x, xwas, ywas, &x11, &y11, &x12, &y12))
@@ -5355,7 +5358,10 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
     else if (x->gl_editor->e_onmotion == MA_REGION)
     {
         canvas_doregion(x, xpos, ypos, 0);
-        sys_vgui("pdtk_check_scroll_on_motion .x%lx.c 0\n", x);
+        //sys_vgui("pdtk_check_scroll_on_motion .x%lx.c 0\n", x);
+        /* This turns out not to be very useful so it's commented.
+           Can revisit later... */
+        //canvas_getscroll(x);
     }
     else if (x->gl_editor->e_onmotion == MA_CONNECT)
     {
