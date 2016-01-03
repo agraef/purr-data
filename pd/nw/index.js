@@ -302,7 +302,7 @@ function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
     var my_file =
         type === "pd_canvas" ? "pd_canvas.html" : "dialog_" + type + ".html";
 
-    var eval_string = "register_canvas_id(" +
+    var eval_string = "register_window_id(" +
                       JSON.stringify(cid) + ", " +
                       JSON.stringify(attr_array) + ");";
     gui.Window.open(my_file, {
@@ -318,7 +318,11 @@ function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
         x: xpos,
         y: ypos
     }, function (new_win) {
-        pdgui.set_patchwin(cid, new_win);
+        if (type === "pd_canvas") {
+            pdgui.set_patchwin(cid, new_win);
+        } else {
+            pdgui.set_dialogwin(cid, new_win);
+        }
         new_win.on("loaded", function() {
             new_win.eval(null, eval_string);
         });

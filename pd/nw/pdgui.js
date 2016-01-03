@@ -812,6 +812,10 @@ exports.get_dialogwin = function(name) {
     return dialogwin[name];
 }
 
+exports.set_dialogwin = function(did, win) {
+    dialogwin[did] = win;
+}
+
 exports.remove_dialogwin = function(name) {
     dialogwin[name] = null;
 }
@@ -3171,7 +3175,7 @@ function gui_iemgui_dialog(did, attr_array) {
     //for (var i = 0; i < attr_array.length; i++) {
     //    attr_array[i] = '"' + attr_array[i] + '"';
     //}
-    dialogwin[did] = nw_create_window(did, "iemgui", 265, 450, 20, 20,
+    nw_create_window(did, "iemgui", 265, 450, 20, 20,
         attr_array_to_object(attr_array));
 }
 

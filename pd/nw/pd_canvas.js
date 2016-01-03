@@ -652,7 +652,7 @@ var canvas_events = (function() {
 // This gets called from the nw_create_window function in index.html
 // It provides us with our canvas id from the C side.  Once we have it
 // we can create the menu and register event callbacks
-function register_canvas_id(cid, attr_array) {
+function register_window_id(cid, attr_array) {
     name = cid; // hack
     // We create the window menus and popup menu before doing anything else
     // to ensure that we don't try to set the svg size before these are done.

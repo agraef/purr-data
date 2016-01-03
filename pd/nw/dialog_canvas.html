@@ -632,7 +632,7 @@ function init_arrays(attr_objects) {
 // This gets called from the nw_create_window function in index.html
 // It provides us with our window id from the C side.  Once we have it
 // we can create the menu and register event callbacks
-function register_canvas_id(gfxstub, attr_objects) {
+function register_window_id(gfxstub, attr_objects) {
     pd_object_callback = gfxstub;
     var canvas_fieldsets, i, prop;
     // attr_objects[0]: canvas properties
