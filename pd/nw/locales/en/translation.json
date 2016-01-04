@@ -243,6 +243,14 @@
     "devtools_tt": "Show the DevTools window (for debugging)"
   },
   "canvas": {
+    "save_dialog": {
+      "yes": "Yes",
+      "yes_tt": "Write the changes to file before closing the patch",
+      "no": "No",
+      "no_tt": "Don't save any changes, just close the patch",
+      "cancel": "Cancel",
+      "cancel_tt": "Don't save any changes, and don't close the patch"
+    },
     "prop": {
       "heading": {
         "gop": "appearance on parent",

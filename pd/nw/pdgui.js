@@ -388,7 +388,7 @@ function build_file_dialog_string(obj) {
 
 exports.build_file_dialog_string = build_file_dialog_string;
 
-function gui_canvas_saveas (name, initfile, initdir) {
+function gui_canvas_saveas (name, initfile, initdir, close_flag) {
     var input, chooser,
         span = patchwin[name].window.document.querySelector("#saveDialogSpan");
     if (!fs.existsSync(initdir)) {
@@ -411,7 +411,7 @@ function gui_canvas_saveas (name, initfile, initdir) {
     span.innerHTML = input;
     chooser = patchwin[name].window.document.querySelector("#saveDialog"); 
     chooser.onchange = function() {
-        saveas_callback(name, this.value);
+        saveas_callback(name, this.value, close_flag);
         // reset value so that we can open the same file twice
         this.value = null;
         console.log("tried to save something");
@@ -419,7 +419,7 @@ function gui_canvas_saveas (name, initfile, initdir) {
     chooser.click();
 }
 
-function saveas_callback(cid, file) {
+function saveas_callback(cid, file, close_flag) {
     var filename = file,
         directory = path.dirname(filename),
         basename = path.basename(filename);
@@ -428,7 +428,8 @@ function saveas_callback(cid, file) {
     if (filename === null) {
         return;
     }
-    pdsend(cid, "savetofile", enquote(basename), enquote(directory));
+    pdsend(cid, "savetofile", enquote(basename), enquote(directory),
+        close_flag);
 }
 
 exports.saveas_callback = saveas_callback;
@@ -498,15 +499,36 @@ function canvas_menuclose_callback(cid_for_dialog, cid, force) {
     // filename/args/dir which is ugly. Also, this should use the
     // html5 dialog-- or some CSS equivalent-- instead of the
     // confusing OK/Cancel javascript prompt.
-    var title = patchwin[cid_for_dialog].window.document.title,
-        reply = patchwin[cid_for_dialog].window
-                .confirm("Save changes to " + title + "?");
-    if (reply) {
-        pdsend(cid_for_dialog + " menusave");
+    var dialog = patchwin[cid_for_dialog].window.document.getElementById("save_before_quit"),
+        // hm... we messed up somewhere. It'd be better to set the document
+        // title so that we don't have to mess with nw.js-specific properties.
+        // Also, it's pretty shoddy to have to split on " * ", and to include
+        // the creation arguments in this dialog. We'd be better off storing
+        // the actual path and filename somewhere, then just fetching it here.
+        title = patchwin[cid_for_dialog].title.split(" * "),
+        dialog_file_slot = patchwin[cid_for_dialog].window.document.getElementById("save_before_quit_filename"),
+        no_button = patchwin[cid_for_dialog].window.document.getElementById("no_button"),
+        filename = title[0],
+        dir = title[1];
+    if (dir.charAt(0) === "(") {
+        dir = dir.slice(dir.indexOf(")")+4); // slice off ") - "
     } else {
-        pdsend(cid_for_dialog + " dirty 0");        
-        pdsend(cid + " menuclose " + force);
+        dir = dir.slice(2); // slice off "- "
     }
+    dialog_file_slot.textContent = filename;
+    dialog_file_slot.title = dir;
+    no_button.onclick = function() {
+        patchwin[cid_for_dialog].window.canvas_events.close_without_saving(cid, force);
+    };
+    dialog.showModal();
+//        reply = patchwin[cid_for_dialog].window
+//                .confirm("Save changes to " + title + "?");
+//    if (reply) {
+//        pdsend(cid_for_dialog + " menusave");
+//    } else {
+//        pdsend(cid_for_dialog + " dirty 0");
+//        pdsend(cid + " menuclose " + force);
+//    }
 }
 
 function gui_canvas_menuclose(cid_for_dialog, cid, force) {

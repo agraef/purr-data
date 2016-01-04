@@ -39,6 +39,31 @@
              value="Search"/>
       </input>
     </div>
+    <dialog id="save_before_quit">
+      <h4>Do you want to save the changes you made in
+        <span id="save_before_quit_filename"></span>?
+      </h4>
+      <div id="save_before_quit_filename"></div>
+      <div class="submit_buttons">
+        <button type="button"
+                id="yes_button"
+                onClick="canvas_events.save_and_close();"
+                data-i18n="[title]canvas.save_dialog.yes_tt">
+          <span data-i18n="canvas.save_dialog.yes"></span>
+        </button>
+        <button type="button"
+                id="no_button"
+                data-i18n="[title]canvas.save_dialog.no_tt">
+          <span data-i18n="canvas.save_dialog.no"></span>
+        </button>
+        <button type="button"
+                id="cancel_button"
+                onClick="close_save_dialog()"
+                data-i18n="[title]canvas.save_dialog.cancel_tt">
+          <span data-i18n="canvas.save_dialog.cancel"></span>
+        </button>
+      </div>
+    </dialog>
     <script type="text/javascript" src="./pd_canvas.js"></script>
   </body>
 </html>

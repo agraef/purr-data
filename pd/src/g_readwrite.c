@@ -763,7 +763,8 @@ extern void canvasgop_checksize(t_canvas *x);
 
     /* save a "root" canvas to a file; cf. canvas_saveto() which saves the
     body (and which is called recursively.) */
-static void canvas_savetofile(t_canvas *x, t_symbol *filename, t_symbol *dir)
+static void canvas_savetofile(t_canvas *x, t_symbol *filename, t_symbol *dir,
+    t_floatarg fdestroy)
 {
     t_binbuf *b = binbuf_new();
     canvas_savetemplatesto(x, b, 1);
@@ -783,27 +784,29 @@ static void canvas_savetofile(t_canvas *x, t_symbol *filename, t_symbol *dir)
         if (x->gl_isgraph)
             canvasgop_checksize(x);
         canvas_reload(filename, dir, &x->gl_gobj);
+        if (fdestroy != 0)
+            vmess(&x->gl_pd, gensym("menuclose"), "f", 1.);
     }
     binbuf_free(b);
 }
 
-static void canvas_menusaveas(t_canvas *x)
+static void canvas_menusaveas(t_canvas *x, t_floatarg fdestroy)
 {
     t_canvas *x2 = canvas_getrootfor(x);
-    gui_vmess("gui_canvas_saveas", "xss", x2, x2->gl_name->s_name, canvas_getdir(x2)->s_name);
+    gui_vmess("gui_canvas_saveas", "xssi", x2, x2->gl_name->s_name, canvas_getdir(x2)->s_name, fdestroy != 0);
 //    sys_vgui("pdtk_canvas_saveas .x%lx \"%s\" \"%s\"\n", x2,
 //        x2->gl_name->s_name, canvas_getdir(x2)->s_name);
 }
 
-static void canvas_menusave(t_canvas *x)
+static void canvas_menusave(t_canvas *x, t_floatarg fdestroy)
 {
     t_canvas *x2 = canvas_getrootfor(x);
     char *name = x2->gl_name->s_name;
     if (*name && strncmp(name, "Untitled", 8)
             && (strlen(name) < 4 || strcmp(name + strlen(name)-4, ".pat")
                 || strcmp(name + strlen(name)-4, ".mxt")))
-            canvas_savetofile(x2, x2->gl_name, canvas_getdir(x2));
-    else canvas_menusaveas(x2);
+            canvas_savetofile(x2, x2->gl_name, canvas_getdir(x2), fdestroy);
+    else canvas_menusaveas(x2, fdestroy);
 }
 
 void g_readwrite_setup(void)
@@ -815,12 +818,12 @@ void g_readwrite_setup(void)
     class_addmethod(canvas_class, (t_method)glist_mergefile,
         gensym("mergefile"), A_SYMBOL, A_DEFSYM, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_savetofile,
-        gensym("savetofile"), A_SYMBOL, A_SYMBOL, 0);
+        gensym("savetofile"), A_SYMBOL, A_SYMBOL, A_DEFFLOAT, 0);
     class_addmethod(canvas_class, (t_method)canvas_saveto,
         gensym("saveto"), A_CANT, 0);
 /* ------------------ from the menu ------------------------- */
     class_addmethod(canvas_class, (t_method)canvas_menusave,
-        gensym("menusave"), 0);
+        gensym("menusave"), A_DEFFLOAT, 0);
     class_addmethod(canvas_class, (t_method)canvas_menusaveas,
-        gensym("menusaveas"), 0);
+        gensym("menusaveas"), A_DEFFLOAT, 0);
 }

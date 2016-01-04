@@ -28,6 +28,10 @@ function add_keymods(key, evt) {
     return shift + ctrl + key;
 }
 
+function close_save_dialog() {
+    document.getElementById("save_before_quit").close();
+}
+
 function text_to_fudi(text) {
     text = text.trim();
     text = text.replace(/(\$[0-9]+)/g, "\\$1");    // escape dollar signs
@@ -444,7 +448,7 @@ var canvas_events = (function() {
     // with nwworkingdir
     document.querySelector("#saveDialog").addEventListener("change",
         function(evt) {
-            pdgui.saveas_callback(name, this.value);
+            pdgui.saveas_callback(name, this.value, 0);
             // reset value so that we can open the same file twice
             this.value = null;
             console.log("tried to save something");
@@ -645,9 +649,31 @@ var canvas_events = (function() {
                 scalar_draggables[id] = null;
             }
         },
-        clickable_resize_handle: false // this can be removed...
+        clickable_resize_handle: false, // this can be removed...
+        save_and_close: function() {
+            pdgui.pdsend(name, "menusave", 1);
+        },
+        close_without_saving: function(cid, force) {
+            pdgui.pdsend(name, "dirty 0");
+            pdgui.pdsend(cid, "menuclose", force);
+        }
     }
 }());
+
+// Stop-gap translator. We copy/pasted this in each dialog, too. It
+// should be moved to pdgui.js
+function translate_form() {
+    var i
+    var elements = document.querySelectorAll("[data-i18n]");
+    for (i = 0; i < elements.length; i++) {
+        var data = elements[i].dataset.i18n;
+        if (data.slice(0,7) === "[title]") {
+            elements[i].title = l(data.slice(7));
+        } else {
+            elements[i].textContent = l(data);
+        }
+    }
+}
 
 // This gets called from the nw_create_window function in index.html
 // It provides us with our canvas id from the C side.  Once we have it
@@ -667,6 +693,7 @@ function register_window_id(cid, attr_array) {
     }
     create_popup_menu(cid);
     canvas_events.register(cid);
+    translate_form();
     // Trigger a "focus" event so that OSX updates the menu for this window
     nw_window_focus_callback();
     canvas_events.normal();
