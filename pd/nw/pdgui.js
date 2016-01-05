@@ -2372,7 +2372,6 @@ function gui_iemgui_label_show_drag_handle(cid, tag, state, x, y) {
             class: (cid === tag) ? "gop_drag_handle" : "label_drag_handle"
         });
         gobj.appendChild(rect);
-        patchwin[cid].window.canvas_events.clickable_resize_handle = true;
     } else {
         if (gobj) {
             rect = gobj.getElementsByClassName((cid === tag) ?
@@ -2381,8 +2380,6 @@ function gui_iemgui_label_show_drag_handle(cid, tag, state, x, y) {
             // Need to check for null here...
             if (rect) {
                 rect.parentNode.removeChild(rect);
-                patchwin[cid].window.canvas_events.clickable_resize_handle =
-                    false;
             } else {
                 post("couldnt delete the iemgui drag handle!");
             }

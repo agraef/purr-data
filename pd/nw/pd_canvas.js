@@ -649,7 +649,6 @@ var canvas_events = (function() {
                 scalar_draggables[id] = null;
             }
         },
-        clickable_resize_handle: false, // this can be removed...
         save_and_close: function() {
             pdgui.pdsend(name, "menusave", 1);
         },
