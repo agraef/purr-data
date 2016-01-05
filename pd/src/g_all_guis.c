@@ -696,20 +696,6 @@ int   maxi(int   a, int   b) {return a>b?a:b;}
 float minf(float a, float b) {return a<b?a:b;}
 float maxf(float a, float b) {return a>b?a:b;}
 
-// in all 20 cases :
-// [bng], [tgl], [hradio], [vradio], [hsl], [vsl], [cnv], [nbx], [vu]
-// for both scale & label, plus canvas' scale & move.
-void scalehandle_bind(t_scalehandle *h) {
-    //sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
-    //    h->h_pathname, h->h_bindsym->s_name);
-    //sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
-    //    h->h_pathname, h->h_bindsym->s_name);
-    //sys_vgui("bind %s <Motion> {pd [concat %s _motion %%x %%y \\;]}\n",
-    //    h->h_pathname, h->h_bindsym->s_name);
-    gui_vmess("gui_add_iemgui_label_resize_listener", "xs",
-        h->h_glist, h->h_pathname);
-}
-
 // in 18 cases only, because canvas does not fit the pattern below.
 // canvas has no label handle and has a motion handle
 // but in the case of canvas, the "iemgui" tag is added (it wasn't the case originally)
@@ -765,7 +751,6 @@ void scalehandle_draw_select(t_scalehandle *h, int px, int py) {
         sprintf(tagbuf, "x%lx", (long unsigned int)x);
         gui_vmess("gui_iemgui_label_show_drag_handle", "xsiii",
             canvas, tagbuf, 1, px - sx, py - sy);
-        scalehandle_bind(h);
         h->h_vis = 1;
     /* not yet (this is not supported by the current implementation) */
     }/* else {
