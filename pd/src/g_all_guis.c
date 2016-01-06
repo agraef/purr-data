@@ -701,63 +701,29 @@ float maxf(float a, float b) {return a>b?a:b;}
 // but in the case of canvas, the "iemgui" tag is added (it wasn't the case originally)
 void scalehandle_draw_select(t_scalehandle *h, int px, int py) {
     char tagbuf[MAXPDSTRING];
-    char tags[128]; // BNG may need up to 100 chars in 64-bit mode, for example
     t_object *x = h->h_master;
     t_canvas *canvas=glist_getcanvas(h->h_glist);
 
-    //int px,py;
-    //t_class *c = pd_class((t_pd *)x);
-    //if (h->h_scale) {
-    //    int x1,y1,x2,y2;
-    //    c->c_wb->w_getrectfn((t_gobj *)x,canvas,&x1,&y1,&x2,&y2);
-    //    px=x2-x1; py=y2-y1;
-    //} else if (c==canvas_class) {  
-    //} else {
-    //    px=x->x_ldx; py=x->x_ldy;
-    //}
-
-    const char *cursor = h->h_scale ? "bottom_right_corner" : "crosshair";
     int sx = h->h_scale ? SCALEHANDLE_WIDTH  : LABELHANDLE_WIDTH;
     int sy = h->h_scale ? SCALEHANDLE_HEIGHT : LABELHANDLE_HEIGHT;
 
     scalehandle_draw_erase(h);
 
     if (!h->h_vis) {
-        sys_vgui("canvas %s -width %d -height %d -bg $pd_colors(selection) -bd 0 "
-            "-cursor %s\n", h->h_pathname, sx, sy, cursor);
-        if (h->h_scale) {
-            sprintf(tags,"x%lx %lxSCALE iemgui selected", (long)x,(long)x);
-        } else {
-            sprintf(tags,"x%lx %lx%s iemgui selected", (long)x,
-                (long)x,pd_class((t_pd *)x)==canvas_class?"MOVE":"LABELH");
-        }
-        int xpos = 0, ypos = 0;
-        if (pd_class((t_pd *)x) == canvas_class)
-        {
-            xpos = x->te_xpix;
-            ypos = x->te_ypix;
-        }
-        else
-        {
-            t_iemgui *y = (t_iemgui *)(h->h_master);
-            xpos = text_xpix(&y->x_obj, y->x_glist);
-            ypos = text_ypix(&y->x_obj, y->x_glist);
-        }
-        sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d "
-            "-window %s -tags {%s}\n", canvas,
-            xpos+px-sx, ypos+py-sy, sx, sy,
-            h->h_pathname, tags);
-
         sprintf(tagbuf, "x%lx", (long unsigned int)x);
-        gui_vmess("gui_iemgui_label_show_drag_handle", "xsiii",
-            canvas, tagbuf, 1, px - sx, py - sy);
-        h->h_vis = 1;
-    /* not yet (this is not supported by the current implementation) */
-    }/* else {
-        sys_vgui(".x%x.c coords %s %d %d\n", canvas, h->h_pathname,
-            x->te_xpix+px-sx, x->te_ypix+py-sy);
-        sys_vgui("raise %s\n", h->h_pathname);
-    }*/
+        /* A hack to keep from drawing a bunch of iemgui label handles
+           in a large selection. Here we just draw one on the first
+           iemgui in the selection, or-- it's a canvas-- we draw it
+           on the gop rectangle */
+        if (pd_class((t_pd *)x) == canvas_class || 
+                (canvas->gl_editor && canvas->gl_editor->e_selection &&
+                 !canvas->gl_editor->e_selection->sel_next))
+        {
+            gui_vmess("gui_iemgui_label_show_drag_handle", "xsiii",
+                canvas, tagbuf, 1, px - sx, py - sy);
+            h->h_vis = 1;
+        }
+    }
 }
 
 extern t_class *my_canvas_class;
