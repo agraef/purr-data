@@ -2131,6 +2131,8 @@ void canvasgop__clickhook(t_scalehandle *sh, int newstate)
         }
         else //enter if move_gop hook
         {// this block is similar to scalehandle_unclick_label but not enough
+         // We've actually removed scalehandle_unclick_label everywhere, so
+         // check to see whether this can be removed as well...
             canvas_undo_add(x, 8, "apply", canvas_undo_set_canvas(x));
             if (sh->h_dragx || sh->h_dragy) 
             {

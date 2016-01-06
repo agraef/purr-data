@@ -239,7 +239,6 @@ EXTERN t_scalehandle *scalehandle_new(t_object *x, t_glist *glist, int scale, t_
 EXTERN void scalehandle_free(t_scalehandle *h);
 EXTERN void properties_set_field_int(long props, const char *gui_field, int value);
 EXTERN void scalehandle_dragon_label(t_scalehandle *h, float f1, float f2);
-EXTERN void scalehandle_unclick_label(t_scalehandle *h);
 EXTERN void scalehandle_click_label(t_scalehandle *h);
 EXTERN void scalehandle_click_scale(t_scalehandle *h);
 EXTERN void scalehandle_unclick_scale(t_scalehandle *h);

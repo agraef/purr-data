@@ -808,7 +808,6 @@ void scalehandle_dragon_label(t_scalehandle *h, float mouse_x, float mouse_y) {
         h->h_dragx = dx;
         h->h_dragy = dy;
 
-
         int properties = gfxstub_haveproperties((void *)x);
         if (properties)
         {
@@ -817,11 +816,8 @@ void scalehandle_dragon_label(t_scalehandle *h, float mouse_x, float mouse_y) {
             properties_set_field_int(properties,"label.xy.x_entry",new_x);
             properties_set_field_int(properties,"label.xy.y_entry",new_y);
         }
-
         x->x_ldx += dx;
         x->x_ldy += dy;
-
-
 
         if (glist_isvisible(x->x_glist))
         {
@@ -829,32 +825,15 @@ void scalehandle_dragon_label(t_scalehandle *h, float mouse_x, float mouse_y) {
             int ypos=text_ypix(&x->x_obj, x->x_glist);
             //iemgui_getrect_legacy_label(x, &xpos, &ypos);
             t_canvas *canvas=glist_getcanvas(x->x_glist);
-            sys_vgui(".x%lx.c coords %lxLABEL %d %d\n", canvas, x,
-                xpos+x->x_ldx + h->h_dragx,
-                ypos+x->x_ldy + h->h_dragy);
+            //sys_vgui(".x%lx.c coords %lxLABEL %d %d\n", canvas, x,
+            //    xpos+x->x_ldx + h->h_dragx,
+            //    ypos+x->x_ldy + h->h_dragy);
             gui_vmess("gui_iemgui_label_coords", "xxii",
                 canvas,
                 x,
                 x->x_ldx,
                 x->x_ldy);
         }
-    }
-}
-
-void scalehandle_unclick_label(t_scalehandle *h) {
-    t_iemgui *x = (t_iemgui *)h->h_master;
-    canvas_apply_setundo(x->x_glist, (t_gobj *)x);
-    if (h->h_dragx || h->h_dragy)
-    {
-        x->x_ldx += h->h_dragx;
-        x->x_ldy += h->h_dragy;
-        canvas_dirty(x->x_glist, 1);
-    }
-    if (glist_isvisible(x->x_glist))
-    {
-        iemgui_select((t_gobj *)x, x->x_glist, 1);
-        canvas_fixlinesfor(x->x_glist, (t_text *)x);
-        canvas_getscroll(x->x_glist);
     }
 }
 
@@ -943,8 +922,6 @@ static void scalehandle_motionhook(t_scalehandle *h,
 void iemgui__clickhook3(t_scalehandle *sh, int newstate) {
     if (!sh->h_dragon && newstate && sh->h_scale)
         scalehandle_click_scale(sh);
-    else if (sh->h_dragon && newstate == 0 && !sh->h_scale)
-        scalehandle_unclick_label(sh);
     else if (!sh->h_dragon && newstate && !sh->h_scale)
         scalehandle_click_label(sh);
     sh->h_dragon = newstate;
