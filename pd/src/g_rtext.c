@@ -570,7 +570,7 @@ void rtext_select(t_rtext *x, int state)
 void rtext_activate(t_rtext *x, int state)
 {
     //fprintf(stderr,"rtext_activate state=%d\n", state);
-    int w = 0, h = 0, widthspec, indx;
+    int w = 0, h = 0, widthspec, heightspec, indx, isgop;
     t_glist *glist = x->x_glist;
     t_canvas *canvas = glist_getcanvas(glist);
     //if (state && x->x_active) printf("duplicate rtext_activate\n");
@@ -606,19 +606,35 @@ void rtext_activate(t_rtext *x, int state)
        the box position follows the mouse
     */
 
-    widthspec = x->x_text->te_width; // width if any specified
+    /* If we're a gop canvas... */
+    if (pd_class((t_pd*)x->x_text) == canvas_class &&
+        ((t_canvas *)x->x_text)->gl_isgraph)
+    {
+        widthspec = ((t_canvas *)x->x_text)->gl_pixwidth;
+        heightspec = ((t_canvas *)x->x_text)->gl_pixheight;
+        isgop = 1;
+    }
+    else
+    {
+        widthspec = x->x_text->te_width; // width if any specified
+        heightspec = -1; // signal that we don't have a heightspec
+        isgop = 0;
+    }
+
     /* we need to get scroll to make sure we've got the
        correct bbox for the svg */
     canvas_getscroll(glist_getcanvas(canvas));
-    gui_vmess("gui_textarea", "xssiiisii",
+    gui_vmess("gui_textarea", "xssiiiisiii",
         canvas,
         x->x_tag,
         (pd_class((t_pd *)x->x_text) == message_class ? "msg" : "obj"),
         x->x_text->te_xpix,
         x->x_text->te_ypix,
         widthspec,
+        heightspec,
         x->x_buf,
         sys_hostfontsize(glist_getfont(glist)),
+        isgop,
         state);
 }
 

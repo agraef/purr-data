@@ -3412,8 +3412,8 @@ function shove_svg_background_data_into_css(w) {
     tail_style.backgroundImage = generate_msg_box_bg_data("tail", stroke);
 }
 
-function gui_textarea(cid, tag, type, x, y, max_char_width, text,
-    font_size, state) {
+function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
+    font_size, is_gop, state) {
     var range, svg_view, p,
         gobj = get_gobj(cid, tag);
     if (state !== 0) {
@@ -3444,9 +3444,15 @@ function gui_textarea(cid, tag, type, x, y, max_char_width, text,
             text_line_height_kludge(font_size, "pd") + "px");
         p.style.setProperty("transform", "translate(0px, 0px)");
         p.style.setProperty("max-width",
-            max_char_width === 0 ? "60ch" : max_char_width + "ch");
+            width_spec === 0 || is_gop == 0 ? "60ch" :
+                width_spec + "ch");
         p.style.setProperty("min-width",
-            max_char_width === 0 ? "3ch" : max_char_width + "ch");
+            width_spec <= 0 ? "3ch" :
+                (is_gop == 1 ? width_spec + "px" :
+                    width_spec + "ch"));
+        if (is_gop == 1) {
+            p.style.setProperty("min-height", height_spec + "px");
+        }
         // set backgroundimage for message box
         if (type === "msg") {
             shove_svg_background_data_into_css(patchwin[cid].window);

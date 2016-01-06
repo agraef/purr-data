@@ -103,7 +103,7 @@
     display: table-cell;
     padding: 3px 2px 3px 2px;
     /* box-shadow: inset 1px 0px 0px 1px #000; */
-    background-color: white;
+    background-color: transparent;
     white-space: normal;
     word-wrap: break-word;
     -webkit-margin-before: 0px;
