@@ -124,7 +124,7 @@ var canvas_events = (function() {
                 var target_id;
                 if (target_is_scrollbar(evt)) {
                     return;
-                } else if (evt.target.id === "clickable_resize_handle") {
+                } else if (evt.target.classList.contains("clickable_resize_handle")) {
                     // get id ("x123456etcgobj" without the "x" or "gobj")
                     target_id = "_h" +
                         evt.target.parentNode.id.slice(0,-4).slice(1);
@@ -404,7 +404,7 @@ var canvas_events = (function() {
                 var dx = (evt.pageX + svg_view.x) - last_draggable_x,
                     dy = (evt.pageY + svg_view.y) - last_draggable_y,
                     handle_elem =
-                        document.getElementById("clickable_resize_handle"),
+                        document.querySelector(".clickable_resize_handle"),
                     target_id = "_h" +
                         handle_elem.parentNode.id.slice(0,-4).slice(1),
                     is_canvas_gop_rect = document.

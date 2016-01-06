@@ -711,18 +711,9 @@ void scalehandle_draw_select(t_scalehandle *h, int px, int py) {
 
     if (!h->h_vis) {
         sprintf(tagbuf, "x%lx", (long unsigned int)x);
-        /* A hack to keep from drawing a bunch of iemgui label handles
-           in a large selection. Here we just draw one on the first
-           iemgui in the selection, or-- it's a canvas-- we draw it
-           on the gop rectangle */
-        if (pd_class((t_pd *)x) == canvas_class || 
-                (canvas->gl_editor && canvas->gl_editor->e_selection &&
-                 !canvas->gl_editor->e_selection->sel_next))
-        {
-            gui_vmess("gui_iemgui_label_show_drag_handle", "xsiii",
-                canvas, tagbuf, 1, px - sx, py - sy);
-            h->h_vis = 1;
-        }
+        gui_vmess("gui_iemgui_label_show_drag_handle", "xsiii",
+            canvas, tagbuf, 1, px - sx, py - sy);
+        h->h_vis = 1;
     }
 }
 

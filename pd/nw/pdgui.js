@@ -2368,9 +2368,9 @@ function gui_iemgui_label_show_drag_handle(cid, tag, state, x, y) {
             y: y + 3,
             width: 7,
             height: 7,
-            id: "clickable_resize_handle",
             class: (cid === tag) ? "gop_drag_handle" : "label_drag_handle"
         });
+        rect.classList.add("clickable_resize_handle");
         gobj.appendChild(rect);
     } else {
         if (gobj) {
