@@ -732,10 +732,11 @@ void scalehandle_draw_select2(t_iemgui *x) {
     t_canvas *canvas=glist_getcanvas(x->x_glist);
     t_class *c = pd_class((t_pd *)x);
     int sx,sy;
-    if (c==my_canvas_class)
+    if (c == my_canvas_class)
     {
         t_my_canvas *y = (t_my_canvas *)x;
-        sx=y->x_vis_w; sy=y->x_vis_h;
+        sx = y->x_vis_w;
+        sy = y->x_vis_h;
     }
     else
     {
@@ -746,17 +747,14 @@ void scalehandle_draw_select2(t_iemgui *x) {
     }
     /* we're not drawing the scalehandle for the actual iemgui-- just
        the one for the label. */
-//    scalehandle_draw_select(x->x_handle,sx-1,sy-1);
-    if (x->x_lab!=s_empty)
+    //scalehandle_draw_select(x->x_handle,sx-1,sy-1);
+    if (x->x_lab != s_empty)
         scalehandle_draw_select(x->x_lhandle,x->x_ldx,x->x_ldy);
 }
 
 void scalehandle_draw_erase(t_scalehandle *h) {
-    t_canvas *canvas=glist_getcanvas(h->h_glist);
+    t_canvas *canvas = glist_getcanvas(h->h_glist);
     if (!h->h_vis) return;
-    sys_vgui("destroy %s\n", h->h_pathname);
-    sys_vgui(".x%lx.c delete %lx%s\n", canvas, h->h_master,
-        h->h_scale ? "SCALE" : pd_class((t_pd *)h->h_master)==canvas_class?"MOVE":"LABELH");
     gui_vmess("gui_iemgui_label_show_drag_handle", "xxiii",
         h->h_glist, h->h_master, 0, 0, 0);
     h->h_vis = 0;
