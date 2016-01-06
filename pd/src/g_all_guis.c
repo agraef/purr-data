@@ -906,7 +906,6 @@ static void scalehandle_clickhook(t_scalehandle *h, t_floatarg f,
     h->h_offset_x=xxx;
     h->h_offset_y=yyy;
     h->h_clickfn(h,f);
-    
 }
 
 static void scalehandle_motionhook(t_scalehandle *h,
@@ -916,7 +915,6 @@ static void scalehandle_motionhook(t_scalehandle *h,
     // Now set the offset to the new mouse position
     h->h_offset_x = f1;
     h->h_offset_y = f2;
-
 }
 
 void iemgui__clickhook3(t_scalehandle *sh, int newstate) {
@@ -932,7 +930,7 @@ void iemgui__clickhook3(t_scalehandle *sh, int newstate) {
 // drawn when object is selected on its canvas (instead of GOP)
 static void scalehandle_check_and_redraw(t_iemgui *x)
 {
-    if(x->x_selected == x->x_glist)
+    if (x->x_selected == x->x_glist)
         scalehandle_draw_select2(x);
 }
 
@@ -941,7 +939,7 @@ static void scalehandle_check_and_redraw(t_iemgui *x)
 
 void iemgui_tag_selected(t_iemgui *x) {
     t_canvas *canvas=glist_getcanvas(x->x_glist);
-    if(x->x_selected)
+    if (x->x_selected)
     {
         //sys_vgui(".x%lx.c addtag selected withtag x%lx\n", canvas, x);
         gui_vmess("gui_gobj_select", "xx", canvas, x);
