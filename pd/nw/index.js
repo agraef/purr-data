@@ -357,10 +357,10 @@ function pdmenu_irc () {
 }
 
 function minit(menu_item, options) {
-    var o;
-    for (o in options) {
-        if (options.hasOwnProperty(o)) {
-            menu_item[o] = options[o];
+    var key;
+    for (key in options) {
+        if (options.hasOwnProperty(key)) {
+            menu_item[key] = options[key];
         }
     }
 }

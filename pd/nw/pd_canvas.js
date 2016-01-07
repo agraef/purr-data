@@ -785,10 +785,20 @@ function menu_generic () {
 }
 
 function minit(menu_item, options) {
-    var o;
-    for (o in options) {
-        if (options.hasOwnProperty(o)) {
-            menu_item[o] = options[o];
+    var key;
+    for (key in options) {
+        if (options.hasOwnProperty(key)) {
+            // For click callbacks, we want to check if canvas state is
+            // "none", in which case we don't call them. This is just a
+            // hack, though-- it'd be a better UX to disable all menu items
+            // when we're in the "none" state.
+            menu_item[key] = (key !== "click") ?
+                options[key] :
+                function() {
+                    if (canvas_events.get_state() !== "none") {
+                        options[key]();
+                    }
+            };
         }
     }
 }
