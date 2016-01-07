@@ -164,6 +164,8 @@ static void bng__motionhook(t_scalehandle *sh,
         x2 = x1 + width;
         y2 = y1 + height;
 
+        /* This is convoluted, but I can't think of another
+           way to get this behavior... */
         if (mouse_x <= x2)
         {
             if (mouse_y > y2)

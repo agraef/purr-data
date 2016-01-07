@@ -883,7 +883,7 @@ void scalehandle_click_scale(t_scalehandle *h) {
 // they are on their own canvas
 void scalehandle_unclick_scale(t_scalehandle *h) {
     t_iemgui *x = (t_iemgui *)h->h_master;
-    sys_vgui(".x%x.c delete %s\n", x->x_glist, h->h_outlinetag);
+    //sys_vgui(".x%x.c delete %s\n", x->x_glist, h->h_outlinetag);
     iemgui_io_draw_move(x);
     iemgui_select((t_gobj *)x, x->x_glist, 1);
     canvas_fixlinesfor(x->x_glist, (t_text *)x);

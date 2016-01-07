@@ -165,19 +165,12 @@ static void slider__motionhook(t_scalehandle *sh, t_floatarg mouse_x, t_floatarg
     if (sh->h_scale)
     {
         t_slider *x = (t_slider *)(sh->h_master);
-        int dx = (int)(mouse_x - sh->h_offset_x),
-            dy = (int)(mouse_y - sh->h_offset_y);
-        int minx = x->x_orient ? IEM_GUI_MINSIZE : IEM_SL_MINSIZE;
-        int miny = x->x_orient ? IEM_SL_MINSIZE : IEM_GUI_MINSIZE;
-        
-        dx = maxi(dx,minx-x->x_gui.x_w);
-        dy = maxi(dy,miny-x->x_gui.x_h);
-        sh->h_dragx = dx;
-        sh->h_dragy = dy;
-        scalehandle_drag_scale(sh);
-
-        x->x_gui.x_w += dx;
-        x->x_gui.x_h += dy;
+        int width = mouse_x - text_xpix(&x->x_gui.x_obj, x->x_gui.x_glist),
+            height = mouse_y - text_ypix(&x->x_gui.x_obj, x->x_gui.x_glist),
+            minx = x->x_orient ? IEM_GUI_MINSIZE : IEM_SL_MINSIZE,
+            miny = x->x_orient ? IEM_SL_MINSIZE : IEM_GUI_MINSIZE;
+        x->x_gui.x_w = maxi(width, minx);
+        x->x_gui.x_h = maxi(height, miny);
 
         if (glist_isvisible(x->x_gui.x_glist))
         {

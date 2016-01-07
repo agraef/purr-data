@@ -2081,6 +2081,7 @@ void canvasgop_checksize(t_canvas *x)
 
 void canvasgop__clickhook(t_scalehandle *sh, int newstate)
 {
+post("canvas clickhook");
     t_canvas *x = (t_canvas *)(sh->h_master);
     if (sh->h_dragon && newstate == 0)
     {
@@ -2177,7 +2178,8 @@ void canvasgop__clickhook(t_scalehandle *sh, int newstate)
     sh->h_dragon = newstate;
 }
 
-void canvasgop__motionhook(t_scalehandle *sh,t_floatarg mouse_x, t_floatarg mouse_y)
+void canvasgop__motionhook(t_scalehandle *sh, t_floatarg mouse_x,
+    t_floatarg mouse_y)
 {
     t_canvas *x = (t_canvas *)(sh->h_master);
     int dx = (int)mouse_x - sh->h_offset_x,
@@ -2185,40 +2187,18 @@ void canvasgop__motionhook(t_scalehandle *sh,t_floatarg mouse_x, t_floatarg mous
     
     if (sh->h_dragon)
     {
-        if(sh->h_scale) //enter if resize_gop hook
+        if (sh->h_scale) //enter if resize_gop hook
         {
-            int sx = maxi(SCALE_GOP_MINWIDTH ,x->gl_pixwidth + dx);
-            int sy = maxi(SCALE_GOP_MINHEIGHT,x->gl_pixheight + dy);
-            //int x1=0, y1=0, x2=0, y2=0;
-            // if text is not hidden, use it as min height & width.
-            /*if (!x->gl_hidetext)
-            {
-                if (x->gl_owner)
-                    gobj_getrect((t_gobj*)x, x->gl_owner, &x1, &y1, &x2, &y2);
-                else
-                    graph_checkgop_rect((t_gobj*)x, x, &x1, &y1, &x2, &y2);
-                sx = maxi(sx,x2-x1);
-                sy = maxi(sy,y2-y1);
-            }*/ // does not work, needs a gobj_getrect that does not use pixwidth & pixheight
-
-            x->gl_pixwidth = sx;
-            x->gl_pixheight= sy;
-
-            int newx = sx;
-            int newy = sy;
-
-            //sys_vgui(".x%x.c coords %s %d %d %d %d\n",
-            //    x, sh->h_outlinetag, x->gl_xmargin, x->gl_ymargin, newx, newy);
+            int width = mouse_x - x->gl_xmargin,
+                height = mouse_y - x->gl_ymargin;
+            x->gl_pixwidth = width = maxi(SCALE_GOP_MINWIDTH, width);
+            x->gl_pixheight = height = maxi(SCALE_GOP_MINHEIGHT, height);
             gui_vmess("gui_canvas_redrect_coords", "xiiii",
                 x,
                 x->gl_xmargin,
                 x->gl_ymargin,
-                x->gl_xmargin + newx,
-                x->gl_ymargin + newy);
-
-            sh->h_dragx = sx-x->gl_pixwidth;
-            sh->h_dragy = sy-x->gl_pixheight;
-
+                x->gl_xmargin + width,
+                x->gl_ymargin + height);
             int properties = gfxstub_haveproperties((void *)x);
             if (properties)
             {
@@ -2238,16 +2218,12 @@ void canvasgop__motionhook(t_scalehandle *sh,t_floatarg mouse_x, t_floatarg mous
                 properties_set_field_int(properties,
                     "n.canvasdialog.y.f2.entry4",x->gl_ymargin + dy);
             }
-
             x->gl_xmargin += dx;
             x->gl_ymargin += dy;
 
             int x1 = x->gl_xmargin, x2 = x1+x->gl_pixwidth;
             int y1 = x->gl_ymargin, y2 = y1+x->gl_pixheight;
 
-
-            //sys_vgui(".x%x.c coords GOP %d %d %d %d %d %d %d %d %d %d\n",
-            //            x, x1, y1, x2, y1, x2, y2, x1, y2, x1, y1);
             gui_vmess("gui_canvas_redrect_coords", "xiiii",
                 x, x1, y1, x2, y2);
             sh->h_dragx = dx;
