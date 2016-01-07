@@ -499,15 +499,20 @@ function canvas_menuclose_callback(cid_for_dialog, cid, force) {
     // filename/args/dir which is ugly. Also, this should use the
     // html5 dialog-- or some CSS equivalent-- instead of the
     // confusing OK/Cancel javascript prompt.
-    var dialog = patchwin[cid_for_dialog].window.document.getElementById("save_before_quit"),
+    var nw = patchwin[cid_for_dialog],
+        w = nw.window,
+        doc = w.document,
+        dialog = doc.getElementById("save_before_quit"),
         // hm... we messed up somewhere. It'd be better to set the document
         // title so that we don't have to mess with nw.js-specific properties.
         // Also, it's pretty shoddy to have to split on " * ", and to include
         // the creation arguments in this dialog. We'd be better off storing
         // the actual path and filename somewhere, then just fetching it here.
-        title = patchwin[cid_for_dialog].title.split(" * "),
-        dialog_file_slot = patchwin[cid_for_dialog].window.document.getElementById("save_before_quit_filename"),
-        no_button = patchwin[cid_for_dialog].window.document.getElementById("no_button"),
+        title = nw.title.split(" * "),
+        dialog_file_slot = doc.getElementById("save_before_quit_filename"),
+        yes_button = doc.getElementById("yes_button"),
+        no_button = doc.getElementById("no_button"),
+        cancel_button = doc.getElementById("cancel_button"),
         filename = title[0],
         dir = title[1];
     if (dir.charAt(0) === "(") {
@@ -517,13 +522,25 @@ function canvas_menuclose_callback(cid_for_dialog, cid, force) {
     }
     dialog_file_slot.textContent = filename;
     dialog_file_slot.title = dir;
-    no_button.onclick = function() {
-        patchwin[cid_for_dialog].window.canvas_events.close_without_saving(cid, force);
+    yes_button.onclick = function() {
+        w.canvas_events.save_and_close();
     };
+    no_button.onclick = function() {
+        w.canvas_events.close_without_saving(cid, force);
+    };
+    cancel_button.onclick = function() {
+        w.close_save_dialog();
+        w.canvas_events[w.canvas_events.get_previous_state()]();
+    }
+
     // Boy does this seem wrong-- restore() brings the window to the front of
     // the stacking order. But that is really the job of focus(). This works
     // under Ubuntu-- need to test it on OSX...
-    patchwin[cid_for_dialog].restore();
+    nw.restore();
+    // Turn off events so that the user doesn't change the canvas state--
+    // we actually need to disable the menubar items, too, but we haven't
+    // done that yet.
+    w.canvas_events.none();
     dialog.showModal();
 }
 
