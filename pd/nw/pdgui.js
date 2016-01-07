@@ -520,15 +520,11 @@ function canvas_menuclose_callback(cid_for_dialog, cid, force) {
     no_button.onclick = function() {
         patchwin[cid_for_dialog].window.canvas_events.close_without_saving(cid, force);
     };
+    // Boy does this seem wrong-- restore() brings the window to the front of
+    // the stacking order. But that is really the job of focus(). This works
+    // under Ubuntu-- need to test it on OSX...
+    patchwin[cid_for_dialog].restore();
     dialog.showModal();
-//        reply = patchwin[cid_for_dialog].window
-//                .confirm("Save changes to " + title + "?");
-//    if (reply) {
-//        pdsend(cid_for_dialog + " menusave");
-//    } else {
-//        pdsend(cid_for_dialog + " dirty 0");
-//        pdsend(cid + " menuclose " + force);
-//    }
 }
 
 function gui_canvas_menuclose(cid_for_dialog, cid, force) {
