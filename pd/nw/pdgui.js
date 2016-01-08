@@ -3200,7 +3200,6 @@ function gui_gatom_activate(cid, tag, state) {
     } else {
         g.classList.remove("activated");
     }
-    post("activating gatom: cid is " + cid + " and tag is " + tag + " and t is " + t);
 }
 
 function gui_iemgui_dialog(did, attr_array) {

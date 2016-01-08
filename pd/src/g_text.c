@@ -1039,7 +1039,9 @@ static void gatom_key(void *z, t_floatarg f)
         gatom_bang(x);
         gatom_retext(x, 1, 1);
         x->a_buf[0] = 0;
-        glist_grab(x->a_glist, 0, 0, 0, 0, 0);
+        /* We want to keep grabbing the keyboard after hitting "Enter", so
+           we're commenting the following out */
+        //glist_grab(x->a_glist, 0, 0, 0, 0, 0);
     }
     else if (len < (ATOMBUFSIZE-1))
     {
