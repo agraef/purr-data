@@ -1820,8 +1820,8 @@ static int text_click(t_gobj *z, struct _glist *glist,
         {
             //fprintf(stderr,"atom click\n");
             /* Change the gatom blue when it's clicked? Need to test... */
-            sys_vgui(".x%lx.c itemconfigure %s -fill %s\n", canvas, 
-                rtext_gettag(y), "$pd_colors(selection)");
+            //sys_vgui(".x%lx.c itemconfigure %s -fill %s\n", canvas,
+            //    rtext_gettag(y), "$pd_colors(selection)");
             gui_vmess("gui_gatom_activate", "xsi",
                 canvas,
                 rtext_gettag(y),
