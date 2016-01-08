@@ -3193,6 +3193,16 @@ function gui_gatom_dialog(did, attr_array) {
         attr_array_to_object(attr_array));
 }
 
+function gui_gatom_activate(cid, tag, state) {
+    var g = get_gobj(cid, tag);
+    if (state !== 0) {
+        g.classList.add("activated");
+    } else {
+        g.classList.remove("activated");
+    }
+    post("activating gatom: cid is " + cid + " and tag is " + tag + " and t is " + t);
+}
+
 function gui_iemgui_dialog(did, attr_array) {
     //for (var i = 0; i < attr_array.length; i++) {
     //    attr_array[i] = '"' + attr_array[i] + '"';

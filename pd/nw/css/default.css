@@ -264,6 +264,11 @@ text {
     fill: blue;
 }
 
+/* gatom "activated" text (i.e., when it has the keyboard focus) */
+.atom.activated text {
+    fill: red;
+}
+
 /* test of xlet hover animation... this should 
    probably use the web animation API instead. That
    way the animation won't get cut off when you

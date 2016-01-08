@@ -878,6 +878,10 @@ static void gatom_retext(t_gatom *x, int senditup, int recolor)
     {
         //sys_vgui(".x%lx.c itemconfigure %s -fill %s\n", canvas, 
         //    rtext_gettag(y), "$pd_colors(text)");
+        gui_vmess("gui_gatom_activate", "xsi",
+            canvas,
+            rtext_gettag(y),
+            0);
     }
     binbuf_clear(x->a_text.te_binbuf);
     binbuf_add(x->a_text.te_binbuf, 1, &x->a_atom);
@@ -1818,6 +1822,10 @@ static int text_click(t_gobj *z, struct _glist *glist,
             /* Change the gatom blue when it's clicked? Need to test... */
             sys_vgui(".x%lx.c itemconfigure %s -fill %s\n", canvas, 
                 rtext_gettag(y), "$pd_colors(selection)");
+            gui_vmess("gui_gatom_activate", "xsi",
+                canvas,
+                rtext_gettag(y),
+                1);
             gatom_click((t_gatom *)x, (t_floatarg)xpix, (t_floatarg)ypix,
                 (t_floatarg)shift, (t_floatarg)0, (t_floatarg)alt);
         }
