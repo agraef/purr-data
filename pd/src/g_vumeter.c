@@ -304,11 +304,11 @@ static void vu_draw_config(t_vu* x, t_glist* glist)
 /* Not sure if this is necessary anymore */
 static void vu_draw_select(t_vu* x,t_glist* glist)
 {
-    t_canvas *canvas=glist_getcanvas(glist);
-    char lcol[8]; sprintf(lcol,"#%6.6x", x->x_gui.x_lcol);
-    int issel = x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas;
-    sys_vgui(".x%lx.c itemconfigure %lxSCALEN -fill %s\n",
-        canvas, x, issel ? selection_color : lcol);
+    //t_canvas *canvas=glist_getcanvas(glist);
+    //char lcol[8]; sprintf(lcol,"#%6.6x", x->x_gui.x_lcol);
+    //int issel = x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas;
+    //sys_vgui(".x%lx.c itemconfigure %lxSCALEN -fill %s\n",
+    //    canvas, x, issel ? selection_color : lcol);
 }
 
 static void vu__clickhook(t_scalehandle *sh, int newstate)
