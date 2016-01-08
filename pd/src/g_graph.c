@@ -1550,8 +1550,10 @@ static void graph_select(t_gobj *z, t_glist *glist, int state)
                 }
             }
         }
-        sys_vgui("pdtk_select_all_gop_widgets .x%lx %s %d\n",
-            canvas, rtext_gettag(glist_findrtext(glist, &x->gl_obj)), state);
+        // Don't yet understand the purpose of this call, so not deleting
+        // it just yet...
+        //sys_vgui("pdtk_select_all_gop_widgets .x%lx %s %d\n",
+        //    canvas, rtext_gettag(glist_findrtext(glist, &x->gl_obj)), state);
     }
 }
 

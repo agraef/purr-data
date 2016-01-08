@@ -134,12 +134,15 @@ void canvas_raise_all_cords (t_canvas *x) {
 }
 
 static void canvas_enteritem (t_canvas *x, int xpos, int ypos, const char *tag) {
-    sys_vgui("pdtk_canvas_enteritem .x%x.c %d %d %s -1\n",
-        x, xpos, ypos, tag);
+    // This will be replaced by GUI-side functionality once we combine
+    // object and xlet drawing in a single command from Pd.
+    //sys_vgui("pdtk_canvas_enteritem .x%x.c %d %d %s -1\n",
+    //    x, xpos, ypos, tag);
 }
 
 static void canvas_leaveitem (t_canvas *x) {
-    sys_vgui("pdtk_canvas_leaveitem .x%x.c\n", x);
+    // See comment above
+    //sys_vgui("pdtk_canvas_leaveitem .x%x.c\n", x);
 }
 
 static void tooltip_erase (t_canvas *x) {
