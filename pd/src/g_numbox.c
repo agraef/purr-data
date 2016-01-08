@@ -369,9 +369,9 @@ static void my_numbox__motionhook(t_scalehandle *sh,
         int properties = gfxstub_haveproperties((void *)x);
         if (properties)
         {
-            properties_set_field_int(properties,"dim.w_ent",x->x_scalewidth);
-            properties_set_field_int(properties,"dim.h_ent",x->x_scaleheight);
-            properties_set_field_int(properties,"label.fontsize_entry",x->x_tmpfontsize);
+            properties_set_field_int(properties,"width",x->x_scalewidth);
+            properties_set_field_int(properties,"height",x->x_scaleheight);
+            properties_set_field_int(properties,"font-size",x->x_tmpfontsize);
         }
     }
     scalehandle_dragon_label(sh,mouse_x, mouse_y);

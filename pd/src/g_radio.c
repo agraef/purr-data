@@ -190,7 +190,7 @@ static void radio__motionhook(t_scalehandle *sh, t_floatarg mouse_x, t_floatarg 
         int properties = gfxstub_haveproperties((void *)x);
         if (properties)
         {
-            properties_set_field_int(properties,"dim.w_ent", x->x_orient ?
+            properties_set_field_int(properties,"size", x->x_orient ?
                 x->x_gui.x_h + sh->h_dragy :
                 x->x_gui.x_w + sh->h_dragx);
         }

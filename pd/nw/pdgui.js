@@ -3201,6 +3201,11 @@ function gui_iemgui_dialog(did, attr_array) {
         attr_array_to_object(attr_array));
 }
 
+function gui_dialog_set_field(did, field_name, value) {
+    var elem = dialogwin[did].window.document.getElementsByName(field_name)[0];
+    elem.value = value;
+}
+
 function gui_create_array(did, count) {
     var attr_array = [{
         array_gfxstub: did,

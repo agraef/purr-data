@@ -354,8 +354,8 @@ static void vu__motionhook(t_scalehandle *sh, t_floatarg mouse_x, t_floatarg mou
         {
             int new_w = x->x_gui.x_w + sh->h_dragx;
             int new_h = x->x_gui.x_h + sh->h_dragy;
-            properties_set_field_int(properties,"dim.w_ent",new_w);
-            properties_set_field_int(properties,"dim.h_ent",new_h);
+            properties_set_field_int(properties,"width",new_w);
+            properties_set_field_int(properties,"height",new_h);
         }
     }
     scalehandle_dragon_label(sh,mouse_x, mouse_y);

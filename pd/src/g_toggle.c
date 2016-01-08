@@ -159,12 +159,11 @@ static void toggle__motionhook(t_scalehandle *sh, t_floatarg mouse_x, t_floatarg
         if (properties)
         {
             int new_w = x->x_gui.x_w + sh->h_dragx;
-            properties_set_field_int(properties,"dim.w_ent",new_w);
+            properties_set_field_int(properties,"size",new_w);
         }
     }
     scalehandle_dragon_label(sh,mouse_x, mouse_y);
 }
-
 
 void toggle_draw(t_toggle *x, t_glist *glist, int mode)
 {

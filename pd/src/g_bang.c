@@ -202,7 +202,7 @@ static void bng__motionhook(t_scalehandle *sh,
         if (properties)
         {
             int new_w = x->x_gui.x_w + sh->h_dragx;
-            properties_set_field_int(properties,"dim.w_ent",new_w);
+            properties_set_field_int(properties,"size",new_w);
         }
     }
     scalehandle_dragon_label(sh,mouse_x, mouse_y);

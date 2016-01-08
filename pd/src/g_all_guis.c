@@ -795,8 +795,14 @@ void scalehandle_free(t_scalehandle *h) {
 }
 
 void properties_set_field_int(long props, const char *gui_field, int value) {
-    sys_vgui(".gfxstub%lx.%s delete 0 end\n", props, gui_field);
-    sys_vgui(".gfxstub%lx.%s insert 0 %d\n", props, gui_field, value);
+    //sys_vgui(".gfxstub%lx.%s delete 0 end\n", props, gui_field);
+    //sys_vgui(".gfxstub%lx.%s insert 0 %d\n", props, gui_field, value);
+    char tagbuf[MAXPDSTRING];
+    sprintf(tagbuf, ".gfxstub%lx", props);
+    gui_vmess("gui_dialog_set_field", "ssi",
+        tagbuf,
+        gui_field,
+        value);
 };
 
 void scalehandle_dragon_label(t_scalehandle *h, float mouse_x, float mouse_y) {
@@ -813,8 +819,8 @@ void scalehandle_dragon_label(t_scalehandle *h, float mouse_x, float mouse_y) {
         {
             int new_x = x->x_ldx + h->h_dragx;
             int new_y = x->x_ldy + h->h_dragy;
-            properties_set_field_int(properties,"label.xy.x_entry",new_x);
-            properties_set_field_int(properties,"label.xy.y_entry",new_y);
+            properties_set_field_int(properties, "x-offset", new_x);
+            properties_set_field_int(properties, "y-offset", new_y);
         }
         x->x_ldx += dx;
         x->x_ldy += dy;
