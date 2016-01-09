@@ -1037,7 +1037,7 @@ static void gatom_key(void *z, t_floatarg f)
             x->a_atom.a_w.w_symbol = gensym(x->a_buf);
         else bug("gatom_key");
         gatom_bang(x);
-        gatom_retext(x, 1, 1);
+        gatom_retext(x, 1, 0);
         x->a_buf[0] = 0;
         /* We want to keep grabbing the keyboard after hitting "Enter", so
            we're commenting the following out */
