@@ -2067,9 +2067,12 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
 }
 
     /* draw inlets and outlets for a text object or for a graph. */
+   /* this should never get called... */
 void glist_drawiofor_withtag(t_glist *glist, t_object *ob, int firsttime,
     char *tag, int x1, int y1, int x2, int y2)
 {
+    post("glist_drawiofor_withtag: should never get called!");
+    return;
     if (pd_class(&ob->te_pd) == text_class)
         return;
     //fprintf(stderr,"drawiofor_withtag\n");
@@ -2086,14 +2089,14 @@ void glist_drawiofor_withtag(t_glist *glist, t_object *ob, int firsttime,
             /* Hm, I can't seem to find a case where this is needed
                yet.  All the xlets in nw.js port load and get created
                correctly without it... */
-            sys_vgui(".x%lx.c create prect %d %d %d %d \
-                      -fill %s -stroke %s -tags {%so%d %lx outlet}\n",
-                glist_getcanvas(glist), onset, y2 - 2, onset + IOWIDTH, y2,
-                (issignal ? "$pd_colors(signal_nlet)" :
-                    "$pd_colors(control_nlet)"),
-                (issignal ? "$pd_colors(signal_cord)" :
-                    "$pd_colors(control_cord)"),
-                tag, i, tag);
+            //sys_vgui(".x%lx.c create prect %d %d %d %d \
+            //          -fill %s -stroke %s -tags {%so%d %lx outlet}\n",
+            //    glist_getcanvas(glist), onset, y2 - 2, onset + IOWIDTH, y2,
+            //    (issignal ? "$pd_colors(signal_nlet)" :
+            //        "$pd_colors(control_nlet)"),
+            //    (issignal ? "$pd_colors(signal_cord)" :
+            //        "$pd_colors(control_cord)"),
+            //    tag, i, tag);
         }
 /*
         else
@@ -2113,15 +2116,16 @@ void glist_drawiofor_withtag(t_glist *glist, t_object *ob, int firsttime,
         {
             //fprintf(stderr,"drawiofor_withtag i firsttime\n");
             issignal = obj_issignalinlet(ob,i);
-            sys_vgui(".x%lx.c create prect %d %d %d %d \
-                      -fill %s -stroke %s -tags {%si%d %lx inlet}\n",
-                glist_getcanvas(glist), onset, y1,
-                onset + IOWIDTH, y1 + EXTRAPIX,
-                (issignal ? "$pd_colors(signal_nlet)" :
-                    "$pd_colors(control_nlet)"),
-                (issignal ? "$pd_colors(signal_cord)" :
-                    "$pd_colors(control_cord)"),
-                tag, i, tag);
+            /* Looks like this doesn't get called... */
+            //sys_vgui(".x%lx.c create prect %d %d %d %d \
+            //          -fill %s -stroke %s -tags {%si%d %lx inlet}\n",
+            //    glist_getcanvas(glist), onset, y1,
+            //    onset + IOWIDTH, y1 + EXTRAPIX,
+            //    (issignal ? "$pd_colors(signal_nlet)" :
+            //        "$pd_colors(control_nlet)"),
+            //    (issignal ? "$pd_colors(signal_cord)" :
+            //        "$pd_colors(control_cord)"),
+            //    tag, i, tag);
         }
 /*        else
         {
@@ -2282,10 +2286,11 @@ void text_drawborder(t_text *x, t_glist *glist,
         }
         else
         {
-            sys_vgui(".x%lx.c coords %sR "
-                     "%d %d %d %d %d %d %d %d %d %d %d %d\n",
-                glist_getcanvas(glist), tag,
-                x1, y1,  x2-4, y1,  x2, y1+4,  x2, y2,  x1, y2,  x1, y1);
+            /* doesn't look like this ever gets called... */
+            //sys_vgui(".x%lx.c coords %sR "
+            //         "%d %d %d %d %d %d %d %d %d %d %d %d\n",
+            //    glist_getcanvas(glist), tag,
+            //    x1, y1,  x2-4, y1,  x2, y1+4,  x2, y2,  x1, y2,  x1, y1);
         }
     }
         /* for comments, just draw a dotted rectangle unlocked; when a visible
@@ -2301,14 +2306,15 @@ void text_drawborder(t_text *x, t_glist *glist,
         {
             /*sys_vgui(".x%lx.c create pline\
                  %d %d %d %d -tags [list %sR commentbar] -stroke $pd_colors(atom_box_border)\n",*/
-            sys_vgui(".x%lx.c create ppolygon %d %d %d %d %d %d %d %d %d %d\
-                -tags [list %sR commentbar %s] -stroke %s\
-                -strokewidth 1 -strokedasharray {2 2} -strokelinecap butt\n",
-                glist_getcanvas(glist),
-                //x2, y1,  x2, y2, tag);
-                x1, y1,  x2, y1,  x2, y2,  x1, y2,  x1, y1, tag,
-                (selected ? "selected" : ""),
-                (selected ? "$pd_colors(selection)" : "$pd_colors(box_border)"));
+            /* Look like this isn't needed... */
+            //sys_vgui(".x%lx.c create ppolygon %d %d %d %d %d %d %d %d %d %d\
+            //    -tags [list %sR commentbar %s] -stroke %s\
+            //    -strokewidth 1 -strokedasharray {2 2} -strokelinecap butt\n",
+            //    glist_getcanvas(glist),
+            //    //x2, y1,  x2, y2, tag);
+            //    x1, y1,  x2, y1,  x2, y2,  x1, y2,  x1, y1, tag,
+            //    (selected ? "selected" : ""),
+            //    (selected ? "$pd_colors(selection)" : "$pd_colors(box_border)"));
         }
         else
         {
@@ -2333,9 +2339,12 @@ void text_drawborder(t_text *x, t_glist *glist,
     //    (long unsigned int)glist_getcanvas(glist));
 }
 
+/* Should be able to remove this since it never gets called... */
 void text_drawborder_withtag(t_text *x, t_glist *glist,
     char *tag, int width2, int height2, int firsttime)
 {
+    post("text_drawborder_withtag: should never get called!");
+    return;
     t_object *ob;
     int x1, y1, x2, y2, msg_draw_const, atom_draw_const;
     text_getrect(&x->te_g, glist, &x1, &y1, &x2, &y2);
@@ -2357,13 +2366,13 @@ void text_drawborder_withtag(t_text *x, t_glist *glist,
         }
         if (firsttime)
         {
-            /* Can't figure out if this is needed... */
-            sys_vgui(".x%lx.c create ppolygon %d %d %d %d %d %d %d %d %d %d"
-                     "-stroke %s -fill %s -tags {%sR %lx text}\n", 
-                glist_getcanvas(glist),
-                     x1, y1,  x2, y1,  x2, y2,  x1, y2,  x1, y1,  
-                     outline, fill, tag, tag);
-                //-dash %s -> pattern disabled for tkpath
+            /* Looks like this isn't needed... */
+            //sys_vgui(".x%lx.c create ppolygon %d %d %d %d %d %d %d %d %d %d"
+            //         "-stroke %s -fill %s -tags {%sR %lx text}\n", 
+            //    glist_getcanvas(glist),
+            //         x1, y1,  x2, y1,  x2, y2,  x1, y2,  x1, y1,  
+            //         outline, fill, tag, tag);
+            //    //-dash %s -> pattern disabled for tkpath
         }
     }
     else if (x->te_type == T_MESSAGE)
@@ -2371,7 +2380,7 @@ void text_drawborder_withtag(t_text *x, t_glist *glist,
         msg_draw_const = ((y2-y1)/4);
         if (msg_draw_const > 10) msg_draw_const = 10; /* looks bad if too big */
         if (firsttime)
-            /* Can't figure out if this is needed... */
+            /* Doesn't look like this is necessary... */
             sys_vgui(".x%lx.c create ppolygon "
                      "%d %d %d %d %d %d %d %d %d %d %d %d %d %d "
                      "-stroke $pd_colors(msg_border) -fill $pd_colors(msg) "
@@ -2386,16 +2395,18 @@ void text_drawborder_withtag(t_text *x, t_glist *glist,
     {
         atom_draw_const = ((y2-y1)/3);
         if (firsttime)
-            /* Can't figure out where this is needed */
-            sys_vgui(".x%lx.c create ppolygon "
-                     "%d %d %d %d %d %d %d %d %d %d %d %d "
-                     "-stroke $pd_colors(atom_box_border) "
-                     "-fill $pd_colors(atom_box) "
-                     "-tags {%sR %lx text atom box}\n",
-                glist_getcanvas(glist),
-                     x1, y1,  x2-atom_draw_const, y1,  x2, y1+atom_draw_const,  
-                     x2, y2,  x1, y2,  x1, y1, 
-                    tag, tag);
+        {
+            /* Looks like this isn't needed... */
+            //sys_vgui(".x%lx.c create ppolygon "
+            //         "%d %d %d %d %d %d %d %d %d %d %d %d "
+            //         "-stroke $pd_colors(atom_box_border) "
+            //         "-fill $pd_colors(atom_box) "
+            //         "-tags {%sR %lx text atom box}\n",
+            //    glist_getcanvas(glist),
+            //         x1, y1,  x2-atom_draw_const, y1,  x2, y1+atom_draw_const,  
+            //         x2, y2,  x1, y2,  x1, y1, 
+            //        tag, tag);
+        }
     }
         /* for comments, draw a dotted box; when a visible
         canvas is unlocked we have to call this anew on all comments, and when
@@ -2404,15 +2415,17 @@ void text_drawborder_withtag(t_text *x, t_glist *glist,
     {
         if (firsttime)
         {
-            sys_vgui(".x%lx.c create pline %d %d %d %d "
-                     "-tags [list %sR commentbar] -stroke $box_outline\n",
-                glist_getcanvas(glist),
-                x2, y1,  x2, y2, tag);
+            /* Looks like this isn't needed... */
+            //sys_vgui(".x%lx.c create pline %d %d %d %d "
+            //         "-tags [list %sR commentbar] -stroke $box_outline\n",
+            //    glist_getcanvas(glist),
+            //    x2, y1,  x2, y2, tag);
         }
         else
         {
-            sys_vgui(".x%lx.c coords %sR %d %d %d %d\n",
-                glist_getcanvas(glist), tag, x2, y1,  x2, y2);
+            /* Looks like this isn't needed... */
+            //sys_vgui(".x%lx.c coords %sR %d %d %d %d\n",
+            //    glist_getcanvas(glist), tag, x2, y1,  x2, y2);
         }
     }
         /* draw inlets/outlets */
