@@ -5617,12 +5617,21 @@ static void plot_groupvis(t_scalar *x, t_glist *owner, t_word *data,
     t_glist *groupcanvas, t_glist *parent, t_float basex, t_float basey)
 {
     t_gobj *y;
-    sys_vgui(".x%lx.c create group -tags .scelem%lx.%lx "
-             "-parent {.scelem%lx.%lx}\\\n",
-         glist_getcanvas(owner), groupcanvas, data,
-         parent, data);
+    char tagbuf[MAXPDSTRING], parent_tagbuf[MAXPDSTRING];
+    sprintf(tagbuf, "scelem%lx.%lx", (long unsigned int)groupcanvas,
+        (long unsigned int)data);
+    sprintf(parent_tagbuf, "scelem%lx.%lx", (long unsigned int)parent,
+        (long unsigned int)data);
+    //sys_vgui(".x%lx.c create group -tags .scelem%lx.%lx "
+    //         "-parent {.scelem%lx.%lx}\\\n",
+    //     glist_getcanvas(owner), groupcanvas, data,
+    //     parent, data);
+    gui_start_vmess("gui_create_scalar_group", "xss",
+        glist_getcanvas(owner),
+        tagbuf,
+        parent_tagbuf);
     svg_grouptogui(groupcanvas, template, data);
-    sys_gui("\n");
+    gui_end_vmess();
     for (y = groupcanvas->gl_list; y; y = y->g_next)
     {
         if (pd_class(&y->g_pd) == canvas_class &&
