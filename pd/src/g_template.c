@@ -6057,8 +6057,8 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                     if (ndrawn >= 1000) break;
                 }
                     /* TK will complain if there aren't at least 2 points... */
-                if (ndrawn == 0) sys_vgui("0 0 0 0 \\\n");
-                else if (ndrawn == 1)
+                //if (ndrawn == 0) sys_vgui("0 0 0 0 \\\n");
+                if (ndrawn == 1)
                 {
                     //sys_vgui("%d %f \\\n", ixpix + 10,
                     //yloc + 
