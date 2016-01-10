@@ -957,14 +957,22 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
         {
             int x1 = glist_xtopixels(owner, basex);
             int y1 = glist_ytopixels(owner, basey);
-            sys_vgui(".x%lx.c create prect %d %d %d %d "
-                     "-tags {blankscalar%lx %s}\n",
-                glist_getcanvas(owner), x1-1, y1-1, x1+1, y1+1, x,
-                (glist_isselected(owner, &x->sc_gobj) ?
-                    "scalar_selected" : ""));
+            /* Let's just not create anything to visualize scalars that
+               don't have a template. Pd Vanilla draws a single pixel to 
+               represent them, so later we might want to do a simple
+               shape for them... */
+            //sys_vgui(".x%lx.c create prect %d %d %d %d "
+            //         "-tags {blankscalar%lx %s}\n",
+            //    glist_getcanvas(owner), x1-1, y1-1, x1+1, y1+1, x,
+            //    (glist_isselected(owner, &x->sc_gobj) ?
+            //        "scalar_selected" : ""));
         }
-        else sys_vgui(".x%lx.c delete blankscalar%lx\n",
-            glist_getcanvas(owner), x);
+        else
+        {
+            /* No need to delete if we don't draw anything... */
+            //sys_vgui(".x%lx.c delete blankscalar%lx\n",
+            //    glist_getcanvas(owner), x);
+        }
         return;
     }
     //else sys_vgui(".x%lx.c delete blankscalar%lx\n",
@@ -1063,8 +1071,10 @@ static void scalar_doredraw(t_gobj *client, t_glist *glist)
     if (glist_isselected(glist_getcanvas(glist), (t_gobj *)glist))
     {
         //fprintf(stderr,"yes\n");
-        sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n",
-            glist_getcanvas(glist), glist, 1);
+        /* I still don't understand what this does... should probably
+           do some scalar gop tests to see if it is actually needed... */
+        //sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n",
+        //    glist_getcanvas(glist), glist, 1);
     }
     canvas_getscroll(glist_getcanvas(glist));
 }
