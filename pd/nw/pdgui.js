@@ -2768,6 +2768,15 @@ function gui_drawimage_new(obj_tag, file_path, canvasdir, flags) {
     }
 }
 
+function gui_drawimage_free(obj_tag) {
+    if (drawimage_data[obj_tag] && drawimage_data[obj_tag].length) {
+        post("drawimage: freed " + drawimage_data[obj_tag].length + " images");
+        drawimage_data[obj_tag] = []; // empty the image(s)
+    } else {
+        post("drawimage: warning: no image data to free");
+    }
+}
+
 function img_size_setter(cid, obj, obj_tag, i) {
     var img = new pd_window.window.Image(),
         w, h;

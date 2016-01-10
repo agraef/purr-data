@@ -6106,8 +6106,9 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         }
 
         /* make sure the array drawings are behind the graph */
-        sys_vgui(".x%lx.c lower plot%lx graph%lx\n", glist_getcanvas(glist),
-            data, glist);
+        /* not doing this yet with the GUI port... */
+        //sys_vgui(".x%lx.c lower plot%lx graph%lx\n", glist_getcanvas(glist),
+        //    data, glist);
 
             /* We're done with the outline; now draw all the points.
             This code is inefficient since the template has to be
@@ -7541,8 +7542,13 @@ static void drawimage_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         svg_togui(svg, template, data);
         gui_end_vmess();
     }
-    else sys_vgui("pdtk_drawimage_unvis .x%lx.c .x%lx.i\n",
-        glist_getcanvas(glist), data);
+    else
+    {
+        /* We don't actually need this-- the image should get destroyed
+           automatically. */
+        //sys_vgui("pdtk_drawimage_unvis .x%lx.c .x%lx.i\n",
+        //    glist_getcanvas(glist), data);
+    }
 }
 
 static t_float drawimage_motion_ycumulative;
@@ -7718,7 +7724,8 @@ static void drawimage_free(t_drawimage *x)
     //sprintf(buf, ".x%lx", (t_int)x);
     sprintf(buf, ".x%lx", (long unsigned int)x);
     pd_unbind(&x->x_obj.ob_pd, gensym(buf));
-    sys_vgui("pdtk_drawimage_free .x%lx\n", (t_int)x);
+    //sys_vgui("pdtk_drawimage_free .x%lx\n", (t_int)x);
+    gui_vmess("gui_drawimage_free", "x", x);
 }
 
 static void drawimage_setup(void)
