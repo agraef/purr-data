@@ -185,12 +185,15 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
         x2 - x1,
         y2 - y1,
         glist_istoplevel(canvas));
-    /* Not sure when it is necessary to hide the frame... */
+    /* Not sure when it is necessary to hide the frame... perhaps for
+       k12? */
     if (!x->x_hide_frame || x->x_hide_frame == 2)
-        sys_vgui(".x%lx.c create polyline %d %d %d %d %d %d -stroke #%6.6x "
-            "-tags {%lxBASE2 x%lx text iemgui}\n",
-            canvas, x1, y1, x1 + half, y1 + half, x1, y2,
-            x->x_gui.x_fcol, x, x);
+    {
+        //sys_vgui(".x%lx.c create polyline %d %d %d %d %d %d -stroke #%6.6x "
+        //    "-tags {%lxBASE2 x%lx text iemgui}\n",
+        //    canvas, x1, y1, x1 + half, y1 + half, x1, y2,
+        //    x->x_gui.x_fcol, x, x);
+    }
     my_numbox_ftoa(x);
     //sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w "
     //    "-font %s -fill #%6.6x -tags {%lxNUMBER x%lx noscroll text iemgui}\n",
@@ -273,12 +276,12 @@ static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist)
     char bcol[8]; sprintf(bcol, "#%6.6x", x->x_gui.x_bcol);
     // The logic in these sys_vgui calls is being taken care
     // of in the gui now...
-    sys_vgui(".x%lx.c itemconfigure %lxBASE1 -stroke %s\n", canvas, x,
-        issel ? selection_color : x->x_hide_frame <= 1 ? "$pd_colors(iemgui_border)" : bcol);
-    sys_vgui(".x%lx.c itemconfigure %lxBASE2 -stroke %s\n", canvas, x,
-        issel ? selection_color : fcol);
-    sys_vgui(".x%lx.c itemconfigure %lxNUMBER -fill %s\n", canvas, x,
-        issel ? selection_color : fcol);
+    //sys_vgui(".x%lx.c itemconfigure %lxBASE1 -stroke %s\n", canvas, x,
+    //    issel ? selection_color : x->x_hide_frame <= 1 ? "$pd_colors(iemgui_border)" : bcol);
+    //sys_vgui(".x%lx.c itemconfigure %lxBASE2 -stroke %s\n", canvas, x,
+    //    issel ? selection_color : fcol);
+    //sys_vgui(".x%lx.c itemconfigure %lxNUMBER -fill %s\n", canvas, x,
+    //    issel ? selection_color : fcol);
     if(issel) 
         scalehandle_draw_select2(&x->x_gui);
     else
