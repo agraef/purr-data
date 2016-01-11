@@ -2211,10 +2211,29 @@ void canvas_undo_font(t_canvas *x, void *z, int action)
         t_int properties = gfxstub_haveproperties((void *)x2);
         if (properties)
         {
-            sys_vgui(".gfxstub%lx.radiof.radio%d invoke\n",
-                properties, u_f->font);
-        }    
-        else sys_vgui("dofont_apply .x%lx %d 1\n", x2, u_f->font);
+            char tagbuf[MAXPDSTRING];
+            sprintf(tagbuf, ".gfxstub%lx", (long unsigned int)properties);
+            //sys_vgui(".gfxstub%lx.radiof.radio%d invoke\n",
+            //    properties, u_f->font);
+            gui_vmess("gui_font_dialog_change_size", "si",
+                tagbuf,
+                u_f->font);
+        }
+        else
+        {
+            //sys_vgui("dofont_apply .x%lx %d 1\n", x2, u_f->font);
+            /* In pd.tk there is a global variable holding the last font
+               size. So our dataflow is:
+               1) Pd -> GUI dofont_apply as above
+               2) GUI looks up the previous font size
+               3) GUI -> Pd "canvasid font size old_size 100 no_undo"
+               4) Pd -> GUI redraw the canvas with the new font sizes
+
+               Can't figure out why we need to talk to the GUI in #1, so
+               I'm just calling the canvas "font" method directly... */
+            vmess(&x2->gl_pd, gensym("font"), "iiii",
+                u_f->font, tmp_font, 100, 1);
+        }
         u_f->font = tmp_font;
     }
     else if (action == UNDO_FREE)
