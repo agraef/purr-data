@@ -3224,6 +3224,17 @@ function gui_dialog_set_field(did, field_name, value) {
     elem.value = value;
 }
 
+// Used when undoing a font size change when the font dialog is open
+function gui_font_dialog_change_size(did, font_size) {
+    var button;
+    if (dialogwin[did]) {
+        button = dialogwin[did].window.document.getElementById(font_size);
+        button.click();
+    } else {
+        post("error: no font dialogwin!");
+    }
+}
+
 function gui_create_array(did, count) {
     var attr_array = [{
         array_gfxstub: did,
