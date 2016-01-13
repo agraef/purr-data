@@ -137,7 +137,7 @@ p.msg::after {
 /* not sure what this is doing here... */
 text {
     // fill: red;
-    cursor: default;
+    //cursor: default;
 }
 
 /* not sure if this is still needed */
