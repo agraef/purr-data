@@ -2,6 +2,7 @@
 
 var pwd;
 var gui_dir;
+var last_clipboard_data;
 
 exports.set_pwd = function(pwd_string) {
     pwd = pwd_string;
@@ -25,6 +26,14 @@ exports.get_pd_opendir = function() {
     } else {
         return pwd;
     }
+}
+
+exports.set_last_clipboard_data = function(data) {
+    last_clipboard_data = data;
+}
+
+exports.get_last_clipboard_data = function() {
+    return last_clipboard_data;
 }
 
 // Modules
@@ -571,7 +580,6 @@ function menu_send(name) {
 }
 
 function gui_set_editmode(cid, state) {
-post("set the mode");
     patchwin[cid].window.set_editmode_checkbox(state !== 0 ? true : false);
 }
 

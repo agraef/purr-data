@@ -6130,12 +6130,27 @@ static void canvas_copy(t_canvas *x)
     binbuf_free(copy_binbuf);
     clipboard_istext = 0;
     //fprintf(stderr, "canvas_copy\n");
-    sys_vgui("pdtk_canvas_reset_last_clipboard\n");
+    /* We're not replacing the following sys_vgui call because nw.js's
+       paste mechanism works a bit differently and doesn't require this.
+       But if I missed some functionality this-- as well as the rest of the
+       insanely complicated externalbuffer logic-- should be revisited. */
+
+    //sys_vgui("pdtk_canvas_reset_last_clipboard\n");
     copy_binbuf = canvas_docopy(x);
     if (!x->gl_editor->e_selection)
-        sys_vgui("pdtk_canvas_update_edit_menu .x%lx 0\n", x);
+    {
+        /* Ok, this makes no sense-- if we return above when there's no
+           e_selection, then how could the following possibly be true? */
+
+        //sys_vgui("pdtk_canvas_update_edit_menu .x%lx 0\n", x);
+    }
     else
-        sys_vgui("pdtk_canvas_update_edit_menu .x%lx 1\n", x);
+    {
+        /* Still not exactly sure what this is doing.  If it's just
+           disabling menu items related to the clipboard I think we can
+           do without it. */
+        //sys_vgui("pdtk_canvas_update_edit_menu .x%lx 1\n", x);
+    }
     paste_xyoffset = 1;
     if (x->gl_editor->e_textedfor)
     {

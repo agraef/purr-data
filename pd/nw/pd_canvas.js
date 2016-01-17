@@ -52,6 +52,21 @@ function encode_for_dialog(s) {
     return s;
 }
 
+// Super-simplistic guess at whether the string from the clipboard
+// starts with Pd code. This is just meant as a convenience so that
+// stuff in the copy buffer that obviously isn't Pd code doesn't get
+// in the way when editing.
+function might_be_a_pd_file(stuff_from_clipboard) {
+    var text = stuff_from_clipboard.trim(),
+        one = text.charAt(0),
+        two = text.charAt(1);
+    return (one === "#" && (two === "N" || two === "X"));
+}
+
+function permission_to_paste_from_external_clipboard() {
+    return global.confirm("Warning: you are about to paste Pd code that came from somewhere outside of Pd. Do you want to continue?");
+}
+
 function nw_window_focus_callback() {
     // on OSX, update the menu on focus
     if (process.platform === "darwin") {
@@ -218,26 +233,35 @@ var canvas_events = (function() {
                     // Which don't fire a keypress for some odd reason
 
                     case 65:
-                        if (cmd_or_ctrl_key(evt)) {
+                        if (cmd_or_ctrl_key(evt)) { // ctrl-a
                             pdgui.pdsend(name, "selectall");
                             hack = 0; // not sure what to report here...
                         }
                         break;
                     case 88:
-                        if (cmd_or_ctrl_key(evt)) {
+                        if (cmd_or_ctrl_key(evt)) { // ctrl-x
                             pdgui.pdsend(name, "cut");
                             hack = 0; // not sure what to report here...
                         }
                         break;
                     case 67:
-                        if (cmd_or_ctrl_key(evt)) {
+                        if (cmd_or_ctrl_key(evt)) { // ctrl-c
                             pdgui.pdsend(name, "copy");
                             hack = 0; // not sure what to report here...
                         }
                         break;
                     case 86:
-                        if (cmd_or_ctrl_key(evt)) {
-                            pdgui.pdsend(name, "paste");
+                        if (cmd_or_ctrl_key(evt)) { // ctrl-v
+                            // Crazy workaround: instead of sending the
+                            // "paste" message to Pd here, we wait for the
+                            // "paste" listener to pick it up. That way it
+                            // can check to see if there's anything in the
+                            // paste buffer, and if so forward it to Pd.
+
+                            // We could also use "cut" and "copy" handlers
+                            // above for symmetry, but we're not currently
+                            // doing anything with those buffers.
+                            //pdgui.pdsend(name, "paste");
                             hack = 0; // not sure what to report here...
                         }
                         break;
@@ -478,6 +502,78 @@ var canvas_events = (function() {
     document.addEventListener("contextmenu", function(evt) {
         console.log("got a context menu evt...");
         evt.preventDefault();
+    });
+
+    // Listen to paste event using the half-baked Clipboard API from HTML5
+    document.addEventListener("paste", function(evt) {
+        var clipboard_data = evt.clipboardData.getData("text"),
+            line,
+            lines,
+            i,
+            pd_message;
+        // Precarious, overly complicated and prone to bugs...
+        // Basically, if a Pd user copies some Pd source file from another
+        // application, we give them a single paste operation to paste the
+        // code directly into a window (empty or otherwise). We supply a
+        // warning prompt to let the user know this is what's happening, so
+        // they could cancel if that's not what they wanted.
+
+        // After the prompt, the user can no longer paste that particular
+        // string from the OS clipboard buffer. All paste actions
+        // will instead apply to whatever has been copied or cut from within
+        // a Pd patch. To paste from the OS clipboard again, the user
+        // must cut/copy a _different_ snippet of Pd source file than the
+        // one they previously tried to paste.
+
+        // A temporary workaround to this confusing behavior would be to give
+        // external code-pasting its own menu button. Another possibility is
+        // to let copy/cut actions within the patch actually get written to
+        // the OS clipboard. The latter would involve a lot more work (e.g.,
+        // sending FUDI messages from Pd to set the OS clipboard, etc.)
+
+        // Also, we check below to make sure the OS clipboard is holding
+        // text that could conceivably be Pd source code. If not then the
+        // user won't get bothered with a prompt at all, and normal Pd
+        // paste behavior will follow.
+
+        // Finally, from a usability standpoint the main drawback is that
+        // you can't try to paste the same Pd source code more than once.
+        // For users who want to pasting lots of source code this could be
+        // a frustration, but Pd's normal copy/paste behavior remains
+        // intuitive and in line with the way other apps tend to work.
+
+        if (might_be_a_pd_file(clipboard_data) &&
+            clipboard_data !== pdgui.get_last_clipboard_data()) {
+            if (permission_to_paste_from_external_clipboard()) {
+                // clear the buffer
+                pdgui.pdsend(name, "copyfromexternalbuffer");
+                pd_message = "";
+                lines = clipboard_data.split("\n");
+                for (i = 0; i < lines.length; i++) {
+                    line = lines[i];
+                    // process pd_message if it ends with a semicolon that
+                    // isn't preceded by a backslash
+                    if (line.slice(-1) === ";" &&
+                         (line.length < 2 || line.slice(-2, -1) !== "\\")) {
+                        if (pd_message === "") {
+                            pd_message = line;
+                        } else {
+                            pd_message = pd_message + " " + line;
+                        }
+                        pdgui.pdsend(name, "copyfromexternalbuffer", pd_message);
+                        pd_message = "";
+                    } else {
+                        pd_message = pd_message + " " + line;
+                        pd_message = pd_message.replace(/\n/g, "");
+                    }
+                }
+                // This isn't needed, but pd-l2ork did it for some reason...
+                pdgui.pdsend(name, "copyfromexternalbuffer");
+            }
+            pdgui.set_last_clipboard_data(clipboard_data);
+        }
+        // Send a canvas "paste" message to Pd
+        pdgui.pdsend(name, "paste");
     });
 
     // The following is commented out because we have to set the
