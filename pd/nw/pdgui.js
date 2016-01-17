@@ -2515,13 +2515,18 @@ function gui_scalar_draw_select_rect(cid, tag, state, x1, y1, x2, y2, basex, bas
     // for selected borders because somehow calling properties on a graph
     // triggers this function.  I have no idea why it does that.
     var g = get_gobj(cid, tag),
+        b;
+    // somehow the scalar can unvis before calling this, so we check for
+    // its existence here...
+    if (g) {
         b = g.querySelector(".border");
-    configure_item(b, {
-        x: (x1 - basex) + 0.5,
-        y: (y1 - basey) + 0.5,
-        width: x2 - x1,
-        height: y2 - y1,
-    });
+        configure_item(b, {
+            x: (x1 - basex) + 0.5,
+            y: (y1 - basey) + 0.5,
+            width: x2 - x1,
+            height: y2 - y1
+        });
+    }
 }
 
 function gui_create_scalar_group(cid, tag, parent_tag, attr_array) {
