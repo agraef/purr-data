@@ -6173,7 +6173,8 @@ static void canvas_copy(t_canvas *x)
 
 //#if defined(MSW) || defined(__APPLE__)
 //            /* for Mac or Windows, copy the text to the clipboard here */
-        sys_vgui("clipboard clear\n clipboard append {%.*s}\n", bufsize, buf);
+        /* We don't need this because editing happens GUI side now */
+        //sys_vgui("clipboard clear\n clipboard append {%.*s}\n", bufsize, buf);
 //#else
             /* in X windows the selection already went to the
             clipboard when it was made; here we "copy" it to our own buffer
