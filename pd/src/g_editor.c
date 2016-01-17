@@ -3664,8 +3664,10 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                     //    x, (int)xpos, (int)ypos);
                     //sys_vgui("pdtk_toggle_xy_tooltip .x%lx %d\n", x, 1);
                     x->gl_editor->e_onmotion = MA_MOVE;
-                    if (tooltips)
-                        sys_vgui("pdtk_tip .x%x.c 0 0\n", x);
+                    /* once the code for creating a new object looks sane
+                       we'll leave rendering the tooltips to the GUI. */
+                    //if (tooltips)
+                    //    sys_vgui("pdtk_tip .x%x.c 0 0\n", x);
                 }
             }
             else
@@ -4948,8 +4950,9 @@ void canvas_mouseup(t_canvas *x,
     }
     else if (x->gl_editor->e_onmotion == MA_SCROLL)
     {
-        sys_vgui("pdtk_canvas_scroll_xy_click .x%lx %d %d 0\n",
-            (t_int)x, (int)fxpos, (int)fypos);
+        /* Let's try to do this exclusively in the GUI... */
+        //sys_vgui("pdtk_canvas_scroll_xy_click .x%lx %d %d 0\n",
+        //    (t_int)x, (int)fxpos, (int)fypos);
         x->gl_editor->e_onmotion = MA_NONE;
         canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);        
     }
@@ -4976,6 +4979,8 @@ void canvas_mouseup(t_canvas *x,
             (glob_shift + glob_ctrl*2 + glob_alt*4), 0);
 }
 
+/* This entire function is made superfluous in the GUI port-- we get middle-
+   click pasting for free by default. */
 void canvas_mousedown_middle(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
     t_floatarg which, t_floatarg mod)
 {
@@ -4995,12 +5000,12 @@ void canvas_mousedown_middle(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
         {
             canvas_mousedown(x, xpos, ypos, which, mod);
             canvas_mouseup(x, xpos, ypos, which);
-            sys_vgui("pdtk_pastetext\n");
+            //sys_vgui("pdtk_pastetext\n");
         }
         else
         {
-            sys_vgui("pdtk_canvas_scroll_xy_click .x%lx %d %d 3\n",
-                (t_int)x, (int)xpos, (int)ypos);
+            //sys_vgui("pdtk_canvas_scroll_xy_click .x%lx %d %d 3\n",
+            //    (t_int)x, (int)xpos, (int)ypos);
             x->gl_editor->e_onmotion = MA_SCROLL;
             canvas_setcursor(x, CURSOR_SCROLL);
         }
@@ -5532,8 +5537,15 @@ extern int sys_perf;
 
 void canvas_print(t_canvas *x, t_symbol *s)
 {
-    sys_vgui(".x%lx.c postscript -file %s\n", x,
-        *s->s_name ? s->s_name : "x.ps");
+    /* Could go a few different ways in porting this:
+       1) Use window.print(), which gives a clunky (non-native) interface
+          (Also suggests to save to Google cloud, which I don't like at all)
+       2) Look into node modules
+       3) Replace with an svg export menu item
+       4) Nothing
+    */
+    //sys_vgui(".x%lx.c postscript -file %s\n", x,
+    //    *s->s_name ? s->s_name : "x.ps");
 }
 
     /* find a dirty sub-glist, if any, of this one (including itself) */
@@ -7635,6 +7647,7 @@ void canvas_magicglass(t_canvas *x, t_floatarg fyesplease)
 }
 // end jsarlo
 
+/* Not porting this... will do tooltips GUI-side instead */
 void canvas_tooltips(t_canvas *x, t_floatarg fyesplease)
 {
     //fprintf(stderr,"canvas_tooltips %f\n", fyesplease);
@@ -7650,8 +7663,8 @@ void canvas_tooltips(t_canvas *x, t_floatarg fyesplease)
         tooltips = 0;
         tooltip_erase(x);
     }
-    sys_vgui("pdtk_canvas_tooltips .x%lx %d\n",
-        x, tooltips);
+    //sys_vgui("pdtk_canvas_tooltips .x%lx %d\n",
+    //    x, tooltips);
 }
 
     /* called by canvas_font below */
@@ -7744,6 +7757,7 @@ void glist_setlastxymod(t_glist *gl, int xval, int yval, int mod)
     canvas_last_glist_mod = mod;
 }
 
+/* Not porting... will do tooltips GUI-side... */
 static void canvas_enterobj(t_canvas *x, t_symbol *item, t_floatarg xpos,
     t_floatarg ypos, t_floatarg xletno)
 {
@@ -7779,13 +7793,14 @@ static void canvas_enterobj(t_canvas *x, t_symbol *item, t_floatarg xpos,
             helpname = g->g_pd->c_helpname;
             dir = g->g_pd->c_externdir;
         }
-        sys_vgui("pdtk_gettip .x%lx.c %s %d \
-        [list %s] [list %s] [list %s]\n",
-        x, item->s_name, (int)xletno,
-        name->s_name, helpname->s_name, dir->s_name);
+        //sys_vgui("pdtk_gettip .x%lx.c %s %d \
+        //[list %s] [list %s] [list %s]\n",
+        //x, item->s_name, (int)xletno,
+        //name->s_name, helpname->s_name, dir->s_name);
     }
 }
 
+/* Not porting... will do GUI-side */
 static void canvas_tip(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 {
     if (s == gensym("echo"))
@@ -7794,15 +7809,15 @@ static void canvas_tip(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
         error("canvas_tip: bad argument");
     else
     {
-        sys_vgui("pdtk_tip .x%lx.c 1", x);
+        //sys_vgui("pdtk_tip .x%lx.c 1", x);
         t_atom *at = argv;
         int i;
         for (i=0; i<argc; i++)
         {
-        if (at[i].a_type == A_FLOAT)
-            sys_vgui(" %g", at[i].a_w.w_float);
-        else if (at[i].a_type == A_SYMBOL)
-            sys_vgui(" %s", at[i].a_w.w_symbol->s_name);
+        //if (at[i].a_type == A_FLOAT)
+        //    sys_vgui(" %g", at[i].a_w.w_float);
+        //else if (at[i].a_type == A_SYMBOL)
+        //    sys_vgui(" %s", at[i].a_w.w_symbol->s_name);
         }
         sys_gui("\n");
     }
