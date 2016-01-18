@@ -186,6 +186,7 @@ function create_menu(gui, type) {
             tooltip: l("menu.font_tt")
         }));
         editMenu.append(m.edit.cordinspector = new gui.MenuItem({
+            type: "checkbox",
             label: l("menu.cordinspector"),
             key: "r",
             modifiers: cmd_or_ctrl,

@@ -340,6 +340,15 @@ function pd_geo_string(w, h, x, y) {
     return  [w,"x",h,"+",x,"+",y].join("");
 }
 
+// quick hack so that we can paste pd code from clipboard and
+// have it affect an empty canvas' geometry
+function gui_change_patch_window_geometry(cid, w, h, x, y) {
+    patchwin[cid].width = w;
+    patchwin[cid].height = h + 23; // 23 is a kludge to account for menubar
+    patchwin[cid].x = x;
+    patchwin[cid].y = y;
+}
+
 // In tcl/tk, this function had some checks to apparently
 // keep from sending a "relocate" message to Pd, but I'm
 // not exactly clear on how it works. If this ends up being
@@ -581,6 +590,10 @@ function menu_send(name) {
 
 function gui_set_editmode(cid, state) {
     patchwin[cid].window.set_editmode_checkbox(state !== 0 ? true : false);
+}
+
+function gui_set_cordinspector(cid, state) {
+    patchwin[cid].window.set_cord_inspector_checkbox(state !== 0 ? true : false);
 }
 
 exports.menu_send = menu_send;

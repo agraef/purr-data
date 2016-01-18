@@ -794,6 +794,10 @@ function register_window_id(cid, attr_array) {
     canvas_events.normal();
     pdgui.canvas_map(cid); // side-effect: triggers gui_canvas_getscroll from Pd
     set_editmode_checkbox(attr_array.editmode !== 0 ? true : false);
+    // For now, there is no way for the cord inspector to be turned on by
+    // default. But if this changes we need to set its menu item checkbox
+    // accordingly here
+    //set_cord_inspector_checkbox();
 }
 
 function create_popup_menu(name) {
@@ -873,6 +877,10 @@ function set_edit_menu_modals(state) {
 
 function set_editmode_checkbox(state) {
     canvas_menu.edit.editmode.checked = state;
+}
+
+function set_cord_inspector_checkbox(state) {
+    canvas_menu.edit.cordinspector.checked = state;
 }
 
 // stop-gap

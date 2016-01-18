@@ -6455,10 +6455,16 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
             x->gl_screeny2 = screeny1 + screeny2;
             //canvas_setbounds(x, screenx1, screeny1,
             //    screenx1+screenx2, screeny1+screeny2);
-            sys_vgui("wm geometry .x%lx =%dx%d+%d+%d\n", x,
+            //sys_vgui("wm geometry .x%lx =%dx%d+%d+%d\n", x,
+            //    (int)(x->gl_screenx2 - x->gl_screenx1),
+            //    (int)(x->gl_screeny2 - x->gl_screeny1),
+            //    (int)(x->gl_screenx1), (int)(x->gl_screeny1));
+            gui_vmess("gui_change_patch_window_geometry", "xiiii",
+                x,
                 (int)(x->gl_screenx2 - x->gl_screenx1),
                 (int)(x->gl_screeny2 - x->gl_screeny1),
-                (int)(x->gl_screenx1), (int)(x->gl_screeny1));
+                (int)(x->gl_screenx1),
+                (int)(x->gl_screeny1));
             // hardwired stretchval and whichstretch
             // until we figure out proper resizing
             canvas_dofont(x, copiedfont, 1, 1);
@@ -7581,7 +7587,9 @@ void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
         if (glist_isvisible(x) && glist_istoplevel(x))
         {
             canvas_setcursor(x, CURSOR_RUNMODE_NOTHING);
-            sys_vgui(".x%lx.c delete commentbar\n", glist_getcanvas(x));
+            /* Don't need this anymore, as we can control comment appearance
+               with CSS. */
+            //sys_vgui(".x%lx.c delete commentbar\n", glist_getcanvas(x));
             // jsarlo
             if (x->gl_editor->canvas_cnct_inlet_tag[0] != 0)
             {
@@ -7643,8 +7651,11 @@ void canvas_magicglass(t_canvas *x, t_floatarg fyesplease)
         magicGlass_setOn(x->gl_editor->gl_magic_glass, 0);
         magicGlass_hide(x->gl_editor->gl_magic_glass);
     }
-    sys_vgui("pdtk_canvas_magicglassval .x%x %d\n",
-        glist_getcanvas(x), magicGlass_isOn(x->gl_editor->gl_magic_glass));
+    //sys_vgui("pdtk_canvas_magicglassval .x%x %d\n",
+    //    glist_getcanvas(x), magicGlass_isOn(x->gl_editor->gl_magic_glass));
+    gui_vmess("gui_set_cordinspector", "xi",
+        glist_getcanvas(x),
+        magicGlass_isOn(x->gl_editor->gl_magic_glass));
 }
 // end jsarlo
 
