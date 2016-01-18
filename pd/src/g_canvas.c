@@ -694,9 +694,10 @@ void canvas_reflecttitle(t_canvas *x)
     else namebuf[0] = 0;
 */
 #ifdef __APPLE__
-    sys_vgui("wm attributes .x%lx -modified %d -titlepath {%s/%s}\n",
-        x, x->gl_dirty, canvas_getdir(x)->s_name, x->gl_name->s_name);
-    sys_vgui("wm title .x%lx {%s%s}\n", x, x->gl_name->s_name, namebuf);
+    /* need to test on OSX whether these need to get ported... */
+    //sys_vgui("wm attributes .x%lx -modified %d -titlepath {%s/%s}\n",
+    //    x, x->gl_dirty, canvas_getdir(x)->s_name, x->gl_name->s_name);
+    //sys_vgui("wm title .x%lx {%s%s}\n", x, x->gl_name->s_name, namebuf);
 #else
     //if(glist_havewindow(x) || !x->gl_isgraph || x->gl_isgraph && x->gl_havewindow || x->gl_loading || x->gl_dirty) {
 
@@ -897,8 +898,8 @@ void glist_menu_open(t_glist *x)
         }
         else
         {
-            /* Not sure if this is still needed */
-            sys_vgui("focus .x%lx\n", (t_int)x);
+            /* Not sure if this needs to get ported... need to test */
+            //sys_vgui("focus .x%lx\n", (t_int)x);
         }
     }
     else
@@ -1031,8 +1032,10 @@ void canvas_deletelinesfor(t_canvas *x, t_text *text)
         {
             if (x->gl_editor && glist_isvisible(glist_getcanvas(x)))
             {
-                sys_vgui(".x%lx.c delete l%lx\n",
-                    glist_getcanvas(x), oc);
+                /* Still don't see any place where this gets used. Maybe it's
+                   used by older externals? Need to test... */
+                //sys_vgui(".x%lx.c delete l%lx\n",
+                //    glist_getcanvas(x), oc);
                 /* probably need a gui_vmess here */
             }
             obj_disconnect(t.tr_ob, t.tr_outno, t.tr_ob2, t.tr_inno);
@@ -1079,8 +1082,13 @@ void canvas_deletelinesforio(t_canvas *x, t_text *text,
         {
             if (x->gl_editor)
             {
-                sys_vgui(".x%lx.c delete l%lx\n",
-                    glist_getcanvas(x), oc);
+                char buf[MAXPDSTRING];
+                sprintf(buf, "l%lx", (long unsigned int)oc);
+                //sys_vgui(".x%lx.c delete l%lx\n",
+                //    glist_getcanvas(x), oc);
+                gui_vmess("gui_canvas_delete_line", "xs",
+                    glist_getcanvas(x),
+                    buf);
             }
             obj_disconnect(t.tr_ob, t.tr_outno, t.tr_ob2, t.tr_inno);
         }
@@ -1997,7 +2005,8 @@ void canvasgop_draw_move(t_canvas *x, int doit)
 {
     //delete the earlier GOP window so that when dragging 
     //there is only one GOP window present on parent
-    sys_vgui(".x%lx.c delete GOP\n",  x);
+    /* don't think we need this anymore */
+    //sys_vgui(".x%lx.c delete GOP\n",  x);
         
     //redraw the GOP
     canvas_setgraph(x, x->gl_isgraph+2*x->gl_hidetext, 0);
@@ -2124,7 +2133,8 @@ post("canvas clickhook");
 
             if (glist_isvisible(x))
             {
-                sys_vgui(".x%x.c delete %s\n", x, sh->h_outlinetag);
+                /* Still not sure what this is doing... */
+                //sys_vgui(".x%x.c delete %s\n", x, sh->h_outlinetag);
                 canvasgop_draw_move(x,1);
                 canvas_fixlinesfor(x, (t_text *)x);
                 scrollbar_update(x);
@@ -2156,21 +2166,28 @@ post("canvas clickhook");
 
         if(sh->h_scale) //enter if resize_gop hook
         {
-            sys_vgui("lower %s\n", sh->h_pathname);
+            /* We could port this, but it might be better to wait until we
+               just move the scalehandle stuff directly to the GUI... */
+            //sys_vgui("lower %s\n", sh->h_pathname);
+
             //delete GOP rect where it started from
-            sys_vgui(".x%lx.c delete GOP\n", x);
-            sys_vgui(".x%x.c create rectangle %d %d %d %d\
-                 -outline $pd_colors(selection) -width 1 -tags %s\n",
-                 x, x->gl_xmargin, x->gl_ymargin,
-                    x->gl_xmargin + x->gl_pixwidth,
-                    x->gl_ymargin + x->gl_pixheight, sh->h_outlinetag);
+            /* Doesn't look like we're using this anymore, so no need to
+               port it. */
+            //sys_vgui(".x%lx.c delete GOP\n", x);
+            //sys_vgui(".x%x.c create rectangle %d %d %d %d\
+            //     -outline $pd_colors(selection) -width 1 -tags %s\n",
+            //     x, x->gl_xmargin, x->gl_ymargin,
+            //        x->gl_xmargin + x->gl_pixwidth,
+            //        x->gl_ymargin + x->gl_pixheight, sh->h_outlinetag);
         }
         else //enter if move_gop hook
         {
             //scalehandle_draw_erase(sh,x);
-            sys_vgui("lower %s\n", sh->h_pathname);
+            /* Same as above... */
+            //sys_vgui("lower %s\n", sh->h_pathname);
+
             //delete GOP_resblob when moving the whole GOP
-            sys_vgui(".x%lx.c delete %lxSCALE\n", x, x);
+            //sys_vgui(".x%lx.c delete %lxSCALE\n", x, x);
         }
         sh->h_dragx = 0;
         sh->h_dragy = 0;

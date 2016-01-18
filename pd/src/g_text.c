@@ -2558,6 +2558,14 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
                 x->te_binbuf = b;
                 glob_preset_node_list_seek_hub();
                 glob_preset_node_list_check_loc_and_update();
+                /* Crude hack-- rather than spend another hour rooting
+                   through this awful spaghetti code to figure out where
+                   the border is supposed to get redrawn, let's just add
+                   this... */
+                gobj_vis((t_gobj *)x, glist, 0);
+                gobj_vis((t_gobj *)x, glist, 1);
+                /* ...voila. If this ends up causing problems we can always
+                   revisit it. */
                 //canvas_apply_restore_original_position(glist_getcanvas(glist),
                 //    pos);
             }
