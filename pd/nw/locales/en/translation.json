@@ -243,6 +243,7 @@
     "devtools_tt": "Show the DevTools window (for debugging)"
   },
   "canvas": {
+    "paste_clipboard_prompt": "Warning: you are about to paste Pd code that came from somewhere outside of Pd. Do you want to continue?",
     "save_dialog": {
       "yes": "Yes",
       "yes_tt": "Write the changes to file before closing the patch",

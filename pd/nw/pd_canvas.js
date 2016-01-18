@@ -64,7 +64,7 @@ function might_be_a_pd_file(stuff_from_clipboard) {
 }
 
 function permission_to_paste_from_external_clipboard() {
-    return global.confirm("Warning: you are about to paste Pd code that came from somewhere outside of Pd. Do you want to continue?");
+    return global.confirm(l("canvas.paste_clipboard_prompt"));
 }
 
 function nw_window_focus_callback() {
