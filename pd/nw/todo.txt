@@ -360,6 +360,16 @@ Everything else: (A [x] means we've fixed it)
 [ ] revisit cursor logic-- when you leave the boundaries of an object 
     being dragged, for example, the cursor changes to whatever is set for
     the parent (svg, document, etc.).
+[ ] Consider:
+    [pd foo]
+    |
+    [print]
+
+    1) Go inside [pd foo] and clear the [outlet]
+    2) In the [pd foo] window, click "Undo" in the menu
+    3) Bug!  Notice that the connection between [pd foo]---[print] does
+       not get recreated. I also noted that it isn't just a drawing
+       problem-- the connection doesn't happen at all in Pd.
 [ ] currently you can't send a message to the GUI with a single
     array parameter:
     gui_start_vmess("some_message", "");
