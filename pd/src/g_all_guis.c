@@ -875,10 +875,11 @@ void scalehandle_click_scale(t_scalehandle *h) {
     int x1,y1,x2,y2;
     t_iemgui *x = (t_iemgui *)h->h_master;
     scalehandle_getrect_master(h,&x1,&y1,&x2,&y2);
-    if (glist_isvisible(x->x_glist)) {
-        sys_vgui("lower %s\n", h->h_pathname);
-        sys_vgui(".x%x.c create prect %d %d %d %d -stroke $pd_colors(selection) -strokewidth 1 -tags %s\n",
-            x->x_glist, x1, y1, x2, y2, h->h_outlinetag);
+    if (glist_isvisible(x->x_glist))
+    {
+        //sys_vgui("lower %s\n", h->h_pathname);
+        //sys_vgui(".x%x.c create prect %d %d %d %d -stroke $pd_colors(selection) -strokewidth 1 -tags %s\n",
+        //    x->x_glist, x1, y1, x2, y2, h->h_outlinetag);
     }
     h->h_dragx = 0;
     h->h_dragy = 0;
@@ -900,9 +901,10 @@ void scalehandle_drag_scale(t_scalehandle *h) {
     int x1,y1,x2,y2;
     t_iemgui *x = (t_iemgui *)h->h_master;
     scalehandle_getrect_master(h,&x1,&y1,&x2,&y2);
-    if (glist_isvisible(x->x_glist)) {
-        sys_vgui(".x%x.c coords %s %d %d %d %d\n", x->x_glist, h->h_outlinetag,
-            x1, y1, x2+h->h_dragx, y2+h->h_dragy);
+    if (glist_isvisible(x->x_glist))
+    {
+        //sys_vgui(".x%x.c coords %s %d %d %d %d\n", x->x_glist, h->h_outlinetag,
+        //    x1, y1, x2+h->h_dragx, y2+h->h_dragy);
     }
 }
 
