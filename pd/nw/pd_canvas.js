@@ -84,7 +84,6 @@ function canvas_find_blur() {
 }
 
 function canvas_find_focus() {
-pdgui.post("flub!");
     var state = canvas_events.get_state();
     canvas_events.search();
 }
@@ -349,8 +348,8 @@ var canvas_events = (function() {
                 return false;
             },
             text_mouseup: function(evt) {
-                pdgui.post("mouseup target is " +
-                    evt.target + " and textbox is " + textbox());
+                //pdgui.post("mouseup target is " +
+                //    evt.target + " and textbox is " + textbox());
                 //evt.stopPropagation();    
                 //evt.preventDefault();
                 return false;
@@ -448,9 +447,9 @@ var canvas_events = (function() {
                     (evt.pageY + svg_view.y));
             },
             iemgui_label_mouseup: function(evt) {
-                pdgui.post("lifting the mousebutton on an iemgui label");
+                //pdgui.post("lifting the mousebutton on an iemgui label");
                 // Set last state (none doesn't count as a state)
-                pdgui.post("previous state is " + canvas_events.get_previous_state());
+                //pdgui.post("previous state is " + canvas_events.get_previous_state());
                 canvas_events[canvas_events.get_previous_state()]();
             }
         },

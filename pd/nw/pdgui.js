@@ -406,7 +406,7 @@ function build_file_dialog_string(obj) {
 
 exports.build_file_dialog_string = build_file_dialog_string;
 
-function gui_canvas_saveas (name, initfile, initdir, close_flag) {
+function gui_canvas_saveas(name, initfile, initdir, close_flag) {
     var input, chooser,
         span = patchwin[name].window.document.querySelector("#saveDialogSpan");
     if (!fs.existsSync(initdir)) {
@@ -425,7 +425,6 @@ function gui_canvas_saveas (name, initfile, initdir, close_flag) {
         nwworkingdir: initdir,
         accept: ".pd"
     });
-    post("input is " + input);
     span.innerHTML = input;
     chooser = patchwin[name].window.document.querySelector("#saveDialog"); 
     chooser.onchange = function() {
