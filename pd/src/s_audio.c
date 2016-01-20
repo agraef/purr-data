@@ -722,23 +722,16 @@ void glob_audio_properties(t_pd *dummy, t_floatarg flongform)
     gui_start_vmess("gui_audio_properties", "s",
         gfxstub_new2(&glob_pdobject, (void *)glob_audio_properties));
 
-    //sys_gui("global audio_indevlist; set audio_indevlist {}\n");
-
     gui_start_array(); // input devices
     for (i = 0; i < nindevs; i++)
     {
-        //sys_vgui("lappend audio_indevlist {%s}\n",
-        //    indevlist + i * DEVDESCSIZE);
         gui_s(indevlist + i * DEVDESCSIZE);
     }
     gui_end_array();
 
-//    sys_gui("global audio_outdevlist; set audio_outdevlist {}\n");
     gui_start_array(); // output devices
     for (i = 0; i < noutdevs; i++)
     {
-        //sys_vgui("lappend audio_outdevlist {%s}\n",
-        //    outdevlist + i * DEVDESCSIZE);
         gui_s(outdevlist + i * DEVDESCSIZE);
     }
     gui_end_array();
