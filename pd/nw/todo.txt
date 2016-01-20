@@ -71,7 +71,7 @@ Everything else: (A [x] means we've fixed it)
     (Probably want to either make a permanent item in the pd_canvas.html for it,
     or hard-code a separate div.)
 [ ] looks like nwworkingdir isn't working for open/save dialogs atm
-[ ] text_set doesn't work when a numbox is first created (but works otherwise)
+[x] text_set doesn't work when a numbox is first created (but works otherwise)
 [ ] clean up nw_create_window (doesn't need so many parameters)
 [ ] make it possible to have the inner cells of hradio change color with the
     selection, as the border currently does.  Tk just uses the non-hierarchical
