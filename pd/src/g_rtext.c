@@ -363,31 +363,17 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
         if (action == SEND_FIRST)
         {
             //fprintf(stderr,"send_first rtext=%lx t_text=%lx\n", x, x->x_text);
-            //sys_vgui("pdtk_text_new .x%lx.c {%s %s text %s} %f %f {%.*s} %d %s\n",
-            //    canvas, x->x_tag, rtext_gettype(x)->s_name,
-            //    (glist_isselected(x->x_glist, ((t_gobj*)x->x_text)) ? "selected" : ""),
-            //    dispx + LMARGIN, dispy + TMARGIN,
-            //    outchars_b, tempbuf, sys_hostfontsize(font),
-            //    (glist_isselected(x->x_glist, ((t_gobj*)x->x_text)) ? "$pd_colors(selection)" : "$pd_colors(text)"));
             gui_vmess("gui_text_new", "xssiiisi",
                 canvas, x->x_tag, rtext_gettype(x)->s_name,
                 glist_isselected(x->x_glist, ((t_gobj*)x->x_text)),
                 LMARGIN,
                 fontheight,
-                //pixhigh - BMARGIN - TMARGIN - 1,
-//                TMARGIN,
-//                BMARGIN,
-//                pixhigh,
-//                dispx + LMARGIN,
-//                dispy + TMARGIN,
                 tempbuf,
                 sys_hostfontsize(font));
                
         }
         else if (action == SEND_UPDATE)
         {
-            //sys_vgui("pdtk_text_set .x%lx.c %s {%.*s}\n",
-            //    canvas, x->x_tag, outchars_b, tempbuf);
             gui_vmess("gui_text_set", "xss", canvas, x->x_tag, tempbuf);
 
             // We add the check for T_MESSAGE below so that the box border
