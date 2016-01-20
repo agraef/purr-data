@@ -30,9 +30,6 @@ void bng_draw_update(t_gobj *xgobj, t_glist *glist)
     sprintf(tagbuf, "x%lx", (long unsigned int)&x->x_gui);
     if (x->x_gui.x_changed != x->x_flashed && glist_isvisible(glist))
     {
-//        sys_vgui(".x%lx.c itemconfigure %lxBUT -fill #%6.6x\n",
-//            glist_getcanvas(glist), x,
-//            x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol);
         sprintf(flashcol, "#%6.6x",
             x->x_flashed ? x->x_gui.x_fcol : x->x_gui.x_bcol);
         gui_vmess("gui_bng_flash", "xss",
@@ -53,6 +50,9 @@ void bng_draw_new(t_bng *x, t_glist *glist)
     t_float cr = (x->x_gui.x_w-2)/2.0;
     t_float cx = x1+cr+1.5;
     t_float cy = y1+cr+1.5;
+    /* The circle isn't quite centered in the nw.js port. Let's use the
+       old interface to see if there's anything we're doing wrong. Then once
+       we get the circle placement right we can remove the old code here... */
     //sys_vgui(".x%lx.c create circle %f %f -r %f "
     //         "-stroke $pd_colors(iemgui_border) -fill #%6.6x "
     //         "-tags {%lxBUT x%lx text iemgui border}\n",
@@ -73,9 +73,6 @@ void bng_draw_move(t_bng *x, t_glist *glist)
     t_float cr = (x->x_gui.x_w-2)/2.0;
     t_float cx = x1+cr+1.5;
     t_float cy = y1+cr+1.5;
-    //sys_vgui(".x%lx.c coords %lxBUT %f %f\n", canvas, x, cx, cy);
-    //sys_vgui(".x%lx.c itemconfigure %lxBUT -fill #%6.6x -r %f\n",
-    //    canvas, x, x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol, cr);
     char tagbuf[MAXPDSTRING];
     sprintf(tagbuf, "x%lxbutton", (long unsigned int)x);
     char col[8];
@@ -100,8 +97,6 @@ void bng_draw_config(t_bng* x, t_glist* glist)
     char tagbuf[MAXPDSTRING];
     t_canvas *canvas=glist_getcanvas(glist);
     iemgui_base_draw_config(&x->x_gui);
-    //sys_vgui(".x%lx.c itemconfigure %lxBUT -fill #%6.6x\n",
-    //    canvas, x, x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol);
     sprintf(tagbuf, "x%lxbutton", (long unsigned int)x);
     char fcol[8];
     sprintf(fcol, "#%6.6x", x->x_flashed ? x->x_gui.x_fcol : x->x_gui.x_bcol);
@@ -112,28 +107,6 @@ void bng_draw_config(t_bng* x, t_glist* glist)
     gui_s(fcol);
     gui_end_array();
     gui_end_vmess();
-}
-
-/* can eventually remove this */
-static void bng__clickhook_old(t_scalehandle *sh, int newstate)
-{
-    t_bng *x = (t_bng *)(sh->h_master);
-    if (sh->h_dragon && newstate == 0 && sh->h_scale)
-    {
-        canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
-        if (sh->h_dragx || sh->h_dragy)
-        {
-            x->x_gui.x_w += sh->h_dragx;
-            x->x_gui.x_h += sh->h_dragy;
-            canvas_dirty(x->x_gui.x_glist, 1);
-        }
-        if (glist_isvisible(x->x_gui.x_glist))
-        {
-            bng_draw_move(x, x->x_gui.x_glist);
-            scalehandle_unclick_scale(sh);
-        }
-    }
-    iemgui__clickhook3(sh,newstate);
 }
 
 /* we may no longer need h_dragon... */
