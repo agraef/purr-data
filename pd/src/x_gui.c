@@ -153,7 +153,6 @@ void gfxstub_deleteforkey(void *key)
         {
             if (y->x_key == key)
             {
-                //sys_vgui("destroy .gfxstub%lx\n", y);
                 char tagbuf[MAXPDSTRING];
                 sprintf(tagbuf, ".gfxstub%lx", (long unsigned int)y);
                 gui_vmess("gui_remove_gfxstub", "s",
@@ -256,7 +255,6 @@ static void *openpanel_new( void)
 static void openpanel_symbol(t_openpanel *x, t_symbol *s)
 {
     char *path = (s && s->s_name) ? s->s_name : "$pd_opendir";
-    //sys_vgui("pdtk_openpanel {%s} {%s}\n", x->x_s->s_name, path);
     gui_vmess("gui_openpanel", "xss",
         x->x_canvas,
         x->x_s->s_name,
@@ -316,7 +314,6 @@ static void *savepanel_new( void)
 static void savepanel_symbol(t_savepanel *x, t_symbol *s)
 {
     char *path = (s && s->s_name) ? s->s_name : "$pd_opendir";
-    sys_vgui("pdtk_savepanel {%s} {%s}\n", x->x_s->s_name, path);
     gui_vmess("gui_savepanel", "xss",
         x->x_canvas,
         x->x_s->s_name,
