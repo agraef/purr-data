@@ -25,14 +25,6 @@ void my_canvas_draw_new(t_my_canvas *x, t_glist *glist)
     int x1=text_xpix(&x->x_gui.x_obj, glist);
     int y1=text_ypix(&x->x_gui.x_obj, glist);
 
-    //sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x -stroke #%6.6x "
-    //    "-tags {%lxRECT x%lx text iemgui}\n",
-    //    canvas, x1, y1, x1+x->x_vis_w, y1+x->x_vis_h,
-    //    x->x_gui.x_bcol, x->x_gui.x_bcol, x, x);
-    //sys_vgui(".x%lx.c create prect %d %d %d %d -stroke #%6.6x "
-    //    "-tags {%lxBASE x%lx text iemgui}\n",
-    //    canvas, x1, y1, x1+x->x_gui.x_w, y1+x->x_gui.x_h,
-    //    x->x_gui.x_bcol, x, x);
     char colorbuf[MAXPDSTRING];
     sprintf(colorbuf, "#%6.6x", x->x_gui.x_bcol);
     gui_vmess("gui_text_create_gobj", "xxsiii", canvas,
@@ -48,13 +40,7 @@ void my_canvas_draw_move(t_my_canvas *x, t_glist *glist)
     if (!glist_isvisible(canvas)) return;
     int x1=text_xpix(&x->x_gui.x_obj, glist);
     int y1=text_ypix(&x->x_gui.x_obj, glist);
-
     iemgui_base_draw_move(&x->x_gui);
-
-    //sys_vgui(".x%lx.c coords %lxRECT %d %d %d %d\n",
-    //    canvas, x, x1, y1, x1+x->x_vis_w, y1+x->x_vis_h);
-    //sys_vgui(".x%lx.c coords %lxBASE %d %d %d %d\n",
-    //    canvas, x, x1, y1, x1+x->x_gui.x_w, y1+x->x_gui.x_h);
     gui_vmess("gui_mycanvas_coords", "xxiiii",
         canvas, x,
         x->x_vis_w, x->x_vis_h, x->x_gui.x_w, x->x_gui.x_h);
@@ -64,12 +50,7 @@ void my_canvas_draw_config(t_my_canvas* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
     int isselected;
-    //sys_vgui(".x%lx.c itemconfigure %lxRECT -fill #%6.6x -stroke #%6.6x\n",
-    //         canvas, x, x->x_gui.x_bcol, x->x_gui.x_bcol);
     char bcol[8]; sprintf(bcol, "#%6.6x", x->x_gui.x_bcol);
-    //sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke %s\n", canvas, x,
-    //    x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas ?
-    //    "$pd_colors(selection)" : bcol);
     isselected = x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas;
     gui_vmess("gui_update_mycanvas", "xxsi",
         canvas, x, bcol, isselected);
@@ -80,9 +61,6 @@ void my_canvas_draw_select(t_my_canvas* x, t_glist* glist)
     t_canvas *canvas=glist_getcanvas(glist);
     if (x->x_gui.x_glist != glist_getcanvas(glist)) return;
     char bcol[8]; sprintf(bcol, "#%6.6x", x->x_gui.x_bcol);
-    //sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke %s\n", canvas, x,
-    //    x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas ?
-    //    "$pd_colors(selection)" : bcol);
     gui_vmess("gui_mycanvas_select_color", "xxs",
         canvas, x,
         x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas ?
