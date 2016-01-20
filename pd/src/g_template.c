@@ -3699,6 +3699,11 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
             gui_f(fielddesc_getcoord(&x->x_vec[3], template, data, 1));
         }
     }
+    if (x->x_opacity.a_flag)
+    {
+        gui_s("opacity");
+        gui_f(fielddesc_getcoord(&x->x_opacity.a_attr, template, data, 1));
+    }
     if (x->x_type == gensym("polyline") ||
         x->x_type == gensym("polygon"))
     {
