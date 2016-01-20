@@ -876,7 +876,6 @@ static void scalar_groupvis(t_scalar *x, t_glist *owner, t_template *template,
 
         /* register events */
         svg_register_events((t_gobj *)gl, owner, x, template, x->sc_vec);
-        //sys_gui("\n");
     }
     for (y = gl->gl_list; y; y = y->g_next)
     {
