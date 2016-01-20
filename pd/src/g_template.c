@@ -1600,8 +1600,6 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
         }
         else
             fill = &s_;
-        //sys_vgui(".x%lx.c itemconfigure %s -fill %s\n",
-        //    glist_getcanvas(c), tag, fill->s_name);
         gui_vmess("gui_draw_configure", "xsss",
             glist_getcanvas(c), tag, s->s_name, fill->s_name);
     }
@@ -1776,12 +1774,9 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
             int j;
             int cargs = x->x_nargs_per_cmd[i];
             f = (x->x_vec)+totalpoints;
-            //sys_vgui("%c\\\n", *(cmd));
             sprintf(cmdbuf, "%c", *(cmd));
             gui_s(cmdbuf);
             for (j = 0; j < x->x_nargs_per_cmd[i]; j++)
-                //sys_vgui("%g\\\n", fielddesc_getcoord(
-                //    f+j, template, data, 1));
                 gui_f(fielddesc_getcoord(
                     f+j, template, data, 0));
             totalpoints += x->x_nargs_per_cmd[i];
@@ -1792,9 +1787,6 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
     }
     else if (s == gensym("index"))
     {
-        //sys_vgui("pdtk_drawimage_index .x%lx.c .x%lx .draw%lx.%lx %d\n",
-        //    glist_getcanvas(c), parent, parent, data, drawimage_getindex(parent,
-        //        template, data)); 
         gui_vmess("gui_drawimage_index", "xxxi",
             glist_getcanvas(c), parent, data, drawimage_getindex(parent, template, data));
     }
@@ -3621,19 +3613,12 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
             int j;
             int cargs = x->x_nargs_per_cmd[i];
             f = (x->x_vec)+totalpoints;
-            //sys_vgui("%c\\\n", *(cmd));
-            //sys_vgui("%c ", *(cmd));
             sprintf(cmdbuf, "%c", *(cmd));
             gui_s(cmdbuf);
             for (j = 0; j < x->x_nargs_per_cmd[i]; j++)
-                //sys_vgui("%g\\\n", fielddesc_getcoord(
-                //    f+j, template, data, 1));
-                //sys_vgui("%g ", fielddesc_getcoord(f+j, template, data, 1));
                 gui_f(fielddesc_getcoord(f+j, template, data, 0));
             totalpoints += x->x_nargs_per_cmd[i];
         }
-        //sys_gui("}\\\n");
-        //sys_gui("\",");
         gui_end_array();
     }
     if (x->x_stroketype)
@@ -3860,9 +3845,6 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 pix[i] = fielddesc_getcoord(f, template, data, 1);
         }
         /* begin the gui drawing command */
-
-        //sys_vgui("nn gui_draw_vis \".x%lx\",\"%s\",\"", glist_getcanvas(glist),
-        //    sa->x_type->s_name);
         gui_start_vmess("gui_draw_vis", "xs", glist_getcanvas(glist),
             sa->x_type->s_name);
 
@@ -3875,17 +3857,12 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         char parent_tagbuf[MAXPDSTRING];
         if (in_array)
         {
-            //sys_vgui(" -parent .scelem%lx.%lx \\\n", parentglist, data);
-            //sys_vgui("\"scelem%lx.%lx\",", parentglist, data);
             sprintf(parent_tagbuf, "scelem%lx.%lx", (long unsigned int)parentglist,
                 (long unsigned int)data);
             gui_s(parent_tagbuf);
         }
         else
         {
-            //sys_vgui(" -parent .dgroup%lx.%lx \\\n",
-            //sys_vgui("\"dgroup%lx.%lx\",",
-            //    x->x_canvas, data);
             sprintf(parent_tagbuf, "dgroup%lx.%lx", (long unsigned int)x->x_canvas,
                 (long unsigned int)data);
             gui_s(parent_tagbuf);
@@ -3893,11 +3870,6 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         /* tags - one for this scalar (not sure why the double glist thingy)
           one for this specific draw item
         */
-        //sys_vgui("-tags {.x%lx.x%lx.template%lx .draw%lx.%lx}\n",
-        //    glist_getcanvas(glist), glist, data, x, data);
-
-        // Let's try to get rid of Ico's tag
-        //sys_vgui("\"draw%lx.%lx\"", x, data);
         char tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "draw%lx.%lx", (long unsigned int)x,
             (long unsigned int)data);
@@ -3924,8 +3896,6 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     {
         if (n > 1)
         {
-//            sys_vgui(".x%lx.c delete .x%lx.x%lx.template%lx\n",
-//                glist_getcanvas(glist), glist_getcanvas(glist), glist, data);
             char itemtagbuf[MAXPDSTRING];
             sprintf(itemtagbuf, "draw%lx.%lx", (long unsigned int)x,
                 (long unsigned int)data);
@@ -4615,14 +4585,12 @@ void curve_smooth_to_q(int *pix, int n, int closed)
             a = (p[0].x+p[n-1].x)>>1;
             b = (p[0].y+p[n-1].y)>>1;
         }
-        //sys_vgui("M %d %d \\\n", a, b);
         gui_s("M");
         gui_i(a);
         gui_i(b);
     }
     else // need to test non-closed smooth curves
     {
-        //sys_vgui("M %d %d \\\n", p[0].x, p[0].y);
         gui_s("M");
         gui_i(p[0].x);
         gui_i(p[0].y);
@@ -4631,10 +4599,6 @@ void curve_smooth_to_q(int *pix, int n, int closed)
     int n2 = (closed?n:n-1); // need to test this for non-closed smooth curves
     for (i = (closed?(1+overlap):2); i < n2; i++)
     {
-        //sys_vgui("Q %d %d %d %d \\\n",
-        //    o.x, o.y,
-        //    (o.x + p[i].x)>>1,
-        //    (o.y + p[i].y)>>1);
         gui_s("Q");
         gui_i(o.x);
         gui_i(o.y);
@@ -4647,9 +4611,6 @@ void curve_smooth_to_q(int *pix, int n, int closed)
     {
         // here we repurpose overlap for an additional check
         overlap = (p[0].x == p[n-1].x && p[0].y == p[n-1].y && n-1 != 0);
-        //sys_vgui("Q %d %d %d %d \\\n", p[n-1].x, p[n-1].y,
-        //    (p[n-1].x+p[0+overlap].x)>>1,
-        //    (p[n-1].y+p[0+overlap].y)>>1);
         gui_s("Q");
         gui_i(p[n-1].x);
         gui_i(p[n-1].y);
@@ -4659,7 +4620,6 @@ void curve_smooth_to_q(int *pix, int n, int closed)
     else
     {
         // need ot test this for non-closed smooth curves
-        //sys_vgui("Q %d %d %d %d \\\n", p[n-2].x, p[n-2].y, p[n-1].x, p[n-1].y);
         gui_s("Q");
         gui_i(p[n-2].x);
         gui_i(p[n-2].y);
@@ -4765,8 +4725,6 @@ static void curve_getrect(t_gobj *z, t_glist *glist,
         if (yloc > y2) y2 = yloc;
     }
     //fprintf(stderr,"FINAL curve_getrect %d %d %d %d\n", x1, y1, x2, y2);
-    //sys_vgui(".x%lx.c create prect %d %d %d %d -stroke red -tags blah\n",
-    //        glist_getcanvas(glist), x1, y1, x2, y2);
     *xp1 = x1;
     *yp1 = y1;
     *xp2 = x2;
@@ -4926,21 +4884,15 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 gui_start_array();
                 for (i = 0; i < n; i++)
                 {
-                    //sys_vgui("%d %d \\\n",
-                    //    pix[2*i],
-                    //    pix[2*i+1]);
                     gui_i(pix[2*i]);
                     gui_i(pix[2*i+1]);
                 }
                 gui_end_array();
             }
-            //sys_vgui("-strokewidth %f \\\n", width);
             gui_s("stroke-width");
             gui_f(width);
             if (flags & CLOSED)
             {
-                //sys_vgui("-fill %s -stroke %s \\\n",
-                //    fill, outline);
                 gui_s("fill");
                 gui_s(fill);
                 gui_s("stroke");
@@ -4948,7 +4900,6 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             }
             else
             {
-                //sys_vgui("-stroke %s -fill \"\" \\\n", outline);
                 gui_s("stroke");
                 gui_s(outline);
                 gui_s("fill");
@@ -4963,20 +4914,16 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             {
                 /* If we're in an array we want to use the element template
                    in the tag */
-                //sys_vgui("-parent .scelem%lx.%lx \\\n", parentglist, data);
                 sprintf(parent_tagbuf, "scelem%lx.%lx", (long unsigned int)parentglist, (long unsigned int)data);
                 gui_s(parent_tagbuf);
             }
             else
             {
-                //sys_vgui("-parent .dgroup%lx.%lx \\\n", x->x_canvas, sc->sc_vec);
                 /* Here we can just use x->x_canvas since curves can't appear
                    inside groups */
                 sprintf(parent_tagbuf, "dgroup%lx.%lx", (long unsigned int)x->x_canvas, (long unsigned int)data);
                 gui_s(parent_tagbuf);
             }
-            //sys_vgui("-tags {.x%lx.x%lx.template%lx scalar%lx}\n",
-            //    glist_getcanvas(glist), glist, data, sc);
             char tagbuf[MAXPDSTRING];
             sprintf(tagbuf, "curve%lx.%lx", (long unsigned int)x,
                 (long unsigned int)data);
@@ -5001,8 +4948,6 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     {
         if (n > 1)
         {
-            //sys_vgui(".x%lx.c delete .x%lx.x%lx.template%lx\n",
-            //    glist_getcanvas(glist), glist_getcanvas(glist), glist, data);
             char itemtagbuf[MAXPDSTRING];
             sprintf(itemtagbuf, "curve%lx.%lx", (long unsigned int)x,
                 (long unsigned int)data);
@@ -5622,10 +5567,6 @@ static void plot_groupvis(t_scalar *x, t_glist *owner, t_word *data,
         (long unsigned int)data);
     sprintf(parent_tagbuf, "scelem%lx.%lx", (long unsigned int)parent,
         (long unsigned int)data);
-    //sys_vgui(".x%lx.c create group -tags .scelem%lx.%lx "
-    //         "-parent {.scelem%lx.%lx}\\\n",
-    //     glist_getcanvas(owner), groupcanvas, data,
-    //     parent, data);
     gui_start_vmess("gui_create_scalar_group", "xss",
         glist_getcanvas(owner),
         tagbuf,
@@ -5729,7 +5670,6 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             symfill = (style == PLOTSTYLE_POINTS ? symoutline : symfill);
             t_float minyval = 1e20, maxyval = -1e20;
             int ndrawn = 0;
-            //sys_vgui(".x%lx.c create path { \\\n", glist_getcanvas(glist));
 
             gui_start_vmess("gui_plot_vis", "xii",
                 glist_getcanvas(glist),
@@ -5873,8 +5813,6 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             {
                 /* found "w" field which controls linewidth.  The trace is
                    a filled polygon with 2n points. */
-                //sys_vgui(".x%lx.c create ppolygon \\\n",
-                //    glist_getcanvas(glist));
 
                 gui_start_vmess("gui_plot_vis", "xii",
                     glist_getcanvas(glist),
@@ -5899,11 +5837,6 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                     ixpix = xpix + 0.5;
                     if (xonset >= 0 || ixpix != lastpixel)
                     {
-                        //sys_vgui("%d %f \\\n", ixpix,
-                        //        fielddesc_cvttocoord(yfielddesc, 
-                        //        yloc + yval) -
-                        //        fielddesc_cvttocoord(wfielddesc,wval));
-
                         gui_i(ixpix);
                         gui_f(fielddesc_cvttocoord(yfielddesc, 
                                   yloc + yval) -
@@ -5930,11 +5863,6 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                     ixpix = xpix + 0.5;
                     if (xonset >= 0 || ixpix != lastpixel)
                     {
-                        //sys_vgui("%d %f \\\n", ixpix,
-                        //    yloc + fielddesc_cvttocoord(yfielddesc,
-                        //        yval) +
-                        //            fielddesc_cvttocoord(wfielddesc, wval));
-
                         gui_i(ixpix);
                         gui_f(yloc + fielddesc_cvttocoord(yfielddesc,
                                   yval) +
@@ -5948,15 +5876,6 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                     There should be at least two already. */
                 if (ndrawn < 4)
                 {
-                    //sys_vgui("%d %f \\\n", ixpix + 10,
-                    //    yloc + fielddesc_cvttocoord(yfielddesc,
-                    //        yval) +
-                    //            fielddesc_cvttocoord(wfielddesc, wval));
-                    //sys_vgui("%d %f \\\n", ixpix + 10,
-                    //    yloc + fielddesc_cvttocoord(yfielddesc,
-                    //        yval) -
-                    //            fielddesc_cvttocoord(wfielddesc, wval));
-
                     gui_i(ixpix + 10);
                     gui_f(yloc + fielddesc_cvttocoord(yfielddesc,
                               yval) +
@@ -5968,8 +5887,6 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 }
                 gui_end_array();
             ouch:
-                //sys_vgui(" -strokewidth 1 -fill %s -stroke %s \\\n",
-                //    symoutline->s_name, symoutline->s_name);
                 gui_start_array();
 
                 gui_s("stroke-width");
@@ -5980,15 +5897,6 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 gui_s(symoutline->s_name);
 
                 gui_end_array();
-                // this doesn't work with tkpath...
-                //if (style == PLOTSTYLE_BEZ) sys_vgui("-smooth 1 \\\n");
-
-                //if (in_array)
-                //    sys_vgui(" -parent .scelem%lx \\\n", data);
-                //else
-                //    sys_vgui(" -parent .dgroup%lx.%lx \\\n", x->x_canvas, sc->sc_vec);
-                //sys_vgui("-tags {.x%lx.x%lx.template%lx scalar%lx}\n",
-                //    glist_getcanvas(glist), glist, data, sc);
 
                 /* tags */
                 gui_start_array();
@@ -6011,12 +5919,10 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                     /* no "w" field.  If the linewidth is positive, draw a
                     segmented line with the requested width; otherwise don't
                     draw the trace at all. */
-                //sys_vgui(".x%lx.c create polyline \\\n", glist_getcanvas(glist));
                 gui_start_vmess("gui_plot_vis", "xii",
                     glist_getcanvas(glist),
                     basex,
                     basey);
-
 
                 gui_start_array();
                 gui_s("M");
@@ -6043,10 +5949,6 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
 
                     if (xonset >= 0 || render)
                     {
-                        //sys_vgui("%d %f \\\n", ixpix,
-                        //        yloc + fielddesc_cvttocoord(yfielddesc,
-                        //            yval));
-
                         gui_i(ixpix);
                         gui_f(yloc + fielddesc_cvttocoord(yfielddesc,
                                   yval));
@@ -6060,16 +5962,10 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 //if (ndrawn == 0) sys_vgui("0 0 0 0 \\\n");
                 if (ndrawn == 1)
                 {
-                    //sys_vgui("%d %f \\\n", ixpix + 10,
-                    //yloc + 
-                    //    fielddesc_cvttocoord(yfielddesc, yval));
-
                     gui_i(ixpix + 10);
                     gui_f(yloc + fielddesc_cvttocoord(yfielddesc, yval));
                 }
                 gui_end_array();
-
-                //sys_vgui("-strokewidth %f -stroke %s -fill \"\" \\\n", linewidth, symoutline->s_name);
 
                 gui_start_array();
                 gui_s("stroke-width");
@@ -6079,13 +5975,6 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 gui_s("fill");
                 gui_s("none");
                 gui_end_array();
-                //if (style == PLOTSTYLE_BEZ) sys_vgui("-smooth 1 \\\n"); //this doesn't work with tkpath
-                //if (in_array)
-                //    sys_vgui(" -parent .scelem%lx \\\n", data);
-                //else
-                //    sys_vgui(" -parent .dgroup%lx.%lx \\\n", x->x_canvas, sc->sc_vec);
-                //sys_vgui("-tags {.x%lx.x%lx.template%lx scalar%lx}\n",
-                //          glist_getcanvas(glist), glist, data,sc);
 
                 /* tags */
                 gui_start_array();
@@ -6138,11 +6027,6 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
 
 
                    /* todo: need to check if plot itself is in an array */
-                //sys_vgui(".x%lx.c create group -tags {.scelem%lx.%lx} "
-                //         "-matrix {{1.0 0.0} {0.0 1.0} {%g %g}} ",
-                //    glist_getcanvas(glist), elemtemplatecanvas,
-                //    (t_word *)(elem + elemsize * i),
-                //    usexloc, useyloc);
                 char tagbuf[MAXPDSTRING];
                 sprintf(tagbuf, "scelem%lx.%lx",
                     (long unsigned int)elemtemplatecanvas,
@@ -6150,14 +6034,12 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 char parent_tagbuf[MAXPDSTRING];
                 if (in_array)
                 {
-                    //sys_vgui("-parent {.scelem%lx.%lx}\n", parentglist, data);
                     sprintf(parent_tagbuf, "scelem%lx.%lx",
                         (long unsigned int)parentglist,
                         (long unsigned int)data);
                 }
                 else
                 {
-                    //sys_vgui("-parent {.dgroup%lx.%lx}\n", x->x_canvas, data);
                     sprintf(parent_tagbuf, "dgroup%lx.%lx",
                         (long unsigned int)x->x_canvas,
                         (long unsigned int)data);
@@ -6547,31 +6429,17 @@ static void drawnumber_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             SETSYMBOL(&at, fielddesc_getsymbol(&x->x_value, template, data, 0));
         else SETFLOAT(&at, fielddesc_getfloat(&x->x_value, template, data, 0));
         drawnumber_sprintf(x, buf, &at);
-        //sys_vgui(".x%lx.c create ptext %d "
-        //         "[expr {[font metrics {{%s} %d} -ascent] + %d}] "
-        //         "-textanchor start -fill %s -text {%s}\\\n",
-        //       glist_getcanvas(glist), xloc, sys_font,
-        //       sys_hostfontsize(fontsize), yloc, colorstring, buf);
-        /* have to remove fontweight for the time being... */
-        //sys_vgui(" -fontfamily {%s} -fontsize %d", sys_font, fontsize);
-        //sys_vgui(" -matrix { {%g 0} {0 %g} {0 0} }", xscale, yscale);
-
 
         char parent_tagbuf[MAXPDSTRING];
         if (in_array)
         {
-            //sys_vgui(" -parent .scelem%lx.%lx \\\n", parentglist, data);
             sprintf(parent_tagbuf,"scelem%lx.%lx", (long unsigned int)parentglist, (long unsigned int)data);
         }
         else
         {
-            //sys_vgui(" -parent .dgroup%lx.%lx \\\n",
-            //    x->x_canvas, data);
             sprintf(parent_tagbuf, "dgroup%lx.%lx", (long unsigned int)x->x_canvas, (long unsigned int)data);
         }
         char tagbuf[MAXPDSTRING];
-        //sys_vgui(" -tags {.x%lx.x%lx.template%lx scalar%lx}\n", 
-        //    glist_getcanvas(glist), glist, data, sc);
         sprintf(tagbuf, "drawnumber%lx.%lx", (long unsigned int)x, (long unsigned int)data);
         gui_vmess("gui_drawnumber_vis", "xssiiffsissii",
             glist_getcanvas(glist),
@@ -6590,8 +6458,6 @@ static void drawnumber_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     }
     else
     {
-        //sys_vgui(".x%lx.c delete .x%lx.x%lx.template%lx\n",
-        //    glist_getcanvas(glist), glist_getcanvas(glist), glist, data);
         char tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "drawnumber%lx.%lx", (long unsigned int)x, (long unsigned int)data);
         gui_vmess("gui_draw_erase_item", "xs", glist_getcanvas(glist),
@@ -7004,29 +6870,16 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         else SETFLOAT(&at, fielddesc_getfloat(&x->x_value, template, data, 0));
         drawsymbol_sprintf(x, buf, &at);
 
-        //sys_vgui(".x%lx.c create ptext %d "
-        //         "[expr {[font metrics {{%s} %d} -ascent] + %d}] "
-        //         "-textanchor start -fill %s -text {%s}\\\n",
-        //        glist_getcanvas(glist), xloc, sys_font,
-        //        sys_hostfontsize(fontsize), yloc, colorstring, buf);
-        //sys_vgui(" -fontfamily {%s} -fontsize %d ", sys_font, fontsize);
-        //sys_vgui(" -matrix { {%g 0} {0 %g} {0 0} }", xscale, yscale);
-
         char parent_tagbuf[MAXPDSTRING];
         if (in_array)
         {
-            //sys_vgui(" -parent .scelem%lx.%lx \\\n", parentglist, data);
             sprintf(parent_tagbuf, "scelem%lx.%lx", (long unsigned int)parentglist, (long unsigned int)data);
         }
         else
         {
-            //sys_vgui(" -parent .dgroup%lx.%lx \\\n",
-            //    x->x_canvas, data);
             sprintf(parent_tagbuf, "dgroup%lx.%lx", (long unsigned int)x->x_canvas, (long unsigned int)data);
         }
         char tagbuf[MAXPDSTRING];
-        //sys_vgui(" -tags {.x%lx.x%lx.template%lx scalar%lx}\n", 
-        //    glist_getcanvas(glist), glist, data, sc);
         sprintf(tagbuf, "drawnumber%lx.%lx", (long unsigned int)x, (long unsigned int)data);
 
         gui_vmess("gui_drawnumber_vis", "xssiiffsissii",
@@ -7046,8 +6899,6 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     }
     else
     {
-        //sys_vgui(".x%lx.c delete .x%lx.x%lx.template%lx\n",
-        //    glist_getcanvas(glist), glist_getcanvas(glist), glist, data);
         char tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "drawnumber%lx.%lx", (long unsigned int)x, (long unsigned int)data);
         gui_vmess("gui_draw_erase_item", "xs", glist_getcanvas(glist),
@@ -7277,8 +7128,6 @@ static void *drawimage_new(t_symbol *classsym, int argc, t_atom *argv)
        the source. ".x%lx" is the name for the parent tk image and
        ".x%lx.i" is the tag given to a scalar's canvas image item.
     */
-    //sys_vgui("pdtk_drawimage_new .x%lx {%s} {%s} %d\n", (t_int)x,
-    //    x->x_img->s_name, dir->s_name, x->x_flags);
     gui_vmess("gui_drawimage_new", "xssi",
         x,
         x->x_img->s_name,
@@ -7504,16 +7353,6 @@ static void drawimage_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         int xloc = fielddesc_getcoord(&x->x_xloc, template, data, 0);
         int yloc = fielddesc_getcoord(&x->x_yloc, template, data, 0);
 
-        //sys_vgui("pdtk_drawimage_vis .x%lx.c %d %d .x%lx .x%lx.i %d \\\n",
-        //    glist_getcanvas(glist), xloc, yloc, x, data,
-        //    (int)fielddesc_getfloat(&x->x_value, template, data, 0));
-        //sys_vgui(".x%lx.x%lx.template%lx scalar%lx %s%lx.%lx "
-        //         ".draw%lx.%lx\n", glist_getcanvas(glist),
-        //    glist, data, sc,
-        //    (in_array ? ".scelem" : ".dgroup"),
-        //    (in_array ? parentglist : parent), data,
-        //    x, data);
-
         char tagbuf[MAXPDSTRING];
         char parent_tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "draw%lx.%lx",
@@ -7532,11 +7371,6 @@ static void drawimage_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             (int)fielddesc_getfloat(&x->x_value, template, data, 0),
             parent_tagbuf);
 
-        /* need to revisit all these tags, they are getting confusing... */
-        //sys_vgui(".x%lx.c itemconfigure .x%lx.x%lx.template%lx\\\n",
-        //    glist_getcanvas(glist), glist_getcanvas(glist), glist, data);
-        //sys_vgui(".x%lx.c itemconfigure .draw%lx.%lx\\\n",
-        //    glist_getcanvas(glist), x, data);
         gui_start_vmess("gui_draw_configure_all", "xs",
             glist_getcanvas(glist), tagbuf);
         svg_togui(svg, template, data);
@@ -7724,7 +7558,6 @@ static void drawimage_free(t_drawimage *x)
     //sprintf(buf, ".x%lx", (t_int)x);
     sprintf(buf, ".x%lx", (long unsigned int)x);
     pd_unbind(&x->x_obj.ob_pd, gensym(buf));
-    //sys_vgui("pdtk_drawimage_free .x%lx\n", (t_int)x);
     gui_vmess("gui_drawimage_free", "x", x);
 }
 
