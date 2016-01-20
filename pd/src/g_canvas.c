@@ -674,45 +674,9 @@ void canvas_reflecttitle(t_canvas *x)
 {
     char namebuf[MAXPDSTRING];
     canvas_args_to_string(namebuf, x);
-/*
-    t_canvasenvironment *env = canvas_getenv(x);
-    if (env->ce_argc)
-    {
-        int i;
-        strcpy(namebuf, " (");
-        for (i = 0; i < env->ce_argc; i++)
-        {
-            if (strlen(namebuf) > MAXPDSTRING/2 - 5)
-                break;
-            if (i != 0)
-                strcat(namebuf, " ");
-            atom_string(&env->ce_argv[i], namebuf + strlen(namebuf), 
-                MAXPDSTRING/2);
-        }
-        strcat(namebuf, ")");
-    }
-    else namebuf[0] = 0;
-*/
-#ifdef __APPLE__
-    /* need to test on OSX whether these need to get ported... */
-    //sys_vgui("wm attributes .x%lx -modified %d -titlepath {%s/%s}\n",
-    //    x, x->gl_dirty, canvas_getdir(x)->s_name, x->gl_name->s_name);
-    //sys_vgui("wm title .x%lx {%s%s}\n", x, x->gl_name->s_name, namebuf);
-#else
-    //if(glist_havewindow(x) || !x->gl_isgraph || x->gl_isgraph && x->gl_havewindow || x->gl_loading || x->gl_dirty) {
-
-    /*fprintf(stderr,"%d %d %d %d %d\n", glist_istoplevel(x), !x->gl_isgraph,
-    x->gl_isgraph && x->gl_havewindow, x->gl_loading,
-    x->gl_dirty);*/
-
-    //sys_vgui("wm title .x%lx {%s%c%s - %s}\n", 
-    //    x, x->gl_name->s_name, (x->gl_dirty? '*' : ' '), namebuf,
-    //        canvas_getdir(x)->s_name);
     gui_vmess("gui_canvas_set_title", "xsssi",
         x, x->gl_name->s_name,
         namebuf, canvas_getdir(x)->s_name, x->gl_dirty);
-//}
-#endif
 }
 
     /* mark a glist dirty or clean */
@@ -787,9 +751,6 @@ void canvas_drawredrect(t_canvas *x, int doit)
     {
         int x1=x->gl_xmargin, y1=x->gl_ymargin + sys_legacy;
         int x2=x1+x->gl_pixwidth, y2=y1+x->gl_pixheight;
-        //sys_vgui(".x%lx.c create line "
-        //    "%d %d %d %d %d %d %d %d %d %d -fill #ff8080 -tags GOP\n",
-        //    glist_getcanvas(x), x1, y1, x2, y1, x2, y2, x1, y2, x1, y1);
         gui_vmess("gui_canvas_drawredrect", "xiiii",
             glist_getcanvas(x),
             x1, y1, x2, y2);
@@ -799,7 +760,6 @@ void canvas_drawredrect(t_canvas *x, int doit)
     }
     else
     {
-        //sys_vgui(".x%lx.c delete GOP\n",  glist_getcanvas(x));
         gui_vmess("gui_canvas_deleteredrect", "x",
             glist_getcanvas(x));
     }
@@ -837,7 +797,6 @@ void canvas_map(t_canvas *x, t_floatarg f)
         if (x->gl_isgraph && x->gl_goprect)
             canvas_drawredrect(x, 1);
         scrollbar_update(x);
-        //}
     }
     else
     {
@@ -845,9 +804,6 @@ void canvas_map(t_canvas *x, t_floatarg f)
         if (glist_isvisible(x))
         {
             /* just clear out the whole canvas */
-            //sys_vgui(".x%lx.c dtag all selected\n", x);
-            //sys_vgui("foreach item [.x%lx.c find withtag {(!root)}] "
-            //         "{ .x%lx.c delete $item }\n", x, x);
             gui_vmess("gui_canvas_erase_all_gobjs", "x",
                 x);
             x->gl_mapped = 0;
@@ -990,15 +946,6 @@ static void canvas_drawlines(t_canvas *x)
               pd_class(&t.tr_ob->ob_g.g_pd) != message_class))
             canvas_drawconnection(glist_getcanvas(x), t.tr_lx1, t.tr_ly1,
                 t.tr_lx2, t.tr_ly2, (t_int)oc, issignal);
-
-        /*sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth %s "
-                   "-stroke %s -tags {l%lx all_cords %s}\n",
-              glist_getcanvas(x), t.tr_lx1, t.tr_ly1, t.tr_lx2, t.tr_ly2, 
-              (issignal ? "$pd_colors(signal_cord_width)" :
-                  "$pd_colors(control_cord_width)"),
-              (issignal ? "$pd_colors(signal_cord)" :
-                  "$pd_colors(control_cord)"),
-              oc);*/
     }
 }
 
@@ -1012,10 +959,8 @@ void canvas_fixlinesfor(t_canvas *x, t_text *text)
     {
         if (t.tr_ob == text || t.tr_ob2 == text)
         {
-            /*sys_vgui(".x%lx.c coords l%lx %d %d %d %d\n",
-                glist_getcanvas(x), oc,
-                    t.tr_lx1, t.tr_ly1, t.tr_lx2, t.tr_ly2);*/
-        canvas_updateconnection(x, t.tr_lx1, t.tr_ly1, t.tr_lx2, t.tr_ly2, (t_int)oc);
+            canvas_updateconnection(x, t.tr_lx1, t.tr_ly1, t.tr_lx2, t.tr_ly2,
+                (t_int)oc);
         }
     }
 }
@@ -1056,8 +1001,6 @@ void canvas_eraselinesfor(t_canvas *x, t_text *text)
         {
             if (x->gl_editor)
             {
-                //sys_vgui(".x%lx.c delete l%lx\n",
-                //    glist_getcanvas(x), oc);
                 char tagbuf[MAXPDSTRING];
                 sprintf(tagbuf, "l%lx", (long unsigned int)oc);
                 gui_vmess("gui_canvas_delete_line", "xs",
@@ -1084,8 +1027,6 @@ void canvas_deletelinesforio(t_canvas *x, t_text *text,
             {
                 char buf[MAXPDSTRING];
                 sprintf(buf, "l%lx", (long unsigned int)oc);
-                //sys_vgui(".x%lx.c delete l%lx\n",
-                //    glist_getcanvas(x), oc);
                 gui_vmess("gui_canvas_delete_line", "xs",
                     glist_getcanvas(x),
                     buf);
@@ -1103,7 +1044,6 @@ static void canvas_pop(t_canvas *x, t_floatarg fvis)
     canvas_resortinlets(x);
     canvas_resortoutlets(x);
     x->gl_loading = 0;
-    //sys_vgui("pdtk_canvas_force_getscroll .x%lx.c\n", x);
     //fprintf(stderr,"loading = 0 .x%lx owner=.x%lx\n", x, x->gl_owner);
 }
 
