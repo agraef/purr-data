@@ -28,7 +28,6 @@ t_undo_action *canvas_undo_init(t_canvas *x)
         x->u_last = a;
         a->prev = NULL;
         a->name = "no";
-        //sys_vgui("pdtk_undomenu .x%lx no no\n", (t_int)a->x);
         gui_vmess("gui_undo_menu", "xss", (t_int)a->x, "no", "no");
     }
     else
@@ -55,7 +54,6 @@ t_undo_action *canvas_undo_add(t_canvas *x, int type, const char *name,
     a->data = (void *)data;
     a->name = (char *)name;
     canvas_undo_name = name;
-    //sys_vgui("pdtk_undomenu .x%lx %s no\n", x, a->name);
     gui_vmess("gui_undo_menu", "xss", x, a->name, "no");
     return(a);
 }
@@ -97,8 +95,6 @@ void canvas_undo_undo(t_canvas *x)
         glob_preset_node_list_check_loc_and_update();
         if (glist_isvisible(x) && glist_istoplevel(x))
         {
-            //sys_vgui("pdtk_undomenu .x%lx %s %s\n",
-            //    x, undo_action, redo_action);
             gui_vmess("gui_undo_menu", "xss",
                 x, undo_action, redo_action);
             text_checkvalidwidth(x);
@@ -146,8 +142,6 @@ void canvas_undo_redo(t_canvas *x)
         glob_preset_node_list_check_loc_and_update();
         if (glist_isvisible(x) && glist_istoplevel(x))
         {
-            //sys_vgui("pdtk_undomenu .x%lx %s %s\n",
-            //    x, undo_action, redo_action);
             gui_vmess("gui_undo_menu", "xss",
                 x, undo_action, redo_action);
             text_checkvalidwidth(x);
