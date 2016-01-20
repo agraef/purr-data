@@ -44,7 +44,6 @@ static int clipboard_istext = 0;
 static t_glist *glist_finddirty(t_glist *x);
 static void canvas_reselect(t_canvas *x);
 static void canvas_cut(t_canvas *x);
-//static void canvas_undo(t_canvas *x);
 static int paste_xyoffset = 0; /* a counter of pastes to make x,y offsets */
 //static void canvas_mouseup_gop(t_canvas *x, t_gobj *g);
 static void canvas_done_popup(t_canvas *x, t_float which, t_float xpos,
@@ -168,16 +167,6 @@ static void canvas_nlet_conf (t_canvas *x, int type) {
             x->gl_editor->canvas_cnct_inlet_tag,
         isiemgui, issignal, 1);
 }
-
-/* this doesn't seem to be used anywhere */
-/*static void canvas_nlet_conf2 (t_canvas *x, int cond) { // because of one exception...
-    int issignal = inlet_issignal;
-    sys_vgui(".x%x.c itemconfigure %s -stroke %s -fill %s -strokewidth 1\n", x,
-      x->gl_editor->canvas_cnct_inlet_tag,
-      (last_inlet_filter ? "$pd_colors(iemgui_nlet)" : 
-        (cond     ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)")),
-        (issignal ? "$pd_colors(signal_nlet)" : "$pd_colors(control_nlet)"));
-}*/
 
 void canvas_getscroll (t_canvas *x) {
     //sys_vgui("pdtk_canvas_getscroll .x%lx.c\n",(long)x);
@@ -354,22 +343,12 @@ int canvas_restore_original_position(t_glist *x, t_gobj *y, const char* objtag,
                 {
                     /* we get here if we are supposed to go all the way
                        to the bottom */
-                    //sys_vgui(".x%lx.c addtag arrange withtag %s\n",
-                    //    x, objtag ? objtag : "selected");
-                    //sys_vgui(".x%lx.c lower arrange\n", x);
-                    //sys_vgui(".x%lx.c dtag %s arrange\n",
-                    //    x, objtag ? objtag : "selected");
                     gui_vmess("gui_lower", "xs",
                         x, objtag ? objtag : "selected");
                 }
                 else if (yrnxt)
                 {
                     /* lower into middle */
-                    //if (!objtag)
-                    //    sys_vgui(".x%lx.c addtag arrange withtag selected\n",x);
-                    //sys_vgui("pdtk_find_lowest_widget_withtag_and_arrange "
-                    //    ".x%lx.c %s %s %s\n", x, rtext_gettag(yrnxt),
-                    //    rtext_gettag(yr), objtag ? objtag : "0");
                     gui_vmess("gui_find_lowest_and_arrange", "xss",
                         x, rtext_gettag(yrnxt), objtag ? objtag : "selected");
                 }
@@ -386,11 +365,6 @@ int canvas_restore_original_position(t_glist *x, t_gobj *y, const char* objtag,
                 if (yrnxt)
                 {
                     /* raise into middle */
-                    //if (!objtag)
-                    //    sys_vgui(".x%lx.c addtag arrange withtag selected\n",x);
-                    //sys_vgui("pdtk_find_lowest_widget_withtag_and_arrange "
-                    //    ".x%lx.c %s %s %s\n", x, rtext_gettag(yrnxt),
-                    //    rtext_gettag(yr), objtag ? objtag : "0");
                     gui_vmess("gui_find_lowest_and_arrange", "xss",
                         x, rtext_gettag(yrnxt), objtag ? objtag : "selected");
                 }
@@ -398,12 +372,6 @@ int canvas_restore_original_position(t_glist *x, t_gobj *y, const char* objtag,
                 {
                     /* we get here if we are supposed to go all the way
                        to the top */
-                    //sys_vgui(".x%lx.c addtag arrange withtag %s\n",
-                    //    x, objtag ? objtag : "selected");
-                    //sys_vgui(".x%lx.c raise arrange\n", x);
-                    //sys_vgui(".x%lx.c dtag %s arrange\n", x,
-                    //    objtag ? objtag : "selected");
-                    //canvas_raise_all_cords(x);
                     gui_vmess("gui_raise", "xs",
                         x, objtag ? objtag : "selected");
                 }
@@ -459,10 +427,6 @@ void glist_selectline(t_glist *x, t_outconnect *oc, int index1,
         x->gl_editor->e_selectline_index2 = index2;
         x->gl_editor->e_selectline_inno = inno;
         x->gl_editor->e_selectline_tag = oc;
-        //sys_vgui(".x%lx.c itemconfigure l%lx -stroke $pd_colors(selection)\n",
-        //    x, x->gl_editor->e_selectline_tag);
-        //sys_vgui(".x%lx.c addtag selected withtag l%lx\n",
-        //    glist_getcanvas(x), x->gl_editor->e_selectline_tag);
         sprintf(tagbuf, "l%lx", (long unsigned int)oc);
         gui_vmess("gui_canvas_select_line", "xs", x, tagbuf);
         c_selection = x;
@@ -487,13 +451,6 @@ void glist_deselectline(t_glist *x)
             issignal = 1;
         else
             issignal = 0;
-        //sys_vgui(".x%lx.c itemconfigure l%lx -stroke %s\n",
-        //    x, x->gl_editor->e_selectline_tag,
-        //    (issignal ?
-        //        "$pd_colors(signal_cord)" : "$pd_colors(control_cord)"));
-        //sys_vgui(".x%lx.c dtag l%lx selected\n",
-        //    glist_getcanvas(x),
-        //    glist_getcanvas(x)->gl_editor->e_selectline_tag);
         canvas_draw_gop_resize_hooks(x);
         sprintf(tagbuf, "l%lx", (long unsigned int)x->gl_editor->e_selectline_tag);
         gui_vmess("gui_canvas_deselect_line", "xs", x, tagbuf);
@@ -784,14 +741,12 @@ void canvas_setundo(t_canvas *x, t_undofn undofn, void *buf,
     if (x)
     {
         // enable undo in menu
-        //sys_vgui("pdtk_undomenu .x%lx %s no\n", x, name);
         gui_vmess("gui_undo_menu", "xss",
             x, name, "no");
     }
     else if (hadone)
     {
         /* can't figure out what this does... */
-        //sys_vgui("pdtk_undomenu nobody no no\n");
         gui_vmess("gui_undo_menu ", "xss",
             "nobody", "no", "no");
     }
@@ -804,46 +759,6 @@ void canvas_noundo(t_canvas *x)
     if (!x || (x == canvas_undo_canvas))
         canvas_setundo(0, 0, 0, "foo");
 }
-
-#if 0
-static void canvas_undo(t_canvas *x)
-{
-    //fprintf(stderr,"canvas_undo\n");
-    if (x != canvas_undo_canvas)
-        bug("canvas_undo 1");
-    else if (canvas_undo_whatnext != UNDO_UNDO)
-        bug("canvas_undo 2");
-    else
-    {
-        //fprintf(stderr,"undo\n");
-        (*canvas_undo_fn)(canvas_undo_canvas, canvas_undo_buf, UNDO_UNDO);
-            /* enable redo in menu */
-        if (glist_isvisible(x) && glist_istoplevel(x))
-            sys_vgui("pdtk_undomenu .x%lx no %s\n", x, canvas_undo_name);
-        canvas_undo_whatnext = UNDO_REDO;
-        scrollbar_update(x);
-    }
-}
-
-static void canvas_redo(t_canvas *x)
-{
-    //fprintf(stderr,"canvas_redo\n");
-    if (x != canvas_undo_canvas)
-        bug("canvas_redo 1");
-    else if (canvas_undo_whatnext != UNDO_REDO)
-        bug("canvas_redo 2");
-    else
-    {
-        /* post("redo"); */
-        (*canvas_undo_fn)(canvas_undo_canvas, canvas_undo_buf, UNDO_REDO);
-            /* enable undo in menu */
-        if (glist_isvisible(x) && glist_istoplevel(x))
-            sys_vgui("pdtk_undomenu .x%lx %s no\n", x, canvas_undo_name);
-        canvas_undo_whatnext = UNDO_UNDO;
-        scrollbar_update(x);
-    }
-}
-#endif
 
 /* ------- specific undo methods: 1. connect -------- */
 
@@ -904,7 +819,6 @@ void canvas_disconnect(t_canvas *x,
         if (srcno == index1 && t.tr_outno == outno &&
             sinkno == index2 && t.tr_inno == inno)
         {
-            //sys_vgui(".x%lx.c delete l%lx\n", x, oc);
             sprintf(tagbuf, "l%lx", (long unsigned int)oc);
             gui_vmess("gui_canvas_delete_line", "xs",
                 x, tagbuf);
@@ -2213,8 +2127,6 @@ void canvas_undo_font(t_canvas *x, void *z, int action)
         {
             char tagbuf[MAXPDSTRING];
             sprintf(tagbuf, ".gfxstub%lx", (long unsigned int)properties);
-            //sys_vgui(".gfxstub%lx.radiof.radio%d invoke\n",
-            //    properties, u_f->font);
             gui_vmess("gui_font_dialog_change_size", "si",
                 tagbuf,
                 u_f->font);
@@ -2272,7 +2184,6 @@ void canvas_setcursor(t_canvas *x, unsigned int cursornum)
         }
         if (xwas != x || cursorwas != cursornum)
         {
-            //sys_vgui(".x%lx configure -cursor %s\n", x, cursorlist[cursornum]);
             gui_vmess("gui_canvas_cursor", "xs", x,
                 cursorlist[cursornum]);
             xwas = x;
@@ -2389,8 +2300,6 @@ static void canvas_rightclick(t_canvas *x, int xpos, int ypos, t_gobj *y_sel)
         isobject = 1;
     }
     else isobject = 0;
-    //sys_vgui("pdtk_canvas_popup .x%lx %d %d %d %d %d\n",
-    //    x, xpos, ypos, canprop, canopen, isobject);
     gui_vmess("gui_canvas_popup", "xiiiii",
         x, xpos, ypos, canprop, canopen, isobject);
 }
@@ -2511,14 +2420,7 @@ void canvas_vis(t_canvas *x, t_floatarg f)
         {
             //fprintf(stderr,"new\n");
             canvas_create_editor(x);
-//            sys_vgui("pdtk_canvas_new .x%lx %d %d +%d+%d %d\n", x,
-//                (int)(x->gl_screenx2 - x->gl_screenx1),
-//                (int)(x->gl_screeny2 - x->gl_screeny1),
-//                (int)(x->gl_screenx1), (int)(x->gl_screeny1),
-//                x->gl_edit);
-
             canvas_args_to_string(argsbuf, x);
-
             gui_vmess("gui_canvas_new", "xiisissis",
                 x,
                 (int)(x->gl_screenx2 - x->gl_screenx1),
@@ -2529,20 +2431,12 @@ void canvas_vis(t_canvas *x, t_floatarg f)
                 canvas_getdir(x)->s_name,
                 x->gl_dirty,
                 argsbuf);
-                
 
             /* It looks like this font size call is no longer needed,
                but I'm not sure why it was needed in the first place... */
             //sys_vgui("pdtk_canvas_set_font .x%lx %d\n", x, x->gl_font);
-//            canvas_reflecttitle(x);
+            //canvas_reflecttitle(x);
             x->gl_havewindow = 1;
-
-            // check if this is a subpatch with an array
-            // if so, make it non-scrollable
-            //t_gobj *g = x->gl_list;
-            //if (g && (pd_class(&g->g_pd) == garray_class)
-            //    sys_vgui("pdtk_canvas_set_scrollless .x%lx\n", x);
-            //else
 
             /* We can't update the scrollbars here, because we have to wait
                for the canvas window to load before anything else can happen.
@@ -2552,58 +2446,6 @@ void canvas_vis(t_canvas *x, t_floatarg f)
                so let's keep it here for reference in case we run into a
                but later. */
             //scrollbar_update(x);
-
-/*
-            //newly opened arrays created prior to pd-l2ork require fittograph
-            t_gobj *g, *gg = NULL;
-            t_garray *ga = NULL;
-            t_array *a = NULL;
-            int  num_elem = 0;
-            t_text *t = NULL;
-            int objnamesize;
-            char *objname;
-
-            for (g = x->gl_list; g; g = g->g_next) {
-                //fprintf(stderr, "searching\n");
-
-                //for subpatch garrays
-                if (pd_class(&g->g_pd) == garray_class) {
-                    //fprintf(stderr,"found ya\n");
-                    ga = (t_garray *)g;
-                    if (ga) {
-                        a = garray_getarray(ga);
-                        num_elem = a->a_n;
-                        garray_fittograph(ga, num_elem, 1);
-                    }
-                }
-                //for garrays in gop inside a newly opened patch window
-                else {
-                    t_text *t = (t_text *)g;
-                    t_rtext *y = glist_findrtext(x, t);
-                    if (y) {
-                        rtext_gettext(y, &objname, &objnamesize);
-                        //fprintf(stderr,"objname %s\n", objname);                    
-                        if (!strcmp(objname, "graph ")) {
-                            //fprintf(stderr,"got a graph\n");
-                            for (gg = ((t_glist *)g)->gl_list; gg; gg = gg->g_next) {
-                                //fprintf(stderr, "sub-searching\n");
-                                if (pd_class(&gg->g_pd) == garray_class) {
-                                    //fprintf(stderr,"sub found ya\n");
-                                    ga = (t_garray *)gg;
-                                    if (ga) {
-                                        a = garray_getarray(ga);
-                                        num_elem = a->a_n;
-                                        garray_fittograph(ga, num_elem, 1);
-                                        canvas_dirty(x, 2);
-                                    }
-                                }
-                            }                    
-                        }
-                        //else fprintf(stderr,"fail %d >%s< >graph<\n", strcmp(objname, "graph"), objname);
-                    }
-                }
-            }
-*/
             canvas_updatewindowlist();
         }
     }
@@ -3011,7 +2853,6 @@ static void canvas_doarrange(t_canvas *x, t_float which, t_gobj *oldy,
 
         // and finally redraw
         //fprintf(stderr,"raise\n");
-        //sys_vgui(".x%lx.c raise selected\n", x);
         //canvas_raise_all_cords(x);
         gui_vmess("gui_raise", "xs", x, "selected");
     }
@@ -3028,7 +2869,6 @@ static void canvas_doarrange(t_canvas *x, t_float which, t_gobj *oldy,
 
         // and finally redraw
         //fprintf(stderr,"lower\n");
-        //sys_vgui(".x%lx.c lower selected\n", x);
         gui_vmess("gui_lower", "xs", x, "selected");
         //canvas_redraw(x);
     }
@@ -3485,33 +3325,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                         x->gl_editor->e_onmotion = MA_CONNECT;
                         x->gl_editor->e_xwas = xpos;
                         x->gl_editor->e_ywas = ypos;
-                        //sys_vgui(
-
-                            /*".x%lx.c create polyline %d %d %d %d "
-                              "-stroke %s -strokewidth %s -tags x\n",
-                            x, xpos, ypos, xpos, ypos,
-                            (issignal ?
-                                "$pd_colors(signal_cord)" :
-                                "$pd_colors(control_cord)"),
-                            (issignal ?
-                                "$pd_colors(signal_cord_width)" :
-                                "$pd_colors(control_cord_width)"));*/
-
-                            // bezier is too slow for the time being
-                        //    ".x%lx.c create path "
-                        //    "\"M %d %d Q %d %d %d %d Q %d %d %d %d\" "
-                        //    "-stroke %s -strokewidth %s "
-                        //    "-tags {x all_cords %s}\n",
-                        //x, xpos, ypos,
-                        //xpos, ypos, xpos, ypos,
-                        //xpos, ypos, xpos, ypos,
-                        //(issignal ?
-                        //    "$pd_colors(signal_cord)" :
-                        //    "$pd_colors(control_cord)"),
-                        //(issignal ?
-                        //    "$pd_colors(signal_cord_width)" :
-                        //    "$pd_colors(control_cord_width)"),
-                        //(issignal ? "signal" : "control"));
+                        /* This repetition of args needs to be pruned below */
                         gui_vmess("gui_canvas_line", "xssiiiiiiiiii",
                             x, "newcord", (issignal ? "signal" : "control"),
                             xpos, ypos, xpos, ypos, xpos, ypos, xpos, ypos, xpos, ypos);
@@ -3530,16 +3344,12 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                                     (t_text *)&ob->ob_g);
                             sprintf(x->gl_editor->canvas_cnct_outlet_tag, 
                                 "%so%d", rtext_gettag(yr), closest);
-                            //sys_vgui(".x%x.c itemconfigure %s "
-                            //         "-stroke $select_nlet_color "
-                            //         "-strokewidth $highlight_width\n",
-                            //         x,
-                            //         x->gl_editor->canvas_cnct_outlet_tag);
-
                             gui_vmess("gui_highlight_io", "xs",
                                 x,
                                 x->gl_editor->canvas_cnct_outlet_tag);
 
+                            /* Might need a gui_vmess call here, but I haven't
+                               seen where this code is called yet... */
                             //sys_vgui(".x%x.c raise %s\n",
                             //         x,
                             //         x->gl_editor->canvas_cnct_outlet_tag);
@@ -3593,17 +3403,9 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                             gobj_filter_highlight_behavior((t_text *)&ob->ob_g);
                         sprintf(x->gl_editor->canvas_cnct_inlet_tag, 
                             "%si%d", rtext_gettag(yr), closest);
-                        //sys_vgui(".x%x.c itemconfigure %s "
-                        //         "-strokewidth $highlight_width\n",
-                        //    x, x->gl_editor->canvas_cnct_inlet_tag);
-
                         gui_vmess("gui_highlight_io", "xs",
                             x,
                             x->gl_editor->canvas_cnct_inlet_tag);
-
-                        //sys_vgui(".x%x.c raise %s\n",
-                        //         x,
-                        //         x->gl_editor->canvas_cnct_inlet_tag);
                         inlet_issignal = obj_issignalinlet(ob,closest);
                         if (tooltips)
                         {
@@ -3850,9 +3652,6 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
             //buf->u_redo = (t_undo_sel *)canvas_undo_set_selection(x);
             //canvas_undo_add(x, 11, "selection", buf);
         }
-        //sys_vgui(".x%lx.c create prect %d %d %d %d -tags x "
-        //         "-stroke $pd_colors(selection_rectangle)\n",
-        //    x, xpos, ypos, xpos, ypos);
         gui_vmess("gui_create_selection_rectangle", "xiiii", x,
             xpos, ypos, xpos, ypos);
         x->gl_editor->e_xwas = xpos;
@@ -3973,25 +3772,6 @@ void canvas_drawconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2,
         ymax = 20;
     }
     if (yoff > ymax) yoff = ymax;
-    /*sys_vgui(".x%lx.c create polyline %d %d %d %d -stroke %s "
-               "-strokewidth %s -tags {l%lx all_cords}\n",
-        x, lx1, ly1, lx2, ly2,
-        (issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)"),
-        (issignal ?
-            "$pd_colors(signal_cord_width)" :
-            "$pd_colors(control_cord_width)"), 
-        tag);*/
-    //bezier curves FTW
-    //sys_vgui(".x%lx.c create path \"M %d %d Q %d %d %d %d Q %d %d %d %d\" "
-    //         "-stroke %s -strokewidth %s -tags {l%lx all_cords %s}\n",
-    //    x, lx1, ly1,
-    //    lx1, ly1 + yoff, lx1 + halfx, ly1 + halfy,
-    //    lx2, ly2 - yoff, lx2, ly2,
-    //    (issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)"),
-    //    (issignal ?
-    //        "$pd_colors(signal_cord_width)" :
-    //        "$pd_colors(control_cord_width)"), 
-    //    tag, (issignal ? "signal" : "control"));
     sprintf(tagbuf, "l%lx", (long unsigned int)tag);
     gui_vmess("gui_canvas_line", "xssiiiiiiiiii",
         x, tagbuf, (issignal ? "signal" : "control"), lx1, ly1, lx1, ly1 + yoff,
@@ -4030,34 +3810,16 @@ void canvas_updateconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2,
         if (yoff > ymax) yoff = ymax;
         if (tag)
         {
-            //sys_vgui(".x%lx.c coords l%lx %d %d %d %d\n",
-            //    x, tag, lx1, ly1, lx2, ly2);
-            //bezier curves FTW
-            //sys_vgui(".x%lx.c coords l%lx "
-            //         "\"M %d %d Q %d %d %d %d Q %d %d %d %d\"\n",
-            //    x, tag, lx1, ly1,
-            //    lx1, ly1 + yoff, lx1 + halfx, ly1 + halfy,
-            //    lx2, ly2 - yoff, lx2, ly2);
             sprintf(cord_tag, "l%lx", (long unsigned int)tag);
             gui_vmess("gui_canvas_updateline", "xsiiiii",
                 x, cord_tag,
                 lx1, ly1, lx2, ly2, yoff);
-//                lx1, ly1, lx1, ly1 + yoff, lx1 + halfx, ly1 + halfy,
-//                lx2, ly2 - yoff, lx2, ly2);
         }
         else
         {
-            //sys_vgui(".x%lx.c coords x %d %d %d %d\n", x, lx1, ly1, lx2, ly2);
-            //bezier curves FTW
-            //sys_vgui(".x%lx.c coords x \"M %d %d Q %d %d %d %d Q %d %d %d %d\"\n",
-            //    x, lx1, ly1,
-            //    lx1, ly1 + yoff, lx1 + halfx, ly1 + halfy,
-            //    lx2, ly2 - yoff, lx2, ly2);
             gui_vmess("gui_canvas_updateline", "xsiiiii",
                 x, "newcord",
                 lx1, ly1, lx2, ly2, yoff);
-//                lx1, ly1, lx1, ly1 + yoff, lx1 + halfx, ly1 + halfy, lx2, ly2 - yoff,
-//                lx2, ly2);
         }
     }
 }
@@ -4157,15 +3919,6 @@ int canvas_doconnect_doit(t_canvas *x, t_gobj *y1, t_gobj *y2,
     ly2 = y21;
 
     canvas_drawconnection(x, lx1, ly1, lx2, ly2, (t_int)oc, issignal);
-    /*sys_vgui(".x%lx.c create polyline %d %d %d %d -stroke %s "
-               "-strokewidth %s -tags {l%lx all_cords}\n",
-          glist_getcanvas(x),
-          lx1, ly1, lx2, ly2,
-          (issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)"),
-          (issignal ?
-              "$pd_colors(signal_cord_width)" :
-              "$pd_colors(control_cord_width)"), 
-        oc);*/
     if (x->gl_editor->canvas_cnct_inlet_tag[0] != 0)
     {
         canvas_nlet_conf(x,'i');
@@ -4232,7 +3985,6 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
 
     if (!glob_shift)
     {
-        //sys_vgui(".x%lx.c delete x\n", x);
         gui_vmess("gui_canvas_delete_line", "xs", x, "newcord");
     }
 
@@ -4667,7 +4419,6 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
         ywas = x->gl_editor->e_ywas;
     if (doit && !glob_shift)
     {
-        //sys_vgui(".x%lx.c delete x\n", x);
         gui_vmess("gui_canvas_delete_line", "xs", x, "newcord");
     }
     else
@@ -4736,15 +4487,11 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                             "%si%d",
                             rtext_gettag(y),
                             closest2);
-                    //sys_vgui(".x%x.c itemconfigure %s "
-                    //         "-stroke $select_nlet_color "
-                    //         "-strokewidth $highlight_width\n",
-                    //    x, x->gl_editor->canvas_cnct_inlet_tag);
-
                     gui_vmess("gui_highlight_io", "xs",
                         x,
                         x->gl_editor->canvas_cnct_inlet_tag);
 
+                    /* Didn't I just see this code above? */
                     //sys_vgui(".x%x.c raise %s\n",
                     //         x,
                     //         x->gl_editor->canvas_cnct_inlet_tag);
@@ -4821,59 +4568,16 @@ static void canvas_doregion(t_canvas *x, int xpos, int ypos, int doit)
             loy = x->gl_editor->e_ywas, hiy = ypos;
         else hiy = x->gl_editor->e_ywas, loy = ypos;
         canvas_selectinrect(x, lox, loy, hix, hiy);
-        //sys_vgui(".x%lx.c delete x\n", x);
         gui_vmess("gui_hide_selection_rectangle", "x", x);
         x->gl_editor->e_onmotion = MA_NONE;
     }
     else
     {
-        //sys_vgui(".x%lx.c coords x %d %d %d %d\n",
-        //    x, x->gl_editor->e_xwas,
-        //        x->gl_editor->e_ywas, xpos, ypos);
         gui_vmess("gui_move_selection_rectangle", "xiiii",
             x,
             x->gl_editor->e_xwas, x->gl_editor->e_ywas, xpos, ypos);
     }
 }
-
-/*
-static void canvas_mouseup_gop(t_canvas *x, t_gobj *g) {
-
-    //simulate clearing and recreating object
-    gobj_activate(g, x, 1);
-    t_object *ob = pd_checkobject(&g->g_pd);
-    t_rtext *yyyy = glist_findrtext(x, (t_text *)&ob->ob_g);
-    //copy current text
-    char *buf;
-    int bufsize;
-    rtext_gettext(yyyy, &buf, &bufsize);
-    //fprintf(stderr, ">%s<\n", buf);
-    rtext_key(yyyy, 127, NULL);
-
-    //recreate object with no args
-    glist_deselect(x, g);
-
-    //object was recreated, so now it is latest in the queue
-    t_gobj *z = x->gl_list;
-
-    while (z->g_next) {
-        z = z->g_next;
-    }
-
-    glist_select(x, z);    
-    g = z;    
-    ob = pd_checkobject(&g->g_pd);
-    yyyy = glist_findrtext(x, (t_text *)&ob->ob_g);
-
-    //redo the old text
-    int i;
-    for (i = 0; i < bufsize; i++) {
-        rtext_key(yyyy, (int)buf[i], NULL);
-    }
-    gobj_activate(z, x, 1);
-    x->gl_editor->e_textdirty = 1;
-}
-*/
 
 void canvas_mouseup(t_canvas *x,
     t_floatarg fxpos, t_floatarg fypos, t_floatarg fwhich)
@@ -4906,45 +4610,7 @@ void canvas_mouseup(t_canvas *x,
         if (x->gl_editor->e_selection &&
             !(x->gl_editor->e_selection->sel_next))
         {
-            //t_gobj *g = x->gl_editor->e_selection->sel_what;
-            //t_glist *gl2;
-                /* first though, check we aren't an abstraction with a
-                dirty sub-patch that would be discarded if we edit this. */
-            /*if (pd_class(&g->g_pd) == canvas_class &&
-                canvas_isabstraction((t_glist *)g) &&
-                    (gl2 = glist_finddirty((t_glist *)g)))
-            {
-                vmess(&gl2->gl_pd, gensym("menu-open"), "");
-                x->gl_editor->e_onmotion = MA_NONE;
-                sys_vgui(
-                    "pdtk_check .x%lx {Discard changes to '%s'?} {.x%lx dirty 0;\n} no\n",
-                    canvas_getrootfor(gl2),
-                    canvas_getrootfor(gl2)->gl_name->s_name, gl2);
-                return;
-            }*/
-            /* OK, activate it */
-
-            /*
-            // but before we do, check if this is GOP and adjust accordingly
-            //fprintf(stderr,"activate...");
-            if (pd_class(&g->g_pd) == canvas_class && 
-                ((t_glist *)g)->gl_isgraph &&
-                canvas_isabstraction((t_glist *)g))
-            {
-                //fprintf(stderr,"gop...");
-                // if mouse has not moved AND this object does not have its text hidden (otherwise we only translate the selection)
-                if (!(((t_glist *)g)->gl_hidetext) && !x->gl_editor->e_lastmoved) {
-                    //fprintf(stderr,"yes\n");
-                    canvas_mouseup_gop(x, x->gl_editor->e_selection->sel_what);
-                }
-                //else fprintf(stderr,"no\n");
-            }
-            // else if it is a regular object
-            */
-            //else {
-                //fprintf(stderr,"reg_obj\n");
-                gobj_activate(x->gl_editor->e_selection->sel_what, x, 1);
-            //}
+            gobj_activate(x->gl_editor->e_selection->sel_what, x, 1);
         }
         scrollbar_update(x);
     }
@@ -5061,7 +4727,6 @@ void canvas_displaceselection(t_canvas *x, int dx, int dy)
     }
     if (dx || dy)
     {
-        //sys_vgui("pdtk_canvas_displace_withtag .x%lx.c %d %d\n", x, dx, dy);
         gui_vmess("gui_canvas_displace_withtag", "xii", x, dx, dy);
         if (resortin) canvas_resortinlets(x);
         if (resortout) canvas_resortoutlets(x);
@@ -5114,7 +4779,6 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     if (x->gl_editor->e_onmotion == MA_CONNECT && !glob_shift && !glob_lmclick)
     {
         //fprintf(stderr,"shift released during connect\n");
-        //sys_vgui(".x%lx.c delete x\n", x);
         gui_vmess("gui_canvas_delete_line", "xs", x, "newcord");
         canvas_mouseup(x, canvas_last_glist_x, canvas_last_glist_y, 0);
     }
@@ -5323,7 +4987,6 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
         {
             canvas_setcursor(x, down ?
                 CURSOR_RUNMODE_NOTHING : CURSOR_EDITMODE_NOTHING);
-            //sys_vgui("pdtk_canvas_editval .x%lx %d\n", (t_int)x, down ? 0 : 1);
             gui_vmess("gui_set_editmode", "xi",
                 x,
                 down ? 0 : 1);
@@ -5599,8 +5262,6 @@ void glob_verifyquit(void *dummy, t_floatarg f)
             if (!glist_istoplevel(g2) && g->gl_env)
             {
                 /* if this is an abstraction */
-                //sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 3;}\n",
-                //     g2, g2);
                 gui_vmess("gui_canvas_menuclose", "xxi",
                     g2,
                     g2,
@@ -5608,8 +5269,6 @@ void glob_verifyquit(void *dummy, t_floatarg f)
             }
             else
             {
-                //sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 3;}\n",
-                //     canvas_getrootfor(g2), g2);
                 gui_vmess("gui_canvas_menuclose", "xxi",
                     canvas_getrootfor(g2),
                     g2,
@@ -5622,7 +5281,6 @@ void glob_verifyquit(void *dummy, t_floatarg f)
     }
     if (f == 0 && sys_perf)
     {
-        //sys_vgui("pdtk_check . {really quit?} {pd quit;\n} yes\n");
         gui_vmess("gui_pd_quit_dialog", "");
     }
     else
@@ -5676,8 +5334,6 @@ void canvas_menuclose(t_canvas *x, t_floatarg fforce)
             if (!glist_istoplevel(g) && g->gl_env)
             {
                 /* if this is an abstraction */
-                //sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 2;}\n",
-                //     g, g);
                 gui_vmess("gui_canvas_menuclose", "xxi",
                     g,
                     g,
@@ -5685,8 +5341,6 @@ void canvas_menuclose(t_canvas *x, t_floatarg fforce)
             }
             else
             {
-                //sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 2;}\n",
-                //     canvas_getrootfor(g), g);
                 gui_vmess("gui_canvas_menuclose", "xxi",
                     canvas_getrootfor(g),
                     g,
@@ -5694,14 +5348,6 @@ void canvas_menuclose(t_canvas *x, t_floatarg fforce)
             }
             return;
         }
-/*
-        else if (sys_perf)
-        {
-            sys_vgui(
-"pdtk_check .x%lx {Close '%s'?} {.x%lx menuclose 1;\n} yes\n",
-                canvas_getrootfor(x), canvas_getrootfor(x)->gl_name->s_name, x);
-        }
-*/
         else pd_free(&x->gl_pd);
             //sys_queuegui(x, x, canvas_dofree);
             //clock_delay(x->gl_destroy, 0);
@@ -5739,8 +5385,6 @@ void canvas_menuclose(t_canvas *x, t_floatarg fforce)
             if (!glist_istoplevel(g) && g->gl_env)
             {
                 /* if this is an abstraction */
-                //sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 2;}\n",
-                //     g, g);
                 gui_vmess("gui_canvas_menuclose", "xxi",
                     g,
                     g,
@@ -5748,8 +5392,6 @@ void canvas_menuclose(t_canvas *x, t_floatarg fforce)
             }
             else
             {
-                //sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 2;}\n",
-                //     canvas_getrootfor(g), g);
                 gui_vmess("gui_canvas_menuclose", "xxi",
                     canvas_getrootfor(g),
                     g,
@@ -6170,22 +5812,6 @@ static void canvas_copy(t_canvas *x)
         int bufsize;
         clipboard_istext = 1;
         rtext_getseltext(x->gl_editor->e_textedfor, &buf, &bufsize);
-
-//#if defined(MSW) || defined(__APPLE__)
-//            /* for Mac or Windows, copy the text to the clipboard here */
-        /* We don't need this because editing happens GUI side now */
-        //sys_vgui("clipboard clear\n clipboard append {%.*s}\n", bufsize, buf);
-//#else
-            /* in X windows the selection already went to the
-            clipboard when it was made; here we "copy" it to our own buffer
-            as well, because, annoyingly, the clipboard will usually be 
-            destroyed by the time the user asks to "paste". */
-        /*if (canvas_textcopybuf)
-            t_freebytes(canvas_textcopybuf, canvas_textcopybufsize);
-        canvas_textcopybuf = (char *)getbytes(bufsize);
-        memcpy(canvas_textcopybuf, buf, bufsize);
-        canvas_textcopybufsize = bufsize;*/
-//#endif
     }
 }
 
@@ -6198,13 +5824,6 @@ static void canvas_clearline(t_canvas *x)
              x->gl_editor->e_selectline_index2,
              x->gl_editor->e_selectline_inno);
         canvas_dirty(x, 1);
-        /*canvas_setundo(x, canvas_undo_disconnect,
-            canvas_undo_set_disconnect(x,
-                x->gl_editor->e_selectline_index1,
-                x->gl_editor->e_selectline_outno,
-                x->gl_editor->e_selectline_index2,
-                x->gl_editor->e_selectline_inno),
-            "disconnect");*/
         canvas_undo_add(x, 2, "disconnect", canvas_undo_set_disconnect(x,
                 x->gl_editor->e_selectline_index1,
                 x->gl_editor->e_selectline_outno,
@@ -6455,10 +6074,6 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
             x->gl_screeny2 = screeny1 + screeny2;
             //canvas_setbounds(x, screenx1, screeny1,
             //    screenx1+screenx2, screeny1+screeny2);
-            //sys_vgui("wm geometry .x%lx =%dx%d+%d+%d\n", x,
-            //    (int)(x->gl_screenx2 - x->gl_screenx1),
-            //    (int)(x->gl_screeny2 - x->gl_screeny1),
-            //    (int)(x->gl_screenx1), (int)(x->gl_screeny1));
             gui_vmess("gui_change_patch_window_geometry", "xiiii",
                 x,
                 (int)(x->gl_screenx2 - x->gl_screenx1),
@@ -7409,130 +7024,6 @@ static void canvas_tidy(t_canvas *x)
     scrollbar_update(x);
 }
 
-
-/* below is deprecated/old version of tidy left here for
-   documentation/reuse purposes currently it is inactive */
-#define XTOLERANCE 20
-#define YTOLERANCE 20
-#define NHIST 15
-
-    /* LATER might have to speed this up */
-/*static void canvas_tidyold(t_canvas *x)
-{
-    t_gobj *y, *y2;
-    int ax1, ay1, ax2, ay2, bx1, by1, bx2, by2;
-    int histogram[NHIST], *ip, i, besthist, bestdist;
-        // if nobody is selected, this means do it to all boxes;
-        // othewise just the selection
-    int all = (x->gl_editor ? (x->gl_editor->e_selection == 0) : 1);
-
-    //canvas_setundo(x, canvas_undo_move, canvas_undo_set_move(x, !all),
-    //    "motion");
-    canvas_undo_add(x, 4, "motion", canvas_undo_set_move(x, !all));
-
-        // tidy horizontally
-    for (y = x->gl_list; y; y = y->g_next)
-        if (all || glist_isselected(x, y))
-    {
-        gobj_getrect(y, x, &ax1, &ay1, &ax2, &ay2);
-
-        for (y2 = x->gl_list; y2; y2 = y2->g_next)
-            if (all || glist_isselected(x, y2))
-        {
-            gobj_getrect(y2, x, &bx1, &by1, &bx2, &by2);
-            if (by1 <= ay1 + YTOLERANCE && by1 >= ay1 - YTOLERANCE &&
-                bx1 < ax1)
-                    goto nothorizhead;
-        }
-
-        for (y2 = x->gl_list; y2; y2 = y2->g_next)
-            if (all || glist_isselected(x, y2))
-        {
-            gobj_getrect(y2, x, &bx1, &by1, &bx2, &by2);
-            if (by1 <= ay1 + YTOLERANCE && by1 >= ay1 - YTOLERANCE
-                && by1 != ay1)
-                    gobj_displace(y2, x, 0, ay1-by1);
-        }
-    nothorizhead: ;
-    }
-        // tidy vertically.  First guess the user's favorite vertical spacing
-    for (i = NHIST, ip = histogram; i--; ip++) *ip = 0;
-    for (y = x->gl_list; y; y = y->g_next)
-        if (all || glist_isselected(x, y))
-    {
-        gobj_getrect(y, x, &ax1, &ay1, &ax2, &ay2);
-        for (y2 = x->gl_list; y2; y2 = y2->g_next)
-            if (all || glist_isselected(x, y2))
-        {
-            gobj_getrect(y2, x, &bx1, &by1, &bx2, &by2);
-            if (bx1 <= ax1 + XTOLERANCE && bx1 >= ax1 - XTOLERANCE)
-            {
-                int distance = by1-ay2;
-                if (distance >= 0 && distance < NHIST)
-                    histogram[distance]++;
-            }
-        }
-    }
-    for (i = 1, besthist = 0, bestdist = 4, ip = histogram + 1;
-        i < (NHIST-1); i++, ip++)
-    {
-        int hit = ip[-1] + 2 * ip[0] + ip[1];
-        if (hit > besthist)
-        {
-            besthist = hit;
-            bestdist = i;
-        }
-    }
-    //post("best vertical distance %d", bestdist);
-    for (y = x->gl_list; y; y = y->g_next)
-        if (all || glist_isselected(x, y))
-    {
-        int keep = 1;
-        gobj_getrect(y, x, &ax1, &ay1, &ax2, &ay2);
-        for (y2 = x->gl_list; y2; y2 = y2->g_next)
-            if (all || glist_isselected(x, y2))
-        {
-            gobj_getrect(y2, x, &bx1, &by1, &bx2, &by2);
-            if (bx1 <= ax1 + XTOLERANCE && bx1 >= ax1 - XTOLERANCE &&
-                ay1 >= by2 - 10 && ay1 < by2 + NHIST)
-                    goto nothead;
-        }
-        while (keep)
-        {
-            keep = 0;
-            for (y2 = x->gl_list; y2; y2 = y2->g_next)
-                if (all || glist_isselected(x, y2))
-            {
-                gobj_getrect(y2, x, &bx1, &by1, &bx2, &by2);
-                if (bx1 <= ax1 + XTOLERANCE && bx1 >= ax1 - XTOLERANCE &&
-                    by1 > ay1 && by1 < ay2 + NHIST)
-                {
-                    int vmove = ay2 + bestdist - by1;
-                    gobj_displace(y2, x, ax1-bx1, vmove);
-                    ay1 = by1 + vmove;
-                    ay2 = by2 + vmove;
-                    keep = 1;
-                    break;
-                }
-            }
-        }
-    nothead: ;
-    }
-    canvas_dirty(x, 1);
-}*/
-
-//static void canvas_texteditor(t_canvas *x)
-//{
-//    t_rtext *foo;
-//    char *buf;
-//    int bufsize;
-//    if (foo = x->gl_editor->e_textedfor)
-//        rtext_gettext(foo, &buf, &bufsize);
-//    else buf = "", bufsize = 0;
-//    sys_vgui("pdtk_pd_texteditor {%.*s}\n", bufsize, buf);
-//    
-//}
-
 void glob_key(void *dummy, t_symbol *s, int ac, t_atom *av)
 {
         /* canvas_editing can be zero; canvas_key checks for that */
@@ -7615,20 +7106,10 @@ void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
     if (glist_isvisible(x))
     {
         int edit = !glob_ctrl && x->gl_edit;
-        //sys_vgui("pdtk_canvas_editval .x%lx %d\n",
-        //    glist_getcanvas(x), edit);
         gui_vmess("gui_set_editmode", "xi",
             glist_getcanvas(x),
             edit);
     }
-    /*if (!x->gl_edit) {
-        sys_vgui(".x%lx.m.edit entryconfigure \"Cord Inspector\" "
-                 "-indicatoron false -state disabled\n", glist_getcanvas(x));
-    }
-    else {
-        sys_vgui(".x%lx.m.edit entryconfigure \"Cord Inspector\" "
-                 "-indicatoron false -state normal\n", glist_getcanvas(x));
-    }*/
 }
 
 // jsarlo
@@ -7651,8 +7132,6 @@ void canvas_magicglass(t_canvas *x, t_floatarg fyesplease)
         magicGlass_setOn(x->gl_editor->gl_magic_glass, 0);
         magicGlass_hide(x->gl_editor->gl_magic_glass);
     }
-    //sys_vgui("pdtk_canvas_magicglassval .x%x %d\n",
-    //    glist_getcanvas(x), magicGlass_isOn(x->gl_editor->gl_magic_glass));
     gui_vmess("gui_set_cordinspector", "xi",
         glist_getcanvas(x),
         magicGlass_isOn(x->gl_editor->gl_magic_glass));
@@ -7831,7 +7310,7 @@ static void canvas_tip(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
         //else if (at[i].a_type == A_SYMBOL)
         //    sys_vgui(" %s", at[i].a_w.w_symbol->s_name);
         }
-        sys_gui("\n");
+        //sys_gui("\n");
     }
 }
 
