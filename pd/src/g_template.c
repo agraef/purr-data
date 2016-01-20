@@ -1781,7 +1781,6 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
                     f+j, template, data, 0));
             totalpoints += x->x_nargs_per_cmd[i];
         }
-        //sys_gui("}\n");
         gui_end_array();
         gui_end_vmess();
     }
@@ -3885,7 +3884,6 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             canvas_restore_original_position(gl, (t_gobj *)glist,
                 objtag, -1);
         }
-        //sys_gui(";\n");
         gui_end_array();
         gui_end_vmess();
 
