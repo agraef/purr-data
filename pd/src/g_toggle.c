@@ -26,10 +26,6 @@ void toggle_draw_update(t_gobj *xgobj, t_glist *glist)
         {
             t_canvas *canvas=glist_getcanvas(glist);
 
-            //sys_vgui(".x%lx.c itemconfigure %lxX1 -stroke #%6.6x\n", canvas, x,
-            //         (x->x_on!=0.0)?x->x_gui.x_fcol:x->x_gui.x_bcol);
-            //sys_vgui(".x%lx.c itemconfigure %lxX2 -stroke #%6.6x\n", canvas, x,
-            //         (x->x_on!=0.0)?x->x_gui.x_fcol:x->x_gui.x_bcol);
             char colorbuf[MAXPDSTRING];
             sprintf(colorbuf, "#%6.6x", x->x_gui.x_fcol);
             gui_vmess("gui_toggle_update", "xxis", canvas,
@@ -51,12 +47,6 @@ void toggle_draw_new(t_toggle *x, t_glist *glist)
     sprintf(colorbuf, "#%6.6x", x->x_gui.x_fcol);
 
     iemgui_base_draw_new(&x->x_gui);
-    //sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth %d "
-    //    "-stroke #%6.6x -tags {%lxX1 x%lx text iemgui}\n",
-    //    canvas, x1+w+1, y1+w+1, x2-w-1, y2-w-1, w, col, x, x);
-    //sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth %d "
-    //    "-stroke #%6.6x -tags {%lxX2 x%lx text iemgui}\n",
-    //    canvas, x1+w+1, y2-w-1, x2-w-1, y1+w+1, w, col, x, x);
     gui_vmess("gui_create_toggle", "xxsiiiiiiiiiiii", canvas,
         x, colorbuf, w,
         (x->x_on != 0.0),
@@ -73,11 +63,6 @@ void toggle_draw_move(t_toggle *x, t_glist *glist)
     int y1=text_ypix(&x->x_gui.x_obj, glist), y2=y1+x->x_gui.x_h;
 
     iemgui_base_draw_move(&x->x_gui);
-    //sys_vgui(".x%lx.c itemconfigure {%lxX1||%lxX2} -strokewidth %d\n", canvas, x, x, w);
-    //sys_vgui(".x%lx.c coords %lxX1 %d %d %d %d\n",
-    //    canvas, x, x1+s, y1+s, x2-s, y2-s);
-    //sys_vgui(".x%lx.c coords %lxX2 %d %d %d %d\n",
-    //    canvas, x, x1+s, y2-s, x2-s, y1+s);
     gui_vmess("gui_toggle_resize_cross", "xxiiiiiiiiiii",
         canvas, x,
         w,
@@ -90,8 +75,6 @@ void toggle_draw_config(t_toggle* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
     iemgui_base_draw_config(&x->x_gui);
-    //sys_vgui(".x%lx.c itemconfigure {%lxX1||%lxX2} -stroke #%6.6x\n",
-    //    canvas, x, x, x->x_on?x->x_gui.x_fcol:x->x_gui.x_bcol);
     char colorbuf[MAXPDSTRING];
     sprintf(colorbuf, "#%6.6x", x->x_gui.x_fcol);
     gui_vmess("gui_toggle_update", "xxis", canvas,
