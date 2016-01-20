@@ -675,6 +675,7 @@ EXTERN void gui_start_array(void);
 EXTERN void gui_f(t_float f); /* send a float element in an array */
 EXTERN void gui_i(int i);     /* send an int element in an array */
 EXTERN void gui_s(const char *s); /* send a string element in an array */
+EXTERN void gui_x(long unsigned int i);
 EXTERN void gui_end_array(void);
 EXTERN void gui_end_vmess(void);
 
