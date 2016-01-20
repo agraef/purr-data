@@ -74,9 +74,6 @@ static void vu_update_rms(t_vu *x, t_glist *glist)
             y1 = text_ypix(&x->x_gui.x_obj, glist),
             quad1 = x1 + w4 + 1, quad3 = x1 + x->x_gui.x_w-w4 - 1;
 
-        //sys_vgui(".x%lx.c coords %lxRCOVER %d %d %d %d\n",
-        //    glist_getcanvas(glist), x, quad1 + 1, off + 2, quad3 + 1,
-        //    off + (x->x_led_size + 1) * (IEM_VU_STEPS - x->x_rms) + 2);
         gui_vmess("gui_vumeter_update_rms", "xxiiiiii",
             glist_getcanvas(glist), x,
             quad1 + 1, off + 2, quad3 + 1, off + (x->x_led_size + 1) *
@@ -99,25 +96,15 @@ static void vu_update_peak(t_vu *x, t_glist *glist)
             int j = y1 + (x->x_led_size + 1) * (IEM_VU_STEPS + 1 - x->x_peak)
                 - (x->x_led_size + 1) / 2;
 
-            //sys_vgui(".x%lx.c coords %lxPLED %d %d %d %d\n",
-            //    canvas, x, x1 + 1, j + 2, x1 + x->x_gui.x_w + 2, j + 2);
             char colorbuf[MAXPDSTRING];
             sprintf(colorbuf, "#%6.6x", iemgui_color_hex[i]);
             gui_vmess("gui_vumeter_update_peak", "xxsiiiiii",
                 canvas, x, colorbuf,
                 x1 + 1, j + 2, x1 + x->x_gui.x_w + 2, j + 2, x1, y1);
-
-            //sys_vgui(".x%lx.c itemconfigure %lxPLED -stroke #%6.6x\n",
-            //    canvas, x, iemgui_color_hex[i]);
         }
         else
         {
             int mid = x1 + x->x_gui.x_w / 2;
-
-            //sys_vgui(".x%lx.c itemconfigure %lxPLED -stroke #%6.6x\n",
-            //         canvas, x, x->x_gui.x_bcol);
-            //sys_vgui(".x%lx.c coords %lxPLED %d %d %d %d\n",
-            //         canvas, x, mid+1, y1+22, mid+1, y1+22);
 
             char colorbuf[MAXPDSTRING];
             sprintf(colorbuf, "#%6.6x", x->x_gui.x_bcol);
@@ -160,11 +147,6 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
         yyy = k4 + k1 * (k2-i);
         if((i&3)==1 && (x->x_scale))
         {
-            //sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w "
-            //    "-font %s -fill #%6.6x "
-            //    "-tags {%lxSCALEN %lxSCALE%d x%lx text iemgui}\n",
-            //    canvas, end+1, yyy+k3+2, iemgui_vu_scale_str[i/4], 
-            //    iemgui_font(&x->x_gui), x->x_gui.x_lcol, x, x, i, x);
             char colorbuf[MAXPDSTRING];
             sprintf(colorbuf, "#%6.6x", x->x_gui.x_lcol);
             // not handling font size yet
@@ -176,11 +158,6 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
         led_col = iemgui_vu_col[i];
         if (i<=IEM_VU_STEPS)
         {
-            //sys_vgui(".x%lx.c create polyline %d %d %d %d "
-            //"-strokewidth %d -stroke #%6.6x "
-            //"-tags {%lxRLED%d x%lx text iemgui}\n",
-            //canvas, quad1+1, yyy+2, quad3, yyy+2,
-            //x->x_led_size, iemgui_color_hex[led_col], x, i, x);
             char colorbuf[MAXPDSTRING];
             sprintf(colorbuf, "#%6.6x", iemgui_color_hex[led_col]);
             gui_vmess("gui_create_vumeter_steps", "xxsiiiiiiiii",
@@ -188,20 +165,11 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
                 yyy+2, quad3, yyy+2, x->x_led_size, index, x1, y1, i);
         }
     }
-    //sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x "
-    //    "-stroke #%6.6x -tags {%lxRCOVER x%lx text iemgui}\n",
-    //    canvas, quad1+1, y1+1, quad3, y1+1 + k1*IEM_VU_STEPS,
-    //    x->x_gui.x_bcol, x->x_gui.x_bcol, x, x);
     char colorbuf[MAXPDSTRING];
     sprintf(colorbuf, "#%6.6x", x->x_gui.x_bcol);
     gui_vmess("gui_create_vumeter_rect", "xxsiiiiii",
         canvas, x,
         colorbuf, quad1+1, y1+1, quad3, y1+1 + k1*IEM_VU_STEPS, x1, y1);
-    //sys_vgui(".x%lx.c create polyline %d %d %d %d "
-    //    "-strokewidth %d -fill #%6.6x "
-    //    "-tags {%lxPLED x%lx text iemgui}\n",
-    //    canvas, mid+1, y1+12,
-    //    mid+1, y1+12, x->x_led_size, x->x_gui.x_bcol, x, x);
     sprintf(colorbuf, "#%6.6x", x->x_gui.x_bcol);
     gui_vmess("gui_create_vumeter_peak", "xxsiiiiiii",
         canvas, x,
@@ -223,23 +191,17 @@ static void vu_draw_move(t_vu *x, t_glist *glist)
     int k1=x->x_led_size+1, k2=IEM_VU_STEPS+1, k3=k1/2;
     int yyy, i, k4=y1-k3;
 
-    //sys_vgui(".x%lx.c coords %lxBASE %d %d %d %d\n",
-    //    canvas, x, x1, y1, x1+x->x_gui.x_w+2,y1+x->x_gui.x_h+4);
     gui_vmess("gui_vumeter_border_coords", "xxii",
         canvas, x, x->x_gui.x_w+2, x->x_gui.x_h+4);
     for(i=1; i<=IEM_VU_STEPS; i++)
     {
         yyy = k4 + k1*(k2-i);
-        //sys_vgui(".x%lx.c coords %lxRLED%d %d %d %d %d\n",
-        //    canvas, x, i, quad1+1, yyy+2, quad3, yyy+2);
         gui_vmess("gui_update_vumeter_step_coords", "xxiiiiiii",
             canvas, x, i, quad1+1, yyy+2, quad3, yyy+2,
             x1, y1);
-//        if(((i+2)&3) && (x->x_scale))
+        //if(((i+2)&3) && (x->x_scale))
         if((i&3)==1 && (x->x_scale))
         {
-            //sys_vgui(".x%lx.c coords %lxSCALE%d %d %d\n",
-            //    canvas, x, i, end+1, yyy+k3+2);
             gui_vmess("gui_vumeter_text_coords", "xxiiiii",
                 canvas, x, i,
                 end+1, yyy+k3+2, x1, y1);
@@ -249,8 +211,6 @@ static void vu_draw_move(t_vu *x, t_glist *glist)
     {
         i=IEM_VU_STEPS+1;
         yyy = k4 + k1*(k2-i);
-        //sys_vgui(".x%lx.c coords %lxSCALE%d %d %d\n",
-        //    canvas, x, i, end+1, yyy+k3+2);
         gui_vmess("gui_vumeter_text_coords", "xxiiiii",
             canvas, x, i,
             end+1, yyy+k3+2, x1, y1);
@@ -268,19 +228,12 @@ static void vu_draw_config(t_vu* x, t_glist* glist)
     {
         if (i <= IEM_VU_STEPS)
         {
-            //sys_vgui(".x%lx.c itemconfigure %lxRLED%d -strokewidth %d\n",
-            //    canvas, x, i, x->x_led_size);
             gui_vmess("gui_update_vumeter_steps", "xxii",
                 canvas, x, i, x->x_led_size);
         }
         //if((i&3)==1)
         if((i&3)==1)
         {
-            //sys_vgui(".x%lx.c itemconfigure %lxSCALE%d -text {%s} "
-            //"-font %s -fill %s\n", canvas, x, i, iemgui_vu_scale_str[i/4],
-            //iemgui_font(&x->x_gui), x->x_gui.x_selected == canvas &&
-            //x->x_gui.x_glist == canvas && x->x_scale ? selection_color : lcol);
-
             int isselected = x->x_gui.x_selected == canvas &&
                 x->x_gui.x_glist == canvas && x->x_scale;
             gui_vmess("gui_update_vumeter_text", "xxssisi",
@@ -288,10 +241,6 @@ static void vu_draw_config(t_vu* x, t_glist* glist)
                 iemgui_font(&x->x_gui), isselected, lcol, i);
         }
     }
-    //sys_vgui(".x%lx.c itemconfigure %lxRCOVER -fill #%6.6x -stroke #%6.6x\n",
-    //         canvas, x, x->x_gui.x_bcol, x->x_gui.x_bcol);
-    //sys_vgui(".x%lx.c itemconfigure %lxPLED -strokewidth %d\n",
-    //         canvas, x, x->x_led_size);
     char bcol[8];
     sprintf(bcol, "#%6.6x", x->x_gui.x_bcol);
     gui_vmess("gui_update_vumeter_rect", "xxs",
@@ -503,13 +452,11 @@ static void vu_scale(t_vu *x, t_floatarg fscale)
                 /* if((i+2)&3) */
                 if((i&3)==1)
                 {
-                    //sys_vgui(".x%lx.c delete %lxSCALE%d\n", canvas, x, i);
                     gui_vmess("gui_erase_vumeter_text", "xxi",
                         canvas, x, i);
                 }
             }
             i=IEM_VU_STEPS+1;
-            //sys_vgui(".x%lx.c delete %lxSCALE%d\n", canvas, x, i);
             gui_vmess("gui_erase_vumeter_text", "xxi",
                 canvas, x, i);
         }
@@ -530,10 +477,6 @@ static void vu_scale(t_vu *x, t_floatarg fscale)
                 yyy = k4 + k1*(k2-i);
                 if((i&3)==1)
                 {
-                    //sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w "
-                    //         "-font %s -fill #%6.6x -tags {%lxSCALE%d x%lx}\n",
-                    //    canvas, end+1, yyy+k3+2, iemgui_vu_scale_str[i/4], 
-                    //    iemgui_font(&x->x_gui), x->x_gui.x_lcol, x, i, x);
                     char colorbuf[MAXPDSTRING];
                     sprintf(colorbuf, "#%6.6x", x->x_gui.x_lcol);
                     gui_vmess("gui_create_vumeter_text", "xxsiisiii",
@@ -544,10 +487,6 @@ static void vu_scale(t_vu *x, t_floatarg fscale)
             }
             i = IEM_VU_STEPS + 1;
             yyy = k4 + k1*(k2-i);
-            //sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w "
-            //         "-font %s -fill #%6.6x -tags {%lxSCALE%d x%lx}\n",
-            //    canvas, end+1, yyy+k3+2, iemgui_vu_scale_str[i/4], 
-            //    iemgui_font(&x->x_gui), x->x_gui.x_lcol, x, i, x);
             char colorbuf[MAXPDSTRING];
             sprintf(colorbuf, "#%6.6x", x->x_gui.x_lcol);
             gui_vmess("gui_create_vumeter_text", "xxsiisiii",
