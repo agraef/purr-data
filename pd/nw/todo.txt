@@ -62,7 +62,7 @@ Everything else: (A [x] means we've fixed it)
     the middle) 
 [ ] figure out why -nrt flag causes Pd to bail on the GUI (it wasn't doing this
     on the amd_64 virtual Jessie machine, nor on my 32-bit machine).
-[ ] make dialogs with [yes/no] instead of [cancel/ok]
+[x] make dialogs with [yes/no] instead of [cancel/ok]
 [ ] draw graph inside gobj group
 [ ] merge gui_text_select and gui_text_deselect
 [ ] in function gui_cord_inspector_update, use parameter "moved" to flash text
