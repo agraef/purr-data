@@ -5528,7 +5528,6 @@ static void canvas_find_parent(t_canvas *x, t_floatarg f)
     }
     else
     {
-        //sys_gui("menu_raise_console\n");
         gui_vmess("gui_raise_pd_window", "");
     }
 }
