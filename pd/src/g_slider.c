@@ -31,15 +31,11 @@ static void slider_draw_update(t_gobj *client, t_glist *glist)
     int r;
     if (x->x_orient) {
         r=y2-3 - (x->x_val+50)/100;
-        //sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
-        //    canvas, x, x1+2, r, x2-2, r);
         gui_vmess("gui_slider_update", "xxiiiiii",
             canvas, x, x1+2, r, x2-2, r,
             x1, y1);
     } else {
         r=x1+3 + (x->x_val+50)/100;
-        //sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
-        //    canvas, x, r, y1+2, r, y2-2);
         gui_vmess("gui_slider_update", "xxiiiiii",
             canvas, x, r, y1+2, r, y2-2,
             x1, y1);
@@ -67,18 +63,12 @@ static void slider_draw_new(t_slider *x, t_glist *glist)
     else             r = x1+3 + (x->x_val + 50)/100;
     iemgui_base_draw_new(&x->x_gui);
     if (x->x_orient) {
-        //sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth 3 "
-        //    "-stroke #%6.6x -tags {%lxKNOB x%lx text iemgui}\n",
-        //    canvas, x1+2, r, x2-2, r, x->x_gui.x_fcol, x, x);
         char colorbuf[MAXPDSTRING];
         sprintf(colorbuf, "#%6.6x", x->x_gui.x_fcol);
         gui_vmess("gui_create_slider", "xxsiiiiii",
             canvas, x,
             colorbuf, x1+2, r, x2-2, r, x1, y1);
     } else {
-        //sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth 3 "
-        //    "-stroke #%6.6x -tags {%lxKNOB x%lx text iemgui}\n",
-        //    canvas, r, y1+2, r, y2-2, x->x_gui.x_fcol, x, x);
         char colorbuf[MAXPDSTRING];
         sprintf(colorbuf, "#%6.6x", x->x_gui.x_fcol);
         gui_vmess("gui_create_slider", "xxsiiiiii",
@@ -100,16 +90,12 @@ static void slider_draw_move(t_slider *x, t_glist *glist)
     iemgui_base_draw_move(&x->x_gui);
     if (x->x_orient)
     {
-        //sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
-        //    canvas, x, x1+2, r, x2-2, r);
         gui_vmess("gui_slider_update", "xxiiiiii",
             canvas, x,
             x1+2, r, x2-2, r, x1, y1);
     }
     else
     {
-        //sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
-        //    canvas, x, r, y1+2, r, y2-2);
         gui_vmess("gui_slider_update", "xxiiiiii",
             canvas, x,
             r, y1+2, r, y2-2, x1, y1);
@@ -120,8 +106,6 @@ static void slider_draw_config(t_slider *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
     iemgui_base_draw_config(&x->x_gui);
-    //sys_vgui(".x%lx.c itemconfigure %lxKNOB -stroke #%6.6x\n",
-    //    canvas, x, x->x_gui.x_fcol);
     char colorbuf[MAXPDSTRING];
     sprintf(colorbuf, "#%6.6x", x->x_gui.x_fcol);
     gui_vmess("gui_slider_indicator_color", "xxs",
