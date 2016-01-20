@@ -1547,7 +1547,6 @@ static void canvas_start_dsp(void)
     if (canvas_dspstate)
         ugen_stop();
     else
-        //sys_gui("pdtk_pd_dsp ON\n");
         gui_vmess("gui_pd_dsp", "i", 1);
     ugen_start();
     
@@ -1562,7 +1561,6 @@ static void canvas_stop_dsp(void)
     if (canvas_dspstate)
     {
         ugen_stop();
-        //sys_gui("pdtk_pd_dsp OFF\n");
         gui_vmess("gui_pd_dsp", "i", 0);
         canvas_dspstate = 0;
     }
