@@ -83,7 +83,7 @@ Everything else: (A [x] means we've fixed it)
 [ ] think about scaling the svg instead of the page, and making the selection
     rectangle a div above that
 [ ] change 'visible-width' to 'cnv-width'
-[ ] in dialog_iemgui.html, use an object to store all the prop/value pairs that
+[x] in dialog_iemgui.html, use an object to store all the prop/value pairs that
     got sent.  That way we don't have to use all those awful tricks to
     conditionally fill the slots
 [ ] gui_graph_fill_border: use css class selectors instead of configuration
