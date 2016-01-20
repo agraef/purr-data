@@ -98,7 +98,7 @@ Everything else: (A [x] means we've fixed it)
     moving a lot of the editing code out of C and into the GUI
 [ ] change 'array_element_fill' to 'element_fill', array_outline to
     'array_element_outline' 
-[ ] either nw_create_window should take fewer parameters or it should take an
+[x] either nw_create_window should take fewer parameters or it should take an
     object with name: value pairs
 [ ] getting the sense that glist_isselected should _always_ have
     glist_getcanvas(x) as its first parameter
@@ -114,10 +114,10 @@ Everything else: (A [x] means we've fixed it)
 [ ] revisit pdtk_check_scroll_on_motion.  It's not implemented in the port
     yet.  Perhaps there's a better way to do it, without triggering a bunch
     of layouts.
-[ ] implement pdtk_canvas_editval and magicglassval
+[x] implement pdtk_canvas_editval and magicglassval
 [ ] look into problems with object z-order on the C side when deleting objects
     and then undoing the delete
-[ ] implement magicglass edit menu indicator
+[x] implement magicglass edit menu indicator
 [ ] clip garray to gl_x1 and gl_x2 by:
     a) checking if we're in a gop, and
     b) if so, only render if element number is > gl_x1 and < gl_x2
@@ -139,7 +139,7 @@ Everything else: (A [x] means we've fixed it)
 [ ] port the bug fix from pd-l2ork git repo in commit
     6084c8e5f86d1521edde3a899a6d5b5821aa27c6
     "*fixed bug reported by Gilberto in..."
-[ ] gui_vmess: should it look like this:
+[x] gui_vmess: should it look like this:
         (void *x, "msg", "arg_format", ...)
     or as it currently looks, like this:
         ("msg", "arg_format", ...)
@@ -196,7 +196,7 @@ Everything else: (A [x] means we've fixed it)
     After some more research, it appears this problem doesn't happen
     in OSX.
 [ ] fix ds-demos/splines.pd (arg number out of range)
-[ ] vsl dialog shows "undefined" for one of the tooltips
+[x] vsl dialog shows "undefined" for one of the tooltips
 
 [x] set svg bounds to whatever the window size happens to be
 [x] trigger a canvas_getscroll when the nw.js window is resized
