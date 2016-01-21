@@ -1,4 +1,4 @@
-## Pure Data L2ork
+## Pd-L2Ork
 
 maintainer: Ivica Bukvic <ico@vt.edu>
 
@@ -24,8 +24,8 @@ the screen what text-based languages require you to piece together in your mind.
 
 There are currently three main distributions of Pure Data:
 
-1. Pd-l2ork.  Version used by Ivica Bukvic for his laptop orchestra.  This
-   guide is for Pd-l2ork.
+1. Pd-L2Ork.  Version used by Ivica Bukvic for his laptop orchestra.  This
+   guide is for Pd-L2Ork.
 2. Pure Data "Vanilla".  Miller Puckette's personal version which he hosts on
    his website and maintains.  It doesn't include external libraries like
    objects for doing graphics, video, etc.
@@ -52,7 +52,7 @@ methods, as well as for realizing complex systems for large-scale projects.
 
 ### Goals
 
-Pd-l2ork has the following goals:
+Pd-L2ork has the following goals:
 
 1. Documentation.  We like documentation.  It's like code, except friendly.
 2. Be reliable.  Binary releases must be usable for performances and
@@ -62,7 +62,7 @@ Pd-l2ork has the following goals:
    bugs.  Patches for new functionality that lack documentation are spam.
 4. Be consistent.  Consistent interfaces are themselves a kind of
    documentation.  We like documentation, so it follows that we like consistent
-   interface.s
+   interfaces
 
 ### Installation Guide
 To install using a pre-compiled binary, follow these instructions:
@@ -88,23 +88,23 @@ Contributing is easy:
 3. Send us your patch and we'll try it out.  If it's well-documented and
    there aren't any bugs we'll add it to the software.
 4. If you want to do regular development and have commit access, just request
-   it, then follow the Pd-l2ork goals above.
+   it, then follow the Pd-L2Ork goals above.
 
 Here are some of the current tasks:
 
-* coming up with a better name than Pd-l2ork. :)
+* coming up with a better name than Pd-L2Ork. :)
   * skills needed: creativity, basic knowledge about programming in Pd
   * status: no work done on this yet
 * writing small audio/visual Pd games or demos to include in the next release
   * skills needed: ability to write Pd programs
   * status: I wrote a little sprite-based game that will ship with the next
-    version of Pd-l2ork.  In it, the character walks around in an actual
+    version of Pd-L2Ork.  In it, the character walks around in an actual
     Pd diagram shoots at the objects to progress, and to make realtime
     changes to the music.
     What I'd like is to include a new, smallish game with each release
     that has a link in the Pd console.  It can be a little demo or game,
     just something fun that shows off what can be done using Pure Data.
-* porting Pd-l2ork's graphical user interface from Tcl/Tk to Qt.
+* porting Pd-L2Ork's graphical user interface from Tcl/Tk to Qt.
   * skills needed: knowledge about Qt5/QML, threading, and Pd's core design
     and deterministic message-dispatching and scheduling
   * status: under active development
