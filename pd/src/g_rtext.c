@@ -22,7 +22,7 @@
 #ifdef __APPLE__
 #define BMARGIN 1
 #else
-#define BMARGIN 0
+#define BMARGIN 1
 #endif
 
 #define SEND_FIRST 1
