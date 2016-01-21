@@ -83,6 +83,8 @@ typedef struct _coll
 	t_int unsafe;
 	t_int init; //used to make sure that the secondary thread is ready to go
 
+	t_int threaded; //used to decide whether this should be a threaded instance
+
 	t_coll_q *x_q; //a list of error messages to be processed
 } t_coll;
 
@@ -1623,15 +1625,20 @@ static void coll_read(t_coll *x, t_symbol *s)
 		t_collcommon *cc = x->x_common;
 		if (s && s != &s_) {
 			x->x_s = s;
-			x->unsafe = 1;
+			if (x->threaded == 1) {
+				x->unsafe = 1;
 
-			pthread_mutex_lock(&x->unsafe_mutex);
-			pthread_cond_signal(&x->unsafe_cond);
-			pthread_mutex_unlock(&x->unsafe_mutex);
-			//collcommon_doread(cc, s, x->x_canvas, 0);
+				pthread_mutex_lock(&x->unsafe_mutex);
+				pthread_cond_signal(&x->unsafe_cond);
+				pthread_mutex_unlock(&x->unsafe_mutex);
+				//collcommon_doread(cc, s, x->x_canvas, 0);
+			}
+			else {
+				collcommon_doread(cc, s, x->x_canvas, 0);
+			}
 		}
 		else
-		hammerpanel_open(cc->c_filehandle, 0);
+			hammerpanel_open(cc->c_filehandle, 0);
 	}
 }
 
@@ -1641,15 +1648,20 @@ static void coll_write(t_coll *x, t_symbol *s)
 		t_collcommon *cc = x->x_common;
 		if (s && s != &s_) {
 			x->x_s = s;
-			x->unsafe = 10;
+			if (x->threaded == 1) {
+				x->unsafe = 10;
 
-			pthread_mutex_lock(&x->unsafe_mutex);
-			pthread_cond_signal(&x->unsafe_cond);
-			pthread_mutex_unlock(&x->unsafe_mutex);
-			//collcommon_dowrite(cc, s, x->x_canvas, 0);
+				pthread_mutex_lock(&x->unsafe_mutex);
+				pthread_cond_signal(&x->unsafe_cond);
+				pthread_mutex_unlock(&x->unsafe_mutex);
+				//collcommon_dowrite(cc, s, x->x_canvas, 0);
+			}
+			else {
+				collcommon_dowrite(cc, s, x->x_canvas, 0);
+			}
 		}
 		else
-		hammerpanel_save(cc->c_filehandle, 0, 0);  /* CHECKED no default name */
+			hammerpanel_save(cc->c_filehandle, 0, 0);  /* CHECKED no default name */
 	}
 }
 
@@ -1658,12 +1670,17 @@ static void coll_readagain(t_coll *x)
 	//if (!x->busy) {
 		t_collcommon *cc = x->x_common;
 		if (cc->c_filename) {
-			x->unsafe = 2;
+			if (x->threaded == 1) {
+				x->unsafe = 2;
 
-			pthread_mutex_lock(&x->unsafe_mutex);
-			pthread_cond_signal(&x->unsafe_cond);
-			pthread_mutex_unlock(&x->unsafe_mutex);
-			//collcommon_doread(cc, 0, 0, 0);
+				pthread_mutex_lock(&x->unsafe_mutex);
+				pthread_cond_signal(&x->unsafe_cond);
+				pthread_mutex_unlock(&x->unsafe_mutex);
+				//collcommon_doread(cc, 0, 0, 0);
+			}
+			else {
+				collcommon_doread(cc, 0, 0, 0);
+			}
 		}
 		else
 		hammerpanel_open(cc->c_filehandle, 0);
@@ -1675,12 +1692,17 @@ static void coll_writeagain(t_coll *x)
 	//if (!x->busy) {
 		t_collcommon *cc = x->x_common;
 		if (cc->c_filename) {
-			x->unsafe = 11;
+			if (x->threaded == 1) {
+				x->unsafe = 11;
 
-			pthread_mutex_lock(&x->unsafe_mutex);
-			pthread_cond_signal(&x->unsafe_cond);
-			pthread_mutex_unlock(&x->unsafe_mutex);
-			//collcommon_dowrite(cc, 0, 0, 0);
+				pthread_mutex_lock(&x->unsafe_mutex);
+				pthread_cond_signal(&x->unsafe_cond);
+				pthread_mutex_unlock(&x->unsafe_mutex);
+				//collcommon_dowrite(cc, 0, 0, 0);
+			}
+			else {
+				collcommon_dowrite(cc, 0, 0, 0);
+			}
 		}
 		else
 		hammerpanel_save(cc->c_filehandle, 0, 0);  /* CHECKED no default name */
@@ -1842,28 +1864,47 @@ static void *coll_threaded_fileio(void *ptr)
 	pthread_exit(0);
 }
 
+static void coll_separate(t_coll *x, t_floatarg f)
+{
+	int indx;
+	t_collcommon *cc = x->x_common;
+	if (loud_checkint((t_pd *)x, f, &indx, gensym("separate")))
+	{
+		t_collelem *ep;
+		for (ep = cc->c_first; ep; ep = ep->e_next)
+			if (ep->e_hasnumkey && ep->e_numkey >= indx)
+				ep->e_numkey += 1;
+		collcommon_modified(cc, 0);
+	}
+}
+
 static void coll_free(t_coll *x)
 {
-	x->unsafe = -1;
+	if (x->threaded == 1)
+	{
+		x->unsafe = -1;
 
-	pthread_mutex_lock(&x->unsafe_mutex);
-	pthread_cond_signal(&x->unsafe_cond);
-	pthread_mutex_unlock(&x->unsafe_mutex);
+		pthread_mutex_lock(&x->unsafe_mutex);
+		pthread_cond_signal(&x->unsafe_cond);
+		pthread_mutex_unlock(&x->unsafe_mutex);
 
-	pthread_join(x->unsafe_t, NULL);
-	pthread_mutex_destroy(&x->unsafe_mutex);
+		pthread_join(x->unsafe_t, NULL);
+		pthread_mutex_destroy(&x->unsafe_mutex);
 
-	clock_free(x->x_clock);
-	if (x->x_q)
-		coll_q_free(x);
+		clock_free(x->x_clock);
+		if (x->x_q)
+			coll_q_free(x);
+	}
 
     hammerfile_free(x->x_filehandle);
     coll_unbind(x);
 }
 
-static void *coll_new(t_symbol *s)
+static void *coll_new(t_symbol *s, int argc, t_atom *argv)
 {
 	int ret;
+	int count = 0;
+	t_symbol *file = NULL;
     t_coll *x = (t_coll *)pd_new(coll_class);
     x->x_canvas = canvas_getcurrent();
     outlet_new((t_object *)x, &s_);
@@ -1872,21 +1913,48 @@ static void *coll_new(t_symbol *s)
     x->x_dumpbangout = outlet_new((t_object *)x, &s_bang);
     x->x_filehandle = hammerfile_new((t_pd *)x, coll_embedhook, 0, 0, 0);
 
-	//prep threading stuff
+    // check arguments for filename and threaded version
+    if (argc > 0)
+	{
+		while(count < argc)
+		{
+			if (argv[count].a_type == A_SYMBOL)
+			{
+				// we got a file name
+				file = gensym(atom_getsymbol(&argv[count])->s_name);
+			}
+			else if (argv[count].a_type == A_FLOAT)
+			{
+				// we got a flag for threaded (1) vs non-threaded (0)
+				x->threaded = (int)atom_getfloat(&argv[count]);
+				if (x->threaded < 0) x->threaded = 0;
+				if (x->threaded > 1) x->threaded = 1;
+			}
+			count++;
+		}
+	}
+	// if no file name provided, associate with empty symbol
+	if (file == NULL)
+		file = &s_;
+	
+	// prep threading stuff
 	x->unsafe = 0;
 	x->init = 0;
-	x->x_clock = clock_new(x, (t_method)coll_tick);
-	t_threadedFunctionParams rPars;
-	rPars.x = x;
-	pthread_mutex_init(&x->unsafe_mutex, NULL);
-	pthread_cond_init(&x->unsafe_cond, NULL);
-	ret = pthread_create( &x->unsafe_t, NULL, (void *) &coll_threaded_fileio, (void *) &rPars);
+	if (x->threaded == 1)
+	{
+		x->x_clock = clock_new(x, (t_method)coll_tick);
+		t_threadedFunctionParams rPars;
+		rPars.x = x;
+		pthread_mutex_init(&x->unsafe_mutex, NULL);
+		pthread_cond_init(&x->unsafe_cond, NULL);
+		ret = pthread_create( &x->unsafe_t, NULL, (void *) &coll_threaded_fileio, (void *) &rPars);
 
-	while (!x->init) {
-		sched_yield();
+		while (!x->init) {
+			sched_yield();
+		}
 	}
 
-    coll_bind(x, s);
+    coll_bind(x, file);
 
     return (x);
 }
@@ -1896,7 +1964,7 @@ void coll_setup(void)
     coll_class = class_new(gensym("coll"),
 			   (t_newmethod)coll_new,
 			   (t_method)coll_free,
-			   sizeof(t_coll), 0, A_DEFSYM, 0);
+			   sizeof(t_coll), 0, A_GIMME, 0);
     class_addbang(coll_class, coll_next);
     class_addfloat(coll_class, coll_float);
     class_addsymbol(coll_class, coll_symbol);
@@ -1973,6 +2041,8 @@ void coll_setup(void)
     class_addmethod(coll_class, (t_method)coll_click,
 		    gensym("click"),
 		    A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, 0);
+    class_addmethod(coll_class, (t_method)coll_separate,
+		    gensym("separate"), A_FLOAT, 0);
 #ifdef COLL_DEBUG
     class_addmethod(coll_class, (t_method)coll_debug,
 		    gensym("debug"), A_DEFFLOAT, 0);
@@ -1984,4 +2054,6 @@ void coll_setup(void)
        class itself has been already set up above), but it is better to
        have it around, just in case... */
     hammerfile_setup(collcommon_class, 0);
+    //logpost(NULL, 4, "this is cyclone/coll %s, %dth %s build",
+	//CYCLONE_VERSION, CYCLONE_BUILD, CYCLONE_RELEASE);
 }

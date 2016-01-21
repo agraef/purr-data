@@ -30,9 +30,9 @@ static t_int *cartopol_perform(t_int *w)
     t_float *out2 = (t_float *)(w[5]);
     while (nblock--)
     {
-	float rl = *in1++, im = -*in2++;  /* CHECKED */
-	*out1++ = hypotf(rl, im);
-	*out2++ = atan2f(im, rl);
+        float rl = *in1++, im = *in2++;  /* checked against Max5 */
+        *out1++ = hypotf(rl, im);
+        *out2++ = atan2f(im, rl);
     }
     return (w + 6);
 }
@@ -45,8 +45,8 @@ static t_int *cartopol_perform_nophase(t_int *w)
     t_float *out1 = (t_float *)(w[4]);
     while (nblock--)
     {
-	float rl = *in1++, im = -*in2++;  /* CHECKED */
-	*out1++ = hypotf(rl, im);
+        float rl = *in1++, im = *in2++;  /* checked against Max5 */
+        *out1++ = hypotf(rl, im);
     }
     return (w + 5);
 }

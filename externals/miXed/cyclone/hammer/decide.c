@@ -4,6 +4,7 @@
 
 #include "m_pd.h"
 #include "common/loud.h"
+#include "shared.h"
 
 typedef struct _decide
 {
@@ -48,13 +49,17 @@ static void decide_ft1(t_decide *x, t_floatarg f)
     if (i)  /* CHECKED: negative numbers are accepted */
 	x->x_seed = i;
     else
-	x->x_seed = 123456789;  /* FIXME */
+	x->x_seed = rand();  /* FIXED */
 }
 
 static void *decide_new(t_floatarg f)
 {
     t_decide *x = (t_decide *)pd_new(decide_class);
-    x->x_seed = 123456789;  /* FIXME */
+    int i = (int)f;
+    if (i)
+	x->x_seed = i;
+    else
+	x->x_seed = rand();
     inlet_new((t_object *)x, (t_pd *)x, &s_float, gensym("ft1"));
     outlet_new((t_object *)x, &s_float);
     return (x);
@@ -72,4 +77,6 @@ void decide_setup(void)
 		    gensym("ft1"), A_FLOAT, 0);
     /* CHECKED list is auto-unfolded */
     /* CHECKED doesn't understand "seed" */
+    //logpost(NULL, 4, "this is cyclone/decide %s, %dth %s build",
+	//CYCLONE_VERSION, CYCLONE_BUILD, CYCLONE_RELEASE);
 }

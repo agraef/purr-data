@@ -32,7 +32,7 @@ static t_int *poltocar_perform(t_int *w)
     {
 	float am = *in1++, ph = *in2++;
 	*out1++ = am * cosf(ph);
-	*out2++ = -am * sinf(ph);  /* CHECKED */
+	*out2++ = am * sinf(ph);  /* CHECKED */
     }
     return (w + 6);
 }

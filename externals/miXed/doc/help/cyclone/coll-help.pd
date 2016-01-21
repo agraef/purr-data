@@ -1,9 +1,9 @@
-#N canvas 357 41 554 662 10;
-#X obj -1 958 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
-14 -233017 -33289 0;
+#N canvas 361 14 554 662 10;
+#X obj -1 1118 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12
+0 14 -233017 -33289 0;
 #X obj -1 724 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 480 393 418 288 META 0;
+#N canvas 470 383 418 288 META 0;
 #X text 44 193 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 44 31 LICENSE SIBSD;
 #X text 44 175 AUTHOR Miller Puckette;
@@ -18,7 +18,7 @@
 #X text 44 13 KEYWORDS store edit message index;
 #X text 44 229 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
 for Pd-l2ork version 2013.05.28;
-#X restore 500 960 pd META;
+#X restore 500 1120 pd META;
 #X obj -1 786 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
 13 -228856 -1 0;
 #X obj -1 902 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
@@ -31,7 +31,7 @@ for Pd-l2ork version 2013.05.28;
 #C restore;
 #X obj 65 30 buddy;
 #X obj 108 30 textfile;
-#X restore 196 960 pd Related_objects;
+#X restore 196 1120 pd Related_objects;
 #X obj 81 817 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
 -162280 0;
 #X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header coll 3 12 0 18
@@ -44,7 +44,7 @@ for Pd-l2ork version 2013.05.28;
 #X msg 39 124 next;
 #X obj 32 690 print coll;
 #X msg 131 488 clear;
-#X floatatom 69 667 5 0 0 0 - - -;
+#X floatatom 69 667 5 0 0 0 - - -, f 5;
 #X obj 106 647 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
 #X obj 143 629 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
@@ -84,7 +84,7 @@ for Pd-l2ork version 2013.05.28;
 #X text 166 242 write a file;
 #X text 118 266 open a dialog;
 #X msg 81 267 write;
-#X floatatom 122 467 5 0 0 0 - - -;
+#X floatatom 122 467 5 0 0 0 - - -, f 5;
 #X text 129 290 output nr. of messages stored;
 #X text 72 123 output next =;
 #X msg 159 123 bang;
@@ -138,7 +138,7 @@ for Pd-l2ork version 2013.05.28;
 #X msg 588 130 insert 2 a new two;
 #X text 584 99 inserts new message at index;
 #X text 585 110 and increments all indexes >=;
-#X floatatom 608 160 5 0 0 0 - - -;
+#X floatatom 608 160 5 0 0 0 - - -, f 5;
 #X text 644 159 check it out ...;
 #X text 637 225 or send it out immediately:;
 #X text 624 181 replace an item (silently):;
@@ -167,10 +167,9 @@ be used just like ints to operate on or re-trieve data:;
 #X msg 96 335 remove 3;
 #X text 151 334 delete message \, leave index alone;
 #X msg 246 244 writeagain;
-#N canvas 116 68 589 315 even 0;
+#N canvas 386 140 738 315 even 0;
 #X obj 32 207 coll /tmp/new.coll;
 #C restore;
-#X obj 32 236 print more_coll;
 #X text 133 76 load ...;
 #X msg 49 99 dump;
 #X msg 77 146 renumber;
@@ -180,7 +179,6 @@ be used just like ints to operate on or re-trieve data:;
 #X text 135 123 swap 1 & 2;
 #X msg 32 281 renumber;
 #X text 87 280 doesn't quite work as expected ...;
-#X obj 301 236 print more_coll;
 #X obj 301 207 coll /tmp/new1.coll;
 #C restore;
 #X msg 301 71 2 2 3 4 \, 1 1 2 3 \, 3 3 4 5;
@@ -193,37 +191,45 @@ be used just like ints to operate on or re-trieve data:;
 #X msg 394 148 sort 1 3;
 #X msg 470 148 sort -1 3;
 #X text 399 130 sort by 3rd element:;
-#X msg 453 180 dump;
+#X msg 551 177 dump;
 #X text 141 147 order by index*;
 #X text 21 281 *;
 #X text 12 10 this is not like in the reference \, renumber shouldn't
 be needed:;
-#X connect 0 0 1 0;
+#X msg 551 148 separate 2;
+#X text 551 87 puts a space in place ofádesired index numberㄢd
+increments all indicesばove desired index;
+#X obj 338 263 print more_coll_B_indices;
+#X obj 301 236 print more_coll_B;
+#X obj 32 236 print more_coll_A;
+#X connect 0 0 29 0;
+#X connect 2 0 0 0;
 #X connect 3 0 0 0;
 #X connect 4 0 0 0;
 #X connect 5 0 0 0;
 #X connect 6 0 0 0;
-#X connect 7 0 0 0;
-#X connect 12 0 11 0;
-#X connect 13 0 12 0;
-#X connect 14 0 12 0;
-#X connect 15 0 12 0;
-#X connect 16 0 12 0;
-#X connect 20 0 12 0;
-#X connect 21 0 12 0;
-#X connect 23 0 12 0;
-#X restore 258 93 pd even more things;
+#X connect 10 0 28 0;
+#X connect 10 1 27 0;
+#X connect 11 0 10 0;
+#X connect 12 0 10 0;
+#X connect 13 0 10 0;
+#X connect 14 0 10 0;
+#X connect 18 0 10 0;
+#X connect 19 0 10 0;
+#X connect 21 0 10 0;
+#X connect 25 0 10 0;
+#X restore 344 94 pd even more things;
 #X msg 141 533 wclose;
-#N canvas 433 184 345 227 problems 0;
+#N canvas 423 174 345 227 problems 0;
 #X obj 148 125 outlet;
 #X msg 118 78 min;
 #X msg 148 78 max;
 #X text 62 28 please look at coll.txt if you think;
 #X text 62 41 you can help...;
-#N canvas 63 144 658 284 refer 0;
+#N canvas 53 134 658 284 refer 0;
 #X msg 45 98 1 1 \, 2 2 \, 3 3;
-#X floatatom 408 135 5 0 0 0 - - -;
-#X floatatom 475 204 5 0 0 0 - - -;
+#X floatatom 408 135 5 0 0 0 - - -, f 5;
+#X floatatom 475 204 5 0 0 0 - - -, f 5;
 #X obj 45 132 coll /tmp/1.coll;
 #C restore;
 #X obj 475 167 coll /tmp/2.coll;
@@ -244,7 +250,6 @@ be needed:;
 #X connect 1 0 0 0;
 #X connect 2 0 0 0;
 #X restore 381 561 pd problems;
-#X text 254 75 swap \, sort \, renumber:;
 #X text 111 732 message;
 #X msg 50 147 prev;
 #X text 82 145 previous;
@@ -262,8 +267,6 @@ be needed:;
 #X text 216 839 - when finishing load or save op;
 #X text 111 861 bang;
 #X text 216 862 - when finished with a dump op;
-#X text 88 920 1) /path/to/file;
-#X text 216 920 - option arg loads a file into coll;
 #X obj 495 3 coll;
 #C restore;
 #X text 315 236 rewrite last file written;
@@ -277,8 +280,51 @@ for coll object as specified above;
 #X text 170 510 open editor;
 #X text 185 532 close & save;
 #X text 135 94 look inside;
-#X obj 5 959 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 5 1119 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
+#X text 78 960 symbol /path/to/file;
+#X text 78 980 float 0 or 1;
+#X text 216 960 - optional arg loads a file into coll;
+#X text 216 980 - optional arg makes coll instance threadedㄣsuring
+that file read/write operations arexecuted in a separate thread \,
+which minimizesㄔances of dropped audio samples \, particularlyhen
+handling large coll files;
+#X text 6 926 Following creation arguments can be provided in any order:
+;
+#N canvas 408 171 450 391 threaded 0;
+#X obj 56 233 coll 1;
+#C restore;
+#X obj 121 233 coll /tmp/test.coll 1;
+#C restore;
+#X obj 267 233 coll 1 /tmp/test.coll;
+#C restore;
+#X text 47 38 [coll] object by default complies with Max syntax and
+behavior \, and is therefore running in a single thread (as if one
+explicitly entered argument 0). This also means when reading/writing
+large files \, one may experience drop in audio output due to blocking
+nature of file reading and writing. Threaded option available in pd-l2ork
+allows for these operations to run in a separate thread. Doing so will
+make data available as soon as it is loaded in which case you should
+rely on the third outlet which will signal a bang when the file I/O
+operation has been completed. Any premature requests for data will
+be ignored until a file I/O operation in particular has been completed.
+Below are three examples of threaded instances. Notice how there is
+no specific argument order.;
+#X text 47 292 In contrast \, below is an explicitly non-threaded instance
+(left) and its traditional default (implicit) example (right).;
+#X obj 56 344 coll 0;
+#C restore;
+#X obj 121 344 coll;
+#C restore;
+#X obj 11 -7 cnv 15 443 30 empty \$0-pddp.cnv.header Threaded\ vs.\ Non-Threaded\ Implementation
+17 16 0 16 -204280 -1 0;
+#X restore 342 142 pd threaded instance;
+#X text 330 124 threaded implementation:;
+#X text 309 76 swap \, sort \, renumber \, separate:;
+#X text 6 1061 Please note this also means one cannot use filename
+that is a float number as they will be interpreted as the threaded
+flag with all values less than 0.999... being truncated to 0 and all
+values of 1 or greater being truncated to 1, f 87;
 #X connect 9 0 12 0;
 #X connect 9 1 14 0;
 #X connect 9 2 15 0;
