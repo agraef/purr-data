@@ -74,7 +74,7 @@ one is treated like normal input;
 #X text 165 120 if input is list \, first number resets minimum value
 \, then second one is treated like normal input.;
 #X text 180 640 - intial min value;
-#X obj 6 671 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 6 671 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X text 112 573 float;
 #X text 112 598 float;

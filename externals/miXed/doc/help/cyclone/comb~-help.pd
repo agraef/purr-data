@@ -166,7 +166,7 @@ for Pd-l2ork version 2013.05.28;
 #X text 111 408 list;
 #X text 111 428 message;
 #X text 223 428 - can clear buffer;
-#X obj 5 730 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 5 730 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 10 0 11 1;
 #X connect 11 0 10 0;

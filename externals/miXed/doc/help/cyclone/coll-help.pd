@@ -1,4 +1,4 @@
-#N canvas 361 14 554 662 10;
+#N canvas 351 14 554 662 10;
 #X obj -1 1118 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12
 0 14 -233017 -33289 0;
 #X obj -1 724 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
@@ -197,8 +197,8 @@ be used just like ints to operate on or re-trieve data:;
 #X text 12 10 this is not like in the reference \, renumber shouldn't
 be needed:;
 #X msg 551 148 separate 2;
-#X text 551 87 puts a space in place ofádesired index numberㄢd
-increments all indicesばove desired index;
+#X text 551 87 puts a space in place ofa desired index numberand
+increments all indicesabove desired index;
 #X obj 338 263 print more_coll_B_indices;
 #X obj 301 236 print more_coll_B;
 #X obj 32 236 print more_coll_A;
@@ -263,10 +263,7 @@ increments all indicesばove desired index;
 #X text 111 838 bang;
 #X text 216 816 - index of message sent out;
 #X text 111 794 message;
-#X text 216 794 - messages at certain index can be output;
-#X text 216 839 - when finishing load or save op;
 #X text 111 861 bang;
-#X text 216 862 - when finished with a dump op;
 #X obj 495 3 coll;
 #C restore;
 #X text 315 236 rewrite last file written;
@@ -280,14 +277,14 @@ for coll object as specified above;
 #X text 170 510 open editor;
 #X text 185 532 close & save;
 #X text 135 94 look inside;
-#X obj 5 1119 pddp/pddplink all_about_help_patches.pd -text Usage Guide
-;
+#X obj 5 1119 pddp/pddplink @pd_help/all_about_help_patches.pd -text
+Usage Guide;
 #X text 78 960 symbol /path/to/file;
 #X text 78 980 float 0 or 1;
 #X text 216 960 - optional arg loads a file into coll;
-#X text 216 980 - optional arg makes coll instance threadedㄣsuring
-that file read/write operations arexecuted in a separate thread \,
-which minimizesㄔances of dropped audio samples \, particularlyhen
+#X text 216 980 - optional arg makes coll instance threadedensuring
+that file read/write operations areexecuted in a separate thread \,
+which minimizeschances of dropped audio samples \, particularlywhen
 handling large coll files;
 #X text 6 926 Following creation arguments can be provided in any order:
 ;
@@ -325,6 +322,9 @@ no specific argument order.;
 that is a float number as they will be interpreted as the threaded
 flag with all values less than 0.999... being truncated to 0 and all
 values of 1 or greater being truncated to 1, f 87;
+#X text 216 794 - outputs data at requested index;
+#X text 216 839 - when finishing load or save operation;
+#X text 216 862 - when finished with a dump operation;
 #X connect 9 0 12 0;
 #X connect 9 1 14 0;
 #X connect 9 2 15 0;

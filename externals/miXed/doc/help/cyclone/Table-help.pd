@@ -97,7 +97,7 @@ it the open message.;
 #X text 197 488 - ?????;
 #X text 101 486 ??????;
 #X text 84 598 1) table name;
-#X obj 10 767 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 10 767 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 25 0 45 0;
 #X connect 28 0 45 0;

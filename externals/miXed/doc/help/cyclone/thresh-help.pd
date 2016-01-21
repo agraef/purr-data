@@ -54,7 +54,7 @@ into a list;
 #X text 229 125 inital arg sets period length (default 10msecs);
 #X text 11 23 combine numbers that are received close together into
 a list;
-#X obj 11 375 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 11 375 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 13 0 14 0;
 #X connect 15 0 13 0;

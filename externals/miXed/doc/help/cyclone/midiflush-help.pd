@@ -52,7 +52,7 @@ stream;
 #X text 112 214 (none);
 #X obj 490 -163 midiflush;
 #X text 215 127 - clear: forget all previous notes \, no note off;
-#X obj 13 246 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 13 246 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 10 0 12 0;
 #X connect 11 0 10 0;

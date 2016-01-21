@@ -61,7 +61,7 @@ input signal vector from those of the current vector;
 #X obj 484 48 pddp/dsp;
 #X text 21 22 computes the phase deviation between successive FFT frames
 ;
-#X obj 8 504 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 8 504 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 15 0 17 0;
 #X connect 17 0 18 0;

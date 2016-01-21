@@ -72,7 +72,7 @@ lsb most significant bit least;
 #X text 271 484 or to;
 #X text 191 317 - Most Significant Byte (msb);
 #X text 191 341 - Least Significant Byte (lsb);
-#X obj 14 518 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 14 518 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 21 0 23 0;
 #X connect 21 1 25 0;

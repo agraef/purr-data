@@ -83,7 +83,7 @@ them when turned off again;
 #X text 180 363 - set velocity;
 #X text 106 338 float;
 #X text 180 338 - set pitch;
-#X obj 5 538 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 5 538 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 11 0 12 0;
 #X connect 11 1 13 0;

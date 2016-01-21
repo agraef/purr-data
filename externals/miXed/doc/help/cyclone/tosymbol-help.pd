@@ -45,11 +45,11 @@ lists:;
 #X text 178 525 - list of messages to turn into symbols;
 #X text 106 563 symbol;
 #X text 178 563 - symbol (including whitespace) of input;
-#X obj 106 676 pddp/pddplink ../all_about_lists_vs_anythings.pd -text
+#X obj 106 676 pddp/pddplink @pd_help/all_about_lists_vs_anythings.pd -text
 all_about_lists_vs_anythings;
-#X obj 106 697 pddp/pddplink ../all_about_symbol_construction.pd -text
+#X obj 106 697 pddp/pddplink @pd_help/all_about_symbol_construction.pd -text
 all_about_symbol_construction;
-#X obj 106 655 pddp/pddplink ../all_about_data_types.pd -text all_about_data_types
+#X obj 106 655 pddp/pddplink @pd_help/all_about_data_types.pd -text all_about_data_types
 ;
 #X obj 236 246 fromsymbol;
 #X obj 265 187 tosymbol;
@@ -84,7 +84,7 @@ symbols;
 #X msg 83 360 separator _;
 #X symbolatom 106 440 0 0 0 0 - - -;
 #X text 11 23 transform messages to symbols;
-#X obj 9 731 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 9 731 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 23 0 35 0;
 #X connect 24 0 23 0;

@@ -65,7 +65,7 @@ for Pd-l2ork version 2013.05.28;
 #X obj 223 88 hsl 128 15 0 6.28318 0 0 empty empty phase 7 7 1 10 -225280
 -1 -1 0 1;
 #X text 357 86 (0 to 2pi);
-#X obj 12 567 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 12 567 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 22 0 26 0;
 #X connect 23 0 29 0;

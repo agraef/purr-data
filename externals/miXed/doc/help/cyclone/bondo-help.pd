@@ -57,7 +57,7 @@ for Pd-l2ork version 2013.05.28;
 #X text 180 430 - sets the number of inlets/outlets;
 #X obj 134 253 print two;
 #X obj 154 229 print one;
-#X obj 11 500 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 11 500 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 11 0 14 0;
 #X connect 11 1 31 0;

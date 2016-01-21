@@ -83,7 +83,7 @@ second one is treated like normal input;
 #X text 111 59 float input checked against peak.if not above peak
 \, outlet 2 is banged.if above peak \, outlet 1 is banged and newpeak
 value is set;
-#X obj 12 677 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 12 677 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 30 0 32 0;
 #X connect 30 1 41 0;

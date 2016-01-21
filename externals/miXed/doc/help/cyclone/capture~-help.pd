@@ -29,8 +29,8 @@ for Pd-l2ork version 2013.05.28;
 #X text 6 1 Related Objects;
 #X obj 19 57 pddp/helplink pddp/pddplink;
 #X obj 19 83 pddp/helplink pddp/helplink;
-#X obj 21 33 pddp/pddplink all_about_externals.pd -text _________;
-#X obj 21 33 pddp/pddplink all_about_externals.pd -text Externals;
+#X obj 21 33 pddp/pddplink @pd_help/all_about_externals.pd -text _________;
+#X obj 21 33 pddp/pddplink @pd_help/all_about_externals.pd -text Externals;
 #X restore 211 687 pd Related_objects;
 #X obj 80 185 cnv 17 3 42 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;

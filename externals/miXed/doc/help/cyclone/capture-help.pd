@@ -88,7 +88,7 @@ for Pd-l2ork version 2013.05.28;
 #X text 98 559 1) float - number of values to store (default 512);
 #X text 98 572 2) str x - values are in hex;
 #X obj 498 3 capture;
-#X obj 7 642 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 7 642 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 10 0 15 0;
 #X connect 11 0 10 0;

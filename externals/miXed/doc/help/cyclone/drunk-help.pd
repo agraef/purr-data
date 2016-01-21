@@ -84,7 +84,7 @@ for Pd-l2ork version 2013.05.28;
 #X text 113 547 float;
 #X text 180 547 - set stepsize;
 #X text 189 230 seed range;
-#X obj 11 747 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 11 747 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 10 0 11 0;
 #X connect 12 0 10 0;

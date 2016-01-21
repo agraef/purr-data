@@ -154,7 +154,7 @@ as bits;
 0 0 0 0 0 0 0 0 0;
 #X msg 12 113 bits;
 #X text 478 150 set bitmask;
-#X obj 4 822 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 4 822 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 15 0 24 0;
 #X connect 16 0 17 0;

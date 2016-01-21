@@ -111,7 +111,7 @@ for Pd-l2ork version 2013.05.28;
 #X text 177 277 - signal without interpolation;
 #X text 93 320 1) table;
 #X obj 481 49 pddp/dsp;
-#X obj 7 347 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 7 347 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 11 0 12 1;
 #X connect 12 0 11 0;

@@ -53,7 +53,7 @@ for Pd-l2ork version 2013.05.28;
 #X text 33 55 Once buddy receives all input data \, it outputs that
 data in parallel simultaneously.;
 #X text 11 23 sync inputs when all inlets receive data;
-#X obj 4 439 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 4 439 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 10 0 11 0;
 #X connect 10 1 12 0;

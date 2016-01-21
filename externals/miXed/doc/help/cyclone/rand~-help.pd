@@ -101,7 +101,7 @@ for Pd-l2ork version 2013.05.28;
 #X text 97 302 1) float;
 #X text 180 302 - set intial frequency;
 #X obj 478 51 pddp/dsp;
-#X obj 13 335 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 13 335 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 13 0 14 1;
 #X connect 14 0 13 0;

@@ -55,7 +55,7 @@ for any number;
 #X text 24 129 forget all;
 #X text 205 77 input list to check against the match series;
 #X text 116 363 list;
-#X obj 16 451 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 16 451 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 13 0 11 0;
 #X connect 13 1 12 0;

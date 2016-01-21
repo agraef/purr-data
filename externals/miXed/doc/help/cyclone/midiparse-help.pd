@@ -98,7 +98,7 @@ for Pd-l2ork version 2013.05.28;
 #X text 114 543 list;
 #X text 210 456 - midi message to parse;
 #X text 114 675 (none);
-#X obj 12 704 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 12 704 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 29 0 31 0;
 #X connect 29 1 37 0;

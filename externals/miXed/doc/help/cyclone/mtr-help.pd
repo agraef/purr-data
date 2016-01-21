@@ -95,7 +95,7 @@ the outlet directly below the inlet.;
 that track only.;
 #X text 200 202 mtr sends out list with track # and duration when
 it receives a "next" message;
-#X obj 14 786 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 14 786 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 11 0 18 0;
 #X connect 12 0 18 0;

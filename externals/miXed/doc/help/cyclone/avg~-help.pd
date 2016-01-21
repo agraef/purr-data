@@ -62,7 +62,7 @@ received.;
 #X text 70 249 float output (between 0 and 1 for audio signals);
 #X text 316 89 try different intervals to see the change in avg~ behavior
 ;
-#X obj 5 604 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 5 604 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X text 12 72 signal/trigger input;
 #X obj 75 96 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1

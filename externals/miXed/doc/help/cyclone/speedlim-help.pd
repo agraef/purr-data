@@ -58,7 +58,7 @@ for;
 in milliseconds;
 #X text 241 102 change delay time (ms);
 #X text 178 259 - change delay time (ms);
-#X obj 11 441 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 11 441 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 13 0 14 0;
 #X connect 15 0 13 0;

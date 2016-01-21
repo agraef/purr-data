@@ -70,7 +70,7 @@ for Pd-l2ork version 2013.05.28;
 #X text 18 175 reports the;
 #X text 16 185 open outlet:;
 #X text 185 66 send data to which outlet? 0 = closed;
-#X obj 12 435 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 12 435 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X text 187 366 - data from inlet 1 \, for only the open outlet;
 #X connect 11 0 15 0;

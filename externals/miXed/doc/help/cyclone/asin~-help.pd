@@ -83,7 +83,7 @@ asin~ to output the value zero;
 1;
 #X obj 485 46 pddp/dsp;
 #X text 11 22 Arc-sine function asin(x) for signals;
-#X obj 10 545 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 10 545 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 16 0 22 0;
 #X connect 16 0 22 1;

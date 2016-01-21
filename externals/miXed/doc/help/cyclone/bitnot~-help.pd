@@ -68,7 +68,7 @@ signal input to integer \;;
 ;
 #X text 19 53 Works on floating point signal as bits or as an integer:
 ;
-#X obj 8 601 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 8 601 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 10 0 17 0;
 #X connect 11 0 12 0;

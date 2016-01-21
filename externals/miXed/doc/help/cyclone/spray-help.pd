@@ -50,7 +50,7 @@ the outlet number;
 #X msg 188 119 2 3;
 #X text 217 150 arg sets number of outlets;
 #X text 203 70 outletnumber / value pairs;
-#X obj 7 408 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 7 408 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 17 0 18 0;
 #X connect 17 1 19 0;

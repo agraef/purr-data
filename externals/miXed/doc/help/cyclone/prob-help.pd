@@ -89,7 +89,7 @@ for which there is no rule);
 #X msg 360 133 0;
 #X text 390 132 resets prob to 0;
 #X text 370 96 puts out a number and sets prob to this value;
-#X obj 13 724 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 13 724 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 15 0 16 0;
 #X connect 17 0 15 0;

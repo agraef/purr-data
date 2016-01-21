@@ -45,7 +45,7 @@ for Pd-l2ork version 2013.05.28;
 #X msg 220 83 34 45;
 #X msg 230 140 or that;
 #X text 116 332 (none);
-#X obj 9 365 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 9 365 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 15 0 16 0;
 #X connect 17 0 15 0;

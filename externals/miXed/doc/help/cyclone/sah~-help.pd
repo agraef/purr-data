@@ -75,7 +75,7 @@ with two phasor~ objects;
 #X text 9 23 Sample-and-hold;
 #X text 108 457 float;
 #X text 179 458 - set trigger;
-#X obj 13 736 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 13 736 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 21 0 23 0;
 #X connect 22 0 21 0;

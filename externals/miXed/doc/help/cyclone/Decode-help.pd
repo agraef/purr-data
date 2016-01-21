@@ -69,7 +69,7 @@ for Pd-l2ork version 2013.05.28;
 #X text 179 321 - disable all outlets (overrides outlet 1);
 #X text 110 446 If the input number is higher than the number of outlets
 \, then the highest numbered outlet is sent a 1;
-#X obj 6 492 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 6 492 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 12 0 13 0;
 #X connect 12 1 14 0;

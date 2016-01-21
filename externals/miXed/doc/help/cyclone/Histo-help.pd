@@ -62,7 +62,7 @@ for Pd-l2ork version 2013.05.28;
 inlet;
 #X text 171 304 - clear: erase received numbers;
 #X text 112 423 (none);
-#X obj 9 447 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 9 447 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 11 0 15 0;
 #X connect 11 1 16 0;

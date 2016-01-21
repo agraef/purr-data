@@ -63,7 +63,7 @@ for Pd-l2ork version 2013.05.28;
 #X text 211 164 creates list of numbers;
 #X text 131 68 clear average;
 #X text 159 103 number to add to running average;
-#X obj 11 508 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 11 508 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 12 0 11 0;
 #X connect 12 1 18 0;

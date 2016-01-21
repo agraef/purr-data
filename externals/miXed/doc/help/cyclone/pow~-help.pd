@@ -79,7 +79,7 @@ function. Default is 0;
 #X text 349 236 base can be a signal or float;
 #X text 295 87 amplitude envelope. 2 to the -7 doesn't completely
 shut off the signal...;
-#X obj 9 674 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 9 674 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 22 0 28 1;
 #X connect 22 0 35 0;

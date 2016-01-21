@@ -72,7 +72,7 @@ numbers;
 -162280 0;
 #X text 111 511 bang;
 #X text 196 511 - sent out all different values;
-#X obj 13 583 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 13 583 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 11 0 12 0;
 #X connect 12 0 10 0;

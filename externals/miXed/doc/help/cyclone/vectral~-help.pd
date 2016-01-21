@@ -93,7 +93,7 @@ message is received last is the current mode of operation;
 #X text 35 100 rampsmooth:;
 #X text 187 100 slide:;
 #X text 327 100 deltaclip:;
-#X obj 12 828 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 12 828 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X text 215 621 - unused;
 #X msg 162 364 256;

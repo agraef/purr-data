@@ -156,6 +156,12 @@ void sys_expandpathelems(const char *name, char *result)
         sys_path_replace(name, interim, "@pd_extra", path->nl_string);
         //fprintf(stderr,"path->nl_string=<%s>\n", path->nl_string);
     }
+    else if (strstr(name, "@pd_help") != NULL)
+    {
+        t_namelist *path = sys_helppath;
+        sys_path_replace(name, interim, "@pd_help", path->nl_string);
+        //fprintf(stderr,"path->nl_string=<%s>\n", path->nl_string);
+    }
     else
     {
         strcpy(interim, name);

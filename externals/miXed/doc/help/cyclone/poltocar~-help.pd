@@ -58,7 +58,7 @@ for Pd-l2ork version 2013.05.28;
 #X text 96 119 amp.;
 #X text 172 145 <- do some spectral processing here;
 #X text 21 23 polar to cartesian coordinate conversion.;
-#X obj 14 410 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 14 410 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 25 0 24 0;
 #X connect 25 1 24 1;

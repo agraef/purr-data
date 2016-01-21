@@ -55,7 +55,7 @@ for Pd-l2ork version 0.201305;
 #X text 42 107 with input as float value to take cosh of;
 #X text 394 113 with bang button and argument inside cosh object
 ;
-#X obj 12 420 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 12 420 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 16 0 17 0;
 #X connect 17 0 15 0;

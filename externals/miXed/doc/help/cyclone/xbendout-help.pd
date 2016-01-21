@@ -64,7 +64,7 @@ for Pd-l2ork version 2013.05.28;
 #X obj 313 461 midiout;
 #X text 272 456 or to;
 #X text 11 23 midi pitchbend out;
-#X obj 8 495 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 8 495 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 21 0 26 0;
 #X connect 22 0 26 1;

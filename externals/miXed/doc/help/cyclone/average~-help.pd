@@ -73,7 +73,7 @@ is 100 2) message - sets mode \, as shown above. default is bipolar.
 #X text 101 390 float;
 #X text 168 390 - the interval between samples \, in;
 #X text 401 173 interval between samples taken;
-#X obj 7 615 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 7 615 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 14 0 20 1;
 #X connect 15 0 20 0;

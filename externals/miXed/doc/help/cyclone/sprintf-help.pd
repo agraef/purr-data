@@ -47,7 +47,7 @@ argument to sprintf;
 #X text 263 138 arg is format string;
 #X text 98 320 1) string;
 #X text 179 320 - the string format to output;
-#X obj 11 359 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 11 359 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 15 0 16 0;
 #X connect 17 0 15 0;

@@ -51,7 +51,7 @@ hissy than white noise.;
 #X obj 480 54 pddp/dsp;
 #X text 29 57 very simple to use \, pink~ generates pink noise (see
 below) and sends it through its outlet:;
-#X obj 10 437 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 10 437 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 16 0 15 0;
 #X connect 16 0 15 1;

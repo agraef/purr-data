@@ -59,7 +59,7 @@ for Pd-l2ork version 2013.05.28;
 #X obj 491 5 bangbang;
 #X text 44 61 bangbang operates just like bang \, but it sends several
 bangs;
-#X obj 6 530 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 6 530 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 14 0 15 0;
 #X connect 15 0 22 0;

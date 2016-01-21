@@ -74,7 +74,7 @@ It's particularly useful for envelope following and lowpass filtering.
 #X obj 478 50 pddp/dsp;
 #X text 182 496 - initial slideup value;
 #X text 182 518 - initial slidedown vlaue;
-#X obj 9 640 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 9 640 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 15 0 26 2;
 #X connect 16 0 21 0;

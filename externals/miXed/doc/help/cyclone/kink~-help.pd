@@ -85,7 +85,7 @@ CZ-101? Sure you can.;
 #X text 51 -142 slope input (float or signal):;
 #X text -87 200 distorted phase output;
 #X text 56 366 comment;
-#X obj -109 619 pddp/pddplink all_about_help_patches.pd -text Usage
+#X obj -109 619 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage
 Guide;
 #X connect 13 0 29 0;
 #X connect 14 0 28 0;

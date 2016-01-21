@@ -53,7 +53,7 @@ values approach -pi/2 and pi/2;
 #X obj 482 55 pddp/dsp;
 #X text 111 407 this is a real tangent function whose input expects
 values between 0 and 2pi;
-#X obj 13 489 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 13 489 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 15 0 18 0;
 #X connect 16 0 19 0;

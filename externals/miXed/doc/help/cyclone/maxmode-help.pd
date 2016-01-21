@@ -54,7 +54,7 @@ for Pd-l2ork version 2013.05.28;
 #X text 179 501 - output of import;
 #X text 109 545 (none);
 #X obj 133 290 maxmode;
-#X obj 14 572 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 14 572 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 13 0 31 0;
 #X connect 14 0 31 0;

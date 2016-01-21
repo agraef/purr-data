@@ -162,7 +162,7 @@ for Pd-l2ork version 2013.05.28;
 #X text 128 374 arg is table name \, you can also use:<table name>
 <startpoint> <endpoint> <num_channels>;
 #X obj 479 51 pddp/dsp;
-#X obj 13 772 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 13 772 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X text 109 513;
 #X connect 17 0 18 1;

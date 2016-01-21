@@ -61,7 +61,7 @@ output current max;
 #X text 180 460 - initial maximum;
 #X obj 86 208 maximum 5;
 #X text 150 208 optional argument sets initial maximum;
-#X obj 14 494 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 14 494 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 11 0 33 0;
 #X connect 13 0 33 0;

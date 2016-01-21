@@ -61,7 +61,7 @@ for Pd-l2ork version 2013.05.28;
 #X obj 81 425 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #X text 116 50 resets to zero;
-#X obj 4 557 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 4 557 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 19 0 22 0;
 #X connect 19 1 23 0;

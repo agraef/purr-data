@@ -61,7 +61,7 @@ for Pd-l2ork version 2013.05.28;
 #X obj 507 3 Clip;
 #X text 249 106 input a list or number to pass through range filter
 ;
-#X obj 6 528 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 6 528 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 14 0 24 2;
 #X connect 15 0 24 1;

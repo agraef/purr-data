@@ -60,7 +60,7 @@ for Pd-l2ork version 2013.05.28;
 #X text 96 425 1) float;
 #X text 296 83 outputs the current minimum of two input signals:;
 #X text 129 151 optional argument sets initial minimum;
-#X obj 14 460 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 14 460 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 15 0 17 1;
 #X connect 16 0 17 0;

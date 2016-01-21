@@ -78,7 +78,7 @@ from 2*dB to linear amplitude with 127 becoming 1;
 time in milliseconds;
 #X text 178 410 - integer message as input;
 #X obj 480 48 pddp/dsp;
-#X obj 13 752 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 13 752 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 12 0 15 0;
 #X connect 13 0 12 0;

@@ -87,7 +87,7 @@ on if a non-zero interval is supplied);
 #X text 125 278 interval (for self-clocking):;
 #X text 191 294 change to a value above 0 for self-clocking reports
 of signal values;
-#X obj 10 767 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 10 767 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 27 0 28 0;
 #X connect 28 0 39 0;

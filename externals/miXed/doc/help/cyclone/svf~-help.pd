@@ -148,7 +148,7 @@ in radians input mode);
 #X obj 480 54 pddp/dsp;
 #X text 178 655 - initial cutoff frequency (Hz);
 #X text 178 679 - initial resonance (0-1);
-#X obj 12 829 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 12 829 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 31 0 49 0;
 #X connect 33 0 50 0;

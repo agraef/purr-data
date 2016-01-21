@@ -112,7 +112,7 @@ parameter (default 0);
 \, 0 for line \, 0 to -1 for logarithmic. Can have up to 42 triplets.
 Single float value sets the curve immediately to that value unless
 duration is set to other than 0 via second inlet.;
-#X obj 6 886 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 6 886 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 11 0 12 0;
 #X connect 11 0 18 0;

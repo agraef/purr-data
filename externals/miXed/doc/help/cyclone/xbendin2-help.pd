@@ -67,7 +67,7 @@ lsb most significant bit least;
 #X obj 221 436 midiin;
 #X obj 312 436 midiout;
 #X text 271 431 or to;
-#X obj 11 473 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 11 473 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 15 0 17 0;
 #X connect 15 1 19 0;

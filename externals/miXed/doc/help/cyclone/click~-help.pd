@@ -56,7 +56,7 @@ samples);
 #X obj 482 -50 pddp/dsp;
 #X text 301 -8 use the set message to create a personalized band-limited
 impulse (maximum 256 samples);
-#X obj 4 345 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 4 345 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 10 0 16 0;
 #X connect 11 0 16 0;

@@ -63,7 +63,7 @@ Pd-l2ork version 2013.05.28;
 #X text 94 498 1) float;
 #X text 94 530 2) object;
 #X text 183 530 - optional received object to send input to;
-#X obj 3 560 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 3 560 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X floatatom 331 365 5 0 0 0 - - -, f 5;
 #X text 96 321 < this is forwarded below without being outputted

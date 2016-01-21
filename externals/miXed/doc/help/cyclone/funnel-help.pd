@@ -63,7 +63,7 @@ for Pd-l2ork version 2013.05.28;
 #X obj 22 47 unpack f f;
 #X text 58 115 inlet number;
 #X text 116 86 value of inlet;
-#X obj 13 312 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 13 312 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 10 0 34 0;
 #X connect 11 0 10 0;

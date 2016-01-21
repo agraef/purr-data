@@ -71,7 +71,7 @@ value;
 #X text 108 360 float;
 #X text 179 360 - input y value;
 #X text 175 68 x(int) y(may be float) pairs are stored;
-#X obj 13 472 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 13 472 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 11 0 16 0;
 #X connect 12 0 11 0;

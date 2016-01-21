@@ -54,7 +54,7 @@ for Pd-l2ork version 0.201305;
 #X text 46 108 with input as float value;
 #X text 386 105 with bang button and argument inside tanh object
 ;
-#X obj 9 383 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 9 383 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 20 0 22 0;
 #X connect 21 0 20 0;

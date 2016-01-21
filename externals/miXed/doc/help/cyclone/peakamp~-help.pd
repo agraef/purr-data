@@ -81,7 +81,7 @@ outputs a value.;
 #X text 305 160 <-- argument causes automatic reporting;
 #X text 177 447 - optional \, report peak amp every x miliseconds;
 #X text 177 371 - report every x miliseconds;
-#X obj 10 559 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 10 559 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 15 0 21 1;
 #X connect 18 0 34 0;

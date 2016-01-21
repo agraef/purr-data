@@ -110,7 +110,7 @@ for Pd-l2ork version 2013.05.28;
 #X obj 79 397 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #X obj 87 113 Borax;
-#X obj 7 770 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 7 770 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 9 0 61 0;
 #X connect 9 1 61 1;

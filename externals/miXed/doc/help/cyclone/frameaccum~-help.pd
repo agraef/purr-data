@@ -56,7 +56,7 @@ phase;
 #X obj 483 49 pddp/dsp;
 #X text 11 23 computes running phase of successive phase deviation
 frames;
-#X obj 3 431 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 3 431 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 11 0 12 0;
 #X connect 13 0 11 0;

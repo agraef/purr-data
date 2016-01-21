@@ -52,7 +52,7 @@ for Pd-l2ork version 2013.05.28;
 #X text 218 61 and for lists of words;
 #X text 179 212 - list to split into series of data;
 #X text 179 271 - series of data from input list;
-#X obj 15 344 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 15 344 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 15 0 17 0;
 #X connect 16 0 15 0;

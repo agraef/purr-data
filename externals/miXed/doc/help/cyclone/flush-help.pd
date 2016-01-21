@@ -84,7 +84,7 @@ was received;
 #X text 183 455 - pitch;
 #X text 183 478 - velocity;
 #X text 109 478 float;
-#X obj 12 594 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 12 594 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 11 0 13 0;
 #X connect 11 1 14 0;

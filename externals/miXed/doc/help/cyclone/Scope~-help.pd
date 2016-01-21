@@ -57,7 +57,7 @@ for Pd-l2ork version 2013.05.28;
 -1 -1 3200 0;
 #X text 232 173 colors:;
 #X text 336 302 <--this is the Scope~ object;
-#X obj 18 612 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 18 612 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 24 0 23 0;
 #X connect 25 0 23 0;

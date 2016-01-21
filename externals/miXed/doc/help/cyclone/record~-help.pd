@@ -88,7 +88,7 @@ for Pd-l2ork version 2013.05.28;
 stopped \, off by default;
 #X text 372 349 endpoint in the table in msec;
 #X text 334 318 startpoint in the table in msec;
-#X obj 9 780 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 9 780 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X text 122 540 n = number of channels given by argument (1 \, 2 \,
 or 4);

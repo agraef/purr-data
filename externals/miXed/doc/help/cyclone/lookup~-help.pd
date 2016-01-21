@@ -126,7 +126,7 @@ for Pd-l2ork version 2013.05.28;
 #X text 182 410 - ouput of transfer function lookup;
 #X obj 479 52 pddp/dsp;
 #X text 334 200 arg is an array and an (optional) offset;
-#X obj 14 500 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 14 500 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 12 0 13 0;
 #X connect 13 0 14 0;

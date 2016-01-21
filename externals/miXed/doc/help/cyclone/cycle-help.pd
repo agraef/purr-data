@@ -94,7 +94,7 @@ for Pd-l2ork version 2013.05.28;
 #X text 178 318 - number based on argument.;
 #X text 86 361 1) float;
 #X text 178 360 - number of outlets;
-#X obj 9 430 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 9 430 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 12 0 13 0;
 #X connect 12 1 14 0;

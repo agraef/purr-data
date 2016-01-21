@@ -183,8 +183,10 @@ static void pddplink_click(t_pddplink *x, t_floatarg xpos, t_floatarg ypos,
 			   t_floatarg shift, t_floatarg ctrl, t_floatarg alt)
 {
     x->x_ishit = 1;
+    char final_name[FILENAME_MAX];
+    sys_expandpathelems(x->x_ulink->s_name, final_name);
     sys_vgui("pddplink_open {%s} {%s}\n",               \
-             x->x_ulink->s_name, x->x_dirsym->s_name);
+             final_name, x->x_dirsym->s_name);
     x->x_ishit = 0;
 }
 

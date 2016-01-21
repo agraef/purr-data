@@ -81,7 +81,7 @@ number to output;
 #X text 11 23 pass numbers from outlet to outlet;
 #X text 69 51 As floats are input \, output floats shift from outlet
 to outlet in a rotational pattern.;
-#X obj 6 451 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 6 451 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 8 0 9 0;
 #X connect 8 1 10 0;

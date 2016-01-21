@@ -255,7 +255,7 @@ tasks;
 #X text 204 589 - the processed list based on where split is (slice
 and ecils only);
 #X text 113 472 message;
-#X obj 12 752 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 12 752 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 26 0 42 0;
 #X connect 27 0 42 0;

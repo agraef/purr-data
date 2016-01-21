@@ -75,7 +75,7 @@ of an lfo:;
 the default value is 1;
 #X text 120 125 sets the volume of the click (impulse) sent out the
 right outlet. ;
-#X obj 11 616 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 11 616 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 11 0 12 0;
 #X connect 12 1 13 0;

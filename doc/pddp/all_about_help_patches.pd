@@ -1,7 +1,7 @@
-#N canvas 426 34 554 618 10;
-#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+#N canvas 404 29 559 633 10;
+#X obj 0 605 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#X obj 0 168 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+#X obj 0 178 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
 #N canvas 487 70 494 558 META 0;
 #X text 12 95 RELEASE_VERSION 0.41.4;
@@ -33,14 +33,14 @@ of a patchfile \; ramp - a ramp \; bandlimited \; pd-op - object that
 can report on or manipulate global Pd operation \; anything_op - store
 or manipulate an anything \; abstraction_op - object that only makes
 sense in terms of abstractions;
-#X restore 500 597 pd META;
-#X obj 0 390 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+#X restore 500 607 pd META;
+#X obj 0 400 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
 13 -228856 -1 0;
-#X obj 0 427 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+#X obj 0 437 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
 0 13 -228856 -1 0;
-#X obj 0 503 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+#X obj 0 513 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 213 517 428 109 Related_objects 0;
+#N canvas 203 507 428 109 Related_objects 0;
 #X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 6 1 Related Objects;
@@ -48,14 +48,14 @@ sense in terms of abstractions;
 #X obj 19 83 pddp/helplink pddp/helplink;
 #X obj 20 33 pddp/pddplink all_about_externals.pd -text _________;
 #X obj 20 33 pddp/pddplink all_about_externals.pd -text Externals;
-#X restore 101 597 pd Related_objects;
-#X obj 78 177 cnv 17 3 42 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X restore 101 607 pd Related_objects;
+#X obj 78 187 cnv 17 3 42 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 78 399 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X obj 78 409 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 78 298 cnv 17 3 35 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
+#X obj 78 308 cnv 17 3 35 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
 -162280 0;
-#X obj 78 344 cnv 17 3 35 empty \$0-pddp.cnv.let.r r 5 9 0 16 -228856
+#X obj 78 354 cnv 17 3 35 empty \$0-pddp.cnv.let.r r 5 9 0 16 -228856
 -162280 0;
 #N canvas 117 160 428 384 More_about_creation_arguments 0;
 #X obj 110 143 float 6.5;
@@ -89,7 +89,7 @@ an arbitrary number of arguments. In the example below \, the arguments
 #X connect 1 0 0 0;
 #X connect 3 0 5 0;
 #X connect 4 0 3 0;
-#X restore 101 527 pd More_about_creation_arguments;
+#X restore 101 537 pd More_about_creation_arguments;
 #N canvas 70 265 428 280 Message_types 0;
 #X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
@@ -135,41 +135,40 @@ more atoms in which the first atom is a float atom.;
 #X text 19 238 (inactive);
 #X text 79 238 - some objects like [noise~] will draw an inlet that
 accepts no messages. These xlets are labeled (inactive).;
-#X restore 101 202 pd Message_types;
-#X text 98 507 mention how pd finds help files;
-#X text 98 176 message type;
-#X text 178 176 - description of behavior;
+#X restore 101 212 pd Message_types;
+#X text 98 517 mention how pd finds help files;
+#X text 98 186 message type;
+#X text 178 186 - description of behavior;
 #X msg 151 125 42;
 #X floatatom 151 147 5 0 0 0 - - -, f 5;
 #X text 180 125 <-- Click the message box;
-#X obj 455 51 pddp/dsp;
+#X obj 445 48 pddp/dsp;
 #X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header help_patches 3
 12 0 18 -204280 -1 0;
-#X obj 426 89 cnv 15 122 44 empty empty empty 20 12 0 10 -191407 -1
+#X obj 416 119 cnv 15 122 50 empty empty empty 20 12 0 10 -191407 -1
 0;
-#X obj 423 86 cnv 15 122 44 empty empty empty 20 12 0 10 -1 -1 0;
-#X obj 424 87 cnv 15 120 42 empty empty empty 20 12 0 10 -261106 -1
+#X obj 413 116 cnv 15 122 50 empty empty empty 20 12 0 10 -1 -1 0;
+#X obj 414 117 cnv 15 120 48 empty empty empty 20 12 0 10 -261106 -1
 0;
-#X text 426 110 that produce sound.;
-#X text 426 98 appears in patches;
-#X obj 120 301 cnv 15 352 31 empty empty empty 20 12 0 10 -191407 -1
+#X text 417 149 that produce sound.;
+#X obj 120 311 cnv 15 352 31 empty empty empty 20 12 0 10 -191407 -1
 0;
-#X obj 117 298 cnv 15 352 31 empty empty empty 20 12 0 10 -1 -1 0;
-#X obj 118 299 cnv 15 350 29 empty empty empty 20 12 0 10 -261106 -1
+#X obj 117 308 cnv 15 352 31 empty empty empty 20 12 0 10 -1 -1 0;
+#X obj 118 309 cnv 15 350 29 empty empty empty 20 12 0 10 -261106 -1
 0;
-#X obj 78 229 cnv 17 3 57 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+#X obj 78 239 cnv 17 3 57 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
-#X obj 120 347 cnv 15 352 31 empty empty empty 20 12 0 10 -191407 -1
+#X obj 120 357 cnv 15 352 31 empty empty empty 20 12 0 10 -191407 -1
 0;
-#X obj 117 344 cnv 15 352 31 empty empty empty 20 12 0 10 -1 -1 0;
-#X obj 118 345 cnv 15 350 29 empty empty empty 20 12 0 10 -261106 -1
+#X obj 117 354 cnv 15 352 31 empty empty empty 20 12 0 10 -1 -1 0;
+#X obj 118 355 cnv 15 350 29 empty empty empty 20 12 0 10 -261106 -1
 0;
-#X text 120 344 Some objects have a final \, rightmost inlet that has
+#X text 120 354 Some objects have a final \, rightmost inlet that has
 a specific behavior. This is identified by the letter "r".;
-#X obj 120 231 cnv 15 355 54 empty empty empty 20 12 0 10 -191407 -1
+#X obj 120 241 cnv 15 355 54 empty empty empty 20 12 0 10 -191407 -1
 0;
-#X obj 117 228 cnv 15 355 54 empty empty empty 20 12 0 10 -1 -1 0;
-#X obj 118 229 cnv 15 353 52 empty empty empty 20 12 0 10 -261106 -1
+#X obj 117 238 cnv 15 355 54 empty empty empty 20 12 0 10 -1 -1 0;
+#X obj 118 239 cnv 15 353 52 empty empty empty 20 12 0 10 -261106 -1
 0;
 #X obj 44 64 cnv 15 356 55 empty empty empty 20 12 0 10 -191407 -1
 0;
@@ -180,8 +179,8 @@ a specific behavior. This is identified by the letter "r".;
 the object being used. Most are interactive \, like the one below.
 Help patches are read-only by default \, so you can't accidentally
 overwrite anything in them.;
-#X text 98 398 message type;
-#X text 178 398 - description of behavior;
+#X text 98 408 message type;
+#X text 178 408 - description of behavior;
 #X obj 269 4 cnv 15 172 33 empty 411-cnv65 empty 20 12 0 10 -191407
 -1 0;
 #X obj 265 0 cnv 15 172 33 empty 411-cnv66 empty 20 12 0 10 -1 -1 0
@@ -193,16 +192,16 @@ overwrite anything in them.;
 #X obj 454 4 trigger;
 #X obj 523 4 t;
 #X text 502 4 or;
-#X text 80 445 1) atom type;
-#X text 167 445 - description of behavior;
-#X obj 336 439 cnv 15 198 53 empty empty empty 20 12 0 10 -191407 -1
+#X text 80 455 1) atom type;
+#X text 167 455 - description of behavior;
+#X obj 336 449 cnv 15 198 53 empty empty empty 20 12 0 10 -191407 -1
 0;
-#X obj 333 436 cnv 15 198 53 empty empty empty 20 12 0 10 -1 -1 0;
-#X obj 334 437 cnv 15 196 51 empty empty empty 20 12 0 10 -261106 -1
+#X obj 333 446 cnv 15 198 53 empty empty empty 20 12 0 10 -1 -1 0;
+#X obj 334 447 cnv 15 196 51 empty empty empty 20 12 0 10 -261106 -1
 0;
-#X text 337 448 after the object name to define;
-#X text 337 470 initialize its value(s).;
-#X text 337 437 Many objects accept arguments;
+#X text 337 458 after the object name to define;
+#X text 337 480 initialize its value(s).;
+#X text 337 447 Many objects accept arguments;
 #N canvas 71 285 428 178 Argument_types 0;
 #X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
@@ -219,26 +218,29 @@ object box.;
 #X text 89 75 - comma atom (used in objects like [expr] \, msg box)
 ;
 #X text 89 95 - semicolon atom (also used in [expr] \, msg box);
-#X restore 101 467 pd Argument_types;
-#X obj 336 525 cnv 15 169 55 empty empty empty 20 12 0 10 -191407 -1
+#X restore 101 477 pd Argument_types;
+#X obj 336 535 cnv 15 169 55 empty empty empty 20 12 0 10 -191407 -1
 0;
-#X obj 333 522 cnv 15 169 55 empty empty empty 20 12 0 10 -1 -1 0;
-#X obj 334 523 cnv 15 167 53 empty empty empty 20 12 0 10 -261106 -1
+#X obj 333 532 cnv 15 169 55 empty empty empty 20 12 0 10 -1 -1 0;
+#X obj 334 533 cnv 15 167 53 empty empty empty 20 12 0 10 -261106 -1
 0;
-#X text 336 534 as well as links to;
-#X text 336 546 tutorials or other help;
-#X text 336 557 patches \, may be found here.;
-#X text 336 523 Important object behavior \,;
-#X text 121 227 Inlet numbers are listed \, starting from zero and
+#X text 336 544 as well as links to;
+#X text 336 556 tutorials or other help;
+#X text 336 567 patches \, may be found here.;
+#X text 336 533 Important object behavior \,;
+#X text 121 237 Inlet numbers are listed \, starting from zero and
 in left-to-right order. The same goes for the outlets. Additional information
 may sometimes appear in a subpatch \, like the one above-- click it
 with the mouse to open it.;
-#X obj 99 572 pddp/pddplink all_about_messages.pd;
-#X text 337 459 the object's behavior or to;
-#X text 120 298 "n" means there is a variable number of inlets \, the
+#X obj 99 582 pddp/pddplink all_about_messages.pd;
+#X text 337 469 the object's behavior or to;
+#X text 120 308 "n" means there is a variable number of inlets \, the
 exact number of which is determined by creation argument(s).;
 #X text 11 23 usage guide for internal help patches;
-#X obj 99 552 pddp/pddplink glossary.pd;
-#X obj 5 597 pddp/pddplink all_about.pd -text All About Pd;
-#X text 426 87 The 'dsp' button;
+#X obj 99 562 pddp/pddplink glossary.pd;
+#X obj 5 607 pddp/pddplink all_about.pd -text All About Pd;
+#X text 417 115 The 'dsp' button;
+#X obj 432 71 output~;
+#X text 417 137 appear in patches;
+#X text 417 126 and/or output~;
 #X connect 16 0 17 0;

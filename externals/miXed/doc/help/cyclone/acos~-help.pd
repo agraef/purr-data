@@ -86,7 +86,7 @@ acos~ to output the value zero;
 #X obj 83 386 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #X text 13 23 Arc-cosine function acos(x) for signals;
-#X obj 8 577 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 8 577 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 9 0 17 0;
 #X connect 13 0 34 0;

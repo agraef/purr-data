@@ -72,7 +72,7 @@ for Pd-l2ork version 2013.05.28;
 #X text 168 67 click and drag tochange signal;
 #X text 134 149 Optional arguments set the range. Default is 0 \,
 0;
-#X obj 7 482 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 7 482 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X obj 67 156 Clip~ -1 1;
 #X text 86 353 1) signal/float;

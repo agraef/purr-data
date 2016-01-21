@@ -71,7 +71,7 @@ for Pd-l2ork version 2013.05.28;
 -162280 0;
 #X text 89 50 accum is a multi-function float value changer. It can
 add and multiply by values on inlets 1 and 2 \, respectively.;
-#X obj 9 477 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 9 477 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 9 0 12 0;
 #X connect 11 0 9 0;

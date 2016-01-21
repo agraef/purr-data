@@ -79,7 +79,7 @@ to change ramp up/down phase position. The default lo/hi points are
 ;
 #X text 255 203 change the lo/hi points;
 #X text 221 148 input signal;
-#X obj 7 738 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 7 738 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 24 0 25 0;
 #X connect 25 0 35 0;

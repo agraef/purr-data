@@ -119,7 +119,7 @@ function stored in a buffer~ object.;
 #X text 96 850 Symbol argument sets name of table to play from. Additional
 int argument after that sets sample offset into the table (default
 0);
-#X obj 6 926 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 6 926 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 11 0 15 1;
 #X connect 12 0 13 0;

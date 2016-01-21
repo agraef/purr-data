@@ -92,7 +92,7 @@ on;
 #X obj 481 51 pddp/dsp;
 #X text 189 217 set a min value for the next loop. same as;
 #X text 181 307 you can also use a list like:;
-#X obj 6 767 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 6 767 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 10 0 15 0;
 #X connect 11 0 10 0;

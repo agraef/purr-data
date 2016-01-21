@@ -81,7 +81,7 @@ midi list editor.;
 #X text 188 207 recording:;
 #X text 242 56 <-- midi file should be in the same folder or an open
 window popups to pick file;
-#X obj 14 798 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 14 798 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 23 0 40 0;
 #X connect 24 0 40 0;

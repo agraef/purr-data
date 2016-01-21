@@ -80,7 +80,7 @@ channel to write (optional \, default 1);
 #X text 102 529 float;
 #X text 186 529 - set channel of value being recorded;
 #X text 102 566 remotely sent to table;
-#X obj 12 763 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 12 763 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 12 0 25 0;
 #X connect 13 0 25 1;

@@ -63,7 +63,7 @@ non-zero;
 #X text 214 77 adjust interval;
 #X text 249 185 set refractory period;
 #X obj 187 208 spike~;
-#X obj 8 459 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 8 459 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 24 0 23 0;
 #X connect 24 1 22 0;

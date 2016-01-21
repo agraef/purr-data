@@ -133,7 +133,7 @@ here and there with amplitude from 1 to 0;
 #X text 155 159 Initial args: buffer \, offset(samps) \, length(samps)
 ;
 #X text 418 165 Generate new fir;
-#X obj 7 692 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 7 692 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 19 0 31 0;
 #X connect 21 0 25 0;

@@ -61,7 +61,7 @@ for Pd-l2ork version 2013.05.28;
 #X msg 217 96 0;
 #X text 240 67 float inputs;
 #X text 11 23 report zero / non-zero transitions;
-#X obj 6 505 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 6 505 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 10 0 12 0;
 #X connect 10 0 18 0;

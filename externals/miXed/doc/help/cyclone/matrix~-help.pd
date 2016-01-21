@@ -114,7 +114,7 @@ in milliseconds;
 #X restore 346 293 pd more...;
 #X text 179 445 - connect \, disconnect \, ramp: as specified in pd
 more...;
-#X obj 16 893 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 16 893 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 12 0 11 0;
 #X connect 13 0 11 1;

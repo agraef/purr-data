@@ -92,7 +92,7 @@ system;
 #X text 43 50 shows the state of the mouse:;
 #X text 11 23 report mouse x/y \, delta x/delta y \, and buttonpress
 ;
-#X obj 12 670 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 12 670 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 10 0 11 0;
 #X connect 10 1 12 0;

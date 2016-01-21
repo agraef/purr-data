@@ -60,7 +60,7 @@ for Pd-l2ork version 2013.05.28;
 #X text 180 409 - set the initial maximum;
 #X text 180 323 - signal to compare maximum;
 #X text 180 295 - signal to compare maximum;
-#X obj 15 444 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 15 444 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 12 0 14 1;
 #X connect 13 0 14 0;

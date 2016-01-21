@@ -1,4 +1,4 @@
-#N canvas 0 0 448 398 10;
+#N canvas 423 141 448 398 10;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header all_about_cyclone
 20 10 1 18 -261106 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
@@ -18,7 +18,6 @@ Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
 14 -261106 -33289 0;
 #X text 7 2 Atoms- Related Objects;
 #X restore 103 378 pd Related_objects;
-#X obj 6 378 pddp/pddplink pddp/help.pd -text help;
 #X text 40 36 Cyclone is a library of Pure Data classes \, bringing
 some level of compatibility between Max/MSP and Pd environments. Although
 being itself in the early stage of development \, it is meant to eventually

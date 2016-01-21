@@ -75,7 +75,7 @@ to sending bangs);
 #X text 181 526 - number of bangs sent;
 #X text 200 259 number of bangs sent;
 #X text 156 70 start Uzi full of bangs;
-#X obj 15 606 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 15 606 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 21 0 35 0;
 #X connect 22 0 35 1;

@@ -59,7 +59,7 @@ for Pd-l2ork version 2013.05.28;
 #X obj 243 129 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
 #X text 215 65 set which inlet is open;
-#X obj 6 490 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 6 490 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X text 262 129 bang all inlets \; open inlet passes message;
 #X text 187 464 - optionally open an inlet at creation time;

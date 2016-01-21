@@ -89,7 +89,7 @@ any signal inputs for filter parameters);
 #X text 120 136 center freq:;
 #X text 89 104 gain:;
 #X text 61 60 input signal:;
-#X obj 9 779 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 9 779 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 36 0 35 0;
 #X connect 36 0 35 1;

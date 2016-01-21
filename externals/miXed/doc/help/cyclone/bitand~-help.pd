@@ -155,7 +155,7 @@ as bits;
 ;
 #X text 13 75 bitwise operation on a signal as bits;
 #X text 481 133 set bitmask;
-#X obj 5 781 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 5 781 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 8 0 18 0;
 #X connect 9 0 10 0;

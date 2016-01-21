@@ -114,7 +114,7 @@ list;
 #X connect 14 0 11 0;
 #X restore 441 215 pd weirdness;
 #X text 238 215 list behavior is a bit strange:;
-#X obj 14 428 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 14 428 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 12 0 11 0;
 #X connect 13 0 12 0;

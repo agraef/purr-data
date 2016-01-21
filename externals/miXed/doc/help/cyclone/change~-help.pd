@@ -73,7 +73,7 @@ increasing \, 0 then signal is the same;
 #X text 299 299 detect when signal is increasing;
 #X text 188 326 detect when signal is decreasing;
 #X obj 480 49 pddp/dsp;
-#X obj 5 563 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 5 563 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 11 0 17 0;
 #X connect 13 0 17 0;

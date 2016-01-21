@@ -69,7 +69,7 @@ the coefficients \, [ a0 = k \, b1 = k - 1 ] \, as demonstrated above.
 #X text 179 284 - input frequency to be filtered;
 #X text 179 311 - set cutoff frequency with float;
 #X text 179 331 - set cutoff frequency with signal;
-#X obj 18 669 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 18 669 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 28 0 31 1;
 #X connect 30 0 31 0;

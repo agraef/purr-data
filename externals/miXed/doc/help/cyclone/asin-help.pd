@@ -62,7 +62,7 @@ for Pd-l2ork version 2013.05.28;
 #X text 74 91 with input as float value to take acos of;
 #X obj 79 215 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 8 392 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 8 392 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 13 0 18 0;
 #X connect 16 0 17 0;

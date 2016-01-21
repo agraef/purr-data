@@ -90,7 +90,7 @@ for Pd-l2ork version 2013.05.28;
 #X text 213 489 - midi message based on inlets;
 #X text 97 532 1) float;
 #X text 213 532 - channel number;
-#X obj 12 562 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 12 562 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 10 0 13 0;
 #X connect 12 0 10 0;

@@ -71,7 +71,7 @@ stream;
 #X text 109 559 bang;
 #X text 10 24 separate messages into logical parts;
 #X text 79 58 try different inputs:;
-#X obj 12 632 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 12 632 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 16 0 17 0;
 #X connect 16 1 18 0;

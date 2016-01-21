@@ -73,7 +73,7 @@ bits or signal as float/int;
 ;
 #X obj 76 368 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 5 572 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 5 572 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 10 0 11 0;
 #X connect 11 0 28 0;

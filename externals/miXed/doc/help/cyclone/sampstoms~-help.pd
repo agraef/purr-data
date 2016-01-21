@@ -63,7 +63,7 @@ to milliseconds;
 #X text 269 75 or convert signal values:;
 #X text 11 23 Convert number of samples at sampling rate to milliseconds
 ;
-#X obj 12 435 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 12 435 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 16 0 26 0;
 #X connect 18 0 25 0;

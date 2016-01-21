@@ -93,7 +93,7 @@ in the example below \, or at very small intervals \, it is audible.
 #X obj 482 53 pddp/dsp;
 #X text 208 149 signal/float sets phase of 0-1 transition within pulse
 period (0 to 1);
-#X obj 10 784 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 10 784 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 35 0 51 2;
 #X connect 36 0 37 0;

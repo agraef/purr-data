@@ -57,7 +57,7 @@ initial string to replace it with;
 #X text 243 96 string1: set new string to search for \; string2: string
 to replace it with;
 #X text 136 71 input string to check for substitutions;
-#X obj 10 404 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 10 404 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 11 0 13 0;
 #X connect 12 0 11 0;

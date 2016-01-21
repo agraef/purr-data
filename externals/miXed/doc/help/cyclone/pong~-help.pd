@@ -101,7 +101,7 @@ or wraparound distortion.;
 #X text 111 420 mode <int>;
 #X obj 505 8 pong~;
 #X obj 480 52 pddp/dsp;
-#X obj 9 787 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 9 787 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 32 0 51 2;
 #X connect 33 0 51 1;

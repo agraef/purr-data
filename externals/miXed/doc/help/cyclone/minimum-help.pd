@@ -62,7 +62,7 @@ current min;
 #X text 180 428 - initial minimum to compare to left outlet;
 #X obj 111 202 minimum 5;
 #X text 176 203 optional argument sets initial minimum;
-#X obj 18 460 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 18 460 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 19 0 33 0;
 #X connect 21 0 33 0;

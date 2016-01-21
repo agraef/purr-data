@@ -64,7 +64,7 @@ for Pd-l2ork version 2013.05.28;
 #X text 243 158 optional arg sets initial channel number;
 #X text 92 408 1) float;
 #X text 179 408 - sets initial channel number;
-#X obj 10 494 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 10 494 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 14 0 31 0;
 #X connect 15 0 31 1;

@@ -118,7 +118,7 @@ for Pd-l2ork version 2013.05.28;
 #X text 6 104 arg is an array. if a second argument is given \, it's
 treated as a number of channels. then play~ tries to load 0-sample
 to n-sample where n is the number of channels;
-#X obj -236 380 pddp/pddplink all_about_help_patches.pd -text Usage
+#X obj -236 380 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage
 Guide;
 #X connect 16 0 17 0;
 #X connect 17 0 18 0;

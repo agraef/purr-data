@@ -64,7 +64,7 @@ for Pd-l2ork version 2013.05.28;
 #X text 48 59 outputs the hyperbolic cosine value of input float value.
 ;
 #X text 178 319 - cosh of input value;
-#X obj 8 417 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 8 417 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 19 0 20 0;
 #X connect 20 0 18 0;

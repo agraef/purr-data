@@ -78,7 +78,7 @@ the "drive" increases the amount of distortion. If the "drive" is less
 than 1 \, then it causes a different kind of distortion. If the "drive"
 is less than 0 \, VERY LOUD distortion can result \, so be careful!
 ;
-#X obj 9 751 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 9 751 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
 ;
 #X floatatom 189 169 5 0 1 0 - - -, f 5;
 #X text 171 142 drive factor;
