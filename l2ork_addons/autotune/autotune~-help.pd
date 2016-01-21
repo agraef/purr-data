@@ -1,0 +1,289 @@
+#N canvas 294 14 558 668 10;
+#X obj 0 1102 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header autotune~ 3 12 0
+18 -204280 -1 0;
+#X obj 0 518 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 819 379 370 278 META 0;
+#X text 7 104 OUTLET_0 signal;
+#X text 7 11 KEYWORDS signal pitch-tracking autotune;
+#X text 7 31 LICENSE GNU GPL v3;
+#X text 7 51 DESCRIPTION pitch correction (a.k.a. autotuning);
+#X text 7 171 LIBRARY L2Ork addons;
+#X text 7 191 AUTHOR Ivica Ico Bukvic;
+#X text 7 211 WEBSITE http://l2ork.music.vt.edu;
+#X text 7 231 RELEASE_DATE 2015;
+#X text 7 251 HELP_PATCH_AUTHORS Ivica Ico Bukvic;
+#X text 7 71 INLET_0 signal list correct mix shift tune smooth lfodepth
+lforate lfoshape lfosym warp scwarp fwarp pull pullpitch;
+#X text 7 127 OUTLET_1 float confidence (0-1);
+#X text 7 150 OUTLET_2 float perceived frequency (Hz);
+#X restore 500 1104 pd META;
+#X obj 0 929 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 1010 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 1054 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8
+12 0 13 -228856 -1 0;
+#N canvas 436 542 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [osc~] Related Objects;
+#X obj 23 42 fiddle~;
+#X obj 83 42 sigmund~;
+#X restore 102 1104 pd Related_objects;
+#X obj 78 527 cnv 3 3 393 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 938 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 18 488 audio output;
+#X text 98 526 signal;
+#X text 98 937 signal;
+#X text 98 546 list;
+#X obj 4 1104 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X text 11 23 real-time pitch correction;
+#X obj 482 12 autotune~;
+#X obj 12 53 loadbang;
+#X obj 12 188 mtof;
+#X obj 12 76 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1 1
+;
+#X obj 12 165 + 69;
+#X obj 12 119 counter 2 0 120;
+#X obj 12 142 / 10;
+#X obj 12 96 metro 25;
+#X obj 12 211 osc~ 440;
+#X obj 12 333 autotune~, f 19;
+#X floatatom 67 376 5 0 0 0 - - -, f 5;
+#X floatatom 123 356 10 0 0 0 - - -, f 10;
+#X text 189 355 detected frequency;
+#X obj 31 295 r params;
+#X text 152 77 The [autotune~] object pitch corrects inputted signal
+in real-time based on detected formant. Using extreme settings can
+produce Cher- and T-pain-like pop culture results.[autotune~] is
+based on LADSPA Autotalent plugin. It also borrows code structure from
+Maxus Germanus' autoutuned~;
+#X text 45 143 microtonalpitch scale;
+#N canvas 100 26 804 418 1.basics 0;
+#X obj 28 385 s params;
+#X msg 655 292 mix \$1;
+#X floatatom 483 152 5 0 1 0 - - -, f 5;
+#X floatatom 655 152 5 0 1 0 - - -, f 5;
+#X msg 483 292 correct \$1;
+#X msg 28 260 0 -1 0 -1 -1 0 -1 0 -1 0 -1 -1;
+#X text 219 260 pentatonic scale;
+#X msg 28 207 0 -1 0 -1 0 -1 0 -1 0 -1 0 -1;
+#X msg 28 182 1 -1 1 -1 1 1 -1 1 -1 1 -1 1;
+#X obj 28 158 loadbang;
+#X obj 483 106 loadbang;
+#X msg 483 129 1;
+#X text 25 57 -1 = removes pitch from the scale 0 = includes pitch
+and allows off-tune notes except when surrounded by removed (-1) notes
+1 = snaps any nearby pitch to note, f 91;
+#X text 26 110 Once the scale is initialized \, increase amount of
+pitch correction (e.g. 1) and increase wet signal (e.g. 1).;
+#X text 25 19 First \, set up a scale you wish to use. The twelve notes
+always start with the note A and go up to G#. Default none.;
+#X text 493 174 The amount of pitchcorrection (0-1)Default 0;
+#X text 665 174 Dry/wet mix(0 = dry \, 1 = wet)also available inthe
+main patcherDefault 0;
+#X text 208 182 Major scale with snapping notes;
+#X text 214 207 Whole tone scale (no snapping necessarysince all valid
+notes are surrounded withdisabled notes);
+#X text 178 285 chromatic scale without snappingessentially with no
+effect;
+#X msg 28 285 0 0 0 0 0 0 0 0 0 0 0 0;
+#X text 178 321 chromatic scale with snapping;
+#X msg 28 321 1 1 1 1 1 1 1 1 1 1 1 1;
+#X connect 1 0 0 0;
+#X connect 2 0 4 0;
+#X connect 3 0 1 0;
+#X connect 4 0 0 0;
+#X connect 5 0 0 0;
+#X connect 7 0 0 0;
+#X connect 8 0 0 0;
+#X connect 9 0 8 0;
+#X connect 10 0 11 0;
+#X connect 11 0 2 0;
+#X connect 20 0 0 0;
+#X connect 22 0 0 0;
+#X restore 148 295 pd 1.basics;
+#X msg 90 295 mix \$1;
+#X floatatom 90 191 5 0 1 0 - - -, f 5;
+#X obj 95 401 loadbang;
+#X msg 95 424 0.1;
+#N canvas 47 82 1060 330 2.tuning 0;
+#X floatatom 27 45 5 -12 12 0 - - -, f 5;
+#X msg 27 234 shift \$1;
+#X floatatom 137 45 5 400 480 0 - - -, f 5;
+#X msg 137 234 tune \$1;
+#X floatatom 261 45 5 0 1 0 - - -, f 5;
+#X msg 261 234 smooth \$1;
+#X floatatom 738 45 5 0 1 0 - - -, f 5;
+#X msg 738 234 pull \$1;
+#X floatatom 884 45 5 -36 12 0 - - -, f 5;
+#X msg 884 234 pullpitch \$1;
+#X obj 426 294 s params;
+#X text 220 14 GENERAL TUNING OPTIONS;
+#X text 760 15 PULL PITCH OPTIONS;
+#X text 893 67 Specify pull pitch insemitones away fromnote A (-36
+to 12)Default 0;
+#X text 747 67 How strong ofa pull is theretowards a specificnote
+(0-1)0 = none1 = 100% pulled pitchDefault 0;
+#X floatatom 406 45 5 -1 1 0 - - -, f 5;
+#X msg 406 234 warp \$1;
+#X obj 522 45 tgl 15 0 empty empty empty 17 7 0 10 -258113 -1 -1 0
+1;
+#X msg 522 234 fcorr \$1;
+#X text 35 66 Pitch-shiftoutput 12semi-tonesbelow or above(-12
+to 12)Default 0;
+#X text 146 66 Note A tuning(400-480Hz)Default 440Hz;
+#X text 269 66 Smoothen transitionsbetween pitches (0-1)0 = jumpy1
+= glissando-likeDefault 0;
+#X text 415 67 Warp formantsto alter voiceage/gender (0-1)Default
+0;
+#X text 530 67 Toggle formantcorrection tominimize chipmunkeffectIMPORTANT!
+Requiresvery soft input signal0 = off1 = onDefault 0;
+#X connect 0 0 1 0;
+#X connect 1 0 10 0;
+#X connect 2 0 3 0;
+#X connect 3 0 10 0;
+#X connect 4 0 5 0;
+#X connect 5 0 10 0;
+#X connect 6 0 7 0;
+#X connect 7 0 10 0;
+#X connect 8 0 9 0;
+#X connect 9 0 10 0;
+#X connect 15 0 16 0;
+#X connect 16 0 10 0;
+#X connect 17 0 18 0;
+#X connect 18 0 10 0;
+#X restore 223 295 pd 2.tuning;
+#N canvas 511 188 508 330 3.vibrato 0;
+#X obj 209 291 s params;
+#X floatatom 25 85 5 0 1 0 - - -, f 5;
+#X msg 25 224 lfodepth \$1;
+#X floatatom 118 85 7 0 20000 0 - - -, f 7;
+#X msg 118 224 lforate \$1;
+#X floatatom 246 85 5 -1 1 0 - - -, f 5;
+#X msg 246 224 lfoshape \$1;
+#X floatatom 399 85 5 -1 1 0 - - -, f 5;
+#X msg 399 224 lfosym \$1;
+#X text 210 14 VIBRATO OPTIONS;
+#X text 76 36 Apply a vibrato to the outputting voice using a built-in
+LFO (low frequency oscillator);
+#X text 33 106 LFO depth oramplitude(0-1)Default 0;
+#X text 126 106 LFO frequency(0 to 1/2 Samplingrate)Default 0;
+#X text 255 106 LFO waveform (-1 to 1)-1 = square 0 = sine 1 =
+triangleDefault 0;
+#X text 408 107 LFO waveformsymmetry(-1 to 1)Default 0;
+#X connect 1 0 2 0;
+#X connect 2 0 0 0;
+#X connect 3 0 4 0;
+#X connect 4 0 0 0;
+#X connect 5 0 6 0;
+#X connect 6 0 0 0;
+#X connect 7 0 8 0;
+#X connect 8 0 0 0;
+#X restore 298 295 pd 3.vibrato;
+#X text 126 179 dry/wet mix (0 = dry \, 1 = wet) \, requires scale
+definition and pitch correction to be enabled \, see 1.basics where
+we loadbang a major scale;
+#X obj 12 447 output~;
+#X text 165 274 open subpatchers below to learn about additional options
+;
+#X text 167 937 - the outgoing processed signal.;
+#X text 80 1028 N/A;
+#N canvas 373 124 569 357 4.scale.modifications 0;
+#X floatatom 57 51 5 -5 5 0 - - -, f 5;
+#X msg 57 73 scwarp \$1;
+#X obj 57 303 s params;
+#X obj 398 170 ggee/image @pd_extra/images/autotune_scale_warp.png
+0;
+#X obj 261 329 pddplink http://tombaran.info/autotalent-0.2_refcard.pdf
+;
+#X text 230 311 Image excerpt from Tom Baran's Autotalent documentation.
+;
+#X text 66 97 Modulate existing scaleusing a single parameter.(-5
+to 5).See the chart on the rightto figure out what value touse.Default
+0;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X restore 379 295 pd 4.scale.modifications;
+#X text 167 1064 See subpatchers 1.basics \, 2.tuning \, 3.vibrato
+\, and 4.scale.presets for additional info.;
+#X text 168 526 - an incoming signal to be pitch-corrected.;
+#X text 98 592 correct;
+#X text 98 612 mix;
+#X text 98 632 shift;
+#X text 98 665 tune;
+#X text 167 665 - tune note A (400-480 Hz \, default 440).;
+#X text 167 632 - shift pitch-corrected output by a number of semitones
+(-36 to 12 \, default 0).;
+#X text 167 612 - dry/wet mix (0 = dry \, 1 = wet \, default 0).;
+#X text 167 592 - amount of correction (0-1 \, default 0).;
+#X text 167 546 - a list of 12 values corresponding to each pitch in
+a chromatic scale (-1 = disabled \, 0 = normal \, 1 = snapping \, default
+none);
+#X obj 78 962 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X obj 78 986 cnv 17 3 17 empty \$0-pddp.cnv.let.0 2 5 9 0 16 -228856
+-162280 0;
+#X text 98 961 float;
+#X text 98 985 float;
+#X text 167 961 - confidence value (> 0.7 should be considered voiced).
+;
+#X text 167 985 - perceived pitch (Hz).;
+#X text 103 376 confidence (> 0.7 should be considered voiced);
+#X text 98 685 smooth;
+#X text 167 685 - smoothen transitions between pitches (0-1 \, default
+0).;
+#X text 98 705 lfodepth;
+#X text 98 725 lforate;
+#X text 98 745 lfoshape;
+#X text 98 765 lfosym;
+#X text 98 785 warp;
+#X text 98 805 scwarp;
+#X text 98 871 pull;
+#X text 98 891 pullpitch;
+#X text 167 705 - vibrato LFO depth/amplitude (0-1 \, default 0).;
+#X text 167 725 - LFO frequency (0 to 1/2 sampling rate \, default
+0).;
+#X text 167 745 - LFO waveform (-1=square \, 0=sine \, 1=triangle \,
+default 0).;
+#X text 167 765 - LFO waveform symmetry (-1 to 1 \, default 0).;
+#X text 167 785 - formant warp to alter age/gender (0-1 \, default
+0).;
+#X text 167 805 - scale warp (-5 to 5 \, default 0). See 4.scale.modifications
+for more info.;
+#X text 167 871 - pull to pitch \, (0=no pull \, 1=100% pull \, default
+0).;
+#X text 167 891 - specify pull pitch from -36 semitones below A to
+12 semitones above (-36 to 12 \, default 0).;
+#X obj 12 260 *~ 1;
+#X floatatom 33 239 5 0.05 1 0 - - -, f 5;
+#X text 98 838 fcorr;
+#X text 167 838 - formant correction REQUIRES softer input signal \,
+e.g. use 0.05 multiplier (0=off \, 1=on \, default 0).;
+#X text 68 239 multiplier--use 0.05 when fcorr is enabled (see 2.tuning)
+;
+#X connect 17 0 19 0;
+#X connect 18 0 24 0;
+#X connect 19 0 23 0;
+#X connect 20 0 18 0;
+#X connect 21 0 22 0;
+#X connect 22 0 20 0;
+#X connect 23 0 21 0;
+#X connect 24 0 81 0;
+#X connect 25 0 40 0;
+#X connect 25 0 40 1;
+#X connect 25 1 26 0;
+#X connect 25 2 27 0;
+#X connect 29 0 25 0;
+#X connect 33 0 25 0;
+#X connect 34 0 33 0;
+#X connect 35 0 36 0;
+#X connect 36 0 40 2;
+#X connect 81 0 25 0;
+#X connect 82 0 81 1;
