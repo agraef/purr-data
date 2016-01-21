@@ -1,3 +1,13 @@
 [submodule "Gem"]
-	path = Gem
-	url = git://git.code.sf.net/p/pd-gem/gem
+        path = Gem
+        url = git://git.code.sf.net/p/pd-gem/gem
+[submodule "l2ork_addons/rtcmix-in-pd"]
+        path = l2ork_addons/rtcmix-in-pd
+        url = https://github.com/jwmatthys/rtcmix-in-pd.git
+[submodule "l2ork_addons/cwiid"]
+        path = l2ork_addons/cwiid
+        url = https://github.com/pd-l2ork/cwiid
+[submodule "l2ork_addons/lyonpotpourri"]
+        path = l2ork_addons/lyonpotpourri
+        url = https://github.com/pd-projects/lyonpotpourri
+
