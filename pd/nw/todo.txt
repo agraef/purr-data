@@ -154,7 +154,7 @@ Everything else: (A [x] means we've fixed it)
     NB: this commit affects the old GUI.  Need to revisit it with the new
     one to see whether it's still necessary.
 [ ] same for all commits up to Jul 31, 2015
-[ ] 930414ea5a2330dfa5d581e92514ece05aca1ebf
+[x] 930414ea5a2330dfa5d581e92514ece05aca1ebf
     Has to do with font positioning inside objects boxes... probably
     need to address this manually.
 [ ] test if try/catch parser in the socket receiver is a performance hog. (For
