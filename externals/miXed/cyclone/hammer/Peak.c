@@ -56,8 +56,15 @@ void Peak_setup(void)
     Peak_class = class_new(gensym("Peak"),
 			   (t_newmethod)Peak_new, 0,
 			   sizeof(t_Peak), 0, 0);
+    class_addcreator((t_newmethod)Peak_new, gensym("peak"), 0, 0);
+    class_addcreator((t_newmethod)Peak_new, gensym("cyclone/peak"), 0, 0);
     class_addbang(Peak_class, Peak_bang);
     class_addfloat(Peak_class, Peak_float);
     class_addmethod(Peak_class, (t_method)Peak_ft1,
 		    gensym("ft1"), A_FLOAT, 0);
+}
+
+void peak_setup(void)
+{
+    Peak_setup();
 }

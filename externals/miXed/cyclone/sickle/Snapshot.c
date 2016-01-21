@@ -148,6 +148,8 @@ void Snapshot_tilde_setup(void)
 			       (t_method)snapshot_free,
 			       sizeof(t_snapshot), 0,
 			       A_DEFFLOAT, A_DEFFLOAT, 0);
+    class_addcreator((t_newmethod)snapshot_new, gensym("snapshot~"), A_DEFFLOAT, A_DEFFLOAT, 0);
+    class_addcreator((t_newmethod)snapshot_new, gensym("cyclone/snapshot~"), A_DEFFLOAT, A_DEFFLOAT, 0);
     sic_setup(snapshot_class, snapshot_dsp, snapshot_float);
     class_addbang(snapshot_class, snapshot_bang);
     class_addmethod(snapshot_class, (t_method)snapshot_ft1,
@@ -158,4 +160,9 @@ void Snapshot_tilde_setup(void)
 		    gensym("start"), 0);
     class_addmethod(snapshot_class, (t_method)snapshot_stop,
 		    gensym("stop"), 0);
+}
+
+void snapshot_tilde_setup(void)
+{
+    Snapshot_tilde_setup();
 }

@@ -17,7 +17,6 @@ typedef struct _rand
     int      x_state;
     float    x_target;
     float    x_scaling;  /* LATER use phase increment */
-	float	 x_startrate;
 } t_rand;
 
 static t_class *rand_class;
@@ -32,17 +31,17 @@ static t_int *rand_perform(t_int *w)
     double ph = x->x_nextphase;
     double tfph = ph + SHARED_UNITBIT32;
     t_shared_wrappy wrappy;
-    int32 normhipart;
+    int32_t normhipart;
     float rcpsr = x->x_rcpsr;
     float target = x->x_target;
     float scaling = x->x_scaling;
+
     wrappy.w_d = SHARED_UNITBIT32;
     normhipart = wrappy.w_i[SHARED_HIOFFSET];
 
     while (nblock--)
     {
 	float rate = *rin++;
-	if (rate == 0 && x->x_startrate != 0) rate = x->x_startrate;
 	if (ph > lastph)
 	{
 	    int state = x->x_state;
@@ -78,10 +77,9 @@ static void *rand_new(t_floatarg f)
     static int init = 307;
     x->x_state = (init *= 1319);
     x->x_lastphase = 0.;
-    x->x_nextphase = 1.0;  /* start from 0, force retargetting */
-    x->x_target = x->x_scaling = 0.;
-	x->x_startrate = f;
-    sic_newinlet((t_sic *)x, (f > 0. ? -f : 0.));
+    x->x_nextphase = 1.;  /* start from 0, force retargetting */
+    x->x_target = x->x_scaling = 0;
+    x->x_sic.s_f = (f > 0. ? f : 0.);
     outlet_new((t_object *)x, &s_signal);
     return (x);
 }
@@ -93,4 +91,6 @@ void rand_tilde_setup(void)
 			   sizeof(t_rand), 0,
 			   A_DEFFLOAT, 0);
     sic_setup(rand_class, rand_dsp, SIC_FLOATTOSIGNAL);
+//    logpost(NULL, 4, "this is cyclone/rand~ %s, %dth %s build",
+//	 CYCLONE_VERSION, CYCLONE_BUILD, CYCLONE_RELEASE);
 }

@@ -75,7 +75,7 @@ static void capture_dowrite(t_capture *x, t_symbol *fn)
     char buf[MAXPDSTRING];
     canvas_makefilename(glist_getcanvas(x->x_glist),
 			fn->s_name, buf, MAXPDSTRING);
-    if (fp = fopen(buf, "w"))  /* LATER ask if overwriting, CHECKME */
+    if (fp = sys_fopen(buf, "w"))  /* LATER ask if overwriting, CHECKME */
     {
 	int col = 0;
 	if (x->x_mode == 'f' || count < x->x_bufsize)

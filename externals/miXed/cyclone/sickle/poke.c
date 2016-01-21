@@ -5,6 +5,7 @@
 /* LATER: 'click' method */
 
 #include "m_pd.h"
+#include "shared.h"
 #include "unstable/fragile.h"
 #include "sickle/sic.h"
 #include "sickle/arsic.h"
@@ -52,7 +53,7 @@ static void poke_bang(t_poke *x)
 static void poke_float(t_poke *x, t_float f)
 {
     t_arsic *sic = (t_arsic *)x;
-    t_float *vp;
+    t_word *vp;
     arsic_validate(sic, 0);  /* LATER rethink (efficiency, and complaining) */
     if (vp = sic->s_vectors[x->x_effchannel])
     {
@@ -60,7 +61,7 @@ static void poke_float(t_poke *x, t_float f)
 	if (ndx >= 0 && ndx < sic->s_vecsize)
 	{
 	    double timesince;
-	    vp[ndx] = f;
+	    vp[ndx].w_float = f;
 	    timesince = clock_gettimesince(x->x_clocklasttick);
 	    if (timesince > 1000) poke_tick(x);
 	    else if (!x->x_clockset)
@@ -87,7 +88,7 @@ static t_int *poke_perform(t_int *w)
     t_float *in1 = (t_float *)(w[3]);
     t_float *in2 = (t_float *)(w[4]);
     t_poke *x = (t_poke *)sic;
-    t_float *vp = sic->s_vectors[x->x_effchannel];
+    t_word *vp = sic->s_vectors[x->x_effchannel];
     if (vp && sic->s_playable)
     {
 	int vecsize = sic->s_vecsize;
@@ -96,7 +97,7 @@ static t_int *poke_perform(t_int *w)
 	    t_float f = *in1++;
 	    int ndx = (int)*in2++;
 	    if (ndx >= 0 && ndx < vecsize)
-		vp[ndx] = f;
+		vp[ndx].w_float = f;
 	}
     }
     return (w + sic->s_nperfargs + 1);
@@ -152,4 +153,6 @@ void poke_tilde_setup(void)
 		    gensym("set"), A_SYMBOL, 0);
     class_addmethod(poke_class, (t_method)poke_ft2,
 		    gensym("ft2"), A_FLOAT, 0);
+//    logpost(NULL, 4, "this is cyclone/poke~ %s, %dth %s build",
+//	 CYCLONE_VERSION, CYCLONE_BUILD, CYCLONE_RELEASE);
 }

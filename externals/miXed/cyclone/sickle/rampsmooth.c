@@ -7,7 +7,7 @@
 #include "sickle/sic.h"
 
 /* LATER select the mode fitter-optionally */
-#define RAMPSMOOTH_GEOMETRIC  /* geometric series (same as slide~) CHECKED */
+/* #define RAMPSMOOTH_GEOMETRIC  /* geometric series (same as slide~) CHECKED */
 #ifndef RAMPSMOOTH_GEOMETRIC
 #define RAMPSMOOTH_LINEAR
 #endif
@@ -188,6 +188,8 @@ static void *rampsmooth_new(t_symbol *s, int ac, t_atom *av)
     x->x_target = 0.;
     x->x_incr = 0.;
     x->x_nleft = 0;
+    inlet_new((t_object *)x, (t_pd *)x, &s_float, gensym("rampup"));
+    inlet_new((t_object *)x, (t_pd *)x, &s_float, gensym("rampdown"));
 #endif
     outlet_new((t_object *)x, &s_signal);
     return (x);

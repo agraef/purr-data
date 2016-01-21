@@ -1017,9 +1017,7 @@ static void seq_doread(t_seq *x, t_symbol *fn, int creation)
 	/* loading during object creation -- CHECKED no warning if a file
 	   specified with an arg does not exist, LATER rethink */
 	FILE *fp;
-	char path[MAXPDSTRING];
-	sys_bashfilename(buf, path);
-	if (!(fp = fopen(path, "r")))
+	if (!(fp = sys_fopen(buf, "r")))
 	    return;
 	fclose(fp);
     }

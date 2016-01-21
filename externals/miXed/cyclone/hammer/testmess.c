@@ -7,7 +7,7 @@
 #include "m_pd.h"
 #include "unstable/fragile.h"
 
-#ifdef MSW
+#ifdef _WIN32
 #define snprintf  _snprintf
 #endif
 

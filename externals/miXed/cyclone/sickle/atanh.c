@@ -7,7 +7,7 @@
 #include "sickle/sic.h"
 
 /* LATER ask about osx */
-#if defined(NT) || defined(MACOSX)
+#if defined(_WIN32) || defined(__APPLE__)
 #define atanhf(x)  (log((1 + x) / (1 - x)) * 0.5)
 #endif
 

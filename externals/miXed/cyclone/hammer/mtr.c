@@ -488,8 +488,7 @@ static void mtr_doread(t_mtr *x, t_mtrack *target, t_symbol *fname)
     	path[MAXPDSTRING-1] = 0;
     }
     /* CHECKED no global message */
-    sys_bashfilename(path, path);
-    if (fp = fopen(path, "r"))
+    if (fp = sys_fopen(path, "r"))
     {
 	t_mtrack *tp = 0;
 	char linebuf[MTR_FILEBUFSIZE];
@@ -637,8 +636,7 @@ static void mtr_dowrite(t_mtr *x, t_mtrack *source, t_symbol *fname)
     	path[MAXPDSTRING-1] = 0;
     }
     /* CHECKED no global message */
-    sys_bashfilename(path, path);
-    if (fp = fopen(path, "w"))
+    if (fp = sys_fopen(path, "w"))
     {
 	/* CHECKED single-track writing does not seem to work (a bug?) */
 	if (source) failed = mtr_writetrack(x, source, fp);

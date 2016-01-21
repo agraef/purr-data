@@ -1,6 +1,7 @@
 /* Copyright (c) 2002-2003 krzYszcz and others.
  * For information on usage and redistribution, and for a DISCLAIMER OF ALL
  * WARRANTIES, see the file, "LICENSE.txt," in this distribution.  */
+/* Added code for the stop, pause and resume messages, fjkraan, 20141202. */ 
 
 #include "m_pd.h"
 #include "shared.h"
@@ -35,6 +36,7 @@ typedef struct _line
     int         x_retarget;
     int         x_size;   /* as allocated */
     int         x_nsegs;  /* as used */
+    int         x_pause;
     t_lineseg  *x_curseg;
     t_lineseg  *x_segs;
     t_lineseg   x_segini[LINE_INISIZE];
@@ -70,6 +72,12 @@ static t_int *line_perform(t_int *w)
     float curval = x->x_value;
     float inc = x->x_inc;
     float biginc = x->x_biginc;
+    
+    if (x->x_pause)
+    {
+	while (nblock--) *out++ = curval;
+	return (w + 4);
+    }
     if (PD_BIGORSMALL(curval))  /* LATER rethink */
 	curval = x->x_value = 0;
 retarget:
@@ -180,6 +188,7 @@ static void line_float(t_line *x, t_float f)
     	x->x_nleft = 0;
 	x->x_retarget = 0;
     }
+    x->x_pause = 0;
 }
 
 static void line_ft1(t_line *x, t_floatarg f)
@@ -246,9 +255,9 @@ static void line_list(t_line *x, t_symbol *s, int ac, t_atom *av)
     x->x_target = x->x_segs->s_target;
     x->x_curseg = x->x_segs;
     x->x_retarget = 1;
+    x->x_pause = 0;
 }
 
-/* CHECKED no stop, pity... */
 #if 0
 static void line_stop(t_line *x)
 {
@@ -273,6 +282,22 @@ static void line_free(t_line *x)
     if (x->x_clock) clock_free(x->x_clock);
 }
 
+static void line_stop(t_line *x)
+{
+    x->x_nsegs = 0;
+    x->x_nleft = 0;
+}
+
+static void line_pause(t_line *x)
+{
+    x->x_pause = 1;
+}
+
+static void line_resume(t_line *x)
+{
+    x->x_pause = 0;
+}
+
 static void *line_new(t_floatarg f)
 {
     t_line *x = (t_line *)pd_new(line_class);
@@ -282,6 +307,7 @@ static void *line_new(t_floatarg f)
     x->x_retarget = 0;
     x->x_size = LINE_INISIZE;
     x->x_nsegs = 0;
+    x->x_pause = 0;
     x->x_segs = x->x_segini;
     x->x_curseg = 0;
     inlet_new((t_object *)x, (t_pd *)x, &s_float, gensym("ft1"));
@@ -297,9 +323,25 @@ void Line_tilde_setup(void)
 			   (t_newmethod)line_new,
 			   (t_method)line_free,
 			   sizeof(t_line), 0, A_DEFFLOAT, 0);
+    class_addcreator((t_newmethod)line_new, gensym("line~"), A_DEFFLOAT, 0);
+    class_addcreator((t_newmethod)line_new, gensym("cyclone/line~"), A_DEFFLOAT, 0);
     sic_setup(line_class, line_dsp, SIC_NOMAINSIGNALIN);
     class_addfloat(line_class, line_float);
     class_addlist(line_class, line_list);
     class_addmethod(line_class, (t_method)line_ft1,
 		    gensym("ft1"), A_FLOAT, 0);
+    class_addmethod(line_class, (t_method)line_stop,
+		    gensym("stop"), 0);
+    class_addmethod(line_class, (t_method)line_pause,
+		    gensym("pause"), 0);
+    class_addmethod(line_class, (t_method)line_resume,
+		    gensym("resume"), 0);
+//    logpost(NULL, 4, "this is cyclone/Line~ %s, %dth %s build",
+//	 CYCLONE_VERSION, CYCLONE_BUILD, CYCLONE_RELEASE);
 }
+
+void line_tilde_setup(void)
+{
+    Line_tilde_setup();
+}
+

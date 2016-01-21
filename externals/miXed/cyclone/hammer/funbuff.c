@@ -2,6 +2,7 @@
  * For information on usage and redistribution, and for a DISCLAIMER OF ALL
  * WARRANTIES, see the file, "LICENSE.txt," in this distribution.  */
 
+#include <libgen.h>
 #include "m_pd.h"
 #include "common/loud.h"
 #include "common/vefl.h"
@@ -227,10 +228,16 @@ static void funbuff_dowrite(t_funbuff *x, t_symbol *fn)
     t_binbuf *bb = binbuf_new();
     char buf[MAXPDSTRING];
     t_hammernode *np;
-    binbuf_addv(bb, "s", atom_getsymbol(binbuf_getvec(x->x_ob.te_binbuf)));
+    /* specifying the object as cyclone/funbuff breaks the file writing/
+     * reading as the it doesn't start with 'funbuff'. A call to 
+     * libgen/basename fixes this.  fjk, 2015-01-24 */
+    t_symbol *objName = atom_getsymbol(binbuf_getvec(x->x_ob.te_binbuf));
+    objName->s_name = basename(objName->s_name);
+    binbuf_addv(bb, "s", objName);
     for (np = x->x_tree.t_first; np; np = np->n_next)
 	binbuf_addv(bb, "if", np->n_key, HAMMERNODE_GETFLOAT(np));
     canvas_makefilename(x->x_canvas, fn->s_name, buf, MAXPDSTRING);
+
     binbuf_write(bb, buf, "", 0);
     binbuf_free(bb);
 }
@@ -270,7 +277,7 @@ static void funbuff_read(t_funbuff *x, t_symbol *s)
    a bug? but CHECKME other classes (cf seq's filetype dilemma) */
 static void funbuff_write(t_funbuff *x, t_symbol *s)
 {
-    if (s && s != &s_)
+    if (s && s != &s_) 
 	funbuff_dowrite(x, s);
     else  /* CHECKME default name */
 	hammerpanel_save(x->x_filehandle,
@@ -332,7 +339,7 @@ static void funbuff_dump(t_funbuff *x)
 }
 
 /* CHECKME if pointer is updated */
-static void funbuff_dointerp(t_funbuff *x, t_floatarg f, int vsz, t_float *vec)
+static void funbuff_dointerp(t_funbuff *x, t_floatarg f, int vsz, t_word *vec)
 {
     t_hammernode *np1;
     int trunc = (int)f;
@@ -365,7 +372,7 @@ static void funbuff_dointerp(t_funbuff *x, t_floatarg f, int vsz, t_float *vec)
 		    return;
 		}
 		vec += vndx;
-		frac = *vec + (vec[1] - *vec) * vfrac;
+		frac = vec[0].w_float + (vec[1].w_float - vec[0].w_float) * vfrac;
 	    }
 	    value +=
 		(HAMMERNODE_GETFLOAT(np2) - HAMMERNODE_GETFLOAT(np1)) * frac;
@@ -385,7 +392,7 @@ static void funbuff_interp(t_funbuff *x, t_floatarg f)
 static void funbuff_interptab(t_funbuff *x, t_symbol *s, t_floatarg f)
 {
     int vsz;
-    t_float *vec;
+    t_word *vec;
     if (vec = vefl_get(s, &vsz, 0, (t_pd *)x))
     {
 	if (vsz > 2)
@@ -523,4 +530,6 @@ void funbuff_setup(void)
 		    gensym("debug"), A_DEFFLOAT, 0);
 #endif
     hammerfile_setup(funbuff_class, 1);
+//    logpost(NULL, 4, "this is cyclone/funbuff %s, %dth %s build",
+//	CYCLONE_VERSION, CYCLONE_BUILD, CYCLONE_RELEASE);
 }

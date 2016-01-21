@@ -9,7 +9,7 @@
 /* by definition, this is just an interface to the -lm call
    (do not use costable) */
 
-#if defined(NT) || defined(MACOSX)
+#if defined(_WIN32) || defined(__APPLE__)
 /* cf pd/src/x_arithmetic.c */
 #define tanf  tan
 #endif

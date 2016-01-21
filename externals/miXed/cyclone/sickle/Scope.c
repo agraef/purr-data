@@ -1041,6 +1041,8 @@ void Scope_tilde_setup(void)
 			    (t_newmethod)scope_new,
 			    (t_method)scope_free,
 			    sizeof(t_scope), 0, A_GIMME, 0);
+    class_addcreator((t_newmethod)scope_new, gensym("scope~"), A_GIMME, 0);
+	class_addcreator((t_newmethod)scope_new, gensym("cyclone/scope~"), A_GIMME, 0);
     sic_setup(scope_class, scope_dsp, scope_float);
     class_addmethod(scope_class, (t_method)scope_bufsize,
 		    gensym("bufsize"), A_GIMME, 0);

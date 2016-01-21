@@ -13,7 +13,7 @@
 #include "shared.h"
 #include "sickle/sic.h"
 
-#if defined(NT) || defined(MACOSX)
+#if defined(_WIN32) || defined(__APPLE__)
 /* cf pd/src/x_arithmetic.c */
 #define expf  exp
 #define cosf  cos

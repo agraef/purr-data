@@ -4,6 +4,7 @@
 
 #include <string.h>
 #include "m_pd.h"
+#include "shared.h"
 #include "sickle/sic.h"
 #include "sickle/arsic.h"
 
@@ -29,7 +30,7 @@ static t_int *play_perform(t_int *w)
 	t_play *x = (t_play *)sic;
 	t_float *xin = (t_float *)(w[3]);
 	int vecsize = sic->s_vecsize;
-	t_float **vectable = sic->s_vectors;
+	t_word **vectable = sic->s_vectors;
 	float ksr = sic->s_ksr;
 	int nointerp = 0;
 	int maxindex = (nointerp ? vecsize - 1 : vecsize - 3);
@@ -52,15 +53,15 @@ static t_int *play_perform(t_int *w)
 	    else frac = phase - ndx;
 	    while (ch--)
 	    {
-		t_float *vp = vectable[ch];
+		t_word *vp = vectable[ch];
 		t_float *out = (t_float *)(outp[ch]);
 		if (vp)
 		{
 		    vp += ndx;
-		    a = vp[-1];
-		    b = vp[0];
-		    c = vp[1];
-		    d = vp[2];
+		    a = vp[-1].w_float;
+		    b = vp[0].w_float;
+		    c = vp[1].w_float;
+		    d = vp[2].w_float;
 		    cminusb = c-b;
 		    out[iblock] = b + frac * (
 			cminusb - 0.1666667f * (1. - frac) * (
@@ -119,4 +120,6 @@ void play_tilde_setup(void)
     arsic_setup(play_class, play_dsp, SIC_FLOATTOSIGNAL);
     class_addmethod(play_class, (t_method)play_set,
 		    gensym("set"), A_SYMBOL, 0);
+//    logpost(NULL, 4, "this is cyclone/play~ %s, %dth %s build",
+//	 CYCLONE_VERSION, CYCLONE_BUILD, CYCLONE_RELEASE);
 }

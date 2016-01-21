@@ -66,6 +66,13 @@ void TogEdge_setup(void)
     TogEdge_class = class_new(gensym("TogEdge"),
 			      (t_newmethod)TogEdge_new, 0,
 			      sizeof(t_TogEdge), 0, 0);
+    class_addcreator((t_newmethod)TogEdge_new, gensym("togedge"), 0, 0);
+    class_addcreator((t_newmethod)TogEdge_new, gensym("cyclone/togedge"), 0, 0);
     class_addbang(TogEdge_class, TogEdge_bang);
     class_addfloat(TogEdge_class, TogEdge_float);
+}
+
+void togedge_setup(void)
+{
+    TogEdge_setup();
 }

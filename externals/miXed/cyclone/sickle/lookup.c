@@ -6,6 +6,7 @@
    more compatible (and less useful). */
 
 #include "m_pd.h"
+#include "shared.h"
 #include "sickle/sic.h"
 #include "sickle/arsic.h"
 
@@ -30,22 +31,24 @@ static t_int *lookup_perform(t_int *w)
 	t_float *oin = (t_float *)(w[4]);
 	t_float *sin = (t_float *)(w[5]);
 	int vecsize = sic->s_vecsize;
-	t_float *vec = sic->s_vectors[0];  /* playable implies nonzero (mono) */
+	t_word *vec = sic->s_vectors[0];  /* playable implies nonzero (mono) */
 	while (nblock--)
 	{
 	    float off = *oin++;  /* msp: converted to int (if not a signal) */
 	    int siz = (int)*sin++ - 1;  /* msp: converted to int (signal too) */
-	    float pos = (siz > 0 ? off + siz * (*xin++ + 1.0) * 0.5 : off);
+	    float pos;
+//	    pos = (siz > 0 ? off + siz * (*xin++ + 1.0) * 0.5 : off);  // range: off - (off + siz)
+	    pos = (siz > 0 ? off + (siz - off) * (*xin++ + 1.0) * 0.5 : off);  // range: off - siz
 	    int ndx = (int)pos;
 	    int ndx1 = ndx + 1;
 	    if (ndx1 > 0 && ndx1 < vecsize)
 	    {
-		float val = vec[ndx];
-		*out++ = val + (vec[ndx1] - val) * (pos - ndx);
+		float val = vec[ndx].w_float;
+		*out++ = val + (vec[ndx1].w_float - val) * (pos - ndx);
 	    }
 	    /* CHECKED: */
-	    else if (ndx1 == 0) *out++ = *vec * (pos + 1.0);
-	    else if (ndx1 == vecsize) *out++ = vec[ndx] * (ndx1 - pos);
+	    else if (ndx1 == 0) *out++ = vec[0].w_float * (pos + 1.0);
+	    else if (ndx1 == vecsize) *out++ = vec[ndx].w_float * (ndx1 - pos);
 	    else *out++ = 0;
 	}
     }
@@ -91,4 +94,6 @@ void lookup_tilde_setup(void)
     arsic_setup(lookup_class, lookup_dsp, SIC_FLOATTOSIGNAL);
     class_addmethod(lookup_class, (t_method)lookup_set,
 		    gensym("set"), A_SYMBOL, 0);
+//    logpost(NULL, 4, "this is cyclone/lookup~ %s, %dth %s build",
+//	CYCLONE_VERSION, CYCLONE_BUILD, CYCLONE_RELEASE);
 }

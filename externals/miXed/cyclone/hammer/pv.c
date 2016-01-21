@@ -358,11 +358,11 @@ static void pv_objstatus(t_pv *x, t_glist *glist)
     for (g = glist->gl_list; g; g = g->g_next)
     {
 	if (g == (t_gobj *)x)
-	    post("%x (this object) owning patcher [%s]",
-		 (int)g, glist->gl_name->s_name);
+	    post("%lx (this object) owning patcher [%s]",
+		 (unsigned long)g, glist->gl_name->s_name);
 	else if (pd_class(&g->g_pd) == pv_class
 		 && ((t_pv *)g)->x_name == x->x_name)
-	    post("%x owning patcher [%s]", (int)g, glist->gl_name->s_name);
+	    post("%lx owning patcher [%s]", (unsigned long)g, glist->gl_name->s_name);
     }
 }
 

@@ -137,7 +137,7 @@ static void capture_dowrite(t_capture *x, t_symbol *fn)
     int count = x->x_count;
     char buf[MAXPDSTRING];
     canvas_makefilename(x->x_canvas, fn->s_name, buf, MAXPDSTRING);
-    if (fp = fopen(buf, "w"))  /* LATER ask if overwriting, CHECKED */
+    if (fp = sys_fopen(buf, "w"))  /* LATER ask if overwriting, CHECKED */
     {
 	int col = 0;
 	if (count < x->x_bufsize)

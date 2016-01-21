@@ -7,7 +7,7 @@
 #include "sickle/sic.h"
 
 /* LATER ask about osx */
-#if defined(NT) || defined(MACOSX)
+#if defined(_WIN32) || defined(__APPLE__)
 #define acoshf(x)  (log(x + sqrt(x * x - 1)))
 #endif
 

@@ -6,6 +6,7 @@
 
 #include <string.h>
 #include "m_pd.h"
+#include "shared.c"
 #include "sickle/sic.h"
 #include "sickle/arsic.h"
 
@@ -50,7 +51,7 @@ static void peek_set(t_peek *x, t_symbol *s)
 static void peek_float(t_peek *x, t_float f)
 {
     t_arsic *sic = (t_arsic *)x;
-    t_float *vp;
+    t_word *vp;
     arsic_validate(sic, 0);  /* LATER rethink (efficiency, and complaining) */
     if (vp = sic->s_vectors[x->x_effchannel])
     {
@@ -61,7 +62,7 @@ static void peek_float(t_peek *x, t_float f)
 	    {
 		double timesince;
 		t_float f = x->x_value;
-		vp[ndx] = (x->x_clipmode ? peek_doclip(f) : f);
+		vp[ndx].w_float = (x->x_clipmode ? peek_doclip(f) : f);
 		x->x_pokemode = 0;
 		timesince = clock_gettimesince(x->x_clocklasttick);
 		if (timesince > 1000) peek_tick(x);
@@ -72,7 +73,7 @@ static void peek_float(t_peek *x, t_float f)
 		}
 	    }
 	    /* CHECKED: output not clipped */
-	    else outlet_float(((t_object *)x)->ob_outlet, vp[ndx]);
+	    else outlet_float(((t_object *)x)->ob_outlet, vp[ndx].w_float);
 	}
     }
 }
@@ -144,4 +145,6 @@ void peek_tilde_setup(void)
 		    gensym("ft2"), A_FLOAT, 0);
     class_addmethod(peek_class, (t_method)peek_clip,
 		    gensym("clip"), A_FLOAT, 0);
+//    logpost(NULL, 4, "this is cyclone/peek~ %s, %dth %s build",
+//	 CYCLONE_VERSION, CYCLONE_BUILD, CYCLONE_RELEASE);
 }

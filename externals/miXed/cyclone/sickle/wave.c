@@ -4,6 +4,7 @@
 
 #include <string.h>
 #include "m_pd.h"
+#include "shared.h"
 #include "sickle/sic.h"
 #include "sickle/arsic.h"
 
@@ -42,7 +43,7 @@ static t_int *wave_perform(t_int *w)
 	t_float *sin = (t_float *)(w[4]);
 	t_float *ein = (t_float *)(w[5]);
 	int vecsize = sic->s_vecsize;
-	t_float **vectable = sic->s_vectors;
+	t_word **vectable = sic->s_vectors;
 	float ksr = sic->s_ksr;
 	int nointerp = x->x_nointerp;
 	int maxindex = (nointerp ? vecsize - 1 : vecsize - 3);
@@ -68,9 +69,9 @@ static t_int *wave_perform(t_int *w)
 		else if (ndx > maxindex) ndx = maxindex;
 		while (ch--)
 		{
-		    t_float *vp = vectable[ch];
+		    t_word *vp = vectable[ch];
 		    t_float *out = (t_float *)(outp[ch]);
-		    out[iblock] = (vp ? vp[ndx] : 0);
+		    out[iblock] = (vp ? vp[ndx].w_float : 0);
 		}
 	    }
 	    else
@@ -83,15 +84,15 @@ static t_int *wave_perform(t_int *w)
 		else frac = xpos - ndx;
 		while (ch--)
 		{
-		    t_float *vp = vectable[ch];
+		    t_word *vp = vectable[ch];
 		    t_float *out = (t_float *)(outp[ch]);
 		    if (vp)
 		    {
 			vp += ndx;
-			a = vp[-1];
-			b = vp[0];
-			c = vp[1];
-			d = vp[2];
+			a = vp[-1].w_float;
+			b = vp[0].w_float;
+			c = vp[1].w_float;
+			d = vp[2].w_float;
 			cminusb = c-b;
 			out[iblock] = b + frac * (
 			    cminusb - 0.1666667f * (1. - frac) * (
@@ -158,4 +159,6 @@ void wave_tilde_setup(void)
 		    gensym("set"), A_SYMBOL, 0);
     class_addmethod(wave_class, (t_method)wave_interp,
 		    gensym("interp"), A_FLOAT, 0);
+//    logpost(NULL, 4, "this is cyclone/wave~ %s, %dth %s build",
+//	 CYCLONE_VERSION, CYCLONE_BUILD, CYCLONE_RELEASE);
 }

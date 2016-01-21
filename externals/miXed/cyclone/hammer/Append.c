@@ -354,3 +354,8 @@ void Append_setup(void)
 
     fitter_setup(append_class, append_fitter);
 }
+
+void append_setup(void)
+{
+    Append_setup();
+}

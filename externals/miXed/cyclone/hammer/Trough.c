@@ -56,8 +56,15 @@ void Trough_setup(void)
     Trough_class = class_new(gensym("Trough"),
 			     (t_newmethod)Trough_new, 0,
 			     sizeof(t_Trough), 0, 0);
+    class_addcreator((t_newmethod)Trough_new, gensym("trough"), 0, 0);
+    class_addcreator((t_newmethod)Trough_new, gensym("cyclone/trough"), 0, 0);
     class_addbang(Trough_class, Trough_bang);
     class_addfloat(Trough_class, Trough_float);
     class_addmethod(Trough_class, (t_method)Trough_ft1,
 		    gensym("ft1"), A_FLOAT, 0);
+}
+
+void trough_setup(void)
+{
+    Trough_setup();
 }

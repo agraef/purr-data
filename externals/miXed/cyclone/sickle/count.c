@@ -5,6 +5,8 @@
 #include "m_pd.h"
 #include "sickle/sic.h"
 
+#define COUNTMAXINT 0x7fffffff 
+
 typedef struct _count
 {
     t_sic  x_sic;
@@ -18,28 +20,30 @@ typedef struct _count
 
 static t_class *count_class;
 
+static void count_bang(t_count *x)
+{
+    x->x_count = x->x_min;
+    x->x_on = 1;
+}
+
 static void count_min(t_count *x, t_floatarg f)
 {
     x->x_min = (int)f;
+    count_bang(x);
 }
 
 static void count_max(t_count *x, t_floatarg f)
 {
     x->x_max = (int)f;
     /* MAYBE use 64 bits */
-    x->x_limit = (x->x_max == 0 ? 0x7fffffff
+    x->x_limit = (x->x_max == 0 ? COUNTMAXINT
 		  : x->x_max - 1);  /* CHECKED */
+    count_bang(x);
 }
 
 static void count_autoreset(t_count *x, t_floatarg f)
 {
     x->x_autoreset = (f != 0);
-}
-
-static void count_bang(t_count *x)
-{
-    x->x_count = x->x_min;
-    x->x_on = 1;
 }
 
 static void count_float(t_count *x, t_floatarg f)
@@ -69,10 +73,24 @@ static void count_list(t_count *x, t_symbol *s, int ac, t_atom *av)
     }
 }
 
-static void count_set(t_count *x, t_symbol s, int ac, t_atom *av)
+/* changes minimum (and optional the maximum) without changing current value */
+static void count_set(t_count *x, t_symbol *s, int ac, t_atom *av)
 {
-    if (av[0].a_type == A_FLOAT) count_min(x, av[0].a_w.w_float);
-    if (av[1].a_type == A_FLOAT) count_max(x, av[1].a_w.w_float);
+    if (ac > 0)
+    {
+	if (av[0].a_type == A_FLOAT) {
+	    x->x_min = (int)av[0].a_w.w_float;
+	}
+    }
+    if (ac > 1)
+    {
+	if (av[1].a_type == A_FLOAT) 
+	{
+	    x->x_max = (int)av[1].a_w.w_float;
+	    x->x_limit = (x->x_max == 0 ? COUNTMAXINT
+		: x->x_max - 1);  /* CHECKED */
+	}
+    } 
 }
 
 static void count_stop(t_count *x)

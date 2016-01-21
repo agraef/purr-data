@@ -29,7 +29,7 @@ static t_int *slide_perform(t_int *w)
     while (nblock--)
     {
     	float f = *in1++;
-	if (f > last)
+	if (f >= last)
 	{
 	    float up = *in2++;
 	    if (up > 1.)  /* CHECKED */

@@ -4,6 +4,7 @@
 
 #include <string.h>
 #include "m_pd.h"
+#include "shared.h"
 #include "common/loud.h"
 #include "common/fitter.h"
 #include "sickle/sic.h"
@@ -116,7 +117,7 @@ static t_int *buffir_perform(t_int *w)
 	t_float *oin = (t_float *)(w[4]);
 	t_float *sin = (t_float *)(w[5]);
 	int vecsize = sic->s_vecsize;
-	t_float *vec = sic->s_vectors[0];  /* playable implies nonzero (mono) */
+	t_word *vec = sic->s_vectors[0];  /* playable implies nonzero (mono) */
 	int histsize = x->x_histsize;
 	while (nblock--)
 	{
@@ -133,7 +134,8 @@ static t_int *buffir_perform(t_int *w)
 		npoints = vecsize - off;
 	    if (npoints > 0)
 	    {
-		t_float *coefp = vec + off;
+//		t_float *coefp = vec + off;
+		t_float *coefp = &vec[0].w_float + off;
 		t_float *hp = hihead;
 		t_float sum = 0.;
 		*lohead++ = *hihead++ = *xin++;
@@ -212,4 +214,6 @@ void buffir_tilde_setup(void)
     class_addmethod(buffir_class, (t_method)buffir_set,
 		    gensym("set"), A_SYMBOL, A_DEFFLOAT, A_DEFFLOAT, 0);
     fitter_setup(buffir_class, 0);
+//    logpost(NULL, 4, "this is cyclone/buffir~ %s, %dth %s build",
+//	CYCLONE_VERSION, CYCLONE_BUILD, CYCLONE_RELEASE);
 }

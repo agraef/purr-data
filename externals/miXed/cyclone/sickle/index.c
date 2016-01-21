@@ -6,6 +6,7 @@
 
 #include <string.h>
 #include "m_pd.h"
+#include "shared.h"
 #include "sickle/sic.h"
 #include "sickle/arsic.h"
 
@@ -36,7 +37,7 @@ static t_int *index_perform(t_int *w)
 	t_index *x = (t_index *)sic;
 	t_float *xin = (t_float *)(w[3]);
 	int index, maxindex = sic->s_vecsize - 1;
-	t_float *vp = sic->s_vectors[x->x_effchannel];
+	t_word *vp = sic->s_vectors[x->x_effchannel];
 	if (vp)  /* handle array swapping on the fly via ft1 */
 	{
 	    while (nblock--)
@@ -46,7 +47,7 @@ static t_int *index_perform(t_int *w)
 		    index = 0;
 		else if (index > maxindex)
 		    index = maxindex;
-		*out++ = vp[index];
+		*out++ = vp[index].w_float;
 	    }
 	}
 	else while (nblock--) *out++ = 0;
@@ -104,4 +105,6 @@ void index_tilde_setup(void)
 		    gensym("set"), A_SYMBOL, 0);
     class_addmethod(index_class, (t_method)index_ft1,
 		    gensym("ft1"), A_FLOAT, 0);
+//    logpost(NULL, 4, "this is cyclone/index~ %s, %dth %s build",
+//	 CYCLONE_VERSION, CYCLONE_BUILD, CYCLONE_RELEASE);
 }

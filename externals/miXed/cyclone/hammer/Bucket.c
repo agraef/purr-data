@@ -6,6 +6,7 @@
    The most important changes are listed in "pd-lib-notes.txt" file.  */
 
 #include "m_pd.h"
+#include "shared.h"
 
 typedef struct _Bucket
 {
@@ -15,6 +16,8 @@ typedef struct _Bucket
     t_outlet  **x_outs;
     short int   x_frozen;  /* 0 for thawed, 1 for frozen */
     short int   x_dir;     /* 0 for L2R, 1 for R2L */
+    short int   x_max5mode;  /* 0 for classic Max 4.6 mode, 
+                              1 for Max 5 mode (with 2nd !0 argument) */
 } t_Bucket;
 
 static t_class *Bucket_class;
@@ -44,6 +47,8 @@ static void Bucket_float(t_Bucket *x, t_float val)
 	    x->x_bucks[i] = x->x_bucks[i + 1];
 	x->x_bucks[x->x_numbucks - 1] = val;
     }
+    if (x->x_max5mode && !x->x_frozen)
+	Bucket_bang(x);
 }
 
 static void Bucket_freeze(t_Bucket *x)
@@ -90,10 +95,10 @@ static void Bucket_free(t_Bucket *x)
 	freebytes(x->x_outs, x->x_numbucks * sizeof(*x->x_outs));
 }
 
-static void *Bucket_new(t_floatarg val)
+static void *Bucket_new(t_floatarg val, t_floatarg max5mode)
 {
     t_Bucket *x;
-    int i, nbucks = (int)val;
+    int nbucks = (int)val;
     t_float *bucks;
     t_outlet **outs;
     if (nbucks < 1)
@@ -111,6 +116,7 @@ static void *Bucket_new(t_floatarg val)
     x->x_outs = outs;
     x->x_frozen = 0;
     x->x_dir = 0;
+    x->x_max5mode = ((int)max5mode != 0);
     while (nbucks--) *outs++ = outlet_new((t_object *)x, &s_float);
     return (x);
 }
@@ -120,7 +126,9 @@ void Bucket_setup(void)
     Bucket_class = class_new(gensym("Bucket"),
 			     (t_newmethod)Bucket_new,
 			     (t_method)Bucket_free,
-			     sizeof(t_Bucket), 0, A_DEFFLOAT, 0);
+			     sizeof(t_Bucket), 0, A_DEFFLOAT, A_DEFFLOAT, 0);
+    class_addcreator((t_newmethod)Bucket_new, gensym("bucket"), A_DEFFLOAT, 0);
+    class_addcreator((t_newmethod)Bucket_new, gensym("cyclone/bucket"), A_DEFFLOAT, 0);
     class_addbang(Bucket_class, Bucket_bang);
     class_addfloat(Bucket_class, Bucket_float);
     class_addmethod(Bucket_class, (t_method)Bucket_freeze, gensym("freeze"), 0);
@@ -134,4 +142,11 @@ void Bucket_setup(void)
 		    gensym("set"), A_FLOAT, 0);
     class_addmethod(Bucket_class, (t_method)Bucket_ltor, gensym("l2r"), 0);
     class_addmethod(Bucket_class, (t_method)Bucket_rtol, gensym("r2l"), 0);
+//    logpost(NULL, 4, "this is cyclone/Bucket %s, %dth %s build",
+//	 CYCLONE_VERSION, CYCLONE_BUILD, CYCLONE_RELEASE);    
+}
+
+void bucket_setup(void)
+{
+    Bucket_setup();
 }

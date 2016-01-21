@@ -155,14 +155,20 @@ loopover:
 	ch = nch;
 	while (ch--)
 	{
-	    t_float *vp = sic->s_vectors[ch];
+	    t_word *vp = sic->s_vectors[ch];
 	    if (vp)
 	    {
 		t_float *ip = (t_float *)(w[3 + ch]) + ndone;
 		vp += phase;
 		i = nxfer;
 		/* LATER consider handling under and overflows */
-		while (i--) *vp++ = *ip++;
+//		while (i--) *vp++ = *ip++;
+		int j = 0;
+		while (i--) 
+		{
+			vp[j].w_float = ip[j];
+			j++;
+		}
 	    }
 	}
 	i = nxfer;
@@ -263,4 +269,6 @@ void record_tilde_setup(void)
 		    gensym("set"), A_SYMBOL, 0);
     class_addmethod(record_class, (t_method)record_reset,
 		    gensym("reset"), 0);
+//    logpost(NULL, 4, "this is cyclone/record~ %s, %dth %s build",
+//	 CYCLONE_VERSION, CYCLONE_BUILD, CYCLONE_RELEASE);
 }

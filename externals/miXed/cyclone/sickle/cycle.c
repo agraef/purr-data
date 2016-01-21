@@ -31,24 +31,37 @@ static void cycle_gettable(t_cycle *x)
     if (x->x_name)
     {
 	int tabsize = 0;
-	t_float *table = vefl_get(x->x_name, &tabsize, 1, (t_pd *)x);
+	t_word *table = vefl_get(x->x_name, &tabsize, 1, (t_pd *)x);
 	/* CHECKED buffer is copied */
 	if (table)
 	{
-	    int indx = x->x_offset + CYCLE_TABSIZE;
-	    t_float *ptr = x->x_usertable + CYCLE_TABSIZE;
-	    if (indx == tabsize)
+	    int tablePtr;
+	    int samplesFromTable = tabsize - x->x_offset;
+	    int samplesToCopy = samplesFromTable < CYCLE_TABSIZE ?
+		samplesFromTable : CYCLE_TABSIZE;
+		
+//	    post("samplesFromTable: %d, samplesToCopy: %d, tabsize: %d", 
+//	        samplesFromTable, samplesToCopy, tabsize);
+	    // copy the internal table from the external one as far as 
+	    // its size permits and fill the rest with zeroes.
+	    for (tablePtr = 0; tablePtr < CYCLE_TABSIZE; tablePtr++)
 	    {
-		*ptr-- = *table;
-		indx--;
+		if (samplesToCopy > 0) 
+		{
+		    x->x_usertable[tablePtr] = 
+			table[tablePtr + x->x_offset].w_float;
+		    samplesToCopy--;
+		}
+		else 
+		{
+		    x->x_usertable[tablePtr] = 0;
+		}
 	    }
-	    if (indx < tabsize)
-	    {
-		table += indx;
-		indx -= x->x_offset;
-		while (indx--) *ptr-- = *table--;
-		x->x_table = x->x_usertable;
-	    }
+	    // the 513th sample
+	    x->x_usertable[tablePtr] = (samplesFromTable > 0) ?
+		table[x->x_offset + CYCLE_TABSIZE].w_float : 0;
+
+	    x->x_table = x->x_usertable;
 	    /* CHECKED else no complaint */
 	}
     }
@@ -84,7 +97,7 @@ static t_int *cycle_perform(t_int *w)
     t_float *addr, f1, f2, frac;
     double dphase = x->x_phase + SHARED_UNITBIT32;
     double conv = x->x_conv;
-    int32 normhipart;
+    int32_t normhipart;
     t_shared_wrappy wrappy;
     
     wrappy.w_d = SHARED_UNITBIT32;

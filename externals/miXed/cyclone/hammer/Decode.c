@@ -103,10 +103,17 @@ void Decode_setup(void)
 			     (t_newmethod)Decode_new,
 			     (t_method)Decode_free,
 			     sizeof(t_Decode), 0, A_DEFFLOAT, 0);
+    class_addcreator((t_newmethod)Decode_new, gensym("decode"), A_DEFFLOAT, 0);
+    class_addcreator((t_newmethod)Decode_new, gensym("cyclone/decode"), A_DEFFLOAT, 0);
     class_addfloat(Decode_class, Decode_float);
     class_addmethod(Decode_class, (t_method)Decode_allon,
 		    gensym("ft1"), A_FLOAT, 0);
     class_addmethod(Decode_class, (t_method)Decode_alloff,
 		    gensym("ft2"), A_FLOAT, 0); 
     fitter_setup(Decode_class, 0);
+}
+
+void decode_setup(void)
+{
+    Decode_setup();
 }

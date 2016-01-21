@@ -5,6 +5,7 @@
 #include "m_pd.h"
 #include "common/loud.h"
 #include "shared.h"
+#include <stdlib.h>
 
 typedef struct _decide
 {
@@ -77,6 +78,6 @@ void decide_setup(void)
 		    gensym("ft1"), A_FLOAT, 0);
     /* CHECKED list is auto-unfolded */
     /* CHECKED doesn't understand "seed" */
-    //logpost(NULL, 4, "this is cyclone/decide %s, %dth %s build",
-	//CYCLONE_VERSION, CYCLONE_BUILD, CYCLONE_RELEASE);
+//    logpost(NULL, 4, "this is cyclone/decide %s, %dth %s build",
+//	CYCLONE_VERSION, CYCLONE_BUILD, CYCLONE_RELEASE);
 }
