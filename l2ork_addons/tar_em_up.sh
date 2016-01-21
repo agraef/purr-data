@@ -127,7 +127,10 @@ fi
 
 if [ $full -gt 0 -o $deb -gt 0 ]
 then
-	echo "Pd full installer... IMPORTANT! When run for the first time this step requires internet connection to pull sources from other repositories..."
+	echo "Pd-L2Ork full installer... IMPORTANT! To ensure you have the most up-to-date submodules, this process requires internet connection to pull sources from various repositories..."
+
+	# init all submodules (only necessary the first time)
+	git submodule init
 
 	if [ -d .git ]; then
 		# check if Gem submodule is empty, and if so do first init
@@ -182,6 +185,7 @@ then
 	#	then
 		cd l2ork_addons/cwiid/
 		# install cwiid
+		git submodule update
 		aclocal
 		autoconf
 		./configure --with-python=python2
@@ -242,13 +246,13 @@ then
 	if [ $full -gt 1 -o $deb -eq 2 ]
 	then
 		make distclean
-cp ../../pd/src/g_all_guis.h ../../externals/build/include
-cp ../../pd/src/g_canvas.h ../../externals/build/include
-cp ../../pd/src/m_imp.h ../../externals/build/include
-cp ../../pd/src/m_pd.h ../../externals/build/include
-cp ../../pd/src/s_stuff.h ../../externals/build/include
-cp ../../pd/src/t_tk.h ../../externals/build/include
-cp ../../pd/src/g_all_guis.h ../../externals/build/include								
+		cp ../../pd/src/g_all_guis.h ../../externals/build/include
+		cp ../../pd/src/g_canvas.h ../../externals/build/include
+		cp ../../pd/src/m_imp.h ../../externals/build/include
+		cp ../../pd/src/m_pd.h ../../externals/build/include
+		cp ../../pd/src/s_stuff.h ../../externals/build/include
+		cp ../../pd/src/t_tk.h ../../externals/build/include
+		cp ../../pd/src/g_all_guis.h ../../externals/build/include								
 		rm -rf build/
 	fi
 	if [ $rpi -eq 0 ]
@@ -264,6 +268,8 @@ cp ../../pd/src/g_all_guis.h ../../externals/build/include
 	fi
 	make install prefix=$inst_dir
 	echo "copying pd-l2ork-specific externals..."
+	# create images folder
+	mkdir -p ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/images
 	# patch_name
 	cd ../../l2ork_addons/patch_name
 	make clean
@@ -315,6 +321,49 @@ cp ../../pd/src/g_all_guis.h ../../externals/build/include
 	cp -f disis_spi/disis_spi-help.pd ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
 	cd ../
 	#fi
+	# install rtcmix~ external
+	cd rtcmix-in-pd/
+	git submodule update
+	cd RTcmix*
+	./configure
+	#make clean
+	make
+	cd ../
+	make clean
+	make
+	cp -f rtcmix~.pd_linux ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
+	cp -f rtcmix~-help.pd ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
+	cp -rf lib ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
+	cp -rf scores ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
+	cd ../
+	# install autotune~ plugin
+	cd autotune/
+	make
+	cp -f autotune~.pd_linux ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
+	cp -f autotune~-help.pd ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
+	cp -f autotune_scale_warp.png ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/images
+	cd ../
+	# install lyonpotpourri
+	cd lyonpotpourri/
+	git submodule update
+	make
+	mkdir -p ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/lyon
+	# do not include cartopol and poltocar since cyclone library already has those
+	cp `ls *.pd_linux | egrep -v '^cartopol*' | egrep -v '^poltocar*'` ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/lyon/
+	cp `ls *.pd | egrep -v '^cartopol*' | egrep -v '^poltocar*'` ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/lyon/
+	cp -rf sound ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/lyon/
+	cp -rf lib*.so ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/lyon/
+	cd ../
+	# install fftease
+	cd fftease*
+	make
+	cp *pd_linux ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/lyon/
+	cp -rf lib*.so ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/lyon/
+	cd fftease32-helpfiles/
+	cp *pd ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/lyon/
+	cp -rf sound/* ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/lyon/sound/
+	cd ../../
+	echo "done with l2ork addons."
 	cd ../
 	if [ $pkg -gt 0 ]; then
 	# finish install
