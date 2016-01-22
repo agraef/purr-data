@@ -2851,8 +2851,14 @@ static void canvas_donecanvasdialog(t_glist *x,
     {
         glist_noselect(x);
         gobj_vis(&x->gl_gobj, x->gl_owner, 0);
-        gobj_vis(&x->gl_gobj, x->gl_owner, 1);
-        canvas_redraw(x->gl_owner);
+        if (gobj_shouldvis(&x->gl_obj, x->gl_owner))
+        {
+            gobj_vis(&x->gl_gobj, x->gl_owner, 1);
+            //fprintf(stderr,"yes\n");
+        }
+        else
+            canvas_redraw(glist_getcanvas(x->gl_owner));
+        //canvas_redraw(x->gl_owner);
     }
     // ico@bukvic.net 100518 update scrollbars when
     // GOP potentially exceeds window size
