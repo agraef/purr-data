@@ -589,8 +589,10 @@ void sys_lock(void)
     //fprintf(stderr,"sys_lock\n");
     if (!sys_mutex_lock)
     {
-        pthread_mutex_lock(&sys_mutex);
-        sys_mutex_lock = 1;
+        int res = pthread_mutex_lock(&sys_mutex);
+        //fprintf(stderr,"lock %d\n", res);
+        if (!res)
+            sys_mutex_lock = 1;
     }
 }
 
@@ -599,14 +601,20 @@ void sys_unlock(void)
     //fprintf(stderr,"sys_unlock\n");
     if (sys_mutex_lock)
     {
-        pthread_mutex_unlock(&sys_mutex);
-        sys_mutex_lock = 0;
+        int res = pthread_mutex_unlock(&sys_mutex);
+        //fprintf(stderr,"unlock %d\n", res);
+        if (!res)
+            sys_mutex_lock = 0;
     }
 }
 
 int sys_trylock(void)
 {
-    return pthread_mutex_trylock(&sys_mutex);
+    int res = pthread_mutex_trylock(&sys_mutex);
+    //fprintf(stderr,"trylock %d\n", res);
+    if (!res)
+        sys_mutex_lock = 1;
+    return res;
 }
 
 #else
