@@ -1,4 +1,4 @@
-#N canvas 48 24 1108 668 10;
+#N canvas 55 14 1108 668 10;
 #X obj -30 -30 preset_hub k12 1 %hidden% %node% 2 1 3 %preset% 0 1
 %preset% 1 1 %preset% 2 1 %preset% 3 1 %node% 2 1 11 %preset% 0 30
 %preset% 1 30 %preset% 2 30 %preset% 3 30 %node% 2 2 8 %node% 2 3 7
@@ -168,7 +168,7 @@
 1 %preset% 2 1 %preset% 3 1 %node% 2 68 7 %preset% 0 141.644 %preset%
 1 141.644 %preset% 2 141.644 %preset% 3 141.644 %node% 2 68 15 %preset%
 0 493.151 %preset% 1 493.151 %preset% 2 493.151 %preset% 3 493.151
-;
+%node% 2 59 15;
 #X obj 29 169 K12/logic_metronome 0;
 #X obj 29 32 K12/preset 0;
 #X obj 709 32 K12/math_number 0;
@@ -263,9 +263,9 @@
 #X obj 1180 1237 K12/logic_counter 0;
 #X obj 1284 1263 K12/math_number 0;
 #X obj 1180 1345 K12/math_divide 0;
-#X text 261 270 use this to toggle different parts (0=off \, 1=on)OR
-recall presets 1-4 above;
 #X text 261 244 by Ivica Ico Bukvic <ico@vt.edu>;
+#X text 261 270 use this to toggle different parts (0=off \, 1=on)OR
+recall presets 0-3 above;
 #X connect 1 0 4 0;
 #X connect 3 0 1 0;
 #X connect 3 0 6 0;
