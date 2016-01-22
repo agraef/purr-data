@@ -1,4 +1,4 @@
-#N canvas 430 36 555 619 10;
+#N canvas 420 26 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header message 3 12 0 18
@@ -43,16 +43,12 @@ bang_op;
 #X msg 514 11;
 #X msg 101 141 walk the dog;
 #X obj 101 164 print;
-#N canvas 85 15 428 600 dollarsign_variables 0;
+#N canvas 75 14 431 608 dollarsign_variables 0;
 #X obj 23 156 print;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
-#X msg 12 3;
+#X msg 12 2;
 #X text 40 2 Dollarsign Variables in Message Boxes;
-#X text 20 38 You can use "dollarsign variables" to make variable messages.
-Just use a dollarsign followed by a number-- "\$1" \, "\$2" \, etc.
-The numbers (starting from one) specify which element of the incoming
-message should replace the variable in the outgoing message.;
 #X msg 23 131 pitch \$3;
 #X text 115 106 a list with three numbers;
 #X msg 23 106 list 24 48 72;
@@ -86,16 +82,20 @@ the following still works exactly as the patch above:;
 #X obj 25 576 print;
 #X msg 25 533 22 8 1791;
 #X msg 25 555 \$1-\$2-\$3.wav;
-#X connect 5 0 0 0;
-#X connect 7 0 5 0;
-#X connect 10 0 12 0;
-#X connect 12 0 13 0;
-#X connect 16 0 19 0;
-#X connect 19 0 20 0;
-#X connect 22 0 20 0;
-#X connect 23 0 22 0;
-#X connect 29 0 30 0;
-#X connect 30 0 28 0;
+#X text 20 38 You can use "dollarsign variables" to make variable messages.
+Just use a dollarsign followed by a number-- "\$1" \, "\$2" \, etc.
+The numbers (starting from one) specify which element of the incoming
+message should replace the variable in the outgoing message.;
+#X connect 4 0 0 0;
+#X connect 6 0 4 0;
+#X connect 9 0 11 0;
+#X connect 11 0 12 0;
+#X connect 15 0 18 0;
+#X connect 18 0 19 0;
+#X connect 21 0 19 0;
+#X connect 22 0 21 0;
+#X connect 28 0 29 0;
+#X connect 29 0 27 0;
 #X restore 171 457 pd dollarsign_variables;
 #X text 11 23 clickable message box;
 #X text 98 197 bang;
@@ -260,4 +260,30 @@ are all sent to their destinations.;
 #X text 141 164 <- object box (notice the different border);
 #X text 81 402 n) symbol atom;
 #X text 100 417 float;
+#N canvas 423 174 432 262 \$0_variable 0;
+#X obj 24 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12
+0 14 -204280 -1 0;
+#X msg 35 2;
+#X text 63 2 \$0 Variable in Message Boxes;
+#X msg 40 92 \$0;
+#X text 39 38 Special case available in pd-l2ork is the \$0 variable
+which resolves into canvas instance number \, just like placing such
+a variable inside a regular object.;
+#X floatatom 40 114 5 0 0 0 - - -, f 5;
+#X text 68 92 <--click on this message;
+#X obj 242 92 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 242 112 \$0;
+#X floatatom 242 134 5 0 0 0 - - -, f 5;
+#X text 261 92 <--compare to this;
+#X floatatom 40 178 5 0 0 0 - - -, f 5;
+#X msg 40 199 \$1 \$0;
+#X obj 40 221 print;
+#X text 80 199 <--works in any order;
+#X connect 3 0 5 0;
+#X connect 7 0 8 0;
+#X connect 8 0 9 0;
+#X connect 11 0 12 0;
+#X connect 12 0 13 0;
+#X restore 318 457 pd \$0_variable;
 #X connect 11 0 12 0;
