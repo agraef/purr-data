@@ -2418,6 +2418,37 @@ void canvas_vis(t_canvas *x, t_floatarg f)
         }
         else
         {
+            // From glist_menu_open found in g_canvas.c to allow for
+            // vis scripting of GOP-enabled abstractions
+            if (glist_isvisible(x))
+            {
+                if (!glist_istoplevel(x))
+                {
+                    t_glist *gl2 = x->gl_owner;
+                    if (gl2) //changed from !gl2
+                        //bug("glist_menu_open"); /* shouldn't happen but not dangerous */
+                    //else
+                    {
+                        /* erase ourself in parent window */
+                        gobj_vis(&x->gl_gobj, gl2, 0);
+                        /* get rid of our editor (and subeditors) */
+                        if (x->gl_editor)
+                            canvas_destroy_editor(x);
+                        x->gl_havewindow = 1;
+                        /* redraw ourself in parent window (blanked out this time) */
+                        gobj_vis(&x->gl_gobj, gl2, 1);
+                    }
+                }
+                else
+                {
+                    sys_vgui("focus .x%lx\n", (t_int)x);
+                }
+            }
+            else
+            {
+                if (x->gl_editor)
+                canvas_destroy_editor(x);
+            }
             //fprintf(stderr,"new\n");
             canvas_create_editor(x);
             canvas_args_to_string(argsbuf, x);

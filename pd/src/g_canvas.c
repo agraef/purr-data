@@ -833,28 +833,30 @@ void canvas_redraw(t_canvas *x)
     own window. */
 void glist_menu_open(t_glist *x)
 {
-    if (glist_isvisible(x))
+    /* 20151230: moved to canvas_vis, so that scripted vis calls (e.g. via
+       [send pd-abstraction-name.pd] do proper redraws of abstractions */
+    /*if (glist_isvisible(x))
     {
         if (!glist_istoplevel(x))
         {
             t_glist *gl2 = x->gl_owner;
             if (!gl2) 
-                bug("glist_menu_open"); /* shouldn't happen but not dangerous */
+                bug("glist_menu_open"); // shouldn't happen but not dangerous
             else
             {
-                /* erase ourself in parent window */
+                // erase ourself in parent window
                 gobj_vis(&x->gl_gobj, gl2, 0);
-                /* get rid of our editor (and subeditors) */
+                // get rid of our editor (and subeditors)
                 if (x->gl_editor)
                     canvas_destroy_editor(x);
                 x->gl_havewindow = 1;
-                /* redraw ourself in parent window (blanked out this time) */
+                // redraw ourself in parent window (blanked out this time)
                 gobj_vis(&x->gl_gobj, gl2, 1);
             }
         }
         else
         {
-            /* Not sure if this needs to get ported... need to test */
+            // Not sure if this needs to get ported... need to test
             //sys_vgui("focus .x%lx\n", (t_int)x);
         }
     }
@@ -863,6 +865,7 @@ void glist_menu_open(t_glist *x)
         if (x->gl_editor)
         canvas_destroy_editor(x);
     }
+    */
     canvas_vis(x, 1);
 }
 
@@ -1424,7 +1427,7 @@ static int canvas_should_bind(t_canvas *x)
 {
         /* FIXME should have a "backwards compatible" mode */
         /* not named "Pd" && (is top level || is subpatch) */
-    return strcmp(x->gl_name->s_name, "Pd") && (!x->gl_owner || !x->gl_env);
+    return strcmp(x->gl_name->s_name, "Pd"); // && (!x->gl_owner || !x->gl_env);
 }
 
 static void canvas_bind(t_canvas *x)
