@@ -1,5 +1,4 @@
 C:
-*consider enabling iemgui labels/sends/receives to deal with embedded args (not just at the beginning) using $ rather than only # (is this even possible?)
 *add toggle mode to image (using grab/motion, like gatom)
 *array in s-env draws on top of cnv, which it shouldn't (requires redrawing of the entire GOP, do we really want to do this?--this should solve itself once we decide to update rather than redraw messages)
 *messages should be aware of $0?
