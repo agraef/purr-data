@@ -433,8 +433,12 @@ void iemgui_shouldvis(t_iemgui *x, int mode)
                    to ensure that ordering is honored */
                 t_canvas *canvas = glist_getcanvas(x->x_glist);
                 t_gobj *y = (t_gobj *)x->x_glist;
-                gobj_vis(y, canvas, 0);
-                gobj_vis(y, canvas, 1);
+                // this crashes when the label goes invisible and then
+                // needs to be made visible again, so for the time being
+                // we use the brute force redraw below for both the
+                // vis/unvis-ing of the object and its reordering
+                //gobj_vis(y, canvas, 0);
+                //gobj_vis(y, canvas, 1);
                 // reorder it visually
                 glist_redraw(canvas);
 
