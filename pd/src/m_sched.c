@@ -581,15 +581,27 @@ int m_batchmain(void)
 
 #ifdef THREAD_LOCKING
 static pthread_mutex_t sys_mutex = PTHREAD_MUTEX_INITIALIZER;
+static int sys_mutex_lock = 0;
+//#include <stdio.h>
 
 void sys_lock(void)
 {
-    pthread_mutex_lock(&sys_mutex);
+    //fprintf(stderr,"sys_lock\n");
+    if (!sys_mutex_lock)
+    {
+        pthread_mutex_lock(&sys_mutex);
+        sys_mutex_lock = 1;
+    }
 }
 
 void sys_unlock(void)
 {
-    pthread_mutex_unlock(&sys_mutex);
+    //fprintf(stderr,"sys_unlock\n");
+    if (sys_mutex_lock)
+    {
+        pthread_mutex_unlock(&sys_mutex);
+        sys_mutex_lock = 0;
+    }
 }
 
 int sys_trylock(void)
