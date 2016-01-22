@@ -362,8 +362,9 @@ void sched_set_using_audio(int flag)
 }
 
     /* take the scheduler forward one DSP tick, also handling clock timeouts */
-void sched_tick(double next_sys_time)
+void sched_tick(void )
 {
+    double next_sys_time = sys_time + sys_time_per_dsp_tick;
     int countdown = 5000;
     while (clock_setlist && clock_setlist->c_settime < next_sys_time)
     {
@@ -441,7 +442,7 @@ static void m_pollingscheduler( void)
             timeforward = sys_send_dacs();
 #ifdef THREAD_LOCKING
             /* T.Grill - done */
-            sys_unlock();
+            sys_lock();
 #endif
                 /* if dacs remain "idle" for 1 sec, they're hung up. */
             if (timeforward != 0)
@@ -481,7 +482,7 @@ static void m_pollingscheduler( void)
         sys_setmiditimediff(0, 1e-6 * sys_schedadvance);
         sys_addhist(1);
         if (timeforward != SENDDACS_NO)
-            sched_tick(sys_time + sys_time_per_dsp_tick);
+            sched_tick();
         if (timeforward == SENDDACS_YES)
             didsomething = 1;
 
@@ -524,9 +525,10 @@ static void m_pollingscheduler( void)
 
 void sched_audio_callbackfn(void)
 {
+    sys_lock();
     sys_setmiditimediff(0, 1e-6 * sys_schedadvance);
     sys_addhist(1);
-    sched_tick(sys_time + sys_time_per_dsp_tick);
+    sched_tick();
     sys_addhist(2);
     sys_pollmidiqueue();
     sys_addhist(3);
@@ -534,6 +536,7 @@ void sched_audio_callbackfn(void)
     sys_addhist(5);
     sched_pollformeters();
     sys_addhist(0);
+    sys_unlock();
 }
 
 static void m_callbackscheduler(void)
@@ -573,7 +576,7 @@ int m_batchmain(void)
     sys_time_per_dsp_tick = (TIMEUNITPERSEC) *
         ((double)sys_schedblocksize) / sys_dacsr;
     while (sys_quit != SYS_QUIT_QUIT)
-        sched_tick(sys_time + sys_time_per_dsp_tick);
+        sched_tick();
     return (0);
 }
 
