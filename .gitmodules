@@ -10,3 +10,6 @@
 [submodule "l2ork_addons/cwiid"]
 	path = l2ork_addons/cwiid
 	url = https://github.com/pd-l2ork/cwiid
+[submodule "l2ork_addons/lyonpotpourri"]
+	path = l2ork_addons/lyonpotpourri
+	url = https://github.com/pd-projects/lyonpotpourri
