@@ -10,3 +10,6 @@
 [submodule "l2ork_addons/fftease3.0-32bit"]
         path = l2ork_addons/fftease3.0-32bit
         url = https://github.com/ericlyon/fftease3.0-32bit
+[submodule "l2ork_addons/cwiid"]
+	path = l2ork_addons/cwiid
+	url = https://github.com/pd-l2ork/cwiid
