@@ -10,3 +10,6 @@
 [submodule "l2ork_addons/lyonpotpourri"]
 	path = l2ork_addons/lyonpotpourri
 	url = https://github.com/pd-projects/lyonpotpourri
+[submodule "l2ork_addons/fftease3.0-32bit"]
+	path = l2ork_addons/fftease3.0-32bit
+	url = https://github.com/ericlyon/fftease3.0-32bit
