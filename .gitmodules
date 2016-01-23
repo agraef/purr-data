@@ -4,9 +4,6 @@
 [submodule "l2ork_addons/rtcmix-in-pd"]
 	path = l2ork_addons/rtcmix-in-pd
 	url = https://github.com/jwmatthys/rtcmix-in-pd.git
-[submodule "l2ork_addons/fftease3.0-32bit"]
-        path = l2ork_addons/fftease3.0-32bit
-        url = https://github.com/ericlyon/fftease3.0-32bit
 [submodule "l2ork_addons/cwiid"]
 	path = l2ork_addons/cwiid
 	url = https://github.com/pd-l2ork/cwiid
