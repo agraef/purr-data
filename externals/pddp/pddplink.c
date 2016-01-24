@@ -164,7 +164,7 @@ static void pddplink_vis(t_gobj *z, t_glist *glist, int vis)
             gui_vmess("gui_text_create_gobj", "xssiii",
                 glist_getcanvas(glist),
                 rtext_gettag(y),
-                "link",
+                "pd_link",
                 text_xpix(&x->x_ob, glist_getcanvas(glist)),
                 text_ypix(&x->x_ob, glist_getcanvas(glist)),
                 glist_istoplevel(glist));

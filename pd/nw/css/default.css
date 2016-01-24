@@ -125,6 +125,19 @@ mark.console_find_highlighted {
     fill: black;
 }
 
+/* hyperlinks: for now, just pddplink and helplink */
+.pd_link text {
+    fill: blue;
+}
+
+.pd_link text:hover {
+    fill: red;
+}
+
+.pd_link.selected text {
+    fill: #e87216 !important;
+}
+
 /* text inside a box that is being edited */
 #new_object_textentry {
     /* max-width: 10ch; */
