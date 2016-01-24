@@ -99,17 +99,9 @@ static void helplink_select(t_gobj *z, t_glist *glist, int state)
     if (glist_isvisible(glist) && glist->gl_havewindow)
     {
         if (state) {
-            //sys_vgui(".x%lx.c itemconfigure %s -fill $::pd_colors(selection)\n",
-            //    glist, rtext_gettag(y));
-            //sys_vgui(".x%lx.c addtag selected withtag %s\n",
-            //    glist, rtext_gettag(y));
             gui_vmess("gui_gobj_select", "xs",
                 glist, rtext_gettag(y));
         } else {
-            //sys_vgui(".x%lx.c itemconfigure %s -text {%s} -fill #0000dd -activefill #e70000\n",
-            //    glist, rtext_gettag(y), x->x_vistext);
-            //sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)glist_getcanvas(glist));
-            //sys_vgui(".x%lx.c dtag %s selected\n", glist, rtext_gettag(y));
             gui_vmess("gui_gobj_deselect", "xs",
                 glist, rtext_gettag(y));
         }
@@ -152,8 +144,6 @@ static void helplink_vis(t_gobj *z, t_glist *glist, int vis)
                 glist_getcanvas(glist),
                 rtext_gettag(y),
                 x->x_vistext);
-            //sys_vgui(".x%lx.c itemconfigure %s -text {%s} -fill #0000dd -activefill #e70000\n",
-            //    glist_getcanvas(glist), rtext_gettag(y), x->x_vistext);
         }
     }
     else

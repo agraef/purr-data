@@ -99,19 +99,11 @@ static void pddplink_select(t_gobj *z, t_glist *glist, int state)
     if (glist_isvisible(glist) && glist->gl_havewindow)
     {
         if (state) {
-            //sys_vgui(".x%lx.c itemconfigure %s -fill $::pd_colors(selection)\n",
-            //    glist, rtext_gettag(y));
-            //sys_vgui(".x%lx.c addtag selected withtag %s\n",
-            //    glist, rtext_gettag(y));
             gui_vmess("gui_gobj_select", "xs",
                 glist, rtext_gettag(y));
         }
         else
         {
-            //sys_vgui(".x%lx.c itemconfigure %s -text {%s} -fill #0000dd -activefill #e70000\n",
-            //    glist, rtext_gettag(y), x->x_vistext);
-            //sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)glist_getcanvas(glist));
-            //sys_vgui(".x%lx.c dtag %s selected\n", glist, rtext_gettag(y));
             gui_vmess("gui_gobj_deselect", "xs",
                 glist, rtext_gettag(y));
         }
@@ -160,7 +152,6 @@ static void pddplink_vis(t_gobj *z, t_glist *glist, int vis)
         if ((glist->gl_havewindow || x->x_isgopvisible)
             && (y = glist_findrtext(glist, (t_text *)x)))
         {
-            //sys_vgui(".x%lx.c itemconfigure %s -text {%s} -fill #0000dd -activefill #e70000\n", glist_getcanvas(glist), rtext_gettag(y), x->x_vistext);
             gui_vmess("gui_text_create_gobj", "xssiii",
                 glist_getcanvas(glist),
                 rtext_gettag(y),
@@ -168,6 +159,15 @@ static void pddplink_vis(t_gobj *z, t_glist *glist, int vis)
                 text_xpix(&x->x_ob, glist_getcanvas(glist)),
                 text_ypix(&x->x_ob, glist_getcanvas(glist)),
                 glist_istoplevel(glist));
+            /* This is a bit screwy... first we do rtext_draw
+               which sends the wrong box text (at least when we're
+               not in "-box" mode). Then we call the GUI with the
+               correct text to overwrite that.
+
+               Probably there's a way to simplify this, but I'm so
+               afraid of side-effects in Pd that I'm just keeping this
+               code essentially as it was before the port to the new
+               GUI. */
             rtext_draw(y);
             gui_vmess("gui_text_set", "xss",
                 glist_getcanvas(glist),
@@ -231,8 +231,6 @@ static void pddplink_click(t_pddplink *x, t_floatarg xpos, t_floatarg ypos,
     x->x_ishit = 1;
     char final_name[FILENAME_MAX];
     sys_expandpathelems(x->x_ulink->s_name, final_name);
-    //sys_vgui("pddplink_open {%s} {%s}\n",               \
-    //         final_name, x->x_dirsym->s_name);
     gui_vmess("gui_pddplink_open", "ss",
         final_name,
         x->x_dirsym->s_name);
@@ -437,5 +435,6 @@ void pddplink_setup(void)
 		    A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, 0);
 
     dirsym = pddplink_class->c_externdir;  /* FIXME */
-    sys_vgui("source {%s/pddplink.tcl}\n", dirsym->s_name);
+    /* The pddplink.tcl file is no longer needed */
+    //sys_vgui("source {%s/pddplink.tcl}\n", dirsym->s_name);
 }
