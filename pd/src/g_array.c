@@ -806,8 +806,10 @@ void array_getcoordinate(t_glist *glist,
     if (yonset >= 0)
         yval = *(t_float *)(elem + yonset);
     else yval = 0;
-//    ypix = glist_ytopixels(glist, basey +
-//        fielddesc_cvttocoord(yfielddesc, yval));
+    /* This is from the old API. Now we group drawing instructions in
+       a hierarchy so we can do glist_ytopixels math on the GUI side */
+    //ypix = glist_ytopixels(glist, basey +
+    //    fielddesc_cvttocoord(yfielddesc, yval));
     ypix = basey + fielddesc_cvttocoord(yfielddesc, yval);
     if (glist_topixels)
         ypix = glist_ytopixels(glist, ypix);
@@ -815,9 +817,10 @@ void array_getcoordinate(t_glist *glist,
     {
             /* found "w" field which controls linewidth. */
         t_float wval = *(t_float *)(elem + wonset);
-//        wpix = glist_ytopixels(glist, basey + 
-//            fielddesc_cvttocoord(yfielddesc, yval) +
-//                fielddesc_cvttocoord(wfielddesc, wval)) - ypix;
+        /* ytopixels is now done GUI-side */
+        //wpix = glist_ytopixels(glist, basey +
+        //    fielddesc_cvttocoord(yfielddesc, yval) +
+        //        fielddesc_cvttocoord(wfielddesc, wval)) - ypix;
         wpix = basey + fielddesc_cvttocoord(yfielddesc, yval) +
             fielddesc_cvttocoord(wfielddesc, wval);
         if (glist_topixels)
@@ -1482,7 +1485,9 @@ static void garray_doredraw(t_gobj *client, t_glist *glist)
         //fprintf(stderr,"check if we need to reselect %lx %lx %lx\n",
         //    glist_getcanvas(glist), (t_gobj *)glist, glist->gl_owner);
         int selected = 0;
-//        t_glist *sel = glist->gl_owner;
+        /* Unfortunately I forget to comment this. I can't remember why I
+           use glist instead of glist->gl_owner (quick bugfix maybe?) */
+        //t_glist *sel = glist->gl_owner;
         t_glist *sel = glist;
         while (sel && sel != glist_getcanvas(glist))
         {
