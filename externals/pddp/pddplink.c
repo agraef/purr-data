@@ -98,18 +98,23 @@ static void pddplink_select(t_gobj *z, t_glist *glist, int state)
     rtext_select(y, state);
     if (glist_isvisible(glist) && glist->gl_havewindow)
     {
-		if (state) {
-			sys_vgui(".x%lx.c itemconfigure %s -fill $::pd_colors(selection)\n",
-				glist, rtext_gettag(y));
-			sys_vgui(".x%lx.c addtag selected withtag %s\n",
-				glist, rtext_gettag(y));
-		}
-		else {
-			sys_vgui(".x%lx.c itemconfigure %s -text {%s} -fill #0000dd -activefill #e70000\n",
-				glist, rtext_gettag(y), x->x_vistext);
-			sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)glist_getcanvas(glist));
-			sys_vgui(".x%lx.c dtag %s selected\n", glist, rtext_gettag(y));
-		}
+        if (state) {
+            sys_vgui(".x%lx.c itemconfigure %s -fill $::pd_colors(selection)\n",
+                glist, rtext_gettag(y));
+            sys_vgui(".x%lx.c addtag selected withtag %s\n",
+                glist, rtext_gettag(y));
+            gui_vmess("gui_gobj_select", "xs",
+                glist, rtext_gettag(y));
+        }
+        else
+        {
+            sys_vgui(".x%lx.c itemconfigure %s -text {%s} -fill #0000dd -activefill #e70000\n",
+                glist, rtext_gettag(y), x->x_vistext);
+            sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)glist_getcanvas(glist));
+            sys_vgui(".x%lx.c dtag %s selected\n", glist, rtext_gettag(y));
+            gui_vmess("gui_gobj_deselect", "xs",
+                glist, rtext_gettag(y));
+        }
     }
 }
 
@@ -119,6 +124,31 @@ static void pddplink_activate(t_gobj *z, t_glist *glist, int state)
     t_rtext *y = glist_findrtext(glist, (t_text *)x);
     rtext_activate(y, state);
     x->x_rtextactive = state;
+    if (!state) {
+        /* Big workaround for pddplink without the -box option...
+
+           After this call, Pd calls text_setto to see if it needs to
+           instantiate the object. For nearly all t_text objects, the
+           object doesn't get rebuilt if the text inside the box remains
+           the same. Instead, it just calls rtext_senditup which (eventually)
+           sends a message to the GUI to simply supply new text for the
+           current object. (It shouldn't do this if the text hasn't actually
+           changed, but that's another story...).
+
+           Anyway, since pddplink has this weird widget behavior, the text
+           displayed is different than the text we typed in the box-- hence
+           the x->x_vistext member here. So if we happened to edit the box
+           without changing the text, rtext_senditup would update the link 
+           to be "pddplink foo" instead of just "foo".
+
+           To prevent this, we just zero out the object's te_binbuf to ensure
+           that text_setto re-instantiates. That ensures the correct text is
+           printed for the link */
+        t_binbuf *b = binbuf_new();
+        t_binbuf *old = x->x_ob.te_binbuf;
+        x->x_ob.te_binbuf = b;
+        binbuf_free(old);
+    }
 }
 
 static void pddplink_vis(t_gobj *z, t_glist *glist, int vis)
@@ -130,15 +160,31 @@ static void pddplink_vis(t_gobj *z, t_glist *glist, int vis)
         if ((glist->gl_havewindow || x->x_isgopvisible)
             && (y = glist_findrtext(glist, (t_text *)x)))
         {
-            rtext_draw(y);
 	    	sys_vgui(".x%lx.c itemconfigure %s -text {%s} -fill #0000dd -activefill #e70000\n", glist_getcanvas(glist), rtext_gettag(y), x->x_vistext);
+            gui_vmess("gui_text_create_gobj", "xssiii",
+                glist_getcanvas(glist),
+                rtext_gettag(y),
+                "link",
+                text_xpix(&x->x_ob, glist_getcanvas(glist)),
+                text_ypix(&x->x_ob, glist_getcanvas(glist)),
+                glist_istoplevel(glist));
+            rtext_draw(y);
+            gui_vmess("gui_text_set", "xss",
+                glist_getcanvas(glist),
+                rtext_gettag(y),
+                x->x_vistext);
         }
     }
     else
     {
         if ((glist->gl_havewindow || x->x_isgopvisible)
 	    && (y = glist_findrtext(glist, (t_text *)x)))
-            rtext_erase(y);
+        {
+            //rtext_erase(y);
+            gui_vmess("gui_gobj_erase", "xs",
+                glist_getcanvas(glist),
+                rtext_gettag(y));
+        }
     }
 }
 
@@ -294,12 +340,14 @@ static char *pddplink_optext(int *sizep, int ac, t_atom *av)
 
 static void pddplink_free(t_pddplink *x)
 {
+post("freeing the thing...");
     if (x->x_vistext)
 	freebytes(x->x_vistext, x->x_vissize);
 }
 
 static void *pddplink_new(t_symbol *s, int ac, t_atom *av)
 {
+post("creating a new link");
     t_pddplink xgen, *x;
     int skip;
     xgen.x_isboxed = 0;
