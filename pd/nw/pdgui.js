@@ -216,7 +216,7 @@ function enquote (x) {
 }
 
 // from stackoverflow.com/questions/21698906/how-to-check-if-a-path-is-absolute-or-relative
-// this doesn't seem to be needed atm
+// only seems to be used by pddplink_open
 function path_is_absolute(myPath) {
     var ret = (path.resolve(myPath) ===
         path.normalize(myPath).replace(/(.+)([\/]\\])$/, "$1"));
@@ -3744,4 +3744,23 @@ exports.resize_window = function(did) {
         h = dialogwin[did].window.document.body.scrollHeight;
     dialogwin[did].width = w;
     dialogwin[did].height = h;
+}
+
+// External GUI classes
+
+function gui_pddplink_open(filename, dir) {
+    var full_path, revised_dir, revised_filename;
+    if (filename.indexOf("://") > -1) {
+        external_doc_open(filename);
+    } else if (path_is_absolute(filename)) {
+        doc_open(path.dirname(filename), path.basename(filename));
+    } else if (fs.existsSync(path.join(dir, filename))) {
+        full_path = path.normalize(path.join(dir, filename));
+        revised_dir = path.dirname(full_path);
+        revised_filename = path.basename(full_path);
+        doc_open(revised_dir, revised_filename);
+    } else {
+        // Give feedback to let user know the link didn't work...
+        post("pddplink: error: file not found: " + filename);
+    }
 }
