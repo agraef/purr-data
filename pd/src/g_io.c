@@ -255,7 +255,7 @@ static void *vinlet_newsig(t_symbol *s)
 
     resample_init(&x->x_updown);
 
-    /* this should be though over: 
+    /* this should be thought over: 
      * it might prove hard to provide consistency between labeled up- & downsampling methods
      * maybe indeces would be better...
      *
