@@ -370,7 +370,7 @@ void canvas_obj(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
         else if (connectme == 0)
         {
             //fprintf(stderr,"canvas_obj calls canvas_startmotion\n");
-//            canvas_displaceselection(glist_getcanvas(gl), -8, -8);
+            //canvas_displaceselection(glist_getcanvas(gl), -8, -8);
             canvas_startmotion(glist_getcanvas(gl));
         }
         //canvas_setundo(glist_getcanvas(gl),
@@ -1528,10 +1528,13 @@ static void text_displace(t_gobj *z, t_glist *glist,
         t_rtext *y = glist_findrtext(glist, x);
         gui_vmess("gui_text_displace", "xsii",
             glist, rtext_gettag(y), dx, dy);
-//        t_rtext *y = glist_findrtext(glist, x);
-//        rtext_displace(y, dx, dy);
-//        text_drawborder(x, glist, rtext_gettag(y),
-//            rtext_width(y), rtext_height(y), 0);
+        /* Since the gui organizes all the text and shapes that
+           make an object into a container, we just displace
+           the container here */
+        //t_rtext *y = glist_findrtext(glist, x);
+        //rtext_displace(y, dx, dy);
+        //text_drawborder(x, glist, rtext_gettag(y),
+        //    rtext_width(y), rtext_height(y), 0);
         canvas_fixlinesfor(glist_getcanvas(glist), x);
     }
 }
@@ -2049,13 +2052,13 @@ void glist_drawiofor_withtag(t_glist *glist, t_object *ob, int firsttime,
             //        "$pd_colors(control_cord)"),
             //    tag, i, tag);
         }
-/*
+        /*
         else
         {
             sys_vgui(".x%lx.c addtag selected withtag %so%d \n",
                 glist_getcanvas(glist), tag, i);
         }
-*/
+        */
     }
     n = obj_ninlets(ob);
     //fprintf(stderr,"drawiofor_withtag n=%d\n", n);
@@ -2423,11 +2426,11 @@ static int compare_subpatch_selectors(t_atom *a, t_atom *b)
 
 void text_checkvalidwidth(t_glist *glist)
 {
-    // readjust border in case the new object is invalid and it has more connections
-    // than what the default width allows (this typically happens when there is a valid
-    // object that has been replaced by an invalid one and during recreation the new
-    // object has 0 inlets and outlets and is therefore unaware of its possibly greater
-    // width)
+    // readjust border in case the new object is invalid and it has more
+    // connections than what the default width allows (this typically happens
+    // when there is a valid object that has been replaced by an invalid one
+    // and during recreation the new object has 0 inlets and outlets and is
+    // therefore unaware of its possibly greater width)
     t_gobj *yg = glist->gl_list;
     if (yg)
     {
