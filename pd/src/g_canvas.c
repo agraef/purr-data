@@ -722,12 +722,13 @@ void canvas_draw_gop_resize_hooks(t_canvas* x)
         sprintf(sh->h_pathname, ".x%lx.h%lx", (t_int)x, (t_int)sh);
         sprintf(mh->h_pathname, ".x%lx.h%lx", (t_int)x, (t_int)mh);
 
-//        scalehandle_draw_select(sh,
-//            -1-x->gl_obj.te_xpix+x->gl_xmargin + x->gl_pixwidth,
-//            -1-x->gl_obj.te_ypix+x->gl_ymargin + x->gl_pixheight/*,GOP_resblob*/);
-//        scalehandle_draw_select(mh,
-//            2+SCALEHANDLE_WIDTH -x->gl_obj.te_xpix+x->gl_xmargin,
-//            2+SCALEHANDLE_HEIGHT-x->gl_obj.te_ypix+x->gl_ymargin /*,"GOP_movblob"*/);
+        /* These are handled now in canvas_doclick */
+        //scalehandle_draw_select(sh,
+        //    -1-x->gl_obj.te_xpix+x->gl_xmargin + x->gl_pixwidth,
+        //    -1-x->gl_obj.te_ypix+x->gl_ymargin + x->gl_pixheight/*,GOP_resblob*/);
+        //scalehandle_draw_select(mh,
+        //    2+SCALEHANDLE_WIDTH -x->gl_obj.te_xpix+x->gl_xmargin,
+        //    2+SCALEHANDLE_HEIGHT-x->gl_obj.te_ypix+x->gl_ymargin /*,"GOP_movblob"*/);
 
         /* these constants don't actually reflect the actual size of the
            click rectangle-- we should probably change them... */
@@ -2082,9 +2083,10 @@ post("canvas clickhook");
             }
         }
         else //enter if move_gop hook
-        {// this block is similar to scalehandle_unclick_label but not enough
-         // We've actually removed scalehandle_unclick_label everywhere, so
-         // check to see whether this can be removed as well...
+        {
+            // this block is similar to scalehandle_unclick_label but not enough
+            // We've actually removed scalehandle_unclick_label everywhere, so
+            // check to see whether this can be removed as well...
             canvas_undo_add(x, 8, "apply", canvas_undo_set_canvas(x));
             if (sh->h_dragx || sh->h_dragy) 
             {
@@ -2115,8 +2117,8 @@ post("canvas clickhook");
             /* Doesn't look like we're using this anymore, so no need to
                port it. */
             //sys_vgui(".x%lx.c delete GOP\n", x);
-            //sys_vgui(".x%x.c create rectangle %d %d %d %d\
-            //     -outline $pd_colors(selection) -width 1 -tags %s\n",
+            //sys_vgui(".x%x.c create rectangle %d %d %d %d "
+            //     "-outline $pd_colors(selection) -width 1 -tags %s\n",
             //     x, x->gl_xmargin, x->gl_ymargin,
             //        x->gl_xmargin + x->gl_pixwidth,
             //        x->gl_ymargin + x->gl_pixheight, sh->h_outlinetag);
