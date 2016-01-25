@@ -55,6 +55,9 @@ Everything else: (A [x] means we've fixed it)
 [ ] make pdgui function names more consistent
 [ ] in draw_vis, move tags to front of function call so they don't have to
     be in an array
+[ ] for scalar tags, look into using "x" exclusively inside gui_vmess so that
+    we don't have to sprintf anything. Then on the gui side we can
+    concatenate as needed.
 [ ] in draw_vis, remove all the coords logic and let svg_togui do that work.
     In svg_new, leverage the "d", "points", etc. methods to do the same.
 [ ] remove the draw_vis warning/code about needing 2 points to draw
@@ -89,14 +92,15 @@ Everything else: (A [x] means we've fixed it)
 [ ] gui_graph_fill_border: use css class selectors instead of configuration
 [ ] standardize javascript function names
 [ ] remove gui_text_select_color (css takes care of this)
-[ ] add a canvas message to set a transform on the patchsvg.  Good for:
+[x] add a canvas message to set a transform on the patchsvg.  Good for:
     * obscure display needs (zooming past the browser limits)
     * rotating for a display
     * transforming or scaling all scalars on a patch at once
     However: This will require more math on the mousemotion.
     So this should probably wait until
     moving a lot of the editing code out of C and into the GUI
-[ ] change 'array_element_fill' to 'element_fill', array_outline to
+    (Note: interesting idea but not needed for now)
+[x] change 'array_element_fill' to 'element_fill', array_outline to
     'array_element_outline' 
 [x] either nw_create_window should take fewer parameters or it should take an
     object with name: value pairs
