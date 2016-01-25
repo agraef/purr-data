@@ -101,6 +101,18 @@
     fill: #a49aea;
 }
 
+/* hyperlinks: for now, just pddplink and helplink */
+.pd_link text {
+}
+
+.pd_link text:hover {
+    fill: red;
+}
+
+.pd_link.selected text {
+    fill: #e87216 !important;
+}
+
 #new_object_textentry {
     /* max-width: 10ch; */
     min-width: 3ch;

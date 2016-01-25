@@ -99,7 +99,20 @@
 
 /* text inside boxes: message boxes, object boxes, graphs, comments, etc. */
 .box_text {
-    fill: #4bd046
+    fill: #4bd046;
+}
+
+/* hyperlinks: for now, just pddplink and helplink */
+.pd_link text {
+    fill: #4bd046;
+}
+
+.pd_link text:hover {
+    fill: red;
+}
+
+.pd_link.selected text {
+    fill: white;
 }
 
 #new_object_textentry {

@@ -104,6 +104,19 @@
     fill: white;
 }
 
+/* hyperlinks: for now, just pddplink and helplink */
+.pd_link text {
+    fill: yellow;
+}
+
+.pd_link text:hover {
+    fill: red;
+}
+
+.pd_link.selected text {
+    fill: white;
+}
+
 #new_object_textentry {
     /* max-width: 10ch; */
     min-width: 3ch;

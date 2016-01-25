@@ -102,6 +102,19 @@
     fill: white;
 }
 
+/* hyperlinks: for now, just pddplink and helplink */
+.pd_link text {
+    fill: white;
+}
+
+.pd_link text:hover {
+    fill: red;
+}
+
+.pd_link.selected text {
+    fill: yellow;
+}
+
 #bubbles {
     stroke: red;
 }
