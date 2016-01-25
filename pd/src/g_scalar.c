@@ -64,7 +64,8 @@ void word_init(t_word *data, t_template *template, t_gpointer *gp)
             that all toplevel canvases are visible.  LATER check if this
             is still necessary -- probably not. */
             int dspstate = canvas_suspend_dsp();
-// this needs to be set to sane symbols, possibly stored in the dataslot...
+            // this needs to be set to sane symbols,
+            // possibly stored in the dataslot...
             glob_setfilename(0, gensym("foo"), gensym("bar"));
             t_pd *boundx = s__X.s_thing;
             s__X.s_thing = 0;       /* don't save #X; we'll need to leave it
