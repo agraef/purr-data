@@ -65,7 +65,8 @@ mark.console_find_highlighted {
 #console_find {
     width: 100%;
     height: 1em;
-    background: red;
+    padding: 0.25em;
+    background: silver;
     position: fixed;
     bottom: 0;
     left: 0;
@@ -312,7 +313,8 @@ text {
 #canvas_find {
     width: 100%;
     height: 1em;
-    background: red;
+    padding: 3px;
+    background: silver;
     position: fixed;
     bottom: 0;
     left: 0;

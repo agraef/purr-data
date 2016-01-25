@@ -475,7 +475,7 @@ function nw_create_pd_window_menus(gui, w) {
                 text_container = w.document.getElementById("console_bottom"),
                 state = find_bar.style.getPropertyValue("display");
             if (state === "none") {
-                text_container.style.setProperty("bottom", "1em");
+                text_container.style.setProperty("bottom", "1.4em");
                 find_bar.style.setProperty("display", "inline");
                 find_bar.style.setProperty("height", "1em");
                 text_container.scrollTop = text_container.scrollHeight;

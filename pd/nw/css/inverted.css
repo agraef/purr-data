@@ -48,6 +48,30 @@
     overflow-y: scroll;    
 }
 
+/* marks for matches to console_find */
+mark {
+    background: white;
+}
+
+mark.console_find_current.console_find_highlighted,
+mark.console_find_current {
+    background: yellow;
+}
+
+mark.console_find_highlighted {
+    background: red;
+}
+
+#console_find {
+    width: 100%;
+    height: 1em;
+    padding: 0.2em;
+    background: silver;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
+
 /* Pure Data Patch Window (aka canvas) */
 
 /* patch font and background color. (Note: margin needs to stay at zero.) */
@@ -274,6 +298,16 @@ text {
 .xlet_selected {
     stroke: purple !important;
     -webkit-animation: fizzle 0.5s linear 1;
+}
+
+#canvas_find {
+    width: 100%;
+    height: 1em;
+    padding: 3px;
+    background: silver;
+    position: fixed;
+    bottom: 0;
+    left: 0;
 }
 
 /* Common to all dialogs */
