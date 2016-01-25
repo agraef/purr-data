@@ -40,19 +40,18 @@ void canvas_drawredrect(t_canvas *x, int doit);
 
 int canvas_isgroup(t_canvas *x)
 {
-/*    t_binbuf *b = x->gl_obj.te_binbuf;
-    if (!b)
-    {
-        bug("canvas_isgroup");
-        return 0;
-    }
-    t_atom *argv = binbuf_getvec(x->gl_obj.te_binbuf);
-    if (argv[0].a_type == A_SYMBOL &&
-        argv[0].a_w.w_symbol == gensym("group"))
-        return 1;
-    else
-        return 0;
-*/
+    //t_binbuf *b = x->gl_obj.te_binbuf;
+    //if (!b)
+    //{
+    //    bug("canvas_isgroup");
+    //    return 0;
+    //}
+    //t_atom *argv = binbuf_getvec(x->gl_obj.te_binbuf);
+    //if (argv[0].a_type == A_SYMBOL &&
+    //    argv[0].a_w.w_symbol == gensym("group"))
+    //    return 1;
+    //else
+    //    return 0;
     if (x->gl_svg)
         return 1;
     else
@@ -898,7 +897,6 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
     //fprintf(stderr,"tgt=.x%lx %d\n", (t_int)tgt, exception);
 
     sprintf(tag, "%s", rtext_gettag(glist_findrtext(parent_glist, &x->gl_obj)));
-//post("before rtext_draw: %s", tag);
 
     if (vis & gobj_shouldvis(gr, parent_glist))
     {
@@ -912,8 +910,7 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
             rtext_draw(glist_findrtext(parent_glist, &x->gl_obj));
     }
 
-//    sprintf(tag, "%s", rtext_gettag(glist_findrtext(parent_glist, &x->gl_obj)));
-//post("after rtext_draw: %s", tag);
+    //sprintf(tag, "%s", rtext_gettag(glist_findrtext(parent_glist, &x->gl_obj)));
 
     // need the rect to create the gobj, so this should perhaps be above the
     // conditional
