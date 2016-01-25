@@ -84,8 +84,8 @@ t_template *template_new(t_symbol *templatesym, int argc, t_atom *argv)
             newtype = DT_FLOAT;
         else if (newtypesym == &s_symbol)
             newtype = DT_SYMBOL;
-//        else if (newtypesym == &s_list)
-//            newtype = DT_LIST;
+        //else if (newtypesym == &s_list)
+        //    newtype = DT_LIST;
         else if (newtypesym == gensym("canvas"))
         {
             char filename[MAXPDSTRING+3];
@@ -95,7 +95,8 @@ t_template *template_new(t_symbol *templatesym, int argc, t_atom *argv)
                 pd_error(x, "canvas lacks template or name");
                 goto bad;
             }
-//            filename = canvas_makebindsym(argv[2].a_w.w_symbol);
+            /* If we keep the canvas field API this needs to be revisited */
+            //filename = canvas_makebindsym(argv[2].a_w.w_symbol);
             sprintf(filename, "%s.pd", argv[2].a_w.w_symbol->s_name);
             if (binbuf_read_via_canvas(b, filename, canvas_getcurrent(), 0))
                 post("warning: abstraction %s not found", filename);
@@ -2039,7 +2040,7 @@ void svg_vis(t_svg *x, t_symbol *s, int argc, t_atom *argv)
 /* resize x_vec et al for path or shape coordinate data */
 void svg_resizecoords(t_svg *x, int argc, t_atom *argv)
 {
-//    if (x->x_type != gensym("path")) return;
+    //if (x->x_type != gensym("path")) return;
     int oldn = x->x_npathcmds;
     /* for polyline and polygon, we don't want any path commands */
     x->x_npathcmds = (x->x_type == gensym("path")) ?
@@ -3963,18 +3964,18 @@ static void draw_motion(void *z, t_floatarg dx, t_floatarg dy)
     }
     draw_motion_xcumulative += dx;
     draw_motion_ycumulative += dy;
-//    if (f->fd_var && (tdx != 0))
-//    {
-//        fielddesc_setcoord(f, draw_motion_template, draw_motion_wp,
-//            draw_motion_xbase + draw_motion_xcumulative * draw_motion_xper,
-//                1); 
-//    }
-//    if ((f+1)->fd_var && (tdy != 0))
-//    {
-//        fielddesc_setcoord(f+1, draw_motion_template, draw_motion_wp,
-//            draw_motion_ybase + draw_motion_ycumulative * draw_motion_yper,
-//                1); 
-//    }
+    //if (f->fd_var && (tdx != 0))
+    //{
+    //    fielddesc_setcoord(f, draw_motion_template, draw_motion_wp,
+    //        draw_motion_xbase + draw_motion_xcumulative * draw_motion_xper,
+    //            1); 
+    //}
+    //if ((f+1)->fd_var && (tdy != 0))
+    //{
+    //    fielddesc_setcoord(f+1, draw_motion_template, draw_motion_wp,
+    //        draw_motion_ybase + draw_motion_ycumulative * draw_motion_yper,
+    //            1); 
+    //}
         /* LATER figure out what to do to notify for an array? */
     if (draw_motion_scalar)
     {
@@ -3983,10 +3984,10 @@ static void draw_motion(void *z, t_floatarg dx, t_floatarg dy)
         template_notifyforscalar(draw_motion_template, draw_motion_glist, 
             draw_motion_scalar, gensym("change"), 1, at);
     }
-//    if (draw_motion_scalar)
-//        scalar_redraw(draw_motion_scalar, draw_motion_glist);
-//    if (draw_motion_array)
-//        array_redraw(draw_motion_array, draw_motion_glist);
+    //if (draw_motion_scalar)
+    //    scalar_redraw(draw_motion_scalar, draw_motion_glist);
+    //if (draw_motion_array)
+    //    array_redraw(draw_motion_array, draw_motion_glist);
 }
 
 /*
@@ -4090,8 +4091,8 @@ static int draw_click(t_gobj *z, t_glist *glist,
             minv(mtx1, mtx1);
             /* get rid of translation so it doesn't factor
                in to our deltas */
-    //        mtx1[0][2] = 0;
-    //        mtx1[1][2] = 0;
+            //mtx1[0][2] = 0;
+            //mtx1[1][2] = 0;
             /* maybe needs units per pixel here? */
             mset(mtx2, xpix - glist_xtopixels(glist, basex),
                 ypix - glist_ytopixels(glist, basey), 0, 0, 0, 0);
@@ -4112,7 +4113,7 @@ static int draw_click(t_gobj *z, t_glist *glist,
                 draw_motion_scalar = sc;
                 draw_motion_array = ap;
                 draw_motion_wp = data;
-        //        draw_motion_field = 2*bestn;
+                //draw_motion_field = 2*bestn;
                 draw_motion_template = template;
                 if (draw_motion_scalar)
                     gpointer_setglist(&draw_motion_gpointer, draw_motion_glist,
@@ -4120,9 +4121,9 @@ static int draw_click(t_gobj *z, t_glist *glist,
                 else gpointer_setarray(&draw_motion_gpointer,
                         draw_motion_array, draw_motion_wp);
                 glist_grab(glist, z, draw_motion, 0, xpix, ypix);
-        //        outlet_anything(x->x_obj.ob_outlet, gensym("click"), 0, 0);
+                //outlet_anything(x->x_obj.ob_outlet, gensym("click"), 0, 0);
             }
-//            draw_notifyforscalar(x, glist, sc, gensym("mousedown"), 5, at);
+            //draw_notifyforscalar(x, glist, sc, gensym("mousedown"), 5, at);
         }
         return (1);
     }
@@ -4389,8 +4390,8 @@ static void draw_setup(void)
         gensym("cy"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_data,
         gensym("data"), A_GIMME, 0);
-//    class_addmethod(svg_class, (t_method)svg_drag,
-//        gensym("drag"), A_GIMME, 0);
+    //class_addmethod(svg_class, (t_method)svg_drag,
+    //    gensym("drag"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_event,
         gensym("drag"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_fill,
@@ -7593,7 +7594,7 @@ static void drawimage_setup(void)
         gensym("x"), A_GIMME, 0);
     class_addmethod(drawimage_class, (t_method)drawimage_y,
         gensym("y"), A_GIMME, 0);
-//    class_addanything(drawimage_class, drawimage_anything);
+    //class_addanything(drawimage_class, drawimage_anything);
     class_setparentwidget(drawimage_class, &drawimage_widgetbehavior);
 }
 
