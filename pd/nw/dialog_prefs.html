@@ -393,6 +393,12 @@ function apply() {
 function cancel() {
     var i, attrs, gfxstub;
     pdgui.post("closing the window at this point");
+    // There seems to be a bug in nwjs 0.13 beta3 that doesn't call the
+    // "close" event below. This has the symptom of making it impossible
+    // to click the "Ok" button and open the preferences dialog again after
+    // that. To see if the bug is gone, try removing the next line and see
+    // if you can open the Prefs dialog after clicking "Ok".
+    pdgui.remove_dialogwin(pd_object_callback);
     window.close(true);
     //pdgui.pdsend(pd_object_callback, "cancel");
 }

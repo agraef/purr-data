@@ -615,8 +615,7 @@ var canvas_events = (function() {
     document.querySelector("#canvas_find_button").addEventListener("click",
         events.find_click);
     // We need to separate these into nw_window events and html5 DOM events
-    // closing the Window
-    // this isn't actually closing the window yet
+    // closing the Window this isn't actually closing the window yet
     gui.Window.get().on("close", function() {
         pdgui.pdsend(name, "menuclose 0");
     });
