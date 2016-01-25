@@ -2821,7 +2821,7 @@ static void canvas_donecanvasdialog(t_glist *x,
     canvas_setgraph(x, graphme, 0);
     canvas_dirty(x, 1);
 
-// we're drawn at this point
+    // we're drawn at this point
 
     // make sure gop is never smaller than its text
     // if one wants smaller gop window, make sure to disable text
@@ -3550,7 +3550,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                ypos <= x->gl_ymargin + x->gl_pixheight + 4 &&
                ypos > x->gl_ymargin + x->gl_pixheight - 2)
     {
-// refactor the if into a function call...
+    // refactor the if into a function call...
         if (doit)
         {
             x->gl_editor->e_onmotion = MA_RESIZE;
@@ -5456,7 +5456,6 @@ static void canvas_menufont(t_canvas *x)
     char buf[80];
     t_canvas *x2 = canvas_getrootfor(x);
     gfxstub_deleteforkey(x2);
-//    sprintf(buf, "pdtk_canvas_dofont %%s .x%lx %d\n", (t_int)x2, x2->gl_font);
     char *gfxstub = gfxstub_new2(&x2->gl_pd, &x2->gl_pd);
     gui_vmess("gui_font_dialog", "xsi",
         x2,
@@ -6020,7 +6019,8 @@ static void canvas_paste_atmouse(t_canvas *x)
 {
     t_selection *sel;
     //fprintf(stderr,"paste_atmouse\n");
-    /* use safe values for x1 and y1 which are essentially the same as xyoffset */
+    /* use safe values for x1 and y1 which are essentially the same as
+       xyoffset */
     int x1 = x->gl_editor->e_xwas+10, y1 = x->gl_editor->e_ywas+10, init = 0;
     t_float sx = 0.0, sy = 0.0;
     t_glist *g;
@@ -7369,8 +7369,6 @@ static void canvas_stringforobj(t_rtext *rtext, int argc, t_atom *argv)
 
 static void canvas_createobj(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 {
-//    int length;
-//    char *buf;
     t_gobj *y;
     t_rtext *rtext;
     if (!x->gl_editor) return;
@@ -7379,11 +7377,6 @@ static void canvas_createobj(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
         if (glist_isselected(x, y) && (rtext = glist_findrtext(x, (t_text *)y)))
         {
             canvas_stringforobj(rtext, argc, argv);
-//            t_binbuf *b = binbuf_new();
-//            binbuf_restore(b, argc, argv);
-//            binbuf_gettext(b, &buf, &length);
-//            rtext_settext(rtext, buf, length);
-//            binbuf_free(b);
             // Set the dirty flag since we've changed the rtext content...
             canvas_dirty(x, 1);
             x->gl_editor->e_textdirty = 1;
