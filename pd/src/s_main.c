@@ -278,7 +278,6 @@ int sys_main(int argc, char **argv)
     int i, noprefs;
     sys_externalschedlib = 0;
     sys_extraflags = 0;
-    char * filenames = NULL;
 #ifdef PD_DEBUG
     fprintf(stderr, "Pd-L2Ork: COMPILED FOR DEBUGGING\n");
 #endif
@@ -308,41 +307,16 @@ int sys_main(int argc, char **argv)
         instance, and if necessary open file inside it */\
     if (sys_openlist)
     {
-        // let's create one continuous string from all files
-        int length = 0;
+        // send the files to be opened to the GUI. We send them one
+        // at a time and let the GUI accumulate them so that we don't
+        // have to allocate anything here (as the previous API did)
         t_namelist *nl;
-//        for (nl = sys_openlist; nl; nl = nl->nl_next)
-//        {
-            // for starting and ending quotes plus a space or null terminating
-            // character, we add 3 additional characters per entry
-//            length = length + strlen(nl->nl_string) + 3;
-//        }
-//        if(length && (filenames = (char*) calloc(length, sizeof(char*)) ) != NULL)
-        if (1)
+        for (nl = sys_openlist; nl; nl = nl->nl_next)
         {
-//            strcat(filenames,"\\\"");
-            if (sys_openlist)
-            {
-                for (nl = sys_openlist; nl; nl = nl->nl_next)
-                {
-                    gui_vmess("gui_build_filelist", "s", nl->nl_string);
-//                    strcat(filenames,nl->nl_string);
-//                    if (nl->nl_next)
-//                        strcat(filenames,"\\\" \\\"");
-//                    else strcat(filenames,"\\\"\\\0"); // ensures proper termination
-                }
-            }
-            //fprintf(stderr,"final list: <%s> <%c> %d\n", filenames, filenames[0], length);
-        }
-        else
-        {
-//            error("filelist malloc failed!\n");
-//            return(1);
+            gui_vmess("gui_build_filelist", "s", nl->nl_string);
         }
     }
     gui_vmess("gui_check_unique", "i", sys_unique);
-//        (filenames ? filenames : "0"));
-//    if (filenames != NULL) free(filenames);
     if (sys_externalschedlib)
         return (sys_run_scheduler(sys_externalschedlibname,
             sys_extraflagsstring));
@@ -362,7 +336,6 @@ int sys_main(int argc, char **argv)
                 path = path->nl_next;
             sys_vgui("pdtk_enable_k12_mode %s\n", path->nl_string);
         }
-
          /* run scheduler until it quits */
         return (m_mainloop());
     }
