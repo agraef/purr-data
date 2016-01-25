@@ -331,11 +331,11 @@ static void my_numbox__motionhook(t_scalehandle *sh,
             my_numbox_draw_move(x, x->x_gui.x_glist);
             my_numbox_draw_config(x, x->x_gui.x_glist);
             my_numbox_draw_update((t_gobj*)x, x->x_gui.x_glist);
-            
-/*
-            gobj_vis(x, x->x_gui.x_glist, 0);
-            gobj_vis(x, x->x_gui.x_glist, 1);
-*/
+            /* These were just a crude way to guarantee correct
+               redrawing when testing, but it looks like the calls
+               above take care of it. */
+            //gobj_vis(x, x->x_gui.x_glist, 0);
+            //gobj_vis(x, x->x_gui.x_glist, 1);
             scalehandle_unclick_scale(sh);
         }
 
