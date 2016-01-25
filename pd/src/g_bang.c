@@ -119,7 +119,9 @@ static void bng__clickhook(t_scalehandle *sh, int newstate)
         if (!sh->h_scale) /* click on a label handle */
             scalehandle_click_label(sh);
     }
-//    iemgui__clickhook3(sh,newstate);
+    /* We no longer need this "clickhook", as we can handle the dragging
+       either in the GUI (for the label handle) or or in canvas_doclick */
+    //iemgui__clickhook3(sh,newstate);
     sh->h_dragon = newstate;
 }
 
