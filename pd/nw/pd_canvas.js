@@ -299,10 +299,16 @@ var canvas_events = (function() {
                 // For some reasons <ctrl-e> registers a keypress with
                 // charCode of 5. We filter that out here so it doesn't
                 // cause trouble when toggling editmode.
-                if (evt.charCode !== 5) {
+                // Also, we're capturing <ctrl-or-cmd-Enter> in the "Edit"
+                // menu item "reselect", so we filter it out here as well.
+                // (That may change once we find a more flexible way of
+                // handling keyboard shortcuts
+                if (evt.charCode !== 5 &&
+                      (!cmd_or_ctrl(evt) || evt.charCode !== 10)) {
                     pdgui.canvas_sendkey(name, 1, evt, evt.charCode,
                         keydown_autorepeat);
-                pdgui.set_keymap(last_keydown, evt.charCode, keydown_autorepeat);
+                    pdgui.set_keymap(last_keydown, evt.charCode,
+                        keydown_autorepeat);
                 }
                 //pdgui.post("keypress time: charcode is " + evt.charCode);
                 // Don't do things like scrolling on space, arrow keys, etc.
@@ -318,10 +324,11 @@ var canvas_events = (function() {
                 if (my_char_code) {
                     pdgui.canvas_sendkey(name, 0, evt, my_char_code, evt.repeat);
                 }
-                //pdgui.post("keyup time: charcode is: " + my_char_code);
-                if (evt.keyCode === 13 && cmd_or_ctrl_key(evt)) {
-                    pdgui.pdsend(name, "reselect");
-                }
+                // This can probably be removed
+                //if (cmd_or_ctrl_key(evt) &&
+                //      (evt.keyCode === 13 || evt.keyCode === 10)) {
+                //    pdgui.pdsend(name, "reselect");
+                //}
                 evt.stopPropagation();
                 evt.preventDefault();
             },
@@ -363,11 +370,11 @@ var canvas_events = (function() {
                 evt.stopPropagation();    
                 //evt.preventDefault();
                 // ctrl-Enter to instantiate object
-                if (evt.keyCode === 13 && cmd_or_ctrl_key(evt)) {
-                    canvas_events.text(); // anchor the object
-                    canvas_events.set_obj();
-                    pdgui.pdsend(name, "reselect");
-                }
+//                if (evt.keyCode === 13 && cmd_or_ctrl_key(evt)) {
+//                    canvas_events.text(); // anchor the object
+//                    canvas_events.set_obj();
+//                    pdgui.pdsend(name, "reselect");
+//                }
                 return false;
             },
             text_keypress: function(evt) {
@@ -1006,7 +1013,23 @@ function nw_create_patch_window_menus(gui, w, name) {
     });
     minit(m.edit.reselect, {
         enabled: true,
-        click: function() { pdgui.pdsend(name, "reselect"); }
+        click: function() {
+            // This is a bit complicated... menu item shortcuts receive
+            // key events before the DOM, so we have to make sure to
+            // filter out <ctrl-or-cmd-Enter> in the DOM eventhandler
+            // in the "normal" keypress callback.
+            // We also have to make sure to send the text ahead to Pd
+            // to make sure it has it in the before before attempting
+            // to "reselect".
+            // As we move the editing functionality from the c code to
+            // the GUI, this will get less complex.
+            if (canvas_events.get_state() === "floating_text" ||
+                canvas_events.get_state() === "text") {
+                canvas_events.text(); // anchor the object
+                canvas_events.set_obj();
+            }
+            pdgui.pdsend(name, "reselect");
+        }
     });
     minit(m.edit.tidyup, {
         enabled: true,
