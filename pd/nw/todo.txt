@@ -165,7 +165,7 @@ Everything else: (A [x] means we've fixed it)
     lots of data it can end up freezing the GUI. Test if requestAnimationFrame
     makes any difference...)
 [ ] Figure out what pdtk_ping does
-[ ] Instead of hardcoded gui_post colors, set a class (warning, error, etc.)
+[x] Instead of hardcoded gui_post colors, set a class (warning, error, etc.)
 [ ] revisit the function for escaping double-quotes inside s_inter.c, see
     if there's a cleaner way to do it
 [ ] the socket reader has a buffer capped at 4096. This is plenty for most
