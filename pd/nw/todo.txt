@@ -127,9 +127,6 @@ Everything else: (A [x] means we've fixed it)
 [ ] Fix layout on dialogs so that height/width of the document doesn't
     reflow when the window gets resized
 [ ] look into using requestAnimationFrame
-[ ] autopatch creates a new box, but if you try to instantiate the empty box
-    you have to click twice to get it to leave text entry mode
-[ ] look into pasting only text inside text entry
 [ ] canvas_check_geometry doesn't seem to do the right thing for canvases that
     are far to the right of the screen. Can't think of anything except maybe a
     bug in nw.js Window.x?
@@ -171,9 +168,6 @@ Everything else: (A [x] means we've fixed it)
 [ ] make scalars dig inside abstractions when they search the templatecanvas
     for drawing commands.  This will make it possible to build abstraction
     libraries for ds-gui widgets.
-[ ] fix the Next Window/Previous Window keybindings. For some reason they
-    don't work.
-[ ] unnecessary scrollbars appear when many patches are opened at once.
 [ ] some menuitem shortcuts don't pass their events on to the dom, while
     others do. I think it happens when a double-modifier has keys in common
     with a single-modifier. Example: <ctrl-shift-v> creates a vsl, but the
@@ -342,9 +336,6 @@ Everything else: (A [x] means we've fixed it)
 [x] make GUI server try again if the port is already in use
 [x] figure out why OSX app bundle runs when using "open" from the terminal,
     but not when you click it
-[ ] when scaling, bng and tgl retain the correct mouse position if you
-    try to make it smaller than the minimum size. But vu creates
-    an offset in that case.
 [x] revisit cursor logic-- when you leave the boundaries of an object 
     being dragged, for example, the cursor changes to whatever is set for
     the parent (svg, document, etc.).
