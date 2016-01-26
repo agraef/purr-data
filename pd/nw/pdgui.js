@@ -238,7 +238,7 @@ var last_child = {};
 var last_object_id = "";
 var duplicate = 0;
 
-function do_post(string, color) {
+function do_post(string, type) {
     var myp, span, text, printout;
     current_string += string;
     if (string.slice(-1) === "\n") {
@@ -247,10 +247,11 @@ function do_post(string, color) {
             duplicate++;
             current_string = "";
         } else {
-            if (color === undefined) { color = "black" };
             myp = pd_window.document.getElementById("p1"),
             span = pd_window.document.createElement("span");
-            span.style.color = color;
+            if (type) {
+                span.classList.add(type); 
+            }
             text = pd_window.document.createTextNode(current_string); 
             span.appendChild(text);
             myp.appendChild(span);
@@ -266,15 +267,15 @@ function do_post(string, color) {
 }
 
 // print message to console-- add a newline for convenience
-function post(string, color) {
-    do_post(string + "\n", color);
+function post(string, type) {
+    do_post(string + "\n", type);
 }
 
 exports.post = post;
 
 // print message to console from Pd-- don't add newline
-function gui_post(string, color) {
-    do_post(string, color);
+function gui_post(string, type) {
+    do_post(string, type);
 }
 
 function pd_error_select_by_id(objectid) {
@@ -297,6 +298,7 @@ function gui_post_error(objectid, loglevel, errormsg) {
         my_p = pd_window.document.getElementById("p1");
         // if we have an object id, make a friendly link...
         error_span = pd_window.document.createElement("span");
+        error_span.classList.add("error");
         dup_span = pd_window.document.createElement("span");
         last_child = error_span;
         error_title = pd_window.document.createTextNode("error");
@@ -3383,6 +3385,9 @@ exports.skin = (function () {
                     apply(patchwin[w]);
                 }
             }
+            // hack for the console
+            pd_window.document.getElementById("page_style")
+                .setAttribute("href", dir + preset + ".css");
         },
         apply: function (nw_window) {
             apply(nw_window);
