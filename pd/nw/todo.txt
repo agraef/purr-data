@@ -42,7 +42,6 @@ Node-webkit stuff:
 
 Everything else: (A [x] means we've fixed it)
 [ ] packaging as app, setting correct appname, etc
-[ ] get -unique to work (relied on tcl [send] command)
 [ ] check if patch windows with screenposition (0,0) get stuck underneath OSX
     menu.
 [ ] abstract away appendChild
