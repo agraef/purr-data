@@ -46,6 +46,19 @@
     right: 0px;
     bottom: 0px;
     overflow-y: scroll;    
+    color: white;
+    background: black;
+}
+
+/* The console API allows classes for different types of messages to print.
+   Currently the only class is "error". More may be added, especially once 
+   we port the "loglevel" functionality that was available in Pd Extended. */
+#console_bottom .error {
+    color: red;
+}
+
+#console_bottom .error a {
+    color: white; 
 }
 
 /* marks for matches to console_find */
@@ -66,10 +79,18 @@ mark.console_find_highlighted {
     width: 100%;
     height: 1em;
     padding: 0.2em;
-    background: silver;
+    background: #444;
+    color: #ccc;
     position: fixed;
     bottom: 0;
     left: 0;
+}
+
+#console_find_text {
+    background: black;
+    border-style: solid;
+    border-color: #555;
+    color: white;
 }
 
 /* Pure Data Patch Window (aka canvas) */
@@ -304,10 +325,18 @@ text {
     width: 100%;
     height: 1em;
     padding: 3px;
-    background: silver;
+    background: #444;
+    color: #ccc;
     position: fixed;
     bottom: 0;
     left: 0;
+}
+
+#canvas_find_text {
+    background: black;
+    border-style: solid;
+    border-color: #555;
+    color: white;
 }
 
 /* Common to all dialogs */

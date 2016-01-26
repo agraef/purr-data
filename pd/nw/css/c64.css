@@ -45,6 +45,19 @@
     right: 0px;
     bottom: 0px;
     overflow-y: scroll;    
+    background-color: #3e32a2;
+    color: #a49aea;
+}
+
+/* The console API allows classes for different types of messages to print.
+   Currently the only class is "error". More may be added, especially once 
+   we port the "loglevel" functionality that was available in Pd Extended. */
+#console_bottom .error {
+    color: #cc9933;
+}
+
+#console_bottom .error a {
+    color: #ccc;
 }
 
 /* marks for matches to console_find */
