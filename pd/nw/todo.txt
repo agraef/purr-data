@@ -62,8 +62,6 @@ Everything else: (A [x] means we've fixed it)
 [ ] remove the draw_vis warning/code about needing 2 points to draw
 [ ] make gui_menu_close message less hacky (currently includes patch args in
     the middle) 
-[ ] figure out why -nrt flag causes Pd to bail on the GUI (it wasn't doing this
-    on the amd_64 virtual Jessie machine, nor on my 32-bit machine).
 [x] make dialogs with [yes/no] instead of [cancel/ok]
 [ ] draw graph inside gobj group
 [ ] merge gui_text_select and gui_text_deselect
