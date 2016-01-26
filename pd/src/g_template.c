@@ -3380,8 +3380,8 @@ static void draw_getrect(t_gobj *z, t_glist *glist,
     svg_groupmtx(sa, template, data, mtx1);
     if (sa->x_type == gensym("path"))
     {
-        /* this could get damned expensive with complex paths 
-        which is why there's a caching mechanism */
+        /* this could get very expensive with complex paths--
+        that is why there's a caching mechanism */
         svg_getpathrect(sa, glist, data, template, basex, basey,
             &x1, &y1, &x2, &y2);
     }
