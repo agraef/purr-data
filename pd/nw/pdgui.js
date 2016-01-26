@@ -3472,7 +3472,7 @@ function generate_msg_box_bg_data(type, stroke) {
 // message box flag. We use a backgroundImage svg to address this, but
 // for security reasons HTML5 doesn't provide access to svg image styles.
 // As a workaround we just seek out the relevant CSS rules and shove the
-// whole damned svg data url into them. We do this each time the user
+// whole svg data url into them. We do this each time the user
 // clicks a box to edit.
 // Also, notice that both CSS and SVG _still_ fail miserably at drawing a
 // message box flag that expands in the middle while retaining the same angles
