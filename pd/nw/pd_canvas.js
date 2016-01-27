@@ -304,7 +304,7 @@ var canvas_events = (function() {
                 // (That may change once we find a more flexible way of
                 // handling keyboard shortcuts
                 if (evt.charCode !== 5 &&
-                      (!cmd_or_ctrl(evt) || evt.charCode !== 10)) {
+                      (!cmd_or_ctrl_key(evt) || evt.charCode !== 10)) {
                     pdgui.canvas_sendkey(name, 1, evt, evt.charCode,
                         keydown_autorepeat);
                     pdgui.set_keymap(last_keydown, evt.charCode,
