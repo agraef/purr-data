@@ -134,7 +134,7 @@ Everything else: (A [x] means we've fixed it)
 [ ] integrate the inlet mouseover animation with a change of fill color
 [ ] figure out difference between deb install location /usr
     vs tarball /usr/local
-[ ] port the bug fix from pd-l2ork git repo in commit
+[x] port the bug fix from pd-l2ork git repo in commit
     6084c8e5f86d1521edde3a899a6d5b5821aa27c6
     "*fixed bug reported by Gilberto in..."
 [x] gui_vmess: should it look like this:
