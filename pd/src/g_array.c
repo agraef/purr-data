@@ -767,7 +767,7 @@ void garray_arraydialog(t_garray *x, t_symbol *s, int argc, t_atom *argv)
 static void garray_free(t_garray *x)
 {
     t_pd *x2;
-        sys_unqueuegui(&x->x_gobj);
+    sys_unqueuegui(&x->x_gobj);
     gfxstub_deleteforkey(x);
     pd_unbind(&x->x_gobj.g_pd, x->x_realname);
         /* LATER find a way to get #A unbound earlier (at end of load?) */
@@ -1518,16 +1518,22 @@ void garray_redraw(t_garray *x)
 {
     //fprintf(stderr,"garray_redraw\n");
     if (glist_isvisible(x->x_glist))
-        // enqueueing redraw ensures that the array is drawn after its values
-        // have been instantiated (instead, we address this in the creating
-        // dialog by enqueuing redrawing of the graph garray resides in as
-        // this will fix the lack of the array name and other features
-        // hence this approach is considered wrong
-        //sys_queuegui(&x->x_gobj, x->x_glist, garray_doredraw);
+        /* enqueueing redraw ensures that the array is drawn after its values
+           have been instantiated
+           1-24-2015 Ico: reenabled this method to optimize redrawing as per
+           Gilberto's report on l2ork-dev list.
+           TODO: when adding new array to the newest array it is not always
+           drawn, or tabwrite does not write to the right array--see Gilberto's
+           example available from:
+           http://disis.music.vt.edu/pipermail/l2ork-dev/2015-January/000676.htm
+        */
+        sys_queuegui(&x->x_gobj, x->x_glist, garray_doredraw);
 
-        // this is useful so that things get redrawn before they are selected
-        // so that we don't have to fake yet another selection after the fact
-        garray_doredraw(&x->x_gobj, x->x_glist);
+        /* 1-24-2015 Ico: this however causes painfully slow and inefficient red
+           when we use tabwrite which writes one point per array and requests
+           redraw after each point is changed. Thus it is deprecated in favor of
+           of the approach above */
+        //garray_doredraw(&x->x_gobj, x->x_glist);
 }
 
    /* This function gets the template of an array; if we can't figure
