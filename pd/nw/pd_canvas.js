@@ -264,6 +264,21 @@ var canvas_events = (function() {
                             hack = 0; // not sure what to report here...
                         }
                         break;
+                    case 90:
+                        if (cmd_or_ctrl_key(evt)) { // ctrl-z undo/redo
+                            // We have to catch undo and redo shortcuts here
+                            // instead of using menu shortcuts. There is a
+                            // separate undo/redo buffer when we're editing
+                            // inside an object box we need to use, and a
+                            // menu item shortcut would not propogate down
+                            // to the DOM in that case.
+                            if (evt.shiftKey) {
+                                pdgui.pdsend(name, "redo");
+                            } else {
+                                pdgui.pdsend(name, "undo");
+                            }
+                        }
+                        break;
 
                     // Need to handle Control key, Alt
 
@@ -282,20 +297,6 @@ var canvas_events = (function() {
                 //evt.preventDefault();
             },
             keypress: function(evt) {
-                // Hack to handle undo/redo shortcuts. Other menu shortcuts are
-                // in pd_menus. It'd be best to have a JSON file called
-                // pd_shortcuts.js so we can keep them all in a central
-                // location, but that's a bigger project.
-                if (evt.charCode === 26) {
-                    if (cmd_or_ctrl_key(evt)) {
-                        if (evt.shiftKey === true) { // ctrl-Shift-z
-                            pdgui.pdsend(name, "redo");
-                        } else { // ctrl-z
-                            pdgui.pdsend(name, "undo");
-                        }
-                        return;
-                    }
-                }
                 // For some reasons <ctrl-e> registers a keypress with
                 // charCode of 5. We filter that out here so it doesn't
                 // cause trouble when toggling editmode.
