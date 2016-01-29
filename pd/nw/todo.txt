@@ -141,12 +141,14 @@ Everything else: (A [x] means we've fixed it)
         (void *x, "msg", "arg_format", ...)
     or as it currently looks, like this:
         ("msg", "arg_format", ...)
-[ ] same for "*fixed spaces in old UI objects that were converted to \t..."
+[x] same for "*fixed spaces in old UI objects that were converted to \t..."
     262447434c3548c53bc0b52e7f5bb5431b233311
     NB: this commit uses the vertical tab as a hack for putting spaces
     inside gatom labels. But I'm currently using vertical tab as a hack
     to delimit commands sent to the GUI.  So for now, this commit will
     will not get ported.
+    (Note: doesn't seem like I need this. Spaces appear just fine inside
+     gatoms.)
 [ ] same for "*fixed font positioning on 14.04+ releases"
     9edc6ca98e141174b86ebe5cdf406fe7e47845d5
     NB: this commit affects the old GUI.  Need to revisit it with the new
