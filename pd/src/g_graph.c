@@ -1448,7 +1448,6 @@ static void graph_select(t_gobj *z, t_glist *glist, int state)
                     (g->g_pd->c_wb->w_displacefnwtag != NULL) ||
                     (g && pd_class((t_pd *)g) == garray_class)))
                 {
-                    post("inside flub... selecting a fluarg");
                     gobj_select(g, x, state);
                 }
             }
