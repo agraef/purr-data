@@ -420,11 +420,23 @@ var canvas_events = (function() {
             },
             scalar_draggable_mousemove: function(evt) {
                 var new_x = evt.pageX,
-                    new_y = evt.pageY;
+                    new_y = evt.pageY,
+                    dx = new_x - last_draggable_x,
+                    dy = new_y - last_draggable_y,
+                    // For the sake of convenience we're sending transformed
+                    // dx and dy back to the user. If it turns out this is
+                    // expensive we can either optimize this or just leave it
+                    // up to the user to handle on their own. (But I should
+                    // mention that it was non-trivial for me to do the math
+                    // of inverting and multiplying the matrices from within
+                    // a Pd patch. And I'm the author of this API. Make
+                    // of that what you will...
+                    minv = draggable_elem.getCTM().inverse(),
+                    tx = minv.a * dx + minv.c * dy,
+                    ty = minv.b * dx + minv.d * dy;
                 var obj = scalar_draggables[draggable_elem.id];
                 pdgui.pdsend(obj.cid, "scalar_event", obj.scalar_sym, 
-                    obj.drawcommand_sym, obj.event_name, new_x - last_draggable_x,
-                    new_y - last_draggable_y);
+                    obj.drawcommand_sym, obj.event_name, dx, dy, tx, ty);
                 last_draggable_x = new_x;
                 last_draggable_y = new_y;
             },
