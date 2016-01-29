@@ -2947,16 +2947,14 @@ exports.popup_action = popup_action;
 //    g.appendChild(b);
 //}
 
-// refactor-- use a class so this can happen in css
+// This sets a GOP subpatch or graph to be "greyed out" when the user
+// has opened it to inspect its contents.  (I.e., it has its own window.)
+// We never actually remove this tag-- instead we just assume that the
+// GOP will get erased and redrawn when its time to show the contents
+// again.
 function gui_graph_fill_border(cid, tag) {
-    var g = get_gobj(cid, tag),
-        b = g.querySelectorAll(".border"),
-        i;
-    for (i = 0; i < b.length; i++) {
-        configure_item(b[i], {
-            fill: "gray"
-        });
-    }
+    var g = get_gobj(cid, tag);
+    g.classList.add("has_window");
 }
 
 function gui_graph_deleteborder(cid, tag) {
