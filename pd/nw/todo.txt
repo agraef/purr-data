@@ -88,7 +88,7 @@ Everything else: (A [x] means we've fixed it)
     conditionally fill the slots
 [x] gui_graph_fill_border: use css class selectors instead of configuration
 [ ] standardize javascript function names
-[ ] remove gui_text_select_color (css takes care of this)
+[x] remove gui_text_select_color (css takes care of this)
 [x] add a canvas message to set a transform on the patchsvg.  Good for:
     * obscure display needs (zooming past the browser limits)
     * rotating for a display
