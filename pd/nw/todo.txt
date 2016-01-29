@@ -45,8 +45,12 @@ Everything else: (A [x] means we've fixed it)
 [ ] check if patch windows with screenposition (0,0) get stuck underneath OSX
     menu.
 [ ] abstract away appendChild
-[ ] font-size should be set as css property for a class of text, rather than
+[x] font-size should be set as css property for a class of text, rather than
     per each gobj in svg
+    (Note: not sure that this makes sense right now. We could use a class to
+    set the "Pd font size" and do the actual sizing in CSS. But it's still
+    going to be the same amount of work when the user changes the size in
+    the font dialog.)
 [ ] find a better approach to escaping characters for the gui than
     escape_double_quotes kludge (and handle any other problematic chars)
 [ ] once garrays are drawn inside a <g> we won't have to individually erase
