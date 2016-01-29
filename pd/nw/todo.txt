@@ -86,7 +86,7 @@ Everything else: (A [x] means we've fixed it)
 [x] in dialog_iemgui.html, use an object to store all the prop/value pairs that
     got sent.  That way we don't have to use all those awful tricks to
     conditionally fill the slots
-[ ] gui_graph_fill_border: use css class selectors instead of configuration
+[x] gui_graph_fill_border: use css class selectors instead of configuration
 [ ] standardize javascript function names
 [ ] remove gui_text_select_color (css takes care of this)
 [x] add a canvas message to set a transform on the patchsvg.  Good for:
@@ -110,7 +110,7 @@ Everything else: (A [x] means we've fixed it)
     specified in s_inter and in editor_new, so it should be easy to amend
     if need be.
 [ ] make "rtext" textarea <div> static, and turn display on/off
-[ ] for the clipboard shortcut keys inside pd_canvas.html keydown, not sure
+[x] for the clipboard shortcut keys inside pd_canvas.html keydown, not sure
     what code should be sent to Pd on keyup...
 [ ] revisit pdtk_check_scroll_on_motion.  It's not implemented in the port
     yet.  Perhaps there's a better way to do it, without triggering a bunch
@@ -157,7 +157,7 @@ Everything else: (A [x] means we've fixed it)
 [x] 930414ea5a2330dfa5d581e92514ece05aca1ebf
     Has to do with font positioning inside objects boxes... probably
     need to address this manually.
-[ ] test if try/catch parser in the socket receiver is a performance hog. (For
+[x] test if try/catch parser in the socket receiver is a performance hog. (For
     lots of data it can end up freezing the GUI. Test if requestAnimationFrame
     makes any difference...)
 [ ] Figure out what pdtk_ping does
