@@ -183,7 +183,7 @@ Everything else: (A [x] means we've fixed it)
     inconsistency.
     After some more research, it appears this problem doesn't happen
     in OSX.
-[ ] fix ds-demos/splines.pd (arg number out of range)
+[x] fix ds-demos/splines.pd (arg number out of range)
 [x] vsl dialog shows "undefined" for one of the tooltips
 
 [x] set svg bounds to whatever the window size happens to be
