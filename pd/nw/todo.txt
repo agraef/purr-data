@@ -149,11 +149,11 @@ Everything else: (A [x] means we've fixed it)
     will not get ported.
     (Note: doesn't seem like I need this. Spaces appear just fine inside
      gatoms.)
-[ ] same for "*fixed font positioning on 14.04+ releases"
+[x] same for "*fixed font positioning on 14.04+ releases"
     9edc6ca98e141174b86ebe5cdf406fe7e47845d5
     NB: this commit affects the old GUI.  Need to revisit it with the new
     one to see whether it's still necessary.
-[ ] same for all commits up to Jul 31, 2015
+[x] same for all commits up to Jul 31, 2015
 [x] 930414ea5a2330dfa5d581e92514ece05aca1ebf
     Has to do with font positioning inside objects boxes... probably
     need to address this manually.
