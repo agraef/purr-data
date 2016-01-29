@@ -233,6 +233,12 @@ text {
     fill: none;
 }
 
+/* Graph (or subpatch) that has been opened to inspect its contents */
+.graph.has_window .border {
+    stroke: #0b560b;
+    fill: #0b560b;
+}
+
 /* border color for selected objects
       * an element with the class "border"
       * the element is contained within a parent element of class "selected"
