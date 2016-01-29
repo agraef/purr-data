@@ -1747,22 +1747,6 @@ function gui_gobj_deselect(cid, tag) {
     }
 }
 
-function gui_text_select_color(cid, tag) {
-    // nb: this is handled in css now-- we should do a final check to make
-    // sure this isn't called, then get rid of it.
-    return;
-    var rect = get_item(cid, tag + "border");
-    if (rect !== null) {
-        configure_item(rect, {
-            stroke: "blue",
-            "stroke-width": 1,
-            "stroke-dasharray": "none"
-        });
-    } else {
-        post("select_color: something wrong with tag: " + tag + "border");
-    }
-}
-
 // This adds a 0.5 offset to align to pixel grid, so it should
 // only be used to move gobjs to a new position.  (Should probably
 // be renamed to gobj_move to make this more obvious.)

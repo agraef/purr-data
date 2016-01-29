@@ -526,7 +526,6 @@ void iemgui_select(t_gobj *z, t_glist *glist, int selected)
         x->x_selected = canvas;
     else
         x->x_selected = NULL;
-    gui_vmess("gui_text_select_color", "xx", canvas, x);
     x->x_draw((void *)z, glist, IEM_GUI_DRAW_MODE_SELECT);
     if (selected < 2)
     {

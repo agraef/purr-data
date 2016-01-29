@@ -1620,8 +1620,6 @@ static void text_select(t_gobj *z, t_glist *glist, int state)
     {
         if (glist_istoplevel(glist))
         {
-            gui_vmess("gui_text_select_color", "xs",
-                glist_getcanvas(glist), rtext_gettag(y));
             if (z->g_pd == gatom_class)
             {
                 //sys_vgui(".x%lx.c itemconfigure %lx.l -fill %s\n",
