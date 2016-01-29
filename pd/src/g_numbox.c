@@ -170,7 +170,7 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
         y1,
         x2 - x1,
         y2 - y1,
-        glist_istoplevel(canvas));
+        glist_istoplevel(glist));
     /* Not sure when it is necessary to hide the frame... perhaps for
        k12? */
     if (!x->x_hide_frame || x->x_hide_frame == 2)
