@@ -1442,7 +1442,7 @@ function gui_highlight_io(cid, tag) {
                  {"stroke-width":"7"},
                  {"stroke-width":"3"},
                 ],
-                { duration: 400,
+                { duration: 600,
                   delay: 45,
                   iterations: Infinity,
                   easing: "ease-in-out" }
