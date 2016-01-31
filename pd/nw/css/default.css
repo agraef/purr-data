@@ -299,19 +299,19 @@ text {
 /* test of xlet hover animation... this should 
    probably use the web animation API instead. That
    way the animation won't get cut off when you
-   move off the object */
+   move off the object. We can't do that currently
+   because Pd just floods us with pairs of messages 
+   for every pixel we move inside an xlet. */
 @-webkit-keyframes fizzle {
     0% {
         stroke-width: 1;
         stroke-opacity: 1;
-        x: 0;
         rx: 1;
         ry: 1;
     }
     100% {
         stroke-width: 20;
         stroke-opacity: 0.2;
-        x: 100;
         rx: 50;
         ry: 50;
     }
@@ -319,8 +319,9 @@ text {
 
 /* can't remember why this was tagged !important */
 .xlet_selected {
-    stroke: purple !important;
-    -webkit-animation: fizzle 0.5s linear 1;
+    stroke: orange !important;
+    fill: orange;
+    -webkit-animation: fizzle 0.4s linear 1;
 }
 
 #canvas_find {

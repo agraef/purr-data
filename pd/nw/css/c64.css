@@ -117,7 +117,7 @@ mark.console_find_highlighted {
 /* selected connection between objects */
 .cord.signal.selected_line,
 .cord.control.selected_line {
-    stroke: blue;
+    stroke: #cc9933;
 }
 
 #cord_inspector_rect {
@@ -217,7 +217,7 @@ text {
     stroke: #7569d7;
 }
 
-/* A little hack for special canvas of [cnv].
+/* A little hack for special case of [cnv].
    All other iemguis have a black border, but
    [cnv] sets its selection rectangle to the
    user-supplied fill color when the object
@@ -296,14 +296,12 @@ text {
     0% {
         stroke-width: 1;
         stroke-opacity: 1;
-        x: 0;
         rx: 1;
         ry: 1;
     }
     100% {
         stroke-width: 20;
         stroke-opacity: 0.2;
-        x: 100;
         rx: 50;
         ry: 50;
     }
@@ -311,7 +309,8 @@ text {
 
 /* can't remember why this was tagged !important */
 .xlet_selected {
-    stroke: purple !important;
+    stroke: #cc9933 !important;
+    fill: #7569d7;
     -webkit-animation: fizzle 0.5s linear 1;
 }
 

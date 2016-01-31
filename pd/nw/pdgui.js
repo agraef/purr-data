@@ -1423,31 +1423,14 @@ function gui_configure_io(cid, tag, is_iemgui, is_signal, width) {
         }
         // remove xlet_selected tag
         xlet.classList.remove("xlet_selected");
-        if (xlet_anim) {
-            xlet_anim.cancel();
-        }
     }
 }
 
-var xlet_anim;
 function gui_highlight_io(cid, tag) {
     var xlet = get_item(cid, tag);
     // must check for null (see gui_configure_io)
     if (xlet !== null) {
         xlet.classList.add("xlet_selected");
-        if (!xlet_anim || xlet_anim.playState === "finished" ||
-            xlet_anim.playState === "idle") {
-            xlet_anim = xlet.animate(
-                [{"stroke-width":"3"},
-                 {"stroke-width":"7"},
-                 {"stroke-width":"3"},
-                ],
-                { duration: 600,
-                  delay: 45,
-                  iterations: Infinity,
-                  easing: "ease-in-out" }
-            );
-        }
     }
 }
 

@@ -297,14 +297,12 @@ text {
     0% {
         stroke-width: 1;
         stroke-opacity: 1;
-        x: 0;
         rx: 1;
         ry: 1;
     }
     100% {
         stroke-width: 20;
         stroke-opacity: 0.2;
-        x: 100;
         rx: 50;
         ry: 50;
     }
@@ -312,7 +310,8 @@ text {
 
 /* can't remember why this was tagged !important */
 .xlet_selected {
-    stroke: purple !important;
+    stroke: gray !important;
+    fill: gray;
     -webkit-animation: fizzle 0.5s linear 1;
 }
 

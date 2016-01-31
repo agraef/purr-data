@@ -107,18 +107,18 @@ mark.console_find_highlighted {
 
 .cord.signal {
     stroke-width: 2;
-    stroke: #53b83b;
+    stroke: green;
 }
 
 .cord.control {
     stroke-width: 1;
-    stroke: #53b83b;
+    stroke: green;
 }
 
 /* selected connection between objects */
 .cord.signal.selected_line,
 .cord.control.selected_line {
-    stroke: blue;
+    stroke: #53b83b;
 }
 
 #cord_inspector_rect {
@@ -266,21 +266,21 @@ text {
 
 /* control inlet */
 .xlet_control {
-    stroke: #53b83b;
+    stroke: green;
     fill: #53b83b;
 //    stroke-width: 1;
 }
 
 /* signal inlet */
 .xlet_signal {
-    stroke: #53b83b;
+    stroke: green;
     fill: #53b83b;
     stroke-width: 1;
 }
 
 /* iemgui inlet or outlet */
 .xlet_iemgui {
-    stroke: #0b560b;
+    stroke: green;
     fill: #0b560b;
     stroke-width: 1;
 }
@@ -298,14 +298,12 @@ text {
     0% {
         stroke-width: 1;
         stroke-opacity: 1;
-        x: 0;
         rx: 1;
         ry: 1;
     }
     100% {
         stroke-width: 20;
         stroke-opacity: 0.2;
-        x: 100;
         rx: 50;
         ry: 50;
     }
@@ -313,7 +311,8 @@ text {
 
 /* can't remember why this was tagged !important */
 .xlet_selected {
-    stroke: purple !important;
+    stroke: #53b83b !important;
+    fill: green;
     -webkit-animation: fizzle 0.5s linear 1;
 }
 
