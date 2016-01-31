@@ -118,15 +118,20 @@ Everything else: (A [x] means we've fixed it)
     'array_element_outline' 
 [x] either nw_create_window should take fewer parameters or it should take an
     object with name: value pairs
-[ ] getting the sense that glist_isselected should _always_ have
+[x] getting the sense that glist_isselected should _always_ have
     glist_getcanvas(x) as its first parameter
-[ ] t_svg: change x_x1..y2 to simple x_bbox[4], and change current x_bbox to
+    Note: not necessary.
+[x] t_svg: change x_x1..y2 to simple x_bbox[4], and change current x_bbox to
     x_cachebbox (or something like that)
-[ ] look into changing 'x' format specifier from \"x%.6lx\" to more generic
+    Note: can be revisited later.
+[x] look into changing 'x' format specifier from \"x%.6lx\" to more generic
     \"%.6lx\". (Not exactly sure what good the "x" does there.)  It's only
     specified in s_inter and in editor_new, so it should be easy to amend
     if need be.
-[ ] make "rtext" textarea <div> static, and turn display on/off
+    Note: doesn't seem necessary yet.
+[x] make "rtext" textarea <div> static, and turn display on/off
+    Note: doesn't seem necessary, although it's easy to change in the future
+    (say, if it becomes a performance problem on really big patches)
 [x] for the clipboard shortcut keys inside pd_canvas.html keydown, not sure
     what code should be sent to Pd on keyup...
 [ ] revisit pdtk_check_scroll_on_motion.  It's not implemented in the port
