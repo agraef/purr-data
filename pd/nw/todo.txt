@@ -134,8 +134,8 @@ Everything else: (A [x] means we've fixed it)
 [ ] canvas_check_geometry doesn't seem to do the right thing for canvases that
     are far to the right of the screen. Can't think of anything except maybe a
     bug in nw.js Window.x?
-[ ] look into using mask-image in order to make this background color theme-able
-[ ] integrate the inlet mouseover animation with a change of fill color
+[x] look into using mask-image in order to make this background color theme-able
+[x] integrate the inlet mouseover animation with a change of fill color
 [ ] figure out difference between deb install location /usr
     vs tarball /usr/local
 [x] port the bug fix from pd-l2ork git repo in commit
