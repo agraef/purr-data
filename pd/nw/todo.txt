@@ -122,7 +122,7 @@ Everything else: (A [x] means we've fixed it)
     yet.  Perhaps there's a better way to do it, without triggering a bunch
     of layouts.
 [x] implement pdtk_canvas_editval and magicglassval
-[ ] look into problems with object z-order on the C side when deleting objects
+[x] look into problems with object z-order on the C side when deleting objects
     and then undoing the delete
 [x] implement magicglass edit menu indicator
 [ ] clip garray to gl_x1 and gl_x2 by:
