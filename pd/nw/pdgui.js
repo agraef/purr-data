@@ -409,6 +409,7 @@ function build_file_dialog_string(obj) {
 exports.build_file_dialog_string = build_file_dialog_string;
 
 function gui_canvas_saveas(name, initfile, initdir, close_flag) {
+post("hey, the initdir is " + initdir + " and initfile is " + initfile);
     var input, chooser,
         span = patchwin[name].window.document.querySelector("#saveDialogSpan");
     if (!fs.existsSync(initdir)) {
@@ -423,8 +424,13 @@ function gui_canvas_saveas(name, initfile, initdir, close_flag) {
         style: "display: none;",
         type: "file",
         id: "saveDialog",
-        nwsaveas: initdir + '/' +  initfile,
-        nwworkingdir: initdir,
+        nwsaveas: initfile,
+        // For some reason we have to put the file name at the end of
+        // nwworkingdir path. Otherwise nw.js picks the final subdirectory as
+        // the suggested file name.
+        // nwworkingdir is by far the worst part of nw.js API-- if you run
+        // into a bug then be very suspicious of this code...
+        nwworkingdir: path.join(initdir, initfile),
         accept: ".pd"
     });
     span.innerHTML = input;

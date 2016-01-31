@@ -937,12 +937,14 @@ function nw_create_patch_window_menus(gui, w, name) {
         click: function() {
             var input, chooser,
                 span = w.document.querySelector("#fileDialogSpan");
+            // Complicated workaround-- see comment in build_file_dialog_string
             input = pdgui.build_file_dialog_string({
                 style: "display: none;",
                 type: "file",
                 id: "fileDialog",
-                nwworkingdir: "/user/home",
+                nwworkingdir: pdgui.get_pwd(),
                 multiple: null,
+                // These are copied from pd_filetypes in pdgui.js
                 accept: ".pd,.pat,.mxt,.mxb,.help"
             });
             span.innerHTML = input;
