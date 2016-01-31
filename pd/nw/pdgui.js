@@ -986,7 +986,7 @@ function gui_canvas_new(cid, width, height, geometry, editmode, name, dir, dirty
     geometry = geometry.slice(1);   // remove the leading "+"
     geometry = geometry.split("+"); // x/y screen offset (in pixels)
     // Keep patches on the visible screen
-    var xpos = Math.min(Number(geometry[0]), window.screen.height - width); 
+    var xpos = Math.min(Number(geometry[0]), window.screen.width - width); 
     var ypos = Math.min(Number(geometry[1]), window.screen.height - height); 
     xpos = Math.max(xpos, 0);
     ypos = Math.max(ypos, 0);
