@@ -70,13 +70,18 @@ Everything else: (A [x] means we've fixed it)
 [ ] in draw_vis, remove all the coords logic and let svg_togui do that work.
     In svg_new, leverage the "d", "points", etc. methods to do the same.
 [ ] remove the draw_vis warning/code about needing 2 points to draw
-[ ] make gui_menu_close message less hacky (currently includes patch args in
+[x] make gui_menu_close message less hacky (currently includes patch args in
     the middle) 
 [x] make dialogs with [yes/no] instead of [cancel/ok]
-[ ] draw graph inside gobj group
-[ ] merge gui_text_select and gui_text_deselect
-[ ] in function gui_cord_inspector_update, use parameter "moved" to flash text
-[ ] cord_inspector_flash doesn't seem to be deterministic-- if you move among
+[x] draw graph inside gobj group
+    Note: good idea, but this will be extremely difficult to get right given
+    the C API for specifying coords, glists, etc.
+[x] merge gui_text_select and gui_text_deselect
+    Note: doesn't seem necessary.
+[x] in function gui_cord_inspector_update, use parameter "moved" to flash text
+    Note: not sure I understand this one. But if this is a bug we'll run into
+    later...
+[x] cord_inspector_flash doesn't seem to be deterministic-- if you move among
     several cords very fast it will try to flash a non-existent svg item.
     (Probably want to either make a permanent item in the pd_canvas.html for it,
     or hard-code a separate div.)
