@@ -133,7 +133,7 @@ Everything else: (A [x] means we've fixed it)
 [ ] Fix layout on dialogs so that height/width of the document doesn't
     reflow when the window gets resized
 [x] look into using requestAnimationFrame
-[ ] canvas_check_geometry doesn't seem to do the right thing for canvases that
+[x] canvas_check_geometry doesn't seem to do the right thing for canvases that
     are far to the right of the screen. Can't think of anything except maybe a
     bug in nw.js Window.x?
 [x] look into using mask-image in order to make this background color theme-able
