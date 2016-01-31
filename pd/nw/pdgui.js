@@ -1840,9 +1840,9 @@ function gui_hide_selection_rectangle(cid) {
 
 // iemguis
 
-function gui_create_bng(cid, tag, cx, cy, radius) {
-    var g = get_gobj(cid, tag),
-        circle = create_item(cid, "circle", {
+function gui_create_bng(c, id, cx, cy, radius) {
+    var g = get_gobj(c, id),
+        circle = create_item(c, "circle", {
             cx: cx,
             cy: cy,
             r: radius,
@@ -1850,14 +1850,30 @@ function gui_create_bng(cid, tag, cx, cy, radius) {
             fill: "none",
             stroke: "black",
             "stroke-width": 1,
-            id: tag + "button"
+            id: id + "button"
     });
     g.appendChild(circle);
 }
 
-function gui_bng_flash(cid, tag, color) {
-    var button = get_item(cid, tag + "button");
-    configure_item(button, { fill: color });
+// change "x123456" to "#123456". Used as a convenience function for
+// iemgui colors.
+function x2h(x_val) {
+    return "#" + x_val.slice(1);
+}
+
+function gui_bng_button_color(c, id, x_color) {
+    var button = get_item(c, id + "button");
+    configure_item(button, { fill: x2h(x_color) });
+}
+
+function gui_bng_configure(c, id, x_color, cx, cy, r) {
+    var b = get_item(c, id + "button");
+    configure_item(b, {
+        cx: cx,
+        cy: cy,
+        r: r,
+        fill: x2h(x_color)
+    });
 }
 
 function gui_create_toggle(cid, tag, color, width, state, p1,p2,p3,p4,p5,p6,p7,p8,basex,basey) {
