@@ -2428,52 +2428,49 @@ function gui_iemgui_label_show_drag_handle(cid, tag, state, x, y) {
     }
 }
 
-function gui_create_mycanvas(cid,tag,color,x1,y1,x2_vis,y2_vis,x2,y2) {
+function gui_create_mycanvas(c,id,x_color,x1,y1,x2_vis,y2_vis,x2,y2) {
     var rect_vis, rect, g;
-    rect_vis = create_item(cid,"rect", {
+    rect_vis = create_item(c, "rect", {
         width: x2_vis - x1,
         height: y2_vis - y1,
-        fill: color,
-        stroke: color,
-        id: tag + "rect"
+        fill: x2h(x_color),
+        stroke: x2h(x_color),
+        id: id + "rect"
         }
     );
 
     // we use a drag_handle-- unlike a 'border' it takes
     // the same color as the visible rectangle when deselected
-    rect = create_item(cid,"rect", {
+    rect = create_item(c, "rect", {
         width: x2 - x1,
         height: y2 - y1,
         fill: "none",
-        stroke: color,
-        id: tag + "drag_handle",
+        stroke: x2h(x_color),
+        id: id + "drag_handle",
         "class": "border mycanvas_border"
         }
     );
-    g = get_gobj(cid,tag);
+    g = get_gobj(c, id);
     g.appendChild(rect_vis);
     g.appendChild(rect);
 }
 
-function gui_update_mycanvas(cid, tag, color, selected) {
-    var r = get_item(cid, tag + "rect"),
-        h = get_item(cid, tag + "drag_handle");
-    configure_item(r, { fill: color, stroke: color });
+function gui_update_mycanvas(c, id, x_color, selected) {
+    var r = get_item(c, id + "rect"),
+        h = get_item(c, id + "drag_handle");
+    configure_item(r, {
+        fill: x2h(x_color),
+        stroke: x2h(x_color)
+    });
 }
 
-function gui_mycanvas_coords(cid, tag, vis_width, vis_height, select_width, select_height) {
-    var r = get_item(cid, tag + "rect"),
-        h = get_item(cid, tag + "drag_handle");
+function gui_mycanvas_coords(c, id, vis_width, vis_height, select_width, select_height) {
+    var r = get_item(c, id + "rect"),
+        h = get_item(c, id + "drag_handle");
     configure_item(r, { width: vis_width, height: vis_height });
     configure_item(h, { width: select_width, height: select_height });
 }
 
-// Not needed anymore
-function gui_mycanvas_select_color(cid,tag,color) {
-    //var item = get_item(cid,tag + "drag_handle");
-    //configure_item(item, {stroke: color});
-}
- 
 function gui_create_scalar(cid, tag, isselected, t1, t2, t3, t4, t5, t6,
     is_toplevel) {
     // we should probably use create_gobj here, but we"re doing some initial 

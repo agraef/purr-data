@@ -25,12 +25,10 @@ void my_canvas_draw_new(t_my_canvas *x, t_glist *glist)
     int x1=text_xpix(&x->x_gui.x_obj, glist);
     int y1=text_ypix(&x->x_gui.x_obj, glist);
 
-    char colorbuf[MAXPDSTRING];
-    sprintf(colorbuf, "#%6.6x", x->x_gui.x_bcol);
     gui_vmess("gui_text_create_gobj", "xxsiii", canvas,
         x, "iemgui", x1, y1, glist_istoplevel(canvas));
-    gui_vmess("gui_create_mycanvas", "xxsiiiiii", canvas,
-        x, colorbuf, x1, y1, x1+x->x_vis_w, y1+x->x_vis_h,
+    gui_vmess("gui_create_mycanvas", "xxxiiiiii", canvas,
+        x, x->x_gui.x_bcol, x1, y1, x1+x->x_vis_w, y1+x->x_vis_h,
         x1+x->x_gui.x_w, y1+x->x_gui.x_h);
 }
 
@@ -50,21 +48,14 @@ void my_canvas_draw_config(t_my_canvas* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
     int isselected;
-    char bcol[8]; sprintf(bcol, "#%6.6x", x->x_gui.x_bcol);
     isselected = x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas;
-    gui_vmess("gui_update_mycanvas", "xxsi",
-        canvas, x, bcol, isselected);
+    gui_vmess("gui_update_mycanvas", "xxxi",
+        canvas, x, x->x_gui.x_bcol, isselected);
 }
 
 void my_canvas_draw_select(t_my_canvas* x, t_glist* glist)
 {
-    t_canvas *canvas=glist_getcanvas(glist);
-    if (x->x_gui.x_glist != glist_getcanvas(glist)) return;
-    char bcol[8]; sprintf(bcol, "#%6.6x", x->x_gui.x_bcol);
-    gui_vmess("gui_mycanvas_select_color", "xxs",
-        canvas, x,
-        x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas ?
-            "blue" : bcol); 
+    /* No longer needed */
 }
 
 static void my_canvas__clickhook(t_scalehandle *sh, int newstate)
