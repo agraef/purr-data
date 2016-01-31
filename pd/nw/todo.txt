@@ -42,9 +42,11 @@ Node-webkit stuff:
 
 Everything else: (A [x] means we've fixed it)
 [ ] packaging as app, setting correct appname, etc
-[ ] check if patch windows with screenposition (0,0) get stuck underneath OSX
+[x] check if patch windows with screenposition (0,0) get stuck underneath OSX
     menu.
-[ ] abstract away appendChild
+[x] abstract away appendChild
+    Note: not needed at that time. Maybe further in the future when we've
+    pulled most of the GUI stuff out of the c code we can revisit this.
 [x] font-size should be set as css property for a class of text, rather than
     per each gobj in svg
     (Note: not sure that this makes sense right now. We could use a class to
@@ -53,8 +55,12 @@ Everything else: (A [x] means we've fixed it)
     the font dialog.)
 [ ] find a better approach to escaping characters for the gui than
     escape_double_quotes kludge (and handle any other problematic chars)
-[ ] once garrays are drawn inside a <g> we won't have to individually erase
+[x] once garrays are drawn inside a <g> we won't have to individually erase
     each child of a scalar
+    Note: Not sure exactly how we would do this. While it makes the most sense
+    from the GUI-side, a lot the interfaces on the C-side would need to be
+    changed.  Seems like an enormous undertaking, unless there's some clever
+    hack that I'm not yet seeing.
 [ ] make pdgui function names more consistent
 [ ] in draw_vis, move tags to front of function call so they don't have to
     be in an array
