@@ -74,7 +74,7 @@ Everything else: (A [x] means we've fixed it)
     several cords very fast it will try to flash a non-existent svg item.
     (Probably want to either make a permanent item in the pd_canvas.html for it,
     or hard-code a separate div.)
-[ ] looks like nwworkingdir isn't working for open/save dialogs atm
+[x] looks like nwworkingdir isn't working for open/save dialogs atm
 [x] text_set doesn't work when a numbox is first created (but works otherwise)
 [x] clean up nw_create_window (doesn't need so many parameters)
 [x] make it possible to have the inner cells of hradio change color with the
