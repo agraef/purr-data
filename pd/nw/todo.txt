@@ -77,9 +77,10 @@ Everything else: (A [x] means we've fixed it)
 [ ] looks like nwworkingdir isn't working for open/save dialogs atm
 [x] text_set doesn't work when a numbox is first created (but works otherwise)
 [x] clean up nw_create_window (doesn't need so many parameters)
-[ ] make it possible to have the inner cells of hradio change color with the
+[x] make it possible to have the inner cells of hradio change color with the
     selection, as the border currently does.  Tk just uses the non-hierarchical
     tags and appends the word "BASE".  (Maybe use an inner <g> to do this.)
+    Note: this doesn't seem like a big deal.
 [ ] implement the crappy iemgui color dialog presets
 [ ] use underscores for iemgui dialog element names
 [ ] change all the gui color char[MAXPDSTRING] junk to simple int, and do the
