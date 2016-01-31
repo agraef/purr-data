@@ -84,9 +84,10 @@ Everything else: (A [x] means we've fixed it)
 [ ] use underscores for iemgui dialog element names
 [ ] change all the gui color char[MAXPDSTRING] junk to simple int, and do the
     conversion to hex html string in the gui.
-[ ] think about scaling the svg instead of the page, and making the selection
+[x] think about scaling the svg instead of the page, and making the selection
     rectangle a div above that
-[ ] change 'visible-width' to 'cnv-width'
+[x] change 'visible-width' to 'cnv-width'
+    Note: this isn't needed
 [x] in dialog_iemgui.html, use an object to store all the prop/value pairs that
     got sent.  That way we don't have to use all those awful tricks to
     conditionally fill the slots
@@ -130,7 +131,7 @@ Everything else: (A [x] means we've fixed it)
     in the lib loading routine
 [ ] Fix layout on dialogs so that height/width of the document doesn't
     reflow when the window gets resized
-[ ] look into using requestAnimationFrame
+[x] look into using requestAnimationFrame
 [ ] canvas_check_geometry doesn't seem to do the right thing for canvases that
     are far to the right of the screen. Can't think of anything except maybe a
     bug in nw.js Window.x?
