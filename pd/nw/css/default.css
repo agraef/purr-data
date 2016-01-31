@@ -112,7 +112,7 @@ mark.console_find_highlighted {
 /* selected connection between objects */
 .cord.signal.selected_line,
 .cord.control.selected_line {
-    stroke: blue;
+    stroke: #e87216;
 }
 
 #cord_inspector_rect {
@@ -162,7 +162,7 @@ mark.console_find_highlighted {
 }
 
 #new_object_textentry.obj {
-    outline: 1px solid blue;
+    outline: 1px solid #e87216;
 }
 
 /* We're dynamically creating the svg background data in javascript
@@ -172,7 +172,7 @@ mark.console_find_highlighted {
    in the style sheet and retrieve it in javascript when we build the svg
    background. */
 #new_object_textentry.msg {
-    outline: 0px solid blue;
+    outline: 0px solid #e87216;
     /* background-image: url(../msg-box.svg); */
 }
 
