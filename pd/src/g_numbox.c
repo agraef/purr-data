@@ -137,20 +137,21 @@ static void my_numbox_draw_update(t_gobj *client, t_glist *glist)
         x->x_buf[sl+1] = 0;
         if(sl >= x->x_gui.x_w)
             cp += sl - x->x_gui.x_w + 1;
-        gui_vmess("gui_text_set", "xxs", glist_getcanvas(glist),
-            x, cp);
-            
+        gui_vmess("gui_text_set", "xxs",
+            glist_getcanvas(glist),
+            x,
+            cp);
         x->x_buf[sl] = 0;
     }
     else
     {
-        //printf("draw_update 2\n");
-        char fcol[8]; sprintf(fcol, "#%6.6x",
-            x->x_gui.x_change ? IEM_GUI_COLOR_EDITED : x->x_gui.x_fcol);
-        my_numbox_ftoa(x);
-        gui_vmess("gui_text_set", "xxs", glist_getcanvas(glist),
-            x, x->x_buf);
-        x->x_buf[0] = 0;
+        my_numbox_ftoa(x); /* mmm... side-effects */
+        gui_vmess("gui_text_set", "xxs",
+            glist_getcanvas(glist),
+            x,
+            x->x_buf);
+        x->x_buf[0] = 0; /* mmm... more side-effects... no clue why we'd need
+                            to mutate a struct member in order to draw stuff */
     }
 }
 
@@ -160,12 +161,11 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
     int half=x->x_gui.x_h/2, d=1+x->x_gui.x_h/34;
     int x1=text_xpix(&x->x_gui.x_obj, glist), x2=x1+x->x_numwidth;
     int y1=text_ypix(&x->x_gui.x_obj, glist), y2=y1+x->x_gui.x_h;
-    char bcol[8]; sprintf(bcol, "#%6.6x", x->x_gui.x_bcol);
 
-    gui_vmess("gui_create_numbox", "xxsiiiii",
+    gui_vmess("gui_create_numbox", "xxxiiiii",
         canvas,
         x,
-        bcol,
+        x->x_gui.x_bcol,
         x1,
         y1,
         x2 - x1,
@@ -181,11 +181,13 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
         //    x->x_gui.x_fcol, x, x);
     }
     my_numbox_ftoa(x);
-    char colorbuf[MAXPDSTRING];
-    sprintf(colorbuf, "#%6.6x", x->x_gui.x_fcol);
-    gui_vmess("gui_numbox_drawtext", "xxsisiiii",
-        canvas, x,
-        x->x_buf, x->x_gui.x_fontsize, colorbuf, x1+half+2, y1+half+d, x1, y1);
+    gui_vmess("gui_numbox_drawtext", "xxsixiiii",
+        canvas,
+        x,
+        x->x_buf,
+        x->x_gui.x_fontsize,
+        x->x_gui.x_fcol,
+        x1+half+2, y1+half+d, x1, y1);
 }
 
 /* Not sure that this is needed anymore */
@@ -223,14 +225,15 @@ static void my_numbox_draw_move(t_my_numbox *x, t_glist *glist)
 static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    char fcol[8]; sprintf(fcol, "#%6.6x", x->x_gui.x_fcol);
     int issel = x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas;
-    char bgcol[MAXPDSTRING];
-    sprintf(bgcol, "#%6.6x", x->x_gui.x_bcol);
-    
-    gui_vmess("gui_update_numbox", "xxsssii",
-        canvas, x,
-        fcol, bgcol, iemgui_typeface, x->x_gui.x_fontsize, sys_fontweight);
+    gui_vmess("gui_update_numbox", "xxxxsii",
+        canvas,
+        x,
+        x->x_gui.x_fcol,
+        x->x_gui.x_bcol,
+        iemgui_typeface,
+        x->x_gui.x_fontsize,
+        sys_fontweight);
 }
 
 static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist)
@@ -323,11 +326,8 @@ static void my_numbox__motionhook(t_scalehandle *sh,
         x->x_numwidth = my_numbox_calc_fontwidth(x);
         canvas_dirty(x->x_gui.x_glist, 1);
 
-
-
         if (glist_isvisible(x->x_gui.x_glist))
         {
-            
             my_numbox_draw_move(x, x->x_gui.x_glist);
             my_numbox_draw_config(x, x->x_gui.x_glist);
             my_numbox_draw_update((t_gobj*)x, x->x_gui.x_glist);
@@ -338,9 +338,6 @@ static void my_numbox__motionhook(t_scalehandle *sh,
             //gobj_vis(x, x->x_gui.x_glist, 1);
             scalehandle_unclick_scale(sh);
         }
-
-
-
         int properties = gfxstub_haveproperties((void *)x);
         if (properties)
         {
@@ -613,7 +610,6 @@ static void my_numbox_log_height(t_my_numbox *x, t_floatarg lh)
         x->x_k = exp(log(x->x_max/x->x_min)/(double)(x->x_log_height));
     else
         x->x_k = 1.0;
-    
 }
 
 static void my_numbox_hide_frame(t_my_numbox *x, t_floatarg lh)

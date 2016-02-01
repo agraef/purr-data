@@ -1840,9 +1840,9 @@ function gui_hide_selection_rectangle(cid) {
 
 // iemguis
 
-function gui_create_bng(c, id, cx, cy, radius) {
-    var g = get_gobj(c, id),
-        circle = create_item(c, "circle", {
+function gui_create_bng(cid, tag, cx, cy, radius) {
+    var g = get_gobj(cid, tag),
+        circle = create_item(cid, "circle", {
             cx: cx,
             cy: cy,
             r: radius,
@@ -1850,7 +1850,7 @@ function gui_create_bng(c, id, cx, cy, radius) {
             fill: "none",
             stroke: "black",
             "stroke-width": 1,
-            id: id + "button"
+            id: tag + "button"
     });
     g.appendChild(circle);
 }
@@ -1861,13 +1861,13 @@ function x2h(x_val) {
     return "#" + x_val.slice(1);
 }
 
-function gui_bng_button_color(c, id, x_color) {
-    var button = get_item(c, id + "button");
+function gui_bng_button_color(cid, tag, x_color) {
+    var button = get_item(cid, tag + "button");
     configure_item(button, { fill: x2h(x_color) });
 }
 
-function gui_bng_configure(c, id, x_color, cx, cy, r) {
-    var b = get_item(c, id + "button");
+function gui_bng_configure(cid, tag, x_color, cx, cy, r) {
+    var b = get_item(cid, tag + "button");
     configure_item(b, {
         cx: cx,
         cy: cy,
@@ -1955,7 +1955,7 @@ function numbox_data_string(w, h) {
 }
 
 // Todo: send fewer parameters from c
-function gui_create_numbox(cid, tag, bgcolor, x, y, w, h, is_toplevel) {
+function gui_create_numbox(cid, tag, x_color, x, y, w, h, is_toplevel) {
     // numbox doesn't have a standard iemgui border,
     // so we must create its gobj manually
     var g = gui_text_create_gobj(cid, tag, "iemgui", x, y, is_toplevel),
@@ -1964,7 +1964,7 @@ function gui_create_numbox(cid, tag, bgcolor, x, y, w, h, is_toplevel) {
     data = numbox_data_string(w, h);
     border = create_item(cid, "path", {
         d: data,
-        fill: bgcolor,
+        fill: x2h(x_color),
         stroke: "black",
         "stroke-width": 1,
         id: (tag + "border"),
@@ -1980,7 +1980,7 @@ function gui_numbox_coords(cid, tag, w, h) {
     });
 }
 
-function gui_numbox_drawtext(cid,tag,text,font_size,color,xpos,ypos,basex,basey) {
+function gui_numbox_drawtext(cid,tag,text,font_size,x_color,xpos,ypos,basex,basey) {
     // kludge alert -- I'm not sure why I need to add half to the ypos
     // below. But it works for most font sizes.
     var g = get_gobj(cid, tag),
@@ -1989,7 +1989,7 @@ function gui_numbox_drawtext(cid,tag,text,font_size,color,xpos,ypos,basex,basey)
                         (xpos - basex) + "," +
                         ((ypos - basey + (ypos - basey) * 0.5)|0) + ")",
             "font-size": font_size,
-            fill: color,
+            fill: x2h(x_color),
             id: tag + "text"
         }),
         text_node = patchwin[cid].window.document.createTextNode(text);
@@ -1997,12 +1997,12 @@ function gui_numbox_drawtext(cid,tag,text,font_size,color,xpos,ypos,basex,basey)
     g.appendChild(svg_text);
 }
 
-function gui_update_numbox(cid, tag, fcolor, bgcolor, font_name, font_size, font_weight) {
+function gui_update_numbox(cid, tag, x_fcolor, x_bgcolor, font_name, font_size, font_weight) {
     var b = get_item(cid, tag + "border"),
         text = get_item(cid, tag + "text"),
         label = get_item(cid, tag + "label");
-    configure_item(b, { fill: bgcolor });
-    configure_item(text, { fill: fcolor, "font-size": font_size });
+    configure_item(b, { fill: x2h(x_bgcolor) });
+    configure_item(text, { fill: x2h(x_fcolor), "font-size": font_size });
     // Update the label if one exists
     if (label) {
         gui_iemgui_label_font(cid, tag, font_name, font_weight, font_size);
@@ -2428,45 +2428,45 @@ function gui_iemgui_label_show_drag_handle(cid, tag, state, x, y) {
     }
 }
 
-function gui_create_mycanvas(c,id,x_color,x1,y1,x2_vis,y2_vis,x2,y2) {
+function gui_create_mycanvas(cid,tag,x_color,x1,y1,x2_vis,y2_vis,x2,y2) {
     var rect_vis, rect, g;
-    rect_vis = create_item(c, "rect", {
+    rect_vis = create_item(cid, "rect", {
         width: x2_vis - x1,
         height: y2_vis - y1,
         fill: x2h(x_color),
         stroke: x2h(x_color),
-        id: id + "rect"
+        id: tag + "rect"
         }
     );
 
     // we use a drag_handle-- unlike a 'border' it takes
     // the same color as the visible rectangle when deselected
-    rect = create_item(c, "rect", {
+    rect = create_item(cid, "rect", {
         width: x2 - x1,
         height: y2 - y1,
         fill: "none",
         stroke: x2h(x_color),
-        id: id + "drag_handle",
+        id: tag + "drag_handle",
         "class": "border mycanvas_border"
         }
     );
-    g = get_gobj(c, id);
+    g = get_gobj(cid, tag);
     g.appendChild(rect_vis);
     g.appendChild(rect);
 }
 
-function gui_update_mycanvas(c, id, x_color, selected) {
-    var r = get_item(c, id + "rect"),
-        h = get_item(c, id + "drag_handle");
+function gui_update_mycanvas(cid, tag, x_color, selected) {
+    var r = get_item(cid, tag + "rect"),
+        h = get_item(cid, tag + "drag_handle");
     configure_item(r, {
         fill: x2h(x_color),
         stroke: x2h(x_color)
     });
 }
 
-function gui_mycanvas_coords(c, id, vis_width, vis_height, select_width, select_height) {
-    var r = get_item(c, id + "rect"),
-        h = get_item(c, id + "drag_handle");
+function gui_mycanvas_coords(cid, tag, vis_width, vis_height, select_width, select_height) {
+    var r = get_item(cid, tag + "rect"),
+        h = get_item(cid, tag + "drag_handle");
     configure_item(r, { width: vis_width, height: vis_height });
     configure_item(h, { width: select_width, height: select_height });
 }
