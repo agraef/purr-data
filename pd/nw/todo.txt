@@ -94,8 +94,9 @@ Everything else: (A [x] means we've fixed it)
     Note: this doesn't seem like a big deal.
 [ ] implement the crappy iemgui color dialog presets
 [ ] use underscores for iemgui dialog element names
-[ ] change all the gui color char[MAXPDSTRING] junk to simple int, and do the
+[x] change all the gui color char[MAXPDSTRING] junk to simple int, and do the
     conversion to hex html string in the gui.
+    Note: there may be some left in g_canvas.c and g_template.c
 [x] think about scaling the svg instead of the page, and making the selection
     rectangle a div above that
 [x] change 'visible-width' to 'cnv-width'
