@@ -2067,7 +2067,7 @@ function gui_create_radio(cid,tag,p1,p2,p3,p4,i,basex,basey) {
     g.appendChild(cell);
 }
 
-function gui_create_radio_buttons(cid,tag,color,p1,p2,p3,p4,basex,basey,i,state) {
+function gui_create_radio_buttons(cid,tag,x_color,p1,p2,p3,p4,basex,basey,i,state) {
     var g = get_gobj(cid, tag),
         b;
     b = create_item(cid, "rect", {
@@ -2075,8 +2075,8 @@ function gui_create_radio_buttons(cid,tag,color,p1,p2,p3,p4,basex,basey,i,state)
         y: p2 - basey,
         width: p3 - p1,
         height: p4 - p2,
-        stroke: color,
-        fill: color,
+        stroke: x2h(x_color),
+        fill: x2h(x_color),
         id: tag + "button_" + i,
         display: state ? "inline" : "none"
     });
@@ -2104,11 +2104,15 @@ function gui_radio_button_coords(cid, tag, x1, y1, xi, yi, i, s, d, orient) {
     });
 }
 
-function gui_radio_update(cid,tag,bgcolor,prev,next) {
+function gui_radio_update(cid,tag,x_fgcolor,prev,next) {
     var prev = get_item(cid, tag + "button_" + prev),
         next = get_item(cid, tag + "button_" + next);
-    configure_item(prev, { display: "none", fill: bgcolor, stroke: bgcolor });
-    configure_item(next, { display: "inline", fill: bgcolor, stroke: bgcolor });
+    configure_item(prev, { display: "none" });
+    configure_item(next, {
+        display: "inline",
+        fill: x2h(x_fgcolor),
+        stroke: x2h(x_fgcolor)
+    });
 }
 
 function gui_create_vumeter_text(cid,tag,color,xpos,ypos,text,index,basex,basey) {
