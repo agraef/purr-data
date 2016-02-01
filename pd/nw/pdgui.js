@@ -2016,7 +2016,7 @@ function gui_update_numbox_text_position(cid, tag, x, y) {
     });
 }
 
-function gui_create_slider(cid,tag,color,p1,p2,p3,p4,basex, basey) {
+function gui_create_slider(cid,tag,x_color,p1,p2,p3,p4,basex, basey) {
     var g = get_gobj(cid, tag),
         indicator;
     indicator = create_item(cid, "line", {
@@ -2024,7 +2024,7 @@ function gui_create_slider(cid,tag,color,p1,p2,p3,p4,basex, basey) {
         y1: p2 - basey,
         x2: p3 - basex,
         y2: p4 - basey,
-        stroke: color,
+        stroke: x2h(x_color),
         "stroke-width": 3,
         fill: "none",
         id: tag + "indicator"
@@ -2043,10 +2043,10 @@ function gui_slider_update(cid,tag,p1,p2,p3,p4,basex,basey) {
     });
 }
 
-function gui_slider_indicator_color(cid, tag, color) {
+function gui_slider_indicator_color(cid, tag, x_color) {
     var i = get_item(cid, tag + "indicator");
     configure_item(i, {
-        stroke: color
+        stroke: x2h(x_color)
     });
 }
 
