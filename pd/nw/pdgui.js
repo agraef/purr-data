@@ -2115,7 +2115,7 @@ function gui_radio_update(cid,tag,x_fgcolor,prev,next) {
     });
 }
 
-function gui_create_vumeter_text(cid,tag,color,xpos,ypos,text,index,basex,basey) {
+function gui_create_vumeter_text(cid,tag,x_color,xpos,ypos,text,index,basex,basey) {
     var g = get_gobj(cid, tag),
         svg_text = create_item(cid, "text", {
             x: xpos - basex,
@@ -2137,12 +2137,12 @@ function gui_create_vumeter_text(cid,tag,color,xpos,ypos,text,index,basex,basey)
 // c) recreate all the missing labels
 // To get on to other work we just parrot the insanity here,
 // and silently ignore calls to update non-existent text.
-function gui_update_vumeter_text(cid, tag, text, font, selected, color, i) {
+function gui_update_vumeter_text(cid, tag, text, font, selected, x_color, i) {
     var svg_text = get_item(cid, tag + "text_" + i);
     if (!selected) {
         // Hack...
         if (svg_text !== null) {
-            configure_item(svg_text, { fill: color });
+            configure_item(svg_text, { fill: x2h(x_color) });
         }
     }
 }
@@ -2157,7 +2157,7 @@ function gui_erase_vumeter_text(cid, tag, i) {
     t.parentNode.removeChild(t);
 }
 
-function gui_create_vumeter_steps(cid,tag,color,p1,p2,p3,p4,width,index,basex,basey,i) {
+function gui_create_vumeter_steps(cid,tag,x_color,p1,p2,p3,p4,width,index,basex,basey,i) {
     var g = get_gobj(cid, tag),
         l;
     l = create_item(cid, "line", {
@@ -2165,7 +2165,7 @@ function gui_create_vumeter_steps(cid,tag,color,p1,p2,p3,p4,width,index,basex,ba
         y1: p2 - basey,
         x2: p3 - basex,
         y2: p4 - basey,
-        stroke: color,
+        stroke: x2h(x_color),
         "stroke-width": width,
         "id": tag + "led_" + i
     });
@@ -2187,7 +2187,7 @@ function gui_update_vumeter_step_coords(cid,tag,i,x1,y1,x2,y2,basex,basey) {
     });
 }
 
-function gui_create_vumeter_rect(cid,tag,color,p1,p2,p3,p4,basex,basey) {
+function gui_create_vumeter_rect(cid,tag,x_color,p1,p2,p3,p4,basex,basey) {
     var g = get_gobj(cid, tag),
         rect;
     rect = create_item(cid, "rect", {
@@ -2195,16 +2195,16 @@ function gui_create_vumeter_rect(cid,tag,color,p1,p2,p3,p4,basex,basey) {
         y: p2 - basey,
         width: p3 - p1,
         height: p4 + 1 - p2,
-        stroke: color,
-        fill: color,
+        stroke: x2h(x_color),
+        fill: x2h(x_color),
         id: tag + "rect"
     });
     g.appendChild(rect);
 }
 
-function gui_update_vumeter_rect(cid, tag, color) {
+function gui_update_vumeter_rect(cid, tag, x_color) {
     var r = get_item(cid, tag + "rect");
-    configure_item(r, { fill: color, stroke: color });
+    configure_item(r, { fill: x2h(x_color), stroke: x2h(x_color) });
 }
 
 // Oh hack upon hack... why doesn't the iemgui base_config just take care
@@ -2249,14 +2249,14 @@ function gui_vumeter_update_rms(cid,tag,p1,p2,p3,p4,basex,basey) {
     });
 }
 
-function gui_vumeter_update_peak(cid,tag,color,p1,p2,p3,p4,basex,basey) {
+function gui_vumeter_update_peak(cid,tag,x_color,p1,p2,p3,p4,basex,basey) {
     var line = get_item(cid, tag + "peak");
     configure_item(line, {
         x1: p1 - basex,
         y1: p2 - basey,
         x2: p3 - basex,
         y2: p4 - basey,
-        stroke: color
+        stroke: x2h(x_color)
     });
 }
 
