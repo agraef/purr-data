@@ -25,11 +25,8 @@ void toggle_draw_update(t_gobj *xgobj, t_glist *glist)
         if(glist_isvisible(glist))
         {
             t_canvas *canvas=glist_getcanvas(glist);
-
-            char colorbuf[MAXPDSTRING];
-            sprintf(colorbuf, "#%6.6x", x->x_gui.x_fcol);
-            gui_vmess("gui_toggle_update", "xxis", canvas,
-                x, x->x_on != 0.0, colorbuf);
+            gui_vmess("gui_toggle_update", "xxix", canvas,
+                x, x->x_on != 0.0, x->x_gui.x_fcol);
         }
         x->x_gui.x_changed = 0;
     }
@@ -37,18 +34,16 @@ void toggle_draw_update(t_gobj *xgobj, t_glist *glist)
 
 void toggle_draw_new(t_toggle *x, t_glist *glist)
 {
-    char colorbuf[8];
     t_canvas *canvas=glist_getcanvas(glist);
     int w=(x->x_gui.x_w+29)/30;
     int x1=text_xpix(&x->x_gui.x_obj, glist);
     int y1=text_ypix(&x->x_gui.x_obj, glist);
     int x2=x1+x->x_gui.x_w, y2=y1+x->x_gui.x_h;
     int col = (x->x_on!=0.0)?x->x_gui.x_fcol:x->x_gui.x_bcol;
-    sprintf(colorbuf, "#%6.6x", x->x_gui.x_fcol);
 
     iemgui_base_draw_new(&x->x_gui);
-    gui_vmess("gui_create_toggle", "xxsiiiiiiiiiiii", canvas,
-        x, colorbuf, w,
+    gui_vmess("gui_create_toggle", "xxxiiiiiiiiiiii", canvas,
+        x, x->x_gui.x_fcol, w,
         (x->x_on != 0.0),
         x1+w+1, y1+w+1, x2-w-1, y2-w-1,
         x1+w+1, y2-w-1, x2-w-1, y1+w+1, x1, y1);
@@ -75,10 +70,8 @@ void toggle_draw_config(t_toggle* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
     iemgui_base_draw_config(&x->x_gui);
-    char colorbuf[MAXPDSTRING];
-    sprintf(colorbuf, "#%6.6x", x->x_gui.x_fcol);
-    gui_vmess("gui_toggle_update", "xxis", canvas,
-    x, x->x_on != 0.0, colorbuf);
+    gui_vmess("gui_toggle_update", "xxix", canvas,
+    x, x->x_on != 0.0, x->x_gui.x_fcol);
 }
 
 static void toggle__clickhook(t_scalehandle *sh, int newstate)

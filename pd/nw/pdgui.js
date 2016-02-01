@@ -1876,7 +1876,7 @@ function gui_bng_configure(cid, tag, x_color, cx, cy, r) {
     });
 }
 
-function gui_create_toggle(cid, tag, color, width, state, p1,p2,p3,p4,p5,p6,p7,p8,basex,basey) {
+function gui_create_toggle(cid, tag, x_color, width, state, p1,p2,p3,p4,p5,p6,p7,p8,basex,basey) {
     var g = get_gobj(cid, tag),
         points_array,
         cross1, cross2;
@@ -1885,7 +1885,7 @@ function gui_create_toggle(cid, tag, color, width, state, p1,p2,p3,p4,p5,p6,p7,p
     ];
     cross1 = create_item(cid, "polyline", {
         points: points_array.join(" "),
-        stroke: color,
+        stroke: x2h(x_color),
         fill: "none",
         id: tag + "cross1",
         display: state ? "inline" : "none",
@@ -1896,7 +1896,7 @@ function gui_create_toggle(cid, tag, color, width, state, p1,p2,p3,p4,p5,p6,p7,p
     ];
     cross2 = create_item(cid, "polyline", {
         points: points_array.join(" "),
-        stroke: color,
+        stroke: x2h(x_color),
         fill: "none",
         id: tag + "cross2",
         display: state ? "inline" : "none",
@@ -1929,15 +1929,15 @@ function gui_toggle_resize_cross(cid,tag,w,p1,p2,p3,p4,p5,p6,p7,p8,basex,basey) 
     });
 }
 
-function gui_toggle_update(cid, tag, state, color) {
+function gui_toggle_update(cid, tag, state, x_color) {
     var cross1 = get_item(cid, tag + "cross1"),
         cross2 = get_item(cid, tag + "cross2");
     if (!!state) {
-        configure_item(cross1, { display: "inline", stroke: color });
-        configure_item(cross2, { display: "inline", stroke: color });
+        configure_item(cross1, { display: "inline", stroke: x2h(x_color) });
+        configure_item(cross2, { display: "inline", stroke: x2h(x_color) });
     } else {
-        configure_item(cross1, { display: "none", stroke: color });
-        configure_item(cross2, { display: "none", stroke: color });
+        configure_item(cross1, { display: "none", stroke: x2h(x_color) });
+        configure_item(cross2, { display: "none", stroke: x2h(x_color) });
     }
 }
 
