@@ -87,8 +87,7 @@ function nw_window_focus_callback() {
 function add_events() {
     // Find bar
     var find_bar = document.getElementById("console_find_text");
-    find_bar.defaultValue = "Search in Console";
-    console_find_set_default(find_bar);
+    find_bar.placeholder = "Search in Console";
     find_bar.addEventListener("keydown",
         function(e) {
             return console_find_keydown(this, e);
@@ -135,20 +134,6 @@ function connect() {
     }
 }
 
-function console_find_check_default(e) {
-    if (e.value === e.defaultValue) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-function console_find_set_default(e) {
-    e.value = e.defaultValue;
-    e.setSelectionRange(0,0);
-    e.style.color = "#888";
-}
-
 function console_unwrap_tag(console_elem, tag_name) {
     var b = console_elem.getElementsByTagName(tag_name),
         parent_elem;
@@ -166,21 +151,13 @@ function console_find_text(elem, evt, callback) {
     var console_text = document.getElementById("p1"),
         wrap_tag = "mark",
         wrapper_count;
-    // Check the input for default text before the event happens
-    if (console_find_check_default(elem)) {
-       // if so, erase it
-        elem.value = "";
-        // put this in css and use class here
-        elem.style.color = "#000";
-    }
     window.setTimeout(function () {
         console_unwrap_tag(console_text, wrap_tag);
-
-        // Check after the event if the value is empty, and if
-        // so set it to default value
+        // Check after the event if the value is empty
         if (elem.value === undefined || elem.value === "") {
-            console_find_set_default(elem);
-        } else if (!console_find_check_default(elem)) {
+            // Todo: use class instead of style here
+            elem.style.setProperty("background", "white");
+        } else {
             window.findAndReplaceDOMText(console_text, {
                 //preset: "prose",
                 find: elem.value.toLowerCase(),
@@ -190,6 +167,7 @@ function console_find_text(elem, evt, callback) {
             // many matches there were without traversing the DOM and
             // counting the wrappers!
             wrapper_count = console_text.getElementsByTagName(wrap_tag).length;
+            // Todo: use class instead of style here...
             if (wrapper_count < 1) {
                 elem.style.setProperty("background", "red");
             } else {
@@ -478,10 +456,16 @@ function nw_create_pd_window_menus(gui, w) {
                 text_container.style.setProperty("bottom", "1.4em");
                 find_bar.style.setProperty("display", "inline");
                 find_bar.style.setProperty("height", "1em");
-                text_container.scrollTop = text_container.scrollHeight;
-                find_bar_text.focus();
-                find_bar_text.select();
+                // Don't do the following in logical time so that the
+                // console_find keypress event won't receive this shortcut key
+                window.setTimeout(function() {
+                    find_bar_text.focus();
+                    find_bar_text.select();
+                }, 0);
             } else {
+                // Blur focus so that the console_find keypress doesn't
+                // receive our shortcut key
+                find_bar.blur();
                 text_container.style.setProperty("bottom", "0px");
                 find_bar.style.setProperty("display", "none");
             }
