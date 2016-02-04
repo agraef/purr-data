@@ -597,9 +597,7 @@ function nw_create_pd_window_menus(gui, w) {
         }
     });
     minit(m.help.browser, {
-        click: function() {
-            alert("please implement a help browser");
-        }
+        click: pdgui.open_search
     });
     minit(m.help.l2ork_list, {
         click: function() {

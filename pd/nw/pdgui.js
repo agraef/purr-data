@@ -707,6 +707,11 @@ function doc_open (dir, basename) {
     }
 }
 
+// Need to rethink these names-- it's confusing to have this and
+// pd_doc_open available, but we need this one for dialog_search because
+// it uses absolute paths
+exports.doc_open = doc_open;
+
 // Open a file relative to the main directory where "doc/" and "extra/" live
 function pd_doc_open(dir, basename) {
     doc_open(path.join(gui_dir, dir), basename);
@@ -3324,6 +3329,14 @@ function open_prefs() {
 }
 
 exports.open_prefs = open_prefs;
+
+function open_search() {
+    if (!dialogwin["search"]) {
+        nw_create_window("search", "search", 300, 400, 20, 20, null);
+    }
+}
+
+exports.open_search= open_search;
 
 function gui_audio_properties(gfxstub, sys_indevs, sys_outdevs, 
     pd_indevs, pd_inchans, pd_outdevs, pd_outchans, audio_attrs) {

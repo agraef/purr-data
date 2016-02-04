@@ -1341,9 +1341,7 @@ function nw_create_patch_window_menus(gui, w, name) {
         }
     });
     minit(m.help.browser, {
-        click: function() {
-            alert("please implement a help browser");
-        }
+        click: pdgui.open_search
     });
     minit(m.help.l2ork_list, {
         click: function() {

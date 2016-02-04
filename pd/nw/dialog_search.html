@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pd Search Engine</title>
+    <script type="text/javascript" src="./elasticlunr.js"></script>
+    <script>
+"use strict";
+var pdgui = require("./pdgui.js");
+var fs = require("fs");
+var path = require("path");
+var l = pdgui.get_local_string;
+
+var index = elasticlunr();
+index.addField("title");
+index.addField("keywords");
+index.addField("description");
+index.addField("path");
+index.addField("body");
+index.setRef("id");
+var doc_id = 0;
+
+// Stop-gap translator
+function translate_form() {
+    var i;
+    var elements = document.querySelectorAll("[data-i18n]");
+    for (i = 0; i < elements.length; i++) {
+        var data = elements[i].dataset.i18n;
+        if (data.slice(0,7) === "[title]") {
+            elements[i].title = l(data.slice(7));
+        } else {
+            elements[i].textContent = l(data);
+        }
+    }
+}
+
+function add_doc_to_index(filename, data) {
+    var title = path.basename(filename, ".pd"),
+        big_line = data.replace("\n", " "),
+        keywords,
+        desc;
+        // We use [\s\S] to match across multiple lines...
+        keywords = big_line
+            .match(/#X text [0-9]+ [0-9]+ KEYWORDS ([\s\S]*?);/),
+        desc = big_line
+            .match(/#X text [0-9]+ [0-9]+ DESCRIPTION ([\s\S]*?);/);
+        keywords = keywords && keywords.length > 1 ? keywords[1].trim() : null;
+        desc = desc && desc.length > 1 ? desc[1].trim() : null;
+    if (title.slice(-5) === "-help") {
+        title = title.slice(0, -5);
+    }
+    index.addDoc({
+        "id": doc_id++,
+        "title": title,
+        "keywords": keywords,
+        "description": desc,
+        "body": big_line,
+        "path": filename
+    });
+    
+}
+
+function read_file(filename, len, i) {
+    fs.readFile(filename, { encoding: "utf8", flag: "r" },
+        function(err, data) {
+            if (!err) {
+                add_doc_to_index(filename, data);
+            } else {
+                pdgui.post("err: " + err);
+            }
+        if (i === (len - 1)) {
+            pdgui.post("Probably about finished...");
+            document.getElementById("results").textContent = "";
+            document.getElementById("search_text").disabled = false;
+        } 
+    });
+}
+
+
+function build_index() {
+    var doc_path = path.join(pdgui.get_gui_dir(), "doc", "5.reference");
+    pdgui.post("doc path is " + doc_path);
+    fs.readdir(doc_path, function(err, files) {
+        var i, j = 0,
+            len = files.length,
+            filename;
+pdgui.post("len is " + len);
+        if (!err) {
+            for (i = 0; i < len; i++) {
+                if (files[i].slice(-3) === ".pd") {
+                    filename = path.join(doc_path, files[i]);
+                    read_file(filename, len, j++);
+                } else {
+                    j++;
+                }
+            }
+        } else { pdgui.post("err: " + err); }
+    });
+}
+
+function register_window_id(id, attrs) {
+    translate_form();
+    document.getElementById("results").textContent = "Building Index...";
+    document.getElementById("search_text").disabled = true;
+    build_index();
+}
+
+function doc_search() {
+    var text_elem = document.getElementById("search_text"),
+        results_elem = document.getElementById("results"),
+        search_text = text_elem.value,
+        results,
+        doc,
+        i,
+        header,
+        div,
+        text_node,
+        a;
+    results_elem.innerHTML = "";
+    text_elem.blur();
+    results = index.search(search_text);
+    for (i = 0; i < results.length; i++) {
+        doc = index.documentStore.getDoc(results[i].ref);
+        div = document.createElement("div");
+        a = document.createElement("a");
+        a.href = "javascript: pdgui.doc_open('" +
+                 path.dirname(doc.path) + "', '" +
+                 path.basename(doc.path) + "');"
+        a.textContent = doc.title;
+        header = document.createElement("h3");
+        header.appendChild(a);
+        text_node = document.createTextNode(doc.description);
+        div.appendChild(header);
+        div.appendChild(text_node);
+        results_elem.appendChild(div);
+    }
+    if (results.length === 0) {
+        results_elem.textContent = "No Results Found.";
+    }
+}
+
+window.onload = function() {
+    document.body.addEventListener("keydown", function(evt) {
+        var input_elem = document.getElementById("search_text");
+        if (evt.target !== input_elem) {
+            pdgui.post("somewhere outside the input");
+            input_elem.focus();
+        } else {
+            // If we want to trigger a search on each keystroke we can do it
+            // here.
+            pdgui.post("key inside the input");
+        }
+    });
+}
+    </script>
+  </head>
+  <body>
+    <h1>Search for Pd Objects</h1>
+    <form id="search_form" action="javascript:doc_search();">
+      <input type="search"
+             name="search_text"
+             id="search_text"
+             placeholder="Search Pd Docs">
+    </form>
+    <div id="results">
+    </div>
+  </body>
+</html>

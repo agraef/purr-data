@@ -470,6 +470,8 @@ function create_menu(gui, type) {
     }));
     helpMenu.append(m.help.browser = new gui.MenuItem({
         label: l("menu.browser"),
+        key: "b",
+        modifiers: cmd_or_ctrl,
         tooltip: l("menu.browser_tt")
     }));
     helpMenu.append(new gui.MenuItem({ type: "separator" }));
@@ -491,8 +493,6 @@ function create_menu(gui, type) {
     }));
     helpMenu.append(m.help.devtools = new gui.MenuItem({
         label: l("menu.devtools"),
-        key:"b",
-        modifiers: cmd_or_ctrl,
         tooltip: l("menu.devtools_tt")
     }));
 
