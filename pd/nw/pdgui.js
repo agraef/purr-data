@@ -2214,11 +2214,13 @@ function gui_update_vumeter_rect(cid, tag, x_color) {
 
 // Oh hack upon hack... why doesn't the iemgui base_config just take care
 // of this?
-function gui_vumeter_border_coords(cid, tag, width, height) {
-    var r = get_item(cid, tag + "border");
+function gui_vumeter_border_size(cid, tag, width, height) {
+    var g = get_gobj(cid, tag),
+        r;
     // also need to check for existence-- apparently the iemgui
     // dialog will delete the vu and try to set this before recreating it...
-    if (r) {
+    if (g) {
+        r = g.querySelector(".border");
         configure_item(r, { width: width, height: height });
     }
 }

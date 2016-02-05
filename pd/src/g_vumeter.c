@@ -178,7 +178,7 @@ static void vu_draw_move(t_vu *x, t_glist *glist)
     int k1=x->x_led_size+1, k2=IEM_VU_STEPS+1, k3=k1/2;
     int yyy, i, k4=y1-k3;
 
-    gui_vmess("gui_vumeter_border_coords", "xxii",
+    gui_vmess("gui_vumeter_border_size", "xxii",
         canvas, x, x->x_gui.x_w+2, x->x_gui.x_h+4);
     for(i=1; i<=IEM_VU_STEPS; i++)
     {
@@ -257,16 +257,14 @@ static void vu__motionhook(t_scalehandle *sh, t_floatarg mouse_x, t_floatarg mou
     {
         t_vu *x = (t_vu *)(sh->h_master);
         int dx = (int)(mouse_x - sh->h_offset_x),
-            dy = (int)(mouse_y - sh->h_offset_y);
+            height = ((int)mouse_y) -
+                text_ypix(&x->x_gui.x_obj, x->x_gui.x_glist);
         dx = maxi(dx, 8-x->x_gui.x_w);
-        dy = maxi(dy,80-x->x_gui.x_h);
         sh->h_dragx = dx;
-        sh->h_dragy = dy;
         scalehandle_drag_scale(sh);
 
         x->x_gui.x_w += dx;
-        x->x_gui.x_h += dy;
-
+        vu_check_height(x, height);
         if (glist_isvisible(x->x_gui.x_glist))
         {
             /* draw_move doesn't seem to cut it for vu, so we
@@ -530,6 +528,7 @@ static void vu_dialog(t_vu *x, t_symbol *s, int argc, t_atom *argv)
     canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
     int w = atom_getintarg(0, argc, argv);
     int h = atom_getintarg(1, argc, argv);
+
     int scale = !!atom_getintarg(4, argc, argv);
     int sr_flags = iemgui_dialog(&x->x_gui, argc, argv);
     x->x_gui.x_loadinit = 0;
