@@ -416,10 +416,10 @@ function apply() {
     var slot5 = +document.getElementsByName("log-scaling")[0].checked;
     // Hack to accomodate the vu-scale property, which exists in the same
     // slot as this one
-    var log_scaling_spanner = document.getElementsByClassName("log-scaling")[0];
-    var log_display = log_scaling_spanner.style.getPropertyValue("display");
+    var log_scaling_div = document.querySelector(".log-scaling");
+    var no_log_display = log_scaling_div.classList.contains("hidden");
 
-    if (log_display === null) {
+    if (no_log_display) {
         slot5 = +document.getElementsByName("vu-scale")[0].checked;
         pdgui.post("slot five is " + slot5);
     }
