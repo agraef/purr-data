@@ -11,12 +11,14 @@
 var pdgui = require("./pdgui.js");
 var fs = require("fs");
 var path = require("path");
+var dive = require("./dive.js"); // small module to recursively search dirs
 var l = pdgui.get_local_string;
 
 var index = elasticlunr();
 index.addField("title");
 index.addField("keywords");
 index.addField("description");
+//index.addField("body");
 index.addField("path");
 index.setRef("id");
 var doc_id = 0;
@@ -47,6 +49,10 @@ function add_doc_to_index(filename, data) {
             .match(/#X text [0-9]+ [0-9]+ DESCRIPTION ([\s\S]*?);/);
         keywords = keywords && keywords.length > 1 ? keywords[1].trim() : null;
         desc = desc && desc.length > 1 ? desc[1].trim() : null;
+        if (desc) {
+            // format Pd's "comma atoms" as normal commas
+            desc = desc.replace(" \\,", ",");
+        }
     if (title.slice(-5) === "-help") {
         title = title.slice(0, -5);
     }
@@ -55,46 +61,39 @@ function add_doc_to_index(filename, data) {
         "title": title,
         "keywords": keywords,
         "description": desc,
+        //"body": big_line,
         "path": filename
     });
     
 }
 
-function read_file(filename, len, i) {
-    fs.readFile(filename, { encoding: "utf8", flag: "r" },
-        function(err, data) {
-            if (!err) {
-                add_doc_to_index(filename, data);
-            } else {
-                pdgui.post("err: " + err);
-            }
-        if (i === (len - 1)) {
-            // Probably about finished...
-            document.getElementById("results").textContent = "";
-            document.getElementById("search_text").disabled = false;
-        } 
-    });
+function read_file(err, filename, stat) {
+    if (!err) {
+        if (filename.slice(-3) === ".pd") {
+            fs.readFile(filename, { encoding: "utf8", flag: "r" },
+                function(read_err, data) {
+                    if (!read_err) {
+                        add_doc_to_index(filename, data);
+                    } else {
+                        pdgui.post("err: " + read_err);
+                    }
+                }
+            );
+        }
+    } else {
+        pdgui.post("err: " + err);
+    }
 }
 
+function finish_build() {
+    document.getElementById("search_text").disabled = false;
+    document.getElementById("results").innerHTML = "";
+}
 
 function build_index() {
-    var doc_path = path.join(pdgui.get_gui_dir(), "doc", "5.reference");
+    var doc_path = path.join(pdgui.get_gui_dir(), "doc");
     pdgui.post("doc path is " + doc_path);
-    fs.readdir(doc_path, function(err, files) {
-        var i, j = 0,
-            len = files.length,
-            filename;
-        if (!err) {
-            for (i = 0; i < len; i++) {
-                if (files[i].slice(-3) === ".pd") {
-                    filename = path.join(doc_path, files[i]);
-                    read_file(filename, len, j++);
-                } else {
-                    j++;
-                }
-            }
-        } else { pdgui.post("err: " + err); }
-    });
+    dive(doc_path, read_file, finish_build);
 }
 
 function console_unwrap_tag(console_elem, tag_name) {
