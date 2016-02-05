@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link id="page_style" rel="stylesheet"
+          type="text/css" href="css/default.css">
     <title>Pd Search Engine</title>
     <script type="text/javascript" src="./elasticlunr.js"></script>
+    <script type="text/javascript" src="./console_search.js"></script>
     <script>
 "use strict";
 var pdgui = require("./pdgui.js");
@@ -83,7 +86,6 @@ function build_index() {
         var i, j = 0,
             len = files.length,
             filename;
-pdgui.post("len is " + len);
         if (!err) {
             for (i = 0; i < len; i++) {
                 if (files[i].slice(-3) === ".pd") {
@@ -97,8 +99,196 @@ pdgui.post("len is " + len);
     });
 }
 
+function console_unwrap_tag(console_elem, tag_name) {
+    var b = console_elem.getElementsByTagName(tag_name),
+        parent_elem;
+    while (b.length) {
+        parent_elem = b[0].parentNode;
+        while(b[0].firstChild) {
+            parent_elem.insertBefore(b[0].firstChild, b[0]);
+        }
+        parent_elem.removeChild(b[0]); 
+        parent_elem.normalize();
+    }
+}
+
+function console_find_text(elem, evt, callback) {
+    var console_text = document.getElementById("results"),
+        wrap_tag = "mark",
+        wrapper_count;
+    window.setTimeout(function () {
+        console_unwrap_tag(console_text, wrap_tag);
+        // Check after the event if the value is empty
+        if (elem.value === undefined || elem.value === "") {
+            // Todo: use class instead of style here
+            elem.style.setProperty("background", "white");
+        } else {
+            window.findAndReplaceDOMText(console_text, {
+                //preset: "prose",
+                find: elem.value.toLowerCase(),
+                wrap: wrap_tag
+            });
+            // The searchAndReplace API is so bad you can't even know how
+            // many matches there were without traversing the DOM and
+            // counting the wrappers!
+            wrapper_count = console_text.getElementsByTagName(wrap_tag).length;
+            // Todo: use class instead of style here...
+            if (wrapper_count < 1) {
+                elem.style.setProperty("background", "red");
+            } else {
+                elem.style.setProperty("background", "white");
+            }
+        }
+        if (callback) {
+            callback();
+        }
+    }, 0);
+}
+
+// start at top and highlight the first result after a search
+function console_find_callback() {
+    var highlight_checkbox = document.getElementById("console_find_highlight");
+    console_find_highlight_all(highlight_checkbox);
+    console_find_traverse.set_index(0);
+    console_find_traverse.next();
+}
+
+function console_find_keypress(elem, e) {
+    console_find_text(elem, e, console_find_callback);
+}
+
+function console_find_highlight_all(elem) {
+    var matches,
+        highlight_tag = "console_find_highlighted",
+        state = elem.checked,
+        i, len;
+    matches = document.getElementById("results")
+        .getElementsByClassName(highlight_tag);
+    // remember-- matches is a _live_ collection, not an array.
+    // If you remove the highlight_tag from an element, it is
+    // automatically removed from the collection. I cannot yet
+    // see a single benefit to this behavior-- here, it means
+    // we must decrement i to keep from skipping over every
+    // other element... :(
+    for (i = matches.length - 1; i >= 0; i--) {
+        matches[i].classList.remove(highlight_tag);
+    }
+    if (state) {
+        matches = document.getElementById("results").getElementsByTagName("mark");
+        for (i = 0; i < matches.length; i++) {
+            matches[i].classList.add(highlight_tag);
+        }
+    }
+}
+
+var console_find_traverse = (function() {
+    var count = 0,
+        wrap_tag = "mark";
+    return {
+        next: function() {
+            var i, last, next,
+                console_text = document.getElementById("results"),
+                elements = console_text.getElementsByTagName(wrap_tag);
+            if (elements.length > 0) {
+                i = count % elements.length;
+                elements[i].classList.add("console_find_current");
+                if (elements.length > 1) {
+                    last = i === 0 ? elements.length - 1 : i - 1;
+                    next = (i + 1) % elements.length;
+                    elements[last].classList.remove("console_find_current");
+                    elements[next].classList.remove("console_find_current");
+                }
+                // adjust the scrollbar to make sure the element is visible,
+                // but only if necessary.
+                // I don't think this is available on all browsers...
+                elements[i].scrollIntoViewIfNeeded();
+                count++;
+            }
+        },
+        set_index: function(c) {
+            count = c;
+        }
+    }
+}());
+
+function console_find_keydown(elem, evt) {
+    if (evt.keyCode === 13) {
+        console_find_traverse.next();
+        evt.stopPropagation();
+        evt.preventDefault();
+        return false;
+    } else if (evt.keyCode === 27) { // escape
+
+    } else if (evt.keyCode === 8 || // backspace or delete
+               evt.keyCode === 46) {
+        console_find_text(elem, evt, console_find_callback);
+    }
+}
+
+function find_bar_shortcut(evt) {
+    var osx = process.platform === "darwin",
+    modifier = osx ? "metaKey" : "ctrlKey";
+    return (evt.keyCode === 70 && evt[modifier]) // <ctrl-f>
+}
+
+function toggle_find_bar() {
+    // this is copied from index.js m.edit.find...
+    var find_div = document.getElementById("console_find"),
+        find_bar_text = document.getElementById("console_find_text"),
+        state = find_div.style.getPropertyValue("display");
+    if (state !== "inline") {
+        find_div.style.setProperty("display", "inline");
+        window.setTimeout(function() {
+                find_bar_text.focus();
+                find_bar_text.select();
+            }, 0);
+    } else {
+        find_div.style.setProperty("display", "none");
+        // Blur focus so that the console_find keypress doesn't
+        // receive our shortcut key
+        find_div.blur();
+    }
+}
+
+function add_events() {
+    // Find bar
+    var find_bar = document.getElementById("console_find_text");
+    find_bar.placeholder = "Search in Console";
+    find_bar.addEventListener("keydown",
+        function(evt) {
+            if (find_bar_shortcut(evt)) {
+                toggle_find_bar();
+                evt.stopPropagation();
+            } else {
+                evt.stopPropagation();
+                return console_find_keydown(this, evt);
+            }
+        }, false
+    );
+    find_bar.addEventListener("keypress",
+        function(evt) {
+            console_find_keypress(this, evt);
+        }, false
+    );
+
+    // Keydown in the document
+    document.body.addEventListener("keydown", function(evt) {
+        var input_elem = document.getElementById("search_text");
+        if (find_bar_shortcut(evt)) {
+            toggle_find_bar();
+        } else if (evt.target !== input_elem) {
+            input_elem.focus();
+        } else {
+            // If we want to trigger a search on each keystroke we can do it
+            // here.
+        }
+    });
+
+}
+
 function register_window_id(id, attrs) {
     translate_form();
+    add_events();
     document.getElementById("results").textContent = "Building Index...";
     document.getElementById("search_text").disabled = true;
     build_index();
@@ -137,20 +327,6 @@ function doc_search() {
         results_elem.textContent = "No Results Found.";
     }
 }
-
-window.onload = function() {
-    document.body.addEventListener("keydown", function(evt) {
-        var input_elem = document.getElementById("search_text");
-        if (evt.target !== input_elem) {
-            pdgui.post("somewhere outside the input");
-            input_elem.focus();
-        } else {
-            // If we want to trigger a search on each keystroke we can do it
-            // here.
-            pdgui.post("key inside the input");
-        }
-    });
-}
     </script>
   </head>
   <body>
@@ -162,6 +338,22 @@ window.onload = function() {
              placeholder="Search Pd Docs">
     </form>
     <div id="results">
+    </div>
+    <div id = "console_find" style="display:none;">
+      <div>
+        <label><input type="text"
+                      id="console_find_text"
+                      name="console_find_text"
+                      defaultValue="Search in Console"
+                      style="width:10em;"/>
+        </label>
+        <label>Highlight All
+               <input type="checkbox"
+                      id="console_find_highlight"
+                      name="console_find_highlight"
+                      onchange="console_find_highlight_all(this);"/>
+        </label>
+      </div>
     </div>
   </body>
 </html>
