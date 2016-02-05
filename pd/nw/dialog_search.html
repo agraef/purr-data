@@ -18,7 +18,6 @@ index.addField("title");
 index.addField("keywords");
 index.addField("description");
 index.addField("path");
-index.addField("body");
 index.setRef("id");
 var doc_id = 0;
 
@@ -56,7 +55,6 @@ function add_doc_to_index(filename, data) {
         "title": title,
         "keywords": keywords,
         "description": desc,
-        "body": big_line,
         "path": filename
     });
     
@@ -71,7 +69,7 @@ function read_file(filename, len, i) {
                 pdgui.post("err: " + err);
             }
         if (i === (len - 1)) {
-            pdgui.post("Probably about finished...");
+            // Probably about finished...
             document.getElementById("results").textContent = "";
             document.getElementById("search_text").disabled = false;
         } 
@@ -251,6 +249,12 @@ function toggle_find_bar() {
 }
 
 function add_events() {
+    // closing the Window
+    nw.Window.get().on("close", function() {
+        pdgui.remove_dialogwin("search");
+        nw.Window.get().close(true);
+    });
+
     // Find bar
     var find_bar = document.getElementById("console_find_text");
     find_bar.placeholder = "Search in Console";
