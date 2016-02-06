@@ -118,8 +118,7 @@ extern void glist_scalar(t_glist *canvas, t_symbol *s, int argc, t_atom *argv);
 void canvas_getargs(int *argcp, t_atom **argvp);
 
 static void canvas_objtext(t_glist *gl, int xpix, int ypix,
-    int width, int selected,
-    t_binbuf *b)
+    int width, int selected, t_binbuf *b, int connectme)
 {
     //fprintf(stderr,"canvas_objtext\n");
     t_text *x;
@@ -224,10 +223,12 @@ static void canvas_objtext(t_glist *gl, int xpix, int ypix,
 
     if (selected)
     {
-            /* this is called if we've been created from the menu. */
+            /* this is called if we've been created from the menu. we use
+               connectme to be able to tell the GUI the difference between
+               a newly created floating object and an autopatched one. */
         glist_select(gl, &x->te_g);
         gobj_activate(&x->te_g, gl,
-            2); // <-- hack to signal that we're a new object
+            connectme ? 1 : 2); // <-- hack to set floating mode for new obj box
     }
     if (pd_class(&x->ob_pd) == vinlet_class)
         canvas_resortinlets(glist_getcanvas(gl));
@@ -344,7 +345,7 @@ void canvas_obj(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
         t_binbuf *b = binbuf_new();
         binbuf_restore(b, argc-2, argv+2);
         canvas_objtext(gl, atom_getintarg(0, argc, argv),
-            atom_getintarg(1, argc, argv), 0, 0, b);
+            atom_getintarg(1, argc, argv), 0, 0, b, 0);
     }
         /* JMZ: don't go into interactive mode in a closed canvas */
     else if (!glist_isvisible(gl))
@@ -359,7 +360,7 @@ void canvas_obj(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
         canvas_objtext(gl,
             connectme ? xpix : xpix - 8,
             connectme ? ypix : ypix - 8,
-            0, 1, b);
+            0, 1, b, connectme);
         if (connectme == 1)
         {
             //fprintf(stderr,"canvas_obj calls canvas_connect\n");
@@ -402,7 +403,7 @@ void canvas_obj_abstraction_from_menu(t_glist *gl, t_symbol *s,
         pd_vmess (&gl->gl_pd, gensym("tooltips"), "i", 1);
 #endif
     canvas_objtext(gl, xpix+atom_getintarg(1, argc, argv),
-        ypix+atom_getintarg(2, argc, argv), 0, 1, b);
+        ypix+atom_getintarg(2, argc, argv), 0, 1, b, 0);
 
     // the object is now the last on the glist so we locate it
     // and send it loadbang
@@ -463,11 +464,11 @@ void canvas_iemguis(t_glist *gl, t_symbol *guiobjname)
     glist_noselect(gl);
     SETSYMBOL(&at, guiobjname);
     binbuf_restore(b, 1, &at);
-    canvas_objtext(gl, xpix, ypix, 0, 1, b);
+    canvas_objtext(gl, xpix, ypix, 0, 1, b, 0);
     if (connectme == 1)
         canvas_connect(gl, indx, 0, nobj, 0);
     //glist_getnextxy(gl, &xpix, &ypix);
-    //canvas_objtext(gl, xpix, ypix, 1, b);
+    //canvas_objtext(gl, xpix, ypix, 1, b, 0);
     else if (connectme == 0)
     {
         canvas_displaceselection(glist_getcanvas(gl), -8, -8);
@@ -1712,6 +1713,10 @@ static void text_select(t_gobj *z, t_glist *glist, int state)
     }
 }
 
+/* state:
+   0. deactivate
+   1. activate text
+   2. activate "floating" text (i.e., a new empty obj that follows the mouse) */
 static void text_activate(t_gobj *z, t_glist *glist, int state)
 {
     t_text *x = (t_text *)z;
@@ -2521,7 +2526,7 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
                 int xwas = x->te_xpix, ywas = x->te_ypix;
                 canvas_eraselinesfor(glist, x);
                 glist_delete(glist, &x->te_g);
-                canvas_objtext(glist, xwas, ywas, widthwas, 0, b);
+                canvas_objtext(glist, xwas, ywas, widthwas, 0, b, 0);
                     /* if it's an abstraction loadbang it here */
                 if (newest && pd_class(newest) == canvas_class)
                     canvas_loadbang((t_canvas *)newest);
