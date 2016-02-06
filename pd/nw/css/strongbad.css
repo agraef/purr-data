@@ -161,7 +161,7 @@ mark.console_find_highlighted {
     /* box-shadow: inset 1px 0px 0px 1px #000; */
     color: #4bd046;
     background-color: transparent;
-    white-space: normal;
+    white-space: pre;
     word-wrap: break-word;
     -webkit-margin-before: 0px;
 }
