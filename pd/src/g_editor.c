@@ -7350,24 +7350,15 @@ static void canvas_tip(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     }
 }
 
-static void canvas_stringforobj(t_rtext *rtext, int argc, t_atom *argv)
+t_binbuf *newobjbuf;
+static void canvas_addtobuf(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 {
-    int length;
-    char *buf;
-    t_binbuf *b = binbuf_new();
-    binbuf_restore(b, argc, argv);
-    binbuf_gettext(b, &buf, &length);
-    /* We hand off "buf" to rtext as
-       its x_buf member, and "length"
-       as x_bufsize. Pd will handle
-       deallocation of those members
-       automatically, so we don't need
-       to free the "buf" here. */
-    rtext_settext(rtext, buf, length);
-    binbuf_free(b);
+    if (!newobjbuf)
+        newobjbuf = binbuf_new();
+    binbuf_add(newobjbuf, argc, argv);
 }
 
-static void canvas_createobj(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
+static void canvas_buftotext(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_gobj *y;
     t_rtext *rtext;
@@ -7376,15 +7367,35 @@ static void canvas_createobj(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     {
         if (glist_isselected(x, y) && (rtext = glist_findrtext(x, (t_text *)y)))
         {
-            canvas_stringforobj(rtext, argc, argv);
+            int length;
+            char *buf;
+            t_binbuf *b = binbuf_new();
+            binbuf_restore(b, binbuf_getnatom(newobjbuf), binbuf_getvec(newobjbuf));
+            binbuf_gettext(b, &buf, &length);
+            /* We hand off "buf" to rtext as its x_buf member, and "length"
+               as x_bufsize. Pd will handle deallocation of those members
+               automatically, so we don't need to free the "buf" here. */
+            rtext_settext(rtext, buf, length);
+            binbuf_free(b);
+            binbuf_clear(newobjbuf);
             // Set the dirty flag since we've changed the rtext content...
             canvas_dirty(x, 1);
             x->gl_editor->e_textdirty = 1;
             x->gl_editor->e_onmotion = MA_NONE; // undo any mouse actions
-            if (s == gensym("createobj"))
-                glist_deselect(x, y); // instantiate
             break;
         }
+    }
+}
+
+static void canvas_createobj(t_canvas *x)
+{
+    t_gobj *y;
+    t_rtext *rtext;
+    if (!x->gl_editor) return;
+    for (y = x->gl_list; y; y = y->g_next)
+    {
+        if (glist_isselected(x, y) && (rtext = glist_findrtext(x, (t_text *)y)))
+            glist_deselect(x, y); // instantiate
     }
 }
 
@@ -7409,10 +7420,12 @@ void g_editor_setup(void)
     A_GIMME, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_tip, gensym("echo"),
         A_GIMME, A_NULL);
+    class_addmethod(canvas_class, (t_method)canvas_addtobuf,
+        gensym("obj_addtobuf"), A_GIMME, A_NULL);
+    class_addmethod(canvas_class, (t_method)canvas_buftotext,
+        gensym("obj_buftotext"), A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_createobj,
-        gensym("setobj"), A_GIMME, A_NULL);
-    class_addmethod(canvas_class, (t_method)canvas_createobj,
-        gensym("createobj"), A_GIMME, A_NULL);
+        gensym("obj_createobj"), A_NULL);
 /* ------------------------ menu actions ---------------------------- */
     class_addmethod(canvas_class, (t_method)canvas_menuclose,
         gensym("menuclose"), A_DEFFLOAT, 0);

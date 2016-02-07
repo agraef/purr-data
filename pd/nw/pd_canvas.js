@@ -41,6 +41,38 @@ function text_to_fudi(text) {
     return text;
 }
 
+// Convert a string (FUDI message) to an array of strings small enough
+// to fit in Pd's socketreceiver buffer of 4096 bytes
+function string_to_array_of_chunks(msg) {
+    var chunk_max = 1024,
+        max_pd_string = 1000,
+        left,
+        in_array = [],
+        out_array = [];
+    if (msg.length <= chunk_max) {
+        out_array.push([msg]);
+    } else {
+        in_array = msg.split(" ");
+        while (in_array.length) {
+            left = in_array.slice();
+            if (left.toString().length > chunk_max) {
+                while (1) {
+                    left.splice(left.length >> 1);
+                    if (left.length < 2 ||
+                        left.toString().length <= chunk_max) {
+                        break;
+                    }
+                }
+            }
+            // might need a check here for max_pd_string to warn
+            // user if a string is going to get truncated. (That's
+            // what max_pd_string is for above.)
+            out_array.push(in_array.splice(0, left.length));
+        }
+    }
+    return out_array;
+}
+
 // Should probably be in pdgui.js
 function encode_for_dialog(s) {
     s = s.replace(/\s/g, "+_");
@@ -474,15 +506,18 @@ var canvas_events = (function() {
             }
         },
         utils = {
-            create_obj: function() {
-                var fudi_msg = text_to_fudi(textbox().innerText);
-                pdgui.pdsend(name, "createobj", fudi_msg);
-                //pdgui.post("formatted content is " + fudi_msg);
-            },
             set_obj: function() {
-                var fudi_msg = text_to_fudi(textbox().innerText);
-                pdgui.pdsend(name, "setobj", fudi_msg);
-                //pdgui.post("formatted content is " + fudi_msg);
+                var fudi_msg = text_to_fudi(textbox().innerText),
+                    fudi_array = string_to_array_of_chunks(fudi_msg),
+                    i;
+                for (i = 0; i < fudi_array.length; i++) {
+                    pdgui.pdsend(name, "obj_addtobuf", fudi_array[i].join(" "));
+                }
+                pdgui.pdsend(name, "obj_buftotext");
+            },
+            create_obj: function() {
+                canvas_events.set_obj();
+                pdgui.pdsend(name, "obj_createobj");
             }
         }
     ;
