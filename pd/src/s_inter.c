@@ -762,30 +762,37 @@ void sys_gui(const char *s)
     sys_vgui("%s", s);
 }
 
-char *escape_double_quotes(const char *src) {
-    static char ret[MAXPDSTRING*4+1];
-    char *escaped = ret; 
-    int i, len = MAXPDSTRING*4;
-    for (i = 0; i < len-1 && src[i] != 0; i++)
+static void escape_double_quotes(const char *src) {
+    int dq = 0, len = 0;
+    const char *s = src;
+    while(*s++)
     {
-        if (src[i] == '\"')
-            *(escaped++) = '\\'; 
-        *(escaped++) = src[i];
+        len++;
+        if (*s == '\"')
+            dq++;
     }
-    *escaped = '\0';
-    if (i >= len) fprintf(stderr, "oops, you caught me statically allocating a string "
-                       "in a lazy attempt to escape double-quotes for the gui. "
-                       "Please call me out publicly for this regression, and/or revise this "
-                       "so it doesn't arbitrarily limit the size of the strings "
-                       "we can send to the gui.\n");
-    return ret;
+    if (!dq)
+        sys_vgui("\"%s\"", src);
+    else
+    {
+        char *dest = (char *)t_getbytes((len+1)*sizeof(*dest));
+        s = src;
+        while(*s++)
+        {
+            if (*s == '\"')
+                *dest++ = '\\', *dest++ = '\"';
+            else
+                *dest++ = *s;
+        }
+        sys_vgui("\"%s\"", dest);
+        t_freebytes(dest, (len+1)*sizeof(*dest));
+    }
 }
 
 void gui_end_vmess(void)
 {
     sys_gui("\x1f"); /* unit separator */
 }
-
 
 /* quick hack to send a parameter list for use as a function call in
    Node-Webkit */
@@ -810,7 +817,7 @@ void gui_do_vmess(const char *sel, char *fmt, int end, va_list ap)
         switch(*fp++)
         {
         case 'f': sys_vgui("%g", va_arg(ap, double)); break;
-        case 's': sys_vgui("\"%s\"", escape_double_quotes(va_arg(ap, const char *))); break;
+        case 's': escape_double_quotes(va_arg(ap, const char *)); break;
         case 'i': sys_vgui("%d", va_arg(ap, t_int)); break;
         case 'x': sys_vgui("\"x%.6lx\"", va_arg(ap, long unsigned int)); break;
         //case 'p': SETPOINTER(at, va_arg(ap, t_gpointer *)); break;
@@ -878,10 +885,13 @@ void gui_s(const char *s)
 {
     if (gui_array_head && !gui_array_tail)
     {
-        sys_vgui("\"%s\"", escape_double_quotes(s));
+        escape_double_quotes(s);
     }
     else
-        sys_vgui(",\"%s\"", escape_double_quotes(s));
+    {
+        sys_vgui(",");
+        escape_double_quotes(s);
+    }
     gui_array_head = 0;
     gui_array_tail = 0;
 }
