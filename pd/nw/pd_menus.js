@@ -389,13 +389,15 @@ function create_menu(gui, type) {
     m.win = {};
     winmanMenu.append(m.win.nextwin = new gui.MenuItem({
         label: l("menu.nextwin"),
-        key: String.fromCharCode(12), // Page down
+        key: "PageDown",
+        //key: String.fromCharCode(12), // Page down
         modifiers: cmd_or_ctrl,
         tooltip: l("menu.nextwin_tt")
     }));
     winmanMenu.append(m.win.prevwin = new gui.MenuItem({
         label: l("menu.prevwin"),
-        key: String.fromCharCode(11), // Page up
+        key: "PageUp",
+        //key: String.fromCharCode(11), // Page up
         modifiers: cmd_or_ctrl,
         tooltip: l("menu.prevwin_tt")
     }));
