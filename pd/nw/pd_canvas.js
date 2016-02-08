@@ -402,12 +402,6 @@ var canvas_events = (function() {
             text_keyup: function(evt) {
                 evt.stopPropagation();    
                 //evt.preventDefault();
-                // ctrl-Enter to instantiate object
-//                if (evt.keyCode === 13 && cmd_or_ctrl_key(evt)) {
-//                    canvas_events.text(); // anchor the object
-//                    canvas_events.set_obj();
-//                    pdgui.pdsend(name, "reselect");
-//                }
                 return false;
             },
             text_keypress: function(evt) {
@@ -506,7 +500,7 @@ var canvas_events = (function() {
             }
         },
         utils = {
-            set_obj: function() {
+            create_obj: function() {
                 var fudi_msg = text_to_fudi(textbox().innerText),
                     fudi_array = string_to_array_of_chunks(fudi_msg),
                     i;
@@ -514,10 +508,6 @@ var canvas_events = (function() {
                     pdgui.pdsend(name, "obj_addtobuf", fudi_array[i].join(" "));
                 }
                 pdgui.pdsend(name, "obj_buftotext");
-            },
-            create_obj: function() {
-                canvas_events.set_obj();
-                pdgui.pdsend(name, "obj_createobj");
             }
         }
     ;
@@ -775,9 +765,6 @@ var canvas_events = (function() {
         get_previous_state: function() {
             return previous_state;
         },
-        set_obj: function() {
-            utils.set_obj();
-        },
         create_obj: function() {
             utils.create_obj();
         },
@@ -905,7 +892,7 @@ function have_live_box() {
 // If there's a box being edited, send the box's text to Pd
 function update_live_box() {
     if (have_live_box()) {
-        canvas_events.set_obj();
+        canvas_events.create_obj();
     }
 }
 
@@ -1076,7 +1063,7 @@ function nw_create_patch_window_menus(gui, w, name) {
             if (canvas_events.get_state() === "floating_text" ||
                 canvas_events.get_state() === "text") {
                 canvas_events.text(); // anchor the object
-                canvas_events.set_obj();
+                canvas_events.create_obj();
             }
             pdgui.pdsend(name, "reselect");
         }

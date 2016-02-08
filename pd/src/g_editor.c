@@ -7377,7 +7377,6 @@ static void canvas_buftotext(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
                automatically, so we don't need to free the "buf" here. */
             rtext_settext(rtext, buf, length);
             binbuf_free(b);
-            binbuf_clear(newobjbuf);
             // Set the dirty flag since we've changed the rtext content...
             canvas_dirty(x, 1);
             x->gl_editor->e_textdirty = 1;
@@ -7385,18 +7384,8 @@ static void canvas_buftotext(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
             break;
         }
     }
-}
-
-static void canvas_createobj(t_canvas *x)
-{
-    t_gobj *y;
-    t_rtext *rtext;
-    if (!x->gl_editor) return;
-    for (y = x->gl_list; y; y = y->g_next)
-    {
-        if (glist_isselected(x, y) && (rtext = glist_findrtext(x, (t_text *)y)))
-            glist_deselect(x, y); // instantiate
-    }
+    /* Clear the buffer */
+    binbuf_clear(newobjbuf);
 }
 
 void g_editor_setup(void)
@@ -7424,8 +7413,6 @@ void g_editor_setup(void)
         gensym("obj_addtobuf"), A_GIMME, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_buftotext,
         gensym("obj_buftotext"), A_NULL);
-    class_addmethod(canvas_class, (t_method)canvas_createobj,
-        gensym("obj_createobj"), A_NULL);
 /* ------------------------ menu actions ---------------------------- */
     class_addmethod(canvas_class, (t_method)canvas_menuclose,
         gensym("menuclose"), A_DEFFLOAT, 0);
