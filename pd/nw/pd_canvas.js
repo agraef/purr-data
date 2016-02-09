@@ -410,7 +410,7 @@ var canvas_events = (function() {
                 return false;
             },
             text_paste: function(evt) {
-                pdgui.post("text_paste detected...");
+                pdgui.post("text paste detected...");
                 evt.preventDefault;
                 document.execCommand("insertText", false,
                     e.clipboardData.getData("text"));
