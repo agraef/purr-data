@@ -256,14 +256,18 @@ static void vu__motionhook(t_scalehandle *sh, t_floatarg mouse_x, t_floatarg mou
     if (sh->h_scale)
     {
         t_vu *x = (t_vu *)(sh->h_master);
-        int dx = (int)(mouse_x - sh->h_offset_x),
+        int width = ((int)mouse_x) -
+                text_xpix(&x->x_gui.x_obj, x->x_gui.x_glist),
             height = ((int)mouse_y) -
                 text_ypix(&x->x_gui.x_obj, x->x_gui.x_glist);
-        dx = maxi(dx, 8-x->x_gui.x_w);
-        sh->h_dragx = dx;
+
+        width = maxi(width, 8);
+
+        sh->h_dragx = width - x->x_gui.x_w;
+
         scalehandle_drag_scale(sh);
 
-        x->x_gui.x_w += dx;
+        x->x_gui.x_w = width;
         vu_check_height(x, height);
         if (glist_isvisible(x->x_gui.x_glist))
         {
@@ -278,7 +282,7 @@ static void vu__motionhook(t_scalehandle *sh, t_floatarg mouse_x, t_floatarg mou
         int properties = gfxstub_haveproperties((void *)x);
         if (properties)
         {
-            int new_w = x->x_gui.x_w + sh->h_dragx;
+            int new_w = width;
             int new_h = x->x_gui.x_h + sh->h_dragy;
             properties_set_field_int(properties,"width",new_w);
             properties_set_field_int(properties,"height",new_h);
