@@ -409,6 +409,12 @@ var canvas_events = (function() {
                 //evt.preventDefault();
                 return false;
             },
+            text_paste: function(evt) {
+                pdgui.post("text_paste detected...");
+                evt.preventDefault;
+                document.execCommand("insertText", false,
+                    e.clipboardData.getData("text"));
+            },
             floating_text_click: function(evt) {
                 if (target_is_scrollbar(evt)) {
                     return;
@@ -733,6 +739,7 @@ var canvas_events = (function() {
             document.addEventListener("keydown", events.text_keydown, false);
             document.addEventListener("keypress", events.text_keypress, false);
             document.addEventListener("keyup", events.text_keyup, false);
+            document.addEventListener("paste", events.text_paste, false);
             document.addEventListener("mousedown", events.text_mousedown, false);
             document.addEventListener("mouseup", events.text_mouseup, false);
             state = "text";
