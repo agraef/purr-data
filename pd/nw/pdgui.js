@@ -3155,34 +3155,35 @@ function gui_raise_window(cid) {
     patchwin[cid].focus();
 }
 
+// Unfortunately DOM window.focus doesn't actually focus the window, so we
+// have to use the chrome API
 function gui_raise_pd_window() {
-    pd_window.focus(-1);
+    chrome.windows.getAll(function (w_array) {
+        chrome.windows.update(w_array[0].id, { focused: true });
+    });
 }
 
-// Walk the list of open patch windows. They are walked in the order
-// they were created.
-// This is a bit complicated because of the way I set pd_window above
+// Using the chrome app API, because nw.js doesn't seem
+// to let me get a list of the Windows
 function walk_window_list(cid, offset) {
-    var win_store = global.__nwWindowsStore,
-        my_win = cid === "pd_window" ? pd_window : patchwin[cid].window,
-        id_array = [],
-        my_id, id, next_id;
-    for (id in win_store) {
-        if (win_store.hasOwnProperty(id)) {
-            id_array.push(+id); // build array of numbers
-            if (win_store[id].window === my_win) {
-                my_id = +id; // cast as number to match against array
+    chrome.windows.getAll(function (w_array) {
+        chrome.windows.getLastFocused(function (w) {
+            var i, next, match = -1;
+            for (i = 0; i < w_array.length; i++) {
+                if (w_array[i].id === w.id) {
+                    match = i;
+                    break;
+                }
             }
-        }
-    }
-    id_array.sort(function(a, b) { return a-b; }); // sort numerically
-    next_id = (id_array.indexOf(my_id) + offset);
-    if (next_id < 0) {
-        next_id += id_array.length;
-    } else {
-        next_id %= id_array.length;
-    }
-    win_store[id_array[next_id]].focus();
+            if (match !== -1) {
+                next = (((match + offset) % w_array.length) // modulo...
+                        + w_array.length) % w_array.length; // handle negatives
+                chrome.windows.update(w_array[next].id, { focused: true });
+            } else {
+                post("error: cannot find last focused window.");
+            }
+        });
+    })
 }
 
 function raise_next(cid) {
