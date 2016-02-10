@@ -18,7 +18,8 @@
               </label>
             </td>
             <td data-i18n="[title]iem.prop.size_tt">
-              <input type="text" name="size">
+              <input type="text" name="size"
+                     onchange="update_attr(this);">
             </td>
           </tr>
           <tr class="selection-size prop hidden">
@@ -28,7 +29,8 @@
               </label>
             </td>
             <td data-i18n="[title]iem.prop.select_size_tt">
-              <input type="text" name="selection-size">
+              <input type="text" name="selection-size"
+                     onchange="update_attr(this);">
             </td>
           </tr>
           <tr class="number prop hidden">
@@ -38,7 +40,8 @@
               </label>
             </td>
             <td data-i18n="[title]iem.prop.number_tt">
-              <input type="number" name="number">
+              <input type="number" name="number"
+                     onchange="update_attr(this);">
             </td>
           </tr>
           <tr class="nonzero-value prop hidden">
@@ -48,7 +51,8 @@
               </label>
             </td>
             <td data-i18n="[title]iem.prop.nonzero_value_tt">
-              <input type="text" name="nonzero-value">
+              <input type="text" name="nonzero-value"
+                     onchange="update_attr(this);">
             </td>
           </tr>
           <tr class="width prop hidden">
@@ -58,7 +62,8 @@
               </label>
             </td>
             <td data-i18n="[title]iem.prop.width_tt">
-              <input type="text" name="width">
+              <input type="text" name="width"
+                     onchange="update_attr(this);">
             </td>
             <td>
               <label data-i18n="[title]iem.prop.height_tt">
@@ -66,7 +71,8 @@
               </label>
             </td>
             <td data-i18n="[title]iem.prop.height_tt">
-              <input type="text" name="height">
+              <input type="text" name="height"
+                     onchange="update_attr(this);">
             </td>
           </tr>
           <tr class="visible-width prop hidden">
@@ -76,7 +82,8 @@
               </label>
             </td>
             <td data-i18n="[title]iem.prop.visible_width_tt">
-              <input type="text" name="visible-width">
+              <input type="text" name="visible-width"
+                     onchange="update_attr(this);">
             </td>
             <td>
               <label data-i18n="iem.prop.visible_height">
@@ -84,7 +91,8 @@
               </label>
             </td>
             <td data-i18n="[title]iem.prop.visible_height_tt">
-              <input type="text" name="visible-height">
+              <input type="text" name="visible-height"
+                     onchange="update_attr(this);">
             </td>
           </tr>
           <tr class="minimum-range prop pair hidden">
@@ -94,7 +102,8 @@
               </label>
             </td>
             <td data-i18n="[title]iem.prop.minimum_tt">
-              <input type="text" name="minimum-range">
+              <input type="text" name="minimum-range"
+                     onchange="update_attr(this);">
             </td>
             <td>
               <label data-i18n="[title]iem.prop.maximum_tt">
@@ -102,7 +111,8 @@
               </label>
             </td>
             <td data-i18n="[title]iem.prop.maximum_tt">
-              <input type="text" name="maximum-range">
+              <input type="text" name="maximum-range"
+                     onchange="update_attr(this);">
             </td>
           </tr>
           <tr class="flash-interrupt prop hidden">
@@ -112,7 +122,8 @@
               </label>
             </td>
             <td data-i18n="[title]iem.prop.flash_interrupt_tt">
-              <input type="text" name="flash-interrupt">
+              <input type="text" name="flash-interrupt"
+                     onchange="update_attr(this);">
             </td>
             <td>
               <label data-i18n="[title]iem.prop.flash_hold_tt">
@@ -120,7 +131,8 @@
               </label>
             </td>
             <td data-i18n="[title]iem.prop.flash_hold_tt">
-              <input type="text" name="flash-hold">
+              <input type="text" name="flash-hold"
+                     onchange="update_attr(this);">
             </td>
           </tr>
           <tr class="log-height prop hidden">
@@ -131,14 +143,16 @@
               </label>
             </td>
             <td>
-              <input type="text" name="log-height">
+              <input type="text" name="log-height"
+                     onchange="update_attr(this);">
             </td>
           </tr>
         </table>
 
         <div class="init prop hidden">
           <label data-i18n="[title]iem.prop.init_tt">
-            <input type="checkbox" name="init" value="on">
+            <input type="checkbox" name="init" value="on"
+                   onchange="update_attr(this);">
             <span data-i18n="iem.prop.init"></span>
           </label>
           <br>
@@ -147,14 +161,16 @@
         <div class="vu-scale prop hidden">
           <label data-i18n="[title]iem.prop.vu_scale_tt">
             <span data-i18n="iem.prop.vu_scale"></span>
-            <input type="checkbox" name="vu-scale" value="on">
+            <input type="checkbox" name="vu-scale" value="on"
+                   onchange="update_attr(this);">
           </label>
           <br>
         </div>
 
         <div class="log-scaling prop hidden">
           <label data-i18n="[title]iem.prop.log_scale_tt">
-            <input type="checkbox" name="log-scaling" value="on">
+            <input type="checkbox" name="log-scaling" value="on"
+                   onchange="update_attr(this);">
             <span data-i18n="iem.prop.log_scale"></span>
           </label>
           <br>
@@ -162,7 +178,8 @@
 
         <div class="steady-on-click prop hidden">
           <label data-i18n="[title]iem.prop.steady_tt">
-            <input type="checkbox" name="steady-on-click" value="on">
+            <input type="checkbox" name="steady-on-click" value="on"
+                   onchange="update_attr(this);">
             <span data-i18n="iem.prop.steady"></span>
           </label>
           <br>
@@ -180,7 +197,8 @@
               </label>
             </td>
             <td data-i18n="[title]iem.prop.send_tt">
-              <input type="text" name="send-symbol">
+              <input type="text" name="send-symbol"
+                     onchange="update_attr(this);">
             </td>
             <td>
           <tr class="receive-symbol prop hidden">
@@ -190,7 +208,8 @@
               </label>
             </td>
             <td data-i18n="[title]iem.prop.receive_tt">
-              <input type="text" name="receive-symbol">
+              <input type="text" name="receive-symbol"
+                     onchange="update_attr(this);">
             </td>
             <td>
           </tr>
@@ -208,7 +227,8 @@
               </label>
             </td>
             <td data-i18n="[title]iem.prop.label_tt">
-              <input type="text" name="label">
+              <input type="text" name="label"
+                     onchange="update_attr(this);">
             </td>
             <td>
               <label data-i18n="[title]iem.prop.xoffset_tt">
@@ -216,7 +236,8 @@
               </label>
             </td>
             <td data-i18n="[title]iem.prop.xoffset_tt">
-              <input type="text" name="x-offset">
+              <input type="text" name="x-offset"
+                     onchange="update_attr(this);">
             </td>
             <td>
               <label data-i18n="[title]iem.prop.yoffset_tt">
@@ -224,7 +245,8 @@
               </label>
             </td>
             <td data-i18n="[title]iem.prop.yoffset_tt">
-              <input type="text" name="y-offset">
+              <input type="text" name="y-offset"
+                     onchange="update_attr(this);">
             </td>
           </tr>
           <tr class="font-style prop hidden">
@@ -233,7 +255,8 @@
                 <span data-i18n="iem.prop.font"></span>
             </td>
             <td data-i18n="[title]iem.prop.font_tt">
-              <select name="font-style">
+              <select name="font-style"
+                      onchange="update_attr(this);">
                 <option>DejaVu Sans Mono</option>
                 <option>Helvetica</option>
                 <option>Times</option>
@@ -242,7 +265,8 @@
             <td colspan="4">
               <label data-i18n="[title]iem.prop.fontsize_tt">
                 <span data-i18n="iem.prop.fontsize"></span>
-                <input type="text" name="font-size">
+                <input type="text" name="font-size"
+                       onchange="update_attr(this);">
               <label>
             </td>
           </tr>
@@ -309,7 +333,9 @@ var l = pdgui.get_local_string;
 // gui preset
 pdgui.skin.apply(this);
 
-var pd_object_callback;
+var pd_object_callback,
+    old_attrs = {}, // original state. Used if we cancel the dialog
+    new_attrs = {}; // changed state. Used if we apply or click "Ok"
 
 function ok() {
     apply();
@@ -328,6 +354,20 @@ function strip_problem_chars(arg) {
         ret = ret.split(";").join("");
     }
     return ret;
+}
+
+function update_attr(elem) {
+    pdgui.post("updating attr " + elem.name);
+    if (!new_attrs.hasOwnProperty(elem.name)) {
+        pdgui.post("warning: new_attrs[" + elem.name + "] doesn't exist");
+    }
+    if (elem.type === "checkbox") {
+        new_attrs[elem.name] = elem.checked ? 1 : 0;
+    } else if (elem.type === "select-one") {
+        new_attrs[elem] = elem.selectedIndex;
+    } else {
+        new_attrs[elem] = elem.value;
+    }
 }
 
 function apply() {
@@ -482,7 +522,14 @@ function cancel() {
 // It provides us with our window id from the C side.  Once we have it
 // we can create the menu and register event callbacks
 function register_window_id(gfxstub, attr_object) {
+    var attr;
     pd_object_callback = gfxstub;
+    old_attrs = attr_object;
+    for (attr in old_attrs) {
+        if (old_attrs.hasOwnProperty(attr)) {
+            new_attrs[attr] = old_attrs[attr];
+        }
+    }
     console.log("attr object is " + attr_object.toString());
     add_events(gfxstub);
     translate_form();
