@@ -17,7 +17,8 @@
               </label>
             </td>
             <td data-i18n="[title]gatom.prop.width_tt">
-              <input type="text" id="width" name="width">
+              <input type="text" id="width" name="width"
+                     onchange="update_attr(this)">
             </td>
             <td>
             </td>
@@ -31,7 +32,8 @@
               </label>
             </td>
             <td data-i18n="[title]iem.prop.minimum_tt">
-              <input type="text" id="minimum-range" name="minimum-range">
+              <input type="text" id="draglo" name="draglo"
+                     onchange="update_attr(this)">
             </td>
             <td>
               <label data-i18n="[title]iem.prop.maximum_tt">
@@ -39,7 +41,8 @@
               </label>
             </td>
             <td data-i18n="[title]iem.prop.maximum_tt">
-              <input type="text" id="maximum-range" name="maximum-range">
+              <input type="text" id="draghi" name="draghi"
+                     onchange="update_attr(this)">
             </td>
           </tr>
           <tr>
@@ -49,7 +52,8 @@
               </label>
             </td>
             <td colspan="3">
-              <input type="text" id="send-symbol" name="send-symbol">
+              <input type="text" id="send_symbol" name="send_symbol"
+                     onchange="update_attr(this)">
             </td>
           </tr>
           <tr>
@@ -59,7 +63,7 @@
               </label>
             </td>
             <td colspan="3">
-            <input type="text" id="receive-symbol" name="receive-symbol">
+            <input type="text" id="receive_symbol" name="receive_symbol">
             </td>
           </tr>
           <tr>
@@ -69,7 +73,8 @@
               </label>
             </td>
             <td colspan="3">
-              <input type="text" id="label" name="label">
+              <input type="text" id="label" name="label"
+                     onchange="update_attr(this)">
             </td>
           </tr>
           <tr>
@@ -86,7 +91,8 @@
                        type="radio"
                        id="labelpos_left"
                        value="2"
-                       name="labelpos">
+                       name="labelpos"
+                       onchange="update_attr(this)">
                 <span data-i18n="gatom.prop.label_top"></span>
 
                 <br/>
@@ -95,26 +101,29 @@
                        type="radio"
                        id="labelpos_left"
                        value="0"
-                       name="labelpos">
+                       name="labelpos"
+                       onchange="update_attr(this)">
                 <span data-i18n="gatom.prop.label_left"></span>
 
-              <input class="array-style"
-                     type="radio"
-                     id="labelpos_right"
-                     value="1"
-                     name="labelpos">
-              <span data-i18n="gatom.prop.label_right"></span>
+                <input class="array-style"
+                       type="radio"
+                       id="labelpos_right"
+                       value="1"
+                       name="labelpos"
+                       onchange="update_attr(this)">
+                <span data-i18n="gatom.prop.label_right"></span>
 
-              <br/>
+                <br/>
 
-              <input class="array-style"
-                     type="radio"
-                     id="labelpos_bottom"
-                     value="3"
-                     name="labelpos">
-              <span data-i18n="gatom.prop.label_bottom"></span>
+                <input class="array-style"
+                       type="radio"
+                       id="labelpos_bottom"
+                       value="3"
+                       name="labelpos"
+                       onchange="update_attr(this)">
+                <span data-i18n="gatom.prop.label_bottom"></span>
 
-            </label>
+              </label>
 
         </table>
 
@@ -127,7 +136,7 @@
       <button type="button" onClick="apply()" data-i18n="[title]iem.prop.apply_tt">
         <span data-i18n="iem.prop.apply"></span>
       </button>
-      <button type="button" onClick="cancel()" data-i18n="[title]iem.prop.cancel_tt">
+      <button type="button" onClick="cancel(true)" data-i18n="[title]iem.prop.cancel_tt">
         <span data-i18n="iem.prop.cancel"></span>
       </button>
     </div>
@@ -145,12 +154,9 @@ var l = pdgui.get_local_string;
 
 pdgui.skin.apply(this);
 
-var pd_object_callback;
-
-function ok() {
-    apply();
-    cancel();
-}
+var pd_object_callback,
+    old_attrs = {}, // original state. Used if we cancel the dialog
+    new_attrs = {}; // changed state. Used if we apply or click "Ok"
 
 function substitute_space(arg) {
     var fake_space = String.fromCharCode(11);
@@ -184,33 +190,76 @@ function gatom_escape(str) {
     return strip_problem_chars(ret);
 }
 
-function apply() {
-    pdgui.post("we're applying gatom changes!");
+function update_attr(elem) {
+    pdgui.post("updated value detected. I am " + elem.name + " and my v is " + elem.value);
+    new_attrs[elem.name] = elem.value;
+}
+
+function send_params(attrs, create_undo_point) {
+    //pdgui.post("we're applying gatom changes!");
     pdgui.pdsend(pd_object_callback, "param", 
-        +document.getElementById("width").value,
-        +document.getElementById("minimum-range").value,
-        +document.getElementById("maximum-range").value,
-        gatom_escape(document.getElementById("label").value),
-        document.querySelector('input[name="labelpos"]:checked').value,
-        gatom_escape(document.getElementById("receive-symbol").value),
-        gatom_escape(document.getElementById("send-symbol").value)
+        +attrs.width,
+        +attrs.draglo,
+        +attrs.draghi,
+        gatom_escape(attrs.label),
+        +attrs.labelpos,
+        gatom_escape(attrs.receive_symbol),
+        gatom_escape(attrs.send_symbol),
+        create_undo_point ? 1 : 0
     );
 }
 
-function cancel() {
+function cancel(revert_changes) {
+    var dirty = false, attr;
     pdgui.post("closing the window at this point");
     //window.close(true);
+    if (revert_changes) {
+        for (attr in old_attrs) {
+            if (old_attrs[attr] !== new_attrs[attr]) {
+                dirty = true;
+            }
+        }
+        if (dirty) {
+            send_params(old_attrs, false);
+        }
+    }
     pdgui.pdsend(pd_object_callback, "cancel");
+}
+
+function apply() {
+    send_params(new_attrs, false);
+}
+
+function ok() {
+    // Steal focus from any active input to make sure it triggers an
+    // onchange event
+    document.querySelector("button").focus();
+    send_params(new_attrs, true);
+    cancel(false);
 }
 
 // This gets called from the nw_create_window function in index.html
 // It provides us with our window id from the C side.  Once we have it
 // we can create the menu and register event callbacks
 function register_window_id(gfxstub, attributes) {
+    var attr;
     pd_object_callback = gfxstub;
     add_events(gfxstub);
     translate_form();
     populate_form(attributes);
+
+    // Hack... change incoming "-" to empty string
+    if (attributes.label === "-") { attributes.label = ""; }
+    if (attributes.send_symbol === "-") { attributes.send_symbol= ""; }
+    if (attributes.receive_symbol === "-") { attributes.receive_symbol = ""; }
+
+    // Initialize the new_attrs to the current ones
+    for (attr in attributes) {
+        if (attributes.hasOwnProperty(attr)) {
+            new_attrs[attr] = attributes[attr];
+        }
+    }
+    old_attrs = attributes;
     // We don't turn on rendering of the "container" div until
     // We've finished displaying all the spans and populating the
     // labels and form elements.  That makes it more efficient and
@@ -250,16 +299,16 @@ function get_elem(name) {
 function populate_form(attributes) {
     var label, snd, rcv, labelpos, i, radios;
     get_elem("width").value = attributes.width;
-    get_elem("minimum-range").value = attributes.draglo;
-    get_elem("maximum-range").value = attributes.draghi;
+    get_elem("draglo").value = attributes.draglo;
+    get_elem("draghi").value = attributes.draghi;
     label = attributes.label;
     get_elem("label").value = label === "-" ? "" : label;
-    snd = attributes["send-symbol"];
-    get_elem("send-symbol").value = snd === "-" ? "" : snd;
-    rcv = attributes["receive-symbol"];
-    get_elem("receive-symbol").value = rcv === "-" ? "" : rcv;
+    snd = attributes.send_symbol;
+    get_elem("send_symbol").value = snd === "-" ? "" : snd;
+    rcv = attributes.receive_symbol;
+    get_elem("receive_symbol").value = rcv === "-" ? "" : rcv;
 
-    labelpos = attributes["labelpos"];
+    labelpos = attributes.labelpos;
     radios = document.getElementsByName("labelpos");
     for (i = 0; i < radios.length; i++) {
         if (+radios[i].value === labelpos) {

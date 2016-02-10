@@ -1128,7 +1128,10 @@ EXTERN int canvas_apply_restore_original_position(t_canvas *x, int pos);
     /* message back from dialog window */
 static void gatom_param(t_gatom *x, t_symbol *sel, int argc, t_atom *argv)
 {
-    canvas_apply_setundo(x->a_glist, (t_gobj *)x);
+    /* Check if we need to set an undo point. This happens if the user
+       clicks the "Ok" button, but not when clicking "Apply" or "Cancel" */
+    if (atom_getintarg(7, argc, argv))
+        canvas_apply_setundo(x->a_glist, (t_gobj *)x);
 
     t_float width = atom_getfloatarg(0, argc, argv);
     t_float draglo = atom_getfloatarg(1, argc, argv);
@@ -1391,8 +1394,8 @@ static void gatom_properties(t_gobj *z, t_glist *owner)
     gui_s("draghi");   gui_f(x->a_draghi);
     gui_s("labelpos"); gui_i(x->a_wherelabel);
     gui_s("label");    gui_s(gatom_escapit(x->a_label)->s_name);
-    gui_s("receive-symbol");  gui_s(gatom_escapit(x->a_symfrom)->s_name);
-    gui_s("send-symbol");     gui_s(gatom_escapit(x->a_symto)->s_name);
+    gui_s("receive_symbol");  gui_s(gatom_escapit(x->a_symfrom)->s_name);
+    gui_s("send_symbol");     gui_s(gatom_escapit(x->a_symto)->s_name);
     gui_end_array();
     gui_end_vmess();
 }
