@@ -799,7 +799,7 @@ static int gui_array_tail;
 /* this is a bug fix for the edge case of a message to the gui
    with a single array. This is necessary because I'm using a space
    delimiter between the first and second arg, and commas between
-   the rest. 
+   the rest.
    While I think gui_vmess and gui_start_vmess interfaces work well,
    the actual format of the message as sent to the GUI can definitely
    be changed if need be. I threw it together hastily just to get something
