@@ -794,6 +794,30 @@ void gui_end_vmess(void)
     sys_gui("\x1f"); /* hack: use unit separator to delimit messages */
 }
 
+static int gui_array_head;
+static int gui_array_tail;
+/* this is a bug fix for the edge case of a message to the gui
+   with a single array. This is necessary because I'm using a space
+   delimiter between the first and second arg, and commas between
+   the rest. 
+   While I think gui_vmess and gui_start_vmess interfaces work well,
+   the actual format of the message as sent to the GUI can definitely
+   be changed if need be. I threw it together hastily just to get something
+   easy to parse in Javascript on the GUI side.
+   -jw */
+static void set_leading_array(int state) {
+    if (state)
+    {
+        gui_array_head = 1;
+        gui_array_tail = 0;
+    }
+    else
+    {
+        gui_array_head = 0;
+        gui_array_tail = 0;
+    }
+}
+
 /* quick hack to send a parameter list for use as a function call in nw.js */
 void gui_do_vmess(const char *sel, char *fmt, int end, va_list ap)
 {
@@ -824,6 +848,7 @@ void gui_do_vmess(const char *sel, char *fmt, int end, va_list ap)
     }
 done:
     va_end(ap);
+    if (nargs) set_leading_array(0);
     if (end)
         gui_end_vmess();
 }
@@ -839,11 +864,10 @@ void gui_start_vmess(const char *sel, char *fmt, ...)
 {
     va_list ap;
     va_start(ap, fmt);
+    set_leading_array(1);
     gui_do_vmess(sel, fmt, 0, ap);
 }
 
-static int gui_array_head;
-static int gui_array_tail;
 void gui_start_array(void)
 {
     if (gui_array_head && !gui_array_tail)
