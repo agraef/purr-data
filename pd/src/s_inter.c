@@ -791,20 +791,17 @@ static void escape_double_quotes(const char *src) {
 
 void gui_end_vmess(void)
 {
-    sys_gui("\x1f"); /* unit separator */
+    sys_gui("\x1f"); /* hack: use unit separator to delimit messages */
 }
 
-/* quick hack to send a parameter list for use as a function call in
-   Node-Webkit */
+/* quick hack to send a parameter list for use as a function call in nw.js */
 void gui_do_vmess(const char *sel, char *fmt, int end, va_list ap)
 {
     //va_list ap;
     int nargs = 0;
     char *fp = fmt;
     //va_start(ap, end);
-    sys_vgui("%s ", sel); /* use a bell to signal the beginning of msg
-                               (this can be replaced with any other obscure
-                                ascii escape)                            */
+    sys_vgui("%s ", sel);
     while (*fp)
     {
         // stop-gap-- increase to 20 until we find a way to pass a list or array
