@@ -234,6 +234,8 @@ function ok() {
     // Steal focus from any active input to make sure it triggers an
     // onchange event
     document.querySelector("button").focus();
+    // send the old attrs first so we can set an undo point on them
+    send_params(old_attrs, false);
     send_params(new_attrs, true);
     cancel(false);
 }
