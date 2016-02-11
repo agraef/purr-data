@@ -529,7 +529,8 @@ static void vu_properties(t_gobj *z, t_glist *owner)
 
 static void vu_dialog(t_vu *x, t_symbol *s, int argc, t_atom *argv)
 {
-    canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
+    if (atom_getintarg(19, argc, argv))
+        canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
     int w = atom_getintarg(0, argc, argv);
     int h = atom_getintarg(1, argc, argv);
 

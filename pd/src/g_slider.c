@@ -319,7 +319,8 @@ static void slider_bang(t_slider *x)
 
 static void slider_dialog(t_slider *x, t_symbol *s, int argc, t_atom *argv)
 {
-    canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
+    if (atom_getintarg(19, argc, argv))
+        canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
     int w = atom_getintarg(0, argc, argv);
     int h = atom_getintarg(1, argc, argv);
     double min = atom_getfloatarg(2, argc, argv);

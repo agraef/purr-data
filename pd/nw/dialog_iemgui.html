@@ -372,12 +372,13 @@ function update_attr(elem) {
 
 //Clean up strings to send as symbol arguments to Pd
 function pd_symbol_carwash(s) {
-    s = (s === "" || !s) ? "empty" : s;
+    s = !s ? "empty" : s;
     if (s.charAt(0) === "$") {
         s = "#" + s.slice(1);
     }
     s = substitute_space(s);
     s = strip_problem_chars(s);
+    return s;
 }
 
 function send_params(attrs, create_undo_point) {
@@ -391,13 +392,12 @@ function send_params(attrs, create_undo_point) {
         iemgui_clip_fontsize $id
     */
 
-pdgui.post("label is " + attrs["label"]);
     var send_symbol = attrs["send-symbol"],
         receive_symbol = attrs["receive-symbol"],
         label =  attrs["label"];
-    pd_symbol_carwash(send_symbol);
-    pd_symbol_carwash(receive_symbol);
-    pd_symbol_carwash(label);
+    send_symbol = pd_symbol_carwash(send_symbol);
+    receive_symbol = pd_symbol_carwash(receive_symbol);
+    label = pd_symbol_carwash(label);
 
     var label_x_offset =  attrs["x-offset"];
     var label_y_offset =  attrs["y-offset"];
@@ -439,7 +439,7 @@ pdgui.post("label is " + attrs["label"]);
 
     if (!slot3) { // toggle
         slot3 = attrs["nonzero-value"];
-        if (slot3 === "") {
+        if (!slot3) {
             slot3 = 0;
         }
         slot4 = 0;
@@ -474,7 +474,9 @@ pdgui.post("label is " + attrs["label"]);
     var font_size = attrs["font-size"];
     if (!font_size) { font_size = 0; }
 
-    var foreground_color = attrs["foreground-color"];
+    // [vu] doesn't have a foreground color
+    var foreground_color = attrs["foreground-color"] ?
+        attrs["foreground-color"] : 0;
     var background_color = attrs["background-color"];
     var label_color = attrs["label-color"];
 
@@ -500,7 +502,9 @@ pdgui.post("label is " + attrs["label"]);
         background_color, foreground_color,
         label_color,
         slot18, // steady on click
-        0);
+        0, // not sure what this is doing here
+        create_undo_point ? 1 : 0 // whether we set an undo point
+    );
 }
 
 function cancel(revert_changes) {
@@ -528,6 +532,8 @@ function ok() {
     // Steal focus from any active input to make sure it triggers an
     // onchange event
     document.querySelector("button").focus();
+    // send the old attrs first so we can set an undo point on them
+    send_params(old_attrs, false);
     send_params(new_attrs, true);
     cancel(false);
 }

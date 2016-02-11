@@ -500,7 +500,8 @@ static void my_numbox_bang(t_my_numbox *x)
 static void my_numbox_dialog(t_my_numbox *x, t_symbol *s, int argc,
     t_atom *argv)
 {
-    canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
+    if (atom_getintarg(19, argc, argv))
+        canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
     x->x_gui.x_w = maxi(atom_getintarg(0, argc, argv),1);
     x->x_gui.x_h = maxi(atom_getintarg(1, argc, argv),8);
     double min = atom_getfloatarg(2, argc, argv);

@@ -346,7 +346,8 @@ static void bng_bang2(t_bng *x)/*wird immer gesendet, wenn moeglich*/
 
 static void bng_dialog(t_bng *x, t_symbol *s, int argc, t_atom *argv)
 {
-    canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
+    if (atom_getintarg(19, argc, argv))
+        canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
     x->x_gui.x_h = x->x_gui.x_w = atom_getintarg(0, argc, argv);
     int fthold = atom_getintarg(2, argc, argv);
     int ftbreak = atom_getintarg(3, argc, argv);
