@@ -1169,9 +1169,7 @@ function nw_create_patch_window_menus(gui, w, name) {
     minit(m.view.fullscreen, {
         click: function() {
             var win = gui.Window.get();
-            var fullscreen = win.isFullscreen;
-            win.isFullscreen = !fullscreen;
-            pdgui.post("fullscreen is " + fullscreen);
+            win.toggleFullscreen();
         }
     });
 
