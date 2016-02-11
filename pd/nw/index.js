@@ -503,10 +503,8 @@ function nw_create_pd_window_menus(gui, w) {
     });
     minit(m.view.fullscreen, {
         click: function() {
-            var win = gui.Window.get(),
-                fullscreen = win.isFullscreen;
-            win.isFullscreen = !fullscreen;
-            pdgui.post("fullscreen is " + !fullscreen);
+            var win = gui.Window.get();
+            win.toggleFullscreen();
         }
     });
 
