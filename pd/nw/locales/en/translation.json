@@ -67,7 +67,9 @@
       "apply":        "Apply",
       "apply_tt":     "Apply the settings without closing the dialog",
       "cancel":       "Cancel",
-      "cancel_tt":    "Close the dialog window"
+      "cancel_tt":    "Close the dialog window",
+      "close":        "Close",
+      "close_tt":     "Close the dialog window"
     }
   },
   "gatom": {
@@ -344,12 +346,14 @@
       "channels": "channels",
       "channels_tt": "number of channels for this device"
     },
-    "ok": "ok",
+    "ok": "Ok",
     "ok_tt": "Update the audio properties and close the dialog",
-    "apply": "apply",
+    "apply": "Apply",
     "apply_tt": "Update audio properties without closing this dialog",
-    "cancel": "cancel",
-    "cancel_tt": "Cancel updating the properties"
+    "cancel": "Cancel",
+    "cancel_tt": "Cancel updating the properties",
+    "close": "Close",
+    "close_tt": "Close the properties dialog"
   },
   "font": {
     "prop": {
@@ -359,7 +363,9 @@
       "12": "12",
       "16": "16",
       "24": "24",
-      "36": "36"
+      "36": "36",
+      "close": "Close",
+      "close_tt": "Close the font dialog"
     }
   }
 }
