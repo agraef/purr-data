@@ -364,9 +364,6 @@ function update_attr(elem) {
     } else if (elem.type === "select-one") {
         new_attrs[elem.name] = elem.selectedIndex;
     } else if (elem.type === "color") {
-pdgui.post("elem.vlaue.sliceis " + elem.value.slice(1));
-pdgui.post("elem.vlaue.sliceis.parseint " + parseInt(elem.value.slice(1)), 16);
-
         new_attrs[elem.name] = parseInt(elem.value.slice(1), 16)
     } else {
         new_attrs[elem.name] = elem.value;
@@ -415,16 +412,11 @@ pdgui.post("label is " + attrs["label"]);
 
     var height, width;
     var size = attrs["size"];
-pdgui.post("size is " + attrs["size"]);
     if (!size) {
-pdgui.post("looked for selection size");
-pdgui.post("ssize is " + attrs["selection-size"]);
         size = attrs["selection-size"];
     }
 
-pdgui.post("almost final size is " + size);
     if (size) {
-pdgui.post("checking final size");
         width = size;
         height = size;
     } else {
@@ -432,8 +424,6 @@ pdgui.post("checking final size");
         height = attrs["height"];
     }
 
-pdgui.post("width = " + attrs["width"]);
-pdgui.post("height = " + attrs["height"]);
     var slot3 = attrs["minimum-range"];
     var slot4 = attrs["maximum-range"];
 
@@ -484,7 +474,6 @@ pdgui.post("height = " + attrs["height"]);
     var font_size = attrs["font-size"];
     if (!font_size) { font_size = 0; }
 
-pdgui.post("background-color is " + attrs["background-color"]);
     var foreground_color = attrs["foreground-color"];
     var background_color = attrs["background-color"];
     var label_color = attrs["label-color"];
