@@ -77,7 +77,6 @@
         </table>
       </fieldset> 
 
-
       <fieldset class="canvas"> 
         <legend data-i18n="canvas.prop.heading.data_scaling"></legend> 
 
@@ -393,7 +392,6 @@ function array_choose(array_index) {
     }
     for (name in array_attr) {
         if (array_attr.hasOwnProperty(name)) {
-console.log("namer is " + name);
             value = array_attr[name];
             switch (name) {
                 case "array_gfxstub": break;
@@ -506,7 +504,6 @@ function get_input(name) {
 function get_array_value(name, attrs) {
     return attrs[name];
 }
-
 
 // for a new array, slot 4 is:
 //   "0" to create the array in a new graph
@@ -622,10 +619,13 @@ function populate_array_form(objects) {
 // Set up arrays in an object
     
 function init_arrays(attr_objects) {
-    pd_garray_attrs = attr_objects; 
-    if (attr_objects.length > 0) {
+    if (attr_objects.length) {
         // populate form with first array
         populate_array_form(attr_objects);
+        // disable x1 and x2 for garrays-- they
+        // automatically get set to the array size
+        document.getElementsByName("x1")[0].disabled = true;
+        document.getElementsByName("x2")[0].disabled = true;
     }
 }
 
@@ -649,17 +649,18 @@ function register_window_id(gfxstub, attr_objects) {
     // If this is a new array dialog we might not have any canvas
     // properties to set. If so, just show the array form elements
     if (attr_objects[0].hasOwnProperty("array_gfxstub")) {
+        pd_garray_attrs = attr_objects; 
         new_array_dialog = true; // this is a new array dialog
         canvas_fieldsets = document.getElementsByClassName("canvas");
         for (i = 0; i < canvas_fieldsets.length; i++) {
             canvas_fieldsets[i].classList.add("hidden");
         }
-        init_arrays(attr_objects);
     } else {
+        pd_garray_attrs = attr_objects.slice(1);
         new_array_dialog = false; // this is a canvas/array props dialog
-        init_arrays(attr_objects.slice(1));
         populate_form(attr_objects[0]);
     }
+        init_arrays(pd_garray_attrs);
 
     // We don't turn on rendering of the "container" div until
     // We've finished displaying all the spans and populating the
@@ -731,7 +732,6 @@ function populate_form(attr_object) {
     }
     // Some special cases for hiding options for garray dialogs
     if (pd_garray_attrs.length > 0) {
-console.log("fungyfungyfungyfungy");
         // Graph-on-parent toggle
         document.getElementsByClassName("display-flags")[0]
             .classList.add("hidden");
