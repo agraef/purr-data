@@ -509,7 +509,6 @@ function send_params(attrs, create_undo_point) {
 
 function cancel(revert_changes) {
     var dirty = false, attr;
-    pdgui.post("closing the window at this point");
     //window.close(true);
     if (revert_changes) {
         for (attr in old_attrs) {

@@ -121,7 +121,6 @@ function apply() {
 }
 
 function cancel() {
-    pdgui.post("closing the window at this point");
     //window.close(true);
     pdgui.pdsend(pd_object_callback, "cancel");
 }

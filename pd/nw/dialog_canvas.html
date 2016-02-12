@@ -574,7 +574,6 @@ function apply() {
 
 function cancel() {
     var i, attrs, gfxstub;
-    pdgui.post("closing the window at this point");
     //window.close(true);
     pdgui.pdsend(pd_object_callback, "cancel");
     for (i = 0; i < pd_garray_attrs.length; i++) {
