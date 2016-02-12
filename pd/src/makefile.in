@@ -49,8 +49,6 @@ ARCH_CFLAGS = -DPD
 
 CFLAGS = @CFLAGS@ $(ARCH_CFLAGS) $(WARN_CFLAGS) $(CPPFLAGS) $(MORECFLAGS)
 
-QTGUI = @qt@
-
 # the sources
 
 SYSSRC += @SYSSRC@
@@ -87,10 +85,6 @@ TYPE_PUNNING_OBJ = $(TYPE_PUNNING_SRC:.c=.o)
 OPT_SAFE_OBJ = $(OPT_SAFE_SRC:.c=.o) 
 OBJ = $(SRC:.c=.o) 
 
-ifeq ($(QTGUI), yes)
-	OBJ += g_qt.moc.o g_qt.o
-endif
-
 GSRC =  @GUISRC@
 
 GOBJ = $(GSRC:.c=.o)
@@ -107,16 +101,6 @@ PD_TEST_VERSION := $(shell grep PD_TEST_VERSION m_pd.h | \
 PD_VERSION := $(PD_MAJOR_VERSION).$(PD_MINOR_VERSION).$(PD_BUGFIX_VERSION)
 ifneq ($(PD_TEST_VERSION),)
 	PD_VERSION := $(PD_VERSION)-$(PD_TEST_VERSION)
-endif
-
-# C++/Qt
-CXX = g++
-CXXFLAGS =
-MOC = moc
-QT_INCLUDE = -I/usr/include/qt5 -I/usr/include/qt5/QtGui -I/usr/include/qt5/QtCore
-ifeq ($(QTGUI),yes)
-  LDFLAGS += -L/usr/lib/i386-linux-gnu
-  LIB += -lQt5Core -lQt5Gui -lQt5Widgets
 endif
 
 #
@@ -144,15 +128,6 @@ $(GOBJ) : %.o : %.c
 $(ASIOOBJ): %.o : %.cpp
 	$(CXX) $(CFLAGS) $(INCLUDE) -c -o $(OBJ_DIR)/$*.o $*.cpp
 
-../obj/g_qt.moc.cpp : g_qt.h
-	$(MOC) $(subst $(CPPFLAGS),-fno-strict-aliasing,) $(QT_INCLUDE) $< -o ../obj/$@
-
-../obj/g_qt.moc.o : ../obj/g_qt.moc.cpp
-	$(CXX) $(CFLAGS) $(CXXFLAGS) $(QT_INCLUDE) -fPIC -c ../obj/g_qt.moc.cpp -o ../obj/g_qt.moc.o
-
-../obj/g_qt.o : g_qt.cpp
-	$(CXX) $(CFLAGS) $(CXXFLAGS) $(QT_INCLUDE) -fPIC -c g_qt.cpp -o ../obj/g_qt.o
-
 pd: $(PDEXEC)
 
 ifneq ($(GSRC),)
@@ -177,13 +152,8 @@ $(BIN_DIR)/pdsend: u_pdsend.c
 $(BIN_DIR)/pdreceive: u_pdreceive.c $(BIN_DIR)
 	$(CC) $(CFLAGS)  $(STRIPFLAG) -o $(BIN_DIR)/pdreceive u_pdreceive.c
 
-ifeq ($(QTGUI),yes)
-$(PDEXEC): $(OBJ)
-	cd ../obj;  $(CXX) $(LDFLAGS) $(DBG_CFLAGS) -o $(PDEXEC) $(OBJ) $(LIB)
-else
 $(PDEXEC): $(OBJ)
 	cd ../obj;  $(CC) $(LDFLAGS) $(DBG_CFLAGS) -o $(PDEXEC) $(OBJ) $(LIB)
-endif
 
 $(BIN_DIR)/pd-gui: $(GOBJ) $(GSRC)
 	cd ../obj; $(CC) $(INCLUDE) -o $(BIN_DIR)/$(GUINAME) $(GOBJ) $(GLIB)
@@ -309,7 +279,6 @@ install: all tkpath tkdnd
 	@echo "Pd install succeeded."
 
 local-clean:	
-	-rm -f -- ../obj/*.moc.cpp
 	-rm -f -- $(OBJ)
 	-rm -f ../obj/* $(PDEXEC) $(BIN_DIR)/$(GUINAME) $(BIN_DIR)/pdsend \
 	    $(BIN_DIR)/pdreceive $(BIN_DIR)/pd-watchdog m_stamp.c

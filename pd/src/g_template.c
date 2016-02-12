@@ -1073,9 +1073,9 @@ t_class *svg_class;
       string for that option.  There's still the bug that the user can't set
       an attribute back to "inherit" after they've set something explicitly,
       however.
-   2) This might be generally useful even with Qt, so that if the user calls
-      a method for an attribute without any arguments, Qt goes back to
-      inheriting the value from the parent.  That gives us a way to
+   2) This might be generally useful even with other GUI toolkits, so that if
+      the user calls a method for an attribute without any arguments, Qt goes
+      back to inheriting the value from the parent.  That gives us a way to
       differentiate "inherit" from fielddescriptors, the value "none" and
       "".  (Similar to the way "set" resets a message box.)
 */
