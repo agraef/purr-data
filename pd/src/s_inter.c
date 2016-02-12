@@ -775,17 +775,22 @@ static void escape_double_quotes(const char *src) {
         sys_vgui("\"%s\"", src);
     else
     {
-        char *dest = (char *)t_getbytes((len+1)*sizeof(*dest));
+        char *dest = (char *)t_getbytes((len+dq+1)*sizeof(*dest));
+        char *tmp = dest;
         s = src;
         while(*s++)
         {
             if (*s == '\"')
-                *dest++ = '\\', *dest++ = '\"';
+            {
+                *tmp++ = '\\';
+                *tmp++ = '\"';
+            }
             else
-                *dest++ = *s;
+                *tmp++ = *s;
         }
+        *tmp = '\0'; /* null terminate */
         sys_vgui("\"%s\"", dest);
-        t_freebytes(dest, (len+1)*sizeof(*dest));
+        t_freebytes(dest, (len+dq+1)*sizeof(*dest));
     }
 }
 
