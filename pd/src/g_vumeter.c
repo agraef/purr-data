@@ -142,10 +142,12 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
         if((i&3)==1 && (x->x_scale))
         {
             // not handling font size yet
-            gui_vmess("gui_create_vumeter_text", "xxxiisiii",
+            gui_vmess("gui_create_vumeter_text", "xxxiisiiiis",
                 canvas, x,
                 x->x_gui.x_lcol, end+1, yyy+k3+2, iemgui_vu_scale_str[i/4],
-                i, x1, y1);
+                i, x1, y1,
+                x->x_gui.x_fontsize,
+                sys_fontweight);
         }
         led_col = iemgui_vu_col[i];
         if (i<=IEM_VU_STEPS)

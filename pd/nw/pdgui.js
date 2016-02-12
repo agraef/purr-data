@@ -2120,12 +2120,14 @@ function gui_radio_update(cid,tag,x_fgcolor,prev,next) {
     });
 }
 
-function gui_create_vumeter_text(cid,tag,x_color,xpos,ypos,text,index,basex,basey) {
+function gui_create_vumeter_text(cid,tag,x_color,xpos,ypos,text,index,basex,basey, font_size, font_weight) {
     var g = get_gobj(cid, tag),
         svg_text = create_item(cid, "text", {
             x: xpos - basex,
             y: ypos - basey,
-            //  font-size: font);
+            "font-family": iemgui_fontfamily(fontname),
+            "font-size": font_size,
+            "font-weight": font_weight,
             id: tag + "text_" + index
         }),
         text_node = patchwin[cid].window.document.createTextNode(text);
