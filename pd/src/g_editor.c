@@ -2783,7 +2783,6 @@ static void canvas_donecanvasdialog(t_glist *x,
         post("Array graphs cannot have their 'graph on parent' "
              "or 'hide object name and arguments' options disabled");
     }
-    
     if (graphme)
     {
         if (x1 != x2)
