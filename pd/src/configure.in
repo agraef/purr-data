@@ -10,22 +10,16 @@ AC_SUBST(portaudio, no)
 AC_SUBST(portmidi, no)
 AC_SUBST(binarymode, -m755)
 AC_SUBST(fftw, no)
-AC_SUBST(tk, yes)
 AC_SUBST(PDLIB)
 AC_SUBST(CPPFLAGS)
 AC_SUBST(MORECFLAGS)
 AC_SUBST(EXT)
 AC_SUBST(USE_DEBUG_CFLAGS, no)
 AC_SUBST(SYSSRC)
-AC_SUBST(TCLTK_FRAMEWORKS_PATH)
-AC_SUBST(TCLTK_FRAMEWORKS_PATH)
 AC_SUBST(STRIPFLAG)
-AC_SUBST(GUINAME)
-AC_SUBST(GUIFLAGS)
 AC_SUBST(OSNUMBER)
 AC_SUBST(EXTERNTARGET)
 AC_SUBST(ASIOSRC)
-AC_SUBST(GUISRC)
 AC_SUBST(PDEXEC)
 
 dnl other defaults
@@ -52,8 +46,6 @@ AC_ARG_ENABLE(fftw,     [  --enable-fftw           use FFTW package],
     fftw=$enableval)
 AC_ARG_ENABLE(fat,      [  --disable-fat           build fat binary on Mac OS X], 
     fat=$enableval, fat="yes")
-AC_ARG_ENABLE(tk,       [  --disable-tk            build without tcl/tk-GUI],
-    tk=$enableval)
 
 dnl Checks for programs.
 AC_PROG_CC
@@ -103,82 +95,6 @@ if test x$fftw = "xyes";
 then
 AC_CHECK_LIB(fftw3f, fftwf_version,PDLIB="$PDLIB -lfftw3f",
     echo "fftw3 package not found - using built-in FFT"; fftw=no)
-fi
-
-dnl look for tcl 8.x... do I really have to go through all this!?
-
-foundit=no
-if test $foundit = "no";
-then
-    AC_CHECK_HEADER(tcl.h,foundit=yes,)
-fi
-if test $foundit = "no";
-then
-    AC_CHECK_HEADER(tcl8.7/tcl.h,
-        GUIFLAGS="$GUIFLAGS -I/usr/include/tcl8.7";foundit=yes,)
-fi
-if test $foundit = "no";
-then
-    AC_CHECK_HEADER(tcl8.6/tcl.h,
-        GUIFLAGS="$GUIFLAGS -I/usr/include/tcl8.6";foundit=yes,)
-fi
-if test $foundit = "no";
-then
-    AC_CHECK_HEADER(tcl8.5/tcl.h,
-        GUIFLAGS="$GUIFLAGS -I/usr/include/tcl8.5";foundit=yes,)
-fi
-if test $foundit = "no";
-then
-    AC_CHECK_HEADER(tcl8.4/tcl.h,
-        GUIFLAGS="$GUIFLAGS -I/usr/include/tcl8.4";foundit=yes,)
-fi
-if test $foundit = "no";
-then
-    AC_CHECK_HEADER(tcl8.4/tcl.h,
-        GUIFLAGS="$GUIFLAGS -I/usr/local/include/tcl8.4";foundit=yes,)
-fi
-if test $foundit = "no";
-then
-    AC_CHECK_HEADER(tcl8.3/tcl.h,
-        GUIFLAGS="$GUIFLAGS -I/usr/include/tcl8.3";foundit=yes,)
-fi
-if test $foundit = "no";
-then
-    AC_CHECK_HEADER(tcl8.2/tcl.h,
-        GUIFLAGS="$GUIFLAGS -I/usr/include/tcl8.2";foundit=yes,)
-fi
-if test $foundit = "no";
-then
-    echo no tcl header found
-         echo bolding trying without...
-#    exit -1
-fi
-
-AC_CHECK_LIB(tcl8.6, main,,
-AC_CHECK_LIB(tcl85, main,,
-        AC_CHECK_LIB(tcl8.5, main,,
-        AC_CHECK_LIB(tcl84, main,,
-            AC_CHECK_LIB(tcl8.4, main,,
-                AC_CHECK_LIB(tcl8.3, main,,
-                    AC_CHECK_LIB(tcl8.2, main,,
-                                    AC_CHECK_LIB(tcl8.0, main,,
-                            echo no tcl library found; exit 1))))))))
-
-AC_CHECK_LIB(tk8.6, main,,
-AC_CHECK_LIB(tk85, main,,
-    AC_CHECK_LIB(tk8.5, main,,
-       AC_CHECK_LIB(tk84, main,,
-            AC_CHECK_LIB(tk8.4, main,,
-                AC_CHECK_LIB(tk8.3, main,,
-                    AC_CHECK_LIB(tk8.2, main,,
-                                    AC_CHECK_LIB(tk8.0, main,,
-                            echo no tk library found; exit 1))))))))
-
-
-if test x$tk != "xno"; then
-GUISRC="t_main.c t_tkcmd.c"
-else
-GUISRC=
 fi
 
 PDEXEC=pd-l2ork
@@ -266,7 +182,6 @@ dnl No OSS on hurd
         binarymode="-m4755"
     fi
     STRIPFLAG=-s
-    GUINAME="pd-gui"
     if test x$USE_DEBUG_CFLAGS = "xyes";
     then
         MORECFLAGS=$MORECFLAGS" -g"
@@ -338,25 +253,7 @@ then
         ../portmidi/pm_common/portmidi.c   \
         ../portmidi/porttime/ptmacosx_cf.c"
     STRIPFLAG=""
-    GUINAME="libPdTcl.dylib"
 
-# find the Tcl/Tk Frameworks
-         if test -d "../../Frameworks";
-    then
-        # Miller's location
-        TCLTK_FRAMEWORKS_PATH="../../Frameworks"
-         elif test -d "/Library/Frameworks";
-         then
-        # get it from the default install location
-        TCLTK_FRAMEWORKS_PATH="/Library/Frameworks"
-    else
-        # Panther has Tcl here; Tiger has Tcl and Tk here
-        TCLTK_FRAMEWORKS_PATH="/System/Library/Frameworks"
-    fi           
-    GUIFLAGS="-F$TCLTK_FRAMEWORKS_PATH -framework Tcl -framework Tk \
-        -I$TCLTK_FRAMEWORKS_PATH/Tk.framework/Versions/Current/Headers \
-        -I$TCLTK_FRAMEWORKS_PATH/Tcl.framework/Versions/Current/Headers \
-        -I$TCLTK_FRAMEWORKS_PATH/Tcl.framework/Versions/8.4/PrivateHeaders"
     if test x$USE_DEBUG_CFLAGS = "xyes";
     then
         MORECFLAGS=$MORECFLAGS" -g"
@@ -406,8 +303,6 @@ then
          ../portaudio/src/hostapi/pa_asio/asio.cpp ../asio/asio.cpp \
          ../asio/asiodrivers.cpp ../asio/asiolist.cpp"
     STRIPFLAG="--strip-unneeded"
-    GUINAME="pdtcl.dll"
-    GUIFLAGS=
 fi
 
 # support for jack, on either linux or darwin:
