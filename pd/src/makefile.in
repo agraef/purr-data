@@ -229,7 +229,7 @@ install: all tkpath tkdnd
 	install -d $(DESTDIR)$(libpdbindir)/css
 	install -d $(DESTDIR)$(libpdbindir)/locales
 	install -m644 ../nw/*.* $(DESTDIR)$(libpdbindir)/
-	install -m755 ../nw/nw/* $(DESTDIR)$(libpdbindir)/nw/
+	rsync -ax --exclude=.git --exclude=.svn ../nw/nw $(DESTDIR)$(libpdbindir)
 	install -m644 ../nw/css/*.* $(DESTDIR)$(libpdbindir)/css/
 	for dir in $(shell ls -1 ../nw/locales); do \
 		echo "installing locale $$dir"; \
