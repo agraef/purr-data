@@ -9,7 +9,6 @@ to this file... */
 #include <stdlib.h>
 #include "m_pd.h"
 #include "m_imp.h"
-#include "t_tk.h"
 #include "g_canvas.h"
 #include "g_all_guis.h" /* for canvas handle freeing */
 #include "s_stuff.h"    /* for sys_hostfontsize */
