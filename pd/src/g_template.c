@@ -1773,7 +1773,6 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
         for (i = 0, cmd = x->x_pathcmds; i < x->x_npathcmds; i++, cmd++)
         {
             int j;
-            int cargs = x->x_nargs_per_cmd[i];
             f = (x->x_vec)+totalpoints;
             sprintf(cmdbuf, "%c", *(cmd));
             gui_s(cmdbuf);
@@ -1858,7 +1857,6 @@ void svg_updatevec(t_canvas *c, t_word *data, t_template *template,
             }
 
             t_template *elemtemplate = template_findbyname(elemtemplatesym);
-            t_canvas *elemtemplatecanvas = template_findcanvas(elemtemplate);
             /* this is a doozy... */
             array = *(t_array **)(((char *)data) + arrayonset);
             elem = (char *)array->a_vec;
@@ -1868,10 +1866,9 @@ void svg_updatevec(t_canvas *c, t_word *data, t_template *template,
                 elemsize = array->a_elemsize;
                 for (j = 0; j < array->a_n; j++)
                 {
-                        int redraw_bbox = 0;
-                        svg_sendupdate(x, glist_getcanvas(c), s,
-                            elemtemplate, (t_word *)(elem + elemsize * j),
-                            predraw_bbox, parent, sc);
+                    svg_sendupdate(x, glist_getcanvas(c), s,
+                        elemtemplate, (t_word *)(elem + elemsize * j),
+                        predraw_bbox, parent, sc);
                 }
             }
             svg_updatevec(c, (t_word *)elem, elemtemplate, target, parent,
@@ -3388,7 +3385,6 @@ static void draw_getrect(t_gobj *z, t_glist *glist,
     else if (sa->x_type == gensym("polyline") ||
              sa->x_type == gensym("polygon"))
     {
-        int nxy = n >> 1;
         svg_parsetransform(sa, template, data, &m1, &m2, &m3,
             &m4, &m5, &m6);
         mset(mtx2, m1, m2, m3, m4, m5, m6);
@@ -3611,7 +3607,6 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
         for (i = 0, cmd = x->x_pathcmds; i < x->x_npathcmds; i++, cmd++)
         {
             int j;
-            int cargs = x->x_nargs_per_cmd[i];
             f = (x->x_vec)+totalpoints;
             sprintf(cmdbuf, "%c", *(cmd));
             gui_s(cmdbuf);
@@ -3708,7 +3703,7 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
     if (x->x_type == gensym("polyline") ||
         x->x_type == gensym("polygon"))
     {
-        int i, n = x->x_nargs;
+        int i;
         if (x->x_nargs)
         {
             gui_s("points");
@@ -3804,13 +3799,12 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     t_draw *x = (t_draw *)z;
     t_svg *sa = (t_svg *)x->x_attr;
 
-    int i, n = sa->x_nargs;
+    int n = sa->x_nargs;
     //t_float mtx1[3][3] =  { { 0, 0, 0}, {0, 0, 0}, {0, 0, 1} };
     //t_float mtx2[3][3] =  { { 0, 0, 0}, {0, 0, 0}, {0, 0, 1} };
     /* need to scale some attributes like radii, widths, etc. */
     //t_float xscale = glist_xtopixels(glist, 1) - glist_xtopixels(glist, 0);
     //t_float yscale = glist_ytopixels(glist, 1) - glist_ytopixels(glist, 0);
-    t_fielddesc *f = sa->x_vec;
 
     /*// get the universal tag for all nested objects
     t_canvas *tag = x->x_canvas;
@@ -3835,20 +3829,11 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         */
 
         int in_array = (sc->sc_vec == data) ? 0 : 1;
-        //int flags = sa->x_flags;
-        t_float pix[500];
+        /* This was originally used to limit the number of points to 500.
+           We're not doing that anymore, but "n" is used below so I want to
+           investigate further before removing it. */
         if (n > 500)
             n = 500;
-            /* calculate the pixel values before we start printing
-            out the TK message so that "error" printout won't be
-            interspersed with it.  Only show up to 100 points so we don't
-            have to allocate memory here. */
-        if (sa->x_type != gensym("path"))
-        {
-            //int nxy = n >> 1;
-            for (i = 0, f = sa->x_vec; i < n; i++, f++)
-                pix[i] = fielddesc_getcoord(f, template, data, 1);
-        }
         /* begin the gui drawing command */
         gui_start_vmess("gui_draw_vis", "xs", glist_getcanvas(glist),
             sa->x_type->s_name);
@@ -3956,7 +3941,6 @@ static void draw_motion(void *z, t_floatarg dx, t_floatarg dy)
     tdy = mtx2[1][0];
     SETFLOAT(at+2, tdx);
     SETFLOAT(at+3, tdy);
-    t_fielddesc *f = sa->x_vec; //+ draw_motion_field;
     if (!gpointer_check(&draw_motion_gpointer, 0))
     {
         post("draw_motion: scalar disappeared");
@@ -4561,10 +4545,8 @@ void curve_smooth_to_q(int *pix, int n, int closed)
 {
     //fprintf(stderr,"curve_smooth_to_q closed=%d\n", closed);
     intxy *p = (intxy *)pix;
-    int i, end = (closed ? n : n - 1);
-    int a = 0, b = 0;
+    int i;
     int overlap = 0;
-    int current = 0;
     // >>1 is used instead of /2 or *0.5, because of slight difference in rounding.
 
     gui_s("d");
