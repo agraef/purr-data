@@ -107,7 +107,7 @@ endif
 #  ------------------ targets ------------------------------------
 #
 
-.PHONY: pd gui externs all bin pd tkpath tkdnd install \
+.PHONY: pd gui externs all bin pd install \
         TAGS etags etags_Darwin etags_Linux etags_MINGW
 
 all: pd $(BIN_DIR)/pd-watchdog gui $(BIN_DIR)/pdsend \
@@ -196,35 +196,15 @@ externs:
 	make -C ../extra/pd~      @EXTERNTARGET@
 	make -C ../extra/stdout   @EXTERNTARGET@
 
-../tkpath/Makefile: ../tkpath/Makefile.in ../tkpath/configure.in
-	cd ../tkpath && aclocal && autoconf && ./configure --prefix=$(prefix)
-
-tkpath: ../tkpath/Makefile
-	make -C ../tkpath
-	cd ../src
-
-../tkdnd/Makefile: ../tkdnd/Makefile.in ../tkdnd/configure.in
-	cd ../tkdnd && aclocal && autoconf && ./configure --prefix=$(prefix)
-
-tkdnd: ../tkdnd/Makefile
-	make -C ../tkdnd
-	cd ../src
-
 BINARYMODE=@binarymode@
 
 ABOUT_FILE=$(DESTDIR)$(pddocdir)/1.manual/1.introduction.txt
-install: all tkpath tkdnd
+install: all
 	install -d $(DESTDIR)$(libpdbindir)
 	install $(BIN_DIR)/$(GUINAME) $(DESTDIR)$(libpdbindir)/$(GUINAME)
 	install $(BIN_DIR)/pd-watchdog $(DESTDIR)$(libpdbindir)/pd-watchdog
 	install -m644 pd.tk $(DESTDIR)$(libpdbindir)/pd.tk
 	install -m644 *.tcl $(DESTDIR)$(libpdbindir)/
-	install -m644 ../tkpath/library/tkpath.tcl $(DESTDIR)$(libpdbindir)/tkpath.tcl
-	install -m644 ../tkpath/libtkpath*so $(DESTDIR)$(libpdbindir)/
-	install -m644 ../tkdnd/library/tkdnd.tcl $(DESTDIR)$(libpdbindir)/tkdnd.tcl
-	install -m644 ../tkdnd/library/tkdnd_unix.tcl $(DESTDIR)$(libpdbindir)/tkdnd_unix.tcl
-	install -m644 ../tkdnd/library/tkdnd_compat.tcl $(DESTDIR)$(libpdbindir)/tkdnd_compat.tcl
-	install -m644 ../tkdnd/libtkdnd*so $(DESTDIR)$(libpdbindir)/
 	install -d $(DESTDIR)$(libpdbindir)/nw
 	install -d $(DESTDIR)$(libpdbindir)/css
 	install -d $(DESTDIR)$(libpdbindir)/locales
@@ -299,7 +279,6 @@ distclean: clean
 		autom4te.cache/output.* autom4te.cache/traces.* autom4te.cache/requests
 	-rmdir autom4te.cache
 	-rm -rf autom4te-*.cache
-	cd ../tkpath && make distclean
 
 tags: $(SRC) $(GSRC); ctags *.[ch]
 
