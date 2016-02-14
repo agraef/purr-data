@@ -41,11 +41,54 @@ Node-webkit stuff:
 5) command line argv
 
 Everything else: (A [x] means we've fixed it)
+[ ] standardize javascript function names
+[ ] implement the crappy iemgui color dialog presets
+[ ] use underscores for iemgui dialog element names
+[ ] remove the draw_vis warning/code about needing 2 points to draw
+[ ] in draw_vis, move tags to front of function call so they don't have to
+    be in an array
+[ ] make pdgui function names more consistent
+[ ] for scalar tags, look into using "x" exclusively inside gui_vmess so that
+    we don't have to sprintf anything. Then on the gui side we can
+    concatenate as needed.
+[ ] revisit pdtk_check_scroll_on_motion.  It's not implemented in the port
+    yet.  Perhaps there's a better way to do it, without triggering a bunch
+    of layouts.
+[ ] fix bug where utf_8 snowmen in an object box can cause a buffer overflow
+    in the lib loading routine
+[ ] Fix layout on dialogs so that height/width of the document doesn't
+    reflow when the window gets resized
+[ ] figure out difference between deb install location /usr
+    vs tarball /usr/local
+[ ] Figure out what pdtk_ping does
+[ ] revisit the function for escaping double-quotes inside s_inter.c, see
+    if there's a cleaner way to do it
+[ ] don't implement tooltips until we have a single call to create an object
+    plus all xlets. That way we can add an arg or two for the name and dir
+    to find the help patch and get all descriptions in one go
+[ ] make scalars dig inside abstractions when they search the templatecanvas
+    for drawing commands.  This will make it possible to build abstraction
+    libraries for ds-gui widgets.
+[ ] some menuitem shortcuts don't pass their events on to the dom, while
+    others do. I think it happens when a double-modifier has keys in common
+    with a single-modifier. Example: <ctrl-shift-v> creates a vsl, but the
+    key gets sent to Pd. However, <ctrl-shift-h> creates an hsl, and
+    does _not_ send a key to Pd. Since <ctrl-v> is bound to "paste" and
+    <ctrl-h> isn't bound to anything, that may somehow be causing an
+    inconsistency.
+    After some more research, it appears this problem doesn't happen
+    in OSX.
+[x] clip garray to gl_x1 and gl_x2 by:
+    a) checking if we're in a gop, and
+    b) if so, only render if element number is > gl_x1 and < gl_x2
+    Note: this was fixed because we're not allowing different x-range for
+    garrays.
 [x] When you update the dialog window for [vu], it doesn't redraw the xlets
     properly
 [x] When you open a dialog window, the scale isn't automatically selected
 [x] vu scale isn't drawn correctly-- text is too big
-[ ] packaging as app, setting correct appname, etc
+[x] packaging as app, setting correct appname, etc
+    Note: added to gitlab tracker
 [x] check if patch windows with screenposition (0,0) get stuck underneath OSX
     menu.
 [x] abstract away appendChild
@@ -57,23 +100,17 @@ Everything else: (A [x] means we've fixed it)
     set the "Pd font size" and do the actual sizing in CSS. But it's still
     going to be the same amount of work when the user changes the size in
     the font dialog.)
-[ ] find a better approach to escaping characters for the gui than
+[x] find a better approach to escaping characters for the gui than
     escape_double_quotes kludge (and handle any other problematic chars)
+    Note: don't need to do this right now.  (Or maybe ever?)
 [x] once garrays are drawn inside a <g> we won't have to individually erase
     each child of a scalar
     Note: Not sure exactly how we would do this. While it makes the most sense
     from the GUI-side, a lot the interfaces on the C-side would need to be
     changed.  Seems like an enormous undertaking, unless there's some clever
     hack that I'm not yet seeing.
-[ ] make pdgui function names more consistent
-[ ] in draw_vis, move tags to front of function call so they don't have to
-    be in an array
-[ ] for scalar tags, look into using "x" exclusively inside gui_vmess so that
-    we don't have to sprintf anything. Then on the gui side we can
-    concatenate as needed.
-[ ] in draw_vis, remove all the coords logic and let svg_togui do that work.
+[x] in draw_vis, remove all the coords logic and let svg_togui do that work.
     In svg_new, leverage the "d", "points", etc. methods to do the same.
-[ ] remove the draw_vis warning/code about needing 2 points to draw
 [x] make gui_menu_close message less hacky (currently includes patch args in
     the middle) 
 [x] make dialogs with [yes/no] instead of [cancel/ok]
@@ -96,8 +133,6 @@ Everything else: (A [x] means we've fixed it)
     selection, as the border currently does.  Tk just uses the non-hierarchical
     tags and appends the word "BASE".  (Maybe use an inner <g> to do this.)
     Note: this doesn't seem like a big deal.
-[ ] implement the crappy iemgui color dialog presets
-[ ] use underscores for iemgui dialog element names
 [x] change all the gui color char[MAXPDSTRING] junk to simple int, and do the
     conversion to hex html string in the gui.
     Note: there may be some left in g_canvas.c and g_template.c
@@ -109,7 +144,6 @@ Everything else: (A [x] means we've fixed it)
     got sent.  That way we don't have to use all those awful tricks to
     conditionally fill the slots
 [x] gui_graph_fill_border: use css class selectors instead of configuration
-[ ] standardize javascript function names
 [x] remove gui_text_select_color (css takes care of this)
 [x] add a canvas message to set a transform on the patchsvg.  Good for:
     * obscure display needs (zooming past the browser limits)
@@ -139,28 +173,16 @@ Everything else: (A [x] means we've fixed it)
     (say, if it becomes a performance problem on really big patches)
 [x] for the clipboard shortcut keys inside pd_canvas.html keydown, not sure
     what code should be sent to Pd on keyup...
-[ ] revisit pdtk_check_scroll_on_motion.  It's not implemented in the port
-    yet.  Perhaps there's a better way to do it, without triggering a bunch
-    of layouts.
 [x] implement pdtk_canvas_editval and magicglassval
 [x] look into problems with object z-order on the C side when deleting objects
     and then undoing the delete
 [x] implement magicglass edit menu indicator
-[ ] clip garray to gl_x1 and gl_x2 by:
-    a) checking if we're in a gop, and
-    b) if so, only render if element number is > gl_x1 and < gl_x2
-[ ] fix bug where utf_8 snowmen in an object box can cause a buffer overflow
-    in the lib loading routine
-[ ] Fix layout on dialogs so that height/width of the document doesn't
-    reflow when the window gets resized
 [x] look into using requestAnimationFrame
 [x] canvas_check_geometry doesn't seem to do the right thing for canvases that
     are far to the right of the screen. Can't think of anything except maybe a
     bug in nw.js Window.x?
 [x] look into using mask-image in order to make this background color theme-able
 [x] integrate the inlet mouseover animation with a change of fill color
-[ ] figure out difference between deb install location /usr
-    vs tarball /usr/local
 [x] port the bug fix from pd-l2ork git repo in commit
     6084c8e5f86d1521edde3a899a6d5b5821aa27c6
     "*fixed bug reported by Gilberto in..."
@@ -187,25 +209,7 @@ Everything else: (A [x] means we've fixed it)
 [x] test if try/catch parser in the socket receiver is a performance hog. (For
     lots of data it can end up freezing the GUI. Test if requestAnimationFrame
     makes any difference...)
-[ ] Figure out what pdtk_ping does
 [x] Instead of hardcoded gui_post colors, set a class (warning, error, etc.)
-[ ] revisit the function for escaping double-quotes inside s_inter.c, see
-    if there's a cleaner way to do it
-[ ] don't implement tooltips until we have a single call to create an object
-    plus all xlets. That way we can add an arg or two for the name and dir
-    to find the help patch and get all descriptions in one go
-[ ] make scalars dig inside abstractions when they search the templatecanvas
-    for drawing commands.  This will make it possible to build abstraction
-    libraries for ds-gui widgets.
-[ ] some menuitem shortcuts don't pass their events on to the dom, while
-    others do. I think it happens when a double-modifier has keys in common
-    with a single-modifier. Example: <ctrl-shift-v> creates a vsl, but the
-    key gets sent to Pd. However, <ctrl-shift-h> creates an hsl, and
-    does _not_ send a key to Pd. Since <ctrl-v> is bound to "paste" and
-    <ctrl-h> isn't bound to anything, that may somehow be causing an
-    inconsistency.
-    After some more research, it appears this problem doesn't happen
-    in OSX.
 [x] fix ds-demos/splines.pd (arg number out of range)
 [x] vsl dialog shows "undefined" for one of the tooltips
 
@@ -368,7 +372,7 @@ Everything else: (A [x] means we've fixed it)
 [x] revisit cursor logic-- when you leave the boundaries of an object 
     being dragged, for example, the cursor changes to whatever is set for
     the parent (svg, document, etc.).
-[ ] Consider:
+[x] Consider:
     [pd foo]
     |
     [print]
@@ -378,7 +382,8 @@ Everything else: (A [x] means we've fixed it)
     3) Bug!  Notice that the connection between [pd foo]---[print] does
        not get recreated. I also noted that it isn't just a drawing
        problem-- the connection doesn't happen at all in Pd.
-[ ] currently you can't send a message to the GUI with a single
+    Note: ported to giblab issue tracker
+[x] currently you can't send a message to the GUI with a single
     array parameter:
     gui_start_vmess("some_message", "");
     gui_start_array();
