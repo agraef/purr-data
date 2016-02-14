@@ -41,10 +41,10 @@ Node-webkit stuff:
 5) command line argv
 
 Everything else: (A [x] means we've fixed it)
-[ ] When you update the dialog window for [vu], it doesn't redraw the xlets
+[x] When you update the dialog window for [vu], it doesn't redraw the xlets
     properly
-[ ] When you open a dialog window, the scale isn't automatically selected
-[ ] vu scale isn't drawn correctly-- text is too big
+[x] When you open a dialog window, the scale isn't automatically selected
+[x] vu scale isn't drawn correctly-- text is too big
 [ ] packaging as app, setting correct appname, etc
 [x] check if patch windows with screenposition (0,0) get stuck underneath OSX
     menu.
