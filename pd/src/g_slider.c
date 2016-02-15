@@ -63,11 +63,11 @@ static void slider_draw_new(t_slider *x, t_glist *glist)
     else             r = x1+3 + (x->x_val + 50)/100;
     iemgui_base_draw_new(&x->x_gui);
     if (x->x_orient) {
-        gui_vmess("gui_create_slider", "xxxiiiiii",
+        gui_vmess("gui_slider_new", "xxxiiiiii",
             canvas, x,
             x->x_gui.x_fcol, x1+2, r, x2-2, r, x1, y1);
     } else {
-        gui_vmess("gui_create_slider", "xxxiiiiii",
+        gui_vmess("gui_slider_new", "xxxiiiiii",
             canvas, x,
             x->x_gui.x_fcol, r, y1+2, r, y2-2, x1, y1);
     }

@@ -1079,7 +1079,7 @@ void iemgui_draw_io(t_iemgui *x, int old_sr_flags)
         for (i=0; i<n; i++)
         {
             sprintf(tagbuf, "%so%d", iem_get_tag(canvas, x), i);
-            gui_vmess("gui_canvas_drawio", "xxsiiiiiisiii", canvas,
+            gui_vmess("gui_gobj_draw_io", "xxsiiiiiisiii", canvas,
                 x, tagbuf,
                 x1+i*k, y2-1, x1+i*k + IOWIDTH, y2, x1, y1, "o", i,
                 0, 1);
@@ -1090,7 +1090,7 @@ void iemgui_draw_io(t_iemgui *x, int old_sr_flags)
         for (i=0; i<n; i++)
         {
             sprintf(tagbuf, "%so%d", iem_get_tag(canvas, x), i);
-            gui_vmess("gui_eraseio", "xs",
+            gui_vmess("gui_gobj_erase_io", "xs",
                 canvas, tagbuf);
         }
     }
@@ -1104,7 +1104,7 @@ void iemgui_draw_io(t_iemgui *x, int old_sr_flags)
         for (i=0; i<n; i++)
         {
             sprintf(tagbuf, "%si%d", iem_get_tag(canvas, x), i);
-            gui_vmess("gui_canvas_drawio", "xxsiiiiiisiii", canvas,
+            gui_vmess("gui_gobj_draw_io", "xxsiiiiiisiii", canvas,
                 x, tagbuf,
                 x1+i*k, y1, x1+i*k + IOWIDTH, y1+1, x1, y1, "i", i,
                 0, 1);
@@ -1115,7 +1115,7 @@ void iemgui_draw_io(t_iemgui *x, int old_sr_flags)
         for (i=0; i<n; i++)
         {
             sprintf(tagbuf, "%si%d", iem_get_tag(canvas, x), i);
-            gui_vmess("gui_eraseio", "xs",
+            gui_vmess("gui_gobj_erase_io", "xs",
                 canvas, tagbuf);
         }
     }
@@ -1172,18 +1172,18 @@ void iemgui_base_draw_new(t_iemgui *x) {
     c->c_wb->w_getrectfn((t_gobj *)x,x->x_glist,&x1,&y1,&x2,&y2);
     //iemgui_getrect_draw(x, &x1, &y1, &x2, &y2); 
     gop_redraw=gr;
-    gui_vmess("gui_text_create_gobj", "xxsiii", canvas, x,
-        "iemgui", x1, y1, glist_istoplevel(x->x_glist));
     char colorbuf[MAXPDSTRING];
     sprintf(colorbuf, "#%6.6x", x->x_bcol);
-    gui_vmess("gui_text_drawborder", "xxsiiiii",
+    gui_vmess("gui_gobj_new", "xxsiii", canvas, x,
+        "iemgui", x1, y1, glist_istoplevel(x->x_glist));
+    gui_vmess("gui_text_draw_border", "xxsiiiii",
         canvas,
         x,
         colorbuf,
         0,
         x1, y1, x2, y2);
-    gui_vmess("gui_iemgui_base_color", "xxs",
-        canvas, x, colorbuf);
+    gui_vmess("gui_iemgui_base_color", "xxx",
+        canvas, x, x->x_bcol);
 }
 
 void iemgui_base_draw_move(t_iemgui *x) {

@@ -812,7 +812,7 @@ void scalar_doconfigure(t_gobj *xgobj, t_glist *owner)
             (int)glist_ytopixels(owner, basey));
 
         char groupbuf[MAXPDSTRING];
-        // Quick hack to make gui_create_scalar_group more general (so we
+        // Quick hack to make gui_scalar_draw_group more general (so we
         // don't have to tack on "gobj" manually)
 
 
@@ -820,7 +820,7 @@ void scalar_doconfigure(t_gobj *xgobj, t_glist *owner)
         //sprintf(tagbuf, "scalar%lxgobj", (long unsigned int)x->sc_vec);
         //sprintf(groupbuf, "dgroup%lx.%lx", (long unsigned int)templatecanvas,
         //    (long unsigned int)x->sc_vec);
-        //gui_vmess("gui_create_scalar_group", "xss",
+        //gui_vmess("gui_scalar_draw_group", "xss",
         //    glist_getcanvas(owner), groupbuf, tagbuf); 
 
         for (y = templatecanvas->gl_list; y; y = y->g_next)
@@ -870,7 +870,7 @@ static void scalar_groupvis(t_scalar *x, t_glist *owner, t_template *template,
         char parentbuf[MAXPDSTRING];
         sprintf(parentbuf, "dgroup%lx.%lx", (long unsigned int)parent,
             (long unsigned int)x->sc_vec);
-        gui_start_vmess("gui_create_scalar_group", "xss",
+        gui_start_vmess("gui_scalar_draw_group", "xss",
             glist_getcanvas(owner), tagbuf, parentbuf);
         svg_grouptogui(gl, template, x->sc_vec);
         gui_end_vmess();
@@ -976,7 +976,7 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
            understand "None"-- instead we must send an empty symbol.) */
         char tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "scalar%lx", (long unsigned int)x->sc_vec);
-        gui_vmess("gui_create_scalar", "xsiffffiii",
+        gui_vmess("gui_scalar_new", "xsiffffiii",
             glist_getcanvas(owner), 
             tagbuf,
             glist_isselected(owner, &x->sc_gobj),
@@ -985,12 +985,12 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
             (int)glist_ytopixels(owner, basey),
             glist_istoplevel(owner));
         char groupbuf[MAXPDSTRING];
-        // Quick hack to make gui_create_scalar_group more general (so we
+        // Quick hack to make gui_scalar_draw_group more general (so we
         // don't have to tack on "gobj" manually)
         sprintf(tagbuf, "scalar%lxgobj", (long unsigned int)x->sc_vec);
         sprintf(groupbuf, "dgroup%lx.%lx", (long unsigned int)templatecanvas,
             (long unsigned int)x->sc_vec);
-        gui_vmess("gui_create_scalar_group", "xss",
+        gui_vmess("gui_scalar_draw_group", "xss",
             glist_getcanvas(owner), groupbuf, tagbuf);
     }
 

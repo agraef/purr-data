@@ -108,9 +108,9 @@ void magicGlass_updateText(t_magicGlass *x, int moved)
 
 void magicGlass_drawNew(t_magicGlass *x)
 {
-    gui_vmess("gui_text_create_gobj", "xssiii",
+    gui_vmess("gui_gobj_new", "xssiii",
         x->x_c, "cord_inspector", "cord_inspector", 0, 0, 0);
-    gui_vmess("gui_create_cord_inspector", "x",
+    gui_vmess("gui_cord_inspector_new", "x",
         x->x_c); 
     magicGlass_updateText(x, 0);
     clock_delay(x->x_flashClock, MG_CLOCK_FLASH_DELAY);
@@ -119,7 +119,7 @@ void magicGlass_drawNew(t_magicGlass *x)
 void magicGlass_undraw(t_magicGlass *x)
 {
     //fprintf(stderr,"magicglass_undraw\n");
-    gui_vmess("gui_erase_cord_inspector", "x",
+    gui_vmess("gui_cord_inspector_erase", "x",
         x->x_c);
 }
 

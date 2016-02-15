@@ -1778,7 +1778,7 @@ static void text_vis(t_gobj *z, t_glist *glist, int vis)
 
                 // make a group
                 text_getrect(&x->te_g, glist, &x1, &y1, &x2, &y2);
-                gui_vmess("gui_text_create_gobj", "xssiii",
+                gui_vmess("gui_gobj_new", "xssiii",
                     glist_getcanvas(glist),
                     rtext_gettag(y), type, x1, y1, glist_istoplevel(glist));
 
@@ -1990,14 +1990,14 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
             issignal = obj_issignaloutlet(ob,i);
 
             /* need to send issignal and is_iemgui here... */
-            gui_vmess("gui_canvas_drawio", "xssiiiiiisiii",
+            gui_vmess("gui_gobj_draw_io", "xssiiiiiisiii",
                 glist_getcanvas(glist), rtext_gettag(y), tag,
                 onset, y2 - 2, onset + IOWIDTH, y2, x1, y1, "o", i,
                 issignal, 0);
         }
         else
         {
-            gui_vmess("gui_canvas_redraw_io", "xssiisiii",
+            gui_vmess("gui_gobj_redraw_io", "xssiisiii",
                 glist_getcanvas(glist), rtext_gettag(y), tag,
                 onset, y2 - 2, "o", i, x1, y1);
         }
@@ -2011,7 +2011,7 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
         {
             //fprintf(stderr,"glist_drawiofor i firsttime\n");
             issignal = obj_issignalinlet(ob,i);
-            gui_vmess("gui_canvas_drawio", "xssiiiiiisiii",
+            gui_vmess("gui_gobj_draw_io", "xssiiiiiisiii",
                 glist_getcanvas(glist), rtext_gettag(y), tag,
                 onset, y1, onset + IOWIDTH, y1 + EXTRAPIX, x1, y1, "i", i,
                 issignal, 0);
@@ -2019,7 +2019,7 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
         else
         {
             //fprintf(stderr,"glist_drawiofor i firsttime\n");
-            gui_vmess("gui_canvas_redraw_io", "xssiisiii",
+            gui_vmess("gui_gobj_redraw_io", "xssiisiii",
                 glist_getcanvas(glist), rtext_gettag(y), tag,
                 onset, y1, "i", i, x1, y1);
         }
@@ -2160,7 +2160,7 @@ void text_drawborder(t_text *x, t_glist *glist,
         }
         if (firsttime)
         {
-            gui_vmess("gui_text_drawborder", "xssiiiii",
+            gui_vmess("gui_text_draw_border", "xssiiiii",
                 glist_getcanvas(glist), tag, "none",
                 broken, x1, y1, x2, y2);
                
@@ -2181,7 +2181,7 @@ void text_drawborder(t_text *x, t_glist *glist,
     {
         if (firsttime)
         {
-            gui_vmess("gui_message_drawborder", "xsii",
+            gui_vmess("gui_message_draw_border", "xsii",
                 glist_getcanvas(glist), tag, x2 - x1, y2 - y1);
         }
         else
@@ -2212,7 +2212,7 @@ void text_drawborder(t_text *x, t_glist *glist,
             //    (selected ? "$pd_colors(selection)" : "$pd_colors(atom_box_border)"),
             //        tag, tag, (selected ? "selected" : ""));
             /* These coords can be greatly simplified... */
-            gui_vmess("gui_atom_drawborder", "xsiiiiiiiiiiii",
+            gui_vmess("gui_atom_draw_border", "xsiiiiiiiiiiii",
                 glist_getcanvas(glist), tag,
                 x1-x1, y1-y1, x2-4-x1, y1-y1, x2-x1,
                 y1+4-y1, x2-x1, y2-y1, x1-x1, y2-y1, x1-x1, y1-y1);

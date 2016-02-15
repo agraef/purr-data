@@ -51,10 +51,10 @@ void radio_draw_new(t_radio *x, t_glist *glist)
         {
             if (i)
             {
-                gui_vmess("gui_create_radio", "xxiiiiiii",
+                gui_vmess("gui_radio_new", "xxiiiiiii",
                     canvas, x, x1, yi, x1+d, yi, i, x1, y1);
             }
-            gui_vmess("gui_create_radio_buttons", "xxxiiiiiiii",
+            gui_vmess("gui_radio_create_buttons", "xxxiiiiiiii",
                 canvas, x,
                 x->x_gui.x_fcol,
                 x1+s, yi+s, x1+d-s, yi+d-s, x1, y1, i, x->x_on==i);
@@ -65,10 +65,10 @@ void radio_draw_new(t_radio *x, t_glist *glist)
         {
             if (i)
             {
-                gui_vmess("gui_create_radio", "xxiiiiiii", canvas,
+                gui_vmess("gui_radio_new", "xxiiiiiii", canvas,
                     x, xi, y1, xi, y1+d, i, x1, y1);
             }
-            gui_vmess("gui_create_radio_buttons", "xxxiiiiiiii",
+            gui_vmess("gui_radio_create_buttons", "xxxiiiiiiii",
                 canvas, x,
                 x->x_gui.x_fcol,
                 xi+s, y1+s, xi+d-s, yi+d-s, x1, y1, i, x->x_on==i);

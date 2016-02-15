@@ -162,7 +162,7 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
     int x1=text_xpix(&x->x_gui.x_obj, glist), x2=x1+x->x_numwidth;
     int y1=text_ypix(&x->x_gui.x_obj, glist), y2=y1+x->x_gui.x_h;
 
-    gui_vmess("gui_create_numbox", "xxxiiiii",
+    gui_vmess("gui_numbox_new", "xxxiiiii",
         canvas,
         x,
         x->x_gui.x_bcol,
@@ -181,7 +181,7 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
         //    x->x_gui.x_fcol, x, x);
     }
     my_numbox_ftoa(x);
-    gui_vmess("gui_numbox_drawtext", "xxsixiiii",
+    gui_vmess("gui_numbox_draw_text", "xxsixiiii",
         canvas,
         x,
         x->x_buf,
@@ -215,7 +215,7 @@ static void my_numbox_draw_move(t_my_numbox *x, t_glist *glist)
         x2 - x1,
         y2 - y1);
 
-    gui_vmess("gui_update_numbox_text_position", "xxii",
+    gui_vmess("gui_numbox_update_text_position", "xxii",
         canvas,
         x,
         half + 2,
@@ -226,7 +226,7 @@ static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
     int issel = x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas;
-    gui_vmess("gui_update_numbox", "xxxxsii",
+    gui_vmess("gui_numbox_update", "xxxxsii",
         canvas,
         x,
         x->x_gui.x_fcol,

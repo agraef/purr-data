@@ -42,7 +42,7 @@ void toggle_draw_new(t_toggle *x, t_glist *glist)
     int col = (x->x_on!=0.0)?x->x_gui.x_fcol:x->x_gui.x_bcol;
 
     iemgui_base_draw_new(&x->x_gui);
-    gui_vmess("gui_create_toggle", "xxxiiiiiiiiiiii", canvas,
+    gui_vmess("gui_toggle_new", "xxxiiiiiiiiiiii", canvas,
         x, x->x_gui.x_fcol, w,
         (x->x_on != 0.0),
         x1+w+1, y1+w+1, x2-w-1, y2-w-1,

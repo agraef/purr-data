@@ -52,7 +52,7 @@ void bng_draw_new(t_bng *x, t_glist *glist)
     //         "-tags {%lxBUT x%lx text iemgui border}\n",
     //     canvas, cx, cy, cr, x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol,
     //     x, x);
-    gui_vmess("gui_create_bng", "xxfff",
+    gui_vmess("gui_bng_new", "xxfff",
         canvas,
         &x->x_gui,
         cx - x1,

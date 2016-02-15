@@ -504,7 +504,7 @@ void canvas_resortinlets(t_canvas *x)
             //        "$signal_nlet" : "$pd_colors_control_nlet)"));
             sprintf(xlet_tag, "%si%d", rtext_gettag(rt), i);
             char xlet_tag[MAXPDSTRING];
-            gui_vmess("gui_configure_io", "xsiii",
+            gui_vmess("gui_gobj_configure_io", "xsiii",
                 x,
                 xlet_tag,
                 0,
@@ -902,7 +902,7 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
         int xpix, ypix;
         xpix = text_xpix(&x->gl_obj, parent_glist);
         ypix = text_ypix(&x->gl_obj, parent_glist);
-        gui_vmess("gui_text_create_gobj", "xssiii",
+        gui_vmess("gui_gobj_new", "xssiii",
             glist_getcanvas(x->gl_owner),
             tag, "graph", xpix, ypix, 1);
         if (canvas_showtext(x))
@@ -934,7 +934,7 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
     {
         if (vis && gobj_shouldvis(gr, parent_glist))
         {
-            gui_vmess("gui_text_drawborder", "xssiiiii",
+            gui_vmess("gui_text_draw_border", "xssiiiii",
                 glist_getcanvas(x->gl_owner),
                 tag,
                 "none",
@@ -964,7 +964,7 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
         char tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "%sR", tag);
 
-        gui_vmess("gui_text_drawborder", "xssiiiii",
+        gui_vmess("gui_text_draw_border", "xssiiiii",
             glist_getcanvas(x->gl_owner),
             tag,
             "none",

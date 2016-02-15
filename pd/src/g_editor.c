@@ -162,7 +162,7 @@ static void canvas_nlet_conf (t_canvas *x, int type) {
 
     /* this is rather confusing, but the canvas_cnct_[xlet]_tag already
        includes the type and index concatenated to the end. */
-    gui_vmess("gui_configure_io", "xsiii",
+    gui_vmess("gui_gobj_configure_io", "xsiii",
         x, type == 'o' ? x->gl_editor->canvas_cnct_outlet_tag :
             x->gl_editor->canvas_cnct_inlet_tag,
         isiemgui, issignal, 1);
@@ -170,7 +170,7 @@ static void canvas_nlet_conf (t_canvas *x, int type) {
 
 void canvas_getscroll (t_canvas *x) {
     //sys_vgui("pdtk_canvas_getscroll .x%lx.c\n",(long)x);
-    gui_vmess("gui_canvas_getscroll", "x", x);
+    gui_vmess("gui_canvas_get_scroll", "x", x);
 }
 
 /* ---------------- generic widget behavior ------------------------- */
@@ -2504,7 +2504,7 @@ void canvas_vis(t_canvas *x, t_floatarg f)
         if (glist_isvisible(x))
             canvas_map(x, 0);
         canvas_destroy_editor(x);
-        gui_vmess("gui_close_window", "x", x);
+        gui_vmess("gui_window_close", "x", x);
         // delete properties windows of objects in the patcher we're closing
         g = x->gl_list;
         while (g)
@@ -3380,7 +3380,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                                     (t_text *)&ob->ob_g);
                             sprintf(x->gl_editor->canvas_cnct_outlet_tag, 
                                 "%so%d", rtext_gettag(yr), closest);
-                            gui_vmess("gui_highlight_io", "xs",
+                            gui_vmess("gui_gobj_highlight_io", "xs",
                                 x,
                                 x->gl_editor->canvas_cnct_outlet_tag);
 
@@ -3439,7 +3439,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                             gobj_filter_highlight_behavior((t_text *)&ob->ob_g);
                         sprintf(x->gl_editor->canvas_cnct_inlet_tag, 
                             "%si%d", rtext_gettag(yr), closest);
-                        gui_vmess("gui_highlight_io", "xs",
+                        gui_vmess("gui_gobj_highlight_io", "xs",
                             x,
                             x->gl_editor->canvas_cnct_inlet_tag);
                         inlet_issignal = obj_issignalinlet(ob,closest);
@@ -3688,7 +3688,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
             //buf->u_redo = (t_undo_sel *)canvas_undo_set_selection(x);
             //canvas_undo_add(x, 11, "selection", buf);
         }
-        gui_vmess("gui_create_selection_rectangle", "xiiii", x,
+        gui_vmess("gui_canvas_draw_selection", "xiiii", x,
             xpos, ypos, xpos, ypos);
         x->gl_editor->e_xwas = xpos;
         x->gl_editor->e_ywas = ypos;
@@ -3847,13 +3847,13 @@ void canvas_updateconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2,
         if (tag)
         {
             sprintf(cord_tag, "l%lx", (long unsigned int)tag);
-            gui_vmess("gui_canvas_updateline", "xsiiiii",
+            gui_vmess("gui_canvas_update_line", "xsiiiii",
                 x, cord_tag,
                 lx1, ly1, lx2, ly2, yoff);
         }
         else
         {
-            gui_vmess("gui_canvas_updateline", "xsiiiii",
+            gui_vmess("gui_canvas_update_line", "xsiiiii",
                 x, "newcord",
                 lx1, ly1, lx2, ly2, yoff);
         }
@@ -4523,7 +4523,7 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                             "%si%d",
                             rtext_gettag(y),
                             closest2);
-                    gui_vmess("gui_highlight_io", "xs",
+                    gui_vmess("gui_gobj_highlight_io", "xs",
                         x,
                         x->gl_editor->canvas_cnct_inlet_tag);
 
@@ -4604,12 +4604,12 @@ static void canvas_doregion(t_canvas *x, int xpos, int ypos, int doit)
             loy = x->gl_editor->e_ywas, hiy = ypos;
         else hiy = x->gl_editor->e_ywas, loy = ypos;
         canvas_selectinrect(x, lox, loy, hix, hiy);
-        gui_vmess("gui_hide_selection_rectangle", "x", x);
+        gui_vmess("gui_canvas_hide_selection", "x", x);
         x->gl_editor->e_onmotion = MA_NONE;
     }
     else
     {
-        gui_vmess("gui_move_selection_rectangle", "xiiii",
+        gui_vmess("gui_canvas_move_selection", "xiiii",
             x,
             x->gl_editor->e_xwas, x->gl_editor->e_ywas, xpos, ypos);
     }
@@ -5023,7 +5023,7 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
         {
             canvas_setcursor(x, down ?
                 CURSOR_RUNMODE_NOTHING : CURSOR_EDITMODE_NOTHING);
-            gui_vmess("gui_set_editmode", "xi",
+            gui_vmess("gui_canvas_set_editmode", "xi",
                 x,
                 down ? 0 : 1);
             if(x->gl_editor && x->gl_editor->gl_magic_glass)
@@ -5317,7 +5317,7 @@ void glob_verifyquit(void *dummy, t_floatarg f)
     }
     if (f == 0 && sys_perf)
     {
-        gui_vmess("gui_pd_quit_dialog", "");
+        gui_vmess("gui_quit_dialog", "");
     }
     else
     {
@@ -6109,7 +6109,7 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
             x->gl_screeny2 = screeny1 + screeny2;
             //canvas_setbounds(x, screenx1, screeny1,
             //    screenx1+screenx2, screeny1+screeny2);
-            gui_vmess("gui_change_patch_window_geometry", "xiiii",
+            gui_vmess("gui_canvas_change_geometry", "xiiii",
                 x,
                 (int)(x->gl_screenx2 - x->gl_screenx1),
                 (int)(x->gl_screeny2 - x->gl_screeny1),
@@ -7141,7 +7141,7 @@ void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
     if (glist_isvisible(x))
     {
         int edit = !glob_ctrl && x->gl_edit;
-        gui_vmess("gui_set_editmode", "xi",
+        gui_vmess("gui_canvas_set_editmode", "xi",
             glist_getcanvas(x),
             edit);
     }
@@ -7167,7 +7167,7 @@ void canvas_magicglass(t_canvas *x, t_floatarg fyesplease)
         magicGlass_setOn(x->gl_editor->gl_magic_glass, 0);
         magicGlass_hide(x->gl_editor->gl_magic_glass);
     }
-    gui_vmess("gui_set_cordinspector", "xi",
+    gui_vmess("gui_canvas_set_cordinspector", "xi",
         glist_getcanvas(x),
         magicGlass_isOn(x->gl_editor->gl_magic_glass));
 }

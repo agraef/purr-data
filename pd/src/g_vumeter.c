@@ -142,7 +142,7 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
         if((i&3)==1 && (x->x_scale))
         {
             // not handling font size yet
-            gui_vmess("gui_create_vumeter_text", "xxxiisiiiis",
+            gui_vmess("gui_vumeter_draw_text", "xxxiisiiiis",
                 canvas, x,
                 x->x_gui.x_lcol, end+1, yyy+k3+2, iemgui_vu_scale_str[i/4],
                 i, x1, y1,
@@ -152,15 +152,15 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
         led_col = iemgui_vu_col[i];
         if (i<=IEM_VU_STEPS)
         {
-            gui_vmess("gui_create_vumeter_steps", "xxxiiiiiiiii",
+            gui_vmess("gui_vumeter_create_steps", "xxxiiiiiiiii",
                 canvas, x, iemgui_color_hex[led_col], quad1+1,
                 yyy+2, quad3, yyy+2, x->x_led_size, index, x1, y1, i);
         }
     }
-    gui_vmess("gui_create_vumeter_rect", "xxxiiiiii",
+    gui_vmess("gui_vumeter_draw_rect", "xxxiiiiii",
         canvas, x,
         x->x_gui.x_bcol, quad1+1, y1+1, quad3, y1+1 + k1*IEM_VU_STEPS, x1, y1);
-    gui_vmess("gui_create_vumeter_peak", "xxxiiiiiii",
+    gui_vmess("gui_vumeter_draw_peak", "xxxiiiiiii",
         canvas, x,
         x->x_gui.x_bcol, mid+1, y1+12, mid+1, y1+12, x->x_led_size, x1, y1);
     x->x_updaterms = x->x_updatepeak = 1;
@@ -185,7 +185,7 @@ static void vu_draw_move(t_vu *x, t_glist *glist)
     for(i=1; i<=IEM_VU_STEPS; i++)
     {
         yyy = k4 + k1*(k2-i);
-        gui_vmess("gui_update_vumeter_step_coords", "xxiiiiiii",
+        gui_vmess("gui_vumeter_update_step_coords", "xxiiiiiii",
             canvas, x, i, quad1+1, yyy+2, quad3, yyy+2,
             x1, y1);
         //if(((i+2)&3) && (x->x_scale))
@@ -216,7 +216,7 @@ static void vu_draw_config(t_vu* x, t_glist* glist)
     {
         if (i <= IEM_VU_STEPS)
         {
-            gui_vmess("gui_update_vumeter_steps", "xxii",
+            gui_vmess("gui_vumeter_update_steps", "xxii",
                 canvas, x, i, x->x_led_size);
         }
         //if((i&3)==1)
@@ -224,14 +224,14 @@ static void vu_draw_config(t_vu* x, t_glist* glist)
         {
             int isselected = x->x_gui.x_selected == canvas &&
                 x->x_gui.x_glist == canvas && x->x_scale;
-            gui_vmess("gui_update_vumeter_text", "xxssixi",
+            gui_vmess("gui_vumeter_update_text", "xxssixi",
                 canvas, x, iemgui_vu_scale_str[i/4],
                 iemgui_font(&x->x_gui), isselected, x->x_gui.x_lcol, i);
         }
     }
-    gui_vmess("gui_update_vumeter_rect", "xxx",
+    gui_vmess("gui_vumeter_update_rect", "xxx",
         canvas, x, x->x_gui.x_bcol);
-    gui_vmess("gui_update_vumeter_peak", "xxi",
+    gui_vmess("gui_vumeter_update_peak_width", "xxi",
         canvas, x, x->x_led_size);
     iemgui_base_draw_config(&x->x_gui);
 }
@@ -435,12 +435,12 @@ static void vu_scale(t_vu *x, t_floatarg fscale)
                 /* if((i+2)&3) */
                 if((i&3)==1)
                 {
-                    gui_vmess("gui_erase_vumeter_text", "xxi",
+                    gui_vmess("gui_vumeter_erase_text", "xxi",
                         canvas, x, i);
                 }
             }
             i=IEM_VU_STEPS+1;
-            gui_vmess("gui_erase_vumeter_text", "xxi",
+            gui_vmess("gui_vumeter_erase_text", "xxi",
                 canvas, x, i);
         }
     }
@@ -460,7 +460,7 @@ static void vu_scale(t_vu *x, t_floatarg fscale)
                 yyy = k4 + k1*(k2-i);
                 if((i&3)==1)
                 {
-                    gui_vmess("gui_create_vumeter_text", "xxxiisiii",
+                    gui_vmess("gui_vumeter_draw_text", "xxxiisiii",
                         canvas, x, x->x_gui.x_lcol,
                         end+1, yyy+k3+2, iemgui_vu_scale_str[i/4],
                         i, end, yyy);
@@ -468,7 +468,7 @@ static void vu_scale(t_vu *x, t_floatarg fscale)
             }
             i = IEM_VU_STEPS + 1;
             yyy = k4 + k1*(k2-i);
-            gui_vmess("gui_create_vumeter_text", "xxxiisiii",
+            gui_vmess("gui_vumeter_draw_text", "xxxiisiii",
                 canvas, x, x->x_gui.x_lcol,
                 end+1, yyy+k3+2, iemgui_vu_scale_str[i/4],
                 i, end, yyy);
