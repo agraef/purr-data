@@ -132,7 +132,7 @@ static void helplink_vis(t_gobj *z, t_glist *glist, int vis)
         if ((glist->gl_havewindow || x->x_isgopvisible)
             && (y = glist_findrtext(glist, (t_text *)x)))
         {
-            gui_vmess("gui_text_create_gobj", "xssiii",
+            gui_vmess("gui_gobj_new", "xssiii",
                 glist_getcanvas(glist),
                 rtext_gettag(y),
                 "pd_link",
