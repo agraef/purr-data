@@ -189,7 +189,7 @@ function create_menu(gui, type) {
             type: "checkbox",
             label: l("menu.cordinspector"),
             key: "r",
-            modifiers: cmd_or_ctrl,
+            modifiers: cmd_or_ctrl + "+shift",
             tooltip: l("menu.cordinspector_tt")
         }));
         editMenu.append(new gui.MenuItem({ type: "separator" }));
