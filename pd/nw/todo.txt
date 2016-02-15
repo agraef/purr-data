@@ -41,7 +41,6 @@ Node-webkit stuff:
 5) command line argv
 
 Everything else: (A [x] means we've fixed it)
-[ ] standardize javascript function names
 [ ] implement the crappy iemgui color dialog presets
 [ ] use underscores for iemgui dialog element names
 [ ] remove the draw_vis warning/code about needing 2 points to draw
@@ -78,6 +77,7 @@ Everything else: (A [x] means we've fixed it)
     inconsistency.
     After some more research, it appears this problem doesn't happen
     in OSX.
+[x] standardize javascript function names
 [x] clip garray to gl_x1 and gl_x2 by:
     a) checking if we're in a gop, and
     b) if so, only render if element number is > gl_x1 and < gl_x2
