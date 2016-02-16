@@ -811,18 +811,6 @@ void scalar_doconfigure(t_gobj *xgobj, t_glist *owner)
             (int)glist_xtopixels(owner, basex),
             (int)glist_ytopixels(owner, basey));
 
-        char groupbuf[MAXPDSTRING];
-        // Quick hack to make gui_scalar_draw_group more general (so we
-        // don't have to tack on "gobj" manually)
-
-
-        //Not sure if we need this here...
-        //sprintf(tagbuf, "scalar%lxgobj", (long unsigned int)x->sc_vec);
-        //sprintf(groupbuf, "dgroup%lx.%lx", (long unsigned int)templatecanvas,
-        //    (long unsigned int)x->sc_vec);
-        //gui_vmess("gui_scalar_draw_group", "xss",
-        //    glist_getcanvas(owner), groupbuf, tagbuf); 
-
         for (y = templatecanvas->gl_list; y; y = y->g_next)
         {
             t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
@@ -937,8 +925,8 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
     {
         if (vis)
         {
-            int x1 = glist_xtopixels(owner, basex);
-            int y1 = glist_ytopixels(owner, basey);
+            //int x1 = glist_xtopixels(owner, basex);
+            //int y1 = glist_ytopixels(owner, basey);
             /* Let's just not create anything to visualize scalars that
                don't have a template. Pd Vanilla draws a single pixel to 
                represent them, so later we might want to do a simple
