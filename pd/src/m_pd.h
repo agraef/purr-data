@@ -540,10 +540,10 @@ EXTERN int (*sys_idlehook)(void);   /* hook to add idle time computation */
  from Pd Vanilla. See Pd Vanilla git commit:
      78b81aa3cb903d923da9eec8ad104935a5ae9ce4
  plus some other revisions after that one. */
-# define sys_open open
-# define sys_close close
-# define sys_fopen fopen
-# define sys_fclose fclose
+#define sys_open open
+#define sys_close close
+#define sys_fopen fopen
+#define sys_fclose fclose
 
 /* ------------  threading ------------------- */ 
 EXTERN void sys_lock(void);
