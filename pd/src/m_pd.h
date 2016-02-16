@@ -64,6 +64,9 @@ extern int pd_compatibilitylevel;   /* e.g., 43 for pd 0.43 compatibility */
 #include <stddef.h>     /* just for size_t -- how lame! */
 #endif
 
+/* for FILE, needed by sys_fopen() and sys_fclose() only */
+#include <stdio.h>
+
 #define MAXPDSTRING 1000        /* must be >= FILENAME_MAX */
 #define MAXPDARG 5              /* max number of args we can typecheck today */
 
@@ -527,6 +530,20 @@ EXTERN int sched_geteventno(void);
 EXTERN double sys_getrealtime(void);
 EXTERN int (*sys_idlehook)(void);   /* hook to add idle time computation */
 
+/* Win32's open()/fopen() do not handle UTF-8 filenames so we need
+ * these internal versions that handle UTF-8 filenames the same across
+ * all platforms.  They are recommended for use in external
+ * objectclasses as well so they work with Unicode filenames on Windows
+
+ For now, we're just doing typedefs to alias the standard io calls. But
+ once someone wants to build on Windows, the relevant commits should be ported
+ from Pd Vanilla. See Pd Vanilla git commit:
+     78b81aa3cb903d923da9eec8ad104935a5ae9ce4
+ plus some other revisions after that one. */
+# define sys_open open
+# define sys_close close
+# define sys_fopen fopen
+# define sys_fclose fclose
 
 /* ------------  threading ------------------- */ 
 EXTERN void sys_lock(void);
