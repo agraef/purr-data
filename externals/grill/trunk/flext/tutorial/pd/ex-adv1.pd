@@ -1,0 +1,23 @@
+#N canvas 46 58 592 347 12;
+#X msg 34 92 or two words;
+#X msg 169 93 2 3;
+#X msg 48 291 one or two words;
+#X obj 72 213 print result;
+#X obj 49 172 adv1 one;
+#X obj 48 263 prepend set;
+#X text 162 257 you can also use "prepend";
+#X obj 16 8 cnv 15 550 40 empty empty adv1 10 22 0 24 -260818 -1 0
+;
+#X text 175 28 http://grrrr.org;
+#X text 199 214 watch the console!;
+#X text 210 110 send the object various messages;
+#X text 160 274 (if adv1 has already been loaded);
+#X text 145 10 flext tutorial \, (C)2002-2006 Thomas Grill;
+#X obj 66 127 nbx 3 18 0 100 0 0 empty empty empty 0 -6 0 14 -262144
+-1 -1 24 256;
+#X connect 0 0 4 0;
+#X connect 1 0 4 0;
+#X connect 4 0 3 0;
+#X connect 4 0 5 0;
+#X connect 5 0 2 0;
+#X connect 13 0 4 0;

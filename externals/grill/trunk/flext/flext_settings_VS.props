@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <FLEXTPATH>C:\flext_svn\</FLEXTPATH>
+    <MAXSDKPATH>C:\maxmspsdk\c74support</MAXSDKPATH>
+    <PDPATH>C:\_pd_</PDPATH>
+    <STK_INC>%HOMEDRIVE%\%HOMEPATH%\stk\include</STK_INC>
+    <STK_LIB />
+    <SNDOBJ_INC>%HOMEDRIVE%\%HOMEPATH%\SndObj\include</SNDOBJ_INC>
+    <SNDOBJ_LIB />
+    <PTHREADSINC>%HOMEDRIVE%\%HOMEPATH%\pthreads\include</PTHREADSINC>
+    <PTHREADSLIB />
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="FLEXTPATH">
+      <Value>$(FLEXTPATH)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="MAXSDKPATH">
+      <Value>$(MAXSDKPATH)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="PDPATH">
+      <Value>$(PDPATH)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="STK_INC">
+      <Value>$(STK_INC)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="STK_LIB">
+      <Value>$(STK_LIB)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="SNDOBJ_INC">
+      <Value>$(SNDOBJ_INC)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="SNDOBJ_LIB">
+      <Value>$(SNDOBJ_LIB)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="PTHREADSINC">
+      <Value>$(PTHREADSINC)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="PTHREADSLIB">
+      <Value>$(PTHREADSLIB)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

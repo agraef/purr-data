@@ -1,0 +1,220 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="doc">
+      <UniqueIdentifier>{7bb32839-5f02-403c-8c87-7e23e503da2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Atom">
+      <UniqueIdentifier>{b6ab6c44-4981-4f6a-8fa4-1f2ffc0474c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{ce32b131-02e3-4f40-9aab-b5bd28ee40cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IO">
+      <UniqueIdentifier>{9d517a55-ec69-4c90-9e82-92732e07ab47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{66c627f0-70f3-4911-a110-237c33382b2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dsp">
+      <UniqueIdentifier>{6d4c4e59-0a0c-433e-bcd4-0169cd4602f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SndObj">
+      <UniqueIdentifier>{b4e9e1cb-00c7-489d-8749-73cb01de4eeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="STK">
+      <UniqueIdentifier>{7f6b80c3-9c73-4206-bc24-0a6b4b6085ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Defs">
+      <UniqueIdentifier>{123923c9-b45e-4a17-ac4a-84243d328d7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="build">
+      <UniqueIdentifier>{e9163e91-7e58-443e-a593-a0dc70c8e0a9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="build.txt">
+      <Filter>doc</Filter>
+    </None>
+    <None Include="changes.txt">
+      <Filter>doc</Filter>
+    </None>
+    <None Include="notes.txt">
+      <Filter>doc</Filter>
+    </None>
+    <None Include="readme.txt">
+      <Filter>doc</Filter>
+    </None>
+    <None Include="build-max-msvc.bat">
+      <Filter>build</Filter>
+    </None>
+    <None Include="build-pd-msvc.bat">
+      <Filter>build</Filter>
+    </None>
+    <None Include="config-max-msvc.txt">
+      <Filter>build</Filter>
+    </None>
+    <None Include="config-pd-msvc.txt">
+      <Filter>build</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\fldoxygen.h">
+      <Filter>doc</Filter>
+    </ClInclude>
+    <ClInclude Include="source\flbase.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="source\flclass.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="source\flext.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="source\flinternal.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="source\flprefix.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="source\flstdc.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="source\flcontainers.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="source\flmap.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="source\flmspbuffer.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="source\flsupport.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="source\fldsp.h">
+      <Filter>Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="source\fldefs.h">
+      <Filter>Defs</Filter>
+    </ClInclude>
+    <ClInclude Include="source\fldefs_attradd.h">
+      <Filter>Defs</Filter>
+    </ClInclude>
+    <ClInclude Include="source\fldefs_attrcb.h">
+      <Filter>Defs</Filter>
+    </ClInclude>
+    <ClInclude Include="source\fldefs_attrvar.h">
+      <Filter>Defs</Filter>
+    </ClInclude>
+    <ClInclude Include="source\fldefs_hdr.h">
+      <Filter>Defs</Filter>
+    </ClInclude>
+    <ClInclude Include="source\fldefs_methadd.h">
+      <Filter>Defs</Filter>
+    </ClInclude>
+    <ClInclude Include="source\fldefs_methbind.h">
+      <Filter>Defs</Filter>
+    </ClInclude>
+    <ClInclude Include="source\fldefs_methcall.h">
+      <Filter>Defs</Filter>
+    </ClInclude>
+    <ClInclude Include="source\fldefs_meththr.h">
+      <Filter>Defs</Filter>
+    </ClInclude>
+    <ClInclude Include="source\fldefs_setup.h">
+      <Filter>Defs</Filter>
+    </ClInclude>
+    <ClInclude Include="source\fldefs_methcb.h">
+      <Filter>Defs</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\flatom.cpp">
+      <Filter>Atom</Filter>
+    </ClCompile>
+    <ClCompile Include="source\flatom_part.cpp">
+      <Filter>Atom</Filter>
+    </ClCompile>
+    <ClCompile Include="source\flatom_pr.cpp">
+      <Filter>Atom</Filter>
+    </ClCompile>
+    <ClCompile Include="source\flbase.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="source\flext.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="source\fllib.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="source\flthr.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="source\flattr.cpp">
+      <Filter>IO</Filter>
+    </ClCompile>
+    <ClCompile Include="source\flattr_ed.cpp">
+      <Filter>IO</Filter>
+    </ClCompile>
+    <ClCompile Include="source\flbind.cpp">
+      <Filter>IO</Filter>
+    </ClCompile>
+    <ClCompile Include="source\flitem.cpp">
+      <Filter>IO</Filter>
+    </ClCompile>
+    <ClCompile Include="source\flmeth.cpp">
+      <Filter>IO</Filter>
+    </ClCompile>
+    <ClCompile Include="source\flmsg.cpp">
+      <Filter>IO</Filter>
+    </ClCompile>
+    <ClCompile Include="source\flout.cpp">
+      <Filter>IO</Filter>
+    </ClCompile>
+    <ClCompile Include="source\flproxy.cpp">
+      <Filter>IO</Filter>
+    </ClCompile>
+    <ClCompile Include="source\flqueue.cpp">
+      <Filter>IO</Filter>
+    </ClCompile>
+    <ClCompile Include="source\flxlet.cpp">
+      <Filter>IO</Filter>
+    </ClCompile>
+    <ClCompile Include="source\flbuf.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="source\flmap.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="source\flsimd.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="source\flsupport.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="source\fltimer.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="source\flutil.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="source\fldsp.cpp">
+      <Filter>Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="source\flsndobj.cpp">
+      <Filter>SndObj</Filter>
+    </ClCompile>
+    <ClCompile Include="source\flstk.cpp">
+      <Filter>STK</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuildStep Include="source\flsndobj.h">
+      <Filter>SndObj</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="source\flstk.h">
+      <Filter>STK</Filter>
+    </CustomBuildStep>
+  </ItemGroup>
+</Project>

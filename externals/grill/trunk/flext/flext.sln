@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "flext", "flext.vcxproj", "{B94DB81C-B5FB-4984-99DC-5063C3793BFE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Max Debug|Win32 = Max Debug|Win32
+		Max Release|Win32 = Max Release|Win32
+		Max Shared Debug|Win32 = Max Shared Debug|Win32
+		Max Shared Release|Win32 = Max Shared Release|Win32
+		Max Threaded Debug|Win32 = Max Threaded Debug|Win32
+		Max Threaded Release|Win32 = Max Threaded Release|Win32
+		PD Debug|Win32 = PD Debug|Win32
+		PD Release|Win32 = PD Release|Win32
+		PD Shared Debug|Win32 = PD Shared Debug|Win32
+		PD Shared Release|Win32 = PD Shared Release|Win32
+		PD Threads Debug|Win32 = PD Threads Debug|Win32
+		PD Threads Release|Win32 = PD Threads Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B94DB81C-B5FB-4984-99DC-5063C3793BFE}.Max Debug|Win32.ActiveCfg = Max Debug|Win32
+		{B94DB81C-B5FB-4984-99DC-5063C3793BFE}.Max Debug|Win32.Build.0 = Max Debug|Win32
+		{B94DB81C-B5FB-4984-99DC-5063C3793BFE}.Max Release|Win32.ActiveCfg = Max Release|Win32
+		{B94DB81C-B5FB-4984-99DC-5063C3793BFE}.Max Release|Win32.Build.0 = Max Release|Win32
+		{B94DB81C-B5FB-4984-99DC-5063C3793BFE}.Max Shared Debug|Win32.ActiveCfg = Max Shared Debug|Win32
+		{B94DB81C-B5FB-4984-99DC-5063C3793BFE}.Max Shared Debug|Win32.Build.0 = Max Shared Debug|Win32
+		{B94DB81C-B5FB-4984-99DC-5063C3793BFE}.Max Shared Release|Win32.ActiveCfg = Max Shared Release|Win32
+		{B94DB81C-B5FB-4984-99DC-5063C3793BFE}.Max Shared Release|Win32.Build.0 = Max Shared Release|Win32
+		{B94DB81C-B5FB-4984-99DC-5063C3793BFE}.Max Threaded Debug|Win32.ActiveCfg = Max Threaded Debug|Win32
+		{B94DB81C-B5FB-4984-99DC-5063C3793BFE}.Max Threaded Debug|Win32.Build.0 = Max Threaded Debug|Win32
+		{B94DB81C-B5FB-4984-99DC-5063C3793BFE}.Max Threaded Release|Win32.ActiveCfg = Max Threaded Release|Win32
+		{B94DB81C-B5FB-4984-99DC-5063C3793BFE}.Max Threaded Release|Win32.Build.0 = Max Threaded Release|Win32
+		{B94DB81C-B5FB-4984-99DC-5063C3793BFE}.PD Debug|Win32.ActiveCfg = PD Debug|Win32
+		{B94DB81C-B5FB-4984-99DC-5063C3793BFE}.PD Debug|Win32.Build.0 = PD Debug|Win32
+		{B94DB81C-B5FB-4984-99DC-5063C3793BFE}.PD Release|Win32.ActiveCfg = PD Release|Win32
+		{B94DB81C-B5FB-4984-99DC-5063C3793BFE}.PD Release|Win32.Build.0 = PD Release|Win32
+		{B94DB81C-B5FB-4984-99DC-5063C3793BFE}.PD Shared Debug|Win32.ActiveCfg = PD Shared Debug|Win32
+		{B94DB81C-B5FB-4984-99DC-5063C3793BFE}.PD Shared Debug|Win32.Build.0 = PD Shared Debug|Win32
+		{B94DB81C-B5FB-4984-99DC-5063C3793BFE}.PD Shared Release|Win32.ActiveCfg = PD Shared Release|Win32
+		{B94DB81C-B5FB-4984-99DC-5063C3793BFE}.PD Shared Release|Win32.Build.0 = PD Shared Release|Win32
+		{B94DB81C-B5FB-4984-99DC-5063C3793BFE}.PD Threads Debug|Win32.ActiveCfg = PD Threads Debug|Win32
+		{B94DB81C-B5FB-4984-99DC-5063C3793BFE}.PD Threads Debug|Win32.Build.0 = PD Threads Debug|Win32
+		{B94DB81C-B5FB-4984-99DC-5063C3793BFE}.PD Threads Release|Win32.ActiveCfg = PD Threads Release|Win32
+		{B94DB81C-B5FB-4984-99DC-5063C3793BFE}.PD Threads Release|Win32.Build.0 = PD Threads Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

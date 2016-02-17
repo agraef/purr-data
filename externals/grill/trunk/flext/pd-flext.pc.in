@@ -1,0 +1,23 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@/flext
+
+Name: pd-flext
+Description: C++ glue layer for Pure Data and Max
+Version: @VERSION@
+Cflags: -I${includedir} -DPD -DFLEXT_SYS=2 -DFLEXT_SHARED
+Libs: -L${libdir} -lflext-pd
+
+## sections below ought to be factored out into standalone .pc files
+#Name: pd-flext-static
+#Description: C++ glue layer for Pure Data and Max (static)
+#Version: @VERSION@
+#Cflags: -I${includedir} -DPD
+#Libs: -L${libdir} -lflext-pd_s
+#
+#Name: pd-flext-inline
+#Description: C++ glue layer for Pure Data and Max (inline)
+#Version: @VERSION@
+#Cflags: -I${includedir} -DPD -DFLEXT_INLINE
+#Libs:

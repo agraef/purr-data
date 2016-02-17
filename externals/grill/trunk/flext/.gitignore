@@ -1,0 +1,57 @@
+.DS_Store
+config.txt
+pd-darwin/
+max-darwin/
+buildsys/config-*.txt
+flext.xcodeproj/project.xcworkspace/
+flext.xcodeproj/xcuserdata/
+
+ CompiledObject files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# autoconf temporary files
+Makefile
+Makefile.in
+autom4te.cache
+compile
+config.guess
+config.log
+config.status
+config.sub
+configure
+depcomp
+install-sh
+libtool
+ltmain.sh
+missing
+source/.deps
+source/Makefile
+source/Makefile.in
+aclocal.m4
+m4/

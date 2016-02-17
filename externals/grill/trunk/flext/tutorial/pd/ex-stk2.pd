@@ -1,0 +1,32 @@
+#N canvas 245 28 594 364 12;
+#X obj 68 318 dac~;
+#X obj 15 8 cnv 15 550 40 empty empty stk2 10 22 0 24 -260818 -1 0
+;
+#X text 175 28 http://grrrr.org;
+#X text 193 229 adjust the volume;
+#X obj 194 212 hsl 128 15 0.01 1 1 0 empty empty empty -2 -6 0 8 -261681
+-1 -1 0 1;
+#X obj 68 263 *~ 0.3;
+#X text 175 8 flext tutorial \, (C)2002-2006 Thomas Grill;
+#X obj 68 215 stk2~;
+#X obj 125 263 *~ 0.3;
+#X msg 183 139 shL \$1;
+#X msg 241 139 shR \$1;
+#X obj 267 77 hsl 128 15 0.5 2 1 0 empty empty empty -2 -6 0 8 -261681
+-1 -1 0 1;
+#X obj 267 95 hsl 128 15 0.5 2 1 0 empty empty empty -2 -6 0 8 -261681
+-1 -1 0 1;
+#X text 172 73 pitch left;
+#X text 172 93 pitch right;
+#X obj 68 78 osc~ 442;
+#X connect 4 0 5 1;
+#X connect 4 0 8 1;
+#X connect 5 0 0 0;
+#X connect 7 0 5 0;
+#X connect 7 1 8 0;
+#X connect 8 0 0 1;
+#X connect 9 0 7 0;
+#X connect 10 0 7 0;
+#X connect 11 0 9 0;
+#X connect 12 0 10 0;
+#X connect 15 0 7 0;

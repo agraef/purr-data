@@ -1,0 +1,1513 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E907FC2F1ACB4EEF003B821A /* vecLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9974802077054CD00206F68 /* vecLib.framework */; };
+		E95B343B0F40BEE3006336AA /* flpushns.h in Headers */ = {isa = PBXBuildFile; fileRef = E95B343A0F40BEE3006336AA /* flpushns.h */; };
+		E95B343C0F40BEE3006336AA /* flpushns.h in Headers */ = {isa = PBXBuildFile; fileRef = E95B343A0F40BEE3006336AA /* flpushns.h */; };
+		E95B343D0F40BEE3006336AA /* flpushns.h in Headers */ = {isa = PBXBuildFile; fileRef = E95B343A0F40BEE3006336AA /* flpushns.h */; };
+		E95B343E0F40BEE3006336AA /* flpushns.h in Headers */ = {isa = PBXBuildFile; fileRef = E95B343A0F40BEE3006336AA /* flpushns.h */; };
+		E95B343F0F40BEE3006336AA /* flpushns.h in Headers */ = {isa = PBXBuildFile; fileRef = E95B343A0F40BEE3006336AA /* flpushns.h */; };
+		E95B34400F40BEE3006336AA /* flpushns.h in Headers */ = {isa = PBXBuildFile; fileRef = E95B343A0F40BEE3006336AA /* flpushns.h */; };
+		E95B34420F40BEF0006336AA /* flpopns.h in Headers */ = {isa = PBXBuildFile; fileRef = E95B34410F40BEF0006336AA /* flpopns.h */; };
+		E95B34430F40BEF0006336AA /* flpopns.h in Headers */ = {isa = PBXBuildFile; fileRef = E95B34410F40BEF0006336AA /* flpopns.h */; };
+		E95B34440F40BEF0006336AA /* flpopns.h in Headers */ = {isa = PBXBuildFile; fileRef = E95B34410F40BEF0006336AA /* flpopns.h */; };
+		E95B34450F40BEF0006336AA /* flpopns.h in Headers */ = {isa = PBXBuildFile; fileRef = E95B34410F40BEF0006336AA /* flpopns.h */; };
+		E95B34460F40BEF0006336AA /* flpopns.h in Headers */ = {isa = PBXBuildFile; fileRef = E95B34410F40BEF0006336AA /* flpopns.h */; };
+		E95B34470F40BEF0006336AA /* flpopns.h in Headers */ = {isa = PBXBuildFile; fileRef = E95B34410F40BEF0006336AA /* flpopns.h */; };
+		E99747CE0770548700206F68 /* flatom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED7C0383E50201A80AC9 /* flatom.cpp */; };
+		E99747D00770548700206F68 /* flatom_part.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A66C03CE39F501A80AC9 /* flatom_part.cpp */; };
+		E99747D10770548700206F68 /* flatom_pr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED7B0383E50201A80AC9 /* flatom_pr.cpp */; };
+		E99747D20770548700206F68 /* flattr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED7D0383E50201A80AC9 /* flattr.cpp */; };
+		E99747D30770548700206F68 /* flattr_ed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9BDCC4104F4D7C1008929A0 /* flattr_ed.cpp */; };
+		E99747D40770548700206F68 /* flbase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED7E0383E50201A80AC9 /* flbase.cpp */; };
+		E99747D50770548700206F68 /* flbind.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F598D263044CC4A001A80AC9 /* flbind.cpp */; };
+		E99747D60770548700206F68 /* flbuf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED800383E50201A80AC9 /* flbuf.cpp */; };
+		E99747D70770548700206F68 /* fldsp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED880383E50201A80AC9 /* fldsp.cpp */; };
+		E99747D80770548700206F68 /* flext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED8A0383E50201A80AC9 /* flext.cpp */; };
+		E99747D90770548700206F68 /* flitem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A66D03CE39F501A80AC9 /* flitem.cpp */; };
+		E99747DA0770548700206F68 /* fllib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED8D0383E50201A80AC9 /* fllib.cpp */; };
+		E99747DB0770548700206F68 /* flmeth.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A66E03CE39F501A80AC9 /* flmeth.cpp */; };
+		E99747DC0770548700206F68 /* flmsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A66F03CE39F501A80AC9 /* flmsg.cpp */; };
+		E99747DD0770548700206F68 /* flout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED8F0383E50201A80AC9 /* flout.cpp */; };
+		E99747DE0770548700206F68 /* flproxy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A67103CE39F501A80AC9 /* flproxy.cpp */; };
+		E99747DF0770548700206F68 /* flqueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A67203CE39F501A80AC9 /* flqueue.cpp */; };
+		E99747E00770548700206F68 /* flsimd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F598D264044CC4A001A80AC9 /* flsimd.cpp */; };
+		E99747E30770548700206F68 /* flsupport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED930383E50201A80AC9 /* flsupport.cpp */; };
+		E99747E40770548700206F68 /* flthr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED950383E50201A80AC9 /* flthr.cpp */; };
+		E99747E50770548700206F68 /* fltimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F5B1FAC8041191190179CFEF /* fltimer.cpp */; };
+		E99747E60770548700206F68 /* flutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED960383E50201A80AC9 /* flutil.cpp */; };
+		E99747E70770548700206F68 /* flxlet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED970383E50201A80AC9 /* flxlet.cpp */; };
+		E99747E80770548F00206F68 /* flbase.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED7F0383E50201A80AC9 /* flbase.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E99747E90770548F00206F68 /* flclass.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED810383E50201A80AC9 /* flclass.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E99747EA0770548F00206F68 /* fldefs.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED860383E50201A80AC9 /* fldefs.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E99747EB0770548F00206F68 /* fldefs_attradd.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5B804757BC801A0C81C /* fldefs_attradd.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E99747EC0770548F00206F68 /* fldefs_attrcb.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5B904757BC801A0C81C /* fldefs_attrcb.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E99747ED0770548F00206F68 /* fldefs_attrvar.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BA04757BC801A0C81C /* fldefs_attrvar.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E99747EE0770548F00206F68 /* fldefs_hdr.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BB04757BC801A0C81C /* fldefs_hdr.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E99747EF0770548F00206F68 /* fldefs_methadd.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BC04757BC801A0C81C /* fldefs_methadd.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E99747F00770548F00206F68 /* fldefs_methbind.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BD04757BC801A0C81C /* fldefs_methbind.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E99747F10770548F00206F68 /* fldefs_methcall.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BE04757BC801A0C81C /* fldefs_methcall.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E99747F20770548F00206F68 /* fldefs_methcb.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BF04757BC801A0C81C /* fldefs_methcb.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E99747F30770548F00206F68 /* fldefs_meththr.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5C004757BC801A0C81C /* fldefs_meththr.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E99747F40770548F00206F68 /* fldefs_setup.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5C104757BC801A0C81C /* fldefs_setup.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E99747F50770548F00206F68 /* fldoxygen.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED870383E50201A80AC9 /* fldoxygen.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E99747F60770548F00206F68 /* fldsp.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED890383E50201A80AC9 /* fldsp.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E99747F70770548F00206F68 /* flext.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED8B0383E50201A80AC9 /* flext.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E99747F80770548F00206F68 /* flinternal.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED8C0383E50201A80AC9 /* flinternal.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E99747F90770548F00206F68 /* flmspbuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED8E0383E50201A80AC9 /* flmspbuffer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E99747FA0770548F00206F68 /* flprefix.h in Headers */ = {isa = PBXBuildFile; fileRef = F504A67003CE39F501A80AC9 /* flprefix.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E99747FC0770548F00206F68 /* flstdc.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED920383E50201A80AC9 /* flstdc.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E99747FE0770548F00206F68 /* flsupport.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED940383E50201A80AC9 /* flsupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E9974803077054CD00206F68 /* vecLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9974802077054CD00206F68 /* vecLib.framework */; };
+		E997480F0770570800206F68 /* flprefix.h in Headers */ = {isa = PBXBuildFile; fileRef = F504A67003CE39F501A80AC9 /* flprefix.h */; };
+		E99748100770570800206F68 /* flbase.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED7F0383E50201A80AC9 /* flbase.h */; };
+		E99748110770570800206F68 /* flclass.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED810383E50201A80AC9 /* flclass.h */; };
+		E99748120770570800206F68 /* fldoxygen.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED870383E50201A80AC9 /* fldoxygen.h */; };
+		E99748130770570800206F68 /* fldsp.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED890383E50201A80AC9 /* fldsp.h */; };
+		E99748140770570800206F68 /* flext.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED8B0383E50201A80AC9 /* flext.h */; };
+		E99748150770570800206F68 /* flinternal.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED8C0383E50201A80AC9 /* flinternal.h */; };
+		E99748160770570800206F68 /* flmspbuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED8E0383E50201A80AC9 /* flmspbuffer.h */; };
+		E99748170770570800206F68 /* flstdc.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED920383E50201A80AC9 /* flstdc.h */; };
+		E99748180770570800206F68 /* flsupport.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED940383E50201A80AC9 /* flsupport.h */; };
+		E99748190770570800206F68 /* fldefs.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED860383E50201A80AC9 /* fldefs.h */; };
+		E997481A0770570800206F68 /* fldefs_attradd.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5B804757BC801A0C81C /* fldefs_attradd.h */; };
+		E997481B0770570800206F68 /* fldefs_attrcb.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5B904757BC801A0C81C /* fldefs_attrcb.h */; };
+		E997481C0770570800206F68 /* fldefs_attrvar.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BA04757BC801A0C81C /* fldefs_attrvar.h */; };
+		E997481D0770570800206F68 /* fldefs_hdr.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BB04757BC801A0C81C /* fldefs_hdr.h */; };
+		E997481E0770570800206F68 /* fldefs_methadd.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BC04757BC801A0C81C /* fldefs_methadd.h */; };
+		E997481F0770570800206F68 /* fldefs_methbind.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BD04757BC801A0C81C /* fldefs_methbind.h */; };
+		E99748200770570800206F68 /* fldefs_methcall.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BE04757BC801A0C81C /* fldefs_methcall.h */; };
+		E99748210770570800206F68 /* fldefs_methcb.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BF04757BC801A0C81C /* fldefs_methcb.h */; };
+		E99748220770570800206F68 /* fldefs_meththr.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5C004757BC801A0C81C /* fldefs_meththr.h */; };
+		E99748230770570800206F68 /* fldefs_setup.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5C104757BC801A0C81C /* fldefs_setup.h */; };
+		E99748250770570800206F68 /* flatom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED7C0383E50201A80AC9 /* flatom.cpp */; };
+		E99748270770570800206F68 /* flatom_part.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A66C03CE39F501A80AC9 /* flatom_part.cpp */; };
+		E99748280770570800206F68 /* flatom_pr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED7B0383E50201A80AC9 /* flatom_pr.cpp */; };
+		E99748290770570800206F68 /* flattr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED7D0383E50201A80AC9 /* flattr.cpp */; };
+		E997482A0770570800206F68 /* flattr_ed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9BDCC4104F4D7C1008929A0 /* flattr_ed.cpp */; };
+		E997482B0770570800206F68 /* flbase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED7E0383E50201A80AC9 /* flbase.cpp */; };
+		E997482C0770570800206F68 /* flbind.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F598D263044CC4A001A80AC9 /* flbind.cpp */; };
+		E997482D0770570800206F68 /* flbuf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED800383E50201A80AC9 /* flbuf.cpp */; };
+		E997482E0770570800206F68 /* fldsp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED880383E50201A80AC9 /* fldsp.cpp */; };
+		E997482F0770570800206F68 /* flext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED8A0383E50201A80AC9 /* flext.cpp */; };
+		E99748300770570800206F68 /* flitem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A66D03CE39F501A80AC9 /* flitem.cpp */; };
+		E99748310770570800206F68 /* fllib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED8D0383E50201A80AC9 /* fllib.cpp */; };
+		E99748320770570800206F68 /* flmeth.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A66E03CE39F501A80AC9 /* flmeth.cpp */; };
+		E99748330770570800206F68 /* flmsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A66F03CE39F501A80AC9 /* flmsg.cpp */; };
+		E99748340770570800206F68 /* flout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED8F0383E50201A80AC9 /* flout.cpp */; };
+		E99748350770570800206F68 /* flproxy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A67103CE39F501A80AC9 /* flproxy.cpp */; };
+		E99748360770570800206F68 /* flqueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A67203CE39F501A80AC9 /* flqueue.cpp */; };
+		E99748370770570800206F68 /* flsimd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F598D264044CC4A001A80AC9 /* flsimd.cpp */; };
+		E99748380770570800206F68 /* flsupport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED930383E50201A80AC9 /* flsupport.cpp */; };
+		E99748390770570800206F68 /* flthr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED950383E50201A80AC9 /* flthr.cpp */; };
+		E997483A0770570800206F68 /* fltimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F5B1FAC8041191190179CFEF /* fltimer.cpp */; };
+		E997483B0770570800206F68 /* flutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED960383E50201A80AC9 /* flutil.cpp */; };
+		E997483C0770570800206F68 /* flxlet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED970383E50201A80AC9 /* flxlet.cpp */; };
+		E997483E0770570800206F68 /* vecLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9974802077054CD00206F68 /* vecLib.framework */; };
+		E997488C0770593C00206F68 /* flatom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED7C0383E50201A80AC9 /* flatom.cpp */; };
+		E997488E0770593C00206F68 /* flatom_part.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A66C03CE39F501A80AC9 /* flatom_part.cpp */; };
+		E997488F0770593C00206F68 /* flatom_pr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED7B0383E50201A80AC9 /* flatom_pr.cpp */; };
+		E99748900770593C00206F68 /* flattr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED7D0383E50201A80AC9 /* flattr.cpp */; };
+		E99748910770593C00206F68 /* flattr_ed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9BDCC4104F4D7C1008929A0 /* flattr_ed.cpp */; };
+		E99748920770593C00206F68 /* flbase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED7E0383E50201A80AC9 /* flbase.cpp */; };
+		E99748930770593C00206F68 /* flbind.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F598D263044CC4A001A80AC9 /* flbind.cpp */; };
+		E99748940770593C00206F68 /* flbuf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED800383E50201A80AC9 /* flbuf.cpp */; };
+		E99748950770593C00206F68 /* fldsp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED880383E50201A80AC9 /* fldsp.cpp */; };
+		E99748960770593C00206F68 /* flext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED8A0383E50201A80AC9 /* flext.cpp */; };
+		E99748970770593C00206F68 /* flitem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A66D03CE39F501A80AC9 /* flitem.cpp */; };
+		E99748980770593C00206F68 /* fllib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED8D0383E50201A80AC9 /* fllib.cpp */; };
+		E99748990770593C00206F68 /* flmeth.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A66E03CE39F501A80AC9 /* flmeth.cpp */; };
+		E997489A0770593C00206F68 /* flmsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A66F03CE39F501A80AC9 /* flmsg.cpp */; };
+		E997489B0770593C00206F68 /* flout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED8F0383E50201A80AC9 /* flout.cpp */; };
+		E997489C0770593C00206F68 /* flproxy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A67103CE39F501A80AC9 /* flproxy.cpp */; };
+		E997489D0770593C00206F68 /* flqueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A67203CE39F501A80AC9 /* flqueue.cpp */; };
+		E997489E0770593C00206F68 /* flsimd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F598D264044CC4A001A80AC9 /* flsimd.cpp */; };
+		E997489F0770593C00206F68 /* flsupport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED930383E50201A80AC9 /* flsupport.cpp */; };
+		E99748A00770593C00206F68 /* flthr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED950383E50201A80AC9 /* flthr.cpp */; };
+		E99748A10770593C00206F68 /* fltimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F5B1FAC8041191190179CFEF /* fltimer.cpp */; };
+		E99748A20770593C00206F68 /* flutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED960383E50201A80AC9 /* flutil.cpp */; };
+		E99748A30770593C00206F68 /* flxlet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED970383E50201A80AC9 /* flxlet.cpp */; };
+		E99748A40770595500206F68 /* flprefix.h in Headers */ = {isa = PBXBuildFile; fileRef = F504A67003CE39F501A80AC9 /* flprefix.h */; };
+		E99748A50770595500206F68 /* flbase.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED7F0383E50201A80AC9 /* flbase.h */; };
+		E99748A60770595500206F68 /* flclass.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED810383E50201A80AC9 /* flclass.h */; };
+		E99748A70770595500206F68 /* fldoxygen.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED870383E50201A80AC9 /* fldoxygen.h */; };
+		E99748A80770595500206F68 /* fldsp.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED890383E50201A80AC9 /* fldsp.h */; };
+		E99748A90770595600206F68 /* flext.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED8B0383E50201A80AC9 /* flext.h */; };
+		E99748AA0770595600206F68 /* flinternal.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED8C0383E50201A80AC9 /* flinternal.h */; };
+		E99748AB0770595600206F68 /* flmspbuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED8E0383E50201A80AC9 /* flmspbuffer.h */; };
+		E99748AC0770595600206F68 /* flsndobj.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED910383E50201A80AC9 /* flsndobj.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E99748AD0770595600206F68 /* flstdc.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED920383E50201A80AC9 /* flstdc.h */; };
+		E99748AE0770595600206F68 /* flsupport.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED940383E50201A80AC9 /* flsupport.h */; };
+		E99748AF0770595600206F68 /* flstk.h in Headers */ = {isa = PBXBuildFile; fileRef = F504A67403CE39F501A80AC9 /* flstk.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E99748B00770595E00206F68 /* fldefs.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED860383E50201A80AC9 /* fldefs.h */; };
+		E99748B10770595E00206F68 /* fldefs_attradd.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5B804757BC801A0C81C /* fldefs_attradd.h */; };
+		E99748B20770595E00206F68 /* fldefs_attrcb.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5B904757BC801A0C81C /* fldefs_attrcb.h */; };
+		E99748B30770595E00206F68 /* fldefs_attrvar.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BA04757BC801A0C81C /* fldefs_attrvar.h */; };
+		E99748B40770595E00206F68 /* fldefs_hdr.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BB04757BC801A0C81C /* fldefs_hdr.h */; };
+		E99748B50770595E00206F68 /* fldefs_methadd.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BC04757BC801A0C81C /* fldefs_methadd.h */; };
+		E99748B60770595E00206F68 /* fldefs_methbind.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BD04757BC801A0C81C /* fldefs_methbind.h */; };
+		E99748B70770595E00206F68 /* fldefs_methcall.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BE04757BC801A0C81C /* fldefs_methcall.h */; };
+		E99748B80770595E00206F68 /* fldefs_methcb.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BF04757BC801A0C81C /* fldefs_methcb.h */; };
+		E99748B90770595E00206F68 /* fldefs_meththr.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5C004757BC801A0C81C /* fldefs_meththr.h */; };
+		E99748BA0770595E00206F68 /* fldefs_setup.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5C104757BC801A0C81C /* fldefs_setup.h */; };
+		E99748D107705BAF00206F68 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E99748D007705BAF00206F68 /* ApplicationServices.framework */; };
+		E997498E07705CC400206F68 /* flprefix.h in Headers */ = {isa = PBXBuildFile; fileRef = F504A67003CE39F501A80AC9 /* flprefix.h */; };
+		E997498F07705CC400206F68 /* flbase.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED7F0383E50201A80AC9 /* flbase.h */; };
+		E997499007705CC400206F68 /* flclass.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED810383E50201A80AC9 /* flclass.h */; };
+		E997499107705CC400206F68 /* fldoxygen.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED870383E50201A80AC9 /* fldoxygen.h */; };
+		E997499207705CC400206F68 /* fldsp.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED890383E50201A80AC9 /* fldsp.h */; };
+		E997499307705CC400206F68 /* flext.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED8B0383E50201A80AC9 /* flext.h */; };
+		E997499407705CC400206F68 /* flinternal.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED8C0383E50201A80AC9 /* flinternal.h */; };
+		E997499507705CC400206F68 /* flmspbuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED8E0383E50201A80AC9 /* flmspbuffer.h */; };
+		E997499607705CC400206F68 /* flstdc.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED920383E50201A80AC9 /* flstdc.h */; };
+		E997499707705CC400206F68 /* flsupport.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED940383E50201A80AC9 /* flsupport.h */; };
+		E997499807705CC400206F68 /* fldefs.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED860383E50201A80AC9 /* fldefs.h */; };
+		E997499907705CC400206F68 /* fldefs_attradd.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5B804757BC801A0C81C /* fldefs_attradd.h */; };
+		E997499A07705CC400206F68 /* fldefs_attrcb.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5B904757BC801A0C81C /* fldefs_attrcb.h */; };
+		E997499B07705CC400206F68 /* fldefs_attrvar.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BA04757BC801A0C81C /* fldefs_attrvar.h */; };
+		E997499C07705CC400206F68 /* fldefs_hdr.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BB04757BC801A0C81C /* fldefs_hdr.h */; };
+		E997499D07705CC400206F68 /* fldefs_methadd.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BC04757BC801A0C81C /* fldefs_methadd.h */; };
+		E997499E07705CC400206F68 /* fldefs_methbind.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BD04757BC801A0C81C /* fldefs_methbind.h */; };
+		E997499F07705CC400206F68 /* fldefs_methcall.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BE04757BC801A0C81C /* fldefs_methcall.h */; };
+		E99749A007705CC400206F68 /* fldefs_methcb.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BF04757BC801A0C81C /* fldefs_methcb.h */; };
+		E99749A107705CC400206F68 /* fldefs_meththr.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5C004757BC801A0C81C /* fldefs_meththr.h */; };
+		E99749A207705CC400206F68 /* fldefs_setup.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5C104757BC801A0C81C /* fldefs_setup.h */; };
+		E99749A407705CC400206F68 /* flatom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED7C0383E50201A80AC9 /* flatom.cpp */; };
+		E99749A607705CC400206F68 /* flatom_part.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A66C03CE39F501A80AC9 /* flatom_part.cpp */; };
+		E99749A707705CC400206F68 /* flatom_pr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED7B0383E50201A80AC9 /* flatom_pr.cpp */; };
+		E99749A807705CC400206F68 /* flattr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED7D0383E50201A80AC9 /* flattr.cpp */; };
+		E99749A907705CC400206F68 /* flattr_ed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9BDCC4104F4D7C1008929A0 /* flattr_ed.cpp */; };
+		E99749AA07705CC400206F68 /* flbase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED7E0383E50201A80AC9 /* flbase.cpp */; };
+		E99749AB07705CC400206F68 /* flbind.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F598D263044CC4A001A80AC9 /* flbind.cpp */; };
+		E99749AC07705CC400206F68 /* flbuf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED800383E50201A80AC9 /* flbuf.cpp */; };
+		E99749AD07705CC400206F68 /* fldsp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED880383E50201A80AC9 /* fldsp.cpp */; };
+		E99749AE07705CC400206F68 /* flext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED8A0383E50201A80AC9 /* flext.cpp */; };
+		E99749AF07705CC400206F68 /* flitem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A66D03CE39F501A80AC9 /* flitem.cpp */; };
+		E99749B007705CC400206F68 /* fllib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED8D0383E50201A80AC9 /* fllib.cpp */; };
+		E99749B107705CC400206F68 /* flmeth.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A66E03CE39F501A80AC9 /* flmeth.cpp */; };
+		E99749B207705CC400206F68 /* flmsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A66F03CE39F501A80AC9 /* flmsg.cpp */; };
+		E99749B307705CC400206F68 /* flout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED8F0383E50201A80AC9 /* flout.cpp */; };
+		E99749B407705CC400206F68 /* flproxy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A67103CE39F501A80AC9 /* flproxy.cpp */; };
+		E99749B507705CC400206F68 /* flqueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A67203CE39F501A80AC9 /* flqueue.cpp */; };
+		E99749B607705CC400206F68 /* flsimd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F598D264044CC4A001A80AC9 /* flsimd.cpp */; };
+		E99749B707705CC400206F68 /* flsupport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED930383E50201A80AC9 /* flsupport.cpp */; };
+		E99749B807705CC400206F68 /* flthr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED950383E50201A80AC9 /* flthr.cpp */; };
+		E99749B907705CC400206F68 /* fltimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F5B1FAC8041191190179CFEF /* fltimer.cpp */; };
+		E99749BA07705CC400206F68 /* flutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED960383E50201A80AC9 /* flutil.cpp */; };
+		E99749BB07705CC400206F68 /* flxlet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED970383E50201A80AC9 /* flxlet.cpp */; };
+		E99749BD07705CC400206F68 /* vecLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9974802077054CD00206F68 /* vecLib.framework */; };
+		E9974B9407705F1400206F68 /* flprefix.h in Headers */ = {isa = PBXBuildFile; fileRef = F504A67003CE39F501A80AC9 /* flprefix.h */; };
+		E9974B9507705F1400206F68 /* flbase.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED7F0383E50201A80AC9 /* flbase.h */; };
+		E9974B9607705F1400206F68 /* flclass.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED810383E50201A80AC9 /* flclass.h */; };
+		E9974B9707705F1400206F68 /* fldoxygen.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED870383E50201A80AC9 /* fldoxygen.h */; };
+		E9974B9807705F1400206F68 /* fldsp.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED890383E50201A80AC9 /* fldsp.h */; };
+		E9974B9907705F1400206F68 /* flext.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED8B0383E50201A80AC9 /* flext.h */; };
+		E9974B9A07705F1400206F68 /* flinternal.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED8C0383E50201A80AC9 /* flinternal.h */; };
+		E9974B9B07705F1400206F68 /* flmspbuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED8E0383E50201A80AC9 /* flmspbuffer.h */; };
+		E9974B9C07705F1400206F68 /* flstdc.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED920383E50201A80AC9 /* flstdc.h */; };
+		E9974B9D07705F1400206F68 /* flsupport.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED940383E50201A80AC9 /* flsupport.h */; };
+		E9974B9E07705F1400206F68 /* fldefs.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED860383E50201A80AC9 /* fldefs.h */; };
+		E9974B9F07705F1400206F68 /* fldefs_attradd.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5B804757BC801A0C81C /* fldefs_attradd.h */; };
+		E9974BA007705F1400206F68 /* fldefs_attrcb.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5B904757BC801A0C81C /* fldefs_attrcb.h */; };
+		E9974BA107705F1400206F68 /* fldefs_attrvar.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BA04757BC801A0C81C /* fldefs_attrvar.h */; };
+		E9974BA207705F1400206F68 /* fldefs_hdr.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BB04757BC801A0C81C /* fldefs_hdr.h */; };
+		E9974BA307705F1400206F68 /* fldefs_methadd.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BC04757BC801A0C81C /* fldefs_methadd.h */; };
+		E9974BA407705F1400206F68 /* fldefs_methbind.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BD04757BC801A0C81C /* fldefs_methbind.h */; };
+		E9974BA507705F1400206F68 /* fldefs_methcall.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BE04757BC801A0C81C /* fldefs_methcall.h */; };
+		E9974BA607705F1400206F68 /* fldefs_methcb.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BF04757BC801A0C81C /* fldefs_methcb.h */; };
+		E9974BA707705F1400206F68 /* fldefs_meththr.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5C004757BC801A0C81C /* fldefs_meththr.h */; };
+		E9974BA807705F1400206F68 /* fldefs_setup.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5C104757BC801A0C81C /* fldefs_setup.h */; };
+		E9974BAA07705F1400206F68 /* flatom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED7C0383E50201A80AC9 /* flatom.cpp */; };
+		E9974BAC07705F1400206F68 /* flatom_part.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A66C03CE39F501A80AC9 /* flatom_part.cpp */; };
+		E9974BAD07705F1400206F68 /* flatom_pr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED7B0383E50201A80AC9 /* flatom_pr.cpp */; };
+		E9974BAE07705F1400206F68 /* flattr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED7D0383E50201A80AC9 /* flattr.cpp */; };
+		E9974BAF07705F1400206F68 /* flattr_ed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9BDCC4104F4D7C1008929A0 /* flattr_ed.cpp */; };
+		E9974BB007705F1400206F68 /* flbase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED7E0383E50201A80AC9 /* flbase.cpp */; };
+		E9974BB107705F1400206F68 /* flbind.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F598D263044CC4A001A80AC9 /* flbind.cpp */; };
+		E9974BB207705F1400206F68 /* flbuf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED800383E50201A80AC9 /* flbuf.cpp */; };
+		E9974BB307705F1400206F68 /* fldsp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED880383E50201A80AC9 /* fldsp.cpp */; };
+		E9974BB407705F1400206F68 /* flext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED8A0383E50201A80AC9 /* flext.cpp */; };
+		E9974BB507705F1400206F68 /* flitem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A66D03CE39F501A80AC9 /* flitem.cpp */; };
+		E9974BB607705F1400206F68 /* fllib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED8D0383E50201A80AC9 /* fllib.cpp */; };
+		E9974BB707705F1400206F68 /* flmeth.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A66E03CE39F501A80AC9 /* flmeth.cpp */; };
+		E9974BB807705F1400206F68 /* flmsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A66F03CE39F501A80AC9 /* flmsg.cpp */; };
+		E9974BB907705F1400206F68 /* flout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED8F0383E50201A80AC9 /* flout.cpp */; };
+		E9974BBA07705F1400206F68 /* flproxy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A67103CE39F501A80AC9 /* flproxy.cpp */; };
+		E9974BBB07705F1400206F68 /* flqueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A67203CE39F501A80AC9 /* flqueue.cpp */; };
+		E9974BBC07705F1400206F68 /* flsimd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F598D264044CC4A001A80AC9 /* flsimd.cpp */; };
+		E9974BBD07705F1400206F68 /* flsupport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED930383E50201A80AC9 /* flsupport.cpp */; };
+		E9974BBE07705F1400206F68 /* flthr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED950383E50201A80AC9 /* flthr.cpp */; };
+		E9974BBF07705F1400206F68 /* fltimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F5B1FAC8041191190179CFEF /* fltimer.cpp */; };
+		E9974BC007705F1400206F68 /* flutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED960383E50201A80AC9 /* flutil.cpp */; };
+		E9974BC107705F1400206F68 /* flxlet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED970383E50201A80AC9 /* flxlet.cpp */; };
+		E9974BC307705F1400206F68 /* vecLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9974802077054CD00206F68 /* vecLib.framework */; };
+		E9974BC707705F4F00206F68 /* fldefs.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED860383E50201A80AC9 /* fldefs.h */; };
+		E9974BC807705F4F00206F68 /* fldefs_attradd.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5B804757BC801A0C81C /* fldefs_attradd.h */; };
+		E9974BC907705F4F00206F68 /* fldefs_attrcb.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5B904757BC801A0C81C /* fldefs_attrcb.h */; };
+		E9974BCA07705F4F00206F68 /* fldefs_attrvar.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BA04757BC801A0C81C /* fldefs_attrvar.h */; };
+		E9974BCB07705F4F00206F68 /* fldefs_hdr.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BB04757BC801A0C81C /* fldefs_hdr.h */; };
+		E9974BCC07705F4F00206F68 /* fldefs_methadd.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BC04757BC801A0C81C /* fldefs_methadd.h */; };
+		E9974BCD07705F4F00206F68 /* fldefs_methbind.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BD04757BC801A0C81C /* fldefs_methbind.h */; };
+		E9974BCE07705F4F00206F68 /* fldefs_methcall.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BE04757BC801A0C81C /* fldefs_methcall.h */; };
+		E9974BCF07705F4F00206F68 /* fldefs_methcb.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5BF04757BC801A0C81C /* fldefs_methcb.h */; };
+		E9974BD007705F4F00206F68 /* fldefs_meththr.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5C004757BC801A0C81C /* fldefs_meththr.h */; };
+		E9974BD107705F4F00206F68 /* fldefs_setup.h in Headers */ = {isa = PBXBuildFile; fileRef = F5CBC5C104757BC801A0C81C /* fldefs_setup.h */; };
+		E9974BD207705F4F00206F68 /* flprefix.h in Headers */ = {isa = PBXBuildFile; fileRef = F504A67003CE39F501A80AC9 /* flprefix.h */; };
+		E9974BD307705F4F00206F68 /* flbase.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED7F0383E50201A80AC9 /* flbase.h */; };
+		E9974BD407705F4F00206F68 /* flclass.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED810383E50201A80AC9 /* flclass.h */; };
+		E9974BD507705F4F00206F68 /* fldoxygen.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED870383E50201A80AC9 /* fldoxygen.h */; };
+		E9974BD607705F4F00206F68 /* fldsp.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED890383E50201A80AC9 /* fldsp.h */; };
+		E9974BD707705F4F00206F68 /* flext.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED8B0383E50201A80AC9 /* flext.h */; };
+		E9974BD807705F4F00206F68 /* flinternal.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED8C0383E50201A80AC9 /* flinternal.h */; };
+		E9974BD907705F4F00206F68 /* flmspbuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED8E0383E50201A80AC9 /* flmspbuffer.h */; };
+		E9974BDA07705F4F00206F68 /* flsndobj.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED910383E50201A80AC9 /* flsndobj.h */; };
+		E9974BDB07705F4F00206F68 /* flstdc.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED920383E50201A80AC9 /* flstdc.h */; };
+		E9974BDC07705F4F00206F68 /* flsupport.h in Headers */ = {isa = PBXBuildFile; fileRef = F55CED940383E50201A80AC9 /* flsupport.h */; };
+		E9974BDD07705F4F00206F68 /* flstk.h in Headers */ = {isa = PBXBuildFile; fileRef = F504A67403CE39F501A80AC9 /* flstk.h */; };
+		E9974BDF07705F4F00206F68 /* flatom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED7C0383E50201A80AC9 /* flatom.cpp */; };
+		E9974BE107705F4F00206F68 /* flatom_part.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A66C03CE39F501A80AC9 /* flatom_part.cpp */; };
+		E9974BE207705F4F00206F68 /* flatom_pr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED7B0383E50201A80AC9 /* flatom_pr.cpp */; };
+		E9974BE307705F4F00206F68 /* flattr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED7D0383E50201A80AC9 /* flattr.cpp */; };
+		E9974BE407705F4F00206F68 /* flattr_ed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9BDCC4104F4D7C1008929A0 /* flattr_ed.cpp */; };
+		E9974BE507705F4F00206F68 /* flbase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED7E0383E50201A80AC9 /* flbase.cpp */; };
+		E9974BE607705F4F00206F68 /* flbind.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F598D263044CC4A001A80AC9 /* flbind.cpp */; };
+		E9974BE707705F4F00206F68 /* flbuf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED800383E50201A80AC9 /* flbuf.cpp */; };
+		E9974BE807705F4F00206F68 /* fldsp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED880383E50201A80AC9 /* fldsp.cpp */; };
+		E9974BE907705F4F00206F68 /* flext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED8A0383E50201A80AC9 /* flext.cpp */; };
+		E9974BEA07705F4F00206F68 /* flitem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A66D03CE39F501A80AC9 /* flitem.cpp */; };
+		E9974BEB07705F4F00206F68 /* fllib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED8D0383E50201A80AC9 /* fllib.cpp */; };
+		E9974BEC07705F4F00206F68 /* flmeth.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A66E03CE39F501A80AC9 /* flmeth.cpp */; };
+		E9974BED07705F4F00206F68 /* flmsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A66F03CE39F501A80AC9 /* flmsg.cpp */; };
+		E9974BEE07705F4F00206F68 /* flout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED8F0383E50201A80AC9 /* flout.cpp */; };
+		E9974BEF07705F4F00206F68 /* flproxy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A67103CE39F501A80AC9 /* flproxy.cpp */; };
+		E9974BF007705F4F00206F68 /* flqueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F504A67203CE39F501A80AC9 /* flqueue.cpp */; };
+		E9974BF107705F4F00206F68 /* flsimd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F598D264044CC4A001A80AC9 /* flsimd.cpp */; };
+		E9974BF207705F4F00206F68 /* flsupport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED930383E50201A80AC9 /* flsupport.cpp */; };
+		E9974BF307705F4F00206F68 /* flthr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED950383E50201A80AC9 /* flthr.cpp */; };
+		E9974BF407705F4F00206F68 /* fltimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F5B1FAC8041191190179CFEF /* fltimer.cpp */; };
+		E9974BF507705F4F00206F68 /* flutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED960383E50201A80AC9 /* flutil.cpp */; };
+		E9974BF607705F4F00206F68 /* flxlet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F55CED970383E50201A80AC9 /* flxlet.cpp */; };
+		E9974BF807705F4F00206F68 /* vecLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9974802077054CD00206F68 /* vecLib.framework */; };
+		E9974BF907705F4F00206F68 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E99748D007705BAF00206F68 /* ApplicationServices.framework */; };
+		E9974E160770780D00206F68 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9974E140770780D00206F68 /* MaxAPI.framework */; };
+		E9974E170770780D00206F68 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9974E150770780D00206F68 /* MaxAudioAPI.framework */; };
+		E9974E180770780D00206F68 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9974E140770780D00206F68 /* MaxAPI.framework */; };
+		E9974E190770780D00206F68 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9974E150770780D00206F68 /* MaxAudioAPI.framework */; };
+		E9974E1A0770780D00206F68 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9974E140770780D00206F68 /* MaxAPI.framework */; };
+		E9974E1B0770780D00206F68 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9974E150770780D00206F68 /* MaxAudioAPI.framework */; };
+		E99A3D920D35903A00E692EF /* atomic_int.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D8B0D35903A00E692EF /* atomic_int.hpp */; };
+		E99A3D930D35903A00E692EF /* atomic_ptr.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D8C0D35903A00E692EF /* atomic_ptr.hpp */; };
+		E99A3D940D35903A00E692EF /* branch_hints.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D8D0D35903A00E692EF /* branch_hints.hpp */; };
+		E99A3D950D35903A00E692EF /* cas.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D8E0D35903A00E692EF /* cas.hpp */; };
+		E99A3D960D35903A00E692EF /* fifo.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D8F0D35903A00E692EF /* fifo.hpp */; };
+		E99A3D970D35903A00E692EF /* prefix.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D900D35903A00E692EF /* prefix.hpp */; };
+		E99A3D980D35903A00E692EF /* stack.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D910D35903A00E692EF /* stack.hpp */; };
+		E99A3D990D35903A00E692EF /* atomic_int.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D8B0D35903A00E692EF /* atomic_int.hpp */; };
+		E99A3D9A0D35903A00E692EF /* atomic_ptr.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D8C0D35903A00E692EF /* atomic_ptr.hpp */; };
+		E99A3D9B0D35903A00E692EF /* branch_hints.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D8D0D35903A00E692EF /* branch_hints.hpp */; };
+		E99A3D9C0D35903A00E692EF /* cas.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D8E0D35903A00E692EF /* cas.hpp */; };
+		E99A3D9D0D35903A00E692EF /* fifo.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D8F0D35903A00E692EF /* fifo.hpp */; };
+		E99A3D9E0D35903A00E692EF /* prefix.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D900D35903A00E692EF /* prefix.hpp */; };
+		E99A3D9F0D35903A00E692EF /* stack.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D910D35903A00E692EF /* stack.hpp */; };
+		E99A3DA00D35903A00E692EF /* atomic_int.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D8B0D35903A00E692EF /* atomic_int.hpp */; };
+		E99A3DA10D35903A00E692EF /* atomic_ptr.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D8C0D35903A00E692EF /* atomic_ptr.hpp */; };
+		E99A3DA20D35903A00E692EF /* branch_hints.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D8D0D35903A00E692EF /* branch_hints.hpp */; };
+		E99A3DA30D35903A00E692EF /* cas.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D8E0D35903A00E692EF /* cas.hpp */; };
+		E99A3DA40D35903A00E692EF /* fifo.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D8F0D35903A00E692EF /* fifo.hpp */; };
+		E99A3DA50D35903A00E692EF /* prefix.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D900D35903A00E692EF /* prefix.hpp */; };
+		E99A3DA60D35903A00E692EF /* stack.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D910D35903A00E692EF /* stack.hpp */; };
+		E99A3DA70D35903A00E692EF /* atomic_int.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D8B0D35903A00E692EF /* atomic_int.hpp */; };
+		E99A3DA80D35903A00E692EF /* atomic_ptr.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D8C0D35903A00E692EF /* atomic_ptr.hpp */; };
+		E99A3DA90D35903A00E692EF /* branch_hints.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D8D0D35903A00E692EF /* branch_hints.hpp */; };
+		E99A3DAA0D35903A00E692EF /* cas.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D8E0D35903A00E692EF /* cas.hpp */; };
+		E99A3DAB0D35903A00E692EF /* fifo.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D8F0D35903A00E692EF /* fifo.hpp */; };
+		E99A3DAC0D35903A00E692EF /* prefix.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D900D35903A00E692EF /* prefix.hpp */; };
+		E99A3DAD0D35903A00E692EF /* stack.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D910D35903A00E692EF /* stack.hpp */; };
+		E99A3DAE0D35903A00E692EF /* atomic_int.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D8B0D35903A00E692EF /* atomic_int.hpp */; };
+		E99A3DAF0D35903A00E692EF /* atomic_ptr.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D8C0D35903A00E692EF /* atomic_ptr.hpp */; };
+		E99A3DB00D35903A00E692EF /* branch_hints.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D8D0D35903A00E692EF /* branch_hints.hpp */; };
+		E99A3DB10D35903A00E692EF /* cas.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D8E0D35903A00E692EF /* cas.hpp */; };
+		E99A3DB20D35903A00E692EF /* fifo.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D8F0D35903A00E692EF /* fifo.hpp */; };
+		E99A3DB30D35903A00E692EF /* prefix.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D900D35903A00E692EF /* prefix.hpp */; };
+		E99A3DB40D35903A00E692EF /* stack.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D910D35903A00E692EF /* stack.hpp */; };
+		E99A3DB50D35903A00E692EF /* atomic_int.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D8B0D35903A00E692EF /* atomic_int.hpp */; };
+		E99A3DB60D35903A00E692EF /* atomic_ptr.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D8C0D35903A00E692EF /* atomic_ptr.hpp */; };
+		E99A3DB70D35903A00E692EF /* branch_hints.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D8D0D35903A00E692EF /* branch_hints.hpp */; };
+		E99A3DB80D35903A00E692EF /* cas.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D8E0D35903A00E692EF /* cas.hpp */; };
+		E99A3DB90D35903A00E692EF /* fifo.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D8F0D35903A00E692EF /* fifo.hpp */; };
+		E99A3DBA0D35903A00E692EF /* prefix.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D900D35903A00E692EF /* prefix.hpp */; };
+		E99A3DBB0D35903A00E692EF /* stack.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E99A3D910D35903A00E692EF /* stack.hpp */; };
+		E99A3DCF0D3592AB00E692EF /* flmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E99A3DCE0D3592AB00E692EF /* flmap.cpp */; };
+		E99A3DD00D3592AB00E692EF /* flmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E99A3DCE0D3592AB00E692EF /* flmap.cpp */; };
+		E99A3DD10D3592AB00E692EF /* flmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E99A3DCE0D3592AB00E692EF /* flmap.cpp */; };
+		E99A3DD20D3592AB00E692EF /* flmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E99A3DCE0D3592AB00E692EF /* flmap.cpp */; };
+		E99A3DD30D3592AB00E692EF /* flmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E99A3DCE0D3592AB00E692EF /* flmap.cpp */; };
+		E99A3DD40D3592AB00E692EF /* flmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E99A3DCE0D3592AB00E692EF /* flmap.cpp */; };
+		E99A3DD80D3592D100E692EF /* flcontainers.h in Headers */ = {isa = PBXBuildFile; fileRef = E99A3DD50D3592D100E692EF /* flcontainers.h */; };
+		E99A3DD90D3592D100E692EF /* flfeatures.h in Headers */ = {isa = PBXBuildFile; fileRef = E99A3DD60D3592D100E692EF /* flfeatures.h */; };
+		E99A3DDA0D3592D100E692EF /* flmap.h in Headers */ = {isa = PBXBuildFile; fileRef = E99A3DD70D3592D100E692EF /* flmap.h */; };
+		E99A3DDB0D3592D100E692EF /* flcontainers.h in Headers */ = {isa = PBXBuildFile; fileRef = E99A3DD50D3592D100E692EF /* flcontainers.h */; };
+		E99A3DDC0D3592D100E692EF /* flfeatures.h in Headers */ = {isa = PBXBuildFile; fileRef = E99A3DD60D3592D100E692EF /* flfeatures.h */; };
+		E99A3DDD0D3592D100E692EF /* flmap.h in Headers */ = {isa = PBXBuildFile; fileRef = E99A3DD70D3592D100E692EF /* flmap.h */; };
+		E99A3DDE0D3592D100E692EF /* flcontainers.h in Headers */ = {isa = PBXBuildFile; fileRef = E99A3DD50D3592D100E692EF /* flcontainers.h */; };
+		E99A3DDF0D3592D100E692EF /* flfeatures.h in Headers */ = {isa = PBXBuildFile; fileRef = E99A3DD60D3592D100E692EF /* flfeatures.h */; };
+		E99A3DE00D3592D100E692EF /* flmap.h in Headers */ = {isa = PBXBuildFile; fileRef = E99A3DD70D3592D100E692EF /* flmap.h */; };
+		E99A3DE10D3592D100E692EF /* flcontainers.h in Headers */ = {isa = PBXBuildFile; fileRef = E99A3DD50D3592D100E692EF /* flcontainers.h */; };
+		E99A3DE20D3592D100E692EF /* flfeatures.h in Headers */ = {isa = PBXBuildFile; fileRef = E99A3DD60D3592D100E692EF /* flfeatures.h */; };
+		E99A3DE30D3592D100E692EF /* flmap.h in Headers */ = {isa = PBXBuildFile; fileRef = E99A3DD70D3592D100E692EF /* flmap.h */; };
+		E99A3DE40D3592D100E692EF /* flcontainers.h in Headers */ = {isa = PBXBuildFile; fileRef = E99A3DD50D3592D100E692EF /* flcontainers.h */; };
+		E99A3DE50D3592D100E692EF /* flfeatures.h in Headers */ = {isa = PBXBuildFile; fileRef = E99A3DD60D3592D100E692EF /* flfeatures.h */; };
+		E99A3DE60D3592D100E692EF /* flmap.h in Headers */ = {isa = PBXBuildFile; fileRef = E99A3DD70D3592D100E692EF /* flmap.h */; };
+		E99A3DE70D3592D100E692EF /* flcontainers.h in Headers */ = {isa = PBXBuildFile; fileRef = E99A3DD50D3592D100E692EF /* flcontainers.h */; };
+		E99A3DE80D3592D100E692EF /* flfeatures.h in Headers */ = {isa = PBXBuildFile; fileRef = E99A3DD60D3592D100E692EF /* flfeatures.h */; };
+		E99A3DE90D3592D100E692EF /* flmap.h in Headers */ = {isa = PBXBuildFile; fileRef = E99A3DD70D3592D100E692EF /* flmap.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		E95B343A0F40BEE3006336AA /* flpushns.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = flpushns.h; sourceTree = "<group>"; };
+		E95B34410F40BEF0006336AA /* flpopns.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = flpopns.h; sourceTree = "<group>"; };
+		E99747CD0770545100206F68 /* libflext-pd_sd.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libflext-pd_sd.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E9974802077054CD00206F68 /* vecLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = vecLib.framework; path = /System/Library/Frameworks/vecLib.framework; sourceTree = "<absolute>"; };
+		E997483F0770570800206F68 /* libflext-pd_td.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libflext-pd_td.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E9974886077058C100206F68 /* libflext-pd_d.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libflext-pd_d.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E99748D007705BAF00206F68 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = /System/Library/Frameworks/ApplicationServices.framework; sourceTree = "<absolute>"; };
+		E99749BE07705CC400206F68 /* libflext-max_sd.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libflext-max_sd.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E9974BC407705F1400206F68 /* libflext-max_td.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libflext-max_td.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E9974BFA07705F4F00206F68 /* libflext-max_d.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libflext-max_d.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E9974E140770780D00206F68 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = /Library/Frameworks/MaxAPI.framework; sourceTree = "<absolute>"; };
+		E9974E150770780D00206F68 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = /Library/Frameworks/MaxAudioAPI.framework; sourceTree = "<absolute>"; };
+		E99A3D8B0D35903A00E692EF /* atomic_int.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = atomic_int.hpp; sourceTree = "<group>"; };
+		E99A3D8C0D35903A00E692EF /* atomic_ptr.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = atomic_ptr.hpp; sourceTree = "<group>"; };
+		E99A3D8D0D35903A00E692EF /* branch_hints.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = branch_hints.hpp; sourceTree = "<group>"; };
+		E99A3D8E0D35903A00E692EF /* cas.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = cas.hpp; sourceTree = "<group>"; };
+		E99A3D8F0D35903A00E692EF /* fifo.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = fifo.hpp; sourceTree = "<group>"; };
+		E99A3D900D35903A00E692EF /* prefix.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = prefix.hpp; sourceTree = "<group>"; };
+		E99A3D910D35903A00E692EF /* stack.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = stack.hpp; sourceTree = "<group>"; };
+		E99A3DCE0D3592AB00E692EF /* flmap.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = flmap.cpp; path = source/flmap.cpp; sourceTree = "<group>"; };
+		E99A3DD50D3592D100E692EF /* flcontainers.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = flcontainers.h; sourceTree = "<group>"; };
+		E99A3DD60D3592D100E692EF /* flfeatures.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = flfeatures.h; sourceTree = "<group>"; };
+		E99A3DD70D3592D100E692EF /* flmap.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = flmap.h; sourceTree = "<group>"; };
+		E9BDCC4104F4D7C1008929A0 /* flattr_ed.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = flattr_ed.cpp; path = source/flattr_ed.cpp; sourceTree = "<group>"; };
+		F504A66C03CE39F501A80AC9 /* flatom_part.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = flatom_part.cpp; path = source/flatom_part.cpp; sourceTree = "<group>"; };
+		F504A66D03CE39F501A80AC9 /* flitem.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = flitem.cpp; path = source/flitem.cpp; sourceTree = "<group>"; };
+		F504A66E03CE39F501A80AC9 /* flmeth.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = flmeth.cpp; path = source/flmeth.cpp; sourceTree = "<group>"; };
+		F504A66F03CE39F501A80AC9 /* flmsg.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = flmsg.cpp; path = source/flmsg.cpp; sourceTree = "<group>"; };
+		F504A67003CE39F501A80AC9 /* flprefix.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = flprefix.h; sourceTree = "<group>"; };
+		F504A67103CE39F501A80AC9 /* flproxy.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = flproxy.cpp; path = source/flproxy.cpp; sourceTree = "<group>"; };
+		F504A67203CE39F501A80AC9 /* flqueue.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = flqueue.cpp; path = source/flqueue.cpp; sourceTree = "<group>"; };
+		F504A67303CE39F501A80AC9 /* flstk.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = flstk.cpp; path = source/flstk.cpp; sourceTree = "<group>"; };
+		F504A67403CE39F501A80AC9 /* flstk.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = flstk.h; sourceTree = "<group>"; };
+		F55CED7B0383E50201A80AC9 /* flatom_pr.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = flatom_pr.cpp; path = source/flatom_pr.cpp; sourceTree = SOURCE_ROOT; };
+		F55CED7C0383E50201A80AC9 /* flatom.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = flatom.cpp; path = source/flatom.cpp; sourceTree = SOURCE_ROOT; };
+		F55CED7D0383E50201A80AC9 /* flattr.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = flattr.cpp; path = source/flattr.cpp; sourceTree = SOURCE_ROOT; };
+		F55CED7E0383E50201A80AC9 /* flbase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = flbase.cpp; path = source/flbase.cpp; sourceTree = SOURCE_ROOT; };
+		F55CED7F0383E50201A80AC9 /* flbase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = flbase.h; sourceTree = "<group>"; };
+		F55CED800383E50201A80AC9 /* flbuf.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = flbuf.cpp; path = source/flbuf.cpp; sourceTree = SOURCE_ROOT; };
+		F55CED810383E50201A80AC9 /* flclass.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = flclass.h; sourceTree = "<group>"; };
+		F55CED860383E50201A80AC9 /* fldefs.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = fldefs.h; path = source/fldefs.h; sourceTree = SOURCE_ROOT; };
+		F55CED870383E50201A80AC9 /* fldoxygen.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = fldoxygen.h; sourceTree = "<group>"; };
+		F55CED880383E50201A80AC9 /* fldsp.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = fldsp.cpp; path = source/fldsp.cpp; sourceTree = SOURCE_ROOT; };
+		F55CED890383E50201A80AC9 /* fldsp.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = fldsp.h; sourceTree = "<group>"; };
+		F55CED8A0383E50201A80AC9 /* flext.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = flext.cpp; path = source/flext.cpp; sourceTree = SOURCE_ROOT; };
+		F55CED8B0383E50201A80AC9 /* flext.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = flext.h; sourceTree = "<group>"; };
+		F55CED8C0383E50201A80AC9 /* flinternal.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = flinternal.h; sourceTree = "<group>"; };
+		F55CED8D0383E50201A80AC9 /* fllib.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = fllib.cpp; path = source/fllib.cpp; sourceTree = SOURCE_ROOT; };
+		F55CED8E0383E50201A80AC9 /* flmspbuffer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = flmspbuffer.h; sourceTree = "<group>"; };
+		F55CED8F0383E50201A80AC9 /* flout.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = flout.cpp; path = source/flout.cpp; sourceTree = SOURCE_ROOT; };
+		F55CED900383E50201A80AC9 /* flsndobj.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = flsndobj.cpp; path = source/flsndobj.cpp; sourceTree = SOURCE_ROOT; };
+		F55CED910383E50201A80AC9 /* flsndobj.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = flsndobj.h; sourceTree = "<group>"; };
+		F55CED920383E50201A80AC9 /* flstdc.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = flstdc.h; sourceTree = "<group>"; };
+		F55CED930383E50201A80AC9 /* flsupport.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = flsupport.cpp; path = source/flsupport.cpp; sourceTree = SOURCE_ROOT; };
+		F55CED940383E50201A80AC9 /* flsupport.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = flsupport.h; sourceTree = "<group>"; };
+		F55CED950383E50201A80AC9 /* flthr.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = flthr.cpp; path = source/flthr.cpp; sourceTree = SOURCE_ROOT; };
+		F55CED960383E50201A80AC9 /* flutil.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = flutil.cpp; path = source/flutil.cpp; sourceTree = SOURCE_ROOT; };
+		F55CED970383E50201A80AC9 /* flxlet.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = flxlet.cpp; path = source/flxlet.cpp; sourceTree = SOURCE_ROOT; };
+		F598D263044CC4A001A80AC9 /* flbind.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = flbind.cpp; path = source/flbind.cpp; sourceTree = "<group>"; };
+		F598D264044CC4A001A80AC9 /* flsimd.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = flsimd.cpp; path = source/flsimd.cpp; sourceTree = "<group>"; };
+		F5B1FAC8041191190179CFEF /* fltimer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = fltimer.cpp; path = source/fltimer.cpp; sourceTree = "<group>"; };
+		F5CBC5B804757BC801A0C81C /* fldefs_attradd.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = fldefs_attradd.h; sourceTree = "<group>"; };
+		F5CBC5B904757BC801A0C81C /* fldefs_attrcb.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = fldefs_attrcb.h; sourceTree = "<group>"; };
+		F5CBC5BA04757BC801A0C81C /* fldefs_attrvar.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = fldefs_attrvar.h; sourceTree = "<group>"; };
+		F5CBC5BB04757BC801A0C81C /* fldefs_hdr.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = fldefs_hdr.h; sourceTree = "<group>"; };
+		F5CBC5BC04757BC801A0C81C /* fldefs_methadd.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = fldefs_methadd.h; sourceTree = "<group>"; };
+		F5CBC5BD04757BC801A0C81C /* fldefs_methbind.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = fldefs_methbind.h; sourceTree = "<group>"; };
+		F5CBC5BE04757BC801A0C81C /* fldefs_methcall.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = fldefs_methcall.h; sourceTree = "<group>"; };
+		F5CBC5BF04757BC801A0C81C /* fldefs_methcb.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = fldefs_methcb.h; sourceTree = "<group>"; };
+		F5CBC5C004757BC801A0C81C /* fldefs_meththr.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = fldefs_meththr.h; sourceTree = "<group>"; };
+		F5CBC5C104757BC801A0C81C /* fldefs_setup.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = fldefs_setup.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E99747CB0770545100206F68 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9974803077054CD00206F68 /* vecLib.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E997483D0770570800206F68 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E997483E0770570800206F68 /* vecLib.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E9974884077058C100206F68 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E99748D107705BAF00206F68 /* ApplicationServices.framework in Frameworks */,
+				E907FC2F1ACB4EEF003B821A /* vecLib.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E99749BC07705CC400206F68 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E99749BD07705CC400206F68 /* vecLib.framework in Frameworks */,
+				E9974E160770780D00206F68 /* MaxAPI.framework in Frameworks */,
+				E9974E170770780D00206F68 /* MaxAudioAPI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E9974BC207705F1400206F68 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9974BC307705F1400206F68 /* vecLib.framework in Frameworks */,
+				E9974E180770780D00206F68 /* MaxAPI.framework in Frameworks */,
+				E9974E190770780D00206F68 /* MaxAudioAPI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E9974BF707705F4F00206F68 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9974BF807705F4F00206F68 /* vecLib.framework in Frameworks */,
+				E9974BF907705F4F00206F68 /* ApplicationServices.framework in Frameworks */,
+				E9974E1A0770780D00206F68 /* MaxAPI.framework in Frameworks */,
+				E9974E1B0770780D00206F68 /* MaxAudioAPI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		034768DDFF38A45A11DB9C8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E99747CD0770545100206F68 /* libflext-pd_sd.a */,
+				E997483F0770570800206F68 /* libflext-pd_td.a */,
+				E9974886077058C100206F68 /* libflext-pd_d.dylib */,
+				E99749BE07705CC400206F68 /* libflext-max_sd.a */,
+				E9974BC407705F1400206F68 /* libflext-max_td.a */,
+				E9974BFA07705F4F00206F68 /* libflext-max_d.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0867D691FE84028FC02AAC07 /* flext-PB */ = {
+			isa = PBXGroup;
+			children = (
+				F55CEDB50383E50D01A80AC9 /* Headers */,
+				08FB77ACFE841707C02AAC07 /* Source */,
+				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
+				034768DDFF38A45A11DB9C8B /* Products */,
+			);
+			name = "flext-PB";
+			sourceTree = "<group>";
+		};
+		0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				E9974E140770780D00206F68 /* MaxAPI.framework */,
+				E9974E150770780D00206F68 /* MaxAudioAPI.framework */,
+				E99748D007705BAF00206F68 /* ApplicationServices.framework */,
+				E9974802077054CD00206F68 /* vecLib.framework */,
+			);
+			name = "External Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		08FB77ACFE841707C02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				F55CED7C0383E50201A80AC9 /* flatom.cpp */,
+				F504A66C03CE39F501A80AC9 /* flatom_part.cpp */,
+				F55CED7B0383E50201A80AC9 /* flatom_pr.cpp */,
+				F55CED7D0383E50201A80AC9 /* flattr.cpp */,
+				E9BDCC4104F4D7C1008929A0 /* flattr_ed.cpp */,
+				F55CED7E0383E50201A80AC9 /* flbase.cpp */,
+				F598D263044CC4A001A80AC9 /* flbind.cpp */,
+				F55CED800383E50201A80AC9 /* flbuf.cpp */,
+				F55CED880383E50201A80AC9 /* fldsp.cpp */,
+				F55CED8A0383E50201A80AC9 /* flext.cpp */,
+				F504A66D03CE39F501A80AC9 /* flitem.cpp */,
+				F55CED8D0383E50201A80AC9 /* fllib.cpp */,
+				E99A3DCE0D3592AB00E692EF /* flmap.cpp */,
+				F504A66E03CE39F501A80AC9 /* flmeth.cpp */,
+				F504A66F03CE39F501A80AC9 /* flmsg.cpp */,
+				F55CED8F0383E50201A80AC9 /* flout.cpp */,
+				F504A67103CE39F501A80AC9 /* flproxy.cpp */,
+				F504A67203CE39F501A80AC9 /* flqueue.cpp */,
+				F598D264044CC4A001A80AC9 /* flsimd.cpp */,
+				F55CED930383E50201A80AC9 /* flsupport.cpp */,
+				F55CED950383E50201A80AC9 /* flthr.cpp */,
+				F5B1FAC8041191190179CFEF /* fltimer.cpp */,
+				F55CED960383E50201A80AC9 /* flutil.cpp */,
+				F55CED970383E50201A80AC9 /* flxlet.cpp */,
+				F55CED900383E50201A80AC9 /* flsndobj.cpp */,
+				F504A67303CE39F501A80AC9 /* flstk.cpp */,
+			);
+			name = Source;
+			sourceTree = SOURCE_ROOT;
+		};
+		E99A3D870D358FB800E692EF /* lockfree */ = {
+			isa = PBXGroup;
+			children = (
+				E99A3D8B0D35903A00E692EF /* atomic_int.hpp */,
+				E99A3D8C0D35903A00E692EF /* atomic_ptr.hpp */,
+				E99A3D8D0D35903A00E692EF /* branch_hints.hpp */,
+				E99A3D8E0D35903A00E692EF /* cas.hpp */,
+				E99A3D8F0D35903A00E692EF /* fifo.hpp */,
+				E99A3D900D35903A00E692EF /* prefix.hpp */,
+				E99A3D910D35903A00E692EF /* stack.hpp */,
+			);
+			path = lockfree;
+			sourceTree = "<group>";
+		};
+		F55CEDB50383E50D01A80AC9 /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+				E99A3DD50D3592D100E692EF /* flcontainers.h */,
+				E99A3DD60D3592D100E692EF /* flfeatures.h */,
+				E99A3DD70D3592D100E692EF /* flmap.h */,
+				E99A3D870D358FB800E692EF /* lockfree */,
+				F5CBC61C04757BDA01A0C81C /* Defs */,
+				F504A67003CE39F501A80AC9 /* flprefix.h */,
+				F55CED7F0383E50201A80AC9 /* flbase.h */,
+				F55CED810383E50201A80AC9 /* flclass.h */,
+				F55CED870383E50201A80AC9 /* fldoxygen.h */,
+				F55CED890383E50201A80AC9 /* fldsp.h */,
+				F55CED8B0383E50201A80AC9 /* flext.h */,
+				F55CED8C0383E50201A80AC9 /* flinternal.h */,
+				F55CED8E0383E50201A80AC9 /* flmspbuffer.h */,
+				F55CED910383E50201A80AC9 /* flsndobj.h */,
+				F55CED920383E50201A80AC9 /* flstdc.h */,
+				F55CED940383E50201A80AC9 /* flsupport.h */,
+				F504A67403CE39F501A80AC9 /* flstk.h */,
+				E95B343A0F40BEE3006336AA /* flpushns.h */,
+				E95B34410F40BEF0006336AA /* flpopns.h */,
+			);
+			name = Headers;
+			path = source;
+			sourceTree = "<group>";
+		};
+		F5CBC61C04757BDA01A0C81C /* Defs */ = {
+			isa = PBXGroup;
+			children = (
+				F55CED860383E50201A80AC9 /* fldefs.h */,
+				F5CBC5B804757BC801A0C81C /* fldefs_attradd.h */,
+				F5CBC5B904757BC801A0C81C /* fldefs_attrcb.h */,
+				F5CBC5BA04757BC801A0C81C /* fldefs_attrvar.h */,
+				F5CBC5BB04757BC801A0C81C /* fldefs_hdr.h */,
+				F5CBC5BC04757BC801A0C81C /* fldefs_methadd.h */,
+				F5CBC5BD04757BC801A0C81C /* fldefs_methbind.h */,
+				F5CBC5BE04757BC801A0C81C /* fldefs_methcall.h */,
+				F5CBC5BF04757BC801A0C81C /* fldefs_methcb.h */,
+				F5CBC5C004757BC801A0C81C /* fldefs_meththr.h */,
+				F5CBC5C104757BC801A0C81C /* fldefs_setup.h */,
+			);
+			name = Defs;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		E99747C90770545100206F68 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E99747FA0770548F00206F68 /* flprefix.h in Headers */,
+				E99747E80770548F00206F68 /* flbase.h in Headers */,
+				E99747E90770548F00206F68 /* flclass.h in Headers */,
+				E99747F50770548F00206F68 /* fldoxygen.h in Headers */,
+				E99747F60770548F00206F68 /* fldsp.h in Headers */,
+				E99747F70770548F00206F68 /* flext.h in Headers */,
+				E99747F80770548F00206F68 /* flinternal.h in Headers */,
+				E99747F90770548F00206F68 /* flmspbuffer.h in Headers */,
+				E99747FC0770548F00206F68 /* flstdc.h in Headers */,
+				E99747FE0770548F00206F68 /* flsupport.h in Headers */,
+				E99747EA0770548F00206F68 /* fldefs.h in Headers */,
+				E99747EB0770548F00206F68 /* fldefs_attradd.h in Headers */,
+				E99747EC0770548F00206F68 /* fldefs_attrcb.h in Headers */,
+				E99747ED0770548F00206F68 /* fldefs_attrvar.h in Headers */,
+				E99747EE0770548F00206F68 /* fldefs_hdr.h in Headers */,
+				E99747EF0770548F00206F68 /* fldefs_methadd.h in Headers */,
+				E99747F00770548F00206F68 /* fldefs_methbind.h in Headers */,
+				E99747F10770548F00206F68 /* fldefs_methcall.h in Headers */,
+				E99747F20770548F00206F68 /* fldefs_methcb.h in Headers */,
+				E99747F30770548F00206F68 /* fldefs_meththr.h in Headers */,
+				E99747F40770548F00206F68 /* fldefs_setup.h in Headers */,
+				E99A3D990D35903A00E692EF /* atomic_int.hpp in Headers */,
+				E99A3D9A0D35903A00E692EF /* atomic_ptr.hpp in Headers */,
+				E99A3D9B0D35903A00E692EF /* branch_hints.hpp in Headers */,
+				E99A3D9C0D35903A00E692EF /* cas.hpp in Headers */,
+				E99A3D9D0D35903A00E692EF /* fifo.hpp in Headers */,
+				E99A3D9E0D35903A00E692EF /* prefix.hpp in Headers */,
+				E99A3D9F0D35903A00E692EF /* stack.hpp in Headers */,
+				E99A3DDB0D3592D100E692EF /* flcontainers.h in Headers */,
+				E99A3DDC0D3592D100E692EF /* flfeatures.h in Headers */,
+				E99A3DDD0D3592D100E692EF /* flmap.h in Headers */,
+				E95B34400F40BEE3006336AA /* flpushns.h in Headers */,
+				E95B34470F40BEF0006336AA /* flpopns.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E997480E0770570800206F68 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E997480F0770570800206F68 /* flprefix.h in Headers */,
+				E99748100770570800206F68 /* flbase.h in Headers */,
+				E99748110770570800206F68 /* flclass.h in Headers */,
+				E99748120770570800206F68 /* fldoxygen.h in Headers */,
+				E99748130770570800206F68 /* fldsp.h in Headers */,
+				E99748140770570800206F68 /* flext.h in Headers */,
+				E99748150770570800206F68 /* flinternal.h in Headers */,
+				E99748160770570800206F68 /* flmspbuffer.h in Headers */,
+				E99748170770570800206F68 /* flstdc.h in Headers */,
+				E99748180770570800206F68 /* flsupport.h in Headers */,
+				E99748190770570800206F68 /* fldefs.h in Headers */,
+				E997481A0770570800206F68 /* fldefs_attradd.h in Headers */,
+				E997481B0770570800206F68 /* fldefs_attrcb.h in Headers */,
+				E997481C0770570800206F68 /* fldefs_attrvar.h in Headers */,
+				E997481D0770570800206F68 /* fldefs_hdr.h in Headers */,
+				E997481E0770570800206F68 /* fldefs_methadd.h in Headers */,
+				E997481F0770570800206F68 /* fldefs_methbind.h in Headers */,
+				E99748200770570800206F68 /* fldefs_methcall.h in Headers */,
+				E99748210770570800206F68 /* fldefs_methcb.h in Headers */,
+				E99748220770570800206F68 /* fldefs_meththr.h in Headers */,
+				E99748230770570800206F68 /* fldefs_setup.h in Headers */,
+				E99A3DA00D35903A00E692EF /* atomic_int.hpp in Headers */,
+				E99A3DA10D35903A00E692EF /* atomic_ptr.hpp in Headers */,
+				E99A3DA20D35903A00E692EF /* branch_hints.hpp in Headers */,
+				E99A3DA30D35903A00E692EF /* cas.hpp in Headers */,
+				E99A3DA40D35903A00E692EF /* fifo.hpp in Headers */,
+				E99A3DA50D35903A00E692EF /* prefix.hpp in Headers */,
+				E99A3DA60D35903A00E692EF /* stack.hpp in Headers */,
+				E99A3DDE0D3592D100E692EF /* flcontainers.h in Headers */,
+				E99A3DDF0D3592D100E692EF /* flfeatures.h in Headers */,
+				E99A3DE00D3592D100E692EF /* flmap.h in Headers */,
+				E95B343B0F40BEE3006336AA /* flpushns.h in Headers */,
+				E95B34420F40BEF0006336AA /* flpopns.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E9974882077058C100206F68 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E99748B00770595E00206F68 /* fldefs.h in Headers */,
+				E99748B10770595E00206F68 /* fldefs_attradd.h in Headers */,
+				E99748B20770595E00206F68 /* fldefs_attrcb.h in Headers */,
+				E99748B30770595E00206F68 /* fldefs_attrvar.h in Headers */,
+				E99748B40770595E00206F68 /* fldefs_hdr.h in Headers */,
+				E99748B50770595E00206F68 /* fldefs_methadd.h in Headers */,
+				E99748B60770595E00206F68 /* fldefs_methbind.h in Headers */,
+				E99748B70770595E00206F68 /* fldefs_methcall.h in Headers */,
+				E99748B80770595E00206F68 /* fldefs_methcb.h in Headers */,
+				E99748B90770595E00206F68 /* fldefs_meththr.h in Headers */,
+				E99748BA0770595E00206F68 /* fldefs_setup.h in Headers */,
+				E99748A40770595500206F68 /* flprefix.h in Headers */,
+				E99748A50770595500206F68 /* flbase.h in Headers */,
+				E99748A60770595500206F68 /* flclass.h in Headers */,
+				E99748A70770595500206F68 /* fldoxygen.h in Headers */,
+				E99748A80770595500206F68 /* fldsp.h in Headers */,
+				E99748A90770595600206F68 /* flext.h in Headers */,
+				E99748AA0770595600206F68 /* flinternal.h in Headers */,
+				E99748AB0770595600206F68 /* flmspbuffer.h in Headers */,
+				E99748AC0770595600206F68 /* flsndobj.h in Headers */,
+				E99748AD0770595600206F68 /* flstdc.h in Headers */,
+				E99748AE0770595600206F68 /* flsupport.h in Headers */,
+				E99748AF0770595600206F68 /* flstk.h in Headers */,
+				E99A3D920D35903A00E692EF /* atomic_int.hpp in Headers */,
+				E99A3D930D35903A00E692EF /* atomic_ptr.hpp in Headers */,
+				E99A3D940D35903A00E692EF /* branch_hints.hpp in Headers */,
+				E99A3D950D35903A00E692EF /* cas.hpp in Headers */,
+				E99A3D960D35903A00E692EF /* fifo.hpp in Headers */,
+				E99A3D970D35903A00E692EF /* prefix.hpp in Headers */,
+				E99A3D980D35903A00E692EF /* stack.hpp in Headers */,
+				E99A3DD80D3592D100E692EF /* flcontainers.h in Headers */,
+				E99A3DD90D3592D100E692EF /* flfeatures.h in Headers */,
+				E99A3DDA0D3592D100E692EF /* flmap.h in Headers */,
+				E95B343C0F40BEE3006336AA /* flpushns.h in Headers */,
+				E95B34430F40BEF0006336AA /* flpopns.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E997498D07705CC400206F68 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E997498E07705CC400206F68 /* flprefix.h in Headers */,
+				E997498F07705CC400206F68 /* flbase.h in Headers */,
+				E997499007705CC400206F68 /* flclass.h in Headers */,
+				E997499107705CC400206F68 /* fldoxygen.h in Headers */,
+				E997499207705CC400206F68 /* fldsp.h in Headers */,
+				E997499307705CC400206F68 /* flext.h in Headers */,
+				E997499407705CC400206F68 /* flinternal.h in Headers */,
+				E997499507705CC400206F68 /* flmspbuffer.h in Headers */,
+				E997499607705CC400206F68 /* flstdc.h in Headers */,
+				E997499707705CC400206F68 /* flsupport.h in Headers */,
+				E997499807705CC400206F68 /* fldefs.h in Headers */,
+				E997499907705CC400206F68 /* fldefs_attradd.h in Headers */,
+				E997499A07705CC400206F68 /* fldefs_attrcb.h in Headers */,
+				E997499B07705CC400206F68 /* fldefs_attrvar.h in Headers */,
+				E997499C07705CC400206F68 /* fldefs_hdr.h in Headers */,
+				E997499D07705CC400206F68 /* fldefs_methadd.h in Headers */,
+				E997499E07705CC400206F68 /* fldefs_methbind.h in Headers */,
+				E997499F07705CC400206F68 /* fldefs_methcall.h in Headers */,
+				E99749A007705CC400206F68 /* fldefs_methcb.h in Headers */,
+				E99749A107705CC400206F68 /* fldefs_meththr.h in Headers */,
+				E99749A207705CC400206F68 /* fldefs_setup.h in Headers */,
+				E99A3DA70D35903A00E692EF /* atomic_int.hpp in Headers */,
+				E99A3DA80D35903A00E692EF /* atomic_ptr.hpp in Headers */,
+				E99A3DA90D35903A00E692EF /* branch_hints.hpp in Headers */,
+				E99A3DAA0D35903A00E692EF /* cas.hpp in Headers */,
+				E99A3DAB0D35903A00E692EF /* fifo.hpp in Headers */,
+				E99A3DAC0D35903A00E692EF /* prefix.hpp in Headers */,
+				E99A3DAD0D35903A00E692EF /* stack.hpp in Headers */,
+				E99A3DE10D3592D100E692EF /* flcontainers.h in Headers */,
+				E99A3DE20D3592D100E692EF /* flfeatures.h in Headers */,
+				E99A3DE30D3592D100E692EF /* flmap.h in Headers */,
+				E95B343F0F40BEE3006336AA /* flpushns.h in Headers */,
+				E95B34460F40BEF0006336AA /* flpopns.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E9974B9307705F1400206F68 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9974B9407705F1400206F68 /* flprefix.h in Headers */,
+				E9974B9507705F1400206F68 /* flbase.h in Headers */,
+				E9974B9607705F1400206F68 /* flclass.h in Headers */,
+				E9974B9707705F1400206F68 /* fldoxygen.h in Headers */,
+				E9974B9807705F1400206F68 /* fldsp.h in Headers */,
+				E9974B9907705F1400206F68 /* flext.h in Headers */,
+				E9974B9A07705F1400206F68 /* flinternal.h in Headers */,
+				E9974B9B07705F1400206F68 /* flmspbuffer.h in Headers */,
+				E9974B9C07705F1400206F68 /* flstdc.h in Headers */,
+				E9974B9D07705F1400206F68 /* flsupport.h in Headers */,
+				E9974B9E07705F1400206F68 /* fldefs.h in Headers */,
+				E9974B9F07705F1400206F68 /* fldefs_attradd.h in Headers */,
+				E9974BA007705F1400206F68 /* fldefs_attrcb.h in Headers */,
+				E9974BA107705F1400206F68 /* fldefs_attrvar.h in Headers */,
+				E9974BA207705F1400206F68 /* fldefs_hdr.h in Headers */,
+				E9974BA307705F1400206F68 /* fldefs_methadd.h in Headers */,
+				E9974BA407705F1400206F68 /* fldefs_methbind.h in Headers */,
+				E9974BA507705F1400206F68 /* fldefs_methcall.h in Headers */,
+				E9974BA607705F1400206F68 /* fldefs_methcb.h in Headers */,
+				E9974BA707705F1400206F68 /* fldefs_meththr.h in Headers */,
+				E9974BA807705F1400206F68 /* fldefs_setup.h in Headers */,
+				E99A3DAE0D35903A00E692EF /* atomic_int.hpp in Headers */,
+				E99A3DAF0D35903A00E692EF /* atomic_ptr.hpp in Headers */,
+				E99A3DB00D35903A00E692EF /* branch_hints.hpp in Headers */,
+				E99A3DB10D35903A00E692EF /* cas.hpp in Headers */,
+				E99A3DB20D35903A00E692EF /* fifo.hpp in Headers */,
+				E99A3DB30D35903A00E692EF /* prefix.hpp in Headers */,
+				E99A3DB40D35903A00E692EF /* stack.hpp in Headers */,
+				E99A3DE40D3592D100E692EF /* flcontainers.h in Headers */,
+				E99A3DE50D3592D100E692EF /* flfeatures.h in Headers */,
+				E99A3DE60D3592D100E692EF /* flmap.h in Headers */,
+				E95B343D0F40BEE3006336AA /* flpushns.h in Headers */,
+				E95B34440F40BEF0006336AA /* flpopns.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E9974BC607705F4F00206F68 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9974BC707705F4F00206F68 /* fldefs.h in Headers */,
+				E9974BC807705F4F00206F68 /* fldefs_attradd.h in Headers */,
+				E9974BC907705F4F00206F68 /* fldefs_attrcb.h in Headers */,
+				E9974BCA07705F4F00206F68 /* fldefs_attrvar.h in Headers */,
+				E9974BCB07705F4F00206F68 /* fldefs_hdr.h in Headers */,
+				E9974BCC07705F4F00206F68 /* fldefs_methadd.h in Headers */,
+				E9974BCD07705F4F00206F68 /* fldefs_methbind.h in Headers */,
+				E9974BCE07705F4F00206F68 /* fldefs_methcall.h in Headers */,
+				E9974BCF07705F4F00206F68 /* fldefs_methcb.h in Headers */,
+				E9974BD007705F4F00206F68 /* fldefs_meththr.h in Headers */,
+				E9974BD107705F4F00206F68 /* fldefs_setup.h in Headers */,
+				E9974BD207705F4F00206F68 /* flprefix.h in Headers */,
+				E9974BD307705F4F00206F68 /* flbase.h in Headers */,
+				E9974BD407705F4F00206F68 /* flclass.h in Headers */,
+				E9974BD507705F4F00206F68 /* fldoxygen.h in Headers */,
+				E9974BD607705F4F00206F68 /* fldsp.h in Headers */,
+				E9974BD707705F4F00206F68 /* flext.h in Headers */,
+				E9974BD807705F4F00206F68 /* flinternal.h in Headers */,
+				E9974BD907705F4F00206F68 /* flmspbuffer.h in Headers */,
+				E9974BDA07705F4F00206F68 /* flsndobj.h in Headers */,
+				E9974BDB07705F4F00206F68 /* flstdc.h in Headers */,
+				E9974BDC07705F4F00206F68 /* flsupport.h in Headers */,
+				E9974BDD07705F4F00206F68 /* flstk.h in Headers */,
+				E99A3DB50D35903A00E692EF /* atomic_int.hpp in Headers */,
+				E99A3DB60D35903A00E692EF /* atomic_ptr.hpp in Headers */,
+				E99A3DB70D35903A00E692EF /* branch_hints.hpp in Headers */,
+				E99A3DB80D35903A00E692EF /* cas.hpp in Headers */,
+				E99A3DB90D35903A00E692EF /* fifo.hpp in Headers */,
+				E99A3DBA0D35903A00E692EF /* prefix.hpp in Headers */,
+				E99A3DBB0D35903A00E692EF /* stack.hpp in Headers */,
+				E99A3DE70D3592D100E692EF /* flcontainers.h in Headers */,
+				E99A3DE80D3592D100E692EF /* flfeatures.h in Headers */,
+				E99A3DE90D3592D100E692EF /* flmap.h in Headers */,
+				E95B343E0F40BEE3006336AA /* flpushns.h in Headers */,
+				E95B34450F40BEF0006336AA /* flpopns.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		E99747CC0770545100206F68 /* PD static single */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E9A5BCA10A3381C400AD9F03 /* Build configuration list for PBXNativeTarget "PD static single" */;
+			buildPhases = (
+				E99747C90770545100206F68 /* Headers */,
+				E99747CA0770545100206F68 /* Sources */,
+				E99747CB0770545100206F68 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "PD static single";
+			productName = "PD static single";
+			productReference = E99747CD0770545100206F68 /* libflext-pd_sd.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		E997480D0770570800206F68 /* PD static multi */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E9A5BCA50A3381C400AD9F03 /* Build configuration list for PBXNativeTarget "PD static multi" */;
+			buildPhases = (
+				E997480E0770570800206F68 /* Headers */,
+				E99748240770570800206F68 /* Sources */,
+				E997483D0770570800206F68 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "PD static multi";
+			productName = "PD static single";
+			productReference = E997483F0770570800206F68 /* libflext-pd_td.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		E9974885077058C100206F68 /* PD shared */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E9A5BCA90A3381C400AD9F03 /* Build configuration list for PBXNativeTarget "PD shared" */;
+			buildPhases = (
+				E9974882077058C100206F68 /* Headers */,
+				E9974883077058C100206F68 /* Sources */,
+				E9974884077058C100206F68 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "PD shared";
+			productName = "PD shared";
+			productReference = E9974886077058C100206F68 /* libflext-pd_d.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		E997498C07705CC400206F68 /* Max static single */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E9A5BCAD0A3381C400AD9F03 /* Build configuration list for PBXNativeTarget "Max static single" */;
+			buildPhases = (
+				E997498D07705CC400206F68 /* Headers */,
+				E99749A307705CC400206F68 /* Sources */,
+				E99749BC07705CC400206F68 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Max static single";
+			productName = "PD static single";
+			productReference = E99749BE07705CC400206F68 /* libflext-max_sd.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		E9974B9207705F1400206F68 /* Max static multi */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E9A5BCB10A3381C400AD9F03 /* Build configuration list for PBXNativeTarget "Max static multi" */;
+			buildPhases = (
+				E9974B9307705F1400206F68 /* Headers */,
+				E9974BA907705F1400206F68 /* Sources */,
+				E9974BC207705F1400206F68 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Max static multi";
+			productName = "PD static single";
+			productReference = E9974BC407705F1400206F68 /* libflext-max_td.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		E9974BC507705F4F00206F68 /* Max shared */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E9A5BCB50A3381C400AD9F03 /* Build configuration list for PBXNativeTarget "Max shared" */;
+			buildPhases = (
+				E9974BC607705F4F00206F68 /* Headers */,
+				E9974BDE07705F4F00206F68 /* Sources */,
+				E9974BF707705F4F00206F68 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Max shared";
+			productName = "PD shared";
+			productReference = E9974BFA07705F4F00206F68 /* libflext-max_d.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0867D690FE84028FC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0620;
+			};
+			buildConfigurationList = E9A5BCB90A3381C400AD9F03 /* Build configuration list for PBXProject "flext" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 0867D691FE84028FC02AAC07 /* flext-PB */;
+			productRefGroup = 034768DDFF38A45A11DB9C8B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E99747CC0770545100206F68 /* PD static single */,
+				E997480D0770570800206F68 /* PD static multi */,
+				E9974885077058C100206F68 /* PD shared */,
+				E997498C07705CC400206F68 /* Max static single */,
+				E9974B9207705F1400206F68 /* Max static multi */,
+				E9974BC507705F4F00206F68 /* Max shared */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E99747CA0770545100206F68 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E99747CE0770548700206F68 /* flatom.cpp in Sources */,
+				E99747D00770548700206F68 /* flatom_part.cpp in Sources */,
+				E99747D10770548700206F68 /* flatom_pr.cpp in Sources */,
+				E99747D20770548700206F68 /* flattr.cpp in Sources */,
+				E99747D30770548700206F68 /* flattr_ed.cpp in Sources */,
+				E99747D40770548700206F68 /* flbase.cpp in Sources */,
+				E99747D50770548700206F68 /* flbind.cpp in Sources */,
+				E99747D60770548700206F68 /* flbuf.cpp in Sources */,
+				E99747D70770548700206F68 /* fldsp.cpp in Sources */,
+				E99747D80770548700206F68 /* flext.cpp in Sources */,
+				E99747D90770548700206F68 /* flitem.cpp in Sources */,
+				E99747DA0770548700206F68 /* fllib.cpp in Sources */,
+				E99747DB0770548700206F68 /* flmeth.cpp in Sources */,
+				E99747DC0770548700206F68 /* flmsg.cpp in Sources */,
+				E99747DD0770548700206F68 /* flout.cpp in Sources */,
+				E99747DE0770548700206F68 /* flproxy.cpp in Sources */,
+				E99747DF0770548700206F68 /* flqueue.cpp in Sources */,
+				E99747E00770548700206F68 /* flsimd.cpp in Sources */,
+				E99747E30770548700206F68 /* flsupport.cpp in Sources */,
+				E99747E40770548700206F68 /* flthr.cpp in Sources */,
+				E99747E50770548700206F68 /* fltimer.cpp in Sources */,
+				E99747E60770548700206F68 /* flutil.cpp in Sources */,
+				E99747E70770548700206F68 /* flxlet.cpp in Sources */,
+				E99A3DD00D3592AB00E692EF /* flmap.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E99748240770570800206F68 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E99748250770570800206F68 /* flatom.cpp in Sources */,
+				E99748270770570800206F68 /* flatom_part.cpp in Sources */,
+				E99748280770570800206F68 /* flatom_pr.cpp in Sources */,
+				E99748290770570800206F68 /* flattr.cpp in Sources */,
+				E997482A0770570800206F68 /* flattr_ed.cpp in Sources */,
+				E997482B0770570800206F68 /* flbase.cpp in Sources */,
+				E997482C0770570800206F68 /* flbind.cpp in Sources */,
+				E997482D0770570800206F68 /* flbuf.cpp in Sources */,
+				E997482E0770570800206F68 /* fldsp.cpp in Sources */,
+				E997482F0770570800206F68 /* flext.cpp in Sources */,
+				E99748300770570800206F68 /* flitem.cpp in Sources */,
+				E99748310770570800206F68 /* fllib.cpp in Sources */,
+				E99748320770570800206F68 /* flmeth.cpp in Sources */,
+				E99748330770570800206F68 /* flmsg.cpp in Sources */,
+				E99748340770570800206F68 /* flout.cpp in Sources */,
+				E99748350770570800206F68 /* flproxy.cpp in Sources */,
+				E99748360770570800206F68 /* flqueue.cpp in Sources */,
+				E99748370770570800206F68 /* flsimd.cpp in Sources */,
+				E99748380770570800206F68 /* flsupport.cpp in Sources */,
+				E99748390770570800206F68 /* flthr.cpp in Sources */,
+				E997483A0770570800206F68 /* fltimer.cpp in Sources */,
+				E997483B0770570800206F68 /* flutil.cpp in Sources */,
+				E997483C0770570800206F68 /* flxlet.cpp in Sources */,
+				E99A3DD10D3592AB00E692EF /* flmap.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E9974883077058C100206F68 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E997488C0770593C00206F68 /* flatom.cpp in Sources */,
+				E997488E0770593C00206F68 /* flatom_part.cpp in Sources */,
+				E997488F0770593C00206F68 /* flatom_pr.cpp in Sources */,
+				E99748900770593C00206F68 /* flattr.cpp in Sources */,
+				E99748910770593C00206F68 /* flattr_ed.cpp in Sources */,
+				E99748920770593C00206F68 /* flbase.cpp in Sources */,
+				E99748930770593C00206F68 /* flbind.cpp in Sources */,
+				E99748940770593C00206F68 /* flbuf.cpp in Sources */,
+				E99748950770593C00206F68 /* fldsp.cpp in Sources */,
+				E99748960770593C00206F68 /* flext.cpp in Sources */,
+				E99748970770593C00206F68 /* flitem.cpp in Sources */,
+				E99748980770593C00206F68 /* fllib.cpp in Sources */,
+				E99748990770593C00206F68 /* flmeth.cpp in Sources */,
+				E997489A0770593C00206F68 /* flmsg.cpp in Sources */,
+				E997489B0770593C00206F68 /* flout.cpp in Sources */,
+				E997489C0770593C00206F68 /* flproxy.cpp in Sources */,
+				E997489D0770593C00206F68 /* flqueue.cpp in Sources */,
+				E997489E0770593C00206F68 /* flsimd.cpp in Sources */,
+				E997489F0770593C00206F68 /* flsupport.cpp in Sources */,
+				E99748A00770593C00206F68 /* flthr.cpp in Sources */,
+				E99748A10770593C00206F68 /* fltimer.cpp in Sources */,
+				E99748A20770593C00206F68 /* flutil.cpp in Sources */,
+				E99748A30770593C00206F68 /* flxlet.cpp in Sources */,
+				E99A3DCF0D3592AB00E692EF /* flmap.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E99749A307705CC400206F68 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E99749A407705CC400206F68 /* flatom.cpp in Sources */,
+				E99749A607705CC400206F68 /* flatom_part.cpp in Sources */,
+				E99749A707705CC400206F68 /* flatom_pr.cpp in Sources */,
+				E99749A807705CC400206F68 /* flattr.cpp in Sources */,
+				E99749A907705CC400206F68 /* flattr_ed.cpp in Sources */,
+				E99749AA07705CC400206F68 /* flbase.cpp in Sources */,
+				E99749AB07705CC400206F68 /* flbind.cpp in Sources */,
+				E99749AC07705CC400206F68 /* flbuf.cpp in Sources */,
+				E99749AD07705CC400206F68 /* fldsp.cpp in Sources */,
+				E99749AE07705CC400206F68 /* flext.cpp in Sources */,
+				E99749AF07705CC400206F68 /* flitem.cpp in Sources */,
+				E99749B007705CC400206F68 /* fllib.cpp in Sources */,
+				E99749B107705CC400206F68 /* flmeth.cpp in Sources */,
+				E99749B207705CC400206F68 /* flmsg.cpp in Sources */,
+				E99749B307705CC400206F68 /* flout.cpp in Sources */,
+				E99749B407705CC400206F68 /* flproxy.cpp in Sources */,
+				E99749B507705CC400206F68 /* flqueue.cpp in Sources */,
+				E99749B607705CC400206F68 /* flsimd.cpp in Sources */,
+				E99749B707705CC400206F68 /* flsupport.cpp in Sources */,
+				E99749B807705CC400206F68 /* flthr.cpp in Sources */,
+				E99749B907705CC400206F68 /* fltimer.cpp in Sources */,
+				E99749BA07705CC400206F68 /* flutil.cpp in Sources */,
+				E99749BB07705CC400206F68 /* flxlet.cpp in Sources */,
+				E99A3DD20D3592AB00E692EF /* flmap.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E9974BA907705F1400206F68 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9974BAA07705F1400206F68 /* flatom.cpp in Sources */,
+				E9974BAC07705F1400206F68 /* flatom_part.cpp in Sources */,
+				E9974BAD07705F1400206F68 /* flatom_pr.cpp in Sources */,
+				E9974BAE07705F1400206F68 /* flattr.cpp in Sources */,
+				E9974BAF07705F1400206F68 /* flattr_ed.cpp in Sources */,
+				E9974BB007705F1400206F68 /* flbase.cpp in Sources */,
+				E9974BB107705F1400206F68 /* flbind.cpp in Sources */,
+				E9974BB207705F1400206F68 /* flbuf.cpp in Sources */,
+				E9974BB307705F1400206F68 /* fldsp.cpp in Sources */,
+				E9974BB407705F1400206F68 /* flext.cpp in Sources */,
+				E9974BB507705F1400206F68 /* flitem.cpp in Sources */,
+				E9974BB607705F1400206F68 /* fllib.cpp in Sources */,
+				E9974BB707705F1400206F68 /* flmeth.cpp in Sources */,
+				E9974BB807705F1400206F68 /* flmsg.cpp in Sources */,
+				E9974BB907705F1400206F68 /* flout.cpp in Sources */,
+				E9974BBA07705F1400206F68 /* flproxy.cpp in Sources */,
+				E9974BBB07705F1400206F68 /* flqueue.cpp in Sources */,
+				E9974BBC07705F1400206F68 /* flsimd.cpp in Sources */,
+				E9974BBD07705F1400206F68 /* flsupport.cpp in Sources */,
+				E9974BBE07705F1400206F68 /* flthr.cpp in Sources */,
+				E9974BBF07705F1400206F68 /* fltimer.cpp in Sources */,
+				E9974BC007705F1400206F68 /* flutil.cpp in Sources */,
+				E9974BC107705F1400206F68 /* flxlet.cpp in Sources */,
+				E99A3DD30D3592AB00E692EF /* flmap.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E9974BDE07705F4F00206F68 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9974BDF07705F4F00206F68 /* flatom.cpp in Sources */,
+				E9974BE107705F4F00206F68 /* flatom_part.cpp in Sources */,
+				E9974BE207705F4F00206F68 /* flatom_pr.cpp in Sources */,
+				E9974BE307705F4F00206F68 /* flattr.cpp in Sources */,
+				E9974BE407705F4F00206F68 /* flattr_ed.cpp in Sources */,
+				E9974BE507705F4F00206F68 /* flbase.cpp in Sources */,
+				E9974BE607705F4F00206F68 /* flbind.cpp in Sources */,
+				E9974BE707705F4F00206F68 /* flbuf.cpp in Sources */,
+				E9974BE807705F4F00206F68 /* fldsp.cpp in Sources */,
+				E9974BE907705F4F00206F68 /* flext.cpp in Sources */,
+				E9974BEA07705F4F00206F68 /* flitem.cpp in Sources */,
+				E9974BEB07705F4F00206F68 /* fllib.cpp in Sources */,
+				E9974BEC07705F4F00206F68 /* flmeth.cpp in Sources */,
+				E9974BED07705F4F00206F68 /* flmsg.cpp in Sources */,
+				E9974BEE07705F4F00206F68 /* flout.cpp in Sources */,
+				E9974BEF07705F4F00206F68 /* flproxy.cpp in Sources */,
+				E9974BF007705F4F00206F68 /* flqueue.cpp in Sources */,
+				E9974BF107705F4F00206F68 /* flsimd.cpp in Sources */,
+				E9974BF207705F4F00206F68 /* flsupport.cpp in Sources */,
+				E9974BF307705F4F00206F68 /* flthr.cpp in Sources */,
+				E9974BF407705F4F00206F68 /* fltimer.cpp in Sources */,
+				E9974BF507705F4F00206F68 /* flutil.cpp in Sources */,
+				E9974BF607705F4F00206F68 /* flxlet.cpp in Sources */,
+				E99A3DD40D3592AB00E692EF /* flmap.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		E9A5BCA20A3381C400AD9F03 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"FLEXT_SYS=2",
+				);
+				HEADER_SEARCH_PATHS = "$(PD)/src";
+				PRODUCT_NAME = "$(inherited)-pd_sd";
+			};
+			name = Development;
+		};
+		E9A5BCA30A3381C400AD9F03 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"FLEXT_SYS=2",
+				);
+				HEADER_SEARCH_PATHS = "$(PD)/src";
+				PRODUCT_NAME = "$(inherited)-pd_s";
+			};
+			name = Deployment;
+		};
+		E9A5BCA60A3381C400AD9F03 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"FLEXT_SYS=2",
+					FLEXT_THREADS,
+				);
+				HEADER_SEARCH_PATHS = "$(PD)/src";
+				PRODUCT_NAME = "$(inherited)-pd_td";
+			};
+			name = Development;
+		};
+		E9A5BCA70A3381C400AD9F03 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"FLEXT_SYS=2",
+					FLEXT_THREADS,
+				);
+				HEADER_SEARCH_PATHS = "$(PD)/src";
+				PRODUCT_NAME = "$(inherited)-pd_t";
+			};
+			name = Deployment;
+		};
+		E9A5BCAA0A3381C400AD9F03 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"FLEXT_SYS=2",
+					FLEXT_SHARED,
+				);
+				HEADER_SEARCH_PATHS = "$(PD)/src";
+				MACH_O_TYPE = mh_dylib;
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
+				PRODUCT_NAME = "$(inherited)-pd_d";
+			};
+			name = Development;
+		};
+		E9A5BCAB0A3381C400AD9F03 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"FLEXT_SYS=2",
+					FLEXT_SHARED,
+				);
+				HEADER_SEARCH_PATHS = "$(PD)/src";
+				MACH_O_TYPE = mh_dylib;
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
+				PRODUCT_NAME = "$(inherited)-pd";
+			};
+			name = Deployment;
+		};
+		E9A5BCAE0A3381C400AD9F03 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"FLEXT_SYS=1",
+					MAC_VERSION,
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(maxsdk)/max-includes",
+					"$(maxsdk)/msp-includes",
+				);
+				PRODUCT_NAME = "$(inherited)-max_sd";
+			};
+			name = Development;
+		};
+		E9A5BCAF0A3381C400AD9F03 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"FLEXT_SYS=1",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(maxsdk)/max-includes",
+					"$(maxsdk)/msp-includes",
+				);
+				PRODUCT_NAME = "$(inherited)-max_s";
+			};
+			name = Deployment;
+		};
+		E9A5BCB20A3381C400AD9F03 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"FLEXT_SYS=1",
+					FLEXT_THREADS,
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(maxsdk)/max-includes",
+					"$(maxsdk)/msp-includes",
+				);
+				PRODUCT_NAME = "$(inherited)-max_td";
+			};
+			name = Development;
+		};
+		E9A5BCB30A3381C400AD9F03 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"FLEXT_SYS=1",
+					FLEXT_THREADS,
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(maxsdk)/max-includes",
+					"$(maxsdk)/msp-includes",
+				);
+				PRODUCT_NAME = "$(inherited)-max_t";
+			};
+			name = Deployment;
+		};
+		E9A5BCB60A3381C400AD9F03 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"FLEXT_SYS=1",
+					FLEXT_SHARED,
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(maxsdk)/max-includes",
+					"$(maxsdk)/msp-includes",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(maxsdk)/msp-includes",
+					"$(maxsdk)/msp-includes",
+				);
+				MACH_O_TYPE = mh_dylib;
+				PRODUCT_NAME = "$(inherited)-max_d";
+			};
+			name = Development;
+		};
+		E9A5BCB70A3381C400AD9F03 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"FLEXT_SYS=1",
+					FLEXT_SHARED,
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(maxsdk)/max-includes",
+					"$(maxsdk)/msp-includes",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(maxsdk)/msp-includes",
+					"$(maxsdk)/msp-includes",
+				);
+				MACH_O_TYPE = mh_dylib;
+				PRODUCT_NAME = "$(inherited)-max";
+			};
+			name = Deployment;
+		};
+		E9A5BCBA0A3381C400AD9F03 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = source/flext.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					FLEXT_DEBUG,
+					FLEXT_USE_SIMD,
+					FLEXT_USE_CMEM,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				PRODUCT_NAME = "$(PROJECT_NAME)";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Development;
+		};
+		E9A5BCBB0A3381C400AD9F03 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = source/flext.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					FLEXT_USE_SIMD,
+					FLEXT_USE_CMEM,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				PRODUCT_NAME = "$(PROJECT_NAME)";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Deployment;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E9A5BCA10A3381C400AD9F03 /* Build configuration list for PBXNativeTarget "PD static single" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E9A5BCA20A3381C400AD9F03 /* Development */,
+				E9A5BCA30A3381C400AD9F03 /* Deployment */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Deployment;
+		};
+		E9A5BCA50A3381C400AD9F03 /* Build configuration list for PBXNativeTarget "PD static multi" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E9A5BCA60A3381C400AD9F03 /* Development */,
+				E9A5BCA70A3381C400AD9F03 /* Deployment */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Deployment;
+		};
+		E9A5BCA90A3381C400AD9F03 /* Build configuration list for PBXNativeTarget "PD shared" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E9A5BCAA0A3381C400AD9F03 /* Development */,
+				E9A5BCAB0A3381C400AD9F03 /* Deployment */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Deployment;
+		};
+		E9A5BCAD0A3381C400AD9F03 /* Build configuration list for PBXNativeTarget "Max static single" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E9A5BCAE0A3381C400AD9F03 /* Development */,
+				E9A5BCAF0A3381C400AD9F03 /* Deployment */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Deployment;
+		};
+		E9A5BCB10A3381C400AD9F03 /* Build configuration list for PBXNativeTarget "Max static multi" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E9A5BCB20A3381C400AD9F03 /* Development */,
+				E9A5BCB30A3381C400AD9F03 /* Deployment */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Deployment;
+		};
+		E9A5BCB50A3381C400AD9F03 /* Build configuration list for PBXNativeTarget "Max shared" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E9A5BCB60A3381C400AD9F03 /* Development */,
+				E9A5BCB70A3381C400AD9F03 /* Deployment */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Deployment;
+		};
+		E9A5BCB90A3381C400AD9F03 /* Build configuration list for PBXProject "flext" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E9A5BCBA0A3381C400AD9F03 /* Development */,
+				E9A5BCBB0A3381C400AD9F03 /* Deployment */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Deployment;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0867D690FE84028FC02AAC07 /* Project object */;
+}

@@ -1,0 +1,31 @@
+#N canvas 70 150 694 465 12;
+#X obj 59 296 attr1 @arg 3;
+#X text 114 273 attribute as a creation arg;
+#X msg 160 98 getattributes;
+#X text 167 319 there is one additional outlet;
+#X text 167 334 for all attribute-enabled objects;
+#X obj 150 367 print;
+#X msg 160 141 getarg;
+#X text 12 92 trigger output;
+#X msg 160 203 arg \$1;
+#X text 230 191 set attribute "arg";
+#X text 295 98 query object attributes (watch console);
+#X text 228 142 query attribute "arg" (watch console);
+#X obj 16 8 cnv 15 550 40 empty empty attr1 10 22 0 24 -260818 -1 0
+;
+#X text 175 28 http://grrrr.org;
+#X text 26 388 result;
+#X obj 23 114 nbx 4 16 -999 999 0 0 empty empty empty 0 -6 0 12 -261681
+-1 -1 0 256;
+#X obj 29 370 nbx 7 16 -1e+37 1e+37 0 0 empty empty empty 0 -6 0 12
+-228992 -1 -1 0 256;
+#X obj 161 181 nbx 4 16 -999 999 0 0 empty empty empty 0 -6 0 12 -261681
+-1 -1 0 256;
+#X text 175 10 flext tutorial \, (C)2002-2006 Thomas Grill;
+#X connect 0 0 16 0;
+#X connect 0 1 5 0;
+#X connect 2 0 0 0;
+#X connect 6 0 0 0;
+#X connect 8 0 0 0;
+#X connect 15 0 0 0;
+#X connect 17 0 8 0;

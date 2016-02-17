@@ -1,0 +1,10 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@/flext
+
+Name: max-flext
+Description: C++ glue layer for Pure Data and Max
+Version: @VERSION@
+Cflags: -I${includedir} -DFLEXT_SYS=1 -DFLEXT_SHARED
+Libs: -L${libdir} -lflext-max

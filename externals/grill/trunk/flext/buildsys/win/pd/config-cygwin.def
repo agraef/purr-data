@@ -1,0 +1,37 @@
+# where is the PD installation?
+# (this should point to the main folder, which has a "src" (PD Vanilla) or "include" (PD extended) subfolder)
+PDPATH=/cygdrive/c/program files/pd
+
+###############################################################
+
+# where do/should the flext headers reside/be built?
+FLEXTINC=$(PDPATH)/flext
+
+# where do/should the flext static libraries reside/be built?
+FLEXTLIB=$(FLEXTINC)
+
+# where do/should the flext shared libraries reside/be built?
+FLEXTSHLIB=$(PDPATH)/bin
+
+###############################################################
+
+# where should the external be built?
+OUTPATH=pd-cygwin
+
+# where should the external be installed?
+INSTPATH=$(PDPATH)/extra
+
+###############################################################
+
+# make flags (e.g. use multiprocessor)
+#MFLAGS=-j 2
+
+# user defined compiler flags
+# (check if they match your system!)
+UFLAGS=-msse -mfpmath=sse -ffast-math
+
+# user defined optimization flags
+# (check if they match your system!)
+OFLAGS=-O3
+# optimizations for Pentium 4
+OFLAGS+=-march=pentium4

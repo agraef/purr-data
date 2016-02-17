@@ -1,0 +1,2 @@
+NAME=stk2~
+SRCS=main.cpp

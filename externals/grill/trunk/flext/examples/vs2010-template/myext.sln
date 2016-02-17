@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "myext", "myext.vcxproj", "{C9B4070E-05E1-3111-1BF3-2A08D7054375}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Max Debug|Win32 = Max Debug|Win32
+		Max Release|Win32 = Max Release|Win32
+		PD Debug|Win32 = PD Debug|Win32
+		PD Release|Win32 = PD Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C9B4070E-05E1-3111-1BF3-2A08D7054375}.Max Debug|Win32.ActiveCfg = Max Debug|Win32
+		{C9B4070E-05E1-3111-1BF3-2A08D7054375}.Max Debug|Win32.Build.0 = Max Debug|Win32
+		{C9B4070E-05E1-3111-1BF3-2A08D7054375}.Max Release|Win32.ActiveCfg = Max Release|Win32
+		{C9B4070E-05E1-3111-1BF3-2A08D7054375}.Max Release|Win32.Build.0 = Max Release|Win32
+		{C9B4070E-05E1-3111-1BF3-2A08D7054375}.PD Debug|Win32.ActiveCfg = PD Debug|Win32
+		{C9B4070E-05E1-3111-1BF3-2A08D7054375}.PD Debug|Win32.Build.0 = PD Debug|Win32
+		{C9B4070E-05E1-3111-1BF3-2A08D7054375}.PD Release|Win32.ActiveCfg = PD Release|Win32
+		{C9B4070E-05E1-3111-1BF3-2A08D7054375}.PD Release|Win32.Build.0 = PD Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
