@@ -854,12 +854,11 @@ static void getsize_set(t_getsize *x, t_symbol *templatesym, t_symbol *fieldsym)
 
 static void getsize_pointer(t_getsize *x, t_gpointer *gp)
 {
-    int nitems, onset, type;
+    int onset, type;
     t_symbol *templatesym, *fieldsym = x->x_fieldsym, *elemtemplatesym;
     t_template *template;
     t_word *w;
     t_array *array;
-    int elemsize;
     t_gstub *gs = gp->gp_stub;
     if (!gpointer_check(gp, 0))
     {
@@ -946,7 +945,6 @@ static void setsize_float(t_setsize *x, t_float f)
     t_template *template;
     t_template *elemtemplate;
     t_word *w;
-    t_atom *at;
     t_array *array;
     int elemsize;
     int newsize = f;
@@ -1386,8 +1384,11 @@ static void field_setvalue(t_field *x, t_symbol *s, int argc, t_atom *argv)
     t_word *vec = x->x_canvas->gl_vec;
     t_gpointer *gp = &x->x_canvas->gl_gp;
     t_gstub *gs = gp->gp_stub;
-    int onset, type;
-    t_symbol *arraytype, *fieldsym = x->x_s;
+    /* not needed yet... but may be needed if we find a cleaner way to
+       update graphics for array elements */
+    // int onset, type;
+    //t_symbol *arraytype;
+    t_symbol *fieldsym = x->x_s;
     if (argc)
     {
         if (argv->a_type == A_FLOAT)
