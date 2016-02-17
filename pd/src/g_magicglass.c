@@ -264,8 +264,6 @@ void magicGlass_hide(t_magicGlass *x)
 void magicGlass_moveText(t_magicGlass *x, int pX, int pY)
 {
     //fprintf(stderr,"magicglass_moveText\n");
-    int bgSize;
-    
     x->x_x = pX;
     x->x_y = pY;
     magicGlass_updateText(x, 1);

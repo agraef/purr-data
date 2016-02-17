@@ -1,2 +1,0 @@
-NAME=lib1
-SRCS=main.cpp

@@ -1,2 +1,0 @@
-EXT=mxe
-LDFLAGS=$(LDFLAGS) /EXPORT:main

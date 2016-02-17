@@ -1,4 +1,0 @@
-DEFS += -DFLEXT_SYS=2 -DPD
-
-INCPATH += -I$(PDPATH)/src
-LIBPATH += -L$(PDPATH)/bin

@@ -1,3 +1,0 @@
-NAME=thread2
-BUILDTYPE=multi
-SRCS=main.cpp

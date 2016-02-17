@@ -1,2 +1,0 @@
-NAME=timer1
-SRCS=main.cpp

@@ -1,2 +1,0 @@
-NAME=bind1
-SRCS=main.cpp
