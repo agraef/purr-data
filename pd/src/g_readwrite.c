@@ -169,10 +169,8 @@ int glist_readscalar(t_glist *x, int natoms, t_atom *vec,
 
 void glist_readfrombinbuf(t_glist *x, t_binbuf *b, char *filename, int selectem)
 {
-    t_canvas *canvas = glist_getcanvas(x);
-    int cr = 0, natoms, nline, message, nextmsg = 0, i, j, nitems;
+    int natoms, nline, message, nextmsg = 0;
     t_atom *vec;
-    t_gobj *gobj;
 
     natoms = binbuf_getnatom(b);
     vec = binbuf_getvec(b);
@@ -648,7 +646,8 @@ static void canvas_saveto(t_canvas *x, t_binbuf *b)
             (int)(x->gl_screeny2 - x->gl_screeny1),
             (patchsym != &s_ ? patchsym: gensym("(subpatch)")),
             x->gl_mapped);
-        t_text *xt = (t_text *)x;
+        /* Not sure what the following commented line was doing... */
+        //t_text *xt = (t_text *)x;
     }
         /* root or abstraction */
     else 
