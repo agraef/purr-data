@@ -46,7 +46,6 @@ Everything else: (A [x] means we've fixed it)
 [ ] remove the draw_vis warning/code about needing 2 points to draw
 [ ] in draw_vis, move tags to front of function call so they don't have to
     be in an array
-[ ] make pdgui function names more consistent
 [ ] for scalar tags, look into using "x" exclusively inside gui_vmess so that
     we don't have to sprintf anything. Then on the gui side we can
     concatenate as needed.
@@ -60,15 +59,13 @@ Everything else: (A [x] means we've fixed it)
 [ ] figure out difference between deb install location /usr
     vs tarball /usr/local
 [ ] Figure out what pdtk_ping does
-[ ] revisit the function for escaping double-quotes inside s_inter.c, see
-    if there's a cleaner way to do it
 [ ] don't implement tooltips until we have a single call to create an object
     plus all xlets. That way we can add an arg or two for the name and dir
     to find the help patch and get all descriptions in one go
 [ ] make scalars dig inside abstractions when they search the templatecanvas
     for drawing commands.  This will make it possible to build abstraction
     libraries for ds-gui widgets.
-[ ] some menuitem shortcuts don't pass their events on to the dom, while
+[x] some menuitem shortcuts don't pass their events on to the dom, while
     others do. I think it happens when a double-modifier has keys in common
     with a single-modifier. Example: <ctrl-shift-v> creates a vsl, but the
     key gets sent to Pd. However, <ctrl-shift-h> creates an hsl, and
@@ -77,6 +74,10 @@ Everything else: (A [x] means we've fixed it)
     inconsistency.
     After some more research, it appears this problem doesn't happen
     in OSX.
+    Note: moved to bug tracker
+[x] revisit the function for escaping double-quotes inside s_inter.c, see
+    if there's a cleaner way to do it
+[x] make pdgui function names more consistent
 [x] standardize javascript function names
 [x] clip garray to gl_x1 and gl_x2 by:
     a) checking if we're in a gop, and
