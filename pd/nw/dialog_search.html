@@ -91,7 +91,7 @@ function finish_build() {
 }
 
 function build_index() {
-    var doc_path = path.join(pdgui.get_gui_dir(), "doc");
+    var doc_path = path.join(pdgui.get_lib_dir(), "doc");
     pdgui.post("doc path is " + doc_path);
     dive(doc_path, read_file, finish_build);
 }

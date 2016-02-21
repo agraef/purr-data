@@ -298,8 +298,8 @@ int sys_main(int argc, char **argv)
         return (0);
     if (sys_startgui(sys_guidir->s_name))       /* start the gui */
         return(1);
-        /* check if we are unique, otherwise, just focus existing
-        instance, and if necessary open file inside it */\
+        /* send the libdir to the GUI */
+    gui_vmess("gui_set_lib_dir", "s", sys_libdir->s_name);
     if (sys_openlist)
     {
         // send the files to be opened to the GUI. We send them one
@@ -311,6 +311,10 @@ int sys_main(int argc, char **argv)
             gui_vmess("gui_build_filelist", "s", nl->nl_string);
         }
     }
+        /* check if we are unique, otherwise, just focus existing
+           instance, and if necessary open file inside it. This doesn't
+           yet work with the new GUI because we need to set it up to
+           allow multiple instances. */
     gui_vmess("gui_check_unique", "i", sys_unique);
     if (sys_externalschedlib)
         return (sys_run_scheduler(sys_externalschedlibname,

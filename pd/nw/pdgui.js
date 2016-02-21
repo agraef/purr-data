@@ -2,6 +2,7 @@
 
 var pwd;
 var gui_dir;
+var lib_dir;
 var last_clipboard_data;
 
 exports.set_pwd = function(pwd_string) {
@@ -18,6 +19,14 @@ exports.set_gui_dir = function(dir_string) {
 
 exports.get_gui_dir = function() {
     return gui_dir;
+}
+
+function gui_set_lib_dir(dir) {
+    lib_dir = dir;
+}
+
+exports.get_lib_dir = function() {
+    return lib_dir;
 }
 
 exports.get_pd_opendir = function() {
