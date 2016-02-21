@@ -466,40 +466,24 @@ static int sys_getmultidevchannels(int n, int *devlist)
 }
 */
 
-
     /* this routine tries to figure out where to find the auxilliary files
     Pd will need to run.  This is either done by looking at the command line
     invokation for Pd, or if that fails, by consulting the variable
     INSTALL_PREFIX.  In MSW, we don't try to use INSTALL_PREFIX. */
 void sys_findprogdir(char *progname)
 {
+    char *execdir = pd_getdirname()->s_name, *lastslash;
     char sbuf[FILENAME_MAX], sbuf2[FILENAME_MAX];
-    //char *lastslash; 
+    strncpy(sbuf, execdir, FILENAME_MAX-1);
 #ifndef MSW
     struct stat statbuf;
-#endif /* NOT MSW */
-
-    /* find out by what string Pd was invoked; put answer in "sbuf". */
-#ifdef MSW
-    GetModuleFileName(NULL, sbuf2, sizeof(sbuf2));
-    sbuf2[FILENAME_MAX-1] = 0;
-    sys_unbashfilename(sbuf2, sbuf);
-#endif /* MSW */
-#ifndef MSW
-    strncpy(sbuf, progname, FILENAME_MAX);
-    sbuf[FILENAME_MAX-1] = 0;
-#endif /* NOT MSW */
-#ifdef INSTALL_PREFIX
-    strcpy(sbuf2, INSTALL_PREFIX);
-//#else
-//    strcpy(sbuf2, ".");
 #endif
-    /*lastslash = strrchr(sbuf, '/');
-    if (!strcmp(sbuf2, "") && lastslash)
+    lastslash = strrchr(sbuf, '/');
+    if (lastslash)
     {
             // bash last slash to zero so that sbuf is directory pd was in,
             //    e.g., ~/pd/bin
-        *lastslash = 0; 
+        *lastslash = 0;
             // go back to the parent from there, e.g., ~/pd
         lastslash = strrchr(sbuf, '/');
         if (lastslash)
@@ -508,7 +492,16 @@ void sys_findprogdir(char *progname)
             sbuf2[lastslash-sbuf] = 0;
         }
         else strcpy(sbuf2, "..");
-    }*/
+    }
+    else
+    {
+            /* no slashes found.  Try INSTALL_PREFIX. */
+#ifdef INSTALL_PREFIX
+        strncpy(sbuf2, INSTALL_PREFIX, FILENAME_MAX-1);
+#else
+        strcpy(sbuf2, ".");
+#endif
+    }
         /* now we believe sbuf2 holds the parent directory of the directory
         pd was found in.  We now want to infer the "lib" directory and the
         "gui" directory.  In "simple" unix installations, the layout is
@@ -530,12 +523,7 @@ void sys_findprogdir(char *progname)
     sys_libdir = gensym(sbuf2);
     sys_guidir = &s_;   /* in MSW the guipath just depends on the libdir */
 #else
-    char *res = realpath(sbuf2, sbuf);
-    if (!res)
-    {
-        error("%s: Cannot get a real path", sbuf2);
-    }
-    strncpy(sbuf2, sbuf, FILENAME_MAX-30);
+    strncpy(sbuf, sbuf2, FILENAME_MAX-30);
     sbuf[FILENAME_MAX-30] = 0;
     strcat(sbuf2, "/lib/pd-l2ork");
     if (stat(sbuf2, &statbuf) >= 0)
