@@ -672,13 +672,13 @@ var canvas_events = (function() {
     });
     // update viewport size when window size changes
     gui.Window.get().on("maximize", function() {
-        pdgui.gui_canvas_getscroll(name);
+        pdgui.gui_canvas_get_scroll(name);
     });
     gui.Window.get().on("unmaximize", function() {
-        pdgui.gui_canvas_getscroll(name);
+        pdgui.gui_canvas_get_scroll(name);
     });
     gui.Window.get().on("resize", function() {
-        pdgui.gui_canvas_getscroll(name);
+        pdgui.gui_canvas_get_scroll(name);
     });
     gui.Window.get().on("focus", function() {
         nw_window_focus_callback();
@@ -839,7 +839,7 @@ function register_window_id(cid, attr_array) {
     // Trigger a "focus" event so that OSX updates the menu for this window
     nw_window_focus_callback();
     canvas_events.normal();
-    pdgui.canvas_map(cid); // side-effect: triggers gui_canvas_getscroll from Pd
+    pdgui.canvas_map(cid); // side-effect: triggers gui_canvas_get_scroll
     set_editmode_checkbox(attr_array.editmode !== 0 ? true : false);
     // For now, there is no way for the cord inspector to be turned on by
     // default. But if this changes we need to set its menu item checkbox
