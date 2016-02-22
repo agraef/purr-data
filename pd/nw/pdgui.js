@@ -1062,8 +1062,9 @@ function spawn_pd(gui_path, port) {
         platform = process.platform,
         flags = ["-guiport", port];
     if (platform === "darwin") {
-        // OSX
-        pd_binary = path.join(gui_path, "pd-l2ork");
+        // OSX -- this is currently tailored to work with an app bundle. It
+        // hasn't been tested with a system install of pd-l2ork
+        pd_binary = path.join("bin", "pd-l2ork");
     } else {
         pd_binary = path.join(gui_path, "..", "bin", "pd-l2ork");
         flags.push("-nrt"); // for some reason realtime causes watchdog to die
