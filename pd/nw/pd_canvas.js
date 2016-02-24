@@ -380,7 +380,10 @@ var canvas_events = (function() {
                     //var fudi_msg = text_to_fudi(textbox().innerText);
                     //pdgui.pdsend(name, "createobj", fudi_msg);
                     //pdgui.post("formatted content is " + fudi_msg);
+                    // send a mousedown and mouseup event to Pd to instantiate
+                    // the object
                     events.mousedown(evt);
+                    events.mouseup(evt);
                     canvas_events.normal();
                 }
                 evt.stopPropagation();    
