@@ -129,7 +129,7 @@ var pd_myversion,    // Pd version string
     filetypes,         // valid file extensions for opening/saving (includes Max filetypes)
     untitled_number,   // number to increment for each new patch that is opened
     untitled_directory, // default directory where to create/save new patches
-    popup_coords,       // x/y for current popup window (global because there's only one at a time)
+    popup_coords,       // 0: canvas x, 1: canvas y, 2: screen x, 3: screen y
     pd_colors = {};                // associative array of canvas color presets
 
     var pd_filetypes = { ".pd": "Pd Files",
@@ -2920,8 +2920,6 @@ function gui_canvas_popup(cid, xpos, ypos, canprop, canopen, isobject) {
         zfactor = zoom_kludge(zoom_level);
     popup_coords[0] = xpos;
     popup_coords[1] = ypos;
-    xpos = Math.floor(xpos * zfactor);
-    ypos = Math.floor(ypos * zfactor);
     //popup_coords[0] = xpos;
     //popup_coords[1] = ypos;
     popup_menu[cid].items[0].enabled = canprop;
@@ -2934,8 +2932,12 @@ function gui_canvas_popup(cid, xpos, ypos, canprop, canopen, isobject) {
     var left = patchwin[cid].window.document.body.scrollLeft;
     var top = patchwin[cid].window.document.body.scrollTop;
 
-    popup_menu[cid].popup(xpos - Math.floor(left * zfactor),
-        ypos - Math.floor(top * zfactor));
+    xpos = Math.floor(xpos * zfactor) - Math.floor(left * zfactor);
+    ypos = Math.floor(ypos * zfactor) - Math.floor(top * zfactor);
+    popup_coords[2] = xpos + patchwin[cid].x;
+    popup_coords[3] = ypos + patchwin[cid].y;
+
+    popup_menu[cid].popup(xpos, ypos);
 }
 
 function popup_action(cid, index) {
@@ -3237,7 +3239,8 @@ function attr_array_to_object(attr_array) {
 }
 
 function gui_gatom_dialog(did, attr_array) {
-    dialogwin[did] = nw_create_window(did, "gatom", 265, 300, 20, 20,
+    dialogwin[did] = nw_create_window(did, "gatom", 265, 300,
+        popup_coords[2], popup_coords[3],
         attr_array_to_object(attr_array));
 }
 
@@ -3254,7 +3257,8 @@ function gui_iemgui_dialog(did, attr_array) {
     //for (var i = 0; i < attr_array.length; i++) {
     //    attr_array[i] = '"' + attr_array[i] + '"';
     //}
-    nw_create_window(did, "iemgui", 265, 450, 20, 20,
+    nw_create_window(did, "iemgui", 265, 450,
+        popup_coords[2], popup_coords[3],
         attr_array_to_object(attr_array));
 }
 
@@ -3299,7 +3303,8 @@ function gui_canvas_dialog(did, attr_arrays) {
             }
         }
     }
-    dialogwin[did] = nw_create_window(did, "canvas", 250, 100, 20, 20,
+    dialogwin[did] = nw_create_window(did, "canvas", 250, 100,
+        popup_coords[2], popup_coords[3],
         attr_arrays);
 }
 
@@ -3312,7 +3317,7 @@ function gui_remove_gfxstub(did) {
 
 function gui_font_dialog(cid, gfxstub, font_size) {
     var attrs = { canvas: cid, font_size: font_size };
-    dialogwin[gfxstub] = nw_create_window(gfxstub, "font", 265, 265, 20, 20,
+    dialogwin[gfxstub] = nw_create_window(gfxstub, "font", 265, 265, 0, 0,
         attrs);
 }
 
@@ -3326,7 +3331,7 @@ function gui_pd_dsp(state) {
 
 function open_prefs() {
     if (!dialogwin["prefs"]) {
-        nw_create_window("prefs", "prefs", 265, 540, 20, 20, null);
+        nw_create_window("prefs", "prefs", 265, 540, 0, 0, null);
     }
 }
 
