@@ -56,8 +56,6 @@ Everything else: (A [x] means we've fixed it)
     in the lib loading routine
 [ ] Fix layout on dialogs so that height/width of the document doesn't
     reflow when the window gets resized
-[ ] figure out difference between deb install location /usr
-    vs tarball /usr/local
 [ ] Figure out what pdtk_ping does
 [ ] don't implement tooltips until we have a single call to create an object
     plus all xlets. That way we can add an arg or two for the name and dir
@@ -65,6 +63,8 @@ Everything else: (A [x] means we've fixed it)
 [ ] make scalars dig inside abstractions when they search the templatecanvas
     for drawing commands.  This will make it possible to build abstraction
     libraries for ds-gui widgets.
+[x] figure out difference between deb install location /usr
+    vs tarball /usr/local
 [x] some menuitem shortcuts don't pass their events on to the dom, while
     others do. I think it happens when a double-modifier has keys in common
     with a single-modifier. Example: <ctrl-shift-v> creates a vsl, but the
