@@ -102,7 +102,7 @@ function permission_to_paste_from_external_clipboard() {
 function nw_window_focus_callback() {
     // on OSX, update the menu on focus
     if (process.platform === "darwin") {
-        nw_create_patch_window_menus(gui, window, name);
+        nw_create_patch_window_menus(gui, window, canvas_events.get_id());
     }
 }
 
@@ -134,7 +134,7 @@ var canvas_events = (function() {
         scalar_draggables = {}, // elements of a scalar which have the "drag" event enabled
         draggable_elem,         // last scalar we dragged
         last_draggable_x,       // last x coord for the element we're dragging
-        last_draggable_y,       // last y 
+        last_draggable_y,       // last y
         previous_state = "none", /* last state, excluding explicit 'none' */
         match_words_state = false,
         last_search_term = "",
@@ -414,9 +414,9 @@ var canvas_events = (function() {
             },
             text_paste: function(evt) {
                 pdgui.post("text paste detected...");
-                evt.preventDefault;
+                evt.preventDefault();
                 document.execCommand("insertText", false,
-                    e.clipboardData.getData("text"));
+                    evt.clipboardData.getData("text"));
             },
             floating_text_click: function(evt) {
                 if (target_is_scrollbar(evt)) {
@@ -644,18 +644,18 @@ var canvas_events = (function() {
     //);
     document.querySelector("#openpanel_dialog").addEventListener("change",
         function(evt) {
-            var file_string = this.value;
+            var file_string = evt.target.value;
             // reset value so that we can open the same file twice
-            this.value = null;
+            evt.target.value = null;
             pdgui.file_dialog_callback(file_string);
             console.log("tried to openpanel something");
         }, false
     );
     document.querySelector("#savepanel_dialog").addEventListener("change",
         function(evt) {
-            var file_string = this.value;
+            var file_string = evt.target.value;
             // reset value so that we can open the same file twice
-            this.value = null;
+            evt.target.value = null;
             pdgui.file_dialog_callback(file_string);
             console.log("tried to savepanel something");
         }, false
@@ -691,12 +691,12 @@ var canvas_events = (function() {
 
     return {
         none: function() {
-            var evt_name;
+            var evt_name, prop;
             if (state !== "none") {
                 previous_state = state;
             }
             state = "none";
-            for (var prop in events) {
+            for (prop in events) {
                 if (events.hasOwnProperty(prop)) {
                     evt_name = prop.split("_");
                     evt_name = evt_name[evt_name.length - 1];
@@ -769,6 +769,9 @@ var canvas_events = (function() {
         register: function(n) {
             name = n;
         },
+        get_id: function() {
+            return name;
+        },
         get_state: function() {
             return state;
         },
@@ -786,7 +789,7 @@ var canvas_events = (function() {
             scalar_draggables[tag] = {
                 cid: cid,
                 scalar_sym: scalar_sym,
-                drawcommand_sym, drawcommand_sym,
+                drawcommand_sym: drawcommand_sym,
                 event_name: event_name
             };
         },
@@ -802,7 +805,7 @@ var canvas_events = (function() {
             pdgui.pdsend(name, "dirty 0");
             pdgui.pdsend(cid, "menuclose", force);
         }
-    }
+    };
 }());
 
 // Stop-gap translator. We copy/pasted this in each dialog, too. It
@@ -824,7 +827,6 @@ function translate_form() {
 // It provides us with our canvas id from the C side.  Once we have it
 // we can create the menu and register event callbacks
 function register_window_id(cid, attr_array) {
-    name = cid; // hack
     // We create the window menus and popup menu before doing anything else
     // to ensure that we don't try to set the svg size before these are done.
     // Otherwise we might set the svg size to the window viewport, only to have
@@ -1001,14 +1003,14 @@ function nw_create_patch_window_menus(gui, w, name) {
         click: function () {
             pdgui.canvas_check_geometry(name); // should this go in menu_save?
             pdgui.menu_save(name);
-        },
+        }
     });
     minit(m.file.saveas, {
         enabled: true,
         click: function (){
             pdgui.canvas_check_geometry(name);
             pdgui.menu_saveas(name);
-        },
+        }
     });
     minit(m.file.message, {
         click: function() { pdgui.menu_send(name); }
@@ -1018,7 +1020,7 @@ function nw_create_patch_window_menus(gui, w, name) {
         click: function() { pdgui.menu_close(name); }
     });
     minit(m.file.quit, {
-        click: pdgui.menu_quit,
+        click: pdgui.menu_quit
     });
 
     // Edit menu
