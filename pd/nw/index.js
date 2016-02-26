@@ -9,7 +9,7 @@ var pd_menus = require("./pd_menus.js");
 var pwd = process.env.PWD !== undefined ? process.env.PWD : process.env.HOME;
 
 // gui preset
-pdgui.skin.apply(this);
+pdgui.skin.apply(window);
 
 // For translations
 var l = pdgui.get_local_string;

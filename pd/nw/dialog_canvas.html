@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8">
     <link id="page_style" rel="stylesheet" type="text/css" href="css/default.css">
     <title>Pd Preferences</title>
   </head>
@@ -277,14 +278,14 @@
 
   <script>
 "use strict";
-var gui = require("nw.gui"); 
+var gui = require("nw.gui");
 var pdgui = require("./pdgui.js");
 
 // For translations
 var l = pdgui.get_local_string;
 
 // gui preset
-pdgui.skin.apply(this);
+pdgui.skin.apply(window);
 
 var pd_object_callback;
 
@@ -422,9 +423,9 @@ function array_choose(array_index) {
 }
 
 var arrays_select = document.getElementById("arrays_select");
-arrays_select.addEventListener("change", function() {
-    pdgui.post("changed the thing is " + this.value);
-    array_choose(this.value);
+arrays_select.addEventListener("change", function(evt) {
+    pdgui.post("changing to array index " + evt.target.value);
+    array_choose(evt.target.value);
 });
 
 var gop_label = document.getElementById("gop_label");
@@ -487,9 +488,10 @@ function substitute_space(arg) {
 }
 
 function strip_problem_chars(arg) {
-    var problem_chars = [";", ",", "{", "}", "\\"];
-    var ret = arg;
-    for(var i = 0; i < problem_chars.length; i++) {
+    var problem_chars = [";", ",", "{", "}", "\\"],
+        ret = arg,
+        i;
+    for (i = 0; i < problem_chars.length; i++) {
         ret = ret.split(";").join("");
     }
     return ret;
@@ -598,10 +600,10 @@ function populate_array_form(objects) {
         opt.textContent = "Array #" + (i+1);
         arrays_select.appendChild(opt);
     }
-    // We're permanently hiding the checkbutton for creating a new array 
+    // We're permanently hiding the checkbutton for creating a new array
     // inside an existing graph. It's just a weird interface with very
-    // few benefits. However, patches that already have multiple arrays 
-    // inside a graph will continue to work.  (And if users really want 
+    // few benefits. However, patches that already have multiple arrays
+    // inside a graph will continue to work.  (And if users really want
     // this feature back it's easy to turn it back on.
     if (!new_array_dialog || 1) {  // to re-enable, remove the "|| 1"
         document.getElementsByClassName("array_in_existing_graph")[0]
@@ -616,7 +618,7 @@ function populate_array_form(objects) {
 }
 
 // Set up arrays in an object
-    
+
 function init_arrays(attr_objects) {
     if (attr_objects.length) {
         // populate form with first array
@@ -648,7 +650,7 @@ function register_window_id(gfxstub, attr_objects) {
     // If this is a new array dialog we might not have any canvas
     // properties to set. If so, just show the array form elements
     if (attr_objects[0].hasOwnProperty("array_gfxstub")) {
-        pd_garray_attrs = attr_objects; 
+        pd_garray_attrs = attr_objects;
         new_array_dialog = true; // this is a new array dialog
         canvas_fieldsets = document.getElementsByClassName("canvas");
         for (i = 0; i < canvas_fieldsets.length; i++) {
@@ -709,7 +711,7 @@ function populate_form(attr_object) {
                 // Set the gop-related parts of the form to be
                 // enabled/disabled based on state
                 set_gop(!!flag);
-            }            
+            }
             var elem = document.getElementsByName(prop);
             if (elem.length > 0) {
                 if(prop.slice(-5) === "color") {

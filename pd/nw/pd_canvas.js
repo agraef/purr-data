@@ -5,7 +5,7 @@ var pdgui = require("./pdgui.js");
 var pd_menus = require("./pd_menus.js");
 
 // Apply gui preset to this canvas
-pdgui.skin.apply(this);
+pdgui.skin.apply(window);
 
 //var name = pdgui.last_loaded();
    

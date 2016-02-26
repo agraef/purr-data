@@ -152,7 +152,7 @@ var pdgui = require("./pdgui.js");
 // For translations
 var l = pdgui.get_local_string;
 
-pdgui.skin.apply(this);
+pdgui.skin.apply(window);
 
 var pd_object_callback,
     old_attrs = {}, // original state. Used if we cancel the dialog

@@ -15,6 +15,9 @@ var dive = require("./dive.js"); // small module to recursively search dirs
 var l = pdgui.get_local_string;
 
 var index = elasticlunr();
+
+pdgui.skin.apply(window);
+
 index.addField("title");
 index.addField("keywords");
 index.addField("description");
@@ -333,6 +336,9 @@ function doc_search() {
     </script>
   </head>
   <body>
+    <div style="font-family: Courier 10 Pitch; font-size: 2.5em;">
+      <span style="color: #c44654;">P</span><span style="color: #ac399c;">u</span><span style="color: #54439c;">r</span><span style="color: #ce4d3d;">e</span><span style="color: #3c9e54;">d</span><span style="color: #7349a4;">a</span><span style="color: purple;">t</span><span style="color: #7349a4;">a</span>
+    </div>
     <svg xmlns="http://www.w3.org/2000/svg"
          version="1.1"
          viewBox="0 0 450 65"
