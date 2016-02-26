@@ -14,25 +14,11 @@ pdgui.skin.apply(window);
 // For translations
 var l = pdgui.get_local_string;
 
-// Set up the Pd Window
-set_vars(this);
-add_events();
-nw_create_pd_window_menus(gui, window);
-gui.Window.get().setMinimumSize(350,250);
-// Now we create a connection from the GUI to Pd, in one of two ways:
-// 1) If the GUI was started by Pd, then we create a tcp client and
-//    connect on the port Pd fed us in our command line arguments.
-// 2) If Pd hasn't started yet, then the GUI creates a tcp server and spawns
-//    Pd using the "-guiport" flag with the port the GUI is listening on.
-// Pd always starts the GUI with a certain set of command line arguments. If
-// those arguments aren't present then we assume we need to start Pd.
-connect();
-
 function have_args() {
     return !!gui.App.argv.length;
 }
 
-function set_vars(global) {
+function set_vars(win) {
     var port_no, gui_dir;
     // If the GUI was started by Pd, our port number is going to be
     // the first argument. If the GUI is supposed to start Pd, we won't
@@ -44,13 +30,13 @@ function set_vars(global) {
     } else {
         // If we're starting Pd, this is the first port number to try. (We'll
         // increment it if that port happens to be taken.
-        port_no = 5400; 
+        port_no = 5400;
         gui_dir = pwd;
     }
     pdgui.set_port(port_no);
     pdgui.set_pwd(pwd);
     pdgui.set_gui_dir(gui_dir);
-    pdgui.set_pd_window(global);
+    pdgui.set_pd_window(win);
     pdgui.set_app_quitfn(app_quit);
     pdgui.set_open_html_fn(open_html);
     pdgui.set_open_textfile_fn(open_textfile);
@@ -84,44 +70,9 @@ function nw_window_focus_callback() {
     }
 }
 
-function add_events() {
-    // Find bar
-    var find_bar = document.getElementById("console_find_text");
-    find_bar.placeholder = "Search in Console";
-    find_bar.addEventListener("keydown",
-        function(e) {
-            return console_find_keydown(this, e);
-        }, false
-    );
-    find_bar.addEventListener("keypress",
-        function(e) {
-            console_find_keypress(this, e);
-        }, false
-    );
-    // DSP toggle
-    document.getElementById("dsp_control").addEventListener("click",
-        function(evt) {
-            var dsp_state = this.checked ? 1 : 0;
-            pdgui.pdsend("pd dsp", dsp_state);
-        }
-    );
-    // Browser Window Close
-    gui.Window.get().on("close", function() {
-        pdgui.menu_quit();
-    });
-    // Focus callback for OSX
-    gui.Window.get().on("focus", function() {
-        nw_window_focus_callback();
-    });
-    // Open dialog
-    document.getElementById("fileDialog").setAttribute("nwworkingdir", pwd);
-    document.getElementById("fileDialog").setAttribute("accept",
-        Object.keys(pdgui.pd_filetypes).toString());
-}
-
 function connect() {
     var gui_path;
-    if (have_args()) { 
+    if (have_args()) {
         // Pd started the GUI, so connect to it on port provided in our args
         pdgui.post("Pd has started the GUI");
         pdgui.connect_as_client();
@@ -142,15 +93,16 @@ function console_unwrap_tag(console_elem, tag_name) {
         while(b[0].firstChild) {
             parent_elem.insertBefore(b[0].firstChild, b[0]);
         }
-        parent_elem.removeChild(b[0]); 
+        parent_elem.removeChild(b[0]);
         parent_elem.normalize();
     }
 }
 
-function console_find_text(elem, evt, callback) {
+function console_find_text(evt, callback) {
     var console_text = document.getElementById("p1"),
         wrap_tag = "mark",
-        wrapper_count;
+        wrapper_count,
+        elem = evt.target;
     window.setTimeout(function () {
         console_unwrap_tag(console_text, wrap_tag);
         // Check after the event if the value is empty
@@ -188,15 +140,15 @@ function console_find_callback() {
     console_find_traverse.next();
 }
 
-function console_find_keypress(elem, e) {
-    console_find_text(elem, e, console_find_callback);
+function console_find_keypress(e) {
+    console_find_text(e, console_find_callback);
 }
 
 function console_find_highlight_all(elem) {
     var matches,
         highlight_tag = "console_find_highlighted",
         state = elem.checked,
-        i, len;
+        i;
     matches = document.getElementById("p1")
         .getElementsByClassName(highlight_tag);
     // remember-- matches is a _live_ collection, not an array.
@@ -216,12 +168,12 @@ function console_find_highlight_all(elem) {
     }
 }
 
-var console_find_traverse = (function() {
+var console_find_traverse = (function () {
     var count = 0,
         console_text = document.getElementById("p1"),
         wrap_tag = "mark";
     return {
-        next: function() {
+        next: function () {
             var i, last, next,
                 elements = console_text.getElementsByTagName(wrap_tag);
             if (elements.length > 0) {
@@ -243,10 +195,10 @@ var console_find_traverse = (function() {
         set_index: function(c) {
             count = c;
         }
-    }
+    };
 }());
 
-function console_find_keydown(elem, evt) {
+function console_find_keydown(evt) {
     if (evt.keyCode === 13) {
         console_find_traverse.next();
         evt.stopPropagation();
@@ -256,8 +208,43 @@ function console_find_keydown(elem, evt) {
 
     } else if (evt.keyCode === 8 || // backspace or delete
                evt.keyCode === 46) {
-        console_find_text(elem, evt, console_find_callback);
+        console_find_text(evt, console_find_callback);
     }
+}
+
+function add_events() {
+    // Find bar
+    var find_bar = document.getElementById("console_find_text");
+    find_bar.placeholder = "Search in Console";
+    find_bar.addEventListener("keydown",
+        function(e) {
+            return console_find_keydown(e);
+        }, false
+    );
+    find_bar.addEventListener("keypress",
+        function(e) {
+            console_find_keypress(e);
+        }, false
+    );
+    // DSP toggle
+    document.getElementById("dsp_control").addEventListener("click",
+        function(evt) {
+            var dsp_state = evt.target.checked ? 1 : 0;
+            pdgui.pdsend("pd dsp", dsp_state);
+        }
+    );
+    // Browser Window Close
+    gui.Window.get().on("close", function () {
+        pdgui.menu_quit();
+    });
+    // Focus callback for OSX
+    gui.Window.get().on("focus", function () {
+        nw_window_focus_callback();
+    });
+    // Open dialog
+    document.getElementById("fileDialog").setAttribute("nwworkingdir", pwd);
+    document.getElementById("fileDialog").setAttribute("accept",
+        Object.keys(pdgui.pd_filetypes).toString());
 }
 
 function nw_close_window(window) {
@@ -314,26 +301,6 @@ function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
 
 // Pd Window Menu Bar
 
-function pdmenu_help_browser (w) {
-    w.alert("Please implement pdmenu_preferences"); 
-}
-
-function pdmenu_l2ork_mailinglist () {
-    alert("Please implement pdmenu_preferences"); 
-}
-
-function pdmenu_pd_mailinglists () {
-    alert("Please implement pdmenu_preferences"); 
-}
-
-function pdmenu_forums () {
-    alert("Please implement pdmenu_preferences"); 
-}
-
-function pdmenu_irc () {
-    alert("Please implement pdmenu_preferences"); 
-}
-
 function minit(menu_item, options) {
     var key;
     for (key in options) {
@@ -367,13 +334,13 @@ function nw_create_pd_window_menus(gui, w) {
                 accept: ".pd,.pat,.mxt,.mxb,.help"
             });
             span.innerHTML = input;
-            var chooser = w.document.querySelector("#fileDialog");
+            chooser = w.document.querySelector("#fileDialog");
             // Hack-- we have to set the event listener here because we
             // changed out the innerHTML above
             chooser.onchange = function() {
-                var file_array = this.value;
+                var file_array = chooser.value;
                 // reset value so that we can open the same file twice
-                this.value = null;
+                chooser.value = null;
                 pdgui.menu_open(file_array);
                 console.log("tried to open something");
             };
@@ -425,7 +392,7 @@ function nw_create_pd_window_menus(gui, w) {
                 // error when trying to select all right after Pd starts:
                 // "The given range and the current selection belong to two
                 //  different document fragments."
-                // (I guess nw.js somehow starts up with the selection being 
+                // (I guess nw.js somehow starts up with the selection being
                 // somewhere outside the window...)
                 w.getSelection().empty();
                 w.getSelection().addRange(range);
@@ -478,7 +445,7 @@ function nw_create_pd_window_menus(gui, w) {
         minit(m.edit.editmode, { enabled: false });
     }
     minit(m.edit.preferences, {
-        click: pdgui.open_prefs,
+        click: pdgui.open_prefs
     });
 
     // View menu
@@ -605,3 +572,21 @@ function nw_create_pd_window_menus(gui, w) {
         }
     });
 }
+
+function gui_init(win) {
+    set_vars(win);
+    add_events();
+    nw_create_pd_window_menus(gui, win);
+    // Set up the Pd Window
+    gui.Window.get().setMinimumSize(350, 250);
+    // Now we create a connection from the GUI to Pd, in one of two ways:
+    // 1) If the GUI was started by Pd, then we create a tcp client and
+    //    connect on the port Pd fed us in our command line arguments.
+    // 2) If Pd hasn't started yet, then the GUI creates a tcp server and spawns
+    //    Pd using the "-guiport" flag with the port the GUI is listening on.
+    // Pd always starts the GUI with a certain set of command line arguments. If
+    // those arguments aren't present then we assume we need to start Pd.
+    connect();
+}
+
+gui_init(window);
