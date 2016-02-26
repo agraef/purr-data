@@ -90,7 +90,7 @@ function create_menu(gui, type) {
             label: l("menu.close"),
             key: "w",
             modifiers: cmd_or_ctrl,
-            tooltip: l("menu.close_tt"),
+            tooltip: l("menu.close_tt")
         }));
     }
     fileMenu.append(m.file.quit = new gui.MenuItem({
@@ -242,7 +242,7 @@ function create_menu(gui, type) {
     }));
 
     // View sub-entries
-    m.view= {};
+    m.view = {};
     viewMenu.append(m.view.zoomin = new gui.MenuItem({
         label: l("menu.zoomin"),
         key: "=",
@@ -415,7 +415,7 @@ function create_menu(gui, type) {
             label: l("menu.pdwin"),
             tooltip: l("menu.pdwin_tt"),
             key: "r",
-            modifiers: cmd_or_ctrl 
+            modifiers: cmd_or_ctrl
         }));
     }
     // Media menu
@@ -468,7 +468,7 @@ function create_menu(gui, type) {
     }));
     helpMenu.append(m.help.manual = new gui.MenuItem({
         label: l("menu.manual"),
-        tooltip: l("menu.manual"),
+        tooltip: l("menu.manual")
     }));
     helpMenu.append(m.help.browser = new gui.MenuItem({
         label: l("menu.browser"),
