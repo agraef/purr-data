@@ -3392,9 +3392,9 @@ function gui_midi_properties(gfxstub, sys_indevs, sys_outdevs,
 exports.skin = (function () {
     var dir = "css/";
     var preset = "default";
-    var w;
-    function apply(win) {
-        win.window.document.getElementById("page_style")
+    var id;
+    function set_css(win) {
+        win.document.getElementById("page_style")
             .setAttribute("href", dir + preset + ".css");
     }
     return {
@@ -3405,17 +3405,17 @@ exports.skin = (function () {
         set: function (name) {
             preset = name;
             post("trying to set...");
-            for (w in patchwin) {
-                if (patchwin.hasOwnProperty(w) && patchwin[w]) {
-                    apply(patchwin[w]);
+            for (id in patchwin) {
+                if (patchwin.hasOwnProperty(id) && patchwin[id]) {
+                    set_css(patchwin[id].window);
                 }
             }
             // hack for the console
             pd_window.document.getElementById("page_style")
                 .setAttribute("href", dir + preset + ".css");
         },
-        apply: function (nw_window) {
-            apply(nw_window);
+        apply: function (win) {
+            set_css(win);
         }
     };
 }());
