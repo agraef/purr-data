@@ -56,7 +56,7 @@ var lang = require("./pdlang.js");
 
 exports.get_local_string = lang.get_local_string;
 
-var pd_window; 
+var pd_window;
 exports.pd_window;
 
 // Turns out I messed this up. pd_window should really be an
@@ -185,32 +185,32 @@ exports.get_char_code = get_char_code;
 
     // Hard-coded Pd-l2ork font metrics
 /*
-var font_fixed_metrics = "\
-8 5 11 \
-9 6 12 \
-10 6 13 \
-12 7 16 \
-14 8 17 \
-16 10 19 \
-18 11 22 \
-24 14 29 \
-30 18 37 \
-36 22 44";
+var font_fixed_metrics = [
+    8, 5, 11,
+    9, 6, 12,
+    10, 6, 13,
+    12, 7, 16,
+    14, 8, 17,
+    16, 10, 19,
+    18, 11, 22,
+    24, 14, 29,
+    30, 18, 37,
+    36, 22, 44 ].join(" ");
 */
 
 // Let's try to get some metrics specific to Node-webkit...
     // Hard-coded Pd-l2ork font metrics
-var font_fixed_metrics = "\
-8 5 11 \
-9 6 12 \
-10 6 13 \
-12 7 16 \
-14 8 17 \
-16 10 19 \
-18 11 22 \
-24 14 29 \
-30 18 37 \
-36 22 44";
+var font_fixed_metrics = [
+    8, 5, 11,
+    9, 6, 12,
+    10, 6, 13,
+    12, 7, 16,
+    14, 8, 17,
+    16, 10, 19,
+    18, 11, 22,
+    24, 14, 29,
+    30, 18, 37,
+    36, 22, 44 ].join(" ");
 
 // Utility Functions
 
@@ -228,7 +228,7 @@ function enquote (x) {
 // only seems to be used by pddplink_open
 function path_is_absolute(myPath) {
     var ret = (path.resolve(myPath) ===
-        path.normalize(myPath).replace(/(.+)([\/]\\])$/, "$1"));
+        path.normalize(myPath).replace(/(.+)([\/|\\])$/, "$1"));
     return ret;
 }
 
@@ -259,9 +259,9 @@ function do_post(string, type) {
             myp = pd_window.document.getElementById("p1"),
             span = pd_window.document.createElement("span");
             if (type) {
-                span.classList.add(type); 
+                span.classList.add(type);
             }
-            text = pd_window.document.createTextNode(current_string); 
+            text = pd_window.document.createTextNode(current_string);
             span.appendChild(text);
             myp.appendChild(span);
             printout = pd_window.document.getElementById("console_bottom");
@@ -407,7 +407,7 @@ function build_file_dialog_string(obj) {
         if (obj.hasOwnProperty(prop)) {
             input += prop;
             if (obj[prop]) {
-                input += '="' + obj[prop] + '"'; 
+                input += '="' + obj[prop] + '"';
             }
             input += ' ';
         }
@@ -444,7 +444,7 @@ post("hey, the initdir is " + initdir + " and initfile is " + initfile);
         accept: ".pd"
     });
     span.innerHTML = input;
-    chooser = patchwin[name].window.document.querySelector("#saveDialog"); 
+    chooser = patchwin[name].window.document.querySelector("#saveDialog");
     chooser.onchange = function() {
         saveas_callback(name, this.value, close_flag);
         // reset value so that we can open the same file twice
@@ -644,7 +644,7 @@ function app_quit() {
 
 exports.set_app_quitfn = function(quitfn) {
     nw_app_quit = quitfn;
-} 
+}
 
 function open_file(file) {
     var directory = path.dirname(file),
@@ -682,7 +682,7 @@ function open_file(file) {
 }
 
 // This doesn't work yet... need to figure out how to send command line args
-// (files) to be opened by the unique instance 
+// (files) to be opened by the unique instance
 function gui_open_files_via_unique(filenames)
 {
     var i;
@@ -761,37 +761,11 @@ function gui_check_unique (unique) {
             if (!pathIsAbsolute(file)) {
                 file = fs.join(pwd, file);
             }
-            final_filenames.push(file);  
+            final_filenames.push(file);
         }
         gui_open_files_via_unique(final_filenames);
     }
-    // old tcl follows...
-	//if path is relative
-	//then join pwd and relative path
-	//else
-	//use the absolute path
-	//(no need to check for existence here)
-
-	//            catch {cd [file dirname $file]}
-	//            set dir [pwd]
-
-	//file tail should be the filename
-
-	//            set name [file tail $file]
-	//            #puts stderr "********DIR:$dir FILE:$name COMBINED:[file join $dir $name]"
-	//            lappend final_filenames [file join $dir $name]
-	//            cd $startup_dir
-	//        }
-	//        #puts stderr "send pd-l2ork pdtk_open_files_via_unique $final_filenames"
-	//        set outcome [catch {send pd-l2ork pdtk_open_files_via_unique \{$final_filenames\}}]
-	//        #puts stderr "outcome = $outcome"
-	//        if { $outcome == 0 } {
-	//                menu_really_quit
-	//                exit
-	//        }
-	//}
-	//        tk appname $appname
-	//        #puts stderr "this is unique instance [tk appname]"
+    // old tcl follows... see pd.tk for the original code
 }
 
 function gui_startup(version, fontname_from_pd, fontweight_from_pd,
@@ -943,7 +917,7 @@ function gui_canvas_cursor(cid, pd_event_type) {
         case "cursor_editmode_resize_bottom_right": c = "se-resize";
             break;
         case "cursor_scroll":
-            c = "all-scroll"; 
+            c = "all-scroll";
             break;
     }
     patch.style.cursor = c;
@@ -976,7 +950,6 @@ function gui_canvas_set_title(cid, name, args, dir, dirty_flag) {
 }
 
 // create a new canvas
-// todo: rename parameter "name" to "cid"
 function gui_canvas_new(cid, width, height, geometry, editmode, name, dir, dirty_flag, cargs) {
     // hack for buggy tcl popups... should go away for node-webkit
     //reset_ctrl_on_popup_window
@@ -1004,8 +977,8 @@ function gui_canvas_new(cid, width, height, geometry, editmode, name, dir, dirty
     geometry = geometry.slice(1);   // remove the leading "+"
     geometry = geometry.split("+"); // x/y screen offset (in pixels)
     // Keep patches on the visible screen
-    var xpos = Math.min(Number(geometry[0]), window.screen.width - width); 
-    var ypos = Math.min(Number(geometry[1]), window.screen.height - height); 
+    var xpos = Math.min(Number(geometry[0]), window.screen.width - width);
+    var ypos = Math.min(Number(geometry[1]), window.screen.height - height);
     xpos = Math.max(xpos, 0);
     ypos = Math.max(ypos, 0);
     var menu_flag;
@@ -1296,7 +1269,7 @@ function configure_item(item, attributes) {
         for (i = 0; i < attributes.length; i+=2) {
             value = attributes[i+1];
             item.setAttributeNS(null, attributes[i],
-                Array.isArray(value) ? value.join(" "): value); 
+                Array.isArray(value) ? value.join(" "): value);
         }
     } else {
         for (attr in attributes) {
@@ -1330,7 +1303,7 @@ function add_gobj_to_svg(svg, gobj) {
 // the left edge of a rect may be 3 pixels while the right edge is 4. I'm not
 // sure whether this is a bug or just the quirky behavior of value "crispEdges".
 // As a workaround, we explicitly add "0.5" to the gobj's translation
-// coordinates below. This aligns the shapes-- lines, polygons, and rects 
+// coordinates below. This aligns the shapes-- lines, polygons, and rects
 // with a 1px stroke-- to the pixel grid, making them crisp.
 
 // Also-- note that we have a separate function for creating a scalar.
@@ -1410,7 +1383,7 @@ function gui_gobj_draw_io(cid, parenttag, tag, x1, y1, x2, y2, basex, basey,
 }
 
 function gui_gobj_redraw_io(cid, parenttag, tag, x, y, type, i, basex, basey) {
-    var xlet = get_item(cid, tag + type + i); 
+    var xlet = get_item(cid, tag + type + i);
     // We have to check for null. Here's why...
     // if you create a gatom:
     //   canvas_atom -> glist_add -> text_vis -> glist_retext ->
@@ -1435,7 +1408,7 @@ function gui_gobj_configure_io(cid, tag, is_iemgui, is_signal, width) {
     // to other objects. This may happen due to:
     //   * autopatching
     //   * objects which fail to create when loading a patch
-    if (xlet !== null) { 
+    if (xlet !== null) {
         configure_item(xlet, {
             "stroke-width": width,
         });
@@ -1593,7 +1566,7 @@ function text_line_height_kludge(fontsize, fontsize_type) {
 
 function text_to_tspans(canvasname, svg_text, text) {
     var lines, i, len, tspan, fontsize, text_node;
-    lines = text.split("\n"); 
+    lines = text.split("\n");
     len = lines.length;
     // Get fontsize (minus the trailing "px")
     fontsize = svg_text.getAttribute("font-size").slice(0, -2);
@@ -1783,11 +1756,11 @@ function elem_move(elem, x, y) {
 
 function elem_displace(elem, dx, dy) {
         var t = elem.transform.baseVal.getItem(0);
-        t.matrix.e += dx; 
-        t.matrix.f += dy; 
+        t.matrix.e += dx;
+        t.matrix.f += dy;
 }
 
-// used for tidy up 
+// used for tidy up
 function gui_text_displace(name, tag, dx, dy) {
     elem_displace(get_gobj(name, tag), dx, dy);
 }
@@ -1811,15 +1784,15 @@ function gui_canvas_displace_withtag(name, dx, dy) {
     for (i = 0; i < ol.length; i++) {
         elem_displace(ol[i], dx, dy);
         //var elem = ol[i].transform.baseVal.getItem(0);
-        //var new_tx = dx + elem.matrix.e; 
-        //var new_ty = dy + elem.matrix.f; 
+        //var new_tx = dx + elem.matrix.e;
+        //var new_ty = dy + elem.matrix.f;
         //elem.matrix.e = new_tx;
         //elem.matrix.f = new_ty;
     }
     textentry = patchwin[name].window.document
                 .getElementById("new_object_textentry");
     if (textentry !== null) {
-        textentry_displace(textentry, dx, dy); 
+        textentry_displace(textentry, dx, dy);
     }
     //elem.setAttributeNS(null, "transform",
     //"translate(" + new_tx + "," + new_ty + ")");
@@ -1840,7 +1813,7 @@ function gui_canvas_draw_selection(cid, x1, y1, x2, y2) {
         "shape-rendering": "optimizeSpeed",
         "stroke-width": 1,
         id: "selection_rectangle",
-        display: "inline" 
+        display: "inline"
     });
     svg.appendChild(rect);
 }
@@ -2328,7 +2301,7 @@ function iemgui_font_height(name, size) {
 function iemgui_fontfamily(name) {
     var family = "DejaVu Sans Mono";
     if (name === "DejaVu Sans Mono") {
-        family = "DejaVu Sans Mono"; // probably should add some fallbacks here 
+        family = "DejaVu Sans Mono"; // probably should add some fallbacks here
     }
     else if (name === "helvetica") {
         family = "Helvetica, 'DejaVu Sans'";
@@ -2393,9 +2366,9 @@ function gui_iemgui_label_color(cid, tag, color) {
 function gui_iemgui_label_select(cid, tag, is_selected) {
     var svg_text = get_item(cid, tag + "label");
     if (is_selected) {
-        svg_text.classList.add("iemgui_label_selected"); 
+        svg_text.classList.add("iemgui_label_selected");
     } else {
-        svg_text.classList.remove("iemgui_label_selected"); 
+        svg_text.classList.remove("iemgui_label_selected");
     }
 }
 
@@ -2483,7 +2456,7 @@ function gui_mycanvas_coords(cid, tag, vis_width, vis_height, select_width, sele
 
 function gui_scalar_new(cid, tag, isselected, t1, t2, t3, t4, t5, t6,
     is_toplevel) {
-    // we should probably use create_gobj here, but we"re doing some initial 
+    // we should probably use create_gobj here, but we"re doing some initial
     // scaling that normal gobjs don't need...
     var svg = get_item(cid, "patchsvg"), // id for the svg in the DOM
         matrix,
@@ -2565,7 +2538,7 @@ function gui_scalar_draw_group(cid, tag, parent_tag, attr_array) {
     attr_array.push("id", tag);
     g = create_item(cid, "g", attr_array);
     parent_elem.appendChild(g);
-    return g; 
+    return g;
 }
 
 function gui_scalar_configure_gobj(cid, tag, isselected, t1, t2, t3, t4, t5, t6) {
@@ -2636,7 +2609,7 @@ function gui_draw_drag_event(cid, tag, scalar_sym, drawcommand_sym,
     event_name, state) {
     var win = patchwin[cid].window;
     if (state === 0) {
-        win.canvas_events.remove_scalar_draggable(tag); 
+        win.canvas_events.remove_scalar_draggable(tag);
     } else {
         win.canvas_events.add_scalar_draggable(cid, tag, scalar_sym,
             drawcommand_sym, event_name);
@@ -2647,7 +2620,7 @@ function gui_draw_drag_event(cid, tag, scalar_sym, drawcommand_sym,
 function gui_draw_event(cid, tag, scalar_sym, drawcommand_sym, event_name,
     state) {
     var item = get_item(cid, tag),
-        event_type = "on" + event_name; 
+        event_type = "on" + event_name;
     if (state === 1) {
         item[event_type] = function(e) {
             pdsend(cid, "scalar_event", scalar_sym, drawcommand_sym, event_name,
@@ -2857,7 +2830,7 @@ function gui_drawimage_vis(cid, x, y, obj, data, seqno, parent_tag) {
             visibility: seqno === i ? "visible" : "hidden",
             preserveAspectRatio: "xMinYMin meet"
         });
-        item.setAttributeNS("http://www.w3.org/1999/xlink", "href", 
+        item.setAttributeNS("http://www.w3.org/1999/xlink", "href",
             "data:image/" + drawimage_data[obj][i].type + ";base64," +
              drawimage_data[obj][i].data);
         image_container.appendChild(item);
@@ -2927,7 +2900,7 @@ function gui_canvas_popup(cid, xpos, ypos, canprop, canopen, isobject) {
 
     // We'll use "isobject" to enable/disable "To Front" and "To Back"
     //isobject;
-    
+
     // Get page coords for top of window, in case we're scrolled
     var left = patchwin[cid].window.document.body.scrollLeft;
     var top = patchwin[cid].window.document.body.scrollTop;
@@ -3345,7 +3318,7 @@ function open_search() {
 
 exports.open_search= open_search;
 
-function gui_audio_properties(gfxstub, sys_indevs, sys_outdevs, 
+function gui_audio_properties(gfxstub, sys_indevs, sys_outdevs,
     pd_indevs, pd_inchans, pd_outdevs, pd_outchans, audio_attrs) {
     var attrs = audio_attrs.concat([
         "audio-apis", pd_apilist,
@@ -3470,7 +3443,7 @@ exports.get_style_by_selector = get_style_by_selector;
 // message flag at the right.
 function generate_msg_box_bg_data(type, stroke) {
    return 'url(\"data:image/svg+xml;utf8,' +
-            '<svg ' + 
+            '<svg ' +
               "xmlns:svg='http://www.w3.org/2000/svg' " +
               "xmlns='http://www.w3.org/2000/svg' " +
               "xmlns:xlink='http://www.w3.org/1999/xlink' " +
@@ -3576,10 +3549,10 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
         if (p !== null) {
             p.parentNode.removeChild(p);
         }
-        if (patchwin[cid].window.canvas_events.get_previous_state() === 
+        if (patchwin[cid].window.canvas_events.get_previous_state() ===
                "search") {
             patchwin[cid].window.canvas_events.search();
-        } else { 
+        } else {
             patchwin[cid].window.canvas_events.normal();
         }
     }
@@ -3599,8 +3572,8 @@ function gui_undo_menu(cid, undo_text, redo_text) {
 function do_getscroll(cid) {
     var bbox, width, height, min_width, min_height, x, y,
         svg;
-    // Since we're throttling these getscroll calls, they can happen after 
-    // the patch has been closed. We remove the cid from the patchwin 
+    // Since we're throttling these getscroll calls, they can happen after
+    // the patch has been closed. We remove the cid from the patchwin
     // object on close, so we can just check to see if our Window object has
     // been set to null, and if so just return.
     // This is an awfully bad pattern. The whole scroll-checking mechanism
@@ -3609,8 +3582,8 @@ function do_getscroll(cid) {
     if (!patchwin[cid]) { return; }
     svg = get_item(cid, "patchsvg");
     bbox = svg.getBBox();
-    // We try to do Pd-extended style canvas origins. That is, coord (0, 0) 
-    // should be in the top-left corner unless there are objects with a 
+    // We try to do Pd-extended style canvas origins. That is, coord (0, 0)
+    // should be in the top-left corner unless there are objects with a
     // negative x or y.
     // To implement the Pd-l2ork behavior, the top-left of the canvas should
     // always be the topmost, leftmost object.
@@ -3622,16 +3595,16 @@ function do_getscroll(cid) {
     // The svg "overflow" attribute on an <svg> seems to be buggy-- for example,
     // you can't trigger a mouseover event for a <rect> that is outside of the
     // explicit bounds of the svg.
-    // To deal with this, we want to set the svg width/height to always be 
-    // at least as large as the browser's viewport. There are a few ways to 
-    // do this this, like documentElement.clientWidth, but window.innerWidth 
+    // To deal with this, we want to set the svg width/height to always be
+    // at least as large as the browser's viewport. There are a few ways to
+    // do this this, like documentElement.clientWidth, but window.innerWidth
     // seems to give the best results.
-    // However, there is either a bug or some strange behavior regarding 
+    // However, there is either a bug or some strange behavior regarding
     // the viewport size: setting both the height and width of an <svg> to
     // the viewport height/width will display the scrollbars. The height or
     // width must be set to 4 less than the viewport size in order to keep
     // the scrollbars from appearing. Here, we just subtract 4 from both
-    // of them. This could lead to some problems with event handlers but I 
+    // of them. This could lead to some problems with event handlers but I
     // haven't had a problem with it yet.
     min_width = patchwin[cid].window.innerWidth - 4;
     min_height = patchwin[cid].window.innerHeight - 4;
@@ -3658,7 +3631,7 @@ function do_getscroll(cid) {
     configure_item(svg, {
         viewBox: [x, y, width, height].join(" "),
         width: width,
-        height: height 
+        height: height
     });
 }
 
@@ -3739,8 +3712,7 @@ function gui_find_lowest_and_arrange(cid, reference_element_tag, objtag) {
         i;
     if (ref_elem !== null) {
         if (objtag === "selected") {
-            selection = 
-            svg.getElementsByClassName("selected");
+            selection = svg.getElementsByClassName("selected");
         } else {
             gobj = get_gobj(cid, objtag);
             if (gobj !== null) {
