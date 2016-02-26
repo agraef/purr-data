@@ -327,7 +327,7 @@
 
   <script>
 "use strict";
-var gui = require("nw.gui"); 
+var gui = require("nw.gui");
 var pdgui = require("./pdgui.js");
 
 // For translations
@@ -346,9 +346,10 @@ function substitute_space(arg) {
 }
 
 function strip_problem_chars(arg) {
-    var problem_chars = [";", ",", "{", "}", "\\"];
-    var ret = arg;
-    for(var i = 0; i < problem_chars.length; i++) {
+    var problem_chars = [";", ",", "{", "}", "\\"],
+        ret = arg,
+        i;
+    for(i = 0; i < problem_chars.length; i++) {
         ret = ret.split(";").join("");
     }
     return ret;

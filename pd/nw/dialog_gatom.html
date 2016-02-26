@@ -146,7 +146,7 @@
 
   <script>
 "use strict";
-var gui = require("nw.gui"); 
+var gui = require("nw.gui");
 var pdgui = require("./pdgui.js");
 
 // For translations
@@ -197,7 +197,7 @@ function update_attr(elem) {
 
 function send_params(attrs, create_undo_point) {
     //pdgui.post("we're applying gatom changes!");
-    pdgui.pdsend(pd_object_callback, "param", 
+    pdgui.pdsend(pd_object_callback, "param",
         +attrs.width,
         +attrs.draglo,
         +attrs.draghi,

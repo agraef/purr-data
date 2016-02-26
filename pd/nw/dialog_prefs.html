@@ -252,7 +252,7 @@
     </div>
   <script>
 "use strict";
-var gui = require("nw.gui"); 
+var gui = require("nw.gui");
 var pdgui = require("./pdgui.js");
 
 // For translations
@@ -451,7 +451,7 @@ function populate_devs(type, attrs) {
         elem.appendChild(opt);
         for (j = 0; j < devs.length; j++) {
             opt = document.createElement("option");
-            opt.value = j; 
+            opt.value = j;
             opt.textContent = devs[j];
             elem.appendChild(opt);
         }
@@ -479,7 +479,7 @@ function populate_midi_devs(type, attrs) {
         elem.appendChild(opt);
         for (j = 0; j < devs.length; j++) {
             opt = document.createElement("option");
-            opt.value = j; 
+            opt.value = j;
             opt.textContent = devs[j];
             elem.appendChild(opt);
         }
@@ -507,8 +507,8 @@ function audio_prefs_callback(attrs) {
     document.getElementById("blocksize").value = get_attr("blocksize", attrs);
     document.getElementById("advance").value = get_attr("advance", attrs);
 
-    var callback = get_attr("cancallback", attrs);
-    //show the checkbox if the API allows 
+    callback = get_attr("cancallback", attrs);
+    //show the checkbox if the API allows
     if (callback !== -1) {
         document.getElementById("callback_container")
             .classList.remove("hidden");
@@ -594,10 +594,11 @@ function tr_text(id) {
 
 // Stop-gap translator
 function translate_form() {
-    var i;
-    var elements = document.querySelectorAll("[data-i18n]");
+    var elements = document.querySelectorAll("[data-i18n]"),
+        data,
+        i;
     for (i = 0; i < elements.length; i++) {
-        var data = elements[i].dataset.i18n;
+        data = elements[i].dataset.i18n;
         if (data.slice(0,7) === "[title]") {
             elements[i].title = l(data.slice(7));
         } else {
@@ -608,8 +609,8 @@ function translate_form() {
 
 function populate_form(attr_array) {
     // First, let's put the translated text for the form labels:
-
-    for(var i = 0; i < attr_array.length; i+=2) {
+    var i;
+    for(i = 0; i < attr_array.length; i+=2) {
         // Unhide the span with the class with the same name as the id
         var prop_group = document.getElementsByClassName(attr_array[i])[0];
         if (prop_group !== undefined) {

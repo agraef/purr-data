@@ -28,10 +28,11 @@ var doc_id = 0;
 
 // Stop-gap translator
 function translate_form() {
-    var i;
-    var elements = document.querySelectorAll("[data-i18n]");
+    var elements = document.querySelectorAll("[data-i18n]"),
+        data,
+        i;
     for (i = 0; i < elements.length; i++) {
-        var data = elements[i].dataset.i18n;
+        data = elements[i].dataset.i18n;
         if (data.slice(0,7) === "[title]") {
             elements[i].title = l(data.slice(7));
         } else {
@@ -67,7 +68,6 @@ function add_doc_to_index(filename, data) {
         //"body": big_line,
         "path": filename
     });
-    
 }
 
 function read_file(err, filename, stat) {
@@ -107,7 +107,7 @@ function console_unwrap_tag(console_elem, tag_name) {
         while(b[0].firstChild) {
             parent_elem.insertBefore(b[0].firstChild, b[0]);
         }
-        parent_elem.removeChild(b[0]); 
+        parent_elem.removeChild(b[0]);
         parent_elem.normalize();
     }
 }
