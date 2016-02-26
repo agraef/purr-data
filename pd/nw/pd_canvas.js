@@ -1,6 +1,6 @@
 "use strict";
 
-var gui = require("nw.gui"); 
+var gui = require("nw.gui");
 var pdgui = require("./pdgui.js");
 var pd_menus = require("./pd_menus.js");
 
@@ -8,7 +8,7 @@ var pd_menus = require("./pd_menus.js");
 pdgui.skin.apply(window);
 
 //var name = pdgui.last_loaded();
-   
+
 var l = pdgui.get_local_string;
 
 console.log("my working dir is " + pdgui.get_pwd());
@@ -204,7 +204,7 @@ var canvas_events = (function() {
                     // right-click
                     mod = 8;
                 } else {
-                    mod = (evt.shiftKey + (cmd_or_ctrl_key(evt) << 1)); 
+                    mod = (evt.shiftKey + (cmd_or_ctrl_key(evt) << 1));
                 }
                 pdgui.pdsend(name, "mouse",
                     (evt.pageX + svg_view.x),
@@ -366,7 +366,7 @@ var canvas_events = (function() {
                 evt.preventDefault();
             },
             text_mousemove: function(evt) {
-                evt.stopPropagation();    
+                evt.stopPropagation();
                 //evt.preventDefault();
                 return false;
             },
@@ -386,29 +386,29 @@ var canvas_events = (function() {
                     events.mouseup(evt);
                     canvas_events.normal();
                 }
-                evt.stopPropagation();    
+                evt.stopPropagation();
                 //evt.preventDefault();
                 return false;
             },
             text_mouseup: function(evt) {
                 //pdgui.post("mouseup target is " +
                 //    evt.target + " and textbox is " + textbox());
-                //evt.stopPropagation();    
+                //evt.stopPropagation();
                 //evt.preventDefault();
                 return false;
             },
             text_keydown: function(evt) {
-                evt.stopPropagation();    
+                evt.stopPropagation();
                 //evt.preventDefault();
                 return false;
             },
             text_keyup: function(evt) {
-                evt.stopPropagation();    
+                evt.stopPropagation();
                 //evt.preventDefault();
                 return false;
             },
             text_keypress: function(evt) {
-                evt.stopPropagation();    
+                evt.stopPropagation();
                 //evt.preventDefault();
                 return false;
             },
@@ -470,7 +470,7 @@ var canvas_events = (function() {
                     tx = minv.a * dx + minv.c * dy,
                     ty = minv.b * dx + minv.d * dy;
                 var obj = scalar_draggables[draggable_elem.id];
-                pdgui.pdsend(obj.cid, "scalar_event", obj.scalar_sym, 
+                pdgui.pdsend(obj.cid, "scalar_event", obj.scalar_sym,
                     obj.drawcommand_sym, obj.event_name, dx, dy, tx, ty);
                 last_draggable_x = new_x;
                 last_draggable_y = new_y;
@@ -525,9 +525,9 @@ var canvas_events = (function() {
     // with nwworkingdir
     document.querySelector("#saveDialog").addEventListener("change",
         function(evt) {
-            pdgui.saveas_callback(name, this.value, 0);
+            pdgui.saveas_callback(name, evt.target.value, 0);
             // reset value so that we can open the same file twice
-            this.value = null;
+            evt.target.value = null;
             console.log("tried to save something");
         }, false
     );
@@ -687,20 +687,20 @@ var canvas_events = (function() {
         nw_window_focus_callback();
     });
     // set minimum window size
-    gui.Window.get().setMinimumSize(150, 100); 
+    gui.Window.get().setMinimumSize(150, 100);
 
     return {
         none: function() {
-            var name;
+            var evt_name;
             if (state !== "none") {
                 previous_state = state;
             }
             state = "none";
             for (var prop in events) {
                 if (events.hasOwnProperty(prop)) {
-                    name = prop.split("_");
-                    name = name[name.length - 1];
-                    document.removeEventListener(name, events[prop], false);
+                    evt_name = prop.split("_");
+                    evt_name = evt_name[evt_name.length - 1];
+                    document.removeEventListener(evt_name, events[prop], false);
                 }
             }
         },
@@ -717,10 +717,10 @@ var canvas_events = (function() {
             set_edit_menu_modals(true);
         },
         scalar_drag: function() {
-            // This scalar_drag is a prototype for moving more of the editing environment 
-            // directly to the GUI.  At the moment we're leaving the other "normal" 
-            // events live, since behavior like editmode selection still happens from
-            // the Pd engine.
+            // This scalar_drag is a prototype for moving more of the editing
+            // environment directly to the GUI.  At the moment we're leaving
+            // the other "normal" events live, since behavior like editmode
+            // selection still happens from the Pd engine.
             //this.none();
             document.addEventListener("mousemove", events.scalar_draggable_mousemove, false);
             document.addEventListener("mouseup", events.scalar_draggable_mouseup, false);
@@ -1159,7 +1159,7 @@ function nw_create_patch_window_menus(gui, w, name) {
         enabled: true,
         click: function () {
             var z = gui.Window.get().zoomLevel;
-            if (z > -7) { z--; } 
+            if (z > -7) { z--; }
             gui.Window.get().zoomLevel = z;
         }
     });
@@ -1195,7 +1195,7 @@ function nw_create_patch_window_menus(gui, w, name) {
     });
     minit(m.put.number, {
         enabled: true,
-        click: function() { 
+        click: function() {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "floatatom 0");
