@@ -88,7 +88,7 @@
 
   <script>
 "use strict";
-var gui = require("nw.gui"); 
+var gui = require("nw.gui");
 var pdgui = require("./pdgui.js");
 
 // For translations
@@ -100,19 +100,9 @@ var pd_object_callback;
 var current_size;
 var canvas;
 
-function ok() {
-    apply();
-    cancel();
-}
-
-function change_size() {
-    pdgui.post("changing the size");
-    apply();
-}
-
 function apply() {
     pdgui.post("we're applying font size changes!");
-    pdgui.pdsend(canvas, "font", 
+    pdgui.pdsend(canvas, "font",
         +document.querySelector('input[name="font_size"]:checked').value,
         current_size,
         100,
@@ -123,6 +113,16 @@ function apply() {
 function cancel() {
     //window.close(true);
     pdgui.pdsend(pd_object_callback, "cancel");
+}
+
+function ok() {
+    apply();
+    cancel();
+}
+
+function change_size() {
+    pdgui.post("changing the size");
+    apply();
 }
 
 // This gets called from the nw_create_window function in index.html
@@ -146,11 +146,12 @@ function register_window_id(gfxstub, attrs) {
 
 // Stop-gap translator
 function translate_form() {
-    var i
-    var elements = document.querySelectorAll("[data-i18n]");
+    var elements = document.querySelectorAll("[data-i18n]"),
+        data,
+        i;
     for (i = 0; i < elements.length; i++) {
-        var data = elements[i].dataset.i18n;
-        if (data.slice(0,7) === "[title]") {
+        data = elements[i].dataset.i18n;
+        if (data.slice(0, 7) === "[title]") {
             elements[i].title = l(data.slice(7));
         } else {
             elements[i].textContent = l(data);
@@ -159,7 +160,7 @@ function translate_form() {
 }
 
 function get_attr(name, attrs) {
-    return attrs[attrs.indexOf(name)+1];
+    return attrs[attrs.indexOf(name) + 1];
 }
 
 function get_elem(name) {
@@ -174,7 +175,7 @@ function populate_form(attrs) {
 
 function add_events(name) {
     // closing the Window
-    gui.Window.get().on("close", function() {
+    gui.Window.get().on("close", function () {
         // this needs to do whatever the "cancel" button does
         //pdgui.pdsend(name, "menuclose 0");
         //cancel();
