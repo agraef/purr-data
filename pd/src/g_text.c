@@ -2211,9 +2211,7 @@ void text_drawborder(t_text *x, t_glist *glist,
             //        tag, tag, (selected ? "selected" : ""));
             /* These coords can be greatly simplified... */
             gui_vmess("gui_atom_draw_border", "xsiiiiiiiiiiii",
-                glist_getcanvas(glist), tag,
-                x1-x1, y1-y1, x2-4-x1, y1-y1, x2-x1,
-                y1+4-y1, x2-x1, y2-y1, x1-x1, y2-y1, x1-x1, y1-y1);
+                glist_getcanvas(glist), tag, x2 - x1, y2 - y1);
         }
         else
         {
