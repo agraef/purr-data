@@ -18,9 +18,6 @@ Event settings for edit mode
    * can type new text into the box
    * a click in the box will anchor the box and trigger #2 above
 
-*need to be able to tell the difference between new obj and retexted
-obj
-
 HTML5 which may not be standard yet:
 1) mouse.pageX/pageY -- exist in Chromium but maybe not in FF et al.
 2) svg 'overflow' attribute -- probably doesn't work in other browsers
