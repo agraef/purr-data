@@ -1432,18 +1432,22 @@ function gui_gobj_highlight_io(cid, tag) {
     }
 }
 
-function gui_message_draw_border(cid,tag,width,height) {
+function message_border_points(width, height) {
+    return [0,0,
+            width+4, 0,
+            width, 4,
+            width, height-4,
+            width+4, height,
+            0, height,
+            0, 0]
+        .join(" ");
+}
+
+function gui_message_draw_border(cid, tag, width, height) {
     var g = get_gobj(cid, tag),
-        p_array = [0,0,
-                   width+4, 0,
-                   width, 4,
-                   width, height-4,
-                   width+4, height,
-                   0, height,
-                   0, 0],
         polygon;
     polygon = create_item(cid, "polygon", {
-        points: p_array.join(),
+        points: message_border_points(width, height),
         fill: "none",
         stroke: "black",
         class: "border"
@@ -1461,12 +1465,11 @@ function gui_message_flash(cid, tag, state) {
     }
 }
 
-function gui_message_redraw_border(cid,tag,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14) {
+function gui_message_redraw_border(cid, tag, width, height) {
     var g = get_gobj(cid, tag),
-        b = g.querySelector(".border"),
-        p_array = [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14];
+        b = g.querySelector(".border");
     configure_item(b, {
-        points: p_array.join(" "),
+        points: message_border_points(width, height),
     });
 }
 

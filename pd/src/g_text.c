@@ -2192,10 +2192,8 @@ void text_drawborder(t_text *x, t_glist *glist,
             //    x1, y1,  x2+4, y1,  x2, y1+4,  x2, y2-4,  x2+4, y2,
             //    x1, y2,  x1, y1);
             /* These coords can be greatly simplified, as above... */
-            gui_vmess("gui_message_redraw_border", "xsiiiiiiiiiiiiii",
-                glist_getcanvas(glist), tag,
-                x1-x1, y1-y1,  x2+4-x1, y1-y1,  x2-x1, y1+4-y1, x2-x1, y2-4-y1,  x2+4-x1, y2-y1,
-                x1-x1, y2-y1,  x1-x1, y1-y1);
+            gui_vmess("gui_message_redraw_border", "xsii",
+                glist_getcanvas(glist), tag, x2 - x2, y2 - y1);
         }
     }
     else if (x->te_type == T_ATOM)
