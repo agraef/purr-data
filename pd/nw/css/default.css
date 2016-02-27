@@ -19,7 +19,7 @@
     color: black;
 }
 
-/* The main Pd Window */
+/* The Pd Console Window */
 
 #console_body {
     margin: 0px;
@@ -337,10 +337,18 @@ text {
     left: 0;
 }
 
+/* Dialog to ask to save the patch before quitting */
+#save_before_quit {
+    background-color: #f3f3f3;
+    border:1px solid #bbb;
+    padding: 12px;
+    margin: 12px;
+}
+
 /* Common to all dialogs */
 
 .dialog_body {
-    background-color:#f3f3f3;
+    background-color: #f3f3f3;
 }
 
 .submit_buttons {
