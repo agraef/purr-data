@@ -5,7 +5,7 @@
     <link id="page_style" rel="stylesheet" type="text/css" href="css/default.css">
     <title>Canvas Dialog</title>
   </head>
-  <body>
+  <body class="dialog_body">
     <div class="container noselect">
     <form> 
 
@@ -80,7 +80,7 @@
 
       <fieldset class="canvas"> 
         <legend data-i18n="canvas.prop.heading.data_scaling"></legend> 
-
+<div style="display: inline-block; align: left;">
           <div class="x-scale prop hidden">
             <label class="no_gop_opt" data-i18n="[title]canvas.prop.x_scale_tt">
               <span data-i18n="canvas.prop.x_scale"></span>
@@ -122,7 +122,7 @@
          </label>
        </div>
     </div>
-
+</div>
       </fieldset> 
 
 
@@ -140,7 +140,8 @@
               <input onchange="attr_change(this);"
                      class="array-name"
                      type="text"
-                     name="array_name">
+                     name="array_name"
+                     id="array_name_input">
             </label>
             <label class="array-size"
                    data-i18n="[title]canvas.prop.array_size_tt">
@@ -170,50 +171,60 @@
 
             <span data-i18n="canvas.prop.array_style"></span>
             <br/>
-            <label class="polygon"
-                   data-i18n="[title]canvas.prop.array_polygon_tt">
-              <input class="array-style"
-                     type="radio"
-                     id="polygon"
-                     value="0"
-                     name="array_style"
-                     onchange="flag_change(this);">
-              <span data-i18n="canvas.prop.array_polygon"></span>
-            </label>
-            <br/>
-            <label class="points"
-                   data-i18n="[title]canvas.prop.array_points_tt">
-              <input class="array-style"
-                     type="radio"
-                     id="points"
-                     value="1"
-                     name="array_style"
-                     onchange="flag_change(this);">
-              <span data-i18n="canvas.prop.array_points"></span>
-            </label>
-            <br/>
-            <label class="bezier-curve"
-                   data-i18n="[title]canvas.prop.array_bezier_tt">
-              <input class="array-style"
-                     type="radio"
-                     id="bezier"
-                     value="2"
-                     name="array_style"
-                     onchange="flag_change(this);">
-              <span data-i18n="canvas.prop.array_bezier"></span>
-            </label>
-            <br/>
-            <label class="bar-graph"
-                   data-i18n="[title]canvas.prop.array_bars_tt">
-              <input class="array-style"
-                     type="radio"
-                     id="bar-graph"
-                     value="3"
-                     name="array_style"
-                     onchange="flag_change(this);">
-              <span data-i18n="canvas.prop.array_bars"></span>
-            </label>
-            <br/>
+            <table class="array_style">
+              <tr>
+                <td>
+                  <label class="polygon"
+                         data-i18n="[title]canvas.prop.array_polygon_tt">
+                    <input class="array-style"
+                           type="radio"
+                           id="polygon"
+                           value="0"
+                           name="array_style"
+                           onchange="flag_change(this);">
+                    <span data-i18n="canvas.prop.array_polygon"></span>
+                  </label>
+                </td>
+                <td>
+                  <label class="points"
+                         data-i18n="[title]canvas.prop.array_points_tt">
+                    <input class="array-style"
+                           type="radio"
+                           id="points"
+                           value="1"
+                           name="array_style"
+                           onchange="flag_change(this);">
+                    <span data-i18n="canvas.prop.array_points"></span>
+                  </label>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label class="bezier-curve"
+                         data-i18n="[title]canvas.prop.array_bezier_tt">
+                    <input class="array-style"
+                           type="radio"
+                           id="bezier"
+                           value="2"
+                           name="array_style"
+                           onchange="flag_change(this);">
+                    <span data-i18n="canvas.prop.array_bezier"></span>
+                  </label>
+                </td>
+                <td>
+                  <label class="bar-graph"
+                         data-i18n="[title]canvas.prop.array_bars_tt">
+                    <input class="array-style"
+                           type="radio"
+                           id="bar-graph"
+                           value="3"
+                           name="array_style"
+                           onchange="flag_change(this);">
+                    <span data-i18n="canvas.prop.array_bars"></span>
+                  </label>
+                </td>
+              </tr>
+            </table>
           </div>
 
       <div class="array-fill">
@@ -623,7 +634,7 @@ function init_arrays(attr_objects) {
     if (attr_objects.length) {
         // populate form with first array
         populate_array_form(attr_objects);
-        // disable x1 and x2 for garrays-- they
+        // hide x1 and x2 for garrays-- they
         // automatically get set to the array size
         document.getElementsByName("x1")[0].disabled = true;
         document.getElementsByName("x2")[0].disabled = true;

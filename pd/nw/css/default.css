@@ -336,6 +336,10 @@ text {
 
 /* Common to all dialogs */
 
+.dialog_body {
+    background-color:#ccc;
+}
+
 .submit_buttons {
     text-align: center;
     padding: 8px;
@@ -343,12 +347,16 @@ text {
 
 fieldset {
     font-family:Georgia;
-    background-color:#eeeeee;
+    background-color:#ccc;
     border-radius:3px;
-    border:2px solid black;
+    border:1px solid #ddd;
     margin-left:auto;
     margin-right:auto;
-    padding: 10px;
+    padding: 8px;
+}
+
+legend {
+    font-size: 1.2em;
 }
 
 .hidden {
@@ -360,11 +368,6 @@ fieldset {
 }
 
 /* Iemgui dialog */
-
-#iemgui_dialog_body {
-    font-family:Verdana;
-    margin: 0px;
-}
 
 input[type="text"]{
     width:3em;
@@ -435,11 +438,24 @@ div.y1 {
 div.x1 {
     text-align: center;
     padding: 3px;
+    white-space: nowrap;
 }
 
 div.y2 {
     text-align: center;
     padding: 3px;
+}
+
+.x-margin {
+    white-space: nowrap;
+}
+
+.array_style {
+    white-space: nowrap;
+}
+
+#array_name_input {
+    width: 6em;
 }
 
 .disabled {

@@ -3276,7 +3276,7 @@ function gui_canvas_dialog(did, attr_arrays) {
             }
         }
     }
-    dialogwin[did] = nw_create_window(did, "canvas", 250, 100,
+    dialogwin[did] = nw_create_window(did, "canvas", 300, 100,
         popup_coords[2], popup_coords[3],
         attr_arrays);
 }
@@ -3290,7 +3290,7 @@ function gui_remove_gfxstub(did) {
 
 function gui_font_dialog(cid, gfxstub, font_size) {
     var attrs = { canvas: cid, font_size: font_size };
-    dialogwin[gfxstub] = nw_create_window(gfxstub, "font", 265, 265, 0, 0,
+    dialogwin[gfxstub] = nw_create_window(gfxstub, "font", 265, 200, 0, 0,
         attrs);
 }
 
@@ -3304,7 +3304,7 @@ function gui_pd_dsp(state) {
 
 function open_prefs() {
     if (!dialogwin["prefs"]) {
-        nw_create_window("prefs", "prefs", 265, 540, 0, 0, null);
+        nw_create_window("prefs", "prefs", 265, 350, 0, 0, null);
     }
 }
 
