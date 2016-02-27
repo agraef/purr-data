@@ -337,7 +337,7 @@ text {
 /* Common to all dialogs */
 
 .dialog_body {
-    background-color:#ccc;
+    background-color:#f3f3f3;
 }
 
 .submit_buttons {
@@ -347,7 +347,7 @@ text {
 
 fieldset {
     font-family:Georgia;
-    background-color:#ccc;
+    background-color:#f3f3f3;
     border-radius:3px;
     border:1px solid #ddd;
     margin-left:auto;
