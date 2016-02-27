@@ -237,6 +237,7 @@ function toggle_find_bar() {
         find_bar_text = document.getElementById("console_find_text"),
         state = find_div.style.getPropertyValue("display");
     if (state !== "inline") {
+        find_div.style.setProperty("height", "1.4em");
         find_div.style.setProperty("display", "inline");
         window.setTimeout(function() {
                 find_bar_text.focus();
@@ -244,6 +245,7 @@ function toggle_find_bar() {
             }, 0);
     } else {
         find_div.style.setProperty("display", "none");
+        find_div.style.setProperty("height", "0em");
         // Blur focus so that the console_find keypress doesn't
         // receive our shortcut key
         find_div.blur();

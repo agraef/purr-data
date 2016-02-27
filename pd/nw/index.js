@@ -420,9 +420,9 @@ function nw_create_pd_window_menus(gui, w) {
                 text_container = w.document.getElementById("console_bottom"),
                 state = find_bar.style.getPropertyValue("display");
             if (state === "none") {
-                text_container.style.setProperty("bottom", "1.4em");
+                text_container.style.setProperty("bottom", "1.6em");
                 find_bar.style.setProperty("display", "inline");
-                find_bar.style.setProperty("height", "1em");
+                find_bar.style.setProperty("height", "1.2em");
                 // Don't do the following in logical time so that the
                 // console_find keypress event won't receive this shortcut key
                 window.setTimeout(function() {
