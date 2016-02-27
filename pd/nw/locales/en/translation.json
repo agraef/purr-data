@@ -256,7 +256,7 @@
     },
     "prop": {
       "heading": {
-        "gop": "appearance on parent",
+        "gop": "appearance",
         "data_scaling": "data scaling",
         "size": "size",
         "viewbox_offsets": "viewbox offsets",
