@@ -143,6 +143,17 @@ var canvas_events = (function() {
         textbox = function () {
             return document.getElementById("new_object_textentry");
         },
+        find_scalar_draggable = function (elem) {
+            var ret = elem;
+            while (ret) {
+                if (scalar_draggables[ret.id]) {
+                    return ret;
+                }
+                ret = (ret.parentNode && ret.parentNode.tagName === "g") ?
+                    ret.parentNode : null;
+            }
+            return ret; // returning null if no parent group has a listener
+        },
         target_is_scrollbar = function(evt) {
             // Don't send the event to Pd if we click on the scrollbars.
             // This is a bit fragile because we're suppressing on
@@ -185,13 +196,14 @@ var canvas_events = (function() {
                 // tk events (and, therefore, Pd evnets) are one greater
                 // than html5...
                 var b = evt.button + 1;
-                var mod;
+                var mod, match_elem;
                 // See if there are any draggable scalar shapes...
-                if (Object.keys(scalar_draggables)) {
+                if (Object.keys(scalar_draggables).length) {
                     // if so, see if our target is one of them...
-                    if (scalar_draggables[evt.target.id]) {
+                    match_elem = find_scalar_draggable(evt.target);
+                    if (match_elem) {
                         // then set some state and turn on the drag events
-                        draggable_elem = evt.target;
+                        draggable_elem = match_elem;
                         last_draggable_x = evt.pageX;
                         last_draggable_y = evt.pageY;
                         canvas_events.scalar_drag();
