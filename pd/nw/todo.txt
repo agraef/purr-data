@@ -19,10 +19,8 @@ Event settings for edit mode
    * a click in the box will anchor the box and trigger #2 above
 
 HTML5 which may not be standard yet:
-1) mouse.pageX/pageY -- exist in Chromium but maybe not in FF et al.
-2) svg 'overflow' attribute -- probably doesn't work in other browsers
-3) document.body.scrollTop (might be Chromium-specific, not sure)
-4) document.body.scrollLeft (might be Chromium-specific, not sure)
+1) document.body.scrollTop (might be Chromium-specific, not sure)
+2) document.body.scrollLeft (might be Chromium-specific, not sure)
 
 Problems to put off until all (or most) sys_vgui calls are eliminated:
 [x] gui-side parser inside -- pdgui.js
