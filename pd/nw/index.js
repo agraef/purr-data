@@ -98,12 +98,18 @@ function console_unwrap_tag(console_elem, tag_name) {
     }
 }
 
+// We need to use a regular expression to search without regard to case
+function escapeRegExp(string){
+  // $& means the whole matched string
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 function console_find_text(evt, callback) {
     var console_text = document.getElementById("p1"),
         wrap_tag = "mark",
         wrapper_count,
         elem = evt.target;
     window.setTimeout(function () {
+        var find_text = new RegExp(escapeRegExp(elem.value), "gi");
         console_unwrap_tag(console_text, wrap_tag);
         // Check after the event if the value is empty
         if (elem.value === undefined || elem.value === "") {
@@ -112,7 +118,7 @@ function console_find_text(evt, callback) {
         } else {
             window.findAndReplaceDOMText(console_text, {
                 //preset: "prose",
-                find: elem.value.toLowerCase(),
+                find: find_text,
                 wrap: wrap_tag
             });
             // The searchAndReplace API is so bad you can't even know how
