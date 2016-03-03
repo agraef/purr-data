@@ -10,7 +10,7 @@ maintainer: Jonathan Wilkes <jancsika@yahoo.com>
 * [Goals](#goals)
 * [Installation Guide](#installation-guide)
 * [Contributor Guide](#contributor-guide)
-* [Human Interface Guidelines](#hig)
+* [Human Interface Guidelines](#human-interface-guidelines)
 * [Core Pd Notes](#core-pd-notes)
 * [GUI Message Spec](#gui-messaging-specification)
 
