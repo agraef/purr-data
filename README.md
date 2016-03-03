@@ -10,6 +10,7 @@ maintainer: Jonathan Wilkes <jancsika@yahoo.com>
 * [Goals](#goals)
 * [Installation Guide](#installation-guide)
 * [Contributor Guide](#contributor-guide)
+* [Human Interface Guidelines](#hig)
 * [Core Pd Notes](#core-pd-notes)
 * [GUI Message Spec](#gui-messaging-specification)
 
@@ -123,6 +124,50 @@ Here are some of the current tasks:
     And Mathieu Bouchard's "pure unity" (not sure if this is the most
     recent link...):
     http://sourceforge.net/p/pure-data/svn/HEAD/tree/tags/externals/pureunity/pureunity-0.0/
+
+### Human Interface Guidelines
+
+#### General Look and Feel
+
+Pd is a multi-window application that consists of three parts:
+
+1. A main window, called the "Pd Window" or "Console Window". This window
+   displays informational and error messages for Pd programs.
+2. One or more "canvas" windows-- aka "patch" windows, used to display the
+   diagrams that make up a Pd program.
+3. One or more dialog windows used to configure the various parts of Pd.
+
+All should look simple and uncluttered. Although "canvas" windows cannot
+(yet) be traversed and edited using only the keyboard, all three parts of Pd
+should be designed so that they can be manipulated using only the keyboard.
+
+### Hooks for new users
+It should also be possible to produce sound and interact when a new user runs
+program for the very first time. In every release, there should be a link at
+the bottom of the Console Window to a short game written in Pd that demonstrates
+one or more of the capabilities of the Pd environment. The game should be
+designed to be fun outside of its efficacy as a demonstration of Pd.
+
+#### Fonts
+Pd ships with "DejaVu Sans Mono", which is used for the text in canvas windows.
+Fonts are sized to fit the hard-coded constraints in Pd Vanilla. This way box
+sizes will match as closely as possible across distributions and OSes.
+
+These hard-coded sizes are maximum character widths and heights. No font
+fits these maximums exactly, so it's currently impossible to tell when looking
+at a Pd canvas whether the objects will collide on a system using a different
+font (or even a different font-rendering engine).
+
+Dialogs and console button labels may use variable-width fonts. There is not
+yet a suggested default to use for these.
+
+The console printout area currently uses "DejaVu Sans Mono". Errors are printed
+as a link so that the user can click them to highlight the corresponded canvas
+or object that triggered the error.
+
+#### Colors
+
+Nothing set in stone yet.
 
 ### Core Pd Notes
 
