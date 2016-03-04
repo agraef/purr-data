@@ -577,7 +577,20 @@ function canvas_menuclose_callback(cid_for_dialog, cid, force) {
     // we actually need to disable the menubar items, too, but we haven't
     // done that yet.
     w.canvas_events.none();
-    dialog.showModal();
+    // go back to original zoom level so that dialog will show up
+    nw.zoomLevel = 1;
+    // big workaround-- apparently the dialog placement algo and the nw.js
+    // zoomLevel state change don't happen deterministically. So we set a
+    // timeout to force the dialog to render after the zoomLevel change.
+
+    // Probably the best solution is to give up on using the nw.js zoomLevel
+    // method altogether and do canvas zooming completely in the DOM. This will
+    // add some math to the canvas_events, so it's probably a good idea to
+    // wait until we move most of the GUI functionality out of the C code (or
+    // at least until we quit sending incessant "motion" messages to the core).
+    w.setTimeout(function() {
+        dialog.showModal();
+    }, 0);
 }
 
 function gui_canvas_menuclose(cid_for_dialog, cid, force) {
