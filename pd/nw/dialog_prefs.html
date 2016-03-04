@@ -1,30 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html id="prefs_html_element">
   <head>
     <link id="page_style" rel="stylesheet" type="text/css" href="css/default.css">
   </head>
-  <body class="dialog_body">
-    <div class="container noselect">
-      <div class="menu">
-        <span data-i18n="[title]prefs.heading.audio_tt">
-          <a onclick="display_pref('audio');"
-             data-i18n="prefs.heading.audio">
-          </a> 
-        </span>
-        <span data-i18n="[title]prefs.heading.midi_tt">
-          <a onclick="display_pref('midi');"
-             data-i18n="prefs.heading.midi"></a> 
-        </span>
-        <span data-i18n="[title]prefs.heading.gui_tt">
-          <a onclick="display_pref('gui');"
-             data-i18n="prefs.heading.gui"></a> 
-        </span>
-      </div>
+  <body class="dialog_body" id="prefs_body">
+<div class="container noselect prefs_container">
+    <div class="prefs_tab_group">
+      <input type="radio"
+             name="prefs_radio_group"
+             id="audio_tab_radio"
+             class="tab1 prefs_tab"
+             checked="checked" />
+      <label for="audio_tab_radio" data-i18n="[title]prefs.heading.audio_tt">
+        <span data-i18n="prefs.heading.audio"></span>
+      </label>
 
-      <fieldset id="audio">
-        <legend data-i18n="prefs.heading.audio"></legend>
-        <select id="audio_api" onchange="change_api(this);">
-        </select>
+      <input type="radio"
+             name="prefs_radio_group"
+             id="midi_tab_radio"
+             class="tab2 prefs_tab"/>
+      <label for="midi_tab_radio" data-i18n="[title]prefs.heading.midi_tt">
+        <span data-i18n="prefs.heading.midi"></span>
+      </label>
+
+      <input type="radio"
+             name="prefs_radio_group"
+             id="gui_tab_radio"
+             class="tab3 prefs_tab"/>
+      <label for="gui_tab_radio" data-i18n="[title]prefs.heading.gui_tt">
+        <span data-i18n="prefs.heading.gui"></span>
+      </label>
+
+      <div class="tab1">
+        <label data-i18n="[title]prefs.audio.api_tt">
+          <span data-i18n="prefs.audio.api"></span>
+          <select id="audio_api" onchange="change_api(this);">
+          </select>
+        </label>
         <br/>
         <label data-i18n="[title]prefs.audio.sr_tt">
           <span data-i18n="prefs.audio.sr"></span>
@@ -48,16 +60,18 @@
             <input type="checkbox" id="callback" name="callback">
           </label>
         </div>
-
-        <select id="blocksize"
-                onchange="attr_change(this);">
-          <option value="64">64</option>
-          <option value="128">128</option>
-          <option value="256">256</option>
-          <option value="512">512</option>
-          <option value="1024">1024</option>
-          <option value="2048">2048</option>
-        </select>
+        <label data-i18n="[title]prefs.audio.blocksize_tt">
+          <span data-i18n="prefs.audio.blocksize"></span>
+          <select id="blocksize"
+                  onchange="attr_change(this);">
+            <option value="64">64</option>
+            <option value="128">128</option>
+            <option value="256">256</option>
+            <option value="512">512</option>
+            <option value="1024">1024</option>
+            <option value="2048">2048</option>
+          </select>
+        </label>
         <br/>
         <table>
           <tr>
@@ -181,11 +195,9 @@
             </td>
           </tr>
         </table>
+      </div>
 
-      </fieldset>
-
-      <fieldset id="midi">
-        <legend data-i18n="prefs.heading.midi"></legend>
+      <div class="tab2">
         <select id="midi_api" onchange="change_api(this);">
         </select>
         <br/>
@@ -206,50 +218,46 @@
         <br/>
         <select id="midi_out4" onchange="dev_change(this);"></select>
         <br/>
-
-      </fieldset>
-
-      <fieldset id="gui">
-        <legend data-i18n="prefs.heading.gui"></legend>
-
-          <label data-i18n="[title]prefs.gui.presets.gui_preset_tt">
-            <span data-i18n="prefs.gui.presets.gui_preset"></span>
-          </label>
-          <select id="gui_preset" onchange="gui_preset_change(this);">
-            <option data-i18n="prefs.gui.presets.default" value="default">
-            </option>
-            <option data-i18n="prefs.gui.presets.inverted" value="inverted">
-            </option>
-            <option data-i18n="prefs.gui.presets.vanilla" value="vanilla">
-            </option>
-            <option data-i18n="prefs.gui.presets.vanilla_inverted" value="vanilla_inverted">
-            </option>
-            <option data-i18n="prefs.gui.presets.extended" value="extended">
-            </option>
-            <option data-i18n="prefs.gui.presets.c64" value="c64">
-            </option>
-            <option data-i18n="prefs.gui.presets.subdued" value="subdued">
-            </option>
-            <option data-i18n="prefs.gui.presets.strongbad" value="strongbad">
-            </option>
-          </select>
-
-      </fieldset>
-
-
-    <div class="submit_buttons">
-      <button type="button" onClick="ok()" data-i18n="[title]prefs.ok_tt">
-        <span data-i18n="prefs.ok"></span>
-      </button>
-      <button type="button" onClick="apply()" data-i18n="[title]prefs.apply_tt">
-      <span data-i18n="prefs.apply"></span>
-      </button>
-      <button type="button" onClick="cancel()" data-i18n="[title]prefs.close_tt">
-      <span data-i18n="prefs.close"></span>
-      </button>
       </div>
 
+      <div class="tab3">
+        <label data-i18n="[title]prefs.gui.presets.gui_preset_tt">
+          <span data-i18n="prefs.gui.presets.gui_preset"></span>
+        </label>
+        <select id="gui_preset" onchange="gui_preset_change(this);">
+          <option data-i18n="prefs.gui.presets.default" value="default">
+          </option>
+          <option data-i18n="prefs.gui.presets.inverted" value="inverted">
+          </option>
+          <option data-i18n="prefs.gui.presets.vanilla" value="vanilla">
+          </option>
+          <option data-i18n="prefs.gui.presets.vanilla_inverted" value="vanilla_inverted">
+          </option>
+          <option data-i18n="prefs.gui.presets.extended" value="extended">
+          </option>
+          <option data-i18n="prefs.gui.presets.c64" value="c64">
+          </option>
+          <option data-i18n="prefs.gui.presets.subdued" value="subdued">
+          </option>
+          <option data-i18n="prefs.gui.presets.strongbad" value="strongbad">
+          </option>
+        </select>
+      </div>
     </div>
+
+      <div class="submit_buttons prefs_buttons">
+        <button type="button" onClick="ok()" data-i18n="[title]prefs.ok_tt">
+          <span data-i18n="prefs.ok"></span>
+        </button>
+        <button type="button" onClick="apply()" data-i18n="[title]prefs.apply_tt">
+        <span data-i18n="prefs.apply"></span>
+        </button>
+        <button type="button" onClick="cancel()" data-i18n="[title]prefs.close_tt">
+        <span data-i18n="prefs.close"></span>
+        </button>
+      </div>
+
+</div>
   <script>
 "use strict";
 var gui = require("nw.gui");
@@ -269,17 +277,6 @@ var pd_midi_attrs;
 function ok() {
     apply();
     cancel();
-}
-
-function display_pref(type) {
-    pdgui.post("here i am with " + type);
-    var all, i, this_elem;
-    all = document.getElementsByTagName("fieldset");
-    this_elem = document.getElementById(type);
-    for (i = 0; i < all.length; i++) {
-        all[i].style.setProperty("display", "none");
-    }
-        this_elem.style.setProperty("display", "inline");
 }
 
 function gui_preset_change(elem) {
@@ -573,8 +570,6 @@ function register_window_id(gfxstub, attr_arrays) {
     add_events(gfxstub);
     translate_form();
 
-    // default to audio preference panel
-    display_pref("audio");
     // We don't turn on rendering of the "container" div until
     // We've finished displaying all the spans and populating the
     // labels and form elements.  That makes it more efficient and

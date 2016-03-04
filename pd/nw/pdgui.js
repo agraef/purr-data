@@ -3315,7 +3315,7 @@ function gui_pd_dsp(state) {
 
 function open_prefs() {
     if (!dialogwin["prefs"]) {
-        nw_create_window("prefs", "prefs", 265, 350, 0, 0, null);
+        nw_create_window("prefs", "prefs", 265, 400, 0, 0, null);
     }
 }
 
