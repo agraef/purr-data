@@ -32,47 +32,55 @@
         </label>
 
         <div class="tab1">
-<div>
-          <label data-i18n="[title]prefs.audio.api_tt">
-            <span data-i18n="prefs.audio.api"></span>
-            <select id="audio_api" onchange="change_api(this);">
-            </select>
-          </label>
-
-          <label data-i18n="[title]prefs.audio.sr_tt">
-            <span data-i18n="prefs.audio.sr"></span>
-            <input type="text"
-                   id="rate"
-                   name="rate"
-                   onchange="attr_change(this);">
-          </label>
-</div>
-<div class="audio_dev_settings">
-          <label data-i18n="[title]prefs.audio.blocksize_tt">
-            <span data-i18n="prefs.audio.blocksize"></span>
-            <select id="blocksize"
-                    onchange="attr_change(this);">
-              <option value="64">64</option>
-              <option value="128">128</option>
-              <option value="256">256</option>
-              <option value="512">512</option>
-              <option value="1024">1024</option>
-              <option value="2048">2048</option>
-            </select>
-          </label>
-          <label data-i18n="[title]prefs.audio.advance_tt">
-            <span data-i18n="prefs.audio.advance"></span>
-            <input type="text"
-                   id="advance"
-                   name="advance"
-                   onchange="attr_change(this);">
-          </label>
-</div class="audio_dev_settings">
-          <div id="callback_container" class="hidden">
-            <label data-i18n="[title]prefs.audio.callback_tt">
-              <span data-i18n="prefs.audio.callback"></span>
-              <input type="checkbox" id="callback" name="callback">
+          <div class="audio_dev_settings">
+            <label data-i18n="[title]prefs.audio.api_tt">
+              <span data-i18n="prefs.audio.api"></span>
+              <select id="audio_api" onchange="change_api(this);">
+              </select>
             </label>
+
+            <label data-i18n="[title]prefs.audio.sr_tt">
+              <span data-i18n="prefs.audio.sr"></span>
+              <input type="text"
+                     id="rate"
+                     name="rate"
+                     onchange="attr_change(this);">
+            </label>
+          </div>
+          <div class="audio_dev_settings">
+            <label data-i18n="[title]prefs.audio.blocksize_tt">
+              <span data-i18n="prefs.audio.blocksize"></span>
+              <select id="blocksize"
+                      onchange="attr_change(this);">
+                <option value="64">64</option>
+                <option value="128">128</option>
+                <option value="256">256</option>
+                <option value="512">512</option>
+                <option value="1024">1024</option>
+                <option value="2048">2048</option>
+              </select>
+            </label>
+            <label data-i18n="[title]prefs.audio.advance_tt">
+              <span data-i18n="prefs.audio.advance"></span>
+              <input type="text"
+                     id="advance"
+                     name="advance"
+                     onchange="attr_change(this);">
+            </label>
+          </div>
+          <div class="audio_dev_settings">
+            <span id="callback_container" class="hidden">
+              <label data-i18n="[title]prefs.audio.callback_tt">
+                <span data-i18n="prefs.audio.callback"></span>
+                <input type="checkbox" id="callback" name="callback">
+              </label>
+            </span>
+            <span id="multi_dev_container" class="hidden">
+              <label data-i18n="[title]prefs.audio.callback_tt">
+                <span data-i18n="prefs.audio.callback"></span>
+                <input type="checkbox" id="multi-dev" name="multi-dev">
+              </label>
+            </span>
           </div>
           <table>
             <tr>
@@ -199,9 +207,15 @@
         </div>
 
         <div class="tab2">
-          <select id="midi_api" onchange="change_api(this);">
-          </select>
-          <br/>
+
+          <div class="audio_dev_settings">
+            <label data-i18n="[title]prefs.midi.api_tt">
+              <span data-i18n="prefs.midi.api"></span>
+              <select id="midi_api" onchange="change_api(this);">
+              </select>
+            </label>
+          </div>
+
           <select id="midi_in1" onchange="dev_change(this);"></select>
           <br/>
           <select id="midi_in2" onchange="dev_change(this);"></select>
@@ -301,6 +315,9 @@ function dev_change(elem) {
     attrs[index] = elem.value;
     pdgui.post("id is " + elem.id);
     pdgui.post("new chan attrs is " + attrs);
+
+    disable_unused_chans("in");
+    disable_unused_chans("out");
 }
 
 function attr_change(elem) {
@@ -484,6 +501,31 @@ function populate_midi_devs(type, attrs) {
     }
 }
 
+function disable_unused_chans(type) {
+    var i, chan_elem;
+    for (i = 0; i < 4; i++) {
+        chan_elem = document.getElementById(type + "chans" + (i+1));
+        if (+document.getElementById(type + (i+1)).value === -1) {
+            chan_elem.disabled = true;
+        } else {
+            chan_elem.disabled = false;
+        }
+    }
+}
+
+function disable_unused_devs(type, canmulti) {
+    var i;
+    if (+canmulti < 2) {
+        for (i = 0; i < 3; i++) {
+            document.getElementById(type + (i+2)).disabled = true;
+        }
+    } else {
+        for (i = 0; i < 4; i++) {
+            document.getElementById(type + (i+1)).disabled = false;
+        }
+    }
+}
+
 function audio_prefs_callback(attrs) {
     pd_audio_attrs = attrs;
     var api_select = document.getElementById("audio_api");
@@ -523,6 +565,12 @@ function audio_prefs_callback(attrs) {
     // have the side-effect of setting the dev to 'None')
     set_chans("in", get_attr("pd-inchans", attrs));
     set_chans("out", get_attr("pd-outchans", attrs));
+
+    disable_unused_chans("in");
+    disable_unused_chans("out");
+
+    disable_unused_devs("in", get_attr("canmulti", attrs));
+    disable_unused_devs("out", get_attr("canmulti", attrs));
 
     pdgui.resize_window(pd_object_callback);
 }
