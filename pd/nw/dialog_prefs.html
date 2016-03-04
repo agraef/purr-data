@@ -4,246 +4,247 @@
     <link id="page_style" rel="stylesheet" type="text/css" href="css/default.css">
   </head>
   <body class="dialog_body" id="prefs_body">
-<div class="container noselect prefs_container">
-    <div class="prefs_tab_group">
-      <input type="radio"
-             name="prefs_radio_group"
-             id="audio_tab_radio"
-             class="tab1 prefs_tab"
-             checked="checked" />
-      <label for="audio_tab_radio" data-i18n="[title]prefs.heading.audio_tt">
-        <span data-i18n="prefs.heading.audio"></span>
-      </label>
-
-      <input type="radio"
-             name="prefs_radio_group"
-             id="midi_tab_radio"
-             class="tab2 prefs_tab"/>
-      <label for="midi_tab_radio" data-i18n="[title]prefs.heading.midi_tt">
-        <span data-i18n="prefs.heading.midi"></span>
-      </label>
-
-      <input type="radio"
-             name="prefs_radio_group"
-             id="gui_tab_radio"
-             class="tab3 prefs_tab"/>
-      <label for="gui_tab_radio" data-i18n="[title]prefs.heading.gui_tt">
-        <span data-i18n="prefs.heading.gui"></span>
-      </label>
-
-      <div class="tab1">
-        <label data-i18n="[title]prefs.audio.api_tt">
-          <span data-i18n="prefs.audio.api"></span>
-          <select id="audio_api" onchange="change_api(this);">
-          </select>
+    <div class="container noselect prefs_container">
+      <div class="prefs_tab_group">
+        <input type="radio"
+               name="prefs_radio_group"
+               id="audio_tab_radio"
+               class="tab1 prefs_tab"
+               checked="checked" />
+        <label for="audio_tab_radio" data-i18n="[title]prefs.heading.audio_tt">
+          <span data-i18n="prefs.heading.audio"></span>
         </label>
-        <br/>
-        <label data-i18n="[title]prefs.audio.sr_tt">
-          <span data-i18n="prefs.audio.sr"></span>
-          <input type="text"
-                 id="rate"
-                 name="rate"
-                 onchange="attr_change(this);">
+
+        <input type="radio"
+               name="prefs_radio_group"
+               id="midi_tab_radio"
+               class="tab2 prefs_tab"/>
+        <label for="midi_tab_radio" data-i18n="[title]prefs.heading.midi_tt">
+          <span data-i18n="prefs.heading.midi"></span>
         </label>
-        <br/>
-        <label data-i18n="[title]prefs.audio.advance_tt">
-          <span data-i18n="prefs.audio.advance"></span>
-          <input type="text"
-                 id="advance"
-                 name="advance"
-                 onchange="attr_change(this);">
+
+        <input type="radio"
+               name="prefs_radio_group"
+               id="gui_tab_radio"
+               class="tab3 prefs_tab"/>
+        <label for="gui_tab_radio" data-i18n="[title]prefs.heading.gui_tt">
+          <span data-i18n="prefs.heading.gui"></span>
         </label>
-        <br/>
-        <div id="callback_container" class="hidden">
-          <label data-i18n="[title]prefs.audio.callback_tt">
-            <span data-i18n="prefs.audio.callback"></span>
-            <input type="checkbox" id="callback" name="callback">
+
+        <div class="tab1">
+<div>
+          <label data-i18n="[title]prefs.audio.api_tt">
+            <span data-i18n="prefs.audio.api"></span>
+            <select id="audio_api" onchange="change_api(this);">
+            </select>
           </label>
+
+          <label data-i18n="[title]prefs.audio.sr_tt">
+            <span data-i18n="prefs.audio.sr"></span>
+            <input type="text"
+                   id="rate"
+                   name="rate"
+                   onchange="attr_change(this);">
+          </label>
+</div>
+<div class="audio_dev_settings">
+          <label data-i18n="[title]prefs.audio.blocksize_tt">
+            <span data-i18n="prefs.audio.blocksize"></span>
+            <select id="blocksize"
+                    onchange="attr_change(this);">
+              <option value="64">64</option>
+              <option value="128">128</option>
+              <option value="256">256</option>
+              <option value="512">512</option>
+              <option value="1024">1024</option>
+              <option value="2048">2048</option>
+            </select>
+          </label>
+          <label data-i18n="[title]prefs.audio.advance_tt">
+            <span data-i18n="prefs.audio.advance"></span>
+            <input type="text"
+                   id="advance"
+                   name="advance"
+                   onchange="attr_change(this);">
+          </label>
+</div class="audio_dev_settings">
+          <div id="callback_container" class="hidden">
+            <label data-i18n="[title]prefs.audio.callback_tt">
+              <span data-i18n="prefs.audio.callback"></span>
+              <input type="checkbox" id="callback" name="callback">
+            </label>
+          </div>
+          <table>
+            <tr>
+              <td>
+                Input Devices
+              </td>
+              <td>
+                <span data-i18n="prefs.audio.channels"></span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <select id="in1" onchange="dev_change(this);"></select>
+              </td>
+              <td>
+                <label data-i18n="[title]prefs.audio.channels_tt">
+                  <input type="text"
+                   id="inchans1"
+                   name="inchans1"
+                   onchange="dev_change(this);">
+                </label>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <select id="in2" onchange="dev_change(this);"></select>
+              </td>
+              <td>
+                <label data-i18n="[title]prefs.audio.channels_tt">
+                  <input type="text"
+                   id="inchans2"
+                   name="inchans2"
+                   onchange="dev_change(this);">
+                </label>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <select id="in3" onchange="dev_change(this);"></select>
+              </td>
+              <td>
+                <label data-i18n="[title]prefs.audio.channels_tt">
+                  <input type="text"
+                   id="inchans3"
+                   name="inchans3"
+                   onchange="dev_change(this);">
+                </label>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <select id="in4" onchange="dev_change(this);"></select>
+              </td>
+              <td>
+                <label data-i18n="[title]prefs.audio.channels_tt">
+                  <input type="text"
+                   id="inchans4"
+                   name="inchans4"
+                   onchange="dev_change(this);">
+                </label>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Output Devices
+              </td>
+              <td>
+                <span data-i18n="prefs.audio.channels"></span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <select id="out1" onchange="dev_change(this);"></select>
+              </td>
+              <td>
+                <label data-i18n="[title]prefs.audio.channels_tt">
+                  <input type="text"
+                   id="outchans1"
+                   name="outchans1"
+                   onchange="dev_change(this);">
+                </label>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <select id="out2" onchange="dev_change(this);"></select>
+              </td>
+              <td>
+                <label data-i18n="[title]prefs.audio.channels_tt">
+                  <input type="text"
+                   id="outchans2"
+                   name="outchans2"
+                   onchange="dev_change(this);">
+                </label>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <select id="out3" onchange="dev_change(this);"></select>
+              </td>
+              <td>
+                <label data-i18n="[title]prefs.audio.channels_tt">
+                  <input type="text"
+                   id="outchans3"
+                   name="outchans3"
+                   onchange="dev_change(this);">
+                </label>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <select id="out4" onchange="dev_change(this);"></select>
+              </td>
+              <td>
+                <label data-i18n="[title]prefs.audio.channels_tt">
+                  <input type="text"
+                   id="outchans4"
+                   name="outchans4"
+                   onchange="dev_change(this);">
+                </label>
+              </td>
+            </tr>
+          </table>
         </div>
-        <label data-i18n="[title]prefs.audio.blocksize_tt">
-          <span data-i18n="prefs.audio.blocksize"></span>
-          <select id="blocksize"
-                  onchange="attr_change(this);">
-            <option value="64">64</option>
-            <option value="128">128</option>
-            <option value="256">256</option>
-            <option value="512">512</option>
-            <option value="1024">1024</option>
-            <option value="2048">2048</option>
+
+        <div class="tab2">
+          <select id="midi_api" onchange="change_api(this);">
           </select>
-        </label>
-        <br/>
-        <table>
-          <tr>
-            <td>
-              Input Devices
-            </td>
-            <td>
-              <span data-i18n="prefs.audio.channels"></span>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <select id="in1" onchange="dev_change(this);"></select>
-            </td>
-            <td>
-              <label data-i18n="[title]prefs.audio.channels_tt">
-                <input type="text"
-                 id="inchans1"
-                 name="inchans1"
-                 onchange="dev_change(this);">
-              </label>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <select id="in2" onchange="dev_change(this);"></select>
-            </td>
-            <td>
-              <label data-i18n="[title]prefs.audio.channels_tt">
-                <input type="text"
-                 id="inchans2"
-                 name="inchans2"
-                 onchange="dev_change(this);">
-              </label>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <select id="in3" onchange="dev_change(this);"></select>
-            </td>
-            <td>
-              <label data-i18n="[title]prefs.audio.channels_tt">
-                <input type="text"
-                 id="inchans3"
-                 name="inchans3"
-                 onchange="dev_change(this);">
-              </label>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <select id="in4" onchange="dev_change(this);"></select>
-            </td>
-            <td>
-              <label data-i18n="[title]prefs.audio.channels_tt">
-                <input type="text"
-                 id="inchans4"
-                 name="inchans4"
-                 onchange="dev_change(this);">
-              </label>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              Output Devices
-            </td>
-            <td>
-              <span data-i18n="prefs.audio.channels"></span>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <select id="out1" onchange="dev_change(this);"></select>
-            </td>
-            <td>
-              <label data-i18n="[title]prefs.audio.channels_tt">
-                <input type="text"
-                 id="outchans1"
-                 name="outchans1"
-                 onchange="dev_change(this);">
-              </label>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <select id="out2" onchange="dev_change(this);"></select>
-            </td>
-            <td>
-              <label data-i18n="[title]prefs.audio.channels_tt">
-                <input type="text"
-                 id="outchans2"
-                 name="outchans2"
-                 onchange="dev_change(this);">
-              </label>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <select id="out3" onchange="dev_change(this);"></select>
-            </td>
-            <td>
-              <label data-i18n="[title]prefs.audio.channels_tt">
-                <input type="text"
-                 id="outchans3"
-                 name="outchans3"
-                 onchange="dev_change(this);">
-              </label>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <select id="out4" onchange="dev_change(this);"></select>
-            </td>
-            <td>
-              <label data-i18n="[title]prefs.audio.channels_tt">
-                <input type="text"
-                 id="outchans4"
-                 name="outchans4"
-                 onchange="dev_change(this);">
-              </label>
-            </td>
-          </tr>
-        </table>
-      </div>
+          <br/>
+          <select id="midi_in1" onchange="dev_change(this);"></select>
+          <br/>
+          <select id="midi_in2" onchange="dev_change(this);"></select>
+          <br/>
+          <select id="midi_in3" onchange="dev_change(this);"></select>
+          <br/>
+          <select id="midi_in4" onchange="dev_change(this);"></select>
+          <br/>
 
-      <div class="tab2">
-        <select id="midi_api" onchange="change_api(this);">
-        </select>
-        <br/>
-        <select id="midi_in1" onchange="dev_change(this);"></select>
-        <br/>
-        <select id="midi_in2" onchange="dev_change(this);"></select>
-        <br/>
-        <select id="midi_in3" onchange="dev_change(this);"></select>
-        <br/>
-        <select id="midi_in4" onchange="dev_change(this);"></select>
-        <br/>
+          <select id="midi_out1" onchange="dev_change(this);"></select>
+          <br/>
+          <select id="midi_out2" onchange="dev_change(this);"></select>
+          <br/>
+          <select id="midi_out3" onchange="dev_change(this);"></select>
+          <br/>
+          <select id="midi_out4" onchange="dev_change(this);"></select>
+          <br/>
+        </div>
 
-        <select id="midi_out1" onchange="dev_change(this);"></select>
-        <br/>
-        <select id="midi_out2" onchange="dev_change(this);"></select>
-        <br/>
-        <select id="midi_out3" onchange="dev_change(this);"></select>
-        <br/>
-        <select id="midi_out4" onchange="dev_change(this);"></select>
-        <br/>
+        <div class="tab3">
+          <label data-i18n="[title]prefs.gui.presets.gui_preset_tt">
+            <span data-i18n="prefs.gui.presets.gui_preset"></span>
+          </label>
+          <select id="gui_preset" onchange="gui_preset_change(this);">
+            <option data-i18n="prefs.gui.presets.default" value="default">
+            </option>
+            <option data-i18n="prefs.gui.presets.inverted" value="inverted">
+            </option>
+            <option data-i18n="prefs.gui.presets.vanilla" value="vanilla">
+            </option>
+            <option data-i18n="prefs.gui.presets.vanilla_inverted" value="vanilla_inverted">
+            </option>
+            <option data-i18n="prefs.gui.presets.extended" value="extended">
+            </option>
+            <option data-i18n="prefs.gui.presets.c64" value="c64">
+            </option>
+            <option data-i18n="prefs.gui.presets.subdued" value="subdued">
+            </option>
+            <option data-i18n="prefs.gui.presets.strongbad" value="strongbad">
+            </option>
+          </select>
+        </div>
       </div>
-
-      <div class="tab3">
-        <label data-i18n="[title]prefs.gui.presets.gui_preset_tt">
-          <span data-i18n="prefs.gui.presets.gui_preset"></span>
-        </label>
-        <select id="gui_preset" onchange="gui_preset_change(this);">
-          <option data-i18n="prefs.gui.presets.default" value="default">
-          </option>
-          <option data-i18n="prefs.gui.presets.inverted" value="inverted">
-          </option>
-          <option data-i18n="prefs.gui.presets.vanilla" value="vanilla">
-          </option>
-          <option data-i18n="prefs.gui.presets.vanilla_inverted" value="vanilla_inverted">
-          </option>
-          <option data-i18n="prefs.gui.presets.extended" value="extended">
-          </option>
-          <option data-i18n="prefs.gui.presets.c64" value="c64">
-          </option>
-          <option data-i18n="prefs.gui.presets.subdued" value="subdued">
-          </option>
-          <option data-i18n="prefs.gui.presets.strongbad" value="strongbad">
-          </option>
-        </select>
-      </div>
-    </div>
 
       <div class="submit_buttons prefs_buttons">
         <button type="button" onClick="ok()" data-i18n="[title]prefs.ok_tt">
@@ -256,8 +257,7 @@
         <span data-i18n="prefs.close"></span>
         </button>
       </div>
-
-</div>
+    </div>
   <script>
 "use strict";
 var gui = require("nw.gui");

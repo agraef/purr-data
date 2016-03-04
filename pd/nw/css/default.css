@@ -497,16 +497,16 @@ div.y2 {
 }
 
 /* Main tab widget */
+
+/* All the display, width, and height settings below are a house of cards.
+   I don't have the schooling to actually predict how all these CSS elements
+   work together to create the whole. I just fudged around until I found a
+   way to get the buttons anchored at the bottom of the dialog without
+   triggering scrollbars to appear. If someone knows a way to do it "right"
+   without becoming an order of magnitude more complex, do feel free... */
 .prefs_tab_group {
-    /* I needed to get this div to expand with the inner div content so
-       that I could resize the prefs window to display the content without
-       a scrollbar. I just played stackexchange roulette until I found
-       something that worked. I have no idea why absolute positioning
-       solves my problem, nor do I have time to become a CSS wizard just
-       to get this single thing to work. */
     display: table;
     width: 90%;
-/*    height: 90vh; */
 }
 
 /* Configure the radio buttons to hide off-screen */
@@ -542,9 +542,9 @@ div.y2 {
 
 /* Checked tabs must be white with the bottom border removed */
 .prefs_tab:checked + label {
-    background-color:white;
+    background-color: #f3f3f3;
     font-weight: bold;
-    border-bottom: 1px solid white;
+    border-bottom: 1px solid #f3f3f3;
     margin-bottom: -1px;
 }
 
@@ -552,33 +552,23 @@ div.y2 {
 .prefs_tab_group > div {
     display: none;
     border-top: 1px solid black;
-/*    border-bottom: 1px solid black; */
-    background-color: white;
-/*    padding: 10px 10px; */
     padding: 0px;
     margin: 0px;
     height: 100%;
-/*    height: 95%; */
-/*    margin-bottom: -20px; */
-/*    overflow: auto; */
-
-/*    box-shadow: 0 0 20px #444;
-    -moz-box-shadow: 0 0 20px #444;
-    -webkit-box-shadow: 0 0 20px #444;
-*/
-/*    border-radius: 0 5px 5px 5px;
-    -moz-border-radius: 0 5px 5px 5px;
-    -webkit-border-radius: 0 5px 5px 5px;
-*/
 }
 
 /* This matches tabs displaying to their associated radio inputs */
 .tab1:checked ~ .tab1, .tab2:checked ~ .tab2, .tab3:checked ~ .tab3 {
     display: table;
     padding: 8px;
+    line-height: 20px;
     width: 100%;
-/*    height: 100%; */
     height: 78vh;
+}
+
+.audio_dev_settings {
+    padding-bottom: 8px;
+    padding-top: 8px;
 }
 
 #prefs_buttons {
