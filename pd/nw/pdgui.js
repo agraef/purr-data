@@ -602,6 +602,7 @@ function gui_canvas_menuclose(cid_for_dialog, cid, force) {
 }
 
 function gui_quit_dialog() {
+    gui_raise_pd_window();
     var reply = pd_window.window.confirm("Really quit?");
     if (reply === true) {
         pdsend("pd quit");
