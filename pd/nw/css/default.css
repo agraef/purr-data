@@ -521,7 +521,7 @@ div.y2 {
     /* inline-block such that the label can be given dimensions */
     display: inline-block;
     /* A nice curved border around the tab */
-    border: 1px solid black;
+    border: 1px solid #ddd;
     /* the bottom border is handled by the tab content div */
     border-bottom: 0;
     /* Padding around tab text */
@@ -531,13 +531,13 @@ div.y2 {
     margin-top: 0px;
     margin-bottom: 0px;
     /* Set the background color to default gray (non-selected tab) */
-    background-color:#ddd;
+    background-color:#e9e9e9;
     height: 5vh;
 }
 
 /* Focused tabs */
 .prefs_tab:focus + label {
-    border: 1px dashed black;
+    border: 1px dashed #ddd;
 }
 
 /* Checked tabs must be white with the bottom border removed */
@@ -551,7 +551,7 @@ div.y2 {
 /* The tab content must fill the widgets size and have a nice border */
 .prefs_tab_group > div {
     display: none;
-    border-top: 1px solid black;
+    border-top: 1px solid #ddd;
     padding: 0px;
     margin: 0px;
     height: 100%;
