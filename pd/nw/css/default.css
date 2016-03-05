@@ -521,23 +521,25 @@ div.y2 {
     /* inline-block such that the label can be given dimensions */
     display: inline-block;
     /* A nice curved border around the tab */
-    border: 1px solid #ddd;
+    border: 1px solid #bbb;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
     /* the bottom border is handled by the tab content div */
     border-bottom: 0;
     /* Padding around tab text */
     padding: 5px 10px;
     /* put a small margin to the left to make the first tab clear */
     margin-left: 4px;
-    margin-top: 0px;
+    margin-top: 8px;
     margin-bottom: 0px;
     /* Set the background color to default gray (non-selected tab) */
-    background-color:#e9e9e9;
+    background-color:#ececec;
     height: 5vh;
 }
 
 /* Focused tabs */
 .prefs_tab:focus + label {
-    border: 1px dashed #ddd;
+    border: 1px dashed #bbb;
 }
 
 /* Checked tabs must be white with the bottom border removed */
