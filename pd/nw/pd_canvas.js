@@ -164,6 +164,23 @@ var canvas_events = (function() {
                 return 0;
             }
         },
+        grow_svg_for_element= function(elem) {
+            // See if an element overflows the svg bbox, and
+            // enlarge the svg to accommodate it
+            var svg = document.getElementById("patchsvg"),
+                elem_bbox = elem.getBoundingClientRect(),
+                svg_viewbox = svg.getAttribute("viewBox").split(" "),
+                w = Math.max(elem_bbox.left + elem_bbox.width, svg_viewbox[2]),
+                h = Math.max(elem_bbox.top + elem_bbox.height, svg_viewbox[3]);
+            svg.setAttribute("viewBox",
+                [Math.min(elem_bbox.left, svg_viewbox[0]),
+                 Math.min(elem_bbox.top, svg_viewbox[1]),
+                 w,
+                 h
+                ].join(" "));
+            svg.setAttribute("width", w);
+            svg.setAttribute("height", h);
+        },
         events = {
             mousemove: function(evt) {
                 //pdgui.post("x: " + evt.pageX + " y: " + evt.pageY +
@@ -429,6 +446,7 @@ var canvas_events = (function() {
                 evt.preventDefault();
                 document.execCommand("insertText", false,
                     evt.clipboardData.getData("text"));
+                grow_svg_for_element(textbox());
             },
             floating_text_click: function(evt) {
                 if (target_is_scrollbar(evt)) {
