@@ -578,7 +578,7 @@ function canvas_menuclose_callback(cid_for_dialog, cid, force) {
     // done that yet.
     w.canvas_events.none();
     // go back to original zoom level so that dialog will show up
-    nw.zoomLevel = 1;
+    nw.zoomLevel = 0;
     // big workaround-- apparently the dialog placement algo and the nw.js
     // zoomLevel state change don't happen deterministically. So we set a
     // timeout to force the dialog to render after the zoomLevel change.
