@@ -27,6 +27,7 @@
 
 #console_controls {
     background-color: LightGray;
+    height: 40px;
 } 
 
 #control_frame {
@@ -142,7 +143,7 @@
 /* This needs to be renamed, since the "Find" bar is actually at the bottom */
 #console_bottom {
     position: absolute;
-    top: 50px;
+    top: 40px;
     left: 0px;
     right: 0px;
     bottom: 0px;
