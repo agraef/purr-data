@@ -50,9 +50,6 @@ Everything else: (A [x] means we've fixed it)
 [ ] fix bug where utf_8 snowmen in an object box can cause a buffer overflow
     in the lib loading routine
 [ ] Figure out what pdtk_ping does
-[ ] don't implement tooltips until we have a single call to create an object
-    plus all xlets. That way we can add an arg or two for the name and dir
-    to find the help patch and get all descriptions in one go
 [ ] make scalars dig inside abstractions when they search the templatecanvas
     for drawing commands.  This will make it possible to build abstraction
     libraries for ds-gui widgets.
