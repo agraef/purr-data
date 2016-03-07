@@ -27,12 +27,10 @@
 
 #console_controls {
     background-color: LightGray;
-    height: 50px; 
 } 
 
 #control_frame {
     padding: 12px;
-    transform: translate(20, -10);
 }
 
 /* The DSP toggle */
