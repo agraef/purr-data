@@ -353,6 +353,10 @@
       "channels": "channels",
       "channels_tt": "number of channels for this device"
     },
+    "midi": {
+      "api": "midi api",
+      "api_tt": "midi backend or server used to communicate with midi devices"
+    },
     "ok": "Ok",
     "ok_tt": "Update the audio properties and close the dialog",
     "apply": "Apply",
