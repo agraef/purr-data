@@ -56,11 +56,10 @@ STRIP = strip --strip-unneeded -R .note -R .comment
 
 # the sources
 
-PASRC = s_audio_pa.c s_audio_pablio.c s_audio_paring.c \
-	s_audio_mmio.c s_midi_mmio.c \
+PASRC = s_audio_pa.c s_audio_paring.c \
+	s_audio_mmio.c \
 	$(PADIR)/src/common/pa_stream.c \
         $(PADIR)/src/common/pa_trace.c \
-        $(PADIR)/src/common/pa_skeleton.c \
         $(PADIR)/src/common/pa_process.c \
         $(PADIR)/src/common/pa_front.c \
         $(PADIR)/src/common/pa_dither.c \
@@ -68,19 +67,21 @@ PASRC = s_audio_pa.c s_audio_pablio.c s_audio_paring.c \
         $(PADIR)/src/common/pa_converters.c \
         $(PADIR)/src/common/pa_allocation.c \
         $(PADIR)/src/common/pa_ringbuffer.c \
+        $(PADIR)/src/os/win/pa_win_coinitialize.c \
         $(PADIR)/src/os/win/pa_win_hostapis.c \
         $(PADIR)/src/os/win/pa_win_util.c \
         $(PADIR)/src/os/win/pa_win_waveformat.c \
         $(PADIR)/src/hostapi/wmme/pa_win_wmme.c
 
 ASIOSRC = $(PADIR)/src/hostapi/asio/iasiothiscallresolver.cpp \
-	$(PADIR)/src/hostapi/asio/pa_asio.cpp $(ASIODIR)/asio.cpp \
-	$(ASIODIR)/asiodrivers.cpp $(ASIODIR)/asiolist.cpp
+	$(PADIR)/src/hostapi/asio/pa_asio.cpp $(ASIODIR)/common/asio.cpp \
+	$(ASIODIR)/host/asiodrivers.cpp $(ASIODIR)/host/pc/asiolist.cpp
 #VSRC =  s_audio_vst.c
 
 PMDIR = ../portmidi
 PMINCLUDE = -I$(PMDIR)/pm_common -I$(PMDIR)/pm_win -I$(PMDIR)/porttime -DNEWBUFFER
-PMSRC = $(PMDIR)/pm_common/portmidi.c \
+PMSRC = s_midi_pm.c \
+        $(PMDIR)/pm_common/portmidi.c \
         $(PMDIR)/pm_common/pmutil.c \
         $(PMDIR)/porttime/porttime.c \
         $(PMDIR)/porttime/ptwinmm.c \
@@ -92,7 +93,7 @@ PMOBJ =  $(PMSRC:.c=.o)
 GSRC = t_tkcmd.c
 
 HEADERS = g_all_guis.h m_imp.h t_tk.h g_canvas.h m_pd.h s_stuff.h \
-	$(wildcard ../portaudio/common/*.h) s_audio_paring.h s_audio_pablio.h
+	$(wildcard ../portaudio/common/*.h) s_audio_paring.h
 
 SRC = g_canvas.c g_graph.c g_text.c g_rtext.c g_array.c g_template.c g_io.c \
     g_scalar.c g_traversal.c g_guiconnect.c g_readwrite.c g_editor.c \
