@@ -90,7 +90,7 @@ PMSRC = s_midi_pm.c \
 
 PMOBJ =  $(PMSRC:.c=.o)
 
-GSRC = t_tkcmd.c
+GSRC =
 
 HEADERS = g_all_guis.h m_imp.h t_tk.h g_canvas.h m_pd.h s_stuff.h \
 	$(wildcard ../portaudio/common/*.h) s_audio_paring.h
@@ -139,7 +139,7 @@ endif
 
 .PHONY: all install clean externs testbin
 
-all: config.h pdtcl.dll $(PDDLL) $(PDEXEC) pdsend.exe pdreceive.exe pd.com externs
+all: config.h $(PDDLL) $(PDEXEC) pdsend.exe pdreceive.exe pd.com externs
 
 config.h: config.h.in
 	cp config.h.in config.h
@@ -243,7 +243,6 @@ ABOUT_FILE=$(pddocdir)/1.manual/1.introduction.txt
 install:  all
 # the real install
 	install -d $(DESTDIR)$(bindir)
-	install -p pdtcl.dll $(DESTDIR)$(bindir)/pdtcl.dll
 	install -p pd.tk $(DESTDIR)$(bindir)/pd.tk
 	install -p helpbrowser.tcl $(DESTDIR)$(bindir)/helpbrowser.tcl
 	install -p pkgIndex.tcl $(DESTDIR)$(bindir)/pkgIndex.tcl
