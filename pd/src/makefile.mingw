@@ -92,7 +92,7 @@ PMOBJ =  $(PMSRC:.c=.o)
 
 GSRC =
 
-HEADERS = g_all_guis.h m_imp.h t_tk.h g_canvas.h m_pd.h s_stuff.h \
+HEADERS = g_all_guis.h m_imp.h g_canvas.h m_pd.h s_stuff.h \
 	$(wildcard ../portaudio/common/*.h) s_audio_paring.h
 
 SRC = g_canvas.c g_graph.c g_text.c g_rtext.c g_array.c g_template.c g_io.c \
