@@ -2176,7 +2176,7 @@ function gui_vumeter_erase_text(cid, tag, i) {
     t.parentNode.removeChild(t);
 }
 
-function gui_vumeter_create_steps(cid,tag,x_color,p1,p2,p3,p4,width,index,basex,basey,i) {
+function gui_vumeter_create_steps(cid,tag,x_color,p1,p2,p3,p4,width,basex,basey,i) {
     var g = get_gobj(cid, tag),
         l;
     l = create_item(cid, "line", {

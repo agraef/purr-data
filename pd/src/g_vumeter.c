@@ -152,9 +152,9 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
         led_col = iemgui_vu_col[i];
         if (i<=IEM_VU_STEPS)
         {
-            gui_vmess("gui_vumeter_create_steps", "xxxiiiiiiiii",
+            gui_vmess("gui_vumeter_create_steps", "xxxiiiiiiii",
                 canvas, x, iemgui_color_hex[led_col], quad1+1,
-                yyy+2, quad3, yyy+2, x->x_led_size, index, x1, y1, i);
+                yyy+2, quad3, yyy+2, x->x_led_size, x1, y1, i);
         }
     }
     gui_vmess("gui_vumeter_draw_rect", "xxxiiiiii",
