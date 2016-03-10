@@ -60,8 +60,9 @@ WARN_CFLAGS = -Wall -W -Wstrict-prototypes -Wno-unused \
 # Also, for SetDllDirectory() s_loader.c, we need a minium of Windows
 # XP SP1.  WINVER isnt' fine-grained enough for that, so we use the
 # next minor version of Windows, 5.2.
-ARCH_CFLAGS = -DPD -DPD_INTERNAL -DPA_USE_ASIO -DPA_USE_WMME -DWINVER=0x0502 \
-	-DUSEAPI_MMIO -DUSEAPI_PORTAUDIO -mms-bitfields -DWISHAPP='"wish85.exe"'
+ARCH_CFLAGS = -DPD -DPD_INTERNAL -DMSW -DPA_USE_ASIO -DPA_USE_WMME \
+	-DWINVER=0x0502 -DUSEAPI_MMIO -DUSEAPI_PORTAUDIO -mms-bitfields \
+	-DWISHAPP='"wish85.exe"'
 
 CFLAGS += $(ARCH_CFLAGS) $(WARN_CFLAGS) $(OPT_CFLAGS) $(MORECFLAGS)
 
