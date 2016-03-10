@@ -248,8 +248,6 @@ testbin: $(PDEXEC) $(PDDLL) pd.com
 	echo "Copying files to $(BIN_DIR)"
 	install -d $(BIN_DIR)
 	install -p pd.tk $(BIN_DIR)
-	install -p helpbrowser.tcl $(BIN_DIR)
-	install -p pkgIndex.tcl $(BIN_DIR)
 	install -p $(PDDLL) $(BIN_DIR)
 	install -p pd.ico $(BIN_DIR)
 	install -p pd.com $(BIN_DIR)
@@ -260,8 +258,6 @@ install:  all
 # the real install
 	install -d $(DESTDIR)$(bindir)
 	install -p pd.tk $(DESTDIR)$(bindir)/pd.tk
-	install -p helpbrowser.tcl $(DESTDIR)$(bindir)/helpbrowser.tcl
-	install -p pkgIndex.tcl $(DESTDIR)$(bindir)/pkgIndex.tcl
 	install -p $(PDEXEC) $(DESTDIR)$(bindir)/$(PDEXEC)
 	install -p pd.com $(DESTDIR)$(bindir)/pd.com
 	install -p pd.dll $(DESTDIR)$(bindir)/pd.dll
