@@ -1,8 +1,14 @@
-# how Miller builds Pd on Windows:
+# makefile to compile for windows using the mingw suite.
+# To use this makefile to cross-compile from linux, type for example:
+# make -f makefile.mingw CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-c++ \
+#  WINDRES=i686-w64-mingw32-windres
+
+# Miller's Windows build uses Microsoft Visual C and makefile.msvc:
 # http://lists.puredata.info/pipermail/pd-dev/2004-10/002981.html
 
 CC = gcc
 CXX = g++
+WINDRES = windres
 
 cvs_root_dir = ../..
 pd_src = $(cvs_root_dir)/pd
@@ -35,20 +41,27 @@ DLLWRAP= dllwrap
 MORECFLAGS = -O3 -funroll-loops -fomit-frame-pointer 
 
 PADIR = $(pd_src)/portaudio
-ASIODIR = $(pd_src)/asio
-INCPA = -I$(PADIR) -I$(ASIODIR) -I$(PADIR)/include -I$(PADIR)/src/common
+ASIODIR = $(pd_src)/lib/ASIOSDK2.3
+ASIOINC = -I$(ASIODIR)/common -I$(ASIODIR)/host -I$(ASIODIR)/host/pc
+INCPA = -I$(PADIR)/include -I$(PADIR)/src/common -I$(PADIR)/src/os/win \
+      $(ASIOINC)
 INCLUDE = -I$(pd_src)/src 
 GINCLUDE = -I/usr/local/include $(INCLUDE)
 
 LDFLAGS = 
-LIBS = -lm -lpthreadGC2 -lwsock32 -lwinmm -lole32 -ltcl85 -ltk85
+LIBS = -lm -lwsock32 -lwinmm -lole32 -lpthread
 
 OPT_CFLAGS = 
 
 WARN_CFLAGS = -Wall -W -Wstrict-prototypes -Wno-unused \
     -Wno-unused-parameter -Wno-parentheses -Wno-switch
-ARCH_CFLAGS = -DPD -DPD_INTERNAL -DMSW -DNT -DPA_NO_DS -DUSEAPI_MMIO -DPA_NO_WASAPI \
-	-DUSEAPI_PORTAUDIO -DPA19 -DPA_LITTLE_ENDIAN -mms-bitfields
+# Some old code in asio/ASIOSDK2/common/combase.h needs to be ignored,
+# we do this by setting the WINVER macro to min Windows XP aka 5.1.
+# Also, for SetDllDirectory() s_loader.c, we need a minium of Windows
+# XP SP1.  WINVER isnt' fine-grained enough for that, so we use the
+# next minor version of Windows, 5.2.
+ARCH_CFLAGS = -DPD -DPD_INTERNAL -DPA_USE_ASIO -DPA_USE_WMME -DWINVER=0x0502 \
+	-DUSEAPI_MMIO -DUSEAPI_PORTAUDIO -mms-bitfields -DWISHAPP='"wish85.exe"'
 
 CFLAGS += $(ARCH_CFLAGS) $(WARN_CFLAGS) $(OPT_CFLAGS) $(MORECFLAGS)
 
