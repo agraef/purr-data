@@ -760,11 +760,14 @@ void sys_gui(const char *s)
 static void escape_double_quotes(const char *src) {
     int dq = 0, len = 0;
     const char *s = src;
-    while(*s++)
+    while(*s)
     {
         len++;
         if (*s == '\"')
+        {
             dq++;
+        }
+        s++;
     }
     if (!dq)
         sys_vgui("\"%s\"", src);
@@ -773,7 +776,7 @@ static void escape_double_quotes(const char *src) {
         char *dest = (char *)t_getbytes((len+dq+1)*sizeof(*dest));
         char *tmp = dest;
         s = src;
-        while(*s++)
+        while(*s)
         {
             if (*s == '\"')
             {
@@ -781,7 +784,10 @@ static void escape_double_quotes(const char *src) {
                 *tmp++ = '\"';
             }
             else
+            {
                 *tmp++ = *s;
+            }
+            s++;
         }
         *tmp = '\0'; /* null terminate */
         sys_vgui("\"%s\"", dest);
