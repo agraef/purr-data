@@ -2767,33 +2767,36 @@ function gui_drawimage_new(obj_tag, file_path, canvasdir, flags) {
     }
     file_path = path.normalize(file_path);
     if (fs.existsSync(file_path) && fs.lstatSync(file_path).isDirectory()) {
+        files = fs.readdirSync(file_path)
+                    .sort(); // Note that js's "sort" method doesn't do the
+                             // "right thing" for numbers. For that we'd need
+                             // to provide our own sorting function
+        drawimage_data[obj_tag] = []; // array for base64 image data
+        // todo: warn about image sequence with > 999
+        for (i = 0; i < files.length && i < 1000; i++) {
+            ext = path.extname(files[i]);
 
-    }
-    files = fs.readdirSync(file_path)
-                .sort(); // Note that js's "sort" method doesn't do the
-                         // "right thing" for numbers. For that we'd need
-                         // to provide our own sorting function
-    drawimage_data[obj_tag] = []; // create empty array for base64 image data
-    for (i = 0; i < files.length && i < 1000; i++) {
-        ext = path.extname(files[i]);
+        // todo: tolower()
 
-    // todo: tolower()
+            if (ext === ".gif" ||
+                ext === ".jpg" ||
+                ext === ".png" ||
+                ext === ".jpeg" ||
+                ext === ".svg") {
 
-        if (ext === ".gif" ||
-            ext === ".jpg" ||
-            ext === ".png" ||
-            ext === ".jpeg" ||
-            ext === ".svg") {
-
-            post("we got an image at index " + i + ": " + files[i]);
-            // Now add an element to that array with the image data
-            drawimage_data[obj_tag].push({
-                type: ext === ".jpeg" ? "jpg" : ext.slice(1),
-                data: fs.readFileSync(path.join(file_path, files[i]),"base64")
-            });
+                post("we got an image at index " + i + ": " + files[i]);
+                // Now add an element to that array with the image data
+                drawimage_data[obj_tag].push({
+                    type: ext === ".jpeg" ? "jpg" : ext.slice(1),
+                    data: fs.readFileSync(path.join(file_path, files[i]),"base64")
+                });
+            }
         }
+    } else {
+        i = 0;
     }
     post("no of files: " + i);
+
     if (i > 0) {
         img = new pd_window.Image(); // create an image in the pd_window context
         img.onload = function() {
