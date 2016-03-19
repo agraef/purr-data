@@ -79,7 +79,7 @@ ifeq ($(OS_NAME),windows)
 # all of these included libs are part of libc in UNIX platforms.  All except
 # libregex are in DLLs, so they get stripped from the external's .dll binary
   LIBS += -L$(pd_src)/src -L$(pd_src)/bin -L$(pd_src)/obj -lpd \
-    -lwsock32 -liphlpapi -lpthreadGC2 -lkernel32 -luser32 -lgdi32 -lregex
+    -lwsock32 -liphlpapi -lpthread -lkernel32 -luser32 -lgdi32 -lregex
   DYLIB_LDFLAGS = -shared
   STRIP = strip --strip-unneeded -R .note -R .comment
 endif
