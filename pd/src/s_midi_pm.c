@@ -20,7 +20,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include "portaudio.h"
 #include "portmidi.h"
 #include "porttime.h"
 
