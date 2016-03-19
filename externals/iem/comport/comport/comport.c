@@ -1463,7 +1463,7 @@ static void comport_stopbit(t_comport *x, t_floatarg f)
     if(set_serial(x) == 0)
     {
 #ifdef _WIN32
-        pd_error(,"[comport] ** ERROR ** could not set stopbits of device %s to %g\n",
+        pd_error(x,"[comport] ** ERROR ** could not set stopbits of device %s to %g\n",
             &x->serial_device->s_name[4], f);
 #else
         pd_error(x,"[comport] ** ERROR ** could not set extra stopbit of device %s\n",
