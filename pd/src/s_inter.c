@@ -84,7 +84,11 @@ typedef int socklen_t;
 
 static int stderr_isatty;
 
+/* I don't see any other systems where this header (and backtrace) are
+   available. */
+#ifdef __linux__
 #include <execinfo.h>
+#endif
 
 typedef struct _fdpoll
 {
@@ -653,7 +657,7 @@ static void sys_trytogetmoreguibuf(int newsize)
 }
 
 void blargh(void) {
-#ifdef MACOSX
+#ifndef __linux__
   fprintf(stderr,"unhandled exception\n");
 #else
   int i;
