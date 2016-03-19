@@ -97,7 +97,7 @@ static t_int *cycle_perform(t_int *w)
     t_float *addr, f1, f2, frac;
     double dphase = x->x_phase + SHARED_UNITBIT32;
     double conv = x->x_conv;
-    int32_t normhipart;
+    int32 normhipart;
     t_shared_wrappy wrappy;
     
     wrappy.w_d = SHARED_UNITBIT32;
