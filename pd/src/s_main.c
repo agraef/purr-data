@@ -171,16 +171,6 @@ static void openit(const char *dirname, const char *filename)
         close (fd);
         glob_evalfile(0, gensym(nameptr), gensym(dirbuf));
         sys_vgui("pdtk_set_current_dir {%s}\n", filename);
-        char actualpath[PATH_MAX];
-        char *path_ptr = NULL;
-        path_ptr = realpath(filename, actualpath);
-        //sys_vgui("::pd_menus::update_recentfiles_menu .mbar.file 0\n");
-        //fprintf(stderr, "%s %s %s %s %s\n", dirname, filename, 
-        //    strstr(filename, dirname), actualpath, path_ptr);
-        if (path_ptr != NULL)
-        {
-            sys_vgui("::pd_guiprefs::update_recentfiles \"%s\" 1\n", actualpath);
-        }
     }
     else
         error("%s: can't open", filename);
