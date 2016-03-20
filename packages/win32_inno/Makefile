@@ -86,7 +86,7 @@ lib_install:
 # if these are installed, include them in the build root
 	-install -p $(system32)/msvcp71.dll   $(DESTDIR)$(bindir)
 	-install -p $(system32)/msvcr71.dll   $(DESTDIR)$(bindir)
-	-install -p $(system32)/pthreadVC.dll $(DESTDIR)$(bindir)
+	#-install -p $(system32)/pthreadVC.dll $(DESTDIR)$(bindir)
 # these go into the Pd package's lib dir
 	install -d $(DESTDIR)$(libdir)/dde1.3
 	cp -rp /usr/local/lib/dde1.3/* $(DESTDIR)$(libdir)/dde1.3
