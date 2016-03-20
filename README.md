@@ -84,7 +84,6 @@ http://l2ork.music.vt.edu/main/?page_id=56#install-dev
 2. msys2 adds Start Menu items for 3 different "flavors" of shell: MinGW-w64 Win32 Shell, MinGW-w64 Win64 Shell, and MSYS Shell. Click the menu item for MinGW-w64 Win32 Shell.
 3. Once the shell opens, we need to install the dependencies for building Purr Data. Issue the following command:
 <code>pacman -S mingw-w64-i686-toolchain mingw-64-i686-fftw mingw-64-i686-libvorbis mingw-w64-i686-ladspa-sdk mingw-w64-i686-dlfcn mingw-w64-i686-lame git make autoconf automake libtool mingw-w64-i686-libsndfile mingw-w64-i686-lua</code>
-You'll be asked if you want to install all packages. Not all are needed, but if you have ~600mB of space it's easiest to just install them all.
 4. Type `exit` in the shell and click the `Enter` key to close it, then reopen it from the menu.
 5. Download the repository by issuing this command:
 <code>git clone https://puredata.osuosl.org/jwilkes/purr-data.git</code>
