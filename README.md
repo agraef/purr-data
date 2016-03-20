@@ -87,12 +87,11 @@ http://l2ork.music.vt.edu/main/?page_id=56#install-dev
 4. Type `exit` in the shell and click the `Enter` key to close it, then reopen it from the menu.
 5. Download the source code. Issue the following command to create a new directory "purr-data" and clone the repository to it:
 <code>git clone https://puredata.osuosl.org/jwilkes/purr-data.git</code>
-This will clone the repository into the directory "purr-data"
 6. We need to add a directory for the ASIO SDK. Issue the following command:
 <code>mkdir purr-data/pd/lib</code>
-6. Download the ASIO SDK [here](http://www.steinberg.net/en/company/developers.html) and extract it.
-7. Navigate to the place you extracted the directory `asiosdk2.3`. Inside it is another directory named `ASIOSDK2.3`. Copy that inner directory `ASIOSDK2.3` to C:\msys2\home\YOUR-USER-ACCOUNT\purr-data\pd\lib.
-8. Issue the following commands:
+7. Download the ASIO SDK [here](http://www.steinberg.net/en/company/developers.html) and extract it.
+8. Navigate to the place you extracted the directory `asiosdk2.3`. Inside it is another directory named `ASIOSDK2.3`. Copy that inner directory `ASIOSDK2.3` to C:\msys2\home\YOUR-USER-ACCOUNT\purr-data\pd\lib.
+9. Issue the following commands:
 <code>cd purr-data/packages/win32_inno
 make install</code>
 
