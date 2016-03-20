@@ -80,23 +80,14 @@ lib_install:
 	install -p $(bin_src)/libvorbisfile-3.dll  $(DESTDIR)$(prefix)/
 	install -p $(bin_src)/lua53.dll          $(DESTDIR)$(prefix)/
 	#install -p $(bin_src)/pthreadGC2.dll     $(DESTDIR)$(prefix)/
-	install -p $(bin_src)/libdl.dll     $(DESTDIR)$(prefix)/
+	install -p $(bin_src)/libdl-0.dll     $(DESTDIR)$(prefix)/
 # these stay with pd.exe
 	install -d $(DESTDIR)$(bindir)
-	install -p $(bin_src)/tcl85.dll     $(DESTDIR)$(bindir)
-	install -p $(bin_src)/tclpip85.dll  $(DESTDIR)$(bindir)
-	install -p $(bin_src)/tk85.dll      $(DESTDIR)$(bindir)
 # if these are installed, include them in the build root
 	-install -p $(system32)/msvcp71.dll   $(DESTDIR)$(bindir)
 	-install -p $(system32)/msvcr71.dll   $(DESTDIR)$(bindir)
 	-install -p $(system32)/pthreadVC.dll $(DESTDIR)$(bindir)
 # these go into the Pd package's lib dir
-	install -d $(DESTDIR)$(libdir)/tcl8
-	cp -rp /usr/local/lib/tcl8/* $(DESTDIR)$(libdir)/tcl8
-	install -d $(DESTDIR)$(libdir)/tcl8.5
-	cp -rp /usr/local/lib/tcl8.5/* $(DESTDIR)$(libdir)/tcl8.5
-	install -d $(DESTDIR)$(libdir)/tk8.5
-	cp -rp /usr/local/lib/tk8.5/* $(DESTDIR)$(libdir)/tk8.5
 	install -d $(DESTDIR)$(libdir)/dde1.3
 	cp -rp /usr/local/lib/dde1.3/* $(DESTDIR)$(libdir)/dde1.3
 	install -d $(DESTDIR)$(libdir)/reg1.2
