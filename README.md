@@ -87,7 +87,7 @@ pacman -S autoconf automake git libtool \
           make mingw-w64-i686-dlfcn mingw-w64-i686-fftw \
           mingw-w64-i686-ladspa-sdk mingw-w64-i686-lame \
           mingw-w64-i686-libsndfile mingw-w64-i686-libvorbis \
-          mingw-w64-i686-lua mingw-w64-i686-toolchain </code>
+          mingw-w64-i686-lua mingw-w64-i686-toolchain</code>
 4. Type `exit` in the shell and click the `Enter` key to close it, then reopen it from the menu.
 5. Download the source code. Issue the following command to create a new directory "purr-data" and clone the repository to it:<code>
 git clone https://puredata.osuosl.org/jwilkes/purr-data.git</code>
