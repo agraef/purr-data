@@ -15,6 +15,7 @@ INSTALL_DIR     = $(INSTALL) -p -m 755 -d
 UNAME := $(shell uname -s)
 ifeq ($(UNAME),Darwin)
   CPU := $(shell uname -p)
+  CYCLIST = cyclist
   ifeq ($(CPU),arm) # iPhone/iPod Touch
     EXTENSION = pd_darwin
     OS = iphoneos
@@ -53,6 +54,7 @@ ifeq ($(UNAME),Darwin)
 endif
 ifeq ($(UNAME),Linux)
   CPU := $(shell uname -m)
+  CYCLIST = cyclist
   EXTENSION = pd_linux
   OS = linux
   PD_PATH = /usr
@@ -64,6 +66,7 @@ ifeq ($(UNAME),Linux)
 endif
 ifeq (CYGWIN,$(findstring CYGWIN,$(UNAME)))
   CPU := $(shell uname -m)
+  CYCLIST = cyclist
   EXTENSION = dll
   OS = cygwin
   PD_PATH = $(cygpath $(PROGRAMFILES))/pd
@@ -75,6 +78,7 @@ ifeq (CYGWIN,$(findstring CYGWIN,$(UNAME)))
 endif
 ifeq (MINGW,$(findstring MINGW,$(UNAME)))
   CPU := $(shell uname -m)
+  CYCLIST = cyclist.exe
   EXTENSION = dll
   OS = windows
   PD_PATH = $(shell cd "$(PROGRAMFILES)"/pd && pwd)
@@ -114,13 +118,13 @@ install: cyclone
 		$(DESTDIR)$(objectsdir)/cyclone/examples
 # install "cyclist" command line app with pd
 	$(INSTALL_DIR) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) ../bin/cyclist $(DESTDIR)$(bindir)
-	$(STRIP) $(DESTDIR)$(bindir)/cyclist
+	$(INSTALL_PROGRAM) ../bin/$(CYCLIST) $(DESTDIR)$(bindir)
+	$(STRIP) $(DESTDIR)$(bindir)/$(CYCLIST)
 
 clean:
 	-$(MAKE) -f Makefile $(DEST_PATHS) clean
 	-rm -f ../bin/*.pd_linux
-	-rm -f ../bin/cyclist
+	-rm -f ../bin/$(CYCLIST)
 	-rm -f Makefile.deps
 	-rm -f shadow/Makefile.deps
 	-rm -f hammer/Makefile.deps
