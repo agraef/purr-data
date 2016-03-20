@@ -66,6 +66,9 @@ Pd-L2ork has the following goals:
    interfaces
 
 ### Installation Guide
+
+#### Linux
+
 To install using a pre-compiled binary, follow these instructions:
 http://l2ork.music.vt.edu/main/?page_id=56
 
@@ -75,6 +78,28 @@ http://l2ork.music.vt.edu/main/?page_id=56
 
 Then follow the steps outlined here:
 http://l2ork.music.vt.edu/main/?page_id=56#install-dev
+
+#### Windows 32-bit Using msys2
+1. Download and install [msys2](https://msys2.github.io/). Note that there are two installers-- one for 32-bit Windows systems (i386) and one for 64-bit Windows (x_64).  Make sure you know which [version](http://windows.microsoft.com/en-us/windows/32-bit-and-64-bit-windows#1TC=windows-7) of Windows you are running and download the appropriate installer.
+2. msys2 adds Start Menu items for 3 different "flavors" of shell: MinGW-w64 Win32 Shell, MinGW-w64 Win64 Shell, and MSYS Shell. Click the menu item for MinGW-w64 Win32 Shell.
+3. Once the shell opens, we need to install the dependencies for building Purr Data. Issue the following command:
+<code>pacman -S mingw-w64-i686-toolchain mingw-64-i686-fftw mingw-64-i686-libvorbis mingw-w64-i686-ladspa-sdk mingw-w64-i686-dlfcn mingw-w64-i686-lame git make autoconf automake libtool mingw-w64-i686-libsndfile mingw-w64-i686-lua</code>
+You'll be asked if you want to install all packages. Not all are needed, but if you have ~600mB of space it's easiest to just install them all.
+4. Type `exit` in the shell and click the `Enter` key to close it, then reopen it from the menu.
+5. Download the repository by issuing this command:
+<code>git clone https://puredata.osuosl.org/jwilkes/purr-data.git</code>
+This will clone the repository into the directory "purr-data"
+6. We need to add a directory for the ASIO SDK. Issue the following command:
+<code>mkdir purr-data/pd/lib</code>
+6. Download the ASIO SDK [here](http://www.steinberg.net/en/company/developers.html) and extract it.
+7. Navigate to the place you extracted the directory `asiosdk2.3`. Inside it is another directory named `ASIOSDK2.3`. Copy that inner directory `ASIOSDK2.3` to C:\msys2\home\YOUR-USER-ACCOUNT\purr-data\pd\lib.
+8. Issue the following commands:
+<code>cd purr-data/packages/win32_inno
+make install</code>
+
+two remaining issues:
+zexy - rawprint struct (line 20) already defined when using msys2
+flext - doesn't compile so you have to remove externals/Makefile reference to it (in the big list of externals)
 
 ### Contributor Guide
 
