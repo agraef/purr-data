@@ -91,9 +91,7 @@ lib_install:
 
 exe_install:
 	install -d $(DESTDIR)$(bindir)
-	install -p $(bin_src)/wish85.exe  $(DESTDIR)$(bindir)
-	install -p $(bin_src)/tclsh85.exe  $(DESTDIR)$(bindir)
-
+	# We need to add the nw.js binary here
 
 $(PD_INNO_SETUP): $(PD_INNO_SETUP).in
 	@echo "Making Inno Setup file: $(PD_INNO_SETUP)"
