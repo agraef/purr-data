@@ -71,14 +71,14 @@ lib_install:
 	install -d $(DESTDIR)$(prefix)/
 	install -p $(bin_src)/libfftw3-3.dll  $(DESTDIR)$(prefix)/
 	install -p $(bin_src)/libfftw3f-3.dll  $(DESTDIR)$(prefix)/
-	install -p $(bin_src)/libgnurx-0.dll  $(DESTDIR)$(prefix)/
+	#install -p $(bin_src)/libgnurx-0.dll  $(DESTDIR)$(prefix)/
 	install -p $(bin_src)/libogg-0.dll  $(DESTDIR)$(prefix)/
 	install -p $(bin_src)/libsndfile-1.dll  $(DESTDIR)$(prefix)/
 	install -p $(bin_src)/libvorbis-0.dll  $(DESTDIR)$(prefix)/
 	install -p $(bin_src)/libvorbisenc-2.dll  $(DESTDIR)$(prefix)/
 	install -p $(bin_src)/libvorbisfile-3.dll  $(DESTDIR)$(prefix)/
 	install -p $(bin_src)/lua53.dll          $(DESTDIR)$(prefix)/
-	install -p $(bin_src)/pthreadGC2.dll     $(DESTDIR)$(prefix)/
+	#install -p $(bin_src)/pthreadGC2.dll     $(DESTDIR)$(prefix)/
 	install -p $(bin_src)/libdl.dll     $(DESTDIR)$(prefix)/
 # these stay with pd.exe
 	install -d $(DESTDIR)$(bindir)
