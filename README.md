@@ -85,8 +85,8 @@ http://l2ork.music.vt.edu/main/?page_id=56#install-dev
 3. Once the shell opens, we need to install the dependencies for building Purr Data. Issue the following command:
 <code>pacman -S mingw-w64-i686-toolchain mingw-64-i686-fftw mingw-64-i686-libvorbis mingw-w64-i686-ladspa-sdk mingw-w64-i686-dlfcn mingw-w64-i686-lame git make autoconf automake libtool mingw-w64-i686-libsndfile mingw-w64-i686-lua</code>
 4. Type `exit` in the shell and click the `Enter` key to close it, then reopen it from the menu.
-5. Download the source code. Issue the following command to create a new directory "purr-data" and clone the repository to it:
-<code>git clone https://puredata.osuosl.org/jwilkes/purr-data.git</code>
+5. Download the source code. Issue the following command to create a new directory "purr-data" and clone the repository to it:<code>
+git clone https://puredata.osuosl.org/jwilkes/purr-data.git</code>
 6. We need to add a directory for the ASIO SDK. Issue the following command:
 <code>mkdir purr-data/pd/lib</code>
 7. Download the ASIO SDK [here](http://www.steinberg.net/en/company/developers.html) and extract it.
