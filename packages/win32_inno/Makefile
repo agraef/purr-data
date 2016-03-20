@@ -63,7 +63,7 @@ prebuilt_install:
 #==============================================================================#
 
 #bin_src = /usr/local/bin
-bin_src = /mingw/bin
+bin_src = /mingw32/bin
 system32 = /c/WINDOWS/system32
 lib_install:
 # ultimately, the DLLs should be installed in %SystemRoot%\system32 by
