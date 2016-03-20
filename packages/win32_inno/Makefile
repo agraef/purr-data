@@ -87,11 +87,6 @@ lib_install:
 	-install -p $(system32)/msvcp71.dll   $(DESTDIR)$(bindir)
 	-install -p $(system32)/msvcr71.dll   $(DESTDIR)$(bindir)
 	#-install -p $(system32)/pthreadVC.dll $(DESTDIR)$(bindir)
-# these go into the Pd package's lib dir
-	install -d $(DESTDIR)$(libdir)/dde1.3
-	cp -rp /usr/local/lib/dde1.3/* $(DESTDIR)$(libdir)/dde1.3
-	install -d $(DESTDIR)$(libdir)/reg1.2
-	cp -rp /usr/local/lib/reg1.2/* $(DESTDIR)$(libdir)/reg1.2
 
 
 exe_install:
