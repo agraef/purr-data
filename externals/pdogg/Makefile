@@ -144,7 +144,7 @@ ifeq (MINGW,$(findstring MINGW,$(UNAME)))
   OPT_CFLAGS = -O3 -funroll-loops -fomit-frame-pointer
   CFLAGS += -mms-bitfields
   LDFLAGS += -s -shared -Wl,--enable-auto-import
-  LIBS += -L"$(PD_PATH)/src" -L"$(PD_PATH)/bin" -L"$(PD_PATH)/obj" -lpd -lwsock32 -lkernel32 -luser32 -lgdi32 -lpthread -lvorbis -lvorbisenc -logg
+  LIBS += -L"$(PD_PATH)/src" -L"$(PD_PATH)/bin" -L"$(PD_PATH)/obj" -lpd -lwsock32 -lkernel32 -luser32 -lgdi32 -lpthread -lvorbis -lvorbisfile -lvorbisenc -logg
   STRIP = strip --strip-unneeded -R .note -R .comment
   DISTBINDIR=$(DISTDIR)-$(OS)
 endif
