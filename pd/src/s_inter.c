@@ -1398,18 +1398,22 @@ fprintf(stderr, "guidir is %s\n", guidir);
             the libdir. */
         /* fprintf(stderr, "%s\n", sys_libdir->s_name); */
         
-        strcpy(scriptbuf, "\"");
-        strcat(scriptbuf, sys_libdir->s_name);
-        strcat(scriptbuf, "/" PDBINDIR "pd.tk\"");
+        //strcpy(scriptbuf, "\"");
+        //strcat(scriptbuf, sys_libdir->s_name);
+        //strcat(scriptbuf, "/" PDBINDIR "pd.tk\"");
+        //sys_bashfilename(scriptbuf, scriptbuf);
+
+        strcpy(scriptbuf, sys_libdir->s_name);
+        strcat(scriptbuf, "/" PDBINDIR);
         sys_bashfilename(scriptbuf, scriptbuf);
-        
-                sprintf(portbuf, "%d", portno);
+
+        sprintf(portbuf, "%d", portno);
 
         strcpy(wishbuf, sys_libdir->s_name);
-        strcat(wishbuf, "/" PDBINDIR WISHAPP);
+        strcat(wishbuf, "/" PDBINDIR "nw/nw");
         sys_bashfilename(wishbuf, wishbuf);
-        
-        spawnret = _spawnl(P_NOWAIT, wishbuf, WISHAPP, scriptbuf, portbuf, 0);
+
+        spawnret = _spawnl(P_NOWAIT, wishbuf, "pd-nw", scriptbuf, portbuf, 0);
         if (spawnret < 0)
         {
             perror("spawnl");
