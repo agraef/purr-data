@@ -156,7 +156,7 @@ void envrms_tilde_setup(void)
                               (t_method)sigenvrms_ff, sizeof(t_sigenvrms), 0, A_DEFFLOAT, A_DEFFLOAT, 0);
   class_addmethod(sigenvrms_class, nullfn, gensym("signal"), 0);
   class_addmethod(sigenvrms_class, (t_method)sigenvrms_dsp, gensym("dsp"),
-                  0);
+                  A_CANT, 0);
 
   class_addmethod(sigenvrms_class, (t_method)sigenvrms_help, gensym("help"),
                   0);

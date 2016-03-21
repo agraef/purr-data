@@ -159,7 +159,7 @@ void blockshuffle_tilde_setup(void)
                                  sizeof(t_blockshuffle), 0, A_NULL);
   class_addmethod(blockshuffle_class, nullfn, gensym("signal"), 0);
   class_addmethod(blockshuffle_class, (t_method)blockshuffle_dsp,
-                  gensym("dsp"), 0);
+                  gensym("dsp"), A_CANT, 0);
 
   class_addlist(blockshuffle_class, blockshuffle_list);
 

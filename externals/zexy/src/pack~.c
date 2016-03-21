@@ -96,7 +96,8 @@ void pack_tilde_setup(void)
                             (t_method)sigpack_free,
                             sizeof(t_sigpack), 0, A_DEFFLOAT, 0);
   class_addmethod(sigpack_class, nullfn, gensym("signal"), 0);
-  class_addmethod(sigpack_class, (t_method)sigpack_dsp, gensym("dsp"), 0);
+  class_addmethod(sigpack_class, (t_method)sigpack_dsp, gensym("dsp"),
+                  A_CANT, 0);
 
   class_addmethod(sigpack_class, (t_method)sigpack_help, gensym("help"), 0);
 

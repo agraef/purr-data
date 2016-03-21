@@ -110,7 +110,8 @@ void dfreq_tilde_setup(void)
   dfreq_class = class_new(gensym("dfreq~"), (t_newmethod)dfreq_new, 0,
                           sizeof(t_dfreq), 0, A_NULL);
   class_addmethod(dfreq_class, nullfn, gensym("signal"), 0);
-  class_addmethod(dfreq_class, (t_method)dfreq_dsp, gensym("dsp"), 0);
+  class_addmethod(dfreq_class, (t_method)dfreq_dsp, gensym("dsp"),
+                  A_CANT, 0);
 
   class_addmethod(dfreq_class, (t_method)dfreq_tilde_helper, gensym("help"),
                   0);

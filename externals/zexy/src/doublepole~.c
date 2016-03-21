@@ -116,7 +116,7 @@ void doublepole_tilde_setup(void)
                                   0, sizeof(t_sigdoublepole), 0, A_GIMME, 0);
   CLASS_MAINSIGNALIN(sigdoublepole_class, t_sigdoublepole, x_f);
   class_addmethod(sigdoublepole_class, (t_method)sigdoublepole_dsp,
-                  gensym("dsp"), 0);
+                  gensym("dsp"), A_CANT, 0);
   class_addlist(sigdoublepole_class, sigdoublepole_list);
   class_addmethod(sigdoublepole_class, (t_method)sigdoublepole_set,
                   gensym("set"),

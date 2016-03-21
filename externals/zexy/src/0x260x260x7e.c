@@ -289,7 +289,7 @@ void setup_0x260x260x7e(void)
                                  (t_newmethod)andand_tilde_new, 0,
                                  sizeof(t_andand_tilde), 0, A_GIMME, 0);
   class_addmethod(andand_tilde_class, (t_method)andand_tilde_dsp,
-                  gensym("dsp"), 0);
+                  gensym("dsp"), A_CANT, 0);
   CLASS_MAINSIGNALIN(andand_tilde_class, t_andand_tilde, x_f);
   class_addmethod  (andand_tilde_class, (t_method)andand_tilde_help,
                     gensym("help"), A_NULL);
@@ -300,7 +300,7 @@ void setup_0x260x260x7e(void)
                                        sizeof(t_scalarandand_tilde), 0, 0);
   CLASS_MAINSIGNALIN(scalarandand_tilde_class, t_scalarandand_tilde, x_f);
   class_addmethod(scalarandand_tilde_class, (t_method)scalarandand_tilde_dsp,
-                  gensym("dsp"),
+                  gensym("dsp"), A_CANT,
                   0);
   class_addmethod  (scalarandand_tilde_class, (t_method)andand_tilde_help,
                     gensym("help"), A_NULL);

@@ -130,7 +130,7 @@ void unpack_tilde_setup(void)
                               0,
                               sizeof(t_sigunpack), 0, A_DEFFLOAT, 0);
   class_addmethod(sigunpack_class, (t_method)sigunpack_dsp, gensym("dsp"),
-                  0);
+                  A_CANT, 0);
   class_addfloat(sigunpack_class, (t_method)sigunpack_float);
   class_addlist (sigunpack_class, (t_method)sigunpack_list);
 

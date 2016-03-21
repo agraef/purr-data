@@ -612,7 +612,8 @@ void sfrecord_setup(void)
                              (t_method)sfrecord_free,
                              sizeof(t_sfrecord), 0, A_DEFFLOAT, A_DEFFLOAT,0);
   class_addmethod(sfrecord_class, nullfn, gensym("signal"), 0);
-  class_addmethod(sfrecord_class, (t_method)sfrecord_dsp, gensym("dsp"), 0);
+  class_addmethod(sfrecord_class, (t_method)sfrecord_dsp, gensym("dsp"),
+                  A_CANT, 0);
 
   /* method open with filename */
   class_addmethod(sfrecord_class, (t_method)sfrecord_open, gensym("open"),

@@ -180,7 +180,8 @@ void noisi_tilde_setup(void)
                           sizeof(t_nois), 0, A_DEFFLOAT, 0);
 
   class_addfloat(noisi_class, set_noisfreq);
-  class_addmethod(noisi_class, (t_method)noisi_dsp, gensym("dsp"), 0);
+  class_addmethod(noisi_class, (t_method)noisi_dsp, gensym("dsp"),
+                  A_CANT, 0);
 
   class_addmethod(noisi_class, (t_method)set_noisseed, gensym("seed"),
                   A_FLOAT, 0);

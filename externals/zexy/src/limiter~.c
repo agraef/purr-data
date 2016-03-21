@@ -774,7 +774,8 @@ void limiter_tilde_setup(void)
                             sizeof(t_limiter), 0, A_GIMME, 0);
 
   class_addmethod(limiter_class, nullfn,					gensym("signal"), 0);
-  class_addmethod(limiter_class, (t_method)limiter_dsp,	gensym("dsp"), 0);
+  class_addmethod(limiter_class, (t_method)limiter_dsp,	gensym("dsp"),
+                  A_CANT, 0);
 
   class_addmethod(limiter_class, (t_method)limiter_tilde_helper,
                   gensym("help"), 0);

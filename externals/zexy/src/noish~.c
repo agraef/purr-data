@@ -176,7 +176,8 @@ void noish_tilde_setup(void)
                           sizeof(t_nois), 0, A_DEFFLOAT, 0);
 
   class_addfloat(noish_class, set_freq);
-  class_addmethod(noish_class, (t_method)noish_dsp, gensym("dsp"), 0);
+  class_addmethod(noish_class, (t_method)noish_dsp, gensym("dsp"),
+                  A_CANT, 0);
 
   class_addmethod(noish_class, (t_method)set_noisseed, gensym("seed"),
                   A_FLOAT, 0);

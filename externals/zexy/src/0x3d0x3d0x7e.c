@@ -242,7 +242,8 @@ void setup_0x3d0x3d0x7e(void)
 {
   eq_tilde_class = class_new(gensym("==~"), (t_newmethod)eq_tilde_new, 0,
                              sizeof(t_eq_tilde), 0, A_GIMME, 0);
-  class_addmethod(eq_tilde_class, (t_method)eq_tilde_dsp, gensym("dsp"), 0);
+  class_addmethod(eq_tilde_class, (t_method)eq_tilde_dsp, gensym("dsp"),
+                    A_CANT, 0);
   CLASS_MAINSIGNALIN(eq_tilde_class, t_eq_tilde, x_f);
   class_addmethod  (eq_tilde_class, (t_method)eq_tilde_help, gensym("help"),
                     A_NULL);
@@ -253,7 +254,7 @@ void setup_0x3d0x3d0x7e(void)
   CLASS_MAINSIGNALIN(scalareq_tilde_class, t_scalareq_tilde, x_f);
   class_addmethod(scalareq_tilde_class, (t_method)scalareq_tilde_dsp,
                   gensym("dsp"),
-                  0);
+                  A_CANT, 0);
   class_addmethod  (scalareq_tilde_class, (t_method)eq_tilde_help,
                     gensym("help"), A_NULL);
   class_sethelpsymbol(scalareq_tilde_class, gensym("zigbinops"));
