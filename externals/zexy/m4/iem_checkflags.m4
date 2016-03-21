@@ -1,5 +1,5 @@
-dnl Copyright (C) 2005-2011 IOhannes m zmölnig
-dnl This file is free software; IOhannes m zmölnig
+dnl Copyright (C) 2005-2011 IOhannes m zmÃ¶lnig
+dnl This file is free software; IOhannes m zmÃ¶lnig
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
 

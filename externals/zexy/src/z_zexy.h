@@ -25,6 +25,7 @@ void demultiplex_tilde_setup(void); /* demultiplex~ */
 void demultiplex_setup(void); /* demultiplex */
 void dfreq_tilde_setup(void); /* dfreq~ */
 void dirac_tilde_setup(void); /* dirac~ */
+void doublepole_tilde_setup(void); /* doublepole~ */
 void drip_setup(void); /* drip */
 void envrms_tilde_setup(void); /* envrms~ */
 void fifop_setup(void); /* fifop */

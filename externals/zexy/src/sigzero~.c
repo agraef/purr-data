@@ -1,4 +1,4 @@
-/* 
+/*
  * sigzero~: detect whether an entire signal vector is 0
  *
  * (c) 1999-2011 IOhannes m zmölnig, forum::für::umläute, institute of electronic music and acoustics (iem)
@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -28,8 +28,7 @@
 
 static t_class *sigzero_class;
 
-typedef struct _sigzero
-{
+typedef struct _sigzero {
   t_object x_obj;
   int activate;
   int current; /* 0 == (signalblock == 0); 1==(signalblock != 0) */
@@ -59,13 +58,12 @@ static t_int *sigzero_perform(t_int *w)
   int non_zero = 0;
 
   if (x->activate) {
-    while (n--)
-      {
-        if (*in++ != 0.) {
-          non_zero = 1;
-          break;
-        }
+    while (n--) {
+      if (*in++ != 0.) {
+        non_zero = 1;
+        break;
       }
+    }
     if (non_zero != x->current) {
       outlet_float(x->x_obj.ob_outlet, x->current = non_zero);
     }
@@ -81,7 +79,7 @@ static void sigzero_dsp(t_sigzero *x, t_signal **sp)
 
 static void sigzero_tilde_helper(void)
 {
-  post("\n"HEARTSYMBOL" sigzero~-object :: for detecting whether a signal is currently zero or not");
+  post("\n"HEARTSYMBOL " sigzero~-object :: for detecting whether a signal is currently zero or not");
   post("'bang'\t: turn the detector on\n"
        "'off'\t: turn it off\n"
        "<1/0>\t: turn it on/off\n"
@@ -106,8 +104,9 @@ void sigzero_tilde_setup(void)
   class_addmethod(sigzero_class, (t_method)sigzero_off, gensym("off"), 0);
 
   class_addmethod(sigzero_class, nullfn, gensym("signal"), 0);
-  class_addmethod(sigzero_class, (t_method)sigzero_dsp, gensym("dsp"), A_CANT, 0);
+  class_addmethod(sigzero_class, (t_method)sigzero_dsp, gensym("dsp"), 0);
 
-  class_addmethod(sigzero_class, (t_method)sigzero_tilde_helper, gensym("help"), 0);
+  class_addmethod(sigzero_class, (t_method)sigzero_tilde_helper,
+                  gensym("help"), 0);
   zexy_register("sigzero~");
 }

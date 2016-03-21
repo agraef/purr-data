@@ -1,4 +1,4 @@
-/* 
+/*
  *  sort :  sort a list of floats
  *
  * (c) 1999-2011 IOhannes m zmölnig, forum::für::umläute, institute of electronic music and acoustics (iem)
@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -27,8 +27,7 @@
 
 static t_class *sort_class;
 
-typedef struct _sort
-{
+typedef struct _sort {
   t_object x_obj;
 
   int bufsize;
@@ -53,8 +52,12 @@ static void sort_buffer(t_sort *x, int argc, t_atom *argv)
   t_atom *atombuf = argv;
 
   if (argc != x->bufsize) {
-    if (x->buffer) freebytes(x->buffer,  x->bufsize * sizeof(t_float));
-    if (x->indices)freebytes(x->indices, x->bufsize * sizeof(t_int));
+    if (x->buffer) {
+      freebytes(x->buffer,  x->bufsize * sizeof(t_float));
+    }
+    if (x->indices) {
+      freebytes(x->indices, x->bufsize * sizeof(t_int));
+    }
 
     x->bufsize = argc;
     x->buffer = getbytes(x->bufsize * sizeof(t_float));
@@ -62,7 +65,7 @@ static void sort_buffer(t_sort *x, int argc, t_atom *argv)
   }
 
   buf = x->buffer;
-  while (n--){
+  while (n--) {
     *buf++ = atom_getfloat(atombuf++);
     x->indices[n] = n;
   }
@@ -101,17 +104,25 @@ static void sort_list(t_sort *x, t_symbol *s, int argc, t_atom *argv)
     }
   }
 
-  if (x->ascending) 
-    for (n = 0; n < argc; n++) SETFLOAT(&atombuf[n], idx[n]);
+  if (x->ascending)
+    for (n = 0; n < argc; n++) {
+      SETFLOAT(&atombuf[n], idx[n]);
+    }
   else
-    for (n = 0, i=argc-1; n < argc; n++, i--) SETFLOAT(&atombuf[n], idx[i]);
+    for (n = 0, i=argc-1; n < argc; n++, i--) {
+      SETFLOAT(&atombuf[n], idx[i]);
+    }
 
   outlet_list(x->indexOut , gensym("list"), n, atombuf);
 
-  if (x->ascending) 
-    for (n = 0; n < argc; n++) SETFLOAT(&atombuf[n], buf[n]);
+  if (x->ascending)
+    for (n = 0; n < argc; n++) {
+      SETFLOAT(&atombuf[n], buf[n]);
+    }
   else
-    for (n = 0, i=argc-1; n < argc; n++, i--) SETFLOAT(&atombuf[n], buf[i]);
+    for (n = 0, i=argc-1; n < argc; n++, i--) {
+      SETFLOAT(&atombuf[n], buf[i]);
+    }
   outlet_list(x->sortedOut, gensym("list"), n, atombuf);
 
 
@@ -129,22 +140,24 @@ static void *sort_new(t_floatarg f)
   x->bufsize = 0;
   x->buffer = NULL;
 
-  inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("float"), gensym("direction"));
+  inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("float"),
+            gensym("direction"));
 
   return (x);
 }
 
 static void sort_help(t_sort*x)
 {
-  post("\n"HEARTSYMBOL" sort\t\t:: sort a list of numbers");
+  post("\n"HEARTSYMBOL " sort\t\t:: sort a list of numbers");
 }
 void sort_setup(void)
 {
-  sort_class = class_new(gensym("sort"), (t_newmethod)sort_new, 
+  sort_class = class_new(gensym("sort"), (t_newmethod)sort_new,
                          0, sizeof(t_sort), 0, A_DEFFLOAT,  0);
-  
+
   class_addlist    (sort_class, sort_list);
-  class_addmethod   (sort_class, (t_method)sort_dir, gensym("direction"), A_DEFFLOAT, 0);
+  class_addmethod   (sort_class, (t_method)sort_dir, gensym("direction"),
+                     A_DEFFLOAT, 0);
   class_addmethod(sort_class, (t_method)sort_help, gensym("help"), A_NULL);
 
   zexy_register("sort");

@@ -1,4 +1,4 @@
-/* 
+/*
  * listfind: find a sublist in a list and return the index of the occurence (or indices if there are more)
  *
  * (c) 1999-2011 IOhannes m zmölnig, forum::für::umläute, institute of electronic music and acoustics (iem)
@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -32,8 +32,7 @@
 static t_class *listfind_class;
 
 
-typedef struct _listfind
-{
+typedef struct _listfind {
   t_object       x_obj;
   t_outlet      *x_outlet;
 
@@ -68,13 +67,17 @@ static void listfind_list2(t_listfind*x,t_symbol*s, int argc, t_atom*argv)
   DEBUGFUN(post("list2: %d %x", x->x_argc, x->x_argv));
 }
 
-static int atom_equals(t_atom*a1, t_atom*a2) {
-  if(a1->a_type!=a2->a_type) return 0;
+static int atom_equals(t_atom*a1, t_atom*a2)
+{
+  if(a1->a_type!=a2->a_type) {
+    return 0;
+  }
 
-  return(a1->a_w.w_symbol==a2->a_w.w_symbol);  
+  return(a1->a_w.w_symbol==a2->a_w.w_symbol);
 }
 
-static int list_equals(int count, t_atom*a1, t_atom*a2) {
+static int list_equals(int count, t_atom*a1, t_atom*a2)
+{
   int i=0;
   DEBUGFUN(post("list(%d) equals?", count));
   DEBUGFUN(postatom(count, a1));
@@ -90,14 +93,13 @@ static int list_equals(int count, t_atom*a1, t_atom*a2) {
     }
     if(A_FLOAT==a1->a_type) {
       if(atom_getfloat(a1)!=atom_getfloat(a2)) {
-	return 0;
+        return 0;
       }
-    } else 
-      if(a1->a_w.w_symbol!=a2->a_w.w_symbol) { /* is it that simple? */
-      DEBUGFUN(post("atom values do not match: %x != %x", 
-		    a1->a_w.w_symbol, 
-		    a2->a_w.w_symbol
-		    ));
+    } else if(a1->a_w.w_symbol!=a2->a_w.w_symbol) { /* is it that simple? */
+      DEBUGFUN(post("atom values do not match: %x != %x",
+                    a1->a_w.w_symbol,
+                    a2->a_w.w_symbol
+                   ));
       return 0;
     }
   }
@@ -105,7 +107,8 @@ static int list_equals(int count, t_atom*a1, t_atom*a2) {
   return 1;
 }
 
-static int listfind_find(int argc, t_atom*argv, int matchc, t_atom*matchv) {
+static int listfind_find(int argc, t_atom*argv, int matchc, t_atom*matchv)
+{
   int i=0;
 
   DEBUGFUN(post("match: %d vs %d elements", argc, matchc));
@@ -113,29 +116,33 @@ static int listfind_find(int argc, t_atom*argv, int matchc, t_atom*matchv) {
   if(matchc>argc) {
     DEBUGFUN(post("list find -1"));
 
-     return -1;
+    return -1;
   }
   if(matchc==0) {
-  DEBUGFUN(post("list find 0"));
+    DEBUGFUN(post("list find 0"));
 
     return 0;
   }
 
   for(i=0; i<=(argc-matchc); i++, argv++) {
     DEBUGFUN(post("checking at %d", i));
-    if(list_equals(matchc, argv, matchv))
+    if(list_equals(matchc, argv, matchv)) {
       return i;
+    }
   }
   return -1;
 }
 
-static void listfind_doit(t_outlet*out, int longcount, t_atom*longlist, int patterncount, t_atom*patternlist) {
+static void listfind_doit(t_outlet*out, int longcount, t_atom*longlist,
+                          int patterncount, t_atom*patternlist)
+{
   int count=0;
   int index;
   int offset=0;
 
   t_atom*ap=0;
-  int length=1+((patterncount>0)?(longcount/patterncount):longcount); /* we shan't have more hits than this! */
+  int length=1+((patterncount>0)?(longcount/patterncount):
+                longcount); /* we shan't have more hits than this! */
   if(length<1) {
     outlet_bang(out);
   }
@@ -143,7 +150,8 @@ static void listfind_doit(t_outlet*out, int longcount, t_atom*longlist, int patt
 
   DEBUGFUN(post("expecting no more than %d results", length));
 
-  while((index=listfind_find(longcount-offset, longlist+offset, patterncount, patternlist))>=0) {
+  while((index=listfind_find(longcount-offset, longlist+offset, patterncount,
+                             patternlist))>=0) {
     offset+=index;
     SETFLOAT(ap+count, offset);
 
@@ -159,11 +167,12 @@ static void listfind_doit(t_outlet*out, int longcount, t_atom*longlist, int patt
   freebytes(ap, length*sizeof(t_atom));
 }
 
-static void listfind_list(t_listfind *x, t_symbol *s, int argc, t_atom *argv)
+static void listfind_list(t_listfind *x, t_symbol *s, int argc,
+                          t_atom *argv)
 {
 #if 0
-  /* entire list hot: 
-   * this is more intuitive when searching a pattern in many lists 
+  /* entire list hot:
+   * this is more intuitive when searching a pattern in many lists
    */
   listfind_doit(x->x_obj.ob_outlet, argc, argv, x->x_argc, x->x_argv);
 
@@ -181,7 +190,7 @@ static void listfind_list(t_listfind *x, t_symbol *s, int argc, t_atom *argv)
 }
 
 static void listfind_free(t_listfind *x)
-{ 
+{
   if(x->x_argv) {
     freebytes(x->x_argv, x->x_argc*sizeof(int));
     x->x_argv=0;
@@ -196,7 +205,8 @@ static void *listfind_new(t_symbol* UNUSED(s), int argc, t_atom *argv)
   t_listfind *x = (t_listfind *)pd_new(listfind_class);
 
   outlet_new(&x->x_obj, 0);
-  x->x_listin=inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("list"), gensym("lst2"));
+  x->x_listin=inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("list"),
+                        gensym("lst2"));
 
   x->x_argc=0;
   x->x_argv=0;
@@ -209,16 +219,18 @@ static void *listfind_new(t_symbol* UNUSED(s), int argc, t_atom *argv)
 
 static void listfind_help(t_listfind*x)
 {
-  post("\n"HEARTSYMBOL" listfind\t\t:: split lists into multiple sublists based on matches");
+  post("\n"HEARTSYMBOL " listfind\t\t:: split lists into multiple sublists based on matches");
 }
 
 void listfind_setup(void)
 {
-  listfind_class = class_new(gensym("listfind"), (t_newmethod)listfind_new, 
+  listfind_class = class_new(gensym("listfind"), (t_newmethod)listfind_new,
                              (t_method)listfind_free, sizeof(t_listfind), 0, A_GIMME, 0);
   class_addlist    (listfind_class, listfind_list);
-  class_addmethod  (listfind_class, (t_method)listfind_list2, gensym("lst2"), A_GIMME, 0);
+  class_addmethod  (listfind_class, (t_method)listfind_list2, gensym("lst2"),
+                    A_GIMME, 0);
 
-  class_addmethod(listfind_class, (t_method)listfind_help, gensym("help"), A_NULL);
+  class_addmethod(listfind_class, (t_method)listfind_help, gensym("help"),
+                  A_NULL);
   zexy_register("listfind");
 }

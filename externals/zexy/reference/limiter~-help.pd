@@ -61,7 +61,7 @@
 #X restore 476 221 pd generator~;
 #X text 37 99 it is quite important to delay the original signals before
 the limiter-amplification is applied to prevent clicks !!!;
-#X text 52 353 1906:forum::für::umläute:2001;
+#X text 52 353 1906:forum::fÃ¼r::umlÃ¤ute:2001;
 #X text 585 170 level of the inlets;
 #X text 511 148 (give some 190dB and notice no clipping);
 #X obj 493 298 z~ 64;

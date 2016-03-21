@@ -1,4 +1,4 @@
-/* 
+/*
  * avg~: calculate the average of a signal block
  *
  * (c) 1999-2011 IOhannes m zmölnig, forum::für::umläute, institute of electronic music and acoustics (iem)
@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -25,8 +25,7 @@
 
 static t_class *avg_class;
 
-typedef struct _avg
-{
+typedef struct _avg {
   t_object x_obj;
 
   t_float n_inv;
@@ -45,10 +44,9 @@ static t_int *avg_perform(t_int *w)
 
   t_sample buf = 0.;
 
-  while (n--)
-    {
-      buf += *in++;
-    }
+  while (n--) {
+    buf += *in++;
+  }
   outlet_float(x->x_obj.ob_outlet, buf*x->n_inv);
 
   return (w+4);
@@ -78,7 +76,7 @@ void avg_tilde_setup(void)
   avg_class = class_new(gensym("avg~"), (t_newmethod)avg_new, 0,
                         sizeof(t_avg), 0, A_DEFFLOAT, 0);
   class_addmethod(avg_class, nullfn, gensym("signal"), 0);
-  class_addmethod(avg_class, (t_method)avg_dsp, gensym("dsp"), A_CANT, 0);
+  class_addmethod(avg_class, (t_method)avg_dsp, gensym("dsp"), 0);
 
   class_addmethod(avg_class, (t_method)avg_help, gensym("help"), 0);
   zexy_register("avg~");

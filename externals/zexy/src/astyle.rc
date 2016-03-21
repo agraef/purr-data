@@ -1,0 +1,16 @@
+## asytyle configuration for zexy
+# usage: astyle --options=astyle.conf *.c *.h
+
+## CRLF line-ending
+lineend=linux
+
+## make sure that code fits on an old-school terminal
+max-code-length=75
+# maximum indentation on continuation lines
+max-instatement-indent=40
+
+## "One  True  Brace  Style"
+style=1tbs
+
+## hardly an indentation
+indent=spaces=2

@@ -1,4 +1,4 @@
-/* 
+/*
  * sgn~: sign of a signal
  *
  * (c) 1999-2011 IOhannes m zmölnig, forum::für::umläute, institute of electronic music and acoustics (iem)
@@ -7,20 +7,19 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "zexySIMD.h"
 
-typedef struct _sgnTilde
-{
+typedef struct _sgnTilde {
   t_object x_obj;
 } t_sgnTilde;
 
@@ -37,11 +36,15 @@ static t_int *sgnTilde_perform(t_int *w)
   t_sample x;
   while (n--) {
     x=*in++;
-    if (x>0.) *out++=1.;
-    else if	(x<0.) *out++=-1.;
-    else *out++=0.;
+    if (x>0.) {
+      *out++=1.;
+    } else if	(x<0.) {
+      *out++=-1.;
+    } else {
+      *out++=0.;
+    }
   }
-  
+
   return (w+4);
 }
 static t_int *sgnTilde_perform8(t_int *w)
@@ -51,26 +54,74 @@ static t_int *sgnTilde_perform8(t_int *w)
   int n = (int)(w[3])>>3;
   t_sample x;
 
-  while(n--){
+  while(n--) {
     /* weirdly enough, the if/else/if/else is a lot faster than ()?:(()?:) */
-    if ((x=in[0])>0.) out[0]=1.; else if(x<0.) out[0]=-1.; else out[0]=0.;
-    if ((x=in[1])>0.) out[1]=1.; else if(x<0.) out[1]=-1.; else out[1]=0.;
-    if ((x=in[2])>0.) out[2]=1.; else if(x<0.) out[2]=-1.; else out[2]=0.;
-    if ((x=in[3])>0.) out[3]=1.; else if(x<0.) out[3]=-1.; else out[3]=0.;
-    if ((x=in[4])>0.) out[4]=1.; else if(x<0.) out[4]=-1.; else out[4]=0.;
-    if ((x=in[5])>0.) out[5]=1.; else if(x<0.) out[5]=-1.; else out[5]=0.;
-    if ((x=in[6])>0.) out[6]=1.; else if(x<0.) out[6]=-1.; else out[6]=0.;
-    if ((x=in[7])>0.) out[7]=1.; else if(x<0.) out[7]=-1.; else out[7]=0.;
+    if ((x=in[0])>0.) {
+      out[0]=1.;
+    } else if(x<0.) {
+      out[0]=-1.;
+    } else {
+      out[0]=0.;
+    }
+    if ((x=in[1])>0.) {
+      out[1]=1.;
+    } else if(x<0.) {
+      out[1]=-1.;
+    } else {
+      out[1]=0.;
+    }
+    if ((x=in[2])>0.) {
+      out[2]=1.;
+    } else if(x<0.) {
+      out[2]=-1.;
+    } else {
+      out[2]=0.;
+    }
+    if ((x=in[3])>0.) {
+      out[3]=1.;
+    } else if(x<0.) {
+      out[3]=-1.;
+    } else {
+      out[3]=0.;
+    }
+    if ((x=in[4])>0.) {
+      out[4]=1.;
+    } else if(x<0.) {
+      out[4]=-1.;
+    } else {
+      out[4]=0.;
+    }
+    if ((x=in[5])>0.) {
+      out[5]=1.;
+    } else if(x<0.) {
+      out[5]=-1.;
+    } else {
+      out[5]=0.;
+    }
+    if ((x=in[6])>0.) {
+      out[6]=1.;
+    } else if(x<0.) {
+      out[6]=-1.;
+    } else {
+      out[6]=0.;
+    }
+    if ((x=in[7])>0.) {
+      out[7]=1.;
+    } else if(x<0.) {
+      out[7]=-1.;
+    } else {
+      out[7]=0.;
+    }
 
     in+=8;
     out+=8;
   }
-  
+
   return (w+4);
 }
 
 #ifdef __SSE__
-static int l_bitmask[]={0x80000000, 0x80000000, 0x80000000, 0x80000000}; /* sign bitmask */
+static int l_bitmask[]= {0x80000000, 0x80000000, 0x80000000, 0x80000000}; /* sign bitmask */
 static t_int *sgnTilde_performSSE(t_int *w)
 {
   __m128 *in = (__m128 *)(w[1]);
@@ -111,14 +162,17 @@ static void sgnTilde_dsp(t_sgnTilde *x, t_signal **sp)
 {
 #ifdef __SSE__
   if(
-     ZEXY_TYPE_EQUAL(t_sample, float) && /*  currently SSE2 code is only for float (not for double) */
-     zexy_testSSE(sgnTilde_perform,
-		  sgnTilde_performSSE, 
-		  1,1)
-     )
-    {
-      dsp_add(sgnTilde_performSSE, 3, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
-    } else
+    Z_SIMD_CHKBLOCKSIZE(sp[0]->s_n) &&
+    Z_SIMD_CHKALIGN(sp[0]->s_vec) &&
+    Z_SIMD_CHKALIGN(sp[1]->s_vec) &&
+    ZEXY_TYPE_EQUAL(t_sample, float)
+    && /*  currently SSE2 code is only for float (not for double) */
+    zexy_testSSE(sgnTilde_perform,
+                 sgnTilde_performSSE,
+                 1,1)
+  ) {
+    dsp_add(sgnTilde_performSSE, 3, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+  } else
 #endif
     if (sp[0]->s_n & 7) {
       dsp_add(sgnTilde_perform , 3, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
@@ -130,14 +184,14 @@ static void sgnTilde_dsp(t_sgnTilde *x, t_signal **sp)
 
 static void sgnTilde_helper(void)
 {
-  post("\n"HEARTSYMBOL" sgn~ \t\t:: sign of a signal");
+  post("\n"HEARTSYMBOL " sgn~ \t\t:: sign of a signal");
 }
 
 static void *sgnTilde_new(void)
 {
   t_sgnTilde *x = (t_sgnTilde *)pd_new(sgnTilde_class);
   outlet_new(&x->x_obj, gensym("signal"));
-  
+
   return (x);
 }
 
@@ -146,9 +200,10 @@ void sgn_tilde_setup(void)
   sgnTilde_class = class_new(gensym("sgn~"), (t_newmethod)sgnTilde_new, 0,
                              sizeof(t_sgnTilde), 0, A_DEFFLOAT, 0);
   class_addmethod(sgnTilde_class, nullfn, gensym("signal"), 0);
-  class_addmethod(sgnTilde_class, (t_method)sgnTilde_dsp, gensym("dsp"), A_CANT, 0);
-  
-  class_addmethod(sgnTilde_class, (t_method)sgnTilde_helper, gensym("help"), 0);
+  class_addmethod(sgnTilde_class, (t_method)sgnTilde_dsp, gensym("dsp"), 0);
+
+  class_addmethod(sgnTilde_class, (t_method)sgnTilde_helper, gensym("help"),
+                  0);
   class_sethelpsymbol(sgnTilde_class, gensym("zigbinops"));
   zexy_register("sgn~");
 }

@@ -1,4 +1,4 @@
-/* 
+/*
  *  sum :: the sum of a list of floats
  *
  * (c) 1999-2011 IOhannes m zmölnig, forum::für::umläute, institute of electronic music and acoustics (iem)
@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -21,8 +21,7 @@
 
 static t_class *sum_class;
 
-typedef struct _sum
-{
+typedef struct _sum {
   t_object x_obj;
 } t_sum;
 
@@ -30,7 +29,9 @@ static void sum_list(t_sum *x, t_symbol* UNUSED(s), int argc, t_atom *argv)
 {
   t_float sum = 0.f;
 
-  while(argc--)sum+=atom_getfloat(argv++);
+  while(argc--) {
+    sum+=atom_getfloat(argv++);
+  }
 
   outlet_float(x->x_obj.ob_outlet,sum);
 }
@@ -52,7 +53,7 @@ static void sum_help(void)
 void sum_setup(void)
 {
   sum_class = class_new(gensym("sum"), (t_newmethod)sum_new, 0,
-			 sizeof(t_sum), 0, A_DEFFLOAT, 0);
+                        sizeof(t_sum), 0, A_DEFFLOAT, 0);
 
   class_addlist(sum_class, (t_method)sum_list);
   class_addmethod(sum_class, (t_method)sum_help, gensym("help"), 0);

@@ -1,4 +1,4 @@
-/* 
+/*
  * step~: unity step function
  *
  * (c) 1999-2011 IOhannes m zmölnig, forum::für::umläute, institute of electronic music and acoustics (iem)
@@ -7,18 +7,18 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /*
-  step~  : will make a unity step at a desired point in the signal-vector; the second input specifies a 
+  step~  : will make a unity step at a desired point in the signal-vector; the second input specifies a
   length:	after the so-specified time has elapsed, the step will toggle back to the previous
   value;
   the length can be passed as an argument when creating the object
@@ -31,12 +31,11 @@
 
 #include "zexy.h"
 
-/* ------------------------ step~ ----------------------------- */ 
+/* ------------------------ step~ ----------------------------- */
 
 static t_class *step_class;
 
-typedef struct _step
-{
+typedef struct _step {
   t_object x_obj;
   int position;
   int length;
@@ -54,10 +53,10 @@ static void step_bang(t_step *x)
 
 static void step_float(t_step *x, t_float where)
 {
-  x->wait4stop = x->length + 
-    (x->wait4start =
-     (x->position = (where>0)*where)
-     );
+  x->wait4stop = x->length +
+                 (x->wait4start =
+                    (x->position = (where>0)*where)
+                 );
 }
 
 static void step_setlength(t_step *x, t_float arg)
@@ -77,14 +76,16 @@ static t_int *step_perform(t_int *w)
 
   int wait4start = x->wait4start, wait4stop = x->wait4stop;
 
-  while (n--)
-    {
-      wait4stop--;
-      if (!wait4start--) toggle ^= 1;
-      else if (!wait4stop) toggle ^= 1;
-
-      *out++ = toggle;		
+  while (n--) {
+    wait4stop--;
+    if (!wait4start--) {
+      toggle ^= 1;
+    } else if (!wait4stop) {
+      toggle ^= 1;
     }
+
+    *out++ = toggle;
+  }
 
   x->wait4start = wait4start;
   x->wait4stop = wait4stop;
@@ -101,7 +102,7 @@ static void step_dsp(t_step *x, t_signal **sp)
 
 static void step_helper(void)
 {
-  post(""HEARTSYMBOL" step~-object :: generates a unity-step");
+  post(""HEARTSYMBOL " step~-object :: generates a unity-step");
   post("creation : \"dirac~ [<position> [<length>]]\" : create a rectangular window\n"
        "\t\t\tat specified position and with specified length (in samples)\n"
        "inlet1\t: <position>\t: create a rectangular window at new position\n"
@@ -127,16 +128,17 @@ static void *step_new(t_floatarg farg)
 
   return (x);
 }
- 
+
 void step_tilde_setup(void)
 {
   step_class = class_new(gensym("step~"), (t_newmethod)step_new, 0,
                          sizeof(t_step), 0, A_DEFFLOAT, 0);
 
   class_addfloat(step_class, step_float);
-  class_addbang(step_class, step_bang); 
-  class_addmethod(step_class, (t_method)step_setlength, gensym("ft1"), A_FLOAT, 0);
-  class_addmethod(step_class, (t_method)step_dsp, gensym("dsp"), A_CANT, 0);
+  class_addbang(step_class, step_bang);
+  class_addmethod(step_class, (t_method)step_setlength, gensym("ft1"),
+                  A_FLOAT, 0);
+  class_addmethod(step_class, (t_method)step_dsp, gensym("dsp"), 0);
 
   class_addmethod(step_class, (t_method)step_helper, gensym("help"), 0);
 

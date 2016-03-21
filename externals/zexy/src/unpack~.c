@@ -1,4 +1,4 @@
-/* 
+/*
  * unpack~ :: convert (list-of-) float inputs to signals
  *
  * (c) 1999-2011 IOhannes m zmölnig, forum::für::umläute, institute of electronic music and acoustics (iem)
@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -21,8 +21,7 @@
 
 static t_class *sigunpack_class;
 
-typedef struct _sigunpack
-{
+typedef struct _sigunpack {
   t_object x_obj;
   t_sample *buffer;
   t_sample *rp, *wp;
@@ -34,19 +33,24 @@ static void sigunpack_float(t_sigunpack *x, t_float f)
 {
   if (x->wp + 1  != x->rp) {
     *(x->wp)++ = f;
-    if (x->wp == x->buffer + x->bufsize) x->wp = x->buffer;
+    if (x->wp == x->buffer + x->bufsize) {
+      x->wp = x->buffer;
+    }
   }
 }
 
-static void sigunpack_list(t_sigunpack *x, t_symbol *s, int argc, t_atom *argv)
+static void sigunpack_list(t_sigunpack *x, t_symbol *s, int argc,
+                           t_atom *argv)
 {
   t_atom *ap = argv;
   int i;
   for (i = 0, ap = argv; i < argc; ap++, i++) {
     if (x->wp + 1  != x->rp) {
       *(x->wp)++ = atom_getfloat(ap);
-      if (x->wp == x->buffer + x->bufsize) x->wp = x->buffer;
-    }    
+      if (x->wp == x->buffer + x->bufsize) {
+        x->wp = x->buffer;
+      }
+    }
   }
 }
 
@@ -60,10 +64,16 @@ static t_int *sigunpack_perform(t_int *w)
   t_sample *buf = x->rp;
   int hitchhike = 0;
 
-  if ((x->wp >= x->rp) && (x->wp < x->rp+n)) hitchhike=1;
+  if ((x->wp >= x->rp) && (x->wp < x->rp+n)) {
+    hitchhike=1;
+  }
   x->rp += n;
-  if (x->rp == x->buffer + x->bufsize) x->rp = x->buffer;
-  if (hitchhike) x->wp = x->rp;
+  if (x->rp == x->buffer + x->bufsize) {
+    x->rp = x->buffer;
+  }
+  if (hitchhike) {
+    x->wp = x->rp;
+  }
 
   while (n--) {
     *out++ = *buf;
@@ -93,8 +103,12 @@ static void *sigunpack_new(t_floatarg f)
 
   int suggestedsize = (int)f;
   int bufsize;
-  if (!suggestedsize) bufsize = 64;
-  else bufsize = (suggestedsize % 64)?(64*(1+(int)(suggestedsize/64))):suggestedsize;
+  if (!suggestedsize) {
+    bufsize = 64;
+  } else {
+    bufsize = (suggestedsize % 64)?(64*(1+(int)(suggestedsize/64))):
+              suggestedsize;
+  }
 
   x->buffer = (t_sample *)getbytes(bufsize * sizeof(*x->buffer));
   x->bufsize = bufsize;
@@ -112,13 +126,16 @@ static void sigunpack_help(void)
 
 void unpack_tilde_setup(void)
 {
-  sigunpack_class = class_new(gensym("unpack~"), (t_newmethod)sigunpack_new, 0,
+  sigunpack_class = class_new(gensym("unpack~"), (t_newmethod)sigunpack_new,
+                              0,
                               sizeof(t_sigunpack), 0, A_DEFFLOAT, 0);
-  class_addmethod(sigunpack_class, (t_method)sigunpack_dsp, gensym("dsp"), A_CANT, 0);
+  class_addmethod(sigunpack_class, (t_method)sigunpack_dsp, gensym("dsp"),
+                  0);
   class_addfloat(sigunpack_class, (t_method)sigunpack_float);
   class_addlist (sigunpack_class, (t_method)sigunpack_list);
 
 
-  class_addmethod(sigunpack_class, (t_method)sigunpack_help, gensym("help"), 0);
+  class_addmethod(sigunpack_class, (t_method)sigunpack_help, gensym("help"),
+                  0);
   zexy_register("unpack~");
 }

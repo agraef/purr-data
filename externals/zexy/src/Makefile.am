@@ -16,6 +16,8 @@ AM_LDFLAGS+= @EXTRA_LTFLAGS@
 AM_CFLAGS += 
 AM_LDFLAGS+= 
 
+EXTRA_DIST = \
+	astyle.rc
 
 if LIBRARY
 pkglib_LTLIBRARIES+=zexy.la
@@ -45,6 +47,7 @@ pkglib_LTLIBRARIES+= \
 	demux.la \
 	dfreq~.la \
 	dirac~.la \
+	doublepole~.la \
 	drip.la \
 	unfold.la \
 	envrms~.la \
@@ -146,6 +149,7 @@ demultiplex_la_SOURCES	= demultiplex.c
 demux_la_SOURCES	= demultiplex.c
 dfreq__la_SOURCES	= dfreq~.c
 dirac__la_SOURCES	= dirac~.c
+doublepole__la_SOURCES	= doublepole~.c
 drip_la_SOURCES		= drip.c
 unfold_la_SOURCES	= drip.c
 envrms__la_SOURCES	= envrms~.c
@@ -231,7 +235,7 @@ zexy_la_SOURCES	= zexy.c z_zexy.c \
 	0x260x260x7e.c 0x2e.c 0x3c0x7e.c 0x3d0x3d0x7e.c 0x3e0x7e.c 0x7c0x7c0x7e.c \
 	a2l.c abs~.c absgn~.c atoi.c atof.c avg~.c  \
 	blockmirror~.c blockshuffle~.c blockswap~.c \
-	date.c demultiplex~.c demultiplex.c dfreq~.c dirac~.c drip.c envrms~.c \
+	date.c demultiplex~.c demultiplex.c dfreq~.c dirac~.c doublepole~.c drip.c envrms~.c \
 	fifop.c freadln.c fwriteln.c glue.c index.c length.c lifop.c limiter~.c \
 	list2int.c list2lists.c list2symbol.c lister.c listfind.c liststorage.c longload.c lpt.c \
 	makesymbol.c matchbox.c mavg.c minmax.c msgfile.c multiline~.c multiplex~.c \

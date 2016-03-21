@@ -303,5 +303,5 @@ the type;
 #X text 10 90 DESCRIPTION the swiss army knife for Pd;
 #X restore 23 27 pd META;
 #X text 228 7 the zexy external;
-#X text 429 66 (c) forum::f�r::umlute 1999-2012;
+#X text 429 66 (c) forum::für::umläute 1999-2012;
 #X connect 1 0 0 0;

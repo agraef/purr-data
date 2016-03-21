@@ -1,4 +1,4 @@
-/* 
+/*
  *  sleepgrain :  get (and set?) the sleepgrain of Pd
  *
  * (c) 1999-2011 IOhannes m zmölnig, forum::für::umläute, institute of electronic music and acoustics (iem)
@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -26,8 +26,7 @@ EXTERN int* get_sys_sleepgrain(void ) ;
 
 static t_class *sleepgrain_class;
 
-typedef struct _sleepgrain
-{
+typedef struct _sleepgrain {
   t_object x_obj;
 
 } t_sleepgrain;
@@ -64,9 +63,10 @@ static void *sleepgrain_new(void)
 
 void sleepgrain_setup(void)
 {
-  sleepgrain_class = class_new(gensym("sleepgrain"), (t_newmethod)sleepgrain_new, 
-                                     0, sizeof(t_sleepgrain), 0, A_NULL);
-  
+  sleepgrain_class = class_new(gensym("sleepgrain"),
+                               (t_newmethod)sleepgrain_new,
+                               0, sizeof(t_sleepgrain), 0, A_NULL);
+
   class_addbang  (sleepgrain_class, sleepgrain_bang);
   class_addfloat (sleepgrain_class, sleepgrain_float);
   zexy_register("sleepgrain");

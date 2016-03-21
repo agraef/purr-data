@@ -1,4 +1,4 @@
-/* 
+/*
  * msgfile: an improved version of [textfile]
  *
  * (c) 1999-2011 IOhannes m zmölnig, forum::für::umläute, institute of electronic music and acoustics (iem)
@@ -7,18 +7,18 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
-/*  
+/*
     this is heavily based on code from [textfile],
     which is part of pd and written by Miller S. Puckette
     pd (and thus [textfile]) come with their own license
@@ -35,6 +35,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <string.h>
+
 
 
 
@@ -59,11 +60,10 @@ typedef struct _msglist {
   t_atom *thislist;
 
   void *next;
-  void *previous;  
+  void *previous;
 } t_msglist;
 
-typedef struct _msgfile
-{
+typedef struct _msgfile {
   t_object x_obj;              /* everything */
   t_outlet *x_secondout;        /* "done" */
 
@@ -106,25 +106,27 @@ static int node_wherearewe(t_msgfile *x)
     cur = cur->next;
   }
 
-  if(cur&&cur->thislist)
+  if(cur&&cur->thislist) {
     return counter;
+  }
   return -1;
 }
 
 static void write_currentnode(t_msgfile *x, int ac, t_atom *av)
 {
   /* append list to the current node list */
-  
+
   t_msglist *cur=x->current;
   t_atom *ap=NULL;
-  int newsize = 0; 
+  int newsize = 0;
 
-  if(!cur || (ac && av && A_SYMBOL==av->a_type && gensym("")==atom_getsymbol(av))){
+  if(!cur || (ac && av && A_SYMBOL==av->a_type
+              && gensym("")==atom_getsymbol(av))) {
     /* ignoring empty symbols! */
     return;
   }
 
-  newsize = cur->n + ac; 
+  newsize = cur->n + ac;
 
   ap = (t_atom *)getbytes(newsize * sizeof(t_atom));
   memcpy(ap, cur->thislist, cur->n * sizeof(t_atom));
@@ -136,12 +138,12 @@ static void write_currentnode(t_msgfile *x, int ac, t_atom *av)
 
 static void delete_currentnode(t_msgfile *x)
 {
-  if (x&&x->current){
+  if (x&&x->current) {
     t_msglist *dummy = x->current;
     t_msglist *nxt=0;
     t_msglist *prv=0;
 
-    if(dummy){
+    if(dummy) {
       nxt=dummy->next;
       prv=dummy->previous;
 
@@ -160,14 +162,19 @@ static void delete_currentnode(t_msgfile *x)
       dummy=0;
     }
 
-    if (nxt) nxt->previous = prv;
-    if (prv) prv->next     = nxt;
-    
+    if (nxt) {
+      nxt->previous = prv;
+    }
+    if (prv) {
+      prv->next     = nxt;
+    }
+
     x->current = (nxt)?nxt:prv;
-    if(x->current)
+    if(x->current) {
       x->previous=x->current->previous;
-    else
+    } else {
       x->previous=prv;
+    }
 
   }
 }
@@ -176,11 +183,14 @@ static void delete_emptynodes(t_msgfile *x)
 {
   x->current=x->start;
   x->previous=0;
-  if (!x->current) return;
+  if (!x->current) {
+    return;
+  }
 
   while (x->current && x->current->next) {
-    if (!x->current->thislist) delete_currentnode(x);
-    else {
+    if (!x->current->thislist) {
+      delete_currentnode(x);
+    } else {
       x->previous=x->current;
       x->current = x->current->next;
     }
@@ -188,7 +198,7 @@ static void delete_emptynodes(t_msgfile *x)
 }
 
 static void add_currentnode(t_msgfile *x)
-{ 
+{
   /* add (after the current node) a node at the current position (do not write the listbuf !!!) */
   t_msglist *newnode = (t_msglist *)getbytes(sizeof(t_msglist));
   t_msglist  *prv, *nxt, *cur=x->current;
@@ -202,17 +212,23 @@ static void add_currentnode(t_msgfile *x)
   newnode->next = nxt;
   newnode->previous = prv;
 
-  if (prv) prv->next = newnode;
-  if (nxt) nxt->previous = newnode;
+  if (prv) {
+    prv->next = newnode;
+  }
+  if (nxt) {
+    nxt->previous = newnode;
+  }
 
   x->current = newnode;
   x->previous=prv;
 
-  if(!x->start) /* it's the first line in the buffer */
+  if(!x->start) { /* it's the first line in the buffer */
     x->start=x->current;
+  }
 }
 static void insert_currentnode(t_msgfile *x)
-{  /* insert (add before the current node) a node (do not write a the listbuf !!!) */
+{
+  /* insert (add before the current node) a node (do not write a the listbuf !!!) */
   t_msglist *newnode;
   t_msglist  *prv, *nxt, *cur = x->current;
 
@@ -230,8 +246,12 @@ static void insert_currentnode(t_msgfile *x)
     newnode->next = nxt;
     newnode->previous = prv;
 
-    if (prv) prv->next = newnode;
-    if (nxt) nxt->previous = newnode;
+    if (prv) {
+      prv->next = newnode;
+    }
+    if (nxt) {
+      nxt->previous = newnode;
+    }
 
     x->previous=prv;
     x->current = newnode;
@@ -260,25 +280,39 @@ static void delete_region(t_msgfile *x, int start, int stop)
     dummy = dummy->next;
   }
 
-  if ((stop > counter) || (stop == -1)) stop = counter;
-  if ((stop+1) && (start > stop)) return;
-  if (stop == 0) return;
+  if ((stop > counter) || (stop == -1)) {
+    stop = counter;
+  }
+  if ((stop+1) && (start > stop)) {
+    return;
+  }
+  if (stop == 0) {
+    return;
+  }
 
-  newwhere = (oldwhere < start)?oldwhere:( (oldwhere < stop)?start:start+(oldwhere-stop));
+  newwhere = (oldwhere < start)?oldwhere:( (oldwhere < stop)?start:start+
+             (oldwhere-stop));
   n = stop - start;
 
   msgfile_goto(x, start);
 
-  while (n--) delete_currentnode(x);
+  while (n--) {
+    delete_currentnode(x);
+  }
 
-  if (newwhere+1) msgfile_goto(x, newwhere);
-  else msgfile_end(x);
+  if (newwhere+1) {
+    msgfile_goto(x, newwhere);
+  } else {
+    msgfile_end(x);
+  }
 }
 
 
 static int atomcmp(t_atom *this, t_atom *that)
 {
-  if (this->a_type != that->a_type) return 1;
+  if (this->a_type != that->a_type) {
+    return 1;
+  }
 
   switch (this->a_type) {
   case A_FLOAT:
@@ -324,25 +358,31 @@ static void msgfile_binbuf2listbuf(t_msgfile *x, t_binbuf *bbuf)
 
 static void msgfile_rewind(t_msgfile *x)
 {
-  //  while (x->current && x->current->previous) x->current = x->current->previous;    
+  //  while (x->current && x->current->previous) x->current = x->current->previous;
   x->current = x->start;
   x->previous=0;
 }
 static void msgfile_end(t_msgfile *x)
 {
-  if (!x->current) return;
+  if (!x->current) {
+    return;
+  }
   while (x->current->next) {
     x->previous= x->current;
     x->current = x->current->next;
   }
-  
+
 }
 static void msgfile_goto(t_msgfile *x, t_float f)
 {
   int i = f;
 
-  if (i<0) return;
-  if (!x->current) return;
+  if (i<0) {
+    return;
+  }
+  if (!x->current) {
+    return;
+  }
   msgfile_rewind(x);
 
   while (i-- && x->current->next) {
@@ -357,8 +397,12 @@ static void msgfile_skip(t_msgfile *x, t_float f)
 
   t_msglist *dummy = x->start;
 
-  if (!f) return;
-  if (!x->current) return;
+  if (!f) {
+    return;
+  }
+  if (!x->current) {
+    return;
+  }
 
   while (dummy->next && dummy!=x->current) {
     counter++;
@@ -366,7 +410,9 @@ static void msgfile_skip(t_msgfile *x, t_float f)
   }
 
   i = counter + f;
-  if (i<0) i=0;
+  if (i<0) {
+    i=0;
+  }
 
   msgfile_goto(x, i);
 }
@@ -387,8 +433,12 @@ static void msgfile_delete(t_msgfile *x, t_symbol *s, int ac, t_atom *av)
     int pos = atom_getfloat(av);
     int oldwhere = node_wherearewe(x);
 
-    if (pos<0) return;
-    if (oldwhere > pos) oldwhere--;
+    if (pos<0) {
+      return;
+    }
+    if (oldwhere > pos) {
+      oldwhere--;
+    }
     msgfile_goto(x, pos);
     delete_currentnode(x);
     msgfile_goto(x, oldwhere);
@@ -397,13 +447,18 @@ static void msgfile_delete(t_msgfile *x, t_symbol *s, int ac, t_atom *av)
     int pos2 = atom_getfloat(av);
 
     if ((pos1 < pos2) || (pos2 == -1)) {
-      if (pos2+1) delete_region(x, pos1, pos2+1);
-      else delete_region(x, pos1, -1);
+      if (pos2+1) {
+        delete_region(x, pos1, pos2+1);
+      } else {
+        delete_region(x, pos1, -1);
+      }
     } else {
       delete_region(x, pos1+1, -1);
       delete_region(x, 0, pos2);
     }
-  } else delete_currentnode(x);
+  } else {
+    delete_currentnode(x);
+  }
 }
 
 static void msgfile_add(t_msgfile *x, t_symbol *s, int ac, t_atom *av)
@@ -416,7 +471,9 @@ static void msgfile_add2(t_msgfile *x, t_symbol *s, int ac, t_atom *av)
 {
   msgfile_end(x);
   if (x->current) {
-    if(x->current->previous) x->current = x->current->previous;
+    if(x->current->previous) {
+      x->current = x->current->previous;
+    }
   } else {
     add_currentnode(x);
   }
@@ -433,11 +490,15 @@ static void msgfile_append(t_msgfile *x, t_symbol *s, int ac, t_atom *av)
 }
 static void msgfile_append2(t_msgfile *x, t_symbol *s, int ac, t_atom *av)
 {
-  if(!x->current)
+  if(!x->current) {
     add_currentnode(x);
+  }
 
-  if (x->current->thislist) write_currentnode(x, ac, av);
-  else msgfile_append(x, s, ac, av);
+  if (x->current->thislist) {
+    write_currentnode(x, ac, av);
+  } else {
+    msgfile_append(x, s, ac, av);
+  }
 }
 static void msgfile_insert(t_msgfile *x, t_symbol *s, int ac, t_atom *av)
 {
@@ -449,7 +510,9 @@ static void msgfile_insert(t_msgfile *x, t_symbol *s, int ac, t_atom *av)
 static void msgfile_insert2(t_msgfile *x, t_symbol *s, int ac, t_atom *av)
 {
   t_msglist *cur = x->current;
-  if ((x->current) && (x->current->previous)) x->current = x->current->previous;
+  if ((x->current) && (x->current->previous)) {
+    x->current = x->current->previous;
+  }
   write_currentnode(x, ac, av);
   x->current = cur;
 }
@@ -485,7 +548,8 @@ static void msgfile_flush(t_msgfile *x)
 static void msgfile_this(t_msgfile *x)
 {
   if ((x->current) && (x->current->thislist)) {
-    outlet_list(x->x_obj.ob_outlet, gensym("list"), x->current->n, x->current->thislist);
+    outlet_list(x->x_obj.ob_outlet, gensym("list"), x->current->n,
+                x->current->thislist);
   } else {
     outlet_bang(x->x_secondout);
   }
@@ -494,10 +558,14 @@ static void msgfile_next(t_msgfile *x)
 {
   if ((x->current) && (x->current->next)) {
     t_msglist *next = x->current->next;
-    if (next->thislist)
+    if (next->thislist) {
       outlet_list(x->x_obj.ob_outlet, gensym("list"), next->n, next->thislist);
-    else outlet_bang(x->x_secondout);
-  } else outlet_bang(x->x_secondout);
+    } else {
+      outlet_bang(x->x_secondout);
+    }
+  } else {
+    outlet_bang(x->x_secondout);
+  }
 }
 static void msgfile_prev(t_msgfile *x)
 {
@@ -509,15 +577,19 @@ static void msgfile_prev(t_msgfile *x)
     prev = x->previous;
   }
   if(prev) {
-    if (prev->thislist)
+    if (prev->thislist) {
       outlet_list(x->x_obj.ob_outlet, gensym("list"), prev->n, prev->thislist);
-    else outlet_bang(x->x_secondout);
+    } else {
+      outlet_bang(x->x_secondout);
+    }
 
-  } else outlet_bang(x->x_secondout);
+  } else {
+    outlet_bang(x->x_secondout);
+  }
 }
 
 static void msgfile_bang(t_msgfile *x)
-{ 
+{
   if ((x->current) && (x->current->thislist)) {
     t_msglist*cur=x->current;
     x->current=cur->next;
@@ -539,12 +611,14 @@ static void msgfile_find(t_msgfile *x, t_symbol *s, int ac, t_atom *av)
     t_atom *that = av;
     t_atom *this = cur->thislist;
 
-    if(0==this){
+    if(0==this) {
       cur=cur->next;
       continue;
     }
-    
-    if (ac < n) n = ac;
+
+    if (ac < n) {
+      n = ac;
+    }
 
     while (n-->0) {
       if ( (strcmp("*", atom_getsymbol(that)->s_name) && atomcmp(that, this)) ) {
@@ -563,12 +637,14 @@ static void msgfile_find(t_msgfile *x, t_symbol *s, int ac, t_atom *av)
     cur=cur->next;
   }
 
-  if(found){
+  if(found) {
     x->current = found;
     x->previous= found->previous;
     outlet_float(x->x_secondout, node_wherearewe(x));
-    if(found->n && found->thislist)
-      outlet_list(x->x_obj.ob_outlet, gensym("list"), found->n, found->thislist);
+    if(found->n && found->thislist) {
+      outlet_list(x->x_obj.ob_outlet, gensym("list"), found->n,
+                  found->thislist);
+    }
   } else {
     outlet_bang(x->x_secondout);
   }
@@ -576,14 +652,19 @@ static void msgfile_find(t_msgfile *x, t_symbol *s, int ac, t_atom *av)
 
 static void msgfile_where(t_msgfile *x)
 {
-  if (x->current && x->current->thislist) outlet_float(x->x_secondout, node_wherearewe(x));
-  else outlet_bang(x->x_secondout);
+  if (x->current && x->current->thislist) {
+    outlet_float(x->x_secondout, node_wherearewe(x));
+  } else {
+    outlet_bang(x->x_secondout);
+  }
 }
 
 
-static void msgfile_sort(t_msgfile *x, t_symbol *s0, t_symbol*s1, t_symbol*r)
+static void msgfile_sort(t_msgfile *x, t_symbol *s0, t_symbol*s1,
+                         t_symbol*r)
 {
-  post("sorting not implemented yet: '%s', '%s' -> '%s'", s0->s_name, s1->s_name, r->s_name);
+  post("sorting not implemented yet: '%s', '%s' -> '%s'", s0->s_name,
+       s1->s_name, r->s_name);
 
 
 #if 0
@@ -625,7 +706,8 @@ static void msgfile_sort(t_msgfile *x, t_symbol *s0, t_symbol*s1, t_symbol*r)
 /* ********************************** */
 /* file I/O                           */
 
-static void msgfile_read2(t_msgfile *x, t_symbol *filename, t_symbol *format)
+static void msgfile_read2(t_msgfile *x, t_symbol *filename,
+                          t_symbol *format)
 {
   int rmode = 0;
 
@@ -647,21 +729,25 @@ static void msgfile_read2(t_msgfile *x, t_symbol *filename, t_symbol *format)
   rmode |= O_BINARY;
 #endif
 
-  if ((fd = open_via_path(dirname,
-                          filename->s_name, "", buf, &bufptr, MAXPDSTRING, 0)) < 0) {
+  fd = open_via_path(dirname,
+                     filename->s_name, "", buf, &bufptr, MAXPDSTRING, 0);
 
-    if((fd=open(filename->s_name, rmode)) < 0) {
+  if (fd < 0) {
+    /* open via path failed, fall back */
+    fd=z_open(filename->s_name, rmode);
+    if(fd < 0) {
       pd_error(x, "can't open in %s/%s",  dirname, filename->s_name);
       return;
     } else {
+      z_close(fd);
       sprintf(filnam, "%s", filename->s_name);
     }
   } else {
-    close(fd);
+    z_close(fd);
     sprintf(filnam, "%s/%s", buf, bufptr);
   }
 
-  fil=fopen(filnam, "rb");
+  fil=z_fopen(filnam, "rb");
   if(fil==NULL) {
     pd_error(x, "could not open '%s'", filnam);
     return;
@@ -671,9 +757,9 @@ static void msgfile_read2(t_msgfile *x, t_symbol *filename, t_symbol *format)
   fseek(fil, 0, SEEK_SET);
 
   if (!(readbuf = t_getbytes(length))) {
-    pd_error(x, "msgfile_read: could not reserve %ld bytes to read into", length);
-    fclose(fil);
-    close(fd);
+    pd_error(x, "msgfile_read: could not reserve %ld bytes to read into",
+             length);
+    z_fclose(fil);
     return;
   }
 
@@ -683,8 +769,9 @@ static void msgfile_read2(t_msgfile *x, t_symbol *filename, t_symbol *format)
     mode = CSV_MODE;
   } else if (gensym("pd")==format) {
     mode = PD_MODE;
-  } else if (*format->s_name)
+  } else if (*format->s_name) {
     pd_error(x, "msgfile_read: unknown flag: %s", format->s_name);
+  }
 
   switch (mode) {
   case CR_MODE:
@@ -703,14 +790,15 @@ static void msgfile_read2(t_msgfile *x, t_symbol *filename, t_symbol *format)
 
   /* read */
   if ((readlength = fread(readbuf, sizeof(char), length, fil)) < length) {
-    pd_error(x, "msgfile_read: unable to read %s: %ld of %ld", filnam, readlength, length);
-    fclose(fil);
+    pd_error(x, "msgfile_read: unable to read %s: %ld of %ld", filnam,
+             readlength, length);
+    z_fclose(fil);
     t_freebytes(readbuf, length);
     return;
   }
 
   /* close */
-  fclose(fil);
+  z_fclose(fil);
 
   /* convert separators and eols to what pd expects in a binbuf*/
   bufptr=readbuf;
@@ -719,22 +807,26 @@ static void msgfile_read2(t_msgfile *x, t_symbol *filename, t_symbol *format)
   charbinbuflength=2*length+MSGFILE_HEADROOM;
 
   charbinbuf=(char*)getbytes(charbinbuflength);
-  
+
   cbb=charbinbuf;
-  for(pos=0; pos<charbinbuflength; pos++)charbinbuf[pos]=0;
+  for(pos=0; pos<charbinbuflength; pos++) {
+    charbinbuf[pos]=0;
+  }
 
   *cbb++=';';
   pos=1;
   while (readlength--) {
-    if(pos>=charbinbuflength){
-      pd_error(x, "msgfile: read error (headroom %d too small!)", MSGFILE_HEADROOM);
+    if(pos>=charbinbuflength) {
+      pd_error(x, "msgfile: read error (headroom %d too small!)",
+               MSGFILE_HEADROOM);
       goto read_error;
       break;
     }
     if (*bufptr == separator) {
       *cbb = ' ';
     } else if (*bufptr==eol) {
-      *cbb++=';';pos++;
+      *cbb++=';';
+      pos++;
       *cbb='\n';
     } else {
       *cbb=*bufptr;
@@ -749,18 +841,20 @@ static void msgfile_read2(t_msgfile *x, t_symbol *filename, t_symbol *format)
   binbuf_text(bbuf, charbinbuf, charbinbuflength);
   msgfile_binbuf2listbuf(x, bbuf);
 
- read_error:
+read_error:
   binbuf_free(bbuf);
   t_freebytes(readbuf, length);
   t_freebytes(charbinbuf, charbinbuflength);
 }
-static void msgfile_read(t_msgfile *x, t_symbol *filename, t_symbol *format)
+static void msgfile_read(t_msgfile *x, t_symbol *filename,
+                         t_symbol *format)
 {
   msgfile_clear(x);
   msgfile_read2(x, filename, format);
 }
 
-static void msgfile_write(t_msgfile *x, t_symbol *filename, t_symbol *format)
+static void msgfile_write(t_msgfile *x, t_symbol *filename,
+                          t_symbol *format)
 {
   char buf[MAXPDSTRING];
   t_binbuf *bbuf = binbuf_new();
@@ -780,9 +874,6 @@ static void msgfile_write(t_msgfile *x, t_symbol *filename, t_symbol *format)
     binbuf_addsemi(bbuf);
     cur = cur->next;
   }
-    
-  canvas_makefilename(x->x_canvas, filename->s_name,
-                      buf, MAXPDSTRING);
 
   if(format&&gensym("")!=format) {
     if(gensym("cr")==format) {
@@ -795,7 +886,7 @@ static void msgfile_write(t_msgfile *x, t_symbol *filename, t_symbol *format)
       pd_error(x, "msgfile_write: ignoring unknown flag: %s", format->s_name);
     }
   }
- 
+
   switch (mode) {
   case CR_MODE:
     separator = ' ';
@@ -810,22 +901,25 @@ static void msgfile_write(t_msgfile *x, t_symbol *filename, t_symbol *format)
     eol = ';';
     break;
   }
-  
+
   binbuf_gettext(bbuf, &mytext, &textlen);
   dumtext = mytext;
   i = textlen;
 
   while(i--) {
-    if (*dumtext==' ')
+    if (*dumtext==' ') {
       *dumtext=separator;
-    else if ((*dumtext==';') && (dumtext[1]=='\n'))
+    } else if ((*dumtext==';') && (dumtext[1]=='\n')) {
       *dumtext = eol;
+    }
     dumtext++;
   }
-  
+
   /* open */
-  sys_bashfilename(filename->s_name, filnam);
-  if (!(f = fopen(filnam, "w"))) {
+  canvas_makefilename(x->x_canvas, filename->s_name,
+                      buf, MAXPDSTRING);
+  sys_bashfilename(buf, filnam);
+  if (!(f = z_fopen(filnam, "w"))) {
     pd_error(x, "msgfile : failed to open %s", filnam);
   } else {
     /* write */
@@ -834,7 +928,9 @@ static void msgfile_write(t_msgfile *x, t_symbol *filename, t_symbol *format)
     }
   }
   /* close */
-  if (f) fclose(f);
+  if (f) {
+    z_fclose(f);
+  }
 
   binbuf_free(bbuf);
 }
@@ -864,7 +960,7 @@ static void msgfile_print(t_msgfile *x)
 
 static void msgfile_help(t_msgfile *x)
 {
-  post("\n"HEARTSYMBOL" msgfile\t:: handle and store files of lists");
+  post("\n"HEARTSYMBOL " msgfile\t:: handle and store files of lists");
   post("goto <n>\t: goto line <n>"
        "\nrewind\t\t: goto the beginning of the file"
        "\nend\t\t: goto the end of the file"
@@ -912,10 +1008,13 @@ static void *msgfile_new(t_symbol *s, int argc, t_atom *argv)
 
   if ((argc==1) && (argv->a_type == A_SYMBOL)) {
     t_symbol*mode=atom_getsymbol(argv);
-    if      (gensym("cr") == mode) x->mode = CR_MODE;
-    else if (gensym("csv")== mode) x->mode = CSV_MODE;
-    else if (gensym("pd") == mode) x->mode = PD_MODE;
-    else {
+    if      (gensym("cr") == mode) {
+      x->mode = CR_MODE;
+    } else if (gensym("csv")== mode) {
+      x->mode = CSV_MODE;
+    } else if (gensym("pd") == mode) {
+      x->mode = PD_MODE;
+    } else {
       pd_error(x, "msgfile: unknown argument %s", argv->a_w.w_symbol->s_name);
     }
   }
@@ -934,44 +1033,68 @@ void msgfile_setup(void)
 {
   msgfile_class = class_new(gensym("msgfile"), (t_newmethod)msgfile_new,
                             (t_method)msgfile_free, sizeof(t_msgfile), 0, A_GIMME, 0);
-  class_addmethod(msgfile_class, (t_method)msgfile_goto, gensym("goto"), A_DEFFLOAT, 0);
-  class_addmethod(msgfile_class, (t_method)msgfile_rewind, gensym("rewind"), 0);
-  class_addmethod(msgfile_class, (t_method)msgfile_rewind, gensym("begin"), 0);
+  class_addmethod(msgfile_class, (t_method)msgfile_goto, gensym("goto"),
+                  A_DEFFLOAT, 0);
+  class_addmethod(msgfile_class, (t_method)msgfile_rewind, gensym("rewind"),
+                  0);
+  class_addmethod(msgfile_class, (t_method)msgfile_rewind, gensym("begin"),
+                  0);
   class_addmethod(msgfile_class, (t_method)msgfile_end, gensym("end"), 0);
 
-  class_addmethod(msgfile_class, (t_method)msgfile_next, gensym("next"), A_DEFFLOAT, 0);
-  class_addmethod(msgfile_class, (t_method)msgfile_prev, gensym("prev"), A_DEFFLOAT, 0);
+  class_addmethod(msgfile_class, (t_method)msgfile_next, gensym("next"),
+                  A_DEFFLOAT, 0);
+  class_addmethod(msgfile_class, (t_method)msgfile_prev, gensym("prev"),
+                  A_DEFFLOAT, 0);
 
-  class_addmethod(msgfile_class, (t_method)msgfile_skip, gensym("skip"), A_DEFFLOAT, 0);
+  class_addmethod(msgfile_class, (t_method)msgfile_skip, gensym("skip"),
+                  A_DEFFLOAT, 0);
 
-  class_addmethod(msgfile_class, (t_method)msgfile_set, gensym("set"), A_GIMME, 0);
-  
-  class_addmethod(msgfile_class, (t_method)msgfile_clear, gensym("clear"), 0);
-  class_addmethod(msgfile_class, (t_method)msgfile_delete, gensym("delete"), A_GIMME, 0);
-  
-  class_addmethod(msgfile_class, (t_method)msgfile_add, gensym("add"), A_GIMME, 0);
-  class_addmethod(msgfile_class, (t_method)msgfile_add2, gensym("add2"), A_GIMME, 0);
-  class_addmethod(msgfile_class, (t_method)msgfile_append, gensym("append"), A_GIMME, 0);
-  class_addmethod(msgfile_class, (t_method)msgfile_append2, gensym("append2"), A_GIMME, 0);
-  class_addmethod(msgfile_class, (t_method)msgfile_insert, gensym("insert"), A_GIMME, 0);
-  class_addmethod(msgfile_class, (t_method)msgfile_insert2, gensym("insert2"), A_GIMME, 0);
+  class_addmethod(msgfile_class, (t_method)msgfile_set, gensym("set"),
+                  A_GIMME, 0);
 
-  class_addmethod(msgfile_class, (t_method)msgfile_replace, gensym("replace"), A_GIMME, 0);
+  class_addmethod(msgfile_class, (t_method)msgfile_clear, gensym("clear"),
+                  0);
+  class_addmethod(msgfile_class, (t_method)msgfile_delete, gensym("delete"),
+                  A_GIMME, 0);
 
-  class_addmethod(msgfile_class, (t_method)msgfile_find, gensym("find"), A_GIMME, 0);
+  class_addmethod(msgfile_class, (t_method)msgfile_add, gensym("add"),
+                  A_GIMME, 0);
+  class_addmethod(msgfile_class, (t_method)msgfile_add2, gensym("add2"),
+                  A_GIMME, 0);
+  class_addmethod(msgfile_class, (t_method)msgfile_append, gensym("append"),
+                  A_GIMME, 0);
+  class_addmethod(msgfile_class, (t_method)msgfile_append2,
+                  gensym("append2"), A_GIMME, 0);
+  class_addmethod(msgfile_class, (t_method)msgfile_insert, gensym("insert"),
+                  A_GIMME, 0);
+  class_addmethod(msgfile_class, (t_method)msgfile_insert2,
+                  gensym("insert2"), A_GIMME, 0);
 
-  class_addmethod(msgfile_class, (t_method)msgfile_read, gensym("read"), A_SYMBOL, A_DEFSYM, 0);
-  class_addmethod(msgfile_class, (t_method)msgfile_read2, gensym("read2"), A_SYMBOL, A_DEFSYM, 0);
-  class_addmethod(msgfile_class, (t_method)msgfile_write, gensym("write"), A_SYMBOL, A_DEFSYM, 0);
-  class_addmethod(msgfile_class, (t_method)msgfile_print, gensym("print"), 0);
-  class_addmethod(msgfile_class, (t_method)msgfile_flush, gensym("flush"), 0);
+  class_addmethod(msgfile_class, (t_method)msgfile_replace,
+                  gensym("replace"), A_GIMME, 0);
+
+  class_addmethod(msgfile_class, (t_method)msgfile_find, gensym("find"),
+                  A_GIMME, 0);
+
+  class_addmethod(msgfile_class, (t_method)msgfile_read, gensym("read"),
+                  A_SYMBOL, A_DEFSYM, 0);
+  class_addmethod(msgfile_class, (t_method)msgfile_read2, gensym("read2"),
+                  A_SYMBOL, A_DEFSYM, 0);
+  class_addmethod(msgfile_class, (t_method)msgfile_write, gensym("write"),
+                  A_SYMBOL, A_DEFSYM, 0);
+  class_addmethod(msgfile_class, (t_method)msgfile_print, gensym("print"),
+                  0);
+  class_addmethod(msgfile_class, (t_method)msgfile_flush, gensym("flush"),
+                  0);
 
   class_addbang(msgfile_class, msgfile_bang);
   class_addmethod(msgfile_class, (t_method)msgfile_this, gensym("this"), 0);
-  class_addmethod(msgfile_class, (t_method)msgfile_where, gensym("where"), 0);
+  class_addmethod(msgfile_class, (t_method)msgfile_where, gensym("where"),
+                  0);
 
 
-  class_addmethod(msgfile_class, (t_method)msgfile_sort, gensym("sort"), A_SYMBOL, A_SYMBOL, A_SYMBOL, 0);
+  class_addmethod(msgfile_class, (t_method)msgfile_sort, gensym("sort"),
+                  A_SYMBOL, A_SYMBOL, A_SYMBOL, 0);
 
   class_addmethod(msgfile_class, (t_method)msgfile_help, gensym("help"), 0);
 

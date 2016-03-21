@@ -1,4 +1,4 @@
-/* 
+/*
  * tavg~: arithmetic mean between last and current 'bang' (triggered average on signals)
  *
  * (c) 1999-2011 IOhannes m zmölnig, forum::für::umläute, institute of electronic music and acoustics (iem)
@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -21,8 +21,7 @@
 
 static t_class *tavg_class;
 
-typedef struct _tavg
-{
+typedef struct _tavg {
   t_object x_obj;
   t_sample n_inv;
   t_sample buf;
@@ -47,7 +46,9 @@ static t_int *tavg_perform(t_int *w)
   int n = (int)(w[3]);
   t_sample buf = x->buf;
 
-  while (n--) buf += *in++;
+  while (n--) {
+    buf += *in++;
+  }
   x->buf = buf;
   x->blocks++;
   return (w+4);
@@ -77,7 +78,7 @@ void tavg_tilde_setup(void)
   tavg_class = class_new(gensym("tavg~"), (t_newmethod)tavg_new, 0,
                          sizeof(t_tavgtilde), 0, A_DEFFLOAT, 0);
   class_addmethod(tavg_class, nullfn, gensym("signal"), 0);
-  class_addmethod(tavg_class, (t_method)tavg_dsp, gensym("dsp"), A_CANT, 0);
+  class_addmethod(tavg_class, (t_method)tavg_dsp, gensym("dsp"), 0);
 
   class_addbang(tavg_class, tavg_bang);
 

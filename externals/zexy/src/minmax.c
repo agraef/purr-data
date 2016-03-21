@@ -1,4 +1,4 @@
-/* 
+/*
  * minmax :: get minimum and maximum of a list
  *
  * (c) 1999-2011 IOhannes m zmölnig, forum::für::umläute, institute of electronic music and acoustics (iem)
@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -22,8 +22,7 @@
 
 static t_class *minmax_class;
 
-typedef struct _minmax
-{
+typedef struct _minmax {
   t_object x_obj;
   t_float min;
   t_float max;
@@ -37,19 +36,23 @@ static void minmax_bang(t_minmax *x)
   outlet_float(x->mino,x->min);
 }
 
-static void minmax_list(t_minmax *x, t_symbol* UNUSED(s), int argc, t_atom *argv)
+static void minmax_list(t_minmax *x, t_symbol* UNUSED(s), int argc,
+                        t_atom *argv)
 {
-  if(argc){
+  if(argc) {
     t_float min = atom_getfloat(argv++);
     t_float max=min;
     argc--;
-    
-    while(argc--){
+
+    while(argc--) {
       t_float f = atom_getfloat(argv++);
-      if (f<min)min=f;
-      else if (f>max)max=f;
+      if (f<min) {
+        min=f;
+      } else if (f>max) {
+        max=f;
+      }
     }
-    
+
     x->min=min;
     x->max=max;
   }
@@ -76,7 +79,7 @@ static void minmax_help(void)
 void minmax_setup(void)
 {
   minmax_class = class_new(gensym("minmax"), (t_newmethod)minmax_new, 0,
-			 sizeof(t_minmax), 0, A_DEFFLOAT, 0);
+                           sizeof(t_minmax), 0, A_DEFFLOAT, 0);
 
   class_addlist(minmax_class, (t_method)minmax_list);
   class_addbang(minmax_class, (t_method)minmax_bang);

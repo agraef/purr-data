@@ -1,4 +1,4 @@
-/* 
+/*
  * rawprint:  print the incoming message as raw as possible
  *
  * (c) 1999-2011 IOhannes m zmölnig, forum::für::umläute, institute of electronic music and acoustics (iem)
@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -20,12 +20,14 @@
 #include "zexy.h"
 #include <stdio.h>
 
-#ifdef _MSC_VER 
+#ifdef _MSC_VER
 # define snprintf _snprintf
 #endif
 
 #if !defined( _MSC_VER ) && defined (_WIN32)
-int _get_output_format( void ){ return 0; }
+# ifndef _get_output_format
+//int _get_output_format( void ){ return 0; }
+# endif
 #endif
 
 static t_class *rawprint_class;
@@ -41,7 +43,12 @@ static void rawprint_any(t_rawprint *x, t_symbol*s, int argc, t_atom*argv)
   if(x->label) {
     startpost("%s: ", x->label->s_name);
   }
-  startpost("\"%s\"", s->s_name);
+  
+  if(s)
+    startpost("\"%s\"", s->s_name);
+  else // this shouldn't happen, but sometimes does...
+    startpost("NULL");
+
   while(argc--) {
     switch(argv->a_type) {
     case A_FLOAT:
@@ -69,7 +76,8 @@ static void rawprint_any(t_rawprint *x, t_symbol*s, int argc, t_atom*argv)
       snprintf(buf, MAXPDSTRING-1, "DOLLAR['%s']", atom_getsymbol(argv)->s_name);
       break;
     case A_DOLLSYM:
-      snprintf(buf, MAXPDSTRING-1, "DOLLSYM['%s']", atom_getsymbol(argv)->s_name);
+      snprintf(buf, MAXPDSTRING-1, "DOLLSYM['%s']",
+               atom_getsymbol(argv)->s_name);
       break;
     case A_GIMME:
       snprintf(buf, MAXPDSTRING-1, "GIMME");
@@ -81,7 +89,7 @@ static void rawprint_any(t_rawprint *x, t_symbol*s, int argc, t_atom*argv)
       snprintf(buf, MAXPDSTRING-1, "unknown[%d]", argv->a_type);
     }
     buf[MAXPDSTRING-1]=0;
-    
+
     startpost(" %s", buf);
     argv++;
   }
@@ -93,13 +101,15 @@ static void *rawprint_new(t_symbol*s)
 {
   t_rawprint *x = (t_rawprint *)pd_new(rawprint_class);
   x->label=NULL;
-  if(s&&gensym("")!=s)
+  if(s&&gensym("")!=s) {
     x->label=s;
+  }
 
   return (x);
 }
 
-void rawprint_setup(void) {
+void rawprint_setup(void)
+{
   rawprint_class = class_new(gensym("rawprint"),
                              (t_newmethod)rawprint_new,
                              0, sizeof(t_rawprint),

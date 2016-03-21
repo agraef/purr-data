@@ -1,4 +1,4 @@
-/* 
+/*
  * unpack: a type-agnostic version of [unpack]
  *
  * (c) 2007-2011 IOhannes m zmölnig, forum::für::umläute, institute of electronic music and acoustics (iem)
@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -34,8 +34,7 @@
 
 static t_class *zunpack_class;
 
-typedef struct _zunpack
-{
+typedef struct _zunpack {
   t_object x_obj;
   t_outlet**x_out;
   t_int x_numouts;
@@ -74,7 +73,7 @@ static void zunpack_free(t_zunpack *x)
   freebytes(x->x_out, x->x_numouts*sizeof(t_outlet*));
 
   x->x_numouts=0;
-  x->x_out=0;  
+  x->x_out=0;
 }
 
 static void *zunpack_new(t_symbol*s, int argc, t_atom*argv)
@@ -82,22 +81,22 @@ static void *zunpack_new(t_symbol*s, int argc, t_atom*argv)
   t_zunpack *x = (t_zunpack *)pd_new(zunpack_class);
   int count=(argc>0)?argc:2;
   int i=0;
-  
+
   x->x_numouts=count;
   x->x_out=(t_outlet**)getbytes(count*sizeof(t_outlet*));
 
   for(i=0; i<count; i++) {
     x->x_out[i]  =outlet_new(&x->x_obj, 0);
-  } 
+  }
 
   return (x);
 }
 
 void zunpack_setup(void)
 {
-  
-  zunpack_class = class_new(gensym("zexy/unpack"), 
-                            (t_newmethod)zunpack_new, (t_method)zunpack_free, sizeof(t_zunpack), 
+
+  zunpack_class = class_new(gensym("zexy/unpack"),
+                            (t_newmethod)zunpack_new, (t_method)zunpack_free, sizeof(t_zunpack),
                             0,  A_GIMME, 0);
 #if 0
   /* oops Pd-0.42 allows us to override built-ins

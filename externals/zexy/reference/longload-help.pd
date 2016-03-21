@@ -1,0 +1,6 @@
+#N canvas 553 320 450 300 10;
+#X text 148 51 takes long to load;
+#X obj 35 51 longload 5000;
+#X text 30 119 the optional argument specifies the time (in ms) \,
+this object takes to instantiate.;
+#X text 36 158 the default is 1000ms.;

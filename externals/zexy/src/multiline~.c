@@ -1,4 +1,4 @@
-/* 
+/*
  * multiline~: interpolating signal multiplier
  *
  * (c) 1999-2011 IOhannes m zmölnig, forum::für::umläute, institute of electronic music and acoustics (iem)
@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -63,30 +63,41 @@ typedef struct _mline {
 
 /* the message thing */
 
-static void mline_list(t_mline *x, t_symbol* UNUSED(s), int argc, t_atom *argv)
+static void mline_list(t_mline *x, t_symbol* UNUSED(s), int argc,
+                       t_atom *argv)
 {
-  if (argc>x->sigNUM)x->time=atom_getfloat(argv+argc-1);
+  if (argc>x->sigNUM) {
+    x->time=atom_getfloat(argv+argc-1);
+  }
 
   if (x->time <= 0) {
     if (argc==1) {
       t_float f = atom_getfloat(argv);
       int i=x->sigNUM;
-      while(i--)x->target[i]=x->value[i]=f;
+      while(i--) {
+        x->target[i]=x->value[i]=f;
+      }
     } else {
       int offset = (argc<x->sigNUM)?x->sigNUM-argc:0;
       int i=offset?argc:x->sigNUM;
-      while(i--)x->target[i+offset]=x->value[i+offset]=atom_getfloat(argv++);
+      while(i--) {
+        x->target[i+offset]=x->value[i+offset]=atom_getfloat(argv++);
+      }
     }
     x->ticksleft=x->retarget=x->time=0;
   } else {
     if (argc==1) {
       int i = x->sigNUM;
       t_float f = atom_getfloat(argv);
-      for(i=0;i<x->sigNUM;i++)x->target[i]=f;
+      for(i=0; i<x->sigNUM; i++) {
+        x->target[i]=f;
+      }
     } else {
       int offset = (argc<x->sigNUM)?x->sigNUM-argc:0;
       int i=offset?argc:x->sigNUM;
-      while(i--)x->target[i+offset]=atom_getfloat(argv++);
+      while(i--) {
+        x->target[i+offset]=atom_getfloat(argv++);
+      }
     }
     x->retarget = 1;
   }
@@ -95,7 +106,9 @@ static void mline_list(t_mline *x, t_symbol* UNUSED(s), int argc, t_atom *argv)
 static void mline_stop(t_mline *x)
 {
   int i = x->sigNUM;
-  while (i--) x->target[i] = x->value[i];
+  while (i--) {
+    x->target[i] = x->value[i];
+  }
   x->ticksleft = x->retarget = 0;
 }
 
@@ -118,7 +131,9 @@ static t_int *mline_perform(t_int *w)
   if (x->retarget) {
     int nticks = x->time * x->msec2tick;
 
-    if (!nticks) nticks = 1;
+    if (!nticks) {
+      nticks = 1;
+    }
     x->ticksleft = nticks;
 
     x->retarget = 0;
@@ -129,8 +144,10 @@ static t_int *mline_perform(t_int *w)
     t_sample oneovernos = 1./(x->ticksleft*n);
 
     int i=sigNUM;
-    while(i--)*inc++=(*tgt++-*val++)*oneovernos;
-    
+    while(i--) {
+      *inc++=(*tgt++-*val++)*oneovernos;
+    }
+
     n=-1;
     while (n++<N) {
       buf = sigBUF;
@@ -138,29 +155,39 @@ static t_int *mline_perform(t_int *w)
       inc = increment;
 
       i = sigNUM;
-      while (i--)*buf++=in[i][n]*(*val++ += *inc++);
+      while (i--) {
+        *buf++=in[i][n]*(*val++ += *inc++);
+      }
       i=sigNUM;
       buf=sigBUF;
-      while (i--)out[i][n]=*buf++;
+      while (i--) {
+        out[i][n]=*buf++;
+      }
     }
 
     if (!--x->ticksleft) {
       val = value;
       tgt = target;
       i = sigNUM;
-      while(i--)*val++=*tgt++;
+      while(i--) {
+        *val++=*tgt++;
+      }
     }
-      
+
   } else { /* no ticks left */
     int i = sigNUM;
     while (n--) {
       i = sigNUM;
       val = value;
       buf = sigBUF;
-      while (i--)*buf++=in[i][n]**val++;
+      while (i--) {
+        *buf++=in[i][n]**val++;
+      }
       i = sigNUM;
       buf = sigBUF;
-      while (i--)out[i][n]=*buf++;
+      while (i--) {
+        out[i][n]=*buf++;
+      }
     }
   }
 
@@ -173,11 +200,15 @@ static void mline_dsp(t_mline *x, t_signal **sp)
 {
   int i = x->sigNUM, n = 0;
   t_sample **dummy = x->sigIN;
-  while(i--)*dummy++=sp[n++]->s_vec;
+  while(i--) {
+    *dummy++=sp[n++]->s_vec;
+  }
 
   i = x->sigNUM;
   dummy =x->sigOUT;
-  while(i--)*dummy++=sp[n++]->s_vec;
+  while(i--) {
+    *dummy++=sp[n++]->s_vec;
+  }
 
   x->msec2tick = sp[0]->s_sr / (1000.f * sp[0]->s_n);
   dsp_add(mline_perform, 2, x, sp[0]->s_n);
@@ -208,10 +239,14 @@ static void *mline_new(t_symbol* UNUSED(s), int argc, t_atom *argv)
     x->time = 0;
   } else {
     x->time = atom_getfloat(argv+argc-1);
-    if (x->time < 0) x->time = 0;
+    if (x->time < 0) {
+      x->time = 0;
+    }
 
     argc--;
-    if (!argc) argc = 1;
+    if (!argc) {
+      argc = 1;
+    }
   }
 
   x->sigNUM = argc;
@@ -227,7 +262,7 @@ static void *mline_new(t_symbol* UNUSED(s), int argc, t_atom *argv)
 
   inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("float"), gensym(""));
   floatinlet_new(&x->x_obj, &x->time);
-    
+
   x->sigIN  = (t_sample **)getbytes(x->sigNUM * sizeof(t_sample **));
   x->sigOUT = (t_sample **)getbytes(x->sigNUM * sizeof(t_sample **));
   x->sigBUF = (t_sample  *)getbytes(x->sigNUM * sizeof(t_sample  *));
@@ -252,20 +287,22 @@ static void *mline_new(t_symbol* UNUSED(s), int argc, t_atom *argv)
 
 static void mline_help(t_mline*x)
 {
-  post("\n"HEARTSYMBOL" multiline~\t:: ramped multiplication of multiple signals");
+  post("\n"HEARTSYMBOL " multiline~\t:: ramped multiplication of multiple signals");
 }
 
 void multiline_tilde_setup(void)
 {
-  mline_class = class_new(gensym("multiline~"), (t_newmethod)mline_new, (t_method)mline_free,
-			  sizeof(t_mline), 0, A_GIMME, 0);
+  mline_class = class_new(gensym("multiline~"), (t_newmethod)mline_new,
+                          (t_method)mline_free,
+                          sizeof(t_mline), 0, A_GIMME, 0);
 
-  class_addmethod(mline_class, (t_method)mline_dsp, gensym("dsp"), A_CANT, 0);
+  class_addmethod(mline_class, (t_method)mline_dsp, gensym("dsp"), 0);
   class_addmethod(mline_class, nullfn, gensym("signal"), 0);
 
   class_addmethod(mline_class, (t_method)mline_list, gensym(""), A_GIMME, 0);
   class_addmethod(mline_class, (t_method)mline_stop, gensym("stop"), 0);
 
-  class_addmethod  (mline_class, (t_method)mline_help, gensym("help"), A_NULL);
+  class_addmethod  (mline_class, (t_method)mline_help, gensym("help"),
+                    A_NULL);
   zexy_register("multiline_tilde");
 }

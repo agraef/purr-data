@@ -1,4 +1,4 @@
-/* 
+/*
  * prime:  get the n-th prime number
  *
  * (c) 1999-2011 IOhannes m zmölnig, forum::für::umläute, institute of electronic music and acoustics (iem)
@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -34,12 +34,12 @@ static void prime_float(t_prime *x, t_float f)
   unsigned int max_divisor;
   unsigned int divisor=1;
 
-  if (f<2){
+  if (f<2) {
     outlet_float(x->x_obj.ob_outlet, 0.0);
     return;
   }
 
-  if (!(i%2)){
+  if (!(i%2)) {
     outlet_float(x->x_obj.ob_outlet, (t_float)(i==2));
     return;
   }
@@ -66,15 +66,16 @@ static void *prime_new(void)
 
 static void prime_help(t_prime*x)
 {
-  post("\n"HEARTSYMBOL" prime\t\t:: test whether a given number is prime");
+  post("\n"HEARTSYMBOL " prime\t\t:: test whether a given number is prime");
 }
 
 
-void prime_setup(void) {
+void prime_setup(void)
+{
   prime_class = class_new(gensym("prime"),
-			  (t_newmethod)prime_new,
-			  0, sizeof(t_prime),
-			  CLASS_DEFAULT, 0);
+                          (t_newmethod)prime_new,
+                          0, sizeof(t_prime),
+                          CLASS_DEFAULT, 0);
 
   class_addfloat(prime_class, prime_float);
   class_addmethod(prime_class, (t_method)prime_help, gensym("help"), A_NULL);

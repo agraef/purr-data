@@ -1,4 +1,4 @@
-/* 
+/*
  * pdf~:  get the ProbabilityDensityFunction of a signal
  *
  * (c) 1999-2011 IOhannes m zmölnig, forum::für::umläute, institute of electronic music and acoustics (iem)
@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -23,8 +23,7 @@
 
 static t_class *pdf_class;
 
-typedef struct _pdf
-{
+typedef struct _pdf {
   t_object x_obj;
 
   t_float *buf;
@@ -37,7 +36,9 @@ static void clear_pdfbuf(t_pdf *x)
   int n = x->size;
   t_float *buf = x->buf;
 
-  while (n--) *buf++=0.;
+  while (n--) {
+    *buf++=0.;
+  }
 }
 
 static void pdf_bang(t_pdf *x)
@@ -46,25 +47,32 @@ static void pdf_bang(t_pdf *x)
   t_float *buf = x->buf, max = 0;
   t_atom a[2];
 
-  while (n--) if (max < *buf++) max = buf[-1];
+  while (n--) if (max < *buf++) {
+      max = buf[-1];
+    }
 
   n=x->size;
   buf = x->buf;
 
-  if (max==0.) max=1.;
+  if (max==0.) {
+    max=1.;
+  }
   max = 1./max;
 
-  while (n--)
-    {
-      SETFLOAT(a, *buf++*max);
-      SETFLOAT(a+1,x->size-n-1);
-      outlet_list(x->x_obj.ob_outlet, gensym("list"), 2, (t_atom*)&a);
-    }
+  while (n--) {
+    SETFLOAT(a, *buf++*max);
+    SETFLOAT(a+1,x->size-n-1);
+    outlet_list(x->x_obj.ob_outlet, gensym("list"), 2, (t_atom*)&a);
+  }
 }
 
 static void pdf_float(t_pdf *x, t_floatarg f)
 {
-  if (f) pdf_bang(x); else clear_pdfbuf(x);
+  if (f) {
+    pdf_bang(x);
+  } else {
+    clear_pdfbuf(x);
+  }
 }
 
 static t_int *pdf_perform(t_int *w)
@@ -76,12 +84,11 @@ static t_int *pdf_perform(t_int *w)
   t_float *buf = x->buf;
   t_float halfsize = x->halfsize;
 
-  while (n--)
-    {
-      t_sample f = *in++;
-      int iindex = ((f + 1.0) * halfsize)+0.5;
-      buf[(iindex<0)?0:((iindex>=x->size)?x->size-1:iindex)]+=1.;
-    }
+  while (n--) {
+    t_sample f = *in++;
+    int iindex = ((f + 1.0) * halfsize)+0.5;
+    buf[(iindex<0)?0:((iindex>=x->size)?x->size-1:iindex)]+=1.;
+  }
   return (w+4);
 }
 
@@ -102,19 +109,20 @@ static void *pdf_new(t_floatarg f)
   clear_pdfbuf(x);
 
   outlet_new(&x->x_obj, gensym("list"));
-    
+
   return (x);
 }
 
 static void pdf_free(t_pdf *x)
 {
-  if(x->buf)
+  if(x->buf) {
     freebytes(x->buf, x->size*sizeof(*x->buf));
+  }
 }
 
 static void pdf_tilde_helper(void)
 {
-  post("\n"HEARTSYMBOL" pdf~\t:: get the probability density function of a signal (-1.0 to +1.0)");
+  post("\n"HEARTSYMBOL " pdf~\t:: get the probability density function of a signal (-1.0 to +1.0)");
   post("'bang'\t  : output a list of the probabilities of 'n' function values"
        "\n'clear'\t  : clear the buffer (set all probabilities to zero)"
        "\n<1/0>\t  : short for 'bang' and 'clear'"
@@ -124,11 +132,12 @@ static void pdf_tilde_helper(void)
 
 void pdf_tilde_setup(void)
 {
-  pdf_class = class_new(gensym("pdf~"), (t_newmethod)pdf_new, (t_method)pdf_free,
-			sizeof(t_pdf), 0, A_DEFFLOAT, 0);
+  pdf_class = class_new(gensym("pdf~"), (t_newmethod)pdf_new,
+                        (t_method)pdf_free,
+                        sizeof(t_pdf), 0, A_DEFFLOAT, 0);
 
   class_addmethod(pdf_class, nullfn, gensym("signal"), 0);
-  class_addmethod(pdf_class, (t_method)pdf_dsp, gensym("dsp"), A_CANT, 0);
+  class_addmethod(pdf_class, (t_method)pdf_dsp, gensym("dsp"), 0);
 
   class_addmethod(pdf_class, (t_method)pdf_bang, gensym("bang"), 0);
   class_addmethod(pdf_class, (t_method)clear_pdfbuf, gensym("clear"), 0);

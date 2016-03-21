@@ -1,4 +1,4 @@
-/* 
+/*
  * pack~:  pack the signal-vector to a list of floats
  *
  * (c) 1999-2011 IOhannes m zmölnig, forum::für::umläute, institute of electronic music and acoustics (iem)
@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -21,8 +21,7 @@
 
 static t_class *sigpack_class;
 
-typedef struct _sigpack
-{
+typedef struct _sigpack {
   t_object x_obj;
 
   int vector_length;
@@ -33,7 +32,8 @@ typedef struct _sigpack
 
 static void sigpack_tick(t_sigpack*x)
 {
-  outlet_list(x->x_obj.ob_outlet, gensym("list"), x->vector_length, x->buffer);
+  outlet_list(x->x_obj.ob_outlet, gensym("list"), x->vector_length,
+              x->buffer);
 }
 
 static t_int *sigpack_perform(t_int *w)
@@ -92,10 +92,11 @@ static void sigpack_help(void)
 
 void pack_tilde_setup(void)
 {
-  sigpack_class = class_new(gensym("pack~"), (t_newmethod)sigpack_new, (t_method)sigpack_free,
+  sigpack_class = class_new(gensym("pack~"), (t_newmethod)sigpack_new,
+                            (t_method)sigpack_free,
                             sizeof(t_sigpack), 0, A_DEFFLOAT, 0);
   class_addmethod(sigpack_class, nullfn, gensym("signal"), 0);
-  class_addmethod(sigpack_class, (t_method)sigpack_dsp, gensym("dsp"), A_CANT, 0);
+  class_addmethod(sigpack_class, (t_method)sigpack_dsp, gensym("dsp"), 0);
 
   class_addmethod(sigpack_class, (t_method)sigpack_help, gensym("help"), 0);
 

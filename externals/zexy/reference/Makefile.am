@@ -4,6 +4,8 @@ SUFFIXES = .pd
 
 zexydir=$(pkglibdir)
 
+empty=
+
 dist_zexy_DATA= \
 	a2l-help.pd \
 	atoi-help.pd \
@@ -77,7 +79,8 @@ dist_zexy_DATA= \
 	urn-help.pd \
 	wrap-help.pd \
 	z~-help.pd \
-	zigbinops-help.pd
+	zigbinops-help.pd \
+	$(empty)
 
 #############
 # symlinks for aliases

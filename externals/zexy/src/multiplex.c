@@ -1,4 +1,4 @@
-/* 
+/*
  * mulitplex   :  multiplex a specified input to the output
  *
  * (c) 1999-2011 IOhannes m zmölnig, forum::für::umläute, institute of electronic music and acoustics (iem)
@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -46,8 +46,7 @@
 static t_class *mux_class;
 static t_class *muxproxy_class;
 
-typedef struct _mux
-{
+typedef struct _mux {
   t_object x_obj;
   struct _muxproxy  **x_proxy;
 
@@ -57,8 +56,7 @@ typedef struct _mux
 } t_mux;
 
 
-typedef struct _muxproxy
-{
+typedef struct _muxproxy {
   t_pd  p_pd;
   t_mux    *p_master;
   int id;
@@ -69,11 +67,13 @@ static void mux_select(t_mux *x, t_float f)
   x->i_selected=f;
 }
 
-static void mux_anything(t_muxproxy *y, t_symbol *s, int argc, t_atom *argv)
+static void mux_anything(t_muxproxy *y, t_symbol *s, int argc,
+                         t_atom *argv)
 {
   t_mux*x=y->p_master;
-  if(y->id==x->i_selected)
+  if(y->id==x->i_selected) {
     outlet_anything(x->x_obj.ob_outlet, s, argc, argv);
+  }
 }
 
 static void *mux_new(t_symbol *s, int argc, t_atom *argv)
@@ -99,42 +99,44 @@ static void *mux_new(t_symbol *s, int argc, t_atom *argv)
   return (x);
 }
 
-static void mux_free(t_mux*x){
+static void mux_free(t_mux*x)
+{
   const int count = x->i_count;
 
-  if(x->in && x->x_proxy){
+  if(x->in && x->x_proxy) {
     int n=0;
-    for(n=0; n<count; n++){
-      if(x->in[n]){
+    for(n=0; n<count; n++) {
+      if(x->in[n]) {
         inlet_free(x->in[n]);
       }
       x->in[n]=0;
-      if(x->x_proxy[n]){
+      if(x->x_proxy[n]) {
         t_muxproxy *y=x->x_proxy[n];
         y->p_master=0;
         y->id=0;
-        pd_free(&y->p_pd);        
+        pd_free(&y->p_pd);
       }
-      x->x_proxy[n]=0;      
+      x->x_proxy[n]=0;
     }
     freebytes(x->in, x->i_count * sizeof(t_inlet *));
     freebytes(x->x_proxy, x->i_count * sizeof(t_muxproxy*));
   }
-  
+
   /* pd_free(&y->p_pd); */
 }
 
 void multiplex_setup(void)
 {
   mux_class = class_new(gensym("multiplex"), (t_newmethod)mux_new,
-			(t_method)mux_free, sizeof(t_mux), CLASS_NOINLET, A_GIMME,  0);
+                        (t_method)mux_free, sizeof(t_mux), CLASS_NOINLET, A_GIMME,  0);
   class_addcreator((t_newmethod)mux_new, gensym("mux"), A_GIMME, 0);
- 
-  class_addmethod   (mux_class, (t_method)mux_select, gensym(""), A_DEFFLOAT, 0);
+
+  class_addmethod   (mux_class, (t_method)mux_select, gensym(""), A_DEFFLOAT,
+                     0);
 
   muxproxy_class = class_new(0, 0, 0,
-			    sizeof(t_muxproxy),
-			    CLASS_PD | CLASS_NOINLET, 0);
+                             sizeof(t_muxproxy),
+                             CLASS_PD | CLASS_NOINLET, 0);
   class_addanything(muxproxy_class, mux_anything);
 
 

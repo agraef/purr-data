@@ -1,4 +1,4 @@
-/* 
+/*
  * swap~: byteswap a 16bit signal
  *
  * (c) 1999-2011 IOhannes m zmölnig, forum::für::umläute, institute of electronic music and acoustics (iem)
@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -32,8 +32,7 @@
 
 static t_class *swap_class;
 
-typedef struct _swap
-{
+typedef struct _swap {
   t_object x_obj;
   int swapper;
 } t_swap;
@@ -56,13 +55,16 @@ static t_int *swap_perform(t_int *w)
   int n = (int)(w[4]);
 
 
-  if (x->swapper) 
+  if (x->swapper)
     while (n--) {
-      short dummy = FLOAT2SHORT * *in++;
-      *out++ = SHORT2FLOAT * (short)( ((dummy & 0xFF) << 8) | ((dummy & 0xFF00) >> 8) );
+      short dummy = FLOAT2SHORT **in++;
+      *out++ = SHORT2FLOAT * (short)( ((dummy & 0xFF) << 8) | ((
+                                        dummy & 0xFF00) >> 8) );
     }
-  else while (n--) *out++ = *in++;
-  
+  else while (n--) {
+      *out++ = *in++;
+    }
+
   return (w+5);
 }
 
@@ -73,7 +75,7 @@ static void swap_dsp(t_swap *x, t_signal **sp)
 
 static void swap_helper(void)
 {
-  post("\n"HEARTSYMBOL" swap~-object for byteswapping a signal");
+  post("\n"HEARTSYMBOL " swap~-object for byteswapping a signal");
   post("<1/0>  : turn the swapper on/off\n"
        "'bang' : toggle the swapper on/off\n"
        "'help' : view this\n"
@@ -92,13 +94,13 @@ static void *swap_new(void)
 void swap_tilde_setup(void)
 {
   swap_class = class_new(gensym("swap~"), (t_newmethod)swap_new, 0,
-			 sizeof(t_swap), 0, A_NULL);
+                         sizeof(t_swap), 0, A_NULL);
   class_addmethod(swap_class, nullfn, gensym("signal"), 0);
-  class_addmethod(swap_class, (t_method)swap_dsp, gensym("dsp"), A_CANT, 0);
-  
+  class_addmethod(swap_class, (t_method)swap_dsp, gensym("dsp"), 0);
+
   class_addfloat(swap_class, swap_float);
   class_addbang(swap_class, swap_bang);
-  
+
   class_addmethod(swap_class, (t_method)swap_helper, gensym("help"), 0);
   zexy_register("swap~");
 }

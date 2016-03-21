@@ -1,4 +1,4 @@
-/* 
+/*
  * blockshuffle~: shuffle a signal block
  *
  * (c) 1999-2011 IOhannes m zmölnig, forum::für::umläute, institute of electronic music and acoustics (iem)
@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -28,8 +28,8 @@
 
 static t_class *blockshuffle_class;
 
-typedef struct _blockshuffle
-{  t_object x_obj;
+typedef struct _blockshuffle {
+  t_object x_obj;
 
   t_sample*blockbuf;
   t_int*   indices;
@@ -39,37 +39,47 @@ typedef struct _blockshuffle
   int shufflesize;
 } t_blockshuffle;
 
-static void blockshuffle_buildindex(t_blockshuffle *x, int blocksize){
+static void blockshuffle_buildindex(t_blockshuffle *x, int blocksize)
+{
   int i=0;
-  if(blocksize!=x->size){
-    if(x->indices)freebytes(x->indices, x->size);
-    if(x->blockbuf)freebytes(x->blockbuf, x->size);
+  if(blocksize!=x->size) {
+    if(x->indices) {
+      freebytes(x->indices, x->size);
+    }
+    if(x->blockbuf) {
+      freebytes(x->blockbuf, x->size);
+    }
     x->indices=getbytes (sizeof(t_int)*blocksize);
     x->blockbuf=getbytes(sizeof(t_sample)*blocksize);
     x->size=blocksize;
   }
-  for(i=0;i<x->shufflesize&&i<blocksize; i++){
+  for(i=0; i<x->shufflesize&&i<blocksize; i++) {
     int idx=x->shuffle[i];
-    if(idx>=blocksize)idx=blocksize-1;
-    if(idx<0)idx=0;
+    if(idx>=blocksize) {
+      idx=blocksize-1;
+    }
+    if(idx<0) {
+      idx=0;
+    }
     x->indices[i]=idx;
   }
-  for(;i<blocksize; i++){
+  for(; i<blocksize; i++) {
     x->indices[i]=i;
   }
 }
 
-static void blockshuffle_list(t_blockshuffle *x, t_symbol*s, int argc, t_atom*argv)
+static void blockshuffle_list(t_blockshuffle *x, t_symbol*s, int argc,
+                              t_atom*argv)
 {
   int i;
-  if(x->shuffle){
+  if(x->shuffle) {
     freebytes(x->shuffle, x->shufflesize);
     x->shuffle=0;
   }
   x->shufflesize=argc;
   x->shuffle=getbytes(sizeof(*x->shuffle)*argc);
 
-  for(i=0; i<argc; i++){
+  for(i=0; i<argc; i++) {
     x->shuffle[i]=atom_getfloat(argv++);
   }
   blockshuffle_buildindex(x, x->size);
@@ -85,16 +95,18 @@ static t_int *blockshuffle_perform(t_int *w)
   t_sample *temp=x->blockbuf;
   t_int    *idx =x->indices;
 
-  if(idx){
-    for(i=0; i<n; i++){
+  if(idx) {
+    for(i=0; i<n; i++) {
       temp[i]=in[idx[i]];
     }
     temp=x->blockbuf;
-    for(i=0; i<n; i++){
+    for(i=0; i<n; i++) {
       *out++=*temp++;
     }
   } else
-    while(n--)*out++=*in++;
+    while(n--) {
+      *out++=*in++;
+    }
 
   return (w+5);
 }
@@ -103,20 +115,28 @@ static void blockshuffle_dsp(t_blockshuffle *x, t_signal **sp)
 {
   blockshuffle_buildindex(x, sp[0]->s_n);
 
-  dsp_add(blockshuffle_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+  dsp_add(blockshuffle_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec,
+          sp[0]->s_n);
 }
 
 static void blockshuffle_helper(void)
 {
-  post("\n"HEARTSYMBOL" blockshuffle~-object for shuffling the samples within a signal-block");
+  post("\n"HEARTSYMBOL " blockshuffle~-object for shuffling the samples within a signal-block");
   post("'help' : view this\n"
        "signal~");
   post("outlet : signal~");
 }
-static void blockshuffle_free(t_blockshuffle *x){
-  if(x->indices) freebytes(x->indices,  sizeof(*x->indices) *x->size);
-  if(x->blockbuf)freebytes(x->blockbuf, sizeof(*x->blockbuf)*x->size);
-  if(x->shuffle) freebytes(x->shuffle,  sizeof(*x->shuffle) *x->shufflesize);
+static void blockshuffle_free(t_blockshuffle *x)
+{
+  if(x->indices) {
+    freebytes(x->indices,  sizeof(*x->indices) *x->size);
+  }
+  if(x->blockbuf) {
+    freebytes(x->blockbuf, sizeof(*x->blockbuf)*x->size);
+  }
+  if(x->shuffle) {
+    freebytes(x->shuffle,  sizeof(*x->shuffle) *x->shufflesize);
+  }
 }
 
 static void *blockshuffle_new(void)
@@ -133,14 +153,17 @@ static void *blockshuffle_new(void)
 
 void blockshuffle_tilde_setup(void)
 {
-  blockshuffle_class = class_new(gensym("blockshuffle~"), (t_newmethod)blockshuffle_new, 
+  blockshuffle_class = class_new(gensym("blockshuffle~"),
+                                 (t_newmethod)blockshuffle_new,
                                  (t_method)blockshuffle_free,
                                  sizeof(t_blockshuffle), 0, A_NULL);
   class_addmethod(blockshuffle_class, nullfn, gensym("signal"), 0);
-  class_addmethod(blockshuffle_class, (t_method)blockshuffle_dsp, gensym("dsp"), A_CANT, 0);
-  
+  class_addmethod(blockshuffle_class, (t_method)blockshuffle_dsp,
+                  gensym("dsp"), 0);
+
   class_addlist(blockshuffle_class, blockshuffle_list);
-  
-  class_addmethod(blockshuffle_class, (t_method)blockshuffle_helper, gensym("help"), 0);
+
+  class_addmethod(blockshuffle_class, (t_method)blockshuffle_helper,
+                  gensym("help"), 0);
   zexy_register("blockshuffle~");
 }

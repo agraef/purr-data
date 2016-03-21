@@ -18,7 +18,7 @@
  http://puredata.info/community/projects/software/zexy/
  ftp://iem.at/pd/Externals/ZEXY
 
- * 
+ *
  * ZEXY is published under the GNU GeneralPublicLicense, that must be shipped with ZEXY.
  * if you are using Debian GNU/linux, the GNU-GPL can be found under /usr/share/common-licenses/GPL
  * if you still haven't found a copy of the GNU-GPL, have a look at http://www.gnu.org
@@ -40,7 +40,7 @@
 # endif
 #endif
 
-/* 
+/*
  * to use the zexyconf.h compile-time configurations, you have to set HAVE_CONFIG_H
  * usually this is done in Make.config by configure
  */
@@ -111,27 +111,35 @@
 
 #define ZEXY_TYPE_EQUAL(type1, type2) (sizeof(type1) == sizeof(type2))
 
-typedef struct _mypdlist
-{
+typedef struct _mypdlist {
   t_object x_obj;
 
   int x_n;
   t_atom *x_list;
 } t_mypdlist;
 
+#ifndef BUILD_DATE
+# define BUILD_DATE  __DATE__
+#endif
+
+
 #ifndef ZEXY_LIBRARY
-static void zexy_register(char*object){
-  if(object!=0){
-    post("[%s] part of zexy-%s (compiled: "__DATE__")", object, VERSION);
+static void zexy_register(char*object)
+{
+  if(object!=0) {
+    post("[%s] part of zexy-%s (compiled "BUILD_DATE")", object, VERSION);
     post("\tCopyright (c) 1999-2012 IOhannes m zmölnig, forum::für::umläute & IEM");
   }
 }
 #else
-static void zexy_register(char*object){object=0;}
+static void zexy_register(char*object)
+{
+  object=0;
+}
 #endif /* ZEXY_LIBRARY */
 
 #if (defined PD_MAJOR_VERSION && defined PD_MINOR_VERSION) && (PD_MAJOR_VERSION > 0 || PD_MINOR_VERSION > 38)
-/* 
+/*
  * pd>=0.39 has a verbose() function; older versions don't
  * btw, this finally makes zexy binary incompatible with older version
  */
@@ -142,14 +150,27 @@ static void zexy_register(char*object){object=0;}
  * this should make zexy binary compatible with older pd versions again
  */
 # ifndef __WIN32__
-   void verbose(int level, const char *fmt, ...);
+void verbose(int level, const char *fmt, ...);
 # endif
 #else
-/* 
+/*
  * on older version we just shut up!
  */
 # define z_verbose
 #endif
+
+#if (defined PD_MAJOR_VERSION && defined PD_MINOR_VERSION) && (PD_MAJOR_VERSION > 0 || PD_MINOR_VERSION > 43)
+# define z_open sys_open
+# define z_close sys_close
+# define z_fopen sys_fopen
+# define z_fclose sys_fclose
+#else
+# define z_open open
+# define z_close close
+# define z_fopen fopen
+# define z_fclose fclose
+#endif
+
 
 #if (defined __x86_64__) && (defined PD_MAJOR_VERSION && defined PD_MINOR_VERSION) && (PD_MAJOR_VERSION > 0 || PD_MINOR_VERSION >= 41)
 # define zarray_t t_word

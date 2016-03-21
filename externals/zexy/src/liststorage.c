@@ -1,4 +1,4 @@
-/* 
+/*
  * liststorage: stores a number of lists
  *
  * (c) 1999-2011 IOhannes m zmölnig, forum::für::umläute, institute of electronic music and acoustics (iem)
@@ -7,17 +7,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*  
+/*
     this is heavily based on code from [textfile],
     which is part of pd and written by Miller S. Puckette
     pd (and thus [textfile]) come with their own license
@@ -48,8 +48,7 @@ typedef struct _msglist {
   struct _msglist *next;
 } t_msglist;
 
-typedef struct _liststorage
-{
+typedef struct _liststorage {
   t_object x_obj;              /* everything */
 
   t_outlet*x_dataout; /* where the data appears */
@@ -69,13 +68,18 @@ static t_class *liststorage_class;
 /* ************************************************************************ */
 /* helper functions                                                           */
 
-static t_msglist*_liststorage_getslot(t_liststorage*x, int slot) {
+static t_msglist*_liststorage_getslot(t_liststorage*x, int slot)
+{
   //  post("getting slot %d of %d|%d", slot, 0, x->x_numslots);
-  if(slot<0 || slot>=x->x_numslots) { pd_error(x, "[liststorage]: attempting to access invalid slot %d", slot); return NULL;  }
+  if(slot<0 || slot>=x->x_numslots) {
+    pd_error(x, "[liststorage]: attempting to access invalid slot %d", slot);
+    return NULL;
+  }
   return x->x_slots[slot];
 }
 
-static void _liststorage_deletemsglist(t_msglist*list) {
+static void _liststorage_deletemsglist(t_msglist*list)
+{
   t_msglist*x=list;
   while(x) {
     t_msglist*y=x;
@@ -89,7 +93,8 @@ static void _liststorage_deletemsglist(t_msglist*list) {
   }
 }
 
-static void _liststorage_deleteslot(t_liststorage*x, int slot) {
+static void _liststorage_deleteslot(t_liststorage*x, int slot)
+{
   t_msglist*list=_liststorage_getslot(x, slot);
   if(list) {
     _liststorage_deletemsglist(list);
@@ -97,7 +102,8 @@ static void _liststorage_deleteslot(t_liststorage*x, int slot) {
   }
 }
 
-static t_msglist*_liststorage_newslot(int argc, t_atom*argv) {
+static t_msglist*_liststorage_newslot(int argc, t_atom*argv)
+{
   t_msglist*slot=getbytes(sizeof(t_msglist));
   int i=0;
 
@@ -113,7 +119,9 @@ static t_msglist*_liststorage_newslot(int argc, t_atom*argv) {
 }
 
 
-static t_msglist*_liststorage_add2slot(t_msglist*slot, int argc, t_atom*argv) {
+static t_msglist*_liststorage_add2slot(t_msglist*slot, int argc,
+                                       t_atom*argv)
+{
   t_msglist*dummy=slot;
   t_msglist*newlist=_liststorage_newslot(argc, argv);
   if(NULL==slot) {
@@ -130,12 +138,14 @@ static t_msglist*_liststorage_add2slot(t_msglist*slot, int argc, t_atom*argv) {
 }
 
 
-static int _liststorage_resize(t_liststorage*x, int size) {
+static int _liststorage_resize(t_liststorage*x, int size)
+{
   t_msglist**newarray=NULL;
   int i=0;
 
   if(size<0) {
-    pd_error(x, "[liststorage]: refusing to resize for negative amount of slots");
+    pd_error(x,
+             "[liststorage]: refusing to resize for negative amount of slots");
     return 0;
   }
 
@@ -170,13 +180,17 @@ static int _liststorage_resize(t_liststorage*x, int size) {
   return size;
 }
 
-static int _liststorage_checkslot(t_liststorage*x, const char*string, const int resize) {
+static int _liststorage_checkslot(t_liststorage*x, const char*string,
+                                  const int resize)
+{
   int slot=x->x_currentslot;
   t_atom atom;
   SETFLOAT(&atom, (t_float)slot);
 
-  if(slot<0) { 
-    if(NULL!=string)pd_error(x, "[liststorage]: %s %d", string, slot); 
+  if(slot<0) {
+    if(NULL!=string) {
+      pd_error(x, "[liststorage]: %s %d", string, slot);
+    }
     outlet_anything(x->x_infoout, gensym("invalidslot"), 1, &atom);
     return -1;
   }
@@ -184,7 +198,9 @@ static int _liststorage_checkslot(t_liststorage*x, const char*string, const int 
     if(resize) {
       _liststorage_resize(x, slot+1);
     } else {
-      if(NULL!=string)pd_error(x, "[liststorage]: %s %d", string, slot);
+      if(NULL!=string) {
+        pd_error(x, "[liststorage]: %s %d", string, slot);
+      }
       outlet_anything(x->x_infoout, gensym("invalidslot"), 1, &atom);
       return -1;
     }
@@ -194,14 +210,17 @@ static int _liststorage_checkslot(t_liststorage*x, const char*string, const int 
 /* ************************************************************************ */
 /* object methods                                                           */
 
-  /* recall all lists from the current slot */
+/* recall all lists from the current slot */
 static void liststorage_bang(t_liststorage *x)
-{ 
+{
   t_atom atom;
   t_msglist*list=NULL;
 
-  int slot=_liststorage_checkslot(x, "attempting to read data from invalid slot", 0);
-  if(slot<0)return;
+  int slot=_liststorage_checkslot(x,
+                                  "attempting to read data from invalid slot", 0);
+  if(slot<0) {
+    return;
+  }
   list=_liststorage_getslot(x, slot);
 
   while(list) {
@@ -214,26 +233,32 @@ static void liststorage_bang(t_liststorage *x)
   //  outlet_anything(x->x_infoout, gensym("done"), 1, &atom);
 }
 
-  /* add a new list to the current slot */
-static void liststorage_add(t_liststorage *x, t_symbol *s, int ac, t_atom *av)
+/* add a new list to the current slot */
+static void liststorage_add(t_liststorage *x, t_symbol *s, int ac,
+                            t_atom *av)
 {
   t_msglist*list=NULL;
-  int slot=_liststorage_checkslot(x, "attempting to add data to invalid slot", 1);
-  if(slot<0)return;
+  int slot=_liststorage_checkslot(x,
+                                  "attempting to add data to invalid slot", 1);
+  if(slot<0) {
+    return;
+  }
   list=_liststorage_getslot(x, slot);
   x->x_slots[slot]=_liststorage_add2slot(x->x_slots[slot], ac, av);
 }
 
-  /* clear the current slot */
+/* clear the current slot */
 static void liststorage_clear(t_liststorage *x)
 {
   int slot=_liststorage_checkslot(x, "attempting to clear invalid slot", 0);
-  if(slot<0)return;
+  if(slot<0) {
+    return;
+  }
 
   _liststorage_deleteslot(x, slot);
 }
 
-  /* clear all slots */
+/* clear all slots */
 static void liststorage_clearall(t_liststorage *x)
 {
   int i=0;
@@ -242,7 +267,7 @@ static void liststorage_clearall(t_liststorage *x)
   }
 }
 
-  /* insert an empty slot at (before) given position */
+/* insert an empty slot at (before) given position */
 static void liststorage_insert(t_liststorage *x, t_floatarg f)
 {
   int current=x->x_currentslot;
@@ -253,17 +278,19 @@ static void liststorage_insert(t_liststorage *x, t_floatarg f)
   slot=_liststorage_checkslot(x, "attempting to insert invalid slot", 1);
   x->x_currentslot=current;
 
-  if(slot<0)return;
+  if(slot<0) {
+    return;
+  }
 
-  _liststorage_resize(x, x->x_numslots+1); 
+  _liststorage_resize(x, x->x_numslots+1);
 
   for(i=x->x_numslots-1; i>slot; i--) {
     x->x_slots[i]=x->x_slots[i-1];
   }
-  x->x_slots[slot]=NULL;  
+  x->x_slots[slot]=NULL;
 }
 
-  /* get the number of slots */
+/* get the number of slots */
 static void liststorage_info(t_liststorage *x)
 {
   t_atom ap;
@@ -272,7 +299,7 @@ static void liststorage_info(t_liststorage *x)
 }
 
 
-  /* get the number of slots */
+/* get the number of slots */
 static void liststorage_slot(t_liststorage *x, t_floatarg f)
 {
   int slot=f;
@@ -281,7 +308,7 @@ static void liststorage_slot(t_liststorage *x, t_floatarg f)
 }
 
 
-  /* remove empty slots */
+/* remove empty slots */
 static void liststorage_compress(t_liststorage *x)
 {
   t_msglist**newarray=NULL;
@@ -289,7 +316,7 @@ static void liststorage_compress(t_liststorage *x)
   int size=0;
   for(i=0; i<x->x_numslots; i++) {
     if(NULL!=x->x_slots[i]) {
-      
+
       size++;
     }
   }
@@ -299,8 +326,9 @@ static void liststorage_compress(t_liststorage *x)
     return;
   }
 
-  if(size<x->x_defaultnumslots)
+  if(size<x->x_defaultnumslots) {
     size=x->x_defaultnumslots;
+  }
 
   /* create a new array */
   newarray=getbytes(sizeof(t_msglist*)*size);
@@ -344,18 +372,21 @@ static void *liststorage_new(t_floatarg f)
   t_liststorage *x = (t_liststorage *)pd_new(liststorage_class);
   int slots=f;
 
-  x->x_slotin=inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("float"), gensym("slot"));
+  x->x_slotin=inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("float"),
+                        gensym("slot"));
   x->x_dataout=outlet_new(&x->x_obj, gensym("list"));
   x->x_infoout=outlet_new(&x->x_obj, 0);
 
 
 
-  if(slots<=0)slots=20;
+  if(slots<=0) {
+    slots=20;
+  }
   x->x_defaultnumslots=slots;
   x->x_numslots=0;
   x->x_currentslot=0;
   x->x_slots=NULL;
-  
+
   _liststorage_resize(x, x->x_defaultnumslots);
 
 
@@ -365,33 +396,41 @@ static void *liststorage_new(t_floatarg f)
 
 void liststorage_setup(void)
 {
-  liststorage_class = class_new(gensym("liststorage"), (t_newmethod)liststorage_new,
-                            (t_method)liststorage_free, sizeof(t_liststorage), 0, A_DEFFLOAT, 0);
+  liststorage_class = class_new(gensym("liststorage"),
+                                (t_newmethod)liststorage_new,
+                                (t_method)liststorage_free, sizeof(t_liststorage), 0, A_DEFFLOAT, 0);
 
   /* recall all lists from the current slot */
   class_addbang(liststorage_class, (t_method)liststorage_bang);
 
   /* add a new list to the current slot */
-  class_addmethod(liststorage_class, (t_method)liststorage_add, gensym("add"), A_GIMME, 0);
+  class_addmethod(liststorage_class, (t_method)liststorage_add,
+                  gensym("add"), A_GIMME, 0);
   /* clear the current slot */
-  class_addmethod(liststorage_class, (t_method)liststorage_clear, gensym("clear"), 0);
+  class_addmethod(liststorage_class, (t_method)liststorage_clear,
+                  gensym("clear"), 0);
   /* clear all slots */
-  class_addmethod(liststorage_class, (t_method)liststorage_clearall, gensym("clearall"), 0);
+  class_addmethod(liststorage_class, (t_method)liststorage_clearall,
+                  gensym("clearall"), 0);
 
 
   /* add a new list to the current slot */
-  class_addmethod(liststorage_class, (t_method)liststorage_slot, gensym("slot"), A_FLOAT, 0);
+  class_addmethod(liststorage_class, (t_method)liststorage_slot,
+                  gensym("slot"), A_FLOAT, 0);
 
 
   /* insert an empty slot at (before) given position */
-  class_addmethod(liststorage_class, (t_method)liststorage_insert, gensym("insert"), A_DEFFLOAT, 0);
+  class_addmethod(liststorage_class, (t_method)liststorage_insert,
+                  gensym("insert"), A_DEFFLOAT, 0);
 
- /* remove empty slots */
-  class_addmethod(liststorage_class, (t_method)liststorage_compress, gensym("compress"), 0);
+  /* remove empty slots */
+  class_addmethod(liststorage_class, (t_method)liststorage_compress,
+                  gensym("compress"), 0);
 
 
   /* get the number of slots */
-  class_addmethod(liststorage_class, (t_method)liststorage_info, gensym("info"), 0);
+  class_addmethod(liststorage_class, (t_method)liststorage_info,
+                  gensym("info"), 0);
 
   zexy_register("liststorage");
 }

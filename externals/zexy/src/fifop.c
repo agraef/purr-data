@@ -1,4 +1,4 @@
-/* 
+/*
  * fifop: a FIFO (first-in first-out) with priorities
  *
  * (c) 1999-2011 IOhannes m zmölnig, forum::für::umläute, institute of electronic music and acoustics (iem)
@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -46,8 +46,7 @@ typedef struct _fifop_prioritylist {
   struct _fifop_prioritylist *next;
 } t_fifop_prioritylist;
 
-typedef struct _fifop
-{
+typedef struct _fifop {
   t_object              x_obj;
   t_fifop_prioritylist *fifo_list;
   t_float               priority; /* current priority */
@@ -55,27 +54,31 @@ typedef struct _fifop
   t_outlet             *x_out, *x_infout;
 } t_fifop;
 
-static t_fifop_prioritylist*fifop_genprioritylist(t_fifop*x, t_float priority)
+static t_fifop_prioritylist*fifop_genprioritylist(t_fifop*x,
+    t_float priority)
 {
   t_fifop_prioritylist*result=0, *dummy=0;
 
-  if(x->fifo_list!=0)
-    {
-      /*
-       * do we already have this priority ?
-       * if so, just return a pointer to that fifo
-       * else set the dummy-pointer to the fifo BEFORE the new one
-       */
-      dummy=x->fifo_list;
-      while(dummy!=0){
-        t_float prio=dummy->priority;
-        if(prio==priority)return dummy;
-        if(prio>priority)break;
-        result=dummy;
-        dummy=dummy->next;
+  if(x->fifo_list!=0) {
+    /*
+     * do we already have this priority ?
+     * if so, just return a pointer to that fifo
+     * else set the dummy-pointer to the fifo BEFORE the new one
+     */
+    dummy=x->fifo_list;
+    while(dummy!=0) {
+      t_float prio=dummy->priority;
+      if(prio==priority) {
+        return dummy;
       }
-      dummy=result; /* dummy points to the FIFO-before the one we want to insert */
+      if(prio>priority) {
+        break;
+      }
+      result=dummy;
+      dummy=dummy->next;
     }
+    dummy=result; /* dummy points to the FIFO-before the one we want to insert */
+  }
   /* create a new priority list */
   result = (t_fifop_prioritylist*)getbytes(sizeof( t_fifop_prioritylist));
   result->priority=priority;
@@ -84,7 +87,7 @@ static t_fifop_prioritylist*fifop_genprioritylist(t_fifop*x, t_float priority)
   result->next=0;
 
   /* insert it into the list of priority lists */
-  if(dummy==0){
+  if(dummy==0) {
     /* insert at the beginning */
     result->next=x->fifo_list;
     x->fifo_list=result;
@@ -103,18 +106,17 @@ static int add2fifo(t_fifop_prioritylist*fifoprio, int argc, t_atom *argv)
   t_fifop_list*fifo=0;
   t_fifop_list*entry=0;
 
-  if(fifoprio==0){
-        error("pfifo: no fifos available");
+  if(fifoprio==0) {
+    error("pfifo: no fifos available");
     return -1;
   }
 
   /* create an entry for the fifo */
-  if(!(entry = (t_fifop_list*)getbytes(sizeof(t_fifop_list))))
-    {
-      error("pfifo: couldn't add entry to end of fifo");
-      return -1;
-    }
-  if(!(entry->argv=(t_atom*)getbytes(argc*sizeof(t_atom)))){
+  if(!(entry = (t_fifop_list*)getbytes(sizeof(t_fifop_list)))) {
+    error("pfifo: couldn't add entry to end of fifo");
+    return -1;
+  }
+  if(!(entry->argv=(t_atom*)getbytes(argc*sizeof(t_atom)))) {
     error("pfifo: couldn't add list to fifo!");
     return -1;
   }
@@ -123,13 +125,13 @@ static int add2fifo(t_fifop_prioritylist*fifoprio, int argc, t_atom *argv)
   entry->next=0;
 
   /* insert entry into fifo */
-  if(fifoprio->fifo_end){
+  if(fifoprio->fifo_end) {
     /* append to the end of the fifo */
     fifo=fifoprio->fifo_end;
 
     /* add new entry to end of fifo */
     fifo->next=entry;
-    fifoprio->fifo_end=entry;    
+    fifoprio->fifo_end=entry;
   } else {
     /* the new entry is the 1st entry of the fifo */
     fifoprio->fifo_start=entry;
@@ -140,23 +142,27 @@ static int add2fifo(t_fifop_prioritylist*fifoprio, int argc, t_atom *argv)
 }
 static t_fifop_prioritylist*getFifo(t_fifop_prioritylist*pfifo)
 {
-  if(pfifo==0)return 0;
+  if(pfifo==0) {
+    return 0;
+  }
   /* get the highest non-empty fifo */
-  while(pfifo->fifo_start==0 && pfifo->next!=0)pfifo=pfifo->next;
+  while(pfifo->fifo_start==0 && pfifo->next!=0) {
+    pfifo=pfifo->next;
+  }
   return pfifo;
 }
 
-static void fifop_list(t_fifop *x, t_symbol* UNUSED(s), int argc, t_atom *argv)
+static void fifop_list(t_fifop *x, t_symbol* UNUSED(s), int argc,
+                       t_atom *argv)
 {
   t_fifop_prioritylist*pfifo=0;
   if(!(pfifo=fifop_genprioritylist(x, x->priority))) {
     error("[fifop]: couldn't get priority fifo");
     return;
   }
-  if(!add2fifo(pfifo, argc, argv))
-    {
-      x->counter++;
-    }
+  if(!add2fifo(pfifo, argc, argv)) {
+    x->counter++;
+  }
 }
 static void fifop_bang(t_fifop *x)
 {
@@ -165,11 +171,11 @@ static void fifop_bang(t_fifop *x)
   t_atom*argv=0;
   int argc=0;
 
-  if(!(pfifo=getFifo(x->fifo_list))){
+  if(!(pfifo=getFifo(x->fifo_list))) {
     outlet_bang(x->x_infout);
     return;
   }
-  if(!(fifo=pfifo->fifo_start)){
+  if(!(fifo=pfifo->fifo_start)) {
     outlet_bang(x->x_infout);
     return;
   }
@@ -177,7 +183,7 @@ static void fifop_bang(t_fifop *x)
   x->counter--;
 
   pfifo->fifo_start=fifo->next;
-  if(0==pfifo->fifo_start){
+  if(0==pfifo->fifo_start) {
     pfifo->fifo_end=0;
   }
   /* get the list from the entry */
@@ -200,24 +206,26 @@ static void fifop_bang(t_fifop *x)
 static void fifop_query(t_fifop*x)
 {
   z_verbose(1, "%d elements in fifo", (int)x->counter);
-  
+
   outlet_float(x->x_infout, (t_float)x->counter);
 }
 
 static void fifop_clear(t_fifop*x)
 {
   t_fifop_prioritylist *fifo_list=x->fifo_list;
-  while(fifo_list){
+  while(fifo_list) {
     t_fifop_prioritylist *fifo_list2=fifo_list;
 
     t_fifop_list*fifo=fifo_list2->fifo_start;
     fifo_list=fifo_list->next;
 
-    while(fifo){
+    while(fifo) {
       t_fifop_list*fifo2=fifo;
       fifo=fifo->next;
 
-      if(fifo2->argv)freebytes(fifo2->argv, fifo2->argc*sizeof(t_atom));
+      if(fifo2->argv) {
+        freebytes(fifo2->argv, fifo2->argc*sizeof(t_atom));
+      }
       fifo2->argv=0;
       fifo2->argc=0;
       fifo2->next=0;
@@ -234,7 +242,7 @@ static void fifop_clear(t_fifop*x)
 }
 /* this is NOT re-entrant! */
 static void fifop_dump(t_fifop*x)
-{  
+{
   t_fifop_prioritylist*pfifo=getFifo(x->fifo_list);
 
   if(!pfifo||!pfifo->fifo_start) {
@@ -259,7 +267,7 @@ static void fifop_dump(t_fifop*x)
 
 static void fifop_help(t_fifop*x)
 {
-  post("\n"HEARTSYMBOL" fifop\t\t:: a First-In-First-Out queue with priorities");
+  post("\n"HEARTSYMBOL " fifop\t\t:: a First-In-First-Out queue with priorities");
 }
 
 
@@ -288,16 +296,20 @@ static void *fifop_new(void)
 void fifop_setup(void)
 {
   fifop_class = class_new(gensym("fifop"), (t_newmethod)fifop_new,
-                             (t_method)fifop_free, sizeof(t_fifop), 0, A_NULL);
+                          (t_method)fifop_free, sizeof(t_fifop), 0, A_NULL);
 
   class_addbang    (fifop_class, fifop_bang);
   class_addlist    (fifop_class, fifop_list);
 
-  class_addmethod  (fifop_class, (t_method)fifop_clear, gensym("clear"), A_NULL);
-  class_addmethod  (fifop_class, (t_method)fifop_dump, gensym("dump"), A_NULL);
+  class_addmethod  (fifop_class, (t_method)fifop_clear, gensym("clear"),
+                    A_NULL);
+  class_addmethod  (fifop_class, (t_method)fifop_dump, gensym("dump"),
+                    A_NULL);
 
-  class_addmethod  (fifop_class, (t_method)fifop_query, gensym("info"), A_NULL);
-  class_addmethod  (fifop_class, (t_method)fifop_help, gensym("help"), A_NULL);
+  class_addmethod  (fifop_class, (t_method)fifop_query, gensym("info"),
+                    A_NULL);
+  class_addmethod  (fifop_class, (t_method)fifop_help, gensym("help"),
+                    A_NULL);
 
   zexy_register("fifop");
 }
