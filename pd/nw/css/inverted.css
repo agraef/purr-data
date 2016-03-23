@@ -455,3 +455,111 @@ div.y2 {
 .disabled {
     color: #aaa;
 }
+
+/* Preferences dialog */
+
+#prefs_html_element {
+/*    height: 100%; */
+    margin: 0px;
+    padding: 0px;
+    height: 100vh;
+}
+
+#prefs_body {
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+/*    height: 100%; */
+    padding: 0px;
+}
+
+#prefs_container {
+    display: table;
+}
+
+/* Main tab widget */
+
+/* All the display, width, and height settings below are a house of cards.
+   I don't have the schooling to actually predict how all these CSS elements
+   work together to create the whole. I just fudged around until I found a
+   way to get the buttons anchored at the bottom of the dialog without
+   triggering scrollbars to appear. If someone knows a way to do it "right"
+   without becoming an order of magnitude more complex, do feel free... */
+.prefs_tab_group {
+    display: table;
+    width: 90%;
+}
+
+/* Configure the radio buttons to hide off-screen */
+.prefs_tab {
+    position: absolute;
+    left:-100px;
+    top:-100px;
+}
+
+/* Configure labels to look like tabs */
+.prefs_tab + label {
+    /* inline-block such that the label can be given dimensions */
+    display: inline-block;
+    /* A nice curved border around the tab */
+    border: 1px solid #bbb;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    /* the bottom border is handled by the tab content div */
+    border-bottom: 0;
+    /* Padding around tab text */
+    padding: 5px 10px;
+    /* put a small margin to the left to make the first tab clear */
+    margin-left: 4px;
+    margin-top: 8px;
+    margin-bottom: 0px;
+    /* Set the background color to default gray (non-selected tab) */
+    background-color:#ececec;
+    height: 5vh;
+}
+
+/* Focused tabs */
+.prefs_tab:focus + label {
+    border: 1px dashed #bbb;
+}
+
+/* Checked tabs must be white with the bottom border removed */
+.prefs_tab:checked + label {
+    background-color: #f3f3f3;
+    font-weight: bold;
+    border-bottom: 1px solid #f3f3f3;
+    margin-bottom: -1px;
+}
+
+/* The tab content must fill the widgets size and have a nice border */
+.prefs_tab_group > div {
+    display: none;
+    border-top: 1px solid #ddd;
+    padding: 0px;
+    margin: 0px;
+    height: 100%;
+}
+
+/* This matches tabs displaying to their associated radio inputs */
+.tab1:checked ~ .tab1, .tab2:checked ~ .tab2, .tab3:checked ~ .tab3 {
+    display: table;
+    padding: 8px;
+    line-height: 20px;
+    width: 100%;
+    height: 78vh;
+}
+
+.tab_settings {
+    padding-top: 8px;
+}
+
+#prefs_buttons {
+    display: table;
+    height: 10vh;
+    padding: 0px;
+    margin: 0px;
+    margin-top: -10px;
+    margin-bottom: -10px;
+    padding: 30px;
+}
