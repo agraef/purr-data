@@ -136,7 +136,7 @@ LIB_TARGETS = adaptive arraysize bassemu boids bsaylor comport creb cxc cyclone 
 
 # this is for libraries that don't compile (yet) on all platforms
 ifeq ($(OS_NAME),windows)
-  LIB_TARGETS += 
+  LIB_TARGETS += gem
 else
   ifeq ($(OS_NAME),darwin)
 # on Mac OS X 10.6/Snow Leopard don't build hid since it needs Carbon

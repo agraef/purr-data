@@ -85,6 +85,7 @@ http://l2ork.music.vt.edu/main/?page_id=56#install-dev
 3. Once the shell opens, we need to install the dependencies for building Purr Data. Issue the following command:<code>
 pacman -S autoconf automake git libtool \
           make mingw-w64-i686-dlfcn mingw-w64-i686-fftw \
+          mingw-w64-i686-ftgl 
           mingw-w64-i686-ladspa-sdk mingw-w64-i686-lame \
           mingw-w64-i686-libsndfile mingw-w64-i686-libvorbis \
           mingw-w64-i686-lua mingw-w64-i686-toolchain</code>
@@ -103,6 +104,7 @@ make install</code>
 two remaining issues:
 zexy - rawprint struct (line 20) already defined when using msys2
 flext - doesn't compile so you have to remove externals/Makefile reference to it (in the big list of externals)
+Gem - copy pd.dll from pd/src to pd/
 
 ### Contributor Guide
 
