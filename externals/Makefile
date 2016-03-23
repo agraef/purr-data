@@ -609,8 +609,7 @@ $(gem_src)/Gem.dll: $(gem_src)/configure
 #		--without-quicktime \
 #		--with-video=plugins \
 #		--with-film=plugins \
-		--with-pd=$(pd_src) \
-		--with-extension=dll
+		--with-pd=$(pd_src)
 	$(MAKE) -C $(gem_src)
 
 $(gem_src)/Gem.pd_linux: $(gem_src)/configure
