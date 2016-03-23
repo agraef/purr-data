@@ -596,13 +596,19 @@ $(gem_src)/configure:
 $(gem_src)/Gem.dll: $(gem_src)/configure
 	cd $(gem_src) && ./configure \
 		CXXFLAGS="-DHAVE_S_STUFF_H" \
+		--host=i686-w64-mingw32 \
+		--without-ALL \
+		--with-ftgl \
+		--with-ftgl-cflags="-I/mingw32/include -I/mingw32/include/freetype2" \
+		--with-ftgl-libs="-L/mingw32/lib -lftgl" \
+		--with-vfw32 \
 		--prefix=$(prefix) \
 		--libdir=$(objectsdir) \
-		--disable-rpath \
-		--enable-sse2 \
-		--without-quicktime \
-		--with-video=plugins \
-		--with-film=plugins \
+#		--disable-rpath \
+#		--enable-sse2 \
+#		--without-quicktime \
+#		--with-video=plugins \
+#		--with-film=plugins \
 		--with-pd=$(pd_src) \
 		--with-extension=dll
 	$(MAKE) -C $(gem_src)
