@@ -508,7 +508,7 @@ div.y2 {
 /* Checked tabs must be white with the bottom border removed */
 .prefs_tab:checked + label {
     background-color: #f3f3f3;
-    font-weight: bold;
+    text-shadow: 1px 0px 0px; /* substitute for "bold" to retain div width */
     border-bottom: 1px solid #f3f3f3;
     margin-bottom: -1px;
 }
