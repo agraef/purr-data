@@ -85,7 +85,7 @@ http://l2ork.music.vt.edu/main/?page_id=56#install-dev
 3. Once the shell opens, we need to install the dependencies for building Purr Data. Issue the following command:<code>
 pacman -S autoconf automake git libtool \
           make mingw-w64-i686-dlfcn mingw-w64-i686-fftw \
-          mingw-w64-i686-ftgl 
+          mingw-w64-i686-ftgl mingw-w64-i686-fribidi \
           mingw-w64-i686-ladspa-sdk mingw-w64-i686-lame \
           mingw-w64-i686-libsndfile mingw-w64-i686-libvorbis \
           mingw-w64-i686-lua mingw-w64-i686-toolchain</code>
