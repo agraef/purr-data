@@ -701,6 +701,10 @@ var canvas_events = (function() {
     document.querySelector("#canvas_find_text").addEventListener("focusin",
         canvas_find_focus, false
     );
+
+    // Add placeholder text... this all needs to be collected into an 
+    // add_events function similiar to the one in index.js
+    document.querySelector("#canvas_find_text").placeholder = "Search in Patch";
     document.querySelector("#canvas_find_text").addEventListener("blur",
         canvas_find_blur, false
     );
