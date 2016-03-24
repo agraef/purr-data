@@ -157,6 +157,13 @@
     color: red;
 }
 
+/* Find bar */
+
+#console_find label, #canvas_find label {
+    font-family: "DejaVu Sans", sans-serif;
+    font-size: 10pt;
+}
+
 /* marks for matches to console_find */
 mark {
     background: white;
