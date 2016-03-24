@@ -244,6 +244,11 @@
     "devtools": "Show DevTools",
     "devtools_tt": "Show the DevTools window (for debugging)"
   },
+  "pd_window": {
+    "find": {
+      "placeholder": "Search in Console"
+    }
+  },
   "canvas": {
     "paste_clipboard_prompt": "Warning: you are about to paste Pd code that came from somewhere outside of Pd. Do you want to continue?",
     "save_dialog": {
@@ -253,6 +258,9 @@
       "no_tt": "Don't save any changes, just close the patch",
       "cancel": "Cancel",
       "cancel_tt": "Don't save any changes, and don't close the patch"
+    },
+    "find": {
+      "placeholder": "Search in Canvas"
     },
     "prop": {
       "heading": {

@@ -221,7 +221,7 @@ function console_find_keydown(evt) {
 function add_events() {
     // Find bar
     var find_bar = document.getElementById("console_find_text");
-    find_bar.placeholder = "Search in Console";
+    find_bar.placeholder = l("pd_window.find.placeholder");
     find_bar.addEventListener("keydown",
         function(e) {
             return console_find_keydown(e);
