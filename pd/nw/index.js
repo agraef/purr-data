@@ -8,6 +8,12 @@ var pd_menus = require("./pd_menus.js");
 // HOME instead.
 var pwd = process.env.PWD !== undefined ? process.env.PWD : process.env.HOME;
 
+// Windows doesn't have either of the environment variables above, so we
+// compromise atm with HOMEPATH.
+if (!pwd) {
+    pwd = process.env.HOMEPATH;
+}
+
 // gui preset
 pdgui.skin.apply(window);
 
