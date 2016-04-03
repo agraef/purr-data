@@ -1416,7 +1416,7 @@ fprintf(stderr, "guidir is %s\n", guidir);
         spawnret = _spawnl(P_NOWAIT, wishbuf, "pd-nw", scriptbuf, portbuf,
             "localhost",
             (sys_k12_mode ? "pd-l2ork-k12" : "pd-l2ork"),
-            sys_libdir->s_name, 0);
+            scriptbuf, 0);
         if (spawnret < 0)
         {
             perror("spawnl");
