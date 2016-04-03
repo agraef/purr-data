@@ -1413,7 +1413,10 @@ fprintf(stderr, "guidir is %s\n", guidir);
         strcat(wishbuf, "/" PDBINDIR "nw/nw");
         sys_bashfilename(wishbuf, wishbuf);
 
-        spawnret = _spawnl(P_NOWAIT, wishbuf, "pd-nw", scriptbuf, portbuf, 0);
+        spawnret = _spawnl(P_NOWAIT, wishbuf, "pd-nw", scriptbuf, portbuf,
+            "localhost",
+            (sys_k12_mode ? "pd-l2ork-k12" : "pd-l2ork"),
+            guidir, 0);
         if (spawnret < 0)
         {
             perror("spawnl");
