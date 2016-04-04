@@ -695,7 +695,7 @@ function open_file(file) {
     }
     if (basename.match(/\.(pd|pat|mxt)$/i) != null) {
         pdsend("pd open", enquote(basename),
-            defunkify_for_windows(enquote(directory)));
+            defunkify_windows_path(enquote(directory)));
         pd_opendir = directory;
         //::pd_guiprefs::update_recentfiles "$filename" 1
     }
@@ -738,7 +738,7 @@ function doc_open (dir, basename) {
 
     } else {
         pdsend("pd open", enquote(basename),
-            defunkify_for_windows(enquote(norm_path)));
+            defunkify_windows_path(enquote(norm_path)));
     }
 }
 
