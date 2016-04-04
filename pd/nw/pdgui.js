@@ -17,6 +17,8 @@ function defunkify_windows_path(s) {
     return s.replace(/\\/g, "/");
 }
 
+exports.defunkify_windows_path = defunkify_windows_path;
+
 exports.set_gui_dir = function(dir_string) {
     gui_dir = path.normalize(path.join(dir_string, ".."));
     gui_dir = defunkify_windows_path(gui_dir);
