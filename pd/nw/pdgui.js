@@ -694,7 +694,8 @@ function open_file(file) {
         //}
     }
     if (basename.match(/\.(pd|pat|mxt)$/i) != null) {
-        pdsend("pd open", enquote(basename), enquote(directory));
+        pdsend("pd open", enquote(basename),
+            defunkify_for_windows(enquote(directory)));
         pd_opendir = directory;
         //::pd_guiprefs::update_recentfiles "$filename" 1
     }
@@ -725,6 +726,7 @@ function open_textfile(target) {
 
 // Open a file-- html, text, or Pd.
 function doc_open (dir, basename) {
+    // normalize to get rid of extra slashes, ".." and "."
     var norm_path = path.normalize(dir);
     if (basename.slice(-4) === ".txt"
         || basename.slice(-2) === ".c") {
@@ -735,7 +737,8 @@ function doc_open (dir, basename) {
         open_html(path.join(norm_path, basename));
 
     } else {
-        pdsend("pd open", enquote(basename), enquote(norm_path));
+        pdsend("pd open", enquote(basename),
+            defunkify_for_windows(enquote(norm_path)));
     }
 }
 
