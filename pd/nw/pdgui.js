@@ -13,8 +13,13 @@ exports.get_pwd = function() {
     return pwd;
 }
 
+function defunkify_windows_path(s) {
+    return s.replace(/\\/g, "/");
+}
+
 exports.set_gui_dir = function(dir_string) {
     gui_dir = path.normalize(path.join(dir_string, ".."));
+    gui_dir = defunkify_windows_path(gui_dir);
 }
 
 exports.get_gui_dir = function() {
@@ -429,7 +434,7 @@ post("hey, the initdir is " + initdir + " and initfile is " + initfile);
     if (initfile.slice(-3) !== ".pd") {
         initfile += ".pd";
     }
-    // This is complicated because of a bug... see above
+    // This is complicated because of a bug... see build_file_dialog_string
     input = build_file_dialog_string({
         style: "display: none;",
         type: "file",
