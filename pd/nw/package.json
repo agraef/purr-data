@@ -1,8 +1,5 @@
 {
-  "name": "my-app",
+  "name": "purr-data",
   "version": "0.1.0",
-  "main": "index.html",
-  "window": {
-    "toolbar": false
-  }
+  "main": "index.html"
 }
