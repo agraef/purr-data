@@ -321,8 +321,8 @@ function doc_search() {
         div = document.createElement("div");
         a = document.createElement("a");
         a.href = "javascript: pdgui.doc_open('" +
-                 defunkify_windows_path(path.dirname(doc.path)) + "', '" +
-                 defunkify_windows_path(path.basename(doc.path)) + "');"
+                 pdgui.defunkify_windows_path(path.dirname(doc.path)) + "', '" +
+                 pdgui.defunkify_windows_path(path.basename(doc.path)) + "');"
         a.textContent = doc.title;
         header = document.createElement("h3");
         header.appendChild(a);
