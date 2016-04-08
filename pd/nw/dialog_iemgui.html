@@ -413,11 +413,11 @@ function send_params(attrs, create_undo_point) {
 
     var height, width;
     var size = attrs["size"];
-    if (!size) {
+    if (size === undefined) {
         size = attrs["selection-size"];
     }
 
-    if (size) {
+    if (size !== undefined) {
         width = size;
         height = size;
     } else {
@@ -428,19 +428,19 @@ function send_params(attrs, create_undo_point) {
     var slot3 = attrs["minimum-range"];
     var slot4 = attrs["maximum-range"];
 
-    if (!slot3) {
+    if (slot3 === undefined) {
         slot3 = attrs["flash-interrupt"];
         slot4 = attrs["flash-hold"];
     }
 
-    if (!slot3) {
+    if (slot3 === undefined) {
         slot3 = attrs["visible-width"];
         slot4 = attrs["visible-height"];
     }
 
-    if (!slot3) { // toggle
+    if (slot3 === undefined) { // toggle
         slot3 = attrs["nonzero-value"];
-        if (!slot3) {
+        if (slot3 === undefined) {
             slot3 = 0;
         }
         slot4 = 0;
@@ -462,10 +462,10 @@ function send_params(attrs, create_undo_point) {
     if (!init) { init = 0; }
 
     var slot7 = attrs["log-height"];
-    if (!slot7) {
+    if (slot7 === undefined) {
         slot7 = attrs["number"];
     }
-    if (!slot7) {
+    if (slot7 === undefined) {
         slot7 = 0;
     }
 
@@ -473,7 +473,7 @@ function send_params(attrs, create_undo_point) {
     //if (font_style !== null) { font_style = 0; }
 
     var font_size = attrs["font-size"];
-    if (!font_size) { font_size = 0; }
+    if (font_size === undefined) { font_size = 0; }
 
     // [vu] doesn't have a foreground color
     var foreground_color = attrs["foreground-color"] ?
