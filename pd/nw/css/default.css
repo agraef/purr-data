@@ -267,7 +267,7 @@ mark.console_find_highlighted {
     color: black; /* text color */
     background-color: transparent;
     white-space: pre;
-    word-wrap: break-word;
+    overflow-wrap: break-word;
     -webkit-margin-before: 0px;
 }
 

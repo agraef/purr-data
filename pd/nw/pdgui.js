@@ -3556,8 +3556,7 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
             text_line_height_kludge(font_size, "pd") + "px");
         p.style.setProperty("transform", "translate(0px, 0px)");
         p.style.setProperty("max-width",
-            width_spec === 0 || is_gop == 0 ? "60ch" :
-                width_spec + "ch");
+            width_spec !== 0 ? width_spec + "ch" : "60ch");
         p.style.setProperty("min-width",
             width_spec <= 0 ? "3ch" :
                 (is_gop == 1 ? width_spec + "px" :
