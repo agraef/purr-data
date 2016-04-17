@@ -32,12 +32,11 @@ const char *image_get_filename(t_image *x,char *file)
     static char fname[MAXPDSTRING];
     char *bufptr;
     int fd;
-
     fd=open_via_path(canvas_getdir(glist_getcanvas(x->x_glist))->s_name,
                      file, "",fname, &bufptr, MAXPDSTRING, 1);
-    if(fd>0)
+    if (fd > 0)
     {
-        fname[strlen(fname)]='/';
+        fname[strlen(fname)] = '/';
         close(fd);
         return fname;
     }
@@ -54,7 +53,7 @@ void image_drawme(t_image *x, t_glist *glist, int firsttime)
             x->x_type = 1;
             pd_error(x, "[image]: no image found");
         }
-        if(x->x_type)
+        if (x->x_type)
         {
             sys_vgui(".x%lx.c create image %d %d -tags %xS\n",
                      glist_getcanvas(glist),
@@ -70,8 +69,10 @@ void image_drawme(t_image *x, t_glist *glist, int firsttime)
                 sys_vgui("image create photo img%x\n",x);
                 x->x_localimage=1;
             }
-            if(fname)
+            if (fname)
+            {
                 sys_vgui("::moonlib::image::configure .x%lx img%x {%s}\n",x,x,fname);
+            }
             sys_vgui(".x%lx.c create image %d %d -image img%x -tags %xS\n",
                      glist_getcanvas(glist),
                      text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist),x,x);
@@ -82,12 +83,10 @@ void image_drawme(t_image *x, t_glist *glist, int firsttime)
     }
     else
     {
-        sys_vgui(".x%lx.c coords %xS \
-%d %d\n",
+        sys_vgui(".x%lx.c coords %xS %d %d\n",
                  glist_getcanvas(glist), x,
                  text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist));
     }
-
 }
 
 
@@ -97,16 +96,13 @@ void image_erase(t_image *x,t_glist *glist)
 }
 
 
-
-/* ------------------------ image widgetbehaviour----------------------------- */
-
+/* ------------------------ image widgetbehaviour -------------------------- */
 
 static void image_getrect(t_gobj *z, t_glist *glist,
-                          int *xp1, int *yp1, int *xp2, int *yp2)
+    int *xp1, int *yp1, int *xp2, int *yp2)
 {
     int width, height;
     t_image *x = (t_image *)z;
-
 
     width = x->x_width;
     height = x->x_height;
@@ -117,7 +113,7 @@ static void image_getrect(t_gobj *z, t_glist *glist,
 }
 
 static void image_displace(t_gobj *z, t_glist *glist,
-                           int dx, int dy)
+    int dx, int dy)
 {
     t_image *x = (t_image *)z;
     x->x_obj.te_xpix += dx;
@@ -148,11 +144,7 @@ static void image_select(t_gobj *z, t_glist *glist, int state)
         sys_vgui(".x%lx.c delete %xSEL\n",
                  glist_getcanvas(glist), x);
     }
-
-
-
 }
-
 
 static void image_activate(t_gobj *z, t_glist *glist, int state)
 {
@@ -166,7 +158,6 @@ static void image_delete(t_gobj *z, t_glist *glist)
     t_text *x = (t_text *)z;
     canvas_deletelinesfor(glist, x);
 }
-
 
 static void image_vis(t_gobj *z, t_glist *glist, int vis)
 {
@@ -182,15 +173,18 @@ static void image_vis(t_gobj *z, t_glist *glist, int vis)
 static void image_save(t_gobj *z, t_binbuf *b)
 {
     t_image *x = (t_image *)z;
-    binbuf_addv(b, "ssiissi", gensym("#X"),gensym("obj"),
-                x->x_obj.te_xpix, x->x_obj.te_ypix,
+    binbuf_addv(b, "ssiissi",
+                gensym("#X"),
+                gensym("obj"),
+                x->x_obj.te_xpix,
+                x->x_obj.te_ypix,
                 atom_getsymbol(binbuf_getvec(x->x_obj.te_binbuf)),
-                x->x_image,x->x_type);
+                x->x_image,
+                x->x_type);
     binbuf_addv(b, ";");
 }
 
-
-t_widgetbehavior   image_widgetbehavior;
+t_widgetbehavior image_widgetbehavior;
 
 void image_size(t_image *x,t_floatarg w,t_floatarg h)
 {
@@ -211,22 +205,21 @@ void image_open(t_gobj *z,t_symbol *file)
     const char *fname;
     int oldtype=x->x_type;
 
-
-    fname=image_get_filename(x,file->s_name);
-    if(fname)
+    fname = image_get_filename(x,file->s_name);
+    if (fname)
     {
-        x->x_image=file;
-        x->x_type=0;
-        if(glist_isvisible(x->x_glist))
+        x->x_image = file;
+        x->x_type = 0;
+        if (glist_isvisible(x->x_glist))
         {
-            if(!x->x_localimage)
+            if (!x->x_localimage)
             {
                 sys_vgui("image create photo img%x\n",x);
                 x->x_localimage=1;
             }
             sys_vgui("img%x blank\n",x);
             sys_vgui("::moonlib::image::configure .x%lx img%x {%s}\n",x,x,fname);
-            if(oldtype) sys_vgui(".x%lx.c itemconfigure %xS -image img%x\n",
+            if (oldtype) sys_vgui(".x%lx.c itemconfigure %xS -image img%x\n",
                                      glist_getcanvas(x->x_glist),x,x);
         }
     }
@@ -238,24 +231,20 @@ void image_load(t_gobj *z,t_symbol *image,t_symbol *file)
 {
     t_image *x = (t_image *)z;
     const char *fname;
-
-    fname=image_get_filename(x,file->s_name);
-    if(fname)
+    fname = image_get_filename(x,file->s_name);
+    if (fname)
         sys_vgui("::moonlib::image::create_photo .x%lx %s {%s}\n",x,image->s_name,fname);
 }
 
 void image_set(t_gobj *z,t_symbol *image)
 {
     t_image *x = (t_image *)z;
-
     x->x_image=image;
     x->x_type=1;
-
-    if(glist_isvisible(x->x_glist))
+    if (glist_isvisible(x->x_glist))
         sys_vgui(".x%lx.c itemconfigure %xS -image %s\n",
                  glist_getcanvas(x->x_glist),x,x->x_image->s_name);
 }
-
 
 static void image_setwidget(void)
 {
@@ -274,13 +263,11 @@ static void image_setwidget(void)
 #endif
 }
 
-
 static void *image_new(t_symbol *image, t_float type)
 {
     t_image *x = (t_image *)pd_new(image_class);
 
     x->x_glist = (t_glist *) canvas_getcurrent();
-
     x->x_width = 15;
     x->x_height = 15;
     if (type != 0)
@@ -298,7 +285,6 @@ void image_setup(void)
 {
     image_class = class_new(gensym("image"), (t_newmethod)image_new, 0,
                             sizeof(t_image),0, A_DEFSYM,A_DEFFLOAT,0);
-
     /*
         class_addmethod(image_class, (t_method)image_size, gensym("size"),
         	A_FLOAT, A_FLOAT, 0);
@@ -306,23 +292,18 @@ void image_setup(void)
         class_addmethod(image_class, (t_method)image_color, gensym("color"),
         	A_SYMBOL, 0);
     */
-
     class_addmethod(image_class, (t_method)image_open, gensym("open"),
                     A_SYMBOL, 0);
     class_addmethod(image_class, (t_method)image_set, gensym("set"),
                     A_SYMBOL, 0);
     class_addmethod(image_class, (t_method)image_load, gensym("load"),
                     A_SYMBOL, A_SYMBOL, 0);
-
     image_setwidget();
     class_setwidget(image_class,&image_widgetbehavior);
 #if PD_MINOR_VERSION >= 37
     class_setsavefn(image_class,&image_save);
 #endif
-
     sys_vgui("eval [read [open {%s/%s.tcl}]]\n",
              image_class->c_externdir->s_name,
              image_class->c_name->s_name);
 }
-
-
