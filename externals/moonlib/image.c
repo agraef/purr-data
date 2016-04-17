@@ -203,7 +203,7 @@ void image_open(t_gobj *z,t_symbol *file)
 {
     t_image *x = (t_image *)z;
     const char *fname;
-    int oldtype=x->x_type;
+    int oldtype = x->x_type;
 
     fname = image_get_filename(x,file->s_name);
     if (fname)
@@ -215,7 +215,7 @@ void image_open(t_gobj *z,t_symbol *file)
             if (!x->x_localimage)
             {
                 sys_vgui("image create photo img%x\n",x);
-                x->x_localimage=1;
+                x->x_localimage = 1;
             }
             sys_vgui("img%x blank\n",x);
             sys_vgui("::moonlib::image::configure .x%lx img%x {%s}\n",x,x,fname);
@@ -239,8 +239,8 @@ void image_load(t_gobj *z,t_symbol *image,t_symbol *file)
 void image_set(t_gobj *z,t_symbol *image)
 {
     t_image *x = (t_image *)z;
-    x->x_image=image;
-    x->x_type=1;
+    x->x_image = image;
+    x->x_type = 1;
     if (glist_isvisible(x->x_glist))
         sys_vgui(".x%lx.c itemconfigure %xS -image %s\n",
                  glist_getcanvas(x->x_glist),x,x->x_image->s_name);
@@ -248,18 +248,18 @@ void image_set(t_gobj *z,t_symbol *image)
 
 static void image_setwidget(void)
 {
-    image_widgetbehavior.w_getrectfn =     image_getrect;
-    image_widgetbehavior.w_displacefn =    image_displace;
-    image_widgetbehavior.w_selectfn =   image_select;
-    image_widgetbehavior.w_activatefn =   image_activate;
-    image_widgetbehavior.w_deletefn =   image_delete;
-    image_widgetbehavior.w_visfn =   image_vis;
+    image_widgetbehavior.w_getrectfn = image_getrect;
+    image_widgetbehavior.w_displacefn = image_displace;
+    image_widgetbehavior.w_selectfn = image_select;
+    image_widgetbehavior.w_activatefn = image_activate;
+    image_widgetbehavior.w_deletefn = image_delete;
+    image_widgetbehavior.w_visfn = image_vis;
 #if (PD_VERSION_MINOR > 31)
     image_widgetbehavior.w_clickfn = NULL;
     image_widgetbehavior.w_propertiesfn = NULL;
 #endif
 #if PD_MINOR_VERSION < 37
-    image_widgetbehavior.w_savefn =   image_save;
+    image_widgetbehavior.w_savefn = image_save;
 #endif
 }
 
@@ -267,14 +267,14 @@ static void *image_new(t_symbol *image, t_float type)
 {
     t_image *x = (t_image *)pd_new(image_class);
 
-    x->x_glist = (t_glist *) canvas_getcurrent();
+    x->x_glist = (t_glist *)canvas_getcurrent();
     x->x_width = 15;
     x->x_height = 15;
     if (type != 0)
         x->x_type= 1;
     else
         x->x_type= 0;
-    x->x_localimage=0;
+    x->x_localimage = 0;
     x->x_image = image;
 
     outlet_new(&x->x_obj, &s_float);
@@ -299,11 +299,8 @@ void image_setup(void)
     class_addmethod(image_class, (t_method)image_load, gensym("load"),
                     A_SYMBOL, A_SYMBOL, 0);
     image_setwidget();
-    class_setwidget(image_class,&image_widgetbehavior);
+    class_setwidget(image_class, &image_widgetbehavior);
 #if PD_MINOR_VERSION >= 37
-    class_setsavefn(image_class,&image_save);
+    class_setsavefn(image_class, &image_save);
 #endif
-    sys_vgui("eval [read [open {%s/%s.tcl}]]\n",
-             image_class->c_externdir->s_name,
-             image_class->c_name->s_name);
 }
