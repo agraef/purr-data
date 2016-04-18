@@ -2759,12 +2759,43 @@ function gui_drawnumber_vis(cid, parent_tag, tag, x, y, scale_x, scale_y,
     }
 }
 
+// closure to handle class-specific data that
+// needs to be in the GUI. There shouldn't be
+// many cases for this-- for now it's just used
+// to cache image data for image-handling classes:
+// ggee/image
+// moonlib/image (for backwards compatibility only: its API is inherently leaky)
+// draw sprite
+// draw image
+var pd_cache = (function() {
+    var d = {};
+    return {
+        free: function(key) {
+            if (d.hasOwnProperty(key)) {
+                d[key] = null;
+            }
+        },
+        set: function(key, data) {
+            d[key] = data;
+            return data;
+        },
+        get: function(key) {
+            if (d.hasOwnProperty(key)) {
+                return d[key];
+            } else {
+                return undefined;
+            }
+        }
+    };
+}());
+
 var drawimage_data = {}; // for storing base64 image data associated with
                          // each [draw image] command
 exports.flub = drawimage_data;
 
 function gui_drawimage_new(obj_tag, file_path, canvasdir, flags) {
     var drawsprite = 1,
+        drawimage_data = []; // array for base64 image data
         image_seq,
         i,
         matchchar = "*",
@@ -2781,7 +2812,6 @@ function gui_drawimage_new(obj_tag, file_path, canvasdir, flags) {
                     .sort(); // Note that js's "sort" method doesn't do the
                              // "right thing" for numbers. For that we'd need
                              // to provide our own sorting function
-        drawimage_data[obj_tag] = []; // array for base64 image data
         // todo: warn about image sequence with > 999
         for (i = 0; i < files.length && i < 1000; i++) {
             ext = path.extname(files[i]);
@@ -2796,7 +2826,7 @@ function gui_drawimage_new(obj_tag, file_path, canvasdir, flags) {
 
                 post("we got an image at index " + i + ": " + files[i]);
                 // Now add an element to that array with the image data
-                drawimage_data[obj_tag].push({
+                drawimage_data.push({
                     type: ext === ".jpeg" ? "jpg" : ext.slice(1),
                     data: fs.readFileSync(path.join(file_path, files[i]),"base64")
                 });
@@ -2812,17 +2842,19 @@ function gui_drawimage_new(obj_tag, file_path, canvasdir, flags) {
         img.onload = function() {
             pdsend(obj_tag, "size", this.width, this.height);
         };
-        img.src = "data:image/" + drawimage_data[obj_tag][0].type +
-            ";base64," + drawimage_data[obj_tag][0].data;
+        img.src = "data:image/" + drawimage_data[0].type +
+            ";base64," + drawimage_data[0].data;
     } else {
         post("drawimage: warning: no images loaded");
     }
+    pd_cache.set(obj_tag, drawimage_data); // add the data to container
 }
 
 function gui_drawimage_free(obj_tag) {
-    if (drawimage_data[obj_tag] && drawimage_data[obj_tag].length) {
-        post("drawimage: freed " + drawimage_data[obj_tag].length + " images");
-        drawimage_data[obj_tag] = []; // empty the image(s)
+    var c = pd_cache.get(obj_tag);
+    if (c && c.length) {
+        post("drawimage: freed " + c.length + " images");
+        pd_cache.free(obj_tag); // empty the image(s)
     } else {
         post("drawimage: warning: no image data to free");
     }
@@ -2839,14 +2871,15 @@ function img_size_setter(cid, obj, obj_tag, i) {
             height: h
         });
     };
-    img.src = "data:image/" + drawimage_data[obj][i].type +
-        ";base64," + drawimage_data[obj][i].data;
+    img.src = "data:image/" + pd_cache.get(obj)[i].type +
+        ";base64," + pd_cache.get(obj)[i].data;
 }
 
 function gui_drawimage_vis(cid, x, y, obj, data, seqno, parent_tag) {
     var item,
         g = get_item(cid, parent_tag), // main <g> within the scalar
-        len = drawimage_data[obj].length,
+        image_array = pd_cache.get(obj),
+        len = image_array.length,
         i,
         image_container,
         obj_tag = "draw" + obj.slice(1) + "." + data.slice(1);
@@ -2869,8 +2902,8 @@ function gui_drawimage_vis(cid, x, y, obj, data, seqno, parent_tag) {
             preserveAspectRatio: "xMinYMin meet"
         });
         item.setAttributeNS("http://www.w3.org/1999/xlink", "href",
-            "data:image/" + drawimage_data[obj][i].type + ";base64," +
-             drawimage_data[obj][i].data);
+            "data:image/" + image_array[i].type + ";base64," +
+             image_array[i].data);
         image_container.appendChild(item);
     }
     g.appendChild(image_container);
@@ -2884,7 +2917,7 @@ function gui_drawimage_vis(cid, x, y, obj, data, seqno, parent_tag) {
 function gui_drawimage_index(cid, obj, data, index) {
     var obj_tag = "draw" + obj.slice(1) + "." + data.slice(1),
         i,
-        len = drawimage_data[obj].length,
+        len = pd_cache.get(obj).length,
         image_container = get_item(cid, obj_tag),
         image = image_container.childNodes[index],
         last_image = image_container.querySelectorAll('[visibility="visible"]');
