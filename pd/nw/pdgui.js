@@ -2785,17 +2785,18 @@ var pd_cache = (function() {
             } else {
                 return undefined;
             }
+        },
+        debug: function() {
+            return d;
         }
     };
 }());
 
-var drawimage_data = {}; // for storing base64 image data associated with
-                         // each [draw image] command
-exports.flub = drawimage_data;
+exports.pd_cache = pd_cache;
 
 function gui_drawimage_new(obj_tag, file_path, canvasdir, flags) {
     var drawsprite = 1,
-        drawimage_data = []; // array for base64 image data
+        drawimage_data = [], // array for base64 image data
         image_seq,
         i,
         matchchar = "*",
