@@ -2868,7 +2868,7 @@ function gui_drawimage_free(obj_tag) {
 // to calculate the dimensions. We then use those dimensions for
 // our svg image x/y, after which point the Image below _should_ 
 // get garbage collected.
-function img_size_setter(cid, image_cache_key, svg_image_tag) {
+function img_size_setter(cid, svg_image_tag, type, data) {
     var img = new pd_window.window.Image(),
         w, h;
     img.onload = function() {
@@ -2879,8 +2879,7 @@ function img_size_setter(cid, image_cache_key, svg_image_tag) {
             height: h
         });
     };
-    img.src = "data:image/" + pd_cache.get(image_cache_key)[i].type +
-        ";base64," + pd_cache.get(image_cache_key)[i].data;
+    img.src = "data:image/" + type + ";base64," + data;
 }
 
 function gui_drawimage_vis(cid, x, y, obj, data, seqno, parent_tag) {
@@ -2918,7 +2917,8 @@ function gui_drawimage_vis(cid, x, y, obj, data, seqno, parent_tag) {
 
     // Hack to set correct width and height
     for (i = 0; i < len; i++) {
-        img_size_setter(cid, obj, obj_tag + i);
+        img_size_setter(cid, obj_tag+i, pd_cache.get(obj)[i].type,
+            pd_cache.get(obj)[i].data);
     }
 }
 
@@ -2933,6 +2933,23 @@ function gui_drawimage_index(cid, obj, data, index) {
         configure_item(last_image[i], { visibility: "hidden" });
     }
     configure_item(image, { visibility: "visible" });
+}
+
+function gui_load_default_image(dummy_cid, key) {
+    pd_cache.set(key + key + "default", {
+        type: "gif",
+        data: [
+             "R0lGODlhDwARANU8AAAAAP6xDv/yHP6kDP6oCv7FEP/pGUY6J/7KEP7CD//tG/6s",
+             "Curp6FVLM+/v7vzhGP7SE/61DtfW05pwG/7ZFXFjOmNWM31yXv65Dv69D/nuIu+9",
+             "Em5hRmlcO1FELv///1tILLWWI/b29v/kGOubD/7cFteMEYBdJoiAbpKMeJuYjWNX",
+             "QF9UOrq4stmYEui/FoqEc3VoRZWQfMCBEtbGMO3VHe6qEObUOZiDQ+2wEcJ/Enlu",
+             "Wf///wAAAAAAAAAAACH5BAEAADwALAAAAAAPABEAQAa1QJ5QJIt1Kh1OSiTkNSAQ",
+             "gBRRSEgBgcChKWxdOLsWl5eiKQRoheFBQSQKExjvMsFErtLBYHIRqnAaaAIGaxQv",
+             "Fio8Fg94ACWNGB4oIQWVCRFZCwQEeyhCDAcumpwDJgcMXBIVN4FqNSErEkIOCoGC",
+             "BiNtCBsHDiwPhApqIyUQVRk5HhUUVx8AUVLOASAKGwhUx1mZJAoSFhgZAJgBmgCc",
+             "ILIOBzaYo3okvVwMKyczJjonLKhCQQA7"
+            ].join("")
+    });
 }
 
 // Load an image and cache the base64 data
@@ -2953,10 +2970,12 @@ function gui_gobj_draw_image(cid, tag, image_key) {
             id: tag,
             preserveAspectRatio: "xMinYMin meet"
         });
-        item.setAttributeNS("http://www.w3.org/1999/xlink", "href",
-            "data:image/" + pd_cache.get(image_key).type + ";base64," +
-             pd_cache.get(image_key).data);
-        img_size_setter(cid, image_key, tag);
+    i.setAttributeNS("http://www.w3.org/1999/xlink", "href",
+        "data:image/" + pd_cache.get(image_key).type + ";base64," +
+         pd_cache.get(image_key).data);
+    img_size_setter(cid, tag, pd_cache.get(image_key).type,
+        pd_cache.get(image_key).data);
+    g.appendChild(i);
 }
 
 // Switch the data for an existing svg image
@@ -2965,7 +2984,8 @@ function gui_image_configure(cid, tag, image_key) {
     item.setAttributeNS("http://www.w3.org/1999/xlink", "href",
         "data:image/" + pd_cache.get(image_key).type + ";base64," +
          pd_cache.get(image_key).data);
-    img_size_setter(cid, image_key, tag);
+    img_size_setter(cid, tag, pd_cache.get(image_key).type,
+        pd_cache.get(image_key).data);
 }
 
 function add_popup(cid, popup) {
