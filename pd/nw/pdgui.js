@@ -2861,19 +2861,26 @@ function gui_drawimage_free(obj_tag) {
     }
 }
 
-function img_size_setter(cid, obj, obj_tag, i) {
+// We use this to get the correct height and width for the svg
+// image. Unfortunately svg images are less flexible than normal
+// html images-- you have to provide a size and 100% doesn't work.
+// So here we load the image data into a new Image, just to get it
+// to calculate the dimensions. We then use those dimensions for
+// our svg image x/y, after which point the Image below _should_ 
+// get garbage collected.
+function img_size_setter(cid, image_cache_key, svg_image_tag) {
     var img = new pd_window.window.Image(),
         w, h;
     img.onload = function() {
         w = this.width,
         h = this.height;
-        configure_item(get_item(cid, obj_tag + i), {
+        configure_item(get_item(cid, svg_image_tag), {
             width: w,
             height: h
         });
     };
-    img.src = "data:image/" + pd_cache.get(obj)[i].type +
-        ";base64," + pd_cache.get(obj)[i].data;
+    img.src = "data:image/" + pd_cache.get(image_cache_key)[i].type +
+        ";base64," + pd_cache.get(image_cache_key)[i].data;
 }
 
 function gui_drawimage_vis(cid, x, y, obj, data, seqno, parent_tag) {
@@ -2911,7 +2918,7 @@ function gui_drawimage_vis(cid, x, y, obj, data, seqno, parent_tag) {
 
     // Hack to set correct width and height
     for (i = 0; i < len; i++) {
-        img_size_setter(cid, obj, obj_tag, i);
+        img_size_setter(cid, obj, obj_tag + i);
     }
 }
 
@@ -2926,6 +2933,39 @@ function gui_drawimage_index(cid, obj, data, index) {
         configure_item(last_image[i], { visibility: "hidden" });
     }
     configure_item(image, { visibility: "visible" });
+}
+
+// Load an image and cache the base64 data
+function gui_load_image(cid, key, filepath) {
+    var data = fs.readFileSync(filepath,"base64");
+        ext = path.extname(filepath);
+    pd_cache.set(key, {
+        type: ext === ".jpeg" ? "jpg" : ext.slice(1),
+        data: data
+    });
+}
+
+// Draw an image in an object-- used for ggee/image and
+// moonlib/image
+function gui_gobj_draw_image(cid, tag, image_key) {
+    var g = get_gobj(cid, tag),
+        i = create_item(cid, "image", {
+            id: tag,
+            preserveAspectRatio: "xMinYMin meet"
+        });
+        item.setAttributeNS("http://www.w3.org/1999/xlink", "href",
+            "data:image/" + pd_cache.get(image_key).type + ";base64," +
+             pd_cache.get(image_key).data);
+        img_size_setter(cid, image_key, tag);
+}
+
+// Switch the data for an existing svg image
+function gui_image_configure(cid, tag, image_key) {
+    var i = get_item(tag + "image");
+    item.setAttributeNS("http://www.w3.org/1999/xlink", "href",
+        "data:image/" + pd_cache.get(image_key).type + ";base64," +
+         pd_cache.get(image_key).data);
+    img_size_setter(cid, image_key, tag);
 }
 
 function add_popup(cid, popup) {
