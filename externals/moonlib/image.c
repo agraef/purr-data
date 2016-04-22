@@ -120,9 +120,14 @@ post("about to make a new object. xpix is %d and ypix is %d",
     }
     else
     {
-        sys_vgui(".x%lx.c coords %xS %d %d\n",
-                 glist_getcanvas(glist), x,
-                 text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist));
+        //sys_vgui(".x%lx.c coords %xS %d %d\n",
+        //         glist_getcanvas(glist), x,
+        //         text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist));
+        gui_vmess("gui_image_coords", "xxii",
+            glist_getcanvas(glist),
+            x,
+            text_xpix(&x->x_obj, glist),
+            text_ypix(&x->x_obj, glist));
     }
 }
 
