@@ -2954,7 +2954,7 @@ function gui_load_default_image(dummy_cid, key) {
 
 // Load an image and cache the base64 data
 function gui_load_image(cid, key, filepath) {
-    var data = fs.readFileSync(filepath,"base64");
+    var data = fs.readFileSync(filepath,"base64"),
         ext = path.extname(filepath);
     pd_cache.set(key, {
         type: ext === ".jpeg" ? "jpg" : ext.slice(1),
@@ -2980,12 +2980,17 @@ function gui_gobj_draw_image(cid, tag, image_key) {
 
 // Switch the data for an existing svg image
 function gui_image_configure(cid, tag, image_key) {
-    var i = get_item(tag + "image");
-    item.setAttributeNS("http://www.w3.org/1999/xlink", "href",
+    var i = get_item(cid, tag);
+    i.setAttributeNS("http://www.w3.org/1999/xlink", "href",
         "data:image/" + pd_cache.get(image_key).type + ";base64," +
          pd_cache.get(image_key).data);
     img_size_setter(cid, tag, pd_cache.get(image_key).type,
         pd_cache.get(image_key).data);
+}
+
+// Move an image
+function gui_image_coords(cid, tag, x, y) {
+    elem_move(get_gobj(cid, tag), x, y);
 }
 
 function add_popup(cid, popup) {
