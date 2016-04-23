@@ -2868,7 +2868,11 @@ function gui_drawimage_free(obj_tag) {
 // to calculate the dimensions. We then use those dimensions for
 // our svg image x/y, after which point the Image below _should_ 
 // get garbage collected.
-function img_size_setter(cid, svg_image_tag, type, data) {
+// We add the "tk_anchor" parameter so that we can match the awful interface
+// of moonlib/image. We only check for the value "center"-- otherwise we
+// assume "nw" (top-left corner) when tk_anchor is undefined, as this matches
+// the svg spec.
+function img_size_setter(cid, svg_image_tag, type, data, tk_anchor) {
     var img = new pd_window.window.Image(),
         w, h;
     img.onload = function() {
@@ -2876,7 +2880,9 @@ function img_size_setter(cid, svg_image_tag, type, data) {
         h = this.height;
         configure_item(get_item(cid, svg_image_tag), {
             width: w,
-            height: h
+            height: h,
+            x: tk_anchor === "center" ? 0 - w/2 : 0,
+            y: tk_anchor === "center" ? 0 - h/2 : 0
         });
     };
     img.src = "data:image/" + type + ";base64," + data;
@@ -2963,8 +2969,8 @@ function gui_load_image(cid, key, filepath) {
 }
 
 // Draw an image in an object-- used for ggee/image and
-// moonlib/image
-function gui_gobj_draw_image(cid, tag, image_key) {
+// moonlib/image. For the meaning of tk_anchor see img_size_setter.
+function gui_gobj_draw_image(cid, tag, image_key, tk_anchor) {
     var g = get_gobj(cid, tag),
         i = create_item(cid, "image", {
             id: tag,
@@ -2974,18 +2980,18 @@ function gui_gobj_draw_image(cid, tag, image_key) {
         "data:image/" + pd_cache.get(image_key).type + ";base64," +
          pd_cache.get(image_key).data);
     img_size_setter(cid, tag, pd_cache.get(image_key).type,
-        pd_cache.get(image_key).data);
+        pd_cache.get(image_key).data, tk_anchor);
     g.appendChild(i);
 }
 
 // Switch the data for an existing svg image
-function gui_image_configure(cid, tag, image_key) {
+function gui_image_configure(cid, tag, image_key, tk_anchor) {
     var i = get_item(cid, tag);
     i.setAttributeNS("http://www.w3.org/1999/xlink", "href",
         "data:image/" + pd_cache.get(image_key).type + ";base64," +
          pd_cache.get(image_key).data);
     img_size_setter(cid, tag, pd_cache.get(image_key).type,
-        pd_cache.get(image_key).data);
+        pd_cache.get(image_key).data, tk_anchor);
 }
 
 // Move an image

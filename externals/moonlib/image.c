@@ -54,9 +54,6 @@ void image_drawme(t_image *x, t_glist *glist, int firsttime)
     char key2[MAXPDSTRING];
     if (firsttime)
     {
-            text_xpix(&x->x_obj, glist),
-            text_ypix(&x->x_obj, glist));
-
         gui_vmess("gui_gobj_new", "xxsiii",
             glist_getcanvas(glist),
             x,
@@ -84,8 +81,11 @@ void image_drawme(t_image *x, t_glist *glist, int firsttime)
             //         x);
             //sys_vgui(".x%lx.c itemconfigure %xS -image %s\n",
             //         glist_getcanvas(glist), x, x->x_image->s_name);
-            gui_vmess("gui_gobj_draw_image", "xxs",
-                glist_getcanvas(glist), x, x->x_image->s_name);
+            gui_vmess("gui_gobj_draw_image", "xxss",
+                glist_getcanvas(glist),
+                x,
+                x->x_image->s_name,
+                "center");
         }
         else
         {
@@ -110,8 +110,11 @@ void image_drawme(t_image *x, t_glist *glist, int firsttime)
             //         text_ypix(&x->x_obj, glist),
             //         x,
             //         x);
-            gui_vmess("gui_gobj_draw_image", "xxs",
-                glist_getcanvas(glist), x, key);
+            gui_vmess("gui_gobj_draw_image", "xxss",
+                glist_getcanvas(glist),
+                x,
+                key,
+                "center");
         }
         /* TODO callback from gui
           sys_vgui("image_size logo");
@@ -268,8 +271,11 @@ void image_open(t_gobj *z, t_symbol *file)
             {
                 //sys_vgui(".x%lx.c itemconfigure %xS -image img%x\n",
                 //    glist_getcanvas(x->x_glist), x, x);
-                gui_vmess("gui_image_configure", "xxs",
-                    glist_getcanvas(x->x_glist), x, key);
+                gui_vmess("gui_image_configure", "xxss",
+                    glist_getcanvas(x->x_glist),
+                    x,
+                    key,
+                    "center");
             }
         }
     }
@@ -313,8 +319,11 @@ void image_set(t_gobj *z, t_symbol *image)
     {
         //sys_vgui(".x%lx.c itemconfigure %xS -image %s\n",
         //         glist_getcanvas(x->x_glist), x, x->x_image->s_name);
-        gui_vmess("gui_image_configure", "xxs",
-            glist_getcanvas(x->x_glist), x, key);
+        gui_vmess("gui_image_configure", "xxss",
+            glist_getcanvas(x->x_glist),
+            x,
+            key,
+            "center");
     }
 }
 
