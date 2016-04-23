@@ -3550,17 +3550,19 @@ function select_text(cid, elem) {
 }
 
 // CSS: Cleanly separate style from content.
-// Arnold: Get down!
 // Me: Ahhhh!
+// Arnold: Get down!
+// Me: Wat?
 // CSS: Impossible...
 // Arnold: Style this. *kappakappakappa*
 // Me: Hey, you can't just go around killing people!
 // Arnold: It's not human. It's a W3C Standard.
 // Me: But how did it get here?
-// Arnold: It travelled hear from the past.
-//         It won't stop until you are eliminated.
-// Me: So what now?
-// Arnold: Use this to find what you need then get the heck out of here.
+// Arnold: It travelled from the past.
+// Me: What does it want?
+// Arnold: It won't stop until your energy is completely eliminated.
+// Me: What now?
+// Arnold: Use this to find what you need. Then get the heck out of there!
 function get_style_by_selector(w, selector) {
     var sheet_list = w.document.styleSheets,
         rule_list, i, j,
