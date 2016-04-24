@@ -2940,18 +2940,16 @@ function gui_drawimage_index(cid, obj, data, index) {
 
 function gui_load_default_image(dummy_cid, key) {
     pd_cache.set(key + key + "default", {
-        type: "gif",
-        data: [
-             "R0lGODlhDwARANU8AAAAAP6xDv/yHP6kDP6oCv7FEP/pGUY6J/7KEP7CD//tG/6s",
-             "Curp6FVLM+/v7vzhGP7SE/61DtfW05pwG/7ZFXFjOmNWM31yXv65Dv69D/nuIu+9",
-             "Em5hRmlcO1FELv///1tILLWWI/b29v/kGOubD/7cFteMEYBdJoiAbpKMeJuYjWNX",
-             "QF9UOrq4stmYEui/FoqEc3VoRZWQfMCBEtbGMO3VHe6qEObUOZiDQ+2wEcJ/Enlu",
-             "Wf///wAAAAAAAAAAACH5BAEAADwALAAAAAAPABEAQAa1QJ5QJIt1Kh1OSiTkNSAQ",
-             "gBRRSEgBgcChKWxdOLsWl5eiKQRoheFBQSQKExjvMsFErtLBYHIRqnAaaAIGaxQv",
-             "Fio8Fg94ACWNGB4oIQWVCRFZCwQEeyhCDAcumpwDJgcMXBIVN4FqNSErEkIOCoGC",
-             "BiNtCBsHDiwPhApqIyUQVRk5HhUUVx8AUVLOASAKGwhUx1mZJAoSFhgZAJgBmgCc",
-             "ILIOBzaYo3okvVwMKyczJjonLKhCQQA7"
-            ].join("")
+        type: "png",
+        data: ["iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAAb1BMVEWBgYHX19",
+               "f///8vLy/8/Pzx8PH3+Pf19fXz8/Pu7u7l5eXj4+Pn5+fs7Oza2tr6+vnq6urh",
+               "4eHe3t7c3Nza2dr6+fro6Og1NTXr6+xYWFi1tbWjo6OWl5aLjItDQ0PPz8+/v7",
+               "+wsLCenZ5zc3NOTk4Rpd0DAAAAqElEQVQoz62L2Q6CMBBFhcFdCsomq+v/f6Mn",
+               "bdOSBn3ypNO5Nyez+kG0zN9NWZZK8RRbB/2XmMLSvSZp2mehTMVcLGIYbcWcLW",
+               "1/U4PIZCvmOCMSaWzEHGaMIq2NmJNn4ORuMybP6xxYD0SnE4NJDdc0fYv0LCJg",
+               "9g4RqV3BrJfB7Bzc+ILZOjC+YDYOjC+YKqsyHlOZAX5Msgwm1iRxgDYBSWjCm+",
+               "98AAfDEgD0K69gAAAAAElFTkSuQmCC"
+              ].join("")
     });
 }
 
