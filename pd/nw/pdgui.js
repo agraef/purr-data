@@ -2510,11 +2510,8 @@ function gui_scalar_new(cid, tag, isselected, t1, t2, t3, t4, t5, t6,
     if (is_toplevel === 0) {
         g.classList.add("gop");
     }
-    // Let's make a selection rect... but we can't make it
-    // a child of the gobj group because the getrect fn gives
-    // us a bbox in the canvas coord system
+    // Let's make a selection rect...
     selection_rect = create_item(cid, "rect", {
-        //id: tag + "selection_rect",
         class: "border",
         display: "none",
         fill: "none",
@@ -2535,20 +2532,20 @@ function gui_scalar_erase(cid, tag) {
     //    sr.parentNode.removeChild(sr);
 }
 
+// This is unnecessarily complex-- the select rect is a child of the parent
+// scalar group, but in the initial Tkpath API the rect was free-standing.
+// This means all the coordinate parameters are in the screen position. But
+// we need the coords relative to the scalar's x/y-- hence we subtract the
+// scalar's basex/basey from the coords below.
+
+// Additionally, this function is a misnomer-- we're not actually drawing
+// the rect here.  It's drawn as part of the scalar_vis function.  We're
+// merely changing its coords and size.
+
+// Finally, we have this awful display attribute toggling in css
+// for selected borders because somehow calling properties on a graph
+// triggers this function.  I have no idea why it does that.
 function gui_scalar_draw_select_rect(cid, tag, state, x1, y1, x2, y2, basex, basey) {
-    // This is unnecessarily complex-- the select rect is a child of the parent
-    // scalar group, but in the initial Tkpath API the rect was free-standing.
-    // This means all the coordinate parameters are in the screen position. But
-    // we need the coords relative to the scalar's x/y-- hence we subtract the
-    // scalar's basex/basey from the coords below.
-
-    // Additionally, we're not actually drawing the rect here.  It's drawn
-    // as part of the scalar_vis function.  We're merely changing its coords
-    // and size.
-
-    // Finally, we have this awful display attribute toggling in css
-    // for selected borders because somehow calling properties on a graph
-    // triggers this function.  I have no idea why it does that.
     var g = get_gobj(cid, tag),
         b;
     // somehow the scalar can unvis before calling this, so we check for
