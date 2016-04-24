@@ -406,5 +406,9 @@ void image_setup(void)
 #if PD_MINOR_VERSION >= 37
     class_setsavefn(image_class, &image_save);
 #endif
+    /* cache a default image (question mark) for case where no image argument
+       is given. The key is ("x%lxx%lxdefault", image_class, image_class),
+       to protect against namespace clashes with the complicated interface
+       of moonlib/image */
     gui_vmess("gui_load_default_image", "sx", "dummy", image_class);
 }
