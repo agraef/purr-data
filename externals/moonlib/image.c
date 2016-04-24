@@ -120,9 +120,11 @@ void image_drawme(t_image *x, t_glist *glist, int firsttime)
           sys_vgui("image_size logo");
         */
         /* Finally, draw a border */
-        gui_vmess("gui_image_draw_border", "xxii",
+        gui_vmess("gui_image_draw_border", "xxiiii",
             glist_getcanvas(glist),
             x,
+            0,
+            0,
             x->x_width,
             x->x_height);
     }
