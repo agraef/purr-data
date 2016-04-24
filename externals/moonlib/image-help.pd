@@ -1,33 +1,32 @@
-#N canvas 197 95 631 592 10;
-#X obj 0 38 cnv 8 100 60 empty empty image 20 20 1 18 -262144 -1109
+#N canvas 196 40 631 592 10;
+#X obj 0 58 cnv 8 100 60 empty empty image 20 20 1 18 -262144 -1109
 0;
 #X text 14 550 (c) moonix: Antoine Rousseau 2004;
-#X text 118 73 image viewer;
-#X text 79 91 usage: image image_symbol [type];
-#X text 97 106 if type=0 (or absent) \, image_symbol is a file.;
-#X text 444 121 see "load" and "set";
-#X text 98 121 if type=1 \, image_symbol means a pre-loaded image \;
+#X text 118 93 image viewer;
+#X text 79 111 usage: image image_symbol [type];
+#X text 97 126 if type=0 (or absent) \, image_symbol is a file.;
+#X text 98 151 if type=1 \, image_symbol means a pre-loaded image \;
 ;
 #X text 248 550 \, but it's a hack of Gunter Geiger's image...;
-#X obj 112 192 cnv 15 80 40 empty empty empty 20 12 0 14 -1 -66577
+#X obj 112 222 cnv 15 80 40 empty empty empty 20 12 0 14 -1 -66577
 0;
-#X obj 122 206 image examples/play.gif 0;
-#X obj 348 274 cnv 15 20 20 empty empty empty 20 12 0 14 -1 -66577
+#X obj 122 236 image examples/play.gif 0;
+#X obj 348 304 cnv 15 20 20 empty empty empty 20 12 0 14 -1 -66577
 0;
-#X obj 372 255 t a;
-#X msg 424 163 open examples/play.gif;
-#X msg 425 183 open examples/playy.gif;
-#X msg 424 202 open examples/rec.gif;
-#X msg 424 220 open examples/pause.gif;
-#X msg 424 238 open examples/sinw.gif;
-#X msg 425 256 open examples/squarew.gif;
-#X msg 425 273 open examples/saww.gif;
-#X obj 360 285 image examples/saww.gif 0;
-#X obj 136 206 image examples/rec.gif 0;
-#X obj 152 206 image examples/pause.gif 0;
-#X obj 185 202 image examples/sinw.gif 0;
-#X obj 185 214 image examples/squarew.gif 0;
-#X obj 185 226 image examples/saww.gif 0;
+#X obj 372 285 t a;
+#X msg 424 193 open examples/play.gif;
+#X msg 425 213 open examples/playy.gif;
+#X msg 424 232 open examples/rec.gif;
+#X msg 424 250 open examples/pause.gif;
+#X msg 424 268 open examples/sinw.gif;
+#X msg 425 286 open examples/squarew.gif;
+#X msg 425 303 open examples/saww.gif;
+#X obj 360 315 image examples/saww.gif 0;
+#X obj 136 236 image examples/rec.gif 0;
+#X obj 152 236 image examples/pause.gif 0;
+#X obj 185 232 image examples/sinw.gif 0;
+#X obj 185 244 image examples/squarew.gif 0;
+#X obj 185 256 image examples/saww.gif 0;
 #N canvas 183 192 77 40 (subpatch) 0;
 #X obj 87 205 t a;
 #X msg 127 127 open examples/sinw.gif;
@@ -54,8 +53,8 @@
 #X connect 10 2 3 0;
 #X connect 11 0 7 0;
 #X coords 0 0 1 1 40 40 1;
-#X restore 246 191 pd;
-#X text 241 176 click !;
+#X restore 246 221 pd;
+#X text 241 206 click !;
 #X obj 65 406 t f f;
 #X obj 65 468 pack s s;
 #X msg 65 488 load \$1 \$2;
@@ -73,7 +72,7 @@
 #X text 291 345 2: set img_sym;
 #X text 270 521 rem: when a img_symbol is loaded \, it;
 #X text 305 533 can be used in any image object.;
-#X text 17 152 ONLY GIF FILES ACCEPTED !! (because of Tk...);
+#X text 17 182 ONLY GIF FILES ACCEPTED !! (because of Tk...);
 #X msg 62 334 64;
 #X obj 63 357 until;
 #X obj 64 383 float;
@@ -90,33 +89,35 @@ added by Jonathan Wilkes for Pd version 0.42.;
 #X text 12 45 DESCRIPTION image viewer;
 #X text 12 5 KEYWORDS control GUI deprecated;
 #X restore 574 551 pd META;
-#X text 102 9 Important note: This object is DEPRECATED. The "load"
-method leaks memory \, and the image is anchored in the center which
-makes it at odds with the normal object positioning in Pd.;
-#X text 101 54 For images see [draw image] and [draw sprite];
-#X connect 11 0 19 0;
-#X connect 12 0 11 0;
-#X connect 13 0 11 0;
-#X connect 14 0 11 0;
-#X connect 15 0 11 0;
-#X connect 16 0 11 0;
-#X connect 17 0 11 0;
-#X connect 18 0 11 0;
-#X connect 27 0 47 0;
-#X connect 27 1 49 0;
-#X connect 28 0 29 0;
-#X connect 29 0 33 0;
-#X connect 30 0 33 0;
-#X connect 31 0 32 0;
-#X connect 32 0 34 0;
-#X connect 34 0 48 0;
-#X connect 36 0 37 0;
-#X connect 37 0 33 0;
+#X text 101 74 For images see [draw image] and [draw sprite];
+#X text 432 143 see "load" and "set";
+#X text 102 9 Important note: This object is DEPRECATED-- it is kept
+here for the backwards compatibility. The "load" method leaks memory
+\, and the image is anchored in the center which makes it at odds with
+the normal object positioning in Pd.;
+#X connect 10 0 18 0;
+#X connect 11 0 10 0;
+#X connect 12 0 10 0;
+#X connect 13 0 10 0;
+#X connect 14 0 10 0;
+#X connect 15 0 10 0;
+#X connect 16 0 10 0;
+#X connect 17 0 10 0;
+#X connect 26 0 46 0;
+#X connect 26 1 48 0;
+#X connect 27 0 28 0;
+#X connect 28 0 32 0;
+#X connect 29 0 32 0;
+#X connect 30 0 31 0;
+#X connect 31 0 33 0;
+#X connect 33 0 47 0;
+#X connect 35 0 36 0;
+#X connect 36 0 32 0;
+#X connect 42 0 43 0;
 #X connect 43 0 44 0;
+#X connect 44 0 26 0;
 #X connect 44 0 45 0;
-#X connect 45 0 27 0;
-#X connect 45 0 46 0;
-#X connect 46 0 45 1;
-#X connect 47 0 28 0;
-#X connect 48 0 30 0;
-#X connect 49 0 28 1;
+#X connect 45 0 44 1;
+#X connect 46 0 27 0;
+#X connect 47 0 29 0;
+#X connect 48 0 27 1;
