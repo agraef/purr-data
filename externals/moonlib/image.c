@@ -119,6 +119,12 @@ void image_drawme(t_image *x, t_glist *glist, int firsttime)
         /* TODO callback from gui
           sys_vgui("image_size logo");
         */
+        /* Finally, draw a border */
+        gui_vmess("gui_image_draw_border", "xxii",
+            glist_getcanvas(glist),
+            x,
+            x->x_width,
+            x->x_height);
     }
     else
     {
@@ -173,21 +179,23 @@ static void image_displace(t_gobj *z, t_glist *glist, int dx, int dy)
 static void image_select(t_gobj *z, t_glist *glist, int state)
 {
     t_image *x = (t_image *)z;
-    if (state)
-    {
-        sys_vgui(".x%lx.c create rectangle "
-                 "%d %d %d %d -tags %xSEL -outline blue\n",
-            glist_getcanvas(glist),
-            text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist),
-            text_xpix(&x->x_obj, glist) + x->x_width,
-            text_ypix(&x->x_obj, glist) + x->x_height,
-            x);
-    }
-    else
-    {
-        sys_vgui(".x%lx.c delete %xSEL\n",
-            glist_getcanvas(glist), x);
-    }
+    //if (state)
+    //{
+    //    sys_vgui(".x%lx.c create rectangle "
+    //             "%d %d %d %d -tags %xSEL -outline blue\n",
+    //        glist_getcanvas(glist),
+    //        text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist),
+    //        text_xpix(&x->x_obj, glist) + x->x_width,
+    //        text_ypix(&x->x_obj, glist) + x->x_height,
+    //        x);
+    //}
+    //else
+    //{
+    //    sys_vgui(".x%lx.c delete %xSEL\n",
+    //        glist_getcanvas(glist), x);
+    //}
+    gui_vmess("gui_image_toggle_border", "xxi",
+        glist_getcanvas(glist), x, state);
 }
 
 static void image_activate(t_gobj *z, t_glist *glist, int state)

@@ -2984,6 +2984,29 @@ function gui_gobj_draw_image(cid, tag, image_key, tk_anchor) {
     g.appendChild(i);
 }
 
+function gui_image_draw_border(cid, tag, w, h) {
+    var g = get_gobj(cid, tag),
+        b = create_item(cid, "path", {
+        "stroke-width": "1",
+        fill: "none",
+        d: "m 0 0 " + w + " 0 " +
+           "m 0 0 0 " + h +
+           "m 0 0 " + -w + " 0 " +
+           "m 0 0 0 " + -h,
+        visibility: "hidden",
+        class: "border"
+    });
+    g.appendChild(b);
+}
+
+function gui_image_toggle_border(cid, tag, state) {
+    var g = get_gobj(cid, tag),
+        b = g.querySelector(".border");
+    configure_item(b, {
+        visibility: state === 0 ? "hidden" : "visible"
+    });
+}
+
 // Switch the data for an existing svg image
 function gui_image_configure(cid, tag, image_key, tk_anchor) {
     var i = get_item(cid, tag);
