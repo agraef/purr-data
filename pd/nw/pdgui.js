@@ -1267,12 +1267,12 @@ function get_gobj(cid, object) {
 }
 
 // Convenience function to get a drawn item of gobj
-function get_item(cid,item_id) {
+function get_item(cid, item_id) {
     return patchwin[cid].window.document.getElementById(item_id);
 }
 
 // Similar to [canvas create] in tk
-function create_item(cid,type,args) {
+function create_item(cid, type, args) {
     var item = patchwin[cid].window.document
         .createElementNS("http://www.w3.org/2000/svg", type);
     if (args !== null) {
@@ -1572,7 +1572,7 @@ function gui_canvas_delete_line(cid, tag) {
     }
 }
 
-function gui_canvas_update_line(cid,tag,x1,y1,x2,y2,yoff) {
+function gui_canvas_update_line(cid, tag, x1, y1, x2, y2, yoff) {
     var halfx = parseInt((x2 - x1)/2),
         halfy = parseInt((y2 - y1)/2),
         cord = get_item(cid, tag),
@@ -2043,7 +2043,7 @@ function gui_numbox_update_text_position(cid, tag, x, y) {
     });
 }
 
-function gui_slider_new(cid,tag,x_color,p1,p2,p3,p4,basex, basey) {
+function gui_slider_new(cid, tag, x_color, p1, p2, p3, p4, basex, basey) {
     var g = get_gobj(cid, tag),
         indicator;
     indicator = create_item(cid, "line", {
@@ -2060,7 +2060,7 @@ function gui_slider_new(cid,tag,x_color,p1,p2,p3,p4,basex, basey) {
 
 }
 
-function gui_slider_update(cid,tag,p1,p2,p3,p4,basex,basey) {
+function gui_slider_update(cid, tag, p1, p2, p3, p4, basex, basey) {
     var indicator = get_item(cid, tag + "indicator");
     configure_item(indicator, {
         x1: p1 - basex,
@@ -2077,7 +2077,7 @@ function gui_slider_indicator_color(cid, tag, x_color) {
     });
 }
 
-function gui_radio_new(cid,tag,p1,p2,p3,p4,i,basex,basey) {
+function gui_radio_new(cid, tag, p1, p2, p3, p4, i, basex, basey) {
     var g = get_gobj(cid, tag),
         cell;
     cell = create_item(cid, "line", {
@@ -2131,7 +2131,7 @@ function gui_radio_button_coords(cid, tag, x1, y1, xi, yi, i, s, d, orient) {
     });
 }
 
-function gui_radio_update(cid,tag,x_fgcolor,prev,next) {
+function gui_radio_update(cid, tag, x_fgcolor, prev, next) {
     var prev = get_item(cid, tag + "button_" + prev),
         next = get_item(cid, tag + "button_" + next);
     configure_item(prev, { display: "none" });
@@ -2270,7 +2270,7 @@ function gui_vumeter_draw_peak(cid,tag,color,p1,p2,p3,p4,width,basex,basey) {
 }
 
 // probably should change tag from "rect" to "cover"
-function gui_vumeter_update_rms(cid,tag,p1,p2,p3,p4,basex,basey) {
+function gui_vumeter_update_rms(cid, tag, p1, p2, p3, p4, basex, basey) {
     var rect = get_item(cid, tag + "rect");
     configure_item(rect, {
         x: p1 - basex,
