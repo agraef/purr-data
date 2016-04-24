@@ -33,11 +33,34 @@ typedef struct _image
 /* widget helper functions */
 static void image_select(t_gobj *z, t_glist *glist, int state);
 
-void image_doopen(t_image* x)
+t_symbol *image_trytoopen(t_image* x)
 {
     char fname[FILENAME_MAX];
     FILE *file;
-    if (strlen(x->x_fname->s_name) == 0)
+    if (x->x_fname == &s_)
+    {
+        return 0;
+    }
+    t_glist *glist = glist_getcanvas(x->x_glist);
+    canvas_makefilename(glist_getcanvas(x->x_glist), x->x_fname->s_name,
+        fname, FILENAME_MAX);
+    // try to open the file
+    if (file = fopen(fname, "r"))
+    {
+        fclose(file);
+        return gensym(fname);
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+void image_doopen_old(t_image* x)
+{
+    char fname[FILENAME_MAX];
+    FILE *file;
+    if (x->x_fname == &s_)
     {
         x->x_fname = gensym("@pd_extra/ggee/empty_image.png");
     }
@@ -65,17 +88,56 @@ void image_drawme(t_image *x, t_glist *glist, int firstime)
 {
     if (firstime)
     {
-        sys_vgui("catch {.x%lx.c delete %xS}\n", glist_getcanvas(glist), x);
-        sys_vgui(".x%x.c create image %d %d -tags %xS\n",
-            glist_getcanvas(glist),text_xpix(&x->x_obj, glist),
-            text_ypix(&x->x_obj, glist), x);
-         image_doopen(x);
+        char key[MAXPDSTRING];
+        t_symbol *fname = image_trytoopen(x);
+        // make a new gobj, border, etc.
+        gui_vmess("gui_gobj_new", "xxsiii",
+            glist_getcanvas(glist),
+            x,
+            "obj",
+            text_xpix(&x->x_obj, glist),
+            text_ypix(&x->x_obj, glist),
+            glist_istoplevel(glist));
+        if (fname) {
+            // set the key to (x%lx, x)
+            sprintf(key, "x%lx", (long unsigned int)x);
+            // set a new image in the cache for this image
+            gui_vmess("gui_load_image", "xss",
+                glist_getcanvas(glist), key, fname);
+        }
+        else
+        {
+            char key2[MAXPDSTRING];
+            // set the key to (x%lxx%lxdefault, image_class, image_class)
+            sprintf(key, "x%lx", (long unsigned int)image_class);
+            sprintf(key2, "x%lx", (long unsigned int)image_class);
+            strcat(key, key2);
+            strcat(key, "default");
+        }
+        // draw the new canvas image
+        gui_vmess("gui_gobj_draw_image", "xxss",
+            glist_getcanvas(glist),
+            x,
+            key,
+            "center");
+        //sys_vgui("catch {.x%lx.c delete %xS}\n", glist_getcanvas(glist), x);
+        //sys_vgui(".x%x.c create image %d %d -tags %xS\n",
+        //    glist_getcanvas(glist),text_xpix(&x->x_obj, glist),
+        //    text_ypix(&x->x_obj, glist), x);
+        gui_vmess("gui_image_size_callback", "xss",
+            glist_getcanvas(glist), key, x->x_receive->s_name);
     }
     else
     {
-        sys_vgui(".x%x.c coords %xS %d %d\n",
-            glist_getcanvas(glist), x,
-            text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist));
+        // move the gobj
+        //sys_vgui(".x%x.c coords %xS %d %d\n",
+        //    glist_getcanvas(glist), x,
+        //    text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist));
+        gui_vmess("gui_image_coords", "xxii",
+            glist_getcanvas(glist),
+            x,
+            text_xpix(&x->x_obj, glist),
+            text_ypix(&x->x_obj, glist));
     }
 }
 
@@ -208,6 +270,8 @@ static void image_select(t_gobj *z, t_glist *glist, int state)
 {
     //fprintf(stderr,"image_select %d\n", state);
     t_image *x = (t_image *)z;
+    gui_vmess("gui_image_toggle_border", "xxi",
+        glist_getcanvas(glist), x, state);
     if (state)
     {
         if (x->x_glist == glist_getcanvas(glist))
@@ -235,17 +299,19 @@ static void image_select(t_gobj *z, t_glist *glist, int state)
             }
         }
         //if (glist->gl_owner && !glist_istoplevel(glist))
-        sys_vgui(".x%x.c addtag selected withtag %xS\n", glist_getcanvas(glist), x);
-        sys_vgui(".x%x.c addtag selected withtag %xMT\n", glist_getcanvas(glist), x);
-        sys_vgui(".x%x.c addtag selected withtag %xSEL\n", glist_getcanvas(glist), x);
+        //sys_vgui(".x%x.c addtag selected withtag %xS\n", glist_getcanvas(glist), x);
+        //sys_vgui(".x%x.c addtag selected withtag %xMT\n", glist_getcanvas(glist), x);
+        //sys_vgui(".x%x.c addtag selected withtag %xSEL\n", glist_getcanvas(glist), x);
+        gui_vmess("gui_gobj_select", "xx", glist_getcanvas(glist), x);
     }
     else
     {
         sys_vgui("catch {.x%x.c delete %xSEL}\n",
         glist_getcanvas(glist), x);
         //if (glist->gl_owner && !glist_istoplevel(glist))
-        sys_vgui(".x%lx.c dtag %xS selected\n", glist_getcanvas(glist), x);
-        sys_vgui(".x%lx.c dtag %xMT selected\n", glist_getcanvas(glist), x);
+        //sys_vgui(".x%lx.c dtag %xS selected\n", glist_getcanvas(glist), x);
+        //sys_vgui(".x%lx.c dtag %xMT selected\n", glist_getcanvas(glist), x);
+        gui_vmess("gui_gobj_deselect", "xx", glist_getcanvas(glist), x);
     }
 }
 
@@ -354,7 +420,7 @@ void image_open(t_image* x, t_symbol *s, t_int argc, t_atom *argv)
     x->x_fname = get_filename(argc, argv);
     x->x_img_width = 0;
     x->x_img_height = 0;
-    image_doopen(x);
+    image_trytoopen(x);
 }
 
 static void image_imagesize_callback(t_image *x, t_float w, t_float h) {
@@ -367,7 +433,7 @@ static void image_imagesize_callback(t_image *x, t_float w, t_float h) {
         if (strcmp("@pd_extra/ggee/empty_image.png", x->x_fname->s_name) != 0)
         {
             x->x_fname = gensym("@pd_extra/ggee/empty_image.png");
-            image_doopen(x);
+            image_trytoopen(x);
             return;
         }
     }
@@ -380,6 +446,15 @@ static void image_imagesize_callback(t_image *x, t_float w, t_float h) {
     {
         //sys_vgui("catch {.x%x.c delete %xMT}\n", glist_getcanvas(x->x_glist), x);
         // reselect if we are on a toplevel canvas to adjust the selection rectangle, if necessary
+
+        gui_vmess("gui_image_draw_border", "xxiiii",
+            glist_getcanvas(x->x_glist),
+            x,
+            0 - x->x_img_width/2,
+            0 - x->x_img_height/2,
+            x->x_img_width,
+            x->x_img_height);
+
         if (glist_isselected(x->x_glist, (t_gobj *)x) && glist_getcanvas(x->x_glist) == x->x_glist)
         {
             image_select((t_gobj *)x, glist_getcanvas(x->x_glist), 0);
@@ -474,4 +549,9 @@ void image_setup(void)
     image_setwidget();
     class_setwidget(image_class,&image_widgetbehavior);
     class_setsavefn(image_class,&image_save);
+    /* cache a default image (question mark) for case where no image argument
+       is given. The key is ("x%lxx%lxdefault", image_class, image_class),
+       to protect against namespace clashes with the complicated interface
+       of moonlib/image */
+    gui_vmess("gui_load_default_image", "sx", "dummy", image_class);
 }
