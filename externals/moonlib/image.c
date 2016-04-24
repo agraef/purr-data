@@ -143,7 +143,9 @@ void image_drawme(t_image *x, t_glist *glist, int firsttime)
 
 void image_erase(t_image *x, t_glist *glist)
 {
-    sys_vgui(".x%lx.c delete %xS\n", glist_getcanvas(glist), x);
+    /* This isn't necessary anymore-- deleting the parent gobj deletes the
+       child svg image element... */
+    //sys_vgui(".x%lx.c delete %xS\n", glist_getcanvas(glist), x);
 }
 
 
@@ -168,12 +170,12 @@ static void image_displace(t_gobj *z, t_glist *glist, int dx, int dy)
     t_image *x = (t_image *)z;
     x->x_obj.te_xpix += dx;
     x->x_obj.te_ypix += dy;
-    sys_vgui(".x%lx.c coords %xSEL %d %d %d %d\n",
-        glist_getcanvas(glist), x,
-        text_xpix(&x->x_obj, glist),
-        text_ypix(&x->x_obj, glist),
-        text_xpix(&x->x_obj, glist) + x->x_width,
-        text_ypix(&x->x_obj, glist) + x->x_height);
+    //sys_vgui(".x%lx.c coords %xSEL %d %d %d %d\n",
+    //    glist_getcanvas(glist), x,
+    //    text_xpix(&x->x_obj, glist),
+    //    text_ypix(&x->x_obj, glist),
+    //    text_xpix(&x->x_obj, glist) + x->x_width,
+    //    text_ypix(&x->x_obj, glist) + x->x_height);
     image_drawme(x, glist, 0);
     canvas_fixlinesfor(glist,(t_text *)x);
 }
