@@ -103,7 +103,7 @@ void image_drawme(t_image *x, t_glist *glist, int firstime)
             sprintf(key, "x%lx", (long unsigned int)x);
             // set a new image in the cache for this image
             gui_vmess("gui_load_image", "xss",
-                glist_getcanvas(glist), key, fname);
+                glist_getcanvas(glist), key, fname->s_name);
         }
         else
         {
