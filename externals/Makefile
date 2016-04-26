@@ -604,12 +604,7 @@ $(gem_src)/Gem.dll: $(gem_src)/configure
 		--with-vfw32 \
 		--prefix=$(prefix) \
 		--libdir=$(objectsdir) \
-#		--disable-rpath \
-#		--enable-sse2 \
-#		--without-quicktime \
-#		--with-video=plugins \
-#		--with-film=plugins \
-		--with-pd=$(pd_src)
+		--with-pd=$(DESTDIR)
 	$(MAKE) -C $(gem_src)
 
 $(gem_src)/Gem.pd_linux: $(gem_src)/configure
