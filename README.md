@@ -100,15 +100,19 @@ wget http://www.steinberg.net/sdk_downloads/asiosdk2.3.zip
 8. Now unzip it:<code>
 unzip asiosdk2.3.zip
 </code>
-9. And finally move it to the "lib" directory you just created:<code>
+9. Move it to the "lib" directory you just created:<code>
 mv ASIOSDK2.3 purr-data/pd/lib</code>
 10. We need to download the nw.js binary. (Note: for Windows XP, you'll need the 32 bit binary. You can get it from the nw.js website.) Issue the following command:<code>
 wget http://dl.nwjs.io/v0.14.2/nwjs-sdk-v0.14.2-win-x64.zip</code>
-11. Now unzip it:<code>
+11. Check the file hash against what these instructions expect it to be<code>
+[[ `sha256sum nwjs-sdk-v0.14.2-win-x64.zip | cut -d' ' -f 1` == \
+"cde3f93a1d03780f248ba1aeabf5008e2d0970a4c2113a6e7b5e493fbc7d48f3" ]] && \
+echo It matches</code>
+12. Now unzip it:<code>
 unzip nwjs-sdk-v0.14.2-win-x64.zip</code>
-12. Now move it into the repo:<code>
+13. Now move it into the repo:<code>
 mv nwjs-sdk-v0.14.2-win-x64 purr-data/pd/nw/nw</code>
-13. Finally, issue the following commands:
+14. Finally, issue the following commands:
 <code>
 cd purr-data/packages/win32_inno
 make install</code>
