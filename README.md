@@ -94,9 +94,21 @@ pacman -S autoconf automake git libtool \
 git clone https://puredata.osuosl.org/jwilkes/purr-data.git</code>
 6. We need to add a directory for the ASIO SDK. Issue the following command:<code>
 mkdir purr-data/pd/lib</code>
-7. Download the ASIO SDK [here](http://www.steinberg.net/en/company/developers.html) and extract it.
-8. Navigate to the place you extracted the directory `asiosdk2.3`. Inside it is another directory named `ASIOSDK2.3`. Copy that inner directory `ASIOSDK2.3` to C:\msys2\home\YOUR-USER-ACCOUNT\purr-data\pd\lib.
-9. Issue the following commands:
+7. Download the ASIO SDK [here](http://www.steinberg.net/en/company/developers.html) and extract it.<code>
+wget http://www.steinberg.net/sdk_downloads/asiosdk2.3.zip
+</code>
+8. Now unzip it:<code>
+unzip asiosdk2.3.zip
+</code>
+9. And finally move it to the "lib" directory you just created:<code>
+mv ASIOSDK2.3 purr-data/pd/lib</code>
+10. We need to download the nw.js binary. (Note: for Windows XP, you'll need the 32 bit binary. You can get it from the nw.js website.) Issue the following command:<code>
+wget http://dl.nwjs.io/v0.14.2/nwjs-sdk-v0.14.2-win-x64.zip</code>
+11. Now unzip it:<code>
+unzip nwjs-sdk-v0.14.2-win-x64.zip</code>
+12. Now move it into the repo:<code>
+mv nwjs-sdk-v0.14.2-win-x64 purr-data/pd/nw/nw</code>
+13. Finally, issue the following commands:
 <code>
 cd purr-data/packages/win32_inno
 make install</code>
