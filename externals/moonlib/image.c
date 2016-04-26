@@ -259,7 +259,7 @@ static void image_save(t_gobj *z, t_binbuf *b)
     binbuf_addv(b, ";");
 }
 
-t_widgetbehavior image_widgetbehavior;
+static t_widgetbehavior image_widgetbehavior;
 
 static void image_size(t_image *x, t_floatarg w, t_floatarg h)
 {

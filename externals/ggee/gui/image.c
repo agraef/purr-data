@@ -105,7 +105,7 @@ static void image_drawme(t_image *x, t_glist *glist, int firstime)
     }
 }
 
-void image_erase(t_image* x,t_glist* glist)
+static void image_erase(t_image* x,t_glist* glist)
 {
     gui_vmess("gui_gobj_erase", "xx", glist_getcanvas(glist), x);
     //sys_vgui("catch {.x%x.c delete %xS}\n",glist_getcanvas(glist), x);
@@ -318,7 +318,7 @@ static void image_save(t_gobj *z, t_binbuf *b)
     binbuf_addv(b, ";");
 }
 
-t_widgetbehavior   image_widgetbehavior;
+static t_widgetbehavior image_widgetbehavior;
 
 /*void image_size(t_image* x,t_floatarg w,t_floatarg h) {
      x->x_width = w;
@@ -361,13 +361,13 @@ static void image_click(t_image *x, t_float f)
         x->x_click = 1;
 }
 
-void image_gop_spill(t_image* x, t_floatarg f)
+static void image_gop_spill(t_image* x, t_floatarg f)
 {
     x->x_gop_spill = (f >= 0 ? f : 0);
     image_displace((t_gobj*)x, x->x_glist, 0.0, 0.0);
 }
 
-void image_gop_spill_size(t_image* x, t_floatarg f)
+static void image_gop_spill_size(t_image* x, t_floatarg f)
 {
     //printf("image_gop_spill_size=%d\n", (int)f);
     // we need a size of at least 3 to have a meaningful
@@ -380,7 +380,7 @@ void image_gop_spill_size(t_image* x, t_floatarg f)
     }
 }
 
-void image_open(t_image* x, t_symbol *s, t_int argc, t_atom *argv)
+static void image_open(t_image* x, t_symbol *s, t_int argc, t_atom *argv)
 {
     x->x_fname = get_filename(argc, argv);
     x->x_img_width = 0;
