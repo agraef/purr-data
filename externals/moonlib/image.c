@@ -48,7 +48,7 @@ const char *image_get_filename(t_image *x, char *file)
     else return 0;
 }
 
-void image_drawme(t_image *x, t_glist *glist, int firsttime)
+static void image_drawme(t_image *x, t_glist *glist, int firsttime)
 {
     char key[MAXPDSTRING];
     char key2[MAXPDSTRING];
@@ -242,7 +242,7 @@ static void image_save(t_gobj *z, t_binbuf *b)
 
 t_widgetbehavior image_widgetbehavior;
 
-void image_size(t_image *x, t_floatarg w, t_floatarg h)
+static void image_size(t_image *x, t_floatarg w, t_floatarg h)
 {
     x->x_width = w;
     x->x_height = h;

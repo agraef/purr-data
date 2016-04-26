@@ -84,7 +84,7 @@ void image_doopen_old(t_image* x)
     sys_vgui("pd [concat %s _imagesize [image width $img%x] [image height $img%x] \\;]\n",x->x_receive->s_name, x, x);
 }
 
-void image_drawme(t_image *x, t_glist *glist, int firstime)
+static void image_drawme(t_image *x, t_glist *glist, int firstime)
 {
     if (firstime)
     {
