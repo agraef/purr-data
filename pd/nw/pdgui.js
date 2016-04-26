@@ -3024,7 +3024,9 @@ function gui_image_configure(cid, tag, image_key, tk_anchor) {
 
 // Move an image
 function gui_image_coords(cid, tag, x, y) {
-    elem_move(get_gobj(cid, tag), x, y);
+    if (patchwin[cid]) {
+        elem_move(get_gobj(cid, tag), x, y);
+    }
 }
 
 function add_popup(cid, popup) {
