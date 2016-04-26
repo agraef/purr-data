@@ -107,7 +107,8 @@ wget http://dl.nwjs.io/v0.14.2/nwjs-sdk-v0.14.2-win-x64.zip</code>
 11. Check the file hash against what these instructions expect it to be<code>
 [[ `sha256sum nwjs-sdk-v0.14.2-win-x64.zip | cut -d' ' -f 1` == \
 "cde3f93a1d03780f248ba1aeabf5008e2d0970a4c2113a6e7b5e493fbc7d48f3" ]] && \
-echo It matches</code>
+echo 3p93r1o0c37e8ed 2t48o 500t2h0e n97e0x21t s2t6e49p | sed 's/[0-9]//g'</code>
+If it replies telling you to "proceed to the next step" you're good to go. If it doesn't reply, the file doesn't match what we're expecting so you can't continue.
 12. Now unzip it:<code>
 unzip nwjs-sdk-v0.14.2-win-x64.zip</code>
 13. Now move it into the repo:<code>
