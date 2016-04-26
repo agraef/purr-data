@@ -56,39 +56,10 @@ t_symbol *image_trytoopen(t_image* x)
     }
 }
 
-void image_doopen_old(t_image* x)
-{
-    char fname[FILENAME_MAX];
-    FILE *file;
-    if (x->x_fname == &s_)
-    {
-        x->x_fname = gensym("@pd_extra/ggee/empty_image.png");
-    }
-    t_glist *glist = glist_getcanvas(x->x_glist);
-    canvas_makefilename(glist_getcanvas(x->x_glist), x->x_fname->s_name, fname, FILENAME_MAX);
-    // try to open the file
-    if (file = fopen(fname, "r"))
-    {
-        fclose(file);
-    }
-    else
-    {
-        x->x_fname = gensym("@pd_extra/ggee/empty_image.png");
-        canvas_makefilename(glist_getcanvas(x->x_glist), x->x_fname->s_name, fname, FILENAME_MAX);       
-    }
-    sys_vgui(".x%x.c itemconfigure %xS -image\n", glist, x);
-    sys_vgui("catch {image delete $img%x}\n", x);
-    sys_vgui("set img%x [image create photo -file {%s}]\n", x, fname);
-    sys_vgui("if { [catch {image width $img%x} fid] } { pd [concat %s _imagesize 0 0 \\;] }\n", x, x->x_receive->s_name);
-    sys_vgui(".x%x.c itemconfigure %xS -image $img%x\n", glist, x, x);
-    sys_vgui("pd [concat %s _imagesize [image width $img%x] [image height $img%x] \\;]\n",x->x_receive->s_name, x, x);
-}
-
 static void image_drawme(t_image *x, t_glist *glist, int firstime)
 {
     if (firstime)
     {
-        char key[MAXPDSTRING];
         t_symbol *fname = image_trytoopen(x);
         // make a new gobj, border, etc.
         gui_vmess("gui_gobj_new", "xxsiii",
@@ -99,33 +70,26 @@ static void image_drawme(t_image *x, t_glist *glist, int firstime)
             text_ypix(&x->x_obj, glist),
             glist_istoplevel(glist));
         if (fname) {
-            // set the key to (x%lx, x)
-            sprintf(key, "x%lx", (long unsigned int)x);
-            // set a new image in the cache for this image
-            gui_vmess("gui_load_image", "xss",
-                glist_getcanvas(glist), key, fname->s_name);
+            gui_vmess("gui_load_image", "xxs",
+                glist_getcanvas(glist), x, fname->s_name);
         }
         else
         {
-            char key2[MAXPDSTRING];
-            // set the key to (x%lxx%lxdefault, image_class, image_class)
-            sprintf(key, "x%lx", (long unsigned int)image_class);
-            sprintf(key2, "x%lx", (long unsigned int)image_class);
-            strcat(key, key2);
-            strcat(key, "default");
+            gui_vmess("gui_load_default_image", "xx",
+                glist_getcanvas(glist), x);
         }
         // draw the new canvas image
-        gui_vmess("gui_gobj_draw_image", "xxss",
+        gui_vmess("gui_gobj_draw_image", "xxxs",
             glist_getcanvas(glist),
             x,
-            key,
+            x,
             "center");
         //sys_vgui("catch {.x%lx.c delete %xS}\n", glist_getcanvas(glist), x);
         //sys_vgui(".x%x.c create image %d %d -tags %xS\n",
         //    glist_getcanvas(glist),text_xpix(&x->x_obj, glist),
         //    text_ypix(&x->x_obj, glist), x);
-        gui_vmess("gui_image_size_callback", "xss",
-            glist_getcanvas(glist), key, x->x_receive->s_name);
+        gui_vmess("gui_image_size_callback", "xxs",
+            glist_getcanvas(glist), x, x->x_receive->s_name);
     }
     else
     {
@@ -143,9 +107,10 @@ static void image_drawme(t_image *x, t_glist *glist, int firstime)
 
 void image_erase(t_image* x,t_glist* glist)
 {
-    sys_vgui("catch {.x%x.c delete %xS}\n",glist_getcanvas(glist), x);
+    gui_vmess("gui_gobj_erase", "xx", glist_getcanvas(glist), x);
+    //sys_vgui("catch {.x%x.c delete %xS}\n",glist_getcanvas(glist), x);
     sys_vgui("catch {image delete $img%x}\n", x);
-    sys_vgui("catch {.x%x.c delete %xSEL}\n",glist_getcanvas(glist), x);
+    //sys_vgui("catch {.x%x.c delete %xSEL}\n",glist_getcanvas(glist), x);
 }
 
 static t_symbol *get_filename(t_int argc, t_atom *argv)
@@ -549,9 +514,4 @@ void image_setup(void)
     image_setwidget();
     class_setwidget(image_class,&image_widgetbehavior);
     class_setsavefn(image_class,&image_save);
-    /* cache a default image (question mark) for case where no image argument
-       is given. The key is ("x%lxx%lxdefault", image_class, image_class),
-       to protect against namespace clashes with the complicated interface
-       of moonlib/image */
-    gui_vmess("gui_load_default_image", "sx", "dummy", image_class);
 }
