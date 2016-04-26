@@ -2850,11 +2850,11 @@ function gui_drawimage_new(obj_tag, file_path, canvasdir, flags) {
 
 function gui_drawimage_free(obj_tag) {
     var c = pd_cache.get(obj_tag);
-    if (c && c.length) {
-        post("drawimage: freed " + c.length + " images");
+    if (c) {
+        post("image: freed image data for " + obj_tag);
         pd_cache.free(obj_tag); // empty the image(s)
     } else {
-        post("drawimage: warning: no image data to free");
+        post("image: warning: no image data in cache to free");
     }
 }
 
@@ -2939,7 +2939,7 @@ function gui_drawimage_index(cid, obj, data, index) {
 }
 
 function gui_load_default_image(dummy_cid, key) {
-    pd_cache.set(key + key + "default", {
+    pd_cache.set(key, {
         type: "png",
         data: ["iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAAb1BMVEWBgYHX19",
                "f///8vLy/8/Pzx8PH3+Pf19fXz8/Pu7u7l5eXj4+Pn5+fs7Oza2tr6+vnq6urh",
@@ -3007,9 +3007,13 @@ function gui_image_draw_border(cid, tag, x, y, w, h) {
 function gui_image_toggle_border(cid, tag, state) {
     var g = get_gobj(cid, tag),
         b = g.querySelector(".border");
-    configure_item(b, {
-        visibility: state === 0 ? "hidden" : "visible"
-    });
+    // We have to check for b since the border is only created after
+    // the callback from the GUI provides the size.
+    if (b) {
+        configure_item(b, {
+            visibility: state === 0 ? "hidden" : "visible"
+        });
+    }
 }
 
 // Switch the data for an existing svg image
