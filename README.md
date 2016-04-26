@@ -106,9 +106,12 @@ mv ASIOSDK2.3 purr-data/pd/lib</code>
 wget http://dl.nwjs.io/v0.14.2/nwjs-sdk-v0.14.2-win-x64.zip</code>
 11. Check the file hash against what these instructions expect it to be. Paste the following into the terminal and hit Enter. If it prints out "proceed to the next step" then you're good to go.
 ```
-[[ `sha256sum nwjs-sdk-v0.14.2-win-x64.zip | cut -d' ' -f 1` == \
-"cde3f93a1d03780f248ba1aeabf5008e2d0970a4c2113a6e7b5e493fbc7d48f3" ]] && \
-echo 3p93r1o0c37e8ed 2t48o 500t2h0e n97e0x21t s2t6e49p | sed 's/[0-9]//g'
+[[ `sha256sum nwjs-sdk-v0.14.2-win-x64.zip | \
+    cut -d' ' -f 1` == \
+"cde3f93a1d03780f248ba1aeabf5008e2d0970a4c2113a6e7b5e493fbc7d48f3" \
+]] && \
+echo 3p93r1o0c37e8ed 2t48o 500t2h0e n97e0x21t s2t6e49p | \
+sed 's/[0-9]//g'
 ```
 12. Now unzip it:<code>
 unzip nwjs-sdk-v0.14.2-win-x64.zip</code>
