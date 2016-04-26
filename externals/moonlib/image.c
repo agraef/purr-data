@@ -28,7 +28,7 @@ typedef struct _image
 
 /* widget helper functions */
 
-const char *image_get_filename(t_image *x, char *file)
+static const char *image_get_filename(t_image *x, char *file)
 {
     static char dirresult[MAXPDSTRING];
     char *fileresult, *fullpath;
@@ -142,7 +142,7 @@ static void image_drawme(t_image *x, t_glist *glist, int firsttime)
     }
 }
 
-void image_erase(t_image *x, t_glist *glist)
+static void image_erase(t_image *x, t_glist *glist)
 {
     //sys_vgui(".x%lx.c delete %xS\n", glist_getcanvas(glist), x);
     gui_vmess("gui_gobj_erase", "xx", glist_getcanvas(glist), x);
@@ -267,14 +267,14 @@ static void image_size(t_image *x, t_floatarg w, t_floatarg h)
     x->x_height = h;
 }
 
-void image_color(t_image *x, t_symbol *col)
+static void image_color(t_image *x, t_symbol *col)
 {
     /*     outlet_bang(x->x_obj.ob_outlet); only bang if there was a bang ..
            so color black does the same as bang, but doesn't forward the bang
     */
 }
 
-void image_open(t_gobj *z, t_symbol *file)
+static void image_open(t_gobj *z, t_symbol *file)
 {
     t_image *x = (t_image *)z;
     const char *fname;
@@ -315,7 +315,7 @@ void image_open(t_gobj *z, t_symbol *file)
         pd_error(x, "[image]: error opening file '%s'", file->s_name);
 }
 
-void image_load(t_gobj *z, t_symbol *image, t_symbol *file)
+static void image_load(t_gobj *z, t_symbol *image, t_symbol *file)
 {
     t_image *x = (t_image *)z;
     const char *fname;
@@ -338,7 +338,7 @@ void image_load(t_gobj *z, t_symbol *image, t_symbol *file)
     }
 }
 
-void image_set(t_gobj *z, t_symbol *image)
+static void image_set(t_gobj *z, t_symbol *image)
 {
     char key[MAXPDSTRING];
     t_image *x = (t_image *)z;
