@@ -21,6 +21,7 @@ typedef struct _image
     int x_width;
     int x_height;
     t_symbol *x_image;
+    t_symbol *x_key; // key to cache the image on the gui side
     int x_type; //0=file 1=tk_image
     t_int x_localimage; //localimage "img%x" done
 } t_image;
@@ -67,8 +68,8 @@ static void image_drawme(t_image *x, t_glist *glist, int firsttime)
             sprintf(key2, "x%lx", (long unsigned int)pd_class(&x->x_obj.te_pd));
             strcat(key, key2);
             strcat(key, "default");
-            x->x_image = gensym(key);
             //x->x_image = gensym("::moonlib::image::noimage");
+            x->x_key = gensym(key);
             x->x_type = 1;
             pd_error(x, "[image]: no image found");
         }
@@ -84,7 +85,7 @@ static void image_drawme(t_image *x, t_glist *glist, int firsttime)
             gui_vmess("gui_gobj_draw_image", "xxss",
                 glist_getcanvas(glist),
                 x,
-                x->x_image->s_name,
+                key,
                 "center");
         }
         else
@@ -143,9 +144,8 @@ static void image_drawme(t_image *x, t_glist *glist, int firsttime)
 
 void image_erase(t_image *x, t_glist *glist)
 {
-    /* This isn't necessary anymore-- deleting the parent gobj deletes the
-       child svg image element... */
     //sys_vgui(".x%lx.c delete %xS\n", glist_getcanvas(glist), x);
+    gui_vmess("gui_gobj_erase", "xx", glist_getcanvas(glist), x);
 }
 
 
@@ -180,6 +180,21 @@ static void image_displace(t_gobj *z, t_glist *glist, int dx, int dy)
     canvas_fixlinesfor(glist,(t_text *)x);
 }
 
+static void image_displace_wtag(t_gobj *z, t_glist *glist, int dx, int dy)
+{
+    t_image *x = (t_image *)z;
+    x->x_obj.te_xpix += dx;
+    x->x_obj.te_ypix += dy;
+    //sys_vgui(".x%lx.c coords %xSEL %d %d %d %d\n",
+    //    glist_getcanvas(glist), x,
+    //    text_xpix(&x->x_obj, glist),
+    //    text_ypix(&x->x_obj, glist),
+    //    text_xpix(&x->x_obj, glist) + x->x_width,
+    //    text_ypix(&x->x_obj, glist) + x->x_height);
+    //image_drawme(x, glist, 0);
+    canvas_fixlinesfor(glist,(t_text *)x);
+}
+
 static void image_select(t_gobj *z, t_glist *glist, int state)
 {
     t_image *x = (t_image *)z;
@@ -200,6 +215,10 @@ static void image_select(t_gobj *z, t_glist *glist, int state)
     //}
     gui_vmess("gui_image_toggle_border", "xxi",
         glist_getcanvas(glist), x, state);
+    if (state)
+        gui_vmess("gui_gobj_select", "xx", glist_getcanvas(glist), x);
+    else
+        gui_vmess("gui_gobj_deselect", "xx", glist_getcanvas(glist), x);
 }
 
 static void image_activate(t_gobj *z, t_glist *glist, int state)
@@ -266,6 +285,7 @@ void image_open(t_gobj *z, t_symbol *file)
     {
         sprintf(key, "x%lx", (long unsigned int)x);
         x->x_image = gensym(fname);
+        x->x_key = gensym(key);
         x->x_type = 0;
         if (glist_isvisible(x->x_glist))
         {
@@ -325,7 +345,8 @@ void image_set(t_gobj *z, t_symbol *image)
     /* key is the class address followed by the user-supplied string */
     sprintf(key, "x%lx", (long unsigned int)pd_class(&x->x_obj.te_pd));
     strcat(key, image->s_name);
-    x->x_image = gensym(key);
+    x->x_image = image;
+    x->x_key = gensym(key);
     x->x_type = 1;
     if (glist_isvisible(x->x_glist))
     {
@@ -354,6 +375,7 @@ static void image_setwidget(void)
 #if PD_MINOR_VERSION < 37
     image_widgetbehavior.w_savefn = image_save;
 #endif
+    image_widgetbehavior.w_displacefnwtag = image_displace_wtag;
 }
 
 static void *image_new(t_symbol *image, t_float type)
@@ -374,7 +396,8 @@ static void *image_new(t_symbol *image, t_float type)
         {
             sprintf(key, "x%lx", (long unsigned int)pd_class(&x->x_obj.te_pd));
             strcat(key, image->s_name);
-            x->x_image = gensym(key);
+            x->x_image = image;
+            x->x_key = gensym(key);
         }
         else
         {
@@ -414,5 +437,11 @@ void image_setup(void)
        is given. The key is ("x%lxx%lxdefault", image_class, image_class),
        to protect against namespace clashes with the complicated interface
        of moonlib/image */
-    gui_vmess("gui_load_default_image", "sx", "dummy", image_class);
+    char key[MAXPDSTRING];
+    char key2[MAXPDSTRING];
+    sprintf(key, "x%lx", (long unsigned int)image_class);
+    sprintf(key2, "x%lx", (long unsigned int)image_class);
+    strcat(key, key2);
+    strcat(key, "default");
+    gui_vmess("gui_load_default_image", "ss", "dummy", key);
 }
