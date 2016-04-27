@@ -89,7 +89,7 @@ Time to build: *roughly 1.5 hours*
   Note: don't run it after it installs. You'll open it manually in the next step.
 2. Run MinGW-w64 Win32 Shell *(less than a minute)*  
    msys2 adds three Start Menu items for different "flavors" of shell:  
-   + MinGW-w64 _Win32_ Shell <- click this one!
+   + MinGW-w64 __Win32__ Shell <- click this one!
    + MinGW-w64 Win64 Shell
    + MSYS Shell
 3. Install the dependencies *(5-10 minutes)*  
