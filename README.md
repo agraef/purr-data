@@ -143,7 +143,9 @@ cd purr-data/packages/win32_inno</code>
 16. Download all submodules *(3 minutes)*  
     Use the following command:<code>
 git submodule init && git submodule sync && git submodule update</code>
-17. Finally, build Purr-Data *(45-50 minutes)*<code>
+17. In ~/purr-data/externals/Makefile, go to line 131 and delete the word 
+    "flext".
+18. Finally, build Purr-Data *(45-50 minutes)*<code>
 make install</code>
 
 two remaining issues:
