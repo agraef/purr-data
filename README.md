@@ -80,8 +80,12 @@ Then follow the steps outlined here:
 http://l2ork.music.vt.edu/main/?page_id=56#install-dev
 
 #### Windows 32-bit Using msys2
-1. Download and install [msys2](https://msys2.github.io/) (*5 minutes*)  
-   Notice there are two installers-- one for 32-bit Windows systems (i386) and one for 64-bit Windows (x_64). Be sure you know which [version](http://windows.microsoft.com/en-us/windows/32-bit-and-64-bit-windows#1TC=windows-7) of Windows you are running and download the appropriate installer.  
+1. Download and install [msys2](https://msys2.github.io/) *(5 minutes)*  
+  There are two installers-- one for 32-bit Windows systems (i386) and one for
+  64-bit Windows (x_64). Be sure you know which
+  [version](http://windows.microsoft.com/en-us/windows/32-bit-and-64-bit-windows#1TC=windows-7)
+  of Windows you are running and download the appropriate installer.  
+  Note: don't run it after it installs. You'll open it manually in the next step.
 2. msys2 adds Start Menu items for 3 different "flavors" of shell: MinGW-w64 Win32 Shell, MinGW-w64 Win64 Shell, and MSYS Shell. Click the menu item for MinGW-w64 Win32 Shell.
 3. Once the shell opens, we need to install the dependencies for building Purr Data. Issue the following command:<code>
 pacman -S autoconf automake git libtool \
