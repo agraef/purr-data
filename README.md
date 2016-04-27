@@ -80,7 +80,7 @@ Then follow the steps outlined here:
 http://l2ork.music.vt.edu/main/?page_id=56#install-dev
 
 #### Windows 32-bit Using msys2
-Time to build: *roughly 1 1/2 hours*
+Time to build: *roughly 1.5 hours*
 1. Download and install [msys2](https://msys2.github.io/) *(5 minutes)*  
   There are two installers-- one for 32-bit Windows systems (i386) and one for
   64-bit Windows (x_64). Be sure you know which
