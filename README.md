@@ -92,29 +92,40 @@ http://l2ork.music.vt.edu/main/?page_id=56#install-dev
    + MinGW-w64 Win64 Shell
    + MSYS Shell
 3. Install the dependencies *(5-10 minutes)*  
-   Once the shell opens, we need to install the dependencies for building Purr Data. Issue the following command:<code>
+   Once the shell opens, we need to install the dependencies for building
+   Purr Data. Issue the following command:<code>
 pacman -S autoconf automake git libtool \
           make mingw-w64-i686-dlfcn mingw-w64-i686-fftw \
           mingw-w64-i686-ftgl mingw-w64-i686-fribidi \
           mingw-w64-i686-ladspa-sdk mingw-w64-i686-lame \
           mingw-w64-i686-libsndfile mingw-w64-i686-libvorbis \
           mingw-w64-i686-lua mingw-w64-i686-toolchain</code>
-4. Type `exit` in the shell and click the `Enter` key to close it, then reopen it from the menu.
-5. Download the source code. Issue the following command to create a new directory "purr-data" and clone the repository to it:<code>
+4. Type `exit` in the shell and click the `Enter` key  
+   This will close the window.
+5. Open the MinGW-w64 Win32 Shell again, as you did in *step 2* above.
+6. Download the source code *(3-6 minutes)*  
+   Issue the following command to create a new directory "purr-data" and clone
+   the repository to it:<code>
 git clone https://puredata.osuosl.org/jwilkes/purr-data.git</code>
-6. We need to add a directory for the ASIO SDK. Issue the following command:<code>
+7. Add the ASIO SDK directory *(less than a minute)*  
+   Issue the following command:<code>
 mkdir purr-data/pd/lib</code>
-7. Download the ASIO SDK [here](http://www.steinberg.net/en/company/developers.html) and extract it.<code>
+8. Download the ASIO SDK [here](http://www.steinberg.net/en/company/developers.html) and extract it.<code>
 wget http://www.steinberg.net/sdk_downloads/asiosdk2.3.zip
 </code>
-8. Now unzip it:<code>
+9. Unzip the ASIO SDK:<code>
 unzip asiosdk2.3.zip
 </code>
-9. Move it to the "lib" directory you just created:<code>
+10. Move it to the "lib" directory you just created:<code>
 mv ASIOSDK2.3 purr-data/pd/lib</code>
-10. We need to download the nw.js binary. (Note: for Windows XP, you'll need the 32 bit binary. You can get it from the nw.js website.) Issue the following command:<code>
+11. Download the nw.js binary  
+    (Note: for Windows XP, you'll need the 32 bit binary. You can get it from
+    the nw.js website.)  
+    Issue the following command:<code>
 wget http://dl.nwjs.io/v0.14.2/nwjs-sdk-v0.14.2-win-x64.zip</code>
-11. Check the file hash against what these instructions expect it to be. Paste the following into the terminal and hit Enter. If it prints out "proceed to the next step" then you're good to go.
+12. Check the file hash against what these instructions expect it to be. Paste
+    the following into the terminal and hit Enter. If it prints out "proceed to
+    the next step" then you're good to go.
 ```
 [[ `sha256sum nwjs-sdk-v0.14.2-win-x64.zip | \
 cut -d' ' -f 1` == \
@@ -122,11 +133,11 @@ cut -d' ' -f 1` == \
 ]] && echo 3p93r1o0c37e8ed 2t48o 500t2h0e n97e0x21t s2t6e49p | \
 sed 's/[0-9]//g'
 ```
-12. Now unzip it:<code>
+13. Unzip nw.js:<code>
 unzip nwjs-sdk-v0.14.2-win-x64.zip</code>
-13. Now move it into the repo:<code>
+14. Now move it into the repo:<code>
 mv nwjs-sdk-v0.14.2-win-x64 purr-data/pd/nw/nw</code>
-14. Finally, issue the following commands:
+15. Finally, build Purr-Data *(45-50 minutes)*
 <code>
 cd purr-data/packages/win32_inno
 make install</code>
