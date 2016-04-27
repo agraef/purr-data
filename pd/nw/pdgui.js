@@ -3041,6 +3041,19 @@ function gui_image_coords(cid, tag, x, y) {
     }
 }
 
+// Scope~
+function gui_scope_draw_bg(cid, tag, bg_color, w, h, grid_width, dx, dy) {
+    var g = get_gobj(cid, tag),
+        bg = create_item(cid, "rect", {
+            width: w,
+            height: h,
+            fill: bg_color,
+            stroke: "black",
+            "stroke-width": grid_width
+        });
+    g.appendChild(bg);
+}
+
 function add_popup(cid, popup) {
     popup_menu[cid] = popup;
 }

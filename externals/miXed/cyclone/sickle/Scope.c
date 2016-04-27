@@ -705,8 +705,10 @@ static void scope_drawbg(t_scope *x, t_canvas *cv,
 {
     int i;
     float dx, dy, xx, yy;
+    char bgcolor[20];
     dx = (x2 - x1) * 0.125;
     dy = (y2 - y1) * 0.25;
+    sprintf(bgcolor, "#%2.2x%2.2x%2.2x", x->x_bgred, x->x_bggreen, x->x_bgblue);
     sys_vgui(".x%x.c create rectangle %d %d %d %d\
  -fill #%2.2x%2.2x%2.2x -width %f -tags {%s %s}\n",
 	     cv, x1, y1, x2, y2,
@@ -720,6 +722,18 @@ static void scope_drawbg(t_scope *x, t_canvas *cv,
 	sys_vgui(".x%x.c create line %d %f %d %f\
  -width %f -tags {%s %s}\n", cv, x1, yy, x2, yy,
 		 SCOPE_GRIDWIDTH, x->x_gridtag, x->x_tag);
+// parameters for GUI message:
+// cv = canvas
+// x2 - x1, y2 - y1, bgcolor SCOPE_GRIDWIDTH, dx, dy
+    gui_vmess("gui_scope_draw_bg", "xxsiifff",
+        glist_getcanvas(cv),
+        x,
+        bgcolor,
+        x2 - x1,
+        y2 - y1,
+        SCOPE_GRIDWIDTH,
+        dx,
+        dy);
 }
 
 static void scope_drawmono(t_scope *x, t_canvas *cv)
@@ -807,6 +821,15 @@ static void scope_vis(t_gobj *z, t_glist *glist, int vis)
     t_canvas *cv = scope_getcanvas(x, glist);
     if (vis)
     {
+        int x1, y1, x2, y2;
+	scope_getrect(z, glist, &x1, &y1, &x2, &y2);
+        gui_vmess("gui_gobj_new", "xxsiii",
+            glist_getcanvas(glist),
+            x,
+            "obj",
+            x1,
+            y1,
+            glist_istoplevel(glist));
 	t_scopehandle *sh = (t_scopehandle *)x->x_handle;
 #if FORKY_VERSION < 37
 	rtext_new(glist, t, glist->gl_editor->e_rtext, 0);
@@ -823,7 +846,8 @@ static void scope_vis(t_gobj *z, t_glist *glist, int vis)
 	t_rtext *rt = glist_findrtext(glist, t);
 	if (rt) rtext_free(rt);
 #endif
-	sys_vgui(".x%x.c delete %s\n", cv, x->x_tag);
+	//sys_vgui(".x%x.c delete %s\n", cv, x->x_tag);
+        gui_vmess("gui_gobj_erase", "xx", glist_getcanvas(glist), x);
 	x->x_canvas = 0;
     }
 }
