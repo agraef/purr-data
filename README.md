@@ -111,7 +111,7 @@ git clone https://puredata.osuosl.org/jwilkes/purr-data.git</code>
 7. Add the ASIO SDK directory *(less than a minute)*  
    Issue the following command:<code>
 mkdir purr-data/pd/lib</code>
-8. Download the ASIO SDK [here](http://www.steinberg.net/en/company/developers.html) and extract it. *(2 minutes)*<code>
+8. Download the ASIO SDK *(2 minutes)*<code>
 wget http://www.steinberg.net/sdk_downloads/asiosdk2.3.zip
 </code>
 9. Unzip the ASIO SDK: *(less than a minute)*<code>
