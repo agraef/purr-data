@@ -90,7 +90,7 @@ http://l2ork.music.vt.edu/main/?page_id=56#install-dev
    msys2 adds three Start Menu items for different "flavors" of shell:  
    + MinGW-w64 Win32 Shell
    + MinGW-w64 Win64 Shell, and
-   + MSYS Shell  
+   + MSYS Shell
    Click the menu item for MinGW-w64 Win32 Shell.
 3. Once the shell opens, we need to install the dependencies for building Purr Data. Issue the following command:<code>
 pacman -S autoconf automake git libtool \
