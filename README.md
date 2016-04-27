@@ -110,15 +110,15 @@ git clone https://puredata.osuosl.org/jwilkes/purr-data.git</code>
 7. Add the ASIO SDK directory *(less than a minute)*  
    Issue the following command:<code>
 mkdir purr-data/pd/lib</code>
-8. Download the ASIO SDK [here](http://www.steinberg.net/en/company/developers.html) and extract it.<code>
+8. Download the ASIO SDK [here](http://www.steinberg.net/en/company/developers.html) and extract it. *(2 minutes)*<code>
 wget http://www.steinberg.net/sdk_downloads/asiosdk2.3.zip
 </code>
-9. Unzip the ASIO SDK:<code>
+9. Unzip the ASIO SDK: *(less than a minute)*<code>
 unzip asiosdk2.3.zip
 </code>
-10. Move it to the "lib" directory you just created:<code>
+10. Move it to the "lib" directory you just created: *(less than a minute)*<code>
 mv ASIOSDK2.3 purr-data/pd/lib</code>
-11. Download the nw.js binary  
+11. Download the nw.js binary *(3-6 minutes)*  
     (Note: for Windows XP, you'll need the 32 bit binary. You can get it from
     the nw.js website.)  
     Issue the following command:<code>
@@ -133,13 +133,16 @@ cut -d' ' -f 1` == \
 ]] && echo 3p93r1o0c37e8ed 2t48o 500t2h0e n97e0x21t s2t6e49p | \
 sed 's/[0-9]//g'
 ```
-13. Unzip nw.js:<code>
+13. Unzip nw.js: *(less than a minute)*<code>
 unzip nwjs-sdk-v0.14.2-win-x64.zip</code>
-14. Now move it into the repo:<code>
+14. Now move it into the repo: *(less than a minute)*<code>
 mv nwjs-sdk-v0.14.2-win-x64 purr-data/pd/nw/nw</code>
-15. Finally, build Purr-Data *(45-50 minutes)*
-<code>
-cd purr-data/packages/win32_inno
+15. Enter the purr-data directory *(less than a minute)*<code>
+cd purr-data/packages/win32_inno</code>
+16. Download all submodules *(3 minutes)*  
+    Use the following command:<code>
+git submodule init && git submodule sync && git submodule update</code>
+17. Finally, build Purr-Data *(45-50 minutes)*<code>
 make install</code>
 
 two remaining issues:
