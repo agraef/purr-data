@@ -3067,7 +3067,6 @@ function gui_scope_draw_bg(cid, tag, bg_color, w, h, grid_width, dx, dy) {
         fill: "none",
         stroke: "black",
         "stroke-width": grid_width,
-        "shape-rendering": "geometricPrecision"
     });
     g.appendChild(bg);
     g.appendChild(path);
