@@ -3050,8 +3050,27 @@ function gui_scope_draw_bg(cid, tag, bg_color, w, h, grid_width, dx, dy) {
             fill: bg_color,
             stroke: "black",
             "stroke-width": grid_width
-        });
+        }),
+        path,
+        path_string = "",
+        i, x, y, align_x, align_y;
+    for (i = 0, x = dx; i < 7; i++, x += dx) {
+        align_x = (x|0) === x ? x : Math.round(x);
+        path_string += ["M", 0, 0, align_x, 0, align_x, h].join(" ");
+    }
+    for (i = 0, y = dy; i < 3; i++, y += dy) {
+        align_y = (y|0) === y ? y : Math.round(y);
+        path_string += ["M", 0, 0, 0, align_y, w, align_y].join(" ");
+    }
+    path = create_item(cid, "path", {
+        d: path_string,
+        fill: "none",
+        stroke: "black",
+        "stroke-width": grid_width,
+        "shape-rendering": "geometricPrecision"
+    });
     g.appendChild(bg);
+    g.appendChild(path);
 }
 
 function add_popup(cid, popup) {
