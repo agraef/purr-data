@@ -654,6 +654,13 @@ static void scope_drawfgxy(t_scope *x, t_canvas *cv,
     sprintf(cmd2, "-fill #%2.2x%2.2x%2.2x -width %f -tags {%s %s}\n ",
 	    x->x_fgred, x->x_fggreen, x->x_fgblue,
 	    SCOPE_FGWIDTH, x->x_fgtag, x->x_tag);
+    /* Not sure we really need the conditional here, but it's
+       difficult to trust external libs... */
+    if (x->x_bufsize)
+    {
+        //gui_start_vmess("gui_scope_configure_fg", "xx", cv, x);
+	//gui_start_array();
+    }
     while (nleft > SCOPE_GUICHUNKXY)
     {
 	int i = SCOPE_GUICHUNKXY;
@@ -698,6 +705,11 @@ static void scope_drawfgxy(t_scope *x, t_canvas *cv,
     }
     if (chunkp > chunk)
 	sys_gui(chunk);
+    if (x->x_bufsize)
+    {
+        //gui_end_array();
+        //gui_end_vmess();
+    }
 }
 
 static void scope_drawbg(t_scope *x, t_canvas *cv,
