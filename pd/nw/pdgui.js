@@ -3053,14 +3053,18 @@ function gui_scope_draw_bg(cid, tag, bg_color, w, h, grid_width, dx, dy) {
         }),
         path,
         path_string = "",
+        foreground_path, // to be used for the foreground lines
         i, x, y, align_x, align_y;
+    // Path strings for the grid lines
+    // vertical lines...
     for (i = 0, x = dx; i < 7; i++, x += dx) {
         align_x = (x|0) === x ? x : Math.round(x);
-        path_string += ["M", 0, 0, align_x, 0, align_x, h].join(" ");
+        path_string += ["M", align_x, 0, "V", h].join(" ");
     }
+    // horizontal lines...
     for (i = 0, y = dy; i < 3; i++, y += dy) {
         align_y = (y|0) === y ? y : Math.round(y);
-        path_string += ["M", 0, 0, 0, align_y, w, align_y].join(" ");
+        path_string += ["M", 0, align_y, "H", w].join(" ");
     }
     path = create_item(cid, "path", {
         d: path_string,
@@ -3068,8 +3072,17 @@ function gui_scope_draw_bg(cid, tag, bg_color, w, h, grid_width, dx, dy) {
         stroke: "black",
         "stroke-width": grid_width,
     });
+    // We go ahead and create a path to be used in the foreground. We'll
+    // set the actual path data in the draw/redraw functions. Doing it this
+    // way will save us having to create and destroy DOM objects each time
+    // we redraw the foreground
+    foreground_path = create_item(cid, "path", {
+        fill: "none",
+        id: "fgxy"
+    });
     g.appendChild(bg);
     g.appendChild(path);
+    g.appendChild(foreground_path);
 }
 
 function add_popup(cid, popup) {

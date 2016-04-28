@@ -722,6 +722,11 @@ static void scope_drawbg(t_scope *x, t_canvas *cv,
 	sys_vgui(".x%x.c create line %d %f %d %f\
  -width %f -tags {%s %s}\n", cv, x1, yy, x2, yy,
 		 SCOPE_GRIDWIDTH, x->x_gridtag, x->x_tag);
+    /* Here we draw the background, _and_ we create the paths
+       for the foreground paths. The paths will get filled with
+       data in scope_drawfgxy, etc. This should be cheaper than
+       creating and destroying a bunch of DOM objects on every
+       redraw. */
     gui_vmess("gui_scope_draw_bg", "xxsiifff",
         glist_getcanvas(cv),
         x,
