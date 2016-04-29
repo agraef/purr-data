@@ -80,7 +80,7 @@ Then follow the steps outlined here:
 http://l2ork.music.vt.edu/main/?page_id=56#install-dev
 
 #### Windows 32-bit Using msys2
-Time to build: *roughly 1.5 hours*
+Time to build: *roughly 1.5 hours-- 30 minutes of this is for Gem alone*
 
 Important note: check the name of your Windows user account. If it has a space
 in it-- like "My Home Computer" or "2nd Laptop", then **stop**. You may not
