@@ -227,7 +227,7 @@ function create_menu(gui, type) {
     }
     editMenu.append(m.edit.preferences = new gui.MenuItem({
         label: l("menu.preferences"),
-        key: "p",
+        key: osx ? "," : "p",
         modifiers: cmd_or_ctrl,
         tooltip: l("menu.preferences_tt")
     }));
