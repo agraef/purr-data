@@ -3048,6 +3048,7 @@ function gui_scope_draw_bg(cid, tag, fg_color, bg_color, w, h, grid_width, dx, d
             width: w,
             height: h,
             fill: bg_color,
+            class: "bg",
             stroke: "black",
             "stroke-width": grid_width
         }),
@@ -3107,6 +3108,25 @@ function gui_scope_configure_fg_xy(cid, tag, data_array) {
 
 function gui_scope_configure_fg_mono(cid, tag, data_array) {
     scope_configure_fg(cid, tag, ".fgmono", data_array);
+}
+
+function gui_scope_configure_bg_color(cid, tag, color) {
+    var g = get_gobj(cid, tag),
+        elem = g.querySelector(".bg");
+    configure_item(elem, { fill: color });
+}
+
+function gui_scope_configure_fg_color(cid, tag, color) {
+     var g = get_gobj(cid, tag),
+        xy = g.querySelector(".fgxy"),
+        mono = g.querySelector(".fgmono");
+    configure_item(xy, { stroke: color });
+    configure_item(mono, { stroke: color });
+}
+
+function gui_scope_clear_fg(cid, tag) {
+    scope_configure_fg(cid, tag, ".fgxy", []);
+    scope_configure_fg(cid, tag, ".fgmono", []);
 }
 
 function add_popup(cid, popup) {

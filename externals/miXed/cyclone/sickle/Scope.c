@@ -505,8 +505,15 @@ static void scope_frgb(t_scope *x, t_symbol *s, int ac, t_atom *av)
     x->x_fggreen = (int)fggreen;
     x->x_fgblue = (int)fgblue;
     if (cv = scope_isvisible(x))
-	sys_vgui(".x%x.c itemconfigure %s -fill #%2.2x%2.2x%2.2x\n",
-		 cv, x->x_fgtag, x->x_fgred, x->x_fggreen, x->x_fgblue);
+    {
+        char color[20];
+        sprintf(color, "#%2.2x%2.2x%2.2x",
+            x->x_fgred, x->x_fggreen, x->x_fgblue);
+	//sys_vgui(".x%x.c itemconfigure %s -fill #%2.2x%2.2x%2.2x\n",
+	//	 cv, x->x_fgtag, x->x_fgred, x->x_fggreen, x->x_fgblue);
+        gui_vmess("gui_scope_configure_fg_color", "xxs",
+            cv, x, color);
+    }
 }
 
 static void scope_brgb(t_scope *x, t_symbol *s, int ac, t_atom *av)
@@ -528,8 +535,15 @@ static void scope_brgb(t_scope *x, t_symbol *s, int ac, t_atom *av)
     x->x_bggreen = (int)bggreen;
     x->x_bgblue = (int)bgblue;
     if (cv = scope_isvisible(x))
-	sys_vgui(".x%x.c itemconfigure %s -fill #%2.2x%2.2x%2.2x\n",
-		 cv, x->x_bgtag, x->x_bgred, x->x_bggreen, x->x_bgblue);
+    {
+        char color[20];
+        sprintf(color, "#%2.2x%2.2x%2.2x",
+            x->x_bgred, x->x_bggreen, x->x_bgblue);
+	//sys_vgui(".x%x.c itemconfigure %s -fill #%2.2x%2.2x%2.2x\n",
+	//	 cv, x->x_bgtag, x->x_bgred, x->x_bggreen, x->x_bgblue);
+        gui_vmess("gui_scope_configure_bg_color", "xxs",
+            cv, x, color);
+    }
 }
 
 static void scope_getrect(t_gobj *z, t_glist *glist,
@@ -837,7 +851,8 @@ static void scope_redrawxy(t_scope *x, t_canvas *cv)
 
 static void scope_revis(t_scope *x, t_canvas *cv)
 {
-    sys_vgui(".x%x.c delete %s\n", cv, x->x_tag);
+//    sys_vgui(".x%x.c delete %s\n", cv, x->x_tag);
+    gui_vmess("gui_scope_clear_fg", "xx", cv, x);
     if (x->x_xymode)
 	scope_drawxy(x, cv);
     else
@@ -927,6 +942,7 @@ static void scope_setxymode(t_scope *x, int xymode)
 	if (cv = scope_isvisible(x))
 	{
 	    sys_vgui(".x%x.c delete %s\n", cv, x->x_fgtag);
+            gui_vmess("gui_scope_clear_fg", "xx", cv, x);
 	    if (!xymode)
 	    {
 		int x1, y1, x2, y2;
