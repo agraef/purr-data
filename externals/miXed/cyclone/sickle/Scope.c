@@ -570,7 +570,12 @@ static void scope_displace(t_gobj *z, t_glist *glist, int dx, int dy)
     if (glist_isvisible(glist))
     {
 	t_canvas *cv = scope_getcanvas(x, glist);
-	sys_vgui(".x%x.c move %s %d %d\n", cv, x->x_tag, dx, dy);
+	//sys_vgui(".x%x.c move %s %d %d\n", cv, x->x_tag, dx, dy);
+        gui_vmess("gui_scope_displace", "xxii",
+            cv,
+            x,
+            dx,
+            dy);
 	canvas_fixlinesfor(cv, t);
     }
 }
@@ -617,7 +622,10 @@ static void scope_delete(t_gobj *z, t_glist *glist)
     canvas_deletelinesfor(glist, (t_text *)z);
 }
 
-/* we might not need this... */
+/* We probably don't need this anymore. We're creating the fg paths 
+   when we draw the background, so we only need to configure their 
+   data using the redraw methods. It's no longer used, but we should
+   probably test a bit more before removing it... */
 static void scope_drawfgmono(t_scope *x, t_canvas *cv,
 			     int x1, int y1, int x2, int y2)
 {
@@ -737,19 +745,19 @@ static void scope_drawbg(t_scope *x, t_canvas *cv,
     dy = (y2 - y1) * 0.25;
     sprintf(fgcolor, "#%2.2x%2.2x%2.2x", x->x_fgred, x->x_fggreen, x->x_fgblue);
     sprintf(bgcolor, "#%2.2x%2.2x%2.2x", x->x_bgred, x->x_bggreen, x->x_bgblue);
-    sys_vgui(".x%x.c create rectangle %d %d %d %d\
+    //sys_vgui(".x%x.c create rectangle %d %d %d %d\
  -fill #%2.2x%2.2x%2.2x -width %f -tags {%s %s}\n",
-	     cv, x1, y1, x2, y2,
-	     x->x_bgred, x->x_bggreen, x->x_bgblue,
-	     SCOPE_GRIDWIDTH, x->x_bgtag, x->x_tag);
-    for (i = 0, xx = x1 + dx; i < 7; i++, xx += dx)
-	sys_vgui(".x%x.c create line %f %d %f %d\
+    //   cv, x1, y1, x2, y2,
+    //   x->x_bgred, x->x_bggreen, x->x_bgblue,
+    //   SCOPE_GRIDWIDTH, x->x_bgtag, x->x_tag);
+    //for (i = 0, xx = x1 + dx; i < 7; i++, xx += dx)
+    //    sys_vgui(".x%x.c create line %f %d %f %d\
  -width %f -tags {%s %s}\n", cv, xx, y1, xx, y2,
-		 SCOPE_GRIDWIDTH, x->x_gridtag, x->x_tag);
-    for (i = 0, yy = y1 + dy; i < 3; i++, yy += dy)
-	sys_vgui(".x%x.c create line %d %f %d %f\
+    //        SCOPE_GRIDWIDTH, x->x_gridtag, x->x_tag);
+    //for (i = 0, yy = y1 + dy; i < 3; i++, yy += dy)
+    //    sys_vgui(".x%x.c create line %d %f %d %f\
  -width %f -tags {%s %s}\n", cv, x1, yy, x2, yy,
-		 SCOPE_GRIDWIDTH, x->x_gridtag, x->x_tag);
+    //        SCOPE_GRIDWIDTH, x->x_gridtag, x->x_tag);
     /* Here we draw the background, _and_ we create the paths
        for the foreground paths. The paths will get filled with
        data in scope_drawfgxy, etc. This should be cheaper than
@@ -845,7 +853,7 @@ static void scope_redrawxy(t_scope *x, t_canvas *cv)
 {
     int x1, y1, x2, y2;
     scope_getrect((t_gobj *)x, x->x_glist, &x1, &y1, &x2, &y2);
-    sys_vgui(".x%x.c delete %s\n", cv, x->x_fgtag);
+    //sys_vgui(".x%x.c delete %s\n", cv, x->x_fgtag);
     scope_drawfgxy(x, cv, x1, y1, x2, y2);
 }
 
@@ -941,13 +949,14 @@ static void scope_setxymode(t_scope *x, int xymode)
 	t_canvas *cv;
 	if (cv = scope_isvisible(x))
 	{
-	    sys_vgui(".x%x.c delete %s\n", cv, x->x_fgtag);
+	    //sys_vgui(".x%x.c delete %s\n", cv, x->x_fgtag);
             gui_vmess("gui_scope_clear_fg", "xx", cv, x);
 	    if (!xymode)
 	    {
 		int x1, y1, x2, y2;
 		scope_getrect((t_gobj *)x, x->x_glist, &x1, &y1, &x2, &y2);
-		scope_drawfgmono(x, cv, x1, y1, x2, y2);
+		//scope_drawfgmono(x, cv, x1, y1, x2, y2);
+                scope_redrawmono(x, cv);
 	    }
 	}
 	x->x_xymode = xymode;

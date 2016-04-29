@@ -3129,6 +3129,10 @@ function gui_scope_clear_fg(cid, tag) {
     scope_configure_fg(cid, tag, ".fgmono", []);
 }
 
+function gui_scope_displace(cid, tag, dx, dy) {
+    gui_text_displace(cid, tag, dx, dy);
+}
+
 function add_popup(cid, popup) {
     popup_menu[cid] = popup;
 }
