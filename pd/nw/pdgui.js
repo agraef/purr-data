@@ -918,7 +918,14 @@ function gui_canvas_cursor(cid, pd_event_type) {
             c = "default";
             break;
         case "cursor_runmode_clickme":
-            c = "pointer";
+            // The "pointer" icon seems the natural choice for "clickme" here,
+            // but unfortunately it creates ambiguity with the default editmode
+            // pointer icon. Not sure what the best solution is, but for now
+            // we'll just use "default" for clickme. That creates another
+            // ambiguity, but it's less of an issue since most of the
+            // clickable runtime items are fairly obvious anyway.
+            //c = "pointer";
+            c = "default";
             break;
         case "cursor_runmode_thicken":
             c = "inherit";
