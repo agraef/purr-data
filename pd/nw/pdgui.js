@@ -3042,7 +3042,7 @@ function gui_image_coords(cid, tag, x, y) {
 }
 
 // Scope~
-function gui_scope_draw_bg(cid, tag, bg_color, w, h, grid_width, dx, dy) {
+function gui_scope_draw_bg(cid, tag, fg_color, bg_color, w, h, grid_width, dx, dy) {
     var g = get_gobj(cid, tag),
         bg = create_item(cid, "rect", {
             width: w,
@@ -3053,7 +3053,8 @@ function gui_scope_draw_bg(cid, tag, bg_color, w, h, grid_width, dx, dy) {
         }),
         path,
         path_string = "",
-        foreground_path, // to be used for the foreground lines
+        fg_xy_path, // to be used for the foreground lines
+        fg_mono_path,
         i, x, y, align_x, align_y;
     // Path strings for the grid lines
     // vertical lines...
@@ -3076,13 +3077,36 @@ function gui_scope_draw_bg(cid, tag, bg_color, w, h, grid_width, dx, dy) {
     // set the actual path data in the draw/redraw functions. Doing it this
     // way will save us having to create and destroy DOM objects each time
     // we redraw the foreground
-    foreground_path = create_item(cid, "path", {
+    fg_xy_path = create_item(cid, "path", {
         fill: "none",
-        id: "fgxy"
+        stroke: fg_color,
+        class: "fgxy"
+    });
+    fg_mono_path = create_item(cid, "path", {
+        fill: "none",
+        stroke: fg_color,
+        class: "fgmono"
     });
     g.appendChild(bg);
     g.appendChild(path);
-    g.appendChild(foreground_path);
+    g.appendChild(fg_xy_path);
+    g.appendChild(fg_mono_path);
+}
+
+function scope_configure_fg(cid, tag, type, data_array) {
+    var g = get_gobj(cid, tag),
+        fg_path = g.querySelector(type); // class ".fgxy" or ".fgmono"
+    configure_item(fg_path, {
+        d: data_array.join(" ")
+    });
+}
+
+function gui_scope_configure_fg_xy(cid, tag, data_array) {
+    scope_configure_fg(cid, tag, ".fgxy", data_array);
+}
+
+function gui_scope_configure_fg_mono(cid, tag, data_array) {
+    scope_configure_fg(cid, tag, ".fgmono", data_array);
 }
 
 function add_popup(cid, popup) {
