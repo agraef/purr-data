@@ -154,10 +154,8 @@ git submodule init && git submodule sync && git submodule update</code>
 18. Finally, build Purr-Data *(45-50 minutes)*<code>
 make install</code>
 
-two remaining issues:
-zexy - rawprint struct (line 20) already defined when using msys2
+one remaining issue:
 flext - doesn't compile so you have to remove externals/Makefile reference to it (in the big list of externals)
-Gem - copy pd.dll from pd/src to pd/
 
 ### Contributor Guide
 
