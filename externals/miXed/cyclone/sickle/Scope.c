@@ -838,7 +838,7 @@ static void scope_drawmono(t_scope *x, t_canvas *cv)
     int x1, y1, x2, y2;
     scope_getrect((t_gobj *)x, x->x_glist, &x1, &y1, &x2, &y2);
     scope_drawbg(x, cv, x1, y1, x2, y2);
-    scope_drawfgmono(x, cv, x1, y1, x2, y2);
+    //scope_drawfgmono(x, cv, x1, y1, x2, y2);
 }
 
 static void scope_drawxy(t_scope *x, t_canvas *cv)
@@ -982,44 +982,85 @@ static void scopehandle__clickhook(t_scopehandle *sh, t_floatarg f, t_floatarg x
 
 	t_scope *x = sh->h_master;
 
-	if (xxx) x->scale_offset_x = xxx;
-	if (yyy) x->scale_offset_y = yyy;
+//	if (xxx) x->scale_offset_x = xxx;
+//	if (yyy) x->scale_offset_y = yyy;
 
-    int newstate = (int)f;
-    if (sh->h_dragon && newstate == 0)
+//    int newstate = (int)f;
+//    if (sh->h_dragon && newstate == 0)
+//    {
+//	/* done dragging */
+//	t_canvas *cv;
+//	if (sh->h_dragx || sh->h_dragy) {
+//		x->x_width = x->x_width + sh->h_dragx - x->scale_offset_x;
+//		x->x_height = x->x_height + sh->h_dragy - x->scale_offset_y;
+//	}
+//	if (cv = scope_isvisible(x))
+//	{
+//	    sys_vgui(".x%x.c delete %s\n", cv, sh->h_outlinetag);
+//	    scope_revis(x, cv);
+//	    sys_vgui("destroy %s\n", sh->h_pathname);
+//	    scope_select((t_gobj *)x, x->x_glist, 1);
+//	    canvas_fixlinesfor(x->x_glist, (t_text *)x);  /* 2nd inlet */
+//	}
+//    }
+//    else if (!sh->h_dragon && newstate)
+//    {
+//	/* dragging */
+//	t_canvas *cv;
+//	if (cv = scope_isvisible(x))
+//	{
+//	    int x1, y1, x2, y2;
+//	    scope_getrect((t_gobj *)x, x->x_glist, &x1, &y1, &x2, &y2);
+//	    sys_vgui("lower %s\n", sh->h_pathname);
+//	    sys_vgui(".x%x.c create rectangle %d %d %d %d\
+// -outline $select_color -width %f -tags %s\n",
+//		     cv, x1, y1, x2, y2, SCOPE_SELBDWIDTH, sh->h_outlinetag);
+//	}
+//	sh->h_dragx = 0;
+//	sh->h_dragy = 0;
+//    }
+    sh->h_dragon = f;
+}
+
+static void scopehandle__motionhook(t_scopehandle *sh,
+				    t_floatarg mouse_x, t_floatarg mouse_y)
+{
+    t_scope *x = (t_scope *)(sh->h_master);
+    int x1, y1, x2, y2, width, height;
+    scope_getrect((t_gobj *)x, x->x_glist, &x1, &y1, &x2, &y2);
+    width = mouse_x - x1;
+    height = mouse_y - y1;
+    x->x_width =  width < SCOPE_MINWIDTH ? SCOPE_MINWIDTH : width;
+    x->x_height = height < SCOPE_MINHEIGHT ? SCOPE_MINHEIGHT : height;
+
+    /* This is just a quick and dirty way to redraw, which has the side
+       effect of erasing the waveform until the next tick. For a more elegant
+       approach we'd want to call the "revis" function, but that would also
+       require an extra gui function for changing the size of the background. */
+    if (glist_isvisible(x->x_glist))
     {
-	/* done dragging */
-	t_canvas *cv;
-	if (sh->h_dragx || sh->h_dragy) {
-		x->x_width = x->x_width + sh->h_dragx - x->scale_offset_x;
-		x->x_height = x->x_height + sh->h_dragy - x->scale_offset_y;
-	}
-	if (cv = scope_isvisible(x))
-	{
-	    sys_vgui(".x%x.c delete %s\n", cv, sh->h_outlinetag);
-	    scope_revis(x, cv);
-	    sys_vgui("destroy %s\n", sh->h_pathname);
-	    scope_select((t_gobj *)x, x->x_glist, 1);
-	    canvas_fixlinesfor(x->x_glist, (t_text *)x);  /* 2nd inlet */
-	}
+        scope_vis((t_gobj *)x, x->x_glist, 0);
+        scope_vis((t_gobj *)x, x->x_glist, 1);
     }
-    else if (!sh->h_dragon && newstate)
-    {
-	/* dragging */
-	t_canvas *cv;
-	if (cv = scope_isvisible(x))
-	{
-	    int x1, y1, x2, y2;
-	    scope_getrect((t_gobj *)x, x->x_glist, &x1, &y1, &x2, &y2);
-	    sys_vgui("lower %s\n", sh->h_pathname);
-	    sys_vgui(".x%x.c create rectangle %d %d %d %d\
- -outline $select_color -width %f -tags %s\n",
-		     cv, x1, y1, x2, y2, SCOPE_SELBDWIDTH, sh->h_outlinetag);
-	}
-	sh->h_dragx = 0;
-	sh->h_dragy = 0;
-    }
-    sh->h_dragon = newstate;
+//    if (sh->h_dragon)
+//    {
+//	t_scope *x = sh->h_master;
+//	int dx = (int)f1, dy = (int)f2;
+//	int x1, y1, x2, y2, newx, newy;
+//	scope_getrect((t_gobj *)x, x->x_glist, &x1, &y1, &x2, &y2);
+//	newx = x2 - x->scale_offset_x + dx;
+//	newy = y2 - x->scale_offset_y + dy;
+//
+//	if (newx > x1 + SCOPE_MINWIDTH && newy > y1 + SCOPE_MINHEIGHT)
+//	{
+//	    t_canvas *cv;
+//	    if (cv = scope_isvisible(x))
+//		sys_vgui(".x%x.c coords %s %d %d %d %d\n",
+//			 cv, sh->h_outlinetag, x1, y1, newx, newy);
+//	    sh->h_dragx = dx;
+//	    sh->h_dragy = dy;
+//	}
+//    }
 }
 
 /* wrapper method for forwarding "scopehandle" data */
@@ -1030,28 +1071,12 @@ static void scope_click_for_resizing(t_scope *x, t_floatarg f, t_floatarg xxx,
     scopehandle__clickhook(sh, f, xxx, yyy);
 }
 
-static void scopehandle__motionhook(t_scopehandle *sh,
-				    t_floatarg f1, t_floatarg f2)
+/* another wrapper for forwarding "scopehandle" motion data */
+static void scope_motion_for_resizing(t_scope *x, t_floatarg xxx,
+    t_floatarg yyy)
 {
-    if (sh->h_dragon)
-    {
-	t_scope *x = sh->h_master;
-	int dx = (int)f1, dy = (int)f2;
-	int x1, y1, x2, y2, newx, newy;
-	scope_getrect((t_gobj *)x, x->x_glist, &x1, &y1, &x2, &y2);
-	newx = x2 - x->scale_offset_x + dx;
-	newy = y2 - x->scale_offset_y + dy;
-
-	if (newx > x1 + SCOPE_MINWIDTH && newy > y1 + SCOPE_MINHEIGHT)
-	{
-	    t_canvas *cv;
-	    if (cv = scope_isvisible(x))
-		sys_vgui(".x%x.c coords %s %d %d %d %d\n",
-			 cv, sh->h_outlinetag, x1, y1, newx, newy);
-	    sh->h_dragx = dx;
-	    sh->h_dragy = dy;
-	}
-    }
+    t_scopehandle *sh = (t_scopehandle *)x->x_handle;
+    scopehandle__motionhook(sh, xxx, yyy);
 }
 
 static void scope_free(t_scope *x)
@@ -1153,6 +1178,9 @@ void Scope_tilde_setup(void)
     class_addmethod(scope_class, (t_method)scope_click_for_resizing,
 		    gensym("_click_for_resizing"),
 		    A_FLOAT, A_FLOAT, A_FLOAT, 0);
+    class_addmethod(scope_class, (t_method)scope_motion_for_resizing,
+		    gensym("_motion_for_resizing"),
+		    A_FLOAT, A_FLOAT, 0);
     class_setwidget(scope_class, &scope_widgetbehavior);
     forky_setsavefn(scope_class, scope_save);
     scopehandle_class = class_new(gensym("_scopehandle"), 0, 0,

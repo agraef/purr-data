@@ -5189,6 +5189,11 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
                 pd_vmess(sh, gensym("_motion"), "ff", (t_float)xpos, (t_float)ypos);
                 //pd_vmess(sh, gensym("_click"), "fff", 0, xpos, ypos);
             }
+            else if (ob && pd_class(&ob->te_pd)->c_name == gensym("Scope~"))
+            {
+                pd_vmess((t_pd *)ob, gensym("_motion_for_resizing"),
+                    "ff", (t_float)xpos, (t_float)ypos);
+            }
             else post("not resizable");
         }
         else // resizing a gop rectangle
