@@ -1022,6 +1022,14 @@ static void scopehandle__clickhook(t_scopehandle *sh, t_floatarg f, t_floatarg x
     sh->h_dragon = newstate;
 }
 
+/* wrapper method for forwarding "scopehandle" data */
+static void scope_click_for_resizing(t_scope *x, t_floatarg f, t_floatarg xxx,
+    t_floatarg yyy)
+{
+    t_scopehandle *sh = (t_scopehandle *)x->x_handle;
+    scopehandle__clickhook(sh, f, xxx, yyy);
+}
+
 static void scopehandle__motionhook(t_scopehandle *sh,
 				    t_floatarg f1, t_floatarg f2)
 {
@@ -1140,6 +1148,11 @@ void Scope_tilde_setup(void)
     class_addmethod(scope_class, (t_method)scope_click,
 		    gensym("click"),
 		    A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, 0);
+    /* Big hack for receiving edit-mode resize anchor clicks from
+       g_editor.c. */
+    class_addmethod(scope_class, (t_method)scope_click_for_resizing,
+		    gensym("_click_for_resizing"),
+		    A_FLOAT, A_FLOAT, A_FLOAT, 0);
     class_setwidget(scope_class, &scope_widgetbehavior);
     forky_setsavefn(scope_class, scope_save);
     scopehandle_class = class_new(gensym("_scopehandle"), 0, 0,

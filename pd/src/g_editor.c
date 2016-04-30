@@ -3284,8 +3284,13 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
             /* look for an outlet we just clicked onto */
             int noutlet;
             int ninlet;
-                /* resize?  only for "true" text boxes or canvases*/
-            if (ob && ob->te_iemgui && xpos >= x2-4 && ypos > y2-6)
+                /* resize?  only for "true" text boxes, canvases, iemguis,
+                   and -- using an awful hack-- for the Scope~ object
+                   by checking for the class name below */
+            if (ob &&
+                   (ob->te_iemgui
+                       || pd_class(&ob->te_pd)->c_name == gensym("Scope~"))
+                   && xpos >= x2-4 && ypos > y2-6)
             {
                 if (doit)
                 {
@@ -3294,9 +3299,17 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                     x->gl_editor->e_ywas = y1;
                     x->gl_editor->e_xnew = xpos;
                     x->gl_editor->e_ynew = ypos;
-                    t_pd *sh = (t_pd *)((t_iemgui *)ob)->x_handle;
-                    pd_vmess(sh, gensym("_click"), "fff",
-                        (t_float)1, (t_float)xpos, (t_float)ypos);
+                    if (ob->te_iemgui)
+                    {
+                        t_pd *sh = (t_pd *)((t_iemgui *)ob)->x_handle;
+                        pd_vmess(sh, gensym("_click"), "fff",
+                            (t_float)1, (t_float)xpos, (t_float)ypos);
+                    }
+                    else
+                    {
+                        pd_vmess((t_pd *)ob, gensym("_click_for_resizing"),
+                           "fff", (t_float)1, (t_float)xpos, (t_float)ypos);
+                    }
                 }
                 else
                 {
