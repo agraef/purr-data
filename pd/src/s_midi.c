@@ -525,13 +525,13 @@ void sys_get_midi_apis(char *buf)
 void sys_get_midi_apis2(t_binbuf *buf)
 {
     int n = 0;
-#ifndef USEAPI_ALSA
-    binbuf_addv(buf, "si", gensym("OSS"), API_DEFAULT); n++;
-#else
+#ifdef USEAPI_OSS
+    binbuf_addv(buf, "si", gensym("OSS"), API_DEFAULT);
     n++;
 #endif
 #ifdef USEAPI_ALSA
-    binbuf_addv(buf, "si", gensym("ALSA"), API_ALSA); n++;
+    binbuf_addv(buf, "si", gensym("ALSA"), API_ALSA);
+    n++;
 #endif
     /* then again, if only one API (or none) we don't offer any choice. */
 //    if (n < 2)
