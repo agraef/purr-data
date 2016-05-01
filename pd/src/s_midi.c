@@ -678,7 +678,7 @@ void glob_midi_setapi(void *dummy, t_floatarg f)
 
 extern t_class *glob_pdobject;
 
-    /* start an midi settings dialog window */
+    /* start a midi settings dialog window */
 void glob_midi_properties(t_pd *dummy, t_floatarg flongform)
 {
     char buf[1024 + 2 * MAXNDEV*(DEVDESCSIZE+4)];
