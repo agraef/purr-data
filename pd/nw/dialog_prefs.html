@@ -642,6 +642,14 @@ function midi_prefs_callback(attrs) {
             .style.setProperty("display", "none");
         document.getElementsByClassName("alsa_midi")[0]
             .style.setProperty("display", "inherit");
+        // For ALSA, we just set the number of ports we want
+        // for input and output. The tcl/tk interface just reused
+        // the first of the "indevs" for this value, so (for now)
+        // we repeat that mistake here...
+        document.getElementById("alsa_in_ports").value =
+            +get_attr("pd-indevs", attrs)[0];
+        document.getElementById("alsa_out_ports").value =
+            +get_attr("pd-outdevs", attrs)[0];
     } else {
         document.getElementsByClassName("midi_devices")[0]
             .style.setProperty("display", "inherit");
