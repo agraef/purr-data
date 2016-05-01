@@ -526,7 +526,7 @@ void sys_get_midi_apis2(t_binbuf *buf)
 {
     int n = 0;
 #ifdef USEAPI_OSS
-    binbuf_addv(buf, "si", gensym("OSS"), API_DEFAULT);
+    binbuf_addv(buf, "si", gensym("OSS"), API_OSS);
     n++;
 #endif
 #ifdef USEAPI_ALSA
