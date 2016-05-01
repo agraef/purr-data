@@ -85,8 +85,8 @@
           </div>
           <table>
             <tr>
-              <td>
-                Input Devices
+              <td data-i18n="[title]prefs.audio.input_title_tt">
+                <span data-i18n="prefs.audio.input_title"></span>
               </td>
               <td>
                 <span data-i18n="prefs.audio.channels"></span>
@@ -145,8 +145,8 @@
               </td>
             </tr>
             <tr>
-              <td>
-                Output Devices
+              <td data-i18n="[title]prefs.audio.output_title_tt">
+                <span data-i18n="prefs.audio.output_title"></span>
               </td>
               <td>
                 <span data-i18n="prefs.audio.channels"></span>
@@ -215,24 +215,50 @@
               </select>
             </label>
           </div>
+          <div class="tab_settings alsa_midi">
+            <label data-i18n="[title]prefs.midi.alsa_in_ports_tt">
+              <span data-i18n="prefs.midi.alsa_in_ports"></span>
+              <input type="text"
+                     id="alsa_in_ports"
+                     name="alsa_in_ports"
+                     onchange="attr_change(this);">
+            </label>
+            <label data-i18n="[title]prefs.midi.alsa_out_ports_tt">
+              <span data-i18n="prefs.midi.alsa_out_ports"></span>
+              <input type="text"
+                     id="alsa_out_ports"
+                     name="alsa_out_ports"
+                     onchange="attr_change(this);">
+            </label>
+          </div>
 
-          <select id="midi_in1" onchange="dev_change(this);"></select>
-          <br/>
-          <select id="midi_in2" onchange="dev_change(this);"></select>
-          <br/>
-          <select id="midi_in3" onchange="dev_change(this);"></select>
-          <br/>
-          <select id="midi_in4" onchange="dev_change(this);"></select>
-          <br/>
+          <div class="tab_settings midi_devices">
+            <span data-i18n="[title]prefs.midi.input_title_tt">
+              <span data-i18n="prefs.midi.input_title"></span>
+            </span>
+            <br/>
+            <select id="midi_in1" onchange="dev_change(this);"></select>
+            <br/>
+            <select id="midi_in2" onchange="dev_change(this);"></select>
+            <br/>
+            <select id="midi_in3" onchange="dev_change(this);"></select>
+            <br/>
+            <select id="midi_in4" onchange="dev_change(this);"></select>
+            <br/>
 
-          <select id="midi_out1" onchange="dev_change(this);"></select>
-          <br/>
-          <select id="midi_out2" onchange="dev_change(this);"></select>
-          <br/>
-          <select id="midi_out3" onchange="dev_change(this);"></select>
-          <br/>
-          <select id="midi_out4" onchange="dev_change(this);"></select>
-          <br/>
+            <span data-i18n="[title]prefs.midi.output_title_tt">
+              <span data-i18n="prefs.midi.output_title"></span>
+            </span>
+            <br/>
+            <select id="midi_out1" onchange="dev_change(this);"></select>
+            <br/>
+            <select id="midi_out2" onchange="dev_change(this);"></select>
+            <br/>
+            <select id="midi_out3" onchange="dev_change(this);"></select>
+            <br/>
+            <select id="midi_out4" onchange="dev_change(this);"></select>
+            <br/>
+          </div>
         </div>
 
         <div class="tab3">
@@ -476,15 +502,13 @@ function populate_devs(type, attrs) {
 }
 
 function populate_midi_devs(type, attrs) {
-    var devs = get_attr(type === "in" ? "sys-indevs" : "sys-outdevs", attrs);
-    var i, j, opt, elem, chan_elem, chans;
-    pdgui.post("devs are " + devs);
-    pdgui.post("type is " + type + 1);
-    chans = get_attr("pd-" + type + "chans", attrs);
+    var dev_names = get_attr(type === "in" ?
+        "midi-indev-names" : "midi-outdev-names", attrs);
+    var i, j, opt, elem;
+    pdgui.post("dev names are " + dev_names);
+    pdgui.post("type is " + type);
     for (i = 0; i < 4; i++) {
-        elem = document.getElementById(type + (i+1));
-        chan_elem = document.getElementById(type + "chans" + (i+1));
-        chan_elem.value = chans[i];
+        elem = document.getElementById("midi_" + type + (i+1));
         // if the user changed the API, we need to remove the old devs
         while (elem.firstChild) {
             elem.removeChild(elem.firstChild);
@@ -494,10 +518,10 @@ function populate_midi_devs(type, attrs) {
         opt.value = -1;
         opt.textContent = "None";
         elem.appendChild(opt);
-        for (j = 0; j < devs.length; j++) {
+        for (j = 0; j < dev_names.length; j++) {
             opt = document.createElement("option");
             opt.value = j;
-            opt.textContent = devs[j];
+            opt.textContent = dev_names[j];
             elem.appendChild(opt);
         }
     }
@@ -609,6 +633,23 @@ function midi_prefs_callback(attrs) {
         );
     }
 
+    // Hide devs and only show the alsa in/out boxes. In the future
+    // we need an additional user friendly alsa interface here-- one that
+    // just lets the user pick a single input device and single output
+    // device, like LMMS does.
+    if (+get_attr("current-api", attrs) === 1) { // ALSA API
+        document.getElementsByClassName("midi_devices")[0]
+            .style.setProperty("display", "none");
+        document.getElementsByClassName("alsa_midi")[0]
+            .style.setProperty("display", "inherit");
+    } else {
+        document.getElementsByClassName("midi_devices")[0]
+            .style.setProperty("display", "inherit");
+        document.getElementsByClassName("alsa_midi")[0]
+            .style.setProperty("display", "none");
+        populate_midi_devs("in", attrs);
+        populate_midi_devs("out", attrs);
+    }
     pdgui.resize_window(pd_object_callback);
 }
 

@@ -359,11 +359,23 @@
       "blocksize": "blocksize",
       "blocksize_tt": "number of samples in a block to be delivered to or received from the audio api",
       "channels": "channels",
-      "channels_tt": "number of channels for this device"
+      "channels_tt": "number of channels for this device",
+      "input_title": "Input Devices",
+      "input_title_tt": "hardware devices used to get audio into Pd",
+      "output_title": "Output Devices",
+      "output_title_tt": "hardware devices to send audio from Pd"
     },
     "midi": {
       "api": "midi api",
-      "api_tt": "midi backend or server used to communicate with midi devices"
+      "api_tt": "midi backend or server used to communicate with midi devices",
+      "alsa_in_ports": "input ports",
+      "alsa_in_ports_tt": "number of input ports for Pd",
+      "alsa_out_ports": "output ports",
+      "alsa_out_ports_tt": "number of output ports for Pd",
+      "input_title": "Input Devices",
+      "input_title_tt": "hardware devices used to get midi data into Pd",
+      "output_title": "Output Devices",
+      "output_title_tt": "hardware devices to send midi data from Pd"
     },
     "ok": "Ok",
     "ok_tt": "Update the audio properties and close the dialog",

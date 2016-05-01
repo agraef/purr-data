@@ -3628,8 +3628,8 @@ function gui_midi_properties(gfxstub, sys_indevs, sys_outdevs,
     pd_indevs, pd_outdevs, midi_attrs) {
     var attrs = midi_attrs.concat([
         "midi-apis", pd_midiapilist,
-        "sys-indevs", sys_indevs,
-        "sys-outdevs", sys_outdevs,
+        "midi-indev-names", sys_indevs,
+        "midi-outdev-names", sys_outdevs,
         "pd-indevs", pd_indevs,
         "pd-outdevs", pd_outdevs,
         ]);
