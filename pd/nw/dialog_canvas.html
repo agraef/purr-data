@@ -399,11 +399,6 @@ function array_choose(array_index) {
         array_attr = pd_garray_attrs[array_index];
     for (name in array_attr) {
         if (array_attr.hasOwnProperty(name)) {
-            console.log("name is " + name);
-        }
-    }
-    for (name in array_attr) {
-        if (array_attr.hasOwnProperty(name)) {
             value = array_attr[name];
             switch (name) {
                 case "array_gfxstub": break;
@@ -424,7 +419,7 @@ function array_choose(array_index) {
                     break;
                 default:
                     // name, size, fill, and outline
-                    pdgui.post("name is " + name);
+                    //pdgui.post("name is " + name);
                     elem = document.getElementsByName(name)[0];
                     elem.value = value;
                     break;
@@ -649,11 +644,6 @@ function register_window_id(gfxstub, attr_objects) {
     var canvas_fieldsets, i, prop;
     // attr_objects[0]: canvas properties
     // attr_objects[1...n-1]: array properties
-    for (prop in attr_objects[0]) {
-        if (attr_objects[0].hasOwnProperty(prop)) {
-            pdgui.post(prop + ": " + attr_objects[0][prop]);
-        }
-    }
     add_events(gfxstub);
     // not sure that we need this for properties windows...
     // pdgui.canvas_map(gfxstub);
@@ -708,14 +698,10 @@ function populate_form(attr_object) {
             // Unhide the span with the class with the same name as the id
             var prop_group = document.getElementsByClassName(prop)[0];
             if (prop_group !== undefined) {
-                console.log("the thing here is " + prop);
                 prop_group.classList.remove("hidden");
-            } else {
-                pdgui.post("Error: couldn't find iemgui prop group for " +
-                    prop);
             }
             if (prop === "display-flags") {
-                // protip: "!!" forces Boolean, "+" forces Number type
+                // reminder: "!!" forces Boolean, "+" forces Number type
                 var flag = +attr_object[prop];
                 document.getElementsByName("gop")[0].checked = !!flag;
                 document.getElementsByName("hide-name")[0].checked = !!(flag & 2);
@@ -734,7 +720,6 @@ function populate_form(attr_object) {
                 } else if (elem[0].type === "checkbox") {
                     // The attr here is a string, so we need to
                     // force it to number, hence the "+" below
-                    pdgui.post("found a CHECKED ITEM!!!");
                     elem[0].checked = +attr_object[prop];
                 } else {
                     elem[0].value = attr_object[prop];
