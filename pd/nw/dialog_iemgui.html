@@ -383,7 +383,6 @@ function pd_symbol_carwash(s) {
 }
 
 function send_params(attrs, create_undo_point) {
-    pdgui.post("we're applying iemgui changes!");
     /* Not sure what these are...
         iemgui_clip_dim $id
         iemgui_clip_num $id
@@ -454,9 +453,7 @@ function send_params(attrs, create_undo_point) {
 
     if (no_log_display) {
         slot5 = attrs["vu-scale"] ? +attrs["vu-scale"] : 0;
-        pdgui.post("slot five is " + slot5);
     }
-    pdgui.post("slot five is " + slot5);
 
     var init = +attrs["init"];
     if (!init) { init = 0; }
@@ -590,9 +587,6 @@ function populate_form(attr_object) {
         if (prop_group !== undefined) {
             console.log("the thing here is " + attr);
             prop_group.classList.remove("hidden");
-        } else {
-            pdgui.post("Error: couldn't find iemgui prop group for " +
-                attr);
         }
         // iemguis use the string 'empty' for null because of
         // the limitations of Pd's state-saving API.  So we have
@@ -604,7 +598,7 @@ function populate_form(attr_object) {
                     var hex_string = Number(attr_object[attr]).toString(16);
                     var color_string = "#" +
                         (hex_string === "0" ? "000000" : hex_string);
-                    pdgui.post("color is " + color_string);
+                    //pdgui.post("color is " + color_string);
                     elem[0].value = color_string;
                 } else if (elem[0].type === "checkbox") {
                     // The attr here is a string, so we need to
