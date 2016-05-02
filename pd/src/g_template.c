@@ -4262,48 +4262,15 @@ t_parentwidgetbehavior draw_widgetbehavior =
 
 static void svg_free_events(t_svg *x)
 {
-    /* This is pretty simplistic-- if the flag is set then we set the
-       event to zero and send the update to the GUI. */
-    if (x->x_events.e_focusin.a_flag == 1)
-    {
-        fielddesc_setfloat_const(&x->x_events.e_focusin.a_attr, 0);
-        svg_update(x, gensym("focusin"));
-    }
-    if (x->x_events.e_activate.a_flag == 1)
-    {
-        fielddesc_setfloat_const(&x->x_events.e_activate.a_attr, 0);
-        svg_update(x, gensym("focusout"));
-    }
-    if (x->x_events.e_click.a_flag == 1)
-    {
-        fielddesc_setfloat_const(&x->x_events.e_click.a_attr, 0);
-        svg_update(x, gensym("click"));
-    }
-    if (x->x_events.e_mousedown.a_flag == 1)
-    {
-        fielddesc_setfloat_const(&x->x_events.e_mousedown.a_attr, 0);
-        svg_update(x, gensym("mousedown"));
-    }
-    if (x->x_events.e_mouseup.a_flag == 1)
-    {
-        fielddesc_setfloat_const(&x->x_events.e_mouseup.a_attr, 0);
-        svg_update(x, gensym("mouseup"));
-    }
-    if (x->x_events.e_mouseover.a_flag == 1)
-    {
-        fielddesc_setfloat_const(&x->x_events.e_mouseover.a_attr, 0);
-        svg_update(x, gensym("mouseover"));
-    }
-    if (x->x_events.e_mousemove.a_flag == 1)
-    {
-        fielddesc_setfloat_const(&x->x_events.e_mousemove.a_attr, 0);
-        svg_update(x, gensym("mousemove"));
-    }
-    if (x->x_events.e_mouseout.a_flag == 1)
-    {
-        fielddesc_setfloat_const(&x->x_events.e_mouseout.a_attr, 0);
-        svg_update(x, gensym("mouseout"));
-    }
+    /* Right now all the events except for "drag" get automatically
+       garbage collected in the GUI.
+       The reason "drag" does not is that it's a kind of "meta-event"--
+       we keep a reference to the "draggable" object and check for it
+       on clicking the canvas. The benefit is there's a single, centralized
+       set of canvas events instead of event listeners for each scalar.
+       Drawback is that we have to manage destroying the "drag" references
+       in the GUI. But eventually all scalar events should be handled this
+       way... */
     if (x->x_events.e_drag.a_flag == 1)
     {
         fielddesc_setfloat_const(&x->x_events.e_drag.a_attr, 0);
