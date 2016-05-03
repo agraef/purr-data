@@ -1,5 +1,5 @@
 #N struct drawtut-line float x float y;
-#N canvas 0 19 638 634 10;
+#N canvas 31 34 638 634 10;
 #X obj 53 84 loadbang;
 #X text 0 1 New Drawing Commands: line;
 #X text 0 1 __________________________;

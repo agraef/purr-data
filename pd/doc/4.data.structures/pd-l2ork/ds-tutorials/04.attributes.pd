@@ -1,5 +1,5 @@
 #N struct drawtut-attr float x float y;
-#N canvas 0 19 517 678 10;
+#N canvas 13 25 517 671 10;
 #X text 0 1 New Drawing Commands: attributes;
 #X text 0 1 ________________________________;
 #X text 53 23 Our shapes are pretty boring so far. Black lines around
@@ -12,7 +12,6 @@ object.;
 #X text 53 123 Svg is a complex specification \, and not all of its
 object attributes are supported in Pd. But the basic ones are.;
 #X obj 53 207 struct drawtut-attr float x float y;
-#X obj 53 313 draw rect 0 0 50 50;
 #X scalar drawtut-attr 55 339 \;;
 #X text 53 153 For example \, below is a [struct] definition \, [draw]
 object and a scalar created from them. Let's send a message to make
@@ -40,7 +39,8 @@ using a [loadbang] message. Notice that attributes will be the same
 for all scalars created from this [struct]. Later you will see how
 to set attributes to be different for each scalar.;
 #X msg 123 252 fill green;
-#X connect 9 0 6 0;
-#X connect 16 0 17 0;
-#X connect 17 0 6 0;
-#X connect 19 0 6 0;
+#X obj 53 313 draw rect 50 50 0 0;
+#X connect 8 0 19 0;
+#X connect 15 0 16 0;
+#X connect 16 0 19 0;
+#X connect 18 0 19 0;

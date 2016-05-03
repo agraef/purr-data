@@ -1,13 +1,12 @@
 #N struct polar-clock float x float y float ax float ay float flag
 float xloc float yloc float mx float my float r;
-#N canvas 0 19 1062 664 10;
-#X scalar polar-clock 281 372 -111.804 -67.5566 1 0 0 50 -150 200 \;
+#N canvas 1 32 1022 664 10;
+#X scalar polar-clock 281 372 131.348 -132.709 0 0 0 50 -150 200 \;
 ;
 #X obj 137 29 struct polar-clock float x float y float ax float ay
 float flag float xloc float yloc float mx float my float r;
 #X obj 139 65 loadbang;
-#X scalar polar-clock 281 372 -44.046 -79.4424 1 0 0 50 -110 160 \;
-;
+#X scalar polar-clock 281 372 210 50 0 0 0 50 -110 160 \;;
 #X scalar polar-clock 281 372 -53.9232 -9.9997 1 0 0 50 -70 120 \;
 ;
 #X scalar polar-clock 281 372 33.3672 128.252 1 0 0 50 -30 80 \;;
@@ -160,9 +159,7 @@ float flag float xloc float yloc float mx float my float r;
 #X floatatom 648 592 5 0 0 0 - - -, f 5;
 #X floatatom 607 592 5 0 0 1 : - -, f 5;
 #X obj 509 29 namecanvas polar_clock;
-#X obj 395 126 draw circle mx mx r;
-#X obj 139 110 draw path M mx my A r r 0 flag 1 ax ay;
-#X obj 395 65 loadbang;
+#X obj 415 65 loadbang;
 #X text 604 148 Raphael Polar Clock;
 #X text 604 148 ___________________;
 #X text 604 253 In addition \, drawing the arcs for this patch has
@@ -191,14 +188,16 @@ as the main (and probably _only_) reference. So take a sip of coffee
 \, think how much easier it is to write code for a living than loading
 shit into a truck \, and get to work;
 #X msg 139 86 stroke-width 30 \, stroke ay ax ay \, fill none;
-#X msg 395 89 stroke gray \, stroke-width 5 \, stroke-dasharray 1 15
+#X msg 415 89 stroke gray \, stroke-width 5 \, stroke-dasharray 1 15
 \, stroke-linecap 1 \, stroke-opacity 0.4 \, fill none;
-#X connect 2 0 24 0;
+#X obj 415 126 draw circle r mx mx;
+#X obj 139 110 draw path M mx my A r r 0 flag 1 ax ay;
+#X connect 2 0 22 0;
 #X connect 7 0 12 0;
 #X connect 7 1 11 0;
 #X connect 7 2 10 0;
 #X connect 7 3 9 0;
 #X connect 7 4 8 0;
-#X connect 16 0 25 0;
-#X connect 24 0 15 0;
-#X connect 25 0 14 0;
+#X connect 14 0 23 0;
+#X connect 22 0 25 0;
+#X connect 23 0 24 0;

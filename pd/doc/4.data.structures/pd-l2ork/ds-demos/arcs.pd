@@ -1,5 +1,5 @@
 #N struct arcs float x float y;
-#N canvas 0 19 730 583 10;
+#N canvas 145 33 730 583 10;
 #N canvas 497 68 781 562 arcs 0;
 #X obj 110 13 struct arcs float x float y;
 #X obj 48 109 draw path M 20 350 l 50 -25 a 25 25 -30 0 1 50 -25 l
@@ -65,7 +65,7 @@ M -6 -10 l -6 -6 M -6 -10 l -6 6;
 #X connect 30 0 23 0;
 #X connect 31 0 14 0;
 #X connect 32 0 1 0;
-#X restore 177 100 pd arcs;
+#X restore 197 100 pd arcs;
 #X scalar arcs 148 150 \;;
 #X obj 248 100 pddp/pddplink http://tclbitprint.sourceforge.net/tkpath/quartz/
 ;

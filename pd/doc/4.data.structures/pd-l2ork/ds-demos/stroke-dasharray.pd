@@ -1,5 +1,5 @@
 #N struct blah float x float y;
-#N canvas 19 30 618 455 10;
+#N canvas 20 55 618 455 10;
 #X obj 79 13 struct blah float x float y;
 #X scalar blah 82 64 \;;
 #X text 82 107 Stroke-dasharray method. Try it:;

@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include <math.h>  /* for matrix transforms */
+#include <math.h>  /* for path bbox calculations */
 
 #include "m_pd.h"
 #include "s_stuff.h"    /* for sys_hostfontsize */
@@ -1261,10 +1261,6 @@ void *svg_new(t_pd *parent, t_symbol *s, int argc, t_atom *argv)
         type == gensym("ellipse") ||
         type == gensym("line"))
     {
-        if (argc) svg_attr_setfloatarg(&x->x_x, argc--, argv++);
-        else svg_attr_setfloat_const(&x->x_x, 0);
-        if (argc) svg_attr_setfloatarg(&x->x_y, argc--, argv++);
-        else svg_attr_setfloat_const(&x->x_x, 0);
         if (type == gensym("rect"))
         {
             if (argc) svg_attr_setfloatarg(&x->x_width, argc--, argv++);
@@ -1272,7 +1268,22 @@ void *svg_new(t_pd *parent, t_symbol *s, int argc, t_atom *argv)
             if (argc) svg_attr_setfloatarg(&x->x_height, argc--, argv++);
             else svg_attr_setfloat_const(&x->x_height, 0);
         }
-        else
+        else if (type != gensym("line"))
+        {
+            if (argc) svg_attr_setfloatarg(&x->x_rx, argc--, argv++);
+            else svg_attr_setfloat_const(&x->x_rx, 0);
+            if (type != gensym("circle"))
+            {
+                if (argc) svg_attr_setfloatarg(&x->x_ry, argc--, argv++);
+                else svg_attr_setfloat_const(&x->x_ry, 0);
+            }
+        }
+        if (argc) svg_attr_setfloatarg(&x->x_x, argc--, argv++);
+        else svg_attr_setfloat_const(&x->x_x, 0);
+        if (argc) svg_attr_setfloatarg(&x->x_y, argc--, argv++);
+        else svg_attr_setfloat_const(&x->x_x, 0);
+        /* Just reuse rx and ry for x2 and y2 of "line" */
+        if (type == gensym("line"))
         {
             if (argc) svg_attr_setfloatarg(&x->x_rx, argc--, argv++);
             else svg_attr_setfloat_const(&x->x_rx, 0);

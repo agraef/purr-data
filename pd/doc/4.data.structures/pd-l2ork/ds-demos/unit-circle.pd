@@ -1,5 +1,5 @@
 #N struct unit_circle float x float y;
-#N canvas 11 47 683 520 10;
+#N canvas 13 97 683 520 10;
 #X scalar unit_circle 103 387 \;;
 #X obj 310 166 * 6.28;
 #X obj 310 212 sin;
@@ -11,15 +11,7 @@
 #X obj 310 5 bng 21 250 50 0 empty empty Go! 28 10 0 10 -4034 -1 -1
 ;
 #X obj 52 101 loadbang;
-#N canvas 111 79 770 578 (subpatch) 0;
-#X obj 117 -58 draw path m -120 0 l 120 0 m 0 120 l 0 -240 0 20 150
-0 m -150 100 l 150 0 m -150 100 l 150 0 m 0 20 l 0 -240 0 20 150 0
-m -150 100 l 150 0 m -150 100 l 150 0 m 0 20 l 0 -240 0 20 150 0 m
--150 100 l 150 0 m -150 100 l 150 0 m 0 20 l 0 -240 0 20 150 0 m -150
-100 l 150 0 m -150 100 l 150 0 m 0 20 l 0 -240 0 20 150 0 m -150 100
-l 150 0 m -150 100 l 150 0 m 0 20 l 0 -240 0 20 20 0 m -20 100 l 20
-0 m -20 100 l 20 0;
-#X obj 117 -140 draw circle 0 0 100;
+#N canvas 237 72 770 578 (subpatch) 0;
 #X msg 117 -174 fill black \, fill-opacity 0.1 \, stroke blue \, stroke-opacity
 0.6 \, stroke-width 4;
 #X obj 117 -195 loadbang;
@@ -57,36 +49,44 @@ l 150 0 m -150 100 l 150 0 m 0 20 l 0 -240 0 20 20 0 m -20 100 l 20
 #X text 245 189 <- radius line;
 #X text 313 292 <- progress line;
 #X text 624 329 <- guide line;
-#X msg 117 -79 stroke-width 2 \, stroke gray \, stroke-opacity 0.6
-\, fill white;
 #X msg 525 110 stroke-width 3 \, stroke red \, fill none;
-#X connect 2 0 1 0;
-#X connect 3 0 2 0;
-#X connect 4 0 36 0;
-#X connect 5 0 9 0;
-#X connect 6 0 5 0;
-#X connect 7 0 9 0;
-#X connect 8 0 9 0;
-#X connect 10 0 7 0;
-#X connect 11 0 8 0;
-#X connect 13 0 12 0;
-#X connect 14 0 12 0;
+#X obj 117 -58 draw path m -120 0 l 120 0 m 0 120 l 0 -240 0 20 150
+0 m -150 100 l 150 0 m -150 100 l 150 0 m 0 20 l 0 -240 0 20 150 0
+m -150 100 l 150 0 m -150 100 l 150 0 m 0 20 l 0 -240 0 20 150 0 m
+-150 100 l 150 0 m -150 100 l 150 0 m 0 20 l 0 -240 0 20 150 0 m -150
+100 l 150 0 m -150 100 l 150 0 m 0 20 l 0 -240 0 20 150 0 m -150 100
+l 150 0 m -150 100 l 150 0 m 0 20 l 0 -240 0 20 20 0 m -20 100 l 20
+0 m -20 100 l 20 0;
+#X msg 117 -79 stroke-width 2 \, stroke gray \, stroke-opacity 0.6
+\, fill none;
+#X obj 117 -140 draw circle 100 0 0;
+#X connect 0 0 37 0;
+#X connect 1 0 0 0;
+#X connect 2 0 36 0;
+#X connect 3 0 7 0;
+#X connect 4 0 3 0;
+#X connect 5 0 7 0;
+#X connect 6 0 7 0;
+#X connect 8 0 5 0;
+#X connect 9 0 6 0;
+#X connect 11 0 10 0;
+#X connect 12 0 10 0;
+#X connect 13 0 10 0;
+#X connect 14 0 11 0;
 #X connect 15 0 12 0;
 #X connect 16 0 13 0;
-#X connect 17 0 14 0;
-#X connect 18 0 15 0;
-#X connect 19 0 21 0;
+#X connect 17 0 19 0;
+#X connect 18 0 17 0;
 #X connect 20 0 19 0;
-#X connect 22 0 21 0;
+#X connect 21 0 20 0;
+#X connect 22 0 28 0;
 #X connect 23 0 22 0;
-#X connect 24 0 30 0;
-#X connect 25 0 24 0;
-#X connect 27 0 37 0;
-#X connect 28 0 29 0;
-#X connect 29 0 12 0;
-#X connect 30 0 26 0;
-#X connect 36 0 0 0;
-#X connect 37 0 26 0;
+#X connect 25 0 34 0;
+#X connect 26 0 27 0;
+#X connect 27 0 10 0;
+#X connect 28 0 24 0;
+#X connect 34 0 24 0;
+#X connect 36 0 35 0;
 #X restore 52 247 draw group;
 #X obj 92 5 struct unit_circle float x float y;
 #X obj 364 251 * 100;

@@ -1,39 +1,66 @@
 #N struct targets float x float y;
 #N struct movers float x float y float x1 float y1 float style float
 opacity float r float g float b float sw;
-#N canvas 0 25 668 654 10;
-#N canvas 651 83 645 479 targets 0;
-#X obj 323 179 draw rect 0 50 400 450;
+#N canvas 1 25 668 654 10;
+#N canvas 651 83 645 479 targets 1;
 #X obj 119 13 struct targets float x float y;
 #X obj 119 60 loadbang;
-#X obj 159 175 draw circle 300 150 20;
-#X obj 159 215 draw circle 300 200 20;
-#X obj 159 255 draw circle 300 250 20;
-#X obj 159 295 draw circle 300 300 20;
-#X obj 159 335 draw circle 300 350 20;
-#X obj 159 375 draw circle 300 400 20;
-#X obj 159 415 draw circle 300 450 20;
-#X obj 159 135 draw circle 300 100 20;
 #X msg 323 157 fill #333333;
 #X obj 323 135 loadbang;
 #X msg 119 81 fill #000 \, stroke #fff \, stroke-dasharray 4 3 \, stroke-opacity
 1.2 \, fill-opacity 0.2;
-#X connect 2 0 13 0;
-#X connect 11 0 0 0;
-#X connect 12 0 11 0;
-#X connect 13 0 3 0;
-#X connect 13 0 4 0;
-#X connect 13 0 5 0;
-#X connect 13 0 6 0;
-#X connect 13 0 7 0;
-#X connect 13 0 8 0;
-#X connect 13 0 9 0;
-#X connect 13 0 10 0;
+#X obj 323 179 draw rect 400 450 0 50;
+#X obj 159 135 draw circle 20 300 100;
+#X obj 159 175 draw circle 20 300 150;
+#X obj 159 215 draw circle 20 300 200;
+#X obj 159 255 draw circle 20 300 250;
+#X obj 159 295 draw circle 20 300 300;
+#X obj 159 335 draw circle 20 300 350;
+#X obj 159 375 draw circle 20 300 400;
+#X obj 159 415 draw circle 20 300 450;
+#X connect 1 0 4 0;
+#X connect 2 0 5 0;
+#X connect 3 0 2 0;
+#X connect 4 0 6 0;
+#X connect 4 0 7 0;
+#X connect 4 0 8 0;
+#X connect 4 0 9 0;
+#X connect 4 0 10 0;
+#X connect 4 0 11 0;
+#X connect 4 0 12 0;
+#X connect 4 0 13 0;
 #X restore 33 19 pd targets;
 #X scalar targets 33 9 \;;
-#N canvas 710 109 645 479 movers 1;
+#X scalar movers 133 109 200 0 0 1 255 0 0 3 \;;
+#X scalar movers 133 159 200 0 1 1 100 100 0 3 \;;
+#X scalar movers 133 209 200 0 2 1 0 100 100 3 \;;
+#X scalar movers 133 310 200 -1 4 1 50 210 0 3 \;;
+#X scalar movers 133 359 200 0 5 1 210 0 80 3 \;;
+#X scalar movers 133 409 200 0 6 1 42 84 126 3 \;;
+#X scalar movers 133 459 200 0 7 1 80 80 0 3 \;;
+#X scalar movers 133 259 200 0 3 0.999999 100 0 0 3 \;;
+#X text 450 99 linear;
+#X text 450 149 easein;
+#X text 450 199 easeout;
+#X text 450 249 easeinout;
+#X text 450 299 backin;
+#X text 450 349 backout;
+#X text 450 399 elastic;
+#X text 450 449 bounce;
+#X text 33 1021 Click a "mover" ^;
+#X text 33 531 Easing;
+#X text 33 531 ______;
+#X text 33 551 Here are a few animation styles taken from Raphael.js.
+This demo defines two different data structures-- one for the dashed
+circles and background \, and another for the animated circles. Currently
+this doesn't work well because you can't control z-ordering-- the most
+recently moved scalar is always at the front. But since only one type
+of scalar is being animated and none of them overlap \, it isn't a
+problem here.;
+#X text 450 531 Based on:;
+#X obj 450 552 pddp/pddplink http://raphaeljs.com/easing.html;
+#N canvas 710 109 645 479 movers 0;
 #X obj 119 250 loadbang;
-#X obj 119 312 draw circle x1 y1 20;
 #X obj 119 52 route click;
 #X obj 119 73 trigger anything anything;
 #X obj 298 151 print junk;
@@ -403,41 +430,14 @@ opacity float r float g float b float sw;
 style float opacity float r float g float b float sw;
 #X msg 119 270 fill r g b \, stroke #fff \, stroke-dasharray \, fill-opacity
 opacity \, stroke-width sw;
-#X connect 0 0 9 0;
-#X connect 2 0 3 0;
-#X connect 3 0 7 0;
-#X connect 3 1 5 0;
-#X connect 5 0 6 2;
-#X connect 7 0 6 0;
-#X connect 7 1 6 1;
-#X connect 8 0 2 0;
-#X connect 9 0 1 0;
+#X obj 120 312 draw circle 20 x1 y1;
+#X connect 0 0 8 0;
+#X connect 1 0 2 0;
+#X connect 2 0 6 0;
+#X connect 2 1 4 0;
+#X connect 4 0 5 2;
+#X connect 6 0 5 0;
+#X connect 6 1 5 1;
+#X connect 7 0 1 0;
+#X connect 8 0 9 0;
 #X restore 113 19 pd movers;
-#X scalar movers 133 109 0 0 0 0 255 0 0 1 \;;
-#X scalar movers 133 159 0 0 1 0 100 100 0 1 \;;
-#X scalar movers 133 209 0 0 2 0 0 100 100 1 \;;
-#X scalar movers 133 310 0 -1 4 0 50 210 0 1 \;;
-#X scalar movers 133 359 0 0 5 0 210 0 80 1 \;;
-#X scalar movers 133 409 0 0 6 0 42 84 126 1 \;;
-#X scalar movers 133 459 0 0 7 0 80 80 0 1 \;;
-#X scalar movers 133 259 0.000244141 0 3 1.2207e-06 100 0 0 1 \;;
-#X text 450 99 linear;
-#X text 450 149 easein;
-#X text 450 199 easeout;
-#X text 450 249 easeinout;
-#X text 450 299 backin;
-#X text 450 349 backout;
-#X text 450 399 elastic;
-#X text 450 449 bounce;
-#X text 33 511 Click a "mover" ^;
-#X text 33 531 Easing;
-#X text 33 531 ______;
-#X text 33 551 Here are a few animation styles taken from Raphael.js.
-This demo defines two different data structures-- one for the dashed
-circles and background \, and another for the animated circles. Currently
-this doesn't work well because you can't control z-ordering-- the most
-recently moved scalar is always at the front. But since only one type
-of scalar is being animated and none of them overlap \, it isn't a
-problem here.;
-#X text 450 531 Based on:;
-#X obj 450 552 pddp/pddplink http://raphaeljs.com/easing.html;

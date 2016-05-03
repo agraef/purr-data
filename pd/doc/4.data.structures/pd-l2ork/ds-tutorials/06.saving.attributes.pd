@@ -1,6 +1,5 @@
 #N struct drawtut-attr-saving float x float y;
-#N canvas 0 19 638 551 10;
-#X obj 53 153 draw rect 0 0 50 50;
+#N canvas 194 100 638 551 10;
 #X text 0 1 New Drawing Commands: attributes (continued);
 #X text 0 1 ____________________________________________;
 #X text 53 23 Saving attributes is fairly straightforward using message
@@ -22,5 +21,6 @@ svg attributes \, which will let use change the visual appearance of
 each scalar.;
 #X text 228 280 <- Create another scalar in the empty object box by
 typing the struct name "drawtut-attr-saving" into it.;
-#X connect 4 0 7 0;
-#X connect 7 0 0 0;
+#X obj 53 153 draw rect 50 50 0 0;
+#X connect 3 0 6 0;
+#X connect 6 0 11 0;

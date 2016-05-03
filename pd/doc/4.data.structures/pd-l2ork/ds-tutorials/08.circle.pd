@@ -1,5 +1,5 @@
 #N struct drawtut-circle float x float y;
-#N canvas 0 19 638 554 10;
+#N canvas 13 29 638 554 10;
 #X msg 143 117 stroke blue;
 #X text 52 484 Lines are only a single stroke. They don't have any
 inner area to fill \, so none of the messages like "fill" or "fill-rule"
@@ -13,15 +13,15 @@ have any effect.;
 #X msg 53 117 fill yellow;
 #X msg 228 117 stroke-width \$1;
 #X floatatom 228 93 5 0 0 0 - - -, f 5;
-#X obj 53 153 draw circle 0 0 80;
-#X text 52 374 The [draw] object above creates a circle with its center
-at (0 \, 0) \, with a radius of 80 pixels.;
 #X text 51 414 Keep in mind that the coordinates for a circle specify
 its center \, not the top left corner of the shape's bounding box.
 But it's easy to that if you want to-- just offset the coordinates
 by value you use for the radius. (That would be [draw circle 80 80
 80] for the above example.);
-#X connect 0 0 11 0;
-#X connect 8 0 11 0;
-#X connect 9 0 11 0;
+#X obj 53 153 draw circle 80 0 0;
+#X text 52 374 The [draw] object above creates a circle with a radius
+of 80 pixels \, with the center of the circle at (0 \, 0).;
+#X connect 0 0 12 0;
+#X connect 8 0 12 0;
+#X connect 9 0 12 0;
 #X connect 10 0 9 0;

@@ -1,8 +1,8 @@
-#N canvas 0 19 495 603 10;
+#N struct drawtut-one float x float y;
+#N canvas 87 38 495 603 10;
 #X text 0 1 New Drawing Commands: draw;
 #X text 0 1 __________________________;
 #X obj 53 47 struct drawtut-one float x float y;
-#X obj 53 219 draw rect 0 0 40 40;
 #X text 53 67 The first argument "drawtut-one" is a name we will associated
 with our shape.;
 #X text 53 98 The other arguments define data to associate with this
@@ -15,11 +15,6 @@ should hold a floating point number.;
 the name of an svg shape-- "rect" here. Any arguments after that are
 coordinates and other data telling Pd how to draw the shape. For convenience
 \, coordinates are relative to the x/y fields.;
-#X text 53 298 Any [draw] object on the same canvas as our [struct]
-will be used to draw a shape to represent the data structure we've
-defined here. To keep things organized Pd expects there to be only
-one [struct] object per canvas. That way it's simple to know which
-[draw] commands go with which data structure.;
 #X text 53 369 So how do we draw something? We just type the name we
 gave to the [struct] into an object box. This will create an object
 \, referred to in Pd as a "scalar". It will have data for "x" and "y"
@@ -38,3 +33,10 @@ in the main patch \, but since there's only one [struct] per canvas
 you typically will want to keep your [struct] and any [draw] objects
 in their own subpatch.;
 #X obj 56 463;
+#X obj 53 219 draw rect 40 40 0 0;
+#X text 53 298 Any [draw] object on the same canvas as our [struct]
+will be used to draw a shape to represent the data structure we've
+defined here. To keep things organized Pd expects there to be only
+one [struct] object per canvas. That way it's simple to know which
+[draw] commands go with which data structure.;
+#X text 178 218 <- rectangle \, 40x40 pixels at offset (0 \, 0);
