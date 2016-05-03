@@ -1,8 +1,8 @@
 #N struct foo;
-#N canvas 113 51 881 608 10;
+#N canvas 29 82 881 608 10;
 #X obj 731 39 pddplink http://remusprites.carbonmade.com/ -text Sprite
 by Bleed;
-#N canvas 480 111 853 605 (subpatch) 0;
+#N canvas 1 25 853 605 (subpatch) 0;
 #X obj 253 455 cnv 15 378 41 empty empty empty 20 12 0 14 -204786 -66577
 0;
 #X obj 33 550 cnv 15 270 32 empty empty empty 20 12 0 14 -204786 -66577
@@ -105,8 +105,7 @@ translating the frames of the sprite to make them line up correctly.
 #X connect 6 3 3 0;
 #X restore 61 452 pd transform-flashlight-beam;
 #X obj 68 485 loadbang;
-#N canvas 510 33 765 643 level-completed 0;
-#X obj 470 227 draw rect 63 50 387 48;
+#N canvas 258 53 765 643 level-completed 0;
 #X obj 34 83 draw path m 96.5563 77.37 c 1.92685 9.95844 -16.8413 5.35744
 -10.1789 -4.24988 -4.92945 -7.64506 12.2558 -11.9026 -1.96966 -11.2116
 -11.6695 -0.701416 3.56415 5.52858 -1.33995 13.3848 3.83698 7.12434
@@ -181,25 +180,26 @@ z;
 11.9772 z;
 #X obj 437 101 inlet;
 #X obj 470 163 loadbang;
-#X msg 470 185 fill 100 230 100 \, stroke gray \, fill-opacity 0.8
+#X obj 470 227 draw rect 387 48 63 50;
+#X msg 470 185 fill 100 230 100 \, stroke gray \, fill-opacity 0.5
 \, rx 20 \, ry 20;
-#X connect 15 0 1 0;
-#X connect 15 0 14 0;
-#X connect 15 0 13 0;
-#X connect 15 0 12 0;
-#X connect 15 0 11 0;
-#X connect 15 0 10 0;
-#X connect 15 0 9 0;
-#X connect 15 0 8 0;
-#X connect 15 0 7 0;
-#X connect 15 0 6 0;
-#X connect 15 0 5 0;
-#X connect 15 0 4 0;
-#X connect 15 0 3 0;
-#X connect 15 0 2 0;
-#X connect 15 0 0 0;
-#X connect 16 0 17 0;
-#X connect 17 0 0 0;
+#X connect 14 0 0 0;
+#X connect 14 0 13 0;
+#X connect 14 0 12 0;
+#X connect 14 0 11 0;
+#X connect 14 0 10 0;
+#X connect 14 0 9 0;
+#X connect 14 0 8 0;
+#X connect 14 0 7 0;
+#X connect 14 0 6 0;
+#X connect 14 0 5 0;
+#X connect 14 0 4 0;
+#X connect 14 0 3 0;
+#X connect 14 0 2 0;
+#X connect 14 0 1 0;
+#X connect 14 0 16 0;
+#X connect 15 0 17 0;
+#X connect 17 0 16 0;
 #X restore 288 284 draw group level-completed;
 #N canvas 690 179 450 300 level-failed 0;
 #N canvas 770 19 450 683 out-of-bullets 0;
@@ -318,8 +318,8 @@ z m -10.2 6.76 c -16.409 -1.07188 2.85868 -24.3778 6.81644 -7.79128
 7.12042 -10.1774 9.46013 0.49717 10.1621 8.30469 3.28021 22.7269 -3.94926
 13.3476 -9.64595 l -0.3556 1.57923 0 0 z;
 #X obj 18 -5 inlet;
-#X obj 88 54 draw rect 130 140 270 46;
 #X msg 90 30 fill-opacity 0.4 \, rx 20 \, ry 20;
+#X obj 88 54 draw rect 270 46 130 140;
 #X connect 8 0 0 0;
 #X connect 8 0 7 0;
 #X connect 8 0 6 0;
@@ -328,9 +328,9 @@ z m -10.2 6.76 c -16.409 -1.07188 2.85868 -24.3778 6.81644 -7.79128
 #X connect 8 0 3 0;
 #X connect 8 0 2 0;
 #X connect 8 0 1 0;
-#X connect 8 0 10 0;
 #X connect 8 0 9 0;
-#X connect 10 0 9 0;
+#X connect 8 0 10 0;
+#X connect 9 0 10 0;
 #X restore 152 197 draw group go-to-jail;
 #X obj 269 68 loadbang;
 #X msg 269 89 fill black;
