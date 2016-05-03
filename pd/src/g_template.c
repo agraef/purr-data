@@ -416,7 +416,8 @@ static void template_conformarray(t_template *tfrom, t_template *tto,
     /* this routine searches for every scalar in the glist that belongs
     to the "from" template and makes it belong to the "to" template.  Descend
     glists recursively.
-    We don't handle redrawing here; this is to be filled in LATER... */
+    We don't do a redraw here, instead it happens when we change the
+    template (in glist_add). */
 
 t_array *garray_getarray(t_garray *x);
 

@@ -326,9 +326,6 @@ t_scalar *scalar_new(t_glist *owner, t_symbol *templatesym)
     x->sc_template = templatesym;
     gpointer_setglist(&gp, owner, &x->sc_gobj);
     word_init(x->sc_vec, template, &gp);
-    char buf[50];
-    sprintf(buf, "x%lx", (long unsigned int)x);
-    pd_bind(&x->sc_gobj.g_pd, gensym(buf));
     return (x);
 }
 
@@ -912,6 +909,8 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
 {
     //fprintf(stderr,"scalar_vis %d %lx\n", vis, (t_int)z);
     t_scalar *x = (t_scalar *)z;
+    char buf[50];
+    sprintf(buf, "x%lx", (long unsigned int)x);
 
     x->sc_bboxcache = 0;
 
@@ -980,6 +979,7 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
             (long unsigned int)x->sc_vec);
         gui_vmess("gui_scalar_draw_group", "xss",
             glist_getcanvas(owner), groupbuf, tagbuf);
+        pd_bind(&x->sc_gobj.g_pd, gensym(buf));
     }
 
     /* warning: don't need--- have recursive func. */
@@ -1007,6 +1007,7 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
         sprintf(tagbuf, "scalar%lx", (long unsigned int)x->sc_vec);
         gui_vmess("gui_scalar_erase", "xs",
             glist_getcanvas(owner), tagbuf);
+        pd_unbind(&x->sc_gobj.g_pd, gensym(buf));
     }
 
     sys_unqueuegui(x);
