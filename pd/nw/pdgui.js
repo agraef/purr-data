@@ -14,7 +14,11 @@ exports.get_pwd = function() {
 }
 
 function defunkify_windows_path(s) {
-    return s.replace(/\\/g, "/");
+    var ret = s;
+    if (process.platform === "win32") {
+        ret = ret.replace(/\\/g, "/");
+    }
+    return ret;
 }
 
 exports.defunkify_windows_path = defunkify_windows_path;
@@ -487,7 +491,7 @@ function menu_new () {
     untitled_directory = pwd;
     pdsend("pd filename",
            "Untitled-" + untitled_number,
-           enquote(untitled_directory));
+           enquote(defunkify_windows_path(untitled_directory)));
     // I don't think k12_mode works yet. Need to test this.
     if (k12_mode == 1) {
         k12_saveas_on_new = 1;
