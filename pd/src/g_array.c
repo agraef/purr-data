@@ -1351,8 +1351,10 @@ static void garray_select(t_gobj *z, t_glist *glist, int state)
 {
     //fprintf(stderr,">>>>>>>>>>>>garray_select %d\n", state);
     t_garray *x = (t_garray *)z;
-    sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n",
-        glist_getcanvas(glist), x->x_glist, state);
+    /* There's no replacement for the following command in the
+       new GUI, but it looks like it's not needed anymore. */
+    //sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n",
+    //    glist_getcanvas(glist), x->x_glist, state);
 
     scalar_select((t_gobj *)x->x_scalar, glist, state);
 }
