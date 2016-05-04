@@ -1260,9 +1260,6 @@ static void scalar_free(t_scalar *x)
         return;
     }
     word_free(x->sc_vec, template);
-    char buf[50];
-    sprintf(buf, "x%lx", (long unsigned int)x);
-    pd_unbind(&x->sc_gobj.g_pd, gensym(buf));
     gfxstub_deleteforkey(x);
         /* the "size" field in the class is zero, so Pd doesn't try to free
         us automatically (see pd_free()) */
