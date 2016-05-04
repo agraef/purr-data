@@ -430,7 +430,6 @@ function build_file_dialog_string(obj) {
 exports.build_file_dialog_string = build_file_dialog_string;
 
 function gui_canvas_saveas(name, initfile, initdir, close_flag) {
-post("hey, the initdir is " + initdir + " and initfile is " + initfile);
     var input, chooser,
         span = patchwin[name].window.document.querySelector("#saveDialogSpan");
     if (!fs.existsSync(initdir)) {
@@ -466,7 +465,7 @@ post("hey, the initdir is " + initdir + " and initfile is " + initfile);
 }
 
 function saveas_callback(cid, file, close_flag) {
-    var filename = file,
+    var filename = defunkify_windows_path(file),
         directory = path.dirname(filename),
         basename = path.basename(filename);
     // It probably isn't possible to arrive at the callback with an
@@ -672,8 +671,9 @@ exports.set_app_quitfn = function(quitfn) {
 }
 
 function open_file(file) {
-    var directory = path.dirname(file),
-        basename = path.basename(file),
+    var filename = defunkify_windows_path(file),
+        directory = path.dirname(filename),
+        basename = path.basename(filename),
         cyclist;
     if (basename.match(/\.(pat|mxb|help)$/) !=null) {
         post("warning: opening pat|mxb|help not implemented yet");
@@ -701,7 +701,7 @@ function open_file(file) {
     }
     if (basename.match(/\.(pd|pat|mxt)$/i) != null) {
         pdsend("pd open", enquote(basename),
-            defunkify_windows_path(enquote(directory)));
+            (enquote(directory)));
         pd_opendir = directory;
         //::pd_guiprefs::update_recentfiles "$filename" 1
     }
