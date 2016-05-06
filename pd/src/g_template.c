@@ -1086,6 +1086,16 @@ typedef struct _svg_attr
     t_fielddesc a_attr;
 } t_svg_attr;
 
+typedef enum
+{
+    CT_NULL,  /* nothing specified */
+    CT_SYM,   /* t_fielddesc #abcdef or color name "blue", etc. */
+    CT_RGB,   /* fielddesc: R G B */
+    CT_HSL,   /*            H S L */
+    CT_HCL,   /*            H C L */
+    CT_LAB    /*            L A B */
+} t_colortype;
+
 /* events on which to output a notification from the outlet of [draw] */
 typedef struct _svg_event
 {
@@ -1109,11 +1119,11 @@ typedef struct _svg
     int x_flags;
     t_symbol *x_type;
     t_fielddesc x_fill[3];
-    int x_filltype;
+    t_colortype x_filltype;
     t_svg_attr x_fillopacity;
     t_svg_attr x_fillrule;
     t_fielddesc x_stroke[3];
-    int x_stroketype;
+    t_colortype x_stroketype;
     int x_ndash;
     t_fielddesc *x_strokedasharray; /* array of lengths */
     t_svg_attr x_strokedashoffset;
@@ -1347,7 +1357,7 @@ void *svg_new(t_pd *parent, t_symbol *s, int argc, t_atom *argv)
     }
     fielddesc_setfloat_const(&x->x_bbox, 1);
     fielddesc_setfloat_const(&x->x_drag, 0);
-    x->x_filltype = 0;
+    x->x_filltype = CT_NULL;
     x->x_fillopacity.a_flag = 0;
     x->x_fillrule.a_flag = 0;
     fielddesc_setfloat_const(&x->x_pointerevents.a_attr, 1);
@@ -1506,17 +1516,102 @@ t_canvas *svg_parentcanvas(t_svg *x)
     return (ret);
 }
 
-static char *rgb_to_hex(int r, int g, int b)
+static int rgb_to_int(int r, int g, int b)
 {
-    static char hexc[10];
     int r1 = r < 0 ? 0 : r;
     if (r1 > 255) r1 = 255;
     int g1 = g < 0 ? 0 : g;
     if (g1 > 255) g1 = 255;
     int b1 = b < 0 ? 0 : b;
     if (b1 > 255) b1 = 255;
-    sprintf(hexc, "#%.6x", (r1 << 16) + (g1 << 8) + b1);
-    return hexc;
+    return ((r1 << 16) + (g1 << 8) + b1);
+}
+
+/* hsl implementation from (3-clause BSD-licensed) d3 */
+static t_float hsl_v(t_float m1, t_float m2, t_float h)
+{
+    if (h > 360) h -= 360;
+    else if (h < 0) h += 360;
+    if (h < 60) return (m1 + (m2 - m1) * h / 60.);
+    if (h < 180) return m2;
+    if (h < 240) return (m1 + (m2 - m1) * (240 - h) / 60.);
+    return m1;
+}
+
+static int hsl_to_int(t_float h, t_float s, t_float l)
+{
+    t_float m1, m2;
+
+    h = ((int)h) % 360;
+    h = h < 0 ? h + 360 : h;
+    s = s < 0 ? 0 : s > 1 ? 1 : s;
+    l = l < 0 ? 0 : l > 1 ? 1 : l;
+
+    m2 = l <= 0.5 ? l * (1 + s) : l + s - l * s;
+    m1 = 2 * l - m2;
+
+    return (rgb_to_int(
+        (int)(hsl_v(m1, m2, h + 120) * 255 + 0.5),
+        (int)(hsl_v(m1, m2, h) * 255 + 0.5),
+        (int)(hsl_v(m1, m2, h - 120) * 255 + 0.5)));
+}
+
+t_float lab_xyz(t_float x)
+{
+    return (x > 0.206893034 ? x * x * x : (x - 4 / 29) / 7.787037);
+}
+
+int xyz_rgb(t_float r)
+{
+    return ((int)(0.5 + (255 * (r <= 0.00304 ?
+        12.92 * r :
+        1.055 * pow(r, 1 / 2.4) - 0.055))));
+}
+
+#define LAB_X 0.950470
+#define LAB_Y 1
+#define LAB_Z 1.088830
+static int lab_to_int(t_float l, t_float a, t_float b)
+{
+    t_float y, x, z;
+    y = (1 + 16) / 116.;
+    x = y + a / 500.;
+    z = y - b / 200.;
+
+    x = lab_xyz(x) * LAB_X;
+    y = lab_xyz(y) * LAB_Y;
+    z = lab_xyz(z) * LAB_Z;
+
+    return rgb_to_int(
+        xyz_rgb( 3.2404542 * x - 1.5371385 * y - 0.4985314 * z),
+        xyz_rgb(-0.9692660 * x + 1.8760108 * y + 0.0415560 * z),
+        xyz_rgb( 0.0556434 * x - 0.2040259 * y + 1.0572252 * z));
+}
+
+static char *svg_get_color(t_fielddesc *fd, t_colortype ct,
+    t_template *template, t_word *data)
+{
+    static char str[10];
+    if (ct == CT_SYM)
+    {
+        sprintf(str, "%s", fielddesc_getsymbol(fd, template, data, 1)->s_name);
+    }
+    else
+    {
+        t_float c1, c2, c3;
+        int result = 0;
+        c1 = fielddesc_getcoord(fd, template, data, 1),
+        c2 = fielddesc_getcoord(fd+1, template, data, 1),
+        c3 = fielddesc_getcoord(fd+2, template, data, 1);
+        if (ct == CT_RGB)
+            result = rgb_to_int((int)c1, (int)c2, (int)c3);
+        else if (ct == CT_HSL)
+            result = hsl_to_int(c1, c2, c3);
+        else if (ct == CT_LAB)
+            result = lab_to_int(c1, c2, c3);
+        sprintf(str, "#%.6x", result);
+    }
+    return str;
 }
 
 char *get_strokelinecap(int a)
@@ -1600,38 +1695,18 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
         *predraw_bbox = 1;
     else if (s == gensym("fill"))
     {
-        t_symbol *fill;
-        t_fielddesc *fd = x->x_fill;
-        if (x->x_filltype == 1)
-            fill = fielddesc_getsymbol(fd, template, data, 1);
-        else if (x->x_filltype == 2)
-        {
-            fill = gensym(rgb_to_hex(
-                (int)fielddesc_getcoord(fd, template, data, 1),
-                (int)fielddesc_getcoord(fd+1, template, data, 1),
-                (int)fielddesc_getcoord(fd+2, template, data, 1)));
-        }
-        else
-            fill = &s_;
+//        else
+//            fill = &s_;
         gui_vmess("gui_draw_configure", "xsss",
-            glist_getcanvas(c), tag, s->s_name, fill->s_name);
+            glist_getcanvas(c), tag, s->s_name,
+                svg_get_color(x->x_fill, x->x_filltype, template, data));
     }
     else if (s == gensym("stroke"))
     {
-        t_symbol *stroke;
-        t_fielddesc *fd = x->x_stroke;
-        if (x->x_stroketype == 1)
-            stroke = fielddesc_getsymbol(fd, template, data, 1);
-        else if (x->x_stroketype == 2)
-        {
-            stroke = gensym(rgb_to_hex(
-                (int)fielddesc_getcoord(fd, template, data, 1),
-                (int)fielddesc_getcoord(fd+1, template, data, 1),
-                (int)fielddesc_getcoord(fd+2, template, data, 1)));
-        }
-        else stroke = &s_;
+//        else stroke = &s_;
         gui_vmess("gui_draw_configure", "xsss",
-            glist_getcanvas(c), tag, s->s_name, stroke->s_name);
+            glist_getcanvas(c), tag, s->s_name,
+                svg_get_color(x->x_stroke, x->x_stroketype, template, data));
     }
     else if (s == gensym("fill-rule"))
         gui_vmess("gui_draw_configure", "xssi",
@@ -2137,87 +2212,111 @@ void svg_strokedasharray(t_svg *x, t_symbol *s,
     svg_update(x, s);
 }
 
-void svg_fill(t_svg *x, t_symbol *s, t_int argc, t_atom *argv)
+static int svg_set_color(t_svg *x, t_colortype *type, t_fielddesc *cfield,
+    t_symbol *s, int argc, t_atom *argv)
 {
-    if (argc <= 0)
-        x->x_filltype = 0;
-    else if (argc == 1 && argv->a_type == A_SYMBOL)
+    if (argc >= 3)
     {
-        fielddesc_setsymbol_const(x->x_fill, atom_getsymbolarg(0, argc, argv));
-        x->x_filltype = 1;
-    }
-    else if (argc > 2)
-    {
-        int i, var = 0;
-        /* if there's a color variable field we have to recalculate
-           it each redraw in draw_vis */
-        for(i = 0; i < argc; i++)
-            var = (argv[i].a_type == A_SYMBOL) ? 1 : var;
-        if (var)
+        if (argc == 3)
+            *type = CT_RGB;
+        else
         {
-            t_fielddesc *fd = x->x_fill;
-            fielddesc_setfloatarg(fd, argc--, argv++);
-            fielddesc_setfloatarg(fd+1, argc--, argv++);
-            fielddesc_setfloatarg(fd+2, argc--, argv++);
-            x->x_filltype = 2;
+            if (argv->a_type == A_SYMBOL)
+            {
+                t_symbol *cs = atom_getsymbolarg(0, argc, argv);
+                if (cs == gensym("rgb")) *type = CT_RGB;
+                else if (cs == gensym("hsl")) *type = CT_HSL;
+                else if (cs == gensym("hcl")) *type = CT_HCL;
+                else if (cs == gensym("lab")) *type = CT_LAB;
+                else
+                {
+                    pd_error(x, "draw: error: color type %s not defined",
+                        cs->s_name);
+                    return 0;
+                }
+                argc--, argv++;
+            }
+            else
+            {
+                pd_error(x, "draw: error: no color type specified");
+                return 0;
+            }
+        }
+    }
+    if (argc <= 0)
+        *type = CT_NULL;
+    else if (argc == 1)
+    {
+        if (argv->a_type == A_SYMBOL)
+        {
+            *type = CT_SYM;
+            fielddesc_setsymbol_const(cfield,
+                atom_getsymbolarg(0, argc, argv));
         }
         else
         {
-            int r = (int)atom_getfloatarg(0, argc--, argv++);
-            int g = (int)atom_getfloatarg(0, argc--, argv++);
-            int b = (int)atom_getfloatarg(0, argc--, argv++);
-            fielddesc_setsymbol_const(x->x_fill,
-                gensym(rgb_to_hex(r, g, b)));
-            x->x_filltype = 1;
-        }
-        if (argc && (argv->a_type == A_FLOAT || argv->a_type == A_SYMBOL))
-        {
-            svg_setattr(x, gensym("fill-opacity"), argc, argv);
+            pd_error(x, "draw: error: bad argument for fill color");
+            return 0;
         }
     }
+    else if (argc == 2)
+    {
+        if (argv->a_type == A_SYMBOL &&
+            argv[1].a_type == A_SYMBOL &&
+            atom_getsymbolarg(0, argc, argv) == &s_symbol)
+        {
+            *type = CT_SYM;
+            argc--, argv++;
+            fielddesc_setsymbolarg(cfield, argc, argv);
+        }
+        else
+        {
+            pd_error(x, "draw: error: bad arguments for fill color");
+            return 0;
+        }
+    }
+    else if (argc == 3)
+    {
+        int i, var = 0;
+        t_fielddesc *fd = cfield;
+        /* if there's a color variable field we have to recalculate
+           it each redraw in draw_vis */
+        for (i = 0; i < argc; i++)
+            var = (argv[i].a_type == A_SYMBOL) ? 1 : var;
+        /* go ahead and set the fields */
+        fielddesc_setfloatarg(fd, argc--, argv++);
+        fielddesc_setfloatarg(fd+1, argc--, argv++);
+        fielddesc_setfloatarg(fd+2, argc--, argv++);
+        if (!var)
+        {
+            /* if all fields are constants, we can go ahead
+               and cache the hex string here. A bit of a hack
+               since svg_get_color expects a t_template* 
+               and a t_word*. But those aren't used for
+               constants so we can get away with it... */
+            char *col = svg_get_color(fd, *type, 0, 0);
+            fielddesc_setsymbol_const(cfield, gensym(col));
+            *type = CT_SYM;
+//            *type = CT_RGB;
+        }
+    }
+    else
+    {
+        pd_error(x, "draw: error: bad arguments for fill color");
+        return 0;
+    }
+    return 1;
+}
+
+void svg_fill(t_svg *x, t_symbol *s, int argc, t_atom *argv)
+{
+    svg_set_color(x, &x->x_filltype, x->x_fill, s, argc, argv);
     svg_update(x, s);
 }
 
 void svg_stroke(t_svg *x, t_symbol *s, t_int argc, t_atom *argv)
 {
-    if (argc <= 0)
-        x->x_stroketype = 0;
-    else if (argc == 1 && argv->a_type == A_SYMBOL)
-    {
-        fielddesc_setsymbol_const(x->x_stroke,
-            atom_getsymbolarg(0, argc, argv));
-        x->x_stroketype = 1;
-    }
-    else if (argc > 2)
-    {
-        int var = 0, i;
-        t_fielddesc *fd = x->x_stroke;
-        for(i = 0; i < argc; i++)
-            var = (argv[i].a_type == A_SYMBOL) ? 1 : var;
-        if (var)
-        {
-            fielddesc_setfloatarg(fd, argc--, argv++);
-            fielddesc_setfloatarg(fd+1, argc--, argv++);
-            fielddesc_setfloatarg(fd+2, argc--, argv++);
-            x->x_stroketype = 2;
-        }
-        else
-        {
-            /* if no variables, then precompute a_stroke so it doesn't
-               have to happen every call to draw_vis */
-            int r = (int)atom_getfloatarg(0, argc--, argv++);
-            int g = (int)atom_getfloatarg(0, argc--, argv++);
-            int b = (int)atom_getfloatarg(0, argc--, argv++);
-            fielddesc_setsymbol_const(x->x_stroke,
-                gensym(rgb_to_hex(r, g, b)));
-            x->x_stroketype = 1;
-        }
-        if (argc && (argv->a_type == A_FLOAT || argv->a_type == A_SYMBOL))
-        {
-            svg_setattr(x, gensym("stroke-opacity"), argc, argv);
-            return;
-        }
-    }
+    svg_set_color(x, &x->x_stroketype, x->x_stroke, s, argc, argv);
     svg_update(x, s);
 }
 
@@ -3572,23 +3671,10 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
     // Hack to send parameters to the GUI. Not sure yet if
     // we want to generalize that...
     gui_start_array();
-    if (x->x_filltype)
+    if (x->x_filltype != CT_NULL)
     {
-        t_fielddesc *fd = x->x_fill;
-        if (x->x_filltype == 1)
-        {
-            t_symbol *f = fielddesc_getsymbol(fd, template, data, 1);
-            gui_s("fill");
-            gui_s(f->s_name);
-        }
-        else if (x->x_filltype == 2)
-        {
-            gui_s("fill");
-            gui_s(rgb_to_hex(
-                (int)fielddesc_getcoord(fd, template, data, 1),
-                (int)fielddesc_getcoord(fd+1, template, data, 1),
-                (int)fielddesc_getcoord(fd+2, template, data, 1)));
-        }
+        gui_s("fill");
+        gui_s(svg_get_color(x->x_fill, x->x_filltype, template, data));
     }
     if (x->x_fillopacity.a_flag)
     {
@@ -3628,23 +3714,10 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
         }
         gui_end_array();
     }
-    if (x->x_stroketype)
+    if (x->x_stroketype != CT_NULL)
     {
-        t_fielddesc *fd = x->x_stroke;
-        if (x->x_stroketype == 1)
-        {
-            t_symbol *s = fielddesc_getsymbol(fd, template, data, 1);
-            gui_s("stroke");
-            gui_s(s->s_name);
-        }
-        else if (x->x_stroketype == 2)
-        {
-            gui_s("stroke");
-            gui_s(rgb_to_hex(
-                (int)fielddesc_getcoord(fd, template, data, 1),
-                (int)fielddesc_getcoord(fd+1, template, data, 1),
-                (int)fielddesc_getcoord(fd+2, template, data, 1)));
-        }
+        gui_s("stroke");
+        gui_s(svg_get_color(x->x_stroke, x->x_stroketype, template, data));
     }
     if (x->x_strokewidth.a_flag)
     {
