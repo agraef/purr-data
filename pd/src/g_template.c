@@ -1538,17 +1538,19 @@ static t_float hsl_v(t_float m1, t_float m2, t_float h)
     return m1;
 }
 
-static int hsl_to_int(t_float h, t_float s, t_float l)
+static int hsl_to_int(t_float h, t_float s, t_float lightness)
 {
     t_float m1, m2;
 
     h = ((int)h) % 360;
     h = h < 0 ? h + 360 : h;
     s = s < 0 ? 0 : s > 1 ? 1 : s;
-    l = l < 0 ? 0 : l > 1 ? 1 : l;
+    lightness = lightness < 0 ? 0 : lightness > 1 ? 1 : lightness;
 
-    m2 = l <= 0.5 ? l * (1 + s) : l + s - l * s;
-    m1 = 2 * l - m2;
+    m2 = lightness <= 0.5 ?
+        lightness * (1 + s) :
+        lightness + s - lightness * s;
+    m1 = 2 * lightness - m2;
 
     return (rgb_to_int(
         (int)(hsl_v(m1, m2, h + 120) * 255 + 0.5),
@@ -1558,23 +1560,23 @@ static int hsl_to_int(t_float h, t_float s, t_float l)
 
 t_float lab_xyz(t_float x)
 {
-    return (x > 0.206893034 ? x * x * x : (x - 4 / 29) / 7.787037);
+    return (x > 0.206893034 ? x * x * x : (x - 4. / 29.) / 7.787037);
 }
 
 int xyz_rgb(t_float r)
 {
     return ((int)(0.5 + (255 * (r <= 0.00304 ?
         12.92 * r :
-        1.055 * pow(r, 1 / 2.4) - 0.055))));
+        1.055 * pow(r, 1. / 2.4) - 0.055))));
 }
 
 #define LAB_X 0.950470
-#define LAB_Y 1
+#define LAB_Y 1.
 #define LAB_Z 1.088830
-static int lab_to_int(t_float l, t_float a, t_float b)
+static int lab_to_int(t_float lightness, t_float a, t_float b)
 {
     t_float y, x, z;
-    y = (1 + 16) / 116.;
+    y = (lightness + 16) / 116.;
     x = y + a / 500.;
     z = y - b / 200.;
 
@@ -1592,10 +1594,10 @@ static char *svg_get_color(t_fielddesc *fd, t_colortype ct,
     t_template *template, t_word *data)
 {
     static char str[10];
-    if (ct == CT_SYM)
-    {
+    if (ct == CT_NULL)
+        sprintf(str, "none");
+    else if (ct == CT_SYM)
         sprintf(str, "%s", fielddesc_getsymbol(fd, template, data, 1)->s_name);
-    }
     else
     {
         t_float c1, c2, c3;
@@ -1695,15 +1697,12 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
         *predraw_bbox = 1;
     else if (s == gensym("fill"))
     {
-//        else
-//            fill = &s_;
         gui_vmess("gui_draw_configure", "xsss",
             glist_getcanvas(c), tag, s->s_name,
                 svg_get_color(x->x_fill, x->x_filltype, template, data));
     }
     else if (s == gensym("stroke"))
     {
-//        else stroke = &s_;
         gui_vmess("gui_draw_configure", "xsss",
             glist_getcanvas(c), tag, s->s_name,
                 svg_get_color(x->x_stroke, x->x_stroketype, template, data));
@@ -2297,7 +2296,6 @@ static int svg_set_color(t_svg *x, t_colortype *type, t_fielddesc *cfield,
             char *col = svg_get_color(fd, *type, 0, 0);
             fielddesc_setsymbol_const(cfield, gensym(col));
             *type = CT_SYM;
-//            *type = CT_RGB;
         }
     }
     else
