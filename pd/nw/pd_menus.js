@@ -122,16 +122,28 @@ function create_menu(gui, type) {
         editMenu.append(new gui.MenuItem({ type: "separator" }));
         editMenu.append(m.edit.cut = new gui.MenuItem({
             label: l("menu.cut"),
+            key: "x",
+            modifiers: cmd_or_ctrl,
             tooltip: l("menu.cut_tt")
         }));
     }
     editMenu.append(m.edit.copy = new gui.MenuItem({
         label: l("menu.copy"),
+        key: "c",
+        modifiers: cmd_or_ctrl,
         tooltip: l("menu.copy_tt")
     }));
     if (canvas_menu) {
+        // The nwjs menubar keybindings don't propagate down
+        // to the DOM. Here, we need the DOM to receive the
+        // "paste" event in case we want to paste a Pd file
+        // from an external buffer. So unfortunately we can't
+        // do the keybindings here. The side-effect is that
+        // "Ctrl-V" isn't displayed in the menu item.
         editMenu.append(m.edit.paste = new gui.MenuItem({
             label: l("menu.paste"),
+            //key: "v",
+            //modifiers: cmd_or_ctrl,
             tooltip: l("menu.paste_tt")
         }));
         editMenu.append(m.edit.duplicate = new gui.MenuItem({
@@ -143,6 +155,8 @@ function create_menu(gui, type) {
     }
     editMenu.append(m.edit.selectall = new gui.MenuItem({
         label: l("menu.selectall"),
+        key: "a",
+        modifiers: cmd_or_ctrl,
         tooltip: l("menu.selectall_tt")
     }));
     if (canvas_menu) {

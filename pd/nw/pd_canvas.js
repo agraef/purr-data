@@ -298,33 +298,41 @@ var canvas_events = (function() {
 
                     case 65:
                         if (cmd_or_ctrl_key(evt)) { // ctrl-a
-                            pdgui.pdsend(name, "selectall");
+                            // This is handled in the nwjs menu, but we
+                            // add a way to toggle the window menubar
+                            // the following command should be uncommented...
+                            //pdgui.pdsend(name, "selectall");
                             hack = 0; // not sure what to report here...
                         }
                         break;
                     case 88:
                         if (cmd_or_ctrl_key(evt)) { // ctrl-x
-                            pdgui.pdsend(name, "cut");
+                            // This is handled in the nwjs menubar. If we
+                            // add a way to toggle the menubar it will be
+                            // handled with the "cut" DOM listener, so we
+                            // can probably remove this code...
+                            //pdgui.pdsend(name, "cut");
                             hack = 0; // not sure what to report here...
                         }
                         break;
                     case 67:
                         if (cmd_or_ctrl_key(evt)) { // ctrl-c
-                            pdgui.pdsend(name, "copy");
+                            // Handled in nwjs menubar (see above)
+                            //pdgui.pdsend(name, "copy");
                             hack = 0; // not sure what to report here...
                         }
                         break;
                     case 86:
                         if (cmd_or_ctrl_key(evt)) { // ctrl-v
-                            // Crazy workaround: instead of sending the
-                            // "paste" message to Pd here, we wait for the
-                            // "paste" listener to pick it up. That way it
-                            // can check to see if there's anything in the
-                            // paste buffer, and if so forward it to Pd.
+                            // Instead of sending the "paste" message to Pd
+                            // here, we wait for the "paste" DOM listener to
+                            // pick it up. That way it can check to see if
+                            // there's anything in the paste buffer, and if so
+                            // forward it to Pd.
 
-                            // We could also use "cut" and "copy" handlers
-                            // above for symmetry, but we're not currently
-                            // doing anything with those buffers.
+                            // We also use "cut" and "copy" DOM event handlers
+                            // and leave this code in case we need to change
+                            // tactics for some reason.
                             //pdgui.pdsend(name, "paste");
                             hack = 0; // not sure what to report here...
                         }
@@ -337,6 +345,9 @@ var canvas_events = (function() {
                             // inside an object box we need to use, and a
                             // menu item shortcut would not propogate down
                             // to the DOM in that case.
+
+                            // Not sure if DOM has listeners for undo/redo,
+                            // so for now (May 7, 2016) we catch them here...
                             if (evt.shiftKey) {
                                 pdgui.pdsend(name, "redo");
                             } else {
@@ -593,6 +604,26 @@ var canvas_events = (function() {
     document.addEventListener("contextmenu", function(evt) {
         console.log("got a context menu evt...");
         evt.preventDefault();
+    });
+
+    // Cut event
+    document.addEventListener("cut", function(evt) {
+        // This event doesn't currently get called because the
+        // nw menubar receives the event and doesn't propagate
+        // to the DOM. But if we add the ability to toggle menubar
+        // display, we might need to rely on this listener.
+        pdgui.post("cut detected by DOM listener");
+        pdgui.pdsend(name, "cut");
+    });
+
+    // Copy event
+    document.addEventListener("copy", function(evt) {
+        // This event doesn't currently get called because the
+        // nw menubar receives the event and doesn't propagate
+        // to the DOM. But if we add the ability to toggle menubar
+        // display, we might need to rely on this listener.
+        pdgui.post("copy detected by DOM listener");
+        pdgui.pdsend(name, "copy");
     });
 
     // Listen to paste event using the half-baked Clipboard API from HTML5
