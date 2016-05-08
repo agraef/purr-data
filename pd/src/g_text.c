@@ -2454,7 +2454,6 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
     int i1, i2;
 
     //fprintf(stderr,"text_setto %d\n", x->te_type);
-
     if (x->te_type == T_OBJECT)
     {
         //fprintf(stderr,"setto T_OBJECT\n");
@@ -2504,6 +2503,7 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
                 t_rtext *yr = glist_findrtext(glist, x);
                 if (yr) rtext_retext(yr);
                 binbuf_free(b);
+                b = NULL;
             }
         }
         else  /* normally, just destroy the old one and make a new one. */
@@ -2546,13 +2546,17 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
                 t_rtext *yr = glist_findrtext(glist, x);
                 if (yr) rtext_retext(yr);
                 binbuf_free(b);
+                b = NULL;
             }
         }
             /* if we made a new "pd" or changed a window name,
                 update window list */
-        if (natom2 >= 1  && vec2[0].a_type == A_SYMBOL
+        if (b && natom2 >= 1
+            && vec2 && vec2[0].a_type == A_SYMBOL
             && !strcmp(vec2[0].a_w.w_symbol->s_name, "pd"))
-                canvas_updatewindowlist();
+        {
+            canvas_updatewindowlist();
+        }
         /* this is a quick bugfix-- we need to free the binbuf "b" if we
            created a scalar in canvas_objtext */
         if (scalar_in_a_box)
