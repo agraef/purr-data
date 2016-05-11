@@ -163,9 +163,12 @@ static void canvas_nlet_conf (t_canvas *x, int type) {
     /* this is rather confusing, but the canvas_cnct_[xlet]_tag already
        includes the type and index concatenated to the end. */
     gui_vmess("gui_gobj_configure_io", "xsiii",
-        x, type == 'o' ? x->gl_editor->canvas_cnct_outlet_tag :
+        x,
+        type == 'o' ? x->gl_editor->canvas_cnct_outlet_tag :
             x->gl_editor->canvas_cnct_inlet_tag,
-        isiemgui, issignal, 1);
+        isiemgui,
+        issignal,
+        1);
 }
 
 void canvas_getscroll (t_canvas *x) {
@@ -2301,7 +2304,12 @@ static void canvas_rightclick(t_canvas *x, int xpos, int ypos, t_gobj *y_sel)
     }
     else isobject = 0;
     gui_vmess("gui_canvas_popup", "xiiiii",
-        x, xpos, ypos, canprop, canopen, isobject);
+        x,
+        xpos,
+        ypos,
+        canprop,
+        canopen,
+        isobject);
 }
 
 /* ----  editors -- perhaps this and "vis" should go to g_editor.c ------- */
@@ -3376,8 +3384,19 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                         x->gl_editor->e_ywas = ypos;
                         /* This repetition of args needs to be pruned below */
                         gui_vmess("gui_canvas_line", "xssiiiiiiiiii",
-                            x, "newcord", (issignal ? "signal" : "control"),
-                            xpos, ypos, xpos, ypos, xpos, ypos, xpos, ypos, xpos, ypos);
+                            x,
+                            "newcord",
+                            (issignal ? "signal" : "control"),
+                            xpos,
+                            ypos,
+                            xpos,
+                            ypos,
+                            xpos,
+                            ypos,
+                            xpos,
+                            ypos,
+                            xpos,
+                            ypos);
                     }   
                     else
                     // jsarlo
@@ -3701,8 +3720,12 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
             //buf->u_redo = (t_undo_sel *)canvas_undo_set_selection(x);
             //canvas_undo_add(x, 11, "selection", buf);
         }
-        gui_vmess("gui_canvas_draw_selection", "xiiii", x,
-            xpos, ypos, xpos, ypos);
+        gui_vmess("gui_canvas_draw_selection", "xiiii",
+            x,
+            xpos,
+            ypos,
+            xpos,
+            ypos);
         x->gl_editor->e_xwas = xpos;
         x->gl_editor->e_ywas = ypos;
         x->gl_editor->e_onmotion = MA_REGION;
@@ -3823,8 +3846,19 @@ void canvas_drawconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2,
     if (yoff > ymax) yoff = ymax;
     sprintf(tagbuf, "l%lx", (long unsigned int)tag);
     gui_vmess("gui_canvas_line", "xssiiiiiiiiii",
-        x, tagbuf, (issignal ? "signal" : "control"), lx1, ly1, lx1, ly1 + yoff,
-        lx1 + halfx, ly1 + halfy, lx2, ly2 - yoff, lx2, ly2);
+        x,
+        tagbuf,
+        (issignal ? "signal" : "control"),
+        lx1,
+        ly1,
+        lx1,
+        ly1 + yoff,
+        lx1 + halfx,
+        ly1 + halfy,
+        lx2,
+        ly2 - yoff,
+        lx2,
+        ly2);
 }
 
 void canvas_updateconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2,
@@ -3861,14 +3895,24 @@ void canvas_updateconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2,
         {
             sprintf(cord_tag, "l%lx", (long unsigned int)tag);
             gui_vmess("gui_canvas_update_line", "xsiiiii",
-                x, cord_tag,
-                lx1, ly1, lx2, ly2, yoff);
+                x,
+                cord_tag,
+                lx1,
+                ly1,
+                lx2,
+                ly2,
+                yoff);
         }
         else
         {
             gui_vmess("gui_canvas_update_line", "xsiiiii",
-                x, "newcord",
-                lx1, ly1, lx2, ly2, yoff);
+                x,
+                "newcord",
+                lx1,
+                ly1,
+                lx2,
+                ly2,
+                yoff);
         }
     }
 }
@@ -4624,7 +4668,10 @@ static void canvas_doregion(t_canvas *x, int xpos, int ypos, int doit)
     {
         gui_vmess("gui_canvas_move_selection", "xiiii",
             x,
-            x->gl_editor->e_xwas, x->gl_editor->e_ywas, xpos, ypos);
+            x->gl_editor->e_xwas,
+            x->gl_editor->e_ywas,
+            xpos,
+            ypos);
     }
 }
 
