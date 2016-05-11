@@ -1,26 +1,26 @@
 #N struct bulb float x float y float r float g float b float a float
 s;
-#N canvas 199 68 650 527 10;
+#N canvas 78 43 650 527 10;
 #X obj 350 170 random 255;
 #X obj 420 170 random 255;
 #X obj 490 170 random 255;
 #X obj 350 134 trigger bang bang bang anything;
 #X obj 350 240 set bulb r g b a s;
-#X scalar bulb 37 89 50 26 143 1 2 \;;
-#X scalar bulb 207 89 141 98 156 1 2 \;;
-#X scalar bulb 117 89 221 41 109 1 2 \;;
-#X scalar bulb 37 189 147 213 194 1 2 \;;
-#X scalar bulb 204 187 147 213 194 1 2 \;;
-#X scalar bulb 117 189 162 230 120 1 2 \;;
-#X scalar bulb 37 289 107 163 157 1 2 \;;
-#X scalar bulb 207 289 2 197 206 1 2 \;;
-#X scalar bulb 117 289 125 4 42 1 2 \;;
-#X scalar bulb 287 289 22 49 33 1 2 \;;
-#X scalar bulb 467 289 105 204 27 1 2 \;;
-#X scalar bulb 377 289 224 181 45 1 2 \;;
-#X scalar bulb 37 -11 36 28 222 1 2 \;;
-#X scalar bulb 207 -11 122 187 225 1 2 \;;
-#X scalar bulb 117 -11 103 152 169 1 2 \;;
+#X scalar bulb 37 89 242 174 165 1 2 \;;
+#X scalar bulb 207 89 72 59 246 1 2 \;;
+#X scalar bulb 117 89 229 169 152 1 2 \;;
+#X scalar bulb 37 189 131 135 244 1 2 \;;
+#X scalar bulb 204 187 228 84 57 1 2 \;;
+#X scalar bulb 117 189 61 216 37 1 2 \;;
+#X scalar bulb 37 289 56 156 235 1 2 \;;
+#X scalar bulb 207 289 42 25 107 1 2 \;;
+#X scalar bulb 117 289 72 82 232 1 2 \;;
+#X scalar bulb 287 289 190 165 206 1 2 \;;
+#X scalar bulb 467 289 28 15 74 1 2 \;;
+#X scalar bulb 377 289 12 56 15 1 2 \;;
+#X scalar bulb 37 -11 157 44 25 1 2 \;;
+#X scalar bulb 207 -11 10 8 178 1 2 \;;
+#X scalar bulb 117 -11 187 16 118 1 2 \;;
 #X obj 399 112 set bulb s a;
 #X obj 350 211 pack f f f 0.3 5;
 #X msg 399 91 2 1 \$1;
@@ -34,34 +34,35 @@ for scalars.;
 #X obj 87 77 loadbang;
 #X obj 87 21 struct bulb float x float y float r float g float b float
 a float s;
-#N canvas 537 133 450 300 (subpatch) 0;
-#X obj 34 79 loadbang;
-#X obj 34 125 draw path M 100 100 m -43.3013 21.6987 a 50 50 0 1 1
-86.6025 0 c -6 12 -23.3013 18.3013 -23.3013 33.3013 a 50 50 0 0 1 -40
-0 c 0 -15 -17.3013 -21.3013 -23.3013 -33.3013 z;
-#X obj 34 174 draw path M 100 100 m -20 82 a 50 50 0 0 0 40 -2 l 0
+#N canvas 263 243 450 300 (subpatch) 0;
+#X obj 34 19 loadbang;
+#X obj 34 75 draw path M 100 100 m -43.3013 21.6987 a 50 50 0 1 1 86.6025
+0 c -6 12 -23.3013 18.3013 -23.3013 33.3013 a 50 50 0 0 1 -40 0 c 0
+-15 -17.3013 -21.3013 -23.3013 -33.3013 z;
+#X obj 34 124 draw path M 100 100 m -20 82 a 50 50 0 0 0 40 -2 l 0
 3 -10 8 -20 0 -10 -8 z;
-#X obj 34 210 draw path M 100 100 m -20 55 a 50 50 0 0 0 40 -2 l 0
+#X obj 34 160 draw path M 100 100 m -20 55 a 50 50 0 0 0 40 -2 l 0
 27 a -50 50 0 0 1 -40 2 z;
-#X obj 34 246 draw path M 100 100 m -20 53 a 50 50 0 0 0 40 0;
-#X obj 34 269 draw path M 100 100 m -20 82 a 50 50 0 0 0 40 0;
-#X obj 34 292 draw path M 100 100 m -20 61.75 a 50 50 0 0 0 40 -2;
-#X obj 34 315 draw path M 100 100 m -20 70.75 a 50 50 0 0 0 40 -2;
-#X obj 34 338 draw path M 100 100 m -20 79.75 a 50 50 0 0 0 40 -2;
-#X obj 34 361 draw path M 100 100 m -20 55 a 50 50 0 0 0 40 -2;
-#X obj 34 384 draw path M 100 100 m -20 64 a 50 50 0 0 0 40 -2;
-#X obj 34 407 draw path M 100 100 m -20 73 a 50 50 0 0 0 40 -2;
-#X obj 34 430 draw path M 100 100 m -20 82 a 50 50 0 0 0 40 -2;
-#X obj 34 453 draw path M 100 100 m -20 57.25 a 50 50 0 0 0 40 -2;
-#X obj 34 476 draw path M 100 100 m -20 66.25 a 50 50 0 0 0 40 -2;
-#X obj 34 499 draw path M 100 100 m -20 75.25 a 50 50 0 0 0 40 -2;
-#X obj 34 522 draw path M 100 100 m -20 59.5 a 50 50 0 0 0 40 -2;
-#X obj 34 545 draw path M 100 100 m -20 68.5 a 50 50 0 0 0 40 -2;
-#X obj 34 568 draw path M 100 100 m -20 77.5 a 50 50 0 0 0 40 -2;
-#X obj 34 591 draw path M 100 100 m -43.3013 21.6987 a 50 50 0 1 1
+#X obj 34 196 draw path M 100 100 m -20 53 a 50 50 0 0 0 40 0;
+#X obj 34 219 draw path M 100 100 m -20 82 a 50 50 0 0 0 40 0;
+#X obj 34 242 draw path M 100 100 m -20 61.75 a 50 50 0 0 0 40 -2;
+#X obj 34 265 draw path M 100 100 m -20 70.75 a 50 50 0 0 0 40 -2;
+#X obj 34 288 draw path M 100 100 m -20 79.75 a 50 50 0 0 0 40 -2;
+#X obj 34 311 draw path M 100 100 m -20 55 a 50 50 0 0 0 40 -2;
+#X obj 34 334 draw path M 100 100 m -20 64 a 50 50 0 0 0 40 -2;
+#X obj 34 357 draw path M 100 100 m -20 73 a 50 50 0 0 0 40 -2;
+#X obj 34 380 draw path M 100 100 m -20 82 a 50 50 0 0 0 40 -2;
+#X obj 34 403 draw path M 100 100 m -20 57.25 a 50 50 0 0 0 40 -2;
+#X obj 34 426 draw path M 100 100 m -20 66.25 a 50 50 0 0 0 40 -2;
+#X obj 34 449 draw path M 100 100 m -20 75.25 a 50 50 0 0 0 40 -2;
+#X obj 34 472 draw path M 100 100 m -20 59.5 a 50 50 0 0 0 40 -2;
+#X obj 34 495 draw path M 100 100 m -20 68.5 a 50 50 0 0 0 40 -2;
+#X obj 34 518 draw path M 100 100 m -20 77.5 a 50 50 0 0 0 40 -2;
+#X obj 34 541 draw path M 100 100 m -43.3013 21.6987 a 50 50 0 1 1
 86.6025 0 c -6 12 -23.3013 18.3013 -23.3013 33.3013 l 0 28 -10 8 -20
 0 -10 -8 0 -28 c 0 -15 -17.3013 -21.3013 -23.3013 -33.3013 z;
-#X msg 34 102 fill r g b a \, stroke-width s \, stroke r g b;
+#X msg 34 42 fill r g b \, fill-opacity a \, stroke-width s \, stroke
+r g b;
 #X connect 0 0 20 0;
 #X connect 20 0 1 0;
 #X restore 88 133 draw group;
