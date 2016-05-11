@@ -2210,8 +2210,11 @@ void text_drawborder(t_text *x, t_glist *glist,
             //    (selected ? "$pd_colors(selection)" : "$pd_colors(atom_box_border)"),
             //        tag, tag, (selected ? "selected" : ""));
             /* These coords can be greatly simplified... */
-            gui_vmess("gui_atom_draw_border", "xsiiiiiiiiiiii",
-                glist_getcanvas(glist), tag, x2 - x1, y2 - y1);
+            gui_vmess("gui_atom_draw_border", "xsii",
+                glist_getcanvas(glist),
+                tag,
+                x2 - x1,
+                y2 - y1);
         }
         else
         {
