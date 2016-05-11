@@ -1,5 +1,5 @@
 #N struct drawtut-transform float x float y;
-#N canvas 79 81 867 589 10;
+#N canvas 80 106 867 589 10;
 #X text 0 1 New Drawing Commands: transform;
 #X text 1 1 _______________________________;
 #X text 53 23 All [draw] objects understand the "transform" message.
@@ -42,8 +42,6 @@ message if you want multiple transformations.;
 #X obj 53 57 struct drawtut-transform float x float y;
 #X obj 257 140 f 100;
 #X obj 257 188 * 0.01;
-#X obj 337 188 * 0.01;
-#X obj 407 188 * 0.01;
 #X text 470 168 <- The attributes skewx and skewy can take any value.
 Here I limit them to be between -1 and 1 \, just so that the rectangle's
 dimensions don't grow too large.;
@@ -60,19 +58,17 @@ dimensions don't grow too large.;
 #X connect 10 0 28 0;
 #X connect 11 0 8 0;
 #X connect 11 1 25 3;
-#X connect 12 0 29 0;
+#X connect 12 0 13 0;
 #X connect 13 0 10 0;
 #X connect 13 1 25 4;
-#X connect 14 0 30 0;
+#X connect 14 0 15 0;
 #X connect 15 0 12 0;
 #X connect 15 1 25 5;
 #X connect 16 0 17 0;
-#X connect 17 0 33 0;
-#X connect 20 0 33 0;
+#X connect 17 0 31 0;
+#X connect 20 0 31 0;
 #X connect 24 0 27 0;
-#X connect 25 0 32 0;
+#X connect 25 0 30 0;
 #X connect 27 0 10 0;
 #X connect 28 0 11 0;
-#X connect 29 0 13 0;
-#X connect 30 0 15 0;
-#X connect 32 0 33 0;
+#X connect 30 0 31 0;
