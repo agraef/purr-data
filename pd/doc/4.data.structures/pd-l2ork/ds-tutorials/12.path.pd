@@ -1,5 +1,5 @@
 #N struct drawtut-path float x float y;
-#N canvas 0 19 850 556 10;
+#N canvas 1 25 850 556 10;
 #X text 0 1 New Drawing Commands: path;
 #X text 1 1 __________________________;
 #X text 53 23 Paths are complex drawings.;
@@ -36,5 +36,13 @@ each letter.;
 curves doesn't work as precisely as it should. This means some paths
 may extend past the edges of the selection rectangle in Pd. (Like the
 bottom of the "O" in the example above;
+#N canvas 290 275 450 300 META 0;
+#X text 16 26 LICENSE SIBSD;
+#X text 16 66 AUTHOR Jonathan Wilkes;
+#X text 16 86 HELP_PATCH_AUTHORS Jonathan Wilkes;
+#X text 16 6 KEYWORDS tutorial data_structure draw gui;
+#X text 16 46 DESCRIPTION drawing paths to display data structure data
+;
+#X restore 776 520 pd META;
 #X connect 5 0 11 0;
 #X connect 7 0 5 0;

@@ -1,5 +1,5 @@
 #N struct drawtut-polygon float x float y;
-#N canvas 0 19 845 575 10;
+#N canvas 1 25 845 575 10;
 #X msg 53 117 stroke blue;
 #X msg 142 117 fill yellow;
 #X msg 228 117 stroke-width \$1;
@@ -26,6 +26,14 @@ for how to fill overlapping areas.;
 #X text 517 57 nonzero;
 #X text 527 87 evenodd;
 #X msg 442 86 fill-rule 1;
+#N canvas 290 275 450 300 META 0;
+#X text 16 26 LICENSE SIBSD;
+#X text 16 66 AUTHOR Jonathan Wilkes;
+#X text 16 86 HELP_PATCH_AUTHORS Jonathan Wilkes;
+#X text 16 6 KEYWORDS tutorial data_structure draw gui;
+#X text 16 46 DESCRIPTION drawing polygons with the [draw] command
+;
+#X restore 780 544 pd META;
 #X connect 0 0 9 0;
 #X connect 1 0 9 0;
 #X connect 2 0 9 0;

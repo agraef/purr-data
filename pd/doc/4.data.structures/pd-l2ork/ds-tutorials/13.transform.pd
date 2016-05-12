@@ -1,53 +1,61 @@
 #N struct drawtut-transform float x float y;
-#N canvas 80 106 867 589 10;
+#N canvas 22 32 867 625 10;
 #X text 0 1 New Drawing Commands: transform;
 #X text 1 1 _______________________________;
 #X text 53 23 All [draw] objects understand the "transform" message.
 It allows you to do affine transformations on shapes.;
 #X text 53 83 Let's start with a simple rectangle:;
-#X floatatom 57 187 5 0 0 0 x/y - -, f 5;
-#X scalar drawtut-transform 197 449 \;;
-#X floatatom 97 187 5 0 0 0 - - -, f 5;
-#X obj 97 208 t b a;
-#X floatatom 177 187 5 0 0 0 rotate - -, f 5;
-#X obj 177 208 t b a;
-#X floatatom 257 167 5 0 0 0 scale - -, f 5;
-#X obj 257 208 t b a;
-#X floatatom 337 167 5 -100 100 0 skewx - -, f 5;
-#X obj 337 208 t b a;
-#X floatatom 407 167 5 -100 100 0 skewy - -, f 5;
-#X obj 407 208 t b a;
-#X floatatom 127 315 5 0 0 0 - - -, f 5;
-#X msg 127 336 transform rotate \$1 50 20;
-#X text 447 449 For "scale" \, you can either specify a single value
+#X floatatom 57 173 5 0 0 0 x/y - -, f 5;
+#X scalar drawtut-transform 197 435 \;;
+#X floatatom 97 173 5 0 0 0 - - -, f 5;
+#X obj 97 194 t b a;
+#X floatatom 177 173 5 0 0 0 rotate - -, f 5;
+#X obj 177 194 t b a;
+#X floatatom 257 153 5 0 0 0 scale - -, f 5;
+#X obj 257 194 t b a;
+#X floatatom 337 153 5 -100 100 0 skewx - -, f 5;
+#X obj 337 194 t b a;
+#X floatatom 407 153 5 -100 100 0 skewy - -, f 5;
+#X obj 407 194 t b a;
+#X floatatom 127 301 5 0 0 0 - - -, f 5;
+#X msg 127 322 transform rotate \$1 50 20;
+#X text 447 435 For "scale" \, you can either specify a single value
 to applied to both the x- and y-axis \, or one value for each. For
 rotation \, you can supply an additional x/y coordinate to specify
 the center of rotation. An example is in the second message box above.
 ;
-#X text 57 529 After the word "transform" \, you specify the name of
+#X text 57 515 After the word "transform" \, you specify the name of
 the affine transformation you'd like to apply. All are shown above.
 Pd then takes them and applies them in the order you specified.;
-#X msg 127 362 transform matrix 1 0 0 1 0 0;
-#X text 312 362 <- You can just feed the matrix values directly \,
+#X msg 127 348 transform matrix 1 0 0 1 0 0;
+#X text 312 348 <- You can just feed the matrix values directly \,
 too.;
-#X text 295 319 <- For rotations \, you can specify two extra floats
+#X text 295 305 <- For rotations \, you can specify two extra floats
 for the center of rotation. Here \, it makes the rotation happen around
 the center of the rectangle.;
-#X text 447 519 Notice that "transform" data doesn't accumulate in
+#X text 447 505 Notice that "transform" data doesn't accumulate in
 a [draw] object. When you send a new "transform" message the old values
 are forgotten. That's why you have to gang them all together in a single
 message if you want multiple transformations.;
-#X obj 257 119 loadbang;
-#X obj 57 258 pack 0 0 0 0 0 0;
+#X obj 257 105 loadbang;
+#X obj 57 244 pack 0 0 0 0 0 0;
 #X obj 53 57 struct drawtut-transform float x float y;
-#X obj 257 140 f 100;
-#X obj 257 188 * 0.01;
-#X text 470 168 <- The attributes skewx and skewy can take any value.
+#X obj 257 126 f 100;
+#X obj 257 174 * 0.01;
+#X text 470 154 <- The attributes skewx and skewy can take any value.
 Here I limit them to be between -1 and 1 \, just so that the rectangle's
 dimensions don't grow too large.;
-#X msg 57 279 transform translate \$1 \$2 rotate \$3 scale \$4 skewx
+#X msg 57 265 transform translate \$1 \$2 rotate \$3 scale \$4 skewx
 \$5 skewy \$6;
-#X obj 57 388 draw rect 100 40 0 0;
+#X obj 57 374 draw rect 100 40 0 0;
+#N canvas 290 275 450 300 META 0;
+#X text 16 26 LICENSE SIBSD;
+#X text 16 76 AUTHOR Jonathan Wilkes;
+#X text 16 96 HELP_PATCH_AUTHORS Jonathan Wilkes;
+#X text 16 6 KEYWORDS tutorial data_structure draw gui;
+#X text 16 46 DESCRIPTION applying affine transforms to data structure
+drawings;
+#X restore 784 593 pd META;
 #X connect 4 0 25 0;
 #X connect 6 0 7 0;
 #X connect 7 0 4 0;

@@ -1,5 +1,5 @@
 #N struct drawtut-attr float x float y;
-#N canvas 13 25 517 671 10;
+#N canvas 1 25 517 671 10;
 #X text 0 1 New Drawing Commands: attributes;
 #X text 0 1 ________________________________;
 #X text 53 23 Our shapes are pretty boring so far. Black lines around
@@ -40,6 +40,13 @@ for all scalars created from this [struct]. Later you will see how
 to set attributes to be different for each scalar.;
 #X msg 123 252 fill green;
 #X obj 53 313 draw rect 50 50 0 0;
+#N canvas 291 300 450 300 META 0;
+#X text 16 26 LICENSE SIBSD;
+#X text 16 66 AUTHOR Jonathan Wilkes;
+#X text 16 86 HELP_PATCH_AUTHORS Jonathan Wilkes;
+#X text 16 6 KEYWORDS tutorial data_structure draw gui;
+#X text 16 46 DESCRIPTION basic attributes for the [draw] command;
+#X restore 450 639 pd META;
 #X connect 8 0 19 0;
 #X connect 15 0 16 0;
 #X connect 16 0 19 0;

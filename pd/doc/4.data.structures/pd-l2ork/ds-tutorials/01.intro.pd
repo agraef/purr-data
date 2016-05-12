@@ -1,5 +1,5 @@
 #N struct foo float x float y;
-#N canvas 230 130 565 491 10;
+#N canvas 1 25 565 491 10;
 #X scalar foo 96 105 \;;
 #N canvas 429 132 808 465 welcome-animation 0;
 #X obj 147 7 bng 54 250 50 0 empty empty empty 17 7 0 10 -262144 -1
@@ -739,5 +739,12 @@ concepts. (Even the animation above doesn't use any pointers.);
 #X connect 25 0 22 0;
 #X restore 339 106 pd sfx~;
 #X obj 339 127 output~;
+#N canvas 290 275 450 300 META 0;
+#X text 16 26 LICENSE SIBSD;
+#X text 16 66 AUTHOR Jonathan Wilkes;
+#X text 16 86 HELP_PATCH_AUTHORS Jonathan Wilkes;
+#X text 16 6 KEYWORDS tutorial data_structure draw gui;
+#X text 16 46 DESCRIPTION short demo of the [draw] command;
+#X restore 502 455 pd META;
 #X connect 6 0 1 0;
 #X connect 11 0 12 0;

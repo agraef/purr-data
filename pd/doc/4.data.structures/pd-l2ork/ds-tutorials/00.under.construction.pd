@@ -1,5 +1,5 @@
 #N struct working-man-scalar float x float y;
-#N canvas 0 19 895 618 10;
+#N canvas 1 25 895 618 10;
 #N canvas 195 124 671 300 template 1;
 #X obj 121 -2492 struct working-man-scalar float x float y;
 #N canvas 725 143 450 300 init 0;
@@ -260,10 +260,18 @@ for drawing instructions \, but that isn't supported at the moment.
 ;
 #X text 43 570 * scalar bbox caching. Should give more control to the
 user as with mouse-dragging.;
-#X text 480 503 * way to reset an svg attribute. Probably by just sending
-a message with no arguments (not sure if tkpath supports this yet)
-;
 #X text 480 313 New:;
 #X text 480 333 * messages to set path data \, polygon points \, x
 \, y \, cx \, cy \, r \, height \, width \, etc.;
 #X text 480 373 Needed:;
+#N canvas 290 275 450 300 META 0;
+#X text 16 6 KEYWORDS tutorial data_structure draw;
+#X text 16 26 LICENSE SIBSD;
+#X text 16 46 DESCRIPTION overview of svg-based data structure drawing
+commands;
+#X text 16 76 AUTHOR Jonathan Wilkes;
+#X text 16 96 HELP_PATCH_AUTHORS Jonathan Wilkes;
+#X restore 771 580 pd META;
+#X text 480 502 * way to reset an svg attribute. Probably by just sending
+a message with no arguments (not sure if tkpath supports this yet)
+;

@@ -1,5 +1,5 @@
 #N struct drawtut-polyline float x float y;
-#N canvas 0 19 532 554 10;
+#N canvas 1 25 532 554 10;
 #X msg 228 137 stroke-width \$1;
 #X floatatom 228 116 5 0 0 0 - - -, f 5;
 #X text 0 1 New Drawing Commands: polyline;
@@ -29,6 +29,14 @@ the [draw] object quite powerful.;
 #X obj 53 103 loadbang;
 #X obj 440 114 * 0.001;
 #X msg 440 72 300;
+#N canvas 290 275 450 300 META 0;
+#X text 16 26 LICENSE SIBSD;
+#X text 16 66 AUTHOR Jonathan Wilkes;
+#X text 16 86 HELP_PATCH_AUTHORS Jonathan Wilkes;
+#X text 16 6 KEYWORDS tutorial data_structure draw gui;
+#X text 16 46 DESCRIPTION drawing a polyline with the [draw] command
+;
+#X restore 464 521 pd META;
 #X connect 0 0 6 0;
 #X connect 1 0 0 0;
 #X connect 9 0 19 0;

@@ -1,5 +1,5 @@
 #N struct drawtut-rect float x float y;
-#N canvas 15 32 515 614 10;
+#N canvas 1 25 515 614 10;
 #X text 0 1 __________________________;
 #X text 0 1 New Drawing Commands: rect;
 #X obj 53 87 struct drawtut-rect float x float y;
@@ -34,3 +34,11 @@ to integers.);
 The first two are the width and height of the rectangle. The third
 and fourth arguments are the x/y coordinates of the top-left corner
 of the rectangle. That's it!;
+#N canvas 290 275 450 300 META 0;
+#X text 16 26 LICENSE SIBSD;
+#X text 16 66 AUTHOR Jonathan Wilkes;
+#X text 16 86 HELP_PATCH_AUTHORS Jonathan Wilkes;
+#X text 16 6 KEYWORDS tutorial data_structure draw gui;
+#X text 16 46 DESCRIPTION drawing a rectangle with the [draw] command
+;
+#X restore 446 583 pd META;

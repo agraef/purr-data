@@ -1,5 +1,5 @@
 #N struct drawtut-animation float x float y;
-#N canvas 2 69 537 571 10;
+#N canvas 14 48 537 571 10;
 #X scalar drawtut-animation 47 309 \;;
 #X obj 47 131 struct drawtut-animation float x float y;
 #X text 0 1 New Drawing Commands: animation;
@@ -33,7 +33,7 @@ in the other direction!;
 #X text 112 524 How does it know?;
 #X msg 47 250 fill \$1 \$1 \$1;
 #X obj 47 188 * 255;
-#X obj 177 158 tgl 23 0 empty empty empty 17 7 0 10 -4034 -1 -1 1 1
+#X obj 177 158 tgl 23 0 empty empty empty 17 7 0 10 -4034 -1 -1 0 1
 ;
 #X msg 177 210 \$1 500;
 #X obj 177 188 * 255;
@@ -41,6 +41,14 @@ in the other direction!;
 #X obj 177 230 line 0 16.7;
 #X text 255 229 <- 2nd argument sets the "grain" rate;
 #X obj 47 279 draw rect 40 40 0 0;
+#N canvas 290 275 450 300 META 0;
+#X text 16 6 KEYWORDS tutorial data_structure draw;
+#X text 16 26 LICENSE SIBSD;
+#X text 16 66 AUTHOR Jonathan Wilkes;
+#X text 16 86 HELP_PATCH_AUTHORS Jonathan Wilkes;
+#X text 16 46 DESCRIPTION animating scalars with the [draw] command
+;
+#X restore 450 538 pd META;
 #X connect 6 0 17 0;
 #X connect 7 0 13 0;
 #X connect 9 0 10 0;

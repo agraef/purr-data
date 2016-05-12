@@ -1,5 +1,5 @@
 #N struct drawtut-ellipse float x float y;
-#N canvas 1 25 509 498 10;
+#N canvas 3 25 509 498 10;
 #X msg 141 117 stroke blue;
 #X msg 54 117 fill yellow;
 #X msg 228 117 stroke-width \$1;
@@ -18,6 +18,14 @@ values \, respectively. (So the one above would be [draw ellipse 86
 #X obj 53 153 draw ellipse 86 42 0 0;
 #X text 52 334 The [draw] object above creates an ellipse with an x-radius
 of 86 and a y-radius of 42 \, centered at (0 \, 0).;
+#N canvas 291 300 450 300 META 0;
+#X text 16 26 LICENSE SIBSD;
+#X text 16 66 AUTHOR Jonathan Wilkes;
+#X text 16 86 HELP_PATCH_AUTHORS Jonathan Wilkes;
+#X text 16 6 KEYWORDS tutorial data_structure draw gui;
+#X text 16 46 DESCRIPTION drawing an ellipse with the [draw] command
+;
+#X restore 445 465 pd META;
 #X connect 0 0 11 0;
 #X connect 1 0 11 0;
 #X connect 2 0 11 0;

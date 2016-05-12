@@ -1,5 +1,5 @@
 #N struct drawtut-circle float x float y;
-#N canvas 13 29 638 554 10;
+#N canvas 1 25 638 554 10;
 #X msg 143 117 stroke blue;
 #X text 52 484 Lines are only a single stroke. They don't have any
 inner area to fill \, so none of the messages like "fill" or "fill-rule"
@@ -21,6 +21,14 @@ by value you use for the radius. (That would be [draw circle 80 80
 #X obj 53 153 draw circle 80 0 0;
 #X text 52 374 The [draw] object above creates a circle with a radius
 of 80 pixels \, with the center of the circle at (0 \, 0).;
+#N canvas 291 300 450 300 META 0;
+#X text 16 26 LICENSE SIBSD;
+#X text 16 66 AUTHOR Jonathan Wilkes;
+#X text 16 86 HELP_PATCH_AUTHORS Jonathan Wilkes;
+#X text 16 6 KEYWORDS tutorial data_structure draw gui;
+#X text 16 46 DESCRIPTION drawing a circle with the [draw] command
+;
+#X restore 568 522 pd META;
 #X connect 0 0 12 0;
 #X connect 8 0 12 0;
 #X connect 9 0 12 0;

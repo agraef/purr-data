@@ -1,5 +1,5 @@
 #N struct drawtut-attr-saving float x float y;
-#N canvas 194 100 638 551 10;
+#N canvas 1 25 638 551 10;
 #X text 0 1 New Drawing Commands: attributes (continued);
 #X text 0 1 ____________________________________________;
 #X text 53 23 Saving attributes is fairly straightforward using message
@@ -22,5 +22,13 @@ each scalar.;
 #X text 228 280 <- Create another scalar in the empty object box by
 typing the struct name "drawtut-attr-saving" into it.;
 #X obj 53 153 draw rect 50 50 0 0;
+#N canvas 290 275 450 300 META 0;
+#X text 16 26 LICENSE SIBSD;
+#X text 16 76 AUTHOR Jonathan Wilkes;
+#X text 16 96 HELP_PATCH_AUTHORS Jonathan Wilkes;
+#X text 16 6 KEYWORDS tutorial data_structure draw gui;
+#X text 16 46 DESCRIPTION specifying display attributes with the [draw]
+command;
+#X restore 573 520 pd META;
 #X connect 3 0 6 0;
 #X connect 6 0 11 0;

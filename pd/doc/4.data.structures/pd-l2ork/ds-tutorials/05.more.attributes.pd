@@ -1,5 +1,5 @@
 #N struct drawtut-attr-cont float x float y;
-#N canvas 194 25 638 671 10;
+#N canvas 1 25 638 671 10;
 #X msg 93 112 fill red;
 #X text 0 1 New Drawing Commands: attributes (continued);
 #X text 0 1 ____________________________________________;
@@ -51,6 +51,14 @@ the appearance of a shape:;
 #X obj 93 85 loadbang;
 #X obj 161 533 * 0.5;
 #X obj 93 583 draw rect 50 50 0 0;
+#N canvas 290 275 450 300 META 0;
+#X text 16 26 LICENSE SIBSD;
+#X text 16 76 AUTHOR Jonathan Wilkes;
+#X text 16 96 HELP_PATCH_AUTHORS Jonathan Wilkes;
+#X text 16 6 KEYWORDS tutorial data_structure draw gui;
+#X text 16 46 DESCRIPTION more detail about display attributes with
+the [draw] command;
+#X restore 573 640 pd META;
 #X connect 0 0 42 0;
 #X connect 8 0 42 0;
 #X connect 10 0 12 0;
