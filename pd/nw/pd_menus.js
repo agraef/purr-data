@@ -36,6 +36,16 @@ function create_menu(gui, type) {
     // Window menu
     window_menu = new gui.Menu({ type: "menubar" });
 
+    // On OSX, we need to start with the built-in mac menu in order to
+    // get the application menu to show up correctly. Unfortunately, this
+    // will also spawn a built-in "Edit" and "Window" menu. Even more
+    // unfortunately, we must use the built-in "Edit" menu-- without it
+    // there is no way to get <command-v> shortcut to trigger the
+    // DOM "paste" event.
+    if (osx) {
+        window_menu.createMacBuiltin("purr-data");
+    }
+
     // File menu
     file_menu = new gui.Menu();
 
@@ -101,46 +111,94 @@ function create_menu(gui, type) {
     }));
 
     // Edit menu
-    edit_menu = new gui.Menu();
-
-    // Edit sub-entries
     m.edit = {};
-    if (canvas_menu) {
-        edit_menu.append(m.edit.undo = new gui.MenuItem({
+    // For OSX, we have to use the built-in "Edit" menu-- I haven't
+    // found any other way to get "paste" event to trickle down to
+    // the DOM. As a consequence, we must fetch the relevant menu
+    // items that were created above with createMacBuiltin and assign
+    // them to the relevant variables below
+    if (osx) {
+        edit_menu = window_menu.items[1].submenu;
+        m.edit.undo = window_menu.items[1].submenu.items[0];
+        // Remove the default Undo, since we can't seem to bind
+        // a click function to it
+        window_menu.items[1].submenu.remove(m.edit.undo);
+
+        // Now create a new one and insert it at the top
+        edit_menu.insert(m.edit.undo = new gui.MenuItem({
             label: l("menu.undo"),
-            tooltip: l("menu.undo_tt")
-        }));
-        edit_menu.append(m.edit.redo = new gui.MenuItem({
+            tooltip: l("menu.undo_tt"),
+            key: "z",
+            modifiers: cmd_or_ctrl
+        }), 0);
+
+        m.edit.redo = window_menu.items[1].submenu.items[1];
+        // Remove the default Undo, since we can't seem to bind
+        // a click function to it
+        window_menu.items[1].submenu.remove(m.edit.redo);
+
+        // Now create a new one and insert it at the top
+        edit_menu.insert(m.edit.redo = new gui.MenuItem({
             label: l("menu.redo"),
-            tooltip: l("menu.redo_tt")
-        }));
-        edit_menu.append(new gui.MenuItem({ type: "separator" }));
-        edit_menu.append(m.edit.cut = new gui.MenuItem({
-            label: l("menu.cut"),
-            key: "x",
+            tooltip: l("menu.redo_tt"),
+            key: "z",
+            modifiers: "shift+" + cmd_or_ctrl
+        }), 1);
+
+        // Note: window_menu.items[1].submenu.items[2] is the separator
+        m.edit.cut = window_menu.items[1].submenu.items[3];
+        m.edit.copy = window_menu.items[1].submenu.items[4];
+        m.edit.paste = window_menu.items[1].submenu.items[5];
+        // There's no "Delete" item for GNU/Linux or Windows--
+        // not sure yet what to do with it.
+        m.edit.delete = window_menu.items[1].submenu.items[6];
+        m.edit.selectall= window_menu.items[1].submenu.items[7];
+    } else {
+        edit_menu = new gui.Menu();
+        // Edit sub-entries
+        if (canvas_menu) {
+            edit_menu.append(m.edit.undo = new gui.MenuItem({
+                label: l("menu.undo"),
+                tooltip: l("menu.undo_tt")
+            }));
+            edit_menu.append(m.edit.redo = new gui.MenuItem({
+                label: l("menu.redo"),
+                tooltip: l("menu.redo_tt")
+            }));
+            edit_menu.append(new gui.MenuItem({ type: "separator" }));
+            edit_menu.append(m.edit.cut = new gui.MenuItem({
+                label: l("menu.cut"),
+                key: "x",
+                modifiers: cmd_or_ctrl,
+                tooltip: l("menu.cut_tt")
+            }));
+        }
+        edit_menu.append(m.edit.copy = new gui.MenuItem({
+            label: l("menu.copy"),
+            key: "c",
             modifiers: cmd_or_ctrl,
-            tooltip: l("menu.cut_tt")
+            tooltip: l("menu.copy_tt")
         }));
+        if (canvas_menu) {
+            // The nwjs menubar keybindings don't propagate down
+            // to the DOM. Here, we need the DOM to receive the
+            // "paste" event in case we want to paste a Pd file
+            // from an external buffer. So unfortunately we can't
+            // do the keybindings here. The side-effect is that
+            // "Ctrl-V" isn't displayed in the menu item.
+            edit_menu.append(m.edit.paste = new gui.MenuItem({
+                label: l("menu.paste"),
+                //key: "v",
+                //modifiers: cmd_or_ctrl,
+                tooltip: l("menu.paste_tt")
+            }));
+        }
     }
-    edit_menu.append(m.edit.copy = new gui.MenuItem({
-        label: l("menu.copy"),
-        key: "c",
-        modifiers: cmd_or_ctrl,
-        tooltip: l("menu.copy_tt")
-    }));
+
+    // We need "duplicate" for canvas_menu and for OSX, where it's not
+    // part of the builtin Edit menu...
+
     if (canvas_menu) {
-        // The nwjs menubar keybindings don't propagate down
-        // to the DOM. Here, we need the DOM to receive the
-        // "paste" event in case we want to paste a Pd file
-        // from an external buffer. So unfortunately we can't
-        // do the keybindings here. The side-effect is that
-        // "Ctrl-V" isn't displayed in the menu item.
-        edit_menu.append(m.edit.paste = new gui.MenuItem({
-            label: l("menu.paste"),
-            //key: "v",
-            //modifiers: cmd_or_ctrl,
-            tooltip: l("menu.paste_tt")
-        }));
         edit_menu.append(m.edit.duplicate = new gui.MenuItem({
             label: l("menu.duplicate"),
             key: "d",
@@ -148,12 +206,17 @@ function create_menu(gui, type) {
             tooltip: l("menu.duplicate_tt")
         }));
     }
-    edit_menu.append(m.edit.selectall = new gui.MenuItem({
-        label: l("menu.selectall"),
-        key: "a",
-        modifiers: cmd_or_ctrl,
-        tooltip: l("menu.selectall_tt")
-    }));
+
+    // OSX already has "Select All" in the builtin Edit menu...
+    if (!osx) {
+        edit_menu.append(m.edit.selectall = new gui.MenuItem({
+            label: l("menu.selectall"),
+            key: "a",
+            modifiers: cmd_or_ctrl,
+            tooltip: l("menu.selectall_tt")
+        }));
+    }
+
     if (canvas_menu) {
         // Unfortunately nw.js doesn't allow
         // key: "Return" or key: "Enter", so we
@@ -374,8 +437,12 @@ function create_menu(gui, type) {
 
     // Windows menu... call it "winman" (i.e., window management)
     // to avoid confusion
-    winman_menu = new gui.Menu();
-
+    if (osx) {
+        // on OSX, createMacBuiltin creates a window menu
+        winman_menu = window_menu.items[2].submenu;
+    } else {
+        winman_menu = new gui.Menu();
+    }
     // Win sub-entries
     m.win = {};
     winman_menu.append(m.win.nextwin = new gui.MenuItem({
@@ -479,46 +546,61 @@ function create_menu(gui, type) {
     }));
 
     // Add submenus to window menu
-
-    // On OSX, we need to start with the built-in mac menu in order to
-    // get the application menu to show up correctly. Unfortunately, this
-    // will also spawn a built-in "Edit" and "Window" menu. Even more
-    // unfortunately, we must use the built-in "Edit" menu-- without it
-    // there is no way to get <command-v> shortcut to trigger the
-    // DOM "paste" event.
     if (osx) {
-        window_menu.createMacBuiltin("purr-data");
-    }
-    window_menu.append(new gui.MenuItem({
-        label: l("menu.file"),
-        submenu: file_menu
-    }));
-    window_menu.append(new gui.MenuItem({
-        label: l("menu.edit"),
-        submenu: edit_menu
-    }));
-    window_menu.append(new gui.MenuItem({
-        label: l("menu.view"),
-        submenu: view_menu
-    }));
-    if (canvas_menu) {
+        window_menu.insert(new gui.MenuItem({
+            label: l("menu.file"),
+            submenu: file_menu
+        }), 1);
+        // Edit menu created from mac builtin above
+        window_menu.insert(new gui.MenuItem({
+            label: l("menu.view"),
+            submenu: view_menu
+        }), 3);
+        window_menu.insert(new gui.MenuItem({
+            label: l("menu.put"),
+            submenu: put_menu
+        }), 4);
+        // "Window" menu created from mac builtin above
+        window_menu.insert(new gui.MenuItem({
+            label: l("menu.media"),
+            submenu: media_menu
+        }), 5);
         window_menu.append(new gui.MenuItem({
-        label: l("menu.put"),
-        submenu: put_menu
+            label: l("menu.help"),
+            submenu: help_menu
+        }));
+    } else {
+        window_menu.append(new gui.MenuItem({
+            label: l("menu.file"),
+            submenu: file_menu
+        }));
+        window_menu.append(new gui.MenuItem({
+            label: l("menu.edit"),
+            submenu: edit_menu
+        }));
+        window_menu.append(new gui.MenuItem({
+            label: l("menu.view"),
+            submenu: view_menu
+        }));
+        if (canvas_menu) {
+            window_menu.append(new gui.MenuItem({
+                label: l("menu.put"),
+                submenu: put_menu
+            }));
+        }
+        window_menu.append(new gui.MenuItem({
+            label: l("menu.windows"),
+            submenu: winman_menu
+        }));
+        window_menu.append(new gui.MenuItem({
+            label: l("menu.media"),
+            submenu: media_menu
+        }));
+        window_menu.append(new gui.MenuItem({
+            label: l("menu.help"),
+            submenu: help_menu
         }));
     }
-    window_menu.append(new gui.MenuItem({
-    label: l("menu.windows"),
-    submenu: winman_menu
-    }));
-    window_menu.append(new gui.MenuItem({
-    label: l("menu.media"),
-    submenu: media_menu
-    }));
-    window_menu.append(new gui.MenuItem({
-    label: l("menu.help"),
-    submenu: help_menu
-    }));
 
     // Assign to window
     gui.Window.get().menu = window_menu;

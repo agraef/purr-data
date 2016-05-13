@@ -618,12 +618,14 @@ var canvas_events = (function() {
 
     // Copy event
     document.addEventListener("copy", function(evt) {
-        // This event doesn't currently get called because the
-        // nw menubar receives the event and doesn't propagate
-        // to the DOM. But if we add the ability to toggle menubar
-        // display, we might need to rely on this listener.
         pdgui.post("copy detected by DOM listener");
-        pdgui.pdsend(name, "copy");
+        // On OSX, this event gets triggered when we're editing
+        // inside an object/message box. So we only forward the
+        // copy message to Pd if we're in a "normal" canvas state
+        pdgui.post("copy detected by DOM listener");
+        if (canvas_events.get_state() === "normal") {
+            pdgui.pdsend(name, "copy");
+        }
     });
 
     // Listen to paste event using the half-baked Clipboard API from HTML5
@@ -658,11 +660,18 @@ var canvas_events = (function() {
         // user won't get bothered with a prompt at all, and normal Pd
         // paste behavior will follow.
 
-        // Finally, from a usability standpoint the main drawback is that
+        // From a usability standpoint the main drawback is that
         // you can't try to paste the same Pd source code more than once.
         // For users who want to pasting lots of source code this could be
         // a frustration, but Pd's normal copy/paste behavior remains
         // intuitive and in line with the way other apps tend to work.
+
+        // Yet another caveat: we only want to check the external buffer
+        // and/or send a "paste" event to Pd if the canvas is in a "normal"
+        // state.
+        if (canvas_events.get_state() !== "normal") {
+            return;
+        }
 
         if (might_be_a_pd_file(clipboard_data) &&
             clipboard_data !== pdgui.get_last_clipboard_data()) {
@@ -952,13 +961,18 @@ function create_popup_menu(name) {
 }
 
 function nw_undo_menu(undo_text, redo_text) {
-    if (undo_text === "no") {
+    // Disabling undo/redo menu buttons on OSX will
+    // turn off any DOM events associated with that
+    // key command. So we can't disable them here--
+    // otherwise it would turn off text-editing
+    // undo/redo.
+    if (process.platform !== "darwin" && undo_text === "no") {
         canvas_menu.edit.undo.enabled = false;
     } else {
         canvas_menu.edit.undo.enabled = true;
         canvas_menu.edit.undo.label = l("menu.undo") + " " + undo_text;
     }
-    if (redo_text === "no") {
+    if (process.platform !== "darwin" && redo_text === "no") {
         canvas_menu.edit.redo.enabled = false;
     } else {
         canvas_menu.edit.redo.enabled = true;
@@ -994,11 +1008,16 @@ function instantiate_live_box() {
 var canvas_menu = {};
 
 function set_edit_menu_modals(state) {
+    // OSX needs to keep these enabled, otherwise the events won't trigger
+    if (process.platform === "darwin") {
+        state = true;
+    }
     canvas_menu.edit.undo.enabled = state;
     canvas_menu.edit.redo.enabled = state;
     canvas_menu.edit.cut.enabled = state;
     canvas_menu.edit.copy.enabled = state;
     canvas_menu.edit.paste.enabled = state;
+    canvas_menu.edit.selectall.enabled = state;
 }
 
 function set_editmode_checkbox(state) {
@@ -1100,11 +1119,25 @@ function nw_create_patch_window_menus(gui, w, name) {
     // Edit menu
     minit(m.edit.undo, {
         enabled: true,
-        click: function () { pdgui.pdsend(name, "undo"); }
+        click: function () {
+            if (process.platform === "darwin" &&
+                canvas_events.get_state() === "text") {
+                document.execCommand("undo", false, null);
+            } else {
+                pdgui.pdsend(name, "undo");
+            }
+        }
     });
     minit(m.edit.redo, {
         enabled: true,
-        click: function () { pdgui.pdsend(name, "redo"); }
+        click: function () {
+            if (process.platform === "darwin" &&
+                canvas_events.get_state() === "text") {
+                document.execCommand("redo", false, null);
+            } else {
+                pdgui.pdsend(name, "redo");
+            }
+        }
     });
     minit(m.edit.cut, {
         enabled: true,
