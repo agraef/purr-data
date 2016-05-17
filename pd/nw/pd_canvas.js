@@ -107,8 +107,10 @@ function nw_window_focus_callback() {
 }
 
 function nw_window_blur_callback(name) {
-    // Fake a mouseup event
-    pdgui.pdsend(name, "mouseup_fake");
+    // Fake a mouseup event to keep from getting a dangling selection box
+    if (canvas_events.get_state === "normal") {
+        pdgui.pdsend(name, "mouseup_fake");
+    }
 }
 
 // These three functions need to be inside canvas_events closure
