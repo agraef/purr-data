@@ -1925,7 +1925,6 @@ void svg_updatevec(t_canvas *c, t_word *data, t_template *template,
     t_template *target, void *parent, t_symbol *s, t_svg *x, t_scalar *sc,
     int *predraw_bbox)
 {
-    // post("updateing vec...");
     int i, j;
     for (i = 0; i < template->t_n; i++)
     {
@@ -7592,7 +7591,7 @@ static void drawimage_free(t_drawimage *x)
     /* delete the parent image in the gui */
     char buf[50];
     //sprintf(buf, ".x%lx", (t_int)x);
-    sprintf(buf, ".x%lx", (long unsigned int)x);
+    sprintf(buf, "x%lx", (long unsigned int)x);
     pd_unbind(&x->x_obj.ob_pd, gensym(buf));
     gui_vmess("gui_drawimage_free", "x", x);
 }
