@@ -4741,6 +4741,15 @@ void canvas_mouseup(t_canvas *x,
             (glob_shift + glob_ctrl*2 + glob_alt*4), 0);
 }
 
+/* Cheap hack to simulate mouseup at the last x/y coord. We use this in
+   the GUI in case the window gets a blur event before a mouseup */
+void canvas_mouseup_fake(t_canvas *x)
+{
+    if (x->gl_editor && x->gl_edit)
+        canvas_mouseup(x, x->gl_editor->e_xwas, x->gl_editor->e_ywas, 0);
+}
+
+
 /* This entire function is made superfluous in the GUI port-- we get middle-
    click pasting for free by default. */
 void canvas_mousedown_middle(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
@@ -7459,6 +7468,8 @@ void g_editor_setup(void)
         A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_mouseup, gensym("mouseup"),
         A_FLOAT, A_FLOAT, A_FLOAT, A_NULL);
+    class_addmethod(canvas_class, (t_method)canvas_mouseup_fake,
+        gensym("mouseup_fake"), A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_mousedown_middle, gensym("mouse-2"),
         A_FLOAT, A_FLOAT, A_FLOAT, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_key, gensym("key"),

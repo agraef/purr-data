@@ -106,6 +106,11 @@ function nw_window_focus_callback() {
     }
 }
 
+function nw_window_blur_callback(name) {
+    // Fake a mouseup event
+    pdgui.pdsend(name, "mouseup_fake");
+}
+
 // These three functions need to be inside canvas_events closure
 function canvas_find_whole_word(elem) {
     canvas_events.match_words(elem.checked);
@@ -416,18 +421,11 @@ var canvas_events = (function() {
             },
             text_mousedown: function(evt) {
                 if (textbox() !== evt.target && !target_is_scrollbar(evt)) {
-                    // Yes: I _really_ want .innerText and NOT .textContent
-                    // here.  I want those newlines: although that isn't
-                    // standard in Pd-Vanilla, Pd-l2ork uses and preserves
-                    // them inside comments
                     utils.create_obj();
-                    //var fudi_msg = text_to_fudi(textbox().innerText);
-                    //pdgui.pdsend(name, "createobj", fudi_msg);
-                    //pdgui.post("formatted content is " + fudi_msg);
                     // send a mousedown and mouseup event to Pd to instantiate
                     // the object
                     events.mousedown(evt);
-                    events.mouseup(evt);
+                    //events.mouseup(evt);
                     canvas_events.normal();
                 }
                 evt.stopPropagation();
@@ -559,6 +557,10 @@ var canvas_events = (function() {
         },
         utils = {
             create_obj: function() {
+                // Yes: I _really_ want .innerText and NOT .textContent
+                // here.  I want those newlines: although that isn't
+                // standard in Pd-Vanilla, Pd-l2ork uses and preserves
+                // them inside comments
                 var fudi_msg = text_to_fudi(textbox().innerText),
                     fudi_array = string_to_array_of_chunks(fudi_msg),
                     i;
@@ -768,6 +770,9 @@ var canvas_events = (function() {
     });
     gui.Window.get().on("focus", function() {
         nw_window_focus_callback();
+    });
+    gui.Window.get().on("blur", function() {
+        nw_window_blur_callback(name);
     });
     // set minimum window size
     gui.Window.get().setMinimumSize(150, 100);
