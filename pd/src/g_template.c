@@ -7282,8 +7282,9 @@ static void drawimage_getrect(t_gobj *z, t_glist *glist,
     t_float m1, m2, m3, m4, m5, m6,
             tx1, ty1, tx2, ty2, t5, t6;
     t_svg *sa = (t_svg *)x->x_attr;
-    if (sa->x_vis.a_flag && !fielddesc_getfloat(&sa->x_vis.a_attr,
-            template, data, 0))
+    if (!fielddesc_getfloat(&sa->x_bbox, template, data, 0) ||
+        (sa->x_vis.a_flag && !fielddesc_getfloat(&sa->x_vis.a_attr,
+            template, data, 0)))
     {
         *xp1 = *yp1 = 0x7fffffff;
         *xp2 = *yp2 = -0x7fffffff;
@@ -7621,6 +7622,8 @@ static void drawimage_setup(void)
         gensym("transform"), A_GIMME, 0);
     class_addmethod(drawimage_class, (t_method)drawimage_forward,
         gensym("vis"), A_GIMME, 0);
+    class_addmethod(drawimage_class, (t_method)drawimage_forward,
+        gensym("bbox"), A_GIMME, 0);
     class_addmethod(drawimage_class, (t_method)drawimage_x,
         gensym("x"), A_GIMME, 0);
     class_addmethod(drawimage_class, (t_method)drawimage_y,
