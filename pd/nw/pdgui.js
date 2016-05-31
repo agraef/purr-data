@@ -2502,7 +2502,7 @@ function gui_mycanvas_coords(cid, tag, vis_width, vis_height, select_width, sele
 
 function gui_scalar_new(cid, tag, isselected, t1, t2, t3, t4, t5, t6,
     is_toplevel) {
-    // we should probably use create_gobj here, but we"re doing some initial
+    // we should probably use gui_gobj_new here, but we"re doing some initial
     // scaling that normal gobjs don't need...
     var svg = get_item(cid, "patchsvg"), // id for the svg in the DOM
         matrix,
@@ -3146,6 +3146,28 @@ function gui_scope_displace(cid, tag, dx, dy) {
 
 function add_popup(cid, popup) {
     popup_menu[cid] = popup;
+}
+
+// envgen
+function gui_envgen_draw_bg(cid, tag, bg_color, w, h, points_array) {
+    var g = get_gobj(cid, tag),
+        bg, pline;
+    bg = create_item(cid, "rect", {
+        width: w,
+        height: h,
+        fill: bg_color,
+        stroke: "black",
+        "stroke-width": "2",
+        transform: "translate(0.5, 0.5)"
+    });
+    pline = create_item(cid, "polyline", {
+        stroke: "black",
+        fill: "none",
+        transform: "translate(1, 1)",
+        points: points_array.join(" ")
+    });
+    g.appendChild(bg);
+    g.appendChild(pline);
 }
 
 exports.add_popup = add_popup;

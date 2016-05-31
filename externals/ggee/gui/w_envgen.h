@@ -13,45 +13,80 @@
 
 static void draw_inlets(t_envgen *x, t_glist *glist, int firsttime, int nin, int nout)
 {
-     int n = nout;
-     int nplus, i;
-     int xpos = text_xpix(&x->x_obj,glist);
-     int ypos = text_ypix(&x->x_obj,glist);
+    int n = nout;
+    int nplus, i;
+    int xpos = text_xpix(&x->x_obj,glist);
+    int ypos = text_ypix(&x->x_obj,glist);
 
-     nplus = (n == 1 ? 1 : n-1);
-     for (i = 0; i < n; i++)
-     {
-	  int onset = xpos + (x->w.width-2*BORDER) * i / nplus;
-	  if (firsttime)
-	       sys_vgui(".x%x.c create rectangle %d %d %d %d -tags %xo%d\n",
-			glist_getcanvas(glist),
-			onset, ypos + x->w.height - 1 + 2*BORDER,
-			onset + IOWIDTH, ypos + x->w.height + 2*BORDER,
-			x, i);
-	  else
-	       sys_vgui(".x%x.c coords %xo%d %d %d %d %d\n",
-			glist_getcanvas(glist), x, i,
-			onset, ypos + x->w.height - 1 + 2*BORDER,
-			onset + IOWIDTH, ypos + x->w.height + 2*BORDER);
-     }
-     n = nin; 
-     nplus = (n == 1 ? 1 : n-1);
-     for (i = 0; i < n; i++)
-     {
-	  int onset = xpos + (x->w.width - IOWIDTH) * i / nplus - BORDER;
-	  if (firsttime)
-	       sys_vgui(".x%x.c create rectangle %d %d %d %d -tags %xi%d\n",
-			glist_getcanvas(glist),
-			onset, ypos - BORDER,
-			     onset + IOWIDTH, ypos + 1 - BORDER,
-			x, i);
-	  else
-	       sys_vgui(".x%x.c coords %xi%d %d %d %d %d\n",
-			glist_getcanvas(glist), x, i,
-			onset, ypos - BORDER,
-			onset + IOWIDTH, ypos + 1 - BORDER);
-	  
-     }
+    nplus = (n == 1 ? 1 : n-1);
+    for (i = 0; i < n; i++)
+    {
+        int onset = xpos + (x->w.width-2*BORDER) * i / nplus;
+        if (firsttime)
+        {
+            //sys_vgui(".x%x.c create rectangle %d %d %d %d -tags %xo%d\n",
+            //    glist_getcanvas(glist),
+            //    onset, ypos + x->w.height - 1 + 2*BORDER,
+            //    onset + IOWIDTH, ypos + x->w.height + 2*BORDER,
+            //    x, i);
+            gui_vmess("gui_gobj_draw_io", "xxxiiiiiisiii",
+                glist_getcanvas(glist),
+                x,
+                x,
+                onset,
+                ypos + x->w.height - 1 + 2 * BORDER,
+                onset + IOWIDTH,
+                ypos + x->w.height + 2 * BORDER,
+                xpos,
+                ypos,
+                "o",
+                i,
+                0,
+                0);
+        }
+	else
+        {
+            //sys_vgui(".x%x.c coords %xo%d %d %d %d %d\n",
+            //    glist_getcanvas(glist), x, i,
+            //    onset, ypos + x->w.height - 1 + 2*BORDER,
+            //    onset + IOWIDTH, ypos + x->w.height + 2*BORDER);
+        }
+    }
+    n = nin;
+    nplus = (n == 1 ? 1 : n-1);
+    for (i = 0; i < n; i++)
+    {
+        int onset = xpos + (x->w.width - IOWIDTH) * i / nplus;
+        if (firsttime)
+        {
+            //sys_vgui(".x%x.c create rectangle %d %d %d %d -tags %xi%d\n",
+            //    glist_getcanvas(glist),
+            //    onset, ypos - BORDER,
+            //    onset + IOWIDTH, ypos + 1 - BORDER,
+            //    x, i);
+            gui_vmess("gui_gobj_draw_io", "xxxiiiiiisiii",
+                glist_getcanvas(glist),
+                x,
+                x,
+                onset,
+                ypos,
+                onset + IOWIDTH,
+                ypos + 1,
+                xpos,
+                ypos,
+                "i",
+                i,
+                0,
+                0);
+        }
+        else
+        {
+            //sys_vgui(".x%x.c coords %xi%d %d %d %d %d\n",
+            //    glist_getcanvas(glist), x, i,
+            //    onset, ypos - BORDER,
+            //    onset + IOWIDTH, ypos + 1 - BORDER);
+        }
+    }
 }
 
 
@@ -202,51 +237,71 @@ static void envgen_shownum(t_envgen *x,t_glist* glist)
 
 static void envgen_create(t_envgen *x, t_glist *glist)
 {
-     int i;
-     static char  buf[1024];
-     float xscale,yscale;
-     int xpos,ypos;
-     char num[40];
+    int i;
+    static char buf[1024];
+    float xscale, yscale;
+    int xpos, ypos;
+    char num[40];
 
-     xpos = text_xpix(&x->x_obj,glist);
-     ypos = (int) text_ypix(&x->x_obj,glist);
-     x->w.numclock = clock_new(x, (t_method) envgen_delnum);     
-     sys_vgui(".x%x.c create rectangle \
-%d %d %d %d -tags %xS -fill "BACKGROUNDCOLOR"\n",
-	      glist_getcanvas(glist),
-	      xpos-BORDER, ypos-BORDER,
-	      xpos + x->w.width+2*BORDER, ypos + x->w.height+2*BORDER,
-	      x);
-     
-     xscale = x->w.width/x->duration[x->last_state];
-     yscale = x->w.height;
-     
-     sprintf(buf,".x%x.c create line",(unsigned int)glist_getcanvas(glist));
-     for (i=0;i<=x->last_state;i++) {
-	  sprintf(num," %d %d ",(int)(xpos + x->duration[i]*xscale),
-		                (int)(ypos + x->w.height- x->finalvalues[i]*yscale));
-	  strcat(buf,num);
-     }
-     
-     sprintf(num,"-tags %pP\n",x);
-     strcat(buf,num);
-     sys_vgui("%s",buf);
-     envgen_create_doodles(x,glist);
+    xpos = text_xpix(&x->x_obj, glist);
+    ypos = (int)text_ypix(&x->x_obj, glist);
+    x->w.numclock = clock_new(x, (t_method)envgen_delnum);     
+
+    gui_vmess("gui_gobj_new", "xxsiii",
+        glist_getcanvas(glist),
+        x,
+        "obj",
+        xpos,
+        ypos);    
+
+    //sys_vgui(".x%x.c create rectangle "
+    //         "%d %d %d %d -tags %xS -fill "BACKGROUNDCOLOR"\n",
+    //    glist_getcanvas(glist),
+    //    xpos-BORDER, ypos-BORDER,
+    //    xpos + x->w.width+2*BORDER, ypos + x->w.height+2*BORDER,
+    //    x);
+    gui_start_vmess("gui_envgen_draw_bg", "xxsii",
+        glist_getcanvas(glist),
+        x,
+        BACKGROUNDCOLOR,
+        x->w.width + 2 * BORDER,
+        x->w.height + 2 * BORDER);
+
+    xscale = x->w.width / x->duration[x->last_state];
+    yscale = x->w.height;
+
+    //sprintf(buf,".x%x.c create line",(unsigned int)glist_getcanvas(glist));
+    gui_start_array();
+    for (i = 0; i <= x->last_state; i++)
+    {
+        //sprintf(num," %d %d ",
+        //    (int)(xpos + x->duration[i] * xscale),
+        //    (int)(ypos + x->w.height - x->finalvalues[i] * yscale));
+        //strcat(buf,num);
+        gui_i(x->duration[i] * xscale);
+        gui_i(x->w.height - x->finalvalues[i] * yscale);
+    }
+    gui_end_array();
+    gui_end_vmess();
+
+    //sprintf(num,"-tags %pP\n",x);
+    //strcat(buf,num);
+    //sys_vgui("%s",buf);
+    envgen_create_doodles(x,glist);
 }
-
 
 static void envgen_update(t_envgen *x, t_glist *glist)
 {
-int i;
-     static char  buf[1024];
-     float xscale,yscale;
-     char num[40];
-     int xpos = text_xpix(&x->x_obj,glist);
-     int ypos = text_ypix(&x->x_obj,glist);
+    int i;
+    static char  buf[1024];
+    float xscale,yscale;
+    char num[40];
+    int xpos = text_xpix(&x->x_obj,glist);
+    int ypos = text_ypix(&x->x_obj,glist);
 
-     sys_vgui(".x%x.c coords %xS \
+    sys_vgui(".x%x.c coords %xS \
 %d %d %d %d\n",
-	      glist_getcanvas(glist), x,
+      glist_getcanvas(glist), x,
 	      xpos - BORDER, ypos -BORDER,
 	      xpos + x->w.width+2*BORDER, ypos + x->w.height+2*BORDER);
      
@@ -310,8 +365,10 @@ static void envgen_getrect(t_gobj *z, t_glist *owner,
 
     width = s->w.width + 2*BORDER;
     height = s->w.height + 2*BORDER;
-    *xp1 = text_xpix(&s->x_obj,owner)-BORDER;
-    *yp1 = text_ypix(&s->x_obj,owner)-BORDER;
+    //*xp1 = text_xpix(&s->x_obj,owner)-BORDER;
+    //*yp1 = text_ypix(&s->x_obj,owner)-BORDER;
+    *xp1 = text_xpix(&s->x_obj,owner);
+    *yp1 = text_ypix(&s->x_obj,owner);
     *xp2 = text_xpix(&s->x_obj,owner) + width + 4;
     *yp2 = text_ypix(&s->x_obj,owner) + height + 4;
 }
