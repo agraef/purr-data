@@ -3151,7 +3151,7 @@ function add_popup(cid, popup) {
 // envgen
 function gui_envgen_draw_bg(cid, tag, bg_color, w, h, points_array) {
     var g = get_gobj(cid, tag),
-        bg, pline;
+        bg, border, pline;
     bg = create_item(cid, "rect", {
         width: w,
         height: h,
@@ -3160,6 +3160,17 @@ function gui_envgen_draw_bg(cid, tag, bg_color, w, h, points_array) {
         "stroke-width": "2",
         transform: "translate(0.5, 0.5)"
     });
+    // draw an extra path so we can give envgen
+    // a border class without affecting the
+    // background color of envgen
+    border = create_item(cid, "path", {
+        "stroke-width": 1,
+        d: ["M", 0, 0, w+1, 0,
+            "M", w+1, 0, w+1, h+1,
+            "M", w+1, h+1, 0, h+1,
+            "M", 0, h+1, 0, 0].join(" "),
+        "class": "border",
+    });
     pline = create_item(cid, "polyline", {
         stroke: "black",
         fill: "none",
@@ -3167,6 +3178,7 @@ function gui_envgen_draw_bg(cid, tag, bg_color, w, h, points_array) {
         points: points_array.join(" ")
     });
     g.appendChild(bg);
+    g.appendChild(border);
     g.appendChild(pline);
 }
 
@@ -3194,13 +3206,55 @@ function gui_envgen_erase_doodles(cid, tag) {
     }
 }
 
-function gui_envgen_coords(cid, tag, x, y, points_array) {
+function gui_envgen_coords(cid, tag, w, h, points_array) {
     var g = get_gobj(cid, tag),
+        bg = g.querySelector("rect"),
+        border = g.querySelector(".border"),
         polyline = g.querySelector("polyline");
-    elem_move(g, x, y);
+    configure_item(bg, {
+        width: w,
+        height: h
+    });
+    configure_item(border, {
+        d: ["M", 0, 0, w+1, 0,
+            "M", w+1, 0, w+1, h+1,
+            "M", w+1, h+1, 0, h+1,
+            "M", 0, h+1, 0, 0].join(" ")
+    });
     configure_item(polyline, {
         points: points_array.join(" ")
     });
+}
+
+function gui_envgen_text(cid, tag, x, y, value, duration) {
+    var g = get_gobj(cid, tag),
+        svg_text;
+    svg_text = create_item(cid, "text", {
+        transform: "translate(" + x + ")",
+        y: y,
+        "font-size": "12px"
+    });
+    text_to_tspans(cid, svg_text, value + "x" + duration);
+    g.appendChild(svg_text);
+}
+
+function gui_envgen_erase_text(cid, tag) {
+    var g = get_gobj(cid, tag),
+        svg_text = g.querySelector("text");
+    // Pd preemptively erases the text, so we must check
+    // for existence here
+    if (svg_text) {
+        svg_text.parentNode.removeChild(svg_text);
+    }
+}
+
+function gui_envgen_select(cid, tag, state) {
+    var g = get_gobj(cid, tag);
+    if (state !== 0) {
+        g.classList.add("selected");
+    } else {
+        g.classList.remove("selected");
+    }
 }
 
 exports.add_popup = add_popup;
