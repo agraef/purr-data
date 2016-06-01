@@ -3163,11 +3163,44 @@ function gui_envgen_draw_bg(cid, tag, bg_color, w, h, points_array) {
     pline = create_item(cid, "polyline", {
         stroke: "black",
         fill: "none",
-        transform: "translate(1, 1)",
+        transform: "translate(2, 2)",
         points: points_array.join(" ")
     });
     g.appendChild(bg);
     g.appendChild(pline);
+}
+
+function gui_envgen_draw_doodle(cid, tag, cx, cy) {
+    var g = get_gobj(cid, tag),
+        d;
+
+    d = create_item(cid, "circle", {
+        r: "2",
+        cx: cx + 2,
+        cy: cy + 2
+    });
+
+    g.appendChild(d);
+}
+
+function gui_envgen_erase_doodles(cid, tag) {
+    var g = get_gobj(cid, tag),
+        elem_array = g.querySelectorAll("circle"),
+        i;
+    if (elem_array.length > 0) {
+        for (i = 0; i < elem_array.length; i++) {
+            elem_array[i].parentNode.removeChild(elem_array[i]);
+        }
+    }
+}
+
+function gui_envgen_coords(cid, tag, x, y, points_array) {
+    var g = get_gobj(cid, tag),
+        polyline = g.querySelector("polyline");
+    elem_move(g, x, y);
+    configure_item(polyline, {
+        points: points_array.join(" ")
+    });
 }
 
 exports.add_popup = add_popup;
