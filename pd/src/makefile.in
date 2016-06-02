@@ -149,6 +149,7 @@ else
 endif
 
 externs: 
+	make -C ../extra/bob~     @EXTERNTARGET@
 	make -C ../extra/bonk~    @EXTERNTARGET@
 	make -C ../extra/choice   @EXTERNTARGET@
 	make -C ../extra/expr~    @EXTERNTARGET@
