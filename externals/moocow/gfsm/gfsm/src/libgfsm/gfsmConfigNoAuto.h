@@ -1,0 +1,1 @@
+../.././src/libgfsm/gfsmConfigAuto.h.in

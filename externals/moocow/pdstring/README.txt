@@ -17,13 +17,11 @@ INSTALLATION
 BUILD OPTIONS
     The 'configure' script supports the following options, among others:
 
-    *   --help
-
+    * --help
         Output a brief usage summary of the 'configure' script, including a
         list of supported options and influential environment variables.
 
-    *   --enable-debug , --disable-debug
-
+    * --enable-debug , --disable-debug
         Whether to enable verbose debugging messages. Default=no.
 
 ACKNOWLEDGEMENTS

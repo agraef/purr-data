@@ -10,8 +10,7 @@ DESCRIPTION
     Currently tested only under linux.
 
 REQUIREMENTS
-    *   libflite >= v1.1
-
+    * libflite >= v1.1
         The 'libflite' library by Alan W Black and Keven A. Lenzo is
         required to build the PD 'flite' external. It is available from
         http://cmuflite.org.
@@ -34,20 +33,16 @@ INSTALLATION
 BUILD OPTIONS
     The 'configure' script supports the following options, among others:
 
-    *   --with-flite-dir=DIR
-
+    * --with-flite-dir=DIR
         Specify the base directory of the libflite distribution.
 
-    *   --with-pd-dir=DIR
-
+    * --with-pd-dir=DIR
         Specify PD base directory.
 
-    *   --enable-debug , --disable-debug
-
+    * --enable-debug , --disable-debug
         Whether to enable verbose debugging messages. Default=no.
 
-    *   Environment Variables
-
+    * Environment Variables
         CPPFLAGS, CFLAGS, LDFLAGS, etc.
 
     See the output of './configure --help' for more options.
