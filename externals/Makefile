@@ -1203,7 +1203,7 @@ moocow_clean:
 	$(MAKE) -C $(externals_src)/moocow/extended distclean
 	-rm -f -- $(MOOCOW_DIR)/*.bak
 	-rm -f -- $(MOOCOW_DIR)/*.*~
-
+	cp -f $(MOOCOW_DIR)/../gfsm/gfsm/src/libgfsm/default/* $(MOOCOW_DIR)/../gfsm/gfsm/src/libgfsm/ 
 
 
 #------------------------------------------------------------------------------#
