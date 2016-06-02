@@ -130,7 +130,7 @@ void midifile_setup(void)
     class_addmethod(midifile_class, (t_method)midifile_single_track, gensym("track"), A_DEFFLOAT, 0);
     class_addmethod(midifile_class, (t_method)midifile_rewind, gensym("rewind"), 0);
     class_addmethod(midifile_class, (t_method)midifile_verbosity, gensym("verbose"), A_DEFFLOAT, 0);
-    class_sethelpsymbol(midifile_class, gensym("midifile-help"));
+    class_sethelpsymbol(midifile_class, gensym("midifile"));
 }
 
 static void *midifile_new(t_symbol *s, int argc, t_atom *argv)
