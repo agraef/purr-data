@@ -129,14 +129,12 @@ if [ $full -gt 0 -o $deb -gt 0 ]
 then
 	echo "Pd-L2Ork full installer... IMPORTANT! To ensure you have the most up-to-date submodules, this process requires internet connection to pull sources from various repositories..."
 
-	# init all submodules (only necessary the first time)
-	git submodule init
-
 	if [ -d .git ]; then
 		# check if Gem submodule is empty, and if so do first init
 		if [ "$(ls -A Gem)" ]; then
 			git submodule update
 		else
+			# init all submodules (only necessary the first time)
 			git submodule init
 			git submodule update
 		fi
@@ -185,7 +183,7 @@ then
 	#	then
 		cd l2ork_addons/cwiid/
 		# install cwiid
-		git submodule update
+		# git submodule update
 		aclocal
 		autoconf
 		./configure --with-python=python2
@@ -324,7 +322,7 @@ then
 	#fi
 	# install rtcmix~ external
 	cd rtcmix-in-pd/
-	git submodule update
+	#git submodule update
 	cd RTcmix*
 	./configure
 	#make clean
@@ -346,7 +344,7 @@ then
 	cd ../
 	# install lyonpotpourri
 	cd lyonpotpourri/
-	git submodule update
+	#git submodule update
 	make
 	mkdir -p ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/lyon
 	# do not include cartopol and poltocar since cyclone library already has those
