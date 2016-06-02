@@ -1,3 +1,0 @@
-TYPES = PDDPLINK
-
-PDDPLINK_SOURCES = pddplink.c

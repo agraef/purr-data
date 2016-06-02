@@ -1,6 +1,0 @@
-puts before
-
-#> test button
-#. -bg green -text test
-
-puts after

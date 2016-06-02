@@ -1,7 +1,0 @@
-CX_SOURCES = \
-cyclone.c \
-maxmode.c \
-dummies.c
-
-OTHER_SOURCES = \
-nettles.c
