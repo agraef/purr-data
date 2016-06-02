@@ -272,6 +272,11 @@ static void shell_anything(t_shell *x, t_symbol *s, int ac, t_atom *at)
 
 void shell_free(t_shell* x)
 {
+    if (x->fdpipe[0] != -1)
+    { 
+        kill(x->pid,SIGKILL);
+        shell_cleanup(x);
+    }
     binbuf_free(x->x_binbuf);
 }
 
