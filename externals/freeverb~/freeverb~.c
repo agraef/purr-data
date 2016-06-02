@@ -159,7 +159,8 @@ static inline float fix_denorm_nan_float(float v)
     u.f = v;
     if ((((u.ul & 0x7f800000) == 0L) && (u.f != 0.f)) || ((u.ul & 0x7f800000) == 0x7f800000))
         /* if the float is denormal or NaN, return 0.0 */
-        return 0.0f;
+        v = 0.0f;
+        //return 0.0f;
 #endif //IRIX
     return v;
 }
