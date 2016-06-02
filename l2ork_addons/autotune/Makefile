@@ -57,7 +57,7 @@ INSTALL = install
 INSTALL_FILE    = $(INSTALL) -p -m 644
 INSTALL_DIR     = $(INSTALL) -p -m 755 -d
 
-CFLAGS = -DPD -I ../../pd/src -Wall -W -g
+CFLAGS = -DPD -I ../../pd/src -Wall -W -g -fPIC
 LDFLAGS =  
 LIBS = 
 ALLSOURCES := $(SOURCES) $(SOURCES_android) $(SOURCES_cygwin) $(SOURCES_macosx) \

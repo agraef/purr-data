@@ -33,6 +33,8 @@ typedef struct _params
     int *p_thread;
 } t_params;
 
+static int wiringPiAlreadyCalled = 0;
+
 /*
  * softPwmThread:
  *  Thread to do the actual PWM output
@@ -422,7 +424,11 @@ static void *disis_gpio_new(t_floatarg f)
     x->x_params.p_val = &(x->x_softpwmval);
     x->x_params.p_thread = &(x->x_softpwm_thread);
 
-    wiringPiSetupGpio();
+    if (!wiringPiAlreadyCalled)
+    {
+        wiringPiSetupGpio();
+        wiringPiAlreadyCalled = 1;
+    }
     //x->x_pwmrange = 0;
     //x->x_chown = gensym(buf);
     return (x);

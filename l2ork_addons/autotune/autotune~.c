@@ -9,10 +9,17 @@
  VERSION 0.2
 
  Ivica Ico Bukvic <ico.bukvic.net>
- VERSION 0.9
-
+ VERSION 0.9.1
  changes:
-	*compatible with the latest version of autotalent
+     *added ability to specify FFT size
+     *added ability to specify hop (window) size--requires further refinement
+      to allow for more nimble pitch readjustment
+     *added pull 2 value where pitch pull is relative to the closest pitch
+     *circumvented segfaults due to NANs--may require a better fix
+
+ VERSION 0.9
+ changes:
+     *compatible with the latest version of autotalent
  
  This program is free software; you can redistribute it and/or modify        
  it under the terms of the GNU General Public License as published by        
@@ -264,7 +271,7 @@ typedef struct _autotune 	// Data structure for this object PD
 
 
 //prototypes for methods
-void *autotune_new();
+void *autotune_new(t_symbol *s, int argc, t_atom *argv);
 void autotune_free(t_autotune *x);	
 void autotune_init(t_autotune *x, unsigned long sr);
 t_int *autotune_perform(t_int *w);
@@ -286,6 +293,7 @@ void autotune_lfo_symmetry(t_autotune *x, t_floatarg f);
 void autotune_formant_correction(t_autotune *x, t_floatarg f);
 void autotune_formant_warp(t_autotune *x, t_floatarg f);
 void autotune_scale_warp(t_autotune *x, t_floatarg f);
+void autotune_confidence(t_autotune *x, t_floatarg f);
 void autotune_processclock(t_autotune *x);
 
 
@@ -294,10 +302,10 @@ void autotune_processclock(t_autotune *x);
 void autotune_tilde_setup(void)
 {
 	autotune_class = class_new(gensym("autotune~"), (t_newmethod)autotune_new, 
-							   (t_method)autotune_free ,sizeof(t_autotune), 0,A_GIMME,0);
+							   (t_method)autotune_free ,sizeof(t_autotune),0,A_GIMME,0);
 	CLASS_MAINSIGNALIN(autotune_class, t_autotune, x_f );
-	class_addmethod(autotune_class,(t_method)autotune_dsp, gensym("dsp"), 0);
-	class_addmethod(autotune_class,(t_method)autotune_assist, gensym("assist"), 0);
+	class_addmethod(autotune_class,(t_method)autotune_dsp, gensym("dsp"),0);
+	class_addmethod(autotune_class,(t_method)autotune_assist, gensym("assist"),0);
 	class_addmethod(autotune_class,(t_method)autotune_list,gensym("list"),A_GIMME,0);
 	class_addmethod(autotune_class,(t_method)autotune_mix,gensym("mix"),A_FLOAT,0);
 	class_addmethod(autotune_class,(t_method)autotune_shift,gensym("shift"),A_FLOAT,0);
@@ -313,17 +321,53 @@ void autotune_tilde_setup(void)
 	class_addmethod(autotune_class,(t_method)autotune_formant_correction,gensym("fcorr"),A_FLOAT,0);
 	class_addmethod(autotune_class,(t_method)autotune_formant_warp,gensym("warp"),A_FLOAT,0);
 	class_addmethod(autotune_class,(t_method)autotune_scale_warp,gensym("scwarp"),A_FLOAT,0);
-	post("autotune~ v.0.9");
-	post("Ivica Ico Bukvic 2015");
+	class_addmethod(autotune_class,(t_method)autotune_confidence,gensym("confidence"),A_FLOAT,0);
+	post("autotune~ v.0.9.2");
+	post("Ivica Ico Bukvic 2016");
 }
 
 
+int autotune_power_of_two (int x)
+{
+	 while (((x % 2) == 0) && x > 1) /* While x is even and > 1 */
+	 	x /= 2;
+	 return (x == 1);
+}
+
 
 // Create - Contruction of signal inlets and outlets
-void *autotune_new()
+void *autotune_new(t_symbol *s, int argc, t_atom *argv)
 {
     unsigned long sr;
+    int fft_window = 0;
+    int fft_hop = 0;
+
     t_autotune *x = (t_autotune *)pd_new(autotune_class);
+
+    if (argc && argv->a_type == A_FLOAT) // got FFT window
+    {
+        fft_window = (int)atom_getint(argv);
+
+        if (fft_window < 0) fft_window = 0;
+        if (!autotune_power_of_two(fft_window)) fft_window = 0;
+        argv++;
+        argc--;
+    }
+
+    if (argc && argv->a_type == A_FLOAT) // got hop number
+    {
+        fft_hop = (int)atom_getint(argv);
+
+        if (fft_hop < 2 || fft_hop > 32) fft_hop = 0;
+        argv++;
+        argc--;
+    }
+
+    if (fft_window != 0)
+    	x->cbsize = fft_window;
+
+    if (fft_hop != 0)
+    	x->noverlap = fft_hop;
 	
 	if(sys_getsr()) sr = sys_getsr();
 	else sr = 44100;
@@ -408,11 +452,14 @@ void autotune_init(t_autotune *x,unsigned long sr)
 	x->aref = 440;
 	x->fTune = x->aref;
 	
-	if (x->fs >=88200) {
-		x->cbsize = 4096;
-	}
-	else {
-		x->cbsize = 2048;
+	if (x->cbsize == 0)
+	{
+		if (x->fs >=88200) {
+			x->cbsize = 4096;
+		}
+		else {
+			x->cbsize = 2048;
+		}
 	}
 	x->corrsize = x->cbsize / 2 + 1;
 	
@@ -471,7 +518,10 @@ void autotune_init(t_autotune *x,unsigned long sr)
 		x->cbwindow[ti+x->cbsize/4] = -0.5*cos(4*PI*ti/(x->cbsize - 1)) + 0.5;
 	}
 	
-	x->noverlap = 4;
+	if (x->noverlap == 0)
+		x->noverlap = 4;
+
+	//fprintf(stderr,"%d %d\n", x->cbsize, x->noverlap);
 	
 	x->fx = fft_con(x->cbsize);
 	
@@ -617,47 +667,47 @@ t_int *autotune_perform(t_int *w)
 	
 		//
 	
-	long int ti;
-	long int ti2;
-	long int ti3;
-	long int ti4;
-	float tf;
-	float tf2;
-	float tf3;
+	volatile long int ti;
+	volatile long int ti2;
+	volatile long int ti3;
+	volatile long int ti4;
+	volatile float tf;
+	volatile float tf2;
+	volatile float tf3;
 
 	// Variables for cubic spline interpolator
-	float indd;
-	int ind0;
-	int ind1;
-	int ind2;
-	int ind3;
-	float vald;
-	float val0;
-	float val1;
-	float val2;
-	float val3;
+	volatile float indd;
+	volatile int ind0;
+	volatile int ind1;
+	volatile int ind2;
+	volatile int ind3;
+	volatile float vald;
+	volatile float val0;
+	volatile float val1;
+	volatile float val2;
+	volatile float val3;
 
-	int lowersnap;
-	int uppersnap;
-	float lfoval;
+	volatile int lowersnap;
+	volatile int uppersnap;
+	volatile float lfoval;
 
-	float pperiod;
-	float inpitch;
-	float conf;
-	float outpitch;
-	float aref;
-	float fa;
-	float fb;
-	float fc;
-	float fk;
-	float flamb;
-	float frlamb;
-	float falph;
-	float foma;
-	float f1resp;
-	float f0resp;
-	float flpa;
-	int ford;
+	volatile float pperiod;
+	volatile float inpitch;
+	volatile float conf;
+	volatile float outpitch;
+	volatile float aref;
+	volatile float fa;
+	volatile float fb;
+	volatile float fc;
+	volatile float fk;
+	volatile float flamb;
+	volatile float frlamb;
+	volatile float falph;
+	volatile float foma;
+	volatile float f1resp;
+	volatile float f0resp;
+	volatile float flpa;
+	volatile int ford;
 
 	// Some logic for the semitone->scale and scale->semitone conversion
 	// If no notes are selected as being in the scale, instead snap to all notes
@@ -670,7 +720,7 @@ t_int *autotune_perform(t_int *w)
 		}
 		else {
 			iPitch2Note[ti] = -1;
-			}
+		}
 	}
 	numNotes = ti2;
 	while (ti2<12) {
@@ -773,6 +823,7 @@ t_int *autotune_perform(t_int *w)
 		// ********************//
 
 		//fprintf(stderr,"overlap=%d outpitch=%f inpitch=%f\n", (x->cbiwr)%(N/x->noverlap), outpitch, inpitch);
+		//fprintf(stderr,"outpitch=%f inpitch=%f\n", outpitch, inpitch);
 		
 		// Every N/noverlap samples, run pitch estimation / correction code
 		if ((x->cbiwr)%(N/x->noverlap) == 0) {
@@ -855,9 +906,16 @@ t_int *autotune_perform(t_int *w)
 			// Convert to semitones
 			tf = (float) -12*log10((float)aref*pperiod)*L2SC;
 			//fprintf(stderr,"tf=%f aref=%f pperiod=%f\n", tf, aref, pperiod);
-			if (conf>=x->vthresh) {
+			post("pperiod=%f conf=%f\n", pperiod, conf);
+			float pp_test = x->pperiod/(x->pperiod - pperiod);
+			if (pp_test < 0.5 || pp_test > 2)
+				pp_test = 1;
+			else
+				pp_test = 0;
+			if (conf>=x->vthresh && tf == tf) { // second check is for NANs
 				inpitch = tf;
 				x->inpitch = tf; // update pitch only if voiced
+				x->pperiod = pperiod;
 			}
 			x->conf = conf;
 
@@ -865,7 +923,7 @@ t_int *autotune_perform(t_int *w)
 			x->fConf = conf;
 
 			//x->pitch = pitch;
-			x->pperiod = pperiod;
+			//x->pperiod = pperiod;
 			//x->conf = conf;
 			
 			//  ---- END Calculate pitch and confidence ----
@@ -997,7 +1055,47 @@ t_int *autotune_perform(t_int *w)
 			//fprintf(stderr,"outpitch=%f\n", outpitch);
 
 			// Pull to fixed pitch
-			outpitch = (1-fPull)*outpitch + fPull*fFixed;
+
+			// when fPull is 1 (legacy behavior which picks absolute pitch in respect to A intonation)
+			if (fPull <= 1)
+			{
+				outpitch = (1-fPull)*outpitch + fPull*fFixed;
+			}
+			else
+			{
+				// Special pull case when fPull is 2
+				/*if (fFixed < 0)
+					while (fFixed < 0)
+						fFixed += 12;
+				else if (fFixed > 12)
+					while (fFixed > 12)
+						fFixed -= 12;*/
+
+				float inpitch_norm = inpitch;
+				if (inpitch_norm < 6)
+					while (inpitch_norm < 6)
+						inpitch_norm += 12;
+				else if (inpitch_norm > 6)
+					while (inpitch_norm > 6)
+						inpitch_norm -= 12;
+				/*float a = fFixed - inpitch_norm;
+				float b = fFixed - 12 - inpitch_norm;
+				float c = fFixed + 12 - inpitch_norm;
+				float result = a;
+				if (abs(b) < abs(result)) result = b;
+				if (abs(c) < abs(result)) result = c;
+				outpitch = inpitch + result;*/
+				float a = inpitch - inpitch_norm;
+				float b = inpitch - 12 - inpitch_norm;
+				float c = inpitch + 12 - inpitch_norm;
+				//post("a=%f b=%f c=%f in_norm=%f\n", a, b, c, inpitch_norm);
+				float result = a;
+				if (abs(b) < abs(result)) result = b;
+				if (abs(c) < abs(result)) result = c;
+				outpitch = result + fFixed;
+				//fprintf(stderr,"outpitch=%f inpitch=%f in_norm=%f\n", outpitch, inpitch, inpitch_norm);
+
+			}
 
 			// -- Convert from semitones to scale notes --
 			ti = (int)(outpitch/12 + 32) - 32; // octave
@@ -1326,13 +1424,13 @@ void autotune_shift(t_autotune *x, t_floatarg f)
 
 void autotune_pull(t_autotune *x, t_floatarg f)
 {
-	x->fPull   = CLIP(f,0.,1.);
+	x->fPull   = CLIP(f,0.,2.);
 	//post("pull=%f", x->fPull);
 }
 
 void autotune_pull_pitch(t_autotune *x, t_floatarg f)
 {
-	x->fFixed  = CLIP(f,-36.,12.);
+	x->fFixed  = CLIP(f,-36.,36.);
 	//post("pullpitch=%f", x->fFixed);
 }
 
@@ -1395,6 +1493,12 @@ void autotune_scale_warp(t_autotune *x, t_floatarg f)
 {
 	x->fScwarp   = CLIP(f,-1.,1.);
 	//post("scwarp=%f", x->fScwarp);
+}
+
+void autotune_confidence(t_autotune *x, t_floatarg f)
+{
+	x->vthresh   = CLIP(f,0.,1.);
+	//post("vthresh=%f", x->vthresh);
 }
 
 void autotune_list(t_autotune *x, t_symbol *m, short argc, t_atom *argv)
