@@ -61,6 +61,8 @@ class fluid:
 		{
 			if ( synth != NULL )
 			        delete_fluid_synth(synth);
+			if ( settings != NULL )
+					delete_fluid_settings(settings);
 		}
 	
 	
@@ -114,6 +116,8 @@ class fluid:
 		
 	private:	
 		fluid_synth_t *synth;
+
+		fluid_settings_t * settings = NULL;
 		
 		FLEXT_CALLBACK_V(fluid_load)
 		void fluid_load(int argc, t_atom *argv);
@@ -259,7 +263,7 @@ void fluid::fluid_init(int argc, t_atom *argv)
 //		// post("WARNING: fluid~ might be out of tune!");
 //	}
 	
-	fluid_settings_t * settings = NULL;
+	//fluid_settings_t * settings = NULL;
 	settings = new_fluid_settings();
 	
 	// fluid_settings_setstr(settings, "audio.driver", "float");
