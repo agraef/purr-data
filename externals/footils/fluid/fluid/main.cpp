@@ -291,8 +291,8 @@ void fluid::fluid_init(int argc, t_atom *argv)
 	fluid_load(argc, argv);
 
 
-	if (settings != NULL )
-		delete_fluid_settings(settings);
+	//if (settings != NULL )
+	//	delete_fluid_settings(settings);
 	
 	// We're done constructing:
 	if (synth)
