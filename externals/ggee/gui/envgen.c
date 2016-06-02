@@ -358,6 +358,7 @@ void envgen_setup(void)
     class_addmethod(envgen_class,(t_method)envgen_release,gensym("release"),A_NULL);
     envgen_widgetbehavior.w_getrectfn =   envgen_getrect;
     envgen_widgetbehavior.w_displacefn =    envgen_displace;
+    envgen_widgetbehavior.w_displacefnwtag = envgen_displace_withtag;
     envgen_widgetbehavior.w_selectfn = envgen_select;
     envgen_widgetbehavior.w_activatefn =   envgen_activate;
     envgen_widgetbehavior.w_deletefn =   envgen_delete;

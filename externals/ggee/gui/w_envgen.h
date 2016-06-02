@@ -50,6 +50,15 @@ static void draw_inlets(t_envgen *x, t_glist *glist, int firsttime, int nin, int
             //    glist_getcanvas(glist), x, i,
             //    onset, ypos + x->w.height - 1 + 2*BORDER,
             //    onset + IOWIDTH, ypos + x->w.height + 2*BORDER);
+            gui_vmess("gui_envgen_move_xlet", "xxsiiiii",
+                glist_getcanvas(glist),
+                x,
+                "o",
+                i,
+                onset,
+                ypos + x->w.height - 1 + 2 * BORDER,
+                xpos,
+                ypos);
         }
     }
     n = nin;
@@ -395,12 +404,20 @@ static void envgen_getrect(t_gobj *z, t_glist *owner,
 
 static void envgen_displace(t_gobj *z, t_glist *glist, int dx, int dy)
 {
+
     t_envgen *x = (t_envgen *)z;
     x->x_obj.te_xpix += dx;
     x->x_obj.te_ypix += dy;
 
-    envgen_drawme(x, glist, 0);
-    canvas_fixlinesfor(glist,(t_text*) x);
+    //envgen_drawme(x, glist, 0);
+    //canvas_fixlinesfor(glist,(t_text*) x);
+}
+
+static void envgen_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
+{
+    t_envgen *x = (t_envgen *)z;
+    x->x_obj.te_xpix += dx;
+    x->x_obj.te_ypix += dy;
 }
 
 static void envgen_select(t_gobj *z, t_glist *glist, int state)
@@ -408,8 +425,12 @@ static void envgen_select(t_gobj *z, t_glist *glist, int state)
     t_envgen *x = (t_envgen *)z;
     //sys_vgui(".x%x.c itemconfigure %xS -fill %s\n", glist,
     //    x, (state? "blue" : BACKGROUNDCOLOR));
-    gui_vmess("gui_envgen_select", "xxi",
-        glist_getcanvas(glist), x, state);
+    if (state)
+        gui_vmess("gui_gobj_select", "xx",
+            glist_getcanvas(glist), x);
+    else
+        gui_vmess("gui_gobj_deselect", "xx",
+            glist_getcanvas(glist), x);
 }
 
 

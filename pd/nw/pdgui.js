@@ -3248,13 +3248,12 @@ function gui_envgen_erase_text(cid, tag) {
     }
 }
 
-function gui_envgen_select(cid, tag, state) {
-    var g = get_gobj(cid, tag);
-    if (state !== 0) {
-        g.classList.add("selected");
-    } else {
-        g.classList.remove("selected");
-    }
+function gui_envgen_move_xlet(cid, tag, type, i, x, y, basex, basey) {
+    var xlet = get_item(cid, tag + type + i);
+    configure_item(xlet, {
+        x: x - basex,
+        y: y - basey
+    });
 }
 
 exports.add_popup = add_popup;
