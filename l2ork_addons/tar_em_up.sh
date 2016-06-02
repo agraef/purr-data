@@ -242,7 +242,8 @@ then
 		cd Gem/
 		export INCREMENTAL="yes"
 	fi
-	cd ../packages/linux_make
+	cd ../pd/src && aclocal && autoconf
+	cd ../../packages/linux_make
 	if [ $full -gt 1 -o $deb -eq 2 ]
 	then
 		make distclean
