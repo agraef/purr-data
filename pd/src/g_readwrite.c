@@ -95,14 +95,21 @@ static void glist_readatoms(t_glist *x, int natoms, t_atom *vec,
         }
         else if (template->t_vec[i].ds_type == DT_LIST)
         {
-            /* If we want to keep the canvas field API, this needs to be
-               revisited */
-            //while (1)
-            //{
-            //    if (!glist_readscalar(w->w_list, natoms, vec,
-            //        p_nextmsg, 0))
-            //            break;
-            //}
+            /* nothing needs to happen here */
+        }
+        else if (template->t_vec[i].ds_type == DT_TEXT)
+        {
+            // Miller's addition for the [text] object
+            t_binbuf *z = binbuf_new();
+            int first = *p_nextmsg, last;
+            for (last = first; last < natoms && vec[last].a_type != A_SEMI;
+                last++);
+            binbuf_restore(z, last-first, vec+first);
+            binbuf_add(w[i].w_binbuf, binbuf_getnatom(z), binbuf_getvec(z));
+            binbuf_free(z);
+            last++;
+            if (last > natoms) last = natoms;
+            *p_nextmsg = last;
         }
     }
 }
@@ -437,6 +444,11 @@ void canvas_writescalar(t_symbol *templatesym, t_word *w, t_binbuf *b,
             //glist_writelist(w->w_list->gl_list, b);
             binbuf_addsemi(b);
         }
+        else if (template->t_vec[i].ds_type == DT_TEXT)
+        {
+            // Miller's addition for the implementation of the [text] object
+            binbuf_savetext(w[i].w_binbuf, b);
+        }
     }
 }
 
@@ -486,6 +498,11 @@ static void canvas_addtemplatesforscalar(t_symbol *templatesym,
                canvas field list */
             //canvas_addtemplatesforlist(w->w_list->gl_list,
             //    p_ntemplates, p_templatevec);
+        }
+        else if (ds->ds_type == DT_TEXT)
+        {
+            canvas_addtemplatesforlist(w->w_list->gl_list,
+                p_ntemplates, p_templatevec);
         }
     }
 }
@@ -567,10 +584,12 @@ t_binbuf *glist_writetobinbuf(t_glist *x, int wholething)
                 case DT_FLOAT: type = &s_float; break;
                 case DT_SYMBOL: type = &s_symbol; break;
                 case DT_ARRAY: type = gensym("array"); break;
-                case DT_LIST: type = &s_list; break;
+                case DT_LIST: type = gensym("canvas"); break;
+                case DT_TEXT: type = &s_list; break;
                 default: type = &s_float; bug("canvas_write");
             }
-            if (template->t_vec[j].ds_type == DT_ARRAY)
+            if (template->t_vec[j].ds_type == DT_ARRAY ||
+                template->t_vec[j].ds_type == DT_LIST)
                 binbuf_addv(b, "sss;", type, template->t_vec[j].ds_name,
                     gensym(template->t_vec[j].ds_fieldtemplate->s_name + 3));
             else binbuf_addv(b, "ss;", type, template->t_vec[j].ds_name);
@@ -751,10 +770,12 @@ static void canvas_savetemplatesto(t_canvas *x, t_binbuf *b, int wholething)
                 case DT_FLOAT: type = &s_float; break;
                 case DT_SYMBOL: type = &s_symbol; break;
                 case DT_ARRAY: type = gensym("array"); break;
-                case DT_LIST: type = &s_list; break;
+                case DT_LIST: type = gensym("canvas"); break;
+                case DT_TEXT: type = gensym("text"); break; //&s_list; break;
                 default: type = &s_float; bug("canvas_write");
             }
-            if (template->t_vec[j].ds_type == DT_ARRAY)
+            if (template->t_vec[j].ds_type == DT_ARRAY ||
+                template->t_vec[j].ds_type == DT_LIST)
                 binbuf_addv(b, "sss", type, template->t_vec[j].ds_name,
                     gensym(template->t_vec[j].ds_fieldtemplate->s_name + 3));
             else binbuf_addv(b, "ss", type, template->t_vec[j].ds_name);
@@ -829,4 +850,12 @@ void g_readwrite_setup(void)
         gensym("menusave"), A_DEFFLOAT, 0);
     class_addmethod(canvas_class, (t_method)canvas_menusaveas,
         gensym("menusaveas"), A_DEFFLOAT, 0);
+}
+
+void canvas_readwrite_for_class(t_class *c)
+{
+    class_addmethod(c, (t_method)canvas_menusave,
+        gensym("menusave"), 0);
+    class_addmethod(c, (t_method)canvas_menusaveas,
+        gensym("menusaveas"), 0);
 }
