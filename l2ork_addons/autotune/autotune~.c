@@ -906,7 +906,7 @@ t_int *autotune_perform(t_int *w)
 			// Convert to semitones
 			tf = (float) -12*log10((float)aref*pperiod)*L2SC;
 			//fprintf(stderr,"tf=%f aref=%f pperiod=%f\n", tf, aref, pperiod);
-			post("pperiod=%f conf=%f\n", pperiod, conf);
+			//post("pperiod=%f conf=%f\n", pperiod, conf);
 			float pp_test = x->pperiod/(x->pperiod - pperiod);
 			if (pp_test < 0.5 || pp_test > 2)
 				pp_test = 1;
