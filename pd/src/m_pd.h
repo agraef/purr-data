@@ -13,7 +13,7 @@ extern "C" {
 #define PD_MAJOR_VERSION 0
 #define PD_MINOR_VERSION 42
 #define PD_BUGFIX_VERSION 7
-#define PD_TEST_VERSION "20160124"
+#define PD_TEST_VERSION "20160525"
 #define PDL2ORK
 extern int pd_compatibilitylevel;   /* e.g., 43 for pd 0.43 compatibility */
 
@@ -62,6 +62,20 @@ extern int pd_compatibilitylevel;   /* e.g., 43 for pd 0.43 compatibility */
 
 #if !defined(_SIZE_T) && !defined(_SIZE_T_)
 #include <stddef.h>     /* just for size_t -- how lame! */
+#endif
+
+/* Microsoft Visual Studio is not C99, it does not provide stdint.h */
+#ifdef _MSC_VER
+typedef signed __int8     int8_t;
+typedef signed __int16    int16_t;
+typedef signed __int32    int32_t;
+typedef signed __int64    int64_t;
+typedef unsigned __int8   uint8_t;
+typedef unsigned __int16  uint16_t;
+typedef unsigned __int32  uint32_t;
+typedef unsigned __int64  uint64_t;
+#else
+# include <stdint.h>
 #endif
 
 /* for FILE, needed by sys_fopen() and sys_fclose() only */
@@ -140,6 +154,7 @@ typedef union word
     t_gpointer *w_gpointer;
     t_array *w_array;
     struct _glist *w_list;
+    struct _binbuf *w_binbuf;
     int w_index;
     t_blob *w_blob; /* MP20061223 blob type */
 } t_word;
@@ -359,10 +374,13 @@ EXTERN t_clock *clock_new(void *owner, t_method fn);
 EXTERN void clock_set(t_clock *x, double systime);
 EXTERN void clock_delay(t_clock *x, double delaytime);
 EXTERN void clock_unset(t_clock *x);
+EXTERN void clock_setunit(t_clock *x, double timeunit, int sampflag);
 EXTERN double clock_getlogicaltime(void);
 EXTERN double clock_getsystime(void); /* OBSOLETE; use clock_getlogicaltime() */
 EXTERN double clock_gettimesince(double prevsystime);
 EXTERN double clock_getsystimeafter(double delaytime);
+EXTERN double clock_gettimesincewithunits(double prevsystime,
+    double units, int sampflag);
 EXTERN void clock_free(t_clock *x);
 
 /* ----------------- pure data ---------------- */
@@ -486,6 +504,8 @@ EXTERN void classtable_tovec(int size, t_atom *vec);
 typedef void (*t_savefn)(t_gobj *x, t_binbuf *b);
 EXTERN void class_setsavefn(t_class *c, t_savefn f);
 EXTERN t_savefn class_getsavefn(t_class *c);
+EXTERN void obj_saveformat(t_object *x, t_binbuf *bb); /* add format to bb */
+
         /* prototype for functions to open properties dialogs */
 typedef void (*t_propertiesfn)(t_gobj *x, struct _glist *glist);
 EXTERN void class_setpropertiesfn(t_class *c, t_propertiesfn f);
@@ -533,17 +553,11 @@ EXTERN int (*sys_idlehook)(void);   /* hook to add idle time computation */
 /* Win32's open()/fopen() do not handle UTF-8 filenames so we need
  * these internal versions that handle UTF-8 filenames the same across
  * all platforms.  They are recommended for use in external
- * objectclasses as well so they work with Unicode filenames on Windows
-
- For now, we're just doing typedefs to alias the standard io calls. But
- once someone wants to build on Windows, the relevant commits should be ported
- from Pd Vanilla. See Pd Vanilla git commit:
-     78b81aa3cb903d923da9eec8ad104935a5ae9ce4
- plus some other revisions after that one. */
-#define sys_open open
-#define sys_close close
-#define sys_fopen fopen
-#define sys_fclose fclose
+ * objectclasses as well so they work with Unicode filenames on Windows */
+EXTERN int sys_open(const char *path, int oflag, ...);
+EXTERN int sys_close(int fd);
+EXTERN FILE *sys_fopen(const char *filename, const char *mode);
+EXTERN int sys_fclose(FILE *stream);
 
 /* ------------  threading ------------------- */ 
 EXTERN void sys_lock(void);
@@ -661,6 +675,8 @@ EXTERN char *garray_vec(t_garray *x);
 EXTERN void garray_resize(t_garray *x, t_floatarg f);
 EXTERN void garray_usedindsp(t_garray *x);
 EXTERN void garray_setsaveit(t_garray *x, int saveit);
+EXTERN t_glist *garray_getglist(t_garray *x);
+EXTERN t_array *garray_getarray(t_garray *x);
 EXTERN t_class *scalar_class;
 
 EXTERN t_float *value_get(t_symbol *s);
@@ -750,6 +766,17 @@ defined, there is a "te_xpix" field in objects, not a "te_xpos" as before: */
 
     /* get version number at run time */
 EXTERN void sys_getversion(int *major, int *minor, int *bugfix);
+
+EXTERN_STRUCT _pdinstance;
+#define t_pdinstance struct _pdinstance       /* m_imp.h */
+
+/* m_pd.c */
+
+EXTERN t_pdinstance *pdinstance_new( void);
+EXTERN void pd_setinstance(t_pdinstance *x);
+EXTERN void pdinstance_free(t_pdinstance *x);
+EXTERN t_canvas *pd_getcanvaslist(void);
+EXTERN int pd_getdspstate(void);
 
 #if defined(_LANGUAGE_C_PLUS_PLUS) || defined(__cplusplus)
 }
