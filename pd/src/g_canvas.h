@@ -213,6 +213,8 @@ struct _glist
     unsigned int gl_goprect:1;      /* draw rectangle for graph-on-parent */
     unsigned int gl_isgraph:1;      /* show as graph on parent */
     unsigned int gl_hidetext:1;     /* hide object-name + args when doing graph on parent */
+    unsigned int gl_private:1;      /* private flag used in x_scalar.c */
+    unsigned int gl_isclone:1;      /* exists as part of a clone object */
     unsigned int gl_gop_initialized:1;     /* used for tagged moving of gop-ed objects to avoid redundant reinit */
     //global preset array pointer
     t_preset_hub *gl_phub;
@@ -248,8 +250,9 @@ extern t_class *message_class;
 
 #define DT_FLOAT 0
 #define DT_SYMBOL 1
-#define DT_LIST 2
+#define DT_TEXT 2
 #define DT_ARRAY 3
+#define DT_LIST 4
 
 typedef struct _dataslot
 {
@@ -568,6 +571,10 @@ EXTERN t_gobj *canvas_findhitbox(t_canvas *x, int xpos, int ypos,
 EXTERN int canvas_setdeleting(t_canvas *x, int flag);
 EXTERN int canvas_hasarray(t_canvas *x);
 
+#define LB_LOAD 0       /* "loadbang" actions - 0 for original meaning */
+#define LB_INIT 1       /* loaded but not yet connected to parent patch */
+#define LB_CLOSE 2      /* about to close */
+
 /* ---- for parsing @pd_extra and other sys paths in filenames  --------------------- */
 
 EXTERN void sys_expandpathelems(const char *name, const char *result);
@@ -590,6 +597,23 @@ EXTERN int canvas_isconnected (t_canvas *x,
     t_text *ob1, int n1, t_text *ob2, int n2);
 EXTERN void canvas_selectinrect(t_canvas *x, int lox, int loy, int hix, int hiy);
 
+EXTERN t_glist *pd_checkglist(t_pd *x);
+
+/* a function that gets called for each path by canvas_path_iterate
+ * if the function returns 0, the iteration is terminated;
+ * <path> pointer to the path
+ * <data> is the pointer given to canvas_path_iterate()
+ * <ce> is a pointer to the canvas-environment that provided <path> in its
+ * search-path (or NULL)
+ */
+typedef int (*t_canvas_path_iterator)(const char *path, void *user_data);
+/*
+ * iterate over all search-paths for <x> calling <fun> with the user-supplied
+ * <data>
+ * iteration stops once all paths are exhausted or calling <fun> returned 0.
+ */
+EXTERN int canvas_path_iterate(t_canvas *x, t_canvas_path_iterator fun,
+    void *user_data);
 
 /* ---- functions on canvasses as objects  --------------------- */
 
@@ -613,6 +637,8 @@ EXTERN t_garray *graph_array(t_glist *gl, t_symbol *s, int argc, t_atom *argv);
 EXTERN t_array *array_new(t_symbol *templatesym, t_gpointer *parent);
 EXTERN void array_resize(t_array *x, int n);
 EXTERN void array_free(t_array *x);
+EXTERN void array_redraw(t_array *a, t_glist *glist);
+EXTERN void array_resize_and_redraw(t_array *array, t_glist *glist, int n);
 int array_joc; /* for "jump on click" array inside a graph */
 
 /* --------------------- gpointers and stubs ---------------- */
@@ -776,6 +802,9 @@ void canvas_raise_all_cords (t_canvas *x);
 void canvas_getscroll (t_canvas *x);
 
 /* --------------------------------------------------------------------- */
+
+/*-------------  g_clone.c ------------- */
+extern t_class *clone_class;
 
 #if defined(_LANGUAGE_C_PLUS_PLUS) || defined(__cplusplus)
 }
