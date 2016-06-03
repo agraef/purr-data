@@ -1,0 +1,607 @@
+#N struct text-help-struct float x float y text z;
+#N canvas 781 162 622 555 12;
+#X obj 131 499 list;
+#X obj 18 6 text;
+#X text 25 498 see also:;
+#N canvas 0 50 600 400 (subpatch) 0;
+#N canvas 0 50 450 250 (subpatch) 0;
+#X array table4 100 float 0;
+#X coords 0 1 99 -1 500 300 1;
+#X restore 50 50 graph;
+#X restore 171 499 array;
+#X obj 280 217 text define;
+#X text 81 173 The text object's first argument sets its function:
+, f 30;
+#N canvas 636 69 631 661 define 0;
+#X msg 39 141 clear;
+#X msg 37 167 read text-object-help.txt;
+#X msg 40 196 write text-object-help.txt;
+#X text 32 20 "text define" maintains a text object and can name it
+so that other objects can find it (and later should have some alternative
+\, anonymous way to be found).;
+#X text 61 376 click to open and edit text:;
+#X text 296 364 creation arguments:;
+#X text 324 382 optional -k flag to keep contents;
+#X text 326 399 optional name;
+#X text 77 263 (optionally you can read or write to/from a file interpreting
+carriage returns as separators \; this should allow reading some text
+file formats - like this:);
+#X text 274 165 read from a file;
+#X text 276 196 write to a file;
+#X text 277 139 clear;
+#X obj 48 228 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 38 491 t b p;
+#X obj 38 540 text get -s text t;
+#X msg 39 515 0;
+#X obj 38 590 print;
+#X obj 38 565 list trim;
+#X text 204 499 machinery for printing out first line of text when
+output as a pointer (by "bang" method above)., f 30;
+#X text 69 222 bang to output a pointer to a scalar (struct) containing
+the text, f 35;
+#X obj 38 400 text define -k text-help-1;
+#A set this is a message \; this is another 1 ... \;;
+#X msg 149 326 write -c /tmp/test-cr.txt;
+#X connect 0 0 20 0;
+#X connect 1 0 20 0;
+#X connect 2 0 20 0;
+#X connect 12 0 20 0;
+#X connect 13 0 15 0;
+#X connect 13 1 14 3;
+#X connect 14 0 17 0;
+#X connect 15 0 14 0;
+#X connect 17 0 16 0;
+#X connect 20 0 13 0;
+#X connect 21 0 20 0;
+#X restore 392 217 pd define;
+#X obj 280 240 text get;
+#N canvas 885 156 859 566 get 0;
+#X floatatom 47 115 5 0 5 0 - - -, f 5;
+#X msg 47 84 0;
+#X msg 123 84 2;
+#X msg 83 84 1;
+#X obj 47 275 print;
+#X obj 148 300 print type;
+#X msg 160 87 3;
+#X msg 200 89 4;
+#X text 242 298 "type" is 0 if terminated by a semicolon \, 1 if by
+a comma \, or 2 if the line number was out of range.;
+#X obj 72 533 text define -k text-help-get;
+#A set;
+#X obj 47 230 text get text-help-get, f 13;
+#X floatatom 50 407 5 0 0 0 - - -, f 5;
+#X msg 50 376 0;
+#X msg 126 376 2;
+#X msg 86 376 1;
+#X obj 50 478 print;
+#X msg 163 379 3;
+#X msg 203 381 4;
+#X obj 50 451 text get text-help-get 1;
+#X text 165 217 arguments: name of the text object or "-s struct-name"
+;
+#X floatatom 462 410 5 0 0 0 - - -, f 5;
+#X msg 462 379 0;
+#X msg 538 379 2;
+#X msg 498 379 1;
+#X obj 462 461 print;
+#X msg 575 382 3;
+#X msg 615 384 4;
+#X text 259 450 read field number 1 (zero for first field), f 23;
+#X obj 461 434 text get text-help-get 1 3;
+#X text 127 345 examples showing field selection:;
+#X text 32 20 "text get" reads the nth line from the named text and
+outputs it \, or optionally reads one or more specific fields (atoms)
+from the line.;
+#X text 101 115 spedcify line number (0 for first line);
+#X floatatom 80 140 5 0 5 0 - - -, f 5;
+#X floatatom 114 163 5 0 5 0 - - -, f 5;
+#X text 162 162 specify number of fields (1 by default \, but ignored
+if whole line), f 66;
+#X text 680 434 read 3 fields starting at field 1, f 21;
+#X text 128 139 starting field number (-1 \, the default \, gives the
+whole line), f 61;
+#X text 162 237 next optional arg to set starting field number (first
+inlet -- none to specify whole line), f 63;
+#X text 166 274 next optional arg to set inlet 2 (number of fields
+\, defaults to one), f 68;
+#X msg 148 186 symbol text-help-get;
+#X text 321 186 find another text by name or pointer;
+#X connect 0 0 10 0;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 6 0 0 0;
+#X connect 7 0 0 0;
+#X connect 10 0 4 0;
+#X connect 10 1 5 0;
+#X connect 11 0 18 0;
+#X connect 12 0 11 0;
+#X connect 13 0 11 0;
+#X connect 14 0 11 0;
+#X connect 16 0 11 0;
+#X connect 17 0 11 0;
+#X connect 18 0 15 0;
+#X connect 20 0 28 0;
+#X connect 21 0 20 0;
+#X connect 22 0 20 0;
+#X connect 23 0 20 0;
+#X connect 25 0 20 0;
+#X connect 26 0 20 0;
+#X connect 28 0 24 0;
+#X connect 32 0 10 1;
+#X connect 33 0 10 2;
+#X connect 39 0 10 3;
+#X restore 392 240 pd get;
+#N canvas 226 212 807 554 text-and-data-structures 0;
+#X floatatom 65 196 5 0 0 0 - - -, f 5;
+#X msg 65 165 0;
+#X msg 140 165 2;
+#X msg 100 165 1;
+#X obj 65 387 print;
+#X obj 206 391 print type;
+#X obj 206 315 pointer;
+#X obj 65 347 text get -s text-help-struct z, f 18;
+#N canvas 807 416 450 300 text-help-struct 0;
+#X scalar text-help-struct 20 20 \; a b c d \;;
+#X obj 79 230 pointer;
+#X msg 79 172 traverse pd-text-help-struct \, bang, f 21;
+#X obj 22 257 append text-help-struct x y;
+#X msg 23 172 20 20;
+#X obj 13 56 struct text-help-struct float x float y text z;
+#X obj 13 83 filledpolygon 0 0 0 0 0 0 10 10 10 10 0 0 0;
+#X obj 15 120 drawtext z 16 -3 0;
+#X connect 1 0 3 2;
+#X connect 2 0 1 0;
+#X connect 4 0 3 0;
+#X restore 208 136 pd text-help-struct;
+#X obj 65 218 t f b;
+#X text 58 35 a simple example showing how to access text in data structures
+via pointers.;
+#N canvas 851 144 450 300 text-help-data 0;
+#X scalar text-help-struct 20 20 \; 1 2 3 \\\; a b c d \\\; \;;
+#X text 13 86 We have one datum (above) whose "z" field is text.;
+#X restore 209 108 pd text-help-data;
+#X msg 205 258 traverse pd-text-help-data \, next, f 18;
+#X text 88 466 bug - saving multi-line texts inside structures;
+#X obj 586 333 pointer;
+#X msg 585 276 traverse pd-text-help-data \, next, f 18;
+#X obj 445 365 text set -s text-help-struct z, f 18;
+#X obj 445 236 t l b;
+#X floatatom 492 337 5 0 0 0 - - -, f 5;
+#X msg 478 292 0;
+#X msg 553 292 2;
+#X msg 513 292 1;
+#X msg 443 158 1 2 3;
+#X msg 454 194 list a b c d;
+#X connect 0 0 9 0;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 6 0 7 3;
+#X connect 7 0 4 0;
+#X connect 7 1 5 0;
+#X connect 9 0 7 0;
+#X connect 9 1 12 0;
+#X connect 12 0 6 0;
+#X connect 14 0 16 3;
+#X connect 15 0 14 0;
+#X connect 17 0 16 0;
+#X connect 17 1 15 0;
+#X connect 18 0 16 1;
+#X connect 19 0 18 0;
+#X connect 20 0 18 0;
+#X connect 21 0 18 0;
+#X connect 22 0 17 0;
+#X connect 23 0 17 0;
+#X restore 83 459 pd text-and-data-structures;
+#X text 73 435 here's how to access texts inside data structures:;
+#X text 63 6 - manage a list of messages;
+#X obj 219 499 scalar;
+#X obj 280 312 text size;
+#N canvas 847 155 741 313 size 0;
+#X obj 71 55 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 68 257 text define -k text-help-size;
+#A set;
+#X obj 71 179 text size text-help-size;
+#X floatatom 71 204 5 0 0 0 - - -, f 5;
+#X floatatom 80 91 5 0 2 0 - - -, f 5;
+#X text 46 11 "text size" reports the number of lines in the text or
+the length of a specified line.;
+#X text 100 52 bang for number of lines;
+#X text 129 89 float for length of nth line (-1 if line number out
+of range);
+#X text 443 122 find another text by name or pointer, f 18;
+#X msg 260 126 symbol text-help-size;
+#X text 281 176 arguments: name of the text object or "-s struct-name"
+, f 30;
+#X connect 0 0 2 0;
+#X connect 2 0 3 0;
+#X connect 4 0 2 0;
+#X connect 9 0 2 1;
+#X restore 392 311 pd size;
+#X obj 280 264 text set;
+#N canvas 483 595 834 537 set 0;
+#X floatatom 107 197 5 0 0 0 - - -, f 5;
+#X msg 107 163 0;
+#X msg 180 165 2;
+#X msg 140 165 1;
+#X msg 62 111 list x y z w;
+#X msg 68 137 1 2 3;
+#X msg 53 84 12 23 34 45 56 56;
+#X obj 48 505 text define -k text-help-3;
+#A set 12 23 34 45 56 56 \; x y z w \; 1 2 3 \;;
+#X obj 55 293 text set text-help-3;
+#X msg 223 165 1e+06;
+#X floatatom 159 219 5 0 0 0 - - -, f 5;
+#X text 211 85 list to write into the text;
+#X text 165 197 line number - use a large number to append a line;
+#X text 240 295 arguments: name of the text object or "-s struct-name"
+;
+#X text 240 320 next optional arg to set inlet 1 (line number);
+#X text 66 407 if inlet 2 is supplied to specify a starting field \,
+the line is not resized - instead \, as many items are replaced as
+were in the list at left. Otherwise \, the line is resized to the size
+of the list.;
+#X msg 212 260 symbol text-help-get;
+#X text 385 260 find another text by name or pointer;
+#X text 206 218 field number - if 0 or positive \, replace text starting
+at this field \, or if negative (or not supplied) \, replace whole
+line., f 62;
+#X text 288 506 <-- click here to see text;
+#X text 46 9 "text set" replaces the nth line with the incoming list.
+If the number n is greater than the number of lines in the text the
+new line is added.;
+#X text 241 348 next optional arg to set inlet 2 (field number \, defaults
+to whole line), f 47;
+#X connect 0 0 8 1;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 8 0;
+#X connect 5 0 8 0;
+#X connect 6 0 8 0;
+#X connect 9 0 0 0;
+#X connect 10 0 8 2;
+#X connect 16 0 8 3;
+#X restore 392 263 pd set;
+#X text 391 176 (click for details), f 11;
+#X text 60 216 create \, store \, and/or edit;
+#X text 91 239 read and output a line;
+#X text 100 263 replace or add a line;
+#X text 115 313 get number of lines;
+#X text 62 50 In Pd a "text" refers to a list of atoms that can include
+commas \, semicolons \, and dollar-sign constructs - anything that
+can go in a message box or a patch (as a saved file). You can use them
+to store a semicolon-separated list of lists \, or as messages to "execute"
+as in a sequencer or message box.;
+#X text 145 337 convert to list;
+#X obj 280 335 text tolist;
+#N canvas 842 231 590 379 tolist 0;
+#X obj 86 99 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 48 13 "text tolist" outputs the entire contents as a list.
+Semicolons \, commas \, and dollar signs are output as symbols (and
+so \, if symbols like " \, " are encountered \, they're escaped with
+backslashes).;
+#X text 108 96 bang to output list;
+#X obj 86 180 text tolist text-help-1;
+#X obj 173 218 list prepend set;
+#X obj 173 241 list trim;
+#X msg 173 291 this is a message \\\; this is another 1 ... \\\;;
+#X msg 187 265 set;
+#X obj 87 218 print;
+#X text 72 326 N.B.: text-help-1 is defined in 'pd define' subwindow.
+;
+#X text 370 122 find another text by name or pointer, f 18;
+#X msg 267 124 symbol text-help-1, f 11;
+#X text 280 172 arguments: name of the text object or "-s struct-name"
+, f 30;
+#X connect 0 0 3 0;
+#X connect 3 0 4 0;
+#X connect 3 0 8 0;
+#X connect 4 0 5 0;
+#X connect 5 0 6 0;
+#X connect 7 0 6 0;
+#X connect 11 0 3 1;
+#X restore 392 335 pd tolist;
+#X obj 280 359 text fromlist;
+#N canvas 842 231 604 318 fromlist 0;
+#X obj 81 202 text fromlist text-help-fromlist;
+#X obj 114 263 text define text-help-fromlist;
+#X text 46 21 "text fromlist" converts a list such as "text tolist"
+would output and fills the text with it. Whatever the text had previously
+contained is discarded.;
+#X msg 81 115 list this is a message \\\; this is another 1 ... \\\;
+;
+#X text 135 241 click here to see contents;
+#X msg 92 145 list 1 2 3;
+#X text 437 157 find another text by name or pointer, f 18;
+#X msg 334 159 symbol text-help-1, f 11;
+#X text 121 92 set contents of text;
+#X connect 3 0 0 0;
+#X connect 5 0 0 0;
+#X connect 7 0 0 1;
+#X restore 392 359 pd fromlist;
+#X text 131 361 convert from list;
+#X text 218 384 search;
+#X obj 280 383 text search;
+#N canvas 626 77 1011 913 search 0;
+#X floatatom 60 313 5 0 0 0 - - -, f 5;
+#X text 385 232 find another text by name or pointer, f 18;
+#X text 207 280 arguments: name of the text object or "-s struct-name"
+, f 30;
+#X text 46 11 "text search" outputs the line number of the line that
+best matches a search key. By default it seeks a line whose leading
+fields match the incoming list.;
+#X obj 52 873 text define -k text-help-search;
+#A set 1 2 3 dog \; 7 8 9 cat \; 4 5 3 dog \; 7 8 9 alligator \; random
+line that won't match numbers \;;
+#X obj 60 270 text search text-help-search, f 16;
+#X msg 182 244 symbol text-help-search;
+#X msg 60 77 1;
+#X msg 60 101 2;
+#X msg 60 125 4;
+#X msg 69 188 4 5;
+#X msg 69 211 4 13;
+#X msg 60 149 7;
+#X text 110 76 matches first line (number 0);
+#X text 102 99 doesn't match first field of any line so -1;
+#X text 113 210 fails on second field so no match;
+#X text 211 314 ... then optional search fields. Each is a field number
+(starting from 0) optionally preceeded by ">". ">=" \, "<" \, "<="
+\, or "near".;
+#X text 98 150 if two lines match only the first is output (but see
+below for finding best matches).;
+#X msg 47 446 7 cat;
+#X msg 47 470 7 alligator;
+#X floatatom 47 574 5 0 0 0 - - -, f 5;
+#X msg 47 494 7 dog;
+#X obj 47 518 text search text-help-search 0 3, f 16;
+#X floatatom 503 600 5 0 0 0 - - -, f 5;
+#X obj 503 541 text search text-help-search 1, f 16;
+#X msg 504 508 8 9;
+#X msg 559 486 8 9 alligator;
+#X msg 504 482 8;
+#X msg 559 513 symbol line;
+#X text 43 392 in this example we ask to match both field 0 and field
+3 exactly. In field 3 we're testing symbols for equality., f 39;
+#X text 401 382 If the search pattern (the incoming list) has more
+fields than we have specified search fields \, extra search patterns
+match succeeding fields starting from the last one give as an argument.
+So for example if there are no arguments we look for matches to any
+number of fields starting from the beginning of the line in the text.
+;
+#X floatatom 49 834 5 0 0 0 - - -, f 5;
+#X obj 49 778 text search text-help-search > 0, f 16;
+#X text 45 613 Match a line for which the search key is greater than
+field zero of that line. The line getting closest to the key wins.
+, f 41;
+#X msg 49 671 2;
+#X msg 49 713 4;
+#X text 86 664 lines 1 \, 2 \, and 3 match \, but 2 wins because its
+first field (4) is closest to the search key 2, f 48;
+#X text 88 703 this matches lines 1 and 3 \, and each is equally good
+\, so line 1 wins., f 43;
+#X text 86 744 nobody's first field is greater than 10;
+#X msg 49 745 10;
+#X obj 507 809 text search text-help-search 2 near 0, f 18;
+#X floatatom 507 866 5 0 0 0 - - -, f 5;
+#X msg 507 685 3 3;
+#X msg 507 714 3 2.5 1;
+#X msg 507 775 3 3 1;
+#X text 506 628 Hear we ask for field 2 to equal 3 and fields starting
+at 0 to be 'near' the following arguments., f 33;
+#X text 547 684 field 2 is 3 and field 0 nearest 3;
+#X text 575 706 here lines 0 and 2 tie over 2.4 (1 and 4 are equally
+far from it) so line 0 whose second field is closer to 1 wins., f
+40;
+#X text 560 766 Here line 2 wins because its field 0 is nearer to 3
+\, notwithstanding that its field 1 is farther from 1;
+#X text 103 125 matches line number 2 (third line);
+#X text 114 188 matches two fields of line number 2;
+#X connect 5 0 0 0;
+#X connect 6 0 5 1;
+#X connect 7 0 5 0;
+#X connect 8 0 5 0;
+#X connect 9 0 5 0;
+#X connect 10 0 5 0;
+#X connect 11 0 5 0;
+#X connect 12 0 5 0;
+#X connect 18 0 22 0;
+#X connect 19 0 22 0;
+#X connect 21 0 22 0;
+#X connect 22 0 20 0;
+#X connect 24 0 23 0;
+#X connect 25 0 24 0;
+#X connect 26 0 24 0;
+#X connect 27 0 24 0;
+#X connect 28 0 24 0;
+#X connect 32 0 31 0;
+#X connect 34 0 32 0;
+#X connect 35 0 32 0;
+#X connect 39 0 32 0;
+#X connect 40 0 41 0;
+#X connect 42 0 40 0;
+#X connect 43 0 40 0;
+#X connect 44 0 40 0;
+#X restore 393 383 pd search;
+#X text 76 408 sequencer/message-sender;
+#X obj 280 406 text sequence;
+#N canvas 199 57 1155 839 sequence 0;
+#X msg 138 468 symbol text-help-search;
+#X text 101 443 specify another text by name or pointer;
+#X msg 37 225 bang;
+#X obj 37 693 print out1;
+#X obj 138 695 print out2;
+#X msg 46 415 args 1 2 fuzz;
+#X msg 37 167 line 0;
+#X obj 655 282 text sequence text-help-seq2 -g, f 17;
+#X obj 889 300 text define -k text-help-seq2;
+#A set test1 1 2 3 \; 1000 test2 6 7 8 \; test1 9 10 \, 21 22 23 \,
+walk the dog \; 500 1500 test1 \; test2 13 14 \;;
+#X msg 771 248 bang;
+#X msg 655 248 line 0;
+#X obj 334 748 print test1;
+#X obj 334 721 r test1;
+#X obj 431 720 r test2;
+#X obj 431 747 print test2;
+#X obj 749 329 print done;
+#X obj 46 391 loadbang;
+#X text 163 414 set values for \$1 \, \$2 \, etc;
+#X msg 37 198 step;
+#X text 81 198 output next line;
+#X text 97 160 set current line number (counting from 0), f 23;
+#X msg 820 248 auto;
+#X msg 868 248 stop;
+#X msg 37 263 auto;
+#X text 79 219 output all lines starting from current one to next waiting
+point, f 34;
+#X text 43 718 lists;
+#X text 133 718 bang if done;
+#X text 162 527 -g to specify global mode (each line begins with a
+symbolic destination), f 39;
+#X text 164 562 -w <symbol> specifies that lines beginning with the
+symbol are waiting points, f 43;
+#X text 165 597 -w <number> specifies that every line's leading n atoms
+are used as a waiting point, f 39;
+#X obj 37 497 text sequence text-help-seq, f 13;
+#X text 230 489 creation arguments:, f 30;
+#X text 164 508 name of the text object or "-s struct-name";
+#X obj 58 764 text define -k text-help-seq;
+#A set 1 2 3 \; 4 5 symbol 7 \; 8 \$1 \$2 \; 9 \$3 \$1-\$2-\$3 \;;
+#X obj 653 328 print wait;
+#X msg 37 327 stop;
+#X text 84 328 stop the sequence;
+#X text 30 10 "text sequence" outputs lines from a text buffer \, either
+to an outlet \, or as messages to named destinations. The text is interpreted
+as a sequence of lists \, and possibly some interspersed waiting instructions
+(called "waits" here). You can ask for one line at a time ("step" message")
+\, or to proceed without delay to the next wait ("bang") \, or to automatically
+sequence through a series of waits (with each wait specifying a delay
+in milliseconds);
+#X text 78 255 automatically sequence \, interpreting waits as delay
+times (but note there aren't any waits in this example - see at right)
+, f 36;
+#X text 653 228 rewind;
+#X text 912 274 click to see the sequence:;
+#X msg 723 248 step;
+#X msg 761 448 bang;
+#X msg 629 448 line 0;
+#X obj 825 535 print done;
+#X msg 816 448 auto;
+#X msg 869 449 stop;
+#X obj 726 535 print wait;
+#X msg 704 448 step;
+#X obj 885 496 text define -k text-help-seq3;
+#A set 1 2 3 \; fred 1000 \; 4 5 6 \; blanch 7 8 \; fred 500 \; 9 10
+\;;
+#X obj 629 482 text sequence text-help-seq3 -w fred, f 22;
+#X obj 629 535 print out1;
+#X text 624 365 Alternatively \, with the "-w" flag (with or without
+"-g" but most usefully without) \, you can specify a symbol that tags
+an entire line as a wait. Here the three outlets are for lists (regular
+lines) \, waits \, and a bang at end of sequence:;
+#X msg 760 718 bang;
+#X msg 628 718 line 0;
+#X msg 815 718 auto;
+#X msg 868 719 stop;
+#X msg 703 718 step;
+#X text 934 472 sequence:;
+#X text 962 746 sequence:;
+#X obj 884 766 text define -k text-help-seq4;
+#A set 0 1 2 3 \; 1000 4 5 6 \; 500 7 8 9 \; 500 10 11 12 \;;
+#X obj 628 752 text sequence text-help-seq4 -w 1, f 19;
+#X obj 824 802 print done;
+#X obj 725 802 print wait;
+#X obj 628 802 print out1;
+#X msg 37 356 tempo 1 msec;
+#X obj 390 376 delay;
+#X text 149 347 set tempo in msec \, sec \, min \, samples \, permin
+\, etc. -- see 'delay' help for details...., f 28;
+#X text 163 646 -t <tempo> <units> initializes tempo as with the "tempo"
+message above., f 36;
+#X msg 915 248 tempo 2 permsec;
+#X text 937 226 set 2x tempo;
+#X text 625 20 The -g flag (which must be given after specifying the
+text with a name or a "-s" argument) specifies that the text contains
+messages to send to global symbols. Lines beginning with symbols are
+sent to the corresponding receive (or other named object). Leading
+numbers are then interpreted as waits. If you use "bang" to sequence
+the text the waits will be output as lists for you to interpret as
+you wish. If you send an "auto" message \, waits that consist of a
+single number are interpreted as delay times in milliseconds (but waits
+with 2 or more arguments are treated as in "bang"). Here the two waits
+are "1000" and "500 1500".;
+#X text 623 576 If you want to use leading numbers in lists as waits
+without having to specify "-g" \, specify "-w 3" for example and up
+to 3 leading numbers (fewer if there's a symbol among the first 3 items)
+will be taken as a wait. Waits specified this way can only have numeric
+elements (while waits specified with a symbol tag as above could have
+symbols too if desired.) Here we use "-w 1" so the "auto" feature can
+simply sequence a list of numbers:;
+#X connect 0 0 30 1;
+#X connect 2 0 30 0;
+#X connect 5 0 30 0;
+#X connect 6 0 30 0;
+#X connect 7 0 34 0;
+#X connect 7 1 15 0;
+#X connect 9 0 7 0;
+#X connect 10 0 7 0;
+#X connect 12 0 11 0;
+#X connect 13 0 14 0;
+#X connect 16 0 5 0;
+#X connect 18 0 30 0;
+#X connect 21 0 7 0;
+#X connect 22 0 7 0;
+#X connect 23 0 30 0;
+#X connect 30 0 3 0;
+#X connect 30 1 4 0;
+#X connect 35 0 30 0;
+#X connect 41 0 7 0;
+#X connect 42 0 50 0;
+#X connect 43 0 50 0;
+#X connect 45 0 50 0;
+#X connect 46 0 50 0;
+#X connect 48 0 50 0;
+#X connect 50 0 51 0;
+#X connect 50 1 47 0;
+#X connect 50 2 44 0;
+#X connect 53 0 61 0;
+#X connect 54 0 61 0;
+#X connect 55 0 61 0;
+#X connect 56 0 61 0;
+#X connect 57 0 61 0;
+#X connect 61 0 64 0;
+#X connect 61 1 63 0;
+#X connect 61 2 62 0;
+#X connect 65 0 30 0;
+#X connect 69 0 7 0;
+#X restore 393 406 pd sequence;
+#X text 365 497 updated for Pd version 0.47;
+#X text 100 287 delete a line or clear;
+#X obj 280 288 text delete;
+#N canvas 1058 154 749 465 delete 0;
+#X text 409 144 find another text by name or pointer;
+#X text 319 257 <-- click here to see text;
+#X obj 49 177 text delete text-help-delete;
+#X text 295 180 argument: name of the text object or "-s struct-name"
+;
+#X msg 206 144 symbol text-help-delete;
+#X obj 55 257 text define -k text-help-delete;
+#A set line 0 \; line 1 \; line 2 \; line 3 \; line 4 \;;
+#X msg 49 62 2;
+#X msg 58 89 -1;
+#X text 98 92 clear whole text;
+#X obj 57 401 text fromlist text-help-delete;
+#X msg 57 376 list line 0 \\\; line 1 \\\; line 2 \\\; line 3 \\\;
+line 4 \\\;;
+#X text 78 353 click below to get original text back:;
+#X text 46 9 "text delete" deletes the nth line.;
+#X text 88 62 delete line nyumber 2 (counting from 0);
+#X connect 4 0 2 1;
+#X connect 6 0 2 0;
+#X connect 7 0 2 0;
+#X connect 10 0 9 0;
+#X restore 392 287 pd delete;
