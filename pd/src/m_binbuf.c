@@ -1698,3 +1698,27 @@ t_pd *glob_evalfile(t_pd *ignore, t_symbol *name, t_symbol *dir)
     s__X.s_thing = boundx;
     return x;
 }
+
+    /* save a text object to a binbuf for a file or copy buf */
+void binbuf_savetext(t_binbuf *bfrom, t_binbuf *bto)
+{
+    int k, n = binbuf_getnatom(bfrom);
+    t_atom *ap = binbuf_getvec(bfrom), at;
+    for (k = 0; k < n; k++)
+    {
+        if (ap[k].a_type == A_FLOAT ||
+            (ap[k].a_type == A_SYMBOL &&
+                !strchr(ap[k].a_w.w_symbol->s_name, ';') &&
+                !strchr(ap[k].a_w.w_symbol->s_name, ',') &&
+                !strchr(ap[k].a_w.w_symbol->s_name, '$')))
+                    binbuf_add(bto, 1, &ap[k]);
+        else
+        {
+            char buf[MAXPDSTRING+1];
+            atom_string(&ap[k], buf, MAXPDSTRING);
+            SETSYMBOL(&at, gensym(buf));
+            binbuf_add(bto, 1, &at);
+        }
+    }
+    binbuf_addsemi(bto);
+}
