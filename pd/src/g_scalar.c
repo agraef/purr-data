@@ -103,6 +103,11 @@ void word_init(t_word *data, t_template *template, t_gpointer *gp)
             post("eval'd a canvas with addy x%lx", (long unsigned int)
                 wp->w_list);
         }
+        else if (type == DT_TEXT)
+        {
+            // Miller's [text] object addition
+            wp->w_binbuf = binbuf_new();
+        }
     }
 }
 
@@ -167,6 +172,8 @@ void word_free(t_word *wp, t_template *template)
             array_free(wp[i].w_array);
         else if (dt->ds_type == DT_LIST)
             canvas_free(wp[i].w_list);
+        else if (dt->ds_type == DT_TEXT)
+            binbuf_free(wp[i].w_binbuf);
     }
 }
 
