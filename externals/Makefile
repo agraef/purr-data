@@ -1809,6 +1809,7 @@ ifneq ($(OS_NAME),windows)
 endif
 
 zexy_clean:
+	cd $(externals_src)/zexy && ./autogen.sh
 	-$(MAKE) -C $(externals_src)/zexy clean
 	-rm -rf -- $(externals_src)/zexy/autom4te.cache
 	-rm -f -- $(externals_src)/zexy/aclocal.m4
