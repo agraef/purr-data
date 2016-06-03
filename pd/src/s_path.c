@@ -40,7 +40,9 @@
 
 t_namelist *sys_externlist;
 t_namelist *sys_searchpath;
+t_namelist *sys_staticpath;
 t_namelist *sys_helppath;
+
 
     /* change '/' characters to the system's native file separator */
 void sys_bashfilename(const char *from, char *to)
@@ -297,9 +299,12 @@ void sys_setextrapath(const char *p)
     namelist_free(pd_extrapath);
     /* add standard place for users to install stuff first */
 #ifdef __gnu_linux__
-    sys_expandpath("~/pd-l2ork-externals", pathbuf);
+    sys_expandpath("~/.local/lib/pd-l2ork/extra/", pathbuf);
     pd_extrapath = namelist_append(0, pathbuf, 0);
-    pd_extrapath = namelist_append(pd_extrapath, "/usr/local/lib/pd-l2ork-externals", 0);
+    sys_expandpath("~/pd-l2ork-externals", pathbuf);
+    pd_extrapath = namelist_append(pd_extrapath, pathbuf, 0);
+    pd_extrapath = namelist_append(pd_extrapath,
+        "/usr/local/lib/pd-l2ork-externals", 0);
 #endif
 
 #ifdef __APPLE__
@@ -309,9 +314,9 @@ void sys_setextrapath(const char *p)
 #endif
 
 #ifdef _WIN32
-    sys_expandpath("%ProgramFiles%/Common Files/Pd", pathbuf);
+    sys_expandpath("%AppData%/Pd", pathbuf);
     pd_extrapath = namelist_append(0, pathbuf, 0);
-    sys_expandpath("%UserProfile%/Application Data/Pd", pathbuf);
+    sys_expandpath("%CommonProgramFiles%/Pd", pathbuf);
     pd_extrapath = namelist_append(pd_extrapath, pathbuf, 0);
 #endif
     /* add built-in "extra" path last so its checked last */
@@ -466,6 +471,94 @@ int open_via_path(const char *dir, const char *name, const char *ext,
 {
     return (do_open_via_path(dir, name, ext, dirresult, nameresult,
         size, bin, sys_searchpath));
+}
+
+    /* open a file with a UTF-8 filename
+    This is needed because WIN32 does not support UTF-8 filenames, only UCS2.
+    Having this function prevents lots of #ifdefs all over the place.
+    */
+#ifdef _WIN32
+int sys_open(const char *path, int oflag, ...)
+{
+    int i, fd;
+    char pathbuf[MAXPDSTRING];
+    wchar_t ucs2path[MAXPDSTRING];
+    sys_bashfilename(path, pathbuf);
+    u8_utf8toucs2(ucs2path, MAXPDSTRING, pathbuf, MAXPDSTRING-1);
+    /* For the create mode, Win32 does not have the same possibilities,
+     * so we ignore the argument and just hard-code read/write. */
+    if (oflag & O_CREAT)
+        fd = _wopen(ucs2path, oflag | O_BINARY, _S_IREAD | _S_IWRITE);
+    else
+        fd = _wopen(ucs2path, oflag | O_BINARY);
+    return fd;
+}
+
+FILE *sys_fopen(const char *filename, const char *mode)
+{
+    char namebuf[MAXPDSTRING];
+    wchar_t ucs2buf[MAXPDSTRING];
+    wchar_t ucs2mode[MAXPDSTRING];
+    sys_bashfilename(filename, namebuf);
+    u8_utf8toucs2(ucs2buf, MAXPDSTRING, namebuf, MAXPDSTRING-1);
+    /* mode only uses ASCII, so no need for a full conversion, just copy it */
+    mbstowcs(ucs2mode, mode, MAXPDSTRING);
+    return (_wfopen(ucs2buf, ucs2mode));
+}
+#else
+#include <stdarg.h>
+int sys_open(const char *path, int oflag, ...)
+{
+    int i, fd;
+    char pathbuf[MAXPDSTRING];
+    sys_bashfilename(path, pathbuf);
+    if (oflag & O_CREAT)
+    {
+        mode_t mode;
+        int imode;
+        va_list ap;
+        va_start(ap, oflag);
+
+        /* Mac compiler complains if we just set mode = va_arg ... so, even
+        though we all know it's just an int, we explicitly va_arg to an int
+        and then convert.
+           -> http://www.mail-archive.com/bug-gnulib@gnu.org/msg14212.html
+           -> http://bugs.debian.org/647345
+        */
+
+        imode = va_arg (ap, int);
+        mode = (mode_t)imode;
+        va_end(ap);
+        fd = open(pathbuf, oflag, mode);
+    }
+    else
+        fd = open(pathbuf, oflag);
+    return fd;
+}
+
+FILE *sys_fopen(const char *filename, const char *mode)
+{
+  char namebuf[MAXPDSTRING];
+  sys_bashfilename(filename, namebuf);
+  return fopen(namebuf, mode);
+}
+#endif /* _WIN32 */
+
+   /* close a previously opened file
+   this is needed on platforms where you cannot open/close resources
+   across dll-boundaries, but we provide it for other platforms as well */
+int sys_close(int fd)
+{
+#ifdef _WIN32
+    return _close(fd);  /* Bill Gates is a big fat hen */
+#else
+    return close(fd);
+#endif
+}
+
+int sys_fclose(FILE *stream)
+{
+    return fclose(stream);
 }
 
     /* Open a help file using the help search path.  We expect the ".pd"
