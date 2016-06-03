@@ -106,6 +106,10 @@ t_template *template_new(t_symbol *templatesym, int argc, t_atom *argv)
             argc--;
             argv++;
         }
+        else if (newtypesym == gensym("text") || newtypesym == &s_list)
+        {
+            newtype = DT_TEXT;
+        }
         else if (newtypesym == gensym("array"))
         {
             if (argc < 3 || argv[2].a_type != A_SYMBOL)
@@ -248,7 +252,8 @@ int template_match(t_template *x1, t_template *x2)
     for (i = x2->t_n; i < x1->t_n; i++)
     {
         if (x1->t_vec[i].ds_type == DT_ARRAY || 
-            x1->t_vec[i].ds_type == DT_LIST)
+            x1->t_vec[i].ds_type == DT_LIST ||
+            x1->t_vec[i].ds_type == DT_TEXT)
                 return (0);
     }
     //if (x2->t_n > x1->t_n)
@@ -349,6 +354,11 @@ static t_scalar *template_conformscalar(t_template *tfrom, t_template *tto,
             t_glist *gl2 = x->sc_vec[i].w_list;
             template_conformglist(tfrom, tto, gl2, conformaction);
         }
+        if (ds->ds_type == DT_TEXT)
+        {
+            t_glist *gl2 = x->sc_vec[i].w_list;
+            template_conformglist(tfrom, tto, gl2, conformaction);
+        }
         else if (ds->ds_type == DT_ARRAY)
         {
             t_symbol *arraytemplate = ds->ds_fieldtemplate;
@@ -400,6 +410,11 @@ static void template_conformarray(t_template *tfrom, t_template *tto,
         {
             t_dataslot *ds = scalartemplate->t_vec + j;
             if (ds->ds_type == DT_LIST)
+            {
+                t_glist *gl2 = wp[j].w_list;
+                template_conformglist(tfrom, tto, gl2, conformaction);
+            }
+            if (ds->ds_type == DT_TEXT)
             {
                 t_glist *gl2 = wp[j].w_list;
                 template_conformglist(tfrom, tto, gl2, conformaction);
@@ -6342,7 +6357,7 @@ void drawnumber_float(t_drawnumber *x, t_floatarg f)
 
 /* -------------------- widget behavior for drawnumber ------------ */
 
-#define DRAWNUMBER_BUFSIZE 80
+/*#define DRAWNUMBER_BUFSIZE 80
 static void drawnumber_sprintf(t_drawnumber *x, char *buf, t_atom *ap)
 {
     int nchars;
@@ -6350,6 +6365,54 @@ static void drawnumber_sprintf(t_drawnumber *x, char *buf, t_atom *ap)
     buf[DRAWNUMBER_BUFSIZE - 1] = 0;
     nchars = strlen(buf);
     atom_string(ap, buf + nchars, DRAWNUMBER_BUFSIZE - nchars);
+}*/
+
+static int drawnumber_gettype(t_drawnumber *x, t_word *data,
+    t_template *template, int *onsetp)
+{
+    int type;
+    t_symbol *arraytype;
+    if (template_find_field(template, /*x->x_fieldname*/ &x->x_value.fd_un.fd_varsym, onsetp, &type,
+        &arraytype) && type != DT_ARRAY)
+            return (type);
+    else return (-1);
+}
+
+#define DRAWNUMBER_BUFSIZE 1024
+static void drawnumber_getbuf(t_drawnumber *x, t_word *data,
+    t_template *template, char *buf)
+{
+    int nchars, onset, type = drawnumber_gettype(x, data, template, &onset);
+    if (type < 0)
+        buf[0] = 0;
+    else
+    {
+        strncpy(buf, x->x_label->s_name, DRAWNUMBER_BUFSIZE);
+        buf[DRAWNUMBER_BUFSIZE - 1] = 0;
+        nchars = strlen(buf);
+        if (type == DT_TEXT)
+        {
+            char *buf2;
+            int size2, ncopy;
+            binbuf_gettext(((t_word *)((char *)data + onset))->w_binbuf,
+                &buf2, &size2);
+            ncopy = (size2 > DRAWNUMBER_BUFSIZE-1-nchars ?
+                DRAWNUMBER_BUFSIZE-1-nchars: size2);
+            memcpy(buf+nchars, buf2, ncopy);
+            buf[nchars+ncopy] = 0;
+            if (nchars+ncopy == DRAWNUMBER_BUFSIZE-1)
+                strcpy(buf+(DRAWNUMBER_BUFSIZE-4), "...");
+            t_freebytes(buf2, size2);
+        }
+        else
+        {
+            t_atom at;
+            if (type == DT_FLOAT)
+                SETFLOAT(&at, ((t_word *)((char *)data + onset))->w_float);
+            else SETSYMBOL(&at, ((t_word *)((char *)data + onset))->w_symbol);
+            atom_string(&at, buf + nchars, DRAWNUMBER_BUFSIZE - nchars);
+        }
+    }
 }
 
 static void drawnumber_getrect(t_gobj *z, t_glist *glist,
@@ -6382,7 +6445,8 @@ static void drawnumber_getrect(t_gobj *z, t_glist *glist,
     if (x->x_flags & DRAW_SYMBOL)
         SETSYMBOL(&at, fielddesc_getsymbol(&x->x_value, template, data, 0));
     else SETFLOAT(&at, fielddesc_getfloat(&x->x_value, template, data, 0));
-    drawnumber_sprintf(x, buf, &at);
+    //drawnumber_sprintf(x, buf, &at);
+    drawnumber_getbuf(x, data, template, buf);
     *xp1 = xloc;
     *yp1 = yloc;
     // Ico 20140830: another regression from the 20140731 where getrect is not accurate
@@ -6463,7 +6527,8 @@ static void drawnumber_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         if (x->x_flags & DRAW_SYMBOL)
             SETSYMBOL(&at, fielddesc_getsymbol(&x->x_value, template, data, 0));
         else SETFLOAT(&at, fielddesc_getfloat(&x->x_value, template, data, 0));
-        drawnumber_sprintf(x, buf, &at);
+        drawnumber_getbuf(x, data, template, buf);
+        //drawnumber_sprintf(x, buf, &at);
 
         char parent_tagbuf[MAXPDSTRING];
         if (in_array)
@@ -6780,7 +6845,7 @@ void drawsymbol_float(t_drawsymbol *x, t_floatarg f)
 
 /* -------------------- widget behavior for drawsymbol ------------ */
 
-#define DRAWSYMBOL_BUFSIZE 80
+/*#define DRAWSYMBOL_BUFSIZE 80
 static void drawsymbol_sprintf(t_drawsymbol *x, char *buf, t_atom *ap)
 {
     int nchars;
@@ -6789,6 +6854,54 @@ static void drawsymbol_sprintf(t_drawsymbol *x, char *buf, t_atom *ap)
     nchars = strlen(buf);
     atom_string(ap, buf + nchars, DRAWSYMBOL_BUFSIZE - nchars);
     //fprintf(stderr,"drawsymbol_sprintf %s\n", buf);
+}*/
+
+static int drawsymbol_gettype(t_drawnumber *x, t_word *data,
+    t_template *template, int *onsetp)
+{
+    int type;
+    t_symbol *arraytype;
+    if (template_find_field(template, /*x->x_fieldname*/ &x->x_value.fd_un.fd_varsym, onsetp, &type,
+        &arraytype) && type != DT_ARRAY)
+            return (type);
+    else return (-1);
+}
+
+#define DRAWSYMBOL_BUFSIZE 1024
+static void drawsymbol_getbuf(t_drawsymbol *x, t_word *data,
+    t_template *template, char *buf)
+{
+    int nchars, onset, type = drawnumber_gettype(x, data, template, &onset);
+    if (type < 0)
+        buf[0] = 0;
+    else
+    {
+        strncpy(buf, x->x_label->s_name, DRAWSYMBOL_BUFSIZE);
+        buf[DRAWSYMBOL_BUFSIZE - 1] = 0;
+        nchars = strlen(buf);
+        if (type == DT_TEXT)
+        {
+            char *buf2;
+            int size2, ncopy;
+            binbuf_gettext(((t_word *)((char *)data + onset))->w_binbuf,
+                &buf2, &size2);
+            ncopy = (size2 > DRAWSYMBOL_BUFSIZE-1-nchars ?
+                DRAWSYMBOL_BUFSIZE-1-nchars: size2);
+            memcpy(buf+nchars, buf2, ncopy);
+            buf[nchars+ncopy] = 0;
+            if (nchars+ncopy == DRAWSYMBOL_BUFSIZE-1)
+                strcpy(buf+(DRAWSYMBOL_BUFSIZE-4), "...");
+            t_freebytes(buf2, size2);
+        }
+        else
+        {
+            t_atom at;
+            if (type == DT_FLOAT)
+                SETFLOAT(&at, ((t_word *)((char *)data + onset))->w_float);
+            else SETSYMBOL(&at, ((t_word *)((char *)data + onset))->w_symbol);
+            atom_string(&at, buf + nchars, DRAWSYMBOL_BUFSIZE - nchars);
+        }
+    }
 }
 
 static void drawsymbol_getrect(t_gobj *z, t_glist *glist,
@@ -6822,7 +6935,8 @@ static void drawsymbol_getrect(t_gobj *z, t_glist *glist,
     if (x->x_flags & DRAW_SYMBOL)
         SETSYMBOL(&at, fielddesc_getsymbol(&x->x_value, template, data, 0));
     else SETFLOAT(&at, fielddesc_getfloat(&x->x_value, template, data, 0));
-    drawsymbol_sprintf(x, buf, &at);
+    //drawsymbol_sprintf(x, buf, &at);
+    drawsymbol_getbuf(x, data, template, buf);
     *xp1 = xloc;
     *yp1 = yloc;
     // Ico 20140830: another regression from the 20140731 where getrect is not accurate
@@ -6879,7 +6993,7 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         int in_array = (sc->sc_vec == data) ? 0 : 1;
         // Ico: why are we using scale here? For group transforms? I thought
         // that drawsymbol was not eligible for group transforms since it is 
-        // a legacy object? keepin xscale and yscale 1.0 makes things look good
+        // a legacy object? keeping xscale and yscale 1.0 makes things look good
         // again on the disis_wiimote-help.pd patch
         t_float xscale = 1.0;
         t_float yscale = 1.0;
@@ -6903,7 +7017,8 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         if (x->x_flags & DRAW_SYMBOL)
             SETSYMBOL(&at, fielddesc_getsymbol(&x->x_value, template, data, 0));
         else SETFLOAT(&at, fielddesc_getfloat(&x->x_value, template, data, 0));
-        drawsymbol_sprintf(x, buf, &at);
+        //drawsymbol_sprintf(x, buf, &at);
+        drawsymbol_getbuf(x, data, template, buf);
 
         char parent_tagbuf[MAXPDSTRING];
         if (in_array)
