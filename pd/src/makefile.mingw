@@ -111,7 +111,7 @@ HEADERS = g_all_guis.h m_imp.h g_canvas.h g_magicglass.h m_pd.h s_stuff.h \
 	$(wildcard ../portaudio/common/*.h) s_audio_paring.h
 
 SRC = g_canvas.c g_graph.c g_text.c g_rtext.c g_array.c g_template.c g_io.c \
-    g_scalar.c g_traversal.c g_guiconnect.c g_readwrite.c g_editor.c \
+    g_scalar.c g_traversal.c g_guiconnect.c g_readwrite.c g_editor.c g_clone.c \
     g_all_guis.c g_bang.c g_radio.c g_mycanvas.c g_numbox.c g_toggle.c \
     g_vumeter.c m_pd.c m_class.c m_obj.c m_atom.c m_memory.c \
     m_binbuf.c m_conf.c m_glob.c m_sched.c s_main.c s_inter.c s_file.c \
@@ -119,8 +119,9 @@ SRC = g_canvas.c g_graph.c g_text.c g_rtext.c g_array.c g_template.c g_io.c \
     d_ugen.c d_ctl.c d_arithmetic.c d_osc.c d_filter.c d_dac.c d_misc.c \
     d_math.c d_fft.c d_fft_mayer.c d_fftroutine.c d_array.c d_global.c \
     d_delay.c d_resample.c x_arithmetic.c x_connective.c x_interface.c \
-    x_midi.c x_misc.c x_time.c x_acoustics.c x_net.c x_qlist.c x_gui.c \
-    x_list.c d_soundfile.c g_slider.c import.c g_magicglass.c x_preset.c \
+    x_midi.c x_misc.c x_time.c x_acoustics.c x_net.c x_text.c x_gui.c \
+    x_list.c x_array.c d_soundfile.c g_vslider.c g_vdial.c import.c \
+    x_vexp.c x_vexp_if.c x_vexp_fun.c \
     g_undo.c s_utf8.c
 
 SRSRC = u_pdsend.c u_pdreceive.c
@@ -216,24 +217,24 @@ pd.res: pd.rc
 
 # for making objects included with Pd, [expr] is whacky, so its built
 # separately, and pd~ doesn't build on Windows yet
-EXTERNALS_SRC := $(wildcard $(pd_src)/extra/[a-df-oq-z]*/*.c)
-EXPR_SRC = vexp.c vexp_fun.c vexp_if.c
-EXPR_OBJ =  $(patsubst %.c, $(pd_src)/extra/expr~/%.o, $(EXPR_SRC))
-expr_src = $(pd_src)/extra/expr~
+#EXTERNALS_SRC := $(wildcard $(pd_src)/extra/[a-df-oq-z]*/*.c)
+#EXPR_SRC = vexp.c vexp_fun.c vexp_if.c
+#EXPR_OBJ =  $(patsubst %.c, $(pd_src)/extra/expr~/%.o, $(EXPR_SRC))
+#expr_src = $(pd_src)/extra/expr~
 
-externs: $(EXTERNALS_SRC:.c=.dll) $(expr_src)/expr.dll $(expr_src)/expr~.dll \
-	$(expr_src)/fexpr~.dll
+#externs: $(EXTERNALS_SRC:.c=.dll) $(expr_src)/expr.dll $(expr_src)/expr~.dll \
+#      $(expr_src)/fexpr~.dll
 
 
-$(expr_src)/expr.dll: $(EXPR_OBJ)
-	$(CC) $(CFLAGS) $(INCLUDE) $(LDFLAGS) -s -shared --enable-auto-import \
-		-o $(expr_src)/expr.dll $(EXPR_OBJ) $(LIBS) -L$(DLL_DIR) -lpd
-$(expr_src)/expr~.dll: $(EXPR_OBJ)
-	$(CC) $(CFLAGS) $(INCLUDE) $(LDFLAGS) -s -shared --enable-auto-import \
-		-o $(expr_src)/expr~.dll $(EXPR_OBJ) $(LIBS) -L$(DLL_DIR) -lpd
-$(expr_src)/fexpr~.dll: $(EXPR_OBJ)
-	$(CC) $(CFLAGS) $(INCLUDE) $(LDFLAGS) -s -shared --enable-auto-import \
-		-o $(expr_src)/fexpr~.dll $(EXPR_OBJ) $(LIBS) -L$(DLL_DIR) -lpd
+#$(expr_src)/expr.dll: $(EXPR_OBJ)
+#      $(CC) $(CFLAGS) $(INCLUDE) $(LDFLAGS) -s -shared --enable-auto-import \
+#              -o $(expr_src)/expr.dll $(EXPR_OBJ) $(LIBS) -L$(DLL_DIR) -lpd
+#$(expr_src)/expr~.dll: $(EXPR_OBJ)
+#      $(CC) $(CFLAGS) $(INCLUDE) $(LDFLAGS) -s -shared --enable-auto-import \
+#              -o $(expr_src)/expr~.dll $(EXPR_OBJ) $(LIBS) -L$(DLL_DIR) -lpd
+#$(expr_src)/fexpr~.dll: $(EXPR_OBJ)
+#      $(CC) $(CFLAGS) $(INCLUDE) $(LDFLAGS) -s -shared --enable-auto-import \
+#              -o $(expr_src)/fexpr~.dll $(EXPR_OBJ) $(LIBS) -L$(DLL_DIR) -lpd
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDE) -c -o $*.o $*.c

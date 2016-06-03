@@ -62,7 +62,7 @@ TYPE_PUNNING_SRC = d_ctl.c d_array.c d_delay.c d_filter.c d_math.c d_osc.c d_sou
 
 # these are safe for full gcc 4.x optimization
 OPT_SAFE_SRC = g_canvas.c g_graph.c g_text.c g_rtext.c g_array.c g_template.c g_io.c \
-    g_scalar.c g_traversal.c g_guiconnect.c g_readwrite.c g_editor.c \
+    g_scalar.c g_traversal.c g_guiconnect.c g_readwrite.c g_editor.c g_clone.c \
     g_undo.c g_all_guis.c g_bang.c g_mycanvas.c g_numbox.c \
     g_toggle.c g_vumeter.c g_magicglass.c g_radio.c g_slider.c \
     m_pd.c m_class.c m_obj.c m_atom.c m_memory.c m_binbuf.c \
@@ -74,8 +74,8 @@ OPT_SAFE_SRC = g_canvas.c g_graph.c g_text.c g_rtext.c g_array.c g_template.c g_
     d_fft.c d_global.c \
     d_resample.c \
     x_arithmetic.c x_connective.c x_interface.c x_midi.c x_misc.c \
-    x_time.c x_acoustics.c x_net.c x_qlist.c x_gui.c x_list.c x_preset.c\
-	import.c \
+    x_time.c x_acoustics.c x_net.c x_text.c x_gui.c x_list.c x_array.c x_preset.c\
+	x_vexp.c x_vexp_if.c x_vexp_fun.c import.c \
     $(SYSSRC)
 
 SRC = $(TYPE_PUNNING_SRC) $(OPT_SAFE_SRC)
@@ -152,7 +152,6 @@ externs:
 	make -C ../extra/bob~     @EXTERNTARGET@
 	make -C ../extra/bonk~    @EXTERNTARGET@
 	make -C ../extra/choice   @EXTERNTARGET@
-	make -C ../extra/expr~    @EXTERNTARGET@
 	make -C ../extra/fiddle~  @EXTERNTARGET@
 	make -C ../extra/loop~    @EXTERNTARGET@
 	make -C ../extra/lrshift~ @EXTERNTARGET@
