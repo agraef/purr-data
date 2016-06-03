@@ -37,6 +37,9 @@ endif
 ifeq ($(UNAME_MACHINE),armv6l)
   ARCH = l_arm
 endif
+ifeq ($(UNAME_MACHINE),armv7l)
+  ARCH = l_arm
+endif
 
 current: $(ARCH)
 
