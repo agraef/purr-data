@@ -22,7 +22,7 @@ two, but how? */
     which can't send symbols starting with '$' (because the Pd message
     interpreter would change them!) */
 
-static t_symbol *sharptodollar(t_symbol *s)
+t_symbol *sharptodollar(t_symbol *s)
 {
     if (*s->s_name == '#')
     {
@@ -85,7 +85,7 @@ void array_resize(t_array *x, int n)
     x->a_valid = ++glist_valid;
 }
 
-static void array_resize_and_redraw(t_array *array, t_glist *glist, int n)
+void array_resize_and_redraw(t_array *array, t_glist *glist, int n)
 {
     //fprintf(stderr,"array_resize_and_redraw\n");
     t_array *a2 = array;
@@ -93,10 +93,10 @@ static void array_resize_and_redraw(t_array *array, t_glist *glist, int n)
     while (a2->a_gp.gp_stub->gs_which == GP_ARRAY)
         a2 = a2->a_gp.gp_stub->gs_un.gs_array;
     if (vis)
-        gobj_vis(a2->a_gp.gp_un.gp_gobj, glist, 0);
+        gobj_vis(&a2->a_gp.gp_un.gp_gobj, glist, 0);
     array_resize(array, n);
     if (vis)
-        gobj_vis(a2->a_gp.gp_un.gp_gobj, glist, 1);
+        gobj_vis(&a2->a_gp.gp_un.gp_gobj, glist, 1);
 }
 
 void word_free(t_word *wp, t_template *template);
@@ -262,6 +262,18 @@ int garray_getname(t_garray *x, t_symbol **namep)
 int garray_joc(t_garray *x)
 {
     return (x->x_joc);
+}
+
+    /* get a garray's containing glist */
+t_glist *garray_getglist(t_garray *x)
+{
+    return (x->x_glist);
+}
+
+    /* get a garray's associated scalar */
+t_scalar *garray_getscalar(t_garray *x)
+{
+    return (x->x_scalar);
 }
 
     /* helper function for fittograph to see if the same GOP has multiple
@@ -1403,7 +1415,7 @@ static int garray_click(t_gobj *z, t_glist *glist,
 
 #define ARRAYWRITECHUNKSIZE 1000
 
-static void garray_save(t_gobj *z, t_binbuf *b)
+void garray_save(t_gobj *z, t_binbuf *b)
 {
     int filestyle;
     t_garray *x = (t_garray *)z;
