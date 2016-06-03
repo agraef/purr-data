@@ -1069,8 +1069,7 @@ void alsa_getzeros(int n);
 void alsa_printstate( void);
 #endif
 
-    /* debugging */
-void glob_foo(void *dummy, t_symbol *s, int argc, t_atom *argv)
+/*void glob_foo(void *dummy, t_symbol *s, int argc, t_atom *argv)
 {
     t_symbol *arg = atom_getsymbolarg(0, argc, argv);
     if (arg == gensym("restart"))
@@ -1091,7 +1090,7 @@ void glob_foo(void *dummy, t_symbol *s, int argc, t_atom *argv)
         alsa_printstate();
     }
 #endif
-}
+}*/
 
 /* convert a device name to a (1-based) device number.  (Output device if
 'output' parameter is true, otherwise input device).  Negative on failure. */
