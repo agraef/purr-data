@@ -1289,6 +1289,8 @@ void canvas_undo_paste(t_canvas *x, void *z, int action)
     }
 }
 
+int clone_match(t_pd *z, t_symbol *name, t_symbol *dir);
+
     /* recursively check for abstractions to reload as result of a save. 
     Don't reload the one we just saved ("except") though. */
     /*  LATER try to do the same trick for externs. */
@@ -1300,15 +1302,27 @@ static void glist_doreload(t_glist *gl, t_symbol *name, t_symbol *dir,
     int i, nobj = glist_getindex(gl, 0);  /* number of objects */
     int hadwindow = gl->gl_havewindow;
     int found = 0;
+    int remakeit = 0;
     // to optimize redrawing we select all objects that need to be updated
     // and redraw them together. Then we look for sub-patches that may have
     // more of the same...
     for (g = gl->gl_list, i = 0; g && i < nobj; i++)
     {
-        if (g != except && pd_class(&g->g_pd) == canvas_class &&
+            /* remake the object if it's an abstraction that appears to have
+            been loaded from the file we just saved */
+        remakeit = (g != except && pd_class(&g->g_pd) == canvas_class &&
             canvas_isabstraction((t_canvas *)g) &&
                 ((t_canvas *)g)->gl_name == name &&
-                    canvas_getdir((t_canvas *)g) == dir)
+                    canvas_getdir((t_canvas *)g) == dir);
+            /* also remake it if it's a "clone" with that name */
+        if (pd_class(&g->g_pd) == clone_class &&
+            clone_match(&g->g_pd, name, dir))
+        {
+                /* LATER try not to remake the one that equals "except" */
+            remakeit = 1;
+        }
+
+        if (remakeit)
         {
                 /* we're going to remake the object, so "g" will go stale.
                 Get its index here, and afterward restore g.  Also, the
@@ -5409,7 +5423,7 @@ void canvas_menuclose(t_canvas *x, t_floatarg fforce)
     //fprintf(stderr,"canvas_menuclose %lx %f\n", (t_int)x, fforce);
     int force = fforce;
     t_glist *g;
-    if (x->gl_owner && (force == 0 || force == 1))
+    if ((x->gl_owner || x->gl_isclone) && (force == 0 || force == 1))
     {
         //fprintf(stderr,"    invis\n");
         canvas_vis(x, 0);   /* if subpatch, just invis it */
@@ -6048,6 +6062,8 @@ static void glist_donewloadbangs(t_glist *x)
         for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
             if (pd_class(&sel->sel_what->g_pd) == canvas_class)
                 canvas_loadbang((t_canvas *)(&sel->sel_what->g_pd));
+            /*else if (zgetfn(&sel->sel_what->g_pd, gensym("loadbang")))
+                vmess(&sel->sel_what->g_pd, gensym("loadbang"), "f", LB_LOAD);*/
     }
 }
 
@@ -7538,4 +7554,22 @@ void g_editor_setup(void)
         gensym("disconnect"), A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_NULL);
 /* -------------- copy buffer ------------------ */
     copy_binbuf = binbuf_new();
+}
+
+void canvas_editor_for_class(t_class *c)
+{
+    class_addmethod(c, (t_method)canvas_mousedown, gensym("mouse"),
+        A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_NULL);
+    class_addmethod(c, (t_method)canvas_mouseup, gensym("mouseup"),
+        A_FLOAT, A_FLOAT, A_FLOAT, A_NULL);
+    class_addmethod(c, (t_method)canvas_key, gensym("key"),
+        A_GIMME, A_NULL);
+    class_addmethod(c, (t_method)canvas_motion, gensym("motion"),
+        A_FLOAT, A_FLOAT, A_FLOAT, A_NULL);
+
+/* ------------------------ menu actions ---------------------------- */
+    class_addmethod(c, (t_method)canvas_menuclose,
+        gensym("menuclose"), A_DEFFLOAT, 0);
+    class_addmethod(c, (t_method)canvas_find_parent,
+        gensym("findparent"), A_NULL);
 }
