@@ -179,6 +179,46 @@ void gpointer_init(t_gpointer *gp)
     gp->gp_un.gp_gobj = 0;
 }
 
+/*********  random utility function to find a binbuf in a datum */
+
+t_binbuf *pointertobinbuf(t_pd *x, t_gpointer *gp, t_symbol *s,
+    const char *fname)
+{
+    t_symbol *templatesym = gpointer_gettemplatesym(gp), *arraytype;
+    t_template *template;
+    int onset, type;
+    t_binbuf *b;
+    t_gstub *gs = gp->gp_stub;
+    t_word *vec;
+    if (!templatesym)
+    {
+        pd_error(x, "%s: bad pointer", fname);
+        return (0);
+    }
+    if (!(template = template_findbyname(templatesym)))
+    {
+        pd_error(x, "%s: couldn't find template %s", fname,
+            templatesym->s_name);
+        return (0);
+    }
+    if (!template_find_field(template, s, &onset, &type, &arraytype))
+    {
+        pd_error(x, "%s: %s.%s: no such field", fname,
+            templatesym->s_name, s->s_name);
+        return (0);
+    }
+    if (type != DT_TEXT)
+    {
+        pd_error(x, "%s: %s.%s: not a list", fname,
+            templatesym->s_name, s->s_name);
+        return (0);
+    }
+    if (gs->gs_which == GP_ARRAY)
+        vec = gp->gp_un.gp_w;
+    else vec = ((t_scalar *)(gp->gp_un.gp_gobj))->sc_vec;
+    return (vec[onset].w_binbuf);
+}
+
     /* templates are named using the name-bashing by which canvases bind
     thenselves, with a leading "pd-".  LATER see if we can have templates
     occupy their real names.  Meanwhile, if a template has an empty name
@@ -662,14 +702,14 @@ static void set_bang(t_set *x)
     else for (i = 0, vp = x->x_variables; i < nitems; i++, vp++)
         template_setfloat(template, vp->gv_sym, vec, vp->gv_w.w_float, 1);
     if (gs->gs_which == GP_GLIST)
-        scalar_configure((t_scalar *)(gp->gp_un.gp_gobj), gs->gs_un.gs_glist);  
+        scalar_configure((t_scalar *)(gp->gp_un.gp_gobj), gs->gs_un.gs_glist);
     else
     {
         t_array *owner_array = gs->gs_un.gs_array;
         while (owner_array->a_gp.gp_stub->gs_which == GP_ARRAY)
             owner_array = owner_array->a_gp.gp_stub->gs_un.gs_array;
         scalar_redraw((t_scalar *)(owner_array->a_gp.gp_un.gp_gobj),
-            owner_array->a_gp.gp_stub->gs_un.gs_glist);  
+            owner_array->a_gp.gp_stub->gs_un.gs_glist);
     }
 }
 
@@ -1007,7 +1047,6 @@ static void setsize_float(t_setsize *x, t_float f)
         array we have to search back until we get to a scalar to erase.
         When graphics updates become queueable this may fall apart... */
 
-
     if (gs->gs_which == GP_GLIST)
     {
         if (glist_isvisible(gs->gs_un.gs_glist))
@@ -1049,7 +1088,7 @@ static void setsize_float(t_setsize *x, t_float f)
     if (gs->gs_which == GP_GLIST)
     {
         if (glist_isvisible(gs->gs_un.gs_glist))
-            gobj_vis(gp->gp_un.gp_gobj, gs->gs_un.gs_glist, 1);  
+            gobj_vis(gp->gp_un.gp_gobj, gs->gs_un.gs_glist, 1);
     }
     else
     {
@@ -1058,7 +1097,7 @@ static void setsize_float(t_setsize *x, t_float f)
             owner_array = owner_array->a_gp.gp_stub->gs_un.gs_array;
         if (glist_isvisible(owner_array->a_gp.gp_stub->gs_un.gs_glist))
             gobj_vis(owner_array->a_gp.gp_un.gp_gobj,
-                owner_array->a_gp.gp_stub->gs_un.gs_glist, 1);  
+                owner_array->a_gp.gp_stub->gs_un.gs_glist, 1);
     }
 }
 
@@ -1279,7 +1318,7 @@ static void sublist_pointer(t_sublist *x, t_gpointer *gp)
         pd_error(x, "sublist: couldn't find field %s", x->x_fieldsym->s_name);
         return;
     }
-    if (type != DT_LIST)
+    if (type != DT_TEXT)
     {
         pd_error(x, "sublist: field %s not of type list", x->x_fieldsym->s_name);
         return;
