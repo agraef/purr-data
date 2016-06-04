@@ -3,29 +3,29 @@
  *
  * oreceive - implementation file
  *
- * copyleft (c) IOhannes m zmölnig
+ * copyleft (c) IOhannes m zmÃ¶lnig
  *
- *   2307:forum::für::umläute:2008
+ *   2307:forum::fÃ¼r::umlÃ¤ute:2008
  *
  *   institute of electronic music and acoustics (iem)
  *   unsiversity of music and dramatic arts graz (kug)
  *
  ******************************************************
  *
- * license: GNU General Public License v.2
+ * license: GNU General Public License v.2 (or later)
  *
  ******************************************************/
 
 
-#include "m_pd.h"
+#include "iemguts.h"
 
 #if 0
 # define debug_post post
 #else
-# define debug_post
+static void debug_post(const char *fmt, ...) {;}
 #endif
 
-static t_class *oreceive_class, *oreceive_proxy_class, *oreceive_guts_class;
+static t_class *oreceive_class, *oreceive_proxy_class;
 
 
 /* ------------------------------------------------------------- */
@@ -151,7 +151,7 @@ static void pd_bind_priority(t_pd*x, t_symbol*key, t_float priority) {
     bind_list=guts_add_key(key);
   if(!bind_list)return;
 
-  element=(t_bind_element*)getbytes(sizeof(t_bind_element));
+  element=getbytes(sizeof(*element));
   element->object=x;
   element->priority=priority;
   element->next=0;
@@ -187,7 +187,7 @@ static void pd_unbind_priority(t_pd*x, t_symbol*key) {
     elements->priority=0;
     elements->next=0;
 
-    freebytes(elements, sizeof(elements));
+    freebytes(elements, sizeof(*elements));
   } else {
     // not here...
   }
@@ -248,8 +248,8 @@ static void oreceive_priority(t_oreceive *x, t_float p)
   x->x_priority=p;
   if(x->x_sym) {
     pd_unbind_priority(&x->x_obj.ob_pd, x->x_sym);
+    pd_bind_priority(&x->x_obj.ob_pd, x->x_sym, x->x_priority);
   }
-  pd_bind_priority(&x->x_obj.ob_pd, x->x_sym, x->x_priority);
 }
 
 static void oreceive_name(t_oreceive *x, t_symbol*s)
@@ -283,6 +283,7 @@ static void oreceive_free(t_oreceive *x)
 
 void oreceive_setup(void)
 {
+    iemguts_boilerplate("[oreceive] (ordered receive)", 0);
     oreceive_class = class_new(gensym("oreceive"), (t_newmethod)oreceive_new, 
                                (t_method)oreceive_free, sizeof(t_oreceive), CLASS_NOINLET, A_DEFSYM, A_DEFFLOAT, 0);
     class_addcreator((t_newmethod)oreceive_new, gensym("r"), A_DEFSYM, A_DEFFLOAT, 0);

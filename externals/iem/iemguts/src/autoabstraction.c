@@ -1,7 +1,11 @@
-/* Copyright (c) 2008 IOhannes m zmölnig @ IEM
+/* Copyright (c) 2008 IOhannes m zmÃ¶lnig @ IEM
  * For information on usage and redistribution, and for a DISCLAIMER OF ALL
  * WARRANTIES, see the file, "LICENSE.txt," that comes with Pd.  
- */
+ ******************************************************
+ *
+ * license: GNU General Public License v.2 (or later)
+ *
+ ******************************************************/
 
 /*
  * this code adds an external "loader" to Miller S. Puckette's "pure data",
@@ -23,7 +27,7 @@
 # define MSW
 #endif
 
-#include "m_pd.h"
+#include "iemguts.h"
 
 
 typedef struct _autoabstraction
@@ -34,14 +38,11 @@ static t_class *autoabstraction_class;
 
 static int s_state=0;
 
-static char *version = "$Revision: 0.1 $";
-
 /* this is the name of the filename that get's loaded as a default template for new abstractions */
 static char*s_templatefilename="autoabstraction.template";
 /* if the loading above fails, we resort to a simple default abstraction that automatically opens up */
 /* LATER: make the font-size the same as the one used by Pd */
 static char*s_templatestring="#N canvas 0 0 450 300 10; #X vis 1;";
-
 
 #if (PD_MINOR_VERSION >= 40)
 # define AUTOABSTRACTION_ENABLED 1
@@ -103,14 +104,14 @@ static int autoabstraction_loader(t_canvas *canvas, char *classname)
   int fd=0;
   char dirbuf[MAXPDSTRING], *nameptr;
 
-  if((fd=canvas_open(canvas, classname, ".pd", dirbuf, &nameptr, MAXPDSTRING, 0)) >= 0 ||
-     (fd=canvas_open(canvas, classname, ".pat", dirbuf, &nameptr, MAXPDSTRING, 0)) >= 0)
+  if((fd=canvas_open(canvas, classname, ".pd", dirbuf, &nameptr, MAXPDSTRING, 0)) >= 0)
     {
       /* oops, there's already an abstraction of the given <classname> */
       close(fd);
       return(0);
     }
 
+  /* none! we create one, so Pd can later find it... */
   autoabstraction_createpatch(canvas, classname);
 
   /* we always fail, because we want Pd to do the real opening of abstractions */
@@ -160,15 +161,13 @@ static void*autoabstraction_new(t_symbol *s, int argc, t_atom *argv)
 void autoabstraction_setup(void)
 {
   /* relies on t.grill's loader functionality, fully added in 0.40 */
-  post("automatic abstraction creator %s",version);  
-  post("\twritten by IOhannes m zmoelnig, IEM <zmoelnig@iem.at>");
-  post("\tcompiled on "__DATE__" at "__TIME__ " ");
-  post("\tcompiled against Pd version %d.%d.%d.%s", PD_MAJOR_VERSION, PD_MINOR_VERSION, PD_BUGFIX_VERSION, PD_TEST_VERSION);
+  iemguts_boilerplate("automatic abstraction creator", 0);
 #ifdef AUTOABSTRACTION_ENABLED
   autoabstraction_initialize();
   sys_register_loader(autoabstraction_loader);
+#warning FIXME loader-0.47 mode!
 #else
-  error("to function, this needs to be compiled against Pd 0.40 or higher,\n");
+  error("autoabstraction needs to be compiled against Pd 0.40 or higher,\n");
   error("\tor a version that has sys_register_loader()");
 #endif
 

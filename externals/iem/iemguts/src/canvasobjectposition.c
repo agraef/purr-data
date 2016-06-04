@@ -3,15 +3,15 @@
  *
  * canvasposition - implementation file
  *
- * copyleft (c) IOhannes m zmölnig
+ * copyleft (c) IOhannes m zmÃ¶lnig
  *
- *   2007:forum::für::umläute:2007
+ *   2007:forum::fÃ¼r::umlÃ¤ute:2007
  *
  *   institute of electronic music and acoustics (iem)
  *
  ******************************************************
  *
- * license: GNU General Public License v.2
+ * license: GNU General Public License v.2 (or later)
  *
  ******************************************************/
 
@@ -27,7 +27,7 @@
  * abstraction within its canvas.
  */
 
-#include "m_pd.h"
+#include "iemguts.h"
 
 #include "g_canvas.h"
 #include "m_imp.h"
@@ -136,7 +136,7 @@ static void *canvasobjectposition_new(t_symbol*s, int argc, t_atom*argv)
 
     if(depth<0)depth=0;
 
-    post("depth=%d\tindex=%d", depth, index);
+    //post("depth=%d\tindex=%d", depth, index);
 
     while(depth && canvas) {
       canvas=canvas->gl_owner;
@@ -186,6 +186,7 @@ static void canvasobjectposition_object(t_canvasobjectposition *x, t_float f)
 
 void canvasobjectposition_setup(void)
 {
+  iemguts_boilerplate("[canvasobjectposition]", 0);
   canvasobjectposition_class = class_new(gensym("canvasobjectposition"), 
                                    (t_newmethod)canvasobjectposition_new, (t_method)canvasobjectposition_free, 
                                    sizeof(t_canvasobjectposition), 0,

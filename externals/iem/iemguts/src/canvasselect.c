@@ -1,29 +1,32 @@
-
 /******************************************************
  *
  * canvasselect - implementation file
  *
- * copyleft (c) IOhannes m zmölnig
+ * copyleft (c) IOhannes m zmÃ¶lnig
  *
- *   2007:forum::für::umläute:2007
+ *   2007:forum::fÃ¼r::umlÃ¤ute:2007
  *
  *   institute of electronic music and acoustics (iem)
  *
  ******************************************************
  *
- * license: GNU General Public License v.2
+ * license: GNU General Public License v.2 (or later)
  *
  ******************************************************/
 
 
-/* 
+/*
  * this object allows to select other objects on the canvas
  * it also allows to query the selection of the canvas
- * 
+ *
  * it also adds a "select" message to the canvas
+ *
+ * TODO:
+ *  - save selection to file
+ *  - patcherize selection
  */
 
-#include "m_pd.h"
+#include "iemguts.h"
 
 #include "g_canvas.h"
 
@@ -48,9 +51,8 @@ static void canvasselect_bang(t_canvasselect *x)
   if(NULL==glist) {
     return;
   }
-  t_atom selected_index;
   int nselected=0;
-  
+
   for(obj=glist->gl_list; obj; obj=obj->g_next, index++) {
     if(glist_isselected(glist, obj)) {
       // post("selected: %d", index);
@@ -60,16 +62,16 @@ static void canvasselect_bang(t_canvasselect *x)
   int n=0;
   index=0;
   t_atom *atombuf;
-  
-  atombuf = (t_atom *)getbytes(sizeof(t_atom)*nselected);
-  
+
+  atombuf = getbytes(nselected*sizeof(*atombuf));
+
   for(obj=glist->gl_list; obj; obj=obj->g_next, index++) {
     if(glist_isselected(glist, obj)) {
       SETFLOAT(&atombuf[n], index);
       n++;
     }
   }
-  
+
   outlet_list(x->x_obj.ob_outlet, &s_list, nselected, atombuf);
 }
 
@@ -104,7 +106,6 @@ static int canvasselect_doselect(t_glist*glist, int index)
 
 static void canvasselect_select(t_canvasselect*x, t_floatarg f)
 {
-  t_glist*glist=x->x_canvas;
   int i=f;
   if(canvasselect_doselect(x->x_canvas, i)<0) {
     pd_error(x, "invalid selection %d", i);
@@ -160,7 +161,6 @@ static int canvasselect_dodeselect(t_glist*glist, int index)
 
 static void canvasselect_deselect(t_canvasselect*x, t_floatarg f)
 {
-  t_glist*glist=x->x_canvas;
   int i=f;
   if(canvasselect_dodeselect(x->x_canvas, i)<0) {
     pd_error(x, "invalid deselection %d", i);
@@ -194,7 +194,7 @@ static void *canvasselect_new(t_floatarg f)
   t_glist *glist=(t_glist *)canvas_getcurrent();
   t_canvas *canvas=(t_canvas*)glist_getcanvas(glist);
   int depth=(int)f;
-  
+
   if(depth<0)depth=0;
 
   while(depth && canvas) {
@@ -203,14 +203,15 @@ static void *canvasselect_new(t_floatarg f)
   }
 
   x->x_canvas = canvas;
-  
+
+
   outlet_new(&x->x_obj, 0);
   return (x);
 }
 
 static void canvasselect_free(t_canvasselect*x)
 {
-
+  x->x_canvas = 0;
 }
 
 static void canvas_select_cb(t_canvas*x, t_float f)
@@ -245,8 +246,9 @@ static void register_methods(void)
 
 void canvasselect_setup(void)
 {
-  canvasselect_class = class_new(gensym("canvasselect"), 
-                                 (t_newmethod)canvasselect_new, (t_method)canvasselect_free, 
+  iemguts_boilerplate("[canvasselect] - (de)select messages for canvas", 0);
+  canvasselect_class = class_new(gensym("canvasselect"),
+                                 (t_newmethod)canvasselect_new, (t_method)canvasselect_free,
                                  sizeof(t_canvasselect), 0,
                                  A_DEFFLOAT, 0);
   class_addbang(canvasselect_class, (t_method)canvasselect_bang);

@@ -3,15 +3,15 @@
  *
  * try - implementation file
  *
- * copyleft (c) IOhannes m zmölnig
+ * copyleft (c) IOhannes m zmÃ¶lnig
  *
- *   2007:forum::für::umläute:2007
+ *   2007:forum::fÃ¼r::umlÃ¤ute:2007
  *
  *   institute of electronic music and acoustics (iem)
  *
  ******************************************************
  *
- * license: GNU General Public License v.2
+ * license: GNU General Public License v.2 (or later)
  *
  ******************************************************/
 
@@ -24,7 +24,7 @@
  * currently this doesn't work (well) with [list]  
  */
 
-#include "m_pd.h"
+#include "iemguts.h"
 #include "g_canvas.h"
 
 int glist_getindex(t_glist *x, t_gobj *y);
@@ -86,6 +86,7 @@ static void *try_new(t_symbol*s, int argc, t_atom*argv)
 
 void try_setup(void)
 {
+  iemguts_boilerplate("[try]", 0);
   try_class = class_new(gensym("try"), 
 			(t_newmethod)try_new, NULL, 
 			sizeof(t_try), 0, 

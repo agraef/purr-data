@@ -3,15 +3,15 @@
  *
  * sendcanvas - implementation file
  *
- * copyleft (c) IOhannes m zmölnig
+ * copyleft (c) IOhannes m zmÃ¶lnig
  *
- *   2007:forum::für::umläute:2007
+ *   2007:forum::fÃ¼r::umlÃ¤ute:2007
  *
  *   institute of electronic music and acoustics (iem)
  *
  ******************************************************
  *
- * license: GNU General Public License v.2
+ * license: GNU General Public License v.2 (or later)
  *
  ******************************************************/
 
@@ -23,7 +23,7 @@
  * e.g. [sendcanvas 1] will send messages to the parent of the containing canvas
  */
 
-#include "m_pd.h"
+#include "iemguts.h"
 #include "g_canvas.h"
 
 int glist_getindex(t_glist *x, t_gobj *y);
@@ -70,6 +70,7 @@ static void *sendcanvas_new(t_floatarg f)
 
 void sendcanvas_setup(void)
 {
+  iemguts_boilerplate("[sendcanvas]", 0);
   sendcanvas_class = class_new(gensym("sendcanvas"), (t_newmethod)sendcanvas_new,
                                (t_method)sendcanvas_free, sizeof(t_sendcanvas), 0, A_DEFFLOAT, 0);
   class_addanything(sendcanvas_class, (t_method)sendcanvas_anything);

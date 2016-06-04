@@ -3,15 +3,15 @@
  *
  * canvasconnections - implementation file
  *
- * copyleft (c) IOhannes m zmölnig
+ * copyleft (c) IOhannes m zmÃ¶lnig
  *
- *   2008:forum::für::umläute:2008
+ *   2008:forum::fÃ¼r::umlÃ¤ute:2008
  *
  *   institute of electronic music and acoustics (iem)
  *
  ******************************************************
  *
- * license: GNU General Public License v.2
+ * license: GNU General Public License v.2 (or later)
  *
  ******************************************************/
 
@@ -23,7 +23,7 @@
  * e.g. [canvasconnections 1] will query the parent of the containing canvas
  */
 
-#include "m_pd.h"
+#include "iemguts.h"
 #include "g_canvas.h"
 #include "m_imp.h"
 #include <string.h>
@@ -52,13 +52,13 @@ typedef struct _intvec
 
 static t_intvec*intvec_new(int initial_size)
 {
-  t_intvec*res=(t_intvec*)getbytes(sizeof(t_intvec));
+  t_intvec*res=getbytes(sizeof(*res));
   if(initial_size<1)
     initial_size=32;
   
   res->num_elements=0;
   res->size=initial_size;
-  res->elements=(int*)getbytes(res->size*sizeof(int));
+  res->elements=getbytes(res->size*sizeof(*res->elements));
 
   return res;
 }
@@ -68,13 +68,13 @@ static void intvec_free(t_intvec*vec)
 {
   if(NULL==vec)return;
   if(vec->elements)
-    freebytes(vec->elements, sizeof(int)*vec->size);
+    freebytes(vec->elements, vec->size * sizeof(*vec->elements));
   vec->elements=NULL;
 
   vec->size=0;
   vec->num_elements=0;
 
-  freebytes(vec, sizeof(t_intvec));
+  freebytes(vec, sizeof(*vec));
 }
 
 
@@ -114,7 +114,6 @@ static int query_inletconnections(t_canvasconnections *x, t_intvec***outobj, t_i
   t_intvec**invecs=NULL;
   t_intvec**inwhich=NULL;
   int ninlets=0;
-  int nin=0;
  
   t_gobj*y;
 
@@ -130,8 +129,8 @@ static int query_inletconnections(t_canvasconnections *x, t_intvec***outobj, t_i
      * to find out, whether they are connected to us!
      */
 
-  invecs=getbytes(sizeof(t_intvec*)*ninlets);
-  inwhich=getbytes(sizeof(t_intvec*)*ninlets);
+  invecs =getbytes(ninlets*sizeof(*invecs));
+  inwhich=getbytes(ninlets*sizeof(*inwhich));
   for(i=0; i<ninlets; i++){
     invecs[i]=intvec_new(0);
     inwhich[i]=intvec_new(0);
@@ -189,7 +188,7 @@ static void canvasconnections_queryinlets(t_canvasconnections *x)
   for(i=0; i<ninlets; i++){
     int size=invecs[i]->num_elements;
     if(size>0) {
-      t_atom*ap=getbytes(sizeof(t_atom)*(size+1));
+      t_atom*ap=getbytes((size+1)*sizeof(*ap));
       int j=0;
       t_symbol*s=gensym("inlet");
 
@@ -198,23 +197,22 @@ static void canvasconnections_queryinlets(t_canvasconnections *x)
         SETFLOAT(ap+j+1, ((t_float)invecs[i]->elements[j]));
       
       outlet_anything(x->x_out, s, size+1, ap);
-      freebytes(ap, sizeof(t_atom)*(size+1));
+      freebytes(ap, (size+1) * sizeof(*ap));
     }
     intvec_free(invecs[i]);
   }
-  if(invecs)freebytes(invecs, sizeof(t_intvec*)*ninlets);
+  if(invecs)freebytes(invecs, ninlets * sizeof(*invecs));
 }
 
 static void canvasconnections_inlet(t_canvasconnections *x, t_floatarg f)
 {
   int inlet=f;
-  t_atom at;
   t_intvec**invecs=0;
   int ninlets=query_inletconnections(x, &invecs, 0); 
 
   if(inlet >= 0 && inlet < ninlets) {
     int size=invecs[inlet]->num_elements;
-    t_atom*ap=getbytes(sizeof(t_atom)*(size+1));
+    t_atom*ap=getbytes((size+1)*sizeof(*ap));
     t_symbol*s=gensym("inlet");
     if(obj_issignalinlet(x->x_object,inlet)) {
       s=gensym("inlet~");
@@ -229,11 +227,11 @@ static void canvasconnections_inlet(t_canvasconnections *x, t_floatarg f)
     }
       
     outlet_anything(x->x_out, s, size+1, ap);
-    freebytes(ap, sizeof(t_atom)*(size+1));
+    freebytes(ap, (size+1) * sizeof(*ap));
 
     intvec_free(invecs[inlet]);
   }
-  if(invecs)freebytes(invecs, sizeof(t_intvec*)*ninlets);
+  if(invecs)freebytes(invecs, ninlets * sizeof(*invecs));
 }
 
 
@@ -285,8 +283,8 @@ static void canvasconnections_inconnect(t_canvasconnections *x, t_floatarg f)
       intvec_free(inwhich[i]);
     }
   }
-  if(invecs)freebytes(invecs, sizeof(t_intvec*)*ninlets);
-  if(inwhich)freebytes(inwhich, sizeof(t_intvec*)*ninlets);
+  if(invecs) freebytes(invecs , ninlets * sizeof(*invecs));
+  if(inwhich)freebytes(inwhich, ninlets * sizeof(*inwhich));
 }
 
 
@@ -325,7 +323,6 @@ static void canvasconnections_outconnect(t_canvasconnections *x, t_floatarg f)
     t_outconnect*conn=obj_starttraverseoutlet(x->x_object, &out, outlet);
     t_object*dest=0;
     t_inlet*in=0;
-    int count=0;
     int id=glist_getindex(x->x_parent, (t_gobj*)x->x_object);
 
     conn=obj_starttraverseoutlet(x->x_object, &out, outlet);
@@ -349,7 +346,6 @@ static void canvasconnections_outconnect(t_canvasconnections *x, t_floatarg f)
 static void canvasconnections_outlet(t_canvasconnections *x, t_floatarg f)
 {
   int outlet=f;
-  t_atom*at=NULL;
   int noutlets=0;
 
   if(0==x->x_object || 0==x->x_parent)
@@ -375,7 +371,7 @@ static void canvasconnections_outlet(t_canvasconnections *x, t_floatarg f)
       conn=obj_nexttraverseoutlet(conn, &dest, &in, &which);
       count++;
     }
-    abuf=(t_atom*)getbytes(sizeof(t_atom)*(count+1));
+    abuf=getbytes((count+1)*sizeof(*abuf));
     SETFLOAT(abuf, outlet);
 
     if(count>0) {
@@ -391,7 +387,7 @@ static void canvasconnections_outlet(t_canvasconnections *x, t_floatarg f)
       }
     }
     outlet_anything(x->x_out, s, count+1, abuf);
-    freebytes(abuf, sizeof(t_atom)*(count+1));
+    freebytes(abuf, (count+1) * sizeof(*abuf));
   }
 }
 
@@ -417,7 +413,7 @@ static void canvasconnections_queryoutlets(t_canvasconnections *x)
     }
     if(count>0) {
       int i=0;
-      t_atom*abuf=(t_atom*)getbytes(sizeof(t_atom)*(count+1));
+      t_atom*abuf=getbytes((count+1)*sizeof(*abuf));
       SETFLOAT(abuf, nout);
       conn=obj_starttraverseoutlet(x->x_object, &out, nout);
       while(conn) {
@@ -429,7 +425,7 @@ static void canvasconnections_queryoutlets(t_canvasconnections *x)
         i++;
       }
       outlet_anything(x->x_out, gensym("outlet"), count+1, abuf);
-      freebytes(abuf, sizeof(t_atom)*(count+1));
+      freebytes(abuf, (count+1) * sizeof(*abuf));
     }
   }
 }
@@ -476,6 +472,7 @@ static void *canvasconnections_new(t_floatarg f)
 
 void canvasconnections_setup(void)
 {
+  iemguts_boilerplate("[canvasconnections]", 0);
   canvasconnections_class = class_new(gensym("canvasconnections"), 
                                       (t_newmethod)canvasconnections_new, (t_method)canvasconnections_free, 
                                       sizeof(t_canvasconnections), 0, 

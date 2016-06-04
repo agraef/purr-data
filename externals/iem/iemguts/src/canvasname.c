@@ -3,15 +3,15 @@
  *
  * canvasname - implementation file
  *
- * copyleft (c) IOhannes m zm-bölnig-A
+ * copyleft (c) IOhannes m zmÃ¶lnig
  *
- *   2007:forum::f-bür::umläute:2007-A
+ *   2007:forum::fÃ¼r::umlÃ¤ute:2007
  *
  *   institute of electronic music and acoustics (iem)
  *
  ******************************************************
  *
- * license: GNU General Public License v.2
+ * license: GNU General Public License v.2 (or later)
  *
  ******************************************************/
 
@@ -32,7 +32,7 @@
  * nice, eh?
  */
 
-#include "m_pd.h"
+#include "iemguts.h"
 #include "g_canvas.h"
 
 
@@ -45,6 +45,9 @@ typedef struct _canvasname
   t_object  x_obj;
 
   t_canvas  *x_canvas;
+  t_outlet*x_nameout;
+  t_outlet*x_displaynameout;
+  t_inlet*x_displaynamein;
 } t_canvasname;
 
 
@@ -52,28 +55,31 @@ static void canvasname_bang(t_canvasname *x)
 {
   t_canvas*c=x->x_canvas;
   t_binbuf*b=0;
-  t_atom name[1];
 
-  if(!x->x_canvas) return;
-  b=x->x_canvas->gl_obj.te_binbuf;
+  if(!c) return;
+
+  if(c->gl_name)
+    outlet_symbol(x->x_displaynameout, c->gl_name);
+
+
+  b=c->gl_obj.te_binbuf;
+
   if(b) {
     /* get the binbufs atomlist */
     t_atom*ap=binbuf_getvec(b);
     t_symbol*s=atom_getsymbol(ap);
-    outlet_symbol(x->x_obj.ob_outlet, s);
-
-    return;
+    if(s)
+      outlet_symbol(x->x_nameout, s);
   } else {
-    //post("empty binbuf for %x", x->x_canvas);
+#if 0
+    post("empty binbuf for %x", x->x_canvas);
+#endif
   }
 }
 
 static void canvasname_symbol(t_canvasname *x, t_symbol*s)
 {
-  t_canvas*c=x->x_canvas;
   t_binbuf*b=0;
-  t_atom name[1];
-
   if(!x->x_canvas) return;
   b=x->x_canvas->gl_obj.te_binbuf;
 
@@ -85,9 +91,18 @@ static void canvasname_symbol(t_canvasname *x, t_symbol*s)
     return;
   }
 }
+static void canvasname_displayname(t_canvasname *x, t_symbol*s)
+{
+  t_canvas*c=x->x_canvas;
+  if(!c) return;
+  c->gl_name = s;
+}
 
 static void canvasname_free(t_canvasname *x)
 {
+  if(x->x_nameout  )outlet_free(x->x_nameout  );x->x_nameout=NULL  ;
+  if(x->x_displaynameout)outlet_free(x->x_displaynameout);x->x_displaynameout=NULL;
+  if(x->x_displaynamein )inlet_free (x->x_displaynamein );x->x_displaynamein=NULL;
 }
 
 static void *canvasname_new(t_floatarg f)
@@ -95,7 +110,6 @@ static void *canvasname_new(t_floatarg f)
   t_canvasname *x = (t_canvasname *)pd_new(canvasname_class);
   t_glist *glist=(t_glist *)canvas_getcurrent();
   t_canvas *canvas=(t_canvas*)glist_getcanvas(glist);
-
   int depth=(int)f;
   if(depth<0)depth=0;
 
@@ -106,15 +120,19 @@ static void *canvasname_new(t_floatarg f)
 
   x->x_canvas = canvas;
 
-  outlet_new(&x->x_obj, &s_symbol);
+  x->x_displaynamein=inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("symbol"), gensym("display"));
+  x->x_nameout=outlet_new(&x->x_obj, &s_symbol);
+  x->x_displaynameout=outlet_new(&x->x_obj, &s_symbol);
   
   return (x);
 }
 
 void canvasname_setup(void)
 {
+  iemguts_boilerplate("[canvasname]", 0);
   canvasname_class = class_new(gensym("canvasname"), (t_newmethod)canvasname_new,
                                (t_method)canvasname_free, sizeof(t_canvasname), 0, A_DEFFLOAT, 0);
   class_addsymbol(canvasname_class, (t_method)canvasname_symbol);
+  class_addmethod(canvasname_class, (t_method)canvasname_displayname, gensym("display"), A_SYMBOL, 0);
   class_addbang  (canvasname_class, (t_method)canvasname_bang);
 }

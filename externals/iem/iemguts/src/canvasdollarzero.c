@@ -1,10 +1,25 @@
-/* For information on usage and redistribution, and for a DISCLAIMER OF ALL
-* WARRANTIES, see the file, "LICENSE.txt," in this distribution.
 
-based on iemlib2 written by Thomas Musil, Copyright (c) IEM KUG Graz Austria 2000 - 2006 */
+/******************************************************
+ *
+ * canvasdollarzero - implementation file
+ *
+ *
+ * copyleft (c) IOhannes m zmölnig
+ *
+ *   2007:forum::für::umläute:2007
+ *
+ *   institute of electronic music and acoustics (iem)
+ *
+ * based on iemlib2 
+ *   copyright (c) 2000-2006 Thomas Musil, IEM, KUG, Graz/Austria
+ *
+ ******************************************************
+ *
+ * license: GNU General Public License v.2 (or later)
+ *
+ ******************************************************/
 
-
-#include "m_pd.h"
+#include "iemguts.h"
 #include "g_canvas.h"
 
 
@@ -50,6 +65,7 @@ static void *canvasdollarzero_new(t_floatarg f)
 
 void canvasdollarzero_setup(void)
 {
+  iemguts_boilerplate("[canvasdollarzero]", 0);
   canvasdollarzero_class = class_new(gensym("canvasdollarzero"), 
                                      (t_newmethod)canvasdollarzero_new, 0, 
                                      sizeof(t_canvasdollarzero), 0, 

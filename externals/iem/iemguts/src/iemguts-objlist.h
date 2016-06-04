@@ -4,17 +4,17 @@
  *
  * copyleft (c) IOhannes m zmölnig
  *
- *   2008:forum::für::umläute:2008
+ *   2008:forum::für::umläute:2015
  *
  *   institute of electronic music and acoustics (iem)
  *
  ******************************************************
  *
- * license: GNU General Public License v.2
+ * license: GNU General Public License v.2 (or later)
  *
  ******************************************************/
 
-/* this file implements some helperr functions for dealing with lists of
+/* this file implements some helper functions for dealing with lists of
  * objects (containing other objects)
  *
  * used for callbacks to enumerated objects without $0 tricks
@@ -24,7 +24,9 @@
  * TODO: documentation
  */
 
-#include "m_pd.h"
+#ifndef INCLUDE_IEMGUTS_OBJECTLIST_H_
+#define INCLUDE_IEMGUTS_OBJECTLIST_H_
+#include "iemguts.h"
 
 
 /* ------------------------- helper methods for callbacks ---------------------------- */
@@ -61,7 +63,7 @@ static t_iemguts_canvaslist*addCanvas(const t_pd*parent)
 {
   t_iemguts_canvaslist*list=findCanvas(parent);
   if(!list) {
-    list=(t_iemguts_canvaslist*)getbytes(sizeof(t_iemguts_canvaslist));
+    list=getbytes(sizeof(*list));
     list->parent=parent;
     list->obj=0;
     list->next=0;
@@ -106,7 +108,7 @@ static void addObjectToCanvas(const t_pd*parent, const t_pd*obj) {
   }
 
   /* we are at the end of the list that does not contain obj yet, so add it */
-  entry=(t_iemguts_objlist*)getbytes(sizeof(t_iemguts_objlist));
+  entry=getbytes(sizeof(*entry));
   entry->obj=obj;
   entry->next=0;
   if(list) {
@@ -139,7 +141,7 @@ static void removeObjectFromCanvas(const t_pd*parent, const t_pd*obj) {
   else
     p->obj=next;
 
-  freebytes((void*)list, sizeof(t_iemguts_objlist));
+  freebytes(list, sizeof(*list));
   list=0;
 }
 
@@ -150,4 +152,5 @@ static void removeObjectFromCanvases(const t_pd*obj) {
     removeObjectFromCanvas(parents->parent, obj);
     parents=parents->next;
   }
+#endif /* INCLUDE_IEMGUTS_OBJECTLIST_H_ */
 }

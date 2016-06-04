@@ -3,15 +3,15 @@
  *
  * propertybang - implementation file
  *
- * copyleft (c) IOhannes m zmölnig
+ * copyleft (c) IOhannes m zmÃ¶lnig
  *
- *   2007:forum::für::umläute:2010
+ *   2007:forum::fÃ¼r::umlÃ¤ute:2010
  *
  *   institute of electronic music and acoustics (iem)
  *
  ******************************************************
  *
- * license: GNU General Public License v.2
+ * license: GNU General Public License v.2 (or later)
  *
  ******************************************************/
 
@@ -87,6 +87,7 @@ static void *propertybang_new(void)
 
 void propertybang_setup(void)
 {
+  iemguts_boilerplate("[propertybang]", 0);
   propertybang_class = class_new(gensym("propertybang"), (t_newmethod)propertybang_new,
     (t_method)propertybang_free, sizeof(t_propertybang), CLASS_NOINLET, 0);
   class_addbang(propertybang_class, propertybang_bang);

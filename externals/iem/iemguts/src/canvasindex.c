@@ -3,15 +3,15 @@
  *
  * canvasindex - implementation file
  *
- * copyleft (c) IOhannes m zmölnig
+ * copyleft (c) IOhannes m zmÃ¶lnig
  *
- *   2007:forum::für::umläute:2007
+ *   2007:forum::fÃ¼r::umlÃ¤ute:2007
  *
  *   institute of electronic music and acoustics (iem)
  *
  ******************************************************
  *
- * license: GNU General Public License v.2
+ * license: GNU General Public License v.2 (or later)
  *
  ******************************************************/
 
@@ -27,7 +27,7 @@
  * abstraction that holds this object
  */
 
-#include "m_pd.h"
+#include "iemguts.h"
 #include "m_imp.h"
 #include "g_canvas.h"
 
@@ -150,6 +150,7 @@ static void *canvasindex_new(t_floatarg f)
 
 void canvasindex_setup(void)
 {
+  iemguts_boilerplate("[canvasindex]", 0);
   canvasindex_class = class_new(gensym("canvasindex"), 
                                 (t_newmethod)canvasindex_new, (t_method)canvasindex_free, 
                                 sizeof(t_canvasindex), 0, 

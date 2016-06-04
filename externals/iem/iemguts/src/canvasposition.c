@@ -3,15 +3,15 @@
  *
  * canvasposition - implementation file
  *
- * copyleft (c) IOhannes m zmölnig
+ * copyleft (c) IOhannes m zmÃ¶lnig
  *
- *   2007:forum::für::umläute:2007
+ *   2007:forum::fÃ¼r::umlÃ¤ute:2007
  *
  *   institute of electronic music and acoustics (iem)
  *
  ******************************************************
  *
- * license: GNU General Public License v.2
+ * license: GNU General Public License v.2 (or later)
  *
  ******************************************************/
 
@@ -27,7 +27,7 @@
  * abstraction within its canvas.
  */
 
-#include "m_pd.h"
+#include "iemguts.h"
 
 #include "g_canvas.h"
 #include "m_imp.h"
@@ -138,6 +138,7 @@ static void *canvasposition_new(t_floatarg f)
 
 void canvasposition_setup(void)
 {
+  iemguts_boilerplate("[canvasposition]", 0);
   canvasposition_class = class_new(gensym("canvasposition"), 
                                    (t_newmethod)canvasposition_new, (t_method)canvasposition_free, 
                                    sizeof(t_canvasposition), 0,

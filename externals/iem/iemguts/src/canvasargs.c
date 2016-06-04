@@ -2,15 +2,15 @@
  *
  * canvasargs - implementation file
  *
- * copyleft (c) IOhannes m zm-bölnig-A
+ * copyleft (c) IOhannes m zmÃ¶lnig
  *
- *   2007:forum::f-bür::umläute:2007-A
+ *   2007:forum::fÃ¼r::umlÃ¤ute:2007
  *
  *   institute of electronic music and acoustics (iem)
  *
  ******************************************************
  *
- * license: GNU General Public License v.2
+ * license: GNU General Public License v.2 (or later)
  *
  ******************************************************/
 
@@ -31,7 +31,7 @@
  * nice, eh?
  */
 
-#include "m_pd.h"
+#include "iemguts.h"
 #include "g_canvas.h"
 
 
@@ -49,16 +49,17 @@ typedef struct _canvasargs
 
 static void canvasargs_list(t_canvasargs *x, t_symbol*s, int argc, t_atom*argv)
 {
-  t_canvas*c=x->x_canvas;
   t_binbuf*b=0;
   t_atom name[1];
 
-  if(!x->x_canvas) return;
+  if(!x || !x->x_canvas) return;
   b=x->x_canvas->gl_obj.te_binbuf;
 
   if(!b)return;
 
+  /* if this method is called with a non-special selector, we *rename* the object */
   if(s==0 || s==gensym("") || s==&s_list || s==&s_bang || s==&s_float || s==&s_symbol || s==&s_) {
+    /* keep the given name */
     t_atom*ap=binbuf_getvec(b);
     s=atom_getsymbol(ap);
   }
@@ -73,21 +74,28 @@ static void canvasargs_bang(t_canvasargs *x)
 {
   int argc=0;
   t_atom*argv=0;
-  t_binbuf*b;
+  t_binbuf*b=0;
 
   if(!x->x_canvas) return;
   b=x->x_canvas->gl_obj.te_binbuf;
 
-  if(!b)return;
+  if(b) {
+    argc=binbuf_getnatom(b)-1;
+    argv=binbuf_getvec(b)+1;
+  } else {
+    canvas_setcurrent(x->x_canvas);
+    canvas_getargs(&argc, &argv);
+    canvas_unsetcurrent(x->x_canvas);
+  }
 
-  argc=binbuf_getnatom(b);
-  argv=binbuf_getvec(b);
-  outlet_list(x->x_obj.ob_outlet, &s_list, argc-1, argv+1);
+  if(argv)
+    outlet_list(x->x_obj.ob_outlet, &s_list, argc, argv);
 }
 
 
 static void canvasargs_free(t_canvasargs *x)
 {
+  x->x_canvas = 0;
 }
 
 static void *canvasargs_new(t_floatarg f)
@@ -112,6 +120,7 @@ static void *canvasargs_new(t_floatarg f)
 
 void canvasargs_setup(void)
 {
+  iemguts_boilerplate("[canvasargs]", 0);
   canvasargs_class = class_new(gensym("canvasargs"), (t_newmethod)canvasargs_new,
                                (t_method)canvasargs_free, sizeof(t_canvasargs), 0, A_DEFFLOAT, 0);
   class_addlist(canvasargs_class, (t_method)canvasargs_list);

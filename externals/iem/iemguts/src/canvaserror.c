@@ -3,15 +3,15 @@
  *
  * canvaserror - implementation file
  *
- * copyleft (c) IOhannes m zm-bölnig-A
+ * copyleft (c) IOhannes m zmÃ¶lnig
  *
- *   2007:forum::f-bür::umläute:2007-A
+ *   2007:forum::fÃ¼r::umlÃ¤ute:2007
  *
  *   institute of electronic music and acoustics (iem)
  *
  ******************************************************
  *
- * license: GNU General Public License v.2
+ * license: GNU General Public License v.2 (or later)
  *
  ******************************************************/
 
@@ -32,7 +32,7 @@
  * nice, eh?
  */
 
-#include "m_pd.h"
+#include "iemguts.h"
 #include "g_canvas.h"
 
 
@@ -77,6 +77,7 @@ static void canvaserror_any(t_canvaserror *x, t_symbol*s, int argc, t_atom*argv)
 
 static void canvaserror_free(t_canvaserror *x)
 {
+  x->x_canvas = 0;
 }
 
 static void *canvaserror_new(t_floatarg f)
@@ -100,6 +101,7 @@ static void *canvaserror_new(t_floatarg f)
 
 void canvaserror_setup(void)
 {
+  iemguts_boilerplate("[canvaserror]", 0);
   canvaserror_class = class_new(gensym("canvaserror"), (t_newmethod)canvaserror_new,
                                (t_method)canvaserror_free, sizeof(t_canvaserror), 0, A_DEFFLOAT, 0);
   class_addanything(canvaserror_class, (t_method)canvaserror_any);

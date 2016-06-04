@@ -3,15 +3,15 @@
  *
  * propertybang - implementation file
  *
- * copyleft (c) IOhannes m zmölnig
+ * copyleft (c) IOhannes m zmÃ¶lnig
  *
- *   2007:forum::für::umläute:2007
+ *   2007:forum::fÃ¼r::umlÃ¤ute:2007
  *
  *   institute of electronic music and acoustics (iem)
  *
  ******************************************************
  *
- * license: GNU General Public License v.2
+ * license: GNU General Public License v.2 (or later)
  *
  ******************************************************/
 
@@ -67,7 +67,7 @@ static void add_savefn(t_class*class)
   if(0!=find_savefn(class)) {
     return;
   } else {
-    t_savefuns*sfun=(t_savefuns*)getbytes(sizeof(t_savefuns));
+    t_savefuns*sfun=getbytes(sizeof(*sfun));
     sfun->class=class;
     sfun->savefn=class_getsavefn(class);
     sfun->next=0;
@@ -97,7 +97,7 @@ static void orig_savefn(t_gobj*z, t_binbuf*b)
 static void savebangs_bangem(t_iemguts_objlist*objs, int pst);
 static void savebangs_savefn(t_gobj*z, t_binbuf*b) {
   /* z is the parent abstraction;
-   * we maintain a list of all [savebangs] within such each parent, in order to call all of them 
+   * we maintain a list of all [savebangs] within a parent, in order to call all of them 
    */
   t_iemguts_objlist*obj=objectsInCanvas((t_pd*)z);
   savebangs_bangem(obj, 0);
@@ -184,6 +184,7 @@ static void savebangs_free(t_savebangs *x)
 
 void savebangs_setup(void)
 {
+  iemguts_boilerplate("[savebangs]", 0);
   savebangs_class = class_new(gensym("savebangs"), (t_newmethod)savebangs_new,
                               (t_method)savebangs_free, sizeof(t_savebangs), CLASS_NOINLET, A_DEFFLOAT, 0);
   add_savefn(savebangs_class);
