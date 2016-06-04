@@ -8,6 +8,7 @@
 #include <math.h>  /* for path bbox calculations */
 
 #include "m_pd.h"
+#include "m_imp.h"
 #include "s_stuff.h"    /* for sys_hostfontsize */
 #include "g_canvas.h"
 
@@ -502,7 +503,7 @@ void template_conform(t_template *tfrom, t_template *tto)
             tfrom->t_sym->s_name);
         //for (i = 0; i < nto; i++)
         //    post("... %d", conformaction[i]);
-        for (gl = canvas_list; gl; gl = gl->gl_next)
+        for (gl = pd_this->pd_canvaslist; gl; gl = gl->gl_next)
             template_conformglist(tfrom, tto, gl, conformaction);
     }
     freebytes(conformaction, sizeof(int) * nto);
@@ -2040,7 +2041,7 @@ void svg_doupdate(t_svg *x, t_canvas *c, t_symbol *s)
 void svg_update(t_svg *x, t_symbol *s)
 {
     t_canvas *c;
-    for (c = canvas_list; c; c = c->gl_next)
+    for (c = pd_this->pd_canvaslist; c; c = c->gl_next)
         svg_doupdate(x, c, s);
 }
 

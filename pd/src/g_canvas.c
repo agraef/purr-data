@@ -45,7 +45,7 @@ t_class *canvas_class;
 int canvas_dspstate;                /* whether DSP is on or off */  
 t_canvas *canvas_editing;           /* last canvas to start text edting */ 
 t_canvas *canvas_whichfind;         /* last canvas we did a find in */ 
-t_canvas *canvas_list;              /* list of all root canvases */
+//t_canvas *canvas_list;              /* list of all root canvases */
 
 /* ------------------ forward function declarations --------------- */
 static void canvas_start_dsp(void);
@@ -76,7 +76,7 @@ void canvas_updatewindowlist( void)
         return;
     gui_start_vmess("gui_set_toplevel_window_list", "s", "dummy");
     gui_start_array();
-    for (x = canvas_list; x; x = x->gl_next)
+    for (x = pd_this->pd_canvaslist; x; x = x->gl_next)
     {
         if (!x->gl_owner)
         {
@@ -1673,7 +1673,7 @@ void canvas_redrawallfortemplate(t_template *template, int action)
 {
     t_canvas *x;
         /* find all root canvases */
-    for (x = canvas_list; x; x = x->gl_next)
+    for (x = pd_this->pd_canvaslist; x; x = x->gl_next)
         glist_redrawall(template, x, action);
 }
 

@@ -554,10 +554,10 @@ void pdinfo_canvaslist(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
     int j, i = 0;
     t_binbuf *outbuf = binbuf_new();
     t_atom at[1];
-    for (c = canvas_list; c; c = c->gl_next)
+    for (c = pd_this->pd_canvaslist; c; c = c->gl_next)
         i++;
     t_gpointer *gp = (t_gpointer *)t_getbytes(i * sizeof(*gp));
-    for (c = canvas_list, i = 0; c; c = c->gl_next, i++)
+    for (c = pd_this->pd_canvaslist, i = 0; c; c = c->gl_next, i++)
     {
         gpointer_init(gp+i);
         gpointer_setglist(gp+i, c, 0);
