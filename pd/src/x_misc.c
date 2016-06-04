@@ -115,9 +115,9 @@ static void loadbang_click(t_loadbang *x,
     outlet_bang(x->x_obj.ob_outlet);
 }
 
-static void loadbang_loadbang(t_loadbang *x)
+static void loadbang_loadbang(t_loadbang *x, t_floatarg action)
 {
-    if (!sys_noloadbang)
+    if (!sys_noloadbang && action == LB_LOAD)
         outlet_bang(x->x_obj.ob_outlet);
 }
 
@@ -126,7 +126,7 @@ static void loadbang_setup(void)
     loadbang_class = class_new(gensym("loadbang"), (t_newmethod)loadbang_new, 0,
         sizeof(t_loadbang), CLASS_NOINLET, 0);
     class_addmethod(loadbang_class, (t_method)loadbang_loadbang,
-        gensym("loadbang"), 0);
+        gensym("loadbang"), A_DEFFLOAT, 0);
     class_addmethod(loadbang_class, (t_method)loadbang_click, gensym("click"),
         A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, 0);
 }
@@ -147,9 +147,8 @@ static void *initbang_new(void)
     return (x);
 }
 
-static void initbang_initbang(t_initbang *x)
-{
-  if (!sys_noloadbang) /* JMZ: hmm, not sure whether we should respect sys_noloadbang here... */
+static void initbang_loadbang(t_initbang *x, t_float type) {
+    if (LB_INIT == (int)type)
         outlet_bang(x->x_obj.ob_outlet);
 }
 
@@ -157,8 +156,8 @@ static void initbang_setup(void)
 {
     initbang_class = class_new(gensym("initbang"), (t_newmethod)initbang_new, 0,
         sizeof(t_initbang), CLASS_NOINLET, 0);
-    class_addmethod(initbang_class, (t_method)initbang_initbang,
-        gensym("initbang"), 0);
+    class_addmethod(initbang_class, (t_method)initbang_loadbang,
+        gensym("loadbang"), A_DEFFLOAT, 0);
     class_addcreator((t_newmethod)initbang_new, gensym("iemguts/initbang"), 0); 
 }
 
@@ -177,9 +176,10 @@ static void *closebang_new(void)
     outlet_new(&x->x_obj, &s_bang);
     return (x);
 }
-static void closebang_closebang(t_closebang *x)
+
+static void closebang_loadbang(t_closebang *x, t_float type)
 {
-  if (!sys_noloadbang) /* JMZ: hmm, not sure whether we should respect sys_noloadbang here... */
+    if (LB_CLOSE == (int)type)
         outlet_bang(x->x_obj.ob_outlet);
 }
 
@@ -188,8 +188,8 @@ static void closebang_setup(void)
     closebang_class = class_new(gensym("closebang"),
         (t_newmethod)closebang_new, 0,
         sizeof(t_closebang), CLASS_NOINLET, 0);
-    class_addmethod(closebang_class, (t_method)closebang_closebang,
-        gensym("closebang"), 0);
+    class_addmethod(closebang_class, (t_method)closebang_loadbang,
+        gensym("loadbang"), A_DEFFLOAT, 0);
     class_addcreator((t_newmethod)closebang_new, gensym("iemguts/closebang"), 0); 
 }
 
