@@ -44,6 +44,7 @@ preset 1, f 23;
 #X obj 454 -56 K12/math_number;
 #X obj 454 27 K12/midi_control;
 #X obj 230 -158 K12/math_number;
+#X obj 328 372 pddplink doc/GM_instrument_list.html;
 #X text 327 187 MIDI synth plays soundfonts (sf2 files). By default
 it offers GM (General MIDI) sound bank. For its input it receives messages
 exclusively from MIDI note (note on/off information) \, MIDI instrument
@@ -51,10 +52,9 @@ exclusively from MIDI note (note on/off information) \, MIDI instrument
 objects. It outputs left (left outlet) and right (right outlet) audio
 channels \, thus allowing for sounds to be panned to different speakers
 \, or (as is the case in this demo) mixed to the same speaker.You
-can also open other custom sf2 soundfonts by clicking no the "open"
+can also open other custom sf2 soundfonts by clicking on the "open"
 button. Such custom choices can be saved using the preset object.For
 a complete list of General MIDI sounds see:;
-#X obj 328 372 pddplink doc/GM_instrument_list.html;
 #X connect 9 0 2 0;
 #X connect 9 1 2 0;
 #X connect 10 0 9 0;
