@@ -1,19 +1,19 @@
-#N canvas 417 39 555 619 10;
+#N canvas 407 29 555 619 10;
 #X obj 0 592 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header closebang 3 12 0
 18 -204280 -1 0;
 #X obj 0 393 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 480 300 494 344 META 0;
+#N canvas 470 290 494 344 META 0;
 #X text 12 85 LIBRARY internal;
 #X text 12 25 LICENSE SIBSD;
 #X text 12 105 AUTHOR IOhannes m zmölnig;
-#X text 12 105 WEBSITE;
+#X text 12 125 WEBSITE;
 #X text 12 5 KEYWORDS control;
 #X text 12 65 OUTLET_0 bang;
-#X text 12 125 RELEASE_DATE 2006;
-#X text 12 145 HELP_PATCH_AUTHORS IOhannes m zmoelnig. Jonathan Wilkes
+#X text 12 145 RELEASE_DATE 2006;
+#X text 12 165 HELP_PATCH_AUTHORS IOhannes m zmoelnig. Jonathan Wilkes
 revised the patch to conform to the PDDP template for Pd version 0.42.
 ;
 #X text 12 45 DESCRIPTION send a beng when abstraction is closed;
