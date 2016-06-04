@@ -148,7 +148,7 @@ static void *initbang_new(void)
 }
 
 static void initbang_loadbang(t_initbang *x, t_float type) {
-    if (LB_INIT == (int)type)
+    if (!sys_noloadbang && LB_INIT == (int)type)
         outlet_bang(x->x_obj.ob_outlet);
 }
 
@@ -179,7 +179,7 @@ static void *closebang_new(void)
 
 static void closebang_loadbang(t_closebang *x, t_float type)
 {
-    if (LB_CLOSE == (int)type)
+    if (!sys_noloadbang && LB_CLOSE == (int)type)
         outlet_bang(x->x_obj.ob_outlet);
 }
 
