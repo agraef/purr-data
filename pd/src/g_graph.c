@@ -1078,7 +1078,7 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
                 (int)glist_ytopixels(x, x->gl_xlabely),
                 x->gl_xlabel[i]->s_name,
                 sys_font, 
-                glist_getfont(x),
+                sys_hostfontsize(glist_getfont(x)),
                 sys_fontweight,
                 x1,
                 y1);
@@ -1094,7 +1094,7 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
                 (int)glist_ytopixels(x, atof(x->gl_ylabel[i]->s_name)),
                 x->gl_ylabel[i]->s_name,
                 sys_font, 
-                glist_getfont(x),
+                sys_hostfontsize(glist_getfont(x)),
                 sys_fontweight,
                 x1,
                 y1);

@@ -5,17 +5,17 @@
 /* "expr" was written by Shahrokh Yadegari c. 1989. -msp */
 /* "expr~" and "fexpr~" conversion by Shahrokh Yadegari c. 1999,2000 */
 
-#define MSP
-#ifdef PD
-#undef MSP
-#endif
+//#define MSP
+//#ifdef PD
+//#undef MSP
+//#endif
 
-#ifdef PD
+//#ifdef PD
 #include "m_pd.h"
-#else /* MSP */
-#include "ext.h"
-#include "z_dsp.h"
-#endif
+//#else /* MSP */
+//#include "ext.h"
+//#include "z_dsp.h"
+//#endif
 
 #define fts_malloc malloc
 #define fts_calloc calloc

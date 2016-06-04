@@ -656,6 +656,11 @@ EXTERN t_scalar *scalar_new(t_glist *owner,
 EXTERN void word_free(t_word *wp, t_template *tmpl);
 EXTERN void scalar_getbasexy(t_scalar *x, t_float *basex, t_float *basey);
 EXTERN void scalar_redraw(t_scalar *x, t_glist *glist);
+EXTERN void canvas_writescalar(t_symbol *templatesym, t_word *w, t_binbuf *b,
+    int amarrayelement);
+EXTERN int canvas_readscalar(t_glist *x, int natoms, t_atom *vec,
+    int *p_nextmsg, int selectit);
+
 EXTERN int template_has_elemtemplate(t_template *t, t_template *tmp);
 
 /* ------helper routines for "garrays" and "plots" -------------- */

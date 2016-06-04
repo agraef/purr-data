@@ -339,7 +339,7 @@ t_scalar *scalar_new(t_glist *owner, t_symbol *templatesym)
     /* Pd method to create a new scalar, add it to a glist, and initialize
     it from the message arguments. */
 
-int glist_readscalar(t_glist *x, int natoms, t_atom *vec,
+int canvas_readscalar(t_glist *x, int natoms, t_atom *vec,
     int *p_nextmsg, int selectit);
 
 void glist_scalar(t_glist *glist,
@@ -362,7 +362,7 @@ void glist_scalar(t_glist *glist,
     natoms = binbuf_getnatom(b);
     vec = binbuf_getvec(b);
     
-    glist_readscalar(glist, natoms, vec, &nextmsg, 0);
+    canvas_readscalar(glist, natoms, vec, &nextmsg, 0);
     binbuf_free(b);
 }
 

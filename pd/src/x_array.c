@@ -188,7 +188,7 @@ static void *array_define_new(t_symbol *s, int argc, t_atom *argv)
     return (x);
 }
 
-void garray_save(t_garray *x, t_binbuf *b);
+void garray_savecontentsto(t_garray *x, t_binbuf *b);
 
 void array_define_save(t_gobj *z, t_binbuf *bb)
 {
@@ -201,7 +201,7 @@ void array_define_save(t_gobj *z, t_binbuf *bb)
 
     if (gl)
     {
-        garray_save((t_gobj *)gl->gl_list, bb);
+        garray_savecontentsto((t_garray *)gl->gl_list, bb);
         obj_saveformat(&x->gl_obj, bb);
     }
     else
@@ -854,6 +854,8 @@ static void *arrayobj_new(t_symbol *s, int argc, t_atom *argv)
 }
 
 void canvas_add_for_class(t_class *c);
+extern void canvas_done_popup(t_canvas *x, t_float which, t_float xpos,
+    t_float ypos);
 
 /* ---------------- global setup function -------------------- */
 
@@ -870,6 +872,15 @@ void x_array_setup(void )
 
     class_addmethod(array_define_class, (t_method)array_define_ignore,
         gensym("editmode"), A_GIMME, 0);
+
+    // dummy calls to make it work with Jonathan's additions to the array
+    class_addmethod(array_define_class, (t_method)array_define_ignore,
+        gensym("relocate"), A_GIMME, 0);
+    class_addmethod(array_define_class, (t_method)array_define_ignore,
+        gensym("scalar_mouseover"), A_GIMME, 0);
+    // removes complaint that array define has no done-popup call
+    class_addmethod(array_define_class, (t_method)array_define_ignore,
+        gensym("done-popup"), A_GIMME, 0);
 
     class_addcreator((t_newmethod)arrayobj_new, gensym("array"), A_GIMME, 0);
 

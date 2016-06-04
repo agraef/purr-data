@@ -424,6 +424,7 @@ t_garray *graph_array(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
     t_symbol *fill;
     t_symbol *outline;
     int fflags;
+    t_symbol *asym = gensym("#A");
 
     if (argc < 3) {pd_error(gl, "garray: not enough args"); return 0;}
     t_symbol *name = atom_getsymbolarg(0, argc--, argv++);
@@ -503,9 +504,19 @@ t_garray *graph_array(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
         fill, 1);
     template_setsymbol(template, gensym("outlinecolor"), x->x_scalar->sc_vec,
         outline, 1);
-    if (x2 = pd_findbyclass(gensym("#A"), garray_class))
+
+           /* bashily unbind #A -- this would create garbage if #A were
+           multiply bound but we believe in this context it's at most
+           bound to whichever textobj or array was created most recently */
+    asym->s_thing = 0;
+        /* and now bind #A to us to receive following messages in the
+        saved file or copy buffer */
+    pd_bind(&x->x_gobj.g_pd, asym);
+
+    /*if (x2 = pd_findbyclass(gensym("#A"), garray_class))
         pd_unbind(x2, gensym("#A"));
-    pd_bind(&x->x_gobj.g_pd, gensym("#A"));
+    pd_bind(&x->x_gobj.g_pd, gensym("#A"));*/
+
     garray_redraw(x);
 
 /* todo: need to test to see if this is necessary
@@ -1414,6 +1425,28 @@ static int garray_click(t_gobj *z, t_glist *glist,
 }
 
 #define ARRAYWRITECHUNKSIZE 1000
+
+void garray_savecontentsto(t_garray *x, t_binbuf *b)
+{
+    if (x->x_saveit)
+    {
+        t_array *array = garray_getarray(x);
+        int n = array->a_n, n2 = 0;
+        if (n > 200000)
+            post("warning: I'm saving an array with %d points!\n", n);
+        while (n2 < n)
+        {
+            int chunk = n - n2, i;
+            if (chunk > ARRAYWRITECHUNKSIZE)
+                chunk = ARRAYWRITECHUNKSIZE;
+            binbuf_addv(b, "si", gensym("#A"), n2);
+            for (i = 0; i < chunk; i++)
+                binbuf_addv(b, "f", ((t_word *)(array->a_vec))[n2+i].w_float);
+            binbuf_addv(b, ";");
+            n2 += chunk;
+        }
+    }
+}
 
 void garray_save(t_gobj *z, t_binbuf *b)
 {
