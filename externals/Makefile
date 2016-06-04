@@ -474,7 +474,7 @@ flatgui_clean:
 # FLEXT and FLEXT externals
 flext:
 	cd $(externals_src)/grill/trunk/flext && \
-	./bootstrap.sh && \
+	./bootstrap.sh || ./bootstrap.sh && \
 	./build.sh pd gcc build && \
 	./build.sh pd gcc build && \
 	./build.sh pd gcc build && \
