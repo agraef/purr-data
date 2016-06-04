@@ -164,6 +164,7 @@ static int disis_spi_write_read(t_disis_spi *spi, unsigned char *data, int lengt
  
   for (i = 0 ; i < length ; i++){
  
+    memset(&spi[i], 0, sizeof (spi[i])); 
     spid[i].tx_buf        = (unsigned long)(data + i); // transmit from "data"
     spid[i].rx_buf        = (unsigned long)(data + i); // receive into "data"
     spid[i].len           = sizeof(*(data + i));
