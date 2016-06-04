@@ -55,6 +55,7 @@ class fluid:
 			AddInAnything();         // slurp anything
 			AddOutSignal(2);         // 2 audio out [ == AddOutSignal(2) ]
 			fluid::fluid_init(argc, argv);
+			settings = NULL;
 	
 		} // end of constructor
 		~fluid()
@@ -117,7 +118,7 @@ class fluid:
 	private:	
 		fluid_synth_t *synth;
 
-		fluid_settings_t * settings = NULL;
+		fluid_settings_t * settings;
 		
 		FLEXT_CALLBACK_V(fluid_load)
 		void fluid_load(int argc, t_atom *argv);
@@ -265,42 +266,48 @@ void fluid::fluid_init(int argc, t_atom *argv)
 	
 	//fluid_settings_t * settings = NULL;
 	settings = new_fluid_settings();
-	
-	// fluid_settings_setstr(settings, "audio.driver", "float");
-	
-	// settings:
-	fluid_settings_setnum(settings, "synth.midi-channels", 16);
-	fluid_settings_setnum(settings, "synth.polyphony", 256);
-	fluid_settings_setnum(settings, "synth.gain", 0.600000);
-	fluid_settings_setnum(settings, "synth.sample-rate", 44100.000000);
-	fluid_settings_setstr(settings, "synth.chorus.active", "no");
-	fluid_settings_setstr(settings, "synth.reverb.active", "no");
-	fluid_settings_setstr(settings, "synth.ladspa.active", "no");
-
-	if (sr != 0)
+	if ( settings == NULL )
 	{
-		fluid_settings_setnum(settings, "synth.sample-rate", sr);
+		post("fluid~: couldn't create synth settings\n");
 	}
-	
+	else
+	{		
+		// fluid_settings_setstr(settings, "audio.driver", "float");
+		
+		// settings:
+		fluid_settings_setnum(settings, "synth.midi-channels", 16);
+		fluid_settings_setnum(settings, "synth.polyphony", 256);
+		fluid_settings_setnum(settings, "synth.gain", 0.600000);
+		fluid_settings_setnum(settings, "synth.sample-rate", 44100.000000);
+		fluid_settings_setstr(settings, "synth.chorus.active", "no");
+		fluid_settings_setstr(settings, "synth.reverb.active", "no");
+		fluid_settings_setstr(settings, "synth.ladspa.active", "no");
 
-	// Create fluidsynth instance:
-	synth = new_fluid_synth(settings);
-	
-	if ( synth == NULL )
-	{
-			post("fluid~: couldn't create synth\n");
+		if (sr != 0)
+		{
+			fluid_settings_setnum(settings, "synth.sample-rate", sr);
+		}
+		
+
+		// Create fluidsynth instance:
+		synth = new_fluid_synth(settings);
+		
+		if ( synth == NULL )
+		{
+				post("fluid~: couldn't create synth\n");
+		}
+		
+		// try to load argument as soundfont
+		fluid_load(argc, argv);
+
+
+		//if (settings != NULL )
+		//	delete_fluid_settings(settings);
+		
+		// We're done constructing:
+		if (synth)
+			post("-- fluid~ with flext ---");
 	}
-	
-	// try to load argument as soundfont
-	fluid_load(argc, argv);
-
-
-	//if (settings != NULL )
-	//	delete_fluid_settings(settings);
-	
-	// We're done constructing:
-	if (synth)
-		post("-- fluid~ with flext ---");
 
 }
 
