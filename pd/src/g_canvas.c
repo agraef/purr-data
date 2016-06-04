@@ -1943,14 +1943,17 @@ int canvas_open(t_canvas *x, const char *name, const char *ext,
     t_namelist *nl, thislist;
     int fd = -1;
     char listbuf[MAXPDSTRING];
+    char final_name[FILENAME_MAX];
     t_canvas *y;
     t_canvasopen co;
 
+    sys_expandpathelems(name, final_name);
+
         /* first check if "name" is absolute (and if so, try to open) */
-    if (sys_open_absolute(name, ext, dirresult, nameresult, size, bin, &fd))
+    if (sys_open_absolute(final_name, ext, dirresult, nameresult, size, bin, &fd))
         return (fd);
         /* otherwise "name" is relative; iterate over all the search-paths */
-    co.name = name;
+    co.name = final_name;
     co.ext = ext;
     co.dirresult = dirresult;
     co.nameresult = nameresult;

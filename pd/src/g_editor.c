@@ -5352,7 +5352,7 @@ void canvas_menuclose(t_canvas *x, t_floatarg fforce);
 void glob_closeall(void*dummy, t_floatarg fforce)
 {
   t_canvas*x, *y;
-  for (x = pd_this->canvaslist; x; )
+  for (x = pd_this->pd_canvaslist; x; )
     {
       y=x->gl_next;
       canvas_menuclose(x, fforce); /* forced closing of this root canvas */
@@ -5367,7 +5367,7 @@ void glob_verifyquit(void *dummy, t_floatarg f)
     //fprintf(stderr, "glob_verifyquit %f\n", f);
     t_glist *g, *g2;
         /* find all root canvases */
-    for (g = pd_this->canvaslist; g; g = g->gl_next)
+    for (g = pd_this->pd_canvaslist; g; g = g->gl_next)
         if (g2 = glist_finddirty(g))
         {
             /* first open window */
