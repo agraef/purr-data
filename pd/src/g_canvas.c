@@ -1132,9 +1132,9 @@ static void canvas_loadbangabstractions(t_canvas *x, t_symbol *s)
         {
             if (canvas_isabstraction((t_canvas *)y))
             {
-            //fprintf(stderr,"%lx a:canvas_loadbang %s\n",x,s->s_name);
-            canvas_loadbangabstractions((t_canvas *)y, s);
-            canvas_loadbangsubpatches((t_canvas *)y, s);
+                //fprintf(stderr,"%lx a:canvas_loadbang %s\n",x,s->s_name);
+                canvas_loadbangabstractions((t_canvas *)y, s);
+                canvas_loadbangsubpatches((t_canvas *)y, s);
             }
             else
             {
