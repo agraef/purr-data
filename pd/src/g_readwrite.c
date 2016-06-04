@@ -501,8 +501,8 @@ static void canvas_addtemplatesforscalar(t_symbol *templatesym,
         }
         else if (ds->ds_type == DT_TEXT)
         {
-            canvas_addtemplatesforlist(w->w_list->gl_list,
-                p_ntemplates, p_templatevec);
+            //canvas_addtemplatesforlist(w->w_list->gl_list,
+            //    p_ntemplates, p_templatevec);
         }
     }
 }
