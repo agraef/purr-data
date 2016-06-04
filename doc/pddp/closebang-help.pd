@@ -1,9 +1,9 @@
-#N canvas 427 49 555 619 10;
-#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+#N canvas 417 39 555 619 10;
+#X obj 0 592 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header closebang 3 12 0
 18 -204280 -1 0;
-#X obj 0 456 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+#X obj 0 393 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
 #N canvas 480 300 494 344 META 0;
 #X text 12 85 LIBRARY internal;
@@ -17,12 +17,12 @@
 revised the patch to conform to the PDDP template for Pd version 0.42.
 ;
 #X text 12 45 DESCRIPTION send a beng when abstraction is closed;
-#X restore 500 597 pd META;
-#X obj 0 484 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+#X restore 500 594 pd META;
+#X obj 0 421 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
 13 -228856 -1 0;
-#X obj 0 538 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+#X obj 0 475 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
 0 13 -228856 -1 0;
-#X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+#X obj 0 503 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #N canvas 213 537 428 102 Related_objects 0;
 #X obj 25 42 initbang;
@@ -31,20 +31,20 @@ revised the patch to conform to the PDDP template for Pd version 0.42.
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 7 1 [closebang] Related Objects;
-#X restore 102 597 pd Related_objects;
-#X obj 78 493 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X restore 102 594 pd Related_objects;
+#X obj 78 430 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #X obj 481 11 closebang;
-#X text 99 460 (none);
-#X text 98 493 bang;
-#X text 100 570 Pd Documentation Chapter 3.6 - doc/1.manual/x3.htm
+#X text 99 397 (none);
+#X text 98 430 bang;
+#X text 100 507 Pd Documentation Chapter 3.6 - doc/1.manual/x3.htm
 ;
-#X text 99 542 (none);
+#X text 99 479 (none);
 #X text 11 23 send a bang when abstraction is closed;
 #X obj 112 236 r from-closebang-abs;
 #X obj 112 262 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;
-#X text 167 493 - a "bang" message is sent automatically when the containing
+#X text 167 430 - a "bang" message is sent automatically when the containing
 patch is closed. It is only triggered when the patch is an embedded
 object in another patch.;
 #X obj 112 133 closebang-abs;
@@ -53,6 +53,9 @@ object connected to [send from-closebang-abs]. If you select the subpatch
 above in editmode and delete it \, the [closebang] object contained
 within will send a bang to the [receive] object below:;
 #X text 207 133 <- delete me;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 4 594 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
+#X obj 292 554 iemguts/initbang;
+#X text 100 531 For the sake of compatibility with the Pure-Data \,
+you can also create this object using:;
 #X connect 15 0 16 0;

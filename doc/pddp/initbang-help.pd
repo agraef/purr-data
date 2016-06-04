@@ -1,5 +1,5 @@
-#N canvas 431 37 556 621 10;
-#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+#N canvas 421 27 556 657 10;
+#X obj 0 650 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header initbang 3 12 0
 18 -204280 -1 0;
@@ -18,7 +18,7 @@ starts to load;
 revised the patch to conform to the PDDP template for Pd version 0.42.
 ;
 #X text 12 115 AUTHOR IOhannes m zmoelnig;
-#X restore 502 597 pd META;
+#X restore 502 652 pd META;
 #X obj 1 452 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
 13 -228856 -1 0;
 #X obj 1 505 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
@@ -32,7 +32,7 @@ revised the patch to conform to the PDDP template for Pd version 0.42.
 #X obj 21 42 closebang;
 #X text 7 1 [initbang] Related Objects;
 #X obj 101 42 loadbang;
-#X restore 104 597 pd Related_objects;
+#X restore 104 652 pd Related_objects;
 #X obj 80 461 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #X obj 490 10 initbang;
@@ -44,7 +44,7 @@ revised the patch to conform to the PDDP template for Pd version 0.42.
 that have a variable number of inlets or outlets.;
 #X text 13 21 send "bang" automatically when abstraction starts to
 load;
-#X obj 6 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 6 652 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
 #X text 92 231 To solve this problem \, the abstraction below uses
 [initbang] instead of [loadbang]. [initbang] will send a bang before
@@ -70,3 +70,6 @@ is a top-most patch \, no bang will ever be sent.;
 #X text 93 51 The abstraction below dynamically creates an outlet using
 [loadbang]. The [loadbang] object sends a bang after this help patch
 has loaded.;
+#X obj 294 619 iemguts/initbang;
+#X text 102 596 For the sake of compatibility with the Pure-Data \,
+you can also create this object using:;
