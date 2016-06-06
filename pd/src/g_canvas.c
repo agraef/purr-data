@@ -1171,8 +1171,9 @@ void canvas_initbang(t_canvas *x)
     t_symbol *s = gensym("loadbang");
     /* run "initbang" for all subpatches, but NOT for the child abstractions */
     for (y = x->gl_list; y; y = y->g_next)
-        if (!canvas_isabstraction((t_canvas *)y))
-            canvas_initbang((t_canvas *)y);
+        if (pd_class(&y->g_pd) == canvas_class &&
+            !canvas_isabstraction((t_canvas *)y))
+                canvas_initbang((t_canvas *)y);
 
     /* call the initbang()-method for objects that have one */
     for (y = x->gl_list; y; y = y->g_next)
