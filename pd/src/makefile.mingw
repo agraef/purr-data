@@ -217,14 +217,14 @@ pd.res: pd.rc
 
 # for making objects included with Pd, [expr] is whacky, so its built
 # separately, and pd~ doesn't build on Windows yet
-#EXTERNALS_SRC := $(wildcard $(pd_src)/extra/[a-df-oq-z]*/*.c)
+EXTERNALS_SRC := $(wildcard $(pd_src)/extra/[a-df-oq-z]*/*.c)
 #EXPR_SRC = vexp.c vexp_fun.c vexp_if.c
 #EXPR_OBJ =  $(patsubst %.c, $(pd_src)/extra/expr~/%.o, $(EXPR_SRC))
 #expr_src = $(pd_src)/extra/expr~
 
 #externs: $(EXTERNALS_SRC:.c=.dll) $(expr_src)/expr.dll $(expr_src)/expr~.dll \
 #      $(expr_src)/fexpr~.dll
-
+externs: $(EXTERNALS_SRC:.c=.dll)
 
 #$(expr_src)/expr.dll: $(EXPR_OBJ)
 #      $(CC) $(CFLAGS) $(INCLUDE) $(LDFLAGS) -s -shared --enable-auto-import \
