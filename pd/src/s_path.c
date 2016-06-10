@@ -18,8 +18,9 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #endif
-#ifdef MSW
+#ifdef _WIN32
 #include <io.h>
+#include <sys/stat.h>
 #include <windows.h>
 #endif
 
