@@ -1,7 +1,8 @@
+# This is a GNU Makefile. Special tools needed: GNU make and awk, git.
 
 # Make Debian packages. This builds a package from the current HEAD in a
 # subdirectory named $(debdist). It also creates the source archive that goes
-# along with it. All files will be created in the toplevel source directory.
+# along with it. All files will be created in the debuild directory.
 
 # To make this work, you need to have the Debian package toolchain (debuild
 # and friends) installed. You should also set the DEBEMAIL environment (or
@@ -32,7 +33,7 @@
 # and 3.
 
 # The Debian version gets derived from the date and serial number of the last
-# commit.
+# commit. You can print it with 'make debversion'.
 debversion = $(shell git log -1 --format=%cd --date=short | sed -e 's/-//g')+git$(shell git rev-list --count HEAD)
 # Debian revision number of the package.
 debrevision = 1
@@ -40,15 +41,19 @@ debrevision = 1
 debsrc = pd-l2ork_$(debversion).orig.tar.gz
 debdist = pd-l2ork-$(debversion)
 
-# Submodules (Gem, etc.).
-submodules = Gem externals/miXed $(addprefix l2ork_addons/, cwiid fftease3.0-32bit lyonpotpourri rtcmix-in-pd)
+# Submodules (Gem, etc.). You can list them with 'make submodules'.
+#submodules = Gem externals/miXed $(addprefix l2ork_addons/, cwiid fftease3.0-32bit lyonpotpourri rtcmix-in-pd)
+submodules = $(sort $(shell git -C .. config --file .gitmodules --get-regexp path | awk '{ print $$2 }'))
 
 # This is used for automatically generated debian/changelog entries (cf. 'make
 # debchange'). Adjust as needed.
 debmsg = "Build from latest upstream source."
 debprio = "low"
 
-.PHONY: debversion debchange debclean deb debsrc deb-us debsrc-us
+.PHONY: submodules debversion debchange debclean deb debsrc deb-us debsrc-us
+
+submodules:
+	@echo $(submodules)
 
 debversion:
 	@echo $(debversion)
@@ -91,8 +96,7 @@ $(debsrc):
 	git -C .. archive --format=tar.gz --prefix=$(debdist)/ HEAD | tar xfz -
 # Grab the submodules.
 	for x in $(submodules); do (cd $(debdist) && rm -rf $$x && git -C ../../$$x archive --format=tar.gz --prefix=$$x/ HEAD | tar xfz -); done
-# The build script tries to grab this during compilation which doesn't work on
-# Launchpad. Why isn't this a submodule?
+# Grab wiringPi. This isn't a submodule yet, so needs to be handled separately.
 	git -C $(debdist)/l2ork_addons/raspberry_pi/disis_gpio clone "git://git.drogon.net/wiringPi"
 	rm -rf $(debdist)/l2ork_addons/raspberry_pi/disis_gpio/wiringPi/.git
 # Create the source tarball.
