@@ -10,8 +10,6 @@
 override_dh_auto_configure:
 
 override_dh_auto_build:
-	cd wiringPi/wiringPi && make static
-	cd l2ork_addons/raspberry_pi/disis_gpio && ln -sf $(CURDIR)/wiringPi .
 	cd l2ork_addons && inst_dir=/usr ./tar_em_up.sh -F -n
 
 override_dh_auto_install:
@@ -19,8 +17,10 @@ override_dh_auto_install:
 # Remove some unneeded files.
 	cd debian/pd-l2ork/ && rm -f Makefile README.txt
 	cd debian/pd-l2ork/usr/lib/pd-l2ork/extra && rm -rf */*.pd_linux_o */*.la
-# Remove cyclist and pdsend/pdreceive which are provided by other packages.
-	cd debian/pd-l2ork/usr/bin && rm -rf pdsend pdreceive cyclist
+# Move cyclist and pdsend/pdreceive to the pd-l2ork lib directory to prevent
+# conflicts with other packages providing these files.
+	cd debian/pd-l2ork/usr/bin && mv pdsend pdreceive cyclist ../lib/pd-l2ork/bin
+# Also remove the corresponding man pages.
 	cd debian/pd-l2ork/usr/share/man/man1 && rm -rf pdsend.* pdreceive.*
 # Move the Gem include files into the pd-l2ork include directory to prevent
 # conflicts with other packages providing these files.
@@ -30,10 +30,10 @@ override_dh_auto_install:
 # Default preferences file.
 	install -d debian/pd-l2ork/etc/pd-l2ork && ln -s -f /usr/lib/pd-l2ork/default.settings debian/pd-l2ork/etc/pd-l2ork/default.settings
 
-# XXXTODO: This is deprecated, so we might have to migrate to dh_python2 in
-# the future. See http://deb.li/dhs2p.
-override_dh_pysupport:
-	dh_pysupport -n -Xxmlrpc-test.py
+# NOTE: Older systems use dh_pysupport instead of dh_python2. See
+# http://deb.li/dhs2p.
+override_dh_python2:
+	dh_python2 -n -Xxmlrpc-test.py
 
 override_dh_compress:
 	dh_compress -X.pd -X.wav -X.aiff -X.txt -X.md
@@ -41,3 +41,8 @@ override_dh_compress:
 override_dh_fixperms:
 	dh_fixperms
 	chmod 0755 debian/pd-l2ork/usr/lib/pd-l2ork/bin/pd.tk
+
+# Supply some options to get rid of a gazillion of warnings about shared
+# library files which are really externals.
+override_dh_shlibdeps:
+	dh_shlibdeps --dpkg-shlibdeps-params="--ignore-missing-info --warnings=0"

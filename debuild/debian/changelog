@@ -1,3 +1,9 @@
+pd-l2ork (20160601+git1680-1) xenial; urgency=low
+
+  * Build from latest upstream source.
+
+ -- Albert Graef <aggraef@gmail.com>  Mon, 06 Jun 2016 08:08:17 +0200
+
 pd-l2ork (0.42.6+git20141114+1491-1) trusty; urgency=low
 
   * Build from latest upstream source.
