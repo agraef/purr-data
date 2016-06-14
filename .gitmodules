@@ -16,3 +16,6 @@
 [submodule "externals/miXed"]
 	path = externals/miXed
 	url = https://github.com/pd-l2ork/miXed.git
+[submodule "l2ork_addons/raspberry_pi/disis_gpio/wiringPi"]
+	path = l2ork_addons/raspberry_pi/disis_gpio/wiringPi
+	url = git@git://git.drogon.net/wiringPi
