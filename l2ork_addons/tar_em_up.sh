@@ -132,11 +132,12 @@ then
 	if [ -d .git ]; then
 		# check if Gem submodule is empty, and if so do first init
 		if [ "$(ls -A Gem)" ]; then
-			git submodule update
+			#git submodule update
+			git submodule foreach git pull origin master
 		else
 			# init all submodules (only necessary the first time)
 			git submodule init
-			git submodule update
+			#git submodule update
 			git submodule foreach git pull origin master
 		fi
 	fi
