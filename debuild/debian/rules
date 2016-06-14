@@ -10,6 +10,7 @@
 override_dh_auto_configure:
 
 override_dh_auto_build:
+	cd l2ork_addons/raspberry_pi/disis_gpio/wiringPi/wiringPi && make static
 	cd l2ork_addons && inst_dir=/usr ./tar_em_up.sh -F -n
 
 override_dh_auto_install:

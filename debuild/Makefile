@@ -91,6 +91,10 @@ $(debsrc):
 	git -C .. archive --format=tar.gz --prefix=$(debdist)/ HEAD | tar xfz -
 # Grab the submodules.
 	for x in $(submodules); do (cd $(debdist) && rm -rf $$x && git -C ../../$$x archive --format=tar.gz --prefix=$$x/ HEAD | tar xfz -); done
+# The build script tries to grab this during compilation which doesn't work on
+# Launchpad. Why isn't this a submodule?
+	git -C $(debdist)/l2ork_addons/raspberry_pi/disis_gpio clone "git://git.drogon.net/wiringPi"
+	rm -rf $(debdist)/l2ork_addons/raspberry_pi/disis_gpio/wiringPi/.git
 # Create the source tarball.
 	tar cfz $(debsrc) $(debdist)
 	rm -rf $(debdist)
