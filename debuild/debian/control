@@ -2,7 +2,7 @@ Source: pd-l2ork
 Section: sound
 Priority: extra
 Maintainer: Albert Graef <aggraef@gmail.com>
-Build-Depends: debhelper (>= 7.0.50~), autoconf, automake, libtool, pkg-config, bison, flex, tcl-dev, tk-dev, libgtk2.0-dev, python-dev, python-support | dh-python, flite1-dev, ladspa-sdk, libasound2-dev, libjack-dev, libbluetooth-dev, libcairo2-dev, libglew-dev, libgsl-dev, libmagick++-dev, libavifile-0.7-dev, libdc1394-22-dev, libfftw3-dev, libfluidsynth-dev, libftgl-dev, libgmerlin-dev, libgsm1-dev, libjpeg-dev, libmp3lame-dev, libmpeg3-dev, libquicktime-dev, libraw1394-dev, libsmpeg-dev, libsndobj-dev, libspeex-dev, libstk0-dev, libv4l-dev, libvorbis-dev, libxv-dev, rsync, curl
+Build-Depends: debhelper (>= 7.0.50~), autoconf, automake, libtool, pkg-config, bison, flex, tcl-dev, tk-dev, libgtk2.0-dev, python-dev, dh-python | python-support, flite1-dev, ladspa-sdk, libasound2-dev, libjack-dev, libbluetooth-dev, libcairo2-dev, libglew-dev, libgsl-dev | libgsl0-dev, libmagick++-dev, libavifile-0.7-dev, libdc1394-22-dev, libfftw3-dev, libfluidsynth-dev, libftgl-dev, libgmerlin-dev, libgsm1-dev, libjpeg-dev, libmp3lame-dev, libmpeg3-dev, libquicktime-dev, libraw1394-dev, libsmpeg-dev, libsndobj-dev, libspeex-dev, libstk0-dev, libv4l-dev, libvorbis-dev, libxv-dev, rsync, curl
 Standards-Version: 3.9.5
 Homepage: http://l2ork.music.vt.edu
 
@@ -12,7 +12,7 @@ Architecture: any
 # since most of the corresponding development packages are already in the build
 # dependencies. However, some of these might be loaded dynamically rather than
 # being linked at compile time, so for safety we just include them all.
-Depends: ${shlibs:Depends}, ${misc:Depends}, python, tkpng, tclxapian, ttf-dejavu-core, libavifile-0.7c2, libbluetooth3, libdc1394-22, libfftw3-3, libflite1, libftgl2, libgmerlin0, libgmerlin-avdec1, libgsl2, libgsm1, libjpeg62, libmp3lame0, libmpeg3-2, libquicktime2, libraw1394-11, libsmpeg0, libspeex1, libv4l-0, libvorbis0a, libxv1
+Depends: ${shlibs:Depends}, ${misc:Depends}, python, tkpng, tclxapian, ttf-dejavu-core, libavifile-0.7c2, libbluetooth3, libdc1394-22, libfftw3-3, libflite1, libftgl2, libgmerlin0, libgmerlin-avdec1, libgsl2 | libgsl0ldbl, libgsm1, libjpeg62, libmp3lame0, libmpeg3-2 | libmpeg3-1, libquicktime2, libraw1394-11, libsmpeg0, libspeex1, libv4l-0, libvorbis0a, libxv1
 Recommends: xdg-utils, pulseaudio-utils, tap-plugins, ladspa-foo-plugins, invada-studio-plugins-ladspa, blepvco, swh-plugins, mcp-plugins, cmt, blop, omins, ubuntustudio-audio-plugins, rev-plugins, dssi-utils, vco-plugins, wah-plugins, fil-plugins, mda-lv2
 Provides: pd-l2ork
 Replaces: pd-l2ork
