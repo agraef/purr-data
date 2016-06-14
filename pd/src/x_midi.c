@@ -329,12 +329,12 @@ static void bendin_list(t_bendin *x, t_symbol *s, int argc, t_atom *argv)
     if (x->x_channel != 0)
     {
         if (channel != x->x_channel) return;
-        outlet_float(x->x_outlet1, value);
+        outlet_float(x->x_outlet1, value - 8192);
     }
     else
     {
         outlet_float(x->x_outlet2, channel);
-        outlet_float(x->x_outlet1, value);
+        outlet_float(x->x_outlet1, value - 8192);
     }
 }
 
