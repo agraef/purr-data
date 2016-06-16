@@ -329,12 +329,12 @@ static void bendin_list(t_bendin *x, t_symbol *s, int argc, t_atom *argv)
     if (x->x_channel != 0)
     {
         if (channel != x->x_channel) return;
-        outlet_float(x->x_outlet1, value - 8192);
+        outlet_float(x->x_outlet1, value);
     }
     else
     {
         outlet_float(x->x_outlet2, channel);
-        outlet_float(x->x_outlet1, value - 8192);
+        outlet_float(x->x_outlet1, value);
     }
 }
 
@@ -356,7 +356,7 @@ void inmidi_pitchbend(int portno, int channel, int value)
     if (pd_this->pd_bendin_sym->s_thing)
     {
         t_atom at[2];
-        SETFLOAT(at, value);
+        SETFLOAT(at, value-8192); // Ico fix the offset of the incoming pitchbend
         SETFLOAT(at+1, (channel + (portno << 4) + 1));
         pd_list(pd_this->pd_bendin_sym->s_thing, &s_list, 2, at);
     }
