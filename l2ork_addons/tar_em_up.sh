@@ -132,13 +132,13 @@ then
 	if [ -d .git ]; then
 		# check if Gem submodule is empty, and if so do first init
 		if [ "$(ls -A Gem)" ]; then
-			#git submodule update
-			git submodule foreach git pull origin master
+			git submodule update
+			#git submodule foreach git pull origin master
 		else
 			# init all submodules (only necessary the first time)
 			git submodule init
-			#git submodule update
-			git submodule foreach git pull origin master
+			git submodule update
+			#git submodule foreach git pull origin master
 		fi
 	fi
 
@@ -332,7 +332,7 @@ then
 	make
 	cd ../
 	make clean
-	make
+	make LINUXINCLUDE=-I../../pd/src
 	cp -f rtcmix~.pd_linux ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
 	cp -f rtcmix~-help.pd ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
 	cp -rf lib ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
