@@ -367,11 +367,11 @@ then
 	cd ../../
 	echo "done with l2ork addons."
 	cd ../
-	if [ $pkg -gt 0 ]; then
 	# finish install
 	cd packages/linux_make
-	echo "tar full installer..."
 	rm -f build/usr/local/lib/pd
+	if [ $pkg -gt 0 ]; then
+	echo "tar full installer..."
 	if [ $deb -gt 0 ]
 	then
 		cd build/
@@ -390,8 +390,10 @@ then
 		#mv build/Pd*bz2 ../../../Pd-l2ork-full-`uname -m`-`date +%Y%m%d`.tar.bz2
 		mv -f build/pd*bz2 ../../..
 	fi
-	cd ../../
+	elif [ $deb -gt 0 ]; then
+		make debstage prefix=$inst_dir
 	fi
+	cd ../../ 
 fi
 
 if [ $addon -eq 1 ]
