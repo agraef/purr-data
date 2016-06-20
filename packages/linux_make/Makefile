@@ -206,6 +206,7 @@ installer_makefile:
 #	-rm -f -- $(helpdir)/iem*/*\$$*.pd $(objectsdir)/iem*/*\$$*.pd
 # don't put the Makefile into the package yet, otherwise it'll get installed
 	cp -rf ../../l2ork_addons/K12/ $(DESTDIR)$(libpddir)/extra/
+	cp -rf ../../externals/hardware/arduino $(DESTDIR)$(libpddir)/extra/
 	cp -f $(packages_src)/linux_make/pd-l2ork.png $(DESTDIR)$(libpddir)
 	cp -f $(packages_src)/linux_make/pd-l2ork-red.png $(DESTDIR)$(libpddir)
 	cp -f $(packages_src)/linux_make/pd-l2ork-k12.png $(DESTDIR)$(libpddir)
