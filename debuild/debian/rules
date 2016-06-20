@@ -10,10 +10,10 @@
 override_dh_auto_configure:
 
 override_dh_auto_build:
-	cd l2ork_addons && inst_dir=/usr ./tar_em_up.sh -F -n
+	cd l2ork_addons && ./tar_em_up.sh -B -n
 
 override_dh_auto_install:
-	mkdir -p debian/pd-l2ork && mv packages/linux_make/build/usr debian/pd-l2ork
+	mkdir -p debian/pd-l2ork && mv packages/linux_make/build/* debian/pd-l2ork
 # Remove some unneeded files.
 	cd debian/pd-l2ork/ && rm -f Makefile README.txt
 	cd debian/pd-l2ork/usr/lib/pd-l2ork/extra && rm -rf */*.pd_linux_o */*.la
@@ -27,8 +27,6 @@ override_dh_auto_install:
 	cd debian/pd-l2ork/usr && mv include/Gem include/pd-l2ork
 # Edit the Gem pkgconfig file accordingly and rename it.
 	cd debian/pd-l2ork/usr/lib/pkgconfig && sed -e 's?/include?/include/pd-l2ork?g' -e 's?/lib/pd/extra?/lib/pd-l2ork/extra?g' < Gem.pc > pd-l2ork-Gem.pc && rm -f Gem.pc
-# Default preferences file.
-	install -d debian/pd-l2ork/etc/pd-l2ork && ln -s -f /usr/lib/pd-l2ork/default.settings debian/pd-l2ork/etc/pd-l2ork/default.settings
 
 # NOTE: Older systems use dh_pysupport instead of dh_python2. See
 # http://deb.li/dhs2p.
