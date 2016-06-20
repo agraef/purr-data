@@ -29,8 +29,10 @@ override_dh_auto_install:
 	cd debian/pd-l2ork/usr/lib/pkgconfig && sed -e 's?/include?/include/pd-l2ork?g' -e 's?/lib/pd/extra?/lib/pd-l2ork/extra?g' < Gem.pc > pd-l2ork-Gem.pc && rm -f Gem.pc
 # Sanitize permissions.
 	cd debian/pd-l2ork && chmod -R go-w * && chmod -R a+r * && chmod a-x usr/lib/pd-l2ork/default.settings
-	find debian/pd-l2ork -name '*.pd_linux' | xargs chmod a-x
-	find debian/pd-l2ork -name '*.pd' | xargs chmod a-x
+	find debian/pd-l2ork -executable -name '*.pd_linux' | xargs chmod a-x
+	find debian/pd-l2ork -executable -name '*.pd' | xargs chmod a-x
+	find debian/pd-l2ork -executable -name '*.txt' | xargs chmod a-x
+	find debian/pd-l2ork -executable -name '*.aif*' | xargs chmod a-x
 	find debian/pd-l2ork -type d | xargs chmod a+x
 
 # NOTE: Older systems use dh_pysupport instead of dh_python2. See
