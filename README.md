@@ -1,6 +1,6 @@
 ## Pd-L2Ork
 
-maintainer: Ivica Bukvic <ico@vt.edu>
+maintainer: Ivica Ico Bukvic <ico@vt.edu>
 
 maintainer: Albert Graef <aggraef@gmail.com>
 
