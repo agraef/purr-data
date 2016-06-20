@@ -2,6 +2,8 @@
 
 maintainer: Ivica Bukvic <ico@vt.edu>
 
+maintainer: Albert Graef <aggraef@gmail.com>
+
 maintainer: Jonathan Wilkes <jancsika@yahoo.com>
 
 * [One Paragraph Overview](#one-paragraph-overview)
