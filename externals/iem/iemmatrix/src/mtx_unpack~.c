@@ -148,7 +148,7 @@ void mtx_unpack_tilde_setup (void)
 {
    mtx_unpack_tilde_class = class_new(gensym("mtx_unpack~"), (t_newmethod)newMtxUnPackTilde, (t_method) deleteMtxUnPackTilde, sizeof(mtx_unpack_tilde), CLASS_DEFAULT, A_DEFFLOAT, 0);
    class_addmethod (mtx_unpack_tilde_class, (t_method) mTxUnPackTildeMatrix, gensym("matrix"),A_GIMME,0);
-   class_addmethod (mtx_unpack_tilde_class, (t_method) mTxUnPackTildeDsp, gensym("dsp"),A_CANT,0);
+   class_addmethod (mtx_unpack_tilde_class, (t_method) mTxUnPackTildeDsp, gensym("dsp"),0);
 }
 
 void iemtx_unpack__setup(void)

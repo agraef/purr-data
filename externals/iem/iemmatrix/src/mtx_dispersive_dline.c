@@ -141,7 +141,7 @@ static void mtx_dispersive_dline_resize(t_mtx_dispersive_dline *x, t_symbol *s,
    }
 }
 
-static void allpass_chain_cycle (t_float x, t_float *y, t_float *z, int n, t_float a) {
+static allpass_chain_cycle (t_float x, t_float *y, t_float *z, int n, t_float a) {
 	t_float w, in;
         int c;
 	in = y[0] = x;
@@ -153,7 +153,7 @@ static void allpass_chain_cycle (t_float x, t_float *y, t_float *z, int n, t_flo
 	}
 }
 
-static void mtx_dispersive_dline_matrix(t_mtx_dispersive_dline *x, t_symbol *s,
+static mtx_dispersive_dline_matrix(t_mtx_dispersive_dline *x, t_symbol *s,
       int argc, t_atom *argv)
 {
   int channels=(int)atom_getfloat(argv);

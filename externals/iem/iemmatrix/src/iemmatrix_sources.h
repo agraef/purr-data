@@ -10,6 +10,7 @@ void iemtx_abs_setup(void); /* mtx_abs.c */
 void iemtx_add_setup(void); /* mtx_add.c */
 void iemtx_and_setup(void); /* mtx_and.c */
 void iemtx_atan_setup(void); /* mtx_atan.c */
+void iemtx_bessel_setup(void); /* mtx_bessel.c */
 void iemtx_bitand_setup(void); /* mtx_bitand.c */
 void iemtx_bitleft_setup(void); /* mtx_bitleft.c */
 void iemtx_bitor_setup(void); /* mtx_bitor.c */

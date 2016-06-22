@@ -5,7 +5,7 @@
  *  mostly refering to matlab/octave matrix functions
  *
  * Copyright (c) Thomas Musil, IEM KUG Graz Austria 2000-2003
- * Copyright (c) IOhannes m zmölnig, forum::für::umläute, IEM, Graz, Austria
+ * Copyright (c) IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, IEM, Graz, Austria
  *
  * For information on usage and redistribution, and for a DISCLAIMER OF ALL
  * WARRANTIES, see the file, "LICENSE.txt," in this distribution.
@@ -928,7 +928,7 @@ void mtx_mul_tilde_setup(void)
   class_addcreator((t_newmethod)matrix_multilde_new, gensym("matrix~"), A_GIMME, 0);
 
 
-  class_addmethod(matrix_multilde_class, (t_method)matrix_multilde_dsp, gensym("dsp"), A_CANT, 0);
+  class_addmethod(matrix_multilde_class, (t_method)matrix_multilde_dsp, gensym("dsp"), 0);
   CLASS_MAINSIGNALIN(matrix_multilde_class, t_matrix_multilde, x_msi);
 
   class_addmethod(matrix_multilde_class, (t_method)matrix_multilde_matrix, gensym("matrix"), A_GIMME, 0);

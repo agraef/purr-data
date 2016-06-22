@@ -2,6 +2,8 @@ SUBDIRS = . cmdline
 
 lib_LIBRARIES = libsharmonics.a
 
+libsharmonics_a_CPPFLAGS = -I$(top_srcdir)/..
+
 libsharmonics_a_SOURCES = \
 	legendre_a.c \
 	sharmonics_normalization.c \

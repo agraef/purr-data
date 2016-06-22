@@ -25,5 +25,5 @@ AC_CHECK_HEADERS([stdlib.h])
 AC_FUNC_MALLOC
 AC_CHECK_FUNCS([pow])
 
-AC_CONFIG_FILES([Makefile test/Makefile])
+AC_CONFIG_FILES([Makefile cmdline/Makefile])
 AC_OUTPUT

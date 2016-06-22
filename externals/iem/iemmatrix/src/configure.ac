@@ -1,10 +1,8 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT(iemmatrix.c)
+AC_INIT([iemmatrix],[0.2],[zmoelnig@iem.at])
 
 AC_CONFIG_HEADER(config.h)
 DFLAGS="${DFLAGS} -DHAVE_CONFIG_H"
-
-
 
 dnl Checks for programs.
 AC_PROG_CC
@@ -16,8 +14,6 @@ AC_SUBST(EXT)
 AC_SUBST(LD)
 AC_SUBST(STRIP)
 AC_SUBST(STRIPFLAGS)
-AC_SUBST(LIBRARY_NAME)
-AC_SUBST(LIBRARY_VERSION)
 AC_SUBST(BUILDLIBRARY)
 AC_SUBST(REFERENCEPATH)
 AC_SUBST(PDLIBDIR)
@@ -73,6 +69,10 @@ dnl AC_CHECK_LIB([m], [cos])
 AC_CHECK_LIB([gslcblas], [cblas_dgemm])
 AC_CHECK_LIB([gsl], [gsl_blas_dgemm])
 AC_CHECK_LIB([gsl], [gsl_eigen_nonsymm],AC_DEFINE(HAVE_GSL_EIGEN_NONSYMM,1,[can gsl compute complex eigenvalues?]))
+AC_CHECK_LIB([gsl], [gsl_sf_bessel_Jn],AC_DEFINE(HAVE_GSL_BESSEL,1,[can gsl compute Bessel functions?]))
+
+dnl for math.h Bessel/Neumann functions
+AC_CHECK_LIB([m], [jn],AC_DEFINE(HAVE_MATH_BESSEL,1,[can math compute Bessel functions?]))
 
 
 if test "x$with_pd" != "x"; then
@@ -101,7 +101,7 @@ AC_CHECK_LIB(pd, nullfn)
 
 dnl Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS(stdlib.h stdio.h string.h math.h time.h sys/time.h fftw3.h sndfile.h gsl/gsl_linalg.h)
+AC_CHECK_HEADERS(stdlib.h stdio.h string.h math.h time.h sys/time.h fftw3.h sndfile.h gsl/gsl_linalg.h gsl/gsl_sf_bessel.h)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_TIME
@@ -247,41 +247,9 @@ then
  EXT=$with_extension
 fi
 
-dnl check for ${LIBRARY_NAME}-version (but why...)
-AC_MSG_CHECKING("library version")
-
-if test "$with_version" != ""
-then
-  echo -n "($with_version)... "
-  LIBRARY_VERSION="$with_version"
-else
-
-if test "x$cross_compiling" = "xno"
-then
-cat > conftest.c << EOF
-#include <stdio.h>
-#include "${LIBRARY_NAME}.h"
-int main(){
-  printf("%s\n", VERSION);
-  return 0;
-}
-EOF
-
-if ${CC} ${INCLUDES} -o conftest.o conftest.c > /dev/null 2>&1
-then
-  LIBRARY_VERSION=`./conftest.o`
-  echo "$LIBRARY_VERSION"
-else
-  LIBRARY_VERSION=""
-  echo "(unknown)"
-fi
-else
-  LIBRARY_VERSION="X"
-  echo "(X)"
-fi
-fi
-
 LFLAGS=${LDFLAGS}
 AC_OUTPUT(Make.config)
+AC_OUTPUT(../VERSION.txt)
+AC_OUTPUT(../iemmatrix-meta.pd)
 
 dnl rm -f conftest.*

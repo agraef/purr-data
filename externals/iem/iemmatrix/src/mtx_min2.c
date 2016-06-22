@@ -4,7 +4,7 @@
  *  objects for manipulating simple matrices
  *  mostly refering to matlab/octave matrix functions
  *
- * Copyright (c) IOhannes m zmölnig, forum::für::umläute
+ * Copyright (c) IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute
  * IEM, Graz, Austria
  *
  * For information on usage and redistribution, and for a DISCLAIMER OF ALL
@@ -99,7 +99,7 @@ static void mtx_min2_float(t_mtx_binmtx *x, t_float f)
   t_atom *ap, *ap2=m2->atombuffer+2;
   int row2, col2, n;
 
-  if (!m2->atombuffer){ post("mulitply with what ?");            return; }
+  if (!m2->atombuffer){ pd_error(x, "right-hand matrix is missing");            return; }
 
   row2=atom_getfloat(m2->atombuffer);
   col2=atom_getfloat(m2->atombuffer+1);

@@ -1,42 +1,43 @@
 default: all
 
-.PHONEY: default all everything dist \
-	clean realclean distclean \
-	install install-bin install-doc install-abs \
-	tests
-
 -include Make.config
 
-VPATH = .:../alias/
+.PHONY: default all everything dist \
+	clean realclean distclean \
+	install install-bin install-doc install-abs \
+	tests \
+	$(LIBRAY_NAME) library externals
 
-## if $(BUILDLIBRARY) is defined, we need to include the aliases
-ifeq "$(BUILDLIBRARY)" ""
- ALIASOBJECTSOURCES=$(subst ../alias/,,$(sort $(filter %.c, $(wildcard ../alias/*.c))))
-else
- ALIASOBJECTSOURCES=
-endif
+VPATH = .:../alias/
+.SUFFIXES: .$(EXT)
+
 
 TESTDIR=../tests
 
-HELPERSOURCES=$(LIBRARY_NAME)_sources.c $(LIBRARY_NAME).c
 
-OBJECTSOURCES=$(sort $(filter-out $(HELPERSOURCES), $(filter %.c, $(wildcard *.c)))) $(ALIASOBJECTSOURCES)
+#####################
+# CORE: core library, ought to be statically-linked with each and every .pd_linux
+# LHELPER: infrastructure for iemmatrix.pd_linux
+# ????: 
+# ALIAS: alias-objects, MUST NOT be linked statically into iemmatrix.pd_linux
 
-SOURCES=$(OBJECTSOURCES) $(HELPERSOURCES)
+CORESRC=$(LIBRARY_NAME)_binops.c $(LIBRARY_NAME)_utility.c
+LHELPERSRC=$(LIBRARY_NAME).c $(LIBRARY_NAME)_sources.c
+PDOBJECTSRC=$(sort $(filter-out $(LHELPERSRC) $(CORESRC), $(filter %.c, $(wildcard *.c))))
+ALIASSRC=$(subst ../alias/,,$(sort $(filter %.c, $(wildcard ../alias/*.c))))
 
-configure: configure.ac aclocal.m4
-	autoconf
+ALLSRC=$(CORESRC) $(LHELPERSRC) $(PDOBJECTSRC) $(ALIASSRC)
 
-aclocal.m4: acinclude.m4
-	aclocal
+COREOBJ=$(CORESRC:.c=.o)
+LHELPEROBJ=$(LHELPERSRC:.c=.o)
+PDOBJ=$(PDOBJECTSRC:.c=.o)
+ALIASOBJ=$(ALIASSRC:.c=.o)
 
-Make.config: Make.config.in configure
-	./configure $(CONFIGUREFLAGS)
+PDOBJECTS=$(PDOBJECTSRC:.c=.$(EXT))
+ALIASOBJECTS=$(ALIASSRC:.c=.$(EXT))
 
-$(LIBRARY_NAME)_sources.c $(LIBRARY_NAME)_sources.h:
-	./makesource.sh
 
--include $(SOURCES:.c=.d)
+-include $(ALLSRC:.c=.d)
 
 ##  2nd only generate depend-files when we have Make.config included
 ##  and thus MAKEDEP_FLAGS defined
@@ -50,47 +51,45 @@ ifdef MAKEDEP_FLAGS
 	 rm -f $@.$$$$
 endif
 
-.SUFFIXES: .$(EXT)
 
-TARGETS = $(SOURCES:.c=.o)
-
-OBJECTS = $(OBJECTSOURCES:.c=.$(EXT))
-
-
-debug:
-	@echo sources $(SOURCES)
-	@echo alias $(ALIASOBJECTSOURCES)
-	@echo targets $(TARGETS)
-	@echo objects $(OBJECTS)
-
-## if $(BUILDLIBRARY) is defined, we build everything as a single library
+## if $(BUILDLIBRARY) is defined, the default is to
+## build everything as a single library
 ## else we build separate externals
 ifneq "$(BUILDLIBRARY)" ""
 all: $(LIBRARY_NAME)
 	cp $(LIBRARY_NAME).$(EXT) ..
 else
-all: $(OBJECTS)
+all: externals
 endif
 
-$(OBJECTS): %.$(EXT) : %.o
-	$(LD) $(LFLAGS) $(AFLAGS) -o $@ $*.o $(LIBS)
-	$(STRIP) $(STRIPFLAGS) $@
-
-$(LIBRARY_NAME): $(TARGETS) $(LIBRARY_NAME)_sources.c $(LIBRARY_NAME)_sources.h
-	$(LD) $(LFLAGS) $(AFLAGS) -o $@.$(EXT) *.o $(LIBS)
-	$(STRIP) $(STRIPFLAGS) $@.$(EXT)
-
-$(TARGETS): %.o : %.c
+%.o : %.c
 	$(CC) $(LIBRARY_CFLAGS) $(AFLAGS) -c -o $@ $<
 
-externals: $(OBJECTS)
+%.$(EXT) : %.o $(COREOBJ)
+	$(LD) $(LFLAGS) $(AFLAGS) -o $@ $^ $(LIBS)
+	$(STRIP) $(STRIPFLAGS) $@
+
+$(LIBRARY_NAME).$(EXT): $(COREOBJ) $(LHELPEROBJ) $(PDOBJ) 
+	$(LD) $(LFLAGS) $(AFLAGS) -o $@ $^ $(LIBS)
+	$(STRIP) $(STRIPFLAGS) $@
+
+$(LIBRARY_NAME): $(LIBRARY_NAME).$(EXT)
+	@echo "$< done"
+
+externals: $(PDOBJECTS) $(ALIASOBJECTS)
+
+library: $(LIBRARY_NAME)
+
 
 clean:
 	-rm -f *.$(EXT) *.o 
 
+METAFILE = ../iemmatrix-meta.pd
+
 realclean: clean
-	-rm -f *~ _* config.*
+	-rm -f *~ _* aclocal.m4 configure config.h config.log config.status
 	-rm -f *.d *.d.*
+	-rm -f ../VERSION.txt $(METAFILE)
 
 distclean: realclean
 	-rm -f Make.config ../*.$(EXT)
@@ -102,21 +101,47 @@ tests:  all
 	make -C $(TESTDIR)
 
 install: install-bin install-doc install-abs
+	-install -d $(INSTALL_DOC)
+	-install -m 644 ../VERSION.txt $(INSTALL_DOC)
+	-install -m 644 $(METAFILE) $(INSTALL_DOC)
 
 install-bin:
 	-install -d $(INSTALL_DOC)
-	-install -m 644 $(LIBRARY_NAME).$(EXT) $(INSTALL_DOC)
+	-install -m 644 *.$(EXT) $(INSTALL_DOC)
 
 install-doc:
 	-install -d $(INSTALL_DOC)
 	-install -m 644 ../doc/*.pd $(INSTALL_DOC)
 
 install-abs:
-	-install -d $(INSTALL_BIN)
-	-install -m 644 ../abs/*.pd $(INSTALL_BIN)
+	-install -d $(INSTALL_DOC)
+	-install -m 644 ../abs/*.pd $(INSTALL_DOC)
 
 dist: all realclean
 	(cd ../..;tar czvf $(TARNAME) $(LIBRARY_NAME))
 
 everything: clean all install distclean
 
+
+#######################
+configure: configure.ac aclocal.m4
+	autoconf
+
+aclocal.m4: acinclude.m4
+	aclocal
+
+Make.config: Make.config.in configure
+	./configure $(CONFIGUREFLAGS)
+
+$(LIBRARY_NAME)_sources.c $(LIBRARY_NAME)_sources.h:
+	./makesource.sh
+#######################
+
+
+
+debug:
+	@echo SOURCES $(SOURCES)
+	@echo HELPERSOURCES $(HELPERSOURCES)
+	@echo ALIASSOURCES $(ALIASOBJECTSOURCES)
+	@echo TARGETS $(TARGETS)
+	@echo OBJECTS $(PDOBJECTS)

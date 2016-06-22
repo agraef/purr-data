@@ -27,7 +27,7 @@ function run_nogui() {
 }
 
 function run_withgui() {
- pd $IEMMATRIX -stderr runtests.pd > ${RUNTESTS_LOG} 2>&1
+ pd $IEMMATRIX -stderr runtests.pd 2>&1 | tee ${RUNTESTS_LOG}
 }
 
 if test "x$1" = "x-gui"; then

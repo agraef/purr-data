@@ -253,6 +253,7 @@ mtx_or/10_function;
 mtx_pivot/00_exist;
 mtx_prod/00_exist;
 mtx_rand/00_exist;
+mtx_rand/01_default;
 mtx_repmat/00_exist;
 mtx_resize/00_exist;
 mtx_reverse/00_exist;

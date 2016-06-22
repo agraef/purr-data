@@ -1,5 +1,5 @@
-LIBRARY_NAME=@LIBRARY_NAME@
-TARNAME =  $(LIBRARY_NAME)-@LIBRARY_VERSION@.tgz
+LIBRARY_NAME=@PACKAGE_NAME@
+TARNAME = $(LIBRARY_NAME)-@PACKAGE_VERSION@.tgz
 
 # when build as a library this holds a pre-processor define
 # (e.g. "-DZEXY_LIBRARY")

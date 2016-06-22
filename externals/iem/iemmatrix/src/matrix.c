@@ -4,7 +4,7 @@
  *  objects for manipulating simple matrices
  *  mostly refering to matlab/octave matrix functions
  *
- * Copyright (c) IOhannes m zmölnig, forum::für::umläute
+ * Copyright (c) IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute
  * IEM, Graz, Austria
  *
  * For information on usage and redistribution, and for a DISCLAIMER OF ALL
@@ -109,15 +109,12 @@ static void matrix_read(t_matrix *x, t_symbol *filename)
 static void matrix_write(t_matrix *x, t_symbol *filename)
 {
   t_atom *ap=x->atombuffer+2;
-  char *filnam = (char*)getbytes(sizeof(char)*MAXPDSTRING);
   int rows = x->row, cols = x->col;
   FILE *f=0;
 
-  sys_bashfilename(filename->s_name, filnam);
-
   /* open file */
-  if (!(f = fopen(filnam, "w"))) {
-    pd_error(x,"matrix : failed to open %128s", filnam);
+  if (!(f = sys_fopen(filename->s_name, "w"))) {
+    pd_error(x,"matrix : failed to open %128s", filename->s_name);
   } else {
     char *text=(char *)getbytes(sizeof(char)*MAXPDSTRING);
     int textlen;
@@ -131,7 +128,7 @@ static void matrix_write(t_matrix *x, t_symbol *filename)
     text[MAXPDSTRING-1]=0;
     textlen = strlen(text);
     if (fwrite(text, textlen*sizeof(char), 1, f) < 1) {
-      pd_error(x,"matrix : failed to write %128s", filnam); goto end;
+      pd_error(x,"matrix : failed to write %128s", filename->s_name); goto end;
     }
 
     while(rows--) {
@@ -142,11 +139,11 @@ static void matrix_write(t_matrix *x, t_symbol *filename)
         text[MAXPDSTRING-1]=0;
 	textlen=strlen(text);
 	if (fwrite(text, textlen*sizeof(char), 1, f) < 1) {
-	  pd_error(x,"matrix : failed to write %128s", filnam); goto end;
+	  pd_error(x,"matrix : failed to write %128s", filename->s_name); goto end;
 	}
       }
       if (fwrite("\n", sizeof(char), 1, f) < 1) {
-	pd_error(x, "matrix : failed to write %128s", filnam); goto end;
+	pd_error(x, "matrix : failed to write %128s", filename->s_name); goto end;
       }
     }
     freebytes(text, sizeof(char)*MAXPDSTRING);
@@ -155,7 +152,6 @@ static void matrix_write(t_matrix *x, t_symbol *filename)
  end:
   /* close file */
   if (f) fclose(f);
-  if(filnam)freebytes(filnam, sizeof(char)*MAXPDSTRING);
 }
 
 static void matrix_list(t_matrix *x, t_symbol *s, int argc, t_atom *argv)

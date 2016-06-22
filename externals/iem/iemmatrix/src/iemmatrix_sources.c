@@ -12,6 +12,7 @@ void iemmatrix_sources_setup(void)
 	iemtx_add_setup(); /* mtx_add.c */
 	iemtx_and_setup(); /* mtx_and.c */
 	iemtx_atan_setup(); /* mtx_atan.c */
+	iemtx_bessel_setup(); /* mtx_bessel.c */
 	iemtx_bitand_setup(); /* mtx_bitand.c */
 	iemtx_bitleft_setup(); /* mtx_bitleft.c */
 	iemtx_bitor_setup(); /* mtx_bitor.c */

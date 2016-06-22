@@ -5,7 +5,7 @@
  *  mostly refering to matlab/octave matrix functions
  *
  * Copyright (c) 2005, Franz Zotter
- * Copyright (c) 2006, IOhannes m zmölnig
+ * Copyright (c) 2006, IOhannes m zmÃ¶lnig
  * IEM, Graz, Austria
  *
  * For information on usage and redistribution, and for a DISCLAIMER OF ALL

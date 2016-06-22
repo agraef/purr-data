@@ -299,7 +299,7 @@ static void deleteMTXRifft (MTXRifft *x)
     free(x->list_im);
 }
 
-static void mtx_rifft_setup (void)
+void mtx_rifft_setup (void)
 {
   mtx_rifft_class = class_new 
     (gensym("mtx_rifft"),
