@@ -39,7 +39,7 @@ static void tab_rfft_init(t_tab_rfft *x)
   t_float f, g;
   TAB_COMPLEX *sincos = x->x_sin_cos;
   
-  g = 2.0f * 3.1415926538f / (t_float)fftsize;
+  g = 2.0 * 3.141592653589793 / (t_float)fftsize;
   for(i=0; i<fftsize; i++)
   {
     f = g * (t_float)i;
@@ -110,7 +110,7 @@ static void tab_rfft_bang(t_tab_rfft *x)
     for(k=0; k<fftsize; k++)
     {
       iemarray_setfloat(vec_dst_re, k, iemarray_getfloat(vec_src, k));
-      iemarray_setfloat(vec_dst_im, k, 0.0f);
+      iemarray_setfloat(vec_dst_im, k, 0.0);
     }
     
     i_inc = fs2;
@@ -176,12 +176,12 @@ static void tab_rfft_bang(t_tab_rfft *x)
       }
     */
     
-    iemarray_setfloat(vec_dst_im, 0, 0.0f);
-    iemarray_setfloat(vec_dst_im, fs2, 0.0f);
+    iemarray_setfloat(vec_dst_im, 0, 0.0);
+    iemarray_setfloat(vec_dst_im, fs2, 0.0);
     for(i = fs2+1; i < fftsize; i++)
     {
-      iemarray_setfloat(vec_dst_re, i, 0.0f);
-      iemarray_setfloat(vec_dst_im, i, 0.0f);
+      iemarray_setfloat(vec_dst_re, i, 0.0);
+      iemarray_setfloat(vec_dst_im, i, 0.0);
     }
     
     outlet_bang(x->x_obj.ob_outlet);
@@ -236,7 +236,7 @@ static void tab_rfft_list(t_tab_rfft *x, t_symbol *s, int argc, t_atom *argv)
       for(k=0; k<fftsize; k++)
       {
         iemarray_setfloat(vec_dst_re, k, iemarray_getfloat(vec_src, k));
-        iemarray_setfloat(vec_dst_im, k, 0.0f);
+        iemarray_setfloat(vec_dst_im, k, 0.0);
       }
       
       i_inc = fs2;
@@ -302,12 +302,12 @@ static void tab_rfft_list(t_tab_rfft *x, t_symbol *s, int argc, t_atom *argv)
         }
       */
       
-      iemarray_setfloat(vec_dst_im, 0, 0.0f);
-      iemarray_setfloat(vec_dst_im, fs2, 0.0f);
+      iemarray_setfloat(vec_dst_im, 0, 0.0);
+      iemarray_setfloat(vec_dst_im, fs2, 0.0);
       for(i = fs2+1; i < fftsize; i++)
       {
-        iemarray_setfloat(vec_dst_re, i, 0.0f);
-        iemarray_setfloat(vec_dst_im, i, 0.0f);
+        iemarray_setfloat(vec_dst_re, i, 0.0);
+        iemarray_setfloat(vec_dst_im, i, 0.0);
       }
       
       outlet_bang(x->x_obj.ob_outlet);
@@ -384,5 +384,4 @@ void tab_rfft_setup(void)
   class_addmethod(tab_rfft_class, (t_method)tab_rfft_dst_im, gensym("dst_im"), A_DEFSYMBOL, 0);
   class_addmethod(tab_rfft_class, (t_method)tab_rfft_dst_re, gensym("dst1"), A_DEFSYMBOL, 0);
   class_addmethod(tab_rfft_class, (t_method)tab_rfft_dst_im, gensym("dst2"), A_DEFSYMBOL, 0);
-//  class_sethelpsymbol(tab_rfft_class, gensym("iemhelp2/tab_rfft-help"));
 }

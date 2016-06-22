@@ -42,7 +42,7 @@ static void tab_fft_init(t_tab_fft *x)
   t_float f, g;
   TAB_COMPLEX *sincos = x->x_sin_cos;
   
-  g = 2.0f * 3.1415926538f / (t_float)fftsize;
+  g = 2.0 * 3.141592653589793 / (t_float)fftsize;
   for(i=0; i<fftsize; i++)
   {
     f = g * (t_float)i;
@@ -390,5 +390,4 @@ void tab_fft_setup(void)
   class_addmethod(tab_fft_class, (t_method)tab_fft_dst_im, gensym("dst_im"), A_DEFSYMBOL, 0);
   class_addmethod(tab_fft_class, (t_method)tab_fft_dst_re, gensym("dst1"), A_DEFSYMBOL, 0);
   class_addmethod(tab_fft_class, (t_method)tab_fft_dst_im, gensym("dst2"), A_DEFSYMBOL, 0);
-//  class_sethelpsymbol(tab_fft_class, gensym("iemhelp2/tab_fft-help"));
 }

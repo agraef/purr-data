@@ -42,7 +42,7 @@ static void tab_ifft_init(t_tab_ifft *x)
   t_float f, g;
   TAB_COMPLEX *sincos = x->x_sin_cos;
   
-  g = 2.0f * 3.1415926538f / (t_float)fftsize;
+  g = 2.0 * 3.141592653589793 / (t_float)fftsize;
   for(i=0; i<fftsize; i++)
   {
     f = g * (t_float)i;
@@ -187,7 +187,7 @@ static void tab_ifft_bang(t_tab_ifft *x)
       }
     */
     
-    g = 1.0f / (t_float)fftsize;
+    g = 1.0 / (t_float)fftsize;
     for(i = 0; i < fftsize; i++)
     {
       iemarray_setfloat(vec_dst_re, i, iemarray_getfloat(vec_dst_re, i)*g);
@@ -318,7 +318,7 @@ static void tab_ifft_list(t_tab_ifft *x, t_symbol *s, int argc, t_atom *argv)
         }
       */
       
-      g = 1.0f / (t_float)fftsize;
+      g = 1.0 / (t_float)fftsize;
       for(i = 0; i < fftsize; i++)
       {
         iemarray_setfloat(vec_dst_re, i, iemarray_getfloat(vec_dst_re, i)*g);
@@ -401,8 +401,7 @@ void tab_ifft_setup(void)
   class_addmethod(tab_ifft_class, (t_method)tab_ifft_src_re, gensym("src1"), A_DEFSYMBOL, 0);
   class_addmethod(tab_ifft_class, (t_method)tab_ifft_src_im, gensym("src2"), A_DEFSYMBOL, 0);
   class_addmethod(tab_ifft_class, (t_method)tab_ifft_dst_re, gensym("dst_re"), A_DEFSYMBOL, 0);
-  class_addmethod(tab_ifft_class, (t_method)tab_ifft_dst_im, gensym("dst_re"), A_DEFSYMBOL, 0);
+  class_addmethod(tab_ifft_class, (t_method)tab_ifft_dst_im, gensym("dst_im"), A_DEFSYMBOL, 0);
   class_addmethod(tab_ifft_class, (t_method)tab_ifft_dst_re, gensym("dst1"), A_DEFSYMBOL, 0);
   class_addmethod(tab_ifft_class, (t_method)tab_ifft_dst_im, gensym("dst2"), A_DEFSYMBOL, 0);
-//  class_sethelpsymbol(tab_ifft_class, gensym("iemhelp2/tab_ifft-help"));
 }

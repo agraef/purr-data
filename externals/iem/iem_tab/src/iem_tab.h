@@ -8,8 +8,8 @@ iem_tab written by Thomas Musil, Copyright (c) IEM KUG Graz Austria 2000 - 2009 
 
 typedef struct
 {
-    float real;
-    float imag;
+    t_float real;
+    t_float imag;
 }
 TAB_COMPLEX;
 

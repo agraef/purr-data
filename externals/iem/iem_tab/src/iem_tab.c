@@ -1,7 +1,7 @@
 /* For information on usage and redistribution, and for a DISCLAIMER OF ALL
 * WARRANTIES, see the file, "LICENSE.txt," in this distribution.
 
-iem_tab written by Thomas Musil, Copyright (c) IEM KUG Graz Austria 2000 - 2009 */
+iem_tab written by Thomas Musil, Copyright (c) IEM KUG Graz Austria 2000 - 2011 */
 
 #include "m_pd.h"
 #include "iemlib.h"
@@ -56,6 +56,8 @@ void tab_conv_setup(void);
 void tab_copy_setup(void);
 void tab_counter_setup(void);
 void tab_cross_corr_setup(void);
+void tab_dbtopow_setup(void);
+void tab_dbtorms_setup(void);
 void tab_div_setup(void);
 void tab_eq_setup(void);
 void tab_eq_scalar_setup(void);
@@ -75,14 +77,15 @@ void tab_lt_scalar_setup(void);
 void tab_max_index_setup(void);
 void tab_min_index_setup(void);
 void tab_min_max_setup(void);
-//void tab_mls_setup(void);
 void tab_mul_setup(void);
 void tab_mul_scalar_setup(void);
 void tab_ne_setup(void);
 void tab_ne_scalar_setup(void);
+void tab_powtodb_setup(void);
 void tab_reverse_setup(void);
 void tab_rfft_setup(void);
 void tab_rifft_setup(void);
+void tab_rmstodb_setup(void);
 void tab_sqrt_setup(void);
 void tab_sub_setup(void);
 void tab_sum_setup(void);
@@ -105,6 +108,8 @@ void iem_tab_setup(void)
   tab_copy_setup();
   tab_counter_setup();
   tab_cross_corr_setup();
+  tab_dbtopow_setup();
+  tab_dbtorms_setup();
   tab_div_setup();
   tab_eq_setup();
   tab_eq_scalar_setup();
@@ -124,19 +129,20 @@ void iem_tab_setup(void)
   tab_max_index_setup();
   tab_min_index_setup();
   tab_min_max_setup();
-  //  tab_mls_setup();
   tab_mul_setup();
   tab_mul_scalar_setup();
   tab_ne_setup();
   tab_ne_scalar_setup();
+  tab_powtodb_setup();
   tab_reverse_setup();
   tab_rfft_setup();
   tab_rifft_setup();
+  tab_rmstodb_setup();
   tab_sqrt_setup();
   tab_sub_setup();
   tab_sum_setup();
   
-  post("iem_tab (R-1.18) library loaded!   (c) Thomas Musil 01.2009");
+  post("iem_tab (R-1.20) library loaded!   (c) Thomas Musil 11.2011");
   post("   musil%ciem.at iem KUG Graz Austria", '@');
 }
 

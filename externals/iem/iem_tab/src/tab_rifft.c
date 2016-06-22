@@ -40,7 +40,7 @@ static void tab_rifft_init(t_tab_rifft *x)
   t_float f, g;
   TAB_COMPLEX *sincos = x->x_sin_cos;
   
-  g = 2.0f * 3.1415926538f / (t_float)fftsize;
+  g = 2.0 * 3.141592653589793 / (t_float)fftsize;
   for(i=0; i<fftsize; i++)
   {
     f = g * (t_float)i;
@@ -112,14 +112,14 @@ static void tab_rifft_bang(t_tab_rifft *x)
     vec_dst_im=x->x_beg_mem_dst_im;
     
     iemarray_setfloat(vec_dst_re, 0, iemarray_getfloat(vec_src_re, 0));
-    iemarray_setfloat(vec_dst_im, 0, 0.0f);
+    iemarray_setfloat(vec_dst_im, 0, 0.0);
     for(j=1; j<fs2; j++)
     {
       iemarray_setfloat(vec_dst_re, j, iemarray_getfloat(vec_src_re, j));
       iemarray_setfloat(vec_dst_im, j, iemarray_getfloat(vec_src_im, j));
     }
     iemarray_setfloat(vec_dst_re, fs2, iemarray_getfloat(vec_src_re, fs2));
-    iemarray_setfloat(vec_dst_im, fs2, 0.0f);
+    iemarray_setfloat(vec_dst_im, fs2, 0.0);
     
     for(k=1, j=fftsize-1; k<fs2; k++, j--)
     {
@@ -190,7 +190,7 @@ static void tab_rifft_bang(t_tab_rifft *x)
       }
     */
     
-    g = 1.0f / (t_float)fftsize;
+    g = 1.0 / (t_float)fftsize;
     for(i = 0; i < fftsize; i++)
     {
       iemarray_setfloat(vec_dst_re, i, iemarray_getfloat(vec_dst_re, i)*g);
@@ -250,7 +250,7 @@ static void tab_rifft_list(t_tab_rifft *x, t_symbol *s, int argc, t_atom *argv)
         iemarray_setfloat(vec_dst_im, j, iemarray_getfloat(vec_src_im, j));
       }
       iemarray_setfloat(vec_dst_re, fs2, iemarray_getfloat(vec_src_re, fs2));
-      iemarray_setfloat(vec_dst_im, fs2, 0.0f);
+      iemarray_setfloat(vec_dst_im, fs2, 0.0);
       for(k=1, j=fftsize-1; k<fs2; k++, j--)
       {
         iemarray_setfloat(vec_dst_re, j, iemarray_getfloat(vec_src_re, k));
@@ -320,7 +320,7 @@ static void tab_rifft_list(t_tab_rifft *x, t_symbol *s, int argc, t_atom *argv)
         }
       */
       
-      g = 1.0f / (t_float)fftsize;
+      g = 1.0 / (t_float)fftsize;
       for(i = 0; i < fftsize; i++)
       {
         iemarray_setfloat(vec_dst_re, i, iemarray_getfloat(vec_dst_re, i)*g);
@@ -400,5 +400,4 @@ void tab_rifft_setup(void)
   class_addmethod(tab_rifft_class, (t_method)tab_rifft_src_im, gensym("src2"), A_DEFSYMBOL, 0);
   class_addmethod(tab_rifft_class, (t_method)tab_rifft_dst, gensym("dst"), A_DEFSYMBOL, 0);
   class_addmethod(tab_rifft_class, (t_method)tab_rifft_dst, gensym("dst1"), A_DEFSYMBOL, 0);
-//  class_sethelpsymbol(tab_rifft_class, gensym("iemhelp2/tab_rifft-help"));
 }
