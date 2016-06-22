@@ -187,7 +187,7 @@ static t_int *n_CLNLMS_tilde_perform(t_int *w)
   t_float *w_filt_coeff;
   t_float my, my_err, sum;
   t_float beta = x->x_beta;
-  t_float hgamma, gamma = x->x_gamma;
+  t_float hgamma, gammax = x->x_gamma;
   t_float hkappa, kappa = x->x_kappa;
   t_float hleakage, leakage = x->x_leakage;
   t_int i, j, k, update_counter;
@@ -202,7 +202,7 @@ static t_int *n_CLNLMS_tilde_perform(t_int *w)
       goto n_CLNLMS_tildeperfzero;// this is Musil/Miller style
   }
 
-  hgamma = gamma * gamma * (float)n_order;
+  hgamma = gammax * gammax * (float)n_order;
   //hkappa = kappa * kappa * (float)n_order;
   hkappa = kappa; // kappa regards to energy value, else use line above
   
@@ -271,7 +271,7 @@ static t_int *n_CLNLMS_tilde_perform(t_int *w)
           }
           for(j=0; j<ord_residual; j++)	// residual
             sum += read_in_hist[-j] * read_in_hist[-j]; // [-j] only valid for Musil's double buffer structure
-          sum += hgamma; // convert gamma corresponding to filter order
+          sum += hgamma; // convert gammax corresponding to filter order
           my = beta / sum;// calculate mue
 
           my_err = my * err_sum;
@@ -403,7 +403,7 @@ static void *n_CLNLMS_tilde_new(t_symbol *s, t_int argc, t_atom *argv)
   t_int n_order=39, n_io=1;
   t_symbol    *w_name;
   t_float beta=0.1f;
-  t_float gamma=0.00001f;
+  t_float gammax=0.00001f;
   t_float kappa = 1.0f;
   t_float leakage = 0.99f;
   
@@ -419,7 +419,7 @@ static void *n_CLNLMS_tilde_new(t_symbol *s, t_int argc, t_atom *argv)
     n_io = (t_int)atom_getintarg(0, argc, argv);
     n_order = (t_int)atom_getintarg(1, argc, argv);
     beta    = (t_float)atom_getfloatarg(2, argc, argv);
-    gamma   = (t_float)atom_getfloatarg(3, argc, argv);
+    gammax  = (t_float)atom_getfloatarg(3, argc, argv);
     kappa   = (t_float)atom_getfloatarg(4, argc, argv);
     leakage   = (t_float)atom_getfloatarg(5, argc, argv);
     w_name  = (t_symbol *)atom_getsymbolarg(6, argc, argv);
@@ -429,10 +429,10 @@ static void *n_CLNLMS_tilde_new(t_symbol *s, t_int argc, t_atom *argv)
     if(beta > 2.0f)
       beta = 2.0f;
     
-    if(gamma < 0.0f)
-      gamma = 0.0f;
-    if(gamma > 1.0f)
-      gamma = 1.0f;
+    if(gammax < 0.0f)
+      gammax = 0.0f;
+    if(gammax > 1.0f)
+      gammax = 1.0f;
     
     if(kappa < 0.0001f)
       kappa = 0.0001f;
@@ -466,7 +466,7 @@ static void *n_CLNLMS_tilde_new(t_symbol *s, t_int argc, t_atom *argv)
     x->x_n_order = n_order;
     x->x_update = 0;
     x->x_beta = beta;
-    x->x_gamma = gamma;
+    x->x_gamma = gammax;
     x->x_kappa = kappa;
     x->x_leakage = leakage;
     x->x_my_kern = (t_n_CLNLMS_tilde_kern *)getbytes(x->x_n_io*sizeof(t_n_CLNLMS_tilde_kern));
@@ -494,7 +494,7 @@ void n_CLNLMS_tilde_setup(void)
   n_CLNLMS_tilde_class = class_new(gensym("n_CLNLMS~"), (t_newmethod)n_CLNLMS_tilde_new, (t_method)n_CLNLMS_tilde_free,
     sizeof(t_n_CLNLMS_tilde), 0, A_GIMME, 0);
   CLASS_MAINSIGNALIN(n_CLNLMS_tilde_class, t_n_CLNLMS_tilde, x_msi);
-  class_addmethod(n_CLNLMS_tilde_class, (t_method)n_CLNLMS_tilde_dsp, gensym("dsp"),A_CANT, 0);
+  class_addmethod(n_CLNLMS_tilde_class, (t_method)n_CLNLMS_tilde_dsp, gensym("dsp"), 0);
   class_addmethod(n_CLNLMS_tilde_class, (t_method)n_CLNLMS_tilde_update, gensym("update"), A_FLOAT, 0); // method: downsampling factor of learning (multiple of 2^N)
   class_addmethod(n_CLNLMS_tilde_class, (t_method)n_CLNLMS_tilde_beta, gensym("beta"), A_FLOAT, 0); //method: normalized learning rate
   class_addmethod(n_CLNLMS_tilde_class, (t_method)n_CLNLMS_tilde_gamma, gensym("gamma"), A_FLOAT, 0);   // method: dithering noise related to signal

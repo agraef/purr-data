@@ -24,6 +24,7 @@ static void *iem_adaptfilt_new(void)
 }
 
 void NLMS_tilde_setup(void);
+void NLMSerr_in_tilde_setup(void);
 void NLMSCC_tilde_setup(void);
 void n_CNLMS_tilde_setup(void);
 void n_CLNLMS_tilde_setup(void);
@@ -33,6 +34,7 @@ void n_CLNLMS_tilde_setup(void);
 void iem_adaptfilt_setup(void)
 {
   NLMS_tilde_setup();
+  NLMSerr_in_tilde_setup();
   NLMSCC_tilde_setup();
   n_CNLMS_tilde_setup();
   n_CLNLMS_tilde_setup();

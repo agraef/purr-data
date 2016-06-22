@@ -18,6 +18,7 @@ SYSTEM = $(shell uname -m)
 # the sources
 
 SRC = NLMS~.c \
+	NLMSerr_in~.c \
 	NLMSCC~.c \
 	n_CNLMS~.c \
 	n_CLNLMS~.c \

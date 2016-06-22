@@ -163,7 +163,7 @@ static t_int *NLMSCC_tilde_perform(t_int *w)
     t_float *wmax_filt_coeff = x->x_wmax_array_mem_beg;
     t_float my, my_err, sum;
     t_float beta = x->x_beta;
-    t_float gamma = x->x_gamma;
+    t_float gammax = x->x_gamma;
     t_int i, j, update_counter;
     t_int update = x->x_update;
     t_int ord8=n_order&0xfffffff8;
@@ -230,7 +230,7 @@ static t_int *NLMSCC_tilde_perform(t_int *w)
                 }
                 for(j=0; j<ord_residual; j++)	// residual
                     sum += read_in_hist[-j] * read_in_hist[-j]; // [-j] only valid for Musil's double buffer structure
-                sum += gamma * gamma * (float)n_order; // convert gamma corresponding to filter order
+                sum += gammax * gammax * (float)n_order; // convert gammax corresponding to filter order
                 my = beta / sum;// calculate mue
                 
                 
@@ -312,7 +312,7 @@ static void *NLMSCC_tilde_new(t_symbol *s, t_int argc, t_atom *argv)
     t_symbol    *wmin_name;
     t_symbol    *wmax_name;
     t_float beta=0.1f;
-    t_float gamma=0.00001f;
+    t_float gammax=0.00001f;
     
     if((argc >= 6) &&
         IS_A_FLOAT(argv,0) &&   //IS_A_FLOAT/SYMBOL from iemlib.h
@@ -324,7 +324,7 @@ static void *NLMSCC_tilde_new(t_symbol *s, t_int argc, t_atom *argv)
     {
         n_order = (t_int)atom_getintarg(0, argc, argv);
         beta    = (t_float)atom_getfloatarg(1, argc, argv);
-        gamma   = (t_float)atom_getfloatarg(2, argc, argv);
+        gammax  = (t_float)atom_getfloatarg(2, argc, argv);
         w_name  = (t_symbol *)atom_getsymbolarg(3, argc, argv);
         wmin_name  = (t_symbol *)atom_getsymbolarg(4, argc, argv);
         wmax_name  = (t_symbol *)atom_getsymbolarg(5, argc, argv);
@@ -334,10 +334,10 @@ static void *NLMSCC_tilde_new(t_symbol *s, t_int argc, t_atom *argv)
         if(beta > 2.0f)
             beta = 2.0f;
         
-        if(gamma < 0.0f)
-            gamma = 0.0f;
-        if(gamma > 1.0f)
-            gamma = 1.0f;
+        if(gammax < 0.0f)
+            gammax = 0.0f;
+        if(gammax > 1.0f)
+            gammax = 1.0f;
         
         if(n_order < 2)
             n_order = 2;
@@ -353,7 +353,7 @@ static void *NLMSCC_tilde_new(t_symbol *s, t_int argc, t_atom *argv)
         x->x_n_order = n_order;
         x->x_update = 0;
         x->x_beta = beta;
-        x->x_gamma = gamma;
+        x->x_gamma = gammax;
         // 2 times in and one time desired_in memory allocation (history)
         x->x_in_hist = (t_float *)getbytes(2*x->x_n_order*sizeof(t_float));
         
@@ -382,7 +382,7 @@ void NLMSCC_tilde_setup(void)
     NLMSCC_tilde_class = class_new(gensym("NLMSCC~"), (t_newmethod)NLMSCC_tilde_new, (t_method)NLMSCC_tilde_free,
         sizeof(t_NLMSCC_tilde), 0, A_GIMME, 0);
     CLASS_MAINSIGNALIN(NLMSCC_tilde_class, t_NLMSCC_tilde, x_msi);
-    class_addmethod(NLMSCC_tilde_class, (t_method)NLMSCC_tilde_dsp, gensym("dsp"), A_CANT, 0);
+    class_addmethod(NLMSCC_tilde_class, (t_method)NLMSCC_tilde_dsp, gensym("dsp"), 0);
     class_addmethod(NLMSCC_tilde_class, (t_method)NLMSCC_tilde_update, gensym("update"), A_FLOAT, 0); // method: downsampling factor of learning (multiple of 2^N)
     class_addmethod(NLMSCC_tilde_class, (t_method)NLMSCC_tilde_beta, gensym("beta"), A_FLOAT, 0); //method: normalized learning rate
     class_addmethod(NLMSCC_tilde_class, (t_method)NLMSCC_tilde_gamma, gensym("gamma"), A_FLOAT, 0);   // method: dithering noise related to signal
