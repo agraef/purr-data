@@ -34,9 +34,9 @@ beforehand.;
 #X text 257 298 this gets passed through;
 #X msg 53 297 illusory-receive-name uh oh;
 #X text 39 407 ALIASES:;
-#X text 102 407 none;
-#X text 102 432 (disabled);
-#X text 135 18 (formerly MAX-incompatible \[forward\]);
+@SPRINKLER_ALIAS_1@
+@SPRINKLER_ALIAS_2@
+#X text 135 18 @SPRINKLER_COMPAT_TEXT@;
 #X connect 0 0 18 0;
 #X connect 1 0 19 0;
 #X connect 11 0 12 1;
