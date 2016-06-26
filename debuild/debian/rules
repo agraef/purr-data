@@ -4,36 +4,48 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
+nwjsver = 0.15.3
+nwjspkg = nwjs-sdk-v$(nwjsver)-linux
+
+ifeq ("$(shell dpkg-architecture -qDEB_HOST_ARCH)","amd64")
+arch = x64
+else
+arch = ia32
+endif
+
 %:
 	dh $@
 
 override_dh_auto_configure:
 
 override_dh_auto_build:
+# Copy the nw.js sources to where purr-data wants them.
+	tar -xf debian/nwjs/$(nwjspkg)-$(arch).tar.gz && rm -rf pd/nw/nw && mv $(nwjspkg)-$(arch) pd/nw/nw
 	cd l2ork_addons && ./tar_em_up.sh -B -n
 
 override_dh_auto_install:
-	mkdir -p debian/pd-l2ork && mv packages/linux_make/build/* debian/pd-l2ork
+	mkdir -p debian/purr-data && mv packages/linux_make/build/* debian/purr-data
 # Remove some unneeded files.
-	cd debian/pd-l2ork/ && rm -f Makefile README.txt
-	cd debian/pd-l2ork/usr/lib/pd-l2ork/extra && rm -rf */*.pd_linux_o */*.la
+	cd debian/purr-data/ && rm -f Makefile README.txt
+	cd debian/purr-data/usr/lib/pd-l2ork/extra && rm -rf */*.pd_linux_o */*.la
 # Move cyclist and pdsend/pdreceive to the pd-l2ork lib directory to prevent
 # conflicts with other packages providing these files.
-	cd debian/pd-l2ork/usr/bin && mv pdsend pdreceive cyclist ../lib/pd-l2ork/bin
+	cd debian/purr-data/usr/bin && mv pdsend pdreceive cyclist ../lib/pd-l2ork/bin
 # Also remove the corresponding man pages.
-	cd debian/pd-l2ork/usr/share/man/man1 && rm -rf pdsend.* pdreceive.*
+	cd debian/purr-data/usr/share/man/man1 && rm -rf pdsend.* pdreceive.*
 # Move the Gem include files into the pd-l2ork include directory to prevent
 # conflicts with other packages providing these files.
-	cd debian/pd-l2ork/usr && mv include/Gem include/pd-l2ork
+	cd debian/purr-data/usr && mv include/Gem include/pd-l2ork
 # Edit the Gem pkgconfig file accordingly and rename it.
-	cd debian/pd-l2ork/usr/lib/pkgconfig && sed -e 's?/include?/include/pd-l2ork?g' -e 's?/lib/pd/extra?/lib/pd-l2ork/extra?g' < Gem.pc > pd-l2ork-Gem.pc && rm -f Gem.pc
+	cd debian/purr-data/usr/lib/pkgconfig && sed -e 's?/include?/include/pd-l2ork?g' -e 's?/lib/pd/extra?/lib/pd-l2ork/extra?g' < Gem.pc > pd-l2ork-Gem.pc && rm -f Gem.pc
 # Sanitize permissions.
-	cd debian/pd-l2ork && chmod -R go-w * && chmod -R a+r * && chmod a-x usr/lib/pd-l2ork/default.settings
-	find debian/pd-l2ork -executable -name '*.pd_linux' | xargs chmod a-x
-	find debian/pd-l2ork -executable -name '*.pd' | xargs chmod a-x
-	find debian/pd-l2ork -executable -name '*.txt' | xargs chmod a-x
-	find debian/pd-l2ork -executable -name '*.aif*' | xargs chmod a-x
-	find debian/pd-l2ork -type d | xargs chmod a+x
+	cd debian/purr-data && chmod -R go-w * && chmod -R a+r * && chmod a-x usr/lib/pd-l2ork/default.settings
+	find debian/purr-data/usr/lib/pd-l2ork/bin/nw -executable -not -type d | xargs chmod a+x
+	find debian/purr-data -executable -name '*.pd_linux' | xargs chmod a-x
+	find debian/purr-data -executable -name '*.pd' | xargs chmod a-x
+	find debian/purr-data -executable -name '*.txt' | xargs chmod a-x
+	find debian/purr-data -executable -name '*.aif*' | xargs chmod a-x
+	find debian/purr-data -type d | xargs chmod a+x
 
 # NOTE: Older systems use dh_pysupport instead of dh_python2. See
 # http://deb.li/dhs2p.
@@ -42,10 +54,6 @@ override_dh_python2:
 
 override_dh_compress:
 	dh_compress -X.pd -X.wav -X.aiff -X.txt -X.md
-
-override_dh_fixperms:
-	dh_fixperms
-	chmod 0755 debian/pd-l2ork/usr/lib/pd-l2ork/bin/pd.tk
 
 # Supply some options to get rid of a gazillion of warnings about shared
 # library files which are really externals.

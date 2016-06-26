@@ -38,8 +38,13 @@ debversion = $(shell git log -1 --format=%cd --date=short | sed -e 's/-//g')+git
 # Debian revision number of the package.
 debrevision = 1
 # Source tarball and folder.
-debsrc = pd-l2ork_$(debversion).orig.tar.gz
-debdist = pd-l2ork-$(debversion)
+debsrc = purr-data_$(debversion).orig.tar.gz
+debdist = purr-data-$(debversion)
+
+# nw.js sdk
+nwjsver = 0.15.3
+nwjspkg = nwjs-sdk-v$(nwjsver)-linux
+nwjs = $(nwjspkg)-ia32.tar.gz $(nwjspkg)-x64.tar.gz
 
 # Submodules (Gem, etc.). You can list them with 'make submodules'.
 #submodules = Gem externals/miXed $(addprefix l2ork_addons/, cwiid fftease3.0-32bit lyonpotpourri rtcmix-in-pd)
@@ -63,12 +68,14 @@ debchange:
 
 debclean:
 	rm -rf $(debdist)
-	rm -f pd-l2ork_*+git*
+	rm -f purr-data_*+git*
 
-deb: $(debsrc)
+deb: $(debsrc) $(addprefix debian/nwjs/, $(nwjs))
 # Unpack the source into our temporary build directory.
 	rm -rf $(debdist)
 	tar xfz $(debsrc)
+# Add the NW.js binaries to the source package.
+	cd debian/source && rm -f include-binaries && for x in $(addprefix debian/nwjs/, $(nwjs)); do echo "$$x" >> include-binaries; done
 # This works around some problems compiling externals on Precise and earlier
 # (patch from pd-extended by Hans-Christoph Steiner, modified for pd-l2ork).
 # This can be removed once Ubuntu 12.04 finally goes the way of the dodo.
@@ -99,3 +106,6 @@ $(debsrc):
 # Create the source tarball.
 	tar cfz $(debsrc) $(debdist)
 	rm -rf $(debdist)
+
+debian/nwjs/$(nwjspkg)-%.tar.gz:
+	mkdir -p debian/nwjs &&	cd debian/nwjs && wget http://dl.nwjs.io/v$(nwjsver)/$(notdir $@)
