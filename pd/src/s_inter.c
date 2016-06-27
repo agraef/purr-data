@@ -933,15 +933,26 @@ void gui_end_array(void)
 }
 
 /* Old GUI command interface... */
-void sys_vguid(const char *file, int line, const char *fmt, ...) {
+void sys_vguid(const char *file, int line, const char *fmt, ...)
+{
     va_list ap;
-    char buf[MAXPDSTRING];
+    char buf[MAXPDSTRING], *bufp, *endp;
     va_start(ap, fmt);
     vsnprintf(buf, MAXPDSTRING-1, fmt, ap);
     va_end(ap);
-    /* For old commands, we're just posting them to the pd console */
+    /* Just display the first non-empty line, to remove console clutter. -ag */
+    for (bufp = buf; *bufp && isspace(*bufp); bufp++) ;
+    if ((endp = strchr(bufp, '\n')))
+    {
+        *endp = 0;
+        if (endp[1])
+        {
+            /* Indicate that more stuff follows with an ellipsis. */
+            strncat(bufp, "...", MAXPDSTRING);
+        }
+    }
     gui_vmess("gui_legacy_tcl_command", "sis",
-        file, line, buf);
+        file, line, bufp);
     //sys_vvguid(file,line,fmt,ap);
 }
 
