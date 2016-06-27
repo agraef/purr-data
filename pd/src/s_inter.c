@@ -745,17 +745,6 @@ void sys_vvguid(const char *file, int line, const char *fmt, va_list ap) {
     sys_vvgui(fmt,ap);
 }
 
-/* Old GUI command interface... */
-void sys_vguid(const char *file, int line, const char *fmt, ...) {
-    va_list ap;
-    char buf[MAXPDSTRING];
-    va_start(ap, fmt);
-    vsnprintf(buf, MAXPDSTRING-1, fmt, ap);
-    va_end(ap);
-    /* For old commands, we're just posting them to the pd console */
-    post("Old command at %s:%d:%s", file, line, buf);
-    //sys_vvguid(file,line,fmt,ap);
-}
 void sys_gui(const char *s)
 {
     sys_vgui("%s", s);
@@ -941,6 +930,19 @@ void gui_end_array(void)
 {
     sys_gui("]");
     gui_array_tail = 1;
+}
+
+/* Old GUI command interface... */
+void sys_vguid(const char *file, int line, const char *fmt, ...) {
+    va_list ap;
+    char buf[MAXPDSTRING];
+    va_start(ap, fmt);
+    vsnprintf(buf, MAXPDSTRING-1, fmt, ap);
+    va_end(ap);
+    /* For old commands, we're just posting them to the pd console */
+    gui_vmess("gui_legacy_tcl_command", "sis",
+        file, line, buf);
+    //sys_vvguid(file,line,fmt,ap);
 }
 
 int sys_flushtogui( void)
@@ -1347,8 +1349,8 @@ fprintf(stderr, "guidir is %s\n", guidir);
             sprintf(cmdbuf,
                 "%s/nw/nw %s %d localhost %s %s\n",
                 guidir,
-                guidir,
-//                "/home/user/pd-nw/pd/nw",
+//                guidir,
+                "/home/user/purr-data/pd/nw",
                 portno,
                 (sys_k12_mode ? "pd-l2ork-k12" : "pd-l2ork"),
                 guidir);

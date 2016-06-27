@@ -346,6 +346,10 @@ function gui_post_error(objectid, loglevel, errormsg) {
     }
 }
 
+function gui_legacy_tcl_command(file, line_number, text) {
+    post("legacy tcl command at " + line_number + " of " + file + ": " + text);
+}
+
 function clear_console() {
     var container = pd_window.document.getElementById("p1");
     container.textContent = "";
@@ -1182,6 +1186,7 @@ function init_socket_events () {
                 // Turn newlines into backslash + "n" so
                 // eval will do the right thing with them
                 next_command = next_command.replace(/\n/g, "\\n");
+                next_command = next_command.replace(/\r/g, "\\r");
                 selector = next_command.slice(0, next_command.indexOf(" "));
                 args = next_command.slice(selector.length + 1);
                 next_command = "";
