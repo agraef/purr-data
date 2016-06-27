@@ -1349,8 +1349,8 @@ fprintf(stderr, "guidir is %s\n", guidir);
             sprintf(cmdbuf,
                 "%s/nw/nw %s %d localhost %s %s\n",
                 guidir,
-//                guidir,
-                "/home/user/purr-data/pd/nw",
+                guidir,
+//                "/home/user/purr-data/pd/nw",
                 portno,
                 (sys_k12_mode ? "pd-l2ork-k12" : "pd-l2ork"),
                 guidir);
