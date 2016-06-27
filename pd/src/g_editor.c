@@ -3532,7 +3532,6 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
 
                         glist_noselect(x);
                         glist_select(x, y);
-
                         //buf->u_redo =
                         //    (t_undo_sel *)canvas_undo_set_selection(x);
                         //canvas_undo_add(x, 11, "selection", buf);
@@ -3566,7 +3565,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                 {
                     canvas_nlet_conf(x,'o');
                     tooltip_erase(x);
-                    x->gl_editor->canvas_cnct_outlet_tag[0] = 0;                  
+                    x->gl_editor->canvas_cnct_outlet_tag[0] = 0;
                 }
 
                 if(x->gl_editor && x->gl_editor->gl_magic_glass)
@@ -3593,7 +3592,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                ypos <= x->gl_ymargin + x->gl_pixheight + 4 &&
                ypos > x->gl_ymargin + x->gl_pixheight - 2)
     {
-    // refactor the if into a function call...
+        // refactor the if into a function call...
         if (doit)
         {
             x->gl_editor->e_onmotion = MA_RESIZE;
@@ -7463,10 +7462,13 @@ static void canvas_buftotext(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
                as x_bufsize. Pd will handle deallocation of those members
                automatically, so we don't need to free the "buf" here. */
             rtext_settext(rtext, buf, length);
+            if (binbuf_match(((t_text *)y)->te_binbuf, b, 1))
+                x->gl_editor->e_textdirty = 0;
+            else
+                x->gl_editor->e_textdirty = 1;
             binbuf_free(b);
             // Set the dirty flag since we've changed the rtext content...
             canvas_dirty(x, 1);
-            x->gl_editor->e_textdirty = 1;
             x->gl_editor->e_onmotion = MA_NONE; // undo any mouse actions
             break;
         }
