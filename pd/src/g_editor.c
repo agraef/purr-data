@@ -7322,7 +7322,7 @@ static void canvas_dofont(t_canvas *x, t_floatarg font, t_floatarg xresize,
     scrollbar_update(x);
 }
 
-    /* canvas_menufont calls up a TK dialog which calls this back */
+    /* canvas_menufont calls up a dialog which calls this back */
 static void canvas_font(t_canvas *x, t_floatarg font, t_floatarg oldfont,
     t_floatarg resize, t_floatarg noundo)
 {
