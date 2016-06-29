@@ -347,7 +347,7 @@ function gui_post_error(objectid, loglevel, errormsg) {
 }
 
 function gui_legacy_tcl_command(file, line_number, text) {
-    post("legacy tcl command at " + line_number + " of " + file);
+    post("legacy tcl command at " + line_number + " of " + file + ": " + text);
 }
 
 function clear_console() {
