@@ -756,7 +756,7 @@ static void escape_double_quotes(const char *src) {
     while(*s)
     {
         len++;
-        if (*s == '\"')
+        if (*s == '\"' || *s == '\\')
         {
             dq++;
         }
@@ -771,10 +771,10 @@ static void escape_double_quotes(const char *src) {
         s = src;
         while(*s)
         {
-            if (*s == '\"')
+            if (*s == '\"' || *s == '\\')
             {
                 *tmp++ = '\\';
-                *tmp++ = '\"';
+                *tmp++ = *s;
             }
             else
             {
@@ -951,11 +951,8 @@ void sys_vguid(const char *file, int line, const char *fmt, ...)
             strncat(bufp, "...", MAXPDSTRING);
         }
     }
-    /* For now, we're sending a dummy string instead of bufp to the GUI.
-       Unlike Pd messages, old tcl commands can contain stray backslashes
-       that can mess up the double quote delimiters for strings in gui_vmess.*/
     gui_vmess("gui_legacy_tcl_command", "sis",
-        file, line, "dummy");
+        file, line, bufp);
     //sys_vvguid(file,line,fmt,ap);
 }
 
