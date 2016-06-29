@@ -756,7 +756,7 @@ static void escape_double_quotes(const char *src) {
     while(*s)
     {
         len++;
-        if (*s == '\"')
+        if (*s == '\"' || *s == '\\')
         {
             dq++;
         }
@@ -771,10 +771,10 @@ static void escape_double_quotes(const char *src) {
         s = src;
         while(*s)
         {
-            if (*s == '\"')
+            if (*s == '\"' || *s == '\\')
             {
                 *tmp++ = '\\';
-                *tmp++ = '\"';
+                *tmp++ = *s;
             }
             else
             {
