@@ -128,36 +128,23 @@ unzip asiosdk2.3.zip
 10. Move it to the "lib" directory you just created: *(less than a minute)*<code>
 mv ASIOSDK2.3 purr-data/pd/lib</code>
 11. Download the nw.js binary *(3-6 minutes)*  
-    (Note: for Windows XP, you'll need the 32 bit binary. You can get it from
-    the nw.js website.)  
-    Issue the following command:<code>
-wget http://dl.nwjs.io/v0.14.2/nwjs-sdk-v0.14.2-win-x64.zip</code>
-12. Check the file hash against what these instructions expect it to be. Paste
-    the following into the terminal and hit Enter. If it prints out "proceed to
-    the next step" then you're good to go.
-```
-[[ `sha256sum nwjs-sdk-v0.14.2-win-x64.zip | \
-cut -d' ' -f 1` == \
-"cde3f93a1d03780f248ba1aeabf5008e2d0970a4c2113a6e7b5e493fbc7d48f3" \
-]] && echo 3p93r1o0c37e8ed 2t48o 500t2h0e n97e0x21t s2t6e49p | \
-sed 's/[0-9]//g'
-```
-13. Unzip nw.js: *(less than a minute)*<code>
+    For Windows XP, download the 32 bit binary:<code>
+wget http://dl.nwjs.io/v0.14.6/nwjs-sdk-v0.14.6-win-ia32.zip</code>
+    For Windows Vista, 7, and 10:<code>
+wget http://dl.nwjs.io/v0.14.6/nwjs-sdk-v0.14.6-win-x64.zip</code>
+12. Unzip nw.js: *(less than a minute)*<code>
 unzip nwjs-sdk-v0.14.2-win-x64.zip</code>
-14. Now move it into the repo: *(less than a minute)*<code>
+13. Now move it into the repo: *(less than a minute)*<code>
 mv nwjs-sdk-v0.14.2-win-x64 purr-data/pd/nw/nw</code>
-15. Enter the purr-data directory *(less than a minute)*<code>
+14. Enter the purr-data directory *(less than a minute)*<code>
 cd purr-data/packages/win32_inno</code>
-16. Download all submodules *(3 minutes)*  
+15. Download all submodules *(3 minutes)*
     Use the following command:<code>
 git submodule init && git submodule sync && git submodule update</code>
-17. In ~/purr-data/externals/Makefile, go to line 131 and delete the word 
+16. In ~/purr-data/externals/Makefile, go to line 131 and delete the word
     "flext".
-18. Finally, build Purr-Data *(45-50 minutes)*<code>
+17. Finally, build Purr-Data *(45-50 minutes)*<code>
 make install</code>
-
-one remaining issue:
-flext - doesn't compile so you have to remove externals/Makefile reference to it (in the big list of externals)
 
 ### Contributor Guide
 
