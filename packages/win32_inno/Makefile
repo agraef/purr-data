@@ -69,20 +69,35 @@ lib_install:
 # ultimately, the DLLs should be installed in %SystemRoot%\system32 by
 # InnoSetup since they are 'officially' named and versioned DLLs, and can be
 # shared between apps
+# GUI port note: Pd doesn't seem to be able to find the following libs
+# unless they are in $(DESTDIR)$(bindir) instead of $(DESTDIR)$(prefix).
+# I figured that out by trial and error. If a Windows expert wants to figure
+# out a better way to do it, that's fine-- I'm just trying to get it to build
+# at all at this point...
 	install -d $(DESTDIR)$(prefix)/
-	install -p $(bin_src)/libfftw3-3.dll  $(DESTDIR)$(prefix)/
-	install -p $(bin_src)/libfftw3f-3.dll  $(DESTDIR)$(prefix)/
-	#install -p $(bin_src)/libgnurx-0.dll  $(DESTDIR)$(prefix)/
-	install -p $(bin_src)/libogg-0.dll  $(DESTDIR)$(prefix)/
-	install -p $(bin_src)/libsndfile-1.dll  $(DESTDIR)$(prefix)/
-	install -p $(bin_src)/libvorbis-0.dll  $(DESTDIR)$(prefix)/
-	install -p $(bin_src)/libvorbisenc-2.dll  $(DESTDIR)$(prefix)/
-	install -p $(bin_src)/libvorbisfile-3.dll  $(DESTDIR)$(prefix)/
-	install -p $(bin_src)/lua53.dll          $(DESTDIR)$(prefix)/
-	#install -p $(bin_src)/pthreadGC2.dll     $(DESTDIR)$(prefix)/
-	install -p $(bin_src)/libdl-0.dll     $(DESTDIR)$(prefix)/
-# these stay with pd.exe
 	install -d $(DESTDIR)$(bindir)
+	install -p $(bin_src)/libfftw3-3.dll  $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libfftw3f-3.dll  $(DESTDIR)$(bindir)/
+	#install -p $(bin_src)/libgnurx-0.dll  $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libogg-0.dll  $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libsndfile-1.dll  $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libvorbis-0.dll  $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libvorbisenc-2.dll  $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libvorbisfile-3.dll  $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/lua53.dll          $(DESTDIR)$(bindir)/
+	#install -p $(bin_src)/pthreadGC2.dll     $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libdl-0.dll     $(DESTDIR)$(bindir)/
+        # These are for Gem
+	install -p $(bin_src)/libftgl-2.dll $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libfreetype-6.dll $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libbz2-1.dll $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libharfbuzz-0.dll $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libglib-2.0-0.dll $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libintl-8.dll $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libiconv-2.dll $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libpng16-16.dll $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/zlib1.dll $(DESTDIR)$(bindir)/
+# these stay with pd.exe
 # if these are installed, include them in the build root
 	-install -p $(system32)/msvcp71.dll   $(DESTDIR)$(bindir)
 	-install -p $(system32)/msvcr71.dll   $(DESTDIR)$(bindir)
