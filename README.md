@@ -108,7 +108,7 @@ pacman -S autoconf automake git libtool \
           mingw-w64-i686-ladspa-sdk mingw-w64-i686-lame \
           mingw-w64-i686-libsndfile mingw-w64-i686-libvorbis \
           mingw-w64-i686-lua mingw-w64-i686-toolchain \
-          unzip wget</code>
+          rsync unzip wget</code>
 4. Type `exit` in the shell and click the `Enter` key  
    This will close the window.
 5. Open the MinGW-w64 Win32 Shell again, as you did in *step 2* above.
