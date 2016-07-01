@@ -267,7 +267,6 @@ then
 		cp -f ../../l2ork_addons/flext/config-lnx-pd-gcc.txt.rpi ../../externals/grill/trunk/flext/buildsys/config-lnx-pd-gcc.txt
 		cat ../../externals/OSCx/src/Makefile | sed -e s/-lpd//g > ../../externals/OSCx/src/Makefile
 	fi
-	echo "FOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
 	make install prefix=$inst_dir
 	echo "copying pd-l2ork-specific externals..."
 	# create images folder
