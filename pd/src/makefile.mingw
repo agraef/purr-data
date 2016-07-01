@@ -258,7 +258,8 @@ ABOUT_FILE=$(pddocdir)/1.manual/1.introduction.txt
 install:  all
 # the real install
 	install -d $(DESTDIR)$(bindir)
-	install -p pd.tk $(DESTDIR)$(bindir)/pd.tk
+# rsync the nw directory, which includes the nw binary itself
+	rsync -ax --exclude=.git --exclude=.svn ../nw $(DESTDIR)$(bindir)
 	install -p $(PDEXEC) $(DESTDIR)$(bindir)/$(PDEXEC)
 	install -p pd.com $(DESTDIR)$(bindir)/pd.com
 	install -p pd.dll $(DESTDIR)$(bindir)/pd.dll
