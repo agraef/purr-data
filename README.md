@@ -11,6 +11,7 @@ maintainer: Jonathan Wilkes <jancsika@yahoo.com>
 * [Three Paragraph Overview](#three-paragraph-overview)
 * [Goals](#goals)
 * [Installation Guide](#installation-guide)
+* [Code of Conduct](#code-of-conduct)
 * [Contributor Guide](#contributor-guide)
 * [Human Interface Guidelines](#human-interface-guidelines)
 * [Core Pd Notes](#core-pd-notes)
