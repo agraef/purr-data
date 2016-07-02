@@ -2242,7 +2242,7 @@ void text_drawborder(t_text *x, t_glist *glist,
             gui_vmess("gui_message_redraw_border", "xsii",
                 glist_getcanvas(glist),
                 tag,
-                x2 - x2,
+                x2 - x1,
                 y2 - y1);
         }
     }
@@ -2362,6 +2362,7 @@ void text_drawborder_withtag(t_text *x, t_glist *glist,
         msg_draw_const = ((y2-y1)/4);
         if (msg_draw_const > 10) msg_draw_const = 10; /* looks bad if too big */
         if (firsttime)
+        {
             /* Doesn't look like this is necessary... */
             sys_vgui(".x%lx.c create ppolygon "
                      "%d %d %d %d %d %d %d %d %d %d %d %d %d %d "
@@ -2372,6 +2373,7 @@ void text_drawborder_withtag(t_text *x, t_glist *glist,
                      x2, y2-msg_draw_const,  x2+msg_draw_const, y2,  
                 x1, y2,  x1, y1,
                     tag, tag);
+        }
     }
     else if (x->te_type == T_ATOM)
     {
