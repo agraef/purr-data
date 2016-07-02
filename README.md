@@ -134,9 +134,9 @@ wget http://dl.nwjs.io/v0.14.6/nwjs-sdk-v0.14.6-win-ia32.zip</code>
     For Windows Vista, 7, and 10:<code>
 wget http://dl.nwjs.io/v0.14.6/nwjs-sdk-v0.14.6-win-x64.zip</code>
 12. Unzip nw.js: *(less than a minute)*<code>
-unzip nwjs-sdk-v0.14.2-win-x64.zip</code>
+unzip nwjs-sdk-v0.14.6-win-x64.zip</code>
 13. Now move it into the repo: *(less than a minute)*<code>
-mv nwjs-sdk-v0.14.2-win-x64 purr-data/pd/nw/nw</code>
+mv nwjs-sdk-v0.14.6-win-x64 purr-data/pd/nw/nw</code>
 14. Enter the purr-data directory *(less than a minute)*<code>
 cd purr-data/packages/win32_inno</code>
 15. Download all submodules *(3 minutes)*
