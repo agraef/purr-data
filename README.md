@@ -115,7 +115,7 @@ pacman -S autoconf automake git libtool \
 6. Download the source code *(3-6 minutes)*  
    Issue the following command to create a new directory "purr-data" and clone
    the repository to it:<code>
-git clone https://puredata.osuosl.org/jwilkes/purr-data.git</code>
+git clone https://git.purrdata.net/jwilkes/purr-data.git</code>
 7. Add the ASIO SDK directory *(less than a minute)*  
    Issue the following command:<code>
 mkdir purr-data/pd/lib</code>
@@ -130,6 +130,7 @@ mv ASIOSDK2.3 purr-data/pd/lib</code>
 11. Download the nw.js binary *(3-6 minutes)*  
     For Windows XP, download the 32 bit binary:<code>
 wget http://dl.nwjs.io/v0.14.6/nwjs-sdk-v0.14.6-win-ia32.zip</code>
+
     For Windows Vista, 7, and 10:<code>
 wget http://dl.nwjs.io/v0.14.6/nwjs-sdk-v0.14.6-win-x64.zip</code>
 12. Unzip nw.js: *(less than a minute)*<code>
