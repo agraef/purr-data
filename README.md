@@ -147,6 +147,13 @@ git submodule init && git submodule sync && git submodule update</code>
 17. Finally, build Purr-Data *(45-50 minutes)*<code>
 make install</code>
 
+### Code of Conduct
+
+1. No sarcasm
+2. Don't lack empathy
+
+Enforcement of the Code of Conduct is complaint-driven.
+
 ### Contributor Guide
 
 Contributing is easy:
@@ -164,9 +171,6 @@ Contributing is easy:
 
 Here are some of the current tasks:
 
-* coming up with a better name than Pd-L2Ork. :)
-  * skills needed: creativity, basic knowledge about programming in Pd
-  * status: no work done on this yet
 * writing small audio/visual Pd games or demos to include in the next release
   * skills needed: ability to write Pd programs
   * status: I wrote a little sprite-based game that will ship with the next
@@ -176,10 +180,6 @@ Here are some of the current tasks:
     What I'd like is to include a new, smallish game with each release
     that has a link in the Pd console.  It can be a little demo or game,
     just something fun that shows off what can be done using Pure Data.
-* porting Pd-L2Ork's graphical user interface from Tcl/Tk to Qt.
-  * skills needed: knowledge about Qt5/QML, threading, and Pd's core design
-    and deterministic message-dispatching and scheduling
-  * status: under active development
 * designing/implementing regression test template
   * skills needed: knowledge about... regression tests. :)  But also some
     expertise in using Pd so that the tests themselves can
