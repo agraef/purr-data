@@ -4,7 +4,7 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-nwjsver = 0.15.3
+nwjsver = 0.15.4
 nwjspkg = nwjs-sdk-v$(nwjsver)-linux
 
 ifeq ("$(shell dpkg-architecture -qDEB_HOST_ARCH)","amd64")
@@ -27,6 +27,7 @@ override_dh_auto_install:
 	mkdir -p debian/purr-data && mv packages/linux_make/build/* debian/purr-data
 # Remove some unneeded files.
 	cd debian/purr-data/ && rm -f Makefile README.txt
+	cd debian/purr-data/usr/lib/pd-l2ork/bin && rm -f DejaVuSansMono.ttf
 	cd debian/purr-data/usr/lib/pd-l2ork/extra && rm -rf */*.pd_linux_o */*.la
 # Move cyclist and pdsend/pdreceive to the pd-l2ork lib directory to prevent
 # conflicts with other packages providing these files.
