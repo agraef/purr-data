@@ -2452,7 +2452,6 @@ void glist_eraseiofor(t_glist *glist, t_object *ob, char *tag)
 // erase the whole gobj in the gui one go
 void text_erase_gobj(t_text *x, t_glist *glist, char *tag)
 {
-    if (x->te_type == T_TEXT && !glist->gl_edit) return;
     gui_vmess("gui_gobj_erase", "xs", glist_getcanvas(glist), tag);
 }
 
