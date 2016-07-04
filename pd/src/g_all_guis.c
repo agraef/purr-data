@@ -505,7 +505,8 @@ void iemgui_displace(t_gobj *z, t_glist *glist, int dx, int dy)
     t_iemgui *x = (t_iemgui *)z;
     x->x_obj.te_xpix += dx;
     x->x_obj.te_ypix += dy;
-    iemgui_shouldvis(x, IEM_GUI_DRAW_MODE_MOVE);
+    if (glist_isvisible(glist))
+        iemgui_shouldvis(x, IEM_GUI_DRAW_MODE_MOVE);
 }
 
 void iemgui_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
