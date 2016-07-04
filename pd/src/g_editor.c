@@ -7319,7 +7319,8 @@ static void canvas_dofont(t_canvas *x, t_floatarg font, t_floatarg xresize,
         if (pd_class(&y->g_pd) == canvas_class
             && !canvas_isabstraction((t_canvas *)y))
                 canvas_dofont((t_canvas *)y, font, xresize, yresize);
-    scrollbar_update(x);
+    if (glist_isvisible(x))
+        scrollbar_update(x);
 }
 
     /* canvas_menufont calls up a dialog which calls this back */
