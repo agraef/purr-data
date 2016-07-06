@@ -2273,6 +2273,11 @@ void text_drawborder(t_text *x, t_glist *glist,
             //         "%d %d %d %d %d %d %d %d %d %d %d %d\n",
             //    glist_getcanvas(glist), tag,
             //    x1, y1,  x2-4, y1,  x2, y1+4,  x2, y2,  x1, y2,  x1, y1);
+            gui_vmess("gui_atom_redraw_border", "xsii",
+                glist_getcanvas(glist),
+                tag,
+                x2 - x1,
+                y2 - y1);
         }
     }
         /* for comments, just draw a dotted rectangle unlocked; when a visible
