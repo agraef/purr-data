@@ -1537,6 +1537,19 @@ function gui_atom_draw_border(cid, tag, width, height) {
     g.appendChild(polygon);
 }
 
+function gui_atom_redraw_border(cid, tag, width, height) {
+    var g = get_gobj(cid, tag),
+        p = g.querySelector("polygon");
+    // When creating a new gatom, the C code sends messages
+    // to redraw the border before the border exists.
+    // So we have to check for existence here...
+    if (p) {
+        configure_item(p, {
+            points: atom_border_points(width, height)
+        });
+    }
+}
+
 // draw a patch cord
 function gui_canvas_line(cid,tag,type,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10) {
     var svg = get_item(cid, "patchsvg"),
@@ -1715,7 +1728,7 @@ function gui_text_new(canvasname, myname, type, isselected, left_margin, font_he
         // text is handled under tk...
         // 'dominant-baseline': 'hanging',
         "shape-rendering": "crispEdges",
-        "font-size": pd_fontsize_to_gui_fontsize(font) + "px",
+        "font-size": (pd_fontsize_to_gui_fontsize(font) === 11.65 ? 12 : pd_fontsize_to_gui_fontsize(font)) + "px",
         "font-weight": "normal",
         id: myname + "text",
         "class": "box_text"
