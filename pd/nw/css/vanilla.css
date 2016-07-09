@@ -1,8 +1,15 @@
 /* Global CSS */
 
+/*
 @font-face {
     font-family: "DejaVu Sans Mono";
     src: url("../DejaVuSansMono.ttf");
+}
+*/
+
+body {
+    margin: 0px;
+    font-family: "DejaVu Sans Mono";
 }
 
 .noselect {
@@ -20,10 +27,6 @@
 }
 
 /* The main Pd Window */
-
-#console_body {
-    margin: 0px;
-}
 
 #console_controls {
     background-color: LightGray;
@@ -88,9 +91,7 @@ mark.console_find_highlighted {
 /* Pure Data Patch Window (aka canvas) */
 
 /* canvas font and background color. (Note: margin needs to stay at zero.) */
-#patch_body {
-    margin: 0px;
-    font-family: "DejaVu Sans Mono";
+.patch_body {
     background-color: white;
 }
 
@@ -328,13 +329,17 @@ text {
 
 /* Common to all dialogs */
 
+.dialog_body {
+    font-family: "DejaVu Sans", sans-serif;
+    background-color: #f3f3f3;
+}
+
 .submit_buttons {
     text-align: center;
     padding: 8px;
 }
 
 fieldset {
-    font-family:Georgia;
     background-color:#eeeeee;
     border-radius:3px;
     border:2px solid black;
@@ -352,11 +357,6 @@ fieldset {
 }
 
 /* Iemgui dialog */
-
-#iemgui_dialog_body {
-    font-family:Verdana;
-    margin: 0px;
-}
 
 input[type="text"]{
     width:3em;
@@ -447,12 +447,7 @@ div.y2 {
     height: 100vh;
 }
 
-#prefs_body {
-    margin-left: 0px;
-    margin-right: 0px;
-    margin-top: 0px;
-    margin-bottom: 0px;
-/*    height: 100%; */
+.prefs_body {
     padding: 0px;
 }
 

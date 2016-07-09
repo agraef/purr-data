@@ -1,8 +1,15 @@
 /* Global CSS */
 
+/*
 @font-face {
     font-family: "DejaVu Sans Mono";
     src: url("../DejaVuSansMono.ttf");
+}
+*/
+
+body {
+    margin: 0px;
+    font-family: "DejaVu Sans Mono";
 }
 
 .noselect {
@@ -20,10 +27,6 @@
 }
 
 /* The main Pd Window */
-
-#console_body {
-    margin: 0px;
-}
 
 #console_controls {
     background-color: LightGray;
@@ -93,10 +96,8 @@ mark.console_find_highlighted {
 
 /* Pure Data Patch Window (aka canvas) */
 
-/* patch font and background color. (Note: margin needs to stay at zero.) */
-#patch_body {
-    margin: 0px;
-    font-family: "DejaVu Sans Mono";
+/* patch font and background color. */
+.patch_body {
     background-color: #3e32a2;
 }
 
@@ -333,16 +334,21 @@ text {
 
 /* Common to all dialogs */
 
+.dialog_body {
+    font-family: "DejaVu Sans", sans-serif;
+    background-color: #3e32a2;
+}
+
 .submit_buttons {
     text-align: center;
     padding: 8px;
 }
 
 fieldset {
-    font-family:Georgia;
-    background-color:#eeeeee;
+    color: #a49aea;
+    background-color: #3e32a2;
     border-radius:3px;
-    border:2px solid black;
+    border:1px solid #cc9933;
     margin-left:auto;
     margin-right:auto;
     padding: 10px;
@@ -452,12 +458,7 @@ div.y2 {
     height: 100vh;
 }
 
-#prefs_body {
-    margin-left: 0px;
-    margin-right: 0px;
-    margin-top: 0px;
-    margin-bottom: 0px;
-/*    height: 100%; */
+.prefs_body {
     padding: 0px;
 }
 
@@ -502,7 +503,7 @@ div.y2 {
     margin-top: 8px;
     margin-bottom: 0px;
     /* Set the background color to default gray (non-selected tab) */
-    background-color:#ececec;
+    background-color:#7569d7;
     height: 5vh;
 }
 
@@ -513,7 +514,7 @@ div.y2 {
 
 /* Checked tabs must be white with the bottom border removed */
 .prefs_tab:checked + label {
-    background-color: #f3f3f3;
+    background-color: #cc9933;
     text-shadow: 1px 0px 0px; /* substitute for "bold" to retain div width */
     border-bottom: 1px solid #f3f3f3;
     margin-bottom: -1px;
@@ -539,6 +540,7 @@ div.y2 {
 
 .tab_settings {
     padding-top: 8px;
+    color: #a49aea;
 }
 
 #prefs_buttons {

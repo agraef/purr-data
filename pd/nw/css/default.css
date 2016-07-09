@@ -1,8 +1,23 @@
 /* Global CSS */
 
+/* Unfortunately we can't simply include a ttf font of our choice with our
+   project. Chrome has some subtle, nasty rendering bug that ends up making
+   the pd object text invisible. It seems to get triggered when opening a
+   new window-- like a dialog-- if it happens not to use the @font-face font
+   in the body. This ends up somehow breaking the display for the original
+   window. The text will turn invisible _sometimes_ when changing font size,
+   zooming, creating an array (the label might be invisible), or showing
+   the "Save before quitting" dialog. */
+/* 
 @font-face {
     font-family: "DejaVu Sans Mono";
     src: url("../DejaVuSansMono.ttf");
+}
+*/
+
+body {
+    margin: 0px;
+    font-family: "DejaVu Sans Mono";
 }
 
 .noselect {
@@ -20,10 +35,6 @@
 }
 
 /* The Pd Console Window */
-
-#console_body {
-    margin: 0px;
-}
 
 #console_controls {
     background-color: LightGray;
@@ -192,9 +203,7 @@ mark.console_find_highlighted {
 /* Pure Data Patch Window (aka canvas) */
 
 /* patch font and background color. (Note: margin needs to stay at zero.) */
-#patch_body {
-    margin: 0px;
-    font-family: "DejaVu Sans Mono";
+.patch_body {
     background-color: white;
 }
 
@@ -458,6 +467,7 @@ text {
 /* Common to all dialogs */
 
 .dialog_body {
+    font-family: "DejaVu Sans", sans-serif;
     background-color: #f3f3f3;
 }
 
@@ -467,7 +477,7 @@ text {
 }
 
 fieldset {
-    font-family:Georgia;
+/*    font-family:Georgia; */
     background-color:#f3f3f3;
     border-radius:3px;
     border:1px solid #ddd;
@@ -592,12 +602,7 @@ div.y2 {
     height: 100vh;
 }
 
-#prefs_body {
-    margin-left: 0px;
-    margin-right: 0px;
-    margin-top: 0px;
-    margin-bottom: 0px;
-/*    height: 100%; */
+.prefs_body {
     padding: 0px;
 }
 
