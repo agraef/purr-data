@@ -39,7 +39,7 @@ static t_int *train_perform(t_int *w)
     double ph = x->x_phase;
     double tfph = ph + SHARED_UNITBIT32;
     t_shared_wrappy wrappy;
-    int32_t normhipart;
+    int32 normhipart;
     int on = x->x_on;
     int edge = 0;
 

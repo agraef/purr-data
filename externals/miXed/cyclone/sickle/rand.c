@@ -31,7 +31,7 @@ static t_int *rand_perform(t_int *w)
     double ph = x->x_nextphase;
     double tfph = ph + SHARED_UNITBIT32;
     t_shared_wrappy wrappy;
-    int32_t normhipart;
+    int32 normhipart;
     float rcpsr = x->x_rcpsr;
     float target = x->x_target;
     float scaling = x->x_scaling;
