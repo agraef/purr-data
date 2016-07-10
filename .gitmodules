@@ -13,9 +13,6 @@
 [submodule "l2ork_addons/fftease3.0-32bit"]
 	path = l2ork_addons/fftease3.0-32bit
 	url = https://github.com/ericlyon/fftease3.0-32bit
-[submodule "externals/miXed"]
-	path = externals/miXed
-	url = https://github.com/pd-l2ork/miXed.git
 [submodule "l2ork_addons/raspberry_pi/disis_gpio/wiringPi"]
 	path = l2ork_addons/raspberry_pi/disis_gpio/wiringPi
 	url = git://git.drogon.net/wiringPi
