@@ -1407,6 +1407,8 @@ fprintf(stderr, "guidir is %s\n", guidir);
 #endif /* HAVE_UNISTD_H */
 
 #ifdef MSW
+        char escaped_scriptbuf[FILENAME_MAX];
+        int i, escaped_len;
             /* in MSW land "guipath" is unused; we just do everything from
             the libdir. */
         /* fprintf(stderr, "%s\n", sys_libdir->s_name); */
@@ -1426,14 +1428,30 @@ fprintf(stderr, "guidir is %s\n", guidir);
         strcat(wishbuf, "/" PDBINDIR "nw/nw");
         sys_bashfilename(wishbuf, wishbuf);
 
-        spawnret = _spawnl(P_NOWAIT, wishbuf, "pd-nw", scriptbuf, portbuf,
+        for (i = 0, escaped_len = 0; i < strlen(scriptbuf); i++)
+        {
+            if (escaped_len > (FILENAME_MAX - 3))
+            {
+                fprintf(stderr, "%s: path to GUI is too long\n");
+                exit(1);
+            }
+            if (scriptbuf[i] == ' ' ||
+                scriptbuf[i] == '^')
+            {
+                escaped_scriptbuf[escaped_len++] = '^';
+            }
+            escaped_scriptbuf[escaped_len++] = scriptbuf[i];
+        }
+        escaped_scriptbuf[escaped_len] = '\0';
+        spawnret = _spawnl(P_NOWAIT, wishbuf, "pd-nw", escaped_scriptbuf,
+            portbuf,
             "localhost",
             (sys_k12_mode ? "pd-l2ork-k12" : "pd-l2ork"),
             scriptbuf, 0);
         if (spawnret < 0)
         {
             perror("spawnl");
-            fprintf(stderr, "%s: couldn't load TCL\n", wishbuf);
+            fprintf(stderr, "%s: couldn't load GUI\n", wishbuf);
             exit(1);
         }
 
