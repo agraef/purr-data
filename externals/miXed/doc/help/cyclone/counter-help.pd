@@ -1,0 +1,238 @@
+#N canvas 420 34 553 662 10;
+#X obj -370 1146 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12
+0 14 -233017 -33289 0;
+#X obj -370 572 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0
+13 -228856 -1 0;
+#N canvas 600 344 370 331 META 0;
+#X text 12 253 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 19 LICENSE SIBSD;
+#X text 12 235 AUTHOR Miller Puckette;
+#X text 12 271 RELEASE_DATE 1997;
+#X text 12 217 LIBRARY cyclone;
+#X text 12 145 OUTLET_0 float;
+#X text 12 55 INLET_0 bang message;
+#X text 12 73 INLET_1 bang float;
+#X text 12 91 INLET_2 bang float;
+#X text 12 109 INLET_3 bang float;
+#X text 12 127 INLET_4 bang float;
+#X text 12 163 OUTLET_1 float;
+#X text 12 181 OUTLET_2 float;
+#X text 12 199 OUTLET_3 float;
+#X text 12 37 DESCRIPTION count the number of bangs received;
+#X text 12 1 KEYWORDS count bangs counter;
+#X text 12 289 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X restore 133 1148 pd META;
+#X obj -370 858 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12
+0 13 -228856 -1 0;
+#X obj -370 983 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8
+12 0 13 -228856 -1 0;
+#N canvas 310 565 426 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 8 28 creb/count;
+#X obj 78 28 count~;
+#X restore -166 1148 pd Related_objects;
+#X obj -293 581 cnv 17 3 33 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -293 642 cnv 17 3 33 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X obj -370 1 cnv 15 552 40 empty \$0-pddp.cnv.header counter 3 12
+0 18 -204280 -1 0;
+#X text -321 23 count the number of bangs received;
+#X obj -303 80 metro 300;
+#X obj -303 57 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X floatatom -226 200 10 0 0 0 - - -;
+#X text -156 201 number of bangs;
+#X text -194 81 change direction;
+#X obj -212 83 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text -340 54 start;
+#X obj -198 107 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144
+-1 -1;
+#X text -177 105 reset to minimum \, wait for next bang before output
+;
+#X obj -184 133 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144
+-1 -1;
+#X text -164 130 reset and output imediately;
+#X floatatom -252 57 5 0 0 0 - - -;
+#X obj -170 155 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144
+-1 -1;
+#X obj -226 174 counter;
+#X floatatom -195 243 5 0 0 0 - - -;
+#X floatatom -195 500 10 0 0 0 - - -;
+#X msg -181 271 0;
+#X msg -171 290 1;
+#X msg -162 309 2;
+#X text -148 269 counter direction;
+#X text -125 281 0 = up;
+#X text -125 293 1 = down;
+#X text -125 305 2 = up and down;
+#X floatatom -148 345 5 0 0 0 - - -;
+#X floatatom -138 363 5 0 0 0 - - -;
+#X floatatom -128 381 5 0 0 0 - - -;
+#X text -93 379 set max;
+#X text -102 361 set counter value;
+#X msg -323 328 up;
+#X msg -302 349 down;
+#X msg -282 369 updown;
+#X text -343 308 direction:;
+#X msg -225 296 inc;
+#X msg -256 296 dec;
+#X text -328 268 inc/decrement doesn't;
+#X text -324 279 care about direction;
+#X msg -63 242 next;
+#X text -159 242 number = bang =;
+#X text -112 341 set min **;
+#X obj -195 473 counter;
+#X obj -293 715 cnv 17 3 33 empty \$0-pddp.cnv.let.0 2 5 9 0 16 -228856
+-162280 0;
+#X obj -293 763 cnv 17 3 33 empty \$0-pddp.cnv.let.0 3 5 9 0 16 -228856
+-162280 0;
+#X obj -293 809 cnv 17 3 33 empty \$0-pddp.cnv.let.0 4 5 9 0 16 -228856
+-162280 0;
+#X text -273 580 bang;
+#X text -193 580 - main bang input \, where counter is collected;
+#X text -273 640 bang;
+#X text -271 714 bang;
+#X text -271 760 bang;
+#X text -272 806 bang;
+#X text -193 636 - change counter direction;
+#X text -274 658 float;
+#X text -166 670 0 = up;
+#X text -166 682 1 = down;
+#X text -166 694 2 = up and down;
+#X text -193 658 - counter direction;
+#X text -193 713 - reset to minimum \, wait for next bang before output
+;
+#X text -272 732 float;
+#X text -193 731 - set min;
+#X text -193 757 - reset and output immediately;
+#X text -272 781 float;
+#X text -193 777 - set counter value;
+#X text -193 805 - reset to maximum \, wait for next bang before output
+;
+#X text -272 827 float;
+#X text -193 827 - set maximum value;
+#X text -272 598 message;
+#X text -193 599 - "up" \, down" \, "updown" \, change direction. "inc"
+and "dec" increment or decrement counter;
+#X obj -293 874 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -293 898 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X obj -293 922 cnv 17 3 17 empty \$0-pddp.cnv.let.0 2 5 9 0 16 -228856
+-162280 0;
+#X obj -293 948 cnv 17 3 17 empty \$0-pddp.cnv.let.0 3 5 9 0 16 -228856
+-162280 0;
+#X text -272 923 float;
+#X text -272 949 float;
+#X text -193 872 - current value of counter;
+#X text -193 899 - reached min when counting down;
+#X text -193 922 - reached max when counting up;
+#X text -193 947 - count of overflows;
+#X text -272 874 float;
+#X text -272 899 float;
+#X obj 114 5 counter;
+#N canvas 805 142 733 288 outputs 0;
+#X obj 49 82 metro 100;
+#X obj 49 57 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X floatatom 49 227 5 0 0 0 - - -;
+#X text 88 228 count;
+#X floatatom 80 198 5 0 0 0 - - -;
+#X floatatom 111 169 5 0 0 0 - - -;
+#X obj 49 108 counter 2 0 10;
+#X text 155 171 we reached max when counting up;
+#X text 129 200 we reached min when counting down;
+#X floatatom 142 137 5 0 0 0 - - -;
+#X text 187 139 count of overflows;
+#X obj 468 156 metro 100;
+#X obj 468 73 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 468 183 counter 2 0 10;
+#X msg 412 104 carrybang;
+#X obj 499 230 print down;
+#X obj 530 207 print up;
+#X msg 436 126 carryint;
+#X text 506 127 default (0/1);
+#X text 485 104 bang when up/down overflow;
+#X text 144 17 ok \, wondering what so many outputs are for ? here
+we go!;
+#X text 145 30 please also test the carrybang vs carryint \, to the
+right;
+#X text 144 43 the subtile difference is 2 state changes (int) vs one
+bang;
+#X connect 0 0 6 0;
+#X connect 1 0 0 0;
+#X connect 6 0 2 0;
+#X connect 6 1 4 0;
+#X connect 6 2 5 0;
+#X connect 6 3 9 0;
+#X connect 11 0 13 0;
+#X connect 12 0 11 0;
+#X connect 13 1 15 0;
+#X connect 13 2 16 0;
+#X connect 14 0 13 0;
+#X connect 17 0 13 0;
+#X restore -2 478 pd outputs;
+#X text -290 998 arguments are specified as follows:;
+#X text -153 1028 one arg = initial maximum;
+#X text -153 1049 two args = initial min/max;
+#X text -153 1072 three = direction (0 \, 1 \, 2) min/max;
+#X obj -286 1027 counter 100;
+#X obj -286 1049 counter 50 100;
+#X obj -287 1072 counter 0 50 100;
+#N canvas 942 269 459 305 additional 0;
+#X obj 268 230 counter;
+#X msg 214 115 set \$1;
+#X floatatom 214 96 5 0 0 0 - - -;
+#X msg 268 116 jam \$1;
+#X floatatom 268 97 5 0 0 0 - - -;
+#X text 159 78 set counter to nr. and output;
+#X text 308 95 immediately;
+#X text 124 95 at next bang;
+#X msg 129 114 goto \$1;
+#X text 190 116 =;
+#X msg 108 191 min \$1;
+#X msg 156 190 max \$1;
+#X floatatom 108 170 5 0 0 0 - - -;
+#X floatatom 156 169 5 0 0 0 - - -;
+#X text 105 152 set min/max;
+#X text 108 35 additional ways to accomplish the same:;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X connect 3 0 0 0;
+#X connect 4 0 3 0;
+#X connect 8 0 0 0;
+#X connect 10 0 0 0;
+#X connect 11 0 0 0;
+#X connect 12 0 10 0;
+#X connect 13 0 11 0;
+#X restore -2 512 pd additional ways;
+#X text -149 152 reset to max \, wait for next bang before output;
+#X obj -368 1146 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage
+Guide;
+#X connect 10 0 23 0;
+#X connect 11 0 10 0;
+#X connect 15 0 23 1;
+#X connect 17 0 23 2;
+#X connect 19 0 23 3;
+#X connect 21 0 10 1;
+#X connect 22 0 23 4;
+#X connect 23 0 12 0;
+#X connect 24 0 49 0;
+#X connect 26 0 49 1;
+#X connect 27 0 49 1;
+#X connect 28 0 49 1;
+#X connect 33 0 49 2;
+#X connect 34 0 49 3;
+#X connect 35 0 49 4;
+#X connect 38 0 49 0;
+#X connect 39 0 49 0;
+#X connect 40 0 49 0;
+#X connect 42 0 49 0;
+#X connect 43 0 49 0;
+#X connect 49 0 25 0;

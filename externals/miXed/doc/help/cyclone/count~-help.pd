@@ -1,0 +1,110 @@
+#N canvas 421 35 553 668 10;
+#X obj 2 767 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj 4 498 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 557 431 410 251 META 0;
+#X text 39 158 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 39 32 LICENSE SIBSD;
+#X text 39 140 AUTHOR Miller Puckette;
+#X text 39 176 RELEASE_DATE 1997;
+#X text 39 122 LIBRARY cyclone;
+#X text 39 14 KEYWORDS signal count dsp;
+#X text 39 50 DESCRIPTION sample counter for dsp;
+#X text 39 104 OUTLET_0 float;
+#X text 39 68 INLET_0 bang stop float autoreset;
+#X text 39 86 INLET_1 float;
+#X text 39 194 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X restore 502 769 pd META;
+#X obj 2 627 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 2 664 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 308 573 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 9 31 count;
+#X obj 50 31 counter;
+#X obj 121 31 phasor~;
+#X restore 204 769 pd Related_objects;
+#X obj 82 507 cnv 17 3 73 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 82 596 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X obj 2 0 cnv 15 552 40 empty \$0-pddp.cnv.header count~ 3 12 0 18
+-204280 -1 0;
+#X text 14 23 sample counter for dsp;
+#X obj 127 377 count~;
+#X msg 103 93 stop;
+#X msg 78 64 bang;
+#X text 111 62 start counting;
+#X text 136 91 stop \, you guessed it;
+#X obj 177 444 snapshot~;
+#X obj 177 415 metro 20;
+#X obj 177 395 tgl 15 0 empty start empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X floatatom 177 468 15 0 0 0 - - -;
+#X text 272 467 samples counted;
+#X floatatom 170 277 5 0 0 0 - - -;
+#X floatatom 160 250 5 0 0 0 - - -;
+#X text 206 276 set a max value \, counter restarts at min;
+#X obj 127 128 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X msg 127 166 autoreset \$1;
+#X text 144 125 reset counter to min if dsp is turned off and on again
+;
+#X msg 145 218 set \$1;
+#X floatatom 145 197 5 0 0 0 - - -;
+#X text 197 244 set a min value (immediately);
+#X msg 448 218 min \$1;
+#X floatatom 448 197 5 0 0 0 - - -;
+#X msg 187 347 10 100000 1 1;
+#X msg 187 325 min max on/off? autoreset?;
+#X obj 365 418 count~ 10 10000 0 1;
+#X text 302 399 args mean : min max on/off? autoreset?;
+#X text 112 506 bang;
+#X text 180 506 - start counting;
+#X text 112 526 stop;
+#X text 180 526 - stop the counter;
+#X text 112 545 float;
+#X text 180 545 - set a minimum value;
+#X obj 82 636 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 112 596 float;
+#X text 180 596 - set a maximum value;
+#X text 112 565 autoreset;
+#X text 180 565 - reset counter to min if dsp is turned off and on
+again;
+#X text 112 636 float;
+#X text 180 635 - the current count;
+#X text 94 672 1) float;
+#X text 94 689 2) float;
+#X text 180 688 - te maximum value;
+#X text 94 706 3) float;
+#X text 180 705 - 0 or 1 for counter on/off;
+#X text 180 673 - the minimum value;
+#X text 94 721 4) float;
+#X text 180 721 - 0 or 1 \, autoreset counter if dsp goes off and back
+on;
+#X obj 506 2 count~;
+#X obj 481 51 pddp/dsp;
+#X text 189 217 set a min value for the next loop. same as;
+#X text 181 307 you can also use a list like:;
+#X obj 6 767 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
+;
+#X connect 10 0 15 0;
+#X connect 11 0 10 0;
+#X connect 12 0 10 0;
+#X connect 15 0 18 0;
+#X connect 16 0 15 0;
+#X connect 17 0 16 0;
+#X connect 20 0 10 1;
+#X connect 21 0 10 0;
+#X connect 23 0 24 0;
+#X connect 24 0 10 0;
+#X connect 26 0 10 0;
+#X connect 27 0 26 0;
+#X connect 30 0 29 0;
+#X connect 31 0 10 0;

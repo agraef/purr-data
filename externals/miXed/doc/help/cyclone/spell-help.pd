@@ -1,0 +1,54 @@
+#N canvas 427 38 561 392 10;
+#X obj -1 365 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 244 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 585 214 379 219 META 0;
+#X text 9 117 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 9 3 LICENSE SIBSD;
+#X text 9 98 AUTHOR Miller Puckette;
+#X text 9 136 RELEASE_DATE 1997;
+#X text 9 79 LIBRARY cyclone;
+#X text 9 155 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 9 -16 KEYWORDS ascii values convert;
+#X text 9 22 DESCRIPTION convert input to ascii values;
+#X text 9 41 INLET_0 list;
+#X text 9 60 OUTLET_0 list;
+#X restore 502 367 pd META;
+#X obj -1 282 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 319 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 435 319 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 199 367 pd Related_objects;
+#X obj 79 253 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 79 291 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header spell 3 12 0 18
+-204280 -1 0;
+#X obj 505 9 spell;
+#X text 11 23 convert input to ascii values;
+#X text 118 253 list;
+#X text 179 253 - list of any nubers \, text \, etc to concert to ascii
+;
+#X text 118 291 list;
+#X text 179 291 - ascii values of data from inlet;
+#X obj 208 177 spell;
+#X obj 208 205 print spell;
+#X msg 208 56 63;
+#X msg 226 112 t h i s;
+#X msg 220 83 34 45;
+#X msg 230 140 or that;
+#X text 116 332 (none);
+#X obj 9 365 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
+;
+#X connect 15 0 16 0;
+#X connect 17 0 15 0;
+#X connect 18 0 15 0;
+#X connect 19 0 15 0;
+#X connect 20 0 15 0;

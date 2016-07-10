@@ -1,0 +1,63 @@
+#N canvas 413 35 558 409 10;
+#X obj 0 380 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj 0 236 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 592 192 368 226 META 0;
+#X text 17 142 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 17 22 LICENSE SIBSD;
+#X text 17 122 AUTHOR Miller Puckette;
+#X text 17 162 RELEASE_DATE 1997;
+#X text 17 102 LIBRARY cyclone;
+#X text 17 62 INLET_0 float bang;
+#X text 17 82 OUTLET_0 float;
+#X text 17 182 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 0.201305;
+#X text 17 2 KEYWORDS tan tangent tanh hyperbolic;
+#X text 17 42 DESCRIPTION takes hyperbolic tangent value of a float
+;
+#X restore 503 382 pd META;
+#X obj 0 293 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 330 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 299 305 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 203 382 pd Related_objects;
+#X obj 75 246 cnv 17 3 34 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 75 302 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 0 -1 cnv 15 552 40 empty \$0-pddp.cnv.header tanh 3 12 0 18
+-204280 -1 0;
+#X text 108 245 float;
+#X text 108 265 bang;
+#X text 108 303 float;
+#X text 91 345 1) float;
+#X text 178 345 - optional initial value to compute;
+#X obj 511 9 tanh;
+#X text 11 24 calculate hyperbolic tangent function;
+#X text 178 245 - the number to take tanh of;
+#X text 178 265 - output tanh of argument;
+#X text 178 303 - tanh of input;
+#X floatatom 153 186 8 0 0 0 - - -, f 8;
+#X obj 153 132 / 100;
+#X floatatom 153 107 5 0 0 0 - - -, f 5;
+#X obj 153 159 tanh 0.2;
+#X floatatom 313 178 8 0 0 0 - - -, f 8;
+#X msg 313 112 bang;
+#X obj 313 145 tanh 0.2;
+#X text 58 55 outputs the hyperbolic tangent value of input float value.
+;
+#X text 46 108 with input as float value;
+#X text 386 105 with bang button and argument inside tanh object
+;
+#X obj 9 383 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
+;
+#X connect 20 0 22 0;
+#X connect 21 0 20 0;
+#X connect 22 0 19 0;
+#X connect 24 0 25 0;
+#X connect 25 0 23 0;

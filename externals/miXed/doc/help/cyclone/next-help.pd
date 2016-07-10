@@ -1,0 +1,90 @@
+#N canvas 428 35 558 498 10;
+#X obj -1 631 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj 1 437 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 621 266 357 242 META 0;
+#X text 8 -49 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 8 -189 LICENSE SIBSD;
+#X text 8 -69 AUTHOR Miller Puckette;
+#X text 8 -29 RELEASE_DATE 1997;
+#X text 8 -89 LIBRARY cyclone;
+#X text 8 -9 HELP_PATCH_AUTHORS Alex Cleveland updated this patch for
+Pd-l2ork version 2013.05.28;
+#X text 8 -209 KEYWORDS separate messages logic;
+#X text 8 -169 DESCRIPTION separate messages into logical parts;
+#X text 8 -149 INLET_0 list float bang;
+#X text 8 -129 OUTLET_0 bang;
+#X text 8 -109 OUTLET_1 bang;
+#X restore 499 633 pd META;
+#X obj 0 520 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 590 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 318 397 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 201 633 pd Related_objects;
+#X obj 79 448 cnv 17 3 58 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 558 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header next 3 12 0 18
+-204280 -1 0;
+#X obj 516 7 next;
+#X text 109 447 list;
+#X text 179 447 - list of numbers;
+#X text 109 469 float;
+#X text 109 491 bang;
+#X text 179 491 - get next number;
+#X text 179 471 - input number;
+#X obj 110 329 next;
+#X obj 110 393 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 131 357 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 131 112 5 0 0 0 - - -, f 5;
+#X obj 165 265 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 165 292 1;
+#X msg 196 292 2;
+#X msg 228 292 3;
+#X text 134 387 bang if the current message is not part;
+#X text 133 400 of the same logical stream;
+#X text 154 364 of the same logical stream;
+#X text 153 351 bang if the current message is part;
+#X msg 168 150 1 2 3 4;
+#X msg 168 211 4 3 2 1;
+#X obj 168 190 spigot;
+#X obj 201 172 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X msg 110 87 1 \, 2 \, 3 \, 4;
+#X text 107 602 (none);
+#X obj 78 529 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 109 528 bang;
+#X text 179 528 - bang if current message is not part of same logical
+stream;
+#X text 179 561 - bang if current message is part of the same logical
+stream;
+#X text 109 559 bang;
+#X text 10 24 separate messages into logical parts;
+#X text 79 58 try different inputs:;
+#X obj 12 632 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
+;
+#X connect 16 0 17 0;
+#X connect 16 1 18 0;
+#X connect 19 0 16 0;
+#X connect 20 0 21 0;
+#X connect 20 0 22 0;
+#X connect 20 0 23 0;
+#X connect 21 0 16 0;
+#X connect 22 0 16 0;
+#X connect 23 0 16 0;
+#X connect 28 0 16 0;
+#X connect 28 0 30 0;
+#X connect 29 0 16 0;
+#X connect 30 0 29 0;
+#X connect 31 0 30 1;
+#X connect 32 0 16 0;

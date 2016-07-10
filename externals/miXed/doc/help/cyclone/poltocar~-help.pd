@@ -1,0 +1,68 @@
+#N canvas 426 36 559 435 10;
+#X obj -1 408 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 234 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 577 209 374 261 META 0;
+#X text 7 186 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 7 34 LICENSE SIBSD;
+#X text 7 167 AUTHOR Miller Puckette;
+#X text 7 205 RELEASE_DATE 1997;
+#X text 7 148 LIBRARY cyclone;
+#X text 7 224 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 7 110 OUTLET_0 signal;
+#X text 7 15 KEYWORDS signal cartesian polar conversion;
+#X text 7 53 DESCRIPTION polar to cartesian coordinate conversion;
+#X text 7 72 INLET_0 signal;
+#X text 7 129 OUTLET_1 signal;
+#X text 7 91 INLET_1 signal;
+#X restore 503 410 pd META;
+#X obj -1 300 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 365 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 481 329 428 153 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 55 46 cartopol~;
+#X restore 201 411 pd Related_objects;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header poltocar~ 3 12
+0 18 -204280 -1 0;
+#X text 124 377 (none);
+#X obj 483 8 poltocar~;
+#X obj 482 55 pddp/dsp;
+#X text 190 243 - amplitude;
+#X text 190 270 - phase;
+#X text 123 243 signal;
+#X text 123 270 signal;
+#X obj 92 245 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 92 271 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 190 311 - real part of signal;
+#X text 190 337 - imaginary part of signal;
+#X text 123 311 signal;
+#X text 123 337 signal;
+#X obj 92 312 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 92 338 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 50 56 Here's how to connect it to an fft~:;
+#X text 177 120 phase (in 271 radians);
+#X obj 121 202 ifft~ 256 256 0;
+#X obj 121 178 poltocar~;
+#X obj 121 103 cartopol~;
+#X obj 121 80 fft~ 256 256 0;
+#X text 96 119 amp.;
+#X text 172 145 <- do some spectral processing here;
+#X text 21 23 polar to cartesian coordinate conversion.;
+#X obj 14 410 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
+;
+#X connect 25 0 24 0;
+#X connect 25 1 24 1;
+#X connect 26 0 25 0;
+#X connect 26 1 25 1;
+#X connect 27 0 26 0;
+#X connect 27 1 26 1;

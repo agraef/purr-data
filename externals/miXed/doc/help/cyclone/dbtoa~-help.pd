@@ -1,0 +1,186 @@
+#N canvas 655 93 564 578 10;
+#X obj 4 40 cnv 15 552 40 empty empty dbtoa~ 3 12 0 18 -204280 -1 0
+;
+#X obj 0 413 cnv 3 550 3 empty empty inlets 8 12 0 13 -228856 -1 0
+;
+#X obj 0 461 cnv 3 550 3 empty empty outlets 8 12 0 13 -228856 -1 0
+;
+#X obj 0 498 cnv 3 550 3 empty empty arguments 8 12 0 13 -228856 -1
+0;
+#X obj 83 470 cnv 17 3 17 empty empty 0 5 9 0 16 -228856 -162280 0
+;
+#X obj 83 427 cnv 17 3 17 empty empty 0 5 9 0 16 -228856 -162280 0
+;
+#X text 147 470 signal;
+#X text 146 508 (none);
+#X obj 4 536 cnv 15 552 21 empty empty empty 20 12 0 14 -233017 -33289
+0;
+#N canvas 244 346 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty empty empty 3 12 0 14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 248 49 cyclone/dbtoa;
+#X obj 152 49 cyclone/atodb;
+#X obj 50 49 cyclone/atodb~;
+#X restore 210 538 pd Related_objects;
+#N canvas 571 307 379 261 META 0;
+#X text 1 0 KEYWORDS signal max_compatible;
+#X text 1 163 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
+;
+#X text 1 40 DESCRIPTION absolute value of a signal;
+#X text 1 60 INLET_0 signal;
+#X text 1 80 OUTLET_0 signal;
+#X text 1 121 AUTHOR Krzysztof Czaja;
+#X text 1 20 LICENSE SIBSD;
+#X text 0 101 VERSION 0.2-beta1;
+#X text 0 142 RELEASE_DATE 2002;
+#X text 1 193 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
+Wilkes for Pd-extended 0.42 to conform to the PDDP template. Alex Cleveland
+updated this patch for Pd-l2ork version 2013.05.28. Fred Jan Kraan
+adapted the patch to pd-extended 2015-02-02;
+#X restore 506 538 pd META;
+#X obj 115 355 nbx 8 20 -1e+37 1e+37 0 0 empty empty Linear_Amplitue
+133 11 0 16 -228856 -1 -1 1e-05 256;
+#X obj 115 312 cyclone/Snapshot~ 100;
+#X obj 115 215 nbx 5 14 -100 0 1 0 empty empty empty 0 -8 0 10 -228856
+-1 -1 0 256;
+#X obj 118 189 hsl 180 15 -100 0 0 0 empty empty empty -2 -8 0 10 -228856
+-1 -1 0 1;
+#X text 111 427 signal/float;
+#X obj 509 47 dbtoa~;
+#X text 180 214 dBFS;
+#X obj 115 240 sig~ -100;
+#X text 77 92 [atodb~] takes any given signal representing a dBFS amplitude
+value and outputs a signal which is a linear amplitude conversion of
+the input.;
+#X text 236 427 - Signal/float representing a dBFS amplitude;
+#X text 236 472 - Linear amplitude value;
+#X text 12 63 Convert dBFS to linear amplitude at signal rate;
+#X text 75 141 Conversion expression: amp = pow(10 \, dBFS / 20);
+#X obj 115 277 cyclone/dbtoa~;
+#N canvas 439 241 715 321 (subpatch) 0;
+#X obj 51 51 cnv 15 552 28 empty empty Cyclone: 6 13 0 18 -128992 -233080
+0;
+#X obj 217 65 cnv 5 5 5 empty empty Library 0 0 0 12 -128992 -233080
+0;
+#X obj 275 65 cnv 5 5 5 empty empty of 0 0 0 12 -128992 -233080 0;
+#X obj 298 64 cnv 5 5 5 empty empty objects 0 0 0 12 -128992 -233080
+0;
+#X obj 356 64 cnv 5 5 5 empty empty cloned 0 0 0 12 -128992 -233080
+0;
+#X obj 406 64 cnv 5 5 5 empty empty from 0 0 0 12 -128992 -233080 0
+;
+#X obj 444 64 cnv 5 5 5 empty empty Max/MSP 0 0 0 12 -128992 -233080
+0;
+#X coords 0 -1 1 1 554 30 1 50 50;
+#X restore 3 4 pd;
+#N canvas 673 40 366 264 (subpatch) 0;
+#X obj 51 101 tgl 42 0 \$0-tgl-s \$0-tgl-r empty 1 8 1 9 -74965 -212593
+-262144 1 1;
+#X obj 215 68 route dsp;
+#X obj 215 37 receive pd;
+#N canvas 939 367 324 271 set_color 0;
+#X obj 47 30 inlet;
+#X obj 96 146 s \$0-cnv;
+#X msg 96 114 color -4.86997e+06 -1.34937e+07;
+#N canvas 0 22 712 637 off 0;
+#X obj 490 220 * -1;
+#X obj 424 300 +;
+#X obj 409 325 +;
+#X obj 347 219 * -65536;
+#X obj 424 220 * -256;
+#X obj 409 356 - 1;
+#X obj 390 189 unpack f f f;
+#X obj 225 295 +;
+#X obj 210 320 +;
+#X obj 148 214 * -65536;
+#X obj 225 215 * -256;
+#X obj 291 215 * -1;
+#X obj 210 351 - 1;
+#X obj 191 184 unpack f f f;
+#X obj 379 423 pack;
+#X msg 378 447 color \$1 \$2;
+#X msg 395 152 124 124 124;
+#X msg 203 154 220 220 220;
+#X obj 238 121 t b b;
+#X obj 238 81 inlet;
+#X obj 378 485 outlet;
+#X connect 0 0 1 1;
+#X connect 1 0 2 1;
+#X connect 2 0 5 0;
+#X connect 3 0 2 0;
+#X connect 4 0 1 0;
+#X connect 5 0 14 1;
+#X connect 6 0 3 0;
+#X connect 6 1 4 0;
+#X connect 6 2 0 0;
+#X connect 7 0 8 1;
+#X connect 8 0 12 0;
+#X connect 9 0 8 0;
+#X connect 10 0 7 0;
+#X connect 11 0 7 1;
+#X connect 12 0 14 0;
+#X connect 13 0 9 0;
+#X connect 13 1 10 0;
+#X connect 13 2 11 0;
+#X connect 14 0 15 0;
+#X connect 15 0 20 0;
+#X connect 16 0 6 0;
+#X connect 17 0 13 0;
+#X connect 18 0 17 0;
+#X connect 18 1 16 0;
+#X connect 19 0 18 0;
+#X restore 47 113 pd off;
+#X obj 47 83 select 0 1;
+#X obj 47 168 list append 0;
+#X obj 47 195 list trim;
+#X obj 47 220 s \$0-tgl-r;
+#X connect 0 0 4 0;
+#X connect 2 0 1 0;
+#X connect 2 0 5 0;
+#X connect 3 0 1 0;
+#X connect 3 0 5 0;
+#X connect 4 0 3 0;
+#X connect 4 1 2 0;
+#X connect 5 0 6 0;
+#X connect 6 0 7 0;
+#X restore 215 165 pd set_color;
+#X obj 135 122 r \$0-tgl-s;
+#N canvas 0 22 450 300 (subpatch) 0;
+#X obj 101 101 cnv 25 40 25 empty \$0-cnv DSP 3 13 0 20 -74965 -212593
+0;
+#X coords 0 -1 1 1 42 27 1 100 100;
+#X restore 51 144 pd;
+#X obj 226 139 s \$0-tgl-r;
+#X msg 226 115 set \$1;
+#X msg 135 177 \; pd dsp \$1;
+#N canvas 256 32 278 194 load_check 0;
+#X obj 136 53 sig~ 1;
+#X obj 74 24 loadbang;
+#X obj 136 86 snapshot~;
+#X obj 91 52 del 5;
+#X obj 136 151 outlet;
+#X obj 74 103 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 74 126 switch~;
+#X connect 0 0 2 0;
+#X connect 1 0 3 0;
+#X connect 1 0 5 0;
+#X connect 2 0 4 0;
+#X connect 3 0 2 0;
+#X connect 3 0 5 0;
+#X connect 5 0 6 0;
+#X restore 51 72 pd load_check;
+#X connect 1 0 3 0;
+#X connect 1 0 7 0;
+#X connect 2 0 1 0;
+#X connect 4 0 8 0;
+#X connect 4 0 3 0;
+#X connect 7 0 6 0;
+#X connect 9 0 0 0;
+#X coords 0 -1 1 1 44 72 2 50 100;
+#X restore 504 91 pd;
+#X connect 12 0 11 0;
+#X connect 13 0 18 0;
+#X connect 14 0 13 0;
+#X connect 18 0 24 0;
+#X connect 24 0 12 0;

@@ -1,0 +1,72 @@
+#N canvas 294 99 553 521 10;
+#X obj -1 500 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 322 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 406 363 437 234 META 0;
+#X text 60 14 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 60 -106 LICENSE SIBSD;
+#X text 60 -6 AUTHOR Miller Puckette;
+#X text 60 34 RELEASE_DATE 1997;
+#X text 60 -26 LIBRARY cyclone;
+#X text 60 -126 KEYWORDS message bond syncronize sync print;
+#X text 60 -86 DESCRIPTION sync a group of messages;
+#X text 60 -66 INLET_0 message bang;
+#X text 60 -46 OUTLET_0 message;
+#X text 60 54 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X restore 502 502 pd META;
+#X obj -1 379 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 416 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 189 488 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 9 31 pack;
+#X obj 44 31 unpack;
+#X restore 211 502 pd Related_objects;
+#X obj 80 388 cnv 17 3 17 empty \$0-pddp.cnv.let.0 n 5 9 0 16 -228856
+-162280 0;
+#X obj 81 337 cnv 17 3 30 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header bondo 3 12 0 18
+-204280 -1 0;
+#X text 11 23 sync a group of messages;
+#X text 169 192 arg sets number of in/outlets;
+#X obj 115 193 bondo 3;
+#X msg 115 130 brown;
+#X msg 84 161 fox;
+#X obj 115 277 print three;
+#X msg 98 110 quick;
+#X msg 154 72 a;
+#X msg 238 142 set newval;
+#X text 323 141 set the value / no output;
+#X msg 205 100 bang;
+#X text 247 93 output all values;
+#X text 246 104 works for all inlets;
+#X text 104 431 1) float;
+#X text 114 334 message;
+#X text 114 352 bang;
+#X text 180 353 - will output all values (can be from any inlet);
+#X text 121 389 message;
+#X text 180 387 - sends out all messages stored in syn;
+#X text 180 335 - message to sync with other messages;
+#X obj 508 5 bondo;
+#X text 180 430 - sets the number of inlets/outlets;
+#X obj 134 253 print two;
+#X obj 154 229 print one;
+#X obj 11 500 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
+;
+#X connect 11 0 14 0;
+#X connect 11 1 31 0;
+#X connect 11 2 32 0;
+#X connect 12 0 11 1;
+#X connect 13 0 11 0;
+#X connect 15 0 11 1;
+#X connect 16 0 11 2;
+#X connect 17 0 11 1;
+#X connect 17 0 11 2;
+#X connect 17 0 11 0;
+#X connect 19 0 11 2;

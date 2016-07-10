@@ -1,0 +1,90 @@
+#N canvas 423 39 566 594 10;
+#X obj -1 619 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 316 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 610 338 360 272 META 0;
+#X text 10 186 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 10 26 LICENSE SIBSD;
+#X text 10 166 AUTHOR Miller Puckette;
+#X text 10 206 RELEASE_DATE 1997;
+#X text 10 146 LIBRARY cyclone;
+#X text 10 126 OUTLET_0 signal;
+#X text 10 226 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 10 6 KEYWORDS signal filter low-pass resonance;
+#X text 10 46 DESCRIPTION low-pass filter with resonance;
+#X text 10 106 INLET_2 signal float;
+#X text 10 86 INLET_1 signal float;
+#X text 10 66 INLET_0 signal;
+#X restore 504 621 pd META;
+#X obj -1 438 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 475 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj -1 534 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8
+12 0 13 -228856 -1 0;
+#N canvas 310 494 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 207 621 pd Related_objects;
+#X obj 78 320 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 349 cnv 17 3 33 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header lores~ 3 12 0 18
+-204280 -1 0;
+#X obj 502 7 lores~;
+#X text 11 23 Low-pass filter with resonance;
+#X msg 221 137 200 \, 2000 500 200 1000;
+#X floatatom 194 187 0 0 0 0 - - -;
+#X floatatom 150 113 0 0 0 0 - - -;
+#X msg 150 138 \$1 30;
+#X obj 150 162 line~ 200;
+#X obj 107 278 dac~;
+#X obj 107 248 *~ 0.15;
+#X obj 107 75 phasor~ 150;
+#X text 218 187 resonance (signal or float);
+#X text 107 56 harmonically rich input source;
+#X text 145 97 set cutoff frequency;
+#X text 222 122 filter sweep;
+#X obj 107 219 lores~ 200 0.75;
+#X text 111 320 signal;
+#X text 178 320 - signal to go through low-pass filter with resonance
+;
+#X obj 78 395 cnv 17 3 33 empty \$0-pddp.cnv.let.0 2 5 9 0 16 -228856
+-162280 0;
+#X text 111 346 signal;
+#X text 178 356 - set cutoff frequency;
+#X obj 78 442 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 111 392 signal;
+#X text 111 411 float;
+#X text 178 400 - set resonance;
+#X text 93 538 lores~ implements a cheap lowpass with an adjustment
+that lets you add the resonance you've been looking for. The middle
+inlet sets a kind of cutoff frequency \, but the sharpness of the filter
+depends on the resonance. 0 is a little bit sharp and 1 as sharp as
+you're going to get.;
+#X text 111 441 signal;
+#X text 178 441 - output of filer;
+#X text 93 487 1) float;
+#X text 178 489 - initial cutoff frequency (default 0);
+#X text 93 507 2) float;
+#X text 178 507 - intial resonance (default 0);
+#X obj 481 49 pddp/dsp;
+#X text 111 368 float;
+#X text 206 212 arguments for initial cutoff frequency (default 0)
+and resonance (default 0);
+#X obj 17 620 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
+;
+#X connect 12 0 16 0;
+#X connect 13 0 24 2;
+#X connect 14 0 15 0;
+#X connect 15 0 16 0;
+#X connect 16 0 24 1;
+#X connect 18 0 17 0;
+#X connect 18 0 17 1;
+#X connect 19 0 24 0;
+#X connect 24 0 18 0;

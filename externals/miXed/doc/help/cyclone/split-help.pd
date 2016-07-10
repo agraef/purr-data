@@ -1,0 +1,82 @@
+#N canvas 426 35 560 535 10;
+#X obj -1 508 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 281 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 603 279 373 266 META 0;
+#X text 7 164 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 7 -7 LICENSE SIBSD;
+#X text 7 145 AUTHOR Miller Puckette;
+#X text 7 183 RELEASE_DATE 1997;
+#X text 7 126 LIBRARY cyclone;
+#X text 7 202 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 7 50 INLET_1 float;
+#X text 7 88 OUTLET_0 float;
+#X text 7 -26 KEYWORDS min max minimum maximum range;
+#X text 7 12 DESCRIPTION look for a range of numbers;
+#X text 7 31 INLET_0 list float;
+#X text 7 69 INLET_2 float;
+#X text 7 107 OUTLET_1 float;
+#X restore 500 510 pd META;
+#X obj -1 387 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 447 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 319 432 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 204 510 pd Related_objects;
+#X obj 79 290 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 79 396 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header split 3 12 0 18
+-204280 -1 0;
+#X obj 503 10 split;
+#X text 11 23 look for a range of numbers;
+#X obj 138 181 split 10 20;
+#X floatatom 138 230 5 0 0 0 - - -, f 5;
+#X floatatom 201 207 5 0 0 0 - - -, f 5;
+#X floatatom 146 109 5 0 0 0 - - -, f 5;
+#X text 236 206 not in range;
+#X text 173 231 in range;
+#X floatatom 169 136 5 0 0 0 - - -, f 5;
+#X floatatom 201 161 5 0 0 0 - - -, f 5;
+#X text 203 136 set min;
+#X text 236 160 set max;
+#X msg 138 71 3 0 10;
+#X obj 79 335 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X obj 79 360 cnv 17 3 17 empty \$0-pddp.cnv.let.0 2 5 9 0 16 -228856
+-162280 0;
+#X text 111 289 list;
+#X text 203 289 - formatat value to compare \, min \, max;
+#X text 111 310 float;
+#X text 203 310 - number to check if in range;
+#X text 111 335 float;
+#X text 203 335 - set min;
+#X text 111 360 float;
+#X text 203 360 - set max;
+#X text 93 457 1) float;
+#X text 203 457 - initial min;
+#X text 93 478 2) float;
+#X text 203 478 - initial max;
+#X obj 79 420 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X text 111 396 float;
+#X text 203 396 - output if number from inlet 0 in range;
+#X text 111 420 float;
+#X text 203 420 - output here if number from inlet 0 not in range;
+#X text 183 107 value to compare to min/max;
+#X text 190 65 3-value list input gives (from left to right) the vaue
+to compare \, set new min \, set new max;
+#X obj 14 506 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
+;
+#X connect 11 0 12 0;
+#X connect 11 1 13 0;
+#X connect 14 0 11 0;
+#X connect 17 0 11 1;
+#X connect 18 0 11 2;
+#X connect 21 0 11 0;

@@ -1,0 +1,113 @@
+#N canvas 427 35 558 549 10;
+#X obj -1 655 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 446 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 615 294 363 263 META 0;
+#X text 11 175 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 11 23 LICENSE SIBSD;
+#X text 11 156 AUTHOR Miller Puckette;
+#X text 11 194 RELEASE_DATE 1997;
+#X text 11 137 LIBRARY cyclone;
+#X text 11 213 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 11 80 INLET_1 float;
+#X text 11 4 KEYWORDS read write sample table graph array;
+#X text 11 42 DESCRIPTION read and write sample values;
+#X text 11 61 INLET_0 list float setx;
+#X text 11 99 INLET_2 ?????;
+#X text 11 118 OUTLET_0 float;
+#X restore 497 657 pd META;
+#X obj -1 577 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 614 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 321 451 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 205 657 pd Related_objects;
+#X obj 78 457 cnv 17 3 45 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 516 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header peek~ 3 12 0 18
+-204280 -1 0;
+#X text 11 24 read and write sample values;
+#X obj 247 361 peek~ table;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array table 100 float 0;
+#X coords 0 1 99 -1 200 140 1;
+#X restore 9 135 graph;
+#X floatatom 259 93 5 0 0 0 - - -, f 5;
+#X floatatom 247 385 5 0 0 0 - - -, f 5;
+#X floatatom 354 253 5 0 0 0 - - -, f 5;
+#X msg 287 132 4 1;
+#X msg 320 132 10 1;
+#X obj 327 170 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 327 192 t b b;
+#X msg 327 216 12;
+#X msg 354 216 1;
+#X msg 349 319 clip \$1;
+#X obj 349 295 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X msg 247 56 set table;
+#X text 369 294 en/disable -1/+1 clipping;
+#X text 307 56 change array;
+#N canvas 873 284 485 231 multichannel 0;
+#X text 77 54 could not get it to work properly as of yet...;
+#X text 76 65 sorry;
+#X text 77 32 in case you were wondering \, that's what the;
+#X text 77 43 third inlet is good for \, unfortunately I;
+#X text 72 96 quoting krzyszzof czaja again:;
+#X text 73 120 > MSP's peek~ is single channel unlike other buffer~
+;
+#X text 73 131 > clients. One may choose a channel with an argument
+;
+#X text 73 142 > or change it via an inlet but I am not sure how to
+;
+#X text 74 154 > emulate this in pd.;
+#X restore 402 407 pd multichannel;
+#X text 107 455 list;
+#X text 107 471 float;
+#X text 178 471 - set x value (set y value at same time in other outlet)
+;
+#X obj 78 587 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 107 516 float;
+#X text 178 516 - set y value (set x value at same time in other outlet)
+;
+#X text 107 487 set x;
+#X text 178 487 - set new table;
+#X text 107 587 float;
+#X text 178 587 - output y value correspoing to input x;
+#X text 89 625 1) table;
+#X text 178 625 - initial table to store x \, y pair into;
+#X text 178 455 - output y value coresponding to input x;
+#X obj 506 7 peek~;
+#X text 8 94 first \, draw something here:;
+#X text 299 90 read the y value by setting x here;
+#X text 346 167 ...or like this...;
+#X text 354 123 to change values in the table \, use lists...;
+#X text 389 240 ...or set the y val here and then set the x val in
+the first inlet;
+#X obj 78 545 cnv 17 3 17 empty \$0-pddp.cnv.let.0 2 5 9 0 16 -228856
+-162280 0;
+#X text 107 545 ?????;
+#X text 178 545 ?????;
+#X obj 10 654 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
+;
+#X connect 10 0 13 0;
+#X connect 12 0 10 0;
+#X connect 14 0 10 1;
+#X connect 15 0 10 0;
+#X connect 16 0 10 0;
+#X connect 17 0 18 0;
+#X connect 18 0 19 0;
+#X connect 18 1 20 0;
+#X connect 19 0 10 0;
+#X connect 20 0 10 1;
+#X connect 21 0 10 0;
+#X connect 22 0 21 0;
+#X connect 23 0 10 0;

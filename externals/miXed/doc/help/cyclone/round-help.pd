@@ -1,0 +1,117 @@
+#N canvas 552 23 566 776 10;
+#X obj 3 734 cnv 15 552 21 empty empty empty 20 12 0 14 -233017 -33289
+0;
+#X obj 3 507 cnv 3 550 3 empty empty inlets 8 12 0 13 -228856 -1 0
+;
+#N canvas 582 203 552 521 META 0;
+#X text 0 20 LICENSE SIBSD;
+#X text 0 123 LIBRARY cyclone;
+#X text 0 143 VERSION 0.2-beta1;
+#X text 2 198 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
+;
+#X text 2 230 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
+Wilkes for Pd-extended 0.42 to conform to the PDDP template. Alex Cleveland
+updated this patch for Pd-l2ork version 2013.05.28. Fred Jan Kraan
+adapted the patch to pd-extended 2015-02-02;
+#X text 0 161 AUTHOR Derek Kwan;
+#X text 0 0 KEYWORDS round;
+#X text 1 179 RELEASE_DATE 2016;
+#X text 0 60 INLET_0 float list message;
+#X text 0 80 INLET_1 float;
+#X text 2 101 OUTLET_0 float list;
+#X text 0 40 DESCRIPTION rounds floats or lists of floats;
+#X restore 506 736 pd META;
+#X obj 3 603 cnv 3 550 3 empty empty outlets 8 12 0 13 -228856 -1 0
+;
+#X obj 3 640 cnv 3 550 3 empty empty arguments 8 12 0 13 -228856 -1
+0;
+#N canvas 283 325 428 171 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty empty empty 3 12 0 14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 13 55 cyclone/minimum~;
+#X obj 13 33 cyclone/maximum~;
+#X obj 13 77 cyclone/pong~;
+#X obj 13 99 cyclone/round~;
+#X restore 206 736 pd Related_objects;
+#X obj 83 612 cnv 17 3 17 empty empty 0 5 9 0 16 -228856 -162280 0
+;
+#X obj 3 39 cnv 15 552 40 empty empty round 3 12 0 18 -204280 -1 0
+;
+#X text 123 654 1) float;
+#X obj 82 566 cnv 17 3 25 empty empty 1 5 9 0 16 -228856 -162280 0
+;
+#X obj 83 514 cnv 17 3 45 empty empty 0 5 9 0 16 -228856 -162280 0
+;
+#X obj 3 678 cnv 3 550 3 empty empty attributes 8 12 0 13 -228856 -1
+0;
+#X text 6 61 rounds floats or lists of floats;
+#X obj 514 49 round;
+#X text 111 613 float/list;
+#X msg 381 375 0.5 5 8;
+#X text 139 566 float;
+#X floatatom 288 320 0 0 0 0 - - -;
+#X text 110 512 float/list;
+#X text 194 511 - value(s) to round;
+#X obj 291 295 hsl 128 15 0 10 0 0 empty empty empty -2 -8 0 10 -228856
+-1 -1 0 1;
+#X obj 72 317 nbx 6 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
+-228856 -1 -1 0 256;
+#X obj 381 435 cyclone/tosymbol;
+#X symbolatom 381 466 15 0 0 0 - - -, f 15;
+#X floatatom 468 375 5 0 0 0 - - -, f 5;
+#X obj 381 403 cyclone/round 3;
+#X obj 72 290 trigger b a;
+#X msg 72 262 nearest \$1;
+#X obj 72 230 tgl 25 0 empty empty empty 17 7 0 10 -228856 -1 -1 0
+1;
+#X text 259 420 works with lists:;
+#X obj 381 349 loadbang;
+#X text 105 95 [round] approximates positive and negative numbers to
+an integer multiple of any given number that is greater or equal to
+0 (0 makes no approximention - original input is output).;
+#X text 104 158 it works in two modes \, rounding to the nearest multiple
+(default) or to the approximating to the truncated multiple value.
+;
+#X text 128 532 nearest;
+#X text 192 613 - approximated value(s);
+#X text 115 697 @nearest <int>;
+#X text 192 654 - value to round to (default = 0 \, no rounding);
+#X text 214 696 - sets mode: non zero = round (default) \, 0 = truncate
+;
+#X text 111 235 (1 = round \, 0 truncate);
+#X obj 135 349 cyclone/round 1 @nearest 0;
+#X obj 135 384 nbx 6 18 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 14
+-228856 -1 -1 0 256;
+#X text 194 531 - "nearest" followed by 0 sets to "truncate mode" \,
+non zero number sets to "round mode" (default).;
+#X text 192 566 - value to round to (whose multple values will be approximated
+to);
+#N canvas 439 241 715 321 (subpatch) 0;
+#X obj 51 51 cnv 15 552 28 empty empty Cyclone: 6 13 0 18 -128992 -233080
+0;
+#X obj 217 65 cnv 5 5 5 empty empty Library 0 0 0 12 -128992 -233080
+0;
+#X obj 275 65 cnv 5 5 5 empty empty of 0 0 0 12 -128992 -233080 0;
+#X obj 298 64 cnv 5 5 5 empty empty objects 0 0 0 12 -128992 -233080
+0;
+#X obj 356 64 cnv 5 5 5 empty empty cloned 0 0 0 12 -128992 -233080
+0;
+#X obj 406 64 cnv 5 5 5 empty empty from 0 0 0 12 -128992 -233080 0
+;
+#X obj 444 64 cnv 5 5 5 empty empty Max/MSP 0 0 0 12 -128992 -233080
+0;
+#X coords 0 -1 1 1 554 30 1 50 50;
+#X restore 2 4 pd;
+#X connect 15 0 25 0;
+#X connect 17 0 39 1;
+#X connect 20 0 17 0;
+#X connect 21 0 39 0;
+#X connect 22 0 23 0;
+#X connect 24 0 25 1;
+#X connect 25 0 22 0;
+#X connect 26 0 21 0;
+#X connect 26 1 39 0;
+#X connect 27 0 26 0;
+#X connect 28 0 27 0;
+#X connect 30 0 15 0;
+#X connect 39 0 40 0;

@@ -1,0 +1,271 @@
+#N canvas 429 36 558 429 10;
+#X obj -1 750 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 441 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 630 173 351 268 META 0;
+#X text 6 162 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 6 -11 LICENSE SIBSD;
+#X text 6 142 AUTHOR Miller Puckette;
+#X text 6 182 RELEASE_DATE 1997;
+#X text 6 122 LIBRARY cyclone;
+#X text 6 202 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 6 -31 KEYWORDS swiss army knife multi purpose list processing
+;
+#X text 6 9 DESCRIPTION multi purpose list processing object a.k.a.
+swiss army knife;
+#X text 6 42 INLET_0 list message;
+#X text 6 62 INLET_1 list float;
+#X text 6 82 OUTLET_0 list;
+#X text 6 102 OUTLET_1 float;
+#X restore 500 752 pd META;
+#X obj -1 553 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 627 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj -1 699 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8
+12 0 13 -228856 -1 0;
+#N canvas 315 328 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 198 752 pd Related_objects;
+#X obj 79 452 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 79 564 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header zl 3 12 0 18 -204280
+-1 0;
+#X obj 514 11 zl;
+#X text 11 23 multi purpose list processing object a.k.a. swiss army
+knife;
+#X text 113 449 list;
+#X obj 79 502 cnv 17 3 35 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X text 113 523 float;
+#X text 204 521 - change number of elements per group;
+#X text 204 473 - change to <mode> and <int> number of elements per
+group;
+#X text 113 563 list;
+#X text 204 563 - the processed list based on mode and number of elements
+;
+#X text 97 637 1) mode;
+#X text 204 637 - mode can be group \, iter \, join \, len \, reg \,
+rev \, rotate \, sect \, nth \, slice \, ecils \, or union;
+#X text 97 670 2) float;
+#X text 204 670 - intial number of elements per group;
+#X text 29 54 zl supports multiple modes that perform various useful
+tasks;
+#X text 92 717 modes can be set as an arg or with a;
+#X msg 328 717 mode mode_name [n];
+#X msg 29 144 list a b;
+#X msg 43 169 list c d e f;
+#X obj 29 343 print group;
+#X text 454 717 message.;
+#X text 12 104 in group mode messages are grouped;
+#X text 12 116 in numbers of elements:;
+#X text 11 143 1;
+#X text 11 168 2;
+#X text 112 308 arg sets mode and optionally the;
+#X text 113 319 number of elements to group;
+#X msg 86 201 3;
+#X text 69 201 3;
+#X msg 128 256 list a b c d e;
+#X msg 128 277 list f g;
+#X text 110 255 4;
+#X text 111 278 5;
+#X obj 29 315 zl group 2;
+#X text 200 278 <- click again;
+#X text 120 224 remaining items are stored and;
+#X text 120 236 used for the next group:;
+#X text 113 203 change nr of elements per group;
+#X obj 376 273 zl iter 3;
+#X msg 388 166 1 2 3 4;
+#X msg 376 144 1 2 3 4 5 6;
+#X floatatom 427 248 5 0 0 0 - - -, f 5;
+#X text 325 107 iter is similar to group but always;
+#X msg 402 188 1;
+#X text 325 119 sends out all available elements:;
+#X msg 427 226 mode iter 4;
+#X text 424 208 change nr here;
+#X text 469 248 or here;
+#X obj 376 298 print iter;
+#N canvas 806 135 643 551 trivial 0;
+#X obj 66 88 zl len;
+#X obj 66 111 print len;
+#X msg 41 40 this produces 3;
+#X msg 66 63 and this should be five;
+#X text 40 18 len outputs the nr. of elements:;
+#X text 301 16 rev reverses:;
+#X obj 303 83 zl rev;
+#X obj 303 108 print rev;
+#X msg 312 59 10 9 8 7 6 5 4 3 2 1 0;
+#X msg 303 36 way this something means this;
+#X text 32 163 reg can be used to store lists:;
+#X obj 33 284 zl reg;
+#X msg 33 186 this is sent out immediately;
+#X obj 33 310 print reg;
+#X msg 39 246 bang;
+#X msg 66 218 this is just stored;
+#X obj 293 330 print rotate;
+#X msg 293 219 sometimes my grammar is all messed up;
+#X obj 293 307 zl rot 3;
+#X text 292 199 master yoda says:;
+#X msg 365 266 1 2 3 4 5 6 7 8;
+#X floatatom 338 241 5 0 0 0 - - -, f 5;
+#X text 281 219 1;
+#X text 322 240 2;
+#X text 350 267 3;
+#X text 76 246 output last stored list;
+#X text 290 163 rot rotates:;
+#X text 34 365 nth sends out the nth element:;
+#X obj 39 445 zl nth 3;
+#X obj 39 469 print nth;
+#X floatatom 84 418 5 0 0 0 - - -, f 5;
+#X msg 39 393 1 10 11 100 101 110 111 1000;
+#X text 126 419 change 'n';
+#X connect 0 0 1 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 6 0 7 0;
+#X connect 8 0 6 0;
+#X connect 9 0 6 0;
+#X connect 11 0 13 0;
+#X connect 12 0 11 0;
+#X connect 14 0 11 0;
+#X connect 15 0 11 1;
+#X connect 17 0 18 0;
+#X connect 18 0 16 0;
+#X connect 20 0 18 0;
+#X connect 21 0 18 1;
+#X connect 28 0 29 0;
+#X connect 30 0 28 1;
+#X connect 31 0 28 0;
+#X restore 402 410 pd trivial ones;
+#X text 155 409 look here for rev \, len \, reg \, rot[ate]:;
+#X text 29 65 on lists. the modes are group \, iter \, join \, len
+\, reg \, rev \,;
+#X text 29 76 rotate \, sect \, nth \, slice \, ecils or union.;
+#X text 107 374 look here for sect \, slice \, ecils \, join \, union:
+;
+#N canvas 901 231 672 509 more 0;
+#X msg 77 -463 this is a list;
+#X msg 116 -441 this is another list;
+#X text 74 -527 are common to both input lists:;
+#X obj 77 -487 t b b;
+#X obj 77 -506 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 77 -415 zl sect;
+#X obj 77 -389 print sect;
+#X text 74 -537 sect outputs the elements that;
+#X obj 347 -415 zl slice 3;
+#X msg 347 -494 1 2 3 4 5 6 7;
+#X obj 347 -361 print slice1;
+#X obj 404 -388 print slice2;
+#X floatatom 404 -443 5 0 0 0 - - -, f 5;
+#X msg 359 -470 a b c d e f g i;
+#X text 345 -562 slice is the only mode to use the 2nd;
+#X text 346 -549 outlet \, it divides the list into two;
+#X text 346 -536 lists at the specified element nr:;
+#X text 445 -444 change nr;
+#X msg 517 -498 1 2 3 4 5 6 7;
+#X floatatom 574 -447 5 0 0 0 - - -, f 5;
+#X msg 529 -474 a b c d e f g i;
+#X obj 517 -419 zl ecils 3;
+#X obj 517 -365 print ecils1;
+#X obj 574 -392 print ecils2;
+#X text 483 -518 ecils is the reverse;
+#X obj 191 -155 zl;
+#X msg 100 -245 mode join;
+#X obj 191 -133 print join;
+#X msg 218 -202 joined together;
+#X obj 191 -247 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144
+-1 -1;
+#X obj 191 -223 t b b;
+#X text 84 -279 in join mode lists are \, well joined:;
+#X text 85 -245 1;
+#X text 174 -246 2;
+#X msg 191 -180 these are;
+#X text 360 -280 union sends out the contents of;
+#X msg 408 -177 this is another list;
+#X obj 363 -218 t b b;
+#X obj 363 -236 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144
+-1 -1;
+#X obj 363 -156 zl union;
+#X obj 363 -135 print union;
+#X msg 363 -198 this is a list;
+#X text 361 -267 both lists \, without repeating any;
+#X text 361 -256 of the elements in both lists:;
+#N canvas 1037 345 405 241 but.... 0;
+#X obj 89 95 t b b;
+#X obj 89 76 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 89 167 zl union;
+#X obj 89 191 print union_but;
+#X msg 89 119 this is a list list list;
+#X msg 119 143 this is is is another list;
+#X text 43 18 I'm not sure if it should be this way ...;
+#X text 42 29 either is is is or one list seems logical.;
+#X text 43 42 how does max do it ?;
+#X connect 0 0 4 0;
+#X connect 0 1 5 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 4 0 2 0;
+#X connect 5 0 2 1;
+#X restore 507 -134 pd but....;
+#X text 447 -129 more...:;
+#X connect 0 0 5 0;
+#X connect 1 0 5 1;
+#X connect 3 0 0 0;
+#X connect 3 1 1 0;
+#X connect 4 0 3 0;
+#X connect 5 0 6 0;
+#X connect 8 0 10 0;
+#X connect 8 1 11 0;
+#X connect 9 0 8 0;
+#X connect 12 0 8 1;
+#X connect 13 0 8 0;
+#X connect 18 0 21 0;
+#X connect 19 0 21 1;
+#X connect 20 0 21 0;
+#X connect 21 0 22 0;
+#X connect 21 1 23 0;
+#X connect 25 0 27 0;
+#X connect 26 0 25 0;
+#X connect 28 0 25 1;
+#X connect 29 0 30 0;
+#X connect 30 0 34 0;
+#X connect 30 1 28 0;
+#X connect 34 0 25 0;
+#X connect 36 0 39 1;
+#X connect 37 0 41 0;
+#X connect 37 1 36 0;
+#X connect 38 0 37 0;
+#X connect 39 0 40 0;
+#X connect 41 0 39 0;
+#X restore 402 374 pd more;
+#X text 113 501 list;
+#X text 204 499 - list to process;
+#X text 204 449 - list to process;
+#X obj 79 592 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X text 113 591 list;
+#X text 204 589 - the processed list based on where split is (slice
+and ecils only);
+#X text 113 472 message;
+#X obj 12 752 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
+;
+#X connect 26 0 42 0;
+#X connect 27 0 42 0;
+#X connect 36 0 42 1;
+#X connect 38 0 42 0;
+#X connect 39 0 42 0;
+#X connect 42 0 28 0;
+#X connect 47 0 57 0;
+#X connect 48 0 47 0;
+#X connect 49 0 47 0;
+#X connect 50 0 47 1;
+#X connect 52 0 47 0;
+#X connect 54 0 47 0;

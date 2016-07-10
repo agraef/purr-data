@@ -1,0 +1,93 @@
+#N canvas 217 53 552 593 10;
+#X obj -1 572 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 354 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 332 333 433 291 META 0;
+#X text 38 176 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 38 43 LICENSE SIBSD;
+#X text 38 156 AUTHOR Miller Puckette;
+#X text 38 196 RELEASE_DATE 1997;
+#X text 38 136 LIBRARY cyclone;
+#X text 38 96 INLET_0 signal;
+#X text 38 116 OUTLET_0 signal;
+#X text 38 63 DESCRIPTION performs bitwise boolean operations on a
+floating point signal as bits or as a float.;
+#X text 38 23 KEYWORDS bitwise bit boolean signal shift;
+#X text 38 216 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X restore 501 574 pd META;
+#X obj -1 409 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 446 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 118 515 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 6 31 bitand~;
+#X obj 60 31 bitor~;
+#X obj 108 31 bitnot~;
+#X restore 215 574 pd Related_objects;
+#X obj 76 418 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 549 40 empty \$0-pddp.cnv.header bitshift~ 3 12
+0 18 -204280 -1 0;
+#X text 112 418 signal;
+#X text 112 366 signal;
+#X floatatom 55 142 0 0 0 0 - - -;
+#X msg 55 162 shift \$1;
+#X floatatom 404 145 0 0 0 0 - - -;
+#X msg 404 165 mode \$1;
+#X obj 29 226 clip~ -1 1;
+#X floatatom 342 145 0 0 0 0 - - -;
+#X msg 342 165 shift \$1;
+#X text 14 92 bitwise operation on a signal as bits;
+#X floatatom 291 145 0 0 0 0 - - -;
+#X obj 291 165 sig~ 1;
+#X floatatom 62 246 0 0 0 0 - - -;
+#X obj 29 270 *~ 0.2;
+#X obj 29 312 dac~;
+#X obj 29 118 cycle~ 440;
+#X text 280 287 args: <shift> <mode>. both default to 0;
+#X text 280 111 bitwise operation on signals as integers;
+#X obj 291 199 bitshift~ 1 1;
+#X obj 291 253 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
+-262144 -1 -1 0 256 0;
+#X obj 29 191 bitshift~ 8 0;
+#X obj 291 228 Snapshot~ 100;
+#X text 167 480 - modes \; mode 0: treat floating point signal input
+as raw 32 bit value \; mode 1: convert floating point signal input
+to integer \;;
+#X text 93 481 2) float;
+#X text 94 456 1) shift;
+#X text 167 455 - number of bits to shift;
+#X text 167 367 - signal to bitshift \, can be treated as signal of
+bits or signal as float/int;
+#X text 167 418 - output of signal bit shifted;
+#X obj 485 3 bitshift~;
+#X obj 480 51 pddp/dsp;
+#X text 17 22 Performs bitwise boolean operations on a foat signal.
+;
+#X text 18 52 Works on floating point signal as bits or as an integer:
+;
+#X obj 76 368 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 5 572 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
+;
+#X connect 10 0 11 0;
+#X connect 11 0 28 0;
+#X connect 12 0 13 0;
+#X connect 13 0 26 0;
+#X connect 14 0 21 0;
+#X connect 15 0 16 0;
+#X connect 16 0 26 0;
+#X connect 18 0 19 0;
+#X connect 19 0 26 0;
+#X connect 20 0 21 1;
+#X connect 21 0 22 0;
+#X connect 21 0 22 1;
+#X connect 23 0 28 0;
+#X connect 26 0 29 0;
+#X connect 28 0 14 0;
+#X connect 29 0 27 0;

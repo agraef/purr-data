@@ -1,0 +1,130 @@
+#N canvas 420 35 559 584 10;
+#X obj 0 895 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj 1 389 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 613 364 351 231 META 0;
+#X text -16 143 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text -16 23 LICENSE SIBSD;
+#X text -16 123 AUTHOR Miller Puckette;
+#X text -16 163 RELEASE_DATE 1997;
+#X text -16 103 LIBRARY cyclone;
+#X text -16 183 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text -16 3 KEYWORDS signal switching matrix mixing;
+#X text -16 43 DESCRIPTION a switching or mixing matrix for signals
+;
+#X text -16 63 INLET_N signal message;
+#X text -16 83 OUTLET_N signal list;
+#X restore 500 897 pd META;
+#X obj 2 468 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 524 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 2 755 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 309 485 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 212 897 pd Related_objects;
+#X obj 79 398 cnv 17 3 33 empty \$0-pddp.cnv.let.0 n 5 9 0 16 -228856
+-162280 0;
+#X obj 80 479 cnv 17 3 33 empty \$0-pddp.cnv.let.0 n 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header matrix~ 3 12 0
+18 -204280 -1 0;
+#X text 11 23 a switching or mixing matrix for signals;
+#X obj 70 354 dac~;
+#X obj 70 326 *~ 0.15;
+#X obj 108 297 *~ 0.15;
+#X obj 71 249 matrix~ 6 2 1;
+#X obj 70 93 osc~ 111;
+#X obj 87 117 osc~ 222;
+#X obj 102 142 osc~ 333;
+#X obj 116 167 osc~ 444;
+#X obj 131 190 osc~ 555;
+#X obj 146 215 osc~ 666;
+#X obj 146 274 print dump;
+#X msg 60 59 dump;
+#X text 95 55 <-- outputs the current gains of all connections out
+the rightmost outlet \, in lists like this: inlet# outlet# gain;
+#X text 110 396 signal;
+#X text 179 396 - signals to mix or switch;
+#X text 110 416 message;
+#X text 110 478 signal;
+#X text 179 417 - dump: outputs the current gains of all connections
+out the rightmost outlet in list: inlet # \, outlet# \, gain;
+#X text 179 478 - mixed or switched singals from inlets;
+#X text 91 560 2) float - argument is the number of signal outlets
+;
+#X text 91 539 1) float - argument is the number of inlets;
+#X text 91 579 3) float - argument is optional \, a 1 turns on "mix
+mode" \, otherwise the default is "switch mode";
+#X text 91 682 mix mode:;
+#X text 91 614 switch mode:;
+#X text 108 627 By default \, [matrix~] is in "switch mode". In switch
+mode \, the connections are either on or off. This can cause audible
+clicks when switching (Max/MSP calls this "binary mode").;
+#X text 108 694 "mix mode" mixes the incoming signals using the values
+from the incoming list to specify the gain \, so they can change the
+amplitude based on that number. mix mode requires more CPU time. (Max/MSP
+calls this "non-binary mode").;
+#X text 95 783 If you want to specify the gain of each connection \,
+you must use three- or four-element list messages rather than the 'connect'
+message. Connections formed with the 'connect' message always have
+a gain specified by the third argument initially given to the object.
+However \, subsequent list messages can alter the gain of connections
+formed with the 'connect' message.;
+#X text 110 498 list;
+#X text 179 498 - last outlet dumps all info in list;
+#X obj 464 4 matrix~ 1 1 1;
+#X obj 480 50 pddp/dsp;
+#N canvas 966 197 468 311 more... 0;
+#X msg 273 47 connect 0 2;
+#X text 243 48 i.e.;
+#X text 243 88 i.e.;
+#X msg 273 87 disconnect 0 2;
+#X text 69 101 disconnect inlet# from outlet#;
+#X text 54 11 Inlets and outlets are numbered from left to right \,
+starting at zero (i.e. hot inlets are 0).;
+#X text 72 64 connect inlet# to outlet#;
+#X text 243 128 i.e.;
+#X msg 273 127 0 2 0.5;
+#X text 69 142 if gain is non-zero \, connect inlet# to outlet#. If
+gain is zero \, disconnect inlet# from outlet#;
+#X msg 343 127 0 2 0;
+#X text 243 178 i.e.;
+#X msg 273 177 0 2 0.5 500;
+#X msg 363 177 0 2 0 1000;
+#X text 69 194 connect inlet# to outlet# with "gain" using "ramptime"
+in milliseconds;
+#X msg 264 277 clear;
+#X text 243 228 i.e.;
+#X text 69 247 sets the default time in milliseconds used to change
+"gain" when in mix mode;
+#X msg 273 227 ramp 500;
+#X msg 353 227 ramp 1000;
+#X text 53 278 clear - remove all connections.;
+#X text 53 227 ramp ramptime;
+#X text 53 177 inlet# outlet# gain ramptime;
+#X text 53 127 inlet# outlet# gain;
+#X text 53 87 disconnect inlet# outlet#;
+#X text 53 47 connect inlet# outlet#;
+#X restore 346 293 pd more...;
+#X text 179 445 - connect \, disconnect \, ramp: as specified in pd
+more...;
+#X obj 16 893 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
+;
+#X connect 12 0 11 0;
+#X connect 13 0 11 1;
+#X connect 14 0 12 0;
+#X connect 14 1 13 0;
+#X connect 14 2 21 0;
+#X connect 15 0 14 0;
+#X connect 16 0 14 1;
+#X connect 17 0 14 2;
+#X connect 18 0 14 3;
+#X connect 19 0 14 4;
+#X connect 20 0 14 5;
+#X connect 22 0 14 0;

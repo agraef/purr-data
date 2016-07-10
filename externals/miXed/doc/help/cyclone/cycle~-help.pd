@@ -1,0 +1,140 @@
+#N canvas 415 34 552 673 10;
+#X obj -1 925 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 611 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 591 463 372 220 META 0;
+#X text 11 148 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 11 22 LICENSE SIBSD;
+#X text 11 130 AUTHOR Miller Puckette;
+#X text 11 166 RELEASE_DATE 1997;
+#X text 11 112 LIBRARY cyclone;
+#X text 11 4 KEYWORDS signal oscillator function generator sine wave
+;
+#X text 11 40 DESCRIPTION table-lookup oscillator or function generator
+;
+#X text 11 58 INLET_0 float signal;
+#X text 11 76 INLET_1 float signal;
+#X text 11 94 OUTLET_0 signal;
+#X text 11 184 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X restore 499 927 pd META;
+#X obj -1 720 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 757 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj -1 833 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8
+12 0 13 -228856 -1 0;
+#N canvas 306 573 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 206 927 pd Related_objects;
+#X obj 77 621 cnv 17 3 33 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 77 673 cnv 17 3 33 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header cycle~ 3 12 0 18
+-204280 -1 0;
+#X text 11 23 Table-lookup oscillator or function generator;
+#X floatatom 322 483 0 0 0 0 - - -;
+#X obj 301 410 loadbang;
+#X msg 301 435 22.5;
+#X text 295 333 4 Using your function;
+#X obj 301 506 *~ 0;
+#X obj 301 461 cycle~ buffsky;
+#X msg 31 380 437;
+#X obj 31 355 loadbang;
+#X obj 32 215 *~ 0.2;
+#X obj 32 179 cycle~ 440;
+#X obj 31 505 *~ 0.2;
+#X floatatom 31 405 0 0 0 0 - - -;
+#X msg 31 430 \$1 400;
+#X obj 31 455 line~;
+#X obj 31 480 cycle~;
+#X obj 31 249 dac~;
+#X obj 316 243 *~ 0.2;
+#X obj 350 173 phasor~ 660;
+#X obj 316 207 cycle~;
+#X text 26 145 frequency input (float or signal);
+#X text 295 146 phase input (float or signal);
+#X text 295 127 2 Driven by phase only (frequency is 0):;
+#X text 26 128 1 argument sets frequency (default 0);
+#N canvas 281 140 183 210 generate-buffer~ 0;
+#X obj 40 30 loadbang;
+#N canvas 50 40 152 247 sawtooth 0;
+#X obj 80 145 - 2;
+#X obj 80 120 * 2;
+#X obj 22 119 * 2;
+#X obj 22 95 split 0 0.5;
+#X obj 22 59 / 512;
+#X obj 22 33 inlet;
+#X obj 22 208 outlet;
+#X connect 0 0 6 0;
+#X connect 1 0 0 0;
+#X connect 2 0 6 0;
+#X connect 3 0 2 0;
+#X connect 3 1 1 0;
+#X connect 4 0 3 0;
+#X connect 5 0 4 0;
+#X restore 80 120 pd sawtooth;
+#X obj 40 143 pack 0 0;
+#X obj 40 98 t f f;
+#X obj 40 76 line 0 1;
+#X msg 40 56 0 \, 512 512;
+#X obj 40 164 peek~ buffsky;
+#X connect 0 0 5 0;
+#X connect 1 0 2 1;
+#X connect 2 0 6 0;
+#X connect 3 0 2 0;
+#X connect 3 1 1 0;
+#X connect 4 0 3 0;
+#X connect 5 0 4 0;
+#X restore 300 355 pd generate-buffer~;
+#X text 352 484 listen?;
+#X obj 300 376 table buffsky 512;
+#X text 26 332 3 Using frequency input;
+#X text 109 622 float;
+#X text 109 637 signal;
+#X text 164 628 - set frequnecy;
+#X obj 77 729 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 109 671 float;
+#X text 109 686 signal;
+#X text 164 677 - drive by phase only (frequency is 0);
+#X text 109 728 signal;
+#X text 164 726 - the signal with given frequency or phase;
+#X text 90 776 1) float;
+#X text 164 776 - default frequency;
+#X text 108 794 buffer;
+#X text 164 794 - can give function stored in buffer object;
+#X obj 503 4 cycle~;
+#X obj 483 50 pddp/dsp;
+#X obj 316 273 dac~;
+#X obj 31 534 dac~;
+#X obj 301 535 dac~;
+#X text 27 52 cycle~ uses a stored table of 512 samples to generate
+functions. By default it uses a sine wave \, but you can give it a
+function stored in a buffer~ object.;
+#X text 96 850 Symbol argument sets name of table to play from. Additional
+int argument after that sets sample offset into the table (default
+0);
+#X obj 6 926 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
+;
+#X connect 11 0 15 1;
+#X connect 12 0 13 0;
+#X connect 13 0 16 0;
+#X connect 15 0 55 1;
+#X connect 16 0 15 0;
+#X connect 17 0 22 0;
+#X connect 18 0 17 0;
+#X connect 19 0 26 0;
+#X connect 20 0 19 0;
+#X connect 21 0 54 1;
+#X connect 22 0 23 0;
+#X connect 23 0 24 0;
+#X connect 24 0 25 0;
+#X connect 25 0 21 0;
+#X connect 27 0 53 0;
+#X connect 28 0 29 1;
+#X connect 29 0 27 0;

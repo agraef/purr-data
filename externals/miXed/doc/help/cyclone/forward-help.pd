@@ -1,0 +1,63 @@
+#N canvas 421 38 554 460 10;
+#X obj -1 437 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj 1 261 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 601 283 358 193 META 0;
+#X text 11 109 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 11 19 LICENSE SIBSD;
+#X text 11 91 AUTHOR Miller Puckette;
+#X text 11 127 RELEASE_DATE 1997;
+#X text 11 73 LIBRARY cyclone;
+#X text 11 55 INLET_0 anything;
+#X text 11 1 KEYWORDS send remote message;
+#X text 11 37 DESCRIPTION send remote messages;
+#X text 11 145 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X restore 499 439 pd META;
+#X obj 0 305 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 342 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 304 365 430 111 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 10 28 receive;
+#X obj 62 28 send;
+#X restore 207 439 pd Related_objects;
+#X obj 79 274 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header forward 3 12 0
+18 -204280 -1 0;
+#X text 11 23 send remote messages;
+#X floatatom 334 173 5 0 0 0 - - -, f 5;
+#X obj 47 206 forward foo;
+#X floatatom 64 113 5 0 0 0 - - -, f 5;
+#X msg 80 165 send bar;
+#X obj 47 79 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X msg 80 146 send foo;
+#X text 111 274 anything;
+#X text 179 274 - thing to forward;
+#X text 94 361 1) anything;
+#X text 179 361 - initial message object holds to forward;
+#X obj 499 6 forward;
+#X text 65 79 bang;
+#X text 101 113 number;
+#X text 21 56 send anything from forward to receive:;
+#X obj 334 147 receive foo;
+#X text 122 207 arg matches receive's arg;
+#X text 136 146 change where the command is sent;
+#X floatatom 441 173 5 0 0 0 - - -, f 5;
+#X obj 441 147 receive bar;
+#X text 111 314 (none);
+#X text 319 119 receive remotely gets the message;
+#X obj 10 437 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
+;
+#X connect 11 0 10 0;
+#X connect 12 0 10 0;
+#X connect 13 0 10 0;
+#X connect 14 0 10 0;
+#X connect 23 0 9 0;
+#X connect 27 0 26 0;

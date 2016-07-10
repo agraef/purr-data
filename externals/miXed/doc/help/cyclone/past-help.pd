@@ -1,0 +1,122 @@
+#N canvas 428 35 558 453 10;
+#X obj -1 426 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 255 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 483 187 494 275 META 0;
+#X text 12 95 RELEASE_VERSION 0.41.4;
+#X text 158 96 Keywords:;
+#X text 12 5 GENRE help;
+#X text 12 65 DESCRIPTION using help patches in Pure Data;
+#X text 12 25 KEYWORDS needs_work (mention how pd finds help files
+and replace 'common_terminology' subpatch with link to glossary);
+#X text 117 111 control- control rate objects \; signal- audiorate
+objects \; data_structure- objects for creating and managing data structures
+\; nonlocal- objects that can make nonlocal connections to other objects
+(i.e. \, communicate with other objects without using wires) \; storage-
+objects whose main function is to store a value \; array- objects for
+creating and editing arrays \; GUI- objects that provide a graphical
+user interface \; MIDI- objects that provide MIDI functionality \;
+time- objects that measure time or which the user can use to manipulate
+time \; unfinished- help patches under construction \; orphan- help
+patches that can't get accessed by right clicking on the corresponding
+object (like [drawsymbol]) \; block-oriented- see Matju's definition
+\; analysis- object that does analysis \; conversion- convert from
+one set of units to another \; filter \; network \; trigonometry \;
+soundfile- object that can play \, manipulate \, and/or save a sound
+file (wav \, ogg \, mp3 \, etc.). \; random- object outputs a random
+value \, list \, or signal \; symbol_op- object that manipulates or
+stores a symbol \; list_op- object that manipulates or stores a list
+\; canvas_op- object whose behavior only makes sense in terms of a
+canvas \; patchfile_op- object whose behavior only makes sense in terms
+of a patchfile \; ramp - a ramp \; bandlimited \; pd-op - object that
+can report on or manipulate global Pd operation \; anything_op - store
+or manipulate an anything \; abstraction_op - object that only makes
+sense in terms of abstractions;
+#X restore 499 428 pd META;
+#X obj -1 337 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 380 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 323 350 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 207 428 pd Related_objects;
+#X obj 78 264 cnv 17 3 56 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 79 350 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header past 3 12 0 18
+-204280 -1 0;
+#X obj 514 8 past;
+#X text 11 23 report when input increases beyond a certain number;
+#X obj 74 166 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 74 142 past 4;
+#X floatatom 74 67 5 0 0 0 - - -, f 5;
+#X text 127 144 one arg sets the limit to get past;
+#X msg 117 108 set 8;
+#X text 160 108 (re)set the limit to pass by;
+#X msg 117 81 clear;
+#X text 157 82 forget previous input;
+#X text 108 263 float;
+#X text 179 263 - number to check if past limit;
+#X text 108 284 set x;
+#X text 179 284 - set the new limit to x;
+#X text 108 305 clear;
+#X text 179 305 - forget previous input;
+#X text 108 350 bang;
+#X text 179 350 - bang if input number is more than limit;
+#X text 90 394 1) float;
+#X text 179 394 - initial limit;
+#N canvas 902 165 577 369 weirdness 0;
+#X obj 97 178 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 27 55 5 0 0 0 - - -, f 5;
+#X msg 97 55 set 10 20 30;
+#X obj 27 103 pack f f;
+#X obj 27 79 t f f;
+#X obj 97 147 past 2 5;
+#X msg 141 98 20 30 40;
+#X msg 141 78 0 0 0;
+#X msg 141 118 40 20 wrdlbrnft;
+#X msg 404 72 11 22 33;
+#X obj 375 176 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 375 150 past 10 20 30;
+#X msg 375 48 0 0 0;
+#X msg 426 93 11 33;
+#X msg 440 113 33;
+#X text 49 288 > item is greater than (>) a corresponding threshold
+\, or if;
+#X text 50 300 > _all_ list elements are greater or equal (>=). That
+is how;
+#X text 50 312 > it looks like in Max but I might be wrong ...;
+#X text 49 276 > its list handling is weird indeed \, it bangs if _any_
+list;
+#X text 94 19 now theses are a bit strange:;
+#X text 50 259 this is a quote from an email Krzysztof Czaja sent:
+;
+#X connect 1 0 4 0;
+#X connect 2 0 5 0;
+#X connect 3 0 5 0;
+#X connect 4 0 3 0;
+#X connect 4 1 3 1;
+#X connect 5 0 0 0;
+#X connect 6 0 5 0;
+#X connect 7 0 5 0;
+#X connect 8 0 5 0;
+#X connect 9 0 11 0;
+#X connect 11 0 10 0;
+#X connect 12 0 11 0;
+#X connect 13 0 11 0;
+#X connect 14 0 11 0;
+#X restore 441 215 pd weirdness;
+#X text 238 215 list behavior is a bit strange:;
+#X obj 14 428 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
+;
+#X connect 12 0 11 0;
+#X connect 13 0 12 0;
+#X connect 15 0 12 0;
+#X connect 17 0 12 0;

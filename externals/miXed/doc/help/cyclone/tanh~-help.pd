@@ -1,0 +1,90 @@
+#N canvas 426 34 558 566 10;
+#X obj 0 537 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj 0 389 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 487 320 494 254 META 0;
+#X text 63 64 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 63 -69 LICENSE SIBSD;
+#X text 63 44 AUTHOR Miller Puckette;
+#X text 63 84 RELEASE_DATE 1997;
+#X text 63 24 LIBRARY cyclone;
+#X text 63 -16 INLET_0 signal;
+#X text 63 4 OUTLET_0 signal;
+#X text 63 104 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 0.201305;
+#X text 63 -89 KEYWORDS hyperbolic tan tangent tanh signal;
+#X text 63 -49 DESCRIPTION takes the hyperbolic tangent function for
+signals;
+#X restore 504 539 pd META;
+#X obj 0 429 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 468 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 504 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 318 463 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 38 34 cosh~;
+#X obj 38 60 sinh~;
+#X restore 204 539 pd Related_objects;
+#X obj 82 400 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 82 440 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 0 -2 cnv 15 552 40 empty \$0-pddp.cnv.header tanh~ 3 12 0 18
+-204280 -1 0;
+#X obj 0 539 pddp/pddplink help.pd -text help;
+#X text 110 400 signal;
+#X text 110 440 signal;
+#X text 108 478 (none);
+#X obj 511 7 tanh~;
+#X text 16 23 Hyperbolic tangent function (tanh(x)) for signals;
+#X floatatom 76 140 0 0 0 0 - - -;
+#X obj 55 163 *~ 1;
+#X obj 55 119 cycle~ 2;
+#X obj 331 160 -~ 3.14159;
+#X obj 331 137 *~ 6.28319;
+#X obj 331 115 phasor~ 2;
+#X obj 55 219 Scope~ 139 77 256 3 128 -1 1 0 0 0 0 102 255 51 135 135
+135 0;
+#X obj 331 223 Scope~ 142 75 256 3 128 -1 1 0 0 0 0 102 255 51 135
+135 135 0;
+#X obj 331 191 tanh~;
+#X obj 55 187 tanh~;
+#X text 177 400 - input to tanh function;
+#X text 177 440 - output of tanh function;
+#X obj 485 53 pddp/dsp;
+#N canvas 1039 231 450 300 analog 0;
+#X obj 220 69 +~ 11;
+#X obj 220 42 *~ 10;
+#X obj 220 18 cycle~ 0.5;
+#X obj 140 18 cycle~ 110;
+#X obj 140 89 *~ 1;
+#X obj 140 157 *~ 0.1;
+#X obj 140 194 dac~;
+#X text 182 134 outputs soft clipped signal;
+#X text 42 -21 can be used to simulate analog distortion \, and is
+much "smoother" than using clip~;
+#X obj 140 122 tanh~;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X connect 3 0 4 0;
+#X connect 4 0 9 0;
+#X connect 5 0 6 0;
+#X connect 5 0 6 1;
+#X connect 9 0 5 0;
+#X restore 331 337 pd analog distortion;
+#X text 50 78 turn a sine wave into a square wave by cranking up the
+volume!;
+#X text 122 336 how to use for analog distortion:;
+#X connect 16 0 17 1;
+#X connect 17 0 25 0;
+#X connect 18 0 17 0;
+#X connect 19 0 24 0;
+#X connect 20 0 19 0;
+#X connect 21 0 20 0;
+#X connect 24 0 23 0;
+#X connect 25 0 22 0;

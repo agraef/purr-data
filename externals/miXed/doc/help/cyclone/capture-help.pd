@@ -1,0 +1,102 @@
+#N canvas 334 53 553 637 10;
+#X obj -1 642 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 351 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 469 405 409 263 META 0;
+#X text 43 102 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 43 -42 LICENSE SIBSD;
+#X text 43 84 AUTHOR Miller Puckette;
+#X text 43 120 RELEASE_DATE 1997;
+#X text 43 66 LIBRARY cyclone;
+#X text 43 -60 KEYWORDS store float edit;
+#X text 43 -24 DESCRIPTION store and edit numbers;
+#X text 43 -6 INLET_0 float;
+#X text 43 12 INLET_1 list;
+#X text 43 30 INLET_2 messages;
+#X text 43 48 OUTLET_0 list;
+#X text 43 138 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X restore 497 644 pd META;
+#X obj -1 515 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 552 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 232 560 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 7 30 coll;
+#C restore;
+#X obj 63 30 funbuff;
+#C restore;
+#X obj 117 30 textfile;
+#X restore 213 644 pd Related_objects;
+#X obj 80 361 cnv 17 3 55 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 80 525 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header capture 3 12 0
+18 -204280 -1 0;
+#X text 12 23 store and edit numbers;
+#X obj 54 284 capture 64 x;
+#X msg 113 148 open;
+#X floatatom 54 79 5 0 0 0 - - -;
+#X msg 27 56 10 20 30 40;
+#X msg 113 127 dump;
+#X obj 54 309 print dump;
+#X msg 113 106 clear;
+#X text 125 57 list is stored from first to last;
+#X text 146 289 second arg is x - values are in hex;
+#X text 230 302 m - values < 128 decimal \, larger numbers are hex
+;
+#X msg 113 167 wclose;
+#X text 101 79 numbers are stored sequentially;
+#X msg 112 190 count;
+#X msg 112 211 write;
+#X msg 112 235 write /tmp/test.txt;
+#X text 145 277 first arg is number of values to store (default 512)
+;
+#X text 212 329 none - values are decimal \, supports float;
+#X text 230 316 d - decimal \, default max behaviour \, only ints;
+#X text 108 359 float;
+#X text 180 359 - numbers are stored sequentially;
+#X text 108 378 list;
+#X text 180 375 - list is stored from first to last;
+#X text 108 399 messages;
+#X text 163 146 open editing window;
+#X text 163 129 send out all stored values sequentially;
+#X text 165 106 clear contents;
+#X text 165 165 close editing window;
+#X text 169 188 print number of items to the console;
+#X text 166 210 save to textfile (dialog box asks for filename);
+#X text 247 234 write to file (no dialog);
+#X text 180 397 - clear: clear contents;
+#X text 180 410 - dump: send out all stored values sequentially;
+#X text 180 424 - open: open editing window;
+#X text 180 438 - wclose: close editing window;
+#X text 180 453 - count: print number of items to the console;
+#X text 180 468 - write: save to textfile (dialog box asks for filename)
+;
+#X text 108 526 list;
+#X text 180 523 - list of numbers stored;
+#X text 180 483 - write /path/to/file: write to file (no dialog);
+#X text 141 585 m - values < 128 decimal \, larger numbers are hex
+;
+#X text 123 610 none - values are decimal \, supports float;
+#X text 141 599 d - decimal \, default max behaviour \, only ints;
+#X text 98 559 1) float - number of values to store (default 512);
+#X text 98 572 2) str x - values are in hex;
+#X obj 498 3 capture;
+#X obj 7 642 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
+;
+#X connect 10 0 15 0;
+#X connect 11 0 10 0;
+#X connect 12 0 10 0;
+#X connect 13 0 10 0;
+#X connect 14 0 10 0;
+#X connect 16 0 10 0;
+#X connect 20 0 10 0;
+#X connect 22 0 10 0;
+#X connect 23 0 10 0;
+#X connect 24 0 10 0;
