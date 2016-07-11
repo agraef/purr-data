@@ -1416,7 +1416,7 @@ fprintf(stderr, "guidir is %s\n", guidir);
         //strcat(scriptbuf, "/" PDBINDIR "pd.tk\"");
         //sys_bashfilename(scriptbuf, scriptbuf);
 
-        sprintf("scriptbuf", "\""); /* use quotes in case there are spaces */
+        sprintf(scriptbuf, "\""); /* use quotes in case there are spaces */
         strcat(scriptbuf, sys_libdir->s_name);
         strcat(scriptbuf, "/" PDBINDIR);
         sys_bashfilename(scriptbuf, scriptbuf);
