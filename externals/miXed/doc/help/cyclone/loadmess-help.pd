@@ -1,0 +1,99 @@
+#N canvas 700 23 564 664 10;
+#X obj 6 614 cnv 15 552 21 empty empty empty 20 12 0 14 -233017 -33289
+0;
+#N canvas 616 310 382 346 META 0;
+#X text 0 19 LICENSE SIBSD;
+#X text 0 133 LIBRARY cyclone;
+#X text 0 38 DESCRIPTION fold or wrap a signal within a given range
+;
+#X text 1 153 VERSION 0.2-beta1;
+#X text 1 171 AUTHOR Krzysztof Czaja;
+#X text 2 189 RELEASE_DATE 2002;
+#X text 3 208 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
+;
+#X text 3 240 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
+Wilkes for Pd-extended 0.42 to conform to the PDDP template. Alex Cleveland
+updated this patch for Pd-l2ork version 2013.05.28. Fred Jan Kraan
+adapted the patch to pd-extended 2015-02-02;
+#X text 0 76 INLET_1 flaot;
+#X text 0 95 INLET_2 float;
+#X text 0 57 INLET_0 float/list;
+#X text 0 114 OUTLET_0 float;
+#X text 0 0 KEYWORDS range limiter (fold \, wrap \, clip);
+#X restore 507 616 pd META;
+#X obj 6 452 cnv 3 550 3 empty empty outlets 8 12 0 13 -228856 -1 0
+;
+#X obj 6 499 cnv 3 550 3 empty empty arguments 8 12 0 13 -228856 -1
+0;
+#N canvas 312 452 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty empty empty 3 12 0 14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 203 619 pd Related_objects;
+#X obj 84 357 cnv 17 3 75 empty empty 0 5 9 0 16 -228856 -162280 0
+;
+#X obj 84 462 cnv 17 3 17 empty empty 0 5 9 0 16 -228856 -162280 0
+;
+#X obj 6 39 cnv 15 552 40 empty empty loadmess 3 12 0 18 -204280 -1
+0;
+#X obj 6 346 cnv 3 550 3 empty empty inlets 8 12 0 13 -228856 -1 0
+;
+#X obj 6 550 cnv 3 550 3 empty empty attributes 8 12 0 13 -228856 -1
+0;
+#X obj 96 225 loadmess bob;
+#X obj 96 259 print;
+#X obj 355 241 print;
+#X obj 212 235 print;
+#X obj 501 47 loadmess;
+#X text 24 62 Send a message when a patch is loaded;
+#X text 134 357 bang;
+#X text 139 390 set;
+#X text 178 356 - Sending a bang message to a loadmess object causes
+it to output its typed message.;
+#X text 180 462 - The loadmess object's loaded message is sent when
+the patch is loaded or when banged/clicked.;
+#X text 180 514 - message to be sent (default "bang").;
+#X obj 64 180 bng 18 250 50 0 empty empty empty 17 7 0 10 -228856 -1
+-1;
+#X text 147 561 @defer <int> (default: 0): When enabled \, the output
+of the loadmess object is deferred (a loadmess with @defer 0 will be
+sent before and have priority over @defer 1);
+#X text 93 515 1) anything;
+#X text 110 462 anything;
+#X msg 116 196 set bob;
+#X text 110 299 Double-click on [loadmess] to output its loaded message!
+;
+#X obj 212 206 loadmess foo 99 bar;
+#N canvas 439 241 715 321 (subpatch) 0;
+#X obj 51 51 cnv 15 552 28 empty empty Cyclone: 6 13 0 18 -128992 -233080
+0;
+#X obj 217 65 cnv 5 5 5 empty empty Library 0 0 0 12 -128992 -233080
+0;
+#X obj 275 65 cnv 5 5 5 empty empty of 0 0 0 12 -128992 -233080 0;
+#X obj 298 64 cnv 5 5 5 empty empty objects 0 0 0 12 -128992 -233080
+0;
+#X obj 356 64 cnv 5 5 5 empty empty cloned 0 0 0 12 -128992 -233080
+0;
+#X obj 406 64 cnv 5 5 5 empty empty from 0 0 0 12 -128992 -233080 0
+;
+#X obj 444 64 cnv 5 5 5 empty empty Max/MSP 0 0 0 12 -128992 -233080
+0;
+#X coords 0 -1 1 1 554 30 1 50 50;
+#X restore 5 3 pd;
+#X msg 96 170 set blah 5 2 1 \, bang;
+#X obj 355 206 loadmess 3 4 @defer 1;
+#X msg 355 174 set 1 2;
+#X msg 418 173 set 3 4;
+#X text 79 97 [loadmess] outputs a message automatically when the patch
+is loaded \, or when the patch is part of another file that is opened.
+;
+#X text 180 390 - The word set followed by any message will set the
+message held by loadmess without any output (can be used for output
+in conjunction with bang).;
+#X connect 10 0 11 0;
+#X connect 21 0 10 0;
+#X connect 25 0 10 0;
+#X connect 27 0 13 0;
+#X connect 29 0 10 0;
+#X connect 30 0 12 0;
+#X connect 31 0 30 0;
+#X connect 32 0 30 0;

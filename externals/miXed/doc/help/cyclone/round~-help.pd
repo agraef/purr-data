@@ -1,0 +1,206 @@
+#N canvas 484 188 560 779 10;
+#X obj 3 724 cnv 15 552 21 empty empty empty 20 12 0 14 -233017 -33289
+0;
+#X obj 3 493 cnv 3 550 3 empty empty inlets 8 12 0 13 -228856 -1 0
+;
+#N canvas 582 203 552 521 META 0;
+#X text 0 20 LICENSE SIBSD;
+#X text 0 123 LIBRARY cyclone;
+#X text 0 143 VERSION 0.2-beta1;
+#X text 2 198 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
+;
+#X text 2 230 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
+Wilkes for Pd-extended 0.42 to conform to the PDDP template. Alex Cleveland
+updated this patch for Pd-l2ork version 2013.05.28. Fred Jan Kraan
+adapted the patch to pd-extended 2015-02-02;
+#X text 0 161 AUTHOR Derek Kwan;
+#X text 0 0 KEYWORDS round;
+#X text 1 179 RELEASE_DATE 2016;
+#X text 0 60 INLET_0 float list message;
+#X text 0 80 INLET_1 float;
+#X text 2 101 OUTLET_0 float list;
+#X text 0 40 DESCRIPTION rounds floats or lists of floats;
+#X restore 506 726 pd META;
+#X obj 3 592 cnv 3 550 3 empty empty outlets 8 12 0 13 -228856 -1 0
+;
+#X obj 3 629 cnv 3 550 3 empty empty arguments 8 12 0 13 -228856 -1
+0;
+#N canvas 283 325 428 171 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty empty empty 3 12 0 14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 13 55 cyclone/minimum~;
+#X obj 13 33 cyclone/maximum~;
+#X obj 13 77 cyclone/pong~;
+#X obj 13 99 cyclone/round~;
+#X restore 206 726 pd Related_objects;
+#X obj 79 601 cnv 17 3 17 empty empty 0 5 9 0 16 -228856 -162280 0
+;
+#X obj 3 38 cnv 15 552 40 empty empty round~ 3 12 0 18 -204280 -1 0
+;
+#X text 123 643 1) float;
+#X obj 78 554 cnv 17 3 25 empty empty 1 5 9 0 16 -228856 -162280 0
+;
+#X obj 79 502 cnv 17 3 45 empty empty 0 5 9 0 16 -228856 -162280 0
+;
+#X obj 3 667 cnv 3 550 3 empty empty attributes 8 12 0 13 -228856 -1
+0;
+#X text 6 60 rounds floats or lists of floats;
+#X text 111 602 float/list;
+#X floatatom 281 265 0 0 0 0 - - -;
+#X text 193 499 - value(s) to round;
+#X obj 284 240 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -228856
+-1 -1 0 1;
+#X msg 154 236 nearest \$1;
+#X obj 154 204 tgl 25 0 empty empty empty 17 7 0 10 -228856 -1 -1 0
+1;
+#X text 191 602 - approximated value(s);
+#X text 88 690 @nearest <int>;
+#X text 191 643 - value to round to (default = 0 \, no rounding);
+#X text 192 690 - sets mode: non zero = round (default) \, 0 = truncate
+;
+#X text 186 207 (1 = round \, 0 truncate);
+#X text 193 519 - "nearest" followed by 0 sets to "truncate mode" \,
+non zero number sets to "round mode" (default).;
+#X text 44 99 [round~] approximates positive and negative signal values
+to an integer multiple of any given number that is greater or equal
+to 0 (0 makes no approximention - original input is output). It works
+in two modes \, rounding to the nearest multiple (default) or to the
+approximating to the truncated multiple value.;
+#X obj 110 294 cyclone/round~ 0.1 @nearest 0;
+#X text 135 500 signal;
+#X text 99 555 float/signal;
+#X text 191 554 - value to round to (whose multple values will be approximated
+to);
+#X text 128 520 nearest;
+#X obj 509 48 round~;
+#X obj 110 331 cyclone/Scope~ 269 134 2 3 128 -1 1 190 0 0 0 205 229
+232 74 79 77 96 98 102 0;
+#N canvas 439 241 715 321 (subpatch) 0;
+#X obj 51 51 cnv 15 552 28 empty empty Cyclone: 6 13 0 18 -128992 -233080
+0;
+#X obj 217 65 cnv 5 5 5 empty empty Library 0 0 0 12 -128992 -233080
+0;
+#X obj 275 65 cnv 5 5 5 empty empty of 0 0 0 12 -128992 -233080 0;
+#X obj 298 64 cnv 5 5 5 empty empty objects 0 0 0 12 -128992 -233080
+0;
+#X obj 356 64 cnv 5 5 5 empty empty cloned 0 0 0 12 -128992 -233080
+0;
+#X obj 406 64 cnv 5 5 5 empty empty from 0 0 0 12 -128992 -233080 0
+;
+#X obj 444 64 cnv 5 5 5 empty empty Max/MSP 0 0 0 12 -128992 -233080
+0;
+#X coords 0 -1 1 1 554 30 1 50 50;
+#X restore 3 4 pd;
+#X obj 78 226 osc~ 150;
+#N canvas 673 40 366 264 (subpatch) 0;
+#X obj 51 101 tgl 42 0 \$0-tgl-s \$0-tgl-r empty 1 8 1 9 -74965 -212593
+-262144 1 1;
+#X obj 215 68 route dsp;
+#X obj 215 37 receive pd;
+#N canvas 939 367 324 271 set_color 0;
+#X obj 47 30 inlet;
+#X obj 96 146 s \$0-cnv;
+#X msg 96 114 color -4.86997e+06 -1.34937e+07;
+#N canvas 0 22 712 637 off 0;
+#X obj 490 220 * -1;
+#X obj 424 300 +;
+#X obj 409 325 +;
+#X obj 347 219 * -65536;
+#X obj 424 220 * -256;
+#X obj 409 356 - 1;
+#X obj 390 189 unpack f f f;
+#X obj 225 295 +;
+#X obj 210 320 +;
+#X obj 148 214 * -65536;
+#X obj 225 215 * -256;
+#X obj 291 215 * -1;
+#X obj 210 351 - 1;
+#X obj 191 184 unpack f f f;
+#X obj 379 423 pack;
+#X msg 378 447 color \$1 \$2;
+#X msg 395 152 124 124 124;
+#X msg 203 154 220 220 220;
+#X obj 238 121 t b b;
+#X obj 238 81 inlet;
+#X obj 378 485 outlet;
+#X connect 0 0 1 1;
+#X connect 1 0 2 1;
+#X connect 2 0 5 0;
+#X connect 3 0 2 0;
+#X connect 4 0 1 0;
+#X connect 5 0 14 1;
+#X connect 6 0 3 0;
+#X connect 6 1 4 0;
+#X connect 6 2 0 0;
+#X connect 7 0 8 1;
+#X connect 8 0 12 0;
+#X connect 9 0 8 0;
+#X connect 10 0 7 0;
+#X connect 11 0 7 1;
+#X connect 12 0 14 0;
+#X connect 13 0 9 0;
+#X connect 13 1 10 0;
+#X connect 13 2 11 0;
+#X connect 14 0 15 0;
+#X connect 15 0 20 0;
+#X connect 16 0 6 0;
+#X connect 17 0 13 0;
+#X connect 18 0 17 0;
+#X connect 18 1 16 0;
+#X connect 19 0 18 0;
+#X restore 47 113 pd off;
+#X obj 47 83 select 0 1;
+#X obj 47 168 list append 0;
+#X obj 47 195 list trim;
+#X obj 47 220 s \$0-tgl-r;
+#X connect 0 0 4 0;
+#X connect 2 0 1 0;
+#X connect 2 0 5 0;
+#X connect 3 0 1 0;
+#X connect 3 0 5 0;
+#X connect 4 0 3 0;
+#X connect 4 1 2 0;
+#X connect 5 0 6 0;
+#X connect 6 0 7 0;
+#X restore 215 165 pd set_color;
+#X obj 135 122 r \$0-tgl-s;
+#N canvas 0 22 450 300 (subpatch) 0;
+#X obj 101 101 cnv 25 40 25 empty \$0-cnv DSP 3 13 0 20 -74965 -212593
+0;
+#X coords 0 -1 1 1 42 27 1 100 100;
+#X restore 51 144 pd;
+#X obj 226 139 s \$0-tgl-r;
+#X msg 226 115 set \$1;
+#X msg 135 177 \; pd dsp \$1;
+#N canvas 256 32 278 194 load_check 0;
+#X obj 136 53 sig~ 1;
+#X obj 74 24 loadbang;
+#X obj 136 86 snapshot~;
+#X obj 91 52 del 5;
+#X obj 136 151 outlet;
+#X obj 74 103 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 74 126 switch~;
+#X connect 0 0 2 0;
+#X connect 1 0 3 0;
+#X connect 1 0 5 0;
+#X connect 2 0 4 0;
+#X connect 3 0 2 0;
+#X connect 3 0 5 0;
+#X connect 5 0 6 0;
+#X restore 51 72 pd load_check;
+#X connect 1 0 3 0;
+#X connect 1 0 7 0;
+#X connect 2 0 1 0;
+#X connect 4 0 8 0;
+#X connect 4 0 3 0;
+#X connect 7 0 6 0;
+#X connect 9 0 0 0;
+#X coords 0 -1 1 1 44 72 2 50 100;
+#X restore 503 91 pd;
+#X connect 14 0 26 1;
+#X connect 16 0 14 0;
+#X connect 17 0 26 0;
+#X connect 18 0 17 0;
+#X connect 26 0 32 0;
+#X connect 34 0 26 0;

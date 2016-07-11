@@ -1,0 +1,72 @@
+#N canvas 719 62 552 483 10;
+#X obj -1 462 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 234 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 1090 158 431 306 META 0;
+#X text 46 114 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 46 -46 LICENSE SIBSD;
+#X text 46 94 AUTHOR Miller Puckette;
+#X text 46 134 RELEASE_DATE 1997;
+#X text 46 74 LIBRARY cyclone;
+#X text 46 -66 KEYWORDS signal cartesian polar conversion;
+#X text 46 -26 DESCRIPTION cartesian to polar conversion for signals
+;
+#X text 46 14 INLET_1 signal;
+#X text 46 -6 INLET_0 signal;
+#X text 46 34 OUTLET_0 signal;
+#X text 46 54 OUTLET_1 signal;
+#X text 46 154 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X restore 503 464 pd META;
+#X obj -1 306 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 377 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj -1 422 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8
+12 0 13 -228856 -1 0;
+#N canvas 1095 187 428 164 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 35 41 poltocar~;
+#X restore 215 465 pd Related_objects;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header cartopol~ 3 12
+0 18 -204280 -1 0;
+#X obj -1 464 pddp/pddplink help.pd -text help;
+#X text 184 322 - amplitude;
+#X text 184 349 - phase;
+#X text 116 392 (none);
+#X text 14 23 cartesian to polar conversion for signals;
+#X text 16 55 Here's how to connect it to an fft~:;
+#X text 143 119 phase (in 271 radians);
+#X obj 87 201 ifft~ 256 256 0;
+#X obj 87 177 poltocar~;
+#X obj 87 102 cartopol~;
+#X obj 87 79 fft~ 256 256 0;
+#X text 62 118 amp.;
+#X text 138 144 <- do some spectral processing here;
+#X text 184 249 - real part of signal;
+#X text 184 275 - imaginary part of signal;
+#X text 117 249 signal;
+#X text 117 275 signal;
+#X text 117 322 signal;
+#X text 117 349 signal;
+#X obj 484 4 cartopol~;
+#X obj 432 24 pddp/pddplink http://wiki.puredata.info/en/help -text
+pdpedia: cartopol~;
+#X obj 86 250 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 86 276 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X obj 86 324 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 86 350 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X obj 481 52 pddp/dsp;
+#X connect 16 0 15 0;
+#X connect 16 1 15 1;
+#X connect 17 0 16 0;
+#X connect 17 1 16 1;
+#X connect 18 0 17 0;
+#X connect 18 1 17 1;

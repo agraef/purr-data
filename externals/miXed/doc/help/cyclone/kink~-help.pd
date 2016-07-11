@@ -1,0 +1,106 @@
+#N canvas 423 36 565 505 10;
+#X obj -120 618 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12
+0 14 -233017 -33289 0;
+#X obj -122 313 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0
+13 -228856 -1 0;
+#N canvas 596 277 371 239 META 0;
+#X text 9 162 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 9 22 LICENSE SIBSD;
+#X text 9 142 AUTHOR Miller Puckette;
+#X text 9 182 RELEASE_DATE 1997;
+#X text 9 122 LIBRARY cyclone;
+#X text 9 62 INLET_0 signal;
+#X text 9 102 OUTLET_0 signal;
+#X text 9 202 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 9 2 KEYWORDS signal kink distort phasor;
+#X text 9 42 DESCRIPTION distort the output of a phasor~;
+#X text 9 82 INLET_1 float signal;
+#X restore 380 620 pd META;
+#X obj -121 388 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12
+0 13 -228856 -1 0;
+#X obj -121 425 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8
+12 0 13 -228856 -1 0;
+#X obj -121 467 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info
+8 12 0 13 -228856 -1 0;
+#N canvas 307 406 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 81 620 pd Related_objects;
+#X obj -44 322 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -43 397 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -123 -265 cnv 15 552 40 empty \$0-pddp.cnv.header kink~ 3 12
+0 18 -204280 -1 0;
+#X obj -44 345 cnv 17 3 33 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X obj 387 -263 kink~;
+#X text -111 -243 Distort the output of a phasor~;
+#X msg 11 164 triglevel 0.01;
+#X msg 131 163 4 64;
+#X obj 71 -23 - 1;
+#X obj 56 4 +~;
+#X msg 55 -112 1 \, 10 180 10 120 1 700;
+#X obj 55 -83 line~ 1;
+#X obj 219 154 dac~;
+#X obj 219 123 *~ 0.05;
+#X obj 208 90 cycle~;
+#X floatatom 71 -45 0 0 0 0 - - -;
+#X obj 3 -182 phasor~ 440;
+#X text -67 -184 phase input;
+#X text 251 88 use as table lookup;
+#X text 65 39 argument sets initial slope value (default 1.0);
+#X obj 4 40 kink~ 1.3;
+#X obj 208 206 Scope~ 126 86 4 3 128 -1 1 0 0 0 0 102 255 51 135 135
+135 0;
+#X obj 3 207 Scope~ 129 84 4 3 128 -1 1 0 0 0 0.01 102 255 51 135 135
+135 0;
+#X obj 11 132 loadbang;
+#X text -13 321 signal;
+#X text 56 321 - phasor to kink;
+#X text -28 474 kink~ takes phasor~ values and distorts them according
+to a slope factor. If the input times the slope is less than 0.5 \,
+that value is output. Otherwise \, a complentary slope is used \, equal
+to 0.5 at the same input value but equal to 1 when the input is 1 This
+creates a bend or "kink" in the phase waveform when the slope is not
+equal to 1 If you feed the output of kink~ into a cycle~ \, the result
+is that the first part (before the kink) of the wavetable is scanned
+much more quickly than the second part (after the kink). Can you say
+CZ-101? Sure you can.;
+#X text -13 345 float;
+#X text 56 348 - slope input;
+#X text -13 361 signal;
+#X text -13 396 signal;
+#X text -31 443 1) float;
+#X text 56 444 - initial slope;
+#X text 56 396 - distorted phasor output;
+#X obj 361 -216 pddp/dsp;
+#X text 201 -119 This ramps the slope from 1 to 10 and then back to
+1 Combine with an amplitude envelope to achieve BRASS ENS. 1 bliss.
+;
+#X text 99 -53 try different slope values (approx 1-20). Reset to
+1 to use the envelope above.;
+#X text 51 -142 slope input (float or signal):;
+#X text -87 200 distorted phase output;
+#X text 56 366 comment;
+#X obj -109 619 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage
+Guide;
+#X connect 13 0 29 0;
+#X connect 14 0 28 0;
+#X connect 14 0 29 0;
+#X connect 15 0 16 1;
+#X connect 16 0 27 1;
+#X connect 17 0 18 0;
+#X connect 18 0 16 0;
+#X connect 20 0 19 0;
+#X connect 20 0 19 1;
+#X connect 21 0 20 0;
+#X connect 21 0 28 0;
+#X connect 22 0 15 0;
+#X connect 23 0 27 0;
+#X connect 27 0 21 1;
+#X connect 27 0 29 0;
+#X connect 30 0 14 0;
+#X connect 30 0 13 0;

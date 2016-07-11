@@ -1,0 +1,200 @@
+#N canvas 420 34 554 614 10;
+#X obj 1 1106 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj 1 630 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 610 414 359 211 META 0;
+#X text 6 108 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 6 -12 LICENSE SIBSD;
+#X text 6 88 AUTHOR Miller Puckette;
+#X text 6 128 RELEASE_DATE 1997;
+#X text 6 68 LIBRARY cyclone;
+#X text 6 148 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 6 -32 KEYWORDS store pairs x y together cartesian;
+#X text 6 8 DESCRIPTION store x \, y pairs of numbers together;
+#X text 6 28 INLET_0 message list float;
+#X text 6 48 OUTLET_0 message list float;
+#X restore 501 1108 pd META;
+#X obj 1 892 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 1 1049 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 299 515 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 15 34 offer;
+#X restore 202 1108 pd Related_objects;
+#X obj 79 639 cnv 17 3 184 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 79 901 cnv 17 3 50 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header funbuff 3 12 0
+18 -204280 -1 0;
+#X obj 501 4 funbuff;
+#C restore;
+#X msg 88 83 1 10 \, 2 20 \, 3 3.33;
+#X floatatom 153 176 5 0 0 0 - - -, f 5;
+#X obj 87 534 print funbuff;
+#X msg 115 111 4 4.4;
+#X text 210 81 store x y pairs;
+#X msg 136 137 4 44.4;
+#X text 179 135 replace a previously stored y value;
+#X text 186 174 retrieve corresponding y value;
+#X msg 29 322 clear;
+#X text -3 303 erase contents;
+#X msg 173 229 embed \$1;
+#X obj 173 209 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X text 233 223 with nonzero arg the contents of the object are;
+#X text 232 234 saved with the patch \, this is the default behaviour
+;
+#X msg 209 284 goto \$1;
+#X floatatom 209 264 5 0 0 0 - - -, f 5;
+#X text 262 268 jump to x position;
+#X msg 213 307 next;
+#X text 249 305 and output y val;
+#X text 262 279 or next x > num;
+#X msg 234 350 min;
+#X msg 234 374 max;
+#X text 263 352 output smallest;
+#X text 263 375 or largest stored y val;
+#X msg 31 377 write;
+#X text 2 360 save contents;
+#X msg 20 429 read;
+#X text 2 412 load contents;
+#X msg 298 448 read /tmp/test.funbuff;
+#X msg 298 427 write /tmp/test.funbuff;
+#X text 269 409 with filename as arg no dialog appears:;
+#X obj 87 508 funbuff /tmp/test.funbuff;
+#C restore;
+#X text 109 659 list;
+#X text 193 659 - list of x \, y pairs to store in buffer;
+#X text 109 638 message;
+#X text 109 680 float;
+#X text 193 680 - input x to get corresponding y value;
+#X text 193 638 - (float \, float) x \, y pair to store in buffer;
+#X text 109 704 message;
+#X text 193 720 write: save buffer contents to file;
+#X text 192 736 read: load contents of buffer from file;
+#X text 193 766 max: output largest stored y value;
+#X text 193 751 min: output smallest y value;
+#X text 193 781 goto x: goes to x position in buffer;
+#X text 193 797 delete x y: delete x y pair from buffer;
+#X text 193 812 dump: dump buffer contents in list;
+#X text 109 917 message;
+#X text 193 917 - print x \, y pair specified by input;
+#X text 109 935 list;
+#X text 193 935 - contents of buffer in x \, y pairs;
+#X text 90 1064 1) /path/to/file;
+#X text 201 1064 - load buffer from file;
+#X text 201 1082 - buffer name to load;
+#X text 193 899 - y value corresponding to input x value;
+#X text 109 899 float;
+#X text 90 1082 2) buffer;
+#N canvas 576 142 320 440 more... 0;
+#X obj 68 209 funbuff;
+#C restore;
+#X obj 68 240 print funbuff2;
+#X msg 90 53 bang;
+#X text 130 53 print status info;
+#X msg 68 28 set 1 1 2 2.2 3 3.5;
+#X text 46 11 another way to store pairs:;
+#X msg 98 98 delete 1 1;
+#X text 174 99 delete matching pair;
+#X msg 105 120 delete 2;
+#X text 168 122 delete pair where x=2;
+#X msg 110 166 delete 3 4;
+#X obj 64 356 funbuff;
+#C restore;
+#X obj 83 382 print funbuffY;
+#X obj 64 409 print funbuffX;
+#X msg 22 296 1 2 \, 3 4 \, 5 6 \, 7 8;
+#X msg 64 324 dump;
+#X text 144 295 load some vals;
+#X text 96 323 and dump them;
+#X text 178 164 no! we don't have it;
+#X connect 0 0 1 0;
+#X connect 2 0 0 0;
+#X connect 4 0 0 0;
+#X connect 6 0 0 0;
+#X connect 8 0 0 0;
+#X connect 10 0 0 0;
+#X connect 11 0 13 0;
+#X connect 11 1 12 0;
+#X connect 14 0 11 0;
+#X connect 15 0 11 0;
+#X restore 418 571 pd more...;
+#X text 11 22 store x \, y pairs of numbers together;
+#X obj 7 1106 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
+;
+#X obj 79 839 cnv 17 3 41 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X text 109 838 float;
+#X text 193 838 - y value to be stored (needs to be followed by an
+xvalue in th first inlet;
+#X obj 79 961 cnv 17 3 30 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X text 109 959 float;
+#X text 247 507 optional argument sets initial filename to load;
+#X text 193 704 clear: erase buffer contents;
+#X text 193 959 - outputs difference between the currently outputted
+value and the last outputted value;
+#X obj 79 1000 cnv 17 3 30 empty \$0-pddp.cnv.let.0 2 5 9 0 16 -228856
+-162280 0;
+#X text 109 998 bang;
+#X text 193 998 - outputs bang when funbuff has reached the end of
+its data list. See pd even_more... for additional info;
+#N canvas 248 299 678 307 even_more... 0;
+#X obj 119 161 funbuff;
+#C restore;
+#X msg 43 72 set 1 2 4 5 7 8 11 12 13 14;
+#X text 39 55 load some values:;
+#X msg 119 97 goto 0;
+#X msg 141 128 next;
+#X text 163 97 goto start;
+#X floatatom 119 259 5 0 0 0 - - -, f 5;
+#X text 154 258 y value;
+#X floatatom 138 230 5 0 0 0 - - -, f 5;
+#X obj 158 194 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 175 194 we reached the end ...;
+#X obj 505 200 funbuff;
+#C restore;
+#X floatatom 544 117 5 0 0 0 - - -, f 5;
+#X floatatom 505 170 5 0 0 0 - - -, f 5;
+#X floatatom 505 248 5 0 0 0 - - -, f 5;
+#X text 401 149 then x \, and use x to retrieve y:;
+#X text 504 98 set y value first:;
+#X text 38 27 the other outlets make sense too:;
+#X text 399 32 and again another way to load data:;
+#X text 174 129 hit this a couple of times;
+#X text 173 229 difference between current and previous x value;
+#X connect 0 0 6 0;
+#X connect 0 1 8 0;
+#X connect 0 2 9 0;
+#X connect 1 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X connect 11 0 14 0;
+#X connect 12 0 11 1;
+#X connect 13 0 11 0;
+#X restore 418 594 pd even_more...;
+#X connect 10 0 41 0;
+#X connect 11 0 41 0;
+#X connect 13 0 41 0;
+#X connect 15 0 41 0;
+#X connect 18 0 41 0;
+#X connect 20 0 41 0;
+#X connect 21 0 20 0;
+#X connect 24 0 41 0;
+#X connect 25 0 24 0;
+#X connect 27 0 41 0;
+#X connect 30 0 41 0;
+#X connect 31 0 41 0;
+#X connect 34 0 41 0;
+#X connect 36 0 41 0;
+#X connect 38 0 41 0;
+#X connect 39 0 41 0;
+#X connect 41 0 12 0;

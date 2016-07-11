@@ -1,0 +1,88 @@
+#N canvas 427 29 559 598 10;
+#X obj -1 571 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 383 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 605 387 372 212 META 0;
+#X text 12 133 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 19 LICENSE SIBSD;
+#X text 12 114 AUTHOR Miller Puckette;
+#X text 12 152 RELEASE_DATE 1997;
+#X text 12 95 LIBRARY cyclone;
+#X text 12 171 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 12 76 OUTLET_0 signal;
+#X text 12 0 KEYWORDS signal ramp smooth;
+#X text 12 38 DESCRIPTION smooth out an incoming signal via a ramp
+;
+#X text 12 57 INLET_0 signal ramp rampup rampdown;
+#X restore 500 573 pd META;
+#X obj -1 475 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 512 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 317 491 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 206 573 pd Related_objects;
+#X obj 81 392 cnv 17 3 70 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 81 485 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header rampsmooth~ 3 12
+0 18 -204280 -1 0;
+#X text 11 23 smooth out an incoming signal via a ramp;
+#X text 110 392 signal;
+#X text 230 392 - incoming signal to smooth out;
+#X msg 111 162 1;
+#X msg 80 162 0;
+#X msg 273 223 rampdown \$1;
+#X floatatom 273 204 0 0 0 0 - - -;
+#X msg 197 223 rampup \$1;
+#X floatatom 197 204 0 0 0 0 - - -;
+#X obj 94 223 sig~;
+#X floatatom 94 204 0 0 0 0 - - -;
+#X msg 136 223 ramp \$1;
+#X floatatom 136 204 0 0 0 0 - - -;
+#X text 243 254 args: <rampup> <rampdown>;
+#X obj 218 292 Scope~ 140 64 256 3 128 -1 1 0 0 0 0 102 255 51 135
+135 135 0;
+#X obj 94 296 Snapshot~ 100;
+#X obj 94 339 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
+-262144 -1 -1 0 256 0;
+#X obj 94 255 rampsmooth~ 44100 44100;
+#X text 110 484 signal;
+#X text 230 484 - output ramped signal;
+#X text 92 521 1) float;
+#X text 92 542 2) float;
+#X text 230 521 - rampup value;
+#X text 230 542 - rampdown value;
+#X text 110 428 rampup <float>;
+#X text 110 410 ramp <float>;
+#X text 110 446 rampdown <float>;
+#X text 230 410 - set ramp value;
+#X text 230 428 - set rampup value;
+#X text 47 55 rampsmooth~ smooths an incoming signal across n samples.
+Each time an incoming value changes \, it begins a linear ramp of n
+samples to reach this value. Useful for envelope following and lowpass
+filtering. The number of samples is specified either as arguments or
+with the ramp \, rampup \, rampdown messages.;
+#X obj 469 8 rampsmooth~;
+#X obj 476 49 pddp/dsp;
+#X text 230 446 - set rampdown value;
+#X obj 13 572 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
+;
+#X connect 12 0 19 0;
+#X connect 13 0 19 0;
+#X connect 14 0 26 0;
+#X connect 15 0 14 0;
+#X connect 16 0 26 0;
+#X connect 17 0 16 0;
+#X connect 18 0 26 0;
+#X connect 19 0 18 0;
+#X connect 20 0 26 0;
+#X connect 21 0 20 0;
+#X connect 24 0 25 0;
+#X connect 26 0 23 0;
+#X connect 26 0 24 0;

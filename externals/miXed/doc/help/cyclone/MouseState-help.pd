@@ -1,0 +1,106 @@
+#N canvas 425 38 558 590 10;
+#X obj -1 669 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 397 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 618 311 351 289 META 0;
+#X text 8 189 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 8 -4 LICENSE SIBSD;
+#X text 8 171 AUTHOR Miller Puckette;
+#X text 8 207 RELEASE_DATE 1997;
+#X text 8 153 LIBRARY cyclone;
+#X text 8 225 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 8 -22 KEYWORDS signal max maximum;
+#X text 8 14 DESCRIPTION report mouse x/y \, delta x/delta y \, and
+buttonpress;
+#X text 8 45 INLET_0 bang message;
+#X text 8 74 comment;
+#X text 8 63 OUTLET_0 toggle;
+#X text 8 87 OUTLET_1 float;
+#X text 8 99 OUTLET_2 float;
+#X text 8 117 OUTLET_3 float;
+#X text 8 135 OUTLET_4 float;
+#X restore 497 671 pd META;
+#X obj -1 496 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 628 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 305 493 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 200 671 pd Related_objects;
+#X obj 62 407 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 62 505 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header MouseState 3 12
+0 18 -204280 -1 0;
+#X obj 478 8 MouseState;
+#X obj 72 220 MouseState;
+#X obj 72 353 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X floatatom 86 326 5 0 0 0 - - -, f 5;
+#X floatatom 100 301 5 0 0 0 - - -, f 5;
+#X text 121 329 x;
+#X msg 116 108 poll;
+#X text 139 302 y;
+#X floatatom 114 277 5 0 0 0 - - -, f 5;
+#X text 152 278 delta x;
+#X floatatom 129 251 5 0 0 0 - - -, f 5;
+#X text 167 252 delta y;
+#X text 91 352 button pressed ? (one button of course \, mac you know)
+;
+#X text 151 108 poll the mouse device;
+#X msg 72 75 bang;
+#X text 103 73 update current state;
+#X msg 116 133 nopoll;
+#X msg 116 158 zero;
+#X text 149 160 set current pos to 0 \, 0 of our coordinate system
+;
+#X msg 116 183 reset;
+#X text 157 183 reset 0 \, 0 to upper left corner;
+#X text 85 405 bang;
+#X text 179 405 - update current state;
+#X text 85 425 other messages;
+#X text 179 426 - poll: poll mouse device;
+#X obj 62 527 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X obj 62 550 cnv 17 3 17 empty \$0-pddp.cnv.let.0 2 5 9 0 16 -228856
+-162280 0;
+#X obj 62 574 cnv 17 3 17 empty \$0-pddp.cnv.let.0 3 5 9 0 16 -228856
+-162280 0;
+#X obj 62 597 cnv 17 3 17 empty \$0-pddp.cnv.let.0 4 5 9 0 16 -228856
+-162280 0;
+#X text 179 505 - is button pressed?;
+#X text 85 505 toggle;
+#X text 85 527 float;
+#X text 85 550 float;
+#X text 85 574 float;
+#X text 85 597 float;
+#X text 179 527 - x position;
+#X text 179 550 - y position;
+#X text 179 574 - delta x from last poll;
+#X text 179 597 - delta y from last poll;
+#X text 105 641 (none);
+#X text 179 441 - nopoll: do not poll mouse device;
+#X text 179 454 - zero: set current position to 0 \, 0 of pd coordinate
+system;
+#X text 179 467 - reset: set 0 \, 0 (upper left corner);
+#X text 161 133 don't poll the mouse divice;
+#X text 43 50 shows the state of the mouse:;
+#X text 11 23 report mouse x/y \, delta x/delta y \, and buttonpress
+;
+#X obj 12 670 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
+;
+#X connect 10 0 11 0;
+#X connect 10 1 12 0;
+#X connect 10 2 13 0;
+#X connect 10 3 17 0;
+#X connect 10 4 19 0;
+#X connect 15 0 10 0;
+#X connect 23 0 10 0;
+#X connect 25 0 10 0;
+#X connect 26 0 10 0;
+#X connect 28 0 10 0;

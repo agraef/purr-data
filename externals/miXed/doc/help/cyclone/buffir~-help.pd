@@ -1,0 +1,151 @@
+#N canvas 276 82 555 596 10;
+#X declare -lib iemmatrix;
+#X obj -1 690 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 432 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 392 384 433 268 META 0;
+#X text 27 89 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 27 -55 LICENSE SIBSD;
+#X text 27 71 AUTHOR Miller Puckette;
+#X text 27 107 RELEASE_DATE 1997;
+#X text 27 53 LIBRARY cyclone;
+#X text 27 -37 DESCRIPTION converts all signal values to positive values
+;
+#X text 27 -86 KEYWORDS signal buffer buffir buff FIR finite impulse
+response convolution filter;
+#X text 27 -19 INLET_0 signal;
+#X text 27 -1 INLET_1 float;
+#X text 27 17 INLET_2 float;
+#X text 27 35 OUTLET_0 signal;
+#X text 27 125 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X restore 502 693 pd META;
+#X obj -1 515 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 552 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj -1 628 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8
+12 0 13 -228856 -1 0;
+#N canvas 162 548 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 11 28 fir;
+#X restore 202 693 pd Related_objects;
+#X obj 79 464 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 554 40 empty \$0-pddp.cnv.header buffir~ 3 12 0
+18 -204280 -1 0;
+#X text 105 440 signal;
+#X text 163 439 - signal to pass to FIR;
+#X text 105 523 signal;
+#X obj 79 485 cnv 17 3 17 empty \$0-pddp.cnv.let.0 2 5 9 0 16 -228856
+-162280 0;
+#X text 105 465 float;
+#X obj 79 524 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 105 487 float;
+#X text 163 487 - Length (samples);
+#X text 163 463 - Offset (samples);
+#X text 163 522 - based on buffer \, offset \, length;
+#X obj 39 132 sig~ 1;
+#X text 169 136 Length (samps);
+#X obj 350 114 loadbang;
+#X msg 28 82 clear;
+#X floatatom 145 136 0 0 0 0 - - -;
+#X floatatom 86 105 0 0 0 0 - - -;
+#X obj 350 141 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#N canvas 480 212 405 395 genRamp 0;
+#X obj 39 197 sel 0 1;
+#X obj 81 254 i;
+#X obj 39 146 sel 1;
+#X msg 111 100 clear;
+#X obj 120 206 * 1;
+#X obj 120 180 expr ((127. - $f1) / 127.);
+#X obj 98 124 - 1;
+#X obj 39 75 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 81 282 pack 0 0;
+#X text 116 151 exponential ramp down from 1 to 0;
+#X text 147 249 makes 50% zeros \, 25% exponential downward ramp \,
+25% random;
+#X obj 39 99 Uzi 128;
+#X obj 39 123 decide;
+#X obj 39 174 decide;
+#X obj 39 219 urn 128;
+#X obj 39 53 inlet;
+#X obj 81 316 outlet;
+#X connect 0 0 14 0;
+#X connect 0 1 1 0;
+#X connect 1 0 8 0;
+#X connect 2 0 13 0;
+#X connect 3 0 14 0;
+#X connect 4 0 8 1;
+#X connect 5 0 4 0;
+#X connect 5 0 4 1;
+#X connect 6 0 1 1;
+#X connect 6 0 5 0;
+#X connect 7 0 3 0;
+#X connect 7 0 11 0;
+#X connect 8 0 16 0;
+#X connect 11 0 12 0;
+#X connect 11 2 6 0;
+#X connect 12 0 2 0;
+#X connect 13 0 0 0;
+#X connect 14 0 8 0;
+#X connect 15 0 7 0;
+#X restore 350 166 pd genRamp;
+#X text 20 64 clears input history only;
+#X text 112 104 Offset (samps);
+#X text 121 207 256 point max len;
+#X text 10 274 integral of buffer from offset to offset + length;
+#X obj 28 176 buffir~ fir_buf 0 32;
+#X obj 350 193 peek~ fir_buf;
+#X obj 368 363 table fir_buf 128;
+#X obj 28 205 Snapshot~ 100;
+#X obj 28 229 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
+-262144 -1 -1 0 256 0;
+#X floatatom 146 305 0 0 0 0 - - -;
+#X obj 29 295 noise~;
+#X obj 29 362 *~ 0.05;
+#X obj 29 395 dac~;
+#X obj 29 330 buffir~ fir_buf 0 10;
+#X text 86 568 1) table;
+#X text 163 567 - buffer (max size 256);
+#X text 87 585 2) float;
+#X text 163 585 - offset;
+#X text 87 602 3) float;
+#X text 163 602 - length;
+#X text 102 638 buffir~ is a table based FIR (finite impulse response)
+filter. an input signal is convolved with n samples of a buffer. Currently
+the maximum number of points is 256;
+#X obj 498 2 buffir~;
+#X obj 483 49 pddp/dsp;
+#X text 11 23 table based FIR (finite impulse response) convolution
+filter;
+#X obj 79 443 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 337 319 table is a 128-point downwards ramp with random values
+here and there with amplitude from 1 to 0;
+#X text 172 298 number of samples in impulse;
+#X text 155 159 Initial args: buffer \, offset(samps) \, length(samps)
+;
+#X text 418 165 Generate new fir;
+#X obj 7 692 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
+;
+#X connect 19 0 31 0;
+#X connect 21 0 25 0;
+#X connect 22 0 31 0;
+#X connect 23 0 31 2;
+#X connect 24 0 31 1;
+#X connect 25 0 26 0;
+#X connect 26 0 32 0;
+#X connect 31 0 34 0;
+#X connect 34 0 35 0;
+#X connect 36 0 40 2;
+#X connect 37 0 40 0;
+#X connect 38 0 39 0;
+#X connect 38 0 39 1;
+#X connect 40 0 38 0;

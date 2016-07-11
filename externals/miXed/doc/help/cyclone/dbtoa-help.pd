@@ -1,0 +1,85 @@
+#N canvas 146 85 568 567 10;
+#X obj 4 43 cnv 15 552 40 empty empty dbtoa 3 12 0 18 -204280 -1 0
+;
+#X obj 4 356 cnv 3 550 3 empty empty inlets 8 12 0 13 -228856 -1 0
+;
+#X obj 4 440 cnv 3 550 3 empty empty outlets 8 12 0 13 -228856 -1 0
+;
+#X obj 4 477 cnv 3 550 3 empty empty arguments 8 12 0 13 -228856 -1
+0;
+#X obj 83 449 cnv 17 3 17 empty empty 0 5 9 0 16 -228856 -162280 0
+;
+#X obj 83 370 cnv 17 3 17 empty empty 0 5 9 0 16 -228856 -162280 0
+;
+#X text 100 486 (none);
+#X obj 4 518 cnv 15 552 21 empty empty empty 20 12 0 14 -233017 -33289
+0;
+#N canvas 244 346 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty empty empty 3 12 0 14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 50 49 cyclone/dbtoa~;
+#X obj 152 49 cyclone/atodb~;
+#X obj 255 49 cyclone/atodb;
+#X restore 210 520 pd Related_objects;
+#N canvas 571 307 379 261 META 0;
+#X text 1 0 KEYWORDS signal max_compatible;
+#X text 1 163 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
+;
+#X text 1 40 DESCRIPTION absolute value of a signal;
+#X text 1 60 INLET_0 signal;
+#X text 1 80 OUTLET_0 signal;
+#X text 1 121 AUTHOR Krzysztof Czaja;
+#X text 1 20 LICENSE SIBSD;
+#X text 0 101 VERSION 0.2-beta1;
+#X text 0 142 RELEASE_DATE 2002;
+#X text 1 193 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
+Wilkes for Pd-extended 0.42 to conform to the PDDP template. Alex Cleveland
+updated this patch for Pd-l2ork version 2013.05.28. Fred Jan Kraan
+adapted the patch to pd-extended 2015-02-02;
+#X restore 506 520 pd META;
+#X obj 153 305 nbx 8 20 -1e+37 1e+37 0 0 empty empty Linear_Amplitude
+133 11 0 16 -228856 -1 -1 1e-05 256;
+#X obj 82 190 nbx 5 14 -100 0 1 0 empty empty empty 0 -8 0 10 -228856
+-1 -1 -100 256;
+#X obj 85 160 hsl 180 15 -100 0 0 1 empty empty empty -2 -8 0 10 -228856
+-1 -1 0 1;
+#X obj 509 50 dbtoa;
+#X text 12 66 Convert dBFS to linear amplitude;
+#X text 273 160 dBFS;
+#X text 111 449 float/list;
+#X text 148 383 bang;
+#X text 154 400 set;
+#X text 189 400 - sets next float value to be converted via bang;
+#X text 189 383 - outputs the last converted float value;
+#X text 170 191 last output;
+#X text 231 227 sets next value to be converted via bang;
+#X obj 153 190 bng 15 250 50 0 empty empty empty 17 7 0 10 -261682
+-1 -1;
+#X msg 177 227 set -60;
+#X text 85 102 Converts a decibel value to its corresponding linear
+amplitude. Conversion expression: amp = pow(10 \, dBFS / 20);
+#X text 112 366 float/list;
+#X text 189 366 - dBFS amplitude value(s);
+#X text 187 449 - Linear amplitude value(s);
+#X obj 153 266 ./cyclone/dbtoa;
+#N canvas 439 241 715 321 (subpatch) 0;
+#X obj 51 51 cnv 15 552 28 empty empty Cyclone: 6 13 0 18 -128992 -233080
+0;
+#X obj 217 65 cnv 5 5 5 empty empty Library 0 0 0 12 -128992 -233080
+0;
+#X obj 275 65 cnv 5 5 5 empty empty of 0 0 0 12 -128992 -233080 0;
+#X obj 298 64 cnv 5 5 5 empty empty objects 0 0 0 12 -128992 -233080
+0;
+#X obj 356 64 cnv 5 5 5 empty empty cloned 0 0 0 12 -128992 -233080
+0;
+#X obj 406 64 cnv 5 5 5 empty empty from 0 0 0 12 -128992 -233080 0
+;
+#X obj 444 64 cnv 5 5 5 empty empty Max/MSP 0 0 0 12 -128992 -233080
+0;
+#X coords 0 -1 1 1 554 30 1 50 50;
+#X restore 3 7 pd;
+#X connect 11 0 29 0;
+#X connect 12 0 11 0;
+#X connect 23 0 29 0;
+#X connect 24 0 29 0;
+#X connect 29 0 10 0;

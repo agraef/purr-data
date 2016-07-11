@@ -1,0 +1,82 @@
+#N canvas 421 39 558 505 10;
+#X obj 0 476 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj 1 273 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 379 298 424 269 META 0;
+#X text 25 131 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 25 -29 LICENSE SIBSD;
+#X text 25 111 AUTHOR Miller Puckette;
+#X text 25 151 RELEASE_DATE 1997;
+#X text 25 91 LIBRARY cyclone;
+#X text 25 -49 KEYWORDS accumulate store add multiply;
+#X text 25 -9 DESCRIPTION store \, add to \, and multiply a number
+;
+#X text 25 11 INLET_0 float bang;
+#X text 25 71 OUTLET_0 float current value of number being accumulated
+;
+#X text 25 31 INLET_1 float add to current value;
+#X text 25 51 INLET_2 float multiply with current value;
+#X text 25 171 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X restore 500 478 pd META;
+#X obj 0 378 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 415 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 134 485 428 85 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 9 29 +;
+#X obj 38 29 *;
+#X restore 196 479 pd Related_objects;
+#X obj 79 325 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X obj 0 -2 cnv 15 552 40 empty \$0-pddp.cnv.header accum 3 12 0 18
+-204280 -1 0;
+#X text 11 19 store \, add to \, and multiply a number;
+#X obj 78 223 accum 4;
+#X text 143 224 arg sets initial value;
+#X floatatom 78 149 5 0 0 0 - - -, f 5;
+#X floatatom 78 248 5 0 0 0 - - -, f 5;
+#X text 116 150 set new value and output;
+#X floatatom 97 175 5 0 0 0 - - -, f 5;
+#X text 135 173 add to current value / no output;
+#X msg 50 122 bang;
+#X text 89 123 output current value;
+#X floatatom 117 200 5 0 0 0 - - -, f 5;
+#X text 156 198 multiply with current val / no output;
+#X msg 29 100 set \$1;
+#X floatatom 29 77 5 0 0 0 - - -, f 5;
+#X text 76 97 reset current value / no output;
+#X text 99 281 float;
+#X text 99 298 bang;
+#X text 174 299 - output the current value;
+#X text 174 283 - to set new value and output;
+#X text 99 389 float;
+#X text 82 440 1) float;
+#X text 174 389 - the current value of number being accumulated;
+#X obj 509 4 accum;
+#X text 174 440 - set initial value;
+#X obj 79 387 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 79 347 cnv 17 3 17 empty \$0-pddp.cnv.let.0 2 5 9 0 16 -228856
+-162280 0;
+#X text 99 324 float;
+#X text 174 321 - add to current value;
+#X text 99 346 float;
+#X text 174 345 - multiply with current value;
+#X obj 79 283 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 89 50 accum is a multi-function float value changer. It can
+add and multiply by values on inlets 1 and 2 \, respectively.;
+#X obj 9 477 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
+;
+#X connect 9 0 12 0;
+#X connect 11 0 9 0;
+#X connect 14 0 9 1;
+#X connect 16 0 9 0;
+#X connect 18 0 9 2;
+#X connect 20 0 9 0;
+#X connect 21 0 20 0;

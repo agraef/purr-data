@@ -1,0 +1,70 @@
+#N canvas 418 36 561 600 10;
+#X obj 0 572 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj 1 451 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 608 371 354 239 META 0;
+#X text 10 152 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 10 32 LICENSE SIBSD;
+#X text 10 132 AUTHOR Miller Puckette;
+#X text 10 172 RELEASE_DATE 1997;
+#X text 10 112 LIBRARY cyclone;
+#X text 10 192 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 10 12 KEYWORDS import max Max MSP patch mode;
+#X text 10 52 DESCRIPTION import tool for Max/MSP patches;
+#X text 10 72 INLET_0 message;
+#X text 10 92 OUTLET_0 message;
+#X restore 500 574 pd META;
+#X obj 1 492 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 1 529 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 303 499 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 204 574 pd Related_objects;
+#X obj 79 460 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 79 501 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header maxmode 3 12 0
+18 -204280 -1 0;
+#X obj 500 6 maxmode;
+#X text 11 23 import tool for Max/MSP patches;
+#X text 145 59 simulate mouse click to open panel;
+#X obj 182 323 print mode;
+#X msg 197 185 set max;
+#X msg 204 206 set barry;
+#X msg 207 261 bang;
+#X msg 193 164 set;
+#X obj 144 386 print result;
+#X msg 206 239 get;
+#X obj 172 350 pddp/print;
+#X obj 133 413 pddp/print;
+#X msg 133 80 click 0 0 0 0 0;
+#X msg 149 109 cd path;
+#X msg 162 131 pwd path;
+#X text 201 110 set open panel directory;
+#X text 220 131 set current and open panel directory;
+#X text 109 460 message;
+#X text 179 460 - see above;
+#X text 109 501 message;
+#X text 179 501 - output of import;
+#X text 109 545 (none);
+#X obj 133 290 maxmode;
+#X obj 14 572 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
+;
+#X connect 13 0 31 0;
+#X connect 14 0 31 0;
+#X connect 15 0 31 0;
+#X connect 16 0 31 0;
+#X connect 18 0 31 0;
+#X connect 21 0 31 0;
+#X connect 22 0 31 0;
+#X connect 23 0 31 0;
+#X connect 31 0 17 0;
+#X connect 31 0 20 0;
+#X connect 31 1 12 0;
+#X connect 31 1 19 0;

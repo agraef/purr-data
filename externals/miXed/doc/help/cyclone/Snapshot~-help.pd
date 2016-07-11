@@ -1,0 +1,102 @@
+#N canvas 421 24 568 620 10;
+#X obj -1 764 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 439 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 617 373 354 242 META 0;
+#X text 7 162 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 7 29 LICENSE SIBSD;
+#X text 7 143 AUTHOR Miller Puckette;
+#X text 7 181 RELEASE_DATE 1997;
+#X text 7 124 LIBRARY cyclone;
+#X text 7 200 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 7 10 KEYWORDS signal sample report values clocking snapshot
+;
+#X text 7 48 DESCRIPTION report sample values from a signal;
+#X text 7 67 INLET_0 signal bang float offset other;
+#X text 7 86 INLET_1 float;
+#X text 7 105 OUTLET_0 float;
+#X restore 502 766 pd META;
+#X obj -1 615 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 652 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj -1 710 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8
+12 0 13 -228856 -1 0;
+#N canvas 302 510 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 198 766 pd Related_objects;
+#X obj 72 449 cnv 17 3 125 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 72 624 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header Snapshot~ 3 12
+0 18 -204280 -1 0;
+#X obj 481 8 Snapshot~;
+#X text 11 24 Report sample values from a signal;
+#X text 103 447 signal;
+#X text 200 447 - signal to sample;
+#X text 103 467 bang;
+#X text 200 467 - output a value from most recent signal vector;
+#X text 103 489 float;
+#X text 200 489 - change self clocking interval to float;
+#X text 103 510 offset <int>;
+#X text 200 510 - change offset within vector of sample output. range
+is from 0 (least recent \, default) to the signal vector size - 1 (most
+recent);
+#X text 103 624 float;
+#X text 200 624 - sample from signal;
+#X text 86 663 1) float;
+#X text 200 663 - self clocking interval (default 0);
+#X text 86 683 2) float;
+#X text 200 683 - sample offset within a vector (default 0);
+#X text 113 729 Snapshot~'s internal clock runs only when the audio
+is on.;
+#X floatatom 106 216 0 0 0 0 - - -;
+#X msg 106 237 offset \$1;
+#X msg 160 303 100;
+#X msg 129 303 20;
+#X obj 69 102 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X msg 97 172 stop;
+#X msg 93 152 start;
+#X floatatom 54 402 0 0 0 0 - - -;
+#X floatatom 129 331 0 0 0 0 - - -;
+#X obj 56 73 cycle~ 440;
+#X text 144 360 Optional arguments set self-clocking interval (default
+0--clock off) and sample offset within a vector (default 0).;
+#X text 178 215 change offset within vector of sample output. range
+is from 0 (least recent \, default) to the signal vector size - 1 (most
+recent);
+#X obj 54 366 Snapshot~ 100;
+#X text 86 97 trigger an output;
+#X text 103 558 other messages;
+#X text 200 558 - start \, stop to turn clock on/off;
+#X obj 479 51 pddp/dsp;
+#X obj 72 585 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X text 103 585 float;
+#X text 200 585 - interval for self-clocking;
+#X obj 89 135 tgl 14 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 140 135 turn clock on/off (by default \, the clock will be
+on if a non-zero interval is supplied);
+#X text 125 278 interval (for self-clocking):;
+#X text 191 294 change to a value above 0 for self-clocking reports
+of signal values;
+#X obj 10 767 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
+;
+#X connect 27 0 28 0;
+#X connect 28 0 39 0;
+#X connect 29 0 35 0;
+#X connect 30 0 35 0;
+#X connect 31 0 39 0;
+#X connect 32 0 39 0;
+#X connect 33 0 39 0;
+#X connect 35 0 39 1;
+#X connect 36 0 39 0;
+#X connect 39 0 34 0;
+#X connect 47 0 39 0;

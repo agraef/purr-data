@@ -1,0 +1,96 @@
+#N canvas 429 36 559 574 10;
+#X obj -1 748 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 413 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 629 336 354 247 META 0;
+#X text 3 168 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 3 35 LICENSE SIBSD;
+#X text 3 149 AUTHOR Miller Puckette;
+#X text 3 187 RELEASE_DATE 1997;
+#X text 3 130 LIBRARY cyclone;
+#X text 3 206 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 3 111 OUTLET_0 signal;
+#X text 3 73 INLET_0 float signal;
+#X text 3 3 KEYWORDS signal amplifier amp overdriven distortion analog
+sumulate;
+#X text 3 54 DESCRIPTION simulate an analog amplifier being overdriven
+;
+#X text 3 92 INLET_1 ?????;
+#X restore 503 750 pd META;
+#X obj -1 500 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 537 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj -1 574 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8
+12 0 13 -228856 -1 0;
+#N canvas 313 476 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 197 750 pd Related_objects;
+#X obj 84 422 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 84 509 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header overdrive~ 3 12
+0 18 -204280 -1 0;
+#X obj 479 6 overdrive~;
+#X text 111 421 float;
+#X text 111 442 signal;
+#X text 180 421 - set drive:;
+#X text 111 508 signal;
+#X text 180 508 - simulated overdriven signal;
+#X text 94 547 1) float;
+#X text 180 547 - intial drive;
+#X text 123 585 overdrive~ simulates the distortion caused when an
+analog amplifier is fed a signal that is too high for the inputs. This
+is generally known as "overdriving" the amplifier \, and it causes
+a characteristic distortion that is often used to generate a "fat"
+sound.;
+#X obj 132 217 overdrive~;
+#N canvas 0 22 450 300 (subpatch) 0;
+#X array overdrive 200 float 2;
+#X coords 0 1 199 -1 200 140 1;
+#X restore 337 251 graph;
+#X obj 38 204 tgl 15 1 empty empty empty 0 -6 0 8 -24198 -1 -1 1 1
+;
+#X obj 132 260 tabwrite~ overdrive;
+#X floatatom 132 143 5 0 0 0 - - -, f 5;
+#X obj 132 111 hsl 128 15 1 12 0 1 empty empty drive 45 9 1 12 -262131
+-1 -1 0 1;
+#N canvas 0 22 454 304 (subpatch) 0;
+#X array osc 200 float 2;
+#X coords 0 1 199 -1 200 140 1;
+#X restore 336 94 graph;
+#X obj 13 260 tabwrite~ osc;
+#X obj 13 111 osc~ 400;
+#X obj 38 222 metro 442;
+#X obj 479 47 pddp/dsp;
+#X obj 84 471 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X text 11 23 Simulate an analog amplifier being overdriven;
+#X text 17 48 simulates distortion by applying a non-linear transfer
+function to the incoming signal.;
+#X text 123 662 If the "drive" is 1 \, the signal is unchanged. Increasing
+the "drive" increases the amount of distortion. If the "drive" is less
+than 1 \, then it causes a different kind of distortion. If the "drive"
+is less than 0 \, VERY LOUD distortion can result \, so be careful!
+;
+#X obj 9 751 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
+;
+#X floatatom 189 169 5 0 1 0 - - -, f 5;
+#X text 171 142 drive factor;
+#X text 226 169 set amount of drive (1. = none);
+#X text 111 471 float;
+#X text 180 471 set amount of overdrive (amplification);
+#X connect 19 0 22 0;
+#X connect 21 0 28 0;
+#X connect 23 0 19 0;
+#X connect 24 0 23 0;
+#X connect 27 0 19 0;
+#X connect 27 0 26 0;
+#X connect 28 0 22 0;
+#X connect 28 0 26 0;
+#X connect 35 0 19 1;

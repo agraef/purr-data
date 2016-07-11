@@ -1728,7 +1728,7 @@ function gui_text_new(canvasname, myname, type, isselected, left_margin, font_he
         // text is handled under tk...
         // 'dominant-baseline': 'hanging',
         "shape-rendering": "crispEdges",
-        "font-size": (pd_fontsize_to_gui_fontsize(font) === 11.65 ? 12 : pd_fontsize_to_gui_fontsize(font)) + "px",
+        "font-size": pd_fontsize_to_gui_fontsize(font) + "px",
         "font-weight": "normal",
         id: myname + "text",
         "class": "box_text"

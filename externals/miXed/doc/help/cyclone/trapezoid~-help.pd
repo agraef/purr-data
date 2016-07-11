@@ -1,0 +1,94 @@
+#N canvas 421 35 558 541 10;
+#X obj -1 736 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj 0 473 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 580 280 386 269 META 0;
+#X text 8 56 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 8 -104 LICENSE SIBSD;
+#X text 8 36 AUTHOR Miller Puckette;
+#X text 8 76 RELEASE_DATE 1997;
+#X text 8 16 LIBRARY cyclone;
+#X text 8 -4 OUTLET_0 signal;
+#X text 8 96 HELP_PATCH_AUTHORS Alex Cleveland updated this patch for
+Pd-l2ork version 2013.05.28;
+#X text 8 -137 KEYWORDS signal trapezoid wavetable lo hi lo/hi phase
+ramp wave;
+#X text 8 -84 DESCRIPTION a trapezoid wavetable;
+#X text 8 -64 INLET_0 signal message;
+#X text 8 -44 INLET_1 signal float;
+#X text 8 -24 INLET_2 signal float;
+#X restore 499 738 pd META;
+#X obj -1 630 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 667 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 307 438 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 204 738 pd Related_objects;
+#X obj 78 483 cnv 17 3 36 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 639 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header trapezoid~ 3 12
+0 18 -204280 -1 0;
+#X obj 477 11 trapezoid~;
+#X text 11 23 a trapezoidal wavetable;
+#X text 105 481 signal;
+#X obj 78 536 cnv 17 3 34 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X text 105 534 signal;
+#X obj 78 583 cnv 17 3 34 empty \$0-pddp.cnv.let.0 2 5 9 0 16 -228856
+-162280 0;
+#X text 105 581 signal;
+#X text 105 555 float;
+#X text 105 602 float;
+#X text 178 534 - change ramp up phase position;
+#X text 178 581 - change ramp down phase position;
+#X text 178 481 - input signal;
+#X text 105 639 signal;
+#X text 178 639 - the trapezoidal wavetable output;
+#X text 281 293 args: <up> <down>;
+#X floatatom 170 183 0 0 0 0 - - -;
+#X msg 170 204 hi \$1;
+#X floatatom 213 183 0 0 0 0 - - -;
+#X msg 213 204 lo \$1;
+#X text 320 265 down;
+#X floatatom 160 128 0 0 0 0 - - -;
+#X text 39 58 trapezoid~ is a trapezoidal wavetable with signal inputs
+to change ramp up/down phase position. The default lo/hi points are
+0 and 1 \, but may be changed using the lo/hi messages.;
+#X text 268 239 up;
+#X obj 161 371 Scope~ 135 74 256 3 128 -1 1 0 0 0 0 102 255 51 135
+135 135 0;
+#X obj 185 324 Snapshot~ 100;
+#X floatatom 185 349 5 0 0 0 - - -, f 5;
+#X obj 160 293 trapezoid~ 0.1 0.9;
+#X obj 266 266 sig~ 0.9;
+#X obj 212 241 sig~ 0.1;
+#X obj 160 149 phasor~ 2;
+#X text 87 682 1) float;
+#X text 178 682 - initial ramp up;
+#X text 87 702 2) float;
+#X text 178 702 - initial ramp down;
+#X obj 481 56 pddp/dsp;
+#X text 105 504 message;
+#X text 178 504 - lo/hi messages change the lo/hi points (default 0/1)
+;
+#X text 255 203 change the lo/hi points;
+#X text 221 148 input signal;
+#X obj 7 738 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
+;
+#X connect 24 0 25 0;
+#X connect 25 0 35 0;
+#X connect 26 0 27 0;
+#X connect 27 0 35 0;
+#X connect 29 0 38 0;
+#X connect 33 0 34 0;
+#X connect 35 0 32 0;
+#X connect 35 0 33 0;
+#X connect 36 0 35 2;
+#X connect 37 0 35 1;
+#X connect 38 0 35 0;

@@ -1,0 +1,79 @@
+#N canvas 275 41 553 627 10;
+#X obj 0 604 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj 0 421 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 433 387 390 256 META 0;
+#X text 13 152 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 13 32 LICENSE SIBSD;
+#X text 13 132 AUTHOR Miller Puckette;
+#X text 13 172 RELEASE_DATE 1997;
+#X text 13 112 LIBRARY cyclone;
+#X text 13 92 OUTLET_0 float;
+#X text 13 52 DESCRIPTION computes the average value of signal;
+#X text 13 72 INLET_0 signal bang;
+#X text 13 192 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 13 12 KEYWORDS average mean signal;
+#X restore 495 606 pd META;
+#X obj 0 496 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 547 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 167 535 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 9 31 average;
+#X obj 60 31 average~;
+#X restore 208 606 pd Related_objects;
+#X obj 77 511 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 0 -1 cnv 15 552 40 empty \$0-pddp.cnv.header avg~ 3 12 0 18
+-204280 -1 0;
+#X text 110 434 signal;
+#X text 177 433 - the signal to have average taken;
+#X text 110 510 float;
+#X floatatom 41 257 0 0 0 0 - - -;
+#X floatatom 270 128 0 0 0 0 - - -;
+#X obj 41 282 * 128;
+#X obj 41 306 vsl 15 90 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 0 1;
+#X obj 219 96 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 285 96 200;
+#X msg 255 96 50;
+#X obj 219 150 metro 100;
+#X obj 41 96 adc~;
+#X obj 41 230 avg~;
+#X text 156 72 start metro to see averages;
+#X text 110 455 bang;
+#X text 177 455 - When average receives a bang \, it computes the mean
+amplitude of its input signal since it last received a bang.;
+#X text 177 501 - the average of signal. The mean amplitude is the
+sum of the absolute values of the input divided by the number of samples
+received.;
+#X text 108 565 (none);
+#X obj 517 1 avg~;
+#X text 11 22 Computes the average value of signal;
+#X obj 482 49 pddp/dsp;
+#X obj 77 437 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 70 249 float output (between 0 and 1 for audio signals);
+#X text 316 89 try different intervals to see the change in avg~ behavior
+;
+#X obj 5 604 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
+;
+#X text 12 72 signal/trigger input;
+#X obj 75 96 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X connect 11 0 13 0;
+#X connect 12 0 18 1;
+#X connect 13 0 14 0;
+#X connect 15 0 18 0;
+#X connect 16 0 12 0;
+#X connect 17 0 12 0;
+#X connect 18 0 20 0;
+#X connect 19 0 20 0;
+#X connect 20 0 11 0;
+#X connect 34 0 20 0;

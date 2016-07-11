@@ -1,0 +1,79 @@
+#N canvas 428 35 560 593 10;
+#X obj -1 565 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 396 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 583 339 396 262 META 0;
+#X text 27 188 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 27 36 LICENSE SIBSD;
+#X text 27 169 AUTHOR Miller Puckette;
+#X text 27 207 RELEASE_DATE 1997;
+#X text 27 150 LIBRARY cyclone;
+#X text 27 226 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 27 17 KEYWORDS polar cartesian conversion coordinate graph
+;
+#X text 27 55 DESCRIPTION polar to cartesian conversion;
+#X text 27 74 INLET_0 float;
+#X text 27 93 INLET_1 float;
+#X text 27 131 OUTLET_1 float;
+#X text 27 112 OUTLET_1 float;
+#X restore 499 567 pd META;
+#X obj -1 460 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 524 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 329 446 428 153 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 53 39 cartopol;
+#X restore 211 568 pd Related_objects;
+#X obj 81 409 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header poltocar 3 12 0
+18 -204280 -1 0;
+#X obj 81 433 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 110 409 float;
+#X text 183 470 - real part of argument;
+#X text 110 433 float;
+#X text 183 495 - imaginary part of argument;
+#X obj 81 470 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 81 495 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 110 470 float;
+#X text 110 495 float;
+#X text 183 409 - amplitude;
+#X text 183 433 - phase;
+#X text 115 537 (none);
+#X obj 486 8 poltocar;
+#X text 12 23 polar to cartesian conversion;
+#X floatatom 172 158 5 0 0 0 amplitude-> - -, f 5;
+#X floatatom 223 112 5 0 0 1 <-phase - -, f 5;
+#X floatatom 172 212 5 0 0 0 real-> - -, f 5;
+#X floatatom 217 212 5 0 0 1 <-imaginary - -, f 5;
+#X obj 172 187 poltocar;
+#X obj 176 307 hsl 128 15 -1 1 0 0 empty empty x-axis 133 7 1 10 -262144
+-1 -1 0 1;
+#X obj 232 248 vsl 15 128 -1 1 0 0 empty empty y-axis -6 -9 1 10 -262144
+-1 -1 0 1;
+#X obj 223 130 t b f;
+#X obj 172 61 hsl 128 15 -1 1 0 0 empty empty amplitude 6 7 1 10 -261681
+-1 -1 0 1;
+#X obj 223 88 hsl 128 15 0 6.28318 0 0 empty empty phase 7 7 1 10 -225280
+-1 -1 0 1;
+#X text 357 86 (0 to 2pi);
+#X obj 12 567 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
+;
+#X connect 22 0 26 0;
+#X connect 23 0 29 0;
+#X connect 24 0 28 0;
+#X connect 25 0 27 0;
+#X connect 26 0 24 0;
+#X connect 26 1 25 0;
+#X connect 29 0 22 0;
+#X connect 29 1 26 1;
+#X connect 30 0 22 0;
+#X connect 31 0 23 0;
