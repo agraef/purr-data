@@ -1407,8 +1407,6 @@ fprintf(stderr, "guidir is %s\n", guidir);
 #endif /* HAVE_UNISTD_H */
 
 #ifdef MSW
-        char escaped_scriptbuf[FILENAME_MAX];
-        int i, escaped_len;
             /* in MSW land "guipath" is unused; we just do everything from
             the libdir. */
         /* fprintf(stderr, "%s\n", sys_libdir->s_name); */
@@ -1418,9 +1416,15 @@ fprintf(stderr, "guidir is %s\n", guidir);
         //strcat(scriptbuf, "/" PDBINDIR "pd.tk\"");
         //sys_bashfilename(scriptbuf, scriptbuf);
 
-        strcpy(scriptbuf, sys_libdir->s_name);
+        sprintf("scriptbuf", "\""); /* use quotes in case there are spaces */
+        strcat(scriptbuf, sys_libdir->s_name);
         strcat(scriptbuf, "/" PDBINDIR);
         sys_bashfilename(scriptbuf, scriptbuf);
+        /* PDBINDIR ends with a "\", which will unfortunately end up
+           escaping our trailing double quote. So we replace the "\" with
+           our double quote. nw.js seems to find the path in this case,
+           so this _should_ work for all cases. */
+        scriptbuf[strlen(scriptbuf)-1] = '"';
 
         sprintf(portbuf, "%d", portno);
 
@@ -1428,22 +1432,7 @@ fprintf(stderr, "guidir is %s\n", guidir);
         strcat(wishbuf, "/" PDBINDIR "nw/nw");
         sys_bashfilename(wishbuf, wishbuf);
 
-        for (i = 0, escaped_len = 0; i < strlen(scriptbuf); i++)
-        {
-            if (escaped_len > (FILENAME_MAX - 3))
-            {
-                fprintf(stderr, "%s: path to GUI is too long\n");
-                exit(1);
-            }
-            if (scriptbuf[i] == ' ' ||
-                scriptbuf[i] == '^')
-            {
-                escaped_scriptbuf[escaped_len++] = '^';
-            }
-            escaped_scriptbuf[escaped_len++] = scriptbuf[i];
-        }
-        escaped_scriptbuf[escaped_len] = '\0';
-        spawnret = _spawnl(P_NOWAIT, wishbuf, "pd-nw", escaped_scriptbuf,
+        spawnret = _spawnl(P_NOWAIT, wishbuf, "pd-nw", scriptbuf,
             portbuf,
             "localhost",
             (sys_k12_mode ? "pd-l2ork-k12" : "pd-l2ork"),
