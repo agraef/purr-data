@@ -2447,7 +2447,7 @@ function gui_iemgui_label_font(cid, tag, fontname, fontweight, fontsize) {
 }
 
 // Show or hide little handle for dragging around iemgui labels
-function gui_iemgui_label_show_drag_handle(cid, tag, state, x, y) {
+function gui_iemgui_label_show_drag_handle(cid, tag, state, x, y, cnv_resize) {
     var gobj = get_gobj(cid, tag),
         rect;
     if (state !== 0) {
@@ -2456,14 +2456,17 @@ function gui_iemgui_label_show_drag_handle(cid, tag, state, x, y) {
             y: y + 3,
             width: 7,
             height: 7,
-            class: (cid === tag) ? "gop_drag_handle" : "label_drag_handle"
+            class: (cid === tag) ? "gop_drag_handle" :
+                cnv_resize !== 0 ? "cnv_resize_handle" : "label_drag_handle"
         });
         rect.classList.add("clickable_resize_handle");
         gobj.appendChild(rect);
     } else {
         if (gobj) {
-            rect = gobj.getElementsByClassName((cid === tag) ?
-                "gop_drag_handle" : "label_drag_handle")[0];
+            rect =
+                gobj.getElementsByClassName((cid === tag) ? "gop_drag_handle" :
+                    cnv_resize !== 0 ? "cnv_resize_handle" :
+                        "label_drag_handle")[0];
             //rect = get_item(cid, "clickable_resize_handle");
             // Need to check for null here...
             if (rect) {
