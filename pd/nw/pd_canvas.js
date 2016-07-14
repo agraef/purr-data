@@ -211,7 +211,9 @@ var canvas_events = (function() {
                     return;
                 } else if (evt.target.classList.contains("clickable_resize_handle")) {
                     // get id ("x123456etcgobj" without the "x" or "gobj")
-                    target_id = "_h" +
+                    target_id =
+                        (evt.target.classList.contains("label_drag_handle") ?
+                        "_l" : "_s") +
                         evt.target.parentNode.id.slice(0,-4).slice(1);
                     last_draggable_x = evt.pageX + svg_view.x;
                     last_draggable_y = evt.pageY + svg_view.y;
@@ -532,7 +534,9 @@ var canvas_events = (function() {
                     dy = (evt.pageY + svg_view.y) - last_draggable_y,
                     handle_elem =
                         document.querySelector(".clickable_resize_handle"),
-                    target_id = "_h" +
+                    target_id =
+                        (handle_elem.classList.contains("label_drag_handle") ?
+                            "_l" : "_s") +
                         handle_elem.parentNode.id.slice(0,-4).slice(1),
                     is_canvas_gop_rect = document.
                         getElementsByClassName("gop_drag_handle").length ?
@@ -819,6 +823,9 @@ var canvas_events = (function() {
             // This is a workaround for dragging iemgui labels. Resizing iemguis
             // currently happens in Pd (canvas_doclick and canvas_motion). (Look
             // for MA_RESIZE.)
+            // The exception is my_canvas, which is weird because the visible
+            // rectangle extends past the bbox that it reports to Pd.
+            // Unfortunately that means a lot of work to treat it separately.
             this.none();
             document.addEventListener("mousemove",
                 events.iemgui_label_mousemove, false);

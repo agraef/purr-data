@@ -83,8 +83,8 @@ static void my_canvas__motionhook(t_scalehandle *sh, t_floatarg mouse_x, t_float
         sh->h_dragy = dy;
         scalehandle_drag_scale(sh);
 
-        x->x_gui.x_w += dx;
-        x->x_gui.x_h += dy;
+        x->x_vis_w += dx;
+        x->x_vis_h += dy;
 
         if (glist_isvisible(x->x_gui.x_glist))
         {

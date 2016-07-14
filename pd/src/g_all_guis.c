@@ -691,6 +691,8 @@ int   maxi(int   a, int   b) {return a>b?a:b;}
 float minf(float a, float b) {return a<b?a:b;}
 float maxf(float a, float b) {return a>b?a:b;}
 
+extern t_class *my_canvas_class;
+
 // in 18 cases only, because canvas does not fit the pattern below.
 // canvas has no label handle and has a motion handle
 // but in the case of canvas, the "iemgui" tag is added (it wasn't the case originally)
@@ -706,13 +708,11 @@ void scalehandle_draw_select(t_scalehandle *h, int px, int py) {
 
     if (!h->h_vis) {
         sprintf(tagbuf, "x%lx", (long unsigned int)x);
-        gui_vmess("gui_iemgui_label_show_drag_handle", "xsiii",
-            canvas, tagbuf, 1, px - sx, py - sy);
+        gui_vmess("gui_iemgui_label_show_drag_handle", "xsiiii",
+            canvas, tagbuf, 1, px - sx, py - sy, h->h_scale);
         h->h_vis = 1;
     }
 }
-
-extern t_class *my_canvas_class;
 
 void scalehandle_draw_select2(t_iemgui *x) {
     t_canvas *canvas=glist_getcanvas(x->x_glist);
@@ -733,7 +733,8 @@ void scalehandle_draw_select2(t_iemgui *x) {
     }
     /* we're not drawing the scalehandle for the actual iemgui-- just
        the one for the label. */
-    //scalehandle_draw_select(x->x_handle,sx-1,sy-1);
+    if (c == my_canvas_class)
+        scalehandle_draw_select(x->x_handle,sx-1,sy-1);
     if (x->x_lab != s_empty)
         scalehandle_draw_select(x->x_lhandle,x->x_ldx,x->x_ldy);
 }
@@ -741,8 +742,8 @@ void scalehandle_draw_select2(t_iemgui *x) {
 void scalehandle_draw_erase(t_scalehandle *h) {
     t_canvas *canvas = glist_getcanvas(h->h_glist);
     if (!h->h_vis) return;
-    gui_vmess("gui_iemgui_label_show_drag_handle", "xxiii",
-        h->h_glist, h->h_master, 0, 0, 0);
+    gui_vmess("gui_iemgui_label_show_drag_handle", "xxiiii",
+        h->h_glist, h->h_master, 0, 0, 0, h->h_scale);
     h->h_vis = 0;
 }
 
@@ -767,7 +768,12 @@ t_scalehandle *scalehandle_new(t_object *x, t_glist *glist, int scale, t_clickha
     h->h_glist = glist;
     if (!scale) /* Only bind for labels-- scaling uses pd_vmess in g_editor.c */
     {
-        sprintf(buf, "_h%lx", (t_int)x);
+        sprintf(buf, "_l%lx", (int)x);
+        pd_bind((t_pd *)h, h->h_bindsym = gensym(buf));
+    }
+    else if (scale && pd_class((t_pd *)x) == my_canvas_class)
+    {
+        sprintf(buf, "_s%lx", (int)x);
         pd_bind((t_pd *)h, h->h_bindsym = gensym(buf));
     }
     sprintf(h->h_outlinetag, "h%lx", (t_int)h);
@@ -783,7 +789,8 @@ t_scalehandle *scalehandle_new(t_object *x, t_glist *glist, int scale, t_clickha
 }
 
 void scalehandle_free(t_scalehandle *h) {
-    if (!h->h_scale) { /* only binding handles labels, not for scaling guis */
+    if (!h->h_scale || pd_class((t_pd *)(h->h_master)) == my_canvas_class)
+    { /* only binding label handles and my_canvas resize handle */
         pd_unbind((t_pd *)h, h->h_bindsym);
     }
     pd_free((t_pd *)h);
