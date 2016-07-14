@@ -1014,7 +1014,8 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
         sprintf(tagbuf, "scalar%lx", (long unsigned int)x->sc_vec);
         gui_vmess("gui_scalar_erase", "xs",
             glist_getcanvas(owner), tagbuf);
-        pd_unbind(&x->sc_gobj.g_pd, gensym(buf));
+        if (gensym(buf)->s_thing)
+            pd_unbind(&x->sc_gobj.g_pd, gensym(buf));
     }
 
     sys_unqueuegui(x);
