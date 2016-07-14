@@ -336,6 +336,7 @@ text {
 
 .dialog_body {
     font-family: "DejaVu Sans", sans-serif;
+    font-size: 10pt;
     background-color: #3e32a2;
 }
 
