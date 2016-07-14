@@ -151,7 +151,7 @@ make install</code>
 ### Code of Conduct
 
 1. No sarcasm
-2. Don't lack empathy
+2. Don't appear to lack empathy
 
 Enforcement of the Code of Conduct is complaint-driven.
 
