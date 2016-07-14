@@ -734,7 +734,7 @@ void scalehandle_draw_select2(t_iemgui *x) {
     /* we're not drawing the scalehandle for the actual iemgui-- just
        the one for the label. */
     if (c == my_canvas_class)
-        scalehandle_draw_select(x->x_handle,sx-1,sy-1);
+        scalehandle_draw_select(x->x_handle,sx+8,sy+3);
     if (x->x_lab != s_empty)
         scalehandle_draw_select(x->x_lhandle,x->x_ldx,x->x_ldy);
 }

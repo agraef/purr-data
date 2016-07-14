@@ -3306,9 +3306,16 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
             int ninlet;
                 /* resize?  only for "true" text boxes, canvases, iemguis,
                    and -- using an awful hack-- for the Scope~ object
-                   by checking for the class name below */
+                   by checking for the class name below.
+
+                   One exception-- my_canvas. It has a weirdo interface
+                   where the visual dimensions usually (i.e., by default)
+                   extends well past the bounds of the bbox. For that reason
+                   we have a virtual waterfall of conditionals flowing all
+                   the way to the GUI just handle resizing a stupid rectangle.
+                */
             if (ob &&
-                   (ob->te_iemgui
+                   (ob->te_iemgui && pd_class((t_pd *)ob) != my_canvas_class
                        || pd_class(&ob->te_pd)->c_name == gensym("Scope~"))
                    && xpos >= x2-4 && ypos > y2-6)
             {
