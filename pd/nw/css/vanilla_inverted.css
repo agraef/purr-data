@@ -332,6 +332,13 @@ text {
     left: 0;
 }
 
+/* Search dialog */
+
+.search_body {
+    font-family: "DejaVu Sans", sans-serif;
+    font-size: 10pt;
+}
+
 /* Common to all dialogs */
 
 .dialog_body {
