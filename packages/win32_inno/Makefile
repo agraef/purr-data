@@ -109,7 +109,6 @@ lib_install:
 
 exe_install:
 	install -d $(DESTDIR)$(bindir)
-	# We need to add the nw.js binary here
 
 $(PD_INNO_SETUP): $(PD_INNO_SETUP).in
 	@echo "Making Inno Setup file: $(PD_INNO_SETUP)"
