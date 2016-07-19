@@ -2,8 +2,7 @@
 #X obj 16 109 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
 ;
 #X msg 161 108 100;
-#X text 12 247 (C) 2006 João Pais - jmmmpais@googlemail.com
-;
+#X text 12 247 (C) 2006 João Pais - jmmmpais@googlemail.com;
 #X text 306 100 Inlets;
 #X text 306 120 - On / Off;
 #X text 306 170 Outlets;
@@ -48,6 +47,19 @@ in the documentation and/or other materials provided with the distribution.
 #X text 8 27 jmmmpais@googlemail.com;
 #X text 8 7 Copyright 2006 \, João Pais;
 #X restore 15 269 pd license;
+#N canvas 504 106 494 344 META 0;
+#X text 12 55 AUTHOR João Pais <jmmmpais@googlemail.com>;
+#X text 12 95 LICENSE BSD;
+#X text 12 75 LIBRARY jmmmp;
+#X text 13 115 WEBSITE http://puredata.info/Members/jmmmp;
+#X text 12 5 DESCRIPTION Metro with GUI;
+#X text 14 36 KEYWORDS metro;
+#X text 12 135 VERSION 2006;
+#X text 14 165 INLET_0 - On / Off;
+#X text 14 185 INLET_1 - Velocity (ms);
+#X text 14 205 OUTLET_0 - Bang;
+#X text 14 225 OUTLET_1 - Velocity (ms);
+#X restore 372 276 pd META;
 #X connect 0 0 7 0;
 #X connect 1 0 7 1;
 #X connect 7 0 9 0;

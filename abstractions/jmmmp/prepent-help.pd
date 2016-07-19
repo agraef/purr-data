@@ -1,0 +1,3 @@
+#N canvas 329 129 450 300 10;
+#X obj 189 121 prepent;
+#X text 73 61 [list prepend]--[list trim] shortcut;

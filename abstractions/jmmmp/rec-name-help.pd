@@ -18,10 +18,10 @@ or playback;
 1;
 #X obj 36 229 print REC;
 #X obj 119 249 print PLAY;
-#X obj 36 366 writesf~ 2;
-#X obj 119 366 readsf~ 2;
-#X obj 119 386 dac~;
-#X obj 36 336 rec-name;
+#X obj 36 376 writesf~ 2;
+#X obj 119 376 readsf~ 2;
+#X obj 119 396 dac~;
+#X obj 36 346 rec-name;
 #X text 13 6 [rec-name] - Automatic naming for a record/playback engine.
 ;
 #X text 12 437 (C) 2007 João Pais - jmmmpais@googlemail.com;
@@ -40,6 +40,25 @@ This string can be connected with the writesf~ and readsf~ objects.
 recordings (or takes) one after the other. The files are named automatically
 \, avoiding the constant inputting of a filename.;
 #X text 12 457 Released under the BSD License;
+#X obj 36 326 tgl 13 0 empty empty empty 0 -6 0 8 -258113 -1 -1 0 1
+;
+#X obj 119 326 tgl 13 0 empty empty empty 0 -6 0 8 -4034 -1 -1 0 1
+;
+#N canvas 504 106 494 344 META 0;
+#X text 12 55 AUTHOR João Pais <jmmmpais@googlemail.com>;
+#X text 12 95 LICENSE BSD;
+#X text 12 75 LIBRARY jmmmp;
+#X text 13 115 WEBSITE http://puredata.info/Members/jmmmp;
+#X text 12 6 DESCRIPTION Automatic naming for a record/playback engine
+;
+#X text 12 36 KEYWORDS filename dynamic;
+#X text 12 135 VERSION 2007;
+#X text 14 165 INLET_0 - Bang / Toggle (Recording);
+#X text 14 185 INLET_1 - Bang / Toggle (Playback) / Sample playback
+index;
+#X text 14 205 OUTLET_0 - message to writesf~;
+#X text 14 225 OUTLET_1 - message to readsf~;
+#X restore 702 466 pd META;
 #X connect 0 0 12 0;
 #X connect 0 1 13 0;
 #X connect 8 0 0 0;
@@ -50,3 +69,5 @@ recordings (or takes) one after the other. The files are named automatically
 #X connect 15 1 16 1;
 #X connect 17 0 14 0;
 #X connect 17 1 15 0;
+#X connect 27 0 17 0;
+#X connect 28 0 17 1;

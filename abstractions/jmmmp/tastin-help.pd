@@ -1,23 +1,40 @@
-#N canvas 121 146 376 296 10;
-#X text 12 247 (C) 2006 João Pais - jmmmpais@googlemail.com
-;
-#X text 12 267 Released under the BSD License;
-#X text 256 125 Outlets;
-#X text 256 75 Arguments;
-#X floatatom 36 156 5 0 0 0 - - -;
+#N canvas 121 146 376 360 10;
+#X text 12 327 Released under the BSD License;
+#X floatatom 46 196 5 0 0 0 - - -;
 #X text 12 10 [tastin] - Gate for keyboard input;
-#X text 256 95 - State (0 / 1);
-#X text 256 145 - key number;
-#X text 256 165 - state;
-#X obj 123 139 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+#X obj 133 179 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
 1;
-#X text 74 156 Key value;
-#X text 143 138 State;
-#X text 256 195 Key control;
-#X obj 36 119 tastin;
-#X text 256 215 - Esc: on / off;
+#X text 82 196 Key value;
+#X text 151 178 State;
+#X obj 46 159 tastin;
 #X text 12 30 Controls the flow of keyboard events with the Esc key
 \, so that nothing gets triggered by accident. The numbers are also
 displayed in the object.;
-#X connect 13 0 4 0;
-#X connect 13 1 9 0;
+#X text 236 185 Outlets;
+#X text 236 85 Arguments;
+#X text 236 105 - State (0 / 1);
+#X text 236 205 - key number;
+#X text 236 225 - state;
+#X text 236 255 Key control;
+#X text 236 275 - Esc on / off;
+#X text 236 135 Inlets;
+#X text 236 155 - toggle switch;
+#X obj 46 129 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 64 129 Status control;
+#N canvas 504 106 494 344 META 0;
+#X text 12 55 AUTHOR João Pais <jmmmpais@googlemail.com>;
+#X text 12 95 LICENSE BSD;
+#X text 12 75 LIBRARY jmmmp;
+#X text 13 115 WEBSITE http://puredata.info/Members/jmmmp;
+#X text 13 6 DESCRIPTION Gate for keyboard input;
+#X text 12 36 KEYWORDS key GUI;
+#X text 14 165 INLET_0 - toggle switch;
+#X text 14 185 OUTLET_0 - key number;
+#X text 14 205 OUTLET_1 - state;
+#X text 12 135 VERSION 2006;
+#X restore 312 326 pd META;
+#X text 12 307 (C) 2006 João Pais - jmmmpais@gmail.com;
+#X connect 6 0 1 0;
+#X connect 6 1 3 0;
+#X connect 17 0 6 0;

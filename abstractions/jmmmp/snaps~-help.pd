@@ -1,4 +1,4 @@
-#N canvas 125 122 425 286 10;
+#N canvas 125 122 408 275 10;
 #X text 12 227 (C) 2006 João Pais - jmmmpais@googlemail.com;
 #X text 12 247 Released under the BSD License;
 #X text 276 100 Inlets;
@@ -16,6 +16,18 @@
 #X msg 146 86 50;
 #X obj 26 177 dsp01;
 #X text 12 10 [snaps~] - snapshot~ GUI implementation;
+#N canvas 504 106 494 344 META 0;
+#X text 12 55 AUTHOR João Pais <jmmmpais@googlemail.com>;
+#X text 12 95 LICENSE BSD;
+#X text 12 75 LIBRARY jmmmp;
+#X text 13 115 WEBSITE http://puredata.info/Members/jmmmp;
+#X text 12 6 DESCRIPTION snapshot~ GUI implementation;
+#X text 12 36 KEYWORDS snapshot~ GUI;
+#X text 12 135 VERSION 2006;
+#X text 14 165 INLET_0 - Signal;
+#X text 14 185 INLET_1 - Meter speed (ms);
+#X text 14 205 OUTLET_0 - Signal level;
+#X restore 352 246 pd META;
 #X connect 5 0 13 1;
 #X connect 8 0 13 0;
 #X connect 13 0 7 0;

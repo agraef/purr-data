@@ -1,0 +1,260 @@
+#N canvas 69 167 450 300 10;
+#X obj 150 53 image examples/rgb.ppm ;
+#N canvas 304 153 474 680 inside 0;
+#N canvas 400 377 705 549 selector-data 0;
+#X obj 203 53 route change click;
+#X obj 222 83 unpack p f;
+#X obj 119 25 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 9 59 t b b;
+#X obj 64 130 pointer;
+#X msg 64 110 traverse \$1 \, bang;
+#X obj 222 333 t p p p p;
+#X obj 222 403 list-add;
+#X obj 222 363 get \$0-rgb-sel p0x;
+#X msg 347 363 -8 0 8;
+#X msg 222 383 \$1 \$1 \$1;
+#X obj 222 423 set \$0-rgb-sel p1x p2x p3x;
+#X obj 256 493 list-add;
+#X msg 256 473 \$1 \$1 \$1;
+#X obj 256 453 get \$0-rgb-sel p0y;
+#X obj 256 513 set \$0-rgb-sel p1y p2y p3y;
+#X text 378 104 drawcurve 0 2 -8 0 0 8 8 0 0 -8 -8 0;
+#X obj 239 183 t p p p p;
+#X obj 273 263 get \$0-rgb-sel p0y;
+#X obj 273 303 set \$0-rgb-sel p0y.;
+#X obj 256 153 outlet;
+#X obj 273 283 + 0;
+#X obj 239 223 + 0;
+#X obj 352 63 drawpolygon 0 1 0 0 259 0 259 66 0 66 0 0;
+#X obj 352 83 drawpolygon 0 2 p0x(0:258) p0y(0:65) p0x. p0y.;
+#X obj 352 123 drawcurve 0 2 p1x p2y p2x p3y p3x p2y p2x p1y p1x p2y
+;
+#X obj 64 90 symbol \$0-swatch;
+#X obj 9 9 loadbang;
+#X obj 9 180 t p b p;
+#X msg 28 200 134 33;
+#X obj 9 29 t b b;
+#X obj 203 7 struct \$0-rgb-sel float x float y float p1x float p1y
+float p2x float p2y float p3x float p3y float p4x float p4y float p5x
+float p5y float p0x float p0y float p0x. float p0y.;
+#X obj 9 160 append \$0-rgb-sel x y;
+#X obj 28 220 set \$0-rgb-sel p0x p0y;
+#X obj 239 203 get \$0-rgb-sel p0x;
+#X obj 239 243 set \$0-rgb-sel p0x.;
+#X msg 9 140 10 10;
+#X obj 452 332 pointer;
+#X obj 522 309 set \$0-rgb-sel p0x p0y;
+#X obj 222 113 t p p p p;
+#X obj 450 253 t p p;
+#X msg 521 259 \$1 \$2;
+#X obj 523 280 t b l;
+#X text 443 221 mecanismo para gravar posicoes;
+#X connect 0 0 1 0;
+#X connect 0 1 1 0;
+#X connect 1 0 39 0;
+#X connect 2 0 3 0;
+#X connect 3 0 36 0;
+#X connect 3 1 26 0;
+#X connect 4 0 32 2;
+#X connect 5 0 4 0;
+#X connect 6 0 8 0;
+#X connect 6 1 11 3;
+#X connect 6 2 14 0;
+#X connect 6 3 15 3;
+#X connect 7 0 11 0;
+#X connect 8 0 10 0;
+#X connect 9 0 7 1;
+#X connect 9 0 12 1;
+#X connect 10 0 7 0;
+#X connect 12 0 15 0;
+#X connect 13 0 12 0;
+#X connect 14 0 13 0;
+#X connect 17 0 34 0;
+#X connect 17 1 35 1;
+#X connect 17 2 18 0;
+#X connect 17 3 19 1;
+#X connect 18 0 21 0;
+#X connect 21 0 19 0;
+#X connect 22 0 35 0;
+#X connect 26 0 5 0;
+#X connect 27 0 30 0;
+#X connect 28 0 39 0;
+#X connect 28 1 29 0;
+#X connect 28 2 33 2;
+#X connect 29 0 33 0;
+#X connect 30 0 3 0;
+#X connect 30 1 9 0;
+#X connect 31 0 0 0;
+#X connect 32 0 28 0;
+#X connect 34 0 22 0;
+#X connect 36 0 32 0;
+#X connect 37 0 39 0;
+#X connect 39 0 6 0;
+#X connect 39 1 17 0;
+#X connect 39 2 20 0;
+#X connect 39 3 40 0;
+#X connect 40 0 37 1;
+#X connect 40 1 38 2;
+#X connect 41 0 42 0;
+#X connect 42 0 37 0;
+#X connect 42 1 38 0;
+#X restore 82 11 pd selector-data;
+#X obj 82 31 get \$0-rgb-sel p0x p0y;
+#X obj 82 151 tabread \$0-table;
+#X obj 101 171 tabread \$0-table;
+#X obj 82 51 t f f f;
+#X msg 173 567 \$1 \$2 \$3;
+#X obj 82 201 pack f f f;
+#X obj 121 111 tabread \$0-table;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0-table 258 float 1;
+#A 0 0 0.0232558 0.0465116 0.0697674 0.0930233 0.116279 0.139535 0.162791
+0.186047 0.209302 0.232558 0.255814 0.27907 0.302326 0.325581 0.348837
+0.372093 0.395349 0.418605 0.44186 0.465116 0.488372 0.511628 0.534884
+0.55814 0.581395 0.604651 0.627907 0.651163 0.674419 0.697674 0.72093
+0.744186 0.767442 0.790698 0.813954 0.837209 0.860465 0.883721 0.906977
+0.930233 0.953488 0.976744 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0.976744
+0.953488 0.930233 0.906977 0.883721 0.860465 0.837209 0.813954 0.790698
+0.767442 0.744186 0.72093 0.697674 0.674419 0.651163 0.627907 0.604651
+0.581395 0.55814 0.534884 0.511628 0.488372 0.465116 0.44186 0.418605
+0.395349 0.372093 0.348837 0.325581 0.302326 0.27907 0.255814 0.232558
+0.209302 0.186046 0.162791 0.139535 0.116279 0.0930232 0.0697674 0.0465117
+0.0232558 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;
+#X coords 0 1 257 0 258 50 1;
+#X restore 202 359 graph;
+#X text 217 426 43 por cada segmento;
+#X text 209 411 0 0 \, 1 43 \, 1 129 \, 0 172 \, 0 258;
+#X obj 82 111 + 86;
+#X obj 82 131 zexy/wrap 257;
+#X obj 121 91 zexy/wrap 257;
+#X obj 121 71 + 172;
+#X obj 173 607 outlet;
+#X obj 233 90 moses 0;
+#X obj 233 70 expr $f1-33;
+#X obj 272 110 expr 1-$f1/32;
+#X obj 173 281 list-mult;
+#X msg 224 261 \$1 \$1 \$1;
+#X text 360 107 opacidade;
+#X obj 173 527 list-mult;
+#X msg 224 507 255 255 255;
+#X obj 173 547 l2i;
+#X obj 224 487 loadbang;
+#X obj 173 587 expr ($f1*(-65536)+$f2*(-256)+$f3*(-1))-1;
+#X text 206 317 converter entradas rgb e iem;
+#X text 362 151 brilho;
+#X obj 82 251 demux 0 1;
+#X obj 272 130 t b f;
+#X obj 233 170 t b f;
+#X obj 113 231 0;
+#X obj 143 231 1;
+#X obj 12 281 unpack f f f;
+#X obj 12 311 pack f f 0 1;
+#X obj 12 331 list-rot 1;
+#X obj 233 150 expr ($f1+1)/32*(-1);
+#X obj 12 351 maxlib/scale 0 1 0 1;
+#X obj 12 491 pack f f f;
+#X obj 46 371 pack f f 0 1;
+#X obj 46 391 list-rot 1;
+#X obj 46 411 maxlib/scale 0 1 0 1;
+#X obj 102 281 t f f f;
+#X obj 81 431 pack f f 0 1;
+#X obj 81 451 list-rot 1;
+#X obj 81 471 maxlib/scale 0 1 0 1;
+#X obj 342 34 inlet;
+#N canvas 0 0 376 407 license 0;
+#X text 8 47 All rights reserved.;
+#X text 8 227 The names of its contributors may not be used to endorse
+or promote products derived from this software without specific prior
+written permission.;
+#X text 8 87 Redistribution and use in source and binary forms \, with
+or without modification \, are permitted provided that the following
+conditions are met:;
+#X text 8 127 Redistributions of source code must retain the above
+copyright notice \, this list of conditions and the following disclaimer.
+;
+#X text 8 297 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES \, INCLUDING
+\, BUT NOT LIMITED TO \, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT \, INDIRECT
+\, INCIDENTAL \, SPECIAL \, EXEMPLARY \, OR CONSEQUENTIAL DAMAGES (INCLUDING
+\, BUT NOT LIMITED TO \, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES
+;
+#X text 8 167 Redistributions in binary form must reproduce the above
+copyright notice \, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the distribution.
+;
+#X text 8 27 jmmmpais@googlemail.com;
+#X text 8 7 Copyright 2010 \, João Pais;
+#X restore 15 656 pd license;
+#X text 14 637 (C) 2010 João Pais - jmmmpais@googlemail.com;
+#X text 242 234 FALTA MECANISMO PARA GRAVAR POSICOES;
+#X connect 0 0 1 0;
+#X connect 1 0 4 0;
+#X connect 1 1 17 0;
+#X connect 2 0 6 0;
+#X connect 3 0 6 1;
+#X connect 4 0 11 0;
+#X connect 4 1 3 0;
+#X connect 4 2 14 0;
+#X connect 5 0 26 0;
+#X connect 6 0 29 0;
+#X connect 7 0 6 2;
+#X connect 11 0 12 0;
+#X connect 12 0 2 0;
+#X connect 13 0 7 0;
+#X connect 14 0 13 0;
+#X connect 16 0 37 0;
+#X connect 16 1 18 0;
+#X connect 17 0 16 0;
+#X connect 18 0 30 0;
+#X connect 19 0 22 0;
+#X connect 20 0 19 1;
+#X connect 22 0 24 0;
+#X connect 23 0 22 1;
+#X connect 24 0 5 0;
+#X connect 25 0 23 0;
+#X connect 26 0 15 0;
+#X connect 29 0 34 0;
+#X connect 29 1 19 0;
+#X connect 30 0 33 0;
+#X connect 30 1 20 0;
+#X connect 31 0 32 0;
+#X connect 31 1 43 0;
+#X connect 32 0 29 1;
+#X connect 33 0 29 1;
+#X connect 34 0 35 0;
+#X connect 34 1 40 0;
+#X connect 34 2 44 0;
+#X connect 35 0 36 0;
+#X connect 36 0 38 0;
+#X connect 37 0 31 0;
+#X connect 38 0 39 0;
+#X connect 39 0 22 0;
+#X connect 40 0 41 0;
+#X connect 41 0 42 0;
+#X connect 42 0 39 1;
+#X connect 43 0 35 1;
+#X connect 43 1 40 1;
+#X connect 43 2 44 1;
+#X connect 44 0 45 0;
+#X connect 45 0 46 0;
+#X connect 46 0 39 2;
+#X restore 10 211 pd inside;
+#X obj 10 261 namecanvas \$0-swatch;
+#X obj 10 191 inlet;
+#X obj 10 231 outlet;
+#X obj 217 220 getdir;
+#X obj 217 199 loadbang;
+#X msg 216 251 open \$1/examples/rgb.ppm;
+#X connect 1 0 4 0;
+#X connect 3 0 1 0;
+#X connect 5 0 7 0;
+#X connect 6 0 5 0;
+#X connect 7 0 0 0;
+#X coords 0 0 279 86 279 86 2 10 10;

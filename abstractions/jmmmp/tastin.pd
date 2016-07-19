@@ -1,22 +1,21 @@
-#N canvas 309 69 360 302 10;
-#X obj 15 41 key;
-#X obj 48 122 spigot;
-#X obj 15 62 sel 27;
-#X obj 112 102 tgl 13 0 \$0-bogus \$0-bogus-i empty 0 -6 0 8 -233017
+#N canvas 459 72 360 310 10;
+#X obj 15 51 key;
+#X obj 48 132 spigot;
+#X obj 15 72 sel 27;
+#X obj 112 112 tgl 13 0 \$0-bogus \$0-bogus-i empty 0 -6 0 8 -233017
 -1 -1 0 1;
-#X obj 112 62 loadbang;
-#X obj 48 152 outlet;
-#X obj 112 152 outlet;
-#X obj 112 82 \$1;
+#X obj 112 42 loadbang;
+#X obj 48 162 outlet;
+#X obj 112 162 outlet;
+#X obj 112 62 \$1;
 #X text 12 10 [tastin] - Gate for keyboard input;
-#X text 236 85 Outlets;
+#X text 236 135 Outlets;
 #X text 236 35 Arguments;
 #X text 236 55 - State (0 / 1);
-#X text 236 105 - key number;
-#X text 236 125 - state;
-#X text 236 155 Key control;
-#X text 236 175 - Esc on / off;
-#X text 12 251 (C) 2006 João Pais - jmmmpais@googlemail.com;
+#X text 236 155 - key number;
+#X text 236 175 - state;
+#X text 236 205 Key control;
+#X text 236 225 - Esc on / off;
 #N canvas 0 0 426 446 license 0;
 #X text 8 47 All rights reserved.;
 #X text 8 227 The names of its contributors may not be used to endorse
@@ -42,21 +41,26 @@ in the documentation and/or other materials provided with the distribution.
 ;
 #X text 8 27 jmmmpais@googlemail.com;
 #X text 8 7 Copyright 2006 \, João Pais;
-#X restore 15 269 pd license;
-#X obj 73 102 cnv 13 37 13 empty \$0-label 0 4 8 0 12 -195568 -1 0
+#X restore 15 279 pd license;
+#X obj 73 112 cnv 13 37 13 empty \$0-label 0 4 8 0 12 -195568 -1 0
 ;
-#X obj 18 222 s \$0-label;
-#X msg 18 202 label \$1;
-#X obj 18 182 makesymbol;
+#X obj 18 232 s \$0-label;
+#X msg 18 212 label \$1;
+#X obj 122 82 inlet;
+#X text 236 85 Inlets;
+#X text 236 105 - toggle switch;
+#X obj 18 192 makefilename %d;
+#X text 12 261 (C) 2006-2015 João Pais - jmmmpais@gmail.com;
 #X connect 0 0 2 0;
 #X connect 1 0 5 0;
 #X connect 2 0 3 0;
 #X connect 2 1 1 0;
-#X connect 2 1 21 0;
+#X connect 2 1 23 0;
 #X connect 3 0 1 1;
 #X connect 3 0 6 0;
 #X connect 4 0 7 0;
 #X connect 7 0 3 0;
-#X connect 20 0 19 0;
-#X connect 21 0 20 0;
-#X coords 0 -1 1 1 94 17 1 33 100;
+#X connect 19 0 18 0;
+#X connect 20 0 3 0;
+#X connect 23 0 19 0;
+#X coords 0 -1 1 1 94 17 1 33 110;

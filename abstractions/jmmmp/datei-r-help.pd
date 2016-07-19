@@ -17,6 +17,17 @@
 #X text 12 237 (C) 2006 João Pais - jmmmpais@googlemail.com;
 #X text 12 257 Released under the BSD License;
 #X text 12 208 Related objects: [datei-o] [datei-w];
+#N canvas 504 106 494 344 META 0;
+#X text 12 55 AUTHOR João Pais <jmmmpais@googlemail.com>;
+#X text 12 95 LICENSE BSD;
+#X text 12 75 LIBRARY jmmmp;
+#X text 13 115 WEBSITE http://puredata.info/Members/jmmmp;
+#X text 12 135 VERSION 2006;
+#X text 14 165 INLET_0 - Bang / File name;
+#X text 14 185 OUTLET_0 - Message;
+#X text 12 5 DESCRIPTION Sends the message "read ../../";
+#X text 12 35 KEYWORDS read file;
+#X restore 402 266 pd META;
 #X connect 0 0 1 0;
 #X connect 1 0 2 0;
 #X connect 3 0 1 0;

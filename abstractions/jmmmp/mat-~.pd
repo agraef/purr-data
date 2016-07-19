@@ -1,4 +1,4 @@
-#N canvas 622 202 457 485 10;
+#N canvas 52 116 497 485 10;
 #X obj 31 109 cnv 15 128 29 empty empty empty 20 12 0 14 -233017 -66577
 0;
 #X obj 19 332 *~;
@@ -19,7 +19,6 @@
 #X obj 48 182 t b f;
 #X obj 73 202 expr if ($f1 == 0 \, 22 \, 20);
 #X msg 73 222 color \$1;
-#X obj 78 144 init 1;
 #N canvas 0 0 426 446 license 0;
 #X text 8 47 All rights reserved.;
 #X text 8 227 The names of its contributors may not be used to endorse
@@ -46,34 +45,46 @@ in the documentation and/or other materials provided with the distribution.
 #X text 8 27 jmmmpais@googlemail.com;
 #X text 8 7 Copyright 2006 \, João Pais;
 #X restore 15 455 pd license;
-#X text 11 8 [met~] - Level meter with amplitude control;
-#X text 266 56 Inlets;
-#X text 266 146 Outlets;
-#X text 266 76 - Signal;
-#X text 266 166 - Amplified signal;
-#X text 266 186 - Signal level (0-1);
-#X text 266 116 - Level (0-127);
-#X text 266 96 - Mute / Unmute (bang);
+#X text 266 96 Inlets;
+#X text 266 186 Outlets;
+#X text 266 116 - Signal;
+#X text 266 206 - Amplified signal;
+#X text 266 226 - Signal level (0-1);
+#X text 266 156 - Level (0-127);
+#X text 266 136 - Mute / Unmute (bang);
 #X obj 29 372 dbtofad;
-#X text 12 437 (C) 2009 João Pais - jmmmpais@googlemail.com;
 #X obj 36 125 hsl 119 10 0 127 0 0 empty empty empty -2 -8 0 10 -191407
--1 -33289 4600 0;
+-1 -33289 9100 0;
 #X obj 36 112 hsl 119 10 -100 12 0 0 empty empty empty -2 -8 0 10 -195568
--1 -262144 1233 1;
+-1 -1 0 1;
 #X obj 128 127 cnv 1 2 6 empty empty empty 20 12 0 14 -262144 -262144
 0;
 #X obj 123 114 cnv 1 2 6 empty empty empty 20 12 0 14 -262144 -262144
 0;
+#X obj 170 87 moses 1;
+#X text 266 46 Arguments;
+#X text 266 66 - Level (0-127);
+#X obj 170 67 \$1;
+#X obj 170 47 initbang;
+#X obj 78 144 1;
+#X obj 118 385 change;
+#X msg 118 405 color \$1 22 22;
+#X obj 119 352 expr if ($f1 == -100 \, 20 \, if ($f1 < -52 \, 16 \,
+if ($f1 < -22 \, 15 \, if ($f1 < -16 \, 14 \, 13))));
+#X text 11 8 [met~] - Level meter with amplitude control and color
+display;
+#X text 12 437 (C) 2009-2014 João Pais - jmmmpais@googlemail.com;
 #X connect 1 0 6 0;
 #X connect 1 0 10 0;
 #X connect 2 0 1 1;
 #X connect 3 0 2 0;
-#X connect 4 0 30 0;
+#X connect 4 0 27 0;
 #X connect 5 0 1 0;
 #X connect 7 0 3 0;
 #X connect 7 0 8 0;
-#X connect 9 0 31 0;
-#X connect 10 0 28 0;
+#X connect 9 0 28 0;
+#X connect 9 0 39 0;
+#X connect 10 0 26 0;
 #X connect 11 0 12 0;
 #X connect 12 0 13 0;
 #X connect 13 0 15 0;
@@ -82,8 +93,15 @@ in the documentation and/or other materials provided with the distribution.
 #X connect 15 1 14 1;
 #X connect 15 1 16 0;
 #X connect 16 0 17 0;
-#X connect 17 0 31 0;
-#X connect 18 0 13 0;
-#X connect 28 0 9 0;
-#X connect 30 0 14 0;
+#X connect 17 0 28 0;
+#X connect 26 0 9 0;
+#X connect 27 0 14 0;
+#X connect 31 1 27 0;
+#X connect 34 0 31 0;
+#X connect 35 0 34 0;
+#X connect 35 0 36 0;
+#X connect 36 0 13 0;
+#X connect 37 0 38 0;
+#X connect 38 0 28 0;
+#X connect 39 0 37 0;
 #X coords 0 -1 1 1 130 31 1 30 108;

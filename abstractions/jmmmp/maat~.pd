@@ -10,12 +10,12 @@
 #X obj 48 262 dbtorms;
 #X obj 128 282 outlet;
 #X obj 60 113 vsl 10 119 0 127 0 0 empty empty empty 0 -8 0 8 -195568
--1 -1 9300 0;
+-1 -1 2787 0;
 #X obj 62 138 cnv 1 6 2 empty empty empty 20 12 0 14 -262144 -262144
 0;
 #X obj 29 382 - 100;
 #X obj 34 113 vsl 10 119 -100 12 0 0 empty empty empty 0 -8 0 8 -195568
--1 -262144 8909 0;
+-1 -262144 0 0;
 #X obj 29 342 env~ 8820;
 #X obj 121 87 inlet mute;
 #X obj 121 112 bang;
@@ -26,8 +26,6 @@
 #X obj 146 170 expr if ($f1 == 0 \, 22 \, 20);
 #X msg 146 190 color \$1;
 #X obj 151 112 init 1;
-#X text 12 428 (C) 2006 João Pais - jmmmpais@googlemail.com
-;
 #N canvas 0 0 426 446 license 0;
 #X text 8 47 All rights reserved.;
 #X text 8 227 The names of its contributors may not be used to endorse
@@ -54,11 +52,11 @@ in the documentation and/or other materials provided with the distribution.
 #X text 8 27 jmmmpais@googlemail.com;
 #X text 8 7 Copyright 2006 \, João Pais;
 #X restore 15 446 pd license;
-#X text 330 45 Inlets;
-#X text 330 155 Outlets;
-#X text 330 215 - Signal level (0-1);
-#X text 330 125 - Level (0-127);
-#X text 330 105 - Mute / Unmute (bang);
+#X text 330 95 Inlets;
+#X text 330 205 Outlets;
+#X text 330 265 - Signal level (0-1);
+#X text 330 175 - Level (0-127);
+#X text 330 155 - Mute / Unmute (bang);
 #X obj 29 362 dbtofad;
 #X obj 109 322 *~;
 #X obj 109 47 inlet~ Signal;
@@ -67,17 +65,22 @@ in the documentation and/or other materials provided with the distribution.
 #X obj 119 342 env~ 8820;
 #X obj 119 362 dbtofad;
 #X obj 46 113 vsl 10 119 -100 12 0 0 empty empty empty 0 -8 0 8 -195568
--1 -262144 8909 0;
+-1 -262144 0 0;
 #X text 11 8 [met~] - Level meter with amplitude control \, stereo
 ;
-#X text 330 65 - Signal L;
-#X text 330 85 - Signal R;
-#X text 330 175 - Amplified signal L;
-#X text 330 195 - Amplified signal R;
+#X text 330 115 - Signal L;
+#X text 330 135 - Signal R;
+#X text 330 225 - Amplified signal L;
+#X text 330 245 - Amplified signal R;
+#X obj 251 67 init \$1;
+#X obj 251 87 moses 1;
+#X text 330 65 - Level (0-127);
+#X text 330 45 Arguments;
+#X text 12 428 (C) 2006-2012 João Pais - jmmmpais@googlemail.com;
 #X connect 1 0 6 0;
 #X connect 1 0 13 0;
 #X connect 2 0 1 1;
-#X connect 2 0 30 1;
+#X connect 2 0 29 1;
 #X connect 3 0 2 0;
 #X connect 4 0 9 0;
 #X connect 5 0 1 0;
@@ -85,7 +88,7 @@ in the documentation and/or other materials provided with the distribution.
 #X connect 7 0 8 0;
 #X connect 9 0 17 0;
 #X connect 11 0 12 0;
-#X connect 13 0 29 0;
+#X connect 13 0 28 0;
 #X connect 14 0 15 0;
 #X connect 15 0 16 0;
 #X connect 16 0 18 0;
@@ -95,13 +98,15 @@ in the documentation and/or other materials provided with the distribution.
 #X connect 18 1 19 0;
 #X connect 19 0 20 0;
 #X connect 20 0 12 0;
-#X connect 20 0 36 0;
+#X connect 20 0 35 0;
 #X connect 21 0 16 0;
-#X connect 29 0 11 0;
-#X connect 30 0 32 0;
-#X connect 30 0 34 0;
-#X connect 31 0 30 0;
-#X connect 33 0 36 0;
-#X connect 34 0 35 0;
-#X connect 35 0 33 0;
-#X coords 0 -1 1 1 44 130 1 30 108;
+#X connect 28 0 11 0;
+#X connect 29 0 31 0;
+#X connect 29 0 33 0;
+#X connect 30 0 29 0;
+#X connect 32 0 35 0;
+#X connect 33 0 34 0;
+#X connect 34 0 32 0;
+#X connect 41 0 42 0;
+#X connect 42 1 9 0;
+#X coords 0 -1 1 1 44 130 2 30 108;

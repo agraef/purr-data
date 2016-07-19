@@ -1,9 +1,9 @@
-#N canvas 10 10 200 200 10;
+#N canvas 10 10 200 164 10;
 #N canvas 20 20 420 300 META 0;
 #X text 10 10 META this is a prototype of a libdir meta file;
 #X text 10 30 NAME jmmmp;
-#X text 10 50 AUTHOR Joao Miguel Pais <jmmmpais@googlemail.com>;
-#X text 10 70 DESCRIPTION ;
 #X text 10 90 LICENSE BSD;
-#X text 10 110 VERSION 0.2;
+#X text 10 110 VERSION 0.3;
+#X text 10 50 AUTHOR João Pais <jmmmpais@googlemail.com>;
+#X text 10 70 DESCRIPTION Several useful abstractions;
 #X restore 10 10 pd META;

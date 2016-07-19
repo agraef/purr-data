@@ -17,7 +17,6 @@
 #X text 239 129 Inlets;
 #X text 239 149 - Message to send;
 #X text 251 163 without "send" prefix;
-#X text 241 183 - On / Off;
 #X obj 192 159 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
 1;
 #X text 17 86 without the 'send' prefix.;
@@ -25,8 +24,21 @@
 #X text 35 197 State;
 #X text 171 140 On / Off;
 #X text 12 258 Related objects: [oscD];
+#N canvas 504 106 494 344 META 0;
+#X text 12 55 AUTHOR João Pais <jmmmpais@googlemail.com>;
+#X text 12 95 LICENSE BSD;
+#X text 12 75 LIBRARY jmmmp;
+#X text 13 115 WEBSITE http://puredata.info/Members/jmmmp;
+#X text 12 135 VERSION 2009;
+#X text 12 6 DESCRIPTION Interface for sendOSC;
+#X text 14 165 INLET_0 - Message to send without "send" prefix;
+#X text 14 185 INLET_1 - On / Off;
+#X text 14 205 OUTLET_0 - State;
+#X text 12 36 KEYWORDS OSC;
+#X restore 342 306 pd META;
+#X text 241 183 - On / Off;
 #X connect 3 0 8 0;
 #X connect 5 0 3 0;
 #X connect 6 0 3 0;
 #X connect 7 0 3 0;
-#X connect 18 0 3 1;
+#X connect 17 0 3 1;

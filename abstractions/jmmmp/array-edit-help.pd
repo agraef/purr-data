@@ -1,0 +1,4 @@
+#N canvas 345 87 450 300 10;
+#X obj 175 132 array-edit;
+#X text 73 84 edit properties of arrays and populate them following
+several formulas;

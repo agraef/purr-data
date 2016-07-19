@@ -1,4 +1,4 @@
-#N struct 1431-color float x float y float farbe float ynpos;
+#N struct 1036-color float x float y float farbe float ynpos;
 #N canvas 188 69 481 385 10;
 #X text 12 357 Released under the BSD License;
 #X text 198 160 Inlets;
@@ -24,6 +24,17 @@ to have a different graphic presentation.;
 #X text 198 240 - 0 \, 1 (like a toggle);
 #X obj 22 122 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
+#N canvas 504 106 494 344 META 0;
+#X text 12 55 AUTHOR João Pais <jmmmpais@googlemail.com>;
+#X text 12 95 LICENSE BSD;
+#X text 12 75 LIBRARY jmmmp;
+#X text 13 115 WEBSITE http://puredata.info/Members/jmmmp;
+#X text 12 5 DESCRIPTION Color-changing Toggle Button;
+#X text 12 35 KEYWORDS toggle GOP;
+#X text 12 135 VERSION 2010;
+#X text 12 165 INLET_0 - bang or float;
+#X text 12 185 OUTLET_0 - 0 or 1;
+#X restore 422 356 pd META;
 #X connect 6 0 4 0;
 #X connect 7 0 4 0;
 #X connect 8 0 4 0;

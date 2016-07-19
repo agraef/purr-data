@@ -1,4 +1,4 @@
-#N canvas 108 117 718 384 10;
+#N canvas 108 117 692 376 10;
 #X text 12 327 (C) 2006 João Pais - jmmmpais@googlemail.com;
 #X text 12 347 Released under the BSD License;
 #X text 476 70 Inlets;
@@ -30,6 +30,19 @@
 #X text 125 165 Click the right button to open the documentation window.
 ;
 #X text 12 295 Related objects: [clock] [uhr];
+#N canvas 504 106 494 344 META 0;
+#X text 12 55 AUTHOR João Pais <jmmmpais@googlemail.com>;
+#X text 12 95 LICENSE BSD;
+#X text 12 75 LIBRARY jmmmp;
+#X text 13 115 WEBSITE http://puredata.info/Members/jmmmp;
+#X text 12 135 VERSION 2006;
+#X text 13 6 DESCRIPTION Chronometer with two layers;
+#X text 12 36 KEYWORDS chronometer;
+#X text 14 165 INLET_0 - new section (key m);
+#X text 14 185 INLET_1 - offset (secs);
+#X text 14 205 OUTLET_0 - Elapsed time since beginning;
+#X text 14 225 OUTLET_1 - Elapsed time since last section;
+#X restore 632 346 pd META;
 #X connect 11 0 5 0;
 #X connect 11 1 6 0;
 #X connect 12 0 11 0;

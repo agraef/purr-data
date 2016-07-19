@@ -14,4 +14,15 @@
 Harmonic content is analysed in 512 bins resolution \, 20 times a second.
 Tested on 44.1KHz.;
 #X obj 18 76 noise~;
+#N canvas 504 106 494 344 META 0;
+#X text 12 55 AUTHOR João Pais <jmmmpais@googlemail.com>;
+#X text 12 95 LICENSE BSD;
+#X text 12 75 LIBRARY jmmmp;
+#X text 13 115 WEBSITE http://puredata.info/Members/jmmmp;
+#X text 12 6 DESCRIPTION Spectrogram with 512 bins resolution;
+#X text 12 36 KEYWORDS spectrogram;
+#X text 12 135 VERSION 2009;
+#X text 14 166 INLET_0 - Audio to analyse;
+#X text 14 185 OUTLET_0 - Same as inlet;
+#X restore 642 386 pd META;
 #X connect 11 0 8 0;

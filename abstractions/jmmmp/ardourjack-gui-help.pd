@@ -1,0 +1,13 @@
+#N canvas 436 287 450 300 10;
+#X obj 165 118 ardourjack-gui;
+#N canvas 49 336 494 344 META 0;
+#X text 12 55 AUTHOR João Pais <jmmmpais@googlemail.com>;
+#X text 12 95 LICENSE BSD;
+#X text 12 75 LIBRARY jmmmp;
+#X text 12 5 DESCRIPTION Controls ardour transport and jack settings
+from Pd;
+#X text 12 35 KEYWORDS ardour jack transport;
+#X text 12 135 VERSION 09.05.2013;
+#X text 13 115 WEBSITE http://puredata.info/Members/jmmmp;
+#X restore 392 276 pd META;
+#X text 70 40 Controls ardour transport and jack settings from Pd;

@@ -1,0 +1,34 @@
+#N canvas 186 367 435 338 10;
+#X text 12 307 Released under the BSD License;
+#X text 257 90 Inlets;
+#X text 257 150 Outlets;
+#X text 257 110 - Bang;
+#X obj 16 92 rgb-color;
+#X text 12 10 [rgb-color] - Pick RGB colors for your GUI objects;
+#X text 257 170 - "color \$1 \$2 \$3" command;
+#X text 257 190 - number with current color;
+#X text 11 287 (C) 2010 João Pais - jmmmpais@googlemail.com;
+#X obj 19 263 hsl 128 15 0 127 0 0 empty \$0-slider Label -2 -8 0 10
+-77055 -243095 -3657 3000 1;
+#X obj 16 173 s \$0-slider;
+#X floatatom 173 173 10 0 0 0 - - -;
+#X text 12 30 Define the colors of your GUI object just like using
+the properties window. The settings of the three fields are saved in
+memory while using the object.;
+#X text 14 230 Send your color settings here:;
+#X text 128 205 in Pd encoding;
+#X text 128 192 Current color code;
+#N canvas 504 106 494 344 META 0;
+#X text 12 55 AUTHOR João Pais <jmmmpais@googlemail.com>;
+#X text 12 95 LICENSE BSD;
+#X text 12 75 LIBRARY jmmmp;
+#X text 13 115 WEBSITE http://puredata.info/Members/jmmmp;
+#X text 12 6 DESCRIPTION Pick RGB colors for your GUI objects;
+#X text 12 36 KEYWORDS color RGB GUI;
+#X text 12 135 VERSION 2010;
+#X text 14 165 INLET_0 - Bang;
+#X text 14 185 OUTLET_0 - "color \$1 \$2 \$3" command;
+#X text 14 205 OUTLET_1 - number with current color;
+#X restore 372 306 pd META;
+#X connect 4 0 10 0;
+#X connect 4 1 11 0;

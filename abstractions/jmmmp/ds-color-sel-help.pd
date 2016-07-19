@@ -1,0 +1,56 @@
+#N struct 1036-color float x float y float farbe float ynpos;
+#N struct 1508-color float x float y float farbe;
+#N struct 1508-color-display float x float y float farbe;
+#N canvas 369 163 531 325 10;
+#N canvas 0 0 426 446 license 0;
+#X text 8 47 All rights reserved.;
+#X text 8 227 The names of its contributors may not be used to endorse
+or promote products derived from this software without specific prior
+written permission.;
+#X text 8 87 Redistribution and use in source and binary forms \, with
+or without modification \, are permitted provided that the following
+conditions are met:;
+#X text 8 127 Redistributions of source code must retain the above
+copyright notice \, this list of conditions and the following disclaimer.
+;
+#X text 8 297 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES \, INCLUDING
+\, BUT NOT LIMITED TO \, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT \, INDIRECT
+\, INCIDENTAL \, SPECIAL \, EXEMPLARY \, OR CONSEQUENTIAL DAMAGES (INCLUDING
+\, BUT NOT LIMITED TO \, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES
+;
+#X text 8 167 Redistributions in binary form must reproduce the above
+copyright notice \, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the distribution.
+;
+#X text 8 27 jmmmpais@googlemail.com;
+#X text 8 7 Copyright 2006 \, João Pais;
+#X restore 16 299 pd license;
+#X text 13 281 (C) 2013 João Pais - jmmmpais@googlemail.com;
+#X text 11 11 [ds-color-sel] - color selector for data structures;
+#X text 13 221 Arguments;
+#X text 113 221 Inlets;
+#X text 203 221 Outlets;
+#X text 203 242 - selected color number;
+#X text 13 241 (none);
+#X text 113 241 (none);
+#X floatatom 14 164 5 0 0 0 - - -;
+#X obj 137 191 pd-colors;
+#X obj 14 89 ds-color-sel;
+#X text 13 191 Also take a look at;
+#X text 201 191 for the color pallettes in Pure Data.;
+#X text 12 39 Click in one of the colors or change the number box.
+You'll get the color number displayed and as output. Connect it to
+your patch.;
+#N canvas 504 106 494 344 META 0;
+#X text 12 55 AUTHOR João Pais <jmmmpais@googlemail.com>;
+#X text 12 95 LICENSE BSD;
+#X text 12 75 LIBRARY jmmmp;
+#X text 13 115 WEBSITE http://puredata.info/Members/jmmmp;
+#X text 12 36 KEYWORDS color tcl/tk data structures;
+#X text 12 6 DESCRIPTION color selector for data structures;
+#X text 12 135 VERSION 2013;
+#X restore 106 299 pd META;
+#X connect 11 0 9 0;

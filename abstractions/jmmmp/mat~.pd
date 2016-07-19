@@ -1,4 +1,4 @@
-#N canvas 622 202 457 485 10;
+#N canvas 369 115 457 485 10;
 #X obj 31 109 cnv 15 29 128 empty empty empty 20 12 0 14 -233017 -66577
 0;
 #X obj 19 332 *~;
@@ -10,12 +10,12 @@
 #X obj 48 262 dbtorms;
 #X obj 98 282 outlet;
 #X obj 48 113 vsl 10 119 0 127 0 0 empty empty empty 0 -8 0 8 -195568
--1 -1 6039 0;
+-1 -1 4646 0;
 #X obj 50 138 cnv 1 6 2 empty empty empty 20 12 0 14 -262144 -262144
 0;
 #X obj 29 392 - 100;
 #X obj 34 113 vsl 10 119 -100 12 0 0 empty empty empty 0 -8 0 8 -195568
--1 -262144 1650 0;
+-1 -262144 0 0;
 #X obj 29 352 env~ 8820;
 #X obj 39 87 inlet mute;
 #X obj 71 112 bang;
@@ -53,17 +53,21 @@ in the documentation and/or other materials provided with the distribution.
 #X text 8 7 Copyright 2006 \, João Pais;
 #X restore 15 455 pd license;
 #X text 11 8 [met~] - Level meter with amplitude control;
-#X text 280 45 Inlets;
-#X text 280 135 Outlets;
-#X text 280 65 - Signal;
-#X text 280 155 - Amplified signal;
-#X text 280 175 - Signal level (0-1);
-#X text 280 105 - Level (0-127);
-#X text 280 85 - Mute / Unmute (bang);
+#X text 280 105 Inlets;
+#X text 280 195 Outlets;
+#X text 280 125 - Signal;
+#X text 280 215 - Amplified signal;
+#X text 280 235 - Signal level (0-1);
+#X text 280 165 - Level (0-127);
+#X text 280 145 - Mute / Unmute (bang);
 #X obj 29 372 dbtofad;
 #X obj 36 143 cnv 1 6 2 empty empty empty 20 12 0 14 -262144 -262144
 0;
 #X text 12 437 (C) 2009 João Pais - jmmmpais@googlemail.com;
+#X text 280 75 - Level (0-127);
+#X text 280 55 Arguments;
+#X obj 169 67 init \$1;
+#X obj 169 87 moses 1;
 #X connect 1 0 6 0;
 #X connect 1 0 13 0;
 #X connect 2 0 1 1;
@@ -86,4 +90,6 @@ in the documentation and/or other materials provided with the distribution.
 #X connect 20 0 12 0;
 #X connect 21 0 16 0;
 #X connect 31 0 11 0;
-#X coords 0 -1 1 1 31 130 1 30 108;
+#X connect 36 0 37 0;
+#X connect 37 1 9 0;
+#X coords 0 -1 1 1 31 130 2 30 108;

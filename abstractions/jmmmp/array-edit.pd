@@ -1,4 +1,4 @@
-#N canvas 68 28 402 755 10;
+#N canvas 68 0 414 704 10;
 #N canvas 202 330 639 485 inside 0;
 #X msg 287 128 const \$1;
 #X obj 15 159 r \$0-resize;
@@ -770,5 +770,16 @@ in the documentation and/or other materials provided with the distribution.
 #X obj 202 221 tgl 15 0 \$0-wrapar \$0-wrapar-i empty 17 7 0 10 -228856
 -1 -1 0 1;
 #X text 221 220 Wraparound (last index ~0);
+#N canvas 278 215 494 344 META 0;
+#X text 12 55 AUTHOR João Pais <jmmmpais@googlemail.com>;
+#X text 12 95 LICENSE BSD;
+#X text 12 75 LIBRARY jmmmp;
+#X text 12 35 KEYWORDS array edit;
+#X text 12 135 VERSION 2009;
+#X text 13 115 WEBSITE http://puredata.info/Members/jmmmp;
+#X text 12 165 INLET_0 - symbol name of array to be edited;
+#X text 12 5 DESCRIPTION Edit properties of arrays and populate them
+following several formulas;
+#X restore 32 744 pd META;
 #X connect 44 0 45 0;
 #X connect 64 0 0 0;

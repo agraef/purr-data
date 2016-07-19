@@ -1,0 +1,191 @@
+#N canvas 191 7 403 393 10;
+#X text 13 161 A display innacuracy makes the pixels in the top row
+and right column too thick.;
+#X text 13 81 This makes it possible to "import" images into vanilla.
+Small pictures are converted fast \, but medium and big files can take
+some time to convert and display.;
+#X text 13 41 This patch converts images into groups of canvases with
+thickness of 1x1 \, pixel per pixel. Invisible pixels (with alpha =
+0) are ignored.;
+#X text 12 11 [pix2canvas] - Convert images into canvas;
+#X text 13 191 Each canvas (i.e. pixel) has its a send and receive
+name based on its coordinate: "XxY" and "XxY-i" respectively.;
+#N canvas 0 0 426 446 license 0;
+#X text 8 47 All rights reserved.;
+#X text 8 227 The names of its contributors may not be used to endorse
+or promote products derived from this software without specific prior
+written permission.;
+#X text 8 87 Redistribution and use in source and binary forms \, with
+or without modification \, are permitted provided that the following
+conditions are met:;
+#X text 8 127 Redistributions of source code must retain the above
+copyright notice \, this list of conditions and the following disclaimer.
+;
+#X text 8 297 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES \, INCLUDING
+\, BUT NOT LIMITED TO \, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT \, INDIRECT
+\, INCIDENTAL \, SPECIAL \, EXEMPLARY \, OR CONSEQUENTIAL DAMAGES (INCLUDING
+\, BUT NOT LIMITED TO \, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES
+;
+#X text 8 167 Redistributions in binary form must reproduce the above
+copyright notice \, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the distribution.
+;
+#X text 8 7 Copyright 2016 \, João Pais;
+#X text 8 27 jmmmpais@gmail.com;
+#X restore 16 361 pd license;
+#X text 15 341 (C) 2016 João Pais - jmmmpais@gmail.com;
+#N canvas 433 80 435 525 patch 0;
+#X obj 13 95 gemhead;
+#X obj 63 135 pix_draw;
+#X obj 53 115 pix_image;
+#X obj 63 55 openpanel;
+#X obj 63 75 list prepend open;
+#X obj 63 95 list trim;
+#X obj 63 155 pix_info . . . .;
+#X obj 38 392 pix_data;
+#X obj 38 292 f+ 0;
+#X obj 38 332 /;
+#X obj 38 272 until;
+#X obj 21 212 f;
+#X obj 157 272 f+ 0;
+#X obj 147 332 /;
+#X obj 125 272 - 1;
+#X obj 147 312 moses;
+#X obj 147 352 t b f;
+#X obj 21 232 t b f b f;
+#X obj 38 352 t b f;
+#X obj 70 442 pack f f f;
+#X obj 157 292 t f f;
+#X obj 38 312 t f f;
+#X msg 321 412 vis 0 \, clear;
+#N canvas 687 323 309 283 rgb2iemcreate 0;
+#X obj 17 37 inlet;
+#X obj 17 87 * 63;
+#X obj 51 87 * 63;
+#X obj 86 86 * 63;
+#X obj 17 107 << 6;
+#X obj 17 127 +;
+#X obj 17 147 << 6;
+#X obj 17 167 +;
+#X obj 17 187 * -1;
+#X obj 17 207 - 1;
+#X obj 17 257 outlet;
+#X obj 17 57 unpack f f f f;
+#X obj 17 237 spigot;
+#X text 67 237 Pixels with alpha = 0 are left out.;
+#X text 17 17 Generates color number. Made by Roman Haefeli.;
+#X connect 0 0 11 0;
+#X connect 1 0 4 0;
+#X connect 2 0 5 1;
+#X connect 3 0 7 1;
+#X connect 4 0 5 0;
+#X connect 5 0 6 0;
+#X connect 6 0 7 0;
+#X connect 7 0 8 0;
+#X connect 8 0 9 0;
+#X connect 9 0 12 0;
+#X connect 11 0 1 0;
+#X connect 11 1 2 0;
+#X connect 11 2 3 0;
+#X connect 11 3 12 1;
+#X connect 12 0 10 0;
+#X restore 60 412 pd rgb2iemcreate;
+#N canvas 1291 441 254 228 gemwindow 0;
+#X obj 20 36 route load;
+#X obj 20 56 route success;
+#X obj 20 76 bang;
+#X msg 20 146 destroy \, dimen 100 100 \, create \, 1;
+#X obj 20 196 gemwin 1;
+#X obj 20 16 inlet;
+#X obj 30 176 inlet;
+#X obj 30 96 del 100;
+#X obj 30 116 outlet;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 2 0 7 0;
+#X connect 3 0 4 0;
+#X connect 5 0 0 0;
+#X connect 6 0 4 0;
+#X connect 7 0 8 0;
+#X restore 130 135 pd gemwindow;
+#X msg 199 115 destroy;
+#X obj 130 212 t b b b b;
+#X msg 130 232 vis 1;
+#X obj 160 192 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 98 332 + 20;
+#X obj 184 412 expr 20 + $f2 - $f1;
+#X msg 70 462 obj \$2 \$3 cnv 1 1 1 \$2x\$3 \$2x\$3-i empty 0 0 0 10
+\$1 22 0 \;;
+#X obj 72 292 - 1;
+#X obj 70 492 s pd-\$0-pix;
+#X obj 63 35 inlet;
+#X text 13 15 Loads into [pix_image] \, and gets the values using [pix_info]
+;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X connect 2 0 6 0;
+#X connect 2 0 7 1;
+#X connect 2 1 24 0;
+#X connect 3 0 4 0;
+#X connect 4 0 5 0;
+#X connect 5 0 2 0;
+#X connect 6 1 11 1;
+#X connect 6 2 14 0;
+#X connect 6 2 15 1;
+#X connect 6 2 30 1;
+#X connect 7 1 23 0;
+#X connect 8 0 21 0;
+#X connect 9 0 18 0;
+#X connect 10 0 8 0;
+#X connect 11 0 17 0;
+#X connect 12 0 20 0;
+#X connect 13 0 16 0;
+#X connect 14 0 13 1;
+#X connect 15 0 13 0;
+#X connect 16 0 11 0;
+#X connect 16 1 7 3;
+#X connect 17 0 12 0;
+#X connect 17 1 10 0;
+#X connect 17 2 8 1;
+#X connect 17 3 32 0;
+#X connect 18 0 7 0;
+#X connect 18 1 7 2;
+#X connect 19 0 31 0;
+#X connect 20 0 15 0;
+#X connect 20 1 30 0;
+#X connect 21 0 9 0;
+#X connect 21 1 29 0;
+#X connect 22 0 33 0;
+#X connect 23 0 19 0;
+#X connect 24 0 26 0;
+#X connect 25 0 24 1;
+#X connect 26 0 27 0;
+#X connect 26 0 25 0;
+#X connect 26 1 12 0;
+#X connect 26 2 12 1;
+#X connect 26 3 22 0;
+#X connect 27 0 33 0;
+#X connect 28 0 26 0;
+#X connect 29 0 19 1;
+#X connect 30 0 19 2;
+#X connect 31 0 33 0;
+#X connect 32 0 9 1;
+#X connect 34 0 3 0;
+#X restore 16 311 pd patch;
+#N canvas 8 115 344 182 \$0-pix 0;
+#X restore 96 311 pd \$0-pix;
+#X obj 16 251 bng 15 250 50 0 empty empty empty 0 -6 0 8 -204786 -1
+-1;
+#X text 13 121 It uses Gem's [pix_image] \, and works with any image
+that can be loaded by it. Tif and jpg work \, other formats depend
+on the Gem settings.;
+#X text 33 251 1 - Load a file;
+#X text 13 231 To convert a picture:;
+#X text 33 271 2 - the file is converted \, and the subpatch \$0-pix
+opens up with the result.;
+#X connect 9 0 7 0;

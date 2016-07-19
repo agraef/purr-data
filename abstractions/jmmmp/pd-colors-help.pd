@@ -1,0 +1,4 @@
+#N struct 1431-color float x float y float farbe float ynpos;
+#N canvas 441 77 450 300 10;
+#X obj 177 131 pd-colors;
+#X text 163 65 pd-color palettes;

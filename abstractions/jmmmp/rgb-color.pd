@@ -1,0 +1,212 @@
+#N canvas 103 180 381 510 10;
+#X obj 13 10 hsl 128 12 0 255 0 0 \$0-r \$0-r-i empty -2 -8 0 10 -228856
+-258113 -1 0 1;
+#X obj 13 22 hsl 128 12 0 255 0 0 \$0-g \$0-g-i empty -2 -8 0 10 -228856
+-4034 -1 0 1;
+#X obj 13 34 hsl 128 12 0 255 0 0 \$0-b \$0-b-i empty -2 -8 0 10 -228856
+-4160 -1 0 1;
+#X obj 24 50 cnv 34 34 34 empty \$0-cnv empty 20 12 0 14 -1 -262144
+0;
+#X obj 21 329 s \$0-cnv;
+#X msg 21 309 color \$1;
+#X obj 85 179 t b f;
+#X obj 167 179 t b f;
+#X obj 144 10 nbx 3 12 0 255 0 0 \$0-r-i \$0-r1-i empty 0 -8 0 8 -261234
+-1 -1 0 256;
+#X obj 144 22 nbx 3 12 0 255 0 0 \$0-g-i \$0-g1-i empty 0 -8 0 8 -204786
+-1 -1 0 256;
+#X obj 144 34 nbx 3 12 0 255 0 0 \$0-b-i \$0-b1-i empty 0 -8 0 8 -203904
+-1 -1 0 256;
+#X obj 11 389 outlet;
+#X msg 21 139 set \$1;
+#X obj 21 159 s \$0-r1-i;
+#X msg 95 139 set \$1;
+#X obj 95 159 s \$0-g1-i;
+#X msg 177 139 set \$1;
+#X obj 177 159 s \$0-b1-i;
+#X obj 85 49 vradio 12 1 0 3 \$0-lab \$0-lab-i empty 0 -8 0 10 -228856
+-1 -1 0;
+#X text 100 46 Background;
+#X text 100 58 Front;
+#X text 100 70 Label;
+#X obj 72 50 cnv 10 10 10 empty \$0-cnv-back empty 20 12 0 14 -1 -262144
+0;
+#X obj 72 62 cnv 10 10 10 empty \$0-cnv-front empty 20 12 0 14 -1 -262144
+0;
+#X obj 72 74 cnv 10 10 10 empty \$0-cnv-label empty 20 12 0 14 -1 -262144
+0;
+#X obj 11 99 r \$0-r;
+#X obj 85 99 r \$0-g;
+#X obj 167 99 r \$0-b;
+#X obj 167 119 i;
+#X obj 85 119 i;
+#X obj 11 119 i;
+#X obj 11 289 expr ($f1*(-65536)+$f2*(-256)+$f3*(-1))-1;
+#X obj 11 229 pack f f f;
+#X obj 31 259 outlet rgb;
+#X text 33 417 inserir inlet \, que separa os numeros e os converte
+a rgb;
+#X obj 212 16 init 0;
+#N canvas 0 0 376 407 license 0;
+#X text 8 47 All rights reserved.;
+#X text 8 227 The names of its contributors may not be used to endorse
+or promote products derived from this software without specific prior
+written permission.;
+#X text 8 87 Redistribution and use in source and binary forms \, with
+or without modification \, are permitted provided that the following
+conditions are met:;
+#X text 8 127 Redistributions of source code must retain the above
+copyright notice \, this list of conditions and the following disclaimer.
+;
+#X text 8 297 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES \, INCLUDING
+\, BUT NOT LIMITED TO \, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT \, INDIRECT
+\, INCIDENTAL \, SPECIAL \, EXEMPLARY \, OR CONSEQUENTIAL DAMAGES (INCLUDING
+\, BUT NOT LIMITED TO \, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES
+;
+#X text 8 167 Redistributions in binary form must reproduce the above
+copyright notice \, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the distribution.
+;
+#X text 8 27 jmmmpais@googlemail.com;
+#X text 8 7 Copyright 2010 \, João Pais;
+#X restore 15 472 pd license;
+#X text 14 453 (C) 2010 João Pais - jmmmpais@googlemail.com;
+#N canvas 0 0 484 500 rgb 0;
+#X obj 21 399 outlet;
+#X msg 21 369 color \$1 \$2 \$3;
+#X obj 21 209 route back front label;
+#X obj 90 89 sel 0 1 2;
+#X msg 90 109 back;
+#X msg 107 129 front;
+#X msg 124 149 label;
+#X obj 21 169 list prepend;
+#X obj 21 189 list trim;
+#X msg 64 269 color \$1;
+#X msg 117 229 color \$1;
+#X obj 117 249 s \$0-cnv-label;
+#X msg 31 229 color \$1;
+#X obj 31 249 s \$0-cnv-back;
+#X obj 64 289 s \$0-cnv-front;
+#X obj 35 319 t b f;
+#X obj 77 319 t b f;
+#X obj 21 349 pack f f f;
+#X obj 90 69 r \$0-lab;
+#X obj 21 129 inlet;
+#X text 39 41 Ausgang RGB;
+#X obj 311 219 route back front label;
+#X obj 380 39 sel 0 1 2;
+#X msg 380 79 back;
+#X msg 404 119 front;
+#X msg 398 159 label;
+#X obj 311 179 list prepend;
+#X obj 311 199 list trim;
+#X obj 290 249 list;
+#X obj 333 249 list;
+#X obj 376 249 list;
+#X obj 290 279 unpack f f f;
+#X obj 380 59 t b b;
+#X obj 397 99 t b b;
+#X obj 414 139 t b b;
+#X msg 359 419 set \$1;
+#X msg 324 359 set \$1;
+#X msg 290 299 set \$1;
+#X obj 359 459 s \$0-b1-i;
+#X obj 369 439 s \$0-b-i;
+#X obj 324 399 s \$0-g1-i;
+#X obj 334 379 s \$0-g-i;
+#X obj 290 339 s \$0-r1-i;
+#X obj 300 319 s \$0-r-i;
+#X obj 380 19 r \$0-lab;
+#X obj 311 139 inlet;
+#X text 286 35 GUI Speicher;
+#X connect 1 0 0 0;
+#X connect 2 0 12 0;
+#X connect 2 0 17 0;
+#X connect 2 1 9 0;
+#X connect 2 1 15 0;
+#X connect 2 2 10 0;
+#X connect 2 2 16 0;
+#X connect 3 0 4 0;
+#X connect 3 1 5 0;
+#X connect 3 2 6 0;
+#X connect 4 0 7 1;
+#X connect 5 0 7 1;
+#X connect 6 0 7 1;
+#X connect 7 0 8 0;
+#X connect 8 0 2 0;
+#X connect 9 0 14 0;
+#X connect 10 0 11 0;
+#X connect 12 0 13 0;
+#X connect 15 0 17 0;
+#X connect 15 1 17 1;
+#X connect 16 0 17 0;
+#X connect 16 1 17 2;
+#X connect 17 0 1 0;
+#X connect 18 0 3 0;
+#X connect 19 0 7 0;
+#X connect 21 0 28 1;
+#X connect 21 1 29 1;
+#X connect 21 2 30 1;
+#X connect 22 0 32 0;
+#X connect 22 1 33 0;
+#X connect 22 2 34 0;
+#X connect 23 0 26 1;
+#X connect 24 0 26 1;
+#X connect 25 0 26 1;
+#X connect 26 0 27 0;
+#X connect 27 0 21 0;
+#X connect 28 0 31 0;
+#X connect 29 0 31 0;
+#X connect 30 0 31 0;
+#X connect 31 0 37 0;
+#X connect 31 1 36 0;
+#X connect 31 2 35 0;
+#X connect 32 0 23 0;
+#X connect 32 1 28 0;
+#X connect 33 0 24 0;
+#X connect 33 1 29 0;
+#X connect 34 0 25 0;
+#X connect 34 1 30 0;
+#X connect 35 0 38 0;
+#X connect 35 0 39 0;
+#X connect 36 0 40 0;
+#X connect 36 0 41 0;
+#X connect 37 0 42 0;
+#X connect 37 0 43 0;
+#X connect 44 0 22 0;
+#X connect 45 0 26 0;
+#X restore 11 359 pd rgb speicher;
+#X obj 267 10 inlet;
+#X obj 267 30 route list float;
+#X obj 165 338 outlet iem-color;
+#X connect 5 0 4 0;
+#X connect 6 0 32 0;
+#X connect 6 1 32 1;
+#X connect 7 0 32 0;
+#X connect 7 1 32 2;
+#X connect 12 0 13 0;
+#X connect 14 0 15 0;
+#X connect 16 0 17 0;
+#X connect 25 0 30 0;
+#X connect 26 0 29 0;
+#X connect 27 0 28 0;
+#X connect 28 0 16 0;
+#X connect 28 0 7 0;
+#X connect 29 0 14 0;
+#X connect 29 0 6 0;
+#X connect 30 0 12 0;
+#X connect 30 0 32 0;
+#X connect 31 0 5 0;
+#X connect 31 0 38 0;
+#X connect 31 0 41 0;
+#X connect 32 0 31 0;
+#X connect 32 0 33 0;
+#X connect 32 0 38 1;
+#X connect 35 0 18 0;
+#X connect 38 0 11 0;
+#X connect 39 0 40 0;
+#X connect 40 0 32 0;
+#X coords 0 -1 1 1 164 78 2 10 10;

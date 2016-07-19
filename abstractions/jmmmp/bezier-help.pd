@@ -1,12 +1,13 @@
-#N struct bez-array float x float y array bez-c-arr bez-c float p0x
-float p0y float p0x. float p0y. float p1x float p1y float p1x. float
-p1y. float p2x float p2y float p2x. float p2y. float p3x float p3y
-float p3x. float p3y. float rpx float rpy float rpx. float rpy.;
-#N struct bez-c float x float y;
-#N canvas 280 17 921 908 10;
+#N struct 1124-bez-array float x float y array 1124-bez-c-arr 1124-bez-c
+float p0x float p0y float p0x. float p0y. float p1x float p1y float
+p1x. float p1y. float p2x float p2y float p2x. float p2y. float p3x
+float p3y float p3x. float p3y. float rpx float rpy float rpx. float
+rpy.;
+#N struct 1124-bez-c float x float y;
+#N canvas 31 5 921 704 10;
 #X floatatom 415 741 5 0 0 0 - - -;
 #X obj 418 727 hsl 50 10 0 1 0 0 empty empty empty -2 -8 0 10 -228856
--1 -1 4900 0;
+-1 -1 0 0;
 #X floatatom 135 195 5 0 0 0 - - -;
 #X msg 125 134 canvas \$1;
 #X floatatom 135 114 5 0 0 0 - - -;
@@ -14,18 +15,17 @@ float p3x. float p3y. float rpx float rpy float rpx. float rpy.;
 #X msg 415 687 0 \, 1 3000;
 #X obj 135 504 pack;
 #X obj 145 484 t b f;
-#X obj 125 820 unpack;
-#X msg 228 820 p0 0.142857 0.244898 \, p1 0.34 0.88 \, p2 0.9 0.4 \,
-p3 0.85 0.73;
+#X msg 228 820 p0 0.25 0.34 \, p1 0.34 0.88 \, p2 0.9 0.4 \, p3 0.85
+0.73;
 #X text 543 84 Arguments;
 #X obj 148 457 hsl 50 10 0 1 0 0 empty empty X -16 6 0 12 -228856 -1
--1 700 1;
+-1 0 1;
 #X obj 148 471 hsl 50 10 0 1 0 0 empty empty Y -16 6 0 12 -228856 -1
--1 1200 1;
-#X obj 128 840 hsl 50 10 0 1 0 0 empty empty X -16 6 0 12 -228856 -1
--1 4165 1;
-#X obj 128 854 hsl 50 10 0 1 0 0 empty empty Y -16 6 0 12 -228856 -1
--1 3577 1;
+-1 0 1;
+#X obj 128 820 hsl 50 10 0 1 0 0 empty empty X -16 6 0 12 -228856 -1
+-1 0 1;
+#X obj 128 834 hsl 50 10 0 1 0 0 empty empty Y -16 6 0 12 -228856 -1
+-1 0 1;
 #X text 135 297 default values;
 #X text 135 337 also first and last points can take any value;
 #X text 222 154 Two values define x and y coordinates;
@@ -36,7 +36,6 @@ a square ...;
 #X text 172 194 size \$1 - Define array size (minimum 2 points);
 #X text 240 789 Dump outlet: connect to a message box \, which you
 can later copy-paste.;
-#X text 105 869 Output: list with scaled x and y values;
 #X text 545 163 If no arguments are given \, the default values are
 110 100 100 When no y argument is present \, a square with dimensions
 of x is created.;
@@ -63,13 +62,8 @@ get formatted.;
 #X text 543 254 Outlets;
 #X text 546 272 - float pair with x / y values;
 #X text 546 292 - control point dump;
-#X text 21 9 [bezier] - Transfer function with one cubic bézier curve
-;
 #X text 153 554 readpoint \$1 - Turn readpoint (red) display on or
 off. Readpoint shows the curent place in the buffer.;
-#X text 543 536 READPOINT NAO FUNCIONA COM VARIOS OBJECTOS \, ENVIA
-PARA BEZIER CRIADO PRIMEIRO \; TIRAR TODOS OS SENDS \, OU FAZER UM
-LOCAL SEND;
 #X text 22 29 Create a transfer function between 0 and 1 \, using the
 four control points of a cubic bézier curve.;
 #X text 546 232 - floats [0 to 1] / commands (with parameters);
@@ -82,7 +76,7 @@ the red boundaries. Or send pX coordinates.;
 #X text 70 814 OUTPUT;
 #X obj 415 761 s \$0-input;
 #X obj 135 677 r \$0-input;
-#X text 320 667 Send your input values between 0 and 1 here:;
+#X text 415 667 Send your input values between 0 and 1 here:;
 #X msg 125 317 p0 0 0 \, p1 0.1 0.6 \, p2 0.9 0.4 \, p3 1 1;
 #X msg 125 357 p0 0.25 0.34 \, p1 0.34 0.88 \, p2 0.9 0.4 \, p3 0.85
 0.73;
@@ -97,30 +91,45 @@ the box - you won't be able to grab the graphic (see bug description)
 ;
 #X msg 125 583 readpoint \$1;
 #X msg 125 624 dump;
-#X connect 0 0 52 0;
+#X text 65 849 Outputs: scaled x and y values;
+#X text 21 9 [bezier] - Transfer function GUI with one cubic bézier
+curve;
+#N canvas 504 106 494 344 META 0;
+#X text 12 55 AUTHOR João Pais <jmmmpais@googlemail.com>;
+#X text 12 95 LICENSE BSD;
+#X text 12 75 LIBRARY jmmmp;
+#X text 12 5 DESCRIPTION Transfer function GUI with one cubic bÃ©zier
+curve;
+#X text 12 35 KEYWORDS bezier data structures;
+#X text 12 135 VERSION 2010;
+#X text 12 165 INLET_0 - all instructions;
+#X text 12 185 OUTLET_0 - list with x/y values;
+#X text 12 205 OUTLET_1 - dump current parameters;
+#X text 13 115 WEBSITE http://puredata.info/Members/jmmmp;
+#X restore 542 486 pd META;
+#X connect 0 0 48 0;
 #X connect 1 0 0 0;
-#X connect 2 0 60 0;
-#X connect 3 0 27 0;
+#X connect 2 0 56 0;
+#X connect 3 0 25 0;
 #X connect 4 0 3 0;
 #X connect 5 0 1 0;
 #X connect 6 0 5 0;
-#X connect 7 0 58 0;
+#X connect 7 0 54 0;
 #X connect 8 0 7 0;
 #X connect 8 1 7 1;
-#X connect 9 0 14 0;
-#X connect 9 1 15 0;
-#X connect 12 0 7 0;
-#X connect 13 0 8 0;
-#X connect 26 0 64 0;
-#X connect 27 0 9 0;
-#X connect 27 1 10 0;
-#X connect 53 0 27 0;
-#X connect 55 0 27 0;
-#X connect 56 0 27 0;
-#X connect 57 0 27 0;
-#X connect 58 0 27 0;
-#X connect 60 0 27 0;
-#X connect 61 0 27 0;
-#X connect 62 0 27 0;
-#X connect 64 0 27 0;
-#X connect 65 0 27 0;
+#X connect 11 0 7 0;
+#X connect 12 0 8 0;
+#X connect 24 0 60 0;
+#X connect 25 0 13 0;
+#X connect 25 1 14 0;
+#X connect 25 2 9 0;
+#X connect 49 0 25 0;
+#X connect 51 0 25 0;
+#X connect 52 0 25 0;
+#X connect 53 0 25 0;
+#X connect 54 0 25 0;
+#X connect 56 0 25 0;
+#X connect 57 0 25 0;
+#X connect 58 0 25 0;
+#X connect 60 0 25 0;
+#X connect 61 0 25 0;

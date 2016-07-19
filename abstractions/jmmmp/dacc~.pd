@@ -1,0 +1,126 @@
+#N struct 1449-color float x float y float farbe;
+#N struct 1449-color-display float x float y float farbe;
+#N struct 1452-color float x float y float farbe;
+#N struct 1452-color-display float x float y float farbe;
+#N struct 1446-matrixctrl float x float y float size float color float
+state;
+#N canvas 40 394 580 447 10;
+#X obj 98 284 inlet~;
+#X text 213 94 Inlets;
+#N canvas 0 0 426 446 license 0;
+#X text 8 47 All rights reserved.;
+#X text 8 227 The names of its contributors may not be used to endorse
+or promote products derived from this software without specific prior
+written permission.;
+#X text 8 87 Redistribution and use in source and binary forms \, with
+or without modification \, are permitted provided that the following
+conditions are met:;
+#X text 8 127 Redistributions of source code must retain the above
+copyright notice \, this list of conditions and the following disclaimer.
+;
+#X text 8 297 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES \, INCLUDING
+\, BUT NOT LIMITED TO \, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT \, INDIRECT
+\, INCIDENTAL \, SPECIAL \, EXEMPLARY \, OR CONSEQUENTIAL DAMAGES (INCLUDING
+\, BUT NOT LIMITED TO \, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES
+;
+#X text 8 167 Redistributions in binary form must reproduce the above
+copyright notice \, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the distribution.
+;
+#X text 8 27 jmmmpais@googlemail.com;
+#X text 8 7 Copyright 2016 \, João Pais;
+#X restore 16 417 pd license;
+#X text 12 397 (C) 2016 João Pais - jmmmpais@googlemail.com;
+#X obj 106 44 inlet;
+#X obj 16 354 dac~ 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
+20 21 22 23 24 25 26 27 28 29 30 31 32;
+#X obj 16 264 matrixctrl 32 1;
+#X obj 145 214 - 1;
+#X msg 145 234 \$1 0 1;
+#X obj 106 124 list split 1;
+#X obj 140 144 t l;
+#X obj 106 84 t a b;
+#X msg 133 104 reset;
+#X obj 361 284 inlet;
+#X obj 16 314 iemmatrix/mtx_mul~ 32 1 20 ----------------------------------------------------------
+;
+#X text 213 154 - Fade time (ms). Default is 20ms.;
+#X obj 106 164 moses 33;
+#X obj 201 214 print dacmm~;
+#X msg 201 194 ERROR: chanel \$1 over the limit of 32 channels.;
+#X text 213 44 Arguments;
+#X text 213 64 - list with channel(s). If not present \, there won't
+be any output until the channels are set.;
+#X text 12 14 [dacc~] - dynamic dac~ outlet up to 32 channels;
+#N canvas 441 633 394 196 init 0;
+#X obj 15 104 list \$1 \$2 \$3 \$4 \$5 \$6 \$7 \$8 \$9 \$10 \$11 \$12
+\$13 \$14 \$15 \$16 \$17 \$18 \$19 \$20 \$21 \$22 \$23 \$24 \$25 \$26
+\$27 \$28 \$29 \$30 \$31 \$32;
+#X obj 15 44 loadbang;
+#X obj 15 64 expr \$1 != 0;
+#X obj 15 84 sel 1;
+#X text 12 14 Checks if initiation values are present. If yes \, list
+is sent.;
+#X obj 15 150 outlet;
+#X connect 0 0 5 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 3 0 0 0;
+#X restore 116 64 pd init;
+#X obj 106 194 moses 1;
+#X text 213 114 - Audio signal;
+#X text 213 134 - Output channel(s) - integer or list of integers (max
+32);
+#X connect 0 0 14 1;
+#X connect 4 0 11 0;
+#X connect 6 0 14 0;
+#X connect 7 0 8 0;
+#X connect 8 0 6 0;
+#X connect 9 0 16 0;
+#X connect 9 1 10 0;
+#X connect 10 0 9 0;
+#X connect 11 0 9 0;
+#X connect 11 1 12 0;
+#X connect 12 0 6 0;
+#X connect 13 0 14 2;
+#X connect 14 0 5 0;
+#X connect 14 1 5 1;
+#X connect 14 2 5 2;
+#X connect 14 3 5 3;
+#X connect 14 4 5 4;
+#X connect 14 5 5 5;
+#X connect 14 6 5 6;
+#X connect 14 7 5 7;
+#X connect 14 8 5 8;
+#X connect 14 9 5 9;
+#X connect 14 10 5 10;
+#X connect 14 11 5 11;
+#X connect 14 12 5 12;
+#X connect 14 13 5 13;
+#X connect 14 14 5 14;
+#X connect 14 15 5 15;
+#X connect 14 16 5 16;
+#X connect 14 17 5 17;
+#X connect 14 18 5 18;
+#X connect 14 19 5 19;
+#X connect 14 20 5 20;
+#X connect 14 21 5 21;
+#X connect 14 22 5 22;
+#X connect 14 23 5 23;
+#X connect 14 24 5 24;
+#X connect 14 25 5 25;
+#X connect 14 26 5 26;
+#X connect 14 27 5 27;
+#X connect 14 28 5 28;
+#X connect 14 29 5 29;
+#X connect 14 30 5 30;
+#X connect 14 31 5 31;
+#X connect 16 0 23 0;
+#X connect 16 1 18 0;
+#X connect 18 0 17 0;
+#X connect 22 0 11 0;
+#X connect 23 1 7 0;
+#X coords 0 0 1 1 143 17 0;

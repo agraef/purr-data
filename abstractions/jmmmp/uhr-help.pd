@@ -1,7 +1,16 @@
 #N canvas 35 130 301 182 10;
-#X text 11 132 (C) 2006 João Pais - jmmmpais@googlemail.com;
 #X text 11 10 [uhr] - Shows the time;
 #X obj 41 61 uhr;
 #X text 12 149 Released under the BSD License;
 #X text 47 41 H / M / S;
 #X text 12 99 Related objects: [stoppuhr] [clock];
+#N canvas 504 106 494 344 META 0;
+#X text 12 55 AUTHOR João Pais <jmmmpais@googlemail.com>;
+#X text 12 95 LICENSE BSD;
+#X text 12 75 LIBRARY jmmmp;
+#X text 13 115 WEBSITE http://puredata.info/Members/jmmmp;
+#X text 12 135 VERSION 2006;
+#X text 13 6 DESCRIPTION Shows the time;
+#X text 12 36 KEYWORDS time GUI;
+#X restore 232 156 pd META;
+#X text 11 132 (C) 2006-2015 João Pais - jmmmpais@gmail.com;

@@ -1,0 +1,38 @@
+#N struct 1084-rgb-sel float x float y float p1x float p1y float p2x
+float p2y float p3x float p3y float p4x float p4y float p5x float p5y
+float p0x float p0y float p0x. float p0y.;
+#N canvas 186 367 411 350 10;
+#X text 12 317 Released under the BSD License;
+#X text 228 180 Inlets;
+#X text 227 230 Outlets;
+#X text 227 200 - Bang;
+#X text 227 250 - "color \$1 \$2 \$3" command;
+#X text 227 270 - number with current color;
+#X text 11 297 (C) 2010 João Pais - jmmmpais@googlemail.com;
+#X obj 13 91 swatch;
+#X obj 28 244 hsl 128 15 0 127 0 0 empty \$0-slider Label -2 -8 0 10
+-1 -1 -262144 0 1;
+#X obj 13 210 s \$0-slider;
+#X floatatom 137 195 10 0 0 0 - - -;
+#X msg 13 190 color \$1;
+#X text 22 11 [swatch] - Pick a color using the hue-saturation chart
+;
+#X text 21 31 To choose a color \, grab the circle and move it around.
+In case the circle disappears \, clicking in the swatch will make it
+appear again.;
+#N canvas 504 106 494 344 META 0;
+#X text 12 55 AUTHOR João Pais <jmmmpais@googlemail.com>;
+#X text 12 95 LICENSE BSD;
+#X text 12 75 LIBRARY jmmmp;
+#X text 13 115 WEBSITE http://puredata.info/Members/jmmmp;
+#X text 13 6 DESCRIPTION Pick a color using the hue-saturation chart
+;
+#X text 12 36 KEYWORDS color GUI data structures;
+#X text 12 135 VERSION 2010;
+#X text 14 165 INLET_0 - bang;
+#X text 14 185 OUTLET_0 - "color \$1 \$2 \$3" command;
+#X text 14 205 OUTLET_1 - number with current color;
+#X restore 342 316 pd META;
+#X connect 7 0 11 0;
+#X connect 7 0 10 0;
+#X connect 11 0 9 0;

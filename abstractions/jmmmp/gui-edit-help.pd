@@ -1,0 +1,3 @@
+#N canvas 345 87 450 300 10;
+#X obj 175 132 gui-edit;
+#X text 115 103 edit standard GUI objects fast;

@@ -1,0 +1,146 @@
+#N struct 1118-bez-array float x float y array 1118-bez-c-arr 1118-bez-c
+float p0x float p0y float p0x. float p0y. float p1x float p1y float
+p1x. float p1y. float p2x float p2y float p2x. float p2y. float p3x
+float p3y float p3x. float p3y. float rpx float rpy float rpx. float
+rpy.;
+#N struct 1118-bez-c float x float y;
+#N struct 1113-bez-array float x float y array 1113-bez-c-arr 1113-bez-c
+float p0x float p0y float p0x. float p0y. float p1x float p1y float
+p1x. float p1y. float p2x float p2y float p2x. float p2y. float p3x
+float p3y float p3x. float p3y. float rpx float rpy float rpx. float
+rpy.;
+#N struct 1113-bez-c float x float y;
+#N canvas 88 5 921 704 10;
+#X floatatom 415 751 5 0 0 0 - - -;
+#X obj 418 737 hsl 50 10 0 1 0 0 empty empty empty -2 -8 0 10 -228856
+-1 -1 0 0;
+#X floatatom 135 205 5 0 0 0 - - -;
+#X msg 125 144 canvas \$1;
+#X floatatom 135 124 5 0 0 0 - - -;
+#X obj 415 717 line;
+#X msg 415 697 0 \, 1 3000;
+#X obj 135 514 pack;
+#X obj 145 494 t b f;
+#X msg 258 830 p0 0.25 0.34 \, p1 0.34 0.88 \, p2 0.9 0.4 \, p3 0.85
+0.73;
+#X text 543 94 Arguments;
+#X obj 148 467 hsl 50 10 0 1 0 0 empty empty X -16 6 0 12 -228856 -1
+-1 0 1;
+#X obj 148 481 hsl 50 10 0 1 0 0 empty empty Y -16 6 0 12 -228856 -1
+-1 0 1;
+#X obj 128 870 hsl 50 10 0 1 0 0 empty empty X -16 6 0 12 -228856 -1
+-1 0 1;
+#X obj 128 884 hsl 50 10 0 1 0 0 empty empty Y -16 6 0 12 -228856 -1
+-1 0 1;
+#X text 135 307 default values;
+#X text 135 347 also first and last points can take any value;
+#X text 222 164 Two values define x and y coordinates;
+#X text 131 275 p[0-3] \$1 \$2 - Control one handle point's coordinates
+between 0 and 1 Send either a message with all points...;
+#X text 115 90 canvas \$1 [\$2] - Change canvas size. One value creates
+a square ...;
+#X text 172 204 size \$1 - Define array size (minimum 2 points);
+#X text 260 799 Dump outlet: connect to a message box \, which you
+can later copy-paste.;
+#X text 545 173 If no arguments are given \, the default values are
+110 100 100 When no y argument is present \, a square with dimensions
+of x is created.;
+#X text 542 395 But \, even with the points outside of the box \, the
+calculations will still work. You only loose mouse control of the graphic
+handles.;
+#X obj 135 574 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 125 707 bezier~;
+#X text 165 634 dump - Dump the coordinates of the control points through
+the right outlet. Connect the outlet to a message box \, and it will
+get formatted.;
+#X text 541 475 Released under the BSD License;
+#X text 541 455 (C) 2010 Jo„o Pais - jmmmpais@googlemail.com;
+#X text 20 94 Object size:;
+#X text 20 204 Array size:;
+#X text 20 274 Control points:;
+#X text 20 574 Readpoint:;
+#X text 20 634 Dump parameters:;
+#X text 546 112 - Array size;
+#X text 546 132 - Canvas size x (+ y);
+#X text 546 152 - Canvas size y;
+#X text 543 224 Inlets;
+#X text 543 264 Outlets;
+#X text 546 282 - float pair with x / y values;
+#X text 546 302 - control point dump;
+#X text 153 564 readpoint \$1 - Turn readpoint (red) display on or
+off. Readpoint shows the curent place in the buffer.;
+#X text 22 39 Create a transfer function between 0 and 1 \, using the
+four control points of a cubic bÈzier curve.;
+#X text 546 242 - floats [0 to 1] / commands (with parameters);
+#X text 542 336 BUG ALERT: if the control points get out of the GOP
+box \, these won't react when you click on them. You'll have to right-click
+\, open \, and then inside the abstraction place the points again inside
+the red boundaries. Or send pX coordinates.;
+#X text 20 74 CONTROL OPTIONS;
+#X text 70 704 INPUT;
+#X text 70 864 OUTPUT;
+#X obj 415 771 s \$0-input;
+#X obj 135 687 r \$0-input;
+#X text 415 677 Send your input values between 0 and 1 here:;
+#X msg 125 327 p0 0 0 \, p1 0.1 0.6 \, p2 0.9 0.4 \, p3 1 1;
+#X msg 125 367 p0 0.25 0.34 \, p1 0.34 0.88 \, p2 0.9 0.4 \, p3 0.85
+0.73;
+#X msg 125 427 p0 0 0 \, p1 0.34 1.3 \, p2 1.4 0.4 \, p3 1 1;
+#X msg 125 534 p0 \$1 \$2;
+#X text 144 446 Or move the points separately:;
+#X msg 125 224 size \$1;
+#X msg 125 245 size 100;
+#X msg 125 164 canvas 300 100;
+#X text 135 387 values outside the 0-1 boundaries will be outside of
+the box - you won't be able to grab the graphic (see bug description)
+;
+#X msg 125 593 readpoint \$1;
+#X msg 125 634 dump;
+#X text 65 899 Outputs: scaled x and y values;
+#X obj 125 830 snaps~;
+#X obj 135 850 snaps~;
+#N canvas 176 128 494 344 META 0;
+#X text 12 55 AUTHOR Jo„o Pais <jmmmpais@googlemail.com>;
+#X text 12 95 LICENSE BSD;
+#X text 12 75 LIBRARY jmmmp;
+#X text 12 35 KEYWORDS bezier data structures;
+#X text 12 135 VERSION 2010;
+#X text 12 165 INLET_0 - all instructions;
+#X text 12 5 DESCRIPTION Transfer function GUI with one cubic b√©zier
+curve at audio rate;
+#X text 12 225 OUTLET_2 - dump current parameters;
+#X text 12 185 OUTLET_0 - x values;
+#X text 12 205 OUTLET_1 - y values;
+#X text 13 115 WEBSITE http://puredata.info/Members/jmmmp;
+#X restore 542 496 pd META;
+#X text 21 9 [bezier~] - Transfer function GUI with one cubic b√©zier
+curve at audio rate;
+#X connect 0 0 48 0;
+#X connect 1 0 0 0;
+#X connect 2 0 56 0;
+#X connect 3 0 25 0;
+#X connect 4 0 3 0;
+#X connect 5 0 1 0;
+#X connect 6 0 5 0;
+#X connect 7 0 54 0;
+#X connect 8 0 7 0;
+#X connect 8 1 7 1;
+#X connect 11 0 7 0;
+#X connect 12 0 8 0;
+#X connect 24 0 60 0;
+#X connect 25 0 63 0;
+#X connect 25 1 64 0;
+#X connect 25 2 9 0;
+#X connect 49 0 25 0;
+#X connect 51 0 25 0;
+#X connect 52 0 25 0;
+#X connect 53 0 25 0;
+#X connect 54 0 25 0;
+#X connect 56 0 25 0;
+#X connect 57 0 25 0;
+#X connect 58 0 25 0;
+#X connect 60 0 25 0;
+#X connect 61 0 25 0;
+#X connect 63 0 13 0;
+#X connect 64 0 14 0;

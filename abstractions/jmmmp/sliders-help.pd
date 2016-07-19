@@ -1,12 +1,12 @@
-#N struct 1026-data-s float x float y array 1026-array-s 1026-element
+#N struct 1085-data-s float x float y array 1085-array-s 1085-element
 ;
-#N struct 1026-element float y;
-#N struct 1061-data-s float x float y array 1061-array-s 1061-element
+#N struct 1085-element float y;
+#N struct 1088-data-s float x float y array 1088-array-s 1088-element
 ;
-#N struct 1061-element float y;
-#N struct 1064-data-s float x float y array 1064-array-s 1064-element
+#N struct 1088-element float y;
+#N struct 1091-data-s float x float y array 1091-array-s 1091-element
 ;
-#N struct 1064-element float y;
+#N struct 1091-element float y;
 #N canvas 35 130 444 495 10;
 #X text 12 472 Released under the BSD License;
 #X text 11 455 (C) 2009 João Pais - jmmmpais@googlemail.com;
@@ -34,3 +34,12 @@ four sliders (all other channels are ignored).;
 #X text 12 422 Related objects: [m-i] [mk];
 #X obj 63 283 sliders 16 aaa;
 #X obj 63 363 sliders 5 bbb;
+#N canvas 504 106 494 344 META 0;
+#X text 12 55 AUTHOR João Pais <jmmmpais@googlemail.com>;
+#X text 12 95 LICENSE BSD;
+#X text 12 75 LIBRARY jmmmp;
+#X text 13 115 WEBSITE http://puredata.info/Members/jmmmp;
+#X text 12 6 DESCRIPTION GUI for incoming midi data;
+#X text 12 36 KEYWORDS midi slider GUI;
+#X text 12 135 VERSION 2009;
+#X restore 382 466 pd META;

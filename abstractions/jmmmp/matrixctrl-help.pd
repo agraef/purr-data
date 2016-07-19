@@ -1,0 +1,259 @@
+#N struct 1153-color float x float y float farbe;
+#N struct 1153-color-display float x float y float farbe;
+#N struct 1156-color float x float y float farbe;
+#N struct 1156-color-display float x float y float farbe;
+#N struct 1150-matrixctrl float x float y float size float color float
+state;
+#N struct 1170-color float x float y float farbe;
+#N struct 1170-color-display float x float y float farbe;
+#N struct 1173-color float x float y float farbe;
+#N struct 1173-color-display float x float y float farbe;
+#N struct 1167-matrixctrl float x float y float size float color float
+state;
+#N struct 1187-color float x float y float farbe;
+#N struct 1187-color-display float x float y float farbe;
+#N struct 1190-color float x float y float farbe;
+#N struct 1190-color-display float x float y float farbe;
+#N struct 1184-matrixctrl float x float y float size float color float
+state;
+#N struct 1087-color float x float y float farbe float ynpos;
+#N struct 1205-color float x float y float farbe;
+#N struct 1205-color-display float x float y float farbe;
+#N struct 1208-color float x float y float farbe;
+#N struct 1208-color-display float x float y float farbe;
+#N struct 1202-matrixctrl float x float y float size float color float
+state;
+#N struct 1222-color float x float y float farbe;
+#N struct 1222-color-display float x float y float farbe;
+#N struct 1225-color float x float y float farbe;
+#N struct 1225-color-display float x float y float farbe;
+#N struct 1219-matrixctrl float x float y float size float color float
+state;
+#N struct 1239-color float x float y float farbe;
+#N struct 1239-color-display float x float y float farbe;
+#N struct 1242-color float x float y float farbe;
+#N struct 1242-color-display float x float y float farbe;
+#N struct 1236-matrixctrl float x float y float size float color float
+state;
+#N struct 1256-color float x float y float farbe;
+#N struct 1256-color-display float x float y float farbe;
+#N struct 1259-color float x float y float farbe;
+#N struct 1259-color-display float x float y float farbe;
+#N struct 1253-matrixctrl float x float y float size float color float
+state;
+#N struct 1273-color float x float y float farbe;
+#N struct 1273-color-display float x float y float farbe;
+#N struct 1276-color float x float y float farbe;
+#N struct 1276-color-display float x float y float farbe;
+#N struct 1270-matrixctrl float x float y float size float color float
+state;
+#N struct 1290-color float x float y float farbe;
+#N struct 1290-color-display float x float y float farbe;
+#N struct 1293-color float x float y float farbe;
+#N struct 1293-color-display float x float y float farbe;
+#N struct 1287-matrixctrl float x float y float size float color float
+state;
+#N struct 1307-color float x float y float farbe;
+#N struct 1307-color-display float x float y float farbe;
+#N struct 1310-color float x float y float farbe;
+#N struct 1310-color-display float x float y float farbe;
+#N struct 1304-matrixctrl float x float y float size float color float
+state;
+#N canvas 167 136 821 610 10;
+#N canvas 0 0 426 446 license 0;
+#X text 8 47 All rights reserved.;
+#X text 8 227 The names of its contributors may not be used to endorse
+or promote products derived from this software without specific prior
+written permission.;
+#X text 8 87 Redistribution and use in source and binary forms \, with
+or without modification \, are permitted provided that the following
+conditions are met:;
+#X text 8 127 Redistributions of source code must retain the above
+copyright notice \, this list of conditions and the following disclaimer.
+;
+#X text 8 297 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES \, INCLUDING
+\, BUT NOT LIMITED TO \, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT \, INDIRECT
+\, INCIDENTAL \, SPECIAL \, EXEMPLARY \, OR CONSEQUENTIAL DAMAGES (INCLUDING
+\, BUT NOT LIMITED TO \, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES
+;
+#X text 8 167 Redistributions in binary form must reproduce the above
+copyright notice \, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the distribution.
+;
+#X text 8 27 jmmmpais@gmail.com;
+#X text 8 7 Copyright 2013 \, João Pais;
+#X restore 61 576 pd license;
+#X text 15 256 Inputs;
+#X obj 101 349 sig~ 1;
+#X obj 59 459 snaps~;
+#X obj 102 439 snaps~;
+#X obj 144 419 snaps~;
+#X obj 188 399 snaps~;
+#X obj 59 379 iemmatrix/mtx_mul~ 4 2;
+#X obj 145 349 sig~ 2;
+#X obj 69 299 prepend set;
+#X text 67 240 Outputs;
+#X text 60 96 To control the GUI \, either click with your mouse \,
+or send messages. These are formated as a list with the horizontal
+& vertical positions starting from 0 \, and state (0/1):;
+#X msg 59 158 0 0 \$1;
+#X obj 59 138 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 59 188 t a;
+#X obj 110 138 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 110 158 2 1 \$1;
+#X obj 160 138 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 160 158 3 0 \$1;
+#X text 101 189 The layout is like Max/MSP's matrixctrl object.;
+#X msg 69 319 matrix 4 2 0 1 0 0 0 1 1 0;
+#X text 144 299 The output is a matrix message;
+#X text 12 41 Clone of Max/MSP's matrixctrl. Can most also be used
+for normal matrixes. Click in the cells or send messages to change
+state.;
+#X text 119 257 this is [matrixctrl 4 2];
+#X text 100 517 == [matrixctrl 5 5 6];
+#X obj 59 258 matrixctrl 4 2;
+#X text 439 136 Inlets;
+#X text 439 336 Outlets;
+#X text 439 356 - output for [iemmatrix/mtx_mul~];
+#X text 439 106 - cell size (default is 13);
+#X text 439 226 - "mode AND" / "mode OR" - matrix behaviour (default
+is AND);
+#X text 438 86 - number of inputs/rows;
+#X text 439 66 - number of outputs/columns;
+#N canvas 331 210 398 327 SIZE+CELLSIZE 0;
+#X msg 19 117 size 2 4;
+#X msg 29 137 size 2 3;
+#X msg 19 217 cellsize 25;
+#X msg 29 237 cellsize 13;
+#X text 19 47 !! Mind \, for "size" and "cellsize" the object doesn't
+get saved with the new parameters !! You must edit the object itself.
+;
+#X text 19 17 Change matrix size and cellsize:;
+#X obj 19 257 matrixctrl 2 2;
+#X obj 19 157 matrixctrl 2 2;
+#X text 19 97 "size \$1 \$2" changes matrix size;
+#X text 19 197 "cellsize \$1" changes cell size \, Standard is 13 points.
+;
+#X connect 0 0 7 0;
+#X connect 1 0 7 0;
+#X connect 2 0 6 0;
+#X connect 3 0 6 0;
+#X restore 439 458 pd SIZE+CELLSIZE;
+#N canvas 218 139 450 433 COLOR 0;
+#X msg 39 177 color 50 100;
+#X msg 29 157 color 57 600;
+#X msg 19 127 color 899 800;
+#X text 109 127 standard values;
+#X text 49 207 == [matrixctrl 2 8 10];
+#X text 18 17 Change colors:;
+#X obj 381 77 pd-colors;
+#X text 89 357 == [matrixctrl 3 3 20];
+#X msg 19 327 color;
+#X text 19 307 Or send only the message "color" to open a color selector.
+;
+#X text 19 78 The colors follow the data structures color scheme. Look
+at;
+#X text 19 91 for a complete palette.;
+#X obj 19 206 matrixctrl 2 8 10;
+#X obj 19 356 matrixctrl 3 3 20;
+#X text 19 37 Send the message "color \$1 \$2" to set the matrix colors.
+;
+#X text 19 57 \$1 = off color \, \$2 = on color;
+#X connect 0 0 12 0;
+#X connect 1 0 12 0;
+#X connect 2 0 12 0;
+#X connect 8 0 13 0;
+#X restore 439 488 pd COLOR;
+#X text 499 488 Change colors;
+#X text 549 458 Change matrix size and cellsize;
+#X text 439 46 Arguments - ALWAYS USE THE FIRST TWO ARGUMENTS;
+#X text 439 306 - matrix ... - read matrix definitions;
+#X text 503 518 Read matrix messages;
+#N canvas 218 139 397 347 MATRIX 0;
+#X text 11 8 Read matrix messages \;;
+#X text 89 271 == [matrixctrl 8 8 8];
+#X text 88 115 == [matrixctrl 5 2];
+#X obj 15 148 prepend set;
+#X msg 15 168 matrix 5 2 0 0 0 0 0 1 1 0 1 1;
+#X msg 15 69 matrix 5 2 1 0 0 1 0 0 1 0 0 0;
+#X msg 25 89 matrix 5 2 0 0 0 0 0 1 1 0 1 1;
+#X text 12 28 Send the message "matrix ... " to import matrix definitions.
+With this you can save your settings.;
+#X msg 15 227 matrix 8 8 0 0 0 0 0 1 1 0 0 1 0 1 0 0 0 0 0 0 0 0 0
+0 1 0 1 0 1 0 0 0 0 1 0 0 0 0 1 0 0 1 1 0 0 0 0 0 0 0 0 0 1 0 1 1 0
+1 0 1 0 0 0 0 0 0;
+#X text 15 207 A more complex example:;
+#X obj 15 273 matrixctrl 8 8 8;
+#X obj 15 117 matrixctrl 5 2;
+#X connect 3 0 4 0;
+#X connect 5 0 11 0;
+#X connect 6 0 11 0;
+#X connect 8 0 10 0;
+#X connect 11 0 3 0;
+#X restore 439 518 pd MATRIX;
+#X text 439 186 - reset - resets matrix;
+#N canvas 455 181 408 289 MODES+RESET 0;
+#X msg 19 98 mode AND;
+#X msg 29 118 mode OR;
+#X text 109 137 == [matrixctrl 5 3];
+#X text 19 47 There are two modes: AND allows for multiple selection
+\, OR keeps only one selected field \, setting all other fields to
+0 AND is the standard mode.;
+#X text 19 17 Interaction modes:;
+#X msg 19 228 reset;
+#X text 19 207 Reset a matrix - the "reset" message sets all fields
+to 0;
+#X obj 19 138 matrixctrl 6 3;
+#X obj 19 248 matrixctrl 2 2;
+#X connect 0 0 7 0;
+#X connect 1 0 7 0;
+#X connect 5 0 8 0;
+#X restore 439 428 pd MODES+RESET;
+#X text 533 428 Interaction modes and reset;
+#X text 439 398 Other features are:;
+#X text 439 206 - bang - outputs current setting;
+#N canvas 564 268 494 344 META 0;
+#X text 12 55 AUTHOR João Pais <jmmmpais@googlemail.com>;
+#X text 12 95 LICENSE BSD;
+#X text 12 75 LIBRARY jmmmp;
+#X text 13 115 WEBSITE http://puredata.info/Members/jmmmp;
+#X text 12 6 DESCRIPTION GUI for [iemmatrix/mtx_mul~];
+#X text 12 36 KEYWORDS matrix mtx_mul~ matrix~;
+#X text 12 135 VERSION 2013;
+#X restore 151 576 pd META;
+#X text 11 11 [matrixctrl x y z] - GUI for [iemmatrix/mtx_mul~];
+#X obj 89 218 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 109 217 bang outputs the current setting;
+#X obj 61 516 matrixctrl 5 5 6;
+#X text 58 558 (C) 2013 João Pais - jmmmpais@gmail.com;
+#X text 439 246 - size \$1 \$2 - change matrix size;
+#X text 439 266 - cellsize \$1 - change cell size;
+#X text 439 286 - color \$1 \$2 - change colors;
+#X text 439 156 - \$1 \$2 \$3 - list with horizontal & vertical positions
+\, and state (0/1);
+#X text 59 498 The third argument sets cell size. Here with 6 points:
+;
+#X connect 2 0 7 1;
+#X connect 7 0 3 0;
+#X connect 7 1 4 0;
+#X connect 7 2 5 0;
+#X connect 7 3 6 0;
+#X connect 8 0 7 2;
+#X connect 9 0 20 0;
+#X connect 12 0 14 0;
+#X connect 13 0 12 0;
+#X connect 14 0 25 0;
+#X connect 15 0 16 0;
+#X connect 16 0 14 0;
+#X connect 17 0 18 0;
+#X connect 18 0 14 0;
+#X connect 25 0 9 0;
+#X connect 25 0 7 0;
+#X connect 48 0 14 0;
