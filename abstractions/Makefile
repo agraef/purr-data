@@ -76,15 +76,13 @@ ds-abs_install:
 
 #------------------------------------------------------------------------------#
 # JMMMP
-jmmmp:
-	make -C $(abstractions_src)/jmmmp
-
+JMMMP_NAME = jmmmp
 jmmmp_install:
-	make -C $(abstractions_src)/jmmmp DESTDIR="$(DESTDIR)" objectsdir="$(objectsdir)" install
-
-jmmmp_clean:
-	make -C $(abstractions_src)/jmmmp clean
-
+	install -d $(DESTDIR)$(objectsdir)/$(JMMMP_NAME)
+	install -d $(DESTDIR)$(objectsdir)/$(JMMMP_NAME)/examples
+	install -p $(abstractions_src)/$(JMMMP_NAME)/*.* $(DESTDIR)$(objectsdir)/$(JMMMP_NAME)
+	install -p $(abstractions_src)/$(JMMMP_NAME)/examples/*.* \
+		 $(DESTDIR)$(objectsdir)/$(JMMMP_NAME)/examples
 
 #------------------------------------------------------------------------------#
 # LIST-ABS
