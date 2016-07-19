@@ -212,7 +212,8 @@ var canvas_events = (function() {
                 } else if (evt.target.classList.contains("clickable_resize_handle")) {
                     // get id ("x123456etcgobj" without the "x" or "gobj")
                     target_id =
-                        (evt.target.classList.contains("label_drag_handle") ?
+                        (evt.target.classList.contains("label_drag_handle") ||
+                         evt.target.classList.contains("gop_drag_handle") ?
                         "_l" : "_s") +
                         evt.target.parentNode.id.slice(0,-4).slice(1);
                     last_draggable_x = evt.pageX + svg_view.x;
@@ -535,7 +536,8 @@ var canvas_events = (function() {
                     handle_elem =
                         document.querySelector(".clickable_resize_handle"),
                     target_id =
-                        (handle_elem.classList.contains("label_drag_handle") ?
+                        (handle_elem.classList.contains("label_drag_handle") ||
+                         handle_elem.classList.contains("gop_drag_handle") ?
                             "_l" : "_s") +
                         handle_elem.parentNode.id.slice(0,-4).slice(1),
                     is_canvas_gop_rect = document.
