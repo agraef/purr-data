@@ -355,8 +355,7 @@ Source: build\gripd\*.*; DestDir: {app}\gripd; Flags: ignoreversion
 ;
 ; DLLs
 ;
-Source: build\lib*.dll; DestDir: {sys}; Flags: restartreplace confirmoverwrite sharedfile
-Source: build\pthread*.dll; DestDir: {sys}; Flags: restartreplace confirmoverwrite sharedfile
+Source: build\bin\lib*.dll; DestDir: {sys}; Flags: restartreplace confirmoverwrite sharedfile
 #ifexist "build\msvcp71.dll"
 Source: build\msvcp71.dll; DestDir: {sys}; Flags: restartreplace uninsneveruninstall sharedfile
 #endif
