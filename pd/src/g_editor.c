@@ -7470,7 +7470,12 @@ static void canvas_buftotext(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
                as x_bufsize. Pd will handle deallocation of those members
                automatically, so we don't need to free the "buf" here. */
             rtext_settext(rtext, buf, length);
-            if (binbuf_match(((t_text *)y)->te_binbuf, b, 1))
+            /* Here we are abusing binbuf_match-- it was written only to see
+               if a subset of a binbuf matches a larger one. So we have to
+               also compare the size of both binbufs to tell if it is an
+               exact match. */
+            if (binbuf_match(((t_text *)y)->te_binbuf, b, 1) &&
+                binbuf_getnatom(((t_text *)y)->te_binbuf) == binbuf_getnatom(b))
                 x->gl_editor->e_textdirty = 0;
             else
                 x->gl_editor->e_textdirty = 1;
