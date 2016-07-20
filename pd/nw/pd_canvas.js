@@ -75,11 +75,11 @@ function string_to_array_of_chunks(msg) {
 
 // Should probably be in pdgui.js
 function encode_for_dialog(s) {
+    s = s.replace(/\+/g, "++");
     s = s.replace(/\s/g, "+_");
     s = s.replace(/\$/g, "+d");
     s = s.replace(/;/g, "+s");
     s = s.replace(/,/g, "+c");
-    s = s.replace(/\+/g, "++");
     s = "+" + s;
     return s;
 }
