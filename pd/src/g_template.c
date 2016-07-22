@@ -3962,6 +3962,11 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         sprintf(tagbuf, "draw%lx.%lx", (long unsigned int)x,
             (long unsigned int)data);
         gui_s(tagbuf);
+        gui_end_array();
+        gui_end_vmess();
+
+        /* need to investigate this further-- it apparently handles
+           the z order for gop scalars */
         if (!glist_istoplevel(glist))
         {
             t_canvas *gl = glist_getcanvas(glist);
@@ -3973,8 +3978,6 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             canvas_restore_original_position(gl, (t_gobj *)glist,
                 objtag, -1);
         }
-        gui_end_array();
-        gui_end_vmess();
 
         /* register events */
         svg_register_events(z, glist, sc, template, data);
