@@ -128,7 +128,7 @@ CXXFLAGS = $(CFLAGS)
 #
 # WARNING!  this MUST be all on one line because the automatic package
 # building scripts rely on it being that way.
-LIB_TARGETS = adaptive arraysize bassemu boids bsaylor comport creb cxc cyclone earplug ekext ext13 freeverb ggee hcs iem_ambi iem_bin_ambi iemlib iemgui iemguts iem_adaptfilt iemmatrix iemxmlrpc iem_delay iem_roomsim iem_spec2 iem_tab jasch_lib loaders-hexloader loaders-libdir lyonpotpourri mapping markex maxlib mjlib moocow moonlib motex mrpeach oscx pan pdcontainer pddp pdogg plugin pmpd sigpack smlib tof unauthorized vbap windowing zexy flext
+LIB_TARGETS = adaptive arraysize bassemu boids bsaylor comport creb cxc cyclone earplug ekext ext13 fftease freeverb ggee hcs iem_ambi iem_bin_ambi iemlib iemgui iemguts iem_adaptfilt iemmatrix iemxmlrpc iem_delay iem_roomsim iem_spec2 iem_tab jasch_lib loaders-hexloader loaders-libdir lyonpotpourri mapping markex maxlib mjlib moocow moonlib motex mrpeach oscx pan pdcontainer pddp pdogg plugin pmpd sigpack smlib tof unauthorized vbap windowing zexy flext
 
 # DISABLED: flatgui
 
@@ -456,6 +456,34 @@ ext13_install:
 ext13_clean:
 	make -C $(externals_src)/ext13 clean
 
+#------------------------------------------------------------------------------#
+# FFTEASE
+FFTEASE_NAME=fftease
+
+fftease:
+	make -C $(externals_src)/$(FFTEASE_NAME)
+
+fftease_install:
+	#make -C $(externals_src)/$(FFTEASE_NAME) DESTDIR="$(DESTDIR)" \
+	#	objectsdir="$(objectsdir)" install
+	install -d $(DESTDIR)$(objectsdir)/$(FFTEASE_NAME)
+	install -d $(DESTDIR)$(objectsdir)/$(FFTEASE_NAME)/sound
+	install -p $(externals_src)/$(FFTEASE_NAME)/*.$(EXTENSION) \
+		$(DESTDIR)$(objectsdir)/$(FFTEASE_NAME)
+	install -p $(externals_src)/$(FFTEASE_NAME)/fftease32-helpfiles/sound/*.* \
+		$(DESTDIR)$(objectsdir)/$(FFTEASE_NAME)/sound
+	# copy the meta file and the shared lib
+	install -p $(externals_src)/$(FFTEASE_NAME)/libfftease* \
+		$(DESTDIR)$(objectsdir)/$(FFTEASE_NAME)
+	# license and readme
+	install -p $(externals_src)/$(FFTEASE_NAME)/*.txt \
+		$(DESTDIR)$(objectsdir)/$(FFTEASE_NAME)
+	# install help files
+	install -p $(externals_src)/$(FFTEASE_NAME)/fftease32-helpfiles/*.pd \
+		$(DESTDIR)$(objectsdir)/$(FFTEASE_NAME)
+
+fftease_clean:
+	make -C $(externals_src)/$(FFTEASE_NAME) clean
 
 #------------------------------------------------------------------------------#
 # FLATGUI
