@@ -1,0 +1,8 @@
+#N canvas 671 360 200 200 10;
+#N canvas 603 108 420 300 META 1;
+#X text 10 25 AUTHOR Thomas A. Baran;
+#X text 10 10 VERSION 0.9.1;
+#X text 10 80 LICENSE GPL v2+;
+#X text 10 42 NAME autotune;
+#X text 10 62 DESCRIPTION an autotuning PD external;
+#X restore 10 10 pd META;

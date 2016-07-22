@@ -337,13 +337,6 @@ then
 	cp -rf lib ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
 	cp -rf scores ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
 	cd ../
-	# install autotune~ plugin
-	cd autotune/
-	make
-	cp -f autotune~.pd_linux ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
-	cp -f autotune~-help.pd ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
-	cp -f autotune_scale_warp.png ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/images
-	cd ../
 	echo "done with l2ork addons."
 	cd ../
 	# finish install
