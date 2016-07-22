@@ -1104,6 +1104,36 @@ loaders-libdir_clean:
 	make -C $(externals_src)/loaders/libdir clean
 
 #------------------------------------------------------------------------------#
+# LYON
+LYON_NAME=lyon
+
+lyon:
+	make -C $(externals_src)/$(LYON_NAME)
+
+lyon_install:
+	install -d $(DESTDIR)$(objectsdir)/$(LYON_NAME)
+	install -p $(wildcard $(externals_src)/$(LYON_NAME)/*.$(EXTENSION)) \
+		$(DESTDIR)$(objectsdir)/$(LYON_NAME)
+	install -p $(externals_src)/$(LYON_NAME)/*.pd \
+		$(DESTDIR)$(objectsdir)/$(LYON_NAME)
+	# don't include cartopol/poltocar-- cyclone library already has those
+	rm $(DESTDIR)$(objectsdir)/$(LYON_NAME)/cartopol.pd
+	rm $(DESTDIR)$(objectsdir)/$(LYON_NAME)/poltocar.pd
+	rm $(DESTDIR)$(objectsdir)/$(LYON_NAME)/cartopol.$(EXTENSION)
+	rm $(DESTDIR)$(objectsdir)/$(LYON_NAME)/poltocar.$(EXTENSION)
+	install -p $(wildcard $(externals_src)/$(LYON_NAME)/sound/*.*) \
+		$(DESTDIR)$(objectsdir)/$(LYON_NAME)
+	# copy the meta file and the shared lib
+	install -p $(wildcard $(externals_src)/$(LYON_NAME)/*lyon*) \
+		$(DESTDIR)$(objectsdir)/$(LYON_NAME)
+	# license and readme
+	install -p $(externals_src)/$(LYON_NAME)/*.txt \
+		$(DESTDIR)$(objectsdir)/$(LYON_NAME)
+
+lyon_clean:
+	make -C $(externals_src)/$(LYON_NAME) clean
+
+#------------------------------------------------------------------------------#
 # MAPPING
 mapping:
 	make -C $(externals_src)/mapping PD_PATH=$(pd_src) CFLAGS="$(CFLAGS)"
