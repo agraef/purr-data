@@ -74,7 +74,7 @@ static void *countund_new(t_float flimit)
   return(x);
 }
 
-static void *countund_limit(t_countund* x, t_float flimit)
+static void countund_limit(t_countund* x, t_float flimit)
 {
   if ( flimit < 0 ) {
        post( "countund~: wrong count limit" );
@@ -84,7 +84,7 @@ static void *countund_limit(t_countund* x, t_float flimit)
   }
 }
 
-static void *countund_bang(t_countund *x)
+static void countund_bang(t_countund *x)
 {
 
   if ( x->x_up ) {

@@ -70,7 +70,7 @@ static void *randomblock_new(t_float flimit)
   return(x);
 }
 
-static void *randomblock_limit(t_randomblock* x, t_float flimit)
+static void randomblock_limit(t_randomblock* x, t_float flimit)
 {
   if ( flimit < 0 || flimit > RAND_MAX ) {
        post( "randomblock~: wrong random limit" );
