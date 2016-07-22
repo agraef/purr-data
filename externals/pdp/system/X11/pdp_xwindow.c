@@ -130,6 +130,7 @@ void pdp_xdisplay_unregister_window(t_pdp_xdisplay *d, t_pdp_xwindow *w)
     if (_windowset_contains(d, w)) _windowset_remove(d, w);
 }
 
+static char *BUT(char *c) {return c + strlen(c) - 1;}
 
 /* LOCKING !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1111*/
 /* get events from display and store in queues */
@@ -145,7 +146,7 @@ void pdp_xdisplay_get_events(t_pdp_xdisplay *d)
     char tag_release[] = "release0";
     char tag_motion[]  = "motion0";
 
-    char *BUT(char *c) {return c + strlen(c) - 1;}
+
 
     /* button chars */
     char *but_drag  =   BUT(tag_drag);

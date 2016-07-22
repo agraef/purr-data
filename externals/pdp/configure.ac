@@ -68,7 +68,7 @@ fi
 
 if test $prefix == NONE;
 then
-	prefix=/usr/local
+	prefix=/Users/mbarb/build/purr-data/pd
 fi
 
 
@@ -138,7 +138,7 @@ dnl Darwin specific stuff: this is still pretty experimental
 dnl How to test if frameworks are present ????
 if test $ARCH == Darwin
 then
-	PD_EXECUTABLE=$prefix/bin/pd
+	PD_EXECUTABLE=$prefix/bin/pd-l2ork
 	LIBS="$LIBS -L/sw/lib"
 	CPPFLAGS="$CPPFLAGS -I/sw/include"
 	PDP_EXTRA_CPPFLAGS="-I/sw/include"

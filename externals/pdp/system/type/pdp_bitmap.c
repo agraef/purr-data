@@ -509,6 +509,11 @@ static int _pdp_packet_bitmap_convert_yv12_to_image(int packet, t_pdp_symbol *de
     return new_p;
 }
 
+    inline u8 _map(s32 pixel){
+	s32 mask = ~(pixel>>16);
+	return ((pixel >> 7) & mask);
+    }
+
 static int _pdp_packet_bitmap_convert_mchp_to_rgb8(int packet, t_pdp_symbol *dest_template)
 {
     t_pdp *header = pdp_packet_header(packet);
@@ -522,10 +527,7 @@ static int _pdp_packet_bitmap_convert_mchp_to_rgb8(int packet, t_pdp_symbol *des
     int new_p, i;
 
     //    static inline u8 _map(s32 pixel){
-    inline u8 _map(s32 pixel){
-	s32 mask = ~(pixel>>16);
-	return ((pixel >> 7) & mask);
-    }
+
 
     switch(nb_channels){
     default: return -1;

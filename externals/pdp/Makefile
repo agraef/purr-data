@@ -21,7 +21,7 @@ pdp_all:
 
 darwin:	pdp_all
 	rm -f pdp.pd_darwin
-	$(CC)  -o pdp.pd_darwin modules/*/*.o system/pdp.o system/*/*.o puredata/*.o $(PDP_LIBS) -bundle -undefined  dynamic_lookup  -twolevel_namespace -bundle_loader $(PD_EXECUTABLE) 
+	$(CC)  -o pdp.pd_darwin modules/*/*.o system/pdp.o system/*/*.o puredata/*.o $(PDP_LIBS) -bundle -undefined  dynamic_lookup  -twolevel_namespace -bundle_loader ../../pd/bin/pd-l2ork
 
 
 linux: pdp_all

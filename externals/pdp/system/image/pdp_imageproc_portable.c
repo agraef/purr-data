@@ -576,6 +576,12 @@ void pdp_imageproc_resample_affinemap_setcentery(void *x, float f){((t_affine_ma
 void pdp_imageproc_resample_affinemap_setzoomx(void *x, float f){((t_affine_map *)x)->zoomx = f;}
 void pdp_imageproc_resample_affinemap_setzoomy(void *x, float f){((t_affine_map *)x)->zoomy = f;}
 void pdp_imageproc_resample_affinemap_setangle(void *x, float f){((t_affine_map *)x)->angle = f;}
+
+    /* affine x, y mappings in screen coordinates */
+    double _mapx(double _x, double _y, double cx, double cy, double c, double s, double izx)
+    {return cx + izx * ( c * (_x-cx) + s * (_y-cy));}
+    double _mapy(double _x, double _y, double cx, double cy, double c, double s, double izy)
+    {return cy + izy * (-s * (_x-cx) + c * (_y-cy));}
 void pdp_imageproc_resample_affinemap_process(void *x, u32 width, u32 height, s16 *srcimage, s16 *dstimage)
 {
     t_affine_map *a = (t_affine_map *)x;
@@ -590,19 +596,17 @@ void pdp_imageproc_resample_affinemap_process(void *x, u32 width, u32 height, s1
     double c = cos(angle);
     double s = sin(angle);
 
-    /* affine x, y mappings in screen coordinates */
-    double mapx(double _x, double _y){return cx + izx * ( c * (_x-cx) + s * (_y-cy));}
-    double mapy(double _x, double _y){return cy + izy * (-s * (_x-cx) + c * (_y-cy));}
 
-    u32 colstate_x = (u32)(scalew * mapx(0,0));
-    u32 colstate_y = (u32)(scaleh * mapy(0,0));
+
+    u32 colstate_x = (u32)(scalew * _mapx(0,0,cx,cy,c,s,izx));
+    u32 colstate_y = (u32)(scaleh * _mapy(0,0,cx,cy,c,s,izy));
     u32 rowstate_x = colstate_x;
     u32 rowstate_y = colstate_y;
 
-    u32 row_inc_x = (u32)(scalew * (mapx(1,0)-mapx(0,0)));
-    u32 row_inc_y = (u32)(scaleh * (mapy(1,0)-mapy(0,0)));
-    u32 col_inc_x = (u32)(scalew * (mapx(0,1)-mapx(0,0)));
-    u32 col_inc_y = (u32)(scaleh * (mapy(0,1)-mapy(0,0)));
+    u32 row_inc_x = (u32)(scalew * (_mapx(1,0,cx,cy,c,s,izx)-_mapx(0,0,cx,cy,c,s,izx)));
+    u32 row_inc_y = (u32)(scaleh * (_mapy(1,0,cx,cy,c,s,izy)-_mapy(0,0,cx,cy,c,s,izy)));
+    u32 col_inc_x = (u32)(scalew * (_mapx(0,1,cx,cy,c,s,izx)-_mapx(0,0,cx,cy,c,s,izx)));
+    u32 col_inc_y = (u32)(scaleh * (_mapy(0,1,cx,cy,c,s,izy)-_mapy(0,0,cx,cy,c,s,izy)));
 
     u32 i,j;
 
