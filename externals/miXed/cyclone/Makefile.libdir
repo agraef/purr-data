@@ -46,7 +46,7 @@ ifeq ($(UNAME),Darwin)
     CFLAGS += $(FAT_FLAGS) -fPIC -I/sw/include
     LDFLAGS += $(FAT_FLAGS) -bundle -undefined dynamic_lookup -L/sw/lib
     # if the 'pd' binary exists, check the linking against it to aid with stripping
-    LDFLAGS += $(shell test -e $(PD_PATH)/bin/pd && echo -bundle_loader $(PD_PATH)/bin/pd)
+    LDFLAGS += $(shell test -e $(PD_PATH)/bin/pd-l2ork && echo -bundle_loader $(PD_PATH)/bin/pd-l2ork)
     LIBS += -lc 
     STRIP = strip -x
 # install into ~/Library/Pd on Mac OS X since /usr/local isn't used much
