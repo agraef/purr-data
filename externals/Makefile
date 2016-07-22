@@ -128,7 +128,7 @@ CXXFLAGS = $(CFLAGS)
 #
 # WARNING!  this MUST be all on one line because the automatic package
 # building scripts rely on it being that way.
-LIB_TARGETS = adaptive arraysize bassemu boids bsaylor comport creb cxc cyclone earplug ekext ext13 freeverb ggee hcs iem_ambi iem_bin_ambi iemlib iemgui iemguts iem_adaptfilt iemmatrix iemxmlrpc iem_delay iem_roomsim iem_spec2 iem_tab jasch_lib loaders-hexloader loaders-libdir mapping markex maxlib mjlib moocow moonlib motex mrpeach oscx pan pdcontainer pddp pdogg plugin pmpd sigpack smlib tof unauthorized vbap windowing zexy flext
+LIB_TARGETS = adaptive arraysize bassemu boids bsaylor comport creb cxc cyclone earplug ekext ext13 freeverb ggee hcs iem_ambi iem_bin_ambi iemlib iemgui iemguts iem_adaptfilt iemmatrix iemxmlrpc iem_delay iem_roomsim iem_spec2 iem_tab jasch_lib loaders-hexloader loaders-libdir lyonpotpourri mapping markex maxlib mjlib moocow moonlib motex mrpeach oscx pan pdcontainer pddp pdogg plugin pmpd sigpack smlib tof unauthorized vbap windowing zexy flext
 
 # DISABLED: flatgui
 
@@ -1105,32 +1105,34 @@ loaders-libdir_clean:
 
 #------------------------------------------------------------------------------#
 # LYON
-LYON_NAME=lyon
+LYON_NAME=lyonpotpourri
 
-lyon:
+lyonpotpourri:
 	make -C $(externals_src)/$(LYON_NAME)
 
-lyon_install:
+lyonpotpourri_install:
+	#make -C $(externals_src)/$(LYON_NAME) DESTDIR="$(DESTDIR)" \
+	#	objectsdir="$(objectsdir)" install
 	install -d $(DESTDIR)$(objectsdir)/$(LYON_NAME)
 	install -p $(wildcard $(externals_src)/$(LYON_NAME)/*.$(EXTENSION)) \
 		$(DESTDIR)$(objectsdir)/$(LYON_NAME)
 	install -p $(externals_src)/$(LYON_NAME)/*.pd \
 		$(DESTDIR)$(objectsdir)/$(LYON_NAME)
 	# don't include cartopol/poltocar-- cyclone library already has those
-	rm $(DESTDIR)$(objectsdir)/$(LYON_NAME)/cartopol.pd
-	rm $(DESTDIR)$(objectsdir)/$(LYON_NAME)/poltocar.pd
-	rm $(DESTDIR)$(objectsdir)/$(LYON_NAME)/cartopol.$(EXTENSION)
-	rm $(DESTDIR)$(objectsdir)/$(LYON_NAME)/poltocar.$(EXTENSION)
-	install -p $(wildcard $(externals_src)/$(LYON_NAME)/sound/*.*) \
+	rm $(DESTDIR)$(objectsdir)/$(LYON_NAME)/cartopol*.pd
+	rm $(DESTDIR)$(objectsdir)/$(LYON_NAME)/poltocar*.pd
+	rm $(DESTDIR)$(objectsdir)/$(LYON_NAME)/cartopol*.$(EXTENSION)
+	rm $(DESTDIR)$(objectsdir)/$(LYON_NAME)/poltocar*.$(EXTENSION)
+	install -p $(externals_src)/$(LYON_NAME)/sound/*.* \
 		$(DESTDIR)$(objectsdir)/$(LYON_NAME)
 	# copy the meta file and the shared lib
-	install -p $(wildcard $(externals_src)/$(LYON_NAME)/*lyon*) \
+	install -p $(externals_src)/$(LYON_NAME)/*lyonpotpourri* \
 		$(DESTDIR)$(objectsdir)/$(LYON_NAME)
 	# license and readme
 	install -p $(externals_src)/$(LYON_NAME)/*.txt \
 		$(DESTDIR)$(objectsdir)/$(LYON_NAME)
 
-lyon_clean:
+lyonpotpourri_clean:
 	make -C $(externals_src)/$(LYON_NAME) clean
 
 #------------------------------------------------------------------------------#

@@ -345,16 +345,16 @@ then
 	cp -f autotune_scale_warp.png ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/images
 	cd ../
 	# install lyonpotpourri
-	cd lyonpotpourri/
+#	cd lyonpotpourri/
 	#git submodule update
-	make
-	mkdir -p ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/lyon
+#	make
+#	mkdir -p ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/lyon
 	# do not include cartopol and poltocar since cyclone library already has those
-	cp `ls *.pd_linux | egrep -v '^cartopol*' | egrep -v '^poltocar*'` ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/lyon/
-	cp `ls *.pd | egrep -v '^cartopol*' | egrep -v '^poltocar*'` ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/lyon/
-	cp -rf sound ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/lyon/
-	cp -rf lib*.so ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/lyon/
-	cd ../
+#	cp `ls *.pd_linux | egrep -v '^cartopol*' | egrep -v '^poltocar*'` ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/lyon/
+#	cp `ls *.pd | egrep -v '^cartopol*' | egrep -v '^poltocar*'` ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/lyon/
+#	cp -rf sound ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/lyon/
+#	cp -rf lib*.so ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/lyon/
+#	cd ../
 	# install fftease
 	cd fftease*
 	make
