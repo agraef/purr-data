@@ -690,7 +690,7 @@ void canvas_dirty(t_canvas *x, t_floatarg n)
     if ((unsigned)n != x2->gl_dirty)
     {
         x2->gl_dirty = n;
-        if (x2->gl_havewindow) // was glist_isvisible(x2)
+        if (x2->gl_havewindow && glist_isvisible(x2))
             canvas_reflecttitle(x2);
     }
 }

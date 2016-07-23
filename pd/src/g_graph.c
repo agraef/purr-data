@@ -1426,7 +1426,9 @@ static void graph_select(t_gobj *z, t_glist *glist, int state)
         {
             canvas = glist;
         }
-        if(glist_istoplevel(glist))
+        if (glist_isvisible(glist) &&
+                (glist_istoplevel(glist) ||
+                 gobj_shouldvis(x, glist)))
         {
             if (state)
                 gui_vmess("gui_gobj_select", "xs",

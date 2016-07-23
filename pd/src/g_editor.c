@@ -7230,7 +7230,8 @@ void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
             //dpsaha@vt.edu called to delete the GOP_blob
             if (x->gl_goprect)        canvas_draw_gop_resize_hooks(x);
         }
-        canvas_setcursor(x, CURSOR_RUNMODE_NOTHING);
+        if (glist_isvisible(x))
+            canvas_setcursor(x, CURSOR_RUNMODE_NOTHING);
     }
     if (glist_isvisible(x))
     {

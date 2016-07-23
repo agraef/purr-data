@@ -606,14 +606,16 @@ void scalar_select(t_gobj *z, t_glist *owner, int state)
     if (state)
     {
         x->sc_selected = owner;
-        gui_vmess("gui_gobj_select", "xs",
-            glist_getcanvas(owner), tagbuf);
+        if (glist_isvisible(owner))
+            gui_vmess("gui_gobj_select", "xs",
+                glist_getcanvas(owner), tagbuf);
     }
     else
     {
         x->sc_selected = 0;
-        gui_vmess("gui_gobj_deselect", "xs",
-            glist_getcanvas(owner), tagbuf);
+        if (glist_isvisible(owner))
+            gui_vmess("gui_gobj_deselect", "xs",
+                glist_getcanvas(owner), tagbuf);
     }
     //sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n",
     //    glist_getcanvas(owner), owner, state);
