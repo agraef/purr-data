@@ -1,0 +1,17 @@
+#N canvas 381 136 399 196 10;
+#X obj 68 39 inlet;
+#X obj 68 119 canvasinfo 1;
+#X obj 167 119 canvasinfo 1;
+#X obj 68 61 trigger bang bang;
+#X msg 167 91 filename;
+#X msg 68 91 dir;
+#X obj 68 141 outlet;
+#X obj 167 141 outlet;
+#X text 209 30 2016 Jonathan Wilkes;
+#X connect 0 0 3 0;
+#X connect 1 0 6 0;
+#X connect 2 0 7 0;
+#X connect 3 0 5 0;
+#X connect 3 1 4 0;
+#X connect 4 0 2 0;
+#X connect 5 0 1 0;

@@ -273,9 +273,7 @@ then
 	mkdir -p ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/images
 	# patch_name
 	cd ../../l2ork_addons/patch_name
-	make clean
-	make
-	cp -f patch_name.pd_linux ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
+	cp -f patch_name.pd ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
 	cp -f patch_name-help.pd ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
 	# disis_wiimote
 	cd ../disis_wiimote
