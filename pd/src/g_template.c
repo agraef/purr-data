@@ -6376,7 +6376,7 @@ static int drawnumber_gettype(t_drawnumber *x, t_word *data,
 {
     int type;
     t_symbol *arraytype;
-    if (template_find_field(template, /*x->x_fieldname*/ &x->x_value.fd_un.fd_varsym, onsetp, &type,
+    if (template_find_field(template, /*x->x_fieldname*/ x->x_value.fd_un.fd_varsym, onsetp, &type,
         &arraytype) && type != DT_ARRAY)
             return (type);
     else return (-1);
@@ -6860,12 +6860,12 @@ static void drawsymbol_sprintf(t_drawsymbol *x, char *buf, t_atom *ap)
     //fprintf(stderr,"drawsymbol_sprintf %s\n", buf);
 }*/
 
-static int drawsymbol_gettype(t_drawnumber *x, t_word *data,
+static int drawsymbol_gettype(t_drawsymbol *x, t_word *data,
     t_template *template, int *onsetp)
 {
     int type;
     t_symbol *arraytype;
-    if (template_find_field(template, /*x->x_fieldname*/ &x->x_value.fd_un.fd_varsym, onsetp, &type,
+    if (template_find_field(template, /*x->x_fieldname*/ x->x_value.fd_un.fd_varsym, onsetp, &type,
         &arraytype) && type != DT_ARRAY)
             return (type);
     else return (-1);
@@ -6875,7 +6875,7 @@ static int drawsymbol_gettype(t_drawnumber *x, t_word *data,
 static void drawsymbol_getbuf(t_drawsymbol *x, t_word *data,
     t_template *template, char *buf)
 {
-    int nchars, onset, type = drawnumber_gettype(x, data, template, &onset);
+    int nchars, onset, type = drawsymbol_gettype(x, data, template, &onset);
     if (type < 0)
         buf[0] = 0;
     else
