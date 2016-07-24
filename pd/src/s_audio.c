@@ -741,12 +741,6 @@ void glob_audio_properties(t_pd *dummy, t_floatarg flongform)
             &blocksize);
     //rate = (int)sys_getsr();
 
-#ifdef USEAPI_JACK
-    if (sys_audioapiopened == API_JACK)
-    {
-        sys_setchsr(audio_nextinchans, audio_nextoutchans, rate);
-    }
-#endif /* JACK */
 
     /* post("naudioindev %d naudiooutdev %d longform %f",
             naudioindev, naudiooutdev, flongform); */
@@ -814,6 +808,13 @@ void glob_audio_properties(t_pd *dummy, t_floatarg flongform)
     gui_end_array();
 
     gui_end_vmess();
+
+#ifdef USEAPI_JACK
+    if (sys_audioapiopened == API_JACK)
+    {
+        sys_setchsr(audio_nextinchans, audio_nextoutchans, rate);
+    }
+#endif /* JACK */
 
     // not sure why we were deleting the key 0 here...
 //    gfxstub_deleteforkey(0);
