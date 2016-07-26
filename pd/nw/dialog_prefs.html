@@ -208,7 +208,7 @@
         </div>
 
         <div class="tab2">
-          <div class="tab_settings">
+          <div class="tab_settings midi_api_container">
             <label data-i18n="[title]prefs.midi.api_tt">
               <span data-i18n="prefs.midi.api"></span>
               <select id="midi_api" onchange="change_api(this);">
@@ -331,18 +331,17 @@ function dev_change(elem) {
     // the same logic works for both channels and
     // devices-- we use the variable 'type' to
     // choose the parameter acoordingly
-    var type;
+    var type, midi;
     id = elem.id;
-    direction = id.slice(0,2) === "in" ? "in" : "out";
+    midi = id.slice(0, 4) === "midi" ? true : false;
+    direction = id.replace("midi_", "").slice(0,2) === "in" ? "in" : "out";
     type = id.indexOf("chans") !== -1 ? "chans" : "devs";
     // This would need to change if there could ever be more than
     // 9 devices
     index = +(id.slice(-1)) - 1;
-    pdgui.post("direction is " + direction);
-    attrs = get_attr("pd-" + direction + type, pd_audio_attrs);
-    attrs[index] = elem.value;
-    pdgui.post("id is " + elem.id);
-    pdgui.post("new chan attrs is " + attrs);
+    attrs = get_attr("pd-" + direction + type,
+        midi ?  pd_midi_attrs : pd_audio_attrs);
+    attrs[index] = midi ? +elem.value + 1 : elem.value;
 
     disable_unused_chans("in");
     disable_unused_chans("out");
@@ -376,7 +375,7 @@ function kludge_dev(type, attrs, index) {
 }
 
 // If the device is -1 ('None'), make the number of channels negative.
-// This is the way Pd's audio back end turns off the device. (It works
+// This is the way Pd's audio backend turns off the device. (It works
 // this way so you can remember your number of channels even if
 // you turn off the device.)
 function kludge_chans(type, attrs, index) {
@@ -632,7 +631,15 @@ function midi_prefs_callback(attrs) {
             get_attr("current-api", attrs)
         );
     }
-
+    // If we still haven't gotten any apis, just assume that the
+    // only option is a generic "system" midi and hide the select widget.
+    // This should really be taken care of in Pd-- I don't know why, for
+    // example, it doesn't just send "MMIO" on Windows when that's the
+    // only API available...
+    if (api_select.getElementsByTagName("option").length < 1) {
+        document.getElementsByClassName("midi_api_container")[0].
+            style.setProperty("display", "none");
+    }
     // Hide devs and only show the alsa in/out boxes. In the future
     // we need an additional user friendly alsa interface here-- one that
     // just lets the user pick a single input device and single output
