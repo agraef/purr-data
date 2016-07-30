@@ -469,7 +469,6 @@ function cancel() {
 }
 
 function change_api(elem) {
-pdgui.post("elem is " + elem);
     var id = elem.getAttribute("id"),
         value = elem.value; // need js object property, DOM Attribute won't work
     if (id === "audio_api") {

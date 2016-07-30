@@ -724,11 +724,9 @@ void glob_midi_properties(t_pd *dummy, t_floatarg flongform)
         gfxstub_new2(&glob_pdobject, (void *)glob_midi_properties));
 
     //sys_gui("global midi_indevlist; set midi_indevlist {none}\n");
-fprintf(stderr, "ndevs is %d", nindevs);
     gui_start_array();
     for (i = 0; i < nindevs; i++)
     {
-fprintf(stderr, "dev is %s", indevlist + i * DEVDESCSIZE);
         //sys_vgui("lappend midi_indevlist {%s}\n",
         //    indevlist + i * DEVDESCSIZE);
         gui_s(indevlist + i * DEVDESCSIZE);
@@ -843,8 +841,6 @@ void glob_midi_dialog(t_pd *dummy, t_symbol *s, int argc, t_atom *argv)
     alsadevin = atom_getintarg(8, argc, argv);
     alsadevout = atom_getintarg(9, argc, argv);
         
-fprintf(stderr, "devin is %d", alsadevin);
-fprintf(stderr, "devout is %d", alsadevout);
 #ifdef USEAPI_ALSA
             /* invent a story so that saving/recalling "settings" will
             be able to restore the number of devices.  ALSA MIDI handling
@@ -886,7 +882,6 @@ void sys_get_midi_devs(char *indevlist, int *nindevs,
   {
     midi_alsa_getdevs(indevlist, nindevs, outdevlist, noutdevs, 
                       maxndevs, devdescsize);
-    fprintf(stderr, "nindevs areererer %d", *nindevs);
   }
   else
 #endif /* ALSA */
