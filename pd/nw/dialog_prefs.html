@@ -221,14 +221,14 @@
               <input type="text"
                      id="alsa_in_ports"
                      name="alsa_in_ports"
-                     onchange="attr_change(this);">
+                     onchange="alsa_in_ports_change(this);">
             </label>
             <label data-i18n="[title]prefs.midi.alsa_out_ports_tt">
               <span data-i18n="prefs.midi.alsa_out_ports"></span>
               <input type="text"
                      id="alsa_out_ports"
                      name="alsa_out_ports"
-                     onchange="attr_change(this);">
+                     onchange="alsa_out_ports_change(this);">
             </label>
           </div>
 
@@ -356,6 +356,28 @@ function attr_change(elem) {
     pdgui.post("value is " + elem.value);
 }
 
+function alsa_ports_change(elem, type) {
+    var attr, dummy, i, len;
+    attr = pd_midi_attrs;
+    dummy = [];
+    len = Number(elem.value);
+    if (len.isNan) {
+        len = 0;
+    }
+    for (i = 0; i < len; i++) {
+        dummy.push("dummy");
+    }
+    attr[attr.indexOf("midi-" + type + "dev-names") + 1] = dummy;
+}
+
+function alsa_in_ports_change(elem) {
+    alsa_ports_change(elem, "in");
+}
+
+function alsa_out_ports_change(elem) {
+    alsa_ports_change(elem, "out");
+}
+
 function get_input(name) {
     var val = document.getElementsByName(name)[0].value;
     return val === 0 ? "0" : val;
@@ -386,7 +408,8 @@ function kludge_chans(type, attrs, index) {
 }
 
 function apply() {
-    var attrs = pd_audio_attrs;
+    var attrs = pd_audio_attrs,
+        midi_use_alsa;
     pdgui.post("applying preferences");
 
     // Audio dialog
@@ -415,6 +438,7 @@ function apply() {
     );
 
     attrs = pd_midi_attrs;
+    midi_use_alsa = !!get_attr("use_alsa", attrs);
     // Midi dialog
     pdgui.pdsend(
         "pd midi-dialog",
@@ -426,8 +450,8 @@ function apply() {
         get_attr("pd-outdevs", attrs)[1],
         get_attr("pd-outdevs", attrs)[2],
         get_attr("pd-outdevs", attrs)[3],
-        0, // midi_alsain
-        0  // midi_alsaout
+        midi_use_alsa ? get_attr("midi-indev-names", attrs).length : 0,
+        midi_use_alsa ? get_attr("midi-outdev-names", attrs).length : 0
     );
 }
 
@@ -654,9 +678,9 @@ function midi_prefs_callback(attrs) {
         // the first of the "indevs" for this value, so (for now)
         // we repeat that mistake here...
         document.getElementById("alsa_in_ports").value =
-            +get_attr("pd-indevs", attrs)[0];
+            get_attr("midi-indev-names", attrs).length;
         document.getElementById("alsa_out_ports").value =
-            +get_attr("pd-outdevs", attrs)[0];
+            get_attr("midi-outdev-names", attrs).length;
     } else {
         document.getElementsByClassName("midi_devices")[0]
             .style.setProperty("display", "inherit");

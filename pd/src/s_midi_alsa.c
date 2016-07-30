@@ -239,6 +239,12 @@ void midi_alsa_init(void)
     alsa_initted = 1;
 }
 
+void midi_alsa_setndevs(int in, int out)
+{
+    alsa_nmidiindevs = in;
+    alsa_nmidioutdevs = out;
+}
+
 void midi_alsa_getdevs(char *indevlist, int *nindevs,
     char *outdevlist, int *noutdevs, int maxndev, int devdescsize)
 {

@@ -489,6 +489,12 @@ void sys_pollmidiqueue( void)
 
 /******************** dialog window and device listing ********************/
 
+#define MAXNDEV 20
+#define DEVDESCSIZE 80
+
+#define DEVONSET 1  /* To agree with command line flags, normally start at 1 */
+
+
 #ifdef USEAPI_ALSA
 void midi_alsa_init( void);
 #endif
@@ -499,9 +505,10 @@ void midi_oss_init( void);
     /* last requested parameters */
 static int midi_nmidiindev;
 static int midi_midiindev[MAXMIDIINDEV];
+static char midi_indevnames[MAXMIDIINDEV * DEVDESCSIZE];
 static int midi_nmidioutdev;
 static int midi_midioutdev[MAXMIDIOUTDEV];
-
+static char midi_outdevnames[MAXMIDIINDEV * DEVDESCSIZE];
 
 void sys_get_midi_apis(char *buf)
 {
@@ -522,6 +529,8 @@ void sys_get_midi_apis(char *buf)
     
 }
 
+/* replacement for sys_get_midi_apis, which uses annoying tcl list brackets.
+   Once it's stable we can switch to it and erase the old one. */
 void sys_get_midi_apis2(t_binbuf *buf)
 {
     int n = 0;
@@ -541,13 +550,23 @@ void sys_get_midi_apis2(t_binbuf *buf)
 void sys_get_midi_params(int *pnmidiindev, int *pmidiindev,
     int *pnmidioutdev, int *pmidioutdev)
 {
-    int i;
+    int i, devn;
     *pnmidiindev = midi_nmidiindev;
-    for (i = 0; i < MAXMIDIINDEV; i++)
-        pmidiindev[i] = midi_midiindev[i]; 
+    for (i = 0; i < midi_nmidiindev; i++)
+    {
+        if ((devn = sys_mididevnametonumber(0,
+            &midi_indevnames[i * DEVDESCSIZE])) >= 0)
+                pmidiindev[i] = devn;
+        else pmidiindev[i] = midi_midiindev[i];
+    }
     *pnmidioutdev = midi_nmidioutdev;
-    for (i = 0; i < MAXMIDIOUTDEV; i++)
-        pmidioutdev[i] = midi_midioutdev[i]; 
+    for (i = 0; i < midi_nmidioutdev; i++)
+    {
+        if ((devn = sys_mididevnametonumber(1,
+            &midi_outdevnames[i * DEVDESCSIZE])) >= 0)
+                pmidioutdev[i] = devn;
+        else pmidioutdev[i] = midi_midioutdev[i];
+    }
 }
 
 static void sys_save_midi_params(
@@ -556,11 +575,19 @@ static void sys_save_midi_params(
 {
     int i;
     midi_nmidiindev = nmidiindev;
-    for (i = 0; i < MAXMIDIINDEV; i++)
-        midi_midiindev[i] = midiindev[i]; 
+    for (i = 0; i < nmidiindev; i++)
+    {
+        midi_midiindev[i] = midiindev[i];
+        sys_mididevnumbertoname(0, midiindev[i],
+            &midi_indevnames[i * DEVDESCSIZE], DEVDESCSIZE);
+    }
     midi_nmidioutdev = nmidioutdev;
-    for (i = 0; i < MAXMIDIOUTDEV; i++)
-        midi_midioutdev[i] = midioutdev[i]; 
+    for (i = 0; i < nmidioutdev; i++)
+    {
+        midi_midioutdev[i] = midioutdev[i];
+        sys_mididevnumbertoname(1, midioutdev[i],
+            &midi_outdevnames[i * DEVDESCSIZE], DEVDESCSIZE);
+    }
 }
 
 void sys_open_midi(int nmidiindev, int *midiindev,
@@ -594,11 +621,6 @@ void sys_reopen_midi( void)
     sys_get_midi_params(&nmidiindev, midiindev, &nmidioutdev, midioutdev);
     sys_open_midi(nmidiindev, midiindev, nmidioutdev, midioutdev, 1);
 }
-
-#define MAXNDEV 20
-#define DEVDESCSIZE 80
-
-#define DEVONSET 1  /* To agree with command line flags, normally start at 1 */
 
 void sys_listmididevs(void )
 {
@@ -640,6 +662,7 @@ void sys_set_midi_api(int which)
 }
 
 void glob_midi_properties(t_pd *dummy, t_floatarg flongform);
+void midi_alsa_setndevs(int in, int out);
 
 void glob_midi_setapi(void *dummy, t_floatarg f)
 {
@@ -654,19 +677,21 @@ void glob_midi_setapi(void *dummy, t_floatarg f)
         else
         {
 #ifdef USEAPI_ALSA
-          if (sys_midiapi == API_ALSA)
-              sys_alsa_close_midi();
-          else
+            if (sys_midiapi == API_ALSA)
+                sys_alsa_close_midi();
+            else
 #endif
-            sys_close_midi();
-          sys_midiapi = newapi;
-          /* bash device params back to default */
-          midi_nmidiindev = midi_nmidioutdev = 1;
-          //midi_midiindev[0] = midi_midioutdev[0] = DEFAULTMIDIDEV;
-          //midi_midichindev[0] = midi_midichoutdev[0] = SYS_DEFAULTCH;
-          sys_reopen_midi();
+                sys_close_midi();
+            sys_midiapi = newapi;
+            /* bash device params back to default */
+//            midi_nmidiindev = midi_nmidioutdev = 1;
+            //midi_midiindev[0] = midi_midioutdev[0] = DEFAULTMIDIDEV;
+            //midi_midichindev[0] = midi_midichoutdev[0] = SYS_DEFAULTCH;
+            sys_reopen_midi();
         }
-
+#ifdef USEAPI_ALSA
+    midi_alsa_setndevs(midi_nmidiindev, midi_nmidioutdev);
+#endif
         glob_midi_properties(0, 0);
     }
     else //if (midi_isopen())
@@ -692,17 +717,18 @@ void glob_midi_properties(t_pd *dummy, t_floatarg flongform)
     char indevlist[MAXNDEV*DEVDESCSIZE], outdevlist[MAXNDEV*DEVDESCSIZE];
     int nindevs = 0, noutdevs = 0, i;
 
-    midi_getdevs(indevlist, &nindevs, outdevlist, &noutdevs,
+    sys_get_midi_devs(indevlist, &nindevs, outdevlist, &noutdevs,
         MAXNDEV, DEVDESCSIZE);
 
     gui_start_vmess("gui_midi_properties", "s",
         gfxstub_new2(&glob_pdobject, (void *)glob_midi_properties));
 
     //sys_gui("global midi_indevlist; set midi_indevlist {none}\n");
-
+fprintf(stderr, "ndevs is %d", nindevs);
     gui_start_array();
     for (i = 0; i < nindevs; i++)
     {
+fprintf(stderr, "dev is %s", indevlist + i * DEVDESCSIZE);
         //sys_vgui("lappend midi_indevlist {%s}\n",
         //    indevlist + i * DEVDESCSIZE);
         gui_s(indevlist + i * DEVDESCSIZE);
@@ -817,6 +843,25 @@ void glob_midi_dialog(t_pd *dummy, t_symbol *s, int argc, t_atom *argv)
     alsadevin = atom_getintarg(8, argc, argv);
     alsadevout = atom_getintarg(9, argc, argv);
         
+fprintf(stderr, "devin is %d", alsadevin);
+fprintf(stderr, "devout is %d", alsadevout);
+#ifdef USEAPI_ALSA
+            /* invent a story so that saving/recalling "settings" will
+            be able to restore the number of devices.  ALSA MIDI handling
+            uses its own set of variables.  LATER figure out how to get
+            this to work coherently */
+    if (sys_midiapi == API_ALSA)
+    {
+        nindev = alsadevin;
+        noutdev = alsadevout;
+        for (i = 0; i < nindev; i++)
+            newmidiindev[i] = i;
+        for (i = 0; i < noutdev; i++)
+            newmidioutdev[i] = i;
+    }
+#endif
+    sys_save_midi_params(nindev, newmidiindev,
+        noutdev, newmidioutdev);
 #ifdef USEAPI_ALSA
     if (sys_midiapi == API_ALSA)
       {
@@ -829,7 +874,6 @@ void glob_midi_dialog(t_pd *dummy, t_symbol *s, int argc, t_atom *argv)
         sys_close_midi();
         sys_open_midi(nindev, newmidiindev, noutdev, newmidioutdev, 1);
       }
-
 }
 
 void sys_get_midi_devs(char *indevlist, int *nindevs,
@@ -839,9 +883,71 @@ void sys_get_midi_devs(char *indevlist, int *nindevs,
 
 #ifdef USEAPI_ALSA
   if (sys_midiapi == API_ALSA)
+  {
     midi_alsa_getdevs(indevlist, nindevs, outdevlist, noutdevs, 
                       maxndevs, devdescsize);
+    fprintf(stderr, "nindevs areererer %d", *nindevs);
+  }
   else
 #endif /* ALSA */
   midi_getdevs(indevlist, nindevs, outdevlist, noutdevs, maxndevs, devdescsize);
+}
+
+/* convert a device name to a (1-based) device number.  (Output device if
+'output' parameter is true, otherwise input device).  Negative on failure. */
+
+int sys_mididevnametonumber(int output, const char *name)
+{
+    char indevlist[MAXNDEV*DEVDESCSIZE], outdevlist[MAXNDEV*DEVDESCSIZE];
+    int nindevs = 0, noutdevs = 0, i;
+
+    sys_get_midi_devs(indevlist, &nindevs, outdevlist, &noutdevs,
+        MAXNDEV, DEVDESCSIZE);
+
+    if (output)
+    {
+        for (i = 0; i < noutdevs; i++)
+        {
+            unsigned int comp = strlen(name);
+            if (comp > strlen(outdevlist + i * DEVDESCSIZE))
+                comp = strlen(outdevlist + i * DEVDESCSIZE);
+            if (!strncmp(name, outdevlist + i * DEVDESCSIZE, comp))
+                return (i);
+        }
+    }
+    else
+    {
+        for (i = 0; i < nindevs; i++)
+        {
+            unsigned int comp = strlen(name);
+            if (comp > strlen(indevlist + i * DEVDESCSIZE))
+                comp = strlen(indevlist + i * DEVDESCSIZE);
+            if (!strncmp(name, indevlist + i * DEVDESCSIZE, comp))
+                return (i);
+        }
+    }
+    return (-1);
+}
+
+/* convert a (1-based) device number to a device name.  (Output device if
+'output' parameter is true, otherwise input device).  Empty string on failure.
+*/
+
+void sys_mididevnumbertoname(int output, int devno, char *name, int namesize)
+{
+    char indevlist[MAXNDEV*DEVDESCSIZE], outdevlist[MAXNDEV*DEVDESCSIZE];
+    int nindevs = 0, noutdevs = 0, i;
+    if (devno < 0)
+    {
+        *name = 0;
+        return;
+    }
+    sys_get_midi_devs(indevlist, &nindevs, outdevlist, &noutdevs,
+        MAXNDEV, DEVDESCSIZE);
+    if (output && (devno < noutdevs))
+        strncpy(name, outdevlist + devno * DEVDESCSIZE, namesize);
+    else if (!output && (devno < nindevs))
+        strncpy(name, indevlist + devno * DEVDESCSIZE, namesize);
+    else *name = 0;
+    name[namesize-1] = 0;
 }
