@@ -474,7 +474,7 @@ ext13_clean:
 FFTEASE_NAME=fftease
 
 fftease:
-	make -C $(externals_src)/$(FFTEASE_NAME)
+	make -C $(externals_src)/$(FFTEASE_NAME) PD_PATH=$(pd_src)
 
 fftease_install:
 	#make -C $(externals_src)/$(FFTEASE_NAME) DESTDIR="$(DESTDIR)" \
@@ -1149,7 +1149,7 @@ loaders-libdir_clean:
 LYON_NAME=lyonpotpourri
 
 lyonpotpourri:
-	make -C $(externals_src)/$(LYON_NAME)
+	make -C $(externals_src)/$(LYON_NAME) PD_PATH=$(pd_src)
 
 lyonpotpourri_install:
 	#make -C $(externals_src)/$(LYON_NAME) DESTDIR="$(DESTDIR)" \
