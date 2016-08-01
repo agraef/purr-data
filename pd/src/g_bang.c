@@ -42,8 +42,8 @@ void bng_draw_new(t_bng *x, t_glist *glist)
     int y1=text_ypix(&x->x_gui.x_obj, glist);
     iemgui_base_draw_new(&x->x_gui);
     t_float cr = (x->x_gui.x_w-2)/2.0;
-    t_float cx = x1+cr+1.5;
-    t_float cy = y1+cr+1.5;
+    t_float cx = x1+cr+1;
+    t_float cy = y1+cr+1;
     /* The circle isn't quite centered in the nw.js port. Let's use the
        old interface to see if there's anything we're doing wrong. Then once
        we get the circle placement right we can remove the old code here... */
@@ -69,8 +69,8 @@ void bng_draw_move(t_bng *x, t_glist *glist)
 
     iemgui_base_draw_move(&x->x_gui);
     t_float cr = (x->x_gui.x_w-2)/2.0;
-    t_float cx = x1+cr+1.5;
-    t_float cy = y1+cr+1.5;
+    t_float cx = x1+cr+1;
+    t_float cy = y1+cr+1;
     gui_vmess("gui_bng_configure", "xxxfff",
         canvas,
         x,
