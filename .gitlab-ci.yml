@@ -3,4 +3,4 @@ before_script:
 
 build_package:
   script:
-    - echo `pwd`
+    - echo "hello world"
