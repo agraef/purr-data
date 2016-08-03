@@ -2,5 +2,6 @@ before_script:
   - apt-get update -qq && apt-get upgrade -qq
 
 build:
-  - cd ~/purr-data/l2ork_addons
-  - ./tar_em_up.sh -b
+  script:
+    - cd ~/purr-data/l2ork_addons
+    - ./tar_em_up.sh -b
