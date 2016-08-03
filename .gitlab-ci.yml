@@ -3,5 +3,4 @@ before_script:
 
 build_package:
   script:
-    - cd ~/purr-data/l2ork_addons
-    - ./tar_em_up.sh -b
+    - pwd
