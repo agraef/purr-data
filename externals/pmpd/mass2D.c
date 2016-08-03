@@ -347,7 +347,7 @@ void mass2D_inter_seg(t_mass2D *x, t_symbol *s, int argc, t_atom *argv)
 {
 t_float a1, b1, c1, a2, b2, c2, a3, b3, c3, tmp;
 t_float posx1, posx2, posy1, posy2;
-t_float profondeur, prof_max;
+t_float profondeur;
 
 	if (argc == 12) 
 		// 0 : posx1
@@ -448,7 +448,7 @@ void mass2D_inter_line(t_mass2D *x, t_symbol *s, int argc, t_atom *argv)
 {
 t_float a1, b1, c1, tmp;
 t_float posx1, posx2, posy1, posy2;
-t_float profondeur, prof_max;
+t_float profondeur;
 
 	if (argc == 12) 
 		// 0 : posx1
@@ -523,10 +523,10 @@ t_float profondeur, prof_max;
 
 void mass2D_inter_circle(t_mass2D *x, t_symbol *s, int argc, t_atom *argv)
 {
-t_float posx1, posy1, Nx, Ny, dx, dy, distance, Dmax, tmp;
+t_float posx1, posy1, Nx, Ny, distance, Dmax, tmp;
 t_float deltaX_old, deltaY_old, distance_old ;
-t_float fnx=0, fny=0;
-t_float ftx=0, fty=0;
+t_float fnx=0;
+t_float ftx=0;
 
 	if (argc == 20) 
 		// 0 : Xcentre

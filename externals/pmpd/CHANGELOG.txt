@@ -1,0 +1,30 @@
+from version 0.10 to version 0.11
+
+- code refactorisation
+- all messages name switch to singular for messages uniformisation (old are keep for compatbility)
+- add fonctionality to messages masses*L in order to add filter on masses Id (symbol only)
+- same for links*L messages
+- New messages linkEnd[1,2][X,Y,Z]T
+- new messages to replace get messages : (should be almost compatible) : massPos [Id], massSpeed [Id], massForce [Id]
+- new messages to replace get messages : linkPos [Id] gives the center of links, to be consistant with other linkPosL and linkPosT.
+- new messages to replace get : linkEnd [Id] : should be compatible with get linksPos
+- new messages testMass and testLink to get all masses or links that fit specifics conditions
+- new messages testMassT and testLinkT (idem as testMass and testLink but with table)
+- new messages testMassL and testLinkL (idem as testMass and testLink but with list)
+- new messages massDistance Id Id : return message : massesDistance float_Id float_Id distance
+- new messages setLCurrent Id [proportion] to change a link size depending on it's size and it's curent length
+- new message : setActive, setInactive for links
+- new statistics messages for links
+- new interactors messages
+- new message "setEnd[1,2]" to change a link connection
+- new message "overdamp" to amplifye forces that are opposed to movement
+- message to change masses a link is connected to
+- rename messages for consistency : [X,Y,Z]min/max -> min/max[X,Y,Z]
+- rename message posX to setPosX
+- debug "setL Id" with no arg : bad computation of link length (2d / 3d) 
+- lot's of bugfix
+- switch to makefile template 1.0.14
+- add default aguments for mass and link creation. (this allow to create a mass with a [mass< message better than [mass mass 1 1 0< message)
+- new examples
+- few set messages can accept 2 symbol : 1 for the class of link/mass to control, 1 for the table name to use as source for the data (so that 1 single message can set lot's of mass/link with diferent data in a very efficient way)
+

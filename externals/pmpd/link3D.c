@@ -32,7 +32,7 @@ void link3D_position3D2(t_link3D *x, t_floatarg f1, t_floatarg f2, t_floatarg f3
 
 void link3D_bang(t_link3D *x)
 {
-  t_float force, force2, forcex1, forcey1, forcez1, forcex2, forcey2, forcez2, distance;
+  t_float force, forcex1, forcey1, forcez1, forcex2, forcey2, forcez2, distance;
   t_atom force1[3];
 
   distance = sqrt ( pow((x->position3Dx2-x->position3Dx1), 2) + pow((x->position3Dy2-x->position3Dy1),2) + pow((x->position3Dz2-x->position3Dz1), 2) );

@@ -1,19 +1,20 @@
-#N canvas 1 91 864 550 12;
+#N canvas 173 68 902 582 12;
+#X declare -path ../;
 #X obj 16 98 t b b;
-#X obj 16 50 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+#X obj 16 50 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
 ;
 #X obj 73 233 unpack s f f;
 #X obj 177 293 vsl 15 128 0 127 0 0 empty empty empty 0 -8 0 8 -262144
--1 -1 8300 1;
+-1 -1 12700 1;
 #X obj 121 343 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
--1 -1 10100 1;
+-1 -1 4535 1;
 #X obj 16 71 metro 50;
-#X msg 360 291 setK \$1;
-#X msg 434 265 setD \$1;
-#X msg 507 237 setM \$1;
-#X floatatom 360 216 5 0 20 0 - - -;
-#X floatatom 434 214 5 0 30 0 - - -;
-#X floatatom 507 214 5 3 100 0 - - -;
+#X msg 305 305 setK \$1;
+#X msg 379 279 setD \$1;
+#X msg 452 251 setM \$1;
+#X floatatom 305 230 5 0 20 0 - - -;
+#X floatatom 379 228 5 0 30 0 - - -;
+#X floatatom 452 228 5 3 100 0 - - -;
 #N canvas 796 335 379 269 gem 0;
 #X obj 197 20 gemhead;
 #X msg 47 96 0 \, destroy;
@@ -40,7 +41,7 @@
 #X connect 10 0 6 2;
 #X connect 11 0 2 0;
 #X restore 19 233 pd gem;
-#X obj 19 186 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+#X obj 19 186 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
 ;
 #N canvas 513 286 485 188 structure 0;
 #N canvas 272 241 298 174 link_left 0;
@@ -91,36 +92,31 @@
 #X connect 5 0 0 0;
 #X connect 5 0 4 0;
 #X restore 62 206 pd structure;
-#X obj 360 265 / 10;
-#X obj 360 239 + 1;
+#X obj 305 279 / 10;
+#X obj 305 253 + 1;
 #X obj 64 100 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
 #X obj 30 124 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X msg 434 190 0;
-#X obj 164 6 loadbang;
+#X msg 379 204 0;
+#X obj 586 207 loadbang;
 #X obj 118 263 + 64;
 #X obj 164 263 + 64;
-#X obj 434 238 / 10;
+#X obj 379 252 / 10;
 #X text 42 47 <- click here;
-#X msg 360 190 3;
-#X msg 164 61 resetF;
-#X obj 235 11 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X msg 305 204 3;
+#X msg 586 262 resetF;
+#X obj 657 212 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X obj 164 32 t b b;
-#X msg 177 83 force2D -100 140;
+#X obj 586 233 t b b;
+#X msg 599 284 force2D -100 140;
 #X obj 51 123 s \$0-link;
 #X obj 16 147 s \$0-mass;
-#X msg 199 108 reset;
-#X obj 507 265 s \$0-mass;
-#X obj 360 323 s \$0-link;
-#X text 269 8 <- reset the simulation;
+#X msg 621 309 reset;
+#X obj 452 279 s \$0-mass;
+#X obj 305 337 s \$0-link;
+#X text 691 209 <- reset the simulation;
 #X text 52 182 <- visualization (need gem);
-#X text 359 135 you can change physical properties of the system. take
-care of numerical instability (especially with fast movement);
-#X text 276 388 The mass is connected to the 4 borders of the screen
-with 4 link (without damping). The movement of the masss (should) follow
-a chaotic equation.;
 #X obj 40 445 osc~;
 #X obj 40 420 mtof;
 #X obj 40 395 line;
@@ -131,7 +127,18 @@ a chaotic equation.;
 #X obj 97 369 / 256;
 #X msg 97 419 \$1 100;
 #X msg 40 369 \$1 100;
-#X msg 507 189 20;
+#X msg 452 203 20;
+#X obj 460 13 declare -path ../;
+#X obj 599 338 s \$0-mass;
+#X obj 586 361 s \$0-link;
+#X text 169 48 The mass is connected to the 4 borders of the screen
+with 4 links (without damping). The movement of the masses (should)
+follow a chaotic equation.;
+#X text 304 130 You can change physical properties of the system. Take
+care of numerical instability (especially with fast movement);
+#X text 303 181 K;
+#X text 377 181 D;
+#X text 451 180 M;
 #X connect 0 0 31 0;
 #X connect 0 1 30 0;
 #X connect 1 0 5 0;
@@ -154,27 +161,28 @@ a chaotic equation.;
 #X connect 19 0 10 0;
 #X connect 20 0 28 0;
 #X connect 21 0 4 0;
-#X connect 21 0 48 0;
+#X connect 21 0 46 0;
 #X connect 22 0 3 0;
-#X connect 22 0 46 0;
+#X connect 22 0 44 0;
 #X connect 23 0 7 0;
 #X connect 25 0 9 0;
-#X connect 26 0 30 0;
+#X connect 26 0 50 0;
 #X connect 27 0 28 0;
 #X connect 28 0 26 0;
 #X connect 28 0 29 0;
 #X connect 28 1 32 0;
-#X connect 29 0 31 0;
-#X connect 32 0 31 0;
-#X connect 39 0 43 0;
-#X connect 40 0 39 0;
-#X connect 41 0 40 0;
-#X connect 42 0 47 0;
-#X connect 43 0 45 0;
-#X connect 43 0 45 1;
-#X connect 44 0 43 1;
-#X connect 46 0 42 1;
-#X connect 46 0 42 0;
-#X connect 47 0 44 0;
-#X connect 48 0 41 0;
-#X connect 49 0 11 0;
+#X connect 29 0 49 0;
+#X connect 32 0 49 0;
+#X connect 32 0 50 0;
+#X connect 37 0 41 0;
+#X connect 38 0 37 0;
+#X connect 39 0 38 0;
+#X connect 40 0 45 0;
+#X connect 41 0 43 0;
+#X connect 41 0 43 1;
+#X connect 42 0 41 1;
+#X connect 44 0 40 1;
+#X connect 44 0 40 0;
+#X connect 45 0 42 0;
+#X connect 46 0 39 0;
+#X connect 47 0 11 0;

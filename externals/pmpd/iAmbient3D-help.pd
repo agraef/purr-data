@@ -1,12 +1,5 @@
-#N canvas 442 90 599 822 10;
+#N canvas 451 77 666 795 10;
 #X text 272 20 ambient interaction;
-#X text 179 143 1 : name;
-#X text 172 70 This object should receive a bang to be active (act
-like the link object);
-#X text 200 642 if a mass is outside of this rectangle \, the mass
-will not interact with this object.;
-#X text 198 295 this is constant force apply to all masses interacting
-this this object. Gravity is a constant negative force on Y axes.;
 #X msg 74 225 setFX 0;
 #X msg 75 249 setFY 0;
 #X msg 76 335 setRndFX 0;
@@ -16,60 +9,67 @@ this this object. Gravity is a constant negative force on Y axes.;
 #X msg 69 543 setYmin -100000;
 #X msg 69 521 setXmax 100000;
 #X msg 69 566 setYmax 100000;
-#X text 202 627 minimum and maximum position of the interactor.;
+#X text 220 624 minimum and maximum position of the interactor.;
 #X msg 70 673 setdX 0;
 #X msg 70 694 setdY 0;
-#X text 77 112 message to change parametter / default value / creation
-arg number / description;
 #X obj 16 752 iAmbient3D;
 #X msg 76 272 setFZ 0;
 #X msg 77 385 setRndFZ 0;
 #X msg 69 589 setZmin -100000;
 #X msg 69 611 setZmax 100000;
 #X msg 70 716 setdZ 0;
-#X text 200 401 Maximum amplitude of a random force aplyed to masses
-(X \, Y and Z amplitude).;
-#X text 175 225 2 : X constant force field;
-#X text 174 249 3 : Y constant force field;
-#X text 173 270 4 : Z constant force field;
-#X text 172 333 5 : rnd X force field;
-#X text 170 360 6 : rnd Y force field;
-#X text 170 386 7 : rnd Z force field;
-#X text 170 432 8 : damping;
-#X text 172 500 9 : X minimum;
-#X text 172 521 10 : X maximum;
-#X text 172 543 11 : Y minimum;
-#X text 171 565 12 : Y maximum;
-#X text 172 591 13 : Z minimum;
-#X text 171 611 14 : Z maximum;
-#X text 170 675 15 : X displacement field;
-#X text 169 696 16 : Y displacement field;
-#X text 169 719 17 : Z displacement field;
+#X text 196 224 2 : X constant force field;
+#X text 196 249 3 : Y constant force field;
+#X text 196 270 4 : Z constant force field;
+#X text 197 500 9 : X minimum;
+#X text 192 521 10 : X maximum;
+#X text 192 543 11 : Y minimum;
+#X text 191 565 12 : Y maximum;
+#X text 192 591 13 : Z minimum;
+#X text 191 611 14 : Z maximum;
+#X text 190 675 15 : X displacement field;
+#X text 189 696 16 : Y displacement field;
+#X text 189 719 17 : Z displacement field;
 #X msg 72 202 setFXY 0 0 0;
-#X text 172 40 This object sould be used for the simulation of interaction
-between a collection of masses and a commun environement;
-#X text 196 155 this is the mass name interacting with this object.
+#X text 222 168 this is the mass name interacting with this object.
 you can also conect the output of this object to a mass \, to allow
 an interaction with this mass.;
-#X text 197 450 value of the damping forces. this force is oposite
-from the velocity of the mass. It is proportional to the velocity of
+#X text 58 117 message to change parameter / default value / creation
+arg number / description;
+#X text 218 283 this is the constant force applied to all masses interacting
+this this object. Gravity is a constant negative force on Y axes.;
+#X text 216 446 value of the damping forces. this force is opposite
+to the velocity of the mass. It is proportional to the velocity of
 the mass.;
-#X text 200 736 X and Y displacement field. displace the mass if it's
-in the interactor field;
-#X connect 5 0 18 0;
-#X connect 6 0 18 0;
-#X connect 7 0 18 0;
-#X connect 8 0 18 0;
-#X connect 9 0 18 0;
-#X connect 10 0 18 0;
-#X connect 11 0 18 0;
-#X connect 12 0 18 0;
-#X connect 13 0 18 0;
-#X connect 15 0 18 0;
-#X connect 16 0 18 0;
-#X connect 19 0 18 0;
-#X connect 20 0 18 0;
-#X connect 21 0 18 0;
-#X connect 22 0 18 0;
-#X connect 23 0 18 0;
-#X connect 41 0 18 0;
+#X text 199 153 1 : Name;
+#X text 172 81 This object should receive a bang to be active (act
+like the link object).;
+#X text 172 40 This object should be used for the simulation of interaction
+between a collection of masses and a common environment.;
+#X text 195 333 5 : Rnd X force field;
+#X text 193 360 6 : Rnd Y force field;
+#X text 193 386 7 : Rnd Z force field;
+#X text 193 432 8 : Damping;
+#X text 220 638 If a mass is outside of this rectangle \, the mass
+will not interact with this object.;
+#X text 219 734 X and Y displacement field. displace the mass if it's
+in the interactor field.;
+#X text 217 398 maximum amplitude of a random force applied to masses
+(X \, Y and Z amplitude).;
+#X connect 1 0 13 0;
+#X connect 2 0 13 0;
+#X connect 3 0 13 0;
+#X connect 4 0 13 0;
+#X connect 5 0 13 0;
+#X connect 6 0 13 0;
+#X connect 7 0 13 0;
+#X connect 8 0 13 0;
+#X connect 9 0 13 0;
+#X connect 11 0 13 0;
+#X connect 12 0 13 0;
+#X connect 14 0 13 0;
+#X connect 15 0 13 0;
+#X connect 16 0 13 0;
+#X connect 17 0 13 0;
+#X connect 18 0 13 0;
+#X connect 31 0 13 0;

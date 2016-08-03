@@ -94,7 +94,7 @@ void mass3D_damp(t_mass3D *x, t_floatarg f1)
   x->damp = f1;
 }
 
-void mass3D_loadbang(t_mass3D *x, t_float posZ)
+void mass3D_loadbang(t_mass3D *x)
 {
   outlet_anything(x->position3D_new, gensym("position3D"), 3, x->pos_new);
 }
@@ -468,7 +468,7 @@ void mass3D_inter_ambient(t_mass3D *x, t_symbol *s, int argc, t_atom *argv)
 
 void mass3D_inter_plane(t_mass3D *x, t_symbol *s, int argc, t_atom *argv)
 {
-	t_float a, b, c, d, profondeur, distance, tmp, profondeur_old;
+	t_float a, b, c, d, profondeur, tmp, profondeur_old;
 
 	if (argc == 12) 
 		// 0 : Xvector
@@ -564,8 +564,7 @@ void mass3D_inter_plane(t_mass3D *x, t_symbol *s, int argc, t_atom *argv)
 
 void mass3D_inter_sphere(t_mass3D *x, t_symbol *s, int argc, t_atom *argv)
 {
-t_float posx1, posy1, posz1, Nx, Ny, Nz, dx, dy, dz, distance, Dmax, tmp;
-t_float deltaX_old, deltaY_old, deltaZ_old, distance_old ;
+t_float posx1, posy1, posz1, Nx, Ny, Nz, distance, Dmax, tmp;
 
 	if (argc == 17) 
 		// 0 : Xcentre
@@ -678,7 +677,7 @@ t_float deltaX_old, deltaY_old, deltaZ_old, distance_old ;
 
 void mass3D_inter_circle(t_mass3D *x, t_symbol *s, int argc, t_atom *argv)
 {
-	t_float a, b, c, d, profondeur, distance, tmp, profondeur_old, rayon, rayon_old;
+	t_float a, b, c, d, profondeur, tmp, profondeur_old, rayon;
 
 	if (argc == 14) 
 		// 0 : Xvector
@@ -771,7 +770,7 @@ void mass3D_inter_circle(t_mass3D *x, t_symbol *s, int argc, t_atom *argv)
 
 void mass3D_inter_cylinder(t_mass3D *x, t_symbol *s, int argc, t_atom *argv)
 {
-	t_float a, b, c, d, profondeur, profondeur_old, distance, tmp, rayon_old, rayon;
+	t_float a, b, c, d, profondeur, profondeur_old, tmp, rayon_old, rayon;
 	t_float Xb, Yb, Zb, Ta, Tb, Tc, Xb_old, Yb_old, Zb_old;
 
 	if (argc == 21) 

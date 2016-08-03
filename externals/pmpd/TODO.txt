@@ -1,0 +1,9 @@
+TODO : 
+closestNeighbor $1(Id) $2(number of neighbor message)
+linkEndL message, like linkEndT, but for list
+add creation parametter to fix maximum number of link and mass
+iBox3d / iBox2d interactors
+iTriangle3d / iSegment2d interactors
+
+openCL
+remove redondant test on table (when many tablink are used)

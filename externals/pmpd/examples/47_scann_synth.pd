@@ -1,5 +1,5 @@
 #N canvas 577 259 515 493 12;
-#X declare -lib Gem;
+#X declare -lib Gem -path ../;
 #N canvas 72 27 1257 926 corde 0;
 #N canvas 306 123 345 326 mass 0;
 #X obj 65 20 inlet;
@@ -854,7 +854,7 @@
 #X connect 12 0 7 0;
 #X restore 1044 604 pd link;
 #X obj 519 43 inlet;
-#N canvas 0 0 738 484 init 0;
+#N canvas 0 22 738 484 init 0;
 #X obj 12 357 s link;
 #X msg 90 129 reset;
 #X msg 12 129 resetF;
@@ -884,7 +884,7 @@
 #X connect 13 0 11 0;
 #X connect 14 0 9 0;
 #X restore 29 25 pd init;
-#N canvas 0 0 1262 941 table_read 0;
+#N canvas 0 22 1262 941 table_read 0;
 #X obj 67 42 r freqwf;
 #X obj 66 127 +~ 3;
 #X obj 73 194 tabread4~ cordewf1a;
@@ -1005,7 +1005,7 @@
 #X obj 1187 1 inlet;
 #X obj 27 450 t b;
 #X obj 27 578 pack 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;
-#N canvas 0 0 196 289 1sur2 0;
+#N canvas 0 22 196 289 1sur2 0;
 #X obj 19 20 inlet;
 #X obj 50 65 f;
 #X obj 50 87 + 1;
@@ -1033,7 +1033,7 @@
 #X connect 9 0 10 1;
 #X connect 10 0 4 0;
 #X restore 27 638 pd 1sur2;
-#N canvas 0 0 192 285 1sur2 0;
+#N canvas 0 22 192 285 1sur2 0;
 #X obj 19 20 inlet;
 #X obj 50 65 f;
 #X obj 50 87 + 1;
@@ -1359,7 +1359,7 @@
 #X obj 36 78 gemwin 40;
 #X text 379 158 (damping);
 #X obj 245 405 dac~;
-#X obj 260 6 declare -lib Gem;
+#X obj 260 6 declare -lib Gem -path ../;
 #X connect 0 0 28 0;
 #X connect 0 1 28 1;
 #X connect 1 0 8 0;
