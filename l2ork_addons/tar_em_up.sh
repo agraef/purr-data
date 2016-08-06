@@ -39,6 +39,32 @@ pkg=1
 
 inst_dir=${inst_dir:-/usr/local}
 
+# Fetch the nw.js binary if we haven't already. We want to fetch it even
+# for building with no libs, so we do it before all options
+echo nwjs-sdk-v0.16.0-`uname | tr '[:upper:]' '[:lower:]'`
+if [ ! -d "../pd/nw/nw" ]; then
+	# fetch the nw.js binary (unfortunately over http...)
+	os=`uname | tr '[:upper:]' '[:lower:]'`
+	arch=""
+	if [ `getconf LONG_BIT` -eq 32 ]; then
+		arch="ia32"
+	else
+		arch="x64"
+	fi
+	ext="tar.gz"
+	nwjs="nwjs-sdk"
+	nwjs_version="v0.16.0"
+	nwjs_dirname=${nwjs}-${nwjs_version}-${os}-${arch}
+	nwjs_filename=${nwjs_dirname}.${ext}
+	nwjs_url=https://dl.nwjs.io/v0.16.0/$nwjs_filename
+	echo "Fetching the nwjs binary from"
+	echo "$nwjs_url"
+	wget $nwjs_url
+	tar -xf $nwjs_filename
+	mv $nwjs_dirname ../pd/nw/nw
+	rm $nwjs_filename
+fi
+
 while getopts ":abBcdefFnRruw" Option
 do case $Option in
 		a)		addon=1;;
@@ -320,21 +346,7 @@ then
 	cp -f disis_spi/disis_spi-help.pd ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
 	cd ../
 	#fi
-	# install rtcmix~ external
-	cd rtcmix-in-pd/
-	#git submodule update
-	cd RTcmix*
-	./configure
-	#make clean
-	make
-	cd ../
-	make clean
-	make LINUXINCLUDE=-I../../pd/src
-	cp -f rtcmix~.pd_linux ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
-	cp -f rtcmix~-help.pd ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
-	cp -rf lib ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
-	cp -rf scores ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
-	cd ../
+
 	echo "done with l2ork addons."
 	cd ../
 	# finish install

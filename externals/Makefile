@@ -128,7 +128,7 @@ CXXFLAGS = $(CFLAGS)
 #
 # WARNING!  this MUST be all on one line because the automatic package
 # building scripts rely on it being that way.
-LIB_TARGETS = adaptive arraysize autotune bassemu boids bsaylor comport creb cxc cyclone earplug ekext ext13 fftease freeverb ggee hcs iem_ambi iem_bin_ambi iemlib iemgui iemguts iem_adaptfilt iemmatrix iemxmlrpc iem_delay iem_roomsim iem_spec2 iem_tab jasch_lib loaders-hexloader loaders-libdir lyonpotpourri mapping markex maxlib mjlib moocow moonlib motex mrpeach oscx pan pdcontainer pddp pdogg plugin pmpd sigpack smlib tof unauthorized vbap windowing zexy flext
+LIB_TARGETS = adaptive arraysize autotune bassemu boids bsaylor comport creb cxc cyclone earplug ekext ext13 fftease freeverb ggee hcs iem_ambi iem_bin_ambi iemlib iemgui iemguts iem_adaptfilt iemmatrix iemxmlrpc iem_delay iem_roomsim iem_spec2 iem_tab jasch_lib loaders-hexloader loaders-libdir lyonpotpourri mapping markex maxlib mjlib moocow moonlib motex mrpeach oscx pan pdcontainer pddp pdogg plugin pmpd rtcmix sigpack smlib tof unauthorized vbap windowing zexy flext
 
 # DISABLED: flatgui
 
@@ -1614,6 +1614,28 @@ postlude_clean:
 	-rm -f -- $(externals_src)/postlude/*/*.*~
 
 
+#------------------------------------------------------------------------------#
+# RTCMIX~
+
+rtcmix:
+	cd $(externals_src)/rtcmix-in-pd/RTcmix* && ./configure && make
+	make -C $(externals_src)/rtcmix-in-pd \
+		PD_PATH=$(pd_src) \
+		CFLAGS="$(CFLAGS)" \
+		LINUXINCLUDE=-I$(pd_src)/src
+
+rtcmix_install:
+	install -d $(DESTDIR)$(objectsdir)/rtcmix
+	install -p $(externals_src)/rtcmix-in-pd/rtcmix~.$(EXTENSION) \
+		$(DESTDIR)/$(objectsdir)
+	install -p $(externals_src)/rtcmix-in-pd/rtcmix~-help.pd \
+		$(DESTDIR)/$(objectsdir)
+	cp -rf $(externals_src)/rtcmix-in-pd/lib $(DESTDIR)/$(objectsdir)
+	cp -rf $(externals_src)/rtcmix-in-pd/scores $(DESTDIR)/$(objectsdir)
+
+rtcmix_clean:
+	make -C $(externals_src)/rtcmix-in-pd clean
+	make -C $(externals_src)/rtcmix-in-pd/RTcmix*
 
 #------------------------------------------------------------------------------#
 # SIGPACK

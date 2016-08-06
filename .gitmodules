@@ -2,7 +2,7 @@
         path = Gem
         url = git://git.code.sf.net/p/pd-gem/gem
 [submodule "l2ork_addons/rtcmix-in-pd"]
-	path = l2ork_addons/rtcmix-in-pd
+	path = externals/rtcmix-in-pd
 	url = https://github.com/jwmatthys/rtcmix-in-pd.git
 [submodule "l2ork_addons/cwiid"]
 	path = l2ork_addons/cwiid
