@@ -1627,11 +1627,13 @@ rtcmix:
 rtcmix_install:
 	install -d $(DESTDIR)$(objectsdir)/rtcmix
 	install -p $(externals_src)/rtcmix-in-pd/rtcmix~.$(EXTENSION) \
-		$(DESTDIR)/$(objectsdir)
+		$(DESTDIR)/$(objectsdir)/rtcmix
 	install -p $(externals_src)/rtcmix-in-pd/rtcmix~-help.pd \
-		$(DESTDIR)/$(objectsdir)
-	cp -rf $(externals_src)/rtcmix-in-pd/lib $(DESTDIR)/$(objectsdir)
-	cp -rf $(externals_src)/rtcmix-in-pd/scores $(DESTDIR)/$(objectsdir)
+		$(DESTDIR)/$(objectsdir)/rtcmix
+	cp -rf $(externals_src)/rtcmix-in-pd/lib \
+		$(DESTDIR)/$(objectsdir)/rtcmix
+	cp -rf $(externals_src)/rtcmix-in-pd/scores \
+		$(DESTDIR)/$(objectsdir)/rtcmix
 
 rtcmix_clean:
 	make -C $(externals_src)/rtcmix-in-pd clean
