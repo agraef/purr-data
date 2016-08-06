@@ -56,7 +56,8 @@ if [ ! -d "../pd/nw/nw" ]; then
 	nwjs_version="v0.16.0"
 	nwjs_dirname=${nwjs}-${nwjs_version}-${os}-${arch}
 	nwjs_filename=${nwjs_dirname}.${ext}
-	nwjs_url=https://dl.nwjs.io/v0.16.0/$nwjs_filename
+	nwjs_url=https://git.purrdata.net/jwilkes/nwjs-binaries/raw/master
+	nwjs_url=${nwjs_url}/$nwjs_filename
 	echo "Fetching the nwjs binary from"
 	echo "$nwjs_url"
 	wget $nwjs_url
