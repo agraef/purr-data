@@ -4,3 +4,5 @@ before_script:
 build_package:
   script:
     - echo `pwd`
+    - cd l2ork_addons
+    - ./tar_em_up -B
