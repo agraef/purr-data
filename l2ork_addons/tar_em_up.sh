@@ -320,12 +320,6 @@ then
 	make
 	cp -f disis_netreceive.pd_linux ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
 	cp -f disis_netreceive-help.pd ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
-	# disis_phasor
-	cd ../disis_phasor
-	make clean
-	make
-	cp -f disis_phasor~.pd_linux ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
-	cp -f disis_phasor~-help.pd ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
 	# spectdelay
 	cd ../spectdelay/spectdelay~
 	./linux-install.sh

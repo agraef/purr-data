@@ -128,7 +128,7 @@ CXXFLAGS = $(CFLAGS)
 #
 # WARNING!  this MUST be all on one line because the automatic package
 # building scripts rely on it being that way.
-LIB_TARGETS = adaptive arraysize autotune bassemu boids bsaylor comport creb cxc cyclone earplug ekext ext13 fftease freeverb ggee hcs iem_ambi iem_bin_ambi iemlib iemgui iemguts iem_adaptfilt iemmatrix iemxmlrpc iem_delay iem_roomsim iem_spec2 iem_tab jasch_lib loaders-hexloader loaders-libdir lyonpotpourri mapping markex maxlib mjlib moocow moonlib motex mrpeach oscx pan pdcontainer pddp pdogg plugin pmpd rtcmix sigpack smlib tof unauthorized vbap windowing zexy flext
+LIB_TARGETS = adaptive arraysize autotune bassemu boids bsaylor comport creb cxc cyclone disis earplug ekext ext13 fftease freeverb ggee hcs iem_ambi iem_bin_ambi iemlib iemgui iemguts iem_adaptfilt iemmatrix iemxmlrpc iem_delay iem_roomsim iem_spec2 iem_tab jasch_lib loaders-hexloader loaders-libdir lyonpotpourri mapping markex maxlib mjlib moocow moonlib motex mrpeach oscx pan pdcontainer pddp pdogg plugin pmpd rtcmix sigpack smlib tof unauthorized vbap windowing zexy flext
 
 # DISABLED: flatgui
 
@@ -445,6 +445,18 @@ cyclone_clean:
 	make -C $(externals_src)/miXed/cyclone -f Makefile.libdir \
 		clean
 
+#------------------------------------------------------------------------------#
+# DISIS
+disis:
+	make -C $(externals_src)/disis PD_PATH=$(pd_src)
+
+disis_install:
+	make -C $(externals_src)/disis \
+		DESTDIR="$(DESTDIR)" objectsdir="$(objectsdir)" \
+		install
+
+disis_clean:
+	make -C $(externals_src)/disis clean
 
 #------------------------------------------------------------------------------#
 # EKEXT
