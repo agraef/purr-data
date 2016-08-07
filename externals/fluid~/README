@@ -1,0 +1,9 @@
+ fluid~ - soundfont external for Pd
+ orchestra in a box  by fbar@footils.org 
+
+ported to Pd's C API by Jonathan Wilkes
+
+fluid~ is an external build around the free fluidsynth soundfont synthesizer
+available on www.fluidsynth.org Soundfonts collect digitally sampled
+instruments. fluid~ converts Pd or (x)Max to a fullblown orchestra with just a
+single external.

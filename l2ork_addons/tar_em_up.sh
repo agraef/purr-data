@@ -292,8 +292,6 @@ then
 	cp -f array* ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
 	# return to l2ork_addons folder
 	cd ../../
-	# copy rjlib into the extra folder
-	cp -rf rjlib ../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
 	# install raspberry pi externals (if applicable)
 	#if [ $rpi -eq 1 ]
 	#then

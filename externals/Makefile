@@ -128,7 +128,7 @@ CXXFLAGS = $(CFLAGS)
 #
 # WARNING!  this MUST be all on one line because the automatic package
 # building scripts rely on it being that way.
-LIB_TARGETS = adaptive arraysize autotune bassemu boids bsaylor comport creb cxc cyclone disis earplug ekext ext13 fftease freeverb ggee hcs iem_ambi iem_bin_ambi iemlib iemgui iemguts iem_adaptfilt iemmatrix iemxmlrpc iem_delay iem_roomsim iem_spec2 iem_tab jasch_lib loaders-hexloader loaders-libdir lyonpotpourri mapping markex maxlib mjlib moocow moonlib motex mrpeach oscx pan pdcontainer pddp pdogg plugin pmpd rtcmix sigpack smlib tof unauthorized vbap windowing zexy flext
+LIB_TARGETS = adaptive arraysize autotune bassemu boids bsaylor comport creb cxc cyclone disis earplug ekext ext13 fftease fluid freeverb ggee hcs iem_ambi iem_bin_ambi iemlib iemgui iemguts iem_adaptfilt iemmatrix iemxmlrpc iem_delay iem_roomsim iem_spec2 iem_tab jasch_lib loaders-hexloader loaders-libdir lyonpotpourri mapping markex maxlib mjlib moocow moonlib motex mrpeach oscx pan pdcontainer pddp pdogg plugin pmpd rjlib rtcmix sigpack smlib tof unauthorized vbap windowing zexy flext
 
 # DISABLED: flatgui
 
@@ -448,6 +448,8 @@ cyclone_clean:
 #------------------------------------------------------------------------------#
 # DISIS
 disis:
+	cd $(externals_src)/disis/cwiid && aclocal && autoconf && \
+		./configure --with-python=python2 && make
 	make -C $(externals_src)/disis PD_PATH=$(pd_src)
 
 disis_install:
@@ -456,6 +458,7 @@ disis_install:
 		install
 
 disis_clean:
+	make -C $(externals_src)/disis/cwiid clean
 	make -C $(externals_src)/disis clean
 
 #------------------------------------------------------------------------------#
@@ -534,9 +537,9 @@ flext:
 	./build.sh pd gcc install
 
 	#fluid~
-	cd footils/fluid && \
-	../../grill/trunk/flext/build.sh pd gcc build && \
-	../../grill/trunk/flext/build.sh pd gcc build
+#	cd footils/fluid && \
+#	../../grill/trunk/flext/build.sh pd gcc build && \
+#	../../grill/trunk/flext/build.sh pd gcc build
 
 	#disis_munger~
 	cd ../l2ork_addons/disis_munger && \
@@ -548,9 +551,9 @@ flext_install:
 	# so we only install statically linked externals
 
 	#fluid~
-	cd footils/fluid && \
-	install -D pd-linux/release-multi/fluid~.pd_linux $(DESTDIR)$(objectsdir)/flext/fluid~.pd_linux && \
-	install -D pd/* $(DESTDIR)$(objectsdir)/flext/
+#	cd footils/fluid && \
+#	install -D pd-linux/release-multi/fluid~.pd_linux $(DESTDIR)$(objectsdir)/flext/fluid~.pd_linux && \
+#	install -D pd/* $(DESTDIR)$(objectsdir)/flext/
 
 	#disis_munger~
 	cd ../l2ork_addons/disis_munger && \
@@ -563,8 +566,8 @@ flext_clean:
 	./build.sh pd gcc clean
 
 	#fluid~
-	cd footils/fluid && \
-	../../grill/trunk/flext/build.sh pd gcc clean
+#	cd footils/fluid && \
+#	../../grill/trunk/flext/build.sh pd gcc clean
 
 	#fluid~
 	cd ../l2ork_addons/disis_munger && \
@@ -596,7 +599,17 @@ flib_clean:
 	-rm -f -- $(externals_src)/postlude/flib/*/*.bak
 	-rm -f -- $(externals_src)/postlude/flib/*/*.*~
 
+#------------------------------------------------------------------------------#
+# FLUID~
 
+fluid:
+	make -C $(externals_src)/fluid~ PD_PATH=$(pd_src)
+
+fluid_install:
+	make -C $(externals_src)/fluid~ DESTDIR="$(DESTDIR)" \
+		objectsdir="$(objectsdir)" install
+
+fluid_clean: make -C $(externals_src)/fluid~ clean
 
 #------------------------------------------------------------------------------#
 # FRANKENSTEIN
@@ -1625,6 +1638,16 @@ postlude_clean:
 	-rm -f -- $(externals_src)/postlude/*/*.bak
 	-rm -f -- $(externals_src)/postlude/*/*.*~
 
+#------------------------------------------------------------------------------#
+# RJLIB
+
+rjlib:
+
+rjlib_install:
+	install -d $(DESTDIR)$(objectsdir)/rjlib
+	cp -rf $(externals_src)/rjlib/* $(DESTDIR)/$(objectsdir)/rjlib
+
+rjlib_clean:
 
 #------------------------------------------------------------------------------#
 # RTCMIX~

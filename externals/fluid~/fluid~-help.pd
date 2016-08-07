@@ -1,0 +1,200 @@
+#N canvas 79 6 1015 761 10;
+#X text 35 71 A soundfont player using If I Were You \, from www.iiwu.org
+;
+#X text 170 296 fluid~ wants channel # first: should I change this?
+;
+#X text 287 518 Program change ( prog or p + chan + value);
+#X text 170 246 Note messages start with note \, n or with nothing
+(pure list input): chan + note + velocity;
+#X obj 36 34 cnv 15 102 32 empty empty empty 20 12 1 14 -1 -66577 0
+;
+#X obj 37 35 cnv 15 100 30 empty empty fluid~ 20 15 1 14 -257472 -66577
+0;
+#X obj 593 18 cnv 15 374 160 empty empty empty 20 12 1 14 -1 -66577
+0;
+#X text 181 120 load soundfonts. Creation argument is possible as well:
+;
+#X obj 594 19 cnv 15 372 158 empty Notes Soundfonts 20 12 1 14 -228992
+-66577 0;
+#X msg 650 109 load /usr/lib/awe/sfbank/2gmgsmt.sf2;
+#X msg 644 89 load \$1;
+#X obj 644 67 openpanel;
+#X obj 644 47 bng 15 250 50 0 empty empty empty 0 -6 0 8 -260818 -1
+-1;
+#X obj 629 134 s \$0-iiwu;
+#X obj 375 146 fluid~ notavail.sf2;
+#X obj 593 182 cnv 15 374 160 empty empty empty 20 12 1 14 -1 -66577
+0;
+#X obj 594 183 cnv 15 372 158 empty Notes Notes 20 12 1 14 -228992
+-66577 0;
+#X obj 837 224 notein;
+#X obj 837 246 pack 0 0 0;
+#X msg 695 288 n 1 60 0;
+#X obj 640 311 s \$0-iiwu;
+#X obj 695 244 bang;
+#X msg 837 268 \$3 \$1 \$2;
+#X obj 837 290 s \$0-iiwu;
+#X obj 593 345 cnv 15 374 160 empty empty empty 20 12 1 14 -1 -66577
+0;
+#X text 159 413 Controller Change: control or c or cc + chan + cc#
++ value;
+#X obj 594 346 cnv 15 372 158 empty Notes Controller_Change/Pitch_Bend
+20 12 1 14 -228992 -66577 0;
+#X obj 632 473 s \$0-iiwu;
+#X floatatom 632 388 5 0 0 0 - - -;
+#X msg 649 441 c 2 \$1;
+#X msg 632 407 control 1 2 \$1;
+#X obj 593 509 cnv 15 374 160 empty empty empty 20 12 1 14 -1 -66577
+0;
+#X obj 594 510 cnv 15 372 158 empty Notes Program_Change 20 12 1 14
+-228992 -66577 0;
+#X obj 703 627 s \$0-iiwu;
+#X msg 703 580 prog 1 \$1;
+#X msg 783 580 p 2 \$1;
+#X floatatom 703 550 5 0 0 0 - - -;
+#X obj 695 202 bng 15 250 50 0 empty empty empty 0 -6 0 8 -24198 -1
+-1;
+#X floatatom 783 550 5 0 0 0 - - -;
+#X floatatom 673 388 5 0 0 0 - - -;
+#X msg 695 222 note 1 60 120;
+#X obj 741 388 ctlin;
+#X obj 741 410 pack 0 0 0;
+#X obj 856 396 bendin;
+#X obj 856 418 pack 0 0;
+#X obj 856 462 s \$0-iiwu;
+#X msg 856 440 bend \$2 \$1;
+#X text 159 445 Pitch Bend works the same: bend or b + chan + val;
+#X msg 857 574 bank 1 \$1;
+#X floatatom 857 555 5 0 0 0 - - -;
+#X text 857 595 bank select;
+#X obj 789 187 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 715 187 metro 1000;
+#X obj 40 261 cnv 15 102 32 empty empty empty 20 12 1 14 -1 -66577
+0;
+#X obj 41 262 cnv 15 100 30 empty empty empty 20 15 1 14 -257472 -66577
+0;
+#X obj 43 342 ezdac~;
+#X obj 66 199 r \$0-iiwu;
+#X msg 66 233 help;
+#X msg 146 217 init /usr/lib/awe/sfbank/2gmgsmt.sf2;
+#X obj 66 269 fluid~;
+#X text 145 185 init [soundfont] can (re)initialize fluid~ for example
+to adapt to new samplerates.;
+#X msg 741 432 cc \$3 \$2 \$1;
+#X obj 203 617 cnv 15 302 110 empty empty empty 20 12 1 14 -1 -66577
+0;
+#X obj 204 618 cnv 15 300 108 empty Notes generators 20 12 1 14 -228992
+-66577 0;
+#X msg 231 682 gen 1 \$2 \$1;
+#X obj 231 704 s \$0-iiwu;
+#X floatatom 289 642 5 0 60 0 - - -;
+#X floatatom 231 642 5 0 0 0 - - -;
+#X obj 231 662 pack 0 17;
+#X text 78 607 gen 17 is "pan".;
+#X text 78 594 Setting generators like for example:;
+#X obj 695 266 del 1000;
+#X symbolatom 343 684 20 0 0 0 - - -;
+#X obj 343 656 fluid.gen2sym;
+#X text 345 700 a little helper;
+#N canvas 402 274 605 444 dust 0;
+#X obj 119 135 del 10;
+#X obj 119 41 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X floatatom 386 66 5 0 0 1 dustiness - -;
+#X floatatom 386 164 5 0 0 1 note_range - -;
+#X floatatom 387 198 5 0 0 1 note_center - -;
+#X obj 237 417 s \$0-iiwu;
+#X obj 387 242 / 2;
+#X floatatom 387 223 5 0 0 1 pan_mod - -;
+#X msg 237 281 gen 1 17 \$1;
+#X obj 237 237 random 100;
+#X obj 237 259 - 50;
+#X obj 119 273 pack 0 0;
+#X obj 119 63 metro;
+#X obj 126 339 pack 0 0;
+#X msg 126 371 note 1 \$1 \$2;
+#X obj 119 251 makenote 100 2;
+#X obj 119 212 + 60;
+#X obj 119 178 random 24;
+#X obj 198 80 random 150;
+#X obj 119 301 poly 8 1;
+#X obj 198 108 t f f;
+#X text 98 11 Inspired by Hans-Christoph Steiner and Derek Holzer;
+#X text 15 11 __Dust__;
+#X connect 0 0 9 0;
+#X connect 0 0 17 0;
+#X connect 1 0 12 0;
+#X connect 2 0 18 1;
+#X connect 3 0 17 1;
+#X connect 4 0 16 1;
+#X connect 6 0 10 1;
+#X connect 7 0 6 0;
+#X connect 7 0 9 1;
+#X connect 8 0 5 0;
+#X connect 9 0 10 0;
+#X connect 10 0 8 0;
+#X connect 11 0 19 0;
+#X connect 12 0 0 0;
+#X connect 12 0 18 0;
+#X connect 13 0 14 0;
+#X connect 14 0 5 0;
+#X connect 15 0 11 0;
+#X connect 15 1 11 1;
+#X connect 16 0 15 0;
+#X connect 17 0 16 0;
+#X connect 18 0 20 0;
+#X connect 19 1 13 0;
+#X connect 19 2 13 1;
+#X connect 20 0 0 1;
+#X restore 709 715 pd dust;
+#X text 601 716 A composition:;
+#X msg 705 87 load /home/ico/Downloads/Soundfonts/jRhodes3.sf2;
+#X connect 9 0 13 0;
+#X connect 10 0 13 0;
+#X connect 11 0 10 0;
+#X connect 12 0 11 0;
+#X connect 17 0 18 0;
+#X connect 17 1 18 1;
+#X connect 17 2 18 2;
+#X connect 18 0 22 0;
+#X connect 19 0 20 0;
+#X connect 21 0 71 0;
+#X connect 22 0 23 0;
+#X connect 28 0 30 0;
+#X connect 29 0 27 0;
+#X connect 30 0 27 0;
+#X connect 34 0 33 0;
+#X connect 35 0 33 0;
+#X connect 36 0 34 0;
+#X connect 37 0 40 0;
+#X connect 38 0 35 0;
+#X connect 39 0 29 0;
+#X connect 40 0 20 0;
+#X connect 40 0 21 0;
+#X connect 41 0 42 0;
+#X connect 41 1 42 1;
+#X connect 41 2 42 2;
+#X connect 42 0 61 0;
+#X connect 43 0 44 0;
+#X connect 43 1 44 1;
+#X connect 44 0 46 0;
+#X connect 46 0 45 0;
+#X connect 48 0 33 0;
+#X connect 49 0 48 0;
+#X connect 51 0 52 0;
+#X connect 52 0 37 0;
+#X connect 56 0 59 0;
+#X connect 57 0 59 0;
+#X connect 58 0 59 0;
+#X connect 59 0 55 0;
+#X connect 59 1 55 1;
+#X connect 61 0 27 0;
+#X connect 64 0 65 0;
+#X connect 66 0 68 1;
+#X connect 66 0 73 0;
+#X connect 67 0 68 0;
+#X connect 68 0 64 0;
+#X connect 71 0 19 0;
+#X connect 73 0 72 0;
+#X connect 77 0 13 0;
