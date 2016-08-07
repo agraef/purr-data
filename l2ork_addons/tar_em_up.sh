@@ -208,24 +208,6 @@ then
 	then
 	#	echo "Since we are doing a complete recompile we are assuming we will need to install l2ork version of the cwiid library. You will need to remove any existing cwiid libraries manually as they will clash with this one. L2Ork version is fully backwards compatible while also offering unique features like full extension support including the passthrough mode. YOU SHOULD REMOVE EXISTING CWIID LIBRARIES PRIOR TO RUNNING THIS INSTALL... You will also have to enter sudo password to install these... Press any key to continue or CTRL+C to cancel install..."
 	#	read dummy
-	#	if [ $no_cwiid -eq 0 ]
-	#	then
-		cd l2ork_addons/cwiid/
-		# install cwiid
-		# git submodule update
-		aclocal
-		autoconf
-		./configure --with-python=python2
-		make
-		# we have disabled system-wide install because as of 23-03-2013
-		# we now statically link disis_wiimote against custom L2Ork version
-		# of the cwiid library
-		if [ $sys_cwiid -eq 1 ]
-		then
-			sudo make install
-		fi
-		cd ../../
-	#	fi
 		# clean files that may remain stuck even after doing global make clean (if any)
 		cd externals/miXed
 		make clean
@@ -302,24 +284,6 @@ then
 	cd ../../l2ork_addons/patch_name
 	cp -f patch_name.pd ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
 	cp -f patch_name-help.pd ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
-	# disis_wiimote
-	cd ../disis_wiimote
-	make clean
-	make
-	cp -f disis_wiimote.pd_linux ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
-	cp -f disis_wiimote-help.pd ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
-	# disis_netsend
-	cd ../disis_netsend
-	make clean
-	make
-	cp -f disis_netsend.pd_linux ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
-	cp -f disis_netsend-help.pd ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
-	# disis_netreceive
-	cd ../disis_netreceive
-	make clean
-	make
-	cp -f disis_netreceive.pd_linux ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
-	cp -f disis_netreceive-help.pd ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
 	# spectdelay
 	cd ../spectdelay/spectdelay~
 	./linux-install.sh

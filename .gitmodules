@@ -5,7 +5,7 @@
 	path = externals/rtcmix-in-pd
 	url = https://github.com/jwmatthys/rtcmix-in-pd.git
 [submodule "l2ork_addons/cwiid"]
-	path = l2ork_addons/cwiid
+	path = externals/disis/cwiid
 	url = https://github.com/pd-l2ork/cwiid
 [submodule "l2ork_addons/lyonpotpourri"]
 	path = externals/lyonpotpourri

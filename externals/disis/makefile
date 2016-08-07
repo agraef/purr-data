@@ -1,49 +1,23 @@
-NAME=disis_phasor~
-SYM=disis_phasor~
+# Makefile for mylib
 
-# If you want to use a customized Pd, then define a $PD_PATH variable.
-# Otherwise, the Pd must be installed on the system
-PD_PATH=../../pd
+lib.name = disis
 
-######################################################
-# You shouldn't need to change anything beyond here! #
-######################################################
+class.sources = disis_phasor~.c disis_netsend.c disis_netreceive.c
 
+datafiles = disis_phasor~-help.pd disis_netsend-help.pd disis_netreceive-help.pd disis_wiimote-help.pd disis_wiimote_legacy.pd README patch_name-help.pd patch_name.pd
 
-ifdef PD_PATH
-PD_INCLUDE := -I$(PD_PATH)/src
-PD_EXTRA_PATH := $(PD_PATH)/extra
-PD_DOC_PATH := $(PD_PATH)/doc
-else
-PD_INCLUDE := -I/usr/local/include
-PD_EXTRA_PATH := /usr/local/lib/pd/extra
-PD_DOC_PATH := /usr/local/lib/pd/doc
-endif
-	
-LIBS =
-#LIBS = -lrt -lbluetooth -lpthread
+# IMPORTANT! disis_wiimote requires a custom L2Ork version of cwiid library
+# For the time being we statically link to a L2Ork version of cwiid library
+# Change this paths if you are compiling disis_wiimote separately from
+# the rest of the pd-l2ork source to reflect the correct location of the
+# custom L2Ork version of the libcwiid
+CWIID_PATH=./cwiid
+CWIID_LIB_STATIC= $(CWIID_PATH)/libcwiid/libcwiid.a
+CWIID_INCLUDE = -I$(CWIID_PATH)/libcwiid
+cflags = $(CWIID_INCLUDE)
 
+disis_wiimote.class.sources = disis_wiimote.c
 
-current: pd_linux
+disis_wiimote.class.ldlibs = $(CWIID_LIB_STATIC) -lbluetooth -lpthread
 
-##### LINUX:
-
-pd_linux: $(NAME).pd_linux
-
-.SUFFIXES: .pd_linux
-
-LINUXCFLAGS = -DPD -g -fPIC #-funroll-loops -fomit-frame-pointer -Wall -Wshadow -Wstrict-prototypes
-
-.c.pd_linux:
-	gcc $(LINUXCFLAGS) $(PD_INCLUDE) -o $*.o -c $*.c
-	gcc -shared -o $(NAME).pd_linux $(NAME).o -lm -lc
-	strip --strip-unneeded $*.pd_linux 
-	rm -f $*.o
-
-install:
-
-	-cp *.pd_linux $(PD_EXTRA_PATH)/.
-	-cp *help*.pd $(PD_DOC_PATH)/.
-
-clean:
-	-rm -f *.o *.pd_* so_locations
+include Makefile.pdlibbuilder
