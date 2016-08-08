@@ -153,7 +153,7 @@ static allpass_chain_cycle (t_float x, t_float *y, t_float *z, int n, t_float a)
 	}
 }
 
-static mtx_dispersive_dline_matrix(t_mtx_dispersive_dline *x, t_symbol *s,
+static void mtx_dispersive_dline_matrix(t_mtx_dispersive_dline *x, t_symbol *s,
       int argc, t_atom *argv)
 {
   int channels=(int)atom_getfloat(argv);
