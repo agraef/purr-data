@@ -160,8 +160,8 @@ make install</code>
 6. It is better to let small things go then to risk taking time away from
    solving bigger problems
 
-It is a really bad idea to break this Code of Conduct *even if* no one
-complains about your behavior.
+It is a bad idea to break this Code of Conduct *even if* no one complains
+about your behavior.
 
 md5sum: 42b9be967d638069789e5d830b8a8f93
 
