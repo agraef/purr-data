@@ -19,6 +19,8 @@ then
 	echo "     -R    build a Raspberry Pi deb (complete recompile)"
 	echo "     -r    build a Raspberry Pi deb (incremental)"
 	echo "     -w    install custom version of cwiid system-wide"
+	echo "     -z    build a Windows installer (incremental)"
+	echo "     -Z    build a Windows installer (complete recompile)"
 	echo
 	echo "   For custom install locations do the following before"
 	echo "   running this script:"
@@ -36,24 +38,39 @@ full=0
 sys_cwiid=0
 rpi=0
 pkg=1
+inno=0
 
 inst_dir=${inst_dir:-/usr/local}
+
+# Get the OS we're running under, normalized to names that can be used
+# to fetch the nwjs binaries below
+
+os=`uname | tr '[:upper:]' '[:lower:]'`
+if [[ $os == *"mingw32"* ]]; then
+	os=win
+fi
 
 # Fetch the nw.js binary if we haven't already. We want to fetch it even
 # for building with no libs, so we do it before all options
 echo nwjs-sdk-v0.16.0-`uname | tr '[:upper:]' '[:lower:]'`
 if [ ! -d "../pd/nw/nw" ]; then
-	# fetch the nw.js binary (unfortunately over http...)
-	os=`uname | tr '[:upper:]' '[:lower:]'`
-	arch=""
 	if [ `getconf LONG_BIT` -eq 32 ]; then
 		arch="ia32"
 	else
 		arch="x64"
 	fi
-	ext="tar.gz"
+
+	if [[ $os == "win" ]]; then
+		ext="zip"
+		# We need the lts version to be able to run on XP. For
+                # simplicity we use that same version for 64 bit Windows, too
+		nwjs_version="v0.14.7"
+	else
+		ext="tar.gz"
+		nwjs_version="v0.16.1"
+	fi
+
 	nwjs="nwjs-sdk"
-	nwjs_version="v0.16.0"
 	nwjs_dirname=${nwjs}-${nwjs_version}-${os}-${arch}
 	nwjs_filename=${nwjs_dirname}.${ext}
 	nwjs_url=https://git.purrdata.net/jwilkes/nwjs-binaries/raw/master
@@ -61,12 +78,27 @@ if [ ! -d "../pd/nw/nw" ]; then
 	echo "Fetching the nwjs binary from"
 	echo "$nwjs_url"
 	wget $nwjs_url
-	tar -xf $nwjs_filename
+	if [[ $os == "win" ]]; then
+		unzip $nwjs_filename
+	else
+		tar -xf $nwjs_filename
+	fi
 	mv $nwjs_dirname ../pd/nw/nw
 	rm $nwjs_filename
 fi
 
-while getopts ":abBcdefFnRruw" Option
+# For Windows, fetch the ASIO SDK if we don't have it already
+if [[ $os == "win" ]]; then
+	if [ ! -d "../pd/lib" ]; then
+		mkdir ../pd/lib
+		wget http://www.steinberg.net/sdk_downloads/asiosdk2.3.zip
+		unzip asiosdk2.3.zip
+		mv ASIOSDK2.3 ../pd/lib
+	fi
+fi
+
+
+while getopts ":abBcdefFnRruwzZ" Option
 do case $Option in
 		a)		addon=1;;
 
@@ -101,6 +133,12 @@ do case $Option in
 
 		w)		sys_cwiid=1
 				;;
+
+		z)		inno=1
+				inst_dir=/usr;;
+
+		Z)		inno=2
+				inst_dir=/usr;;
 
 		*)		echo "Error: unknown option";;
 	esac
@@ -152,7 +190,7 @@ then
 	cd $gitfolder
 fi
 
-if [ $full -gt 0 -o $deb -gt 0 ]
+if [ $full -gt 0 -o $deb -gt 0 -o $inno -gt 0 ]
 then
 	echo "Pd-L2Ork full installer... IMPORTANT! To ensure you have the most up-to-date submodules, this process requires internet connection to pull sources from various repositories..."
 
@@ -169,42 +207,8 @@ then
 		fi
 	fi
 
-	# update the include files to be safe
-	#if [ ! -d "/usr/local/include/pdl2ork" ]; then
-	#	sudo mkdir /usr/local/include/pdl2ork
-	#fi
 
-	#if [ $full -eq 3 ]
-	#then
-	#	echo "IMPORTANT! If you are already running vanilla Pd or Pd-extended, or have a custom installation of Pd-l2ork at a location other than /usr/local/lib/pd-l2ork, you will want to EITHER uninstall all older versions of Pd-l2ork and/or other versions of pd OR manually pre-install Pd-l2ork includes in order to ensure that any third-party externals that rely on the global Pd-l2ork includes reference the right versions of the said files. Failing to do so may result in incorrectly compiled externals that will definitely crash Pd-l2ork. You can install the includes into their default dir /usr/local/include by typing following commands:"
-	#	echo
-	#	echo "sudo cp -f -v pd/src/g_all_guis.h /usr/local/include/pdl2ork/"
-	#	echo "sudo cp -f -v pd/src/g_canvas.h /usr/local/include/pdl2ork/"
-	#	echo "sudo cp -f -v pd/src/m_imp.h /usr/local/include/pdl2ork/"
-	#	echo "sudo cp -f -v pd/src/m_pd.h /usr/local/include/pdl2ork/"
-	#	echo "sudo cp -f -v pd/src/s_stuff.h /usr/local/include/pdl2ork/"
-	#	echo
-	#	echo "If you don't have sudo enabled, replace sudo commands with the appropraite alternative before pasting aforesaid lines in the terminal.
-#
-#PLEASE NOTE that because both Pd and Pd-l2ork use the includes with the same name, depending on your system's setup, skipping this step may result in a failed build. Press any key to continue or CTRL+C to cancel install and manually copy the said files first (or use -f or -F options to have these steps performed automatically)..."
-	#	read dummy
-	#else
-	#	echo "First we will copy updated includes... You may have to enter your sudo password..."
-	#	sudo mkdir $inst_dir/include/pdl2ork/
-	#	sudo cp -f -v pd/src/g_all_guis.h $inst_dir/include/pdl2ork/
-	#	sudo cp -f -v pd/src/g_canvas.h $inst_dir/include/pdl2ork/
-	#	sudo cp -f -v pd/src/m_imp.h $inst_dir/include/pdl2ork/
-	#	sudo cp -f -v pd/src/m_pd.h $inst_dir/include/pdl2ork/
-	#	sudo cp -f -v pd/src/s_stuff.h $inst_dir/include/pdl2ork/
-	#fi
-
-	# update docs
-	#cd doc/
-	#svn checkout https://pure-data.svn.sourceforge.net/svnroot/pure-data/trunk/doc .
-	#cp -f ../l2ork_addons/doc/Makefile .
-	#cd ..
-
-	if [ $full -eq 2 -o $deb -eq 2 ]
+	if [ $full -eq 2 -o $deb -eq 2 -o $inno -eq 2 ]
 	then
 	#	echo "Since we are doing a complete recompile we are assuming we will need to install l2ork version of the cwiid library. You will need to remove any existing cwiid libraries manually as they will clash with this one. L2Ork version is fully backwards compatible while also offering unique features like full extension support including the passthrough mode. YOU SHOULD REMOVE EXISTING CWIID LIBRARIES PRIOR TO RUNNING THIS INSTALL... You will also have to enter sudo password to install these... Press any key to continue or CTRL+C to cancel install..."
 	#	read dummy
@@ -224,36 +228,17 @@ then
 		aclocal
 		./autogen.sh
 		export INCREMENTAL=""
-	#elif [ $full -eq 3 ]
-	#then
-	#	echo "Since pd-l2ork relies on a unique version of cwiid library, we will need to install it to make disis_wiimote external work properly. YOU SHOULD REMOVE EXISTING CWIID LIBRARIES PRIOR TO RUNNING THIS INSTALL... No worries though, L2Ork version is fully backwards compatible while also offering unique features like full extension support including the passthrough mode. To install cwiid library go to <pd-l2ork-root-git-folder>/l2ork-addons/cwiid/ folder and install it using the usual:"
-	#	echo
-	#	echo "./configure"
-	#	echo "make"
-	#	echo "sudo make install"
-	#	echo
-	#	echo "As an alternative, you can also use the -f or -F options instead of an -u option to have this performed automatically. Please note that options -f and -F require that your system has sudo enabled. Press any key to continue or CTRL+C to cancel install..."
-	#	read dummy
-		# clean files that may remain stuck even after doing global make clean (if any)
-	#	cd externals/miXed
-	#	make clean
-	#	cd ../../Gem/src/
-	#	make distclean
-	#	rm -rf ./.libs
-	#	rm -rf ./*/.libs
-	#	cd ../
-	#	make distclean
-	#	rm gemglutwindow.pd_linux
-	#	rm Gem.pd_linux
-	#	aclocal
-	#	./autogen.sh
 	else
 		cd Gem/
 		export INCREMENTAL="yes"
 	fi
 	cd ../pd/src && aclocal && autoconf
-	cd ../../packages/linux_make
-	if [ $full -gt 1 -o $deb -eq 2 ]
+	if [[ $os == "win" ]]; then
+		cd ../../packages/win32_inno
+	else
+		cd ../../packages/linux_make
+	fi
+	if [ $full -gt 1 -o $deb -eq 2 -o $inno -eq 2 ]
 	then
 		make distclean
 		cp ../../pd/src/g_all_guis.h ../../externals/build/include
@@ -276,63 +261,71 @@ then
 		cp -f ../../l2ork_addons/flext/config-lnx-pd-gcc.txt.rpi ../../externals/grill/trunk/flext/buildsys/config-lnx-pd-gcc.txt
 		cat ../../externals/OSCx/src/Makefile | sed -e s/-lpd//g > ../../externals/OSCx/src/Makefile
 	fi
-	make install prefix=$inst_dir
+	if [[ $os == "win" ]]; then
+		echo "Making Windows package..."
+		echo `pwd`
+		make install && make package
+	else
+		make install prefix=$inst_dir
+	fi
 	echo "copying pd-l2ork-specific externals..."
 	# create images folder
 	mkdir -p ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/images
 	# patch_name
-	cd ../../l2ork_addons/patch_name
-	cp -f patch_name.pd ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
-	cp -f patch_name-help.pd ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
 	# spectdelay
-	cd ../spectdelay/spectdelay~
-	./linux-install.sh
-	cp -f spectdelay~.pd_linux ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
-	cp -f spectdelay~-help.pd ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
-	cp -f array* ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
-	# return to l2ork_addons folder
-	cd ../../
+	if [[ $os == "win" ]]; then
+		cd ../../l2ork_addons
+	else
+		cd ../../l2ork_addons/spectdelay/spectdelay~
+		./linux-install.sh
+		cp -f spectdelay~.pd_linux ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
+		cp -f spectdelay~-help.pd ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
+		cp -f array* ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
+		# return to l2ork_addons folder
+		cd ../../
+	fi
 	# install raspberry pi externals (if applicable)
-	#if [ $rpi -eq 1 ]
-	#then
-	cd raspberry_pi
-	./makeall.sh
-	cp -f disis_gpio/disis_gpio.pd_linux ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
-	cp -f disis_gpio/disis_gpio-help.pd ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
-	cp -f disis_spi/disis_spi.pd_linux ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
-	cp -f disis_spi/disis_spi-help.pd ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
-	cd ../
-	#fi
+	if [ $inno -eq 0]; then
+		cd raspberry_pi
+		./makeall.sh
+		cp -f disis_gpio/disis_gpio.pd_linux ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
+		cp -f disis_gpio/disis_gpio-help.pd ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
+		cp -f disis_spi/disis_spi.pd_linux ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
+		cp -f disis_spi/disis_spi-help.pd ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
+		cd ../
+	fi
 
 	echo "done with l2ork addons."
 	cd ../
-	# finish install
-	cd packages/linux_make
-	rm -f build/usr/local/lib/pd
-	if [ $pkg -gt 0 ]; then
-	echo "tar full installer..."
-	if [ $deb -gt 0 ]
-	then
-		cd build/
-		rm -rf DEBIAN/ etc/
-		cd ../
-		make deb prefix=$inst_dir
-	else
-		make tarbz2 prefix=$inst_dir
+	# finish install for deb
+	if [ $inno -eq 0 ]; then
+		cd packages/linux_make
+		rm -f build/usr/local/lib/pd
+		if [ $pkg -gt 0 ]; then
+		echo "tar full installer..."
+		if [ $deb -gt 0 ]
+		then
+			cd build/
+			rm -rf DEBIAN/ etc/
+			cd ../
+			make deb prefix=$inst_dir
+		else
+			make tarbz2 prefix=$inst_dir
+		fi
+		echo "move full installer..."
+		if [ $deb -gt 0 ]
+		then
+			mv *.deb ../../../
+		else
+			#rm -f ../../../Pd-l2ork-full-`uname -m`-`date +%Y%m%d`.tar.bz2 2> /dev/null
+			#mv build/Pd*bz2 ../../../Pd-l2ork-full-`uname -m`-`date +%Y%m%d`.tar.bz2
+			mv -f build/pd*bz2 ../../..
+		fi
+		elif [ $deb -gt 0 ]; then
+			make debstage prefix=$inst_dir
+		fi
+		cd ../../
 	fi
-	echo "move full installer..."
-	if [ $deb -gt 0 ]
-	then
-		mv *.deb ../../../
-	else
-		#rm -f ../../../Pd-l2ork-full-`uname -m`-`date +%Y%m%d`.tar.bz2 2> /dev/null
-		#mv build/Pd*bz2 ../../../Pd-l2ork-full-`uname -m`-`date +%Y%m%d`.tar.bz2
-		mv -f build/pd*bz2 ../../..
-	fi
-	elif [ $deb -gt 0 ]; then
-		make debstage prefix=$inst_dir
-	fi
-	cd ../../ 
 fi
 
 if [ $addon -eq 1 ]
