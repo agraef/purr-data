@@ -152,8 +152,16 @@ make install</code>
 
 1. No sarcasm
 2. Don't appear to lack empathy
+3. You can't live here. If you're spending hours a day writing Purr Data
+   code or-- worse-- spending hours a day *writing emails about* code that 
+   has yet to be written, you're doing it wrong
+4. If working on something for the first time, ask to be mentored
+5. If no one asked you to mentor them, don't teach
+6. It is better to let small things go then to risk taking time away from
+   solving bigger problems
 
-Enforcement of the Code of Conduct is complaint-driven.
+It is a really bad idea to break this Code of Conduct *even if* no one
+complains about your behavior.
 
 ### Contributor Guide
 
