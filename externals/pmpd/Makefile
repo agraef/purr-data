@@ -231,7 +231,7 @@ ifeq (MINGW,$(findstring MINGW,$(UNAME)))
   ALL_LDFLAGS += -s -shared -Wl,--enable-auto-import
   SHARED_LDFLAGS += -shared
   ALL_LIBS += -L"$(PD_PATH)/src" -L"$(PD_PATH)/bin" -L"$(PD_PATH)/obj" \
-	-lpd -lwsock32 -lkernel32 -luser32 -lgdi32 -liberty $(LIBS_windows)
+	-lpd -lwsock32 -lkernel32 -luser32 -lgdi32 $(LIBS_windows)
   STRIP = strip --strip-unneeded -R .note -R .comment
   DISTBINDIR=$(DISTDIR)-$(OS)
 endif
