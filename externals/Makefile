@@ -1653,7 +1653,8 @@ rjlib_clean:
 # RTCMIX~
 
 rtcmix:
-	cd $(externals_src)/rtcmix-in-pd/RTcmix* && ./configure && make
+	cd $(externals_src)/rtcmix-in-pd/RTcmix-pd-4.0.1.6 \
+		&& ./configure && make
 	make -C $(externals_src)/rtcmix-in-pd \
 		PD_PATH=$(pd_src) \
 		CFLAGS="$(CFLAGS)" \
