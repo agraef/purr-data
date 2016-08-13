@@ -3613,7 +3613,8 @@ function gui_savepanel(cid, target, path) {
 }
 
 exports.file_dialog_callback = function(file_string) {
-    pdsend(file_dialog_target, "callback", enquote(file_string));
+    pdsend(file_dialog_target, "callback",
+        enquote(defunkify_windows_path(file_string)));
 }
 
 // Used to convert the ["key", "value"...] arrays coming from
