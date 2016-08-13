@@ -18,8 +18,11 @@ LicenseFile=..\gpl-3.0.txt
 
 Compression=lzma/ultra
 ChangesAssociations=true
-OutputBaseFilename=PACKAGE_NAME
+OutputBaseFilename=Purr Data PD_VERSION
 AppCopyright=GNU GPL
+WizardImageFile=big_cat.bmp
+WizardImageStretch=no
+WizardSmallImageFile=small_cat.bmp
 [Tasks]
 ; NOTE: The following entry contains English phrases ("Create a desktop icon" and "Additional icons"). You are free to translate them into another language if required.
 Name: desktopicon; Description: Create a &desktop icon; GroupDescription: Additional icons:; Flags: unchecked
