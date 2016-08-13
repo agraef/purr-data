@@ -747,8 +747,8 @@ function doc_open (dir, basename) {
         open_html(path.join(norm_path, basename));
 
     } else {
-        pdsend("pd open", enquote(basename),
-            defunkify_windows_path(enquote(norm_path)));
+        pdsend("pd open", enquote(defunkify_windows_path(basename)),
+            enquote(defunkify_windows_path(norm_path)));
     }
 }
 
