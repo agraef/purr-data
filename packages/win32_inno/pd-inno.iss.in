@@ -15,6 +15,7 @@ AppUpdatesURL=http://puredata.org/downloads/
 DefaultDirName={pf}\Purr Data
 DefaultGroupName=Purr Data
 LicenseFile=..\gpl-3.0.txt
+DisableWelcomePage=no
 
 Compression=lzma/ultra
 ChangesAssociations=true
