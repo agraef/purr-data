@@ -6,14 +6,14 @@
 ;
 
 [Setup]
-AppName=pd
-AppVerName=Pd-PD_VERSION
+AppName=Purr Data
+AppVerName=Purr Data PD_VERSION
 AppPublisher=purrdata.net
 AppPublisherURL=http://purrdata.net
 AppSupportURL=http://puredata.org/community/lists/
 AppUpdatesURL=http://puredata.org/downloads/
-DefaultDirName={pf}\purrdata
-DefaultGroupName=Purr-Data
+DefaultDirName={pf}\Purr Data
+DefaultGroupName=Purr Data
 LicenseFile=..\gpl-3.0.txt
 
 Compression=lzma/ultra
@@ -317,18 +317,18 @@ Source: build\bin\cyclist.exe; DestDir: {sys}; Flags: confirmoverwrite promptifo
 ;-----------------------------------------------------------------------------
 ; DejaVu Sans Mono Font Files
 ; the files needed for the Pd-0.39.2-extended default font
-Source: C:\WINDOWS\Fonts\DejaVuSans.ttf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: DejaVu Sans
-Source: C:\WINDOWS\Fonts\DejaVuSans-Bold.ttf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: DejaVu Sans Bold
-Source: C:\WINDOWS\Fonts\DejaVuSans-BoldOblique.ttf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: DejaVu Sans Bold Oblique
-Source: C:\WINDOWS\Fonts\DejaVuSansMono.ttf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: DejaVu Sans Mono
-Source: C:\WINDOWS\Fonts\DejaVuSansMono-Bold.ttf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: DejaVu Sans Mono Bold
-Source: C:\WINDOWS\Fonts\DejaVuSansMono-BoldOblique.ttf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: DejaVu Sans Mono Bold Oblique
-Source: C:\WINDOWS\Fonts\DejaVuSansMono-Oblique.ttf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: DejaVu Sans Mono Oblique
-Source: C:\WINDOWS\Fonts\DejaVuSans-Oblique.ttf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: DejaVu Sans Oblique
-Source: C:\WINDOWS\Fonts\DejaVuSerif.ttf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: DejaVu Serif
-Source: C:\WINDOWS\Fonts\DejaVuSerif-Bold.ttf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: DejaVu Serif Bold
+;Source: C:\WINDOWS\Fonts\DejaVuSans.ttf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: DejaVu Sans
+;Source: C:\WINDOWS\Fonts\DejaVuSans-Bold.ttf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: DejaVu Sans Bold
+;Source: C:\WINDOWS\Fonts\DejaVuSans-BoldOblique.ttf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: DejaVu Sans Bold Oblique
+;Source: C:\WINDOWS\Fonts\DejaVuSansMono.ttf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: DejaVu Sans Mono
+;Source: C:\WINDOWS\Fonts\DejaVuSansMono-Bold.ttf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: DejaVu Sans Mono Bold
+;Source: C:\WINDOWS\Fonts\DejaVuSansMono-BoldOblique.ttf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: DejaVu Sans Mono Bold Oblique
+;Source: C:\WINDOWS\Fonts\DejaVuSansMono-Oblique.ttf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: DejaVu Sans Mono Oblique
+;Source: C:\WINDOWS\Fonts\DejaVuSans-Oblique.ttf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: DejaVu Sans Oblique
+;Source: C:\WINDOWS\Fonts\DejaVuSerif.ttf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: DejaVu Serif
+;Source: C:\WINDOWS\Fonts\DejaVuSerif-Bold.ttf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: DejaVu Serif Bold
 ; Inconsolata font
-Source: C:\WINDOWS\Fonts\Inconsolata.otf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: Inconsolata
+;Source: C:\WINDOWS\Fonts\Inconsolata.otf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: Inconsolata
 ;
 ;
 ;-----------------------------------------------------------------------------
