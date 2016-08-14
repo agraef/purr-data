@@ -84,6 +84,11 @@ if [ ! -d "../pd/nw/nw" ]; then
 		tar -xf $nwjs_filename
 	fi
 	mv $nwjs_dirname ../pd/nw/nw
+	# make sure the nw binary is executable on GNU/Linux and OSX
+	if [[ $os != "win" ]]; then
+		chmod 755 ../pd/nw/nw/nw
+	fi
+	chmod 755 ../pd/nw/nw/nw
 	rm $nwjs_filename
 fi
 
