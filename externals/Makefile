@@ -128,7 +128,7 @@ CXXFLAGS = $(CFLAGS)
 #
 # WARNING!  this MUST be all on one line because the automatic package
 # building scripts rely on it being that way.
-LIB_TARGETS = adaptive arraysize autotune bassemu boids bsaylor comport creb cxc cyclone disis earplug ekext ext13 fftease fluid freeverb ggee hcs iem_ambi iem_bin_ambi iemlib iemgui iemguts iem_adaptfilt iemmatrix iemxmlrpc iem_delay iem_roomsim iem_spec2 iem_tab jasch_lib loaders-hexloader loaders-libdir lyonpotpourri mapping markex maxlib mjlib moocow moonlib motex mrpeach oscx pan pdcontainer pddp pdogg plugin pmpd rjlib rtcmix sigpack smlib tof unauthorized vbap windowing zexy flext
+LIB_TARGETS = adaptive arraysize autotune bassemu boids bsaylor comport creb cxc cyclone disis earplug ekext ext13 fftease fluid freeverb ggee hcs iem_ambi iem_bin_ambi iemlib iemgui iemguts iem_adaptfilt iemmatrix iemxmlrpc iem_delay iem_roomsim iem_spec2 iem_tab jasch_lib loaders-hexloader loaders-libdir lyonpotpourri mapping markex maxlib mjlib moocow moonlib motex mrpeach oscx pan pdcontainer pddp pdogg plugin pmpd rjlib sigpack smlib tof unauthorized vbap windowing zexy
 
 # DISABLED: flatgui
 
@@ -448,9 +448,11 @@ cyclone_clean:
 #------------------------------------------------------------------------------#
 # DISIS
 disis:
+ifneq ($(OS_NAME),windows)
 	cd $(externals_src)/disis/cwiid && aclocal && autoconf && \
 		./configure --with-python=python2 && make
-	make -C $(externals_src)/disis PD_PATH=$(pd_src)
+endif
+	make -C $(externals_src)/disis PD_PATH=$(pd_src) pdbinpath=$(pd_src)/src
 
 disis_install:
 	make -C $(externals_src)/disis \
@@ -603,7 +605,8 @@ flib_clean:
 # FLUID~
 
 fluid:
-	make -C $(externals_src)/fluid~ PD_PATH=$(pd_src)
+	make -C $(externals_src)/fluid~ PD_PATH=$(pd_src) \
+		pdbinpath=$(pd_src)/src
 
 fluid_install:
 	make -C $(externals_src)/fluid~ DESTDIR="$(DESTDIR)" \
