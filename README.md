@@ -111,43 +111,16 @@ pacman -S autoconf automake git libtool \
           mingw-w64-i686-libsndfile mingw-w64-i686-libvorbis \
           mingw-w64-i686-lua mingw-w64-i686-toolchain \
           rsync unzip wget</code>
-4. Type `exit` in the shell and click the `Enter` key  
-   This will close the window.
-5. Open the MinGW-w64 Win32 Shell again, as you did in *step 2* above.
-6. Download the source code *(3-6 minutes)*  
+4. Download the source code *(3-6 minutes)*
    Issue the following command to create a new directory "purr-data" and clone
    the repository to it:<code>
 git clone https://git.purrdata.net/jwilkes/purr-data.git</code>
-7. Add the ASIO SDK directory *(less than a minute)*  
-   Issue the following command:<code>
-mkdir purr-data/pd/lib</code>
-8. Download the ASIO SDK *(2 minutes)*<code>
-wget http://www.steinberg.net/sdk_downloads/asiosdk2.3.zip
-</code>
-9. Unzip the ASIO SDK: *(less than a minute)*<code>
-unzip asiosdk2.3.zip
-</code>
-10. Move it to the "lib" directory you just created: *(less than a minute)*<code>
-mv ASIOSDK2.3 purr-data/pd/lib</code>
-11. Download the nw.js binary *(3-6 minutes)*  
-    For Windows XP, download the 32 bit binary:<code>
-wget http://dl.nwjs.io/v0.14.6/nwjs-sdk-v0.14.6-win-ia32.zip</code>
-
-    For Windows Vista, 7, and 10:<code>
-wget http://dl.nwjs.io/v0.14.6/nwjs-sdk-v0.14.6-win-x64.zip</code>
-12. Unzip nw.js: *(less than a minute)*<code>
-unzip nwjs-sdk-v0.14.6-win-x64.zip</code>
-13. Now move it into the repo: *(less than a minute)*<code>
-mv nwjs-sdk-v0.14.6-win-x64 purr-data/pd/nw/nw</code>
-14. Enter the purr-data directory *(less than a minute)*<code>
-cd purr-data/packages/win32_inno</code>
-15. Download all submodules *(3 minutes)*
-    Use the following command:<code>
-git submodule init && git submodule sync && git submodule update</code>
-16. In ~/purr-data/externals/Makefile, go to line 131 and delete the word
-    "flext".
-17. Finally, build Purr-Data *(45-50 minutes)*<code>
-make install</code>
+5. Enter the purr-data/l2ork_addons directory *(less than a minute)*<code>
+cd purr-data/l2ork_addons</code>
+6. Finally, build Purr-Data *(45-50 minutes)*<code>
+./tar_em_up.sh -Z</code>
+7. Look in purr-data/packages/win32_inno/Output and click the setup file to
+   start installing Purr Data to your machine.
 
 ### Code of Conduct
 
