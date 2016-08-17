@@ -60,6 +60,11 @@ if [ ! -d "../pd/nw/nw" ]; then
 		arch="x64"
 	fi
 
+	# for rpi
+	if [ `uname -m` -eq "armv7l" ]; then
+		arch="armv7l"
+	fi
+
 	if [[ $os == "win" ]]; then
 		ext="zip"
 		# We need the lts version to be able to run on XP. For
@@ -67,7 +72,12 @@ if [ ! -d "../pd/nw/nw" ]; then
 		nwjs_version="v0.14.7"
 	else
 		ext="tar.gz"
-		nwjs_version="v0.16.1"
+		# temporary kluge for rpi-- only 0.15.1 is available atm
+		if [ `uname -m` -eq "armv7l" ]; then
+			nwjs_version="v0.15.1"
+		else
+			nwjs_version="v0.16.1"
+		fi
 	fi
 
 	nwjs="nwjs-sdk"
