@@ -61,7 +61,7 @@ if [ ! -d "../pd/nw/nw" ]; then
 	fi
 
 	# for rpi
-	if [ `uname -m` -eq "armv7l" ]; then
+	if [ `uname -m` == "armv7l" ]; then
 		arch="armv7l"
 	fi
 
@@ -73,7 +73,7 @@ if [ ! -d "../pd/nw/nw" ]; then
 	else
 		ext="tar.gz"
 		# temporary kluge for rpi-- only 0.15.1 is available atm
-		if [ `uname -m` -eq "armv7l" ]; then
+		if [ `uname -m` == "armv7l" ]; then
 			nwjs_version="v0.15.1"
 		else
 			nwjs_version="v0.16.1"
