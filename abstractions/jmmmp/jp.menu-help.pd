@@ -1,18 +1,18 @@
-#N struct 1012-color float x float y float farbe;
-#N struct 1012-color-display float x float y float farbe;
-#N struct 1015-color float x float y float farbe;
-#N struct 1015-color-display float x float y float farbe;
-#N struct 1007-element float x float y symbol menu float lenght float
+#N struct 1087-color float x float y float farbe;
+#N struct 1087-color-display float x float y float farbe;
+#N struct 1090-color float x float y float farbe;
+#N struct 1090-color-display float x float y float farbe;
+#N struct 1082-element float x float y symbol menu float lenght float
 height float selection float ypos float col-back float col-lab;
-#N struct 1025-color float x float y float farbe;
-#N struct 1025-color-display float x float y float farbe;
-#N struct 1028-color float x float y float farbe;
-#N struct 1028-color-display float x float y float farbe;
-#N struct 1020-element float x float y symbol menu float lenght float
+#N struct 1183-color float x float y float farbe;
+#N struct 1183-color-display float x float y float farbe;
+#N struct 1186-color float x float y float farbe;
+#N struct 1186-color-display float x float y float farbe;
+#N struct 1178-element float x float y symbol menu float lenght float
 height float selection float ypos float col-back float col-lab;
-#N canvas 40 80 738 476 10;
-#X floatatom 19 206 5 0 0 0 - - -;
-#N canvas 0 0 426 446 license 0;
+#N canvas 106 113 779 512 10;
+#X floatatom 19 216 5 0 0 0 - - -;
+#N canvas 0 0 393 422 license 0;
 #X text 8 47 All rights reserved.;
 #X text 8 227 The names of its contributors may not be used to endorse
 or promote products derived from this software without specific prior
@@ -37,9 +37,9 @@ in the documentation and/or other materials provided with the distribution.
 ;
 #X text 8 7 Copyright 2016 \, Jo„o Pais;
 #X text 8 27 jmmmpais@gmail.com;
-#X restore 431 446 pd license;
-#X text 429 341 Outlets;
-#X text 429 251 - bang - outputs current setting;
+#X restore 421 486 pd license;
+#X text 419 401 Outlets;
+#X text 419 291 - bang - outputs current setting;
 #N canvas 564 268 494 344 META 0;
 #X text 12 95 LICENSE BSD;
 #X text 12 75 LIBRARY jmmmp;
@@ -49,139 +49,154 @@ in the documentation and/or other materials provided with the distribution.
 #X text 12 36 KEYWORDS menu GOP data-structures;
 #X text 12 55 AUTHOR Jo„o Pais <jmmmpais@gmail.com>;
 #X text 12 135 VERSION 2016;
-#X restore 521 446 pd META;
+#X restore 511 486 pd META;
 #X text 11 11 [jp.menu] - Dropdown menu programmed with data structures
 ;
-#X text 429 41 Arguments - ALWAYS USE THE FIRST THREE ARGUMENTS;
-#X text 429 61 - name of configuration file;
-#X text 428 81 - lenght (pixels);
-#X text 429 101 - height (pixels);
-#N canvas 451 243 394 363 configuration 0;
-#X text 19 17 HOW TO FORMAT THE CONFIGURATION FILE FOR [jp.menu];
-#X text 19 87 Name;
-#X text 19 167 Content;
-#X text 19 187 The content consists of as many lines as items in the
-menu. In each line is be the label that appears.;
-#X text 19 47 The configuration file must be a .txt file \, stored
-in the same folder as the main patch where [jp.menu] is being used.
-;
-#X text 19 227 Load new file;
-#X text 19 247 To load a new file \, send the message "load \$1" with
+#X text 419 61 - name of configuration file;
+#N canvas 312 426 384 356 configuration 0;
+#X text 9 7 HOW TO FORMAT THE CONFIGURATION FILE FOR [jp.menu];
+#X text 9 77 Name;
+#X text 9 157 Content;
+#X text 9 37 The configuration file must be a .txt file \, stored in
+the same folder as the main patch where [jp.menu] is being used.;
+#X text 9 217 Load new file;
+#X text 9 237 To load a new file \, send the message "load \$1" with
 the symbol as argument.;
-#X obj 19 337 s \$0-country-i;
-#X msg 19 288 load audio;
-#X msg 29 308 load country;
-#X text 19 107 The file must be named jp.menu-NAME.txt.;
-#X text 19 127 The NAME will be used as the first argument for [jp.menu].
+#X obj 9 327 s \$0-country-i;
+#X msg 9 278 load audio;
+#X msg 19 298 load country;
+#X text 9 97 The file must be named jp.menu-NAME.txt.;
+#X text 9 117 The NAME will be used as the first argument for [jp.menu].
 ;
-#X connect 8 0 7 0;
-#X connect 9 0 7 0;
-#X restore 222 251 pd configuration;
-#X text 430 426 (C) 2016 Jo„o Pais - jmmmpais@gmail.com;
-#X text 429 211 - integer - select item number. From 0 upwards.;
-#X obj 19 111 hradio 15 1 0 4 empty empty empty 0 -8 0 10 -262144 -1
+#X text 9 177 The content consists of as many lines as items in the
+menu. In each line is be the label that appears in the menu.;
+#X connect 7 0 6 0;
+#X connect 8 0 6 0;
+#X restore 262 281 pd configuration;
+#X text 420 466 (C) 2016 Jo„o Pais - jmmmpais@gmail.com;
+#X text 419 211 - integer - select item number. From 0 upwards.;
+#X obj 19 121 hradio 15 1 0 4 empty empty empty 0 -8 0 10 -262144 -1
 -1 0;
-#X text 429 121 - identifier for receive/send names;
-#X text 15 91 This menu has 4 items;
-#X text 429 361 - integer - chosen item number;
-#X msg 29 131 open;
-#X text 429 191 Input messages;
-#X text 429 231 - open - opens full menu;
-#X text 12 356 Limitations of data structures;
-#X text 12 416 - the message "drawnumber_motion: symbol" appears in
+#X text 439 121 - identifier for receive/send names;
+#X text 419 421 - integer - chosen item number;
+#X msg 29 141 open;
+#X text 419 191 Input messages;
+#X text 419 271 - open - opens full menu;
+#X text 12 416 Limitations of data structures;
+#X text 12 476 - the message "drawnumber_motion: symbol" appears in
 the console when instead of clicking \, the user drags the menu;
-#X text 12 396 - the size of the text can't be changed;
-#N canvas 467 689 450 300 zutun 0;
-#X text 25 215 ## dizer ao puckette para eliminar drawnumbermotion
-das mensagens;
-#X text 26 174 ## saida da direita com s√≠mbolo de label. para isso
-\, s√≥ tem que apanhar o s√≠mbolo apenas quando entra float \, nao
-quando h√° open.;
-#X text 17 138 ## editar e gravar configuracao usando mensagens? funciona
-com text \, ou tem que se usar a nova versao?;
-#X text 21 244 ## modo and \, com v√°rias opcoes ligadas/desligadas?
-;
-#X text 26 48 ## depois de load \, tamanho volta ao normal;
-#X restore 584 446 pd zutun;
-#X text 14 251 Formatting the configuration file;
-#X text 14 291 Color configuration;
-#X text 14 271 You can use send/receive variables;
-#N canvas 497 71 396 209 send/receive 0;
-#X text 19 17 SEND/RECEIVE VARIABLES;
-#X text 19 47 [jp.menu] lets you define an internal variable to use
-with send and receive objects. You can send and receive any messages
-to it.;
-#X text 19 87 The variables are formated as:;
-#X text 19 107 - the 3rd argument gives the send name;
-#X text 19 127 - the receive name adds "-i" to the 3rd argument;
-#X text 19 157 For example \, if the 3rd argument is "menusend" \,
-the receive name will be "menusend-i". You can use also dollarsigns
-as symbols: \$0 \, \$1 \, etc. \, as in the following example:;
-#X restore 228 271 pd send/receive;
 #X text 12 41 [jp.menu] creates a dropdown menu based on a text file.
 This abstraction is a development of the concept used by Gilberto Bernardes
 in his earGram software.;
-#X msg 199 131 open;
-#X obj 189 151 s \$0-country-i;
-#X obj 189 181 r \$0-country;
-#X floatatom 189 111 5 0 0 0 - - -;
-#X floatatom 189 201 5 0 0 0 - - -;
-#X obj 169 131 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+#X msg 299 171 open;
+#X obj 289 191 s \$0-country-i;
+#X obj 289 221 r \$0-country;
+#X floatatom 289 151 5 0 0 0 - - -;
+#X floatatom 289 241 5 0 0 0 - - -;
+#X obj 269 171 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;
-#X text 429 271 - color \$1 \$2 - change colors;
-#X text 170 91 Use send/receive to control the menu;
-#X text 429 141 - background color;
-#X text 429 161 - label / border color;
-#X obj 289 111 jp.menu country 100 22 \$0-country 89 9;
-#X text 429 291 - size x y - change menu size;
-#N canvas 331 210 386 167 size 0;
-#X msg 29 47 size 60 70;
-#X msg 39 67 size 120 20;
-#X msg 19 27 size 80 15;
-#X text 19 7 Change menu size;
-#X obj 19 97 s \$0-country-i;
-#X text 19 127 !! Mind \, for "size" the object doesn't get saved with
+#X text 419 311 - color \$1 \$2 - change colors;
+#X text 150 131 Use send/receive to control the menu;
+#X text 439 141 - background color;
+#X text 439 161 - label / border color;
+#X text 419 351 - size x y - change menu size;
+#X text 12 436 The following limitations are built in to Pure Data:
+;
+#X text 15 91 This menu has 4 items \, Click on it or send a number
+or message.;
+#X text 419 31 Arguments - Always use the first argument \, others
+are facultative;
+#X text 14 281 Formatting/loading a configuration file;
+#N canvas 38 162 445 466 display 0;
+#X msg 19 47 size 60 70;
+#X msg 29 67 size 120 20;
+#X msg 9 27 size 80 15;
+#X text 9 7 Change menu size;
+#X obj 9 87 s \$0-country-i;
+#X text 9 107 !! Mind \, for "size" the object doesn't get saved with
 the new parameters !! You must edit the object itself.;
+#X msg 20 307 color 57 600;
+#X text 9 167 Change colors:;
+#X obj 372 227 pd-colors;
+#X msg 10 387 color;
+#X text 10 367 Or send only the message "color" to open a color selector.
+;
+#X text 10 227 The colors follow the data structures color scheme.
+Look at;
+#X text 10 241 for a complete palette.;
+#X text 10 257 If both color arguments are 0 \, default colors will
+be used.;
+#X obj 10 347 s \$0-country-i;
+#X obj 10 407 s \$0-country-i;
+#X msg 10 287 color 999 0;
+#X text 90 287 default values;
+#X text 10 207 \$1 = background color \, \$2 = label+border color;
+#X text 10 187 Send the message "color \$1 \$2" to set the menu colors.
+;
+#X msg 30 327 color 60 999;
+#X text 10 427 !! Mind \, for "color" the object doesn't get saved
+with the new parameters !! You must edit the object itself.;
 #X connect 0 0 4 0;
 #X connect 1 0 4 0;
 #X connect 2 0 4 0;
-#X restore 121 311 pd size;
-#X text 14 311 Change menu size;
-#N canvas 438 53 442 335 color 0;
-#X msg 21 157 color 57 600;
-#X text 10 7 Change colors:;
-#X obj 373 67 pd-colors;
-#X msg 11 257 color;
-#X text 11 237 Or send only the message "color" to open a color selector.
+#X connect 6 0 14 0;
+#X connect 9 0 15 0;
+#X connect 16 0 14 0;
+#X connect 20 0 14 0;
+#X restore 164 361 pd display;
+#X text 14 361 Display configuration;
+#N canvas 38 28 396 209 send/receive 0;
+#X text 9 7 SEND/RECEIVE VARIABLES;
+#X text 9 77 The variables are formated as:;
+#X text 9 147 For example \, if the 3rd argument is "menusend" \, the
+receive name will be "menusend-i". You can use also dollarsigns as
+symbols: \$0 \, \$1 \, etc. \, as in the example in the main patch.
 ;
-#X text 11 67 The colors follow the data structures color scheme. Look
-at;
-#X text 11 81 for a complete palette.;
-#X text 11 97 If both color arguments are 0 \, default colors will
-be used.;
-#X obj 11 206 s \$0-country-i;
-#X obj 11 277 s \$0-country-i;
-#X msg 11 127 color 999 0;
-#X text 91 127 default values;
-#X text 11 47 \$1 = background color \, \$2 = label+border color;
-#X text 11 27 Send the message "color \$1 \$2" to set the menu colors.
-;
-#X msg 31 177 color 60 999;
-#X text 11 297 !! Mind \, for "color" the object doesn't get saved
-with the new parameters !! You must edit the object itself.;
-#X connect 0 0 8 0;
-#X connect 3 0 9 0;
-#X connect 10 0 8 0;
-#X connect 14 0 8 0;
-#X restore 138 290 pd color;
-#X text 429 311 - load \$1 - load other configuration;
-#X obj 19 151 jp.menu audio 85 13 \$0-aud;
-#X text 12 376 The following limitations are built in to Pure Data:
-;
+#X text 9 97 - the 4th argument gives the send name;
+#X text 9 117 - the receive name adds "-i" to the 4th argument;
+#X text 9 37 [jp.menu] lets you define an internal variable to use
+with send and receive objects. You can send and receive any messages
+to it.;
+#X restore 164 341 pd send/receive;
+#X text 14 341 Send/receive variables;
+#X text 14 321 Select items;
+#N canvas 500 61 386 239 select 0;
+#X msg 22 91 next;
+#X msg 32 111 previous;
+#X floatatom 12 71 5 0 0 0 - - -;
+#X text 12 7 To select an item;
+#X text 12 27 You can send an integer to select an item. The strings
+"next" and "previous" also move between the elements of the menu.;
+#X text 12 167 The message "open" shows the full menu.;
+#X msg 12 187 open;
+#X obj 12 131 s \$0-country-i;
+#X obj 12 207 s \$0-country-i;
+#X connect 0 0 7 0;
+#X connect 1 0 7 0;
+#X connect 2 0 7 0;
+#X connect 6 0 8 0;
+#X restore 164 321 pd select;
+#X text 12 456 - the size and font of the label can't be changed;
+#X text 419 231 - next - outputs next item;
+#X text 419 251 - previous - outputs previous item;
+#X text 419 331 - color - open color selector;
+#X text 419 371 - load \$1 - load other configuration from the same
+folder;
+#X obj 19 161 jp.menu audio;
+#X text 438 81 - lenght (pixels) \, set to 100 if not used;
+#X text 439 101 - height (pixels) \, set to 17 if not used;
+#X obj 149 151 jp.menu country 100 22 \$0-country 89 9;
+#N canvas 491 72 386 146 edit 0;
+#X text 12 7 For now \, the only way to delete a preset is by editing
+the text file with the data. At a later point \, it might be possible
+to integrate editing features into this abstraction. For a more powerful
+abstraction \, check out [jmmmp/jp.preset].;
+#X restore 164 301 pd edit;
+#X text 14 301 Edit presets;
+#X connect 10 0 45 0;
 #X connect 13 0 45 0;
-#X connect 17 0 45 0;
-#X connect 29 0 30 0;
-#X connect 31 0 33 0;
-#X connect 32 0 30 0;
-#X connect 34 0 30 0;
+#X connect 19 0 20 0;
+#X connect 21 0 23 0;
+#X connect 22 0 20 0;
+#X connect 24 0 20 0;
 #X connect 45 0 0 0;

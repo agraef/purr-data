@@ -1,0 +1,234 @@
+#N struct 1036-color float x float y float farbe;
+#N struct 1036-color-display float x float y float farbe;
+#N struct 1039-color float x float y float farbe;
+#N struct 1039-color-display float x float y float farbe;
+#N struct 1034-element float x float y symbol menu float lenght float
+height float selection float ypos float col-back float col-lab;
+#N struct 1132-color float x float y float farbe;
+#N struct 1132-color-display float x float y float farbe;
+#N struct 1135-color float x float y float farbe;
+#N struct 1135-color-display float x float y float farbe;
+#N struct 1130-element float x float y symbol menu float lenght float
+height float selection float ypos float col-back float col-lab;
+#N canvas 217 63 770 565 10;
+#N canvas 0 0 396 419 license 0;
+#X text 8 47 All rights reserved.;
+#X text 8 227 The names of its contributors may not be used to endorse
+or promote products derived from this software without specific prior
+written permission.;
+#X text 8 87 Redistribution and use in source and binary forms \, with
+or without modification \, are permitted provided that the following
+conditions are met:;
+#X text 8 127 Redistributions of source code must retain the above
+copyright notice \, this list of conditions and the following disclaimer.
+;
+#X text 8 297 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES \, INCLUDING
+\, BUT NOT LIMITED TO \, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT \, INDIRECT
+\, INCIDENTAL \, SPECIAL \, EXEMPLARY \, OR CONSEQUENTIAL DAMAGES (INCLUDING
+\, BUT NOT LIMITED TO \, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES
+;
+#X text 8 167 Redistributions in binary form must reproduce the above
+copyright notice \, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the distribution.
+;
+#X text 8 7 Copyright 2016 \, João Pais;
+#X text 8 27 jmmmpais@gmail.com;
+#X restore 411 536 pd license;
+#X text 409 441 Outlets;
+#X text 409 291 - bang - outputs current setting;
+#N canvas 564 268 494 344 META 0;
+#X text 12 95 LICENSE BSD;
+#X text 12 75 LIBRARY jmmmp;
+#X text 13 115 WEBSITE http://puredata.info/Members/jmmmp;
+#X text 12 6 DESCRIPTION Dropdown menu programmed with data structures
+;
+#X text 12 36 KEYWORDS menu GOP data-structures;
+#X text 12 55 AUTHOR João Pais <jmmmpais@gmail.com>;
+#X text 12 135 VERSION 2016;
+#X restore 501 536 pd META;
+#X text 409 61 - name of configuration file;
+#N canvas 403 54 381 365 configuration 0;
+#X text 9 87 Name;
+#X text 9 157 Content;
+#X text 9 227 Load new file;
+#X text 9 247 To load a new file \, send the message "load \$1" with
+the symbol as argument.;
+#X text 9 7 HOW TO FORMAT THE CONFIGURATION FILE FOR [jp.preset];
+#X text 9 37 The configuration file must be a .txt file \, stored in
+the same folder as the main patch where [jp.preset] is being used.
+;
+#X text 9 107 The file must be named jp.preset-NAME.txt.;
+#X text 9 127 The NAME will be used as the first argument for [jp.preset].
+;
+#X text 9 177 The content consists of as many lines as items in the
+menu. At the start of each line is the preset's label \, followed by
+the parameters.;
+#X msg 9 288 load test1;
+#X msg 19 308 load test2;
+#X obj 9 337 s \$0-test2-i;
+#X connect 9 0 11 0;
+#X connect 10 0 11 0;
+#X restore 262 341 pd configuration;
+#X text 410 516 (C) 2016 João Pais - jmmmpais@gmail.com;
+#X text 409 211 - integer - select item number. From 0 upwards.;
+#X obj 18 111 hradio 15 1 0 4 empty empty empty 0 -8 0 10 -262144 -1
+-1 0;
+#X text 429 121 - identifier for receive/send names;
+#X msg 28 131 open;
+#X text 409 191 Input messages;
+#X text 409 271 - open - opens full menu;
+#X text 12 466 Limitations of data structures;
+#X text 12 526 - the message "drawnumber_motion: symbol" appears in
+the console when instead of clicking \, the user drags the menu;
+#N canvas 204 57 396 209 send/receive 0;
+#X text 9 7 SEND/RECEIVE VARIABLES;
+#X text 9 77 The variables are formated as:;
+#X text 9 147 For example \, if the 3rd argument is "menusend" \, the
+receive name will be "menusend-i". You can use also dollarsigns as
+symbols: \$0 \, \$1 \, etc. \, as in the example in the main patch.
+;
+#X text 9 37 [jp.preset] lets you define an internal variable to use
+with send and receive objects. You can send and receive any messages
+to it.;
+#X text 9 97 - the 4th argument gives the send name;
+#X text 9 117 - the receive name adds "-i" to the 4th argument;
+#X restore 164 401 pd send/receive;
+#X text 409 351 - color \$1 \$2 - change colors;
+#X text 429 141 - background color;
+#X text 429 161 - label / border color;
+#X text 409 391 - size x y - change menu size;
+#X text 12 486 The following limitations are built in to Pure Data:
+;
+#X obj 18 171 print PRESET;
+#X msg 238 301 1 2 3;
+#X obj 238 281 prepend set;
+#X text 409 311 - save \$1 ... - replaces current preset;
+#X text 409 331 - rename - open input window to rename current preset
+;
+#X text 409 371 - color - open color selector;
+#X text 409 411 - load \$1 - load other configuration from the same
+folder;
+#X text 14 381 Select items;
+#N canvas 500 61 386 239 select 0;
+#X msg 22 91 next;
+#X msg 32 111 previous;
+#X floatatom 12 71 5 0 0 0 - - -;
+#X text 12 7 To select an item;
+#X text 12 27 You can send an integer to select an item. The strings
+"next" and "previous" also move between the elements of the menu.;
+#X text 12 167 The message "open" shows the full menu.;
+#X msg 12 187 open;
+#X obj 12 131 s \$0-test2-i;
+#X obj 12 207 s \$0-test2-i;
+#X connect 0 0 7 0;
+#X connect 1 0 7 0;
+#X connect 2 0 7 0;
+#X connect 6 0 8 0;
+#X restore 164 381 pd select;
+#X text 409 231 - next - outputs next item;
+#X text 409 251 - previous - outputs previous item;
+#X text 14 401 Send/receive variables;
+#N canvas 491 72 386 554 edit 0;
+#X text 12 337 You can edit the configuration file in anyway you want.
+Or you can use the GUI:;
+#X text 12 387 - the name window appears \, you will be prompted to
+give it a name;
+#X text 12 417 - the new preset slot is created. You can write data
+to it by sending the message "save \$1 ...";
+#X text 12 367 - click the last preset slot \, called "NEW";
+#X text 12 447 - the preset file is automatically saved after you add
+some content to it.;
+#X text 12 317 To add a new preset;
+#X text 12 37 To write a preset;
+#X text 12 57 - select a preset \, making it active;
+#X text 12 77 - send the message "save \$1 ..." to [jp.preset]. It
+overwrites the active preset and saves the file.;
+#X text 12 207 - select a preset \, making it active;
+#X text 12 227 - send the message "save \$1 ..." to [jp.preset]. It
+overwrites the active preset and saves the file.;
+#X text 12 187 To rename a preset;
+#X msg 11 107 save ano soa apdp aospd;
+#X msg 21 127 save 1 23 aa xpto -5;
+#X msg 11 257 rename;
+#X text 12 7 All content operations save the preset file immediately.
+;
+#X text 12 497 To delete a preset;
+#X text 12 517 For now \, the only way to delete a preset is by editing
+the text file with the data.;
+#X obj 11 147 s \$0-test2-i;
+#X obj 11 277 s \$0-test2-i;
+#X connect 12 0 18 0;
+#X connect 13 0 18 0;
+#X connect 14 0 19 0;
+#X restore 164 361 pd edit;
+#X text 14 361 Edit presets;
+#X text 14 421 Display configuration;
+#N canvas 509 163 442 464 display 0;
+#X msg 21 307 color 57 600;
+#X text 10 167 Change colors:;
+#X obj 373 227 pd-colors;
+#X msg 11 387 color;
+#X text 11 367 Or send only the message "color" to open a color selector.
+;
+#X text 11 227 The colors follow the data structures color scheme.
+Look at;
+#X text 11 241 for a complete palette.;
+#X text 11 257 If both color arguments are 0 \, default colors will
+be used.;
+#X msg 11 287 color 999 0;
+#X text 91 287 default values;
+#X text 11 207 \$1 = background color \, \$2 = label+border color;
+#X text 11 187 Send the message "color \$1 \$2" to set the menu colors.
+;
+#X msg 31 327 color 60 999;
+#X text 11 427 !! Mind \, for "color" the object doesn't get saved
+with the new parameters !! You must edit the object itself.;
+#X msg 20 47 size 60 70;
+#X msg 30 67 size 120 20;
+#X msg 10 27 size 80 15;
+#X text 10 7 Change menu size;
+#X text 10 107 !! Mind \, for "size" the object doesn't get saved with
+the new parameters !! You must edit the object itself.;
+#X obj 10 87 s \$0-test2-i;
+#X obj 11 347 s \$0-test2-i;
+#X obj 11 407 s \$0-test2-i;
+#X connect 0 0 20 0;
+#X connect 3 0 21 0;
+#X connect 8 0 20 0;
+#X connect 12 0 20 0;
+#X connect 14 0 19 0;
+#X connect 15 0 19 0;
+#X connect 16 0 19 0;
+#X restore 164 421 pd display;
+#X text 19 211 This object is controlled by the send/receive variables
+defined as arguments.;
+#X text 14 91 This preset has 4 items;
+#X text 428 81 - lenght (pixels) \, set to 100 if not used;
+#X text 429 101 - height (pixels) \, set to 17 if not used;
+#X text 409 31 Arguments - Always use the first argument \, others
+are facultative;
+#X obj 138 261 hradio 15 1 0 5 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X text 139 241 Send:;
+#X text 239 241 Receive:;
+#X text 12 41 [jp.preset] can be used to store and recall lists of
+values. You can connect it with another object \, or use configurable
+send/receive variables.;
+#X text 11 11 [jp.preset] - Dropdown preset saver programmed with data
+structures;
+#X text 409 461 - list of elements;
+#X obj 18 151 jp.preset test1;
+#X obj 138 281 s \$0-test2-i;
+#X obj 238 261 r \$0-test2;
+#X text 14 341 Formatting/loading a configuration file;
+#X text 12 506 - the size and font of the label can't be changed;
+#X obj 18 241 jp.preset test2 100 22 \$0-test2 89 9;
+#X connect 8 0 48 0;
+#X connect 10 0 48 0;
+#X connect 23 0 22 0;
+#X connect 42 0 49 0;
+#X connect 48 0 21 0;
+#X connect 50 0 23 0;

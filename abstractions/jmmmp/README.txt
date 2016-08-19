@@ -1,6 +1,6 @@
 Abstractions from João Pais
 
-Version 0.46
+Version 0.47
 
 (c) 2005-2016 João Pais - jmmmpais@gmail.com
 Released under the BSD license (more information in each abstraction).
@@ -25,6 +25,7 @@ dsp01 - DSP switch
 f+ - Counter with variable increment
 gui-edit - edit standard GUI objects fast
 jp.menu - Dropdown menu programmed with data structures
+jp.preset - Dropdown preset saver programmed with data structures
 lbang - loadbang which can be triggered more often
 liner~ - practical implementation of [line~]
 liner+~ - practical implementation of signal envelopping
@@ -53,9 +54,9 @@ tastin - Gate for keyboard input
 uhr - Shows the time
 
 
-It is recomended to use these abstractions with Pd-extended, since I don't keep track of which externals are used. Some abstractions use other ones of this package, so it is also better to have always the whole package together.
+The jmmmp library is dependent from the following libraries: cyclone, ext13, ggee, iemlib, iemmatrix, jmmmp, zexy 2.2.6.
 
-2016.05.27
+2016.06.30
 
 
 Non-working or discarded abstractions:
