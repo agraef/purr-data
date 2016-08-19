@@ -13,3 +13,6 @@
 [submodule "externals/lyonpotpourri"]
 	path = externals/lyonpotpourri
 	url = https://git.purrdata.net/jwilkes/lyonpotpourri.git
+[submodule "externals/fftease"]
+	path = externals/fftease
+	url = https://git.purrdata.net/jwilkes/fftease.git
