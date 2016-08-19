@@ -7,9 +7,6 @@
 [submodule "l2ork_addons/cwiid"]
 	path = externals/disis/cwiid
 	url = https://github.com/pd-l2ork/cwiid
-[submodule "l2ork_addons/lyonpotpourri"]
-	path = externals/lyonpotpourri
-	url = https://github.com/pd-projects/lyonpotpourri
 [submodule "l2ork_addons/fftease3.0-32bit"]
 	path = externals/fftease
 	url = https://github.com/ericlyon/fftease3.0-32bit
