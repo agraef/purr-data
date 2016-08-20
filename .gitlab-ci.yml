@@ -1,3 +1,9 @@
+before_script:
+  - apt-get update -qq && apt-get upgrade -qq
+  - apt-get purge -y -qq pd-l2ork
+
 build_package:
   script:
-    - sh ./scripts/test.sh
+    - echo `pwd`
+    - cd l2ork_addons
+    - ./tar_em_up.sh -B
