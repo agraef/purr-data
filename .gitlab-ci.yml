@@ -1,6 +1,5 @@
 before_script:
   - apt-get update -qq && apt-get upgrade -qq
-  - apt-get purge -y -qq pd-l2ork
 
 build_package:
   script:
