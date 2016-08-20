@@ -1,8 +1,3 @@
-before_script:
-  - apt-get update -qq && apt-get upgrade -qq
-
 build_package:
   script:
-    - echo `pwd`
-    - cd l2ork_addons
-    - ./tar_em_up.sh -B
+    - pd-l2ork ./scripts/load_all_binaries.pd -nogui
