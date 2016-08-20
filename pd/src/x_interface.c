@@ -56,17 +56,17 @@ static void *print_new(t_symbol *sel, int argc, t_atom *argv)
 
 static void print_bang(t_print *x)
 {
-    post("%s: bang", x->x_sym->s_name);
+    post("%s%sbang", x->x_sym->s_name, (*x->x_sym->s_name ? ": " : ""));
 }
 
 static void print_pointer(t_print *x, t_gpointer *gp)
 {
-    post("%s: (gpointer)", x->x_sym->s_name);
+    post("%s%s(gpointer)", x->x_sym->s_name, (*x->x_sym->s_name ? ": " : ""));
 }
 
 static void print_float(t_print *x, t_float f)
 {
-    post("%s: %g", x->x_sym->s_name, f);
+    post("%s%s%g", x->x_sym->s_name, (*x->x_sym->s_name ? ": " : ""), f);
 }
 
 static void print_list(t_print *x, t_symbol *s, int argc, t_atom *argv)
@@ -75,7 +75,8 @@ static void print_list(t_print *x, t_symbol *s, int argc, t_atom *argv)
         startpost("%s%s%g", x->x_sym->s_name,
             (*x->x_sym->s_name ? ": " : ""),
             atom_getfloatarg(0, argc--, argv++));
-    else startpost("%s: %s", x->x_sym->s_name,
+    else startpost("%s%s%s", x->x_sym->s_name,
+        (*x->x_sym->s_name ? ": " : ""),
         (argc > 1 ? s_list.s_name : (argc == 1 ? s_symbol.s_name :
             s_bang.s_name)));
     postatom(argc, argv);
@@ -84,7 +85,8 @@ static void print_list(t_print *x, t_symbol *s, int argc, t_atom *argv)
 
 static void print_anything(t_print *x, t_symbol *s, int argc, t_atom *argv)
 {
-    startpost("%s: %s", x->x_sym->s_name, s->s_name);
+    startpost("%s%s%s", x->x_sym->s_name, (*x->x_sym->s_name ? ": " : ""),
+        s->s_name);
     postatom(argc, argv);
     endpost();
 }
