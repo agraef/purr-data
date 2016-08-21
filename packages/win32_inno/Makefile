@@ -89,9 +89,17 @@ lib_install:
 	install -p $(bin_src)/libvorbis-0.dll  $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libvorbisenc-2.dll  $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libvorbisfile-3.dll  $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libmp3lame-0.dll  $(DESTDIR)$(bindir)/
+	# I think these two are needed for zexy/matchbox and zexy/regex
+	install -p $(bin_src)/libsystre-0.dll $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libtre-5.dll $(DESTDIR)$(bindir)/
+	# For fluid~
+	install -p $(bin_src)/libfluidsynth-1.dll $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/lua53.dll          $(DESTDIR)$(bindir)/
 	#install -p $(bin_src)/pthreadGC2.dll     $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libdl-0.dll     $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libportaudio-2.dll     $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libFLAC-8.dll     $(DESTDIR)$(bindir)/
         # These are for Gem
 	install -p $(bin_src)/libftgl-2.dll $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libfreetype-6.dll $(DESTDIR)$(bindir)/
@@ -110,6 +118,12 @@ lib_install:
 	install -p $(bin_src)/libwinpthread-1.dll $(DESTDIR)$(bindir)
 	install -p $(bin_src)/libgcc_s_dw2-1.dll $(DESTDIR)$(bindir)
 	install -p $(bin_src)/libstdc++-6.dll $(DESTDIR)$(bindir)
+# lyonpotpourri compiles its own shared lib. On Windows it needs to be
+# in the path of the pd executable in order to get loaded. (There's probably
+# also a way to add the external lib's path but I don't know how to do that.)
+	install -p $(DESTDIR)/extra/lyonpotpourri/liblyonpotpourri.dll $(DESTDIR)$(bindir)
+# fftease also uses a shared lib...
+	install -p $(DESTDIR)/extra/fftease/libfftease.dll $(DESTDIR)$(bindir)
 
 
 exe_install:

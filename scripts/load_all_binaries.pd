@@ -1,4 +1,4 @@
-#N canvas 212 25 658 577 10;
+#N canvas 1 25 658 577 10;
 #X obj 195 61 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
 #X obj 224 449 pdinfo;
@@ -8,7 +8,7 @@
 #X obj 91 189 f;
 #X obj 121 189 + 1;
 #X obj 121 213 t b a;
-#X msg 121 287 set symbol \$1184 \, bang;
+#X msg 121 287 set symbol \$1280 \, bang;
 #X msg 121 310 symbol zexy/||~;
 #X msg 148 262 set set symbol \, adddollar \$1 \, addcomma \, add2
 bang;
@@ -28,7 +28,6 @@ on us;
 #X msg 298 425 \; pd-\$1-staging-area clear \; pd-\$1-staging-area
 obj 20 20 \$2;
 #N canvas 164 45 450 261 \$0-staging-area 0;
-#X obj 20 20 0;
 #X restore 397 85 pd \$0-staging-area;
 #X obj 147 497 pack;
 #X text 276 108 This patch attempts to load all binaries in the extra
@@ -62,81 +61,88 @@ an object loaded properly or not. You just have to read the output.
 #N canvas 433 184 450 300 creator-list 0;
 #X obj 98 32 inlet;
 #X obj 98 564 outlet;
-#X msg 98 53 disis_gpio disis_netreceive disis_netsend disis_phasor~
-disis_spi disis_wiimote expr expr~ fexpr~ gem2pdp patch_name pdp2gem
-pix_2pdp spectdelay~ Gem/Gem Gem/gemglxwindow adaptive/lms2~ adaptive/lms~
-adaptive/nlms2~ adaptive/nlms3~ adaptive/nlms~ arraysize/arraysize
-bassemu~/bassemu~ boids/boids2d boids/boids3d bonk~/bonk~ bsaylor/aenv~
-bsaylor/partconv~ bsaylor/pvoc~ bsaylor/susloop~ bsaylor/svf~ bsaylor/zhzxh~
-choice/choice comport/comport creb/abs~ creb/bdiag~ creb/bfft~ creb/biquadseries~
-creb/bitsplit~ creb/blocknorm~ creb/blosc~ creb/bmatrix~ creb/bwin~
-creb/cexp~ creb/cheby~ creb/clog~ creb/cmath~ creb/diag~ creb/dist~
-creb/dwt~ creb/dynwav~ creb/eadsr~ creb/ead~ creb/ear~ creb/eblosc~
-creb/fdn~ creb/ffpoly creb/filterortho~ creb/fwarp creb/junction~ creb/lattice~
-creb/permut~ creb/qmult~ creb/qnorm~ creb/ramp~ creb/ratio creb/resofilt~
-creb/sbosc~ creb/scrollgrid1D~ creb/statwav~ creb/tabreadmix~ creb/xfm~
-cxc/ENV cxc/ascseq cxc/ascwave cxc/bfilt cxc/bfilt2 cxc/cxavgdev cxc/cxc_counter
-cxc/cxc_prepend cxc/cxc_split cxc/cxmean cxc/cxstddev cxc/delta~ cxc/dist_normal
-cxc/hex2dec cxc/ixprint cxc/mean~ cxc/proc cxc/random1 cxc/random1~
-cxc/random_fl cxc/random_fl~ cxc/random_icg cxc/random_icg~ cxc/random_tw
-cxc/reson~ cxc/utime cyclone/Borax cyclone/Bucket cyclone/Clip cyclone/Clip~
-cyclone/Decode cyclone/Histo cyclone/Line~ cyclone/MouseState cyclone/Peak
-cyclone/Scope~ cyclone/Snapshot~ cyclone/Table cyclone/TogEdge cyclone/Trough
-cyclone/Uzi cyclone/accum cyclone/acos cyclone/acosh~ cyclone/acos~
-cyclone/active cyclone/allpass~ cyclone/anal cyclone/asin cyclone/asinh~
-cyclone/asin~ cyclone/atan2~ cyclone/atanh~ cyclone/atan~ cyclone/average~
-cyclone/avg~ cyclone/bangbang cyclone/bitand~ cyclone/bitnot~ cyclone/bitor~
-cyclone/bitshift~ cyclone/bitxor~ cyclone/bondo cyclone/buddy cyclone/buffir~
-cyclone/capture cyclone/capture~ cyclone/cartopol cyclone/cartopol~
-cyclone/change~ cyclone/click~ cyclone/coll cyclone/comb~ cyclone/cosh
-cyclone/cosh~ cyclone/cosx~ cyclone/counter cyclone/count~ cyclone/curve~
-cyclone/cycle cyclone/cycle~ cyclone/decide cyclone/delay~ cyclone/deltaclip~
-cyclone/delta~ cyclone/drunk cyclone/edge~ cyclone/flush cyclone/forward
-cyclone/frameaccum~ cyclone/framedelta~ cyclone/fromsymbol cyclone/funbuff
-cyclone/funnel cyclone/gate cyclone/grab cyclone/index~ cyclone/iter
-cyclone/kink~ cyclone/linedrive cyclone/lookup~ cyclone/lores~ cyclone/match
-cyclone/matrix~ cyclone/maximum cyclone/maximum~ cyclone/mean cyclone/midiflush
-cyclone/midiformat cyclone/midiparse cyclone/minimum cyclone/minimum~
-cyclone/minmax~ cyclone/mousefilter cyclone/mstosamps~ cyclone/mtr
-cyclone/next cyclone/offer cyclone/onebang cyclone/onepole~ cyclone/overdrive~
-cyclone/past cyclone/peakamp~ cyclone/peek~ cyclone/phasewrap~ cyclone/pink~
-cyclone/play~ cyclone/poke~ cyclone/poltocar cyclone/poltocar~ cyclone/pong~
-cyclone/pow~ cyclone/prob cyclone/pv cyclone/rampsmooth~ cyclone/rand~
-cyclone/record~ cyclone/reson~ cyclone/sah~ cyclone/sampstoms~ cyclone/seq
-cyclone/sinh cyclone/sinh~ cyclone/sinx~ cyclone/slide~ cyclone/speedlim
-cyclone/spell cyclone/spike~ cyclone/split cyclone/spray cyclone/sprintf
-cyclone/substitute cyclone/sustain cyclone/svf~ cyclone/switch cyclone/tanh
-cyclone/tanh~ cyclone/tanx~ cyclone/testmess cyclone/thresh cyclone/tosymbol
-cyclone/train~ cyclone/trapezoid~ cyclone/triangle~ cyclone/universal
-cyclone/urn cyclone/vectral~ cyclone/wave~ cyclone/xbendin cyclone/xbendin2
-cyclone/xbendout cyclone/xbendout2 cyclone/xnotein cyclone/xnoteout
-cyclone/zerox~ cyclone/zl earplug~/earplug~ ekext/cup ekext/cupd ekext/doubledelta
-ekext/framescore~ ekext/framespect~ ekext/hasc~ ekext/hssc~ ekext/list_sum
-ekext/listmoses ekext/lpc~ ekext/lpreson~ ekext/maskxor ekext/peakit~
-ekext/polymap ekext/polystat ekext/sieve ekext/simile ekext/simile~
-ekext/steady ekext/valve ekext/voicing_detector~ ekext/weightonset
-ekext/zeroxpos~ expr~/expr expr~/expr~ expr~/fexpr~ ext13/catch13~
-ext13/cdplayer ext13/filesize ext13/ftos ext13/kalashnikov ext13/mandelbrot
-ext13/mandelbrot~ ext13/messages ext13/openpatch ext13/ossmixer ext13/piperead~
-ext13/pipewrite~ ext13/promiscous~ ext13/receive13 ext13/receive13~
-ext13/scramble~ ext13/send13 ext13/send13~ ext13/sfwrite13~ ext13/streamin13~
-ext13/streamout13~ ext13/strippath ext13/throw13~ ext13/wavinfo fiddle~/fiddle~
-flext/disis_munger~ flext/fluid~ freeverb~/freeverb~ ggee/atan2~ ggee/bandpass
-ggee/constant ggee/envgen ggee/equalizer ggee/fofsynth~ ggee/getdir
-ggee/highpass ggee/highshelf ggee/hlshelf ggee/image ggee/inv ggee/lowpass
-ggee/lowshelf ggee/mixer~ ggee/moog~ ggee/notch ggee/pvocfreq ggee/qread
-ggee/rl ggee/rtout ggee/serial_bird ggee/serial_ms ggee/serial_mt ggee/serialize
-ggee/sfwrite~ ggee/shell ggee/sinh ggee/sl ggee/streamin~ ggee/streamout~
-ggee/stripdir ggee/tabwrite4~ ggee/unserialize ggee/unwonk hcs/canvas_name
-hcs/ce_path hcs/classpath hcs/colorpanel hcs/cursor hcs/folder_list
-hcs/group hcs/helppath hcs/ifeel hcs/passwd hcs/screensize hcs/setenv
-hcs/split_path hcs/sql_query hcs/stat hcs/sys_gui hcs/uname hcs/unsetenv
-hcs/version hcs/window_name hexloader/hexloader hid/hid iem16/del16read~
-iem16/del16write~ iem16/tab16play~ iem16/tab16read iem16/tab16read4
-iem16/tab16read4~ iem16/tab16read~ iem16/tab16receive~ iem16/tab16send~
-iem16/tab16write iem16/tab16write~ iem16/table16 iem16/vd16~ iem_adaptfilt/NLMSCC~
-iem_adaptfilt/NLMS~ iem_adaptfilt/n_CLNLMS~ iem_adaptfilt/n_CNLMS~
-iem_ambi/ambi_decode iem_ambi/ambi_decode2 iem_ambi/ambi_decode3 iem_ambi/ambi_decode_cube
+#X msg 98 53 disis_gpio disis_spi gem2pdp pdp2gem pix_2pdp spectdelay~
+Gem/Gem Gem/gemglxwindow adaptive/lms2~ adaptive/lms~ adaptive/nlms2~
+adaptive/nlms3~ adaptive/nlms~ arraysize/arraysize autotune~/autotune~
+bassemu~/bassemu~ bob~/bob~ boids/boids2d boids/boids3d bonk~/bonk~
+bsaylor/aenv~ bsaylor/partconv~ bsaylor/pvoc~ bsaylor/susloop~ bsaylor/svf~
+bsaylor/zhzxh~ choice/choice comport/comport creb/abs~ creb/bdiag~
+creb/bfft~ creb/biquadseries~ creb/bitsplit~ creb/blocknorm~ creb/blosc~
+creb/bmatrix~ creb/bwin~ creb/cexp~ creb/cheby~ creb/clog~ creb/cmath~
+creb/diag~ creb/dist~ creb/dwt~ creb/dynwav~ creb/eadsr~ creb/ead~
+creb/ear~ creb/eblosc~ creb/fdn~ creb/ffpoly creb/filterortho~ creb/fwarp
+creb/junction~ creb/lattice~ creb/permut~ creb/qmult~ creb/qnorm~ creb/ramp~
+creb/ratio creb/resofilt~ creb/sbosc~ creb/scrollgrid1D~ creb/statwav~
+creb/tabreadmix~ creb/xfm~ cxc/ENV cxc/ascseq cxc/ascwave cxc/bfilt
+cxc/bfilt2 cxc/cxavgdev cxc/cxc_counter cxc/cxc_prepend cxc/cxc_split
+cxc/cxmean cxc/cxstddev cxc/delta~ cxc/dist_normal cxc/hex2dec cxc/ixprint
+cxc/mean~ cxc/proc cxc/random1 cxc/random1~ cxc/random_fl cxc/random_fl~
+cxc/random_icg cxc/random_icg~ cxc/random_tw cxc/reson~ cxc/utime cyclone/Borax
+cyclone/Bucket cyclone/Clip cyclone/Clip~ cyclone/Decode cyclone/Histo
+cyclone/Line~ cyclone/MouseState cyclone/Peak cyclone/Scope~ cyclone/Snapshot~
+cyclone/Table cyclone/TogEdge cyclone/Trough cyclone/Uzi cyclone/accum
+cyclone/acos cyclone/acosh~ cyclone/acos~ cyclone/active cyclone/allpass~
+cyclone/anal cyclone/asin cyclone/asinh~ cyclone/asin~ cyclone/atan2~
+cyclone/atanh~ cyclone/atan~ cyclone/average~ cyclone/avg~ cyclone/bangbang
+cyclone/bitand~ cyclone/bitnot~ cyclone/bitor~ cyclone/bitshift~ cyclone/bitxor~
+cyclone/bondo cyclone/buddy cyclone/buffir~ cyclone/capture cyclone/capture~
+cyclone/cartopol cyclone/cartopol~ cyclone/change~ cyclone/click~ cyclone/coll
+cyclone/comb~ cyclone/cosh cyclone/cosh~ cyclone/cosx~ cyclone/counter
+cyclone/count~ cyclone/curve~ cyclone/cycle cyclone/cycle~ cyclone/decide
+cyclone/delay~ cyclone/deltaclip~ cyclone/delta~ cyclone/drunk cyclone/edge~
+cyclone/flush cyclone/forward cyclone/frameaccum~ cyclone/framedelta~
+cyclone/fromsymbol cyclone/funbuff cyclone/funnel cyclone/gate cyclone/grab
+cyclone/index~ cyclone/iter cyclone/kink~ cyclone/linedrive cyclone/lookup~
+cyclone/lores~ cyclone/match cyclone/matrix~ cyclone/maximum cyclone/maximum~
+cyclone/mean cyclone/midiflush cyclone/midiformat cyclone/midiparse
+cyclone/minimum cyclone/minimum~ cyclone/minmax~ cyclone/mousefilter
+cyclone/mstosamps~ cyclone/mtr cyclone/next cyclone/offer cyclone/onebang
+cyclone/onepole~ cyclone/overdrive~ cyclone/past cyclone/peakamp~ cyclone/peek~
+cyclone/phasewrap~ cyclone/pink~ cyclone/play~ cyclone/poke~ cyclone/poltocar
+cyclone/poltocar~ cyclone/pong~ cyclone/pow~ cyclone/prob cyclone/pv
+cyclone/rampsmooth~ cyclone/rand~ cyclone/record~ cyclone/reson~ cyclone/sah~
+cyclone/sampstoms~ cyclone/seq cyclone/sinh cyclone/sinh~ cyclone/sinx~
+cyclone/slide~ cyclone/speedlim cyclone/spell cyclone/spike~ cyclone/split
+cyclone/spray cyclone/sprintf cyclone/substitute cyclone/sustain cyclone/svf~
+cyclone/switch cyclone/tanh cyclone/tanh~ cyclone/tanx~ cyclone/testmess
+cyclone/thresh cyclone/tosymbol cyclone/train~ cyclone/trapezoid~ cyclone/triangle~
+cyclone/universal cyclone/urn cyclone/vectral~ cyclone/wave~ cyclone/xbendin
+cyclone/xbendin2 cyclone/xbendout cyclone/xbendout2 cyclone/xnotein
+cyclone/xnoteout cyclone/zerox~ cyclone/zl disis/disis_phasor~ earplug~/earplug~
+ekext/cup ekext/cupd ekext/doubledelta ekext/framescore~ ekext/framespect~
+ekext/hasc~ ekext/hssc~ ekext/list_sum ekext/listmoses ekext/lpc~ ekext/lpreson~
+ekext/maskxor ekext/peakit~ ekext/polymap ekext/polystat ekext/sieve
+ekext/simile ekext/simile~ ekext/steady ekext/valve ekext/voicing_detector~
+ekext/weightonset ekext/zeroxpos~ ext13/catch13~ ext13/cdplayer ext13/filesize
+ext13/ftos ext13/kalashnikov ext13/mandelbrot ext13/mandelbrot~ ext13/messages
+ext13/openpatch ext13/ossmixer ext13/piperead~ ext13/pipewrite~ ext13/promiscous~
+ext13/receive13 ext13/receive13~ ext13/scramble~ ext13/send13 ext13/send13~
+ext13/sfwrite13~ ext13/streamin13~ ext13/streamout13~ ext13/strippath
+ext13/throw13~ ext13/wavinfo fftease/bthresher~ fftease/burrow~ fftease/cavoc27~
+fftease/cavoc~ fftease/centerring~ fftease/codepend~ fftease/cross~
+fftease/dentist~ fftease/disarrain~ fftease/disarray~ fftease/drown~
+fftease/enrich~ fftease/ether~ fftease/leaker~ fftease/mindwarp~ fftease/morphine~
+fftease/multyq~ fftease/pileup~ fftease/pvcompand~ fftease/pvgrain~
+fftease/pvharm~ fftease/pvoc~ fftease/pvtuner~ fftease/pvwarpb~ fftease/pvwarp~
+fftease/reanimator~ fftease/resent~ fftease/residency_buffer~ fftease/residency~
+fftease/schmear~ fftease/scrape~ fftease/shapee~ fftease/swinger~ fftease/taint~
+fftease/thresher~ fftease/vacancy~ fftease/xsyn~ fiddle~/fiddle~ fluid~/fluid~
+freeverb~/freeverb~ ggee/atan2~ ggee/bandpass ggee/constant ggee/envgen
+ggee/equalizer ggee/fofsynth~ ggee/getdir ggee/highpass ggee/highshelf
+ggee/hlshelf ggee/image ggee/inv ggee/lowpass ggee/lowshelf ggee/mixer~
+ggee/moog~ ggee/notch ggee/pvocfreq ggee/qread ggee/rl ggee/rtout ggee/serial_bird
+ggee/serial_ms ggee/serial_mt ggee/serialize ggee/sfwrite~ ggee/shell
+ggee/sinh ggee/sl ggee/streamin~ ggee/streamout~ ggee/stripdir ggee/tabwrite4~
+ggee/unserialize ggee/unwonk hcs/canvas_name hcs/ce_path hcs/classpath
+hcs/colorpanel hcs/cursor hcs/folder_list hcs/group hcs/helppath hcs/ifeel
+hcs/passwd hcs/screensize hcs/setenv hcs/split_path hcs/sql_query hcs/stat
+hcs/sys_gui hcs/uname hcs/unsetenv hcs/version hcs/window_name hexloader/hexloader
+hid/hid iem16/del16read~ iem16/del16write~ iem16/tab16play~ iem16/tab16read
+iem16/tab16read4 iem16/tab16read4~ iem16/tab16read~ iem16/tab16receive~
+iem16/tab16send~ iem16/tab16write iem16/tab16write~ iem16/table16 iem16/vd16~
+iem_adaptfilt/NLMSCC~ iem_adaptfilt/NLMSerr_in~ iem_adaptfilt/NLMS~
+iem_adaptfilt/n_CLNLMS~ iem_adaptfilt/n_CNLMS~ iem_ambi/ambi_decode
+iem_ambi/ambi_decode2 iem_ambi/ambi_decode3 iem_ambi/ambi_decode_cube
 iem_ambi/ambi_encode iem_ambi/ambi_rot iem_bin_ambi/bin_ambi_calc_HRTF
 iem_bin_ambi/bin_ambi_reduced_decode iem_bin_ambi/bin_ambi_reduced_decode2
 iem_bin_ambi/bin_ambi_reduced_decode_fft iem_bin_ambi/bin_ambi_reduced_decode_fft2
@@ -154,70 +160,89 @@ iem_spec2/spec2_sum~ iem_spec2/spec2_tab_conv~ iem_spec2/spec2_tabreceive_enable
 iem_spec2/spec2_tabreceive~ iem_tab/tab_abs iem_tab/tab_add iem_tab/tab_add_scalar
 iem_tab/tab_carth2polar iem_tab/tab_complex_inv iem_tab/tab_complex_mul
 iem_tab/tab_const iem_tab/tab_conv iem_tab/tab_copy iem_tab/tab_counter
-iem_tab/tab_cross_corr iem_tab/tab_div iem_tab/tab_eq iem_tab/tab_eq_scalar
-iem_tab/tab_fft iem_tab/tab_find_exact_peaks iem_tab/tab_find_peaks
-iem_tab/tab_ge iem_tab/tab_ge_scalar iem_tab/tab_get_size iem_tab/tab_gt
-iem_tab/tab_gt_scalar iem_tab/tab_ifft iem_tab/tab_le iem_tab/tab_le_scalar
-iem_tab/tab_lt iem_tab/tab_lt_scalar iem_tab/tab_max_index iem_tab/tab_min_index
-iem_tab/tab_min_max iem_tab/tab_mls iem_tab/tab_mul iem_tab/tab_mul_scalar
-iem_tab/tab_ne iem_tab/tab_ne_scalar iem_tab/tab_reverse iem_tab/tab_rfft
-iem_tab/tab_rifft iem_tab/tab_sqrt iem_tab/tab_sub iem_tab/tab_sum
-iemgui/cube_sphere iemgui/hfadl_scale iemgui/hfadr_scale iemgui/iem_event
-iemgui/iem_image iemgui/iem_vu iemgui/numberbox_matrix iemgui/room_sim_2d
-iemgui/room_sim_3d iemgui/sym_dial iemgui/vfad_scale iemguts/autoabstraction
-iemguts/canvasargs iemguts/canvasconnections iemguts/canvasdelete iemguts/canvasdollarzero
+iem_tab/tab_cross_corr iem_tab/tab_dbtopow iem_tab/tab_dbtorms iem_tab/tab_div
+iem_tab/tab_eq iem_tab/tab_eq_scalar iem_tab/tab_fft iem_tab/tab_find_exact_peaks
+iem_tab/tab_find_peaks iem_tab/tab_ge iem_tab/tab_ge_scalar iem_tab/tab_get_size
+iem_tab/tab_gt iem_tab/tab_gt_scalar iem_tab/tab_ifft iem_tab/tab_le
+iem_tab/tab_le_scalar iem_tab/tab_lt iem_tab/tab_lt_scalar iem_tab/tab_max_index
+iem_tab/tab_min_index iem_tab/tab_min_max iem_tab/tab_mls iem_tab/tab_mul
+iem_tab/tab_mul_scalar iem_tab/tab_ne iem_tab/tab_ne_scalar iem_tab/tab_powtodb
+iem_tab/tab_reverse iem_tab/tab_rfft iem_tab/tab_rifft iem_tab/tab_rmstodb
+iem_tab/tab_sqrt iem_tab/tab_sub iem_tab/tab_sum iemgui/cube_sphere
+iemgui/hfadl_scale iemgui/hfadr_scale iemgui/iem_event iemgui/iem_image
+iemgui/iem_vu iemgui/numberbox_matrix iemgui/room_sim_2d iemgui/room_sim_3d
+iemgui/sym_dial iemgui/vfad_scale iemguts/autoabstraction iemguts/canvasargs
+iemguts/canvasconnections iemguts/canvasdelete iemguts/canvasdollarzero
 iemguts/canvaserror iemguts/canvasindex iemguts/canvasname iemguts/canvasobjectposition
-iemguts/canvasposition iemguts/canvasselect iemguts/classtest iemguts/oreceive
-iemguts/propertybang iemguts/receivecanvas iemguts/savebangs iemguts/sendcanvas
-iemguts/try iemlib/FIR~ iemlib/LFO_noise~ iemlib/add2_comma iemlib/any
-iemlib/aspeedlim iemlib/biquad_freq_resp iemlib/bpe iemlib/db2v iemlib/dollarg
-iemlib/exp_inc iemlib/f2note iemlib/fade~ iemlib/filter~ iemlib/float24
-iemlib/for++ iemlib/for_pp iemlib/gate iemlib/hml_shelf~ iemlib/iem_alisttosym
-iemlib/iem_anything iemlib/iem_append iemlib/iem_blocksize~ iemlib/iem_cot4~
-iemlib/iem_delay~ iemlib/iem_i_route iemlib/iem_pbank_csv iemlib/iem_pow4~
-iemlib/iem_prepend iemlib/iem_receive iemlib/iem_route iemlib/iem_samplerate~
-iemlib/iem_sel_any iemlib/iem_send iemlib/iem_sqrt4~ iemlib/iem_symtoalist
-iemlib/ii iemlib/init iemlib/list2send iemlib/lp1_t~ iemlib/m2f~ iemlib/mergefilename
-iemlib/modulo_counter iemlib/mov_avrg_kern~ iemlib/para_bp2~ iemlib/parentdollarzero
-iemlib/peakenv_hold~ iemlib/peakenv~ iemlib/post_netreceive iemlib/pp
-iemlib/pre_inlet iemlib/prepend_ascii iemlib/protect_against_open iemlib/prvu~
-iemlib/pvu~ iemlib/receive2list iemlib/round_zero iemlib/rvu~ iemlib/sin_freq~
-iemlib/sin_phase~ iemlib/soundfile_info iemlib/sparse_FIR~ iemlib/speedlim
-iemlib/split iemlib/splitfilename iemlib/stripfilename iemlib/t3_bpe
-iemlib/t3_delay iemlib/t3_line~ iemlib/t3_metro iemlib/t3_sig~ iemlib/t3_timer
-iemlib/tm iemlib/toggle_mess iemlib/transf_fader iemlib/unsym iemlib/unsymbol
-iemlib/v2db iemlib/vcf_filter~ iemlib/wrap iemmatrix/matrix iemmatrix/matrix_mul_line~
-iemmatrix/matrix_mul~ iemmatrix/matrix~ iemmatrix/mtx iemmatrix/mtx_0x21
-iemmatrix/mtx_0x210x3d iemmatrix/mtx_0x26 iemmatrix/mtx_0x260x26 iemmatrix/mtx_0x2a
-iemmatrix/mtx_0x2a0x7e iemmatrix/mtx_0x2b iemmatrix/mtx_0x2d iemmatrix/mtx_0x2e0x2a
-iemmatrix/mtx_0x2e0x2f iemmatrix/mtx_0x2e0x5e iemmatrix/mtx_0x2f iemmatrix/mtx_0x3a
-iemmatrix/mtx_0x3c iemmatrix/mtx_0x3c0x3c iemmatrix/mtx_0x3c0x3d iemmatrix/mtx_0x3d0x3d
+iemguts/canvasposition iemguts/canvasselect iemguts/classtest iemguts/findbrokenobjects
+iemguts/oreceive iemguts/propertybang iemguts/receivecanvas iemguts/savebangs
+iemguts/sendcanvas iemguts/try iemlib/FIR~ iemlib/LFO_noise~ iemlib/add2_comma
+iemlib/any iemlib/aspeedlim iemlib/biquad_freq_resp iemlib/bpe iemlib/db2v
+iemlib/dollarg iemlib/exp_inc iemlib/f2note iemlib/fade~ iemlib/filter~
+iemlib/float24 iemlib/for++ iemlib/for_pp iemlib/gate iemlib/hml_shelf~
+iemlib/iem_alisttosym iemlib/iem_anything iemlib/iem_append iemlib/iem_blocksize~
+iemlib/iem_cot4~ iemlib/iem_delay~ iemlib/iem_i_route iemlib/iem_pbank_csv
+iemlib/iem_pow4~ iemlib/iem_prepend iemlib/iem_receive iemlib/iem_route
+iemlib/iem_samplerate~ iemlib/iem_sel_any iemlib/iem_send iemlib/iem_sqrt4~
+iemlib/iem_symtoalist iemlib/ii iemlib/init iemlib/list2send iemlib/lp1_t~
+iemlib/m2f~ iemlib/mergefilename iemlib/modulo_counter iemlib/mov_avrg_kern~
+iemlib/para_bp2~ iemlib/parentdollarzero iemlib/peakenv_hold~ iemlib/peakenv~
+iemlib/post_netreceive iemlib/pp iemlib/pre_inlet iemlib/prepend_ascii
+iemlib/protect_against_open iemlib/prvu~ iemlib/pvu~ iemlib/receive2list
+iemlib/round_zero iemlib/rvu~ iemlib/sin_freq~ iemlib/sin_phase~ iemlib/soundfile_info
+iemlib/sparse_FIR~ iemlib/speedlim iemlib/split iemlib/splitfilename
+iemlib/stripfilename iemlib/t3_bpe iemlib/t3_delay iemlib/t3_line~
+iemlib/t3_metro iemlib/t3_sig~ iemlib/t3_timer iemlib/tm iemlib/toggle_mess
+iemlib/transf_fader iemlib/unsym iemlib/unsymbol iemlib/v2db iemlib/vcf_filter~
+iemlib/wrap iemmatrix/matrix iemmatrix/matrix_mul_line~ iemmatrix/matrix_mul~
+iemmatrix/matrix~ iemmatrix/mtx iemmatrix/mtx_0x21 iemmatrix/mtx_0x210x3d
+iemmatrix/mtx_0x26 iemmatrix/mtx_0x260x26 iemmatrix/mtx_0x2a iemmatrix/mtx_0x2a0x7e
+iemmatrix/mtx_0x2b iemmatrix/mtx_0x2d iemmatrix/mtx_0x2e0x2a iemmatrix/mtx_0x2e0x2f
+iemmatrix/mtx_0x2e0x5e iemmatrix/mtx_0x2f iemmatrix/mtx_0x3a iemmatrix/mtx_0x3c
+iemmatrix/mtx_0x3c0x3c iemmatrix/mtx_0x3c0x3d iemmatrix/mtx_0x3d0x3d
 iemmatrix/mtx_0x3e iemmatrix/mtx_0x3e0x3d iemmatrix/mtx_0x3e0x3e iemmatrix/mtx_0x7c
 iemmatrix/mtx_0x7c0x7c iemmatrix/mtx_abs iemmatrix/mtx_add iemmatrix/mtx_and
-iemmatrix/mtx_atan iemmatrix/mtx_bitand iemmatrix/mtx_bitleft iemmatrix/mtx_bitor
-iemmatrix/mtx_bitright iemmatrix/mtx_bspline iemmatrix/mtx_check iemmatrix/mtx_cholesky
-iemmatrix/mtx_col iemmatrix/mtx_colon iemmatrix/mtx_concat iemmatrix/mtx_conv
-iemmatrix/mtx_cos iemmatrix/mtx_cumprod iemmatrix/mtx_cumsum iemmatrix/mtx_dbtopow
-iemmatrix/mtx_dbtorms iemmatrix/mtx_decay iemmatrix/mtx_diag iemmatrix/mtx_diegg
-iemmatrix/mtx_diff iemmatrix/mtx_dispersive_dline iemmatrix/mtx_distance2
-iemmatrix/mtx_div iemmatrix/mtx_egg iemmatrix/mtx_eig iemmatrix/mtx_element
-iemmatrix/mtx_eq iemmatrix/mtx_exp iemmatrix/mtx_eye iemmatrix/mtx_fft
-iemmatrix/mtx_fill iemmatrix/mtx_find iemmatrix/mtx_gauss iemmatrix/mtx_ge
-iemmatrix/mtx_gt iemmatrix/mtx_ifft iemmatrix/mtx_index iemmatrix/mtx_int
-iemmatrix/mtx_inverse iemmatrix/mtx_isequal iemmatrix/mtx_le iemmatrix/mtx_log
-iemmatrix/mtx_lt iemmatrix/mtx_max2 iemmatrix/mtx_mean iemmatrix/mtx_min2
-iemmatrix/mtx_minmax iemmatrix/mtx_mul iemmatrix/mtx_mul~ iemmatrix/mtx_neq
-iemmatrix/mtx_not iemmatrix/mtx_ones iemmatrix/mtx_or iemmatrix/mtx_pack~
-iemmatrix/mtx_pivot iemmatrix/mtx_pow iemmatrix/mtx_powtodb iemmatrix/mtx_print
-iemmatrix/mtx_prod iemmatrix/mtx_qr iemmatrix/mtx_rand iemmatrix/mtx_repmat
-iemmatrix/mtx_resize iemmatrix/mtx_reverse iemmatrix/mtx_rfft iemmatrix/mtx_rifft
-iemmatrix/mtx_rmstodb iemmatrix/mtx_roll iemmatrix/mtx_row iemmatrix/mtx_scroll
-iemmatrix/mtx_sin iemmatrix/mtx_size iemmatrix/mtx_slice iemmatrix/mtx_sndfileread
-iemmatrix/mtx_sort iemmatrix/mtx_spherical_harmonics iemmatrix/mtx_spherical_radial
-iemmatrix/mtx_sub iemmatrix/mtx_sum iemmatrix/mtx_svd iemmatrix/mtx_trace
-iemmatrix/mtx_transpose iemmatrix/mtx_unpack~ iemmatrix/mtx_zeros iemxmlrpc/xmlrpc
-jasch_lib/_ jasch_lib/detox jasch_lib/memchr jasch_lib/strchr jasch_lib/strcut
-jasch_lib/strlen jasch_lib/strtok libdir/libdir loop~/loop~ lrshift~/lrshift~
+iemmatrix/mtx_atan iemmatrix/mtx_bessel iemmatrix/mtx_bitand iemmatrix/mtx_bitleft
+iemmatrix/mtx_bitor iemmatrix/mtx_bitright iemmatrix/mtx_bspline iemmatrix/mtx_check
+iemmatrix/mtx_cholesky iemmatrix/mtx_col iemmatrix/mtx_colon iemmatrix/mtx_concat
+iemmatrix/mtx_conv iemmatrix/mtx_cos iemmatrix/mtx_cumprod iemmatrix/mtx_cumsum
+iemmatrix/mtx_dbtopow iemmatrix/mtx_dbtorms iemmatrix/mtx_decay iemmatrix/mtx_diag
+iemmatrix/mtx_diegg iemmatrix/mtx_diff iemmatrix/mtx_dispersive_dline
+iemmatrix/mtx_distance2 iemmatrix/mtx_div iemmatrix/mtx_egg iemmatrix/mtx_eig
+iemmatrix/mtx_ei~ iemmatrix/mtx_element iemmatrix/mtx_eq iemmatrix/mtx_exp
+iemmatrix/mtx_eye iemmatrix/mtx_fft iemmatrix/mtx_fill iemmatrix/mtx_find
+iemmatrix/mtx_gauss iemmatrix/mtx_ge iemmatrix/mtx_gt iemmatrix/mtx_ifft
+iemmatrix/mtx_index iemmatrix/mtx_int iemmatrix/mtx_inverse iemmatrix/mtx_isequal
+iemmatrix/mtx_le iemmatrix/mtx_log iemmatrix/mtx_lt iemmatrix/mtx_max2
+iemmatrix/mtx_mean iemmatrix/mtx_min2 iemmatrix/mtx_minmax iemmatrix/mtx_mul
+iemmatrix/mtx_mul~ iemmatrix/mtx_neq iemmatrix/mtx_not iemmatrix/mtx_ones
+iemmatrix/mtx_or iemmatrix/mtx_pack~ iemmatrix/mtx_pivot iemmatrix/mtx_pow
+iemmatrix/mtx_powtodb iemmatrix/mtx_print iemmatrix/mtx_prod iemmatrix/mtx_qr
+iemmatrix/mtx_rand iemmatrix/mtx_repmat iemmatrix/mtx_resize iemmatrix/mtx_reverse
+iemmatrix/mtx_rfft iemmatrix/mtx_rifft iemmatrix/mtx_rmstodb iemmatrix/mtx_roll
+iemmatrix/mtx_row iemmatrix/mtx_scroll iemmatrix/mtx_sin iemmatrix/mtx_size
+iemmatrix/mtx_slice iemmatrix/mtx_sndfileread iemmatrix/mtx_sort iemmatrix/mtx_spherical_harmonics
+iemmatrix/mtx_spherical_radial iemmatrix/mtx_sub iemmatrix/mtx_sum
+iemmatrix/mtx_svd iemmatrix/mtx_trace iemmatrix/mtx_transpose iemmatrix/mtx_unpack~
+iemmatrix/mtx_zeros iemxmlrpc/xmlrpc jasch_lib/_ jasch_lib/detox jasch_lib/memchr
+jasch_lib/strchr jasch_lib/strcut jasch_lib/strlen jasch_lib/strtok
+libdir/libdir loop~/loop~ lrshift~/lrshift~ lyonpotpourri/adsr~ lyonpotpourri/arrayfilt~
+lyonpotpourri/bashfest~ lyonpotpourri/buffet~ lyonpotpourri/bvplay~
+lyonpotpourri/channel~ lyonpotpourri/chopper~ lyonpotpourri/clean_selector~
+lyonpotpourri/click2bang~ lyonpotpourri/click2float~ lyonpotpourri/clickhold~
+lyonpotpourri/click~ lyonpotpourri/convolver~ lyonpotpourri/counter~
+lyonpotpourri/distortion~ lyonpotpourri/dmach~ lyonpotpourri/dynss~
+lyonpotpourri/epluribus~ lyonpotpourri/expflam~ lyonpotpourri/flanjah~
+lyonpotpourri/function~ lyonpotpourri/granola~ lyonpotpourri/granulesf~
+lyonpotpourri/granule~ lyonpotpourri/greater~ lyonpotpourri/impulse~
+lyonpotpourri/kbuffer~ lyonpotpourri/killdc~ lyonpotpourri/latch~ lyonpotpourri/magfreq_analysis~
+lyonpotpourri/markov~ lyonpotpourri/mask~ lyonpotpourri/npan~ lyonpotpourri/oscil~
+lyonpotpourri/phasemod~ lyonpotpourri/player~ lyonpotpourri/pulser~
+lyonpotpourri/quadpan~ lyonpotpourri/rotapan~ lyonpotpourri/rtrig~
+lyonpotpourri/samm~ lyonpotpourri/sarec~ lyonpotpourri/sel~ lyonpotpourri/shoehorn~
+lyonpotpourri/sigseq~ lyonpotpourri/splitbank~ lyonpotpourri/splitspec~
+lyonpotpourri/squash~ lyonpotpourri/stutter~ lyonpotpourri/vdb~ lyonpotpourri/vdp~
+lyonpotpourri/vecdex~ lyonpotpourri/waveshape~ lyonpotpourri/windowvec~
 markex/abs~ markex/alternate markex/average markex/counter markex/hsv2rgb
 markex/invert markex/multiselect markex/oneshot markex/randomF markex/reson~
 markex/rgb2hsv markex/strcat markex/tripleLine markex/tripleRand markex/vector+
@@ -236,40 +261,41 @@ maxlib/tilt maxlib/timebang maxlib/triang maxlib/unroute maxlib/urn
 maxlib/velocity maxlib/weibull maxlib/wrap mjlib/about mjlib/convolve~
 mjlib/metroplus mjlib/monorhythm mjlib/morse mjlib/n2m mjlib/pin~ mjlib/prob
 mjlib/synapseA~ moocow/any2bytes moocow/bytes2any moocow/bytes2wchars
-moocow/deque moocow/locale moocow/pdstring moocow/printbytes moocow/printwchars
-moocow/readdir moocow/sprinkler moocow/uselocale moocow/wchars2bytes
-moocow/weightmap moonlib/absolutepath moonlib/basedir moonlib/char2f
-moonlib/comma moonlib/dinlet~ moonlib/dispatch moonlib/dripchar moonlib/f2char
-moonlib/gamme moonlib/image moonlib/mknob moonlib/panvol~ moonlib/popen
-moonlib/readsfv~ moonlib/relativepath moonlib/s2f moonlib/sarray moonlib/sfread2~
-moonlib/slist moonlib/ssaw~ moonlib/tabdump2 moonlib/tabenv moonlib/tabreadl
-moonlib/tabsort moonlib/tabsort2 moonlib/wac motex/getenv motex/ln~
-motex/pansig~ motex/pan~ motex/pol2rec~ motex/polygate~ motex/rec2pol~
-motex/shuffle motex/system mrpeach/binfile mrpeach/cd4000 mrpeach/cd4001
-mrpeach/cd4002 mrpeach/cd4008 mrpeach/cd4011 mrpeach/cd4012 mrpeach/cd4013
-mrpeach/cd4014 mrpeach/cd4015 mrpeach/cd4017 mrpeach/cd40193 mrpeach/cd4023
-mrpeach/cd4024 mrpeach/cd4025 mrpeach/cd4027 mrpeach/cd4070 mrpeach/cd4071
-mrpeach/cd4072 mrpeach/cd4073 mrpeach/cd4075 mrpeach/cd4076 mrpeach/cd4081
-mrpeach/cd4082 mrpeach/cd4094 mrpeach/cd4516 mrpeach/flist2tab mrpeach/httpreceive
-mrpeach/httpreq mrpeach/life2x mrpeach/midifile mrpeach/op~ mrpeach/packOSC
-mrpeach/packxbee mrpeach/pipelist mrpeach/rcosc~ mrpeach/rc~ mrpeach/rojo~
-mrpeach/routeOSC mrpeach/runningmean mrpeach/slipdec mrpeach/slipenc
-mrpeach/sqosc~ mrpeach/str mrpeach/tab2flist mrpeach/tabfind mrpeach/tcpclient
-mrpeach/tcpreceive mrpeach/tcpsend mrpeach/tcpserver mrpeach/udpreceive
-mrpeach/udpreceive~ mrpeach/udpsend mrpeach/udpsend~ mrpeach/unpackOSC
-mrpeach/unpackxbee mrpeach/which oscx/OSCroute oscx/dumpOSC oscx/sendOSC
-pdcontainer/h_deque pdcontainer/h_list pdcontainer/h_map pdcontainer/h_multimap
-pdcontainer/h_multiset pdcontainer/h_prioqueue pdcontainer/h_queue
-pdcontainer/h_set pdcontainer/h_stack pdcontainer/h_vector pddp/helplink
-pddp/pddplink pdogg/oggamp~ pdogg/oggcast~ pdogg/oggread~ pdogg/oggwrite~
-pdp/pdp pd~/pdsched pd~/pd~ pique/pique pix_drum/pix_drum pix_fiducialtrack/pix_fiducialtrack
-pix_hit/pix_hit pix_mano/pix_mano plugin~/plugin~ pmpd/iAmbient2D pmpd/iAmbient3D
-pmpd/iCircle2D pmpd/iCircle3D pmpd/iCylinder3D pmpd/iLine2D pmpd/iPlane3D
-pmpd/iSeg2D pmpd/iSphere3D pmpd/link pmpd/link2D pmpd/link3D pmpd/mass
-pmpd/mass2D pmpd/mass3D pmpd/pmpd~ pmpd/tCircle2D pmpd/tCircle3D pmpd/tCube3D
-pmpd/tCylinder3D pmpd/tLine2D pmpd/tLink2D pmpd/tLink3D pmpd/tPlane3D
-pmpd/tSeg2D pmpd/tSphere3D pmpd/tSquare2D sigmund~/sigmund~ sigpack/chop~
-sigpack/decimate~ sigpack/diode~ sigpack/foldback~ sigpack/foldover~
+moocow/deque moocow/flite moocow/gfsm moocow/locale moocow/pdstring
+moocow/printbytes moocow/printwchars moocow/readdir moocow/sprinkler
+moocow/uselocale moocow/wchars2bytes moocow/weightmap moonlib/absolutepath
+moonlib/basedir moonlib/char2f moonlib/comma moonlib/dinlet~ moonlib/dispatch
+moonlib/dripchar moonlib/f2char moonlib/gamme moonlib/image moonlib/mknob
+moonlib/panvol~ moonlib/popen moonlib/readsfv~ moonlib/relativepath
+moonlib/s2f moonlib/sarray moonlib/sfread2~ moonlib/slist moonlib/ssaw~
+moonlib/tabdump2 moonlib/tabenv moonlib/tabreadl moonlib/tabsort moonlib/tabsort2
+moonlib/wac motex/getenv motex/ln~ motex/pansig~ motex/pan~ motex/pol2rec~
+motex/polygate~ motex/rec2pol~ motex/shuffle motex/system mrpeach/binfile
+mrpeach/cd4000 mrpeach/cd4001 mrpeach/cd4002 mrpeach/cd4008 mrpeach/cd4011
+mrpeach/cd4012 mrpeach/cd4013 mrpeach/cd4014 mrpeach/cd4015 mrpeach/cd4017
+mrpeach/cd40193 mrpeach/cd4023 mrpeach/cd4024 mrpeach/cd4025 mrpeach/cd4027
+mrpeach/cd4070 mrpeach/cd4071 mrpeach/cd4072 mrpeach/cd4073 mrpeach/cd4075
+mrpeach/cd4076 mrpeach/cd4081 mrpeach/cd4082 mrpeach/cd4094 mrpeach/cd4516
+mrpeach/flist2tab mrpeach/httpreceive mrpeach/httpreq mrpeach/life2x
+mrpeach/midifile mrpeach/op~ mrpeach/packOSC mrpeach/packxbee mrpeach/pipelist
+mrpeach/rcosc~ mrpeach/rc~ mrpeach/rojo~ mrpeach/routeOSC mrpeach/runningmean
+mrpeach/slipdec mrpeach/slipenc mrpeach/sqosc~ mrpeach/str mrpeach/tab2flist
+mrpeach/tabfind mrpeach/tcpclient mrpeach/tcpreceive mrpeach/tcpsend
+mrpeach/tcpserver mrpeach/udpreceive mrpeach/udpreceive~ mrpeach/udpsend
+mrpeach/udpsend~ mrpeach/unpackOSC mrpeach/unpackxbee mrpeach/which
+oscx/OSCroute oscx/dumpOSC oscx/sendOSC pdcontainer/h_deque pdcontainer/h_list
+pdcontainer/h_map pdcontainer/h_multimap pdcontainer/h_multiset pdcontainer/h_prioqueue
+pdcontainer/h_queue pdcontainer/h_set pdcontainer/h_stack pdcontainer/h_vector
+pddp/helplink pddp/pddplink pdogg/oggamp~ pdogg/oggcast~ pdogg/oggread~
+pdogg/oggwrite~ pdp/pdp pd~/pdsched pd~/pd~ pique/pique pix_drum/pix_drum
+pix_fiducialtrack/pix_fiducialtrack pix_hit/pix_hit pix_mano/pix_mano
+plugin~/plugin~ pmpd/iAmbient2D pmpd/iAmbient3D pmpd/iCircle2D pmpd/iCircle3D
+pmpd/iCylinder3D pmpd/iLine2D pmpd/iPlane3D pmpd/iSeg2D pmpd/iSphere3D
+pmpd/link pmpd/link2D pmpd/link3D pmpd/mass pmpd/mass2D pmpd/mass3D
+pmpd/pmpd pmpd/pmpd2d pmpd/pmpd3d pmpd/pmpd~ pmpd/tCircle2D pmpd/tCircle3D
+pmpd/tCube3D pmpd/tCylinder3D pmpd/tLine2D pmpd/tLink2D pmpd/tLink3D
+pmpd/tPlane3D pmpd/tSeg2D pmpd/tSphere3D pmpd/tSquare2D sigmund~/sigmund~
+sigpack/chop~ sigpack/decimate~ sigpack/diode~ sigpack/foldback~ sigpack/foldover~
 sigpack/freqdiv~ sigpack/freqshift~ sigpack/hardlimit~ sigpack/harmgen~
 sigpack/impulse~ sigpack/rectify~ sigpack/round~ sigpack/saturate~
 sigpack/shape~ sigpack/sieve~ sigpack/split~ sigpack/transient~ sigpack/ustep~
@@ -303,20 +329,20 @@ zexy/&&~ zexy/0x260x260x7e zexy/0x2e zexy/0x3c0x7e zexy/0x3d0x3d0x7e
 zexy/0x3e0x7e zexy/0x7c0x7c0x7e zexy/<~ zexy/==~ zexy/>~ zexy/a2l zexy/absgn~
 zexy/abs~ zexy/any2list zexy/atof zexy/atoi zexy/avg~ zexy/blockmirror~
 zexy/blockshuffle~ zexy/blockswap~ zexy/date zexy/demultiplex zexy/demultiplex~
-zexy/demux zexy/demux~ zexy/dfreq~ zexy/dirac~ zexy/drip zexy/envrms~
-zexy/fifop zexy/freadln zexy/fwriteln zexy/glue zexy/index zexy/l zexy/l2i
-zexy/l2s zexy/length zexy/lifop zexy/limiter~ zexy/list2int zexy/list2lists
-zexy/list2symbol zexy/lister zexy/listfind zexy/liststorage zexy/longload
-zexy/lp zexy/lpt zexy/makesymbol zexy/matchbox zexy/mavg zexy/minmax
-zexy/msgfile zexy/multiline~ zexy/multiplex zexy/multiplex~ zexy/multireceive
-zexy/mux zexy/mux~ zexy/niagara zexy/noish~ zexy/noisi~ zexy/operating_system
-zexy/pack zexy/packel zexy/pack~ zexy/pdf~ zexy/prime zexy/quantize~
-zexy/rawprint zexy/regex zexy/relay zexy/repack zexy/repeat zexy/route~
-zexy/s2l zexy/sfplay zexy/sfrecord zexy/sgn~ zexy/sigzero~ zexy/sleepgrain
-zexy/sort zexy/step~ zexy/strcmp zexy/sum zexy/swap~ zexy/symbol2list
-zexy/tabdump zexy/tabminmax zexy/tabread4~~ zexy/tabset zexy/tavg~
-zexy/time zexy/unfold zexy/unpack zexy/unpack~ zexy/urn zexy/wrap zexy/z~
-zexy/||~;
+zexy/demux zexy/demux~ zexy/dfreq~ zexy/dirac~ zexy/doublepole~ zexy/drip
+zexy/envrms~ zexy/fifop zexy/freadln zexy/fwriteln zexy/glue zexy/index
+zexy/l zexy/l2i zexy/l2s zexy/length zexy/lifop zexy/limiter~ zexy/list2int
+zexy/list2lists zexy/list2symbol zexy/lister zexy/listfind zexy/liststorage
+zexy/longload zexy/lp zexy/lpt zexy/makesymbol zexy/matchbox zexy/mavg
+zexy/minmax zexy/msgfile zexy/multiline~ zexy/multiplex zexy/multiplex~
+zexy/multireceive zexy/mux zexy/mux~ zexy/niagara zexy/noish~ zexy/noisi~
+zexy/operating_system zexy/pack zexy/packel zexy/pack~ zexy/pdf~ zexy/prime
+zexy/quantize~ zexy/rawprint zexy/regex zexy/relay zexy/repack zexy/repeat
+zexy/route~ zexy/s2l zexy/sfplay zexy/sfrecord zexy/sgn~ zexy/sigzero~
+zexy/sleepgrain zexy/sort zexy/step~ zexy/strcmp zexy/sum zexy/swap~
+zexy/symbol2list zexy/tabdump zexy/tabminmax zexy/tabread4~~ zexy/tabset
+zexy/tavg~ zexy/time zexy/unfold zexy/unpack zexy/unpack~ zexy/urn
+zexy/wrap zexy/z~ zexy/||~;
 #X connect 0 0 2 0;
 #X connect 2 0 1 0;
 #X restore 333 428 pd creator-list;
@@ -353,7 +379,8 @@ zexy/||~;
 #X obj 85 221 folder_list;
 #X obj 85 242 outlet;
 #X obj 85 201 symbol;
-#X msg 85 180 \$1/*pd_linux \, \$1/*l_ia64 \, \$1/*l_i386;
+#X msg 85 180 \$1/*pd_linux \, \$1/*l_ia64 \, \$1/*l_i386 \, \$1/*dll
+\, \$1/*dylib;
 #X connect 0 0 2 0;
 #X connect 1 0 3 0;
 #X connect 2 0 4 0;
@@ -370,21 +397,29 @@ zexy/||~;
 #X obj 187 182 trigger anything anything;
 #X obj 146 39 trigger bang bang;
 #N canvas 595 159 450 300 remove_file_suffix 0;
-#X obj 110 25 inlet;
-#X obj 110 85 list split 1;
-#X obj 110 115 symbol2list .l_ia64;
-#X obj 110 136 list split 1;
-#X obj 110 207 outlet;
-#X obj 110 64 symbol2list .pd_linux;
-#X obj 110 157 symbol2list .l_i386;
-#X obj 110 178 list split 1;
+#X obj 110 10 inlet;
+#X obj 110 60 list split 1;
+#X obj 110 85 symbol2list .l_ia64;
+#X obj 110 106 list split 1;
+#X obj 110 262 outlet;
+#X obj 110 39 symbol2list .pd_linux;
+#X obj 110 127 symbol2list .l_i386;
+#X obj 110 148 list split 1;
+#X obj 110 170 symbol2list .dll;
+#X obj 110 192 list split 1;
+#X obj 110 214 symbol2list .dylib;
+#X obj 110 236 list split 1;
 #X connect 0 0 5 0;
 #X connect 1 0 2 0;
 #X connect 2 0 3 0;
 #X connect 3 0 6 0;
 #X connect 5 0 1 0;
 #X connect 6 0 7 0;
-#X connect 7 0 4 0;
+#X connect 7 0 8 0;
+#X connect 8 0 9 0;
+#X connect 9 0 10 0;
+#X connect 10 0 11 0;
+#X connect 11 0 4 0;
 #X restore 187 282 pd remove_file_suffix;
 #N canvas 595 159 450 363 convert-to-libdir-prefix 0;
 #X obj 110 25 inlet;

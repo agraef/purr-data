@@ -1183,19 +1183,18 @@ lyonpotpourri_install:
 	#make -C $(externals_src)/$(LYON_NAME) DESTDIR="$(DESTDIR)" \
 	#	objectsdir="$(objectsdir)" install
 	install -d $(DESTDIR)$(objectsdir)/$(LYON_NAME)
+	install -d $(DESTDIR)$(objectsdir)/$(LYON_NAME)/sound
 	install -p $(wildcard $(externals_src)/$(LYON_NAME)/*.$(EXTENSION)) \
 		$(DESTDIR)$(objectsdir)/$(LYON_NAME)
-	install -p $(externals_src)/$(LYON_NAME)/*.pd \
+	install -p $(externals_src)/$(LYON_NAME)/lyonpotpourri-helpfiles/*.pd \
 		$(DESTDIR)$(objectsdir)/$(LYON_NAME)
 	# don't include cartopol/poltocar-- cyclone library already has those
-	rm $(DESTDIR)$(objectsdir)/$(LYON_NAME)/cartopol*.pd
-	rm $(DESTDIR)$(objectsdir)/$(LYON_NAME)/poltocar*.pd
 	rm $(DESTDIR)$(objectsdir)/$(LYON_NAME)/cartopol*.$(EXTENSION)
 	rm $(DESTDIR)$(objectsdir)/$(LYON_NAME)/poltocar*.$(EXTENSION)
-	install -p $(externals_src)/$(LYON_NAME)/sound/*.* \
-		$(DESTDIR)$(objectsdir)/$(LYON_NAME)
+	install -p $(externals_src)/$(LYON_NAME)/lyonpotpourri-helpfiles/sound/*.* \
+		$(DESTDIR)$(objectsdir)/$(LYON_NAME)/sound
 	# copy the meta file and the shared lib
-	install -p $(externals_src)/$(LYON_NAME)/*lyonpotpourri* \
+	install -p $(externals_src)/$(LYON_NAME)/*lyonpotpourri.* \
 		$(DESTDIR)$(objectsdir)/$(LYON_NAME)
 	# license and readme
 	install -p $(externals_src)/$(LYON_NAME)/*.txt \
