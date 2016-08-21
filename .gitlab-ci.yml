@@ -5,4 +5,7 @@ build_package:
   script:
     - echo `pwd`
     - cd l2ork_addons
-    - ./tar_em_up.sh -B
+    - ./tar_em_up.sh -b
+  artifacts:
+    paths:
+    - ../*.deb
