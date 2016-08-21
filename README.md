@@ -124,7 +124,7 @@ cd purr-data/l2ork_addons</code>
 
 ### Code of Conduct
 
-1. No sarcasm
+1. No sarcasm, please
 2. Don't appear to lack empathy
 3. You can't live here. If you're spending hours a day writing Purr Data
    code or-- worse-- spending hours a day *writing emails about* code that 
