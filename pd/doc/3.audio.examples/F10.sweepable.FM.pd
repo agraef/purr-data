@@ -1,36 +1,36 @@
-#N canvas 337 19 711 648 10;
-#X obj 138 405 cos~;
-#X obj 138 359 *~;
-#X obj 181 407 cos~;
-#X obj 222 308 wrap~;
-#X obj 185 307 -~;
-#X obj 181 384 +~;
-#X obj 179 442 -~;
-#X obj 200 468 *~;
-#X obj 185 277 samphold~;
-#X floatatom 202 157 4 0 200 0 - - -, f 4;
-#X obj 202 180 / 10;
-#X obj 202 229 line~;
-#X obj 202 206 pack 0 50;
-#X obj 91 212 phasor~;
-#X floatatom 91 189 4 0 0 0 - - -, f 4;
-#X text 77 151 fundamental;
-#X text 77 166 (= mod freq);
-#X text 400 185 index;
-#X text 400 200 (percent);
-#X floatatom 405 224 4 0 500 0 - - -, f 4;
-#X obj 355 290 cos~;
-#X obj 405 293 line~;
-#X obj 355 313 *~;
-#X obj 405 247 / 100;
-#X obj 405 270 pack 0 50;
-#X obj 138 382 +~;
-#X text 358 339 modulating;
-#X text 358 355 oscillator;
-#X text 42 381 both phases-->;
-#X text 11 368 add modulator to;
-#X obj 203 561 output~;
-#X obj 202 530 hip~;
+#N canvas 241 25 711 648 10;
+#X obj 138 425 cos~;
+#X obj 138 379 *~;
+#X obj 181 427 cos~;
+#X obj 222 328 wrap~;
+#X obj 185 327 -~;
+#X obj 181 404 +~;
+#X obj 179 462 -~;
+#X obj 200 488 *~;
+#X obj 185 297 samphold~;
+#X floatatom 202 177 4 0 200 0 - - -, f 4;
+#X obj 202 200 / 10;
+#X obj 202 249 line~;
+#X obj 202 226 pack 0 50;
+#X obj 91 232 phasor~;
+#X floatatom 91 209 4 0 0 0 - - -, f 4;
+#X text 77 171 fundamental;
+#X text 77 186 (= mod freq);
+#X text 400 205 index;
+#X text 400 220 (percent);
+#X floatatom 405 244 4 0 500 0 - - -, f 4;
+#X obj 355 310 cos~;
+#X obj 405 313 line~;
+#X obj 355 333 *~;
+#X obj 405 267 / 100;
+#X obj 405 290 pack 0 50;
+#X obj 138 402 +~;
+#X text 358 359 modulating;
+#X text 358 375 oscillator;
+#X text 42 401 both phases-->;
+#X text 11 388 add modulator to;
+#X obj 203 581 output~;
+#X obj 202 550 hip~;
 #N canvas 122 211 558 609 fft 0;
 #X obj 23 55 inlet~;
 #X obj 210 303 inlet;
@@ -87,19 +87,19 @@ until much later.;
 #X connect 26 0 27 1;
 #X connect 27 0 2 0;
 #X connect 29 0 25 1;
-#X restore 256 530 pd fft;
-#X obj 289 485 bng 18 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X restore 256 550 pd fft;
+#X obj 289 505 bng 18 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X obj 289 506 tgl 18 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+#X obj 289 526 tgl 18 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
 1;
-#X text 310 505 <-- repeatedly;
-#X text 311 485 <-- graph once;
+#X text 310 525 <-- repeatedly;
+#X text 311 505 <-- graph once;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array F10-spectrum 259 float 0;
+#X array F10-spectrum 259 float 0 black black;
 #X coords 0 0.51 258 -0.008 256 130 1;
-#X restore 440 394 graph;
-#X text 432 525 0;
-#X obj 177 494 +~;
+#X restore 440 414 graph;
+#X text 432 545 0;
+#X obj 177 514 +~;
 #X text 20 37 We can apply the two-cosine method to FM synthesis to
 get FM spectra which slide up and down: we just treat the cosines like
 carrier signals in an FM instrument. This doesn't work as well as you'd
@@ -107,35 +107,34 @@ wish \, because the phases of the partials of the two FM instruments
 don't line up \, so that \, for indices of modulation above about 20%
 \, you get beating effects as the center frequency goes up and down.
 ;
-#X text 521 535 -- frequency --;
-#X text 672 526 2700;
+#X text 521 555 -- frequency --;
+#X text 672 546 2700;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header applying_two-cosine_carrier_to_FM
 20 10 1 18 -261139 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
-#X obj 1 626 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+#X obj 1 646 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.34. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.34. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION applying two-cosine carrier to FM;
-#X restore 392 628 pd META;
+#X text 12 45 DESCRIPTION applying two-cosine carrier to FM;
+#X text 12 5 KEYWORDS signal tutorial;
+#X restore 392 648 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261139 -33289 0;
 #X text 7 2 frequency modulation- Related Help Documents;
 #X text 19 37 links:;
-#X restore 103 628 pd References;
-#X obj 6 628 pddp/pddplink ../5.reference/pddp/help.pd -text help;
-#X text 202 122 center freq.;
-#X text 202 136 in tenths of fundamental);
+#X restore 103 648 pd References;
+#X obj 6 648 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X text 202 142 center freq.;
+#X text 202 156 in tenths of fundamental);
 #X connect 0 0 6 1;
 #X connect 0 0 39 0;
 #X connect 1 0 25 0;

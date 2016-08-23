@@ -1,7 +1,7 @@
-#N canvas 0 26 492 402 10;
+#N canvas 267 174 492 402 10;
 #N canvas 0 22 450 300 (subpatch) 0;
-#X array \$0-pwm~ 100 float 0;
-#X coords 0 1.1 100 -0.1 200 100 1;
+#X array \$0-pwm~ 100 float 0 black black;
+#X coords 0 1.1 99 -0.1 200 100 1;
 #X restore 58 236 graph;
 #X obj 83 144 r metro;
 #X text 355 21 <-- Click to start;
@@ -13,7 +13,7 @@
 #X obj 376 287 pwm;
 #X obj 70 66 hsl 128 15 0 1 0 1 empty empty pulse_width -2 -6 1 12
 -225280 -1 -1 10700 0;
-#X floatatom 79 88 5 0 0 0 - - -;
+#X floatatom 79 88 5 0 0 0 - - -, f 5;
 #X text 139 112 argument = pwm rate in Hz;
 #X obj 67 112 pwm~ 2000;
 #X obj 83 169 metro 238.3;
@@ -22,8 +22,7 @@
 #X text 22 351 for more info:;
 #X text 16 11 pulse width modulation at audio rate;
 #X obj 67 193 tabwrite~ \$0-pwm~;
-#N canvas 280 175 494 344 META 0;
-#X text 12 5 GENRE help;
+#N canvas 281 200 494 344 META 0;
 #X text 12 145 HELP_PATCH_AUTHORS "pd meta" information added by Jonathan
 Wilkes for Pd version 0.42.;
 #X text 12 125 AUTHOR Hans-Christoph Steiner;
@@ -33,7 +32,6 @@ Wilkes for Pd version 0.42.;
 #X text 12 85 INLET_0 float;
 #X text 12 105 OUTLET_0 signal;
 #X restore 442 381 pd META;
-#X connect 1 0 12 0;
 #X connect 1 0 12 0;
 #X connect 5 0 6 0;
 #X connect 8 0 9 0;

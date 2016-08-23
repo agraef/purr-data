@@ -1,4 +1,4 @@
-#N canvas 392 78 571 618 10;
+#N canvas 361 29 571 618 10;
 #X obj 287 155 loadbang;
 #X obj 31 271 hip~ 5;
 #X obj 407 67 adc~ 1;
@@ -44,7 +44,7 @@
 #X obj 201 89 loadbang;
 #N canvas 414 195 613 302 looper 0;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array E03-table 44103 float 0;
+#X array E03-table 44103 float 0 black black;
 #X coords 0 1.02 44103 -1.02 200 130 1;
 #X restore 349 22 graph;
 #X text 347 161 ---- 44103 samples ----;
@@ -101,7 +101,7 @@ with what the sound was doing at the middle of the window \, i.e. \,
 samples so it will be as tightly synchronized with the analysis data
 as possible. (If you're doing this on a real-time input \, you might
 drop the delay and settle for less perfect synchronization.);
-#X text 28 486 About fiddle~ \, suffice it to say that the third outlet
+#X text 28 501 About fiddle~ \, suffice it to say that the third outlet
 contains (pitch \, amplitude) pairs. We unpack the pitch and strip
 out any zeros (when fiddle~ fails to find a pitch it outputs zero but
 we'd rather stick with the most recent good one). This is converted
@@ -110,27 +110,26 @@ oscillator. (You can also try large-ish integers which leave the pitch
 intact but introduce funny formants.);
 #X msg 306 207 read ../../saucisse.wav E03-table;
 #X obj 31 38 adc~ 1;
-#X obj 1 596 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+#X obj 1 611 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION octave dividing via ring modulation;
-#X restore 392 598 pd META;
+#X text 12 45 DESCRIPTION octave dividing via ring modulation;
+#X text 12 5 KEYWORDS signal tutorial;
+#X restore 392 613 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261139 -33289 0;
 #X text 7 2 octave dividing- Related Help Documents;
 #X text 19 37 links:;
-#X restore 103 598 pd References;
-#X obj 6 598 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X restore 103 613 pd References;
+#X obj 6 613 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header octave_dividing_via_ring_modulation
 20 10 1 18 -261139 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp

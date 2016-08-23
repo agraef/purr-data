@@ -1,4 +1,4 @@
-#N canvas 431 35 448 570 10;
+#N canvas 432 60 448 570 10;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header looping 20 10 1
 18 -261106 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
@@ -100,7 +100,7 @@ be used to create iterative loops.;
 #X text 99 256 Y;
 #X obj 61 249 t b f;
 #N canvas 0 22 450 300 (subpatch) 0;
-#X array \$0-array 100 float 1;
+#X array \$0-array 100 float 1 black black;
 #A 0 0 0.935458 0.948449 0.960016 0.970142 0.978811 0.98601 0.991728
 0.995956 0.998689 0.999923 0.999654 0.997884 0.994616 0.989854 0.983606
 0.97588 0.966689 0.956046 0.943968 0.930471 0.915578 0.899309 0.88169
@@ -189,10 +189,8 @@ the loop. The [moses 100] ends the loop.;
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
 #X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE all_about_pd;
-#X text 12 45 KEYWORDS needs_work;
-#X text 12 25 NAME until;
 #X text 12 65 DESCRIPTION how to create loops in Pd;
+#X text 12 45 KEYWORDS needs_work until all_about_pd;
 #X restore 392 550 pd META;
 #N canvas 219 238 428 342 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

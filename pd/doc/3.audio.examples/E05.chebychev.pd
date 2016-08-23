@@ -1,4 +1,4 @@
-#N canvas 392 109 573 523 10;
+#N canvas 340 28 573 523 10;
 #X obj 22 282 output~;
 #X obj 44 87 / 100;
 #X floatatom 44 67 5 0 100 0 - - -, f 5;
@@ -11,7 +11,7 @@
 #X obj 22 182 *~ 128;
 #X obj 22 230 tabread4~ E05-tab;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array E05-tab 259 float 1;
+#X array E05-tab 259 float 1 black black;
 #A 0 -1.20148 -1 -0.810724 -0.63326 -0.467216 -0.31221 -0.167866 -0.0338144
 0.0903053 0.204849 0.310166 0.406597 0.494477 0.574137 0.645895 0.71007
 0.766969 0.816895 0.860145 0.897008 0.927771 0.952708 0.972093 0.98619
@@ -244,16 +244,15 @@ draw your own functions by hand and/or try other formulas.;
 #X obj 1 501 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION waveshaping with Chebychev polynomials;
+#X text 12 45 DESCRIPTION waveshaping with Chebychev polynomials;
+#X text 12 5 KEYWORDS signal tutorial;
 #X restore 392 503 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

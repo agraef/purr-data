@@ -1,11 +1,11 @@
-#N canvas 424 19 448 650 10;
-#X obj 22 222 phasor~ 100;
-#X obj 75 270 phasor~;
-#X floatatom 75 247 5 0 999 0 - #0-freq -, f 5;
-#X obj 75 322 cos~;
-#X obj 124 322 cos~;
-#X obj 124 297 +~ 0.25;
-#X obj 23 474 snapshot~;
+#N canvas 355 31 448 650 10;
+#X obj 22 232 phasor~ 100;
+#X obj 75 280 phasor~;
+#X floatatom 75 257 5 0 999 0 - #0-freq -, f 5;
+#X obj 75 332 cos~;
+#X obj 124 332 cos~;
+#X obj 124 307 +~ 0.25;
+#X obj 23 484 snapshot~;
 #N canvas 139 174 382 265 startup 0;
 #X obj 22 24 loadbang;
 #X obj 22 48 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
@@ -23,22 +23,22 @@
 #X connect 2 0 8 0;
 #X connect 5 0 7 0;
 #X connect 6 0 5 0;
-#X restore 320 316 pd startup;
-#X obj 23 373 *~;
-#X obj 67 373 *~;
-#X obj 24 398 lop~;
-#X obj 68 398 lop~;
-#X floatatom 129 362 3 0 100 0 - #0-lop -, f 3;
-#X text 156 362 <-- responsiveness;
-#X obj 112 474 snapshot~;
-#X floatatom 23 497 5 0 0 0 - - -, f 5;
-#X floatatom 112 497 5 0 0 0 - - -, f 5;
-#X obj 137 423 r \$0-tick;
-#X obj 137 444 t b b;
-#X obj 23 565 expr sqrt($f1*$f1+$f2*$f2);
-#X floatatom 23 591 5 0 0 0 - - -, f 5;
-#X text 32 187 signal to;
-#X text 34 201 analyze;
+#X restore 320 326 pd startup;
+#X obj 23 383 *~;
+#X obj 67 383 *~;
+#X obj 24 408 lop~;
+#X obj 68 408 lop~;
+#X floatatom 129 372 3 0 100 0 - #0-lop -, f 3;
+#X text 156 372 <-- responsiveness;
+#X obj 112 484 snapshot~;
+#X floatatom 23 507 5 0 0 0 - - -, f 5;
+#X floatatom 112 507 5 0 0 0 - - -, f 5;
+#X obj 137 433 r \$0-tick;
+#X obj 137 454 t b b;
+#X obj 23 575 expr sqrt($f1*$f1+$f2*$f2);
+#X floatatom 23 601 5 0 0 0 - - -, f 5;
+#X text 32 197 signal to;
+#X text 34 211 analyze;
 #X text 20 37 Another method for picking out the strengths of partials
 in a sound is heterodyning. We guess the frequency of a partial (as
 in the previous patch) but this time we multiply by a complex exponential
@@ -49,41 +49,40 @@ The result is two audio signals (which we take snapshots of) holding
 the real and imaginary parts of the complex amplitude of the partial
 we want. Compared to the previous method \, this had the advantage
 of reporting the phase of the partial as well as its frequency.;
-#X text 180 283 modulate;
-#X text 180 313 to DC;
-#X text 112 247 <-- test frequency;
-#X text 180 298 test frequency;
-#X text 100 399 low-pass filter;
-#X text 31 518 real;
-#X text 32 532 part;
-#X text 161 512 part;
-#X text 152 497 imaginary;
-#X text 62 591 magnitude;
+#X text 180 293 modulate;
+#X text 180 323 to DC;
+#X text 112 257 <-- test frequency;
+#X text 180 308 test frequency;
+#X text 100 409 low-pass filter;
+#X text 31 528 real;
+#X text 32 542 part;
+#X text 161 522 part;
+#X text 152 507 imaginary;
+#X text 62 601 magnitude;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header more_on_measuring_spectra:_heterodyning
 20 10 1 18 -261139 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
-#X obj 1 628 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+#X obj 1 638 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION more on measuring spectra: heterodyning;
-#X restore 392 630 pd META;
+#X text 12 45 DESCRIPTION more on measuring spectra: heterodyning;
+#X text 12 5 KEYWORDS signal tutorial;
+#X restore 392 640 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261139 -33289 0;
 #X text 7 2 heterodyning- Related Help Documents;
 #X text 19 37 links:;
-#X restore 103 630 pd References;
-#X obj 6 630 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X restore 103 640 pd References;
+#X obj 6 640 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 8 0;
 #X connect 0 0 9 0;
 #X connect 1 0 3 0;

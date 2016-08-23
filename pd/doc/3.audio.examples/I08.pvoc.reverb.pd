@@ -1,4 +1,4 @@
-#N canvas 433 147 448 409 10;
+#N canvas 434 49 448 409 10;
 #N canvas 105 328 986 609 fft 0;
 #X obj 18 500 *~;
 #X obj 291 455 *~;
@@ -329,13 +329,13 @@ than the input the input for that channel is ignored.;
 #X restore 31 238 pd test-sound;
 #X text 19 189 short tone;
 #X obj 229 235 s revtime;
-#X text 19 142 For each window \, the amplitude in each channel is
+#X text 19 146 For each window \, the amplitude in each channel is
 propagated by a constant phase increment and multiplied downward by
 a gain that determines the "reverb time".;
 #N canvas 0 110 565 454 hann-window 0;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-hann 1024 float 0;
-#X coords 0 1 1024 0 300 100 1;
+#X array \$0-hann 1024 float 0 black black;
+#X coords 0 1 1023 0 300 100 1;
 #X restore 82 311 graph;
 #X obj 378 165 osc~;
 #X obj 378 190 *~ -0.5;
@@ -384,32 +384,32 @@ and window-msec (analysis window size in seconds and msec).;
 #X restore 229 311 pd hann-window;
 #N canvas 52 71 774 520 tables 0;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-last-real 2048 float 0;
+#X array \$0-last-real 2048 float 0 black black;
 #X coords 0 500 2048 -500 200 150 1;
 #X restore 103 15 graph;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-last-imag 2048 float 0;
+#X array \$0-last-imag 2048 float 0 black black;
 #X coords 0 500 2048 500 200 150 1;
 #X restore 497 6 graph;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-amp-real 2048 float 0;
+#X array \$0-amp-real 2048 float 0 black black;
 #X coords 0 500 2048 -500 200 150 1;
 #X restore 105 185 graph;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-amp-imag 2048 float 0;
+#X array \$0-amp-imag 2048 float 0 black black;
 #X coords 0 500 2048 -500 200 150 1;
 #X restore 501 178 graph;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-inc-real 2048 float 0;
+#X array \$0-inc-real 2048 float 0 black black;
 #X coords 0 1 2048 -1 200 150 1;
 #X restore 105 357 graph;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-inc-imag 2048 float 0;
+#X array \$0-inc-imag 2048 float 0 black black;
 #X coords 0 1 2048 -1 200 150 1;
 #X restore 503 342 graph;
 #X restore 229 332 pd tables;
-#X text 32 354 reverb in;
-#X text 116 354 reverb out;
+#X text 32 364 reverb in;
+#X text 116 364 reverb out;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header piano_reverb 20
 10 1 18 -261139 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
@@ -417,16 +417,15 @@ and window-msec (analysis window size in seconds and msec).;
 #X obj 1 387 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION piano reverb;
+#X text 12 45 DESCRIPTION piano reverb;
+#X text 12 5 KEYWORDS signal tutorial;
 #X restore 392 389 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

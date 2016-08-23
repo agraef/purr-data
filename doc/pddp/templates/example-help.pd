@@ -1,4 +1,4 @@
-#N canvas 50 40 568 623 10;
+#N canvas 51 65 568 623 10;
 #X obj 5 574 cnv 15 550 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 5 -12 cnv 15 550 40 empty \$0-pddp.cnv.header float 3 12 0 18
@@ -6,26 +6,25 @@
 #X obj 4 244 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 15 12 0 13
 -228856 -1 0;
 #N canvas 407 510 490 340 META 0;
-#X text 12 25 KEYWORDS control number float store;
 #X text 12 45 LICENSE GPL;
 #X text 12 65 TEMPLATE template-help.pd v0.1;
 #X text 12 85 PLATFORM windows macosx gnulinux;
 #X text 12 105 DATATYPE float list;
-#X text 12 5 GENRE storage;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 RELEASE_DATE 2007-08-24;
 #X text 12 185 RELEASE_VERSION 0.40-test05;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 KEYWORDS control number float storage;
 #X restore 505 576 pd META;
 #X obj 83 156 cnv 10 50 16 empty empty empty 20 12 0 14 -262126 -66577
 0;
 #X obj 346 163 cnv 10 23 16 empty empty empty 20 12 0 14 -262126 -66577
 0;
-#X floatatom 384 135 5 0 0 0 - - -;
-#X floatatom 345 187 5 0 0 0 - - -;
+#X floatatom 384 135 5 0 0 0 - - -, f 5;
+#X floatatom 345 187 5 0 0 0 - - -, f 5;
 #X obj 364 135 bng 15 250 50 0 empty empty empty 20 7 0 12 -4034 -1
 -1;
-#X floatatom 85 181 5 0 0 0 - - -;
+#X floatatom 85 181 5 0 0 0 - - -, f 5;
 #X msg 85 73 bang;
 #X msg 325 79 7 3 4;
 #X obj 345 162 f;

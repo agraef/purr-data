@@ -1,4 +1,4 @@
-#N canvas 387 23 561 651 10;
+#N canvas 388 45 561 651 10;
 #X floatatom 232 201 4 0 127 0 - - -, f 4;
 #X text 228 163 center;
 #X obj 232 268 line~;
@@ -64,16 +64,15 @@ of sinusoids to make complex spectral shapes.;
 #X obj 1 745 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.40. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.40. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION wave packets as alternative to PAF;
+#X text 12 45 DESCRIPTION wave packets as alternative to PAF;
+#X text 12 5 KEYWORDS signal tutorial;
 #X restore 392 747 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

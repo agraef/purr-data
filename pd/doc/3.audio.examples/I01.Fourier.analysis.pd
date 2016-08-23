@@ -1,7 +1,7 @@
-#N canvas 343 19 688 666 10;
+#N canvas 263 25 688 666 10;
 #X floatatom 38 284 7 0 0 0 - - -, f 7;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-real 64 float 2;
+#X array \$0-real 64 float 2 black black;
 #X coords 0 64 64 -64 256 200 1;
 #X restore 393 194 graph;
 #X floatatom 38 188 5 0 32 0 - - -, f 5;
@@ -13,7 +13,7 @@
 #X obj 67 634 tabwrite~ \$0-imaginary;
 #X obj 38 404 osc~;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-imaginary 64 float 2;
+#X array \$0-imaginary 64 float 2 black black;
 #X coords 0 64 64 -64 256 200 1;
 #X restore 393 427 graph;
 #X obj 69 380 f;
@@ -23,10 +23,10 @@
 #X text 565 175 real part;
 #X text 520 408 imaginary part;
 #X obj 80 565 loadbang;
-#X text 94 186 <- frequency;
-#X text 133 202 (as multiple;
-#X text 135 218 of SR/64 \, the;
-#X text 133 235 fundamental);
+#X text 94 192 <- frequency;
+#X text 133 208 (as multiple;
+#X text 135 224 of SR/64 \, the;
+#X text 133 241 fundamental);
 #X text 170 365 of a cycle;
 #X obj 89 610 s \$0-snap;
 #X obj 69 306 r \$0-snap;
@@ -56,7 +56,7 @@
 20 10 1 18 -261139 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
-#X text 135 28 The [fft~] object has separate inlets for the real and
+#X text 135 24 The [fft~] object has separate inlets for the real and
 imaginary parts of a complex-valued signal and outputs its Fourier
 transform \, again using separate outlets for the real and imaginary
 part. The transform is done on one block of samples (here the block
@@ -70,16 +70,15 @@ energy from real to imaginary and back.;
 #X obj 1 687 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION Fourier analysis;
+#X text 12 45 DESCRIPTION Fourier analysis;
+#X text 12 5 KEYWORDS signal tutorial;
 #X restore 392 689 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

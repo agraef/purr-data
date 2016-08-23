@@ -1,18 +1,17 @@
-#N canvas 430 36 448 227 10;
+#N canvas 432 86 448 227 10;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header pd_META 20 10 1
 18 -261106 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
 #X obj 1 204 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 378 84 494 158 META 0;
+#N canvas 379 109 494 158 META 0;
 #X text 12 85 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
 #X text 12 65 LIBRARY PDDP;
-#X text 12 5 GENRE all_about_pd;
-#X text 12 25 KEYWORDS needs_work;
 #X text 12 45 DESCRIPTION description of the pd META tags;
+#X text 12 25 KEYWORDS needs_work all_about_pd;
 #X restore 392 206 pd META;
 #N canvas 222 133 428 105 Related_objects 0;
 #X text 31 37 Hm...what to put here?;
@@ -56,10 +55,6 @@ as additional text explaining each author's role.;
 #X text 31 763 The values may be float \, list \, bang \, symbol \,
 pointer \, anything \, as well as specific custom selectors such as
 set \, clear \, etc.;
-#X text 31 77 GENRE - describes what type of help patch this is. Possible
-values are: tutorial \, and all_about_pd (in-depth help for a pd concept).
-If GENRE is omitted \, the patch is assumed to be an object help patch.
-;
 #X text 31 137 NAME - name of the objects covered by a multi-object
 help patch. This tag may also be used for tutorials and all_about_pd
 patches to show the relevant object(s) being discussed.;
@@ -69,6 +64,9 @@ names for the object. For [trigger] \, this would be: ALIAS t;
 If this is a libdir object \, this can be omitted.;
 #X text 31 476 HELP_PATCH_AUTHORS - the person or group who made/edited
 this help patch.;
+#X text 31 77 KEYWORDS - general terms to describe the document. The
+most widely-used ones can be found in the Usage Guide at the bottom-left
+corner of most internal object help patches.;
 #X restore 22 147 pd TAGS;
 #X text 19 37 META keywords/tags are used to organize and categorize
 Pure Data documents so that they're easier to search. They follow the

@@ -1,4 +1,4 @@
-#N canvas 433 73 448 632 10;
+#N canvas 434 43 448 632 10;
 #X obj 62 77 osc~ 440;
 #X obj 62 288 dac~;
 #X obj 62 220 *~;
@@ -9,16 +9,16 @@
 #X obj 146 224 r graphit;
 #X obj 78 139 r to-line;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array product 44100 float 0;
-#X coords 0 1.02 44100 -1.02 100 65 1;
+#X array product 44100 float 0 black black;
+#X coords 0 1.02 44099 -1.02 100 65 1;
 #X restore 313 239 graph;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array osc-output 44100 float 0;
-#X coords 0 1.02 44100 -1.02 100 65 1;
+#X array osc-output 44100 float 0 black black;
+#X coords 0 1.02 44099 -1.02 100 65 1;
 #X restore 313 73 graph;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array line-output 44100 float 0;
-#X coords 0 1.02 44100 -1.02 100 65 1;
+#X array line-output 44100 float 0 black black;
+#X coords 0 1.02 44099 -1.02 100 65 1;
 #X restore 313 157 graph;
 #X obj 144 119 tabwrite~ osc-output;
 #X obj 62 263 *~ 0.1;
@@ -47,16 +47,15 @@ an [osc~] \, but with the outputs graphed:;
 #X obj 1 610 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.33. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.33. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 65 DESCRIPTION lines graphed;
-#X text 12 25 KEYWORDS signal ramp;
+#X text 12 45 DESCRIPTION lines graphed;
+#X text 12 5 KEYWORDS signal ramp tutorial;
 #X restore 392 612 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

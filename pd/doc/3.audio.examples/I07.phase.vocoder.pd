@@ -1,4 +1,4 @@
-#N canvas 433 82 448 604 10;
+#N canvas 434 34 448 604 10;
 #X floatatom 346 251 5 0 0 0 - transpo-set -, f 5;
 #X floatatom 101 295 3 0 0 0 - speed-set -, f 3;
 #X floatatom 22 295 7 0 0 0 - location-set -, f 7;
@@ -364,11 +364,11 @@ shifts the signal to the left or right depending on its argument.)
 #X restore 22 490 pd fft-analysis;
 #N canvas 260 23 647 768 phase-tables 0;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array prev-imag 4096 float 0;
+#X array prev-imag 4096 float 0 black black;
 #X coords 0 1000 4096 -1000 400 300 1;
 #X restore 169 326 graph;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array prev-real 4096 float 0;
+#X array prev-real 4096 float 0 black black;
 #X coords 0 500 4096 -500 400 300 1;
 #X restore 170 17 graph;
 #X restore 170 436 pd phase-tables;
@@ -379,8 +379,8 @@ shifts the signal to the left or right depending on its argument.)
 #X obj 23 517 output~;
 #N canvas 0 110 565 454 hann-window 0;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-hann 1024 float 0;
-#X coords 0 1 1024 0 300 100 1;
+#X array \$0-hann 1024 float 0 black black;
+#X coords 0 1 1023 0 300 100 1;
 #X restore 82 311 graph;
 #X obj 378 165 osc~;
 #X obj 378 190 *~ -0.5;
@@ -429,8 +429,8 @@ and window-msec (analysis window size in seconds and msec).;
 #X restore 170 460 pd hann-window;
 #N canvas 388 86 694 447 insample 0;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-sample 82301 float 0;
-#X coords 0 1 82300 -1 400 150 1;
+#X array \$0-sample 62079 float 0 black black;
+#X coords 0 1 62078 -1 400 150 1;
 #X restore 281 135 graph;
 #X obj 28 133 r read-sample;
 #X obj 28 184 unpack s f;
@@ -551,16 +551,15 @@ to see the workings.;
 #X obj 1 582 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION phase vocoder;
+#X text 12 45 DESCRIPTION phase vocoder;
+#X text 12 5 KEYWORDS signal tutorial;
 #X restore 392 584 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

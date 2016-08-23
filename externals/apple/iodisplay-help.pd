@@ -1,20 +1,8 @@
-#N canvas 392 89 560 598 10;
+#N canvas 393 98 560 598 10;
 #X obj 4 -17 cnv 15 550 40 empty \$0-pddp.cnv.header iodisplay 3 12
 0 18 -241536 -1 0;
 #X obj 3 179 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 15 12 0 13
 -245500 -191407 0;
-#N canvas 779 22 494 344 META 0;
-#X text 12 25 KEYWORDS control number float store;
-#X text 12 45 LICENSE GPL;
-#X text 12 65 TEMPLATE template-help.pd v0.1;
-#X text 12 85 PLATFORM windows macosx gnulinux;
-#X text 12 105 DATATYPE float list;
-#X text 12 5 GENRE storage;
-#X text 12 125 LIBRARY internal;
-#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 165 RELEASE_DATE 2007-08-24;
-#X text 12 185 RELEASE_VERSION 0.40-test05;
-#X restore 504 549 pd META;
 #X obj 3 271 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlet 15 12 0
 13 -245500 -191407 0;
 #X obj 3 321 cnv 3 550 3 empty \$0-pddp.cnv.argument argument 15 12
@@ -35,7 +23,7 @@ Apple;
 #X msg 81 33 bang;
 #X obj 103 58 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
 -1 -1 0 1;
-#X floatatom 116 82 5 0 0 0 - - -;
+#X floatatom 116 82 5 0 0 0 - - -, f 5;
 #X obj 81 140 pddp/print;
 #X obj 81 107 iodisplay brightness;
 #X text 102 339 symbol - name of the IODisplay parameter to control
@@ -67,16 +55,16 @@ Apple;
 #X msg 291 33 bang;
 #X obj 306 59 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
 -1 -1 0 1;
-#X floatatom 319 83 5 0 0 0 - - -;
+#X floatatom 319 83 5 0 0 0 - - -, f 5;
 #X obj 291 140 pddp/print;
 #X msg 366 83 symbol brightness;
 #X obj 291 107 iodisplay;
-#X connect 12 0 16 0;
-#X connect 13 0 14 0;
-#X connect 13 0 16 0;
-#X connect 16 0 15 0;
-#X connect 39 0 44 0;
-#X connect 40 0 41 0;
-#X connect 40 0 44 0;
-#X connect 43 0 44 1;
-#X connect 44 0 42 0;
+#X connect 11 0 15 0;
+#X connect 12 0 13 0;
+#X connect 12 0 15 0;
+#X connect 15 0 14 0;
+#X connect 38 0 43 0;
+#X connect 39 0 40 0;
+#X connect 39 0 43 0;
+#X connect 42 0 43 1;
+#X connect 43 0 41 0;

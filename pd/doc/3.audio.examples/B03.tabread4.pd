@@ -1,4 +1,4 @@
-#N canvas 374 90 452 581 10;
+#N canvas 396 44 452 581 10;
 #N canvas 0 0 450 300 (subpatch) 0;
 #X array waveform12 131 float 1 black black;
 #A 0 -0.172615 -0.172615 -0.172615 -0.172615 -0.172615 -0.141231 -0.109846
@@ -18,7 +18,7 @@
 0.219692 0.109846 -0.0156923 -0.0941538 -0.109846 -0.141231 -0.156923
 -0.172615 -0.188308 -0.204 -0.204 -0.219692 -0.204 -0.204 -0.219692
 -0.219692 -0.204 -0.204 -0.204 -0.204 -0.204 -0.188308;
-#X coords 0 1.02 131 -1.02 150 80 1;
+#X coords 0 1.02 130 -1.02 150 80 1;
 #X restore 274 39 graph;
 #X floatatom 131 292 0 0 100 0 - - -;
 #N canvas 159 26 532 285 output 0;
@@ -92,7 +92,7 @@
 #X text 92 38 frequency;
 #N canvas 0 0 450 300 (subpatch) 0;
 #X array wave-out12 441 float 0 black black;
-#X coords 0 1 441 -1 150 80 1;
+#X coords 0 1 440 -1 150 80 1;
 #X restore 274 124 graph;
 #X obj 127 260 tabwrite~ wave-out12;
 #X msg 127 234 bang;
@@ -108,13 +108,12 @@
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 105 AUTHOR Miller Puckette;
 #X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
 #X text 12 45 LICENSE SIBSD;
 #X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal array;
 #X text 12 65 DESCRIPTION wavetable oscillators;
+#X text 12 25 KEYWORDS signal array tutorial;
 #X restore 392 561 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

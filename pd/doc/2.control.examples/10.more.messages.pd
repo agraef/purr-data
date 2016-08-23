@@ -1,16 +1,16 @@
-#N canvas 0 0 448 573 10;
+#N canvas 424 32 448 573 10;
 #X obj 161 348 print;
 #X msg 30 111 3 \, 4 \, 5;
 #X msg 22 84 3 4 5;
 #X msg 25 322 3 \$1 5;
-#X floatatom 25 295 4 0 0 0 - - -;
+#X floatatom 25 295 4 0 0 0 - - -, f 4;
 #X msg 161 320 \$2 \$1 5;
 #X msg 161 295 45 67;
 #X msg 239 295 45 67;
-#X floatatom 28 427 4 0 0 0 - - -;
-#X floatatom 63 427 4 0 0 0 - - -;
-#X floatatom 270 201 4 0 0 0 - - -;
-#X floatatom 164 204 4 0 0 0 - - -;
+#X floatatom 28 427 4 0 0 0 - - -, f 4;
+#X floatatom 63 427 4 0 0 0 - - -, f 4;
+#X floatatom 270 201 4 0 0 0 - - -, f 4;
+#X floatatom 164 204 4 0 0 0 - - -, f 4;
 #X obj 164 177 receive number9;
 #X obj 270 177 receive 9bis;
 #X obj 22 200 print;
@@ -31,7 +31,7 @@ variables \, you will need the "pack" object to get two or more values
 into the same message:;
 #X obj 28 509 print;
 #X obj 28 457 pack 0 0 0;
-#X floatatom 99 427 4 0 0 0 - - -;
+#X floatatom 99 427 4 0 0 0 - - -, f 4;
 #X msg 28 483 cis \$1 \, boom \$2 \, bah \$3;
 #X text 94 457 <-- creation arguments to "pack" set the number of inlets.
 ;
@@ -44,14 +44,13 @@ into the same message:;
 #N canvas 54 300 494 284 META 0;
 #X text 12 115 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 95 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
 #X text 12 45 LICENSE SIBSD;
-#X text 12 25 KEYWORDS control nonlocal;
 #X text 12 135 HELP_PATCH_AUTHORS Miller Puckette. Updated for release
 0.34. Jonathan Wilkes revised the patch to conform to the PDDP template
 for Pd version 0.42.;
 #X text 12 65 DESCRIPTION how to send multiple messages and messages
 without wires;
+#X text 12 25 KEYWORDS control nonlocal tutorial;
 #X restore 382 553 pd META;
 #X text 19 227 You can use "\$1" \, "\$2" \, etc. \, as variables in
 messages. Send the message box a list whose elements supply the values.

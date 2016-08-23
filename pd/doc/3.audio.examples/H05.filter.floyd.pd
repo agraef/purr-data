@@ -1,7 +1,7 @@
-#N canvas 424 20 448 653 10;
+#N canvas 350 25 448 653 10;
 #N canvas 0 0 600 392 conversion-tables 0;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array dbtorms 123 float 1;
+#X array dbtorms 123 float 1 black black;
 #A 0 0 0 1.25893e-05 1.41254e-05 1.58489e-05 1.77828e-05 1.99526e-05
 2.23872e-05 2.51189e-05 2.81838e-05 3.16228e-05 3.54813e-05 3.98107e-05
 4.46684e-05 5.01187e-05 5.62341e-05 6.30957e-05 7.07946e-05 7.94328e-05
@@ -26,7 +26,7 @@
 #X text 506 41 10;
 #X text 321 151 ------ 123 samples ------;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array mtof 130 float 1;
+#X array mtof 130 float 1 black black;
 #A 0 8.1758 8.66196 9.17702 9.72272 10.3009 10.9134 11.5623 12.2499
 12.9783 13.75 14.5676 15.4339 16.3516 17.3239 18.354 19.4454 20.6017
 21.8268 23.1247 24.4997 25.9565 27.5 29.1352 30.8677 32.7032 34.6478
@@ -66,7 +66,7 @@
 #X obj 22 207 mtof;
 #X obj 55 159 mod 8;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-array1 8 float 2;
+#X array \$0-array1 8 float 2 black black;
 #X coords 0 96 8 36 200 100 1;
 #X restore 230 164 graph;
 #X text 73 326 <-- center frequency;
@@ -110,16 +110,15 @@ we had had both even and odd ones.;
 #X obj 1 631 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION another sweeping filter example;
+#X text 12 45 DESCRIPTION another sweeping filter example;
+#X text 12 5 KEYWORDS signal tutorial;
 #X restore 392 633 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

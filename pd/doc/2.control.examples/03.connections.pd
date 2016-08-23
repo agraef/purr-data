@@ -1,4 +1,4 @@
-#N canvas 433 96 448 562 10;
+#N canvas 434 62 448 562 10;
 #X floatatom 28 518 0 0 0 0 - - -;
 #X floatatom 139 519 0 0 0 0 - - -;
 #X floatatom 28 417 0 0 0 0 - - -;
@@ -25,14 +25,13 @@
 #N canvas 42 254 494 284 META 0;
 #X text 12 115 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 95 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
 #X text 12 45 LICENSE SIBSD;
-#X text 12 25 KEYWORDS control;
 #X text 12 135 HELP_PATCH_AUTHORS Miller Puckette. Updated for release
 0.33. Jonathan Wilkes revised the patch to conform to the PDDP template
 for Pd version 0.42.;
 #X text 12 65 DESCRIPTION connections between objects \, and hot and
 cold inlets;
+#X text 12 25 KEYWORDS control tutorial;
 #X restore 382 541 pd META;
 #N canvas 13 202 428 143 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

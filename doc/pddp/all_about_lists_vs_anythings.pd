@@ -1,4 +1,4 @@
-#N canvas 429 34 448 568 10;
+#N canvas 430 59 448 568 10;
 #N canvas 0 0 878 658 old 0;
 #X msg 95 368 1 2 3;
 #X obj 125 399 route list;
@@ -263,16 +263,15 @@ selector "this");
 ;
 #X obj 1 546 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 377 405 494 174 META 0;
+#N canvas 378 430 494 174 META 0;
 #X text 12 115 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
 #X text 12 95 LIBRARY PDDP;
-#X text 12 5 GENRE all_about_pd;
 #X text 12 45 KEYWORDS needs_work;
-#X text 12 25 NAME list;
 #X text 12 65 DESCRIPTION definitions for list and anything in the
 context of Pd;
+#X text 12 25 NAME list all_about_pd;
 #X restore 392 548 pd META;
 #X obj 6 548 pddp/pddplink all_about.pd -text All About Pd;
 #X obj 40 92 pddp/pddplink all_about_atoms.pd;

@@ -1,4 +1,4 @@
-#N canvas 433 105 448 537 10;
+#N canvas 434 130 448 537 10;
 #X obj 23 158 select 1 2;
 #X floatatom 23 130 0 0 0 0 - - -;
 #X obj 23 235 print select-1;
@@ -35,14 +35,13 @@
 #X text 12 135 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 115 AUTHOR Miller Puckette;
 #X text 12 95 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
 #X text 12 45 LICENSE SIBSD;
 #X text 12 155 HELP_PATCH_AUTHORS Updated for release 0.26. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS control;
 #X text 12 65 DESCRIPTION creating conditional branches with control
 object;
+#X text 12 25 KEYWORDS control tutorial;
 #X restore 382 517 pd META;
 #X text 20 283 You also get [spigot] which turns a flow of messages
 on and off (like the [gate] object in Max \, but with the inputs reversed):

@@ -1,4 +1,4 @@
-#N canvas 0 31 486 356 10;
+#N canvas 270 197 486 356 10;
 #N canvas 119 189 450 300 voxdetect 0;
 #X obj 150 156 voicing_detector~;
 #X obj 150 99 inlet~;
@@ -58,14 +58,14 @@
 #X connect 10 0 9 0;
 #X restore 139 86 pd load;
 #N canvas 0 22 450 300 (subpatch) 0;
-#X array \$0-voice 88800 float 0;
+#X array \$0-voice 88800 float 0 black black;
 #X coords 0 1 88799 -1 100 70 1;
 #X restore 281 55 graph;
-#X floatatom 96 234 5 0 0 0 - - -;
+#X floatatom 96 234 5 0 0 0 - - -, f 5;
 #X obj 166 233 dac~;
 #X obj 217 44 vsl 15 101 0 100 0 0 empty empty empty 0 -8 0 8 -262144
 -1 -1 0 1;
-#X floatatom 193 168 5 0 0 0 - - -;
+#X floatatom 193 168 5 0 0 0 - - -, f 5;
 #X text 79 253 The voicing detector estimates whether a frame of speech
 is voiced (uses the vocal chords) or unvoiced (does not).;
 #X text 128 318 (Gnu) Edward Kelly and Nicolas Chetry 2005;
@@ -74,8 +74,7 @@ is voiced (uses the vocal chords) or unvoiced (does not).;
 0 1;
 #X obj 124 162 adc~;
 #X obj 93 291 pddp/pddplink voicing_detector~test3-help.pd;
-#N canvas 397 190 494 344 META 0;
-#X text 12 5 GENRE help;
+#N canvas 398 215 494 344 META 0;
 #X text 12 195 HELP_PATCH_AUTHORS Ed Kelly. Revised by Jonathan Wilkes
 for Pd-extended 0.42 to conform to the PDDP template.;
 #X text 12 45 LICENSE GPL v3;

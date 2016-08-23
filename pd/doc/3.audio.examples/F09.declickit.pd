@@ -1,4 +1,4 @@
-#N canvas 420 23 448 659 10;
+#N canvas 401 36 448 622 10;
 #X obj 82 451 cos~;
 #X obj 82 421 *~;
 #X obj 124 451 cos~;
@@ -8,9 +8,9 @@
 #X obj 124 486 -~;
 #X obj 144 518 *~;
 #X obj 122 543 +~;
-#X obj 156 129 loadbang;
-#X obj 156 155 metro 400;
-#X obj 168 179 del 200;
+#X obj 156 134 loadbang;
+#X obj 156 160 metro 400;
+#X obj 168 184 del 200;
 #X obj 204 296 samphold~;
 #N canvas 0 0 405 406 switch 0;
 #X obj 15 383 outlet~;
@@ -68,16 +68,15 @@ crossings. At the phase crossings the two weighted cosines add to one
 #X obj 1 637 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION changing the center frequency quickly;
+#X text 12 45 DESCRIPTION changing the center frequency quickly;
+#X text 12 5 KEYWORDS signal tutorial;
 #X restore 392 639 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

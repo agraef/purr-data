@@ -1,4 +1,4 @@
-#N canvas 0 18 222 544 10;
+#N canvas 353 44 222 544 10;
 #X text 17 121 GUI stuff;
 #X msg 17 145 menusave;
 #X msg 17 171 menusaveas;
@@ -21,14 +21,13 @@
 #X text 19 52 menu items do.;
 #X msg 17 327 find +test 1;
 #N canvas 218 113 494 396 META 0;
-#X text 12 5 GENRE tutorial;
-#X text 12 95 HELP_PATCH_AUTHORS Damien Henry. "pd meta" information
+#X text 12 85 HELP_PATCH_AUTHORS Damien Henry. "pd meta" information
 added by Jonathan Wilkes for Pd version 0.42.;
-#X text 12 65 DESCRIPTION how to access a patch's menu options by sending
+#X text 12 55 DESCRIPTION how to access a patch's menu options by sending
 messages to a canvas;
-#X text 12 25 KEYWORDS control canvas_op nonlocal dynamic_patching
+#X text 12 34 LICENSE public domain;
+#X text 12 5 KEYWORDS control canvas_op nonlocal dynamic_patching tutorial
 ;
-#X text 12 44 LICENSE public domain;
 #X restore 169 520 pd META;
 #X connect 1 0 15 0;
 #X connect 2 0 15 0;

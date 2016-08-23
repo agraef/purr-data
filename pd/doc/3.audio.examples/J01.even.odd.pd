@@ -1,18 +1,18 @@
-#N canvas 368 22 615 581 10;
+#N canvas 333 28 615 581 10;
 #X obj 80 186 wrap~;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-phasor 882 float 0;
-#X coords 0 1.02 882 -1.02 200 130 1;
+#X array \$0-phasor 882 float 0 black black;
+#X coords 0 1.02 881 -1.02 200 130 1;
 #X restore 397 65 graph;
 #X obj 24 87 -~ 0.5;
 #X obj 80 214 -~ 0.5;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-sum 882 float 0;
-#X coords 0 1.02 882 -1.02 200 130 1;
+#X array \$0-sum 882 float 0 black black;
+#X coords 0 1.02 881 -1.02 200 130 1;
 #X restore 397 219 graph;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-difference 882 float 0;
-#X coords 0 1.02 882 -1.02 200 130 1;
+#X array \$0-difference 882 float 0 black black;
+#X coords 0 1.02 881 -1.02 200 130 1;
 #X restore 396 373 graph;
 #X text 430 505 ---- 0.02 seconds ----;
 #X obj 22 365 output~;
@@ -27,7 +27,7 @@
 #X text 145 242 form the sum and difference;
 #X obj 23 254 +~;
 #X obj 59 253 -~;
-#X text 19 418 This patch splits a sawtooth wave into its even and
+#X text 19 428 This patch splits a sawtooth wave into its even and
 odd harmonics. The wrap~ object is used to make the phased copy. Adding
 and subtracting this to and from the original gives the results shown
 and heard. (Listen to the two outputs separately \, then together.)
@@ -41,7 +41,7 @@ and heard. (Listen to the two outputs separately \, then together.)
 #X obj 138 277 tabwrite~ \$0-difference;
 #X obj 138 300 tabwrite~ \$0-sum;
 #X obj 138 168 tabwrite~ \$0-phasor;
-#X text 19 482 This is a classic technique for gaining separate control
+#X text 19 497 This is a classic technique for gaining separate control
 over the even and odd harmonics in a synthetic sound. It can also be
 used conceptually to understand the harmonic content of a square wave
 in terms of that of a sawtooth \, or vice versa.;
@@ -50,27 +50,26 @@ in terms of that of a sawtooth \, or vice versa.;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
 #X text 131 28 ... into even and odd harmonics;
-#X obj 1 559 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+#X obj 1 574 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION splitting a sawtooth wave;
-#X restore 392 561 pd META;
+#X text 12 45 DESCRIPTION splitting a sawtooth wave;
+#X text 12 5 KEYWORDS signal tutorial;
+#X restore 392 576 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261139 -33289 0;
 #X text 7 2 splitting a sawtooth- Related Help Documents;
 #X text 19 37 links:;
-#X restore 103 561 pd References;
-#X obj 6 561 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X restore 103 576 pd References;
+#X obj 6 576 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 3 0;
 #X connect 2 0 0 0;
 #X connect 2 0 16 0;

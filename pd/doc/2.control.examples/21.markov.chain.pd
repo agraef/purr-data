@@ -1,4 +1,4 @@
-#N canvas 433 121 448 488 10;
+#N canvas 434 95 448 488 10;
 #X obj 22 262 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
 -1;
 #X obj 22 368 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
@@ -58,18 +58,17 @@
 ;
 #X obj 1 466 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 190 254 494 284 META 0;
+#N canvas 460 168 494 284 META 0;
 #X text 12 135 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 115 AUTHOR Miller Puckette;
 #X text 12 95 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
 #X text 12 45 LICENSE SIBSD;
 #X text 12 155 HELP_PATCH_AUTHORS Updated for release 0.35. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS control;
 #X text 12 65 DESCRIPTION how to construct a simple three-valued Markov
 chain;
+#X text 12 25 KEYWORDS control tutorial;
 #X restore 382 468 pd META;
 #X text 19 135 STEP;
 #N canvas 13 392 428 143 References 0;

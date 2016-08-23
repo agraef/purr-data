@@ -1,6 +1,7 @@
+#N struct ;
 #N struct ds-array-ex float x float y array circles circle;
 #N struct circle float y symbol a;
-#N canvas 429 33 448 312 10;
+#N canvas 430 58 448 312 10;
 #N canvas 12 67 428 377 Common_uses_for_arrays_in_PD 0;
 #X text 20 37 Arrays are versatile. Their simple structure make them
 useful in countless situations. This page discusses perhaps the most
@@ -38,15 +39,13 @@ for [table] \, [tabread] \, [tabwrite] \, [soundfiler] \, [tabsend~]
 #X obj 1 290 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 95 LIBRARY PDDP;
-#X text 12 115 HELP_PATCH_AUTHORS Updated for Pd 0.38-2. Jonathan Wilkes
+#X text 12 55 LIBRARY PDDP;
+#X text 12 75 HELP_PATCH_AUTHORS Updated for Pd 0.38-2. Jonathan Wilkes
 revised the patch to conform to the PDDP template for Pd version 0.42.
 ;
-#X text 12 5 GENRE all_about_pd;
-#X text 12 45 KEYWORDS array storage;
-#X text 12 25 NAME table struct;
-#X text 12 65 DESCRIPTION description of arrays and related objects
+#X text 12 25 DESCRIPTION description of arrays and related objects
 for creating and managing them;
+#X text 12 5 KEYWORDS table struct all_about_pd array storage;
 #X restore 392 292 pd META;
 #N canvas 13 162 428 183 Related_objects 0;
 #X obj 22 41 struct;
@@ -82,7 +81,7 @@ graphically) as part of a data structure.;
 #X restore 43 42 pd What_is_an_array_in_PD;
 #N canvas 0 0 428 403 The_Put_menu_array 0;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-pddp-garray-ex1 100 float 2;
+#X array \$0-pddp-garray-ex1 100 float 2 black black;
 #X coords 0 1 99 -1 200 140 1;
 #X restore 22 73 graph;
 #X text 233 149 the black line to change;
@@ -211,7 +210,7 @@ menu arrays (both graphically and in their structure).;
 #X obj 216 109 pddp/pddplink struct-help.pd;
 #N canvas 14 32 428 532 How_to_manipulate_arrays_in_PD 0;
 #N canvas 0 22 452 302 (subpatch) 0;
-#X array exampleArray 14 float 0;
+#X array exampleArray 14 float 0 black black;
 #X coords 0 2 13 -2 200 140 1;
 #X restore 214 378 graph;
 #N canvas 9 24 434 213 Setting_the_size_of_an_array 0;
@@ -238,14 +237,14 @@ of the array.;
 the two arrays which will be concatenated. This process will fill NewArray
 with the contents of exampleArray and concatArray.;
 #N canvas 0 22 450 300 (subpatch) 0;
-#X array concatArray 15 float 1;
+#X array concatArray 15 float 1 black black;
 #A 0 -0.700355 -0.371783 -0.443212 -0.700355 -0.714641 -0.386069 0.0425035
 0.399647 0.513933 0.399647 0.128218 -0.128925 -0.21464 -0.0289252 -0.700355
 ;
 #X coords 0 1 14 -1 200 120 1;
 #X restore 492 25 graph;
 #N canvas 0 22 450 300 (subpatch) 0;
-#X array NewArray 29 float 0;
+#X array NewArray 29 float 0 black black;
 #X coords 0 1 28 -1 300 140 1;
 #X restore 389 225 graph;
 #X obj 125 57 bng 15 250 50 0 empty empty Bang_me 18 7 0 8 -262144
@@ -382,7 +381,7 @@ to dynamically change the array name:;
 #X text 15 300 Arrays accept a "print" command which will output important
 array information to the terminal window. Like below:;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array someOtherArray 4 float 2;
+#X array someOtherArray 4 float 2 black black;
 #X coords 0 1 4 -1 75 50 1;
 #X restore 235 201 graph;
 #X text 15 266 See the [expr] help patch for other array functions.

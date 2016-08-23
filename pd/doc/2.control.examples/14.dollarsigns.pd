@@ -1,4 +1,4 @@
-#N canvas 433 237 448 139 10;
+#N canvas 434 123 448 139 10;
 #X obj 103 79 dollarsign2 three 4;
 #X text 19 37 An abstraction's creation arguments may be either numbers
 or symbols. Gory details are inside:;
@@ -8,17 +8,16 @@ or symbols. Gory details are inside:;
 ;
 #X obj 1 117 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 29 301 494 284 META 0;
+#N canvas 405 151 494 284 META 0;
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 105 AUTHOR Miller Puckette;
 #X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
 #X text 12 45 LICENSE SIBSD;
 #X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.34. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS control abstraction;
 #X text 12 65 DESCRIPTION example patch for dollarsign variables;
+#X text 12 25 KEYWORDS control abstraction tutorial;
 #X restore 382 119 pd META;
 #N canvas 13 202 428 143 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

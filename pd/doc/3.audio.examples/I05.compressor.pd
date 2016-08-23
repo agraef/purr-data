@@ -1,4 +1,4 @@
-#N canvas 433 145 448 416 10;
+#N canvas 434 46 448 416 10;
 #N canvas 297 254 646 523 fft-analysis 0;
 #X obj 115 409 *~;
 #X obj 75 409 *~;
@@ -118,8 +118,8 @@ set 10;
 #X obj 22 329 output~;
 #N canvas 388 86 722 350 insample 0;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-sample 155948 float 0;
-#X coords 0 1 155948 -1 400 150 1;
+#X array \$0-sample 62079 float 0 black black;
+#X coords 0 1 62078 -1 400 150 1;
 #X restore 259 24 graph;
 #X obj 19 23 r read-sample;
 #X obj 19 74 unpack s f;
@@ -176,8 +176,8 @@ squelch value.;
 #X obj 172 237 s read-sample;
 #N canvas 0 110 565 454 hann-window 0;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-hann 1024 float 0;
-#X coords 0 1 1024 0 300 100 1;
+#X array \$0-hann 1024 float 0 black black;
+#X coords 0 1 1023 0 300 100 1;
 #X restore 82 311 graph;
 #X obj 378 165 osc~;
 #X obj 378 190 *~ -0.5;
@@ -232,16 +232,15 @@ and window-msec (analysis window size in seconds and msec).;
 #X obj 1 394 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION dynamic range compression;
+#X text 12 45 DESCRIPTION dynamic range compression;
+#X text 12 5 KEYWORDS signal tutorial;
 #X restore 392 396 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

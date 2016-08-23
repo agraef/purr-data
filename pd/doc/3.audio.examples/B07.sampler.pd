@@ -1,9 +1,9 @@
-#N canvas 433 80 448 610 10;
+#N canvas 434 33 448 610 10;
 #X obj 22 199 hip~ 5;
 #X text 81 199 high pass filter to cut DC;
 #N canvas 0 0 450 300 (subpatch) 0;
 #X array sample-table 44104 float 0 black black;
-#X coords 0 1.02 44104 -1.02 200 130 1;
+#X coords 0 1.02 44103 -1.02 200 130 1;
 #X restore 99 243 graph;
 #X obj 22 172 tabread4~ sample-table;
 #X obj 22 142 line~;
@@ -47,13 +47,12 @@ sent when you load this patch by the "loadbang" object.);
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 105 AUTHOR Miller Puckette;
 #X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
 #X text 12 45 LICENSE SIBSD;
 #X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.33. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal array;
 #X text 12 65 DESCRIPTION scratch machine;
+#X text 12 25 KEYWORDS signal array tutorial;
 #X restore 392 589 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

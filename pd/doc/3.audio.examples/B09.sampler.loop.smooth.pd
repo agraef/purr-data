@@ -1,11 +1,11 @@
-#N canvas 353 101 689 547 10;
+#N canvas 334 68 689 547 10;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array cos-output 44100 float 0;
-#X coords 0 1.02 44100 -1.02 200 130 1;
+#X array cos-output 44100 float 0 black black;
+#X coords 0 1.02 44099 -1.02 200 130 1;
 #X restore 361 217 graph;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array table18 44103 float 0;
-#X coords 0 1.02 44103 -1.02 200 130 1;
+#X array table18 44103 float 0 black black;
+#X coords 0 1.02 44102 -1.02 200 130 1;
 #X restore 361 42 graph;
 #X obj 395 452 loadbang;
 #X obj 21 251 hip~ 5;
@@ -58,13 +58,12 @@ of the envelope \, but this will be taken up later.;
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 105 AUTHOR Miller Puckette;
 #X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
 #X text 12 45 LICENSE SIBSD;
 #X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
 #X text 12 65 DESCRIPTION enveloping your looping sampler;
+#X text 12 25 KEYWORDS signal tutorial;
 #X restore 392 527 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

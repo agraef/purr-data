@@ -1,6 +1,6 @@
-#N canvas 375 139 624 433 10;
+#N canvas 344 37 624 433 10;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array spectrum-tab 127 float 1;
+#X array spectrum-tab 127 float 1 black black;
 #A 0 48.5713 48.5713 48.5713 48.2142 48.2142 48.2142 48.2142 48.2142
 48.2142 48.2142 48.2142 48.2142 48.2142 48.5713 48.5713 48.9284 48.9284
 48.9284 48.9284 48.9284 48.9284 48.9284 48.5713 48.5713 48.5713 48.2142
@@ -90,16 +90,15 @@ which are computed in "oscbank".;
 #X obj 1 411 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal array;
-#X text 12 65 DESCRIPTION drawable spectra;
+#X text 12 45 DESCRIPTION drawable spectra;
+#X text 12 5 KEYWORDS signal array tutorial;
 #X restore 392 413 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

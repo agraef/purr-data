@@ -1,4 +1,4 @@
-#N canvas 428 33 450 472 10;
+#N canvas 429 58 450 472 10;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header acoustic_conversions
 20 10 1 18 -261106 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
@@ -559,15 +559,14 @@ and are clipped/ignored.;
 #X obj 1 448 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 323 229 494 344 META 0;
-#X text 12 115 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
+#X text 12 95 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 45 KEYWORDS conversion;
-#X text 12 95 LIBRARY PDDP;
-#X text 12 5 GENRE all_about_pd;
-#X text 12 25 NAME mtof ftom dbtorms rmstodb dbtopow powtodb;
-#X text 12 65 DESCRIPTION examples of objects that do conversions between
+#X text 12 75 LIBRARY PDDP;
+#X text 12 45 DESCRIPTION examples of objects that do conversions between
 acoustic units;
+#X text 12 15 KEYWORDS mtof ftom dbtorms rmstodb dbtopow powtodb conversion
+all_about_pd;
 #X restore 392 450 pd META;
 #N canvas 207 265 428 212 Related_objects 0;
 #X obj 23 42 dbtopow~;

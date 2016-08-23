@@ -1,4 +1,4 @@
-#N canvas 428 36 448 239 10;
+#N canvas 429 61 448 239 10;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header data_types 20 10
 1 18 -261106 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
@@ -11,11 +11,10 @@
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
 #X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE all_about_pd;
-#X text 12 25 NAME;
 #X text 12 45 KEYWORDS;
 #X text 12 65 DESCRIPTION list of help patches related to Pd data types
 ;
+#X text 12 25 NAME all_about_pd;
 #X restore 392 219 pd META;
 #X obj 6 219 pddp/pddplink all_about.pd -text All About Pd;
 #N canvas 194 98 428 150 Quick_Quiz! 0;

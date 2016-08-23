@@ -1,4 +1,4 @@
-#N canvas -9 18 894 406 10;
+#N canvas 66 172 894 406 10;
 #X obj 486 176 s as_b;
 #X floatatom 542 147 0 0 0 0 - - -;
 #X obj 542 171 s as_f;
@@ -61,11 +61,11 @@ osc.;
 #X text 744 24 THIRD;
 #X text 93 340 this msg does it all !!!;
 #N canvas 458 158 494 396 META 0;
-#X text 12 5 GENRE tutorial;
 #X text 12 75 HELP_PATCH_AUTHORS Damien Henry. "pd meta" information
 added by Jonathan Wilkes for Pd version 0.42.;
-#X text 12 25 KEYWORDS signal canvas_op nonlocal dynamic_patching;
 #X text 12 45 DESCRIPTION generating a polyphonic pd patch dynamically
+;
+#X text 12 25 KEYWORDS signal canvas_op nonlocal dynamic_patching tutorial
 ;
 #X restore 836 376 pd META;
 #X connect 1 0 2 0;

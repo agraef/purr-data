@@ -1,4 +1,4 @@
-#N canvas 430 33 448 503 10;
+#N canvas 431 58 448 503 10;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header symbol_construction
 20 10 1 18 -261106 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
@@ -29,10 +29,9 @@ more advanced functions \, which are listed below.;
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
 #X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE all_about_pd;
 #X text 12 45 KEYWORDS conversion;
-#X text 12 25 NAME makefilename gatom;
 #X text 12 65 DESCRIPTION how to handle symbols in Pd;
+#X text 12 25 NAME makefilename gatom all_about_pd;
 #X restore 392 483 pd META;
 #N canvas 216 383 428 126 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

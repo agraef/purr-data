@@ -1,13 +1,13 @@
-#N canvas 410 22 486 623 10;
+#N canvas 363 34 486 623 10;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array E06-signal 882 float 0;
-#X coords 0 1.02 882 -1.02 200 130 1;
+#X array E06-signal 882 float 0 black black;
+#X coords 0 1.02 881 -1.02 200 130 1;
 #X restore 228 206 graph;
 #X obj 14 301 hip~ 5;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array E06-spectrum 128 float 0;
+#X array E06-spectrum 128 float 0 black black;
 #X coords 0 4300 127 -40 257 130 1;
-#X restore 171 402 graph;
+#X restore 171 392 graph;
 #N canvas 45 83 558 569 fft 0;
 #X obj 19 61 inlet~;
 #X obj 208 212 inlet;
@@ -79,27 +79,27 @@ frequency for showing spectra: the 16th bin in a 4096-point spectrum
 #X obj 82 237 bng 18 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
 #X obj 14 329 output~;
-#X text 202 535 1;
-#X text 236 535 2;
-#X text 268 535 3;
-#X text 300 535 4;
-#X text 333 535 5;
-#X text 363 535 6;
-#X text 394 535 7;
-#X text 170 535 0;
-#X text 235 552 -- partial number --;
+#X text 202 523 1;
+#X text 236 523 2;
+#X text 268 523 3;
+#X text 300 523 4;
+#X text 333 523 5;
+#X text 363 523 6;
+#X text 394 523 7;
+#X text 170 523 0;
+#X text 235 540 -- partial number --;
 #X text 430 260 0;
 #X obj 12 50 r fundamental;
 #X obj 12 73 osc~;
 #X text 299 186 WAVEFORM;
-#X text 265 384 SPECTRUM;
-#X text 431 518 0;
-#X text 429 397 1;
-#X text 430 456 0.5;
+#X text 265 374 SPECTRUM;
+#X text 431 508 0;
+#X text 429 387 1;
+#X text 430 446 0.5;
 #X obj 82 258 tgl 18 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
 ;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array E06-tab 1003 float 1;
+#X array E06-tab 1003 float 1 black black;
 #A 0 1.01005 1 0.99005 0.980199 0.970446 0.960789 0.951229 0.941765
 0.932394 0.923116 0.913931 0.904837 0.895834 0.88692 0.878095 0.869358
 0.860708 0.852144 0.843665 0.83527 0.826959 0.818731 0.810584 0.802519
@@ -297,16 +297,16 @@ frequency for showing spectra: the 16th bin in a 4096-point spectrum
 #X text 107 73 <--index in;
 #X text 224 166 0;
 #X text 391 168 10;
-#X text 12 766 When the index of modulation exceeds 5 we scan past
+#X text 12 772 When the index of modulation exceeds 5 we scan past
 the right hand border of the table (the thousandth point \, corresponding
 to exp(-10). This isn't a problem because the values are all close
 to zero there.;
-#X text 11 691 Table lookup is prepared as follows. First add one to
+#X text 11 692 Table lookup is prepared as follows. First add one to
 the sinusoid and adjust its amplitude according to index \; it ranges
 from 0 to 2*index. Then adjust for the table's input scale (100 points
 per unit \, so multiply by 100) and add one to skip the interpolation
 point at the beginning of the table.;
-#X text 11 572 Here we use an exponential function as a waveshaping
+#X text 11 559 Here we use an exponential function as a waveshaping
 transfer function. The theory is shown in detail in the accompanying
 book \, but in short \, we adjust the sinusoid so that \, as the index
 increases \, we scan starting from the left of the transfer function
@@ -322,17 +322,16 @@ gets progressively fatter.;
 #X obj 1 832 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION waveshaping using an exponential function
+#X text 12 45 DESCRIPTION waveshaping using an exponential function
 ;
+#X text 12 5 KEYWORDS signal tutorial;
 #X restore 392 834 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

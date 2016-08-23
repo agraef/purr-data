@@ -1,4 +1,4 @@
-#N canvas 433 132 448 454 10;
+#N canvas 434 157 448 454 10;
 #X obj 115 131 r receive1;
 #X obj 201 131 r receive2;
 #X msg 22 85 clear \, add receive1 1 \, add 1000 receive1 0 \, add
@@ -26,17 +26,16 @@ request that amount of delay.;
 ;
 #X obj 1 432 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 33 353 494 284 META 0;
+#N canvas 34 378 494 284 META 0;
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 105 AUTHOR Miller Puckette;
 #X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
 #X text 12 45 LICENSE SIBSD;
 #X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.26. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS control;
 #X text 12 65 DESCRIPTION sequencing with [qlist] and [textfile];
+#X text 12 25 KEYWORDS control tutorial;
 #X restore 382 434 pd META;
 #X text 19 37 You can use [qlist] or [textfile] objects for sequencing.
 [qlist] is simpler to use than the (more versatile) [textfile].;

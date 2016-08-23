@@ -1,4 +1,4 @@
-#N canvas 418 74 493 629 10;
+#N canvas 418 38 493 629 10;
 #X obj 21 213 r trigger;
 #X obj 21 409 *~;
 #X obj 21 437 *~;
@@ -19,7 +19,7 @@
 #X obj 21 379 *~;
 #X obj 182 359 +~ 1;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array array62 131 float 1;
+#X array array62 131 float 1 black black;
 #A 0 0.970031 1 0.970031 0.881921 0.740952 0.555571 0.336891 0.0980184
 -0.146729 -0.382682 -0.595698 -0.773009 -0.88 -0.9 -0.92 -0.92 -0.85773
 -0.707109 -0.514106 -0.290288 -0.0490716 0.195086 0.427551 0.63439
@@ -83,16 +83,15 @@ wave if you prefer.;
 #X obj 1 607 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION using ADSRs for portamento;
+#X text 12 45 DESCRIPTION using ADSRs for portamento;
+#X text 12 5 KEYWORDS signal tutorial;
 #X restore 392 609 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

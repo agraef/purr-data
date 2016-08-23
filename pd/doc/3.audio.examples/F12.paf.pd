@@ -1,29 +1,29 @@
-#N canvas 337 22 692 652 10;
-#X obj 98 520 cos~;
-#X obj 98 497 *~;
-#X obj 141 520 cos~;
-#X obj 197 454 wrap~;
-#X obj 161 454 -~;
-#X obj 141 497 +~;
-#X obj 141 550 -~;
-#X obj 141 582 *~;
-#X obj 97 582 +~;
-#X obj 160 427 samphold~;
-#X floatatom 159 305 4 0 500 0 - - -, f 4;
-#X obj 159 328 / 10;
-#X obj 159 376 line~;
-#X obj 159 353 pack 0 50;
-#X obj 99 373 phasor~;
-#X floatatom 99 352 4 0 0 0 - - -, f 4;
-#X text 79 333 fundamental;
-#X text 333 390 index;
-#X text 333 407 (percent);
-#X floatatom 333 428 4 0 500 0 - - -, f 4;
-#X obj 333 474 line~;
-#X obj 254 494 *~;
-#X obj 333 451 pack 0 50;
+#N canvas 312 25 692 652 10;
+#X obj 98 540 cos~;
+#X obj 98 517 *~;
+#X obj 141 540 cos~;
+#X obj 197 474 wrap~;
+#X obj 161 474 -~;
+#X obj 141 517 +~;
+#X obj 141 570 -~;
+#X obj 141 602 *~;
+#X obj 97 602 +~;
+#X obj 160 447 samphold~;
+#X floatatom 159 325 4 0 500 0 - - -, f 4;
+#X obj 159 348 / 10;
+#X obj 159 396 line~;
+#X obj 159 373 pack 0 50;
+#X obj 99 393 phasor~;
+#X floatatom 99 372 4 0 0 0 - - -, f 4;
+#X text 79 353 fundamental;
+#X text 333 410 index;
+#X text 333 427 (percent);
+#X floatatom 333 448 4 0 500 0 - - -, f 4;
+#X obj 333 494 line~;
+#X obj 254 514 *~;
+#X obj 333 471 pack 0 50;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array bell-curve 200 float 1;
+#X array bell-curve 200 float 1 black black;
 #A 0 1.12535e-07 1.54727e-07 2.12059e-07 2.89706e-07 3.94519e-07 5.35535e-07
 7.24633e-07 9.77371e-07 1.31404e-06 1.76105e-06 2.35258e-06 3.13275e-06
 4.15832e-06 5.50199e-06 7.25659e-06 9.54016e-06 1.25023e-05 1.63317e-05
@@ -82,23 +82,23 @@
 #X connect 9 0 5 1;
 #X connect 10 0 8 0;
 #X restore 496 226 pd make-table;
-#X obj 254 471 cos~;
-#X obj 254 448 -~ 0.25;
-#X obj 254 517 +~ 100;
-#X obj 254 540 tabread4~ bell-curve;
-#X obj 125 614 *~;
-#X text 286 557 waveshaper;
+#X obj 254 491 cos~;
+#X obj 254 468 -~ 0.25;
+#X obj 254 537 +~ 100;
+#X obj 254 560 tabread4~ bell-curve;
+#X obj 125 634 *~;
+#X text 286 577 waveshaper;
 #X text 430 409 0;
 #X text 621 408 200;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array F12-spectrum 259 float 0;
+#X array F12-spectrum 259 float 0 black black;
 #X coords 0 0.51 258 -0.008 256 130 1;
 #X restore 406 48 graph;
 #X text 403 180 0;
 #X text 487 184 -- frequency --;
 #X text 629 181 2700;
-#X obj 125 686 output~;
-#X obj 124 655 hip~;
+#X obj 125 706 output~;
+#X obj 124 675 hip~;
 #N canvas 122 211 558 609 fft 0;
 #X obj 23 55 inlet~;
 #X obj 210 303 inlet;
@@ -155,39 +155,39 @@ until much later.;
 #X connect 25 0 26 1;
 #X connect 26 0 2 0;
 #X connect 28 0 24 1;
-#X restore 178 655 pd fft;
-#X obj 211 611 bng 18 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X restore 178 675 pd fft;
+#X obj 211 631 bng 18 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X obj 211 632 tgl 18 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+#X obj 211 652 tgl 18 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
 1;
-#X text 232 631 <-- repeatedly;
-#X text 233 611 <-- graph once;
+#X text 232 651 <-- repeatedly;
+#X text 233 631 <-- graph once;
 #X text 19 46 Instead of using the two cosines as FM carrier oscillators
 \, we can use them as ring modulators for a natural or synthetic tone.
 Here we use waveshaping - to wit \, a sinusoid looking up a Gaussian
 bell curve. This has the nice properties that the partials are always
 positive cosines in phase \, and the spectrum spreads out smoothly
 as the index changes.;
-#X obj 254 422 *~ 0.5;
+#X obj 254 442 *~ 0.5;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header PAF: 20 10 1 18
 -261139 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
 #X text 38 26 two-cosine ring modulator for waveshaper;
-#X text 19 132 For phase coherency \, the waveshaper and the cosine
+#X text 19 140 For phase coherency \, the waveshaper and the cosine
 pair are driven from the same [phasor~] object. Since the waveshaping
 is done using a symmetric curve \, its output is at double the frequency
 of the input. So for each cycle of the phasor we compute a half-cycle
 of the sine function (by multiplying by 0.5 and subtracting 0.25 before
 the cosine lookup). We center the cosine output for lookup in a 200-point
 table containing a bell curve.;
-#X text 18 229 Then with [*~] we do the ring modulation and we're done.
+#X text 18 248 Then with [*~] we do the ring modulation and we're done.
 This is the PAF (phase-aligned formant) synthesis algorithm (patented
 1993 by IRCAM).;
-#X text 157 270 center frequency;
-#X text 157 285 (tenths of fundamental);
-#X text 16 613 ring mod step -->;
-#X obj 1 751 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+#X text 157 290 center frequency;
+#X text 157 305 (tenths of fundamental);
+#X text 16 633 ring mod step -->;
+#X obj 1 771 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
@@ -201,14 +201,14 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 12 25 KEYWORDS signal;
 #X text 12 65 DESCRIPTION two-cosine ring modulator for waveshaper
 ;
-#X restore 392 753 pd META;
+#X restore 392 773 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261139 -33289 0;
 #X text 7 2 PAF- Related Help Documents;
 #X text 19 37 links:;
-#X restore 103 753 pd References;
-#X obj 6 753 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X restore 103 773 pd References;
+#X obj 6 773 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 6 1;
 #X connect 0 0 8 0;
 #X connect 1 0 5 0;

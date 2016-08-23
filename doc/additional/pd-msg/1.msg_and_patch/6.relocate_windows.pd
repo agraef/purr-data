@@ -1,4 +1,4 @@
-#N canvas 0 18 554 615 10;
+#N canvas 240 40 554 615 10;
 #X text 21 35 1 create a new subpatch;
 #X msg 36 89 \; pd-6.relocate_windows.pd obj 400 20 pd my_subpatch
 ;
@@ -52,10 +52,10 @@ it after the "relocate" message has been sent.;
 -1 0 0;
 #X obj 108 312 hsl 128 15 8 1200 0 0 \$0-y empty y 12 8 0 10 -159808
 -1 -1 0 0;
-#X floatatom 203 272 5 0 0 0 - #0-height -;
-#X floatatom 188 253 5 0 0 0 - #0-width -;
-#X floatatom 224 292 5 0 0 0 - #0-x -;
-#X floatatom 244 312 5 0 0 0 - #0-y -;
+#X floatatom 203 272 5 0 0 0 - #0-height -, f 5;
+#X floatatom 188 253 5 0 0 0 - #0-width -, f 5;
+#X floatatom 224 292 5 0 0 0 - #0-x -, f 5;
+#X floatatom 244 312 5 0 0 0 - #0-y -, f 5;
 #X obj 26 387 delay 200;
 #X msg 97 517 \; pd-my_subpatch menuclose \; pd-my_subpatch relocate
 200x200+1+1 1x1+100+100 \; pd-my_subpatch vis 1;
@@ -71,15 +71,16 @@ it after the "relocate" message has been sent.;
 #N canvas 0 0 450 300 my_subpatch 0;
 #X restore 400 20 pd my_subpatch;
 #N canvas 458 158 494 396 META 0;
-#X text 12 5 GENRE tutorial;
 #X text 12 95 HELP_PATCH_AUTHORS Damien Henry. "pd meta" information
 added by Jonathan Wilkes for Pd version 0.42.;
-#X text 12 25 KEYWORDS control canvas_op nonlocal dynamic_patching
-;
 #X text 12 64 DESCRIPTION move a patch window with messages to a canvas
 ;
 #X text 12 43 LICENSE public domain;
+#X text 12 5 KEYWORDS tutorial control canvas_op nonlocal dynamic_patching
+;
 #X restore 496 584 pd META;
+#N canvas 0 0 450 300 my_subpatch 1;
+#X restore 400 20 pd my_subpatch;
 #N canvas 0 0 450 300 my_subpatch 1;
 #X restore 400 20 pd my_subpatch;
 #X connect 4 0 5 0;

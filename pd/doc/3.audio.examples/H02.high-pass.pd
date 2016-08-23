@@ -1,11 +1,11 @@
-#N canvas 402 19 504 516 10;
+#N canvas 394 40 504 516 10;
 #X obj 22 429 output~;
 #X obj 110 410 metro 250;
 #X obj 110 390 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
 1;
 #X text 128 387 graphing on/off;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array H02-graph 882 float 3;
+#X array H02-graph 882 float 3 black black;
 #A 0 0.86084 0.876465 0.891113 0.904785 0.917725 0.929688 0.940918
 0.950928 0.960205 0.968506 0.97583 0.982178 0.987793 0.992188 0.995605
 0.998047 0.999512 1 0.999756 0.998291 0.99585 0.992432 0.988037 0.982666
@@ -160,16 +160,15 @@ one in the "hip~" object.;
 #X obj 1 494 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 25 KEYWORDS;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 65 DESCRIPTION one-pole one-zero high-pass filter;
+#X text 12 45 DESCRIPTION one-pole one-zero high-pass filter;
+#X text 12 5 KEYWORDS tutorial;
 #X restore 392 496 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

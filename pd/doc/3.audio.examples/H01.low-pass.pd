@@ -1,20 +1,20 @@
-#N canvas 430 19 448 544 10;
-#X obj 52 326 mtof;
-#X floatatom 52 303 5 0 0 0 - #0-pit -, f 5;
-#X obj 21 457 output~;
-#X obj 21 372 lop~;
-#X obj 22 269 noise~;
-#X text 89 303 <-- cutoff (pitch units);
-#X text 86 351 <-- cutoff (Hertz);
-#X floatatom 52 351 5 0 0 0 - - -, f 5;
-#X text 57 374 low-pass filter;
-#X obj 110 450 tabwrite~ H01-graph;
-#X obj 110 425 metro 250;
-#X obj 110 405 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+#N canvas 408 34 448 544 10;
+#X obj 52 346 mtof;
+#X floatatom 52 323 5 0 0 0 - #0-pit -, f 5;
+#X obj 21 477 output~;
+#X obj 21 392 lop~;
+#X obj 22 289 noise~;
+#X text 89 323 <-- cutoff (pitch units);
+#X text 86 371 <-- cutoff (Hertz);
+#X floatatom 52 371 5 0 0 0 - - -, f 5;
+#X text 57 394 low-pass filter;
+#X obj 110 470 tabwrite~ H01-graph;
+#X obj 110 445 metro 250;
+#X obj 110 425 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
 1;
-#X text 128 402 graphing on/off;
+#X text 128 422 graphing on/off;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array H01-graph 882 float 3;
+#X array H01-graph 882 float 3 black black;
 #A 0 -0.107788 -0.0695636 -0.0991016 -0.104581 -0.0683972 -0.0547128
 -0.0857414 -0.0731684 -0.0892636 -0.115914 -0.0935128 -0.0572466 -0.0387586
 -0.0429956 -0.03826 -0.0628797 -0.0383263 -0.0720175 -0.0923909 -0.0707558
@@ -141,13 +141,13 @@
 -0.00476758 -0.0362654 -0.0701252 -0.0547324 -0.0708724 -0.0970369
 -0.099428 -0.102544 -0.0736354 -0.0556618 -0.0863601;
 #X coords 0 1 882 -1 200 140 1;
-#X restore 244 327 graph;
-#X text 288 469 --- 0.02 sec ---;
-#X text 19 199 At the cutoff frequency the gain is about -3 dB \, and
+#X restore 244 347 graph;
+#X text 288 489 --- 0.02 sec ---;
+#X text 19 219 At the cutoff frequency the gain is about -3 dB \, and
 above that the gain drops a further 6 dB per octave. (Sometimes one
 uses the word "rolloff" instead of "cutoff" to emphasize the gradual
 way the gain drops off with frequency.);
-#X text 69 268 white noise \, test signal;
+#X text 69 288 white noise \, test signal;
 #N canvas 0 0 450 300 loadbang 0;
 #X obj 85 16 loadbang;
 #X obj 85 40 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
@@ -159,7 +159,7 @@ way the gain drops off with frequency.);
 #X connect 0 0 1 0;
 #X connect 1 0 2 0;
 #X connect 2 0 5 0;
-#X restore 110 484 pd loadbang;
+#X restore 110 504 pd loadbang;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header one-pole_low-pass_filter
 20 10 1 18 -261139 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
@@ -170,33 +170,32 @@ Here we test it with an input of white noise. The [lop~] object does
 the filtering. Its left inlet takes an audio signal to be filtered
 \, and its right inlet takes messages to set its cutoff frequency in
 Hertz.;
-#X text 19 113 The [lop~] object is normalized to pass DC (the lowest
+#X text 19 123 The [lop~] object is normalized to pass DC (the lowest
 frequency) with a gain of one. Higher frequencies are progressively
 more and more attenuated. The lower the cutoff frequency \, the lower
 the total power of the filtered noise. If you graph the output you'll
 see that the waveform gets smoother (and smaller overall) as the cutoff
 frequency is lowered.;
-#X obj 1 522 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+#X obj 1 542 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION one-pole low-pass filter;
-#X restore 392 524 pd META;
+#X text 12 45 DESCRIPTION one-pole low-pass filter;
+#X text 12 5 KEYWORDS signal tutorial;
+#X restore 392 544 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261139 -33289 0;
 #X text 7 2 low-pass filter- Related Help Documents;
 #X text 19 37 links:;
-#X restore 103 524 pd References;
-#X obj 6 524 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X restore 103 544 pd References;
+#X obj 6 544 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 7 0;
 #X connect 1 0 0 0;
 #X connect 3 0 2 0;

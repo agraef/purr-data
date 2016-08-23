@@ -1,4 +1,4 @@
-#N canvas 433 199 448 254 10;
+#N canvas 434 131 448 254 10;
 #X floatatom 22 194 0 0 0 0 - - -;
 #X floatatom 145 194 0 0 0 0 - - -;
 #X text 19 37 You can use dollarsigns in abstractions to get local
@@ -21,17 +21,16 @@ sends and receives as shown here.;
 ;
 #X obj 1 232 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 21 325 494 284 META 0;
+#N canvas 403 107 494 284 META 0;
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 105 AUTHOR Miller Puckette;
 #X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
 #X text 12 45 LICENSE SIBSD;
 #X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.34. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS control nonlocal;
 #X text 12 65 DESCRIPTION dollarsign variables and locality in Pd;
+#X text 12 25 KEYWORDS control nonlocal tutorial;
 #X restore 382 234 pd META;
 #X obj 22 100 dollarsign one;
 #N canvas 13 202 428 196 References 0;

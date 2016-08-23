@@ -1,10 +1,10 @@
-#N canvas 0 31 956 304 10;
+#N canvas 35 223 956 304 10;
 #X obj 368 207 maskxor;
 #X obj 457 63 t b b;
 #X msg 38 157 bang;
-#X floatatom 390 247 5 0 0 0 - - -;
-#X floatatom 368 264 5 0 0 0 - - -;
-#X floatatom 254 122 5 0 0 0 - - -;
+#X floatatom 390 247 5 0 0 0 - - -, f 5;
+#X floatatom 368 264 5 0 0 0 - - -, f 5;
+#X floatatom 254 122 5 0 0 0 - - -, f 5;
 #X msg 457 46 bang;
 #X msg 457 80 listl 1 1 0 0 0 1 1;
 #X msg 500 97 listr 0 1 1 0 2 1 0;
@@ -77,8 +77,7 @@ is GNU software.;
 #X text 847 105 |;
 #X text 847 114 |;
 #X text 759 65 <;
-#N canvas 355 347 494 344 META 0;
-#X text 12 5 GENRE help;
+#N canvas 356 352 494 344 META 0;
 #X text 12 185 HELP_PATCH_AUTHORS Ed Kelly. Revised by Jonathan Wilkes
 for Pd-extended 0.42 to conform to the PDDP template.;
 #X text 12 45 LICENSE GPL v3;

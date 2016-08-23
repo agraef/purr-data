@@ -1,8 +1,8 @@
-#N canvas 433 84 448 600 10;
+#N canvas 434 33 448 600 10;
 #X obj 22 83 r trigger;
 #X obj 22 134 tabread4~ dbtorms;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array dbtorms 123 float 1;
+#X array dbtorms 123 float 1 black black;
 #A 0 0 0 1.25893e-05 1.41254e-05 1.58489e-05 1.77828e-05 1.99526e-05
 2.23872e-05 2.51189e-05 2.81838e-05 3.16228e-05 3.54813e-05 3.98107e-05
 4.46684e-05 5.01187e-05 5.62341e-05 6.30957e-05 7.07946e-05 7.94328e-05
@@ -21,7 +21,7 @@
 1.58489 1.77828 1.99526 2.23872 2.51189 2.81838 3.16228 3.54813 3.98107
 4.46684 5.01187 5.62341 6.30957 7.07946 7.94328 8.91251 10 11.2202
 12.5893;
-#X coords 0 10 123 0 200 100 1;
+#X coords 0 10 122 0 200 100 1;
 #X restore 207 109 graph;
 #N canvas 361 410 663 358 make-table 0;
 #X obj 97 195 moses 2;
@@ -95,16 +95,15 @@ using a lookup table:;
 #X obj 1 577 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION using ADSR's output as dB;
+#X text 12 45 DESCRIPTION using ADSR's output as dB;
+#X text 13 5 KEYWORDS signal tutorial;
 #X restore 392 579 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

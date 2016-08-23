@@ -1,10 +1,10 @@
-#N canvas 367 20 625 517 10;
+#N canvas 273 25 625 517 10;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array F05-signal 882 float 0;
-#X coords 0 1 882 -1 200 130 1;
+#X array F05-signal 882 float 0 black black;
+#X coords 0 1 881 -1 200 130 1;
 #X restore 388 248 graph;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array F05-spectrum 256 float 0;
+#X array F05-spectrum 256 float 0 black black;
 #X coords 0 0.51 255 -0.008 256 130 1;
 #X restore 299 52 graph;
 #X text 386 379 ---- 0.02 seconds ----;
@@ -136,7 +136,7 @@ formant centered at the given partial.;
 #X obj 38 173 osc~;
 #X obj 38 148 *;
 #X obj 72 148 r freq;
-#X text 18 406 This patch is limited to making formants centered on
+#X text 18 415 This patch is limited to making formants centered on
 harmonics. The center frequency thus can't be moved smoothly up and
 down at will (try shift-clicking on modulation frequency to make fractions).
 Next we'll look at two techniques for sliding a formant frequency without
@@ -148,27 +148,26 @@ losing harmonicity.;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
 #X text 74 173 modulating oscillator;
-#X obj 1 494 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+#X obj 1 503 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION ring modulated pulse trains;
-#X restore 392 496 pd META;
+#X text 12 45 DESCRIPTION ring modulated pulse trains;
+#X text 12 5 KEYWORDS signal tutorial;
+#X restore 392 505 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261139 -33289 0;
 #X text 7 2 pulse trains- Related Help Documents;
 #X text 19 37 links:;
-#X restore 103 496 pd References;
-#X obj 6 496 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X restore 103 505 pd References;
+#X obj 6 505 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 7 0 8 0;
 #X connect 8 0 10 0;
 #X connect 10 0 14 0;

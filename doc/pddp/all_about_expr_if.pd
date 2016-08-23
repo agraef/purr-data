@@ -1,4 +1,4 @@
-#N canvas 430 36 448 500 10;
+#N canvas 431 61 448 500 10;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header expr_if 20 10 1
 18 -261106 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
@@ -35,15 +35,13 @@ output.;
 #X obj 1 478 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 375 307 494 205 META 0;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 45 KEYWORDS;
-#X text 12 5 GENRE all_about_pd;
-#X text 12 25 NAME expr expr~ fexpr~;
-#X text 12 105 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
+#X text 12 95 LIBRARY PDDP;
+#X text 12 115 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
 #X text 12 65 DESCRIPTION an explanation of the "if" function from
 sly and the expr family stone;
+#X text 12 45 KEYWORDS expr expr~ fexpr~ all_about_pd;
 #X restore 392 480 pd META;
 #N canvas 217 377 428 136 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

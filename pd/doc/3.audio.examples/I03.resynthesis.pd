@@ -1,4 +1,4 @@
-#N canvas 376 24 580 400 10;
+#N canvas 377 49 580 400 10;
 #N canvas 265 48 643 640 fft-analysis 0;
 #X obj 15 164 *~;
 #X obj 14 99 inlet~;
@@ -60,7 +60,7 @@ four. This window now computes blocks of 512 samples at intervals of
 #X restore 23 279 pd fft-analysis;
 #N canvas 35 66 592 433 Hann-window 0;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-hann 512 float 0;
+#X array \$0-hann 512 float 0 black black;
 #X coords 0 1 511 0 200 120 1;
 #X restore 293 249 graph;
 #X msg 171 263 0;
@@ -99,7 +99,7 @@ the file smaller (it doesn't have to be saved with the array.);
 #X obj 24 313 output~;
 #X obj 22 254 noise~;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-gain 256 float 3;
+#X array \$0-gain 256 float 3 black black;
 #A 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
@@ -131,16 +131,15 @@ patch to see the workings.;
 #X obj 1 378 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION Fourier resynthesis;
+#X text 12 45 DESCRIPTION Fourier resynthesis;
+#X text 12 5 KEYWORDS signal tutorial;
 #X restore 392 380 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

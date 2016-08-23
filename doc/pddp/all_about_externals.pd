@@ -1,4 +1,4 @@
-#N canvas 430 35 446 395 10;
+#N canvas 431 60 446 395 10;
 #X obj 1 -2 cnv 15 445 20 empty \$0-pddp.cnv.header externals 20 12
 1 18 -261106 -33289 0;
 #X obj 412 -2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
@@ -10,9 +10,8 @@
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
 #X text 12 65 LIBRARY PDDP;
-#X text 12 5 GENRE all_about_pd;
 #X text 12 45 DESCRIPTION notions of scope in Pd;
-#X text 12 25 KEYWORDS needs_work;
+#X text 12 25 KEYWORDS needs_work all_about_pd;
 #X restore 397 375 pd META;
 #N canvas 221 288 428 121 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

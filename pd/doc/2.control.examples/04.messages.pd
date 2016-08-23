@@ -1,4 +1,4 @@
-#N canvas 0 0 448 451 10;
+#N canvas 434 79 448 451 10;
 #X floatatom 210 123 0 0 0 0 - - -;
 #X floatatom 177 123 0 0 0 0 - - -;
 #X msg 177 71 5 6;
@@ -30,13 +30,12 @@ points.;
 #N canvas 79 230 494 284 META 0;
 #X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
 #X text 12 45 LICENSE SIBSD;
-#X text 12 25 KEYWORDS control GUI;
 #X text 12 125 HELP_PATCH_AUTHORS Miller Puckette. Updated for release
 0.33. Jonathan Wilkes revised the patch to conform to the PDDP template
 for Pd version 0.42.;
 #X text 12 65 DESCRIPTION messages and message passing in Pd;
+#X text 12 25 KEYWORDS control GUI tutorial;
 #X restore 382 430 pd META;
 #N canvas 7 226 428 287 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

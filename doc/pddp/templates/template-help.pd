@@ -1,4 +1,4 @@
-#N canvas 41 22 564 619 10;
+#N canvas 42 47 564 619 10;
 #X obj 4 569 cnv 15 550 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 4 -17 cnv 15 550 40 empty \$0-pddp.cnv.header myobjectclass
@@ -11,7 +11,6 @@
 #X text 12 65 TEMPLATE template-help.pd v0.1;
 #X text 12 85 PLATFORM windows macosx gnulinux;
 #X text 12 105 DATATYPE float list;
-#X text 12 5 GENRE storage;
 #X text 12 125 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 165 RELEASE_DATE 2007-08-24;

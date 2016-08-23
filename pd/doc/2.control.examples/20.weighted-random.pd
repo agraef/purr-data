@@ -1,4 +1,4 @@
-#N canvas 433 129 448 465 10;
+#N canvas 434 154 448 465 10;
 #X msg 123 95 bang;
 #X text 19 37 You can generate weighted random numbers from uniformly
 distributed ones. If you just want two possible outcomes with a varying
@@ -36,17 +36,16 @@ like this:;
 ;
 #X obj 1 443 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 44 246 494 284 META 0;
+#N canvas 434 187 494 284 META 0;
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 105 AUTHOR Miller Puckette;
 #X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
 #X text 12 45 LICENSE SIBSD;
 #X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.34. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
 #X text 12 65 DESCRIPTION weighted-random numbers;
-#X text 12 25 KEYWORDS control random;
+#X text 12 25 KEYWORDS control random tutorial;
 #X restore 382 445 pd META;
 #N canvas 21 377 428 143 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

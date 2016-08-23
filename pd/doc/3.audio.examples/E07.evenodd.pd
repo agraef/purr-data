@@ -1,10 +1,10 @@
-#N canvas 340 102 729 544 10;
+#N canvas 217 25 729 544 10;
 #X obj 230 131 f;
 #X obj 264 107 + 1;
 #X obj 264 131 mod 11;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array E07 11 float 0;
-#X coords 0 96 11 36 100 160 1;
+#X array E07 11 float 0 black black;
+#X coords 0 96 10 36 100 160 1;
 #X restore 600 46 graph;
 #X floatatom 320 83 0 10 999 0 - - -;
 #X obj 230 203 mtof;
@@ -81,16 +81,15 @@ Between the two we get mixtures of even and odd.;
 #X obj 1 522 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION sequenced waveshaping synthesizer;
+#X text 12 45 DESCRIPTION sequenced waveshaping synthesizer;
+#X text 12 5 KEYWORDS signal tutorial;
 #X restore 392 524 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

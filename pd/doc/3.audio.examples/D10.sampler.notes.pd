@@ -1,16 +1,16 @@
-#N canvas 303 74 840 630 10;
+#N canvas 109 25 840 630 10;
 #X msg 207 32 bang;
 #X obj 207 60 delay 5;
 #X text 447 294 end of note;
 #X obj 313 60 r note;
 #N canvas 459 46 678 451 samples 0;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array sample1 176403 float 0;
+#X array sample1 176403 float 0 black black;
 #X coords 0 1.02 176403 -1.02 200 130 1;
 #X restore 262 41 graph;
 #X text 264 376 ------ 4 seconds ------;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array sample2 176403 float 0;
+#X array sample2 176403 float 0 black black;
 #X coords 0 1.02 176403 -1.02 200 130 1;
 #X restore 262 226 graph;
 #X restore 18 292 pd samples;
@@ -212,16 +212,15 @@ change the duration and rise and decay times.;
 #X obj 1 796 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION chocolate sampler;
+#X text 12 45 DESCRIPTION chocolate sampler;
+#X text 12 5 KEYWORDS signal tutorial;
 #X restore 392 798 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

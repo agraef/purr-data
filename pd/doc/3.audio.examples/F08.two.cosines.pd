@@ -1,4 +1,4 @@
-#N canvas 405 23 493 610 10;
+#N canvas 396 28 493 610 10;
 #X obj 124 379 cos~;
 #X floatatom 171 169 4 0 100 0 - - -, f 4;
 #X obj 171 193 / 10;
@@ -7,7 +7,7 @@
 #X obj 171 265 line~;
 #X obj 171 217 max 0;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array F08-carrier 882 float 0;
+#X array F08-carrier 882 float 0 black black;
 #X coords 0 2 881 -2 200 140 1;
 #X restore 277 121 graph;
 #X floatatom 24 266 4 0 0 0 - - -, f 4;
@@ -49,16 +49,15 @@ partial 5 with amplitude 0.7 and partial 6 with amplitude 0.3:;
 #X obj 1 588 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION movable center frequency;
+#X text 12 45 DESCRIPTION movable center frequency;
+#X text 12 5 KEYWORDS signal tutorial;
 #X restore 392 590 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

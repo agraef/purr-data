@@ -1,4 +1,4 @@
-#N canvas 430 34 448 523 10;
+#N canvas 431 59 448 523 10;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header send_and_receive
 20 10 1 18 -261106 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
@@ -10,10 +10,10 @@
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
 #X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE all_about_pd;
 #X text 12 45 KEYWORDS nonlocal;
-#X text 12 25 NAME send receive vsl hsl vradio hradio;
 #X text 12 65 DESCRIPTION additional information for send and receive
+;
+#X text 12 25 NAME send receive vsl hsl vradio hradio all_about_pd
 ;
 #X restore 392 503 pd META;
 #N canvas 217 407 428 126 Related_objects 0;

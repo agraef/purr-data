@@ -1,12 +1,11 @@
-#N canvas 428 35 558 453 10;
+#N canvas 429 60 558 453 10;
 #X obj -1 426 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #X obj -1 255 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 483 187 494 275 META 0;
+#N canvas 484 212 494 275 META 0;
 #X text 12 95 RELEASE_VERSION 0.41.4;
 #X text 158 96 Keywords:;
-#X text 12 5 GENRE help;
 #X text 12 65 DESCRIPTION using help patches in Pure Data;
 #X text 12 25 KEYWORDS needs_work (mention how pd finds help files
 and replace 'common_terminology' subpatch with link to glossary);
@@ -114,8 +113,8 @@ list;
 #X connect 14 0 11 0;
 #X restore 441 215 pd weirdness;
 #X text 238 215 list behavior is a bit strange:;
-#X obj 14 428 pddp/pddplink @pd_help/all_about_help_patches.pd -text Usage Guide
-;
+#X obj 14 428 pddp/pddplink @pd_help/all_about_help_patches.pd -text
+Usage Guide;
 #X connect 12 0 11 0;
 #X connect 13 0 12 0;
 #X connect 15 0 12 0;

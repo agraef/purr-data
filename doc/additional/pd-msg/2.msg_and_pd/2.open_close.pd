@@ -1,4 +1,4 @@
-#N canvas 0 18 525 543 10;
+#N canvas 250 104 525 543 10;
 #X text 10 4 open and close an abstraction;
 #X msg 25 205 \; pd-abstraction.pd menuclose \;;
 #X text 25 141 Sometimes you can get relative paths (./ \, ../ \, etc.)
@@ -21,17 +21,16 @@ to work \, but usually not. I don't know why...;
 #X text 27 288 OPEN \, THEN CLOSE AFTER 2 SECONDS;
 #X text 25 109 You have to put the name of the patch to open and its
 complete path;
-#X text 22 241 (you have to put the correct name & a valid path);
+#X text 22 251 (you have to put the correct name & a valid path);
 #X text 47 481 you have to put the name of the patch to open (\$1)
 and the complete path to it (\$2);
-#N canvas 437 191 494 396 META 0;
-#X text 12 5 GENRE tutorial;
+#N canvas 438 216 494 396 META 0;
 #X text 12 95 HELP_PATCH_AUTHORS Damien Henry. "pd meta" information
 added by Jonathan Wilkes for Pd version 0.42.;
-#X text 12 25 KEYWORDS control pd_op nonlocal;
 #X text 12 65 DESCRIPTION opening and closing a patch by sending messages
 to Pd;
 #X text 12 45 LICENSE public domain;
+#X text 12 25 KEYWORDS control pd_op nonlocal tutorial;
 #X restore 445 516 pd META;
 #X connect 4 0 15 1;
 #X connect 8 0 9 0;

@@ -1,24 +1,24 @@
-#N canvas 400 28 528 645 10;
-#X obj 76 528 cos~;
-#X obj 76 505 *~;
-#X obj 119 528 cos~;
-#X obj 174 473 wrap~;
-#X obj 138 473 -~;
-#X obj 119 505 +~;
-#X obj 112 558 -~;
-#X obj 132 590 *~;
-#X obj 94 590 +~;
-#X obj 138 441 samphold~;
-#X floatatom 138 241 4 0 127 0 - - -, f 4;
-#X obj 138 308 line~;
-#X obj 138 285 pack 0 50;
-#X obj 29 384 phasor~;
-#X floatatom 29 290 4 0 127 0 - - -, f 4;
-#X text 20 251 fundamental;
-#X floatatom 336 304 4 0 127 0 - - -, f 4;
-#X obj 336 375 line~;
-#X obj 247 504 *~;
-#X obj 336 352 pack 0 50;
+#N canvas 377 25 528 645 10;
+#X obj 76 548 cos~;
+#X obj 76 525 *~;
+#X obj 119 548 cos~;
+#X obj 174 493 wrap~;
+#X obj 138 493 -~;
+#X obj 119 525 +~;
+#X obj 112 578 -~;
+#X obj 132 610 *~;
+#X obj 94 610 +~;
+#X obj 138 461 samphold~;
+#X floatatom 138 261 4 0 127 0 - - -, f 4;
+#X obj 138 328 line~;
+#X obj 138 305 pack 0 50;
+#X obj 29 404 phasor~;
+#X floatatom 29 310 4 0 127 0 - - -, f 4;
+#X text 20 271 fundamental;
+#X floatatom 336 324 4 0 127 0 - - -, f 4;
+#X obj 336 395 line~;
+#X obj 247 524 *~;
+#X obj 336 372 pack 0 50;
 #N canvas 94 264 600 388 make-table 0;
 #X msg 81 44 bang;
 #X obj 81 73 t b b;
@@ -32,7 +32,7 @@
 #X obj 63 168 sel 199;
 #X obj 51 241 expr ($f1-100)/25;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array bell-curve 200 float 1;
+#X array bell-curve 200 float 1 black black;
 #A 0 1.12535e-07 1.54727e-07 2.12059e-07 2.89706e-07 3.94519e-07 5.35535e-07
 7.24633e-07 9.77371e-07 1.31404e-06 1.76105e-06 2.35258e-06 3.13275e-06
 4.15832e-06 5.50199e-06 7.25659e-06 9.54016e-06 1.25023e-05 1.63317e-05
@@ -78,30 +78,30 @@
 #X connect 8 0 7 0;
 #X connect 9 0 5 1;
 #X connect 10 0 8 0;
-#X restore 255 647 pd make-table;
-#X obj 247 478 cos~;
-#X obj 247 453 -~ 0.25;
-#X obj 247 530 +~ 100;
-#X obj 247 553 tabread4~ bell-curve;
-#X obj 133 619 *~;
-#X text 279 578 waveshaper;
-#X obj 29 314 mtof;
-#X obj 160 333 expr 1/$f1;
-#X obj 138 261 mtof;
-#X obj 138 357 *~;
-#X text 334 277 bandwidth;
-#X obj 336 326 mtof;
-#X obj 336 411 *~;
-#X obj 336 435 *~ 25;
-#X text 376 410 divide by fundamental;
-#X text 394 434 range for table;
-#X text 313 529 offset to middle of table;
-#X text 145 379 C.F. relative;
-#X text 146 395 to fundamental;
-#X text 18 266 (MIDI units);
-#X text 169 617 ring mod;
-#X obj 133 646 output~;
-#X text 20 123 Here we take a somewhat lax approach to sampholding
+#X restore 255 667 pd make-table;
+#X obj 247 498 cos~;
+#X obj 247 473 -~ 0.25;
+#X obj 247 550 +~ 100;
+#X obj 247 573 tabread4~ bell-curve;
+#X obj 133 639 *~;
+#X text 279 598 waveshaper;
+#X obj 29 334 mtof;
+#X obj 160 353 expr 1/$f1;
+#X obj 138 281 mtof;
+#X obj 138 377 *~;
+#X text 334 297 bandwidth;
+#X obj 336 346 mtof;
+#X obj 336 431 *~;
+#X obj 336 455 *~ 25;
+#X text 376 430 divide by fundamental;
+#X text 394 454 range for table;
+#X text 313 549 offset to middle of table;
+#X text 145 399 C.F. relative;
+#X text 146 415 to fundamental;
+#X text 18 286 (MIDI units);
+#X text 169 637 ring mod;
+#X obj 133 666 output~;
+#X text 20 133 Here we take a somewhat lax approach to sampholding
 the center frequency control. The frequency itself changes instantly
 \, but the center/fundamental frequency ratio waits for the next period.
 This gives a slight "chirp" if the fundamental is abruptly raised a
@@ -109,7 +109,7 @@ couple of octaves. There's no easy way using Pd's built-in primitives
 to avoid this. Note however that there's a "paf~" extern available
 which solves this problem better and \, moreover \, runs much faster.
 ;
-#X obj 247 428 *~ 0.5;
+#X obj 247 448 *~ 0.5;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header changing_PAF_controls_to_natural_units
 20 10 1 18 -261139 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
@@ -120,28 +120,27 @@ without having the formant shift up and down in parallel. Here all
 three frequencies are expressed in MIDI units. The bandwidth and center
 frequency have to be divided by the fundamental (the expr 1/$f1 takes
 its reciprocal and two [*~] objects finish the division.);
-#X text 136 222 center freq.;
-#X obj 1 711 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+#X text 136 242 center freq.;
+#X obj 1 731 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 65 DESCRIPTION changing PAF controls to natural units;
-#X text 12 25 KEYWORDS signal;
-#X restore 392 713 pd META;
+#X text 12 45 DESCRIPTION changing PAF controls to natural units;
+#X text 12 5 KEYWORDS signal tutorial;
+#X restore 392 733 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261139 -33289 0;
 #X text 7 2 PAF- Related Help Documents;
 #X text 19 37 links:;
-#X restore 103 713 pd References;
-#X obj 6 713 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X restore 103 733 pd References;
+#X obj 6 733 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 6 1;
 #X connect 0 0 8 0;
 #X connect 1 0 5 0;

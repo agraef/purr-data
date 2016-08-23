@@ -1,4 +1,4 @@
-#N canvas 428 34 448 248 10;
+#N canvas 429 59 448 248 10;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header messages 20 10 1
 18 -261106 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
@@ -51,10 +51,9 @@ include "set 3 4 5" \, "threshold 30 74" \, and "foo bar 3 four".;
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
 #X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE all_about_pd;
 #X text 12 45 KEYWORDS needs_work;
-#X text 12 25 NAME list float symbol;
 #X text 12 65 DESCRIPTION message syntax in Pd;
+#X text 12 25 NAME list float symbol all_about_pd;
 #X restore 392 228 pd META;
 #X obj 6 228 pddp/pddplink all_about.pd -text All About Pd;
 #X text 42 153 Messages are made up of atoms. Make sure you understand

@@ -1,4 +1,4 @@
-#N canvas 0 18 381 325 10;
+#N canvas 317 86 381 325 10;
 #X msg 36 86 click \$1 \$2 \$3 \$4;
 #X obj 111 182 key;
 #X floatatom 111 208 0 0 0 0 - - -;
@@ -23,14 +23,13 @@
 #X text 218 67 \$3 (unused ???);
 #X text 73 230 \$1 : number of the key;
 #N canvas 218 113 494 396 META 0;
-#X text 12 5 GENRE tutorial;
 #X text 12 95 HELP_PATCH_AUTHORS Damien Henry. "pd meta" information
 added by Jonathan Wilkes for Pd version 0.42.;
 #X text 12 65 DESCRIPTION simulating mouse and key events with messages
 to a canvas;
-#X text 12 25 KEYWORDS control canvas_op nonlocal dynamic_patching
-;
 #X text 12 44 LICENSE public domain;
+#X text 12 5 KEYWORDS control canvas_op nonlocal dynamic_patching tutorial
+;
 #X restore 325 297 pd META;
 #X connect 0 0 12 0;
 #X connect 1 0 2 0;

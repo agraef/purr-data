@@ -1,8 +1,8 @@
-#N canvas 392 32 567 408 10;
+#N canvas 358 31 567 408 10;
 #X obj 23 262 cos~;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array env-output 44100 float 0;
-#X coords 0 1.02 44100 -1.02 200 130 1;
+#X array env-output 44100 float 0 black black;
+#X coords 0 1.02 44099 -1.02 200 130 1;
 #X restore 326 91 graph;
 #X floatatom 48 320 0 0 0 0 - - -;
 #N canvas 159 26 495 266 output 0;
@@ -135,16 +135,15 @@ turn-of-the-millenium western art music.;
 #X obj 1 386 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.34. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.34. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION portamento;
+#X text 12 45 DESCRIPTION portamento;
+#X text 12 5 KEYWORDS signal tutorial;
 #X restore 392 388 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

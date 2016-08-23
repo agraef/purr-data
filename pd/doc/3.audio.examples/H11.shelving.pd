@@ -1,6 +1,6 @@
-#N canvas 348 19 658 417 10;
+#N canvas 234 26 658 417 10;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-tab1 100 float 1;
+#X array \$0-tab1 100 float 1 black black;
 #A 0 1.39998 1.39868 1.3942 1.39349 1.38496 1.3772 1.36745 1.35633
 1.34208 1.32931 1.31817 1.30372 1.28879 1.27458 1.25944 1.24351 1.22874
 1.21386 1.19924 1.18487 1.17063 1.15653 1.14284 1.13144 1.11914 1.10722
@@ -62,16 +62,15 @@ and q decrease from 100% to -100%.;
 #X obj 1 395 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION shelving filter;
+#X text 12 45 DESCRIPTION shelving filter;
+#X text 12 5 KEYWORDS signal tutorial;
 #X restore 392 397 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

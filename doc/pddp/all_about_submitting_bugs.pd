@@ -1,19 +1,18 @@
-#N canvas 428 33 448 245 10;
+#N canvas 429 58 448 245 10;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header submitting_bugs
 20 10 1 18 -261106 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
 #X obj 1 223 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 369 72 494 183 META 0;
+#N canvas 370 97 494 183 META 0;
 #X text 12 100 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
 #X text 12 80 LIBRARY PDDP;
-#X text 12 5 GENRE all_about_pd;
-#X text 12 25 KEYWORDS needs_work;
 #X text 12 45 DESCRIPTION prerequisites for submitting a bug on Sourceforge
 ;
+#X text 12 25 KEYWORDS needs_work all_about_pd;
 #X restore 392 225 pd META;
 #N canvas 215 136 428 117 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

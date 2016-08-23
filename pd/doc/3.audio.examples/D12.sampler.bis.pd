@@ -1,12 +1,12 @@
-#N canvas 293 77 868 620 10;
+#N canvas 142 33 868 620 10;
 #N canvas 0 0 600 392 samples 0;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array sample1 176403 float 0;
+#X array sample1 176403 float 0 black black;
 #X coords 0 1.02 176403 -1.02 200 130 1;
 #X restore 262 41 graph;
 #X text 282 385 ------ 4 seconds ------;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array sample2 176403 float 0;
+#X array sample2 176403 float 0 black black;
 #X coords 0 1.02 176403 -1.02 200 130 1;
 #X restore 262 226 graph;
 #X restore 575 533 pd samples;
@@ -105,11 +105,11 @@ sample2;
 #X obj 689 285 s onoff;
 #X obj 670 230 pipe;
 #X obj 670 253 pack;
-#X msg 23 448 \; onoff 1 90 60 1 0 0 100;
-#X msg 183 448 \; onoff 1 0;
-#X msg 24 490 \; onoff 2 90 48 1 0 0 100;
-#X msg 183 490 \; onoff 2 0;
-#X msg 24 547 \; note 51 90 1000 1 0 0 100;
+#X msg 23 458 \; onoff 1 90 60 1 0 0 100;
+#X msg 183 458 \; onoff 1 0;
+#X msg 24 500 \; onoff 2 90 48 1 0 0 100;
+#X msg 183 500 \; onoff 2 0;
+#X msg 24 557 \; note 51 90 1000 1 0 0 100;
 #X obj 397 292 sampvoice2;
 #X obj 397 316 sampvoice2;
 #X obj 397 340 sampvoice2;
@@ -123,21 +123,21 @@ attach it to a MIDI keyboard \, for example.) "Note" messages act as
 before \, but in an intermediate step they are split onto note-on and
 note-off messages \, sent to "onoff". You can alternatively send messages
 straight to onoff if you don't know the duration in advance.;
-#X text 19 133 Messages to "onoff" require a tag \, which is a number
+#X text 19 143 Messages to "onoff" require a tag \, which is a number
 shared between the note-on and note-off message so that we can track
 down the voice to turn it off. If you're using MIDI input \, you can
 just re-use the pitch as a tag.;
-#X text 22 428 separate messages for not on and off:;
-#X text 21 528 single messages to do both as before:;
-#X text 19 186 Messages to "onoff" whose amplitude is zero are note-off
+#X text 22 438 separate messages for not on and off:;
+#X text 21 538 single messages to do both as before:;
+#X text 19 196 Messages to "onoff" whose amplitude is zero are note-off
 messages (the other parameters of note-off messages are ignored). The
 "sampvoice2" abstraction is a modification of "sampvoice" which looks
 at the amplitude field to decide whether to begin or end a note.;
-#X text 20 250 To convert "note" messages to pairs of "onoff" messages
+#X text 20 260 To convert "note" messages to pairs of "onoff" messages
 \, first a counter generates a tag. The the "pipe" object delays a
 copy of the tag \, which the following "pack" object converts into
 a note-off message (a pair of numbers \, the tag and a zero.);
-#X text 20 314 Under "r onoff" \, the poly object allocates a voice
+#X text 20 324 Under "r onoff" \, the poly object allocates a voice
 number \, putting it out paired with velocity. After swapping the two
 and packing them into a single message \, the amplitude is checked
 against zero by the "route 0" object \; if zero \, the "pack" confects
@@ -149,27 +149,26 @@ add all the other parameters and route to the appropriate voice.;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
 #X text 74 27 ... version 2 for separate note-on/off messages;
-#X obj 1 598 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+#X obj 1 608 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION polyphonic sampler;
-#X restore 392 600 pd META;
+#X text 12 45 DESCRIPTION polyphonic sampler;
+#X text 12 5 KEYWORDS signal tutorial;
+#X restore 392 610 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261139 -33289 0;
 #X text 7 2 polyphonic sampler- Related Help Documents;
 #X text 19 37 links:;
-#X restore 103 600 pd References;
-#X obj 6 600 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X restore 103 610 pd References;
+#X obj 6 610 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 3 0 4 0;
 #X connect 3 1 30 1;
 #X connect 3 1 4 1;

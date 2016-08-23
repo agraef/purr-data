@@ -1,4 +1,4 @@
-#N canvas 433 104 448 540 10;
+#N canvas 434 63 448 540 10;
 #X obj 60 254 receive;
 #X obj 60 227 send;
 #X obj 60 308 pack;
@@ -46,13 +46,12 @@ have abbreviations. Right click on any one to get reference documentation:
 #N canvas 44 246 494 284 META 0;
 #X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
 #X text 12 45 LICENSE SIBSD;
-#X text 12 25 KEYWORDS control;
 #X text 12 65 DESCRIPTION review of basic pd objects;
 #X text 12 125 HELP_PATCH_AUTHORS Miller Puckette. Updated for release
 0.34. Jonathan Wilkes revised the patch to conform to the PDDP template
 for Pd version 0.42.;
+#X text 12 25 KEYWORDS control tutorial;
 #X restore 382 520 pd META;
 #N canvas 7 226 428 143 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

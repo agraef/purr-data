@@ -1,11 +1,11 @@
-#N canvas 320 21 755 628 10;
+#N canvas 225 25 755 628 10;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array E02-signal 882 float 0;
-#X coords 0 5 882 -5 200 130 1;
+#X array E02-signal 882 float 0 black black;
+#X coords 0 5 881 -5 200 130 1;
 #X restore 361 66 graph;
 #X obj 15 392 hip~ 5;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array E02-spectrum 128 float 0;
+#X array E02-spectrum 128 float 0 black black;
 #X coords 0 4300 127 -40 257 130 1;
 #X restore 295 271 graph;
 #N canvas 45 83 558 569 fft 0;
@@ -143,7 +143,7 @@ f/16 where "f" is the fundamental frequency \, giving roughly 11 Hz.
 per step. Note that if the modulation frequency is set to zero we can't
 predict the overall amplitude because it depends on what phase the
 modulation oscillator happened to have at that moment.;
-#X text 12 560 If you choose a multiple of the fundamental as a modulation
+#X text 12 570 If you choose a multiple of the fundamental as a modulation
 frequency (16 \, 32 \, 48 \, 64 \, ... "steps") the result is again
 periodic at the original frequency. If you select a half-integer times
 the fundamental (8 \, 24 \, 40 \, ... steps) the pitch drops by an
@@ -156,27 +156,26 @@ indeterminate pitch.;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
 #X text 91 27 multiplying a complex tone by a sinusoid;
-#X obj 1 681 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+#X obj 1 691 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 65 DESCRIPTION ring modulation;
-#X text 12 25 KEYWORDS signal;
-#X restore 392 683 pd META;
+#X text 12 45 DESCRIPTION ring modulation;
+#X text 12 5 KEYWORDS signal tutorial;
+#X restore 392 693 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261139 -33289 0;
 #X text 7 2 ring modulation- Related Help Documents;
 #X text 19 37 links:;
-#X restore 103 683 pd References;
-#X obj 6 683 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X restore 103 693 pd References;
+#X obj 6 693 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 1 0 6 0;
 #X connect 1 0 6 1;
 #X connect 5 0 3 1;

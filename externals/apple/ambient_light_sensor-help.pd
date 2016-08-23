@@ -1,20 +1,8 @@
-#N canvas 259 213 560 421 10;
+#N canvas 260 238 560 421 10;
 #X obj 4 -17 cnv 15 550 40 empty \$0-pddp.cnv.header ambient_light_sensor
 3 12 0 18 -241536 -1 0;
 #X obj 3 189 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlet 15 12 0 13
 -245500 -191407 0;
-#N canvas 779 22 494 344 META 0;
-#X text 12 25 KEYWORDS control number float store;
-#X text 12 45 LICENSE GPL;
-#X text 12 65 TEMPLATE template-help.pd v0.1;
-#X text 12 85 PLATFORM windows macosx gnulinux;
-#X text 12 105 DATATYPE float list;
-#X text 12 125 LIBRARY internal;
-#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 165 RELEASE_DATE 2007-08-24;
-#X text 12 185 RELEASE_VERSION 0.40-test05;
-#X text 12 5 GENRE storage;
-#X restore 500 373 pd META;
 #X obj 3 258 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 15 12 0
 13 -245500 -191407 0;
 #X obj 3 338 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 15
@@ -31,8 +19,8 @@
 #X msg 146 48 bang;
 #X msg 179 73 info;
 #X obj 146 129 unpack;
-#X floatatom 146 155 5 0 0 0 left - -;
-#X floatatom 182 155 5 0 0 1 right - -;
+#X floatatom 146 155 5 0 0 0 left - -, f 5;
+#X floatatom 182 155 5 0 0 1 right - -, f 5;
 #X obj 263 153 pddp/print;
 #X text 216 73 output info on right outlet;
 #X obj 263 129 route sensor;
@@ -49,12 +37,12 @@ outlet;
 #X text 103 276 list - a list with the values of the left and right
 sensors;
 #X text 103 306 selector series with info about the sensor;
-#X connect 10 0 13 0;
-#X connect 10 1 18 0;
-#X connect 11 0 10 0;
-#X connect 12 0 10 0;
-#X connect 13 0 14 0;
-#X connect 13 1 15 0;
-#X connect 18 0 16 0;
-#X connect 19 0 10 0;
-#X connect 20 0 19 0;
+#X connect 9 0 12 0;
+#X connect 9 1 17 0;
+#X connect 10 0 9 0;
+#X connect 11 0 9 0;
+#X connect 12 0 13 0;
+#X connect 12 1 14 0;
+#X connect 17 0 15 0;
+#X connect 18 0 9 0;
+#X connect 19 0 18 0;

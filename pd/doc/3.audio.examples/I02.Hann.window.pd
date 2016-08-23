@@ -1,4 +1,4 @@
-#N canvas 433 87 448 590 10;
+#N canvas 432 35 448 590 10;
 #N canvas 228 148 529 544 fft-analysis 0;
 #X obj 15 164 *~;
 #X obj 14 99 inlet~;
@@ -53,7 +53,7 @@ of "fft".;
 #X connect 22 0 6 0;
 #X restore 26 319 pd fft-analysis;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-magnitude 256 float 0;
+#X array \$0-magnitude 256 float 0 black black;
 #X coords 0 256 255 0 256 100 1;
 #X restore 182 178 graph;
 #X obj 25 294 osc~;
@@ -66,7 +66,7 @@ of "fft".;
 #X text 150 223 128;
 #X text 149 173 256;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-hann 512 float 1;
+#X array \$0-hann 512 float 1 black black;
 #A 0 0 3.76403e-05 0.000150591 0.000338793 0.000602275 0.000940949
 0.00135478 0.00184369 0.00240764 0.00304651 0.00376022 0.00454867 0.00541174
 0.0063493 0.00736117 0.00844723 0.00960734 0.0108413 0.0121489 0.01353
@@ -172,17 +172,16 @@ with the mouse...);
 #X obj 1 568 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION windowing and blocking Fourier transforms
+#X text 12 45 DESCRIPTION windowing and blocking Fourier transforms
 ;
+#X text 12 5 KEYWORDS signal tutorial;
 #X restore 392 570 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

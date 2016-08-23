@@ -1,4 +1,4 @@
-#N canvas 424 19 448 622 10;
+#N canvas 425 25 448 622 10;
 #X obj 197 378 loadbang;
 #X obj 279 300 adc~ 1;
 #X obj 197 422 soundfiler;
@@ -35,7 +35,7 @@
 #X restore 22 339 pd;
 #N canvas 414 195 613 302 looper 0;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array E03-table 44103 float 0;
+#X array E03-table 44103 float 0 black black;
 #X coords 0 1.02 44103 -1.02 200 130 1;
 #X restore 349 22 graph;
 #X text 347 161 ---- 44103 samples ----;
@@ -78,29 +78,28 @@ with an adc~ if you want to go live.;
 #X text 135 325 on/off for;
 #X text 135 355 processed sounds;
 #X text 111 340 <-- original and;
-#X obj 1 600 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+#X obj 1 610 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37-1. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.37-1. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION octave doubling via variable comb filter
+#X text 12 45 DESCRIPTION octave doubling via variable comb filter
 ;
-#X restore 392 602 pd META;
+#X text 12 5 KEYWORDS signal tutorial;
+#X restore 392 612 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261139 -33289 0;
 #X text 7 2 octave doubling- Related Help Documents;
 #X text 19 37 links:;
-#X restore 103 602 pd References;
-#X obj 6 602 pddp/pddplink ../5.reference/pddp/help.pd -text help;
-#X text 20 446 We already saw how to use ring modulation to alias a
+#X restore 103 612 pd References;
+#X obj 6 612 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X text 20 456 We already saw how to use ring modulation to alias a
 pitched sound down one octave. Here we do the reverse: filter out all
 odd harmonics using a variable-delay comb filter tuned one octave above
 the incoming sound. We use two taps into the delay line. The fixed

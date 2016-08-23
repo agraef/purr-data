@@ -1,4 +1,4 @@
-#N canvas 0 0 448 496 10;
+#N canvas 448 60 448 496 10;
 #X msg 144 42 hello world;
 #X obj 144 116 print;
 #X floatatom 257 42 0 0 0 0 - - -;
@@ -9,17 +9,16 @@
 ;
 #X obj 1 474 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 94 237 494 284 META 0;
+#N canvas 385 143 494 284 META 0;
 #X text 12 115 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 95 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
 #X text 12 45 LICENSE SIBSD;
 #X text 12 135 HELP_PATCH_AUTHORS Miller Puckette. Updated for release
 0.33. Jonathan Wilkes revised the patch to conform to the PDDP template
 for Pd version 0.42.;
 #X text 12 65 DESCRIPTION the obligatory first program as in any programming
 language to print out "Hello World";
-#X text 12 25 KEYWORDS control GUI user_input;
+#X text 12 25 KEYWORDS control GUI user_input tutorial;
 #X restore 382 476 pd META;
 #N canvas 20 281 428 279 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

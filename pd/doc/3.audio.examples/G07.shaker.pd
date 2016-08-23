@@ -1,4 +1,4 @@
-#N canvas 370 22 611 540 10;
+#N canvas 316 28 611 540 10;
 #X obj 21 453 output~;
 #X obj 21 426 +~;
 #X obj 33 207 delwrite~ G07-del 30;
@@ -38,7 +38,7 @@ off \, one of the four delay's gains is changed in sequence. The change
 occurs over the next four ticks of the metronome (so \, if the metronome
 ticks every 50 msec \, each message to a line~ has a second argument
 of 200.);
-#X text 236 407 Any collection of four gains for the four delayed copies
+#X text 236 417 Any collection of four gains for the four delayed copies
 of the signal (including the original) defines some sort of irregular
 comb filter. The peaks and valleys of the comb filter shift constantly
 as the gains change to new \, random values.;
@@ -49,17 +49,16 @@ as the gains change to new \, random values.;
 #X obj 1 518 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37-1. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.37-1. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal nonlocal;
-#X text 12 65 DESCRIPTION the "shaker" - a time-varying comb filter
+#X text 12 45 DESCRIPTION the "shaker" - a time-varying comb filter
 ;
+#X text 12 5 KEYWORDS signal nonlocal tutorial;
 #X restore 392 520 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

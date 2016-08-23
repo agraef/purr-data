@@ -1,6 +1,6 @@
 #N canvas 433 81 448 607 10;
 #N canvas 0 22 450 300 (subpatch) 0;
-#X array array99 100 float 0;
+#X array array99 100 float 0 black black;
 #X coords 0 1 99 -1 150 100 1;
 #X restore 277 479 graph;
 #X msg 149 237 \; array99 resize \$1;
@@ -51,16 +51,15 @@ know how to readjust themselves automatically when the arrays are resized.
 ;
 #X obj 1 585 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 44 246 494 284 META 0;
+#N canvas 422 155 494 284 META 1;
 #X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 85 AUTHOR Miller Puckette;
-#X text 12 5 GENRE tutorial;
 #X text 12 45 LICENSE SIBSD;
 #X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.34. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS control array;
 #X text 12 65 DESCRIPTION basic array methods;
+#X text 12 25 KEYWORDS control array tutorial;
 #X restore 382 587 pd META;
 #N canvas 13 366 428 212 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

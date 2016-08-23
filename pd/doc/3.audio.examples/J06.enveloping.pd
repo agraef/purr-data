@@ -1,11 +1,11 @@
-#N canvas 328 34 727 584 10;
+#N canvas 237 34 727 584 10;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-waveform 882 float 0;
+#X array \$0-waveform 882 float 0 black black;
 #X coords 0 1.02 881 -1.02 200 130 1;
 #X restore 511 269 graph;
 #X floatatom 47 45 0 0 20 0 - - -;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-env 22050 float 0;
+#X array \$0-env 22050 float 0 black black;
 #X coords 0 1.02 22049 -1.02 200 130 1;
 #X restore 511 89 graph;
 #X obj 47 67 phasor~;
@@ -63,16 +63,15 @@ the sustain and silent regions.;
 #X obj 1 677 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION envelope generators from line segments;
+#X text 12 45 DESCRIPTION envelope generators from line segments;
+#X text 12 5 KEYWORDS signal tutorial;
 #X restore 392 679 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

@@ -1,11 +1,11 @@
-#N canvas 0 31 658 496 10;
+#N canvas 184 127 658 496 10;
 #X obj 151 118 proc;
 #X text 96 15 interface to the linux proc filesystem;
 #X msg 88 80 cpuinfo;
 #X obj 27 281 unpack f f f;
-#X floatatom 25 304 5 0 0 0 - - -;
-#X floatatom 67 305 5 0 0 0 - - -;
-#X floatatom 109 304 5 0 0 0 - - -;
+#X floatatom 25 304 5 0 0 0 - - -, f 5;
+#X floatatom 67 305 5 0 0 0 - - -, f 5;
+#X floatatom 109 304 5 0 0 0 - - -, f 5;
 #X text 37 254 cpu-id \, cpu-mhz \, bogomips;
 #X obj 151 147 print proc_raw;
 #X msg 151 94 proc \$1;
@@ -16,17 +16,17 @@
 #X msg 389 38 blubb;
 #X obj 242 276 unpack f f;
 #X text 241 255 uptime in s \, idle-time in s;
-#X floatatom 241 301 5 0 0 0 - - -;
-#X floatatom 302 305 5 0 0 0 - - -;
+#X floatatom 241 301 5 0 0 0 - - -, f 5;
+#X floatatom 302 305 5 0 0 0 - - -, f 5;
 #X msg 237 38 loadavg;
 #X msg 297 39 version;
 #X obj 174 349 unpack f f f f f f;
-#X floatatom 172 373 5 0 0 0 - - -;
-#X floatatom 187 397 5 0 0 0 - - -;
-#X floatatom 220 373 5 0 0 0 - - -;
-#X floatatom 238 397 5 0 0 0 - - -;
-#X floatatom 271 372 5 0 0 0 - - -;
-#X floatatom 289 396 5 0 0 0 - - -;
+#X floatatom 172 373 5 0 0 0 - - -, f 5;
+#X floatatom 187 397 5 0 0 0 - - -, f 5;
+#X floatatom 220 373 5 0 0 0 - - -, f 5;
+#X floatatom 238 397 5 0 0 0 - - -, f 5;
+#X floatatom 271 372 5 0 0 0 - - -, f 5;
+#X floatatom 289 396 5 0 0 0 - - -, f 5;
 #X text 315 345 apparently the loadavg format is something liek this
 ;
 #X text 318 359 my manpage seems outdated ...;
@@ -38,16 +38,15 @@
 #X text 339 438 5: num of processes now total;
 #X obj 27 234 route cpuinfo uptime loadavg version stat;
 #X obj 458 241 unpack f f f;
-#X floatatom 458 267 5 0 0 0 - - -;
-#X floatatom 484 293 5 0 0 0 - - -;
-#X floatatom 516 266 5 0 0 0 - - -;
+#X floatatom 458 267 5 0 0 0 - - -, f 5;
+#X floatatom 484 293 5 0 0 0 - - -, f 5;
+#X floatatom 516 266 5 0 0 0 - - -, f 5;
 #X text 462 215 uname -r;
 #X text 307 82 really useless stuff but maybe good for estimating number
 of voices in self-generating patches;
-#N canvas 176 129 494 344 META 0;
+#N canvas 177 154 494 344 META 0;
 #X text 12 145 HELP_PATCH_AUTHORS Jonathan Wilkes revised the patch
 to conform to the PDDP template for Pd version 0.42.;
-#X text 12 5 GENRE help;
 #X text 12 25 KEYWORDS control filesystem;
 #X text 12 65 DESCRIPTION interface to the linux proc filesystem;
 #X text 12 85 INLET_0 anything;

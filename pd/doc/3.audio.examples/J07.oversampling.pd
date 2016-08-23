@@ -1,4 +1,4 @@
-#N canvas 433 122 448 484 10;
+#N canvas 312 55 448 484 10;
 #N canvas 284 230 740 538 16x 0;
 #X obj 21 269 *~ 0.125;
 #X obj 21 292 rzero~ -1;
@@ -68,19 +68,19 @@ H13.butterworth.pd in this series.;
 #X obj 22 66 mtof;
 #X floatatom 22 42 3 -24 135 0 - - -, f 3;
 #X text 47 41 <-- pitch;
-#X text 131 230 not;
-#X text 30 238 sampled;
-#X text 30 225 16x up-;
+#X text 131 238 not;
+#X text 30 246 sampled;
+#X text 30 233 16x up-;
 #X text 19 263 The "pd 16x" subpatch at left contains a phasor~ object
 \, but is locally upsampled by a factor of sixteen. Without upsampling
 \, partials as low as 24 Khz. fold back over into the audible range.
 With upsampling \, the first audibly folding over partial is at almost
 700 Hz \, 29 times higher. The relevant partials will be 29 times \,
 or almost 30 dB \, quieter when upsampled.;
-#X text 19 349 A third-order Butterworth filter is used inside the
+#X text 19 359 A third-order Butterworth filter is used inside the
 "pd 16x" subpatch - without that \, the internal signal would fold
 over as it gets downsampled at the outlet~ object.;
-#X text 19 396 You can trade off cutoff frequency with foldover. Here
+#X text 19 406 You can trade off cutoff frequency with foldover. Here
 \, the filter is set for a cutoff of 15 kHz. Lowering it to 7500 Hz
 would further reduce foldover by 18 dB at the expense of losing energy
 in the range 7500-15000 Hz.;
@@ -88,27 +88,26 @@ in the range 7500-15000 Hz.;
 20 10 1 18 -261139 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
-#X obj 1 462 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+#X obj 1 472 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.42. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.42. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION upsampling to control foldover;
-#X restore 392 464 pd META;
+#X text 12 45 DESCRIPTION upsampling to control foldover;
+#X text 12 5 KEYWORDS signal tutorial;
+#X restore 392 474 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261139 -33289 0;
 #X text 7 2 oversampling- Related Help Documents;
 #X text 19 37 Links:;
-#X restore 103 464 pd References;
-#X obj 6 464 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X restore 103 474 pd References;
+#X obj 6 474 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 3 0;
 #X connect 0 0 3 1;
 #X connect 1 0 0 0;

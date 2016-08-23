@@ -1,6 +1,6 @@
-#N canvas 356 19 647 471 10;
+#N canvas 257 37 647 471 10;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-tab1 100 float 1;
+#X array \$0-tab1 100 float 1 black black;
 #A 0 0.999974 0.998121 0.998981 1.00106 1.00019 1.00133 1.00017 0.997406
 0.995891 0.986251 0.976591 0.959539 0.93749 0.903172 0.859824 0.805118
 0.744756 0.682757 0.617726 0.555802 0.496807 0.443599 0.395099 0.351557
@@ -17,9 +17,9 @@
 0.00460384 0.00445121 0.00430475 0.00416536;
 #X coords 0 5 99 0 200 300 1;
 #X restore 422 112 graph;
-#X obj 22 215 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X obj 22 225 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X floatatom 30 259 3 0 0 0 - - -, f 3;
+#X floatatom 30 269 3 0 0 0 - - -, f 3;
 #X text 477 418 frequency;
 #N canvas 876 177 375 255 startup 0;
 #X obj 22 24 loadbang;
@@ -32,47 +32,46 @@
 #X connect 0 0 1 0;
 #X connect 1 0 2 0;
 #X connect 2 0 5 0;
-#X restore 216 397 pd startup;
-#X text 360 400 gain=0;
-#X obj 22 411 filter-graph2 \$0-tab1;
+#X restore 216 407 pd startup;
+#X text 360 410 gain=0;
+#X obj 22 421 filter-graph2 \$0-tab1;
 #X text 400 101 5;
 #X text 417 411 0;
 #X text 405 342 1;
-#X obj 146 373 butterworth3~;
-#X floatatom 164 315 3 0 100 0 - #0-lf -, f 3;
-#X floatatom 211 314 3 85 150 0 - #0-hf -, f 3;
-#X obj 164 341 mtof;
-#X obj 211 341 mtof;
+#X obj 146 383 butterworth3~;
+#X floatatom 164 325 3 0 100 0 - #0-lf -, f 3;
+#X floatatom 211 324 3 85 150 0 - #0-hf -, f 3;
+#X obj 164 351 mtof;
+#X obj 211 351 mtof;
 #X text 597 414 5000;
-#X obj 22 236 filter-graph1 100 5000;
-#X text 156 293 poles;
-#X text 208 293 zeros;
+#X obj 22 246 filter-graph1 100 5000;
+#X text 156 303 poles;
+#X text 208 303 zeros;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header Butterworth_filter
 20 10 1 18 -261139 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
-#X obj 1 449 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+#X obj 1 459 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION Butterworth filter;
-#X restore 392 451 pd META;
+#X text 12 45 DESCRIPTION Butterworth filter;
+#X text 12 5 KEYWORDS signal tutorial;
+#X restore 392 461 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261139 -33289 0;
 #X text 7 2 Butterworth filter- Related Help Documents;
 #X text 19 37 links:;
-#X restore 103 451 pd References;
-#X obj 6 451 pddp/pddplink ../5.reference/pddp/help.pd -text help;
-#X text 19 133 The [butterworth3~] abstraction computes filter coeffients
+#X restore 103 461 pd References;
+#X obj 6 461 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X text 19 143 The [butterworth3~] abstraction computes filter coeffients
 using control messages \, and so it is not suitable for continuously
 time-varying Butterworth filters. For that \, it is often appropriate
 to use time-saving approximations \, but precisely which approximations

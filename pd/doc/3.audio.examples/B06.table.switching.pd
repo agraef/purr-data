@@ -1,6 +1,6 @@
-#N canvas 355 127 684 470 10;
+#N canvas 300 48 684 470 10;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array waveshape15a 131 float 1;
+#X array waveshape15a 131 float 1 black black;
 #A 0 0.847385 0.847385 0.847385 0.847385 0.847385 0.847385 0.847385
 0.847385 0.847385 0.847385 0.847385 0.847385 0.847385 0.847385 0.863077
 0.863077 0.863077 0.863077 0.863077 0.863077 0.863077 0.863077 0.863077
@@ -78,7 +78,7 @@
 #X restore 66 288 pd output;
 #X msg 117 267 MUTE;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array waveshape15b 131 float 1;
+#X array waveshape15b 131 float 1 black black;
 #A 0 -0.659077 -0.643385 -0.643385 -0.627692 -0.612 -0.612 -0.596308
 -0.596308 -0.580615 -0.580615 -0.580615 -0.580615 -0.580615 -0.580615
 -0.580615 -0.596308 -0.596308 -0.596308 -0.596308 -0.596308 -0.596308
@@ -97,7 +97,7 @@
 -0.784615 -0.768923 -0.784615 -0.784615 -0.784615 -0.784615 -0.784615
 -0.784615 -0.784615 -0.784615 -0.784615 -0.784615 -0.784615 -0.784615
 -0.784615 -0.784615 -0.784615 -0.800308 -0.800308 -0.800308 -0.800308
--0.800308 -0.800308 -0.800308;
+-0.800308 -0.800308 -0.800308 ;
 #X coords 0 1.02 130 -1.02 258 130 1;
 #X restore 405 229 graph;
 #X obj 66 235 tabosc4~ waveshape15a;
@@ -128,13 +128,12 @@ arrays with parametrizable names and sizes:;
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 105 AUTHOR Miller Puckette;
 #X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
 #X text 12 45 LICENSE SIBSD;
 #X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.34. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal array;
 #X text 12 65 DESCRIPTION switching between tables;
+#X text 12 25 KEYWORDS signal array tutorial;
 #X restore 392 450 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

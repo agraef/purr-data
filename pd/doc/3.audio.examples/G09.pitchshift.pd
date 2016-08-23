@@ -1,4 +1,4 @@
-#N canvas 318 99 794 553 10;
+#N canvas 189 34 794 553 10;
 #X floatatom 19 107 0 0 0 0 - - -;
 #X obj 82 338 *~;
 #X obj 205 275 line~;
@@ -43,7 +43,7 @@
 #X text 54 236 tape head;
 #N canvas 0 0 612 637 test-input 0;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array array1 155948 float 0;
+#X array array1 155948 float 0 black black;
 #X coords 0 1 155947 -1 200 150 1;
 #X restore 150 141 graph;
 #X obj 139 518 tabread4~ array1;
@@ -101,31 +101,30 @@ using the [vd~] variable delay object. Ther are two moving tape heads
 enveloped out at the moment it has to jump back (or forward) to start
 another scratch. Most of the brain work is in computing how fast the
 tape heads have to move to get the desired transposition.;
-#X text 409 229 The "window size" is the total trajectory of the read
+#X text 409 239 The "window size" is the total trajectory of the read
 points in the delay line \, in milliseconds. The delay times are controlled
 by a [phasor~] object. The second delay time \, 180 degrees out of
 phase from the first one \, is computed using the "wrap" object.;
-#X text 408 293 The "window size" is the total trajectory of the read
+#X text 408 313 The "window size" is the total trajectory of the read
 points in the delay line \, in milliseconds. The delay times are controlled
 by a [phasor~] object. The second delay time \, 180 degrees out of
 phase from the first one \, is computed using the "wrap" object.;
-#X text 407 357 The [cos~] objects compute the fadein and fadeout of
+#X text 407 387 The [cos~] objects compute the fadein and fadeout of
 the two delay line outputs. They each traverse the positive half of
 the cosine waveform (phase -0.25 to +0.25) over the time the phase
 goes from one end to the other.;
 #X obj 1 531 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37-1. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.37-1. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 65 DESCRIPTION pitch shifter;
-#X text 12 25 KEYWORDS signal;
+#X text 12 45 DESCRIPTION pitch shifter;
+#X text 12 5 KEYWORDS signal tutorial;
 #X restore 392 533 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

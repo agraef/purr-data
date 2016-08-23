@@ -1,26 +1,26 @@
-#N canvas 418 19 470 499 10;
-#X obj 33 244 mtof;
-#X floatatom 33 221 5 0 150 0 - #0-pit -, f 5;
-#X obj 22 412 output~;
-#X obj 22 191 noise~;
-#X text 85 220 <-- cutoff (pitch units);
-#X text 96 267 <-- cutoff (Hertz);
-#X floatatom 33 269 5 0 0 0 - - -, f 5;
-#X obj 111 380 metro 250;
-#X obj 111 360 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+#N canvas 363 32 470 499 10;
+#X obj 33 254 mtof;
+#X floatatom 33 231 5 0 150 0 - #0-pit -, f 5;
+#X obj 22 422 output~;
+#X obj 22 201 noise~;
+#X text 85 230 <-- cutoff (pitch units);
+#X text 96 277 <-- cutoff (Hertz);
+#X floatatom 33 279 5 0 0 0 - - -, f 5;
+#X obj 111 390 metro 250;
+#X obj 111 370 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
 1;
-#X text 129 357 graphing on/off;
+#X text 129 367 graphing on/off;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array H03-graph 882 float 2;
+#X array H03-graph 882 float 2 black black;
 #X coords 0 1 882 -1 200 140 1;
-#X restore 258 256 graph;
-#X text 282 398 --- 0.02 sec ---;
-#X text 88 190 white noise \, test signal;
-#X obj 22 327 bp~;
-#X text 63 329 band-pass filter;
-#X obj 111 405 tabwrite~ H03-graph;
-#X floatatom 44 297 5 0 1000 0 - #0-q -, f 5;
-#X text 96 295 <-- q;
+#X restore 258 266 graph;
+#X text 282 408 --- 0.02 sec ---;
+#X text 88 200 white noise \, test signal;
+#X obj 22 337 bp~;
+#X text 63 339 band-pass filter;
+#X obj 111 415 tabwrite~ H03-graph;
+#X floatatom 44 307 5 0 1000 0 - #0-q -, f 5;
+#X text 96 305 <-- q;
 #N canvas 0 0 450 300 loadbang 0;
 #X obj 85 16 loadbang;
 #X obj 85 40 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
@@ -32,8 +32,8 @@
 #X connect 0 0 1 0;
 #X connect 1 0 2 0;
 #X connect 2 0 5 0;
-#X restore 111 439 pd loadbang;
-#X text 19 112 The two controls specify \, first \, the center frequency
+#X restore 111 449 pd loadbang;
+#X text 19 122 The two controls specify \, first \, the center frequency
 \, and second \, the sharpness of the filter \, commonly called "q".
 If you increase q to 10 or 20 \, you will see a drop in total signal
 power \, and moreover \, you'll see and hear the resonant frequency
@@ -47,27 +47,26 @@ patch uses a white noise source to demonstrate bp~.;
 20 10 1 18 -261139 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
-#X obj 1 477 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+#X obj 1 487 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION resonant (band-pass) filter;
-#X restore 392 479 pd META;
+#X text 12 45 DESCRIPTION resonant (band-pass) filter;
+#X text 12 5 KEYWORDS signal tutorial;
+#X restore 392 489 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261139 -33289 0;
 #X text 7 2 band-pass filter- Related Help Documents;
 #X text 19 37 links:;
-#X restore 103 479 pd References;
-#X obj 6 479 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X restore 103 489 pd References;
+#X obj 6 489 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 6 0;
 #X connect 1 0 0 0;
 #X connect 3 0 13 0;

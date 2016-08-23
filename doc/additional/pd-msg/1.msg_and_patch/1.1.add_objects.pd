@@ -1,4 +1,4 @@
-#N canvas 0 18 711 648 10;
+#N canvas 155 25 711 648 10;
 #X msg 42 49 msg 500 10 bang;
 #X text 224 53 <= Click here first;
 #X text 207 232 <= and here;
@@ -45,15 +45,14 @@ the inlet :;
 the order in which objects are created. If you don't the "connect"
 selector won't work correctly. If you get stuck \, reload this patch
 and try again.;
-#N canvas 218 113 494 396 META 0;
-#X text 12 5 GENRE tutorial;
+#N canvas 219 138 494 396 META 0;
 #X text 12 95 HELP_PATCH_AUTHORS Damien Henry. "pd meta" information
 added by Jonathan Wilkes for Pd version 0.42.;
 #X text 12 65 DESCRIPTION how to dynamically instantiate objects and
 connections.;
-#X text 12 25 KEYWORDS control canvas_op nonlocal dynamic_patching
-;
 #X text 12 44 LICENSE public domain;
+#X text 12 5 KEYWORDS control canvas_op nonlocal dynamic_patching tutorial
+;
 #X restore 654 623 pd META;
 #X connect 0 0 21 0;
 #X connect 5 0 22 0;
@@ -62,9 +61,6 @@ connections.;
 #X connect 8 0 24 0;
 #X connect 9 0 24 0;
 #X connect 30 0 23 0;
-#X connect 31 0 23 0;
-#X connect 31 0 23 0;
-#X connect 31 0 23 0;
 #X connect 31 0 23 0;
 #X connect 32 0 24 0;
 #X connect 33 0 24 0;

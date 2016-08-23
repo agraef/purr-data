@@ -1,20 +1,20 @@
-#N canvas 368 112 644 514 10;
+#N canvas 369 46 644 514 10;
 #X floatatom 33 62 0 0 0 0 - - -;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-difference 882 float 0;
-#X coords 0 1.02 882 -1.02 200 130 1;
+#X array \$0-difference 882 float 0 black black;
+#X coords 0 1.02 881 -1.02 200 130 1;
 #X restore 415 341 graph;
 #X text 19 37 frequency;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-phasor1 882 float 0;
-#X coords 0 1.02 882 -1.02 200 130 1;
+#X array \$0-phasor1 882 float 0 black black;
+#X coords 0 1.02 881 -1.02 200 130 1;
 #X restore 415 40 graph;
 #X obj 49 154 phasor~ 0;
 #X obj 49 130 + 0.2;
 #X obj 33 204 -~;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-phasor2 882 float 0;
-#X coords 0 1.02 882 -1.02 200 130 1;
+#X array \$0-phasor2 882 float 0 black black;
+#X coords 0 1.02 881 -1.02 200 130 1;
 #X restore 415 192 graph;
 #X text 24 304 This patch demonstrates pulse width modulation \, which
 is accomplished simply by subtracting two sawtooth waves at a varying
@@ -37,16 +37,15 @@ so that the relative phase wanders continuously.;
 #X obj 1 492 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION classical pulse width modulation;
+#X text 12 45 DESCRIPTION classical pulse width modulation;
+#X text 12 5 KEYWORDS signal tutorial;
 #X restore 392 494 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

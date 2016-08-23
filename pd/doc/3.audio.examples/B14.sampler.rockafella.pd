@@ -1,4 +1,4 @@
-#N canvas 406 56 531 683 10;
+#N canvas 407 25 531 671 10;
 #X obj 21 538 hip~ 5;
 #X floatatom 22 86 4 0 100 0 - - -, f 4;
 #X obj 22 485 *~;
@@ -23,7 +23,7 @@
 #X obj 297 192 phasor~;
 #N canvas 30 567 660 275 table 0;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array table23 44103 float 0;
+#X array table23 44103 float 0 black black;
 #X coords 0 1.02 44100 -1.02 200 130 1;
 #X restore 442 61 graph;
 #X text 444 195 --- 44103 samples ---;
@@ -106,17 +106,16 @@ using "read-pt" and "chunk size" can be in the same units (seconds.)
 #X text 158 23 ...by looped sampling;
 #X obj 1 662 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+#N canvas 431 183 494 284 META 0;
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal array;
-#X text 12 65 DESCRIPTION time compression and expansion;
+#X text 12 45 DESCRIPTION time compression and expansion;
+#X text 12 5 KEYWORDS signal array tutorial;
 #X restore 392 664 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

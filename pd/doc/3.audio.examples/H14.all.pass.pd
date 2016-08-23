@@ -1,7 +1,7 @@
-#N canvas 424 23 448 647 10;
+#N canvas 287 25 448 647 10;
 #X obj 22 254 filter-graph2 tab1 tab2;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array tab1 100 float 1;
+#X array tab1 100 float 1 black black;
 #A 0 0.999994 1.0015 1.00454 0.999907 0.99994 0.999773 1.00002 1.0004
 0.999993 0.998703 1 0.999993 1 0.999699 0.999312 0.99924 0.999999 1
 0.999937 0.999782 0.999733 0.999322 0.9998 1 0.999998 0.999945 0.999998
@@ -17,7 +17,7 @@
 #X coords 0 2 99 0 200 140 1;
 #X restore 230 249 graph;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array tab2 100 float 3;
+#X array tab2 100 float 3 black black;
 #A 0 8.595e-06 0.0615936 0.127096 0.18809 0.251487 0.314087 0.376949
 0.439804 0.502669 0.565481 0.628309 0.691149 0.753982 0.816816 0.879645
 0.942477 1.00531 1.06814 1.13097 1.1938 1.25663 1.31947 1.3823 1.44513
@@ -30,7 +30,7 @@
 4.9007 4.96353 5.02637 5.0892 5.15203 5.21486 5.27769 5.34052 5.40335
 5.46619 5.52902 5.59185 5.65469 5.71752 5.78033 5.8432 5.90605 5.96891
 6.03151 6.09491 6.1559 6.21446;
-#X coords 0 6.283 99 0 200 140 1;
+#X coords 0 6.283 100 0 200 140 1;
 #X restore 235 450 graph;
 #X text 217 306 1;
 #X text 229 592 0;
@@ -77,16 +77,15 @@ values of $p$ are allowed \, as long as p is between -1 and 1;
 #X obj 1 625 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION all-pass filters;
+#X text 12 45 DESCRIPTION all-pass filters;
+#X text 12 5 KEYWORDS signal tutorial;
 #X restore 392 627 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

@@ -1,20 +1,8 @@
-#N canvas 259 213 560 421 10;
+#N canvas 260 238 560 421 10;
 #X obj 4 -17 cnv 15 550 40 empty \$0-pddp.cnv.header cpu_temperature
 3 12 0 18 -241536 -1 0;
 #X obj 3 189 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlet 15 12 0 13
 -245500 -191407 0;
-#N canvas 779 22 494 344 META 0;
-#X text 12 25 KEYWORDS control number float store;
-#X text 12 45 LICENSE GPL;
-#X text 12 65 TEMPLATE template-help.pd v0.1;
-#X text 12 85 PLATFORM windows macosx gnulinux;
-#X text 12 105 DATATYPE float list;
-#X text 12 125 LIBRARY internal;
-#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 165 RELEASE_DATE 2007-08-24;
-#X text 12 185 RELEASE_VERSION 0.40-test05;
-#X text 12 5 GENRE storage;
-#X restore 500 373 pd META;
 #X obj 3 258 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 15 12 0
 13 -245500 -191407 0;
 #X obj 3 338 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 15
@@ -34,10 +22,10 @@
 -162280 0;
 #X text 103 276 list - a list with the values of the left and right
 sensors;
-#X floatatom 146 144 5 0 0 0 - - -;
+#X floatatom 146 144 5 0 0 0 - - -, f 5;
 #X obj 146 101 apple/cpu_temperature;
 #X text 15 6 description: query the CPU temperature in Apples;
-#X connect 9 0 16 0;
-#X connect 10 0 16 0;
-#X connect 11 0 10 0;
-#X connect 16 0 15 0;
+#X connect 8 0 15 0;
+#X connect 9 0 15 0;
+#X connect 10 0 9 0;
+#X connect 15 0 14 0;

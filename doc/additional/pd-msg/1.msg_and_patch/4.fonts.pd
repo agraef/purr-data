@@ -1,4 +1,4 @@
-#N canvas 0 18 405 234 10;
+#N canvas 295 201 405 234 10;
 #X msg 14 26 menufont;
 #X msg 32 64 font 10 100 100;
 #X msg 32 88 font 14 100 100;
@@ -12,14 +12,13 @@
 #X obj 14 196 s pd-4.fonts.pd;
 #X text 14 3 Here a list of all the messages dealing with fonts :;
 #N canvas 458 158 494 396 META 0;
-#X text 12 5 GENRE tutorial;
 #X text 12 95 HELP_PATCH_AUTHORS Damien Henry. "pd meta" information
 added by Jonathan Wilkes for Pd version 0.42.;
-#X text 12 25 KEYWORDS control canvas_op nonlocal dynamic_patching
-;
 #X text 12 64 DESCRIPTION changing font size with messages to a canvas
 ;
 #X text 12 43 LICENSE public domain;
+#X text 12 5 KEYWORDS control canvas_op nonlocal dynamic_patching tutorial
+;
 #X restore 347 206 pd META;
 #X connect 0 0 10 0;
 #X connect 1 0 10 0;

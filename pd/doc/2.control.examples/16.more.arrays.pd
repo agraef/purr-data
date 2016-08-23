@@ -1,8 +1,8 @@
-#N canvas 433 83 448 601 10;
+#N canvas 434 47 448 601 10;
 #N canvas 0 22 450 300 (subpatch) 0;
-#X array array99 5 float 0;
-#X array array98 7 float 0;
-#X coords 0 1 5 -1 150 90 1;
+#X array array99 5 float 0 black black;
+#X array array98 7 float 0 black black;
+#X coords 0 1 6 -1 150 90 1;
 #X restore 211 484 graph;
 #X msg 22 182 \; array99 rename george;
 #X msg 196 182 \; george rename array99;
@@ -42,14 +42,13 @@ ticks \, labels \, and the actual data are lost between Pd sessions.
 #X text 12 155 RELEASE_VERSION 0.41.4;
 #X text 12 135 RELEASE_DATE 2009-06-12;
 #X text 12 95 AUTHOR Miller Puckette;
-#X text 12 5 GENRE tutorial;
 #X text 12 45 LICENSE SIBSD;
 #X text 12 175 HELP_PATCH_AUTHORS Updated for release 0.33. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS control array GUI;
 #X text 12 65 DESCRIPTION array methods for manipulating array data
 and appearance;
+#X text 12 25 KEYWORDS control array GUI tutorial;
 #X restore 382 581 pd META;
 #N canvas 5 431 428 143 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

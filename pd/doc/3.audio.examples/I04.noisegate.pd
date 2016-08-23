@@ -1,4 +1,4 @@
-#N canvas 424 22 448 500 10;
+#N canvas 425 47 448 500 10;
 #X floatatom 196 343 0 0 0 0 - - -;
 #X floatatom 30 315 0 0 100 0 - - -;
 #N canvas 98 0 648 669 fft-analysis 0;
@@ -142,8 +142,8 @@ with each of the accumulating ones.;
 #X restore 30 367 pd fft-analysis;
 #N canvas 0 110 565 454 hann-window 0;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-hann 1024 float 0;
-#X coords 0 1 1024 0 300 100 1;
+#X array \$0-hann 1024 float 0 black black;
+#X coords 0 1 1023 0 300 100 1;
 #X restore 82 311 graph;
 #X obj 378 165 osc~;
 #X obj 378 190 *~ -0.5;
@@ -193,8 +193,8 @@ and window-msec (analysis window size in seconds and msec).;
 #X text 106 293 noise;
 #N canvas 132 255 660 373 insample 0;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-sample 155948 float 0;
-#X coords 0 1 155947 -1 400 150 1;
+#X array \$0-sample 62079 float 0 black black;
+#X coords 0 1 62078 -1 400 150 1;
 #X restore 236 25 graph;
 #X obj 19 23 r read-sample;
 #X obj 19 74 unpack s f;
@@ -296,7 +296,7 @@ amplitude of each in dB.;
 #X msg 196 315 15;
 #N canvas 0 0 592 442 mask-table 0;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-mask 512 float 0;
+#X array \$0-mask 512 float 0 black black;
 #X coords 0 500 511 0 400 300 1;
 #X restore 110 76 graph;
 #X text 25 14 This table (1010-mask) is the average power measured
@@ -326,15 +326,14 @@ of the noise to clean out of the signal).;
 #X obj 1 478 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Jonathan Wilkes revised the patch
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Jonathan Wilkes revised the patch
 to conform to the PDDP template for Pd version 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION denoiser;
+#X text 12 45 DESCRIPTION denoiser;
+#X text 12 5 KEYWORDS signal tutorial;
 #X restore 392 480 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

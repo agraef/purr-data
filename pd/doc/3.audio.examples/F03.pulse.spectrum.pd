@@ -1,4 +1,4 @@
-#N canvas 375 33 610 515 10;
+#N canvas 363 27 610 515 10;
 #X obj 169 180 line~;
 #X obj 22 201 cos~;
 #X obj 169 156 pack 0 50;
@@ -12,11 +12,11 @@
 #X text 164 37 bandwidth;
 #X obj 169 205 +~ 1;
 #X obj 22 225 +~ 1;
-#X text 19 357 Here is a measured amplitude spectrum for the pulse
+#X text 19 367 Here is a measured amplitude spectrum for the pulse
 train. Nutice that \, other than a smallish spillover \, the energy
 sits in one "lobe" whose changing width justifies our calling the squeeze
 factor the "bandwidth.";
-#X text 18 410 The spectrum is in units of amplitude. THe sidelobes
+#X text 18 430 The spectrum is in units of amplitude. THe sidelobes
 \, although they look small \, are actually only about 34 dB down.
 You can design more complicated pulse trains \, little Blackman window
 functions \, which control the sidelobes much better.;
@@ -83,11 +83,11 @@ until much later.;
 #X obj 22 249 *~ 0.5;
 #X obj 23 104 phasor~;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array F03-signal 882 float 0;
-#X coords 0 1.02 882 -1.02 200 130 1;
+#X array F03-signal 882 float 0 black black;
+#X coords 0 1.02 881 -1.02 200 130 1;
 #X restore 390 251 graph;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array F03-spectrum 259 float 0;
+#X array F03-spectrum 259 float 0 black black;
 #X coords 0 0.51 258 -0.008 256 130 1;
 #X restore 279 56 graph;
 #X text 418 384 ---- 0.02 seconds ----;
@@ -105,27 +105,26 @@ until much later.;
 20 10 1 18 -261139 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
-#X obj 1 487 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+#X obj 1 507 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION pulse spectrum measurement;
-#X restore 392 489 pd META;
+#X text 12 45 DESCRIPTION pulse spectrum measurement;
+#X text 12 5 KEYWORDS signal tutorial;
+#X restore 392 509 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261139 -33289 0;
 #X text 7 2 pulse spectrum- Related Help Documents;
 #X text 19 37 links:;
-#X restore 103 489 pd References;
-#X obj 6 489 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X restore 103 509 pd References;
+#X obj 6 509 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 11 0;
 #X connect 1 0 12 0;
 #X connect 2 0 0 0;

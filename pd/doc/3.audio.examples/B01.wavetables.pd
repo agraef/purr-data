@@ -1,7 +1,7 @@
-#N canvas 433 90 448 580 10;
+#N canvas 431 46 448 580 10;
 #X floatatom 87 109 0 0 0 0 - - -;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array table10 259 float 1;
+#X array table10 259 float 1 black black;
 #A 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0.612 0.612 0.612 0.612 0.612 0.627692 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 -0.470769 -0.470769 -0.470769 -0.470769 -0.470769
@@ -51,13 +51,12 @@ waveform. You can draw in the waveform with the mouse.;
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 105 AUTHOR Miller Puckette;
 #X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
 #X text 12 45 LICENSE SIBSD;
 #X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.40. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal array;
 #X text 12 65 DESCRIPTION wavetable oscillators;
+#X text 12 25 KEYWORDS signal array tutorial;
 #X restore 392 560 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

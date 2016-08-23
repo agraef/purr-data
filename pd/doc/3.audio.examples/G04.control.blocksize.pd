@@ -1,4 +1,4 @@
-#N canvas 424 19 448 486 10;
+#N canvas 425 44 448 486 10;
 #N canvas 195 311 647 354 delay-writer 0;
 #X obj 86 220 inlet~;
 #X obj 86 326 outlet~;
@@ -68,18 +68,17 @@ older than their paper.;
 #X obj 1 464 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 165 RELEASE_VERSION 0.41.4;
-#X text 12 145 RELEASE_DATE 2009-06-12;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 185 HELP_PATCH_AUTHORS Updated for release 0.37-1. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 145 RELEASE_VERSION 0.41.4;
+#X text 12 125 RELEASE_DATE 2009-06-12;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 165 HELP_PATCH_AUTHORS Updated for release 0.37-1. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal nonlocal;
-#X text 12 65 DESCRIPTION controlling delay with block~;
+#X text 12 45 DESCRIPTION controlling delay with block~;
+#X text 12 5 KEYWORDS signal nonlocal tutorial;
 #X restore 392 466 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

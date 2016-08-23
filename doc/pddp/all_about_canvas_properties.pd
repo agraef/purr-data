@@ -1,20 +1,19 @@
 #N struct xy-units float x float y;
-#N canvas 429 34 448 318 10;
+#N canvas 430 59 448 318 10;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header canvas_properties
 20 10 1 18 -261106 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
 #X obj 1 296 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 445 194 426 134 META 0;
+#N canvas 446 219 426 134 META 0;
 #X text 12 85 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
 #X text 12 65 LIBRARY PDDP;
-#X text 12 5 GENRE all_about_pd;
-#X text 12 25 KEYWORDS GUI needs_work;
-#X text 12 45 DESCRIPTION settings for the visual appearance of a Pd
+#X text 12 35 DESCRIPTION settings for the visual appearance of a Pd
 canvas;
+#X text 12 15 KEYWORDS GUI needs_work all_about_pd;
 #X restore 392 298 pd META;
 #N canvas 217 212 428 114 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
@@ -87,7 +86,7 @@ parent" in the canvas properties menu to enable this feature.;
 1 18 -261106 -33289 0;
 #X text 7 1 X and Y Range;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-array 10 float 3;
+#X array \$0-array 10 float 3 black black;
 #A 0 1.25716 0.514292 0.814295 1.27144 1.44287 1.57145 1.35716 1.18573
 0.55715 1.28573;
 #X coords 0 1 10 -1 200 140 1;

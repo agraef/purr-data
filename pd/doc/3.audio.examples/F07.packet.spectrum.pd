@@ -1,7 +1,7 @@
-#N canvas 399 22 531 624 10;
-#X obj 282 351 line~;
-#X obj 34 442 cos~;
-#X floatatom 59 542 0 0 0 0 - - -;
+#N canvas 383 27 531 624 10;
+#X obj 282 326 line~;
+#X obj 34 417 cos~;
+#X floatatom 59 517 0 0 0 0 - - -;
 #N canvas 176 241 532 273 output 0;
 #X obj 338 160 t b;
 #X obj 338 110 f;
@@ -53,38 +53,38 @@
 #X connect 21 0 22 1;
 #X connect 23 0 20 0;
 #X connect 26 0 21 0;
-#X restore 34 564 pd output;
-#X msg 85 542 MUTE;
-#X obj 282 327 pack 0 50;
-#X floatatom 282 255 0 0 0 0 - - -;
-#X obj 34 356 -~ 0.5;
-#X obj 34 398 *~;
-#X obj 282 279 / 10;
-#X obj 34 420 clip~ -0.5 0.5;
-#X text 279 232 bandwidth;
-#X obj 282 375 +~ 1;
-#X obj 34 465 +~ 1;
-#X obj 184 436 cos~;
-#X obj 34 489 *~;
-#X floatatom 198 274 4 0 0 0 - - -, f 4;
-#X obj 198 298 / 10;
-#X obj 184 414 *~;
-#X text 196 236 center;
-#X text 196 251 freq.;
-#X obj 282 303 max 0;
-#X obj 198 370 line~;
-#X obj 198 346 pack 0 50;
-#X obj 198 322 max 0;
-#X floatatom 34 308 4 0 0 0 - - -, f 4;
-#X obj 34 332 phasor~ 100;
-#X text 120 542 <-- output;
-#X text 31 284 freq.;
-#X text 31 269 fundamental;
+#X restore 34 539 pd output;
+#X msg 85 517 MUTE;
+#X obj 282 302 pack 0 50;
+#X floatatom 282 230 0 0 0 0 - - -;
+#X obj 34 331 -~ 0.5;
+#X obj 34 373 *~;
+#X obj 282 254 / 10;
+#X obj 34 395 clip~ -0.5 0.5;
+#X text 279 207 bandwidth;
+#X obj 282 350 +~ 1;
+#X obj 34 440 +~ 1;
+#X obj 184 411 cos~;
+#X obj 34 464 *~;
+#X floatatom 198 249 4 0 0 0 - - -, f 4;
+#X obj 198 273 / 10;
+#X obj 184 389 *~;
+#X text 196 211 center;
+#X text 196 226 freq.;
+#X obj 282 278 max 0;
+#X obj 198 345 line~;
+#X obj 198 321 pack 0 50;
+#X obj 198 297 max 0;
+#X floatatom 34 283 4 0 0 0 - - -, f 4;
+#X obj 34 307 phasor~ 100;
+#X text 120 517 <-- output;
+#X text 31 259 freq.;
+#X text 31 244 fundamental;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array spectrum 128 float 0;
-#X coords 0 500 128 0 256 130 1;
-#X restore 240 432 graph;
-#X msg 91 495 bang;
+#X array spectrum 128 float 0 black black;
+#X coords 0 500 127 0 256 130 1;
+#X restore 240 407 graph;
+#X msg 91 470 bang;
 #N canvas 204 17 358 238 fft 0;
 #X obj 46 48 inlet~;
 #X obj 159 181 tabwrite~ spectrum;
@@ -103,45 +103,44 @@
 #X connect 4 0 6 0;
 #X connect 5 0 6 0;
 #X connect 6 0 1 0;
-#X restore 58 517 pd fft;
-#X text 239 572 0;
-#X text 487 569 5512;
-#X text 127 495 <-- graph;
-#X text 19 64 Here's the spectrum you get. Note that even if you put
+#X restore 58 492 pd fft;
+#X text 239 547 0;
+#X text 487 544 5512;
+#X text 127 470 <-- graph;
+#X text 19 39 Here's the spectrum you get. Note that even if you put
 the center frequency right on a partial \, there is significant energy
 in neighboring partials (try fundamental 440 \, "center freq" 30 \,
 bandwidth 0.);
-#X text 18 134 The center frequency is in units of ten per partial
+#X text 18 109 The center frequency is in units of ten per partial
 \, or in other words a value of "30" means "centered on the third partial".
 ;
-#X text 22 185 This technique only works if you're doing Hanning-window
+#X text 22 160 This technique only works if you're doing Hanning-window
 shaped PWM--you can't combine this naturally with FM or with the waveshaping
 technique we'll see later.;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header windowed_packet_spectrum
 20 10 1 18 -261139 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
-#X obj 1 602 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+#X obj 1 577 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.34. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.34. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION windowed packet spectrum;
-#X restore 392 604 pd META;
+#X text 12 45 DESCRIPTION windowed packet spectrum;
+#X text 12 5 KEYWORDS signal tutorial;
+#X restore 392 579 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261139 -33289 0;
 #X text 7 2 windowed packet spectrum- Related Help Documents;
 #X text 19 37 links:;
-#X restore 103 604 pd References;
-#X obj 6 604 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X restore 103 579 pd References;
+#X obj 6 579 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 12 0;
 #X connect 1 0 13 0;
 #X connect 2 0 3 1;

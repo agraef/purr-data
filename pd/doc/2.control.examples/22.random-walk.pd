@@ -1,4 +1,4 @@
-#N canvas 433 99 448 555 10;
+#N canvas 434 124 448 555 10;
 #X floatatom 97 297 5 0 0 0 - - -, f 5;
 #X obj 118 217 f;
 #X obj 87 275 random 4;
@@ -42,17 +42,16 @@ to a random number (from 1 to 4) multiplied by a random sign (-1 or
 ;
 #X obj 1 533 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 44 246 494 284 META 0;
+#N canvas 379 239 494 284 META 0;
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 105 AUTHOR Miller Puckette;
 #X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
 #X text 12 45 LICENSE SIBSD;
 #X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37-1. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS control;
 #X text 12 65 DESCRIPTION random walk generator;
+#X text 12 25 KEYWORDS control tutorial;
 #X restore 382 535 pd META;
 #N canvas 11 381 428 143 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

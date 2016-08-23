@@ -1,4 +1,4 @@
-#N canvas 313 19 779 655 10;
+#N canvas 244 30 779 655 10;
 #X obj 407 469 metro 100;
 #X obj 209 422 phasor~;
 #X obj 407 499 snapshot~;
@@ -96,23 +96,22 @@ onset has actually increased (which has truncation error from summing
 in the phase snapshot) \, and subtract that increase from the phase
 \, giving a value that differs from zero by the truncation error but
 reflects the true phase we should reset to for continuity.;
-#X text 17 241 The metronome rate is arbitrary but should be fast enough
+#X text 17 251 The metronome rate is arbitrary but should be fast enough
 that the [phasor~] never has time to wrap.;
 #X text 467 402 Each 100 msec \, poll phase of [phasor~];
 #X obj 1 778 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 25 KEYWORDS;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.42. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.42. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 65 DESCRIPTION variable speed playback from long tables
+#X text 12 45 DESCRIPTION variable speed playback from long tables
 ;
+#X text 12 5 KEYWORDS tutorial;
 #X restore 392 780 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

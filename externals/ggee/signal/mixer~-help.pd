@@ -1,4 +1,4 @@
-#N canvas 0 26 610 404 10;
+#N canvas 208 173 610 404 10;
 #X obj 163 120 osc~ 220;
 #X obj 186 297 dac~;
 #X obj 163 140 *~ 0.1;
@@ -43,8 +43,7 @@
 #X msg 101 358 7 \$1;
 #X text 57 7 The beginnig of a dynamic mixer matrix object \, implemented
 together with Oswald;
-#N canvas 440 303 494 344 META 0;
-#X text 12 5 GENRE help;
+#N canvas 441 328 494 344 META 0;
 #X text 12 175 HELP_PATCH_AUTHORS "pd meta" information added by Jonathan
 Wilkes for Pd version 0.42.;
 #X text 12 45 LICENSE Tcl/Tk;

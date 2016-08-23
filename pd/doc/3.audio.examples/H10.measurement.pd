@@ -1,7 +1,7 @@
-#N canvas 346 25 666 457 10;
+#N canvas 241 25 666 457 10;
 #X obj 25 336 filter-graph2 tab1 tab2;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array tab1 100 float 1;
+#X array tab1 100 float 1 black black;
 #A 0 0.830737 0.844715 0.882793 0.953057 1.0592 1.19383 1.30927 1.28362
 1.08532 0.848171 0.656605 0.517756 0.418204 0.345252 0.291106 0.249389
 0.216703 0.190566 0.169369 0.1519 0.137418 0.12526 0.114871 0.105957
@@ -19,7 +19,7 @@
 #X coords 0 2 99 0 200 140 1;
 #X restore 434 49 graph;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array tab2 100 float 3;
+#X array tab2 100 float 3 black black;
 #A 0 8.59501e-06 0.0327982 0.0790568 0.143062 0.250239 0.425263 0.697661
 1.04745 1.37257 1.59826 1.73194 1.8042 1.83798 1.84726 1.84029 1.8221
 1.79589 1.76375 1.72711 1.68696 1.64405 1.5989 1.55192 1.50343 1.45366
@@ -32,7 +32,7 @@
 4.82934 4.77958 4.73108 4.6841 4.63895 4.59604 4.55589 4.51925 4.48711
 4.4609 4.44271 4.43574 4.44501 4.4788 4.55106 4.68474 4.91043 5.23555
 5.58534 5.85774 6.03276 6.13994 6.20394 6.24278;
-#X coords 0 6.283 99 0 200 140 1;
+#X coords 0 6.283 100 0 200 140 1;
 #X restore 439 250 graph;
 #X text 421 106 1;
 #X text 433 392 0;
@@ -84,17 +84,16 @@ filter you're curious about.;
 #X obj 1 435 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION measuring filter frequency and phase response
+#X text 12 45 DESCRIPTION measuring filter frequency and phase response
 ;
+#X text 12 5 KEYWORDS signal tutorial;
 #X restore 392 437 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

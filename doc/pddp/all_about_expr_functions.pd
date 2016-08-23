@@ -1,4 +1,4 @@
-#N canvas 430 35 448 545 10;
+#N canvas 431 60 448 545 10;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header expr_operators_and_functions
 20 10 1 18 -261106 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
@@ -55,7 +55,7 @@
 #X obj 36 815 expr abs(a);
 #X obj 36 857 expr modf(a);
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array expr_array 11 float 3;
+#X array expr_array 11 float 3 black black;
 #A 0 -0.707106 0 0.707106 1 0.707108 2.65359e-06 -0.707104 -1 -0.70711
 -5.30718e-06 0.707103;
 #X coords 0 1 11 -1 80 60 1;
@@ -360,11 +360,9 @@ arguments to the [expr] \, [expr~] \, and [fexpr~] objects.;
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
 #X text 12 85 LIBRARY PDDP;
-#X text 12 45 KEYWORDS;
-#X text 12 5 GENRE all_about_pd;
-#X text 12 25 NAME expr expr~ fexpr~;
-#X text 12 65 DESCRIPTION complete list of functions and operators
+#X text 12 45 DESCRIPTION complete list of functions and operators
 for expr family objects;
+#X text 12 25 KEYWORDS expr expr~ fexpr~ all_about_pd;
 #X restore 392 2570 pd META;
 #N canvas 218 414 428 140 Related_objects 0;
 #X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

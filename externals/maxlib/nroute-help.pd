@@ -1,5 +1,5 @@
-#N canvas 10 3 630 380 12;
-#X floatatom 116 199 5 0 0 0 - - -;
+#N canvas 11 28 630 380 12;
+#X floatatom 116 199 5 0 0 0 - - -, f 5;
 #X obj 41 290 print matched;
 #X obj 116 256 print failed;
 #X msg 78 151 8;
@@ -8,7 +8,7 @@
 #X msg 56 105 17 3 45;
 #X msg 116 153 3;
 #X text 170 197 position to match;
-#X floatatom 427 204 5 0 0 0 - - -;
+#X floatatom 427 204 5 0 0 0 - - -, f 5;
 #X obj 336 293 print matched;
 #X obj 427 259 print failed;
 #X obj 336 229 nroute fly 2;
@@ -20,10 +20,9 @@
 #X text 153 152 what to match;
 #X text 54 8 nroute :: route if Nth argument is matched;
 #X text 135 24 written by Olaf Matthes <olaf.matthes@gmx.de>;
-#N canvas 260 141 494 344 META 0;
+#N canvas 261 166 494 344 META 0;
 #X text 12 65 TEMPLATE template-help.pd v0.1;
 #X text 12 85 PLATFORM windows macosx gnulinux;
-#X text 12 5 GENRE help;
 #X text 12 165 WEBSITE;
 #X text 12 205 RELEASE_VERSION 0.42;
 #X text 12 225 HELP_PATCH_AUTHORS "pd meta" information added by Jonathan

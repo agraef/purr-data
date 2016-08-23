@@ -1,4 +1,4 @@
-#N canvas 433 124 448 479 10;
+#N canvas 434 104 448 479 10;
 #X obj 49 116 tabwrite~;
 #X obj 49 90 line~;
 #X obj 49 222 +;
@@ -40,16 +40,15 @@
 #X obj 1 457 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION review of part 1 of the audio tutorials;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.40. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 45 DESCRIPTION review of part 1 of the audio tutorials;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.40. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.43.;
+#X text 12 5 KEYWORDS signal tutorial;
 #X restore 392 459 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

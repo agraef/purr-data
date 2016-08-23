@@ -1,4 +1,4 @@
-#N canvas 433 116 448 504 10;
+#N canvas 405 31 448 504 10;
 #X obj 23 151 +~;
 #X obj 22 232 output~;
 #X obj 158 197 / 100;
@@ -21,7 +21,7 @@ sinusoids. The sinusoids are initially tuned to 225 and 300 Hz \, a
 musical fourth \, and have amplitude of 50 percent (0.5) so that the
 sum is always less than 1 in absolute value. At these settings the
 "clip~" object passes its input through unchanged.;
-#X text 21 372 If the amplitude rises above 50 percent \, the clip~
+#X text 21 382 If the amplitude rises above 50 percent \, the clip~
 object starts altering the signal nonlinearly \, and the result is
 no longer as if the two sinusoids had been processed separately. Instead
 \, they "intermodulate" \, finding a common subharmonic if one exists.
@@ -32,28 +32,27 @@ of the second tone and you will hear a variety of effects.;
 20 10 1 18 -261139 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
-#X obj 1 482 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+#X obj 1 492 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 25 KEYWORDS;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 65 DESCRIPTION nonlinear distortion and difference tones
+#X text 12 45 DESCRIPTION nonlinear distortion and difference tones
 ;
-#X restore 392 484 pd META;
+#X text 12 5 KEYWORDS tutorial;
+#X restore 392 494 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261139 -33289 0;
 #X text 7 2 difference tones- Related Help Documents;
 #X text 19 37 links:;
-#X restore 103 484 pd References;
-#X obj 6 484 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X restore 103 494 pd References;
+#X obj 6 494 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 7 0;
 #X connect 2 0 7 1;
 #X connect 3 0 2 0;

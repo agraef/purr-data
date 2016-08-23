@@ -1,6 +1,6 @@
-#N canvas 433 131 448 459 10;
+#N canvas 434 54 448 459 10;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array waveform11 259 float 1;
+#X array waveform11 259 float 1 black black;
 #A 0 -0.0896033 0 0.0896033 0.178356 0.265425 0.350007 0.431348 0.508756
 0.58161 0.649372 0.711597 0.767935 0.818137 0.862053 0.89963 0.930912
 0.956028 0.975187 0.988669 0.996811 1 0.998655 0.993223 0.984158 0.971919
@@ -97,7 +97,7 @@
 #X msg 72 204 MUTE;
 #X text 43 144 wavetable;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array pitch11 259 float 1;
+#X array pitch11 259 float 1 black black;
 #A 0 757.143 757.143 735.714 700 671.429 650 621.429 600 571.429 550
 521.429 507.143 485.714 464.286 442.857 428.571 414.286 400 378.571
 364.286 342.857 328.571 928.571 921.429 921.429 914.286 907.143 892.857
@@ -149,13 +149,12 @@ input of the second [tabosc4~]. I've detected Klingons \, Captain Kirk...
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 105 AUTHOR Miller Puckette;
 #X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
 #X text 12 45 LICENSE SIBSD;
 #X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.34. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal array GUI;
 #X text 12 65 DESCRIPTION wavetable oscillators;
+#X text 12 25 KEYWORDS signal array GUI tutorial;
 #X restore 392 439 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

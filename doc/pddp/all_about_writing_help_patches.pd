@@ -1,18 +1,17 @@
-#N canvas 430 37 448 238 10;
+#N canvas 431 62 448 238 10;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header writing_help_patches
 20 10 1 18 -261106 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
 #X obj 1 216 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 375 121 494 131 META 0;
+#N canvas 376 146 494 131 META 0;
 #X text 12 85 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
 #X text 12 65 LIBRARY PDDP;
-#X text 12 5 GENRE all_about_pd;
-#X text 12 25 KEYWORDS needs_work;
 #X text 12 45 DESCRIPTION guidelines for writing help patches;
+#X text 12 25 KEYWORDS needs_work all_about_pd;
 #X restore 392 218 pd META;
 #N canvas 218 145 428 105 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

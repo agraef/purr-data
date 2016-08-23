@@ -1,4 +1,4 @@
-#N canvas -9 18 505 524 10;
+#N canvas 260 113 505 524 10;
 #X msg 77 224 msg 10 10 bang;
 #X msg 77 272 obj 10 40 metro 500;
 #X msg 77 248 floatatom 100 10 7 50 5000;
@@ -18,12 +18,11 @@
 #X msg 290 457 menuclose;
 #X text 294 483 this will kill it !;
 #N canvas 458 158 494 396 META 0;
-#X text 12 5 GENRE tutorial;
-#X text 12 75 HELP_PATCH_AUTHORS Damien Henry. "pd meta" information
+#X text 12 85 HELP_PATCH_AUTHORS Damien Henry. "pd meta" information
 added by Jonathan Wilkes for Pd version 0.42.;
+#X text 12 55 DESCRIPTION creating a pd patch dynamically;
 #X text 12 25 KEYWORDS control canvas_op nonlocal dynamic_patching
-;
-#X text 12 45 DESCRIPTION creating a pd patch dynamically;
+tutorial;
 #X restore 448 496 pd META;
 #X connect 0 0 6 0;
 #X connect 1 0 6 0;

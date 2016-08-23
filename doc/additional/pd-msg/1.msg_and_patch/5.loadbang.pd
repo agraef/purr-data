@@ -1,4 +1,4 @@
-#N canvas 0 18 845 545 10;
+#N canvas 95 75 845 545 10;
 #X msg 39 266 loadbang;
 #X obj 62 152 loadbang;
 #X msg 62 178 1;
@@ -37,14 +37,13 @@ to know when you're finished "instantiating" \, and then call "loadbang"
 by yourself by sending a "loadbang" message at the appropriate time.
 ;
 #N canvas 458 158 494 396 META 0;
-#X text 12 5 GENRE tutorial;
 #X text 12 95 HELP_PATCH_AUTHORS Damien Henry. "pd meta" information
 added by Jonathan Wilkes for Pd version 0.42.;
-#X text 12 25 KEYWORDS control canvas_op nonlocal dynamic_patching
-;
 #X text 12 64 DESCRIPTION how to fire a loadbang inside a dynamically
 instantiating abstraction;
 #X text 12 42 LICENSE public domain;
+#X text 12 5 KEYWORDS control canvas_op nonlocal dynamic_patching tutorial
+;
 #X restore 782 518 pd META;
 #X connect 0 0 9 0;
 #X connect 1 0 2 0;

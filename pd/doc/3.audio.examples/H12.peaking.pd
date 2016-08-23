@@ -1,6 +1,6 @@
-#N canvas 326 19 738 592 10;
+#N canvas 199 25 738 592 10;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-tab1 100 float 1;
+#X array \$0-tab1 100 float 1 black black;
 #A 0 0.960563 0.960996 0.962862 0.970269 0.977017 0.985214 1.00122
 1.02249 1.05453 1.10332 1.18193 1.31034 1.5315 1.91468 2.37977 2.37001
 1.92679 1.57244 1.36114 1.23298 1.15262 1.09943 1.06243 1.03636 1.0162
@@ -16,9 +16,9 @@
 0.921397 0.931729 0.976084;
 #X coords 0 5 99 0 200 300 1;
 #X restore 516 193 graph;
-#X obj 23 334 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X obj 23 344 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X floatatom 31 378 3 0 0 0 - - -, f 3;
+#X floatatom 31 388 3 0 0 0 - - -, f 3;
 #X text 571 499 frequency;
 #N canvas 876 177 375 255 startup 0;
 #X obj 22 24 loadbang;
@@ -31,36 +31,36 @@
 #X connect 0 0 1 0;
 #X connect 1 0 2 0;
 #X connect 2 0 5 0;
-#X restore 310 532 pd startup;
-#X floatatom 258 298 3 0 99 0 - #0-pole -, f 3;
-#X text 454 481 gain=0;
-#X obj 23 530 filter-graph2 \$0-tab1;
-#X obj 23 355 filter-graph1 100 22050;
+#X restore 310 542 pd startup;
+#X floatatom 258 308 3 0 99 0 - #0-pole -, f 3;
+#X text 454 491 gain=0;
+#X obj 23 540 filter-graph2 \$0-tab1;
+#X obj 23 365 filter-graph1 100 22050;
 #X text 691 495 22050;
-#X obj 258 321 / 100;
-#X floatatom 312 297 4 0 100 0 - #0-zero -, f 4;
-#X obj 312 320 / 100;
+#X obj 258 331 / 100;
+#X floatatom 312 307 4 0 100 0 - #0-zero -, f 4;
+#X obj 312 330 / 100;
 #X text 494 182 5;
 #X text 511 492 0;
 #X text 499 423 1;
-#X floatatom 388 296 3 0 180 0 - #0-pole -, f 3;
-#X text 397 258 angle;
-#X text 381 274 (degrees);
-#X obj 442 365 sin;
-#X obj 387 366 cos;
-#X obj 387 317 * 3.14159;
-#X obj 387 341 / 180;
-#X obj 223 445 *;
-#X obj 387 390 t b f;
-#X obj 442 390 t b f;
-#X obj 191 473 cpole~;
-#X obj 208 504 czero~;
-#X text 248 262 pole and zero;
-#X text 266 277 radii (%);
-#X obj 259 446 *;
-#X obj 296 472 *;
-#X obj 331 472 *;
-#X text 20 198 Here the pole and zero radii (p and q) control the center-frequency
+#X floatatom 388 306 3 0 180 0 - #0-pole -, f 3;
+#X text 397 268 angle;
+#X text 381 284 (degrees);
+#X obj 442 375 sin;
+#X obj 387 376 cos;
+#X obj 387 327 * 3.14159;
+#X obj 387 351 / 180;
+#X obj 223 455 *;
+#X obj 387 400 t b f;
+#X obj 442 400 t b f;
+#X obj 191 483 cpole~;
+#X obj 208 514 czero~;
+#X text 248 272 pole and zero;
+#X text 266 287 radii (%);
+#X obj 259 456 *;
+#X obj 296 482 *;
+#X obj 331 482 *;
+#X text 20 208 Here the pole and zero radii (p and q) control the center-frequency
 gain by the formula (1-q)/(1-p). The closer to 1 the radii \, the narrower
 the band affected. The non-peak gain \, (1+q)/(1+p) \, is close to
 1 as long as p and q are at least 50% or so.;
@@ -75,28 +75,27 @@ with their complex-valued siblings \, cpole~ and czero~. These filters
 take a (real \, imaginary) pair to filter and another (real-imaginary)
 pair to specify the pole or zero. As for [rpole~] and [rzero~] \, the
 coefficients may change at audio rate.;
-#X obj 1 570 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+#X obj 1 580 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION peaking filter;
-#X restore 392 572 pd META;
+#X text 12 45 DESCRIPTION peaking filter;
+#X text 12 5 KEYWORDS signal tutorial;
+#X restore 392 582 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261139 -33289 0;
 #X text 7 2 peaking filter- Related Help Documents;
 #X text 19 37 links:;
-#X restore 103 572 pd References;
-#X obj 6 572 pddp/pddplink ../5.reference/pddp/help.pd -text help;
-#X text 19 134 The outputs of [cpole~] and [czero~] are also in the
+#X restore 103 582 pd References;
+#X obj 6 582 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X text 19 144 The outputs of [cpole~] and [czero~] are also in the
 form of a (real-imaginary) pair. Both outlets of [cpole~] are connected
 to [czero~] in this example \, but then since we want a real-valued
 filter \, we only take the real part of the (complex) output of [czero~].

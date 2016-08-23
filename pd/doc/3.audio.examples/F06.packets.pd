@@ -1,9 +1,9 @@
-#N canvas 341 22 692 622 10;
+#N canvas 229 25 692 622 10;
 #X obj 283 346 line~;
 #X obj 21 387 cos~;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array pulse-output 882 float 0;
-#X coords 0 1 882 -1 200 130 1;
+#X array pulse-output 882 float 0 black black;
+#X coords 0 1 881 -1 200 130 1;
 #X restore 447 394 graph;
 #X obj 283 323 pack 0 50;
 #X floatatom 283 277 0 0 0 0 - - -;
@@ -40,11 +40,11 @@
 #X obj 188 343 line~;
 #X obj 188 320 pack 0 50;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array carrier 882 float 0;
+#X array carrier 882 float 0 black black;
 #X coords 0 1 881 -1 200 140 1;
 #X restore 447 223 graph;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array window 882 float 0;
+#X array window 882 float 0 black black;
 #X coords 0 1 881 -1 200 140 1;
 #X restore 447 55 graph;
 #X text 170 504 <-- graph;
@@ -61,7 +61,7 @@
 #X text 221 423 <--this cosine goes at the;
 #X text 250 459 but its phase is reset each;
 #X text 248 478 fundamental period.;
-#X text 19 36 The simpler of two techniques for making slidable center
+#X text 19 31 The simpler of two techniques for making slidable center
 frequencies is to synthesize enveloped sinusoidal wave packets. The
 packets should repeat at the fundamental frequency \, but the frequency
 of the packet itself controls the center frequency of the formant.
@@ -93,16 +93,15 @@ occur when the enveloping signal is zero.;
 #X obj 1 600 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS signal;
-#X text 12 65 DESCRIPTION windowed packets;
+#X text 12 45 DESCRIPTION windowed packets;
+#X text 12 5 KEYWORDS signal tutorial;
 #X restore 392 602 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

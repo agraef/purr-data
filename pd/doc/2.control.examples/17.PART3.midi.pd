@@ -1,4 +1,4 @@
-#N canvas 424 82 448 355 10;
+#N canvas 425 107 448 355 10;
 #X floatatom 93 94 0 0 0 0 - - -;
 #X floatatom 57 94 0 0 0 0 - - -;
 #X obj 21 67 notein;
@@ -31,13 +31,12 @@
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 105 AUTHOR Miller Puckette;
 #X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
 #X text 12 45 LICENSE SIBSD;
 #X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.34. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS control MIDI;
 #X text 12 65 DESCRIPTION simple MIDI input and output;
+#X text 12 25 KEYWORDS control MIDI tutorial;
 #X restore 382 335 pd META;
 #N canvas 13 202 428 143 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
