@@ -1,3 +1,0 @@
-* rename or remove matrix~
-* fix nan/denorm problems in recursive filters
-* rewrite iir (c++) stuff -> filters.h
