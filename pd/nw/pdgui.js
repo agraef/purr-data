@@ -512,9 +512,15 @@ exports.menu_new = menu_new;
 
 // requires nw.js API
 function gui_window_close(cid) {
-    nw_close_window(patchwin[cid]);
+    // for some edge cases like [vis 1, vis 0(--[send subpatch] we
+    // may not have finished creating the window yet. So we check to
+    // make sure the canvas cid exists...
+    if (patchwin[cid]) {
+        nw_close_window(patchwin[cid]);
+    }
     // remove reference to the window from patchwin object
     patchwin[cid] = null;
+    loaded[cid] = null;
 }
 
 function menu_k12_open_demos () {
@@ -987,6 +993,12 @@ function gui_canvas_set_title(cid, name, args, dir, dirty_flag) {
     var title = format_window_title(name, dirty_flag, args, dir);
     patchwin[cid].title = title;
 }
+
+function window_is_loaded(cid) {
+    return (loaded[cid] === 1);
+}
+
+exports.window_is_loaded = window_is_loaded;
 
 // create a new canvas
 function gui_canvas_new(cid, width, height, geometry, editmode, name, dir, dirty_flag, cargs) {
@@ -3543,7 +3555,11 @@ function gui_cord_inspector_flash(cid, state) {
 // Window functions
 
 function gui_raise_window(cid) {
-    patchwin[cid].focus();
+    // Check if the window exists, for edge cases like
+    // [vis 1, vis1(---[send this_canvas]
+    if (patchwin[cid]) {
+        patchwin[cid].focus();
+    }
 }
 
 // Unfortunately DOM window.focus doesn't actually focus the window, so we

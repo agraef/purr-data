@@ -301,14 +301,27 @@ function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
             pdgui.set_dialogwin(cid, new_win);
         }
         new_win.on("loaded", function() {
-            new_win.eval(null, eval_string);
+            // We need to check here if we're still the window pointed to
+            // by the GUI's array of toplevel windows. It can easily happen
+            // that we're not-- for example the user could send a stream
+            // of [vis 1, vis 0, vis 1, etc.( to a single subpatch. In that
+            // case the asynchronous Pd <-> GUI communication might
+            // momentarily create multiple windows of that same subpatch.
+            // Here we just let them load, then close any that don't match
+            // the cid we added above.
+            // Additionally, we check to make sure that the cid is registered
+            // as a loaded canvas. If not, we assume it got closed before
+            // we were able to finish loading the browser window (e.g.,
+            // with a [vis 1, vis 0( message). In that case we kill the window.
+            if (new_win === pdgui.get_patchwin(cid) &&
+                pdgui.window_is_loaded(cid)) {
+                // initialize the window
+                new_win.eval(null, eval_string);
+            } else {
+                new_win.close(true);
+            }
         });
     });
-    //pdgui.post("attr_array is " + attr_array);
-    //pdgui.post("eval string is " + eval_string);
-    //if (attr_array !== null) {
-    //    pdgui.post("attr_array is " + attr_array.toString());
-    //}
 }
 
 // Pd Window Menu Bar
