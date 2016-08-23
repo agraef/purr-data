@@ -95,11 +95,13 @@ lib_install:
 	install -p $(bin_src)/libtre-5.dll $(DESTDIR)$(bindir)/
 	# For fluid~
 	install -p $(bin_src)/libfluidsynth-1.dll $(DESTDIR)$(bindir)/
+	# For other external libs
 	install -p $(bin_src)/lua53.dll          $(DESTDIR)$(bindir)/
 	#install -p $(bin_src)/pthreadGC2.dll     $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libdl-0.dll     $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libportaudio-2.dll     $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libFLAC-8.dll     $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libspeex-1.dll     $(DESTDIR)$(bindir)/
         # These are for Gem
 	install -p $(bin_src)/libftgl-2.dll $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libfreetype-6.dll $(DESTDIR)$(bindir)/
