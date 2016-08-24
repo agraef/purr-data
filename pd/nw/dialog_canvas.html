@@ -276,7 +276,7 @@
       <button type="button" id="ok_button" onClick="ok()" data-i18n="[title]iem.prop.ok_tt">
         <span data-i18n="iem.prop.ok"></span>
       </button>
-      <button type="button" onClick="apply()" data-i18n="[title]iem.prop.apply_tt">
+      <button type="button" id="apply_button" onClick="apply()" data-i18n="[title]iem.prop.apply_tt">
         <span data-i18n="iem.prop.apply"></span>
       </button>
       <button type="button" onClick="cancel()" data-i18n="[title]iem.prop.close_tt">
@@ -657,6 +657,10 @@ function register_window_id(gfxstub, attr_objects) {
         for (i = 0; i < canvas_fieldsets.length; i++) {
             canvas_fieldsets[i].classList.add("hidden");
         }
+        // Hide the "Apply" button, as it doesn't make sense for
+        // creating a new array
+        document.getElementById("apply_button").style.setProperty("display",
+            "none");
     } else {
         pd_garray_attrs = attr_objects.slice(1);
         new_array_dialog = false; // this is a canvas/array props dialog
@@ -666,8 +670,8 @@ function register_window_id(gfxstub, attr_objects) {
 
     // We don't turn on rendering of the "container" div until
     // We've finished displaying all the spans and populating the
-    // labels and form elements.  That makes it more efficient and
-    // snappier, at least on older machines.
+    // labels and form elements.  That makes it snappier, at least
+    // on older machines.
     document.getElementsByClassName("container")[0].style.setProperty("display", "inline");
     pdgui.resize_window(pd_object_callback);
 }
