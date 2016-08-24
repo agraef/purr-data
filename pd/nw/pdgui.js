@@ -2406,6 +2406,7 @@ function gui_iemgui_label_new(cid, tag, x, y, color, text, fontname, fontweight,
         // for some reason the font looks bold in Pd-Vanilla-- not sure why
         "font-weight": fontweight,
         "font-size": fontsize + "px",
+        fill: color,
         // Iemgui labels are anchored "w" (left-aligned to non-tclers).
         // For no good reason, they are also centered vertically, unlike
         // object box text. Since svg text uses the baseline as a reference
