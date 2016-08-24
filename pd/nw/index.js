@@ -313,8 +313,9 @@ function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
             // as a loaded canvas. If not, we assume it got closed before
             // we were able to finish loading the browser window (e.g.,
             // with a [vis 1, vis 0( message). In that case we kill the window.
-            if (new_win === pdgui.get_patchwin(cid) &&
-                pdgui.window_is_loaded(cid)) {
+            if ((new_win === pdgui.get_patchwin(cid) ||
+                 new_win === pdgui.get_dialogwin(cid))
+                && pdgui.window_is_loading(cid)) {
                 // initialize the window
                 new_win.eval(null, eval_string);
             } else {

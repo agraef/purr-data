@@ -520,7 +520,7 @@ function gui_window_close(cid) {
     }
     // remove reference to the window from patchwin object
     patchwin[cid] = null;
-    loaded[cid] = null;
+    loading[cid] = null;
 }
 
 function menu_k12_open_demos () {
@@ -887,7 +887,7 @@ var scroll = {},
     font = {},
     doscroll = {},
     last_loaded,
-    loaded = {},
+    loading = {},
     popup_menu = {};
 
     var patchwin = {}; // object filled with cid: [Window object] pairs
@@ -994,11 +994,19 @@ function gui_canvas_set_title(cid, name, args, dir, dirty_flag) {
     patchwin[cid].title = title;
 }
 
-function window_is_loaded(cid) {
-    return (loaded[cid] === 1);
+function window_is_loading(cid) {
+    return loading[cid];
 }
 
-exports.window_is_loaded = window_is_loaded;
+exports.window_is_loading = window_is_loading;
+
+// wrapper for nw_create_window
+function create_window(cid, type, width, height, xpos, ypos, attr_array) {
+    nw_create_window(cid, type, width, height, xpos, ypos, attr_array);
+    // initialize variable to reflect that this window has been opened
+    loading[cid] = true;
+    // we call set_patchwin from the callback in pd_canvas
+}
 
 // create a new canvas
 function gui_canvas_new(cid, width, height, geometry, editmode, name, dir, dirty_flag, cargs) {
@@ -1041,7 +1049,7 @@ function gui_canvas_new(cid, width, height, geometry, editmode, name, dir, dirty
     last_loaded = cid;
     // Not sure why resize and topmost are here-- but we'll pass them on for
     // the time being...
-    nw_create_window(cid, "pd_canvas", width, height,
+    create_window(cid, "pd_canvas", width, height,
         xpos, ypos, {
             menu_flag: menu_flag,
             resize: resize[cid],
@@ -1053,9 +1061,6 @@ function gui_canvas_new(cid, width, height, geometry, editmode, name, dir, dirty
             args: cargs,
             editmode: editmode
     });
-    // initialize variable to reflect that this window has been opened
-    loaded[cid] = 1;
-    // we call set_patchwin from the callback in pd_canvas
 }
 
 /* This gets sent to Pd to trigger each object on the canvas
@@ -3646,7 +3651,7 @@ function attr_array_to_object(attr_array) {
 }
 
 function gui_gatom_dialog(did, attr_array) {
-    dialogwin[did] = nw_create_window(did, "gatom", 265, 300,
+    dialogwin[did] = create_window(did, "gatom", 265, 300,
         popup_coords[2], popup_coords[3],
         attr_array_to_object(attr_array));
 }
@@ -3664,7 +3669,7 @@ function gui_iemgui_dialog(did, attr_array) {
     //for (var i = 0; i < attr_array.length; i++) {
     //    attr_array[i] = '"' + attr_array[i] + '"';
     //}
-    nw_create_window(did, "iemgui", 265, 450,
+    create_window(did, "iemgui", 265, 450,
         popup_coords[2], popup_coords[3],
         attr_array_to_object(attr_array));
 }
@@ -3695,7 +3700,7 @@ function gui_array_new(did, count) {
         array_outline: "black",
         array_in_existing_graph: 0
     }];
-    dialogwin[did] = nw_create_window(did, "canvas", 265, 340, 20, 20,
+    dialogwin[did] = create_window(did, "canvas", 265, 340, 20, 20,
         attr_array);
 }
 
@@ -3710,7 +3715,7 @@ function gui_canvas_dialog(did, attr_arrays) {
             }
         }
     }
-    dialogwin[did] = nw_create_window(did, "canvas", 300, 100,
+    dialogwin[did] = create_window(did, "canvas", 300, 100,
         popup_coords[2], popup_coords[3],
         attr_arrays);
 }
@@ -3724,7 +3729,7 @@ function gui_remove_gfxstub(did) {
 
 function gui_font_dialog(cid, gfxstub, font_size) {
     var attrs = { canvas: cid, font_size: font_size };
-    dialogwin[gfxstub] = nw_create_window(gfxstub, "font", 265, 200, 0, 0,
+    dialogwin[gfxstub] = create_window(gfxstub, "font", 265, 200, 0, 0,
         attrs);
 }
 
@@ -3738,7 +3743,7 @@ function gui_pd_dsp(state) {
 
 function open_prefs() {
     if (!dialogwin["prefs"]) {
-        nw_create_window("prefs", "prefs", 300, 420, 0, 0, null);
+        create_window("prefs", "prefs", 300, 420, 0, 0, null);
     }
 }
 
@@ -3746,7 +3751,7 @@ exports.open_prefs = open_prefs;
 
 function open_search() {
     if (!dialogwin["search"]) {
-        nw_create_window("search", "search", 300, 400, 20, 20, null);
+        create_window("search", "search", 300, 400, 20, 20, null);
     }
 }
 
