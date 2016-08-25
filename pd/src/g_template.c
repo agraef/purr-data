@@ -745,7 +745,7 @@ static void *gtemplate_new(t_symbol *s, int argc, t_atom *argv)
 {
     t_symbol *sym = atom_getsymbolarg(0, argc, argv);
     if (argc >= 1)
-        argc--; argv++;
+        argc--, argv++;
     if (gtemplate_cancreate(sym, argc, argv))
     {
         return (gtemplate_donew(canvas_makebindsym(sym), argc, argv));

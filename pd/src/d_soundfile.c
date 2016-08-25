@@ -407,12 +407,15 @@ int open_soundfile(const char *dirname, const char *filename, int headersize,
     long skipframes)
 {
     char buf[FILENAME_MAX], *bufptr;
-    int fd;
+    int fd, sf_fd;
     fd = open_via_path(dirname, filename, "", buf, &bufptr, FILENAME_MAX, 1);
     if (fd < 0)
         return (-1);
-    else return (open_soundfile_via_fd(fd, headersize, p_bytespersamp,
-        p_bigendian, p_nchannels, p_bytelimit, skipframes));
+    sf_fd = open_soundfile_via_fd(fd, headersize, p_bytespersamp,
+        p_bigendian, p_nchannels, p_bytelimit, skipframes);
+    if (sf_fd < 0)
+        sys_close(fd);
+    return (sf_fd);
 }
 
     /* open a soundfile, using open_via_canvas().  This is used by readsf~ in
@@ -423,12 +426,15 @@ int open_soundfile_via_canvas(t_canvas *canvas, const char *filename, int header
     long skipframes)
 {
     char buf[FILENAME_MAX], *bufptr;
-    int fd;
+    int fd, sf_fd;
     fd = canvas_open(canvas, filename, "", buf, &bufptr, FILENAME_MAX, 1);
     if (fd < 0)
         return (-1);
-    else return (open_soundfile_via_fd(fd, headersize, p_bytespersamp,
-        p_bigendian, p_nchannels, p_bytelimit, skipframes));
+    sf_fd = open_soundfile_via_fd(fd, headersize, p_bytespersamp,
+        p_bigendian, p_nchannels, p_bytelimit, skipframes);
+    if (sf_fd < 0)
+        sys_close(fd);
+    return (sf_fd);
 }
 
 static void soundfile_xferin_sample(int sfchannels, int nvecs, t_sample **vecs,

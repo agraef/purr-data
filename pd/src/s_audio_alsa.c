@@ -617,7 +617,7 @@ int alsa_send_dacs(void)
 void alsa_printstate( void)
 {
     int result, iodev = 0;
-    snd_pcm_sframes_t indelay, outdelay;
+    snd_pcm_sframes_t indelay = 0, outdelay = 0;
     if (sys_audioapi != API_ALSA)
     {
         error("restart-audio: implemented for ALSA only.");

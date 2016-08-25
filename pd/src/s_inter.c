@@ -1135,7 +1135,7 @@ int sys_startgui(const char *guidir)
 {
     pid_t childpid;
     char cmdbuf[4*MAXPDSTRING];
-    struct sockaddr_in server;
+    struct sockaddr_in server = {0};
     int len = sizeof(server);
     int ntry = 0, portno = FIRSTPORTNUM;
     int xsock = -1;
@@ -1195,7 +1195,7 @@ int sys_startgui(const char *guidir)
     }
     else if (sys_guisetportnumber)  /* GUI exists and sent us a port number */
     {
-        struct sockaddr_in server;
+        struct sockaddr_in server = {0};
         struct hostent *hp;
         /* create a socket */
         sys_guisock = socket(AF_INET, SOCK_STREAM, 0);

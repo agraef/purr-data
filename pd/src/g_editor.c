@@ -3060,7 +3060,9 @@ void canvas_done_popup(t_canvas *x, t_float which, t_float xpos,
                     }
                     else
                     {
-                        strcpy(namebuf, class_gethelpname(pd_class(&y->g_pd)));
+                        strncpy(namebuf, class_gethelpname(pd_class(&y->g_pd)),
+                            MAXPDSTRING-1);
+                        namebuf[MAXPDSTRING-1] = 0;
                         dir = class_gethelpdir(pd_class(&y->g_pd));
                     }
                     if (strlen(namebuf) < 4 ||
