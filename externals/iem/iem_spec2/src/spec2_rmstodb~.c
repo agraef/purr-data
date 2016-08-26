@@ -62,6 +62,6 @@ void spec2_rmstodb_tilde_setup(void)
   spec2_rmstodb_tilde_class = class_new(gensym("spec2_rmstodb~"), (t_newmethod)spec2_rmstodb_tilde_new,
     0, sizeof(t_spec2_rmstodb_tilde), 0, 0);
   CLASS_MAINSIGNALIN(spec2_rmstodb_tilde_class, t_spec2_rmstodb_tilde, x_msi);
-  class_addmethod(spec2_rmstodb_tilde_class, (t_method)spec2_rmstodb_tilde_dsp, gensym("dsp"), A_CANT, 0);
+  class_addmethod(spec2_rmstodb_tilde_class, (t_method)spec2_rmstodb_tilde_dsp, gensym("dsp"), 0);
 //  class_sethelpsymbol(spec2_rmstodb_tilde_class, gensym("iemhelp2/spec2_rmstodb~-help"));
 }
