@@ -11,7 +11,7 @@
 	path = l2ork_addons/raspberry_pi/disis_gpio/wiringPi
 	url = git://git.drogon.net/wiringPi
 [submodule "externals/lyonpotpourri"]
-	path = externals/lyonpotpourri
+	path = externals/lyon
 	url = https://git.purrdata.net/jwilkes/lyonpotpourri.git
 [submodule "externals/fftease"]
 	path = externals/fftease
