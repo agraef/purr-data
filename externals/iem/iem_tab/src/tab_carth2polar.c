@@ -86,7 +86,7 @@ static void tab_carth2polar_bang(t_tab_carth2polar *x)
     if(n)
     {
       t_garray *a;
-      t_float rcp_two_pi=0.125f/atan(1.0);
+      t_float rcp_two_pi=0.125/atan(1.0);
       
       for(i=0; i<n; i++)
       {
@@ -156,7 +156,7 @@ static void tab_carth2polar_list(t_tab_carth2polar *x, t_symbol *s, int argc, t_
       if(n)
       {
         t_garray *a;
-        t_float rcp_two_pi=0.125f/atan(1.0);
+        t_float rcp_two_pi=0.125/atan(1.0);
         
         for(i=0; i<n; i++)
         {
@@ -231,5 +231,4 @@ void tab_carth2polar_setup(void)
   class_addmethod(tab_carth2polar_class, (t_method)tab_carth2polar_src_im, gensym("src1_im"), A_DEFSYMBOL, 0);
   class_addmethod(tab_carth2polar_class, (t_method)tab_carth2polar_dst_mag, gensym("dst_mag"), A_DEFSYMBOL, 0);
   class_addmethod(tab_carth2polar_class, (t_method)tab_carth2polar_dst_arg, gensym("dst_arg"), A_DEFSYMBOL, 0);
-//  class_sethelpsymbol(tab_carth2polar_class, gensym("iemhelp2/help-tab_carth2polar"));
 }

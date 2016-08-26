@@ -92,7 +92,7 @@ static void tab_complex_inv_bang(t_tab_complex_inv *x)
         
         re = iemarray_getfloat(vec_src1_re, i);
         im = iemarray_getfloat(vec_src1_im, i);
-        abs = 1.0f / (re*re + im*im);
+        abs = 1.0 / (re*re + im*im);
         iemarray_setfloat(vec_dst_re, i, re*abs);
         iemarray_setfloat(vec_dst_im, i, -im*abs);
       }
@@ -160,7 +160,7 @@ static void tab_complex_inv_list(t_tab_complex_inv *x, t_symbol *s, int argc, t_
           
           re = iemarray_getfloat(vec_src1_re, i);
           im = iemarray_getfloat(vec_src1_im, i);
-          abs = 1.0f / (re*re + im*im);
+          abs = 1.0 / (re*re + im*im);
           iemarray_setfloat(vec_dst_re, i, re*abs);
           iemarray_setfloat(vec_dst_im, i, -im*abs);
         }
@@ -235,5 +235,4 @@ void tab_complex_inv_setup(void)
   class_addmethod(tab_complex_inv_class, (t_method)tab_complex_inv_src1_im, gensym("src1_im"), A_DEFSYMBOL, 0);
   class_addmethod(tab_complex_inv_class, (t_method)tab_complex_inv_src1_im, gensym("src_im"), A_DEFSYMBOL, 0);
   class_addmethod(tab_complex_inv_class, (t_method)tab_complex_inv_dst_im, gensym("dst_im"), A_DEFSYMBOL, 0);
-//  class_sethelpsymbol(tab_complex_inv_class, gensym("iemhelp2/tab_complex_inv-help"));
 }

@@ -2,11 +2,11 @@ TARGET = iem_tab
 
 all: ..\$(TARGET).dll
 
-VIS_CPP_PATH = "C:\Program Files\Microsoft Visual Studio 9.0\VC"
-VIS_SDK_PATH = "C:\Program Files\Microsoft SDKs\Windows\v6.0A"
-PD_INST_PATH = "C:\Program Files\pd-0.43.0"
-PD_WIN_INCLUDE_PATH = /I. /I$(PD_INST_PATH)\src /I$(VIS_CPP_PATH)\include
-PD_WIN_C_FLAGS = /nologo /W3 /WX /DMSW /DNT /DPD /DWIN32 /DWINDOWS /Ox -D_CRT_SECURE_NO_WARNINGS
+VIS_CPP_PATH = "$(PROGRAMFILES)\Microsoft Visual Studio 9.0\VC"
+VIS_SDK_PATH = "$(PROGRAMFILES)\Microsoft SDKs\Windows\v6.0A"
+PD_INST_PATH = "$(PROGRAMFILES)\pd"
+PD_WIN_INCLUDE_PATH = /I. /I..\..\include /I$(PD_INST_PATH)\src /I$(VIS_CPP_PATH)\include
+PD_WIN_C_FLAGS = /nologo /W3 /WX /DMSW /DNT /DPD /DWIN32 /DWINDOWS /DHAVE_G_CANVAS_H /Ox -D_CRT_SECURE_NO_WARNINGS
 PD_WIN_L_FLAGS = /nologo
 
 PD_WIN_LIB = /NODEFAULTLIB:libcmt /NODEFAULTLIB:oldnames /NODEFAULTLIB:kernel32 \
@@ -26,6 +26,8 @@ SRC =	tab_abs.c \
 	tab_copy.c \
 	tab_counter.c \
 	tab_cross_corr.c \
+	tab_dbtorms.c \
+	tab_dbtopow.c \
 	tab_div.c \
 	tab_eq.c \
 	tab_eq_scalar.c \
@@ -49,13 +51,16 @@ SRC =	tab_abs.c \
 	tab_mul_scalar.c \
 	tab_ne.c \
 	tab_ne_scalar.c \
+	tab_powtodb.c \
 	tab_reverse.c \
+	tab_rmstodb.c \
 	tab_rfft.c \
 	tab_rifft.c \
 	tab_sqrt.c \
 	tab_sub.c \
 	tab_sum.c \
-	iem_tab.c
+	$(TARGET).c
+
 
 OBJ = $(SRC:.c=.obj)
 

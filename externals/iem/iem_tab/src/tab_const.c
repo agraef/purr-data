@@ -44,7 +44,7 @@ static void tab_const_bang(t_tab_const *x)
       t_garray *a;
       
       for(i=0; i<n; i++)
-        iemarray_setfloat(vec_dst, i, 0.0f);
+        iemarray_setfloat(vec_dst, i, 0.0);
       outlet_bang(x->x_obj.ob_outlet);
       a = (t_garray *)pd_findbyclass(x->x_sym_dst, garray_class);
       garray_redraw(a);
@@ -156,5 +156,4 @@ void tab_const_setup(void)
   class_addfloat(tab_const_class, (t_method)tab_const_float);
   class_addlist(tab_const_class, (t_method)tab_const_list);
   class_addmethod(tab_const_class, (t_method)tab_const_dst, gensym("dst"), A_DEFSYMBOL, 0);
-//  class_sethelpsymbol(tab_const_class, gensym("iemhelp2/tab_const-help"));
 }

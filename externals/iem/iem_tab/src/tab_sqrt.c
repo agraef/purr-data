@@ -8,8 +8,7 @@ iem_tab written by Thomas Musil, Copyright (c) IEM KUG Graz Austria 2000 - 2009 
 #include "iem_tab.h"
 #include <math.h>
 
-#define TABDUMTAB1SIZE 256
-#define TABDUMTAB2SIZE 1024
+
 
 /* -------------------------- tab_sqrt ------------------------------ */
 /*   x_beg_mem_dst[i] = sqrt(x_beg_mem_src1[i])   */
@@ -28,28 +27,6 @@ typedef struct _tab_sqrt
 } t_tab_sqrt;
 
 static t_class *tab_sqrt_class;
-static t_float tab_rsqrt_exptab[TABDUMTAB1SIZE], tab_rsqrt_mantissatab[TABDUMTAB2SIZE];
-
-static void init_tab_rsqrt(void)
-{
-  int i;
-  
-  for (i=0; i<TABDUMTAB1SIZE; i++)
-  {
-    t_float f;
-    long l = (i ? (i == TABDUMTAB1SIZE-1 ? TABDUMTAB1SIZE-2 : i) : 1)<< 23;
-    
-    *(long *)(&f) = l;
-    tab_rsqrt_exptab[i] = 1.0f/sqrt(f); 
-  }
-  
-  for (i=0; i<TABDUMTAB2SIZE; i++)
-  {
-    t_float f = 1.0f + (1.0f / (t_float)TABDUMTAB2SIZE) * (t_float)i;
-    
-    tab_rsqrt_mantissatab[i] = 1.0f / sqrt(f);  
-  }
-}
 
 static void tab_sqrt_src(t_tab_sqrt *x, t_symbol *s)
 {
@@ -81,19 +58,22 @@ static void tab_sqrt_bang(t_tab_sqrt *x)
     if(n)
     {
       t_garray *a;
-      
-      for(i=0; i<n; i++)
+
+	  for(i=0; i<n; i++)
       {
         t_float f = iemarray_getfloat(vec_src, i);
-        long l = *(long *)(&f);
         
         if(f < 0.0f)
           iemarray_setfloat(vec_dst, i, 0.0f);
         else
         {
-          t_float g = tab_rsqrt_exptab[(l >> 23) & 0xff] * tab_rsqrt_mantissatab[(l >> 13) & 0x3ff];
-          
-          iemarray_setfloat(vec_dst, i, f*g*(1.5f - 0.5f * g * g * f));
+#if ((defined PD_MAJOR_VERSION && defined PD_MINOR_VERSION) && (PD_MAJOR_VERSION > 0 || PD_MINOR_VERSION > 43))
+			t_float g = q8_rsqrt(f);
+            
+            iemarray_setfloat(vec_dst, i, f*g*(1.5f - 0.5f * g * g * f));
+#else
+			iemarray_setfloat(vec_dst, i, sqrt(f));
+#endif
         }
       }
       outlet_bang(x->x_obj.ob_outlet);
@@ -135,19 +115,22 @@ static void tab_sqrt_list(t_tab_sqrt *x, t_symbol *s, int argc, t_atom *argv)
       if(n)
       {
         t_garray *a;
-        
-        for(i=0; i<n; i++)
+
+		for(i=0; i<n; i++)
         {
           t_float f = iemarray_getfloat(vec_src, i);
-          long l = *(long *)(&f);
           
           if(f < 0.0f)
             iemarray_setfloat(vec_dst, i, 0.0f);
           else
           {
-            t_float g = tab_rsqrt_exptab[(l >> 23) & 0xff] * tab_rsqrt_mantissatab[(l >> 13) & 0x3ff];
+#if ((defined PD_MAJOR_VERSION && defined PD_MINOR_VERSION) && (PD_MAJOR_VERSION > 0 || PD_MINOR_VERSION > 43))
+			t_float g = q8_rsqrt(f);
             
             iemarray_setfloat(vec_dst, i, f*g*(1.5f - 0.5f * g * g * f));
+#else
+			iemarray_setfloat(vec_dst, i, sqrt(f));
+#endif
           }
         }
         outlet_bang(x->x_obj.ob_outlet);
@@ -200,7 +183,6 @@ static void *tab_sqrt_new(t_symbol *s, int argc, t_atom *argv)
 
 void tab_sqrt_setup(void)
 {
-  init_tab_rsqrt();
   tab_sqrt_class = class_new(gensym("tab_sqrt"), (t_newmethod)tab_sqrt_new, (t_method)tab_sqrt_free,
     sizeof(t_tab_sqrt), 0, A_GIMME, 0);
   class_addbang(tab_sqrt_class, (t_method)tab_sqrt_bang);
@@ -208,5 +190,4 @@ void tab_sqrt_setup(void)
   class_addmethod(tab_sqrt_class, (t_method)tab_sqrt_src, gensym("src"), A_DEFSYMBOL, 0);
   class_addmethod(tab_sqrt_class, (t_method)tab_sqrt_src, gensym("src1"), A_DEFSYMBOL, 0);
   class_addmethod(tab_sqrt_class, (t_method)tab_sqrt_dst, gensym("dst"), A_DEFSYMBOL, 0);
-//  class_sethelpsymbol(tab_sqrt_class, gensym("iemhelp2/tab_sqrt-help"));
 }

@@ -78,14 +78,14 @@ OBJ = $(SRC:.c=.o)
 #
 
 clean:
-	rm ../$(TARGET)
-	rm *.o
+	-rm ../$(TARGET) $(TARGET)
+	-rm *.o
 
 all: $(OBJ)
 	@echo :: $(OBJ)
 	$(LD) $(LDFLAGS) -o $(TARGET) *.o $(LIB)
 	strip --strip-unneeded $(TARGET)
-	mv $(TARGET) ..
+	cp $(TARGET) ..
 
 $(OBJ) : %.o : %.c
 	$(CC) $(CFLAGS) $(INCLUDE) -c -o $*.o $*.c

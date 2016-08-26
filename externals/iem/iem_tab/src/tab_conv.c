@@ -203,7 +203,7 @@ static void tab_conv_list(t_tab_conv *x, t_symbol *s, int argc, t_atom *argv)
   int i, j, k, l, m, n, p;
   int ok_src1, ok_src2, ok_dst;
   iemarray_t *vec_sig, *vec_ir, *vec_dst;
-  t_float sum=0.0f;
+  t_float sum=0.0;
   
   if((argc >= 5) &&
     IS_A_FLOAT(argv,0) &&
@@ -257,7 +257,7 @@ static void tab_conv_list(t_tab_conv *x, t_symbol *s, int argc, t_atom *argv)
         l = m - 1;
         for(i=0; i<l; i++)
         {
-          sum = 0.0f;
+          sum = 0.0;
           for(j=0, k=i-1; j<i; j++, k--)
             sum += iemarray_getfloat(vec_sig, j) * iemarray_getfloat(vec_ir, k);
           iemarray_setfloat(vec_dst, 0, sum);
@@ -268,7 +268,7 @@ static void tab_conv_list(t_tab_conv *x, t_symbol *s, int argc, t_atom *argv)
         l = n - m + 1;
         for(i=0; i<l; i++)
         {
-          sum = 0.0f;
+          sum = 0.0;
           for(j=0, k=m-1; j<m; j++, k--)
             sum += iemarray_getfloat(vec_sig, j) * iemarray_getfloat(vec_ir, k);
           iemarray_setfloat(vec_dst, 0, sum);
@@ -279,7 +279,7 @@ static void tab_conv_list(t_tab_conv *x, t_symbol *s, int argc, t_atom *argv)
         l = m - 1;
         for(i=l-1; i>=0; i--)
         {
-          sum = 0.0f;
+          sum = 0.0;
           for(j=0, k=i-1; j<i; j++, k--)
             sum += iemarray_getfloat(vec_sig, j) * iemarray_getfloat(vec_ir, k);
           iemarray_setfloat(vec_dst, 0, sum);
@@ -310,7 +310,7 @@ static void tab_conv_list(t_tab_conv *x, t_symbol *s, int argc, t_atom *argv)
         l = m - 1;
         for(i=0; i<l; i++)
         {
-          sum = 0.0f;
+          sum = 0.0;
           for(j=0, k=i-1; j<i; j++, k--)
             sum += iemarray_getfloat(vec_sig, j) * iemarray_getfloat(vec_ir, k);
           iemarray_setfloat(vec_dst, 0, sum);
@@ -324,7 +324,7 @@ static void tab_conv_list(t_tab_conv *x, t_symbol *s, int argc, t_atom *argv)
         l = n - m + 1;
         for(i=0; i<l; i++)
         {
-          sum = 0.0f;
+          sum = 0.0;
           for(j=0, k=m-1; j<m; j++, k--)
             sum += iemarray_getfloat(vec_sig, j) * iemarray_getfloat(vec_ir, k);
           iemarray_setfloat(vec_dst, 0, sum);
@@ -338,7 +338,7 @@ static void tab_conv_list(t_tab_conv *x, t_symbol *s, int argc, t_atom *argv)
         l = m - 1;
         for(i=l-1; i>=0; i--)
         {
-          sum = 0.0f;
+          sum = 0.0;
           for(j=0, k=i-1; j<i; j++, k--)
             sum += iemarray_getfloat(vec_sig, j) * iemarray_getfloat(vec_ir, k);
           iemarray_setfloat(vec_dst, 0, sum);
@@ -411,5 +411,4 @@ void tab_conv_setup(void)
   class_addmethod(tab_conv_class, (t_method)tab_conv_src1, gensym("src1"), A_DEFSYMBOL, 0);
   class_addmethod(tab_conv_class, (t_method)tab_conv_src2, gensym("src2"), A_DEFSYMBOL, 0);
   class_addmethod(tab_conv_class, (t_method)tab_conv_dst, gensym("dst"), A_DEFSYMBOL, 0);
-//  class_sethelpsymbol(tab_conv_class, gensym("iemhelp2/tab_conv-help"));
 }

@@ -1,4 +1,4 @@
-#N canvas 24 39 983 666 10;
+#N canvas 24 39 991 674 10;
 #N canvas 0 22 450 300 (subpatch) 0;
 #X array src_re 100 float 0;
 #X coords 0 1 99 -1 199 100 1;
@@ -238,6 +238,9 @@ of complex src-arrays to a real dst-array;
 #X text 124 452 iem.at;
 #X text 85 474 Graz \, Austria;
 #X text 37 441 (c) Thomas Musil 2000 - 2009;
+#X text 521 17 1.);
+#X text 469 236 2.);
+#X text 44 25 3.);
 #X connect 2 0 13 0;
 #X connect 6 0 12 0;
 #X connect 12 0 4 0;

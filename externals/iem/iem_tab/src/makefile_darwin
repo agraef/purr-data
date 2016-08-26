@@ -29,6 +29,8 @@ SRC = tab_abs.c \
 	tab_copy.c \
 	tab_counter.c \
 	tab_cross_corr.c \
+	tab_dbtopow.c \
+	tab_dbtorms.c \
 	tab_div.c \
 	tab_eq.c \
 	tab_eq_scalar.c \
@@ -52,9 +54,11 @@ SRC = tab_abs.c \
 	tab_mul_scalar.c \
 	tab_ne.c \
 	tab_ne_scalar.c \
+	tab_powtodb.c \
 	tab_reverse.c \
 	tab_rfft.c \
 	tab_rifft.c \
+	tab_rmstodb.c \
 	tab_sqrt.c \
 	tab_sub.c \
 	tab_sum.c \
