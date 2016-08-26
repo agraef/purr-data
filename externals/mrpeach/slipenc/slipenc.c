@@ -54,8 +54,8 @@ typedef struct _slipenc
     t_object    x_obj;
     t_outlet    *x_slipenc_out;
     t_atom      *x_slip_buf;
-    t_int       x_slip_length;
-    t_int       x_slip_max_length;
+    int         x_slip_length;
+    int         x_slip_max_length;
 } t_slipenc;
 
 static void *slipenc_new(t_symbol *s, int argc, t_atom *argv);

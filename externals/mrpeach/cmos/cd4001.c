@@ -5,8 +5,8 @@
 typedef struct _cd4001
 {
     t_object        x_obj;
-    t_int           x_in1;
-    t_int           x_in2;
+    int             x_in1;
+    int             x_in2;
     t_outlet        *x_out;
     t_inlet         *x_inlet2;/* Second inlet is 'live' like the first */
 } t_cd4001;

@@ -1,0 +1,28 @@
+#N canvas 626 544 450 300 10;
+#X obj 57 151 f2b;
+#X msg 57 118 3.14159;
+#X obj 57 187 unpack 0 0 0 0;
+#X floatatom 57 228 5 0 0 0 - - -;
+#X floatatom 92 228 5 0 0 0 - - -;
+#X floatatom 127 228 5 0 0 0 - - -;
+#X floatatom 162 228 5 0 0 0 - - -;
+#X text 244 268 Martin Peach 2013_03_13;
+#X msg 135 118 100000;
+#X text 53 8 [f2b] converts floats to lists of four bytes suitable
+for sending through a serial connection. This is the binary representation
+\, so the receiver must use the same floating-point format.;
+#X obj 213 114 * 4;
+#X floatatom 213 141 12 0 0 0 - - -;
+#X obj 213 91 atan;
+#X msg 213 68 1;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 2 1 4 0;
+#X connect 2 2 5 0;
+#X connect 2 3 6 0;
+#X connect 8 0 0 0;
+#X connect 10 0 11 0;
+#X connect 10 0 0 0;
+#X connect 12 0 10 0;
+#X connect 13 0 12 0;

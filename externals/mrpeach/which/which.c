@@ -81,7 +81,7 @@ static void which_any(t_which *x, t_symbol *s, int argc, t_atom *argv)
 
 static void which_bang(t_which *x)
 {
-    int     fd = -1, result = 0;
+    int     fd = -1;
     char    *nameptr = 0;
     char filename[MAXPDSTRING];
     char dirbuf[MAXPDSTRING];
@@ -128,7 +128,7 @@ static void which_bang(t_which *x)
         outlet_symbol(x->x_obj.te_outlet, gensym("not found"));
         return;
     }
-    result = close(fd);
+    close(fd);
 //post("which_bang: dirbuf: %s", dirbuf);
 //post("which_bang: nameptr: %s", nameptr);
     /* rebuild the absolute pathname */
@@ -157,7 +157,7 @@ static void *which_new(t_symbol *s, int argc, t_atom *argv)
 void which_setup(void)
 {
     which_class = class_new(gensym("which"), (t_newmethod)which_new,
-        0, sizeof(t_which), 0, A_DEFSYM, 0);
+        0, sizeof(t_which), 0, A_GIMME, 0);
     class_addbang(which_class, (t_method)which_bang);
     class_addsymbol(which_class, (t_method)which_symbol);
     class_addanything(which_class, (t_method)which_any);

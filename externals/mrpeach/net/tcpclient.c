@@ -47,6 +47,13 @@
 #include <ws2tcpip.h> /* for socklen_t */
 #endif
 
+/* support older Pd versions without sys_open(), sys_fopen(), sys_fclose() */
+#if PD_MAJOR_VERSION == 0 && PD_MINOR_VERSION < 44
+#define sys_open open
+#define sys_fopen fopen
+#define sys_fclose fclose
+#endif
+
 #ifdef _MSC_VER
 #define snprintf sprintf_s
 #endif
@@ -63,7 +70,7 @@ static char objName[] = "tcpclient";
 typedef struct _tcpclient_sender_params
 {
     char                x_sendbuf[MAX_TCPCLIENT_SEND_BUF]; /* possibly allocate this dynamically for space over speed */
-    int                 x_buf_len;
+    size_t              x_buf_len;
     int                 x_sendresult;
     pthread_t           sendthreadid;
     int                 threadisvalid; /*  non-zero if sendthreadid is an active thread */
@@ -89,7 +96,7 @@ typedef struct _tcpclient
     char                        *x_hostname; // address we want to connect to as text
     int                         x_connectstate; // 0 = not connected, 1 = connected
     int                         x_port; // port we're connected to
-    long                        x_addr; // address we're connected to as 32bit int
+    uint32_t                    x_addr; // address we're connected to as 32bit int
     t_atom                      x_addrbytes[4]; // address we're connected to as 4 bytes
     t_atom                      x_msgoutbuf[MAX_TCPCLIENT_SEND_BUF]; // received data as float atoms
     unsigned char               x_msginbuf[MAX_TCPCLIENT_SEND_BUF]; // received data as bytes
@@ -215,7 +222,7 @@ static void *tcpclient_child_connect(void *w)
         return (x);
     }
     x->x_fd = sockfd;
-    x->x_addr = ntohl(*(long *)hp->h_addr);
+    x->x_addr = ntohl(*(uint32_t *)hp->h_addr);
     /* outlet_float is not threadsafe ! */
     // outlet_float(x->x_obj.ob_outlet, 1);
     x->x_connectstate = 1;
@@ -305,7 +312,7 @@ static void tcpclient_send(t_tcpclient *x, t_symbol *s, int argc, t_atom *argv)
         else if (argv[i].a_type == A_SYMBOL)
         {
             atom_string(&argv[i], fpath, FILENAME_MAX);
-            fptr = fopen(fpath, "rb");
+            fptr = sys_fopen(fpath, "rb");
             if (fptr == NULL)
             {
                 post("%s_send: unable to open \"%s\"", objName, fpath);
@@ -322,7 +329,7 @@ static void tcpclient_send(t_tcpclient *x, t_symbol *s, int argc, t_atom *argv)
                     j = 0;
                 }
             }
-            fclose(fptr);
+            sys_fclose(fptr);
             fptr = NULL;
             if (x->x_verbosity) post("%s_send: read \"%s\" length %d byte%s", objName, fpath, j, ((d==1)?"":"s"));
         }
@@ -376,8 +383,11 @@ static void *tcpclient_child_send(void *w)
 {
     t_tcpclient_sender_params *tsp = (t_tcpclient_sender_params*) w;
 
-    tsp->x_sendresult = send(tsp->x_x->x_fd, tsp->x_sendbuf, tsp->x_buf_len, 0);
-    clock_delay(tsp->x_x->x_sendclock, 0); // calls tcpclient_sent when it's safe to do so
+    if (tsp->x_x->x_fd >= 0) 
+    {
+        tsp->x_sendresult = send(tsp->x_x->x_fd, tsp->x_sendbuf, tsp->x_buf_len, 0);
+        clock_delay(tsp->x_x->x_sendclock, 0); // calls tcpclient_sent when it's safe to do so
+    }
     tsp->threadisvalid = 0; /* this thread is over */
     return(tsp);
 }
@@ -605,12 +615,15 @@ static void tcpclient_free(t_tcpclient *x)
     if (x->x_verbosity) post("...tcpclient_free");
 }
 
+#ifndef BUILD_DATE
+# define BUILD_DATE __DATE__ " " __TIME__
+#endif
 void tcpclient_setup(void)
 {
     char    aboutStr[MAXPDSTRING];
 
-    snprintf(aboutStr, MAXPDSTRING, "%s: (GPL) 20111103 Martin Peach, compiled for pd-%d.%d on %s %s",
-             objName, PD_MAJOR_VERSION, PD_MINOR_VERSION, __DATE__, __TIME__);
+    snprintf(aboutStr, MAXPDSTRING, "%s: (GPL) 20111103 Martin Peach, compiled for pd-%d.%d on %s",
+             objName, PD_MAJOR_VERSION, PD_MINOR_VERSION, BUILD_DATE );
 
 #if PD_MAJOR_VERSION==0 && PD_MINOR_VERSION<43
     post(aboutStr);

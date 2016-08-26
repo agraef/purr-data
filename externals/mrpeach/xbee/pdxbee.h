@@ -13,13 +13,20 @@
 
 /* API Frame Names and Values */
 
+#define Transmit_Request_64_Bit_Address             0x00
+#define Transmit_Request_16_bit_Address             0x01
 #define AT_Command                                  0x08
 #define AT_Command_Queue_Parameter_Value            0x09
 #define ZigBee_Transmit_Request                     0x10
 #define Explicit_Addressing_ZigBee_Command_Frame    0x11
 #define Remote_Command_Request                      0x17
 #define Create_Source_Route                         0x21
+#define Receive_Packet_64_Bit_Address               0x80
+#define Receive_Packet_16_Bit_Address               0x81
+#define Receive_Packet_64_Bit_Address_IO            0x82
+#define Receive_Packet_16_Bit_Address_IO            0x83
 #define AT_Command_Response                         0x88
+#define Transmit_Status                             0x89
 #define Modem_Status                                0x8A
 #define ZigBee_Transmit_Status                      0x8B
 #define ZigBee_Receive_Packet                       0x90

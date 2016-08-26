@@ -5,15 +5,15 @@
 typedef struct _cd4008
 {
     t_object        x_obj;
-    t_int           x_A1;
-    t_int           x_A2;
-    t_int           x_A3;
-    t_int           x_A4;
-    t_int           x_B1;
-    t_int           x_B2;
-    t_int           x_B3;
-    t_int           x_B4;
-    t_int           x_CarryIn;
+    int             x_A1;
+    int             x_A2;
+    int             x_A3;
+    int             x_A4;
+    int             x_B1;
+    int             x_B2;
+    int             x_B3;
+    int             x_B4;
+    int             x_CarryIn;
     t_outlet        *x_outS1;
     t_outlet        *x_outS2;
     t_outlet        *x_outS3;

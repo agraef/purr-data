@@ -5,10 +5,10 @@
 typedef struct _cd4024
 {
     t_object        x_obj;
-    t_int           x_reset;
-    t_int           x_clock;
-    t_int           x_count;
-    t_int           x_updating;
+    int             x_reset;
+    int             x_clock;
+    int             x_count;
+    int             x_updating;
     t_outlet        *x_Q1;
     t_outlet        *x_Q2;
     t_outlet        *x_Q3;

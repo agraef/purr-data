@@ -88,11 +88,8 @@ The OpenSound Control WWW page is
 typedef struct _routeOSC
 {
     t_object    x_obj; /* required header */
-    t_int       x_num; /* Number of prefixes we store */
-    t_int       x_verbosity; /* level of debug output required */
-//    char        *x_prefixes[MAX_NUM]; /* the OSC addresses to be matched */
-//    int         x_prefix_depth[MAX_NUM]; /* the number of slashes in each prefix */
-//    void        *x_outlets[MAX_NUM+1]; /* one for each prefix plus one for everything else */
+    int         x_num; /* Number of prefixes we store */
+    int         x_verbosity; /* level of debug output required */
     char        **x_prefixes; /* the OSC addresses to be matched */
     int         *x_prefix_depth; /* the number of slashes in each prefix */
     void        **x_outlets; /* one for each prefix plus one for everything else */
@@ -104,6 +101,9 @@ void routeOSC_setup(void);
 static void routeOSC_free(t_routeOSC *x);
 static int MyPatternMatch (const char *pattern, const char *test);
 static void routeOSC_doanything(t_routeOSC *x, t_symbol *s, int argc, t_atom *argv);
+static void routeOSC_bang(t_routeOSC *x);
+static void routeOSC_float(t_routeOSC *x, t_floatarg f);
+static void routeOSC_symbol(t_routeOSC *x, t_symbol *s);
 static void routeOSC_list(t_routeOSC *x, t_symbol *s, int argc, t_atom *argv);
 static void *routeOSC_new(t_symbol *s, int argc, t_atom *argv);
 static void routeOSC_set(t_routeOSC *x, t_symbol *s, int argc, t_atom *argv);
@@ -144,12 +144,15 @@ static void routeOSC_free(t_routeOSC *x)
 }
 
 /* initialization routine */
-// setup
+
 void routeOSC_setup(void)
 {
     routeOSC_class = class_new(gensym("routeOSC"), (t_newmethod)routeOSC_new,
         (t_method)routeOSC_free, sizeof(t_routeOSC), 0, A_GIMME, 0);
     class_addanything(routeOSC_class, routeOSC_doanything);
+    class_addbang(routeOSC_class, routeOSC_bang);
+    class_addfloat(routeOSC_class, routeOSC_float);
+    class_addsymbol(routeOSC_class, routeOSC_symbol);
     class_addlist(routeOSC_class, routeOSC_list);
     class_addmethod(routeOSC_class, (t_method)routeOSC_set, gensym("set"), A_GIMME, 0);
     class_addmethod(routeOSC_class, (t_method)routeOSC_paths, gensym("paths"), A_GIMME, 0);
@@ -273,19 +276,18 @@ static int routeOSC_count_slashes(char *prefix)
 static void routeOSC_doanything(t_routeOSC *x, t_symbol *s, int argc, t_atom *argv)
 {
     char    *pattern, *nextSlash;
-    int     i, pattern_depth = 0, matchedAnything = 0;
+    int     i = 0, pattern_depth = 0, matchedAnything = 0;
     int     noPath = 0; // nonzero if we are dealing with a simple list (as from a previous [routeOSC])
 
     pattern = s->s_name;
     if (x->x_verbosity) post("routeOSC_doanything(%p): pattern is %s", x, pattern);
     if (pattern[0] != '/')
-    { // make a path '/'. Now s is actually the first item in the arguments list
-        pattern = gensym("/")->s_name;
-        noPath = 1;
-        if (x->x_verbosity)
-            post("routeOSC_doanything(%p): message pattern \"%s\" does not begin with /, setting path to %s", x, s->s_name, pattern);
+    {
+        /* output unmatched data on rightmost outlet */
+        if (x->x_verbosity) post("routeOSC_doanything no OSC path(%p) , %d args", x, argc);
+        outlet_anything(x->x_outlets[x->x_num], s, argc, argv);
+        return;
     }
-
     pattern_depth = routeOSC_count_slashes(pattern);
     if (x->x_verbosity) post("routeOSC_doanything(%p): pattern_depth is %i", x, pattern_depth);
     nextSlash = NextSlashOrNull(pattern+1);
@@ -396,7 +398,6 @@ static void routeOSC_doanything(t_routeOSC *x, t_symbol *s, int argc, t_atom *ar
             }
         }
     }
-
     if (!matchedAnything)
     {
         // output unmatched data on rightmost outlet a la normal 'route' object, jdl 20020908
@@ -405,14 +406,41 @@ static void routeOSC_doanything(t_routeOSC *x, t_symbol *s, int argc, t_atom *ar
     }
 }
 
+static void routeOSC_bang(t_routeOSC *x)
+{
+    /* output non-OSC data on rightmost outlet */
+    if (x->x_verbosity) post("routeOSC_bang (%p)", x);
+
+    outlet_bang(x->x_outlets[x->x_num]);
+}
+static void routeOSC_float(t_routeOSC *x, t_floatarg f)
+{
+    /* output non-OSC data on rightmost outlet */
+    if (x->x_verbosity) post("routeOSC_float (%p) %f", x, f);
+
+    outlet_float(x->x_outlets[x->x_num], f);
+}
+static void routeOSC_symbol(t_routeOSC *x, t_symbol *s)
+{
+    /* output non-OSC data on rightmost outlet */
+    if (x->x_verbosity) post("routeOSC_symbol (%p) %s", x, s->s_name);
+
+    outlet_symbol(x->x_outlets[x->x_num], s);
+}
+
 static void routeOSC_list(t_routeOSC *x, t_symbol *s, int argc, t_atom *argv)
 {
-    if (argv[0].a_type == A_SYMBOL) routeOSC_doanything(x, argv[0].a_w.w_symbol, argc-1, &argv[1]);
-    else
+    /* output non-OSC data on rightmost outlet */
+    if (x->x_verbosity) post("routeOSC_list (%p) s=%s argc is %d", x, s->s_name, argc);
+
+    if (0 == argc) post("routeOSC_list (%p) empty list", x);/* this should never happen but catch it just in case... */
+
+    else if (argv[0].a_type == A_SYMBOL) routeOSC_doanything(x, argv[0].a_w.w_symbol, argc-1, &argv[1]);
+
+    else if (argv[0].a_type == A_FLOAT)
     {
-        routeOSC_doanything(x, gensym("/"), argc, argv);
-        if (x->x_verbosity)
-            post("routeOSC_doanything(%p): message pattern is not a symbol, setting path to /", x);
+        if (x->x_verbosity) post("routeOSC_list (%p) floats:", x);
+        outlet_list(x->x_outlets[x->x_num], 0L, argc, argv);
     }
 }
 

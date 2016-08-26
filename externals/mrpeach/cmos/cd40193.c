@@ -11,15 +11,15 @@ typedef struct _cd40193
     t_outlet        *x_QDOut;
     t_outlet        *x_CarryOut;
     t_outlet        *x_BorrowOut;
-    t_int           x_countUp;
-    t_int           x_countDown;
-    t_int           x_dataA;
-    t_int           x_dataB;
-    t_int           x_dataC;
-    t_int           x_dataD;
-    t_int           x_load;
-    t_int           x_clear;
-    t_int           x_count;
+    int             x_countUp;
+    int             x_countDown;
+    int             x_dataA;
+    int             x_dataB;
+    int             x_dataC;
+    int             x_dataD;
+    int             x_load;
+    int             x_clear;
+    int             x_count;
     t_inlet         *x_CountDownIn;/* All inlets take one or zero as acceptable inputs. */
     t_inlet         *x_ClearIn;
     t_inlet         *x_LoadIn;

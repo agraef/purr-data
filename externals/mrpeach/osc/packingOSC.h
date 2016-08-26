@@ -27,13 +27,10 @@
    This is the size of a static array.  If you exceed this limit you'll
    get an error message. */
 #define MAX_BUNDLE_NESTING 32
-/* You may have to redefine this typedef if ints on your system
-  aren't 4 bytes. */
-typedef unsigned int uint4;
 typedef struct
 {
-    uint4 seconds;
-    uint4 fraction;
+    uint32_t seconds;
+    uint32_t fraction;
 } OSCTimeTag;
 
 typedef union
@@ -43,3 +40,4 @@ typedef union
 } intfloat32;
 
 #endif // _PACKINGOSC
+/* end of packingOSC.h */

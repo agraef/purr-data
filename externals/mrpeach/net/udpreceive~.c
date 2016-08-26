@@ -389,11 +389,6 @@ static int udpreceive_tilde_createsocket(t_udpreceive_tilde* x, char *address, i
     return 1;
 }
 
-static int udpreceive_tilde_setsocket(t_udpreceive_tilde* x, t_float portno)
-{
-	udpreceive_tilde_createsocket(x, x->x_addr_name, (int)portno);
-}
-
 /* Queue is 1 to 16 frames long */
 #define QUEUESIZE (int)((x->x_framein + DEFAULT_AUDIO_BUFFER_FRAMES - x->x_frameout) % DEFAULT_AUDIO_BUFFER_FRAMES)
 /* Block is a set of sample vectors inside a frame, one vector per channel */
@@ -797,10 +792,9 @@ void udpreceive_tilde_setup(void)
 
     class_addmethod(udpreceive_tilde_class, nullfn, gensym("signal"), 0);
     class_addmethod(udpreceive_tilde_class, (t_method)udpreceive_tilde_info, gensym("info"), 0);
-    class_addmethod(udpreceive_tilde_class, (t_method)udpreceive_tilde_dsp, gensym("dsp"), A_CANT, 0);
+    class_addmethod(udpreceive_tilde_class, (t_method)udpreceive_tilde_dsp, gensym("dsp"), 0);
     class_addmethod(udpreceive_tilde_class, (t_method)udpreceive_tilde_reset, gensym("reset"), A_DEFFLOAT, 0);
     class_addmethod(udpreceive_tilde_class, (t_method)udpreceive_tilde_reset, gensym("buffer"), A_DEFFLOAT, 0);
-    class_addmethod(udpreceive_tilde_class, (t_method)udpreceive_tilde_setsocket, gensym("port"), A_DEFFLOAT, 0);
     post("udpreceive~ v%s, (c) 2004 Olaf Matthes, 2010 Martin Peach", VERSION);
 
     ps_format = gensym("format");

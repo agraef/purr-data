@@ -64,7 +64,7 @@ void rc_tilde_setup(void)
         CLASS_DEFAULT, 
         A_DEFFLOAT, 0);
 
-    class_addmethod(rc_tilde_class, (t_method)rc_tilde_dsp, gensym("dsp"), A_CANT, 0);
+    class_addmethod(rc_tilde_class, (t_method)rc_tilde_dsp, gensym("dsp"), 0);
     CLASS_MAINSIGNALIN(rc_tilde_class, t_rc_tilde, rc_f);
 }
 

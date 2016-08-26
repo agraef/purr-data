@@ -1,0 +1,73 @@
+#N canvas 193 98 901 628 12;
+#X declare -lib mrpeach;
+#X msg 166 354 status;
+#X text 18 334 get status on right outlet:;
+#N canvas 510 620 494 344 META 0;
+#X text 12 155 HELP_PATCH_AUTHORS "pd meta" information added by Jonathan
+Wilkes for Pd version 0.42.;
+#X text 12 25 LICENSE GPL v2 or later;
+#X text 12 5 KEYWORDS control network;
+#X text 12 45 DESCRIPTION receive datagrams over a udp connection and
+outputs them as raw bytes;
+#X text 12 95 OUTLET_0 anything;
+#X text 12 135 AUTHOR Martin Peach \, Dennis Engdahl;
+#X text 12 75 INLET_0 status port connect disconnect float(s);
+#X text 12 115 OUTLET_1 received total;
+#X restore 821 567 pd META;
+#X obj 208 416 udpsndrcv;
+#X msg 197 385 disconnect;
+#X msg 105 260 send /info;
+#X text -12 3 [udpsndrcv] sends datagrams over udp and receives datagrams
+over a udp connection and outputs them as raw bytes. It uses the same
+port for both send and receive.;
+#X text 168 134 IP address to send to/listen on (required);
+#X text 323 447 Total bytes received.;
+#X text 242 544 Data received.;
+#X text -3 60 This was cadged together by Dennis Engdahl (engdahl@snowcrest.net)
+to allow communication with a Behringer X32. The program below demonstrates
+this.;
+#X obj 105 293 packOSC;
+#X obj 238 481 unpackOSC;
+#X text 169 149 Port number to send to (required);
+#X text 31 132 Creation Arguments:;
+#X obj 490 78 import mrpeach;
+#X text 202 176 (Must be unique among instances - see below);
+#X msg 25 213 connect 192.168.1.101 10023 10023;
+#X text 584 598 Dennis Engdahl \, Martin Peach 20104/02/26;
+#X obj 268 447 print a;
+#X obj 238 518 print Instance_1;
+#X obj 208 455 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 496 354 status;
+#X text 348 334 get status on right outlet:;
+#X obj 538 416 udpsndrcv;
+#X msg 527 385 disconnect;
+#X msg 435 260 send /info;
+#X text 653 447 Total bytes received.;
+#X text 572 544 Data received.;
+#X obj 435 293 packOSC;
+#X obj 568 481 unpackOSC;
+#X obj 538 455 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 355 213 connect 192.168.1.101 10023 10024;
+#X obj 598 447 print b;
+#X obj 568 518 print Instance_2;
+#X text 168 163 Port number to send from and listen on (required);
+#X connect 0 0 3 0;
+#X connect 3 0 21 0;
+#X connect 3 1 12 0;
+#X connect 3 2 19 0;
+#X connect 4 0 3 0;
+#X connect 5 0 11 0;
+#X connect 11 0 3 0;
+#X connect 12 0 20 0;
+#X connect 17 0 3 0;
+#X connect 22 0 24 0;
+#X connect 24 0 31 0;
+#X connect 24 1 30 0;
+#X connect 24 2 33 0;
+#X connect 25 0 24 0;
+#X connect 26 0 29 0;
+#X connect 29 0 24 0;
+#X connect 30 0 34 0;
+#X connect 32 0 24 0;

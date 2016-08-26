@@ -5,18 +5,18 @@
 typedef struct _cd4014
 {
     t_object        x_obj;
-    t_int           x_P1;
-    t_int           x_P2;
-    t_int           x_P3;
-    t_int           x_P4;
-    t_int           x_P5;
-    t_int           x_P6;
-    t_int           x_P7;
-    t_int           x_P8;
-    t_int           x_SerialIn;
-    t_int           x_Clk;
-    t_int           x_Q;
-    t_int           x_ParallelSerial;
+    int             x_P1;
+    int             x_P2;
+    int             x_P3;
+    int             x_P4;
+    int             x_P5;
+    int             x_P6;
+    int             x_P7;
+    int             x_P8;
+    int             x_SerialIn;
+    int             x_Clk;
+    int             x_Q;
+    int             x_ParallelSerial;
     t_outlet        *x_outQ6;
     t_outlet        *x_outQ7;
     t_outlet        *x_outQ8;

@@ -10,16 +10,16 @@ typedef struct _cd4516
     t_outlet        *x_Q3Out;
     t_outlet        *x_Q4Out;
     t_outlet        *x_CarryOut;
-    t_int           x_clock;
-    t_int           x_upDown;
-    t_int           x_preset_enable;
-    t_int           x_carry;
-    t_int           x_P1;
-    t_int           x_P2;
-    t_int           x_P3;
-    t_int           x_P4;
-    t_int           x_reset;
-    t_int           x_count;
+    int             x_clock;
+    int             x_upDown;
+    int             x_preset_enable;
+    int             x_carry;
+    int             x_P1;
+    int             x_P2;
+    int             x_P3;
+    int             x_P4;
+    int             x_reset;
+    int             x_count;
     t_inlet         *x_UpDownIn;/* All inlets take one or zero as acceptable inputs. */
     t_inlet         *x_ResetIn;
     t_inlet         *x_PresetEnableIn;

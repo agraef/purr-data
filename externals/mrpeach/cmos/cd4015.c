@@ -5,10 +5,10 @@
 typedef struct _cd4015
 {
     t_object        x_obj;
-    t_int           x_D;
-    t_int           x_R;
-    t_int           x_Clk;
-    t_int           x_Q;
+    int             x_D;
+    int             x_R;
+    int             x_Clk;
+    int             x_Q;
     t_outlet        *x_outQ1;
     t_outlet        *x_outQ2;
     t_outlet        *x_outQ3;

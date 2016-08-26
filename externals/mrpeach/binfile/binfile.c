@@ -1,5 +1,5 @@
 /* binfile.c An external for Pure Data that reads and writes binary files
-*	Copyright (C) 2007  Martin Peach
+*	Copyright (C) 2007-2014  Martin Peach
 *
 *	This program is free software; you can redistribute it and/or modify
 *	it under the terms of the GNU General Public License as published by
@@ -30,6 +30,13 @@ static t_class *binfile_class;
 #define ALLOC_BLOCK_SIZE 65536 /* number of bytes to add when resizing buffer */
 #define PATH_BUF_SIZE 1024 /* maximumn length of a file path */
 
+/* support older Pd versions without sys_open(), sys_fopen(), sys_fclose() */
+#if PD_MAJOR_VERSION == 0 && PD_MINOR_VERSION < 44
+#define sys_open open
+#define sys_fopen fopen
+#define sys_fclose fclose
+#endif
+
 typedef struct t_binfile
 {
     t_object    x_obj;
@@ -49,7 +56,7 @@ typedef struct t_binfile
 static void binfile_rewind (t_binfile *x);
 static void binfile_free(t_binfile *x);
 static FILE *binfile_open_path(t_binfile *x, char *path, char *mode);
-static void binfile_read(t_binfile *x, t_symbol *path);
+static void binfile_read(t_binfile *x, t_symbol *path, t_float max_bytes);
 static void binfile_write(t_binfile *x, t_symbol *path);
 static void binfile_bang(t_binfile *x);
 static void binfile_float(t_binfile *x, t_float val);
@@ -74,7 +81,7 @@ void binfile_setup(void)
     class_addbang(binfile_class, binfile_bang);
     class_addfloat(binfile_class, binfile_float);
     class_addlist(binfile_class, binfile_list);
-    class_addmethod(binfile_class, (t_method)binfile_read, gensym("read"), A_DEFSYMBOL, 0);
+    class_addmethod(binfile_class, (t_method)binfile_read, gensym("read"), A_DEFSYMBOL, A_DEFFLOAT, 0);
     class_addmethod(binfile_class, (t_method)binfile_write, gensym("write"), A_DEFSYMBOL, 0);
     class_addmethod(binfile_class, (t_method)binfile_add, gensym("add"), A_GIMME, 0);
     class_addmethod(binfile_class, (t_method)binfile_set, gensym("set"), A_GIMME, 0);
@@ -99,25 +106,25 @@ static void *binfile_new(t_symbol *s, int argc, t_atom *argv)
     x->x_fP = NULL;
     x->x_fPath[0] = '\0';
     x->x_our_directory = canvas_getcurrentdir();/* get the current directory to use as the base for relative file paths */
-    x->x_buf_length = ALLOC_BLOCK_SIZE;
     x->x_rd_offset = x->x_wr_offset = x->x_length = 0L;
+    x->x_buf_length = 0;//ALLOC_BLOCK_SIZE;
     /* find the first string in the arg list and interpret it as a path to a file */
-    for (i = 0; i < argc; ++i)
-    {
-        if (argv[i].a_type == A_SYMBOL)
-        {
-            pathSymbol = atom_getsymbol(&argv[i]);
-            if (pathSymbol != NULL)
-                binfile_read(x, pathSymbol);
-        }
-    }
     /* find the first float in the arg list and interpret it as the size of the buffer */
     for (i = 0; i < argc; ++i)
     {
         if (argv[i].a_type == A_FLOAT)
         {
             x->x_buf_length = atom_getfloat(&argv[i]);
-            break;
+            break; // take the first number
+        }
+    }
+    for (i = 0; i < argc; ++i)
+    {
+        if (argv[i].a_type == A_SYMBOL)
+        {
+            pathSymbol = atom_getsymbol(&argv[i]);
+            if (pathSymbol != NULL) binfile_read(x, pathSymbol, x->x_buf_length);
+            break; // only try one path
         }
     }
     if ((x->x_buf = getbytes(x->x_buf_length)) == NULL)
@@ -154,7 +161,7 @@ static FILE *binfile_open_path(t_binfile *x, char *path, char *mode)
         strncpy(tryPath, path, PATH_BUF_SIZE-1); /* copy path into a length-limited buffer */
         /* ...if it doesn't work we won't mess up x->fPath */
         tryPath[PATH_BUF_SIZE-1] = '\0'; /* just make sure there is a null termination */
-        fP = fopen(tryPath, mode);
+        fP = sys_fopen(tryPath, mode);
     }
     if (fP == NULL)
     {
@@ -164,7 +171,7 @@ static FILE *binfile_open_path(t_binfile *x, char *path, char *mode)
         strncat(tryPath, path, PATH_BUF_SIZE-1); /* append path to a length-limited buffer */
         /* ...if it doesn't work we won't mess up x->fPath */
         tryPath[PATH_BUF_SIZE-1] = '\0'; /* make sure there is a null termination */
-        fP = fopen(tryPath, mode);
+        fP = sys_fopen(tryPath, mode);
     }
     if (fP != NULL)
         strncpy(x->x_fPath, tryPath, PATH_BUF_SIZE);
@@ -183,12 +190,13 @@ static void binfile_write(t_binfile *x, t_symbol *path)
     bytes_written = fwrite(x->x_buf, 1L, x->x_length, x->x_fP);
     if (bytes_written != x->x_length) post("binfile: %ld bytes written != %ld", bytes_written, x->x_length);
     else post("binfile: wrote %ld bytes to %s", bytes_written, path->s_name);
-    fclose(x->x_fP);
+    sys_fclose(x->x_fP);
     x->x_fP = NULL;
 }
 
-static void binfile_read(t_binfile *x, t_symbol *path)
+static void binfile_read(t_binfile *x, t_symbol *path, t_float max_bytes)
 /* open the file for reading and load it into the buffer, then close it */
+/* if max_bytes > 0 read only max_bytes into the buffer */
 {
     size_t file_length = 0L;
     size_t bytes_read = 0L;
@@ -198,8 +206,9 @@ static void binfile_read(t_binfile *x, t_symbol *path)
         error("binfile: Unable to open %s for reading", path->s_name);
         return;
     }
-    /* get length of file */
-    while (EOF != getc(x->x_fP)) ++file_length;
+    /* get length of file up to max_bytes */
+    if (max_bytes > 0) while ((EOF != getc(x->x_fP))&&(file_length < max_bytes)) ++file_length;
+    else while (EOF != getc(x->x_fP)) ++file_length;
 
     if (file_length == 0L) return;
     /* get storage for file contents */
@@ -219,7 +228,7 @@ static void binfile_read(t_binfile *x, t_symbol *path)
     x->x_wr_offset = x->x_buf_length; /* write new data at end of file */
     x->x_length = x->x_buf_length; /* file length is same as buffer size 7*/
     x->x_rd_offset = 0L; /* read from start of file */
-    fclose (x->x_fP);
+    sys_fclose (x->x_fP);
     x->x_fP = NULL;
     if (bytes_read != file_length) post("binfile length %ld not equal to bytes read (%ld)", file_length, bytes_read);
     else post("binfle: read %ld bytes from %s", bytes_read, path->s_name);

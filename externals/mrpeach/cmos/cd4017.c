@@ -5,8 +5,8 @@
 typedef struct _cd4017
 {
     t_object        x_obj;
-    t_int           x_state;/* clock_inhibit value in bit 0, clock level in bit 1, reset level in bit 2 */
-    t_int           x_count;
+    int             x_state;/* clock_inhibit value in bit 0, clock level in bit 1, reset level in bit 2 */
+    int             x_count;
     t_outlet        *x_0;
     t_outlet        *x_1;
     t_outlet        *x_2;

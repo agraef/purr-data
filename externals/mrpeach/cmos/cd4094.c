@@ -15,12 +15,12 @@ typedef struct _cd4094
     t_outlet        *x_Q8Out;
     t_outlet        *x_QSOut;
     t_outlet        *x_QprimeSOut;
-    t_int           x_clock;
-    t_int           x_data;
-    t_int           x_data_in;
-    t_int           x_strobe;
-    t_int           x_output_enable;
-    t_int           x_qprime;
+    int             x_clock;
+    int             x_data;
+    int             x_data_in;
+    int             x_strobe;
+    int             x_output_enable;
+    int             x_qprime;
     t_inlet         *x_StrobeIn;/* Strobe takes one or zero as acceptable inputs. */
     t_inlet         *x_DataIn;/* Data takes one or zero as acceptable inputs. */
     t_inlet         *x_OutputEnable;/* Output Enable takes one or zero as acceptable inputs. */

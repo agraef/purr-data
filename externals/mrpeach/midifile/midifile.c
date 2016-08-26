@@ -1,5 +1,5 @@
 /* midifile.c An external for Pure Data that reads and writes MIDI files
-*	Copyright (C) 2005-2008  Martin Peach
+*	Copyright (C) 2005-2014  Martin Peach
 *
 *	This program is free software; you can redistribute it and/or modify
 *	it under the terms of the GNU General Public License as published by
@@ -24,6 +24,13 @@
 #include <stdio.h>
 #include <string.h>
 
+/* support older Pd versions without sys_open(), sys_fopen(), sys_fclose() */
+#if PD_MAJOR_VERSION == 0 && PD_MINOR_VERSION < 44
+#define sys_open open
+#define sys_fopen fopen
+#define sys_fclose fclose
+#endif
+
 #define NO_MORE_ELEMENTS 0xFFFFFFFF
 
 static t_class *midifile_class;
@@ -38,11 +45,11 @@ typedef enum {mfReset, mfReading, mfWriting} mfstate;
 
 typedef struct mf_header_chunk
 {
-    char    chunk_type[4]; /* each chunk begins with a 4-character ASCII type.*/
-    size_t  chunk_length ; /* followed by a 32-bit length */
-    int     chunk_format;
-    int     chunk_ntrks;
-    int     chunk_division;
+    char            chunk_type[4]; /* each chunk begins with a 4-character ASCII type.*/
+    size_t          chunk_length ; /* followed by a 32-bit length */
+    int             chunk_format;
+    int             chunk_ntrks;
+    int             chunk_division;
 } mf_header_chunk;
 
 typedef struct mf_track_chunk
@@ -53,7 +60,7 @@ typedef struct mf_track_chunk
     size_t          total_time ; /* sum of delta_times so far */
     size_t          track_index ; /* current byte offset to next track_data element */
     unsigned char   running_status;
-    char            *track_data;
+    unsigned char   *track_data;
 } mf_track_chunk;
 
 typedef struct t_midifile
@@ -82,12 +89,12 @@ static void midifile_get_next_track_chunk_data(t_midifile *x, int mfindex);
 static size_t midifile_get_next_track_chunk_delta_time(t_midifile *x, int mfindex);
 static void midifile_output_long_list (t_outlet *outlet, unsigned char *cP, size_t len, unsigned char first_byte);
 static void midifile_dump_track_chunk_data(t_midifile *x, int mfindex);
-static char *midifile_read_var_len (char *cP, size_t *delta);
+static unsigned char *midifile_read_var_len (unsigned char *cP, size_t *delta);
 static int midifile_write_variable_length_value (FILE *fP, size_t value);
 static unsigned short midifile_combine_bytes(unsigned char data1, unsigned char data2);
-static unsigned short midifile_get_multibyte_2(char*n);
-static unsigned long midifile_get_multibyte_3(char*n);
-static unsigned long midifile_get_multibyte_4(char*n);
+static unsigned short midifile_get_multibyte_2(unsigned char*n);
+static unsigned long midifile_get_multibyte_3(unsigned char*n);
+static unsigned long midifile_get_multibyte_4(unsigned char*n);
 static int midifile_read_track_chunk(t_midifile *x, int mfindex);
 static int midifile_read_header_chunk(t_midifile *x);
 static void midifile_rewind (t_midifile *x);
@@ -114,6 +121,8 @@ void midifile_setup(void);
 
 void midifile_setup(void)
 {
+    char aStr[] = "midifile 20140127 by Martin Peach";
+
     midifile_class = class_new (gensym("midifile"),
         (t_newmethod) midifile_new,
         (t_method)midifile_free, sizeof(t_midifile),
@@ -130,7 +139,12 @@ void midifile_setup(void)
     class_addmethod(midifile_class, (t_method)midifile_single_track, gensym("track"), A_DEFFLOAT, 0);
     class_addmethod(midifile_class, (t_method)midifile_rewind, gensym("rewind"), 0);
     class_addmethod(midifile_class, (t_method)midifile_verbosity, gensym("verbose"), A_DEFFLOAT, 0);
-    class_sethelpsymbol(midifile_class, gensym("midifile"));
+    class_sethelpsymbol(midifile_class, gensym("midifile-help"));
+#if PD_MAJOR_VERSION==0 && PD_MINOR_VERSION<43
+    post(aStr);
+#else
+    logpost(NULL, 3, aStr);
+#endif
 }
 
 static void *midifile_new(t_symbol *s, int argc, t_atom *argv)
@@ -147,6 +161,11 @@ static void *midifile_new(t_symbol *s, int argc, t_atom *argv)
     x->fP = NULL;
     x->fPath[0] = '\0';
     x->our_directory = canvas_getcurrentdir();/* get the current directory to use as the base for relative file paths */
+//#if PD_MAJOR_VERSION==0 && PD_MINOR_VERSION<43
+//    post(x->our_directory->s_name);
+//#else
+//    logpost(NULL, 3, x->our_directory->s_name);
+//#endif
     x->track = ALL_TRACKS; /* startup playing anything */
     x->midi_data[0].a_type = x->midi_data[1].a_type = x->midi_data[2].a_type = A_FLOAT;
     x->state = mfReset;
@@ -177,7 +196,6 @@ static void *midifile_new(t_symbol *s, int argc, t_atom *argv)
     x->midi_list_outlet = outlet_new(&x->x_obj, &s_list);
     x->total_time_outlet = outlet_new(&x->x_obj, &s_float); /* current total_time */
     x->status_outlet = outlet_new(&x->x_obj, &s_anything);/* last outlet for everything else */
-    post("midifile 20110212 by Martin Peach");
     return (void *)x;
 }
 
@@ -185,12 +203,12 @@ static void midifile_close(t_midifile *x)
 {
     if (x->fP != NULL)
     {
-        fclose (x->fP);
+        sys_fclose (x->fP);
         x->fP = NULL;
     }
     if (x->tmpFP != NULL)
     {
-        fclose(x->tmpFP);
+        sys_fclose(x->tmpFP);
         x->tmpFP = NULL;
     }
     x->fPath[0] = '\0';
@@ -238,7 +256,7 @@ static int midifile_open_path(t_midifile *x, char *path, char *mode)
         /* ...if it doesn't work we won't mess up x->fPath */
         tryPath[PATH_BUF_SIZE-1] = '\0'; /* just make sure there is a null termination */
         if (x->verbosity > 1)post("midifile_open_path (absolute): %s\n", tryPath);
-        fP = fopen(tryPath, mode);
+        fP = sys_fopen(tryPath, mode);
     }
     if (fP == NULL)
     {
@@ -249,7 +267,7 @@ static int midifile_open_path(t_midifile *x, char *path, char *mode)
         /* ...if it doesn't work we won't mess up x->fPath */
         tryPath[PATH_BUF_SIZE-1] = '\0'; /* just make sure there is a null termination */
         if (x->verbosity > 1)post("midifile_open_path (relative): %s\n", tryPath);
-        fP = fopen(tryPath, mode);
+        fP = sys_fopen(tryPath, mode);
     }
     if (fP == NULL) return 0;
     x->fP = fP;
@@ -330,7 +348,7 @@ static size_t midifile_write_header(t_midifile *x)
 static void midifile_write(t_midifile *x, t_symbol *s, int argc, t_atom *argv)
 /* open the file for writing and write the header */
 {
-    char        *path;
+    char        *path = NULL;
     int         frames_per_second = 0;/* default */
     int         ticks_per_frame = 90; /* default*/
 
@@ -436,7 +454,7 @@ static void midifile_bang(t_midifile *x)
 static void midifile_list(t_midifile *x, t_symbol *s, int argc, t_atom *argv)
 /* add a list containing time and midi packet to the temporary file in MIDI file format */
 {
-    int         i, j, k, m, dt_written = 0;
+    int         i, j, k, m = 0, dt_written = 0;
     size_t      len, written = 0L;
     static int  warnings = 0;
 
@@ -586,12 +604,12 @@ static int midifle_read_chunks(t_midifile *x)
 
 static int midifile_read_header_chunk(t_midifile *x)
 {
-    char    *cP = x->header_chunk.chunk_type;
-    char    *sP;
-    char    buf[4];
-    size_t  n;
-    int     div, smpte, ticks;
-    t_atom  output_atom;
+    unsigned char   *cP = (unsigned char *)x->header_chunk.chunk_type;
+    char            *sP;
+    char            buf[4];
+    size_t          n;
+    int             div, smpte, ticks;
+    t_atom          output_atom;
 
     if (x->fP == NULL)
     {
@@ -604,7 +622,7 @@ static int midifile_read_header_chunk(t_midifile *x)
     x->offset += n;
     if (n != 4L)
     {
-        error("midifile: read %lu instead of 4", n);
+        error("midifile: read %zu instead of 4", n);
         return 0;
     }
     if (x->verbosity) post("midifile: Header chunk type: %c%c%c%c", cP[0], cP[1], cP[2], cP[3]);
@@ -613,12 +631,12 @@ static int midifile_read_header_chunk(t_midifile *x)
         error ("midifile: bad file format: bad header chunk type");
         return 0;
     }
-    cP = buf;
+    cP = (unsigned char *)buf;
     n = fread(cP, 1L, 4L, x->fP);
     x->offset += n;
     if (n != 4L)
     {
-        error("midifile: read %lu instead of 4", n);
+        error("midifile: read %zu instead of 4", n);
         return 0;
     }
     x->header_chunk.chunk_length = midifile_get_multibyte_4(cP);
@@ -632,7 +650,7 @@ static int midifile_read_header_chunk(t_midifile *x)
     x->offset += n;
     if (n != 2L)
     {
-        error("midifile: read %lu instead of 2", n);
+        error("midifile: read %zu instead of 2", n);
         return 0;
     }
     x->header_chunk.chunk_format = midifile_get_multibyte_2(cP);
@@ -658,7 +676,7 @@ static int midifile_read_header_chunk(t_midifile *x)
     x->offset += n;
     if (n != 2L)
     {
-        error("midifile: read %lu instead of 2", n);
+        error("midifile: read %zu instead of 2", n);
         return 0;
     }
     x->header_chunk.chunk_ntrks = midifile_get_multibyte_2(cP);
@@ -675,7 +693,7 @@ static int midifile_read_header_chunk(t_midifile *x)
     x->offset += n;
     if (n != 2L)
     {
-        error("midifile: read %lu instead of 2", n);
+        error("midifile: read %zu instead of 2", n);
         return 0;
     }
     x->header_chunk.chunk_division = midifile_get_multibyte_2(cP);
@@ -705,10 +723,10 @@ static int midifile_read_track_chunk(t_midifile *x, int mfindex)
 /* read the data part of a track chunk into track_data */
 /* after allocating the space for it */
 {
-    char    *cP = x->track_chunk[mfindex].chunk_type;
-    char    buf[4];
-    char    type[5];
-    size_t  n, len;
+    unsigned char   *cP = (unsigned char *)x->track_chunk[mfindex].chunk_type;
+    char            buf[4];
+    char            type[5];
+    size_t          n, len;
 
     if (x->fP == NULL)
     {
@@ -719,7 +737,7 @@ static int midifile_read_track_chunk(t_midifile *x, int mfindex)
     x->offset += n;
     if (n != 4L)
     {
-        error("midifile: read %lu instead of 4", n);
+        error("midifile: read %zu instead of 4", n);
         return 0;
     }
     if (!(cP[0] == 'M' && cP[1] == 'T' && cP[2] == 'r' && cP[3] == 'k'))
@@ -732,23 +750,23 @@ static int midifile_read_track_chunk(t_midifile *x, int mfindex)
     type[2] = cP[2];
     type[3] = cP[3];
     type[4] = '\0';
-    cP = buf;
+    cP = (unsigned char *)buf;
     n = fread(cP, 1L, 4L, x->fP);
     x->offset += n;
     if (n != 4L)
     {
-        error("midifile: read %lu instead of 4", n);
+        error("midifile: read %zu instead of 4", n);
         return 0;
     }
     len = midifile_get_multibyte_4(cP);
     x->track_chunk[mfindex].chunk_length = len;
-    if (x->verbosity) post("midifile: Track chunk %d type: %s, length %lu", mfindex, type, len);
+    if (x->verbosity) post("midifile: Track chunk %d type: %s, length %zu", mfindex, type, len);
     if ((cP = getbytes(len)) == NULL)
     {
-        error ("midifile: Unable to allocate %lu bytes for track data", len);
+        error ("midifile: Unable to allocate %zu bytes for track data", len);
         return 0;
     }
-    x->track_chunk[mfindex].track_data = cP;	
+    x->track_chunk[mfindex].track_data = (unsigned char*)cP;	
     n = fread(cP, 1L, len, x->fP);
 
     return 1;
@@ -766,7 +784,7 @@ static unsigned short midifile_combine_bytes(unsigned char data1, unsigned char 
     return ((((unsigned short)data2)<< 7) | ((unsigned short)data1));
 }
 
-static unsigned long midifile_get_multibyte_4(char*n)
+static unsigned long midifile_get_multibyte_4(unsigned char*n)
 /* make a long from 4 consecutive bytes in big-endian format */
 {
     unsigned long a, b, c, d, e;
@@ -778,7 +796,7 @@ static unsigned long midifile_get_multibyte_4(char*n)
     return e;
 }
 
-static unsigned long midifile_get_multibyte_3(char*n)
+static unsigned long midifile_get_multibyte_3(unsigned char*n)
 /* make a long from 3 consecutive bytes in big-endian format */
 {
     unsigned long   a, b, c, d;
@@ -789,7 +807,7 @@ static unsigned long midifile_get_multibyte_3(char*n)
     return d;
 }
 
-static unsigned short midifile_get_multibyte_2(char*n)
+static unsigned short midifile_get_multibyte_2(unsigned char*n)
 /* make a short from 2 consecutive bytes in big-endian format */
 {
     unsigned short  a, b, c;
@@ -826,7 +844,7 @@ static int midifile_write_variable_length_value (FILE *fP, size_t value)
     return i;
 }
 
-static char *midifile_read_var_len (char *cP, size_t *delta)
+static unsigned char *midifile_read_var_len (unsigned char *cP, size_t *delta)
 {
 /* enter with cP pointing to deltatime */
 /* set delta to deltatime */
@@ -929,7 +947,7 @@ static void midifile_output_long_list (t_outlet *outlet, unsigned char *cP, size
         return;
     }
     slist[0].a_type = A_FLOAT;
-    slist[0].a_w.w_float = 0xF0;
+    slist[0].a_w.w_float = first_byte;//0xF0;
     for (si = 0; si < len; ++si)
     {
         slist[si+1].a_type = A_FLOAT;
@@ -943,8 +961,9 @@ static void midifile_dump_track_chunk_data(t_midifile *x, int mfindex)
 /* parse entire track chunk and output it to the main window */
 {
     unsigned char   *cP, *last_cP, *str;
-    size_t          total_time, delta_time, time_sig, len;
-    unsigned char   status, running_status, c, d, nn, dd, cc, bb, mi, mcp, ch;
+    size_t          total_time, delta_time, len;
+    unsigned long   time_sig;
+    unsigned char   status, running_status = 0, c, d, nn, dd, cc, bb, mi, mcp, ch;
     char            sf;
     unsigned short  sn;
     unsigned char   tt[3];
@@ -962,7 +981,7 @@ static void midifile_dump_track_chunk_data(t_midifile *x, int mfindex)
         cP = midifile_read_var_len(cP, &delta_time);
         status = *cP++;
         total_time += delta_time;
-        msgPtr += sprintf (msgPtr, "tick %lu delta %lu status %02X ", total_time, delta_time, status);
+        msgPtr += sprintf (msgPtr, "tick %zu delta %zu status %02X ", total_time, delta_time, status);
         if ((status & 0xF0) == 0xF0)
         {
             switch (status)
@@ -970,7 +989,7 @@ static void midifile_dump_track_chunk_data(t_midifile *x, int mfindex)
                 case 0xF0:
                 case 0xF7:
                     cP = midifile_read_var_len(cP, &len);/* not a time but the same variable length format */
-                    msgPtr += sprintf(msgPtr, "Sysex: %02X length %lu ", status, len);
+                    msgPtr += sprintf(msgPtr, "Sysex: %02X length %zu ", status, len);
                     cP += len;
                     break;
                 case 0xF3: /* song select */
@@ -1009,7 +1028,7 @@ static void midifile_dump_track_chunk_data(t_midifile *x, int mfindex)
                 case 0xFF:
                     c = *cP++;
                     cP = midifile_read_var_len(cP, &len);/* not a time but the same variable length format */
-                    msgPtr += sprintf(msgPtr, "Meta 0x%02X length %lu \n", c, len);
+                    msgPtr += sprintf(msgPtr, "Meta 0x%02X length %zu \n", c, len);
                     switch (c)
                     {
                         case 0x58:
@@ -1175,7 +1194,7 @@ static void midifile_get_next_track_chunk_data(t_midifile *x, int mfindex)
 /* Sets the delta_time of the element or NO_MORE_ELEMENTS if no more elements */
 {
     unsigned char   *cP, *last_cP, *str;
-    size_t          delta_time, time_sig, len, i;
+    size_t          delta_time, time_sig, len;
     unsigned char   status, c, d, nn, dd, cc, bb, mi, mcp, n;
     char            sf;
     char            fps, hour, min, sec, frame, subframe;
@@ -1199,7 +1218,7 @@ static void midifile_get_next_track_chunk_data(t_midifile *x, int mfindex)
                 case 0xF0:
                 case 0xF7:
                     cP = midifile_read_var_len(cP, &len); /* packet length */
-                    if (x->verbosity) post("midifile: Sysex: %02X length %lu", status, len);
+                    if (x->verbosity) post("midifile: Sysex: %02X length %zu", status, len);
                     midifile_output_long_list(x->midi_list_outlet, cP, len, 0xF0);
                     cP += len;
                     x->track_chunk[mfindex].running_status = 0;
@@ -1242,7 +1261,7 @@ static void midifile_get_next_track_chunk_data(t_midifile *x, int mfindex)
                 case 0xFF: /* meta event */
                     c = *cP++;
                     cP = midifile_read_var_len(cP, &len);/* meta length */
-                    if (x->verbosity) post("midifile: Track %d Meta: %02X length %lu", mfindex, c, len);
+                    if (x->verbosity) post("midifile: Track %d Meta: %02X length %zu", mfindex, c, len);
                     switch (c)
                     {
                         case 0x59: /* key signature */
@@ -1294,7 +1313,7 @@ static void midifile_get_next_track_chunk_data(t_midifile *x, int mfindex)
                             sec = *cP++;
                             frame = *cP++;
                             subframe = *cP++;
-                            if (x->verbosity) post ("midifile: %lu SMPTE offset: %d:%d:%d:%d:%d, %d fps", hour, min, sec, frame, subframe, fps);
+                            if (x->verbosity) post ("midifile: SMPTE offset: %d:%d:%d:%d:%d, %d fps", hour, min, sec, frame, subframe, fps);
                             SETFLOAT(&output_atom[0], hour);
                             SETFLOAT(&output_atom[1], min);
                             SETFLOAT(&output_atom[2], sec);
@@ -1336,7 +1355,7 @@ static void midifile_get_next_track_chunk_data(t_midifile *x, int mfindex)
                             c = cP[len];
                             cP[len] = '\0'; /* null terminate temporarily */
                             if (x->verbosity) post ("midifile: Cue Point: %s", str);
-                            SETSYMBOL(&output_atom[0], gensym(str));
+                            SETSYMBOL(&output_atom[0], gensym((char *)str));
                             outlet_anything( x->status_outlet, gensym("cue"), 1, output_atom);
                             cP[len] = c;
                             cP += len;
@@ -1346,7 +1365,7 @@ static void midifile_get_next_track_chunk_data(t_midifile *x, int mfindex)
                             c = cP[len];
                             cP[len] = '\0'; /* null terminate temporarily */
                             if (x->verbosity) post ("midifile: Marker: %s", str);
-                            SETSYMBOL(&output_atom[0], gensym(str));
+                            SETSYMBOL(&output_atom[0], gensym((char *)str));
                             outlet_anything( x->status_outlet, gensym("marker"), 1, output_atom);
                             cP[len] = c;
                             cP += len;
@@ -1356,7 +1375,7 @@ static void midifile_get_next_track_chunk_data(t_midifile *x, int mfindex)
                             c = cP[len];
                             cP[len] = '\0'; /* null terminate temporarily */
                             if (x->verbosity) post ("midifile: Lyric: %s", str);
-                            SETSYMBOL(&output_atom[0], gensym(str));
+                            SETSYMBOL(&output_atom[0], gensym((char *)str));
                             outlet_anything( x->status_outlet, gensym("lyrics"), 1, output_atom);
                             cP[len] = c;
                             cP += len;
@@ -1366,7 +1385,7 @@ static void midifile_get_next_track_chunk_data(t_midifile *x, int mfindex)
                             c = cP[len];
                             cP[len] = '\0'; /* null terminate temporarily */
                             if (x->verbosity) post ("midifile: Instrument Name: %s", str);
-                            SETSYMBOL(&output_atom[0], gensym(str));
+                            SETSYMBOL(&output_atom[0], gensym((char *)str));
                             outlet_anything( x->status_outlet, gensym("instr_name"), 1, output_atom);
                             cP[len] = c;
                             cP += len;
@@ -1377,7 +1396,7 @@ static void midifile_get_next_track_chunk_data(t_midifile *x, int mfindex)
                             cP[len] = '\0'; /* null terminate temporarily */
                             if (x->verbosity) post ("midifile: Sequence/Track Name: %s", str);
                             SETFLOAT(&output_atom[0], mfindex);
-                            SETSYMBOL(&output_atom[1], gensym(str));
+                            SETSYMBOL(&output_atom[1], gensym((char *)str));
                             outlet_anything( x->status_outlet, gensym("name"), 2, output_atom);
                             cP[len] = c;
                             cP += len;
@@ -1387,7 +1406,7 @@ static void midifile_get_next_track_chunk_data(t_midifile *x, int mfindex)
                             c = cP[len];
                             cP[len] = '\0'; /* null terminate temporarily */
                             if (x->verbosity) post ("midifile: Copyright Notice: %s", str);
-                            SETSYMBOL(&output_atom[0], gensym(str));
+                            SETSYMBOL(&output_atom[0], gensym((char *)str));
                             outlet_anything( x->status_outlet, gensym("copyright"), 1, output_atom);
                             cP[len] = c;
                             cP += len;
@@ -1397,7 +1416,7 @@ static void midifile_get_next_track_chunk_data(t_midifile *x, int mfindex)
                             c = cP[len];
                             cP[len] = '\0'; /* null terminate temporarily */
                             if (x->verbosity) post ("midifile: Text Event: %s", str);
-                            SETSYMBOL(&output_atom[0], gensym(str));
+                            SETSYMBOL(&output_atom[0], gensym((char *)str));
                             outlet_anything( x->status_outlet, gensym("text"), 1, output_atom);
                             cP[len] = c;
                             cP += len;
@@ -1452,7 +1471,7 @@ static void midifile_get_next_track_chunk_data(t_midifile *x, int mfindex)
             x->midi_data[2].a_w.w_float	= (n == 3)?d:0;
             if (x->midi_data[0].a_w.w_float != 0) outlet_list(x->midi_list_outlet, &s_list, n, x->midi_data);
             if (x->track_chunk[mfindex].running_status == 0)
-                error ("midifile: No running status on track %d at %lu",
+                error ("midifile: No running status on track %d at %zu",
                     mfindex, x->track_chunk[mfindex].total_time + delta_time);
         }
     }
@@ -1559,7 +1578,7 @@ static void midifile_skip_next_track_chunk_data(t_midifile *x, int mfindex)
 static t_symbol *midifile_key_name(int sf, int mi)
 {
     /* set a symbole to the key name baseed on */
-    /* sf= number of sharps if positive, else flats
+    /* sf= number of sharps if positive, else flats */
     /* mi = 0=major 1= minor */
     char    *maj_key[15]={"B",  "Gb", "Db", "Ab", "Eb", "Bb", "F", "C", "G", "D", "A",  "E",  "B",  "F#", "Db"};
     char    *min_key[15]={"G#", "Eb", "Bb", "F",  "C",  "G",  "D", "A", "E", "B", "F#", "C#", "G#", "D#", "Bb"};

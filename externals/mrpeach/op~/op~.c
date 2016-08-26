@@ -228,7 +228,7 @@ void op_tilde_setup(void)
 {
     op_tilde_class = class_new(gensym("op~"), (t_newmethod)op_tilde_new, 0,
         sizeof(t_op_tilde), 0, A_GIMME, 0);
-    class_addmethod(op_tilde_class, (t_method)op_tilde_dsp, gensym("dsp"), A_CANT, 0);
+    class_addmethod(op_tilde_class, (t_method)op_tilde_dsp, gensym("dsp"), 0);
     class_addmethod(op_tilde_class, (t_method)op_tilde_help, gensym("help"), 0);
     class_addmethod(op_tilde_class, (t_method)op_tilde_op, gensym("op"), A_DEFSYMBOL, 0);
     CLASS_MAINSIGNALIN(op_tilde_class, t_op_tilde, x_f);

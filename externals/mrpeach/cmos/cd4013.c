@@ -5,7 +5,7 @@
 typedef struct _cd4013
 {
     t_object        x_obj;
-    t_int           x_state;/* set = bit0, clock = bit1, reset = bit2 j = bit3 k = bit4 q = bit 5 */
+    int             x_state;/* set = bit0, clock = bit1, reset = bit2 j = bit3 k = bit4 q = bit 5 */
     t_outlet        *x_Q;
     t_outlet        *x_notQ;
     t_inlet         *x_set;/* set takes one or zero as acceptable inputs. */

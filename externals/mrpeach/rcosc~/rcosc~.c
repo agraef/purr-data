@@ -109,7 +109,7 @@ void rcosc_tilde_setup(void)
         CLASS_DEFAULT, 
         A_DEFFLOAT, 0);
 
-    class_addmethod(rcosc_tilde_class, (t_method)rcosc_tilde_dsp, gensym("dsp"), A_CANT, 0);
+    class_addmethod(rcosc_tilde_class, (t_method)rcosc_tilde_dsp, gensym("dsp"), 0);
     CLASS_MAINSIGNALIN(rcosc_tilde_class, t_rcosc_tilde, rc_f);
 }
 

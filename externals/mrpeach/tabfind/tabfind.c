@@ -16,7 +16,7 @@ typedef struct _tabfind
 {
     t_object    x_obj;
     t_symbol    *x_arrayname;
-    t_int       x_nth; /* which match to find */
+    int         x_nth; /* which match to find */
 } t_tabfind;
 
 static void tabfind_bang(t_tabfind *x);
@@ -51,7 +51,7 @@ static void tabfind_list(t_tabfind *x, t_symbol *s, int argc, t_atom *argv)
     t_float     *vec;
 #endif
     int         n, count = 0;
-    int         i, j;
+    int         i;
 
     /* first check the list for floatness... */
     for (i = 0; i < argc; ++i)

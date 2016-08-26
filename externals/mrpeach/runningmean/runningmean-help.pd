@@ -1,28 +1,25 @@
-#N canvas 1 53 624 294 10;
-#X obj 141 181 runningmean 128;
-#X msg 141 117 clear;
-#X msg 167 138 length 10;
-#X msg 228 159 22;
-#X text 179 117 clear the array to zero;
-#X text 233 138 set length (also clears the array);
-#X floatatom 141 212 5 0 0 0 - - -;
+#N canvas 216 528 808 369 10;
+#X obj 191 231 runningmean 128;
+#X msg 121 144 clear;
+#X msg 165 189 length 10;
+#X msg 278 209 22;
+#X floatatom 191 262 5 0 0 0 - - -;
 #X obj 11 36 bng 15 250 50 0 empty empty empty 17 7 0 10 -257985 -1
 -1;
 #X text 29 35 bang outputs current mean;
 #X msg 76 99 1;
 #X msg 98 121 2;
-#X text 105 211 mean:;
-#X text 254 158 another way to set length (also clears the array);
+#X text 155 261 mean:;
 #X text 63 69 Incoming floats are added to the array. The mean is recalculated
 for each incoming float;
-#X text 237 181 Argument sets initial length. Default (no argument)
+#X text 287 231 Argument sets initial length. Default (no argument)
 is 128;
 #X text 10 4 [runningmean] outputs the running mean of the last n floats
 to arrive on the left inlet.;
-#X text 199 201 Length can be changed to any positive value less than
+#X text 249 251 Length can be changed to any positive value less than
 or equal to the length set by the creation argumwent;
-#X text 455 239 Martin Peach 2009/04/10;
-#N canvas 446 134 494 344 META 0;
+#X text 505 289 Martin Peach 2009/04/10;
+#N canvas 701 617 494 344 META 0;
 #X text 12 155 HELP_PATCH_AUTHORS "pd meta" information added by Jonathan
 Wilkes for Pd version 0.42.;
 #X text 12 25 LICENSE GPL v2 or later;
@@ -33,11 +30,18 @@ to arrive on the left inlet;
 #X text 12 75 INLET_0 float bang clear length;
 #X text 12 95 INLET_1 float;
 #X text 12 115 OUTLET_0 float;
-#X restore 571 269 pd META;
-#X connect 0 0 6 0;
+#X restore 621 319 pd META;
+#X msg 145 168 clear 10;
+#X text 231 189 set length (and sets the new array to the current mean)
+;
+#X text 304 208 another way to set length;
+#X text 203 167 set the array to all 10s;
+#X text 159 144 clear the array to all zeroes;
+#X connect 0 0 4 0;
 #X connect 1 0 0 0;
 #X connect 2 0 0 0;
 #X connect 3 0 0 1;
+#X connect 5 0 0 0;
 #X connect 7 0 0 0;
-#X connect 9 0 0 0;
-#X connect 10 0 0 0;
+#X connect 8 0 0 0;
+#X connect 16 0 0 0;

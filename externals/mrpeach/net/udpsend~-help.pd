@@ -6,7 +6,7 @@
 #X msg -311 147 format 8bit;
 #X msg -440 18 connect localhost 8008;
 #X text -244 103 float is the most expensive with the best resolution
-(32bit) \, default is 16bit;
+(32bit) \, default is float;
 #X msg -419 39 connect 255.255.255.255 8008;
 #X obj 52 687 print udpreceive~;
 #X obj 224 369 print udpsend~;

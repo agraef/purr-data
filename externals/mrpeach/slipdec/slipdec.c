@@ -21,11 +21,11 @@ typedef struct _slipdec
     t_outlet    *x_slipdec_out;
     t_outlet    *x_status_out;
     t_atom      *x_slip_buf;
-    t_int       x_slip_length;
-    t_int       x_slip_max_length;
-    t_int       x_valid_SLIP;
-    t_int       x_esced;
-    t_int       x_verbose;
+    int         x_slip_length;
+    int         x_slip_max_length;
+    int         x_valid_SLIP;
+    int         x_esced;
+    int         x_verbose;
 } t_slipdec;
 
 static void *slipdec_new(t_symbol *s, int argc, t_atom *argv);
@@ -105,9 +105,9 @@ static void slipdec_list(t_slipdec *x, t_symbol *s, int ac, t_atom *av)
         if (c != f)
         {
             /* abort, input list needs to be fixed before this is gonna wuk */
-            pd_error (x, "slipdec: input %d out of range [0..255]", f);
-			x->x_valid_SLIP = 0; /* not valid SLIP */
-	        slipdec_dump(x,0);// reset
+            pd_error (x, "slipdec: input %f out of range [0..255]", f);
+			      x->x_valid_SLIP = 0; /* not valid SLIP */
+	          slipdec_dump(x,0);// reset
             return;
         }
         if(SLIP_END == c)
@@ -159,9 +159,9 @@ static void slipdec_float(t_slipdec *x, t_float f)
     if (c != f)
     {
         /* abort, input list needs to be fixed before this is gonna wuk */
-        pd_error (x, "slipdec: input %d out of range [0..255]", f);
-		x->x_valid_SLIP = 0; /* not valid SLIP */
-		slipdec_dump(x,0);/* reset */
+        pd_error (x, "slipdec: input %f out of range [0..255]", f);
+    		x->x_valid_SLIP = 0; /* not valid SLIP */
+    		slipdec_dump(x,0);/* reset */
         return;
     }
     if(SLIP_END == c)

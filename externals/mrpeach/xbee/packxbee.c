@@ -3,6 +3,7 @@
 /* Started by Martin Peach 20110731 */
 /* Information taken from "XBee®/XBee-PRO® ZB RF Modules" (document 90000976_G, 11/15/2010)*/
 /* by Digi International Inc. http://www.digi.com */
+/* Series 1 info from "XBee®/XBee-PRO® RF Modules" (document 90000982_L 4/30/2013) */
 
 #include <stdio.h>
 #include <string.h>
@@ -29,6 +30,8 @@ static void packxbee_AT(t_packxbee *x, t_symbol *s, int argc, t_atom *argv);
 static void packxbee_RAT(t_packxbee *x, t_symbol *s, int argc, t_atom *argv);
 static void packxbee_ATQ(t_packxbee *x, t_symbol *s, int argc, t_atom *argv);
 static void packxbee_TX(t_packxbee *x, t_symbol *s, int argc, t_atom *argv);
+static void packxbee_TX64(t_packxbee *x, t_symbol *s, int argc, t_atom *argv);
+static void packxbee_TX16(t_packxbee *x, t_symbol *s, int argc, t_atom *argv);
 static void packxbee_pack_remote_frame(t_packxbee *x, t_symbol *s, int argc, t_atom *argv);
 static void packxbee_pack_frame(t_packxbee *x, t_symbol *s, int argc, t_atom *argv);
 static void packxbee_API(t_packxbee *x, t_float api);
@@ -94,7 +97,7 @@ static int packxbee_outbuf_add(t_packxbee *x, int index, unsigned char val)
     return i;
 }
 
-/* send a packet given a 64-bit address, a 16-bit address, broadcast radius, options, followed by raw data */
+/* send a packet given a 64-bit address, a 16-bit address, broadcast radius, options, followed by raw data (Series2 ZB only) */
 static void packxbee_TX(t_packxbee *x, t_symbol *s, int argc, t_atom *argv)
 {
     unsigned char       floatstring[256]; /* longer than the longest hex number with each character escaped plus the header and checksum overhead */
@@ -164,11 +167,11 @@ static void packxbee_TX(t_packxbee *x, t_symbol *s, int argc, t_atom *argv)
         return;
     }
     f = argv[2].a_w.w_float;
-    if (x->x_verbosity > 1)  post("packxbee_TX float parameter %f", f);
+    if (x->x_verbosity > 1)  post("packxbee_TX: float parameter %f", f);
     d = ((unsigned int)f)&0x0FF;
     if (f != d)
     {
-        post ("packxbee_TX third argument not a positive integer from 0 to 255");
+        error ("packxbee_TX: third argument is not a positive integer from 0 to 255");
         return;
     }
     else broadcast_radius = d;
@@ -181,11 +184,11 @@ static void packxbee_TX(t_packxbee *x, t_symbol *s, int argc, t_atom *argv)
         return;
     }
     f = argv[3].a_w.w_float;
-    if (x->x_verbosity > 1)  post("packxbee_TX float parameter %f", f);
+    if (x->x_verbosity > 1)  post("packxbee_TX: float parameter %f", f);
     d = ((unsigned int)f)&0x0FF;
     if (f != d)
     {
-        post ("packxbee_TX fourth argument not a positive integer from 0 to 255");
+        error ("packxbee_TX: fourth argument is not a positive integer from 0 to 255");
         return;
     }
     else options = d;
@@ -234,11 +237,11 @@ static void packxbee_TX(t_packxbee *x, t_symbol *s, int argc, t_atom *argv)
         if (A_FLOAT == argv[k].a_type)
         {
             f = argv[k].a_w.w_float;
-            if (x->x_verbosity > 1)  post("packxbee_TX float parameter %f", f);
+            if (x->x_verbosity > 1)  post("packxbee_TX: float parameter %f", f);
             d = ((unsigned int)f)&0x0FF;
             if (f != d)
             {
-                post ("packxbee_TX %dth argument not a positive integer from 0 to 255", k+1);
+                error ("packxbee_TX: argument %d is not a positive integer from 0 to 255", k+1);
                 return;
             }
             floatstring[i++] = d;
@@ -246,14 +249,269 @@ static void packxbee_TX(t_packxbee *x, t_symbol *s, int argc, t_atom *argv)
         }
         else if (A_SYMBOL == argv[k].a_type)
         {
-            if (x->x_verbosity > 1)  post("packxbee_TX symbol parameter %s", argv[k].a_w.w_symbol->s_name);
+            if (x->x_verbosity > 1)  post("packxbee_TX: symbol parameter %s", argv[k].a_w.w_symbol->s_name);
             j = i;
             i += sprintf((char *)&floatstring[i], "%s", argv[k].a_w.w_symbol->s_name);
             for (;j < i; ++j) checksum -= floatstring[j];
         }
         else
         {
-            error("packxbee_TX %dth argument neither a float nor a symbol", k);
+            error("packxbee_TX: argument %d is not a float or a symbol", k+1);
+            return;
+        }
+    }
+    length = i-3;
+    floatstring[LENGTH_LSB_INDEX] = length & 0x0FF;
+    floatstring[LENGTH_MSB_INDEX] = length >> 8;
+    floatstring[i++] = checksum;
+    k = j = 0; /* j indexes the outbuf, k indexes the floatbuf, i is the length of floatbuf */
+    for (k = 0; k < i; ++k) j = packxbee_outbuf_add(x, j, floatstring[k]);
+    outlet_list(x->x_listout, &s_list, j, x->x_outbuf);
+    if(x->x_verbosity > 1)
+    {
+        for (k = 0; k < j; ++k)
+        {
+            c = (unsigned char)atom_getfloat(&x->x_outbuf[k]);
+            post("buf[%d]: %d [0x%02X]", k, c, c);
+        }
+    }
+}
+
+/* send a packet given a 64-bit address, options, followed by raw data (Series1 only) */
+static void packxbee_TX64(t_packxbee *x, t_symbol *s, int argc, t_atom *argv)
+{
+    unsigned char       floatstring[256]; /* longer than the longest hex number with each character escaped plus the header and checksum overhead */
+    unsigned long long  dest64;
+    int                 result;
+    char                checksum = 0xFF;
+    unsigned char       options;
+    t_float             f;
+    int                 d, i, j, k;
+    int                 length = 0;
+    unsigned char       c;
+
+    if (argc < 3)
+    {
+        error("packxbee_TX64: not enough parameters");
+        return;
+    }
+    /* first arg is dest64, a symbol starting with "0x" */
+    if (argv[0].a_type != A_SYMBOL)
+    {
+        error("packxbee_TX64: first argument is not a symbol");
+        return;
+    }
+    if ((argv[0].a_w.w_symbol->s_name[0] != '0')||(argv[0].a_w.w_symbol->s_name[1] != 'x'))
+    {
+        error("packxbee_TX64: first argument is not a hex string beginning with \"0x\"");
+        return;
+    }
+#ifdef _MSC_VER
+    result = sscanf(argv[0].a_w.w_symbol->s_name, "0x%I64X", &dest64); 
+#else
+    result = sscanf(argv[0].a_w.w_symbol->s_name, "0x%LX", &dest64);
+#endif
+    if (result == 0)
+    {
+        error("packxbee_TX64: first argument is not a hex string");
+        return;
+    }
+#ifdef _MSC_VER
+    if (x->x_verbosity > 1) post ("packxbee_TX64: dest64:0x%016I64X", dest64);
+#else
+    if (x->x_verbosity > 1) post ("packxbee_TX64: dest64:0x%016LX", dest64);
+#endif
+    /* options is a single byte as a float */
+    if (argv[1].a_type != A_FLOAT)
+    {
+        error("packxbee_TX64: second argument is not a float");
+        return;
+    }
+    f = argv[1].a_w.w_float;
+    if (x->x_verbosity > 1)  post("packxbee_TX64 float parameter %f", f);
+    d = ((unsigned int)f)&0x0FF;
+    if (f != d)
+    {
+        error("packxbee_TX64 second argument is not a positive integer from 0 to 255");
+        return;
+    }
+    else options = d;
+    if (x->x_verbosity > 1)  post("packxbee_TX64: options: %d", d);
+
+    x->x_frameType = Transmit_Request_64_Bit_Address;
+    floatstring[0] = XFRAME; /* as usual */
+    floatstring[1] = 0; /* length MSB */
+    floatstring[2] = 0;/* length LSB */
+    floatstring[3] = x->x_frameType;
+    checksum -= x->x_frameType;
+    if (0 == x->x_frameID) x->x_frameID++;
+    checksum -= x->x_frameID; /* frame ID */
+    floatstring[4] = x->x_frameID++;
+    /* raw 8 byte address in big-endian order: */
+    floatstring[5] = (dest64>>56)&0x0FF;
+    checksum -= floatstring[5];
+    floatstring[6] = (dest64>>48)&0x0FF;
+    checksum -= floatstring[6];
+    floatstring[7] = (dest64>>40)&0x0FF;
+    checksum -= floatstring[7];
+    floatstring[8] = (dest64>>32)&0x0FF;
+    checksum -= floatstring[8];
+    floatstring[9] = (dest64>>24)&0x0FF;
+    checksum -= floatstring[9];
+    floatstring[10] = (dest64>>16)&0x0FF;
+    checksum -= floatstring[10];
+    floatstring[11] = (dest64>>8)&0x0FF;
+    checksum -= floatstring[11];
+    floatstring[12] = (dest64)&0x0FF;
+    checksum -= floatstring[12];
+    floatstring[13] = options;
+    checksum -= floatstring[13];
+
+    /* the rest is payload */
+    i = 14;
+    for (k = 2; k < argc; ++k)
+    {
+        if (A_FLOAT == argv[k].a_type)
+        {
+            f = argv[k].a_w.w_float;
+            if (x->x_verbosity > 1)  post("packxbee_TX64: float parameter %f", f);
+            d = ((unsigned int)f)&0x0FF;
+            if (f != d)
+            {
+                error("packxbee_TX64: argument %d is not a positive integer from 0 to 255", k+1);
+                return;
+            }
+            floatstring[i++] = d;
+            checksum -= d;
+        }
+        else if (A_SYMBOL == argv[k].a_type)
+        {
+            if (x->x_verbosity > 1)  post("packxbee_TX64: symbol parameter %s", argv[k].a_w.w_symbol->s_name);
+            j = i;
+            i += sprintf((char *)&floatstring[i], "%s", argv[k].a_w.w_symbol->s_name);
+            for (;j < i; ++j) checksum -= floatstring[j];
+        }
+        else
+        {
+            error("packxbee_TX64: argument %d is not a float or a symbol", k+1);
+            return;
+        }
+    }
+    length = i-3;
+    floatstring[LENGTH_LSB_INDEX] = length & 0x0FF;
+    floatstring[LENGTH_MSB_INDEX] = length >> 8;
+    floatstring[i++] = checksum;
+    k = j = 0; /* j indexes the outbuf, k indexes the floatbuf, i is the length of floatbuf */
+    for (k = 0; k < i; ++k) j = packxbee_outbuf_add(x, j, floatstring[k]);
+    outlet_list(x->x_listout, &s_list, j, x->x_outbuf);
+    if(x->x_verbosity > 1)
+    {
+        for (k = 0; k < j; ++k)
+        {
+            c = (unsigned char)atom_getfloat(&x->x_outbuf[k]);
+            post("buf[%d]: %d [0x%02X]", k, c, c);
+        }
+    }
+}
+
+/* send a packet given a 16-bit address, options, followed by raw data (Series1 only) */
+static void packxbee_TX16(t_packxbee *x, t_symbol *s, int argc, t_atom *argv)
+{
+    unsigned char       floatstring[256]; /* longer than the longest hex number with each character escaped plus the header and checksum overhead */
+    unsigned int        dest16;
+    int                 result;
+    char                checksum = 0xFF;
+    unsigned char       options;
+    t_float             f;
+    int                 d, i, j, k;
+    int                 length = 0;
+    unsigned char       c;
+
+    if (argc < 3)
+    {
+        error("packxbee_TX16: not enough parameters");
+        return;
+    }
+    /* first arg is dest16 also a symbol starting with "0x" */
+    if (argv[0].a_type != A_SYMBOL)
+    {
+        error("packxbee_TX16: first argument is not a symbol");
+        return;
+    }
+    if ((argv[0].a_w.w_symbol->s_name[0] != '0')||(argv[0].a_w.w_symbol->s_name[1] != 'x'))
+    {
+        error("packxbee_TX16: first argument is not a hex string beginning with \"0x\"");
+        return;
+    }
+    result = sscanf(argv[0].a_w.w_symbol->s_name, "0x%X", &dest16);
+    if (result == 0)
+    {
+        error("packxbee_TX16: first argument is not a hex string");
+        return;
+    }
+    if (x->x_verbosity > 1) post ("packxbee_TX16: dest16: 0x%X", dest16);
+
+    /* options is a single byte as a float */
+    if (argv[1].a_type != A_FLOAT)
+    {
+        error("packxbee_TX16: second argument is not a float");
+        return;
+    }
+    f = argv[1].a_w.w_float;
+    if (x->x_verbosity > 1)  post("packxbee_TX16: float parameter %f", f);
+    d = ((unsigned int)f)&0x0FF;
+    if (f != d)
+    {
+        post ("packxbee_TX16: second argument is not a positive integer from 0 to 255");
+        return;
+    }
+    else options = d;
+    if (x->x_verbosity > 1)  post("packxbee_TX16: options: %d", d);
+
+    x->x_frameType = Transmit_Request_16_bit_Address;
+    floatstring[0] = XFRAME; /* as usual */
+    floatstring[1] = 0; /* length MSB */
+    floatstring[2] = 0;/* length LSB */
+    floatstring[3] = x->x_frameType;
+    checksum -= x->x_frameType;
+    if (0 == x->x_frameID) x->x_frameID++;
+    checksum -= x->x_frameID; /* frame ID */
+    floatstring[4] = x->x_frameID++;
+    /* 16-bit address in big-endian order */
+    floatstring[5] = (dest16>>8)&0x0FF;
+    checksum -= floatstring[5];
+    floatstring[6] = (dest16)&0x0FF;
+    checksum -= floatstring[6];
+
+    floatstring[7] = options;
+    checksum -= floatstring[7];
+    /* the rest is payload */
+    i = 8;
+    for (k = 2; k < argc; ++k)
+    {
+        if (A_FLOAT == argv[k].a_type)
+        {
+            f = argv[k].a_w.w_float;
+            if (x->x_verbosity > 1)  post("packxbee_TX16: float parameter %f", f);
+            d = ((unsigned int)f)&0x0FF;
+            if (f != d)
+            {
+                error ("packxbee_TX16: argument %d is not a positive integer from 0 to 255", k+1);
+                return;
+            }
+            floatstring[i++] = d;
+            checksum -= d;
+        }
+        else if (A_SYMBOL == argv[k].a_type)
+        {
+            if (x->x_verbosity > 1)  post("packxbee_TX16: symbol parameter %s", argv[k].a_w.w_symbol->s_name);
+            j = i;
+            i += sprintf((char *)&floatstring[i], "%s", argv[k].a_w.w_symbol->s_name);
+            for (;j < i; ++j) checksum -= floatstring[j];
+        }
+        else
+        {
+            error("packxbee_TX16: argument %d is not a float or a symbol", k+1);
             return;
         }
     }
@@ -445,9 +703,26 @@ static void packxbee_pack_remote_frame(t_packxbee *x, t_symbol *s, int argc, t_a
             if (argv[4].a_type == A_SYMBOL)
             {
                 if (x->x_verbosity > 0)  post("packxbee_pack_remote_frame symbol parameter %s", argv[4].a_w.w_symbol->s_name);
+
                 if (('0' == argv[4].a_w.w_symbol->s_name[0])&&(('x' == argv[4].a_w.w_symbol->s_name[1])))
-                { /* this is a hexadecimal number: strip the "0x" and copy the rest to the buffer as ascii digits */
-                    i += sprintf((char *)&floatstring[i], "%s", &argv[4].a_w.w_symbol->s_name[2]);
+                { /* this is a hexadecimal number: copy to the buffer as raw binary */
+                    result = sscanf(argv[4].a_w.w_symbol->s_name, "0x%X", &d);
+                    if (result == 0)
+                    {
+                        post("packxbee_pack_remote_frame: argument 4 is not a hex string");
+                    }
+                    else
+                    {
+                        // put the significant part of the raw value into floatstring in big endian order
+                        if (0 != ((d>>24) & 0x0FF)) digits = 4;
+                        else if (0 != ((d>>16) & 0x0FF)) digits = 3;
+                        else if (0 != ((d>>8) & 0x0FF)) digits = 2;
+                        else digits = 1;
+                        if (4 == digits) floatstring[i++] = (d>>24) & 0x0FF;
+                        if (3 <= digits) floatstring[i++] = (d>>16) & 0x0FF;
+                        if (2 <= digits) floatstring[i++] = (d>>8) & 0x0FF;
+                        floatstring[i++] = d & 0x0FF;
+                    }
                 }
                 else // if ((0 == strncmp("NI", argv[0].a_w.w_symbol->s_name, 2))||(0 == strncmp("DN", argv[0].a_w.w_symbol->s_name, 2)))
                 { /* we hope it's just an ascii string for the NI command */
@@ -455,7 +730,6 @@ static void packxbee_pack_remote_frame(t_packxbee *x, t_symbol *s, int argc, t_a
                     {
                         c = argv[4].a_w.w_symbol->s_name[k];
                         if (0 == c) break;
-                        //checksum -= c;
                         floatstring[i++] = c;
                     }
                 }
@@ -464,10 +738,10 @@ static void packxbee_pack_remote_frame(t_packxbee *x, t_symbol *s, int argc, t_a
             {
                 f = argv[4].a_w.w_float;
                 if (x->x_verbosity > 0)  post("packxbee_pack_remote_frame float parameter %f", f);
-                d = ((unsigned int)f)&0x0FF;
+                d = (unsigned int)f;
                 if (f != d)
                 {
-                    post ("packxbee_pack_remote_frame parameter not a positive integer from 0 to 255");
+                    post ("packxbee_pack_remote_frame parameter not an integer");
                 }
                 else
                 {
@@ -528,6 +802,7 @@ static void packxbee_pack_frame(t_packxbee *x, t_symbol *s, int argc, t_atom *ar
     unsigned char   floatstring[256]; /* longer than the longest hex number with each character escaped plus the header and checksum overhead */
     int             length = 0;
     unsigned char   c, digits;
+    int             result;
     t_float         f;
 
     if (x->x_verbosity > 0) post("packxbee_AT s is %s, argc is %d", s->s_name, argc);
@@ -574,7 +849,23 @@ static void packxbee_pack_frame(t_packxbee *x, t_symbol *s, int argc, t_atom *ar
                 if (x->x_verbosity > 0)  post("packxbee_AT symbol parameter %s", argv[1].a_w.w_symbol->s_name);
                 if (('0' == argv[1].a_w.w_symbol->s_name[0])&&(('x' == argv[1].a_w.w_symbol->s_name[1])))
                 { /* this is a hexadecimal number: strip the "0x" and copy the rest to the buffer as ascii digits */
-                    i += sprintf((char *)&floatstring[i], "%s", &argv[1].a_w.w_symbol->s_name[2]);
+                    result = sscanf(argv[1].a_w.w_symbol->s_name, "0x%X", &d);
+                    if (result == 0)
+                    {
+                        post("packxbee_pack_remote_frame: argument 1 is not a hex string");
+                    }
+                    else
+                    {
+                        // put the significant part of the raw value into floatstring in big endian order
+                        if (0 != ((d>>24) & 0x0FF)) digits = 4;
+                        else if (0 != ((d>>16) & 0x0FF)) digits = 3;
+                        else if (0 != ((d>>8) & 0x0FF)) digits = 2;
+                        else digits = 1;
+                        if (4 == digits) floatstring[i++] = (d>>24) & 0x0FF;
+                        if (3 <= digits) floatstring[i++] = (d>>16) & 0x0FF;
+                        if (2 <= digits) floatstring[i++] = (d>>8) & 0x0FF;
+                        floatstring[i++] = d & 0x0FF;
+                    }
                 }
                 else // if ((0 == strncmp("NI", argv[0].a_w.w_symbol->s_name, 2))||(0 == strncmp("DN", argv[0].a_w.w_symbol->s_name, 2)))
                 { /* we hope it's just an ascii string for the NI command */
@@ -582,7 +873,6 @@ static void packxbee_pack_frame(t_packxbee *x, t_symbol *s, int argc, t_atom *ar
                     {
                         c = argv[1].a_w.w_symbol->s_name[k];
                         if (0 == c) break;
-//                        checksum -= c;
                         floatstring[i++] = c;
                     }
                 }
@@ -591,10 +881,10 @@ static void packxbee_pack_frame(t_packxbee *x, t_symbol *s, int argc, t_atom *ar
             {
                 f = argv[1].a_w.w_float;
                 if (x->x_verbosity > 0)  post("packxbee_AT float parameter %f", f);
-                d = ((unsigned int)f)&0x0FF;
+                d = (unsigned int)f;
                 if (f != d)
                 {
-                    post ("packxbee_AT parameter not a positive integer from 0 to 255");
+                    post ("packxbee_AT parameter not an integer");
                 }
                 else
                 {
@@ -660,6 +950,8 @@ void packxbee_setup(void)
     class_addmethod(packxbee_class, (t_method)packxbee_ATQ, gensym("ATQ"), A_GIMME, 0);
     class_addmethod(packxbee_class, (t_method)packxbee_RAT, gensym("RAT"), A_GIMME, 0);
     class_addmethod(packxbee_class, (t_method)packxbee_TX, gensym("TX"), A_GIMME, 0);
+    class_addmethod(packxbee_class, (t_method)packxbee_TX64, gensym("TX64"), A_GIMME, 0);
+    class_addmethod(packxbee_class, (t_method)packxbee_TX16, gensym("TX16"), A_GIMME, 0);
     class_addmethod(packxbee_class, (t_method)packxbee_API, gensym("API"), A_DEFFLOAT, 0);
     class_addmethod(packxbee_class, (t_method)packxbee_verbosity, gensym("verbosity"), A_DEFFLOAT, 0);
 }

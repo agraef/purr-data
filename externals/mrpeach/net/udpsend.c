@@ -29,6 +29,13 @@
 #include <ifaddrs.h> // for getifaddrs
 #endif // __APPLE__
 
+/* support older Pd versions without sys_open(), sys_fopen(), sys_fclose() */
+#if PD_MAJOR_VERSION == 0 && PD_MINOR_VERSION < 44
+#define sys_open open
+#define sys_fopen fopen
+#define sys_fclose fclose
+#endif
+
 static t_class *udpsend_class;
 
 typedef struct _udpsend
@@ -482,7 +489,7 @@ static void udpsend_send(t_udpsend *x, t_symbol *s, int argc, t_atom *argv)
 #ifdef DEBUG
             post ("udpsend fname: %s", fpath);
 #endif
-            fptr = fopen(fpath, "rb");
+            fptr = sys_fopen(fpath, "rb");
             if (fptr == NULL)
             {
                 post("udpsend: unable to open \"%s\"", fpath);
@@ -504,7 +511,7 @@ static void udpsend_send(t_udpsend *x, t_symbol *s, int argc, t_atom *argv)
                     break;
                 }
             }
-            fclose(fptr);
+            sys_fclose(fptr);
             fptr = NULL;
             post("udpsend: read \"%s\" length %d byte%s", fpath, j, ((d==1)?"":"s"));
         }

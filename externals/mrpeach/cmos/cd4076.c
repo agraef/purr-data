@@ -9,20 +9,20 @@ typedef struct _cd4076
     t_outlet        *x_output_B;
     t_outlet        *x_output_C;
     t_outlet        *x_output_D;
-    t_int           x_clock;
-    t_int           x_QA;
-    t_int           x_QB;
-    t_int           x_QC;
-    t_int           x_QD;
-    t_int           x_inA;
-    t_int           x_inB;
-    t_int           x_inC;
-    t_int           x_inD;
-    t_int           x_InDis1;
-    t_int           x_InDis2;
-    t_int           x_OutDis1;
-    t_int           x_OutDis2;
-    t_int           x_Clear;
+    int             x_clock;
+    int             x_QA;
+    int             x_QB;
+    int             x_QC;
+    int             x_QD;
+    int             x_inA;
+    int             x_inB;
+    int             x_inC;
+    int             x_inD;
+    int             x_InDis1;
+    int             x_InDis2;
+    int             x_OutDis1;
+    int             x_OutDis2;
+    int             x_Clear;
     t_inlet         *x_clear;/* clear takes one or zero as acceptable inputs. */
     t_inlet         *x_input_disable_1;/* input_disable_1 takes one or zero as acceptable inputs. */
     t_inlet         *x_input_disable_2;/* input_disable_2 takes one or zero as acceptable inputs. */

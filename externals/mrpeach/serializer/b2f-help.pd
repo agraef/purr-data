@@ -1,0 +1,14 @@
+#N canvas 666 174 450 300 10;
+#X obj 103 178 b2f;
+#X msg 103 83 0 1 2 3;
+#X text 77 53 [b2f] converts lists of 4 bytes to floats.;
+#X text 43 17 Assuming you received 4 bytes as a binary representation
+of a floating-point number \,;
+#X text 234 258 Martin Peach 2013_03_13;
+#X msg 181 83 208 15 73 64;
+#X floatatom 103 209 12 0 0 0 - - -;
+#X msg 269 83 219 15 73 64;
+#X connect 0 0 6 0;
+#X connect 1 0 0 0;
+#X connect 5 0 0 0;
+#X connect 7 0 0 0;

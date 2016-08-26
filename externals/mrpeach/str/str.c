@@ -6,6 +6,13 @@
 #include <errno.h>
 #include "m_pd.h"
 
+/* support older Pd versions without sys_open(), sys_fopen(), sys_fclose() */
+#if PD_MAJOR_VERSION == 0 && PD_MINOR_VERSION < 44
+#define sys_open open
+#define sys_fopen fopen
+#define sys_fclose fclose
+#endif
+
 #ifndef PD_BLOBS /* PD_BLOBS is not defined in m_pd.h: No PD blob support: Make a dummy str object */
 typedef struct _str
 {
@@ -378,7 +385,7 @@ static void str_fread(t_str *x, t_symbol *s, int argc, t_atom *argv)
         return;
     }
     errno = 0;
-    fp = fopen((char *)x->x_buf.s_data, "rb");
+    fp = sys_fopen((char *)x->x_buf.s_data, "rb");
     if(NULL == fp)
     {
         post ("str file_read: error opening file \"%s\": %d", x->x_buf.s_data, errno);
@@ -396,7 +403,7 @@ static void str_fread(t_str *x, t_symbol *s, int argc, t_atom *argv)
         x->x_string_in1_end = limit;
         post ("str file_read: read %lu bytes", limit);
     }
-    fclose(fp);
+    sys_fclose(fp);
     return;
 }
 
@@ -422,7 +429,7 @@ static void str_fwrite(t_str *x, t_symbol *s, int argc, t_atom *argv)
         return;
     }
     errno = 0;
-    fp = fopen((char *)x->x_buf.s_data, "wb");
+    fp = sys_fopen((char *)x->x_buf.s_data, "wb");
     if(NULL == fp)
     {
         post ("str file_write: error opening file \"%s\": %d", x->x_buf.s_data, errno);
@@ -434,7 +441,7 @@ static void str_fwrite(t_str *x, t_symbol *s, int argc, t_atom *argv)
     if (0 != (err = ferror(fp)))
         post ("str file_write: error writing file \"%s\": %d", x->x_buf.s_data, errno);
     else post ("str file_write: wrote %lu bytes to \"%s\"", limit, x->x_buf.s_data);
-    fclose(fp);
+    sys_fclose(fp);
     return;
 }
 
