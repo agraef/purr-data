@@ -1174,7 +1174,7 @@ loaders-libdir_clean:
 
 #------------------------------------------------------------------------------#
 # LYON
-LYON_NAME=lyonpotpourri
+LYON_NAME=lyon
 
 lyonpotpourri:
 	make -C $(externals_src)/$(LYON_NAME) PD_PATH=$(pd_src)
