@@ -5416,7 +5416,7 @@ void glob_verifyquit(void *dummy, t_floatarg f)
     else
     {
         post("Quitting Pd...");
-        glob_quit(0);
+        glob_quit(0, 0);
     }
 }
 

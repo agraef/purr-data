@@ -1632,7 +1632,7 @@ extern void glob_closeall(void *dummy, t_floatarg fforce);
 
 extern int do_not_redraw;
 
-void glob_quit(void *dummy)
+void glob_quit(void *dummy, t_floatarg status)
 {
     /* If we're going to try to cleanly close everything here, we should
        do the same for all open patches and that is currently not the case,
@@ -1654,6 +1654,6 @@ void glob_quit(void *dummy)
         sys_closesocket(sys_guisock);
         sys_rmpollfn(sys_guisock);
     }
-    sys_bail(0); 
+    sys_bail(status); 
 }
 
