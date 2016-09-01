@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link id="page_style" rel="stylesheet" type="text/css" href="css/default.css">
+  </head>
+  <body class="dialog_body">
+    <div class="container">
+    <form> 
+      <fieldset id="data_container"> 
+        <legend id="legend"></legend> 
+      </fieldset> 
+
+    <div class="submit_buttons">
+      <button type="button" onClick="ok()" data-i18n="[title]iem.prop.ok_tt">
+        <span data-i18n="iem.prop.ok"></span>
+      </button>
+      <button type="button" onClick="cancel()" data-i18n="[title]iem.prop.cancel_tt">
+        <span data-i18n="iem.prop.cancel"></span>
+      </button>
+    </div>
+
+  </form> 
+  </div>      
+
+  <script>
+"use strict";
+var gui = require("nw.gui");
+var pdgui = require("./pdgui.js");
+
+// For translations
+var l = pdgui.get_local_string;
+
+pdgui.skin.apply(window);
+
+var pd_object_callback;
+var template_string;
+var canvas;
+
+function apply() {
+    var data_string = "",
+        scalar_inputs = document.querySelectorAll("input.scalar_value"),
+        vector_textarea = document.querySelector("textarea"),
+        i,
+        datum;
+    pdgui.post("we're applying changes! textarea is " + vector_textarea);
+    // start with the template header
+    data_string += template_string;
+    // add the data separator
+    data_string += "\n;\n;\n"
+    // now fetch the template name from the label as the first token for
+    // line with the scalar data
+    data_string += document.getElementById("legend").textContent;
+    for (i = 0; i < scalar_inputs.length; i++) {
+        data_string += " ";
+        if (scalar_inputs[i].title === "float") {
+            data_string += Number(scalar_inputs[i].value);
+        } else {
+            data_string += scalar_inputs[i].value;
+        }
+    }
+    // add terminating semicolon and newline for the scalar value line
+    data_string += ";\n";
+    // now tack on any vector data we may have
+    if (vector_textarea) {
+        data_string += vector_textarea.textContent;
+        // strip off the trailing semicolon. Otherwise Pd will crash...
+        data_string = data_string.slice(0, -1);
+    }
+
+    // trim the string... otherwise we could append an extra semicolon and
+    // crash Pd! So brittle...
+    data_string = data_string.trim();
+
+    data_string.split("\n").forEach(function (line) {
+        pdgui.pdsend(pd_object_callback, "data", line);
+    });
+
+    pdgui.post("outgoing data string is:");
+    pdgui.post(data_string);
+
+    pdgui.pdsend(pd_object_callback, "end");
+}
+
+function cancel() {
+    //window.close(true);
+    pdgui.pdsend(pd_object_callback, "cancel");
+}
+
+function ok() {
+    apply();
+    cancel();
+}
+
+function change_size() {
+    pdgui.post("changing the size");
+    apply();
+}
+
+function parse_template_string(t_string) {
+    // slice off the leading "data;" line
+    t_string = t_string.slice(t_string.indexOf("\n") + 1);
+    var ret = [];
+    t_string.split("\n;\n").forEach(function (t) {
+        var t_object = {},
+            t_lines = t.split("\n");
+        // template name from "template foo;"
+        t_object.template = t_lines.shift().split(" ")[1].slice(0, -1); 
+        t_object.fields = [];
+        t_lines.forEach(function (line) {
+            // remove trailing ";"
+            line = line.slice(0, -1);
+            var tokens = line.split(" "),
+                field = {};
+            if (tokens[0] === "float" || tokens[0] === "symbol") {
+                field["type"] = tokens[0];
+                field["var"] = tokens[1];
+                t_object.fields.push(field);
+            }
+        });
+        t_lines.forEach(function (line) {
+            // remove trailing ";"
+            line = line.slice(0, -1);
+            var tokens = line.split(" "),
+                field = {};
+            if (tokens[0] === "array" ||
+                tokens[0] === "canvas" ||
+                tokens[0] === "list") {
+                field["type"] = tokens[0];
+                field["var"] = tokens[1];
+                field["template"] = tokens[2];
+                t_object.fields.push(field);
+            }
+        });
+        ret.push(t_object);
+    });
+    return ret;
+}
+function add_break(container) {
+        var br = document.createElement("br");
+        br.style.setProperty("clear", "both");
+        container.appendChild(br);
+}
+
+function toggle_vector_editing() {
+    var state = document.getElementById("vector_edit_checkbox").checked;
+pdgui.post("checked is " + state);
+    document.getElementById("vector_textarea").disabled = state ? false : true;
+}
+
+function add_textarea_input() {
+    var label = document.createElement("label"),
+        textarea = document.createElement("textarea"),
+        check_label = document.createElement("label"),
+        check = document.createElement("input"),
+        outer_container = document.getElementById("data_container"),
+        inner_container = document.createElement("div"),
+        br = document.createElement("br");
+
+    label.textContent = "vector fields";
+
+    label.style.setProperty("display", "block");
+    label.style.setProperty("text-align", "left");
+    textarea.style.setProperty("display", "block");
+
+    textarea.setAttribute("id", "vector_textarea");
+    textarea.setAttribute("rows", "4");
+    textarea.setAttribute("col", "5");
+    textarea.style.setProperty("width", "11.3em");
+    textarea.disabled = true;
+
+    check.type = "checkbox";
+    check.id = "vector_edit_checkbox";
+    check.onclick = toggle_vector_editing;
+    check_label.appendChild(check);
+    check_label.appendChild(document.createTextNode("edit vector data"));
+
+    add_break(outer_container);
+
+    inner_container.appendChild(label);
+    inner_container.appendChild(textarea);
+    outer_container.appendChild(inner_container);
+    outer_container.appendChild(check_label);
+}
+
+function add_text_input(field, left_column, first_row) {
+    var label = document.createElement("label"),
+        text_input = document.createElement("input"),
+        outer_container = document.getElementById("data_container"),
+        inner_container = document.createElement("div"),
+        br;
+    inner_container.style.setProperty("float", "left");
+    // For floats, we do two inputs per line with a right margin for
+    // the left column. For symbols, the input takes up the whole line
+    if (left_column && field.type !== "symbol") {
+        inner_container.style.setProperty("margin-right", "1em");
+    }
+    label.textContent = field["var"];
+    text_input.type = "text";
+    text_input.classList.add("scalar_value");
+    text_input.title = field["type"];
+
+    // Set styles-- should be done in css, but quick-and-dirty for now
+    label.style.setProperty("display", "block");
+    // This is in opposition to iemgui dialog. But the iemgui dialog should
+    // be changed to have labels at the top of the input. It makes everything
+    // line up better...
+    label.style.setProperty("text-align", "left");
+    text_input.style.setProperty("display", "block");
+    // Also in opposition to iemgui dialogs
+    text_input.style.setProperty("width",
+        field.type === "float" ? "5em" : "11.3em");
+    // Some bottom margin
+    inner_container.style.setProperty("margin-bottom", "8px");
+
+    // Break before left column or symbol input, except for the first row
+    if (!first_row) {
+        if (field.type === "symbol" || left_column) {
+            add_break(outer_container);
+        }
+    }
+    inner_container.appendChild(label);
+    inner_container.appendChild(text_input);
+    outer_container.appendChild(inner_container);
+}
+
+function build_form(template_string) {
+    var t_array = parse_template_string(template_string),
+        t,
+        i, j;
+    // For now we just build the form from the main template
+    // for the scalar. If there are any array, canvas, or list
+    // fields we just chuck their contents in som multi-line text
+    // widgets.
+    t = t_array[0];
+
+    document.getElementById("legend").textContent = t.template;
+    for (i = 0, j = 0; i < t.fields.length; i++) {
+        if (t.fields[i].type === "symbol" ||
+            t.fields[i].type === "float") {
+            add_text_input(t.fields[i], j % 2 === 0, i === 0);
+            j = (t.fields[i].type === "float") ? j + 1 : 0;
+        }
+    }
+    // Now for array, canvas, and text fields. These get a single textarea
+    // for now because it's non-trivial to parse (much less workably display)
+    // nested arrays
+    for (i = 0; i < t.fields.length; i++) {
+        if (t.fields[i].type === "array" ||
+            t.fields[i].type === "canvas" ||
+            t.fields[i].type === "list") {
+
+            add_textarea_input();
+            break;
+        }
+    }
+    pdgui.post("template_array is " + t_array.toString());
+}
+
+function parse_data_string(d_string) {
+    // trim off leading/trailing spaces and newlines, then split on newlines
+    var lines = d_string.trim().split("\n"),
+        scalar_values = lines[0].slice(0, -1).split(" "),
+        // for now we're not trying to parse the vector data. Nested arrays
+        // make it non-trivial to parse this
+        vector_values = lines.slice(1).join("\n"),
+        ret_obj = {};
+    ret_obj.name = scalar_values.shift();
+    ret_obj.scalar = scalar_values;
+    ret_obj.vector_string = vector_values;
+    return ret_obj;
+}
+
+function populate_form(data_string) {
+    var d_array = parse_data_string(data_string),
+        inputs = document.querySelectorAll("input.scalar_value"),
+        textareas = document.querySelectorAll("textarea"),
+        i;
+    for (i = 0; i < inputs.length; i++) {
+        // skip the leading template name
+        inputs[i].value = d_array.scalar[i].toString();
+    }
+    // For now, we throw all the vector fields into a single textarea
+    if (textareas.length) {
+        textareas[0].textContent = d_array.vector_string;
+    }
+}
+
+// This gets called from the nw_create_window function in index.html
+// It provides us with our window id from the C side.  Once we have it
+// we can create the menu and register event callbacks
+function register_window_id(gfxstub, data_string) {
+    var head, tail, templates, data, data_separator;
+    pd_object_callback = gfxstub;
+    add_events(gfxstub);
+    // slice off the head of the message. This is where the templates
+    // for the data-- plus any templates for (nested) arrays-- are kept.
+    // We will keep the head intact for sending back to Pd since the user
+    // won't be able to change any of that data.
+    data_separator = "\n;\n;";
+    head = data_string.slice(0, data_string.indexOf(data_separator));
+
+    // Note: we need to keep a copy of the incoming data_string so that
+    // the user can revert if need be.
+
+    tail = data_string.slice(data_string.indexOf(data_separator) +
+        data_separator.length);
+
+    //pdgui.post("head of data is " + head);
+    template_string = head;
+    translate_form();
+    build_form(head); // Create form elements from the data template
+    populate_form(tail); // Fill the form we created with the actual data
+
+    // We don't turn on rendering of the "container" div until
+    // We've finished displaying all the spans and populating the
+    // labels and form elements.  That makes it more efficient and
+    // snappier, at least on older machines.
+    document.getElementsByClassName("container")[0]
+        .style.setProperty("display", "inline");
+}
+
+// Stop-gap translator
+function translate_form() {
+    var elements = document.querySelectorAll("[data-i18n]"),
+        data,
+        i;
+    for (i = 0; i < elements.length; i++) {
+        data = elements[i].dataset.i18n;
+        if (data.slice(0, 7) === "[title]") {
+            elements[i].title = l(data.slice(7));
+        } else {
+            elements[i].textContent = l(data);
+        }
+    }
+}
+
+function get_attr(name, attrs) {
+    return attrs[attrs.indexOf(name) + 1];
+}
+
+function get_elem(name) {
+    return document.getElementById(name);
+}
+
+function add_events(name) {
+    // closing the Window
+    gui.Window.get().on("close", function () {
+        // this needs to do whatever the "cancel" button does
+        //pdgui.pdsend(name, "menuclose 0");
+        //cancel();
+        pdgui.remove_dialogwin(pd_object_callback);
+        gui.Window.get().close(true);
+    });
+    pdgui.dialog_bindings(name);
+}
+  </script>
+  </body>
+</html>

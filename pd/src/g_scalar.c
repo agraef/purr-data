@@ -1231,7 +1231,7 @@ static void scalar_menuopen(t_scalar *x)
 static void scalar_properties(t_gobj *z, struct _glist *owner)
 {
     t_scalar *x = (t_scalar *)z;
-    char *buf, buf2[80];
+    char *buf, *gfx_tag;
     int bufsize;
     t_binbuf *b;
     glist_noselect(owner);
@@ -1241,10 +1241,8 @@ static void scalar_properties(t_gobj *z, struct _glist *owner)
     binbuf_free(b);
     buf = t_resizebytes(buf, bufsize, bufsize+1);
     buf[bufsize] = 0;
-    sprintf(buf2, "pdtk_data_dialog %%s {");
-    gfxstub_new((t_pd *)owner, x, buf2);
-    sys_gui(buf);
-    sys_gui("}\n");
+    gfx_tag = gfxstub_new2((t_pd *)owner, x);
+    gui_vmess("gui_data_dialog", "ss", gfx_tag, buf);
     t_freebytes(buf, bufsize+1);
 }
 

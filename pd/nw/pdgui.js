@@ -3721,6 +3721,12 @@ function gui_canvas_dialog(did, attr_arrays) {
         attr_arrays);
 }
 
+function gui_data_dialog(did, data_string) {
+    dialogwin[did] = create_window(did, "data", 250, 300,
+        popup_coords[2], popup_coords[3],
+        data_string);
+}
+
 function gui_remove_gfxstub(did) {
     if (dialogwin[did] !== undefined && dialogwin[did] !== null) {
         dialogwin[did].window.close(true);
