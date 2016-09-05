@@ -143,11 +143,10 @@ function add_break(container) {
 
 function toggle_vector_editing() {
     var state = document.getElementById("vector_edit_checkbox").checked;
-pdgui.post("checked is " + state);
     document.getElementById("vector_textarea").disabled = state ? false : true;
 }
 
-function add_textarea_input() {
+function add_textarea_input(first_row) {
     var label = document.createElement("label"),
         textarea = document.createElement("textarea"),
         check_label = document.createElement("label"),
@@ -174,7 +173,9 @@ function add_textarea_input() {
     check_label.appendChild(check);
     check_label.appendChild(document.createTextNode("edit vector data"));
 
-    add_break(outer_container);
+    if (!first_row) {
+        add_break(outer_container);
+    }
 
     inner_container.appendChild(label);
     inner_container.appendChild(textarea);
@@ -223,33 +224,39 @@ function add_text_input(field, left_column, first_row) {
     outer_container.appendChild(inner_container);
 }
 
+
 function build_form(template_string) {
     var t_array = parse_template_string(template_string),
         t,
-        i, j;
+        i,
+        j,
+        left_col;
     // For now we just build the form from the main template
     // for the scalar. If there are any array, canvas, or list
-    // fields we just chuck their contents in som multi-line text
-    // widgets.
+    // fields we just put all of their contents in a multi-line text
+    // widget.
     t = t_array[0];
 
     document.getElementById("legend").textContent = t.template;
-    for (i = 0, j = 0; i < t.fields.length; i++) {
+    left_col = true;
+    for (i = 0; i < t.fields.length; i++) {
         if (t.fields[i].type === "symbol" ||
             t.fields[i].type === "float") {
-            add_text_input(t.fields[i], j % 2 === 0, i === 0);
-            j = (t.fields[i].type === "float") ? j + 1 : 0;
+            add_text_input(t.fields[i], left_col, i === 0);
+            left_col = (t.fields[i].type === "float") ? false : true;
         }
     }
     // Now for array, canvas, and text fields. These get a single textarea
     // for now because it's non-trivial to parse (much less workably display)
     // nested arrays
-    for (i = 0; i < t.fields.length; i++) {
-        if (t.fields[i].type === "array" ||
-            t.fields[i].type === "canvas" ||
-            t.fields[i].type === "list") {
+    for (j = 0; j < t.fields.length; j++) {
+        if (t.fields[j].type === "array" ||
+            t.fields[j].type === "canvas" ||
+            t.fields[j].type === "list") {
 
-            add_textarea_input();
+            // Add a textarea, but only prepend a break if we already have
+            // text inputs in the form
+            add_textarea_input(j == 0 && i !== 0);
             break;
         }
     }
