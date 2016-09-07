@@ -3727,6 +3727,42 @@ function gui_data_dialog(did, data_string) {
         data_string);
 }
 
+function gui_text_dialog_clear(did) {
+    if (dialogwin[did]) {
+        dialogwin[did].window.textarea_clear();
+    }
+}
+
+function gui_text_dialog_append(did, line) {
+    if (dialogwin[did]) {
+        dialogwin[did].window.textarea_append(line);
+    }
+}
+
+function gui_text_dialog_set_dirty(did, state) {
+    if (dialogwin[did]) {
+        dialogwin[did].window.set_dirty(state !== 0);
+    }
+}
+
+function gui_text_dialog(did, width, height, font_size) {
+    dialogwin[did] = create_window(did, "text", width, height,
+        popup_coords[2], popup_coords[3],
+        font_size);
+}
+
+function gui_text_dialog_raise(did) {
+    if (dialogwin[did]) {
+        dialogwin[did].focus();
+    }
+}
+
+function gui_text_dialog_close_from_pd(did, signoff) {
+    if (dialogwin[did]) {
+        dialogwin[did].window.close_from_pd(signoff !== 0);
+    }
+}
+
 function gui_remove_gfxstub(did) {
     if (dialogwin[did] !== undefined && dialogwin[did] !== null) {
         dialogwin[did].window.close(true);

@@ -61,46 +61,78 @@ static void textbuf_senditup(t_textbuf *x)
 {
     int i, ntxt;
     char *txt;
+    /* I don't think the Pd Vanilla interface can handle cases
+       where a single line is greater than MAXPDSTRING, at least
+       coming from the GUI to Pd. So instead of the %.*s specifier
+       we just use a character array of MAXPDSTRING size. I suppose
+       that means we'll fail on the Pd side, while Pd Vanilla would
+       fail when the GUI tries to forward that line back to Pd.
+    */
+    char buf[MAXPDSTRING];
     if (!x->b_guiconnect)
         return;
     binbuf_gettext(x->b_binbuf, &txt, &ntxt);
-    sys_vgui("pdtk_textwindow_clear .x%lx\n", x);
+    //sys_vgui("pdtk_textwindow_clear .x%lx\n", x);
+    gui_vmess("gui_text_dialog_clear", "x", x);
     for (i = 0; i < ntxt; )
     {
         char *j = strchr(txt+i, '\n');
         if (!j) j = txt + ntxt;
-        sys_vgui("pdtk_textwindow_append .x%lx {%.*s\n}\n",
-            x, j-txt-i, txt+i);
+        //sys_vgui("pdtk_textwindow_append .x%lx {%.*s\n}\n",
+        //    x, j-txt-i, txt+i);
+        if (j - txt - i >= MAXPDSTRING)
+        {
+            pd_error(x, "text: can't display lines greater than %d characters",
+                MAXPDSTRING);
+            break;
+        }
+        sprintf(buf, "%.*s\n", j-txt-i, txt+i);
+        gui_vmess("gui_text_dialog_append", "xs",
+            x, buf);
         i = (j-txt)+1;
     }
-    sys_vgui("pdtk_textwindow_setdirty .x%lx 0\n", x);
+    //sys_vgui("pdtk_textwindow_setdirty .x%lx 0\n", x);
+    gui_vmess("gui_text_dialog_set_dirty", "xi", x, 0);
     t_freebytes(txt, ntxt);
+}
+
+static void textbuf_map(t_textbuf *x)
+{
+    if (x->b_guiconnect)
+        textbuf_senditup(x);
 }
 
 static void textbuf_open(t_textbuf *x)
 {
     if (x->b_guiconnect)
     {
-        sys_vgui("wm deiconify .x%lx\n", x);
-        sys_vgui("raise .x%lx\n", x);
-        sys_vgui("focus .x%lx.text\n", x);
+        //sys_vgui("wm deiconify .x%lx\n", x);
+        //sys_vgui("raise .x%lx\n", x);
+        //sys_vgui("focus .x%lx.text\n", x);
+        gui_vmess("gui_text_dialog_raise", "x", x);
     }
     else
     {
         char buf[40];
-        sys_vgui("pdtk_textwindow_open .x%lx %dx%d {%s: %s} %d\n",
-            x, 600, 340, "myname", "text",
-                 sys_hostfontsize(glist_getfont(x->b_canvas)));//,
+        //sys_vgui("pdtk_textwindow_open .x%lx %dx%d {%s: %s} %d\n",
+        //    x, 600, 340, "myname", "text",
+        //         sys_hostfontsize(glist_getfont(x->b_canvas)));//,
                     //glist_getzoom(x->b_canvas)));
-        sprintf(buf, ".x%lx", (unsigned long)x);
+        sprintf(buf, "x%lx", (unsigned long)x);
         x->b_guiconnect = guiconnect_new(&x->b_ob.ob_pd, gensym(buf));
-        textbuf_senditup(x);
+        gui_vmess("gui_text_dialog", "xiii",
+            x,
+            600,
+            340,
+            sys_hostfontsize(glist_getfont(x->b_canvas))); 
+        //textbuf_senditup(x);
     }
 }
 
 static void textbuf_close(t_textbuf *x)
 {
-    sys_vgui("pdtk_textwindow_doclose .x%lx\n", x);
+    //sys_vgui("pdtk_textwindow_doclose .x%lx\n", x);
+    gui_vmess("gui_text_dialog_close_from_pd", "x", x, 1);
     if (x->b_guiconnect)
     {
         guiconnect_notarget(x->b_guiconnect, 1000);
@@ -197,7 +229,8 @@ static void textbuf_free(t_textbuf *x)
     binbuf_free(x->b_binbuf);
     if (x->b_guiconnect)
     {
-        sys_vgui("destroy .x%lx\n", x);
+        //sys_vgui("destroy .x%lx\n", x);
+        gui_vmess("gui_text_dialog_close_from_pd", "xi", x, 0);
         guiconnect_notarget(x->b_guiconnect, 1000);
     }
         /* just in case we're still bound to #A from loading... */
@@ -1889,6 +1922,8 @@ void x_qlist_setup(void )
     text_define_class = class_new(gensym("text define"),
         (t_newmethod)text_define_new,
         (t_method)text_define_free, sizeof(t_text_define), 0, A_GIMME, 0);
+    class_addmethod(text_define_class, (t_method)textbuf_map,
+        gensym("map"), 0);
     class_addmethod(text_define_class, (t_method)textbuf_open,
         gensym("click"), 0);
     class_addmethod(text_define_class, (t_method)textbuf_close,
