@@ -106,8 +106,13 @@ function register_window_id(gfxstub, text_string) {
     add_events(gfxstub);
 
     translate_form();
+    // We request the text data only after we're certain our window
+    // has loaded. Otherwise the node.js context might try to populate
+    // the textarea before the window has actually loaded.
+
+    // This doesn't happen in Pd Vanilla because tcl/tk synchronously
+    // creates the window.
     pdgui.pdsend(gfxstub, "map");
-//    populate_form(text_string); // Fill the form we created with the actual data
 
     // We don't turn on rendering of the "container" div until
     // We've finished displaying all the spans and populating the
@@ -130,14 +135,6 @@ function translate_form() {
             elements[i].textContent = l(data);
         }
     }
-}
-
-function get_attr(name, attrs) {
-    return attrs[attrs.indexOf(name) + 1];
-}
-
-function get_elem(name) {
-    return document.getElementById(name);
 }
 
 function close_window() {
