@@ -48,6 +48,10 @@ exports.get_pd_opendir = function() {
     }
 }
 
+function gui_set_gui_preset(name) {
+    post("the gui preset is " + name);
+}
+
 exports.set_last_clipboard_data = function(data) {
     last_clipboard_data = data;
 }
@@ -3840,6 +3844,12 @@ function gui_midi_properties(gfxstub, sys_indevs, sys_outdevs,
             "midi_prefs_callback("  +
             JSON.stringify(attrs) + ");"
         );
+    }
+}
+
+function gui_gui_properties(dummy, name) {
+    if (dialogwin["prefs"] !== null) {
+        dialogwin["prefs"].window.gui_prefs_callback(name);
     }
 }
 

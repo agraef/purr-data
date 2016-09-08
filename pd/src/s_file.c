@@ -437,6 +437,8 @@ void sys_loadpreferences( void)
     }
     if (sys_getpreference("defeatrt", prefbuf, MAXPDSTRING))
         sscanf(prefbuf, "%d", &sys_defeatrt);
+    if (sys_getpreference("guipreset", prefbuf, MAXPDSTRING))
+        sscanf(prefbuf, "%s", &sys_gui_preset);
     if (sys_getpreference("flags", prefbuf, MAXPDSTRING))
     {
         if (strcmp(prefbuf, "."))
@@ -551,6 +553,7 @@ void glob_savepreferences(t_pd *dummy)
     sys_putpreference("nloadlib", buf1);
     sprintf(buf1, "%d", sys_defeatrt);
     sys_putpreference("defeatrt", buf1);
+    sys_putpreference("guipreset", sys_gui_preset);
     sys_putpreference("flags", 
         (sys_flags ? sys_flags->s_name : ""));
     sys_donesavepreferences();

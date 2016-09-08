@@ -71,6 +71,18 @@ static void glob_perf(t_pd *dummy, float f)
     sys_perf = (f != 0);
 }
 
+extern char *sys_gui_preset;
+static void glob_gui_preset(t_pd *dummy, t_symbol *s)
+{
+    sys_gui_preset = s->s_name;
+}
+
+/* just the gui-preset for now */
+static void glob_gui_properties(t_pd *dummy)
+{
+    gui_vmess("gui_gui_properties", "xs", 0, sys_gui_preset);
+}
+
 // ths one lives inside g_editor so that it can access the clipboard
 extern void glob_clipboard_text(t_pd *dummy, float f);
 
@@ -148,6 +160,10 @@ void glob_init(void)
         gensym("perf"), A_FLOAT, 0);
     class_addmethod(glob_pdobject, (t_method)glob_clipboard_text,
         gensym("clipboardtext"), A_FLOAT, 0);
+    class_addmethod(glob_pdobject, (t_method)glob_gui_preset,
+        gensym("gui-preset"), A_SYMBOL, 0);
+    class_addmethod(glob_pdobject, (t_method)glob_gui_properties,
+        gensym("gui-properties"), 0);
 #ifdef UNIX
     class_addmethod(glob_pdobject, (t_method)glob_watchdog,
         gensym("watchdog"), 0);

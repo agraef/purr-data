@@ -292,7 +292,7 @@
         <button type="button" onClick="ok()" data-i18n="[title]prefs.ok_tt">
           <span data-i18n="prefs.ok"></span>
         </button>
-        <button type="button" onClick="apply()" data-i18n="[title]prefs.apply_tt">
+        <button type="button" onClick="apply(false)" data-i18n="[title]prefs.apply_tt">
         <span data-i18n="prefs.apply"></span>
         </button>
         <button type="button" onClick="cancel()" data-i18n="[title]prefs.close_tt">
@@ -317,12 +317,16 @@ var pd_audio_attrs;
 var pd_midi_attrs;
 
 function ok() {
-    apply();
+    apply(true);
     cancel();
 }
 
 function gui_preset_change(elem) {
     pdgui.skin.set(elem.value);
+}
+
+function get_gui_preset() {
+    return document.getElementById("gui_preset").selectedOptions[0].value;
 }
 
 // callbacks for devices and/or their number of channels
@@ -407,7 +411,7 @@ function kludge_chans(type, attrs, index) {
     return chans;
 }
 
-function apply() {
+function apply(save_prefs) {
     var attrs = pd_audio_attrs,
         midi_use_alsa;
     pdgui.post("applying preferences");
@@ -453,6 +457,14 @@ function apply() {
         midi_use_alsa ? get_attr("midi-indev-names", attrs).length : 0,
         midi_use_alsa ? get_attr("midi-outdev-names", attrs).length : 0
     );
+
+    // Send the name of the gui preset to Pd
+    pdgui.pdsend("pd gui-preset", get_gui_preset());
+
+    if (save_prefs) {
+        // save the prefs in Pd...
+        pdgui.pdsend("pd save-preferences");
+    }
 }
 
 function cancel() {
@@ -691,6 +703,16 @@ function midi_prefs_callback(attrs) {
     pdgui.resize_window(pd_object_callback);
 }
 
+function gui_prefs_callback(name) {
+    var s = document.getElementById("gui_preset"),
+        i;
+    for (i = 0; i < s.options.length; i++) {
+        if (s.options[i].value.toLowerCase() === name.toLowerCase()) {
+            s.selectedIndex = i;
+            break;
+        }
+    }
+}
 
 // This gets called from the nw_create_window function in index.html
 // It provides us with our window id from the C side.  Once we have it
@@ -709,6 +731,7 @@ function register_window_id(gfxstub, attr_arrays) {
 
     pdgui.pdsend("pd audio-properties"); // request audio pref attrs
     pdgui.pdsend("pd midi-properties");  // request midi pref attrs
+    pdgui.pdsend("pd gui-properties");   // request saved gui properties
     document.getElementsByClassName("container")[0].style.setProperty("display", "inline");
 }
 

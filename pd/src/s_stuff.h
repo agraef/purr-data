@@ -39,6 +39,7 @@ t_symbol *sys_decodedialog(t_symbol *s);
 void sys_loadpreferences( void);
 void sys_savepreferences( void);
 extern int sys_defeatrt;
+extern char *sys_gui_preset;
 extern t_symbol *sys_flags;
 
 /* s_main.c */
