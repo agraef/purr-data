@@ -1,9 +1,9 @@
-#N canvas 429 33 555 619 10;
+#N canvas 394 32 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header sqrt 3 12 0 18 -204280
 -1 0;
-#X obj 0 442 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+#X obj 0 392 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
 #N canvas 484 284 494 344 META 0;
 #X text 12 105 LIBRARY internal;
@@ -21,13 +21,13 @@ for Pd version 0.42.;
 #X text 12 85 OUTLET_0 float;
 #X text 12 165 RELEASE_DATE 1997;
 #X restore 500 597 pd META;
-#X obj 0 504 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+#X obj 0 454 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
 13 -228856 -1 0;
-#X obj 0 541 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+#X obj 0 491 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
 0 13 -228856 -1 0;
-#X obj 0 568 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+#X obj 0 518 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#X text 98 545 (none);
+#X text 98 495 (none);
 #N canvas 214 516 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
@@ -45,12 +45,12 @@ for Pd version 0.42.;
 #X text 8 2 [sqrt] Related Objects;
 #X obj 237 43 abs;
 #X restore 102 597 pd Related_objects;
-#X obj 78 451 cnv 17 3 45 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X obj 78 401 cnv 17 3 45 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X text 98 450 float;
-#X text 98 470 list;
-#X text 98 512 float;
-#X obj 78 513 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X text 98 400 float;
+#X text 98 420 list;
+#X text 98 462 float;
+#X obj 78 463 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #X floatatom 239 217 0 0 0 0 - - -;
 #X floatatom 239 160 0 0 0 0 - - -;
@@ -59,9 +59,15 @@ for Pd version 0.42.;
 #X text 115 249 [sqrt] will output the square root of a number. Negative
 numbers are ignored.;
 #X text 11 23 square root;
-#X text 168 470 - a list will be truncated \, and the first element
+#X text 168 420 - a list will be truncated \, and the first element
 will be used as input.;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
+#X text 219 531 - binary arithmetic operators;
+#X obj 100 531 pddp/pddplink operators-help.pd;
+#X text 219 551 - relational and logical operators;
+#X obj 100 551 pddp/pddplink otherbinops-help.pd;
+#X obj 100 571 pddp/pddplink math-help.pd;
+#X text 219 571 - higher math objects;
 #X connect 15 0 17 0;
 #X connect 17 0 14 0;

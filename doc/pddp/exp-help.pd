@@ -1,9 +1,9 @@
-#N canvas 425 35 555 619 10;
+#N canvas 426 60 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header exp 3 12 0 18 -204280
 -1 0;
-#X obj 0 437 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+#X obj 0 387 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
 #N canvas 480 287 494 344 META 0;
 #X text 12 105 LIBRARY internal;
@@ -20,13 +20,13 @@ for Pd version 0.42.;
 #X text 12 85 OUTLET_0 float;
 #X text 12 45 DESCRIPTION raise e to the nth power;
 #X restore 500 597 pd META;
-#X obj 0 502 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+#X obj 0 452 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
 13 -228856 -1 0;
-#X obj 0 539 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+#X obj 0 489 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
 0 13 -228856 -1 0;
-#X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+#X obj 0 516 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#X text 98 543 (none);
+#X text 98 493 (none);
 #N canvas 207 520 428 108 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
@@ -44,11 +44,11 @@ for Pd version 0.42.;
 #X text 7 1 [exp] Related Objects;
 #X obj 143 42 atan2;
 #X restore 101 597 pd Related_objects;
-#X obj 78 446 cnv 17 3 45 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X obj 78 396 cnv 17 3 45 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X text 98 445 float;
-#X text 98 510 float;
-#X obj 78 511 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X text 98 395 float;
+#X text 98 460 float;
+#X obj 78 461 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #X obj 519 12 exp;
 #X floatatom 239 187 0 0 0 0 - - -;
@@ -59,10 +59,16 @@ for Pd version 0.42.;
 #X text 104 252 where E is Euler's constant and n is the value of the
 inlet.;
 #X text 11 23 raise e to the nth power;
-#X text 168 465 - a list will be truncated \, and the first element
+#X text 168 415 - a list will be truncated \, and the first element
 will be used as input.;
-#X text 98 465 list;
+#X text 98 415 list;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
+#X text 219 529 - binary arithmetic operators;
+#X obj 100 529 pddp/pddplink operators-help.pd;
+#X text 219 549 - relational and logical operators;
+#X obj 100 549 pddp/pddplink otherbinops-help.pd;
+#X obj 100 569 pddp/pddplink math-help.pd;
+#X text 219 569 - higher math objects;
 #X connect 15 0 16 0;
 #X connect 16 0 14 0;

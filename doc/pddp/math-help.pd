@@ -1,9 +1,9 @@
-#N canvas 432 35 555 619 10;
+#N canvas 406 25 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header (math_functions)
 3 12 0 18 -204280 -1 0;
-#X obj 0 325 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+#X obj 0 315 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
 #N canvas 488 281 494 344 META 0;
 #X text 12 85 LIBRARY internal;
@@ -19,11 +19,11 @@ Pd. Revised by Jonathan Wilkes to conform to the PDDP template.;
 #X text 12 145 RELEASE_DATE 1997;
 #X text 12 25 KEYWORDS control trigonometry;
 #X restore 500 597 pd META;
-#X obj 0 448 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+#X obj 0 438 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
 13 -228856 -1 0;
-#X obj 0 484 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+#X obj 0 474 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
 0 13 -228856 -1 0;
-#X obj 0 532 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+#X obj 0 522 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #N canvas 219 515 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
@@ -37,12 +37,12 @@ Pd. Revised by Jonathan Wilkes to conform to the PDDP template.;
 #X obj 210 42 sqrt~;
 #X obj 254 42 pow~;
 #X restore 102 598 pd Related_objects;
-#X obj 78 334 cnv 17 3 60 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X obj 78 324 cnv 17 3 60 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X text 98 333 float;
-#X text 98 352 list;
-#X text 98 456 float;
-#X obj 78 457 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X text 98 323 float;
+#X text 98 342 list;
+#X text 98 446 float;
+#X obj 78 447 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #X text 11 23 higher math in Pd;
 #X obj 249 12 sin;
@@ -55,46 +55,78 @@ Pd. Revised by Jonathan Wilkes to conform to the PDDP template.;
 #X obj 456 12 abs;
 #X obj 484 12 sqrt;
 #X obj 519 12 pow;
-#X text 123 139 For individual help patches \, follow the links below:
-;
-#X obj 252 87 sin;
-#X floatatom 252 61 5 0 0 0 - - -, f 5;
-#X floatatom 252 114 5 0 0 0 - - -, f 5;
-#X text 168 333 - the incoming value;
-#X text 168 352 - a list will be truncated.;
-#X obj 124 171 sin;
-#X obj 124 201 cos;
-#X obj 124 231 tan;
-#X obj 124 261 atan;
-#X obj 124 291 atan2;
-#X obj 314 171 exp;
-#X obj 314 201 log;
-#X obj 314 231 abs;
-#X obj 314 261 sqrt;
-#X obj 314 291 pow;
-#X obj 169 171 pddp/pddplink sin-help.pd;
-#X obj 169 201 pddp/pddplink cos-help.pd;
-#X obj 169 231 pddp/pddplink tan-help.pd;
-#X obj 169 261 pddp/pddplink atan-help.pd;
-#X obj 169 291 pddp/pddplink atan2-help.pd;
-#X obj 359 171 pddp/pddplink exp-help.pd;
-#X obj 359 201 pddp/pddplink log-help.pd;
-#X obj 359 231 pddp/pddplink abs-help.pd;
-#X obj 359 261 pddp/pddplink sqrt-help.pd;
-#X obj 359 291 pddp/pddplink pow-help.pd;
-#X text 168 456 - the outgoing value.;
-#X text 98 488 The [pow] object accepts one float argument to initialize
+#X obj 72 117 sin;
+#X floatatom 72 91 5 0 0 0 - - -, f 5;
+#X floatatom 72 144 5 0 0 0 - - -, f 5;
+#X text 168 323 - the incoming value;
+#X text 168 342 - a list will be truncated.;
+#X text 168 446 - the outgoing value.;
+#X text 98 478 The [pow] object accepts one float argument to initialize
 the right inlet. All other math functions listed here take no arguments.
 ;
-#X text 217 551 - binary arithmetic operators;
-#X obj 98 551 pddp/pddplink operators-help.pd;
-#X text 217 571 - relational and logical operators;
-#X obj 98 571 pddp/pddplink otherbinops-help.pd;
-#X text 98 369 (The [pow] object takes a bang \, which will output
+#X text 217 541 - binary arithmetic operators;
+#X obj 98 541 pddp/pddplink operators-help.pd;
+#X text 217 561 - relational and logical operators;
+#X obj 98 561 pddp/pddplink otherbinops-help.pd;
+#X text 98 359 (The [pow] object takes a bang \, which will output
 the previous value.);
-#X text 97 403 (Note: The [atan2] and [pow] objects have a right inlet.
+#X text 97 393 (Note: The [atan2] and [pow] objects have a right inlet.
 See their respective help patches (links above) for more info.);
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X connect 25 0 27 0;
-#X connect 26 0 25 0;
+#X floatatom 142 91 5 0 0 0 - - -, f 5;
+#X floatatom 142 144 5 0 0 0 - - -, f 5;
+#X floatatom 212 91 5 0 0 0 - - -, f 5;
+#X floatatom 212 144 5 0 0 0 - - -, f 5;
+#X floatatom 282 91 5 0 0 0 - - -, f 5;
+#X floatatom 282 144 5 0 0 0 - - -, f 5;
+#X floatatom 352 91 5 0 0 0 - - -, f 5;
+#X floatatom 352 144 5 0 0 0 - - -, f 5;
+#X floatatom 72 201 5 0 0 0 - - -, f 5;
+#X floatatom 72 254 5 0 0 0 - - -, f 5;
+#X floatatom 142 201 5 0 0 0 - - -, f 5;
+#X floatatom 142 254 5 0 0 0 - - -, f 5;
+#X floatatom 212 201 5 0 0 0 - - -, f 5;
+#X floatatom 212 254 5 0 0 0 - - -, f 5;
+#X floatatom 282 201 5 0 0 0 - - -, f 5;
+#X floatatom 282 254 5 0 0 0 - - -, f 5;
+#X floatatom 352 201 5 0 0 0 - - -, f 5;
+#X floatatom 352 254 5 0 0 0 - - -, f 5;
+#X obj 142 117 cos;
+#X obj 212 117 tan;
+#X obj 282 117 atan;
+#X obj 352 117 atan2;
+#X obj 72 227 exp;
+#X obj 142 227 log;
+#X obj 212 227 abs;
+#X obj 282 227 sqrt;
+#X obj 352 227 pow;
+#X floatatom 392 201 5 0 0 0 - - -, f 5;
+#X floatatom 392 91 5 0 0 0 - - -, f 5;
+#X floatatom 442 201 5 0 0 0 - - -, f 5;
+#X floatatom 442 254 5 0 0 0 - - -, f 5;
+#X obj 442 227 wrap;
+#X connect 24 0 26 0;
+#X connect 25 0 24 0;
+#X connect 38 0 56 0;
+#X connect 40 0 57 0;
+#X connect 42 0 58 0;
+#X connect 44 0 59 0;
+#X connect 46 0 60 0;
+#X connect 48 0 61 0;
+#X connect 50 0 62 0;
+#X connect 52 0 63 0;
+#X connect 54 0 64 0;
+#X connect 56 0 39 0;
+#X connect 57 0 41 0;
+#X connect 58 0 43 0;
+#X connect 59 0 45 0;
+#X connect 60 0 47 0;
+#X connect 61 0 49 0;
+#X connect 62 0 51 0;
+#X connect 63 0 53 0;
+#X connect 64 0 55 0;
+#X connect 65 0 64 1;
+#X connect 66 0 59 1;
+#X connect 67 0 69 0;
+#X connect 69 0 68 0;

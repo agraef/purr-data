@@ -1,9 +1,9 @@
-#N canvas 428 33 555 619 10;
+#N canvas 430 26 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header pow 3 12 0 18 -204280
 -1 0;
-#X obj 0 401 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+#X obj 0 341 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
 #N canvas 481 262 494 368 META 0;
 #X text 12 125 LIBRARY internal;
@@ -22,11 +22,11 @@ for Pd version 0.42.;
 #X text 12 105 OUTLET_0 float;
 #X text 12 185 RELEASE_DATE 1997;
 #X restore 500 597 pd META;
-#X obj 0 487 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+#X obj 0 427 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
 13 -228856 -1 0;
-#X obj 0 524 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+#X obj 0 464 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
 0 13 -228856 -1 0;
-#X obj 0 568 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+#X obj 0 508 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #N canvas 216 516 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
@@ -45,12 +45,12 @@ for Pd version 0.42.;
 #X text 8 2 [pow] Related Objects;
 #X obj 266 43 sqrt;
 #X restore 102 597 pd Related_objects;
-#X obj 78 410 cnv 17 3 45 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X obj 78 350 cnv 17 3 45 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X text 98 409 float;
-#X text 98 429 list;
-#X text 98 495 float;
-#X obj 78 496 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X text 98 349 float;
+#X text 98 369 list;
+#X text 98 435 float;
+#X obj 78 436 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #X floatatom 179 187 0 0 0 0 - - -;
 #X floatatom 179 130 0 0 0 0 - - -;
@@ -58,16 +58,16 @@ for Pd version 0.42.;
 #X text 103 221 [pow] is used to exponentiate a number. 2 to the power
 of 2 = 4 . The right inlet or creation argument is the exponent while
 the left inlet is the base.;
-#X obj 78 460 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+#X obj 78 400 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
-#X text 98 459 float;
+#X text 98 399 float;
 #X obj 516 11 pow;
 #X text 11 23 exponential function;
-#X text 168 407 - base.;
-#X text 168 459 - exponent.;
-#X text 78 544 1) float;
-#X text 168 544 - initializes the right inlet (exponent).;
-#X text 168 427 - a (base \, exponent) pair will be distributed to
+#X text 168 347 - base.;
+#X text 168 399 - exponent.;
+#X text 78 484 1) float;
+#X text 168 484 - initializes the right inlet (exponent).;
+#X text 168 367 - a (base \, exponent) pair will be distributed to
 the two inlets.;
 #X floatatom 229 130 0 0 0 0 - - -;
 #X obj 332 161 pow 3;
@@ -76,6 +76,12 @@ the two inlets.;
 #X floatatom 367 131 5 0 0 0 - - -, f 5;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
+#X text 215 528 - binary arithmetic operators;
+#X obj 96 528 pddp/pddplink operators-help.pd;
+#X text 215 548 - relational and logical operators;
+#X obj 96 548 pddp/pddplink otherbinops-help.pd;
+#X obj 96 568 pddp/pddplink math-help.pd;
+#X text 215 568 - higher math objects;
 #X connect 14 0 15 0;
 #X connect 15 0 13 0;
 #X connect 26 0 15 1;

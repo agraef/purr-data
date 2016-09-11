@@ -792,21 +792,18 @@ void x_arithmetic_setup(void)
         sizeof(t_binop), 0, A_DEFFLOAT, 0);
     class_addbang(binop1_pow_class, binop1_pow_bang);
     class_addfloat(binop1_pow_class, (t_method)binop1_pow_float);
-    class_sethelpsymbol(binop1_pow_class, binop1_sym);
 
     binop1_max_class = class_new(gensym("max"),
         (t_newmethod)binop1_max_new, 0,
         sizeof(t_binop), 0, A_DEFFLOAT, 0);
     class_addbang(binop1_max_class, binop1_max_bang);
     class_addfloat(binop1_max_class, (t_method)binop1_max_float);
-    class_sethelpsymbol(binop1_max_class, binop1_sym);
 
     binop1_min_class = class_new(gensym("min"),
         (t_newmethod)binop1_min_new, 0,
         sizeof(t_binop), 0, A_DEFFLOAT, 0);
     class_addbang(binop1_min_class, binop1_min_bang);
     class_addfloat(binop1_min_class, (t_method)binop1_min_float);
-    class_sethelpsymbol(binop1_min_class, binop1_sym);
 
         /* ------------------ binop2 ----------------------- */
 
@@ -907,52 +904,42 @@ void x_arithmetic_setup(void)
     sin_class = class_new(gensym("sin"), sin_new, 0,
         sizeof(t_object), 0, 0);
     class_addfloat(sin_class, (t_method)sin_float);
-    class_sethelpsymbol(sin_class, math_sym);
     
     cos_class = class_new(gensym("cos"), cos_new, 0,
         sizeof(t_object), 0, 0);
     class_addfloat(cos_class, (t_method)cos_float);
-    class_sethelpsymbol(cos_class, math_sym);
     
     tan_class = class_new(gensym("tan"), tan_new, 0,
         sizeof(t_object), 0, 0);
     class_addfloat(tan_class, (t_method)tan_float);
-    class_sethelpsymbol(tan_class, math_sym);
 
     atan_class = class_new(gensym("atan"), atan_new, 0,
         sizeof(t_object), 0, 0);
     class_addfloat(atan_class, (t_method)atan_float);
-    class_sethelpsymbol(atan_class, math_sym);
 
     atan2_class = class_new(gensym("atan2"), atan2_new, 0,
         sizeof(t_atan2), 0, 0);
     class_addfloat(atan2_class, (t_method)atan2_float);    
-    class_sethelpsymbol(atan2_class, math_sym);
 
     sqrt_class = class_new(gensym("sqrt"), sqrt_new, 0,
         sizeof(t_object), 0, 0);
     class_addfloat(sqrt_class, (t_method)sqrt_float);
-    class_sethelpsymbol(sqrt_class, math_sym);
 
     log_class = class_new(gensym("log"), log_new, 0,
         sizeof(t_object), 0, 0);
     class_addfloat(log_class, (t_method)log_float);    
-    class_sethelpsymbol(log_class, math_sym);
 
     exp_class = class_new(gensym("exp"), exp_new, 0,
         sizeof(t_object), 0, 0);
     class_addfloat(exp_class, (t_method)exp_float);
-    class_sethelpsymbol(exp_class, math_sym);
 
     abs_class = class_new(gensym("abs"), abs_new, 0,
         sizeof(t_object), 0, 0);
     class_addfloat(abs_class, (t_method)abs_float);    
-    class_sethelpsymbol(abs_class, math_sym);
 
     wrap_class = class_new(gensym("wrap"), wrap_new, 0,
         sizeof(t_object), 0, 0);
     class_addfloat(wrap_class, (t_method)wrap_float);    
-    class_sethelpsymbol(wrap_class, math_sym);
 
 /* ------------------------  misc ------------------------ */
 
