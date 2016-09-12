@@ -71,7 +71,7 @@ Pd-L2ork has the following goals:
 ### Installation Guide
 
 #### Linux
-
+Time to build: *40 minutes to 1.5 hours*
 To install using a pre-compiled binary, follow these instructions:
 http://l2ork.music.vt.edu/main/?page_id=56
 
@@ -81,6 +81,26 @@ http://l2ork.music.vt.edu/main/?page_id=56
 
 Then follow the steps outlined here:
 http://l2ork.music.vt.edu/main/?page_id=56#install-dev
+
+#### OSX (work in progress)
+Time to build: *1 day*
+
+1. Install Xcode from the Mac App Store. *1.5 hours*
+2. Install Xcode command line tools in a terminal window *4 minutes*:<code>
+   xcode-select --install</code>
+3. Agree to the Xcode license in a terminal
+   window:<code>sudo xcodebuild -license</code>
+3. Install [MacPorts](https://www.macports.org) *12 minutes*
+4. Check for updates:<code>sudo port selfupdate</code>
+5. Install the dependencies *6 minutes*:<code>
+   sudo port install wget
+   sudo port install autoconf
+   sudo port install automake</code>
+6. Download the source code *(3-6 minutes)*
+   Issue the following command to create a new directory "purr-data" and clone
+   the repository to it:<code>
+git clone https://git.purrdata.net/jwilkes/purr-data.git</code>
+7. To be continued...
 
 #### Windows 32-bit Using msys2
 Time to build: *roughly 1.5 hours-- 30 minutes of this is for Gem alone*
@@ -117,7 +137,7 @@ pacman -S autoconf automake git libtool \
 git clone https://git.purrdata.net/jwilkes/purr-data.git</code>
 5. Enter the purr-data/l2ork_addons directory *(less than a minute)*<code>
 cd purr-data/l2ork_addons</code>
-6. Finally, build Purr-Data *(45-50 minutes)*<code>
+6. Finally, build Purr-Data *(45-80 minutes)*<code>
 ./tar_em_up.sh -Z</code>
 7. Look in purr-data/packages/win32_inno/Output and click the setup file to
    start installing Purr Data to your machine.
