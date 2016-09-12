@@ -49,6 +49,9 @@ os=`uname | tr '[:upper:]' '[:lower:]'`
 if [[ $os == *"mingw32"* ]]; then
 	os=win
 fi
+if [[ $os == "darwin" ]]; then
+	os=osx
+fi
 
 # Fetch the nw.js binary if we haven't already. We want to fetch it even
 # for building with no libs, so we do it before all options
@@ -65,13 +68,17 @@ if [ ! -d "../pd/nw/nw" ]; then
 		arch="armv7l"
 	fi
 
-	if [[ $os == "win" ]]; then
+	if [[ $os == "win" || $os == "osx" ]]; then
 		ext="zip"
+	else
+		ext="tar.gz"
+	fi
+
+	if [[ $os == "win" ]]; then
 		# We need the lts version to be able to run on XP. For
                 # simplicity we use that same version for 64 bit Windows, too
 		nwjs_version="v0.14.7"
 	else
-		ext="tar.gz"
 		# temporary kluge for rpi-- only 0.15.1 is available atm
 		if [ `uname -m` == "armv7l" ]; then
 			nwjs_version="v0.15.1"
