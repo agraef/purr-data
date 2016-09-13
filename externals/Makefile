@@ -449,8 +449,10 @@ cyclone_clean:
 # DISIS
 disis:
 ifneq ($(OS_NAME),windows)
+ifneq ($(OS_NAME),darwin)
 	cd $(externals_src)/disis/cwiid && aclocal && autoconf && \
 		./configure --with-python=python2 && make
+endif
 endif
 	make -C $(externals_src)/disis PD_PATH=$(pd_src) pdbinpath=$(pd_src)/src
 
@@ -460,7 +462,11 @@ disis_install:
 		install
 
 disis_clean:
+ifneq ($(OS_NAME),windows)
+ifneq ($(OS_NAME),darwin)
 	make -C $(externals_src)/disis/cwiid clean
+endif
+endif
 	make -C $(externals_src)/disis clean
 
 #------------------------------------------------------------------------------#
