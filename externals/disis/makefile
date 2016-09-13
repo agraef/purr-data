@@ -22,13 +22,9 @@ CWIID_LIB_STATIC= $(CWIID_PATH)/libcwiid/libcwiid.a
 CWIID_INCLUDE = -I$(CWIID_PATH)/libcwiid
 cflags = $(CWIID_INCLUDE)
 
-define forDarwin
-    disis_wiimote.class.sources = disis_wiimote.c
-    disis_wiimote.class.ldlibs = $(CWIID_LIB_STATIC) -lbluetooth -lpthread
-endef
 define forLinux
     disis_wiimote.class.sources = disis_wiimote.c
     disis_wiimote.class.ldlibs = $(CWIID_LIB_STATIC) -lbluetooth -lpthread
 endef
 
-include Makefile.pdlibbuilder
+include Makefile.pdlibbuilder.revised

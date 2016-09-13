@@ -537,8 +537,8 @@ ifeq ($(system), Darwin)
     arch.ld.flags := -arch ppc -arch i386 -arch x86_64 -mmacosx-version-min=10.4
   endif
   ifeq ($(machine), x86_64)
-    arch.c.flags := -arch i386 -arch x86_64 -mmacosx-version-min=10.5
-    arch.ld.flags := -arch i386 -arch x86_64 -mmacosx-version-min=10.5
+    arch.c.flags := -arch x86_64 -mmacosx-version-min=10.5
+    arch.ld.flags := -arch x86_64 -mmacosx-version-min=10.5
   endif
 endif
 
