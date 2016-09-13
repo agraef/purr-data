@@ -612,7 +612,8 @@ fluid_install:
 	make -C $(externals_src)/fluid~ DESTDIR="$(DESTDIR)" \
 		objectsdir="$(objectsdir)" install
 
-fluid_clean: make -C $(externals_src)/fluid~ clean
+fluid_clean:
+	make -C $(externals_src)/fluid~ clean
 
 #------------------------------------------------------------------------------#
 # FRANKENSTEIN
