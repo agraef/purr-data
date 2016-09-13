@@ -123,7 +123,7 @@ lib_install:
 # lyonpotpourri compiles its own shared lib. On Windows it needs to be
 # in the path of the pd executable in order to get loaded. (There's probably
 # also a way to add the external lib's path but I don't know how to do that.)
-	install -p $(DESTDIR)/extra/lyonpotpourri/liblyonpotpourri.dll $(DESTDIR)$(bindir)
+	install -p $(DESTDIR)/extra/lyon/liblyonpotpourri.dll $(DESTDIR)$(bindir)
 # fftease also uses a shared lib...
 	install -p $(DESTDIR)/extra/fftease/libfftease.dll $(DESTDIR)$(bindir)
 
