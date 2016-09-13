@@ -1174,34 +1174,37 @@ loaders-libdir_clean:
 
 #------------------------------------------------------------------------------#
 # LYON
-LYON_NAME=lyon
+# Ivica named the libdir "lyon" for Pd-l2ork, but the submodule is named
+# lyonpotpourri. So we must do extra work to differentiate the two...
+LYON_SRC=lyonpotpourri
+LYON_DEST=lyon
 
 lyonpotpourri:
-	make -C $(externals_src)/$(LYON_NAME) PD_PATH=$(pd_src)
+	make -C $(externals_src)/$(LYON_SRC) PD_PATH=$(pd_src)
 
 lyonpotpourri_install:
-	#make -C $(externals_src)/$(LYON_NAME) DESTDIR="$(DESTDIR)" \
+	#make -C $(externals_src)/$(LYON_SRC) DESTDIR="$(DESTDIR)" \
 	#	objectsdir="$(objectsdir)" install
-	install -d $(DESTDIR)$(objectsdir)/$(LYON_NAME)
-	install -d $(DESTDIR)$(objectsdir)/$(LYON_NAME)/sound
-	install -p $(wildcard $(externals_src)/$(LYON_NAME)/*.$(EXTENSION)) \
-		$(DESTDIR)$(objectsdir)/$(LYON_NAME)
-	install -p $(externals_src)/$(LYON_NAME)/lyonpotpourri-helpfiles/*.pd \
-		$(DESTDIR)$(objectsdir)/$(LYON_NAME)
+	install -d $(DESTDIR)$(objectsdir)/$(LYON_DEST)
+	install -d $(DESTDIR)$(objectsdir)/$(LYON_DEST)/sound
+	install -p $(wildcard $(externals_src)/$(LYON_SRC)/*.$(EXTENSION)) \
+		$(DESTDIR)$(objectsdir)/$(LYON_DEST)
+	install -p $(externals_src)/$(LYON_SRC)/lyonpotpourri-helpfiles/*.pd \
+		$(DESTDIR)$(objectsdir)/$(LYON_DEST)
 	# don't include cartopol/poltocar-- cyclone library already has those
-	rm $(DESTDIR)$(objectsdir)/$(LYON_NAME)/cartopol*.$(EXTENSION)
-	rm $(DESTDIR)$(objectsdir)/$(LYON_NAME)/poltocar*.$(EXTENSION)
-	install -p $(externals_src)/$(LYON_NAME)/lyonpotpourri-helpfiles/sound/*.* \
-		$(DESTDIR)$(objectsdir)/$(LYON_NAME)/sound
+	rm $(DESTDIR)$(objectsdir)/$(LYON_DEST)/cartopol*.$(EXTENSION)
+	rm $(DESTDIR)$(objectsdir)/$(LYON_DEST)/poltocar*.$(EXTENSION)
+	install -p $(externals_src)/$(LYON_SRC)/lyonpotpourri-helpfiles/sound/*.* \
+		$(DESTDIR)$(objectsdir)/$(LYON_DEST)/sound
 	# copy the meta file and the shared lib
-	install -p $(externals_src)/$(LYON_NAME)/*lyonpotpourri.* \
-		$(DESTDIR)$(objectsdir)/$(LYON_NAME)
+	install -p $(externals_src)/$(LYON_SRC)/*lyonpotpourri.* \
+		$(DESTDIR)$(objectsdir)/$(LYON_DEST)
 	# license and readme
-	install -p $(externals_src)/$(LYON_NAME)/*.txt \
-		$(DESTDIR)$(objectsdir)/$(LYON_NAME)
+	install -p $(externals_src)/$(LYON_SRC)/*.txt \
+		$(DESTDIR)$(objectsdir)/$(LYON_DEST)
 
 lyonpotpourri_clean:
-	make -C $(externals_src)/$(LYON_NAME) clean
+	make -C $(externals_src)/$(LYON_SRC) clean
 
 #------------------------------------------------------------------------------#
 # MAPPING
