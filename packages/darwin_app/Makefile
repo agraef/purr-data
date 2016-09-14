@@ -86,7 +86,6 @@ endif
 extended_app_install:
 	$(MAKE) -C $(packages_src) $(DEST_PATHS) abstractions_install
 	$(MAKE) -C $(packages_src) $(DEST_PATHS) doc_install
-	$(MAKE) -C $(packages_src) $(DEST_PATHS) extensions_install
 	$(MAKE) -C $(packages_src) $(DEST_PATHS) externals_install
 
 
