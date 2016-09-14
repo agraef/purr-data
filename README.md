@@ -95,12 +95,33 @@ Time to build: *1 day*
 5. Install the dependencies *6 minutes*:<code>
    sudo port install wget
    sudo port install autoconf
-   sudo port install automake</code>
+   sudo port install automake
+   sudo port install libtool
+   sudo port install fftw-3
+   sudo port install fftw-3-single
+   sudo port install python27
+   sudo port install fluidsynth
+   sudo port install lame
+   sudo port install speex
+   sudo port install gsl
+
+</code>
 6. Download the source code *(3-6 minutes)*
    Issue the following command to create a new directory "purr-data" and clone
    the repository to it:<code>
 git clone https://git.purrdata.net/jwilkes/purr-data.git</code>
-7. To be continued...
+7. ...
+8. Set the environment variables on the command line:<code>
+   export CPATH=/opt/local/include
+   export LIBRARY_PATH=/opt/local/lib</code>
+9. In externals/Makefile, remove the following libraries from from LIB_TARGETS:
+   * plugin
+   * hid
+   * pdp
+   * gem2pdp
+10. In packages/darwin_app/Makefile, remove rez_install from build instructions
+11. In packages/darwin_app/Makefile, comment out installation of libquicktime
+9. To be continued...
 
 #### Windows 32-bit Using msys2
 Time to build: *roughly 1.5 hours-- 30 minutes of this is for Gem alone*
