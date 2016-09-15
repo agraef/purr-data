@@ -55,7 +55,7 @@ int sys_unique = 0;     /* by default off, prevents multiple instances
 int sys_legacy = 0;     /* by default off, used to enable legacy features,
                            such as offsets in iemgui object positioning */
 char *sys_guicmd;
-char *sys_gui_preset = "default"; /* name of the gui theme to be used */
+t_symbol *sys_gui_preset; /* name of gui theme to be used */
 t_symbol *sys_libdir;
 t_symbol *sys_guidir;
 static t_namelist *sys_openlist;
@@ -264,6 +264,7 @@ int sys_main(int argc, char **argv)
     int i, noprefs;
     sys_externalschedlib = 0;
     sys_extraflags = 0;
+    sys_gui_preset = gensym("default");
 #ifdef PD_DEBUG
     fprintf(stderr, "Pd-L2Ork: COMPILED FOR DEBUGGING\n");
 #endif
@@ -292,7 +293,8 @@ int sys_main(int argc, char **argv)
         /* send the libdir to the GUI */
     gui_vmess("gui_set_lib_dir", "s", sys_libdir->s_name);
         /* send the name of the gui preset */
-    gui_vmess("gui_set_gui_preset", "s", sys_gui_preset);
+    gui_vmess("gui_set_gui_preset", "s", sys_gui_preset->s_name);
+
     if (sys_openlist)
     {
         // send the files to be opened to the GUI. We send them one

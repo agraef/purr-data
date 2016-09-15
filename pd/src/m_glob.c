@@ -71,16 +71,16 @@ static void glob_perf(t_pd *dummy, float f)
     sys_perf = (f != 0);
 }
 
-extern char *sys_gui_preset;
+extern t_symbol *sys_gui_preset;
 static void glob_gui_preset(t_pd *dummy, t_symbol *s)
 {
-    sys_gui_preset = s->s_name;
+    sys_gui_preset = s;
 }
 
 /* just the gui-preset for now */
 static void glob_gui_properties(t_pd *dummy)
 {
-    gui_vmess("gui_gui_properties", "xs", 0, sys_gui_preset);
+    gui_vmess("gui_gui_properties", "xs", 0, sys_gui_preset->s_name);
 }
 
 // ths one lives inside g_editor so that it can access the clipboard

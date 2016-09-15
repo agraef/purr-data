@@ -212,7 +212,8 @@ static void sys_putpreference(const char *key, const char *value)
         NULL, &hkey, NULL);
     if (err != ERROR_SUCCESS)
     {
-        post("unable to create registry entry: %s\n", key);
+        post("unable to create registry entry: %s: error %lx\n", key,
+            (long unsigned int)err);
         return;
     }
     err = RegSetValueEx(hkey, key, 0, REG_EXPAND_SZ, value, strlen(value)+1);
@@ -438,7 +439,11 @@ void sys_loadpreferences( void)
     if (sys_getpreference("defeatrt", prefbuf, MAXPDSTRING))
         sscanf(prefbuf, "%d", &sys_defeatrt);
     if (sys_getpreference("guipreset", prefbuf, MAXPDSTRING))
-        sscanf(prefbuf, "%s", &sys_gui_preset);
+    {
+        char preset_buf[MAXPDSTRING];
+        sscanf(prefbuf, "%s", preset_buf);
+        sys_gui_preset = gensym(preset_buf);
+    }
     if (sys_getpreference("flags", prefbuf, MAXPDSTRING))
     {
         if (strcmp(prefbuf, "."))
@@ -553,7 +558,7 @@ void glob_savepreferences(t_pd *dummy)
     sys_putpreference("nloadlib", buf1);
     sprintf(buf1, "%d", sys_defeatrt);
     sys_putpreference("defeatrt", buf1);
-    sys_putpreference("guipreset", sys_gui_preset);
+    sys_putpreference("guipreset", sys_gui_preset->s_name);
     sys_putpreference("flags", 
         (sys_flags ? sys_flags->s_name : ""));
     sys_donesavepreferences();
