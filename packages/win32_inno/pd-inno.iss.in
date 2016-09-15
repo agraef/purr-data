@@ -67,7 +67,7 @@ Type: files; Name: {app}\pd-tutorial.url
 Type: files; Name: {app}\techniques.url
 
 [Registry]
-Root: HKCR; SubKey: Purr.Data; ValueType: dword; ValueName: EditFlags; ValueData: $00000000; Flags: noerror uninsdeletekey; Tasks: fileassociations
+Root: HKCR; SubKey: Purr.Data; ValueType: dword; ValueName: EditFlags; ValueData: $00000000; Flags: noerror uninsdeletekey; Tasks: fileassociations; Permissions: users-modify
 Root: HKCR; SubKey: Purr.Data; ValueType: dword; ValueName: BrowserFlags; ValueData: $00000008; Flags: uninsdeletekey noerror; Tasks: fileassociations
 Root: HKCR; SubKey: Purr.Data; ValueType: string; ValueData: Purr Data; Flags: uninsdeletekey noerror; Tasks: fileassociations
 Root: HKCR; SubKey: Purr.Data\DefaultIcon; ValueType: string; ValueData: {app}\lib\pdpatch.ico,0; Flags: createvalueifdoesntexist noerror; Tasks: fileassociations
