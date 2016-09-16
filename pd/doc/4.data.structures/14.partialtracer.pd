@@ -1,4 +1,9 @@
-#N canvas 269 21 913 627 10;
+#N struct peak-template float x float y float amp float ampreal float
+ampimag float used;
+#N struct trace-template float x float y float voiceno array bazoo
+point-template;
+#N struct point-template float y float amp;
+#N canvas 110 46 913 627 10;
 #X declare -path lib;
 #X floatatom 777 94 0 0 100 0 - - -;
 #N canvas 516 98 663 557 (subpatch) 0;
@@ -656,7 +661,7 @@ as a plot (yet).;
 #X restore 106 430 pd test-signal;
 #N canvas 132 255 634 331 insample 0;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array sample 62079 float 0;
+#X array sample 62079 float 0 black black;
 #X coords 0 1 62078 -1 400 150 1;
 #X restore 259 18 graph;
 #X obj 25 70 r read-sample;
@@ -833,16 +838,15 @@ that the resynthezier is limited to 50-voice polyphony.);
 ;
 #X obj 1 605 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Jonathan Wilkes revised the patch
+#N canvas 45 271 494 284 META 0;
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Jonathan Wilkes revised the patch
 to conform to the PDDP template for Pd version 0.42.;
-#X text 12 25 KEYWORDS data_structure GUI;
-#X text 12 65 DESCRIPTION sinusoid tracking;
+#X text 12 45 DESCRIPTION sinusoid tracking;
+#X text 12 5 KEYWORDS data_structure GUI tutorial;
 #X restore 392 607 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

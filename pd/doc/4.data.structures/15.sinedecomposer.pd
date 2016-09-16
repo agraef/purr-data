@@ -1,6 +1,6 @@
 #N struct peak-template float x float y float amp float ampreal float
-ampimag;
-#N canvas 427 19 448 552 10;
+ampimag float used;
+#N canvas 428 44 448 552 10;
 #X msg 211 385 bang;
 #X obj 21 390 pack 0 100;
 #X obj 21 414 line~;
@@ -11,11 +11,11 @@ ampimag;
 #X msg 137 71 bang;
 #X obj 64 104 rfft~;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array array3 4096 float 0;
+#X array array3 4096 float 0 black black;
 #X coords 0 100 4096 -100 400 150 1;
 #X restore 254 14 graph;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array array4 4096 float 0;
+#X array array4 4096 float 0 black black;
 #X coords 0 100 4096 -100 400 150 1;
 #X restore 256 165 graph;
 #X obj 9 185 tabsend~ array3;
@@ -117,44 +117,44 @@ ampimag;
 float ampimag;
 #X restore 309 223 pd peak-template;
 #N canvas 0 0 600 382 peak-list 0;
-#X scalar peak-template 6.52298 330 -195.561 0.0125191 -0.0131689 \;
+#X scalar peak-template 6.52298 330 -195.561 0.0125191 -0.0131689 0
+\;;
+#X scalar peak-template 13.0656 330 -262.841 0.222392 0.0909196 0 \;
 ;
-#X scalar peak-template 13.0656 330 -262.841 0.222392 0.0909196 \;
-;
-#X scalar peak-template 26.2816 330 -188.229 0.0133818 0.00299871 \;
-;
+#X scalar peak-template 26.2816 330 -188.229 0.0133818 0.00299871 0
+\;;
 #X scalar peak-template 34.1579 330 -182.784 -0.0111106 0.000616574
-\;;
+0 \;;
 #X scalar peak-template 39.2398 330 -192.587 0.00649353 -0.0148522
-\;;
+0 \;;
 #X scalar peak-template 54.2567 330 -169.462 -0.00637704 0.00196744
-\;;
+0 \;;
 #X scalar peak-template 64.6374 330 -153.343 -0.00231745 -0.00274854
+0 \;;
+#X scalar peak-template 70.731 330 -228.984 -0.0391646 -0.0525299 0
 \;;
-#X scalar peak-template 70.731 330 -228.984 -0.0391646 -0.0525299 \;
-;
 #X scalar peak-template 83.4018 330 -157.354 0.00213705 0.00360794
-\;;
+0 \;;
 #X scalar peak-template 89.0428 330 -164.547 0.00509053 0.00215158
-\;;
+0 \;;
 #X scalar peak-template 96.8527 330 -127.029 0.00018868 -0.00129597
+0 \;;
+#X scalar peak-template 108.145 330 -206.524 -0.0244265 0.0130057 0
 \;;
-#X scalar peak-template 108.145 330 -206.524 -0.0244265 0.0130057 \;
-;
 #X scalar peak-template 119.672 330 -139.871 0.000310867 0.00212115
-\;;
+0 \;;
 #X scalar peak-template 129.195 330 -154.988 0.00101519 -0.00369247
-\;;
+0 \;;
 #X scalar peak-template 148.144 330 -131.59 -0.000488336 0.00148172
-\;;
+0 \;;
 #X scalar peak-template 156.394 330 -157.846 0.00107442 -0.00413614
-\;;
+0 \;;
 #X scalar peak-template 168.637 330 -126.924 0.0001938 -0.00128991
-\;;
+0 \;;
 #X scalar peak-template 189.884 330 -119.499 0.000252664 -0.000947853
-\;;
+0 \;;
 #X scalar peak-template 211.047 330 -130.949 0.000525129 0.0014288
-\;;
+0 \;;
 #X restore 309 245 pd peak-list;
 #X msg 34 167 \; pd dsp 1;
 #X obj 377 409 s loud;
@@ -167,7 +167,7 @@ sinusoidal peaks that were found at that instant in the sound. You
 can also ask for the peak lists to be printed out.;
 #N canvas 132 255 634 331 insample 0;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array sample 155948 float 0;
+#X array sample 155948 float 0 black black;
 #X coords 0 1 155947 -1 400 150 1;
 #X restore 199 18 graph;
 #X obj 19 70 r read-sample;
@@ -242,15 +242,14 @@ can also ask for the peak lists to be printed out.;
 #X obj 1 530 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Jonathan Wilkes revised the patch
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Jonathan Wilkes revised the patch
 to conform to the PDDP template for Pd version 0.42.;
-#X text 12 25 KEYWORDS data_structure;
-#X text 12 65 DESCRIPTION spectral snapshots;
+#X text 12 45 DESCRIPTION spectral snapshots;
+#X text 12 5 KEYWORDS data_structure tutorial;
 #X restore 392 532 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

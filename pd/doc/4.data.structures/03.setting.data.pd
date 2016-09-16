@@ -1,5 +1,5 @@
 #N struct template3 float x float y float w float h float q;
-#N canvas 433 123 448 481 10;
+#N canvas 434 148 448 481 10;
 #X floatatom 22 351 0 0 0 0 - - -;
 #X floatatom 22 303 0 0 0 0 - - -;
 #X floatatom 22 255 0 0 0 0 - - -;
@@ -77,16 +77,15 @@ that the color is also getting printed out under the rectangles. This
 is done using the "drawnumber" object in the template.;
 #X obj 1 459 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Jonathan Wilkes revised the patch
+#N canvas 45 271 494 284 META 0;
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Jonathan Wilkes revised the patch
 to conform to the PDDP template for Pd version 0.42.;
-#X text 12 25 KEYWORDS data_structure;
-#X text 12 65 DESCRIPTION setting data;
+#X text 12 45 DESCRIPTION setting data;
+#X text 12 5 KEYWORDS data_structure tutorial;
 #X restore 392 461 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

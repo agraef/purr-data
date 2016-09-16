@@ -1,5 +1,5 @@
 #N struct rect float x float y float w float h;
-#N canvas 424 20 448 188 10;
+#N canvas 425 45 448 188 10;
 #N canvas 127 107 428 301 rect 0;
 #X obj 134 140 pointer;
 #X msg 134 109 traverse pd-test \, bang;
@@ -462,17 +462,16 @@ divisions.;
 ;
 #X obj 1 166 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.35. Jonathan
+#N canvas 45 271 494 284 META 0;
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.35. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS data_structure GUI;
-#X text 12 65 DESCRIPTION beat patterns;
+#X text 12 45 DESCRIPTION beat patterns;
+#X text 12 5 KEYWORDS data_structure GUI tutorial;
 #X restore 392 168 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

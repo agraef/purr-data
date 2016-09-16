@@ -1,5 +1,5 @@
 #N struct template1 float x float y float z float q;
-#N canvas 424 19 448 426 10;
+#N canvas 425 44 448 426 10;
 #N canvas 395 77 297 180 data 0;
 #X scalar template1 50 100 30 9 \;;
 #X scalar template1 150 100 -20 900 \;;
@@ -44,21 +44,20 @@ It's possible to mix data of many different templates in the same collection.
 ;
 #X obj 1 404 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 44 246 494 284 META 0;
-#X text 12 85 PLATFORM windows macosx gnulinux;
-#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 205 RELEASE_VERSION 0.41.4;
-#X text 12 185 RELEASE_DATE 2009-06-12;
-#X text 12 145 AUTHOR Miller Puckette;
-#X text 12 125 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 105 DATATYPE float;
-#X text 12 225 HELP_PATCH_AUTHORS Updated for release 0.35. Jonathan
+#N canvas 45 271 494 284 META 0;
+#X text 12 65 PLATFORM windows macosx gnulinux;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 185 RELEASE_VERSION 0.41.4;
+#X text 12 165 RELEASE_DATE 2009-06-12;
+#X text 12 125 AUTHOR Miller Puckette;
+#X text 12 105 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 85 DATATYPE float;
+#X text 12 205 HELP_PATCH_AUTHORS Updated for release 0.35. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
-#X text 12 25 KEYWORDS data_structure GUI;
-#X text 12 65 DESCRIPTION scalars;
+#X text 12 45 DESCRIPTION scalars;
+#X text 12 5 KEYWORDS data_structure GUI tutorial;
 #X restore 392 406 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0

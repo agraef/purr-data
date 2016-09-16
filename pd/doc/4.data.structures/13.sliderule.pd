@@ -1,6 +1,6 @@
 #N struct label float x float y float n;
 #N struct line float x float y float w;
-#N canvas 425 19 448 278 10;
+#N canvas 426 44 448 278 10;
 #N canvas 15 0 504 734 data 0;
 #X scalar label 55 190.999 43 \;;
 #X scalar label 175 196.826 44 \;;
@@ -92,21 +92,21 @@ pitches.;
 #X text 148 573 36;
 #X text 109 638 zero Hz.;
 #X coords 0 734 1 733 0 0 0;
-#X restore 22 154 pd data;
+#X restore 22 164 pd data;
 #N canvas 174 102 428 177 line 0;
 #X obj 22 73 drawpolygon 0 1 0 0 w 0;
 #X obj 22 42 struct line float x float y float w;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261139 -33289 0;
 #X text 7 2 Data Structure Template;
-#X restore 22 175 pd line;
+#X restore 22 185 pd line;
 #N canvas 126 179 428 166 label 0;
 #X obj 40 74 drawnumber n 0 0 0;
 #X obj 40 43 struct label float x float y float n;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261139 -33289 0;
 #X text 7 2 Data Structure Template;
-#X restore 22 196 pd label;
+#X restore 22 206 pd label;
 #N canvas 70 76 614 518 generator 0;
 #X obj 353 173 sel 36 60;
 #X obj 427 171 pointer;
@@ -199,7 +199,7 @@ pitches.;
 #X connect 29 0 31 0;
 #X connect 30 0 24 0;
 #X connect 31 1 28 0;
-#X restore 22 218 pd generator;
+#X restore 22 228 pd generator;
 #X text 19 37 This might help you if you need to compute products of
 frequency shifting and/or FM spectra. Print and cut in half down the
 middle. If you know the pitches associated with two frequencies a and
@@ -214,16 +214,15 @@ on the right.;
 ;
 #X obj 1 256 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Jonathan Wilkes revised the patch
+#N canvas 45 271 494 284 META 0;
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Jonathan Wilkes revised the patch
 to conform to the PDDP template for Pd version 0.42.;
-#X text 12 25 KEYWORDS data_structure GUI;
-#X text 12 65 DESCRIPTION frequency shifter slide rule;
+#X text 12 45 DESCRIPTION frequency shifter slide rule;
+#X text 12 5 KEYWORDS data_structure GUI tutorial;
 #X restore 392 258 pd META;
 #N canvas 13 202 428 190 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
