@@ -65,7 +65,7 @@
               </table>
             </td>
           </tr>
-          <tr class="display-flags prop">
+          <tr class="display-flags prop hide-name-row">
             <td>
             </td>
             <td>
@@ -477,6 +477,11 @@ function show_sane_defaults() {
     gop_click_count++;
 }
 
+function show_gop_name_and_args_checkbutton(flag) {
+    var row = document.getElementsByClassName("hide-name-row")[0];
+    row.style.setProperty("visibility", flag ? "visible" : "hidden");
+}
+
 function set_gop(state) {
     var gop_opts, no_gop_opts;
     if (state === true && gop_click_count === 0) {
@@ -486,6 +491,8 @@ function set_gop(state) {
     no_gop_opts = document.getElementsByClassName("no_gop_opt");
     update_gop_form(gop_opts, state);
     update_gop_form(no_gop_opts, state === false);
+    // Hide or show the "hide-name" row
+    show_gop_name_and_args_checkbutton(state);
 }
 
 function substitute_space(arg) {
@@ -544,7 +551,7 @@ function apply() {
         pdgui.pdsend(pd_object_callback, "donecanvasdialog",
             +get_input("x-scale"),
             +get_input("y-scale"),
-            (gop + 2 * hide_name),
+            (gop ? gop + 2 * hide_name : 0), // No hide_name bit if gop is off
             +get_input("x1"),
             +get_input("y1"),
             +get_input("x2"),
@@ -709,6 +716,10 @@ function populate_form(attr_object) {
                 var flag = +attr_object[prop];
                 document.getElementsByName("gop")[0].checked = !!flag;
                 document.getElementsByName("hide-name")[0].checked = !!(flag & 2);
+                // set visibility of the "hide-name" checkbox based on
+                // the gop flag. This way users don't get the idea that it
+                // can be set independently of gop.
+                show_gop_name_and_args_checkbutton(!!flag);
                 // Set the gop-related parts of the form to be
                 // enabled/disabled based on state
                 set_gop(!!flag);
