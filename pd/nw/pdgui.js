@@ -49,7 +49,7 @@ exports.get_pd_opendir = function() {
 }
 
 function gui_set_gui_preset(name) {
-    post("the gui preset is " + name);
+    skin.set(name);
 }
 
 exports.set_last_clipboard_data = function(data) {
@@ -3854,7 +3854,7 @@ function gui_gui_properties(dummy, name) {
 }
 
 // Let's try a closure for gui skins
-exports.skin = (function () {
+var skin = exports.skin = (function () {
     var dir = "css/";
     var preset = "default";
     var id;
