@@ -135,13 +135,15 @@ that case, but I haven't tested doing it like that. Sorry. Get a better OS...)
   64-bit Windows (x_64). Be sure you know which
   [version](http://windows.microsoft.com/en-us/windows/32-bit-and-64-bit-windows#1TC=windows-7)
   of Windows you are running and download the appropriate installer.  
-  Note: don't run it after it installs. You'll open it manually in the next step.
-2. Run MinGW-w64 Win32 Shell *(less than a minute)*  
+  Note: don't run it after it installs. You'll open it manually in the next
+  step.
+2. Download and install [inno setup](http://www.jrsoftware.org/isdl.php) *(5 minutes)*
+3. Run MinGW-w64 Win32 Shell *(less than a minute)*  
    msys2 adds three Start Menu items for different "flavors" of shell:  
    + MinGW-w64 __Win32__ Shell <- click this one!
    + MinGW-w64 Win64 Shell
    + MSYS Shell
-3. Install the dependencies *(5-10 minutes)*  
+4. Install the dependencies *(5-10 minutes)*  
    Once the shell opens, we need to install the dependencies for building
    Purr Data. Issue the following command:<code>
 pacman -S autoconf automake git libtool \
@@ -152,15 +154,15 @@ pacman -S autoconf automake git libtool \
           mingw-w64-i686-libsndfile mingw-w64-i686-libvorbis \
           mingw-w64-i686-lua mingw-w64-i686-toolchain \
           rsync unzip wget</code>
-4. Download the source code *(3-6 minutes)*
+5. Download the source code *(3-6 minutes)*
    Issue the following command to create a new directory "purr-data" and clone
    the repository to it:<code>
 git clone https://git.purrdata.net/jwilkes/purr-data.git</code>
-5. Enter the purr-data/l2ork_addons directory *(less than a minute)*<code>
+6. Enter the purr-data/l2ork_addons directory *(less than a minute)*<code>
 cd purr-data/l2ork_addons</code>
-6. Finally, build Purr-Data *(45-80 minutes)*<code>
+7. Finally, build Purr-Data *(45-80 minutes)*<code>
 ./tar_em_up.sh -Z</code>
-7. Look in purr-data/packages/win32_inno/Output and click the setup file to
+8. Look in purr-data/packages/win32_inno/Output and click the setup file to
    start installing Purr Data to your machine.
 
 ### Code of Conduct
