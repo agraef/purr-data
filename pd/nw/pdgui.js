@@ -3323,7 +3323,9 @@ function gui_envgen_move_xlet(cid, tag, type, i, x, y, basex, basey) {
 
 exports.add_popup = add_popup;
 
-// Kludge to get popup coords to fit the browser's zoom level
+// Kludge to get popup coords to fit the browser's zoom level. As of v0.16.1
+// it appears nw.js fixed the bug that required this kludge. Leave it here
+// for a few versions as a quick fix just in case there's a regression.
 function zoom_kludge(zoom_level) {
     var zfactor;
     switch(zoom_level) {
@@ -3348,10 +3350,15 @@ function zoom_kludge(zoom_level) {
 }
 
 function gui_canvas_popup(cid, xpos, ypos, canprop, canopen, isobject) {
+    // Get page coords for top of window, in case we're scrolled
+    var win_left = patchwin[cid].window.document.body.scrollLeft,
+        win_top = patchwin[cid].window.document.body.scrollTop,
+        zoom_level = patchwin[cid].zoomLevel, // these were used to work
+        zfactor = zoom_kludge(zoom_level);    // around an old nw.js popup pos
+                                              // bug. It seems to be fixed now.
+
     // Set the global popup x/y so they can be retrieved by the relevant
     // document's event handler
-    var zoom_level = patchwin[cid].zoomLevel,
-        zfactor = zoom_kludge(zoom_level);
     popup_coords[0] = xpos;
     popup_coords[1] = ypos;
     //popup_coords[0] = xpos;
@@ -3362,12 +3369,12 @@ function gui_canvas_popup(cid, xpos, ypos, canprop, canopen, isobject) {
     // We'll use "isobject" to enable/disable "To Front" and "To Back"
     //isobject;
 
-    // Get page coords for top of window, in case we're scrolled
-    var left = patchwin[cid].window.document.body.scrollLeft;
-    var top = patchwin[cid].window.document.body.scrollTop;
+    // We need to round win_left and win_top because the popup menu
+    // interface expects an int. Otherwise the popup position gets wonky
+    // when you zoom and scroll...
+    xpos = xpos - Math.floor(win_left);
+    ypos = ypos - Math.floor(win_top);
 
-    xpos = Math.floor(xpos * zfactor) - Math.floor(left * zfactor);
-    ypos = Math.floor(ypos * zfactor) - Math.floor(top * zfactor);
     popup_coords[2] = xpos + patchwin[cid].x;
     popup_coords[3] = ypos + patchwin[cid].y;
 
