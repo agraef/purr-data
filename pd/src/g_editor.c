@@ -2570,7 +2570,7 @@ void canvas_vis(t_canvas *x, t_floatarg f)
 }
 
     /* set a canvas up as a graph-on-parent.  Set reasonable defaults for
-    any missing paramters and redraw things if necessary. */
+    any missing parameters and redraw things if necessary. */
 void canvas_setgraph(t_glist *x, int flag, int nogoprect)
 {
     //fprintf(stderr,"flag=%d\n",flag);

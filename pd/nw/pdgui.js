@@ -2009,12 +2009,21 @@ function gui_toggle_resize_cross(cid,tag,w,p1,p2,p3,p4,p5,p6,p7,p8,basex,basey) 
 function gui_toggle_update(cid, tag, state, x_color) {
     var cross1 = get_item(cid, tag + "cross1"),
         cross2 = get_item(cid, tag + "cross2");
-    if (!!state) {
-        configure_item(cross1, { display: "inline", stroke: x2h(x_color) });
-        configure_item(cross2, { display: "inline", stroke: x2h(x_color) });
-    } else {
-        configure_item(cross1, { display: "none", stroke: x2h(x_color) });
-        configure_item(cross2, { display: "none", stroke: x2h(x_color) });
+    // We have to check for existence here.
+    // Why? Because a [tgl] inside a gop canvas will send drawing updates,
+    // __even__ __if__ that [tgl] is outside the bounds of the gop and thus
+    // not displayed. This would be best fixed in the C code, but I'm not
+    // exactly sure where or how yet.
+    // Same problem on Pd Vanilla, except that tk canvas commands on
+    // non-existent tags don't throw an error.
+    if (cross1) {
+        if (!!state) {
+            configure_item(cross1, { display: "inline", stroke: x2h(x_color) });
+            configure_item(cross2, { display: "inline", stroke: x2h(x_color) });
+        } else {
+            configure_item(cross1, { display: "none", stroke: x2h(x_color) });
+            configure_item(cross2, { display: "none", stroke: x2h(x_color) });
+        }
     }
 }
 
@@ -2342,8 +2351,12 @@ function gui_vumeter_update_peak(cid,tag,x_color,p1,p2,p3,p4,basex,basey) {
 }
 
 function gui_iemgui_base_color(cid, tag, x_color) {
-    var b = get_gobj(cid, tag).querySelector(".border");
-    configure_item(b, { fill: x2h(x_color) });
+    var g = get_gobj(cid, tag),
+        b;
+    if (g) {
+        b = g.querySelector(".border");
+        configure_item(b, { fill: x2h(x_color) });
+    }
 }
 
 function gui_iemgui_move_and_resize(cid, tag, x1, y1, x2, y2) {
@@ -2431,22 +2444,29 @@ function gui_iemgui_label_new(cid, tag, x, y, color, text, fontname, fontweight,
 }
 
 function gui_iemgui_label_set(cid, tag, text) {
-    get_item(cid, tag + "label").textContent = text;
+    var svg_text = get_item(cid, tag + "label")
+    if (svg_text) {
+        svg_text.textContent = text;
+    }
 }
 
 function gui_iemgui_label_coords(cid, tag, x, y) {
     var svg_text = get_item(cid, tag + "label");
-    configure_item(svg_text, {
-        x: x,
-        y: y
-    });
+    if (svg_text) {
+        configure_item(svg_text, {
+            x: x,
+            y: y
+        });
+    }
 }
 
 function gui_iemgui_label_color(cid, tag, color) {
     var svg_text = get_item(cid, tag + "label");
-    configure_item(svg_text, {
-        fill: color
-    });
+    if (svg_text) {
+        configure_item(svg_text, {
+            fill: color
+        });
+    }
 }
 
 function gui_iemgui_label_select(cid, tag, is_selected) {
@@ -2460,12 +2480,14 @@ function gui_iemgui_label_select(cid, tag, is_selected) {
 
 function gui_iemgui_label_font(cid, tag, fontname, fontweight, fontsize) {
     var svg_text = get_item(cid, tag + "label");
-    configure_item(svg_text, {
-        "font-family": iemgui_fontfamily(fontname),
-        "font-weight": fontweight,
-        "font-size": fontsize + "px",
-        transform: "translate(0," + iemgui_font_height(fontname, fontsize) / 2 + ")"
-    });
+    if (svg_text) {
+        configure_item(svg_text, {
+            "font-family": iemgui_fontfamily(fontname),
+            "font-weight": fontweight,
+            "font-size": fontsize + "px",
+            transform: "translate(0," + iemgui_font_height(fontname, fontsize) / 2 + ")"
+        });
+    }
 }
 
 // Show or hide little handle for dragging around iemgui labels

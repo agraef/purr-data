@@ -22,7 +22,7 @@ void toggle_draw_update(t_gobj *xgobj, t_glist *glist)
     t_toggle *x = (t_toggle *)xgobj;
     if (x->x_gui.x_changed)
     {
-        if(glist_isvisible(glist))
+        if(glist_isvisible(glist_getcanvas(glist)))
         {
             t_canvas *canvas=glist_getcanvas(glist);
             gui_vmess("gui_toggle_update", "xxix", canvas,
@@ -70,8 +70,14 @@ void toggle_draw_config(t_toggle* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
     iemgui_base_draw_config(&x->x_gui);
-    gui_vmess("gui_toggle_update", "xxix", canvas,
-    x, x->x_on != 0.0, x->x_gui.x_fcol);
+    if (glist_isvisible(glist_getcanvas(glist)))
+    {
+        gui_vmess("gui_toggle_update", "xxix",
+            canvas,
+            x,
+            x->x_on != 0.0,
+            x->x_gui.x_fcol);
+    }
 }
 
 static void toggle__clickhook(t_scalehandle *sh, int newstate)
