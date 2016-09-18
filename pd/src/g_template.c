@@ -630,7 +630,8 @@ static void *gtemplate_donew(t_symbol *sym, int argc, t_atom *argv)
     {
         if (pd_class(&gob->g_pd) == gtemplate_class)
         {
-            error("%s: only one struct allowed per canvas.", cur->gl_name->s_name);
+            error("%s: only one struct allowed per canvas.",
+                cur->gl_name->s_name);
             return(0);
         }
         gob = gob->g_next;
@@ -676,7 +677,7 @@ static void *gtemplate_donew(t_symbol *sym, int argc, t_atom *argv)
                     /* conform everyone to the new template */
                 template_conform(t, y);
                 pd_free(&t->t_pdobj);
-                t = template_new(sym, argc, argv);
+                x->x_template = t = template_new(sym, argc, argv);
             }
             pd_free(&y->t_pdobj);
             t->t_list = x;
@@ -688,7 +689,7 @@ static void *gtemplate_donew(t_symbol *sym, int argc, t_atom *argv)
             /* otherwise make a new one and we're the only struct on it. */
         x->x_template = t = template_new(sym, argc, argv);
         t->t_list = x;
-   }
+    }
     outlet_new(&x->x_obj, 0);
     return (x);
 }
@@ -701,7 +702,8 @@ int gtemplate_cancreate(t_symbol *templatename, int argc, t_atom *argv)
     while (argc > 1)
     {
         t_symbol *typesym = argv[0].a_w.w_symbol;
-        if (typesym == &s_float || typesym == &s_symbol)
+        if (typesym == &s_float || typesym == &s_symbol ||
+            typesym == gensym("text"))
         {
             argc -= 2;
             argv += 2; 
@@ -728,15 +730,28 @@ int gtemplate_cancreate(t_symbol *templatename, int argc, t_atom *argv)
             }
             else
             {
-                argc -= 2;
-                argv += 2;
+                error("error: struct: bad array field arguments");
+                return 0;
             }
         }
-        else
+        else if (typesym == gensym("canvas"))
         {
-            argc -= 2;
-            argv += 2;
+            if (argc > 2)
+            {
+                argc -= 3;
+                argv += 3;
+            }
+            else
+            {
+                error("error: struct: bad canvas field arguments");
+                return 0;
+            }
         }
+    }
+    if (argc)
+    {
+        error("error: struct: extra argument");
+        return 0;
     }
     return 1;
 }
