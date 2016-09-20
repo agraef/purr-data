@@ -927,6 +927,7 @@ function translate_form() {
 // It provides us with our canvas id from the C side.  Once we have it
 // we can create the menu and register event callbacks
 function register_window_id(cid, attr_array) {
+    var kludge_title;
     // We create the window menus and popup menu before doing anything else
     // to ensure that we don't try to set the svg size before these are done.
     // Otherwise we might set the svg size to the window viewport, only to have
@@ -950,6 +951,21 @@ function register_window_id(cid, attr_array) {
     // default. But if this changes we need to set its menu item checkbox
     // accordingly here
     //set_cord_inspector_checkbox();
+
+    // One final kludge-- because window creation is asyncronous, we may
+    // have gotten a dirty flag before the window was created. In that case
+    // we check the title_queue to see if our title now contains an asterisk
+    // (which is the visual cue for "dirty")
+
+    // Two possibilities for handling this better:
+    // have a representation of canvas attys in pdgui.js (editmode, dirty, etc.)
+    // or
+    // send those attys from Pd after mapping the canvas
+    kludge_title = pdgui.query_title_queue(cid);
+    if (kludge_title) {
+        nw.Window.get().title = kludge_title;
+    }
+    pdgui.free_title_queue(cid);
 }
 
 function create_popup_menu(name) {

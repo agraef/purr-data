@@ -892,6 +892,7 @@ var scroll = {},
     doscroll = {},
     last_loaded,
     loading = {},
+    title_queue= {}, // ugly kluge to work around an ugly race condition
     popup_menu = {};
 
     var patchwin = {}; // object filled with cid: [Window object] pairs
@@ -995,8 +996,24 @@ exports.format_window_title = format_window_title;
 // (and maybe in other situations)
 function gui_canvas_set_title(cid, name, args, dir, dirty_flag) {
     var title = format_window_title(name, dirty_flag, args, dir);
-    patchwin[cid].title = title;
+    if (patchwin[cid]) {
+        patchwin[cid].title = title;
+    } else {
+        title_queue[cid] = title;
+    }
 }
+
+function query_title_queue(cid) {
+    return title_queue[cid];
+}
+
+exports.query_title_queue = query_title_queue;
+
+function free_title_queue(cid) {
+    title_queue[cid] = null;
+}
+
+exports.free_title_queue = free_title_queue;
 
 function window_is_loading(cid) {
     return loading[cid];
