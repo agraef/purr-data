@@ -144,7 +144,10 @@ var pd_myversion,    // Pd version string
     filetypes,         // valid file extensions for opening/saving (includes Max filetypes)
     untitled_number,   // number to increment for each new patch that is opened
     untitled_directory, // default directory where to create/save new patches
-    popup_coords,       // 0: canvas x, 1: canvas y, 2: screen x, 3: screen y
+    popup_coords,       // 0: canvas x
+                        // 1: canvas y
+                        // 2: screen x
+                        // 3: screen y
     pd_colors = {};                // associative array of canvas color presets
 
     var pd_filetypes = { ".pd": "Pd Files",
@@ -3371,8 +3374,10 @@ function gui_canvas_popup(cid, xpos, ypos, canprop, canopen, isobject) {
     var win_left = patchwin[cid].window.document.body.scrollLeft,
         win_top = patchwin[cid].window.document.body.scrollTop,
         zoom_level = patchwin[cid].zoomLevel, // these were used to work
-        zfactor = zoom_kludge(zoom_level);    // around an old nw.js popup pos
+        zfactor = zoom_kludge(zoom_level),    // around an old nw.js popup pos
                                               // bug. It seems to be fixed now.
+        svg_view_box = patchwin[cid].window.document.getElementById("patchsvg")
+            .getAttribute("viewBox").split(" "); // need top-left svg origin
 
     // Set the global popup x/y so they can be retrieved by the relevant
     // document's event handler
@@ -3392,6 +3397,14 @@ function gui_canvas_popup(cid, xpos, ypos, canprop, canopen, isobject) {
     xpos = xpos - Math.floor(win_left);
     ypos = ypos - Math.floor(win_top);
 
+    // Now subtract the x and y offset for the top left corner of the svg.
+    // We need to do this because a Pd canvas can have objects with negative
+    // coordinates. Thus the SVG viewbox will have negative values for the
+    // top left corner, and those must be subtracted from xpos/ypos to get
+    // the proper window coordinates.
+    xpos -= svg_view_box[0];
+    ypos -= svg_view_box[1];
+
     popup_coords[2] = xpos + patchwin[cid].x;
     popup_coords[3] = ypos + patchwin[cid].y;
 
@@ -3399,7 +3412,7 @@ function gui_canvas_popup(cid, xpos, ypos, canprop, canopen, isobject) {
 }
 
 function popup_action(cid, index) {
-    pdsend(cid, "done-popup", index, popup_coords.join(" "));
+    pdsend(cid, "done-popup", index, popup_coords[0], popup_coords[1]);
 }
 
 exports.popup_action = popup_action;
