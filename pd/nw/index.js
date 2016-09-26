@@ -37,7 +37,11 @@ function set_vars(win) {
         // If we're starting Pd, this is the first port number to try. (We'll
         // increment it if that port happens to be taken.
         port_no = 5400;
-        gui_dir = pwd;
+        // This is confusing and needs to be rethought. OSX app bundle needs
+        // the gui_dir to be "bin", but the actual gui files reside in
+        // "bin/../" because of the structure of the nw.js app bundle we use.
+        // Anyway, this seems to get all the "doc" links to be found...
+        gui_dir = process.platform === "darwin" ? "bin" : pwd;
     }
     pdgui.set_port(port_no);
     pdgui.set_pwd(pwd);
