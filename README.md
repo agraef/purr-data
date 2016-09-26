@@ -121,7 +121,10 @@ git clone https://git.purrdata.net/jwilkes/purr-data.git</code>
    * gem2pdp
 10. In packages/darwin_app/Makefile, remove rez_install from build instructions
 11. In packages/darwin_app/Makefile, comment out installation of libquicktime
-9. To be continued...
+12. Run `make install`
+13. In the app in the "build" directory, find the en.lproj/InfoPlist.strings
+    and change the CFBundleDisplayName and CFBundleName to "purr-data"
+13. To be continued...
 
 #### Windows 32-bit Using msys2
 Time to build: *roughly 1.5 hours-- 30 minutes of this is for Gem alone*
