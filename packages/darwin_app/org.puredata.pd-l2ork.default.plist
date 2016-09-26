@@ -51,35 +51,27 @@
 	<key>loadlib22</key>
 	<string>smlib</string>
 	<key>loadlib23</key>
-	<string>toxy</string>
-	<key>loadlib24</key>
 	<string>unauthorized</string>
-	<key>loadlib25</key>
+	<key>loadlib24</key>
 	<string>vbap</string>
-	<key>loadlib26</key>
+	<key>loadlib25</key>
 	<string>pan</string>
-	<key>loadlib27</key>
+	<key>loadlib26</key>
 	<string>hcs</string>
-	<key>loadlib28</key>
+	<key>loadlib27</key>
 	<string>jmmmp</string>
-	<key>loadlib29</key>
+	<key>loadlib28</key>
 	<string>ext13</string>
-	<key>loadlib30</key>
+	<key>loadlib29</key>
 	<string>ggee</string>
-	<key>loadlib31</key>
+	<key>loadlib30</key>
 	<string>iem_anything</string>
-	<key>loadlib32</key>
-	<string>flib</string>
-	<key>loadlib33</key>
+	<key>loadlib31</key>
 	<string>ekext</string>
-	<key>loadlib34</key>
-	<string>flatspace</string>
-	<key>loadlib35</key>
+	<key>loadlib32</key>
 	<string>pdp</string>
-	<key>loadlib36</key>
-	<string>pidip</string>
 	<key>nloadlib</key>
-	<string>36</string>
+	<string>32</string>
 	<key>path1</key>
 	<string>/System/Library/Fonts</string>
 	<key>path2</key>

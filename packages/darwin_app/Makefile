@@ -6,8 +6,9 @@ export MACOSX_DEPLOYMENT_TARGET = 10.4
 CWD := $(shell pwd)
 BUILD_BASE = $(CWD)/build
 PD_APP_NAME = $(PACKAGE_NAME)
+PD_SHORT_NAME = "Purr-Data"
 PD_APP_CONTENTS = $(BUILD_BASE)/$(PD_APP_NAME).app/Contents
-DESTDIR = $(PD_APP_CONTENTS)/Resources
+DESTDIR = $(PD_APP_CONTENTS)/Resources/app.nw
 
 cvs_root_dir := $(shell cd $(CWD)/../.. && pwd)
 BUILDLAYOUT_DIR = $(cvs_root_dir)/packages
@@ -61,9 +62,11 @@ all:
 install: darwin_app
 
 #------------------------------------------------------------------------------#
-darwin_app: darwin_app_core extended_install rez_install darwin_app_embed_libs spotlight_importer_install
+darwin_app: darwin_app_core extended_install darwin_app_embed_libs spotlight_importer_install
 	@echo " "
 	@echo "Pd.app build succeeded!"
+
+NWFILES = $(foreach file,$(wildcard $(cvs_root_dir)/pd/nw/*),$(DESTDIR)/bin/$(notdir $(file)))
 
 extended_install:
 # on Mac OS X 10.6/Snow Leopard don't build Gem since it needs Carbon
@@ -78,6 +81,16 @@ ifeq ($(shell uname -r | sed 's|10\.[0-9][0-9]*\.[0-9][0-9]*|10|'),10)
 else
 	$(MAKE) -C $(packages_src) $(DEST_PATHS) extended_install
 endif
+	# Huge kludge to move all the nw.js files in $DESTDIR/bin to
+	# $DESTDIR. We need to do this because the nw.js app expects
+	# package.json to be inside $DESTDIR. So all the rest of the
+	# supporting GUI files must be there, too
+	-mv $(NWFILES) $(DESTDIR)
+	# remove the extra nw.js binary
+	rm -rf $(DESTDIR)/nw
+	# remove the broken pd-l2ork symlink from bin/
+	rm $(DESTDIR)/bin/pd-l2ork
+	install -p $(cvs_root_dir)/pd/bin/pd-l2ork $(DESTDIR)/bin
 
 #------------------------------------------------------------------------------#
 # this target is for when you already have a pre-built Pd.app and you
@@ -93,44 +106,47 @@ extended_app_install:
 # build a standalone Wish.app from the installed Tcl/Tk Frameworks
 darwin_app_wrapper: Info.plist
 # Wish
-	install -d "$(PD_APP_CONTENTS)/MacOS"
-	install -m0755 -p \
-		"$(WISH_CONTENTS)/MacOS/$(WISH_NAME)" "$(PD_APP_CONTENTS)/MacOS"
-	install -d "$(PD_APP_CONTENTS)/Resources"
+	install -d "$(BUILD_BASE)"
+	rsync -ax $(cvs_root_dir)/pd/nw/nw/nwjs.app/ $(BUILD_BASE)/$(PD_APP_NAME).app/
+#	install -d "$(PD_APP_CONTENTS)/MacOS"
+	#install -m0755 -p \
+	#	"$(WISH_CONTENTS)/MacOS/$(WISH_NAME)" "$(PD_APP_CONTENTS)/MacOS"
+	#install -d "$(PD_APP_CONTENTS)/Resources"
 # only embed the Tcl/Tk Frameworks if not building against the built-in ones
-ifneq (/System,$(findstring /System,$(WISH_FRAMEWORKS_SOURCE)))
-	install -d $(PD_APP_CONTENTS)/Frameworks \
-		$(PD_APP_CONTENTS)/Frameworks/Tcl.framework \
-		$(PD_APP_CONTENTS)/Frameworks/Tk.framework
-	ditto $(WISH_FRAMEWORKS_SOURCE)/Tcl.framework \
-		$(PD_APP_CONTENTS)/Frameworks/Tcl.framework/
-	ditto $(WISH_FRAMEWORKS_SOURCE)/Tk.framework \
-		$(PD_APP_CONTENTS)/Frameworks/Tk.framework/
-	rm -rf $(PD_APP_CONTENTS)/Frameworks/Tcl.framework/{,/Versions/8.4}/{Headers,PrivateHeaders,*_debug,lib*.a,*Config.sh} && \
-	rm -rf $(PD_APP_CONTENTS)/Frameworks/Tk.framework/{,/Versions/8.4}/{Headers,PrivateHeaders,*_debug,lib*.a,*Config.sh}
-	chmod -R u+w $(PD_APP_CONTENTS)/Frameworks
+#ifneq (/System,$(findstring /System,$(WISH_FRAMEWORKS_SOURCE)))
+	#install -d $(PD_APP_CONTENTS)/Frameworks \
+	#	$(PD_APP_CONTENTS)/Frameworks/Tcl.framework \
+	#	$(PD_APP_CONTENTS)/Frameworks/Tk.framework
+	#ditto $(WISH_FRAMEWORKS_SOURCE)/Tcl.framework \
+	#	$(PD_APP_CONTENTS)/Frameworks/Tcl.framework/
+	#ditto $(WISH_FRAMEWORKS_SOURCE)/Tk.framework \
+	#	$(PD_APP_CONTENTS)/Frameworks/Tk.framework/
+	#rm -rf $(PD_APP_CONTENTS)/Frameworks/Tcl.framework/{,/Versions/8.4}/{Headers,PrivateHeaders,*_debug,lib*.a,*Config.sh} && \
+	#rm -rf $(PD_APP_CONTENTS)/Frameworks/Tk.framework/{,/Versions/8.4}/{Headers,PrivateHeaders,*_debug,lib*.a,*Config.sh}
+	#chmod -R u+w $(PD_APP_CONTENTS)/Frameworks
 # from http://tktoolkit.cvs.sourceforge.net/tktoolkit/tk/macosx/GNUmakefile
-	fix_install_id ( ) { \
-	    chmod -R a+w "$$1"; \
-	    install_name_tool -id $$(otool -L "$$1" | awk "/$$2\.framework.*[^:]\$$/ {sub(\"^.*/Frameworks\",\"@executable_path/../Frameworks\",\$$1); print \$$1}") "$$1"; \
-	    chmod -R a-w "$$1"; \
-	} && \
-	fix_install_name ( ) { \
-	    chmod -R a+w "$$1"; \
-	    install_name_tool -change $$(otool -L "$$1" | awk "/$$2\.framework.*[^:]\$$/ {print \$$1; sub(\"^.*/Frameworks\",\"@executable_path/../Frameworks\",\$$1); print \$$1}") "$$1"; \
-	    chmod -R a-w "$$1"; \
-	} && \
-	fix_install_id $(PD_APP_CONTENTS)/Frameworks/Tcl.framework/Tcl Tcl && \
-	fix_install_id $(PD_APP_CONTENTS)/Frameworks/Tk.framework/Tk Tk && \
-	fix_install_name "$(PD_APP_CONTENTS)/MacOS/$(WISH_NAME)" Tcl && \
-	fix_install_name "$(PD_APP_CONTENTS)/MacOS/$(WISH_NAME)" Tk
-endif # NOT /System
+	#fix_install_id ( ) { \
+	#    chmod -R a+w "$$1"; \
+	#    install_name_tool -id $$(otool -L "$$1" | awk "/$$2\.framework.*[^:]\$$/ {sub(\"^.*/Frameworks\",\"@executable_path/../Frameworks\",\$$1); print \$$1}") "$$1"; \
+	#    chmod -R a-w "$$1"; \
+	#} && \
+	#fix_install_name ( ) { \
+	#    chmod -R a+w "$$1"; \
+	#    install_name_tool -change $$(otool -L "$$1" | awk "/$$2\.framework.*[^:]\$$/ {print \$$1; sub(\"^.*/Frameworks\",\"@executable_path/../Frameworks\",\$$1); print \$$1}") "$$1"; \
+	#    chmod -R a-w "$$1"; \
+	#} && \
+	#fix_install_id $(PD_APP_CONTENTS)/Frameworks/Tcl.framework/Tcl Tcl && \
+	#fix_install_id $(PD_APP_CONTENTS)/Frameworks/Tk.framework/Tk Tk && \
+	#fix_install_name "$(PD_APP_CONTENTS)/MacOS/$(WISH_NAME)" Tcl && \
+	#fix_install_name "$(PD_APP_CONTENTS)/MacOS/$(WISH_NAME)" Tk
+#endif # NOT /System
 # set up app wrapper
-	install -d "$(PD_APP_CONTENTS)/Resources"
-	install -m0644 -p Info.plist "$(PD_APP_CONTENTS)"
+	install -d "$(PD_APP_CONTENTS)/Resources/app.nw"
+	# The nw.js app has its own Info.plist
+	#install -m0644 -p Info.plist "$(PD_APP_CONTENTS)"
 	install -m0644 -p *.icns  "$(PD_APP_CONTENTS)/Resources"
-	mv "$(PD_APP_CONTENTS)/MacOS/${WISH_NAME}" \
-		"$(PD_APP_CONTENTS)/MacOS/${PD_APP_NAME}"
+	#mv "$(PD_APP_CONTENTS)/MacOS/${WISH_NAME}" \
+	#	"$(PD_APP_CONTENTS)/MacOS/${PD_APP_NAME}"
 
 #------------------------------------------------------------------------------#
 # generate Info.plist using PD_APP_NAME and PD_VERSION
@@ -138,6 +154,7 @@ Info.plist: CFBUNDLEVERSION_DATE := $(shell date +%Y.%m.%d)
 Info.plist: Info.plist.in 
 	cat Info.plist.in | \
 		sed 's/PD_APP_NAME/$(PD_APP_NAME)/' | \
+		sed 's/PD_SHORT_NAME/$(PD_SHORT_NAME)/' | \
 		sed 's/CFBUNDLESHORTVERSIONSTRING/$(PD_MAJOR_VERSION).$(PD_MINOR_VERSION).$(PD_BUGFIX_VERSION)/' | \
 		sed 's/CFBUNDLEVERSION/$(CFBUNDLEVERSION_DATE)/' > \
 		Info.plist
@@ -155,8 +172,8 @@ rez_install:
 
 darwin_app_embed_libs:
 # embed libquicktime plugins
-	install -d $(PD_APP_CONTENTS)/lib/libquicktime1
-	install -p /sw/lib/libquicktime1/*.so $(PD_APP_CONTENTS)/lib/libquicktime1
+	#install -d $(PD_APP_CONTENTS)/lib/libquicktime1
+	#install -p /sw/lib/libquicktime1/*.so $(PD_APP_CONTENTS)/lib/libquicktime1
 	./embed-MacOSX-dependencies.sh $(PD_APP_CONTENTS)
 
 # shortcut to install the readme on non-Extended builds
@@ -178,11 +195,11 @@ darwin_app_core: darwin_app_wrapper
 		test -e pdextended || ln -s pd pdextended
 # support for Info Panel Plugins mgmt
 	cd "$(PD_APP_CONTENTS)" && ln -s Resources/extra Plugins
-	install -p -m0644 org.puredata.pdextended.default.plist "$(PD_APP_CONTENTS)/"
+	install -p -m0644 org.puredata.pd-l2ork.default.plist "$(PD_APP_CONTENTS)/Resources/"
 # since Pd-vanilla on Mac OS X doesn't have an 'include/pd' folder,
 # Pd-extended will mimic Pd-vanilla's include/pd until Pd-vanilla gets one
-	ln -s pdextended "$(PD_APP_CONTENTS)/Resources/include/pd"
-	ln -s pd/m_pd.h "$(PD_APP_CONTENTS)/Resources/include/m_pd.h"
+	ln -s pdextended "$(PD_APP_CONTENTS)/Resources/app.nw/include/pd"
+	ln -s pd/m_pd.h "$(PD_APP_CONTENTS)/Resources/app.nw/include/m_pd.h"
 
 
 #==============================================================================#
