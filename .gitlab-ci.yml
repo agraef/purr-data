@@ -22,7 +22,9 @@ debian_stable_amd64_deb:
      - stable
      - amd64
    script:
-     - gcc hi.c
+     - echo `pwd`
+     - cd l2ork_addons
+     - ./tar_em_up.sh -b
 
 ubuntu_14.04_i386_deb:
    tags:
