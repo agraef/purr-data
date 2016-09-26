@@ -1,11 +1,55 @@
 before_script:
-  - apt-get update -qq && apt-get upgrade -qq
+   - sudo apt-get -qq purge -y pd-l2ork > /dev/null || echo "couldn't purge..."
+   - sudo DEBIAN_FRONTEND=noninteractive apt-get -qq -y update > /dev/null
+   - sudo DEBIAN_FRONTEND=noninteractive apt-get -qq -y upgrade > /dev/null
 
-build_package:
-  script:
-    - echo `pwd`
-    - cd l2ork_addons
-    - ./tar_em_up.sh -b
-  artifacts:
-    paths:
-    - ../*.deb
+debian_stable_i386_deb:
+   tags:
+     - debian
+     - stable
+     - i386
+   script:
+     - echo `pwd`
+     - cd l2ork_addons
+     - ./tar_em_up.sh -b
+   artifacts:
+     paths:
+       - a.out
+
+debian_stable_amd64_deb:
+   tags:
+     - debian
+     - stable
+     - amd64
+   script:
+     - gcc hi.c
+
+ubuntu_14.04_i386_deb:
+   tags:
+     - ubuntu
+     - v14.04
+     - i386
+   script:
+     - echo `pwd`
+     - cd l2ork_addons
+     - ./tar_em_up.sh -b
+
+ubuntu_14.04_amd64_deb:
+   tags:
+     - ubuntu
+     - v14.04
+     - amd64
+   script:
+     - echo `pwd`
+     - cd l2ork_addons
+     - ./tar_em_up.sh -b
+
+ubuntu_16.04_amd64_deb:
+   tags:
+     - ubuntu
+     - v16.04
+     - amd64
+   script:
+     - echo `pwd`
+     - cd l2ork_addons
+     - ./tar_em_up.sh -b
