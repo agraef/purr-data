@@ -730,7 +730,7 @@ int gtemplate_cancreate(t_symbol *templatename, int argc, t_atom *argv)
             }
             else
             {
-                error("error: struct: bad array field arguments");
+                error("struct: bad array field arguments");
                 return 0;
             }
         }
@@ -743,14 +743,19 @@ int gtemplate_cancreate(t_symbol *templatename, int argc, t_atom *argv)
             }
             else
             {
-                error("error: struct: bad canvas field arguments");
+                error("struct: bad canvas field arguments");
                 return 0;
             }
+        }
+        else
+        {
+                error("struct: bad field type");
+                return 0;
         }
     }
     if (argc)
     {
-        error("error: struct: extra argument");
+        error("struct: extra argument");
         return 0;
     }
     return 1;
