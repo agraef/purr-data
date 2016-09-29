@@ -3024,9 +3024,9 @@ function gui_drawimage_vis(cid, x, y, obj, data, seqno, parent_tag) {
 function gui_drawimage_index(cid, obj, data, index) {
     var obj_tag = "draw" + obj.slice(1) + "." + data.slice(1),
         i,
-        len = pd_cache.get(obj).length,
         image_container = get_item(cid, obj_tag),
-        image = image_container.childNodes[index],
+        len = image_container.childNodes.length,
+        image = image_container.childNodes[((index % len) + len) % len],
         last_image = image_container.querySelectorAll('[visibility="visible"]');
     for (i = 0; i < last_image.length; i++) {
         configure_item(last_image[i], { visibility: "hidden" });
