@@ -112,6 +112,8 @@ lib_install:
 	install -p $(bin_src)/libiconv-2.dll $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libpng16-16.dll $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/zlib1.dll $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libpcre-1.dll $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libgraphite2.dll $(DESTDIR)$(bindir)/
 # these stay with pd.exe
 # if these are installed, include them in the build root
 	-install -p $(system32)/msvcp71.dll   $(DESTDIR)$(bindir)
