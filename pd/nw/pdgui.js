@@ -1833,11 +1833,20 @@ function gui_text_redraw_border(cid, tag, x1, y1, x2, y2) {
 }
 
 function gui_gobj_select(cid, tag) {
-    var g = get_gobj(cid, tag);
-    if (g !== null) {
-        g.classList.add("selected");
-    } else {
-        console.log("text_select: something wrong with group tag: " + tag);
+    var g;
+    // We need to check if the window exists, because Pd will send
+    // messages to select the object before it (or the window) actually exists
+
+    // For example, this happens when using the "Find" menu. If Pd finds the
+    // match in a subpatch that isn't visible, it will open the subpatch and
+    // try to select the matching object before the subpatch has been mapped.
+    if (patchwin[cid]) {
+        g = get_gobj(cid, tag);
+        if (g !== null) {
+            g.classList.add("selected");
+        } else {
+            console.log("text_select: something wrong with group tag: " + tag);
+        }
     }
 }
 
