@@ -30,9 +30,9 @@ for pd_darwin in `find $PD_APP_CONTENTS -name '*.pd_darwin'`; do
 			install -d $PD_APP_LIB
 			install -p /opt/local/lib/$lib $PD_APP_LIB
 			new_lib=`echo $lib | sed 's|.*/\(.*\.dylib\)|\1|'`
-			# @executable_path starts from Contents/Resources/bin/pd
-			install_name_tool -id @executable_path/../../$LIB_DIR/$new_lib $PD_APP_LIB/$new_lib
-			install_name_tool -change /opt/local/lib/$lib @executable_path/../../$LIB_DIR/$new_lib $pd_darwin
+			# @executable_path starts from Contents/Resources/app.nw/bin/pd
+			install_name_tool -id @executable_path/../../../$LIB_DIR/$new_lib $PD_APP_LIB/$new_lib
+			install_name_tool -change /opt/local/lib/$lib @executable_path/../../../$LIB_DIR/$new_lib $pd_darwin
 		done
 		echo " "
 	fi
@@ -52,7 +52,7 @@ for so in $PD_APP_LIB/*/*.so; do
 				install -vp /opt/local/lib/$lib $PD_APP_LIB
 			fi
 			# @executable_path starts from Contents/Resources/bin/pd
-			install_name_tool -change /opt/local/lib/$lib @executable_path/../../$LIB_DIR/$new_lib $so
+			install_name_tool -change /opt/local/lib/$lib @executable_path/../../../$LIB_DIR/$new_lib $so
 		done
 		echo " "
 	fi
@@ -71,8 +71,8 @@ for dylib in $PD_APP_LIB/*.dylib; do
 				install -vp /opt/local/lib/$lib $PD_APP_LIB
 			fi
 			# @executable_path starts from Contents/Resources/bin/pd
-			install_name_tool -id @executable_path/../../$LIB_DIR/$new_lib $PD_APP_LIB/$new_lib
-			install_name_tool -change /opt/local/lib/$lib @executable_path/../../$LIB_DIR/$new_lib $dylib
+			install_name_tool -id @executable_path/../../../$LIB_DIR/$new_lib $PD_APP_LIB/$new_lib
+			install_name_tool -change /opt/local/lib/$lib @executable_path/../../../$LIB_DIR/$new_lib $dylib
 		done
 		echo " "
 	fi
@@ -91,9 +91,9 @@ for dylib in $PD_APP_LIB/*.dylib; do
 			else
 				install -vp /opt/local/lib/$lib $PD_APP_LIB
 			fi
-			# @executable_path starts from Contents/Resources/bin/pd
-			install_name_tool -id @executable_path/../../$LIB_DIR/$new_lib $PD_APP_LIB/$new_lib
-			install_name_tool -change /opt/local/lib/$lib @executable_path/../../$LIB_DIR/$new_lib $dylib
+			# @executable_path starts from Contents/Resources/app.nw/bin/pd
+			install_name_tool -id @executable_path/../../../$LIB_DIR/$new_lib $PD_APP_LIB/$new_lib
+			install_name_tool -change /opt/local/lib/$lib @executable_path/../../../$LIB_DIR/$new_lib $dylib
 		done
 		echo " "
 	fi

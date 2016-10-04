@@ -29,6 +29,8 @@ WISH_CONTENTS = "$(WISH)/Contents"
 
 OPT_CFLAGS = -fast -fPIC -ftree-vectorize
 FAT_FLAGS = -mmacosx-version-min=10.4
+CFLAGS = -mmacosx-version-min=10.4
+LDFLAGS = -mmacosx-version-min=10.4
 
 # which CPU to compile for
 TARGET_PLATFORM := $(shell uname -p)
@@ -184,7 +186,7 @@ readme_install:
 #------------------------------------------------------------------------------#
 darwin_app_core: darwin_app_wrapper
 	$(MAKE) -C $(packages_src) $(DEST_PATHS) \
-		PD_CONFIGURE_FLAGS="--enable-jack=no --disable-fat" \
+		PD_CONFIGURE_FLAGS="--enable-jack --disable-fat" \
 		pd_install 
 	install -d "$(PD_APP_CONTENTS)/Resources/bin"
 	cd "$(PD_APP_CONTENTS)/Resources" && \
