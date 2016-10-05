@@ -263,11 +263,11 @@ then
     OSNUMBER=2
     if test x$jack = "xyes";
     then
-        LDFLAGS=$LDFLAGS" -ljack"
+        LDFLAGS=$LDFLAGS" -weak_framework Jackmp"
     fi
     if test x$jack = "xrun";
     then
-        LDFLAGS=$LDFLAGS" -ljack"
+        LDFLAGS=$LDFLAGS" -weak_framework Jackmp"
     fi
 fi
 

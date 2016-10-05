@@ -105,7 +105,6 @@ Time to build: *1 day*
    sudo port install speex
    sudo port install gsl
    sudo port install libquicktime-devel
-   sudo port install jack
 
 </code>
 6. Download the source code *(3-6 minutes)*

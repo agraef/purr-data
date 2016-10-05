@@ -186,7 +186,7 @@ readme_install:
 #------------------------------------------------------------------------------#
 darwin_app_core: darwin_app_wrapper
 	$(MAKE) -C $(packages_src) $(DEST_PATHS) \
-		PD_CONFIGURE_FLAGS="--enable-jack --disable-fat" \
+		PD_CONFIGURE_FLAGS="--enable-jack=no --disable-fat" \
 		pd_install 
 	install -d "$(PD_APP_CONTENTS)/Resources/bin"
 	cd "$(PD_APP_CONTENTS)/Resources" && \
