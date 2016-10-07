@@ -4979,6 +4979,12 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 gui_s("fill");
                 gui_s("none");
             }
+            /* We add an attribute to keep the stroke from scaling, to keep
+               backwards compatibility with Pd Vanilla for curve.  For the
+               newer [draw] objects we stick with the svg spec (and should
+               probably add a method for this attribute...) */
+            gui_s("vector-effect");
+            gui_s("non-scaling-stroke");
             gui_end_array();
 
             // Tags Array
