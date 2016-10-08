@@ -13,3 +13,6 @@
 [submodule "externals/lyonpotpourri"]
 	path = externals/lyonpotpourri
 	url = https://git.purrdata.net/jwilkes/lyonpotpourri.git
+[submodule "Gem"]
+	path = Gem
+	url = https://git.purrdata.net/jwilkes/Gem.git
