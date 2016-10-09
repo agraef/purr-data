@@ -159,11 +159,15 @@ function create_menu(gui, type) {
         if (canvas_menu) {
             edit_menu.append(m.edit.undo = new gui.MenuItem({
                 label: l("menu.undo"),
-                tooltip: l("menu.undo_tt")
+                tooltip: l("menu.undo_tt"),
+                key: "z",
+                modifiers: cmd_or_ctrl
             }));
             edit_menu.append(m.edit.redo = new gui.MenuItem({
                 label: l("menu.redo"),
-                tooltip: l("menu.redo_tt")
+                tooltip: l("menu.redo_tt"),
+                key: "z",
+                modifiers: "shift+" + cmd_or_ctrl
             }));
             edit_menu.append(new gui.MenuItem({ type: "separator" }));
             edit_menu.append(m.edit.cut = new gui.MenuItem({

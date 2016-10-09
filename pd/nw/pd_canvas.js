@@ -350,20 +350,23 @@ var canvas_events = (function() {
                         break;
                     case 90:
                         if (cmd_or_ctrl_key(evt)) { // ctrl-z undo/redo
-                            // We have to catch undo and redo shortcuts here
-                            // instead of using menu shortcuts. There is a
-                            // separate undo/redo buffer when we're editing
-                            // inside an object box we need to use, and a
-                            // menu item shortcut would not propogate down
-                            // to the DOM in that case.
+                            // We have to catch undo and redo here.
+                            // undo and redo have nw.js menu item shortcuts,
+                            // and those shortcuts don't behave consistently
+                            // across platforms:
+                            // Gnu/Linux: key events for the shortcut do not
+                            //   propogate down to the DOM
+                            // OSX: key events for the shortcut _do_ propogate
+                            //   down to the DOM
+                            // Windows: not sure...
 
-                            // Not sure if DOM has listeners for undo/redo,
-                            // so for now (May 7, 2016) we catch them here...
-                            if (evt.shiftKey) {
-                                pdgui.pdsend(name, "redo");
-                            } else {
-                                pdgui.pdsend(name, "undo");
-                            }
+                            // Solution-- let the menu item shortcuts handle
+                            // undo/redo functionality, and do nothing here...
+                            //if (evt.shiftKey) {
+                            //    pdgui.pdsend(name, "redo");
+                            //} else {
+                            //    pdgui.pdsend(name, "undo");
+                            //}
                         }
                         break;
 
@@ -1153,8 +1156,7 @@ function nw_create_patch_window_menus(gui, w, name) {
     minit(m.edit.undo, {
         enabled: true,
         click: function () {
-            if (process.platform === "darwin" &&
-                canvas_events.get_state() === "text") {
+            if (canvas_events.get_state() === "text") {
                 document.execCommand("undo", false, null);
             } else {
                 pdgui.pdsend(name, "undo");
@@ -1164,8 +1166,7 @@ function nw_create_patch_window_menus(gui, w, name) {
     minit(m.edit.redo, {
         enabled: true,
         click: function () {
-            if (process.platform === "darwin" &&
-                canvas_events.get_state() === "text") {
+            if (canvas_events.get_state() === "text") {
                 document.execCommand("redo", false, null);
             } else {
                 pdgui.pdsend(name, "redo");
