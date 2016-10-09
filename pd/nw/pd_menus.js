@@ -248,15 +248,6 @@ function create_menu(gui, type) {
             modifiers: cmd_or_ctrl,
             tooltip: l("menu.tidyup_tt")
         }));
-        edit_menu.append(m.edit.tofront = new gui.MenuItem({
-            label: l("menu.tofront"),
-            tooltip: l("menu.tofront_tt")
-        }));
-        edit_menu.append(m.edit.toback = new gui.MenuItem({
-            label: l("menu.toback"),
-            tooltip: l("menu.toback_tt")
-        }));
-        edit_menu.append(new gui.MenuItem({ type: "separator" }));
         edit_menu.append(m.edit.font = new gui.MenuItem({
             label: l("menu.font"),
             tooltip: l("menu.font_tt")

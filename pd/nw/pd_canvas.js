@@ -994,6 +994,21 @@ function create_popup_menu(name) {
             pdgui.popup_action(name, 2);
         }
     }));
+    popup_menu.append(new gui.MenuItem({
+        type: "separator",
+    }));
+    popup_menu.append(new gui.MenuItem({
+        label: "Bring to Front",
+        click: function() {
+            pdgui.popup_action(name, 3);
+        }
+    }));
+    popup_menu.append(new gui.MenuItem({
+        label: "Send to Back",
+        click: function() {
+            pdgui.popup_action(name, 4);
+        }
+    }));
 }
 
 function nw_undo_menu(undo_text, redo_text) {
@@ -1224,14 +1239,6 @@ function nw_create_patch_window_menus(gui, w, name) {
     minit(m.edit.tidyup, {
         enabled: true,
         click: function() { pdgui.pdsend(name, "tidy"); }
-    });
-    minit(m.edit.tofront, {
-        enabled: true,
-        click: function() { pdgui.popup_action(name, 3); }
-    });
-    minit(m.edit.toback, {
-        enabled: true,
-        click: function() { pdgui.popup_action(name, 4); }
     });
     minit(m.edit.font, {
         enabled: true,
