@@ -3733,11 +3733,14 @@ function gui_gatom_dialog(did, attr_array) {
 }
 
 function gui_gatom_activate(cid, tag, state) {
-    var g = get_gobj(cid, tag);
-    if (state !== 0) {
-        g.classList.add("activated");
-    } else {
-        g.classList.remove("activated");
+    var g;
+    if (patchwin[cid]) {
+        g = get_gobj(cid, tag);
+        if (state !== 0) {
+            g.classList.add("activated");
+        } else {
+            g.classList.remove("activated");
+        }
     }
 }
 
