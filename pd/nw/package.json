@@ -1,5 +1,6 @@
 {
   "name": "purr-data",
   "version": "0.1.0",
-  "main": "index.html"
+  "main": "index.html",
+  "chromium-args": "--proxy-server=http://127.0.0.1"
 }
