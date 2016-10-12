@@ -3836,6 +3836,11 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
         gui_s("stroke-opacity");
         gui_f(fielddesc_getcoord(&x->x_strokeopacity.a_attr, template, data, 1));
     }
+    if (x->x_strokedashoffset.a_flag)
+    {
+        gui_s("stroke-dashoffset");
+        gui_f(fielddesc_getcoord(&x->x_strokedashoffset.a_attr, template, data, 1));
+    }
     if (x->x_strokelinecap.a_flag)
     {
         gui_s("stroke-linecap");
