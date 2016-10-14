@@ -64,7 +64,7 @@ all:
 install: darwin_app
 
 #------------------------------------------------------------------------------#
-darwin_app: darwin_app_core extended_install darwin_app_embed_libs spotlight_importer_install
+darwin_app: darwin_app_core extended_install darwin_app_embed_libs
 	@echo " "
 	@echo "Pd.app build succeeded!"
 
