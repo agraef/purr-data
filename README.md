@@ -143,6 +143,7 @@ Homebrew build
    brew install speex
    brew install gsl
    brew install libquicktime
+   brew install pkg-config
 </code>
 3. git clone https://git.purrdata.net/jwilkes/purr-data.git
 4. remove plugin from LIB_TARGETS in externals/Makefile
