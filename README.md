@@ -127,6 +127,26 @@ git clone https://git.purrdata.net/jwilkes/purr-data.git</code>
     and change the CFBundleDisplayName and CFBundleName to "purr-data"
 13. To be continued...
 
+Homebrew build
+1. Install [Homebrew](http://brew.sh) *(15 minutes)*
+   (asks for password twice-- once for command line tools, once for homebrew)
+2. Install the dependencies *10 minutes*:<code>
+   brew install wget
+   brew install autoconf
+   brew install automake
+   brew install libtool
+   brew install fftw
+   brew install python
+   brew install fluidsynth
+   brew install lame
+   brew install libvorbis
+   brew install speex
+   brew install gsl
+   brew install libquicktime
+</code>
+3. git clone https://git.purrdata.net/jwilkes/purr-data.git
+4. remove plugin from LIB_TARGETS in externals/Makefile
+
 #### Windows 32-bit Using msys2
 Time to build: *roughly 1.5 hours-- 30 minutes of this is for Gem alone*
 
