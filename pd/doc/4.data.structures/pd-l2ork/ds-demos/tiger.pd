@@ -1,6 +1,6 @@
 #N struct tiger float x float y;
 #N struct tiger-array float x float y array a tiger;
-#N canvas 1 25 515 402 10;
+#N canvas 2 50 515 402 10;
 #X floatatom 50 183 5 0 0 0 - - -, f 5;
 #X obj 93 15 struct tiger float x float y;
 #N canvas 0 27 1366 684 (subpatch) 0;
@@ -2176,10 +2176,6 @@ C 256 273.5 269.5 292 269.5 299 C 269.5 299 272 291.5 270.5 287 z;
 #X connect 466 0 465 0;
 #X connect 468 0 467 0;
 #X restore 50 258 draw group;
-#X text 124 258 <-- an awful lot of paths inside here. In a case like
-this it would probably be preferable to have a [draw svg] where you
-can just specify the file name. A GUI toolkit like Qt might be able
-to do this \, but tcl/tk cannot.;
 #X scalar tiger 150 131 \;;
 #X obj 50 348 output~;
 #X obj 50 139 loadbang;
@@ -2379,12 +2375,15 @@ to do this \, but tcl/tk cannot.;
 #X connect 6 0 5 0;
 #X restore 366 229 pd tiger-array;
 #X msg 50 229 transform scale \$1 rotate -45 \, mouseover 1;
-#X connect 0 0 7 0;
-#X connect 2 0 9 0;
-#X connect 6 0 8 0;
-#X connect 7 0 13 0;
-#X connect 8 0 0 0;
-#X connect 9 0 10 0;
-#X connect 10 0 5 0;
-#X connect 10 0 5 1;
-#X connect 13 0 2 0;
+#X text 124 258 <-- an awful lot of paths inside here. This isn't the
+most efficient way to draw a static image \, but it does show how the
+svg path caching in Pd can prevent dropouts.;
+#X connect 0 0 6 0;
+#X connect 2 0 8 0;
+#X connect 5 0 7 0;
+#X connect 6 0 12 0;
+#X connect 7 0 0 0;
+#X connect 8 0 9 0;
+#X connect 9 0 4 0;
+#X connect 9 0 4 1;
+#X connect 12 0 2 0;
