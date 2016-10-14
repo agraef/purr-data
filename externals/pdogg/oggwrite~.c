@@ -466,11 +466,7 @@ static void oggwrite_open(t_oggwrite *x, t_symbol *sfile)
 		x->x_recflag = 0;
     }
 
-#ifdef WIN32
-    if((x->x_fd = _open( sfile->s_name, x->x_file_open_mode, _S_IREAD|_S_IWRITE)) < 0)
-#else
-    if((x->x_fd = open( sfile->s_name, x->x_file_open_mode, S_IRWXU|S_IRWXG|S_IRWXO )) < 0)
-#endif
+    if((x->x_fd = sys_open( sfile->s_name, x->x_file_open_mode, 0666 )) < 0)
     {
        error( "oggwrite~: can not open \"%s\"", sfile->s_name); 
        x->x_fd=-1;
@@ -729,7 +725,7 @@ static void *oggwrite_new(void)
 	x->x_bcperformer = "";
 	x->x_bccontact = "";
 	x->x_bcdate = "";
-    post(oggwrite_version);
+    logpost(NULL, 4, oggwrite_version);
 	return(x);
 }
 

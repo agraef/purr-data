@@ -1070,7 +1070,7 @@ static void *oggcast_new(t_floatarg fnchannels, t_floatarg fbufsize)
 	x->x_mountpoint = "puredata.ogg";
 	x->x_servertype = 1;			/* HTTP/1.0 protocol for Icecast2 */
     
-    post(oggcast_version);
+    logpost(NULL, 4, oggcast_version);
 	post("oggcast~: set buffer to %dk bytes", bufsize / 1024);
 	post("oggcast~: encoding %d channels @ %d Hz", x->x_channels, x->x_samplerate);
 

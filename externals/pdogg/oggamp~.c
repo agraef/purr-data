@@ -634,7 +634,7 @@ static void oggamp_child_dographics(t_oggamp *x)
 		/* do graphics stuff :: create rectangle */
     if ( x->x_graphic && glist_isvisible( x->x_canvas ) )
     {
-		sys_vgui(".x%x.c create rectangle %d %d %d %d -fill lightblue -tags %xPBAR\n",
+		sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill lightblue -tags %xPBAR\n",
                   x->x_canvas, x->x_obj.te_xpix, x->x_obj.te_ypix-OBJHEIGHT-1,
                   x->x_obj.te_xpix + OBJWIDTH, x->x_obj.te_ypix - 1, x );
     } 
@@ -648,7 +648,7 @@ static void oggamp_child_updategraphics(t_oggamp *x)
 			/* update graphical read status */
 		char color[32];
 
-		sys_vgui(".x%x.c delete rectangle %xSTATUS\n", x->x_canvas, x); 
+		sys_vgui(".x%lx.c delete rectangle %xSTATUS\n", x->x_canvas, x); 
 		if(x->x_fifobytes < (x->x_fifosize / 8))
 		{
 			strcpy(color, "red");
@@ -657,7 +657,7 @@ static void oggamp_child_updategraphics(t_oggamp *x)
 		{
 			strcpy(color, "lightgreen");
 		}
-		sys_vgui(".x%x.c create rectangle %d %d %d %d -fill %s -tags %xSTATUS\n",
+		sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill %s -tags %xSTATUS\n",
 		x->x_canvas, x->x_obj.te_xpix, x->x_obj.te_ypix-OBJHEIGHT-1,
 		x->x_obj.te_xpix+((x->x_fifobytes*OBJWIDTH)/x->x_fifosize),
 		x->x_obj.te_ypix - 1, color, x);
@@ -667,8 +667,8 @@ static void oggamp_child_delgraphics(t_oggamp *x)
 {
     if(x->x_graphic)			/* delete graphics */
     {
-       sys_vgui(".x%x.c delete rectangle %xPBAR\n", x->x_canvas, x );
-       sys_vgui(".x%x.c delete rectangle %xSTATUS\n", x->x_canvas, x ); 
+       sys_vgui(".x%lx.c delete rectangle %xPBAR\n", x->x_canvas, x );
+       sys_vgui(".x%lx.c delete rectangle %xSTATUS\n", x->x_canvas, x ); 
     }
 }
 
@@ -1056,7 +1056,7 @@ static void *oggamp_new(t_floatarg fdographics, t_floatarg fnchannels, t_floatar
     x->x_graphic = (int)fdographics;
     x->x_canvas = canvas_getcurrent(); 
     
-    post(oggamp_version);
+    logpost(NULL, 4, oggamp_version);
 	post("oggamp~: set buffer to %dk bytes", bufsize/1024);
 
 		/* start child thread */

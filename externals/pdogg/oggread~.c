@@ -290,11 +290,7 @@ static void oggread_open(t_oggread *x, t_symbol *filename)
 		post("oggread~: previous file closed");
 	}
 		/* open file for reading */
-#ifdef WIN32
-	if((x->x_file = fopen(filename->s_name, "rb")) < 0)
-#else
-   if((x->x_file = fopen(filename->s_name, "r")) < 0)
-#endif
+    if((x->x_file = sys_fopen(filename->s_name, "r")) < 0)
     {
 		post("oggread~: could not open file \"%s\"", filename->s_name);
 		x->x_eos = 1;
@@ -394,7 +390,7 @@ static void *oggread_new(t_floatarg fdographics)
     x->x_outunread = 0;
 	x->x_decoded = 0;
 
-    post(oggread_version);
+    logpost(NULL, 4, oggread_version);
 
     return (x);
 }
