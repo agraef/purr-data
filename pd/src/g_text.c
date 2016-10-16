@@ -1649,7 +1649,7 @@ static void text_select(t_gobj *z, t_glist *glist, int state)
                              x->te_type != T_TEXT &&
                              glist_istoplevel(glist))
                 {
-                    /* Not sure yet what this is doing... */
+                    /* Not sure yet what this was doing... */
                     //sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 1 "
                     //         "-strokedasharray {} "
                     //         "-fill $pd_colors(box)\n",
@@ -2572,10 +2572,23 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
             //fprintf(stderr,"setto not canvas\n");
             binbuf_gettext(x->te_binbuf, &c1, &i1);
             binbuf_gettext(b, &c2, &i2);
-            //if the string doesn't match or if the object we entered is invalid
-            //(e.g. we created an object that failed to create but now we have an
-            //abstraction in patch's path named the same as the desired object)
-            if (strcmp(c1, c2) || (pd_class(&x->te_pd) == text_class && x->te_type != T_TEXT))
+            /* It might be nice here to make another attempt at loading
+               broken objects. For example, there may now be an abstraction
+               in the canvas path-- if so, we should create it.
+
+               However, doing this would require more thought-- for example,
+               if the object indeed remains broken we wouldn't want to call
+               canvas_restoreconnections as our broken object would now
+               be at the end of the glist. (I imagine this is what the
+               canvas_apply_restore_original_position call was meant to
+               fix before it was removed.)
+
+               So instead, we only check for new objects if the string
+               has changed. If this function ever gets cleaned up to become
+               more than just a series of nearly-incomprehensible
+               side-effects, perhaps the issue may be revisited.
+            */
+            if (strcmp(c1, c2))
             {
                 //fprintf(stderr,"text_setto calls canvas_undo_add recreate\n");
                 canvas_undo_add(glist_getcanvas(glist), 10, "recreate",
