@@ -40,7 +40,7 @@ EXTRA_DIST = pdogg.c makefile.msvc HISTORY
 ALL_CFLAGS = -I"$(PD_INCLUDE)"
 ALL_LDFLAGS =  
 SHARED_LDFLAGS =
-ALL_LIBS = $(shell pkg-config --libs vorbis vorbisenc vorbisfile)
+ALL_LIBS = $(shell pkg-config --libs ogg vorbis vorbisenc vorbisfile)
 LIBS_windows = -lpthread
 
 
