@@ -623,4 +623,6 @@ function gui_init(win) {
     connect();
 }
 
-gui_init(window);
+window.onload = function() {
+    gui_init(window);
+};
