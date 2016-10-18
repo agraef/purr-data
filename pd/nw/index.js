@@ -25,7 +25,7 @@ function have_args() {
 }
 
 function set_vars(win) {
-    var port_no, gui_dir;
+    var port_no, gui_dir, font_engine_sanity;
     // If the GUI was started by Pd, our port number is going to be
     // the first argument. If the GUI is supposed to start Pd, we won't
     // have any arguments and need to set it here.
@@ -47,6 +47,7 @@ function set_vars(win) {
     pdgui.set_pwd(pwd);
     pdgui.set_gui_dir(gui_dir);
     pdgui.set_pd_window(win);
+    font_engine_sanity = pdgui.set_font_engine_sanity(win);
     pdgui.set_app_quitfn(app_quit);
     pdgui.set_open_html_fn(open_html);
     pdgui.set_open_textfile_fn(open_textfile);
@@ -55,6 +56,11 @@ function set_vars(win) {
     // nw context callbacks (mostly just creating/destroying windows)
     pdgui.set_new_window_fn(nw_create_window);
     pdgui.set_close_window_fn(nw_close_window);
+    if (!font_engine_sanity) {
+        pdgui.post("warning: your system's font stack is maintained by troglodytes.");
+    } else {
+        pdgui.post("font stack check: using optimal font sizes.");
+    }
 }
 
 function app_quit() {

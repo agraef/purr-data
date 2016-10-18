@@ -521,7 +521,7 @@ var canvas_events = (function() {
                     // mention that it was non-trivial for me to do the math
                     // of inverting and multiplying the matrices from within
                     // a Pd patch. And I'm the author of this API. Make
-                    // of that what you will...
+                    // of that what you will...)
                     minv = draggable_elem.getCTM().inverse(),
                     tx = minv.a * dx + minv.c * dy,
                     ty = minv.b * dx + minv.d * dy;

@@ -89,6 +89,47 @@ exports.set_pd_window = function(win) {
     exports.pd_window = win;
 }
 
+var font_engine_sanity;
+
+// Here we use an HTML5 canvas hack to measure the width of
+// the text to check for a font rendering anomaly. Here's why:
+//
+// It was reported that Ubuntu 16.04, Arch-- and probably most other Gnu/Linux
+// distros going forward-- all end up with text extending past the box border.
+// The test_text below is the string used in the bug report.
+// OSX, Windows, and older Gnu/Linux stacks (like Ubuntu 14.04) all render
+// this text with a width that is within half a pixel of each other (+- 217).
+//
+// Newer versions of Ubuntu and Arch measured nearly 7 pixels wider.
+//
+// I don't know what the new Gnu/Linux stack is up to (and I don't have the
+// time to spelunk) but it's out of whack with the rest of the desktop
+// rendering engines. Worse, there's some kind of quantization going on that
+// keeps the new Gnu/Linux stack from hitting anything close to the font
+// metrics of Pd Vanilla.
+//
+// Anyhow, we check for the discrepancy and try our best not to make newer
+// versions of Gnu/Linux distros look too shitty...
+exports.set_font_engine_sanity = function(win) {
+    var canvas = win.document.createElement("canvas"),
+        ctx = canvas.getContext("2d"),
+        test_text = "struct theremin float x float y";
+    canvas.id = "font_sanity_checker_canvas";
+    win.document.body.appendChild(canvas);
+    ctx.font = "11.65px DejaVu Sans Mono";
+    if (Math.floor(ctx.measureText(test_text).width) <= 217) {
+        font_engine_sanity = true;
+    } else {
+        font_engine_sanity = false;
+    }
+    canvas.parentNode.removeChild(canvas);
+    return font_engine_sanity;
+}
+
+function font_stack_is_maintained_by_troglodytes() {
+    return !font_engine_sanity;
+}
+
 var nw_create_window;
 var nw_close_window;
 var nw_app_quit;
@@ -1694,24 +1735,46 @@ function text_to_tspans(canvasname, svg_text, text) {
 // we can revisit the issue. Even Pd-Vanilla's box sizing
 // changed at version 0.43, so we can break as well if
 // it comes to that.
+
+function font_map() {
+    return {
+        // pd_size: gui_size
+        8: 8.33,
+        12: 11.65,
+        16: 16.65,
+        24: 23.3,
+        36: 36.6
+    };
+}
+
+// This is a suboptimal font map, necessary because some genius "improved"
+// the font stack on Gnu/Linux by delivering font metrics that don't match
+// at all with what you get in OSX, Windows, nor even the previous version
+// of the Gnu/Linux stack.
+function suboptimal_font_map() {
+    return {
+        // pd_size: gui_size
+        8: 8.45,
+        12: 11.4,
+        16: 16.45,
+        24: 23.3,
+        36: 36
+    }
+}
+
 function gobj_fontsize_kludge(fontsize, return_type) {
     // These were tested on an X60 running Trisquel (based
     // on Ubuntu)
     var ret, prop,
-        fontmap = {
-            // pd_size: gui_size
-            8: 8.33,
-            12: 11.65,
-            16: 16.65,
-            24: 23.3,
-            36: 36.6 };
+        fmap = font_stack_is_maintained_by_troglodytes() ?
+            suboptimal_font_map() : font_map();
     if (return_type === "gui") {
-        ret = fontmap[fontsize];
+        ret = fmap[fontsize];
         return ret ? ret : fontsize;
     } else {
-        for (prop in fontmap) {
-            if (fontmap.hasOwnProperty(prop)) {
-                if (fontmap[prop] == fontsize) {
+        for (prop in fmap) {
+            if (fmap.hasOwnProperty(prop)) {
+                if (fmap[prop] == fontsize) {
                     return +prop;
                 }
             }
