@@ -2212,7 +2212,6 @@ void canvasgop_checksize(t_canvas *x)
 
 void canvasgop__clickhook(t_scalehandle *sh, int newstate)
 {
-post("canvas clickhook");
     t_canvas *x = (t_canvas *)(sh->h_master);
     if (sh->h_dragon && newstate == 0)
     {
