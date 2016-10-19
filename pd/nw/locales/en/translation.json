@@ -398,5 +398,10 @@
       "close": "Close",
       "close_tt": "Close the font dialog"
     }
+  },
+  "search": {
+    "browse": "browse the documentation",
+    "search": "search",
+    "search_placeholder": "Search Pd Docs"
   }
 }

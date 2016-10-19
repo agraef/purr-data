@@ -322,6 +322,9 @@ function add_events() {
 
 function register_window_id(id, attrs) {
     translate_form();
+    // Translate the placeholder for the search input:
+    document.getElementById("search_text").placeholder =
+        l("search.search_placeholder");
     add_events();
     document.getElementById("results").textContent = "Building Index...";
     document.getElementById("search_text").disabled = true;
@@ -385,8 +388,11 @@ function doc_search() {
       <input type="search"
              name="search_text"
              id="search_text"
-             placeholder="Search Pd Docs">
-      <input type="image" src="folder.svg" id="file_browser_button">
+             data-i18n="[title]search.search">
+      <input type="image"
+             src="folder.svg"
+             id="file_browser_button"
+             data-i18n="[title]search.browse">
    </form>
     <div id="results">
     </div>
