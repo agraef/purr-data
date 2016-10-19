@@ -99,6 +99,19 @@ function build_index() {
     dive(doc_path, read_file, finish_build);
 }
 
+function file_browser_click() {
+    document.getElementById("file_browser").click();
+}
+
+function file_browser_callback(elem) {
+    var doc = elem.value;
+    pdgui.post("file callback: file is " + elem.value);
+    pdgui.post("dir is " + pdgui.defunkify_windows_path(path.dirname(doc)));
+    pdgui.post("file is " + pdgui.defunkify_windows_path(path.basename(doc)));
+    pdgui.doc_open(pdgui.defunkify_windows_path(path.dirname(doc)),
+        pdgui.defunkify_windows_path(path.basename(doc)));
+}
+
 function console_unwrap_tag(console_elem, tag_name) {
     var b = console_elem.getElementsByTagName(tag_name),
         parent_elem;
@@ -279,11 +292,21 @@ function add_events() {
         }, false
     );
 
+    document.getElementById("file_browser_button").addEventListener("click",
+        function(evt) {
+            if (evt.currentTarget === document.activeElement) {
+                file_browser_click();
+            }
+    });
+
     // Keydown in the document
     document.body.addEventListener("keydown", function(evt) {
-        var input_elem = document.getElementById("search_text");
+        var input_elem = document.getElementById("search_text"),
+            button_elem = document.getElementById("file_browser_button");
         if (find_bar_shortcut(evt)) {
             toggle_find_bar();
+        } else if (evt.target === button_elem &&
+                   evt.keyCode === 10 || evt.keyCode === 13) {
         } else if (evt.target !== input_elem) {
             input_elem.focus();
         } else {
@@ -291,7 +314,10 @@ function add_events() {
             // here.
         }
     });
-
+    document.getElementById("search_text").addEventListener("search",
+        function() {
+            doc_search();
+    });
 }
 
 function register_window_id(id, attrs) {
@@ -299,6 +325,8 @@ function register_window_id(id, attrs) {
     add_events();
     document.getElementById("results").textContent = "Building Index...";
     document.getElementById("search_text").disabled = true;
+    document.getElementById("file_browser").setAttribute("nwworkingdir",
+        pdgui.get_gui_dir() + "/doc"); // Probably need a doc getter in pdgui
     build_index();
 }
 
@@ -318,6 +346,7 @@ function doc_search() {
     results = index.search(search_text);
     for (i = 0; i < results.length; i++) {
         doc = index.documentStore.getDoc(results[i].ref);
+
         div = document.createElement("div");
         a = document.createElement("a");
         a.href = "javascript: pdgui.doc_open('" +
@@ -338,6 +367,7 @@ function doc_search() {
     </script>
   </head>
   <body class="search_body">
+    <input type="file" id="file_browser" style="display: none;" onchange="file_browser_callback(this);"></input>
     <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
          width="220" height="50" viewBox="0 0 140 31.81">
       <g stroke-linecap="square" fill="none" stroke-width="3">
@@ -351,12 +381,13 @@ function doc_search() {
         <path d="M102,14 a-4,4.5 0 1,0 0,3 m0.5,3 0,-9" stroke="#309"/>
       </g>
     </svg>
-    <form id="search_form" action="javascript:doc_search();">
+    <form id="search_form" action="javascript:void(0);">
       <input type="search"
              name="search_text"
              id="search_text"
              placeholder="Search Pd Docs">
-    </form>
+      <input type="image" src="folder.svg" id="file_browser_button">
+   </form>
     <div id="results">
     </div>
     <div id = "console_find" style="display:none;">
