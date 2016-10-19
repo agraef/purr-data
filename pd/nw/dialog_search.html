@@ -24,7 +24,6 @@ index.addField("description");
 //index.addField("body");
 index.addField("path");
 index.setRef("id");
-var doc_id = 0;
 
 // Stop-gap translator
 function translate_form() {
@@ -61,12 +60,11 @@ function add_doc_to_index(filename, data) {
         title = title.slice(0, -5);
     }
     index.addDoc({
-        "id": doc_id++,
+        "id": filename,
         "title": title,
         "keywords": keywords,
-        "description": desc,
+        "description": desc
         //"body": big_line,
-        "path": filename
     });
 }
 
@@ -353,8 +351,8 @@ function doc_search() {
         div = document.createElement("div");
         a = document.createElement("a");
         a.href = "javascript: pdgui.doc_open('" +
-                 pdgui.defunkify_windows_path(path.dirname(doc.path)) + "', '" +
-                 pdgui.defunkify_windows_path(path.basename(doc.path)) + "');"
+                 pdgui.defunkify_windows_path(path.dirname(doc.id)) + "', '" +
+                 pdgui.defunkify_windows_path(path.basename(doc.id)) + "');"
         a.textContent = doc.title;
         header = document.createElement("h3");
         header.appendChild(a);
@@ -370,7 +368,7 @@ function doc_search() {
     </script>
   </head>
   <body class="search_body">
-    <input type="file" id="file_browser" style="display: none;" onchange="file_browser_callback(this);"></input>
+    <input type="file" id="file_browser" style="display: none;" onchange="file_browser_callback(this);" accept=".pd,.txt,.htm,.html,.pdf"></input>
     <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
          width="220" height="50" viewBox="0 0 140 31.81">
       <g stroke-linecap="square" fill="none" stroke-width="3">
