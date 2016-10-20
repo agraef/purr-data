@@ -457,9 +457,10 @@ function doc_search() {
         display_toc();
         return;
     }
-    // if the search term is doc/* short circuit the search and
-    // just list the docs in that directory
-    if (search_text.slice(0, 4) === "doc/" &&
+    // if the search term is doc/* or extra/* then short circuit
+    // the search and just list the docs in that directory
+    if ((search_text.slice(0, 4) === "doc/" ||
+         search_text.slice(0, 6) === "extra/") &&
         search_text.indexOf(" ") === -1) {
         display_directory(path.join(pdgui.get_lib_dir(), search_text));
         return;
