@@ -29,10 +29,11 @@ var filetypes = [".pd", ".txt", ".htm", ".html", ".pdf"];
 
 // Table of Contents to start with
 var toc = [
+    // Original Pd documentation
     {
         id: "doc/1.manual",
         title: "Pd Manual",
-        description: "detailed description of the program's behavior and user interface"
+        description: "HTML manual for Pure Data"
     },
     {
         id: "doc/2.control.examples",
@@ -45,10 +46,54 @@ var toc = [
         description: "objects and concepts related to producing audio in realtime"
     },
     {
-        id: "doc/4.data.structures/pd-l2ork/ds-tutorials",
+        id: "doc/4.data.structures",
         title: "Data Structures",
         description: "custom data manipulation and interactive graphics"
-    }
+    },
+    {
+        id: "doc/5.reference",
+        title: "Reference",
+        description: "reference patches for key concepts and built-in objects"
+    },
+    {
+        id: "doc/6.externs",
+        title: "Externals",
+        description: "how to code control and signal objects in C"
+    },
+/*  // Section 7 of the vanilla Pd docs, uncomment these if needed.
+    {
+        id: "doc/7.stuff/soundfile-tools",
+        title: "Stuff - Soundfile Tools",
+        description: "some standard audio transformations packaged to work with mono soundfiles"
+    },
+    {
+        id: "doc/7.stuff/synth",
+        title: "Stuff - Synth",
+        description: "polyphonic subtractive synthesizer example"
+    },
+    {
+        id: "doc/7.stuff/tools",
+        title: "Stuff - Tools",
+        description: "useful little helper patches"
+    },
+*/
+    // Pd-L2Ork extras
+    {
+        id: "doc/4.data.structures/pd-l2ork/ds-tutorials",
+        title: "Pd-L2Ork Data Structure Tutorials",
+        description: "overview of svg-based data structure drawing commands"
+    },
+    // Popular external libraries
+    {
+        id: "extra/cyclone",
+        title: "Cyclone",
+        description: "library of clones of Max/MSP 4.x objects"
+    },
+    {
+        id: "extra/Gem",
+        title: "GEM",
+        description: "Graphics Environment for Multimedia (OpenGL graphics in Pd)"
+    },
 ];
 
 // Stop-gap translator
