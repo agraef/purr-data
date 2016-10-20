@@ -414,7 +414,7 @@ function register_window_id(id, attrs) {
     add_events();
     // set file types for the file dialog
     document.getElementById("file_browser").accept = filetypes.join(",");
-    document.getElementById("results").textContent = "Building Index...";
+    document.getElementById("results").textContent = "Building index...";
     document.getElementById("search_text").disabled = true;
     document.getElementById("file_browser").setAttribute("nwworkingdir",
         pdgui.get_gui_dir() + "/doc"); // Probably need a doc getter in pdgui
@@ -422,7 +422,7 @@ function register_window_id(id, attrs) {
 }
 
 function display_no_results() {
-    document.getElementById("results").textContent = "No Results Found.";
+    document.getElementById("results").textContent = "No results found.";
 }
 
 function display_doc(doc) {
