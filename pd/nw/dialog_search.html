@@ -47,9 +47,9 @@ function add_doc_to_index(filename, data) {
         desc;
         // We use [\s\S] to match across multiple lines...
         keywords = big_line
-            .match(/#X text [0-9]+ [0-9]+ KEYWORDS ([\s\S]*?);/i),
+            .match(/#X text \-?[0-9]+ \-?[0-9]+ KEYWORDS ([\s\S]*?);/i),
         desc = big_line
-            .match(/#X text [0-9]+ [0-9]+ DESCRIPTION ([\s\S]*?);/i);
+            .match(/#X text \-?[0-9]+ \-?[0-9]+ DESCRIPTION ([\s\S]*?);/i);
         keywords = keywords && keywords.length > 1 ? keywords[1].trim() : null;
         desc = desc && desc.length > 1 ? desc[1].trim() : null;
         if (desc) {
@@ -97,6 +97,35 @@ function build_index() {
     dive(doc_path, read_file, finish_build);
 }
 
+function clear_results() {
+    document.getElementById("results").innerHTML = "";
+}
+
+var current_dir;
+
+function display_directory_callback(err, files) {
+    var doc, doc_path;
+    if (err) {
+        pdgui.post("Search Engine: " + err);
+    } else {
+        files.forEach(function (f, i, a) {
+            doc_path = path.join(current_dir, f);
+            doc = index.documentStore.getDoc(doc_path) || {
+                id: doc_path,
+                title: f,
+                description: null
+            };
+            display_doc(doc);
+        });
+    }
+}
+
+function display_directory(dir) {
+    current_dir = dir;
+    clear_results();
+    fs.readdir(dir, display_directory_callback);
+}
+
 function file_browser_click() {
     document.getElementById("file_browser").click();
 }
@@ -108,6 +137,7 @@ function file_browser_callback(elem) {
     pdgui.post("file is " + pdgui.defunkify_windows_path(path.basename(doc)));
     pdgui.doc_open(pdgui.defunkify_windows_path(path.dirname(doc)),
         pdgui.defunkify_windows_path(path.basename(doc)));
+    display_directory(pdgui.defunkify_windows_path(path.dirname(doc)));
 }
 
 function console_unwrap_tag(console_elem, tag_name) {
@@ -331,38 +361,52 @@ function register_window_id(id, attrs) {
     build_index();
 }
 
+function display_no_results() {
+    document.getElementById("results").textContent = "No Results Found.";
+}
+
+function display_doc(doc) {
+    var div = document.createElement("div"),
+        a = document.createElement("a"),
+        results_elem = document.getElementById("results"),
+        header,
+        text_node;
+    a.href = "javascript: pdgui.doc_open('" +
+         pdgui.defunkify_windows_path(path.dirname(doc.id)) + "', '" +
+         pdgui.defunkify_windows_path(path.basename(doc.id)) + "');"
+    a.textContent = doc.title;
+    // set title to path for tooltip
+    a.title = doc.id;
+    header = document.createElement("h3");
+    header.appendChild(a);
+    text_node = document.createTextNode(doc.description);
+    div.appendChild(header);
+    div.appendChild(text_node);
+    results_elem.appendChild(div);
+}
+
 function doc_search() {
     var text_elem = document.getElementById("search_text"),
-        results_elem = document.getElementById("results"),
         search_text = text_elem.value,
         results,
         doc,
-        i,
-        header,
-        div,
-        text_node,
-        a;
-    results_elem.innerHTML = "";
+        i;
+    // if the search term is doc/* short circuit the search and
+    // just list the docs in that directory
+    if (search_text.slice(0, 4) === "doc/" &&
+        search_text.indexOf(" ") === -1) {
+        display_directory(path.join(pdgui.get_lib_dir(), search_text));
+        return;
+    }
+    clear_results();
     text_elem.blur();
     results = index.search(search_text);
     for (i = 0; i < results.length; i++) {
         doc = index.documentStore.getDoc(results[i].ref);
-
-        div = document.createElement("div");
-        a = document.createElement("a");
-        a.href = "javascript: pdgui.doc_open('" +
-                 pdgui.defunkify_windows_path(path.dirname(doc.id)) + "', '" +
-                 pdgui.defunkify_windows_path(path.basename(doc.id)) + "');"
-        a.textContent = doc.title;
-        header = document.createElement("h3");
-        header.appendChild(a);
-        text_node = document.createTextNode(doc.description);
-        div.appendChild(header);
-        div.appendChild(text_node);
-        results_elem.appendChild(div);
+        display_doc(doc);
     }
     if (results.length === 0) {
-        results_elem.textContent = "No Results Found.";
+        display_no_results();
     }
 }
     </script>
