@@ -235,9 +235,9 @@ function file_browser_click() {
 
 function file_browser_callback(elem) {
     var doc = elem.value;
-    pdgui.post("file callback: file is " + elem.value);
-    pdgui.post("dir is " + pdgui.defunkify_windows_path(path.dirname(doc)));
-    pdgui.post("file is " + pdgui.defunkify_windows_path(path.basename(doc)));
+    //pdgui.post("file callback: file is " + elem.value);
+    //pdgui.post("dir is " + pdgui.defunkify_windows_path(path.dirname(doc)));
+    //pdgui.post("file is " + pdgui.defunkify_windows_path(path.basename(doc)));
     pdgui.doc_open(pdgui.defunkify_windows_path(path.dirname(doc)),
         pdgui.defunkify_windows_path(path.basename(doc)));
     display_directory(pdgui.defunkify_windows_path(path.dirname(doc)));
