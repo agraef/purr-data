@@ -4,7 +4,7 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-nwjsver = 0.15.4
+nwjsver = 0.17.6
 nwjspkg = nwjs-sdk-v$(nwjsver)-linux
 
 ifeq ("$(shell dpkg-architecture -qDEB_HOST_ARCH)","amd64")

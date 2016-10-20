@@ -42,7 +42,7 @@ debsrc = purr-data_$(debversion).orig.tar.gz
 debdist = purr-data-$(debversion)
 
 # nw.js sdk
-nwjsver = 0.15.4
+nwjsver = 0.17.6
 nwjspkg = nwjs-sdk-v$(nwjsver)-linux
 nwjs = $(nwjspkg)-ia32.tar.gz $(nwjspkg)-x64.tar.gz
 
