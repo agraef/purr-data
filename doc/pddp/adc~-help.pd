@@ -14,7 +14,7 @@
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
 #X text 12 5 KEYWORDS signal conversion;
-#X text 12 45 DESCRIPTION: audio input;
+#X text 12 45 DESCRIPTION audio input;
 #X text 12 65 INLET_0;
 #X text 12 85 OUTLET_N signal;
 #X text 12 165 RELEASE_DATE 1997;
