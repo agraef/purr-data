@@ -25,6 +25,32 @@ index.addField("description");
 index.addField("path");
 index.setRef("id");
 
+var filetypes = [".pd", ".txt", ".htm", ".html", ".pdf"];
+
+// Table of Contents to start with
+var toc = [
+    {
+        id: "doc/1.manual",
+        title: "Pd Manual",
+        description: "detailed description of the program's behavior and user interface"
+    },
+    {
+        id: "doc/2.control.examples",
+        title: "Control Tutorials",
+        description: "basic building blocks of the Pd language and environment"
+    },
+    {
+        id: "doc/3.audio.examples",
+        title: "Audio Tutorials",
+        description: "objects and concepts related to producing audio in realtime"
+    },
+    {
+        id: "doc/4.data.structures/pd-l2ork/ds-tutorials",
+        title: "Data Structures",
+        description: "custom data manipulation and interactive graphics"
+    }
+];
+
 // Stop-gap translator
 function translate_form() {
     var elements = document.querySelectorAll("[data-i18n]"),
@@ -86,9 +112,37 @@ function read_file(err, filename, stat) {
     }
 }
 
+function click_toc(dir) {
+    document.getElementById("search_text").value = dir;
+    doc_search();
+}
+
+function display_toc() {
+    var results_elem = document.getElementById("results"),
+        div,
+        a,
+        header,
+        text_node;
+    toc.forEach(function(doc, i, a) {
+        div = document.createElement("div");
+        a = document.createElement("a");
+        a.href = "javascript: click_toc('" + doc.id + "');";
+        a.textContent = doc.title;
+        // set title to path for tooltip
+        a.title = doc.id;
+        header = document.createElement("h3");
+        header.appendChild(a);
+        text_node = document.createTextNode(doc.description);
+        div.appendChild(header);
+        div.appendChild(text_node);
+        results_elem.appendChild(div);
+    });
+}
+
 function finish_build() {
     document.getElementById("search_text").disabled = false;
-    document.getElementById("results").innerHTML = "";
+    clear_results();
+    display_toc();
 }
 
 function build_index() {
@@ -109,13 +163,15 @@ function display_directory_callback(err, files) {
         pdgui.post("Search Engine: " + err);
     } else {
         files.forEach(function (f, i, a) {
-            doc_path = path.join(current_dir, f);
-            doc = index.documentStore.getDoc(doc_path) || {
-                id: doc_path,
-                title: f,
-                description: null
-            };
-            display_doc(doc);
+            if (filetypes.indexOf(path.extname(f)) !== -1) {
+                doc_path = path.join(current_dir, f);
+                doc = index.documentStore.getDoc(doc_path) || {
+                    id: doc_path,
+                    title: f,
+                    description: null
+                };
+                display_doc(doc);
+            }
         });
     }
 }
@@ -354,6 +410,8 @@ function register_window_id(id, attrs) {
     document.getElementById("search_text").placeholder =
         l("search.search_placeholder");
     add_events();
+    // set file types for the file dialog
+    document.getElementById("file_browser").accept = filetypes.join(",");
     document.getElementById("results").textContent = "Building Index...";
     document.getElementById("search_text").disabled = true;
     document.getElementById("file_browser").setAttribute("nwworkingdir",
@@ -412,7 +470,7 @@ function doc_search() {
     </script>
   </head>
   <body class="search_body">
-    <input type="file" id="file_browser" style="display: none;" onchange="file_browser_callback(this);" accept=".pd,.txt,.htm,.html,.pdf"></input>
+    <input type="file" id="file_browser" style="display: none;" onchange="file_browser_callback(this);"></input>
     <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
          width="220" height="50" viewBox="0 0 140 31.81">
       <g stroke-linecap="square" fill="none" stroke-width="3">
