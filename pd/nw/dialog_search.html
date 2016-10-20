@@ -451,6 +451,12 @@ function doc_search() {
         results,
         doc,
         i;
+    // if the search term is empty then just redisplay the toc
+    if (!search_text) {
+        clear_results();
+        display_toc();
+        return;
+    }
     // if the search term is doc/* short circuit the search and
     // just list the docs in that directory
     if (search_text.slice(0, 4) === "doc/" &&
