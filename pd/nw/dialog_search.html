@@ -78,6 +78,8 @@ function add_doc_to_index(filename, data) {
             .match(/#X text \-?[0-9]+ \-?[0-9]+ DESCRIPTION ([\s\S]*?);/i);
         keywords = keywords && keywords.length > 1 ? keywords[1].trim() : null;
         desc = desc && desc.length > 1 ? desc[1].trim() : null;
+        // Remove the Pd escapes for commas
+        desc = desc ? desc.replace(" \\,", ",") : null;
         if (desc) {
             // format Pd's "comma atoms" as normal commas
             desc = desc.replace(" \\,", ",");
