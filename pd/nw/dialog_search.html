@@ -233,9 +233,11 @@ function display_toc() {
             a.title = doc.id;
             header = document.createElement("h3");
             header.appendChild(a);
-            text_node = document.createTextNode(doc.description?doc.description:"no description");
             div.appendChild(header);
-            div.appendChild(text_node);
+	    if (doc.description) {
+		text_node = document.createTextNode(doc.description);
+		div.appendChild(text_node);
+	    }
 	} else {
 	    // make a session title
             header = document.createElement("h2");
@@ -545,9 +547,11 @@ function display_doc(doc) {
     a.title = doc.id;
     header = document.createElement("h3");
     header.appendChild(a);
-    text_node = document.createTextNode(doc.description?doc.description:"no description");
     div.appendChild(header);
-    div.appendChild(text_node);
+    if (doc.description) {
+	text_node = document.createTextNode(doc.description);
+	div.appendChild(text_node);
+    }
     results_elem.appendChild(div);
 }
 
