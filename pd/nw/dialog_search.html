@@ -28,8 +28,15 @@ index.setRef("id");
 var filetypes = [".pd", ".txt", ".htm", ".html", ".pdf"];
 
 // Table of Contents to start with
+/* NOTE: A section title is indicated by an entry consisting just of the title
+   field. All other entries *must* also contain the directory (relative to the
+   pd-l2ork lib directory) in the id field, and may optionally contain a
+   description field. */
 var toc = [
     // Original Pd documentation
+    {
+        title: "Pure Data",
+    },
     {
         id: "doc/1.manual",
         title: "Pd Manual",
@@ -62,28 +69,69 @@ var toc = [
     },
 /*  // Section 7 of the vanilla Pd docs, uncomment these if needed.
     {
+        title: "Stuff",
+    },
+    {
         id: "doc/7.stuff/soundfile-tools",
-        title: "Stuff - Soundfile Tools",
+        title: "Soundfile Tools",
         description: "some standard audio transformations packaged to work with mono soundfiles"
     },
     {
         id: "doc/7.stuff/synth",
-        title: "Stuff - Synth",
+        title: "Synth",
         description: "polyphonic subtractive synthesizer example"
     },
     {
         id: "doc/7.stuff/tools",
-        title: "Stuff - Tools",
+        title: "Tools",
         description: "useful little helper patches"
     },
 */
     // Pd-L2Ork extras
     {
+        title: "Pd-L2Ork",
+    },
+    {
         id: "doc/4.data.structures/pd-l2ork/ds-tutorials",
-        title: "Pd-L2Ork Data Structure Tutorials",
+        title: "Data Structure Tutorials",
         description: "overview of svg-based data structure drawing commands"
     },
-    // Popular external libraries
+    {
+        id: "extra/disis",
+        title: "DISIS",
+        description: "DISIS externals (wiimote et al)"
+    },
+    // PDDP tutorials
+    {
+        title: "PDDP Tutorials",
+    },
+    {
+        id: "doc/manuals/0.Intro",
+        title: "Intro",
+        description: "getting started with Pd"
+    },
+    {
+        id: "doc/manuals/1.Sound",
+        title: "Sound",
+        description: "Pd sound examples"
+    },
+    {
+        id: "doc/manuals/2.Image",
+        title: "Image",
+        description: "3D graphics with GEM"
+    },
+    {
+        id: "doc/manuals/3.Networking",
+        title: "Networking",
+        description: "introduction to Pd's networking facilities"
+    },
+    // External libraries
+    // NOTE: These are just some popular examples. Pd-L2Ork ships with
+    // many external libraries, too many to list them all. Feel free
+    // to edit this list as needed.
+    {
+        title: "Externals",
+    },
     {
         id: "extra/cyclone",
         title: "Cyclone",
@@ -93,6 +141,11 @@ var toc = [
         id: "extra/Gem",
         title: "GEM",
         description: "Graphics Environment for Multimedia (OpenGL graphics in Pd)"
+    },
+    {
+        id: "extra/lyon",
+        title: "LyonPotpourri",
+        description: "Eric Lyon's external collection"
     },
 ];
 
@@ -172,16 +225,24 @@ function display_toc() {
         text_node;
     toc.forEach(function(doc, i, a) {
         div = document.createElement("div");
-        a = document.createElement("a");
-        a.href = "javascript: click_toc('" + doc.id + "');";
-        a.textContent = doc.title;
-        // set title to path for tooltip
-        a.title = doc.id;
-        header = document.createElement("h3");
-        header.appendChild(a);
-        text_node = document.createTextNode(doc.description?doc.description:"no description");
-        div.appendChild(header);
-        div.appendChild(text_node);
+	if (doc.id) {
+            a = document.createElement("a");
+            a.href = "javascript: click_toc('" + doc.id + "');";
+            a.textContent = doc.title;
+            // set title to path for tooltip
+            a.title = doc.id;
+            header = document.createElement("h3");
+            header.appendChild(a);
+            text_node = document.createTextNode(doc.description?doc.description:"no description");
+            div.appendChild(header);
+            div.appendChild(text_node);
+	} else {
+	    // make a session title
+            header = document.createElement("h2");
+            text_node = document.createTextNode(doc.title);
+            header.appendChild(text_node);
+            div.appendChild(header);
+	}
         results_elem.appendChild(div);
     });
 }
