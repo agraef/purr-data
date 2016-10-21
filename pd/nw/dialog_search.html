@@ -275,7 +275,7 @@ function display_directory_callback(err, files) {
                 doc_path = path.join(current_dir, f);
                 doc = index.documentStore.getDoc(doc_path) || {
                     id: doc_path,
-                    title: f,
+                    title: path.basename(f, ".pd"),
                     description: null
                 };
                 display_doc(doc);
