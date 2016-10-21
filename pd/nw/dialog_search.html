@@ -35,28 +35,26 @@ var filetypes = [".pd", ".txt", ".htm", ".html", ".pdf"];
 var toc = [
     // Original Pd documentation
     {
-        title: "Pure Data",
-    },
-    {
         id: "doc/1.manual",
         title: "Pd Manual",
-        description: "HTML manual for Pure Data"
+        description: "HTML manual"
     },
     {
         id: "doc/2.control.examples",
         title: "Control Tutorials",
-        description: "basic building blocks of the Pd language and environment"
+        description: "the Pd language and editor"
     },
     {
         id: "doc/3.audio.examples",
         title: "Audio Tutorials",
-        description: "objects and concepts related to producing audio in realtime"
+        description: "manipulating audio in realtime"
     },
     {
         id: "doc/4.data.structures",
         title: "Data Structures",
-        description: "custom data manipulation and interactive graphics"
+        description: "custom data and 2d visualization"
     },
+/*
     {
         id: "doc/5.reference",
         title: "Reference",
@@ -67,7 +65,7 @@ var toc = [
         title: "Externals",
         description: "how to code control and signal objects in C"
     },
-/*  // Section 7 of the vanilla Pd docs, uncomment these if needed.
+    // Section 7 of the vanilla Pd docs, uncomment these if needed.
     {
         title: "Stuff",
     },
@@ -89,17 +87,9 @@ var toc = [
 */
     // Pd-L2Ork extras
     {
-        title: "Pd-L2Ork",
-    },
-    {
         id: "doc/4.data.structures/pd-l2ork/ds-tutorials",
-        title: "Data Structure Tutorials",
-        description: "overview of svg-based data structure drawing commands"
-    },
-    {
-        id: "extra/disis",
-        title: "DISIS",
-        description: "DISIS externals (wiimote et al)"
+        title: "Pd-l2ork Data Structures",
+        description: "new and improved data structure visualizations"
     },
     // PDDP tutorials
     {
@@ -137,11 +127,12 @@ var toc = [
         title: "Cyclone",
         description: "library of clones of Max/MSP 4.x objects"
     },
-    {
-        id: "extra/Gem",
-        title: "GEM",
-        description: "Graphics Environment for Multimedia (OpenGL graphics in Pd)"
-    },
+    // Gem isn't currently running on OSX, so we don't list it here
+//    {
+//        id: "extra/Gem",
+//        title: "GEM",
+//        description: "Graphics Environment for Multimedia (OpenGL graphics in Pd)"
+//    },
     {
         id: "extra/lyon",
         title: "LyonPotpourri",
