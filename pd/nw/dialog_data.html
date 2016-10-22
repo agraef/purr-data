@@ -230,7 +230,7 @@ function build_form(template_string) {
         t,
         i,
         j,
-        left_col;
+        left_column;
     // For now we just build the form from the main template
     // for the scalar. If there are any array, canvas, or list
     // fields we just put all of their contents in a multi-line text
@@ -238,12 +238,20 @@ function build_form(template_string) {
     t = t_array[0];
 
     document.getElementById("legend").textContent = t.template;
-    left_col = true;
+    left_column = false;
     for (i = 0; i < t.fields.length; i++) {
         if (t.fields[i].type === "symbol" ||
             t.fields[i].type === "float") {
-            add_text_input(t.fields[i], left_col, i === 0);
-            left_col = (t.fields[i].type === "float") ? false : true;
+
+            if (t.fields[i].type === "float") {
+                left_column = !left_column;
+            } else {
+                left_column = true;
+            }
+            add_text_input(t.fields[i], left_column, i === 0);
+            if (t.fields[i].type === "symbol") {
+                left_column = false;
+            }
         }
     }
     // Now for array, canvas, and text fields. These get a single textarea
