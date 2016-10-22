@@ -1303,6 +1303,7 @@ function nw_create_patch_window_menus(gui, w, name) {
             var z = gui.Window.get().zoomLevel;
             if (z < 8) { z++; }
             gui.Window.get().zoomLevel = z;
+            pdgui.gui_canvas_get_scroll(name);
         }
     });
     minit(m.view.zoomout, {
@@ -1311,6 +1312,7 @@ function nw_create_patch_window_menus(gui, w, name) {
             var z = gui.Window.get().zoomLevel;
             if (z > -7) { z--; }
             gui.Window.get().zoomLevel = z;
+            pdgui.gui_canvas_get_scroll(name);
         }
     });
     minit(m.view.zoomreset, {
