@@ -2909,12 +2909,12 @@ function gui_drawnumber_vis(cid, parent_tag, tag, x, y, scale_x, scale_y,
         configure_item(svg_text, {
             transform: "scale(" + scale_x + "," + scale_y + ") " +
                        "translate(" + x + ")",
-            y: y,
+            y: y + fontsize,
             // Turns out we can't do 'hanging' baseline because it's borked
             // when scaled. Bummer...
             // "dominant-baseline": "hanging",
             "shape-rendering": "optimizeSpeed",
-            "font-size": font + "px",
+            "font-size": fontsize + "px",
             fill: fontcolor,
             visibility: visibility === 1 ? "normal" : "hidden",
             id: tag
