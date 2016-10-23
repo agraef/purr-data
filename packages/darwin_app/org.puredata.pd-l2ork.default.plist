@@ -70,8 +70,10 @@
 	<string>ekext</string>
 	<key>loadlib32</key>
 	<string>pdp</string>
+	<key>loadlib33</key>
+	<string>disis</string>
 	<key>nloadlib</key>
-	<string>32</string>
+	<string>33</string>
 	<key>path1</key>
 	<string>/System/Library/Fonts</string>
 	<key>path2</key>
