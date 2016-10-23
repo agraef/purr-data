@@ -346,112 +346,6 @@ externalsdir ?= ..
 Makefile.pdlibbuilder = true
 
 
-################################################################################
-### variables: library name and version ########################################
-################################################################################
-
-
-# strip possibles spaces from lib.name, they mess up calculated file names
-lib.name := $(strip $(lib.name))
-
-# if meta file exists, check library version 
-metafile := $(wildcard $(lib.name)-meta.pd)
-
-ifdef metafile
-  lib.version := $(shell sed -n \
-    's|^\#X text [0-9][0-9]* [0-9][0-9]* VERSION \(.*\);|\1|p' \
-    $(metafile))
-endif
-
-
-################################################################################
-### variables: files ###########################################################
-################################################################################
-
-
-#=== sources ===================================================================
-
-
-# (re)define <classname>.class.sources using file names in class.sources
-
-define add-class-source
-$(notdir $(basename $v)).class.sources += $v
-endef
-
-$(foreach v, $(class.sources), $(eval $(add-class-source)))
-
-# derive class names from <classname>.class.sources variables
-sourcevariables := $(filter %.class.sources, $(.VARIABLES))
-classes := $(basename $(basename $(sourcevariables)))
-
-# accumulate all source files specified in makefile
-classes.sources := $(sort $(foreach v, $(sourcevariables), $($v)))
-all.sources := $(classes.sources) $(lib.setup.sources) \
-  $(shared.sources) $(common.sources)
-
-
-#=== object files ==============================================================
-
-
-# construct object filenames from all C and C++ source file names
-classes.objects := $(addsuffix .o, $(basename $(classes.sources)))
-common.objects := $(addsuffix .o, $(basename $(common.sources)))
-shared.objects := $(addsuffix .o, $(basename $(shared.sources)))
-lib.setup.objects := $(addsuffix .o, $(basename $(lib.setup.sources)))
-all.objects = $(classes.objects) $(common.objects) $(shared.objects) \
-  $(lib.setup.objects)
-
-
-#=== executables ===============================================================
-
-
-# use recursive variables here because executable extension is not yet known
-
-# construct class executable names from class names
-classes.executables = $(addsuffix .$(extension), $(classes))
-
-# construct shared lib executable name if shared sources are defined
-ifdef shared.sources
-  shared.lib = lib$(lib.name).$(shared.extension)
-else
-  shared.lib =
-endif
-
-
-################################################################################
-### variables per platform #####################################################
-################################################################################
-
-
-#=== flags per architecture ====================================================
-
-
-# Set architecture-dependent cflags, mainly for Linux. For Mac and Windows, 
-# arch.c.flags are overriden below.
-
-machine := $(shell uname -m)
-
-# Raspberry Pi 1st generation
-ifeq ($(machine), armv6l)
-  arch.c.flags = -march=armv6 -mfpu=vfp -mfloat-abi=hard
-endif
-
-# Beagle, Udoo, RPi2 etc.
-ifeq ($(machine), armv7l)
-  arch.c.flags = -march=armv7-a -mfpu=vfpv3 -mfloat-abi=hard
-endif
-
-# Intel 32 bit, build with SSE and SSE2 instructions
-ifeq ($(findstring $(machine), i386 i686), $(machine))
-  arch.c.flags = -march=pentium4 -mfpmath=sse -msse -msse2
-endif
-
-# Intel/AMD 64 bit, build with SSE, SSE2 and SSE3 instructions
-ifeq ($(findstring $(machine), ia64 x86_64), $(machine))
-  arch.c.flags = -march=core2 -mfpmath=sse -msse -msse2 -msse3 
-endif
-
-
 #=== operating system ==========================================================
 
 
@@ -589,6 +483,112 @@ ifeq ($(system), Windows)
   shared.extension = dll
   shared.ldflags := -static-libgcc -shared "$(pdbinpath)/pd.dll"
   stripflags = --strip-unneeded -R .note -R .comment
+endif
+
+
+################################################################################
+### variables: library name and version ########################################
+################################################################################
+
+
+# strip possibles spaces from lib.name, they mess up calculated file names
+lib.name := $(strip $(lib.name))
+
+# if meta file exists, check library version 
+metafile := $(wildcard $(lib.name)-meta.pd)
+
+ifdef metafile
+  lib.version := $(shell sed -n \
+    's|^\#X text [0-9][0-9]* [0-9][0-9]* VERSION \(.*\);|\1|p' \
+    $(metafile))
+endif
+
+
+################################################################################
+### variables: files ###########################################################
+################################################################################
+
+
+#=== sources ===================================================================
+
+
+# (re)define <classname>.class.sources using file names in class.sources
+
+define add-class-source
+$(notdir $(basename $v)).class.sources += $v
+endef
+
+$(foreach v, $(class.sources), $(eval $(add-class-source)))
+
+# derive class names from <classname>.class.sources variables
+sourcevariables := $(filter %.class.sources, $(.VARIABLES))
+classes := $(basename $(basename $(sourcevariables)))
+
+# accumulate all source files specified in makefile
+classes.sources := $(sort $(foreach v, $(sourcevariables), $($v)))
+all.sources := $(classes.sources) $(lib.setup.sources) \
+  $(shared.sources) $(common.sources)
+
+
+#=== object files ==============================================================
+
+
+# construct object filenames from all C and C++ source file names
+classes.objects := $(addsuffix .o, $(basename $(classes.sources)))
+common.objects := $(addsuffix .o, $(basename $(common.sources)))
+shared.objects := $(addsuffix .o, $(basename $(shared.sources)))
+lib.setup.objects := $(addsuffix .o, $(basename $(lib.setup.sources)))
+all.objects = $(classes.objects) $(common.objects) $(shared.objects) \
+  $(lib.setup.objects)
+
+
+#=== executables ===============================================================
+
+
+# use recursive variables here because executable extension is not yet known
+
+# construct class executable names from class names
+classes.executables = $(addsuffix .$(extension), $(classes))
+
+# construct shared lib executable name if shared sources are defined
+ifdef shared.sources
+  shared.lib = lib$(lib.name).$(shared.extension)
+else
+  shared.lib =
+endif
+
+
+################################################################################
+### variables per platform #####################################################
+################################################################################
+
+
+#=== flags per architecture ====================================================
+
+
+# Set architecture-dependent cflags, mainly for Linux. For Mac and Windows, 
+# arch.c.flags are overriden below.
+
+machine := $(shell uname -m)
+
+# Raspberry Pi 1st generation
+ifeq ($(machine), armv6l)
+  arch.c.flags = -march=armv6 -mfpu=vfp -mfloat-abi=hard
+endif
+
+# Beagle, Udoo, RPi2 etc.
+ifeq ($(machine), armv7l)
+  arch.c.flags = -march=armv7-a -mfpu=vfpv3 -mfloat-abi=hard
+endif
+
+# Intel 32 bit, build with SSE and SSE2 instructions
+ifeq ($(findstring $(machine), i386 i686), $(machine))
+  arch.c.flags = -march=pentium4 -mfpmath=sse -msse -msse2
+endif
+
+# Intel/AMD 64 bit, build with SSE, SSE2 and SSE3 instructions
+ifeq ($(findstring $(machine), ia64 x86_64), $(machine))
+  arch.c.flags = -march=core2 -mfpmath=sse -msse -msse2 -msse3 
 endif
 
 
