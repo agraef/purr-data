@@ -62,7 +62,7 @@ function apply() {
     data_string += ";\n";
     // now tack on any vector data we may have
     if (vector_textarea) {
-        data_string += vector_textarea.textContent;
+        data_string += vector_textarea.value;
         // strip off the trailing semicolon. Otherwise Pd will crash...
         data_string = data_string.slice(0, -1);
     }

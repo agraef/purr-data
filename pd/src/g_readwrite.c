@@ -341,8 +341,17 @@ void canvas_dataproperties(t_canvas *x, t_scalar *sc, t_binbuf *b)
         && (template = template_findbyname(((t_scalar *)newone)->sc_template)))
     {
             /* copy new one to old one and delete new one */
-        memcpy(&((t_scalar *)oldone)->sc_vec, &((t_scalar *)newone)->sc_vec,
-            template->t_n * sizeof(t_word));
+        int i;
+        /* swap out the sc_vec field. That way we'll keep the one from
+           the new scalar, and the old one will get freed by word_free (which
+           gets called from pd_free below)
+        */
+        for (i = 0; i < template->t_n; i++)
+        {
+            t_word w = ((t_scalar *)newone)->sc_vec[i];
+            ((t_scalar *)newone)->sc_vec[i] = ((t_scalar *)oldone)->sc_vec[i];
+            ((t_scalar *)oldone)->sc_vec[i] = w;
+        }
         pd_free(&newone->g_pd);
         if (glist_isvisible(x))
         {
