@@ -70,4 +70,5 @@ path32: /usr/lib/pd-l2ork/extra/ekext
 path33: /usr/lib/pd-l2ork/extra/flext
 path34: /usr/lib/pd-l2ork/extra/rjlib
 path35: /usr/lib/pd-l2ork/extra/lyon
-npath: 35
+path36: /usr/lib/pd-l2ork/extra/disis
+npath: 36
