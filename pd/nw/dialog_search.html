@@ -88,7 +88,7 @@ var toc = [
     // Pd-L2Ork extras
     {
         id: "doc/4.data.structures/pd-l2ork/ds-tutorials",
-        title: "Pd-l2ork Data Structures",
+        title: "Pd-L2Ork Data Structures",
         description: "new and improved data structure visualizations"
     },
     // PDDP tutorials
@@ -127,12 +127,16 @@ var toc = [
         title: "Cyclone",
         description: "library of clones of Max/MSP 4.x objects"
     },
-    // Gem isn't currently running on OSX, so we don't list it here
-//    {
-//        id: "extra/Gem",
-//        title: "GEM",
-//        description: "Graphics Environment for Multimedia (OpenGL graphics in Pd)"
-//    },
+    {
+        id: "extra/disis",
+        title: "DISIS",
+        description: "DISIS externals (wiimote et al)"
+    },
+    {
+        id: "extra/Gem",
+        title: "GEM",
+        description: "Graphics Environment for Multimedia (OpenGL graphics in Pd)"
+    },
     {
         id: "extra/lyon",
         title: "LyonPotpourri",
@@ -217,17 +221,22 @@ function display_toc() {
     toc.forEach(function(doc, i, a) {
         div = document.createElement("div");
 	if (doc.id) {
-            a = document.createElement("a");
-            a.href = "javascript: click_toc('" + doc.id + "');";
-            a.textContent = doc.title;
-            // set title to path for tooltip
-            a.title = doc.id;
-            header = document.createElement("h3");
-            header.appendChild(a);
-            div.appendChild(header);
-	    if (doc.description) {
-		text_node = document.createTextNode(doc.description);
-		div.appendChild(text_node);
+	    try {
+		fs.accessSync(path.join(pdgui.get_lib_dir(), doc.id), fs.F_OK);
+		a = document.createElement("a");
+		a.href = "javascript: click_toc('" + doc.id + "');";
+		a.textContent = doc.title;
+		// set title to path for tooltip
+		a.title = doc.id;
+		header = document.createElement("h3");
+		header.appendChild(a);
+		div.appendChild(header);
+		if (doc.description) {
+		    text_node = document.createTextNode(doc.description);
+		    div.appendChild(text_node);
+		}
+	    } catch (e) {
+		// entry doesn't exist, ignore it
 	    }
 	} else {
 	    // make a session title
@@ -236,7 +245,9 @@ function display_toc() {
             header.appendChild(text_node);
             div.appendChild(header);
 	}
-        results_elem.appendChild(div);
+	if (div.hasChildNodes()) {
+            results_elem.appendChild(div);
+	}
     });
 }
 
