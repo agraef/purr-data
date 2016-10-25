@@ -40,12 +40,22 @@ exports.get_lib_dir = function() {
     return lib_dir;
 }
 
-exports.get_pd_opendir = function() {
+function get_pd_opendir() {
     if (pd_opendir) {
         return pd_opendir;
     } else {
         return pwd;
     }
+}
+
+exports.get_pd_opendir = get_pd_opendir;
+
+function set_pd_opendir(dir) {
+    pd_opendir = dir;
+}
+
+function gui_set_current_dir(dummy, dir_and_filename) {
+    set_pd_opendir(path.dirname(dir_and_filename));
 }
 
 function gui_set_gui_preset(name) {
@@ -543,7 +553,7 @@ exports.menu_saveas = menu_saveas;
 
 function menu_new () {
     // try not to use a global here
-    untitled_directory = pwd;
+    untitled_directory = get_pd_opendir();
     pdsend("pd filename",
            "Untitled-" + untitled_number,
            enquote(defunkify_windows_path(untitled_directory)));
@@ -764,7 +774,7 @@ function open_file(file) {
     if (basename.match(/\.(pd|pat|mxt)$/i) != null) {
         pdsend("pd open", enquote(basename),
             (enquote(directory)));
-        pd_opendir = directory;
+        set_pd_opendir(directory);
         //::pd_guiprefs::update_recentfiles "$filename" 1
     }
 }
