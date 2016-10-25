@@ -3,21 +3,21 @@
 #X text 0 1 New Drawing Commands: path;
 #X text 1 1 __________________________;
 #X text 53 23 Paths are complex drawings.;
-#X obj 53 57 struct drawtut-path float x float y;
-#X scalar drawtut-path 292 174 \;;
-#X msg 53 127 stroke black \, stroke-width 1 \, fill yellow \, transform
+#X obj 53 47 struct drawtut-path float x float y;
+#X scalar drawtut-path 292 124 \;;
+#X msg 53 107 stroke black \, stroke-width 1 \, fill yellow \, transform
 scale 2;
-#X text 671 271 <- a complex path;
-#X obj 53 102 loadbang;
-#X text 52 424 Svg paths are quite complex and powerful. After the
+#X text 671 221 <- a complex path;
+#X obj 53 82 loadbang;
+#X text 52 404 Svg paths are quite complex and powerful. After the
 word "path" \, you must specify single-letter drawing commands followed
 by numeric coordinate and shape data for the command. A single path
 can have several subpaths-- the one to the left has three \, one for
 each letter.;
-#X text 52 494 You can find out more about them in the svg specification:
+#X text 52 474 You can find out more about them in the svg specification:
 ;
-#X obj 52 515 pddp/pddplink http://www.w3.org/TR/SVG/paths.html;
-#X obj 53 153 draw path m 156.27 34.6306 3.94531 0 0 25.8398 14.1992
+#X obj 52 495 pddp/pddplink http://www.w3.org/TR/SVG/paths.html;
+#X obj 53 133 draw path m 156.27 34.6306 3.94531 0 0 25.8398 14.1992
 0 0 3.32031 -18.1445 0 0 -29.1602 m -19.6484 2.67578 c -2.86459 2.7e-05
 -5.14324 1.06773 -6.83593 3.20312 -1.6797 2.13544 -2.51954 5.04559
 -2.51953 8.73047 -1e-05 3.67189 0.83983 6.57553 2.51953 8.71094 1.69269
@@ -32,7 +32,7 @@ each letter.;
 1.22395 -8.28123 3.67187 -11.0156 2.46093 -2.74737 5.74218 -4.12106
 9.84375 -4.12109 m -32.6953 0.527344 3.94531 0 0 25.8398 14.1992 0
 0 3.32031 -18.1445 0 0 -29.1602;
-#X text 468 349 Unfortunately the bounding-box calculation for some
+#X text 468 299 Unfortunately the bounding-box calculation for some
 curves doesn't work as precisely as it should. This means some paths
 may extend past the edges of the selection rectangle in Pd. (Like the
 bottom of the "O" in the example above;
@@ -44,5 +44,12 @@ bottom of the "O" in the example above;
 #X text 16 46 DESCRIPTION drawing paths to display data structure data
 ;
 #X restore 776 520 pd META;
+#X text 466 375 If you copy/paste path data from SVGs on the web \,
+try putting the data in quotes and prepending "d=" \, like this:;
+#X text 466 415 [draw path d="M-2 0 3-3"];
+#X text 466 437 When you instantiate it \, Pd will normalize the path
+data by putting spaces between each item in the path \, removing commas
+\, and making all commands explicit \, like this:;
+#X text 466 485 [draw path M -2 0 L 3 -3];
 #X connect 5 0 11 0;
 #X connect 7 0 5 0;
