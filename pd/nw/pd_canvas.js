@@ -1141,7 +1141,7 @@ function nw_create_patch_window_menus(gui, w, name) {
                 style: "display: none;",
                 type: "file",
                 id: "fileDialog",
-                nwworkingdir: pdgui.get_pwd(),
+                nwworkingdir: pdgui.get_pd_opendir(),
                 multiple: null,
                 // These are copied from pd_filetypes in pdgui.js
                 accept: ".pd,.pat,.mxt,.mxb,.help"

@@ -364,7 +364,7 @@ function nw_create_pd_window_menus(gui, w) {
                 style: "display: none;",
                 type: "file",
                 id: "fileDialog",
-                nwworkingdir: pdgui.get_pwd(),
+                nwworkingdir: pdgui.get_pd_opendir(),
                 multiple: null,
                 // These are copied from pd_filetypes in pdgui.js
                 accept: ".pd,.pat,.mxt,.mxb,.help"
