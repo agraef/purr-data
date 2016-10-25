@@ -294,7 +294,9 @@ void sys_log_error(int type)
     if (type != ERR_NOTHING && !sched_diored &&
         (sched_diddsp >= sched_dioredtime))
     {
-        sys_vgui("pdtk_pd_dio 1\n");
+        // XXXFIXME
+        //sys_vgui("pdtk_pd_dio 1\n");
+        error("audio I/O dropout");
         sched_diored = 1;
     }
     sched_dioredtime =
@@ -327,7 +329,8 @@ static void sched_pollformeters( void)
         return;
     if (sched_diored && (sched_diddsp - sched_dioredtime > 0))
     {
-        sys_vgui("pdtk_pd_dio 0\n");
+        // XXXFIXME
+        //sys_vgui("pdtk_pd_dio 0\n");
         sched_diored = 0;
     }
     if (sched_meterson)
@@ -347,7 +350,8 @@ static void sched_pollformeters( void)
     if (inclip != sched_lastinclip || outclip != sched_lastoutclip
         || indb != sched_lastindb || outdb != sched_lastoutdb)
     {
-        sys_vgui("pdtk_pd_meters %d %d %d %d\n", indb, outdb, inclip, outclip);
+        // XXXFIXME
+        //sys_vgui("pdtk_pd_meters %d %d %d %d\n", indb, outdb, inclip, outclip);
         sched_lastinclip = inclip;
         sched_lastoutclip = outclip;
         sched_lastindb = indb;
@@ -403,7 +407,8 @@ void sched_set_using_audio(int flag)
 
     sys_time_per_dsp_tick = (TIMEUNITPERSECOND) *
         ((double)sys_schedblocksize) / sys_dacsr;
-    sys_vgui("pdtk_pd_dsp %s\n", flag ? "on" : "off");
+    // XXXFIXME
+    //sys_vgui("pdtk_pd_dsp %s\n", flag ? "on" : "off");
 }
 
     /* take the scheduler forward one DSP tick, also handling clock timeouts */
@@ -510,7 +515,7 @@ static void m_pollingscheduler( void)
                         idletime = sys_getrealtime();
                     else if (sys_getrealtime() - idletime > 1.)
                     {
-                        error("audio I/O stuck... closing audio\n");
+                        error("audio I/O stuck... closing audio");
                         sys_close_audio();
                         sched_set_using_audio(SCHED_AUDIO_NONE);
                         goto waitfortick;

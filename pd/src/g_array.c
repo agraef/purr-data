@@ -1548,8 +1548,9 @@ static void garray_doredraw(t_gobj *client, t_glist *glist)
         if (selected)
         {
             //fprintf(stderr,"garray_doredraw isselected\n");
-            sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n",
-                glist_getcanvas(glist), glist, 1);
+            // XXXFIXME?
+            //sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n",
+            //    glist_getcanvas(glist), glist, 1);
             // a giant kludge-- we really just need gop items
             // to be children of their gop <group>
             t_scalar *sc = x->x_scalar;
