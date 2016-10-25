@@ -66,6 +66,10 @@ var fs = require("fs");     // for fs.existsSync
 var path = require("path"); // for path.dirname path.extname path.join
 var cp = require("child_process"); // for starting core Pd from GUI in OSX
 
+var parse_svg_path = require("./parse-svg-path.js");
+
+exports.parse_svg_path = parse_svg_path;
+
 // local strings
 var lang = require("./pdlang.js");
 

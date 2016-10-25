@@ -32,8 +32,29 @@ function close_save_dialog() {
     document.getElementById("save_before_quit").close();
 }
 
+function text_to_normalized_svg_path(text) {
+    text = text.slice(4).trim()  // draw
+               .slice(4).trim()  // path
+               .slice(1).trim()  // d
+               .slice(1).trim(); // =
+    if (text.slice(0, 1) === '"') {
+        text = text.slice(1);
+    }
+    if (text.slice(-1) === '"') {
+        text = text.slice(0, -1);
+    }
+    text = pdgui.parse_svg_path(text);
+    return "draw path " + text.reduce(function (prev, curr) {
+        return prev.concat(curr)
+    }).join(" ");
+}
+
 function text_to_fudi(text) {
     text = text.trim();
+    // special case for draw path d="arbitrary path string" ...
+    if (text.search(/^draw\s+path\s+d\s*=\s*"/) !== -1) {
+        text = text_to_normalized_svg_path(text);
+    }
     text = text.replace(/(\$[0-9]+)/g, "\\$1");    // escape dollar signs
     text = text.replace(/(\$@)/g, "\\$@");         // escape special $@ sign
     text = text.replace(/(?!\\)(,|;)/g, " \\$1 "); // escape "," and ";"
