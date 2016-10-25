@@ -4466,7 +4466,7 @@ static void draw_setup(void)
     class_addmethod(svg_class, (t_method)svg_setattr,
         gensym("cy"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_data,
-        gensym("data"), A_GIMME, 0);
+        gensym("d"), A_GIMME, 0);
     //class_addmethod(svg_class, (t_method)svg_drag,
     //    gensym("drag"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_event,
