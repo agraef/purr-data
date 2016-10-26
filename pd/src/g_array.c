@@ -1548,7 +1548,10 @@ static void garray_doredraw(t_gobj *client, t_glist *glist)
         if (selected)
         {
             //fprintf(stderr,"garray_doredraw isselected\n");
-            // XXXFIXME?
+            /* I haven't found a case where this is actually needed...
+               perhaps with nested GOPs or something? Anyhow if there's
+               a regression this commented-out call might be a place
+               to investigate... */
             //sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n",
             //    glist_getcanvas(glist), glist, 1);
             // a giant kludge-- we really just need gop items
