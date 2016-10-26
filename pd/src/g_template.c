@@ -1657,7 +1657,7 @@ char *get_strokelinecap(int a)
     static char strokelinecap[15];
     if (a == 0) sprintf(strokelinecap, "butt");
     else if (a == 1) sprintf(strokelinecap, "round");
-    else if (a == 2) sprintf(strokelinecap, "projecting");
+    else if (a == 2) sprintf(strokelinecap, "square");
     else sprintf(strokelinecap, "butt");
     return (strokelinecap);
 }
