@@ -341,14 +341,12 @@ static char *pddplink_optext(int *sizep, int ac, t_atom *av)
 
 static void pddplink_free(t_pddplink *x)
 {
-post("freeing the thing...");
     if (x->x_vistext)
 	freebytes(x->x_vistext, x->x_vissize);
 }
 
 static void *pddplink_new(t_symbol *s, int ac, t_atom *av)
 {
-post("creating a new link");
     t_pddplink xgen, *x;
     int skip;
     xgen.x_isboxed = 0;
