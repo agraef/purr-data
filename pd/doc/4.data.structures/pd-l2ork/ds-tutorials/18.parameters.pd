@@ -1,0 +1,84 @@
+#N struct drawtut-parameters float x float y float r;
+#N canvas 1 25 537 571 10;
+#N canvas 290 275 450 300 META 0;
+#X text 16 6 KEYWORDS tutorial data_structure draw;
+#X text 16 26 LICENSE SIBSD;
+#X text 16 66 AUTHOR Jonathan Wilkes;
+#X text 16 86 HELP_PATCH_AUTHORS Jonathan Wilkes;
+#X text 16 46 DESCRIPTION animating scalars with the [draw] command
+;
+#X restore 400 538 pd META;
+#X text 0 1 New Drawing Commands: parameters inside attributes;
+#X text 1 1 __________________________________________________;
+#X obj 51 30 struct drawtut-parameters float x float y float r;
+#X scalar drawtut-parameters 377 356 145 \;;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X obj 50 8 draw path M 65.1156 83.9018 C 64.723 82.0975 64.1326 80.0178
+64 78.9856 C 63.3534 73.9518 55.7499 68.6425 41.3075 64.4957 C 36.4634
+63.1049 30.7734 61.2873 28.6632 60.4568 C 16.2466 55.57 12.0128 45.0033
+17.5 32.5959 C 18.875 29.4868 20 26.2568 20 25.4181 C 20 22.8404 14.6722
+17.0832 12.3228 17 C 8.47609 16.8638 4 10.5268 4 7.77216 C 4 5.7091
+8.64238 5.89799 12.1219 6.71428 C 12.1219 6.71428 16.7077 7.35054 18.2061
+11.7776 C 18.6767 13.1682 18.4122 13.8243 19.3659 15.2703 C 20.3196
+16.7163 23.3616 19.0885 24.1635 20.3979 C 26.8148 24.727 26.6395 28.3724
+24.022 34.1408 C 22.934 36.5384 22.034 39.9468 22.022 41.7152 C 21.9921
+46.0853 26.9562 51.57 33.4239 54.313 C 36.2158 55.497 43.3268 58.8519
+49.2262 61.7684 C 62.1361 68.1506 64.9501 71.2149 66.1835 80.2337 C
+67.134 87.1838 66.7361 88.5505 65.1156 83.9018 z;
+#X obj 50 244 draw path M 5.0713 7.44696 L 2.68749 5.47181 L 2.3806
+4.18776 M 2.82812 5.42493 L 1.36538 5.01748;
+#X restore 46 266 draw group;
+#X msg 46 147 transform rotate r 35 40 \, mouseover 1;
+#X obj 46 288 route mouseover;
+#X obj 46 310 unpack p;
+#X obj 46 539 set drawtut-parameters r;
+#X scalar drawtut-parameters 257 468 -61 \;;
+#X scalar drawtut-parameters 221 312 389 \;;
+#X scalar drawtut-parameters 372 423 39 \;;
+#X scalar drawtut-parameters 399 323 139.32 \;;
+#X scalar drawtut-parameters 264 417 243 \;;
+#X scalar drawtut-parameters 211 420 -103 \;;
+#X scalar drawtut-parameters 417 415 -301 \;;
+#X scalar drawtut-parameters 287 339 -83.4 \;;
+#X scalar drawtut-parameters 333 442 27 \;;
+#X scalar drawtut-parameters 296 301 -258 \;;
+#X obj 46 332 trigger anything anything;
+#X obj 46 354 t a b;
+#X obj 46 378 get drawtut-parameters r;
+#X obj 46 517 line;
+#X obj 46 469 pack;
+#X msg 46 495 \$1 \, \$2 250;
+#X obj 46 123 loadbang;
+#X obj 46 400 % 360;
+#X obj 46 422 t a a;
+#X obj 73 445 +;
+#X obj 85 400 random 720;
+#X obj 85 422 - 360;
+#X text 49 64 Almost all attributes can take variables as parameters.
+This lets you set different graphical state for each instance of a
+data structure.;
+#X text 59 171 Above we set the rotate to field "r". That means each
+snake has its rotation set to whatever happens to be the value of "r".
+;
+#X msg 65 231 transform rotate 45 35 40;
+#X text 226 230 <-- click to set all back to a constant value.;
+#X connect 5 0 7 0;
+#X connect 6 0 5 0;
+#X connect 7 0 8 0;
+#X connect 8 0 20 0;
+#X connect 20 0 21 0;
+#X connect 20 1 9 1;
+#X connect 21 0 22 0;
+#X connect 21 1 30 0;
+#X connect 22 0 27 0;
+#X connect 23 0 9 0;
+#X connect 24 0 25 0;
+#X connect 25 0 23 0;
+#X connect 26 0 6 0;
+#X connect 27 0 28 0;
+#X connect 28 0 24 0;
+#X connect 28 1 29 0;
+#X connect 29 0 24 1;
+#X connect 30 0 31 0;
+#X connect 31 0 29 1;
+#X connect 34 0 5 0;
