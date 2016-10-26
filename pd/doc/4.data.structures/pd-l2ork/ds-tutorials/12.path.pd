@@ -1,5 +1,5 @@
 #N struct drawtut-path float x float y;
-#N canvas 1 25 850 556 10;
+#N canvas 2 25 850 556 10;
 #X text 0 1 New Drawing Commands: path;
 #X text 1 1 __________________________;
 #X text 53 23 Paths are complex drawings.;

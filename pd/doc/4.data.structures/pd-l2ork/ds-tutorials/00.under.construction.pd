@@ -1,6 +1,6 @@
 #N struct working-man-scalar float x float y;
-#N canvas 1 25 895 618 10;
-#N canvas 195 124 671 300 template 1;
+#N canvas 1 25 836 618 10;
+#N canvas 195 124 671 300 template 0;
 #X obj 121 -2492 struct working-man-scalar float x float y;
 #N canvas 725 143 450 300 init 0;
 #X obj 88 67 line;
@@ -221,49 +221,28 @@ L 258.192 372.204 L 254.304 371.484 z;
 #X restore 121 -2430 draw group;
 #X connect 1 0 2 0;
 #X restore 443 6 pd template;
-#X scalar working-man-scalar 218 -11 \;;
-#X text 13 0 Still under heavy development!;
-#X text 43 130 * stroke and fill methods;
-#X text 43 40 Stable methods of the new [draw] object are:;
-#X text 43 90 _Close_ to stable (won't change unless some big problem
-is revealed):;
-#X text 43 345 Wish I could figure out a better way to do them:;
-#X text 43 60 * stroke-opacity \, fill-opacity \, transform \, stroke-width
-\, stroke-miterlimit \, rx \, ry \, and stroke-dasharray methods.;
-#X text 43 460 Experimental:;
-#X text 43 365 * fill-rule \, stroke-linejoin \, stroke-linecap. The
+#X scalar working-man-scalar -169 309 \;;
+#X text 103 10 Still under heavy development!;
+#X text 429 450 Wish I could figure out a better way to do them:;
+#X text 429 470 * fill-rule \, stroke-linejoin \, stroke-linecap. The
 problem is that they take symbolic arguments in the svg standard \,
 but with data structures a symbolic argument represents a variable
 field. So I just use a float argument. I could use quotes around a
 symbol to specify a constant string \, but that would be obscure and
 at odds with the rest of Pd.;
-#X text 43 480 * mouse-dragging hotspots. This currently works like
-old-school scalars \, and it even works with transforms. It's original
-design is too limiting \, and with ds arrays the element hotspot may
-even conflict with the coordinate hotspot. A more expressive way is
-needed \, maybe something ported or inspired by Raphael.;
-#X text 480 393 * methods to better control mouse interaction. Something
-like the old "-x" flag but allowing separate control of edit-mode displacement
-and hotspot dragging. (Just because the drawing data contains a variable
-doesn't mean it should be draggable.);
-#X text 480 473 * [draw text] for scalable svg text.;
-#X text 43 250 Stable group handling:;
-#X text 43 155 * [draw [shape-name]] pattern \, [draw sprite] \, and
+#X text 70 413 * [draw text] for scalable svg text.;
+#X text 429 355 Stable group handling:;
+#X text 429 260 * [draw [shape-name]] pattern \, [draw sprite] \, and
 [draw image] names. I don't particularly like the two word naming scheme
 of [draw shape] \, but [drawpolygon] is already taken and has a different
 interface. Additionally \, Gem already has the bare word polygon \,
 so "draw" is as good a qualifier as I can think of.;
-#X text 43 270 * [group] subpatch seems to work fine. It's basically
+#X text 429 375 * [group] subpatch seems to work fine. It's basically
 just a subpatch with an inlet to control svg attributes of the drawing
 commands it conatins. It might also be handy to search abstractions
 for drawing instructions \, but that isn't supported at the moment.
 ;
-#X text 43 570 * scalar bbox caching. Should give more control to the
-user as with mouse-dragging.;
-#X text 480 313 New:;
-#X text 480 333 * messages to set path data \, polygon points \, x
-\, y \, cx \, cy \, r \, height \, width \, etc.;
-#X text 480 373 Needed:;
+#X text 70 393 Needed:;
 #N canvas 290 275 450 300 META 0;
 #X text 16 6 KEYWORDS tutorial data_structure draw;
 #X text 16 26 LICENSE SIBSD;
@@ -271,7 +250,41 @@ user as with mouse-dragging.;
 commands;
 #X text 16 76 AUTHOR Jonathan Wilkes;
 #X text 16 96 HELP_PATCH_AUTHORS Jonathan Wilkes;
-#X restore 771 580 pd META;
-#X text 480 502 * way to reset an svg attribute. Probably by just sending
-a message with no arguments (not sure if tkpath supports this yet)
-;
+#X restore 731 580 pd META;
+#X text 491 31 Unstable methods;
+#X text 491 31 ________________;
+#X text 25 31 Stable methods;
+#X text 25 31 ______________;
+#X text 25 51 cx - circle center x coordinate \; cy
+- circle center y coordinate \; d - path
+data \; fill-opacity - opacity for inner
+color of shape or path \; height - rect height
+\; opacity - shape or group opacity \; points
+- polygon/polylin coordinate data \; r - circle
+radius \; rx - ellipse horizontal radius or
+rect corner horiz smoothing \; ry - ellipse
+vertical radius or rect corner vert smoothing \; stroke-dasharray
+- dash pattern for stroke \; stroke-opacity
+- opacity for stroke \; stroke-dashoffset -
+offset for the beginning of the dash pattern \; stroke-width
+- width of the stroke \; transform - affine transformation
+message for shape or group \; width - width of
+rect \; x - rect x coordinate (user) \; x1
+- line x coordinate for beginning of line \; x2
+- line x coordinate for end of line \; y - rect
+y coordinate (user) \; y1 - line y coordinate
+for beginning of line \; y2 - line y coordinate
+for end of line \; , f 63;
+#X text 454 51 bbox - don't calculate bounding box in Pd \; drag
+- set event for mouse dragging \; fill-rule - rule for
+overlapping shape coords \; mousedown - set event for
+depressing the mouse button \; mousemove - set event for
+mouse motion \; mouseover - set event for mouse moving
+into a shape \; mouseout - set event for mouse moving
+out of a shape \; mouseup - set event for mouse button
+release \; pointer-events - which parts of a shape trigger
+events \; stroke-linecap - style for end of stroke \; stroke-linejoin
+- style stroke corner \; stroke-miterlimit - limit on sharp
+angle extent \; vis - visibility of shape or path \; fill
+- inner color for shape or path \; stroke - shape or path stroke
+color \; ;

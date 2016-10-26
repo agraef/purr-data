@@ -9,7 +9,7 @@ have any effect.;
 #X text 53 23 Circles are another simple shape.;
 #X obj 53 57 struct drawtut-circle float x float y;
 #X scalar drawtut-circle 157 283 \;;
-#X text 248 270 <- a circle;
+#X text 268 273 <- a circle;
 #X msg 53 117 fill yellow;
 #X msg 228 117 stroke-width \$1;
 #X floatatom 228 93 5 0 0 0 - - -, f 5;

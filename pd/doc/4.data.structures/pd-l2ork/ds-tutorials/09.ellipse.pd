@@ -1,5 +1,5 @@
 #N struct drawtut-ellipse float x float y;
-#N canvas 3 25 509 498 10;
+#N canvas 1 25 509 498 10;
 #X msg 141 117 stroke blue;
 #X msg 54 117 fill yellow;
 #X msg 228 117 stroke-width \$1;

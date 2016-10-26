@@ -1,45 +1,38 @@
 #N struct drawtut-one float x float y;
-#N canvas 1 25 495 603 10;
+#N canvas 2 25 495 603 10;
 #X text 0 1 New Drawing Commands: draw;
 #X text 0 1 __________________________;
 #X obj 53 47 struct drawtut-one float x float y;
-#X text 53 67 The first argument "drawtut-one" is a name we will associated
-with our shape.;
-#X text 53 98 The other arguments define data to associate with this
-data structure. The fields "x" and "y" are names for data fields \,
-and the word "float" that precedes each one tells Pd that each one
-should hold a floating point number.;
-#X text 53 195 Now let's define a shape to associate with this [struct]:
+#X text 53 185 Now let's define a shape to associate with this [struct]:
 ;
-#X text 53 241 This object starts with the word "draw" followed by
+#X text 53 231 This object starts with the word "draw" followed by
 the name of an svg shape-- "rect" here. Any arguments after that are
 coordinates and other data telling Pd how to draw the shape. For convenience
 \, coordinates are relative to the x/y fields.;
-#X text 53 369 So how do we draw something? We just type the name we
+#X text 53 359 So how do we draw something? We just type the name we
 gave to the [struct] into an object box. This will create an object
 \, referred to in Pd as a "scalar". It will have data for "x" and "y"
 fields and will use the info in our [draw] object to draw itself on
 the canvas.;
-#X text 53 439 Type our [struct] name "drawtut-one" in the box below:
+#X text 53 429 Type our [struct] name "drawtut-one" in the box below:
 ;
-#X text 53 152 The field names "x" and "y" are special in Pd. Their
+#X text 53 142 The field names "x" and "y" are special in Pd. Their
 values will be associated with the base x/y coordinates of what we
 draw to represent an object created from the [struct] above.;
-#X text 53 23 Let's draw something! First \, we need a [struct]:;
-#X text 53 509 That's it! To sum up: once you have a [struct] and some
+#X text 53 499 That's it! To sum up: once you have a [struct] and some
 [draw] objects \, you can create a scalar like the one above on any
 canvas in the running Pd instance. For convenience we created everything
 in the main patch \, but since there's only one [struct] per canvas
 you typically will want to keep your [struct] and any [draw] objects
 in their own subpatch.;
-#X obj 56 463;
-#X obj 53 219 draw rect 40 40 0 0;
-#X text 53 298 Any [draw] object on the same canvas as our [struct]
+#X obj 56 453;
+#X obj 53 209 draw rect 40 40 0 0;
+#X text 53 288 Any [draw] object on the same canvas as our [struct]
 will be used to draw a shape to represent the data structure we've
 defined here. To keep things organized Pd expects there to be only
 one [struct] object per canvas. That way it's simple to know which
 [draw] commands go with which data structure.;
-#X text 178 218 <- rectangle \, 40x40 pixels at offset (0 \, 0);
+#X text 178 208 <- rectangle \, 40x40 pixels at offset (0 \, 0);
 #N canvas 291 300 450 300 META 0;
 #X text 16 26 LICENSE SIBSD;
 #X text 16 66 AUTHOR Jonathan Wilkes;
@@ -47,3 +40,10 @@ one [struct] object per canvas. That way it's simple to know which
 #X text 16 6 KEYWORDS tutorial data_structure draw gui;
 #X text 16 46 DESCRIPTION introducing the [draw] command;
 #X restore 435 575 pd META;
+#X text 53 23 Let's draw something! First we need a [struct]:;
+#X text 53 67 The first argument "drawtut-one" is a name for our data.
+;
+#X text 53 88 The other arguments define our data fields. The fields
+"x" and "y" are names for data fields \, and the word "float" that
+precedes each one tells Pd that each one should hold a floating point
+number.;

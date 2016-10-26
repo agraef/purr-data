@@ -1,5 +1,5 @@
 #N struct drawtut-attr float x float y;
-#N canvas 1 25 517 671 10;
+#N canvas 2 25 517 671 10;
 #X text 0 1 New Drawing Commands: attributes;
 #X text 0 1 ________________________________;
 #X text 53 23 Our shapes are pretty boring so far. Black lines around
@@ -30,11 +30,9 @@ by hexadecimal values like "#ccddcc" or "#68ef68". (You can also use
 the 3-digit shorthands if you wish.);
 #X text 53 526 * rgb color values using 3 float arguments. Each float
 should be in the range 0-255.;
-#X text 53 556 * rgba \, with 4 float arguments. Same as above with
-the fourth argument specifying opacity.;
 #X floatatom 244 253 5 0 0 0 - - -, f 5;
 #X msg 244 274 fill 0 \$1 0;
-#X text 54 597 You can set attributes like "fill" automatically by
+#X text 54 596 You can set attributes like "fill" automatically by
 using a [loadbang] message. Notice that attributes will be the same
 for all scalars created from this [struct]. Later you will see how
 to set attributes to be different for each scalar.;
@@ -47,7 +45,9 @@ to set attributes to be different for each scalar.;
 #X text 16 6 KEYWORDS tutorial data_structure draw gui;
 #X text 16 46 DESCRIPTION basic attributes for the [draw] command;
 #X restore 450 639 pd META;
-#X connect 8 0 19 0;
-#X connect 15 0 16 0;
-#X connect 16 0 19 0;
-#X connect 18 0 19 0;
+#X text 53 560 Note: there are also hsl \, hcl \, and lab colors but
+the interface isn't stable yet.;
+#X connect 8 0 18 0;
+#X connect 14 0 15 0;
+#X connect 15 0 18 0;
+#X connect 17 0 18 0;

@@ -15,10 +15,6 @@ boxes with commas separating each attribute:;
 saved as the "x" and "y" fields for each scalar. Each scalar has its
 own values for "x" and "y"-- that's we can put the two scalars above
 at separate locations in the patch.;
-#X text 52 434 We can define more data fields than just "x" and "y".
-Later we will use new fields to associate a scalar's data with the
-svg attributes \, which will let use change the visual appearance of
-each scalar.;
 #X text 228 280 <- Create another scalar in the empty object box by
 typing the struct name "drawtut-attr-saving" into it.;
 #X obj 53 153 draw rect 50 50 0 0;
@@ -30,5 +26,9 @@ typing the struct name "drawtut-attr-saving" into it.;
 #X text 16 46 DESCRIPTION specifying display attributes with the [draw]
 command;
 #X restore 573 520 pd META;
+#X text 52 434 We can define more data fields than just "x" and "y".
+Later we will use new fields to associate a scalar's data with the
+svg attributes. That allows us to change the visual appearance of each
+scalar.;
 #X connect 3 0 6 0;
-#X connect 6 0 11 0;
+#X connect 6 0 10 0;

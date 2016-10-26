@@ -1,5 +1,5 @@
 #N struct drawtut-group float x float y;
-#N canvas 2 51 648 468 10;
+#N canvas 2 25 648 468 10;
 #X scalar drawtut-group 54 159 \;;
 #X text 1 1 ___________________________;
 #X text 0 1 New Drawing Commands: group;

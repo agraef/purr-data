@@ -1,5 +1,5 @@
 #N struct drawtut-attr-cont float x float y;
-#N canvas 1 25 638 671 10;
+#N canvas 2 25 638 671 10;
 #X msg 93 112 fill red;
 #X text 0 1 New Drawing Commands: attributes (continued);
 #X text 0 1 ____________________________________________;
@@ -21,30 +21,30 @@ the appearance of a shape:;
 #X text 164 291 y value for rounded rectangle corner;
 #X text 214 317 stroke color. 1 symbol \, 3 floats (rgb) \, or 4 floats
 (rgba);
-#X text 274 344 list of numbers to specify dash lengths;
-#X msg 140 371 stroke-linecap 0;
-#X text 254 371 for ends of open subpaths. 0 = butt \, 1 = round \,
+#X text 278 374 list of numbers to specify dash lengths;
+#X msg 144 401 stroke-linecap 0;
+#X text 258 401 for ends of open subpaths. 0 = butt \, 1 = round \,
 2 = square;
-#X text 264 399 shape of path corners. 0 = miter \, 1 = round \, 2
+#X text 268 429 shape of path corners. 0 = miter \, 1 = round \, 2
 = bevel;
-#X text 286 425 limit miter length;
-#X text 286 452 opacity for the stroke. float in range 0-1;
-#X text 286 478 width of the stroke.;
-#X msg 146 398 stroke-linejoin 0;
-#X msg 151 425 stroke-miterlimit 0;
-#X msg 155 452 stroke-opacity 0.4;
+#X text 290 455 limit miter length;
+#X text 290 482 opacity for the stroke. float in range 0-1;
+#X text 261 343 width of the stroke.;
+#X msg 150 428 stroke-linejoin 0;
+#X msg 155 455 stroke-miterlimit 0;
+#X msg 159 482 stroke-opacity 0.4;
 #X text 286 556 affine transformation on the object.;
-#X msg 158 479 stroke-width 10;
+#X msg 133 344 stroke-width 10;
 #X floatatom 161 511 5 0 0 0 - - -, f 5;
 #X msg 161 556 transform skewx \$1;
 #X text 275 600 Read more about svg attributes here:;
 #X obj 275 621 pddp/pddplink http://www.w3.org/TR/SVG11/painting.html
 ;
 #X msg 107 196 fill-rule 0;
-#X msg 134 344 stroke-dasharray 5 10;
+#X msg 138 374 stroke-dasharray 5 10;
 #X msg 127 317 stroke purple;
 #X obj 127 141 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 0 1;
+-1 -1 6600 1;
 #X text 107 141 0;
 #X text 268 141 1;
 #X text 25 348 (scalar);
