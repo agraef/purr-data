@@ -806,9 +806,18 @@ void canvas_map(t_canvas *x, t_floatarg f)
         //fprintf(stderr,"canvas_map 0\n");
         if (glist_isvisible(x))
         {
-            /* just clear out the whole canvas */
-            gui_vmess("gui_canvas_erase_all_gobjs", "x",
-                x);
+            /* Clear out scalars one by one. We need to do this
+               in order to unbind the symbol we used to receive
+               [draw] events from the GUI. (We could also just unbind
+               here if this turns out to be a bottleneck... */
+            t_gobj *y;
+            for (y = x->gl_list; y; y = y->g_next)
+            {
+                if (pd_class(&y->g_pd) == scalar_class)
+                    gobj_vis(y, x, 0);
+            }
+            /* now clear out the rest of the canvas in the GUI */
+            gui_vmess("gui_canvas_erase_all_gobjs", "x", x);
             x->gl_mapped = 0;
         }
     }
