@@ -12,6 +12,9 @@ debian_stable_i386_deb:
      - echo `pwd`
      - cd l2ork_addons
      - ./tar_em_up.sh -B
+   artifacts:
+     paths:
+       - pd*.deb
 
 debian_stable_amd64_deb:
    tags:
