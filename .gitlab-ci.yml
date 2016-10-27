@@ -14,7 +14,7 @@ debian_stable_i386_deb:
      - ./tar_em_up.sh -B
    artifacts:
      paths:
-       - ./*.deb
+       - pd*.deb
      expire_in: 1 week
 
 debian_stable_amd64_deb:
@@ -28,7 +28,7 @@ debian_stable_amd64_deb:
      - ./tar_em_up.sh -B
    artifacts:
      paths:
-       - ./*.deb
+       - pd*.deb
      expire_in: 1 week
 
 
@@ -43,7 +43,7 @@ ubuntu_14.04_i386_deb:
      - ./tar_em_up.sh -B
    artifacts:
      paths:
-       - ./*.deb
+       - pd*.deb
      expire_in: 1 week
 
 
@@ -58,7 +58,7 @@ ubuntu_14.04_amd64_deb:
      - ./tar_em_up.sh -B
    artifacts:
      paths:
-       - ./*.deb
+       - pd*.deb
      expire_in: 1 week
 
 ubuntu_16.04_amd64_deb:
@@ -72,5 +72,5 @@ ubuntu_16.04_amd64_deb:
      - ./tar_em_up.sh -B
    artifacts:
      paths:
-       - ./*.deb
+       - pd*.deb
      expire_in: 1 week
