@@ -11,7 +11,6 @@ then
 	echo "     -b    build a deb (incremental, all platforms)"
 	echo "     -B    build a deb (complete recompile)"
 	echo "     -c    core Pd source tarball"
-	echo "     -d    whole dev folder tarball"
 	echo "     -e    everything"
 	echo "     -f    full installer (incremental)"
 	echo "     -F    full installer (complete recompile)"
@@ -33,7 +32,6 @@ fi
 addon=0
 deb=0
 core=0
-dev=0
 full=0
 sys_cwiid=0
 rpi=0
@@ -132,11 +130,8 @@ do case $Option in
 
 		c)		core=1;;
 
-		d)		dev=1;;
-
 		e)		addon=1
 				core=1
-				dev=1
 				full=1;;
 
 		f)		full=1;;
@@ -177,39 +172,7 @@ then
 	cd pd/src/
 	make clean
 	cd ../../
-	tar -jcf ../Pd-l2ork-`date +%Y%m%d`.tar.bz2 pd
-fi
-
-if [ $dev -eq 1 ]
-then
-	echo "Pd dev package..."
-	#cd doc/
-	#svn checkout https://pure-data.svn.sourceforge.net/svnroot/pure-data/trunk/doc .
-	#cp -f ../l2ork_addons/doc/Makefile .
-	#cd ..
-	cd externals/miXed
-	make clean
-	cd ../
-	make distclean
-	cd ../pd/src
-	make distclean
-	cd ../../Gem/src/
-	make distclean
-	rm -rf ./.libs
-	rm -rf ./*/.libs
-	cd ../
-	make distclean
-	rm gemglutwindow.pd_linux
-	rm Gem.pd_linux
-	cd ../packages/linux_make
-	make distclean
-	cd ../../
-	gitfolder=`basename $PWD`
-	cd ../
-	rm -f pd-l2ork-dev-`date +%Y%m%d`.tar.bz2 2> /dev/null
-	echo "tar dev installer..."
-	tar -jcf pd-l2ork-dev-`date +%Y%m%d`.tar.bz2 $gitfolder
-	cd $gitfolder
+	tar -jcf ./Pd-l2ork-`date +%Y%m%d`.tar.bz2 pd
 fi
 
 if [ $full -gt 0 -o $deb -gt 0 -o $inno -gt 0 ]
@@ -337,11 +300,11 @@ then
 		echo "move full installer..."
 		if [ $deb -gt 0 ]
 		then
-			mv *.deb ../../../
+			mv *.deb ../../
 		else
 			#rm -f ../../../Pd-l2ork-full-`uname -m`-`date +%Y%m%d`.tar.bz2 2> /dev/null
 			#mv build/Pd*bz2 ../../../Pd-l2ork-full-`uname -m`-`date +%Y%m%d`.tar.bz2
-			mv -f build/pd*bz2 ../../..
+			mv -f build/pd*bz2 ../..
 		fi
 		elif [ $deb -gt 0 ]; then
 			make debstage prefix=$inst_dir
