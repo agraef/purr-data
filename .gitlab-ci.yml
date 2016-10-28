@@ -14,7 +14,7 @@ debian_stable_i386_deb:
      - ./tar_em_up.sh -b
    artifacts:
      paths:
-       - README.md
+       - ../README.md
 
 debian_stable_amd64_deb:
    tags:
@@ -27,7 +27,7 @@ debian_stable_amd64_deb:
      - ./tar_em_up.sh -b
    artifacts:
      paths:
-       - README.md
+       - ../README.md
 
 ubuntu_14.04_i386_deb:
    tags:
@@ -40,7 +40,7 @@ ubuntu_14.04_i386_deb:
      - ./tar_em_up.sh -b
    artifacts:
      paths:
-       - README.md
+       - ../README.md
 
 ubuntu_14.04_amd64_deb:
    tags:
@@ -53,7 +53,7 @@ ubuntu_14.04_amd64_deb:
      - ./tar_em_up.sh -b
    artifacts:
      paths:
-       - README.md
+       - ../README.md
 
 ubuntu_16.04_amd64_deb:
    tags:
@@ -66,5 +66,5 @@ ubuntu_16.04_amd64_deb:
      - ./tar_em_up.sh -b
    artifacts:
      paths:
-       - README.md
+       - ../README.md
 
