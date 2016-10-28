@@ -283,6 +283,11 @@ install:  all
 		install -d $(pddocdir)/$$dir ; \
 		install -p ../doc/$$dir/*.* $(pddocdir)/$$dir ; \
 	done
+	for dir in $(shell ls -1 ../doc/4.data.structures | grep -v CVS); do \
+		echo "installing 4.data.structures/$$dir"; \
+		install -d $(pddocdir)/4.data.structures/$$dir ; \
+		install -p ../doc/4.data.structures/$$dir/*.* $(pddocdir)/4.data.structures/$$dir ; \
+	done
 	for dir in $(shell ls -1 ../doc/7.stuff | grep -v CVS); do \
 		echo "installing 7.stuff/$$dir"; \
 		install -d $(pddocdir)/7.stuff/$$dir ; \
