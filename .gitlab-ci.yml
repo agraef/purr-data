@@ -13,7 +13,7 @@ debian_stable_i386_deb:
      - gcc -v
    artifacts:
      paths:
-       - README.md
+       - ./README.md
 
 debian_stable_amd64_deb:
    tags:
