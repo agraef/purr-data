@@ -12,7 +12,6 @@ debian_stable_i386_deb:
      - echo `pwd`
      - gcc -v
      - cd l2ork_addons
-     - echo `pwd`
    artifacts:
      paths:
        - README.md
@@ -26,7 +25,6 @@ debian_stable_amd64_deb:
      - echo `pwd`
      - gcc -v
      - cd l2ork_addons
-     - echo `pwd`
    artifacts:
      paths:
        - README.md
@@ -40,7 +38,6 @@ ubuntu_14.04_i386_deb:
      - echo `pwd`
      - gcc -v
      - cd l2ork_addons
-     - echo `pwd`
    artifacts:
      paths:
        - README.md
@@ -54,7 +51,6 @@ ubuntu_14.04_amd64_deb:
      - echo `pwd`
      - gcc -v
      - cd l2ork_addons
-     - echo `pwd`
    artifacts:
      paths:
        - README.md
@@ -68,9 +64,6 @@ ubuntu_16.04_amd64_deb:
      - echo `pwd`
      - gcc -v
      - cd l2ork_addons
-     - echo `pwd`
    artifacts:
      paths:
        - README.md
-
-
