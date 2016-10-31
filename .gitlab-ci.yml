@@ -11,9 +11,11 @@ debian_stable_i386_deb:
    script:
      - echo `pwd`
      - cd l2ork_addons
+     - tar_em_up.sh -B
    artifacts:
+     expire_in: 1 week
      paths:
-       - README.md
+       - pd*.deb
 
 debian_stable_amd64_deb:
    tags:
@@ -23,9 +25,11 @@ debian_stable_amd64_deb:
    script:
      - echo `pwd`
      - cd l2ork_addons
+     - tar_em_up.sh -B
    artifacts:
+     expire_in: 1 week
      paths:
-       - README.md
+       - pd*.deb
 
 ubuntu_14.04_i386_deb:
    tags:
@@ -35,9 +39,11 @@ ubuntu_14.04_i386_deb:
    script:
      - echo `pwd`
      - cd l2ork_addons
+     - tar_em_up.sh -B
    artifacts:
+     expire_in: 1 week
      paths:
-       - README.md
+       - pd*.deb
 
 ubuntu_14.04_amd64_deb:
    tags:
@@ -47,9 +53,11 @@ ubuntu_14.04_amd64_deb:
    script:
      - echo `pwd`
      - cd l2ork_addons
+     - tar_em_up.sh -B
    artifacts:
+     expire_in: 1 week
      paths:
-       - README.md
+       - pd*.deb
 
 ubuntu_16.04_amd64_deb:
    tags:
@@ -59,6 +67,8 @@ ubuntu_16.04_amd64_deb:
    script:
      - echo `pwd`
      - cd l2ork_addons
+     - tar_em_up.sh -B
    artifacts:
+     expire_in: 1 week
      paths:
-       - README.md
+       - pd*.deb
