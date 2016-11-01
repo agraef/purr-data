@@ -506,17 +506,24 @@ function gui_canvas_saveas(name, initfile, initdir, close_flag) {
         initfile += ".pd";
     }
     // This is complicated because of a bug... see build_file_dialog_string
+
+    // NOTE ag: The original code had nwworkingdir set to path.join(initdir,
+    // initfile) which doesn't seem right and in fact does *not* work with the
+    // latest nw.js on Linux at all (dialog comes up without a path under
+    // which to save, "Save" doesn't work until you explicitly select one).
+
+    // Setting nwsaveas to initfile and nwworkingdir to initdir (as you'd
+    // expect) works for me on Linux, but it seems that specifying an absolute
+    // pathname for nwsaveas is necessary on Windows, and this also works on
+    // Linux. Cf. https://github.com/nwjs/nw.js/issues/3372 (which is still
+    // open at the time of this writing). -ag
     input = build_file_dialog_string({
         style: "display: none;",
         type: "file",
         id: "saveDialog",
-        nwsaveas: initfile,
-        // For some reason we have to put the file name at the end of
-        // nwworkingdir path. Otherwise nw.js picks the final subdirectory as
-        // the suggested file name.
-        // nwworkingdir is by far the worst part of nw.js API-- if you run
-        // into a bug then be very suspicious of this code...
-        nwworkingdir: path.join(initdir, initfile),
+        // using an absolute path here, see comment above
+        nwsaveas: path.join(initdir, initfile),
+        nwworkingdir: initdir,
         accept: ".pd"
     });
     span.innerHTML = input;
