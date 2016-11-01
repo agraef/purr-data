@@ -283,10 +283,10 @@ install:  all
 		install -d $(pddocdir)/$$dir ; \
 		install -p ../doc/$$dir/*.* $(pddocdir)/$$dir ; \
 	done
-	for dir in $(shell ls -1 ../doc/4.data.structures | grep -v CVS); do \
-		echo "installing 4.data.structures/$$dir"; \
-		install -d $(pddocdir)/4.data.structures/$$dir ; \
-		install -p ../doc/4.data.structures/$$dir/*.* $(pddocdir)/4.data.structures/$$dir ; \
+	for dir in $(shell ls -1 ../doc/4.data.structures/pd-l2ork | grep -v CVS); do \
+		echo "installing 4.data.structures/pd-l2ork/$$dir"; \
+		install -d $(pddocdir)/4.data.structures/pd-l2ork/$$dir ; \
+		install -p ../doc/4.data.structures/pd-l2ork/$$dir/*.* $(pddocdir)/4.data.structures/pd-l2ork/$$dir ; \
 	done
 	for dir in $(shell ls -1 ../doc/7.stuff | grep -v CVS); do \
 		echo "installing 7.stuff/$$dir"; \
