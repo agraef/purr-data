@@ -139,10 +139,19 @@ static FILE *sys_prefsavefp;
 static void sys_initsavepreferences( void)
 {
     char filenamebuf[FILENAME_MAX], *homedir = getenv("HOME");
-    FILE *fp;
+    struct stat statbuf;
 
     if (!homedir)
         return;
+    snprintf(filenamebuf, FILENAME_MAX, "%s/.pd-l2ork", homedir);
+    filenamebuf[FILENAME_MAX-1] = 0;
+    if (stat(filenamebuf, &statbuf) || !S_ISDIR(statbuf.st_mode)) {
+      // user config dir doesn't exist yet, try to create it
+      if (mkdir(filenamebuf, 0755)) {
+        pd_error(0, "%s: %s",filenamebuf, strerror(errno));
+	return;
+      }
+    }
     snprintf(filenamebuf, FILENAME_MAX, "%s/.pd-l2ork/user.settings", homedir);
     filenamebuf[FILENAME_MAX-1] = 0;
     if ((sys_prefsavefp = fopen(filenamebuf, "w")) == NULL)
