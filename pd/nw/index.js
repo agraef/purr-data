@@ -117,8 +117,9 @@ function console_unwrap_tag(console_elem, tag_name) {
 // We need to use a regular expression to search without regard to case
 function escapeRegExp(string){
   // $& means the whole matched string
-  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return string.replace(/[.*+?^${}()|\[\]\\]/g, "\\$&");
 }
+
 function console_find_text(evt, callback) {
     var console_text = document.getElementById("p1"),
         wrap_tag = "mark",
