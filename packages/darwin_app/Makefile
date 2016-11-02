@@ -169,7 +169,7 @@ spotlight_importer_install:
 # tigital's Gem window focus black magic
 rez_install:
 	install -pv "$(CWD)/mac.r" "$(DESTDIR)$(bindir)"
-	cd "$(DESTDIR)$(bindir)" && /Developer/Tools/Rez -t APPL mac.r -o pd
+	cd "$(DESTDIR)$(bindir)" && /usr/bin/Rez -t APPL mac.r -o pd
 
 
 darwin_app_embed_libs:
@@ -232,7 +232,7 @@ dmg:
 	install -p DS_Store "/Volumes/$(VOLUME_NAME)/.DS_Store"
 	install -p VolumeIcon.icns "/Volumes/$(VOLUME_NAME)/.VolumeIcon.icns"
 # To enable the local image icon
-	/Developer/Tools/SetFile -a C /Volumes/$(VOLUME_NAME)/.VolumeIcon.icns \
+	/usr/bin/SetFile -a C /Volumes/$(VOLUME_NAME)/.VolumeIcon.icns \
 		/Volumes/$(VOLUME_NAME)
 	$(MAKE) -C $(packages_src) \
 		DESTDIR="/Volumes/$(VOLUME_NAME)/$(PD_APP_NAME).app/Contents/Resources" doc_format
@@ -241,10 +241,10 @@ dmg:
 	hdiutil convert -format UDZO -o "$(PACKAGE_NAME).dmg" build.dmg
 	rm -f build.dmg
 # install license
-	hdiutil unflatten "$(PACKAGE_NAME).dmg"
-	/Developer/Tools/Rez /Developer/Headers/FlatCarbon/*.r SLA.r -a \
-		-o "$(PACKAGE_NAME).dmg"
-	hdiutil flatten "$(PACKAGE_NAME).dmg"
+#	hdiutil unflatten "$(PACKAGE_NAME).dmg"
+#	/usr/bin/Rez /Developer/Headers/FlatCarbon/*.r SLA.r -a \
+#		-o "$(PACKAGE_NAME).dmg"
+#	hdiutil flatten "$(PACKAGE_NAME).dmg"
 
 
 
