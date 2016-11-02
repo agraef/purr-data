@@ -18,6 +18,7 @@ then
 	echo "     -R    build a Raspberry Pi deb (complete recompile)"
 	echo "     -r    build a Raspberry Pi deb (incremental)"
 	echo "     -w    install custom version of cwiid system-wide"
+	echo "     -X    build an OSX installer (dmg)"
 	echo "     -z    build a Windows installer (incremental)"
 	echo "     -Z    build a Windows installer (complete recompile)"
 	echo
@@ -37,6 +38,7 @@ sys_cwiid=0
 rpi=0
 pkg=1
 inno=0
+dmg=0
 
 inst_dir=${inst_dir:-/usr/local}
 
@@ -118,7 +120,7 @@ if [[ $os == "win" ]]; then
 fi
 
 
-while getopts ":abBcdefFnRruwzZ" Option
+while getopts ":abBcdefFnRruwXzZ" Option
 do case $Option in
 		a)		addon=1;;
 
@@ -151,6 +153,9 @@ do case $Option in
 		w)		sys_cwiid=1
 				;;
 
+		X)		dmg=1
+				inst_dir=/usr;;
+
 		z)		inno=1
 				inst_dir=/usr;;
 
@@ -175,7 +180,7 @@ then
 	tar -jcf ./Pd-l2ork-`date +%Y%m%d`.tar.bz2 pd
 fi
 
-if [ $full -gt 0 -o $deb -gt 0 -o $inno -gt 0 ]
+if [ $full -gt 0 -o $deb -gt 0 -o $inno -gt 0 -o $dmg -gt 0 ]
 then
 	echo "Pd-L2Ork full installer... IMPORTANT! To ensure you have the most up-to-date submodules, this process requires internet connection to pull sources from various repositories..."
 
@@ -193,7 +198,7 @@ then
 	fi
 
 
-	if [ $full -eq 2 -o $deb -eq 2 -o $inno -eq 2 ]
+	if [ $full -eq 2 -o $deb -eq 2 -o $inno -eq 2 -o $dmg -eq 2 ]
 	then
 	#	echo "Since we are doing a complete recompile we are assuming we will need to install l2ork version of the cwiid library. You will need to remove any existing cwiid libraries manually as they will clash with this one. L2Ork version is fully backwards compatible while also offering unique features like full extension support including the passthrough mode. YOU SHOULD REMOVE EXISTING CWIID LIBRARIES PRIOR TO RUNNING THIS INSTALL... You will also have to enter sudo password to install these... Press any key to continue or CTRL+C to cancel install..."
 	#	read dummy
@@ -220,10 +225,12 @@ then
 	cd ../pd/src && aclocal && autoconf
 	if [[ $os == "win" ]]; then
 		cd ../../packages/win32_inno
+	elif [[ $os == "darwin" ]]; then
+		cd ../../packages/darwin_app
 	else
 		cd ../../packages/linux_make
 	fi
-	if [ $full -gt 1 -o $deb -eq 2 -o $inno -eq 2 ]
+	if [ $full -gt 1 -o $deb -eq 2 -o $inno -eq 2 -o $dmg -eq 2 ]
 	then
 		make distclean
 		cp ../../pd/src/g_all_guis.h ../../externals/build/include
@@ -250,6 +257,10 @@ then
 		echo "Making Windows package..."
 		echo `pwd`
 		make install && make package
+	elif [[ $os == "darwin" ]]; then
+		echo "Making OSX package (dmg)..."
+		echo `pwd`
+		make install && make package
 	else
 		make install prefix=$inst_dir
 	fi
@@ -259,6 +270,8 @@ then
 	# patch_name
 	# spectdelay
 	if [[ $os == "win" ]]; then
+		cd ../../l2ork_addons
+	elif [[ $os == "darwin" ]]; then
 		cd ../../l2ork_addons
 	else
 		cd ../../l2ork_addons/spectdelay/spectdelay~
@@ -270,7 +283,7 @@ then
 		cd ../../
 	fi
 	# install raspberry pi externals (if applicable)
-	if [ $inno -eq 0 ]; then
+	if [ $inno -eq 0 -o $dmg -eq 0 ]; then
 		cd raspberry_pi
 		./makeall.sh
 		cp -f disis_gpio/disis_gpio.pd_linux ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
@@ -283,7 +296,7 @@ then
 	echo "done with l2ork addons."
 	cd ../
 	# finish install for deb
-	if [ $inno -eq 0 ]; then
+	if [ $inno -eq 0 -o $dmg -eq 0 ]; then
 		cd packages/linux_make
 		rm -f build/usr/local/lib/pd
 		if [ $pkg -gt 0 ]; then
