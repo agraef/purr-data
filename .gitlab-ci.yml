@@ -72,3 +72,17 @@ ubuntu_16.04_amd64_deb:
      expire_in: 1 day
      paths:
        - pd*.deb
+
+osx_amd64_dmg:
+   tags:
+     - osx
+     - v10.11
+     - dmg
+   script:
+     - echo `pwd`
+     - cd l2ork_addons
+     - ./tar_em_up.sh -X
+   artifacts:
+     expire_in: 1 day
+     paths:
+       - packages/darwin_app/*.dmg
