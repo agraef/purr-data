@@ -225,7 +225,7 @@ then
 	cd ../pd/src && aclocal && autoconf
 	if [[ $os == "win" ]]; then
 		cd ../../packages/win32_inno
-	elif [[ $os == "darwin" ]]; then
+	elif [[ $os == "osx" ]]; then
 		cd ../../packages/darwin_app
 	else
 		cd ../../packages/linux_make
@@ -257,7 +257,7 @@ then
 		echo "Making Windows package..."
 		echo `pwd`
 		make install && make package
-	elif [[ $os == "darwin" ]]; then
+	elif [[ $os == "osx" ]]; then
 		echo "Making OSX package (dmg)..."
 		echo `pwd`
 		make install && make package
@@ -271,7 +271,7 @@ then
 	# spectdelay
 	if [[ $os == "win" ]]; then
 		cd ../../l2ork_addons
-	elif [[ $os == "darwin" ]]; then
+	elif [[ $os == "osx" ]]; then
 		cd ../../l2ork_addons
 	else
 		cd ../../l2ork_addons/spectdelay/spectdelay~
