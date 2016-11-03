@@ -74,14 +74,20 @@ function string_to_array_of_chunks(msg) {
     if (msg.length <= chunk_max) {
         out_array.push([msg]);
     } else {
-        in_array = msg.split(" ");
+        in_array = msg.split(/[\s\n]/); // split on newlines or spaces
         while (in_array.length) {
-            left = in_array.slice();
+            left = in_array.slice(); // make a copy of in_array
             if (left.toString().length > chunk_max) {
                 while (1) {
-                    left.splice(left.length >> 1);
-                    if (left.length < 2 ||
-                        left.toString().length <= chunk_max) {
+                    if (left.length < 2) {
+                        pdgui.post("Warning: string truncated:");
+                        pdgui.post(left.toString().
+                            match(/............................../g).join("\n")
+                        );
+                        break;
+                    }
+                    left = left.splice(0, left.length >> 1);
+                    if (left.toString().length <= chunk_max) {
                         break;
                     }
                 }
@@ -89,7 +95,8 @@ function string_to_array_of_chunks(msg) {
             // might need a check here for max_pd_string to warn
             // user if a string is going to get truncated. (That's
             // what max_pd_string is for above.)
-            out_array.push(in_array.splice(0, left.length));
+            out_array.push(left);
+            in_array = in_array.splice(left.length);
         }
     }
     return out_array;
