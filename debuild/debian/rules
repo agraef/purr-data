@@ -57,6 +57,9 @@ override_dh_python2:
 override_dh_compress:
 	dh_compress -X.pd -X.wav -X.aiff -X.txt -X.md
 
+override_dh_strip:
+	dh_strip -Xpnacl
+
 # Supply some options to get rid of a gazillion of warnings about shared
 # library files which are really externals.
 override_dh_shlibdeps:
