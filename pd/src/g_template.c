@@ -1873,7 +1873,7 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
             gui_end_vmess();
         }
     }
-    else if (s == gensym("data"))
+    else if (s == gensym("d"))
     {
         char tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "draw%lx.%lx",
@@ -2188,9 +2188,9 @@ void svg_data(t_svg *x, t_symbol *s, int argc, t_atom *argv)
             x->x_type != gensym("polygon"))
             return;
         /* "points" for polys... */
-        if (s == gensym("data") && x->x_type != gensym("path"))
+        if (s == gensym("d") && x->x_type != gensym("path"))
             return;
-        /* and "data" for paths */
+        /* and "d" for paths */
         if (x->x_type == gensym("path"))
         {
             if (s == gensym("points")) return;
