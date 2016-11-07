@@ -279,10 +279,12 @@ function create_menu(gui, type) {
             tooltip: l("menu.finderror_tt")
         }));
         edit_menu.append(new gui.MenuItem({ type: "separator" }));
-        edit_menu.append(m.edit.autotips = new gui.MenuItem({
+        m.edit.autotips = new gui.MenuItem({
             label: l("menu.autotips"),
             tooltip: l("menu.autotips_tt")
-        }));
+        });
+        // commented out because it doesn't work yet -ag
+        //edit_menu.append(m.edit.autotips);
         edit_menu.append(m.edit.editmode = new gui.MenuItem({
             type: "checkbox",
             label: l("menu.editmode"),
