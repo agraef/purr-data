@@ -489,7 +489,7 @@ static void *select_new(t_symbol *s, int argc, t_atom *argv)
                 s = 1;
             }
         }
-        x->x_mixed = f * s;
+        x->x_mixed = f && s;
         x->x_rejectout = outlet_new(&x->x_obj, &s_float);
         return (x);
     }
