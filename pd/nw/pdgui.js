@@ -1669,7 +1669,7 @@ function gui_canvas_line(cid,tag,type,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10) {
     path = create_item(cid, "path", {
         d: d_array.join(" "),
         fill: "none",
-        "shape-rendering": "optimizeSpeed",
+        //"shape-rendering": "optimizeSpeed",
         id: tag,
         "class": "cord " + type
     });
@@ -2008,7 +2008,7 @@ function gui_canvas_draw_selection(cid, x1, y1, x2, y2) {
     rect = create_item(cid, "polygon", {
         points: points_array.join(" "),
         fill: "none",
-        "shape-rendering": "optimizeSpeed",
+        //"shape-rendering": "optimizeSpeed",
         "stroke-width": 1,
         id: "selection_rectangle",
         display: "inline"
@@ -2912,7 +2912,7 @@ function gui_drawnumber_vis(cid, parent_tag, tag, x, y, scale_x, scale_y,
             // Turns out we can't do 'hanging' baseline because it's borked
             // when scaled. Bummer...
             // "dominant-baseline": "hanging",
-            "shape-rendering": "optimizeSpeed",
+            //"shape-rendering": "optimizeSpeed",
             "font-size": fontsize + "px",
             fill: fontcolor,
             visibility: visibility === 1 ? "normal" : "hidden",
@@ -2934,7 +2934,7 @@ function gui_drawnumber_vis(cid, parent_tag, tag, x, y, scale_x, scale_y,
             // Turns out we can't do 'hanging' baseline because it's borked
             // when scaled. Bummer...
             // "dominant-baseline": "hanging",
-            "shape-rendering": "optimizeSpeed",
+            //"shape-rendering": "optimizeSpeed",
             "font-size": fontsize + "px",
             fill: fontcolor,
             visibility: visibility === 1 ? "normal" : "hidden",
