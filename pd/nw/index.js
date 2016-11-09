@@ -25,7 +25,7 @@ function have_args() {
 }
 
 function set_vars(win) {
-    var port_no, gui_dir, font_engine_sanity;
+    var port_no, gui_dir, font_engine_sanity, pd_engine_id;
     // If the GUI was started by Pd, our port number is going to be
     // the first argument. If the GUI is supposed to start Pd, we won't
     // have any arguments and need to set it here.
@@ -33,6 +33,8 @@ function set_vars(win) {
         port_no = gui.App.argv[0]; // fed to us by the Pd process
         // looks like this is the same as pwd below
         gui_dir = gui.App.argv[3];
+        // address unique to the pd_engine
+        pd_engine_id = gui.App.argv[4];
     } else {
         // If we're starting Pd, this is the first port number to try. (We'll
         // increment it if that port happens to be taken.
@@ -44,6 +46,7 @@ function set_vars(win) {
         gui_dir = process.platform === "darwin" ? "bin" : pwd;
     }
     pdgui.set_port(port_no);
+    pdgui.set_pd_engine_id(pd_engine_id);
     pdgui.set_pwd(pwd);
     pdgui.set_gui_dir(gui_dir);
     pdgui.set_pd_window(win);
@@ -256,6 +259,14 @@ function add_events() {
             pdgui.pdsend("pd dsp", dsp_state);
         }
     );
+    // Opening another file
+    nw.App.on("open", function(argv_string) {
+        var port, pd_engine_id;
+        port = argv_string.split(" ").slice(-5, -4);
+        pd_engine_id = argv_string.split(" ").slice(-1);
+        pdgui.connect_as_client_to_secondary_instance("localhost", port,
+            pd_engine_id);
+    });
     // Browser Window Close
     gui.Window.get().on("close", function () {
         pdgui.menu_quit();

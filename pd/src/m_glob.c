@@ -36,6 +36,7 @@ void glob_startup_dialog(t_pd *dummy, t_symbol *s, int argc, t_atom *argv);
 void glob_ping(t_pd *dummy);
 void glob_watchdog(t_pd *dummy);
 void glob_savepreferences(t_pd *dummy);
+void glob_forward_files_from_secondary_instance(void);
 
 void alsa_resync( void);
 
@@ -111,6 +112,9 @@ void glob_init(void)
         CLASS_DEFAULT, A_NULL);
     class_addmethod(glob_pdobject, (t_method)glob_initfromgui, gensym("init"),
         A_GIMME, 0);
+    class_addmethod(glob_pdobject,
+        (t_method)glob_forward_files_from_secondary_instance,
+        gensym("forward_files_from_secondary_instance"), 0);
     class_addmethod(glob_pdobject, (t_method)glob_setfilename, 
         gensym("filename"), A_SYMBOL, A_SYMBOL, 0);
     class_addmethod(glob_pdobject, (t_method)glob_evalfile, gensym("open"),

@@ -1134,12 +1134,22 @@ static int defaultfontshit[MAXFONTS] = {
 int sys_startgui(const char *guidir)
 {
     pid_t childpid;
+    char cwd[FILENAME_MAX];
     char cmdbuf[4*MAXPDSTRING];
     struct sockaddr_in server = {0};
     int len = sizeof(server);
     int ntry = 0, portno = FIRSTPORTNUM;
     int xsock = -1;
     stderr_isatty = isatty(2);
+#ifdef MSW
+        if (GetCurrentDirectory(FILENAME_MAX, cwd) == 0)
+            strcpy(cwd, ".");
+#endif
+#ifdef HAVE_UNISTD_H
+        if (!getcwd(cwd, FILENAME_MAX))
+            strcpy(cwd, ".");
+
+#endif
 #ifdef MSW
     short version = MAKEWORD(2, 0);
     WSADATA nobby;
@@ -1178,15 +1188,7 @@ int sys_startgui(const char *guidir)
             skip starting the GUI up. */
         t_atom zz[NDEFAULTFONT+2];
         int i;
-#ifdef MSW
-        if (GetCurrentDirectory(MAXPDSTRING, cmdbuf) == 0)
-            strcpy(cmdbuf, ".");
-#endif
-#ifdef HAVE_UNISTD_H
-        if (!getcwd(cmdbuf, MAXPDSTRING))
-            strcpy(cmdbuf, ".");
-        
-#endif
+        strcpy(cmdbuf, cwd);
         SETSYMBOL(zz, gensym(cmdbuf));
         for (i = 0; i < (int)NDEFAULTFONT; i++)
             SETFLOAT(zz+i+1, defaultfontshit[i]);
@@ -1358,13 +1360,14 @@ fprintf(stderr, "guidir is %s\n", guidir);
                we add it again as the last argument to make sure we can fetch
                it on the GUI side. */
             sprintf(cmdbuf,
-                "%s/nw/nw %s %d localhost %s %s\n",
+                "%s/nw/nw %s %d localhost %s %s x%.6lx",
                 guidir,
                 guidir,
 //                "/home/user/purr-data/pd/nw",
                 portno,
                 (sys_k12_mode ? "pd-l2ork-k12" : "pd-l2ork"),
-                guidir);
+                guidir,
+                (long unsigned int)pd_this);
 
 #endif
             sys_guicmd = cmdbuf;
@@ -1596,6 +1599,7 @@ fprintf(stderr, "guidir is %s\n", guidir);
         gui_end_array();
 
         gui_end_vmess();
+        gui_vmess("gui_set_cwd", "xs", 0, cwd);
         binbuf_free(aapis);
         binbuf_free(mapis);
     }

@@ -259,6 +259,31 @@ static void pd_makeversion(void)
     pd_version = strdup(foo);
 }
 
+/* send the openlist to the GUI before closing a secondary
+   instance of Pd. */
+void glob_forward_files_from_secondary_instance(void)
+{
+        /* check if we are unique, otherwise, just focus existing
+           instance, and if necessary open file inside it. This doesn't
+           yet work with the new GUI because we need to set it up to
+           allow multiple instances. */
+    gui_start_vmess("gui_open_via_unique", "xi", pd_this, sys_unique);
+    gui_start_array();
+    if (sys_openlist)
+    {
+        // send the files to be opened to the GUI. We send them as an
+        // array here so that we don't have to allocate anything here
+        // (as the previous API did)
+        t_namelist *nl;
+        for (nl = sys_openlist; nl; nl = nl->nl_next)
+        {
+            gui_s(nl->nl_string);
+        }
+    }
+    gui_end_array();
+    gui_end_vmess();
+}
+
 /* this is called from main() in s_entry.c */
 int sys_main(int argc, char **argv)
 {
@@ -296,22 +321,6 @@ int sys_main(int argc, char **argv)
         /* send the name of the gui preset */
     gui_vmess("gui_set_gui_preset", "s", sys_gui_preset->s_name);
 
-    if (sys_openlist)
-    {
-        // send the files to be opened to the GUI. We send them one
-        // at a time and let the GUI accumulate them so that we don't
-        // have to allocate anything here (as the previous API did)
-        t_namelist *nl;
-        for (nl = sys_openlist; nl; nl = nl->nl_next)
-        {
-            gui_vmess("gui_build_filelist", "s", nl->nl_string);
-        }
-    }
-        /* check if we are unique, otherwise, just focus existing
-           instance, and if necessary open file inside it. This doesn't
-           yet work with the new GUI because we need to set it up to
-           allow multiple instances. */
-    gui_vmess("gui_check_unique", "i", sys_unique);
     if (sys_externalschedlib)
         return (sys_run_scheduler(sys_externalschedlibname,
             sys_extraflagsstring));

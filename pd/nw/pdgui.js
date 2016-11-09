@@ -4,6 +4,7 @@ var pwd;
 var gui_dir;
 var lib_dir;
 var last_clipboard_data;
+var pd_engine_id;
 
 exports.set_pwd = function(pwd_string) {
     pwd = pwd_string;
@@ -19,6 +20,10 @@ function defunkify_windows_path(s) {
         ret = ret.replace(/\\/g, "/");
     }
     return ret;
+}
+
+exports.set_pd_engine_id = function (id) {
+    pd_engine_id = id;
 }
 
 exports.defunkify_windows_path = defunkify_windows_path;
@@ -216,8 +221,6 @@ var pd_myversion,    // Pd version string
     exports.pd_filetypes = pd_filetypes;
 
     popup_coords = [0,0];
-
-    var startup_files = []; // Array of files to be opened at startup (from the command line)
 
 // Keycode vs Charcode: A Primer
 // -----------------------------
@@ -786,19 +789,6 @@ function open_file(file) {
     }
 }
 
-// This doesn't work yet... need to figure out how to send command line args
-// (files) to be opened by the unique instance
-function gui_open_files_via_unique(filenames)
-{
-    var i;
-    length = filenames.length;
-    if (length != 0) {
-        for (i = 0; i < length; i++) {
-            open_file(filenames[i]);
-        }
-    }
-}
-
 function open_html(target) {
     nw_open_html(target);
 }
@@ -845,34 +835,29 @@ function external_doc_open(url) {
 
 exports.external_doc_open = external_doc_open;
 
-function gui_build_filelist(file) {
-    startup_files.push(file);
+function gui_set_cwd(dummy, cwd) {
+    post("cwd from secondary instance is " + cwd);
+    if (cwd !== ".") {
+        pwd = cwd;
+    }
 }
 
 // This doesn't work at the moment.  Not sure how to feed the command line
 // filelist to a single instance of node-webkit.
-function gui_check_unique (unique) {
-    // global appname
-    return;
-    var final_filenames = new Array,
-        startup_dir = pwd,
-        filelist_length,
+function gui_open_via_unique (secondary_pd_engine_id, unique, file_array) {
+    var startup_dir = pwd,
         i,
-        file,
-        dir;
-    if (unique == 0) {
-        filelist_length = startup_files.length;
-        for (i = 0; i < filelist_length; i++) {
-            file = startup_files[i];
-            dir;
-            if (!pathIsAbsolute(file)) {
-                file = fs.join(pwd, file);
+        file;
+    if (unique == 0 && secondary_pd_engine_id !== pd_engine_id) {
+        for (i = 0; i < file_array.length; i++) {
+            file = file_array[i];
+            if (!path.isAbsolute(file)) {
+                file = path.join(pwd, file);
             }
-            final_filenames.push(file);
+            open_file(file);
         }
-        gui_open_files_via_unique(final_filenames);
+        quit_secondary_pd_instance(secondary_pd_engine_id);
     }
-    // old tcl follows... see pd.tk for the original code
 }
 
 function gui_startup(version, fontname_from_pd, fontweight_from_pd,
@@ -1209,6 +1194,85 @@ exports.set_port = function (port_no) {
     PORT = port_no;
 }
 
+var secondary_pd_engines = {};
+
+// This is an alarmingly complicated and brittle approach to opening
+// files from a secondary instance of Pd in a currently running instance.
+// It works something like this:
+// 1. User is running an instance of Purr Data.
+// 2. User runs another instance of Purr Data from the command line, specifying
+//    files to be opened as command line args. Or, they click on a file which
+//    in the desktop or file manager which triggers the same behavior.
+// 2. A new Pd process starts-- let's call it a "secondary pd engine".
+// 3. The secondary pd engine tries to run a new GUI.
+// 4. The secondary GUI forwards an "open" message to the currently running GUI.
+// 5. The secondary GUI exits (before spawning any windows).
+// 6. The original GUI receives the "open" message, finds the port number
+//    for the secondary Pd engine, and opens a socket to it.
+// 7. The original GUI receives a message to set the working directory to
+//    whatever the secondary Pd engine thinks it should be.
+// 8. The original GUI sends a message to the secondary Pd instance, telling
+//    it to send a list of files to be opened.
+// 9. The original GUI receives a message from the secondary Pd instance
+//    with the list of files.
+// 10.For each file to be opened, the original GUI sends a message to the
+//    _original_ Pd engine to open the file.
+// 11.Once these messages have been sent, the original GUI sends a message
+//    to the secondary Pd engine to quit.
+// 12.The original Pd engine opens the files, and the secondary Pd instance
+//    quits.
+function connect_as_client_to_secondary_instance(host, port, pd_engine_id) {
+    var client = new net.Socket(),
+        command_buffer = {
+            next_command: ""
+    };
+    client.setNoDelay(true);
+    client.connect(+port, host, function() {
+        console.log("CONNECTED TO: " + host + ":" + port);
+        secondary_pd_engines[pd_engine_id] = {
+            socket: client
+        }
+        client.write("pd forward_files_from_secondary_instance;");
+    });
+    client.on("data", function(data) {
+        // Terrible thing:
+        // We're parsing the data as it comes in-- possibly
+        // from multiple ancillary instances of the Pd engine.
+        // So to retain some semblance of sanity, we only let the
+        // parser evaluate commands that we list in the array below--
+        // anything else will be discarded.  This is of course bad
+        // because it means simple changes to the code, e.g., changing
+        // the name of the function "gui_set_cwd" would cause a bug
+        // if you forget to come here and also change that name in the
+        // array below.
+        // Another terrible thing-- gui_set_cwd sets a single, global
+        // var for the working directory. So if the user does something
+        // weird like write a script to open files from random directories,
+        // there would be a race and it might not work.
+        // Yet another terrible thing-- now we're setting the current
+        // working directory both in the GUI, and from the secondary instances
+        // with "gui_set_cwd" below.
+        perfect_parser(data, command_buffer, [
+            "gui_set_cwd",
+            "gui_open_via_unique"
+        ]);
+    });
+    client.on("close", function () {
+        // I guess somebody could script opening patches in an
+        // installation, so let's go ahead and delete the key here
+        // (The alternative is just setting it to undefined)
+        delete secondary_pd_engines[pd_engine_id];
+    });
+}
+
+function quit_secondary_pd_instance (pd_engine_id) {
+    secondary_pd_engines[pd_engine_id].socket.write("pd quit;");
+}
+
+// This is called when the running GUI receives an "open" event.
+exports.connect_as_client_to_secondary_instance =
+    connect_as_client_to_secondary_instance;
+
 function connect_as_client() {
     var client = new net.Socket();
     client.setNoDelay(true);
@@ -1261,17 +1325,12 @@ exports.connect_as_server = connect_as_server;
 // data parameter is what the server sent to this socket
 
 // We're not receiving FUDI (i.e., Pd) messages. Right now we're just using
-// an alarm bell '\a' to signal the end of a message. This is easier than
-// checking for unescaped semicolons, since it only requires a check for a
-// single byte. Of course this makes it more brittle, so it can be changed
-// later if needed.
+// the unit separator (ASCII 31) to signal the end of a message. This is
+// easier than checking for unescaped semicolons, since it only requires a
+// check for a single byte. Of course this makes it more brittle, so it can
+// be changed later if needed.
 
-function init_socket_events () {
-    var next_command = ""; // A not-quite-FUDI command: selector arg1,arg2,etc.
-                           // These are formatted on the C side to be easy
-                           // to parse here in javascript
-
-    var perfect_parser = function(data) {
+function perfect_parser(data, cbuf, sel_array) {
         var i, len, selector, args;
         len = data.length;
         for (i = 0; i < len; i++) {
@@ -1280,24 +1339,33 @@ function init_socket_events () {
                 // decode next_command
                 try {
                     // This should work for all utf-8 content
-                    next_command = decodeURIComponent(next_command);
+                    cbuf.next_command =
+                        decodeURIComponent(cbuf.next_command);
                 }
                 catch(err) {
                     // This should work for ISO-8859-1
-                    next_command = unescape(next_command);
+                    cbuf.next_command = unescape(cbuf.next_command);
                 }
                 // Turn newlines into backslash + "n" so
                 // eval will do the right thing with them
-                next_command = next_command.replace(/\n/g, "\\n");
-                next_command = next_command.replace(/\r/g, "\\r");
-                selector = next_command.slice(0, next_command.indexOf(" "));
-                args = next_command.slice(selector.length + 1);
-                next_command = "";
+                cbuf.next_command = cbuf.next_command.replace(/\n/g, "\\n");
+                cbuf.next_command = cbuf.next_command.replace(/\r/g, "\\r");
+                selector = cbuf.next_command.slice(0, cbuf.next_command.indexOf(" "));
+                args = cbuf.next_command.slice(selector.length + 1);
+                cbuf.next_command = "";
                 // Now evaluate it
                 //post("Evaling: " + selector + "(" + args + ");");
-                eval(selector + "(" + args + ");");
+                // For communicating with a secondary instance, we filter
+                // incoming messages. A better approach would be to make
+                // sure that the Pd engine only sends the gui_set_cwd message
+                // before "gui_startup".  Then we could just check the
+                // Pd engine id in "gui_startup" and branch there, instead of
+                // fudging with the parser here.
+                if (!sel_array || sel_array.indexOf(selector) !== -1) {
+                    eval(selector + "(" + args + ");");
+                }
             } else {
-                next_command += "%" +
+                cbuf.next_command += "%" +
                     ("0" // leading zero (for rare case of single digit)
                      + data[i].toString(16)) // to hex
                        .slice(-2); // remove extra leading zero
@@ -1305,31 +1373,15 @@ function init_socket_events () {
         }
     };
 
-    var fast_parser = function(data) {
-        var i, len, selector, args;
-        len = data.length;
-        for (i = 0; i < len; i++) {
-            // check for end of command:
-            if (data[i] === String.fromCharCode(7)) { // vertical tab
-                // we have the next_command...
-                // Turn newlines into backslash + "n" so
-                // eval will do the right thing
-                next_command = next_command.replace(/\n/g, "\\n");
-                selector = next_command.slice(0, next_command.indexOf(" "));
-                args = next_command.slice(selector.length + 1);
-                next_command = "";
-                // Now evaluate it-- unfortunately the V8 engine can't
-                // optimize this eval call.
-                //post("Evaling: " + selector + "(" + args + ");");
-                eval(selector + "(" + args + ");");
-            } else {
-                next_command += data[i];
-            }
-        }
+function init_socket_events () {
+    // A not-quite-FUDI command: selector arg1,arg2,etc. These are
+    // formatted on the C side to be easy to parse here in javascript
+    var command_buffer = {
+        next_command: ""
     };
-
-    connection.on("data", perfect_parser);
-
+    connection.on("data", function(data) {
+        perfect_parser(data, command_buffer);
+    });
     connection.on("error", function(e) {
         console.log("Socket error: " + e.code);
         nw_app_quit();
