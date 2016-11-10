@@ -1419,6 +1419,8 @@ fprintf(stderr, "guidir is %s\n", guidir);
         //strcat(scriptbuf, "/" PDBINDIR "pd.tk\"");
         //sys_bashfilename(scriptbuf, scriptbuf);
 
+        char pd_this_string[80];
+        sprintf(pd_this_string, "x%lx", (long unsigned int)pd_this);
         sprintf(scriptbuf, "\""); /* use quotes in case there are spaces */
         strcat(scriptbuf, sys_libdir->s_name);
         strcat(scriptbuf, "/" PDBINDIR);
@@ -1439,7 +1441,7 @@ fprintf(stderr, "guidir is %s\n", guidir);
             portbuf,
             "localhost",
             (sys_k12_mode ? "pd-l2ork-k12" : "pd-l2ork"),
-            scriptbuf, 0);
+            scriptbuf, pd_this_string, 0);
         if (spawnret < 0)
         {
             perror("spawnl");
