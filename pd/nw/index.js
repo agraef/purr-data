@@ -262,6 +262,7 @@ function add_events() {
     // Opening another file
     nw.App.on("open", function(argv_string) {
         var port,
+            host,
             pd_engine_id,
             argv;
         if (argv_string.slice(0, 7) === "file://") {
@@ -279,10 +280,24 @@ function add_events() {
                 // open the GUI, supplying us with a port number and
                 // an instance id. In this case, we need to create a
                 // socket connection and fetch the file-list...
-                argv = argv_string.split(" ");
-                port = +argv.slice(-5, -4);
-                pd_engine_id = argv.slice(-1);
-                pdgui.connect_as_client_to_secondary_instance("localhost", port,
+                pd_engine_id = argv_string.split(" ").slice(-1).join();
+                argv_string = argv_string.slice(0, -pd_engine_id.length).trim();
+                // strip off the gui dir
+                argv_string = argv_string.slice(0,
+                    -nw.App.argv[3].length).trim();
+                if (process.platform === "win32") {
+                    // windows quotes this string, so let's remove the two
+                    // quotation marks
+                    argv_string = argv_string.slice(0, -2).trim();
+                }
+                // now strip off the k12 string, which is guaranteed not
+                // to have any spaces in it
+                argv_string = argv_string.slice(0,
+                        -argv_string.split(" ").slice(-1).join().length).trim();
+                // now get the host string and the port
+                host = argv_string.split(" ").slice(-1).join();
+                port = +argv_string.split(" ").slice(-2, -1).join();
+                pdgui.connect_as_client_to_secondary_instance(host, port,
                     pd_engine_id);
         }
     });
