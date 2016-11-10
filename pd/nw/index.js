@@ -263,23 +263,27 @@ function add_events() {
     nw.App.on("open", function(argv_string) {
         var port,
             pd_engine_id,
-            argv = argv_string.split(" ");
-        if (argv.length) {
-            if (argv.length === 1) {
+            argv;
+        if (argv_string.slice(0, 7) === "file://") {
                 // Clicking on a Pd file with an installed OSX app bundle sends
                 // a single argument which is a file:// URI.
                 // With the OSX app bundle it is the GUI which starts the
                 // Pd process. So in this case, we just need to parse the
                 // file and open it.
-                if (argv.slice(0, 7) === "file://") {
-                    pdgui.menu_open(decodeURI(argv.slice(7)));
-                }
-            } else {
+                // Selecting multiple files and clicking "Open" will trigger
+                // a separate "open" event for each file, so luckily we don't
+                // have to parse them.
+                    pdgui.menu_open(decodeURI(argv_string.slice(7)));
+        } else {
+                // Otherwise we assume that the Pd process tried to
+                // open the GUI, supplying us with a port number and
+                // an instance id. In this case, we need to create a
+                // socket connection and fetch the file-list...
+                argv = argv_string.split(" ");
                 port = +argv.slice(-5, -4);
                 pd_engine_id = argv.slice(-1);
                 pdgui.connect_as_client_to_secondary_instance("localhost", port,
                     pd_engine_id);
-            }
         }
     });
     // Browser Window Close
