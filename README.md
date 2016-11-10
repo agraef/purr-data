@@ -82,7 +82,34 @@ http://l2ork.music.vt.edu/main/?page_id=56
 Then follow the steps outlined here:
 http://l2ork.music.vt.edu/main/?page_id=56#install-dev
 
-#### OSX (work in progress)
+#### OSX
+Homebrew build (supported)
+1. Install [Homebrew](http://brew.sh) *(15 minutes)*
+   (asks for password twice-- once for command line tools, once for homebrew)
+2. Install the dependencies *10 minutes*:<code>
+   brew install wget
+   brew install autoconf
+   brew install automake
+   brew install libtool
+   brew install fftw
+   brew install python
+   brew install fluidsynth
+   brew install lame
+   brew install libvorbis
+   brew install speex
+   brew install gsl
+   brew install libquicktime
+   brew install pkg-config
+</code>
+3. git clone https://git.purrdata.net/jwilkes/purr-data.git
+4. Change to the directory<code>
+cd purr-data/l2ork_addons</code>
+5. Run the installer<code>
+./tar_em_up.sh -X</code>
+6. When the installer finishes, there should be a dmg file in<code>
+purr-data/packages/darwin_app</code>
+
+Macports build (unsupported, unfinished)
 Time to build: *1 day*
 
 1. Install Xcode from the Mac App Store. *1.5 hours*
@@ -105,7 +132,6 @@ Time to build: *1 day*
    sudo port install speex
    sudo port install gsl
    sudo port install libquicktime-devel
-
 </code>
 6. Download the source code *(3-6 minutes)*
    Issue the following command to create a new directory "purr-data" and clone
@@ -125,28 +151,8 @@ git clone https://git.purrdata.net/jwilkes/purr-data.git</code>
 12. Run `make install`
 13. In the app in the "build" directory, find the en.lproj/InfoPlist.strings
     and change the CFBundleDisplayName and CFBundleName to "purr-data"
-13. To be continued...
-
-Homebrew build
-1. Install [Homebrew](http://brew.sh) *(15 minutes)*
-   (asks for password twice-- once for command line tools, once for homebrew)
-2. Install the dependencies *10 minutes*:<code>
-   brew install wget
-   brew install autoconf
-   brew install automake
-   brew install libtool
-   brew install fftw
-   brew install python
-   brew install fluidsynth
-   brew install lame
-   brew install libvorbis
-   brew install speex
-   brew install gsl
-   brew install libquicktime
-   brew install pkg-config
-</code>
-3. git clone https://git.purrdata.net/jwilkes/purr-data.git
-4. remove plugin from LIB_TARGETS in externals/Makefile
+14. Note: the script `embed-MacOSX-dependencies.sh` doesn't work with
+    macports paths.
 
 #### Windows 32-bit Using msys2
 Time to build: *roughly 1.5 hours-- 30 minutes of this is for Gem alone*
