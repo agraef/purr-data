@@ -283,7 +283,7 @@ then
 		cd ../../
 	fi
 	# install raspberry pi externals (if applicable)
-	if [ $inno -eq 0 -o $dmg -eq 0 ]; then
+	if [ $inno -eq 0 -a $dmg -eq 0 ]; then
 		cd raspberry_pi
 		./makeall.sh
 		cp -f disis_gpio/disis_gpio.pd_linux ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
@@ -296,7 +296,7 @@ then
 	echo "done with l2ork addons."
 	cd ../
 	# finish install for deb
-	if [ $inno -eq 0 -o $dmg -eq 0 ]; then
+	if [ $inno -eq 0 -a $dmg -eq 0 ]; then
 		cd packages/linux_make
 		rm -f build/usr/local/lib/pd
 		if [ $pkg -gt 0 ]; then

@@ -191,10 +191,6 @@ darwin_app_core: darwin_app_wrapper
 	install -d "$(PD_APP_CONTENTS)/Resources/bin"
 	cd "$(PD_APP_CONTENTS)/Resources" && \
 		ln -s bin Scripts
-	cd "$(PD_APP_CONTENTS)/Resources/bin" && \
-		test -e AppMain.tcl || ln -s pd.tk AppMain.tcl
-	cd "$(PD_APP_CONTENTS)/Resources/bin" && \
-		test -e pdextended || ln -s pd pdextended
 # support for Info Panel Plugins mgmt
 	cd "$(PD_APP_CONTENTS)" && ln -s Resources/extra Plugins
 	install -p -m0644 org.puredata.pd-l2ork.default.plist "$(PD_APP_CONTENTS)/Resources/"
