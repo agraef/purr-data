@@ -82,6 +82,8 @@ typedef int socklen_t;
 #define LOCALHOST "localhost"
 #endif
 
+#define X_SPECIFIER "x%.6lx"
+
 static int stderr_isatty;
 
 /* I don't see any other systems where this header (and backtrace) are
@@ -839,7 +841,9 @@ void gui_do_vmess(const char *sel, char *fmt, int end, va_list ap)
         case 'f': sys_vgui("%g", va_arg(ap, double)); break;
         case 's': escape_double_quotes(va_arg(ap, const char *)); break;
         case 'i': sys_vgui("%d", va_arg(ap, t_int)); break;
-        case 'x': sys_vgui("\"x%.6lx\"", va_arg(ap, long unsigned int)); break;
+        case 'x': sys_vgui("\"" X_SPECIFIER "\"",
+            va_arg(ap, long unsigned int));
+            break;
         //case 'p': SETPOINTER(at, va_arg(ap, t_gpointer *)); break;
         default: goto done;
         }
@@ -1360,7 +1364,7 @@ fprintf(stderr, "guidir is %s\n", guidir);
                we add it again as the last argument to make sure we can fetch
                it on the GUI side. */
             sprintf(cmdbuf,
-                "%s/nw/nw %s %d localhost %s %s x%.6lx",
+                "%s/nw/nw %s %d localhost %s %s " X_SPECIFIER,
                 guidir,
                 guidir,
 //                "/home/user/purr-data/pd/nw",
@@ -1420,7 +1424,7 @@ fprintf(stderr, "guidir is %s\n", guidir);
         //sys_bashfilename(scriptbuf, scriptbuf);
 
         char pd_this_string[80];
-        sprintf(pd_this_string, "x%lx", (long unsigned int)pd_this);
+        sprintf(pd_this_string, X_SPECIFIER, (long unsigned int)pd_this);
         sprintf(scriptbuf, "\""); /* use quotes in case there are spaces */
         strcat(scriptbuf, sys_libdir->s_name);
         strcat(scriptbuf, "/" PDBINDIR);
