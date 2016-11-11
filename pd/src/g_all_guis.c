@@ -768,12 +768,12 @@ t_scalehandle *scalehandle_new(t_object *x, t_glist *glist, int scale, t_clickha
     h->h_glist = glist;
     if (!scale) /* Only bind for labels-- scaling uses pd_vmess in g_editor.c */
     {
-        sprintf(buf, "_l%lx", (int)x);
+        sprintf(buf, "_l%lx", (long unsigned int)x);
         pd_bind((t_pd *)h, h->h_bindsym = gensym(buf));
     }
     else if (scale && pd_class((t_pd *)x) == my_canvas_class)
     {
-        sprintf(buf, "_s%lx", (int)x);
+        sprintf(buf, "_s%lx", (long unsigned int)x);
         pd_bind((t_pd *)h, h->h_bindsym = gensym(buf));
     }
     sprintf(h->h_outlinetag, "h%lx", (t_int)h);
