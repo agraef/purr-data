@@ -4,10 +4,10 @@ var lang;
 
 try {
     // try the locale given by navigator.language
-    lang = require('./locales/'+navigator.language+'/translation.json');
+    lang = require("./locales/" + navigator.language + "/translation.json");
 } catch (e) {
-    // if that fails then fall back to the default locale 'en'
-    lang = require('./locales/en/translation.json');
+    // if that fails then fall back to the default locale "en"
+    lang = require("./locales/en/translation.json");
 }
 
 exports.lang = lang;
