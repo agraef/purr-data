@@ -973,39 +973,45 @@ void preset_hub_save(t_gobj *z, t_binbuf *b)
         phd = x->ph_data;
         while (phd)
         {
-            if(PH_DEBUG) fprintf(stderr,"    saving phd\n");
-            /* designate a node and state whether it is active or disabled
-               (disabled nodes are ones that have presets saved but have been
-               deleted since-- we keep these in the case of undo actions during
-               the session that may go beyond saving something into a file) */
-            binbuf_addv(b, "si", gensym("%node%"), phd->phd_pn_gl_loc_length);
-
-            // gather info about the length of the node's location and store it
-            for (i = 0; i < phd->phd_pn_gl_loc_length; i++)
+        	// only save node and preset if it is active, this prevents stale
+        	// data that will be unnecessary since undo is also purged once
+        	// the file is reloaded from the disk
+        	if (phd->phd_node)
             {
-                binbuf_addv(b,"i", (int)phd->phd_pn_gl_loc[i]);
-            }
+	            if(PH_DEBUG) fprintf(stderr,"    saving phd\n");
+	            /* designate a node and state whether it is active or disabled
+	               (disabled nodes are ones that have presets saved but have been
+	               deleted since-- we keep these in the case of undo actions during
+	               the session that may go beyond saving something into a file) */
+	            binbuf_addv(b, "si", gensym("%node%"), phd->phd_pn_gl_loc_length);
 
-            // save preset data
-            np = phd->phd_npreset;
-            while (np)
-            {
-                if (np->np_val.l_n > 0)
-                {
-                    binbuf_addv(b, "si", gensym("%preset%"),
-                        (int)np->np_preset);
-                    for (i = 0; i < np->np_val.l_n; i++)
-                    {
-                        if (np->np_val.l_vec[i].l_a.a_type == A_FLOAT)
-                            binbuf_addv(b, "f",
-                                np->np_val.l_vec[i].l_a.a_w.w_float);
-                        else if (np->np_val.l_vec[i].l_a.a_type == A_SYMBOL)
-                            binbuf_addv(b, "s",
-                                np->np_val.l_vec[i].l_a.a_w.w_symbol);    
-                    }
-                }
-                np = np->np_next;
-            }
+	            // gather info about the length of the node's location and store it
+	            for (i = 0; i < phd->phd_pn_gl_loc_length; i++)
+	            {
+	                binbuf_addv(b,"i", (int)phd->phd_pn_gl_loc[i]);
+	            }
+
+	            // save preset data
+	            np = phd->phd_npreset;
+	            while (np)
+	            {
+	                if (np->np_val.l_n > 0)
+	                {
+	                    binbuf_addv(b, "si", gensym("%preset%"),
+	                        (int)np->np_preset);
+	                    for (i = 0; i < np->np_val.l_n; i++)
+	                    {
+	                        if (np->np_val.l_vec[i].l_a.a_type == A_FLOAT)
+	                            binbuf_addv(b, "f",
+	                                np->np_val.l_vec[i].l_a.a_w.w_float);
+	                        else if (np->np_val.l_vec[i].l_a.a_type == A_SYMBOL)
+	                            binbuf_addv(b, "s",
+	                                np->np_val.l_vec[i].l_a.a_w.w_symbol);    
+	                    }
+	                }
+	                np = np->np_next;
+	            }
+	        }
 
             phd = phd->phd_next;
         }
