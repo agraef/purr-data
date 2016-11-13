@@ -192,8 +192,8 @@ function create_menu(gui, type) {
             // "Ctrl-V" isn't displayed in the menu item.
             edit_menu.append(m.edit.paste = new gui.MenuItem({
                 label: l("menu.paste"),
-                //key: "v",
-                //modifiers: cmd_or_ctrl,
+                key: "v",
+                modifiers: cmd_or_ctrl,
                 tooltip: l("menu.paste_tt")
             }));
         }
