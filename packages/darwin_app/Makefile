@@ -192,7 +192,7 @@ darwin_app_core: darwin_app_wrapper
 	cd "$(PD_APP_CONTENTS)/Resources" && \
 		ln -s bin Scripts
 # support for Info Panel Plugins mgmt
-	cd "$(PD_APP_CONTENTS)" && ln -s Resources/extra Plugins
+	cd "$(PD_APP_CONTENTS)" && ln -s Resources/app.nw/extra Plugins
 	install -p -m0644 org.puredata.pd-l2ork.default.plist "$(PD_APP_CONTENTS)/Resources/"
 # since Pd-vanilla on Mac OS X doesn't have an 'include/pd' folder,
 # Pd-extended will mimic Pd-vanilla's include/pd until Pd-vanilla gets one
