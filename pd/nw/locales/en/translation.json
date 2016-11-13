@@ -402,6 +402,8 @@
   "search": {
     "browse": "browse the documentation",
     "search": "search",
+    "building_index": "Building index...",
+    "no_results": "No results found.",
     "search_placeholder": "Search Pd Docs"
   }
 }
