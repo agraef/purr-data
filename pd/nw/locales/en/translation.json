@@ -121,7 +121,7 @@
     "copy": "Copy",
     "copy_tt": "Copy selected objects to the clipboard",
     "paste": "Paste",
-    "paste_tt": "Add any objects to the canvas which wer previously cut or copied",
+    "paste_tt": "Add any objects to the canvas which were previously cut or copied",
     "duplicate": "Duplicate",
     "duplicate_tt": "Paste a copy of the current selection on the canvas (doesn't use clipboard)",
     "selectall": "Select All",
@@ -151,7 +151,7 @@
     "autotips": "Autotips",
     "autotips_tt": "Turn on tooltips in the patch",
     "editmode": "Editmode",
-    "autotips_tt": "Toggle Editmode",
+    "editmode_tt": "Toggle Editmode",
     "preferences": "Preferences",
     "preferences_tt": "Open a dialog window to configure the running instance of Pd",
 
@@ -192,7 +192,7 @@
     "hradio": "Hradio",
     "hradio_tt": "Add horizontal group of radio buttons to the canvas for selecting a value",
     "vu": "VU",
-    "vu_tt": "Add a Vu Meter to the canvas",
+    "vu_tt": "Add a VU Meter to the canvas",
     "cnv": "Canvas Rectangle",
     "cnv_tt": "Add a boring rectangle to the canvas for displaying a rectangle",
 
@@ -402,6 +402,8 @@
   "search": {
     "browse": "browse the documentation",
     "search": "search",
+    "building_index": "Building index...",
+    "no_results": "No results found.",
     "search_placeholder": "Search Pd Docs"
   }
 }
