@@ -363,12 +363,6 @@ var canvas_events = (function() {
                         break;
                     case 86:
                         if (cmd_or_ctrl_key(evt)) { // ctrl-v
-                            // Instead of sending the "paste" message to Pd
-                            // here, we wait for the "paste" DOM listener to
-                            // pick it up. That way it can check to see if
-                            // there's anything in the paste buffer, and if so
-                            // forward it to Pd.
-
                             // We also use "cut" and "copy" DOM event handlers
                             // and leave this code in case we need to change
                             // tactics for some reason.
@@ -684,80 +678,13 @@ var canvas_events = (function() {
         }
     });
 
-    // Listen to paste event using the half-baked Clipboard API from HTML5
+    // Listen to paste event
+    // XXXTODO: Not sure whether this is even needed any more, as the
+    // paste-from-clipboard functionality has been moved to its own menu
+    // option. So this code may possibly be removed in the future. -ag
     document.addEventListener("paste", function(evt) {
-        var clipboard_data = evt.clipboardData.getData("text"),
-            line,
-            lines,
-            i,
-            pd_message;
-        // Precarious, overly complicated and prone to bugs...
-        // Basically, if a Pd user copies some Pd source file from another
-        // application, we give them a single paste operation to paste the
-        // code directly into a window (empty or otherwise). We supply a
-        // warning prompt to let the user know this is what's happening, so
-        // they could cancel if that's not what they wanted.
-
-        // After the prompt, the user can no longer paste that particular
-        // string from the OS clipboard buffer. All paste actions
-        // will instead apply to whatever has been copied or cut from within
-        // a Pd patch. To paste from the OS clipboard again, the user
-        // must cut/copy a _different_ snippet of Pd source file than the
-        // one they previously tried to paste.
-
-        // A temporary workaround to this confusing behavior would be to give
-        // external code-pasting its own menu button. Another possibility is
-        // to let copy/cut actions within the patch actually get written to
-        // the OS clipboard. The latter would involve a lot more work (e.g.,
-        // sending FUDI messages from Pd to set the OS clipboard, etc.)
-
-        // Also, we check below to make sure the OS clipboard is holding
-        // text that could conceivably be Pd source code. If not then the
-        // user won't get bothered with a prompt at all, and normal Pd
-        // paste behavior will follow.
-
-        // From a usability standpoint the main drawback is that
-        // you can't try to paste the same Pd source code more than once.
-        // For users who want to pasting lots of source code this could be
-        // a frustration, but Pd's normal copy/paste behavior remains
-        // intuitive and in line with the way other apps tend to work.
-
-        // Yet another caveat: we only want to check the external buffer
-        // and/or send a "paste" event to Pd if the canvas is in a "normal"
-        // state.
         if (canvas_events.get_state() !== "normal") {
             return;
-        }
-
-        if (might_be_a_pd_file(clipboard_data) &&
-            clipboard_data !== pdgui.get_last_clipboard_data()) {
-            if (permission_to_paste_from_external_clipboard()) {
-                // clear the buffer
-                pdgui.pdsend(name, "copyfromexternalbuffer");
-                pd_message = "";
-                lines = clipboard_data.split("\n");
-                for (i = 0; i < lines.length; i++) {
-                    line = lines[i];
-                    // process pd_message if it ends with a semicolon that
-                    // isn't preceded by a backslash
-                    if (line.slice(-1) === ";" &&
-                         (line.length < 2 || line.slice(-2, -1) !== "\\")) {
-                        if (pd_message === "") {
-                            pd_message = line;
-                        } else {
-                            pd_message = pd_message + " " + line;
-                        }
-                        pdgui.pdsend(name, "copyfromexternalbuffer", pd_message);
-                        pd_message = "";
-                    } else {
-                        pd_message = pd_message + " " + line;
-                        pd_message = pd_message.replace(/\n/g, "");
-                    }
-                }
-                // This isn't needed, but pd-l2ork did it for some reason...
-                pdgui.pdsend(name, "copyfromexternalbuffer");
-            }
-            pdgui.set_last_clipboard_data(clipboard_data);
         }
         // Send a canvas "paste" message to Pd
         pdgui.pdsend(name, "paste");
@@ -1096,6 +1023,65 @@ function instantiate_live_box() {
     }
 }
 
+function canvas_paste_from_clipboard(name, clipboard_data)
+{
+    var line, lines, i, pd_message;
+
+    // This lets the user copy some Pd source file from another application
+    // and paste the code directly into a canvas window (empty or otherwise).
+    // It does a quick check to make sure the OS clipboard is holding text
+    // that could conceivably be Pd source code. But that's not 100% foolproof
+    // and if it's not then the engine might crash and burn, so be careful! :)
+
+    // We only want to check the external buffer and/or send a "paste" event
+    // to Pd if the canvas is in a "normal" state.
+    if (canvas_events.get_state() !== "normal") {
+        return;
+    }
+
+    // Maybe we want a warning prompt here? Then uncomment the line below. I
+    // disabled this for now, as the paste-from-clipboard command now has its
+    // own menu option, so presumably the user knows what he's doing. -ag
+    if (!might_be_a_pd_file(clipboard_data)
+	//|| !permission_to_paste_from_external_clipboard()
+       ) {
+        return;
+    }
+
+    // clear the buffer
+    pdgui.pdsend(name, "copyfromexternalbuffer");
+    pd_message = "";
+    lines = clipboard_data.split("\n");
+    for (i = 0; i < lines.length; i++) {
+        line = lines[i];
+        // process pd_message if it ends with a semicolon that
+        // isn't preceded by a backslash
+        if (line.slice(-1) === ";" &&
+            (line.length < 2 || line.slice(-2, -1) !== "\\")) {
+            if (pd_message === "") {
+                pd_message = line;
+            } else {
+                pd_message = pd_message + " " + line;
+            }
+            pdgui.pdsend(name, "copyfromexternalbuffer", pd_message);
+            pd_message = "";
+        } else {
+            pd_message = pd_message + " " + line;
+            pd_message = pd_message.replace(/\n/g, "");
+        }
+    }
+    // This signals to the engine that we're done filling the external buffer,
+    // so this might conceivably call some internal cleanup code. At present
+    // it doesn't do anything, though.
+    pdgui.pdsend(name, "copyfromexternalbuffer");
+    // Send a canvas "paste" message to Pd
+    pdgui.pdsend(name, "paste");
+    // Finally, make sure to reset the buffer so that next time around we
+    // start from a clean slate. (Otherwise, the engine will just add stuff to
+    // the existing buffer contents.)
+    pdgui.pdsend(name, "reset_copyfromexternalbuffer");
+}
+
 // Menus for the Patch window
 
 var canvas_menu = {};
@@ -1241,6 +1227,15 @@ function nw_create_patch_window_menus(gui, w, name) {
     minit(m.edit.paste, {
         enabled: true,
         click: function () { pdgui.pdsend(name, "paste"); }
+    });
+    minit(m.edit.paste_clipboard, {
+        enabled: true,
+        click: function () {
+	    var clipboard = nw.Clipboard.get();
+	    var text = clipboard.get('text');
+	    //pdgui.post("** paste from clipboard: "+text);
+	    canvas_paste_from_clipboard(name, text);
+	}
     });
     minit(m.edit.duplicate, {
         enabled: true,

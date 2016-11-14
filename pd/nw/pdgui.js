@@ -3,7 +3,6 @@
 var pwd;
 var gui_dir;
 var lib_dir;
-var last_clipboard_data;
 var pd_engine_id;
 
 exports.set_pwd = function(pwd_string) {
@@ -65,14 +64,6 @@ function gui_set_current_dir(dummy, dir_and_filename) {
 
 function gui_set_gui_preset(name) {
     skin.set(name);
-}
-
-exports.set_last_clipboard_data = function(data) {
-    last_clipboard_data = data;
-}
-
-exports.get_last_clipboard_data = function() {
-    return last_clipboard_data;
 }
 
 // Modules
