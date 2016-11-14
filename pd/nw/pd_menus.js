@@ -199,6 +199,8 @@ function create_menu(gui, type) {
     if (canvas_menu) {
         edit_menu.append(m.edit.paste_clipboard = new gui.MenuItem({
             label: l("menu.paste_clipboard"),
+            key: "v",
+            modifiers: cmd_or_ctrl + "+alt",
             tooltip: l("menu.paste_clipboard_tt")
         }));
         edit_menu.append(m.edit.duplicate = new gui.MenuItem({

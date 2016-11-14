@@ -1039,14 +1039,15 @@ function canvas_paste_from_clipboard(name, clipboard_data)
         return;
     }
 
+    if (!might_be_a_pd_file(clipboard_data)) {
+	pdgui.post("paste error: clipboard doesn't appear to contain valid Pd code");
+        return;
+    }
+
     // Maybe we want a warning prompt here? Then uncomment the line below. I
     // disabled this for now, as the paste-from-clipboard command now has its
     // own menu option, so presumably the user knows what he's doing. -ag
-    if (!might_be_a_pd_file(clipboard_data)
-	//|| !permission_to_paste_from_external_clipboard()
-       ) {
-        return;
-    }
+    //if (!permission_to_paste_from_external_clipboard()) return;
 
     // clear the buffer
     pdgui.pdsend(name, "copyfromexternalbuffer");
@@ -1071,8 +1072,7 @@ function canvas_paste_from_clipboard(name, clipboard_data)
         }
     }
     // This signals to the engine that we're done filling the external buffer,
-    // so this might conceivably call some internal cleanup code. At present
-    // it doesn't do anything, though.
+    // that it can do necessary checks and call some internal cleanup code.
     pdgui.pdsend(name, "copyfromexternalbuffer");
     // Send a canvas "paste" message to Pd
     pdgui.pdsend(name, "paste");
