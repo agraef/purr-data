@@ -1352,10 +1352,18 @@ function nw_create_patch_window_menus(gui, w, name) {
             pdgui.gui_canvas_get_scroll(name);
         }
     });
+    minit(m.view.optimalzoom, {
+        enabled: true,
+        click: function () {
+            pdgui.gui_canvas_optimal_zoom(name);
+            pdgui.gui_canvas_get_scroll(name);
+        }
+    });
     minit(m.view.zoomreset, {
         enabled: true,
         click: function () {
             gui.Window.get().zoomLevel = 0;
+            pdgui.gui_canvas_get_scroll(name);
         }
     });
     minit(m.view.fullscreen, {
