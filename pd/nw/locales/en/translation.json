@@ -122,6 +122,8 @@
     "copy_tt": "Copy selected objects to the clipboard",
     "paste": "Paste",
     "paste_tt": "Add any objects to the canvas which were previously cut or copied",
+    "paste_clipboard": "Paste from Clipboard",
+    "paste_clipboard_tt": "Paste Pd code from the clipboard to the canvas (use with caution!)",
     "duplicate": "Duplicate",
     "duplicate_tt": "Paste a copy of the current selection on the canvas (doesn't use clipboard)",
     "selectall": "Select All",

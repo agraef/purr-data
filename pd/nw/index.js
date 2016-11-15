@@ -456,6 +456,7 @@ function nw_create_pd_window_menus(gui, w) {
     });
     if (osx) {
         minit(m.edit.paste, { enabled: false });
+        minit(m.edit.paste_clipboard, { enabled: false });
         minit(m.edit.duplicate, { enabled: false });
     }
     minit(m.edit.selectall, {

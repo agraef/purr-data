@@ -122,6 +122,8 @@
     "copy_tt": "Kopiere die selektierten Objekte in die Ablage",
     "paste": "Einfügen",
     "paste_tt": "Füge Objekte aus der Ablage in den Patch ein",
+    "paste_clipboard": "Einfügen aus Zwischenablage",
+    "paste_clipboard_tt": "Füge Pd code aus der Zwischenablage in den Patch ein (mit Vorsicht verwenden!)",
     "duplicate": "Duplizieren",
     "duplicate_tt": "Füge eine Kopie der aktuell selektierten Objekte in den Patch ein (verwendet nicht die Zwischenablage)",
     "selectall": "Alles auswählen",
