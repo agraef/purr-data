@@ -565,11 +565,11 @@ function create_menu(gui, type) {
             label: l("menu.put"),
             submenu: put_menu
         }), 4);
-        // "Window" menu created from mac builtin above
         window_menu.insert(new gui.MenuItem({
             label: l("menu.media"),
             submenu: media_menu
         }), 5);
+        // "Window" menu created from mac builtin above
         window_menu.append(new gui.MenuItem({
             label: l("menu.help"),
             submenu: help_menu
@@ -594,12 +594,12 @@ function create_menu(gui, type) {
             }));
         }
         window_menu.append(new gui.MenuItem({
-            label: l("menu.windows"),
-            submenu: winman_menu
-        }));
-        window_menu.append(new gui.MenuItem({
             label: l("menu.media"),
             submenu: media_menu
+        }));
+        window_menu.append(new gui.MenuItem({
+            label: l("menu.windows"),
+            submenu: winman_menu
         }));
         window_menu.append(new gui.MenuItem({
             label: l("menu.help"),
