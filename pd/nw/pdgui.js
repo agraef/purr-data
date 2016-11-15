@@ -4371,17 +4371,11 @@ function gui_undo_menu(cid, undo_text, redo_text) {
     }
 }
 
-function do_getscroll(cid) {
-    var bbox, width, height, min_width, min_height, x, y,
-        svg;
-    // Since we're throttling these getscroll calls, they can happen after
-    // the patch has been closed. We remove the cid from the patchwin
-    // object on close, so we can just check to see if our Window object has
-    // been set to null, and if so just return.
-    // This is an awfully bad pattern. The whole scroll-checking mechanism
-    // needs to be rethought, but in the meantime this should prevent any
-    // errors wrt the rendering context disappearing.
-    if (!patchwin[cid]) { return; }
+function canvas_params(cid)
+{
+    // calculate the canvas parameters (svg bounding box and window geometry)
+    // for do_getscroll and do_optimalzoom
+    var bbox, width, height, min_width, min_height, x, y, svg;
     svg = get_item(cid, "patchsvg");
     bbox = svg.getBBox();
     // We try to do Pd-extended style canvas origins. That is, coord (0, 0)
@@ -4419,6 +4413,21 @@ function do_getscroll(cid) {
     min_height |= 0;
     x |= 0;
     y |= 0;
+    return { svg: svg, x: x, y: y, w: width, h: height,
+	     mw: min_width, mh: min_height };
+}
+
+function do_getscroll(cid) {
+    // Since we're throttling these getscroll calls, they can happen after
+    // the patch has been closed. We remove the cid from the patchwin
+    // object on close, so we can just check to see if our Window object has
+    // been set to null, and if so just return.
+    // This is an awfully bad pattern. The whole scroll-checking mechanism
+    // needs to be rethought, but in the meantime this should prevent any
+    // errors wrt the rendering context disappearing.
+    if (!patchwin[cid]) { return; }
+    var { svg: svg, x: x, y: y, w: width, h: height,
+	  mw: min_width, mh: min_height } = canvas_params(cid);
     if (width < min_width) {
         width = min_width;
     }
@@ -4459,27 +4468,11 @@ function gui_canvas_get_scroll(cid) {
 exports.gui_canvas_get_scroll = gui_canvas_get_scroll;
 
 function do_optimalzoom(cid) {
-    // determine an optimal zoom level; this uses pretty much the same
-    // logic as do_getscroll above to determine bbox and actual window
-    // size, and then determines the maximal zoom level that makes the
-    // entire patch fit within the window
-    var bbox, width, height, min_width, min_height, x, y,
-        svg;
+    // determine an optimal zoom level that makes the entire patch fit within
+    // the window
     if (!patchwin[cid]) { return; }
-    svg = get_item(cid, "patchsvg");
-    bbox = svg.getBBox();
-    width = bbox.x > 0 ? bbox.x + bbox.width : bbox.width;
-    height = bbox.y > 0 ? bbox.y + bbox.height : bbox.height;
-    x = bbox.x > 0 ? 0 : bbox.x,
-    y = bbox.y > 0 ? 0 : bbox.y;
-    min_width = patchwin[cid].window.innerWidth - 4;
-    min_height = patchwin[cid].window.innerHeight - 4;
-    width |= 0; // drop everything to the right of the decimal point
-    height |= 0;
-    min_width |= 0;
-    min_height |= 0;
-    x |= 0;
-    y |= 0;
+    var { x: x, y: y, w: width, h: height, mw: min_width, mh: min_height } =
+	canvas_params(cid);
     // Calculate the optimal horizontal and vertical zoom values,
     // using floor to always round down to the nearest integer. Note
     // that these may well be negative, if the viewport is too small
