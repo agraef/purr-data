@@ -4458,6 +4458,62 @@ function gui_canvas_get_scroll(cid) {
 
 exports.gui_canvas_get_scroll = gui_canvas_get_scroll;
 
+function do_optimalzoom(cid) {
+    // determine an optimal zoom level; this uses pretty much the same
+    // logic as do_getscroll above to determine bbox and actual window
+    // size, and then determines the maximal zoom level that makes the
+    // entire patch fit within the window
+    var bbox, width, height, min_width, min_height, x, y,
+        svg;
+    if (!patchwin[cid]) { return; }
+    svg = get_item(cid, "patchsvg");
+    bbox = svg.getBBox();
+    width = bbox.x > 0 ? bbox.x + bbox.width : bbox.width;
+    height = bbox.y > 0 ? bbox.y + bbox.height : bbox.height;
+    x = bbox.x > 0 ? 0 : bbox.x,
+    y = bbox.y > 0 ? 0 : bbox.y;
+    min_width = patchwin[cid].window.innerWidth - 4;
+    min_height = patchwin[cid].window.innerHeight - 4;
+    width |= 0; // drop everything to the right of the decimal point
+    height |= 0;
+    min_width |= 0;
+    min_height |= 0;
+    x |= 0;
+    y |= 0;
+    // Calculate the optimal horizontal and vertical zoom values,
+    // using floor to always round down to the nearest integer. Note
+    // that these may well be negative, if the viewport is too small
+    // for the patch at the current zoom level. XXXREVIEW: We assume a
+    // zoom factor of 1.2 here; this works for me on Linux, but I'm
+    // not sure how portable it is. -ag
+    var zx = 0, zy = 0;
+    if (width>0) zx = Math.floor(Math.log(min_width/width)/Math.log(1.2));
+    if (height>0) zy = Math.floor(Math.log(min_height/height)/Math.log(1.2));
+    // Optimal zoom is the minimum of the horizontal and vertical zoom
+    // values. This gives us the offset to the current zoom level. We
+    // then need to clamp the resulting new zoom level to the valid
+    // zoom level range of -8..+7.
+    var actz = patchwin[cid].zoomLevel, z = actz+Math.min(zx, zy);
+    if (z < -8) z = -8; if (z > 7) z = 7;
+    //post("bbox: "+width+"x"+height+"+"+x+"+"+y+" window size: "+min_width+"x"+min_height+" current zoom level: "+actz+" optimal zoom level: "+z);
+    if (z != actz) {
+	patchwin[cid].zoomLevel = z;
+    }
+}
+
+var optimalzoom_var = {};
+
+// We use a setTimeout here as with do_getscroll above, but we have to
+// use a smaller value here, so that we're done before a subsequent
+// call to do_getscroll updates the viewport. XXXREVIEW: Hopefully
+// 100 msec are enough for do_optimalzoom to finish.
+function gui_canvas_optimal_zoom(cid) {
+    clearTimeout(optimalzoom_var[cid]);
+    optimalzoom_var[cid] = setTimeout(do_optimalzoom, 150, cid);
+}
+
+exports.gui_canvas_optimal_zoom = gui_canvas_optimal_zoom;
+
 // handling the selection
 function gui_lower(cid, tag) {
     var svg = patchwin[cid].window.document.getElementById("patchsvg"),

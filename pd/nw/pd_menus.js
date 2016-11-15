@@ -325,6 +325,14 @@ function create_menu(gui, type) {
         modifiers: cmd_or_ctrl,
         tooltip: l("menu.zoomreset_tt")
     }));
+    if (canvas_menu) {
+	view_menu.append(m.view.optimalzoom = new gui.MenuItem({
+            label: l("menu.zoomoptimal"),
+            key: "0",
+            modifiers: cmd_or_ctrl + "+alt",
+            tooltip: l("menu.zoomoptimal_tt")
+	}));
+    }
     view_menu.append(new gui.MenuItem({ type: "separator" }));
     view_menu.append(m.view.fullscreen = new gui.MenuItem({
         label: l("menu.fullscreen"),

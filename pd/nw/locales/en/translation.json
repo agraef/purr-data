@@ -165,6 +165,8 @@
     "zoomout_tt": "Make the patch visually smaller",
     "zoomreset": "Reset Zoom",
     "zoomreset_tt": "Reset the zoom to the original level",
+    "zoomoptimal": "Optimal Zoom",
+    "zoomoptimal_tt": "Change the zoom to the optimal level which makes the entire patch visible (as far as possible)",
     "fullscreen": "Fullscreen",
 
     "put": "Put",
