@@ -47,7 +47,7 @@ int canvas_isgroup(t_canvas *x)
     //}
     //t_atom *argv = binbuf_getvec(x->gl_obj.te_binbuf);
     //if (argv[0].a_type == A_SYMBOL &&
-    //    argv[0].a_w.w_symbol == gensym("group"))
+    //    argv[0].a_w.w_symbol == gensym("g"))
     //    return 1;
     //else
     //    return 0;

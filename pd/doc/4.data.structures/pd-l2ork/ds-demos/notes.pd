@@ -188,7 +188,7 @@ c -100 -53 -163 -157 -163 -270 c 0 -87 22 -158 43 -230 c 84 102 155
 #X connect 63 0 20 0;
 #X connect 64 0 22 0;
 #X connect 65 0 24 0;
-#X restore 447 519 draw group;
+#X restore 447 519 draw g;
 #X obj 447 408 * 0.01;
 #X obj 447 432 * 11;
 #X obj 447 473 pack;

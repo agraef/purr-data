@@ -1067,7 +1067,7 @@ extern t_pd *svg_header(t_pd *x);
 
 static void group_svginit(t_glist *gl)
 {
-    gl->gl_svg = (t_pd *)(svg_new((t_pd *)gl, gensym("group"), 0, 0));
+    gl->gl_svg = (t_pd *)(svg_new((t_pd *)gl, gensym("g"), 0, 0));
     t_pd *proxy = svg_header(gl->gl_svg);
     inlet_new(&gl->gl_obj, proxy, 0, 0);
     outlet_new(&gl->gl_obj, &s_anything);

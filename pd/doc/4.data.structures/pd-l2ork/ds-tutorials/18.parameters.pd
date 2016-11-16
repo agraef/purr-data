@@ -27,7 +27,7 @@
 67.134 87.1838 66.7361 88.5505 65.1156 83.9018 z;
 #X obj 50 244 draw path M 5.0713 7.44696 L 2.68749 5.47181 L 2.3806
 4.18776 M 2.82812 5.42493 L 1.36538 5.01748;
-#X restore 46 266 draw group;
+#X restore 46 266 draw g;
 #X msg 46 147 transform rotate r 35 40 \, mouseover 1;
 #X obj 46 288 route mouseover;
 #X obj 46 310 unpack p;

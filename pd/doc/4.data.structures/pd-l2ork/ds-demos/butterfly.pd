@@ -494,7 +494,7 @@ that to zero Pd doesn't currently just ignores the transform message
 and doesn't update the graphics.;
 #X text 22 200 This is currently inefficient because I'm calculating
 the transform for _each_ individual drawing instruction that makes
-up the butterfly. For this there is the [draw group] object which does
+up the butterfly. For this there is the [draw g] object which does
 a single transformation for the entire set of drawing instructions.
 ;
 #X obj 32 465 pack 0 0 1 0;

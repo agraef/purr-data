@@ -66,7 +66,7 @@
 #X connect 35 0 0 0;
 #X connect 36 0 24 0;
 #X connect 37 0 25 0;
-#X restore 311 205 draw group;
+#X restore 311 205 draw g;
 #X obj 309 93 struct splines float x float y float qmid float c1 float
 c2;
 #X text 272 394 <- Click-drag the inner red crosses to change the y-value

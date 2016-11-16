@@ -1346,7 +1346,7 @@ void *svg_new(t_pd *parent, t_symbol *s, int argc, t_atom *argv)
         for (i = 0; i < ncmds; i++) x->x_nargs_per_cmd[i] = 0;
         x->x_nargs = argc - ncmds;
     }
-    else if (x->x_type == gensym("group"))
+    else if (x->x_type == gensym("g"))
     {
         x->x_nargs = 0;
         x->x_vec = 0;
@@ -1459,7 +1459,7 @@ static int symbol_isdrawtype(t_symbol *s)
         s == gensym("line")    || s == gensym("path")     ||
         s == gensym("polygon") || s == gensym("polyline") ||
         s == gensym("rect")    || s == gensym("image")    ||
-        s == gensym("sprite")  || s == gensym("group"))
+        s == gensym("sprite")  || s == gensym("g"))
     {
         return 1;
     }
@@ -1481,7 +1481,7 @@ static void *draw_new(t_symbol *classsym, t_int argc, t_atom *argv)
         have their own class and new function */
         if (type == gensym("sprite") || type == gensym("image"))
             return (drawimage_new(type, argc, argv));
-        else if (type == gensym("group"))
+        else if (type == gensym("g"))
         {
             t_symbol *group_name;
             if (argc > 0 && argv->a_type == A_SYMBOL)
@@ -1530,7 +1530,7 @@ t_canvas *svg_parentcanvas(t_svg *x)
        use case, but that doesn't seem like a sensible
        interface in general. */
     t_canvas *ret = 0;
-    if (x->x_type == gensym("group"))
+    if (x->x_type == gensym("g"))
     {
         t_canvas *c = (t_canvas *)x->x_parent;
         if (c->gl_owner)
@@ -1716,7 +1716,7 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
     int in_array = (sc->sc_vec != data);
     //post("in_array is %d", in_array);
     char tag[MAXPDSTRING];
-    if (x->x_type == gensym("group"))
+    if (x->x_type == gensym("g"))
     {
         sprintf(tag, "%s%lx.%lx",
             (in_array ? "scelem" : "dgroup"),
@@ -1794,7 +1794,7 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
            we need to do it for all of the draw commands
            inside it.
         */
-        if (x->x_type == gensym("group"))
+        if (x->x_type == gensym("g"))
             svg_group_pathrect_cache(x, 0);
         else if (x->x_pathrect_cache != -1)
         {
@@ -3487,7 +3487,7 @@ static void draw_getrect(t_gobj *z, t_glist *glist,
     */
     if (!fielddesc_getfloat(&sa->x_vis.a_attr, template, data, 0) ||
         !fielddesc_getfloat(&sa->x_bbox, template, data, 0) ||
-        (sa->x_type == gensym("group")))
+        (sa->x_type == gensym("g")))
     {
         *xp1 = *yp1 = 0x7fffffff;
         *xp2 = *yp2 = -0x7fffffff;
@@ -7825,7 +7825,7 @@ t_canvas *canvas_templatecanvas_forgroup(t_canvas *c)
         argv[0].a_type == A_SYMBOL &&
         argv[0].a_w.w_symbol == gensym("draw") &&
         argv[1].a_type == A_SYMBOL &&
-        argv[1].a_w.w_symbol == gensym("group"))
+        argv[1].a_w.w_symbol == gensym("g"))
     {
         templatecanvas = canvas_templatecanvas_forgroup(c->gl_owner);
     }
