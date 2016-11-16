@@ -83,7 +83,7 @@ Then follow the steps outlined here:
 http://l2ork.music.vt.edu/main/?page_id=56#install-dev
 
 #### OSX
-Homebrew build (supported)
+Homebrew build (supported) *40 minutes to 1.5 hours*
 1. Install [Homebrew](http://brew.sh) *(15 minutes)*
    (asks for password twice-- once for command line tools, once for homebrew)
 2. Install the dependencies *10 minutes*:<code>
@@ -105,7 +105,7 @@ Homebrew build (supported)
 4. Change to the directory<code>
 cd purr-data/l2ork_addons</code>
 5. Run the installer<code>
-./tar_em_up.sh -X</code>
+./tar_em_up.sh -X *15 minutes*</code>
 6. When the installer finishes, there should be a dmg file in<code>
 purr-data/packages/darwin_app</code>
 
