@@ -332,6 +332,18 @@ function create_menu(gui, type) {
             modifiers: cmd_or_ctrl + "+alt",
             tooltip: l("menu.zoomoptimal_tt")
 	}));
+	view_menu.append(m.view.horizzoom = new gui.MenuItem({
+            label: l("menu.zoomhoriz"),
+            key: "w",
+            modifiers: cmd_or_ctrl + "+alt",
+            tooltip: l("menu.zoomhoriz_tt")
+	}));
+	view_menu.append(m.view.vertzoom = new gui.MenuItem({
+            label: l("menu.zoomvert"),
+            key: "h",
+            modifiers: cmd_or_ctrl + "+alt",
+            tooltip: l("menu.zoomvert_tt")
+	}));
     }
     view_menu.append(new gui.MenuItem({ type: "separator" }));
     view_menu.append(m.view.fullscreen = new gui.MenuItem({

@@ -167,6 +167,10 @@
     "zoomreset_tt": "Reset the zoom to the original level",
     "zoomoptimal": "Optimal Zoom",
     "zoomoptimal_tt": "Change the zoom to the optimal level which makes the entire patch visible (as far as possible)",
+    "zoomhoriz": "Fit to Width",
+    "zoomhoriz_tt": "Change the zoom level to make the patch fit horizontally",
+    "zoomvert": "Fit to Height",
+    "zoomvert_tt": "Change the zoom level to make the patch fit vertically",
     "fullscreen": "Fullscreen",
 
     "put": "Put",
