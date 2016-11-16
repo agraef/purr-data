@@ -4647,7 +4647,7 @@ function gui_canvas_get_scroll(cid) {
 
 exports.gui_canvas_get_scroll = gui_canvas_get_scroll;
 
-function do_optimalzoom(cid) {
+function do_optimalzoom(cid, hflag, vflag) {
     // determine an optimal zoom level that makes the entire patch fit within
     // the window
     if (!patchwin[cid]) { return; }
@@ -4662,11 +4662,18 @@ function do_optimalzoom(cid) {
     var zx = 0, zy = 0;
     if (width>0) zx = Math.floor(Math.log(min_width/width)/Math.log(1.2));
     if (height>0) zy = Math.floor(Math.log(min_height/height)/Math.log(1.2));
-    // Optimal zoom is the minimum of the horizontal and vertical zoom
-    // values. This gives us the offset to the current zoom level. We
-    // then need to clamp the resulting new zoom level to the valid
-    // zoom level range of -8..+7.
-    var actz = patchwin[cid].zoomLevel, z = actz+Math.min(zx, zy);
+    // Optimal zoom is the minimum of the horizontal and/or the vertical zoom
+    // values, depending on the h and v flags. This gives us the offset to the
+    // current zoom level. We then need to clamp the resulting new zoom level
+    // to the valid zoom level range of -8..+7.
+    var actz = patchwin[cid].zoomLevel, z = 0;
+    if (hflag && vflag)
+	z = Math.min(zx, zy);
+    else if (hflag)
+	z = zx;
+    else if (vflag)
+	z = zy;
+    z += actz;
     if (z < -8) z = -8; if (z > 7) z = 7;
     //post("bbox: "+width+"x"+height+"+"+x+"+"+y+" window size: "+min_width+"x"+min_height+" current zoom level: "+actz+" optimal zoom level: "+z);
     if (z != actz) {
@@ -4680,9 +4687,9 @@ var optimalzoom_var = {};
 // use a smaller value here, so that we're done before a subsequent
 // call to do_getscroll updates the viewport. XXXREVIEW: Hopefully
 // 100 msec are enough for do_optimalzoom to finish.
-function gui_canvas_optimal_zoom(cid) {
+function gui_canvas_optimal_zoom(cid, h, v) {
     clearTimeout(optimalzoom_var[cid]);
-    optimalzoom_var[cid] = setTimeout(do_optimalzoom, 150, cid);
+    optimalzoom_var[cid] = setTimeout(do_optimalzoom, 150, cid, h, v);
 }
 
 exports.gui_canvas_optimal_zoom = gui_canvas_optimal_zoom;

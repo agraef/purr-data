@@ -167,6 +167,10 @@
     "zoomreset_tt": "Setze die Anzeige des Patches auf die Originalgröße zurück",
     "zoomoptimal": "Optimale Größe",
     "zoomoptimal_tt": "Wählt die optimale Größe, mit der der gesamte Patch angezeigt werden kann (soweit möglich)",
+    "zoomhoriz": "An Breite anpassen",
+    "zoomhoriz_tt": "Wählt die optimale Größe, um den Patch in voller Breite anzuzeigen",
+    "zoomvert": "An Höhe anpassen",
+    "zoomvert_tt": "Wählt die optimale Größe, um den Patch in voller Höhe anzuzeigen",
     "fullscreen": "Vollbild",
 
     "put": "Hinzufügen",

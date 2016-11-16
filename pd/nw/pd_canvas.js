@@ -1189,7 +1189,21 @@ function nw_create_patch_window_menus(gui, w, name) {
     minit(m.view.optimalzoom, {
         enabled: true,
         click: function () {
-            pdgui.gui_canvas_optimal_zoom(name);
+            pdgui.gui_canvas_optimal_zoom(name, 1, 1);
+            pdgui.gui_canvas_get_scroll(name);
+        }
+    });
+    minit(m.view.horizzoom, {
+        enabled: true,
+        click: function () {
+            pdgui.gui_canvas_optimal_zoom(name, 1, 0);
+            pdgui.gui_canvas_get_scroll(name);
+        }
+    });
+    minit(m.view.vertzoom, {
+        enabled: true,
+        click: function () {
+            pdgui.gui_canvas_optimal_zoom(name, 0, 1);
             pdgui.gui_canvas_get_scroll(name);
         }
     });
