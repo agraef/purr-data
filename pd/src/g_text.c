@@ -1774,7 +1774,6 @@ static void text_vis(t_gobj *z, t_glist *glist, int vis)
             {
                 //fprintf(stderr,"    draw it\n");
                 t_rtext *y = glist_findrtext(glist, x);
-
                 // make a group
                 text_getrect(&x->te_g, glist, &x1, &y1, &x2, &y2);
                 gui_vmess("gui_gobj_new", "xssiii",
@@ -2485,6 +2484,8 @@ static int compare_subpatch_selectors(t_atom *a, t_atom *b)
         return 0;
 }
 
+extern t_class *scalar_class;
+
 void text_checkvalidwidth(t_glist *glist)
 {
     // readjust border in case the new object is invalid and it has more
@@ -2497,6 +2498,11 @@ void text_checkvalidwidth(t_glist *glist)
     {
         while (yg->g_next)
             yg = yg->g_next;
+        /* bugfix for scalars. Since they don't have an rtext associated with
+           them the glist_findrtext call below will end with a failed
+           consistency check. This can happen when undoing on a canvas that
+           contains a scalar. */
+        if (pd_class((t_pd *)yg) == scalar_class) return;
         t_text *newest_t = (t_text *)yg;
         //fprintf(stderr, "newest object text class is %lx\n", newest_t);
         t_rtext *yn = glist_findrtext(glist, newest_t);
