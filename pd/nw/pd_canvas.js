@@ -19,15 +19,6 @@ document.getElementById("fileDialog")
 document.getElementById("fileDialog").setAttribute("accept",
     Object.keys(pdgui.pd_filetypes).toString());
 
-var last_keydown = "";
-
-// This could probably be in pdgui.js
-function add_keymods(key, evt) {
-    var shift = evt.shiftKey ? "Shift" : "";
-    var ctrl = evt.ctrlKey ? "Ctrl" : "";
-    return shift + ctrl + key;
-}
-
 function close_save_dialog() {
     document.getElementById("save_before_quit").close();
 }
@@ -156,14 +147,6 @@ function canvas_find_focus() {
     canvas_events.search();
 }
 
-function cmd_or_ctrl_key(evt) {
-    if (process.platform === "darwin") {
-        return evt.metaKey;
-    } else {
-        return evt.ctrlKey;
-    }
-}
-
 var canvas_events = (function() {
     var name,
         state,
@@ -174,7 +157,6 @@ var canvas_events = (function() {
         previous_state = "none", /* last state, excluding explicit 'none' */
         match_words_state = false,
         last_search_term = "",
-        keydown_autorepeat = false,
         svg_view = document.getElementById("patchsvg").viewBox.baseVal,
         textbox = function () {
             return document.getElementById("new_object_textentry");
@@ -224,11 +206,11 @@ var canvas_events = (function() {
         events = {
             mousemove: function(evt) {
                 //pdgui.post("x: " + evt.pageX + " y: " + evt.pageY +
-                //    " modifier: " + (evt.shiftKey + (cmd_or_ctrl_key(evt) << 1)));
+                //    " modifier: " + (evt.shiftKey + (pdgui.cmd_or_ctrl_key(evt) << 1)));
                 pdgui.pdsend(name, "motion",
                     (evt.pageX + svg_view.x),
                     (evt.pageY + svg_view.y),
-                    (evt.shiftKey + (cmd_or_ctrl_key(evt) << 1))
+                    (evt.shiftKey + (pdgui.cmd_or_ctrl_key(evt) << 1))
                 );
                 evt.stopPropagation();
                 evt.preventDefault();
@@ -276,7 +258,7 @@ var canvas_events = (function() {
                     // right-click
                     mod = 8;
                 } else {
-                    mod = (evt.shiftKey + (cmd_or_ctrl_key(evt) << 1));
+                    mod = (evt.shiftKey + (pdgui.cmd_or_ctrl_key(evt) << 1));
                 }
                 pdgui.pdsend(name, "mouse",
                     (evt.pageX + svg_view.x),
@@ -299,163 +281,15 @@ var canvas_events = (function() {
                 evt.preventDefault();
             },
             keydown: function(evt) {
-                var key_code = evt.keyCode,
-                    hack = null; // hack for unprintable ascii codes
-                keydown_autorepeat = evt.repeat;
-                switch(key_code) {
-                    case 8:
-                    case 9:
-                    case 10:
-                    case 27:
-                    //case 32:
-                    case 127: hack = key_code; break;
-                    case 37: hack = add_keymods("Left", evt); break;
-                    case 38: hack = add_keymods("Up", evt); break;
-                    case 39: hack = add_keymods("Right", evt); break;
-                    case 40: hack = add_keymods("Down", evt); break;
-                    case 33: hack = add_keymods("Prior", evt); break;
-                    case 34: hack = add_keymods("Next", evt); break;
-                    case 35: hack = add_keymods("End", evt); break;
-                    case 36: hack = add_keymods("Home", evt); break;
-
-                    // These may be different on Safari...
-                    case 112: hack = add_keymods("F1", evt); break;
-                    case 113: hack = add_keymods("F2", evt); break;
-                    case 114: hack = add_keymods("F3", evt); break;
-                    case 115: hack = add_keymods("F4", evt); break;
-                    case 116: hack = add_keymods("F5", evt); break;
-                    case 117: hack = add_keymods("F6", evt); break;
-                    case 118: hack = add_keymods("F7", evt); break;
-                    case 119: hack = add_keymods("F8", evt); break;
-                    case 120: hack = add_keymods("F9", evt); break;
-                    case 121: hack = add_keymods("F10", evt); break;
-                    case 122: hack = add_keymods("F11", evt); break;
-                    case 123: hack = add_keymods("F12", evt); break;
-
-                    // Handle weird behavior for clipboard shortcuts
-                    // Which don't fire a keypress for some odd reason
-
-                    case 65:
-                        if (cmd_or_ctrl_key(evt)) { // ctrl-a
-                            // This is handled in the nwjs menu, but we
-                            // add a way to toggle the window menubar
-                            // the following command should be uncommented...
-                            //pdgui.pdsend(name, "selectall");
-                            hack = 0; // not sure what to report here...
-                        }
-                        break;
-                    case 88:
-                        if (cmd_or_ctrl_key(evt)) { // ctrl-x
-                            // This is handled in the nwjs menubar. If we
-                            // add a way to toggle the menubar it will be
-                            // handled with the "cut" DOM listener, so we
-                            // can probably remove this code...
-                            //pdgui.pdsend(name, "cut");
-                            hack = 0; // not sure what to report here...
-                        }
-                        break;
-                    case 67:
-                        if (cmd_or_ctrl_key(evt)) { // ctrl-c
-                            // Handled in nwjs menubar (see above)
-                            //pdgui.pdsend(name, "copy");
-                            hack = 0; // not sure what to report here...
-                        }
-                        break;
-                    case 86:
-                        if (cmd_or_ctrl_key(evt)) { // ctrl-v
-                            // We also use "cut" and "copy" DOM event handlers
-                            // and leave this code in case we need to change
-                            // tactics for some reason.
-                            //pdgui.pdsend(name, "paste");
-                            hack = 0; // not sure what to report here...
-                        }
-                        break;
-                    case 90:
-                        if (cmd_or_ctrl_key(evt)) { // ctrl-z undo/redo
-                            // We have to catch undo and redo here.
-                            // undo and redo have nw.js menu item shortcuts,
-                            // and those shortcuts don't behave consistently
-                            // across platforms:
-                            // Gnu/Linux: key events for the shortcut do not
-                            //   propogate down to the DOM
-                            // OSX: key events for the shortcut _do_ propogate
-                            //   down to the DOM
-                            // Windows: not sure...
-
-                            // Solution-- let the menu item shortcuts handle
-                            // undo/redo functionality, and do nothing here...
-                            //if (evt.shiftKey) {
-                            //    pdgui.pdsend(name, "redo");
-                            //} else {
-                            //    pdgui.pdsend(name, "undo");
-                            //}
-                        }
-                        break;
-
-                    // Need to handle Control key, Alt
-
-                    case 16: hack = "Shift"; break;
-                    case 17: hack = "Control"; break;
-                    case 18: hack = "Alt"; break;
-
-                    // keycode 188 = comma -- in contrast to / this is
-                    // next to the period on most Latin keyboards, so
-                    // much more convenient to quickly switch dsp off
-                    // and then on again
-                    case 188:
-                    // keycode 55 = 7 key (shifted = '/' on German keyboards)
-                    case 55:
-                        if (cmd_or_ctrl_key(evt)) {
-                            evt.preventDefault();
-                            pdgui.pdsend("pd dsp 1");
-                        }
-                        break;
-
-                }
-                if (hack !== null) {
-                    pdgui.canvas_sendkey(name, 1, evt, hack, keydown_autorepeat);
-                    pdgui.set_keymap(key_code, hack);
-                }
-
-                //pdgui.post("keydown time: keycode is " + evt.keyCode);
-                last_keydown = evt.keyCode;
-                //evt.stopPropagation();
-                //evt.preventDefault();
+                pdgui.keydown(name, evt);
             },
             keypress: function(evt) {
-                // For some reasons <ctrl-e> registers a keypress with
-                // charCode of 5. We filter that out here so it doesn't
-                // cause trouble when toggling editmode.
-                // Also, we're capturing <ctrl-or-cmd-Enter> in the "Edit"
-                // menu item "reselect", so we filter it out here as well.
-                // (That may change once we find a more flexible way of
-                // handling keyboard shortcuts
-                if (evt.charCode !== 5 &&
-                      (!cmd_or_ctrl_key(evt) || evt.charCode !== 10)) {
-                    pdgui.canvas_sendkey(name, 1, evt, evt.charCode,
-                        keydown_autorepeat);
-                    pdgui.set_keymap(last_keydown, evt.charCode,
-                        keydown_autorepeat);
-                }
-                //pdgui.post("keypress time: charcode is " + evt.charCode);
+                pdgui.keypress(name, evt);
                 // Don't do things like scrolling on space, arrow keys, etc.
-                //evt.stopPropagation();
                 evt.preventDefault();
             },
             keyup: function(evt) {
-                var my_char_code = pdgui.get_char_code(evt.keyCode);
-                // Sometimes we don't have char_code. For example, the
-                // nw menu doesn't propogate shortcut events, so we don't get
-                // to map a charcode on keydown/keypress. In those cases we'll
-                // get null, so we check for that here...
-                if (my_char_code) {
-                    pdgui.canvas_sendkey(name, 0, evt, my_char_code, evt.repeat);
-                }
-                // This can probably be removed
-                //if (cmd_or_ctrl_key(evt) &&
-                //      (evt.keyCode === 13 || evt.keyCode === 10)) {
-                //    pdgui.pdsend(name, "reselect");
-                //}
+                pdgui.keyup(name, evt);
                 evt.stopPropagation();
                 evt.preventDefault();
             },
