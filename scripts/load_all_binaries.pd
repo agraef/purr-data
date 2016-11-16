@@ -1,4 +1,4 @@
-#N canvas 1 25 658 577 10;
+#N canvas 271 51 658 577 10;
 #X obj 195 61 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
 #X obj 224 449 pdinfo;
@@ -368,7 +368,7 @@ zexy/wrap zexy/z~ zexy/||~;
 #X connect 6 0 2 1;
 #X restore 187 161 pd spigot;
 #X msg 187 202 symbol \$1/*;
-#N canvas 462 116 450 300 search_libdirs 0;
+#N canvas 463 141 450 300 search_libdirs 0;
 #X obj 85 27 inlet;
 #X obj 130 86 hcs/file_type;
 #X obj 85 48 t a a;
@@ -376,11 +376,11 @@ zexy/wrap zexy/z~ zexy/||~;
 #X obj 85 159 spigot;
 #X msg 130 128 1;
 #X msg 200 129 0;
-#X obj 85 221 folder_list;
-#X obj 85 242 outlet;
-#X obj 85 201 symbol;
-#X msg 85 180 \$1/*pd_linux \, \$1/*l_ia64 \, \$1/*l_i386 \, \$1/*dll
-\, \$1/*dylib;
+#X obj 85 231 folder_list;
+#X obj 85 252 outlet;
+#X obj 85 211 symbol;
+#X msg 85 179 \$1/*pd_linux \, \$1/*l_ia64 \, \$1/*l_i386 \, \$1/*dll
+\, \$1/*dylib \, \$1/*pd_darwin;
 #X connect 0 0 2 0;
 #X connect 1 0 3 0;
 #X connect 2 0 4 0;
