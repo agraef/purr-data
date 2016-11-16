@@ -1,5 +1,5 @@
 #N struct drawtut-group float x float y;
-#N canvas 2 25 648 468 10;
+#N canvas 4 75 648 468 10;
 #X scalar drawtut-group 54 159 \;;
 #X text 1 1 ___________________________;
 #X text 0 1 New Drawing Commands: group;
@@ -12,6 +12,18 @@ of individually.;
 #X msg 434 213 transform scale \$1;
 #X obj 434 101 loadbang;
 #X msg 434 122 100;
+#X text 53 343 Like [pd] subpatches \, you can use [inlet] and [outlet].
+The "main" inlet for the group-- the one that sets attributes-- is
+always the furthest to the right.;
+#X text 505 236 <- click to open;
+#N canvas 290 275 450 300 META 0;
+#X text 16 26 LICENSE SIBSD;
+#X text 16 66 AUTHOR Jonathan Wilkes;
+#X text 16 86 HELP_PATCH_AUTHORS Jonathan Wilkes;
+#X text 16 6 KEYWORDS tutorial data_structure draw gui;
+#X text 16 46 DESCRIPTION how to group data structure drawings with
+[draw];
+#X restore 574 433 pd META;
 #N canvas 573 107 450 300 (subpatch) 0;
 #X obj 35 253 draw path M 160 0 l 40 40 M 160 40 l 40 -40;
 #X obj 35 26 loadbang;
@@ -30,25 +42,13 @@ of individually.;
 #X connect 5 0 8 0;
 #X connect 6 0 8 0;
 #X connect 9 0 0 0;
-#X restore 434 236 draw group;
-#X text 53 343 Like [pd] subpatches \, you can use [inlet] and [outlet].
-The "main" inlet for the group-- the one that sets attributes-- is
-always the furthest to the right.;
-#X text 505 236 <- click to open;
-#X text 53 263 The [draw group] object is essentially just a subpatch
-with an inlet. You can send it all the same messages that you can send
-to shapes. This will set the attributes for any drawing commands inside
-the [draw group] which you haven't already set explicitly.;
-#N canvas 290 275 450 300 META 0;
-#X text 16 26 LICENSE SIBSD;
-#X text 16 66 AUTHOR Jonathan Wilkes;
-#X text 16 86 HELP_PATCH_AUTHORS Jonathan Wilkes;
-#X text 16 6 KEYWORDS tutorial data_structure draw gui;
-#X text 16 46 DESCRIPTION how to group data structure drawings with
-[draw];
-#X restore 574 433 pd META;
+#X restore 434 236 draw g;
+#X text 53 263 The [draw g] object is essentially just a subpatch with
+an inlet. You can send it all the same messages that you can send to
+shapes. This will set the attributes for any drawing commands inside
+the [draw g] which you haven't already set explicitly.;
 #X connect 5 0 6 0;
 #X connect 6 0 7 0;
-#X connect 7 0 10 0;
+#X connect 7 0 13 0;
 #X connect 8 0 9 0;
 #X connect 9 0 5 0;

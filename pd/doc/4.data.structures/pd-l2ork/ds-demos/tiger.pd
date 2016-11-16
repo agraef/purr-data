@@ -2175,7 +2175,7 @@ C 256 273.5 269.5 292 269.5 299 C 269.5 299 272 291.5 270.5 287 z;
 #X connect 464 0 463 0;
 #X connect 466 0 465 0;
 #X connect 468 0 467 0;
-#X restore 50 258 draw group;
+#X restore 50 258 draw g;
 #X scalar tiger 150 131 \;;
 #X obj 50 348 output~;
 #X obj 50 139 loadbang;

@@ -218,7 +218,7 @@ L 258.192 372.204 L 254.304 371.484 z;
 #X connect 19 0 20 0;
 #X connect 21 0 5 0;
 #X connect 22 0 1 0;
-#X restore 121 -2430 draw group;
+#X restore 121 -2430 draw g;
 #X connect 1 0 2 0;
 #X restore 443 6 pd template;
 #X scalar working-man-scalar -169 309 \;;

@@ -87,7 +87,7 @@ l 150 0 m -150 100 l 150 0 m 0 20 l 0 -240 0 20 20 0 m -20 100 l 20
 #X connect 28 0 24 0;
 #X connect 34 0 24 0;
 #X connect 36 0 35 0;
-#X restore 52 247 draw group;
+#X restore 52 247 draw g;
 #X obj 92 5 struct unit_circle float x float y;
 #X obj 364 251 * 100;
 #X obj 548 243 * 600;

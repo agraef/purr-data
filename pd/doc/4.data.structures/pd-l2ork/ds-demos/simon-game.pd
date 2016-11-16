@@ -47,7 +47,7 @@ sc float wc;
 #X connect 16 0 2 0;
 #X connect 17 0 3 0;
 #X connect 18 0 4 0;
-#X restore 375 166 draw group;
+#X restore 375 166 draw g;
 #X obj 341 233 t b a;
 #X obj 375 461 set simon nc;
 #X obj 341 425 * 255;

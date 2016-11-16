@@ -197,7 +197,7 @@ C 244.728 367.092 244.44 367.596 244.44 368.1 C 244.44 368.172 244.44
 #X connect 22 0 23 0;
 #X connect 24 0 5 0;
 #X connect 25 0 1 0;
-#X restore 96 136 draw group;
+#X restore 96 136 draw g;
 #X obj 96 93 loadbang;
 #X msg 96 114 transform matrix -1 0 0 1 510.336 0;
 #X obj 123 11 struct working-man-scalar float x float y;

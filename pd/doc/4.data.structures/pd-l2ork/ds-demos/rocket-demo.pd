@@ -36,7 +36,7 @@ transform matrix 1.0041 0 0 1.01474 -1.11186 -7.22347 \, stroke ""
 #X connect 5 0 2 0;
 #X connect 6 0 0 0;
 #X connect 6 0 2 0;
-#X restore 27 66 draw group thrust;
+#X restore 27 66 draw g thrust;
 #X obj 27 504 loadbang;
 #X obj 27 566 draw path M 43.244 60.7763 C 122.101 62.472 321.362 94.6929
 397.675 290.563 C 371.389 295.651 306.948 358.397 296.773 393.161 C
@@ -150,7 +150,7 @@ stroke-width 12.5 \, stroke-linejoin 1;
 #X connect 25 0 0 0;
 #X connect 25 1 0 1;
 #X connect 26 0 20 0;
-#X restore 264 287 draw group rocket;
+#X restore 264 287 draw g rocket;
 #N canvas 547 87 754 501 moon 0;
 #X obj 40 17 loadbang;
 #X obj 40 79 draw path m 10.671 231.42 c 89.543 56.086 188.11 -10.029
@@ -203,7 +203,7 @@ stroke-width 12.5 \, stroke-linejoin 1;
 #X connect 18 0 12 0;
 #X connect 19 0 14 0;
 #X connect 20 0 1 0;
-#X restore 95 362 draw group moon;
+#X restore 95 362 draw g moon;
 #X floatatom 45 167 5 0 0 0 - - -, f 5;
 #X obj 45 238 pack;
 #X floatatom 95 167 5 0 0 0 - - -, f 5;
@@ -351,7 +351,7 @@ stroke-width 12.5 \, stroke-linejoin 1;
 #X connect 27 0 13 0;
 #X connect 28 0 1 0;
 #X connect 29 0 21 0;
-#X restore 137 320 draw group;
+#X restore 137 320 draw g;
 #X floatatom 164 138 5 0 0 0 - - -, f 5;
 #X floatatom 203 138 5 0 0 0 - - -, f 5;
 #X obj 203 189 t b a;
@@ -396,11 +396,11 @@ stroke-width 12.5 \, stroke-linejoin 1;
 #X connect 21 0 12 0;
 #X connect 22 0 15 0;
 #X connect 22 1 20 0;
-#X restore 96 299 pd guts;
-#X obj 96 40 bng 90 250 50 0 empty rocket-bng empty 17 7 0 10 -262144
+#X restore 193 358 pd guts;
+#X obj 193 99 bng 90 250 50 0 empty rocket-bng empty 17 7 0 10 -262144
 -1 -1;
-#X obj 96 346 output~;
-#X scalar rocket 247 106 \;;
+#X obj 193 405 output~;
+#X scalar rocket 344 165 \;;
 #N canvas 433 184 450 351 dsp~ 0;
 #X obj 56 55 inlet;
 #X obj 201 51 noise~;
@@ -438,9 +438,9 @@ stroke-width 12.5 \, stroke-linejoin 1;
 #X connect 14 0 12 0;
 #X connect 15 0 14 0;
 #X connect 17 0 16 0;
-#X restore 96 320 pd dsp~;
-#X msg 138 233 zazzmatazz;
-#X obj 138 254 t b b;
+#X restore 193 379 pd dsp~;
+#X msg 235 292 zazzmatazz;
+#X obj 235 313 t b b;
 #X connect 0 0 4 0;
 #X connect 1 0 0 0;
 #X connect 4 0 2 0;
