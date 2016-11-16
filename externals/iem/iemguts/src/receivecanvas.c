@@ -122,7 +122,7 @@ static void *receivecanvas_new(t_floatarg f)
 
   if(canvas) {
     char buf[MAXPDSTRING];
-    snprintf(buf, MAXPDSTRING-1, ".x%lx", (t_int)canvas);
+    snprintf(buf, MAXPDSTRING-1, "x%lx", (long unsigned int)canvas);
     buf[MAXPDSTRING-1]=0;
 
     x->x_proxy=receivecanvas_proxy_new(x, gensym(buf));
