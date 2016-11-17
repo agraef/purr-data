@@ -4892,8 +4892,6 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     
     if (ac < 5)
         return;
-    if (!x || !x->gl_editor)
-        return;
     canvas_undo_already_set_move = 0;
     down = (atom_getfloat(av) != 0);  /* nonzero if it's a key down */
     shift = (atom_getfloat(av+2) != 0);  /* nonzero if shift-ed */
@@ -4905,7 +4903,8 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     //    glob_shift, glob_lmclick);
 
     // check if user released shift while trying manual multi-connect
-    if (x->gl_editor->e_onmotion == MA_CONNECT && !glob_shift && !glob_lmclick)
+    if (x && x->gl_editor &&
+	x->gl_editor->e_onmotion == MA_CONNECT && !glob_shift && !glob_lmclick)
     {
         //fprintf(stderr,"shift released during connect\n");
         gui_vmess("gui_canvas_delete_line", "xs", x, "newcord");
@@ -4913,7 +4912,8 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     }
 
     // check if user released shift while dragging inside an object
-    if (x->gl_editor->e_onmotion == MA_PASSOUT && !glob_shift && !glob_lmclick)
+    if (x && x->gl_editor &&
+	x->gl_editor->e_onmotion == MA_PASSOUT && !glob_shift && !glob_lmclick)
     {
         //fprintf(stderr,"shift released during button+shift drag\n");
         canvas_mouseup(x, x->gl_editor->e_xwas, x->gl_editor->e_ywas, 0);
@@ -5012,7 +5012,7 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
         pd_list(keynamesym_a->s_thing, 0, 2, at);
     }
 
-    if (!x->gl_editor)  /* if that 'invis'ed the window, we'd better stop. */
+    if (!x || !x->gl_editor)
         return;
     if (x && down)
     {
