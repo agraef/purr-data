@@ -350,7 +350,7 @@ function strip_problem_chars(arg) {
         ret = arg,
         i;
     for(i = 0; i < problem_chars.length; i++) {
-        ret = ret.split(";").join("");
+        ret = ret.split(problem_chars[i]).join("");
     }
     return ret;
 }

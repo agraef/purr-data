@@ -500,16 +500,6 @@ function substitute_space(arg) {
     return arg.split(" ").join(fake_space);
 }
 
-function strip_problem_chars(arg) {
-    var problem_chars = [";", ",", "{", "}", "\\"],
-        ret = arg,
-        i;
-    for (i = 0; i < problem_chars.length; i++) {
-        ret = ret.split(";").join("");
-    }
-    return ret;
-}
-
 function get_input(name) {
     var val = document.getElementsByName(name)[0].value;
     return val;
