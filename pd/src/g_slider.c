@@ -149,7 +149,7 @@ static void slider__motionhook(t_scalehandle *sh, t_floatarg mouse_x, t_floatarg
             miny = x->x_orient ? IEM_SL_MINSIZE : IEM_GUI_MINSIZE;
         x->x_gui.x_w = maxi(width, minx);
         x->x_gui.x_h = maxi(height, miny);
-
+        slider_check_length(x, x->x_orient ? x->x_gui.x_h : x->x_gui.x_w);
         if (glist_isvisible(x->x_gui.x_glist))
         {
             slider_draw_move(x, x->x_gui.x_glist);
