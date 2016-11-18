@@ -152,7 +152,18 @@ function create_menu(gui, type) {
         // There's no "Delete" item for GNU/Linux or Windows--
         // not sure yet what to do with it.
         m.edit.delete = window_menu.items[1].submenu.items[6];
+        // The MacBuiltin "Select All" doesn't propagate down to the DOM
+        //on OSX, so we have to remove it
         m.edit.selectall= window_menu.items[1].submenu.items[7];
+        window_menu.items[1].submenu.remove(m.edit.selectall);
+        // Now we replace it with a custom "Select All" which will
+        // propagate to the DOM...
+        edit_menu.append(m.edit.selectall = new gui.MenuItem({
+            label: l("menu.selectall"),
+            tooltip: l("menu.selectall_tt"),
+            key: "a",
+            modifiers: cmd_or_ctrl
+        }));
     } else {
         edit_menu = new gui.Menu();
         // Edit sub-entries
