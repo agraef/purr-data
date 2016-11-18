@@ -1080,7 +1080,7 @@ function nw_create_patch_window_menus(gui, w, name) {
         click: function (evt) {
             if (canvas_events.get_state() === "normal") {
                 pdgui.pdsend(name, "selectall");
-            } else if (process.os === "darwin") {
+            } else if (process.platform === "darwin") {
                 // big kluge for OSX to select all inside a
                 // contenteditable element (needed because
                 // the stupid MacBuiltin is buggy-- see pd_menus.js)
