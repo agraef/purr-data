@@ -231,7 +231,7 @@ static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
         x,
         x->x_gui.x_fcol,
         x->x_gui.x_bcol,
-        iemgui_typeface,
+        iemgui_typeface(x),
         x->x_gui.x_fontsize,
         sys_fontweight);
 }
