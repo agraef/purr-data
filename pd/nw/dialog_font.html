@@ -177,10 +177,7 @@ function add_events(name) {
     // closing the Window
     gui.Window.get().on("close", function () {
         // this needs to do whatever the "cancel" button does
-        //pdgui.pdsend(name, "menuclose 0");
-        //cancel();
-        pdgui.remove_dialogwin(pd_object_callback);
-        gui.Window.get().close(true);
+        cancel();
     });
     pdgui.dialog_bindings(name);
 }

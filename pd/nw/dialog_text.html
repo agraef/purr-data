@@ -139,8 +139,8 @@ function translate_form() {
 
 function close_window() {
     pdgui.pdsend(pd_object_callback, "close");
-    pdgui.remove_dialogwin(pd_object_callback);
-    gui.Window.get().close(true);
+    //pdgui.remove_dialogwin(pd_object_callback);
+    //gui.Window.get().close(true);
 }
 
 function close_from_pd(signoff) {

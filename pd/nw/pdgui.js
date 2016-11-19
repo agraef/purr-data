@@ -4258,7 +4258,7 @@ function gui_text_dialog_close_from_pd(did, signoff) {
 
 function gui_remove_gfxstub(did) {
     if (dialogwin[did] !== undefined && dialogwin[did] !== null) {
-        dialogwin[did].window.close(true);
+        dialogwin[did].close(true);
         dialogwin[did] = null;
     }
 }
