@@ -345,19 +345,25 @@ below) and uncast conversions from longer to shorter numerical formats.
 The code doesn't respect "const" yet.
 
 1.1.  Prefixes in structure elements.  The names of structure elements always
-have a K&R-style prefix, as in ((t_atom)x)->a_type, where the "a_" prefix
+have a K&R-style prefix, as in `((t_atom)x)->a_type`, where the `a_` prefix
 indicates "atom."  This is intended to enhance readability (although the
-convention arose from a limitation of early C compilers.)  Common prefixes are
-"w_" (word), "a_" (atom), "s_" (symbol), "ob_" (object), "te_" (text object),
-"g_" (graphical object), and "gl_" (glist, a list of graphical objects).  Also,
-global symbols sometimes get prefixes, as in "s_float" (the symbol whose string
-is "float).  Typedefs are prefixed by "t_".  Most _private_ structures, i.e.,
-structures whose definitions appear in a ".c" file, are prefixed by "x_".
+convention arose from a limitation of early C compilers.)  Common prefixes are:
+  * `w_` (word)
+  * `a_` (atom)
+  * `s_` (symbol)
+  * `ob_` (object)
+  * `te_` (text object)
+  * `g_` (graphical object)
+  * `gl_` (glist, a list of graphical objects).
+
+Also, global symbols sometimes get prefixes, as in `s_float` (the symbol whose
+string is "float").  Typedefs are prefixed by `t_`.  Most _private_ structures,
+i.e., structures whose definitions appear in a ".c" file, are prefixed by `x_`.
 
 1.2.   Function arguments.  Many functions take as their first
-argument a pointer named "x", which is a pointer to a structure suggested
-by the function prefix; e.g., canvas_dirty(x, n) where "x" points to a canvas
-(t_canvas *x).
+argument a pointer named `x`, which is a pointer to a structure suggested
+by the function prefix; e.g., `canvas_dirty(x, n)` where `x` points to a canvas
+`(t_canvas *x)`.
 
 1.3.  Function Prototypes.  Functions which are used in at least two different
 files (besides where they originate) are prototyped in the appropriate include
@@ -402,6 +408,7 @@ char * or void * instead.
 3.2.  Pd passes true single-precision floating-point arguments to methods;
 Max uses double.
 Typedefs are provided:
+
     t_floatarg, t_intarg for arguments passed by the message system
     t_float, t_int for the "word" union (in atoms, for example.)
 
@@ -423,6 +430,7 @@ to.  The exceptions are:
     post, error, bug (s_print.c)
 which are all frequently called and which don't fit into simple categories.
 Important packages are:
+
     (pd-gui:)   pdgui -- everything
     (pd:)	    pd -- functions common to all "pd" objects
                 obj -- fuctions common to all "patchable" objects ala Max
@@ -434,16 +442,25 @@ Important packages are:
 #### 5. Source file prefixes
 
 5.0. Source file prefixes. 
+
 PD:
-s    system interface
-m    message system
-g    graphics stuff
-d    DSP objects
-x    control objects
-z    other
+
+  s    system interface
+  m    message system
+  g    graphics stuff
+  d    DSP objects
+  x    control objects
+  z    other
 
 PD-GUI:
-t    TK front end
+
+  gui    GUI front end
+
+#### 6. Javascript style
+1. Brackets on the same line as declaration or expression: `if (a) {`
+2. Single line comments only: `//`
+3. Use double-quotes for strings
+4. Use underscores to separate words of function names and variables
 
 ### GUI Messaging Specification
 #### Public GUI interface
@@ -462,13 +479,13 @@ The public interface consists of the following:
 gui_vmess(const char *msg, const char *format, ...);
 ```
 
-where const char *format consists of zero or more of the following:
+where `const char *format` consists of zero or more of the following:
 
-* f - floating point value (t_float)
-* i - integer (int)
-* s - c string (char*)
+* f - floating point value (`t_float`)
+* i - integer (`int`)
+* s - c string (`char*	)
 * x - hexadecimal integer value, with a precision of at least six digits.
-      (hex value is preceded by an 'x', like "x123456")
+      (hex value is preceded by an 'x', like `x123456`)
 
 For some of Pd's internals like array visualization, the message length may
 vary. For these _special_ cases, the following functions allow the developer
