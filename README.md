@@ -445,16 +445,16 @@ Important packages are:
 
 PD:
 
-  s    system interface
-  m    message system
-  g    graphics stuff
-  d    DSP objects
-  x    control objects
-  z    other
+    s    system interface
+    m    message system
+    g    graphics stuff
+    d    DSP objects
+    x    control objects
+    z    other
 
 PD-GUI:
 
-  gui    GUI front end
+    gui    GUI front end
 
 #### 6. Javascript style
 1. Brackets on the same line as declaration or expression: `if (a) {`
