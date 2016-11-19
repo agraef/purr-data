@@ -86,3 +86,7 @@ osx_amd64_dmg:
      expire_in: 1 day
      paths:
        - packages/darwin_app/*.dmg
+
+after_script:
+   - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive dpkg --force-all -i pd-l2ork*.deb > /dev/null
+   - pd-l2ork -nogui -nrt -noaudio scripts/load_all_binaries.pd
