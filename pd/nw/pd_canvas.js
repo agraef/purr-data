@@ -326,7 +326,6 @@ var canvas_events = (function() {
             text_keyup: function(evt) {
                 evt.stopPropagation();
                 if (evt.keyCode === 13) {
-                    pdgui.post("growing the svg...");
                     grow_svg_for_element(textbox());
                 }
                 //evt.preventDefault();
@@ -338,7 +337,6 @@ var canvas_events = (function() {
                 return false;
             },
             text_paste: function(evt) {
-                pdgui.post("text paste detected...");
                 evt.preventDefault();
                 document.execCommand("insertText", false,
                     evt.clipboardData.getData("text"));
@@ -496,17 +494,14 @@ var canvas_events = (function() {
         // nw menubar receives the event and doesn't propagate
         // to the DOM. But if we add the ability to toggle menubar
         // display, we might need to rely on this listener.
-        pdgui.post("cut detected by DOM listener");
         pdgui.pdsend(name, "cut");
     });
 
     // Copy event
     document.addEventListener("copy", function(evt) {
-        pdgui.post("copy detected by DOM listener");
         // On OSX, this event gets triggered when we're editing
         // inside an object/message box. So we only forward the
         // copy message to Pd if we're in a "normal" canvas state
-        pdgui.post("copy detected by DOM listener");
         if (canvas_events.get_state() === "normal") {
             pdgui.pdsend(name, "copy");
         }

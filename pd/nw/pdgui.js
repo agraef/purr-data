@@ -582,6 +582,12 @@ function gui_post_error(objectid, loglevel, errormsg) {
 }
 
 function gui_legacy_tcl_command(file, line_number, text) {
+    // Print legacy tcl commands on the console. These may still be present in
+    // some parts of the code (usually externals) which haven't been converted
+    // to the new nw.js gui yet. Usually the presence of such commands
+    // indicates a bug that needs to be fixed. This information is most useful
+    // for developers, so you may want to comment out the following line if
+    // you don't want to see them.
     post("legacy tcl command at " + line_number + " of " + file + ": " + text);
 }
 
@@ -1006,7 +1012,6 @@ function external_doc_open(url) {
 exports.external_doc_open = external_doc_open;
 
 function gui_set_cwd(dummy, cwd) {
-    post("cwd from secondary instance is " + cwd);
     if (cwd !== ".") {
         pwd = cwd;
     }
@@ -1904,7 +1909,7 @@ function gui_canvas_select_line(cid, tag) {
     if (line !== null) {
         line.classList.add("selected_line");
     } else {
-        post("gui_canvas_select_line: can't find line");
+        //post("gui_canvas_select_line: can't find line");
     }
 }
 
@@ -1913,7 +1918,7 @@ function gui_canvas_deselect_line(cid, tag) {
     if (line !== null) {
         line.classList.remove("selected_line");
     } else {
-        post("gui_canvas_select_line: can't find line");
+        //post("gui_canvas_select_line: can't find line");
     }
 }
 
@@ -1923,7 +1928,7 @@ function gui_canvas_delete_line(cid, tag) {
     if (line !== null) {
         line.parentNode.removeChild(line);
     } else {
-        post("canvas_delete_line: error: the line doesn't exist");
+        //post("canvas_delete_line: error: the line doesn't exist");
     }
 }
 
@@ -2104,8 +2109,12 @@ function gui_gobj_erase(cid, tag) {
     if (g !== null) {
         g.parentNode.removeChild(g);
     } else {
-        post("gui_gobj_erase: gobj " + tag +
-            " didn't exist in the first place!");
+        // Unfortunately Pd can send messages
+        // to erase objects before they got created,
+        // or extra messages to delete objects. So
+        // we can't report an error here...
+        //post("gui_gobj_erase: gobj " + tag +
+        //    " didn't exist in the first place!");
     }
 }
 
@@ -2852,7 +2861,7 @@ function gui_iemgui_label_show_drag_handle(cid, tag, state, x, y, cnv_resize) {
             if (rect) {
                 rect.parentNode.removeChild(rect);
             } else {
-                post("couldnt delete the iemgui drag handle!");
+                post("error: couldn't delete the iemgui drag handle!");
             }
         }
     }
@@ -3014,7 +3023,7 @@ function gui_draw_erase_item(cid, tag) {
     if (item !== null) {
         item.parentNode.removeChild(item);
     } else {
-        post("uh oh... gui_draw_erase_item couldn't find the item...");
+        //post("uh oh... gui_draw_erase_item couldn't find the item...");
     }
 }
 
@@ -3234,7 +3243,6 @@ function gui_drawimage_new(obj_tag, file_path, canvasdir, flags) {
                 ext === ".jpeg" ||
                 ext === ".svg") {
 
-                post("we got an image at index " + i + ": " + files[i]);
                 // Now add an element to that array with the image data
                 drawimage_data.push({
                     type: ext === ".jpeg" ? "jpg" : ext.slice(1),
@@ -3263,7 +3271,6 @@ function gui_drawimage_new(obj_tag, file_path, canvasdir, flags) {
 function gui_drawimage_free(obj_tag) {
     var c = pd_cache.get(obj_tag);
     if (c) {
-        post("image: freed image data for " + obj_tag);
         pd_cache.free(obj_tag); // empty the image(s)
     } else {
         post("image: warning: no image data in cache to free");
@@ -4031,7 +4038,7 @@ function gui_cord_inspector_erase(cid) {
     if (ci !== null) {
         ci.parentNode.removeChild(ci);
     } else {
-        post("oops, trying to erase cord inspector that doesn't exist!");
+        //post("oops, trying to erase cord inspector that doesn't exist!");
     }
 }
 
@@ -4044,7 +4051,7 @@ function gui_cord_inspector_flash(cid, state) {
             ct.classList.remove("flash");
         }
     } else {
-        post("gui_cord_inspector_flash: cord inspector doesn't exist!");
+        //post("gui_cord_inspector_flash: cord inspector doesn't exist!");
     }
 }
 
@@ -4358,7 +4365,6 @@ var skin = exports.skin = (function () {
         },
         set: function (name) {
             preset = name;
-            post("trying to set...");
             for (id in patchwin) {
                 if (patchwin.hasOwnProperty(id) && patchwin[id]) {
                     set_css(patchwin[id].window);

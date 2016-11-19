@@ -333,7 +333,6 @@ function flag_change(elem) {
     // get value from radio group, checked from checkboxes
     if (name === "array_style") {
         value = document.querySelector('input[name="array_style"]:checked').value;
-        pdgui.post("array style found: " + value);
         // Toggle visibility of the fill color button-- only show for bar
         // graph style (= 3)
         toggle_fill_color(+value);
@@ -343,7 +342,6 @@ function flag_change(elem) {
     }
     //pdgui.post("value is " + value);
     flag = array_attr.array_flags;
-    pdgui.post("flag before is " + flag);
     switch (name) {
         case "array_save":
             flag &= ~1;    // clear the save bit
@@ -360,7 +358,6 @@ function flag_change(elem) {
             break;
     }
     array_attr.array_flags = flag;
-    pdgui.post("array is " + array_attr);
 }
 
 function flag2_change(elem) {
@@ -372,7 +369,6 @@ function flag2_change(elem) {
     // "+" for casting boolean to number
     value = +elem.checked;
     array_attr[name] = value;
-    pdgui.post("array is " + array_attr);
 }
 
 function array_delete_change(elem) {
@@ -390,8 +386,6 @@ function attr_change(elem) {
     if (elem.name === "array-fill") {
         array-fill
     }
-    pdgui.post("name is " + elem.name);
-    pdgui.post("value is " + elem.value);
 }
 
 function array_choose(array_index) {
@@ -430,7 +424,6 @@ function array_choose(array_index) {
 
 var arrays_select = document.getElementById("arrays_select");
 arrays_select.addEventListener("change", function(evt) {
-    pdgui.post("changing to array index " + evt.target.value);
     array_choose(evt.target.value);
 });
 
@@ -720,7 +713,6 @@ function populate_form(attr_object) {
                     var hex_string = Number(attr_object[prop]).toString(16);
                     var color_string = "#" +
                         (hex_string === "0" ? "000000" : hex_string);
-                    pdgui.post("color is " + color_string);
                     elem[0].value = color_string;
                 } else if (elem[0].type === "checkbox") {
                     // The attr here is a string, so we need to

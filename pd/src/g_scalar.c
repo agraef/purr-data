@@ -1026,7 +1026,6 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
         // we removed this because it caused infinite recursion
         // in the scalar-help.pd example
         //scalar_select(z, owner, 1);
-        post("here we are in scalar vis, selected...");
         scalar_drawselectrect(x, owner, 0);
         scalar_drawselectrect(x, owner, 1);
     }

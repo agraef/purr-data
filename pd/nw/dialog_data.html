@@ -42,7 +42,6 @@ function apply() {
         vector_textarea = document.querySelector("textarea"),
         i,
         datum;
-    pdgui.post("we're applying changes! textarea is " + vector_textarea);
     // start with the template header
     data_string += template_string;
     // add the data separator
@@ -75,9 +74,6 @@ function apply() {
         pdgui.pdsend(pd_object_callback, "data", line);
     });
 
-    pdgui.post("outgoing data string is:");
-    pdgui.post(data_string);
-
     pdgui.pdsend(pd_object_callback, "end");
 }
 
@@ -92,7 +88,6 @@ function ok() {
 }
 
 function change_size() {
-    pdgui.post("changing the size");
     apply();
 }
 

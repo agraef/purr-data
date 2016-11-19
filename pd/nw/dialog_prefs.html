@@ -356,8 +356,6 @@ function attr_change(elem) {
     attr = pd_audio_attrs;
     id = elem.id;
     attr[attr.indexOf(id) + 1] = elem.value;
-    pdgui.post("id is " + elem.id);
-    pdgui.post("value is " + elem.value);
 }
 
 function alsa_ports_change(elem, type) {
@@ -414,7 +412,6 @@ function kludge_chans(type, attrs, index) {
 function apply(save_prefs) {
     var attrs = pd_audio_attrs,
         midi_use_alsa;
-    pdgui.post("applying preferences");
 
     // Audio dialog
     pdgui.pdsend(
@@ -469,7 +466,6 @@ function apply(save_prefs) {
 
 function cancel() {
     var i, attrs, gfxstub;
-    pdgui.post("closing the window at this point");
     // There seems to be a bug in nwjs 0.13 beta3 that doesn't call the
     // "close" event below. This has the symptom of making it impossible
     // to click the "Ok" button and open the preferences dialog again after
@@ -495,9 +491,7 @@ function get_attr(name, attrs) {
 }
 
 function populate_apis(elem, apis, current_api) {
-    pdgui.post("curent api is " + current_api);
     var i, opt, api_select = elem;
-    pdgui.post("apis are " + apis);
     for (i = 0; i < apis.length; i += 2) {
         opt = document.createElement("option");
         opt.textContent = apis[i];
@@ -510,8 +504,6 @@ function populate_apis(elem, apis, current_api) {
 function populate_devs(type, attrs) {
     var devs = get_attr(type === "in" ? "sys-indevs" : "sys-outdevs", attrs);
     var i, j, opt, elem, chan_elem, chans;
-    pdgui.post("devs are " + devs);
-    pdgui.post("type is " + type + 1);
     chans = get_attr("pd-" + type + "chans", attrs);
     for (i = 0; i < 4; i++) {
         elem = document.getElementById(type + (i+1));
@@ -539,8 +531,6 @@ function populate_midi_devs(type, attrs) {
     var dev_names = get_attr(type === "in" ?
         "midi-indev-names" : "midi-outdev-names", attrs);
     var i, j, opt, elem;
-    pdgui.post("dev names are " + dev_names);
-    pdgui.post("type is " + type);
     for (i = 0; i < 4; i++) {
         elem = document.getElementById("midi_" + type + (i+1));
         // if the user changed the API, we need to remove the old devs
@@ -590,8 +580,6 @@ function audio_prefs_callback(attrs) {
     pd_audio_attrs = attrs;
     var api_select = document.getElementById("audio_api");
     var callback, i, j, elem, devs, opt;
-    pdgui.post("audio attrs are " + attrs);
-    pdgui.post("attrs length " + attrs.length);
     // We can get this callback multiple times while the dialog
     // is open.  This is because an API change requires a query
     // for new properties. So we only populate the api options
@@ -656,8 +644,6 @@ function set_chans(type, chans_array) {
 function midi_prefs_callback(attrs) {
     pd_midi_attrs = attrs;
     var api_select = document.getElementById("midi_api");
-    pdgui.post("midi attrs are " + attrs);
-    pdgui.post("attrs length " + attrs.length);
 
     if (api_select.getElementsByTagName("option").length < 1) {
         populate_apis(
@@ -773,7 +759,6 @@ function populate_form(attr_array) {
             if (elem[0].type === "checkbox") {
                 // The attr here is a string, so we need to
                 // force it to number, hence the "+" below
-                pdgui.post("found a CHECKED ITEM!!!");
                 elem[0].checked = +attr_array[i+1];
             } else {
                 elem[0].value = attr_array[i+1];

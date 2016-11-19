@@ -55,7 +55,6 @@ var dirty = false;
 
 function apply() {
     var text_array = document.getElementById("text").value.split("\n");
-    pdgui.post("applying...");
     // clear out Pd's binbuf for our text object
     pdgui.pdsend(pd_object_callback, "clear");
     text_array.forEach(function (line) {

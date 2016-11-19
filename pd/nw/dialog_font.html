@@ -101,7 +101,6 @@ var current_size;
 var canvas;
 
 function apply() {
-    pdgui.post("we're applying font size changes!");
     pdgui.pdsend(canvas, "font",
         +document.querySelector('input[name="font_size"]:checked').value,
         current_size,
@@ -121,7 +120,6 @@ function ok() {
 }
 
 function change_size() {
-    pdgui.post("changing the size");
     apply();
 }
 
