@@ -116,7 +116,7 @@ function connect() {
                 // have to parse them.
                     pdgui.menu_open(decodeURI(gui.App.argv[0].slice(7)));
                 }
-            }, 3000);
+            }, 6000);
         }
     }
 }
