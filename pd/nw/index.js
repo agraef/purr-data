@@ -114,9 +114,9 @@ function connect() {
                 // Selecting multiple files and clicking "Open" will trigger
                 // a separate "open" event for each file, so luckily we don't
                 // have to parse them.
-                    pdgui.menu_open(decodeURI(argv_string.slice(7)));
+                    pdgui.menu_open(decodeURI(argv[0].slice(7)));
                 }
-            }, 2000);
+            }, 3000);
         }
     }
 }
