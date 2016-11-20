@@ -554,6 +554,14 @@ var canvas_events = (function() {
         canvas_find_focus, false
     );
 
+    // disable drag and drop for the time being
+    window.addEventListener("dragover", function (evt) {
+        evt.preventDefault();
+    }, false);
+    window.addEventListener("drop", function (evt) {
+        evt.preventDefault();
+    }, false);
+
     // Add placeholder text... this all needs to be collected into an 
     // add_events function similiar to the one in index.js
     document.querySelector("#canvas_find_text").placeholder =

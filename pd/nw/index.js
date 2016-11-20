@@ -323,6 +323,14 @@ function add_events() {
     document.getElementById("fileDialog").setAttribute("nwworkingdir", pwd);
     document.getElementById("fileDialog").setAttribute("accept",
         Object.keys(pdgui.pd_filetypes).toString());
+
+    // disable drag and drop for the time being
+    window.addEventListener("dragover", function (evt) {
+        evt.preventDefault();
+    }, false);
+    window.addEventListener("drop", function (evt) {
+        evt.preventDefault();
+    }, false);
 }
 
 function nw_close_window(window) {
