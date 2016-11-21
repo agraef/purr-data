@@ -40,6 +40,8 @@ void radio_draw_update(t_gobj *client, t_glist *glist)
 void radio_draw_new(t_radio *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
+    char cbuf[8];
+    sprintf(cbuf, "#%6.6x", x->x_gui.x_fcol);
     int n=x->x_number, i, d=x->x_gui.x_w, s=d/4;
     int x1=text_xpix(&x->x_gui.x_obj, glist), xi=x1;
     int y1=text_ypix(&x->x_gui.x_obj, glist), yi=y1; 
@@ -54,9 +56,9 @@ void radio_draw_new(t_radio *x, t_glist *glist)
                 gui_vmess("gui_radio_new", "xxiiiiiii",
                     canvas, x, x1, yi, x1+d, yi, i, x1, y1);
             }
-            gui_vmess("gui_radio_create_buttons", "xxxiiiiiiii",
+            gui_vmess("gui_radio_create_buttons", "xxsiiiiiiii",
                 canvas, x,
-                x->x_gui.x_fcol,
+                cbuf,
                 x1+s, yi+s, x1+d-s, yi+d-s, x1, y1, i, x->x_on==i);
             yi += d;
             x->x_drawn = x->x_on;
@@ -106,6 +108,8 @@ void radio_draw_config(t_radio *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
     int n=x->x_number, i;
+    char cbuf[8];
+    sprintf(cbuf, "#%6.6x", x->x_gui.x_fcol);
     iemgui_base_draw_config(&x->x_gui);
     for (i=0; i<n; i++)
     {
@@ -114,8 +118,8 @@ void radio_draw_config(t_radio *x, t_glist *glist)
         //    (x->x_on==i) ? x->x_gui.x_fcol : x->x_gui.x_bcol,
         //    (x->x_on==i) ? x->x_gui.x_fcol : x->x_gui.x_bcol);
     }
-    gui_vmess("gui_radio_update", "xxxii",
-        canvas, x, x->x_gui.x_fcol, 0, x->x_on);
+    gui_vmess("gui_radio_update", "xxsii",
+        canvas, x, cbuf, 0, x->x_on);
 
 }
 

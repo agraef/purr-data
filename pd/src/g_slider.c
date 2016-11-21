@@ -55,6 +55,8 @@ static void slider_draw_update(t_gobj *client, t_glist *glist)
 static void slider_draw_new(t_slider *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
+    char cbuf[8];
+    sprintf(cbuf, "#%6.6x", x->x_gui.x_fcol);
     int x1=text_xpix(&x->x_gui.x_obj, glist), x2=x1+x->x_gui.x_w;
     int y1=text_ypix(&x->x_gui.x_obj, glist), y2=y1+x->x_gui.x_h;
     if (x->x_orient) y2+=5; else x2+=5;
@@ -63,13 +65,13 @@ static void slider_draw_new(t_slider *x, t_glist *glist)
     else             r = x1+3 + (x->x_val + 50)/100;
     iemgui_base_draw_new(&x->x_gui);
     if (x->x_orient) {
-        gui_vmess("gui_slider_new", "xxxiiiiii",
+        gui_vmess("gui_slider_new", "xxsiiiiii",
             canvas, x,
-            x->x_gui.x_fcol, x1+2, r, x2-2, r, x1, y1);
+            cbuf, x1+2, r, x2-2, r, x1, y1);
     } else {
-        gui_vmess("gui_slider_new", "xxxiiiiii",
+        gui_vmess("gui_slider_new", "xxsiiiiii",
             canvas, x,
-            x->x_gui.x_fcol, r, y1+2, r, y2-2, x1, y1);
+            cbuf, r, y1+2, r, y2-2, x1, y1);
     }
 }
 
@@ -101,9 +103,11 @@ static void slider_draw_move(t_slider *x, t_glist *glist)
 static void slider_draw_config(t_slider *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
+    char cbuf[8];
+    sprintf(cbuf, "#%6.6x", x->x_gui.x_fcol);
     iemgui_base_draw_config(&x->x_gui);
-    gui_vmess("gui_slider_indicator_color", "xxx",
-        canvas, x, x->x_gui.x_fcol);
+    gui_vmess("gui_slider_indicator_color", "xxs",
+        canvas, x, cbuf);
 }
 
 void slider_check_minmax(t_slider *x, double min, double max);

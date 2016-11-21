@@ -1190,8 +1190,9 @@ void iemgui_base_draw_new(t_iemgui *x) {
         colorbuf,
         0,
         x1, y1, x2, y2);
-    gui_vmess("gui_iemgui_base_color", "xxx",
-        canvas, x, x->x_bcol);
+    sprintf(colorbuf, "#%6.6x", x->x_bcol);
+    gui_vmess("gui_iemgui_base_color", "xxs",
+        canvas, x, colorbuf);
 }
 
 void iemgui_base_draw_move(t_iemgui *x) {

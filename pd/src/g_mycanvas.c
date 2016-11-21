@@ -24,11 +24,13 @@ void my_canvas_draw_new(t_my_canvas *x, t_glist *glist)
     t_canvas *canvas=glist_getcanvas(glist);
     int x1=text_xpix(&x->x_gui.x_obj, glist);
     int y1=text_ypix(&x->x_gui.x_obj, glist);
+    char cbuf[8];
+    sprintf(cbuf, "#%6.6x", x->x_gui.x_bcol);
 
     gui_vmess("gui_gobj_new", "xxsiii", canvas,
         x, "iemgui", x1, y1, glist_istoplevel(canvas));
-    gui_vmess("gui_mycanvas_new", "xxxiiiiii", canvas,
-        x, x->x_gui.x_bcol, x1, y1, x1+x->x_vis_w, y1+x->x_vis_h,
+    gui_vmess("gui_mycanvas_new", "xxsiiiiii", canvas,
+        x, cbuf, x1, y1, x1+x->x_vis_w, y1+x->x_vis_h,
         x1+x->x_gui.x_w, y1+x->x_gui.x_h);
 }
 
@@ -48,9 +50,11 @@ void my_canvas_draw_config(t_my_canvas* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
     int isselected;
+    char cbuf[8];
     isselected = x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas;
-    gui_vmess("gui_mycanvas_update", "xxxi",
-        canvas, x, x->x_gui.x_bcol, isselected);
+    sprintf(cbuf, "#%6.6x", x->x_gui.x_bcol);
+    gui_vmess("gui_mycanvas_update", "xxsi",
+        canvas, x, cbuf, isselected);
 }
 
 void my_canvas_draw_select(t_my_canvas* x, t_glist* glist)

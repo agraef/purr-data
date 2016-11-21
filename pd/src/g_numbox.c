@@ -158,14 +158,16 @@ static void my_numbox_draw_update(t_gobj *client, t_glist *glist)
 static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
+    char cbuf[8];
+    sprintf(cbuf, "#%6.6x", x->x_gui.x_bcol);
     int half=x->x_gui.x_h/2, d=1+x->x_gui.x_h/34;
     int x1=text_xpix(&x->x_gui.x_obj, glist), x2=x1+x->x_numwidth;
     int y1=text_ypix(&x->x_gui.x_obj, glist), y2=y1+x->x_gui.x_h;
 
-    gui_vmess("gui_numbox_new", "xxxiiiii",
+    gui_vmess("gui_numbox_new", "xxsiiiii",
         canvas,
         x,
-        x->x_gui.x_bcol,
+        cbuf,
         x1,
         y1,
         x2 - x1,
@@ -181,12 +183,13 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
         //    x->x_gui.x_fcol, x, x);
     }
     my_numbox_ftoa(x);
-    gui_vmess("gui_numbox_draw_text", "xxsixiiii",
+    sprintf(cbuf, "#%6.6x", x->x_gui.x_fcol);
+    gui_vmess("gui_numbox_draw_text", "xxsisiiii",
         canvas,
         x,
         x->x_buf,
         x->x_gui.x_fontsize,
-        x->x_gui.x_fcol,
+        cbuf,
         x1+half+2, y1+half+d, x1, y1);
 }
 
@@ -225,13 +228,16 @@ static void my_numbox_draw_move(t_my_numbox *x, t_glist *glist)
 static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
+    char fg[8], bg[8];
+    sprintf(fg, "#%6.6x",  x->x_gui.x_fcol);
+    sprintf(bg, "#%6.6x",  x->x_gui.x_bcol);
     int issel = x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas;
-    gui_vmess("gui_numbox_update", "xxxxsii",
+    gui_vmess("gui_numbox_update", "xxsssii",
         canvas,
         x,
-        x->x_gui.x_fcol,
-        x->x_gui.x_bcol,
-        iemgui_typeface(x),
+        fg,
+        bg,
+        iemgui_typeface((t_iemgui *)x),
         x->x_gui.x_fontsize,
         sys_fontweight);
 }

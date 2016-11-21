@@ -89,22 +89,24 @@ static void vu_update_peak(t_vu *x, t_glist *glist)
     {
         int x1 = text_xpix(&x->x_gui.x_obj, glist);
         int y1 = text_ypix(&x->x_gui.x_obj, glist);
+        char cbuf[8];
 
-        if(x->x_peak)
+        if (x->x_peak)
         {
             int i = iemgui_vu_col[x->x_peak];
             int j = y1 + (x->x_led_size + 1) * (IEM_VU_STEPS + 1 - x->x_peak)
                 - (x->x_led_size + 1) / 2;
-
-            gui_vmess("gui_vumeter_update_peak", "xxxiiiiii",
-                canvas, x, iemgui_color_hex[i],
+            sprintf(cbuf, "#%06x", iemgui_color_hex[i]);
+            gui_vmess("gui_vumeter_update_peak", "xxsiiiiii",
+                canvas, x, cbuf,
                 x1 + 1, j + 2, x1 + x->x_gui.x_w + 2, j + 2, x1, y1);
         }
         else
         {
             int mid = x1 + x->x_gui.x_w / 2;
-            gui_vmess("gui_vumeter_update_peak", "xxxiiiiii",
-                canvas, x, x->x_gui.x_bcol,
+            sprintf(cbuf, "#%6.6x", x->x_gui.x_bcol);
+            gui_vmess("gui_vumeter_update_peak", "xxsiiiiii",
+                canvas, x, cbuf,
                 mid+1, y1+22, mid+1, y1+22, x1, y1);
         }
     }
@@ -134,6 +136,7 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
     int quad3=x2-w4, end=x2+4;
     int k1=x->x_led_size+1, k2=IEM_VU_STEPS+1, k3=k1/2;
     int led_col, yyy, i, k4=y1-k3;
+    char cbuf[8];
     iemgui_base_draw_new(&x->x_gui);
 
     for(i = 1; i <= IEM_VU_STEPS+1; i++)
@@ -141,10 +144,11 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
         yyy = k4 + k1 * (k2-i);
         if((i&3)==1 && (x->x_scale))
         {
+            sprintf(cbuf, "#%06x", x->x_gui.x_lcol);
             // not handling font size yet
-            gui_vmess("gui_vumeter_draw_text", "xxxiisiiiis",
+            gui_vmess("gui_vumeter_draw_text", "xxsiisiiiis",
                 canvas, x,
-                x->x_gui.x_lcol, end+1, yyy+k3+2, iemgui_vu_scale_str[i/4],
+                cbuf, end+1, yyy+k3+2, iemgui_vu_scale_str[i/4],
                 i, x1, y1,
                 x->x_gui.x_fontsize,
                 sys_fontweight);
@@ -152,17 +156,19 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
         led_col = iemgui_vu_col[i];
         if (i<=IEM_VU_STEPS)
         {
-            gui_vmess("gui_vumeter_create_steps", "xxxiiiiiiii",
-                canvas, x, iemgui_color_hex[led_col], quad1+1,
+            sprintf(cbuf, "#%06x", iemgui_color_hex[led_col]);
+            gui_vmess("gui_vumeter_create_steps", "xxsiiiiiiii",
+                canvas, x, cbuf, quad1+1,
                 yyy+2, quad3, yyy+2, x->x_led_size, x1, y1, i);
         }
     }
-    gui_vmess("gui_vumeter_draw_rect", "xxxiiiiii",
+    sprintf(cbuf, "#%06x", x->x_gui.x_bcol);
+    gui_vmess("gui_vumeter_draw_rect", "xxsiiiiii",
         canvas, x,
-        x->x_gui.x_bcol, quad1+1, y1+1, quad3, y1+1 + k1*IEM_VU_STEPS, x1, y1);
-    gui_vmess("gui_vumeter_draw_peak", "xxxiiiiiii",
+        cbuf, quad1+1, y1+1, quad3, y1+1 + k1*IEM_VU_STEPS, x1, y1);
+    gui_vmess("gui_vumeter_draw_peak", "xxsiiiiiii",
         canvas, x,
-        x->x_gui.x_bcol, mid+1, y1+12, mid+1, y1+12, x->x_led_size, x1, y1);
+        cbuf, mid+1, y1+12, mid+1, y1+12, x->x_led_size, x1, y1);
     x->x_updaterms = x->x_updatepeak = 1;
     sys_queuegui(x, x->x_gui.x_glist, vu_draw_update);
 }
@@ -212,6 +218,8 @@ static void vu_draw_config(t_vu* x, t_glist* glist)
 {
     int i;
     t_canvas *canvas=glist_getcanvas(glist);
+    char cbuf[8];
+    sprintf(cbuf, "#%6.6x", x->x_gui.x_lcol);
     for(i = 1; i <= IEM_VU_STEPS+1; i++)
     {
         if (i <= IEM_VU_STEPS)
@@ -226,11 +234,12 @@ static void vu_draw_config(t_vu* x, t_glist* glist)
                 x->x_gui.x_glist == canvas && x->x_scale;
             gui_vmess("gui_vumeter_update_text", "xxssixi",
                 canvas, x, iemgui_vu_scale_str[i/4],
-                iemgui_font(&x->x_gui), isselected, x->x_gui.x_lcol, i);
+                iemgui_font(&x->x_gui), isselected, cbuf, i);
         }
     }
-    gui_vmess("gui_vumeter_update_rect", "xxx",
-        canvas, x, x->x_gui.x_bcol);
+    sprintf(cbuf, "#%6.6x", x->x_gui.x_bcol);
+    gui_vmess("gui_vumeter_update_rect", "xxs",
+        canvas, x, cbuf);
     gui_vmess("gui_vumeter_update_peak_width", "xxi",
         canvas, x, x->x_led_size);
     iemgui_base_draw_config(&x->x_gui);
@@ -421,6 +430,7 @@ void vu_check_height(t_vu *x, int h)
 static void vu_scale(t_vu *x, t_floatarg fscale)
 {
     int i, scale = (int)fscale;
+    char cbuf[8];
 
     if(scale != 0) scale = 1;
     if(x->x_scale && !scale)
@@ -455,21 +465,22 @@ static void vu_scale(t_vu *x, t_floatarg fscale)
         x->x_scale = (int)scale;
         if(glist_isvisible(x->x_gui.x_glist))
         {
+            sprintf(cbuf, "#%6.6x", x->x_gui.x_lcol);
             for(i=1; i<=IEM_VU_STEPS; i++)
             {
                 yyy = k4 + k1*(k2-i);
                 if((i&3)==1)
                 {
-                    gui_vmess("gui_vumeter_draw_text", "xxxiisiii",
-                        canvas, x, x->x_gui.x_lcol,
+                    gui_vmess("gui_vumeter_draw_text", "xxsiisiii",
+                        canvas, x, cbuf,
                         end+1, yyy+k3+2, iemgui_vu_scale_str[i/4],
                         i, end, yyy);
                 }
             }
             i = IEM_VU_STEPS + 1;
             yyy = k4 + k1*(k2-i);
-            gui_vmess("gui_vumeter_draw_text", "xxxiisiii",
-                canvas, x, x->x_gui.x_lcol,
+            gui_vmess("gui_vumeter_draw_text", "xxsiisiii",
+                canvas, x, cbuf,
                 end+1, yyy+k3+2, iemgui_vu_scale_str[i/4],
                 i, end, yyy);
         }

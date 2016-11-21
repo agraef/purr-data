@@ -2277,28 +2277,22 @@ function gui_bng_new(cid, tag, cx, cy, radius) {
     g.appendChild(circle);
 }
 
-// change "x123456" to "#123456". Used as a convenience function for
-// iemgui colors.
-function x2h(x_val) {
-    return "#" + x_val.slice(1);
-}
-
-function gui_bng_button_color(cid, tag, x_color) {
+function gui_bng_button_color(cid, tag, color) {
     var button = get_item(cid, tag + "button");
-    configure_item(button, { fill: x2h(x_color) });
+    configure_item(button, { fill: color });
 }
 
-function gui_bng_configure(cid, tag, x_color, cx, cy, r) {
+function gui_bng_configure(cid, tag, color, cx, cy, r) {
     var b = get_item(cid, tag + "button");
     configure_item(b, {
         cx: cx,
         cy: cy,
         r: r,
-        fill: x2h(x_color)
+        fill: color
     });
 }
 
-function gui_toggle_new(cid, tag, x_color, width, state, p1,p2,p3,p4,p5,p6,p7,p8,basex,basey) {
+function gui_toggle_new(cid, tag, color, width, state, p1,p2,p3,p4,p5,p6,p7,p8,basex,basey) {
     var g = get_gobj(cid, tag),
         points_array,
         cross1, cross2;
@@ -2307,7 +2301,7 @@ function gui_toggle_new(cid, tag, x_color, width, state, p1,p2,p3,p4,p5,p6,p7,p8
     ];
     cross1 = create_item(cid, "polyline", {
         points: points_array.join(" "),
-        stroke: x2h(x_color),
+        stroke: color,
         fill: "none",
         id: tag + "cross1",
         display: state ? "inline" : "none",
@@ -2318,7 +2312,7 @@ function gui_toggle_new(cid, tag, x_color, width, state, p1,p2,p3,p4,p5,p6,p7,p8
     ];
     cross2 = create_item(cid, "polyline", {
         points: points_array.join(" "),
-        stroke: x2h(x_color),
+        stroke: color,
         fill: "none",
         id: tag + "cross2",
         display: state ? "inline" : "none",
@@ -2351,7 +2345,7 @@ function gui_toggle_resize_cross(cid,tag,w,p1,p2,p3,p4,p5,p6,p7,p8,basex,basey) 
     });
 }
 
-function gui_toggle_update(cid, tag, state, x_color) {
+function gui_toggle_update(cid, tag, state, color) {
     var cross1 = get_item(cid, tag + "cross1"),
         cross2 = get_item(cid, tag + "cross2");
     // We have to check for existence here.
@@ -2363,11 +2357,11 @@ function gui_toggle_update(cid, tag, state, x_color) {
     // non-existent tags don't throw an error.
     if (cross1) {
         if (!!state) {
-            configure_item(cross1, { display: "inline", stroke: x2h(x_color) });
-            configure_item(cross2, { display: "inline", stroke: x2h(x_color) });
+            configure_item(cross1, { display: "inline", stroke: color });
+            configure_item(cross2, { display: "inline", stroke: color });
         } else {
-            configure_item(cross1, { display: "none", stroke: x2h(x_color) });
-            configure_item(cross2, { display: "none", stroke: x2h(x_color) });
+            configure_item(cross1, { display: "none", stroke: color });
+            configure_item(cross2, { display: "none", stroke: color });
         }
     }
 }
@@ -2386,7 +2380,7 @@ function numbox_data_string(w, h) {
 }
 
 // Todo: send fewer parameters from c
-function gui_numbox_new(cid, tag, x_color, x, y, w, h, is_toplevel) {
+function gui_numbox_new(cid, tag, color, x, y, w, h, is_toplevel) {
     // numbox doesn't have a standard iemgui border,
     // so we must create its gobj manually
     var g = gui_gobj_new(cid, tag, "iemgui", x, y, is_toplevel),
@@ -2395,7 +2389,7 @@ function gui_numbox_new(cid, tag, x_color, x, y, w, h, is_toplevel) {
     data = numbox_data_string(w, h);
     border = create_item(cid, "path", {
         d: data,
-        fill: x2h(x_color),
+        fill: color,
         stroke: "black",
         "stroke-width": 1,
         id: (tag + "border"),
@@ -2411,7 +2405,7 @@ function gui_numbox_coords(cid, tag, w, h) {
     });
 }
 
-function gui_numbox_draw_text(cid,tag,text,font_size,x_color,xpos,ypos,basex,basey) {
+function gui_numbox_draw_text(cid,tag,text,font_size,color,xpos,ypos,basex,basey) {
     // kludge alert -- I'm not sure why I need to add half to the ypos
     // below. But it works for most font sizes.
     var g = get_gobj(cid, tag),
@@ -2420,7 +2414,7 @@ function gui_numbox_draw_text(cid,tag,text,font_size,x_color,xpos,ypos,basex,bas
                         (xpos - basex) + "," +
                         ((ypos - basey + (ypos - basey) * 0.5)|0) + ")",
             "font-size": font_size,
-            fill: x2h(x_color),
+            fill: color,
             id: tag + "text"
         }),
         text_node = patchwin[cid].window.document.createTextNode(text);
@@ -2428,12 +2422,12 @@ function gui_numbox_draw_text(cid,tag,text,font_size,x_color,xpos,ypos,basex,bas
     g.appendChild(svg_text);
 }
 
-function gui_numbox_update(cid, tag, x_fcolor, x_bgcolor, font_name, font_size, font_weight) {
+function gui_numbox_update(cid, tag, fcolor, bgcolor, font_name, font_size, font_weight) {
     var b = get_item(cid, tag + "border"),
         text = get_item(cid, tag + "text"),
         label = get_item(cid, tag + "label");
-    configure_item(b, { fill: x2h(x_bgcolor) });
-    configure_item(text, { fill: x2h(x_fcolor), "font-size": font_size });
+    configure_item(b, { fill: bgcolor });
+    configure_item(text, { fill: fcolor, "font-size": font_size });
     // Update the label if one exists
     if (label) {
         gui_iemgui_label_font(cid, tag, font_name, font_weight, font_size);
@@ -2447,7 +2441,7 @@ function gui_numbox_update_text_position(cid, tag, x, y) {
     });
 }
 
-function gui_slider_new(cid, tag, x_color, p1, p2, p3, p4, basex, basey) {
+function gui_slider_new(cid, tag, color, p1, p2, p3, p4, basex, basey) {
     var g = get_gobj(cid, tag),
         indicator;
     indicator = create_item(cid, "line", {
@@ -2455,7 +2449,7 @@ function gui_slider_new(cid, tag, x_color, p1, p2, p3, p4, basex, basey) {
         y1: p2 - basey,
         x2: p3 - basex,
         y2: p4 - basey,
-        stroke: x2h(x_color),
+        stroke: color,
         "stroke-width": 3,
         fill: "none",
         id: tag + "indicator"
@@ -2474,10 +2468,10 @@ function gui_slider_update(cid, tag, p1, p2, p3, p4, basex, basey) {
     });
 }
 
-function gui_slider_indicator_color(cid, tag, x_color) {
+function gui_slider_indicator_color(cid, tag, color) {
     var i = get_item(cid, tag + "indicator");
     configure_item(i, {
-        stroke: x2h(x_color)
+        stroke: color
     });
 }
 
@@ -2498,7 +2492,7 @@ function gui_radio_new(cid, tag, p1, p2, p3, p4, i, basex, basey) {
     g.appendChild(cell);
 }
 
-function gui_radio_create_buttons(cid,tag,x_color,p1,p2,p3,p4,basex,basey,i,state) {
+function gui_radio_create_buttons(cid,tag,color,p1,p2,p3,p4,basex,basey,i,state) {
     var g = get_gobj(cid, tag),
         b;
     b = create_item(cid, "rect", {
@@ -2506,8 +2500,8 @@ function gui_radio_create_buttons(cid,tag,x_color,p1,p2,p3,p4,basex,basey,i,stat
         y: p2 - basey,
         width: p3 - p1,
         height: p4 - p2,
-        stroke: x2h(x_color),
-        fill: x2h(x_color),
+        stroke: color,
+        fill: color,
         id: tag + "button_" + i,
         display: state ? "inline" : "none"
     });
@@ -2535,18 +2529,18 @@ function gui_radio_button_coords(cid, tag, x1, y1, xi, yi, i, s, d, orient) {
     });
 }
 
-function gui_radio_update(cid, tag, x_fgcolor, prev, next) {
+function gui_radio_update(cid, tag, fgcolor, prev, next) {
     var prev = get_item(cid, tag + "button_" + prev),
         next = get_item(cid, tag + "button_" + next);
     configure_item(prev, { display: "none" });
     configure_item(next, {
         display: "inline",
-        fill: x2h(x_fgcolor),
-        stroke: x2h(x_fgcolor)
+        fill: fgcolor,
+        stroke: fgcolor
     });
 }
 
-function gui_vumeter_draw_text(cid,tag,x_color,xpos,ypos,text,index,basex,basey, font_size, font_weight) {
+function gui_vumeter_draw_text(cid,tag,color,xpos,ypos,text,index,basex,basey, font_size, font_weight) {
     var g = get_gobj(cid, tag),
         svg_text = create_item(cid, "text", {
             x: xpos - basex,
@@ -2570,12 +2564,12 @@ function gui_vumeter_draw_text(cid,tag,x_color,xpos,ypos,text,index,basex,basey,
 // c) recreate all the missing labels
 // To get on to other work we just parrot the insanity here,
 // and silently ignore calls to update non-existent text.
-function gui_vumeter_update_text(cid, tag, text, font, selected, x_color, i) {
+function gui_vumeter_update_text(cid, tag, text, font, selected, color, i) {
     var svg_text = get_item(cid, tag + "text_" + i);
     if (!selected) {
         // Hack...
         if (svg_text !== null) {
-            configure_item(svg_text, { fill: x2h(x_color) });
+            configure_item(svg_text, { fill: color });
         }
     }
 }
@@ -2590,7 +2584,7 @@ function gui_vumeter_erase_text(cid, tag, i) {
     t.parentNode.removeChild(t);
 }
 
-function gui_vumeter_create_steps(cid,tag,x_color,p1,p2,p3,p4,width,basex,basey,i) {
+function gui_vumeter_create_steps(cid,tag,color,p1,p2,p3,p4,width,basex,basey,i) {
     var g = get_gobj(cid, tag),
         l;
     l = create_item(cid, "line", {
@@ -2598,7 +2592,7 @@ function gui_vumeter_create_steps(cid,tag,x_color,p1,p2,p3,p4,width,basex,basey,
         y1: p2 - basey,
         x2: p3 - basex,
         y2: p4 - basey,
-        stroke: x2h(x_color),
+        stroke: color,
         "stroke-width": width,
         "id": tag + "led_" + i
     });
@@ -2620,7 +2614,7 @@ function gui_vumeter_update_step_coords(cid,tag,i,x1,y1,x2,y2,basex,basey) {
     });
 }
 
-function gui_vumeter_draw_rect(cid,tag,x_color,p1,p2,p3,p4,basex,basey) {
+function gui_vumeter_draw_rect(cid,tag,color,p1,p2,p3,p4,basex,basey) {
     var g = get_gobj(cid, tag),
         rect;
     rect = create_item(cid, "rect", {
@@ -2628,16 +2622,16 @@ function gui_vumeter_draw_rect(cid,tag,x_color,p1,p2,p3,p4,basex,basey) {
         y: p2 - basey,
         width: p3 - p1,
         height: p4 + 1 - p2,
-        stroke: x2h(x_color),
-        fill: x2h(x_color),
+        stroke: color,
+        fill: color,
         id: tag + "rect"
     });
     g.appendChild(rect);
 }
 
-function gui_vumeter_update_rect(cid, tag, x_color) {
+function gui_vumeter_update_rect(cid, tag, color) {
     var r = get_item(cid, tag + "rect");
-    configure_item(r, { fill: x2h(x_color), stroke: x2h(x_color) });
+    configure_item(r, { fill: color, stroke: color });
 }
 
 // Oh hack upon hack... why doesn't the iemgui base_config just take care
@@ -2684,23 +2678,23 @@ function gui_vumeter_update_rms(cid, tag, p1, p2, p3, p4, basex, basey) {
     });
 }
 
-function gui_vumeter_update_peak(cid,tag,x_color,p1,p2,p3,p4,basex,basey) {
+function gui_vumeter_update_peak(cid,tag,color,p1,p2,p3,p4,basex,basey) {
     var line = get_item(cid, tag + "peak");
     configure_item(line, {
         x1: p1 - basex,
         y1: p2 - basey,
         x2: p3 - basex,
         y2: p4 - basey,
-        stroke: x2h(x_color)
+        stroke: color
     });
 }
 
-function gui_iemgui_base_color(cid, tag, x_color) {
+function gui_iemgui_base_color(cid, tag, color) {
     var g = get_gobj(cid, tag),
         b;
     if (g) {
         b = g.querySelector(".border");
-        configure_item(b, { fill: x2h(x_color) });
+        configure_item(b, { fill: color });
     }
 }
 
@@ -2867,13 +2861,13 @@ function gui_iemgui_label_show_drag_handle(cid, tag, state, x, y, cnv_resize) {
     }
 }
 
-function gui_mycanvas_new(cid,tag,x_color,x1,y1,x2_vis,y2_vis,x2,y2) {
+function gui_mycanvas_new(cid,tag,color,x1,y1,x2_vis,y2_vis,x2,y2) {
     var rect_vis, rect, g;
     rect_vis = create_item(cid, "rect", {
         width: x2_vis - x1,
         height: y2_vis - y1,
-        fill: x2h(x_color),
-        stroke: x2h(x_color),
+        fill: color,
+        stroke: color,
         id: tag + "rect"
         }
     );
@@ -2884,7 +2878,7 @@ function gui_mycanvas_new(cid,tag,x_color,x1,y1,x2_vis,y2_vis,x2,y2) {
         width: x2 - x1,
         height: y2 - y1,
         fill: "none",
-        stroke: x2h(x_color),
+        stroke: color,
         id: tag + "drag_handle",
         "class": "border mycanvas_border"
         }
@@ -2894,12 +2888,12 @@ function gui_mycanvas_new(cid,tag,x_color,x1,y1,x2_vis,y2_vis,x2,y2) {
     g.appendChild(rect);
 }
 
-function gui_mycanvas_update(cid, tag, x_color, selected) {
+function gui_mycanvas_update(cid, tag, color, selected) {
     var r = get_item(cid, tag + "rect"),
         h = get_item(cid, tag + "drag_handle");
     configure_item(r, {
-        fill: x2h(x_color),
-        stroke: x2h(x_color)
+        fill: color,
+        stroke: color
     });
 }
 
