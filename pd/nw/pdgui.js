@@ -3769,9 +3769,12 @@ function gui_envgen_move_xlet(cid, tag, type, i, x, y, basex, basey) {
 exports.add_popup = add_popup;
 
 // Kludge to get popup coords to fit the browser's zoom level. As of v0.16.1
-// it appears nw.js fixed the bug that required this kludge. Leave it here
-// for now because we're using lts v0.14 for the Windows binaries because
-// Windows XP support will be dropped after that.
+// it appears nw.js fixed the bug that required this kludge. The only versions
+// affected then are
+// a) Windows, which is pinned to version 0.14.7 to support XP and
+// b) OSX 10.8 which requires 0.14.7 to run.
+// So we do a version check for "0.14.7" to see whether the kludge is
+// needed.
 function zoom_kludge(zoom_level) {
     var zfactor;
     switch(zoom_level) {
@@ -3806,7 +3809,8 @@ function gui_canvas_popup(cid, xpos, ypos, canprop, canopen, isobject) {
         svg_view_box = patchwin[cid].window.document.getElementById("patchsvg")
             .getAttribute("viewBox").split(" "); // need top-left svg origin
 
-    zfactor = process.platform === "win32" ? zoom_kludge(zoom_level) : 1;
+    // Check nw.js version-- if its lts then we need the zoom_kludge...
+    zfactor = process.platform.nw === "0.14.7" ? zoom_kludge(zoom_level) : 1;
     // Set the global popup x/y so they can be retrieved by the relevant
     // document's event handler
     popup_coords[0] = xpos;
