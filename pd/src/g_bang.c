@@ -87,11 +87,13 @@ void bng_draw_move(t_bng *x, t_glist *glist)
 void bng_draw_config(t_bng* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
+    char cbuf[8];
+    sprintf(cbuf, "#%6.6x", x->x_flashed ? x->x_gui.x_fcol : x->x_gui.x_bcol);
     iemgui_base_draw_config(&x->x_gui);
-    gui_vmess("gui_bng_button_color", "xxx",
+    gui_vmess("gui_bng_button_color", "xxs",
         canvas,
         x,
-        x->x_flashed ? x->x_gui.x_fcol : x->x_gui.x_bcol);
+        cbuf);
 }
 
 /* we may no longer need h_dragon... */

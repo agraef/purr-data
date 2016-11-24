@@ -26,12 +26,14 @@ t_class *vradio_class, *vradio_old_class;
 void radio_draw_update(t_gobj *client, t_glist *glist)
 {
     t_radio *x = (t_radio *)client;
+    char cbuf[8];
+    sprintf(cbuf, "#%6.6x", x->x_gui.x_fcol);
     if (!glist_isvisible(glist)) return;
     t_canvas *canvas=glist_getcanvas(glist);
-    gui_vmess("gui_radio_update", "xxxii",
+    gui_vmess("gui_radio_update", "xxsii",
         canvas,
         x,
-        x->x_gui.x_fcol,
+        cbuf,
         x->x_drawn,
         x->x_on);
     x->x_drawn = x->x_on;
@@ -70,9 +72,9 @@ void radio_draw_new(t_radio *x, t_glist *glist)
                 gui_vmess("gui_radio_new", "xxiiiiiii", canvas,
                     x, xi, y1, xi, y1+d, i, x1, y1);
             }
-            gui_vmess("gui_radio_create_buttons", "xxxiiiiiiii",
+            gui_vmess("gui_radio_create_buttons", "xxsiiiiiiii",
                 canvas, x,
-                x->x_gui.x_fcol,
+                cbuf,
                 xi+s, y1+s, xi+d-s, yi+d-s, x1, y1, i, x->x_on==i);
             xi += d;
             x->x_drawn = x->x_on;

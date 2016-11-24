@@ -20,13 +20,15 @@ static t_class *toggle_class;
 void toggle_draw_update(t_gobj *xgobj, t_glist *glist)
 {
     t_toggle *x = (t_toggle *)xgobj;
+    char cbuf[8];
+    sprintf(cbuf, "#%6.6x", x->x_gui.x_fcol);
     if (x->x_gui.x_changed)
     {
         if(glist_isvisible(glist_getcanvas(glist)))
         {
             t_canvas *canvas=glist_getcanvas(glist);
-            gui_vmess("gui_toggle_update", "xxix", canvas,
-                x, x->x_on != 0.0, x->x_gui.x_fcol);
+            gui_vmess("gui_toggle_update", "xxis", canvas,
+                x, x->x_on != 0.0, cbuf);
         }
         x->x_gui.x_changed = 0;
     }
