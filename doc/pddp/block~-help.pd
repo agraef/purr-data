@@ -1,9 +1,9 @@
-#N canvas 427 32 555 619 10;
+#N canvas 242 31 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header block~ 3 12 0 18
 -204280 -1 0;
-#X obj 0 271 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+#X obj 0 251 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
 #N canvas 479 284 494 344 META 0;
 #X text 12 105 LIBRARY internal;
@@ -33,12 +33,12 @@ for DSP;
 14 -204280 -1 0;
 #X text 8 1 [block~] Related Objects;
 #X restore 102 597 pd Related_objects;
-#X obj 78 280 cnv 17 3 40 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X obj 78 260 cnv 17 3 70 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X text 98 280 set;
+#X text 98 260 set;
 #X text 98 341 (none);
-#X floatatom 78 247 0 0 0 0 - - -;
-#X text 155 248 <- measured time (msec) between blocks;
+#X floatatom 78 223 0 0 0 0 - - -;
+#X text 165 224 <- measured time (msec) between blocks;
 #X text 161 49 block size 4096 \, no overlap \, no resampling;
 #X text 162 71 bigger block size;
 #X text 160 92 double overlap;
@@ -59,7 +59,7 @@ than your superpatch. This is useful for writing FFT based patches
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 7 1 [block~] A Simple Example;
-#X restore 282 556 pd a-simple-block-example;
+#X restore 242 555 pd a-simple-block-example;
 #N canvas 56 284 428 261 block-interactions 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
@@ -76,7 +76,7 @@ in other \, running patches will cycle old input (and sound like garbage).
 to intercommunicate must have the same blocking -- and if their parents
 are blocked bigger than they are \, there might be weirdness.;
 #X restore 102 555 pd block-interactions;
-#X text 257 224 <- toggle display;
+#X text 257 200 <- toggle display;
 #X text 11 23 block \, overlap \, and resampling control for DSP;
 #N canvas 22 87 428 396 visualize 0;
 #X obj 49 219 f;
@@ -92,15 +92,15 @@ are blocked bigger than they are \, there might be weirdness.;
 -1 -1 0 1;
 #X obj 49 187 spigot;
 #X obj 110 124 r \$0-tgl;
-#X obj 49 319 bng 10 92 50 0 \$0-nowhere \$0-bng-rcv empty 17 7 0 10
+#X obj 49 319 bng 10 50 50 0 \$0-nowhere \$0-bng-rcv empty 17 7 0 10
 -262144 -1 -1;
-#X obj 64 319 bng 10 92 50 0 \$0-nowhere \$0-bng-rcv empty 17 7 0 10
+#X obj 64 319 bng 10 50 50 0 \$0-nowhere \$0-bng-rcv empty 17 7 0 10
 -262144 -1 -1;
-#X obj 79 319 bng 10 92 50 0 \$0-nowhere \$0-bng-rcv empty 17 7 0 10
+#X obj 79 319 bng 10 50 50 0 \$0-nowhere \$0-bng-rcv empty 17 7 0 10
 -262144 -1 -1;
-#X obj 94 319 bng 10 92 50 0 \$0-nowhere \$0-bng-rcv empty 17 7 0 10
+#X obj 94 319 bng 10 50 50 0 \$0-nowhere \$0-bng-rcv empty 17 7 0 10
 -262144 -1 -1;
-#X obj 109 319 bng 10 92 50 0 \$0-nowhere \$0-bng-rcv empty 17 7 0
+#X obj 109 319 bng 10 50 50 0 \$0-nowhere \$0-bng-rcv empty 17 7 0
 10 -262144 -1 -1;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
@@ -113,15 +113,15 @@ to display how different "set" messages change the block size.;
 #X obj 49 89 t b b;
 #X obj 49 115 timer;
 #X obj 49 273 sel 0 1 2 3 4 5 6 7 8 9;
-#X obj 124 319 bng 10 92 50 0 \$0-nowhere \$0-bng-rcv empty 17 7 0
+#X obj 124 319 bng 10 50 50 0 \$0-nowhere \$0-bng-rcv empty 17 7 0
 10 -262144 -1 -1;
-#X obj 139 319 bng 10 92 50 0 \$0-nowhere \$0-bng-rcv empty 17 7 0
+#X obj 139 319 bng 10 50 50 0 \$0-nowhere \$0-bng-rcv empty 17 7 0
 10 -262144 -1 -1;
-#X obj 154 319 bng 10 92 50 0 \$0-nowhere \$0-bng-rcv empty 17 7 0
+#X obj 154 319 bng 10 50 50 0 \$0-nowhere \$0-bng-rcv empty 17 7 0
 10 -262144 -1 -1;
-#X obj 169 319 bng 10 92 50 0 \$0-nowhere \$0-bng-rcv empty 17 7 0
+#X obj 169 319 bng 10 50 50 0 \$0-nowhere \$0-bng-rcv empty 17 7 0
 10 -262144 -1 -1;
-#X obj 184 319 bng 10 92 50 0 \$0-nowhere \$0-bng-rcv empty 17 7 0
+#X obj 184 319 bng 10 50 50 0 \$0-nowhere \$0-bng-rcv empty 17 7 0
 10 -262144 -1 -1;
 #X obj 49 246 mod 10;
 #X connect 0 0 1 0;
@@ -153,20 +153,13 @@ to display how different "set" messages change the block size.;
 #X connect 25 9 30 0;
 #X connect 31 0 25 0;
 #X coords 0 -1 1 1 175 35 1 45 300;
-#X restore 78 209 pd visualize;
-#X obj 422 12 block~;
-#X text 90 161 IMPORTANT NOTE: Since you may have at most one block~/switch~
-object in any window \, [block~] has been put in a subpatch (below)
-for this example:;
+#X restore 78 185 pd visualize;
 #X text 170 384 - blocksize.;
 #X text 170 398 - (optional) overlap.;
 #X text 170 411 - (optional) resampling factor (relative to super-patch).
 ;
 #X text 80 398 2) float;
 #X text 80 411 3) float;
-#X text 168 280 - [block] has a single inlet that accepts a "set" message--
-"set" followed by one to three floats-- that determines the block size
-\, overlap \, and resampling for the window (see example above).;
 #X text 80 384 1) float;
 #X text 99 439 Pd's default block size is 64 samples. The [inlet~]
 and [outlet~] objects reblock signals to adjust for differences between
@@ -180,8 +173,36 @@ any other block size. This is intended for later use in video processing.
 #X obj 455 51 pddp/dsp;
 #X obj 102 576 pddp/pddplink ../3.audio.examples/J07.oversampling.pd
 -text doc/3.audio.examples/J07.oversampling.pd;
-#X text 469 12 or;
-#X obj 494 12 switch~;
+#X text 574 554 <-- weird 'bang' feature lets you single-step DSP;
+#X text 385 10 [block~] or [switch~];
+#X text 90 161 Note: [block~] is in the subpatch (below) for this example:
+;
+#X text 168 260 - "set" followed by one to three floats determines
+the block size \, overlap \, and resampling for the window (see example
+above).;
+#X text 98 310 bang;
+#X text 168 310 - calculate a single block inside a subpatch (see below)
+;
+#N canvas 0 22 581 315 bang_message 0;
+#X text 32 11 You can use the switch~ object to single-step dsp in
+a subpatch. This might be useful for block operations that don't want
+to be synced to the sample clock: loading a wondiw function in a table
+\, or copying one table to another:;
+#X obj 136 193 noise~;
+#X obj 136 225 tabwrite~ zzzz;
+#X obj 33 154 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#N canvas 0 22 450 300 (subpatch) 0;
+#X array zzzz 256 float 2 black black;
+#X coords 0 1 256 -1 256 140 1;
+#X restore 300 116 graph;
+#X obj 33 228 switch~ 256;
+#X text 25 111 turn DSP on and click to;
+#X text 26 127 randomize the table at right:;
+#X connect 1 0 2 0;
+#X connect 3 0 2 0;
+#X connect 3 0 5 0;
+#X restore 420 554 pd bang_message;
 #X connect 18 0 27 0;
 #X connect 19 0 27 0;
 #X connect 20 0 27 0;
