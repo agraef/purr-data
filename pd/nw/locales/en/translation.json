@@ -366,6 +366,8 @@
       "advance_tt": "delay",
       "blocksize": "blocksize",
       "blocksize_tt": "number of samples in a block to be delivered to or received from the audio api",
+      "callback": "use callbacks",
+      "callback_tt": "use Pd's callback interface for this API",
       "channels": "channels",
       "channels_tt": "number of channels for this device",
       "input_title": "Input Devices",
