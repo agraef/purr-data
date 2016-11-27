@@ -420,8 +420,13 @@ var canvas_events = (function() {
                 last_draggable_y = evt.pageY + svg_view.y;
 
                 if (!is_canvas_gop_rect) {
-                    handle_elem.x.baseVal.value += dx;
-                    handle_elem.y.baseVal.value += dy;
+                    // This is bad-- we should be translating
+                    // here so that the logic doesn't depend on the shape
+                    // type we chose in pdgui (here, it's "line").
+                    handle_elem.x1.baseVal.value += dx;
+                    handle_elem.y1.baseVal.value += dy;
+                    handle_elem.x2.baseVal.value += dx;
+                    handle_elem.y2.baseVal.value += dy;
                 }
 
                 pdgui.pdsend(target_id, "_motion",

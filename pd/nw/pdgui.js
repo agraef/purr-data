@@ -2834,13 +2834,20 @@ function gui_iemgui_label_show_drag_handle(cid, tag, state, x, y, cnv_resize) {
     var gobj = get_gobj(cid, tag),
         rect;
     if (state !== 0) {
-        rect = create_item(cid, "rect", {
-            x: x - 4,
-            y: y + 3,
-            width: 7,
-            height: 7,
-            class: (cid === tag) ? "gop_drag_handle" :
-                cnv_resize !== 0 ? "cnv_resize_handle" : "label_drag_handle"
+        // Here we use a "line" shape so that we can control its color
+        // using the "border" class (for iemguis) or the "gop_rect" class
+        // for the graph-on-parent rectangle anchor. In both cases the styles
+        // set a stroke property, and a single thick line is easier to define
+        // than a "rect" for that case.
+        rect = create_item(cid, "line", {
+            x1: x,
+            y1: y + 3,
+            x2: x,
+            y2: y + 10,
+            "stroke-width": 7,
+            class: (cid === tag) ? "gop_drag_handle gop_rect" :
+                cnv_resize !== 0 ? "cnv_resize_handle border" :
+                "label_drag_handle border"
         });
         rect.classList.add("clickable_resize_handle");
         gobj.appendChild(rect);
@@ -2872,8 +2879,17 @@ function gui_mycanvas_new(cid,tag,color,x1,y1,x2_vis,y2_vis,x2,y2) {
         }
     );
 
-    // we use a drag_handle-- unlike a 'border' it takes
-    // the same color as the visible rectangle when deselected
+    // we use a drag_handle, which is square outline with transparent fill
+    // that shows the part of the rectangle that may be dragged in editmode.
+    // Clicking the rectangle outside of that square will have no effect.
+    // Unlike a 'border' it takes the same color as the visible rectangle when
+    // deselected.
+    // I'm not sure why it was decided to define this object's bbox separate
+    // from the visual rectangle. That causes all kinds of usability problems.
+    // For just one example, it means we can't simply use the "resize" cursor
+    // like all the other iemguis.
+    // Unfortunately its ingrained as a core object in Pd, so we have to
+    // support it here.
     rect = create_item(cid, "rect", {
         width: x2 - x1,
         height: y2 - y1,

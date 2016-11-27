@@ -107,7 +107,7 @@ mark.console_find_highlighted {
 
 /* The outline to show the visible area for a Graph-On-Parent canvas,
    i.e., the "red rectangle" */
-#gop_rect {
+.gop_rect {
     fill: none;
     stroke: blue;
     stroke-opacity: 0.8;
