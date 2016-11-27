@@ -164,6 +164,9 @@ function create_menu(gui, type) {
             key: "a",
             modifiers: cmd_or_ctrl
         }));
+        // Finally, let's remove the "Delete" item since it's not hooked
+        // in to anything yet...
+        window_menu.items[1].submenu.remove(m.edit.delete);
     } else {
         edit_menu = new gui.Menu();
         // Edit sub-entries
