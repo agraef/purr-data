@@ -369,11 +369,6 @@ exports.keydown = function(cid, evt) {
         case 17: hack = "Control"; break;
         case 18: hack = "Alt"; break;
 
-        // keycode 188 = comma -- in contrast to / this is
-        // next to the period on most Latin keyboards, so
-        // much more convenient to quickly switch dsp off
-        // and then on again
-        case 188:
         // keycode 55 = 7 key (shifted = '/' on German keyboards)
         case 55:
             if (cmd_or_ctrl_key(evt)) {
