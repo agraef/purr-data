@@ -546,13 +546,17 @@ function create_menu(gui, type) {
     }));
     help_menu.append(m.help.manual = new gui.MenuItem({
         label: l("menu.manual"),
-        tooltip: l("menu.manual")
+        tooltip: l("menu.manual_tt")
     }));
     help_menu.append(m.help.browser = new gui.MenuItem({
         label: l("menu.browser"),
         key: "b",
         modifiers: cmd_or_ctrl,
         tooltip: l("menu.browser_tt")
+    }));
+    help_menu.append(m.help.intro = new gui.MenuItem({
+        label: l("menu.intro"),
+        tooltip: l("menu.intro_tt")
     }));
     help_menu.append(new gui.MenuItem({ type: "separator" }));
     help_menu.append(m.help.l2ork_list = new gui.MenuItem({

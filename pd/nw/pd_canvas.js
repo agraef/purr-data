@@ -1431,6 +1431,11 @@ function nw_create_patch_window_menus(gui, w, name) {
     minit(m.help.browser, {
         click: pdgui.open_search
     });
+    minit(m.help.intro, {
+        click: function() {
+            pdgui.pd_doc_open("doc/5.reference", "help-intro.pd");
+        }
+    });
     minit(m.help.l2ork_list, {
         click: function() {
             pdgui.external_doc_open("http://disis.music.vt.edu/listinfo/l2ork-dev");

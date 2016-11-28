@@ -241,6 +241,8 @@
     "manual_tt": "Öffne das Pd-HTML-Handbuch",
     "browser": "Hilfe-Browser",
     "browser_tt": "Öffne einen Hilfe-Browser, um nach Dokumentation und Objekten zu suchen",
+    "intro": "Schnellreferenz",
+    "intro_tt": "Öffne einen Hilfe-Patch mit einer Liste der wichtigsten Pd-Objekte",
     "l2ork_list": "Pd-L2Ork-Mailing-Liste",
     "l2ork_list_tt": "Öffne einen Link zur Pd-L2Ork-Mailing-Liste im Browser",
     "pd_list": "Pure Data-Mailing-Liste",
