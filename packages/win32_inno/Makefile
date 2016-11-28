@@ -114,6 +114,13 @@ lib_install:
 	install -p $(bin_src)/zlib1.dll $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libpcre-1.dll $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libgraphite2.dll $(DESTDIR)$(bindir)/
+	# Apparently these Gem dependencies must be in the bindir
+	# to be found on Windows
+	-install -p $(DESTDIR)/extra/Gem/gem_film*.dll $(DESTDIR)$(bindir)/
+	-install -p $(DESTDIR)/extra/Gem/gem_image*.dll $(DESTDIR)$(bindir)/
+	-install -p $(DESTDIR)/extra/Gem/gem_model*.dll $(DESTDIR)$(bindir)/
+	-install -p $(DESTDIR)/extra/Gem/gem_record*.dll $(DESTDIR)$(bindir)/
+	-install -p $(DESTDIR)/extra/Gem/gem_video*.dll $(DESTDIR)$(bindir)/
 # these stay with pd.exe
 # if these are installed, include them in the build root
 	-install -p $(system32)/msvcp71.dll   $(DESTDIR)$(bindir)
