@@ -342,20 +342,20 @@ function create_menu(gui, type) {
     if (canvas_menu) {
 	view_menu.append(m.view.optimalzoom = new gui.MenuItem({
             label: l("menu.zoomoptimal"),
-            key: "0",
-            modifiers: cmd_or_ctrl + "+alt",
+            key: "9",
+            modifiers: cmd_or_ctrl,
             tooltip: l("menu.zoomoptimal_tt")
 	}));
 	view_menu.append(m.view.horizzoom = new gui.MenuItem({
             label: l("menu.zoomhoriz"),
-            key: "w",
+            key: "9",
             modifiers: cmd_or_ctrl + "+alt",
             tooltip: l("menu.zoomhoriz_tt")
 	}));
 	view_menu.append(m.view.vertzoom = new gui.MenuItem({
             label: l("menu.zoomvert"),
-            key: "h",
-            modifiers: cmd_or_ctrl + "+alt",
+            key: "9",
+            modifiers: cmd_or_ctrl + "+shift",
             tooltip: l("menu.zoomvert_tt")
 	}));
     }
