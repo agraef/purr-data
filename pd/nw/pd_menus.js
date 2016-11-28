@@ -554,6 +554,10 @@ function create_menu(gui, type) {
         modifiers: cmd_or_ctrl,
         tooltip: l("menu.browser_tt")
     }));
+    help_menu.append(m.help.intro = new gui.MenuItem({
+        label: l("menu.intro"),
+        tooltip: l("menu.intro_tt")
+    }));
     help_menu.append(new gui.MenuItem({ type: "separator" }));
     help_menu.append(m.help.l2ork_list = new gui.MenuItem({
         label: l("menu.l2ork_list"),
