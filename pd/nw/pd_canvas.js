@@ -788,19 +788,19 @@ function create_popup_menu(name) {
     pdgui.add_popup(name, popup_menu);
 
     popup_menu.append(new gui.MenuItem({
-        label: "Properties",
+        label: l("canvas.menu.props"),
         click: function() {
             pdgui.popup_action(name, 0);
         }
     }));
     popup_menu.append(new gui.MenuItem({
-        label: "Open",
+        label: l("canvas.menu.open"),
         click: function() {
             pdgui.popup_action(name, 1);
         }
     }));
     popup_menu.append(new gui.MenuItem({
-        label: "Help",
+        label: l("canvas.menu.help"),
         click: function() {
             pdgui.popup_action(name, 2);
         }
@@ -809,13 +809,13 @@ function create_popup_menu(name) {
         type: "separator",
     }));
     popup_menu.append(new gui.MenuItem({
-        label: "Bring to Front",
+        label: l("canvas.menu.front"),
         click: function() {
             pdgui.popup_action(name, 3);
         }
     }));
     popup_menu.append(new gui.MenuItem({
-        label: "Send to Back",
+        label: l("canvas.menu.back"),
         click: function() {
             pdgui.popup_action(name, 4);
         }

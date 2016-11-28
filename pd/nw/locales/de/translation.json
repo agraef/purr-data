@@ -270,6 +270,13 @@
     "find": {
       "placeholder": "Suche im Patch"
     },
+    "menu": {
+      "props": "Einstellungen",
+      "open": "Öffnen",
+      "help": "Hilfe",
+      "front": "Nach vorne",
+      "back": "Nach hinten"
+    },
     "prop": {
       "heading": {
         "gop": "Erscheinungsbild",
