@@ -270,6 +270,13 @@
     "find": {
       "placeholder": "Search in Canvas"
     },
+    "menu": {
+      "props": "Properties",
+      "open": "Open",
+      "help": "Help",
+      "front": "Bring to Front",
+      "back": "Send to Back"
+    },
     "prop": {
       "heading": {
         "gop": "appearance",

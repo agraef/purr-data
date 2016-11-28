@@ -270,6 +270,13 @@
     "find": {
       "placeholder": "Suche im Patch"
     },
+    "menu": {
+      "props": "Einstellungen",
+      "open": "Öffnen",
+      "help": "Hilfe",
+      "front": "Nach vorne",
+      "back": "Nach hinten"
+    },
     "prop": {
       "heading": {
         "gop": "Erscheinungsbild",
@@ -364,8 +371,8 @@
       "sr_tt": "Anzahl von Samples pro Sekunde",
       "advance": "Verzögerung",
       "advance_tt": "Verzögerung (msec)",
-      "callback": "callback dinge",
-      "callback_tt": "benutzen der callback API von Pd für diesen Audio-Backend",
+      "callback": "Verwende Callbacks",
+      "callback_tt": "Callback-API von Pd für dieses Audio-Backend verwenden",
       "blocksize": "Blockgröße",
       "blocksize_tt": "Anzahl von Samples in einem Block, der an die Audio-API gesendet oder von dort empfangen wird",
       "channels": "Kanäle",
