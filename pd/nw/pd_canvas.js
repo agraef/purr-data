@@ -119,7 +119,8 @@ function permission_to_paste_from_external_clipboard() {
     return global.confirm(l("canvas.paste_clipboard_prompt"));
 }
 
-function nw_window_focus_callback() {
+function nw_window_focus_callback(name) {
+    pdgui.set_focused_patchwin(name);
     // on OSX, update the menu on focus
     if (process.platform === "darwin") {
         nw_create_patch_window_menus(gui, window, canvas_events.get_id());
@@ -592,7 +593,7 @@ var canvas_events = (function() {
         pdgui.gui_canvas_get_scroll(name);
     });
     gui.Window.get().on("focus", function() {
-        nw_window_focus_callback();
+        nw_window_focus_callback(name);
     });
     gui.Window.get().on("blur", function() {
         nw_window_blur_callback(name);
@@ -757,7 +758,7 @@ function register_window_id(cid, attr_array) {
     canvas_events.register(cid);
     translate_form();
     // Trigger a "focus" event so that OSX updates the menu for this window
-    nw_window_focus_callback();
+    nw_window_focus_callback(cid);
     canvas_events.normal();
     pdgui.canvas_map(cid); // side-effect: triggers gui_canvas_get_scroll
     set_editmode_checkbox(attr_array.editmode !== 0 ? true : false);

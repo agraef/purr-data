@@ -66,6 +66,10 @@ function gui_set_gui_preset(name) {
     skin.set(name);
 }
 
+exports.set_focused_patchwin = function(cid) {
+    last_focused = cid;
+}
+
 // Modules
 
 var fs = require("fs");     // for fs.existsSync
@@ -1110,7 +1114,8 @@ var scroll = {},
     redo = {},
     font = {},
     doscroll = {},
-    last_loaded,
+    last_loaded, // last loaded canvas
+    last_focused, // last focused canvas (doesn't include Pd window or dialogs)
     loading = {},
     title_queue= {}, // ugly kluge to work around an ugly race condition
     popup_menu = {};
@@ -4127,9 +4132,17 @@ function file_dialog(cid, type, target, path) {
     file_dialog_target = target;
     var query_string = (type === "open" ?
                         "openpanel_dialog" : "savepanel_dialog"),
-        d = patchwin[cid].window.document.querySelector("#" + query_string);
-    d.setAttribute("nwworkingdir", path);
-    d.click();
+        input_elem,
+        win;
+        // We try opening the dialog in the last focused window. There's an
+        // edge case where [loadbang]--[openpanel] will trigger before the
+        // window has finished loading. In that case we just trigger the
+        // dialog in the main Pd window.
+        win = last_focused && patchwin[last_focused] ? patchwin[last_focused] :
+            pd_window;
+        input_elem = win.window.document.querySelector("#" + query_string);
+    input_elem.setAttribute("nwworkingdir", path);
+    input_elem.click();
 }
 
 function gui_openpanel(cid, target, path) {

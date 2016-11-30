@@ -341,6 +341,26 @@ function add_events() {
     document.getElementById("fileDialog").setAttribute("accept",
         Object.keys(pdgui.pd_filetypes).toString());
 
+    // [openpanel] and [savepanel] callbacks
+    document.querySelector("#openpanel_dialog").addEventListener("change",
+        function(evt) {
+            var file_string = evt.target.value;
+            // reset value so that we can open the same file twice
+            evt.target.value = null;
+            pdgui.file_dialog_callback(file_string);
+            console.log("tried to openpanel something");
+        }, false
+    );
+    document.querySelector("#savepanel_dialog").addEventListener("change",
+        function(evt) {
+            var file_string = evt.target.value;
+            // reset value so that we can open the same file twice
+            evt.target.value = null;
+            pdgui.file_dialog_callback(file_string);
+            console.log("tried to savepanel something");
+        }, false
+    );
+
     // disable drag and drop for the time being
     window.addEventListener("dragover", function (evt) {
         evt.preventDefault();
