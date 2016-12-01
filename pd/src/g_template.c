@@ -1633,14 +1633,14 @@ static char *svg_get_color(t_fielddesc *fd, t_colortype ct,
     if (ct == CT_NULL)
         sprintf(str, "none");
     else if (ct == CT_SYM)
-        sprintf(str, "%s", fielddesc_getsymbol(fd, template, data, 1)->s_name);
+        sprintf(str, "%s", fielddesc_getsymbol(fd, template, data, 0)->s_name);
     else
     {
         t_float c1, c2, c3;
         int result = 0;
-        c1 = fielddesc_getcoord(fd, template, data, 1),
-        c2 = fielddesc_getcoord(fd+1, template, data, 1),
-        c3 = fielddesc_getcoord(fd+2, template, data, 1);
+        c1 = fielddesc_getcoord(fd, template, data, 0),
+        c2 = fielddesc_getcoord(fd+1, template, data, 0),
+        c3 = fielddesc_getcoord(fd+2, template, data, 0);
         if (ct == CT_RGB)
             result = rgb_to_int((int)c1, (int)c2, (int)c3);
         else if (ct == CT_HSL)
@@ -1747,7 +1747,7 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
         gui_vmess("gui_draw_configure", "xssi",
             glist_getcanvas(c), tag, "fill-rule",
             (int)fielddesc_getcoord(
-                &x->x_fillrule.a_attr, template, data, 1) ?
+                &x->x_fillrule.a_attr, template, data, 0) ?
                     "evenodd" : "nonzero");
     else if (s == gensym("fill-opacity") ||
              s == gensym("opacity") ||
@@ -1757,7 +1757,7 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
         gui_vmess("gui_draw_configure", "xssf",
             glist_getcanvas(c), tag, s->s_name,
             fielddesc_getcoord(
-                &(svg_getattr(x, s)->a_attr), template, data, 1));
+                &(svg_getattr(x, s)->a_attr), template, data, 0));
     else if (s == gensym("pointer-events"))
         *predraw_bbox = 1;
     else if (s == gensym("stroke-linecap"))
@@ -1765,13 +1765,13 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
             glist_getcanvas(c), tag, "stroke-linecap",
                 get_strokelinecap(
                     (int)fielddesc_getcoord(&x->x_strokelinecap.a_attr,
-                        template, data, 1)));
+                        template, data, 0)));
     else if (s == gensym("stroke-linejoin"))
         gui_vmess("gui_draw_configure", "xsss",
             glist_getcanvas(c), tag, "stroke-linejoin",
                 get_strokelinejoin(
                     (int)fielddesc_getcoord(&x->x_strokelinejoin.a_attr,
-                        template, data, 1)));
+                        template, data, 0)));
     else if (s == gensym("stroke-width") ||
              s == gensym("rx") || s == gensym("r") || s == gensym("x2") ||
              s == gensym("ry") || s == gensym("y2") ||
@@ -1782,17 +1782,15 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
         gui_vmess("gui_draw_configure", "xssf",
             glist_getcanvas(c), tag, s->s_name,
             fielddesc_getcoord(
-                &(svg_getattr(x, s)->a_attr), template, data, 1));
+                &(svg_getattr(x, s)->a_attr), template, data, 0));
         *predraw_bbox = 1;
     }
     else if (s == gensym("transform"))
     {
         t_float m1, m2, m3, m4, m5, m6;
-        /* we'll probably get a different bbox now, so we
-           will calculate a new one the next time we call
-           draw_getrect for this draw command. For groups
-           we need to do it for all of the draw commands
-           inside it.
+        /* we'll probably get a different bbox now, so we will calculate a
+           new one the next time we call draw_getrect for this draw command.
+           For groups we need to do it for all of the draw commands inside it.
         */
         if (x->x_type == gensym("g"))
             svg_group_pathrect_cache(x, 0);
@@ -1813,49 +1811,49 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
         gui_vmess("gui_draw_event", "xsxxsi",
             glist_getcanvas(c), tag, sc, x, "mouseover",
             (int)fielddesc_getcoord(
-                &x->x_events.e_mouseover.a_attr, template, data, 1));
+                &x->x_events.e_mouseover.a_attr, template, data, 0));
     }
     else if (s == gensym("mouseout"))
     {
         gui_vmess("gui_draw_event", "xsxxsi",
             glist_getcanvas(c), tag, sc, x, "mouseout",
             (int)fielddesc_getcoord(
-                &x->x_events.e_mouseout.a_attr, template, data, 1));
+                &x->x_events.e_mouseout.a_attr, template, data, 0));
     }
     else if (s == gensym("mousemove"))
     {
         gui_vmess("gui_draw_event", "xsxxsi",
             glist_getcanvas(c), tag, sc, x, "mousemove",
             (int)fielddesc_getcoord(
-                &x->x_events.e_mousemove.a_attr, template, data, 1));
+                &x->x_events.e_mousemove.a_attr, template, data, 0));
     }
     else if (s == gensym("mouseup"))
     {
         gui_vmess("gui_draw_event", "xsxxsi",
             glist_getcanvas(c), tag, sc, x, "mouseup",
             (int)fielddesc_getcoord(
-                &x->x_events.e_mouseup.a_attr, template, data, 1));
+                &x->x_events.e_mouseup.a_attr, template, data, 0));
     }
     else if (s == gensym("mousedown"))
     {
         gui_vmess("gui_draw_event", "xsxxsi",
             glist_getcanvas(c), tag, sc, x, "mousedown",
             (int)fielddesc_getcoord(
-                &x->x_events.e_mousedown.a_attr, template, data, 1));
+                &x->x_events.e_mousedown.a_attr, template, data, 0));
     }
     else if (s == gensym("drag"))
     {
         gui_vmess("gui_draw_drag_event", "xsxxsi",
             glist_getcanvas(c), tag, sc, x, "drag",
             (int)fielddesc_getcoord(
-                &x->x_events.e_drag.a_attr, template, data, 1));
+                &x->x_events.e_drag.a_attr, template, data, 0));
     }
     else if (s == gensym("vis"))
     {
         gui_vmess("gui_draw_configure", "xsss",
             glist_getcanvas(c), tag, "visibility",
             (int)fielddesc_getcoord(
-                &x->x_vis.a_attr, template, data, 1) ? "visible" : "hidden");
+                &x->x_vis.a_attr, template, data, 0) ? "visible" : "hidden");
         *predraw_bbox = 1;
     }
     else if (s == gensym("stroke-dasharray"))
@@ -1868,7 +1866,7 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
                 glist_getcanvas(c), tag, s->s_name);
             gui_start_array();
             for (i = 0; i < x->x_ndash; i++)
-                gui_f(fielddesc_getcoord(fd+i, template, data, 1));
+                gui_f(fielddesc_getcoord(fd+i, template, data, 0));
             gui_end_array();
             gui_end_vmess();
         }
@@ -1929,12 +1927,12 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
             x->x_type == gensym("ellipse"))
         {
             t_float xval, yval, w, h;
-            xval = fielddesc_getcoord(f, template, data, 1);
-            yval = fielddesc_getcoord(f+1, template, data, 1);
+            xval = fielddesc_getcoord(f, template, data, 0);
+            yval = fielddesc_getcoord(f+1, template, data, 0);
             if (x->x_type == gensym("rect"))
             {
-                w = xval + (fielddesc_getcoord(f+2, template, data, 1));
-                h = yval + (fielddesc_getcoord(f+3, template, data, 1));
+                w = xval + (fielddesc_getcoord(f+2, template, data, 0));
+                h = yval + (fielddesc_getcoord(f+3, template, data, 0));
                 gui_f(xval);
                 gui_f(yval);
                 gui_f(w);
@@ -1950,7 +1948,7 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
         {
             int n = (x->x_type == gensym("circle")) ? 2 : x->x_nargs;
             for (i = 0; i < n; i++)
-                gui_f(fielddesc_getcoord(f+i, template, data, 1));
+                gui_f(fielddesc_getcoord(f+i, template, data, 0));
         }
         gui_end_array();
         gui_end_vmess();
@@ -3712,13 +3710,13 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
     if (x->x_fillopacity.a_flag)
     {
         gui_s("fill-opacity");
-        gui_f(fielddesc_getcoord(&x->x_fillopacity.a_attr, template, data, 1));
+        gui_f(fielddesc_getcoord(&x->x_fillopacity.a_attr, template, data, 0));
     }
     if (x->x_fillrule.a_flag)
     {
         gui_s("fill-rule");
         gui_s((int)fielddesc_getfloat(
-            &x->x_fillrule.a_attr, template, data, 1) ?
+            &x->x_fillrule.a_attr, template, data, 0) ?
                 "evenodd" : "nonzero");
     }
     if (x->x_type == gensym("path"))
@@ -3755,68 +3753,68 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
     if (x->x_strokewidth.a_flag)
     {
         gui_s("stroke-width");
-        gui_f(fielddesc_getcoord(&x->x_strokewidth.a_attr, template, data, 1));
+        gui_f(fielddesc_getcoord(&x->x_strokewidth.a_attr, template, data, 0));
     }
     if (x->x_rx.a_flag)
     {
         gui_s(x->x_type == gensym("circle") ? "r" :
             x->x_type == gensym("line") ? "x2" : "rx");
-        gui_f(fielddesc_getcoord(&x->x_rx.a_attr, template, data, 1));
+        gui_f(fielddesc_getcoord(&x->x_rx.a_attr, template, data, 0));
     }
     if (x->x_ry.a_flag)
         {
             gui_s(x->x_type == gensym("ellipse") ? "ry" : "y2");
-            gui_f(fielddesc_getcoord(&x->x_ry.a_attr, template, data, 1));
+            gui_f(fielddesc_getcoord(&x->x_ry.a_attr, template, data, 0));
         }
     if (x->x_x.a_flag)
     {
         gui_s(x->x_type == gensym("rect") ? "x" :
             x->x_type == gensym("line") ? "x1" : "cx");
-        gui_f(fielddesc_getcoord(&x->x_x.a_attr, template, data, 1));
+        gui_f(fielddesc_getcoord(&x->x_x.a_attr, template, data, 0));
     }
     if (x->x_y.a_flag)
     {
         gui_s(x->x_type == gensym("rect") ? "y" :
             x->x_type == gensym("line") ? "y1" : "cy");
-        gui_f(fielddesc_getcoord(&x->x_y.a_attr, template, data, 1));
+        gui_f(fielddesc_getcoord(&x->x_y.a_attr, template, data, 0));
     }
     if (x->x_width.a_flag)
     {
         gui_s("width");
-        gui_f(fielddesc_getcoord(&x->x_width.a_attr, template, data, 1));
+        gui_f(fielddesc_getcoord(&x->x_width.a_attr, template, data, 0));
     }
     if (x->x_height.a_flag)
     {
         gui_s("height");
-        gui_f(fielddesc_getcoord(&x->x_height.a_attr, template, data, 1));
+        gui_f(fielddesc_getcoord(&x->x_height.a_attr, template, data, 0));
     }
     if (x->x_type == gensym("line"))
     {
         if (x->x_nargs > 0)
         {
             gui_s("x1");
-            gui_f(fielddesc_getcoord(&x->x_vec[0], template, data, 1));
+            gui_f(fielddesc_getcoord(&x->x_vec[0], template, data, 0));
         }
         if (x->x_nargs > 1)
         {
             gui_s("y1");
-            gui_f(fielddesc_getcoord(&x->x_vec[1], template, data, 1));
+            gui_f(fielddesc_getcoord(&x->x_vec[1], template, data, 0));
         }
         if (x->x_nargs > 2)
         {
             gui_s("x2");
-            gui_f(fielddesc_getcoord(&x->x_vec[2], template, data, 1));
+            gui_f(fielddesc_getcoord(&x->x_vec[2], template, data, 0));
         }
         if (x->x_nargs > 3)
         {
             gui_s("y2");
-            gui_f(fielddesc_getcoord(&x->x_vec[3], template, data, 1));
+            gui_f(fielddesc_getcoord(&x->x_vec[3], template, data, 0));
         }
     }
     if (x->x_opacity.a_flag)
     {
         gui_s("opacity");
-        gui_f(fielddesc_getcoord(&x->x_opacity.a_attr, template, data, 1));
+        gui_f(fielddesc_getcoord(&x->x_opacity.a_attr, template, data, 0));
     }
     if (x->x_type == gensym("polyline") ||
         x->x_type == gensym("polygon"))
@@ -3827,39 +3825,39 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
             gui_s("points");
             gui_start_array();
             for (i = 0; i < x->x_nargs; i++)
-                gui_f(fielddesc_getcoord(&x->x_vec[i], template, data, 1));
+                gui_f(fielddesc_getcoord(&x->x_vec[i], template, data, 0));
             gui_end_array();
         }
     }
     if (x->x_strokeopacity.a_flag)
     {
         gui_s("stroke-opacity");
-        gui_f(fielddesc_getcoord(&x->x_strokeopacity.a_attr, template, data, 1));
+        gui_f(fielddesc_getcoord(&x->x_strokeopacity.a_attr, template, data, 0));
     }
     if (x->x_strokedashoffset.a_flag)
     {
         gui_s("stroke-dashoffset");
-        gui_f(fielddesc_getcoord(&x->x_strokedashoffset.a_attr, template, data, 1));
+        gui_f(fielddesc_getcoord(&x->x_strokedashoffset.a_attr, template, data, 0));
     }
     if (x->x_strokelinecap.a_flag)
     {
         gui_s("stroke-linecap");
         gui_s(get_strokelinecap(
             (int)fielddesc_getcoord(&x->x_strokelinecap.a_attr,
-            template, data, 1)));
+            template, data, 0)));
     }
     if (x->x_strokelinejoin.a_flag)
     {
         gui_s("stroke-linejoin");
         gui_s(get_strokelinejoin(
             (int)fielddesc_getfloat(&x->x_strokelinejoin.a_attr,
-        template, data, 1)));
+        template, data, 0)));
     }
     if (x->x_strokemiterlimit.a_flag)
     {
         gui_s("stroke-miterlimit");
         gui_f(fielddesc_getcoord(&x->x_strokemiterlimit.a_attr,
-            template, data, 1));
+            template, data, 0));
     }
     if (x->x_ndash)
     {
@@ -3869,7 +3867,7 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
         gui_start_array();
         for (i = 0, fd = x->x_strokedasharray; i < x->x_ndash; i++)
         {
-            gui_f(fielddesc_getcoord(fd+i, template, data, 1));
+            gui_f(fielddesc_getcoord(fd+i, template, data, 0));
         }
         gui_end_array();
     }
@@ -3889,19 +3887,19 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
     { 
         gui_s("visibility");
         gui_s(fielddesc_getfloat(&x->x_vis.a_attr, 
-            template, data, 1) ? "visible" : "hidden"); 
+            template, data, 0) ? "visible" : "hidden");
     }
     if (x->x_rx.a_flag)
     {
         gui_s("rx");
         gui_f(fielddesc_getcoord(&x->x_rx.a_attr,
-            template, data, 1));
+            template, data, 0));
     }
     if (x->x_ry.a_flag)
     {
         gui_s("ry");
         gui_f(fielddesc_getcoord(&x->x_ry.a_attr,
-            template, data, 1));
+            template, data, 0));
     }
     // Not sure why display attr is here...
     gui_s("display");
