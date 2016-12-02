@@ -1453,7 +1453,9 @@ function nw_create_patch_window_menus(gui, w, name) {
         }
     });
     minit(m.help.irc, {
-        click: menu_generic
+        click: function() {
+            pdgui.external_doc_open("http://puredata.info/community/IRC");
+        }
     });
     minit(m.help.devtools, {
         click: function () {
