@@ -707,7 +707,7 @@ function nw_create_pd_window_menus(gui, w) {
     minit(m.help.irc, {
         click: function() {
             pdgui.external_doc_open("http://puredata.info/community/IRC");
-	}
+        }
     });
     minit(m.help.devtools, {
         click: function () {
