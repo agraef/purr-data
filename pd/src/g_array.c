@@ -870,11 +870,11 @@ void array_getcoordinate(t_glist *glist,
     // so that the smallest hitbox is always at least 8x8
     // check with all_about_arrays.pd inside custom scalars
     // in an array
-    if (*xp1 == *xp2)
+    if (glist_topixels && *xp1 == *xp2)
     {
         *xp1 = *xp1 - 4;
         *xp2 = *xp2 + 4;
-        wpix = 8;
+        if (wpix < 8) wpix = 8;
     }
     *wp = wpix;
 }
