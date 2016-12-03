@@ -544,20 +544,38 @@ void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state)
         scalar_getbasexy(x, &basex, &basey);
 
         scalar_getrect(&x->sc_gobj, glist, &x1, &y1, &x2, &y2);
-        x1--; x2++; y1--; y2++;
         if (glist_istoplevel(glist))
         {
-            t_float xscale = glist_xtopixels(glist, 1) -
-                glist_xtopixels(glist, 0);
-            t_float yscale = glist_ytopixels(glist, 1) -
-                glist_ytopixels(glist, 0);
-            gui_vmess("gui_scalar_draw_select_rect", "xsiiiiiff",
+            t_float xorig = glist_xtopixels(glist, 0);
+            t_float yorig = glist_ytopixels(glist, 0);
+            t_float xscale = glist_xtopixels(glist, 1) - xorig;
+            t_float yscale = glist_ytopixels(glist, 1) - yorig;
+            // the bbox is in scaled canvas coordinates, but
+            // gui_scalar_draw_select_rect expects them in unscaled units, so
+            // we undo the scaling (as well as the translation of the origin)
+            // here
+            t_float u1 = (x1 - xorig) / xscale;
+            t_float v1 = (y1 - yorig) / yscale;
+            t_float u2 = (x2 - xorig) / xscale;
+            t_float v2 = (y2 - yorig) / yscale;
+            // undoing the scaling will reverse the order of coordinates if
+            // the corresponding scale factor is negative, so we put them back
+            // into ascending order if necessary; gui_scalar_draw_select_rect
+            // expects them that way
+            if (u2 < u1) {
+                t_float u = u2;
+                u2 = u1; u1 = u;
+            }
+            if (v2 < v1) {
+                t_float v = v2;
+                v2 = v1; v1 = v;
+            }
+            gui_vmess("gui_scalar_draw_select_rect", "xsiffffff",
                 glist_getcanvas(glist), tagbuf,
                 state,
-                (int)(x1 / xscale),
-                (int)(y1 / yscale),
-                (int)(x2 / xscale),
-                (int)(y2 / yscale),
+                // the actual selection rectangle is 1 unit larger than the
+                // bbox at each border
+                u1-1.0, v1-1.0, u2+1.0, v2+1.0,
                 basex,
                 basey);
         }
