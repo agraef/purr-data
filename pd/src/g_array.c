@@ -93,10 +93,10 @@ void array_resize_and_redraw(t_array *array, t_glist *glist, int n)
     while (a2->a_gp.gp_stub->gs_which == GP_ARRAY)
         a2 = a2->a_gp.gp_stub->gs_un.gs_array;
     if (vis)
-        gobj_vis(&a2->a_gp.gp_un.gp_gobj, glist, 0);
+        gobj_vis(a2->a_gp.gp_un.gp_gobj, glist, 0);
     array_resize(array, n);
     if (vis)
-        gobj_vis(&a2->a_gp.gp_un.gp_gobj, glist, 1);
+        gobj_vis(a2->a_gp.gp_un.gp_gobj, glist, 1);
 }
 
 void word_free(t_word *wp, t_template *template);
@@ -1077,7 +1077,8 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
         t_float best = -1;
             /* if it has more than 2000 points, just check 1000 of them. */
         int incr = (array->a_n <= 2000 ? 1 : array->a_n / 1000);
-        t_float pxpix1, pxpix2, pypix, pwpix, dx, dy, dy2, dy3;
+        t_float pxpix1 = 0.0, pxpix2 = 0.0, pypix = 0.0, pwpix = 0.0,
+          dx, dy, dy2, dy3;
         for (i = 0; i < array->a_n; i += incr)
         {
             array_getcoordinate(glist, (char *)(array->a_vec) + i * elemsize,
@@ -1166,6 +1167,7 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
 
 /* from array-rev */
 
+#if 0 // this doesn't seem to be used anywhere -ag
             int hit = 0;
             if(array_joc)
             {
@@ -1173,6 +1175,7 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
             }
             else
                 hit = dx + dy <= best || dx + dy2 <= best || dx + dy3 <= best;
+#endif
 /* end array-rev */
 
                 if (dy < dy2 && dy < dy3)
@@ -1311,6 +1314,7 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
     return (0);
 }
 
+#if 0 // this doesn't seem to be used anywhere -ag
 static void array_getrect(t_array *array, t_glist *glist,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
@@ -1354,6 +1358,7 @@ static void array_getrect(t_array *array, t_glist *glist,
     *xp2 = x2;
     *yp2 = y2;
 }
+#endif
 
 /* -------------------- widget behavior for garray ------------ */
 
@@ -1379,6 +1384,7 @@ static void garray_select(t_gobj *z, t_glist *glist, int state)
     //sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n",
     //    glist_getcanvas(glist), x->x_glist, state);
 
+    extern void scalar_select(t_gobj *z, t_glist *owner, int state);
     scalar_select((t_gobj *)x->x_scalar, glist, state);
 }
 
