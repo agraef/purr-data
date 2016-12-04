@@ -547,17 +547,29 @@ void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state)
         x1--; x2++; y1--; y2++;
         if (glist_istoplevel(glist))
         {
-            t_float xscale = glist_xtopixels(glist, 1) -
-                glist_xtopixels(glist, 0);
-            t_float yscale = glist_ytopixels(glist, 1) -
-                glist_ytopixels(glist, 0);
-            gui_vmess("gui_scalar_draw_select_rect", "xsiiiiiff",
+            t_float xorig = glist_xtopixels(glist, 0);
+            t_float yorig = glist_ytopixels(glist, 0);
+            t_float xscale = glist_xtopixels(glist, 1) - xorig;
+            t_float yscale = glist_ytopixels(glist, 1) - yorig;
+            // unscaled x/y coordinates
+            t_float u1 = (x1 - xorig) / xscale;
+            t_float v1 = (y1 - yorig) / yscale;
+            t_float u2 = (x2 - xorig) / xscale;
+            t_float v2 = (y2 - yorig) / yscale;
+            // make sure that these are in the right order,
+            // gui_scalar_draw_select_rect expects them that way
+            if (u2 < u1) {
+                t_float u = u2;
+                u2 = u1; u1 = u;
+            }
+            if (v2 < v1) {
+                t_float v = v2;
+                v2 = v1; v1 = v;
+            }
+            gui_vmess("gui_scalar_draw_select_rect", "xsiffffff",
                 glist_getcanvas(glist), tagbuf,
                 state,
-                (int)(x1 / xscale),
-                (int)(y1 / yscale),
-                (int)(x2 / xscale),
-                (int)(y2 / yscale),
+                u1, v1, u2, v2,
                 basex,
                 basey);
         }

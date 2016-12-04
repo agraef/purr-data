@@ -5483,7 +5483,7 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
     if (x->x_canvas->gl_owner && x->x_canvas->gl_svg)
         svg_dogroupmtx(x->x_canvas, template, data, mtx1);
     //post("plot_getrect matrix: %g %g %g %g %g %g",
-    //  mtx1[0][0], mtx1[1][0], mtx1[0][1], mtx1[1][1], mtx1[0][2], mtx1[2][1]);
+    //  mtx1[0][0], mtx1[1][0], mtx1[0][1], mtx1[1][1], mtx1[0][2], mtx1[1][2]);
     int elemsize, yonset, wonset, xonset;
     t_canvas *elemtemplatecanvas;
     t_template *elemtemplate;
