@@ -5861,7 +5861,8 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             gui_s(symoutline->s_name);
 
             gui_s("stroke-width");
-            gui_f(style == PLOTSTYLE_POINTS ? 0 : y_inverse);
+            gui_f(style == PLOTSTYLE_POINTS ? 0 :
+                y_inverse * (y_inverse >= 0 ? 1 : -1));
             gui_end_array();
 
             /* tags */
@@ -5973,7 +5974,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 gui_start_array();
 
                 gui_s("stroke-width");
-                gui_f(y_inverse);
+                gui_f(y_inverse * (y_inverse >= 0 ? 1 : -1));
                 gui_s("stroke");
                 gui_s(symoutline->s_name);
                 gui_s("fill");
@@ -6052,7 +6053,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
 
                 gui_start_array();
                 gui_s("stroke-width");
-                gui_f(linewidth * y_inverse);
+                gui_f(linewidth * (y_inverse * (y_inverse >= 0 ? 1 : -1)));
                 gui_s("stroke");
                 gui_s(symoutline->s_name);
                 gui_s("fill");
