@@ -262,6 +262,7 @@
   "canvas": {
     "paste_clipboard_prompt": "Warnung: Sie sind dabei, Pd-Code einzufügen, der außerhalb von Pd erstellt wurde. Möchten Sie fortfahren?",
     "save_dialog": {
+      "prompt": "Speichern der Änderungen in",
       "yes": "Ja",
       "yes_tt": "Speichern der Änderungen in einer Datei vor dem Schließen des Patches",
       "no": "Nein",
@@ -270,7 +271,10 @@
       "cancel_tt": "Kein Speichern der Änderungen und kein Schließen des Patches"
     },
     "find": {
-      "placeholder": "Suche im Patch"
+      "placeholder": "Suche im Patch",
+      "search": "Suche",
+      "search_tt": "Das nächste Vorkommen suchen",
+      "whole_word": "Ganze Wörter"
     },
     "menu": {
       "props": "Einstellungen",
