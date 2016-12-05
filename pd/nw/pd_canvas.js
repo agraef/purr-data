@@ -148,6 +148,10 @@ function canvas_find_focus() {
     canvas_events.search();
 }
 
+function canvas_find_reset() {
+    canvas_events.find_reset();
+}
+
 var canvas_events = (function() {
     var name,
         state,
@@ -728,6 +732,9 @@ var canvas_events = (function() {
         match_words: function(state) {
             match_words_state = state;
         },
+        find_reset: function() {
+            last_search_term = "";
+        },
         add_scalar_draggable: function(cid, tag, scalar_sym, drawcommand_sym,
             event_name) {
             scalar_draggables[tag] = {
@@ -1180,6 +1187,9 @@ function nw_create_patch_window_menus(gui, w, name) {
                 // canvas atm.  But if there are other states added later,
                 // we might need to fetch the previous state here.
                 canvas_events.normal();
+                // this resets the last search term so that the next search
+                // starts from the beginning again
+                canvas_events.find_reset();
             }
         }
     });
