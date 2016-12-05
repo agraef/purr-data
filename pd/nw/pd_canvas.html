@@ -31,19 +31,20 @@
                     defaultValue="Search in Canvas"
                     style="width:10em"/>
       </label>
-      <label>Match Whole Word
+      <label><span data-i18n="canvas.find.whole_word"></span>
         <input type="checkbox"
                id="canvas_find_whole_word"
                name="canvas_find_whole_word"
                onchange="canvas_find_whole_word(this);"/> 
       </label>
-      <input type="button"
-             id="canvas_find_button"
-             name="canvas_find_button"
-             value="Search"/>
+      <button type="button"
+              id="canvas_find_button"
+              data-i18n="[title]canvas.find.search_tt">
+        <span data-i18n="canvas.find.search"></span>
+      </button>
     </div>
     <dialog id="save_before_quit">
-      <h4>Do you want to save the changes you made in
+      <h4><span data-i18n="canvas.save_dialog.prompt"></span>
         <span id="save_before_quit_filename"></span>?
       </h4>
       <div class="submit_buttons">
