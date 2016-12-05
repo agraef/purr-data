@@ -2845,9 +2845,9 @@ function gui_iemgui_label_show_drag_handle(cid, tag, state, x, y, cnv_resize) {
             x2: x,
             y2: y + 10,
             "stroke-width": 7,
-            class: (cid === tag) ? "gop_drag_handle gop_rect" :
+            class: (cid === tag) ? "gop_drag_handle move_handle gop_rect" :
                 cnv_resize !== 0 ? "cnv_resize_handle border" :
-                "label_drag_handle border"
+                "label_drag_handle move_handle border"
         });
         rect.classList.add("clickable_resize_handle");
         gobj.appendChild(rect);

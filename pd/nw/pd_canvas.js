@@ -153,6 +153,7 @@ var canvas_events = (function() {
         state,
         scalar_draggables = {}, // elements of a scalar which have the "drag" event enabled
         draggable_elem,         // last scalar we dragged
+        draggable_label,        // kluge for handling [cnv] label/size anchors
         last_draggable_x,       // last x coord for the element we're dragging
         last_draggable_y,       // last y
         previous_state = "none", /* last state, excluding explicit 'none' */
@@ -222,11 +223,11 @@ var canvas_events = (function() {
                 if (target_is_scrollbar(evt)) {
                     return;
                 } else if (evt.target.classList.contains("clickable_resize_handle")) {
+                    draggable_label =
+                        evt.target.classList.contains("move_handle");
+
                     // get id ("x123456etcgobj" without the "x" or "gobj")
-                    target_id =
-                        (evt.target.classList.contains("label_drag_handle") ||
-                         evt.target.classList.contains("gop_drag_handle") ?
-                        "_l" : "_s") +
+                    target_id = (draggable_label ? "_l" : "_s") +
                         evt.target.parentNode.id.slice(0,-4).slice(1);
                     last_draggable_x = evt.pageX + svg_view.x;
                     last_draggable_y = evt.pageY + svg_view.y;
@@ -404,14 +405,42 @@ var canvas_events = (function() {
                 canvas_events.normal();
             },
             iemgui_label_mousemove: function(evt) {
+                // This is very convoluted.
+                // 1. In the generic mousedown handler we detect a click for a
+                //    label handle, red gop rect handle, or [cnv] resize anchor.
+                //    That sets this callback for dragging the handle.
+                // 2. The mousedown also sends a message to Pd to tell it that
+                //    a handle has been clicked. The message is forwarded
+                //    to the relevant handle (a t_scalehandle in Pd).
+                // 3. Pd erases *all* handles, then redraws the one for this
+                //    object. That *eventually* leaves just the handle(s)
+                //    for the current object. This is either a single handle
+                //    (for most iemguis and the canvas red rect), or possibly
+                //    two handles for [cnv]-- one for resizing and one for its
+                //    label.
+                // 4. This function responds to mouse motion. It looks up
+                //    the current handle by tag (using the draggable_lable
+                //    kludge to choose between the cnv_resize_handle and
+                //    everything else), sends a message to Pd to alter the
+                //    object/label accordingly, then displaces the little
+                //    handle itself. We unfortunately can't merely keep a
+                //    reference to the handle element because in #3 Pd will
+                //    have erased it.
+                // Pro: I don't have to dig into the C code to get this to
+                //      work.
+                // Con: It's inherently racy. #3 and #4 happen at the same
+                //      time, so it's possible to apply dx/dy to the wrong
+                //      handle (which will eventually get erased by Pd anyway).
+                //      Anyhow, this is all very bad, but it works so it's
+                //      at least not the worst of all possible worlds.
                 var dx = (evt.pageX + svg_view.x) - last_draggable_x,
                     dy = (evt.pageY + svg_view.y) - last_draggable_y,
-                    handle_elem =
-                        document.querySelector(".clickable_resize_handle"),
-                    target_id =
-                        (handle_elem.classList.contains("label_drag_handle") ||
-                         handle_elem.classList.contains("gop_drag_handle") ?
-                            "_l" : "_s") +
+                    handle_elem = document.querySelector(
+                        draggable_label ?
+                            ".move_handle" :
+                            ".cnv_resize_handle"
+                        ),
+                    target_id = (draggable_label ? "_l" : "_s") +
                         handle_elem.parentNode.id.slice(0,-4).slice(1),
                     is_canvas_gop_rect = document.
                         getElementsByClassName("gop_drag_handle").length ?
