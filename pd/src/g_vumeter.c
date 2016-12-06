@@ -471,18 +471,20 @@ static void vu_scale(t_vu *x, t_floatarg fscale)
                 yyy = k4 + k1*(k2-i);
                 if((i&3)==1)
                 {
-                    gui_vmess("gui_vumeter_draw_text", "xxsiisiii",
+                    gui_vmess("gui_vumeter_draw_text", "xxsiisiiiis",
                         canvas, x, cbuf,
                         end+1, yyy+k3+2, iemgui_vu_scale_str[i/4],
-                        i, end, yyy);
+                        i, end, yyy, x->x_gui.x_fontsize,
+                        sys_fontweight);
                 }
             }
             i = IEM_VU_STEPS + 1;
             yyy = k4 + k1*(k2-i);
-            gui_vmess("gui_vumeter_draw_text", "xxsiisiii",
+            gui_vmess("gui_vumeter_draw_text", "xxsiisiiiis",
                 canvas, x, cbuf,
                 end+1, yyy+k3+2, iemgui_vu_scale_str[i/4],
-                i, end, yyy);
+                i, end, yyy, x->x_gui.x_fontsize,
+                sys_fontweight);
         }
     }
 }
