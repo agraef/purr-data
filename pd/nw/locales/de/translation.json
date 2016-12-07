@@ -80,7 +80,7 @@
       "label_right": "rechts",
       "label_tt": "Text zur Anzeige neben diesem Objekt",
       "labelpos": "Position des Etiketts",
-      "labelpos_tt": "positioniere das Etiketts links oder rechts vom Objekt",
+      "labelpos_tt": "positioniere das Etikett relativ zum Widget",
       "label_top": "oben",
       "label_bottom": "unten",
       "label_left": "links",
