@@ -80,7 +80,7 @@
       "label_right": "right",
       "label_tt": "text label to display next to this object",
       "labelpos": "label position",
-      "labelpos_tt": "position the label to the left or right of the object",
+      "labelpos_tt": "position the text label relative to the widget",
       "label_top": "top",
       "label_bottom": "bottom",
       "label_left": "left",
