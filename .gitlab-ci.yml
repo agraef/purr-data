@@ -9,6 +9,7 @@ debian_stable_i386_deb:
      - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive apt-get -qq -y upgrade > /dev/null
      - cd l2ork_addons
      - ./tar_em_up.sh -B
+     - cd ..
      - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive dpkg --force-all -i pd-l2ork*.deb > /dev/null
      - pd-l2ork -nogui -nrt -noaudio scripts/load_all_binaries.pd
    artifacts:
@@ -27,6 +28,7 @@ debian_stable_amd64_deb:
      - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive apt-get -qq -y upgrade > /dev/null
      - cd l2ork_addons
      - ./tar_em_up.sh -B
+     - cd ..
      - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive dpkg --force-all -i pd-l2ork*.deb > /dev/null
      - pd-l2ork -nogui -nrt -noaudio scripts/load_all_binaries.pd
    artifacts:
@@ -45,6 +47,7 @@ ubuntu_14.04_i386_deb:
      - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive apt-get -qq -y upgrade > /dev/null
      - cd l2ork_addons
      - ./tar_em_up.sh -B
+     - cd ..
      - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive dpkg --force-all -i pd-l2ork*.deb > /dev/null
      - pd-l2ork -nogui -nrt -noaudio scripts/load_all_binaries.pd
    artifacts:
@@ -63,6 +66,7 @@ ubuntu_14.04_amd64_deb:
      - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive apt-get -qq -y upgrade > /dev/null
      - cd l2ork_addons
      - ./tar_em_up.sh -B
+     - cd ..
      - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive dpkg --force-all -i pd-l2ork*.deb > /dev/null
      - pd-l2ork -nogui -nrt -noaudio scripts/load_all_binaries.pd
    artifacts:
@@ -81,6 +85,7 @@ ubuntu_16.04_amd64_deb:
      - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive apt-get -qq -y upgrade > /dev/null
      - cd l2ork_addons
      - ./tar_em_up.sh -B
+     - cd ..
      - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive dpkg --force-all -i pd-l2ork*.deb > /dev/null
      - pd-l2ork -nogui -nrt -noaudio scripts/load_all_binaries.pd
    artifacts:
