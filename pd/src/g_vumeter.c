@@ -522,21 +522,21 @@ static void vu_properties(t_gobj *z, t_glist *owner)
     gui_s("width"); gui_i(x->x_gui.x_w);
     gui_s("height"); gui_i(x->x_gui.x_h);
     
-    gui_s("vu-scale"); gui_i(x->x_scale);
+    gui_s("vu_scale"); gui_i(x->x_scale);
 
-    gui_s("minimum-size"); gui_i(IEM_GUI_MINSIZE);
+    gui_s("minimum_size"); gui_i(IEM_GUI_MINSIZE);
     
-    gui_s("range-schedule"); // no idea what this is...
+    gui_s("range_schedule"); // no idea what this is...
     gui_i(2);
 
-    gui_s("receive-symbol");   gui_s(srl[1]->s_name);
+    gui_s("receive_symbol");   gui_s(srl[1]->s_name);
     gui_s("label");            gui_s(srl[2]->s_name);
-    gui_s("x-offset");         gui_i(x->x_gui.x_ldx);
-    gui_s("y-offset");         gui_i(x->x_gui.x_ldy);
-    gui_s("font-style");       gui_i(x->x_gui.x_font_style);
-    gui_s("font-size");        gui_i(x->x_gui.x_fontsize);
-    gui_s("background-color"); gui_i(0xffffff & x->x_gui.x_bcol);
-    gui_s("label-color");      gui_i(0xffffff & x->x_gui.x_lcol);
+    gui_s("x_offset");         gui_i(x->x_gui.x_ldx);
+    gui_s("y_offset");         gui_i(x->x_gui.x_ldy);
+    gui_s("font_style");       gui_i(x->x_gui.x_font_style);
+    gui_s("font_size");        gui_i(x->x_gui.x_fontsize);
+    gui_s("background_color"); gui_i(0xffffff & x->x_gui.x_bcol);
+    gui_s("label_color");      gui_i(0xffffff & x->x_gui.x_lcol);
     
     gui_end_array();
     gui_end_vmess();

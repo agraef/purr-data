@@ -252,9 +252,9 @@ static void radio_properties(t_gobj *z, t_glist *owner)
 
     gui_s("type");         gui_s(x->x_orient ? "vradio" : "hradio");
     gui_s("size");         gui_i(x->x_gui.x_w);
-    gui_s("minimum-size"); gui_i(IEM_GUI_MINSIZE);
+    gui_s("minimum_size"); gui_i(IEM_GUI_MINSIZE);
 
-    gui_s("range-schedule"); // no idea what this is...
+    gui_s("range_schedule"); // no idea what this is...
     gui_i(0);
 
     gui_s("hchange"); // no idea...
@@ -262,16 +262,16 @@ static void radio_properties(t_gobj *z, t_glist *owner)
 
     gui_s("init");             gui_i(x->x_gui.x_loadinit);
     gui_s("number");           gui_i(x->x_number);
-    gui_s("send-symbol");      gui_s(srl[0]->s_name);
-    gui_s("receive-symbol");   gui_s(srl[1]->s_name);
+    gui_s("send_symbol");      gui_s(srl[0]->s_name);
+    gui_s("receive_symbol");   gui_s(srl[1]->s_name);
     gui_s("label");            gui_s(srl[2]->s_name);
-    gui_s("x-offset");         gui_i(x->x_gui.x_ldx);
-    gui_s("y-offset");         gui_i(x->x_gui.x_ldy);
-    gui_s("font-style");       gui_i(x->x_gui.x_font_style);
-    gui_s("font-size");        gui_i(x->x_gui.x_fontsize);
-    gui_s("background-color"); gui_i(0xffffff & x->x_gui.x_bcol);
-    gui_s("foreground-color"); gui_i(0xffffff & x->x_gui.x_fcol);
-    gui_s("label-color");      gui_i(0xffffff & x->x_gui.x_lcol);
+    gui_s("x_offset");         gui_i(x->x_gui.x_ldx);
+    gui_s("y_offset");         gui_i(x->x_gui.x_ldy);
+    gui_s("font_style");       gui_i(x->x_gui.x_font_style);
+    gui_s("font_size");        gui_i(x->x_gui.x_fontsize);
+    gui_s("background_color"); gui_i(0xffffff & x->x_gui.x_bcol);
+    gui_s("foreground_color"); gui_i(0xffffff & x->x_gui.x_fcol);
+    gui_s("label_color");      gui_i(0xffffff & x->x_gui.x_lcol);
     
     gui_end_array();
     gui_end_vmess();

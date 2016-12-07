@@ -2257,8 +2257,8 @@ void canvasgop__clickhook(t_scalehandle *sh, int newstate)
             int properties = gfxstub_haveproperties((void *)x);
             if (properties)
             {
-                properties_set_field_int(properties,"n.canvasdialog.x.f2.entry3",x->gl_pixwidth);
-                properties_set_field_int(properties,"n.canvasdialog.y.f2.entry3",x->gl_pixheight);
+                properties_set_field_int(properties,"x-pix",x->gl_pixwidth);
+                properties_set_field_int(properties,"y-pix",x->gl_pixheight);
             }
 
             if (glist_isvisible(x))
@@ -2351,9 +2351,9 @@ void canvasgop__motionhook(t_scalehandle *sh, t_floatarg mouse_x,
             if (properties)
             {
                 properties_set_field_int(properties,
-                    "n.canvasdialog.x.f2.entry3",x->gl_pixwidth + sh->h_dragx);
+                    "x-pix",x->gl_pixwidth + sh->h_dragx);
                 properties_set_field_int(properties,
-                    "n.canvasdialog.y.f2.entry3",x->gl_pixheight + sh->h_dragy);
+                    "y-pix",x->gl_pixheight + sh->h_dragy);
             }
         }
         else //enter if move_gop hook
@@ -2362,9 +2362,9 @@ void canvasgop__motionhook(t_scalehandle *sh, t_floatarg mouse_x,
             if (properties)
             {
                 properties_set_field_int(properties,
-                    "n.canvasdialog.x.f2.entry4",x->gl_xmargin + dx);
+                    "x-margin",x->gl_xmargin + dx);
                 properties_set_field_int(properties,
-                    "n.canvasdialog.y.f2.entry4",x->gl_ymargin + dy);
+                    "y-margin",x->gl_ymargin + dy);
             }
             x->gl_xmargin += dx;
             x->gl_ymargin += dy;

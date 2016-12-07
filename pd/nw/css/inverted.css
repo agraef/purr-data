@@ -419,19 +419,19 @@ label {
     width: 50%;
 }
 
-input[name="x-offset"] {
+input[name="x_offset"] {
     width: 2em;
 }
 
-input[name="y-offset"] {
+input[name="y_offset"] {
     width: 2em;
 }
 
-input[name="send-symbol"] {
+input[name="send_symbol"] {
     width: 8em;
 }
 
-input[name="receive-symbol"] {
+input[name="receive_symbol"] {
     width: 8em;
 }
 
@@ -439,7 +439,7 @@ input[name="label"] {
     width: 8em;
 }
 
-input[name="font-size"] {
+input[name="font_size"] {
     width: 3em;
 }
 

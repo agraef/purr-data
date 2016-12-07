@@ -139,7 +139,7 @@
             <label class="array-name"
                    data-i18n="[title]canvas.prop.array_name_tt">
               <span data-i18n="canvas.prop.array_name"></span>
-              <input onchange="attr_change(this);"
+              <input onchange="update_array_attr(this);"
                      class="array-name"
                      type="text"
                      name="array_name"
@@ -148,7 +148,7 @@
             <label class="array-size"
                    data-i18n="[title]canvas.prop.array_size_tt">
               <span data-i18n="canvas.prop.array_size"></span>
-              <input onchange="attr_change(this);"
+              <input onchange="update_array_attr(this);"
                      class="array-size"
                      type="text"
                      name="array_size">
@@ -231,7 +231,7 @@
 
       <div class="array-fill">
         <label data-i18n="[title]canvas.prop.array_fill_tt">
-          <input onchange="attr_change(this);"
+          <input onchange="update_array_attr(this);"
                  type="color"
                  name="array_fill">
           <span data-i18n="canvas.prop.array_fill"></span>
@@ -241,7 +241,7 @@
 
       <div class="array-outline">
         <label data-i18n="[title]canvas.prop.array_outline_tt">
-          <input onchange="attr_change(this);"
+          <input onchange="update_array_attr(this);"
                  type="color"
                  name="array_outline">
           <span data-i18n="canvas.prop.array_outline"></span>
@@ -379,14 +379,28 @@ function array_delete_change(elem) {
     array_attr.array_delete = elem.checked;
 }
 
-function attr_change(elem) {
+// Placeholder for updating gop margins and coords when the dialog window
+// is open. Ideally we want to keep a record of all changes so that clicking
+// "Cancel" will undo all of the changes made inside the dialog. However this
+// is non-trivial with the canvas dialog because of all the state changes
+// one can make to an array in the same dialog. For that reason we replace the
+// "Cancel" button with one called "Close".
+// The function in pdgui to update the form fields when a user drags the
+// dimensions and margins is also used for iemguis, which *do* have a "Cancel"
+// button. So we just set up a dummy function here to adhere to that interface.
+function update_attr(elem) {
+    // do nothing for now...
+}
+
+function update_array_attr(elem) {
     var array_index, array_attr, arrays_select, name;
     arrays_select = document.getElementById("arrays_select");
     array_attr = pd_garray_attrs[arrays_select.value];
     name = elem.name;
     array_attr[name] = elem.value;
     if (elem.name === "array-fill") {
-        array-fill
+        // Not sure what this was for...
+        //array-fill
     }
 }
 

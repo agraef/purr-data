@@ -819,8 +819,8 @@ void scalehandle_dragon_label(t_scalehandle *h, float mouse_x, float mouse_y) {
         {
             int new_x = x->x_ldx + h->h_dragx;
             int new_y = x->x_ldy + h->h_dragy;
-            properties_set_field_int(properties, "x-offset", new_x);
-            properties_set_field_int(properties, "y-offset", new_y);
+            properties_set_field_int(properties, "x_offset", new_x);
+            properties_set_field_int(properties, "y_offset", new_y);
         }
         x->x_ldx += dx;
         x->x_ldy += dy;

@@ -349,7 +349,7 @@ static void my_numbox__motionhook(t_scalehandle *sh,
         {
             properties_set_field_int(properties,"width",x->x_scalewidth);
             properties_set_field_int(properties,"height",x->x_scaleheight);
-            properties_set_field_int(properties,"font-size",x->x_tmpfontsize);
+            properties_set_field_int(properties,"font_size",x->x_tmpfontsize);
         }
     }
     scalehandle_dragon_label(sh,mouse_x, mouse_y);
@@ -478,22 +478,22 @@ static void my_numbox_properties(t_gobj *z, t_glist *owner)
     gui_s("type"); gui_s("nbx");
     gui_s("width");  gui_i(x->x_gui.x_w);
     gui_s("height"); gui_i(x->x_gui.x_h);
-    gui_s("minimum-range"); gui_f(x->x_min);
-    gui_s("maximum-range"); gui_f(x->x_max);
-    gui_s("log-scaling"); gui_i(x->x_lin0_log1);
-    gui_s("log-height"); gui_i(x->x_log_height);
+    gui_s("minimum_range"); gui_f(x->x_min);
+    gui_s("maximum_range"); gui_f(x->x_max);
+    gui_s("log_scaling"); gui_i(x->x_lin0_log1);
+    gui_s("log_height"); gui_i(x->x_log_height);
     gui_s("init"); gui_i(x->x_gui.x_loadinit);
-    gui_s("send-symbol");      gui_s(srl[0]->s_name);
-    gui_s("receive-symbol");   gui_s(srl[1]->s_name);
+    gui_s("send_symbol");      gui_s(srl[0]->s_name);
+    gui_s("receive_symbol");   gui_s(srl[1]->s_name);
     gui_s("label");            gui_s(srl[2]->s_name);
-    gui_s("x-offset");         gui_i(x->x_gui.x_ldx);
-    gui_s("y-offset");         gui_i(x->x_gui.x_ldy);
-    gui_s("font-style");       gui_i(x->x_gui.x_font_style);
-    gui_s("font-size");        gui_i(x->x_gui.x_fontsize);
-    gui_s("background-color"); gui_i(0xffffff & x->x_gui.x_bcol);
-    gui_s("foreground-color"); gui_i(0xffffff & x->x_gui.x_fcol);
-    gui_s("label-color");      gui_i(0xffffff & x->x_gui.x_lcol);
-    gui_s("hide-frame");       gui_i(x->x_hide_frame);
+    gui_s("x_offset");         gui_i(x->x_gui.x_ldx);
+    gui_s("y_offset");         gui_i(x->x_gui.x_ldy);
+    gui_s("font_style");       gui_i(x->x_gui.x_font_style);
+    gui_s("font_size");        gui_i(x->x_gui.x_fontsize);
+    gui_s("background_color"); gui_i(0xffffff & x->x_gui.x_bcol);
+    gui_s("foreground_color"); gui_i(0xffffff & x->x_gui.x_fcol);
+    gui_s("label_color");      gui_i(0xffffff & x->x_gui.x_lcol);
+    gui_s("hide_frame");       gui_i(x->x_hide_frame);
     gui_end_array();
     gui_end_vmess();
 }
