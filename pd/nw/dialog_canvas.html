@@ -13,7 +13,7 @@
         <legend data-i18n="canvas.prop.heading.gop"></legend> 
 
         <table class="pairs">
-          <tr class="display-flags prop hidden" data-i18n="[title]canvas.prop.gop_tt">
+          <tr class="display_flags prop hidden" data-i18n="[title]canvas.prop.gop_tt">
             <td>
               <input type="checkbox" name="gop" value="on">
             </td>
@@ -21,7 +21,7 @@
               <span id="gop_label" data-i18n="canvas.prop.gop"></span>
             </td>
           </tr>
-          <tr class="x-pix prop hidden">
+          <tr class="x_pix prop hidden">
             <td>
             </td>
             <td>
@@ -33,7 +33,7 @@
                     </label>
                   </td>
                   <td data-i18n="[title]canvas.prop.x_pix_tt">
-                    <input class="gop_opt" type="text" name="x-pix">
+                    <input class="gop_opt" type="text" name="x_pix">
                   </td>
                   <td>
                     <label class="gop_opt" data-i18n="[title]canvas.prop.y_pix_tt">
@@ -41,17 +41,17 @@
                     </label>
                   </td>
                   <td data-i18n="[title]canvas.prop.y_pix_tt">
-                    <input class="gop_opt" type="text" name="y-pix">
+                    <input class="gop_opt" type="text" name="y_pix">
                   </td>
                 </tr>
-                <tr class="x-margin prop hidden">
+                <tr class="x_margin prop hidden">
                   <td>
                     <label class="gop_opt" data-i18n="[title]canvas.prop.x_margin_tt">
                       <span data-i18n="canvas.prop.x_margin"></span>
                     </label>
                   </td>
                   <td data-i18n="[title]canvas.prop.x_margin_tt">
-                    <input class="gop_opt" type="text" name="x-margin">
+                    <input class="gop_opt" type="text" name="x_margin">
                   </td>
                   <td>
                     <label class="gop_opt" data-i18n="[title]canvas.prop.y_margin_tt">
@@ -59,18 +59,18 @@
                     </label>
                   </td>
                   <td data-i18n="[title]canvas.prop.y_margin_tt">
-                    <input class="gop_opt" type="text" name="y-margin">
+                    <input class="gop_opt" type="text" name="y_margin">
                   </td>
                 </tr>
               </table>
             </td>
           </tr>
-          <tr class="display-flags prop hide-name-row">
+          <tr class="display_flags prop hide_name_row">
             <td>
             </td>
             <td>
               <label class="gop_opt" data-i18n="[title]canvas.prop.hide_name_tt">
-                <input class="gop_opt" type="checkbox" name="hide-name" value="on">
+                <input class="gop_opt" type="checkbox" name="hide_name" value="on">
                 <span data-i18n="canvas.prop.hide_name"></span>
               </label>
             </td>
@@ -81,15 +81,15 @@
       <fieldset class="canvas"> 
         <legend data-i18n="canvas.prop.heading.data_scaling"></legend> 
 <div style="display: inline-block; align: left;">
-          <div class="x-scale prop hidden">
+          <div class="x_scale prop hidden">
             <nobr>
             <label class="no_gop_opt" data-i18n="[title]canvas.prop.x_scale_tt">
               <span data-i18n="canvas.prop.x_scale"></span>
-              <input class="no_gop_opt" type="text" name="x-scale">
+              <input class="no_gop_opt" type="text" name="x_scale">
             </label>
             <label class="no_gop_opt" data-i18n="[title]canvas.prop.y_scale_tt">
               <span data-i18n="canvas.prop.y_scale"></span>
-              <input class="no_gop_opt" type="text" name="y-scale">
+              <input class="no_gop_opt" type="text" name="y_scale">
             </label>
             </nobr>
           </div>
@@ -473,10 +473,10 @@ var gop_click_count = 0;
 
 function show_sane_defaults() {
     var w, h, xoff, yoff;
-    w = document.getElementsByName("x-pix")[0];
-    h = document.getElementsByName("y-pix")[0];
-    xoff = document.getElementsByName("x-margin")[0];
-    yoff = document.getElementsByName("y-margin")[0];
+    w = document.getElementsByName("x_pix")[0];
+    h = document.getElementsByName("y_pix")[0];
+    xoff = document.getElementsByName("x_margin")[0];
+    yoff = document.getElementsByName("y_margin")[0];
     if (w.value === "0" && h.value === "0") {
         w.value = 85;
         h.value = 60;
@@ -487,7 +487,7 @@ function show_sane_defaults() {
 }
 
 function show_gop_name_and_args_checkbutton(flag) {
-    var row = document.getElementsByClassName("hide-name-row")[0];
+    var row = document.getElementsByClassName("hide_name_row")[0];
     row.style.setProperty("visibility", flag ? "visible" : "hidden");
 }
 
@@ -500,7 +500,7 @@ function set_gop(state) {
     no_gop_opts = document.getElementsByClassName("no_gop_opt");
     update_gop_form(gop_opts, state);
     update_gop_form(no_gop_opts, state === false);
-    // Hide or show the "hide-name" row
+    // Hide or show the "hide_name" row
     show_gop_name_and_args_checkbutton(state);
 }
 
@@ -545,20 +545,20 @@ function apply() {
     if (!new_array_dialog) {
         // Note: the "+" casts Boolean to Number
         gop = +document.getElementsByName("gop")[0].checked;
-        hide_name = +document.getElementsByName("hide-name")[0].checked;
+        hide_name = +document.getElementsByName("hide_name")[0].checked;
 
         pdgui.pdsend(pd_object_callback, "donecanvasdialog",
-            +get_input("x-scale"),
-            +get_input("y-scale"),
+            +get_input("x_scale"),
+            +get_input("y_scale"),
             (gop ? gop + 2 * hide_name : 0), // No hide_name bit if gop is off
             +get_input("x1"),
             +get_input("y1"),
             +get_input("x2"),
             +get_input("y2"),
-            +get_input("x-pix"),
-            +get_input("y-pix"),
-            +get_input("x-margin"),
-            +get_input("y-margin")
+            +get_input("x_pix"),
+            +get_input("y_pix"),
+            +get_input("x_margin"),
+            +get_input("y_margin")
         );
     }
 
@@ -710,12 +710,12 @@ function populate_form(attr_object) {
             if (prop_group !== undefined) {
                 prop_group.classList.remove("hidden");
             }
-            if (prop === "display-flags") {
+            if (prop === "display_flags") {
                 // reminder: "!!" forces Boolean, "+" forces Number type
                 var flag = +attr_object[prop];
                 document.getElementsByName("gop")[0].checked = !!flag;
-                document.getElementsByName("hide-name")[0].checked = !!(flag & 2);
-                // set visibility of the "hide-name" checkbox based on
+                document.getElementsByName("hide_name")[0].checked = !!(flag & 2);
+                // set visibility of the "hide_name" checkbox based on
                 // the gop flag. This way users don't get the idea that it
                 // can be set independently of gop.
                 show_gop_name_and_args_checkbutton(!!flag);
@@ -743,16 +743,16 @@ function populate_form(attr_object) {
     // Some special cases for hiding options for garray dialogs
     if (pd_garray_attrs.length > 0) {
         // Graph-on-parent toggle
-        document.getElementsByClassName("display-flags")[0]
+        document.getElementsByClassName("display_flags")[0]
             .classList.add("hidden");
         // Graph-on-parent flag for hiding object name/args
-        document.getElementsByClassName("display-flags")[1]
+        document.getElementsByClassName("display_flags")[1]
             .classList.add("hidden");
         // GOP-rect margins don't make sense for garrays, so hide them
-        document.getElementsByClassName("x-margin")[0]
+        document.getElementsByClassName("x_margin")[0]
             .classList.add("hidden");
         // X/Y scaling-- garray is always in a gop so not needed
-        document.getElementsByClassName("x-scale")[0]
+        document.getElementsByClassName("x_scale")[0]
             .classList.add("hidden");
     }
 }

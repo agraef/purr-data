@@ -2673,17 +2673,17 @@ void canvas_properties(t_glist *x)
         //        x->gl_x1, x->gl_y1, x->gl_x2, x->gl_y2, 
         //        (int)x->gl_pixwidth, (int)x->gl_pixheight,
         //        (int)x->gl_xmargin, (int)x->gl_ymargin);
-        gui_s("x-scale");  gui_f(0.);
-        gui_s("y-scale");  gui_f(0.);
-        gui_s("display-flags"); gui_i(glist_isgraph(x));
+        gui_s("x_scale");  gui_f(0.);
+        gui_s("y_scale");  gui_f(0.);
+        gui_s("display_flags"); gui_i(glist_isgraph(x));
         gui_s("x1");       gui_f(x->gl_x1);
         gui_s("y1");       gui_f(x->gl_y1);
         gui_s("x2");       gui_f(x->gl_x2);
         gui_s("y2");       gui_f(x->gl_y2);
-        gui_s("x-pix");    gui_i((int)x->gl_pixwidth);
-        gui_s("y-pix");    gui_i((int)x->gl_pixheight);
-        gui_s("x-margin"); gui_i((int)x->gl_xmargin);
-        gui_s("y-margin"); gui_i((int)x->gl_ymargin);
+        gui_s("x_pix");    gui_i((int)x->gl_pixwidth);
+        gui_s("y_pix");    gui_i((int)x->gl_pixheight);
+        gui_s("x_margin"); gui_i((int)x->gl_xmargin);
+        gui_s("y_margin"); gui_i((int)x->gl_ymargin);
     }
     else
     {
@@ -2694,17 +2694,17 @@ void canvas_properties(t_glist *x)
         //        0., -1., 1., 1., 
         //        (int)x->gl_pixwidth, (int)x->gl_pixheight,
         //        (int)x->gl_xmargin, (int)x->gl_ymargin);
-        gui_s("x-scale");  gui_f(glist_dpixtodx(x, 1));
-        gui_s("y-scale");  gui_f(-glist_dpixtody(x, 1));
-        gui_s("display-flags"); gui_i(0);
+        gui_s("x_scale");  gui_f(glist_dpixtodx(x, 1));
+        gui_s("y_scale");  gui_f(-glist_dpixtody(x, 1));
+        gui_s("display_flags"); gui_i(0);
         gui_s("x1");       gui_f(0.);
         gui_s("y1");       gui_f(-1.);
         gui_s("x2");       gui_f(1.);
         gui_s("y2");       gui_f(1.);
-        gui_s("x-pix");    gui_i((int)x->gl_pixwidth);
-        gui_s("y-pix");    gui_i((int)x->gl_pixheight);
-        gui_s("x-margin"); gui_i((int)x->gl_xmargin);
-        gui_s("y-margin"); gui_i((int)x->gl_ymargin);
+        gui_s("x_pix");    gui_i((int)x->gl_pixwidth);
+        gui_s("y_pix");    gui_i((int)x->gl_pixheight);
+        gui_s("x_margin"); gui_i((int)x->gl_xmargin);
+        gui_s("y_margin"); gui_i((int)x->gl_ymargin);
     }
     //gfxstub_new(&x->gl_pd, x, graphbuf);
 

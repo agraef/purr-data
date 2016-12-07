@@ -2210,7 +2210,10 @@ void canvasgop_checksize(t_canvas *x)
 
         if (dirty)
         {
-            post("Adjusting canvas graph-on-parent area to accomodate its name. If you want to have a smaller graph-on-parent window, please hide graph text.");
+            post("Warning: "
+                 "Adjusting canvas graph-on-parent area to accomodate "
+                 "its name. If you want to have a smaller graph-on-parent "
+                 "window, please hide graph text.");
             canvas_dirty(x, 1);
             canvasgop_draw_move(x,1);
             canvas_fixlinesfor(x, (t_text *)x);
@@ -2257,8 +2260,8 @@ void canvasgop__clickhook(t_scalehandle *sh, int newstate)
             int properties = gfxstub_haveproperties((void *)x);
             if (properties)
             {
-                properties_set_field_int(properties,"x-pix",x->gl_pixwidth);
-                properties_set_field_int(properties,"y-pix",x->gl_pixheight);
+                properties_set_field_int(properties,"x_pix",x->gl_pixwidth);
+                properties_set_field_int(properties,"y_pix",x->gl_pixheight);
             }
 
             if (glist_isvisible(x))
@@ -2351,9 +2354,9 @@ void canvasgop__motionhook(t_scalehandle *sh, t_floatarg mouse_x,
             if (properties)
             {
                 properties_set_field_int(properties,
-                    "x-pix",x->gl_pixwidth + sh->h_dragx);
+                    "x_pix",x->gl_pixwidth + sh->h_dragx);
                 properties_set_field_int(properties,
-                    "y-pix",x->gl_pixheight + sh->h_dragy);
+                    "y_pix",x->gl_pixheight + sh->h_dragy);
             }
         }
         else //enter if move_gop hook
@@ -2362,9 +2365,9 @@ void canvasgop__motionhook(t_scalehandle *sh, t_floatarg mouse_x,
             if (properties)
             {
                 properties_set_field_int(properties,
-                    "x-margin",x->gl_xmargin + dx);
+                    "x_margin",x->gl_xmargin + dx);
                 properties_set_field_int(properties,
-                    "y-margin",x->gl_ymargin + dy);
+                    "y_margin",x->gl_ymargin + dy);
             }
             x->gl_xmargin += dx;
             x->gl_ymargin += dy;
