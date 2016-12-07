@@ -1184,7 +1184,7 @@ loaders-libdir_clean:
 # Ivica named the libdir "lyon" for Pd-l2ork, but the submodule is named
 # lyonpotpourri. So we must do extra work to differentiate the two...
 LYON_SRC=lyonpotpourri
-LYON_DEST=lyon
+LYON_DEST=lyonpotpourri
 
 lyonpotpourri:
 	make -C $(externals_src)/$(LYON_SRC) PD_PATH=$(pd_src)

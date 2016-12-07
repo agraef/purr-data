@@ -34,7 +34,9 @@ loadlib30: ggee
 loadlib31: iem_anything
 loadlib32: ekext
 loadlib33: hexloader
-nloadlib: 33
+loadlib34: disis
+loadlib35: lyonpotpourri
+nloadlib: 35
 path1: /var/lib/defoma/x-ttcidfont-conf.d/dirs/TrueType
 path2: ~/pd-l2ork-externals
 path3: ~/L2Ork/PD/Abstractions
