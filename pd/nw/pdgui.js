@@ -999,7 +999,7 @@ exports.doc_open = doc_open;
 
 // Open a file relative to the main directory where "doc/" and "extra/" live
 function pd_doc_open(dir, basename) {
-    doc_open(path.join(gui_dir, dir), basename);
+    doc_open(path.join(lib_dir, dir), basename);
 }
 
 exports.pd_doc_open = pd_doc_open;
