@@ -1204,7 +1204,7 @@ lyonpotpourri_install:
 	install -p $(externals_src)/$(LYON_SRC)/lyonpotpourri-helpfiles/sound/*.* \
 		$(DESTDIR)$(objectsdir)/$(LYON_DEST)/sound
 	# copy the meta file and the shared lib
-	install -p $(externals_src)/$(LYON_SRC)/*lyonpotpourri.* \
+	install -p $(externals_src)/$(LYON_SRC)/*lyonpotpourri*.* \
 		$(DESTDIR)$(objectsdir)/$(LYON_DEST)
 	# license and readme
 	install -p $(externals_src)/$(LYON_SRC)/*.txt \
