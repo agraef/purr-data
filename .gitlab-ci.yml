@@ -105,4 +105,4 @@ osx_amd64_dmg:
    artifacts:
      expire_in: 1 day
      paths:
-       - packages/darwin_app/*.dmg
+       - packages/darwin_app/Makefile
