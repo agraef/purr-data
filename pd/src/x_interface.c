@@ -538,7 +538,7 @@ void pdinfo_dir(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 void pdinfo_dsp(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_atom at[1];
-    SETFLOAT(at, (t_float)canvas_dspstate);
+    SETFLOAT(at, (t_float)pd_getdspstate());
     info_out((t_text *)x, s, 1, at);
 }
 
