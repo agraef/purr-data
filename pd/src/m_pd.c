@@ -469,6 +469,7 @@ static t_pdinstance *pdinstance_donew(int useprefix)
     x->pd_dspchainsize = 0;
     x->pd_canvaslist = 0;
     x->pd_dspstate = 0;
+    x->pd_dspstate_user = 0;
     x->pd_midiin_sym = midi_gensym(midiprefix, "#midiin");
     x->pd_sysexin_sym = midi_gensym(midiprefix, "#sysexin");
     x->pd_notein_sym = midi_gensym(midiprefix, "#notein");

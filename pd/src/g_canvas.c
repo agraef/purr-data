@@ -1539,7 +1539,7 @@ static void canvas_dsp(t_canvas *x, t_signal **sp)
 }
 
     /* this routine starts DSP for all root canvases. */
-static void canvas_start_dsp(void)
+static void canvas_dostart_dsp(void)
 {
     t_canvas *x;
     if (pd_this->pd_dspstate)
@@ -1556,7 +1556,13 @@ static void canvas_start_dsp(void)
         pd_bang(gensym("pd-dsp-started")->s_thing);
 }
 
-static void canvas_stop_dsp(void)
+static void canvas_start_dsp(void)
+{
+    pd_this->pd_dspstate_user = 1;
+    canvas_dostart_dsp();
+}
+
+static void canvas_dostop_dsp(void)
 {
     if (pd_this->pd_dspstate)
     {
@@ -1568,6 +1574,12 @@ static void canvas_stop_dsp(void)
     }
 }
 
+static void canvas_stop_dsp(void)
+{
+    pd_this->pd_dspstate_user = 0;
+    canvas_dostop_dsp();
+}
+
     /* DSP can be suspended before, and resumed after, operations which
     might affect the DSP chain.  For example, we suspend before loading and
     resume afterward, so that DSP doesn't get resorted for every DSP object
@@ -1577,14 +1589,14 @@ int canvas_suspend_dsp(void)
 {
     //fprintf(stderr,"canvas_suspend_dsp %d\n", rval);
     int rval = pd_this->pd_dspstate;
-    if (rval) canvas_stop_dsp();
+    if (rval) canvas_dostop_dsp();
     return (rval);
 }
 
 void canvas_resume_dsp(int oldstate)
 {
     //fprintf(stderr,"canvas_resume_dsp %d\n", oldstate);
-    if (oldstate) canvas_start_dsp();
+    if (oldstate) canvas_dostart_dsp();
 }
 
     /* this is equivalent to suspending and resuming in one step. */

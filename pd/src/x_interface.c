@@ -535,10 +535,13 @@ void pdinfo_dir(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
     info_out((t_text *)x, s, 1, at);
 }
 
+/* Instead of reporting the actual value for dsp when it's temporarily
+   suspended, we report what it will be when dsp is resumed. This way the
+   user can get a meaningful value at load time. */
 void pdinfo_dsp(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_atom at[1];
-    SETFLOAT(at, (t_float)pd_getdspstate());
+    SETFLOAT(at, (t_float)(pd_this->pd_dspstate_user));
     info_out((t_text *)x, s, 1, at);
 }
 
