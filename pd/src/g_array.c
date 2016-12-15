@@ -8,6 +8,7 @@
 #include "m_pd.h"
 #include "g_canvas.h"
 #include <math.h>
+#include <ctype.h>
 
 extern int glob_lmclick;
 
@@ -24,15 +25,17 @@ two, but how? */
 
 t_symbol *sharptodollar(t_symbol *s)
 {
-    if (*s->s_name == '#')
+    char buf[MAXPDSTRING], *s1, *s2;
+    if (strlen(s->s_name) >= MAXPDSTRING)
+        return (s);
+    for (s1 = s->s_name, s2 = buf; ; s1++, s2++)
     {
-        char buf[MAXPDSTRING];
-        strncpy(buf, s->s_name, MAXPDSTRING);
-        buf[MAXPDSTRING-1] = 0;
-        buf[0] = '$';
-        return (gensym(buf));
+        if (*s1 == '#' && *s1 && isdigit(s1[1]))
+            *s2 = '$';
+        else if (!(*s2 = *s1))
+            break;
     }
-    else return (s);
+    return (gensym(buf));
 }
 
 /* --------- "pure" arrays with scalars for elements. --------------- */

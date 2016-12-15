@@ -177,21 +177,38 @@ function strip_problem_chars(arg) {
 }
 
 function gatom_escape(str) {
-    var arr, i, ret;
+    var ret;
     if (str.length === 0) {
         ret = "-";
     } else if (str.slice(0,1) === "-") {
         ret = "-" + str;
     } else {
-        arr = str.split("");
-        for (i = 0; i < arr.length; i++) {
-            if (arr[i] === "$") {
+        var arr = str.split("");
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i] === "$" && i+1 < arr.length &&
+                arr[i+1] >= "0" && arr[i+1] <= "9") {
                 arr[i] = "#";
             }
         }
         ret = arr.join("");
     }
     return strip_problem_chars(ret);
+}
+
+function gatom_unescape(str) {
+    if (str.slice(0,1) === "-") {
+        str = str.slice(1);
+    } else {
+        var arr = str.split("");
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i] === "#" && i+1 < arr.length &&
+                arr[i+1] >= "0" && arr[i+1] <= "9") {
+                arr[i] = "$";
+            }
+        }
+        str = arr.join("");
+    }
+    return str;
 }
 
 function update_attr(elem) {
@@ -306,11 +323,11 @@ function populate_form(attributes) {
     get_elem("draglo").value = attributes.draglo;
     get_elem("draghi").value = attributes.draghi;
     label = attributes.label;
-    get_elem("label").value = label === "-" ? "" : label;
+    get_elem("label").value = gatom_unescape(label);
     snd = attributes.send_symbol;
-    get_elem("send_symbol").value = snd === "-" ? "" : snd;
+    get_elem("send_symbol").value = gatom_unescape(snd);
     rcv = attributes.receive_symbol;
-    get_elem("receive_symbol").value = rcv === "-" ? "" : rcv;
+    get_elem("receive_symbol").value = gatom_unescape(rcv);
 
     labelpos = attributes.labelpos;
     radios = document.getElementsByName("labelpos");

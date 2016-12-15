@@ -53,7 +53,7 @@ t_symbol *iemgui_dollar2raute(t_symbol *s)
         return (s);
     for (s1 = s->s_name, s2 = buf; ; s1++, s2++)
     {
-        if (*s1 == '$')
+        if (*s1 == '$' && *s1 && isdigit(s1[1]))
             *s2 = '#';
         else if (!(*s2 = *s1))
             break;
@@ -68,7 +68,7 @@ t_symbol *iemgui_raute2dollar(t_symbol *s)
         return (s);
     for (s1 = s->s_name, s2 = buf; ; s1++, s2++)
     {
-        if (*s1 == '#')
+        if (*s1 == '#' && *s1 && isdigit(s1[1]))
             *s2 = '$';
         else if (!(*s2 = *s1))
             break;
