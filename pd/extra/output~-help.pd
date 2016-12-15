@@ -1,11 +1,352 @@
-#N canvas 103 48 450 300 10;
-#X obj 104 118 osc~ 200;
-#X obj 241 122 noise~;
-#X text 38 28 a GUI replacement for [dac~] with controls for "compute
-audio" \, volume \, and a mute button.;
-#X obj 91 166 output~;
-#X obj 220 165 output~;
-#X connect 0 0 3 0;
-#X connect 0 0 3 1;
-#X connect 1 0 4 1;
-#X connect 1 0 4 0;
+#N canvas 239 54 554 574 10;
+#X obj 1 171 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 1 -398 cnv 15 552 40 empty \$0-pddp.cnv.header output~ 3 12
+0 18 -204280 -1 0;
+#N canvas 483 261 380 289 META 0;
+#X text 12 225 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 5 KEYWORDS signal abstraction;
+#X text 12 25 LICENSE GPL;
+#X text 12 65 INLET_0 signal;
+#X text 12 85 INLET_1 signal;
+#X text 12 105 INLET_2 float;
+#X text 12 125 OUTLET_0 signal;
+#X text 12 145 OUTLET_1 signal;
+#X text 12 165 OUTLET_2 float;
+#X text 12 205 AUTHOR Alexandre Torres Porres;
+#X text 12 265 HELP_PATCH_AUTHOR Alexandre Torres Porres;
+#X text 12 45 DESCRIPTION gui / stereo out / gain / DSP control;
+#X text 12 245 RELEASE_DATE 2016;
+#X text 11 185 LIBRARY none;
+#X restore 501 173 pd META;
+#X obj 1 101 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 667 486 418 179 Related_objects 0;
+#X obj 86 100 pddp/pddplink ../3.audio.examples/A05.output.subpatch.pd
+-text doc/3.audio.examples/A05.output.subpatch.pd;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 43 39 dac~;
+#X text 8 2 [output~] Related Objects;
+#X text 25 73 A related abstraction is found in the audio tutorials:
+;
+#X text 26 131 Similar work made in pddp and Pd-Extended was based
+on this abstraction model \, resulting now in Pd-l2ork's version of
+[output~];
+#X restore 103 174 pd Related_objects;
+#X text 309 -232 <= mute button;
+#X text 124 -246 click & drag slider ======>, f 14;
+#X obj 1 -199 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#X obj 1 -27 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 1 46 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 80 -189 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 6 0 16 -228856
+-162280 0;
+#X obj 80 -19 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 6 0 16 -228856
+-162280 0;
+#X obj 80 -167 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 6 0 16 -228856
+-162280 0;
+#X text 128 -189 signal;
+#X text 128 -167 signal;
+#X obj 80 -144 cnv 17 3 110 empty \$0-pddp.cnv.let.2 2 5 6 0 16 -228856
+-162280 0;
+#X text 134 -144 float;
+#X text 127 -19 signal;
+#X obj 80 3 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 6 0 16 -228856
+-162280 0;
+#X text 127 4 signal;
+#X obj 80 24 cnv 17 3 17 empty \$0-pddp.cnv.let.2 2 5 6 0 16 -228856
+-162280 0;
+#X text 133 25 float;
+#X text 178 -189 - incoming signal routed to left channel output,
+f 60;
+#X text 178 -167 - incoming signal routed to right channel output,
+f 60;
+#X text 177 -19 - gain scaled output of left inlet, f 60;
+#X text 177 4 - gain scaled output of right inlet, f 60;
+#X text 177 25 - slider value (0-1), f 60;
+#X text 177 74 - scaling mode: 0 (quartic \, default) \, 1 (dB) or
+2 (linear), f 60;
+#X text 116 -65 <on/off>;
+#X text 98 -128 dac <float>;
+#X text 178 -128 - turns dac~ on <1> or off <0> (outlets not affected)
+, f 60;
+#X text 92 -114 gain <float>;
+#X text 178 -114 - sets linear gain multiplier (values <= 0 are ignored)
+, f 60;
+#X text 92 -49 ramp <float>;
+#X text 92 -98 mode <float>;
+#X text 178 -98 - scaling mode: 0 (quartic \, default) \, 1 (dB) or
+2 (linear), f 60;
+#X text 12 -375 GUI- stereo output \, gain adjuster & DSP control;
+#X obj 7 173 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X text 491 -384 [output~];
+#N canvas 437 158 795 396 examples 0;
+#X obj 199 182 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -228856
+-1 -1 0 1;
+#X floatatom 199 202 5 0 0 0 - - -, f 5;
+#X floatatom 199 353 5 0 0 0 - - -, f 5;
+#X obj 116 354 env~;
+#X obj 157 353 env~;
+#X floatatom 157 378 4 0 0 0 - - -, f 4;
+#X floatatom 116 378 4 0 0 0 - - -, f 4;
+#X text 214 181 set slider (0-1);
+#X msg 260 256 on;
+#X msg 260 278 off;
+#X obj 250 210 tgl 15 0 empty empty empty 17 7 0 10 -228856 -1 -1 0
+1;
+#X msg 250 231 dac \$1;
+#X text 287 256 DSP on;
+#X text 286 279 DSP off;
+#X obj 116 228 osc~ 440;
+#X text 269 210 dac~ on/off;
+#X msg 535 218 mode \$1;
+#X obj 535 141 vradio 15 0 0 3 \$0-dummy \$0-dummy-set empty 0 -8 0
+10 -228856 -1 -1 0;
+#X text 519 156 dB;
+#X text 495 170 linear;
+#X floatatom 535 194 5 0 0 0 - - -, f 5;
+#X text 58 331 scaled => stereo output, f 9;
+#X text 204 330 <= slider value;
+#X obj 452 249 osc~ 440;
+#X msg 602 224 gain \$1;
+#X obj 602 198 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
+-228856 -1 -1 0 256 0;
+#X obj 602 175 hsl 128 15 0.1 2 0 0 empty empty empty -2 -8 0 10 -228856
+-1 -1 0 1;
+#X floatatom 535 354 0 0 0 0 - - -;
+#X obj 452 355 env~;
+#X obj 493 354 env~;
+#X floatatom 493 379 4 0 0 0 - - -, f 4;
+#X floatatom 452 379 4 0 0 0 - - -, f 4;
+#X text 489 140 quartic;
+#X msg 639 312 ramp \$1;
+#X obj 639 286 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
+-228856 -1 -1 0 256 0;
+#X text 406 72 You can also set a ramp time for the slider value \,
+the default is 20 ms and the minimum is 5 ms. This also affects the
+slider value input in the right outlet.;
+#X obj 614 255 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -228856
+-1 -1 0 1;
+#X text 631 254 set slider (0-1);
+#X text 406 11 [output~] has 3 scaling modes for its slider (the default
+is "quartic"). You can set a linear gain multiplier \, which needs
+to be greater than zero and also represents the maximum linear gain
+achieved.;
+#X msg 168 150 mute;
+#X text 202 151 mute button;
+#X obj 452 292 output~;
+#X obj 116 282 output~ 0;
+#X text 14 55 If you mute the abstraction \, it also affects the outlets
+and it sends no signal. So \, if you don't want to listen but need
+the signal through the outlets \, use the 1st argument or the "dac
+0" message into the right outlet - as it doesn't affect the outlets.
+Using [output~] without the dac~ is useful for gain adjustments only.
+;
+#X text 620 174 maximum gain;
+#X text 15 12 [output~] allows you to switch the DSP engine on or off
+\, dac~ output on or off and mute/unmute without any clicks!;
+#X text 561 139 <= slider scaling;
+#X connect 0 0 1 0;
+#X connect 1 0 42 2;
+#X connect 3 0 6 0;
+#X connect 4 0 5 0;
+#X connect 8 0 42 2;
+#X connect 9 0 42 2;
+#X connect 10 0 11 0;
+#X connect 11 0 42 2;
+#X connect 14 0 42 0;
+#X connect 14 0 42 1;
+#X connect 16 0 41 2;
+#X connect 17 0 20 0;
+#X connect 20 0 16 0;
+#X connect 23 0 41 0;
+#X connect 23 0 41 1;
+#X connect 24 0 41 2;
+#X connect 25 0 24 0;
+#X connect 26 0 25 0;
+#X connect 28 0 31 0;
+#X connect 29 0 30 0;
+#X connect 33 0 41 2;
+#X connect 34 0 33 0;
+#X connect 36 0 41 2;
+#X connect 39 0 42 2;
+#X connect 41 0 28 0;
+#X connect 41 1 29 0;
+#X connect 41 2 27 0;
+#X connect 42 0 3 0;
+#X connect 42 1 4 0;
+#X connect 42 2 2 0;
+#X restore 468 -287 pd examples;
+#X obj 237 -289 osc~ 440;
+#X text 115 52 1) float;
+#X text 89 -346 The [output~] abstraction is a user-friendly gain adjuster
+and stereo output \, with controls for "compute audio" (DSP) \, volume
+\, gain multiplier \, mute \, dac~ and ramp time.;
+#X text 178 -144 - sets slider (range is clipped to 0-1), f 60;
+#X text 178 -49 - sets ramp time in ms for slider values (default 20)
+, f 60;
+#X obj 216 -252 output~;
+#X text 131 107 [output~] was originally in Pd Extended's extra folder
+as a variant of [ezoutput~] from PDDP. This is an improved \, redesigned
+and backwards compatible version for Pd-l2ork made by Alexandre Porres
+with extra features.;
+#X text 177 52 - [dac~]: <0>: no dac~ output \, <1>: dac~ output (default)
+, f 60;
+#X text 178 -65 - turns DSP Engine (Compute Audio) "On" or "Off",
+f 60;
+#X text 115 74 2) float, f 9;
+#X text 139 -82 mute;
+#X text 178 -82 - mute/unmute button, f 60;
+#N canvas 227 48 672 395 scaling 0;
+#X obj 29 54 cnv 15 198 198 empty empty empty 20 12 0 14 -253888 -66577
+0;
+#N canvas 0 22 452 302 (subpatch) 0;
+#X array \$0-dB 441 float 0 black black;
+#X array \$0-quartic 441 float 0 black black;
+#X array \$0-linear 441 float 0 black black;
+#X coords 0 1.01 440 0 200 200 1;
+#X restore 29 53 graph;
+#X text 96 130 linear;
+#X text 23 257 0;
+#X text 217 255 1;
+#X text 234 78 o;
+#X text 234 90 u;
+#X text 234 102 t;
+#X text 234 127 u;
+#X text 234 139 t;
+#X text 234 115 p;
+#X text 234 160 v;
+#X text 234 172 a;
+#X text 234 184 l;
+#X text 234 196 u;
+#X text 234 208 e;
+#X text 230 241 0;
+#X text 230 51 1;
+#X text 270 20 The graph to the left shows us how the scaling modes
+work. A linear scaling doesn't really do anything \, the input is the
+same as the output. We have then two non linear modes:;
+#X text 278 118 -;
+#X text 278 74 -;
+#X text 128 182 quartic;
+#X text 171 220 dB;
+#X obj 438 299 osc~ 440;
+#X msg 521 312 gain \$1;
+#X obj 386 207 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
+-228856 -1 -1 0 256 0;
+#X obj 521 289 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
+-228856 -1 -1 0 256 0;
+#X obj 438 342 output~;
+#X obj 521 175 vsl 15 80 0 2 0 0 empty empty empty 0 -9 0 10 -233017
+-1 -1 0 1;
+#X text 527 270 max gain;
+#X text 362 204 dB;
+#N canvas 264 70 391 161 db-to-linear 0;
+#X obj 52 69 expr pow(10 \, $f1 / 20);
+#X obj 52 30 inlet;
+#X obj 52 102 outlet;
+#X text 201 69 dBFS to linear amplitude;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X restore 386 233 pd db-to-linear;
+#X text 67 262 entry (slider) value;
+#X text 287 118 dB: This mode adopts a decibel scale with a range of
+100 dB (using the [dbtorms~] object).;
+#X text 22 303 The gain value is a simple multiplier to the output
+value of the slider and determines the maximum linear gain output regardless
+of the scaling mode. For example \, "2" will output the double of the
+input amplitude \, and "0.5" half of it. This is useful if your input
+isn't loud enough \, if it is too high or even if you're using multiple
+[output~] objects as they all add to the same output.;
+#X text 287 74 Quartic (default): This mode just gets the slider values
+to the power of 4 (so \, for instance \, an input slider value of 0.5
+becomes 0.125)., f 57;
+#N canvas 0 0 450 300 init-array 0;
+#X msg 71 41 441;
+#X obj 71 63 t a b;
+#X msg 112 85 0, f 4;
+#X obj 71 85 until;
+#X obj 71 117 f;
+#X obj 109 117 + 1;
+#X obj 71 232 / 441;
+#X obj 71 198 t a a;
+#X obj 330 164 t a a;
+#X obj 330 232 dbtorms;
+#X obj 198 212 / 441;
+#X obj 198 180 t a a;
+#X obj 198 234 pow 4;
+#X obj 330 208 / 4.41;
+#X obj 71 256 tabwrite \$0-linear;
+#X obj 198 256 tabwrite \$0-quartic;
+#X obj 71 18 loadbang;
+#X obj 330 256 tabwrite \$0-dB;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 1 1 2 0;
+#X connect 2 0 4 1;
+#X connect 3 0 4 0;
+#X connect 4 0 5 0;
+#X connect 4 0 7 0;
+#X connect 4 0 8 0;
+#X connect 4 0 11 0;
+#X connect 5 0 4 1;
+#X connect 6 0 14 0;
+#X connect 7 0 6 0;
+#X connect 7 1 14 1;
+#X connect 8 0 13 0;
+#X connect 8 1 17 1;
+#X connect 9 0 17 0;
+#X connect 10 0 12 0;
+#X connect 11 0 10 0;
+#X connect 11 1 15 1;
+#X connect 12 0 15 0;
+#X connect 13 0 9 0;
+#X connect 16 0 0 0;
+#X restore 146 22 pd init-array;
+#X connect 23 0 27 0;
+#X connect 23 0 27 1;
+#X connect 24 0 27 2;
+#X connect 25 0 31 0;
+#X connect 26 0 24 0;
+#X connect 28 0 26 0;
+#X connect 31 0 26 0;
+#X restore 463 -241 pd scaling \; modes & gain;
+#X text 309 -249 <= dsp status/toggle;
+#N canvas 876 153 420 512 DSP 0;
+#X obj 120 295 osc~ 440;
+#X obj 120 341 output~;
+#X msg 203 285 on;
+#X msg 219 311 off;
+#X msg 168 96 \; pd dsp \$1;
+#X obj 168 68 tgl 20 0 empty empty empty 17 7 0 10 -216373 -1 -1 0
+1;
+#X text 212 344 <= click on the DSP status;
+#X text 24 142 These are the usual ways of doing this \, but the [output~]
+abstraction offers yet other options.;
+#X text 23 18 The DSP engine can be turned on and off in the main Pd
+window \, in the "Media" menu or inside a patch with this message to
+Pd:;
+#X text 23 191 First \, if the DSP is on when you load [output~] \,
+it checks the DSP state and loads the GUI accordingly \, where the
+top right corner shows the status as either "on" or "off". But this
+interface also acts as a toggle so you can click on it and change the
+status. Another way of doing that in the patch is with the "on" and
+"off" messages to the right inlet.;
+#X text 227 358 (it behaves as a toggle);
+#X text 31 411 Try the above [output~] abstraction as the only object
+sending signals to pd's output \, now change the DSP status with the
+volume up in one of the usual ways and with the interface provided
+by [output~] (via toggle or messages). You'll notice how changing the
+DSP status with [output~] does not 'click'! This is because it automatically
+fades in and out when turning it on and off!;
+#X connect 0 0 1 0;
+#X connect 0 0 1 1;
+#X connect 2 0 1 2;
+#X connect 3 0 1 2;
+#X connect 5 0 4 0;
+#X restore 456 -264 pd DSP status;
+#X connect 40 0 45 0;
+#X connect 40 0 45 1;
