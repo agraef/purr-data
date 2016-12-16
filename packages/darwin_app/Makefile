@@ -215,7 +215,11 @@ dmg:
 # detach one with the same name first
 	-hdiutil detach "/Volumes/$(VOLUME_NAME)"
 	hdiutil attach build.dmg
-	install -p $(DESTDIR)$(manualsdir)/Pd/ReadMe.html "/Volumes/$(VOLUME_NAME)"
+# enormous hack to get around the error caused by mutating m_pd.h in the
+# middle of building. We can't use $(DESTDIR) here because it depends on
+# TEST_VERSION from m_pd.h, the value of which gets changed to the current
+# date in the middle of the build!!!
+	install -p $(BUILD_BASE)/*.app/Contents/Resources/app.nw/$(manualsdir)/Pd/ReadMe.html "/Volumes/$(VOLUME_NAME)"
 # add link to /Applications for easy install
 	ln -s /Applications /Volumes/$(VOLUME_NAME)/Applications
 # Install to .background for easier manual DS_Store makeing 
