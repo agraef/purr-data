@@ -235,7 +235,7 @@ dmg:
 	/usr/bin/SetFile -a C /Volumes/$(VOLUME_NAME)/.VolumeIcon.icns \
 		/Volumes/$(VOLUME_NAME)
 	$(MAKE) -C $(packages_src) \
-		DESTDIR="/Volumes/$(VOLUME_NAME)/*.app)/Contents/Resources" doc_format
+		DESTDIR="/Volumes/$(VOLUME_NAME)/*.app/Contents/Resources" doc_format
 	chmod -R a-w "/Volumes/$(VOLUME_NAME)/*.app/Contents/Resources"
 	hdiutil detach `mount | grep $(VOLUME_NAME) | cut -d ' ' -f 1`
 	hdiutil convert -format UDZO -o "$(PACKAGE_NAME).dmg" build.dmg
