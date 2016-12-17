@@ -323,6 +323,9 @@ then
 			make debstage prefix=$inst_dir
 		fi
 		cd ../../
+	# move OSX dmg installer
+	elif [ $dmg -gt 0 ]; then
+		mv packages/darwin_app/Pd*.dmg .
 	fi
 fi
 
