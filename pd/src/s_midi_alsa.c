@@ -32,6 +32,7 @@ static snd_seq_t *midi_handle;
 
 static snd_midi_event_t *midiev;
 
+void midi_alsa_setndevs(int in, int out);
 
 void sys_alsa_do_open_midi(int nmidiin, int *midiinvec,
     int nmidiout, int *midioutvec)
@@ -45,6 +46,7 @@ void sys_alsa_do_open_midi(int nmidiin, int *midiinvec,
 
     alsa_nmidiin = 0;
     alsa_nmidiout = 0;
+    midi_alsa_setndevs(alsa_nmidiin, alsa_nmidiout);
 
     if (nmidiout == 0 && nmidiin == 0) return;
 
@@ -105,6 +107,10 @@ void sys_alsa_do_open_midi(int nmidiin, int *midiinvec,
     snd_midi_event_new(ALSA_MAX_EVENT_SIZE,&midiev);
     alsa_nmidiout = nmidiout;
     alsa_nmidiin = nmidiin;
+    // We need to keep the ALSA devices list (midi_alsa_getdevs) in sync with
+    // the actual device config. Not sure why this table (used by the GUI)
+    // uses its own device counts. -ag
+    midi_alsa_setndevs(alsa_nmidiin, alsa_nmidiout);
 
     return;
  error:
@@ -218,6 +224,7 @@ void sys_alsa_poll_midi(void)
 void sys_alsa_close_midi()
 {
     alsa_nmidiin = alsa_nmidiout = 0;
+    midi_alsa_setndevs(alsa_nmidiin, alsa_nmidiout);
     if(midi_handle)
       {
         snd_seq_close(midi_handle);
