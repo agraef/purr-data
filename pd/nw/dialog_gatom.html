@@ -168,7 +168,7 @@ function substitute_space(arg) {
 }
 
 function strip_problem_chars(arg) {
-    var problem_chars = [";", ","/*, "{", "}"*/, "\\"];
+    var problem_chars = [";", ",", "\\"];
     var ret = arg;
     for(var i = 0; i < problem_chars.length; i++) {
         ret = ret.split(problem_chars[i]).join("");
