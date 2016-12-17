@@ -5280,7 +5280,7 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
         {
             t_pd *sh = (t_pd *)x->x_handle;
             pd_vmess(sh, gensym("_motion"), "ff", (t_float)xpos, (t_float)ypos);
-            post("moving a gop rect");
+            //post("moving a gop rect");
         }
     }
     else if (x->gl_editor->e_onmotion == MA_SCROLL || mod == -1)

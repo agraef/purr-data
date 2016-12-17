@@ -844,10 +844,10 @@ void scalehandle_click_label(t_scalehandle *h) {
     t_iemgui *x = (t_iemgui *)h->h_master;
     if (glist_isvisible(x->x_glist))
     {
-        sys_vgui("lower %s\n", h->h_pathname);
+        //sys_vgui("lower %s\n", h->h_pathname);
         t_scalehandle *othersh = x->x_handle;
-        sys_vgui("lower .x%lx.h%lx\n",
-            (t_int)glist_getcanvas(x->x_glist), (t_int)othersh);
+        //sys_vgui("lower .x%lx.h%lx\n",
+        //    (t_int)glist_getcanvas(x->x_glist), (t_int)othersh);
     }
     h->h_dragx = 0;
     h->h_dragy = 0;
