@@ -49,7 +49,6 @@ function text_to_fudi(text) {
     text = text.replace(/(\$[0-9]+)/g, "\\$1");    // escape dollar signs
     text = text.replace(/(\$@)/g, "\\$@");         // escape special $@ sign
     text = text.replace(/(?!\\)(,|;)/g, " \\$1 "); // escape "," and ";"
-    text = text.replace(/\{|\}/g, "");             // filter "{" and "}"
     text = text.replace(/\u0020+/g, " ");          // filter consecutive ascii32
     return text;
 }
