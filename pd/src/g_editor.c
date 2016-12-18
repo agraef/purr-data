@@ -68,7 +68,6 @@ static int screeny2;
 static int copiedfont;
 static void canvas_dofont(t_canvas *x, t_floatarg font, t_floatarg xresize,
     t_floatarg yresize);
-extern void canvas_setbounds(t_canvas *x, int x1, int y1, int x2, int y2);
 int canvas_apply_restore_original_position(t_canvas *x, int orig_pos);
 extern void canvas_draw_gop_resize_hooks(t_canvas *x);
 static void canvas_font(t_canvas *x, t_floatarg font, t_floatarg oldfont,
@@ -6237,8 +6236,6 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
             x->gl_screenx2 = screenx1 + screenx2;
             x->gl_screeny1 = screeny1;
             x->gl_screeny2 = screeny1 + screeny2;
-            //canvas_setbounds(x, screenx1, screeny1,
-            //    screenx1+screenx2, screeny1+screeny2);
             gui_vmess("gui_canvas_change_geometry", "xiiii",
                 x,
                 (int)(x->gl_screenx2 - x->gl_screenx1),

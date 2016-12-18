@@ -51,7 +51,7 @@ t_canvas *canvas_whichfind;         /* last canvas we did a find in */
 static void canvas_start_dsp(void);
 static void canvas_stop_dsp(void);
 static void canvas_drawlines(t_canvas *x);
-void canvas_setbounds(t_canvas *x, int x1, int y1, int x2, int y2);
+void canvas_dosetbounds(t_canvas *x, int x1, int y1, int x2, int y2);
 void canvas_reflecttitle(t_canvas *x);
 static void canvas_addtolist(t_canvas *x);
 static void canvas_takeofflist(t_canvas *x);
@@ -423,7 +423,7 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     x->gl_y1 = 0;
     x->gl_x2 = 1;
     x->gl_y2 = 1;
-    canvas_setbounds(x, xloc, yloc, xloc + width, yloc + height);
+    canvas_dosetbounds(x, xloc, yloc, xloc + width, yloc + height);
     x->gl_owner = owner;
     x->gl_isclone = 0;
     x->gl_name = (*s->s_name ? s : 
@@ -609,9 +609,8 @@ int glist_isgraph(t_glist *x)
     return (x->gl_isgraph|(x->gl_hidetext<<1));
 }
 
-    /* This is sent from the GUI to inform a toplevel that its window has been
-    moved or resized. */
-void canvas_setbounds(t_canvas *x, int x1, int y1, int x2, int y2)
+/* bounds-setting for patch/subpatch windows */
+void canvas_dosetbounds(t_canvas *x, int x1, int y1, int x2, int y2)
 {
     //fprintf(stderr,"canvas_setbounds %d %d %d %d\n", x1, y1, x2, y2);
 
@@ -641,6 +640,14 @@ void canvas_setbounds(t_canvas *x, int x1, int y1, int x2, int y2)
                 gobj_displace(y, x, 0, heightchange);
         canvas_redraw(x);
     }
+}
+
+    /* public method to set the bounds for a patch/subpatch window from the
+       GUI. */
+static void canvas_setbounds(t_canvas *x, t_float left, t_float top,
+                             t_float right, t_float bottom)
+{
+    canvas_dosetbounds(x, (int)left, (int)top, (int)right, (int)bottom);
 }
 
 t_symbol *canvas_makebindsym(t_symbol *s)
@@ -1247,7 +1254,7 @@ static void canvas_relocate(t_canvas *x, t_symbol *canvasgeom,
             /* for some reason this is initially called with cw=ch=1 so
             we just suppress that here. */
     if (cw > 5 && ch > 5)
-        canvas_setbounds(x, txpix, typix,
+        canvas_dosetbounds(x, txpix, typix,
             txpix + cw, typix + ch);
     /* readjust garrays (if any) */
     t_gobj *g;
@@ -2499,6 +2506,8 @@ void g_canvas_setup(void)
         A_DEFFLOAT, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_loadbang,
         gensym("loadbang"), A_NULL);
+    class_addmethod(canvas_class, (t_method)canvas_setbounds,
+        gensym("setbounds"), A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_relocate,
         gensym("relocate"), A_SYMBOL, A_SYMBOL, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_vis,

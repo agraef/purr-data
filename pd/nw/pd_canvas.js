@@ -630,6 +630,10 @@ var canvas_events = (function() {
     gui.Window.get().on("blur", function() {
         nw_window_blur_callback(name);
     });
+    gui.Window.get().on("move", function(x, y) {
+        var w = gui.Window.get();
+        pdgui.pdsend(name, "setbounds", x, y, x + w.width, y + w.height);
+    });
     // set minimum window size
     gui.Window.get().setMinimumSize(150, 100);
 
