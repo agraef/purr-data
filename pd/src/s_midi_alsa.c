@@ -221,9 +221,11 @@ void sys_alsa_close_midi()
     if(midi_handle)
       {
         snd_seq_close(midi_handle);
+        midi_handle = NULL;
         if(midiev)
           {
             snd_midi_event_free(midiev);
+            midiev = NULL;
           }
       }
 }
