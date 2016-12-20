@@ -374,7 +374,6 @@ function nw_close_window(window) {
     window.close(true);
 }
 
-// Way too many arguments here-- rethink this interface
 function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
         // todo: make a separate way to format the title for OSX
     var my_title;
@@ -412,6 +411,7 @@ function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
             pdgui.set_dialogwin(cid, new_win);
         }
         new_win.on("loaded", function() {
+            // Off to the races... :(
             // We need to check here if we're still the window pointed to
             // by the GUI's array of toplevel windows. It can easily happen
             // that we're not-- for example the user could send a stream
@@ -424,12 +424,31 @@ function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
             // as a loaded canvas. If not, we assume it got closed before
             // we were able to finish loading the browser window (e.g.,
             // with a [vis 1, vis 0( message). In that case we kill the window.
+
+            // Still, this is pretty fortuitous-- we have two levels of
+            // asynchronicity-- creating the nw window and loading it. There
+            // may still be an edge case where a race between those two causes
+            // unpredictable behavior.
             if ((new_win === pdgui.get_patchwin(cid) ||
                  new_win === pdgui.get_dialogwin(cid))
                 && pdgui.window_is_loading(cid)) {
                 // initialize the window
                 new_win.eval(null, eval_string);
+                // flag the window as loaded. We may want to wait until the
+                // DOM window has finished loading for this.
+                pdgui.set_finished_loading(cid);
             } else {
+                // If the window is no longer loading, we need to go ahead
+                // and remove the reference to it in the patchwin array.
+                // Otherwise we get dangling references to closed windows
+                // and other bugs...
+                if (!pdgui.window_is_loading(cid)) {
+                    if (type === "pd_canvas") {
+                        pdgui.set_patchwin(cid, undefined);
+                    } else {
+                        pdgui.set_dialogwin(cid, undefined);
+                    }
+                }
                 new_win.close(true);
             }
         });

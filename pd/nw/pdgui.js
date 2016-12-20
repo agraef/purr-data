@@ -1247,6 +1247,12 @@ function window_is_loading(cid) {
 
 exports.window_is_loading = window_is_loading;
 
+function set_window_finished_loading(cid) {
+    loading[cid] = null;
+}
+
+exports.set_window_finished_loading = set_window_finished_loading;
+
 // wrapper for nw_create_window
 function create_window(cid, type, width, height, xpos, ypos, attr_array) {
     nw_create_window(cid, type, width, height, xpos, ypos, attr_array);
@@ -1924,11 +1930,14 @@ function gui_canvas_deselect_line(cid, tag) {
 
 // rename to erase_line (or at least standardize with gobj_erase)
 function gui_canvas_delete_line(cid, tag) {
-    var line = get_item(cid, tag);
-    if (line !== null) {
-        line.parentNode.removeChild(line);
-    } else {
-        //post("canvas_delete_line: error: the line doesn't exist");
+    var line;
+    if (patchwin[cid]) {
+        line = get_item(cid, tag);
+        if (line !== null) {
+            line.parentNode.removeChild(line);
+        } else {
+            //post("canvas_delete_line: error: the line doesn't exist");
+        }
     }
 }
 
@@ -2167,11 +2176,14 @@ function gui_gobj_select(cid, tag) {
 }
 
 function gui_gobj_deselect(cid, tag) {
-    var gobj = get_gobj(cid, tag)
-    if (gobj !== null) {
-        gobj.classList.remove("selected");
-    } else {
-        console.log("text_deselect: something wrong with tag: " + tag + "gobj");
+    var gobj;
+    if (patchwin[cid]) {
+        gobj = get_gobj(cid, tag);
+        if (gobj !== null) {
+            gobj.classList.remove("selected");
+        } else {
+            console.log("text_deselect: error with tag: " + tag + "gobj");
+        }
     }
 }
 
@@ -2809,11 +2821,14 @@ function gui_iemgui_label_color(cid, tag, color) {
 }
 
 function gui_iemgui_label_select(cid, tag, is_selected) {
-    var svg_text = get_item(cid, tag + "label");
-    if (is_selected) {
-        svg_text.classList.add("iemgui_label_selected");
-    } else {
-        svg_text.classList.remove("iemgui_label_selected");
+    var svg_text;
+    if (patchwin[cid]) {
+        svg_text = get_item(cid, tag + "label");
+        if (is_selected) {
+            svg_text.classList.add("iemgui_label_selected");
+        } else {
+            svg_text.classList.remove("iemgui_label_selected");
+        }
     }
 }
 
