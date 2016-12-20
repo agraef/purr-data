@@ -345,7 +345,7 @@ function dev_change(elem) {
     index = +(id.slice(-1)) - 1;
     attrs = get_attr("pd-" + direction + type,
         midi ?  pd_midi_attrs : pd_audio_attrs);
-    attrs[index] = midi ? +elem.value + 1 : elem.value;
+    attrs[index] = elem.value;
 
     disable_unused_chans("in");
     disable_unused_chans("out");
@@ -537,14 +537,14 @@ function populate_midi_devs(type, attrs) {
         while (elem.firstChild) {
             elem.removeChild(elem.firstChild);
         }
-        // make a dummy device named 'None' with value -1
+        // make a dummy device named 'None' with value 0
         opt = document.createElement("option");
-        opt.value = -1;
+        opt.value = 0;
         opt.textContent = "None";
         elem.appendChild(opt);
         for (j = 0; j < dev_names.length; j++) {
             opt = document.createElement("option");
-            opt.value = j;
+            opt.value = j+1;
             opt.textContent = dev_names[j];
             elem.appendChild(opt);
         }
@@ -685,6 +685,8 @@ function midi_prefs_callback(attrs) {
             .style.setProperty("display", "none");
         populate_midi_devs("in", attrs);
         populate_midi_devs("out", attrs);
+        set_devs("midi_in", get_attr("pd-indevs", attrs));
+        set_devs("midi_out", get_attr("pd-outdevs", attrs));
     }
     pdgui.resize_window(pd_object_callback);
 }
