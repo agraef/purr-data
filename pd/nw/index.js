@@ -90,7 +90,7 @@ function nw_window_focus_callback() {
 }
 
 function connect() {
-    var gui_path;
+    var gui_path, file_path;
     if (have_args() && gui.App.argv.length > 1) {
         // Pd started the GUI, so connect to it on port provided in our args
         pdgui.post("Pd has started the GUI");
@@ -99,25 +99,15 @@ function connect() {
         // create a tcp server, then spawn Pd with "-guiport" flag and port
         gui_path = window.location.pathname;
         gui_path = gui_path.substr(0, gui_path.lastIndexOf('/'));
-        pdgui.post("GUI is starting Pd...");
-        pdgui.connect_as_server(gui_path);
-        if (have_args()) {
-            // Quick bugfix for OSX-- handle case where user clicks on a
-            // file and Pd hasn't been started yet.
-            window.setTimeout(function () {
-                if (gui.App.argv[0].slice(0, 7) === "file://") {
-                // Clicking on a Pd file with an installed OSX app bundle sends
-                // a single argument which is a file:// URI.
-                // With the OSX app bundle it is the GUI which starts the
-                // Pd process. So in this case, we just need to parse the
-                // file and open it.
-                // Selecting multiple files and clicking "Open" will trigger
-                // a separate "open" event for each file, so luckily we don't
-                // have to parse them.
-                    pdgui.menu_open(decodeURI(gui.App.argv[0].slice(7)));
-                }
-            }, 6000);
+        // On OSX, if the user double-clicks a pd file we get a single
+        // argument prefixed with "file://". If so, we parse it and
+        // feed it to the Pd instance as an argument to the "-open" flag
+        file_path = gui.App.argv[0];
+        if (have_args() && file_path.slice(0, 7) === "file://") {
+            file_path = decodeURI(file_path.slice(7));
         }
+        pdgui.post("GUI is starting Pd...");
+        pdgui.connect_as_server(gui_path, file_path);
     }
 }
 

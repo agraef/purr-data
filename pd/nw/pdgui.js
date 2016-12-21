@@ -1338,7 +1338,7 @@ exports.canvas_map = canvas_map;
 
 // If the GUI is started first (as in a Mac OSX Bundle) we use this
 // function to actually start the core
-function spawn_pd(gui_path, port) {
+function spawn_pd(gui_path, port, file_to_open) {
     post("gui_path is " + gui_path);
     var pd_binary,
         platform = process.platform,
@@ -1347,6 +1347,9 @@ function spawn_pd(gui_path, port) {
         // OSX -- this is currently tailored to work with an app bundle. It
         // hasn't been tested with a system install of pd-l2ork
         pd_binary = path.join("bin", "pd-l2ork");
+        if (file_to_open) {
+            flags.push("-open", file_to_open);
+        }
     } else {
         pd_binary = path.join(gui_path, "..", "bin", "pd-l2ork");
         flags.push("-nrt"); // for some reason realtime causes watchdog to die
@@ -1469,7 +1472,7 @@ function connect_as_client() {
 
 exports.connect_as_client = connect_as_client;
 
-function connect_as_server(gui_path) {
+function connect_as_server(gui_path, file_path) {
     var server = net.createServer(function(c) {
             post("incoming connection to GUI");
             connection = c;
@@ -1479,7 +1482,7 @@ function connect_as_server(gui_path) {
         ntries = 0,
         listener_callback = function() {
             post("GUI listening on port " + port + " on host " + HOST);
-            spawn_pd(gui_path, port);
+            spawn_pd(gui_path, port, file_path);
         };
     server.listen(port, HOST, listener_callback);
     // try to reconnect if necessary
