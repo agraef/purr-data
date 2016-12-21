@@ -145,7 +145,7 @@ darwin_app_wrapper: Info.plist
 # set up app wrapper
 	install -d "$(PD_APP_CONTENTS)/Resources/app.nw"
 	# The nw.js app has its own Info.plist
-	#install -m0644 -p Info.plist "$(PD_APP_CONTENTS)"
+	install -m0644 -p Info.plist "$(PD_APP_CONTENTS)"
 	install -m0644 -p *.icns  "$(PD_APP_CONTENTS)/Resources"
 	#mv "$(PD_APP_CONTENTS)/MacOS/${WISH_NAME}" \
 	#	"$(PD_APP_CONTENTS)/MacOS/${PD_APP_NAME}"

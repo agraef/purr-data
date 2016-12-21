@@ -1,82 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>BuildMachineOSBuild</key>
+	<string>14D136</string>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
+	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>Purr Data</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>pd</string>
-				<string>pat</string>
-				<string>mxt</string>
-				<string>mxb</string>
-				<string>help</string>
+                                <string>pd</string>
+                                <string>pat</string>
+                                <string>mxt</string>
+                                <string>mxb</string>
+                                <string>help</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>pd-file.icns</string>
+			<string>document.icns</string>
 			<key>CFBundleTypeName</key>
-			<string>Pure Data Patch</string>
+			<string>Pd file</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
-	<string>PD_APP_NAME</string>
+	<string>nwjs</string>
 	<key>CFBundleIconFile</key>
-	<string>pd.icns</string>
+	<string>app.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>org.puredata.pd.wish</string>
+	<string>net.purrdata.nwjs</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>PD_SHORT_NAME</string>
+	<string>Purr Data</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>CFBUNDLESHORTVERSIONSTRING</string>
-	<key>CFBundleSignature</key>
-	<string>PdPd</string>
+	<string>54.0.2840.71</string>
 	<key>CFBundleVersion</key>
-	<string>CFBUNDLEVERSION</string>
-	<key>LSBackgroundOnly</key>
-	<false/>
-	<key>LSEnvironment</key>
-	<dict>
-		<key>EXAMPLE_ENVIRONMENT_VARIABLE</key>
-		<string>this is just a test</string>
-	</dict>
-	<key>LSUIElement</key>
-	<integer>0</integer>
-	<key>LSUIPresentationMode</key>
-	<integer>0</integer>
+	<string>2840.71</string>
+	<key>LSFileQuarantineEnabled</key>
+	<true/>
+	<key>LSHasLocalizedDisplayName</key>
+	<string>1</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>10.9.0</string>
+	<key>NSAppleScriptEnabled</key>
+	<true/>
+	<key>NSPrincipalClass</key>
+	<string>BrowserCrApplication</string>
+	<key>NSSupportsAutomaticGraphicsSwitching</key>
+	<true/>
+	<key>NSUserActivityTypes</key>
+	<array>
+		<string>NSUserActivityTypeBrowsingWeb</string>
+	</array>
+	<key>NSUserNotificationAlertStyle</key>
+	<string>banner</string>
+	<key>OSAScriptingDefinition</key>
+	<string>scripting.sdef</string>
+	<key>SCMRevision</key>
+	<string>1d4579db757b41f0c86527a91f2d2bff04e936c6</string>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<string>public.plain-text</string>
 			<key>UTTypeIdentifier</key>
-			<string>org.puredata.pd-patch</string>
+			<string>net.purrdata.pd-patch</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
 				<array>
 					<string>pd</string>
-				</array>
-			</dict>
-		</dict>
-		<dict>
-			<key>UTTypeConformsTo</key>
-			<string>public.plain-text</string>
-			<key>UTTypeIdentifier</key>
-			<string>org.puredata.max-patch</string>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<array>
-					<string>pat</string>
 				</array>
 			</dict>
 		</dict>
