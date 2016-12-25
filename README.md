@@ -106,8 +106,9 @@ Homebrew build (supported) *40 minutes to 1.5 hours*
 cd purr-data/l2ork_addons</code>
 5. Run the installer<code>
 ./tar_em_up.sh -X *15 minutes*</code>
-6. When the installer finishes, there should be a dmg file in<code>
-purr-data/packages/darwin_app</code>
+6. When the installer finishes, type<code>
+cd ..</code>
+7. There should now be a .dmg file in your current directory
 
 Macports build (unsupported, unfinished)
 Time to build: *1 day*
