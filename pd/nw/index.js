@@ -426,7 +426,7 @@ function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
                 new_win.eval(null, eval_string);
                 // flag the window as loaded. We may want to wait until the
                 // DOM window has finished loading for this.
-                pdgui.set_finished_loading(cid);
+                pdgui.set_window_finished_loading(cid);
             } else {
                 // If the window is no longer loading, we need to go ahead
                 // and remove the reference to it in the patchwin array.
