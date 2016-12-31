@@ -2296,7 +2296,9 @@ function gui_bng_button_color(cid, tag, color) {
     var button;
     if (patchwin[cid]) {
         button = get_item(cid, tag + "button");
-        configure_item(button, { fill: color });
+        if (button) {
+            configure_item(button, { fill: color });
+        }
     }
 }
 
