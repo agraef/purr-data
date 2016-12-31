@@ -1879,14 +1879,21 @@ function gui_atom_draw_border(cid, tag, width, height) {
 
 function gui_atom_redraw_border(cid, tag, width, height) {
     var g = get_gobj(cid, tag),
+        p;
+    // Unfortunately Pd will send updates for gui objects that
+    // lie outside the bounding box of a graph-on-parent subpach.
+    // We should refrain from sending such messages from Pd, but for
+    // now this conditional guards against calling a method on null...
+    if (g) {
         p = g.querySelector("polygon");
-    // When creating a new gatom, the C code sends messages
-    // to redraw the border before the border exists.
-    // So we have to check for existence here...
-    if (p) {
-        configure_item(p, {
-            points: atom_border_points(width, height)
-        });
+        // When creating a new gatom, the C code sends messages
+        // to redraw the border before the border exists.
+        // So we have to check for existence here...
+        if (p) {
+            configure_item(p, {
+                points: atom_border_points(width, height)
+            });
+        }
     }
 }
 
