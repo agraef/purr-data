@@ -2832,10 +2832,12 @@ function gui_iemgui_label_select(cid, tag, is_selected) {
     var svg_text;
     if (patchwin[cid]) {
         svg_text = get_item(cid, tag + "label");
-        if (is_selected) {
-            svg_text.classList.add("iemgui_label_selected");
-        } else {
-            svg_text.classList.remove("iemgui_label_selected");
+        if (svg_text) {
+            if (is_selected) {
+                svg_text.classList.add("iemgui_label_selected");
+            } else {
+                svg_text.classList.remove("iemgui_label_selected");
+            }
         }
     }
 }
