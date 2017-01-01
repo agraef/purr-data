@@ -135,7 +135,7 @@ debstage: $(bindir)
 		$(DESTDIR)/etc/pd-l2ork/default.settings
 	install -p $(packages_src)/linux_make/default.settings $(DESTDIR)$(libpddir)
 # app window icon
-	install -p $(packages_src)/linux_make/pd-l2ork.gif $(DESTDIR)$(libpddir)
+	#install -p $(packages_src)/linux_make/pd-l2ork.gif $(DESTDIR)$(libpddir)
 # emacs mode for .pd files
 	install -d $(DESTDIR)/usr/share/emacs/site-lisp/
 	install -p -m0644 $(scripts_src)/pd-l2ork-mode.el \
@@ -187,7 +187,7 @@ installer_readme:
 installer_settings:
 	install -p $(packages_src)/linux_make/default.settings $(DESTDIR)$(libpddir)
 	# app window icon
-	install -p $(packages_src)/linux_make/pd-l2ork.gif $(DESTDIR)$(libpddir)
+	# install -p $(packages_src)/linux_make/pd-l2ork.gif $(DESTDIR)$(libpddir)
 #	install -d $(DESTDIR)/usr/share/icons/hicolor/128x128/apps
 #	install -p -m0644 $(packages_src)/linux_make/pd-l2ork.png \
 #		$(DESTDIR)/usr/share/icons/hicolor/128x128/apps/
