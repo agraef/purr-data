@@ -414,6 +414,7 @@ static void grid_displace(t_gobj *z, t_glist *glist, int dx, int dy)
     if (xold != text_xpix(&x->x_obj, glist) || yold != text_ypix(&x->x_obj, glist))
     {
 	//grid_draw_move(x, x->x_glist);
+        canvas_fixlinesfor(glist, (t_text *)z);
     }
 }
 
