@@ -33,7 +33,7 @@ static int gridcount=0;
 static int guidebug=0;
 static int pointsize = 5;
 
-static char   *grid_version = "grid: version 0.8, written by Yves Degoyon (ydegoyon@free.fr)";
+static char   *grid_version = "grid: version 0.8.1, written by Yves Degoyon (ydegoyon@free.fr)";
 
 #define GRID_SYS_VGUI2(a,b) if (guidebug) \
                          post(a,b);\
@@ -252,7 +252,7 @@ static void grid_draw_select(t_grid* x,t_glist* glist)
     t_canvas *canvas = glist_getcanvas(glist);
     if (x->x_selected)
     {
-        pd_bind(&x->x_obj.ob_pd, x->x_name);
+        //pd_bind(&x->x_obj.ob_pd, x->x_name);
         /* sets the item in blue */
         //GRID_SYS_VGUI3(".x%lx.c itemconfigure %lxGRID "
         //               "-outline #0000FF\n",
@@ -261,7 +261,7 @@ static void grid_draw_select(t_grid* x,t_glist* glist)
     }
     else
     {
-        pd_unbind(&x->x_obj.ob_pd, x->x_name);
+        //pd_unbind(&x->x_obj.ob_pd, x->x_name);
         //GRID_SYS_VGUI3(".x%lx.c itemconfigure %lxGRID "
         //               "-outline #000000\n",
         //    canvas, x);
@@ -722,7 +722,7 @@ static t_grid *grid_new(t_symbol *s, int argc, t_atom *argv)
 
 static void grid_free(t_grid *x)
 {
-    post( "grid~: freeing ressources [NULL]" );
+    pd_unbind(&x->x_obj.ob_pd, x->x_name);
 }
 
 void grid_setup(void)
