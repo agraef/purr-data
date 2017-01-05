@@ -3634,11 +3634,9 @@ function gui_configure_grid(cid, tag, w, h, bg_color, has_grid, x_l, y_l) {
             "M", 0, 0, 0, h,
             "M", w, 0, w, h
            ].join(" "),
-        width: w,
-        height: h,
         fill: "none",
         stroke: "black",
-        "stroke-width": 1,
+        "stroke-width": 1
     });
     configure_item(g.querySelector(".out_0"), {
         y: h + 1,
@@ -3646,7 +3644,7 @@ function gui_configure_grid(cid, tag, w, h, bg_color, has_grid, x_l, y_l) {
         height: 1,
         fill: "none",
         stroke: "black",
-        "stroke-width": 1,
+        "stroke-width": 1
     });
     configure_item(g.querySelector(".out_1"), {
         x: w - 7,
@@ -3655,14 +3653,14 @@ function gui_configure_grid(cid, tag, w, h, bg_color, has_grid, x_l, y_l) {
         height: 1,
         fill: "none",
         stroke: "black",
-        "stroke-width": 1,
+        "stroke-width": 1
     });
 
     grid_d_string = !!has_grid ? get_grid_data(w, h, x_l, y_l) : "";
     configure_item(g.querySelector(".grid"), {
         d: grid_d_string,
         stroke: "white",
-        "stroke-width": 1,
+        "stroke-width": 1
     });
 
     configure_item(g.querySelector(".point"), {
@@ -3671,7 +3669,7 @@ function gui_configure_grid(cid, tag, w, h, bg_color, has_grid, x_l, y_l) {
         height: 5,
         fill: "#ff0000",
         stroke: "black",
-        "stroke-width": 1,
+        "stroke-width": 1
     });
 }
 
@@ -3713,6 +3711,84 @@ function gui_grid_point(cid, tag, x, y) {
         x: x,
         y: y,
         style: "visibility: visible;"
+    });
+}
+
+// mknob from moonlib
+function gui_mknob_new(cid, tag, x, y, is_toplevel, show_in, show_out) {
+    var g = gui_gobj_new(cid, tag, "obj", x, y, is_toplevel),
+        border = create_item(cid, "path", {
+            class: "border" // now we can inherit the css border styles
+        }),
+        circle = create_item(cid, "circle", {
+            class: "circle"
+        }),
+        line = create_item(cid, "line", {
+            class: "dial"
+        }),
+        in_0 = create_item(cid, "rect", {
+            class: "in_0",
+            style: "display: " + (is_toplevel && show_in ? "inline;" : "none;")
+        }),
+        out_0 = create_item(cid, "rect", {
+            class: "out_0",
+            style: "display: " + (is_toplevel && show_out ? "inline;" : "none;")
+        }),
+        label = create_item(cid, "text", {
+            class: "label"
+        });
+    g.appendChild(border);
+    g.appendChild(circle);
+    g.appendChild(line);
+    g.appendChild(in_0);
+    g.appendChild(out_0);
+    g.appendChild(label);
+}
+
+function gui_configure_mknob(cid, tag, size, xlet_width, label_x, label_y,
+    bg_color, fg_color, label_color) {
+    var g = get_gobj(cid, tag);
+    configure_item(g.querySelector(".border"), {
+        d: ["M", 0, 0, size, 0,
+            "M", 0, size, size, size,
+            "M", 0, 0, 0, size,
+            "M", size, 0, size, size
+           ].join(" "),
+        fill: "none",
+    });
+    configure_item(g.querySelector(".circle"), {
+        cx: size / 2,
+        cy: size / 2,
+        r: size / 2,
+        fill: bg_color,
+        stroke: "black",
+        "stroke-width": 1
+    });
+    configure_item(g.querySelector(".dial"), {
+        "stroke-width": 2,
+        stroke: fg_color
+    });
+    configure_item(g.querySelector(".in_0"), {
+        x: 0,
+        y: -1,
+        width: xlet_width,
+        height: 1
+    });
+    configure_item(g.querySelector(".out_0"), {
+        x: 0,
+        y: size - 1,
+        width: xlet_width,
+        height: 1
+    });
+}
+
+function gui_turn_mknob(cid, tag, x1, y1, x2, y2) {
+    var g = get_gobj(cid, tag);
+    configure_item(g.querySelector(".dial"), {
+        x1: x1,
+        y1: y1,
+        x2: x2,
+        y2: y2
     });
 }
 

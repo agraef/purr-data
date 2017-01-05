@@ -69,7 +69,9 @@
       "cancel":       "Abbrechen",
       "cancel_tt":    "Schließe das Dialog-Fenster",
       "close":        "Schließen",
-      "close_tt":     "Schließe das Dialog-Fenster"
+      "close_tt":     "Schließe das Dialog-Fenster",
+      "mknob_steps":  "# of steps",
+      "mknob_steps_tt": "number of dial positions for the knob"
     }
   },
   "gatom": {

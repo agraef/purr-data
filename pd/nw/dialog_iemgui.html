@@ -66,11 +66,11 @@
                      onchange="update_attr(this);">
             </td>
             <td>
-              <label data-i18n="[title]iem.prop.height_tt">
-                <span data-i18n="iem.prop.height"></span>
+              <label data-i18n="[title]iem.prop.height_tt" class="mknob_tt">
+                <span data-i18n="iem.prop.height" class="mknob_label"></span>
               </label>
             </td>
-            <td data-i18n="[title]iem.prop.height_tt">
+            <td data-i18n="[title]iem.prop.height_tt" class="mknob_tt">
               <input type="text" name="height"
                      onchange="update_attr(this);">
             </td>
@@ -198,7 +198,7 @@
             </td>
             <td data-i18n="[title]iem.prop.send_tt">
               <input type="text" name="send_symbol"
-                     onchange="update_attr(this);">
+                     onchange="update_attr(this, true);">
             </td>
             <td>
           <tr class="receive_symbol prop hidden">
@@ -209,7 +209,7 @@
             </td>
             <td data-i18n="[title]iem.prop.receive_tt">
               <input type="text" name="receive_symbol"
-                     onchange="update_attr(this);">
+                     onchange="update_attr(this, true);">
             </td>
             <td>
           </tr>
@@ -228,7 +228,7 @@
             </td>
             <td data-i18n="[title]iem.prop.label_tt">
               <input type="text" name="label"
-                     onchange="update_attr(this);">
+                     onchange="update_attr(this, true);">
             </td>
             <td>
               <label data-i18n="[title]iem.prop.xoffset_tt">
@@ -355,7 +355,7 @@ function strip_problem_chars(arg) {
     return ret;
 }
 
-function update_attr(elem) {
+function update_attr(elem, symbol_field) {
     if (!new_attrs.hasOwnProperty(elem.name)) {
         pdgui.post("warning: new_attrs[" + elem.name + "] doesn't exist");
     }
@@ -366,7 +366,8 @@ function update_attr(elem) {
     } else if (elem.type === "color") {
         new_attrs[elem.name] = parseInt(elem.value.slice(1), 16)
     } else {
-        new_attrs[elem.name] = elem.value;
+        new_attrs[elem.name] = (elem.value === "" && !symbol_field) ?
+            "0" : elem.value;
     }
 }
 
@@ -551,6 +552,15 @@ function ok() {
     cancel(false);
 }
 
+function change_height_slot_labels_for_mknob() {
+    document.body.querySelectorAll(".mknob_label").forEach(function(e) {
+        e.setAttribute("data-i18n", "iem.prop.mknob_steps");
+    });
+    document.body.querySelectorAll(".mknob_tt").forEach(function(e) {
+        e.setAttribute("data-i18n", "[title]iem.prop.mknob_steps_tt");
+    });
+}
+
 // This gets called from the nw_create_window function in index.html
 // It provides us with our window id from the C side.  Once we have it
 // we can create the menu and register event callbacks
@@ -565,6 +575,14 @@ function register_window_id(gfxstub, attr_object) {
     }
     console.log("attr object is " + attr_object.toString());
     add_events(gfxstub);
+
+    // Special case for [moonlib/mknob] which leverages the iemgui dialog--
+    // change the label for "height" to "steps"
+    if (attr_object.type === "mknob") {
+        change_height_slot_labels_for_mknob();
+        pdgui.post("Special case: mknob");
+    }
+
     translate_form();
     populate_form(attr_object);
     // We don't turn on rendering of the "container" div until
@@ -610,7 +628,7 @@ function populate_form(attr_object) {
         if (attr_object[attr] !== "empty") {
             var elem = document.getElementsByName(attr);
             if (elem.length > 0) {
-                if(attr.slice(-5) === "color") {
+                if (attr.slice(-5) === "color") {
                     var hex_string = Number(attr_object[attr]).toString(16);
                     var color_string = "#" +
                         (hex_string === "0" ? "000000" : hex_string);
@@ -623,8 +641,8 @@ function populate_form(attr_object) {
                 } else if (elem[0].type === "select-one") {
                     elem[0].selectedIndex = +attr_object[attr];
                 } else if (attr === "send_symbol" ||
-			   attr === "receive_symbol" ||
-			   attr === "label") {
+                           attr === "receive_symbol" ||
+                           attr === "label") {
                     elem[0].value = iemgui_unescape(attr_object[attr]);
                 } else {
                     elem[0].value = attr_object[attr];

@@ -41,7 +41,7 @@ typedef struct _mknob
     int      x_steady;
     double   x_min;
     double   x_max;
-    int   	 x_H;
+    int      x_H;
     double   x_k;
 } t_mknob;
 
@@ -51,45 +51,42 @@ static t_class *mknob_class;
 /* widget helper functions */
 static void mknob_update_knob(t_mknob *x, t_glist *glist)
 {
-    t_canvas *canvas=glist_getcanvas(glist);
-//	float val=(x->x_val + 50.0)/100.0/MKNOB_TANGLE;
-    float val=(x->x_val + 50.0)/100.0/x->x_H;
-    float 	angle,
-            radius=x->x_gui.x_w/2.0*.98,
-            miniradius=MKNOB_THICK,
-			xp, yp, xc, yc, xpc, ypc;
+    t_canvas *canvas = glist_getcanvas(glist);
+    float val = (x->x_val + 50.0)/100.0/x->x_H;
+    float angle,
+        radius = x->x_gui.x_w/2.0*.98,
+        miniradius = MKNOB_THICK,
+        xp, yp, xc, yc, xpc, ypc;
     int x0,y0,x1,y1;
-    x0=text_xpix(&x->x_gui.x_obj, glist);
-    y0=text_ypix(&x->x_gui.x_obj, glist);
-    x1=x0+x->x_gui.x_w;
-    y1=y0+x->x_gui.x_w;
-    xc=(x0+x1)/2.0;
-    yc=(y0+y1)/2.0;
+    //x0=text_xpix(&x->x_gui.x_obj, glist);
+    //y0=text_ypix(&x->x_gui.x_obj, glist);
+    x0 = 0;
+    y0 = 0;
+    x1 = x0 + x->x_gui.x_w;
+    y1 = y0 + x->x_gui.x_w;
+    xc = (x0+x1) / 2.0;
+    yc = (y0+y1) / 2.0;
 
-    if(x->x_gui.x_h<0)
-        angle=val*(M_PI*2.0)+M_PI/2.0;
+    if (x->x_gui.x_h < 0)
+        angle = val * (M_PI * 2.0) + M_PI / 2.0;
     else
-        angle=val*(M_PI*1.5)+3.0*M_PI/4.0;
+        angle = val * (M_PI * 1.5) + 3.0 * M_PI / 4.0;
 
-    xp=xc+radius*cos(angle);
-    yp=yc+radius*sin(angle);
-    xpc=miniradius*cos(angle-M_PI/2.0);
-    ypc=miniradius*sin(angle-M_PI/2.0);
-    //xpc=xc+7*cos(angle);
-    //ypc=yc+7*sin(angle);
+    xp = xc + radius * cos(angle);
+    yp = yc + radius * sin(angle);
+    xpc = miniradius * cos(angle - M_PI / 2.0);
+    ypc = miniradius * sin(angle - M_PI / 2.0);
 
-    //fprintf(stderr,"xp%f yp%f xpc%f ypc%f angle%f xc%f yc%f\n", xp, yp, xpc, ypc, angle, xc, yc);
-
-    //sys_vgui(".x%lx.c coords %xKNOB %f %f %f %f %f %f\n",
-    //         canvas,x,xp,yp,xc+xpc,yc+ypc,xc-xpc,yc-ypc);
-    sys_vgui(".x%lx.c coords %xKNOB %f %f %f %f\n",
-             canvas,x,xp,yp,xc,yc);
-	/*t_float val=(x->x_val + 50.0)/100.0/x->x_H;
-	t_float angle = val * M_PI * 1.5 - M_PI * 0.75;
-    t_float xc=text_xpix(&x->x_gui.x_obj, glist)+x->x_gui.x_w/2.0;
-    t_float yc=text_ypix(&x->x_gui.x_obj, glist)+x->x_gui.x_w/2.0;
-	sys_vgui("set matrix [::tkp::transform rotate %f %f %f]\n", angle, xc, yc);
-    sys_vgui(".x%lx.c itemconfigure %xKNOB -matrix $matrix\n", canvas, x);*/
+    //sys_vgui(".x%lx.c coords %xKNOB %f %f %f %f\n",
+    //         canvas,x,xp,yp,xc,yc);
+    gui_vmess("gui_turn_mknob", "xxffff",
+        canvas,
+        x,
+        xp,
+        yp,
+        xc,
+        yc
+    );
 }
 
 static void mknob_draw_update(t_mknob *x, t_glist *glist)
@@ -117,6 +114,41 @@ static void mknob_draw_update(t_mknob *x, t_glist *glist)
     }
 }
 
+static void mknob_draw_config(t_mknob *x,t_glist *glist)
+{
+    t_canvas *canvas = glist_getcanvas(glist);
+    char bcol[8], fcol[8], lcol[8];
+
+    sprintf(bcol, "#%6.6x", x->x_gui.x_bcol);
+    sprintf(fcol, "#%6.6x", x->x_gui.x_fcol);
+    sprintf(lcol, "#%6.6x", x->x_gui.x_lcol);
+
+    sys_vgui(".x%lx.c itemconfigure %xLABEL "
+             "-font {{%s} %d bold} -fill #%6.6x -text {%s} \n",
+             canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize,
+             x->x_gui.x_fsf.x_selected?IEM_GUI_COLOR_SELECTED:x->x_gui.x_lcol,
+             strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");
+    sys_vgui(".x%lx.c itemconfigure %xKNOB "
+             "-fill #%6.6x\n", canvas, x, x->x_gui.x_fcol);
+    sys_vgui(".x%lx.c itemconfigure %xCENTER "
+             "-fill #%6.6x\n", canvas, x, x->x_gui.x_fcol);
+    sys_vgui(".x%lx.c itemconfigure %xBASE "
+             "-fill #%6.6x\n", canvas, x, x->x_gui.x_bcol);
+
+    gui_vmess("gui_configure_mknob", "xxiiiisss",
+        canvas,
+        x,
+        x->x_gui.x_w,
+        IOWIDTH,
+        x->x_gui.x_ldx,
+        x->x_gui.x_ldy,
+        bcol,
+        fcol,
+        lcol
+    );
+    mknob_update_knob(x,glist);
+}
+
 static void mknob_draw_new(t_mknob *x, t_glist *glist)
 {
     int xpos=text_xpix(&x->x_gui.x_obj, glist);
@@ -130,42 +162,54 @@ static void mknob_draw_new(t_mknob *x, t_glist *glist)
     t_gobj *y = (t_gobj *)x;
     t_object *ob = pd_checkobject(&y->g_pd);
 
-    /* GOP objects are unable to call findrtext triggering consistency check error */
+    // GOP objects are unable to call findrtext triggering consistency
+    // check error
     t_rtext *yyyy = NULL;
     if (!glist->gl_isgraph || glist_istoplevel(glist))
         yyyy = glist_findrtext(canvas, (t_text *)&ob->ob_g);
 
-    /* on GOP we cause segfault as apparently text_gettag() returns bogus data */
+    // on GOP we cause segfault as apparently text_gettag() returns bogus data
     char *nlet_tag;
     if (yyyy) nlet_tag = rtext_gettag(yyyy);
     else nlet_tag = "bogus";
 
-    sys_vgui(".x%lx.c create circle %f %f -r %f -fill #%6.6x -tags {%xBASE %xMKNOB %s}\n",
-             canvas,xc,yc,rc,
-             x->x_gui.x_bcol, x, x, nlet_tag);
-    /*sys_vgui(".x%lx.c create circle %f %f -r %f -stroke \"\" -fill #%6.6x -tags {%xCENTER %xMKNOB}\n",
-         canvas,xc,yc,3.5,
-         x->x_gui.x_fcol, x, x);*/
-    /*sys_vgui(".x%lx.c create ppolygon %d %d %d %d %d %d -fill #%6.6x -tags {%xKNOB %xMKNOB}\n",
-             glist_getcanvas(glist),
-             (int)xc,ypos,(int)xc-4,(int)yc,(int)xc+4,(int)yc,x->x_gui.x_fcol,x,x);*/
-    sys_vgui(".x%lx.c create ppolygon %f %d %f %f -strokewidth 2 -stroke #%6.6x -tags {%xKNOB %xMKNOB %s}\n",
-             canvas,xc,ypos,xc,yc,x->x_gui.x_fcol,x,x,nlet_tag);
-    mknob_update_knob(x,glist);
+    //sys_vgui(".x%lx.c create circle %f %f -r %f "
+    //         "-fill #%6.6x -tags {%xBASE %xMKNOB %s}\n",
+    //         canvas,xc,yc,rc,
+    //         x->x_gui.x_bcol, x, x, nlet_tag);
+    //sys_vgui(".x%lx.c create ppolygon %f %d %f %f "
+    //         "-strokewidth 2 -stroke #%6.6x -tags {%xKNOB %xMKNOB %s}\n",
+    //         canvas,xc,ypos,xc,yc,x->x_gui.x_fcol,x,x,nlet_tag);
+    //mknob_update_knob(x,glist);
     sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
 	     -font {{%s} %d bold} -fill #%6.6x -tags {%xLABEL %xMKNOB %s}\n",
              canvas, xpos+x->x_gui.x_ldx,
              ypos+x->x_gui.x_ldy,
-             strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
-             x->x_gui.x_font, x->x_gui.x_fontsize, x->x_gui.x_lcol, x, x, nlet_tag);
-    if (canvas == glist) {
-        if(!x->x_gui.x_fsf.x_snd_able)
-            sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%xOUT%d %xMKNOB %so0 outlet}\n",
-             canvas, xpos, ypos + x->x_gui.x_w-1, xpos + IOWIDTH, ypos + x->x_gui.x_w, x, 0, x, nlet_tag);
-        if(!x->x_gui.x_fsf.x_rcv_able)
-        sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%xIN%d %xMKNOB %si0 inlet}\n",
-             canvas, xpos, ypos-1, xpos + IOWIDTH, ypos, x, 0, x, nlet_tag);
-    }
+             strcmp(x->x_gui.x_lab->s_name, "empty") ?
+                 x->x_gui.x_lab->s_name : "",
+             x->x_gui.x_font, x->x_gui.x_fontsize, x->x_gui.x_lcol,
+             x, x, nlet_tag);
+    //if (canvas == glist) {
+    //    if (!x->x_gui.x_fsf.x_snd_able)
+    //        sys_vgui(".x%lx.c create prect %d %d %d %d "
+    //                 "-tags {%xOUT%d %xMKNOB %so0 outlet}\n",
+    //         canvas, xpos, ypos + x->x_gui.x_w-1,
+    //         xpos + IOWIDTH, ypos + x->x_gui.x_w, x, 0, x, nlet_tag);
+    //    if (!x->x_gui.x_fsf.x_rcv_able)
+    //        sys_vgui(".x%lx.c create prect %d %d %d %d "
+    //                 "-tags {%xIN%d %xMKNOB %si0 inlet}\n",
+    //         canvas, xpos, ypos-1, xpos + IOWIDTH, ypos, x, 0, x, nlet_tag);
+    //}
+    gui_vmess("gui_mknob_new", "xxiiiii",
+        canvas,
+        x,
+        xpos,
+        ypos,
+        glist_istoplevel(glist),
+        !x->x_gui.x_fsf.x_snd_able,
+        !x->x_gui.x_fsf.x_rcv_able
+    );
+    mknob_draw_config(x, glist);
 }
 
 static void mknob_draw_move(t_mknob *x, t_glist *glist)
@@ -216,19 +260,6 @@ static void mknob_draw_erase(t_mknob *x,t_glist *glist)
     }
 }
 
-static void mknob_draw_config(t_mknob *x,t_glist *glist)
-{
-    t_canvas *canvas=glist_getcanvas(glist);
-
-    sys_vgui(".x%lx.c itemconfigure %xLABEL -font {{%s} %d bold} -fill #%6.6x -text {%s} \n",
-             canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize,
-             x->x_gui.x_fsf.x_selected?IEM_GUI_COLOR_SELECTED:x->x_gui.x_lcol,
-             strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");
-    sys_vgui(".x%lx.c itemconfigure %xKNOB -fill #%6.6x\n", canvas, x, x->x_gui.x_fcol);
-    sys_vgui(".x%lx.c itemconfigure %xCENTER -fill #%6.6x\n", canvas, x, x->x_gui.x_fcol);
-    sys_vgui(".x%lx.c itemconfigure %xBASE -fill #%6.6x\n", canvas, x, x->x_gui.x_bcol);
-}
-
 static void mknob_draw_io(t_mknob *x,t_glist *glist, int old_snd_rcv_flags)
 {
     int xpos=text_xpix(&x->x_gui.x_obj, glist);
@@ -265,24 +296,27 @@ static void mknob_draw_io(t_mknob *x,t_glist *glist, int old_snd_rcv_flags)
 static void mknob_draw_select(t_mknob *x,t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    //fprintf(stderr,"mknob_draw_select %lx %lx\n", x->x_gui.x_fsf.x_selected, glist);
 
-    if(x->x_gui.x_fsf.x_selected)
+    if (x->x_gui.x_fsf.x_selected)
     {
-        //pd_bind(&x->x_gui.x_obj.ob_pd, iemgui_key_sym);
-        if (x->x_gui.x_glist == glist_getcanvas(glist))
-        {
-            sys_vgui(".x%lx.c itemconfigure %xBASE -stroke $pd_colors(selection)\n", canvas, x);
-            sys_vgui(".x%lx.c itemconfigure %xLABEL -fill $pd_colors(selection)\n", canvas, x);
-        }
-		sys_vgui(".x%lx.c addtag selected withtag %lxMKNOB\n", canvas, x);
+        //if (x->x_gui.x_glist == glist_getcanvas(glist))
+        //{
+        //    sys_vgui(".x%lx.c itemconfigure %xBASE "
+        //             "-stroke $pd_colors(selection)\n", canvas, x);
+        //    sys_vgui(".x%lx.c itemconfigure %xLABEL "
+        //             "-fill $pd_colors(selection)\n", canvas, x);
+        //}
+        //sys_vgui(".x%lx.c addtag selected withtag %lxMKNOB\n", canvas, x);
+        gui_vmess("gui_gobj_select", "xx", canvas, x);
     }
     else
     {
-        //pd_unbind(&x->x_gui.x_obj.ob_pd, iemgui_key_sym);
-        sys_vgui(".x%lx.c itemconfigure %xBASE -stroke #%6.6x\n", canvas, x, x->x_gui.x_fcol);
-        sys_vgui(".x%lx.c itemconfigure %xLABEL -fill #%6.6x\n", canvas, x, x->x_gui.x_lcol);
-		sys_vgui(".x%lx.c dtag %lxMKNOB selected\n", canvas, x);
+        //sys_vgui(".x%lx.c itemconfigure %xBASE "
+        //         "-stroke #%6.6x\n", canvas, x, x->x_gui.x_fcol);
+        //sys_vgui(".x%lx.c itemconfigure %xLABEL "
+        //         "-fill #%6.6x\n", canvas, x, x->x_gui.x_lcol);
+        //sys_vgui(".x%lx.c dtag %lxMKNOB selected\n", canvas, x);
+        gui_vmess("gui_gobj_deselect", "xx", canvas, x);
     }
 }
 
@@ -412,6 +446,7 @@ static void mknob_properties(t_gobj *z, t_glist *owner)
 {
     t_mknob *x = (t_mknob *)z;
     char buf[800];
+    char *gfx_tag;
     t_symbol *srl[3];
 
     iemgui_properties(&x->x_gui, srl);
@@ -430,7 +465,37 @@ static void mknob_properties(t_gobj *z, t_glist *owner)
             srl[2]->s_name, x->x_gui.x_ldx, x->x_gui.x_ldy,
             x->x_gui.x_fsf.x_font_style, x->x_gui.x_fontsize,
             0xffffff & x->x_gui.x_bcol, 0xffffff & x->x_gui.x_fcol, 0xffffff & x->x_gui.x_lcol);
-    gfxstub_new(&x->x_gui.x_obj.ob_pd, x, buf);
+    //gfxstub_new(&x->x_gui.x_obj.ob_pd, x, buf);
+
+    gfx_tag = gfxstub_new2(&x->x_gui.x_obj.ob_pd, x);
+
+    gui_start_vmess("gui_iemgui_dialog", "s", gfx_tag);
+    gui_start_array();
+
+    gui_s("type");             gui_s("mknob");
+    gui_s("width");            gui_i(x->x_gui.x_w);
+    /* Since mknob reuses the iemgui dialog code, we just
+       use the "height" slot for the number of steps and
+       re-label it on the GUI side */
+    gui_s("height");           gui_i(x->x_gui.x_h);
+    gui_s("minimum_range");    gui_f(x->x_min);
+    gui_s("maximum_range");    gui_f(x->x_max);
+    gui_s("log_scaling");      gui_i(x->x_lin0_log1);
+    gui_s("init");             gui_i(x->x_gui.x_isa.x_loadinit);
+    gui_s("steady_on_click");   gui_i(x->x_steady);
+    gui_s("send_symbol");      gui_s(srl[0]->s_name);
+    gui_s("receive_symbol");   gui_s(srl[1]->s_name);
+    gui_s("label");            gui_s(srl[2]->s_name);
+    gui_s("x_offset");         gui_i(x->x_gui.x_ldx);
+    gui_s("y_offset");         gui_i(x->x_gui.x_ldy);
+    gui_s("font_style");       gui_i(x->x_gui.x_fsf.x_font_style);
+    gui_s("font_size");        gui_i(x->x_gui.x_fontsize);
+    gui_s("background_color"); gui_i(0xffffff & x->x_gui.x_bcol);
+    gui_s("foreground_color"); gui_i(0xffffff & x->x_gui.x_fcol);
+    gui_s("label_color");      gui_i(0xffffff & x->x_gui.x_lcol);
+
+    gui_end_array();
+    gui_end_vmess();
 }
 
 static void mknob_set(t_mknob *x, t_floatarg f)    /* bugfix */
@@ -487,9 +552,9 @@ static void mknob_dialog(t_mknob *x, t_symbol *s, int argc, t_atom *argv)
     int steady = (int)atom_getintarg(17, argc, argv);
     int sr_flags;
 
-    if(lilo != 0) lilo = 1;
+    if (lilo != 0) lilo = 1;
     x->x_lin0_log1 = lilo;
-    if(steady)
+    if (steady)
         x->x_steady = 1;
     else
         x->x_steady = 0;
@@ -504,7 +569,7 @@ static void mknob_dialog(t_mknob *x, t_symbol *s, int argc, t_atom *argv)
     canvas_fixlinesfor(x->x_gui.x_glist, (t_text *)x);
 }
 
-static int xm0,ym0,xm,ym;
+static int xm0, ym0, xm, ym;
 
 static void mknob_motion(t_mknob *x, t_floatarg dx, t_floatarg dy)
 {
