@@ -503,7 +503,7 @@ static void *bng_new(t_symbol *s, int argc, t_atom *argv)
 
 static void bng_ff(t_bng *x)
 {
-    if(iemgui_has_rcv(&x->x_gui))
+    if (iemgui_has_rcv(&x->x_gui))
         pd_unbind(&x->x_gui.x_obj.ob_pd, x->x_gui.x_rcv);
     clock_free(x->x_clock_lck);
     clock_free(x->x_clock_brk);
