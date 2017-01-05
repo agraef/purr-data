@@ -99,7 +99,8 @@ static void grid_draw_update(t_grid *x, t_glist *glist)
     // }
 }
 
-static void grid_draw_new(t_grid *x, t_glist *glist)
+static void grid_draw_select(t_grid* x, t_glist* glist);
+static void grid_draw_configure(t_grid *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
     //GRID_SYS_VGUI8(".x%lx.c create rectangle %d %d %d %d "
@@ -148,14 +149,7 @@ static void grid_draw_new(t_grid *x, t_glist *glist)
     //}
 
     // gui_gobj_new, "xx type text_xpix text_ypix istoplevel"
-    gui_vmess("gui_gobj_new", "xxsiii",
-        canvas,
-        x,
-        "obj",
-        text_xpix(&x->x_obj, glist),
-        text_ypix(&x->x_obj, glist),
-        glist_istoplevel(glist));
-    gui_vmess("gui_grid_draw_bg", "xxiisiii",
+    gui_vmess("gui_configure_grid", "xxiisiii",
         canvas,
         x,
         x->x_width,
@@ -164,7 +158,21 @@ static void grid_draw_new(t_grid *x, t_glist *glist)
         x->x_grid,
         x->x_xlines,
         x->x_ylines);
+    if (glist_isselected(glist, &x->x_obj))
+        grid_draw_select(x, glist);
     canvas_fixlinesfor( canvas, (t_text*)x );
+}
+
+static void grid_draw_new(t_grid *x, t_glist *glist)
+{
+    t_canvas *canvas=glist_getcanvas(glist);
+    gui_vmess("gui_grid_new", "xxiii",
+        canvas,
+        x,
+        text_xpix(&x->x_obj, glist),
+        text_ypix(&x->x_obj, glist),
+        glist_istoplevel(glist));
+    grid_draw_configure(x, glist);
 }
 
 static void grid_draw_move(t_grid *x, t_glist *glist)
@@ -323,14 +331,36 @@ static void grid_save(t_gobj *z, t_binbuf *b)
 static void grid_properties(t_gobj *z, t_glist *owner)
 {
     char buf[800];
+    char *gfx_tag;
     t_grid *x=(t_grid *)z;
 
-    sprintf(buf, "pdtk_grid_dialog %%s %s %d %.2f %.2f %d %.2f %.2f %d %.2f %.2f %d %d\n",
-        x->x_name->s_name, x->x_width, x->x_min, x->x_max, x->x_height, 
-        x->y_min, x->y_max, x->x_grid, x->x_xstep, x->x_ystep,
-        x->x_xlines, x->x_ylines );
+    //sprintf(buf, "pdtk_grid_dialog %%s %s %d %.2f %.2f %d %.2f %.2f %d %.2f %.2f %d %d\n",
+    //    x->x_name->s_name, x->x_width, x->x_min, x->x_max, x->x_height, 
+    //    x->y_min, x->y_max, x->x_grid, x->x_xstep, x->x_ystep,
+    //    x->x_xlines, x->x_ylines );
         // post("grid_properties : %s", buf );
-    gfxstub_new(&x->x_obj.ob_pd, x, buf);
+    //gfxstub_new(&x->x_obj.ob_pd, x, buf);
+    gfx_tag = gfxstub_new2(&x->x_obj.ob_pd, x);
+
+    gui_start_vmess("gui_external_dialog", "ss", gfx_tag, "grid");
+    gui_start_array();
+
+    gui_s("receive_symbol"); gui_s(x->x_name->s_name);
+    gui_s("width"); gui_i(x->x_width);
+    gui_s("min"); gui_f(x->x_min);
+    gui_s("max"); gui_f(x->x_max);
+    gui_s("height"); gui_i(x->x_height);
+    gui_s("y-min"); gui_f(x->y_min);
+    gui_s("y-max"); gui_f(x->y_max);
+    gui_s("grid_toggle"); gui_i(x->x_grid);
+    gui_s("x-steps"); gui_f(x->x_xstep);
+    gui_s("y-steps"); gui_f(x->x_ystep);
+    gui_s("x-lines"); gui_i(x->x_xlines);
+    gui_s("y-lines"); gui_i(x->x_ylines);
+
+    gui_end_array();
+    gui_end_vmess();
+
 }
 
 static void grid_select(t_gobj *z, t_glist *glist, int selected)
@@ -390,8 +420,9 @@ static void grid_dialog(t_grid *x, t_symbol *s, int argc, t_atom *argv)
     x->x_ystep = argv[9].a_w.w_float;
     x->x_xlines = argv[10].a_w.w_float;
     x->x_ylines = argv[11].a_w.w_float;
-    grid_draw_erase(x, x->x_glist);
-    grid_draw_new(x, x->x_glist);
+    //grid_draw_erase(x, x->x_glist);
+    //grid_draw_new(x, x->x_glist);
+    grid_draw_configure(x, x->x_glist);
 }
 
 static void grid_delete(t_gobj *z, t_glist *glist)
@@ -417,6 +448,26 @@ static void grid_displace(t_gobj *z, t_glist *glist, int dx, int dy)
         canvas_fixlinesfor(glist, (t_text *)z);
     }
 }
+
+static void grid_displace_wtag(t_gobj *z, t_glist *glist, int dx, int dy)
+{
+    t_grid *x = (t_grid *)z;
+    int xold = text_xpix(&x->x_obj, glist);
+    int yold = text_ypix(&x->x_obj, glist);
+
+    // post( "grid_displace dx=%d dy=%d", dx, dy );
+
+    x->x_obj.te_xpix += dx;
+    x->x_current += dx;
+    x->x_obj.te_ypix += dy;
+    x->y_current += dy;
+    if (xold != text_xpix(&x->x_obj, glist) || yold != text_ypix(&x->x_obj, glist))
+    {
+	//grid_draw_move(x, x->x_glist);
+        canvas_fixlinesfor(glist, (t_text *)z);
+    }
+}
+
 
 static void grid_motion(t_grid *x, t_floatarg dx, t_floatarg dy)
 {
@@ -508,8 +559,9 @@ static void grid_new_color(t_grid *x, t_floatarg color1,
         sprintf(col3,"%X",(int) color3);
     sprintf( x->x_bgcolor, "#%s%s%s", col1, col2, col3);
 
-    grid_draw_erase(x, x->x_glist);
-    grid_draw_new(x, x->x_glist);
+    //grid_draw_erase(x, x->x_glist);
+    //grid_draw_new(x, x->x_glist);
+    grid_draw_configure(x, x->x_glist);
 }
 
 static void grid_values(t_grid* x, t_floatarg xvalue, t_floatarg yvalue)
@@ -724,6 +776,7 @@ static t_grid *grid_new(t_symbol *s, int argc, t_atom *argv)
 static void grid_free(t_grid *x)
 {
     pd_unbind(&x->x_obj.ob_pd, x->x_name);
+    gfxstub_deleteforkey(x);
 }
 
 void grid_setup(void)
@@ -759,6 +812,7 @@ void grid_setup(void)
     grid_widgetbehavior.w_deletefn =     grid_delete;
     grid_widgetbehavior.w_visfn =        grid_vis;
     grid_widgetbehavior.w_clickfn =      grid_click;
+    grid_widgetbehavior.w_displacefnwtag = grid_displace_wtag;
 
 #if PD_MINOR_VERSION >= 37
     class_setpropertiesfn(grid_class, grid_properties);

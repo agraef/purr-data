@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link id="page_style" rel="stylesheet" type="text/css" href="css/default.css">
+  </head>
+  <body class="dialog_body">
+    <div class="container">
+    <form> 
+      <fieldset> 
+        <legend></legend> 
+      </fieldset> 
+    <div class="submit_buttons">
+      <button type="button"
+              onClick="ok();"
+              id="ok_button"
+              data-i18n="[title]iem.prop.ok_tt">
+        <span data-i18n="iem.prop.ok"></span>
+      </button>
+      <button type="button"
+              onClick="apply();"
+              id="apply_button"
+              data-i18n="[title]iem.prop.apply_tt">
+        <span data-i18n="iem.prop.apply"></span>
+      </button>
+      <button type="button"
+              onClick="cancel(true);"
+              data-i18n="[title]iem.prop.cancel_tt">
+        <span data-i18n="iem.prop.cancel"></span>
+      </button>
+    </div>
+  </form> 
+  </div>      
+  <script>
+"use strict";
+var gui = require("nw.gui");
+var pdgui = require("./pdgui.js");
+
+// For translations
+var l = pdgui.get_local_string;
+
+pdgui.skin.apply(window);
+
+var pd_object_callback;
+var old_properties; // Original values in case the user wants to cancel changes
+var new_properties; // Updated values
+
+// Grab focus for one of the buttons
+function focus_button(id) {
+    document.getElementById(id).focus();
+}
+
+function send_props_to_pd(attr_array) {
+    var values = [];
+    // Todo: parse symbols the same way we do for iemguis before
+    // sending them back to Pd. This might require some fanagling on
+    // the pd side of things...
+    attr_array.forEach(function(elem) {
+        values.push(elem.value);
+    });
+    pdgui.pdsend(pd_object_callback, "dialog", values.join(" "));
+}
+
+function apply() {
+    focus_button("apply_button");
+    send_props_to_pd(new_properties); 
+}
+
+function cancel() {
+    send_props_to_pd(old_properties);
+    pdgui.pdsend(pd_object_callback, "cancel");
+}
+
+function ok() {
+    // Focus button so that the "change" event triggers
+    // for the form before sending values to Pd
+    focus_button("ok_button");
+    send_props_to_pd(new_properties);
+    pdgui.pdsend(pd_object_callback, "cancel");
+}
+
+// turn a ["name", value, etc.] array
+// into an array of objects where each object contains
+// name: name for the input element
+// type: type of element (number, string, toggle)
+// label: string label (basically the name with underscores turned to spaces)
+// value: a value for the input
+function parse_attrs(attrs) {
+    var ret = [],
+        elem;
+    attrs.forEach(function(token, i) {
+        if (i % 2 === 0) {
+            elem = {};
+            token = token.split("_");
+            if (token.length > 1) {
+                elem.type = token[token.length - 1];
+                if (elem.type !== "symbol" &&
+                    elem.type !== "toggle") {
+                    // no suffix defaults to "number"
+                    elem.type = "number";
+                } else {
+                    // remove the type suffix
+                    token = token.slice(0, -1);
+                }
+            } else {
+                elem.type = "number";
+            }
+            elem.name = token.join("_");
+            elem.label = token.join(" ");
+        } else {
+            elem.value = token;
+            // now push the object onto the array
+            ret.push(elem);
+        }
+    });
+    return ret;
+}
+
+// This gets called from the nw_create_window function in index.html
+// It provides us with our window id from the C side.  Once we have it
+// we can create the menu and register event callbacks
+function register_window_id(gfxstub, args) {
+    var external_name = args.name,
+        array_of_objects;
+    pd_object_callback = gfxstub;
+    array_of_objects = parse_attrs(args.attributes);
+    // Store our array for later use
+    new_properties = array_of_objects;
+    // Also make a copy in the case that the user cancels this dialog
+    old_properties = JSON.parse(JSON.stringify(array_of_objects));    
+
+    add_events(gfxstub);
+    // not sure that we need this for properties windows
+    //pdgui.canvas_map(gfxstub);
+    translate_form();
+
+    build_form(external_name, array_of_objects);
+
+    // We don't turn on rendering of the "container" div until
+    // We've finished displaying all the spans and populating the
+    // labels and form elements.  That makes it more efficient and
+    // snappier, at least on older machines.
+    document.getElementsByClassName("container")[0]
+        .style.setProperty("display", "inline");
+}
+
+// Stop-gap translator
+function translate_form() {
+    var elements = document.querySelectorAll("[data-i18n]"),
+        data,
+        i;
+    for (i = 0; i < elements.length; i++) {
+        data = elements[i].dataset.i18n;
+        if (data.slice(0, 7) === "[title]") {
+            elements[i].title = l(data.slice(7));
+        } else {
+            elements[i].textContent = l(data);
+        }
+    }
+}
+
+function get_input_type(t) {
+    return t === "symbol" ? "text" :
+           t === "number" ? "text" : 
+           t === "toggle" ? "checkbox":
+                            "text";
+}
+
+function build_form(external_name, array_of_objects) {
+    var fieldset = document.querySelector("fieldset");
+    document.querySelector("legend").textContent = external_name;
+    array_of_objects.forEach(function(elem) {
+        var input_elem = document.createElement("input"),
+            label = document.createElement("label");
+        input_elem.type = get_input_type(elem.type);
+        if (input_elem.type === "checkbox") {
+            input_elem.checked = elem.value !== 0;
+            input_elem.onchange = function() {
+                elem.value = input_elem.checked ? 1 : 0;
+            };
+        } else {
+            input_elem.value = elem.value;
+            input_elem.onchange = function() {
+                elem.value = input_elem.value;
+            }
+        }
+        label.textContent = elem.label;
+        label.appendChild(input_elem);
+        fieldset.appendChild(label);
+        // stop-gap until we make this prettier through css: insert a break
+        fieldset.appendChild(document.createElement("br"));
+    });
+}
+
+function add_events(name) {
+    // closing the Window
+    gui.Window.get().on("close", function () {
+        // this needs to do whatever the "cancel" button does
+        cancel();
+    });
+    pdgui.dialog_bindings(name);
+}
+  </script>
+  </body>
+</html>

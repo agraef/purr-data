@@ -3596,7 +3596,7 @@ function gui_scope_displace(cid, tag, dx, dy) {
 
 // unauthorized/grid
 
-function make_grid_data(w, h, x_l, y_l) {
+function get_grid_data(w, h, x_l, y_l) {
     var d, x, y, offset;
     d = [];
     offset = Math.floor(w / x_l);
@@ -3609,7 +3609,7 @@ function make_grid_data(w, h, x_l, y_l) {
     }
     offset = Math.floor(h / y_l);
     if (offset > 0) {
-        for (y = 0; y < w; y += offset) {
+        for (y = 0; y < h; y += offset) {
             d = d.concat(["M", 0, y, w, y]); // horizontal line
         }
     } else {
@@ -3618,23 +3618,17 @@ function make_grid_data(w, h, x_l, y_l) {
     return d.join(" ");
 }
 
-function gui_grid_draw_bg(cid, tag, w, h, bg_color, has_grid, x_l, y_l) {
+function gui_configure_grid(cid, tag, w, h, bg_color, has_grid, x_l, y_l) {
     var g = get_gobj(cid, tag),
-        border, // for inheriting gui preset colors
-        bg,
-        out_0,
-        out_1,
-        grid,
+    // configure each element in the grid
         grid_d_string,
-        point,
         point_size = 5;
-    bg = create_item(cid, "rect", {
+    configure_item(g.querySelector(".bg"), {
         width: w,
         height: h,
         fill: bg_color,
-        class: "bg"
     });
-    border = create_item(cid, "path", {
+    configure_item(g.querySelector(".border"), {
         d: ["M", 0, 0, w, 0,
             "M", 0, h, w, h,
             "M", 0, 0, 0, h,
@@ -3645,18 +3639,16 @@ function gui_grid_draw_bg(cid, tag, w, h, bg_color, has_grid, x_l, y_l) {
         fill: "none",
         stroke: "black",
         "stroke-width": 1,
-        class: "border" // now we can inherit the css border styles
     });
-    out_0 = create_item(cid, "rect", {
+    configure_item(g.querySelector(".out_0"), {
         y: h + 1,
         width: 7,
         height: 1,
         fill: "none",
         stroke: "black",
         "stroke-width": 1,
-        class: "out_0"
     });
-    out_1 = create_item(cid, "rect", {
+    configure_item(g.querySelector(".out_1"), {
         x: w - 7,
         y: h + 1,
         width: 7,
@@ -3664,26 +3656,45 @@ function gui_grid_draw_bg(cid, tag, w, h, bg_color, has_grid, x_l, y_l) {
         fill: "none",
         stroke: "black",
         "stroke-width": 1,
-        class: "out_1"
     });
-    if (has_grid === 1) {
-        grid_d_string = make_grid_data(w, h, x_l, y_l);
-        grid = create_item(cid, "path", {
-            d: grid_d_string,
-            stroke: "white",
-            "stroke-width": 1,
-            class: "grid"
-        });
-    }
-    point = create_item(cid, "rect", {
+
+    grid_d_string = !!has_grid ? get_grid_data(w, h, x_l, y_l) : "";
+    configure_item(g.querySelector(".grid"), {
+        d: grid_d_string,
+        stroke: "white",
+        "stroke-width": 1,
+    });
+
+    configure_item(g.querySelector(".point"), {
         style: "visibility: none;",
         width: 5,
         height: 5,
         fill: "#ff0000",
         stroke: "black",
         "stroke-width": 1,
-        class: "point"
     });
+}
+
+function gui_grid_new(cid, tag, x, y, is_toplevel) {
+    var g = gui_gobj_new(cid, tag, "obj", x, y, is_toplevel),
+        bg = create_item(cid, "rect", {
+            class: "bg"
+        }),
+        border = create_item(cid, "path", {
+            class: "border" // now we can inherit the css border styles
+        }),
+        out_0 = create_item(cid, "rect", {
+            class: "out_0"
+        }),
+        out_1 = create_item(cid, "rect", {
+            class: "out_1"
+        }),
+        grid = create_item(cid, "path", {
+            class: "grid"
+        }),
+        point = create_item(cid, "rect", {
+            class: "point"
+        });
     g.appendChild(bg);
     g.appendChild(out_0);
     g.appendChild(out_1);
@@ -3691,6 +3702,7 @@ function gui_grid_draw_bg(cid, tag, w, h, bg_color, has_grid, x_l, y_l) {
     g.appendChild(point);
     g.appendChild(border);
 }
+
 
 function gui_grid_point(cid, tag, x, y) {
     var g = get_gobj(cid, tag),
@@ -4329,6 +4341,15 @@ function gui_font_dialog(cid, gfxstub, font_size) {
     var attrs = { canvas: cid, font_size: font_size };
     dialogwin[gfxstub] = create_window(gfxstub, "font", 265, 200, 0, 0,
         attrs);
+}
+
+function gui_external_dialog(did, external_name, attr_array) {
+    create_window(did, "external", 265, 450,
+        popup_coords[2], popup_coords[3],
+        {
+            name: external_name,
+            attributes: attr_array
+        });
 }
 
 // Global settings
