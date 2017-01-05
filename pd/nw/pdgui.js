@@ -3684,10 +3684,12 @@ function gui_grid_new(cid, tag, x, y, is_toplevel) {
             class: "border" // now we can inherit the css border styles
         }),
         out_0 = create_item(cid, "rect", {
-            class: "out_0"
+            class: "out_0",
+            style: "display: " + (is_toplevel ? "inline;" : "none;")
         }),
         out_1 = create_item(cid, "rect", {
-            class: "out_1"
+            class: "out_1",
+            style: "display: " + (is_toplevel ? "inline;" : "none;")
         }),
         grid = create_item(cid, "path", {
             class: "grid"
