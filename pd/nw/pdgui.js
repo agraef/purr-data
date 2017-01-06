@@ -3725,18 +3725,13 @@ function gui_mknob_new(cid, tag, x, y, is_toplevel, show_in, show_out) {
         }),
         line = create_item(cid, "line", {
             class: "dial"
-        }),
-        label = create_item(cid, "text", {
-            class: "label"
         });
     g.appendChild(border);
     g.appendChild(circle);
     g.appendChild(line);
-    g.appendChild(label);
 }
 
-function gui_configure_mknob(cid, tag, size, xlet_width, label_x, label_y,
-    bg_color, fg_color, label_color) {
+function gui_configure_mknob(cid, tag, size, bg_color, fg_color) {
     var g = get_gobj(cid, tag);
     configure_item(g.querySelector(".border"), {
         d: ["M", 0, 0, size, 0,
@@ -3767,17 +3762,6 @@ function gui_turn_mknob(cid, tag, x1, y1, x2, y2) {
         y1: y1,
         x2: x2,
         y2: y2
-    });
-}
-
-function gui_mknob_outlet_coords(cid, tag, w) {
-    var g = get_gobj(cid, tag);
-    g.querySelectorAll(".xlet_iemgui").forEach(function(elem) {
-        if (elem.getAttributeNS(null, "y") !== "0") {
-            configure_item(elem, {
-                y: w - 1
-            });
-        }
     });
 }
 

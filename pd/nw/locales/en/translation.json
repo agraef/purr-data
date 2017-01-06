@@ -71,7 +71,9 @@
       "close":        "Close",
       "close_tt":     "Close the dialog window",
       "mknob_steps":  "# of steps",
-      "mknob_steps_tt": "number of dial positions for the knob"
+      "mknob_steps_tt": "number of dial positions for the knob",
+      "mknob_size":   "size",
+      "mknob_size_tt": "size of the knob"
     }
   },
   "gatom": {

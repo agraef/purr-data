@@ -57,20 +57,20 @@
           </tr>
           <tr class="width prop hidden">
             <td>
-              <label data-i18n="[title]iem.prop.width_tt"> 
-                <span data-i18n="iem.prop.width"></span>
+              <label data-i18n="[title]iem.prop.width_tt" class="mknob_size_tt"> 
+                <span data-i18n="iem.prop.width" class="mknob_size"></span>
               </label>
             </td>
-            <td data-i18n="[title]iem.prop.width_tt">
+            <td data-i18n="[title]iem.prop.width_tt" class="mknob_size_tt">
               <input type="text" name="width"
                      onchange="update_attr(this);">
             </td>
             <td>
-              <label data-i18n="[title]iem.prop.height_tt" class="mknob_tt">
-                <span data-i18n="iem.prop.height" class="mknob_label"></span>
+              <label data-i18n="[title]iem.prop.height_tt" class="mknob_steps_tt">
+                <span data-i18n="iem.prop.height" class="mknob_steps"></span>
               </label>
             </td>
-            <td data-i18n="[title]iem.prop.height_tt" class="mknob_tt">
+            <td data-i18n="[title]iem.prop.height_tt" class="mknob_steps_tt">
               <input type="text" name="height"
                      onchange="update_attr(this);">
             </td>
@@ -552,12 +552,14 @@ function ok() {
     cancel(false);
 }
 
-function change_height_slot_labels_for_mknob() {
-    document.body.querySelectorAll(".mknob_label").forEach(function(e) {
-        e.setAttribute("data-i18n", "iem.prop.mknob_steps");
-    });
-    document.body.querySelectorAll(".mknob_tt").forEach(function(e) {
-        e.setAttribute("data-i18n", "[title]iem.prop.mknob_steps_tt");
+function change_width_and_height_labels() {
+    [".mknob_steps", ".mknob_size"].forEach(function(sel) {
+        document.body.querySelectorAll(sel).forEach(function(e) {
+            e.setAttribute("data-i18n", "iem.prop" + sel);
+        });
+        document.body.querySelectorAll(sel + "_tt").forEach(function(e) {
+            e.setAttribute("data-i18n", "[title]iem.prop" + sel + "_tt");
+        });
     });
 }
 
@@ -579,7 +581,7 @@ function register_window_id(gfxstub, attr_object) {
     // Special case for [moonlib/mknob] which leverages the iemgui dialog--
     // change the label for "height" to "steps"
     if (attr_object.type === "mknob") {
-        change_height_slot_labels_for_mknob();
+        change_width_and_height_labels();
         pdgui.post("Special case: mknob");
     }
 
