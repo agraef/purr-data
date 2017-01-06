@@ -3726,22 +3726,12 @@ function gui_mknob_new(cid, tag, x, y, is_toplevel, show_in, show_out) {
         line = create_item(cid, "line", {
             class: "dial"
         }),
-        in_0 = create_item(cid, "rect", {
-            class: "in_0",
-            style: "display: " + (is_toplevel && show_in ? "inline;" : "none;")
-        }),
-        out_0 = create_item(cid, "rect", {
-            class: "out_0",
-            style: "display: " + (is_toplevel && show_out ? "inline;" : "none;")
-        }),
         label = create_item(cid, "text", {
             class: "label"
         });
     g.appendChild(border);
     g.appendChild(circle);
     g.appendChild(line);
-    g.appendChild(in_0);
-    g.appendChild(out_0);
     g.appendChild(label);
 }
 
@@ -3768,18 +3758,6 @@ function gui_configure_mknob(cid, tag, size, xlet_width, label_x, label_y,
         "stroke-width": 2,
         stroke: fg_color
     });
-    configure_item(g.querySelector(".in_0"), {
-        x: 0,
-        y: -1,
-        width: xlet_width,
-        height: 1
-    });
-    configure_item(g.querySelector(".out_0"), {
-        x: 0,
-        y: size - 1,
-        width: xlet_width,
-        height: 1
-    });
 }
 
 function gui_turn_mknob(cid, tag, x1, y1, x2, y2) {
@@ -3789,6 +3767,17 @@ function gui_turn_mknob(cid, tag, x1, y1, x2, y2) {
         y1: y1,
         x2: x2,
         y2: y2
+    });
+}
+
+function gui_mknob_outlet_coords(cid, tag, w) {
+    var g = get_gobj(cid, tag);
+    g.querySelectorAll(".xlet_iemgui").forEach(function(elem) {
+        if (elem.getAttributeNS(null, "y") !== "0") {
+            configure_item(elem, {
+                y: w - 1
+            });
+        }
     });
 }
 

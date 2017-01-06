@@ -215,6 +215,17 @@ static void mknob_draw_new(t_mknob *x, t_glist *glist)
     mknob_draw_config(x, glist);
 }
 
+static void mknob_move_io(t_mknob *x,t_glist *glist)
+{
+    int xpos = text_xpix(&x->x_gui.x_obj, glist);
+    int ypos = text_ypix(&x->x_gui.x_obj, glist);
+    t_canvas *canvas = glist_getcanvas(glist);
+    t_gobj *y = (t_gobj *)x;
+
+    gui_vmess("gui_mknob_outlet_coords", "xxi", canvas, x, x->x_gui.x_w);
+}
+
+
 static void mknob_draw_move(t_mknob *x, t_glist *glist)
 {
     int xpos=text_xpix(&x->x_gui.x_obj, glist);
@@ -232,7 +243,8 @@ static void mknob_draw_move(t_mknob *x, t_glist *glist)
     //sys_vgui(".x%lx.c coords %xCENTER %f %f\n",
     //         canvas, x,
     //         xc, yc);
-    mknob_update_knob(x,glist);
+    mknob_update_knob(x, glist);
+    mknob_move_io(x, glist);
     //sys_vgui(".x%lx.c coords %xLABEL %d %d\n",
     //         canvas, x, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy);
     //if (canvas == glist) {
@@ -249,7 +261,7 @@ static void mknob_draw_move(t_mknob *x, t_glist *glist)
 
 static void mknob_draw_erase(t_mknob *x,t_glist *glist)
 {
-    t_canvas *canvas=glist_getcanvas(glist);
+    t_canvas *canvas = glist_getcanvas(glist);
 
     //sys_vgui(".x%lx.c delete %xBASE\n", canvas, x);
     //sys_vgui(".x%lx.c delete %xCENTER\n", canvas, x);
@@ -263,38 +275,6 @@ static void mknob_draw_erase(t_mknob *x,t_glist *glist)
     //}
 }
 
-static void mknob_draw_io(t_mknob *x,t_glist *glist, int old_snd_rcv_flags)
-{
-    int xpos=text_xpix(&x->x_gui.x_obj, glist);
-    int ypos=text_ypix(&x->x_gui.x_obj, glist);
-    t_canvas *canvas=glist_getcanvas(glist);
-
-    t_gobj *y = (t_gobj *)x;
-    t_object *ob = pd_checkobject(&y->g_pd);
-
-    /* GOP objects are unable to call findrtext triggering consistency check error */
-    t_rtext *yyyy = NULL;
-    if (!glist->gl_isgraph || glist_istoplevel(glist))
-        yyyy = glist_findrtext(canvas, (t_text *)&ob->ob_g);
-
-    /* on GOP we cause segfault as apparently text_gettag() returns bogus data */
-    char *nlet_tag;
-    if (yyyy) nlet_tag = rtext_gettag(yyyy);
-    else nlet_tag = "bogus";
-
-    //if (canvas == glist) {
-    //    if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && !x->x_gui.x_fsf.x_snd_able)
-    //        sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%xOUT%d %xMKNOB %so0 outlet}\n",
-    //         canvas, xpos, ypos + x->x_gui.x_w-1, xpos + IOWIDTH, ypos + x->x_gui.x_w, x, 0, x, nlet_tag);
-    //    if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && x->x_gui.x_fsf.x_snd_able)
-    //        sys_vgui(".x%lx.c delete %xOUT%d\n", canvas, x, 0);
-    //    if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && !x->x_gui.x_fsf.x_rcv_able)
-    //        sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%xIN%d %xMKNOB %si0 inlet}\n",
-    //         canvas, xpos, ypos-1, xpos + IOWIDTH, ypos, x, 0, x, nlet_tag);
-    //    if(!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && x->x_gui.x_fsf.x_rcv_able)
-    //    sys_vgui(".x%lx.c delete %xIN%d\n", canvas, x, 0);
-   // }
-}
 
 //static void mknob_draw_select(t_mknob *x,t_glist *glist)
 //{
