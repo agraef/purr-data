@@ -582,7 +582,6 @@ function register_window_id(gfxstub, attr_object) {
     // change the label for "height" to "steps"
     if (attr_object.type === "mknob") {
         change_width_and_height_labels();
-        pdgui.post("Special case: mknob");
     }
 
     translate_form();
