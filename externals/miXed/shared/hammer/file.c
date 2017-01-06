@@ -60,6 +60,7 @@ static t_hammerfile *hammerfile_getproxy(t_pd *master)
 
 static void hammereditor_guidefs(void)
 {
+#if 0
     sys_gui("proc hammereditor_open {name geometry title sendable} {\n");
     sys_gui(" if {[winfo exists $name]} {\n");
     sys_gui("  $name.text delete 1.0 end\n");
@@ -161,6 +162,7 @@ static void hammereditor_guidefs(void)
     sys_gui("  } else {hammereditor_doclose $name}\n");
     sys_gui(" }\n");
     sys_gui("}\n");
+#endif
 }
 
 /* null owner defaults to class name, pass "" to supress */
@@ -272,6 +274,7 @@ static void hammereditor_end(t_hammerfile *f)
 
 static void hammerpanel_guidefs(void)
 {
+#if 0
     sys_gui("proc hammerpanel_open {target inidir} {\n");
     sys_gui(" global pd_opendir\n");
     sys_gui(" if {$inidir == \"\"} {\n");
@@ -306,6 +309,7 @@ static void hammerpanel_guidefs(void)
     sys_gui("   [pdtk_enquote $filename] [pdtk_enquote $directory] \\;]\n");
     sys_gui(" }\n");
     sys_gui("}\n");
+#endif
 }
 
 /* There are two modes of -initialdir persistence:
