@@ -40,8 +40,6 @@ pkg=1
 inno=0
 dmg=0
 
-inst_dir=${inst_dir:-/usr/local}
-
 # Get the OS we're running under, normalized to names that can be used
 # to fetch the nwjs binaries below
 
@@ -125,10 +123,10 @@ do case $Option in
 		a)		addon=1;;
 
 		b)		deb=1
-				inst_dir=/usr;;
+				inst_dir=${inst_dir:-/usr};;
 
 		B)		deb=2
-				inst_dir=/usr;;
+				inst_dir=${inst_dir:-/usr};;
 
 		c)		core=1;;
 
@@ -165,6 +163,8 @@ do case $Option in
 		*)		echo "Error: unknown option";;
 	esac
 done
+
+inst_dir=${inst_dir:-/usr/local}
 
 export TAR_EM_UP_PREFIX=$inst_dir
 
