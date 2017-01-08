@@ -463,7 +463,7 @@ void iemgui_shouldvis(t_iemgui *x, int mode)
 
 void iemgui_size(t_iemgui *x)
 {
-    if(glist_isvisible(x->x_glist))
+    if (glist_isvisible(x->x_glist))
         iemgui_shouldvis(x, IEM_GUI_DRAW_MODE_MOVE);
 }
 
