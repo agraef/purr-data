@@ -1,0 +1,73 @@
+#N canvas 1 25 559 519 10;
+#X obj -1 611 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 404 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 633 310 345 214 META 0;
+#X text -137 120 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text -137 25 LICENSE SIBSD;
+#X text -137 101 AUTHOR Miller Puckette;
+#X text -137 139 RELEASE_DATE 1997;
+#X text -137 82 LIBRARY cyclone;
+#X text -137 158 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text -137 6 KEYWORDS signal graphic display graph;
+#X text -137 44 DESCRIPTION graphic signal display;
+#X text -137 63 INLET_0 signal buffsize range frgb brgb;
+#X restore 502 613 pd META;
+#X obj -1 529 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 566 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 332 419 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 211 613 pd Related_objects;
+#X obj 71 413 cnv 17 3 104 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header Scope~ 3 12 0 18
+-204280 -1 0;
+#X text 11 23 Graphic Signal Display;
+#X text 98 412 signal;
+#X text 264 413 - signal to display;
+#X text 98 436 buffsize <int>;
+#X text 264 436 - change buffer size;
+#X text 98 459 range <int> <int>;
+#X text 264 459 - change range of display;
+#X text 98 480 frgb <int> <int> <int>;
+#X text 98 540 (none);
+#X obj 480 47 pddp/dsp;
+#X obj 493 9 Scope~_;
+#X text 98 579 (none);
+#X text 264 501 - set color of graph in RGB values;
+#X text 98 501 brgb <int> <int> <int>;
+#X text 264 480 - set color of line in RGB values;
+#X obj 84 251 Scope~ 245 119 256 3 100 -1 1 0 0 0 0 0 255 0 0 0 255
+0;
+#X msg 218 99 bufsize 100;
+#X msg 218 126 range 1 2;
+#X obj 84 99 osc~ 500;
+#X obj 84 70 hsl 100 18 20 500 1 1 empty empty frequency 5 8 1 10 -262131
+-1 -1 4200 0;
+#X obj 84 208 *~;
+#X obj 99 128 vsl 15 60 0.01 1 1 1 empty empty empty 0 -8 0 8 -225271
+-1 -1 3200 0;
+#X text 292 173 colors:;
+#X text 336 302 <--this is the Scope~ object;
+#X obj 18 612 pddp/pddplink @pd_help/all_about_help_patches.pd -text
+Usage Guide;
+#X msg 294 125 range -1 1;
+#X msg 350 197 brgb 255 255 0;
+#X msg 350 172 frgb 0 0 0;
+#X msg 350 224 frgb 0 255 0 \, brgb 0 0 255;
+#X connect 24 0 23 0;
+#X connect 25 0 23 0;
+#X connect 26 0 28 0;
+#X connect 27 0 26 0;
+#X connect 28 0 23 0;
+#X connect 29 0 28 1;
+#X connect 33 0 23 0;
+#X connect 34 0 23 0;
+#X connect 35 0 23 0;
+#X connect 36 0 23 0;

@@ -3590,10 +3590,6 @@ function gui_scope_clear_fg(cid, tag) {
     scope_configure_fg(cid, tag, ".fgmono", []);
 }
 
-function gui_scope_displace(cid, tag, dx, dy) {
-    gui_text_displace(cid, tag, dx, dy);
-}
-
 // unauthorized/grid
 
 function get_grid_data(w, h, x_l, y_l) {

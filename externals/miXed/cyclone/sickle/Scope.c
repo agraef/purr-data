@@ -571,12 +571,7 @@ static void scope_displace(t_gobj *z, t_glist *glist, int dx, int dy)
     {
 	t_canvas *cv = scope_getcanvas(x, glist);
 	//sys_vgui(".x%x.c move %s %d %d\n", cv, x->x_tag, dx, dy);
-        gui_vmess("gui_scope_displace", "xxii",
-            cv,
-            x,
-            dx,
-            dy);
-	canvas_fixlinesfor(cv, t);
+	//canvas_fixlinesfor(cv, t);
     }
 }
 
@@ -590,11 +585,6 @@ static void scope_displace_wtag(t_gobj *z, t_glist *glist, int dx, int dy)
     {
 	t_canvas *cv = scope_getcanvas(x, glist);
 	//sys_vgui(".x%x.c move %s %d %d\n", cv, x->x_tag, dx, dy);
-//        gui_vmess("gui_scope_displace", "xxii",
-//            cv,
-//            x,
-//            dx,
-//            dy);
 	canvas_fixlinesfor(cv, t);
     }
 }
@@ -882,7 +872,7 @@ static void scope_redrawxy(t_scope *x, t_canvas *cv)
 
 static void scope_revis(t_scope *x, t_canvas *cv)
 {
-//    sys_vgui(".x%x.c delete %s\n", cv, x->x_tag);
+    //sys_vgui(".x%x.c delete %s\n", cv, x->x_tag);
     gui_vmess("gui_scope_clear_fg", "xx", cv, x);
     if (x->x_xymode)
 	scope_drawxy(x, cv);
@@ -1005,45 +995,46 @@ static void scope_tick(t_scope *x)
 static void scopehandle__clickhook(t_scopehandle *sh, t_floatarg f, t_floatarg xxx, t_floatarg yyy)
 {
 
-	t_scope *x = sh->h_master;
+    t_scope *x = sh->h_master;
 
-//	if (xxx) x->scale_offset_x = xxx;
-//	if (yyy) x->scale_offset_y = yyy;
+    //if (xxx) x->scale_offset_x = xxx;
+    //if (yyy) x->scale_offset_y = yyy;
 
-//    int newstate = (int)f;
-//    if (sh->h_dragon && newstate == 0)
-//    {
-//	/* done dragging */
-//	t_canvas *cv;
-//	if (sh->h_dragx || sh->h_dragy) {
-//		x->x_width = x->x_width + sh->h_dragx - x->scale_offset_x;
-//		x->x_height = x->x_height + sh->h_dragy - x->scale_offset_y;
-//	}
-//	if (cv = scope_isvisible(x))
-//	{
-//	    sys_vgui(".x%x.c delete %s\n", cv, sh->h_outlinetag);
-//	    scope_revis(x, cv);
-//	    sys_vgui("destroy %s\n", sh->h_pathname);
-//	    scope_select((t_gobj *)x, x->x_glist, 1);
-//	    canvas_fixlinesfor(x->x_glist, (t_text *)x);  /* 2nd inlet */
-//	}
-//    }
-//    else if (!sh->h_dragon && newstate)
-//    {
-//	/* dragging */
-//	t_canvas *cv;
-//	if (cv = scope_isvisible(x))
-//	{
-//	    int x1, y1, x2, y2;
-//	    scope_getrect((t_gobj *)x, x->x_glist, &x1, &y1, &x2, &y2);
-//	    sys_vgui("lower %s\n", sh->h_pathname);
-//	    sys_vgui(".x%x.c create rectangle %d %d %d %d\
-// -outline $select_color -width %f -tags %s\n",
-//		     cv, x1, y1, x2, y2, SCOPE_SELBDWIDTH, sh->h_outlinetag);
-//	}
-//	sh->h_dragx = 0;
-//	sh->h_dragy = 0;
-//    }
+    //int newstate = (int)f;
+    //if (sh->h_dragon && newstate == 0)
+    //{
+    //    /* done dragging */
+    //    t_canvas *cv;
+    //    if (sh->h_dragx || sh->h_dragy)
+    //    {
+    //        x->x_width = x->x_width + sh->h_dragx - x->scale_offset_x;
+    //        x->x_height = x->x_height + sh->h_dragy - x->scale_offset_y;
+    //    }
+    //    if (cv = scope_isvisible(x))
+    //    {
+    //        sys_vgui(".x%x.c delete %s\n", cv, sh->h_outlinetag);
+    //        scope_revis(x, cv);
+    //        sys_vgui("destroy %s\n", sh->h_pathname);
+    //        scope_select((t_gobj *)x, x->x_glist, 1);
+    //        canvas_fixlinesfor(x->x_glist, (t_text *)x);  /* 2nd inlet */
+    //    }
+    //}
+    //else if (!sh->h_dragon && newstate)
+    //{
+    //    /* dragging */
+    //    t_canvas *cv;
+    //    if (cv = scope_isvisible(x))
+    //    {
+    //        int x1, y1, x2, y2;
+    //        scope_getrect((t_gobj *)x, x->x_glist, &x1, &y1, &x2, &y2);
+    //        sys_vgui("lower %s\n", sh->h_pathname);
+    //        sys_vgui(".x%x.c create rectangle %d %d %d %d\
+    //            -outline $select_color -width %f -tags %s\n",
+    //        cv, x1, y1, x2, y2, SCOPE_SELBDWIDTH, sh->h_outlinetag);
+    //    }
+    //    sh->h_dragx = 0;
+    //    sh->h_dragy = 0;
+    //}
     sh->h_dragon = f;
 }
 
@@ -1067,25 +1058,25 @@ static void scopehandle__motionhook(t_scopehandle *sh,
         scope_vis((t_gobj *)x, x->x_glist, 0);
         scope_vis((t_gobj *)x, x->x_glist, 1);
     }
-//    if (sh->h_dragon)
-//    {
-//	t_scope *x = sh->h_master;
-//	int dx = (int)f1, dy = (int)f2;
-//	int x1, y1, x2, y2, newx, newy;
-//	scope_getrect((t_gobj *)x, x->x_glist, &x1, &y1, &x2, &y2);
-//	newx = x2 - x->scale_offset_x + dx;
-//	newy = y2 - x->scale_offset_y + dy;
-//
-//	if (newx > x1 + SCOPE_MINWIDTH && newy > y1 + SCOPE_MINHEIGHT)
-//	{
-//	    t_canvas *cv;
-//	    if (cv = scope_isvisible(x))
-//		sys_vgui(".x%x.c coords %s %d %d %d %d\n",
-//			 cv, sh->h_outlinetag, x1, y1, newx, newy);
-//	    sh->h_dragx = dx;
-//	    sh->h_dragy = dy;
-//	}
-//    }
+    //if (sh->h_dragon)
+    //{
+    //    t_scope *x = sh->h_master;
+    //    int dx = (int)f1, dy = (int)f2;
+    //    int x1, y1, x2, y2, newx, newy;
+    //    scope_getrect((t_gobj *)x, x->x_glist, &x1, &y1, &x2, &y2);
+    //    newx = x2 - x->scale_offset_x + dx;
+    //    newy = y2 - x->scale_offset_y + dy;
+
+    //    if (newx > x1 + SCOPE_MINWIDTH && newy > y1 + SCOPE_MINHEIGHT)
+    //    {
+    //        t_canvas *cv;
+    //        if (cv = scope_isvisible(x))
+    //            sys_vgui(".x%x.c coords %s %d %d %d %d\n",
+    //                cv, sh->h_outlinetag, x1, y1, newx, newy);
+    //        sh->h_dragx = dx;
+    //        sh->h_dragy = dy;
+    //    }
+    //}
 }
 
 /* wrapper method for forwarding "scopehandle" data */
