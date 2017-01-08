@@ -580,6 +580,25 @@ static void scope_displace(t_gobj *z, t_glist *glist, int dx, int dy)
     }
 }
 
+static void scope_displace_wtag(t_gobj *z, t_glist *glist, int dx, int dy)
+{
+    t_scope *x = (t_scope *)z;
+    t_text *t = (t_text *)z;
+    t->te_xpix += dx;
+    t->te_ypix += dy;
+    if (glist_isvisible(glist))
+    {
+	t_canvas *cv = scope_getcanvas(x, glist);
+	//sys_vgui(".x%x.c move %s %d %d\n", cv, x->x_tag, dx, dy);
+//        gui_vmess("gui_scope_displace", "xxii",
+//            cv,
+//            x,
+//            dx,
+//            dy);
+	canvas_fixlinesfor(cv, t);
+    }
+}
+
 static void scope_select(t_gobj *z, t_glist *glist, int state)
 {
     t_scope *x = (t_scope *)z;
@@ -587,33 +606,37 @@ static void scope_select(t_gobj *z, t_glist *glist, int state)
     t_scopehandle *sh = (t_scopehandle *)x->x_handle;
     if (state)
     {
-	int x1, y1, x2, y2;
-	scope_getrect(z, glist, &x1, &y1, &x2, &y2);
+        gui_vmess("gui_gobj_select", "xx", cv, x);
+	//int x1, y1, x2, y2;
+	//scope_getrect(z, glist, &x1, &y1, &x2, &y2);
 
-	sys_vgui(".x%x.c itemconfigure %s -outline blue -width %f -fill %s\n",
-		 cv, x->x_bgtag, SCOPE_SELBDWIDTH, SCOPE_SELCOLOR);
+        //sys_vgui(".x%x.c itemconfigure %s -outline blue -width %f -fill %s\n",
+        //cv, x->x_bgtag, SCOPE_SELBDWIDTH, SCOPE_SELCOLOR);
 
-	sys_vgui("canvas %s -width %d -height %d -bg #fedc00 -bd 0 -cursor bottom_right_corner\n",
-		 sh->h_pathname, SCOPEHANDLE_WIDTH, SCOPEHANDLE_HEIGHT);
-	sys_vgui(".x%x.c create window %f %f -anchor nw\
- -width %d -height %d -window %s -tags %s\n",
-		 cv, x2 - (SCOPEHANDLE_WIDTH - SCOPE_SELBDWIDTH),
-		 y2 - (SCOPEHANDLE_HEIGHT - SCOPE_SELBDWIDTH),
-		 SCOPEHANDLE_WIDTH, SCOPEHANDLE_HEIGHT,
-		 sh->h_pathname, x->x_tag);
-	sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
-		 sh->h_pathname, sh->h_bindsym->s_name);
-	sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
-		 sh->h_pathname, sh->h_bindsym->s_name);
-	sys_vgui("bind %s <Motion> {pd [concat %s _motion %%x %%y \\;]}\n",
-		 sh->h_pathname, sh->h_bindsym->s_name);
+        //sys_vgui("canvas %s -width %d -height %d "
+        //         "-bg #fedc00 -bd 0 -cursor bottom_right_corner\n",
+        //    sh->h_pathname, SCOPEHANDLE_WIDTH, SCOPEHANDLE_HEIGHT);
+        //sys_vgui(".x%x.c create window %f %f -anchor nw "
+        //         "-width %d -height %d -window %s -tags %s\n",
+        //    cv, x2 - (SCOPEHANDLE_WIDTH - SCOPE_SELBDWIDTH),
+        //    y2 - (SCOPEHANDLE_HEIGHT - SCOPE_SELBDWIDTH),
+        //    SCOPEHANDLE_WIDTH, SCOPEHANDLE_HEIGHT,
+        //    sh->h_pathname, x->x_tag);
+        //sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
+        //    sh->h_pathname, sh->h_bindsym->s_name);
+        //sys_vgui("bind %s <ButtonRelease> "
+        //           "{pd [concat %s _click 0 0 0 \\;]}\n",
+        //    sh->h_pathname, sh->h_bindsym->s_name);
+        //sys_vgui("bind %s <Motion> {pd [concat %s _motion %%x %%y \\;]}\n",
+        //    sh->h_pathname, sh->h_bindsym->s_name);
     }
     else
     {
-	sys_vgui(".x%x.c itemconfigure %s -outline black -width %f\
- -fill #%2.2x%2.2x%2.2x\n", cv, x->x_bgtag, SCOPE_GRIDWIDTH,
-		 x->x_bgred, x->x_bggreen, x->x_bgblue);
-	sys_vgui("destroy %s\n", sh->h_pathname);
+        gui_vmess("gui_gobj_deselect", "xx", cv, x);
+        //sys_vgui(".x%x.c itemconfigure %s -outline black -width %f "
+        //         "-fill #%2.2x%2.2x%2.2x\n", cv, x->x_bgtag, SCOPE_GRIDWIDTH,
+        //x->x_bgred, x->x_bggreen, x->x_bgblue);
+        //sys_vgui("destroy %s\n", sh->h_pathname);
     }
 }
 
@@ -892,6 +915,8 @@ static void scope_vis(t_gobj *z, t_glist *glist, int vis)
 	    scope_drawxy(x, cv);
 	else
 	    scope_drawmono(x, cv);
+        if (glist_isselected(cv, (t_gobj *)x))
+            gui_vmess("gui_gobj_select", "xx", cv, x);
     }
     else
     {
@@ -939,7 +964,7 @@ static t_widgetbehavior scope_widgetbehavior =
     scope_delete,
     scope_vis,
     scope_click,
-    FORKY_WIDGETPADDING
+    scope_displace_wtag
 };
 
 static void scope_setxymode(t_scope *x, int xymode)
