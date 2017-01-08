@@ -32,6 +32,7 @@ typedef struct _grid
     int x_xlines; 	/* number of vertical lines                  */
     int x_ylines; 	/* number of horizontal lines                */
     char *x_bgcolor; 	/* background color                          */
+    t_pd *x_handle;     /* for click-drag resizing                   */
 } t_grid;
 
 #endif

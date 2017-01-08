@@ -16,6 +16,9 @@
 
 #include "g_grid.h"
 
+/* For the scalehandle... */
+#include "g_all_guis.h"
+
 #ifdef _WIN32
 #include <io.h>
 #else
@@ -25,6 +28,8 @@
 #define DEFAULT_GRID_WIDTH 200
 #define DEFAULT_GRID_HEIGHT 200
 #define DEFAULT_GRID_NBLINES 10
+#define MIN_GRID_WIDTH 20
+#define MIN_GRID_HEIGHT 20
 
 t_widgetbehavior grid_widgetbehavior;
 static t_class *grid_class;
@@ -678,6 +683,62 @@ static void grid_bang(t_grid *x) {
     grid_output_current(x);
 }
 
+static void grid__clickhook(t_scalehandle *sh, int newstate)
+{
+    t_grid *x = (t_grid *)(sh->h_master);
+    if (newstate)
+    {
+        canvas_apply_setundo(x->x_glist, (t_gobj *)x);
+    }
+    sh->h_dragon = newstate;
+}
+
+static void grid__motionhook(t_scalehandle *sh,
+    t_floatarg mouse_x, t_floatarg mouse_y)
+{
+    if (sh->h_scale)
+    {
+        t_grid *x = (t_grid *)(sh->h_master);
+        int width = mouse_x - text_xpix(&x->x_obj, x->x_glist),
+            height = mouse_y - text_ypix(&x->x_obj, x->x_glist),
+            minw = MIN_GRID_WIDTH,
+            minh = MIN_GRID_HEIGHT;
+        x->x_width = width < minw ? minw : width;
+        x->x_height = height < minh ? minh : height;
+        if (glist_isvisible(x->x_glist))
+        {
+            grid_draw_configure(x, x->x_glist);
+            //scalehandle_unclick_scale(sh);
+        }
+
+        int properties = gfxstub_haveproperties((void *)x);
+        if (properties)
+        {
+            int new_w = x->x_width + sh->h_dragx;
+            int new_h = x->x_height + sh->h_dragy;
+            properties_set_field_int(properties,"width",new_w);
+            properties_set_field_int(properties,"height",new_h);
+        }
+    }
+}
+
+/* wrapper method for forwarding "scalehandle" data */
+static void grid_click_for_resizing(t_grid *x, t_floatarg f,
+    t_floatarg xxx, t_floatarg yyy)
+{
+    t_scalehandle *sh = (t_scalehandle *)x->x_handle;
+    grid__clickhook(sh, f);
+//    grid__clickhook(sh, f, xxx, yyy);
+}
+
+/* another wrapper for forwarding "scalehandle" motion data */
+static void grid_motion_for_resizing(t_grid *x, t_floatarg xxx,
+    t_floatarg yyy)
+{
+    t_scalehandle *sh = (t_scalehandle *)x->x_handle;
+    grid__motionhook(sh, xxx, yyy);
+}
+
 static t_grid *grid_new(t_symbol *s, int argc, t_atom *argv)
 {
     int zz;
@@ -770,6 +831,9 @@ static t_grid *grid_new(t_symbol *s, int argc, t_atom *argv)
     // post( "grid_new name : %s width: %d height : %d",
     // x->x_name->s_name, x->x_width, x->x_height );
 
+    x->x_handle = scalehandle_new((t_object *)x, x->x_glist, 1,
+        grid__clickhook, grid__motionhook);
+
     return (x);
 }
 
@@ -805,6 +869,14 @@ void grid_setup(void)
         gensym("dialog"), A_GIMME, 0);
     class_addmethod(grid_class, (t_method)grid_new_color,
         gensym("color"), A_FLOAT, A_FLOAT, A_FLOAT, 0);
+    /* Big hack for receiving edit-mode resize anchor clicks from
+       g_editor.c. */
+    class_addmethod(grid_class, (t_method)grid_click_for_resizing,
+                    gensym("_click_for_resizing"),
+                    A_FLOAT, A_FLOAT, A_FLOAT, 0);
+    class_addmethod(grid_class, (t_method)grid_motion_for_resizing,
+                    gensym("_motion_for_resizing"),
+                    A_FLOAT, A_FLOAT, 0);
     grid_widgetbehavior.w_getrectfn =    grid_getrect;
     grid_widgetbehavior.w_displacefn =   grid_displace;
     grid_widgetbehavior.w_selectfn =     grid_select;
