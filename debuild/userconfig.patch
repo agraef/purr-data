@@ -1,0 +1,31 @@
+diff --git a/pd/src/s_file.c b/pd/src/s_file.c
+index 1c18096f..576e4c36 100644
+--- a/pd/src/s_file.c
++++ b/pd/src/s_file.c
+@@ -62,7 +62,7 @@ static void sys_initloadpreferences( void)
+              sys_libdir->s_name);
+ 
+     if (homedir)
+-        snprintf(user_prefs_file, FILENAME_MAX, "%s/.pd-l2ork/user.settings", homedir);
++        snprintf(user_prefs_file, FILENAME_MAX, "%s/.purr-data/user.settings", homedir);
+     if (stat(user_prefs_file, &statbuf) == 0) 
+         strncpy(filenamebuf, user_prefs_file, FILENAME_MAX);
+     else if (stat(default_prefs_file, &statbuf) == 0)
+@@ -143,7 +143,7 @@ static void sys_initsavepreferences( void)
+ 
+     if (!homedir)
+         return;
+-    snprintf(filenamebuf, FILENAME_MAX, "%s/.pd-l2ork", homedir);
++    snprintf(filenamebuf, FILENAME_MAX, "%s/.purr-data", homedir);
+     filenamebuf[FILENAME_MAX-1] = 0;
+     if (stat(filenamebuf, &statbuf) || !S_ISDIR(statbuf.st_mode)) {
+       // user config dir doesn't exist yet, try to create it
+@@ -152,7 +152,7 @@ static void sys_initsavepreferences( void)
+ 	return;
+       }
+     }
+-    snprintf(filenamebuf, FILENAME_MAX, "%s/.pd-l2ork/user.settings", homedir);
++    snprintf(filenamebuf, FILENAME_MAX, "%s/.purr-data/user.settings", homedir);
+     filenamebuf[FILENAME_MAX-1] = 0;
+     if ((sys_prefsavefp = fopen(filenamebuf, "w")) == NULL)
+     {
