@@ -80,6 +80,8 @@ deb: $(debsrc) $(addprefix debian/nwjs/, $(nwjs))
 # (patch from pd-extended by Hans-Christoph Steiner, modified for pd-l2ork).
 # This can be removed once Ubuntu 12.04 finally goes the way of the dodo.
 #	cd $(debdist) && patch -p1 < ../precise-configure.patch
+# Patch the user config dir name so that purr-data can coexist with pd-l2ork.
+	cd $(debdist) && patch -Np1 < ../userconfig.patch
 # Make sure to copy the Debian files which may have uncommitted changes.
 # Then run debuild to create the package.
 	cd $(debdist) && cp -R ../debian . && debuild $(DEBUILD_FLAGS)
