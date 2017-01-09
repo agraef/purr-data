@@ -3314,8 +3314,10 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                    extends well past the bounds of the bbox. For that reason
                    we have a virtual waterfall of conditionals flowing all
                    the way to the GUI just handle resizing a stupid rectangle.
+
+                   Also, the following conditional is way too complex.
                 */
-            if ((ob && ob->te_iemgui
+            if (ob && (ob->te_iemgui
                  && pd_class((t_pd *)ob) != my_canvas_class
                  || pd_class(&ob->te_pd)->c_name == gensym("Scope~")
                  || pd_class(&ob->te_pd)->c_name == gensym("grid"))
