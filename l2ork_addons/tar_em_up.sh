@@ -98,7 +98,12 @@ if [ ! -d "../pd/nw/nw" ]; then
 	else
 		tar -xf $nwjs_filename
 	fi
-	mv $nwjs_dirname ../pd/nw/nw
+	# Special case for arm binary's inconsistent directory name
+	# (It's not the same as the `uname -m` output)
+	if [ `uname -m` == "armv7l" ]; then
+		nwjs_dirname=`echo $nwjs_dirname | sed 's/armv7l/arm/'`
+	fi
+        mv $nwjs_dirname ../pd/nw/nw
 	# make sure the nw binary is executable on GNU/Linux and OSX
 	if [[ $os != "win" ]]; then
 		chmod 755 ../pd/nw/nw/nw
