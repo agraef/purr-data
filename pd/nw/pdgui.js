@@ -3615,10 +3615,18 @@ function get_grid_data(w, h, x_l, y_l) {
 }
 
 function gui_configure_grid(cid, tag, w, h, bg_color, has_grid, x_l, y_l) {
-    var g = get_gobj(cid, tag),
-    // configure each element in the grid
+    var g,
         grid_d_string,
         point_size = 5;
+    // Quick bugfix for messages that arrive to the GUI before the
+    // window is mapped. This can happen when the user connects
+    // [loadbang] to a [grid] method that changes visual display (like "color")
+    // We need a way to prevent sending such messages
+    if (!patchwin[cid]) {
+        return;
+    }
+    g = get_gobj(cid, tag);
+    // configure each element in the grid
     configure_item(g.querySelector(".bg"), {
         width: w,
         height: h,
