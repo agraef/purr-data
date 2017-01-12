@@ -135,7 +135,7 @@ void mknob_draw(t_mknob *x, t_glist *glist, int mode)
     if (mode == IEM_GUI_DRAW_MODE_UPDATE)
         mknob_draw_update(x, glist);
     else if (mode == IEM_GUI_DRAW_MODE_MOVE)
-        mknob_draw_config(x, glist);
+        iemgui_base_draw_move(&x->x_gui);
     else if (mode == IEM_GUI_DRAW_MODE_NEW)
         mknob_draw_new(x, glist);
     else if (mode == IEM_GUI_DRAW_MODE_CONFIG)
