@@ -91,11 +91,11 @@ else
 					 LIBS="-lc -lm"
 					 ;;
         *-*-linux*)
-                CFLAGS="$CFLAGS -DUNIX -Wall -Wimplicit -Wunused -Wmissing-prototypes -O1"
+                CFLAGS="$CFLAGS -DUNIX -Wall -Wimplicit -Wunused -Wmissing-prototypes -O1 -fPIC"
 					 LDFLAGS="-Wl,--export-dynamic -shared"
 					 INCLUDES="$INCLUDES"
 					 pd_suffix=pd_linux
-					 LIBS="-L../../../pd/bin -lpd -lc -lm"
+					 LIBS="-L../../../pd/bin -lc -lm"
 					 ;;
         sparc-sun-*)
 		          echo "YOU HAVE A SPARC STATION,	not setting any flags, not supported yet"
