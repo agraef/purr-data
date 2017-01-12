@@ -78,7 +78,7 @@ for dylib in $PD_APP_LIB/*.dylib; do
 	fi
 done
 
-# run it one more time to catch dylibs that depend on dylibs
+# run it again to catch dylibs that depend on dylibs located in /usr/local/opt
 for dylib in $PD_APP_LIB/*.dylib; do
 	LIBS=`otool -L $dylib | sed -n 's|.*/usr/local/opt/\(.*\.dylib\).*|\1|p'`
 	if [ "x$LIBS" != "x" ]; then
@@ -99,3 +99,24 @@ for dylib in $PD_APP_LIB/*.dylib; do
 	fi
 done
 
+# finally, run it one more time to catch dylibs that depend on dylibs from
+# /usr/local/lib
+for dylib in $PD_APP_LIB/*.dylib; do
+        LIBS=`otool -L $dylib | sed -n 's|.*/usr/local/lib/\(.*\.dylib\).*|\1|p'`
+        if [ "x$LIBS" != "x" ]; then
+                echo "`echo $dylib | sed 's|.*/\(.*\.dylib\)|\1|'` is using:"
+                for lib in $LIBS; do
+                        echo "    $lib"
+                        new_lib=`echo $lib | sed 's|.*/\(.*\.dylib\)|\1|'`
+                        if [ -e  $PD_APP_LIB/$new_lib ]; then
+                                echo "$PD_APP_LIB/$new_lib already exists, skipping copy."
+                        else
+                                install -vp /usr/local/lib/$lib $PD_APP_LIB
+                        fi
+                        # @executable_path starts from Contents/Resources/app.nw/bin/pd
+                        install_name_tool -id @executable_path/../../../$LIB_DIR/$new_lib $PD_APP_LIB/$new_lib
+                        install_name_tool -change /usr/local/lib/$lib @executable_path/../../../$LIB_DIR/$new_lib $dylib
+                done
+                echo " "
+        fi
+done
