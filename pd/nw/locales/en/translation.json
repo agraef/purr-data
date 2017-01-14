@@ -352,12 +352,28 @@
   },
   "prefs": {
     "heading": {
+      "startup": "startup",
+      "startup_tt": "startup settings",
       "gui": "GUI",
       "gui_tt": "settings for the user interface",
       "audio": "audio",
       "audio_tt": "configure the audio devices",
       "midi": "MIDI",
       "midi_tt": "configure MIDI devices"
+    },
+    "startup": {
+      "flags": "startup flags",
+      "flags_tt": "Startup flags the program is invoked with; changes require a restart of the application to take effect",
+      "libs": "Libraries",
+	"libs_tt": "External libraries to be loaded on startup; changes require a restart of the application to take effect",
+      "paths": "Search Paths",
+      "paths_tt": "Search path for abstractions and externals; changes require a restart of the application to take effect",
+      "new": "New",
+      "new_tt": "Add an item after the selected one",
+      "edit": "Edit",
+      "edit_tt": "Edit the selected item",
+      "del": "Delete",
+      "del_tt": "Delete the selected item"
     },
     "gui": {
       "presets": {

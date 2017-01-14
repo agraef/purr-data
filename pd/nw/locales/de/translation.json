@@ -352,12 +352,28 @@
   },
   "prefs": {
     "heading": {
+      "startup": "Startup",
+      "startup_tt": "Startup-Einstellungen",
       "gui": "GUI",
       "gui_tt": "Einstellungen der Benutzeroberfläche",
       "audio": "Audio",
       "audio_tt": "konfiguriere die Audio-Geräte",
       "midi": "MIDI",
       "midi_tt": "konfiguriere die MIDI-Geräte"
+    },
+    "startup": {
+      "flags": "Optionen",
+      "flags_tt": "Startup-Optionen für den Programmaufruf; Neustart der Anwendung ist erforderlich, damit Änderungen wirksam werden",
+      "libs": "Bibliotheken",
+      "libs_tt": "External-Bibliotheken, die beim Programmstart zu laden sind; Neustart der Anwendung ist erforderlich, damit Änderungen wirksam werden",
+      "paths": "Suchpfade",
+      "paths_tt": "Suchpfade für Abstraktionen und Externals; Neustart der Anwendung ist erforderlich, damit Änderungen wirksam werden",
+      "new": "Neu",
+      "new_tt": "Füge ein neues Element nach dem ausgewählten hinzu",
+      "edit": "Bearbeiten",
+      "edit_tt": "Bearbeite das ausgewählte Element",
+      "del": "Löschen",
+      "del_tt": "Lösche das ausgewählte Element"
     },
     "gui": {
       "presets": {

@@ -560,6 +560,10 @@ input[name="font_size"] {
     width: 3em;
 }
 
+input[name="startup_flags"] {
+    width: 16em;
+}
+
 /* Canvas dialog */
 
 div.x-scale {
@@ -683,7 +687,7 @@ div.y2 {
 }
 
 /* This matches tabs displaying to their associated radio inputs */
-.tab1:checked ~ .tab1, .tab2:checked ~ .tab2, .tab3:checked ~ .tab3 {
+.tab1:checked ~ .tab1, .tab2:checked ~ .tab2, .tab3:checked ~ .tab3, .tab4:checked ~ .tab4 {
     display: table;
     padding: 8px;
     line-height: 20px;

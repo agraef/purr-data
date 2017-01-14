@@ -31,6 +31,14 @@
           <span data-i18n="prefs.heading.gui"></span>
         </label>
 
+        <input type="radio"
+               name="prefs_radio_group"
+               id="startup_tab_radio"
+               class="tab4 prefs_tab"/>
+        <label for="startup_tab_radio" data-i18n="[title]prefs.heading.startup_tt">
+          <span data-i18n="prefs.heading.startup"></span>
+        </label>
+
         <div class="tab1">
           <div class="tab_settings">
             <label data-i18n="[title]prefs.audio.api_tt">
@@ -286,6 +294,53 @@
             </select>
           </div>
         </div>
+
+        <div class="tab4">
+          <div class="tab_settings">
+            <label data-i18n="[title]prefs.startup.paths_tt">
+              <span data-i18n="prefs.startup.paths"></span>
+            </label>
+            <div style=" height:92px; width:300px; background:white; border: 1px solid #bbb; overflow-y:auto; overflow-x:auto; padding:0px;">
+              <table id="startup_paths" style="width:100%; background:white;">
+              </table>
+            </div>
+            <div class="submit_buttons">
+              <button type="button" onClick="startup_path_new()" data-i18n="[title]prefs.startup.new_tt">
+                <span data-i18n="prefs.startup.new"></span>
+              </button>
+              <button type="button" id="startup_path_edit" onClick="startup_path_edit()" data-i18n="[title]prefs.startup.edit_tt">
+                <span data-i18n="prefs.startup.edit"></span>
+              </button>
+              <button type="button" id="startup_path_delete" onClick="startup_path_delete()" data-i18n="[title]prefs.startup.del_tt">
+                <span data-i18n="prefs.startup.del"></span>
+              </button>
+            </div>
+            <label data-i18n="[title]prefs.startup.libs_tt">
+              <span data-i18n="prefs.startup.libs"></span>
+            </label>
+            <div style=" height:92px; width:300px; background:white; border: 1px solid #bbb; overflow-y:auto; overflow-x:auto; padding:0px;">
+              <table id="startup_libs" style="width:100%; background:white;">
+              </table>
+            </div>
+            <div class="submit_buttons">
+              <button type="button" onClick="startup_lib_new()" data-i18n="[title]prefs.startup.new_tt">
+                <span data-i18n="prefs.startup.new"></span>
+              </button>
+              <button type="button" id="startup_lib_edit" onClick="startup_lib_edit()" data-i18n="[title]prefs.startup.edit_tt">
+                <span data-i18n="prefs.startup.edit"></span>
+              </button>
+              <button type="button" id="startup_lib_delete" onClick="startup_lib_delete()" data-i18n="[title]prefs.startup.del_tt">
+                <span data-i18n="prefs.startup.del"></span>
+              </button>
+            </div>
+            <label data-i18n="[title]prefs.startup.flags_tt">
+              <span data-i18n="prefs.startup.flags"></span>
+              <input type="text"
+                     id="startup_flags"
+                     name="startup_flags">
+            </label>
+          </div>
+        </div>
       </div>
 
       <div class="submit_buttons prefs_buttons">
@@ -327,6 +382,86 @@ function gui_preset_change(elem) {
 
 function get_gui_preset() {
     return document.getElementById("gui_preset").selectedOptions[0].value;
+}
+
+// startup config data
+
+// XXXTODO: We should maybe include these in the dialog, but the startup tab
+// is already crowded enough as it is, so currently we just record them in
+// global variables and then resubmit them unchanged. Note that all of these
+// options are rarely used by the average user, and they can also be entered
+// using the startup flags field if needed.
+var startup_use_stdpath = 1;
+var startup_verbose = 0;
+var startup_defeat_rt = 0;
+
+function get_startup_flags() {
+    return pdgui.encode_for_dialog(document.getElementById("startup_flags").value);
+}
+
+// Kludge alert: The user may create invalid empty entries in the paths and
+// libs tables during editing. The easiest way to deal with these would be to
+// just ignore them, but the table editor currently won't let us do that, so
+// instead we flag them using the special text "N/A" in red. These invalid
+// entries can be checked for with the valid_startup_item function below and
+// are filtered out when submitting the data to Pd. If anyone has a better
+// idea to deal with this corner case then please be my guest. -ag
+
+function valid_startup_item(item)
+{
+    return item.textContent != "N/A" || item.style.color != "red";
+}
+
+function finalize_startup_entry(item)
+{
+    if (!item.textContent) {
+        // flag empty entry as invalid
+        item.textContent = "N/A";
+        item.style.color = "red";
+    }
+}
+
+function prepare_startup_entry(item)
+{
+    if (!valid_startup_item(item)) {
+        // prepare an invalid entry for editing by turning it back into an
+        // empty string
+        item.textContent = "";
+        item.style.color = "black";
+    }
+}
+
+// retrieve the path and lib lists from the corresponding tables in the dialog
+// and encode them in a form which can be safely transmitted via FUDI
+
+function get_path_array() {
+    var table = document.getElementById("startup_paths");
+    var arr = [];
+    if (table != null) {
+        for (var i = 0; i < table.rows.length; i++) {
+            var cell = table.rows[i].cells[0];
+            // filter out empty items
+            if (valid_startup_item(cell)) {
+                arr.push(pdgui.encode_for_dialog(cell.textContent));
+            }
+        }
+    }
+    return arr;
+}
+
+function get_lib_array() {
+    var table = document.getElementById("startup_libs");
+    var arr = [];
+    if (table != null) {
+        for (var i = 0; i < table.rows.length; i++) {
+            var cell = table.rows[i].cells[0];
+            // filter out empty items
+            if (valid_startup_item(cell)) {
+                arr.push(pdgui.encode_for_dialog(cell.textContent));
+            }
+        }
+    }
+    return arr;
 }
 
 // callbacks for devices and/or their number of channels
@@ -457,6 +592,10 @@ function apply(save_prefs) {
 
     // Send the name of the gui preset to Pd
     pdgui.pdsend("pd gui-preset", get_gui_preset());
+
+    // Send the startup config data to Pd
+    pdgui.pdsend.apply(null, ["pd path-dialog", startup_use_stdpath, startup_verbose].concat(get_path_array()));
+    pdgui.pdsend.apply(null, ["pd startup-dialog", startup_defeat_rt, get_startup_flags()].concat(get_lib_array()));
 
     if (save_prefs) {
         // save the prefs in Pd...
@@ -702,12 +841,223 @@ function gui_prefs_callback(name) {
     }
 }
 
+// startup settings
+
 function path_prefs_callback(use_stdpath, verbose, path_array) {
-    pdgui.post("path callback: " + path_array.join("\n"));
+    //pdgui.post("path callback: " + path_array.join("\n"));
+    // XXXTODO
+    startup_use_stdpath = use_stdpath;
+    startup_verbose = verbose;
+    var table = document.getElementById("startup_paths");
+    if (table != null) {
+        // Add the path_array elements to the table.
+        for (var i = 0; i < path_array.length; i++) {
+            var row = table.insertRow(i);
+            var cell = row.insertCell(0);
+            cell.textContent = path_array[i];
+            // install the requisite handlers
+            startup_paths_handlers(cell);
+        }
+    }
+    selected_startup_path = -1;
+    update_path_buttons();
 }
 
 function lib_prefs_callback(defeat_rt, flag_string, lib_array) {
-    pdgui.post("lib callback: " + lib_array.join("\n"));
+    //pdgui.post("lib callback: " + lib_array.join("\n"));
+    // XXXTODO
+    startup_defeat_rt = defeat_rt;
+    document.getElementById("startup_flags").value = flag_string;
+    var table = document.getElementById("startup_libs");
+    if (table != null) {
+        // Add the lib_array elements to the table.
+        for (var i = 0; i < lib_array.length; i++) {
+            var row = table.insertRow(i);
+            var cell = row.insertCell(0);
+            cell.textContent = lib_array[i];
+            // install the requisite handlers
+            startup_libs_handlers(cell);
+        }
+    }
+    selected_startup_lib = -1;
+    update_lib_buttons();
+}
+
+var selected_startup_lib = -1;
+var selected_startup_path = -1;
+
+function current_startup_lib()
+{
+    var table = document.getElementById("startup_libs");
+    return table.rows[selected_startup_lib].cells[0];
+}
+
+function current_startup_path()
+{
+    var table = document.getElementById("startup_paths");
+    return table.rows[selected_startup_path].cells[0];
+}
+
+function update_lib_buttons()
+{
+    var val = selected_startup_lib < 0;
+    var edit_button = document.getElementById("startup_lib_edit");
+    var del_button = document.getElementById("startup_lib_delete");
+    edit_button.disabled = val;
+    del_button.disabled = val;
+}
+
+function update_path_buttons()
+{
+    var val = selected_startup_path < 0;
+    var edit_button = document.getElementById("startup_path_edit");
+    var del_button = document.getElementById("startup_path_delete");
+    edit_button.disabled = val;
+    del_button.disabled = val;
+}
+
+function startup_libs_handlers(item)
+{
+    item.style = "white-space: nowrap";
+    item.onclick = function () {
+        startup_lib_click(this);
+    };
+    item.onblur = function () {
+        startup_lib_blur(this);
+    };
+}
+
+function startup_paths_handlers(item)
+{
+    item.style = "white-space: nowrap";
+    item.onclick = function () {
+        startup_path_click(this);
+    };
+    item.onblur = function () {
+        startup_path_blur(this);
+    };
+}
+
+function startup_lib_click(item) {
+    var i = item.parentElement.rowIndex;
+    if (i != selected_startup_lib) {
+        if (selected_startup_lib >= 0) {
+            current_startup_lib().style.background = "white";
+            current_startup_lib().setAttribute("contenteditable", "false");
+        }
+        item.style.background = "#ddd";
+        selected_startup_lib = i;
+    } else if (item.getAttribute("contenteditable") != "true") {
+        item.style.background = "white";
+        item.contenteditable = "false";
+        selected_startup_lib = -1;
+    }
+    update_lib_buttons();
+}
+
+function startup_lib_new() {
+    var table = document.getElementById("startup_libs");
+    var row = table.insertRow(selected_startup_lib+1);
+    var cell = row.insertCell(0);
+    startup_libs_handlers(cell);
+    startup_lib_click(cell);
+    startup_lib_edit();
+}
+
+function startup_lib_edit() {
+    if (selected_startup_lib >= 0) {
+        var item = current_startup_lib();
+        prepare_startup_entry(item);
+        item.setAttribute("contenteditable", "true");
+        item.focus();
+    }
+}
+
+function startup_lib_blur(item) {
+    // Kludge alert: Apparently we can't just remove an empty row
+    // here, so we simply flag the entry as invalid instead.
+    finalize_startup_entry(item);
+    item.setAttribute("contenteditable", "false");
+}
+
+function startup_lib_delete() {
+    if (selected_startup_lib >= 0) {
+        var table = document.getElementById("startup_libs");
+        table.deleteRow(selected_startup_lib);
+        if (selected_startup_lib < table.rows.length) {
+            // make sure that the following row is selected, which is
+            // convenient when deleting successive items
+            var item = current_startup_lib();
+            selected_startup_lib = -1;
+            startup_lib_click(item);
+        } else {
+            selected_startup_lib = -1;
+            if (table.rows.length > 0)
+                startup_lib_click(table.rows[table.rows.length-1].cells[0]);
+        }
+    }
+    update_lib_buttons();
+}
+
+function startup_path_click(item) {
+    var i = item.parentElement.rowIndex;
+    if (i != selected_startup_path) {
+        if (selected_startup_path >= 0) {
+            current_startup_path().style.background = "white";
+            current_startup_path().setAttribute("contenteditable", "false");
+        }
+        item.style.background = "#ddd";
+        selected_startup_path = i;
+    } else if (item.getAttribute("contenteditable") != "true") {
+        item.style.background = "white";
+        item.contenteditable = "false";
+        selected_startup_path = -1;
+    }
+    update_path_buttons();
+}
+
+function startup_path_new() {
+    var table = document.getElementById("startup_paths");
+    var row = table.insertRow(selected_startup_path+1);
+    var cell = row.insertCell(0);
+    startup_paths_handlers(cell);
+    startup_path_click(cell);
+    startup_path_edit();
+}
+
+function startup_path_edit() {
+    if (selected_startup_path >= 0) {
+        var item = current_startup_path();
+        prepare_startup_entry(item);
+        item.setAttribute("contenteditable", "true");
+        item.focus();
+    }
+}
+
+function startup_path_blur(item) {
+    // Kludge alert: Apparently we can't just remove an empty row
+    // here, so we simply flag the entry as invalid instead.
+    finalize_startup_entry(item);
+    item.setAttribute("contenteditable", "false");
+}
+
+function startup_path_delete() {
+    if (selected_startup_path >= 0) {
+        var table = document.getElementById("startup_paths");
+        table.deleteRow(selected_startup_path);
+        if (selected_startup_path < table.rows.length) {
+            // make sure that the following row is selected, which is
+            // convenient when deleting successive items
+            var item = current_startup_path();
+            selected_startup_path = -1;
+            startup_path_click(item);
+        } else {
+            selected_startup_path = -1;
+            if (table.rows.length > 0)
+                startup_path_click(table.rows[table.rows.length-1].cells[0]);
+        }
+    }
+    update_path_buttons();
 }
 
 // This gets called from the nw_create_window function in index.html
