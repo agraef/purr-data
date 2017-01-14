@@ -92,17 +92,6 @@ function string_to_array_of_chunks(msg) {
     return out_array;
 }
 
-// Should probably be in pdgui.js
-function encode_for_dialog(s) {
-    s = s.replace(/\+/g, "++");
-    s = s.replace(/\s/g, "+_");
-    s = s.replace(/\$/g, "+d");
-    s = s.replace(/;/g, "+s");
-    s = s.replace(/,/g, "+c");
-    s = "+" + s;
-    return s;
-}
-
 // Super-simplistic guess at whether the string from the clipboard
 // starts with Pd code. This is just meant as a convenience so that
 // stuff in the copy buffer that obviously isn't Pd code doesn't get
@@ -371,7 +360,7 @@ var canvas_events = (function() {
                         pdgui.pdsend(name, "findagain");
                     } else {
                         pdgui.pdsend(name, "find",
-                        encode_for_dialog(t),
+                        pdgui.encode_for_dialog(t),
                         match_words_state ? "1" : "0");
                     }
                 }
