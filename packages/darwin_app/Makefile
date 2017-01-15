@@ -152,7 +152,7 @@ darwin_app_wrapper: Info.plist
 	# Now change the localized app name in Resources/*.lproj from nwjs
 	# to "Purr Data". For some reason "CFBundleDisplayName" doesn't accept
 	# spaces so we give it "PurrData"
-	for file in $(BUILD_BASE)/*.app/Contents/Resources/*.lproj/InfoPlist.strings; do plutil -convert json "$$file"; cat "$$file" | LC_ALL=C sed 's/"CFBundleName":"nwjs"/"CFBundleName":"Purr Data"/g' > "$$file"; cat "$$file" | LC_ALL=C sed 's/"CFBundleDisplayName":"nwjs"/"CFBundleDisplayName":"PurrData"/g' > "$$file"; plutil -convert binary1 "$$file"; done
+	for file in $(BUILD_BASE)/*.app/Contents/Resources/*.lproj/InfoPlist.strings; do plutil -convert json -o ./tmp.txt "$$file"; cat ./tmp.txt | LC_ALL=C sed 's/"CFBundleName":"nwjs"/"CFBundleName":"Purr Data"/g' | LC_ALL=C sed 's/"CFBundleDisplayName":"nwjs"/"CFBundleDisplayName":"PurrData"/g' > ./tmp.txt; plutil -convert binary1 -o "$$file" ./tmp.txt; rm ./tmp.txt; done
 
 #------------------------------------------------------------------------------#
 # generate Info.plist using PD_APP_NAME and PD_VERSION
