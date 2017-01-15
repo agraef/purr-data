@@ -4480,6 +4480,18 @@ function gui_gui_properties(dummy, name) {
     }
 }
 
+function gui_path_properties(dummy, use_stdpath, verbose, path_array) {
+    if (dialogwin["prefs"] !== null) {
+        dialogwin["prefs"].window.path_prefs_callback(use_stdpath, verbose, path_array);
+    }
+}
+
+function gui_lib_properties(dummy, defeat_rt, flag_string, lib_array) {
+    if (dialogwin["prefs"] !== null) {
+        dialogwin["prefs"].window.lib_prefs_callback(defeat_rt, flag_string, lib_array);
+    }
+}
+
 // Let's try a closure for gui skins
 var skin = exports.skin = (function () {
     var dir = "css/";

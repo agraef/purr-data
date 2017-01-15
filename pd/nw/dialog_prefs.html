@@ -702,6 +702,14 @@ function gui_prefs_callback(name) {
     }
 }
 
+function path_prefs_callback(use_stdpath, verbose, path_array) {
+    pdgui.post("path callback: " + path_array.join("\n"));
+}
+
+function lib_prefs_callback(defeat_rt, flag_string, lib_array) {
+    pdgui.post("lib callback: " + lib_array.join("\n"));
+}
+
 // This gets called from the nw_create_window function in index.html
 // It provides us with our window id from the C side.  Once we have it
 // we can create the menu and register event callbacks
@@ -720,6 +728,8 @@ function register_window_id(gfxstub, attr_arrays) {
     pdgui.pdsend("pd audio-properties"); // request audio pref attrs
     pdgui.pdsend("pd midi-properties");  // request midi pref attrs
     pdgui.pdsend("pd gui-properties");   // request saved gui properties
+    pdgui.pdsend("pd start-path-dialog"); // request default system paths
+    pdgui.pdsend("pd start-startup-dialog"); // request default loaded libs
     document.getElementsByClassName("container")[0].style.setProperty("display", "inline");
 }
 

@@ -772,11 +772,22 @@ void glob_start_path_dialog(t_pd *dummy)
     int i;
     t_namelist *nl;
 
-    sys_gui("global pd_path; set pd_path {}\n");
+    //sys_gui("global pd_path; set pd_path {}\n");
+    gui_start_vmess("gui_path_properties", "xii",
+        dummy,
+        sys_usestdpath,
+        sys_verbose
+    );
+    gui_start_array();
     for (nl = sys_searchpath, i = 0; nl; nl = nl->nl_next, i++)
-        sys_vgui("lappend pd_path {%s}\n", nl->nl_string);
-    sprintf(buf, "pdtk_path_dialog %%s %d %d\n", sys_usestdpath, sys_verbose);
-    gfxstub_new(&glob_pdobject, (void *)glob_start_path_dialog, buf);
+    {
+        //sys_vgui("lappend pd_path {%s}\n", nl->nl_string);
+        gui_s(nl->nl_string);
+    }
+    gui_end_array();
+    gui_end_vmess();
+    //sprintf(buf, "pdtk_path_dialog %%s %d %d\n", sys_usestdpath, sys_verbose);
+    //gfxstub_new(&glob_pdobject, (void *)glob_start_path_dialog, buf);
 }
 
     /* new values from dialog window */
@@ -802,12 +813,23 @@ void glob_start_startup_dialog(t_pd *dummy)
     int i;
     t_namelist *nl;
 
-    sys_gui("global pd_startup; set pd_startup {}\n");
+    //sys_gui("global pd_startup; set pd_startup {}\n");
+    gui_start_vmess("gui_lib_properties", "xis",
+        dummy,
+        sys_defeatrt,
+        sys_flags->s_name
+    );
+    gui_start_array();
     for (nl = sys_externlist, i = 0; nl; nl = nl->nl_next, i++)
-        sys_vgui("lappend pd_startup {%s}\n", nl->nl_string);
-    sprintf(buf, "pdtk_startup_dialog %%s %d \"%s\"\n", sys_defeatrt,
-        sys_flags->s_name);
-    gfxstub_new(&glob_pdobject, (void *)glob_start_startup_dialog, buf);
+    {
+        //sys_vgui("lappend pd_startup {%s}\n", nl->nl_string);
+        gui_s(nl->nl_string);
+    }
+    gui_end_array();
+    gui_end_vmess();
+    //sprintf(buf, "pdtk_startup_dialog %%s %d \"%s\"\n", sys_defeatrt,
+    //    sys_flags->s_name);
+    //gfxstub_new(&glob_pdobject, (void *)glob_start_startup_dialog, buf);
 }
 
     /* new values from dialog window */
