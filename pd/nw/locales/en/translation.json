@@ -405,13 +405,13 @@
       "output_title_tt": "hardware devices to send midi data from Pd"
     },
     "ok": "Ok",
-    "ok_tt": "Update the audio properties and close the dialog",
+    "ok_tt": "Update the preferences and close the dialog",
     "apply": "Apply",
-    "apply_tt": "Update audio properties without closing this dialog",
+    "apply_tt": "Update preferences without closing this dialog",
     "cancel": "Cancel",
-    "cancel_tt": "Cancel updating the properties",
+    "cancel_tt": "Cancel updating the preferences",
     "close": "Close",
-    "close_tt": "Close the properties dialog"
+    "close_tt": "Close the preferences dialog"
   },
   "font": {
     "prop": {

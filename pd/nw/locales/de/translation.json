@@ -405,9 +405,9 @@
       "output_title_tt": "Hardware-Geräte für die MIDI-Ausgabe von Pd"
     },
     "ok": "Ok",
-    "ok_tt": "Aktualisiere die Audio-Einstellungen und schließe den Dialog",
+    "ok_tt": "Aktualisiere die Einstellungen und schließe den Dialog",
     "apply": "Anwenden",
-    "apply_tt": "Aktualisiere die Audio-Einstellungen ohne Schließen des Dialogs",
+    "apply_tt": "Aktualisiere die Einstellungen ohne Schließen des Dialogs",
     "cancel": "Abbrechen",
     "cancel_tt": "Aktualisierung der Einstellungen abbrechen",
     "close": "Schließen",
