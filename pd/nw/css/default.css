@@ -661,7 +661,6 @@ div.y2 {
     margin-bottom: 0px;
     /* Set the background color to default gray (non-selected tab) */
     background-color:#ececec;
-    height: 4vh;
 }
 
 /* Focused tabs */
