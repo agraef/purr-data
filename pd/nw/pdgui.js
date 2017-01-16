@@ -459,6 +459,21 @@ var font_fixed_metrics = [
 
 // Utility Functions
 
+// This is used to escape spaces and other special delimiters in FUDI
+// arguments for dialogs. (The reverse function is sys_decodedialog() in the C
+// code.)
+function encode_for_dialog(s) {
+    s = s.replace(/\+/g, "++");
+    s = s.replace(/\s/g, "+_");
+    s = s.replace(/\$/g, "+d");
+    s = s.replace(/;/g, "+s");
+    s = s.replace(/,/g, "+c");
+    s = "+" + s;
+    return s;
+}
+
+exports.encode_for_dialog = encode_for_dialog;
+
 // originally used to enquote a string to send it to a tcl function
 function enquote (x) {
     var foo = x.replace(/,/g, "");
