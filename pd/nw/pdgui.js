@@ -4432,7 +4432,7 @@ function gui_pd_dsp(state) {
 
 function open_prefs() {
     if (!dialogwin["prefs"]) {
-        create_window("prefs", "prefs", 300, 420, 0, 0, null);
+        create_window("prefs", "prefs", 350, 470, 0, 0, null);
     }
 }
 

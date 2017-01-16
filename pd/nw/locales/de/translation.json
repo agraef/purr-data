@@ -362,8 +362,8 @@
       "midi_tt": "konfiguriere die MIDI-Geräte"
     },
     "startup": {
-      "flags": "Optionen",
-      "flags_tt": "Startup-Optionen für den Programmaufruf; Neustart der Anwendung ist erforderlich, damit Änderungen wirksam werden",
+      "flags": "Startup-Flags",
+      "flags_tt": "Zusätzliche Optionen für den Programmaufruf; Neustart der Anwendung ist erforderlich, damit Änderungen wirksam werden",
       "libs": "Bibliotheken",
       "libs_tt": "External-Bibliotheken, die beim Programmstart zu laden sind; Neustart der Anwendung ist erforderlich, damit Änderungen wirksam werden",
       "paths": "Suchpfade",
