@@ -352,11 +352,11 @@
   },
   "prefs": {
     "heading": {
-      "startup": "startup",
+      "startup": "Startup",
       "startup_tt": "startup settings",
       "gui": "GUI",
       "gui_tt": "settings for the user interface",
-      "audio": "audio",
+      "audio": "Audio",
       "audio_tt": "configure the audio devices",
       "midi": "MIDI",
       "midi_tt": "configure MIDI devices"
