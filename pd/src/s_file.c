@@ -418,6 +418,9 @@ void sys_loadpreferences( void)
         callback, blocksize);
         
         /* load MIDI preferences */
+    if (sys_getpreference("midiapi", prefbuf, MAXPDSTRING)
+        && sscanf(prefbuf, "%d", &api) > 0)
+            sys_set_midi_api(api);
         /* JMZ/MB: brackets for initializing */
     if (sys_getpreference("nomidiin", prefbuf, MAXPDSTRING) &&
         (!strcmp(prefbuf, ".") || !strcmp(prefbuf, "True")))
@@ -573,6 +576,9 @@ void glob_savepreferences(t_pd *dummy)
     sys_putpreference("blocksize", buf1);
 
         /* MIDI settings */
+    sprintf(buf1, "%d", sys_midiapi);
+    sys_putpreference("midiapi", buf1);
+
     sys_get_midi_params(&nmidiindev, midiindev, &nmidioutdev, midioutdev);
     sys_putpreference("nomidiin", (nmidiindev <= 0 ? "True" : "False"));
     /* AG: nmidiin */
