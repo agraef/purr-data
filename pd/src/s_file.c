@@ -351,7 +351,25 @@ void sys_loadpreferences( void)
             naudioindev = 0;
     else
     {
-        for (i = 0, naudioindev = 0; i < MAXAUDIOINDEV; i++)
+        /* AG: naudioin key */
+        /* The idea here is to keep track of the actual number of devices, so
+           that we don't read stale device entries which were removed long ago
+           but are still present in the defaults/registry on Mac and Windows.
+           (This bug is in all other Pd versions out there. It only affects
+           Mac and Windows, since the config information on Linux is kept in a
+           file which is overwritten each time the config information is
+           saved, so there are never any stale device entries in it.)
+           Our code is fully compatible with config info from other Pd
+           versions, i.e., we fall back to the default behavior of looking for
+           up to MAXAUDIOINDEV devices if the naudioin key isn't set, and the
+           naudioin key will just be ignored if our config happens to be read
+           by other Pd versions. Audio outputs and MIDI inputs/outputs are
+           handled in exactly the same fashion below. */
+        int n;
+        if (!(sys_getpreference("naudioin", prefbuf, MAXPDSTRING)
+              && sscanf(prefbuf, "%d", &n) > 0))
+            n = MAXAUDIOINDEV;
+        for (i = 0, naudioindev = 0; i < n; i++)
         {
             sprintf(keybuf, "audioindev%d", i+1);
             if (!sys_getpreference(keybuf, prefbuf, MAXPDSTRING))
@@ -370,7 +388,12 @@ void sys_loadpreferences( void)
             naudiooutdev = 0;
     else
     {
-        for (i = 0, naudiooutdev = 0; i < MAXAUDIOOUTDEV; i++)
+        /* AG: naudioout key */
+        int n;
+        if (!(sys_getpreference("naudioout", prefbuf, MAXPDSTRING)
+              && sscanf(prefbuf, "%d", &n) > 0))
+            n = MAXAUDIOOUTDEV;
+        for (i = 0, naudiooutdev = 0; i < n; i++)
         {
             sprintf(keybuf, "audiooutdev%d", i+1);
             if (!sys_getpreference(keybuf, prefbuf, MAXPDSTRING))
@@ -395,31 +418,50 @@ void sys_loadpreferences( void)
         callback, blocksize);
         
         /* load MIDI preferences */
+    if (sys_getpreference("midiapi", prefbuf, MAXPDSTRING)
+        && sscanf(prefbuf, "%d", &api) > 0)
+            sys_set_midi_api(api);
         /* JMZ/MB: brackets for initializing */
     if (sys_getpreference("nomidiin", prefbuf, MAXPDSTRING) &&
         (!strcmp(prefbuf, ".") || !strcmp(prefbuf, "True")))
             nmidiindev = 0;
-    else for (i = 0, nmidiindev = 0; i < MAXMIDIINDEV; i++)
+    else
     {
-        sprintf(keybuf, "midiindev%d", i+1);
-        if (!sys_getpreference(keybuf, prefbuf, MAXPDSTRING))
-            break;
-        if (sscanf(prefbuf, "%d", &midiindev[i]) < 1)
-            break;
-        nmidiindev++;
+        /* AG: nmidiin key */
+        int n;
+        if (!(sys_getpreference("nmidiin", prefbuf, MAXPDSTRING)
+              && sscanf(prefbuf, "%d", &n) > 0))
+            n = MAXMIDIINDEV;
+        for (i = 0, nmidiindev = 0; i < n; i++)
+        {
+            sprintf(keybuf, "midiindev%d", i+1);
+            if (!sys_getpreference(keybuf, prefbuf, MAXPDSTRING))
+                break;
+            if (sscanf(prefbuf, "%d", &midiindev[i]) < 1)
+                break;
+            nmidiindev++;
+        }
     }
         /* JMZ/MB: brackets for initializing */
     if (sys_getpreference("nomidiout", prefbuf, MAXPDSTRING) &&
         (!strcmp(prefbuf, ".") || !strcmp(prefbuf, "True")))
             nmidioutdev = 0;
-    else for (i = 0, nmidioutdev = 0; i < MAXMIDIOUTDEV; i++)
+    else
     {
-        sprintf(keybuf, "midioutdev%d", i+1);
-        if (!sys_getpreference(keybuf, prefbuf, MAXPDSTRING))
-            break;
-        if (sscanf(prefbuf, "%d", &midioutdev[i]) < 1)
-            break;
-        nmidioutdev++;
+        /* AG: nmidiout key */
+        int n;
+        if (!(sys_getpreference("nmidiout", prefbuf, MAXPDSTRING)
+              && sscanf(prefbuf, "%d", &n) > 0))
+            n = MAXMIDIOUTDEV;
+        for (i = 0, nmidioutdev = 0; i < n; i++)
+        {
+            sprintf(keybuf, "midioutdev%d", i+1);
+            if (!sys_getpreference(keybuf, prefbuf, MAXPDSTRING))
+                break;
+            if (sscanf(prefbuf, "%d", &midioutdev[i]) < 1)
+                break;
+            nmidioutdev++;
+        }
     }
     sys_open_midi(nmidiindev, midiindev, nmidioutdev, midioutdev, 0);
 
@@ -500,6 +542,10 @@ void glob_savepreferences(t_pd *dummy)
             &blocksize);
 
     sys_putpreference("noaudioin", (naudioindev <= 0 ? "True" : "False"));
+    /* AG: additional naudioin key, see the comments in sys_loadpreferences
+       above for explanation */
+    sprintf(buf1, "%d", naudioindev);
+    sys_putpreference("naudioin", buf1);
     for (i = 0; i < naudioindev; i++)
     {
         sprintf(buf1, "audioindev%d", i+1);
@@ -507,6 +553,9 @@ void glob_savepreferences(t_pd *dummy)
         sys_putpreference(buf1, buf2);
     }
     sys_putpreference("noaudioout", (naudiooutdev <= 0 ? "True" : "False"));
+    /* AG: naudioout key */
+    sprintf(buf1, "%d", naudiooutdev);
+    sys_putpreference("naudioout", buf1);
     for (i = 0; i < naudiooutdev; i++)
     {
         sprintf(buf1, "audiooutdev%d", i+1);
@@ -527,8 +576,14 @@ void glob_savepreferences(t_pd *dummy)
     sys_putpreference("blocksize", buf1);
 
         /* MIDI settings */
+    sprintf(buf1, "%d", sys_midiapi);
+    sys_putpreference("midiapi", buf1);
+
     sys_get_midi_params(&nmidiindev, midiindev, &nmidioutdev, midioutdev);
     sys_putpreference("nomidiin", (nmidiindev <= 0 ? "True" : "False"));
+    /* AG: nmidiin */
+    sprintf(buf1, "%d", nmidiindev);
+    sys_putpreference("nmidiin", buf1);
     for (i = 0; i < nmidiindev; i++)
     {
         sprintf(buf1, "midiindev%d", i+1);
@@ -536,6 +591,9 @@ void glob_savepreferences(t_pd *dummy)
         sys_putpreference(buf1, buf2);
     }
     sys_putpreference("nomidiout", (nmidioutdev <= 0 ? "True" : "False"));
+    /* AG: nmidiout */
+    sprintf(buf1, "%d", nmidioutdev);
+    sys_putpreference("nmidiout", buf1);
     for (i = 0; i < nmidioutdev; i++)
     {
         sprintf(buf1, "midioutdev%d", i+1);
