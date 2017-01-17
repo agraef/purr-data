@@ -104,11 +104,10 @@ if [ ! -d "../pd/nw/nw" ]; then
 		nwjs_dirname=`echo $nwjs_dirname | sed 's/armv7l/arm/'`
 	fi
         mv $nwjs_dirname ../pd/nw/nw
-	# make sure the nw binary is executable on GNU/Linux and OSX
-	if [[ $os != "win" ]]; then
+	# make sure the nw binary is executable on GNU/Linux
+	if [[ $os != "win" && $dmg == 0 ]]; then
 		chmod 755 ../pd/nw/nw/nw
 	fi
-	chmod 755 ../pd/nw/nw/nw
 	rm $nwjs_filename
 fi
 
