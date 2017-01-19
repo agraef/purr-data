@@ -72,6 +72,7 @@ Pd-L2ork has the following goals:
 
 #### Linux
 Time to build: *40 minutes to 1.5 hours*
+Hard drive space required: *roughly 2.5 GB*
 To install using a pre-compiled binary, follow these instructions:
 http://l2ork.music.vt.edu/main/?page_id=56
 
@@ -82,11 +83,12 @@ http://l2ork.music.vt.edu/main/?page_id=56
 Then follow the steps outlined here:
 http://l2ork.music.vt.edu/main/?page_id=56#install-dev
 
-#### OSX
-Homebrew build (supported) *40 minutes to 1.5 hours*
+#### OSX 64-bit using Homebrew
+Time to build: *50 minutes to 1.5 hours*
+Hard drive space required: *roughly 2 GB*
 1. Install [Homebrew](http://brew.sh) *(15 minutes)*
    (asks for password twice-- once for command line tools, once for homebrew)
-2. Install the dependencies *10 minutes*:<code>
+2. Install the dependencies *(10 minutes)*:<code>
    brew install wget
    brew install autoconf
    brew install automake
@@ -101,62 +103,19 @@ Homebrew build (supported) *40 minutes to 1.5 hours*
    brew install libquicktime
    brew install pkg-config
 </code>
-3. git clone https://git.purrdata.net/jwilkes/purr-data.git
+3. Clone the Purr-Data repository *(10 minutes)*<code>
+git clone https://git.purrdata.net/jwilkes/purr-data.git</code>
 4. Change to the directory<code>
 cd purr-data/l2ork_addons</code>
-5. Run the installer<code>
-./tar_em_up.sh -X *15 minutes*</code>
+5. Run the installer *(15 minutes)*<code>
+./tar_em_up.sh -X</code>
 6. When the installer finishes, type<code>
 cd ..</code>
 7. There should now be a .dmg file in your current directory
 
-Macports build (unsupported, unfinished)
-Time to build: *1 day*
-
-1. Install Xcode from the Mac App Store. *1.5 hours*
-2. Install Xcode command line tools in a terminal window *4 minutes*:<code>
-   xcode-select --install</code>
-3. Agree to the Xcode license in a terminal
-   window:<code>sudo xcodebuild -license</code>
-3. Install [MacPorts](https://www.macports.org) *12 minutes*
-4. Check for updates:<code>sudo port selfupdate</code>
-5. Install the dependencies *6 minutes*:<code>
-   sudo port install wget
-   sudo port install autoconf
-   sudo port install automake
-   sudo port install libtool
-   sudo port install fftw-3
-   sudo port install fftw-3-single
-   sudo port install python27
-   sudo port install fluidsynth
-   sudo port install lame
-   sudo port install speex
-   sudo port install gsl
-   sudo port install libquicktime-devel
-</code>
-6. Download the source code *(3-6 minutes)*
-   Issue the following command to create a new directory "purr-data" and clone
-   the repository to it:<code>
-git clone https://git.purrdata.net/jwilkes/purr-data.git</code>
-7. ...
-8. Set the environment variables on the command line:<code>
-   export CPATH=/opt/local/include
-   export LIBRARY_PATH=/opt/local/lib</code>
-9. In externals/Makefile, remove the following libraries from from LIB_TARGETS:
-   * plugin
-   * hid
-   * pdp
-   * gem2pdp
-10. In packages/darwin_app/Makefile, remove rez_install from build instructions
-11. In packages/darwin_app/Makefile, comment out installation of libquicktime
-12. Run `make install`
-13. In the app in the "build" directory, find the en.lproj/InfoPlist.strings
-    and change the CFBundleDisplayName and CFBundleName to "purr-data"
-14. Note: the script `embed-MacOSX-dependencies.sh` doesn't work with
-    macports paths.
-
 #### Windows 32-bit Using msys2
 Time to build: *roughly 1.5 hours-- 30 minutes of this is for Gem alone*
+Hard drive space required to build: *rougly 2.5 GB*
 
 Important note: check the name of your Windows user account. If it has a space
 in it-- like "My Home Computer" or "2nd Laptop", then **stop**. You may not
