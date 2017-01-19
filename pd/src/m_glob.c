@@ -37,6 +37,9 @@ void glob_ping(t_pd *dummy);
 void glob_watchdog(t_pd *dummy);
 void glob_savepreferences(t_pd *dummy);
 void glob_forward_files_from_secondary_instance(void);
+void glob_recent_files(t_pd *dummy);
+void glob_add_recent_file(t_pd *dummy, t_symbol *s);
+void glob_clear_recent_files(t_pd *dummy);
 
 void alsa_resync( void);
 
@@ -168,6 +171,12 @@ void glob_init(void)
         gensym("gui-preset"), A_SYMBOL, 0);
     class_addmethod(glob_pdobject, (t_method)glob_gui_properties,
         gensym("gui-properties"), 0);
+    class_addmethod(glob_pdobject, (t_method)glob_recent_files,
+        gensym("recent-files"), 0);
+    class_addmethod(glob_pdobject, (t_method)glob_add_recent_file,
+        gensym("add-recent-file"), A_SYMBOL, 0);
+    class_addmethod(glob_pdobject, (t_method)glob_clear_recent_files,
+        gensym("clear-recent-files"), 0);
 #ifdef UNIX
     class_addmethod(glob_pdobject, (t_method)glob_watchdog,
         gensym("watchdog"), 0);
