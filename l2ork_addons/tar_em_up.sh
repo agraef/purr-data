@@ -40,6 +40,56 @@ pkg=1
 inno=0
 dmg=0
 
+while getopts ":abBcdefFnRruwXzZ" Option
+do case $Option in
+		a)		addon=1;;
+
+		b)		deb=1
+				inst_dir=${inst_dir:-/usr};;
+
+		B)		deb=2
+				inst_dir=${inst_dir:-/usr};;
+
+		c)		core=1;;
+
+		e)		addon=1
+				core=1
+				full=1;;
+
+		f)		full=1;;
+
+		F)		full=2;;
+
+		n)		pkg=0;;
+
+		R)		deb=2
+				inst_dir=/usr
+				rpi=1;;
+
+		r)		deb=1
+				inst_dir=/usr
+				rpi=1;;
+
+		w)		sys_cwiid=1
+				;;
+
+		X)		dmg=1
+				inst_dir=/usr;;
+
+		z)		inno=1
+				inst_dir=/usr;;
+
+		Z)		inno=2
+				inst_dir=/usr;;
+
+		*)		echo "Error: unknown option";;
+	esac
+done
+
+inst_dir=${inst_dir:-/usr/local}
+
+export TAR_EM_UP_PREFIX=$inst_dir
+
 # Get the OS we're running under, normalized to names that can be used
 # to fetch the nwjs binaries below
 
@@ -120,57 +170,6 @@ if [[ $os == "win" ]]; then
 		mv ASIOSDK2.3 ../pd/lib
 	fi
 fi
-
-
-while getopts ":abBcdefFnRruwXzZ" Option
-do case $Option in
-		a)		addon=1;;
-
-		b)		deb=1
-				inst_dir=${inst_dir:-/usr};;
-
-		B)		deb=2
-				inst_dir=${inst_dir:-/usr};;
-
-		c)		core=1;;
-
-		e)		addon=1
-				core=1
-				full=1;;
-
-		f)		full=1;;
-
-		F)		full=2;;
-
-		n)		pkg=0;;
-
-		R)		deb=2
-				inst_dir=/usr
-				rpi=1;;
-
-		r)		deb=1
-				inst_dir=/usr
-				rpi=1;;
-
-		w)		sys_cwiid=1
-				;;
-
-		X)		dmg=1
-				inst_dir=/usr;;
-
-		z)		inno=1
-				inst_dir=/usr;;
-
-		Z)		inno=2
-				inst_dir=/usr;;
-
-		*)		echo "Error: unknown option";;
-	esac
-done
-
-inst_dir=${inst_dir:-/usr/local}
-
-export TAR_EM_UP_PREFIX=$inst_dir
 
 cd ../
 
