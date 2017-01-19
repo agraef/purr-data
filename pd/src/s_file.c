@@ -507,6 +507,7 @@ void sys_loadpreferences( void)
         if (strcmp(prefbuf, "."))
             sys_flags = gensym(prefbuf);
     }
+    sys_doneloadpreferences();
     sys_doflags();
 
     if (sys_defeatrt)
