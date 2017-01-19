@@ -49,7 +49,6 @@ void sys_doflags( void);
 #define USER_CONFIG_DIR ".pd-l2ork"
 
 static char *sys_prefbuf;
-static int sys_prefbufsize;
 
 static void sys_initloadpreferences( void)
 {
@@ -339,7 +338,7 @@ void sys_loadpreferences( void)
     int nmidiindev, midiindev[MAXMIDIINDEV];
     int nmidioutdev, midioutdev[MAXMIDIOUTDEV];
     int i, rate = 0, advance = -1, callback = 0, blocksize = 0,
-        api, nolib, maxi;
+        api, maxi;
     char prefbuf[MAXPDSTRING], keybuf[80];
 
     sys_initloadpreferences();
