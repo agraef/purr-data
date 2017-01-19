@@ -46,6 +46,8 @@ void sys_doflags( void);
 
 #ifdef UNIX
 
+#define USER_CONFIG_DIR ".pd-l2ork"
+
 static char *sys_prefbuf;
 static int sys_prefbufsize;
 
@@ -62,7 +64,7 @@ static void sys_initloadpreferences( void)
              sys_libdir->s_name);
 
     if (homedir)
-        snprintf(user_prefs_file, FILENAME_MAX, "%s/.pd-l2ork/user.settings", homedir);
+        snprintf(user_prefs_file, FILENAME_MAX, "%s/" USER_CONFIG_DIR "/user.settings", homedir);
     if (stat(user_prefs_file, &statbuf) == 0) 
         strncpy(filenamebuf, user_prefs_file, FILENAME_MAX);
     else if (stat(default_prefs_file, &statbuf) == 0)
@@ -143,7 +145,7 @@ static void sys_initsavepreferences( void)
 
     if (!homedir)
         return;
-    snprintf(filenamebuf, FILENAME_MAX, "%s/.pd-l2ork", homedir);
+    snprintf(filenamebuf, FILENAME_MAX, "%s/" USER_CONFIG_DIR, homedir);
     filenamebuf[FILENAME_MAX-1] = 0;
     if (stat(filenamebuf, &statbuf) || !S_ISDIR(statbuf.st_mode)) {
       // user config dir doesn't exist yet, try to create it
@@ -152,7 +154,7 @@ static void sys_initsavepreferences( void)
         return;
       }
     }
-    snprintf(filenamebuf, FILENAME_MAX, "%s/.pd-l2ork/user.settings", homedir);
+    snprintf(filenamebuf, FILENAME_MAX, "%s/" USER_CONFIG_DIR "/user.settings", homedir);
     filenamebuf[FILENAME_MAX-1] = 0;
     if ((sys_prefsavefp = fopen(filenamebuf, "w")) == NULL)
     {
@@ -683,7 +685,7 @@ void sys_save_recent_files(void)
   char filenamebuf[FILENAME_MAX], *homedir = getenv("HOME");
   struct stat statbuf;
   if (!homedir) return;
-  snprintf(filenamebuf, FILENAME_MAX, "%s/.pd-l2ork", homedir);
+  snprintf(filenamebuf, FILENAME_MAX, "%s/" USER_CONFIG_DIR, homedir);
   filenamebuf[FILENAME_MAX-1] = 0;
   if (stat(filenamebuf, &statbuf) || !S_ISDIR(statbuf.st_mode)) {
     // user config dir doesn't exist yet, try to create it
@@ -692,7 +694,7 @@ void sys_save_recent_files(void)
       return;
     }
   }
-  snprintf(filenamebuf, FILENAME_MAX, "%s/.pd-l2ork/recent_files", homedir);
+  snprintf(filenamebuf, FILENAME_MAX, "%s/" USER_CONFIG_DIR "/recent_files", homedir);
   filenamebuf[FILENAME_MAX-1] = 0;
   if ((fp = fopen(filenamebuf, "w")) == NULL) {
     pd_error(0, "%s: %s",filenamebuf, strerror(errno));
@@ -723,7 +725,7 @@ void sys_load_recent_files(void)
   FILE *fp;
   char filenamebuf[FILENAME_MAX], *homedir = getenv("HOME");
   if (!homedir) return;
-  snprintf(filenamebuf, FILENAME_MAX, "%s/.pd-l2ork/recent_files", homedir);
+  snprintf(filenamebuf, FILENAME_MAX, "%s/" USER_CONFIG_DIR "/recent_files", homedir);
   filenamebuf[FILENAME_MAX-1] = 0;
   if ((fp = fopen(filenamebuf, "r")) == NULL) return;
   for (sys_n_recent_files = 0; sys_n_recent_files < MAX_RECENT_FILES &&
