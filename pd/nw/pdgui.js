@@ -4818,7 +4818,7 @@ function canvas_params(cid)
     x |= 0;
     y |= 0;
     return { svg: svg, x: x, y: y, w: width, h: height,
-	     mw: min_width, mh: min_height };
+             mw: min_width, mh: min_height };
 }
 
 function do_getscroll(cid) {
@@ -4831,7 +4831,7 @@ function do_getscroll(cid) {
     // errors wrt the rendering context disappearing.
     if (!patchwin[cid]) { return; }
     var { svg: svg, x: x, y: y, w: width, h: height,
-	  mw: min_width, mh: min_height } = canvas_params(cid);
+          mw: min_width, mh: min_height } = canvas_params(cid);
     if (width < min_width) {
         width = min_width;
     }
@@ -4876,7 +4876,7 @@ function do_optimalzoom(cid, hflag, vflag) {
     // the window
     if (!patchwin[cid]) { return; }
     var { x: x, y: y, w: width, h: height, mw: min_width, mh: min_height } =
-	canvas_params(cid);
+        canvas_params(cid);
     // Calculate the optimal horizontal and vertical zoom values,
     // using floor to always round down to the nearest integer. Note
     // that these may well be negative, if the viewport is too small
@@ -4892,16 +4892,16 @@ function do_optimalzoom(cid, hflag, vflag) {
     // to the valid zoom level range of -8..+7.
     var actz = patchwin[cid].zoomLevel, z = 0;
     if (hflag && vflag)
-	z = Math.min(zx, zy);
+        z = Math.min(zx, zy);
     else if (hflag)
-	z = zx;
+        z = zx;
     else if (vflag)
-	z = zy;
+        z = zy;
     z += actz;
     if (z < -8) z = -8; if (z > 7) z = 7;
     //post("bbox: "+width+"x"+height+"+"+x+"+"+y+" window size: "+min_width+"x"+min_height+" current zoom level: "+actz+" optimal zoom level: "+z);
     if (z != actz) {
-	patchwin[cid].zoomLevel = z;
+        patchwin[cid].zoomLevel = z;
     }
 }
 
