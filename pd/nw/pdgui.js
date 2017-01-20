@@ -741,6 +741,8 @@ function saveas_callback(cid, file, close_flag) {
     }
     pdsend(cid, "savetofile", enquote(basename), enquote(directory),
         close_flag);
+    // XXXREVIEW: It seems sensible that we also switch the opendir here. -ag
+    set_pd_opendir(directory);
     // update the recent files list
     var norm_path = path.normalize(directory);
     pdsend("pd add-recent-file", enquote(path.join(norm_path, basename)));
