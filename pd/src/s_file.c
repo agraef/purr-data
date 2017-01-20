@@ -646,8 +646,10 @@ char *sys_recent_files[MAX_RECENT_FILES];
 
 static int fexists(const char *s)
 {
-  struct stat statbuf;
-  return stat(s, &statbuf) == 0;
+  FILE *fp = sys_fopen(s, "r");
+  if (!fp) return 0;
+  sys_fclose(fp);
+  return 1;
 }
 
 void sys_add_recent_file(const char *s)
