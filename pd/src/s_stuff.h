@@ -42,6 +42,14 @@ extern int sys_defeatrt;
 extern t_symbol *sys_gui_preset;
 extern t_symbol *sys_flags;
 
+#define MAX_RECENT_FILES 8
+void sys_load_recent_files(void);
+void sys_save_recent_files(void);
+void sys_add_recent_file(const char *s);
+void sys_clear_recent_files(void);
+extern int sys_n_recent_files;
+extern char *sys_recent_files[];
+
 /* s_main.c */
 extern int sys_debuglevel;
 extern int sys_verbose;

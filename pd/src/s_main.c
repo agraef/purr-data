@@ -301,6 +301,7 @@ int sys_main(int argc, char **argv)
             noprefs = 1;
     if (!noprefs)
         sys_loadpreferences();                  /* load default settings */
+    sys_load_recent_files();                    /* load recent files table */
 #ifndef MSW
     if (!noprefs)
         sys_rcfile();                           /* parse the startup file */
@@ -320,6 +321,8 @@ int sys_main(int argc, char **argv)
     gui_vmess("gui_set_lib_dir", "s", sys_libdir->s_name);
         /* send the name of the gui preset */
     gui_vmess("gui_set_gui_preset", "s", sys_gui_preset->s_name);
+        /* send the recent files list */
+    glob_recent_files(0);
 
     if (sys_externalschedlib)
         return (sys_run_scheduler(sys_externalschedlibname,

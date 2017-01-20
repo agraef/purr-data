@@ -3,6 +3,7 @@
 var pdgui = require("./pdgui.js");
 var l = pdgui.get_local_string; // For menu names
 var osx_menu = null; // OSX App menu -- a single one per running instance
+var recent_files_submenu = null;
 
 function create_menu(gui, type) {
     // On OSX we create a menu only once, and then enable/disable menuitems
@@ -25,6 +26,16 @@ function create_menu(gui, type) {
         winman_menu,
         media_menu,
         help_menu;
+
+    // We only maintain a single instance of the recent files submenu which
+    // gets updated in pdgui.js via a callback from the engine.
+    if (!recent_files_submenu) {
+        recent_files_submenu = new gui.Menu();
+        // NOTE: Since we can't be sure whether the GUI or the engine runs
+        // first, make sure that we populate the submenu on the first run in
+        // either case.
+        pdgui.populate_recent_files(recent_files_submenu);
+    }
 
     // OSX just spawns a single canvas menu and then enables/disables
     // the various menu items as needed.
@@ -62,6 +73,11 @@ function create_menu(gui, type) {
         key: "o",
         modifiers: cmd_or_ctrl,
         tooltip: l("menu.open_tt")
+    }));
+    file_menu.append(m.file.recent_files = new gui.MenuItem({
+        label: l("menu.recent_files"),
+        submenu: recent_files_submenu,
+        tooltip: l("menu.recent_files_tt")
     }));
     if (pdgui.k12_mode == 1) {
         file_menu.append(m.file.k12 = new gui.MenuItem({

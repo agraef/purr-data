@@ -741,6 +741,11 @@ function saveas_callback(cid, file, close_flag) {
     }
     pdsend(cid, "savetofile", enquote(basename), enquote(directory),
         close_flag);
+    // XXXREVIEW: It seems sensible that we also switch the opendir here. -ag
+    set_pd_opendir(directory);
+    // update the recent files list
+    var norm_path = path.normalize(directory);
+    pdsend("pd add-recent-file", enquote(path.join(norm_path, basename)));
 }
 
 exports.saveas_callback = saveas_callback;
@@ -976,6 +981,9 @@ function open_file(file) {
             (enquote(directory)));
         set_pd_opendir(directory);
         //::pd_guiprefs::update_recentfiles "$filename" 1
+        // update the recent files list
+        var norm_path = path.normalize(directory);
+        pdsend("pd add-recent-file", enquote(path.join(norm_path, basename)));
     }
 }
 
@@ -4446,6 +4454,58 @@ function open_search() {
 
 exports.open_search= open_search;
 
+// This is the same for all windows (initialization is in pd_menus.js).
+var recent_files_submenu = null;
+var recent_files = null;
+
+// We need to jump through some hoops here since JS closures capture variables
+// by reference, which causes trouble when closures are created within a
+// loop.
+function recent_files_callback(i) {
+    return function() {
+        var fname = recent_files[i];
+        //post("clicked recent file: "+fname);
+        open_file(fname);
+    }
+}
+
+function populate_recent_files(submenu) {
+    if (submenu) recent_files_submenu = submenu;
+    if (recent_files && recent_files_submenu) {
+        //post("recent files: " + recent_files.join(" "));
+        while (recent_files_submenu.items.length > 0)
+            recent_files_submenu.removeAt(0);
+        for (var i = 0; i < recent_files.length; i++) {
+            var item = new nw.MenuItem({
+                label: path.basename(recent_files[i]),
+                tooltip: recent_files[i]
+            });
+            item.click = recent_files_callback(i);
+            recent_files_submenu.append(item);
+        }
+        if (recent_files_submenu.items.length > 0) {
+            recent_files_submenu.append(new nw.MenuItem({
+                type: "separator"
+            }));
+            var item = new nw.MenuItem({
+                label: lang.get_local_string("menu.clear_recent_files"),
+                tooltip: lang.get_local_string("menu.clear_recent_files_tt")
+            });
+            item.click = function() {
+                pdsend("pd clear-recent-files");
+            };
+            recent_files_submenu.append(item);
+        }
+    }
+}
+
+exports.populate_recent_files = populate_recent_files;
+
+function gui_recent_files(dummy, recent_files_array) {
+    recent_files = recent_files_array;
+    populate_recent_files(recent_files_submenu);
+}
+
 function gui_audio_properties(gfxstub, sys_indevs, sys_outdevs,
     pd_indevs, pd_inchans, pd_outdevs, pd_outchans, audio_attrs) {
     var attrs = audio_attrs.concat([
@@ -4758,7 +4818,7 @@ function canvas_params(cid)
     x |= 0;
     y |= 0;
     return { svg: svg, x: x, y: y, w: width, h: height,
-	     mw: min_width, mh: min_height };
+             mw: min_width, mh: min_height };
 }
 
 function do_getscroll(cid) {
@@ -4771,7 +4831,7 @@ function do_getscroll(cid) {
     // errors wrt the rendering context disappearing.
     if (!patchwin[cid]) { return; }
     var { svg: svg, x: x, y: y, w: width, h: height,
-	  mw: min_width, mh: min_height } = canvas_params(cid);
+          mw: min_width, mh: min_height } = canvas_params(cid);
     if (width < min_width) {
         width = min_width;
     }
@@ -4816,7 +4876,7 @@ function do_optimalzoom(cid, hflag, vflag) {
     // the window
     if (!patchwin[cid]) { return; }
     var { x: x, y: y, w: width, h: height, mw: min_width, mh: min_height } =
-	canvas_params(cid);
+        canvas_params(cid);
     // Calculate the optimal horizontal and vertical zoom values,
     // using floor to always round down to the nearest integer. Note
     // that these may well be negative, if the viewport is too small
@@ -4832,16 +4892,16 @@ function do_optimalzoom(cid, hflag, vflag) {
     // to the valid zoom level range of -8..+7.
     var actz = patchwin[cid].zoomLevel, z = 0;
     if (hflag && vflag)
-	z = Math.min(zx, zy);
+        z = Math.min(zx, zy);
     else if (hflag)
-	z = zx;
+        z = zx;
     else if (vflag)
-	z = zy;
+        z = zy;
     z += actz;
     if (z < -8) z = -8; if (z > 7) z = 7;
     //post("bbox: "+width+"x"+height+"+"+x+"+"+y+" window size: "+min_width+"x"+min_height+" current zoom level: "+actz+" optimal zoom level: "+z);
     if (z != actz) {
-	patchwin[cid].zoomLevel = z;
+        patchwin[cid].zoomLevel = z;
     }
 }
 

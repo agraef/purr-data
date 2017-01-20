@@ -46,8 +46,9 @@ void sys_doflags( void);
 
 #ifdef UNIX
 
+#define USER_CONFIG_DIR ".pd-l2ork"
+
 static char *sys_prefbuf;
-static int sys_prefbufsize;
 
 static void sys_initloadpreferences( void)
 {
@@ -62,7 +63,7 @@ static void sys_initloadpreferences( void)
              sys_libdir->s_name);
 
     if (homedir)
-        snprintf(user_prefs_file, FILENAME_MAX, "%s/.pd-l2ork/user.settings", homedir);
+        snprintf(user_prefs_file, FILENAME_MAX, "%s/" USER_CONFIG_DIR "/user.settings", homedir);
     if (stat(user_prefs_file, &statbuf) == 0) 
         strncpy(filenamebuf, user_prefs_file, FILENAME_MAX);
     else if (stat(default_prefs_file, &statbuf) == 0)
@@ -143,16 +144,16 @@ static void sys_initsavepreferences( void)
 
     if (!homedir)
         return;
-    snprintf(filenamebuf, FILENAME_MAX, "%s/.pd-l2ork", homedir);
+    snprintf(filenamebuf, FILENAME_MAX, "%s/" USER_CONFIG_DIR, homedir);
     filenamebuf[FILENAME_MAX-1] = 0;
     if (stat(filenamebuf, &statbuf) || !S_ISDIR(statbuf.st_mode)) {
       // user config dir doesn't exist yet, try to create it
       if (mkdir(filenamebuf, 0755)) {
         pd_error(0, "%s: %s",filenamebuf, strerror(errno));
-	return;
+        return;
       }
     }
-    snprintf(filenamebuf, FILENAME_MAX, "%s/.pd-l2ork/user.settings", homedir);
+    snprintf(filenamebuf, FILENAME_MAX, "%s/" USER_CONFIG_DIR "/user.settings", homedir);
     filenamebuf[FILENAME_MAX-1] = 0;
     if ((sys_prefsavefp = fopen(filenamebuf, "w")) == NULL)
     {
@@ -337,7 +338,7 @@ void sys_loadpreferences( void)
     int nmidiindev, midiindev[MAXMIDIINDEV];
     int nmidioutdev, midioutdev[MAXMIDIOUTDEV];
     int i, rate = 0, advance = -1, callback = 0, blocksize = 0,
-        api, nolib, maxi;
+        api, maxi;
     char prefbuf[MAXPDSTRING], keybuf[80];
 
     sys_initloadpreferences();
@@ -505,6 +506,7 @@ void sys_loadpreferences( void)
         if (strcmp(prefbuf, "."))
             sys_flags = gensym(prefbuf);
     }
+    sys_doneloadpreferences();
     sys_doflags();
 
     if (sys_defeatrt)
@@ -635,4 +637,166 @@ void glob_savepreferences(t_pd *dummy)
         (sys_flags ? sys_flags->s_name : ""));
     sys_donesavepreferences();
     
+}
+
+/* AG: Recent files table */
+
+int sys_n_recent_files = 0;
+char *sys_recent_files[MAX_RECENT_FILES];
+
+static int fexists(const char *s)
+{
+  struct stat statbuf;
+  return stat(s, &statbuf) == 0;
+}
+
+void sys_add_recent_file(const char *s)
+{
+  int i;
+  // only add the file if it actually exists
+  if (!fexists(s)) return;
+  for (i = 0; i < sys_n_recent_files && strcmp(sys_recent_files[i], s); i++) ;
+  if (i < sys_n_recent_files) {
+    // already got an existing entry, move it to the front
+    char *t = sys_recent_files[i];
+    memmove(sys_recent_files+1, sys_recent_files, i*sizeof(char*));
+    sys_recent_files[0] = t;
+  } else {
+    char *t = strdup(s);
+    if (!t) return;
+    if (sys_n_recent_files == MAX_RECENT_FILES) {
+      // kick out the oldest entry to make room for a new one
+      free(sys_recent_files[--sys_n_recent_files]);
+    }
+    // add a new entry at the beginning of the table
+    memmove(sys_recent_files+1, sys_recent_files,
+            sys_n_recent_files*sizeof(char*));
+    sys_recent_files[0] = t;
+    sys_n_recent_files++;
+  }
+}
+
+void sys_save_recent_files(void)
+{
+  int i;
+#ifdef UNIX
+  // UNIX/Linux: save in recent_files file
+  FILE *fp;
+  char filenamebuf[FILENAME_MAX], *homedir = getenv("HOME");
+  struct stat statbuf;
+  if (!homedir) return;
+  snprintf(filenamebuf, FILENAME_MAX, "%s/" USER_CONFIG_DIR, homedir);
+  filenamebuf[FILENAME_MAX-1] = 0;
+  if (stat(filenamebuf, &statbuf) || !S_ISDIR(statbuf.st_mode)) {
+    // user config dir doesn't exist yet, try to create it
+    if (mkdir(filenamebuf, 0755)) {
+      pd_error(0, "%s: %s",filenamebuf, strerror(errno));
+      return;
+    }
+  }
+  snprintf(filenamebuf, FILENAME_MAX, "%s/" USER_CONFIG_DIR "/recent_files", homedir);
+  filenamebuf[FILENAME_MAX-1] = 0;
+  if ((fp = fopen(filenamebuf, "w")) == NULL) {
+    pd_error(0, "%s: %s",filenamebuf, strerror(errno));
+    return;
+  }
+  for (i = 0; i < sys_n_recent_files; i++) {
+    fprintf(fp, "%s\n", sys_recent_files[i]);
+  }
+  fclose(fp);
+#else
+  // Mac/Windows (use the defaults/registry)
+  char buf[MAXPDSTRING];
+  sys_initsavepreferences();
+  for (i = 0; i < sys_n_recent_files; i++) {
+    sprintf(buf, "recent%d", i+1);
+    sys_putpreference(buf, sys_recent_files[i]);
+  }
+  sprintf(buf, "%d", i);
+  sys_putpreference("nrecent", buf);
+  sys_donesavepreferences();
+#endif
+}
+
+void sys_load_recent_files(void)
+{
+#ifdef UNIX
+  // UNIX/Linux: load from recent_files file
+  FILE *fp;
+  char filenamebuf[FILENAME_MAX], *homedir = getenv("HOME");
+  if (!homedir) return;
+  snprintf(filenamebuf, FILENAME_MAX, "%s/" USER_CONFIG_DIR "/recent_files", homedir);
+  filenamebuf[FILENAME_MAX-1] = 0;
+  if ((fp = fopen(filenamebuf, "r")) == NULL) return;
+  for (sys_n_recent_files = 0; sys_n_recent_files < MAX_RECENT_FILES &&
+         fgets(filenamebuf, FILENAME_MAX, fp); ) {
+    char *s;
+    int l = strlen(filenamebuf);
+    if (l > 0 && filenamebuf[l-1] == '\n') filenamebuf[--l] = 0;
+    // only add files which actually exist
+    if (l == 0 || !fexists(filenamebuf)) continue;
+    s = strdup(filenamebuf);
+    if (s) sys_recent_files[sys_n_recent_files++] = s;
+  }
+  fclose(fp);
+#else
+  // Mac/Windows (use the defaults/registry)
+  char prefbuf[MAXPDSTRING], keybuf[80];
+  int i, maxi = MAX_RECENT_FILES;
+  sys_initloadpreferences();
+  if (sys_getpreference("nrecent", prefbuf, MAXPDSTRING))
+    sscanf(prefbuf, "%d", &maxi);
+  for (i = 0; i < maxi; i++) {
+    int l;
+    char *s;
+    sprintf(keybuf, "recent%d", i+1);
+    if (!sys_getpreference(keybuf, prefbuf, MAXPDSTRING))
+      break;
+    l = strlen(prefbuf);
+    if (l == 0 || !fexists(prefbuf)) continue;
+    s = strdup(prefbuf);
+    if (s) sys_recent_files[sys_n_recent_files++] = s;
+  }
+  sys_doneloadpreferences();
+#endif
+}
+
+void sys_clear_recent_files(void)
+{
+  int i;
+  for (i = 0; i < sys_n_recent_files; i++) {
+    free(sys_recent_files[i]);
+  }
+  sys_n_recent_files = 0;
+}
+
+// send the recent files list back to the gui so that the Recent Files menu
+// can be updated accordingly
+void glob_recent_files(t_pd *dummy)
+{
+    int i;
+    gui_start_vmess("gui_recent_files", "x", dummy);
+    gui_start_array();
+    for (i = 0; i < sys_n_recent_files; i++)
+    {
+        gui_s(sys_recent_files[i]);
+    }
+    gui_end_array();
+    gui_end_vmess();
+}
+
+// add an entry to the recent files list, save the list and update the gui
+void glob_add_recent_file(t_pd *dummy, t_symbol *s)
+{
+    sys_add_recent_file(s->s_name);
+    sys_save_recent_files();
+    glob_recent_files(dummy);
+}
+
+// clear the recent files list, save the list and update the gui
+void glob_clear_recent_files(t_pd *dummy)
+{
+    sys_clear_recent_files();
+    sys_save_recent_files();
+    glob_recent_files(dummy);
 }
