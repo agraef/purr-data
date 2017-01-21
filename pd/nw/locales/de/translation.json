@@ -371,7 +371,7 @@
       "libs": "Bibliotheken",
       "libs_tt": "External-Bibliotheken, die beim Programmstart zu laden sind; Neustart der Anwendung ist erforderlich, damit Änderungen wirksam werden",
       "paths": "Suchpfade",
-      "paths_tt": "Suchpfade für Abstraktionen und Externals; Neustart der Anwendung ist erforderlich, damit Änderungen wirksam werden",
+      "paths_tt": "Suchpfade für Abstraktionen und Externals",
       "new": "Neu",
       "new_tt": "Füge ein neues Element nach dem ausgewählten hinzu",
       "edit": "Bearbeiten",
