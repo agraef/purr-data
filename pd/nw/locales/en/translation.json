@@ -369,7 +369,7 @@
       "flags": "startup flags",
       "flags_tt": "Startup flags the program is invoked with; changes require a restart of the application to take effect",
       "libs": "Libraries",
-	"libs_tt": "External libraries to be loaded on startup; changes require a restart of the application to take effect",
+      "libs_tt": "External libraries to be loaded on startup; changes require a restart of the application to take effect",
       "paths": "Search Paths",
       "paths_tt": "Search path for abstractions and externals",
       "new": "New",
