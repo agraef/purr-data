@@ -219,7 +219,7 @@ darwin_app_core: darwin_app_wrapper
 
 package: dmg
 
-VOLUME_NAME = Pd-extended
+VOLUME_NAME = Pd-l2ork
 dmg:
 	hdiutil create -format UDRW -fs HFS+ -srcfolder "$(BUILD_BASE)" \
 		-volname $(VOLUME_NAME) build.dmg
