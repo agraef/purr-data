@@ -331,6 +331,25 @@ static void sys_donesavepreferences( void)
 #endif /* __APPLE__ */
 
 
+#ifdef _WIN32
+static int check_exists(const char*path)
+{
+    char pathbuf[MAXPDSTRING];
+    wchar_t ucs2path[MAXPDSTRING];
+    sys_bashfilename(path, pathbuf);
+    u8_utf8toucs2(ucs2path, MAXPDSTRING, pathbuf, MAXPDSTRING-1);
+    return (0 ==  _waccess(ucs2path, 0));
+}
+#else
+#include <unistd.h>
+static int check_exists(const char*path)
+{
+    char pathbuf[MAXPDSTRING];
+    sys_bashfilename(path, pathbuf);
+    return (0 == access(pathbuf, 0));
+}
+#endif
+
 void sys_loadpreferences( void)
 {
     int naudioindev, audioindev[MAXAUDIOINDEV], chindev[MAXAUDIOINDEV];
@@ -475,6 +494,8 @@ void sys_loadpreferences( void)
         sprintf(keybuf, "path%d", i+1);
         if (!sys_getpreference(keybuf, prefbuf, MAXPDSTRING))
             break;
+        else if (!check_exists(prefbuf)) // AG: ignore non-existent paths
+            continue;
         sys_searchpath = namelist_append_files(sys_searchpath, prefbuf);
     }
     if (sys_getpreference("standardpath", prefbuf, MAXPDSTRING))
@@ -644,19 +665,11 @@ void glob_savepreferences(t_pd *dummy)
 int sys_n_recent_files = 0;
 char *sys_recent_files[MAX_RECENT_FILES];
 
-static int fexists(const char *s)
-{
-  FILE *fp = sys_fopen(s, "r");
-  if (!fp) return 0;
-  sys_fclose(fp);
-  return 1;
-}
-
 void sys_add_recent_file(const char *s)
 {
   int i;
   // only add the file if it actually exists
-  if (!fexists(s)) return;
+  if (!check_exists(s)) return;
   for (i = 0; i < sys_n_recent_files && strcmp(sys_recent_files[i], s); i++) ;
   if (i < sys_n_recent_files) {
     // already got an existing entry, move it to the front
@@ -736,7 +749,7 @@ void sys_load_recent_files(void)
     int l = strlen(filenamebuf);
     if (l > 0 && filenamebuf[l-1] == '\n') filenamebuf[--l] = 0;
     // only add files which actually exist
-    if (l == 0 || !fexists(filenamebuf)) continue;
+    if (l == 0 || !check_exists(filenamebuf)) continue;
     s = strdup(filenamebuf);
     if (s) sys_recent_files[sys_n_recent_files++] = s;
   }
@@ -755,7 +768,7 @@ void sys_load_recent_files(void)
     if (!sys_getpreference(keybuf, prefbuf, MAXPDSTRING))
       break;
     l = strlen(prefbuf);
-    if (l == 0 || !fexists(prefbuf)) continue;
+    if (l == 0 || !check_exists(prefbuf)) continue;
     s = strdup(prefbuf);
     if (s) sys_recent_files[sys_n_recent_files++] = s;
   }
