@@ -285,7 +285,14 @@ static void sys_initloadpreferences(void)
     // 1. defaults export: grab our defaults in XML format
     // 2. plutil -convert json -r -o - -: convert to JSON
     // 3. sed: a few edits remove the extra JSON bits (curly brances, string
-    //    quotes, unwanted whitespace and character escapes)
+    //    quotes, unwanted whitespace and character escapes) and produce
+    //    Pd-L2Ork's Unix prefs format, i.e.:
+    // JSON                        -->            Unix prefs
+    // {
+    //   "nloadlib" : "33",                       nloadlib: 33
+    //   "loadlib1" : "libdir",                   loadlib1: libdir
+    //   "path1" : "\/System\/Library\/Fonts"     path1: /System/Library/Fonts
+    // }
     snprintf(cmdbuf, MAXPDSTRING, "defaults export %s - | plutil -convert json -r -o - - | sed -E -e 's/[{}]//g' -e 's/^ *\"(([^\"]|\\\\.)*)\" *: *\"(([^\"]|\\\\.)*)\".*/\\1: \\3/' -e 's/\\\\(.)/\\1/g'", current_prefs);
     // open the pipe
     fp = popen(cmdbuf, "r");
