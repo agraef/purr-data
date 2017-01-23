@@ -248,67 +248,122 @@ static void sys_donesavepreferences( void)
 // prefs file that is currently the one to save to
 static char current_prefs[FILENAME_MAX] = "org.puredata.pd-l2ork"; 
 
-static void sys_initloadpreferences( void)
+static char *sys_prefbuf;
+
+// Maximum number of bytes to be read on each iteration. Note that the buffer
+// is resized in increments of BUFSZ until the entire prefs data has been
+// read. For best performance, BUFSZ should be a sizeable fraction of the
+// expected preference data size. The size 4096 matches PD's internal GUI
+// socket size and thus should normally be enough to read the entire prefs
+// data in one go.
+#define BUFSZ 4096
+
+// AG: We have to go to some lengths here since 'defaults read' doesn't
+// properly deal with UTF-8 characters in the prefs data. 'defaults export'
+// does the trick, however, so we use that to read the entire prefs data at
+// once from a pipe, using plutil to convert the resulting data to JSON format
+// which can then be translated to Pd's Unix preferences file format using
+// sed. The result is stored in a character buffer for efficient access. From
+// there we can retrieve the individual keys in the same fashion as on Unix. A
+// welcome side effect is that loading the prefs is *much* faster now than
+// with the previous method which invoked 'defaults read' on each individual
+// key.
+
+// XXXTODO: In principle, this approach should also work in reverse to import
+// the data into the defaults storage in one go. Presumably this should also
+// be much faster than the current implementation which invokes the shell to
+// run 'defaults write' for each individual key.
+
+static void sys_initloadpreferences(void)
 {
+    char cmdbuf[MAXPDSTRING], *buf;
+    FILE *fp;
+    size_t sz, n = 0;
+    int res;
+    // This looks complicated, but is rather straightforward. The individual
+    // stages of the pipe are:
+    // 1. defaults export: grab our defaults in XML format
+    // 2. plutil -convert json -r -o - -: convert to JSON
+    // 3. sed: a few edits remove the extra JSON bits (curly brances, string
+    //    quotes, unwanted whitespace and character escapes)
+    snprintf(cmdbuf, MAXPDSTRING, "defaults export %s - | plutil -convert json -r -o - - | sed -E -e 's/[{}]//g' -e 's/^ *\"(([^\"]|\\\\.)*)\" *: *\"(([^\"]|\\\\.)*)\".*/\\1: \\3/' -e 's/\\\\(.)/\\1/g'", current_prefs);
+    // open the pipe
+    fp = popen(cmdbuf, "r");
+    if (!fp) {
+      // if opening the pipe failed for some reason, bail out now
+      if (sys_verbose)
+        perror(current_prefs);
+      error("%s: %s", current_prefs, strerror(errno));
+      return;
+    }
+    // Initialize the buffer. Note that we have to reserve one extra byte for
+    // the terminating NUL character. The buf variable always points to the
+    // current chunk of memory to be written into.
+    sys_prefbuf = buf = malloc((sz = BUFSZ)+1);
+    while (buf && (n = fread(buf, 1, BUFSZ, fp)) > 0) {
+      char *newbuf;
+      size_t oldsz = sz;
+      // terminating NUL byte, to be safe
+      buf[n] = 0;
+      // if the byte count is short, then all data has been read; bail out
+      if (n < BUFSZ) break;
+      // more data may follow, enlarge the buffer in BUFSZ increments
+      sz += BUFSZ;
+      if ((newbuf = realloc(sys_prefbuf, sz+1))) {
+        // memory allocation succeeded, prepare the new buffer for the next read
+        sys_prefbuf = newbuf;
+        // adjust the current buffer pointer
+        buf = newbuf + oldsz;
+      } else {
+        // memory allocation failed, bail out
+        buf = NULL;
+      }
+    }
+    // close the pipe
+    res = pclose(fp);
+    if (res)
+      post("%s: pclose returned exit status %d", current_prefs, WEXITSTATUS(res));
+    // check for memory allocation errors
+    if (!buf) {
+      error("couldn't allocate memory for preferences buffer");
+      return;
+    }
+    // When we come here, n is the length of the last chunk we read into buf.
+    // Add the terminating NUL byte there.
+    buf[n] = 0;
+    if (sys_verbose)
+      post("success reading preferences from: %s", current_prefs);
+    //post("%s: read %d bytes of preferences data", current_prefs, strlen(sys_prefbuf));
 }
 
 static int sys_getpreference(const char *key, char *value, int size)
 {
-    char cmdbuf[256];
-    int nread = 0, nleft = size;
-    char default_prefs[FILENAME_MAX]; // default prefs embedded in the package
-    char embedded_prefs[FILENAME_MAX]; // overrides others for standalone app
-    char embedded_prefs_file[FILENAME_MAX];
-    char user_prefs_file[FILENAME_MAX];
-    char *homedir = getenv("HOME");
-    struct stat statbuf;
-    /* the 'defaults' command expects the filename without .plist at the end */
-    snprintf(default_prefs, FILENAME_MAX, "%s/../org.puredata.pd-l2ork.default", 
-             sys_libdir->s_name);
-    snprintf(embedded_prefs, FILENAME_MAX, "%s/../org.puredata.pd-l2ork", 
-             sys_libdir->s_name);
-    snprintf(embedded_prefs_file, FILENAME_MAX, "%s.plist", embedded_prefs);
-    snprintf(user_prefs_file, FILENAME_MAX, 
-             "%s/Library/Preferences/org.puredata.pd-l2ork.plist", homedir);
-    if (stat(embedded_prefs_file, &statbuf) == 0) 
-    {
-        snprintf(cmdbuf, FILENAME_MAX + 20, 
-                 "defaults read '%s' %s 2> /dev/null\n", embedded_prefs, key);
-        strncpy(current_prefs, embedded_prefs, FILENAME_MAX);
-    }
-    else if (stat(user_prefs_file, &statbuf) == 0) 
-    {
-        snprintf(cmdbuf, FILENAME_MAX + 20, 
-                 "defaults read org.puredata.pd-l2ork %s 2> /dev/null\n", key);
-        strcpy(current_prefs, "org.puredata.pd-l2ork");
-    }
-    else 
-    {
-        snprintf(cmdbuf, FILENAME_MAX + 20, 
-                 "defaults read '%s' %s 2> /dev/null\n", default_prefs, key);
-        strcpy(current_prefs, "org.puredata.pd-l2ork");
-    }
-    FILE *fp = popen(cmdbuf, "r");
-    while (nread < size)
-    {
-        int newread = fread(value+nread, 1, size-nread, fp);
-        if (newread <= 0)
-            break;
-        nread += newread;
-    }
-    pclose(fp);
-    if (nread < 1)
+    char searchfor[80], *where, *whereend;
+    if (!sys_prefbuf)
         return (0);
-    if (nread >= size)
-        nread = size-1;
-    value[nread] = 0;
-    if (value[nread-1] == '\n')     /* remove newline character at end */
-        value[nread-1] = 0;
-    return(1);
+    sprintf(searchfor, "\n%s:", key);
+    where = strstr(sys_prefbuf, searchfor);
+    if (!where)
+        return (0);
+    where += strlen(searchfor);
+    while (*where == ' ' || *where == '\t')
+        where++;
+    for (whereend = where; *whereend && *whereend != '\n'; whereend++)
+        ;
+    if (*whereend == '\n')
+        whereend--;
+    if (whereend > where + size - 1)
+        whereend = where + size - 1;
+    strncpy(value, where, whereend+1-where);
+    value[whereend+1-where] = 0;
+    return (1);
 }
 
 static void sys_doneloadpreferences( void)
 {
+    if (sys_prefbuf)
+        free(sys_prefbuf);
+    sys_prefbuf = NULL;
 }
 
 static void sys_initsavepreferences( void)
