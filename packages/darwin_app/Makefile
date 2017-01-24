@@ -85,6 +85,8 @@ endif
 	# remove the broken pd-l2ork symlink from bin/
 	rm $(DESTDIR)/bin/pd-l2ork
 	install -p $(cvs_root_dir)/pd/bin/pd-l2ork $(DESTDIR)/bin
+	# fix the broken pd-l2ork symlink in $(DESTDIR), too
+	ln -sf bin/pd-l2ork $(DESTDIR)
 
 #------------------------------------------------------------------------------#
 # this target is for when you already have a pre-built Pd.app and you
@@ -165,7 +167,7 @@ darwin_app_core: darwin_app_wrapper
 	install -p -m0644 org.puredata.pd-l2ork.default.plist "$(PD_APP_CONTENTS)/Resources/"
 # since Pd-vanilla on Mac OS X doesn't have an 'include/pd' folder,
 # Pd-extended will mimic Pd-vanilla's include/pd until Pd-vanilla gets one
-	ln -s pdextended "$(PD_APP_CONTENTS)/Resources/app.nw/include/pd"
+	ln -s pd-l2ork "$(PD_APP_CONTENTS)/Resources/app.nw/include/pd"
 	ln -s pd/m_pd.h "$(PD_APP_CONTENTS)/Resources/app.nw/include/m_pd.h"
 
 
