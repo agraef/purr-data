@@ -310,15 +310,15 @@ void sys_setextrapath(const char *p)
 #endif
 
 #ifdef __APPLE__
-    sys_expandpath("~/Library/Pd", pathbuf);
+    sys_expandpath("~/Library/Pd-l2ork", pathbuf);
     pd_extrapath = namelist_append(0, pathbuf, 0);
-    pd_extrapath = namelist_append(pd_extrapath, "/Library/Pd", 0);
+    pd_extrapath = namelist_append(pd_extrapath, "/Library/Pd-l2ork", 0);
 #endif
 
 #ifdef _WIN32
-    sys_expandpath("%AppData%/Pd", pathbuf);
+    sys_expandpath("%AppData%/Pd-l2ork", pathbuf);
     pd_extrapath = namelist_append(0, pathbuf, 0);
-    sys_expandpath("%CommonProgramFiles%/Pd", pathbuf);
+    sys_expandpath("%CommonProgramFiles%/Pd-l2ork", pathbuf);
     pd_extrapath = namelist_append(pd_extrapath, pathbuf, 0);
 #endif
     /* add built-in "extra" path last so its checked last */
