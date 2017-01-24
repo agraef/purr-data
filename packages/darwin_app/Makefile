@@ -15,14 +15,6 @@ BUILDLAYOUT_DIR = $(cvs_root_dir)/packages
 
 include $(BUILDLAYOUT_DIR)/Makefile.buildlayout
 
-WISH_FRAMEWORKS_SOURCE := $(shell (test -e "/Library/Frameworks/Tk.framework/Tk" && echo "/Library/Frameworks") || echo /System/Library/Frameworks)
-WISH_SOURCE = $(WISH_FRAMEWORKS_SOURCE)/Tk.framework/Resources
-# Wish Shell.app changed to Wish.app in TclTk 8.4.10
-WISH_NAME := $(shell ( test -d $(WISH_SOURCE)/Wish.app && echo Wish) \
-	|| echo Wish Shell)
-WISH = "$(WISH_SOURCE)/$(WISH_NAME).app"
-WISH_CONTENTS = "$(WISH)/Contents"
-
 # CPU-specific gleaned from:
 # http://developer.apple.com/releasenotes/DeveloperTools/RN-GCC4/
 # http://hpc.sourceforge.net/
@@ -105,50 +97,16 @@ extended_app_install:
 
 
 #------------------------------------------------------------------------------#
-# build a standalone Wish.app from the installed Tcl/Tk Frameworks
+# build a standalone nw.js app
 darwin_app_wrapper: Info.plist
-# Wish
+# nwjs.app
 	install -d "$(BUILD_BASE)"
 	rsync -ax $(cvs_root_dir)/pd/nw/nw/nwjs.app/ $(BUILD_BASE)/$(PD_APP_NAME).app/
-#	install -d "$(PD_APP_CONTENTS)/MacOS"
-	#install -m0755 -p \
-	#	"$(WISH_CONTENTS)/MacOS/$(WISH_NAME)" "$(PD_APP_CONTENTS)/MacOS"
-	#install -d "$(PD_APP_CONTENTS)/Resources"
-# only embed the Tcl/Tk Frameworks if not building against the built-in ones
-#ifneq (/System,$(findstring /System,$(WISH_FRAMEWORKS_SOURCE)))
-	#install -d $(PD_APP_CONTENTS)/Frameworks \
-	#	$(PD_APP_CONTENTS)/Frameworks/Tcl.framework \
-	#	$(PD_APP_CONTENTS)/Frameworks/Tk.framework
-	#ditto $(WISH_FRAMEWORKS_SOURCE)/Tcl.framework \
-	#	$(PD_APP_CONTENTS)/Frameworks/Tcl.framework/
-	#ditto $(WISH_FRAMEWORKS_SOURCE)/Tk.framework \
-	#	$(PD_APP_CONTENTS)/Frameworks/Tk.framework/
-	#rm -rf $(PD_APP_CONTENTS)/Frameworks/Tcl.framework/{,/Versions/8.4}/{Headers,PrivateHeaders,*_debug,lib*.a,*Config.sh} && \
-	#rm -rf $(PD_APP_CONTENTS)/Frameworks/Tk.framework/{,/Versions/8.4}/{Headers,PrivateHeaders,*_debug,lib*.a,*Config.sh}
-	#chmod -R u+w $(PD_APP_CONTENTS)/Frameworks
-# from http://tktoolkit.cvs.sourceforge.net/tktoolkit/tk/macosx/GNUmakefile
-	#fix_install_id ( ) { \
-	#    chmod -R a+w "$$1"; \
-	#    install_name_tool -id $$(otool -L "$$1" | awk "/$$2\.framework.*[^:]\$$/ {sub(\"^.*/Frameworks\",\"@executable_path/../Frameworks\",\$$1); print \$$1}") "$$1"; \
-	#    chmod -R a-w "$$1"; \
-	#} && \
-	#fix_install_name ( ) { \
-	#    chmod -R a+w "$$1"; \
-	#    install_name_tool -change $$(otool -L "$$1" | awk "/$$2\.framework.*[^:]\$$/ {print \$$1; sub(\"^.*/Frameworks\",\"@executable_path/../Frameworks\",\$$1); print \$$1}") "$$1"; \
-	#    chmod -R a-w "$$1"; \
-	#} && \
-	#fix_install_id $(PD_APP_CONTENTS)/Frameworks/Tcl.framework/Tcl Tcl && \
-	#fix_install_id $(PD_APP_CONTENTS)/Frameworks/Tk.framework/Tk Tk && \
-	#fix_install_name "$(PD_APP_CONTENTS)/MacOS/$(WISH_NAME)" Tcl && \
-	#fix_install_name "$(PD_APP_CONTENTS)/MacOS/$(WISH_NAME)" Tk
-#endif # NOT /System
 # set up app wrapper
 	install -d "$(PD_APP_CONTENTS)/Resources/app.nw"
 	# The nw.js app has its own Info.plist
 	install -m0644 -p Info.plist "$(PD_APP_CONTENTS)"
 	install -m0644 -p *.icns  "$(PD_APP_CONTENTS)/Resources"
-	#mv "$(PD_APP_CONTENTS)/MacOS/${WISH_NAME}" \
-	#	"$(PD_APP_CONTENTS)/MacOS/${PD_APP_NAME}"
 	# Now change the localized app name in Resources/*.lproj from nwjs
 	# to "Purr Data". For some reason "CFBundleDisplayName" doesn't accept
 	# spaces so we give it "PurrData"
@@ -293,8 +251,7 @@ darwin_app_clean:
 	-rm -f -- $(PD_APP_CONTENTS)/Resources/bin/*.tk
 	-rm -f -- $(PD_APP_CONTENTS)/Resources/bin/*.tcl
 	-rm -f -- $(PD_APP_CONTENTS)/Resources/Scripts
-	-rm -f -- "$(PD_APP_CONTENTS)/Resources/$(WISH_NAME).rsrc" \
-		"$(PD_APP_CONTENTS)/Resources/pd*.icns"
+	-rm -f -- "$(PD_APP_CONTENTS)/Resources/pd*.icns"
 	-rmdir  $(PD_APP_CONTENTS)/Resources
 	-rmdir  $(BUILD_BASE)/$(PD_APP_NAME).app/Contents
 	-rmdir  $(BUILD_BASE)/$(PD_APP_NAME).app
@@ -326,9 +283,6 @@ test_locations:
 	@echo "PD_VERSION: $(PD_VERSION)"
 	@echo "PACKAGE_NAME: $(PACKAGE_NAME)"
 	@echo "PD-EXTENDED_VERSION: $(PD-EXTENDED_VERSION)"
-	@echo "WISH: $(WISH)"
-	@echo "WISH_FRAMEWORKS_SOURCE: $(WISH_FRAMEWORKS_SOURCE)"
-	@echo "Tcl/Tk Version: $(shell sed -n 's|.*>\(8\..*\)<.*|\1|p' $(WISH_FRAMEWORKS_SOURCE)/Tk.framework/Resources/Info.plist | head -1)"
 	@echo "CWD $(CWD)"
 	@echo "DESTDIR $(DESTDIR)"
 	@echo "PREFIX $(prefix)"
