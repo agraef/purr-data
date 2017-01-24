@@ -217,7 +217,8 @@ PD_VERSION := $(PD_L2ORK_VERSION)-$(PD_TEST_VERSION)
 
 VERSION_DATE := $(shell date +%Y%m%d)
 
-PACKAGE_NAME = Pd-l2ork-$(PD_VERSION)-`uname -m`
+APPLICATION_NAME = Pd-l2ork
+PACKAGE_NAME = $(APPLICATION_NAME)-$(PD_VERSION)-`uname -m`
 
 
 #==============================================================================#

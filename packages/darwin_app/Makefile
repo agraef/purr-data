@@ -5,7 +5,10 @@ export MACOSX_DEPLOYMENT_TARGET = 10.4
 
 CWD := $(shell pwd)
 BUILD_BASE = $(CWD)/build
-PD_APP_NAME = $(PACKAGE_NAME)
+# some folks may prefer to have the version and architecture in the app name
+#PD_APP_NAME = $(PACKAGE_NAME)
+# but we want just the real name of the application
+PD_APP_NAME = $(APPLICATION_NAME)
 PD_SHORT_NAME = "Purr-Data"
 PD_APP_CONTENTS = $(BUILD_BASE)/$(PD_APP_NAME).app/Contents
 DESTDIR = $(PD_APP_CONTENTS)/Resources/app.nw
