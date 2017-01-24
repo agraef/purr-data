@@ -128,7 +128,7 @@ HAVE_AUTOGEN_SH := $(wildcard $(pd_src)/autogen.sh)
 ifeq (autogen.sh, $(findstring autogen.sh,$(HAVE_AUTOGEN_SH)))
 #----------------------------------------------------------------------------#
 # new autotools build system
-pd: set_version
+pd: git_version
 	cd $(pd_src) \
 		&& ./autogen.sh \
 		&& ./configure $(PD_CONFIGURE_FLAGS) \
@@ -154,7 +154,7 @@ $(pd_src)/src/configure: $(pd_src)/src/configure.ac
 #	cd $(pd_src)/src/ && ./configure $(PD_CONFIGURE_FLAGS)
 
 # this line has the "-" to support the current makefile.mingw hack
-pd: $(pd_src)/src/configure set_version
+pd: $(pd_src)/src/configure git_version
 	-cd $(pd_src)/src && ./configure $(PD_CONFIGURE_FLAGS) && \
 		make OPT_CFLAGS="" depend  && \
 		make $(DEST_PATHS) $(PD_BUILD_FLAGS)
@@ -477,19 +477,28 @@ devsymlinks_clean:
 	-sudo rm -f /usr/local/lib/libtcl*.dylib /usr/local/lib/libtk*.dylib
 	-sudo rm -f /usr/local/lib/libtclstub*.a /usr/local/lib/libtkstub*.a
 
+# AG: The set_version target is broken since it modifies m_pd.h in-place
+# during the build, which is a bad thing to do to files which are supposed to
+# be kept in a source code repository. Instead, let's generate m_pd.h from
+# m_pd.h.in, where the latter is kept in the repo and the former gets created
+# from the latter when needed.
+
+git_version: $(pd_src)/src/m_pd.h.in
+	cd $(pd_src)/src/ && \
+	sed 's|^\(#define PD_TEST_VERSION "\).*"|\1$(GIT_VERSION)"|' m_pd.h.in > m_pd.h
 
 set_version:
 # change Pd's version number to reflect the extended build
 # this needs the complete_version_defines patch to work
 	cd $(pd_src)/src/ && \
-		sed 's|^\(#define PD_TEST_VERSION "\).*"|\1$(PD-EXTENDED_VERSION)"|' m_pd.h > \
+		sed 's|^\(#define PD_TEST_VERSION "\).*"|\1$(GIT_VERSION)"|' m_pd.h > \
 			m_pd.h.tmp && mv m_pd.h.tmp m_pd.h
 
 unset_version:
 # change the version number back to the original 
 # this needs the complete_version_defines patch to work
 	cd $(pd_src)/src && \
-		sed 's|^\(#define PD_TEST_VERSION ".*\)$(PD-EXTENDED_VERSION_PREFIX).*"|\1"|' \
+		sed 's|^\(#define PD_TEST_VERSION ".*\)$(GIT_VERSION_PREFIX).*"|\1"|' \
 			m_pd.h > m_pd.h.tmp && \
 		mv m_pd.h.tmp m_pd.h
 
@@ -554,7 +563,7 @@ patch_pd_devel:
 # change Pd's version number to reflect the extended build
 # this needs the complete_version_defines patch to work
 	cd $(pd_src)/src/ && \
-		sed 's|^\(#define PD_TEST_VERSION "\).*"|\1$(PD-EXTENDED_VERSION)"|' m_pd.h > \
+		sed 's|^\(#define PD_TEST_VERSION "\).*"|\1$(GIT_VERSION)"|' m_pd.h > \
 			m_pd.h.tmp && mv m_pd.h.tmp m_pd.h
 	@echo " "
 	@echo "patching completed."
@@ -564,7 +573,7 @@ unpatch_pd_devel:
 # change the version number back to the original 
 # this needs the complete_version_defines patch to work
 	cd $(pd_src)/src && \
-		sed 's|^\(#define PD_TEST_VERSION ".*\)$(PD-EXTENDED_VERSION)"|\1"|' \
+		sed 's|^\(#define PD_TEST_VERSION ".*\)$(GIT_VERSION)"|\1"|' \
 			m_pd.h > m_pd.h.tmp && \
 		mv m_pd.h.tmp m_pd.h
 # apply all platform-specific patches
@@ -611,7 +620,7 @@ distclean: cruft_clean
 
 test_locations:
 	@echo "PD_VERSION: $(PD_VERSION)"
-	@echo "PD-EXTENDED_VERSION: $(PD-EXTENDED_VERSION)"
+	@echo "GIT_VERSION: $(GIT_VERSION)"
 	@echo "CWD $(CWD)"
 	@echo "DESTDIR $(DESTDIR)"
 	@echo "PREFIX $(prefix)"
