@@ -254,7 +254,8 @@ static void pd_makeversion(void)
     //    PD_MAJOR_VERSION, PD_MINOR_VERSION,
     //    PD_BUGFIX_VERSION, PD_TEST_VERSION);    
 
-    snprintf(foo, sizeof(foo), "Pd-L2Ork version %s\n", PD_TEST_VERSION);
+    snprintf(foo, sizeof(foo), "Pd-L2Ork version %s (%s)\n", PD_L2ORK_VERSION,
+	     PD_TEST_VERSION);
 
     pd_version = strdup(foo);
 }

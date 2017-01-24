@@ -173,5 +173,6 @@ void import_setup(void)
     post("\t[import] is still in development, the interface could change!");
     //post("\tcompiled against Pd version %d.%d.%d", PD_MAJOR_VERSION, 
     //     PD_MINOR_VERSION, PD_BUGFIX_VERSION);
-    post("\tcompiled against Pd-l2ork version %s", PD_TEST_VERSION);
+    post("\tcompiled against Pd-l2ork version %s (%s)", PD_L2ORK_VERSION,
+	 PD_TEST_VERSION);
 }
