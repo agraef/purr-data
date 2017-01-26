@@ -168,52 +168,40 @@ installdirs: $(DESTDIR) $(bindir) $(examplesdir) $(pddocdir) $(includedir) $(hel
 #==============================================================================#
 
 
-# AG: "Abandon hope all ye who enter here." Past this point lies madness. Most
-# of Pd's version information is kept in m_pd.h, but some of it needs to be
-# generated at build time to keep in sync with git sources. Since we don't
-# want to have files in the repo which get updated with every build, we use a
-# template m_pd.h.in for m_pd.h instead. The stable version parts (only
-# updated by editing m_pd.h.in manually) can be read from there.
-
-PD_MAJOR_VERSION := $(shell grep PD_MAJOR_VERSION $(pd_src)/src/m_pd.h.in | \
+PD_MAJOR_VERSION := $(shell grep PD_MAJOR_VERSION $(pd_src)/src/m_pd.h | \
 	sed 's|^.define *PD_MAJOR_VERSION *\([0-9]*\).*|\1|' )
-PD_MINOR_VERSION := $(shell grep PD_MINOR_VERSION $(pd_src)/src/m_pd.h.in | \
+PD_MINOR_VERSION := $(shell grep PD_MINOR_VERSION $(pd_src)/src/m_pd.h | \
 	sed 's|^.define *PD_MINOR_VERSION *\([0-9]*\).*|\1|' )
-PD_BUGFIX_VERSION := $(shell grep PD_BUGFIX_VERSION $(pd_src)/src/m_pd.h.in | \
+PD_BUGFIX_VERSION := $(shell grep PD_BUGFIX_VERSION $(pd_src)/src/m_pd.h | \
 	sed 's|^.define *PD_BUGFIX_VERSION *\([0-9]*\).*|\1|' )
-#PD_TEST_VERSION := $(shell grep PD_TEST_VERSION $(pd_src)/src/m_pd.h | \
-#	sed 's|^.define *PD_TEST_VERSION *"\(.*\)".*|\1|' )
+PD_TEST_VERSION := $(shell grep PD_TEST_VERSION $(pd_src)/src/m_pd.h | \
+	sed 's|^.define *PD_TEST_VERSION *"\(.*\)".*|\1|' )
 #PD_VERSION = $(PD_MAJOR_VERSION).$(PD_MINOR_VERSION).$(PD_BUGFIX_VERSION)
 #ifneq ($(PD_TEST_VERSION),)
 #	PD_VERSION := $(PD_VERSION)-$(PD_TEST_VERSION)
 #endif
 
 # AG: Pd-l2ork version number. This becomes part of the PD_VERSION.
-# It comes from the m_pd.h.in file and will be something like 1.x for
+# It comes from the m_pd.h file and will be something like 1.x for
 # "classic" Pd-l2ork and 2.x for the new nw.js version.
-PD_L2ORK_VERSION := $(shell grep PD_L2ORK_VERSION $(pd_src)/src/m_pd.h.in | \
+PD_L2ORK_VERSION := $(shell grep PD_L2ORK_VERSION $(pd_src)/src/m_pd.h | \
 	sed 's|^.define *PD_L2ORK_VERSION *"\(.*\)".*|\1|' )
 
-# AG: version number based on the actual git revision and date. We use this
-# both for the PD_TEST_VERSION and for the package name and accompanying
+# AG: build version number based on the actual git revision and date. This is
+# substituted into s_stuff.h (rather than m_pd.h which we really don't want to
+# touch) so that it's available in the source. We use this in lieu of of
+# PD_TEST_VERSION for -version and for the package name and accompanying
 # materials (ReadMe files and such). Note that this will only work when
 # building directly from a clone of the git repo, and of course you'll need to
 # have git installed.
-GIT_VERSION := $(shell git log -1 --format=%cd --date=short | sed -e 's/-//g')-rev.$(shell git rev-parse --short HEAD)
-
-# AG: Untangle the hall of mirrors that is PD_TEST_VERSION. m_pd.h won't exist
-# or will at least be outdated when the build starts, so we can't simply read
-# it from there. Since we always use the package version (git revision and
-# date, see GIT_VERSION below), we just set it directly instead.
-
-PD_TEST_VERSION := $(GIT_VERSION)
+PD_BUILD_VERSION := $(shell git log -1 --format=%cd --date=short | sed -e 's/-//g')-rev.$(shell git rev-parse --short HEAD)
 
 # AG: This is being used for the package name and accompanying materials. For
 # Pd-l2ork the vanilla Pd version numbers are rather meaningless (they are
 # mainly kept around so that 3rd party externals and abstractions know what
 # iteration of the vanilla API they have available). Instead, we use a version
-# number derived from PD_L2ORK_VERSION and PD_TEST_VERSION.
-PD_VERSION := $(PD_L2ORK_VERSION)-$(PD_TEST_VERSION)
+# number derived from PD_L2ORK_VERSION and PD_BUILD_VERSION.
+PD_VERSION := $(PD_L2ORK_VERSION)-$(PD_BUILD_VERSION)
 
 VERSION_DATE := $(shell date +%Y%m%d)
 

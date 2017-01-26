@@ -98,8 +98,10 @@ ifneq ($(PD_TEST_VERSION),)
 	PD_VERSION := $(PD_VERSION)-$(PD_TEST_VERSION)
 endif
 # AG: Pd-l2ork version number
-PD_L2ORK_VERSION := $(shell grep PD_L2ORK_VERSION m_pd.h.in | \
+PD_L2ORK_VERSION := $(shell grep PD_L2ORK_VERSION m_pd.h | \
 	sed 's|^.define *PD_L2ORK_VERSION *"\(.*\)".*|\1|' )
+PD_BUILD_VERSION := $(shell grep PD_BUILD_VERSION s_stuff.h | \
+	sed 's|^.define *PD_BUILD_VERSION *"\(.*\)".*|\1|' )
 
 #
 #  ------------------ targets ------------------------------------
@@ -203,7 +205,7 @@ install: all
                     $(DESTDIR)$(pddocdir)/7.stuff/$$dir ; \
 	done
 	mv $(ABOUT_FILE) $(ABOUT_FILE).tmp
-	cat $(ABOUT_FILE).tmp | sed 's|PD_VERSION|Pd-l2ork version $(PD_L2ORK_VERSION) ($(PD_TEST_VERSION))|' \
+	cat $(ABOUT_FILE).tmp | sed 's|PD_VERSION|Pd-l2ork version $(PD_L2ORK_VERSION) ($(PD_BUILD_VERSION))|' \
 		> $(ABOUT_FILE)
 	rm $(ABOUT_FILE).tmp
 	rsync -ax --exclude=.git --exclude=.svn ../extra $(DESTDIR)$(libpddir)/

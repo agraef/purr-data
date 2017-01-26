@@ -286,7 +286,7 @@ test_locations:
 	@echo "OPT_CFLAGS: $(OPT_CFLAGS)"
 	@echo "PD_VERSION: $(PD_VERSION)"
 	@echo "PACKAGE_NAME: $(PACKAGE_NAME)"
-	@echo "PD-EXTENDED_VERSION: $(PD-EXTENDED_VERSION)"
+	@echo "PD_BUILD_VERSION: $(PD_BUILD_VERSION)"
 	@echo "CWD $(CWD)"
 	@echo "DESTDIR $(DESTDIR)"
 	@echo "PREFIX $(prefix)"

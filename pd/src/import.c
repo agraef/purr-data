@@ -174,5 +174,5 @@ void import_setup(void)
     //post("\tcompiled against Pd version %d.%d.%d", PD_MAJOR_VERSION, 
     //     PD_MINOR_VERSION, PD_BUGFIX_VERSION);
     post("\tcompiled against Pd-l2ork version %s (%s)", PD_L2ORK_VERSION,
-	 PD_TEST_VERSION);
+	 PD_BUILD_VERSION);
 }

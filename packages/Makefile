@@ -258,7 +258,7 @@ welcome_install:
 	echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"http://puredata.org/ploneCustom.css\" />" >> $(WELCOME_FILE)
 	echo "</head>" >> $(WELCOME_FILE)
 	echo "<body><p><p>" >> $(WELCOME_FILE)
-	echo "<h2>Pd-l2ork version $(PD_L2ORK_VERSION) ($(PD_TEST_VERSION))</h2>" >> $(WELCOME_FILE)
+	echo "<h2>Pd-l2ork version $(PD_L2ORK_VERSION) ($(PD_BUILD_VERSION))</h2>" >> $(WELCOME_FILE)
 	echo "<p>Pd-l2ork was written by Ivica Bukvic and Jonathan Wilkes. It is a fork of Hans-Christoph Steiner's Pd-extended, which in turn is based on Miller S. Puckette's Pd. The included Pd abstractions and externals are the work of many people whose contributions are gratefully acknowledged.</p>" >> $(WELCOME_FILE)
 	echo "<font size=\"-1\">" >> $(WELCOME_FILE)
 	echo "<p>`grep -A9 ACKNOWLEDG $(pd_src)/README.txt`</p>" >> $(WELCOME_FILE)
@@ -279,7 +279,7 @@ readme_install:
 	echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"http://puredata.org/plone.css\" />" >> $(README_FILE)
 	echo "</head>" >> $(README_FILE)
 	echo "<body>" >> $(README_FILE)
-	echo "<h2>Pd-l2ork version $(PD_L2ORK_VERSION) ($(PD_TEST_VERSION))</h2>" 	>> $(README_FILE)
+	echo "<h2>Pd-l2ork version $(PD_L2ORK_VERSION) ($(PD_BUILD_VERSION))</h2>" 	>> $(README_FILE)
 	echo "<p>Pd is a real-time, graphical programming language for media processing created by Miller S. Puckette.  It provides an environment for audio analysis, synthesis, and processing, with a rich set of multimedia capabilities.  You can get Pd for Linux, Windows, MacOS X, BSD, or IRIX.</p>" >> $(README_FILE)
 	echo "<p>Pd-l2ork is a version of Pd based on Hans-Christoph Steiner's Pd-extended which features many bugfixes and enhancements, especially in the user interface.  Pd-l2ork was created by Ivica Ico Bukvic and is maintained by a team of volunteers including Jonathan Wilkes who ported it to the Mac and Windows.  It is available for Linux, Windows and MacOS X.</p>" >> $(README_FILE)
 	echo "<p>For general information about Pd, go to: <a href=\"http://puredata.org\" target=\"pd\">http://puredata.org</a>.  More information about Pd-l2ork can be found on the <a href=\"http://l2ork.music.vt.edu/main/make-your-own-l2ork/software/\" target=\"pd-l2ork\">Pd-l2ork website</a>.</p>" >> $(README_FILE)
@@ -476,26 +476,26 @@ devsymlinks_clean:
 
 # AG: The set_version target is broken since it modifies m_pd.h in-place
 # during the build, which is a bad thing to do to files which are supposed to
-# be kept in a source code repository. Instead, let's generate m_pd.h from
-# m_pd.h.in, where the latter is kept in the repo and the former gets created
-# from the latter when needed.
+# be kept in a source code repository. Instead, we create s_stuff.h from
+# s_stuff.h.in, where the latter is kept in the repo and the former gets created
+# from the latter by substituting PD_BUILD_VERSION.
 
-git_version: $(pd_src)/src/m_pd.h.in
+git_version: $(pd_src)/src/s_stuff.h.in
 	cd $(pd_src)/src/ && \
-	sed 's|^\(#define PD_TEST_VERSION "\).*"|\1$(GIT_VERSION)"|' m_pd.h.in > m_pd.h
+	sed 's|^\(#define PD_BUILD_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' s_stuff.h.in > s_stuff.h
 
 set_version:
 # change Pd's version number to reflect the extended build
 # this needs the complete_version_defines patch to work
 	cd $(pd_src)/src/ && \
-		sed 's|^\(#define PD_TEST_VERSION "\).*"|\1$(GIT_VERSION)"|' m_pd.h > \
+		sed 's|^\(#define PD_TEST_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' m_pd.h > \
 			m_pd.h.tmp && mv m_pd.h.tmp m_pd.h
 
 unset_version:
 # change the version number back to the original 
 # this needs the complete_version_defines patch to work
 	cd $(pd_src)/src && \
-		sed 's|^\(#define PD_TEST_VERSION ".*\)$(GIT_VERSION_PREFIX).*"|\1"|' \
+		sed 's|^\(#define PD_TEST_VERSION ".*\)$(PD_BUILD_VERSION_PREFIX).*"|\1"|' \
 			m_pd.h > m_pd.h.tmp && \
 		mv m_pd.h.tmp m_pd.h
 
@@ -560,7 +560,7 @@ patch_pd_devel:
 # change Pd's version number to reflect the extended build
 # this needs the complete_version_defines patch to work
 	cd $(pd_src)/src/ && \
-		sed 's|^\(#define PD_TEST_VERSION "\).*"|\1$(GIT_VERSION)"|' m_pd.h > \
+		sed 's|^\(#define PD_TEST_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' m_pd.h > \
 			m_pd.h.tmp && mv m_pd.h.tmp m_pd.h
 	@echo " "
 	@echo "patching completed."
@@ -570,7 +570,7 @@ unpatch_pd_devel:
 # change the version number back to the original 
 # this needs the complete_version_defines patch to work
 	cd $(pd_src)/src && \
-		sed 's|^\(#define PD_TEST_VERSION ".*\)$(GIT_VERSION)"|\1"|' \
+		sed 's|^\(#define PD_TEST_VERSION ".*\)$(PD_BUILD_VERSION)"|\1"|' \
 			m_pd.h > m_pd.h.tmp && \
 		mv m_pd.h.tmp m_pd.h
 # apply all platform-specific patches
@@ -617,7 +617,7 @@ distclean: cruft_clean
 
 test_locations:
 	@echo "PD_VERSION: $(PD_VERSION)"
-	@echo "GIT_VERSION: $(GIT_VERSION)"
+	@echo "PD_BUILD_VERSION: $(PD_BUILD_VERSION)"
 	@echo "CWD $(CWD)"
 	@echo "DESTDIR $(DESTDIR)"
 	@echo "PREFIX $(prefix)"
