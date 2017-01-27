@@ -72,7 +72,7 @@ install:
 #
 #==============================================================================#
 
-PACKAGE_NAME = pd-l2ork-`uname -m`-$(PD_VERSION)
+PACKAGE_NAME = pd-l2ork-$(PD_VERSION)-`uname -m`
 
 package: $(PACKAGE_TYPE)
 
@@ -264,7 +264,7 @@ test_locations:
 	@echo --------------------------------------------------
 	@echo "PD_VERSION: $(PD_VERSION)"
 	@echo "DEB_PD_VERSION: $(DEB_PD_VERSION)"
-	@echo "PD-EXTENDED_VERSION: $(PD-EXTENDED_VERSION)"
+	@echo "PD_BUILD_VERSION: $(PD_BUILD_VERSION)"
 	@echo "CWD $(CWD)"
 	@echo "DESTDIR $(DESTDIR)"
 	@echo "PACKAGE_TYPE $(PACKAGE_TYPE)"

@@ -1,27 +1,28 @@
 PD_VERSION
 
 A real-time graphical programming environment for live interactive
-computer music, Pd-l2ork currently works only on Linux.
+computer music, Pd-l2ork works on Linux, Macintosh OSX, and Microsoft
+Windows.
 
 Pd is copyrighted, but is free for you to use for any reasonable purpose.
 See the file:
-     PD_BASEDIR/LICENSE.txt
+     PD_BASEDIR/doc/manuals/Pd/Pd-LICENSE.txt
 
-L2Ork iteration offers rewrite of many of PD's core routines for the
-purpose of improving editor functionality and stability. It is
-distributed under the same license as base PD. For additional info see:
+Pd-l2ork offers a rewrite of many of Pd's core routines for the purpose
+of improving editor functionality and stability. It is distributed under
+the same license as Pd. For additional info see:
     http://l2ork.music.vt.edu/main/
 
 Reference documentation for Pd lives in:
     file:PD_BASEDIR/doc/1.manual/index.htm
 or:
-    http://www.crca.ucsd.edu/~msp/Pd_documentation/index.htm
+    http://msp.ucsd.edu/Pd_documentation/
 
 Much more documentation and other resources live on:
     http://puredata.org
 
 The Pd mailing list archive lives in:
-    http://iem.kug.ac.at/mailinglists/pd-list/
+    http://iem.at/mailinglists/pd-list/
 
 
 Many more useful links are listed in the HTML documentation, section 1.2.

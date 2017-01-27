@@ -145,7 +145,7 @@ $(PD_INNO_SETUP): $(PD_INNO_SETUP).in
 	cat "$(PD_INNO_SETUP).in" | \
 		sed 's/PACKAGE_NAME/$(PACKAGE_NAME)/g' | \
 		sed 's/PD_VERSION/$(PD_VERSION)/g' | \
-		sed 's/PD-EXTENDED_VERSION/$(PD-EXTENDED_VERSION)/g' > \
+		sed 's/PD_BUILD_VERSION/$(PD_BUILD_VERSION)/g' > \
 		$(PD_INNO_SETUP)
 #	start $(PD_INNO_SETUP)
 
@@ -182,7 +182,7 @@ test_package:
 test_locations:
 	@echo --------------------------------------------------
 	@echo "PD_VERSION: $(PD_VERSION)"
-	@echo "PD-EXTENDED_VERSION: $(PD-EXTENDED_VERSION)"
+	@echo "PD_BUILD_VERSION: $(PD_BUILD_VERSION)"
 	@echo "CWD $(CWD)"
 	@echo "DESTDIR $(DESTDIR)"
 	@echo "PREFIX $(prefix)"
