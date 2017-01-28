@@ -280,6 +280,39 @@ static void sys_initloadpreferences(void)
     FILE *fp;
     size_t sz, n = 0;
     int res;
+    char default_prefs[FILENAME_MAX]; // default prefs embedded in the package
+    char embedded_prefs[FILENAME_MAX]; // overrides others for standalone app
+    char embedded_prefs_file[FILENAME_MAX];
+    char user_prefs_file[FILENAME_MAX];
+    const char *prefs, *homedir = getenv("HOME");
+    struct stat statbuf;
+    // On the Mac, we first look for an embedded prefs file, then for a user
+    // prefs file, and fall back to the defaults in the package if none of
+    // these exist. Note that Pd-l2ork can't create standalone apps à la
+    // Pd-extended right now, but we might want to support them in the future,
+    // so we handle the embedded prefs case anyway.
+    snprintf(default_prefs, FILENAME_MAX,
+	     "%s/../org.puredata.pd-l2ork.default",
+             sys_libdir->s_name);
+    snprintf(embedded_prefs, FILENAME_MAX,
+	     "%s/../org.puredata.pd-l2ork",
+             sys_libdir->s_name);
+    snprintf(embedded_prefs_file, FILENAME_MAX, "%s.plist", embedded_prefs);
+    snprintf(user_prefs_file, FILENAME_MAX,
+             "%s/Library/Preferences/org.puredata.pd-l2ork.plist", homedir);
+    if (stat(embedded_prefs_file, &statbuf) == 0) {
+      // Read from and write to the embedded prefs (standalone app).
+      prefs = embedded_prefs;
+      strncpy(current_prefs, embedded_prefs, FILENAME_MAX);
+    } else if (stat(user_prefs_file, &statbuf) == 0) {
+      // Read from and write to the user prefs.
+      prefs = current_prefs;
+      strcpy(current_prefs, "org.puredata.pd-l2ork");
+    } else {
+      // Read from the package defaults and write to the user prefs.
+      prefs = default_prefs;
+      strcpy(current_prefs, "org.puredata.pd-l2ork");
+    }
     // This looks complicated, but is rather straightforward. The individual
     // stages of the pipe are:
     // 1. defaults export: grab our defaults in XML format
@@ -293,7 +326,7 @@ static void sys_initloadpreferences(void)
     //   "loadlib1" : "libdir",                   loadlib1: libdir
     //   "path1" : "\/System\/Library\/Fonts"     path1: /System/Library/Fonts
     // }
-    snprintf(cmdbuf, MAXPDSTRING, "defaults export %s - | plutil -convert json -r -o - - | sed -E -e 's/[{}]//g' -e 's/^ *\"(([^\"]|\\\\.)*)\" *: *\"(([^\"]|\\\\.)*)\".*/\\1: \\3/' -e 's/\\\\(.)/\\1/g'", current_prefs);
+    snprintf(cmdbuf, MAXPDSTRING, "defaults export %s - | plutil -convert json -r -o - - | sed -E -e 's/[{}]//g' -e 's/^ *\"(([^\"]|\\\\.)*)\" *: *\"(([^\"]|\\\\.)*)\".*/\\1: \\3/' -e 's/\\\\(.)/\\1/g'", prefs);
     // open the pipe
     fp = popen(cmdbuf, "r");
     if (!fp) {
