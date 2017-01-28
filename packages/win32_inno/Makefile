@@ -42,7 +42,11 @@ endif
 	@echo " "
 	@echo "win32_inno install succeeded!"
 
-build_pd:
+git_version: $(pd_src)/src/s_stuff.h.in
+	cd $(pd_src)/src/ && \
+	sed 's|^\(#define PD_BUILD_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' s_stuff.h.in > s_stuff.h
+
+build_pd: git_version
 	cd $(pd_src)/src && $(MAKE) -f makefile.mingw
 
 pd_install: build_pd
