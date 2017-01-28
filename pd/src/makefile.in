@@ -2,7 +2,7 @@
 # support.  Its safe on other platforms since gcc only checks this env var on
 # Apple's gcc.  <hans@at.or.at>
 ifeq ($(shell uname -s),Darwin)
-export MACOSX_DEPLOYMENT_TARGET = 10.3
+export MACOSX_DEPLOYMENT_TARGET = 10.4
 endif
 
 VPATH = ../obj:./
@@ -100,8 +100,10 @@ endif
 # AG: Pd-l2ork version number
 PD_L2ORK_VERSION := $(shell grep PD_L2ORK_VERSION m_pd.h | \
 	sed 's|^.define *PD_L2ORK_VERSION *"\(.*\)".*|\1|' )
-PD_BUILD_VERSION := $(shell grep PD_BUILD_VERSION s_stuff.h | \
-	sed 's|^.define *PD_BUILD_VERSION *"\(.*\)".*|\1|' )
+# This is replicated from packages/Makefile.buildlayout. XXXFIXME: Right now
+# you have to manually keep these two definitions in sync; if you edit one of
+# them, you should also edit the other.
+PD_BUILD_VERSION := $(shell git log -1 --format=%cd --date=short | sed -e 's/-//g')-rev.$(shell git rev-parse --short HEAD)
 
 #
 #  ------------------ targets ------------------------------------
@@ -241,17 +243,19 @@ extra-clean:
 clean: extra-clean local-clean
 
 distclean: clean
-	-rm -f config.cache config.log config.status makefile tags \
+	-rm -f s_stuff.h config.cache config.log config.status makefile tags \
 		autom4te.cache/output.* autom4te.cache/traces.* autom4te.cache/requests
-	-rmdir autom4te.cache
-	-rm -rf autom4te-*.cache
+	-rm -rf autom4te*.cache
 
 tags: $(SRC); ctags *.[ch]
 
 depend: makefile.dependencies
 
-makefile.dependencies: makefile
+makefile.dependencies: makefile s_stuff.h
 	$(CC) $(CPPFLAGS) -M $(SRC) > makefile.dependencies
+
+s_stuff.h: s_stuff.h.in
+	sed 's|^\(#define PD_BUILD_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' $< > $@
 
 uninstall:
 	rm -f -r $(DESTDIR)$(libpddir)

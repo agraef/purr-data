@@ -148,6 +148,10 @@ PD_VERSION := $(PD_MAJOR_VERSION).$(PD_MINOR_VERSION).$(PD_BUGFIX_VERSION)
 ifneq ($(PD_TEST_VERSION),)
 	PD_VERSION := $(PD_VERSION)-$(PD_TEST_VERSION)
 endif
+# AG: Pd-l2ork version number
+PD_L2ORK_VERSION := $(shell grep PD_L2ORK_VERSION m_pd.h | \
+	sed 's|^.define *PD_L2ORK_VERSION *"\(.*\)".*|\1|' )
+PD_BUILD_VERSION := $(shell git log -1 --format=%cd --date=short | sed -e 's/-//g')-rev.$(shell git rev-parse --short HEAD)
 
 
 #
@@ -160,6 +164,9 @@ all: config.h $(PDDLL) $(PDEXEC) pdsend.exe pdreceive.exe pd.com externs
 
 config.h: config.h.in
 	cp config.h.in config.h
+
+s_stuff.h: s_stuff.h.in
+	sed 's|^\(#define PD_BUILD_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' $< > $@
 
 $(OBJ) : %.o : %.c
 	$(CC) $(CFLAGS) $(GFLAGS) $(INCLUDE) -c -o $*.o $*.c 
@@ -294,7 +301,7 @@ install:  all
 		install -p ../doc/7.stuff/$$dir/*.* $(pddocdir)/7.stuff/$$dir ; \
 	done
 	mv $(ABOUT_FILE) $(ABOUT_FILE).tmp
-	cat $(ABOUT_FILE).tmp | sed 's|PD_VERSION|Pd version $(PD_VERSION)|' \
+	cat $(ABOUT_FILE).tmp | sed 's|PD_VERSION|Pd version $(PD_L2ORK_VERSION) ($(PD_BUILD_VERSION))|' \
 		> $(ABOUT_FILE)
 	rm $(ABOUT_FILE).tmp
 	install -d $(libpddir)/extra
@@ -318,7 +325,7 @@ clean:
 	-rm -f makefile.dependencies
 
 distclean: clean
-	rm -rf -- config.cache config.log config.status makefile tags \
+	rm -rf -- s_stuff.h config.cache config.log config.status makefile tags \
 	     autom4te-*.cache
 
 tags: $(SRC) $(GSRC); ctags *.[ch]
