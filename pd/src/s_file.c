@@ -326,7 +326,14 @@ static void sys_initloadpreferences(void)
     //   "loadlib1" : "libdir",                   loadlib1: libdir
     //   "path1" : "\/System\/Library\/Fonts"     path1: /System/Library/Fonts
     // }
-    snprintf(cmdbuf, MAXPDSTRING, "defaults export %s - | plutil -convert json -r -o - - | sed -E -e 's/[{}]//g' -e 's/^ *\"(([^\"]|\\\\.)*)\" *: *\"(([^\"]|\\\\.)*)\".*/\\1: \\3/' -e 's/\\\\(.)/\\1/g'", prefs);
+    snprintf(cmdbuf, MAXPDSTRING,
+        "defaults export %s - "
+        "| plutil -convert json -r -o - - "
+        "| sed -E "
+          "-e 's/[{}]//g' "
+          "-e 's/^ *\"(([^\"]|\\\\.)*)\" *: *\"(([^\"]|\\\\.)*)\".*/\\1: \\3/' "
+          "-e 's/\\\\(.)/\\1/g'",
+        prefs);
     // open the pipe
     fp = popen(cmdbuf, "r");
     if (!fp) {
