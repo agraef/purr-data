@@ -245,8 +245,7 @@ clean: extra-clean local-clean
 distclean: clean
 	-rm -f s_stuff.h config.cache config.log config.status makefile tags \
 		autom4te.cache/output.* autom4te.cache/traces.* autom4te.cache/requests
-	-rmdir autom4te.cache
-	-rm -rf autom4te-*.cache
+	-rm -rf autom4te*.cache
 
 tags: $(SRC); ctags *.[ch]
 
