@@ -539,7 +539,7 @@ function get_array_slot_4(attrs) {
 }
 
 function apply() {
-    var i, attrs, gop, hide_name, slot_4;
+    var gop, hide_name, slot_4;
     // If this is a dialog to create a new array, we
     // skip the canvas dialog callback
     if (!new_array_dialog) {
@@ -564,11 +564,13 @@ function apply() {
 
     // Now send the array properties, in a separate
     // message for each array
-    for (i = 0; i < pd_garray_attrs.length; i++) {
-        attrs = pd_garray_attrs[i];
+    pd_garray_attrs.forEach(function(attrs) {
+        var i;
         name = get_array_value("array_name", attrs);
         var arr = name.split("");
-        for (var i = 0; i < arr.length; i++) {
+        // This is a bit too complicated-- isn't there a standardized
+        // interface for doing this?
+        for (i = 0; i < arr.length; i++) {
             if (arr[i] === "$" && i+1 < arr.length &&
                 arr[i+1] >= "0" && arr[i+1] <= "9") {
                 arr[i] = "#";
@@ -587,8 +589,7 @@ function apply() {
             get_array_value("array_fill", attrs),
             get_array_value("array_outline", attrs)
         );
-
-    }
+    });
 }
 
 function cancel() {
