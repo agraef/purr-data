@@ -947,11 +947,8 @@ exports.set_app_quitfn = function(quitfn) {
     nw_app_quit = quitfn;
 }
 
-function open_file(file) {
-    var filename = defunkify_windows_path(file),
-        directory = path.dirname(filename),
-        basename = path.basename(filename),
-        cyclist;
+function import_file(directory, basename)
+{
     if (basename.match(/\.(pat|mxb|help)$/) !=null) {
         post("warning: opening pat|mxb|help not implemented yet");
         if (pd_nt == 0) {
@@ -976,15 +973,36 @@ function open_file(file) {
         //    puts stderr "converted Max binary to text format: $directory/$basename"
         //}
     }
+}
+
+function process_file(file, do_open) {
+    var filename = defunkify_windows_path(file),
+        directory = path.dirname(filename),
+        basename = path.basename(filename),
+        cyclist;
+    if (do_open) import_file(directory, basename);
     if (basename.match(/\.(pd|pat|mxt)$/i) != null) {
-        pdsend("pd open", enquote(basename),
-            (enquote(directory)));
+        if (do_open) {
+            pdsend("pd open", enquote(basename),
+                   (enquote(directory)));
+        }
         set_pd_opendir(directory);
         //::pd_guiprefs::update_recentfiles "$filename" 1
         // update the recent files list
         var norm_path = path.normalize(directory);
         pdsend("pd add-recent-file", enquote(path.join(norm_path, basename)));
     }
+}
+
+function open_file(file) {
+    process_file(file, 1);
+}
+
+function gui_process_open_arg(file) {
+    // AG: This is invoked when the engine opens a patch file via the command
+    // line (-open). In this case the file is already loaded, so we just
+    // update the opendir and the recent files list.
+    process_file(file, 0);
 }
 
 function open_html(target) {
