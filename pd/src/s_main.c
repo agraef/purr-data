@@ -171,8 +171,7 @@ static void openit(const char *dirname, const char *filename)
     {
         close (fd);
         glob_evalfile(0, gensym(nameptr), gensym(dirbuf));
-        gui_vmess("gui_set_current_dir", "xs",
-            0, filename);
+        gui_vmess("gui_process_open_arg", "s", filename);
     }
     else
         error("%s: can't open", filename);
