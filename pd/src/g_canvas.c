@@ -14,6 +14,7 @@ to be different but are now unified except for some fossilized names.) */
 #include "g_canvas.h"
 #include "g_all_guis.h"
 #include <string.h>
+#include <math.h>
 
 extern int do_not_redraw;
 extern void canvas_drawconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2, t_int tag, int issignal);
@@ -350,6 +351,22 @@ t_symbol *canvas_field_templatesym; /* for "canvas" data type */
 t_word *canvas_field_vec;           /* for "canvas" data type */
 t_gpointer *canvas_field_gp;        /* parent for "canvas" data type */
 
+static int calculate_zoom(t_float zoom_hack)
+{
+  // This gives back the zoom level stored in the patch (cf. zoom_hack
+  // in g_readwrite.c). Make sure to round this value to handle any rounding
+  // errors due to the limited float precision in Pd's binbuf writer.
+  int zoom = round(zoom_hack*32);
+  // This is a 5 bit number in 2's complement, so we need to extend the sign.
+  zoom = zoom << 27 >> 27;
+  // To be on the safe side, we finally clamp the result to the range -7..8
+  // which are the zoom levels supported by Purr Data right now.
+  if (zoom < -7) zoom = -7;
+  if (zoom > 8) zoom = 8;
+  //post("read zoom level: %d", zoom);
+  return zoom;
+}
+
     /* make a new glist.  It will either be a "root" canvas or else
     it appears as a "text" object in another window (canvas_getcurrent() 
     tells us which.) */
@@ -370,6 +387,8 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     int vis = 0, width = GLIST_DEFCANVASWIDTH, height = GLIST_DEFCANVASHEIGHT;
     int xloc = 0, yloc = GLIST_DEFCANVASYLOC;
     int font = (owner ? owner->gl_font : sys_defaultfont);
+    int zoom = 0;
+    extern int sys_zoom;
 
     glist_init(x);
     //x->gl_magic_glass = magicGlass_new(x);
@@ -380,20 +399,28 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
 
     if (argc == 5)  /* toplevel: x, y, w, h, font */
     {
+        t_float zoom_hack = atom_getfloatarg(3, argc, argv);
         xloc = atom_getintarg(0, argc, argv);
         yloc = atom_getintarg(1, argc, argv);
         width = atom_getintarg(2, argc, argv);
         height = atom_getintarg(3, argc, argv);
         font = atom_getintarg(4, argc, argv);
+        zoom_hack -= height;
+        if (sys_zoom && zoom_hack > 0)
+            zoom = calculate_zoom(zoom_hack);
     }
     else if (argc == 6)  /* subwindow: x, y, w, h, name, vis */
     {
+        t_float zoom_hack = atom_getfloatarg(3, argc, argv);
         xloc = atom_getintarg(0, argc, argv);
         yloc = atom_getintarg(1, argc, argv);
         width = atom_getintarg(2, argc, argv);
         height = atom_getintarg(3, argc, argv);
         s = atom_getsymbolarg(4, argc, argv);
         vis = atom_getintarg(5, argc, argv);
+        zoom_hack -= height;
+        if (sys_zoom && zoom_hack > 0)
+            zoom = calculate_zoom(zoom_hack);
     }
         /* (otherwise assume we're being created from the menu.) */
 
@@ -448,6 +475,7 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     x->gl_willvis = vis;
     x->gl_edit = !strncmp(x->gl_name->s_name, "Untitled", 8);
     x->gl_font = sys_nearestfontsize(font);
+    x->gl_zoom = zoom;
     pd_pushsym(&x->gl_pd);
 
     //dpsaha@vt.edu gop resize (refactored by mathieu)
@@ -548,6 +576,7 @@ t_glist *glist_addglist(t_glist *g, t_symbol *sym,
     x->gl_pixheight = py2 - py1;
     x->gl_font =  (canvas_getcurrent() ?
         canvas_getcurrent()->gl_font : sys_defaultfont);
+    x->gl_zoom = 0;
     x->gl_screenx1 = x->gl_screeny1 = 0;
     x->gl_screenx2 = 450;
     x->gl_screeny2 = 300;
