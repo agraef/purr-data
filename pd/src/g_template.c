@@ -96,8 +96,9 @@ t_template *template_new(t_symbol *templatesym, int argc, t_atom *argv)
                 pd_error(x, "canvas lacks template or name");
                 goto bad;
             }
-            /* If we keep the canvas field API this needs to be revisited */
-            //filename = canvas_makebindsym(argv[2].a_w.w_symbol);
+            /* We're abusing newarraytemplate here to store the name of
+               the abstraction (minus the .pd extension) */
+            newarraytemplate = argv[2].a_w.w_symbol;
             sprintf(filename, "%s.pd", argv[2].a_w.w_symbol->s_name);
             if (binbuf_read_via_canvas(b, filename, canvas_getcurrent(), 0))
                 post("warning: abstraction %s not found", filename);

@@ -258,7 +258,7 @@ typedef struct _dataslot
 {
     int ds_type;
     t_symbol *ds_name;
-    t_symbol *ds_fieldtemplate;     /* filled in for arrays only */
+    t_symbol *ds_fieldtemplate;     /* filled in only for array/canvas fields */
     t_binbuf *ds_binbuf;            /* binbuf of an abstraction to be loaded */
 } t_dataslot;
 

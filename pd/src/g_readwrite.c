@@ -787,8 +787,10 @@ static void canvas_savetemplatesto(t_canvas *x, t_binbuf *b, int wholething)
                 case DT_TEXT: type = gensym("text"); break; //&s_list; break;
                 default: type = &s_float; bug("canvas_write");
             }
-            if (template->t_vec[j].ds_type == DT_ARRAY ||
-                template->t_vec[j].ds_type == DT_LIST)
+            if (template->t_vec[j].ds_type == DT_LIST)
+                binbuf_addv(b, "sss", type, template->t_vec[j].ds_name,
+                    gensym(template->t_vec[j].ds_fieldtemplate->s_name));
+            else if (template->t_vec[j].ds_type == DT_ARRAY)
                 binbuf_addv(b, "sss", type, template->t_vec[j].ds_name,
                     gensym(template->t_vec[j].ds_fieldtemplate->s_name + 3));
             else binbuf_addv(b, "ss", type, template->t_vec[j].ds_name);
