@@ -75,16 +75,18 @@ static void glob_perf(t_pd *dummy, float f)
     sys_perf = (f != 0);
 }
 
+extern int sys_zoom;
 extern t_symbol *sys_gui_preset;
-static void glob_gui_preset(t_pd *dummy, t_symbol *s)
+static void glob_gui_prefs(t_pd *dummy, t_symbol *s, float f)
 {
     sys_gui_preset = s;
+    sys_zoom = !!(int)f;
 }
 
-/* just the gui-preset for now */
+/* just the gui-preset and the save-zoom toggle for now */
 static void glob_gui_properties(t_pd *dummy)
 {
-    gui_vmess("gui_gui_properties", "xs", 0, sys_gui_preset->s_name);
+    gui_vmess("gui_gui_properties", "xsi", 0, sys_gui_preset->s_name, sys_zoom);
 }
 
 // ths one lives inside g_editor so that it can access the clipboard
@@ -167,8 +169,8 @@ void glob_init(void)
         gensym("perf"), A_FLOAT, 0);
     class_addmethod(glob_pdobject, (t_method)glob_clipboard_text,
         gensym("clipboardtext"), A_FLOAT, 0);
-    class_addmethod(glob_pdobject, (t_method)glob_gui_preset,
-        gensym("gui-preset"), A_SYMBOL, 0);
+    class_addmethod(glob_pdobject, (t_method)glob_gui_prefs,
+        gensym("gui-prefs"), A_SYMBOL, A_FLOAT, 0);
     class_addmethod(glob_pdobject, (t_method)glob_gui_properties,
         gensym("gui-properties"), 0);
     class_addmethod(glob_pdobject, (t_method)glob_recent_files,

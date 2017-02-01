@@ -1303,7 +1303,7 @@ function create_window(cid, type, width, height, xpos, ypos, attr_array) {
 }
 
 // create a new canvas
-function gui_canvas_new(cid, width, height, geometry, editmode, name, dir, dirty_flag, cargs) {
+function gui_canvas_new(cid, width, height, geometry, zoom, editmode, name, dir, dirty_flag, cargs) {
     // hack for buggy tcl popups... should go away for node-webkit
     //reset_ctrl_on_popup_window
 
@@ -1353,6 +1353,7 @@ function gui_canvas_new(cid, width, height, geometry, editmode, name, dir, dirty
             dir: dir,
             dirty: dirty_flag,
             args: cargs,
+            zoom: zoom,
             editmode: editmode
     });
 }
@@ -4567,9 +4568,9 @@ function gui_midi_properties(gfxstub, sys_indevs, sys_outdevs,
     }
 }
 
-function gui_gui_properties(dummy, name) {
+function gui_gui_properties(dummy, name, save_zoom) {
     if (dialogwin["prefs"] !== null) {
-        dialogwin["prefs"].window.gui_prefs_callback(name);
+        dialogwin["prefs"].window.gui_prefs_callback(name, save_zoom);
     }
 }
 
@@ -4920,6 +4921,7 @@ function do_optimalzoom(cid, hflag, vflag) {
     //post("bbox: "+width+"x"+height+"+"+x+"+"+y+" window size: "+min_width+"x"+min_height+" current zoom level: "+actz+" optimal zoom level: "+z);
     if (z != actz) {
         patchwin[cid].zoomLevel = z;
+        pdsend(cid, "zoom", z);
     }
 }
 

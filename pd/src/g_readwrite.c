@@ -646,6 +646,28 @@ static void glist_write(t_glist *x, t_symbol *filename, t_symbol *format)
 
 /* ------ routines to save and restore canvases (patches) recursively. ----*/
 
+static double zoom_hack(int x, int zoom)
+{
+  // AG: This employs an interesting little hack made possible by a loophole
+  // in Pd's patch parser (binbuf_eval), which will happily read a float value
+  // where an int is expected, and cast it to an int anyway. Applied to the #N
+  // header of a canvas, this lets us store the zoom level of a patch in the
+  // fractional part of a window geometry argument x, so that we can restore
+  // it when the patch is reloaded. Since vanilla and other Pd flavors won't
+  // even notice the extra data, the same patch can still be loaded by any
+  // other Pd version without any problems.
+
+  // Encoding of the zoom level: Purr Data's zoom levels go from -7 to 8 so
+  // that we can encode them as 4 bit numbers in two's complement. However, it
+  // makes sense to leave 1 extra bit for future extensions, so our encoding
+  // actually uses nonnegative 5 bit integer multiples of 2^-5 = 0.03125 in a
+  // way that leaves the integer part of the height parameter intact. Note
+  // that using 2's complement here has the advantage that a zero zoom level
+  // maps to a zero fraction so that we don't need an extra bit to detect
+  // whether there's a zoom level when reading the patch.
+  return x + (zoom & 31) * 0.03125;
+}
+
     /* save to a binbuf, called recursively; cf. canvas_savetofile() which
     saves the document, and is only called on root canvases. */
 static void canvas_saveto(t_canvas *x, t_binbuf *b)
@@ -653,6 +675,7 @@ static void canvas_saveto(t_canvas *x, t_binbuf *b)
     t_gobj *y;
     t_linetraverser t;
     t_outconnect *oc;
+    extern int sys_zoom;
         /* subpatch */
     if (x->gl_owner && !x->gl_env)
     {
@@ -671,25 +694,53 @@ static void canvas_saveto(t_canvas *x, t_binbuf *b)
         patchsym = atom_getsymbolarg(name_index,
             binbuf_getnatom(bz), binbuf_getvec(bz));
         binbuf_free(bz);
-        binbuf_addv(b, "ssiiiisi;", gensym("#N"), gensym("canvas"),
-            (int)(x->gl_screenx1),
-            (int)(x->gl_screeny1),
-            (int)(x->gl_screenx2 - x->gl_screenx1),
-            (int)(x->gl_screeny2 - x->gl_screeny1),
-            (patchsym != &s_ ? patchsym: gensym("(subpatch)")),
-            x->gl_mapped);
+        if (sys_zoom && x->gl_zoom != 0) {
+          // This uses the hack described above to store the zoom factor in
+          // the fractional part of the windows height parameter. Note that
+          // any of the other canvas geometry parameters would do just as
+          // well, as they are all measured in pixels and thus unlikely to
+          // become fractional in the future.
+          binbuf_addv(b, "ssiiifsi;", gensym("#N"), gensym("canvas"),
+                      (int)(x->gl_screenx1),
+                      (int)(x->gl_screeny1),
+                      (int)(x->gl_screenx2 - x->gl_screenx1),
+                      zoom_hack(x->gl_screeny2 - x->gl_screeny1, x->gl_zoom),
+                      (patchsym != &s_ ? patchsym: gensym("(subpatch)")),
+                      x->gl_mapped);
+        } else {
+          // This is the standard (vanilla) code. This is also used in the
+          // case of a zero zoom level, so unzoomed patches will always
+          // produce a standard vanilla patch file when saved.
+          binbuf_addv(b, "ssiiiisi;", gensym("#N"), gensym("canvas"),
+                      (int)(x->gl_screenx1),
+                      (int)(x->gl_screeny1),
+                      (int)(x->gl_screenx2 - x->gl_screenx1),
+                      (int)(x->gl_screeny2 - x->gl_screeny1),
+                      (patchsym != &s_ ? patchsym: gensym("(subpatch)")),
+                      x->gl_mapped);
+        }
         /* Not sure what the following commented line was doing... */
         //t_text *xt = (t_text *)x;
     }
         /* root or abstraction */
     else 
     {
-        binbuf_addv(b, "ssiiiii;", gensym("#N"), gensym("canvas"),
-            (int)(x->gl_screenx1),
-            (int)(x->gl_screeny1),
-            (int)(x->gl_screenx2 - x->gl_screenx1),
-            (int)(x->gl_screeny2 - x->gl_screeny1),
-                (int)x->gl_font);
+        // See above.
+        if (sys_zoom && x->gl_zoom != 0) {
+          binbuf_addv(b, "ssiiifi;", gensym("#N"), gensym("canvas"),
+                      (int)(x->gl_screenx1),
+                      (int)(x->gl_screeny1),
+                      (int)(x->gl_screenx2 - x->gl_screenx1),
+                      zoom_hack(x->gl_screeny2 - x->gl_screeny1, x->gl_zoom),
+                      (int)x->gl_font);
+        } else {
+          binbuf_addv(b, "ssiiiii;", gensym("#N"), gensym("canvas"),
+                      (int)(x->gl_screenx1),
+                      (int)(x->gl_screeny1),
+                      (int)(x->gl_screenx2 - x->gl_screenx1),
+                      (int)(x->gl_screeny2 - x->gl_screeny1),
+                      (int)x->gl_font);
+        }
         canvas_savedeclarationsto(x, b);
     }
     for (y = x->gl_list; y; y = y->g_next)

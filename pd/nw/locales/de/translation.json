@@ -392,6 +392,10 @@
         "strongbad": "Strongbad",
         "extended": "Extended",
         "c64": "C64"
+      },
+      "zoom": {
+        "save_zoom": "Speichern/Laden der Vergrößerung im Patch",
+        "save_zoom_tt": "Speichere die aktuelle Vergrößerung mit dem Patch und stelle diese beim Laden des Patches wieder her"
       }
     },
     "audio": {

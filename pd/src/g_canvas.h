@@ -200,6 +200,7 @@ struct _glist
     t_editor *gl_editor;        /* editor structure when visible */
     t_symbol *gl_name;          /* symbol bound here */
     int gl_font;                /* nominal font size in points, e.g., 10 */
+    int gl_zoom;                /* current zoom level (-7..8) */
     struct _glist *gl_next;         /* link in list of toplevels */
     t_canvasenvironment *gl_env;    /* root canvases and abstractions only */
     unsigned int gl_havewindow:1;   /* true if we own a window */

@@ -2471,11 +2471,12 @@ void canvas_vis(t_canvas *x, t_floatarg f)
             //fprintf(stderr,"new\n");
             canvas_create_editor(x);
             canvas_args_to_string(argsbuf, x);
-            gui_vmess("gui_canvas_new", "xiisissis",
+            gui_vmess("gui_canvas_new", "xiisiissis",
                 x,
                 (int)(x->gl_screenx2 - x->gl_screenx1),
                 (int)(x->gl_screeny2 - x->gl_screeny1),
                 geobuf,
+                x->gl_zoom,
                 x->gl_edit,
                 x->gl_name->s_name,
                 canvas_getdir(x)->s_name,
@@ -7394,6 +7395,12 @@ static void canvas_font(t_canvas *x, t_floatarg font, t_floatarg oldfont,
     canvas_dofont(x2, font, realresize, realresize);
 }
 
+static void canvas_zoom(t_canvas *x, t_floatarg zoom)
+{
+    x->gl_zoom = zoom;
+    //post("store zoom level: %d", x->gl_zoom);
+}
+
 void glist_getnextxy(t_glist *gl, int *xpix, int *ypix)
 {
     if (canvas_last_glist == gl)
@@ -7592,6 +7599,8 @@ void g_editor_setup(void)
         gensym("menufont"), A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_font,
         gensym("font"), A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_NULL);
+    class_addmethod(canvas_class, (t_method)canvas_zoom,
+        gensym("zoom"), A_FLOAT, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_find,
         gensym("find"), A_SYMBOL, A_FLOAT, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_find_again,

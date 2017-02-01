@@ -40,7 +40,7 @@
 #define snprintf sprintf_s
 #endif
 
-int sys_defeatrt;
+int sys_defeatrt, sys_zoom;
 t_symbol *sys_flags = &s_;
 void sys_doflags( void);
 
@@ -618,6 +618,8 @@ void sys_loadpreferences( void)
     }
     if (sys_getpreference("defeatrt", prefbuf, MAXPDSTRING))
         sscanf(prefbuf, "%d", &sys_defeatrt);
+    if (sys_getpreference("savezoom", prefbuf, MAXPDSTRING))
+        sscanf(prefbuf, "%d", &sys_zoom);
     if (sys_getpreference("guipreset", prefbuf, MAXPDSTRING))
     {
         char preset_buf[MAXPDSTRING];
@@ -755,6 +757,8 @@ void glob_savepreferences(t_pd *dummy)
     sys_putpreference("nloadlib", buf1);
     sprintf(buf1, "%d", sys_defeatrt);
     sys_putpreference("defeatrt", buf1);
+    sprintf(buf1, "%d", sys_zoom);
+    sys_putpreference("savezoom", buf1);
     sys_putpreference("guipreset", sys_gui_preset->s_name);
     sys_putpreference("flags", 
         (sys_flags ? sys_flags->s_name : ""));

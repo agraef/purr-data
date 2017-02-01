@@ -788,6 +788,8 @@ function register_window_id(cid, attr_array) {
     // Trigger a "focus" event so that OSX updates the menu for this window
     nw_window_focus_callback(cid);
     canvas_events.normal();
+    // Initialize the zoom level to the value retrieved from the patch, if any.
+    nw.Window.get().zoomLevel = attr_array.zoom;
     pdgui.canvas_map(cid); // side-effect: triggers gui_canvas_get_scroll
     set_editmode_checkbox(attr_array.editmode !== 0 ? true : false);
     // For now, there is no way for the cord inspector to be turned on by
@@ -1219,6 +1221,7 @@ function nw_create_patch_window_menus(gui, w, name) {
             var z = gui.Window.get().zoomLevel;
             if (z < 8) { z++; }
             gui.Window.get().zoomLevel = z;
+            pdgui.pdsend(name, "zoom", z);
             pdgui.gui_canvas_get_scroll(name);
         }
     });
@@ -1228,6 +1231,7 @@ function nw_create_patch_window_menus(gui, w, name) {
             var z = gui.Window.get().zoomLevel;
             if (z > -7) { z--; }
             gui.Window.get().zoomLevel = z;
+            pdgui.pdsend(name, "zoom", z);
             pdgui.gui_canvas_get_scroll(name);
         }
     });
@@ -1256,6 +1260,7 @@ function nw_create_patch_window_menus(gui, w, name) {
         enabled: true,
         click: function () {
             gui.Window.get().zoomLevel = 0;
+            pdgui.pdsend(name, "zoom", 0);
             pdgui.gui_canvas_get_scroll(name);
         }
     });

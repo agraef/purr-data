@@ -292,6 +292,11 @@
               <option data-i18n="prefs.gui.presets.strongbad" value="strongbad">
               </option>
             </select>
+            <br/>
+            <label data-i18n="[title]prefs.gui.zoom.save_zoom_tt">
+              <input type="checkbox" id="save_zoom" name="save_zoom">
+              <span data-i18n="prefs.gui.zoom.save_zoom"></span>
+            </label>
           </div>
         </div>
 
@@ -384,6 +389,10 @@ function gui_preset_change(elem) {
 
 function get_gui_preset() {
     return document.getElementById("gui_preset").selectedOptions[0].value;
+}
+
+function get_save_zoom() {
+    return +document.getElementById("save_zoom").checked;
 }
 
 // startup config data
@@ -592,8 +601,9 @@ function apply(save_prefs) {
         midi_use_alsa ? get_attr("midi-outdev-names", attrs).length : 0
     );
 
-    // Send the name of the gui preset to Pd
-    pdgui.pdsend("pd gui-preset", get_gui_preset());
+    // Send the gui prefs (currently just the name of the gui preset and the
+    // status of the save-zoom toggle) to Pd
+    pdgui.pdsend("pd gui-prefs", get_gui_preset(), get_save_zoom());
 
     // Send the startup config data to Pd
     pdgui.pdsend.apply(null, ["pd path-dialog", startup_use_stdpath, startup_verbose].concat(get_path_array()));
@@ -832,7 +842,7 @@ function midi_prefs_callback(attrs) {
     pdgui.resize_window(pd_object_callback);
 }
 
-function gui_prefs_callback(name) {
+function gui_prefs_callback(name, save_zoom) {
     var s = document.getElementById("gui_preset"),
         i;
     for (i = 0; i < s.options.length; i++) {
@@ -841,6 +851,7 @@ function gui_prefs_callback(name) {
             break;
         }
     }
+    document.getElementById("save_zoom").checked = !!save_zoom;
 }
 
 // startup settings
