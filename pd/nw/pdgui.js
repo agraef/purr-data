@@ -1052,7 +1052,18 @@ function external_doc_open(url) {
 exports.external_doc_open = external_doc_open;
 
 function gui_set_cwd(dummy, cwd) {
-    if (cwd !== ".") {
+    // The check for "darwin" is a quick workaround for getting
+    // the OSX App bundle to start the pwd in the user's working directory
+    // instead of deep inside the App bundle itself.  However, this may
+    // become a problem when people try to install Purr Data "Linux"-style,
+    // that is, install it system-wide from the command line instead of
+    // in an App bundle.
+
+    // Also, there is a general problem that we're setting the pwd from
+    // two different places-- index.js in set_vars() and s_inter.c with
+    // this call.  That's unnecessarily complex and hard to follow. It
+    // should be simplified
+    if (cwd !== "." && process.platform !== "darwin") {
         pwd = cwd;
     }
 }
