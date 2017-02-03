@@ -1057,6 +1057,13 @@ function nw_create_patch_window_menus(gui, w, name) {
             pdgui.menu_saveas(name);
         }
     });
+    minit(m.file.print, {
+        enabled: true,
+        click: function (){
+            pdgui.canvas_check_geometry(name);
+            pdgui.menu_print(name);
+        }
+    });
     minit(m.file.message, {
         click: function() { pdgui.menu_send(name); }
     });

@@ -109,6 +109,8 @@
     "save_tt": "Speichere einen Pd-Patch auf der Festplatte",
     "saveas": "Speichern unter...",
     "saveas_tt": "Speichere einen Pd-Patch unter einem neuen Dateinamen",
+    "print": "Drucken...",
+    "print_tt": "Drucke einen Pd-Patch und speichere das Resultat in einer PDF-Datei",
     "message": "Nachricht...",
     "message_tt": "Sende eine Nachricht direkt an die laufende Pd-Instanz",
 

@@ -756,6 +756,59 @@ function menu_saveas(name) {
 
 exports.menu_saveas = menu_saveas;
 
+function gui_canvas_print(name, initfile, initdir) {
+    // AG: This works mostly like gui_canvas_saveas above, except that we
+    // create a pdf file and use a different input element and callback.
+    var input, chooser,
+        span = patchwin[name].window.document.querySelector("#printDialogSpan");
+    if (!fs.existsSync(initdir)) {
+        initdir = pwd;
+    }
+    // If we don't have a ".pd" file extension (e.g., "Untitled-1", add one)
+    if (initfile.slice(-3) !== ".pd") {
+        initfile += ".pd";
+    }
+    // Adding an "f" now gives .pdf which is what we want.
+    initfile += "f";
+    input = build_file_dialog_string({
+        style: "display: none;",
+        type: "file",
+        id: "printDialog",
+        nwsaveas: path.join(initdir, initfile),
+        nwworkingdir: initdir,
+        accept: ".pdf"
+    });
+    span.innerHTML = input;
+    chooser = patchwin[name].window.document.querySelector("#printDialog");
+    chooser.onchange = function() {
+        print_callback(name, this.value);
+        // reset value so that we can open the same file twice
+        this.value = null;
+        console.log("tried to print something");
+    }
+    chooser.click();
+}
+
+function print_callback(cid, file) {
+    var filename = defunkify_windows_path(file);
+    // It probably isn't possible to arrive at the callback with an
+    // empty string.  But I've only tested on Debian so far...
+    if (filename === null) {
+        return;
+    }
+    // Let nw.js do the rest (requires nw.js 0.14.6+)
+    patchwin[cid].print({ pdf_path: filename, headerFooterEnabled: false });
+    post("printed to: " + filename);
+}
+
+exports.print_callback = print_callback;
+
+function menu_print(name) {
+    pdsend(name + " menuprint");
+}
+
+exports.menu_print = menu_print;
+
 function menu_new () {
     // try not to use a global here
     untitled_directory = get_pd_opendir();
