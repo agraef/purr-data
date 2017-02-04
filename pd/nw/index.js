@@ -25,30 +25,22 @@ function have_args() {
 }
 
 function set_vars(win) {
-    var port_no, gui_dir, font_engine_sanity, pd_engine_id;
+    var port_no, font_engine_sanity, pd_engine_id;
     // If the GUI was started by Pd, our port number is going to be
     // the first argument. If the GUI is supposed to start Pd, we won't
     // have any arguments and need to set it here.
     if (have_args() && gui.App.argv.length > 1) {
         port_no = gui.App.argv[0]; // fed to us by the Pd process
-        // looks like this is the same as pwd below
-        gui_dir = gui.App.argv[3];
         // address unique to the pd_engine
         pd_engine_id = gui.App.argv[4];
     } else {
         // If we're starting Pd, this is the first port number to try. (We'll
         // increment it if that port happens to be taken.
         port_no = 5400;
-        // This is confusing and needs to be rethought. OSX app bundle needs
-        // the gui_dir to be "bin", but the actual gui files reside in
-        // "bin/../" because of the structure of the nw.js app bundle we use.
-        // Anyway, this seems to get all the "doc" links to be found...
-        gui_dir = process.platform === "darwin" ? "bin" : pwd;
     }
     pdgui.set_port(port_no);
     pdgui.set_pd_engine_id(pd_engine_id);
     pdgui.set_pwd(pwd);
-    pdgui.set_gui_dir(gui_dir);
     pdgui.set_pd_window(win);
     font_engine_sanity = pdgui.set_font_engine_sanity(win);
     pdgui.set_app_quitfn(app_quit);
