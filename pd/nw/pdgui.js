@@ -1095,19 +1095,9 @@ function external_doc_open(url) {
 exports.external_doc_open = external_doc_open;
 
 function gui_set_cwd(dummy, cwd) {
-    // The check for "darwin" is a quick workaround for getting
-    // the OSX App bundle to start the pwd in the user's working directory
-    // instead of deep inside the App bundle itself.  However, this may
-    // become a problem when people try to install Purr Data "Linux"-style,
-    // that is, install it system-wide from the command line instead of
-    // in an App bundle.
-
-    // Also, there is a general problem that we're setting the pwd from
-    // two different places-- index.js in set_vars() and s_inter.c with
-    // this call.  That's unnecessarily complex and hard to follow. It
-    // should be simplified
-    if (cwd !== "." && process.platform !== "darwin") {
+    if (cwd !== ".") {
         pwd = cwd;
+        post("working directory is " + cwd);
     }
 }
 
@@ -1442,7 +1432,7 @@ function spawn_pd(gui_path, port, file_to_open) {
     if (platform === "darwin") {
         // OSX -- this is currently tailored to work with an app bundle. It
         // hasn't been tested with a system install of pd-l2ork
-        pd_binary = path.join("bin", "pd-l2ork");
+        pd_binary = path.join(gui_path, "bin", "pd-l2ork");
         if (file_to_open) {
             flags.push("-open", file_to_open);
         }
@@ -1451,6 +1441,13 @@ function spawn_pd(gui_path, port, file_to_open) {
         flags.push("-nrt"); // for some reason realtime causes watchdog to die
     }
     post("binary is " + pd_binary);
+    // AG: It isn't nice that we change the cwd halfway through the startup
+    // here, but since the GUI launches the engine if we come here (that's how
+    // it works on the Mac), we *really* want to launch the engine in the
+    // user's home directory and not in some random subdir of the OSX app
+    // bundle. Note that to make that work, the pd-l2ork executable needs to
+    // be invoked using an absolute path (see above).
+    process.chdir(process.env.HOME);
     var child = cp.spawn(pd_binary, flags, {
         stdio: "inherit",
         detached: true

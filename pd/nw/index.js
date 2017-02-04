@@ -3,9 +3,15 @@ var gui = require("nw.gui");
 var pdgui = require("./pdgui.js");
 var pd_menus = require("./pd_menus.js");
 
-// we're using pwd in fileDialog. If you start Pd by clicking the app bundle
-// in OSX, the PWD environment variable doesn't exist. In that case we use
-// HOME instead.
+// We're using the following pwd variable as the default dir in which various
+// file dialogs open, so we need to initialize it in some way. The following
+// provides a reasonable default (use the PWD if it's available, otherwise
+// fall back to HOME, or HOMEPATH on Windows). This will be updated later by
+// the engine through pdgui.gui_set_cwd() once the engine has completed its
+// startup.
+
+// If you start Pd by clicking the app bundle in OSX, the PWD environment
+// variable doesn't exist. In that case we use HOME instead.
 var pwd = process.env.PWD !== undefined ? process.env.PWD : process.env.HOME;
 
 // Windows doesn't have either of the environment variables above, so we
@@ -35,7 +41,7 @@ function set_vars(win) {
         pd_engine_id = gui.App.argv[4];
     } else {
         // If we're starting Pd, this is the first port number to try. (We'll
-        // increment it if that port happens to be taken.
+        // increment it if that port happens to be taken.)
         port_no = 5400;
     }
     pdgui.set_port(port_no);
@@ -89,8 +95,7 @@ function connect() {
         pdgui.connect_as_client();
     } else {
         // create a tcp server, then spawn Pd with "-guiport" flag and port
-        gui_path = window.location.pathname;
-        gui_path = gui_path.substr(0, gui_path.lastIndexOf('/'));
+        gui_path = process.cwd();
         // On OSX, if the user double-clicks a pd file we get a single
         // argument prefixed with "file://". If so, we parse it and
         // feed it to the Pd instance as an argument to the "-open" flag
@@ -283,7 +288,7 @@ function add_events() {
                 // Selecting multiple files and clicking "Open" will trigger
                 // a separate "open" event for each file, so luckily we don't
                 // have to parse them.
-                    pdgui.menu_open(decodeURI(argv_string.slice(7)));
+                pdgui.menu_open(decodeURI(argv_string.slice(7)));
         } else {
                 // Otherwise we assume that the Pd process tried to
                 // open the GUI, supplying us with a port number and
