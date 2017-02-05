@@ -99,6 +99,12 @@ function create_menu(gui, type) {
             modifiers: cmd_or_ctrl + "+shift",
             tooltip: l("menu.saveas_tt")
         }));
+        file_menu.append(m.file.print = new gui.MenuItem({
+            label: l("menu.print"),
+            key: "p",
+            modifiers: cmd_or_ctrl + "+shift",
+            tooltip: l("menu.print_tt")
+        }));
     }
     if (pdgui.k12_mode == 0) {
         file_menu.append(new gui.MenuItem({ type: "separator" }));

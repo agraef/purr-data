@@ -109,6 +109,8 @@
     "save_tt": "Save a Pd patch to disk",
     "saveas": "Save as...",
     "saveas_tt": "Save a Pd patch by manually choosing a filename",
+    "print": "Print...",
+    "print_tt": "Print a Pd patch, saving the result to a PDF file",
     "message": "Message...",
     "message_tt": "Send a message directly to the running Pd instance",
 

@@ -899,6 +899,12 @@ static void canvas_menusave(t_canvas *x, t_floatarg fdestroy)
     else canvas_menusaveas(x2, fdestroy);
 }
 
+static void canvas_menuprint(t_canvas *x)
+{
+    t_canvas *x2 = canvas_getrootfor(x);
+    gui_vmess("gui_canvas_print", "xss", x, x->gl_name->s_name, canvas_getdir(x2)->s_name);
+}
+
 void g_readwrite_setup(void)
 {
     class_addmethod(canvas_class, (t_method)glist_write,
@@ -916,6 +922,8 @@ void g_readwrite_setup(void)
         gensym("menusave"), A_DEFFLOAT, 0);
     class_addmethod(canvas_class, (t_method)canvas_menusaveas,
         gensym("menusaveas"), A_DEFFLOAT, 0);
+    class_addmethod(canvas_class, (t_method)canvas_menuprint,
+        gensym("menuprint"), 0);
 }
 
 void canvas_readwrite_for_class(t_class *c)
@@ -924,4 +932,6 @@ void canvas_readwrite_for_class(t_class *c)
         gensym("menusave"), 0);
     class_addmethod(c, (t_method)canvas_menusaveas,
         gensym("menusaveas"), 0);
+    class_addmethod(c, (t_method)canvas_menuprint,
+        gensym("menuprint"), 0);
 }
