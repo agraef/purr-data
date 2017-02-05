@@ -385,7 +385,8 @@ static void image_open(t_image* x, t_symbol *s, t_int argc, t_atom *argv)
     x->x_fname = get_filename(argc, argv);
     x->x_img_width = 0;
     x->x_img_height = 0;
-    image_trytoopen(x);
+    image_vis((t_gobj *)x, x->x_glist, 0);
+    image_vis((t_gobj *)x, x->x_glist, 1);
 }
 
 static void image_imagesize_callback(t_image *x, t_float w, t_float h) {
