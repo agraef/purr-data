@@ -1,7 +1,6 @@
 "use strict";
 
 var pwd;
-var gui_dir;
 var lib_dir;
 var pd_engine_id;
 
@@ -26,15 +25,6 @@ exports.set_pd_engine_id = function (id) {
 }
 
 exports.defunkify_windows_path = defunkify_windows_path;
-
-exports.set_gui_dir = function(dir_string) {
-    gui_dir = path.normalize(path.join(dir_string, ".."));
-    gui_dir = defunkify_windows_path(gui_dir);
-}
-
-exports.get_gui_dir = function() {
-    return gui_dir;
-}
 
 function gui_set_lib_dir(dir) {
     lib_dir = dir;

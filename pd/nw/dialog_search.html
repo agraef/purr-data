@@ -516,6 +516,7 @@ function add_events() {
 }
 
 function register_window_id(id, attrs) {
+    var doc_path = path.join(pdgui.get_lib_dir(), "doc");
     translate_form();
     // Translate the placeholder for the search input:
     document.getElementById("search_text").placeholder =
@@ -526,7 +527,7 @@ function register_window_id(id, attrs) {
     document.getElementById("results").textContent = l("search.building_index");
     document.getElementById("search_text").disabled = true;
     document.getElementById("file_browser").setAttribute("nwworkingdir",
-        pdgui.get_gui_dir() + "/doc"); // Probably need a doc getter in pdgui
+        doc_path); // Probably need a doc getter in pdgui
     build_index();
 }
 
