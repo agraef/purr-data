@@ -137,7 +137,17 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
     int k1=x->x_led_size+1, k2=IEM_VU_STEPS+1, k3=k1/2;
     int led_col, yyy, i, k4=y1-k3;
     char cbuf[8];
+
+    /* vumeter is a special case because the base doesn't actually
+       cover the entire bbox returned by vu_getrect.  Instead it is
+       the bbox minus the width of the scale.  That means the call
+       below is going to draw a base rectangle that is too wide... */
     iemgui_base_draw_new(&x->x_gui);
+
+    /* ...as a quick and dirty bugfix, we just make another call
+       and send the correct size */
+    gui_vmess("gui_vumeter_border_size", "xxii",
+        canvas, x, x->x_gui.x_w+2, x->x_gui.x_h+4);
 
     for(i = 1; i <= IEM_VU_STEPS+1; i++)
     {
@@ -185,6 +195,8 @@ static void vu_draw_move(t_vu *x, t_glist *glist)
           end=x1+x->x_gui.x_w+4;
     int k1=x->x_led_size+1, k2=IEM_VU_STEPS+1, k3=k1/2;
     int yyy, i, k4=y1-k3;
+
+    iemgui_base_draw_move(&x->x_gui);
 
     gui_vmess("gui_vumeter_border_size", "xxii",
         canvas, x, x->x_gui.x_w+2, x->x_gui.x_h+4);
