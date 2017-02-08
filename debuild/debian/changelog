@@ -1,5 +1,5 @@
-purr-data (20160623+git2729+0e83b4c-1) xenial; urgency=low
+purr-data (2.0+git3322+50e3805-1) xenial; urgency=low
 
   * Build from latest upstream source.
 
- -- Albert Graef <aggraef@gmail.com>  Fri, 24 Jun 2016 05:57:05 +0200
+ -- Albert Graef <aggraef@gmail.com>  Wed, 08 Feb 2017 10:33:38 +0100
