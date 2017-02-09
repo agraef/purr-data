@@ -34,7 +34,7 @@
 
 # The Debian version gets derived from the date and serial number of the last
 # commit. You can print it with 'make debversion'.
-debversion = $(shell git log -1 --format=%cd --date=short | sed -e 's/-//g')+git$(shell git rev-list --count HEAD)+$(shell git rev-parse --short HEAD)
+debversion = $(shell grep PD_L2ORK_VERSION ../pd/src/m_pd.h | sed 's|^.define *PD_L2ORK_VERSION *"\(.*\)".*|\1|')+git$(shell git rev-list --count HEAD)+$(shell git rev-parse --short HEAD)
 # Debian revision number of the package.
 debrevision = 1
 # Source tarball and folder.
