@@ -1,3 +1,31 @@
+New Pd-l2ork TODO
+-----------------
+
+[x] Remove all libs that _obviously_ are not included in LIB_TARGETS of externals/Makefile, which
+    don't get built from tar_em_up.sh, and which aren't leveraging Flext
+[ ] Figure out flatspace dependencies and whether we want to support any of them going forward (probably not)
+[ ] Get rid of Flext-based libs that aren't being built
+[ ] Get rid of Flext
+[ ] Check duplicates like
+    * externals/signal and pd/extra/etc.
+    * externals/loaders and externals/import and pd/src/import.c
+    * io and whatever else
+    * grh and grill (and perhaps both can be removed)
+    * pdp_opencv and pix_opencv and whatever is in Gem that might be another dup
+    * check if footils is being used
+    figure out which are currently getting build and get rid of the other ones
+[ ] Check interesting remaining libs like
+    * mmonoplayer
+    * various stuff in tb
+    * rhythm _estimator
+    * supercollider
+    * dfx
+    * deprecated
+    See if we want to keep/maintain any of it and whether it even compiles
+
+Old Pd-l2ork TODO
+-----------------
+
 Diff status between pd-l2ork externals source tree and main community pd svn
 AS OF November 14, 2014
 

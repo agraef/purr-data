@@ -1,8 +1,0 @@
-#N canvas 153 160 450 300 10;
-#X text 27 21 inlet0: routed to each instance based on instance number
-;
-#X text 27 41 inlet1: connected directly to each instance;
-#X text 27 101 outlet1: connected directly to each instance;
-#X obj 62 163 instances 50 instances-template 1 2 3 4 5 6 7;
-#X text 27 81 outlet0: connected directly to each instance;
-#X text 54 223 up to 7 symbol or float arguments can be used;

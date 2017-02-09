@@ -622,36 +622,6 @@ fluid_clean:
 	make -C $(externals_src)/fluid~ clean
 
 #------------------------------------------------------------------------------#
-# FRANKENSTEIN
-FRANKENSTEIN_NAME=frankenstein
-# exclude test.c since it is not used
-FRANKENSTEIN_OBJECTS := $(wildcard $(externals_src)/frankenstein/*.c)
-frankenstein: $(FRANKENSTEIN_OBJECTS:.c=.$(EXTENSION))
-
-frankenstein_install: frankenstein
-	install -d $(DESTDIR)$(objectsdir)/$(FRANKENSTEIN_NAME)
-	$(scripts_src)/generate-libdir-metafile.sh $(DESTDIR)$(objectsdir) $(FRANKENSTEIN_NAME) \
-		--author "" \
-		--description "" \
-		--license "" \
-		--version ""
-	install -p $(FRANKENSTEIN_OBJECTS:.c=.$(EXTENSION)) $(DESTDIR)$(objectsdir)/$(FRANKENSTEIN_NAME)
-	install -d $(DESTDIR)$(manualsdir)/$(FRANKENSTEIN_NAME)
-	install -p $(externals_src)/frankenstein/doc/*.* \
-		$(DESTDIR)$(manualsdir)/$(FRANKENSTEIN_NAME)
-	install -d $(DESTDIR)$(examplesdir)/$(FRANKENSTEIN_NAME)
-	install -p $(externals_src)/frankenstein/patches/*.* \
-		$(DESTDIR)$(examplesdir)/$(FRANKENSTEIN_NAME)
-
-frankenstein_clean:
-	-rm -f -- $(externals_src)/frankenstein/*.$(EXTENSION)
-	-rm -f -- $(externals_src)/frankenstein/*.o
-	-rm -f -- $(externals_src)/frankenstein/*.bak
-	-rm -f -- $(externals_src)/frankenstein/*.*~
-
-
-
-#------------------------------------------------------------------------------#
 # FREEVERB
 freeverb:
 	make -C $(externals_src)/freeverb~ PD_PATH=$(pd_src) CFLAGS="$(CFLAGS)"
