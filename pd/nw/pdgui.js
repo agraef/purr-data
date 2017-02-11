@@ -735,7 +735,7 @@ function saveas_callback(cid, file, close_flag) {
     set_pd_opendir(directory);
     // update the recent files list
     var norm_path = path.normalize(directory);
-    pdsend("pd add-recent-file", enquote(path.join(norm_path, basename)));
+    pdsend("pd add-recent-file", enquote(defunkify_windows_path(path.join(norm_path, basename))));
 }
 
 exports.saveas_callback = saveas_callback;
@@ -1033,7 +1033,7 @@ function process_file(file, do_open) {
         //::pd_guiprefs::update_recentfiles "$filename" 1
         // update the recent files list
         var norm_path = path.normalize(directory);
-        pdsend("pd add-recent-file", enquote(path.join(norm_path, basename)));
+        pdsend("pd add-recent-file", enquote(defunkify_windows_path(path.join(norm_path, basename))));
     }
 }
 
