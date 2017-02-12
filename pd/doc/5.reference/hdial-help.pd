@@ -1,4 +1,4 @@
-#N canvas 106 314 612 281 10;
+#N canvas 433 45 612 281 10;
 #X obj 1 1 cnv 8 100 60 empty empty hdial=hdl 20 20 1 18 -262144 -1109
 0;
 #X text 16 213 (c) musil@iem.kug.ac.at;
@@ -14,15 +14,15 @@
 #X obj 44 100 hdl 25 1 1 10 foo8_snd foo8_rcv hdial_0_9 156 -8 192
 10 -99865 -262144 -260818 2;
 #X msg 44 142 \$1;
-#X floatatom 44 164 4 0 0;
+#X floatatom 44 164 4 0 0 0 - - -, f 4;
 #X obj 44 186 bng 15 250 50 0 empty empty empty 8 -8 0 10 -262144 -1
 -1;
 #X obj 89 161 tgl 12 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
 1;
 #X obj 89 140 route 0 1 2 3 4 5 6 7 8 9;
 #X msg 176 64 set \$1;
-#X floatatom 176 43 4 0 9;
-#X floatatom 44 54 4 0 9;
+#X floatatom 176 43 4 0 9 0 - - -, f 4;
+#X floatatom 44 54 4 0 9 0 - - -, f 4;
 #X msg 91 41 7 0 -5.44;
 #X msg 95 63 3 3 4.55;
 #X obj 106 161 tgl 12 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
@@ -44,31 +44,31 @@
 #X obj 242 161 tgl 12 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
 1;
 #X obj 82 178 print;
-#X floatatom 380 198 4 0 0;
+#X floatatom 380 198 4 0 0 0 - - -, f 4;
 #X msg 380 172 \$1;
 #X msg 355 103 set \$1;
-#X floatatom 355 82 4 0 9;
+#X floatatom 355 82 4 0 9 0 - - -, f 4;
 #X text 128 178 UP- \, DOWN- \, LEFT- or RIGHT-key;
 #X text 127 189 for moving selected gui-objects;
 #N canvas 226 227 699 530 edit 0;
 #X obj 42 198 f;
 #X msg 20 177 bang;
-#X floatatom 58 176 3 63 156;
-#X floatatom 93 198 3 -20 37;
+#X floatatom 58 176 3 63 156 0 - - -, f 3;
+#X floatatom 93 198 3 -20 37 0 - - -, f 3;
 #X obj 42 221 pack 0 0;
 #X text 120 198 y-label;
 #X text 86 176 x-label;
-#X floatatom 270 187 3 8 50;
+#X floatatom 270 187 3 8 50 0 - - -, f 3;
 #X text 297 187 size;
 #X obj 286 293 f;
 #X msg 264 272 bang;
-#X floatatom 302 271 3 -10 10;
-#X floatatom 337 293 3 -10 10;
+#X floatatom 302 271 3 -10 10 0 - - -, f 3;
+#X floatatom 337 293 3 -10 10 0 - - -, f 3;
 #X obj 286 316 pack 0 0;
 #X obj 300 412 f;
 #X msg 278 391 bang;
-#X floatatom 316 390 3 20 60;
-#X floatatom 351 412 3 100 200;
+#X floatatom 316 390 3 20 60 0 - - -, f 3;
+#X floatatom 351 412 3 100 200 0 - - -, f 3;
 #X obj 300 435 pack 0 0;
 #X text 330 271 x-delta;
 #X text 364 293 y-delta;
@@ -76,14 +76,14 @@
 #X text 378 412 y-position;
 #X obj 62 313 f;
 #X msg 40 292 bang;
-#X floatatom 78 291 3 0 2;
-#X floatatom 113 313 3 4 36;
+#X floatatom 78 291 3 0 2 0 - - -, f 3;
+#X floatatom 113 313 3 4 36 0 - - -, f 3;
 #X obj 62 336 pack 0 0;
 #X text 106 291 font;
 #X text 142 313 height;
 #X text 504 293 no init;
 #X text 475 348 init value on loadbang;
-#X floatatom 482 228 5 2 20;
+#X floatatom 482 228 5 2 20 0 - - -, f 5;
 #X msg 47 125 \; foo8_rcv color \$1 \$2 \$3;
 #X msg 42 246 \; foo8_rcv label_pos \$1 \$2;
 #X msg 62 361 \; foo8_rcv label_font \$1 \$2;
@@ -105,9 +105,9 @@
 #X obj 47 104 pack 0 0 0;
 #X obj 47 76 f;
 #X msg 24 28 bang;
-#X floatatom 63 26 3 0 29;
-#X floatatom 79 46 3 0 29;
-#X floatatom 112 62 3 0 29;
+#X floatatom 63 26 3 0 29 0 - - -, f 3;
+#X floatatom 79 46 3 0 29 0 - - -, f 3;
+#X floatatom 112 62 3 0 29 0 - - -, f 3;
 #X text 91 26 background;
 #X text 106 46 front-color;
 #X text 140 63 label-color;
@@ -200,9 +200,9 @@
 #X connect 36 2 29 0;
 #X connect 36 3 35 0;
 #X restore 285 86 pd RGB_____________;
-#X floatatom 327 55 3 0 255;
-#X floatatom 370 55 3 0 255;
-#X floatatom 413 56 3 0 255;
+#X floatatom 327 55 3 0 255 0 - - -, f 3;
+#X floatatom 370 55 3 0 255 0 - - -, f 3;
+#X floatatom 413 56 3 0 255 0 - - -, f 3;
 #X text 34 0 preset-colors;
 #X text 296 -3 RGB-colors;
 #X text 327 37 red;
@@ -254,6 +254,7 @@
 #X text 183 11 gui-hdial:;
 #X text 33 238 graz \, austria 2002;
 #X text 251 232 updated for Pd version 0.35;
+#X text 279 254 KEYWORDS deprecated;
 #X connect 6 0 9 0;
 #X connect 8 0 5 0;
 #X connect 8 0 31 0;

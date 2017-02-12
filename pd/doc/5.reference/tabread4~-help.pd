@@ -75,8 +75,8 @@ interpolation is meaningful.;
 ;
 #X text 98 353 set;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-array 10 float 0 black black;
-#X coords 0 1 10 -1 160 100 1;
+#X array \$0-array 10 float 0;
+#X coords 0 1 9 -1 160 100 1;
 #X restore 289 141 graph;
 #X text 98 425 signal;
 #X obj 40 217 loadbang;
@@ -96,7 +96,7 @@ or an error message will appear in the console.;
 #X obj 23 125 s \$0-array;
 #X connect 0 0 5 0;
 #X connect 2 0 0 0;
-#X restore 289 269 pd init;
+#X restore 288 270 pd init;
 #X text 168 353 - the "set" message \, followed by the name of an array
 \, permits you to switch between arrays (e.g. \, "set another_array").
 ;

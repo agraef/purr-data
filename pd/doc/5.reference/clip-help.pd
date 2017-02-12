@@ -1,11 +1,11 @@
-#N canvas 398 77 555 619 10;
+#N canvas 424 40 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header clip 3 12 0 18 -204280
 -1 0;
 #X obj 0 297 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 563 393 378 279 META 0;
+#N canvas 478 290 494 344 META 0;
 #X text 12 145 LIBRARY internal;
 #X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -21,7 +21,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 12 85 INLET_1 float;
 #X text 12 105 INLET_2 float;
 #X text 12 205 RELEASE_DATE 2009;
-#X restore 502 598 pd META;
+#X restore 500 597 pd META;
 #X obj 0 415 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
 13 -228856 -1 0;
 #X obj 0 458 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
@@ -30,14 +30,14 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 0 13 -228856 -1 0;
 #X obj 78 306 cnv 17 3 45 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#N canvas 176 569 428 102 Related_objects 0;
-#X obj 202 42 int;
-#X obj 233 42 f;
+#N canvas 207 532 428 102 Related_objects 0;
+#X obj 234 43 int;
+#X obj 274 42 f;
 #X obj 22 42 min;
-#X obj 53 42 max;
-#X obj 84 42 clip~;
-#X obj 128 42 min~;
-#X obj 165 42 max~;
+#X obj 65 42 max;
+#X obj 105 42 clip~;
+#X obj 149 42 min~;
+#X obj 191 42 max~;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 7 1 [clip] Related Objects;
@@ -50,16 +50,16 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 78 387 cnv 17 3 17 empty \$0-pddp.cnv.let.2 2 5 9 0 16 -228856
 -162280 0;
 #X text 98 386 float;
-#X obj 511 5 clip;
+#X obj 504 11 clip;
 #X obj 306 179 clip -50 50;
-#X floatatom 306 205 5 0 0 0 - - -;
-#X floatatom 306 141 5 0 0 0 - - -;
+#X floatatom 306 205 5 0 0 0 - - -, f 5;
+#X floatatom 306 141 5 0 0 0 - - -, f 5;
 #X text 383 177 creation arguments;
 #X obj 128 179 clip;
-#X floatatom 138 140 5 0 0 0 - - -;
-#X floatatom 181 140 5 0 0 0 - - -;
-#X floatatom 224 140 5 0 0 0 - - -;
-#X floatatom 128 205 5 0 0 0 - - -;
+#X floatatom 138 140 5 0 0 0 - - -, f 5;
+#X floatatom 181 140 5 0 0 0 - - -, f 5;
+#X floatatom 224 140 5 0 0 0 - - -, f 5;
+#X floatatom 128 205 5 0 0 0 - - -, f 5;
 #X text 171 179 no arguments;
 #X text 205 108 list;
 #X msg 128 108 42 100 500;
@@ -69,13 +69,13 @@ low and high values stored in the object.;
 #X text 98 424 float;
 #N canvas 102 355 428 206 clip_vs_min_and_max 0;
 #X text 10 70 Consider the following:;
-#X floatatom 50 96 5 0 0 0 - - -;
-#X floatatom 50 177 5 0 0 0 - - -;
+#X floatatom 50 96 5 0 0 0 - - -, f 5;
+#X floatatom 50 177 5 0 0 0 - - -, f 5;
 #X obj 50 151 min 50;
 #X obj 50 125 max -50;
 #X text 137 136 same as;
 #X obj 257 148 clip -50 50;
-#X floatatom 257 177 5 0 0 0 - - -;
+#X floatatom 257 177 5 0 0 0 - - -, f 5;
 #X text 10 37 [clip] is a tool which combines the functionality of
 [min] and [max] into a single object.;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
@@ -94,12 +94,12 @@ inlet) is the high extreme. However \, strange behaviour should be
 expected if you mix these arguments up.;
 #X obj 43 155 clip -50 50;
 #X obj 169 149 clip 72 -104;
-#X floatatom 43 122 5 0 0 0 - - -;
-#X floatatom 43 184 5 0 0 0 - - -;
-#X floatatom 169 181 5 0 0 0 - - -;
+#X floatatom 43 122 5 0 0 0 - - -, f 5;
+#X floatatom 43 184 5 0 0 0 - - -, f 5;
+#X floatatom 169 181 5 0 0 0 - - -, f 5;
 #X text 174 104 Numbers below 72 are clipped to 72;
 #X text 174 124 Numbers above -104 are clipped to -104;
-#X floatatom 311 258 5 0 0 0 - - -;
+#X floatatom 311 258 5 0 0 0 - - -, f 5;
 #X obj 311 214 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
 1;
 #X obj 311 236 clip 1 -1024;

@@ -1,86 +1,90 @@
-#N canvas 334 144 554 442 10;
-#X obj -1 420 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
-14 -233017 -33289 0;
-#X obj -1 258 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
--228856 -1 0;
-#N canvas 440 331 436 231 META 0;
-#X text 56 126 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 56 6 LICENSE SIBSD;
-#X text 56 106 AUTHOR Miller Puckette;
-#X text 56 146 RELEASE_DATE 1997;
-#X text 56 -14 KEYWORDS signal constrain clip pass filter range;
-#X text 56 26 DESCRIPTION constrains a signal within a certain range
-;
-#X text 56 46 INLET_0 signal;
-#X text 56 66 OUTLET_0 signal;
-#X text 56 166 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
-for Pd-l2ork version 2013.05.28;
-#X text 56 86 LIBRARY internal;
-#X restore 500 422 pd META;
-#X obj -1 301 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
-13 -228856 -1 0;
-#X obj -1 343 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
-0 13 -228856 -1 0;
-#N canvas 228 453 427 109 Related_objects 0;
-#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
-14 -204280 -1 0;
-#X text 6 1 Related Objects;
-#X obj 50 29 clip;
-#X obj 8 29 Clip~;
-#X restore 209 422 pd Related_objects;
-#X obj 77 313 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
--162280 0;
-#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header clip~ 3 12 0 18
+#N canvas 425 36 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header clip~ 3 12 0 18
 -204280 -1 0;
-#X text 86 353 1) float;
-#X text 87 374 2) float;
-#X text 11 23 Constrains a signal within a certain range;
-#X obj 67 223 tabwrite~ \$0-a;
-#N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-a 100 float 3;
-#A 0 0.169761 0.183715 0.197062 0.209759 0.221755 0.233017 0.243509
-0.253192 0.262032 0.270007 0.277088 0.283244 0.288464 0.292732 0.296021
-0.298331 0.299656 0.299982 0.299313 0.297655 0.295009 0.291381 0.286791
-0.281251 0.274772 0.267385 0.259116 0.24998 0.240017 0.229262 0.217743
-0.205501 0.192581 0.179021 0.164865 0.150165 0.134968 0.11932 0.103277
-0.086894 0.0702202 0.0533143 0.0362322 0.0190294 0.00176354 -0.0155081
--0.0327286 -0.0498398 -0.0667862 -0.0835123 -0.099959 -0.116075 -0.131808
--0.147102 -0.161907 -0.176178 -0.189864 -0.202918 -0.215301 -0.226972
--0.237885 -0.248012 -0.257321 -0.265768 -0.273337 -0.280004 -0.285736
--0.290522 -0.294348 -0.297196 -0.299055 -0.299926 -0.299804 -0.298682
--0.296573 -0.293485 -0.289414 -0.284388 -0.278422 -0.271528 -0.263733
--0.255068 -0.245555 -0.235225 -0.224118 -0.21227 -0.199712 -0.186495
--0.172661 -0.158251 -0.143317 -0.12791 -0.112077 -0.0958714 -0.0793497
--0.0625643 -0.0455707 -0.0284267 -0.0111884 0.00608727;
-#X coords 0 1 99 -1 100 75 1;
-#X restore 378 114 graph;
-#X obj 83 200 metro 150;
-#X obj 83 180 tgl 15 1 empty empty empty 17 7 0 10 -262144 -1 -1 1
-1;
-#X obj 67 75 osc~ 440;
-#X floatatom 136 76 5 0 0 0 - - -;
-#X obj 67 130 *~ 0;
-#X obj 136 106 / 10;
-#X text 105 271 signal;
-#X text 179 271 - singal to pass through range filter;
-#X text 105 312 signal;
-#X text 179 312 - outputs part of signal inside range;
-#X text 179 352 - sets minimun number of range \, (default is 0);
-#X text 179 374 - sets maximum number of range \, (default is 0);
-#X obj 483 49 pddp/dsp;
-#X obj 77 271 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
--162280 0;
-#X text 168 67 click and drag tochange signal;
-#X text 134 149 Optional arguments set the range. Default is 0 \,
-0;
-#X obj 7 422 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 0 357 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 481 286 494 344 META 0;
+#X text 12 145 LIBRARY internal;
+#X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 165 AUTHOR Miller Puckette;
+#X text 12 225 HELP_PATCH_AUTHORS Updated for Pd version 0.33. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS signal filter;
+#X text 12 45 DESCRIPTION restrict a signal to lie between two limits
 ;
-#X obj 510 5 clip~;
-#X obj 67 156 clip~ -1 1;
-#X connect 13 0 11 0;
+#X text 12 125 OUTLET_0 signal;
+#X text 12 65 INLET_0 signal;
+#X text 12 85 INLET_1 float;
+#X text 12 105 INLET_2 float;
+#X text 12 205 RELEASE_DATE 2009;
+#X restore 500 597 pd META;
+#X obj 0 449 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 486 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X obj 78 366 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#N canvas 208 523 428 108 Related_objects 0;
+#X obj 23 36 min~;
+#X obj 70 36 max~;
+#X obj 118 36 clip;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [clip~] Related Objects;
+#X restore 101 597 pd Related_objects;
+#X text 98 365 signal;
+#X obj 78 458 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 458 signal;
+#X obj 502 12 clip~;
+#X obj 41 177 clip~ -0.5 0.5;
+#X obj 41 117 osc~ 1000;
+#X obj 57 226 metro 500;
+#X text 209 149 inlets to reset clip range;
+#X floatatom 101 149 4 0 0 0 - - -, f 4;
+#X floatatom 162 150 4 0 0 0 - - -, f 4;
+#X text 176 177 creation arguments initialize clip range;
+#X text 183 250 <- graph the output;
+#X obj 78 396 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 395 float;
+#X obj 78 421 cnv 17 3 17 empty \$0-pddp.cnv.let.2 2 5 9 0 16 -228856
+-162280 0;
+#X text 98 420 float;
+#X obj 57 203 loadbang;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0-array 100 float 0;
+#X coords 0 1 100 -1 200 100 1 0 0;
+#X restore 343 238 graph;
+#X text 11 23 restrict a signal to lie between two limits;
+#X text 168 365 - an incoming signal at the left inlet will be clipped
+to lie between the two limits.;
+#X text 168 458 - outputs the clipped signal.;
+#X text 168 505 - (optional) initial minimum value beyond which to
+clip the signal.;
+#X text 168 535 - (optional) initial maximum value beyond which to
+clip the signal.;
+#X text 80 505 1) float;
+#X text 80 535 2) float;
+#X text 81 67 The [clip~] object passes its signal input to its output
+\, clipping it to lie between two limits.;
+#X text 168 395 - minimum value below which the incoming signal is
+clipped.;
+#X text 168 420 - maximum value above which the incoming signal is
+clipped.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 476 52 pddp/dsp;
+#X obj 41 250 tabwrite~ \$0-array;
+#X connect 13 0 39 0;
 #X connect 14 0 13 0;
-#X connect 15 0 17 0;
-#X connect 16 0 18 0;
-#X connect 17 0 31 0;
-#X connect 18 0 17 1;
-#X connect 31 0 11 0;
+#X connect 15 0 39 0;
+#X connect 17 0 13 1;
+#X connect 18 0 13 2;
+#X connect 25 0 15 0;

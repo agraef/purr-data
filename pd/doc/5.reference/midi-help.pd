@@ -1,129 +1,100 @@
-#N canvas 68 50 876 553 12;
-#X floatatom 318 379 0 0 0;
-#X floatatom 282 468 0 0 0;
-#X floatatom 200 469 0 0 0;
-#X text 96 330 off;
-#X floatatom 52 383 0 0 0;
-#X floatatom 70 134 0 0 0;
-#X obj 34 108 notein;
-#X floatatom 34 134 0 0 0;
-#X obj 52 488 noteout;
-#X obj 52 462 makenote 64 250;
-#X obj 52 409 metro 500;
-#X msg 52 356 1;
-#X msg 84 356 0;
-#X text 52 333 on;
-#X msg 52 436 60;
-#X obj 200 496 pgmout;
-#X obj 282 494 bendout;
-#X floatatom 416 379 0 0 0;
-#X floatatom 197 136 0 0 0;
-#X floatatom 145 136 0 0 0;
-#X text 41 79 omni;
-#X floatatom 106 134 0 0 0;
-#X obj 145 109 notein 1;
-#X text 145 85 channel 1;
-#X text 194 17 MIDI I/O objects;
-#X text 85 54 notes;
-#X text 334 47 control change;
-#X text 264 69 everything;
-#X floatatom 309 137 0 0 0;
-#X floatatom 271 137 0 0 0;
-#X floatatom 347 136 0 0 0;
-#X obj 271 110 ctlin;
-#X floatatom 440 138 0 0 0;
-#X floatatom 396 138 0 0 0;
-#X obj 396 111 ctlin 7;
-#X text 364 71 specific controller number;
-#X text 410 88 omni;
-#X text 496 89 channel 1;
-#X floatatom 493 140 0 0 0;
-#X obj 493 114 ctlin 7 1;
-#X obj 61 221 pgmin;
-#X floatatom 97 248 0 0 0;
-#X floatatom 61 248 0 0 0;
-#X floatatom 197 250 0 0 0;
-#X floatatom 161 250 0 0 0;
-#X floatatom 307 253 0 0 0;
-#X floatatom 272 253 0 0 0;
-#X floatatom 382 255 0 0 0;
-#X floatatom 343 253 0 0 0;
-#X floatatom 420 256 0 0 0;
-#X obj 161 222 bendin;
-#X obj 272 226 touchin;
-#X obj 343 227 polytouchin;
-#X text 49 167 these can also take an optional channel number as argument but by default are omni:;
-#X text 32 197 program change;
-#X text 155 198 pitch bend;
-#X text 271 203 channel and poly aftertouch;
-#X floatatom 191 380 0 0 0;
-#X floatatom 224 380 0 0 0;
-#X floatatom 260 382 0 0 0;
-#X obj 191 407 ctlout;
-#X obj 318 406 ctlout 7;
-#X text 192 349 control out;
-#X text 314 353 control 7;
-#X text 409 354 control 7 \, channel 4;
-#X obj 416 406 ctlout 7 4;
-#X text 101 277 outputs work similarly. They all take an optional channel as creation argument \, and ctlin takes a control number and a channel. You get inlets to change them in any case. IF you specify no channel \, it's channel 1;
-#X floatatom 355 467 0 0 0;
-#X floatatom 440 466 0 0 0;
-#X obj 355 493 touchout;
-#X obj 440 492 polytouchout;
-#X floatatom 479 467 0 0 0;
-#X floatatom 520 467 0 0 0;
-#X obj 625 218 midiin;
-#X floatatom 625 249 0 0 0;
-#X floatatom 656 249 0 0 0;
-#X floatatom 695 249 0 0 0;
-#X floatatom 726 250 0 0 0;
-#X text 590 155 These two are always omni and;
-#X text 590 174 output the port number instead;
-#X text 594 192 of the channel:;
-#X obj 697 218 sysexin;
-#X obj 623 472 midiout;
-#X text 571 413 use this to output raw MIDI;
-#X text 566 433 (the second inlet is the port;
-#X text 569 451 number.);
-#X text 625 514 updated for Pd release 0.33;
-#X connect 0 0 61 0;
-#X connect 1 0 16 0;
-#X connect 2 0 15 0;
-#X connect 4 0 10 0;
-#X connect 6 0 7 0;
-#X connect 6 1 5 0;
-#X connect 6 2 21 0;
-#X connect 9 0 8 0;
-#X connect 9 1 8 1;
-#X connect 10 0 14 0;
-#X connect 11 0 4 0;
-#X connect 12 0 4 0;
-#X connect 14 0 9 0;
-#X connect 17 0 65 0;
-#X connect 22 0 19 0;
-#X connect 22 1 18 0;
-#X connect 31 0 29 0;
-#X connect 31 1 28 0;
-#X connect 31 2 30 0;
-#X connect 34 0 33 0;
-#X connect 34 1 32 0;
-#X connect 39 0 38 0;
-#X connect 40 0 42 0;
-#X connect 40 1 41 0;
-#X connect 50 0 44 0;
-#X connect 50 1 43 0;
-#X connect 51 0 46 0;
-#X connect 51 1 45 0;
-#X connect 52 0 48 0;
-#X connect 52 1 47 0;
-#X connect 52 2 49 0;
-#X connect 57 0 60 0;
-#X connect 58 0 60 1;
-#X connect 59 0 60 2;
-#X connect 67 0 69 0;
-#X connect 68 0 70 0;
-#X connect 71 0 70 1;
-#X connect 72 0 70 2;
-#X connect 73 0 74 0;
-#X connect 73 1 75 0;
-#X connect 81 0 76 0;
+#N canvas 430 38 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header (MIDI) 3 12 0 18
+-204280 -1 0;
+#X obj 0 288 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 489 291 494 344 META 0;
+#X text 12 105 LIBRARY internal;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 65 LICENSE SIBSD;
+#X text 12 125 AUTHOR Miller Puckette;
+#X text 12 185 HELP_PATCH_AUTHORS Updated for Pd v0.41. Revised by
+Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
+;
+#X text 12 45 KEYWORDS control MIDI;
+#X text 12 85 DESCRIPTION MIDI input/output objects;
+#X text 12 5 NAME bendin ctlin midiin notein pgmin polytouchin sysexin
+touchin bendout ctlout midiout noteout pgmout polytouchout touchout
+;
+#X text 12 165 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 495 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 538 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X text 98 542 (none);
+#N canvas 217 519 428 109 Related_objects 0;
+#X obj 62 43 makenote;
+#X obj 22 43 poly;
+#X obj 123 43 list;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 (MIDI) Related Objects;
+#X restore 102 598 pd Related_objects;
+#X obj 79 297 cnv 17 3 130 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 296 float;
+#X text 98 353 list;
+#X text 98 503 float;
+#X obj 79 504 cnv 17 3 30 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 79 440 cnv 17 3 45 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 439 float;
+#X text 98 383 flush;
+#X text 98 413 clear;
+#X text 168 383 - output all values one by one \, in the order they
+were received \, and clear the collection.;
+#X text 168 503 - upon sending the "flush" message to the left inlet
+\, [bag] will output each value in the order it was received.;
+#X text 168 353 - a (value \, flag) pair is distributed to the two
+inlets. Lists with more than two elements will be truncated.;
+#X text 168 413 - clear the collection.;
+#X text 167 439 - a float to the right inlet sets the "flag": if zero
+\, values to the left inlet will not be added to the collection. If
+nonzero \, values to the right inlet will be added to the collection.
+;
+#X text 168 296 - a float to the left inlet will be added to the collection
+if the last value the right inlet received was nonzero. If the last
+value the right inlet received was zero \, the float sent to the right
+inlet will be removed from the collection.;
+#X text 11 23 MIDI input/output objects;
+#X obj 86 86 bendin;
+#X obj 86 123 bendout;
+#X obj 131 86 ctlin;
+#X obj 137 123 ctlout;
+#X obj 215 86 notein;
+#X obj 233 123 noteout;
+#X obj 260 86 pgmin;
+#X obj 284 123 pgmout;
+#X obj 425 86 touchin;
+#X obj 299 86 polytouchin;
+#X obj 170 86 midiin;
+#X obj 374 86 sysexin;
+#X obj 182 123 midiout;
+#X obj 329 123 polytouchout;
+#X obj 410 123 touchout;
+#X text 10 86 MIDI input:;
+#X text 10 123 MIDI output:;
+#X obj 320 185 pddp/pddplink touchin-help.pd;
+#X obj 243 185 touchin;
+#X obj 243 210 polytouchin;
+#X obj 320 210 pddp/pddplink polytouchin-help.pd;
+#X obj 243 235 touchout;
+#X obj 320 235 pddp/pddplink touchout-help.pd;
+#X obj 243 260 polytouchout;
+#X obj 320 260 pddp/pddplink polytouchout-help.pd;
+#X obj 80 185 midiin;
+#X obj 80 235 sysexin;
+#X obj 80 210 midiout;
+#X obj 135 185 pddp/pddplink midiin-help.pd;
+#X obj 135 235 pddp/pddplink sysexin-help.pd;
+#X obj 135 210 pddp/pddplink midiout-help.pd;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X text 77 151 Right-click the objects above and choose "Help" \, or
+follow the links below for help on these objects:;

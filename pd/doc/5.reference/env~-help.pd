@@ -1,31 +1,75 @@
-#N canvas 134 127 625 411 12;
-#X floatatom 11 332 0 0 0 0 - - -;
-#X obj 74 14 env~;
-#X text 120 16 - envelope follower;
-#X obj 11 209 osc~ 400;
-#X obj 11 236 *~;
-#X floatatom 103 211 3 -99 300 0 - - -;
-#X obj 103 235 dbtorms;
-#X text 9 46 The env~ object takes a signal and outputs its RMS amplitude
-in dB (with 1 normalized to 100 dB.) Output is bounded below by zero.
+#N canvas 428 34 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header env~ 3 12 0 18 -204280
+-1 0;
+#X obj 0 343 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 486 284 494 344 META 0;
+#X text 12 105 LIBRARY internal;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 AUTHOR Miller Puckette;
+#X text 12 185 HELP_PATCH_AUTHORS Updated for Pd version 0.40. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS signal conversion;
+#X text 12 65 INLET_0 signal;
+#X text 12 85 INLET_1 float;
+#X text 12 45 DESCRIPTION envelope follower;
+#X text 12 165 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 380 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 434 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 535 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X obj 78 352 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 389 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 351 signal;
+#X obj 513 10 env~;
+#X text 98 539 The analysis is "Hanning" (raised cosine) windowed.
 ;
-#X text 141 209 <- set peak-to-peak amplitude here in dB.;
-#X text 57 333 <- the output is RMS amplitude which (for a sinusoid)
+#X text 98 389 float;
+#X floatatom 74 263 0 0 0 0 - - -;
+#X obj 74 140 osc~ 400;
+#X obj 74 167 *~;
+#X floatatom 166 116 3 -99 300 0 - - -, f 3;
+#X obj 166 140 dbtorms;
+#X text 194 114 <- set peak-to-peak amplitude here in dB.;
+#X text 110 264 <- the output is RMS amplitude which (for a sinusoid)
 is about 3 dB below peak-to-peak amplitude.;
-#X text 359 380 updated for Pd version 0.40.;
-#X obj 11 269 env~ 16384 8192;
-#X text 160 259 creation arguments:;
-#X text 158 277 1 window size in samples (1024 default);
-#X text 158 296 2 period in samples per analysis (window/2 default)
+#X obj 74 200 env~ 16384 8192;
+#N canvas 213 524 428 101 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 9 38 threshold~;
+#X text 7 1 [env~] Related Objects;
+#X restore 101 597 pd Related_objects;
+#X text 11 23 envelope follower;
+#X text 168 452 - (optional) the analysis window size in samples (the
+default is 1024).;
+#X text 80 452 1) float;
+#X text 80 479 2) float;
+#X text 168 479 - (optional) the period (the number of samples per
+analysis-- window/2 by default). This should normally be a multiple
+of the DSP block size \, although this isn't enforced.;
+#X text 168 389 - the [env~] object takes a signal and outputs its
+RMS amplitude in dB (with 1 normalized to 100 dB.) Output is bounded
+below by zero.;
+#X text 168 351 - the incoming signal;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X text 9 102 The analysis is "Hanning" (raised cosine) windowed.;
-#X text 9 125 The optional creation arguments are the analysis window
-size in samples \, and the period (the number of samples between analyses).
-The latter should normally be a multiple of the DSP block size \, although
-this isn't enforced.;
-#X connect 3 0 4 0;
-#X connect 4 0 11 0;
-#X connect 5 0 6 0;
-#X connect 6 0 4 1;
-#X connect 11 0 0 0;
-#X connect 11 0 0 0;
+#X obj 480 56 pddp/dsp;
+#X obj 98 557 pddp/pddplink ../3.audio.examples/C07.envelope.follower.pd
+-text doc.3.audio.examples/C07.envelope.follower.pd;
+#X obj 98 572 pddp/pddplink ../3.audio.examples/H06.envelope.follower.pd
+-text doc.3.audio.examples/H06.envelope.follower.pd;
+#X connect 14 0 15 0;
+#X connect 15 0 20 0;
+#X connect 16 0 17 0;
+#X connect 17 0 15 1;
+#X connect 20 0 13 0;

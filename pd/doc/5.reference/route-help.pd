@@ -1,11 +1,11 @@
-#N canvas 513 24 555 689 10;
+#N canvas 427 31 555 685 10;
 #X obj 0 697 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header route 3 12 0 18
 -204280 -1 0;
 #X obj 0 240 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 50 229 494 392 META 0;
+#N canvas 482 297 494 392 META 0;
 #X text 12 85 PLATFORM windows macosx gnulinux;
 #X text 12 165 LIBRARY internal;
 #X text 12 205 WEBSITE http://crca.ucsd.edu/~msp/;
@@ -31,7 +31,7 @@ or first element;
 0 13 -228856 -1 0;
 #X obj 0 672 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 74 482 428 109 Related_objects 0;
+#N canvas 211 576 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [route] Related Objects;
@@ -43,9 +43,7 @@ or first element;
 -162280 0;
 #X obj 78 456 cnv 17 3 17 empty \$0-pddp.cnv.let.0 n 5 9 0 16 -228856
 -162280 0;
-#X obj 512 4 route;
-#X obj 459 20 pddp/pddplink http://wiki.puredata.info/en/route -text
-pdpedia: route;
+#X obj 508 12 route;
 #X obj 27 113 route 0 1;
 #X msg 27 61 0 12;
 #X msg 65 61 1 13;
@@ -60,7 +58,7 @@ pdpedia: route;
 #X obj 27 136 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
 #X msg 140 61 7 17;
-#N canvas 414 108 517 509 float_mode 0;
+#N canvas 414 108 516 509 float_mode 0;
 #X text 89 271 float;
 #X text 89 365 list;
 #X text 89 325 symbol;
@@ -84,16 +82,20 @@ to the rightmost outlet.;
 ;
 #X msg 141 50 2;
 #X msg 148 72 1 2 3;
-#X obj 129 167 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+#X obj 141 167 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 162 167 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;
 #X msg 169 116 something else;
 #X obj 204 167 print rejection_outlet;
-#X obj 141 239 print out0;
-#X obj 162 217 print out1;
+#X obj 141 233 print out0;
+#X obj 162 211 print out1;
 #X text 50 26 For "float mode" \, the first argument must be a float.
 ;
 #X obj 141 142 route 1 2 3;
-#X obj 183 195 print out2;
+#X obj 183 189 print out2;
+#X obj 183 167 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
 #X msg 158 94 3 dog night;
 #X text 139 325 - the symbol is compared to the creation arguments
 \, and a bang is sent to the corresponding outlet if there is a match.
@@ -103,21 +105,17 @@ creation argument(s). If there is a match \, the first element is removed
 from the list \, and the remaining list is sent to the outlet corresponding
 to the matching creation argument. If there is no match the input is
 sent to the rightmost outlet.;
-#X obj 150 167 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
--1 -1;
-#X obj 171 167 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
--1 -1;
-#X connect 13 0 21 0;
-#X connect 14 0 21 0;
-#X connect 16 0 21 0;
-#X connect 21 0 18 0;
-#X connect 21 0 15 0;
-#X connect 21 1 19 0;
-#X connect 21 1 26 0;
-#X connect 21 2 22 0;
-#X connect 21 2 27 0;
-#X connect 21 3 17 0;
-#X connect 23 0 21 0;
+#X connect 13 0 22 0;
+#X connect 14 0 22 0;
+#X connect 17 0 22 0;
+#X connect 22 0 15 0;
+#X connect 22 0 19 0;
+#X connect 22 1 16 0;
+#X connect 22 1 20 0;
+#X connect 22 2 23 0;
+#X connect 22 2 24 0;
+#X connect 22 3 18 0;
+#X connect 25 0 22 0;
 #X restore 171 306 pd float_mode;
 #X text 98 249 anything;
 #X text 168 249 - [route] handles its input in 3 different "modes"
@@ -133,10 +131,10 @@ below to see how message types are handled under each mode.;
 -228856 -1 0;
 #X obj 69 398 cnv 17 3 255 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 56 244 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+#X obj 68 244 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
-#X obj 89 244 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
--1;
+#X obj 101 244 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
 #X obj 203 262 print rejection_outlet;
 #X msg 68 59 der;
 #X obj 68 349 print out0;
@@ -174,12 +172,12 @@ outlet. If there is no match the input is sent to the rightmost outlet.
 #X text 91 667 Beware! All this can be confusing at times...;
 #X msg 84 103 das;
 #X obj 135 305 print out2;
-#X obj 123 244 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+#X obj 135 244 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;
-#X obj 157 244 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+#X obj 169 244 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;
 #X msg 108 182 doh;
-#X obj 191 244 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+#X obj 203 244 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;
 #X msg 74 81 die 41;
 #X text 49 36 In selector mode \, all creation arguments should be
@@ -487,6 +485,7 @@ multiple creation arguments \, you'll notice that this second inlet
 is absent.;
 #X obj 23 256 route 42;
 #X obj 217 276 route word;
+#X floatatom 23 278 5 0 0 0 - - -, f 5;
 #X msg 23 210 42;
 #X obj 217 255 list trim;
 #X text 20 128 Also notice in the right example how symbols need to
@@ -494,22 +493,20 @@ be truncated of its symbol prefix using [list trim] or using a message.
 Otherwise \, route will not recognize the value correctly.;
 #X msg 164 206 word;
 #X msg 125 182 symbol word;
-#X obj 23 278 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
--1;
 #X connect 1 0 12 0;
 #X connect 2 0 12 1;
-#X connect 4 0 15 0;
-#X connect 5 0 15 0;
+#X connect 4 0 16 0;
+#X connect 5 0 16 0;
 #X connect 6 0 13 1;
 #X connect 8 0 13 1;
-#X connect 12 0 19 0;
+#X connect 12 0 14 0;
 #X connect 12 1 0 0;
 #X connect 13 0 3 0;
 #X connect 13 1 7 0;
-#X connect 14 0 12 0;
-#X connect 15 0 13 0;
-#X connect 17 0 13 0;
+#X connect 15 0 12 0;
+#X connect 16 0 13 0;
 #X connect 18 0 13 0;
+#X connect 19 0 13 0;
 #X restore 171 416 pd second_inlet;
 #X text 98 400 symbol;
 #X text 167 386 - the right inlet is available if there is only one
@@ -523,21 +520,21 @@ creation argument. See the subpatch below for details:;
 #X text 398 119 This one doesn't work;
 #X msg 269 85 symbol word;
 #X msg 258 60 word;
-#X connect 12 0 17 0;
-#X connect 12 0 21 0;
-#X connect 12 1 19 0;
-#X connect 12 1 20 0;
-#X connect 12 2 16 0;
-#X connect 12 2 18 0;
-#X connect 13 0 12 0;
-#X connect 14 0 12 0;
-#X connect 15 0 12 0;
-#X connect 22 0 12 0;
-#X connect 33 0 12 0;
-#X connect 49 0 52 0;
-#X connect 49 1 51 0;
-#X connect 50 0 49 0;
-#X connect 53 0 50 0;
-#X connect 54 0 49 0;
-#X connect 56 0 50 0;
-#X connect 57 0 49 0;
+#X connect 11 0 16 0;
+#X connect 11 0 20 0;
+#X connect 11 1 18 0;
+#X connect 11 1 19 0;
+#X connect 11 2 15 0;
+#X connect 11 2 17 0;
+#X connect 12 0 11 0;
+#X connect 13 0 11 0;
+#X connect 14 0 11 0;
+#X connect 21 0 11 0;
+#X connect 32 0 11 0;
+#X connect 48 0 51 0;
+#X connect 48 1 50 0;
+#X connect 49 0 48 0;
+#X connect 52 0 49 0;
+#X connect 53 0 48 0;
+#X connect 55 0 49 0;
+#X connect 56 0 48 0;

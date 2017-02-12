@@ -1,4 +1,4 @@
-#N canvas 304 179 349 252 10;
+#N canvas 1 25 349 252 10;
 #X text 11 8 PDDP Colour Guide:;
 #X obj 14 39 cnv 20 20 20 empty empty Reference-Patches 30 9 0 13 -200249
 -1 0;
@@ -10,5 +10,3 @@
 -1 0;
 #X obj 14 178 cnv 20 20 20 empty empty Stop-Process 30 9 0 13 -239389
 -1 0;
-#X obj 14 208 cnv 20 20 20 empty empty Highlight-Object/patch? 30 9
-0 13 -262126 -1 0;
