@@ -319,9 +319,9 @@ static void sys_dispatchnextmidiin( void)
         if (byte == 0xf8) {
           // AG: Not sure what the timebase for the right outlet is supposed
           // to be. I'm using msecs right now, which is in line with the other
-          // tempo-related objects such as metro. Uncomment the .001 factor to
+          // tempo-related objects such as metro. Multiply with .001 to
           // get seconds instead.
-          double timing = /*.001 * */clock_gettimesince(sys_midiinittime);
+          double timing = clock_gettimesince(sys_midiinittime);
           inmidi_clk(timing);
         }
     }
