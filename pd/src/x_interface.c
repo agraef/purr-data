@@ -859,6 +859,15 @@ void pdinfo_version(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
     info_out((t_text *)x, s, 3, at);
 }
 
+void pdinfo_l2ork_version(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    char buf[MAXPDSTRING];
+    t_atom at[1];
+    sprintf(buf, PD_L2ORK_VERSION " " PD_BUILD_VERSION);
+    SETSYMBOL(at, gensym(buf));
+    info_out((t_text *)x, s, 1, at);
+}
+
 void pdinfo_print(t_pdinfo *x)
 {
     info_print((t_text *)x);
@@ -930,6 +939,8 @@ void pdinfo_setup(void)
         gensym("samplerate"), A_GIMME, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_version,
         gensym("version"), A_GIMME, 0);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_l2ork_version,
+        gensym("l2ork_version"), A_GIMME, 0);
 
     class_addmethod(pdinfo_class, (t_method)pdinfo_print,
         gensym("print"), 0);
