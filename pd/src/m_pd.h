@@ -11,8 +11,8 @@ extern "C" {
 #include <stdarg.h>
 
 #define PD_MAJOR_VERSION 0
-#define PD_MINOR_VERSION 43
-#define PD_BUGFIX_VERSION 10
+#define PD_MINOR_VERSION 47
+#define PD_BUGFIX_VERSION 0
 #define PD_TEST_VERSION ""
 #define PD_L2ORK_VERSION "2.0"
 #define PDL2ORK
