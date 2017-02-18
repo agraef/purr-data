@@ -599,6 +599,7 @@ static t_symbol *addfileextent(t_symbol *s)
     return (gensym(namebuf));
 }
 
+#define MAXOBJDEPTH 1000
 static int tryingalready;
 
 void canvas_popabstraction(t_canvas *x);
@@ -613,14 +614,17 @@ int pd_setloadingabstraction(t_symbol *sym);
     doesn't know.  Pd tries to load it as an extern, then as an abstraction. */
 void new_anything(void *dummy, t_symbol *s, int argc, t_atom *argv)
 {
-    if (tryingalready) return;
+    if (tryingalready>MAXOBJDEPTH){
+      error("maximum object loading depth %d reached", MAXOBJDEPTH);
+      return;
+    }
     newest = 0;
     class_loadsym = s;
     if (sys_load_lib(canvas_getcurrent(), s->s_name))
     {
-        tryingalready = 1;
+        tryingalready++;
         typedmess(dummy, s, argc, argv);
-        tryingalready = 0;
+        tryingalready--;
         return;
     }
     class_loadsym = 0;
