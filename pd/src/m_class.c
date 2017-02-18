@@ -613,9 +613,6 @@ int pd_setloadingabstraction(t_symbol *sym);
     doesn't know.  Pd tries to load it as an extern, then as an abstraction. */
 void new_anything(void *dummy, t_symbol *s, int argc, t_atom *argv)
 {
-    t_pd *current;
-    int fd;
-    char dirbuf[FILENAME_MAX], *nameptr;
     if (tryingalready) return;
     newest = 0;
     class_loadsym = s;
@@ -627,25 +624,6 @@ void new_anything(void *dummy, t_symbol *s, int argc, t_atom *argv)
         return;
     }
     class_loadsym = 0;
-    current = s__X.s_thing;
-    if ((fd = canvas_open(canvas_getcurrent(), s->s_name, ".pd",
-        dirbuf, &nameptr, FILENAME_MAX, 0)) >= 0 ||
-            (fd = canvas_open(canvas_getcurrent(), s->s_name, ".pat",
-                dirbuf, &nameptr, FILENAME_MAX, 0)) >= 0)
-    {
-        close (fd);
-        if (!pd_setloadingabstraction(s))
-        {
-            canvas_setargs(argc, argv);
-            binbuf_evalfile(gensym(nameptr), gensym(dirbuf));
-            canvas_initbang((t_canvas *)(s__X.s_thing));/* JMZ*/
-            if (s__X.s_thing != current)
-                canvas_popabstraction((t_canvas *)(s__X.s_thing));
-            canvas_setargs(0, 0);
-        }
-        else error("%s: can't load abstraction within itself\n", s->s_name);
-    }
-    else newest = 0;
 }
 
 t_symbol  s_pointer =   {"pointer", 0, 0};
