@@ -6,6 +6,8 @@ maintainer: Albert Graef <aggraef@gmail.com>
 
 maintainer: Jonathan Wilkes <jancsika@yahoo.com>
 
+[Mailing List](http://disis.music.vt.edu/cgi-bin/mailman/listinfo/l2ork-dev)
+
 * [One Paragraph Overview](#one-paragraph-overview)
 * [Flavors of Pure Data](#flavors-of-pure-data)
 * [Three Paragraph Overview](#three-paragraph-overview)
