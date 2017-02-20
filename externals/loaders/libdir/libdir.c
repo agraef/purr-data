@@ -10,7 +10,7 @@
 /* WARNING: KLUDGE!  */
 /*
  * this struct is not publically defined (its in g_canvas.c) so I need to
- * include this here.  Its from Pd 0.41-test03 2006-11-19. */
+ * include this here.  Its from Pd 0.47-0. */
 struct _canvasenvironment
 {
     t_symbol *ce_dir;      /* directory patch lives in */
@@ -21,7 +21,13 @@ struct _canvasenvironment
 };
 
 
-static char *version = "1.9";
+static char *version =
+#ifdef VERSION
+  VERSION
+#else
+  "unknown"
+#endif
+  ;
 
 /* This loader opens a directory with a -meta.pd file as a library.  In the
  * long run, the idea is that one folder will have all of objects files, all
@@ -37,71 +43,131 @@ static char *version = "1.9";
  * to have one directory hold the objects, help files, manuals,
  * etc. making it a self-contained library. <hans@at.or.at>
  */
+/*
+ * TODO
+ * - get 'declare' messages from the meta-file, and send them to the current canvas
+ */
+static void libdir_get_fullname(char*dest, size_t size, const char*classname) {
+  snprintf(dest, size-1, "%s/%s-meta", classname, classname);
+  dest[size-1]=0;
+}
+static int libdir_add_to_path(const char*dirbuf, t_canvas*canvas) {
+  if(sys_isabsolutepath(dirbuf)) { // only include actual full paths
+    if (canvas) {
+      t_canvasenvironment *canvasenvironment = canvas_getenv(canvas);
+      canvasenvironment->ce_path = namelist_append(canvasenvironment->ce_path,
+						 dirbuf, 0);
+    } else {
+        sys_searchpath = namelist_append(sys_searchpath, dirbuf, 0);
+    }
+    return 1;
+  }
+  return 0;
+}
 
-static int libdir_loader(t_canvas *canvas, char *classname)
+static int libdir_loader_legacy(t_canvas *canvas, char *classname)
 {
     int fd = -1;
-    char helppathname[FILENAME_MAX];
     char fullclassname[FILENAME_MAX], dirbuf[FILENAME_MAX];
     char *nameptr;
-    t_canvasenvironment *canvasenvironment;
 
 /* look for meta file (classname)/(classname)-meta.pd */
-    strncpy(fullclassname, classname, FILENAME_MAX - 6);
-    strcat(fullclassname, "/");
-    strncat(fullclassname, classname, FILENAME_MAX - strlen(fullclassname) - 6);
-    strcat(fullclassname, "-meta");
-    
+    libdir_get_fullname(fullclassname, FILENAME_MAX, classname);
+
     /* if this is being called from a canvas, then add the library path to the
      * canvas-local path */
-    if(canvas) 
-    {
-        canvasenvironment = canvas_getenv(canvas);
-        /* setting the canvas to NULL causes it to ignore any canvas-local path */
-        if ((fd = canvas_open(NULL, fullclassname, ".pd",
-                              dirbuf, &nameptr, FILENAME_MAX, 0)) < 0) 
-        {
-            return (0);
-        }
-        close(fd);
-        if(sys_isabsolutepath(dirbuf)) // only include actual full paths
-            canvasenvironment->ce_path = namelist_append(canvasenvironment->ce_path, 
-                                                         dirbuf, 0);
-        if(sys_verbose)
-            post("libdir_loader: added '%s' to the canvas-local objectclass path",
-                 classname);
-    }
+    if(canvas)
+      /* setting the canvas to NULL causes it to ignore any canvas-local path */
+      fd = canvas_open(NULL, fullclassname, ".pd",
+		       dirbuf, &nameptr, FILENAME_MAX, 0);
     else
+      fd = open_via_path(".", fullclassname, ".pd",
+			 dirbuf, &nameptr, FILENAME_MAX, 0);
+    if(fd < 0)
     {
-        if ((fd = open_via_path(".", fullclassname, ".pd",
-                                dirbuf, &nameptr, FILENAME_MAX, 0)) < 0) 
-        {
-            return (0);
-        }
-        close(fd);
-        sys_searchpath = namelist_append(sys_searchpath, dirbuf, 0);
-        strncpy(helppathname, sys_libdir->s_name, FILENAME_MAX-30);
-        helppathname[FILENAME_MAX-30] = 0;
-        strcat(helppathname, "/doc/5.reference/");
-        strcat(helppathname, classname);
-        sys_helppath = namelist_append(sys_helppath, helppathname, 0);
-        post("libdir_loader: added '%s' to the global objectclass path", 
-             classname);
-//        post("\tThis is deprecated behavior.");
+      return (0);
     }
+    sys_close(fd);
+#if 0
+    if(!canvas) {
+      char helppathname[FILENAME_MAX];
+      strncpy(helppathname, sys_libdir->s_name, FILENAME_MAX-30);
+      helppathname[FILENAME_MAX-30] = 0;
+      strcat(helppathname, "/doc/5.reference/");
+      strcat(helppathname, classname);
+      sys_helppath = namelist_append(sys_helppath, helppathname, 0);
+    }
+#endif
+    if(libdir_add_to_path(dirbuf, canvas))
+      logpost(NULL, 3, "libdir_loader: added '%s' to the %s objectclass path",
+	      classname, canvas?"canvas-local":"global");
+
     /* post("libdir_loader loaded fullclassname: '%s'\n", fullclassname); */
-    if (sys_verbose) 
-        post("Loaded libdir '%s' from '%s'", classname, dirbuf);
+#if 0
+    // AG: This is from https://github.com/pure-data/libdir/commit/2f7b873e.
+    // Seems overly verbose, though, disasbled for now since Purr Data won't
+    // filter console messages according to their verbosity level.
+    logpost(NULL, 14, "Loaded libdir '%s' from '%s'", classname, dirbuf);
+#endif
 
     return (1);
 }
 
+static int libdir_loader_pathwise(t_canvas *canvas, const char *classname, const char*path)
+{
+    int fd = -1;
+    char fullclassname[FILENAME_MAX], dirbuf[FILENAME_MAX];
+    char *nameptr;
+
+    if(!path) {
+      /* we already tried all paths, so skip this */
+      return 0;
+    }
+
+    /* look for meta file (classname)/(classname)-meta.pd */
+    libdir_get_fullname(fullclassname, FILENAME_MAX, classname);
+
+    if ((fd = sys_trytoopenone(path, fullclassname, ".pd",
+			       dirbuf, &nameptr, FILENAME_MAX, 0)) < 0) {
+      return 0;
+    }
+    sys_close(fd);
+    if(libdir_add_to_path(dirbuf, canvas))
+      logpost(NULL, 3, "libdir_loader: added '%s' to the %s objectclass path",
+	      classname, canvas?"canvas-local":"global");
+
+    /* post("libdir_loader loaded fullclassname: '%s'\n", fullclassname); */
+#if 0
+    logpost(NULL, 14, "Loaded libdir '%s' from '%s'", classname, dirbuf);
+#endif
+
+    return (1);
+}
+
+static t_class *libdir_class;
+static void*libdir_new(void)
+{
+  t_pd *x = pd_new(libdir_class);
+  return (x);
+}
+
 void libdir_setup(void)
 {
-/* relies on t.grill's loader functionality, fully added in 0.40 */
-    sys_register_loader(libdir_loader);
-    post("libdir loader %s",version);  
-    post("\tcompiled on "__DATE__" at "__TIME__ " ");
-    post("\tcompiled against Pd version %d.%d.%d.%s", PD_MAJOR_VERSION, 
-         PD_MINOR_VERSION, PD_BUGFIX_VERSION, PD_TEST_VERSION);
+    int major, minor, bugfix;
+    sys_getversion(&major, &minor, &bugfix);
+    if (major>0 || minor >=47) {
+      sys_register_loader(libdir_loader_pathwise);
+    } else {
+      sys_register_loader(libdir_loader_legacy);
+    }
+    logpost(NULL, 3, "libdir loader %s",version);
+    logpost(NULL, 3, "\tcompiled on "__DATE__" at "__TIME__ " ");
+    logpost(NULL, 3, "\tcompiled against Pd version %d.%d.%d.%s",
+            PD_MAJOR_VERSION, PD_MINOR_VERSION, PD_BUGFIX_VERSION, PD_TEST_VERSION);
+    libdir_class = class_new(gensym("libdir"), libdir_new, 0, sizeof(t_object), CLASS_NOINLET, 0);
+}
+
+void setup(void)
+{
+    libdir_setup();
 }
