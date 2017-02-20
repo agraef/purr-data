@@ -21,13 +21,7 @@ struct _canvasenvironment
 };
 
 
-static char *version =
-#ifdef VERSION
-  VERSION
-#else
-  "unknown"
-#endif
-  ;
+static char *version = "1.10";
 
 /* This loader opens a directory with a -meta.pd file as a library.  In the
  * long run, the idea is that one folder will have all of objects files, all
