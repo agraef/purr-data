@@ -686,15 +686,9 @@ void ugen_connect(t_dspcontext *dc, t_object *x1, int outno, t_object *x2,
             error("object with signal outlets but no DSP method?");
                 /* check if it's a "text" (i.e., object wasn't created) -
                 if so fail silently */
-        t_text *t2 = (t_text *)x2;
-        // The following only happens if the DAC is on while connecting
-        // objects. If this is not yet initialized object we don't
-        // really know if its inlet is signal or not, so we don't post
-        // the error.
-        if (pd_class(&t2->te_pd) != text_class ||
-            (pd_class(&t2->te_pd) == text_class && t2->te_type == T_TEXT))
-                pd_error(u1->u_obj,
-                    "signal outlet connect to nonsignal inlet (ignored)");
+        else if (!(x2 && (pd_class(&x2->ob_pd) == text_class)))
+            pd_error(u1->u_obj,
+                "signal outlet connect to nonsignal inlet (ignored)");
         return;
     }
     if (sigoutno < 0 || sigoutno >= u1->u_nout || siginno >= u2->u_nin)
@@ -743,7 +737,7 @@ static void ugen_doit(t_dspcontext *dc, t_ugenbox *u)
         is set.  We don't yet know if a subcanvas will be "blocking" so there
         we delay new signal creation, which will be handled by calling
         signal_setborrowed in the ugen_done_graph routine below. */
-    int nonewsigs = (class == canvas_class || 
+    int nonewsigs = (class == canvas_class ||
         ((class == vinlet_class) && !(dc->dc_reblock)));
         /* when we encounter a subcanvas or a signal outlet, suppress freeing
         the input signals as they may be "borrowed" for the super or sub
