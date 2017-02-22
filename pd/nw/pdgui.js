@@ -4198,11 +4198,14 @@ function gui_canvas_redrect_coords(cid, x1, y1, x2, y2) {
 
 // For clarity, this probably shouldn't be a gobj.  Also, it might be easier to
 // make it a div that lives on top of the patchsvg
-function gui_cord_inspector_new(cid) {
+function gui_cord_inspector_new(cid, font_size) {
     var g = get_gobj(cid, "cord_inspector"),
         ci_rect = create_item(cid, "rect", { id: "cord_inspector_rect" }),
         ci_poly = create_item(cid, "polygon", { id: "cord_inspector_polygon" }),
-        ci_text = create_item(cid, "text", { id: "cord_inspector_text" }),
+        ci_text = create_item(cid, "text", {
+            id: "cord_inspector_text",
+            "font-size": pd_fontsize_to_gui_fontsize(font_size) + "px",
+        }),
         text_node = patchwin[cid].window.document.createTextNode("");
     ci_text.appendChild(text_node);
     g.appendChild(ci_rect);

@@ -110,8 +110,8 @@ void magicGlass_drawNew(t_magicGlass *x)
 {
     gui_vmess("gui_gobj_new", "xssiii",
         x->x_c, "cord_inspector", "cord_inspector", 0, 0, 0);
-    gui_vmess("gui_cord_inspector_new", "x",
-        x->x_c); 
+    gui_vmess("gui_cord_inspector_new", "xi",
+        x->x_c, x->x_display_font);
     magicGlass_updateText(x, 0);
     clock_delay(x->x_flashClock, MG_CLOCK_FLASH_DELAY);
 }
