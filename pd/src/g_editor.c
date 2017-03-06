@@ -3352,6 +3352,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
             }
             else if (!sys_k12_mode && ob && !x->gl_editor->e_textedfor &&
                 (ob->te_pd->c_wb == &text_widgetbehavior ||
+                 ob->te_type == T_ATOM ||
                  ob->ob_pd == canvas_class) &&
                  xpos >= x2-4 && ypos < y2-4 && ypos > y1+4)
             {
@@ -5217,9 +5218,10 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
         {
             int wantwidth = xpos - x11;
             t_object *ob = pd_checkobject(&y1->g_pd);
-            if (ob && ob->te_pd->c_wb == &text_widgetbehavior ||
-                    (ob->ob_pd == canvas_class &&
-                        !((t_canvas *)ob)->gl_isgraph))
+            if (ob && (ob->te_pd->c_wb == &text_widgetbehavior ||
+                       ob->te_type == T_ATOM ||
+                       (ob->ob_pd == canvas_class &&
+                        !((t_canvas *)ob)->gl_isgraph)))
             {
                 wantwidth = wantwidth / sys_fontwidth(glist_getfont(x));
                 if (wantwidth < 1)
