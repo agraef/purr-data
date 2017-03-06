@@ -334,6 +334,47 @@ text {
     fill: #eee;
 }
 
+/* for dropdown box we want to visually distinguish boxes that output
+   the index from boxes that output the value. For now we do that by
+   stroking the arrow for boxes that output an index. For boxes that
+   output the value we don't need a CSS rule, as the arrow will be filled
+   black by default */
+.atom .index_arrow {
+    stroke: black;
+    stroke-width: 1;
+    fill: none;
+}
+
+/* gatom "activated" text (i.e., when it has the keyboard focus) */
+.atom.activated text {
+    fill: red;
+}
+
+#dropdown_list {
+    position: absolute;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #c3c3c3;
+    cursor: pointer;
+    box-shadow: 5px 0 5px -5px #aaa, 0 5px 5px -5px #aaa, -5px 0 5px -5px #aaa;
+}
+
+#dropdown_list ol {
+    list-style-position: inside;
+    margin: 0;
+    padding: 0;
+    background: #eee;
+}
+
+#dropdown_list li {
+    list-style-type: none;
+    padding: 5px;
+}
+
+#dropdown_list li.highlighted {
+    background-color: #c3c3c3;
+}
+
 .obj .border {
     fill: #f6f8f8;
     stroke: #ccc;
@@ -408,11 +449,6 @@ text {
 /* text label for an iemgui */
 .iemgui_label_selected {
     fill: blue;
-}
-
-/* gatom "activated" text (i.e., when it has the keyboard focus) */
-.atom.activated text {
-    fill: red;
 }
 
 /* test of xlet hover animation... this should 

@@ -197,6 +197,10 @@ var canvas_events = (function() {
             svg.setAttribute("width", w);
             svg.setAttribute("height", h);
         },
+        dropdown_index_to_pd = function(elem) {
+            pdgui.pdsend(elem.getAttribute("data-callback"),
+                elem.querySelector(".highlighted").getAttribute("data-index"));
+        },
         events = {
             mousemove: function(evt) {
                 //pdgui.post("x: " + evt.pageX + " y: " + evt.pageY +
@@ -460,6 +464,36 @@ var canvas_events = (function() {
                 // Set last state (none doesn't count as a state)
                 //pdgui.post("previous state is " + canvas_events.get_previous_state());
                 canvas_events[canvas_events.get_previous_state()]();
+            },
+            dropdown_menu_mousedown: function(evt) {
+                var select_elem = document.querySelector("#dropdown_list");
+                dropdown_index_to_pd(select_elem);
+                select_elem.style.setProperty("display", "none");
+                canvas_events.normal();
+            },
+            dropdown_menu_mouseup: function(evt) {
+                var i, select_elem;
+                if (evt.target.parentNode
+                    && evt.target.parentNode.parentNode
+                    && evt.target.parentNode.parentNode.id === "dropdown_list") {
+                    select_elem = document.querySelector("#dropdown_list");
+                    dropdown_index_to_pd(select_elem);
+                    select_elem.style.setProperty("display", "none");
+                    canvas_events.normal();
+                }
+            },
+            dropdown_menu_mouseover: function(evt) {
+                var li_array;
+                if (evt.target.parentNode
+                    && evt.target.parentNode.parentNode
+                    && evt.target.parentNode.parentNode.id === "dropdown_list") {
+                    li_array = evt.target.parentNode.querySelectorAll('li');
+                    li_array.forEach(function(e) {
+                        e.classList.remove("highlighted");
+                    });
+                    evt.target.classList.add("highlighted");
+                }
+                // hide the dropdown menu <div> thingy
             }
         },
         utils = {
@@ -701,6 +735,12 @@ var canvas_events = (function() {
             state = "floating_text";
             set_edit_menu_modals(false);
         },
+        dropdown_menu: function() {
+            this.none();
+            document.addEventListener("mousedown", events.dropdown_menu_mousedown, false);
+            document.addEventListener("mouseup", events.dropdown_menu_mouseup, false);
+            document.addEventListener("mouseover", events.dropdown_menu_mouseover, false);
+        },
         search: function() {
             this.none();
             document.addEventListener("keydown", events.find_keydown, false);
@@ -791,7 +831,7 @@ function register_window_id(cid, attr_array) {
     // Initialize the zoom level to the value retrieved from the patch, if any.
     nw.Window.get().zoomLevel = attr_array.zoom;
     pdgui.canvas_map(cid); // side-effect: triggers gui_canvas_get_scroll
-    set_editmode_checkbox(attr_array.editmode !== 0 ? true : false);
+    pdgui.canvas_set_editmode(cid, attr_array.editmod);
     // For now, there is no way for the cord inspector to be turned on by
     // default. But if this changes we need to set its menu item checkbox
     // accordingly here
@@ -1317,6 +1357,14 @@ function nw_create_patch_window_menus(gui, w, name) {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "text 0");
+        }
+    });
+    minit(m.put.dropdown, {
+        enabled: true,
+        click: function() {
+            update_live_box();
+            pdgui.pdsend(name, "dirty 1");
+            pdgui.pdsend(name, "dropdown 0");
         }
     });
     minit(m.put.bang, {

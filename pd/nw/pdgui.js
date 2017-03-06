@@ -951,8 +951,20 @@ function menu_send(name) {
 }
 
 // requires nw.js API (Menuitem)
-function gui_canvas_set_editmode(cid, state) {
+function canvas_set_editmode(cid, state) {
+    var patchsvg = patchwin[cid].window.document.querySelector("#patchsvg");
     patchwin[cid].window.set_editmode_checkbox(state !== 0 ? true : false);
+    if (state !== 0) {
+        patchsvg.classList.add("editmode");
+    } else {
+        patchsvg.classList.remove("editmode");
+    }
+}
+
+exports.canvas_set_editmode = canvas_set_editmode;
+
+function gui_canvas_set_editmode(cid, state) {
+    canvas_set_editmode(cid, state);
 }
 
 // requires nw.js API (Menuitem)
@@ -1946,21 +1958,34 @@ function gui_message_redraw_border(cid, tag, width, height) {
     });
 }
 
-function atom_border_points(width, height) {
-    return [0, 0,
+function atom_border_points(width, height, is_dropdown) {
+    // For atom, angle the top-right corner.
+    // For dropdown, angle both top-right and bottom-right corners
+    var bottom_right_x = is_dropdown ? width - 4 : width;
+    return  [0, 0,
             width - 4, 0,
             width, 4,
-            width, height,
+            width, height - 4,
+            bottom_right_x, height,
             0, height,
             0, 0]
         .join(" ");
 }
 
-function gui_atom_draw_border(cid, tag, width, height) {
+function atom_arrow_points(width, height) {
+    var m = height < 20 ? 1 : height / 12;
+    return [width - (9 * m), height * 0.5 - Math.floor(1 * m),
+        width - (3 * m), height * 0.5 - Math.floor(1 * m),
+        width - (6 * m), height * 0.5 + Math.floor(4 * m),
+    ].join(" ");
+}
+
+
+function gui_atom_draw_border(cid, tag, type, width, height) {
     var g = get_gobj(cid, tag),
-        polygon;
+        polygon, arrow, m;
     polygon = create_item(cid, "polygon", {
-        points: atom_border_points(width, height),
+        points: atom_border_points(width, height, type !== 0),
         fill: "none",
         stroke: "gray",
         "stroke-width": 1,
@@ -1968,11 +1993,23 @@ function gui_atom_draw_border(cid, tag, width, height) {
         //id: tag + "border"
     });
     g.appendChild(polygon);
+    if (type !== 0) { // dropdown
+        // 1 = output index
+        // 2 = output value
+        // Let's make the two visually distinct so that the user can still
+        // reason about the patch functionality merely by reading the diagram
+        m = height < 20 ? 1 : height / 12;
+        arrow = create_item(cid, "polygon", {
+            points: atom_arrow_points(width, height),
+            "class": type === 1 ? "index_arrow" : "value_arrow"
+        });
+        g.appendChild(arrow);
+    }
 }
 
-function gui_atom_redraw_border(cid, tag, width, height) {
+function gui_atom_redraw_border(cid, tag, is_dropdown, width, height) {
     var g = get_gobj(cid, tag),
-        p;
+        p, a;
     // Unfortunately Pd will send updates for gui objects that
     // lie outside the bounding box of a graph-on-parent subpach.
     // We should refrain from sending such messages from Pd, but for
@@ -1986,6 +2023,12 @@ function gui_atom_redraw_border(cid, tag, width, height) {
             configure_item(p, {
                 points: atom_border_points(width, height)
             });
+            if (!!is_dropdown) {
+                a = g.querySelectorAll("polygon")[1];
+                configure_item(a , {
+                    points: atom_arrow_points(width, height)
+                });
+            }
         }
     }
 }
@@ -2303,6 +2346,14 @@ function elem_displace(elem, dx, dy) {
         var t = elem.transform.baseVal.getItem(0);
         t.matrix.e += dx;
         t.matrix.f += dy;
+}
+
+function elem_get_coords(elem) {
+    var t = elem.transform.baseVal.getItem(0);
+    return {
+        x: t.matrix.e,
+        y: t.matrix.f
+    }
 }
 
 // used for tidy up
@@ -4379,6 +4430,61 @@ function gui_gatom_activate(cid, tag, state) {
             g.classList.add("activated");
         } else {
             g.classList.remove("activated");
+        }
+    }
+}
+
+function gui_dropdown_dialog(did, attr_array) {
+    // Just reuse the "gatom" dialog
+    dialogwin[did] = create_window(did, "gatom", 265, 300,
+        popup_coords[2], popup_coords[3],
+        attr_array_to_object(attr_array));
+}
+
+function dropdown_populate(cid, label_array, current_index) {
+    var ol = patchwin[cid]
+        .window.document.querySelector("#dropdown_list ol");
+    // clear it out
+    ol.innerHTML = '';
+    label_array.forEach(function(text, i) {
+        var li = patchwin[cid].window.document.createElement("li");
+        li.textContent = text;
+        li.setAttribute("data-index", i);
+        if (i === current_index) {
+            li.classList.add("highlighted");
+        }
+        ol.appendChild(li);
+    });
+}
+
+function gui_dropdown_activate(cid, obj_tag, tag, current_index, font_size, state, label_array) {
+    var g, select_elem, svg_view;
+    // Annoying: obj_tag is just the "x"-prepended hex value for the object,
+    // and tag is the one from rtext_gettag that is used as our gobj id
+    if (patchwin[cid]) {
+        g = get_gobj(cid, tag);
+        if (state !== 0) {
+            svg_view = patchwin[cid].window.document.getElementById("patchsvg")
+                .viewBox.baseVal;
+            dropdown_populate(cid, label_array, current_index);
+            select_elem = patchwin[cid]
+                .window.document.querySelector("#dropdown_list");
+            // stick the obj_tag in a data field
+            select_elem.setAttribute("data-callback", obj_tag);
+            select_elem.style.setProperty("display", "inline");
+            select_elem.style.setProperty("left",
+                (elem_get_coords(g).x - svg_view.x) + "px");
+            select_elem.style.setProperty("top",
+                (elem_get_coords(g).y + g.getBBox().height - svg_view.y)
+                    + "px");
+            select_elem.style.setProperty("font-size",
+                pd_fontsize_to_gui_fontsize(font_size) + "px");
+            select_elem.style.setProperty("min-width", g.getBBox().width + "px");
+            patchwin[cid].window.canvas_events.dropdown_menu();
+        } else {
+            post("deactivating dropdown menu");
+            // Probably want to send this
+            pdsend(cid, "key 0 Control 0 1 0");
         }
     }
 }

@@ -7,7 +7,7 @@
     <div class="container">
     <form> 
       <fieldset> 
-        <legend data-i18n="gatom.prop.gatom"></legend> 
+        <legend id="dialog_header"></legend>
 
         <table class="pairs">
           <tr class="width prop">
@@ -43,6 +43,22 @@
             <td data-i18n="[title]iem.prop.maximum_tt">
               <input type="text" id="draghi" name="draghi"
                      onchange="update_attr(this)">
+            </td>
+          </tr>
+
+          <tr class="outtype prop">
+            <td>
+              <label data-i18n="[title]gatom.prop.dropdown_outtype_tt">
+                <span data-i18n="gatom.prop.dropdown_outtype"></span>
+              </label>
+            </td>
+            <td colspan="3"
+                data-i18n="[title]gatom.prop.dropdown_outtype_tt">
+              <select id="outtype_select"
+                      onchange="update_dropdown_outtype(this);">
+                <option>index</option>
+                <option>value</option>
+              </select>
             </td>
           </tr>
           <tr>
@@ -215,12 +231,17 @@ function update_attr(elem) {
     new_attrs[elem.name] = elem.value;
 }
 
+function update_dropdown_outtype(elem) {
+    new_attrs.outtype = elem.selectedIndex;
+}
+
 function send_params(attrs, create_undo_point) {
     //pdgui.post("we're applying gatom changes!");
+    var gatom = attrs.name === "atom";
     pdgui.pdsend(pd_object_callback, "param",
         +attrs.width,
-        +attrs.draglo,
-        +attrs.draghi,
+        gatom ? +attrs.draglo : +attrs.outtype,
+        gatom ? +attrs.draghi : 0,
         gatom_escape(attrs.label),
         +attrs.labelpos,
         gatom_escape(attrs.receive_symbol),
@@ -266,8 +287,19 @@ function register_window_id(gfxstub, attributes) {
     var attr;
     pd_object_callback = gfxstub;
     add_events(gfxstub);
+
+    // before translating, set the header based on class name:
+    document.querySelector("#dialog_header")
+        .setAttribute("data-i18n", "gatom.prop." +
+            (attributes.name === "dropdown" ? "dropdown" : "gatom"));
+
     translate_form();
     populate_form(attributes);
+
+    // hide outtype select for "dropdown", or draglo/hi for "gatom"
+    document.querySelector(attributes.name === "atom" ? ".outtype" : ".draglo")
+        .style.setProperty("display", "none");
+
 
     // Hack... change incoming "-" to empty string
     if (attributes.label === "-") { attributes.label = ""; }
@@ -280,6 +312,7 @@ function register_window_id(gfxstub, attributes) {
             new_attrs[attr] = attributes[attr];
         }
     }
+
     old_attrs = attributes;
     // We don't turn on rendering of the "container" div until
     // We've finished displaying all the spans and populating the
@@ -320,8 +353,12 @@ function get_elem(name) {
 function populate_form(attributes) {
     var label, snd, rcv, labelpos, i, radios;
     get_elem("width").value = attributes.width;
-    get_elem("draglo").value = attributes.draglo;
-    get_elem("draghi").value = attributes.draghi;
+    if (attributes.name === "atom") {
+        get_elem("draglo").value = attributes.draglo;
+        get_elem("draghi").value = attributes.draghi;
+    } else {
+        get_elem("outtype_select").selectedIndex = attributes.outtype;
+    }
     label = attributes.label;
     get_elem("label").value = gatom_unescape(label);
     snd = attributes.send_symbol;

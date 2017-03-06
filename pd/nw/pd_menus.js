@@ -425,6 +425,12 @@ function create_menu(gui, type) {
             modifiers: cmd_or_ctrl,
             tooltip: l("menu.comment_tt")
         }));
+        put_menu.append(m.put.dropdown = new gui.MenuItem({
+            label: l("menu.dropdown"),
+            //key: "6",
+            //modifiers: cmd_or_ctrl,
+            tooltip: l("menu.dropdown_tt")
+        }));
         put_menu.append(new gui.MenuItem({ type: "separator" }));
         put_menu.append(m.put.bang = new gui.MenuItem({
             label: l("menu.bang"),

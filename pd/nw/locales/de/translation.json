@@ -79,6 +79,7 @@
   "gatom": {
     "prop": {
       "gatom": "Atom-Box",
+      "dropdown": "Ausgezähltwunderbox",
       "label": "Etikett",
       "label_left": "links",
       "label_right": "rechts",
@@ -89,6 +90,8 @@
       "label_bottom": "unten",
       "label_left": "links",
       "label_right": "rechts",
+      "dropdown_outtype": "output",
+      "dropdown_outtype_tt": "whether to output the index or the value",
       "width": "Breite",
       "width_tt": "Breite (in Zeichen)"
     }
@@ -195,6 +198,8 @@
     "symbol_tt": "Füge dem Patch ein Feld zur Eingabe und Anzeige von Symbolen hinzu",
     "comment": "Kommentar",
     "comment_tt": "Füge dem Patch einen Kommentar hinzu",
+    "dropdown": "Dropdown",
+    "dropdown_tt": "Dropdown menu",
     "bang": "Bang",
     "bang_tt": "Füge dem Patch einen Taster zum Senden von Bang-Nachrichten hinzu",
     "toggle": "Toggle",

@@ -22,6 +22,7 @@
 t_class *text_class;
 t_class *message_class;
 static t_class *gatom_class;
+static t_class *dropdown_class;
 static void text_vis(t_gobj *z, t_glist *glist, int vis);
 static void text_displace(t_gobj *z, t_glist *glist,
     int dx, int dy);
@@ -1211,7 +1212,6 @@ static void gatom_getwherelabel(t_gatom *x, t_glist *glist, int *xp, int *yp)
     }
 }
 
-
 static void gatom_displace(t_gobj *z, t_glist *glist,
     int dx, int dy)
 {
@@ -1248,8 +1248,6 @@ static void gatom_vis(t_gobj *z, t_glist *glist, int vis)
                 canvas_realizedollar(x->a_glist, x->a_label)->s_name,
                 sys_hostfontsize(glist_getfont(glist))
             );
-
-
         }
         else
         {
@@ -1351,7 +1349,7 @@ void canvas_atom(t_glist *gl, t_atomtype type,
             (void *)canvas_undo_set_create(glist_getcanvas(gl)));
     }
     glob_preset_node_list_seek_hub();
-    glob_preset_node_list_check_loc_and_update();    
+    glob_preset_node_list_check_loc_and_update();
 }
 
 void canvas_floatatom(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
@@ -1385,9 +1383,448 @@ static void gatom_properties(t_gobj *z, t_glist *owner)
     gui_start_vmess("gui_gatom_dialog", "s",
         gfxstub_new2(&x->a_text.te_pd, x));
     gui_start_array();
+    gui_s("name");     gui_s("atom");
     gui_s("width");    gui_i(x->a_text.te_width);
     gui_s("draglo");   gui_f(x->a_draglo);
     gui_s("draghi");   gui_f(x->a_draghi);
+    gui_s("labelpos"); gui_i(x->a_wherelabel);
+    gui_s("label");    gui_s(gatom_escapit(x->a_label)->s_name);
+    gui_s("receive_symbol");  gui_s(gatom_escapit(x->a_symfrom)->s_name);
+    gui_s("send_symbol");     gui_s(gatom_escapit(x->a_symto)->s_name);
+    gui_end_array();
+    gui_end_vmess();
+}
+
+/* ---------------------- the "dropdown" text item ------------------------ */
+
+typedef struct _dropdown
+{
+    t_text a_text;
+    t_binbuf *a_names;      /* names to be displayed */
+    int a_maxnamewidth;     /* when width = 0 this is used */
+    int a_index;            /* index */
+    t_glist *a_glist;       /* owning glist */
+    t_float a_dummy;        /* dummy value */
+    int a_outtype;           /* 0 = index, 1 = value */
+    int a_output;           /* 0 = index, 1 = value */
+    t_symbol *a_label;      /* symbol to show as label next to box */
+    t_symbol *a_symfrom;    /* "receive" name -- bind ourselvs to this */
+    t_symbol *a_symto;      /* "send" name -- send to this on output */
+    char a_wherelabel;      /* 0-3 for left, right, above, below */
+    t_symbol *a_expanded_to; /* a_symto after $0, $1, ...  expansion */
+} t_dropdown;
+
+static void dropdown_redraw(t_gobj *client, t_glist *glist)
+{
+    t_dropdown *x = (t_dropdown *)client;
+    glist_retext(x->a_glist, &x->a_text);
+}
+
+    /* recolor option offers    0 ignore recolor
+                                1 recolor */
+static void dropdown_retext(t_dropdown *x, int senditup, int recolor)
+{
+    t_canvas *canvas = glist_getcanvas(x->a_glist);
+    t_rtext *y = glist_findrtext(x->a_glist, &x->a_text);
+    if (recolor)
+    {
+        /* not sure if we need to activate dropdown */
+        //gui_vmess("gui_gatom_activate", "xsi",
+        //    canvas, rtext_gettag(y), 0);
+        post("note: dropdown is being activated!");
+    }
+    binbuf_clear(x->a_text.te_binbuf);
+    binbuf_add(x->a_text.te_binbuf, 1, binbuf_getvec(x->a_names) + x->a_index);
+
+    if (senditup && glist_isvisible(x->a_glist))
+        sys_queuegui(x, x->a_glist, dropdown_redraw);
+}
+
+/* use this to keep the index within the correct range */
+static int dropdown_clipindex(t_dropdown *x, int i)
+{
+    int ret = i, len = binbuf_getnatom(x->a_names);
+    if (ret < 0) ret = 0;
+    if (ret > len - 1) ret = len - 1;
+    return ret;
+}
+
+static void dropdown_set(t_dropdown *x, t_symbol *s, int argc, t_atom *argv)
+{
+    int oldindex = x->a_index;
+    if (!argc) return;
+    x->a_index = dropdown_clipindex(x, (int)atom_getfloat(argv));
+    if (oldindex != x->a_index)
+        dropdown_retext(x, 1, 0);
+}
+
+static int dropdown_names_getmaxwidth(t_dropdown *x) {
+    char buf[MAXPDSTRING];
+    t_binbuf *names = x->a_names, *b = binbuf_new();
+    int len = binbuf_getnatom(x->a_names), maxwidth = 0;
+    while (len--)
+    {
+        int width;
+        binbuf_clear(b);
+        binbuf_add(b, 1, binbuf_getvec(names) + len);
+        binbuf_gettext(b, &buf, &width);
+        if (width > maxwidth) maxwidth = width;
+    }
+    return maxwidth;
+}
+
+static void dropdown_names(t_dropdown *x, t_symbol *s, int argc, t_atom *argv)
+{
+    binbuf_clear(x->a_names);
+    if (argc)
+        binbuf_add(x->a_names, argc, argv);
+    else
+        binbuf_addv(x->a_names, "s", &s_);
+    /* nudge a_index back into range */
+    x->a_index = dropdown_clipindex(x, x->a_index);
+    post("max width is %d", dropdown_names_getmaxwidth(x));
+    x->a_maxnamewidth = dropdown_names_getmaxwidth(x);
+    //dropdown_max_namelength(x);
+    dropdown_retext(x, 1, 0);
+}
+
+static void dropdown_bang(t_dropdown *x)
+{
+    t_atom at;
+    if (x->a_outtype == 0)
+        SETFLOAT(&at, (t_float)x->a_index);
+    else
+    {
+        t_atom *atfrom = binbuf_getvec(x->a_names) + x->a_index;
+        if (atfrom->a_type == A_FLOAT)
+            SETFLOAT(&at, atom_getfloat(atfrom));
+        else if (atfrom->a_type == A_SYMBOL)
+            SETSYMBOL(&at, atom_getsymbol(atfrom));
+        else pd_error(x, "only float and symbol output supported");
+    }
+    if (x->a_text.te_outlet)
+        outlet_list(x->a_text.te_outlet, &s_list, 1, &at);
+    if (*x->a_expanded_to->s_name && x->a_expanded_to->s_thing)
+    {
+        if (x->a_symto == x->a_symfrom)
+            pd_error(x,
+                "%s: atom with same send/receive name (infinite loop)",
+                    x->a_symto->s_name);
+        else pd_list(x->a_expanded_to->s_thing, &s_list, 1, &at);
+    }
+}
+
+static void dropdown_float(t_dropdown *x, t_float f)
+{
+    /* this should output the atom at the relevant index
+       Let's do it js-style, negative indices for wrapping
+       back around and bring numbers greater than last index
+       down to last index */
+    t_atom at;
+    SETFLOAT(&at, f);
+    dropdown_set(x, 0, 1, &at);
+    dropdown_bang(x);
+}
+
+static void dropdown_symbol(t_dropdown *x, t_symbol *s)
+{
+    t_atom at;
+    SETSYMBOL(&at, s);
+    dropdown_set(x, 0, 1, &at);
+    dropdown_bang(x);
+}
+
+    /* We need a list method because, since there's both an "inlet" and a
+    "nofirstin" flag, the standard list behavior gets confused. */
+static void dropdown_list(t_dropdown *x, t_symbol *s, int argc, t_atom *argv)
+{
+    if (!argc)
+        dropdown_bang(x);
+    else if (argv->a_type == A_FLOAT)
+        dropdown_float(x, argv->a_w.w_float);
+    else if (argv->a_type == A_SYMBOL)
+        dropdown_symbol(x, argv->a_w.w_symbol);
+    else pd_error(x, "dropdown_list: need float or symbol");
+}
+
+/* this should send a message to the GUI triggering the dropdown
+   <div> to be displayed and its event listeners activated */
+static int dropdown_click(t_gobj *z, struct _glist *glist,
+    int xpix, int ypix, int shift, int alt, int dbl, int doit)
+{
+    t_dropdown *x = (t_dropdown *)z;
+    t_canvas *canvas = glist_getcanvas(glist);
+    t_rtext *y = glist_findrtext(glist, (t_text *)x);
+    if (doit)
+    {
+        int i, len = binbuf_getnatom(x->a_names);
+        t_atom *at = binbuf_getvec(x->a_names);
+        /* for gatom we turn the text red to indicate it as editable.
+           For dropdown we instead have the GUI create a menu with which
+           the user can choose an option */
+        gui_start_vmess("gui_dropdown_activate", "xxsiii",
+            canvas,
+            x,
+            rtext_gettag(y),
+            x->a_index,
+            sys_hostfontsize(glist_getfont(glist)),
+            1);
+        gui_start_array();
+        for (i = 0; i < len; i++)
+        {
+            if (at[i].a_type == A_FLOAT)
+                gui_f(at[i].a_w.w_float);
+            else if (at[i].a_type == A_SYMBOL)
+                gui_s(at[i].a_w.w_symbol->s_name);
+            else
+                gui_s("(pointer)");
+        }
+        gui_end_array();
+        gui_end_vmess();
+    }
+    return (1);
+}
+
+    /* message back from dialog window */
+static void dropdown_param(t_dropdown *x, t_symbol *sel, int argc, t_atom *argv)
+{
+    /* Check if we need to set an undo point. This happens if the user
+       clicks the "Ok" button, but not when clicking "Apply" or "Cancel" */
+    if (atom_getintarg(7, argc, argv))
+        canvas_apply_setundo(x->a_glist, (t_gobj *)x);
+
+    t_float width = atom_getfloatarg(0, argc, argv);
+
+    int output = (int)atom_getfloatarg(1, argc, argv);
+    t_float dummy = atom_getfloatarg(2, argc, argv);
+    t_symbol *label = gatom_unescapit(atom_getsymbolarg(3, argc, argv));
+    t_float wherelabel = atom_getfloatarg(4, argc, argv);
+    t_symbol *symfrom = gatom_unescapit(atom_getsymbolarg(5, argc, argv));
+    t_symbol *symto = gatom_unescapit(atom_getsymbolarg(6, argc, argv));
+
+    gobj_vis(&x->a_text.te_g, x->a_glist, 0);
+    if (!*symfrom->s_name && *x->a_symfrom->s_name)
+        inlet_new(&x->a_text, &x->a_text.te_pd, 0, 0);
+    else if (*symfrom->s_name && !*x->a_symfrom->s_name && x->a_text.te_inlet)
+    {
+        canvas_deletelinesforio(x->a_glist, &x->a_text,
+            x->a_text.te_inlet, 0);
+        inlet_free(x->a_text.te_inlet);
+    }
+    if (!*symto->s_name && *x->a_symto->s_name)
+        outlet_new(&x->a_text, 0);
+    else if (*symto->s_name && !*x->a_symto->s_name && x->a_text.te_outlet)
+    {
+        canvas_deletelinesforio(x->a_glist, &x->a_text,
+            0, x->a_text.te_outlet);
+        outlet_free(x->a_text.te_outlet);
+    }
+    x->a_outtype = output;
+    x->a_dummy = dummy;
+    if (width < 0)
+        width = 4;
+    else if (width > 80)
+        width = 80;
+    x->a_text.te_width = width;
+    x->a_wherelabel = ((int)wherelabel & 3);
+    x->a_label = label;
+    if (*x->a_symfrom->s_name)
+        pd_unbind(&x->a_text.te_pd,
+            canvas_realizedollar(x->a_glist, x->a_symfrom));
+    x->a_symfrom = symfrom;
+    if (*x->a_symfrom->s_name)
+        pd_bind(&x->a_text.te_pd,
+            canvas_realizedollar(x->a_glist, x->a_symfrom));
+    x->a_symto = symto;
+    x->a_expanded_to = canvas_realizedollar(x->a_glist, x->a_symto);
+    gobj_vis(&x->a_text.te_g, x->a_glist, 1);
+    gobj_select(&x->a_text.te_g, x->a_glist, 1);
+    canvas_dirty(x->a_glist, 1);
+    canvas_getscroll(x->a_glist);
+    /* glist_retext(x->a_glist, &x->a_text); */
+}
+
+    /* ---------------- dropdown-specific widget functions --------------- */
+
+/* this can be combined with gatom_getwherelabel */
+static void dropdown_getwherelabel(t_dropdown *x, t_glist *glist, int *xp, int *yp)
+{
+    int x1, y1, x2, y2;
+    text_getrect(&x->a_text.te_g, glist, &x1, &y1, &x2, &y2);
+    if (x->a_wherelabel == ATOM_LABELLEFT)
+    {
+        *xp = -3 -
+            strlen(canvas_realizedollar(x->a_glist, x->a_label)->s_name) *
+            sys_fontwidth(glist_getfont(glist));
+        *yp = y2 - y1 - 4;
+    }
+    else if (x->a_wherelabel == ATOM_LABELRIGHT)
+    {
+        *xp = x2 - x1 + 3;
+        *yp = y2 - y1 - 4;
+    }
+    else if (x->a_wherelabel == ATOM_LABELUP)
+    {
+        *xp = -1;
+        *yp = -3;
+    }
+    else
+    {
+        *xp = -1;
+        *yp = y2 - y1 + sys_fontheight(glist_getfont(glist));
+    }
+}
+
+/* for dropdown's label */
+static void dropdown_vis(t_gobj *z, t_glist *glist, int vis)
+{
+    //fprintf(stderr,"dropdown_vis\n");
+    t_dropdown *x = (t_dropdown *)z;
+    text_vis(z, glist, vis);
+    if (*x->a_label->s_name)
+    {
+        if (vis)
+        {
+            int x1, y1;
+            t_rtext *y = glist_findrtext(x->a_glist, &x->a_text);
+            dropdown_getwherelabel(x, glist, &x1, &y1);
+            gui_vmess("gui_text_new", "xssiiisi",
+                glist_getcanvas(glist),
+                rtext_gettag(y),
+                "dropdown",
+                0,
+                x1, // left margin
+                y1, // top margin
+                canvas_realizedollar(x->a_glist, x->a_label)->s_name,
+                sys_hostfontsize(glist_getfont(glist))
+            );
+        }
+        else
+        {
+            /* We're just deleting the parent gobj in the GUI, which takes
+               care of removing all the children. So we don't need to send
+               a message here */
+            //sys_vgui(".x%lx.c delete %lx.l\n", glist_getcanvas(glist), x);
+        }
+    }
+    if (!vis)
+        sys_unqueuegui(x);
+}
+
+/* a lot of this is duplicated from canvas_atom-- we should factor out the
+   common stuff from the copy/pasta here */
+void canvas_dropdown(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
+{
+    char tagbuf[MAXPDSTRING];
+    if (canvas_hasarray(gl)) return;
+    //fprintf(stderr,"canvas_atom\n");
+    t_dropdown *x = (t_dropdown *)pd_new(dropdown_class);
+    x->a_text.te_width = 0;                        /* don't know it yet. */
+    x->a_text.te_type = T_ATOM;
+    x->a_text.te_iemgui = 0;
+    x->a_text.te_binbuf = binbuf_new();
+    x->a_glist = gl;
+    x->a_dummy = 0;
+    x->a_outtype = 1; /* output value by default */
+    x->a_wherelabel = 0;
+    x->a_label = &s_;
+    x->a_symfrom = &s_;
+    x->a_symto = x->a_expanded_to = &s_;
+    x->a_index = 0;
+    x->a_names = binbuf_new();
+    binbuf_addv(x->a_names, "ssss", &s_symbol, &s_float, &s_bang, &s_list);
+    x->a_maxnamewidth = dropdown_names_getmaxwidth(x);
+    x->a_text.te_width = 6;
+
+    /* bind symbol for sending index updates from the GUI */
+    sprintf(tagbuf, "x%lx", (long unsigned int)x);
+    pd_bind(&x->a_text.te_pd, gensym(tagbuf));
+
+    binbuf_add(x->a_text.te_binbuf, 1, binbuf_getvec(x->a_names));
+    if (argc > 1)
+        /* create from file. x, y, width, low-range, high-range, flags,
+            label, receive-name, send-name */
+    {
+        x->a_text.te_xpix = atom_getfloatarg(0, argc, argv);
+        x->a_text.te_ypix = atom_getfloatarg(1, argc, argv);
+        x->a_text.te_width = atom_getintarg(2, argc, argv);
+            /* sanity check because some very old patches have trash in this
+            field... remove this in 2003 or so: */
+        if (x->a_text.te_width < 0 || x->a_text.te_width > 500)
+            x->a_text.te_width = 4;
+        x->a_outtype = (int)atom_getfloatarg(3, argc, argv);
+        x->a_dummy = atom_getfloatarg(4, argc, argv);
+        x->a_wherelabel = (((int)atom_getfloatarg(5, argc, argv)) & 3);
+        x->a_label = gatom_unescapit(atom_getsymbolarg(6, argc, argv));
+        x->a_symfrom = gatom_unescapit(atom_getsymbolarg(7, argc, argv));
+        if (*x->a_symfrom->s_name)
+            pd_bind(&x->a_text.te_pd,
+                canvas_realizedollar(x->a_glist, x->a_symfrom));
+
+        x->a_symto = gatom_unescapit(atom_getsymbolarg(8, argc, argv));
+        x->a_expanded_to = canvas_realizedollar(x->a_glist, x->a_symto);
+        if (x->a_symto == &s_)
+            outlet_new(&x->a_text, &s_float);
+        if (x->a_symfrom == &s_)
+            inlet_new(&x->a_text, &x->a_text.te_pd, 0, 0);
+        glist_add(gl, &x->a_text.te_g);
+    }
+    else
+    {
+        int connectme, xpix, ypix, indx, nobj;
+        canvas_howputnew(gl, &connectme, &xpix, &ypix, &indx, &nobj);
+        outlet_new(&x->a_text, &s_float);
+        inlet_new(&x->a_text, &x->a_text.te_pd, 0, 0);
+        pd_vmess(&gl->gl_pd, gensym("editmode"), "i", 1);
+        x->a_text.te_xpix = xpix;
+        x->a_text.te_ypix = ypix;
+        glist_add(gl, &x->a_text.te_g);
+        glist_noselect(gl);
+        glist_select(gl, &x->a_text.te_g);
+        if (connectme == 1)
+            canvas_connect(gl, indx, 0, nobj, 0);
+        else if (connectme == 0)
+        {
+            canvas_displaceselection(glist_getcanvas(gl), -8, -8);
+            canvas_startmotion(glist_getcanvas(gl));
+        }
+        //canvas_setundo(glist_getcanvas(gl),
+        //    canvas_undo_create, canvas_undo_set_create(gl), "create");
+        canvas_undo_add(glist_getcanvas(gl), 9, "create",
+            (void *)canvas_undo_set_create(glist_getcanvas(gl)));
+    }
+    glob_preset_node_list_seek_hub();
+    glob_preset_node_list_check_loc_and_update();
+}
+
+static void dropdown_free(t_dropdown *x)
+{
+    char tagbuf[MAXPDSTRING];
+    sprintf(tagbuf, "x%lx", (long unsigned int)x);
+    pd_unbind(&x->a_text.te_pd, gensym(tagbuf));
+
+    if (*x->a_symfrom->s_name)
+        pd_unbind(&x->a_text.te_pd,
+            canvas_realizedollar(x->a_glist, x->a_symfrom));
+    gfxstub_deleteforkey(x);
+}
+
+static void dropdown_properties(t_gobj *z, t_glist *owner)
+{
+    t_dropdown *x = (t_dropdown *)z;
+    //char buf[200];
+    //sprintf(buf, "pdtk_dropdown_dialog %%s %d %g %g %d {%s} {%s} {%s}\n",
+    //    x->a_text.te_width, x->a_draglo, x->a_draghi,
+    //        x->a_wherelabel, gatom_escapit(x->a_label)->s_name,
+    //            gatom_escapit(x->a_symfrom)->s_name,
+    //                gatom_escapit(x->a_symto)->s_name);
+    //gfxstub_new(&x->a_text.te_pd, x, buf);
+    gui_start_vmess("gui_dropdown_dialog", "s",
+        gfxstub_new2(&x->a_text.te_pd, x));
+    gui_start_array();
+    gui_s("name");     gui_s("dropdown");
+    gui_s("width");    gui_i(x->a_text.te_width);
+    gui_s("outtype");   gui_f(x->a_outtype);
     gui_s("labelpos"); gui_i(x->a_wherelabel);
     gui_s("label");    gui_s(gatom_escapit(x->a_label)->s_name);
     gui_s("receive_symbol");  gui_s(gatom_escapit(x->a_symfrom)->s_name);
@@ -1419,6 +1856,9 @@ static void text_getrect(t_gobj *z, t_glist *glist,
         int font = glist_getfont(glist);
         int fontwidth = sys_fontwidth(font), fontheight = sys_fontheight(font);
         width = (x->te_width > 0 ? x->te_width : 6) * fontwidth + 2;
+        /* add an extra two characters for the dropdown box's arrow */
+        if (pd_class(&x->te_pd) == dropdown_class)
+            width += fontwidth * 2;
         height = fontheight + 3; /* borrowed from TMARGIN, etc, in g_rtext.c */
     }
     // jsarlo
@@ -1456,6 +1896,13 @@ static void text_getrect(t_gobj *z, t_glist *glist,
         if (y)
         {
             width = rtext_width(y);
+            if (pd_class(&x->te_pd) == dropdown_class)
+            {
+                int font = glist_getfont(glist);
+                int fontwidth = sys_fontwidth(font);
+//                width += fontwidth * 2;
+                width = fontwidth * (((t_dropdown *)x)->a_maxnamewidth + 2);
+            }
             height = rtext_height(y) - (iscomment << 1);
         }
 
@@ -1591,15 +2038,6 @@ static void text_displace_withtag(t_gobj *z, t_glist *glist,
     }    
 }
 
-static void gatom_displace_withtag(t_gobj *z, t_glist *glist,
-    int dx, int dy)
-{
-    //t_gatom *x = (t_gatom*)z;
-    text_displace_withtag(z, glist, dx, dy);
-    //sys_vgui(".x%lx.c move %lx.l %d %d\n", glist_getcanvas(glist), 
-    //    x, dx, dy);
-}
-
 static void text_select(t_gobj *z, t_glist *glist, int state)
 {
     t_text *x = (t_text *)z;
@@ -1723,7 +2161,8 @@ static void text_activate(t_gobj *z, t_glist *glist, int state)
 {
     t_text *x = (t_text *)z;
     t_rtext *y = glist_findrtext(glist, x);
-    if (z->g_pd != gatom_class) rtext_activate(y, state);
+    if (z->g_pd != gatom_class && z->g_pd != dropdown_class)
+        rtext_activate(y, state);
 }
 
 static void text_delete(t_gobj *z, t_glist *glist)
@@ -1825,6 +2264,7 @@ static int text_click(t_gobj *z, struct _glist *glist,
     }
     else if (x->te_type == T_ATOM)
     {
+        /* Note: dropdown has its own click handler */
         t_canvas *canvas = glist_getcanvas(glist);
         t_rtext *y = glist_findrtext(glist, x);
         if (doit)
@@ -1886,19 +2326,35 @@ void text_save(t_gobj *z, t_binbuf *b)
     else if (x->te_type == T_ATOM)
     {
         //fprintf(stderr, "atom\n");
-        t_atomtype t = ((t_gatom *)x)->a_atom.a_type;
-        t_symbol *sel = (t == A_SYMBOL ? gensym("symbolatom") :
-            (t == A_FLOAT ? gensym("floatatom") : gensym("intatom")));
-        t_symbol *label = gatom_escapit(((t_gatom *)x)->a_label);
-        t_symbol *symfrom = gatom_escapit(((t_gatom *)x)->a_symfrom);
-        t_symbol *symto = gatom_escapit(((t_gatom *)x)->a_symto);
-        binbuf_addv(b, "ssiiifffsss", gensym("#X"), sel,
-            (int)x->te_xpix, (int)x->te_ypix, (int)x->te_width,
-            (double)((t_gatom *)x)->a_draglo,
-            (double)((t_gatom *)x)->a_draghi,
-            (double)((t_gatom *)x)->a_wherelabel,
-            label, symfrom, symto);
-    }           
+        if (pd_class(&x->te_pd) == gatom_class)
+        {
+            t_atomtype t = ((t_gatom *)x)->a_atom.a_type;
+            t_symbol *sel = (t == A_SYMBOL ? gensym("symbolatom") :
+                (t == A_FLOAT ? gensym("floatatom") : gensym("intatom")));
+            t_symbol *label = gatom_escapit(((t_gatom *)x)->a_label);
+            t_symbol *symfrom = gatom_escapit(((t_gatom *)x)->a_symfrom);
+            t_symbol *symto = gatom_escapit(((t_gatom *)x)->a_symto);
+            binbuf_addv(b, "ssiiifffsss", gensym("#X"), sel,
+                (int)x->te_xpix, (int)x->te_ypix, (int)x->te_width,
+                (double)((t_gatom *)x)->a_draglo,
+                (double)((t_gatom *)x)->a_draghi,
+                (double)((t_gatom *)x)->a_wherelabel,
+                label, symfrom, symto);
+        }
+        else
+        {
+            t_symbol *sel = gensym("dropdown");
+            t_symbol *label = gatom_escapit(((t_dropdown *)x)->a_label);
+            t_symbol *symfrom = gatom_escapit(((t_dropdown *)x)->a_symfrom);
+            t_symbol *symto = gatom_escapit(((t_dropdown *)x)->a_symto);
+            binbuf_addv(b, "ssiiiiffsss", gensym("#X"), sel,
+                (int)x->te_xpix, (int)x->te_ypix, (int)x->te_width,
+                (int)((t_dropdown *)x)->a_outtype,
+                (double)((t_dropdown *)x)->a_dummy,
+                (double)((t_dropdown *)x)->a_wherelabel,
+                label, symfrom, symto);
+        }
+    }
     else    
     {
         //fprintf(stderr,"comment\n");
@@ -1959,7 +2415,19 @@ static t_widgetbehavior gatom_widgetbehavior =
     text_delete,
     gatom_vis,
     text_click,
-    gatom_displace_withtag,
+    text_displace_withtag,
+};
+
+static t_widgetbehavior dropdown_widgetbehavior =
+{
+    text_getrect,
+    text_displace,
+    text_select,
+    text_activate,
+    text_delete,
+    dropdown_vis,
+    dropdown_click,
+    text_displace_withtag,
 };
 
 /* -------------------- the "text" class  ------------ */
@@ -2138,7 +2606,6 @@ void glist_drawiofor_withtag(t_glist *glist, t_object *ob, int firsttime,
     }
 }
 
-
 void text_drawborder(t_text *x, t_glist *glist,
     char *tag, int width2, int height2, int firsttime)
 {
@@ -2259,9 +2726,11 @@ void text_drawborder(t_text *x, t_glist *glist,
             //    (selected ? "$pd_colors(selection)" : "$pd_colors(atom_box_border)"),
             //        tag, tag, (selected ? "selected" : ""));
             /* These coords can be greatly simplified... */
-            gui_vmess("gui_atom_draw_border", "xsii",
+            gui_vmess("gui_atom_draw_border", "xsiii",
                 glist_getcanvas(glist),
                 tag,
+                pd_class(&x->te_pd) == dropdown_class ?
+                    ((t_dropdown *)x)->a_outtype + 1 : 0,
                 x2 - x1,
                 y2 - y1);
         }
@@ -2272,9 +2741,10 @@ void text_drawborder(t_text *x, t_glist *glist,
             //         "%d %d %d %d %d %d %d %d %d %d %d %d\n",
             //    glist_getcanvas(glist), tag,
             //    x1, y1,  x2-4, y1,  x2, y1+4,  x2, y2,  x1, y2,  x1, y1);
-            gui_vmess("gui_atom_redraw_border", "xsii",
+            gui_vmess("gui_atom_redraw_border", "xsiii",
                 glist_getcanvas(glist),
                 tag,
+                pd_class(&x->te_pd) == dropdown_class ? 1 : 0,
                 x2 - x1,
                 y2 - y1);
         }
@@ -2431,7 +2901,6 @@ void text_drawborder_withtag(t_text *x, t_glist *glist,
     //canvas_getscroll(
     //    (long unsigned int)glist_getcanvas(glist));
 }
-
 
 void glist_eraseiofor(t_glist *glist, t_object *ob, char *tag)
 {
@@ -2746,6 +3215,21 @@ void g_text_setup(void)
         A_GIMME, 0);
     class_setwidget(gatom_class, &gatom_widgetbehavior);
     class_setpropertiesfn(gatom_class, gatom_properties);
+
+    dropdown_class = class_new(gensym("dropdown"), 0, (t_method)dropdown_free,
+        sizeof(t_dropdown), CLASS_NOINLET | CLASS_PATCHABLE, 0);
+    class_addbang(dropdown_class, dropdown_bang);
+    class_addfloat(dropdown_class, dropdown_float);
+    class_addsymbol(dropdown_class, dropdown_symbol);
+    class_addlist(dropdown_class, dropdown_list);
+    class_addmethod(dropdown_class, (t_method)dropdown_set, gensym("set"),
+        A_GIMME, 0);
+    class_addmethod(dropdown_class, (t_method)dropdown_names, gensym("names"),
+        A_GIMME, 0);
+    //class_addmethod(dropdown_class, (t_method)dropdown_click, gensym("click"),
+    //  A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, 0);
+    class_addmethod(dropdown_class, (t_method)dropdown_param, gensym("param"),
+        A_GIMME, 0);
+    class_setwidget(dropdown_class, &dropdown_widgetbehavior);
+    class_setpropertiesfn(dropdown_class, dropdown_properties);
 }
-
-

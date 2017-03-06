@@ -79,6 +79,7 @@
   "gatom": {
     "prop": {
       "gatom": "atom box",
+      "dropdown": "dropdown menu",
       "label": "label",
       "label_left": "left",
       "label_right": "right",
@@ -89,6 +90,8 @@
       "label_bottom": "bottom",
       "label_left": "left",
       "label_right": "right",
+      "dropdown_outtype": "output",
+      "dropdown_outtype_tt": "whether to output the index or the value",
       "width": "width",
       "width_tt": "width (in characters)"
     }
@@ -195,6 +198,8 @@
     "symbol_tt": "Add a box to type and display a symbol on the canvas",
     "comment": "Comment",
     "comment_tt": "Write a comment on the canvas",
+    "dropdown": "Dropdown",
+    "dropdown_tt": "Dropdown menu",
     "bang": "Bang",
     "bang_tt": "Add a graphical button to the canvas for sending bang messages",
     "toggle": "Toggle",

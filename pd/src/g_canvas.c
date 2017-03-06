@@ -2465,6 +2465,7 @@ extern void canvas_numbox(t_glist *gl, t_symbol *s, int argc, t_atom *argv);
 extern void canvas_msg(t_glist *gl, t_symbol *s, int argc, t_atom *argv);
 extern void canvas_floatatom(t_glist *gl, t_symbol *s, int argc, t_atom *argv);
 extern void canvas_symbolatom(t_glist *gl, t_symbol *s, int argc, t_atom *argv);
+extern void canvas_dropdown(t_glist *gl, t_symbol *s, int argc, t_atom *argv);
 extern void glist_scalar(t_glist *canvas, t_symbol *s, int argc, t_atom *argv);
 
 void g_graph_setup(void);
@@ -2499,6 +2500,8 @@ void g_canvas_setup(void)
         gensym("floatatom"), A_GIMME, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_symbolatom,
         gensym("symbolatom"), A_GIMME, A_NULL);
+    class_addmethod(canvas_class, (t_method)canvas_dropdown,
+        gensym("dropdown"), A_GIMME, A_NULL);
     class_addmethod(canvas_class, (t_method)glist_text,
         gensym("text"), A_GIMME, A_NULL);
     class_addmethod(canvas_class, (t_method)glist_glist, gensym("graph"),

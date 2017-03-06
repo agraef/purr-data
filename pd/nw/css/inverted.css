@@ -232,6 +232,50 @@ text {
     fill: #111;
 }
 
+/* for dropdown box we want to visually distinguish boxes that output
+   the index from boxes that output the value. For now we do that by
+   stroking the arrow for boxes that output an index. */
+.atom .index_arrow {
+    stroke: #a294a2;
+    stroke-width: 1;
+    fill: none;
+}
+
+.atom .value_arrow {
+    fill: #a294a2;
+}
+
+/* gatom "activated" text (i.e., when it has the keyboard focus) */
+.atom.activated text {
+    fill: red;
+}
+
+#dropdown_list {
+    position: absolute;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #999;
+    cursor: pointer;
+    color: white;
+    box-shadow: 5px 0 5px -5px #999, 0 5px 5px -5px #999, -5px 0 5px -5px #999;
+}
+
+#dropdown_list ol {
+    list-style-position: inside;
+    margin: 0;
+    padding: 0;
+    background: black;
+}
+
+#dropdown_list li {
+    list-style-type: none;
+    padding: 5px;
+}
+
+#dropdown_list li.highlighted {
+    background: #555;
+}
+
 .obj .border {
     fill: #090707;
     stroke: #3e3e3e;
