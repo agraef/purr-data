@@ -1,0 +1,145 @@
+#N canvas 214 25 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header dropdown 3 12 0
+18 -204280 -1 0;
+#X obj 0 231 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 486 289 494 344 META 0;
+#X text 12 115 LIBRARY internal;
+#X text 12 155 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 35 LICENSE SIBSD;
+#X text 12 135 AUTHOR Miller Puckette;
+#X text 12 195 HELP_PATCH_AUTHORS Updated for Pd version 0.34. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 75 INLET_0 float bang symbol set;
+#X text 12 95 OUTLET_0 float;
+#X text 12 175 RELEASE_DATE 1997;
+#X text 12 55 DESCRIPTION atom (number box and symbol box);
+#X text 12 5 KEYWORDS control storage GUI nonlocal symbol_op;
+#X restore 500 597 pd META;
+#X obj 0 412 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 479 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 515 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X text 98 483 (none);
+#N canvas 215 542 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 47 1 Related Objects;
+#X obj 21 42 float;
+#X obj 61 42 list;
+#X obj 102 45 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
+-262144 -1 -1 0 256 0;
+#X obj 169 42 drawnumber;
+#X floatatom 20 70 5 0 0 0 - - -, f 5;
+#X symbolatom 59 70 10 0 0 0 - - -, f 10;
+#X restore 102 598 pd Related_objects;
+#X obj 78 240 cnv 17 3 160 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 420 float;
+#X obj 78 421 cnv 17 3 52 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 239 bang;
+#X text 98 259 float;
+#X text 98 289 list;
+#X text 98 349 set;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X text 168 289 - a list will be truncated to the first item.;
+#X text 98 450 symbol;
+#X text 11 23 popup menu for choosing a number or symbol;
+#X dropdown 481 9 6 1 0 0 - - -, f 6;
+#X dropdown 118 141 0 1 0 0 - - -;
+#X msg 158 75 names country western;
+#X obj 118 211 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 118 184 select country western;
+#X obj 182 211 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 158 45 loadbang;
+#X floatatom 118 75 5 0 0 0 - - -, f 5;
+#X dropdown 321 140 6 0 0 0 - - -, f 6;
+#X floatatom 336 98 5 0 0 0 - - -, f 5;
+#X floatatom 321 181 5 0 0 0 - - -, f 5;
+#X msg 321 75 names c d e f g a b;
+#X text 378 140 2) Output index;
+#X text 179 141 1) output value;
+#X msg 170 99 set 1;
+#X msg 380 98 set 3;
+#X obj 86 99 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 168 239 - send the value or index to the outlet;
+#X text 168 259 - set the index and trigger output.;
+#X text 168 349 - set the dropdown box to display the value at the
+given index without sending output from the outlet. Example: "set 3"
+will display the 4th item in the list. Out of bounds indices will be
+clipped to the nearest index.;
+#X text 168 420 - in "index" mode \, this is the index of the chosen
+value. In "value" mode it is a floating point value.;
+#X text 168 450 - in "value" mode \, this is the chosen symbol value
+;
+#N canvas 99 121 430 514 dropdown_box_properties 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X floatatom 70 102 12 0 0 0 - - -, f 12;
+#X text 19 69 width;
+#X text 69 69 - width of the number box (in characters). By default
+the width is 5 characters.;
+#X text 148 102 width = 12 characters;
+#X floatatom 70 123 2 0 0 0 - - -, f 2;
+#X text 148 123 width = 2 characters;
+#X floatatom 70 143 0 0 0 0 - - -;
+#X text 148 143 width = 0 characters (read below);
+#X text 19 291 label;
+#X text 69 291 - give the number box a visible name;
+#X text 68 311 Use the radio buttons to reposition the label to the
+left \, right \, top \, or bottom of the number box. Spaces in the
+label will automatically be converted to underscores.;
+#X text 19 373 messages;
+#X text 69 373 - nonlocal send and receive;
+#X text 68 393 As an alternative to using wires \, you can set send
+and receive names to send messages through the number box. "Number-box-7"
+below is set to receive messages to "gatom-help-rcv" \, and send messages
+to "gatom-help-snd";
+#X text 50 2 Properties for dropdown;
+#X text 20 38 Right click on a dropdown box and choose "Properties"
+to change the following:;
+#X text 69 164 If you select a width of 0 \, the dropdown box will
+be set to the length of the largest value (in characters). This way
+all the values will be able to fit in the box when chosen.;
+#X text 19 220 output;
+#X text 69 220 - set whether to output the value or the index;
+#X dropdown 181 242 6 1 0 1 value - -, f 6;
+#X dropdown 71 242 6 0 0 1 index - -, f 6;
+#X floatatom 71 263 5 0 0 1 number - -, f 5;
+#X symbolatom 181 263 10 0 0 1 symbol - -, f 10;
+#X dropdown 225 462 6 1 0 0 - #0-dropdown-receive -, f 6;
+#X floatatom 71 452 5 0 0 0 - - -, f 5;
+#X obj 71 476 s \$0-dropdown-receive;
+#X connect 20 0 23 0;
+#X connect 21 0 22 0;
+#X connect 25 0 26 0;
+#X restore 102 557 pd dropdown_box_properties;
+#X text 98 309 names;
+#X text 168 309 - a list of symbols or numbers to display in the dropdown
+menu. In "value" mode \, dropdown can output both symbols and numbers
+;
+#X text 98 523 For choosing the "mode" as well as setting other properties
+\, see this subpatch:;
+#X connect 21 0 24 0;
+#X connect 22 0 21 0;
+#X connect 24 0 23 0;
+#X connect 24 1 25 0;
+#X connect 26 0 22 0;
+#X connect 26 0 31 0;
+#X connect 27 0 21 0;
+#X connect 28 0 30 0;
+#X connect 29 0 28 0;
+#X connect 31 0 28 0;
+#X connect 34 0 21 0;
+#X connect 35 0 28 0;
+#X connect 36 0 21 0;
