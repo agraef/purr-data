@@ -122,6 +122,16 @@ function nw_window_blur_callback(name) {
     }
 }
 
+function nw_window_zoom(name, delta) {
+    var z = gui.Window.get().zoomLevel;
+    z += delta;
+    if (z < 8 && z > -8) {
+        gui.Window.get().zoomLevel = z;
+        pdgui.pdsend(name, "zoom", z);
+        pdgui.gui_canvas_get_scroll(name);
+    }
+}
+
 // These three functions need to be inside canvas_events closure
 function canvas_find_whole_word(elem) {
     canvas_events.match_words(elem.checked);
@@ -578,6 +588,15 @@ var canvas_events = (function() {
         }
         // Send a canvas "paste" message to Pd
         pdgui.pdsend(name, "paste");
+    });
+
+    // MouseWheel event for zooming
+    document.addEventListener("wheel", function(evt) {
+        if (evt.deltaY < 0) {
+            nw_window_zoom(name, +1);
+        } else if (evt.deltaY > 0) {
+            nw_window_zoom(name, -1);
+        }
     });
 
     // The following is commented out because we have to set the
@@ -1265,21 +1284,13 @@ function nw_create_patch_window_menus(gui, w, name) {
     minit(m.view.zoomin, {
         enabled: true,
         click: function () {
-            var z = gui.Window.get().zoomLevel;
-            if (z < 8) { z++; }
-            gui.Window.get().zoomLevel = z;
-            pdgui.pdsend(name, "zoom", z);
-            pdgui.gui_canvas_get_scroll(name);
+            nw_window_zoom(name, +1);
         }
     });
     minit(m.view.zoomout, {
         enabled: true,
         click: function () {
-            var z = gui.Window.get().zoomLevel;
-            if (z > -7) { z--; }
-            gui.Window.get().zoomLevel = z;
-            pdgui.pdsend(name, "zoom", z);
-            pdgui.gui_canvas_get_scroll(name);
+            nw_window_zoom(name, -1);
         }
     });
     minit(m.view.optimalzoom, {
