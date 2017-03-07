@@ -22,15 +22,15 @@ body {
 }
 
 ::selection {
-    background: #eee8d5;
-    color: #657b83;
+    background: #073642;
+    color: #839496;
 }
 
 /* The main Pd Window */
 
 #console_controls {
     color: #657b83;
-    background-color: #eee8d5;
+    background-color: #073642;
     height: 50px; 
 } 
 
@@ -49,19 +49,19 @@ body {
     right: 0px;
     bottom: 0px;
     overflow-y: scroll;    
-    background-color: #fdf6e3;
-    color: #657b83;
+    background-color: #002b36;
+    color: #839496;
 }
 
 /* The console API allows classes for different types of messages to print.
    Currently the only class is "error". More may be added, especially once 
    we port the "loglevel" functionality that was available in Pd Extended. */
 #console_bottom .error {
-    color: #586e75;
+    color: #93a1a1;
 }
 
 #console_bottom .error a {
-    color: #268bd2;
+    color: #b58900;
     font-weight: 600;
 }
 
@@ -90,7 +90,7 @@ mark.console_find_highlighted {
     width: 100%;
     height: 1em;
     padding: 0.2em;
-    background: #eee8d5;
+    background: #073642;
     position: fixed;
     bottom: 0;
     left: 0;
@@ -101,11 +101,11 @@ mark.console_find_highlighted {
 
 /* patch font and background color. (Note: margin needs to stay at zero.) */
 .patch_body {
-    background-color: #fdf6e3;
+    background-color: #002b36;
 }
 
 #selection_rectangle {
-    stroke: #073642;
+    stroke: #b58900;
 }
 
 /* The outline to show the visible area for a Graph-On-Parent canvas,
@@ -118,18 +118,18 @@ mark.console_find_highlighted {
 
 .cord.signal {
     stroke-width: 2;
-    stroke: #93a1a1;
+    stroke: #586e75;
 }
 
 .cord.control {
     stroke-width: 1;
-    stroke: #93a1a1;
+    stroke: #586e75;
 }
 
 /* selected connection between objects */
 .cord.signal.selected_line,
 .cord.control.selected_line {
-    stroke: #268bd2;
+    stroke: #b58900;
 }
 
 #cord_inspector_rect {
@@ -147,7 +147,7 @@ mark.console_find_highlighted {
 
 /* text inside boxes: message boxes, object boxes, graphs, comments, etc. */
 .box_text {
-    fill: #657b83;
+    fill: #839496;
 }
 
 /* hyperlinks: for now, just pddplink and helplink */
@@ -174,15 +174,15 @@ mark.console_find_highlighted {
     white-space: pre-wrap;
     overflow-wrap: break-word;
     -webkit-margin-before: 0px;
-    color: #586e75;
+    color: #93a1a1;
 }
 
 #new_object_textentry.obj {
-    outline: 1px solid #268bd2;
+    outline: 1px solid #b58900;
 }
 
 #new_object_textentry.msg {
-    outline: 0px solid #268bd2;
+    outline: 0px solid #b58900;
     background-image: url(../msg-box.svg);
 }
 
@@ -210,8 +210,8 @@ text {
 }
 
 .msg .border {
-    stroke: #93a1a1;
-    fill: #fdf6e3;
+    stroke: #586e75;
+    fill: #002b36;
 }
 
 /* state of msg box when clicking it */
@@ -221,8 +221,8 @@ text {
 
 /* atom box */
 .atom .border {
-    stroke: #93a1a1;
-    fill: #fdf6e3;
+    stroke: #586e75;
+    fill: #002b36;
 }
 
 /* for dropdown box we want to visually distinguish boxes that output
@@ -231,14 +231,14 @@ text {
    output the value we don't need a CSS rule, as the arrow will be filled
    black by default */
 .atom .index_arrow {
-    stroke: #93a1a1;
+    stroke: #586e75;
     stroke-width: 1;
     fill: none;
 }
 
 .atom .value_arrow {
-    stroke: #93a1a1;
-    fill: #93a1a1;
+    stroke: #586e75;
+    fill: #586e75;
 }
 
 /* gatom "activated" text (i.e., when it has the keyboard focus) */
@@ -250,16 +250,17 @@ text {
     position: absolute;
     border-width: 1px;
     border-style: solid;
-    border-color: #93a1a1;
+    border-color: #586e75;
     cursor: pointer;
-    color: #586e75;
+    color: #93a1a1;
+
 }
 
 #dropdown_list ol {
     list-style-position: inside;
     margin: 0;
     padding: 0;
-    background: #fdf6e3;
+    background: #002b36;
 }
 
 #dropdown_list li {
@@ -268,12 +269,12 @@ text {
 }
 
 #dropdown_list li.highlighted {
-    background: #eee8d5;
+    background: #073642;
 }
 
 .obj .border {
-    fill: #fdf6e3;
-    stroke: #93a1a1;
+    fill: #002b36;
+    stroke: #586e75;
 }
 
 /* A little hack for special canvas of [cnv].
@@ -286,7 +287,7 @@ text {
 }
 
 .graph .border {
-    stroke: #93a1a1;
+    stroke: #586e75;
     fill: none;
 }
 
@@ -305,13 +306,13 @@ text {
       canvas.
 */
 :not(.gop).selected .border {
-    stroke: #268bd2;
+    stroke: #b58900;
     display: inline;
 }
 
 /* text inside selected objects */
 :not(.gop).selected text {
-    fill: #268bd2;
+    fill: #b58900;
 }
 
 /* for an object that didn't create */
@@ -323,21 +324,21 @@ text {
 
 /* control inlet */
 .xlet_control {
-    stroke: #657b83;
-    fill: #fdf6e3;
+    stroke: #586e75;
+    fill: #002b36;
 }
 
 /* signal inlet */
 .xlet_signal {
-    stroke: #657b83;
-    fill: #657b83;
+    stroke: #586e75;
+    fill: #002b36;
     stroke-width: 1;
 }
 
 /* iemgui inlet or outlet */
 .xlet_iemgui {
-    stroke: #657b83;
-    fill: #fdf6e3;
+    stroke: #586e75;
+    fill: #002b36;
     stroke-width: 1;
 }
 
@@ -376,7 +377,7 @@ text {
     width: 100%;
     height: 1em;
     padding: 3px;
-    background: #eee8d5;
+    background: #073642;
     position: fixed;
     bottom: 0;
     left: 0;
