@@ -3087,6 +3087,9 @@ function gui_mycanvas_update(cid, tag, color, selected) {
         fill: color,
         stroke: color
     });
+    configure_item(h, {
+        stroke: color
+    });
 }
 
 function gui_mycanvas_coords(cid, tag, vis_width, vis_height, select_width, select_height) {
