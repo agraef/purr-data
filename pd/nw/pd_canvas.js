@@ -592,10 +592,12 @@ var canvas_events = (function() {
 
     // MouseWheel event for zooming
     document.addEventListener("wheel", function(evt) {
-        if (evt.deltaY < 0) {
-            nw_window_zoom(name, +1);
-        } else if (evt.deltaY > 0) {
-            nw_window_zoom(name, -1);
+        if (pdgui.cmd_or_ctrl_key(evt)) {
+            if (evt.deltaY < 0) {
+                nw_window_zoom(name, +1);
+            } else if (evt.deltaY > 0) {
+                nw_window_zoom(name, -1);
+            }
         }
     });
 
