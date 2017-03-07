@@ -498,7 +498,7 @@ var canvas_events = (function() {
                     && evt.target.parentNode.parentNode
                     && evt.target.parentNode.parentNode.id === "dropdown_list") {
                     li_array = evt.target.parentNode.querySelectorAll('li');
-                    li_array.forEach(function(e) {
+                    Array.prototype.forEach.call(li_array, function(e) {
                         e.classList.remove("highlighted");
                     });
                     evt.target.classList.add("highlighted");

@@ -554,11 +554,13 @@ function ok() {
 
 function change_width_and_height_labels() {
     [".mknob_steps", ".mknob_size"].forEach(function(sel) {
-        document.body.querySelectorAll(sel).forEach(function(e) {
+        Array.prototype.forEach.call(
+            document.body.querySelectorAll(sel), function(e) {
             e.setAttribute("data-i18n", "iem.prop" + sel);
         });
-        document.body.querySelectorAll(sel + "_tt").forEach(function(e) {
-            e.setAttribute("data-i18n", "[title]iem.prop" + sel + "_tt");
+	Array.prototype.forEach.call(
+            document.body.querySelectorAll(sel + "_tt"), function(e) {
+                e.setAttribute("data-i18n", "[title]iem.prop" + sel + "_tt");
         });
     });
 }
