@@ -268,12 +268,13 @@ exports.keydown = function(cid, evt) {
         hack = null, // hack for unprintable ascii codes
         cmd_or_ctrl
     switch(key_code) {
-        case 8:
+        case 8: // backspace
         case 9:
         case 10:
         case 27:
         //case 32:
         case 127: hack = key_code; break;
+        case 46: hack = 127; break; // some platforms report 46 for Delete
         case 37: hack = add_keymods("Left", evt); break;
         case 38: hack = add_keymods("Up", evt); break;
         case 39: hack = add_keymods("Right", evt); break;
