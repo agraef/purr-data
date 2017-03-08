@@ -4457,7 +4457,10 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                 
                 // now decide which one is better
                 // (we give preference to option A if both are equal)
-                if (successA >= successB)
+                // AG: Also take into account the ctrl mod status, so
+                // that the user can reverse our default choice (otherwise
+                // we usually just end up preferring outgoing connections)
+                if (glob_ctrl ? successA < successB : successA >= successB)
                 {
                     // OPTION A (see description above)
                     for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
