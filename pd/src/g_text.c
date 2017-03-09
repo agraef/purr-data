@@ -2744,7 +2744,8 @@ void text_drawborder(t_text *x, t_glist *glist,
             gui_vmess("gui_atom_redraw_border", "xsiii",
                 glist_getcanvas(glist),
                 tag,
-                pd_class(&x->te_pd) == dropdown_class ? 1 : 0,
+                pd_class(&x->te_pd) == dropdown_class ?
+                    ((t_dropdown *)x)->a_outtype + 1 : 0,
                 x2 - x1,
                 y2 - y1);
         }

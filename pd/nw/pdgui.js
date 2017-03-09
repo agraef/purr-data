@@ -2008,7 +2008,7 @@ function gui_atom_draw_border(cid, tag, type, width, height) {
     }
 }
 
-function gui_atom_redraw_border(cid, tag, is_dropdown, width, height) {
+function gui_atom_redraw_border(cid, tag, type, width, height) {
     var g = get_gobj(cid, tag),
         p, a;
     // Unfortunately Pd will send updates for gui objects that
@@ -2022,12 +2022,12 @@ function gui_atom_redraw_border(cid, tag, is_dropdown, width, height) {
         // So we have to check for existence here...
         if (p) {
             configure_item(p, {
-                points: atom_border_points(width, height)
+                points: atom_border_points(width, height, type !== 0)
             });
-            if (!!is_dropdown) {
+            if (type !== 0) {
                 a = g.querySelectorAll("polygon")[1];
                 configure_item(a , {
-                    points: atom_arrow_points(width, height)
+                    points: atom_arrow_points(width, height),
                 });
             }
         }
