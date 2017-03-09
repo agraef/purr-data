@@ -76,7 +76,7 @@ the algorithm along by pressing the ctrl key *before* doing the connections:
 ;
 #X text 36 17 Mode 4 is the most complicated. Here we want to connect
 the objects above to the objects below again \, but this time the different
-out- or inlets of the target object will be *distibuted* among the
+out- or inlets of the target object will be *distributed* among the
 other objects. To try these \, select each group of three or four objects
 below and then connect the leftmost outlet of the leftmost object on
 the top to the leftmost inlet of the leftmost object on the bottom.
