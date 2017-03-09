@@ -1,29 +1,29 @@
-#N canvas 705 163 453 555 10;
+#N canvas 251 25 453 586 10;
 #X obj 36 48 pack f f f f;
 #X obj 169 8 unpack f f f f;
-#X text 13 144 (1) 1:1 multi-connect: connects o(n+k) -> i(m+k) for
+#X text 13 180 (1) 1:1 multi-connect: connects o(n+k) -> i(m+k) for
 k=0 \, 1 \, ... \, where o(n)->i(m) is the initial connection and *exactly*
 o and i are selected;
 #X obj 36 8 unpack f f f;
 #X obj 169 48 pack f f f;
-#X text 13 190 (2) 1:N single-connect: connects o(n)->i(m) \, o(n)->i'(m)
+#X text 13 226 (2) 1:N single-connect: connects o(n)->i(m) \, o(n)->i'(m)
 \, o(n)->i''(m) \, ... \, where o(n)->i(m) is the initial connection
 \, o is unselected and at least 2 objects i \, i' \, i'' \, ... are
 selected;
-#X text 13 249 (3) N:1 single-connect: connects o(n)->i(m) \, o'(n)->i(m)
+#X text 13 285 (3) N:1 single-connect: connects o(n)->i(m) \, o'(n)->i(m)
 \, o''(n)->i(m) \, ... \, where o(n)->i(m) is the initial connection
 \, i is unselected and at least 2 objects o \, o' \, o'' \, ... are
 selected;
-#X text 13 308 (4) 1:N multi-connect: connects o(n+k) -> i(m) for each
+#X text 13 344 (4) 1:N multi-connect: connects o(n+k) -> i(m) for each
 other selected object i \, k = 0 \, 1 \, ... \, where o(n)->i(m) is
 the initial connection \, and *both* o and at least two different i's
 are selected;
-#X text 13 367 (4') N:1 multi-connect: connects o(n) -> i(m+k) for
+#X text 13 403 (4') N:1 multi-connect: connects o(n) -> i(m+k) for
 each other selected object o \, k = 0 \, 1 \, ... \, where o(n)->i(m)
 is the initial connection \, and *both* i and at least two different
 o's are selected;
-#X text 13 124 "Intelligent" patching:;
-#X text 13 78 Shift connections: Pressing the shift key while doing
+#X text 13 160 "Intelligent" patching:;
+#X text 13 114 Shift connections: Pressing the shift key while doing
 connections will let you do multiple connections from the same outlet
 in one go.;
 #N canvas 88 323 450 323 mode1 0;
@@ -32,8 +32,7 @@ and then connect the leftmost outlet of the upper object to the leftmost
 inlet of the lower object:;
 #X obj 110 81 unpack f f f f;
 #X obj 115 120 pack f f f f;
-#X restore 377 162 pd mode1;
-#X text 272 22 NOTE: Details and exercises;
+#X restore 377 198 pd mode1;
 #X text 272 35 can be found in the margin.;
 #N canvas 66 279 450 323 mode2+3 0;
 #X obj 188 84 inlet;
@@ -50,7 +49,7 @@ the leftmost object in the (selected) bottom row.;
 row and then connect the leftmost object in the (selected) top row
 to the inlet of the (unselected) lower object.;
 #X obj 181 243 outlet;
-#X restore 377 247 pd mode2+3;
+#X restore 377 283 pd mode2+3;
 #N canvas 288 307 445 421 mode4 0;
 #X obj 86 177 unpack f f f;
 #X floatatom 83 209 5 0 0 0 - - -, f 5;
@@ -83,15 +82,15 @@ either mode 4 or mode 4' \, whatever gives the most connections. Sometimes
 this choice will be ambiguous \, in which case you may have to help
 the algorithm along by pressing the ctrl key *before* doing the connections:
 ;
-#X restore 377 356 pd mode4;
-#X text 13 426 NOTE: Intelligent patching will do either (4) or (4')
+#X restore 377 392 pd mode4;
+#X text 13 462 NOTE: Intelligent patching will do either (4) or (4')
 \, whichever gives the most connections. This choice can be reversed
 by holding the ctrl key when doing the initial connection. The "other"
 selected objects will be considered in left-to-right and top-to-bottom
 order.;
 #X obj 4 -24 cnv 15 445 20 empty \$0-pddp.cnv.header intelligent\ patching
 20 10 1 18 -261139 -33289 0;
-#X obj 2 500 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+#X obj 2 536 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 42 254 494 284 META 0;
 #X text 12 85 LIBRARY PDDP;
@@ -102,7 +101,7 @@ Wilkes).;
 #X text 12 105 WEBSITE https://agraef.github.io/purr-data-intro/;
 #X text 12 65 DESCRIPTION how to connect multiple objects in one go
 ;
-#X restore 383 502 pd META;
+#X restore 383 538 pd META;
 #N canvas 19 470 428 143 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261139 -33289 0;
@@ -110,7 +109,10 @@ Wilkes).;
 #X text 17 28 Notice that some of the menu items have shortcut keys
 listed beside them. Check out the one for Edit mode for a quick way
 to switch back and forth between Edit mode and Run mode.;
-#X restore 104 502 pd References;
-#X obj 7 502 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X restore 104 538 pd References;
+#X obj 7 538 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X obj 418 -23 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
+#X text 33 90 Note: these behaviors are unstable and subject to change
+;
+#X text 272 22 Details and exercises;
