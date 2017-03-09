@@ -1,4 +1,4 @@
-#N canvas 251 25 453 586 10;
+#N canvas 252 51 453 586 10;
 #X obj 36 48 pack f f f f;
 #X obj 169 8 unpack f f f f;
 #X text 13 180 (1) 1:1 multi-connect: connects o(n+k) -> i(m+k) for
@@ -69,19 +69,19 @@ to the inlet of the (unselected) lower object.;
 #X text 262 374 with ctrl;
 #X text 54 145 Mode 4: 1:N ("fan out");
 #X text 220 145 Mode 4': N:1 ("fan in");
-#X text 36 17 Mode 4 is the most complicated. Here we want to connect
-the objects above to the objects below again \, but this time the different
-out- or inlets of the target object will be *distibuted* among the
-other objects. To try these \, select each group of three objects below
-and then connect the leftmost outlet of the leftmost object on the
-top to the leftmost inlet of the leftmost object on the bottom. Note
-that \, in contrast to mode 2 and 3 \, here *all* the objects to be
-connected have to be selected beforehand!;
 #X text 37 236 Note that the intelligent patching heuristic will pick
 either mode 4 or mode 4' \, whatever gives the most connections. Sometimes
 this choice will be ambiguous \, in which case you may have to help
 the algorithm along by pressing the ctrl key *before* doing the connections:
 ;
+#X text 36 17 Mode 4 is the most complicated. Here we want to connect
+the objects above to the objects below again \, but this time the different
+out- or inlets of the target object will be *distibuted* among the
+other objects. To try these \, select each group of three or four objects
+below and then connect the leftmost outlet of the leftmost object on
+the top to the leftmost inlet of the leftmost object on the bottom.
+Note that \, in contrast to mode 2 and 3 \, here *all* the objects
+to be connected have to be selected beforehand!;
 #X restore 377 392 pd mode4;
 #X text 13 462 NOTE: Intelligent patching will do either (4) or (4')
 \, whichever gives the most connections. This choice can be reversed
