@@ -501,13 +501,16 @@ var duplicate = 0;
 function do_post(string, type) {
     var myp, span, text, printout;
     current_string += string;
+    myp = pd_window.document.getElementById("p1");
     if (string.slice(-1) === "\n") {
         if (current_string === last_string) {
             last_child.textContent = "[" + (duplicate + 2) + "] " + last_string;
             duplicate++;
             current_string = "";
+            if (myp.lastChild !== last_child) {
+                myp.appendChild(last_child);
+            }
         } else {
-            myp = pd_window.document.getElementById("p1"),
             span = pd_window.document.createElement("span");
             if (type) {
                 span.classList.add(type);
@@ -4475,6 +4478,10 @@ function gui_dropdown_activate(cid, obj_tag, tag, current_index, font_size, stat
                 .window.document.querySelector("#dropdown_list");
             // stick the obj_tag in a data field
             select_elem.setAttribute("data-callback", obj_tag);
+            select_elem.style.setProperty("max-height",
+                (patchwin[cid].window.innerHeight -
+                    g.getBoundingClientRect().bottom - 5) + "px"
+            );
             select_elem.style.setProperty("display", "inline");
             select_elem.style.setProperty("left",
                 (elem_get_coords(g).x - svg_view.x) + "px");
