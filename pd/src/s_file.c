@@ -269,11 +269,6 @@ static char *sys_prefbuf;
 // with the previous method which invoked 'defaults read' on each individual
 // key.
 
-// XXXTODO: In principle, this approach should also work in reverse to import
-// the data into the defaults storage in one go. Presumably this should also
-// be much faster than the current implementation which invokes the shell to
-// run 'defaults write' for each individual key.
-
 static void sys_initloadpreferences(void)
 {
     char cmdbuf[MAXPDSTRING], *buf;
@@ -317,7 +312,7 @@ static void sys_initloadpreferences(void)
     // stages of the pipe are:
     // 1. defaults export: grab our defaults in XML format
     // 2. plutil -convert json -r -o - -: convert to JSON
-    // 3. sed: a few edits remove the extra JSON bits (curly brances, string
+    // 3. sed: a few edits remove the extra JSON bits (curly braces, string
     //    quotes, unwanted whitespace and character escapes) and produce
     //    Pd-L2Ork's Unix prefs format, i.e.:
     // JSON                        -->            Unix prefs
@@ -413,21 +408,56 @@ static void sys_doneloadpreferences( void)
     sys_prefbuf = NULL;
 }
 
+// AG: We use a similar approach here to import the data into the defaults
+// storage in one go. To these ends, a temporary plist file in xml format is
+// created which is then submitted to 'defaults import'. This is *much* faster
+// than the previous implementation which invoked the shell to run 'defaults
+// write' for each individual key.
+
+#define save_prefs_template "/tmp/pd-l2ork.defaults.plist.XXXXXX"
+
+static FILE *save_fp;
+static char save_prefs[] = save_prefs_template;
+
 static void sys_initsavepreferences( void)
 {
+  strcpy(save_prefs, save_prefs_template);
+  int fd = mkstemp(save_prefs);
+  if (fd < 0) {
+    error("save preferences: %s", strerror(errno));
+    return;
+  }
+  save_fp = fdopen(fd, "w");
+  if (!save_fp) {
+    error("save preferences: %s", strerror(errno));
+    return;
+  }
+  fprintf(save_fp, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n"
+"<plist version=\"1.0\">\n"
+"<dict>\n");
 }
 
 static void sys_putpreference(const char *key, const char *value)
 {
-    char cmdbuf[MAXPDSTRING];
-    snprintf(cmdbuf, MAXPDSTRING, 
-             "defaults write '%s' %s \"%s\" 2> /dev/null\n",
-             current_prefs, key, value);
-    system(cmdbuf);
+  if (!save_fp) return;
+  fprintf(save_fp,
+          "<key>%s</key>\n<string>%s</string>\n",
+          key, value);
 }
 
 static void sys_donesavepreferences( void)
 {
+  if (!save_fp) return;
+  fprintf(save_fp, "</dict>\n</plist>\n");
+  fclose(save_fp);
+  save_fp = 0;
+  char cmdbuf[MAXPDSTRING];
+  snprintf(cmdbuf, MAXPDSTRING,
+           "defaults import '%s' '%s' 2> /dev/null",
+           current_prefs, save_prefs);
+  system(cmdbuf);
+  unlink(save_prefs);
 }
 
 #endif /* __APPLE__ */
