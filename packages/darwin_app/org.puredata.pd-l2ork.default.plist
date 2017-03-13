@@ -57,25 +57,29 @@
 	<key>loadlib25</key>
 	<string>pan</string>
 	<key>loadlib26</key>
-	<string>hcs</string>
+	<string>freeverb~</string>
 	<key>loadlib27</key>
-	<string>jmmmp</string>
+	<string>hcs</string>
 	<key>loadlib28</key>
-	<string>ext13</string>
+	<string>jmmmp</string>
 	<key>loadlib29</key>
-	<string>ggee</string>
+	<string>ext13</string>
 	<key>loadlib30</key>
-	<string>iem_anything</string>
+	<string>ggee</string>
 	<key>loadlib31</key>
-	<string>ekext</string>
+	<string>iem_anything</string>
 	<key>loadlib32</key>
-	<string>pdp</string>
+	<string>ekext</string>
 	<key>loadlib33</key>
-	<string>disis</string>
+	<string>pdp</string>
 	<key>loadlib34</key>
+	<string>hexloader</string>
+	<key>loadlib35</key>
+	<string>disis</string>
+	<key>loadlib36</key>
 	<string>lyonpotpourri</string>
 	<key>nloadlib</key>
-	<string>34</string>
+	<string>36</string>
 	<key>path1</key>
 	<string>/System/Library/Fonts</string>
 	<key>path2</key>
