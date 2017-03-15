@@ -5,7 +5,7 @@
 	<key>defeatrt</key>
 	<string>0</string>
 	<key>flags</key>
-	<string>-helppath ~/Library/Pd -helppath /Library/Pd</string>
+	<string>-helppath ~/Library/Pd-l2ork -helppath /Library/Pd-l2ork</string>
 	<key>loadlib1</key>
 	<string>libdir</string>
 	<key>loadlib2</key>
