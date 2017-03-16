@@ -2278,20 +2278,23 @@ function gui_gobj_erase(cid, tag) {
 }
 
 function gui_text_set (cid, tag, text) {
-    var svg_text = get_item(cid, tag + "text");
-    if (svg_text !== null) {
-        // trim leading/trailing whitespace
-        text = text.trim();
-        svg_text.textContent = "";
-        text_to_tspans(cid, svg_text, text);
-    } else {
-        // In tk, setting an option for a non-existent canvas
-        // item is ignored. Because of that, Miller didn't pay
-        // attention to parts of the implementation which attempted
-        // to set options before creating the item. To get a sense
-        // of where this is happening, uncomment the following line:
+    var svg_text;
+    if (patchwin[cid]) {
+        svg_text = get_item(cid, tag + "text");
+        if (svg_text !== null) {
+            // trim leading/trailing whitespace
+            text = text.trim();
+            svg_text.textContent = "";
+            text_to_tspans(cid, svg_text, text);
+        } else {
+            // In tk, setting an option for a non-existent canvas
+            // item is ignored. Because of that, Miller didn't pay
+            // attention to parts of the implementation which attempted
+            // to set options before creating the item. To get a sense
+            // of where this is happening, uncomment the following line:
 
-        //post("gui_text_set: svg_text doesn't exist: tag: " + tag);
+            //post("gui_text_set: svg_text doesn't exist: tag: " + tag);
+        }
     }
 }
 
