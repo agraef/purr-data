@@ -259,15 +259,14 @@ static char *sys_prefbuf;
 #define BUFSZ 4096
 
 // AG: We have to go to some lengths here since 'defaults read' doesn't
-// properly deal with UTF-8 characters in the prefs data. 'defaults export'
-// does the trick, however, so we use that to read the entire prefs data at
-// once from a pipe, using plutil to convert the resulting data to JSON format
-// which can then be translated to Pd's Unix preferences file format using
-// sed. The result is stored in a character buffer for efficient access. From
-// there we can retrieve the individual keys in the same fashion as on Unix. A
-// welcome side effect is that loading the prefs is *much* faster now than
-// with the previous method which invoked 'defaults read' on each individual
-// key.
+// properly deal with UTF-8 characters in the prefs data. 'plutil' does the
+// trick, however, so we use that to read the entire prefs data at once from a
+// pipe, converting it to JSON format which can then be translated to Pd's
+// Unix preferences file format using sed. The result is stored in a character
+// buffer for efficient access. From there we can retrieve the individual keys
+// in the same fashion as on Unix. A welcome side effect is that loading the
+// prefs is *much* faster now than with the previous method which invoked
+// 'defaults read' on each individual key.
 
 static void sys_initloadpreferences(void)
 {
@@ -275,8 +274,9 @@ static void sys_initloadpreferences(void)
     FILE *fp;
     size_t sz, n = 0;
     int res;
-    char default_prefs[FILENAME_MAX]; // default prefs embedded in the package
+    char default_prefs[FILENAME_MAX];  // default prefs embedded in the package
     char embedded_prefs[FILENAME_MAX]; // overrides others for standalone app
+    char user_prefs[FILENAME_MAX];     // user preferences
     char embedded_prefs_file[FILENAME_MAX];
     char user_prefs_file[FILENAME_MAX];
     const char *prefs, *homedir = getenv("HOME");
@@ -292,9 +292,10 @@ static void sys_initloadpreferences(void)
     snprintf(embedded_prefs, FILENAME_MAX,
 	     "%s/../org.puredata.pd-l2ork",
              sys_libdir->s_name);
+    snprintf(user_prefs, FILENAME_MAX,
+             "%s/Library/Preferences/org.puredata.pd-l2ork", homedir);
     snprintf(embedded_prefs_file, FILENAME_MAX, "%s.plist", embedded_prefs);
-    snprintf(user_prefs_file, FILENAME_MAX,
-             "%s/Library/Preferences/org.puredata.pd-l2ork.plist", homedir);
+    snprintf(user_prefs_file, FILENAME_MAX, "%s.plist", user_prefs);
     if (stat(embedded_prefs_file, &statbuf) == 0) {
       // Read from and write to the embedded prefs (standalone app).
       prefs = embedded_prefs;
@@ -302,17 +303,16 @@ static void sys_initloadpreferences(void)
     } else if (stat(user_prefs_file, &statbuf) == 0) {
       // Read from and write to the user prefs.
       prefs = current_prefs;
-      strcpy(current_prefs, "org.puredata.pd-l2ork");
+      strncpy(current_prefs, user_prefs, FILENAME_MAX);
     } else {
       // Read from the package defaults and write to the user prefs.
       prefs = default_prefs;
-      strcpy(current_prefs, "org.puredata.pd-l2ork");
+      strncpy(current_prefs, user_prefs, FILENAME_MAX);
     }
     // This looks complicated, but is rather straightforward. The individual
     // stages of the pipe are:
-    // 1. defaults export: grab our defaults in XML format
-    // 2. plutil -convert json -r -o - -: convert to JSON
-    // 3. sed: a few edits remove the extra JSON bits (curly braces, string
+    // 1. plutil -convert json -r -o -: grab our defaults and convert to JSON
+    // 2. sed: a few edits remove the extra JSON bits (curly braces, string
     //    quotes, unwanted whitespace and character escapes) and produce
     //    Pd-L2Ork's Unix prefs format, i.e.:
     // JSON                        -->            Unix prefs
@@ -322,8 +322,7 @@ static void sys_initloadpreferences(void)
     //   "path1" : "\/System\/Library\/Fonts"     path1: /System/Library/Fonts
     // }
     snprintf(cmdbuf, MAXPDSTRING,
-        "defaults export %s - "
-        "| plutil -convert json -r -o - - "
+        "plutil -convert json -r -o - %s.plist "
         "| sed -E "
           "-e 's/[{}]//g' "
           "-e 's/^ *\"(([^\"]|\\\\.)*)\" *: *\"(([^\"]|\\\\.)*)\".*/\\1: \\3/' "
