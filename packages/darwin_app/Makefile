@@ -130,8 +130,8 @@ Info.plist: Info.plist.in
 	cat Info.plist.in | \
 		sed 's/PD_APP_NAME/$(PD_APP_NAME)/' | \
 		sed 's/PD_SHORT_NAME/$(PD_SHORT_NAME)/' | \
-		sed 's/CFBUNDLESHORTVERSIONSTRING/$(PD_MAJOR_VERSION).$(PD_MINOR_VERSION).$(PD_BUGFIX_VERSION)/' | \
-		sed 's/CFBUNDLEVERSION/$(CFBUNDLEVERSION_DATE)/' > \
+		sed 's/CFBUNDLESHORTVERSIONSTRING/$(PD_L2ORK_VERSION)/' | \
+		sed 's/CFBUNDLEVERSION/$(PD_BUILD_VERSION)/' > \
 		Info.plist
 
 spotlight_importer_install:
