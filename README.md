@@ -38,7 +38,7 @@ There are currently three main distributions of Pure Data:
 2. Pure Data "Vanilla".  Miller Puckette's personal version which he hosts on
    his website and maintains.  It doesn't include external libraries like
    objects for doing graphics, video, etc.
-2. Pure Data Extended.  A monolithic distribution which ships with lots of
+3. Pure Data Extended.  A monolithic distribution which ships with lots of
    external libraries.  As of August 2015 it hasn't been updated since January 2014.
 
 ### Three Paragraph Overview
@@ -76,8 +76,10 @@ Pd-L2ork has the following goals:
 ### Installation Guide
 
 #### Linux
-Time to build: *40 minutes to 1.5 hours*
+
+Time to build: *40 minutes to 1.5 hours*  
 Hard drive space required: *roughly 2.5 GB*
+
 To install using a pre-compiled binary, follow these instructions:
 http://l2ork.music.vt.edu/main/?page_id=56
 
@@ -89,75 +91,100 @@ Then follow the steps outlined here:
 http://l2ork.music.vt.edu/main/?page_id=56#install-dev
 
 #### OSX 64-bit using Homebrew
-Time to build: *50 minutes to 1.5 hours*
+
+Time to build: *50 minutes to 1.5 hours*  
 Hard drive space required: *roughly 2 GB*
+
 1. Install [Homebrew](http://brew.sh) *(15 minutes)*
    (asks for password twice-- once for command line tools, once for homebrew)
-2. Install the dependencies *(10 minutes)*:<code>
-   brew install wget
-   brew install autoconf
-   brew install automake
-   brew install libtool
-   brew install fftw
-   brew install python
-   brew install fluidsynth
-   brew install lame
-   brew install libvorbis
-   brew install speex
-   brew install gsl
-   brew install libquicktime
-   brew install pkg-config
-</code>
-3. Clone the Purr-Data repository *(10 minutes)*<code>
-git clone https://git.purrdata.net/jwilkes/purr-data.git</code>
-4. Change to the directory<code>
-cd purr-data/l2ork_addons</code>
-5. Run the installer *(15 minutes)*<code>
-./tar_em_up.sh -X</code>
-6. When the installer finishes, type<code>
-cd ..</code>
+
+2. Install the dependencies *(10 minutes)*:
+
+        brew install wget
+        brew install autoconf
+        brew install automake
+        brew install libtool
+        brew install fftw
+        brew install python
+        brew install fluidsynth
+        brew install lame
+        brew install libvorbis
+        brew install speex
+        brew install gsl
+        brew install libquicktime
+        brew install pkg-config
+
+3. Clone the Purr-Data repository *(10 minutes)*
+
+        git clone https://git.purrdata.net/jwilkes/purr-data.git
+
+4. Change to the directory
+
+        cd purr-data/l2ork_addons
+
+5. Run the installer *(15 minutes)*
+
+        ./tar_em_up.sh -X
+
+6. When the installer finishes, type
+
+        cd ..
+
 7. There should now be a .dmg file in your current directory
 
 #### Windows 32-bit Using msys2
-Time to build: *roughly 1.5 hours-- 30 minutes of this is for Gem alone*
+
+Time to build: *roughly 1.5 hours-- 30 minutes of this is for Gem alone*  
 Hard drive space required to build: *rougly 2.5 GB*
 
 Important note: check the name of your Windows user account. If it has a space
 in it-- like "My Home Computer" or "2nd Laptop", then **stop**. You may not
 use this guide.  (Actually you can probably just install everything in ~/.. in
 that case, but I haven't tested doing it like that. Sorry. Get a better OS...)
+
 1. Download and install [msys2](https://msys2.github.io/) *(5 minutes)*  
-  There are two installers-- one for 32-bit Windows systems (i386) and one for
-  64-bit Windows (x_64). Be sure you know which
-  [version](http://windows.microsoft.com/en-us/windows/32-bit-and-64-bit-windows#1TC=windows-7)
-  of Windows you are running and download the appropriate installer.  
-  Note: don't run it after it installs. You'll open it manually in the next
-  step.
+   There are two installers-- one for 32-bit Windows systems (i386) and one for
+   64-bit Windows (x_64). Be sure you know which
+   [version](http://windows.microsoft.com/en-us/windows/32-bit-and-64-bit-windows#1TC=windows-7)
+   of Windows you are running and download the appropriate installer.  
+   Note: don't run it after it installs. You'll open it manually in the next
+   step.
+
 2. Download and install [inno setup](http://www.jrsoftware.org/isdl.php) *(5 minutes)*
+
 3. Run MinGW-w64 Win32 Shell *(less than a minute)*  
-   msys2 adds three Start Menu items for different "flavors" of shell:  
-   + MinGW-w64 __Win32__ Shell <- click this one!
-   + MinGW-w64 Win64 Shell
-   + MSYS Shell
+   msys2 adds three Start Menu items for different "flavors" of shell:
+    + MinGW-w64 __Win32__ Shell <- click this one!
+    + MinGW-w64 Win64 Shell
+    + MSYS Shell
+
 4. Install the dependencies *(5-10 minutes)*  
    Once the shell opens, we need to install the dependencies for building
-   Purr Data. Issue the following command:<code>
-pacman -S autoconf automake git libtool \
+   Purr Data. Issue the following command:
+
+        pacman -S autoconf automake git libtool \
           make mingw-w64-i686-dlfcn mingw-w64-i686-fftw \
           mingw-w64-i686-fluidsynth \
           mingw-w64-i686-ftgl mingw-w64-i686-fribidi \
           mingw-w64-i686-ladspa-sdk mingw-w64-i686-lame \
           mingw-w64-i686-libsndfile mingw-w64-i686-libvorbis \
           mingw-w64-i686-lua mingw-w64-i686-toolchain \
-          rsync unzip wget</code>
-5. Download the source code *(3-6 minutes)*
+          rsync unzip wget
+
+5. Download the source code *(3-6 minutes)*  
    Issue the following command to create a new directory "purr-data" and clone
-   the repository to it:<code>
-git clone https://git.purrdata.net/jwilkes/purr-data.git</code>
-6. Enter the purr-data/l2ork_addons directory *(less than a minute)*<code>
-cd purr-data/l2ork_addons</code>
-7. Finally, build Purr-Data *(45-80 minutes)*<code>
-./tar_em_up.sh -Z</code>
+   the repository to it:
+
+        git clone https://git.purrdata.net/jwilkes/purr-data.git
+
+6. Enter the purr-data/l2ork_addons directory *(less than a minute)*
+
+        cd purr-data/l2ork_addons
+
+7. Finally, build Purr-Data *(45-80 minutes)*
+
+        ./tar_em_up.sh -Z
+
 8. Look in purr-data/packages/win32_inno/Output and click the setup file to
    start installing Purr Data to your machine.
 
