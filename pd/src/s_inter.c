@@ -840,7 +840,7 @@ void gui_do_vmess(const char *sel, char *fmt, int end, va_list ap)
         {
         case 'f': sys_vgui("%g", va_arg(ap, double)); break;
         case 's': escape_double_quotes(va_arg(ap, const char *)); break;
-        case 'i': sys_vgui("%d", va_arg(ap, t_int)); break;
+        case 'i': sys_vgui("%d", va_arg(ap, int)); break;
         case 'x': sys_vgui("\"" X_SPECIFIER "\"",
             va_arg(ap, long unsigned int));
             break;
