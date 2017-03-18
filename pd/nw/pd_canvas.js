@@ -1525,7 +1525,7 @@ function nw_create_patch_window_menus(gui, w, name) {
     // Help menu
     minit(m.help.about, {
         click: function() {
-            pdgui.pd_doc_open("doc/1.manual", "1.introduction.txt");
+            pdgui.pd_doc_open("doc/about", "about.pd");
         }
     });
     minit(m.help.manual, {

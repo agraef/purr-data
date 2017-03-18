@@ -7372,7 +7372,7 @@ void drawimage_size(t_drawimage *x, t_float w, t_float h)
 {
     x->x_w = w;
     x->x_h = h;
-post("w is %g and h is %g", w, h);
+    //post("w is %g and h is %g", w, h);
 }
 
 static int drawimage_getindex(void *z, t_template *template, t_word *data)

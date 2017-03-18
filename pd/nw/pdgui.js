@@ -3449,7 +3449,7 @@ function gui_drawimage_new(obj_tag, file_path, canvasdir, flags) {
     } else {
         i = 0;
     }
-    post("no of files: " + i);
+    //post("no of files: " + i);
 
     if (i > 0) {
         img = new pd_window.Image(); // create an image in the pd_window context

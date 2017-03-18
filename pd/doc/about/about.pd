@@ -1,0 +1,56 @@
+#N struct cat float x float y;
+#N canvas 323 210 525 457 12;
+#N canvas 367 202 450 346 version 0;
+#X msg 61 51 l2ork_version;
+#X obj 61 76 pdinfo;
+#X obj 61 26 loadbang;
+#X obj 61 101 makefilename Pd-l2ork-%s;
+#X msg 61 126 label \$1;
+#X obj 61 151 s \$0-about_text;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 2 0 0 0;
+#X connect 3 0 4 0;
+#X connect 4 0 5 0;
+#X restore 18 416 pd version;
+#X text 18 76 A real-time graphical programming environment for live
+interactive computer music \, Pd-l2ork works on Linux \, Macintosh
+OSX \, and Microsoft Windows.;
+#X text 18 136 Pd is copyrighted \, but is free for you to use for
+any reasonable purpose. See the file:;
+#X obj 18 172 pddp/pddplink @pd_help/../manuals/Pd/License.html -text
+doc/manuals/Pd/License.html;
+#X text 18 197 Pd-l2ork offers a rewrite of many of Pd's core routines
+for the purpose of improving editor functionality and stability. It
+is distributed under the same license as Pd. For additional info see:
+;
+#X obj 18 265 pddp/pddplink http://l2ork.music.vt.edu/main/;
+#X text 18 296 This is Purr Data \, the cross-platform \, JS-based
+version of Pd-l2ork. An introduction to Purr Data can be found at:
+;
+#X obj 18 330 pddp/pddplink https://agraef.github.io/purr-data-intro/
+;
+#X text 18 360 Reference documentation for Pd lives in:;
+#X obj 18 378 pddp/pddplink @pd_help/../1.manual/index.htm -text doc/1.manual/index.htm
+;
+#X obj 36 21 cnv 15 432 33 empty \$0-about_text Pd-l2ork 20 12 0 18
+-261139 -1 0;
+#N canvas 430 372 450 323 cat 0;
+#X obj 16 180 draw sprite ./cat;
+#X obj 16 21 struct cat float x float y;
+#X obj 16 80 tgl 15 1 empty empty empty 17 7 0 10 -262144 -1 -1 1 1
+;
+#X obj 70 125 + 1;
+#X obj 16 125 f;
+#X obj 70 150 mod 30;
+#X floatatom 16 150 5 0 0 0 - - -, f 5;
+#X obj 16 100 metro 50;
+#X connect 2 0 7 0;
+#X connect 3 0 5 0;
+#X connect 4 0 3 0;
+#X connect 4 0 6 0;
+#X connect 5 0 4 1;
+#X connect 6 0 0 0;
+#X connect 7 0 4 0;
+#X restore 454 416 pd cat;
+#X scalar cat 383 82 \;;

@@ -295,6 +295,7 @@ install:  all
 		install -d $(pddocdir)/4.data.structures/pd-l2ork/$$dir ; \
 		install -p ../doc/4.data.structures/pd-l2ork/$$dir/*.* $(pddocdir)/4.data.structures/pd-l2ork/$$dir ; \
 	done
+	cp -rf ../doc/about $(pddocdir)/
 	for dir in $(shell ls -1 ../doc/7.stuff | grep -v CVS); do \
 		echo "installing 7.stuff/$$dir"; \
 		install -d $(pddocdir)/7.stuff/$$dir ; \
