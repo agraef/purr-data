@@ -199,6 +199,7 @@ install: all
 	done
 # kludge install of additional pd-l2ork data structures docs
 	cp -rf ../doc/4.data.structures/pd-l2ork $(DESTDIR)$(pddocdir)/4.data.structures/	
+	cp -rf ../doc/about $(DESTDIR)$(pddocdir)/
 # and now the rest
 	for dir in $(shell ls -1 ../doc/7.stuff | grep -v CVS); do \
 		echo "installing 7.stuff/$$dir"; \
