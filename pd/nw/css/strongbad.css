@@ -248,6 +248,7 @@ text {
     cursor: pointer;
     color: #4bd046;
     box-shadow: 1px 1px 1px 1px #0b560b;
+    overflow-y: auto;
 }
 
 #dropdown_list ol {

@@ -237,6 +237,7 @@ text {
     border-style: solid;
     border-color: black;
     cursor: pointer;
+    overflow-y: auto;
 }
 
 #dropdown_list ol {

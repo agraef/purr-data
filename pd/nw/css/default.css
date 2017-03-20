@@ -357,6 +357,7 @@ text {
     border-color: #c3c3c3;
     cursor: pointer;
     box-shadow: 5px 0 5px -5px #aaa, 0 5px 5px -5px #aaa, -5px 0 5px -5px #aaa;
+    overflow-y: auto;
 }
 
 #dropdown_list ol {

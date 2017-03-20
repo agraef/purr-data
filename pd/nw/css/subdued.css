@@ -243,6 +243,7 @@ text {
     border-style: solid;
     border-color: #b1d3b1;
     cursor: pointer;
+    overflow-y: auto;
 }
 
 #dropdown_list ol {
