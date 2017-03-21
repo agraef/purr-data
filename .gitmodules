@@ -10,9 +10,9 @@
 [submodule "externals/fftease"]
 	path = externals/fftease
 	url = https://git.purrdata.net/jwilkes/fftease.git
-[submodule "externals/lyonpotpourri"]
-	path = externals/lyonpotpourri
-	url = https://git.purrdata.net/jwilkes/lyonpotpourri.git
 [submodule "Gem"]
 	path = Gem
 	url = https://git.purrdata.net/jwilkes/Gem.git
+[submodule "externals/lyonpotpourri"]
+	path = externals/lyonpotpourri
+	url = https://github.com/ericlyon/lyonpotpourri3.0.git
