@@ -1163,16 +1163,28 @@ lyonpotpourri_install:
 	#make -C $(externals_src)/$(LYON_SRC) DESTDIR="$(DESTDIR)" \
 	#	objectsdir="$(objectsdir)" install
 	install -d $(DESTDIR)$(objectsdir)/$(LYON_DEST)
-	install -d $(DESTDIR)$(objectsdir)/$(LYON_DEST)/sound
 	install -p $(wildcard $(externals_src)/$(LYON_SRC)/*.$(EXTENSION)) \
 		$(DESTDIR)$(objectsdir)/$(LYON_DEST)
-	install -p $(externals_src)/$(LYON_SRC)/lyonpotpourri-helpfiles/*.pd \
+	install -p $(externals_src)/$(LYON_SRC)/*.pd \
 		$(DESTDIR)$(objectsdir)/$(LYON_DEST)
+	install -d $(DESTDIR)$(objectsdir)/$(LYON_DEST)/sound
+	install -p $(externals_src)/$(LYON_SRC)/examples/*.* \
+		$(DESTDIR)$(objectsdir)/$(LYON_DEST)/sound
+	# some of the help patches expect to find the sounds in the examples
+	# subfolder instead of 'sound', so make sure that both are available
+ifeq ($(OS_NAME),windows)
+	# symbolic links don't work under Windows, just copy the folder instead
+	rm -rf $(DESTDIR)$(objectsdir)/$(LYON_DEST)/examples
+	cp -r $(DESTDIR)$(objectsdir)/$(LYON_DEST)/sound  $(DESTDIR)$(objectsdir)/$(LYON_DEST)/examples
+else
+	rm -f $(DESTDIR)$(objectsdir)/$(LYON_DEST)/examples
+	ln -sf sound $(DESTDIR)$(objectsdir)/$(LYON_DEST)/examples
+endif
 	# don't include cartopol/poltocar-- cyclone library already has those
 	rm $(DESTDIR)$(objectsdir)/$(LYON_DEST)/cartopol*.$(EXTENSION)
 	rm $(DESTDIR)$(objectsdir)/$(LYON_DEST)/poltocar*.$(EXTENSION)
-	install -p $(externals_src)/$(LYON_SRC)/lyonpotpourri-helpfiles/sound/*.* \
-		$(DESTDIR)$(objectsdir)/$(LYON_DEST)/sound
+	rm $(DESTDIR)$(objectsdir)/$(LYON_DEST)/cartopol*.pd
+	rm $(DESTDIR)$(objectsdir)/$(LYON_DEST)/poltocar*.pd
 	# copy the meta file and the shared lib
 	install -p $(externals_src)/$(LYON_SRC)/*lyonpotpourri*.* \
 		$(DESTDIR)$(objectsdir)/$(LYON_DEST)
