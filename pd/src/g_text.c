@@ -1482,7 +1482,6 @@ static void dropdown_names(t_dropdown *x, t_symbol *s, int argc, t_atom *argv)
         binbuf_addv(x->a_names, "s", &s_);
     /* nudge a_index back into range */
     x->a_index = dropdown_clipindex(x, x->a_index);
-    //post("max width is %d", dropdown_names_getmaxwidth(x));
     x->a_maxnamewidth = dropdown_names_getmaxwidth(x);
     //dropdown_max_namelength(x);
     dropdown_retext(x, 1, 0);

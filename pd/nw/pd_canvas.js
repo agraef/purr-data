@@ -223,7 +223,6 @@ var canvas_events = (function() {
                 // Make sure the highlighted element is in view
                 container.scrollTop = elem.offsetTop + elem.offsetHeight
                     - container.clientHeight;
-                //pdgui.post("offset is " + container.scrollTop);
             }
         },
         events = {
