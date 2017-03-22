@@ -48,11 +48,11 @@ static void argument_bang(t_argument *x)
 
 }
 
+#define LB_LOAD 0 /* from g_canvas.h */
 
-
-static void argument_loadbang(t_argument *x)
+static void argument_loadbang(t_argument *x, t_floatarg action)
 {
-   // if (!sys_noloadbang)
+   // if (action == LB_LOAD)
    //     argument_bang(x);
 }
 
@@ -125,7 +125,7 @@ void argument_setup(void)
     class_addbang(argument_class, argument_bang);
    
    
-   //class_addmethod(argument_class, (t_method)argument_loadbang, gensym("loadbang"), 0);
+   //class_addmethod(argument_class, (t_method)argument_loadbang, gensym("loadbang"), A_DEFFLOAT, 0);
    
 }
 

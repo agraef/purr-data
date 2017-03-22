@@ -574,9 +574,11 @@ static void mknob_float(t_mknob *x, t_floatarg f)
     }
 }
 
-static void mknob_loadbang(t_mknob *x)
+#define LB_LOAD 0 /* from g_canvas.h */
+
+static void mknob_loadbang(t_mknob *x, t_floatarg action)
 {
-    if (!sys_noloadbang && x->x_gui.x_loadinit)
+    if (action == LB_LOAD && x->x_gui.x_loadinit)
     {
         (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
         mknob_bang(x);
@@ -781,7 +783,8 @@ void mknob_setup(void)
     class_addmethod(mknob_class, (t_method)mknob_motion, gensym("motion"),
                     A_FLOAT, A_FLOAT, 0);
     class_addmethod(mknob_class, (t_method)mknob_dialog, gensym("dialog"), A_GIMME, 0);
-    class_addmethod(mknob_class, (t_method)mknob_loadbang, gensym("loadbang"), 0);
+    class_addmethod(mknob_class, (t_method)mknob_loadbang, gensym("loadbang"),
+        A_DEFFLOAT, 0);
     class_addmethod(mknob_class, (t_method)mknob_set, gensym("set"), A_FLOAT, 0);
     class_addmethod(mknob_class, (t_method)mknob_size, gensym("size"), A_GIMME, 0);
     class_addmethod(mknob_class, (t_method)mknob_delta, gensym("delta"), A_GIMME, 0);

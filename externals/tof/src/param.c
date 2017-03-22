@@ -57,8 +57,8 @@ static t_symbol* s_cnv;
 #include "paramRoute.h"
 #include "paramGui.h"
 
-// For loadbang
-extern int sys_noloadbang;
+// For loadbang, from g_canvas.h
+#define LB_LOAD 0
 
 static t_class *param_class;
 static t_class *param_inlet2_class;
@@ -99,9 +99,9 @@ static void paramClass_bang(t_paramClass *x)
    
 }
 
-static void paramClass_loadbang(t_paramClass *x)
+static void paramClass_loadbang(t_paramClass *x, t_floatarg action)
 {
-    if (!sys_noloadbang && !x->noloadbang)
+    if (action == LB_LOAD && !x->noloadbang)
         paramClass_bang(x);
 }
 
@@ -389,7 +389,7 @@ void param_setup(void)
   class_addanything(param_class, paramClass_anything);
   class_addbang(param_class, paramClass_bang);
   
-  class_addmethod(param_class, (t_method)paramClass_loadbang, gensym("loadbang"), 0);
+  class_addmethod(param_class, (t_method)paramClass_loadbang, gensym("loadbang"), A_DEFFLOAT, 0);
   
   param_inlet2_class = class_new(gensym("_param_inlet2"),
     0, 0, sizeof(t_paramClass_inlet2), CLASS_PD | CLASS_NOINLET, 0);

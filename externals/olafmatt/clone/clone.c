@@ -180,17 +180,22 @@ static void clone_instance_init(t_clone *x, t_cloneelement *ep, t_pd *y, int ins
     }
 }
 
+#define LB_LOAD 0 /* from g_canvas.h */
+
 	/* send loadbang to all instances */
-static void clone_loadbang(t_clone *x)
+static void clone_loadbang(t_clone *x, t_floatarg action)
 {
 	t_canvas *cv;
 	int i;
 
-	for (i = 0; i < x->x_nelems; i++)
-	{
-		if (cv = x->x_table[i].e_ab)
-			pd_vmess(&cv->gl_pd, gensym("loadbang"), "");
-	}
+        if (action == LB_LOAD)
+        {
+            for (i = 0; i < x->x_nelems; i++)
+            {
+                if (cv = x->x_table[i].e_ab)
+                    pd_vmess(&cv->gl_pd, gensym("loadbang"), "f", 0);
+            }
+        }
 }
 
 	/* the two below borrow from binbuf_evalfile() -- which may change... */
@@ -215,7 +220,7 @@ static void clone_instantiate_all(t_clone *x)
 			canvas_setargs(0, 0);
 		}
 		canvas_resume_dsp(dspstate);
-		clone_loadbang(x);
+		clone_loadbang(x, 0);
     }
 }
 

@@ -185,7 +185,7 @@ void paramCustom_setup(void)
   class_addanything(paramCustom_class, paramCustom_anything);
   //class_addbang(paramCustom_class, paramCustom_bang);
   
-  //class_addmethod(param_class, (t_method)paramClass_loadbang, gensym("loadbang"), 0);
+  //class_addmethod(param_class, (t_method)paramClass_loadbang, gensym("loadbang"), A_DEFFLOAT, 0);
   
   paramCustom_receive_class = class_new(gensym("paramCustom_receive"),
     0, 0, sizeof(t_paramCustom_receive), CLASS_PD | CLASS_NOINLET, 0);

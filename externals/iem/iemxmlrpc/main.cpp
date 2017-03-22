@@ -472,7 +472,7 @@ void RPCServer::Method_Load(XmlRpc::XmlRpcValue &params, XmlRpc::XmlRpcValue &re
         pd_vmess(x, gensym("pop"), "i", 1);
 
         // issue load bang
-        pd_vmess(x, gensym("loadbang"), "");
+        pd_vmess(x, gensym("loadbang"), "f", 0);
 
         // save created canvas object
         canvas = x;

@@ -119,9 +119,11 @@ void mass_setX(t_mass *x, t_float posX)
   outlet_float(x->position_new, posX);
 }
 
-void mass_loadbang(t_mass *x)
+#define LB_LOAD 0 /* from g_canvas.h */
+
+void mass_loadbang(t_mass *x, t_floatarg action)
 {
-  outlet_float(x->position_new, x->Xinit);
+  if (action == LB_LOAD) outlet_float(x->position_new, x->Xinit);
 }
 
 void mass_set_mass(t_mass *x, t_float mass)
@@ -181,6 +183,6 @@ void mass_setup(void)
   class_addmethod(mass_class, (t_method)mass_resetF, gensym("resetF"), 0);
   class_addmethod(mass_class, (t_method)mass_minX, gensym("setXmin"), A_DEFFLOAT, 0);
   class_addmethod(mass_class, (t_method)mass_maxX, gensym("setXmax"), A_DEFFLOAT, 0);
-  class_addmethod(mass_class, (t_method)mass_loadbang, gensym("loadbang"), 0);
+  class_addmethod(mass_class, (t_method)mass_loadbang, gensym("loadbang"), A_DEFFLOAT, 0);
 }
 

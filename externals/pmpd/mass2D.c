@@ -286,9 +286,12 @@ void mass2D_setY(t_mass2D *x, t_float posY)
   outlet_anything(x->position2D_new, gensym("position2D"), 2, x->pos_new);
 }
 
-void mass2D_loadbang(t_mass2D *x)
+#define LB_LOAD 0 /* from g_canvas.h */
+
+void mass2D_loadbang(t_mass2D *x, t_floatarg action)
 {
-  outlet_anything(x->position2D_new, gensym("position2D"), 2, x->pos_new);
+  if (action == LB_LOAD)
+    outlet_anything(x->position2D_new, gensym("position2D"), 2, x->pos_new);
 }
 
 
@@ -806,6 +809,6 @@ void mass2D_setup(void)
   class_addmethod(mass2D_class, (t_method)mass2D_off, gensym("off"), 0);
   class_addmethod(mass2D_class, (t_method)mass2D_reset, gensym("reset"), 0);
   class_addmethod(mass2D_class, (t_method)mass2D_resetf, gensym("resetF"), 0);
-  class_addmethod(mass2D_class, (t_method)mass2D_loadbang, gensym("loadbang"), 0);
+  class_addmethod(mass2D_class, (t_method)mass2D_loadbang, gensym("loadbang"), A_DEFFLOAT, 0);
 
 }

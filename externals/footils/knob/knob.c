@@ -606,17 +606,11 @@ static void knob_steady(t_knob *x, t_floatarg f)
     x->x_steady = (f==0.0)?0:1;
 }
 
-static void knob_loadbang(t_knob *x)
+#define LB_LOAD 0 /* from g_canvas.h */
+
+static void knob_loadbang(t_knob *x, t_floatarg action)
 {
-  /* WARNING: this is a kludge to get this object building on
-     Windows. Currently, the linker fails on the symbol
-     "sys_noloadbang".  <hans@at.or.at>
-   */
-#ifdef _WIN32
-    if(x->x_gui.x_isa.x_loadinit)
-#else
-    if(!sys_noloadbang && x->x_gui.x_isa.x_loadinit)
-#endif
+    if (action == LB_LOAD && x->x_gui.x_isa.x_loadinit)
     {
 	(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
 	knob_bang(x);
@@ -756,7 +750,8 @@ void knob_setup(void)
 		    A_FLOAT, A_FLOAT, 0);
     class_addmethod(knob_class, (t_method)knob_dialog, gensym("dialog"),
 		    A_GIMME, 0);
-    class_addmethod(knob_class, (t_method)knob_loadbang, gensym("loadbang"), 0);
+    class_addmethod(knob_class, (t_method)knob_loadbang, gensym("loadbang"),
+        A_DEFFLOAT, 0);
     class_addmethod(knob_class, (t_method)knob_set, gensym("set"), A_FLOAT, 0);
     class_addmethod(knob_class, (t_method)knob_size, gensym("size"), A_GIMME, 0);
     class_addmethod(knob_class, (t_method)knob_delta, gensym("delta"), A_GIMME, 0);

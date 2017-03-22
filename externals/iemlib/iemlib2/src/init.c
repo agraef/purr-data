@@ -38,9 +38,11 @@ static void init_bang(t_init *x)
     outlet_pointer(x->x_obj.ob_outlet, (t_gpointer *)x->x_at->a_w.w_gpointer);
 }
 
-static void init_loadbang(t_init *x)
+#define LB_LOAD 0 /* from g_canvas.h */
+
+static void init_loadbang(t_init *x, t_floatarg action)
 {
-  if(!sys_noloadbang)
+  if (action == LB_LOAD)
     init_bang(x);
 }
 
@@ -185,7 +187,8 @@ void init_setup(void)
   init_class = class_new(gensym("init"), (t_newmethod)init_new,
     (t_method)init_free, sizeof(t_init), 0, A_GIMME, 0);
   class_addcreator((t_newmethod)init_new, gensym("ii"), A_GIMME, 0);
-  class_addmethod(init_class, (t_method)init_loadbang, gensym("loadbang"), 0);
+  class_addmethod(init_class, (t_method)init_loadbang, gensym("loadbang"),
+    A_DEFFLOAT, 0);
   class_addbang(init_class, (t_method)init_bang);
   class_addanything(init_class, init_anything);
   class_addlist(init_class, init_list);

@@ -570,9 +570,11 @@ static void sym_dial_init(t_sym_dial *x, t_floatarg f)
   x->x_gui.x_isa.x_loadinit = (f==0.0)?0:1;
 }
 
-static void sym_dial_loadbang(t_sym_dial *x)
+#define LB_LOAD 0 /* from g_canvas.h */
+
+static void sym_dial_loadbang(t_sym_dial *x, t_floatarg action)
 {
-  if(!sys_noloadbang && x->x_gui.x_isa.x_loadinit)
+  if (action == LB_LOAD && x->x_gui.x_isa.x_loadinit)
   {
     (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
     sym_dial_bang(x);
@@ -919,7 +921,8 @@ void sym_dial_setup(void)
     A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, 0);
   class_addmethod(sym_dial_class, (t_method)sym_dial_dialog, gensym("dialog"),
     A_GIMME, 0);
-  class_addmethod(sym_dial_class, (t_method)sym_dial_loadbang, gensym("loadbang"), 0);
+  class_addmethod(sym_dial_class, (t_method)sym_dial_loadbang,
+    gensym("loadbang"), A_DEFFLOAT, 0);
   class_addmethod(sym_dial_class, (t_method)sym_dial_set, gensym("set"), A_GIMME, 0);
   class_addmethod(sym_dial_class, (t_method)sym_dial_size, gensym("size"), A_GIMME, 0);
   class_addmethod(sym_dial_class, (t_method)sym_dial_delta, gensym("delta"), A_GIMME, 0);

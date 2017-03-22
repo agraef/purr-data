@@ -3914,13 +3914,18 @@ function gui_configure_mknob(cid, tag, size, bg_color, fg_color) {
 }
 
 function gui_turn_mknob(cid, tag, x1, y1, x2, y2) {
-    var g = get_gobj(cid, tag);
-    configure_item(g.querySelector(".dial"), {
-        x1: x1,
-        y1: y1,
-        x2: x2,
-        y2: y2
-    });
+    var g;
+    if (patchwin[cid]) {
+        g = get_gobj(cid, tag);
+        if (g) {
+            configure_item(g.querySelector(".dial"), {
+                x1: x1,
+                y1: y1,
+                x2: x2,
+                y2: y2
+            });
+        }
+    }
 }
 
 function add_popup(cid, popup) {

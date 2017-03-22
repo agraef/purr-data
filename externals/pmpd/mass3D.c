@@ -94,9 +94,12 @@ void mass3D_damp(t_mass3D *x, t_floatarg f1)
   x->damp = f1;
 }
 
-void mass3D_loadbang(t_mass3D *x)
+#define LB_LOAD 0 /* from g_canvas.h */
+
+void mass3D_loadbang(t_mass3D *x, t_floatarg action)
 {
-  outlet_anything(x->position3D_new, gensym("position3D"), 3, x->pos_new);
+  if (action == LB_LOAD)
+    outlet_anything(x->position3D_new, gensym("position3D"), 3, x->pos_new);
 }
 
 void mass3D_setX(t_mass3D *x, t_float posX)
@@ -1079,7 +1082,7 @@ void mass3D_setup(void)
   class_addmethod(mass3D_class, (t_method)mass3D_set_mass3D, gensym("setM"), A_DEFFLOAT, 0);
   class_addmethod(mass3D_class, (t_method)mass3D_reset, gensym("reset"), 0);
   class_addmethod(mass3D_class, (t_method)mass3D_resetf, gensym("resetF"), 0);
-  class_addmethod(mass3D_class, (t_method)mass3D_reset, gensym("loadbang"), 0);
+  class_addmethod(mass3D_class, (t_method)mass3D_reset, gensym("loadbang"), A_DEFFLOAT, 0);
   class_addmethod(mass3D_class, (t_method)mass3D_on, gensym("on"), 0);
   class_addmethod(mass3D_class, (t_method)mass3D_off, gensym("off"), 0);
   class_addmethod(mass3D_class, (t_method)mass3D_seuil, gensym("setT"), A_DEFFLOAT, 0);

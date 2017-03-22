@@ -456,12 +456,13 @@ void gamme_getall(t_gamme *x)
     gamme_getn(x);
 }
 
-extern int sys_noloadbang;
-static void gamme_loadbang(t_gamme *x)
+#define LB_LOAD 0 /* from g_canvas.h */
+
+static void gamme_loadbang(t_gamme *x, t_floatarg action)
 {
     int i;
 
-    if(sys_noloadbang) return;
+    if (action != LB_LOAD) return;
     for(i=0; i<12; i++) gamme_out_changed(x,i);
     gamme_getn(x);
 }
