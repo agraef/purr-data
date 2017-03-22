@@ -390,9 +390,9 @@ static void bng_list(t_bng *x, t_symbol *s, int ac, t_atom *av){bng_bang2(x);}
 static void bng_anything(t_bng *x, t_symbol *s, int argc, t_atom *argv)
 {bng_bang2(x);}
 
-static void bng_loadbang(t_bng *x)
+static void bng_loadbang(t_bng *x, t_floatarg action)
 {
-    if(!sys_noloadbang && x->x_gui.x_loadinit)
+    if (action == LB_LOAD && x->x_gui.x_loadinit)
     {
         bng_set(x);
         bng_bout(x,0);
@@ -528,7 +528,8 @@ void g_bang_setup(void)
                     A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, 0);
     class_addmethod(bng_class, (t_method)bng_dialog, gensym("dialog"),
                     A_GIMME, 0);
-    class_addmethod(bng_class, (t_method)bng_loadbang, gensym("loadbang"), 0);
+    class_addmethod(bng_class, (t_method)bng_loadbang, gensym("loadbang"),
+        A_DEFFLOAT, 0);
     class_addmethod(bng_class, (t_method)bng_size, gensym("size"), A_GIMME, 0);
     iemgui_class_addmethods(bng_class);
     class_addmethod(bng_class, (t_method)bng_flashtime, gensym("flashtime"),

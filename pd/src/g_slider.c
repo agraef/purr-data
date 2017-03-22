@@ -483,9 +483,9 @@ static void slider_steady(t_slider *x, t_floatarg f)
     x->x_steady = (f==0.0)?0:1;
 }
 
-static void slider_loadbang(t_slider *x)
+static void slider_loadbang(t_slider *x, t_floatarg action)
 {
-    if(!sys_noloadbang && x->x_gui.x_loadinit)
+    if(action == LB_LOAD && x->x_gui.x_loadinit)
     {
         x->x_gui.x_draw(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
         slider_bang(x);
@@ -597,7 +597,7 @@ static void slider_free(t_slider *x)
 
 void slider_addmethods(t_class *c) {
     class_addmethod(c, (t_method)slider_loadbang,
-        gensym("loadbang"), 0);
+        gensym("loadbang"), A_DEFFLOAT, 0);
     class_addmethod(c, (t_method)slider_set,
         gensym("set"), A_FLOAT, 0);
     class_addmethod(c, (t_method)slider_log, gensym("log"), 0);

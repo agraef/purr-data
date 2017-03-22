@@ -1697,7 +1697,8 @@ t_pd *glob_evalfile(t_pd *ignore, t_symbol *name, t_symbol *dir)
         x = s__X.s_thing;
         vmess(x, gensym("pop"), "i", 1);
     }
-    pd_doloadbang();
+    if (!sys_noloadbang)
+        pd_doloadbang();
     canvas_resume_dsp(dspstate);
     s__X.s_thing = boundx;
     return x;

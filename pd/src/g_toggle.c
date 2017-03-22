@@ -328,9 +328,9 @@ static void toggle_fout(t_toggle *x, t_floatarg f)
     iemgui_out_float(&x->x_gui, 0, 0, x->x_on);
 }
 
-static void toggle_loadbang(t_toggle *x)
+static void toggle_loadbang(t_toggle *x, t_floatarg action)
 {
-    if(!sys_noloadbang && x->x_gui.x_loadinit)
+    if (action == LB_LOAD && x->x_gui.x_loadinit)
         toggle_fout(x, (t_float)x->x_on);
 }
 
@@ -440,7 +440,7 @@ void g_toggle_setup(void)
     class_addmethod(toggle_class, (t_method)toggle_dialog, gensym("dialog"),
                     A_GIMME, 0);
     class_addmethod(toggle_class, (t_method)toggle_loadbang, gensym("loadbang"),
-        0);
+        A_DEFFLOAT, 0);
     class_addmethod(toggle_class, (t_method)toggle_set, gensym("set"),
         A_FLOAT, 0);
     class_addmethod(toggle_class, (t_method)toggle_size, gensym("size"),

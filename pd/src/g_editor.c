@@ -6116,7 +6116,7 @@ static t_canvas *paste_canvas;
 
 static void glist_donewloadbangs(t_glist *x)
 {
-    if (x->gl_editor)
+    if (!sys_noloadbang && x->gl_editor)
     {
         t_selection *sel;
         for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)

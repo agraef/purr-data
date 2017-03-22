@@ -419,9 +419,9 @@ static int radio_newclick(t_gobj *z, struct _glist *glist, int xpix, int ypix,
     return (1);
 }
 
-static void radio_loadbang(t_radio *x)
+static void radio_loadbang(t_radio *x, t_floatarg action)
 {
-    if(!sys_noloadbang && x->x_gui.x_loadinit)
+    if(action == LB_LOAD && x->x_gui.x_loadinit)
     {
         radio_bang(x);
     }
@@ -529,7 +529,8 @@ void radio_addmethods(t_class *c)
 {
     class_addbang(c, radio_bang);
     class_addfloat(c, radio_float);
-    class_addmethod(c, (t_method)radio_loadbang,  gensym("loadbang"), 0);
+    class_addmethod(c, (t_method)radio_loadbang,  gensym("loadbang"),
+        A_DEFFLOAT, 0);
     class_addmethod(c, (t_method)radio_set,       gensym("set"), A_FLOAT, 0);
     class_addmethod(c, (t_method)radio_size,      gensym("size"), A_GIMME, 0);
     class_addmethod(c, (t_method)iemgui_init,      gensym("init"), A_FLOAT, 0);

@@ -117,7 +117,7 @@ static void loadbang_click(t_loadbang *x,
 
 static void loadbang_loadbang(t_loadbang *x, t_floatarg action)
 {
-    if (!sys_noloadbang && action == LB_LOAD)
+    if (action == LB_LOAD)
         outlet_bang(x->x_obj.ob_outlet);
 }
 
