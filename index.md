@@ -15,9 +15,7 @@ Purr Data serves the same purpose, but offers a new and much improved graphical 
 Purr Data also offers some notable advancements over "classic" Pd-l2ork:
 
 - cross platform compatibility
-
 - modern GUI written in JavaScript (using [nw.js](https://nwjs.io/))
-
 - improved SVG graphics
 
 Purr Data continues to offer all of Pd-l2ork's GUI and usability improvements, a help browser giving access to help patches in PDDP (Pd Documentation Project) format, and a large collection of bundled 3rd party externals, while using the latest and greatest version of Pd's tried and proven real-time engine under the hood.
