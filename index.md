@@ -4,11 +4,23 @@ layout: default
 
 Jonathan Wilkes' **Purr Data** a.k.a. **Pd-l2ork** 2.0 is an improved version of Miller Puckette's **[Pd](http://puredata.info/)**. It is based on Ico Bukvic's **[Pd-l2ork](http://l2ork.music.vt.edu/main/make-your-own-l2ork/software/)**, which in turn is a fork of Hans-Christoph Steiner's **[Pd-extended](http://puredata.info/downloads/pd-extended)**.
 
+## About Purr Data
+
 Pd (Pure Data) is a graphical data-flow programming environment which is geared towards real-time interactive computer music and multimedia applications. It is a full-featured open-source alternative to its commercial sibling, Cycling74's [Max](https://cycling74.com/).
 
-Purr Data serves the same purpose, but offers a new and much improved graphical user interface and includes many 3rd party plug-ins, while still using Pd's tried and proven real-time engine under the hood. Like Pd, it runs on Linux, macOS and Windows, and is open-source throughout.
+Purr Data serves the same purpose, but offers a new and much improved graphical user interface and includes many 3rd party plug-ins. Like Pd, it runs on Linux, macOS and Windows, and is open-source throughout.
 
 ![Purr Data running on macOS.](purr-data.png)
+
+Purr Data also offers some notable advancements over "classic" Pd-l2ork:
+
+- cross platform compatibility
+
+- modern GUI written in JavaScript (using [nw.js](https://nwjs.io/))
+
+- improved SVG graphics
+
+Purr Data continues to offer all of Pd-l2ork's GUI and usability improvements, a help browser giving access to help patches in PDDP (Pd Documentation Project) format, and a large collection of bundled 3rd party externals, while using the latest and greatest version of Pd's tried and proven real-time engine under the hood.
 
 ## The Name?
 
