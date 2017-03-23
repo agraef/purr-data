@@ -209,14 +209,17 @@ Contributing is easy:
 
 1. Join the development list:
    http://disis.music.vt.edu/cgi-bin/mailman/listinfo/l2ork-dev
-2. Tell us what you'd like to work on.  Unfortunately there are _lots_ of
-   externals and even core features that are poorly documented.  We can help 
-   make sure you aren't duplicating functionality (or that you at least know
-   what's already been implemented).
-3. Send us your patch and we'll try it out.  If it's well-documented and
+2. Tell us what you'd like to work on. There are lots of possibilities. For 
+   example, there are _lots_ of externals and even core features that are
+   poorly documented.
+3. _No prototypes, please_. Purr Data's biggest strength is that users can
+   turn an idea into working code very quickly. But a prototyping language that 
+   is itself a prototype isn't very useful. That means Purr Data's core code
+   and libraries must be stable, consistent, well-documented, and easy to use.
+4. Make sure you aren't duplicating existing functionality, especially core
+   functionality.
+5. Send us a merge request and we'll test it. If it's well-documented and
    there aren't any bugs we'll add it to the software.
-4. If you want to do regular development and have commit access, just request
-   it, then follow the Pd-L2Ork goals above.
 
 Here are some of the current tasks:
 
