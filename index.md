@@ -24,7 +24,7 @@ Purr Data continues to offer all of Pd-l2ork's GUI and usability improvements, a
 
 ## The Name?
 
-Purr Data is the official nickname of the Pd-l2ork 2.x branch. Quite obviously the name is a play on "Pure Data" on which "Purr Data" is ultimately based. It also raises positive connotations of soothing purring sounds, and makes for a nice logo. :smiley_cat:
+Purr Data is the official nickname of the Pd-l2ork 2.x branch. Quite obviously the name is a play on "Pure Data" on which "Purr Data" is ultimately based. It also raises positive connotations of soothing purring sounds, and makes for a nice logo. 😺
 
 ## What's Available
 
