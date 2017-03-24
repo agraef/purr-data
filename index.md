@@ -28,8 +28,18 @@ Purr Data is the official nickname of the Pd-l2ork 2.x branch. Quite obviously t
 
 This repository is a mirror of Wilkes' original Gitlab repository available at <https://git.purrdata.net/jwilkes/purr-data>. We mainly use this as a one-stop shop to make it easy for you to get your hands on the latest [source](https://github.com/agraef/purr-data) and the available [releases](https://github.com/agraef/purr-data/releases), including pre-built packages for Linux, macOS and Windows.
 
-We also maintain a collection of Linux packages built from latest git sources for Arch Linux (via the [Arch User Repositories](https://aur.archlinux.org/) a.k.a. AUR) and recent Ubuntu releases (via [Launchpad](https://launchpad.net/~dr-graef)). More information and installation instructions: [Arch](https://l2orkaur.bitbucket.io/), [Ubuntu](https://l2orkubuntu.bitbucket.io/).
+At the Johannes Gutenberg University (JGU) we also maintain a collection of Linux packages built from latest git sources for Arch Linux (via the [Arch User Repositories](https://aur.archlinux.org/) a.k.a. AUR) and recent Ubuntu releases (via [Launchpad](https://launchpad.net/~dr-graef)).
 
-A quick introduction to Purr Data with more details can be found [here](https://agraef.github.io/purr-data-intro).
+Here's a quick shopping list:
+
+- A quick introduction to Purr Data with more details can be found [here](https://agraef.github.io/purr-data-intro).
+
+- All development takes place on <https://git.purrdata.net/jwilkes/purr-data>, so that's where you should go for submitting bug reports and pull requests.
+
+- For general support, questions and discussion please subscribe to the DISIS [Pd-l2ork mailing list](http://disis.music.vt.edu/listinfo/l2ork-dev).
+
+- The latest and greatest downloads can be found at at <https://github.com/agraef/purr-data/releases>.
+
+- Check these links for more information and installation instructions about the JGU [Arch](https://l2orkaur.bitbucket.io/) and [Ubuntu](https://l2orkubuntu.bitbucket.io/) package repositories.
 
 Enjoy your stay!
