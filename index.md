@@ -38,8 +38,8 @@ Here's a quick shopping list:
 
 - For general support, questions and discussion please subscribe to the DISIS [Pd-l2ork mailing list](http://disis.music.vt.edu/listinfo/l2ork-dev).
 
-- The latest and greatest downloads can be found at at <https://github.com/agraef/purr-data/releases>.
+- The latest and greatest downloads can be found at <https://github.com/agraef/purr-data/releases>.
 
-- Check these links for more information and installation instructions about the JGU [Arch](https://l2orkaur.bitbucket.io/) and [Ubuntu](https://l2orkubuntu.bitbucket.io/) package repositories.
+- Please check these links for more information and installation instructions about the JGU [Arch](https://l2orkaur.bitbucket.io/) and [Ubuntu](https://l2orkubuntu.bitbucket.io/) package repositories.
 
 Enjoy your stay!
