@@ -625,8 +625,14 @@ void sys_loadpreferences( void)
         sprintf(keybuf, "path%d", i+1);
         if (!sys_getpreference(keybuf, prefbuf, MAXPDSTRING))
             break;
-        else if (!check_exists(prefbuf)) // AG: ignore non-existent paths
-            continue;
+        else {
+            // AG: need to expand ~ et al here
+            char final_name[FILENAME_MAX];
+            sys_expandpathelems(prefbuf, final_name);
+            // AG: ignore non-existent paths
+            if (!check_exists(final_name))
+                continue;
+	}
         sys_searchpath = namelist_append_files(sys_searchpath, prefbuf);
     }
     if (sys_getpreference("standardpath", prefbuf, MAXPDSTRING))
