@@ -40,6 +40,6 @@ Here's a quick shopping list:
 
 - The latest and greatest downloads can be found at <https://github.com/agraef/purr-data/releases>.
 
-- Please check these links for more information and installation instructions about the JGU [Arch](https://l2orkaur.bitbucket.io/) and [Ubuntu](https://l2orkubuntu.bitbucket.io/) package repositories.
+- Please check these links for more information and installation instructions about the JGU package repositories: [Arch](https://l2orkaur.bitbucket.io/), [Ubuntu](https://l2orkubuntu.bitbucket.io/).
 
 Enjoy your stay!
