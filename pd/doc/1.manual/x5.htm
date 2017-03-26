@@ -1775,10 +1775,6 @@ Beyond this essential collection of GUI objects, it's unlikely you'll ever find
 any commonality between the two.  Also, as of 0.34, importing and exporting to
 Max doesn't know about the Musil objects; I'll try to get that fixed for 0.35.
 
-<P>  In Pd there's no "preset" object (I now think it's basically a bad idea)
-and you have to use explicit sends and receives to restore values to number
-boxes. Then just make a "message" box to re-send the values you want. 
-
 <P> In Macintosh land, instead of getting tabosc4~ and arrays, you get cycle~
 and buffer~. The only gotcha is that you probably can't draw in buffer~ with
 the mouse as you can with arrays, but at least it's possible to 
@@ -1786,6 +1782,43 @@ make a patch that copies a "table" into a "buffer~".
 
 <P> The "bpatcher" feature in Max has a correlate, "graph on parent" subpatches,
 in Pd; however, Pd's version is quite different from Max's.
+
+<H3> <A name="s4"> 5.4. new features in Pd-l2ork </A> </H3>
+
+<P> The "preset_hub" and "preset_node" objects to manage state.
+
+<P> The "dropdown" atom for selecting an atom from a list.
+
+<P> The "delwrite~" object accepts a "clear" message to clear out the
+contents of the buffer.
+
+<P> "$0" inside a message box behaves exactly the same as "$0" in an object
+box.
+
+<P> The "route" object behaves correctly if you mix both symbol and
+float arguments. In Pd Vanilla you must choose either all float arguments
+or all symbol arguments.
+
+<P> There's an extra "bargraph" display type for arrays, plus choice of
+stroke and fill color.
+
+<P> Object and message boxes are sized exactly the same on all platforms.
+On some platforms with suboptimal font renderers this means there will be
+some padding at the right of the of the box. This keeps the users on those
+platforms from positioning the boxes so close that they cause collisions
+on all the other systems. In Pd Vanilla boxes are sized to fit tightly
+around the text.
+
+<P> There are more advanced drawing commands:
+  <UL>
+    <LI>draw rect - draw a rectangle</LI>
+    <LI>draw circle - draw a circle</LI>
+    <LI>draw path - draw an SVG path</LI>
+    <LI>draw polyline - draw line segments</LI>
+    <LI>draw polygon - draw a polygon</LI>
+    <LI>draw image - draw a raster image (jpeg, png, gif)</LI>
+    <LI>draw sprite - draw an image from a preloaded image sequence</LI>
+  </UL>  
 
 </BODY>
 </HTML>
