@@ -381,33 +381,6 @@ pd-wavelet_install:
 
 #==============================================================================#
 #
-# DEVELOPER'S TARGETS
-#
-#==============================================================================#
-
-# make the symlinks necessary to simulate the installed environment
-devsymlinks:
-# make symlinks for help patches
-	test -e $(abstractions_src)/../2.control.examples || \
-		ln -s $(pd_src)/doc/2.control.examples \
-			$(abstractions_src)/../2.control.examples
-	test -e $(abstractions_src)/../3.audio.examples || \
-		ln -s $(pd_src)/doc/3.audio.examples \
-			$(abstractions_src)/../3.audio.examples
-# pd <= 0.38-4 has 4.fft.examples
-	test -e $(abstractions_src)/../4.fft.examples || \
-		ln -s $(pd_src)/doc/4.fft.examples $(abstractions_src)/../4.fft.examples
-# pd > 0.38-4 has 4.data.structures
-	test -e $(abstractions_src)/../4.data.structures || \
-		ln -s $(pd_src)/doc/4.data.structures \
-			$(abstractions_src)/../4.data.structures
-	test -e $(abstractions_src)/../7.stuff || \
-		ln -s $(pd_src)/doc/7.stuff $(abstractions_src)/../7.stuff
-	test -e $(abstractions_src)/../sound || \
-		ln -s $(pd_src)/doc/sound $(abstractions_src)/../sound
-
-#==============================================================================#
-#
 # CLEAN TARGETS
 #
 #==============================================================================#

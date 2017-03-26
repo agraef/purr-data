@@ -2379,9 +2379,6 @@ earplug_clean:
 #
 #==============================================================================#
 
-# make the symlinks necessary to simulate the installed environment
-devsymlinks: 
-
 TAGS: etags
 
 etags:

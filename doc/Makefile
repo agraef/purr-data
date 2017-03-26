@@ -237,32 +237,6 @@ tutorials_clean:
 
 #==============================================================================#
 #
-# DEVELOPER'S TARGETS
-#
-#==============================================================================#
-
-# make the symlinks necessary to simulate the installed environment
-devsymlinks:
-	test -e $(doc_src)/2.control.examples || \
-		ln -sf $(pd_src)/doc/2.control.examples $(doc_src)/2.control.examples
-	test -e $(doc_src)/3.audio.examples || \
-		ln -sf $(pd_src)/doc/3.audio.examples $(doc_src)/3.audio.examples
-# pd <= 0.38-4 has 4.fft.examples
-	test -e $(doc_src)/4.fft.examples || \
-		ln -sf $(pd_src)/doc/4.fft.examples $(doc_src)/4.fft.examples
-# pd > 0.38-4 has 4.data.structures
-	test -e $(doc_src)/4.data.structures || \
-		ln -sf $(pd_src)/doc/4.data.structures $(doc_src)/4.data.structures
-	test -e $(doc_src)/7.stuff || \
-		ln -sf $(pd_src)/doc/7.stuff $(doc_src)/7.stuff
-	test -e $(doc_src)/sound || \
-		ln -sf $(pd_src)/doc/sound $(doc_src)/sound
-# put the pddp support objects in the path
-	test -e $(doc_src)/pddp/pddp || \
-		ln -sf $(externals_src)/pddp $(doc_src)/pddp/pddp
-
-#==============================================================================#
-#
 # CLEAN TARGETS
 #
 #==============================================================================#
