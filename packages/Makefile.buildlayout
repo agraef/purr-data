@@ -122,7 +122,6 @@ pddocdir = $(libpddir)/doc
 examplesdir = $(pddocdir)/examples
 helpdir = $(pddocdir)/5.reference
 manualsdir = $(pddocdir)/manuals
-readmesdir = $(manualsdir)/READMEs
 
 
 #==============================================================================#
@@ -156,10 +155,7 @@ $(manualsdir): $(DESTDIR)
 $(objectsdir): $(DESTDIR)
 	install -d $(DESTDIR)$(objectsdir)
 
-$(readmesdir): $(manualsdir)
-	install -d $(DESTDIR)$(readmesdir)
-
-installdirs: $(DESTDIR) $(bindir) $(examplesdir) $(pddocdir) $(includedir) $(helpdir) $(manualsdir) $(objectsdir) $(readmesdir)
+installdirs: $(DESTDIR) $(bindir) $(examplesdir) $(pddocdir) $(includedir) $(helpdir) $(manualsdir) $(objectsdir)
 
 #==============================================================================#
 #

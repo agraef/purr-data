@@ -352,10 +352,6 @@ timestretch_install:
 #	install -d $(DESTDIR)$(manualsdir)/$(TIMESTRETCH_NAME)
 #	install -p $(abstractions_src)/timestretch/doc/*.txt \
 #		 $(DESTDIR)$(manualsdir)/$(TIMESTRETCH_NAME)
-#	install -d $(DESTDIR)$(readmesdir)
-#	install -p $(abstractions_src)/timestretch/README \
-#		$(DESTDIR)$(readmesdir)/$(TIMESTRETCH_NAME).txt
-
 
 
 #-------------------------------------------------------------------------------
@@ -369,14 +365,14 @@ pd-wavelet_install:
 		$(DESTDIR)$(objectsdir)/$(PDWAVELET_NAME)
 	install -p $(abstractions_src)/pd-wavelet/main.pd \
 		 $(DESTDIR)$(objectsdir)/$(PDWAVELET_NAME)
+	install -p $(abstractions_src)/pd-wavelet/README.txt \
+		 $(DESTDIR)$(objectsdir)/$(PDWAVELET_NAME)
+
 	$(scripts_src)/generate-libdir-metafile.sh $(DESTDIR)$(objectsdir) $(PDWAVELET_NAME) \
 		--author "Raul Diaz Poblete" \
 		--description "manipulation of audio in the wavelet domain" \
 		--license "GNU GPL v2" \
 		--version "" 
-	install -d $(DESTDIR)$(readmesdir)
-	install -p $(abstractions_src)/pd-wavelet/README.txt \
-		$(DESTDIR)$(readmesdir)/$(PDWAVELET_NAME).txt
 
 
 #==============================================================================#
