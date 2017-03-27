@@ -34,7 +34,7 @@ Here's a quick shopping list:
 
 - A quick introduction to Purr Data with more details can be found [here](https://agraef.github.io/purr-data-intro).
 
-- All development takes place on <https://git.purrdata.net/jwilkes/purr-data>, so that's where you should go for submitting bug reports and pull requests.
+- All development takes place on <https://git.purrdata.net/jwilkes/purr-data>, so **that's where you should go for submitting bug reports and pull requests.**
 
 - For general support, questions and discussion please subscribe to the DISIS [Pd-l2ork mailing list](http://disis.music.vt.edu/listinfo/l2ork-dev).
 
