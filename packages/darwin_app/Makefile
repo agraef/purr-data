@@ -69,7 +69,6 @@ extended_install:
 # on Mac OS X 10.6/Snow Leopard don't build Gem since it needs Carbon
 ifeq ($(shell uname -r | sed 's|10\.[0-9][0-9]*\.[0-9][0-9]*|10|'),10)
 	$(MAKE) -C $(packages_src) $(DEST_PATHS) abstractions_install
-	$(MAKE) -C $(packages_src) $(DEST_PATHS) doc_install
 	$(MAKE) -C $(packages_src) $(DEST_PATHS) externals_install
 	$(MAKE) -C $(packages_src) $(DEST_PATHS) readme_install
 	$(MAKE) -C $(packages_src) $(DEST_PATHS) welcome_install
@@ -97,7 +96,6 @@ endif
 # Pd.app in $(BUILD_BASE)/Pd.app
 extended_app_install:
 	$(MAKE) -C $(packages_src) $(DEST_PATHS) abstractions_install
-	$(MAKE) -C $(packages_src) $(DEST_PATHS) doc_install
 	$(MAKE) -C $(packages_src) $(DEST_PATHS) externals_install
 
 

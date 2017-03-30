@@ -22,7 +22,6 @@
 #    extensions
 #	  externals
 # 	  packages
-#    doc
 #
 # it will be going here too:
 #    gem
@@ -88,7 +87,6 @@ DEBUG_CFLAGS = -ggdb
 
 # sources
 abstractions_src = $(cvs_root_dir)/abstractions
-doc_src = $(cvs_root_dir)/doc
 extensions_src = $(cvs_root_dir)/extensions
 externals_src = $(cvs_root_dir)/externals
 flext_src = $(cvs_root_dir)/externals/grill/flext

@@ -175,7 +175,7 @@ endif
 #==============================================================================#
 
 # this is used for installing into a pre-build Pd binary
-extended_install: abstractions_install doc_install \
+extended_install: abstractions_install \
 externals_install readme_install welcome_install \
 license_install noncvs_install
 
@@ -194,12 +194,6 @@ devel_install: pd_devel_install
 # abstractions_install
 abstractions_install:
 	$(MAKE) -C $(abstractions_src) $(DEST_PATHS) install
-
-#------------------------------------------------------------------------------
-# doc_install
-doc_install: 
-	$(MAKE) -C $(doc_src) $(DEST_PATHS) install
-
 
 #------------------------------------------------------------------------------
 # extensions_install
@@ -425,7 +419,6 @@ clean: abstractions_clean doc_clean externals_clean pd_clean
 
 distclean: cruft_clean
 	$(MAKE) -C $(abstractions_src) distclean
-	$(MAKE) -C $(doc_src) distclean
 	$(MAKE) -C $(extensions_src) distclean
 	$(MAKE) -C $(externals_src) distclean
 	-$(MAKE) -C $(pd_src) distclean
