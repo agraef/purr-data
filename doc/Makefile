@@ -28,8 +28,7 @@ include $(BUILDLAYOUT_DIR)/Makefile.buildlayout
 #
 #==============================================================================#
 
-DOC_TARGETS = media messageoddness pd_fileformat pd-msg \
-tutorials
+DOC_TARGETS = media
 
 # clean up after everything is installed
 final_setup:
@@ -59,43 +58,6 @@ template_install: $(manualsdir)
 template_clean:
 	-rm -f -- $(helpdir)$(manualsdir)/$(TEMPLATE_NAME)/*.*
 	-rmdir --	$(helpdir)$(manualsdir)/$(TEMPLATE_NAME) 
-
-
-
-
-#------------------------------------------------------------------------------#
-# EXTERNALS-HOWTO
-EXTERNALS-HOWTO_NAME = Externals-HOWTO
-externals-howto_install: $(manualsdir)
-	install -d $(DESTDIR)$(manualsdir)/$(EXTERNALS-HOWTO_NAME)
-	-$(CURL) http://iem.kug.ac.at/pd/externals-HOWTO/pd-externals-HOWTO.pdf > \
-		$(DESTDIR)$(manualsdir)/$(EXTERNALS-HOWTO_NAME)/pd-externals-HOWTO.pdf
-	-$(CURL) http://iem.kug.ac.at/pd/externals-HOWTO/HOWTO-externals-en.html > \
-		$(DESTDIR)$(manualsdir)/$(EXTERNALS-HOWTO_NAME)/HOWTO-externals-en.html
-	-$(CURL) http://iem.kug.ac.at/pd/externals-HOWTO/node1.html > \
-		$(DESTDIR)$(manualsdir)/$(EXTERNALS-HOWTO_NAME)/node1.html
-	-$(CURL) http://iem.kug.ac.at/pd/externals-HOWTO/node2.html > \
-		$(DESTDIR)$(manualsdir)/$(EXTERNALS-HOWTO_NAME)/node2.html
-	-$(CURL) http://iem.kug.ac.at/pd/externals-HOWTO/node3.html > \
-		$(DESTDIR)$(manualsdir)/$(EXTERNALS-HOWTO_NAME)/node3.html
-	-$(CURL) http://iem.kug.ac.at/pd/externals-HOWTO/node4.html > \
-		$(DESTDIR)$(manualsdir)/$(EXTERNALS-HOWTO_NAME)/node4.html
-	-$(CURL) http://iem.kug.ac.at/pd/externals-HOWTO/node5.html > \
-		$(DESTDIR)$(manualsdir)/$(EXTERNALS-HOWTO_NAME)/node5.html
-	-$(CURL) http://iem.kug.ac.at/pd/externals-HOWTO/node6.html > \
-		$(DESTDIR)$(manualsdir)/$(EXTERNALS-HOWTO_NAME)/node6.html
-	-$(CURL) http://iem.kug.ac.at/pd/externals-HOWTO/node7.html > \
-		$(DESTDIR)$(manualsdir)/$(EXTERNALS-HOWTO_NAME)/node7.html
-	-$(CURL) http://iem.kug.ac.at/pd/externals-HOWTO/node8.html > \
-		$(DESTDIR)$(manualsdir)/$(EXTERNALS-HOWTO_NAME)/node8.html
-	-$(CURL) http://iem.kug.ac.at/pd/externals-HOWTO/node9.html > \
-		$(DESTDIR)$(manualsdir)/$(EXTERNALS-HOWTO_NAME)/node9.html
-	-$(CURL) http://iem.kug.ac.at/pd/externals-HOWTO/node10.html > \
-		$(DESTDIR)$(manualsdir)/$(EXTERNALS-HOWTO_NAME)/node10.html
-
-externals-howto_clean:
-
-
 
 
 #------------------------------------------------------------------------------#
@@ -136,104 +98,6 @@ endif
 media_clean:
 	-rm -f -- $(DESTDIR)$(pddocdir)/$(MEDIA_NAME)/*.*
 	-rmdir --	$(DESTDIR)$(pddocdir)/$(MEDIA_NAME) 
-
-
-
-
-#------------------------------------------------------------------------------#
-# MESSAGEODDNESS
-MESSAGEODDNESS_NAME = MessageOddness
-messageoddness_install: $(manualsdir)
-	install -d $(DESTDIR)$(manualsdir)/$(MESSAGEODDNESS_NAME)
-	install -p $(doc_src)/additional/messageoddness/*.* \
-		$(DESTDIR)$(manualsdir)/$(MESSAGEODDNESS_NAME) 
-
-messageoddness_clean:
-	-rm -f -- $(DESTDIR)$(manualsdir)/$(MESSAGEODDNESS_NAME)/*.*
-	-rmdir --	$(DESTDIR)$(manualsdir)/$(MESSAGEODDNESS_NAME) 
-
-
-
-
-#------------------------------------------------------------------------------#
-# PD-MSG
-PD-MSG_NAME = pd-msg
-pd-msg_install: $(manualsdir)
-	install -d $(DESTDIR)$(manualsdir)/$(PD-MSG_NAME)
-	install -p $(doc_src)/additional/pd-msg/*.txt \
-		$(DESTDIR)$(manualsdir)/$(PD-MSG_NAME) 
-	for dir in $(shell cd  $(doc_src)/additional/pd-msg && ls -d [1-5].*); do \
-		echo "Including $$dir in $(PD-MSG_NAME)"; \
-		install -d $(DESTDIR)$(manualsdir)/$(PD-MSG_NAME)/$$dir; \
-		install -p $(doc_src)/additional/pd-msg/$$dir/*.* \
-			$(DESTDIR)$(manualsdir)/$(PD-MSG_NAME)/$$dir; \
-	done
-
-pd-msg_clean:
-
-
-#------------------------------------------------------------------------------#
-# PD_FILEFORMAT
-PD_FILEFORMAT_NAME = Pd
-pd_fileformat_install: $(manualsdir)
-	install -d $(DESTDIR)$(manualsdir)/$(PD_FILEFORMAT_NAME)
-	install -p $(doc_src)/additional/pd-fileformat.html \
-		$(DESTDIR)$(manualsdir)/$(PD_FILEFORMAT_NAME)/Pd_File_Format.html
-
-pd_fileformat_clean:
-
-#------------------------------------------------------------------------------#
-# TUTORIALS
-tutorials_install: $(manualsdir)
-# start-here
-	install -d "$(DESTDIR)$(manualsdir)/StartHere"
-	install -p $(doc_src)/tutorials/start-here/*.* "$(DESTDIR)$(manualsdir)/StartHere"
-# pddrums
-	install -d $(DESTDIR)$(manualsdir)/PdDrums
-	install -p $(doc_src)/tutorials/footils/pddrums/*.* $(DESTDIR)$(manualsdir)/PdDrums
-# playnow
-	install -d $(DESTDIR)$(manualsdir)/PlayNow
-	install -p $(doc_src)/tutorials/playnow/*.* $(DESTDIR)$(manualsdir)/PlayNow
-# cognition
-	install -d $(DESTDIR)$(manualsdir)/Cognition
-	install -p $(doc_src)/tutorials/cognition/*.* $(DESTDIR)$(manualsdir)/Cognition
-# intro
-	install -d $(DESTDIR)$(manualsdir)/0.Intro
-	install -p $(doc_src)/tutorials/intro/*.* $(DESTDIR)$(manualsdir)/0.Intro
-	install -p $(externals_src)/pddp/+pager.pd $(DESTDIR)$(manualsdir)/0.Intro
-# sound
-	install -d $(DESTDIR)$(manualsdir)/1.Sound
-	install -p $(doc_src)/tutorials/sound/*.* $(DESTDIR)$(manualsdir)/1.Sound
-	install -p $(externals_src)/pddp/+pager.pd $(DESTDIR)$(manualsdir)/1.Sound
-# visual
-	install -d $(DESTDIR)$(manualsdir)/2.Image
-	install -p $(doc_src)/tutorials/visual/*.* $(DESTDIR)$(manualsdir)/2.Image
-	install -p $(externals_src)/pddp/+pager.pd $(DESTDIR)$(manualsdir)/2.Image
-# networking
-	install -d $(DESTDIR)$(manualsdir)/3.Networking
-	install -p $(doc_src)/tutorials/networking/*.* $(DESTDIR)$(manualsdir)/3.Networking
-	install -p $(externals_src)/pddp/+pager.pd $(DESTDIR)$(manualsdir)/3.Networking
-# physical
-#	install -d $(manualsdir)/4.Physical
-#	install -p $(doc_src)/tutorials/physical/*.* $(manualsdir)/4.Physical
-#	install -p $(externals_src)/pddp/+pager.pd $(manualsdir)/4.Physical
-
-tutorials_clean:
-	-rm -f -- $(DESTDIR)$(manualsdir)/PdDrums/*.*
-	-rmdir -- $(DESTDIR)$(manualsdir)/PdDrums
-	-rm -f -- $(DESTDIR)$(manualsdir)/PlayNow/*.*
-	-rmdir -- $(DESTDIR)$(manualsdir)/PlayNow
-	-rm -f -- $(DESTDIR)$(manualsdir)/0.Intro/*.*
-	-rmdir -- $(DESTDIR)$(manualsdir)/0.Intro
-	-rm -f -- $(DESTDIR)$(manualsdir)/1.Sound/*.*
-	-rmdir -- $(DESTDIR)$(manualsdir)/1.Sound
-	-rm -f -- $(DESTDIR)$(manualsdir)/0.Intro/Visual/*.*
-	-rmdir -- $(DESTDIR)$(manualsdir)/0.Intro/Visual
-	-rm -f -- $(DESTDIR)$(manualsdir)/3.Networking/*.*
-	-rmdir -- $(DESTDIR)$(manualsdir)/3.Networking
-	-rm -f -- $(DESTDIR)$(manualsdir)/4.Physical/*.*
-	-rmdir -- $(DESTDIR)$(manualsdir)/4.Physical
-
 
 #==============================================================================#
 #

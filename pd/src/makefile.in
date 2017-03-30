@@ -192,21 +192,7 @@ install: all
 	ln -sf $(bindir)/pd-l2ork $(DESTDIR)$(libpdbindir)/pd-l2ork
 	install -m755 $(BIN_DIR)/pdsend $(DESTDIR)$(bindir)/pdsend
 	install -m755 $(BIN_DIR)/pdreceive $(DESTDIR)$(bindir)/pdreceive 
-	for dir in $(shell ls -1 ../doc | grep -v CVS); do \
-		echo "installing $$dir"; \
-		install -d $(DESTDIR)$(pddocdir)/$$dir ; \
-		install -m644 -p ../doc/$$dir/*.* $(DESTDIR)$(pddocdir)/$$dir ; \
-	done
-# kludge install of additional pd-l2ork data structures docs
-	cp -rf ../doc/4.data.structures/pd-l2ork $(DESTDIR)$(pddocdir)/4.data.structures/	
-	cp -rf ../doc/about $(DESTDIR)$(pddocdir)/
-# and now the rest
-	for dir in $(shell ls -1 ../doc/7.stuff | grep -v CVS); do \
-		echo "installing 7.stuff/$$dir"; \
-		install -d $(DESTDIR)$(pddocdir)/7.stuff/$$dir ; \
-		install -m644 -p ../doc/7.stuff/$$dir/*.* \
-                    $(DESTDIR)$(pddocdir)/7.stuff/$$dir ; \
-	done
+	rsync -ax --exclude=.git --exclude=.svn ../doc/* $(DESTDIR)$(pddocdir)
 	mv $(ABOUT_FILE) $(ABOUT_FILE).tmp
 	cat $(ABOUT_FILE).tmp | sed 's|PD_VERSION|Pd-l2ork version $(PD_L2ORK_VERSION) ($(PD_BUILD_VERSION))|' \
 		> $(ABOUT_FILE)

@@ -126,9 +126,6 @@ memento_install:
 		--author "Frank Barknecht" \
 		--license "GNU GPL" \
 		--description "a collection of objects for managing state saving"
-	install -d $(DESTDIR)$(manualsdir)/$(MEMENTO_NAME)
-	install -p $(abstractions_src)/rradical/memento/tutorial/*.* \
-		$(DESTDIR)$(manualsdir)/$(MEMENTO_NAME)
 	install -d $(DESTDIR)$(objectsdir)/$(MEMENTO_NAME)/manual
 	install -p $(abstractions_src)/rradical/memento/tutorial/*.* \
 		$(DESTDIR)$(objectsdir)/$(MEMENTO_NAME)/manual
@@ -236,11 +233,6 @@ pixeltango_install:
 	install -d $(DESTDIR)$(examplesdir)/$(PIXELTANGO_NAME)
 	install -p $(abstractions_src)/pixelTANGO/Example-Patches/*.* \
 		$(DESTDIR)$(examplesdir)/$(PIXELTANGO_NAME)
-	install -d $(DESTDIR)$(manualsdir)/$(PIXELTANGO_NAME)
-	install -p $(abstractions_src)/pixelTANGO/*.txt \
-		$(DESTDIR)$(manualsdir)/$(PIXELTANGO_NAME)
-	install -p $(abstractions_src)/pixelTANGO/dev-notes/*.txt \
-		$(DESTDIR)$(manualsdir)/$(PIXELTANGO_NAME)
 	install -d $(DESTDIR)$(objectsdir)/$(PIXELTANGO_NAME)/manual
 	install -p $(abstractions_src)/pixelTANGO/*.txt \
 		$(DESTDIR)$(objectsdir)/$(PIXELTANGO_NAME)/manual
