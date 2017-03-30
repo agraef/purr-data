@@ -216,9 +216,14 @@ Contributing is easy:
    turn an idea into working code very quickly. But a prototyping language that 
    is itself a prototype isn't very useful. That means Purr Data's core code
    and libraries must be stable, consistent, well-documented, and easy to use.
-4. Make sure you aren't duplicating existing functionality, especially core
-   functionality.
-5. Send us a merge request and we'll test it. If it's well-documented and
+4. Develop incrementally. Small, solid improvements to the software are
+   preferable to large, disruptive ones.
+5. Make sure you aren't duplicating existing functionality, especially core
+   functionality. For backwards compatibility Purr Data ships many legacy
+   libraries which unfortunately duplicate the same functionality. This makes
+   it harder to learn how to use Pd, and makes it burdensome to read patches
+   and keep track of all the disparate implementations.
+6. Send us a merge request and we'll test it. If it's well-documented and
    there aren't any bugs we'll add it to the software.
 
 Here are some of the current tasks:
