@@ -285,22 +285,8 @@ install:  all
 # Pd-extended will mimic Pd-vanilla's include/pd until Pd-vanilla gets one
 	cp -pr $(DESTDIR)$(includedir)/pdl2ork $(DESTDIR)$(includedir)/pd
 	install -p m_pd.h $(DESTDIR)$(includedir)
-	for dir in $(shell ls -1 ../doc | grep -v CVS); do \
-		echo "installing $$dir"; \
-		install -d $(pddocdir)/$$dir ; \
-		install -p ../doc/$$dir/*.* $(pddocdir)/$$dir ; \
-	done
-	for dir in $(shell ls -1 ../doc/4.data.structures/pd-l2ork | grep -v CVS); do \
-		echo "installing 4.data.structures/pd-l2ork/$$dir"; \
-		install -d $(pddocdir)/4.data.structures/pd-l2ork/$$dir ; \
-		install -p ../doc/4.data.structures/pd-l2ork/$$dir/*.* $(pddocdir)/4.data.structures/pd-l2ork/$$dir ; \
-	done
+	rsync -ax --exclude=.git --exclude=.svn ../doc/* $(pddocdir)
 	cp -rf ../doc/about $(pddocdir)/
-	for dir in $(shell ls -1 ../doc/7.stuff | grep -v CVS); do \
-		echo "installing 7.stuff/$$dir"; \
-		install -d $(pddocdir)/7.stuff/$$dir ; \
-		install -p ../doc/7.stuff/$$dir/*.* $(pddocdir)/7.stuff/$$dir ; \
-	done
 	mv $(ABOUT_FILE) $(ABOUT_FILE).tmp
 	cat $(ABOUT_FILE).tmp | sed 's|PD_VERSION|Pd version $(PD_L2ORK_VERSION) ($(PD_BUILD_VERSION))|' \
 		> $(ABOUT_FILE)

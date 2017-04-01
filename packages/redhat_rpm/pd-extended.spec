@@ -498,9 +498,7 @@ find externals/pdp externals/pidip -type f -exec perl -p -i -e "s|<quicktime/|<l
 perl -p -i -e "s|pdp pidip||g" externals/Makefile
 %endif
 
-# patch the official pd source
 cd packages
-make patch_pd
 
 # make and install pd and externals
 cd linux_make
@@ -551,9 +549,6 @@ for library in ${EXTERNALS} ; do
            ${DESTDIR_ROOT}/${library}%{_prefix}/lib/pd/extra/
     fi
     make -C externals DESTDIR=${DESTDIR} prefix=${prefix} libpddir=${libpddir} libpdbindir=${libpdbindir} ${library}_install
-    if [ -d "${libpddir}/doc/5.reference/" ] ; then
-        (cd ${libpddir}/doc/5.reference/ ; ${buildhome}/scripts/convert-help-to-standard.sh)
-    fi
     find ${DESTDIR_ROOT}/${library} -type f | sed "s|${DESTDIR_ROOT}/${library}||g" > ${buildhome}/files-subpackage-${library}	
 done
 
@@ -566,9 +561,6 @@ for abstraction in ${ABSTRACTIONS} ; do
     libpddir=${libdir}/pd
     libpdbindir=${libpddir}/bin
     make -C abstractions DESTDIR=${DESTDIR} prefix=${prefix} libpddir=${libpddir} libpdbindir=${libpdbindir} ${abstraction}_install
-    if [ -d "${libpddir}/doc/5.reference/" ] ; then
-        (cd ${libpddir}/doc/5.reference/ ; ${buildhome}/scripts/convert-help-to-standard.sh)
-    fi
     find ${DESTDIR_ROOT}/${abstraction} -type f | sed "s|${DESTDIR_ROOT}/${abstraction}||g" > ${buildhome}/files-subpackage-${abstraction}	
 done
 
@@ -798,8 +790,6 @@ install: cannot stat `/usr/src/rpm/BUILD/pure-data/packages/linux_make/../../pac
 install: cannot stat `/usr/src/rpm/BUILD/pure-data/packages/linux_make/../../packages/noncvs/linux/doc/5.reference/*.*': No such file or directory
 
 install: cannot stat `/usr/src/rpm/BUILD/pure-data/packages/linux_make/../../packages/noncvs/linux/extra/*.*': No such file or directory
-
-install: cannot stat `/usr/src/rpm/BUILD/pure-data/packages/linux_make/../../packages/noncvs/linux/gripd/*.*': No such file or directory
 
 * Tue Jul 25 2006 Fernando Lopez-Lezcano <nando@ccrma.stanford.edu> 0.39.2
 - changed package name to pd-extended, build all of it, both pd and

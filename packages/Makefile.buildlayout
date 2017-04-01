@@ -22,7 +22,6 @@
 #    extensions
 #	  externals
 # 	  packages
-#    doc
 #
 # it will be going here too:
 #    gem
@@ -88,7 +87,6 @@ DEBUG_CFLAGS = -ggdb
 
 # sources
 abstractions_src = $(cvs_root_dir)/abstractions
-doc_src = $(cvs_root_dir)/doc
 extensions_src = $(cvs_root_dir)/extensions
 externals_src = $(cvs_root_dir)/externals
 flext_src = $(cvs_root_dir)/externals/grill/flext
@@ -122,7 +120,6 @@ pddocdir = $(libpddir)/doc
 examplesdir = $(pddocdir)/examples
 helpdir = $(pddocdir)/5.reference
 manualsdir = $(pddocdir)/manuals
-readmesdir = $(manualsdir)/READMEs
 
 
 #==============================================================================#
@@ -156,10 +153,7 @@ $(manualsdir): $(DESTDIR)
 $(objectsdir): $(DESTDIR)
 	install -d $(DESTDIR)$(objectsdir)
 
-$(readmesdir): $(manualsdir)
-	install -d $(DESTDIR)$(readmesdir)
-
-installdirs: $(DESTDIR) $(bindir) $(examplesdir) $(pddocdir) $(includedir) $(helpdir) $(manualsdir) $(objectsdir) $(readmesdir)
+installdirs: $(DESTDIR) $(bindir) $(examplesdir) $(pddocdir) $(includedir) $(helpdir) $(manualsdir) $(objectsdir)
 
 #==============================================================================#
 #

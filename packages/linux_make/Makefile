@@ -142,7 +142,6 @@ debstage: $(bindir)
 		$(DESTDIR)/usr/share/emacs/site-lisp/
 # Pd-related scripts
 	#install -p $(scripts_src)/pd-diff $(DESTDIR)$(bindir)
-	#install -p $(scripts_src)/config-switcher.sh $(DESTDIR)$(bindir)
 
 deb: DEB_BUILD_ARCH := $(shell dpkg-architecture -qDEB_BUILD_ARCH)
 deb: DEB_PD_VERSION := $(shell echo $(PD_VERSION) | sed 's|\(.*\)-l2ork-\(.*\)|\1-\2|')

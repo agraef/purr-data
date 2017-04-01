@@ -126,9 +126,6 @@ memento_install:
 		--author "Frank Barknecht" \
 		--license "GNU GPL" \
 		--description "a collection of objects for managing state saving"
-	install -d $(DESTDIR)$(manualsdir)/$(MEMENTO_NAME)
-	install -p $(abstractions_src)/rradical/memento/tutorial/*.* \
-		$(DESTDIR)$(manualsdir)/$(MEMENTO_NAME)
 	install -d $(DESTDIR)$(objectsdir)/$(MEMENTO_NAME)/manual
 	install -p $(abstractions_src)/rradical/memento/tutorial/*.* \
 		$(DESTDIR)$(objectsdir)/$(MEMENTO_NAME)/manual
@@ -236,11 +233,6 @@ pixeltango_install:
 	install -d $(DESTDIR)$(examplesdir)/$(PIXELTANGO_NAME)
 	install -p $(abstractions_src)/pixelTANGO/Example-Patches/*.* \
 		$(DESTDIR)$(examplesdir)/$(PIXELTANGO_NAME)
-	install -d $(DESTDIR)$(manualsdir)/$(PIXELTANGO_NAME)
-	install -p $(abstractions_src)/pixelTANGO/*.txt \
-		$(DESTDIR)$(manualsdir)/$(PIXELTANGO_NAME)
-	install -p $(abstractions_src)/pixelTANGO/dev-notes/*.txt \
-		$(DESTDIR)$(manualsdir)/$(PIXELTANGO_NAME)
 	install -d $(DESTDIR)$(objectsdir)/$(PIXELTANGO_NAME)/manual
 	install -p $(abstractions_src)/pixelTANGO/*.txt \
 		$(DESTDIR)$(objectsdir)/$(PIXELTANGO_NAME)/manual
@@ -352,10 +344,6 @@ timestretch_install:
 #	install -d $(DESTDIR)$(manualsdir)/$(TIMESTRETCH_NAME)
 #	install -p $(abstractions_src)/timestretch/doc/*.txt \
 #		 $(DESTDIR)$(manualsdir)/$(TIMESTRETCH_NAME)
-#	install -d $(DESTDIR)$(readmesdir)
-#	install -p $(abstractions_src)/timestretch/README \
-#		$(DESTDIR)$(readmesdir)/$(TIMESTRETCH_NAME).txt
-
 
 
 #-------------------------------------------------------------------------------
@@ -369,42 +357,15 @@ pd-wavelet_install:
 		$(DESTDIR)$(objectsdir)/$(PDWAVELET_NAME)
 	install -p $(abstractions_src)/pd-wavelet/main.pd \
 		 $(DESTDIR)$(objectsdir)/$(PDWAVELET_NAME)
+	install -p $(abstractions_src)/pd-wavelet/README.txt \
+		 $(DESTDIR)$(objectsdir)/$(PDWAVELET_NAME)
+
 	$(scripts_src)/generate-libdir-metafile.sh $(DESTDIR)$(objectsdir) $(PDWAVELET_NAME) \
 		--author "Raul Diaz Poblete" \
 		--description "manipulation of audio in the wavelet domain" \
 		--license "GNU GPL v2" \
 		--version "" 
-	install -d $(DESTDIR)$(readmesdir)
-	install -p $(abstractions_src)/pd-wavelet/README.txt \
-		$(DESTDIR)$(readmesdir)/$(PDWAVELET_NAME).txt
 
-
-#==============================================================================#
-#
-# DEVELOPER'S TARGETS
-#
-#==============================================================================#
-
-# make the symlinks necessary to simulate the installed environment
-devsymlinks:
-# make symlinks for help patches
-	test -e $(abstractions_src)/../2.control.examples || \
-		ln -s $(pd_src)/doc/2.control.examples \
-			$(abstractions_src)/../2.control.examples
-	test -e $(abstractions_src)/../3.audio.examples || \
-		ln -s $(pd_src)/doc/3.audio.examples \
-			$(abstractions_src)/../3.audio.examples
-# pd <= 0.38-4 has 4.fft.examples
-	test -e $(abstractions_src)/../4.fft.examples || \
-		ln -s $(pd_src)/doc/4.fft.examples $(abstractions_src)/../4.fft.examples
-# pd > 0.38-4 has 4.data.structures
-	test -e $(abstractions_src)/../4.data.structures || \
-		ln -s $(pd_src)/doc/4.data.structures \
-			$(abstractions_src)/../4.data.structures
-	test -e $(abstractions_src)/../7.stuff || \
-		ln -s $(pd_src)/doc/7.stuff $(abstractions_src)/../7.stuff
-	test -e $(abstractions_src)/../sound || \
-		ln -s $(pd_src)/doc/sound $(abstractions_src)/../sound
 
 #==============================================================================#
 #

@@ -175,7 +175,7 @@ endif
 #==============================================================================#
 
 # this is used for installing into a pre-build Pd binary
-extended_install: abstractions_install doc_install \
+extended_install: abstractions_install \
 externals_install readme_install welcome_install \
 license_install noncvs_install
 
@@ -196,12 +196,6 @@ abstractions_install:
 	$(MAKE) -C $(abstractions_src) $(DEST_PATHS) install
 
 #------------------------------------------------------------------------------
-# doc_install
-doc_install: 
-	$(MAKE) -C $(doc_src) $(DEST_PATHS) install
-
-
-#------------------------------------------------------------------------------
 # extensions_install
 extensions_install: 
 	$(MAKE) -C $(extensions_src) $(DEST_PATHS) install
@@ -220,10 +214,6 @@ noncvs_install:
 	-install -p $(packages_src)/noncvs/$(OS_NAME)/bin/*.* $(DESTDIR)$(bindir)
 	-install -p $(packages_src)/noncvs/$(OS_NAME)/doc/5.reference/*.* $(DESTDIR)$(helpdir)
 	-install -p $(packages_src)/noncvs/$(OS_NAME)/extra/*.* $(DESTDIR)$(objectsdir)
-	-test -d $(packages_src)/noncvs/$(OS_NAME)/gripd && \
-		install -d $(DESTDIR)$(prefix)/gripd
-	-install -p $(packages_src)/noncvs/$(OS_NAME)/gripd/*.* \
-		$(DESTDIR)$(prefix)/gripd
 
 
 #==============================================================================#
@@ -380,94 +370,6 @@ doc_format:
 	-find $(DESTDIR) -name .svn -print0 | xargs -0 rm -rf
 
 
-#==============================================================================#
-#
-# DEVELOPER TARGETS
-#
-#==============================================================================#
-
-devsymlinks: devsymlinks_$(OS_NAME)
-
-
-
-devsymlinks_windows:
-
-
-devsymlinks_linux:
-
-
-TCLTK_VERSION=8.4
-devsymlinks_darwin: devsymlinks_clean
-# this makes /usr/local symlinks to the Tcl/Tk frameworks so that ./configure
-# can find them.
-# headers
-	test -e  /Library/Frameworks/Tcl.framework/Versions/$(TCLTK_VERSION)/Headers/tcl.h && \
-		sudo ln -s \
-			/Library/Frameworks/Tcl.framework/Versions/$(TCLTK_VERSION)/Headers/tcl.h \
-			/usr/local/include/tcl.h
-	test -e  /Library/Frameworks/Tcl.framework/Versions/$(TCLTK_VERSION)/Headers/tclDecls.h && \
-		sudo ln -s \
-			/Library/Frameworks/Tcl.framework/Versions/$(TCLTK_VERSION)/Headers/tclDecls.h \
-			/usr/local/include/tclDecls.h
-	test -e  /Library/Frameworks/Tcl.framework/Versions/$(TCLTK_VERSION)/Headers/tclPlatDecls.h && \
-		sudo ln -s \
-			/Library/Frameworks/Tcl.framework/Versions/$(TCLTK_VERSION)/Headers/tclPlatDecls.h \
-			/usr/local/include/tclPlatDecls.h
-# libs
-	test -e  /Library/Frameworks/Tcl.framework/tclConfig.sh && \
-		sudo ln -s /Library/Frameworks/Tcl.framework/tclConfig.sh /usr/local/lib
-	test -e  /Library/Frameworks/Tcl.framework/Versions/$(TCLTK_VERSION)/Tcl && \
-		sudo ln -s \
-			/Library/Frameworks/Tcl.framework/Versions/$(TCLTK_VERSION)/Tcl \
-			/usr/local/lib/libtcl$(TCLTK_VERSION).dylib
-	test -e  /Library/Frameworks/Tcl.framework/Versions/$(TCLTK_VERSION)/libtclstub$(TCLTK_VERSION).a && \
-		sudo ln -s \
-			/Library/Frameworks/Tcl.framework/Versions/$(TCLTK_VERSION)/libtclstub$(TCLTK_VERSION).a \
-			/usr/local/lib/libtclstub$(TCLTK_VERSION).a
-	test -e  /usr/local/lib/libtcl$(TCLTK_VERSION).dylib && \
-		sudo ln -s /usr/local/lib/libtcl$(TCLTK_VERSION).dylib /usr/local/lib/libtcl.dylib
-# headers
-	test -e  /Library/Frameworks/Tk.framework/Versions/$(TCLTK_VERSION)/Headers/tk.h && \
-		sudo ln -s \
-			/Library/Frameworks/Tk.framework/Versions/$(TCLTK_VERSION)/Headers/tk.h \
-			/usr/local/include/tk.h
-	test -e  /Library/Frameworks/Tk.framework/Versions/$(TCLTK_VERSION)/Headers/tkDecls.h && \
-		sudo ln -s \
-			/Library/Frameworks/Tk.framework/Versions/$(TCLTK_VERSION)/Headers/tkDecls.h \
-			/usr/local/include/tkDecls.h
-	test -e  /Library/Frameworks/Tk.framework/Versions/$(TCLTK_VERSION)/Headers/tkIntXlibDecls.h && \
-		sudo ln -s \
-			/Library/Frameworks/Tk.framework/Versions/$(TCLTK_VERSION)/Headers/tkIntXlibDecls.h \
-			/usr/local/include/tkIntXlibDecls.h
-	test -e  /Library/Frameworks/Tk.framework/Versions/$(TCLTK_VERSION)/Headers/tkMacOSX.h && \
-		sudo ln -s \
-			/Library/Frameworks/Tk.framework/Versions/$(TCLTK_VERSION)/Headers/tkMacOSX.h \
-			/usr/local/include/tkMacOSX.h
-	test -e  /Library/Frameworks/Tk.framework/Versions/$(TCLTK_VERSION)/Headers/tkPlatDecls.h && \
-		sudo ln -s \
-			/Library/Frameworks/Tk.framework/Versions/$(TCLTK_VERSION)/Headers/tkPlatDecls.h \
-			/usr/local/include/tkPlatDecls.h
-# libs
-	test -e  /Library/Frameworks/Tk.framework/tkConfig.sh && \
-		sudo ln -s /Library/Frameworks/Tk.framework/tkConfig.sh /usr/local/lib
-	test -e  /Library/Frameworks/Tk.framework/Versions/$(TCLTK_VERSION)/Tk && \
-		sudo ln -s /Library/Frameworks/Tk.framework/Versions/$(TCLTK_VERSION)/Tk \
-			/usr/local/lib/libtk$(TCLTK_VERSION).dylib
-	test -e /Library/Frameworks/Tk.framework/Versions/$(TCLTK_VERSION)/libtkstub$(TCLTK_VERSION).a && \
-		sudo ln -s \
-			/Library/Frameworks/Tk.framework/Versions/$(TCLTK_VERSION)/libtkstub$(TCLTK_VERSION).a \
-			/usr/local/lib/libtkstub$(TCLTK_VERSION).a
-	test -e  /usr/local/lib/libtk$(TCLTK_VERSION).dylib && \
-		sudo ln -s /usr/local/lib/libtk$(TCLTK_VERSION).dylib /usr/local/lib/libtk.dylib
-
-
-
-devsymlinks_clean:
-	-sudo rm -f /usr/local/include/tcl*.h /usr/local/include/tk*.h
-	-sudo rm -f /usr/local/lib/tclConfig.sh /usr/local/lib/tkConfig.sh
-	-sudo rm -f /usr/local/lib/libtcl*.dylib /usr/local/lib/libtk*.dylib
-	-sudo rm -f /usr/local/lib/libtclstub*.a /usr/local/lib/libtkstub*.a
-
 # AG: The set_version target is broken since it modifies m_pd.h in-place
 # during the build, which is a bad thing to do to files which are supposed to
 # be kept in a source code repository. Instead, we create s_stuff.h from
@@ -494,93 +396,6 @@ unset_version:
 		mv m_pd.h.tmp m_pd.h
 
 
-patch_pd:
-	@echo pd_src $(pd_src)
-# apply all platform-neutral patches
-	for patch in $(shell ls -1 $(CWD)/patches/*.patch); do \
-		echo "Applying $$patch"; \
-		cd $(pd_src)/src/ && patch -p0 < $$patch; \
-	done
-# apply all platform-specific patches (is broken on MINGW/Windows)
-ifneq ($(OS_NAME),windows)
-	for patch in $(shell ls -1 $(CWD)/patches/$(OS_NAME)/*.patch); do \
-		echo "Applying $$patch"; \
-		cd $(pd_src)/src/ && patch -p0 < $$patch; \
-	done
-endif
-	-rm -f -- $(pd_src)/src/configure  $(pd_src)/src/makefile
-	@echo " "
-	@echo "patching completed."
-
-
-unpatch_pd:
-# apply all platform-specific patches (is broken on MINGW/Windows)
-ifneq ($(OS_NAME),windows)
-	for patch in $(shell ls -1r $(CWD)/patches/$(OS_NAME)/*.patch); do \
-		echo "Applying $$patch"; \
-		cd $(pd_src)/src/ && patch -p0 -R < $$patch; \
-	done
-endif
-# apply all platform-neutral patches
-	for patch in $(shell ls -1r $(CWD)/patches/*.patch); do \
-		echo "Applying $$patch"; \
-		cd $(pd_src)/src/ && patch -p0 -R < $$patch; \
-	done
-	-rm -f -- $(pd_src)/src/configure  $(pd_src)/src/makefile \
-		$(pd_src)/src/makefile.dependencies
-	@echo " "
-	@echo "unpatching completed."
-
-
-patch: patch_pd set_version
-
-unpatch: unset_version unpatch_pd
-
-
-
-patch_pd_devel:
-	@echo pd_src $(pd_src)
-# apply all platform-neutral patches
-	for patch in $(shell ls -1 $(CWD)/patches/*.patch); do \
-		echo "Applying $$patch"; \
-		cd $(pd_src)/src/ && patch -p0 < $$patch; \
-	done
-# apply all platform-specific patches
-	for patch in $(shell ls -1 $(CWD)/patches/$(OS_NAME)/*.patch); do \
-		echo "Applying $$patch"; \
-		cd $(pd_src)/src/ && patch -p0 < $$patch; \
-	done
-	-rm -f -- $(pd_src)/src/configure  $(pd_src)/src/makefile
-# change Pd's version number to reflect the extended build
-# this needs the complete_version_defines patch to work
-	cd $(pd_src)/src/ && \
-		sed 's|^\(#define PD_TEST_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' m_pd.h > \
-			m_pd.h.tmp && mv m_pd.h.tmp m_pd.h
-	@echo " "
-	@echo "patching completed."
-
-
-unpatch_pd_devel:
-# change the version number back to the original 
-# this needs the complete_version_defines patch to work
-	cd $(pd_src)/src && \
-		sed 's|^\(#define PD_TEST_VERSION ".*\)$(PD_BUILD_VERSION)"|\1"|' \
-			m_pd.h > m_pd.h.tmp && \
-		mv m_pd.h.tmp m_pd.h
-# apply all platform-specific patches
-	for patch in $(shell ls -1r $(CWD)/patches/$(OS_NAME)/*.patch); do \
-		echo "Applying $$patch"; \
-		cd $(pd_src)/src/ && patch -p0 -R < $$patch; \
-	done
-# apply all platform-neutral patches
-	for patch in $(shell ls -1r $(CWD)/patches/*.patch); do \
-		echo "Applying $$patch"; \
-		cd $(pd_src)/src/ && patch -p0 -R < $$patch; \
-	done
-	-rm -f -- $(pd_src)/src/configure  $(pd_src)/src/makefile
-	@echo " "
-	@echo "unpatching completed."
-
 #==============================================================================#
 #
 # CLEAN TARGETS
@@ -604,7 +419,6 @@ clean: abstractions_clean doc_clean externals_clean pd_clean
 
 distclean: cruft_clean
 	$(MAKE) -C $(abstractions_src) distclean
-	$(MAKE) -C $(doc_src) distclean
 	$(MAKE) -C $(extensions_src) distclean
 	$(MAKE) -C $(externals_src) distclean
 	-$(MAKE) -C $(pd_src) distclean
