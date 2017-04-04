@@ -1779,65 +1779,16 @@ toxy_clean:
 
 #------------------------------------------------------------------------------#
 # UNAUTHORIZED
-UNAUTHORIZED_NAME=unauthorized
-# these need to be created before compiling the C
-UNAUTHORIZED_TKFILES = $(wildcard $(externals_src)/unauthorized/*/*.tk)
-%.tk2c: %.tk
-	bash $(externals_src)/unauthorized/tk2c.bash < $*.tk > $*.tk2c
+unauthorized:
+	make -C $(externals_src)/unauthorized CFLAGS="$(CFLAGS)" \
+		PD_PATH=$(pd_src) PD_INCLUDE=$(pd_src)/src
 
-# a number of objects don't compile under MinGW (yet? they used to, but the
-# needed changes were overwritten, so they are in CVS
-ifeq ($(OS_NAME),windows)
-UNAUTHORIZED_OBJECTS := $(wildcard $(externals_src)/unauthorized/[abdg-oqrw]*/*.c)\
-$(wildcard $(externals_src)/unauthorized/c?[a-np-z]*/*.c)
-else
- ifeq ($(OS_NAME),darwin)
- # [cooled~] crashes Pd on Mac OS X, [vocoder~] doesn't compile
-  UNAUTHORIZED_OBJECTS := $(wildcard $(externals_src)/unauthorized/[abd-uw-z]*/*.c)\
-  $(wildcard $(externals_src)/unauthorized/c?[a-np-z]*/*.c)
- else
-   # GNU/Linux, BSD, IRIX, etc.
-  UNAUTHORIZED_OBJECTS := $(wildcard $(externals_src)/unauthorized/*/*.c)
- endif
-endif
-
-
-# [vocoder~] is built separately since its made from a number of files
-UNAUTHORIZED_VOCODER = $(wildcard $(externals_src)/unauthorized/vocoder*/*.c)
- $(externals_src)/unauthorized/vocoder~/vocoder~.$(EXTENSION): $(UNAUTHORIZED_VOCODER:.c=.o)
-	$(CC) $(LDFLAGS) -o $(externals_src)/unauthorized/vocoder~/vocoder~.$(EXTENSION) \
-		$(UNAUTHORIZED_VOCODER:.c=.o) $(LIBS)
-
-unauthorized: $(externals_src)/unauthorized/vocoder~/vocoder~.$(EXTENSION) \
-$(UNAUTHORIZED_TKFILES:.tk=.tk2c) $(UNAUTHORIZED_OBJECTS:.c=.$(EXTENSION))
-
-unauthorized_install: unauthorized
-	install -d $(DESTDIR)$(objectsdir)/$(UNAUTHORIZED_NAME)
-	$(scripts_src)/generate-libdir-metafile.sh $(DESTDIR)$(objectsdir) $(UNAUTHORIZED_NAME) \
-		--author "Yves Degoyon" \
-		--license "GNU GPL" \
-		--description "GUI and streaming objects"
-	install -p $(externals_src)/unauthorized/*/*.$(EXTENSION) \
-		$(DESTDIR)$(objectsdir)/$(UNAUTHORIZED_NAME)
-	install -p $(externals_src)/unauthorized/*/*.pd \
-		$(DESTDIR)$(objectsdir)/$(UNAUTHORIZED_NAME)
-	install -p $(externals_src)/unauthorized/*/*.pls \
-		$(DESTDIR)$(objectsdir)/$(UNAUTHORIZED_NAME)
-	install -d $(DESTDIR)$(objectsdir)/$(UNAUTHORIZED_NAME)/blm
-	install -p $(externals_src)/unauthorized/blinkenlights/blm/*.* \
-		$(DESTDIR)$(objectsdir)/$(UNAUTHORIZED_NAME)/blm
-	install -d $(DESTDIR)$(objectsdir)/$(UNAUTHORIZED_NAME)/manual
-	install -p $(externals_src)/unauthorized/*/*.txt \
-		$(DESTDIR)$(objectsdir)/$(UNAUTHORIZED_NAME)/manual
+unauthorized_install:
+	make -C $(externals_src)/unauthorized \
+		DESTDIR="$(DESTDIR)" objectsdir="$(objectsdir)" install
 
 unauthorized_clean:
-	-rm -f -- $(UNAUTHORIZED_OBJECTS:.c=.$(EXTENSION))
-	-rm -f -- $(UNAUTHORIZED_OBJECTS:.c=.o)
-	-rm -f -- $(UNAUTHORIZED_VOCODER:.c=.$(EXTENSION))
-	-rm -f -- $(UNAUTHORIZED_VOCODER:.c=.o)
-	-rm -f -- $(externals_src)/unauthorized/*/*.bak
-	-rm -f -- $(externals_src)/*/*.*~
-	-rm -f -- $(externals_src)/*.*~
+	make -C $(externals_src)/unauthorized clean
 
 
 #------------------------------------------------------------------------------#
