@@ -487,6 +487,6 @@ void disto_tilde_setup(void)
     class_addmethod(disto_class, (t_method)disto_hipassQ, gensym("hipassQ"), A_FLOAT, 0);
     class_addmethod(disto_class, (t_method)disto_lowpassfreq, gensym("lowpassfreq"), A_FLOAT, 0);
     class_addmethod(disto_class, (t_method)disto_lowpassQ, gensym("lowpassQ"), A_FLOAT, 0);
-    class_addmethod(disto_class, (t_method)disto_dsp, gensym("dsp"), 0);
+    class_addmethod(disto_class, (t_method)disto_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(disto_class, (t_method)disto_preset, gensym("preset"), A_FLOAT, 0);
 }

@@ -633,7 +633,7 @@ void mp3write_tilde_setup(void)
     mp3write_class = class_new(gensym("mp3write~"), (t_newmethod)mp3write_new, (t_method)mp3write_free,
                                sizeof(t_mp3write), 0, 0);
     CLASS_MAINSIGNALIN(mp3write_class, t_mp3write, x_f );
-    class_addmethod(mp3write_class, (t_method)mp3write_dsp, gensym("dsp"), 0);
+    class_addmethod(mp3write_class, (t_method)mp3write_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(mp3write_class, (t_method)mp3write_open, gensym("open"), A_SYMBOL, 0);
     class_addmethod(mp3write_class, (t_method)mp3write_mpeg, gensym("mpeg"), A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, 0);
     class_addmethod(mp3write_class, (t_method)mp3write_start, gensym("start"), 0);

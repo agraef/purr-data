@@ -101,6 +101,6 @@ void compressor_tilde_setup(void)
     compressor_class = class_new(gensym("compressor~"), (t_newmethod)compressor_new, 0,
                                  sizeof(t_compressor), 0, 0);
     CLASS_MAINSIGNALIN( compressor_class, t_compressor, x_f );
-    class_addmethod(compressor_class, (t_method)compressor_dsp, gensym("dsp"), 0);
+    class_addmethod(compressor_class, (t_method)compressor_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(compressor_class, (t_method)compressor_strength, gensym("strength"), A_FLOAT, 0);
 }

@@ -2275,7 +2275,7 @@ void sonogram_tilde_setup(void)
 #endif
 
     CLASS_MAINSIGNALIN( sonogram_class, t_sonogram, x_f );
-    class_addmethod(sonogram_class, (t_method)sonogram_dsp, gensym("dsp"), A_NULL);
+    class_addmethod(sonogram_class, (t_method)sonogram_dsp, gensym("dsp"), A_CANT, A_NULL);
     class_addmethod(sonogram_class, (t_method)sonogram_record, gensym("record"), A_NULL);
     class_addmethod(sonogram_class, (t_method)sonogram_enhance, gensym("enhance"), A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_NULL);
     class_addmethod(sonogram_class, (t_method)sonogram_add, gensym("add"), A_FLOAT, A_FLOAT, A_FLOAT, A_NULL);

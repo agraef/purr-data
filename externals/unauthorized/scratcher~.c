@@ -828,7 +828,7 @@ void scratcher_tilde_setup(void)
 #endif
 
     CLASS_MAINSIGNALIN( scratcher_class, t_scratcher, x_f );
-    class_addmethod(scratcher_class, (t_method)scratcher_dsp, gensym("dsp"), A_NULL);
+    class_addmethod(scratcher_class, (t_method)scratcher_dsp, gensym("dsp"), A_CANT, A_NULL);
     class_addmethod(scratcher_class, (t_method)scratcher_record, gensym("record"), A_NULL);
     class_addmethod(scratcher_class, (t_method)scratcher_resize, gensym("resize"), A_FLOAT, A_NULL);
     class_addmethod(scratcher_class, (t_method)scratcher_sensibility, gensym("sensibility"), A_FLOAT, A_NULL);

@@ -157,7 +157,7 @@ void vocoder_tilde_setup(void)
     vocoder_class = class_new(gensym("vocoder~"), (t_newmethod)vocoder_new, (t_method)vocoder_free,
                               sizeof(t_vocoder), 0, 0);
     CLASS_MAINSIGNALIN( vocoder_class, t_vocoder, x_f );
-    class_addmethod(vocoder_class, (t_method)vocoder_dsp, gensym("dsp"), 0);
+    class_addmethod(vocoder_class, (t_method)vocoder_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(vocoder_class, (t_method)vocoder_cutoff, gensym("cutoff"), A_FLOAT, 0);
     class_addmethod(vocoder_class, (t_method)vocoder_vfeedback, gensym("vfeedback"), A_FLOAT, 0);
 }

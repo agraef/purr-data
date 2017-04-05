@@ -114,6 +114,6 @@ void randomblock_tilde_setup(void)
     randomblock_class = class_new(gensym("randomblock~"), (t_newmethod)randomblock_new,
                                   (t_method)randomblock_free,
                                   sizeof(t_randomblock), 0, A_DEFFLOAT, 0);
-    class_addmethod( randomblock_class, (t_method)randomblock_dsp, gensym("dsp"), 0);
+    class_addmethod( randomblock_class, (t_method)randomblock_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod( randomblock_class, (t_method)randomblock_limit, gensym("limit"), A_FLOAT, 0);
 }

@@ -657,7 +657,7 @@ void filterbank_tilde_setup(void)
     filterbank_class_tilde = class_new(gensym("filterbank~"), (t_newmethod)filterbank_new,
                                        (t_method)filterbank_free, sizeof(t_filterbank_tilde), 0, A_GIMME, 0);
     CLASS_MAINSIGNALIN( filterbank_class_tilde, t_filterbank_tilde, x_f );
-    class_addmethod(filterbank_class_tilde, (t_method)filterbank_dsp, gensym("dsp"), 0);
+    class_addmethod(filterbank_class_tilde, (t_method)filterbank_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(filterbank_class_tilde, (t_method)filterbank_dialog, gensym("dialog"), A_GIMME, 0);
     class_addmethod(filterbank_class_tilde, (t_method)filterbank_randomize, gensym("randomize"), A_DEFFLOAT, 0);
     filterbank_widgetbehavior.w_getrectfn =    filterbank_getrect;

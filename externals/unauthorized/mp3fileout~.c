@@ -555,7 +555,7 @@ void mp3fileout_tilde_setup(void)
                                  sizeof(t_mp3fileout),  0, A_NULL);
 
     class_addmethod(mp3fileout_class, nullfn, gensym("signal"), 0);
-    class_addmethod(mp3fileout_class, (t_method) mp3fileout_dsp, gensym("dsp"), 0);
+    class_addmethod(mp3fileout_class, (t_method) mp3fileout_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(mp3fileout_class, (t_method)mp3fileout_connect, gensym("connect"), A_SYMBOL, A_FLOAT, 0);
     class_addmethod(mp3fileout_class, (t_method)mp3fileout_open, gensym("open"), A_SYMBOL, 0);
     class_addmethod(mp3fileout_class, (t_method)mp3fileout_disconnect, gensym("disconnect"), 0);

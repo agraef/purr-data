@@ -1042,7 +1042,7 @@ void audience_tilde_setup(void)
     audience_class_tilde = class_new(gensym("audience~"), (t_newmethod)audience_new,
                                      (t_method)audience_free, sizeof(t_audience_tilde), 0, A_GIMME, 0);
     CLASS_MAINSIGNALIN( audience_class_tilde, t_audience_tilde, x_f );
-    class_addmethod(audience_class_tilde, (t_method)audience_dsp, gensym("dsp"), 0);
+    class_addmethod(audience_class_tilde, (t_method)audience_dsp, gensym("dsp"), A_CANT, 0);
     class_addmethod(audience_class_tilde, (t_method)audience_dialog, gensym("dialog"), A_GIMME, 0);
     class_addmethod(audience_class_tilde, (t_method)audience_attenuation, gensym("attenuation"), A_DEFFLOAT, 0);
     class_addmethod(audience_class_tilde, (t_method)audience_delay, gensym("delay"), A_DEFFLOAT, 0);
