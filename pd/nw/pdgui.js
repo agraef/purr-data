@@ -2637,13 +2637,18 @@ function gui_slider_new(cid, tag, color, p1, p2, p3, p4, basex, basey) {
 }
 
 function gui_slider_update(cid, tag, p1, p2, p3, p4, basex, basey) {
-    var indicator = get_item(cid, tag + "indicator");
-    configure_item(indicator, {
-        x1: p1 - basex,
-        y1: p2 - basey,
-        x2: p3 - basex,
-        y2: p4 - basey
-    });
+    var indicator;
+    if (patchwin[cid]) {
+        indicator = get_item(cid, tag + "indicator");
+        if (indicator) {
+            configure_item(indicator, {
+                x1: p1 - basex,
+                y1: p2 - basey,
+                x2: p3 - basex,
+                y2: p4 - basey
+            });
+        }
+    }
 }
 
 function gui_slider_indicator_color(cid, tag, color) {
