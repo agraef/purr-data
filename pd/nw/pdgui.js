@@ -4084,7 +4084,7 @@ function gui_canvas_popup(cid, xpos, ypos, canprop, canopen, isobject) {
             .getAttribute("viewBox").split(" "); // need top-left svg origin
 
     // Check nw.js version-- if its lts then we need the zoom_kludge...
-    zfactor = process.platform.nw === "0.14.7" ? zoom_kludge(zoom_level) : 1;
+    zfactor = process.versions.nw === "0.14.7" ? zoom_kludge(zoom_level) : 1;
     // Set the global popup x/y so they can be retrieved by the relevant
     // document's event handler
     popup_coords[0] = xpos;
