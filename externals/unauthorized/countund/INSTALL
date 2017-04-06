@@ -1,7 +1,0 @@
-untar in /my/pd/dir/externs
-
-cd /my/pd/dir/extra/countund~
-
-make
-
-you're set !!
