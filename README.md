@@ -12,7 +12,8 @@ maintainer: Jonathan Wilkes <jancsika@yahoo.com>
 * [Flavors of Pure Data](#flavors-of-pure-data)
 * [Three Paragraph Overview](#three-paragraph-overview)
 * [Goals](#goals)
-* [Installation Guide](#installation-guide)
+* [Downloads](#downloads)
+* [Build Guide](#build-guide)
   * [Gnu/Linux](#linux)
   * [OSX](#osx-64-bit-using-homebrew)
   * [Windows](#windows-32-bit-using-msys2)
@@ -31,15 +32,17 @@ the screen what text-based languages require you to piece together in your mind.
 
 ### Flavors of Pure Data
 
-There are currently three main distributions of Pure Data:
+There are three maintained distributions of Pure Data:
 
-1. Pd-L2Ork.  Version used by Ivica Bukvic for his laptop orchestra.  This
-   guide is for Pd-L2Ork.
-2. Pure Data "Vanilla".  Miller Puckette's personal version which he hosts on
-   his website and maintains.  It doesn't include external libraries like
-   objects for doing graphics, video, etc.
-3. Pure Data Extended.  A monolithic distribution which ships with lots of
-   external libraries.  As of August 2015 it hasn't been updated since January 2014.
+1. Purr Data. This is the 2.0 version of Pd-l2ork. It ships with lots of
+   external libraries and uses a modern GUI written using HTML5.
+2. Pd-L2Ork 1.0, the version used by Ivica Bukvic for his laptop orchestra.
+   Pd-l2ork 1.0 uses tcl/tk (and tkpath) for the GUI. You can find it
+   [here](http://l2ork.music.vt.edu/main/make-your-own-l2ork/software/)
+3. Pure Data "Vanilla".  Miller Puckette's personal version which he hosts on
+   his website and maintains.  It doesn't come with external libraries
+   pre-installed, but it does include an interface you can use to search
+   and install external libraries maintained and packaged by other developers.
 
 ### Three Paragraph Overview
 
@@ -71,14 +74,61 @@ Pd-L2ork has the following goals:
    bugs.  Patches for new functionality that lack documentation are spam.
 4. Be consistent.  Consistent interfaces are themselves a kind of
    documentation.  We like documentation, so it follows that we like consistent
-   interfaces
+   interfaces.
 
-### Installation Guide
+### Downloads
+
+You can download a precompiled installer for Gnu/Linux, Windows, or OSX
+from the following site:
+
+[https://github.com/agraef/purr-data/releases](https://github.com/agraef/purr-data/releases)
+
+### Build Guide
 
 #### Linux
 
 Time to build: *40 minutes to 1.5 hours*  
 Hard drive space required: *roughly 2.5 GB*
+
+1. Install the dependencies
+
+        sudo apt-get install bison flex automake qjackctl \
+             tcl8.5-dev tk8.5-dev tcl-dev tk-dev libasound2-dev \
+             libjack-jackd2-dev libtool libbluetooth-dev libgl1-mesa-dev \
+             libglu1-mesa-dev libglew-dev libmagick++-dev libftgl-dev \
+             libgmerlin-dev libgmerlin-avdec-dev libavifile-0.7-dev \
+             libmpeg3-dev libquicktime-dev libv4l-dev libraw1394-dev \
+             libdc1394-22-dev libfftw3-dev libvorbis-dev ladspa-sdk \
+             dssi-dev tap-plugins ladspa-foo-plugins \
+             invada-studio-plugins-ladspa blepvco swh-plugins mcp-plugins \
+             cmt blop slv2-jack omins ubuntustudio-audio-plugins rev-plugins \
+             libslv2-dev dssi-utils vco-plugins wah-plugins fil-plugins \
+             mda-lv2 libmp3lame-dev libspeex-dev libgsl0-dev \
+             portaudio19-dev python-dev libsmpeg0 libjpeg62 tkpng flite1-dev \
+             libgsm1-dev libfftw3-dev libgtk2.0-dev subversion git libstk0-dev \
+             libsndobj-dev libfluidsynth-dev tclxapian fluid-soundfont-gm \
+             python-tk byacc
+
+2. Clone the Purr-Data repository *(10 minutes)*
+
+        git clone https://git.purrdata.net/jwilkes/purr-data.git
+
+4. Change to the directory
+
+        cd purr-data/l2ork_addons
+
+5. Run the installer *(15 minutes)*  
+   Choose one of the following options:
+   * to build a deb installer, type `./tar_em_up.sh -B`
+   * to build an rpi deb installer, type `./tar_em_up.sh -R`
+   * for a generic tar installer type `./tar_em_up.sh -F`
+
+6. When the installer finishes, type
+
+        cd ..
+
+7. There should now be a .deb file in your current directory
+
 
 To install using a pre-compiled binary, follow these instructions:
 http://l2ork.music.vt.edu/main/?page_id=56
@@ -95,7 +145,7 @@ http://l2ork.music.vt.edu/main/?page_id=56#install-dev
 Time to build: *50 minutes to 1.5 hours*  
 Hard drive space required: *roughly 2 GB*
 
-1. Install [Homebrew](http://brew.sh) *(15 minutes)*
+1. Install [Homebrew](https://brew.sh) *(15 minutes)*
    (asks for password twice-- once for command line tools, once for homebrew)
 
 2. Install the dependencies *(10 minutes)*:
