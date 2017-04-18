@@ -3692,6 +3692,7 @@ function gui_scope_draw_bg(cid, tag, fg_color, bg_color, w, h, grid_width, dx, d
         d: path_string,
         fill: "none",
         stroke: "black",
+        class: "grid",
         "stroke-width": grid_width,
     });
     // We go ahead and create a path to be used in the foreground. We'll
@@ -3730,18 +3731,34 @@ function gui_scope_configure_fg_mono(cid, tag, data_array) {
     scope_configure_fg(cid, tag, ".fgmono", data_array);
 }
 
-function gui_scope_configure_bg_color(cid, tag, color) {
+function scope_configure_bg_color(cid, tag, color) {
     var g = get_gobj(cid, tag),
         elem = g.querySelector(".bg");
     configure_item(elem, { fill: color });
 }
 
-function gui_scope_configure_fg_color(cid, tag, color) {
+function scope_configure_fg_color(cid, tag, color) {
      var g = get_gobj(cid, tag),
         xy = g.querySelector(".fgxy"),
         mono = g.querySelector(".fgmono");
     configure_item(xy, { stroke: color });
     configure_item(mono, { stroke: color });
+}
+
+function scope_configure_grid_color(cid, tag, color) {
+    var g = get_gobj(cid, tag),
+        grid = g.querySelector(".grid");
+    configure_item(grid, { stroke: color });
+}
+
+function gui_scope_configure_color(cid, tag, layer, color) {
+    if (layer === "fg") {
+        scope_configure_fg_color(cid, tag, color);
+    } else if (layer === "bg") {
+        scope_configure_bg_color(cid, tag, color);
+    } else if (layer === "grid") {
+        scope_configure_grid_color(cid, tag, color);
+    }
 }
 
 function gui_scope_clear_fg(cid, tag) {
