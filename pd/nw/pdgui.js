@@ -3676,6 +3676,7 @@ function gui_scope_draw_bg(cid, tag, fg_color, bg_color, w, h, grid_width, dx, d
         path_string = "",
         fg_xy_path, // to be used for the foreground lines
         fg_mono_path,
+        border,
         i, x, y, align_x, align_y;
     // Path strings for the grid lines
     // vertical lines...
@@ -3709,10 +3710,18 @@ function gui_scope_draw_bg(cid, tag, fg_color, bg_color, w, h, grid_width, dx, d
         stroke: fg_color,
         class: "fgmono"
     });
+    border = create_item(cid, "rect", {
+        style: "fill: none;",
+        width: w,
+        height: h,
+        class: "border",
+        "stroke-width": grid_width
+    });
     g.appendChild(bg);
     g.appendChild(path);
     g.appendChild(fg_xy_path);
     g.appendChild(fg_mono_path);
+    g.appendChild(border);
 }
 
 function scope_configure_fg(cid, tag, type, data_array) {
@@ -3764,6 +3773,12 @@ function gui_scope_configure_color(cid, tag, layer, color) {
 function gui_scope_clear_fg(cid, tag) {
     scope_configure_fg(cid, tag, ".fgxy", []);
     scope_configure_fg(cid, tag, ".fgmono", []);
+}
+
+function gui_scope_erase_innards(cid, tag) {
+    var g = get_gobj(cid, tag);
+    // Nuke it
+    g.innerHTML = '';
 }
 
 // unauthorized/grid
