@@ -98,13 +98,11 @@ function parse_attrs(attrs) {
             elem.label = attr.replace("_", " ");
         } else {
             if (elem.type === "enum") {
-                if (elem.value) {
-                    elem.value.push(attr);
+                if (elem.options) {
+                    elem.options.push(attr);
                 } else {
-                    elem.value = [attr];
+                    elem.options = [attr];
                 }
-            } else if (elem.type === "enum_index") {
-                elem.index = attr;
             } else {
                 elem.value = attr;
             }
@@ -137,7 +135,6 @@ function register_window_id(gfxstub, args) {
     translate_form();
 
     build_form(external_name, array_of_objects);
-fud = array_of_objects;
     // We don't turn on rendering of the "container" div until
     // We've finished displaying all the spans and populating the
     // labels and form elements.  That makes it more efficient and
@@ -180,12 +177,15 @@ function build_form(external_name, array_of_objects) {
             type = get_input_type(ob.type);
         if (type === "select") {
             elem = document.createElement("select");
-            ob.value.forEach(function(e) {
+            ob.options.forEach(function(e) {
                 var option = document.createElement("option");
                 option.textContent = e;
                 elem.appendChild(option);
             });
-            elem.selectedIndex = ob.index;
+            elem.selectedIndex = ob.value;
+            elem.onchange = function() {
+                ob.value = elem.selectedIndex;
+            }
         } else if (type === "checkbox") {
             elem = document.createElement("input");
             elem.type = "checkbox";
