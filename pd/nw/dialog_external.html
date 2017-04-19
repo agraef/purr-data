@@ -86,30 +86,33 @@ function ok() {
 // value: a value for the input
 function parse_attrs(attrs) {
     var ret = [],
-        elem;
-    attrs.forEach(function(token, i) {
-        if (i % 2 === 0) {
-            elem = {};
-            token = token.split("_");
-            if (token.length > 1) {
-                elem.type = token[token.length - 1];
-                if (elem.type !== "symbol" &&
-                    elem.type !== "toggle") {
-                    // no suffix defaults to "number"
-                    elem.type = "number";
-                } else {
-                    // remove the type suffix
-                    token = token.slice(0, -1);
-                }
-            } else {
-                elem.type = "number";
-            }
-            elem.name = token.join("_");
-            elem.label = token.join(" ");
+        elem,
+        gate = false;
+    attrs.forEach(function(attr, i) {
+        if (i % 3 === 0) {
+            elem = gate ? elem : {};
+            gate = attr === "enum";
+            elem.type = attr;
+        } else if (i % 3 === 1) {
+            elem.name = attr;
+            elem.label = attr.replace("_", " ");
         } else {
-            elem.value = token;
+            if (elem.type === "enum") {
+                if (elem.value) {
+                    elem.value.push(attr);
+                } else {
+                    elem.value = [attr];
+                }
+            } else if (elem.type === "enum_index") {
+                elem.index = attr;
+            } else {
+                elem.value = attr;
+            }
             // now push the object onto the array
-            ret.push(elem);
+            if (elem.type !== "enum") {
+                elem.type = elem.type === "enum_index" ? "enum" : elem.type;
+                ret.push(elem);
+            }
         }
     });
     return ret;
@@ -134,7 +137,7 @@ function register_window_id(gfxstub, args) {
     translate_form();
 
     build_form(external_name, array_of_objects);
-
+fud = array_of_objects;
     // We don't turn on rendering of the "container" div until
     // We've finished displaying all the spans and populating the
     // labels and form elements.  That makes it more efficient and
@@ -160,7 +163,10 @@ function translate_form() {
 
 function get_input_type(t) {
     return t === "symbol" ? "text" :
-           t === "number" ? "text" : 
+           t === "int" ? "text" :
+           t === "float" ? "text" :
+           t === "color" ? "color" :
+           t === "enum" ? "select" :
            t === "toggle" ? "checkbox":
                             "text";
 }
@@ -168,23 +174,36 @@ function get_input_type(t) {
 function build_form(external_name, array_of_objects) {
     var fieldset = document.querySelector("fieldset");
     document.querySelector("legend").textContent = external_name;
-    array_of_objects.forEach(function(elem) {
-        var input_elem = document.createElement("input"),
-            label = document.createElement("label");
-        input_elem.type = get_input_type(elem.type);
-        if (input_elem.type === "checkbox") {
-            input_elem.checked = elem.value !== 0;
-            input_elem.onchange = function() {
-                elem.value = input_elem.checked ? 1 : 0;
+    array_of_objects.forEach(function(ob) {
+        var elem,
+            label,
+            type = get_input_type(ob.type);
+        if (type === "select") {
+            elem = document.createElement("select");
+            ob.value.forEach(function(e) {
+                var option = document.createElement("option");
+                option.textContent = e;
+                elem.appendChild(option);
+            });
+            elem.selectedIndex = ob.index;
+        } else if (type === "checkbox") {
+            elem = document.createElement("input");
+            elem.type = "checkbox";
+            elem.checked = ob.value !== 0;
+            elem.onchange = function() {
+                ob.value = elem.checked ? 1 : 0;
             };
         } else {
-            input_elem.value = elem.value;
-            input_elem.onchange = function() {
-                elem.value = input_elem.value;
+            elem = document.createElement("input");
+            elem.type = type;
+            elem.value = ob.value;
+            elem.onchange = function() {
+                ob.value = elem.value;
             }
         }
-        label.textContent = elem.label;
-        label.appendChild(input_elem);
+        label = document.createElement("label");
+        label.textContent = ob.label;
+        label.appendChild(elem);
         fieldset.appendChild(label);
         // stop-gap until we make this prettier through css: insert a break
         fieldset.appendChild(document.createElement("br"));
