@@ -2039,25 +2039,28 @@ function gui_atom_redraw_border(cid, tag, type, width, height) {
 
 // draw a patch cord
 function gui_canvas_line(cid,tag,type,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10) {
-    var svg = get_item(cid, "patchsvg"),
-    // xoff is for making sure straight lines are crisp.  An SVG stroke
-    // straddles the coordinate, with 1/2 the width on each side.
-    // Control cords are 1 px wide, which requires a 0.5 x-offset to align
-    // the stroke to the pixel grid.
-    // Signal cords are 2 px wide = 1px on each side-- no need for x-offset.
-        xoff = type === 'signal' ? 0 : 0.5,
-        d_array = ["M", p1 + xoff, p2 + xoff,
-                   "Q", p3 + xoff, p4 + xoff, p5 + xoff, p6 + xoff,
-                   "Q", p7 + xoff, p8 + xoff, p9 + xoff, p10 + xoff],
-        path;
-    path = create_item(cid, "path", {
-        d: d_array.join(" "),
-        fill: "none",
-        //"shape-rendering": "optimizeSpeed",
-        id: tag,
-        "class": "cord " + type
-    });
-    svg.appendChild(path);
+    var svg, xoff, d_array, path;
+    if (patchwin[cid]) {
+        svg = get_item(cid, "patchsvg"),
+        // xoff is for making sure straight lines are crisp.  An SVG stroke
+        // straddles the coordinate, with 1/2 the width on each side.
+        // Control cords are 1 px wide, which requires a 0.5 x-offset to align
+        // the stroke to the pixel grid.
+        // Signal cords are 2 px wide = 1px on each side-- no need for x-offset.
+            xoff = type === 'signal' ? 0 : 0.5,
+            d_array = ["M", p1 + xoff, p2 + xoff,
+                       "Q", p3 + xoff, p4 + xoff, p5 + xoff, p6 + xoff,
+                       "Q", p7 + xoff, p8 + xoff, p9 + xoff, p10 + xoff],
+            path;
+        path = create_item(cid, "path", {
+            d: d_array.join(" "),
+            fill: "none",
+            //"shape-rendering": "optimizeSpeed",
+            id: tag,
+            "class": "cord " + type
+        });
+        svg.appendChild(path);
+    }
 }
 
 function gui_canvas_select_line(cid, tag) {
