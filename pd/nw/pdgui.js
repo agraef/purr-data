@@ -1955,11 +1955,14 @@ function gui_message_flash(cid, tag, state) {
 }
 
 function gui_message_redraw_border(cid, tag, width, height) {
-    var g = get_gobj(cid, tag),
+    var g, b;
+    if (patchwin[cid]) {
+        g = get_gobj(cid, tag);
         b = g.querySelector(".border");
-    configure_item(b, {
-        points: message_border_points(width, height),
-    });
+        configure_item(b, {
+            points: message_border_points(width, height),
+        });
+    }
 }
 
 function atom_border_points(width, height, is_dropdown) {
