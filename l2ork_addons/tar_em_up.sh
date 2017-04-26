@@ -102,7 +102,7 @@ if [[ $os == "darwin" ]]; then
 fi
 
 # Fetch the nw.js binary if we haven't already. We want to fetch it even
-# for building with no libs, so we do it before all options
+# for building with no libs, so we do it regardless of the options
 echo nwjs-sdk-v0.16.0-`uname | tr '[:upper:]' '[:lower:]'`
 if [ ! -d "../pd/nw/nw" ]; then
 	if [ `getconf LONG_BIT` -eq 32 ]; then
@@ -129,9 +129,9 @@ if [ ! -d "../pd/nw/nw" ]; then
 	else
 		# temporary kluge for rpi-- only 0.15.1 is available atm
 		if [ `uname -m` == "armv7l" ]; then
-			nwjs_version="v0.15.1"
+			nwjs_version="v0.17.6"
 		else
-			nwjs_version="v0.18.4"
+			nwjs_version="v0.22.0"
 		fi
 	fi
 
