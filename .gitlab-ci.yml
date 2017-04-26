@@ -106,3 +106,17 @@ osx_amd64_dmg:
      expire_in: 1 day
      paths:
        - Pd*.dmg
+
+osx_10.8_amd64_dmg:
+   tags:
+     - osx
+     - v10.8
+     - dmg
+   script:
+     - echo `pwd`
+     - cd l2ork_addons
+     - osx_version=10.8 ./tar_em_up.sh -X
+   artifacts:
+     expire_in: 1 day
+     paths:
+       - Pd*.dmg
