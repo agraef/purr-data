@@ -120,3 +120,17 @@ osx_10.8_amd64_dmg:
      expire_in: 1 day
      paths:
        - Pd*.dmg
+
+debian_stable_arm_deb:
+   tags:
+     - debian
+     - arm 
+     - stable
+   script:
+     - echo `pwd`
+     - cd l2ork_addons
+     - ./tar_em_up.sh -r
+   artifacts:
+     expire_in: 1 day
+     paths:
+       - pd*.deb
