@@ -1958,10 +1958,12 @@ function gui_message_redraw_border(cid, tag, width, height) {
     var g, b;
     if (patchwin[cid]) {
         g = get_gobj(cid, tag);
-        b = g.querySelector(".border");
-        configure_item(b, {
-            points: message_border_points(width, height),
-        });
+        if (g) {
+            b = g.querySelector(".border");
+            configure_item(b, {
+                points: message_border_points(width, height),
+            });
+        }
     }
 }
 
