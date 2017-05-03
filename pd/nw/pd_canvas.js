@@ -304,6 +304,12 @@ var canvas_events = (function() {
             },
             keydown: function(evt) {
                 pdgui.keydown(name, evt);
+                // prevent the default behavior of scrolling
+                // on arrow keys in editmode
+                if (document.querySelector("#patchsvg")
+                    .classList.contains("editmode")) {
+                    evt.preventDefault();
+                }
             },
             keypress: function(evt) {
                 pdgui.keypress(name, evt);
@@ -926,7 +932,7 @@ function register_window_id(cid, attr_array) {
     // Initialize the zoom level to the value retrieved from the patch, if any.
     nw.Window.get().zoomLevel = attr_array.zoom;
     pdgui.canvas_map(cid); // side-effect: triggers gui_canvas_get_scroll
-    pdgui.canvas_set_editmode(cid, attr_array.editmod);
+    pdgui.canvas_set_editmode(cid, attr_array.editmode);
     // For now, there is no way for the cord inspector to be turned on by
     // default. But if this changes we need to set its menu item checkbox
     // accordingly here
