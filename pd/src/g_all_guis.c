@@ -297,7 +297,7 @@ void iemgui_label_getrect(t_iemgui x_gui, t_glist *x,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
     //fprintf(stderr,"gop_redraw = %d\n", gop_redraw);
-    if (!gop_redraw)
+    if (!gop_redraw || sys_legacy)
     {
         //fprintf(stderr,"ignoring label\n");
         return;
