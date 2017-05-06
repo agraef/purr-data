@@ -4,10 +4,10 @@ layout: default
 
 Jonathan Wilkes' **Purr Data** a.k.a. **Pd-l2ork** 2.0 is an improved version of Miller Puckette's **[Pd](http://puredata.info/)**. It is based on Ico Bukvic's **[Pd-l2ork](http://l2ork.music.vt.edu/main/make-your-own-l2ork/software/)**, which in turn is a fork of Hans-Christoph Steiner's **[Pd-extended](http://puredata.info/downloads/pd-extended)**.
 
-- [**Downloads**](https://github.com/agraef/purr-data/releases): This is where you get ready-made packages for Linux, Mac and Windows.
-- **JGU packages** for [Arch](https://l2orkaur.bitbucket.io/) and [Ubuntu](https://l2orkubuntu.bitbucket.io/): Use these if you're on Arch or a recent Ubuntu version.
-- [**Sources**](https://github.com/agraef/purr-data): Github mirror of the sources, updated regularly.
-- [**Development**](https://git.purrdata.net/jwilkes/purr-data): Wilkes' Gitlab repository. This is where you should go for submitting bug reports and pull requests.
+- [Downloads](https://github.com/agraef/purr-data/releases): This is where you get ready-made packages for Linux, Mac and Windows.
+- JGU packages: Use these if you're on [Arch](https://l2orkaur.bitbucket.io/) or a recent [Ubuntu](https://l2orkubuntu.bitbucket.io/) version.
+- [Sources](https://github.com/agraef/purr-data): Github mirror of the sources, updated regularly.
+- [Development](https://git.purrdata.net/jwilkes/purr-data): Wilkes' Gitlab repository. This is where you should go for submitting bug reports and pull requests.
 
 ## About Purr Data
 
