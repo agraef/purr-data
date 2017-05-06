@@ -1386,6 +1386,7 @@ oscx_clean:
 	-$(MAKE) -C $(externals_src)/OSCx $(DEST_PATHS) clean
 	-$(MAKE) -C $(externals_src)/OSCx CC=gcc clean
 	-rm $(externals_src)/OSCx/Makefile
+	-rm $(externals_src)/OSCx/configure
 
 
 
