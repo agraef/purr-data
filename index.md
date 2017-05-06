@@ -5,7 +5,7 @@ layout: default
 Jonathan Wilkes' **Purr Data** a.k.a. **Pd-l2ork** 2.0 is an improved version of Miller Puckette's **[Pd](http://puredata.info/)**. It is based on Ico Bukvic's **[Pd-l2ork](http://l2ork.music.vt.edu/main/make-your-own-l2ork/software/)**, which in turn is a fork of Hans-Christoph Steiner's **[Pd-extended](http://puredata.info/downloads/pd-extended)**.
 
 - [Downloads](https://github.com/agraef/purr-data/releases): This is where you get ready-made packages for Linux, Mac and Windows.
-- JGU packages: Use these if you're on [Arch](https://l2orkaur.bitbucket.io/) or a recent [Ubuntu](https://l2orkubuntu.bitbucket.io/) version.
+- [JGU packages](#jgu-packages): You can also use these if you're on [Arch](https://l2orkaur.bitbucket.io/) or a recent [Ubuntu](https://l2orkubuntu.bitbucket.io/) version.
 - [Sources](https://github.com/agraef/purr-data): Github mirror of the sources, updated regularly.
 - [Development](https://git.purrdata.net/jwilkes/purr-data): Wilkes' Gitlab repository. This is where you should go for submitting bug reports and pull requests.
 
@@ -33,8 +33,6 @@ Purr Data is the official nickname of the Pd-l2ork 2.x branch. Quite obviously t
 
 This repository is a mirror of Wilkes' original Gitlab repository available at <https://git.purrdata.net/jwilkes/purr-data>. We mainly use this as a one-stop shop to make it easy for you to get your hands on the latest [source](https://github.com/agraef/purr-data) and the available [releases](https://github.com/agraef/purr-data/releases), including pre-built packages for Linux, macOS and Windows.
 
-At the Johannes Gutenberg University (JGU) we also maintain a collection of Linux packages built from latest git sources for Arch Linux (via the [Arch User Repositories](https://aur.archlinux.org/) a.k.a. AUR) and recent Ubuntu releases (via [Launchpad](https://launchpad.net/~dr-graef)).
-
 Here's a quick shopping list:
 
 - A quick introduction to Purr Data with more details can be found [here](https://agraef.github.io/purr-data-intro).
@@ -45,6 +43,10 @@ Here's a quick shopping list:
 
 - The latest and greatest downloads can be found at <https://github.com/agraef/purr-data/releases>.
 
-- Please check these links for more information and installation instructions about the JGU package repositories: [Arch](https://l2orkaur.bitbucket.io/), [Ubuntu](https://l2orkubuntu.bitbucket.io/).
+## JGU Packages
+
+At the Johannes Gutenberg University (JGU) we also maintain a collection of Linux packages built from latest git sources for Arch Linux (via the [Arch User Repositories](https://aur.archlinux.org/) a.k.a. AUR) and recent Ubuntu releases (via [Launchpad](https://launchpad.net/~dr-graef)).
+
+Besides "classic" Pd-l2ork and Purr Data these repositories also contain extensions for the Faust and Pure programming languages as well as all required dependencies which are not in the standard package repositories. Please check the following links for more information and installation instructions: [Arch](https://l2orkaur.bitbucket.io/), [Ubuntu](https://l2orkubuntu.bitbucket.io/).
 
 Enjoy your stay!
