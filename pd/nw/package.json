@@ -2,7 +2,7 @@
   "name": "purr-data",
   "version": "0.1.0",
   "main": "index.html",
-  "chromium-args": "--proxy-server=http://127.0.0.1",
+  "chromium-args": "--proxy-server=http://127.0.0.1 --password-store=basic",
   "window": {
     "icon": "./purr.png"
   }
