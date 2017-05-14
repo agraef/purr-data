@@ -308,7 +308,9 @@ var canvas_events = (function() {
                 // on arrow keys in editmode
                 if (document.querySelector("#patchsvg")
                     .classList.contains("editmode")) {
-                    evt.preventDefault();
+                    if ([32, 37, 38, 39, 40].indexOf(evt.keyCode) > -1) {
+                        evt.preventDefault();
+                    }
                 }
             },
             keypress: function(evt) {
