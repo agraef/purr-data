@@ -1427,10 +1427,13 @@ function canvas_map(name) {
 }
 
 function gui_canvas_erase_all_gobjs(cid) {
-    var svg_elem = get_item(cid, "patchsvg"),
+    var svg_elem,
         elem;
-    while (elem = svg_elem.firstChild) {
-        svg_elem.removeChild(elem);
+    if (patchwin[cid]) {
+        svg_elem = get_item(cid, "patchsvg");
+        while (elem = svg_elem.firstChild) {
+            svg_elem.removeChild(elem);
+        }
     }
 }
 
@@ -1807,43 +1810,53 @@ function add_gobj_to_svg(svg, gobj) {
 // creation, in which case a flag to toggle the offset would be appropriate.
 
 function gui_gobj_new(cid, tag, type, xpos, ypos, is_toplevel) {
-    var svg = get_item(cid, "patchsvg"), // id for the svg element
+    var svg,
         g,
         transform_string;
-    xpos += 0.5;
-    ypos += 0.5;
-    transform_string = "matrix(1,0,0,1," + xpos + "," + ypos + ")",
-    g = create_item(cid, "g", {
+    if (patchwin[cid]) {
+        svg = get_item(cid, "patchsvg"), // id for the svg element
+        xpos += 0.5;
+        ypos += 0.5;
+        transform_string = "matrix(1,0,0,1," + xpos + "," + ypos + ")",
+        g = create_item(cid, "g", {
             id: tag + "gobj",
             transform: transform_string,
             class: type + (is_toplevel !== 0 ? "" : " gop")
-    });
-    add_gobj_to_svg(svg, g);
-    // hm... why returning g and not the return value of appendChild?
-    return g;
+        });
+        add_gobj_to_svg(svg, g);
+        // hm... why returning g and not the return value of appendChild?
+        return g;
+    }
 }
 
 function gui_text_draw_border(cid, tag, bgcolor, isbroken, x1, y1, x2, y2) {
-    var g = get_gobj(cid, tag),
+    var g,
         rect;
-    // isbroken means either
-    //     a) the object couldn't create or
-    //     b) the box is empty
-    rect = create_item(cid, "rect", {
-        width: x2 - x1,
-        height: y2 - y1,
-        //"shape-rendering": "crispEdges",
-        class: "border"
-    });
-    if (isbroken === 1) {
-        rect.classList.add("broken_border");
+    if (patchwin[cid]) {
+        g = get_gobj(cid, tag),
+        // isbroken means either
+        //     a) the object couldn't create or
+        //     b) the box is empty
+        rect = create_item(cid, "rect", {
+            width: x2 - x1,
+            height: y2 - y1,
+            //"shape-rendering": "crispEdges",
+            class: "border"
+        });
+        if (isbroken === 1) {
+            rect.classList.add("broken_border");
+        }
+        g.appendChild(rect);
     }
-    g.appendChild(rect);
 }
 
 function gui_gobj_draw_io(cid, parenttag, tag, x1, y1, x2, y2, basex, basey,
     type, i, is_signal, is_iemgui) {
-    var xlet_class, xlet_id, rect, g = get_gobj(cid, parenttag);
+    var xlet_class, xlet_id, rect, g;
+    if (!patchwin[cid]) {
+        return;
+    }
+    g = get_gobj(cid, parenttag);
     if (is_iemgui) {
         xlet_class = "xlet_iemgui";
         // We have an inconsistency here.  We're setting the tag using
@@ -1933,8 +1946,12 @@ function message_border_points(width, height) {
 }
 
 function gui_message_draw_border(cid, tag, width, height) {
-    var g = get_gobj(cid, tag),
+    var g,
         polygon;
+    if (!patchwin[cid]) {
+        return;
+    }
+    g = get_gobj(cid, tag);
     polygon = create_item(cid, "polygon", {
         points: message_border_points(width, height),
         fill: "none",
@@ -2225,8 +2242,12 @@ function gobj_font_y_kludge(fontsize) {
 
 function gui_text_new(canvasname, myname, type, isselected, left_margin, font_height, text, font) {
     var lines, i, len, tspan,
-        g = get_gobj(canvasname, myname),
+        g,
         svg_text;
+    if (!patchwin[canvasname]) {
+        return;
+    }
+    g = get_gobj(canvasname, myname),
     svg_text = create_item(canvasname, "text", {
         // Maybe it's just me, but the svg spec's explanation of how
         // text x/y and tspan x/y interact is difficult to understand.
@@ -2444,8 +2465,12 @@ function gui_canvas_hide_selection(cid) {
 // iemguis
 
 function gui_bng_new(cid, tag, cx, cy, radius) {
-    var g = get_gobj(cid, tag),
-        circle = create_item(cid, "circle", {
+    var g, circle;
+    if (!patchwin[cid]) {
+        return;
+    }
+    g = get_gobj(cid, tag);
+    circle = create_item(cid, "circle", {
             cx: cx,
             cy: cy,
             r: radius,
@@ -2479,9 +2504,13 @@ function gui_bng_configure(cid, tag, color, cx, cy, r) {
 }
 
 function gui_toggle_new(cid, tag, color, width, state, p1,p2,p3,p4,p5,p6,p7,p8,basex,basey) {
-    var g = get_gobj(cid, tag),
+    var g,
         points_array,
         cross1, cross2;
+    if (!patchwin[cid]) {
+        return;
+    }
+    g = get_gobj(cid, tag);
     points_array = [p1 - basex, p2 - basey,
                     p3 - basex, p4 - basey
     ];
@@ -2569,9 +2598,13 @@ function numbox_data_string(w, h) {
 function gui_numbox_new(cid, tag, color, x, y, w, h, is_toplevel) {
     // numbox doesn't have a standard iemgui border,
     // so we must create its gobj manually
-    var g = gui_gobj_new(cid, tag, "iemgui", x, y, is_toplevel),
+    var g,
         data,
         border;
+    if (!patchwin[cid]) {
+        return;
+    }
+    g = gui_gobj_new(cid, tag, "iemgui", x, y, is_toplevel);
     data = numbox_data_string(w, h);
     border = create_item(cid, "path", {
         d: data,
@@ -2628,8 +2661,12 @@ function gui_numbox_update_text_position(cid, tag, x, y) {
 }
 
 function gui_slider_new(cid, tag, color, p1, p2, p3, p4, basex, basey) {
-    var g = get_gobj(cid, tag),
+    var g,
         indicator;
+    if (!patchwin[cid]) {
+        return;
+    }
+    g = get_gobj(cid, tag);
     indicator = create_item(cid, "line", {
         x1: p1 - basex,
         y1: p2 - basey,
@@ -2667,8 +2704,12 @@ function gui_slider_indicator_color(cid, tag, color) {
 }
 
 function gui_radio_new(cid, tag, p1, p2, p3, p4, i, basex, basey) {
-    var g = get_gobj(cid, tag),
+    var g,
         cell;
+    if (!patchwin[cid]) {
+        return;
+    }
+    g = get_gobj(cid, tag);
     cell = create_item(cid, "line", {
         x1: p1 - basex,
         y1: p2 - basey,
@@ -2881,8 +2922,12 @@ function gui_vumeter_update_peak(cid,tag,color,p1,p2,p3,p4,basex,basey) {
 }
 
 function gui_iemgui_base_color(cid, tag, color) {
-    var g = get_gobj(cid, tag),
+    var g,
         b;
+    if (!patchwin[cid]) {
+        return;
+    }
+    g = get_gobj(cid, tag);
     if (g) {
         b = g.querySelector(".border");
         configure_item(b, { fill: color });
@@ -2942,8 +2987,12 @@ function iemgui_fontfamily(name) {
 
 function gui_iemgui_label_new(cid, tag, x, y, color, text, fontname, fontweight,
     fontsize) {
-    var g = get_gobj(cid, tag),
+    var g,
         svg_text, text_node;
+    if (!patchwin[cid]) {
+        return;
+    }
+    g = get_gobj(cid, tag);
     svg_text = create_item(cid, "text", {
         // x and y need to be relative to baseline instead of nw anchor
         x: x,
@@ -3027,8 +3076,12 @@ function gui_iemgui_label_font(cid, tag, fontname, fontweight, fontsize) {
 
 // Show or hide little handle for dragging around iemgui labels
 function gui_iemgui_label_show_drag_handle(cid, tag, state, x, y, cnv_resize) {
-    var gobj = get_gobj(cid, tag),
+    var gobj,
         rect;
+    if (!patchwin[cid]) {
+        return;
+    }
+    gobj = get_gobj(cid, tag);
     if (state !== 0) {
         // Here we use a "line" shape so that we can control its color
         // using the "border" class (for iemguis) or the "gop_rect" class
@@ -3066,6 +3119,9 @@ function gui_iemgui_label_show_drag_handle(cid, tag, state, x, y, cnv_resize) {
 
 function gui_mycanvas_new(cid,tag,color,x1,y1,x2_vis,y2_vis,x2,y2) {
     var rect_vis, rect, g;
+    if (!patchwin[cid]) {
+        return;
+    }
     rect_vis = create_item(cid, "rect", {
         width: x2_vis - x1,
         height: y2_vis - y1,
@@ -3123,11 +3179,11 @@ function gui_scalar_new(cid, tag, isselected, t1, t2, t3, t4, t5, t6,
     is_toplevel) {
     // we should probably use gui_gobj_new here, but we"re doing some initial
     // scaling that normal gobjs don't need...
-    var svg = get_item(cid, "patchsvg"), // id for the svg in the DOM
-        matrix,
-        transform_string,
-        g,
-        selection_rect;
+    var svg, matrix, transform_string, g, selection_rect;
+    if (!patchwin[cid]) {
+        return;
+    }
+    svg = get_item(cid, "patchsvg"), // id for the svg in the DOM
     matrix = [t1,t2,t3,t4,t5,t6];
     transform_string = "matrix(" + matrix.join() + ")";
     g = create_item(cid, "g", {
@@ -3192,8 +3248,12 @@ function gui_scalar_draw_select_rect(cid, tag, state, x1, y1, x2, y2, basex, bas
 }
 
 function gui_scalar_draw_group(cid, tag, parent_tag, attr_array) {
-    var parent_elem = get_item(cid, parent_tag),
+    var parent_elem,
         g;
+    if (!patchwin[cid]) {
+        return;
+    }
+    parent_elem = get_item(cid, parent_tag);
     if (attr_array === undefined) {
         attr_array = [];
     }
@@ -3314,8 +3374,12 @@ function gui_draw_configure_all(cid, tag, attr_array) {
 
 // Plots for arrays and data structures
 function gui_plot_vis(cid, basex, basey, data_array, attr_array, tag_array) {
-    var g = get_item(cid, tag_array[0]),
+    var g,
         p;
+    if (!patchwin[cid]) {
+        return;
+    }
+    g = get_item(cid, tag_array[0]),
     p = create_item(cid, "path", {
         d: data_array.join(" "),
         id: tag_array[1],
@@ -3430,6 +3494,9 @@ function gui_drawimage_new(obj_tag, file_path, canvasdir, flags) {
         files,
         ext,
         img; // dummy image to measure width and height
+    if (!patchwin[cid]) {
+        return;
+    }
     image_seq = flags & drawsprite;
     if (!path.isAbsolute(file_path)) {
         file_path = path.join(canvasdir, file_path);
@@ -4235,9 +4302,14 @@ function gui_graph_tick_label(cid, tag, x, y, text, font, font_size, font_weight
 }
 
 function gui_canvas_drawredrect(cid, x1, y1, x2, y2) {
-    var svgelem = get_item(cid, "patchsvg"),
-        g = gui_gobj_new(cid, cid, "gop_rect", x1, y1, 1),
+    var svgelem,
+        g,
         r;
+    if (!patchwin[cid]) {
+        return;
+    }
+    svgelem = get_item(cid, "patchsvg");
+    g = gui_gobj_new(cid, cid, "gop_rect", x1, y1, 1);
     r = create_item(cid, "rect", {
         width: x2 - x1,
         height: y2 - y1,
