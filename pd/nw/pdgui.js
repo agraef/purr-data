@@ -4890,6 +4890,7 @@ function select_text(cid, elem) {
         } else if (win.getSelection) {
             range = win.document.createRange();
             range.selectNodeContents(elem);
+            win.getSelection().removeAllRanges();
             win.getSelection().addRange(range);
         }
 }
