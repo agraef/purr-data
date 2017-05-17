@@ -3494,9 +3494,6 @@ function gui_drawimage_new(obj_tag, file_path, canvasdir, flags) {
         files,
         ext,
         img; // dummy image to measure width and height
-    if (!patchwin[cid]) {
-        return;
-    }
     image_seq = flags & drawsprite;
     if (!path.isAbsolute(file_path)) {
         file_path = path.join(canvasdir, file_path);
