@@ -4471,21 +4471,57 @@ exports.raise_pd_window= gui_raise_pd_window;
 
 var file_dialog_target;
 
-function file_dialog(cid, type, target, path) {
+function file_dialog(cid, type, target, start_path) {
     file_dialog_target = target;
     var query_string = (type === "open" ?
-                        "openpanel_dialog" : "savepanel_dialog"),
+                        "openpanelSpan" : "savepanelSpan"),
+        input_span,
         input_elem,
+        input_string,
+        dialog_options,
         win;
-        // We try opening the dialog in the last focused window. There's an
-        // edge case where [loadbang]--[openpanel] will trigger before the
-        // window has finished loading. In that case we just trigger the
-        // dialog in the main Pd window.
-        win = last_focused && patchwin[last_focused] ? patchwin[last_focused] :
-            pd_window;
-        input_elem = win.window.document.querySelector("#" + query_string);
-    input_elem.setAttribute("nwworkingdir", path);
-    input_elem.click();
+    // We try opening the dialog in the last focused window. There's an
+    // edge case where [loadbang]--[openpanel] will trigger before the
+    // window has finished loading. In that case we just trigger the
+    // dialog in the main Pd window.
+    win = last_focused && patchwin[last_focused] ? patchwin[last_focused] :
+        pd_window;
+    input_span = win.window.document.querySelector("#" + query_string);
+    // We have to use an absolute path here because of a bug in nw.js 0.14.7
+    if (!path.isAbsolute(start_path)) {
+        start_path = path.join(pwd, start_path);
+    }
+    // We also have to inject html into the dom because of a bug in nw.js
+    // 0.14.7. For some reason we can't just change the value of nwworkingdir--
+    // it just doesn't work. So this requires us to have the parent <span>
+    // around the <input>. Then when we change the innerHTML of the span the
+    // new value for nwworkingdir magically works.
+    dialog_options = {
+        style: "display: none;",
+        type: "file",
+        id: type === "open" ? "openpanel_dialog" : "savepanel_dialog",
+        // using an absolute path here, see comment above
+        nwworkingdir: start_path
+    };
+    if (type !== "open") {
+        dialog_options.nwsaveas = "";
+    }
+    input_string = build_file_dialog_string(dialog_options);
+    input_span.innerHTML = input_string;
+    // Now that we've rebuilt the input element, let's get a reference to it...
+    input_elem = win.window.document.querySelector("#" +
+        (type === "open" ? "openpanel_dialog" : "savepanel_dialog"));
+    // And add an event handler for the callback
+    input_elem.onchange = function() {
+        // reset value so that we can open the same file twice
+        file_dialog_callback(this.value);
+        this.value = null;
+        console.log("openpanel/savepanel called");
+    };
+    win.window.setTimeout(function() {
+        input_elem.click(); },
+        300
+    );
 }
 
 function gui_openpanel(cid, target, path) {
@@ -4496,10 +4532,12 @@ function gui_savepanel(cid, target, path) {
     file_dialog(cid, "save", target, path);
 }
 
-exports.file_dialog_callback = function(file_string) {
+function file_dialog_callback(file_string) {
     pdsend(file_dialog_target, "callback",
         enquote(defunkify_windows_path(file_string)));
 }
+
+exports.file_dialog_callback = file_dialog_callback;
 
 // Used to convert the ["key", "value"...] arrays coming from
 // Pd to a javascript object
