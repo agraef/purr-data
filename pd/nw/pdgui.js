@@ -2008,8 +2008,11 @@ function atom_arrow_points(width, height) {
 
 
 function gui_atom_draw_border(cid, tag, type, width, height) {
-    var g = get_gobj(cid, tag),
-        polygon, arrow, m;
+    var g, polygon, arrow, m;
+    if (!patchwin[cid]) {
+        return;
+    }
+    g = get_gobj(cid, tag),
     polygon = create_item(cid, "polygon", {
         points: atom_border_points(width, height, type !== 0),
         fill: "none",
