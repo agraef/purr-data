@@ -43,7 +43,8 @@ DEST_PATHS = BUILDLAYOUT_DIR=$(BUILDLAYOUT_DIR) \
 # this variable is to support old "win" directories, rather than "windows"
 BUILDSRC_OS_NAME = $(OS_NAME)
 
-CFLAGS = -DPD -I$(pd_src)/src -Wall -W $(DEBUG_CFLAGS) -I$(gem_src)/src
+WARN_FLAGS = -Wall -W -Wno-unused-parameter
+CFLAGS = -DPD -I$(pd_src)/src $(WARN_FLAGS) $(DEBUG_CFLAGS) -I$(gem_src)/src
 LDFLAGS =  
 LIBS = -lm
 
@@ -1391,6 +1392,7 @@ oscx_clean:
 	-$(MAKE) -C $(externals_src)/OSCx $(DEST_PATHS) clean
 	-$(MAKE) -C $(externals_src)/OSCx CC=gcc clean
 	-rm $(externals_src)/OSCx/Makefile
+	-rm $(externals_src)/OSCx/configure
 
 
 

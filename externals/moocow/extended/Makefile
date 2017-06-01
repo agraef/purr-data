@@ -15,8 +15,7 @@ SUBDIRS = \
 	deque \
 	readdir \
 	weightmap \
-	sprinkler \
-	gfsm
+	sprinkler
 
 ##-- 'pdstring' and 'sprinkler' are already in 'flatspace' ... should they be moved here?
 ##    -> 2008-08: removed any2string,string2any,pdstring from flatspace

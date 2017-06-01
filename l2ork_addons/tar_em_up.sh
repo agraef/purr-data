@@ -102,7 +102,7 @@ if [[ $os == "darwin" ]]; then
 fi
 
 # Fetch the nw.js binary if we haven't already. We want to fetch it even
-# for building with no libs, so we do it before all options
+# for building with no libs, so we do it regardless of the options
 echo nwjs-sdk-v0.16.0-`uname | tr '[:upper:]' '[:lower:]'`
 if [ ! -d "../pd/nw/nw" ]; then
 	if [ `getconf LONG_BIT` -eq 32 ]; then
@@ -122,16 +122,16 @@ if [ ! -d "../pd/nw/nw" ]; then
 		ext="tar.gz"
 	fi
 
-	if [[ $os == "win" ]]; then
+	if [[ $os == "win" || $osx_version == "10.8" ]]; then
 		# We need the lts version to be able to run on XP. For
                 # simplicity we use that same version for 64 bit Windows, too
 		nwjs_version="v0.14.7"
 	else
 		# temporary kluge for rpi-- only 0.15.1 is available atm
 		if [ `uname -m` == "armv7l" ]; then
-			nwjs_version="v0.15.1"
+			nwjs_version="v0.17.6"
 		else
-			nwjs_version="v0.18.4"
+			nwjs_version="v0.22.1"
 		fi
 	fi
 
@@ -142,8 +142,8 @@ if [ ! -d "../pd/nw/nw" ]; then
 	nwjs_url=${nwjs_url}/$nwjs_filename
 	echo "Fetching the nwjs binary from"
 	echo "$nwjs_url"
-	wget $nwjs_url
-	if [[ $os == "win" ]]; then
+	wget -nv $nwjs_url
+	if [[ $os == "win" || $os == "osx" ]]; then
 		unzip $nwjs_filename
 	else
 		tar -xf $nwjs_filename

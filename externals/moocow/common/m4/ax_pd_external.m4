@@ -352,7 +352,7 @@ AC_DEFUN([AX_PD_EXTERNAL],
 	"
   PDEXT_LFLAGS="-shared -L${pddir}/bin -L${pddir}/obj"
   PDEXT_CFLAGS="-mms-bitfields -DMSW -DNT"
-  LIBS="$LIBS -lpd -lwsock32 -lpthreadGC2 -lkernel32 -luser32 -lgdi32 -lregex"
+  LIBS="$LIBS -lpd -lwsock32 -lkernel32 -luser32 -lgdi32 -lregex"
   if test "$ENABLE_DEBUG" = "no" -a -z "$UCFLAGS"; then
     ##-- only set OFLAGS if user CFLAGS are empty
     PDEXT_OFLAGS="-O2"

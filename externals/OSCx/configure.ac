@@ -122,7 +122,7 @@ else
 					 ;;
         *)
 					 dnl assume unix
-                CFLAGS="$CFLAGS -DUNIX -Wall -Wimplicit -Wunused -Wmissing-prototypes -O1"
+                CFLAGS="$CFLAGS -DUNIX -Wall -Wimplicit -Wunused -Wmissing-prototypes -O1 -fPIC"
 					 LDFLAGS="-Wl,--export-dynamic -shared"
 					 pd_suffix=pd_linux
 					 LIBS="-lc -lm"
