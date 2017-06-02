@@ -443,6 +443,11 @@ cyclone_install:
 	make -C $(externals_src)/cyclone \
 		DESTDIR="$(DESTDIR)" objectsdir="$(objectsdir)" \
 		install
+	install -p $(externals_src)/cyclone/documentation/purr_help/*.pd \
+		$(DESTDIR)$(objectsdir)/cyclone
+	install -p \
+		$(externals_src)/cyclone/documentation/purr_help/abs_GUI/*.pd \
+		$(DESTDIR)$(objectsdir)/cyclone
 
 cyclone_clean:
 	make -C $(externals_src)/cyclone \
