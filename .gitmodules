@@ -16,3 +16,6 @@
 [submodule "externals/lyonpotpourri"]
 	path = externals/lyonpotpourri
 	url = https://github.com/ericlyon/lyonpotpourri3.0.git
+[submodule "externals/cyclone"]
+	path = externals/cyclone
+	url = https://git.purrdata.net/jwilkes/pd-cyclone.git

@@ -3307,7 +3307,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
             int noutlet;
             int ninlet;
                 /* resize?  only for "true" text boxes, canvases, iemguis,
-                   and -- using an awful hack-- for the Scope~ and grid
+                   and -- using an awful hack-- for the scope~ and grid
                    objects by checking for the class name below.
 
                    One exception-- my_canvas. It has a weirdo interface
@@ -3320,7 +3320,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                 */
             if (ob && (ob->te_iemgui
                  && pd_class((t_pd *)ob) != my_canvas_class
-                 || pd_class(&ob->te_pd)->c_name == gensym("Scope~")
+                 || pd_class(&ob->te_pd)->c_name == gensym("scope~")
                  || pd_class(&ob->te_pd)->c_name == gensym("grid"))
                 && xpos >= x2-4 && ypos > y2-6)
             {
@@ -3339,7 +3339,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                     }
                     else
                     {
-                        pd_vmess((t_pd *)ob, gensym("_click_for_resizing"),
+                        pd_vmess((t_pd *)ob, gensym("_click"),
                            "fff", (t_float)1, (t_float)xpos, (t_float)ypos);
                     }
                 }
@@ -5277,10 +5277,10 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
                 pd_vmess(sh, gensym("_motion"), "ff", (t_float)xpos, (t_float)ypos);
                 //pd_vmess(sh, gensym("_click"), "fff", 0, xpos, ypos);
             }
-            else if (ob && (pd_class(&ob->te_pd)->c_name == gensym("Scope~")
+            else if (ob && (pd_class(&ob->te_pd)->c_name == gensym("scope~")
                             || pd_class(&ob->te_pd)->c_name == gensym("grid")))
             {
-                pd_vmess((t_pd *)ob, gensym("_motion_for_resizing"),
+                pd_vmess((t_pd *)ob, gensym("_motion"),
                     "ff", (t_float)xpos, (t_float)ypos);
             }
             else post("not resizable");
