@@ -375,7 +375,7 @@ int open_soundfile_via_fd(int fd, int headersize,
                 headersize = seekto;
             }
             bytelimit = swap4(((t_datachunk *)buf)->dc_size, swap);
-            headersize += 8;
+            headersize += sizeof(t_datachunk);
         }
     }
         /* seek past header and any sample frames to skip */
