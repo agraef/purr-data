@@ -29,6 +29,7 @@ objects use Posix-like threads.  */
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+#include <math.h>
 
 #include "m_pd.h"
 
@@ -1283,7 +1284,7 @@ static void soundfiler_read(t_soundfiler *x, t_symbol *s,
         eofis = lseek(fd, 0, SEEK_END);
         if (poswas < 0 || eofis < 0 || eofis < poswas)
         {
-            pd_error(x, "lseek failed: %d..%d", poswas, eofis);
+            pd_error(x, "lseek failed: %ld..%ld", poswas, eofis);
             goto done;
         }
         lseek(fd, poswas, SEEK_SET);
@@ -1303,11 +1304,10 @@ static void soundfiler_read(t_soundfiler *x, t_symbol *s,
             garray_resize_long(garrays[i], finalsize);
                 /* for sanity's sake let's clear the save-in-patch flag here */
             garray_setsaveit(garrays[i], 0);
-            garray_getfloatwords(garrays[i], &vecsize, 
-                &vecs[i]);
-                /* if the resize failed, garray_resize reported the error */
-            if (vecsize != framesinfile)
+            if (!garray_getfloatwords(garrays[i], &vecsize, &vecs[i])
+                || (vecsize != framesinfile))
             {
+                /* if the resize failed, garray_resize reported the error */
                 pd_error(x, "resize failed");
                 goto done;
             }
@@ -1335,18 +1335,18 @@ static void soundfiler_read(t_soundfiler *x, t_symbol *s,
     for (i = 0; i < argc; i++)
     {
         int vecsize;
-        garray_getfloatwords(garrays[i], &vecsize, &vecs[i]);
-        for (j = itemsread; j < vecsize; j++)
-            vecs[i][j].w_float = 0;
+        if (garray_getfloatwords(garrays[i], &vecsize, &vecs[i]))
+            for (j = itemsread; j < vecsize; j++)
+                vecs[i][j].w_float = 0;
     }
         /* zero out vectors in excess of number of channels */
     for (i = channels; i < argc; i++)
     {
         int vecsize;
         t_word *foo;
-        garray_getfloatwords(garrays[i], &vecsize, &foo);
-        for (j = 0; j < vecsize; j++)
-            foo[j].w_float = 0;
+        if (garray_getfloatwords(garrays[i], &vecsize, &foo))
+            for (j = 0; j < vecsize; j++)
+                foo[j].w_float = 0;
     }
         /* do all graphics updates */
     for (i = 0; i < argc; i++)
