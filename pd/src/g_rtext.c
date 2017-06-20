@@ -557,6 +557,7 @@ void rtext_activate(t_rtext *x, int state)
 {
     //fprintf(stderr,"rtext_activate state=%d\n", state);
     int w = 0, h = 0, widthspec, heightspec, indx, isgop;
+    char *tmpbuf;
     t_glist *glist = x->x_glist;
     t_canvas *canvas = glist_getcanvas(glist);
     //if (state && x->x_active) printf("duplicate rtext_activate\n");
@@ -610,6 +611,13 @@ void rtext_activate(t_rtext *x, int state)
     /* we need to get scroll to make sure we've got the
        correct bbox for the svg */
     canvas_getscroll(glist_getcanvas(canvas));
+    /* ugly hack to get around the fact that x_buf is not
+       null terminated. If this becomes a problem we can revisit
+       it later */
+    tmpbuf = t_getbytes(x->x_bufsize + 1);
+    sprintf(tmpbuf, "%.*s", x->x_bufsize, x->x_buf);
+    /* in case x_bufsize is 0... */
+    tmpbuf[x->x_bufsize] = '\0';
     gui_vmess("gui_textarea", "xssiiiisiii",
         canvas,
         x->x_tag,
@@ -618,10 +626,11 @@ void rtext_activate(t_rtext *x, int state)
         x->x_text->te_ypix,
         widthspec,
         heightspec,
-        x->x_buf,
+        tmpbuf,
         sys_hostfontsize(glist_getfont(glist)),
         isgop,
         state);
+    freebytes(tmpbuf, x->x_bufsize + 1);
 }
 
 // outputs 1 if found one of the special chars

@@ -3009,7 +3009,9 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
             //any point of recreating the object
             binbuf_gettext(x->te_binbuf, &c1, &i1);
             binbuf_gettext(b, &c2, &i2);
-            if (strcmp(c1, c2))
+            /* must remember that binbuf_gettext does *not*
+               null-terminate, so we have to be careful here... */
+            if (i1 != i2 || strncmp(c1, c2, i1))
             {
                 //fprintf(stderr,"string differs\n");
                 canvas_undo_add(glist_getcanvas(glist), 10, "recreate",
@@ -3063,7 +3065,7 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
                more than just a series of nearly-incomprehensible
                side-effects, perhaps the issue may be revisited.
             */
-            if (strcmp(c1, c2))
+            if (i1 != i2 || strncmp(c1, c2, i1))
             {
                 //fprintf(stderr,"text_setto calls canvas_undo_add recreate\n");
                 canvas_undo_add(glist_getcanvas(glist), 10, "recreate",
@@ -3130,7 +3132,7 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
         t_binbuf *b = binbuf_new();
         binbuf_text(b, buf, bufsize);
         binbuf_gettext(b, &c2, &i2);
-        if (!c1 || strcmp(c1, c2))
+        if (!c1 || i1 != i2 || strncmp(c1, c2, i1))
         {
             canvas_undo_add(glist_getcanvas(glist), 10, "typing",
                 (void *)canvas_undo_set_recreate(glist_getcanvas(glist),
