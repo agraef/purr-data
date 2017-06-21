@@ -4609,9 +4609,16 @@ function gui_dropdown_activate(cid, obj_tag, tag, current_index, font_size, stat
                 .window.document.querySelector("#dropdown_list");
             // stick the obj_tag in a data field
             select_elem.setAttribute("data-callback", obj_tag);
+            // set the maximum height of the menu to be the remaining
+            // space below the corresponding widget, minus the size of
+            // the scrollbar. (innerHeight includes scrollbar, and
+            // the documentElement's clientHeight (apparently) does not.
             select_elem.style.setProperty("max-height",
                 (patchwin[cid].window.innerHeight -
-                    g.getBoundingClientRect().bottom - 5) + "px"
+                    g.getBoundingClientRect().bottom -
+                    (patchwin[cid].window.innerHeight -
+                    patchwin[cid].window.document.documentElement.clientHeight))
+                    + "px"
             );
             select_elem.style.setProperty("display", "inline");
             select_elem.style.setProperty("left",

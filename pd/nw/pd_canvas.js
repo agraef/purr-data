@@ -555,7 +555,19 @@ var canvas_events = (function() {
                 }
             },
             dropdown_menu_mousedown: function(evt) {
-                var select_elem = document.querySelector("#dropdown_list");
+                var select_elem = document.querySelector("#dropdown_list"),
+                    in_dropdown = evt.target;
+                while (in_dropdown) {
+                    if (in_dropdown.id === "dropdown_list") {
+                        break;
+                    }
+                    in_dropdown = in_dropdown.parentNode;
+                }
+                if (in_dropdown &&
+                        evt.pageX - select_elem.offsetLeft >
+                        select_elem.clientWidth) {
+                    return;
+                }
                 if (evt.target.parentNode
                     && evt.target.parentNode.parentNode
                     && evt.target.parentNode.parentNode.id === "dropdown_list") {
