@@ -524,9 +524,10 @@ var canvas_events = (function() {
                         li = li.nextElementSibling ||
                              li.parentElement.firstElementChild;
                         dropdown_highlight_elem(li);
+                        break;
                     default:
                 }
-
+                evt.preventDefault();
             },
             dropdown_menu_keypress: function(evt) {
                 var li_nodes = document.querySelectorAll("#dropdown_list li"),
