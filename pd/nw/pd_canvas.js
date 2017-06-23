@@ -160,6 +160,8 @@ var canvas_events = (function() {
         last_draggable_y,       // last y
         previous_state = "none", /* last state, excluding explicit 'none' */
         match_words_state = false,
+        last_dropdown_menu_x,
+        last_dropdown_menu_y,
         last_search_term = "",
         svg_view = document.getElementById("patchsvg").viewBox.baseVal,
         textbox = function () {
@@ -211,7 +213,7 @@ var canvas_events = (function() {
             pdgui.pdsend(elem.getAttribute("data-callback"),
                 elem.querySelector(".highlighted").getAttribute("data-index"));
         },
-        dropdown_highlight_elem = function(elem) {
+        dropdown_highlight_elem = function(elem, scroll) {
             var container = document.querySelector("#dropdown_list"),
                 li_array;
             if (!elem.classList.contains("highlighted")) {
@@ -221,8 +223,25 @@ var canvas_events = (function() {
                 });
                 elem.classList.add("highlighted");
                 // Make sure the highlighted element is in view
-                container.scrollTop = elem.offsetTop + elem.offsetHeight
-                    - container.clientHeight;
+                if (scroll) {
+                    if (elem.offsetTop < container.scrollTop
+                        || elem.offsetTop + elem.offsetHeight >
+                            container.scrollTop + container.offsetHeight) {
+                            if (scroll === "up") {
+                                // we can't usse elem.scrollIntoView() here
+                                // because it may also change the scrollbar on
+                                // the document, which in turn could change the
+                                // pageX/pageY, for the mousemove event, which
+                                // in turn would make it impossible for us to
+                                // filter out unnecessary mousemove calls
+                                //    elem.scrollIntoView();
+                            container.scrollTop = elem.offsetTop;
+                        } else if (scroll === "down") {
+                            container.scrollTop = elem.offsetTop + elem.offsetHeight
+                                - container.clientHeight;
+                        }
+                    }
+                }
             }
         },
         events = {
@@ -494,13 +513,13 @@ var canvas_events = (function() {
             iemgui_label_mouseup: function(evt) {
                 //pdgui.post("lifting the mousebutton on an iemgui label");
                 // Set last state (none doesn't count as a state)
-                //pdgui.post("previous state is " + canvas_events.get_previous_state());
+                //pdgui.post("previous state is "
+                //    + canvas_events.get_previous_state());
                 canvas_events[canvas_events.get_previous_state()]();
             },
             dropdown_menu_keydown: function(evt) {
                 var select_elem = document.querySelector("#dropdown_list"),
                     li;
-                pdgui.post("keycode is " + evt.keyCode);
                 switch(evt.keyCode) {
                     case 13:
                     case 32:
@@ -517,17 +536,18 @@ var canvas_events = (function() {
                         li = select_elem.querySelector(".highlighted");
                         li = li.previousElementSibling ||
                              li.parentElement.lastElementChild;
-                        dropdown_highlight_elem(li);
+                        dropdown_highlight_elem(li, "up");
+                        evt.preventDefault();
                         break;
                     case 40: // down
                         li = select_elem.querySelector(".highlighted");
                         li = li.nextElementSibling ||
                              li.parentElement.firstElementChild;
-                        dropdown_highlight_elem(li);
+                        dropdown_highlight_elem(li, "down");
+                        evt.preventDefault();
                         break;
                     default:
                 }
-                evt.preventDefault();
             },
             dropdown_menu_keypress: function(evt) {
                 var li_nodes = document.querySelectorAll("#dropdown_list li"),
@@ -551,7 +571,8 @@ var canvas_events = (function() {
                 if (match !== undefined) {
                     match = (match + offset) % li_nodes.length;
                     if (match !== highlighted_index) {
-                        dropdown_highlight_elem(li_nodes[match]);
+                        dropdown_highlight_elem(li_nodes[match],
+                            match < highlighted_index ? "up" : "down");
                     }
                 }
             },
@@ -589,14 +610,25 @@ var canvas_events = (function() {
                     canvas_events.normal();
                 }
             },
-            dropdown_menu_mouseover: function(evt) {
+            dropdown_menu_mousemove: function(evt) {
                 var li_array;
-                if (evt.target.parentNode
-                    && evt.target.parentNode.parentNode
-                    && evt.target.parentNode.parentNode.id === "dropdown_list") {
-                    dropdown_highlight_elem(evt.target);
+                // For whatever reason, Chromium decides to trigger the
+                // mousemove/mouseenter/mouseover events if the element
+                // underneath it changes (or for mousemove, if the element
+                // moves at all). Unfortunately that means we have to track
+                // the mouse position the entire time to filter out the
+                // true mousemove events from the ones Chromium generates
+                // when a scroll event changes the element under the mouse.
+                if (evt.pageX !== last_dropdown_menu_x
+                    || evt.pageY !== last_dropdown_menu_y) {
+                    if (evt.target.parentNode
+                        && evt.target.parentNode.parentNode
+                        && evt.target.parentNode.parentNode.id === "dropdown_list") {
+                        dropdown_highlight_elem(evt.target);
+                    }
                 }
-                // hide the dropdown menu <div> thingy
+                last_dropdown_menu_x = evt.pageX;
+                last_dropdown_menu_y = evt.pageY;
             }
         },
         utils = {
@@ -853,7 +885,7 @@ var canvas_events = (function() {
             this.none();
             document.addEventListener("mousedown", events.dropdown_menu_mousedown, false);
             document.addEventListener("mouseup", events.dropdown_menu_mouseup, false);
-            document.addEventListener("mouseover", events.dropdown_menu_mouseover, false);
+            document.addEventListener("mousemove", events.dropdown_menu_mousemove, false);
             document.addEventListener("keydown", events.dropdown_menu_keydown, false);
             document.addEventListener("keypress", events.dropdown_menu_keypress, false);
         },
