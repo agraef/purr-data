@@ -535,7 +535,6 @@ var canvas_events = (function() {
                         break;
                     case 27: // escape
                         select_elem.style.setProperty("display", "none");
-                        pdgui.post("canceled thing");
                         canvas_events.normal();
                         break;
                     case 38: // up
