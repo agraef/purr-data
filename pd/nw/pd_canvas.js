@@ -585,9 +585,16 @@ var canvas_events = (function() {
                     }
                     in_dropdown = in_dropdown.parentNode;
                 }
+                // Allow scrollbar click and drag without closing the menu
                 if (in_dropdown &&
                         evt.pageX - select_elem.offsetLeft >
                         select_elem.clientWidth) {
+                    return;
+                }
+                // Special case for OSX, where the scrollbar doesn't take
+                // up any extra space
+                if (nw.process.platform === "darwin"
+                    && (evt.target.id === "dropdown_list")) {
                     return;
                 }
                 if (evt.target.parentNode
@@ -595,6 +602,9 @@ var canvas_events = (function() {
                     && evt.target.parentNode.parentNode.id === "dropdown_list") {
                     dropdown_highlight_elem(evt.target);
                 }
+                // This selects whatever item is highlighted even
+                // if we click outside the menu. Might be better to
+                // cancel in that case.
                 dropdown_index_to_pd(select_elem);
                 select_elem.style.setProperty("display", "none");
                 canvas_events.normal();
