@@ -210,17 +210,23 @@ var canvas_events = (function() {
             svg.setAttribute("height", h);
         },
         dropdown_index_to_pd = function(elem) {
-            pdgui.pdsend(elem.getAttribute("data-callback"),
-                elem.querySelector(".highlighted").getAttribute("data-index"));
+            var highlighted = elem.querySelector(".highlighted");
+            if (highlighted) {
+                pdgui.pdsend(elem.getAttribute("data-callback"),
+                    highlighted.getAttribute("data-index"));
+            }
+        },
+        dropdown_clear_highlight = function() {
+            var container = document.querySelector("#dropdown_list"),
+                li_array = container.querySelectorAll("li");
+            Array.prototype.forEach.call(li_array, function(e) {
+                e.classList.remove("highlighted");
+            });
         },
         dropdown_highlight_elem = function(elem, scroll) {
-            var container = document.querySelector("#dropdown_list"),
-                li_array;
+            var container = document.querySelector("#dropdown_list");
             if (!elem.classList.contains("highlighted")) {
-                li_array = container.querySelectorAll("li");
-                Array.prototype.forEach.call(li_array, function(e) {
-                    e.classList.remove("highlighted");
-                });
+                dropdown_clear_highlight();
                 elem.classList.add("highlighted");
                 // Make sure the highlighted element is in view
                 if (scroll) {
@@ -552,13 +558,21 @@ var canvas_events = (function() {
             dropdown_menu_keypress: function(evt) {
                 var li_nodes = document.querySelectorAll("#dropdown_list li"),
                     string_array = [],
+                    highlighted,
                     highlighted_index,
                     match,
                     offset;
-                highlighted_index =
-                    +document.querySelector("#dropdown_list .highlighted")
-                        .getAttribute("data-index");
-                offset = highlighted_index + 1;
+                highlighted = document
+                    .querySelector("#dropdown_list .highlighted");
+                if (highlighted) {
+                    highlighted_index =
+                        +document.querySelector("#dropdown_list .highlighted")
+                            .getAttribute("data-index");
+                    offset = highlighted_index + 1;
+                } else {
+                    highlighted_index = 1;
+                    offset = 2;
+                }
                 Array.prototype.forEach.call(li_nodes, function(e, i, a) {
                     var s = a[(i + offset) % a.length];
                     string_array.push(s.textContent.trim());
@@ -621,7 +635,6 @@ var canvas_events = (function() {
                 }
             },
             dropdown_menu_mousemove: function(evt) {
-                var li_array;
                 // For whatever reason, Chromium decides to trigger the
                 // mousemove/mouseenter/mouseover events if the element
                 // underneath it changes (or for mousemove, if the element
@@ -635,6 +648,8 @@ var canvas_events = (function() {
                         && evt.target.parentNode.parentNode
                         && evt.target.parentNode.parentNode.id === "dropdown_list") {
                         dropdown_highlight_elem(evt.target);
+                    } else {
+                        dropdown_clear_highlight();
                     }
                 }
                 last_dropdown_menu_x = evt.pageX;
