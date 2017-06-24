@@ -625,6 +625,9 @@ var canvas_events = (function() {
             },
             dropdown_menu_mouseup: function(evt) {
                 var i, select_elem;
+                // This can be triggered if the user keeps the mouse down
+                // to highlight an element and releases the mouse button to
+                // choose that element
                 if (evt.target.parentNode
                     && evt.target.parentNode.parentNode
                     && evt.target.parentNode.parentNode.id === "dropdown_list") {
@@ -633,6 +636,13 @@ var canvas_events = (function() {
                     select_elem.style.setProperty("display", "none");
                     canvas_events.normal();
                 }
+            },
+            dropdown_menu_wheel: function(evt) {
+                // Here we generate bogus mouse coords so that
+                // we can break through the filter below if we're
+                // using the mouse wheel to scroll in the list.
+                last_dropdown_menu_x = Number.MIN_VALUE;
+                last_dropdown_menu_y = Number.MIN_VALUE;
             },
             dropdown_menu_mousemove: function(evt) {
                 // For whatever reason, Chromium decides to trigger the
@@ -913,6 +923,8 @@ var canvas_events = (function() {
             document.addEventListener("mousemove", events.dropdown_menu_mousemove, false);
             document.addEventListener("keydown", events.dropdown_menu_keydown, false);
             document.addEventListener("keypress", events.dropdown_menu_keypress, false);
+            document.querySelector("#dropdown_list")
+                .addEventListener("wheel", events.dropdown_menu_wheel, false);
         },
         search: function() {
             this.none();
