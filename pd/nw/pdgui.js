@@ -4597,7 +4597,7 @@ function dropdown_populate(cid, label_array, current_index) {
 
 function gui_dropdown_activate(cid, obj_tag, tag, current_index, font_size, state, label_array) {
     var g, select_elem, svg_view, g_bbox,
-        w_height,    // excluding the scrollbar
+        doc_height,    // document height, excluding the scrollbar
         menu_height, // height of the list of elements inside the div
         div_y,       // position of div containing the dropdown menu
         div_max,     // max height of the div
@@ -4612,16 +4612,21 @@ function gui_dropdown_activate(cid, obj_tag, tag, current_index, font_size, stat
                 .viewBox.baseVal;
             select_elem = patchwin[cid]
                 .window.document.querySelector("#dropdown_list");
-            select_elem.style.setProperty("display", "inline");
             dropdown_populate(cid, label_array, current_index);
             // stick the obj_tag in a data field
             select_elem.setAttribute("data-callback", obj_tag);
             // display the menu so we can measure it
 
             g_bbox = g.getBoundingClientRect();
-            w_height =
+            // Measuring the document height is tricky-- the following
+            // method is the only reliable one I've found. And even here,
+            // if you display the select_elem as inline _before_ measuring
+            // the doc height, the result ends up being _smaller_. No idea.
+            doc_height =
                 patchwin[cid].window.document.documentElement
                     .clientHeight;
+            // Now let's display the select_elem div so we can measure it
+            select_elem.style.setProperty("display", "inline");
             menu_height = select_elem.querySelector("ol")
                 .getBoundingClientRect().height;
             scroll_y = patchwin[cid].window.scrollY;
@@ -4630,18 +4635,18 @@ function gui_dropdown_activate(cid, obj_tag, tag, current_index, font_size, stat
             // If the entire menu won't fit below the object but _will_
             // fit above it, display it above the object.
             // If the menu needs a scrollbar, display it below the object
-            if (w_height - g_bbox.bottom <= 75
-                || (menu_height > w_height - g_bbox.bottom
+            if (doc_height - g_bbox.bottom <= 75
+                || (menu_height > doc_height - g_bbox.bottom
                     && menu_height <= g_bbox.top)) {
                 // menu on top
                 offset_anchor = "bottom";
-                div_max = g_bbox.top - 1;
-                div_y = w_height - (g_bbox.top + scroll_y);
+                div_max = g_bbox.top - 2;
+                div_y = doc_height - (g_bbox.top + scroll_y);
             }
             else {
                 // menu on bottom (possibly with scrollbar)
                 offset_anchor = "top";
-                div_max = w_height - g_bbox.bottom - 1;
+                div_max = doc_height - g_bbox.bottom - 2;
                 div_y = g_bbox.bottom + scroll_y;
             }
             // set a max-height to force scrollbar if needed
