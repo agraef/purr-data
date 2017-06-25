@@ -4596,7 +4596,13 @@ function dropdown_populate(cid, label_array, current_index) {
 }
 
 function gui_dropdown_activate(cid, obj_tag, tag, current_index, font_size, state, label_array) {
-    var g, select_elem, svg_view;
+    var g, select_elem, svg_view, g_bbox,
+        doc_height,    // document height, excluding the scrollbar
+        menu_height, // height of the list of elements inside the div
+        div_y,       // position of div containing the dropdown menu
+        div_max,     // max height of the div
+        scroll_y,
+        offset_anchor; // top or bottom
     // Annoying: obj_tag is just the "x"-prepended hex value for the object,
     // and tag is the one from rtext_gettag that is used as our gobj id
     if (patchwin[cid]) {
@@ -4604,21 +4610,54 @@ function gui_dropdown_activate(cid, obj_tag, tag, current_index, font_size, stat
         if (state !== 0) {
             svg_view = patchwin[cid].window.document.getElementById("patchsvg")
                 .viewBox.baseVal;
-            dropdown_populate(cid, label_array, current_index);
             select_elem = patchwin[cid]
                 .window.document.querySelector("#dropdown_list");
+            dropdown_populate(cid, label_array, current_index);
             // stick the obj_tag in a data field
             select_elem.setAttribute("data-callback", obj_tag);
-            select_elem.style.setProperty("max-height",
-                (patchwin[cid].window.innerHeight -
-                    g.getBoundingClientRect().bottom - 5) + "px"
-            );
+            // display the menu so we can measure it
+
+            g_bbox = g.getBoundingClientRect();
+            // Measuring the document height is tricky-- the following
+            // method is the only reliable one I've found. And even here,
+            // if you display the select_elem as inline _before_ measuring
+            // the doc height, the result ends up being _smaller_. No idea.
+            doc_height =
+                patchwin[cid].window.document.documentElement
+                    .clientHeight;
+            // Now let's display the select_elem div so we can measure it
             select_elem.style.setProperty("display", "inline");
+            menu_height = select_elem.querySelector("ol")
+                .getBoundingClientRect().height;
+            scroll_y = patchwin[cid].window.scrollY;
+            // If the area below the object is smaller than 75px, then
+            // display the menu above the object.
+            // If the entire menu won't fit below the object but _will_
+            // fit above it, display it above the object.
+            // If the menu needs a scrollbar, display it below the object
+            if (doc_height - g_bbox.bottom <= 75
+                || (menu_height > doc_height - g_bbox.bottom
+                    && menu_height <= g_bbox.top)) {
+                // menu on top
+                offset_anchor = "bottom";
+                div_max = g_bbox.top - 2;
+                div_y = doc_height - (g_bbox.top + scroll_y);
+            }
+            else {
+                // menu on bottom (possibly with scrollbar)
+                offset_anchor = "top";
+                div_max = doc_height - g_bbox.bottom - 2;
+                div_y = g_bbox.bottom + scroll_y;
+            }
+            // set a max-height to force scrollbar if needed
+            select_elem.style.setProperty("max-height", div_max + "px");
             select_elem.style.setProperty("left",
                 (elem_get_coords(g).x - svg_view.x) + "px");
-            select_elem.style.setProperty("top",
-                (elem_get_coords(g).y + g.getBBox().height - svg_view.y)
-                    + "px");
+            // Remove "top" and "bottom" props to keep state clean
+            select_elem.style.removeProperty("top");
+            select_elem.style.removeProperty("bottom");
+            // Now position the div relative to either the "top" or "bottom"
+            select_elem.style.setProperty(offset_anchor, div_y + "px");
             select_elem.style.setProperty("font-size",
                 pd_fontsize_to_gui_fontsize(font_size) + "px");
             select_elem.style.setProperty("min-width", g.getBBox().width + "px");
