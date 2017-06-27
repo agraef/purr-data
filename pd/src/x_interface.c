@@ -658,7 +658,7 @@ void pdinfo_audio_listdevs(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
             outdevlist, &noutdevs,
             &canmulti, &cancallback,
             MAXNDEV, DEVDESCSIZE);
-    t_atom at[4];
+    t_atom at[MAXNDEV];
     if (s == gensym("audio-multidev-support"))
     {
         SETFLOAT(at, canmulti);
@@ -739,7 +739,7 @@ void pdinfo_midi_listdevs(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
     sys_get_midi_devs(indevlist, &nindevs,
             outdevlist, &noutdevs,
             MAXNDEV, DEVDESCSIZE);
-    t_atom at[4];
+    t_atom at[MAXNDEV];
     if (s == gensym("midi-indevlist"))
     {
         for (i = 0; i < nindevs; i++)
