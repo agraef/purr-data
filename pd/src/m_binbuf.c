@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include "m_pd.h"
 #include "s_stuff.h"
+#include "g_canvas.h"
 #include <stdio.h>
 
 #ifdef HAVE_UNISTD_H
@@ -1671,6 +1672,7 @@ void binbuf_evalfile(t_symbol *name, t_symbol *dir)
             b = newb;
         }
         binbuf_eval(b, 0, 0, 0);
+        canvas_initbang((t_canvas *)(s__X.s_thing)); /* JMZ*/
         gensym("#A")->s_thing = bounda;
         s__N.s_thing = boundn;
     }

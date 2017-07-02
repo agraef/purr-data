@@ -532,6 +532,8 @@ EXTERN void canvas_eraselinesfor(t_canvas *x, t_text *text);
 EXTERN void canvas_stowconnections(t_canvas *x);
 EXTERN void canvas_restoreconnections(t_canvas *x);
 EXTERN void canvas_redraw(t_canvas *x);
+EXTERN void canvas_closebang(t_canvas *x);
+EXTERN void canvas_initbang(t_canvas *x);
 
 EXTERN t_inlet *canvas_addinlet(t_canvas *x, t_pd *who, t_symbol *sym);
 EXTERN void canvas_rminlet(t_canvas *x, t_inlet *ip);
