@@ -134,3 +134,12 @@ debian_stable_arm_deb:
      expire_in: 1 day
      paths:
        - pd*.deb
+
+windows_i386_installer:
+  tags:
+    - windows
+    - i386
+  script:
+    - echo `pwd`
+    - cd l2ork_addons
+    - ./tar_em_up.sh -Z
