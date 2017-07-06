@@ -148,7 +148,6 @@ if [ ! -d "../pd/nw/nw" ]; then
 		exit 1
 	else
 		echo "Downloaded nwjs binary"
-		exit 1
 	fi
 	if [[ $os == "win" || $os == "osx" ]]; then
 		unzip $nwjs_filename
