@@ -330,7 +330,7 @@ then
 	elif [ $dmg -gt 0 ]; then
 		mv packages/darwin_app/Pd*.dmg .
 	elif [ $inno -gt 0 ]; then
-		mv ../packages/win32_inno/Output/Purr*.exe .
+		mv packages/win32_inno/Output/Purr*.exe .
 	fi
 fi
 
