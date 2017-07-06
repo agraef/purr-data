@@ -102,7 +102,7 @@ lib_install:
 	# For other external libs
 	install -p $(bin_src)/lua53.dll          $(DESTDIR)$(bindir)/
 	#install -p $(bin_src)/pthreadGC2.dll     $(DESTDIR)$(bindir)/
-	install -p $(bin_src)/libdl-0.dll     $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libdl.dll     $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libportaudio-2.dll     $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libFLAC-8.dll     $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libspeex-1.dll     $(DESTDIR)$(bindir)/
