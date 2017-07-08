@@ -248,7 +248,8 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
             int inchars_c  = x_bufsize_c  - inindex_c;
             int maxindex_c =
                 (inchars_c > widthlimit_c ? widthlimit_c : inchars_c);
-            int maxindex_b = u8_offset(x->x_buf + inindex_b, maxindex_c);
+            int maxindex_b = u8_offset(x->x_buf + inindex_b, maxindex_c,
+                x->x_bufsize - inindex_b);
             int eatchar = 1;
             //fprintf(stderr, "firstone <%s> inindex_b=%d maxindex_b=%d\n", x->x_buf + inindex_b, inindex_b, maxindex_b);
             int foundit_b  = firstone(x->x_buf + inindex_b, '\n', maxindex_b);
@@ -291,7 +292,8 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
             {
                 int actualx = (findx < 0 ? 0 :
                     (findx > foundit_c ? foundit_c : findx));
-                *indexp = inindex_b + u8_offset(x->x_buf + inindex_b, actualx);
+                *indexp = inindex_b + u8_offset(x->x_buf + inindex_b, actualx,
+                    x->x_bufsize - inindex_b);
                 reportedindex = 1;
             }
             strncpy(tempbuf+outchars_b, x->x_buf + inindex_b, foundit_b);
