@@ -688,8 +688,8 @@ void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)
 
     //first we need to check if the list of arguments has $@
     //fprintf(stderr,"=========\nbinbuf_eval argc:%d ac:%d\n", argc, (int)ac);
-    int count;
-    for (count = 0; count < ac; count++)
+    int count, old_ac = ac;
+    for (count = 0; count < old_ac; count++)
     {
         //fprintf(stderr, "count %d\n", count);
         if (at[count].a_type == A_DOLLAR &&
