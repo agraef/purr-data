@@ -248,7 +248,8 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
             int inchars_c  = x_bufsize_c  - inindex_c;
             int maxindex_c =
                 (inchars_c > widthlimit_c ? widthlimit_c : inchars_c);
-            int maxindex_b = u8_offset(x->x_buf + inindex_b, maxindex_c);
+            int maxindex_b = u8_offset(x->x_buf + inindex_b, maxindex_c,
+                x->x_bufsize - inindex_b);
             int eatchar = 1;
             //fprintf(stderr, "firstone <%s> inindex_b=%d maxindex_b=%d\n", x->x_buf + inindex_b, inindex_b, maxindex_b);
             int foundit_b  = firstone(x->x_buf + inindex_b, '\n', maxindex_b);
@@ -291,7 +292,8 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
             {
                 int actualx = (findx < 0 ? 0 :
                     (findx > foundit_c ? foundit_c : findx));
-                *indexp = inindex_b + u8_offset(x->x_buf + inindex_b, actualx);
+                *indexp = inindex_b + u8_offset(x->x_buf + inindex_b, actualx,
+                    x->x_bufsize - inindex_b);
                 reportedindex = 1;
             }
             strncpy(tempbuf+outchars_b, x->x_buf + inindex_b, foundit_b);
@@ -557,6 +559,7 @@ void rtext_activate(t_rtext *x, int state)
 {
     //fprintf(stderr,"rtext_activate state=%d\n", state);
     int w = 0, h = 0, widthspec, heightspec, indx, isgop;
+    char *tmpbuf;
     t_glist *glist = x->x_glist;
     t_canvas *canvas = glist_getcanvas(glist);
     //if (state && x->x_active) printf("duplicate rtext_activate\n");
@@ -610,6 +613,13 @@ void rtext_activate(t_rtext *x, int state)
     /* we need to get scroll to make sure we've got the
        correct bbox for the svg */
     canvas_getscroll(glist_getcanvas(canvas));
+    /* ugly hack to get around the fact that x_buf is not
+       null terminated. If this becomes a problem we can revisit
+       it later */
+    tmpbuf = t_getbytes(x->x_bufsize + 1);
+    sprintf(tmpbuf, "%.*s", x->x_bufsize, x->x_buf);
+    /* in case x_bufsize is 0... */
+    tmpbuf[x->x_bufsize] = '\0';
     gui_vmess("gui_textarea", "xssiiiisiii",
         canvas,
         x->x_tag,
@@ -618,10 +628,11 @@ void rtext_activate(t_rtext *x, int state)
         x->x_text->te_ypix,
         widthspec,
         heightspec,
-        x->x_buf,
+        tmpbuf,
         sys_hostfontsize(glist_getfont(glist)),
         isgop,
         state);
+    freebytes(tmpbuf, x->x_bufsize + 1);
 }
 
 // outputs 1 if found one of the special chars

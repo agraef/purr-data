@@ -185,8 +185,27 @@ int u8_wc_toutf8_nul(char *dest, uint32_t ch)
 }
 
 /* charnum => byte offset */
-int u8_offset(char *str, int charnum)
+int u8_offset(char *str, int charnum, int bufsize)
 {
+    /* Implementation #1 of a tricky encoding in an unsafe language. It
+       assumes that we're dealing with null-terminated strings, but
+       x_buf of rtext isn't null-terminated. */
+    /*
+    int offs=0;
+
+    while (charnum > 0 && str[offs]) {
+        (void)(isutf(str[++offs]) || isutf(str[++offs]) ||
+               isutf(str[++offs]) || ++offs);
+        charnum--;
+    }
+    return offs;
+    */
+
+    /* Implementation number 2 apparently tried to fix that. Instead, it
+       just made a reimplementation that still potential dereferences
+       non-existent pointers _if_ we try to get the offset at the last
+       character _and_ that last character happens to be wide. */
+    /*
     char *string = str;
 
     while (charnum > 0 && *string != '\0') {
@@ -205,11 +224,36 @@ int u8_offset(char *str, int charnum)
     }
 
     return (int)(string - str);
+    */
+
+    /* Here is an _extremely_ conservative implementation that protects
+       against dereferencing garbage pointers. */
+    int offs = 0;
+    if (isutf(str[offs]))
+    {
+        for (offs = 0; offs < bufsize; offs++)
+        {
+            if (isutf(str[offs]))
+            {
+                if (charnum <= 0)
+                    break;
+                charnum -= 1;
+            }
+        }
+    }
+    else
+    {
+        bug("u8_offset");
+    }
+    return offs;
 }
 
 /* byte offset => charnum */
 int u8_charnum(char *s, int offset)
 {
+    /* This has the same problem as the commented implementations of u8_offset
+       above. */
+    /*
     int charnum = 0;
     char *string = s;
     char *const end = string + offset;
@@ -227,6 +271,29 @@ int u8_charnum(char *s, int offset)
             }
         }
         ++charnum;
+    }
+    return charnum;
+    */
+
+    /* The original implementation which doesn't work well with
+       strings that aren't null terminated */
+    /*
+    int charnum = 0, offs=0;
+
+    while (offs < offset && s[offs]) {
+        (void)(isutf(s[++offs]) || isutf(s[++offs]) ||
+               isutf(s[++offs]) || ++offs);
+        charnum++;
+    }
+    return charnum;
+    */
+
+    /* An _extremely_ conservative implementation to avoid dereferencing
+       garbage. */
+    int charnum = 0, i;
+    for (i = 0; i < offset; i++)
+    {
+        if (isutf(s[i])) charnum += 1;
     }
     return charnum;
 }
