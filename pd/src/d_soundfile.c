@@ -29,6 +29,7 @@ objects use Posix-like threads.  */
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+#include <math.h>
 
 #include "m_pd.h"
 
@@ -200,6 +201,21 @@ static void swapstring(char *foo, int doit)
     }
 }
 
+    /* write a sample rate as an 80-bit AIFF-compatible number */
+static void makeaiffsamprate(double sr, unsigned char *shit)
+{
+    int exponent;
+    double mantissa = frexp(sr, &exponent);
+    unsigned long fixmantissa = ldexp(mantissa, 32);
+    shit[0] = (exponent+16382)>>8;
+    shit[1] = exponent+16382;
+    shit[2] = fixmantissa >> 24;
+    shit[3] = fixmantissa >> 16;
+    shit[4] = fixmantissa >> 8;
+    shit[5] = fixmantissa;
+    shit[6] = shit[7] = shit[8] = shit[9] = 0;
+}
+
 /******************** soundfile access routines **********************/
 
 /* This routine opens a file, looks for either a nextstep or "wave" header,
@@ -292,7 +308,8 @@ int open_soundfile_via_fd(int fd, int headersize,
             {
                 long chunksize = swap4(((t_wavechunk *)buf)->wc_size,
                     swap), seekto = headersize + chunksize + 8, seekout;
-                
+                if (seekto & 1)     /* pad up to even number of bytes */
+                    seekto++;
                 if (!strncmp(((t_wavechunk *)buf)->wc_id, "fmt ", 4))
                 {
                     long commblockonset = headersize + 8;
@@ -344,6 +361,8 @@ int open_soundfile_via_fd(int fd, int headersize,
             {
                 long chunksize = swap4(((t_datachunk *)buf)->dc_size,
                     swap), seekto = headersize + chunksize + 8, seekout;
+                if (seekto & 1)     /* pad up to even number of bytes */
+                    seekto++;
                 /* post("chunk %c %c %c %c seek %d",
                     ((t_datachunk *)buf)->dc_id[0],
                     ((t_datachunk *)buf)->dc_id[1],
@@ -374,8 +393,8 @@ int open_soundfile_via_fd(int fd, int headersize,
                         goto badheader;
                 headersize = seekto;
             }
-            bytelimit = swap4(((t_datachunk *)buf)->dc_size, swap);
-            headersize += 8;
+            bytelimit = swap4(((t_datachunk *)buf)->dc_size, swap) - 8;
+            headersize += sizeof(t_datachunk);
         }
     }
         /* seek past header and any sample frames to skip */
@@ -781,8 +800,6 @@ static int create_soundfile(t_canvas *canvas, const char *filename,
     {
         long datasize = nframes * nchannels * bytespersamp;
         long longtmp;
-        static unsigned char dogdoo[] =
-            {0x40, 0x0e, 0xac, 0x44, 0, 0, 0, 0, 0, 0, 'S', 'S', 'N', 'D'};
         if (strcmp(filenamebuf + strlen(filenamebuf)-4, ".aif") &&
             strcmp(filenamebuf + strlen(filenamebuf)-5, ".aiff"))
                 strcat(filenamebuf, ".aif");
@@ -795,10 +812,11 @@ static int create_soundfile(t_canvas *canvas, const char *filename,
         longtmp = swap4(nframes, swap);
         memcpy(&aiffhdr->a_nframeshi, &longtmp, 4);
         aiffhdr->a_bitspersamp = swap2(8 * bytespersamp, swap);
-        memcpy(aiffhdr->a_samprate, dogdoo, sizeof(dogdoo));
-        longtmp = swap4(datasize, swap);
-        memcpy(aiffhdr->a_samprate + sizeof(dogdoo), &longtmp, 4);
-        memset(aiffhdr->a_samprate + sizeof(dogdoo) + 4, 0, 8);
+        makeaiffsamprate(samplerate, aiffhdr->a_samprate);
+        strncpy(((char *)(&aiffhdr->a_samprate))+10, "SSND", 4);
+        longtmp = swap4(datasize + 8, swap);
+        memcpy(((char *)(&aiffhdr->a_samprate))+14, &longtmp, 4);
+        memset(((char *)(&aiffhdr->a_samprate))+18, 0, 8);
         headersize = AIFFPLUS;
     }
     else    /* WAVE format */
@@ -1264,9 +1282,9 @@ static void soundfiler_read(t_soundfiler *x, t_symbol *s,
         
         poswas = lseek(fd, 0, SEEK_CUR);
         eofis = lseek(fd, 0, SEEK_END);
-        if (poswas < 0 || eofis < 0)
+        if (poswas < 0 || eofis < 0 || eofis < poswas)
         {
-            pd_error(x, "lseek failed");
+            pd_error(x, "lseek failed: %ld..%ld", poswas, eofis);
             goto done;
         }
         lseek(fd, poswas, SEEK_SET);
@@ -1283,14 +1301,13 @@ static void soundfiler_read(t_soundfiler *x, t_symbol *s,
         {
             int vecsize;
 
-            garray_resize(garrays[i], finalsize);
+            garray_resize_long(garrays[i], finalsize);
                 /* for sanity's sake let's clear the save-in-patch flag here */
             garray_setsaveit(garrays[i], 0);
-            garray_getfloatwords(garrays[i], &vecsize, 
-                &vecs[i]);
-                /* if the resize failed, garray_resize reported the error */
-            if (vecsize != framesinfile)
+            if (!garray_getfloatwords(garrays[i], &vecsize, &vecs[i])
+                || (vecsize != framesinfile))
             {
+                /* if the resize failed, garray_resize reported the error */
                 pd_error(x, "resize failed");
                 goto done;
             }
@@ -1318,18 +1335,18 @@ static void soundfiler_read(t_soundfiler *x, t_symbol *s,
     for (i = 0; i < argc; i++)
     {
         int vecsize;
-        garray_getfloatwords(garrays[i], &vecsize, &vecs[i]);
-        for (j = itemsread; j < vecsize; j++)
-            vecs[i][j].w_float = 0;
+        if (garray_getfloatwords(garrays[i], &vecsize, &vecs[i]))
+            for (j = itemsread; j < vecsize; j++)
+                vecs[i][j].w_float = 0;
     }
         /* zero out vectors in excess of number of channels */
     for (i = channels; i < argc; i++)
     {
         int vecsize;
         t_word *foo;
-        garray_getfloatwords(garrays[i], &vecsize, &foo);
-        for (j = 0; j < vecsize; j++)
-            foo[j].w_float = 0;
+        if (garray_getfloatwords(garrays[i], &vecsize, &foo))
+            for (j = 0; j < vecsize; j++)
+                foo[j].w_float = 0;
     }
         /* do all graphics updates */
     for (i = 0; i < argc; i++)
@@ -1339,7 +1356,7 @@ static void soundfiler_read(t_soundfiler *x, t_symbol *s,
     goto done;
 usage:
     pd_error(x, "usage: read [flags] filename tablename...");
-    post("flags: -skip <n> -nframes <n> -resize -maxsize <n> ...");
+    post("flags: -skip <n> -resize -maxsize <n> ...");
     post("-raw <headerbytes> <channels> <bytespersamp> <endian (b, l, or n)>.");
 done:
     if (fd >= 0)
@@ -1799,13 +1816,13 @@ static void *readsf_child_main(void *zz)
                 {
                     x->x_fifohead += sysrtn;
                     x->x_bytelimit -= sysrtn;
+                    if (x->x_fifohead == fifosize)
+                        x->x_fifohead = 0;
                     if (x->x_bytelimit <= 0)
                     {
                         x->x_eof = 1;
                         break;
                     }
-                    if (x->x_fifohead == fifosize)
-                        x->x_fifohead = 0;
                 }
 #ifdef DEBUG_SOUNDFILE
                 sprintf(boo, "after: head %d, tail %d\n", 
@@ -2432,20 +2449,23 @@ static t_int *writesf_perform(t_int *w)
         bigendian = x->x_bigendian;
     if (x->x_state == STATE_STREAM)
     {
-        int wantbytes;
+        int wantbytes, roominfifo;
         pthread_mutex_lock(&x->x_mutex);
         wantbytes = sfchannels * vecsize * bytespersample;
-        while (x->x_fifotail > x->x_fifohead &&
-            x->x_fifotail < x->x_fifohead + wantbytes + 1)
+        roominfifo = x->x_fifotail - x->x_fifohead;
+        if (roominfifo <= 0)
+            roominfifo += x->x_fifosize;
+        while (roominfifo < wantbytes + 1)
         {
-#ifdef DEBUG_SOUNDFILE
-            pute("wait...\n");
-#endif
+            fprintf(stderr, "writesf waiting for disk write..\n");
+            fprintf(stderr, "(head %d, tail %d, room %d, want %d)\n",
+                x->x_fifohead, x->x_fifotail, roominfifo, wantbytes);
             sfread_cond_signal(&x->x_requestcondition);
             sfread_cond_wait(&x->x_answercondition, &x->x_mutex);
-#ifdef DEBUG_SOUNDFILE
-            pute("done\n");
-#endif
+            fprintf(stderr, "... done waiting.\n");
+            roominfifo = x->x_fifotail - x->x_fifohead;
+            if (roominfifo <= 0)
+                roominfifo += x->x_fifosize;
         }
 
         soundfile_xferout_sample(sfchannels, x->x_outvec,
@@ -2550,10 +2570,8 @@ static void writesf_open(t_writesf *x, t_symbol *s, int argc, t_atom *argv)
         (x->x_bytespersample * x->x_sfchannels * MAXVECSIZE));
             /* arrange for the "request" condition to be signalled 16
             times per buffer */
-    x->x_sigcountdown = x->x_sigperiod =
-        (x->x_fifosize /
-            (16 * x->x_bytespersample * x->x_sfchannels *
-                x->x_vecsize));
+    x->x_sigcountdown = x->x_sigperiod = (x->x_fifosize /
+            (16 * x->x_bytespersample * x->x_sfchannels * x->x_vecsize));
     sfread_cond_signal(&x->x_requestcondition);
     pthread_mutex_unlock(&x->x_mutex);
 }
@@ -2563,9 +2581,8 @@ static void writesf_dsp(t_writesf *x, t_signal **sp)
     int i, ninlets = x->x_sfchannels;
     pthread_mutex_lock(&x->x_mutex);
     x->x_vecsize = sp[0]->s_n;
-    
     x->x_sigperiod = (x->x_fifosize /
-        (x->x_bytespersample * ninlets * x->x_vecsize));
+            (16 * x->x_bytespersample * x->x_sfchannels * x->x_vecsize));
     for (i = 0; i < ninlets; i++)
         x->x_outvec[i] = sp[i]->s_vec;
     x->x_insamplerate = sp[0]->s_sr;

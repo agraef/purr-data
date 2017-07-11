@@ -298,6 +298,7 @@ static t_int *tabread_tilde_perform(t_int *w)
     int i;
     
     maxindex = x->x_npoints - 1;
+    if (maxindex < 0) goto zero;
     if (!buf) goto zero;
 
     for (i = 0; i < n; i++)
@@ -398,6 +399,7 @@ static t_int *tabread4_tilde_perform(t_int *w)
     int i;
     
     maxindex = x->x_npoints - 3;
+    if (maxindex < 0) goto zero;
 
     if (!buf) goto zero;
 
