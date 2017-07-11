@@ -350,18 +350,18 @@ static void grid_properties(t_gobj *z, t_glist *owner)
     gui_start_vmess("gui_external_dialog", "ss", gfx_tag, "grid");
     gui_start_array();
 
-    gui_s("symbol"); gui_s("receive_symbol"); gui_s(x->x_name->s_name);
-    gui_s("int");    gui_s("width"); gui_i(x->x_width);
-    gui_s("int");    gui_s("min"); gui_f(x->x_min);
-    gui_s("float");  gui_s("max"); gui_f(x->x_max);
-    gui_s("int");    gui_s("height"); gui_i(x->x_height);
-    gui_s("float");  gui_s("y-min"); gui_f(x->y_min);
-    gui_s("float");  gui_s("y-max"); gui_f(x->y_max);
-    gui_s("toggle"); gui_s("show_grid"); gui_i(x->x_grid);
-    gui_s("float");  gui_s("x-steps"); gui_f(x->x_xstep);
-    gui_s("float");  gui_s("y-steps"); gui_f(x->x_ystep);
-    gui_s("int");    gui_s("x-lines"); gui_i(x->x_xlines);
-    gui_s("int");    gui_s("y-lines"); gui_i(x->x_ylines);
+    gui_s("receive_symbol"); gui_s(x->x_name->s_name);
+    gui_s("width"); gui_i(x->x_width);
+    gui_s("min"); gui_f(x->x_min);
+    gui_s("max"); gui_f(x->x_max);
+    gui_s("height"); gui_i(x->x_height);
+    gui_s("y-min"); gui_f(x->y_min);
+    gui_s("y-max"); gui_f(x->y_max);
+    gui_s("grid_toggle"); gui_i(x->x_grid);
+    gui_s("x-steps"); gui_f(x->x_xstep);
+    gui_s("y-steps"); gui_f(x->x_ystep);
+    gui_s("x-lines"); gui_i(x->x_xlines);
+    gui_s("y-lines"); gui_i(x->x_ylines);
 
     gui_end_array();
     gui_end_vmess();
@@ -450,11 +450,6 @@ static void grid_displace(t_gobj *z, t_glist *glist, int dx, int dy)
     x->y_current += dy;
     if (xold != text_xpix(&x->x_obj, glist) || yold != text_ypix(&x->x_obj, glist))
     {
-        gui_vmess("gui_text_displace", "xxii",
-            glist,
-            x,
-            dx,
-            dy);
 	//grid_draw_move(x, x->x_glist);
         canvas_fixlinesfor(glist, (t_text *)z);
     }
@@ -887,10 +882,10 @@ void grid_setup(void)
     /* Big hack for receiving edit-mode resize anchor clicks from
        g_editor.c. */
     class_addmethod(grid_class, (t_method)grid_click_for_resizing,
-                    gensym("_click"),
+                    gensym("_click_for_resizing"),
                     A_FLOAT, A_FLOAT, A_FLOAT, 0);
     class_addmethod(grid_class, (t_method)grid_motion_for_resizing,
-                    gensym("_motion"),
+                    gensym("_motion_for_resizing"),
                     A_FLOAT, A_FLOAT, 0);
     grid_widgetbehavior.w_getrectfn =    grid_getrect;
     grid_widgetbehavior.w_displacefn =   grid_displace;

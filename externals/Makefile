@@ -431,26 +431,16 @@ cxc_clean:
 #------------------------------------------------------------------------------#
 # CYCLONE
 cyclone:
-ifeq ($(OS_NAME),windows)
-	make -C $(externals_src)/cyclone \
-		pdbinpath=$(pd_src)/src PDINCLUDEDIR=$(DESTDIR)$(includedir)
-else
-	make -C $(externals_src)/cyclone \
-		PDDIR=$(pd_src)
-endif
+	make -C $(externals_src)/miXed/cyclone -f Makefile.libdir \
+		PD_PATH=$(pd_src) PD_INCLUDE=$(DESTDIR)$(includedir)
 
 cyclone_install:
-	make -C $(externals_src)/cyclone \
+	make -C $(externals_src)/miXed/cyclone -f Makefile.libdir \
 		DESTDIR="$(DESTDIR)" objectsdir="$(objectsdir)" \
 		install
-	install -p $(externals_src)/cyclone/documentation/purr_help/*.pd \
-		$(DESTDIR)$(objectsdir)/cyclone
-	install -p \
-		$(externals_src)/cyclone/documentation/purr_help/abs_GUI/*.pd \
-		$(DESTDIR)$(objectsdir)/cyclone
 
 cyclone_clean:
-	make -C $(externals_src)/cyclone \
+	make -C $(externals_src)/miXed/cyclone -f Makefile.libdir \
 		clean
 
 #------------------------------------------------------------------------------#
