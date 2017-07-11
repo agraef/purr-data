@@ -3751,6 +3751,7 @@ function gui_scope_draw_bg(cid, tag, fg_color, bg_color, w, h, grid_width, dx, d
         path_string = "",
         fg_xy_path, // to be used for the foreground lines
         fg_mono_path,
+        border,
         i, x, y, align_x, align_y;
     // Path strings for the grid lines
     // vertical lines...
@@ -3767,6 +3768,7 @@ function gui_scope_draw_bg(cid, tag, fg_color, bg_color, w, h, grid_width, dx, d
         d: path_string,
         fill: "none",
         stroke: "black",
+        class: "grid",
         "stroke-width": grid_width,
     });
     // We go ahead and create a path to be used in the foreground. We'll
@@ -3783,10 +3785,18 @@ function gui_scope_draw_bg(cid, tag, fg_color, bg_color, w, h, grid_width, dx, d
         stroke: fg_color,
         class: "fgmono"
     });
+    border = create_item(cid, "rect", {
+        style: "fill: none;",
+        width: w,
+        height: h,
+        class: "border",
+        "stroke-width": grid_width
+    });
     g.appendChild(bg);
     g.appendChild(path);
     g.appendChild(fg_xy_path);
     g.appendChild(fg_mono_path);
+    g.appendChild(border);
 }
 
 function scope_configure_fg(cid, tag, type, data_array) {
@@ -3805,13 +3815,13 @@ function gui_scope_configure_fg_mono(cid, tag, data_array) {
     scope_configure_fg(cid, tag, ".fgmono", data_array);
 }
 
-function gui_scope_configure_bg_color(cid, tag, color) {
+function scope_configure_bg_color(cid, tag, color) {
     var g = get_gobj(cid, tag),
         elem = g.querySelector(".bg");
     configure_item(elem, { fill: color });
 }
 
-function gui_scope_configure_fg_color(cid, tag, color) {
+function scope_configure_fg_color(cid, tag, color) {
      var g = get_gobj(cid, tag),
         xy = g.querySelector(".fgxy"),
         mono = g.querySelector(".fgmono");
@@ -3819,9 +3829,31 @@ function gui_scope_configure_fg_color(cid, tag, color) {
     configure_item(mono, { stroke: color });
 }
 
+function scope_configure_grid_color(cid, tag, color) {
+    var g = get_gobj(cid, tag),
+        grid = g.querySelector(".grid");
+    configure_item(grid, { stroke: color });
+}
+
+function gui_scope_configure_color(cid, tag, layer, color) {
+    if (layer === "fg") {
+        scope_configure_fg_color(cid, tag, color);
+    } else if (layer === "bg") {
+        scope_configure_bg_color(cid, tag, color);
+    } else if (layer === "grid") {
+        scope_configure_grid_color(cid, tag, color);
+    }
+}
+
 function gui_scope_clear_fg(cid, tag) {
     scope_configure_fg(cid, tag, ".fgxy", []);
     scope_configure_fg(cid, tag, ".fgmono", []);
+}
+
+function gui_scope_erase_innards(cid, tag) {
+    var g = get_gobj(cid, tag);
+    // Nuke it
+    g.innerHTML = '';
 }
 
 // unauthorized/grid
