@@ -478,6 +478,133 @@ static void key_setup(void)
     //class_sethelpsymbol(keyname_class, gensym("key"));
 }
 
+/* ------------------ mouse classes for legacy externals ------------------ */
+
+/* Every other legacy external library has some ad hoc code for getting
+   mouse state within a Pd patch. All of them have different weird interfaces
+   and some are outright buggy.
+
+   Most of these return screen coordinates. This is unfortunately more of
+   a pain than it should be in nw.js. Instead, we return window coordinates
+   and hope that this is good enough for the uses to which these external
+   classes have been put. At worst the user can make the relevant canvas
+   full screen and get the desired behavior (minus the offset for the menu).
+
+   Most of the uses for mouse coordinates seem to do with tutorials that map
+   x/y positions to amplitude, frequency, etc. So these classes should be
+   good enough to build abstractions to do an end run around the relevant
+   externals.
+*/
+
+static t_symbol *mousemotion_sym, *mouseclick_sym, *mousewheel_sym;
+static t_class *mousemotion_class, *mouseclick_class, *mousewheel_class;
+
+typedef struct _mousemotion
+{
+    t_object x_obj;
+    t_outlet *x_outlet1;
+    t_outlet *x_outlet2;
+} t_mousemotion;
+
+static void *mousemotion_new( void)
+{
+    t_mousemotion *x = (t_mousemotion *)pd_new(mousemotion_class);
+    x->x_outlet1 = outlet_new(&x->x_obj, &s_float);
+    x->x_outlet2 = outlet_new(&x->x_obj, &s_float);
+    pd_bind(&x->x_obj.ob_pd, mousemotion_sym);
+    return (x);
+}
+
+static void mousemotion_list(t_mousemotion *x, t_symbol *s, int argc,
+    t_atom *argv)
+{
+    outlet_float(x->x_outlet2, atom_getfloatarg(1, argc, argv));
+    outlet_float(x->x_outlet1, atom_getfloatarg(0, argc, argv));
+}
+
+static void mousemotion_free(t_mousemotion *x)
+{
+    pd_unbind(&x->x_obj.ob_pd, mousemotion_sym);
+}
+
+typedef struct _mouseclick
+{
+    t_object x_obj;
+    t_outlet *x_outlet1;
+    t_outlet *x_outlet2;
+    t_outlet *x_outlet3;
+    t_outlet *x_outlet4;
+} t_mouseclick;
+
+static void *mouseclick_new( void)
+{
+    t_mouseclick *x = (t_mouseclick *)pd_new(mouseclick_class);
+    x->x_outlet1 = outlet_new(&x->x_obj, &s_float);
+    x->x_outlet2 = outlet_new(&x->x_obj, &s_float);
+    x->x_outlet3 = outlet_new(&x->x_obj, &s_float);
+    x->x_outlet4 = outlet_new(&x->x_obj, &s_float);
+    pd_bind(&x->x_obj.ob_pd, mouseclick_sym);
+    return (x);
+}
+
+static void mouseclick_list(t_mouseclick *x, t_symbol *s, int argc,
+    t_atom *argv)
+{
+    outlet_float(x->x_outlet4, atom_getfloatarg(3, argc, argv));
+    outlet_float(x->x_outlet3, atom_getfloatarg(2, argc, argv));
+    outlet_float(x->x_outlet2, atom_getfloatarg(1, argc, argv));
+    outlet_float(x->x_outlet1, atom_getfloatarg(0, argc, argv));
+}
+
+static void mouseclick_free(t_mouseclick *x)
+{
+    pd_unbind(&x->x_obj.ob_pd, mouseclick_sym);
+}
+
+typedef struct _mousewheel
+{
+    t_object x_obj;
+} t_mousewheel;
+
+static void *mousewheel_new( void)
+{
+    t_mousewheel *x = (t_mousewheel *)pd_new(mousewheel_class);
+    outlet_new(&x->x_obj, &s_float);
+    pd_bind(&x->x_obj.ob_pd, mousewheel_sym);
+    return (x);
+}
+
+static void mousewheel_float(t_mousewheel *x, t_floatarg f)
+{
+    outlet_float(x->x_obj.ob_outlet, f);
+}
+
+static void mousewheel_free(t_mousewheel *x)
+{
+    pd_unbind(&x->x_obj.ob_pd, mousewheel_sym);
+}
+
+static void mouse_setup(void)
+{
+    mousemotion_class = class_new(gensym("mousemotion"),
+        (t_newmethod)mousemotion_new, (t_method)mousemotion_free,
+        sizeof(t_mousemotion), CLASS_NOINLET, 0);
+    class_addlist(mousemotion_class, mousemotion_list);
+    mousemotion_sym = gensym("#mousemotion");
+
+    mouseclick_class = class_new(gensym("mouseclick"),
+        (t_newmethod)mouseclick_new, (t_method)mouseclick_free,
+        sizeof(t_mouseclick), CLASS_NOINLET, 0);
+    class_addlist(mouseclick_class, mouseclick_list);
+    mouseclick_sym = gensym("#mouseclick");
+
+    mousewheel_class = class_new(gensym("mousewheel"),
+        (t_newmethod)mousewheel_new, (t_method)mousewheel_free,
+        sizeof(t_mousewheel), CLASS_NOINLET, 0);
+    class_addfloat(mousewheel_class, mousewheel_float);
+    mousewheel_sym = gensym("#mousewheel");
+}
+
 /* -------------------------- setup routine ------------------------------ */
 
 void x_gui_setup(void)
@@ -486,6 +613,7 @@ void x_gui_setup(void)
     openpanel_setup();
     savepanel_setup();
     key_setup();
+    mouse_setup();
     // jsarlo
     magicGlass_setup();
     // end jsarlo

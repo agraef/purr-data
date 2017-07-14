@@ -3756,11 +3756,29 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     }
 }
 
+   // Dispatch mouseclick message to receiver (for legacy mouse event externals)
+void canvas_dispatch_mouseclick(t_float down, t_float xpos, t_float ypos,
+    t_float which)
+{
+    t_symbol *mouseclicksym = gensym("#mouseclick");
+    if (mouseclicksym->s_thing)
+    {
+        t_atom at[4];
+        SETFLOAT(at, down);
+        SETFLOAT(at+1, which);
+        SETFLOAT(at+2, xpos);
+        SETFLOAT(at+3, ypos);
+        pd_list(mouseclicksym->s_thing, &s_list, 4, at);
+    }
+}
+
 void canvas_mousedown(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
     t_floatarg which, t_floatarg mod)
 {
     //fprintf(stderr,"canvas_mousedown %d\n", x->gl_editor->e_onmotion);
     canvas_doclick(x, xpos, ypos, which, mod, 1);
+    // now dispatch to any listeners
+    canvas_dispatch_mouseclick(1., xpos, ypos, which);
 }
 
 int canvas_isconnected (t_canvas *x, t_text *ob1, int n1,
@@ -4770,6 +4788,8 @@ void canvas_mouseup(t_canvas *x,
     if (canvas_last_glist_mod == -1)
         canvas_doclick(x, xpos, ypos, 0,
             (glob_shift + glob_ctrl*2 + glob_alt*4), 0);
+    // now dispatch to any click listeners
+    canvas_dispatch_mouseclick(0., xpos, ypos, which);
 }
 
 /* Cheap hack to simulate mouseup at the last x/y coord. We use this in
@@ -5150,6 +5170,7 @@ extern void graph_checkgop_rect(t_gobj *z, t_glist *glist,
 void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
     t_floatarg fmod)
 {
+    static t_symbol *mousemotionsym;
     //fprintf(stderr,"motion %d %d %d %d\n",
     //    (int)xpos, (int)ypos, (int)fmod, canvas_last_glist_mod);
     //fprintf(stderr,"canvas_motion=%d\n",x->gl_editor->e_onmotion);
@@ -5312,6 +5333,16 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
     //        x, (int)xpos, (int)ypos);
     //}
     x->gl_editor->e_lastmoved = 1;
+    // Dispatch to any listeners for the motion message
+    if (!mousemotionsym)
+        mousemotionsym = gensym("#mousemotion");
+    if (mousemotionsym->s_thing)
+    {
+        t_atom at[2];
+        SETFLOAT(at, xpos);
+        SETFLOAT(at+1, ypos);
+        pd_list(mousemotionsym->s_thing, &s_list, 2, at);
+    }
 }
 
 void canvas_startmotion(t_canvas *x)
