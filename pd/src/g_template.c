@@ -7836,16 +7836,8 @@ t_template *canvas_findtemplate(t_canvas *c)
     t_symbol *s1 = gensym("struct");
     for (g = c->gl_list; g; g = g->g_next)
     {
-        t_object *ob = pd_checkobject(&g->g_pd);
-        t_atom *argv;
-        if (!ob || ob->te_type != T_OBJECT ||
-        binbuf_getnatom(ob->te_binbuf) < 2)
-        continue;
-        argv = binbuf_getvec(ob->te_binbuf);
-        if (argv[0].a_type != A_SYMBOL || argv[1].a_type != A_SYMBOL
-        || argv[0].a_w.w_symbol != s1)
-              continue;
-        return (template_findbyname(canvas_makebindsym(argv[1].a_w.w_symbol)));
+        if (pd_class(&g->g_pd) == gtemplate_class)
+            return ((t_gtemplate *)g)->x_template;
     }
     return 0;
 }
