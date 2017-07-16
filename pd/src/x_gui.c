@@ -564,19 +564,27 @@ static void mouseclick_free(t_mouseclick *x)
 typedef struct _mousewheel
 {
     t_object x_obj;
+    t_outlet *x_outlet1;
+    t_outlet *x_outlet2;
+    t_outlet *x_outlet3;
 } t_mousewheel;
 
 static void *mousewheel_new( void)
 {
     t_mousewheel *x = (t_mousewheel *)pd_new(mousewheel_class);
-    outlet_new(&x->x_obj, &s_float);
+    x->x_outlet1 = outlet_new(&x->x_obj, &s_float);
+    x->x_outlet2 = outlet_new(&x->x_obj, &s_float);
+    x->x_outlet3 = outlet_new(&x->x_obj, &s_float);
     pd_bind(&x->x_obj.ob_pd, mousewheel_sym);
     return (x);
 }
 
-static void mousewheel_float(t_mousewheel *x, t_floatarg f)
+static void mousewheel_list(t_mousewheel *x, t_symbol *s, int argc,
+    t_atom *argv)
 {
-    outlet_float(x->x_obj.ob_outlet, f);
+    outlet_float(x->x_outlet3, atom_getfloatarg(2, argc, argv));
+    outlet_float(x->x_outlet2, atom_getfloatarg(1, argc, argv));
+    outlet_float(x->x_outlet1, atom_getfloatarg(0, argc, argv));
 }
 
 static void mousewheel_free(t_mousewheel *x)
@@ -601,7 +609,7 @@ static void mouse_setup(void)
     mousewheel_class = class_new(gensym("mousewheel"),
         (t_newmethod)mousewheel_new, (t_method)mousewheel_free,
         sizeof(t_mousewheel), CLASS_NOINLET, 0);
-    class_addfloat(mousewheel_class, mousewheel_float);
+    class_addfloat(mousewheel_class, mousewheel_list);
     mousewheel_sym = gensym("#mousewheel");
 }
 
