@@ -768,7 +768,7 @@ var canvas_events = (function() {
         // Send a message on to Pd for the [mousewheel] legacy object
         // (in the future we can refcount if we want to prevent forwarding
         // these messages when there's no extant receiver)
-        pdgui.pdsend(name, "mousewheel", d.deltaX, d.deltaY, d.deltaZ);
+        pdgui.pdsend(name, "legacy_mousewheel", d.deltaX, d.deltaY, d.deltaZ);
     });
 
     // The following is commented out because we have to set the

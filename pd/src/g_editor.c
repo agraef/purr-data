@@ -3760,7 +3760,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
 void canvas_dispatch_mouseclick(t_float down, t_float xpos, t_float ypos,
     t_float which)
 {
-    t_symbol *mouseclicksym = gensym("#mouseclick");
+    t_symbol *mouseclicksym = gensym("#legacy_mouseclick");
     if (mouseclicksym->s_thing)
     {
         t_atom at[4];
@@ -3784,7 +3784,7 @@ void canvas_mousedown(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
 void canvas_mousewheel(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
     t_floatarg zpos)
 {
-    t_symbol *mousewheelsym = gensym("#mousewheel");
+    t_symbol *mousewheelsym = gensym("#legacy_mousewheel");
     if (mousewheelsym->s_thing)
     {
         t_atom at[3];
@@ -5349,7 +5349,7 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
     x->gl_editor->e_lastmoved = 1;
     // Dispatch to any listeners for the motion message
     if (!mousemotionsym)
-        mousemotionsym = gensym("#mousemotion");
+        mousemotionsym = gensym("#legacy_mousemotion");
     if (mousemotionsym->s_thing)
     {
         t_atom at[2];
@@ -7597,7 +7597,7 @@ void g_editor_setup(void)
     class_addmethod(canvas_class, (t_method)canvas_mousedown_middle,
         gensym("mouse-2"), A_FLOAT, A_FLOAT, A_FLOAT, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_mousewheel,
-        gensym("mousewheel"), A_FLOAT, A_FLOAT, A_FLOAT, A_NULL);
+        gensym("legacy_mousewheel"), A_FLOAT, A_FLOAT, A_FLOAT, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_key, gensym("key"),
         A_GIMME, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_motion, gensym("motion"),

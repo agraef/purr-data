@@ -594,23 +594,23 @@ static void mousewheel_free(t_mousewheel *x)
 
 static void mouse_setup(void)
 {
-    mousemotion_class = class_new(gensym("mousemotion"),
+    mousemotion_class = class_new(gensym("legacy_mousemotion"),
         (t_newmethod)mousemotion_new, (t_method)mousemotion_free,
         sizeof(t_mousemotion), CLASS_NOINLET, 0);
     class_addlist(mousemotion_class, mousemotion_list);
-    mousemotion_sym = gensym("#mousemotion");
+    mousemotion_sym = gensym("#legacy_mousemotion");
 
-    mouseclick_class = class_new(gensym("mouseclick"),
+    mouseclick_class = class_new(gensym("legacy_mouseclick"),
         (t_newmethod)mouseclick_new, (t_method)mouseclick_free,
         sizeof(t_mouseclick), CLASS_NOINLET, 0);
     class_addlist(mouseclick_class, mouseclick_list);
-    mouseclick_sym = gensym("#mouseclick");
+    mouseclick_sym = gensym("#legacy_mouseclick");
 
-    mousewheel_class = class_new(gensym("mousewheel"),
+    mousewheel_class = class_new(gensym("legacy_mousewheel"),
         (t_newmethod)mousewheel_new, (t_method)mousewheel_free,
         sizeof(t_mousewheel), CLASS_NOINLET, 0);
     class_addfloat(mousewheel_class, mousewheel_list);
-    mousewheel_sym = gensym("#mousewheel");
+    mousewheel_sym = gensym("#legacy_mousewheel");
 }
 
 /* -------------------------- setup routine ------------------------------ */
