@@ -843,6 +843,26 @@ void pdinfo_libdir(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
     info_out((t_text *)x, s, 1, at);
 }
 
+void pdinfo_platform(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_atom at[1];
+    t_symbol *p = gensym("unknown");
+#ifdef __APPLE__
+    p = gensym("darwin");
+#endif
+#ifdef __FreeBSD__
+    p = gensym("freebsd");
+#endif
+#ifdef _WIN32
+    p = gensym("win32");
+#endif
+#ifdef __linux__
+    p = gensym("linux");
+#endif
+    SETSYMBOL(at, p);
+    info_out((t_text *)x, s, 1, at);
+}
+
 void pdinfo_version(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     int major=0, minor=0, bugfix=0;
@@ -930,6 +950,8 @@ void pdinfo_setup(void)
         gensym("midi-outdev"), A_GIMME, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_midi_listdevs,
         gensym("midi-outdevlist"), A_GIMME, 0);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_platform,
+        gensym("platform"), A_GIMME, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_audio_samplerate,
         gensym("samplerate"), A_GIMME, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_version,
