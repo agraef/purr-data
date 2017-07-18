@@ -751,13 +751,24 @@ var canvas_events = (function() {
 
     // MouseWheel event for zooming
     document.addEventListener("wheel", function(evt) {
-        if (pdgui.cmd_or_ctrl_key(evt)) {
-            if (evt.deltaY < 0) {
-                nw_window_zoom(name, +1);
-            } else if (evt.deltaY > 0) {
-                nw_window_zoom(name, -1);
+        var d = { deltaX: 0, deltaY: 0, deltaZ: 0 };
+        Object.keys(d).forEach(function(key) {
+            if (evt[key] < 0) {
+                d[key] = -1;
+            } else if (evt[key] > 0) {
+                d[key] = 1;
+            } else {
+                d[key] = 0;
             }
+        });
+        if (pdgui.cmd_or_ctrl_key(evt)) {
+            // scroll up for zoom-in, down for zoom-out
+            nw_window_zoom(name, -d.deltaY);
         }
+        // Send a message on to Pd for the [mousewheel] legacy object
+        // (in the future we can refcount if we want to prevent forwarding
+        // these messages when there's no extant receiver)
+        pdgui.pdsend(name, "legacy_mousewheel", d.deltaX, d.deltaY, d.deltaZ);
     });
 
     // The following is commented out because we have to set the

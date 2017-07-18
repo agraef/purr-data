@@ -6,7 +6,7 @@ LIBRARY_NAME = hcs
 # add your .c source files, one object per file, to the SOURCES
 # variable, help files will be included automatically, and for GUI
 # objects, the matching .tcl file too
-SOURCES = canvas_name.c ce_path.c classpath.c colorpanel.c cursor.c folder_list.c group.c helppath.c passwd.c screensize.c setenv.c split_path.c sql_query.c stat.c sys_gui.c uname.c unsetenv.c version.c window_name.c
+SOURCES = canvas_name.c ce_path.c classpath.c colorpanel.c folder_list.c group.c helppath.c passwd.c screensize.c setenv.c split_path.c sql_query.c stat.c sys_gui.c uname.c unsetenv.c version.c window_name.c
 
 # For objects that only build on certain platforms, add those to the SOURCES
 # line for the right platforms.
@@ -14,7 +14,7 @@ SOURCES_linux = ifeel.c
 
 # list all pd objects (i.e. myobject.pd) files here, and their helpfiles will
 # be included automatically
-PDOBJECTS = ISOdate.pd ISOtime.pd ascii2int.pd autoscale.pd blocksize_in_ms.pd debounce.pd debug.pd embed.pd file_type.pd float2ascii.pd get-audio-dialog.pd get-midi-dialog.pd gid2group_name.pd group_name2gid.pd hostname.pd make-audio-dialog.pd mouse_region.pd noquit.pd pi.pd pointer_position.pd pwm.pd pwm~.pd split_my_msgs.pd square~.pd tcl_version.pd tkconsole.pd tremolo~.pd uid2username.pd username2uid.pd
+PDOBJECTS = ISOdate.pd ISOtime.pd ascii2int.pd autoscale.pd blocksize_in_ms.pd debounce.pd debug.pd embed.pd file_type.pd float2ascii.pd get-audio-dialog.pd get-midi-dialog.pd gid2group_name.pd group_name2gid.pd hostname.pd make-audio-dialog.pd mouse_region.pd noquit.pd pi.pd pointer_position.pd pwm.pd pwm~.pd split_my_msgs.pd square~.pd tcl_version.pd tkconsole.pd tremolo~.pd uid2username.pd username2uid.pd cursor.pd
 
 # example patches and related files, in the 'examples' subfolder
 EXAMPLES = changing_the_colors.pd move_pd_window.pd cursor.gif

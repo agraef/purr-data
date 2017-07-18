@@ -1,13 +1,13 @@
-#N canvas 1 88 659 523 10;
-#X obj 388 293 pddp/pddplink http://tcl.tk/man/tcl8.5/TkCmd/cursors.htm
+#N canvas 226 35 659 617 10;
+#X obj 388 333 pddp/pddplink http://tcl.tk/man/tcl8.5/TkCmd/cursors.htm
 ;
-#X text 273 276 Here's a complete list of the available cursors:;
-#X msg 441 124 dot;
-#X msg 518 124 gumby;
-#X msg 561 124 gobbler;
-#X msg 370 124 coffee_mug;
-#X msg 471 124 pirate;
-#X msg 42 44 runmode_nothing;
+#X text 273 316 Here's a complete list of the available cursors:;
+#X msg 441 164 dot;
+#X msg 518 164 gumby;
+#X msg 561 164 gobbler;
+#X msg 370 164 coffee_mug;
+#X msg 471 164 pirate;
+#X msg 42 84 runmode_nothing;
 #N canvas 0 22 462 312 make 0;
 #X obj 95 9 inlet;
 #X obj 114 258 outlet;
@@ -25,46 +25,46 @@
 #X connect 6 0 7 0;
 #X connect 7 0 1 0;
 #X connect 7 1 1 0;
-#X restore 169 205 pd make message;
-#X msg 59 63 runmode_clickme;
-#X msg 75 82 runmode_thicken;
-#X msg 92 101 runmode_addpoint;
-#X msg 110 120 editmode_nothing;
-#X obj 169 266 cursor;
-#X text 342 238 <-- this is the actual message to send;
-#X text 15 18 set your mouse cursors for this patch:;
-#X text 279 309 Here are some pictures of the cursors:;
-#X obj 387 325 pddp/pddplink http://www.lehigh.edu/~sol0/ptk/cursors.gif
+#X restore 169 245 pd make message;
+#X msg 59 103 runmode_clickme;
+#X msg 75 122 runmode_thicken;
+#X msg 92 141 runmode_addpoint;
+#X msg 110 160 editmode_nothing;
+#X obj 169 306 cursor;
+#X text 342 278 <-- this is the actual message to send;
+#X text 15 58 set your mouse cursors for this patch:;
+#X text 279 349 Here are some pictures of the cursors:;
+#X obj 387 365 pddp/pddplink http://www.lehigh.edu/~sol0/ptk/cursors.gif
 ;
-#X msg 126 139 editmode_connect;
-#X msg 143 158 editmode_disconnect;
-#X msg 169 239 editmode_disconnect arrow;
-#X text 290 55 first pick a cursor:;
-#X text 189 80 <-- then choose your cursor mode;
-#X obj 46 390 cursor;
-#X msg 55 367 bang;
-#X obj 46 448 route x y;
-#X floatatom 33 472 5 0 0 0 x - -;
-#X floatatom 71 472 5 0 0 1 y - -;
-#X obj 46 342 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X msg 126 179 editmode_connect;
+#X msg 143 198 editmode_disconnect;
+#X msg 169 279 editmode_disconnect arrow;
+#X text 290 95 first pick a cursor:;
+#X text 189 120 <-- then choose your cursor mode;
+#X obj 46 480 cursor;
+#X msg 55 447 bang;
+#X obj 46 538 route x y;
+#X floatatom 33 562 5 0 0 0 x - -, f 5;
+#X floatatom 71 562 5 0 0 1 y - -, f 5;
+#X obj 46 382 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X floatatom 135 488 5 0 0 1 mousewheel - -;
-#X obj 46 414 route motion mousewheel button;
-#X text 65 339 turn on to get mouse motion and buttons;
-#X obj 164 440 route 1 2 3;
-#X obj 164 460 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X floatatom 135 578 5 0 0 1 mousewheel - -, f 5;
+#X obj 46 504 route motion mousewheel button;
+#X text 65 379 turn on to get mouse motion and buttons;
+#X obj 164 530 route 1 2 3;
+#X obj 164 550 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X obj 185 460 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj 185 550 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X obj 206 460 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj 206 550 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X text 227 459 <-- mouse buttons;
-#X text 86 366 or bang to get the current mouse position;
+#X text 227 549 <-- mouse buttons;
+#X text 86 446 or bang to get the current mouse position;
 #N canvas 583 22 481 747 image 0;
 #X obj 240 373 moonlib/image examples/cursor.gif 0;
-#X restore 509 309 pd image of all cursors;
-#X msg 328 124 clock;
-#X msg 288 124 arrow;
+#X restore 509 349 pd image of all cursors;
+#X msg 328 164 clock;
+#X msg 288 164 arrow;
 #N canvas 413 246 494 344 META 0;
 #X text 12 155 HELP_PATCH_AUTHORS "pd meta" information added by Jonathan
 Wilkes for Pd version 0.42.;
@@ -76,7 +76,17 @@ runmode_addpoint editmode_nothing editmode_connect editmode_disconnect
 ;
 #X text 12 115 OUTLET_0;
 #X text 12 5 KEYWORDS control canvas-op user_input;
-#X restore 600 498 pd META;
+#X restore 600 588 pd META;
+#X text 18 8 Note: this is a Purr Data convenience abstraction to support
+the mouse events [cursor] provides. Currently custom cursors don't
+work in Purr Data.;
+#X text 77 398 Purr Data Note: the [cursor] convenience abstraction
+still receives mouse motion data even when the toggle is off. It just
+doesn't forward it to the outlet.;
+#X text 250 492 Purr Data note: motion x/y coordinates are not screen
+coordinates but the coordinates of the mouse on the current canvas.
+You can get something close to screen coordinates by displaying the
+current canvas in full screen mode.;
 #X connect 2 0 8 1;
 #X connect 3 0 8 1;
 #X connect 4 0 8 1;
