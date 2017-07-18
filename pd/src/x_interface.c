@@ -863,6 +863,23 @@ void pdinfo_platform(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
     info_out((t_text *)x, s, 1, at);
 }
 
+void pdinfo_arch(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_atom at[1];
+    t_symbol *a = gensym("unknown");
+#ifdef __i386__
+    a = gensym("ia32");
+#endif
+#ifdef __x86_64__
+    a = gensym("x64");
+#endif
+#ifdef __arm__
+    a = gensym("arm");
+#endif
+    SETSYMBOL(at, a);
+    info_out((t_text *)x, s, 1, at);
+}
+
 void pdinfo_version(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     int major=0, minor=0, bugfix=0;
@@ -902,6 +919,8 @@ void pdinfo_setup(void)
         sizeof(t_pdinfo),
         CLASS_DEFAULT, 0);
 
+    class_addmethod(pdinfo_class, (t_method)pdinfo_arch,
+        gensym("arch"), A_GIMME, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_audio_api,
         gensym("audio-api"), A_DEFFLOAT, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_audio_apilist,
