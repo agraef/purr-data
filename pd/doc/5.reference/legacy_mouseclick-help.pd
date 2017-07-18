@@ -1,0 +1,88 @@
+#N canvas 224 25 555 619 10;
+#X obj 0 585 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header legacy_mouseclick
+3 12 0 18 -204280 -1 0;
+#X obj 0 307 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 487 278 494 344 META 0;
+#X text 12 145 LIBRARY internal;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 65 OUTLET_0 float;
+#X text 12 5 KEYWORDS control user_input legacy;
+#X text 12 45 DESCRIPTION get window x/y coordinates from the mouse
+;
+#X text 12 85 OUTLET_1 float;
+#X text 12 165 AUTHOR Jonathan Wilkes;
+#X text 12 185 HELP_PATCH_AUTHORS Jonathan Wilkes;
+#X text 12 105 OUTLET_2 float;
+#X text 12 125 OUTLET_3 float;
+#X restore 500 587 pd META;
+#X obj 0 335 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 475 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 513 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 222 479 428 145 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 19 72 Externals and other object libraries;
+#X obj 18 94 pddp/helplink Gem/gemkeyboard;
+#X obj 18 114 pddp/helplink Gem/gemkeyname;
+#X obj 141 42 legacy_mousewheel;
+#X text 7 1 [legacy_mousemotion] Related Objects;
+#X obj 21 42 legacy_mousemotion;
+#X restore 102 588 pd Related_objects;
+#X text 98 343 float;
+#X obj 78 344 cnv 17 3 30 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 311 (none);
+#X floatatom 122 230 5 0 0 0 x - -, f 5;
+#X obj 4 587 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X text 63 114 The interface for this object isn't stable. Don't depend
+on it for building stable abstractions. Instead use the mouse-related
+methods to [draw] with data structures for a better mouse event interface.
+;
+#X floatatom 155 210 5 0 0 0 y - -, f 5;
+#X text 195 211 These coordinates are relative to the canvas window
+;
+#X text 195 231 With the current Purr Data GUI there isn't an easy
+;
+#X text 195 247 way to get the screen coordinates. But for legacy;
+#X text 195 262 externals this should be good enough.;
+#X text 168 311 - input comes directly from the mouse events in the
+GUI.;
+#X text 98 374 float;
+#X obj 78 375 cnv 17 3 30 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 479 (none);
+#X text 99 517 Unfortunately this object only returns coordinates when
+the mouse is hovering over a canvas window. To simulate something close
+to screen coordinates \, put the current canvas into full-screen mode
+from the "View" menu.;
+#X obj 56 183 legacy_mouseclick;
+#X floatatom 89 257 5 0 0 1 button_id - -, f 5;
+#X floatatom 56 278 5 0 0 1 0=up/1=down - -, f 5;
+#X text 63 54 This is a convenience class that generates output when
+the mouse is clicked on a Pd canvas. It is used to provide output for
+some old legacy externals from Pd-extended.;
+#X text 98 405 float;
+#X obj 78 406 cnv 17 3 30 empty \$0-pddp.cnv.let.0 2 5 9 0 16 -228856
+-162280 0;
+#X text 168 405 - x coordinate for the canvas window over which the
+mouse is currently hovering.;
+#X text 98 436 float;
+#X obj 78 437 cnv 17 3 30 empty \$0-pddp.cnv.let.0 3 5 9 0 16 -228856
+-162280 0;
+#X text 168 436 - y coordinate for the canvas window over which the
+mouse is currently hovering.;
+#X text 168 343 - 0 = mouseup \, 1 = mousedown;
+#X text 168 374 - id of the button clicked. 1 = left click \, 2 = middle
+button \, 3 = right click. (Note: may be platform specific);
+#X text 11 23 mouse button notification on current canvas;
+#X connect 24 0 26 0;
+#X connect 24 1 25 0;
+#X connect 24 2 11 0;
+#X connect 24 3 14 0;
