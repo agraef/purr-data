@@ -833,18 +833,13 @@ void pdinfo_gui(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
     info_out((t_text *)x, s, 1, at);
 }
 
-/* note: this might be wrong.  Not sure whether "libdir" means
-   something like /usr/lib/pd or the path where all the libdir externals
-   live-- i.e., /usr/lib/pd/extra */
+/* directory where extra and doc are found. Might also want to add
+   another method to return a list of all paths searched for libs-- i.e.,
+   "extrapath". */
 void pdinfo_libdir(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_atom at[1];
-    t_symbol *nsym;
-    t_namelist *nl = pd_extrapath;
-    while (nl->nl_next)
-        nl = nl->nl_next;
-    nsym = gensym(nl->nl_string);
-    SETSYMBOL(at, nsym);
+    SETSYMBOL(at, sys_libdir);
     info_out((t_text *)x, s, 1, at);
 }
 
