@@ -83,28 +83,29 @@ static void prepend_ascii_free(t_prepend_ascii *x)
 
 static void *prepend_ascii_new(t_symbol *s, int ac, t_atom *av)
 {
+  t_atom dummy;
   if((ac <= 0) || (!IS_A_FLOAT(av,0)))
   {
-    post("ERROR: prepend_ascii need a float between 1 and 255 as 1. arg. !!!");
-    return(0);
+    post("WARNING: prepend_ascii need a float between 1 and 255 as "
+         "the 1st arg. Defaulting to 97 (a)");
+    SETFLOAT(&dummy, 97.);
+    av = &dummy;
+    ac = 1;
   }
-  else
-  {
-    t_prepend_ascii *x = (t_prepend_ascii *)pd_new(prepend_ascii_class);
-    char str[2];
-    int i;
+  t_prepend_ascii *x = (t_prepend_ascii *)pd_new(prepend_ascii_class);
+  char str[2];
+  int i;
     
-    x->x_size = 10 + ac;
-    x->x_at = (t_atom *)getbytes(x->x_size * sizeof(t_atom));
-    str[0] = (char)((int)(atom_getfloatarg(0,ac,av))&0xff);
-    str[1] = 0;
-    x->x_sym = gensym(str);
-    x->x_ac = ac - 1;
-    for(i=1; i<ac; i++)
-      x->x_at[i-1] = av[i];
-    outlet_new(&x->x_obj, &s_list);
-    return (x);
-  }
+  x->x_size = 10 + ac;
+  x->x_at = (t_atom *)getbytes(x->x_size * sizeof(t_atom));
+  str[0] = (char)((int)(atom_getfloatarg(0,ac,av))&0xff);
+  str[1] = 0;
+  x->x_sym = gensym(str);
+  x->x_ac = ac - 1;
+  for(i=1; i<ac; i++)
+    x->x_at[i-1] = av[i];
+  outlet_new(&x->x_obj, &s_list);
+  return (x);
 }
 
 void prepend_ascii_setup(void)

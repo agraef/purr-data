@@ -54,7 +54,6 @@ void parentdollarzero_setup(void)
 {
   parentdollarzero_class = class_new(gensym("parentdollarzero"), (t_newmethod)parentdollarzero_new,
            0, sizeof(t_parentdollarzero), 0, 0);
-  class_addcreator((t_newmethod)parentdollarzero_new, gensym("parent$0"), 0);
   class_addbang(parentdollarzero_class, (t_method)parentdollarzero_bang);
 //  class_sethelpsymbol(parentdollarzero_class, gensym("iemhelp/help-parentdollarzero"));
 }
