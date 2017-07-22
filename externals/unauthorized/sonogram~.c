@@ -2200,8 +2200,23 @@ static void *sonogram_new(t_floatarg fsize, t_floatarg fgraphic, t_floatarg fpha
 
     if ( fsize <= 0 || ( fgraphic != 0 && fgraphic != 1 ) || ( fphaso != 0 && fphaso != 1 ) )
     {
-        error( "sonogram~ : missing or negative creation arguments" );
-        return NULL;
+        post( "sonogram~ : warning : creation arguments out of range" );
+        if ( fsize <= 0 )
+        {
+            post( "argument 1 defaulting to 1" );
+            fsize = 1.;
+        }
+        if ( fgraphic != 0 && fgraphic != 1 )
+        {
+            post( "argument 2 defaulting to 0" );
+            fgraphic = 0.;
+        }
+        if ( fphaso != 0 && fphaso != 1 )
+        {
+            post( "argument 3 defaulting to 0" );
+            fphaso = 0.;
+        }
+
     }
 
     // activate graphical callbacks

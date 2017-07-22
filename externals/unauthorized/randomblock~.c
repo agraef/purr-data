@@ -62,10 +62,16 @@ static void *randomblock_new(t_float flimit)
     t_randomblock *x = (t_randomblock *)pd_new(randomblock_class);
     outlet_new(&x->x_obj, &s_signal);
     inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_float, gensym("limit"));
-    if ( flimit <= 0 || flimit > RAND_MAX )
+    if ( flimit <= 0 )
     {
-        post( "randomblock~: wrong creation argument" );
-        return NULL;
+        post( "randomblock~: warning : argument too small : defaulting to 1" );
+        flimit = 1;
+    }
+    else if ( flimit > RAND_MAX )
+    {
+        post( "randomblock~: warning : argument too large : defaulting to %d",
+              RAND_MAX );
+        flimit = (t_float)RAND_MAX;
     }
     x->x_limit = (int) flimit;
     return(x);
