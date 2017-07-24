@@ -315,14 +315,27 @@ static void *pvoc_new(t_symbol *s, int argc, t_atom *argv)
 {
 	t_pvoc *x = (t_pvoc *)pd_new(pvoc_class);
 	int i;
+        t_atom sane_defaults[3];
 
 	inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_signal, &s_signal);	// pitch-shift inlet
 	outlet_new(&x->x_obj, gensym("signal"));
 
 	if (argc != 3) {
+            if (!argc)
+            {
+                post("partconv~: warning: no arguments given");
+                SETSYMBOL(sane_defaults, &s_);
+                SETFLOAT(sane_defaults+1, 2.);
+                SETFLOAT(sane_defaults+2, 2.);
+                argc = 3;
+                argv = sane_defaults;
+            }
+            else
+            {
 		post("argc = %d", argc);
 		error("pvoc~: usage: [pvoc~ <arrayname> <fftsize> <overlap>]");
 		return NULL;
+            }
 	}
 
 	x->fftsize = atom_getfloatarg(1, argc, argv);
