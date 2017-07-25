@@ -55,7 +55,6 @@ void Clip_tilde_setup(void)
     clip_class = class_new(gensym("Clip~"),
 			   (t_newmethod)clip_new, 0,
 			   sizeof(t_clip), 0, A_GIMME, 0);
-    class_addcreator((t_newmethod)clip_new, gensym("clip~"), A_GIMME, 0);
     class_addcreator((t_newmethod)clip_new, gensym("cyclone/clip~"), A_GIMME, 0);
     sic_setup(clip_class, clip_dsp, SIC_FLOATTOSIGNAL);
 }

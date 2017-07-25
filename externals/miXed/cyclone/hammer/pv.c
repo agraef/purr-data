@@ -395,9 +395,16 @@ static void pv_free(t_pv *x)
 static void *pv_new(t_symbol *s, int ac, t_atom *av)
 {
     t_pv *x = 0;
+    t_atom sane_default;
     if (ac && av->a_type == A_SYMBOL)
 	s = av->a_w.w_symbol;
-    else s = 0;
+    else
+    {
+        post("pv: warning: no symbol argument provided: defaulting to 'dummy'");
+        SETSYMBOL(&sane_default, gensym("dummy"));
+        ac = 1;
+        av = &sane_default;
+    }
     if (s && s != &s_)
     {
 	t_glist *gl = canvas_getcurrent();
