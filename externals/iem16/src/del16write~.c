@@ -13,7 +13,7 @@
 /* ----------------------------- del16write~ ----------------------------- */
 
 /* routine to check that all del16writes/del16reads/vds have same vecsize */
-void sigdel16write_checkvecsize(t_sigdel16write *x, int vecsize){
+static void sigdel16write_checkvecsize(t_sigdel16write *x, int vecsize){
   if (x->x_rsortno != ugen_getsortno())    {
     x->x_vecsize = vecsize;
     x->x_rsortno = ugen_getsortno();

@@ -19,6 +19,20 @@ typedef struct _sig16vd{
   float x_f;
 } t_sig16vd;
 
+
+/* routine to check that all del16writes/del16reads/vds have same vecsize */
+/* copied from del16write~.c so that there's no dependency on del16write~
+   existing before we instantiate an object from this class. (Also because
+   I don't feel like adding and bugfixing a shared library across platforms */
+static void sigdel16write_checkvecsize(t_sigdel16write *x, int vecsize){
+  if (x->x_rsortno != ugen_getsortno())    {
+    x->x_vecsize = vecsize;
+    x->x_rsortno = ugen_getsortno();
+  }
+  else if (vecsize != x->x_vecsize)
+    pd_error(x, "del16read/del16write/vd vector size mismatch");
+}
+
 static void *sig16vd_new(t_symbol *s){
   t_sig16vd *x = (t_sig16vd *)pd_new(sig16vd_class);
   if (!*s->s_name) s = gensym("vd~");

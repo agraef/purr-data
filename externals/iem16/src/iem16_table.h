@@ -27,8 +27,8 @@ typedef struct _table16 {
 } t_table16;
 
 
-EXTERN int table16_getarray16(t_table16*x, int*size,t_iem16_16bit**vec);
-EXTERN void table16_usedindsp(t_table16*x);
+//EXTERN int table16_getarray16(t_table16*x, int*size,t_iem16_16bit**vec);
+//EXTERN void table16_usedindsp(t_table16*x);
 
 
 

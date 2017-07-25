@@ -8,6 +8,17 @@
 
 #include "iem16_table.h"
 
+/* the following two functions are copied from table16.c so that each class can
+   be instantiated without a dependency on table16 already existing */
+static int table16_getarray16(t_table16*x, int*size,t_iem16_16bit**vec){
+  *size=x->x_size;
+  *vec =x->x_table;
+  return 1;
+}
+
+static void table16_usedindsp(t_table16*x){
+  x->x_usedindsp=1;
+}
 
 /* ------------ tab16play~ - non-transposing sample playback --------------- */
 
