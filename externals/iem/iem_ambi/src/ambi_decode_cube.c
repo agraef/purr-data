@@ -695,6 +695,19 @@ static void *ambi_decode_cube_new(t_symbol *s, int argc, t_atom *argv)
 	t_ambi_decode_cube *x = (t_ambi_decode_cube *)pd_new(ambi_decode_cube_class);
 	int nls, order, dim, i;
 	int nphls=0;/* phantom_loudspeaker */
+        t_atom sane_defaults[3];
+
+        if(!argc)
+        {
+                post("ambi_decode_cube: warning: no arguments provided: "
+                     "setting to [ambi_decode_cube 1 2 1]");
+                SETFLOAT(sane_defaults, 1.);
+                SETFLOAT(sane_defaults+1, 2.);
+                SETFLOAT(sane_defaults+2, 1.);
+                argc = 3;
+                argv = sane_defaults;
+        }
+
 
 	if(argc < 3)
 	{

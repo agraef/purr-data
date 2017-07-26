@@ -662,6 +662,19 @@ static void *ambi_decode3_new(t_symbol *s, int argc, t_atom *argv)
 	int order, dim, i;
 	int n_real_ls=0;/* number of loudspeakers */
 	int n_pht_ls=0;/* number of phantom_loudspeakers */
+        t_atom sane_defaults[4];
+
+        if(!argc)
+        {
+                post("ambi_decode3: warning: no arguments provided: setting to "
+                     "[ambi_decode3 1 2 1 0]");
+                SETFLOAT(sane_defaults, 1.);
+                SETFLOAT(sane_defaults+1, 2.);
+                SETFLOAT(sane_defaults+2, 1.);
+                SETFLOAT(sane_defaults+3, 0.);
+                argc = 4;
+                argv = sane_defaults;
+        }
 
 	if((argc >= 4) &&
 		IS_A_FLOAT(argv,0) &&
