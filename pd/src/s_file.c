@@ -268,6 +268,8 @@ static char *sys_prefbuf;
 // prefs is *much* faster now than with the previous method which invoked
 // 'defaults read' on each individual key.
 
+static int save_prefs_later = 0;
+
 static void sys_initloadpreferences(void)
 {
     char cmdbuf[MAXPDSTRING], *buf;
@@ -308,6 +310,8 @@ static void sys_initloadpreferences(void)
       // Read from the package defaults and write to the user prefs.
       prefs = default_prefs;
       strncpy(current_prefs, user_prefs, FILENAME_MAX);
+      // AG: Remember to save the prefs later after we loaded them (see below).
+      save_prefs_later = 1;
     }
     // This looks complicated, but is rather straightforward. The individual
     // stages of the pipe are:
@@ -405,6 +409,14 @@ static void sys_doneloadpreferences( void)
     if (sys_prefbuf)
         free(sys_prefbuf);
     sys_prefbuf = NULL;
+    if (save_prefs_later) {
+      // AG: We need to save the default prefs to the user prefs at this point
+      // in order to avoid losing them, in case the recent file list is written
+      // without first saving the defaults (fixes #339).
+      extern void glob_savepreferences(t_pd *dummy);
+      glob_savepreferences(NULL);
+      save_prefs_later = 0;
+    }
 }
 
 // AG: We use a similar approach here to import the data into the defaults
