@@ -470,9 +470,26 @@ static void *bin_ambi_calc_HRTF_new(t_symbol *s, int argc, t_atom *argv)
 	char buf[400];
 	int i, j, fftok;
 	int n_ls, fftsize;
-	t_symbol	*s_hrir;
-	t_symbol	*s_hrtf_re;
-	t_symbol	*s_hrtf_im;
+	t_symbol	*s_hrir = gensym("L_HRIR");
+	t_symbol	*s_hrtf_re = gensym("HRTF_re");
+	t_symbol	*s_hrtf_im = gensym("HRTF_im");
+        t_atom sane_defaults[6];
+
+        if(!argc)
+        {
+                post("bin_ambi_calc_HRTF: warning: no arguments provided: "
+                     "setting to [bin_ambi_calc_HRTF L_HRIR HRTF_re HRTF_im "
+                     "HRIR_win 1 512]");
+                SETSYMBOL(sane_defaults, s_hrir);
+                SETSYMBOL(sane_defaults+1, s_hrtf_re);
+                SETSYMBOL(sane_defaults+2, s_hrtf_im);
+                SETSYMBOL(sane_defaults+3, gensym("HRIR_win"));
+                SETFLOAT(sane_defaults+4, 1.);
+                SETFLOAT(sane_defaults+5, 512.);
+                argc = 6;
+                argv = sane_defaults;
+        }
+
 
 	if((argc >= 6) &&
 		IS_A_SYMBOL(argv,0) &&

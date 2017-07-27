@@ -1057,11 +1057,31 @@ static void *bin_ambi_reduced_decode_fir2_new(t_symbol *s, int argc, t_atom *arg
 	int n_order=0, n_dim=0, n_real_ls=0, n_pht_ls=0, n_ambi=0, firsize=0, prefix=0;
 	t_symbol	*s_hrir=gensym("L_HRIR");
 	t_symbol	*s_hrir_red=gensym("HRIR_red");
-  t_symbol  *s_fade_out_hrir=gensym("HRIR_win");
+	t_symbol  *s_fade_out_hrir=gensym("HRIR_win");
+	t_atom sane_defaults[9];
+
+        if(!argc)
+        {
+                post("bin_ambi_reduced_decode_fir2: warning: no arguments "
+                     "provided: setting to "
+                     "[bin_ambi_reduced_decode_fir2 1 L_HRIR HRIR_red "
+                     "HRIR_win 1 2 1 0 32]");
+                SETFLOAT(sane_defaults, 0.);
+                SETSYMBOL(sane_defaults+1, s_hrir);
+                SETSYMBOL(sane_defaults+2, s_hrir_red);
+                SETSYMBOL(sane_defaults+3, s_fade_out_hrir);
+                SETFLOAT(sane_defaults+4, 1.);
+                SETFLOAT(sane_defaults+5, 2.);
+                SETFLOAT(sane_defaults+6, 1.);
+                SETFLOAT(sane_defaults+7, 0.);
+                SETFLOAT(sane_defaults+8, 32.);
+                argc = 9;
+                argv = sane_defaults;
+        }
 
 	if((argc >= 9) &&
 		IS_A_FLOAT(argv,0) &&
-    IS_A_SYMBOL(argv,1) &&
+		IS_A_SYMBOL(argv,1) &&
 		IS_A_SYMBOL(argv,2) &&
 		IS_A_SYMBOL(argv,3) &&
 		IS_A_FLOAT(argv,4) &&

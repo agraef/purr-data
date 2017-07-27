@@ -1086,11 +1086,28 @@ static void *bin_ambi_reduced_decode_new(t_symbol *s, int argc, t_atom *argv)
 	t_symbol	*s_hrir=gensym("L_HRIR");
 	t_symbol	*s_hrtf_re=gensym("HRTF_re");
 	t_symbol	*s_hrtf_im=gensym("HRTF_im");
-  t_symbol  *s_fade_out_hrir=gensym("HRIR_win");
+	t_symbol  *s_fade_out_hrir=gensym("HRIR_win");
+        t_atom sane_defaults[8];
+
+        if(!argc)
+        {
+                post("bin_ambi_reduced_decode: warning: no arguments provided: "
+                     "setting to [bin_ambi_reduced_decode 1 2 1]");
+                SETFLOAT(sane_defaults, 0.);
+                SETSYMBOL(sane_defaults+1, s_hrir);
+                SETSYMBOL(sane_defaults+2, s_hrtf_re);
+                SETSYMBOL(sane_defaults+3, s_hrtf_im);
+                SETSYMBOL(sane_defaults+4, s_fade_out_hrir);
+                SETFLOAT(sane_defaults+5, 1.);
+                SETFLOAT(sane_defaults+6, 2.);
+                SETFLOAT(sane_defaults+7, 512.);
+                argc = 8;
+                argv = sane_defaults;
+        }
 
 	if((argc >= 8) &&
 		IS_A_FLOAT(argv,0) &&
-    IS_A_SYMBOL(argv,1) &&
+		IS_A_SYMBOL(argv,1) &&
 		IS_A_SYMBOL(argv,2) &&
 		IS_A_SYMBOL(argv,3) &&
 		IS_A_SYMBOL(argv,4) &&
@@ -1100,10 +1117,10 @@ static void *bin_ambi_reduced_decode_new(t_symbol *s, int argc, t_atom *argv)
 	{
 		prefix	= (int)atom_getintarg(0, argc, argv);
 
-		s_hrir								= (t_symbol *)atom_getsymbolarg(1, argc, argv);
-		s_hrtf_re							= (t_symbol *)atom_getsymbolarg(2, argc, argv);
-		s_hrtf_im							= (t_symbol *)atom_getsymbolarg(3, argc, argv);
-		s_fade_out_hrir	      = (t_symbol *)atom_getsymbolarg(4, argc, argv);
+		s_hrir = (t_symbol *)atom_getsymbolarg(1, argc, argv);
+		s_hrtf_re = (t_symbol *)atom_getsymbolarg(2, argc, argv);
+		s_hrtf_im = (t_symbol *)atom_getsymbolarg(3, argc, argv);
+		s_fade_out_hrir = (t_symbol *)atom_getsymbolarg(4, argc, argv);
 
 		n_order	= (int)atom_getintarg(5, argc, argv);
 		n_dim		= (int)atom_getintarg(6, argc, argv);
@@ -1113,7 +1130,7 @@ static void *bin_ambi_reduced_decode_new(t_symbol *s, int argc, t_atom *argv)
 	}
 	else if((argc >= 8) &&
 		IS_A_FLOAT(argv,0) &&
-    IS_A_FLOAT(argv,1) &&
+		IS_A_FLOAT(argv,1) &&
 		IS_A_FLOAT(argv,2) &&
 		IS_A_FLOAT(argv,3) &&
 		IS_A_FLOAT(argv,4) &&
@@ -1123,13 +1140,13 @@ static void *bin_ambi_reduced_decode_new(t_symbol *s, int argc, t_atom *argv)
 	{
 		prefix	= (int)atom_getintarg(0, argc, argv);
 
-		s_hrir								= gensym("L_HRIR");
-		s_hrtf_re							= gensym("HRTF_re");
-		s_hrtf_im							= gensym("HRTF_im");
-		s_fade_out_hrir	      = gensym("HRIR_win");
+		s_hrir = gensym("L_HRIR");
+		s_hrtf_re = gensym("HRTF_re");
+		s_hrtf_im = gensym("HRTF_im");
+		s_fade_out_hrir	= gensym("HRIR_win");
 
 		n_order	= (int)atom_getintarg(5, argc, argv);
-		n_dim		= (int)atom_getintarg(6, argc, argv);
+		n_dim	= (int)atom_getintarg(6, argc, argv);
 		fftsize	= (int)atom_getintarg(7, argc, argv);
 
 		ok = 1;
@@ -1168,20 +1185,20 @@ static void *bin_ambi_reduced_decode_new(t_symbol *s, int argc, t_atom *argv)
 
 		if(!fftok)
 		{
-      fftsize = 512;
+			fftsize = 512;
 			post("bin_ambi_reduced_decode-WARNING: fftsize not equal to 2 ^ n !!!");
 			post("                                 fftsize set to %d", fftsize);
 		}
 
-		x->x_n_dim			= n_dim;
-		x->x_n_ambi			= n_ambi;
-		x->x_n_order		= n_order;
-		x->x_fftsize		= fftsize;
+		x->x_n_dim = n_dim;
+		x->x_n_ambi = n_ambi;
+		x->x_n_order = n_order;
+		x->x_fftsize = fftsize;
 
-		x->x_hrir_filename	= (t_symbol **)getbytes(x->x_n_ambi * sizeof(t_symbol *));
-		x->x_s_hrir					= (t_symbol **)getbytes(x->x_n_ambi * sizeof(t_symbol *));
-		x->x_s_hrtf_re			= (t_symbol **)getbytes(x->x_n_ambi * sizeof(t_symbol *));
-		x->x_s_hrtf_im			= (t_symbol **)getbytes(x->x_n_ambi * sizeof(t_symbol *));
+		x->x_hrir_filename = (t_symbol **)getbytes(x->x_n_ambi * sizeof(t_symbol *));
+		x->x_s_hrir = (t_symbol **)getbytes(x->x_n_ambi * sizeof(t_symbol *));
+		x->x_s_hrtf_re = (t_symbol **)getbytes(x->x_n_ambi * sizeof(t_symbol *));
+		x->x_s_hrtf_im = (t_symbol **)getbytes(x->x_n_ambi * sizeof(t_symbol *));
 		
 		for(i=0; i<n_ambi; i++)
 		{

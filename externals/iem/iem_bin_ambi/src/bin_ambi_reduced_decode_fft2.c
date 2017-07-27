@@ -1161,7 +1161,28 @@ static void *bin_ambi_reduced_decode_fft2_new(t_symbol *s, int argc, t_atom *arg
   t_symbol  *s_hrtf_re=gensym("HRTF_re");
   t_symbol  *s_hrtf_im=gensym("HRTF_im");
   t_symbol  *s_fade_out_hrir=gensym("HRIR_win");
+  t_atom sane_defaults[10];
   
+  if(!argc)
+  {
+    post("bin_ambi_reduced_decode_fft2: warning: no arguments "
+         "provided: setting to "
+         "[bin_ambi_reduced_decode_fft2 1 L_HRIR HRTF_re HRTF_im "
+         "HRIR_win 1 2 1 0 512]");
+    SETFLOAT(sane_defaults, 0.);
+    SETSYMBOL(sane_defaults+1, s_hrir);
+    SETSYMBOL(sane_defaults+2, s_hrtf_re);
+    SETSYMBOL(sane_defaults+3, s_hrtf_im);
+    SETSYMBOL(sane_defaults+4, s_fade_out_hrir);
+    SETFLOAT(sane_defaults+5, 1.);
+    SETFLOAT(sane_defaults+6, 2.);
+    SETFLOAT(sane_defaults+7, 1.);
+    SETFLOAT(sane_defaults+8, 0.);
+    SETFLOAT(sane_defaults+9, 512.);
+    argc = 10;
+    argv = sane_defaults;
+  }
+
   if((argc >= 10) &&
     IS_A_FLOAT(argv,0) &&
     IS_A_SYMBOL(argv,1) &&

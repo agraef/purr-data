@@ -1142,7 +1142,25 @@ static void *bin_ambi_reduced_decode2_new(t_symbol *s, int argc, t_atom *argv)
 	t_symbol	*s_hrir=gensym("L_HRIR");
 	t_symbol	*s_hrtf_re=gensym("HRTF_re");
 	t_symbol	*s_hrtf_im=gensym("HRTF_im");
-  t_symbol  *s_fade_out_hrir=gensym("HRIR_win");
+	t_symbol  *s_fade_out_hrir=gensym("HRIR_win");
+	t_atom sane_defaults[9];
+
+        if(!argc)
+        {
+                post("bin_ambi_reduced_decode2: warning: no arguments "
+                     "provided: setting to [bin_ambi_reduced_decode2 1 2 1]");
+                SETFLOAT(sane_defaults, 0.);
+                SETSYMBOL(sane_defaults+1, s_hrir);
+                SETSYMBOL(sane_defaults+2, s_hrtf_re);
+                SETSYMBOL(sane_defaults+3, s_hrtf_im);
+                SETSYMBOL(sane_defaults+4, s_fade_out_hrir);
+                SETFLOAT(sane_defaults+5, 1.);
+                SETFLOAT(sane_defaults+6, 2.);
+                SETFLOAT(sane_defaults+7, 1.);
+                SETFLOAT(sane_defaults+8, 512.);
+                argc = 9;
+                argv = sane_defaults;
+        }
 
 	if((argc >= 9) &&
 		IS_A_FLOAT(argv,0) &&

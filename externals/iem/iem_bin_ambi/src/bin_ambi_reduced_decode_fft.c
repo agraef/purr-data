@@ -1273,11 +1273,33 @@ static void *bin_ambi_reduced_decode_fft_new(t_symbol *s, int argc, t_atom *argv
 	t_symbol	*s_hrir=gensym("L_HRIR");
 	t_symbol	*s_hrtf_re=gensym("HRTF_re");
 	t_symbol	*s_hrtf_im=gensym("HRTF_im");
-  t_symbol  *s_fade_out_hrir=gensym("HRIR_win");
+	t_symbol  *s_fade_out_hrir=gensym("HRIR_win");
+	t_atom sane_defaults[11];
+
+        if(!argc)
+        {
+                post("bin_ambi_reduced_decode_fft: warning: no arguments "
+                     "provided: setting to "
+                     "[bin_ambi_reduced_decode_fft 1 L_HRIR HRTF_re HRTF_im "
+                     "HRIR_win 1 2 1 1 0 512]");
+                SETFLOAT(sane_defaults, 0.);
+                SETSYMBOL(sane_defaults+1, s_hrir);
+                SETSYMBOL(sane_defaults+2, s_hrtf_re);
+                SETSYMBOL(sane_defaults+3, s_hrtf_im);
+                SETSYMBOL(sane_defaults+4, s_fade_out_hrir);
+                SETFLOAT(sane_defaults+5, 1.);
+                SETFLOAT(sane_defaults+6, 2.);
+                SETFLOAT(sane_defaults+7, 1.);
+                SETFLOAT(sane_defaults+8, 1.);
+                SETFLOAT(sane_defaults+9, 0.);
+                SETFLOAT(sane_defaults+10, 512.);
+                argc = 11;
+                argv = sane_defaults;
+        }
 
 	if((argc >= 11) &&
 		IS_A_FLOAT(argv,0) &&
-    IS_A_SYMBOL(argv,1) &&
+		IS_A_SYMBOL(argv,1) &&
 		IS_A_SYMBOL(argv,2) &&
 		IS_A_SYMBOL(argv,3) &&
 		IS_A_SYMBOL(argv,4) &&
@@ -1290,13 +1312,13 @@ static void *bin_ambi_reduced_decode_fft_new(t_symbol *s, int argc, t_atom *argv
 	{
 		prefix	= (int)atom_getintarg(0, argc, argv);
 
-		s_hrir								= (t_symbol *)atom_getsymbolarg(1, argc, argv);
-		s_hrtf_re							= (t_symbol *)atom_getsymbolarg(2, argc, argv);
-		s_hrtf_im							= (t_symbol *)atom_getsymbolarg(3, argc, argv);
-		s_fade_out_hrir	      = (t_symbol *)atom_getsymbolarg(4, argc, argv);
+		s_hrir	= (t_symbol *)atom_getsymbolarg(1, argc, argv);
+		s_hrtf_re = (t_symbol *)atom_getsymbolarg(2, argc, argv);
+		s_hrtf_im = (t_symbol *)atom_getsymbolarg(3, argc, argv);
+		s_fade_out_hrir = (t_symbol *)atom_getsymbolarg(4, argc, argv);
 
 		n_order		= (int)atom_getintarg(5, argc, argv);
-		n_dim			= (int)atom_getintarg(6, argc, argv);
+		n_dim		= (int)atom_getintarg(6, argc, argv);
 		n_ind_ls	= (int)atom_getintarg(7, argc, argv);
 		n_mrg_mir_ls	= (int)atom_getintarg(8, argc, argv);
 		n_ph_ls		= (int)atom_getintarg(9, argc, argv);
@@ -1306,7 +1328,7 @@ static void *bin_ambi_reduced_decode_fft_new(t_symbol *s, int argc, t_atom *argv
 	}
 	else if((argc >= 11) &&
 		IS_A_FLOAT(argv,0) &&
-    IS_A_FLOAT(argv,1) &&
+		IS_A_FLOAT(argv,1) &&
 		IS_A_FLOAT(argv,2) &&
 		IS_A_FLOAT(argv,3) &&
 		IS_A_FLOAT(argv,4) &&
@@ -1319,9 +1341,9 @@ static void *bin_ambi_reduced_decode_fft_new(t_symbol *s, int argc, t_atom *argv
 	{
 		prefix	= (int)atom_getintarg(0, argc, argv);
 
-		s_hrir								= gensym("L_HRIR");
-		s_hrtf_re							= gensym("HRTF_re");
-		s_hrtf_im							= gensym("HRTF_im");
+		s_hrir	= gensym("L_HRIR");
+		s_hrtf_re = gensym("HRTF_re");
+		s_hrtf_im = gensym("HRTF_im");
 		s_fade_out_hrir	      = gensym("HRIR_win");
 
 		n_order	= (int)atom_getintarg(5, argc, argv);
