@@ -670,7 +670,17 @@ static void *udpreceive_tilde_new(t_symbol *s, int argc, t_atom *argv)
 {
     t_udpreceive_tilde  *x;
     int                 i, j = 0, portno = 0, outlets = 0, blocksize = 0;
+    t_atom sane_defaults[2];
 
+    if (!argc)
+    {
+        post("udpreceive~: warning: no arguments provided: defaulting to "
+             "[updreceive~ 0]");
+        SETFLOAT(sane_defaults, 0.);
+        SETFLOAT(sane_defaults+1, 1.);
+        argc = 2;
+        argv = sane_defaults;
+    }
 
     x = (t_udpreceive_tilde *)pd_new(udpreceive_tilde_class);
     if (NULL == x) return NULL;
