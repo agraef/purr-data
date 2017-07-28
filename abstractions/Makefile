@@ -277,6 +277,33 @@ purepd:
 
 purepd_install:
 	make -C $(abstractions_src)/purepd DESTDIR="$(DESTDIR)" objectsdir="$(objectsdir)" install
+	# remove abstractions that clash with default loaded libraries
+	rm $(DESTDIR)$(objectsdir)/purepd/alternate.pd
+	rm $(DESTDIR)$(objectsdir)/purepd/alternate-help.pd
+	rm $(DESTDIR)$(objectsdir)/purepd/cosh.pd
+	rm $(DESTDIR)$(objectsdir)/purepd/cosh-help.pd
+	rm $(DESTDIR)$(objectsdir)/purepd/delta~.pd
+	rm $(DESTDIR)$(objectsdir)/purepd/delta~-help.pd
+	rm $(DESTDIR)$(objectsdir)/purepd/delta.pd
+	rm $(DESTDIR)$(objectsdir)/purepd/delta-help.pd
+	rm $(DESTDIR)$(objectsdir)/purepd/fifo.pd
+	rm $(DESTDIR)$(objectsdir)/purepd/fifo-help.pd
+	rm $(DESTDIR)$(objectsdir)/purepd/for++.pd
+	rm $(DESTDIR)$(objectsdir)/purepd/for++-help.pd
+	rm $(DESTDIR)$(objectsdir)/purepd/inv.pd
+	rm $(DESTDIR)$(objectsdir)/purepd/inv-help.pd
+	rm $(DESTDIR)$(objectsdir)/purepd/once.pd
+	rm $(DESTDIR)$(objectsdir)/purepd/once-help.pd
+	rm $(DESTDIR)$(objectsdir)/purepd/oneshot.pd
+	rm $(DESTDIR)$(objectsdir)/purepd/oneshot-help.pd
+	rm $(DESTDIR)$(objectsdir)/purepd/sgn~.pd
+	rm $(DESTDIR)$(objectsdir)/purepd/sgn~-help.pd
+	rm $(DESTDIR)$(objectsdir)/purepd/sinh.pd
+	rm $(DESTDIR)$(objectsdir)/purepd/sinh-help.pd
+	rm $(DESTDIR)$(objectsdir)/purepd/tanh.pd
+	rm $(DESTDIR)$(objectsdir)/purepd/tanh-help.pd
+	rm $(DESTDIR)$(objectsdir)/purepd/velocity.pd
+	rm $(DESTDIR)$(objectsdir)/purepd/velocity-help.pd
 
 purepd_clean:
 	make -C $(abstractions_src)/purepd clean
@@ -334,6 +361,13 @@ rtc-lib_install:
 	install -d $(DESTDIR)$(objectsdir)/$(RTC-LIB_NAME)/examples
 	install -p $(abstractions_src)/footils/rtc-lib/rtc/rtc-help/*.pd \
 		$(DESTDIR)$(objectsdir)/$(RTC-LIB_NAME)/examples
+	# remove abstractions that clash with the names of default loaded
+	# libraries
+	rm $(DESTDIR)$(objectsdir)/$(RTC-LIB_NAME)/expr_scale.pd
+	rm $(DESTDIR)$(objectsdir)/$(RTC-LIB_NAME)/inv.pd
+	rm $(DESTDIR)$(objectsdir)/$(RTC-LIB_NAME)/minus.pd
+	rm $(DESTDIR)$(objectsdir)/$(RTC-LIB_NAME)/ratio.pd
+	rm $(DESTDIR)$(objectsdir)/$(RTC-LIB_NAME)/ratio-help.pd
 
 #-------------------------------------------------------------------------------
 # sfruit
@@ -346,6 +380,9 @@ sfruit_install:
 		--author "Luke Iannini" \
 		--license "GNU GPL" \
 		--description "a large collection of assorted handy utilites"
+	# remove abstraction that has a nameclash with list-abs
+	rm $(DESTDIR)$(objectsdir)/$(SFRUIT_NAME)/list-swap.pd
+	rm $(DESTDIR)$(objectsdir)/$(SFRUIT_NAME)/list-swap-help.pd
 
 #-------------------------------------------------------------------------------
 # TIMESTRETCH
