@@ -925,7 +925,7 @@ void mtx_mul_tilde_setup(void)
   /* compatibility with tm's iem_matrix */
   class_addcreator((t_newmethod)matrix_multilde_new, gensym("matrix_mul_line~"), A_GIMME, 0);
   /* compatibility with jmz's zexy */
-  class_addcreator((t_newmethod)matrix_multilde_new, gensym("matrix~"), A_GIMME, 0);
+  //class_addcreator((t_newmethod)matrix_multilde_new, gensym("matrix~"), A_GIMME, 0);
 
 
   class_addmethod(matrix_multilde_class, (t_method)matrix_multilde_dsp, gensym("dsp"), 0);
