@@ -121,11 +121,8 @@ la-kitchen_install:
 	rm $(DESTDIR)$(objectsdir)/$(LA-KITCHEN_NAME)/max_n.pd
 	rm $(DESTDIR)$(objectsdir)/$(LA-KITCHEN_NAME)/max_n-help.pd
 	rm $(DESTDIR)$(objectsdir)/$(LA-KITCHEN_NAME)/median_3.pd
-	rm $(DESTDIR)$(objectsdir)/$(LA-KITCHEN_NAME)/median_3-help.pd
 	rm $(DESTDIR)$(objectsdir)/$(LA-KITCHEN_NAME)/median_5.pd
-	rm $(DESTDIR)$(objectsdir)/$(LA-KITCHEN_NAME)/median_5-help.pd
 	rm $(DESTDIR)$(objectsdir)/$(LA-KITCHEN_NAME)/median_7.pd
-	rm $(DESTDIR)$(objectsdir)/$(LA-KITCHEN_NAME)/median_7-help.pd
 	rm $(DESTDIR)$(objectsdir)/$(LA-KITCHEN_NAME)/min_n.pd
 	rm $(DESTDIR)$(objectsdir)/$(LA-KITCHEN_NAME)/min_n-help.pd
 	install -p $(abstractions_src)/La-kitchen/readme.txt \
