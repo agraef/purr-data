@@ -1,4 +1,4 @@
-#N canvas 154 25 751 635 12;
+#N canvas 162 25 751 671 12;
 #X msg 513 70 bang;
 #N canvas 273 114 533 496 get_extensions 0;
 #X obj 17 44 inlet;
@@ -501,10 +501,7 @@ may be other oddities in external libs with regard to libdir prefixes.
 #X obj 102 163 f;
 #X obj 102 188 + 1;
 #X msg 274 263 set;
-#X msg 66 307 \$1 \, \$2 \, \$3 \, \$4 \, \$5 \, \$6 \, \$7 \, \$8
-\, \$9 \, \$10 \, \$11 \, \$12 \, \$13 \, \$14 \, \$15 \, \$16 \, \$17
-\, \$18 \, \$19 \, \$20 \, \$21 \, \$22 \, \$23 \, \$24 \, \$25 \,
-\$26 \, \$27 \, \$28 \, \$29 \, \$30 \, \$31 \, \$32 \, \$33 \,;
+#X msg 66 307 \$1 \,;
 #X obj 66 263 list;
 #X msg 102 263 adddollar \$1 \, addcomma;
 #X msg 150 126 0;
@@ -719,22 +716,25 @@ maxlib memento mjlib motex osx pddp pdogg pixeltango pmpd rradical
 sigpack smlib unauthorized vbap pan freeverb~ hcs jmmmp ext13 ggee
 iem_anything ekext hexloader disis lyonpotpourri;
 #X obj 37 44 t b b b b;
-#N canvas 340 199 450 300 libs_not_loaded_by_default 1;
+#N canvas 319 177 550 418 libs_not_loaded_by_default 0;
 #X obj 10 11 inlet;
-#X obj 10 231 outlet;
+#X obj 10 251 outlet;
+#X text 104 243 problems;
+#X text 104 263 iem_tab: 45 classes that refuse to create without args
+;
+#X text 104 283 tof: param class is too complex to easily give default
+args;
 #X msg 10 36 adaptive arraysize autotune~ bassemu~ bob~ boids bonk~
 bsaylor choice comport controctopus fluid~ hid iem16 iem_adaptfilt
 iem_ambi iem_bin_ambi iem_delay iemgui iemmatrix iem_roomsim iem_spec2
-iem_tab iemxmlrpc jasch_lib K12 la-kitchen loop~ lrshift~ memento-p
-mjlib moocow moonlib motex mrpeach nsend pan pd~ pdcontainer pd-wavelet
-pique plugin~ pmpd purepd rjlib rradical rtc sfruit sigmund~ stdout
-timestretch tof windowing;
-#X text 110 172 ratchet up as we go;
-#X obj 10 173 list split 12;
-#X connect 0 0 2 0;
-#X connect 2 0 4 0;
-#X connect 4 0 1 0;
+iemxmlrpc jasch_lib K12 la-kitchen loop~ lrshift~ memento-p mjlib moocow
+moonlib motex mrpeach nsend pan pd~ pdcontainer pd-wavelet pique plugin~
+pmpd purepd rjlib rradical rtc sfruit sigmund~ stdout timestretch windowing
+;
+#X connect 0 0 5 0;
+#X connect 5 0 1 0;
 #X restore 57 164 pd libs_not_loaded_by_default;
+#X text 269 163 <- two libraries to go: tof and iem_tab;
 #X connect 0 0 2 0;
 #X connect 1 0 4 0;
 #X connect 2 0 14 0;
