@@ -3459,6 +3459,7 @@ function gui_drawnumber_vis(cid, parent_tag, tag, x, y, scale_x, scale_y,
 // to cache image data for image-handling classes:
 // ggee/image
 // moonlib/image (for backwards compatibility only: its API is inherently leaky)
+// tof/imagebang
 // draw sprite
 // draw image
 var pd_cache = (function() {
@@ -3658,8 +3659,10 @@ function gui_load_image(cid, key, filepath) {
     });
 }
 
-// Draw an image in an object-- used for ggee/image and
-// moonlib/image. For the meaning of tk_anchor see img_size_setter.
+// Draw an image in an object-- used for ggee/image, moonlib/image and
+// tof/imagebang. For the meaning of tk_anchor see img_size_setter. This
+// interface assumes there is only one image per gobject. If you try to
+// set more you'll get duplicate ids.
 function gui_gobj_draw_image(cid, tag, image_key, tk_anchor) {
     var g = get_gobj(cid, tag),
         i = create_item(cid, "image", {
