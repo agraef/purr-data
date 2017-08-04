@@ -1922,6 +1922,7 @@ static void canvas_stdlib(t_canvasenvironment *e, char *stdlib)
     }
 }
 
+extern t_symbol *class_loadsym;     /* name under which an extern is invoked */
 
 void canvas_declare(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 {
@@ -1948,7 +1949,13 @@ void canvas_declare(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
         }
         else if ((argc > i+1) && !strcmp(flag, "-lib"))
         {
-            sys_load_lib(x, atom_getsymbolarg(i+1, argc, argv)->s_name);
+            /* set class_loadsym in case we're loading a library by
+               absolute or namespace-prefixed path. Not sure yet
+               exactly how stdlib works so I haven't touched that
+               one... */
+            class_loadsym = atom_getsymbolarg(i+1, argc, argv);
+            sys_load_lib(x, class_loadsym->s_name);
+            class_loadsym = NULL;
             i++;
         }
         else if ((argc > i+1) && !strcmp(flag, "-stdlib"))

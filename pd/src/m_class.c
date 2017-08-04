@@ -26,7 +26,7 @@
 #define snprintf sprintf_s
 #endif
 
-static t_symbol *class_loadsym;     /* name under which an extern is invoked */
+t_symbol *class_loadsym;     /* name under which an extern is invoked */
 static void pd_defaultfloat(t_pd *x, t_float f);
 static void pd_defaultblob(t_pd *x, t_blob *st); /* MP20061226 blob type */
 static void pd_defaultlist(t_pd *x, t_symbol *s, int argc, t_atom *argv);
