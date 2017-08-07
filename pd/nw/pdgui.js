@@ -5185,7 +5185,7 @@ function canvas_params(cid)
 }
 
 function do_getscroll(cid) {
-    // Since we're throttling these getscroll calls, they can happen after
+    // Since we're debouncing these getscroll calls, they can happen after
     // the patch has been closed. We remove the cid from the patchwin
     // object on close, so we can just check to see if our Window object has
     // been set to null, and if so just return.
@@ -5228,8 +5228,12 @@ var getscroll_var = {};
 //    graphics from displaying until the user releases the mouse,
 //    which would be a buggy UI
 function gui_canvas_get_scroll(cid) {
-    clearTimeout(getscroll_var[cid]);
-    getscroll_var[cid] = setTimeout(do_getscroll, 250, cid);
+    if (!getscroll_var[cid]) {
+        getscroll_var[cid] = setTimeout(function() {
+            do_getscroll(cid);
+            getscroll_var[cid] = null;
+        }, 250);
+    }
 }
 
 exports.gui_canvas_get_scroll = gui_canvas_get_scroll;
