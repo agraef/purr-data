@@ -1,9 +1,9 @@
-LIBS = -lc -lm
+LIBS = -L../../../pd/bin -lc -lm
 LIBOSCDIR = ../libOSC
 LIBOSC = ${LIBOSCDIR}/libOSC.a
 
 # strange bug requires this...
-CFLAGS= -g -O2 -DUNIX -Wall -Wimplicit -Wunused -Wmissing-prototypes -O2 -fPIC -I../libOSC -I../../pd/src -I../../../pd/src -I../src -I../libOSC -I../../pd/src -I../../../pd/src -I../src
+CFLAGS= -g -O2 -DUNIX -Wall -Wimplicit -Wunused -Wmissing-prototypes -O1 -fPIC -I../libOSC -I../../pd/src -I../../../pd/src -I../src -I../libOSC -I../../pd/src -I../../../pd/src -I../src
 # INCLUDES= -I../libOSC -I../../pd/src -I../../../pd/src -I../src
 
 DUMPOBJS=dumpOSC.o

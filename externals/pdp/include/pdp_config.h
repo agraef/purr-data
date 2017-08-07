@@ -35,7 +35,7 @@
 #define HAVE_PDP_QT 1
 
 /* build pdp_sdl */
-#define HAVE_PDP_SDL 1
+/* #undef HAVE_PDP_SDL */
 
 /* build pdp_v4l */
 #define HAVE_PDP_V4L 1
@@ -44,7 +44,7 @@
 #define HAVE_PDP_X 1
 
 /* build pdp_xv */
-#define HAVE_PDP_XV 1
+/* #undef HAVE_PDP_XV */
 
 /* enable forced pwc v4l support */
 /* #undef HAVE_PWCV4L */
