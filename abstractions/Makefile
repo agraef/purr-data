@@ -111,20 +111,6 @@ la-kitchen_install:
 #	install -d $(DESTDIR)$(manualsdir)/$(LA-KITCHEN_NAME)
 #	install -p $(abstractions_src)/La-kitchen/doc/*.* \
 #		 $(DESTDIR)$(manualsdir)/$(LA-KITCHEN_NAME)
-	# Remove abstractions that are already in mapping.
-	rm $(DESTDIR)$(objectsdir)/$(LA-KITCHEN_NAME)/amplitude_n.pd
-	rm $(DESTDIR)$(objectsdir)/$(LA-KITCHEN_NAME)/amplitude_n-help.pd
-	rm $(DESTDIR)$(objectsdir)/$(LA-KITCHEN_NAME)/debounce.pd
-	rm $(DESTDIR)$(objectsdir)/$(LA-KITCHEN_NAME)/debounce-help.pd
-	rm $(DESTDIR)$(objectsdir)/$(LA-KITCHEN_NAME)/last_n.pd
-	rm $(DESTDIR)$(objectsdir)/$(LA-KITCHEN_NAME)/last_n-help.pd
-	rm $(DESTDIR)$(objectsdir)/$(LA-KITCHEN_NAME)/max_n.pd
-	rm $(DESTDIR)$(objectsdir)/$(LA-KITCHEN_NAME)/max_n-help.pd
-	rm $(DESTDIR)$(objectsdir)/$(LA-KITCHEN_NAME)/median_3.pd
-	rm $(DESTDIR)$(objectsdir)/$(LA-KITCHEN_NAME)/median_5.pd
-	rm $(DESTDIR)$(objectsdir)/$(LA-KITCHEN_NAME)/median_7.pd
-	rm $(DESTDIR)$(objectsdir)/$(LA-KITCHEN_NAME)/min_n.pd
-	rm $(DESTDIR)$(objectsdir)/$(LA-KITCHEN_NAME)/min_n-help.pd
 	install -p $(abstractions_src)/La-kitchen/readme.txt \
 		$(DESTDIR)$(objectsdir)/$(LA_KITCHEN_NAME)/README.txt
 
