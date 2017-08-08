@@ -1,4 +1,4 @@
-#N canvas 4 53 659 639 12;
+#N canvas 5 53 659 639 12;
 #X obj 61 34 loadbang;
 #N canvas 107 123 756 233 load_hcs/folder_list 0;
 #X obj 357 47 inlet;
@@ -354,7 +354,7 @@ works.;
 #X connect 28 1 19 1;
 #X connect 29 0 19 0;
 #X restore 132 543 pd get-creator-names;
-#N canvas 239 157 450 346 test-object 0;
+#N canvas 240 179 450 346 test-object 0;
 #X obj 26 36 inlet;
 #X text 72 34 creator_name argtype1 argtype2 etc.;
 #N canvas 372 37 649 659 right_outlet_for_aliases 0;
@@ -704,7 +704,6 @@ nameclash is in the current library we're testing then we ignore it.
 #X connect 5 0 6 0;
 #X connect 9 0 8 0;
 #X connect 10 0 3 0;
-#X connect 10 1 9 0;
 #X connect 10 2 11 0;
 #X restore 132 574 pd test-object;
 #X obj 164 239 trigger bang anything anything;
