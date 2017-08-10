@@ -321,7 +321,8 @@ static void *vcf_filter_tilde_new(t_symbol *filt_typ)
   x->x_wn1 = 0.0;
   x->x_wn2 = 0.0;
   c = (char *)filt_typ->s_name;
-  c[5] = 0;
+  if (strlen(c) > 5)
+    c[5] = 0;
   strcpy(x->x_filtname, c);
   return(x);
 }
