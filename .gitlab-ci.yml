@@ -49,7 +49,7 @@ ubuntu_14.04_i386_deb:
      - ./tar_em_up.sh -B
      - cd ..
      - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive dpkg --force-all -i pd-l2ork*.deb > /dev/null
-     - pd-l2ork -noprefs -nostdpath -nogui -nrt -noaudio scripts/external-tests.pd
+     - valgrind pd-l2ork -noprefs -nostdpath -nogui -nrt -noaudio scripts/external-tests.pd
    artifacts:
      expire_in: 1 day
      paths:
