@@ -233,9 +233,12 @@ static void *mline_new(t_symbol* UNUSED(s), int argc, t_atom *argv)
 {
   t_mline *x = (t_mline *)pd_new(mline_class);
   int i;
+  t_atom sane_default[1];
 
   if (!argc) {
     argc = 1;
+    SETFLOAT(sane_default, 0.);
+    argv = sane_default;
     x->time = 0;
   } else {
     x->time = atom_getfloat(argv+argc-1);
