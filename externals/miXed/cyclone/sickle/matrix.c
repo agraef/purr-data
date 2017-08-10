@@ -494,8 +494,8 @@ static void *matrix_new(t_symbol *s, int ac, t_atom *av)
         post("matrix~: warning: no arguments supplied: picking sane "
              "defaults [matrix~ 1 1 0]");
         SETFLOAT(sane_defaults, 1.);
-        SETFLOAT(sane_defaults, 1.);
-        SETFLOAT(sane_defaults, 0.);
+        SETFLOAT(sane_defaults+1, 1.);
+        SETFLOAT(sane_defaults+2, 0.);
         ac = 3;
         av = sane_defaults;
     }
