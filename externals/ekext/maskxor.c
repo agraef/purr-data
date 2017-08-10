@@ -177,7 +177,7 @@ void maskxor_print(t_maskxor *x)
   post("mode = %f, lengthl = %d, lengthr = %d, lengthm = %d",x->mode,x->lengthl,x->lengthr,x->lengthm);
 }
 
-void *maskxor_new(t_symbol *s, t_floatarg fmode)
+void *maskxor_new(t_floatarg fmode)
 {
   int i;
   t_maskxor *x = (t_maskxor *)pd_new(maskxor_class);
