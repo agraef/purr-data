@@ -79,7 +79,7 @@ static void list2binbuf(t_binbuf**bbuf, int *n, char**str, int argc,
   i=*n;
   s=*str;
 
-  if(' '==s[i]) {
+  if(s && ' '==s[i]) {
     s[i]=0;
   }
 }
