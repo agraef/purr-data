@@ -38,17 +38,6 @@ typedef struct _harmgen_tilde
 static void *harmgen_tilde_new(t_floatarg mag1, t_floatarg mag2, t_floatarg mag3, t_floatarg mag4, t_floatarg mag5, t_floatarg mag6, t_floatarg mag7, t_floatarg mag8, t_floatarg mag9, t_floatarg mag10)
 {
     t_harmgen_tilde *x = (t_harmgen_tilde *)pd_new(harmgen_tilde_class);
-    outlet_new(&x->x_obj, gensym("signal"));
-	floatinlet_new(&x->x_obj, &x->x_mag1);
-	floatinlet_new(&x->x_obj, &x->x_mag2);
-	floatinlet_new(&x->x_obj, &x->x_mag3);
-	floatinlet_new(&x->x_obj, &x->x_mag4);
-	floatinlet_new(&x->x_obj, &x->x_mag5);
-	floatinlet_new(&x->x_obj, &x->x_mag6);
-	floatinlet_new(&x->x_obj, &x->x_mag7);
-	floatinlet_new(&x->x_obj, &x->x_mag8);
-	floatinlet_new(&x->x_obj, &x->x_mag9);
-	floatinlet_new(&x->x_obj, &x->x_mag10);
 	x->x_f = 0;
 	if(mag1) x->x_mag1 = mag1;
 	else x->x_mag1 = 1;
@@ -70,6 +59,17 @@ static void *harmgen_tilde_new(t_floatarg mag1, t_floatarg mag2, t_floatarg mag3
 	else x->x_mag9 = 1;
 	if(mag10) x->x_mag10 = mag10;
 	else x->x_mag10 = 1;
+    outlet_new(&x->x_obj, gensym("signal"));
+	floatinlet_new(&x->x_obj, &x->x_mag1);
+	floatinlet_new(&x->x_obj, &x->x_mag2);
+	floatinlet_new(&x->x_obj, &x->x_mag3);
+	floatinlet_new(&x->x_obj, &x->x_mag4);
+	floatinlet_new(&x->x_obj, &x->x_mag5);
+	floatinlet_new(&x->x_obj, &x->x_mag6);
+	floatinlet_new(&x->x_obj, &x->x_mag7);
+	floatinlet_new(&x->x_obj, &x->x_mag8);
+	floatinlet_new(&x->x_obj, &x->x_mag9);
+	floatinlet_new(&x->x_obj, &x->x_mag10);
     return (x);
 }
 
