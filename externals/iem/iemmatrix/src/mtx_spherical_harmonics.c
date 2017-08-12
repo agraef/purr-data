@@ -83,7 +83,7 @@ static void *newMTXSh (t_symbol *s, int argc, t_atom *argv)
   x->theta = 0; 
   x->ws = 0; 
   x->l=0;
-  nmax=(int) atom_getfloat(argv);
+  nmax= argc ? (int) atom_getfloat(argv) : 0;
   if (nmax<0)
      nmax=0;
   x->nmax=nmax;
