@@ -1,4 +1,4 @@
-#N canvas 3 53 659 639 12;
+#N canvas 2 53 659 639 12;
 #X obj 61 34 loadbang;
 #N canvas 107 123 756 233 load_hcs/folder_list 0;
 #X obj 357 47 inlet;
@@ -712,15 +712,15 @@ nameclash is in the current library we're testing then we ignore it.
 #X obj 371 313 s \$0-last-objectmaker-methodspace-length;
 #X text 304 85 \$0-last-objectmaker-methodspace-length;
 #X text 304 105 \$0-ext;
-#N canvas 1 53 554 595 set_\$0-libdir 1;
+#N canvas 12 53 717 595 set_\$0-libdir 0;
 #X obj 49 48 inlet;
 #X obj 49 317 pdinfo;
 #X obj 49 78 b;
 #X msg 49 288 libdir;
-#X obj 49 567 outlet;
+#X obj 49 540 outlet;
 #X text 97 48 get the directory where extra/ and doc/ live;
-#X obj 49 541 trigger anything anything;
-#X obj 221 567 s \$0-libdir;
+#X obj 49 514 trigger anything anything;
+#X obj 221 540 s \$0-libdir;
 #X obj 49 131 pdinfo;
 #X msg 49 106 platform;
 #X obj 49 156 select darwin;
@@ -737,13 +737,18 @@ nameclash is in the current library we're testing then we ignore it.
 #X text 171 260 the "/bin" at the end...;
 #X obj 119 317 pdinfo;
 #X obj 119 342 list fromsymbol;
-#X obj 119 367 t a a;
 #X obj 151 398 list length;
-#X obj 151 423 - 3;
-#X obj 119 452 list split;
-#X obj 119 477 list tosymbol;
-#X text 245 414 <- filter out "/ b i n";
+#X obj 119 455 list split;
+#X obj 119 480 list tosymbol;
 #X msg 119 288 dir;
+#X obj 119 367 trigger anything anything anything;
+#X text 266 401 OSX gives up back an execdir with a trailing slash.
+Should;
+#X text 266 421 probably normalize the *info classes that output paths
+to;
+#X text 266 441 either always use trailing slashes or never use them.
+;
+#X obj 151 426 - 4;
 #X connect 0 0 2 0;
 #X connect 1 0 6 0;
 #X connect 2 0 9 0;
@@ -758,16 +763,16 @@ nameclash is in the current library we're testing then we ignore it.
 #X connect 12 0 13 0;
 #X connect 13 0 14 0;
 #X connect 14 0 3 0;
-#X connect 14 1 29 0;
+#X connect 14 1 26 0;
 #X connect 21 0 22 0;
-#X connect 22 0 23 0;
-#X connect 23 0 26 0;
-#X connect 23 1 24 0;
+#X connect 22 0 27 0;
+#X connect 23 0 31 0;
 #X connect 24 0 25 0;
-#X connect 25 0 26 1;
-#X connect 26 0 27 0;
-#X connect 27 0 6 0;
-#X connect 29 0 21 0;
+#X connect 25 0 6 0;
+#X connect 26 0 21 0;
+#X connect 27 0 24 0;
+#X connect 27 1 23 0;
+#X connect 31 0 24 1;
 #X restore 61 66 pd set_\$0-libdir;
 #N canvas 246 217 382 392 set_\$0-current_libdir 0;
 #X obj 67 30 inlet;
