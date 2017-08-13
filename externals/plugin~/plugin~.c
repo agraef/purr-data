@@ -59,7 +59,7 @@ static void plugin_tilde_poplocale (void) {}
 
 static int plugin_tilde_have_plugin(Pd_Plugin_Tilde* x);
 
-static t_class* plugin_tilde_class = NULL;
+static t_class* plugin_tilde_class;
 
 void plugin_tilde_setup (void)
 {
@@ -109,7 +109,7 @@ static void* plugin_tilde_new (t_symbol* s_name, t_symbol* s_lib_name)
   x->dsp_vec_length = 0;
   x->dsp_active = 0;
 
-  if (s_name->s_name != NULL) {
+  if (s_name != &s_) {
     if (s_lib_name->s_name == NULL || strlen (s_lib_name->s_name) == 0)
       x->plugin_library_filename = plugin_tilde_search_plugin (x, s_name->s_name);
     else
