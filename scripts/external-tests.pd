@@ -1,4 +1,4 @@
-#N canvas 3 53 659 616 12;
+#N canvas 1 53 659 616 12;
 #X obj 61 34 loadbang;
 #N canvas 107 123 756 233 load_hcs/folder_list 0;
 #X obj 357 47 inlet;
@@ -42,7 +42,7 @@ pmpd purepd rjlib rradical rtc sfruit sigmund~ stdout timestretch windowing
 #X msg 24 150 google libdir cyclone zexy creb cxc iemlib list-abs mapping
 markex maxlib memento mjlib motex osx pddp pdogg pixeltango pmpd rradical
 sigpack smlib unauthorized vbap pan freeverb~ hcs jmmmp ext13 ggee
-iem_anything ekext hexloader disis lyonpotpourri;
+iem_anything ekext disis lyonpotpourri;
 #X connect 0 0 10 0;
 #X connect 9 0 3 0;
 #X connect 10 0 12 0;
@@ -744,7 +744,7 @@ nameclash is in the current library we're testing then we ignore it.
 #X connect 1 0 2 0;
 #X connect 1 1 3 0;
 #X restore 164 359 pd set_\$0-ext;
-#N canvas 35 53 672 572 results 0;
+#N canvas 36 75 1068 572 results 0;
 #X obj 62 25 inlet;
 #X obj 235 33 r \$0-current-libdir-name;
 #X obj 146 33 r \$0-fail;
@@ -785,8 +785,11 @@ nameclash is in the current library we're testing then we ignore it.
 #X obj 335 345 s \$0-fail;
 #X obj 63 212 t b b b;
 #X obj 63 323 t a b a;
-#X obj 335 262 moses 2405;
-#X msg 335 320 only counted \$1 objects. Need 2405 to succeed;
+#X obj 335 262 moses 2275;
+#X msg 335 320 only counted \$1 objects. Need 2275 to succeed;
+#X text 432 224 Where did we get 2275? It is the number of creators
+that we found on OSX-- which does not yet ship K12 mode. (Still need
+to set up Windows tests \, however.;
 #X connect 0 0 38 0;
 #X connect 1 0 4 0;
 #X connect 2 0 3 0;
