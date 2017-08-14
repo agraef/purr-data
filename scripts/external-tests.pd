@@ -1,4 +1,4 @@
-#N canvas 3 53 659 616 12;
+#N canvas 46 53 659 616 12;
 #X obj 61 34 loadbang;
 #N canvas 107 123 756 233 load_hcs/folder_list 0;
 #X obj 357 47 inlet;
@@ -49,7 +49,7 @@ iem_anything ekext hexloader disis lyonpotpourri;
 #X connect 10 1 11 0;
 #X connect 11 0 9 1;
 #X connect 12 0 9 0;
-#X restore 132 124 pd list_of_libdirs;
+#X restore 162 124 pd list_of_libdirs;
 #N canvas 245 192 382 392 list_drip 0;
 #X obj 67 30 inlet;
 #X obj 102 83 list length;
@@ -845,9 +845,9 @@ nameclash is in the current library we're testing then we ignore it.
 #X obj 250 714 print creating_object;
 #X obj 132 607 t a a;
 #X obj 242 613 print getting_creator_names;
+#X msg 69 127 list iem16;
 #X connect 0 0 24 0;
 #X connect 1 0 13 0;
-#X connect 3 0 4 0;
 #X connect 4 0 30 0;
 #X connect 5 0 6 1;
 #X connect 6 0 7 0;
@@ -870,7 +870,7 @@ nameclash is in the current library we're testing then we ignore it.
 #X connect 28 0 36 0;
 #X connect 28 1 18 0;
 #X connect 29 0 27 0;
-#X connect 29 1 3 0;
+#X connect 29 1 38 0;
 #X connect 29 2 5 0;
 #X connect 29 3 9 0;
 #X connect 30 0 25 0;
@@ -881,3 +881,4 @@ nameclash is in the current library we're testing then we ignore it.
 #X connect 34 1 35 0;
 #X connect 36 0 16 0;
 #X connect 36 1 37 0;
+#X connect 38 0 4 0;
