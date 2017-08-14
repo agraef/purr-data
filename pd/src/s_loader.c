@@ -88,6 +88,27 @@ void sys_putonloadlist(const char *classname)
     /* post("put on list %s", classname); */
 }
 
+static char *get_last_file_separator(const char *objectname)
+{
+    char *c = strrchr(objectname, '/');
+    if (c)
+    {
+        char *ret = c;
+            /* if we're the last character before the null terminator,
+               OR if the end of the string is "/~", let's interpret the
+               slash as part of the class name.
+            */
+        if (c[1] == '\0' || (c[1] == '~' && c[2] == '\0'))
+        {
+            *c = '\0';
+            ret = strrchr(objectname, '/');
+            *c = '/';
+        }
+        return ret;
+    }
+    return NULL;
+}
+
 void class_set_extern_dir(t_symbol *s);
 
 static int sys_do_load_abs(t_canvas *canvas, const char *objectname,
@@ -108,7 +129,7 @@ static int sys_do_load_lib(t_canvas *canvas, const char *objectname,
            but we have already tried all paths */
     if(!path)return (0);
 
-    if ((classname = strrchr(objectname, '/')))
+    if ((classname = get_last_file_separator(objectname)))
         classname++;
     else classname = objectname;
     for (i = 0, cnameptr = classname; i < MAXPDSTRING-7 && *cnameptr;
