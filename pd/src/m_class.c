@@ -219,7 +219,6 @@ t_class *classtable_findbyname(t_symbol *s)
 t_class *class_new(t_symbol *s, t_newmethod newmethod, t_method freemethod,
     size_t size, int flags, t_atomtype type1, ...)
 {
-post("class_new");
     va_list ap;
     t_atomtype vec[MAXPDARG+1], *vp = vec;
     int count = 0;
@@ -247,10 +246,8 @@ post("class_new");
             /* add a "new" method by the name specified by the object */
         class_addmethod(pd_objectmaker, (t_method)newmethod, s,
             vec[0], vec[1], vec[2], vec[3], vec[4], vec[5]);
-post("about to check for class_loadsym, which is %s", class_loadsym);
         if (class_loadsym)
         {
-post("got a loadsym... adding %s", class_loadsym);
                 /* if we're loading an extern it might have been invoked by a
                 longer file name; in this case, make this an admissible name
                 too. */
@@ -635,7 +632,6 @@ void new_anything(void *dummy, t_symbol *s, int argc, t_atom *argv)
     }
     newest = 0;
     class_loadsym = s;
-post("new_anything: class_loadsym is %s", class_loadsym);
     if (sys_load_lib(canvas_getcurrent(), s->s_name))
     {
         tryingalready++;
