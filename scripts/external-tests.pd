@@ -1,4 +1,4 @@
-#N canvas 5 53 659 668 12;
+#N canvas 2 53 659 672 12;
 #X obj 61 34 loadbang;
 #N canvas 107 123 756 233 load_hcs/folder_list 0;
 #X obj 357 47 inlet;
@@ -17,12 +17,8 @@
 #X connect 7 0 1 0;
 #X restore 164 459 pd load_hcs/folder_list;
 #X text 304 45 \$0-libdir - directory containing doc and extra;
-#N canvas 44 204 956 472 list_of_libdirs 0;
+#N canvas 45 220 956 472 list_of_libdirs 0;
 #X obj 24 9 inlet;
-#X msg 24 150 libdir cyclone zexy creb cxc iemlib list-abs mapping
-markex maxlib memento mjlib motex osx pddp pdogg pixeltango pmpd rradical
-sigpack smlib unauthorized vbap pan freeverb~ hcs jmmmp ext13 ggee
-iem_anything ekext hexloader disis lyonpotpourri;
 #X text 70 128 libraries that are loaded at startup in Purr Data;
 #X text 49 267 Gem is currently excluded because it doesn't run on
 all platforms;
@@ -43,12 +39,16 @@ iemxmlrpc jasch_lib K12 la-kitchen loop~ lrshift~ memento-p mjlib moocow
 moonlib motex mrpeach nsend pan pd~ pdcontainer pd-wavelet pique plugin~
 pmpd purepd rjlib rradical rtc sfruit sigmund~ stdout timestretch windowing
 ;
-#X connect 0 0 11 0;
-#X connect 1 0 10 0;
-#X connect 10 0 4 0;
-#X connect 11 0 1 0;
-#X connect 11 1 12 0;
-#X connect 12 0 10 1;
+#X msg 24 150 google libdir cyclone zexy creb cxc iemlib list-abs mapping
+markex maxlib memento mjlib motex osx pddp pdogg pixeltango pmpd rradical
+sigpack smlib unauthorized vbap pan freeverb~ hcs jmmmp ext13 ggee
+iem_anything ekext hexloader disis lyonpotpourri;
+#X connect 0 0 10 0;
+#X connect 9 0 3 0;
+#X connect 10 0 12 0;
+#X connect 10 1 11 0;
+#X connect 11 0 9 1;
+#X connect 12 0 9 0;
 #X restore 132 124 pd list_of_libdirs;
 #N canvas 245 192 382 392 list_drip 0;
 #X obj 67 30 inlet;
@@ -288,7 +288,7 @@ works.;
 #X connect 11 2 5 1;
 #X connect 12 0 6 0;
 #X connect 15 0 7 0;
-#X restore 164 539 pd test_load_with_declare;
+#X restore 164 569 pd test_load_with_declare;
 #N canvas 464 46 450 650 get-creator-names 0;
 #X obj 41 22 inlet;
 #X obj 41 586 outlet;
@@ -353,7 +353,7 @@ works.;
 #X connect 28 0 14 0;
 #X connect 28 1 19 1;
 #X connect 29 0 19 0;
-#X restore 132 573 pd get-creator-names;
+#X restore 132 603 pd get-creator-names;
 #N canvas 240 179 450 346 test-object 0;
 #X obj 26 36 inlet;
 #X text 72 34 creator_name argtype1 argtype2 etc.;
@@ -705,7 +705,7 @@ nameclash is in the current library we're testing then we ignore it.
 #X connect 9 0 8 0;
 #X connect 10 0 3 0;
 #X connect 10 2 11 0;
-#X restore 132 604 pd test-object;
+#X restore 132 664 pd test-object;
 #X obj 164 269 trigger bang anything anything;
 #X msg 371 293 methods;
 #X obj 371 318 classinfo objectmaker;
@@ -834,11 +834,15 @@ nameclash is in the current library we're testing then we ignore it.
 #X connect 40 0 41 0;
 #X connect 40 1 36 0;
 #X connect 41 0 37 0;
-#X restore 61 631 pd results;
+#X restore 61 691 pd results;
 #X obj 132 239 t a a;
 #X obj 61 94 trigger bang bang bang anything;
 #X obj 132 179 t a a;
-#X obj 403 169 print testing_lib;
+#X obj 164 534 t a a;
+#X obj 403 169 print testing_libdir;
+#X obj 314 526 print loading_lib;
+#X obj 132 628 t a a;
+#X obj 280 648 print creating_object;
 #X connect 0 0 24 0;
 #X connect 1 0 13 0;
 #X connect 3 0 4 0;
@@ -851,8 +855,8 @@ nameclash is in the current library we're testing then we ignore it.
 #X connect 10 0 12 0;
 #X connect 12 0 1 0;
 #X connect 13 0 14 0;
-#X connect 14 0 15 0;
-#X connect 16 0 17 0;
+#X connect 14 0 31 0;
+#X connect 16 0 34 0;
 #X connect 18 0 6 0;
 #X connect 18 1 10 1;
 #X connect 18 2 19 0;
@@ -868,4 +872,8 @@ nameclash is in the current library we're testing then we ignore it.
 #X connect 29 2 5 0;
 #X connect 29 3 9 0;
 #X connect 30 0 25 0;
-#X connect 30 1 31 0;
+#X connect 30 1 32 0;
+#X connect 31 0 15 0;
+#X connect 31 1 33 0;
+#X connect 34 0 17 0;
+#X connect 34 1 35 0;
