@@ -131,7 +131,7 @@ windows_i386_installer:
     - echo `pwd`
     - cd l2ork_addons
     - ./tar_em_up.sh -Z
-     - ../packages/win32_inno/build/bin/pd.exe -noprefs -nostdpath -nogui -noaudio ../scripts/external-tests.pd
+    - ../packages/win32_inno/build/bin/pd.exe -noprefs -nostdpath -nogui -noaudio ../scripts/external-tests.pd
   artifacts:
     expire_in: 1 day
     paths:
