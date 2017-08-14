@@ -62,12 +62,3 @@ static void vectorMult_setup(void)
 void setup_vector0x2a(void){
   vectorMult_setup();
 }
-void vector0x2a_setup(void){
-  vectorMult_setup();
-}
-void setup_v0x2a(void){
-  vectorMult_setup();
-}
-void v0x2a_setup(void){
-  vectorMult_setup();
-}

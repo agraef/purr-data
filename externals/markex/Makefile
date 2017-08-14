@@ -5,7 +5,7 @@ LIBRARY_NAME = markex
 
 # add your .c source files, one object per file, to the SOURCES
 # variable, help files will be included automatically
-SOURCES = abs~.c alternate.c average.c counter.c hsv2rgb.c invert.c multiselect.c oneshot.c randomF.c reson~.c rgb2hsv.c strcat.c tripleLine.c tripleRand.c vector+.c vector-.c vector0x2a.c vector0x2f.c vectorabs.c vectorpack.c
+SOURCES = abs~.c alternate.c average.c counter.c hsv2rgb.c invert.c multiselect.c oneshot.c randomF.c reson~.c rgb2hsv.c strcat.c tripleLine.c tripleRand.c vector+.c vector-.c vector0x2a.c v0x2a.c vector0x2f.c v0x2f.c vectorabs.c vectorpack.c
 
 # list all pd objects (i.e. myobject.pd) files here, and their helpfiles will
 # be included automatically

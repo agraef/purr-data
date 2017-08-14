@@ -61,5 +61,4 @@ static void vectorDiv_setup(void)
 
 void setup_vector0x2f(void) { vectorDiv_setup(); }
 void vector0x2f_setup(void) { vectorDiv_setup(); }
-void setup_v0x2f(void)      { vectorDiv_setup(); }
 void v0x2f_setup(void)      { vectorDiv_setup(); }
