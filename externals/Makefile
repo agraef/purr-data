@@ -937,7 +937,7 @@ iem16_install: iem16
 	install -d $(DESTDIR)$(objectsdir)/$(IEM16_NAME)
 	$(scripts_src)/generate-libdir-metafile.sh $(DESTDIR)$(objectsdir) $(IEM16_NAME) \
 		--author "IOhannes m zmoelnig" \
-		--description "16bit table, array objects for low memory usage" \
+		--description "16bit table/array objects for low memory usage" \
 		--license "GNU GPL" \
 		--version "0.1"
 	install -p $(IEM16_DIR)/*.$(EXTENSION) $(DESTDIR)$(objectsdir)/$(IEM16_NAME)
