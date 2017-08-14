@@ -1,6 +1,6 @@
 // alias for [mtx_+]
 #include "../src/mtx_add.c"
-void mtx_0x2b_setup()
+void setup_mtx_0x2b()
 {
   mtx_add_setup();
 }

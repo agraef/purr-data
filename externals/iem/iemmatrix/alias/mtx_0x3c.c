@@ -1,6 +1,6 @@
 // alias for [mtx_<]
 #include "../src/mtx_lt.c"
-void mtx_0x3c_setup()
+void setup_mtx_0x3c()
 {
   mtx_lt_setup();
 }

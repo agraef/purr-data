@@ -1,6 +1,6 @@
 // alias for [mtx_&]
 #include "../src/mtx_bitand.c"
-void mtx_0x26_setup()
+void setup_mtx_0x26()
 {
   mtx_bitand_setup();
 }
