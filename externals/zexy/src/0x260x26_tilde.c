@@ -283,7 +283,7 @@ static void andand_tilde_help(t_object*x)
   post("\n"HEARTSYMBOL " &&~\t\t:: logical AND operation on 2 signals");
 }
 
-void setup_0x260x260x7e(void)
+void setup_0x260x26_tilde(void)
 {
   andand_tilde_class = class_new(gensym("&&~"),
                                  (t_newmethod)andand_tilde_new, 0,
