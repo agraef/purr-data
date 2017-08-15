@@ -257,7 +257,7 @@ static void oror_tilde_help(t_object*x)
   post("\n"HEARTSYMBOL " &&~\t\t:: logical OR operation on 2 signals");
 }
 
-void setup_0x7c0x7c0x7e(void)
+void setup_0x7c0x7c_tilde(void)
 {
   oror_tilde_class = class_new(gensym("||~"), (t_newmethod)oror_tilde_new, 0,
                                sizeof(t_oror_tilde), 0, A_GIMME, 0);

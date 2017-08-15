@@ -1834,26 +1834,26 @@ zexy_install: zexy
 # add missing aliases
 # can't do these on Windows because FAT, NTFS don't support these chars in filenames
 # on Windows, these are faked in by loading them as libs
-ifneq ($(OS_NAME),windows)
-	test -e $(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/..$(EXTENSION) || \
-		ln -s 0x2e.$(EXTENSION) \
-			$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/..$(EXTENSION)
-	test -e '$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/&&~.$(EXTENSION)' || \
-		ln -s 0x260x260x7e.$(EXTENSION) \
-			'$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/&&~.$(EXTENSION)'
-	test -e '$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/<~.$(EXTENSION)' || \
-		ln -s 0x3c0x7e.$(EXTENSION) \
-			'$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/<~.$(EXTENSION)'
-	test -e '$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/==~.$(EXTENSION)' || \
-		ln -s 0x3d0x3d0x7e.$(EXTENSION) \
-			'$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/==~.$(EXTENSION)'
-	test -e '$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/>~.$(EXTENSION)' || \
-		ln -s 0x3e0x7e.$(EXTENSION) \
-			'$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/>~.$(EXTENSION)'
-	test -e '$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/||~.$(EXTENSION)' || \
-		ln -s 0x7c0x7c0x7e.$(EXTENSION) \
-			'$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/||~.$(EXTENSION)'
-endif
+#ifneq ($(OS_NAME),windows)
+#	test -e $(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/..$(EXTENSION) || \
+#		ln -s 0x2e.$(EXTENSION) \
+#			$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/..$(EXTENSION)
+#	test -e '$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/&&~.$(EXTENSION)' || \
+#		ln -s 0x260x26_tilde.$(EXTENSION) \
+#			'$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/&&~.$(EXTENSION)'
+#	test -e '$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/<~.$(EXTENSION)' || \
+#		ln -s 0x3c_tilde.$(EXTENSION) \
+#			'$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/<~.$(EXTENSION)'
+#	test -e '$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/==~.$(EXTENSION)' || \
+#		ln -s 0x3d0x3d_tilde.$(EXTENSION) \
+#			'$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/==~.$(EXTENSION)'
+#	test -e '$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/>~.$(EXTENSION)' || \
+#		ln -s 0x3e_tilde.$(EXTENSION) \
+#			'$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/>~.$(EXTENSION)'
+#	test -e '$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/||~.$(EXTENSION)' || \
+#		ln -s 0x7c0x7c_tilde.$(EXTENSION) \
+#			'$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/||~.$(EXTENSION)'
+#endif
 
 zexy_clean:
 	cd $(externals_src)/zexy && ./autogen.sh
