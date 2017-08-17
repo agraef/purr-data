@@ -102,7 +102,8 @@ osx_amd64_dmg:
      - echo `pwd`
      - cd l2ork_addons
      - ./tar_em_up.sh -X
-     - ../packages/darwin_app/build/*.app/Contents/Resources/app.nw/bin/pd-l2ork -noprefs -nostdpath -nogui -noaudio ../scripts/external-tests.pd
+     - cd ../scripts
+     - ../packages/darwin_app/build/*.app/Contents/Resources/app.nw/bin/pd-l2ork -noprefs -nostdpath -nogui -noaudio external-tests.pd
    artifacts:
      expire_in: 1 day
      paths:
@@ -117,7 +118,8 @@ osx_10.8_amd64_dmg:
      - echo `pwd`
      - cd l2ork_addons
      - osx_version=10.8 ./tar_em_up.sh -X
-     - ../packages/darwin_app/build/*.app/Contents/Resources/app.nw/bin/pd-l2ork -noprefs -nostdpath -nogui -noaudio ../scripts/external-tests.pd
+     - cd ../scripts
+     - ../packages/darwin_app/build/*.app/Contents/Resources/app.nw/bin/pd-l2ork -noprefs -nostdpath -nogui -noaudio external-tests.pd
    artifacts:
      expire_in: 1 day
      paths:
