@@ -17,7 +17,7 @@
 #X connect 7 0 1 0;
 #X restore 164 459 pd load_hcs/folder_list;
 #X text 304 45 \$0-libdir - directory containing doc and extra;
-#N canvas 45 220 956 472 list_of_libdirs 0;
+#N canvas 46 220 956 472 list_of_libdirs 0;
 #X obj 24 9 inlet;
 #X text 70 128 libraries that are loaded at startup in Purr Data;
 #X text 49 267 Gem is currently excluded because it doesn't run on
@@ -39,7 +39,7 @@ iemxmlrpc jasch_lib K12 la-kitchen loop~ lrshift~ memento-p mjlib moocow
 moonlib motex mrpeach nsend pan pd~ pdcontainer pd-wavelet pique plugin~
 pmpd purepd rjlib rradical rtc sfruit sigmund~ stdout timestretch windowing
 ;
-#X msg 24 150 google libdir cyclone zexy creb cxc iemlib list-abs mapping
+#X msg 24 150 libdir cyclone zexy creb cxc iemlib list-abs mapping
 markex maxlib memento mjlib motex osx pddp pdogg pixeltango pmpd rradical
 sigpack smlib unauthorized vbap pan freeverb~ hcs jmmmp ext13 ggee
 iem_anything ekext disis lyonpotpourri;
