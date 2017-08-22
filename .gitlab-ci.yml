@@ -144,3 +144,19 @@ windows_i386_installer:
     expire_in: 1 day
     paths:
       - Purr*.exe
+
+debian_stable_arm_deb:
+   tags:
+     - debian
+     - arm 
+     - stable
+   script:
+     - echo `pwd`
+     - cd l2ork_addons
+     - ./tar_em_up.sh -r
+     - cd ..
+     - pd-l2ork -noprefs -nostdpath -nogui -nrt -noaudio scripts/external-tests.pd
+   artifacts:
+     expire_in: 1 day
+     paths:
+       - pd*.deb
