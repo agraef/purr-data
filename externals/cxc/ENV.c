@@ -81,8 +81,8 @@ void ENV_setup(void)
     ENV_class = class_new(gensym("ENV"), (t_newmethod)ENV_new, 0,
     	sizeof(t_ENV), 0, 0);
     class_addmethod(ENV_class, (t_method)ENV_RAND_MAX, gensym("RAND_MAX"), 0);
-    class_addmethod(ENV_class, (t_method)ENV_getenv, gensym("getenv"), A_SYMBOL);
-    class_addmethod(ENV_class, (t_method)ENV_setenv, gensym("setenv"), A_SYMBOL, A_SYMBOL);
+    class_addmethod(ENV_class, (t_method)ENV_getenv, gensym("getenv"), A_SYMBOL, 0);
+    class_addmethod(ENV_class, (t_method)ENV_setenv, gensym("setenv"), A_SYMBOL, A_SYMBOL, 0);
     class_addfloat(ENV_class, ENV_float);
 }
 

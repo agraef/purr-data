@@ -213,10 +213,10 @@ void proc_setup(void)
     proc_class = class_new(gensym("proc"), (t_newmethod)proc_new, 0,
     	sizeof(t_proc), 0, 0);
     class_addmethod(proc_class, (t_method)proc_cpuinfo, gensym("cpuinfo"), 0);
-    class_addmethod(proc_class, (t_method)proc_proc,    gensym("proc"),    A_SYMBOL);
+    class_addmethod(proc_class, (t_method)proc_proc,    gensym("proc"),    A_SYMBOL, 0);
     //class_addmethod(proc_class, (t_method)proc_RAND_MAX, gensym("RAND_MAX"), 0);
-    //class_addmethod(proc_class, (t_method)proc_getenv, gensym("getenv"), A_SYMBOL);
-    //class_addmethod(proc_class, (t_method)proc_setenv, gensym("setenv"), A_SYMBOL, A_SYMBOL);
+    //class_addmethod(proc_class, (t_method)proc_getenv, gensym("getenv"), A_SYMBOL, 0);
+    //class_addmethod(proc_class, (t_method)proc_setenv, gensym("setenv"), A_SYMBOL, A_SYMBOL, 0);
     class_addfloat(proc_class, proc_float);
 }
 
