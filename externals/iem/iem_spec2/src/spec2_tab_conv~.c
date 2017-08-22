@@ -118,7 +118,16 @@ static void spec2_tab_conv_tilde_free(t_spec2_tab_conv_tilde *x)
 static void *spec2_tab_conv_tilde_new(t_symbol *s, int argc, t_atom *argv)
 {
   t_spec2_tab_conv_tilde *x = (t_spec2_tab_conv_tilde *)pd_new(spec2_tab_conv_tilde_class);
-  
+  t_atom sane_defaults[2];
+  if(!argc)
+  {
+    post("spec2_tab_conv~: warning: no arguments provided: setting defaults to "
+         "[spec2_tab_conv~ array1 0]");
+    SETSYMBOL(sane_defaults, gensym("array1"));
+    SETFLOAT(sane_defaults+1, 0.);
+    argv = sane_defaults;
+    argc = 2;
+  }
   if((argc >= 2) && IS_A_SYMBOL(argv,0) && IS_A_FLOAT(argv,1))
   {
     x->x_sym_array = (t_symbol *)(atom_getsymbol(argv));

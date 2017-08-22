@@ -35,9 +35,32 @@ typedef struct _harmgen_tilde
 	float x_f;
 } t_harmgen_tilde;
 
-static void *harmgen_tilde_new(t_floatarg mag1, t_floatarg mag2, t_floatarg mag3, t_floatarg mag4, t_floatarg mag5, t_floatarg mag6, t_floatarg mag7, t_floatarg mag8, t_floatarg mag9, t_floatarg mag10)
+static void *harmgen_tilde_new(t_symbol *s, int argc, t_atom *argv)
 {
+    t_sample mag1 = 1, mag2 = 1, mag3 = 1, mag4 = 1, mag5 = 1,
+             mag6 = 1, mag7 = 1, mag8 = 1, mag9 = 1, mag10 = 1;
     t_harmgen_tilde *x = (t_harmgen_tilde *)pd_new(harmgen_tilde_class);
+	x->x_f = 0;
+	if(argc > 0) mag1 = (t_sample)atom_getfloatarg(0, argc, argv);
+	x->x_mag1 = mag1 ? mag1 : 1;
+	if(argc > 1) mag2 = (t_sample)atom_getfloatarg(1, argc, argv);
+	x->x_mag2 = mag2 ? mag2 : 1;
+	if(argc > 2) mag3 = (t_sample)atom_getfloatarg(2, argc, argv);
+	x->x_mag3 = mag3 ? mag3 : 1;
+	if(argc > 3) mag4 = (t_sample)atom_getfloatarg(3, argc, argv);
+	x->x_mag4 = mag4 ? mag4 : 1;
+	if(argc > 4) mag5 = (t_sample)atom_getfloatarg(4, argc, argv);
+	x->x_mag5 = mag5 ? mag5 : 1;
+	if(argc > 5) mag6 = (t_sample)atom_getfloatarg(5, argc, argv);
+	x->x_mag6 = mag6 ? mag6 : 1;
+	if(argc > 6) mag7 = (t_sample)atom_getfloatarg(6, argc, argv);
+	x->x_mag7 = mag7 ? mag7 : 1;
+	if(argc > 7) mag8 = (t_sample)atom_getfloatarg(7, argc, argv);
+	x->x_mag8 = mag8 ? mag8 : 1;
+	if(argc > 8) mag9 = (t_sample)atom_getfloatarg(8, argc, argv);
+	x->x_mag9 = mag9 ? mag9 : 1;
+	if(argc > 9) mag10 = (t_sample)atom_getfloatarg(9, argc, argv);
+	x->x_mag10 = mag10 ? mag10 : 1;
     outlet_new(&x->x_obj, gensym("signal"));
 	floatinlet_new(&x->x_obj, &x->x_mag1);
 	floatinlet_new(&x->x_obj, &x->x_mag2);
@@ -49,27 +72,6 @@ static void *harmgen_tilde_new(t_floatarg mag1, t_floatarg mag2, t_floatarg mag3
 	floatinlet_new(&x->x_obj, &x->x_mag8);
 	floatinlet_new(&x->x_obj, &x->x_mag9);
 	floatinlet_new(&x->x_obj, &x->x_mag10);
-	x->x_f = 0;
-	if(mag1) x->x_mag1 = mag1;
-	else x->x_mag1 = 1;
-	if(mag2) x->x_mag2 = mag2;
-	else x->x_mag2 = 1;
-	if(mag3) x->x_mag3 = mag3;
-	else x->x_mag3 = 1;
-	if(mag4) x->x_mag4 = mag4;
-	else x->x_mag4 = 1;
-	if(mag5) x->x_mag5 = mag5;
-	else x->x_mag5 = 1;
-	if(mag6) x->x_mag6 = mag6;
-	else x->x_mag6 = 1;
-	if(mag7) x->x_mag7 = mag7;
-	else x->x_mag7 = 1;
-	if(mag8) x->x_mag8 = mag8;
-	else x->x_mag8 = 1;
-	if(mag9) x->x_mag9 = mag9;
-	else x->x_mag9 = 1;
-	if(mag10) x->x_mag10 = mag10;
-	else x->x_mag10 = 1;
     return (x);
 }
 

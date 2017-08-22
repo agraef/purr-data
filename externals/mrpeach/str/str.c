@@ -35,7 +35,7 @@ static void *str_new(t_symbol *s, int argc, t_atom *argv)
 
 void str_setup(void)
 {
-    str_class = class_new(gensym("str"), (t_newmethod)str_new, 0, sizeof(t_str), 0, 0);
+    str_class = class_new(gensym("str"), (t_newmethod)str_new, 0, sizeof(t_str), 0, A_GIMME, 0);
 }
 #else //ifndef PD_BLOBS
 /* Make a _real_ str object: */
@@ -687,7 +687,7 @@ static void *str_new(t_symbol *s, int argc, t_atom *argv)
     x->x_function = 0; /* default = string */
     x->x_nsplit = 0L;
     next = 0; /* index of next argument */
-    if (argv[0].a_type == A_SYMBOL)
+    if (argc && argv[0].a_type == A_SYMBOL)
     { /* the first argument may be a selector */
         atom_string(&argv[0], (char *)x->x_buf.s_data, MAXPDSTRING);
         for (i = 0; i < n_functions; ++i)

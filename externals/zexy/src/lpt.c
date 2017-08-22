@@ -165,7 +165,7 @@ static void lpt_bang(t_lpt *x)
 static void *lpt_new(t_symbol *s, int argc, t_atom *argv)
 {
   t_lpt *x = (t_lpt *)pd_new(lpt_class);
-  char*devname=atom_getsymbol(argv)->s_name;
+  char*devname = argc ? atom_getsymbol(argv)->s_name : &s_;
   if(s==gensym("lp")) {
     error("lpt: the use of 'lp' has been deprecated; use 'lpt' instead");
   }

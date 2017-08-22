@@ -68,38 +68,41 @@ static void iem_i_route_free(t_iem_i_route *x)
 
 static void *iem_i_route_new(t_symbol *s, int argc, t_atom *argv)
 {
-  int n, i;
+  int n, i, first, last, off;
   t_outlet **out;
   t_iem_i_route *x = (t_iem_i_route *)pd_new(iem_i_route_class);
-  
-  if((argc >= 2)&&IS_A_FLOAT(argv,0)&&IS_A_FLOAT(argv,1))
+
+  if (argc) first = atom_getintarg(0, argc--, argv++); else first = 0;
+  if (argc) last = atom_getintarg(0, argc--, argv++); else last = 0;
+  if (argc) off = atom_getintarg(0, argc--, argv++); else off = 0;
+
+  if (first > last)
   {
-    x->x_first_element = (int)atom_getintarg(0, argc, argv);
-    x->x_last_element = (int)atom_getintarg(1, argc, argv);
-    if((argc >= 3)&&IS_A_FLOAT(argv,2))
-    {
-      i = (int)atom_getintarg(2, argc, argv);
-      x->x_first_element += i;
-      x->x_last_element += i;
-    }
-    x->x_out = (t_outlet **)getbytes((x->x_last_element-x->x_first_element+2) * sizeof(t_outlet *));
-    n = x->x_last_element - x->x_first_element + 2;
-    for(i=0, out=x->x_out; i<n; i++, out++)
-      *out = outlet_new(&x->x_obj, &s_list);
-    return (x);
+    post("iem_i_route: warning: illegal range bashed to 0");
+    first = last;
   }
-  else
+  if (last - first + 1 > 100)
   {
-    post("iem_i_route-ERROR: needs 3 floats!!");
-    return(0);
+    post("iem_i_route: warning: only 100 outlets allowed. Setting last "
+         "match value to %d", (int)(first + 98));
+    last = first + 98;
   }
+  x->x_first_element = first + off;
+  x->x_last_element = last + off;
+  x->x_out = (t_outlet **)getbytes((x->x_last_element-x->x_first_element+2) * sizeof(t_outlet *));
+  n = x->x_last_element - x->x_first_element + 2;
+  for(i=0, out=x->x_out; i<n; i++, out++)
+    *out = outlet_new(&x->x_obj, &s_list);
+  return (x);
 }
 
 void iem_i_route_setup(void)
 {
-  iem_i_route_class = class_new(gensym("iem_i_route"), (t_newmethod)iem_i_route_new,
-        (t_method)iem_i_route_free, sizeof(t_iem_i_route), 0, A_GIMME, 0);
-  class_addcreator((t_newmethod)iem_i_route_new, gensym("iiroute"), A_GIMME, 0);
+  iem_i_route_class = class_new(gensym("iem_i_route"),
+    (t_newmethod)iem_i_route_new, (t_method)iem_i_route_free,
+    sizeof(t_iem_i_route), 0, A_GIMME, 0);
+  class_addcreator((t_newmethod)iem_i_route_new, gensym("iiroute"),
+    A_GIMME, 0);
   class_addlist(iem_i_route_class, iem_i_route_list);
-//  class_sethelpsymbol(iem_i_route_class, gensym("iemhelp/help-iem_i_route"));
+  //class_sethelpsymbol(iem_i_route_class, gensym("iemhelp/help-iem_i_route"));
 }

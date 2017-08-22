@@ -83,7 +83,7 @@ static void *newMTXBessel (t_symbol *s, int argc, t_atom *argv)
   x->h_re = 0; 
   x->h_im = 0; 
   x->l=0;
-  fsym=atom_getsymbol(argv);
+  fsym= argc ? atom_getsymbol(argv) : &s_;
   if (fsym->s_name!=0)
      whichfunction=fsym->s_name[0];
   switch (whichfunction) {
@@ -96,7 +96,7 @@ static void *newMTXBessel (t_symbol *s, int argc, t_atom *argv)
      case 'Y':
         x->list_h_im_out = outlet_new (&x->x_obj, gensym("matrix"));
   }
-  nmax=(int) atom_getfloat(argv+1);
+  nmax= argc > 1 ? (int) atom_getfloat(argv+1) : 0;
   if (nmax<0)
      nmax=0;
   x->nmax=nmax;

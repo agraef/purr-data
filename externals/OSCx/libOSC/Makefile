@@ -4,7 +4,7 @@ ARFLAGS=srv
 # DEFS= -Dunix
 LIB=libOSC.a
 
-CFLAGS=-g -O2 -DUNIX -Wall -Wimplicit -Wunused -Wmissing-prototypes -O2 -fPIC -I../libOSC -I../../pd/src -I../../../pd/src -I../src
+CFLAGS=-g -O2 -DUNIX -Wall -Wimplicit -Wunused -Wmissing-prototypes -O1 -fPIC -I../libOSC -I../../pd/src -I../../../pd/src -I../src
 INCLUDES=-I../libOSC -I../../pd/src -I../../../pd/src -I../src
 
 LIBOBJS= ${LIB}(OSC-client.o) ${LIB}(OSC-timetag.o)

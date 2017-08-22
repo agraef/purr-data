@@ -229,8 +229,27 @@ static void *formant_new(t_floatarg fsize, t_floatarg ffreq, t_floatarg ffwidth,
 
     if ( fsize <= 0 || ffreq <= 0 || ffwidth <= 0 || fswidth <= 0 )
     {
-        error( "formant~ : missing or negative creation arguments" );
-        return NULL;
+        error( "formant~ : warning: missing or negative creation arguments" );
+        if (fsize <= 0)
+        {
+            post ("first argument defaulting to 1");
+            fsize = 1;
+        }
+        if (ffreq <= 0)
+        {
+            post ("first argument defaulting to 1");
+            ffreq = 1;
+        }
+        if (ffwidth <= 0)
+        {
+            post ("first argument defaulting to 1");
+            ffwidth = 1;
+        }
+        if (fswidth <= 0)
+        {
+            post ("first argument defaulting to 1");
+            fswidth = 1;
+        }
     }
 
     x->x_size = fsize;

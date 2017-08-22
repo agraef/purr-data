@@ -33,10 +33,9 @@ loadlib29: ext13
 loadlib30: ggee
 loadlib31: iem_anything
 loadlib32: ekext
-loadlib33: hexloader
-loadlib34: disis
-loadlib35: lyonpotpourri
-nloadlib: 35
+loadlib33: disis
+loadlib34: lyonpotpourri
+nloadlib: 34
 path1: /var/lib/defoma/x-ttcidfont-conf.d/dirs/TrueType
 path2: ~/pd-l2ork-externals
 path3: ~/L2Ork/PD/Abstractions
@@ -71,6 +70,6 @@ path31: /usr/lib/pd-l2ork/extra/ggee
 path32: /usr/lib/pd-l2ork/extra/ekext
 path33: /usr/lib/pd-l2ork/extra/flext
 path34: /usr/lib/pd-l2ork/extra/rjlib
-path35: /usr/lib/pd-l2ork/extra/lyon
-path36: /usr/lib/pd-l2ork/extra/disis
+path35: /usr/lib/pd-l2ork/extra/disis
+path36: /usr/lib/pd-l2ork/extra/lyonpotpourri
 npath: 36

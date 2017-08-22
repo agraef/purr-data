@@ -221,7 +221,20 @@ static void *NLMSerr_in_tilde_new(t_symbol *s, t_int argc, t_atom *argv)
     t_symbol    *w_name;
     t_float beta=0.01f;
     t_float gammax=0.00001f;
-    
+    t_atom sane_defaults[4];
+
+    if (!argc)
+    {
+        post("NLMSerr_in~: warning: no arguments supplied: setting default "
+             "values to [NLMSerr_in~ 2 0.01 0.00001 a]");
+        SETFLOAT(sane_defaults, 2.);
+        SETFLOAT(sane_defaults+1, 0.01);
+        SETFLOAT(sane_defaults+2, 0.00001);
+        SETSYMBOL(sane_defaults+3, gensym("a"));
+        argc = 4;
+        argv = sane_defaults;
+    }
+
     if((argc >= 4) &&
         IS_A_FLOAT(argv,0) &&   //IS_A_FLOAT/SYMBOL from iemlib.h
         IS_A_FLOAT(argv,1) &&

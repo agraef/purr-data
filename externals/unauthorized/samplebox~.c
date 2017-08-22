@@ -546,8 +546,9 @@ static void *samplebox_new(t_floatarg fsize)
 
     if ( fsize <= 0 )
     {
-        error( "samplebox~ : missing or negative creation arguments" );
-        return NULL;
+        error( "samplebox~ : warning : creation argument too small : "
+               "defaulting to 1" );
+        fsize = 1.;
     }
 
     x->x_size = fsize;

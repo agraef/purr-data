@@ -345,11 +345,25 @@ static void *partconv_new(t_symbol *s, int argc, t_atom *argv)
 	t_partconv *x = (t_partconv *)pd_new(partconv_class);
 
 	outlet_new(&x->x_obj, gensym("signal"));
+        t_atom sane_defaults[2];
 
 	if (argc != 2) {
+            /* Give some sane defaults with no args so we can at least
+               instantiate and get to the help patch */
+            if (!argc)
+            {
+                post("partconv~: warning: no arguments given");
+                SETSYMBOL(sane_defaults, &s_);
+                SETFLOAT(sane_defaults+1, 2.);
+                argc = 2;
+                argv = sane_defaults;
+            }
+            else
+            {
 		post("argc = %d", argc);
 		error("partconv~: usage: [partconv~ <arrayname> <partsize>]\n\t- partition size must be a power of 2 >= blocksize");
 		return NULL;
+            }
 	}
 
 	x->arrayname = atom_getsymbol(argv);

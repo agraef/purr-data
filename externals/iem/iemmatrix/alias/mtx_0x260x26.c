@@ -1,6 +1,6 @@
 // alias for [mtx_&&]
 #include "../src/mtx_and.c"
-void mtx_0x260x26_setup()
+void setup_mtx_0x260x26()
 {
   mtx_and_setup();
 }

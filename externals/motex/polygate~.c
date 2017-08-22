@@ -104,7 +104,7 @@ static void *polygate_new(t_symbol *s, int argc, t_atom *argv)
 	    x->fadetype = x->lastfadetype = LINEAR;
 	  }
     }
-  else
+  else if (!usedefault)
     {
       if(argv[1].a_w.w_float >= EPMIN)
 	x->fadetype = x->lastfadetype = EPOWER;

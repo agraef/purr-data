@@ -114,7 +114,7 @@ static void *newMTXEig (t_symbol *s, int argc, t_atom *argv)
   
   x->list_l_out_re = outlet_new (&x->x_obj, gensym("list"));
   x->list_l_out_im = outlet_new (&x->x_obj, gensym("list"));
-  if (atom_getsymbol(argv)==gensym("v")) {
+  if (argc && atom_getsymbol(argv)==gensym("v")) {
      x->withevs=1;
      x->list_q_out_re = outlet_new (&x->x_obj, gensym("matrix"));
      x->list_q_out_im = outlet_new (&x->x_obj, gensym("matrix"));

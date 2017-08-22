@@ -482,79 +482,89 @@ static void matrix_free(t_matrix *x)
 static void *matrix_new(t_symbol *s, int ac, t_atom *av)
 {
     t_pd *z;
+    t_atom sane_defaults[3];
     if (!fittermax_get() &&
 	(z = fragile_class_mutate(matrixps_matrixtilde,
 				  (t_newmethod)matrix_new, ac, av)))
+{
 	return (z);
+}
+    if (!ac) // sane defaults if no arguments given
+    {
+        post("matrix~: warning: no arguments supplied: picking sane "
+             "defaults [matrix~ 1 1 0]");
+        SETFLOAT(sane_defaults, 1.);
+        SETFLOAT(sane_defaults+1, 1.);
+        SETFLOAT(sane_defaults+2, 0.);
+        ac = 3;
+        av = sane_defaults;
+    }
     else if (ac < 2)
     {
-	loud_error(0, "bad creation arguments for class '%s'",
-		   matrixps_matrixtilde->s_name);
-	loud_errand(0, "missing number of %s", (ac ? "outlets" : "inlets"));
-	return (0);  /* CHECKED */
+        loud_error(0, "bad creation arguments for class '%s'",
+            matrixps_matrixtilde->s_name);
+        loud_errand(0, "missing number of %s", (ac ? "outlets" : "inlets"));
+        return (0);  /* CHECKED */
+    }
+    t_matrix *x = (t_matrix *)pd_new(matrix_class);
+    int i;
+    if (av[0].a_type == A_FLOAT)
+    {
+        if ((x->x_ninlets = (int)av[0].a_w.w_float) < 1)
+        x->x_ninlets = 1;
+    }
+    else x->x_ninlets = 1;  /* CHECKED */
+    if (av[1].a_type == A_FLOAT)
+    {
+        if ((x->x_noutlets = (int)av[1].a_w.w_float) < 1)
+        x->x_noutlets = 1;
+    }
+    else x->x_noutlets = 1;  /* CHECKED */
+    x->x_ncells = x->x_ninlets * x->x_noutlets;
+    x->x_ivecs = getbytes(x->x_ninlets * sizeof(*x->x_ivecs));
+    x->x_ovecs = getbytes(x->x_noutlets * sizeof(*x->x_ovecs));
+    x->x_nblock = x->x_maxblock = sys_getblksize();
+    x->x_osums = getbytes(x->x_noutlets * sizeof(*x->x_osums));
+    for (i = 0; i < x->x_noutlets; i++)
+        x->x_osums[i] = getbytes(x->x_maxblock * sizeof(*x->x_osums[i]));
+    x->x_cells = getbytes(x->x_ncells * sizeof(*x->x_cells));
+    matrix_clear(x);
+    if (ac >= 3)
+    {
+        if (av[2].a_type == A_FLOAT)
+            x->x_defgain = av[2].a_w.w_float;
+        else
+            x->x_defgain = MATRIX_DEFGAIN;
+        x->x_gains = getbytes(x->x_ncells * sizeof(*x->x_gains));
+        for (i = 0; i < x->x_ncells; i++)
+            x->x_gains[i] = x->x_defgain;
+        x->x_ramps = getbytes(x->x_ncells * sizeof(*x->x_ramps));
+        matrix_ramp(x, MATRIX_DEFRAMP);
+        x->x_coefs = getbytes(x->x_ncells * sizeof(*x->x_coefs));
+        for (i = 0; i < x->x_ncells; i++)
+            x->x_coefs[i] = 0.;
+        x->x_ksr = sys_getsr() * .001;
+        x->x_incrs = getbytes(x->x_ncells * sizeof(*x->x_incrs));
+        x->x_bigincrs = getbytes(x->x_ncells * sizeof(*x->x_bigincrs));
+        x->x_remains = getbytes(x->x_ncells * sizeof(*x->x_remains));
+        for (i = 0; i < x->x_ncells; i++)
+        x->x_remains[i] = 0;
     }
     else
     {
-	t_matrix *x = (t_matrix *)pd_new(matrix_class);
-	int i;
-	if (av[0].a_type == A_FLOAT)
-	{
-	    if ((x->x_ninlets = (int)av[0].a_w.w_float) < 1)
-		x->x_ninlets = 1;
-	}
-	else x->x_ninlets = 1;  /* CHECKED */
-	if (av[1].a_type == A_FLOAT)
-	{
-	    if ((x->x_noutlets = (int)av[1].a_w.w_float) < 1)
-		x->x_noutlets = 1;
-	}
-	else x->x_noutlets = 1;  /* CHECKED */
-	x->x_ncells = x->x_ninlets * x->x_noutlets;
-	x->x_ivecs = getbytes(x->x_ninlets * sizeof(*x->x_ivecs));
-	x->x_ovecs = getbytes(x->x_noutlets * sizeof(*x->x_ovecs));
-	x->x_nblock = x->x_maxblock = sys_getblksize();
-	x->x_osums = getbytes(x->x_noutlets * sizeof(*x->x_osums));
-	for (i = 0; i < x->x_noutlets; i++)
-	    x->x_osums[i] = getbytes(x->x_maxblock * sizeof(*x->x_osums[i]));
-	x->x_cells = getbytes(x->x_ncells * sizeof(*x->x_cells));
-	matrix_clear(x);
-	if (ac >= 3)
-	{
-	    if (av[2].a_type == A_FLOAT)
-		x->x_defgain = av[2].a_w.w_float;
-	    else
-		x->x_defgain = MATRIX_DEFGAIN;
-	    x->x_gains = getbytes(x->x_ncells * sizeof(*x->x_gains));
-	    for (i = 0; i < x->x_ncells; i++)
-		x->x_gains[i] = x->x_defgain;
-	    x->x_ramps = getbytes(x->x_ncells * sizeof(*x->x_ramps));
-	    matrix_ramp(x, MATRIX_DEFRAMP);
-	    x->x_coefs = getbytes(x->x_ncells * sizeof(*x->x_coefs));
-	    for (i = 0; i < x->x_ncells; i++)
-		x->x_coefs[i] = 0.;
-	    x->x_ksr = sys_getsr() * .001;
-	    x->x_incrs = getbytes(x->x_ncells * sizeof(*x->x_incrs));
-	    x->x_bigincrs = getbytes(x->x_ncells * sizeof(*x->x_bigincrs));
-	    x->x_remains = getbytes(x->x_ncells * sizeof(*x->x_remains));
-	    for (i = 0; i < x->x_ncells; i++)
-		x->x_remains[i] = 0;
-	}
-	else
-	{
-	    x->x_gains = 0;
-	    x->x_ramps = 0;
-	    x->x_coefs = 0;
-	    x->x_incrs = 0;
-	    x->x_bigincrs = 0;
-	    x->x_remains = 0;
-	}
-	for (i = 1; i < x->x_ninlets; i++)
-	    sic_newinlet((t_sic *)x, 0.);
-	for (i = 0; i < x->x_noutlets; i++)
-	    outlet_new((t_object *)x, &s_signal);
-	x->x_dumpout = outlet_new((t_object *)x, &s_list);
-	return (x);
+        x->x_gains = 0;
+        x->x_ramps = 0;
+        x->x_coefs = 0;
+        x->x_incrs = 0;
+        x->x_bigincrs = 0;
+        x->x_remains = 0;
     }
+    for (i = 1; i < x->x_ninlets; i++)
+        sic_newinlet((t_sic *)x, 0.);
+    for (i = 0; i < x->x_noutlets; i++)
+        outlet_new((t_object *)x, &s_signal);
+    x->x_dumpout = outlet_new((t_object *)x, &s_list);
+    return (x);
 }
 
 void matrix_tilde_setup(void)

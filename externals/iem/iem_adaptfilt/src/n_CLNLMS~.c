@@ -406,6 +406,23 @@ static void *n_CLNLMS_tilde_new(t_symbol *s, t_int argc, t_atom *argv)
   t_float gammax=0.00001f;
   t_float kappa = 1.0f;
   t_float leakage = 0.99f;
+  t_atom sane_defaults[7];
+
+  if (!argc)
+  {
+    post("n_CLNLMS~: warning: no arguments supplied: setting default "
+         "values to [n_CLNLMS~ 1 2 0.1 0.00001 1 0.99 a]");
+    SETFLOAT(sane_defaults, 1.);
+    SETFLOAT(sane_defaults+1, 2.);
+    SETFLOAT(sane_defaults+2, 0.1);
+    SETFLOAT(sane_defaults+3, 0.00001);
+    SETFLOAT(sane_defaults+4, 1);
+    SETFLOAT(sane_defaults+5, 0.99);
+    SETSYMBOL(sane_defaults+6, gensym("a"));
+    argc = 7;
+    argv = sane_defaults;
+  }
+
   
   if((argc >= 7) &&
     IS_A_FLOAT(argv,0) &&   //IS_A_FLOAT/SYMBOL from iemlib.h

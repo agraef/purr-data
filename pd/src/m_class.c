@@ -26,7 +26,7 @@
 #define snprintf sprintf_s
 #endif
 
-static t_symbol *class_loadsym;     /* name under which an extern is invoked */
+t_symbol *class_loadsym;     /* name under which an extern is invoked */
 static void pd_defaultfloat(t_pd *x, t_float f);
 static void pd_defaultblob(t_pd *x, t_blob *st); /* MP20061226 blob type */
 static void pd_defaultlist(t_pd *x, t_symbol *s, int argc, t_atom *argv);
@@ -251,8 +251,8 @@ t_class *class_new(t_symbol *s, t_newmethod newmethod, t_method freemethod,
                 /* if we're loading an extern it might have been invoked by a
                 longer file name; in this case, make this an admissible name
                 too. */
-            char *loadstring = class_loadsym->s_name,
-                l1 = strlen(s->s_name), l2 = strlen(loadstring);
+            char *loadstring = class_loadsym->s_name;
+            int l1 = strlen(s->s_name), l2 = strlen(loadstring);
             if (l2 > l1 && !strcmp(s->s_name, loadstring + (l2 - l1)))
                 class_addmethod(pd_objectmaker, (t_method)newmethod,
                     class_loadsym,
@@ -318,6 +318,18 @@ void class_addcreator(t_newmethod newmethod, t_symbol *s,
     va_end(ap);
     class_addmethod(pd_objectmaker, (t_method)newmethod, s,
         vec[0], vec[1], vec[2], vec[3], vec[4], vec[5]);
+    if (class_loadsym)
+    {
+            /* if we're loading an extern it might have been invoked by a
+            longer file name; in this case, make this an admissible name
+            too. */
+        char *loadstring = class_loadsym->s_name,
+            l1 = strlen(s->s_name), l2 = strlen(loadstring);
+        if (l2 > l1 && !strcmp(s->s_name, loadstring + (l2 - l1)))
+            class_addmethod(pd_objectmaker, (t_method)newmethod,
+                class_loadsym,
+                vec[0], vec[1], vec[2], vec[3], vec[4], vec[5]);
+    }
 }
 
 void class_addmethod(t_class *c, t_method fn, t_symbol *sel,

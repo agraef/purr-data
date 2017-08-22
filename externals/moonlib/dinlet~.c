@@ -67,6 +67,7 @@ union inletunion
     t_gpointer *iu_pointerslot;
     t_float *iu_floatslot;
     t_symbol **iu_symslot;
+    t_blob **iu_blobslot; /* MP 20061226 blob type */
     t_sample iu_floatsignalvalue;
 };
 
@@ -98,7 +99,7 @@ void signal_setborrowed(t_signal *sig, t_signal *sig2);
 void signal_makereusable(t_signal *sig);
 
 /* ------------------------- vinlet -------------------------- */
-t_class *vinlet_class;
+extern t_class *vinlet_class;
 
 typedef struct _vinlet
 {
@@ -114,6 +115,7 @@ typedef struct _vinlet
     /* if not reblocking, the next slot communicates the parent's inlet
     signal from the prolog to the DSP routine: */
     t_signal *x_directsignal;
+    t_resample x_updown;
 } t_vinlet;
 
 

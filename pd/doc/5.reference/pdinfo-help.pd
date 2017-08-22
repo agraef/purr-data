@@ -1,4 +1,4 @@
-#N canvas 0 19 555 619 10;
+#N canvas 257 29 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header pdinfo 3 12 0 18
@@ -46,19 +46,19 @@ version;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
 #X obj 503 7 pdinfo;
-#X obj 39 284 pdinfo;
-#X msg 39 60 print;
-#X msg 89 201 version;
-#X obj 39 315 print pd-version;
-#X text 143 200 version of Pd that's running (MAJOR MINOR TEST);
-#X msg 83 178 samplerate;
-#X text 157 177 global samplerate;
-#X msg 70 116 dir;
-#X text 99 115 directory of the Pd executable;
-#X msg 64 86 blocksize;
-#X text 136 85 global blocksize;
-#X msg 77 146 dsp-status;
-#X text 152 146 whether dsp is turned on (0 = off \, 1 = on);
+#X obj 39 307 pdinfo;
+#X msg 39 52 print;
+#X msg 105 234 version;
+#X obj 39 334 print pd-version;
+#X text 159 233 version of Pd that's running (MAJOR MINOR TEST);
+#X msg 100 211 samplerate;
+#X text 174 210 global samplerate;
+#X msg 70 120 dir;
+#X text 99 119 directory of the Pd executable;
+#X msg 64 97 blocksize;
+#X text 136 96 global blocksize;
+#X msg 77 143 dsp-status;
+#X text 152 143 whether dsp is turned on (0 = off \, 1 = on);
 #N canvas 100 44 428 514 audio-attributes 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
@@ -103,7 +103,7 @@ version;
 #X connect 23 0 21 0;
 #X connect 24 0 2 0;
 #X connect 28 0 2 0;
-#X restore 156 340 pd audio-attributes;
+#X restore 156 341 pd audio-attributes;
 #N canvas 125 83 428 395 midi-attributes 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
@@ -135,7 +135,7 @@ version;
 #X connect 15 0 2 0;
 #X connect 16 0 2 0;
 #X connect 17 0 2 0;
-#X restore 296 340 pd midi-attributes;
+#X restore 296 341 pd midi-attributes;
 #X text 98 370 print;
 #X text 168 370 - print out each available message (other than "print")
 followed by a semicolon and the output for that method.;
@@ -145,21 +145,26 @@ followed by a semicolon and the output for that method.;
 audio-device and midi-device message in subpatches.;
 #X text 169 459 - output varies depending on the message sent to [pdinfo]
 ;
-#X msg 101 253 classlist;
-#X text 155 305 Audio and MIDI specific messages are in the subpatches
-below:;
+#X msg 101 280 classlist;
 #X text 81 547 When using the "classlist" message \, note that some
 external Pd classes don't have a name. These are currently listed simply
 as "anonymous-class" in the output.;
-#X text 175 252 (long) list of all class names that have been loaded
+#X text 170 278 (long) list of all class names that have been loaded
 in the running instance of Pd. (Note: not all classes can be created
 in an object box.);
-#X msg 92 227 canvaslist;
-#X text 166 226 list of pointers to toplevel canvases in running Pd
+#X msg 98 257 canvaslist;
+#X text 172 256 list of pointers to toplevel canvases in running Pd
 instance;
-#X text 80 59 print all attributes directly to the console;
+#X text 80 51 print all attributes directly to the console;
 #X text 11 20 get info from the Pd instance that is running your patch
 ;
+#X text 155 320 Audio and MIDI specific messages:;
+#X msg 83 166 libdir;
+#X text 132 165 directory where extra/ and doc/ are found;
+#X msg 54 75 arch;
+#X text 88 74 machine architecture: ia32 \, x64 \, or arm;
+#X msg 93 189 platform;
+#X text 152 188 linux \, freebsd \, darwin \, or win32;
 #X connect 12 0 15 0;
 #X connect 13 0 12 0;
 #X connect 14 0 12 0;
@@ -168,4 +173,7 @@ instance;
 #X connect 21 0 12 0;
 #X connect 23 0 12 0;
 #X connect 33 0 12 0;
-#X connect 37 0 12 0;
+#X connect 36 0 12 0;
+#X connect 41 0 12 0;
+#X connect 43 0 12 0;
+#X connect 45 0 12 0;

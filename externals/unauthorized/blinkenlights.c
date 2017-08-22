@@ -159,23 +159,27 @@ static void *blinkenlights_new(t_float fwidth, t_float fheight, t_float fxpixsiz
     t_blinkenlights *x = (t_blinkenlights *)pd_new(blinkenlights_class);
     if ( fwidth <= 0 )
     {
-        post( "blinkenlights: wrong creation argument : width : %f", fwidth );
-        return NULL;
+        post( "blinkenlights: warning: 1st argument (width) is "
+              "too small : defaulting to 1" );
+        fwidth = 1.;
     }
     if ( fheight <= 0 )
     {
-        post( "blinkenlights: wrong creation argument : height : %f", fheight );
-        return NULL;
+        post( "blinkenlights: warning: 2nd argument (height) is too "
+              "small : defaulting to 1" );
+        fheight = 1.;
     }
     if ( fxpixsize <= 0 )
     {
-        post( "blinkenlights: wrong creation argument : x pixel size : %f", fxpixsize );
-        return NULL;
+        post( "blinkenlights: warning 3rd argument (x pixel size) is too "
+              " small : defaulting to 1" );
+        fxpixsize = 1.;
     }
     if ( fypixsize <= 0 )
     {
-        post( "blinkenlights: wrong creation argument : y pixel size : %f", fypixsize );
-        return NULL;
+        post( "blinkenlights: warning 4th argument (y pixel size)  is too "
+              "small : defaulting to 1" );
+        fypixsize = 1.;
     }
     x->x_width = (int) fwidth;
     x->x_height = (int) fheight;

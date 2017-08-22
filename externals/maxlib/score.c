@@ -278,7 +278,7 @@ static void *score_new(t_symbol *s, t_floatarg fskipindex, t_floatarg fskiptime)
 void score_setup(void)
 {
     score_class = class_new(gensym("score"), (t_newmethod)score_new,
-    	(t_method)score_free, sizeof(t_score), 0, A_SYMBOL, A_DEFFLOAT, A_DEFFLOAT, 0);
+    	(t_method)score_free, sizeof(t_score), 0, A_DEFSYM, A_DEFFLOAT, A_DEFFLOAT, 0);
     class_addmethod(score_class, (t_method)score_reset, gensym("reset"), 0);
 	class_addmethod(score_class, (t_method)score_resume, gensym("resume"), 0);
     class_addmethod(score_class, (t_method)score_start, gensym("start"), A_GIMME, 0);
@@ -294,8 +294,8 @@ void score_setup(void)
 void maxlib_score_setup(void)
 {
     score_class = class_new(gensym("maxlib_score"), (t_newmethod)score_new,
-    	(t_method)score_free, sizeof(t_score), 0, A_SYMBOL, A_DEFFLOAT, A_DEFFLOAT, 0);
-	class_addcreator((t_newmethod)score_new, gensym("score"), A_SYMBOL, A_DEFFLOAT, A_DEFFLOAT, 0);
+    	(t_method)score_free, sizeof(t_score), 0, A_DEFSYM, A_DEFFLOAT, A_DEFFLOAT, 0);
+	class_addcreator((t_newmethod)score_new, gensym("score"), A_DEFSYM, A_DEFFLOAT, A_DEFFLOAT, 0);
     class_addmethod(score_class, (t_method)score_reset, gensym("reset"), 0);
 	class_addmethod(score_class, (t_method)score_resume, gensym("resume"), 0);
     class_addmethod(score_class, (t_method)score_start, gensym("start"), A_GIMME, 0);

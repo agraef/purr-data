@@ -21,6 +21,19 @@ typedef struct _sigdel16read{
   int x_zerodel;  	/* 0 or vecsize depending on read/write order */
 } t_sigdel16read;
 
+/* routine to check that all del16writes/del16reads/vds have same vecsize */
+/* copied from del16write~.c so that there's no dependency on del16write~
+   existing before we instantiate an object from this class. (Also because
+   I don't feel like adding and bugfixing a shared library across platforms */
+static void sigdel16write_checkvecsize(t_sigdel16write *x, int vecsize){
+  if (x->x_rsortno != ugen_getsortno())    {
+    x->x_vecsize = vecsize;
+    x->x_rsortno = ugen_getsortno();
+  }
+  else if (vecsize != x->x_vecsize)
+    pd_error(x, "del16read/del16write/vd vector size mismatch");
+}
+
 static void sigdel16read_16bit(t_sigdel16read *x, t_float f);
 
 static void *sigdel16read_new(t_symbol *s, t_floatarg f){

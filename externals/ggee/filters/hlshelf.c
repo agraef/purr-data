@@ -177,15 +177,17 @@ void hlshelf_float(t_hlshelf *x,t_floatarg f)
 static void *hlshelf_new(t_symbol* s,t_int argc, t_atom* at)
 {
     t_hlshelf *x = (t_hlshelf *)pd_new(hlshelf_class);
-    t_float k0 = atom_getfloat(at);
-    t_float k1 = atom_getfloat(at+1);
-    t_float k2 = atom_getfloat(at+2);
-    t_float f1 = atom_getfloat(at+3);
-    t_float f2 = atom_getfloat(at+4);
+    t_float k0 = argc ? atom_getfloatarg(0, argc--, at++) : 0;
+    t_float k1 = argc ? atom_getfloatarg(0, argc--, at++) : 0;
+    t_float k2 = argc ? atom_getfloatarg(0, argc--, at++) : 0;
+    t_float f1 = argc ? atom_getfloatarg(0, argc--, at++) : 0;
+    t_float f2 = argc ? atom_getfloatarg(0, argc--, at++) : 0;
 
-
-    f1 = atom_getfloat(at);
-    f2 = atom_getfloat(at);
+    /* For some reason f1 and f2 got set to the original value
+       of at[0] below. Not sure why. Anyway, I just set them to
+       k0 which should be functionally equivalent. */
+    f1 = k0;
+    f2 = k0;
 
     if ((f1 == 0.0f && f2 == 0.0f) || f1 > f2){ /* all gains = 0db */
 	 f1 = 150.0f;	

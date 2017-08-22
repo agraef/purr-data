@@ -626,6 +626,18 @@ static void *ambi_decode_new(t_symbol *s, int argc, t_atom *argv)
 	t_ambi_decode *x = (t_ambi_decode *)pd_new(ambi_decode_class);
 	int nls, order, dim, i;
 	int nphls=0;/* phantom_loudspeaker */
+        t_atom sane_defaults[3];
+
+        if(!argc)
+        {
+                post("ambi_decode: warning: no arguments provided: setting to "
+                     "[ambi_decode 1 2 1]");
+                SETFLOAT(sane_defaults, 1.);
+                SETFLOAT(sane_defaults+1, 2.);
+                SETFLOAT(sane_defaults+2, 1.);
+                argc = 3;
+                argv = sane_defaults;
+        }
 
 	if(argc < 3)
 	{

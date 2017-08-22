@@ -75,13 +75,12 @@ static void list2binbuf(t_binbuf**bbuf, int *n, char**str, int argc,
 
   binbuf_clear(*bbuf);
   binbuf_add(*bbuf, argc, argv);
-  binbuf_gettext(*bbuf, str, n);
-  i=*n;
-  s=*str;
+  binbuf_gettext(*bbuf, str, &i);
 
-  if(' '==s[i]) {
-    s[i]=0;
-  }
+  s = t_resizebytes(*str, i, i+1);
+  s[i] = 0;
+  *str = s;
+  *n = i+1;
 }
 
 static void strcmp_list(t_strcmp *x, t_symbol* UNUSED(s), int argc,

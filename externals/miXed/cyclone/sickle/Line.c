@@ -323,7 +323,6 @@ void Line_tilde_setup(void)
 			   (t_newmethod)line_new,
 			   (t_method)line_free,
 			   sizeof(t_line), 0, A_DEFFLOAT, 0);
-    class_addcreator((t_newmethod)line_new, gensym("line~"), A_DEFFLOAT, 0);
     class_addcreator((t_newmethod)line_new, gensym("cyclone/line~"), A_DEFFLOAT, 0);
     sic_setup(line_class, line_dsp, SIC_NOMAINSIGNALIN);
     class_addfloat(line_class, line_float);

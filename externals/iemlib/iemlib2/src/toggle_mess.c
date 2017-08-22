@@ -79,14 +79,17 @@ static void toggle_mess_free(t_toggle_mess *x)
 
 static void *toggle_mess_new(t_symbol *s, int ac, t_atom *av)
 {
+  t_atom dummy;
   t_toggle_mess *x = (t_toggle_mess *)pd_new(toggle_mess_class);
   int i;
 
   if(!ac)
   {
-    post("toggle_mess-ERROR: must have at least one argument!");
-    x->x_at = (t_atom *)0;
-    return(0);
+    post("toggle_mess-WARNING: no arguments given. Defaulting to 0.");
+    //x->x_at = (t_atom *)0;
+    SETFLOAT(&dummy, 0.);
+    av = &dummy;
+    ac = 1;
   }
   x->x_ac = ac;
   x->x_at = (t_atom *)getbytes(ac * sizeof(t_atom));

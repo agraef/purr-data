@@ -215,7 +215,7 @@ static void initContent_ls_directions(t_def_ls *x,int ac,Atom*av)
 /*	if (av[0].a_type == A_LONG) d = av[0].a_w.w_long;
 	else */
     
-    if(av[0].a_type == A_FLOAT) d = (long)av[0].a_w.w_float;
+    if(ac && av[0].a_type == A_FLOAT) d = (long)av[0].a_w.w_float;
 	else { error("define-loudspeakers: dimension NaN"); return; }
 
 	if (d==2 || d==3)

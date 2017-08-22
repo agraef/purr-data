@@ -833,18 +833,50 @@ void pdinfo_gui(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
     info_out((t_text *)x, s, 1, at);
 }
 
-/* note: this might be wrong.  Not sure whether "libdir" means
-   something like /usr/lib/pd or the path where all the libdir externals
-   live-- i.e., /usr/lib/pd/extra */
+/* directory where extra and doc are found. Might also want to add
+   another method to return a list of all paths searched for libs-- i.e.,
+   "extrapath". */
 void pdinfo_libdir(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_atom at[1];
-    t_symbol *nsym;
-    t_namelist *nl = pd_extrapath;
-    while (nl->nl_next)
-        nl = nl->nl_next;
-    nsym = gensym(nl->nl_string);
-    SETSYMBOL(at, nsym);
+    SETSYMBOL(at, sys_libdir);
+    info_out((t_text *)x, s, 1, at);
+}
+
+void pdinfo_platform(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_atom at[1];
+    t_symbol *p = gensym("unknown");
+#ifdef __APPLE__
+    p = gensym("darwin");
+#endif
+#ifdef __FreeBSD__
+    p = gensym("freebsd");
+#endif
+#ifdef _WIN32
+    p = gensym("win32");
+#endif
+#ifdef __linux__
+    p = gensym("linux");
+#endif
+    SETSYMBOL(at, p);
+    info_out((t_text *)x, s, 1, at);
+}
+
+void pdinfo_arch(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_atom at[1];
+    t_symbol *a = gensym("unknown");
+#ifdef __i386__
+    a = gensym("ia32");
+#endif
+#ifdef __x86_64__
+    a = gensym("x64");
+#endif
+#ifdef __arm__
+    a = gensym("arm");
+#endif
+    SETSYMBOL(at, a);
     info_out((t_text *)x, s, 1, at);
 }
 
@@ -887,6 +919,8 @@ void pdinfo_setup(void)
         sizeof(t_pdinfo),
         CLASS_DEFAULT, 0);
 
+    class_addmethod(pdinfo_class, (t_method)pdinfo_arch,
+        gensym("arch"), A_GIMME, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_audio_api,
         gensym("audio-api"), A_DEFFLOAT, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_audio_apilist,
@@ -935,6 +969,8 @@ void pdinfo_setup(void)
         gensym("midi-outdev"), A_GIMME, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_midi_listdevs,
         gensym("midi-outdevlist"), A_GIMME, 0);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_platform,
+        gensym("platform"), A_GIMME, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_audio_samplerate,
         gensym("samplerate"), A_GIMME, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_version,

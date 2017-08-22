@@ -39,7 +39,7 @@ typedef struct _sigdel16write{
 } t_sigdel16write;
 
 
-void sigdel16write_checkvecsize(t_sigdel16write *x, int vecsize);
+//void sigdel16write_checkvecsize(t_sigdel16write *x, int vecsize);
 
 
 # define XTRASAMPS 4

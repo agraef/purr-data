@@ -840,6 +840,11 @@ static void *udpsend_tilde_new(t_floatarg inlets, t_floatarg blocksize)
     t_udpsend_tilde *x = (t_udpsend_tilde *)pd_new(udpsend_tilde_class);
     if (x)
     {
+        if (inlets < 1.)
+        {
+            post("udpsend~: warning: no inlet argument given: defaulting to 1");
+            inlets = 1.;
+        }
         for (i = sizeof(t_object); i < (int)sizeof(t_udpsend_tilde); i++)
             ((char *)x)[i] = 0; 
 

@@ -22,6 +22,7 @@ void *newMtxEITilde(t_symbol *s, int argc, t_atom *argv)
 {
    int sd=1;
    int sg=1;
+   t_atom sane_defaults[1];
    mtx_ei_tilde *x = (mtx_ei_tilde*) pd_new(mtx_ei_tilde_class);
    x->sig_in_left=0;
    x->sig_in_right=0;
@@ -32,6 +33,12 @@ void *newMtxEITilde(t_symbol *s, int argc, t_atom *argv)
    inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_signal, &s_signal);
    x->message_outlet=(t_outlet*)outlet_new(&x->x_obj,&s_list);
 
+   /* Prevent an invalid read */
+   if (!argc) {
+      SETFLOAT(sane_defaults, 0.);
+      argv = sane_defaults; 
+      argc = 1;
+   }
    if (argc > 2) {
       sd = atom_getint(argv++);
       sg = argc-1;

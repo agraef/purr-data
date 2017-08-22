@@ -313,7 +313,22 @@ static void *NLMSCC_tilde_new(t_symbol *s, t_int argc, t_atom *argv)
     t_symbol    *wmax_name;
     t_float beta=0.1f;
     t_float gammax=0.00001f;
-    
+    t_atom sane_defaults[6];
+
+    if (!argc)
+    {
+        post("NLMSCC~: warning: no arguments supplied: setting default values "
+             "to [NLMSCC~ 2 0.1 0.00001 a b c]");
+        SETFLOAT(sane_defaults, 2.);
+        SETFLOAT(sane_defaults+1, 0.1);
+        SETFLOAT(sane_defaults+2, 0.00001);
+        SETSYMBOL(sane_defaults+3, gensym("a"));
+        SETSYMBOL(sane_defaults+4, gensym("b"));
+        SETSYMBOL(sane_defaults+5, gensym("c"));
+        argc = 6;
+        argv = sane_defaults;
+    }
+
     if((argc >= 6) &&
         IS_A_FLOAT(argv,0) &&   //IS_A_FLOAT/SYMBOL from iemlib.h
         IS_A_FLOAT(argv,1) &&
