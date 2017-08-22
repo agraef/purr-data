@@ -23,7 +23,7 @@ typedef struct _counter
 	t_outlet    *t_out2;	/* the outlet */
 } t_counter;
 
-void counter_bang(t_counter *x)
+static void counter_bang(t_counter *x)
 {
 	int sendBang = 0;
     switch(x->c_dir)
@@ -93,23 +93,23 @@ void counter_bang(t_counter *x)
 		outlet_bang(x->t_out2);
 }
 
-void counter_dir(t_counter *x, t_floatarg n)
+static void counter_dir(t_counter *x, t_floatarg n)
 {
     if (n == 1 || n == 2 || n == 3) x->c_dir = (int)n;
     else error("bad dir");
 }
 
-void counter_high(t_counter *x, t_floatarg n)
+static void counter_high(t_counter *x, t_floatarg n)
 {
     x->c_high = (int)n;
 }
 
-void counter_low(t_counter *x, t_floatarg n)
+static void counter_low(t_counter *x, t_floatarg n)
 {
     x->c_low = (int)n;
 }
 
-void counter_reset(t_counter *x, t_symbol *s, int argc, t_atom *argv)
+static void counter_reset(t_counter *x, t_symbol *s, int argc, t_atom *argv)
 {
     if (!argc)
     {
@@ -144,7 +144,7 @@ void counter_reset(t_counter *x, t_symbol *s, int argc, t_atom *argv)
     outlet_float(x->t_out1, (float)x->c_current);
 }
 
-void counter_clear(t_counter *x, t_symbol *s, int argc, t_atom *argv)
+static void counter_clear(t_counter *x, t_symbol *s, int argc, t_atom *argv)
 {
     if (!argc)
     {
@@ -178,7 +178,7 @@ void counter_clear(t_counter *x, t_symbol *s, int argc, t_atom *argv)
     }
 }
 
-void *counter_new(t_floatarg f, t_floatarg g, t_floatarg h) /* init vals in struc */
+static void *counter_new(t_floatarg f, t_floatarg g, t_floatarg h) /* init vals in struc */
 {
     t_counter *x = (t_counter *)pd_new(counter_class);
     x->t_out1 = outlet_new(&x->x_obj, 0);
