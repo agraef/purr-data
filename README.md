@@ -81,7 +81,7 @@ Pd-L2ork has the following goals:
 You can download a precompiled installer for Gnu/Linux, Windows, or OSX
 from the following site:
 
-[https://github.com/agraef/purr-data/releases](https://github.com/agraef/purr-data/releases)
+[https://github.com/jonwwilkes/purr-data/releases](https://github.com/jonwwilkes/purr-data/releases)
 
 ### Build Guide
 
