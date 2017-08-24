@@ -71,7 +71,6 @@ ubuntu_14.04_amd64_deb:
      - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive dpkg --force-all -i pd-l2ork*.deb > /dev/null
      - cd scripts
      - valgrind pd-l2ork -noprefs -nostdpath -nogui -nrt -noaudio external-tests.pd
-
    artifacts:
      expire_in: 1 day
      paths:
@@ -92,7 +91,6 @@ ubuntu_16.04_amd64_deb:
      - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive dpkg --force-all -i pd-l2ork*.deb > /dev/null
      - cd scripts
      - valgrind pd-l2ork -noprefs -nostdpath -nogui -nrt -noaudio external-tests.pd
-
    artifacts:
      expire_in: 1 day
      paths:
