@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#define DOLLARALL -0x7fffffff /* defined in m_binbuf.c, too. Consider merging */
+
     /* convenience routines for checking and getting values of
         atoms.  There's no "pointer" version since there's nothing
         safe to return if there's an error. */
@@ -129,7 +131,7 @@ void atom_string(t_atom *a, char *buf, unsigned int bufsize)
     }
         break;
     case A_DOLLAR:
-        if(a->a_w.w_symbol == gensym("@"))
+        if(a->a_w.w_index == DOLLARALL)
         {
             /* JMZ: $@ expansion */
             sprintf(buf, "$@");
