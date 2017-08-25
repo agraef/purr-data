@@ -2123,12 +2123,20 @@ function gui_canvas_update_line(cid, tag, x1, y1, x2, y2, yoff) {
     var halfx = parseInt((x2 - x1)/2),
         halfy = parseInt((y2 - y1)/2),
         cord = get_item(cid, tag),
-    // see comment in gui_canvas_line about xoff
-        xoff= cord.classList.contains("signal") ? 0: 0.5,
+        xoff, // see comment in gui_canvas_line about xoff
+        d_array;
+    // We have to check for existence here for the special case of
+    // preset_node which hides a wire that feeds back from the downstream
+    // object to its inlet. Pd refrains from drawing this hidden wire at all.
+    // It should also suppress a call here to update that line, but it
+    // currently doesn't. So we check for existence.
+    if (cord) {
+        xoff = cord.classList.contains("signal") ? 0: 0.5;
         d_array = ["M",x1+xoff,y1+xoff,
                    "Q",x1+xoff,y1+yoff+xoff,x1+halfx+xoff,y1+halfy+xoff,
                    "Q",x2+xoff,y2-yoff+xoff,x2+xoff,y2+xoff];
-    configure_item(cord, { d: d_array.join(" ") });
+        configure_item(cord, { d: d_array.join(" ") });
+    }
 }
 
 function text_line_height_kludge(fontsize, fontsize_type) {
