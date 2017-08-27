@@ -2304,16 +2304,19 @@ function gui_text_new(canvasname, myname, type, isselected, left_margin, font_he
 // Because of the overly complex code path inside
 // canvas_setgraph, multiple erasures can be triggered in a row.
 function gui_gobj_erase(cid, tag) {
-    var g = get_gobj(cid, tag);
-    if (g !== null) {
-        g.parentNode.removeChild(g);
-    } else {
-        // Unfortunately Pd can send messages
-        // to erase objects before they got created,
-        // or extra messages to delete objects. So
-        // we can't report an error here...
-        //post("gui_gobj_erase: gobj " + tag +
-        //    " didn't exist in the first place!");
+    var g;
+    if (patchwin[cid]) {
+        g = get_gobj(cid, tag);
+        if (g !== null) {
+            g.parentNode.removeChild(g);
+        } else {
+            // Unfortunately Pd can send messages
+            // to erase objects before they got created,
+            // or extra messages to delete objects. So
+            // we can't report an error here...
+            //post("gui_gobj_erase: gobj " + tag +
+            //    " didn't exist in the first place!");
+        }
     }
 }
 
@@ -3672,17 +3675,20 @@ function gui_load_image(cid, key, filepath) {
 // interface assumes there is only one image per gobject. If you try to
 // set more you'll get duplicate ids.
 function gui_gobj_draw_image(cid, tag, image_key, tk_anchor) {
-    var g = get_gobj(cid, tag),
+    var g, i;
+    if (patchwin[cid]) {
+        g = get_gobj(cid, tag);
         i = create_item(cid, "image", {
             id: tag,
             preserveAspectRatio: "xMinYMin meet"
         });
-    i.setAttributeNS("http://www.w3.org/1999/xlink", "href",
-        "data:image/" + pd_cache.get(image_key).type + ";base64," +
-         pd_cache.get(image_key).data);
-    img_size_setter(cid, tag, pd_cache.get(image_key).type,
-        pd_cache.get(image_key).data, tk_anchor);
-    g.appendChild(i);
+        i.setAttributeNS("http://www.w3.org/1999/xlink", "href",
+            "data:image/" + pd_cache.get(image_key).type + ";base64," +
+             pd_cache.get(image_key).data);
+        img_size_setter(cid, tag, pd_cache.get(image_key).type,
+            pd_cache.get(image_key).data, tk_anchor);
+        g.appendChild(i);
+    }
 }
 
 function gui_image_size_callback(cid, key, callback) {
@@ -3695,19 +3701,22 @@ function gui_image_size_callback(cid, key, callback) {
 }
 
 function gui_image_draw_border(cid, tag, x, y, w, h) {
-    var g = get_gobj(cid, tag),
-        b = create_item(cid, "path", {
-        "stroke-width": "1",
-        fill: "none",
-        d: ["m", x, y, w, 0,
-            "m", 0, 0, 0, h,
-            "m", 0, 0, -w, 0,
-            "m", 0, 0, 0, -h
-           ].join(" "),
-        visibility: "hidden",
-        class: "border"
-    });
-    g.appendChild(b);
+    var g, b;
+    if (patchwin[cid]) {
+        g = get_gobj(cid, tag);
+            b = create_item(cid, "path", {
+            "stroke-width": "1",
+            fill: "none",
+            d: ["m", x, y, w, 0,
+                "m", 0, 0, 0, h,
+                "m", 0, 0, -w, 0,
+                "m", 0, 0, 0, -h
+               ].join(" "),
+            visibility: "hidden",
+            class: "border"
+        });
+        g.appendChild(b);
+    }
 }
 
 function gui_image_toggle_border(cid, tag, state) {
