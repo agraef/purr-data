@@ -1254,6 +1254,9 @@ exports.last_loaded = function () {
 // close a canvas window
 
 function gui_canvas_cursor(cid, pd_event_type) {
+    if (!patchwin[cid]) {
+        return;
+    }
     var patch = get_item(cid, "patchsvg"),
         c;
     // A quick mapping of events to pointers-- these can
