@@ -843,23 +843,28 @@ void pdinfo_libdir(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
     info_out((t_text *)x, s, 1, at);
 }
 
+t_symbol* pd_getplatform(void)
+{
+#ifdef __APPLE__
+    return gensym("darwin");
+#endif
+#ifdef __FreeBSD__
+    return gensym("freebsd");
+#endif
+#ifdef _WIN32
+    return gensym("win32");
+#endif
+#ifdef __linux__
+    return gensym("linux");
+#endif
+    /* don't know the platform... */
+    return gensym("unknown");
+}
+
 void pdinfo_platform(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_atom at[1];
-    t_symbol *p = gensym("unknown");
-#ifdef __APPLE__
-    p = gensym("darwin");
-#endif
-#ifdef __FreeBSD__
-    p = gensym("freebsd");
-#endif
-#ifdef _WIN32
-    p = gensym("win32");
-#endif
-#ifdef __linux__
-    p = gensym("linux");
-#endif
-    SETSYMBOL(at, p);
+    SETSYMBOL(at, pd_getplatform());
     info_out((t_text *)x, s, 1, at);
 }
 

@@ -121,7 +121,7 @@ static void sys_path_replace(
 }
 
 /* expand env vars and ~ at the beginning of a path and make a copy to return */
-static void sys_expandpath(const char *from, char *to)
+void sys_expandpath(const char *from, char *to)
 {
     if ((strlen(from) == 1 && from[0] == '~') || (strncmp(from,"~/", 2) == 0))
     {

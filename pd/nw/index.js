@@ -31,14 +31,19 @@ function have_args() {
 }
 
 function set_vars(win) {
-    var port_no, font_engine_sanity, pd_engine_id;
+    var port_no, font_engine_sanity, pd_engine_id, argv_offset;
     // If the GUI was started by Pd, our port number is going to be
     // the first argument. If the GUI is supposed to start Pd, we won't
     // have any arguments and need to set it here.
     if (have_args() && gui.App.argv.length > 1) {
-        port_no = gui.App.argv[0]; // fed to us by the Pd process
+        // Unfortunately there's a bug in nw.js where the argument that
+        // specifies the package.json path doesn't get included in the
+        // argv array. This happens under Windows and Linux but apparently
+        // not under OSX. That means we need an offset hack
+        argv_offset = process.platform === "darwin" ? 1 : 0;
+        port_no = gui.App.argv[1 + argv_offset]; // fed to us by the Pd process
         // address unique to the pd_engine
-        pd_engine_id = gui.App.argv[4];
+        pd_engine_id = gui.App.argv[5 + argv_offset];
     } else {
         // If we're starting Pd, this is the first port number to try. (We'll
         // increment it if that port happens to be taken.)

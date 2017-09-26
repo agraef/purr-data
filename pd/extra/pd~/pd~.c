@@ -5,19 +5,30 @@
   BSD license; see README.txt in this distribution for details.
 */
 
+#ifdef _WIN32
+#include <io.h>
+#include <fcntl.h>
+#include <process.h>
+#include <windows.h>
+typedef int socklen_t;
+#define EADDRINUSE WSAEADDRINUSE
+#else
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <errno.h>
 #include <ctype.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <sys/wait.h>
 #include <fcntl.h>
+#endif
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #ifdef _MSC_VER
 #pragma warning (disable: 4305 4244)
+#define snprintf sprintf_s
+#define stat _stat
 #endif
 
 #ifdef MSP
@@ -33,7 +44,7 @@ typedef double t_floatarg;
 #define A_SYMBOL A_SYM
 #define getbytes t_getbytes
 #define freebytes t_freebytes
-#define ERROR error(
+#define PDERROR error(
 void *pd_tilde_class;
 #define MAXPDSTRING 4096
 #define DEFDACBLKSIZE 64
@@ -43,8 +54,7 @@ void *pd_tilde_class;
 #include "m_pd.h"
 #include "s_stuff.h"
 static t_class *pd_tilde_class;
-char *class_gethelpdir(t_class *c);
-#define ERROR pd_error(x, 
+#define PDERROR pd_error(x, 
 
 #endif
 
@@ -65,6 +75,9 @@ static char pd_tilde_dllextent[] = ".d_fat",
 static char pd_tilde_dllextent[] = ".m_i386", pd_tilde_dllextent2[] = ".dll";
 #endif
 
+#define FOOFOO
+#include "binarymsg.c"
+
 /* ------------------------ pd_tilde~ ----------------------------- */
 
 #define MSGBUFSIZE 65536
@@ -84,14 +97,13 @@ typedef struct _pd_tilde
 #endif /* MSP */
     FILE *x_infd;
     FILE *x_outfd;
-    char *x_msgbuf;
-    int x_msgbufsize;
-    int x_infill;
+    t_binbuf *x_binbuf;
     int x_childpid;
     int x_ninsig;
     int x_noutsig;
     int x_fifo;
-    float x_sr;
+    int x_binary;
+    t_float x_sr;
     t_symbol *x_pddir;
     t_symbol *x_schedlibdir;
     t_sample **x_insig;
@@ -114,169 +126,311 @@ char *strcpy(char *s1, const char *s2);
 static void pd_tilde_tick(t_pd_tilde *x);
 static void pd_tilde_close(t_pd_tilde *x)
 {
+#ifdef _WIN32
+    int termstat;
+#endif
     if (x->x_outfd)
         fclose(x->x_outfd);
     if (x->x_infd)
         fclose(x->x_infd);
     if (x->x_childpid > 0)
+#ifdef _WIN32
+        _cwait(&termstat, x->x_childpid, WAIT_CHILD);
+#else
         waitpid(x->x_childpid, 0, 0);
-    if (x->x_msgbuf)
-        free(x->x_msgbuf);
+#endif
+    binbuf_clear(x->x_binbuf);
     x->x_infd = x->x_outfd = 0;
     x->x_childpid = -1;
-    x->x_msgbuf = 0;
-    x->x_msgbufsize = 0;
 }
 
 static void pd_tilde_readmessages(t_pd_tilde *x)
 {
-    int gotsomething = 0, setclock = 0, wasempty = (x->x_infill == 0);
-    FILE *infd = x->x_infd;
-    while (1)
+    t_atom at;
+    binbuf_clear(x->x_binbuf);
+    if (x->x_binary)
     {
-        int c = getc(infd);
-        if (c == EOF)
+        int nonempty = 0;
+        while (1)
         {
-            ERROR "pd~: %s", strerror(errno));
-            pd_tilde_close(x);
-            break;
-        }
-        if (x->x_infill >= x->x_msgbufsize)
-        {
-            char *z = realloc(x->x_msgbuf, x->x_msgbufsize+MSGBUFSIZE);
-            if (!z)
-            {
-                ERROR "pd~: failed to grow input buffer");
-                pd_tilde_close(x);
+            pd_tilde_getatom(&at, x->x_infd);
+            if (!nonempty && at.a_type == A_SEMI)
                 break;
-            }
-            x->x_msgbuf = z;
-            x->x_msgbufsize += MSGBUFSIZE;
+            nonempty = (at.a_type != A_SEMI);
+            binbuf_add(x->x_binbuf, 1, &at);
         }
-        x->x_msgbuf[x->x_infill++] = c;
-        if (c == ';')
-        {
-            if (!gotsomething)
-                break;
-            gotsomething = 0;
-        }
-        else if (!isspace(c))
-            gotsomething = setclock = 1;
     }
-    if (setclock)
-        clock_delay(x->x_clock, 0);
-    else if (wasempty)
-        x->x_infill = 0;
+    else    /* ASCII */
+    {
+        t_binbuf *tmpb = binbuf_new();
+        while (1)
+        {
+            char msgbuf[MAXPDSTRING];
+            int c, infill = 0, n;
+            t_atom *vec;
+            while (isspace((c = getc(x->x_infd))) && c != EOF)
+                ;
+            if (c == EOF)
+                return;
+            do
+                msgbuf[infill++] = c;
+            while (!isspace((c = getc(x->x_infd))) && c != ';' && c != EOF) ;
+            binbuf_text(tmpb, msgbuf, infill);
+            n = binbuf_getnatom(tmpb);
+            vec = binbuf_getvec(tmpb);
+            binbuf_add(x->x_binbuf, n, vec);
+            if (!n)
+            {
+                bug("pd~");
+                break;  /* shouldn't happen */
+            }
+            if (vec[0].a_type == A_SEMI)
+                break;
+        }
+        binbuf_free(tmpb);
+        /* if (binbuf_getnatom(x->x_binbuf) > 1)
+            binbuf_print(x->x_binbuf); */
+    }
+    clock_delay(x->x_clock, 0);
 }
 
+#define FIXEDARG 14
+#define MAXARG 100
+#ifdef _WIN32
+#define EXTENT ".com"
+#else
+#define EXTENT ""
+#endif
+
 static void pd_tilde_donew(t_pd_tilde *x, char *pddir, char *schedlibdir,
-    char *patchdir, char *pdargs, int ninsig, int noutsig, int fifo,
-    float samplerate)
+    char *patchdir, int argc, t_atom *argv, int ninsig, int noutsig,
+    int fifo, t_float samplerate)
 {
     int i, pid, pipe1[2], pipe2[2];
-    char cmdbuf[MAXPDSTRING], pdexecbuf[MAXPDSTRING], schedbuf[MAXPDSTRING];
+    char pdexecbuf[MAXPDSTRING], schedbuf[MAXPDSTRING], tmpbuf[MAXPDSTRING];
+    char *execargv[FIXEDARG+MAXARG+1], ninsigstr[20], noutsigstr[20],
+        sampleratestr[40];
     struct stat statbuf;
     x->x_infd = x->x_outfd = 0;
     x->x_childpid = -1;
-    snprintf(pdexecbuf, MAXPDSTRING, "%s/bin/pd-l2ork", pddir);
+    if (argc > MAXARG)
+    {
+        post("pd~: args truncated to %d items", MAXARG);
+        argc = MAXARG;
+    }
+    sprintf(ninsigstr, "%d", ninsig);
+    sprintf(noutsigstr, "%d", noutsig);
+    sprintf(sampleratestr, "%f", (float)samplerate);
+    /* Windows is still relying on makefile.mingw which still uses the
+       name "pd" for the executable, so we need an ifdef here. Yuck! */
+#ifdef _WIN32
+    snprintf(tmpbuf, MAXPDSTRING, "%s/bin/pd" EXTENT, pddir);
+#else
+    snprintf(tmpbuf, MAXPDSTRING, "%s/bin/pd-l2ork" EXTENT, pddir);
+#endif
+    sys_bashfilename(tmpbuf, pdexecbuf);
     if (stat(pdexecbuf, &statbuf) < 0)
     {
-        snprintf(pdexecbuf, MAXPDSTRING, "%s/../../../bin/pd-l2ork", pddir);
+        snprintf(tmpbuf, MAXPDSTRING, "%s/../../../bin/pd" EXTENT, pddir);
+        sys_bashfilename(tmpbuf, pdexecbuf);
         if (stat(pdexecbuf, &statbuf) < 0)
         {
-            snprintf(pdexecbuf, MAXPDSTRING, "%s/pd-l2ork", pddir);
+            snprintf(tmpbuf, MAXPDSTRING, "%s/pd" EXTENT, pddir);
+            sys_bashfilename(tmpbuf, pdexecbuf);
             if (stat(pdexecbuf, &statbuf) < 0)
             {
-                ERROR "pd~: can't stat %s", pdexecbuf);
+                PDERROR "pd~: can't stat %s", pdexecbuf);
                 goto fail1;
             }
         }
     }
-    snprintf(schedbuf, MAXPDSTRING, "%s/pdsched%s", schedlibdir, 
+    snprintf(tmpbuf, MAXPDSTRING, "%s/pdsched%s", schedlibdir, 
         pd_tilde_dllextent);
+    sys_bashfilename(tmpbuf, schedbuf);
     if (stat(schedbuf, &statbuf) < 0)
     {
-        snprintf(schedbuf, MAXPDSTRING, "%s/pdsched%s", schedlibdir, 
+        snprintf(tmpbuf, MAXPDSTRING, "%s/pdsched%s", schedlibdir, 
             pd_tilde_dllextent2);
+        sys_bashfilename(tmpbuf, schedbuf);
         if (stat(schedbuf, &statbuf) < 0)
         {
-            ERROR "pd~: can't stat %s", schedbuf);
+            PDERROR "pd~: can't stat %s", schedbuf);
             goto fail1;
         }       
     }
-    snprintf(cmdbuf, MAXPDSTRING,
-"%s -unique -schedlib %s/pdsched -path %s -inchannels %d -outchannels %d -r %g %s\n",
-        pdexecbuf, schedlibdir, patchdir, ninsig, noutsig, samplerate, pdargs);
-#if 0
-#ifdef PD
-    fprintf(stderr, "%s", cmdbuf);
+        /* but the sub-process wants the scheduler name without the suffix */
+    snprintf(tmpbuf, MAXPDSTRING, "%s/pdsched", schedlibdir);
+    sys_bashfilename(tmpbuf, schedbuf);
+    /* We have to quote the executable under Windows to make sure spaces
+       in the path don't confuse Windows. */
+#ifdef _WIN32
+    char quoted_execbuf[MAXPDSTRING];
+    sprintf(quoted_execbuf, "\"%s\"", pdexecbuf);
+    execargv[0] = quoted_execbuf;
+#else
+    execargv[0] = pdexecbuf;
 #endif
-    post("cmd: %s", cmdbuf);
+    /* For the moment we must start the child Pd with the "-unique" flag
+       to ensure its GUI gets its own instance. Hopefully at some point in
+       the future we can figure out a usable way to get multiple Pds running
+       connected to the same GUI process. */
+    execargv[1] = "-unique";
+    execargv[2] = "-schedlib";
+#ifdef _WIN32
+    char quoted_schedbuf[MAXPDSTRING];
+    sprintf(quoted_schedbuf, "\"%s\"", schedbuf);
+    execargv[3] = quoted_schedbuf;
+#else
+    execargv[3] = schedbuf;
 #endif
-    if (pipe(pipe1) < 0)   
+    execargv[4] = "-extraflags";
+    execargv[5] = (x->x_binary ? "b" : "a");
+    execargv[6] = "-path";
+#ifdef _WIN32
+    char quoted_patchdir[MAXPDSTRING];
+    strcpy(quoted_patchdir, "\"");
+    sys_bashfilename(patchdir, tmpbuf);
+    strcat(quoted_patchdir, tmpbuf);
+    strcat(quoted_patchdir, "\"");
+    execargv[7] = quoted_patchdir;
+#else
+    execargv[7] = patchdir;
+#endif
+    execargv[8] = "-inchannels";
+    execargv[9] = ninsigstr;
+    execargv[10] = "-outchannels";
+    execargv[11] = noutsigstr;
+    execargv[12] = "-r";
+    execargv[13] = sampleratestr;
+
+        /* convert atom arguments to strings (temporarily allocating space) */
+    for (i = 0; i < argc; i++)
     {
-        ERROR "pd~: can't create pipe");
+#ifdef PD
+        atom_string(&argv[i], tmpbuf, MAXPDSTRING);
+#endif
+#ifdef MSP
+            /* because Mac pathnames sometimes have an evil preceeding
+            colon character, we test for and silently eat them */
+        if (argv[i].a_type == A_SYM)
+            strncpy(tmpbuf, (*argv->a_w.w_sym->s_name == ':'?
+                argv->a_w.w_sym->s_name+1 : argv->a_w.w_sym->s_name),
+                MAXPDSTRING-3);
+        else if (argv[i].a_type == A_LONG)
+            sprintf(tmpbuf, "%ld", argv->a_w.w_long);
+        else if (argv[i].a_type == A_FLOAT)
+            sprintf(tmpbuf,  "%f", argv->a_w.w_float);
+#endif
+        execargv[FIXEDARG+i] = malloc(strlen(tmpbuf) + 1);
+        strcpy(execargv[FIXEDARG+i], tmpbuf);
+    }
+    execargv[argc+FIXEDARG] = 0;
+#if 1
+    for (i = 0; i < argc+FIXEDARG; i++)
+        fprintf(stderr, "%s ", execargv[i]);
+    fprintf(stderr, "\n");
+#endif
+#ifdef _WIN32
+    if (_pipe(pipe1, 65536, O_BINARY | O_NOINHERIT) < 0)   
+#else
+    if (pipe(pipe1) < 0)   
+#endif
+    {
+        PDERROR "pd~: can't create pipe");
         goto fail1;
     }
+#ifdef _WIN32
+    if (_pipe(pipe2, 65536, O_BINARY | O_NOINHERIT) < 0)   
+#else
     if (pipe(pipe2) < 0)   
+#endif
     {
-        ERROR "pd~: can't create pipe");
+        PDERROR "pd~: can't create pipe");
         goto fail2;
     }
+#ifdef _WIN32
+    {
+        int stdinwas = _dup(0), stdoutwas = _dup(1);
+        if (pipe2[1] == 0)
+            pipe2[1] = _dup(pipe2[1]);
+        if (pipe1[0] != 0)
+            _dup2(pipe1[0], 0);
+        if (pipe2[1] != 1)
+            _dup2(pipe2[1], 1);
+        pid = _spawnv(P_NOWAIT, pdexecbuf, execargv);
+        if (pid < 0)
+        {
+            post("%s: couldn't start subprocess (%s)\n", execargv[0],
+                strerror(errno));
+            goto fail1;
+        }
+        _dup2(stdinwas, 0);
+        _dup2(stdoutwas, 1);
+        _close(stdinwas);
+        _close(stdoutwas);
+    }
+#else /* _WIN32 */
     if ((pid = fork()) < 0)
     {
-        ERROR "pd~: can't fork");
+        PDERROR "pd~: can't fork");
         goto fail3;
     }
     else if (pid == 0)
     {
         /* child process */
+            /* the first dup2 below would bash pipe2[1] if it happens to be
+                zero so in that case renumber it */
         if (pipe2[1] == 0)
+            pipe2[1] = dup(pipe2[1]);
+        if (pipe1[0] != 0)
         {
-            dup2(pipe2[1], 20);
-            close(pipe2[1]);
-            pipe2[1] = 20;
+            dup2(pipe1[0], 0);
+            close (pipe1[0]);
         }
-        dup2(pipe1[0], 0);
-        dup2(pipe2[1], 1);
-        if (pipe1[0] >= 2)
-            close(pipe1[0]);
+        if (pipe2[1] != 1)
+        {
+            dup2(pipe2[1], 1);
+            close (pipe2[1]);
+        }
         if (pipe1[1] >= 2)
             close(pipe1[1]);
         if (pipe2[0] >= 2)
             close(pipe2[0]);
-        if (pipe2[1] >= 2)
-            close(pipe2[1]);
-        execl("/bin/sh", "sh", "-c", cmdbuf, (char*)0);
+        execv("/usr/lib/pd-l2ork/bin/pd-l2ork", execargv);
+        perror("pd~ execv:");
         _exit(1);
     }
-        /* OK, we're parent */
+#endif /* _WIN32 */
+        /* done with fork/exec or spawn; parent continues here */
     close(pipe1[0]);
     close(pipe2[1]);
+#ifndef _WIN32      /* this was done in windows via the O_NOINHERIT flag */
     fcntl(pipe1[1],  F_SETFD, FD_CLOEXEC);
     fcntl(pipe2[0],  F_SETFD, FD_CLOEXEC);
+#endif
     x->x_outfd = fdopen(pipe1[1], "w");
     x->x_infd = fdopen(pipe2[0], "r");
     x->x_childpid = pid;
     for (i = 0; i < fifo; i++)
-        fprintf(x->x_outfd, "%s", ";\n0;\n");
-    fflush(x->x_outfd);
-    if (!(x->x_msgbuf = calloc(MSGBUFSIZE, 1)))
+        if (x->x_binary)
     {
-        ERROR "pd~: can't allocate message buffer");
-        goto fail3;
+        putc(A_SEMI, x->x_outfd);
+        pd_tilde_putfloat(0, x->x_outfd);
+        putc(A_SEMI, x->x_outfd);
     }
-    x->x_msgbufsize = MSGBUFSIZE;
-    x->x_infill = 0;
-    /* fprintf(stderr, "read...\n"); */
+    else fprintf(x->x_outfd, "%s", ";\n0;\n");
+
+    fflush(x->x_outfd);
+    binbuf_clear(x->x_binbuf);
     pd_tilde_readmessages(x);
-    /* fprintf(stderr, "... done.\n"); */
     return;
+#ifndef _WIN32
 fail3:
     close(pipe2[0]);
     close(pipe2[1]);
     if (x->x_childpid > 0)
-        waitpid(x->x_childpid, 0, 0);
+    waitpid(x->x_childpid, 0, 0);
+#endif
 fail2:
     close(pipe1[0]);
     close(pipe1[1]);
@@ -289,68 +443,120 @@ fail1:
 static t_int *pd_tilde_perform(t_int *w)
 {
     t_pd_tilde *x = (t_pd_tilde *)(w[1]);
-    int n = (int)(w[2]), i, j, numbuffill = 0, c;
+    int n = (int)(w[2]), i, j, nsigs, numbuffill = 0, c;
     char numbuf[80];
     FILE *infd = x->x_infd;
     if (!infd)
         goto zeroit;
-    fprintf(x->x_outfd, ";\n");
-    if (!x->x_ninsig)
-        fprintf(x->x_outfd, "0\n");
-    else for (i = 0; i < x->x_ninsig; i++)
+    if (x->x_binary)
     {
-        t_sample *fp = x->x_insig[i];
-        for (j = 0; j < n; j++)
-            fprintf(x->x_outfd, "%g\n", *fp++);
-        for (; j < DEFDACBLKSIZE; j++)
-            fprintf(x->x_outfd, "0\n");
+        putc(A_SEMI, x->x_outfd);
+        if (!x->x_ninsig)
+            pd_tilde_putfloat(0, x->x_outfd);
+        else for (i = 0; i < x->x_ninsig; i++)
+        {
+            t_sample *fp = x->x_insig[i];
+            for (j = 0; j < n; j++)
+                pd_tilde_putfloat(*fp++, x->x_outfd);
+            for (; j < DEFDACBLKSIZE; j++)
+                pd_tilde_putfloat(0, x->x_outfd);
+        }
+        putc(A_SEMI, x->x_outfd);
     }
-    fprintf(x->x_outfd, ";\n");
+    else
+    {
+        fprintf(x->x_outfd, ";\n");
+        if (!x->x_ninsig)
+            fprintf(x->x_outfd, "0\n");
+        else for (i = 0; i < x->x_ninsig; i++)
+        {
+            t_sample *fp = x->x_insig[i];
+            for (j = 0; j < n; j++)
+                fprintf(x->x_outfd, "%g\n", *fp++);
+            for (; j < DEFDACBLKSIZE; j++)
+                fprintf(x->x_outfd, "0\n");
+        }
+        fprintf(x->x_outfd, ";\n");
+    }
     fflush(x->x_outfd);
-    i = j = 0;
-    while (1)
+    nsigs = j = 0;
+    if (x->x_binary)
     {
         while (1)
         {
-            c = getc(infd);
-            if (c == EOF)
+            t_atom at;
+            if (!pd_tilde_getatom(&at, infd))
             {
                 if (errno)
-                    ERROR "pd~: %s", strerror(errno));
-                else ERROR "pd~: subprocess exited");
+                    PDERROR "pd~: %s", strerror(errno));
+                else PDERROR "pd~: subprocess exited");
                 pd_tilde_close(x);
                 goto zeroit;
             }
-            else if (!isspace(c) && c != ';')
-            {
-                if (numbuffill < (80-1))
-                    numbuf[numbuffill++] = c;
-            }
-            else
-            {
-                t_sample z;
-                if (numbuffill)
-                {
-                    numbuf[numbuffill] = 0;
-                    if (sscanf(numbuf, "%f", &z) < 1)
-                        continue;
-                    if (i < x->x_noutsig)
-                        x->x_outsig[i][j] = z;
-                    if (++j >= DEFDACBLKSIZE)
-                        j = 0, i++;
-                }
-                numbuffill = 0;
+            if (at.a_type == A_SEMI)
                 break;
+            else if (at.a_type == A_FLOAT)
+            {
+                if (nsigs < x->x_noutsig)
+                    x->x_outsig[nsigs][j] = at.a_w.w_float;
+                if (++j >= DEFDACBLKSIZE)
+                    j = 0, nsigs++;
             }
+            else PDERROR "pd~: subprocess returned malformed audio");
         }
-        /* message terminated */
-        if (c == ';')
-            break;
     }
-    for (; i < x->x_noutsig; i++, j = 0)
+    else
+    {
+        while (1)
+        {
+            while (1)
+            {
+                c = getc(infd);
+                if (c == EOF)
+                {
+                    if (errno)
+                        PDERROR "pd~: %s", strerror(errno));
+                    else PDERROR "pd~: subprocess exited");
+                    pd_tilde_close(x);
+                    goto zeroit;
+                }
+                else if (!isspace(c) && c != ';')
+                {
+                    if (numbuffill < (80-1))
+                        numbuf[numbuffill++] = c;
+                }
+                else
+                {
+                    t_sample z;
+                    if (numbuffill)
+                    {
+                        numbuf[numbuffill] = 0;
+#if PD_FLOATSIZE == 32
+                        if (sscanf(numbuf, "%f", &z) < 1)
+#else
+                        if (sscanf(numbuf, "%lf", &z) < 1)
+#endif
+                            continue;
+                        if (nsigs < x->x_noutsig)
+                            x->x_outsig[nsigs][j] = z;
+                        if (++j >= DEFDACBLKSIZE)
+                            j = 0, nsigs++;
+                    }
+                    numbuffill = 0;
+                    break;
+                }
+            }
+            /* message terminated */
+            if (c == ';')
+                break;
+        }
+    }
+    if (nsigs < x->x_noutsig)
+        post("sigs %d, j %d", nsigs, j);
+    for (; nsigs < x->x_noutsig; nsigs++, j = 0)
     {
         for (; j < DEFDACBLKSIZE; j++)
-            x->x_outsig[i][j] = 0;
+            x->x_outsig[nsigs][j] = 0;
     }
     pd_tilde_readmessages(x);
     return (w+3);
@@ -370,7 +576,10 @@ static void pd_tilde_dsp(t_pd_tilde *x, t_signal **sp)
         
     for (i = 0, g = x->x_insig; i < x->x_ninsig; i++, g++)
         *g = (*(sp++))->s_vec;
-    
+        /* if there were no input signals Pd still provided us with one,
+        which we ignore: */
+    if (!x->x_ninsig)
+        sp++;
     for (i = 0, g = x->x_outsig; i < x->x_noutsig; i++, g++)
         *g = (*(sp++))->s_vec;
     
@@ -391,35 +600,9 @@ static void pd_tilde_pdtilde(t_pd_tilde *x, t_symbol *s,
         pdargstring[0] = 0;
         argc--; argv++;
 #ifdef PD
-        while (argc--)
-        {
-            atom_string(argv++, pdargstring + strlen(pdargstring), 
-                MAXPDSTRING - strlen(pdargstring));
-            if (strlen(pdargstring) < MAXPDSTRING-1)
-                strcat(pdargstring, " ");
-        }
         patchdir = canvas_getdir(x->x_canvas)->s_name;
 #endif
 #ifdef MSP
-        while (argc--)
-        {
-                /* because Mac pathnames sometimes have an evil preceeding
-                colon character, we test for and silently eat them */
-            if (argv->a_type == A_SYM)
-                strncat(pdargstring, (*argv->a_w.w_sym->s_name == ':'?
-                    argv->a_w.w_sym->s_name+1 : argv->a_w.w_sym->s_name),
-                    MAXPDSTRING - strlen(pdargstring)-3);
-            else if (argv->a_type == A_LONG)
-                snprintf(pdargstring+strlen(pdargstring),
-                    MAXPDSTRING - strlen(pdargstring)-3, "%ld",
-                        argv->a_w.w_long);
-            else if (argv->a_type == A_FLOAT)
-                snprintf(pdargstring+strlen(pdargstring),
-                    MAXPDSTRING - strlen(pdargstring)-3, "%f",
-                        argv->a_w.w_float);
-            strcat(pdargstring, " ");
-            argv++;
-        }
         patchdir = ".";
 #endif
         schedlibdir = x->x_schedlibdir;
@@ -433,7 +616,7 @@ static void pd_tilde_pdtilde(t_pd_tilde *x, t_symbol *s,
             schedlibdir = gensym(scheddirstring);
         }
         pd_tilde_donew(x, x->x_pddir->s_name, schedlibdir->s_name,
-            patchdir, pdargstring, x->x_ninsig, x->x_noutsig, x->x_fifo,
+            patchdir, argc, argv, x->x_ninsig, x->x_noutsig, x->x_fifo,
                 x->x_sr);
     }
     else if (sel == gensym("stop"))
@@ -452,9 +635,9 @@ static void pd_tilde_pdtilde(t_pd_tilde *x, t_symbol *s,
 #endif
             x->x_pddir = sym;
         }
-        else ERROR "pd~ pddir: needs symbol argument");
+        else PDERROR "pd~ pddir: needs symbol argument");
     }
-    else ERROR "pd~: unknown control message: %s", sel->s_name);
+    else PDERROR "pd~: unknown control message: %s", sel->s_name);
 }
 
 static void pd_tilde_free(t_pd_tilde *x)
@@ -473,14 +656,9 @@ static void pd_tilde_tick(t_pd_tilde *x)
 {
     int messstart = 0, i, n;
     t_atom *vec;
-    t_binbuf *b;
-    if (!x->x_msgbuf)
-        return;
-    b = binbuf_new();
-    binbuf_text(b, x->x_msgbuf, x->x_infill);
     /* binbuf_print(b); */
-    n = binbuf_getnatom(b);
-    vec = binbuf_getvec(b);
+    n = binbuf_getnatom(x->x_binbuf);
+    vec = binbuf_getvec(x->x_binbuf);
     for (i = 0; i < n; i++)
     {
         if (vec[i].a_type == A_SEMI)
@@ -493,8 +671,7 @@ static void pd_tilde_tick(t_pd_tilde *x)
             messstart = i+1;
         }
     }
-    binbuf_free(b);
-    x->x_infill = 0;
+    binbuf_clear(x->x_binbuf);
 }
 
 static void pd_tilde_anything(t_pd_tilde *x, t_symbol *s,
@@ -503,20 +680,36 @@ static void pd_tilde_anything(t_pd_tilde *x, t_symbol *s,
     char msgbuf[MAXPDSTRING];
     if (!x->x_outfd)
         return;
-    fprintf(x->x_outfd, "%s ", s->s_name);
-    while (argc--)
+    if (x->x_binary)
     {
-        atom_string(argv++, msgbuf, MAXPDSTRING);
-        fprintf(x->x_outfd, "%s ", msgbuf);
+        pd_tilde_putsymbol(s, x->x_outfd);
+        for (; argc--; argv++)
+        {
+            if (argv->a_type == A_FLOAT)
+                pd_tilde_putfloat(argv->a_w.w_float, x->x_outfd);
+            else if (argv->a_type == A_SYMBOL)
+                pd_tilde_putsymbol(argv->a_w.w_symbol, x->x_outfd);
+        }
+        putc(A_SEMI, x->x_outfd);
     }
-    fprintf(x->x_outfd, ";\n");
+    else
+    {
+        fprintf(x->x_outfd, "%s ", s->s_name);
+        while (argc--)
+        {
+            atom_string(argv++, msgbuf, MAXPDSTRING);
+            fprintf(x->x_outfd, "%s ", msgbuf);
+        }
+        fprintf(x->x_outfd, ";\n");
+    }
 }
 
+extern char *class_gethelpdir(t_class *c);
 static void *pd_tilde_new(t_symbol *s, int argc, t_atom *argv)
 {
     t_pd_tilde *x = (t_pd_tilde *)pd_new(pd_tilde_class);
-    int ninsig = 2, noutsig = 2, j, fifo = 5;
-    float sr = sys_getsr();
+    int ninsig = 2, noutsig = 2, j, fifo = 5, binary = 1;
+    t_float sr = sys_getsr();
     t_sample **g;
     t_symbol *pddir = sys_libdir,
         *scheddir = gensym(class_gethelpdir(pd_tilde_class));
@@ -554,6 +747,11 @@ static void *pd_tilde_new(t_symbol *s, int argc, t_atom *argv)
             scheddir = atom_getsymbolarg(1, argc, argv);
             argc -= 2; argv += 2;
         }
+        else if (!strcmp(firstarg->s_name, "-ascii"))
+        {
+            binary = 0;
+            argc--; argv++;
+        }
         else break;
     }
 
@@ -578,15 +776,17 @@ static void *pd_tilde_new(t_symbol *s, int argc, t_atom *argv)
     x->x_outfd = 0;
     x->x_outfd = 0;
     x->x_childpid = -1;
-    x->x_msgbuf = 0;
     x->x_canvas = canvas_getcurrent();
+    x->x_binbuf = binbuf_new();
+    x->x_binary = binary;
     for (j = 1, g = x->x_insig; j < ninsig; j++, g++)
         inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_signal, &s_signal);
     x->x_outlet1 = outlet_new(&x->x_obj, 0);
     for (j = 0, g = x->x_outsig; j < noutsig; j++, g++)
         outlet_new(&x->x_obj, &s_signal);
+#ifndef _WIN32
     signal(SIGPIPE, SIG_IGN);
-
+#endif
     return (x);
 }
 
@@ -598,11 +798,11 @@ void pd_tilde_setup(void)
     class_addmethod(pd_tilde_class, (t_method)pd_tilde_dsp, gensym("dsp"), 0);
     class_addmethod(pd_tilde_class, (t_method)pd_tilde_pdtilde, gensym("pd~"), A_GIMME, 0);
     class_addanything(pd_tilde_class, pd_tilde_anything);
-    post("pd~ version 0.2");
+    post("pd~ version 0.3");
 }
 #endif
 
-/* -------------------------- MSP glue ------------------------- */
+/* -------------------------- Max/MSP glue ------------------------- */
 #ifdef MSP
 
 #define LOTS 10000
@@ -612,13 +812,8 @@ static void pd_tilde_tick(t_pd_tilde *x)
     int messstart = 0, i, n = 0;
     t_atom vec[LOTS];
     long z1 = 0, z2 = 0;
-    void *b;
-    if (!x->x_msgbuf)
-        return;
-    b = binbuf_new();
-    binbuf_text(b, &x->x_msgbuf, x->x_infill);
     /* binbuf_print(b); */
-    while (!binbuf_getatom(b, &z1, &z2, vec+n))
+    while (!binbuf_getatom(x->x_binbuf, &z1, &z2, vec+n))
     if (++n >= LOTS)
         break;
     for (i = 0; i < n; i++)
@@ -641,8 +836,7 @@ static void pd_tilde_tick(t_pd_tilde *x)
             messstart = i+1;
         }
     }
-    binbuf_free(b);
-    x->x_infill = 0;
+    binbuf_clear(b);
 }
 
 static void pd_tilde_anything(t_pd_tilde *x, t_symbol *s,
@@ -688,14 +882,14 @@ int main()
 
     class_register(CLASS_BOX, c);
     pd_tilde_class = c;
-    post("pd~ version 0.2");
+    post("pd~ version 0.3");
     return (0);
 }
 
 static void *pd_tilde_new(t_symbol *s, long ac, t_atom *av)
 {
     int ninsig = 2, noutsig = 2, fifo = 5, j;
-    float sr = sys_getsr();
+    t_float sr = sys_getsr();
     t_symbol *pddir = gensym("."), *scheddir = gensym(".");
     t_pd_tilde *x;
 
@@ -759,7 +953,8 @@ static void *pd_tilde_new(t_symbol *s, long ac, t_atom *av)
         x->x_outfd = 0;
         x->x_outfd = 0;
         x->x_childpid = -1;
-        x->x_msgbuf = 0;
+        x->x_binbuf = binbuf_new();
+        x->x_binary = binary;
     }
     return (x);
 }
