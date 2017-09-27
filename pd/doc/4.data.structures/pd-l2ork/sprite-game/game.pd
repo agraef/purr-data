@@ -1,8 +1,6 @@
 #N struct foo;
-#N canvas 29 82 881 608 10;
-#X obj 731 39 pddplink http://remusprites.carbonmade.com/ -text Sprite
-by Bleed;
-#N canvas 1 25 853 605 (subpatch) 0;
+#N canvas 1 53 881 631 10;
+#N canvas 457 98 853 628 (subpatch) 0;
 #X obj 253 455 cnv 15 378 41 empty empty empty 20 12 0 14 -204786 -66577
 0;
 #X obj 33 550 cnv 15 270 32 empty empty empty 20 12 0 14 -204786 -66577
@@ -105,6 +103,38 @@ translating the frames of the sprite to make them line up correctly.
 #X connect 6 3 3 0;
 #X restore 61 452 pd transform-flashlight-beam;
 #X obj 68 485 loadbang;
+#X msg 39 266 0;
+#X msg 606 189 transform translate -140 70 scale 0.75;
+#X msg 219 126 0;
+#X obj 219 147 s \$0-lock;
+#X obj 219 31 b;
+#X obj 219 76 del 750;
+#X obj 346 159 s \$0-level-up;
+#X msg 300 159 vis 0;
+#X obj 501 33 r no-bullets;
+#X msg 501 111 vis 1;
+#X msg 258 31 stop;
+#X obj 565 146 s \$0-reset;
+#X obj 638 146 s \$0-level-up;
+#X msg 513 146 vis 0;
+#X obj 501 59 del 1500;
+#X msg 625 90 0;
+#X obj 625 111 s \$0-lock;
+#X obj 565 111 del 3500;
+#X obj 346 126 del 3000;
+#X msg 68 509 stroke-dasharray 5 6 \, fill yellow \, fill-opacity 0.5
+\, stroke darkgray;
+#X obj 367 401 loadbang;
+#X obj 411 224 loadbang;
+#X obj 606 168 loadbang;
+#X obj 259 314 r \$0-hit-object;
+#X msg 367 422 fill yellow \, transform translate 27 -7 scale 0.57
+\, stroke black;
+#X msg 411 245 fill black \, transform translate -130 100 scale 0.75
+\, fill-opacity 0.6 \, stroke-opacity 0.6 \, stroke black;
+#X obj 125 259 r \$0-flashlight;
+#X obj 39 358 change -1;
+#X obj 259 414 change -1;
 #N canvas 258 53 765 643 level-completed 0;
 #X obj 34 83 draw path m 96.5563 77.37 c 1.92685 9.95844 -16.8413 5.35744
 -10.1789 -4.24988 -4.92945 -7.64506 12.2558 -11.9026 -1.96966 -11.2116
@@ -200,8 +230,67 @@ z;
 #X connect 14 0 16 0;
 #X connect 15 0 17 0;
 #X connect 17 0 16 0;
-#X restore 288 284 draw group level-completed;
-#N canvas 690 179 450 300 level-failed 0;
+#X restore 288 284 draw g level-completed;
+#N canvas 691 201 450 300 level-failed 0;
+#X obj 269 68 loadbang;
+#X msg 269 89 fill black;
+#X obj 245 151 loadbang;
+#X msg 245 172 fill red;
+#X obj 104 70 inlet;
+#N canvas 831 86 450 472 go-to-jail 0;
+#X obj 48 86 draw path m 163.521 171.89 c -18.0526 10.1245 -15.1912
+-29.9926 0.19314 -13.8101 9.7597 -7.53129 -12.8866 -9.97304 -15.248
+-0.49569 -9.85779 11.5808 12.5995 27.0142 18.4774 13.0228 6.5267 -9.97766
+-17.1568 -4.83831 -4.84084 -3.32096 2.47553 -0.17293 1.65526 3.34991
+1.41837 4.60396 z;
+#X obj 48 169 draw path m 181.384 173.09 c -17.9481 -2.15321 2.34763
+-31.7296 6.93306 -11.4557 0.71322 4.65858 -1.03672 11.6092 -6.93306
+11.4557 z m 10.56 -9.44 c 2.24679 -19.3448 -29.9247 -10.3518 -20.3118
+5.44585 4.09988 11.8775 22.1276 6.26503 20.3118 -5.44585 z;
+#X obj 48 252 draw path m 222.189 159.97 c -0.92579 -9.94683 8.89423
+-3.17234 5.76 3.55263 0.73074 5.48518 -0.009 9.75999 -4.01047 10.764
+4.66453 3.65249 16.786 -0.0847 7.09047 -3.23506 0 -5.38719 0 -10.7744
+0 -16.1616 6.99203 -4.58295 6.69419 14.7583 8.83215 2.34038 -0.27966
+-8.96861 -15.7669 -5.17226 -20.2711 -3.58188 -0.49011 1.64159 -0.62731
+13.5594 2.59891 6.3215 z;
+#X obj 48 361 draw path m 253.571 173.09 c -17.9481 -2.15321 2.34763
+-31.7296 6.93306 -11.4557 0.6946 4.67437 -1.01164 11.5966 -6.93306
+11.4557 z m 10.56 -9.44 c 2.24679 -19.3448 -29.9247 -10.3518 -20.3118
+5.44585 4.09988 11.8775 22.1276 6.26503 20.3118 -5.44585 z;
+#X obj 48 444 draw path m 304.656 154.89 c 1.85215 6.84529 -1.04715
+27.092 -9.81264 14.1827 -9.07458 -6.03443 4.23793 16.2997 11.3778 3.94955
+3.9797 -6.3 -0.82502 -17.9323 4.8827 -20.5366 -4.81661 -2.34103 -21.9712
+1.24792 -8.24443 2.62822 l 1.79653 -0.22395 0 0 z;
+#X obj 48 527 draw path m 322.719 154.89 c -2.21333 5.86667 -4.42667
+11.7333 -6.64 17.6 -7.20793 4.61356 14.8858 3.22723 3.33221 -1.62982
+6.18535 -9.21407 14.8584 1.42162 11.4515 4.29734 13.3209 1.37281 -2.40419
+-14.2235 -2.45172 -20.7942 -1.16611 -5.99548 -18.2135 0.2738 -5.69198
+0.52667 z m -1 10.36 c 1.62582 -5.47953 4.20743 -13.8265 6.64526 -3.61506
+3.22868 6.12576 -3.63046 2.99007 -6.64526 3.61506 z;
+#X obj 48 636 draw path m 355.741 172.49 c -7.37969 1.04537 -7.2304
+-20.5498 1.59961 -18.5874 -1.69871 -5.46041 -24.0824 0.36903 -9.07961
+0.98738 0 5.86667 0 11.7333 0 17.6 -15.0185 0.79274 7.92919 6.13147
+9.50125 1.07379 L 355.741 172.49 z;
+#X obj 48 706 draw path m 381.244 167.37 c 1.93543 9.94125 -16.8276
+5.37747 -10.1803 -4.22358 -4.92339 -7.64371 12.2507 -11.9437 -1.96802
+-11.2373 -11.6721 -0.69763 3.56032 5.51347 -1.34085 13.3655 3.84807
+7.12042 -10.1774 9.46013 0.49717 10.1621 8.30469 3.28021 22.7269 -3.94926
+13.3476 -9.64595 l -0.3556 1.57923 0 0 z;
+#X obj 18 -5 inlet;
+#X msg 90 30 fill-opacity 0.4 \, rx 20 \, ry 20;
+#X obj 88 54 draw rect 270 46 130 140;
+#X connect 8 0 0 0;
+#X connect 8 0 7 0;
+#X connect 8 0 6 0;
+#X connect 8 0 5 0;
+#X connect 8 0 4 0;
+#X connect 8 0 3 0;
+#X connect 8 0 2 0;
+#X connect 8 0 1 0;
+#X connect 8 0 9 0;
+#X connect 8 0 10 0;
+#X connect 9 0 10 0;
+#X restore 152 197 draw g go-to-jail;
 #N canvas 770 19 450 683 out-of-bullets 0;
 #X obj 49 40 draw path m 109.196 123.09 c -17.9481 -2.15321 2.34765
 -31.7296 6.93307 -11.4557 0.71321 4.65858 -1.03673 11.6092 -6.93307
@@ -277,157 +366,68 @@ z m -10.2 6.76 c -16.409 -1.07188 2.85868 -24.3778 6.81644 -7.79128
 #X connect 13 0 3 0;
 #X connect 13 0 2 0;
 #X connect 13 0 1 0;
-#X restore 152 115 draw group out-of-bullets;
-#N canvas 831 86 450 472 go-to-jail 0;
-#X obj 48 86 draw path m 163.521 171.89 c -18.0526 10.1245 -15.1912
--29.9926 0.19314 -13.8101 9.7597 -7.53129 -12.8866 -9.97304 -15.248
--0.49569 -9.85779 11.5808 12.5995 27.0142 18.4774 13.0228 6.5267 -9.97766
--17.1568 -4.83831 -4.84084 -3.32096 2.47553 -0.17293 1.65526 3.34991
-1.41837 4.60396 z;
-#X obj 48 169 draw path m 181.384 173.09 c -17.9481 -2.15321 2.34763
--31.7296 6.93306 -11.4557 0.71322 4.65858 -1.03672 11.6092 -6.93306
-11.4557 z m 10.56 -9.44 c 2.24679 -19.3448 -29.9247 -10.3518 -20.3118
-5.44585 4.09988 11.8775 22.1276 6.26503 20.3118 -5.44585 z;
-#X obj 48 252 draw path m 222.189 159.97 c -0.92579 -9.94683 8.89423
--3.17234 5.76 3.55263 0.73074 5.48518 -0.009 9.75999 -4.01047 10.764
-4.66453 3.65249 16.786 -0.0847 7.09047 -3.23506 0 -5.38719 0 -10.7744
-0 -16.1616 6.99203 -4.58295 6.69419 14.7583 8.83215 2.34038 -0.27966
--8.96861 -15.7669 -5.17226 -20.2711 -3.58188 -0.49011 1.64159 -0.62731
-13.5594 2.59891 6.3215 z;
-#X obj 48 361 draw path m 253.571 173.09 c -17.9481 -2.15321 2.34763
--31.7296 6.93306 -11.4557 0.6946 4.67437 -1.01164 11.5966 -6.93306
-11.4557 z m 10.56 -9.44 c 2.24679 -19.3448 -29.9247 -10.3518 -20.3118
-5.44585 4.09988 11.8775 22.1276 6.26503 20.3118 -5.44585 z;
-#X obj 48 444 draw path m 304.656 154.89 c 1.85215 6.84529 -1.04715
-27.092 -9.81264 14.1827 -9.07458 -6.03443 4.23793 16.2997 11.3778 3.94955
-3.9797 -6.3 -0.82502 -17.9323 4.8827 -20.5366 -4.81661 -2.34103 -21.9712
-1.24792 -8.24443 2.62822 l 1.79653 -0.22395 0 0 z;
-#X obj 48 527 draw path m 322.719 154.89 c -2.21333 5.86667 -4.42667
-11.7333 -6.64 17.6 -7.20793 4.61356 14.8858 3.22723 3.33221 -1.62982
-6.18535 -9.21407 14.8584 1.42162 11.4515 4.29734 13.3209 1.37281 -2.40419
--14.2235 -2.45172 -20.7942 -1.16611 -5.99548 -18.2135 0.2738 -5.69198
-0.52667 z m -1 10.36 c 1.62582 -5.47953 4.20743 -13.8265 6.64526 -3.61506
-3.22868 6.12576 -3.63046 2.99007 -6.64526 3.61506 z;
-#X obj 48 636 draw path m 355.741 172.49 c -7.37969 1.04537 -7.2304
--20.5498 1.59961 -18.5874 -1.69871 -5.46041 -24.0824 0.36903 -9.07961
-0.98738 0 5.86667 0 11.7333 0 17.6 -15.0185 0.79274 7.92919 6.13147
-9.50125 1.07379 L 355.741 172.49 z;
-#X obj 48 706 draw path m 381.244 167.37 c 1.93543 9.94125 -16.8276
-5.37747 -10.1803 -4.22358 -4.92339 -7.64371 12.2507 -11.9437 -1.96802
--11.2373 -11.6721 -0.69763 3.56032 5.51347 -1.34085 13.3655 3.84807
-7.12042 -10.1774 9.46013 0.49717 10.1621 8.30469 3.28021 22.7269 -3.94926
-13.3476 -9.64595 l -0.3556 1.57923 0 0 z;
-#X obj 18 -5 inlet;
-#X msg 90 30 fill-opacity 0.4 \, rx 20 \, ry 20;
-#X obj 88 54 draw rect 270 46 130 140;
-#X connect 8 0 0 0;
-#X connect 8 0 7 0;
-#X connect 8 0 6 0;
-#X connect 8 0 5 0;
-#X connect 8 0 4 0;
-#X connect 8 0 3 0;
-#X connect 8 0 2 0;
-#X connect 8 0 1 0;
-#X connect 8 0 9 0;
-#X connect 8 0 10 0;
-#X connect 9 0 10 0;
-#X restore 152 197 draw group go-to-jail;
-#X obj 269 68 loadbang;
-#X msg 269 89 fill black;
-#X obj 245 151 loadbang;
-#X msg 245 172 fill red;
-#X obj 104 70 inlet;
+#X restore 152 115 draw g out-of-bullets;
+#X connect 0 0 1 0;
+#X connect 1 0 6 1;
 #X connect 2 0 3 0;
-#X connect 3 0 0 1;
+#X connect 3 0 5 1;
+#X connect 4 0 6 0;
 #X connect 4 0 5 0;
-#X connect 5 0 1 1;
-#X connect 6 0 0 0;
-#X connect 6 0 1 0;
-#X restore 501 214 draw group level-failed;
-#X msg 39 266 0;
-#X msg 606 189 transform translate -140 70 scale 0.75;
-#X msg 219 126 0;
-#X obj 219 147 s \$0-lock;
-#X obj 219 31 b;
-#X obj 219 76 del 750;
-#X obj 346 159 s \$0-level-up;
-#X msg 300 159 vis 0;
-#X obj 501 33 r no-bullets;
-#X msg 501 111 vis 1;
-#X msg 258 31 stop;
-#X obj 565 146 s \$0-reset;
-#X obj 638 146 s \$0-level-up;
-#X msg 513 146 vis 0;
-#X obj 501 59 del 1500;
-#X msg 625 90 0;
-#X obj 625 111 s \$0-lock;
-#X obj 565 111 del 3500;
-#X obj 346 126 del 3000;
-#X msg 68 509 stroke-dasharray 5 6 \, fill yellow \, fill-opacity 0.5
-\, stroke darkgray;
-#X obj 367 401 loadbang;
-#X obj 411 224 loadbang;
-#X obj 606 168 loadbang;
-#X obj 259 314 r \$0-hit-object;
-#X msg 367 422 fill yellow \, transform translate 27 -7 scale 0.57
-\, stroke black;
-#X msg 411 245 fill black \, transform translate -130 100 scale 0.75
-\, fill-opacity 0.6 \, stroke-opacity 0.6 \, stroke black;
-#X obj 125 259 r \$0-flashlight;
-#X obj 39 358 change -1;
-#X obj 259 414 change -1;
+#X restore 501 214 draw g level-failed;
 #X connect 5 0 21 0;
 #X connect 8 0 22 0;
-#X connect 9 0 26 0;
+#X connect 9 0 24 0;
 #X connect 10 0 15 0;
-#X connect 10 0 53 0;
+#X connect 10 0 51 0;
 #X connect 11 0 7 0;
 #X connect 12 0 13 0;
-#X connect 14 0 54 0;
+#X connect 14 0 52 0;
 #X connect 15 0 16 0;
 #X connect 15 1 14 1;
 #X connect 16 0 14 0;
 #X connect 17 0 18 0;
-#X connect 18 0 24 0;
-#X connect 18 0 25 0;
-#X connect 19 0 30 0;
-#X connect 19 0 36 0;
-#X connect 20 0 24 0;
+#X connect 18 0 53 0;
+#X connect 18 0 54 0;
+#X connect 19 0 28 0;
+#X connect 19 0 34 0;
+#X connect 20 0 53 0;
 #X connect 21 0 6 0;
 #X connect 22 0 7 0;
-#X connect 23 0 45 0;
-#X connect 26 0 10 0;
-#X connect 27 0 25 1;
+#X connect 23 0 43 0;
+#X connect 24 0 10 0;
+#X connect 25 0 54 1;
+#X connect 26 0 27 0;
 #X connect 28 0 29 0;
-#X connect 30 0 31 0;
-#X connect 31 0 20 0;
-#X connect 31 0 28 0;
-#X connect 31 0 44 0;
-#X connect 33 0 24 0;
-#X connect 34 0 40 0;
-#X connect 35 0 25 0;
-#X connect 36 0 40 0;
-#X connect 39 0 25 0;
-#X connect 40 0 35 0;
-#X connect 40 0 41 0;
-#X connect 40 0 43 0;
-#X connect 41 0 42 0;
-#X connect 43 0 37 0;
-#X connect 43 0 38 0;
-#X connect 43 0 39 0;
-#X connect 44 0 32 0;
-#X connect 44 0 33 0;
-#X connect 45 0 7 0;
-#X connect 46 0 50 0;
-#X connect 47 0 51 0;
-#X connect 48 0 27 0;
-#X connect 49 0 16 0;
-#X connect 50 0 13 0;
-#X connect 51 0 24 1;
-#X connect 52 0 10 0;
-#X connect 53 0 11 0;
-#X connect 54 0 12 0;
-#X restore 734 138 draw group;
+#X connect 29 0 20 0;
+#X connect 29 0 26 0;
+#X connect 29 0 42 0;
+#X connect 31 0 53 0;
+#X connect 32 0 38 0;
+#X connect 33 0 54 0;
+#X connect 34 0 38 0;
+#X connect 37 0 54 0;
+#X connect 38 0 33 0;
+#X connect 38 0 39 0;
+#X connect 38 0 41 0;
+#X connect 39 0 40 0;
+#X connect 41 0 35 0;
+#X connect 41 0 36 0;
+#X connect 41 0 37 0;
+#X connect 42 0 30 0;
+#X connect 42 0 31 0;
+#X connect 43 0 7 0;
+#X connect 44 0 48 0;
+#X connect 45 0 49 0;
+#X connect 46 0 25 0;
+#X connect 47 0 16 0;
+#X connect 48 0 13 0;
+#X connect 49 0 53 1;
+#X connect 50 0 10 0;
+#X connect 51 0 11 0;
+#X connect 52 0 12 0;
+#X restore 734 138 draw g;
+#X obj 731 39 pddplink http://remusprites.carbonmade.com/ -text Sprite
+by Bleed;
 #N canvas 333 68 1002 543 guts 0;
 #X obj 155 292 * 6;
 #X obj 181 254 + 1;
@@ -2009,7 +2009,7 @@ shooting the final [s the_answer] object;
 #N canvas 244 22 703 657 pluck1 0;
 #X msg 77 402 \$1 0 \$2 \$1 0 \$2 \$1 0 \$2 \$1 0 \$2 \$1 0 \$1 \$1
 ;
-#X msg 77 463 \$3;
+#X msg 77 463 \$2;
 #X msg 359 402 set \, adddollar \$1;
 #X obj 77 514 mtof;
 #X obj 158 92 mod 64;
@@ -2174,7 +2174,7 @@ shooting the final [s the_answer] object;
 #X obj 142 123 + 1;
 #X msg 53 333 \$1 0 \$2 \$1 0 \$2 \$1 0 \$2 \$1 0 \$2 \$1 0 \$1 \$1
 ;
-#X msg 53 384 \$3;
+#X msg 53 384 \$2;
 #X obj 53 426 mtof;
 #X obj 54 256 route 0 1 2 3;
 #X obj 53 405 + 24;
@@ -2364,7 +2364,7 @@ shooting the final [s the_answer] object;
 #X restore 541 170 pd simple-snare;
 #N canvas 115 68 1190 634 baseline 0;
 #X obj 326 343 phasor~;
-#X msg 326 186 \$14;
+#X msg 326 186 \$6;
 #X obj 326 227 mtof;
 #X obj 326 279 line~;
 #X obj 1065 87 + 1;
@@ -2537,7 +2537,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X connect 72 0 11 0;
 #X restore 543 401 pd baseline;
 #N canvas 1 37 682 683 siren 0;
-#X msg 269 204 \$4;
+#X msg 269 204 \$2;
 #X obj 269 235 mtof;
 #X obj 269 287 line~;
 #X obj 479 152 + 1;
@@ -2555,7 +2555,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X obj 350 -2 f;
 #X msg 269 173 \$1 \$2 \$2 \$2;
 #X obj 269 -87 trigger anything anything;
-#X msg 789 274 \$4;
+#X msg 789 274 \$2;
 #X obj 789 298 mtof;
 #X obj 789 346 line~;
 #X obj 969 182 + 1;
@@ -2708,7 +2708,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X restore 599 314 pd siren;
 #N canvas 19 60 947 608 simple-bass 0;
 #X obj 195 273 phasor~;
-#X msg 195 166 \$14;
+#X msg 195 166 \$6;
 #X obj 195 197 mtof;
 #X obj 195 249 line~;
 #X msg 195 74 40 52;
@@ -2820,7 +2820,7 @@ adddollar 1 \, add2 0 0 0 0 0 0 0 0 0;
 #X restore 459 542 pd simple-bass;
 #N canvas 0 19 1366 684 stepwise-bass 0;
 #X obj 215 303 phasor~;
-#X msg 215 146 \$14;
+#X msg 215 146 \$6;
 #X obj 215 177 mtof;
 #X obj 215 229 line~;
 #X obj 565 13 + 1;
@@ -3047,7 +3047,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X restore 501 473 pd stepwise-bass;
 #N canvas 288 49 565 650 siren-to-bass 0;
 #X obj 200 380 phasor~;
-#X msg 75 179 \$4;
+#X msg 75 179 \$2;
 #X obj 200 264 mtof;
 #X obj 200 311 line~;
 #X msg 75 55 40 52;
@@ -3154,7 +3154,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X restore 529 422 pd siren-to-bass;
 #N canvas 440 34 584 635 siren-fade 0;
 #X obj 192 372 phasor~;
-#X msg 95 246 \$4;
+#X msg 95 246 \$2;
 #X obj 192 300 mtof;
 #X obj 192 348 line~;
 #X msg 95 109 40 52;
@@ -3274,7 +3274,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X restore 585 335 pd siren-fade;
 #N canvas 440 34 584 670 siren-fade-long 0;
 #X obj 192 372 phasor~;
-#X msg 95 246 \$4;
+#X msg 95 246 \$2;
 #X obj 192 300 mtof;
 #X obj 192 348 line~;
 #X msg 95 109 40 52;
@@ -3394,7 +3394,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X restore 571 356 pd siren-fade-long;
 #N canvas 440 34 584 670 siren-fade-single 0;
 #X obj 192 372 phasor~;
-#X msg 95 246 \$4;
+#X msg 95 246 \$2;
 #X obj 192 300 mtof;
 #X obj 192 348 line~;
 #X msg 95 109 40 52;
@@ -3541,7 +3541,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #N canvas 434 41 703 657 pluck-fade 0;
 #X msg 77 422 \$1 0 \$2 \$1 0 \$2 \$1 0 \$2 \$1 0 \$2 \$1 0 \$1 \$1
 ;
-#X msg 77 453 \$3;
+#X msg 77 453 \$2;
 #X msg 359 422 set \, adddollar \$1;
 #X obj 77 504 mtof;
 #X obj 158 112 mod 64;
@@ -3701,7 +3701,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X restore 493 233 pd pluck-fade;
 #N canvas 0 19 797 634 level8-bass 0;
 #X obj 326 343 phasor~;
-#X msg 326 186 \$14;
+#X msg 326 186 \$6;
 #X obj 326 227 mtof;
 #X obj 326 279 line~;
 #X obj 645 127 + 1;
@@ -3826,7 +3826,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X obj 96 419 *~ 0.5;
 #X obj 303 419 *~ 0.5;
 #N canvas 76 51 1221 608 stepwise-osc 0;
-#X msg 215 146 \$14;
+#X msg 215 146 \$6;
 #X obj 215 177 mtof;
 #X obj 215 229 line~;
 #X obj 565 13 + 1;
@@ -4113,7 +4113,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X connect 16 0 7 0;
 #X restore 674 191 pd shuffle;
 #N canvas 76 51 1221 608 stepwise-fm 0;
-#X msg 215 146 \$14;
+#X msg 215 146 \$6;
 #X obj 215 177 mtof;
 #X obj 215 229 line~;
 #X obj 565 13 + 1;
@@ -4386,7 +4386,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #N canvas 434 41 755 657 pluck-fade-long 0;
 #X msg 77 422 \$1 0 \$2 \$1 0 \$2 \$1 0 \$2 \$1 0 \$2 \$1 0 \$1 \$1
 ;
-#X msg 77 453 \$3;
+#X msg 77 453 \$2;
 #X msg 359 422 set \, adddollar \$1;
 #X obj 77 504 mtof;
 #X obj 158 112 mod 64;
@@ -4613,7 +4613,7 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X obj 385 305 del 450;
 #X obj 620 203 del 600;
 #X obj 271 325 hsl 91 15 0 1 0 0 \$0-master \$0-from-nowhere Volume
-29 8 0 10 -237503 -1 -1 0 1;
+29 8 0 10 -237503 -1 -1 8450 1;
 #X obj 620 234 list;
 #X obj 620 255 route -1;
 #X msg 641 314 index;
@@ -4729,18 +4729,34 @@ adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar 2 \, adddollar
 #X coords 0 -1 1 1 115 61 1 262 284;
 #X restore 734 61 pd guts;
 #X obj 734 15 struct foo;
-#X obj 450 200 bng 61 250 50 0 empty empty empty 17 7 0 10 -262144
+#X obj 91 157 bng 61 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 91 307 float 21;
+#X obj 91 407 +;
+#X obj 188 236 bng 61 350 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;
-#X obj 450 370 float 42;
-#X obj 450 390 send the_answer;
-#X text 200 50 Use the arrow keys to move;
-#X text 200 80 Click 'f' to turn on the flashlight. When you hit an
+#X obj 91 547 send the_answer;
+#X obj 188 306 float 21;
+#X obj 91 507 select 42;
+#X floatatom 188 337 5 0 0 0 - - -, f 5;
+#X floatatom 104 474 5 0 0 0 - - -, f 5;
+#X text 142 406 <- This object adds two numbers. Like most objects
+in Pd the right inlet just stores the data. The object only outputs
+the sum when you send a number to the left or "hot" inlet.;
+#X text 229 26 Level 2: Add It Up;
+#X text 229 26 __________________;
+#X text 229 86 Click 'f' to turn on the flashlight. When you hit an
 object that you can shoot you'll see an exclamation mark.;
-#X text 200 120 Click 'b' to shoot!;
-#X text 200 20 Level 1: Send the Answer;
-#X text 200 20 ________________________;
+#X text 229 126 Click 'b' to shoot!;
+#X text 229 56 Use the arrow keys to move;
 #X scalar foo \;;
-#X connect 2 0 1 0;
-#X connect 2 1 1 1;
+#X connect 2 0 0 0;
+#X connect 2 1 0 1;
 #X connect 4 0 5 0;
 #X connect 5 0 6 0;
+#X connect 6 0 10 0;
+#X connect 6 0 12 0;
+#X connect 7 0 9 0;
+#X connect 9 0 6 1;
+#X connect 9 0 11 0;
+#X connect 10 0 8 0;
