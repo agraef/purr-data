@@ -485,7 +485,7 @@ static int sys_getmultidevchannels(int n, int *devlist)
 void sys_findprogdir(char *progname)
 {
     char *execdir = pd_getdirname()->s_name, *lastslash;
-    char sbuf[FILENAME_MAX], sbuf2[FILENAME_MAX];
+    char sbuf[FILENAME_MAX], sbuf2[FILENAME_MAX], appbuf[FILENAME_MAX];
     strncpy(sbuf, execdir, FILENAME_MAX-1);
 #ifndef MSW
     struct stat statbuf;
@@ -551,12 +551,20 @@ void sys_findprogdir(char *progname)
     else
     {
             /* simple layout: lib dir is the parent */
-        sys_libdir = gensym(sbuf);
             /* gui lives in .../bin */
         strncpy(sbuf2, sbuf, FILENAME_MAX-30);
+        strncpy(appbuf, sbuf, FILENAME_MAX-30);
         sbuf[FILENAME_MAX-30] = 0;
+        sys_libdir = gensym(sbuf);
         strcat(sbuf2, "/bin");
-        sys_guidir = gensym(sbuf2);
+        /* special case-- with the OSX app bundle the guidir is actually
+           in app.nw instead of app.nw/bin. So we check for a package.json
+           there and then set it accordingly. */
+        strcat(appbuf, "/package.json");
+        if (stat(appbuf, &statbuf) >= 0)
+            sys_guidir = gensym(sbuf);
+        else
+            sys_guidir = gensym(sbuf2);
     }
 #endif
 }

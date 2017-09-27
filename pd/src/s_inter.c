@@ -1135,6 +1135,57 @@ static int defaultfontshit[MAXFONTS] = {
         24, 15, 28};
 #define NDEFAULTFONT (sizeof(defaultfontshit)/sizeof(*defaultfontshit))
 
+extern t_symbol *pd_getplatform(void);
+extern void sys_expandpath(const char *from, char *to);
+
+/* set the datadir for nwjs. We use the published nw.js
+   defaults if there's only one instance of the GUI set to
+   run. Otherwise, we append the port number so that
+   nw.js will spawn a new instance for us.
+
+   Currently, users can give a command line arg to force Pd
+   to start with a new GUI instance. A new GUI must also get
+   created when a user turns on audio and there is a [pd~] object
+   on the canvas. The latter would actually be more usable within
+   a single GUI instance, but that would require some way to
+   visually distinguish patches that are associated with different Pd
+   engine processes.
+*/ 
+
+static void set_datadir(char *buf, int new_gui_instance, int portno)
+{
+    char dir[FILENAME_MAX];
+    t_symbol *platform = pd_getplatform(); 
+    strcpy(buf, "--user-data-dir=");
+    /* Let's go ahead and quote the string to handle spaces in
+       paths, etc. */
+    strcat(buf, "\"");
+    if (platform == gensym("darwin"))
+        sys_expandpath("~/Library/Application Support/", dir);
+    else if (platform != gensym("win32"))/* bsd and linux */
+        sys_expandpath("~/.config/", dir);
+#ifdef _WIN32
+        /* win32 has a more robust API for getting the
+           value of %LOCALAPPDATA%, but this works on
+           Windows 7 and is straightforward... */
+        char *env = getenv("LOCALAPPDATA");
+        strcpy(dir, env);
+        strcat(dir, "\\");
+#endif
+    strcat(dir, "purr-data");
+    if (new_gui_instance)
+    {
+        char portbuf[10];
+        sprintf(portbuf, "-%d", portno);
+        strcat(dir, portbuf);
+    }
+    strcat(buf, dir);
+    /* Finally, close quote... */
+    strcat(buf, "\"");
+}
+
+extern int sys_unique;
+
 int sys_startgui(const char *guidir)
 {
     pid_t childpid;
@@ -1146,13 +1197,12 @@ int sys_startgui(const char *guidir)
     int xsock = -1;
     stderr_isatty = isatty(2);
 #ifdef MSW
-        if (GetCurrentDirectory(FILENAME_MAX, cwd) == 0)
-            strcpy(cwd, ".");
+    if (GetCurrentDirectory(FILENAME_MAX, cwd) == 0)
+        strcpy(cwd, ".");
 #endif
 #ifdef HAVE_UNISTD_H
-        if (!getcwd(cwd, FILENAME_MAX))
-            strcpy(cwd, ".");
-
+    if (!getcwd(cwd, FILENAME_MAX))
+        strcpy(cwd, ".");
 #endif
 #ifdef MSW
     short version = MAKEWORD(2, 0);
@@ -1272,7 +1322,6 @@ int sys_startgui(const char *guidir)
 
         /* assign server port number */
         server.sin_port =  htons((unsigned short)portno);
-
         /* name the socket */
         while (bind(xsock, (struct sockaddr *)&server, sizeof(server)) < 0)
         {
@@ -1325,7 +1374,8 @@ int sys_startgui(const char *guidir)
             /* this glob is needed so the Wish executable can have the same
              * filename as the Pd.app, i.e. 'Pd-0.42-3.app' should have a Wish
              * executable called 'Pd-0.42-3.app/Contents/MacOS/Pd-0.42-3' */
-            sprintf(embed_glob, "%s/../../MacOS/Pd*", guidir);
+//            sprintf(embed_glob, "%s/../../MacOS/Pd*", guidir);
+            sprintf(embed_glob, "%s/../../MacOS/nwjs", guidir);
             glob_buffer.gl_matchc = 1; /* we only need one match */
             glob(embed_glob, GLOB_LIMIT, NULL, &glob_buffer);
             if (glob_buffer.gl_pathc > 0) {
@@ -1342,37 +1392,74 @@ int sys_startgui(const char *guidir)
                     break;
             }
             sprintf(cmdbuf,"\"%s\" %s/pd.tk %d\n",wish_paths[i],guidir,portno);
+            char data_dir_flag[MAXPDSTRING];
+            set_datadir(data_dir_flag, sys_unique, portno);
+            /* Make a copy in case the user wants to change to the repo
+               dir while developing... */
+            char guidir2[MAXPDSTRING];
+            /* Let's go ahead and quote the path in case there are spaces
+               in it. This won't happen on a sane Linux/BSD setup. But it
+               will happen under Windows, so we quote here, too, for
+               the sake of consistency. */
+            strcpy(guidir2, "\"");
+            strcat(guidir2, guidir);
+            strcat(guidir2, "\"");
+            /* Uncomment the following line if you want to
+               use the nw binary and GUI code from your local
+               copy of the Purr Data repo. (Make sure to run
+               tar_em_up.sh first to fetch the nw binary.) */
+            //strcpy(guidir2, "\"/home/grieg/purr-data/pd/nw\"");
+            sprintf(cmdbuf,
+                "\"%s\" %s %s "
+                "%d localhost %s %s " X_SPECIFIER,
+                wish_paths[i],
+                data_dir_flag,
+                guidir2,
+                portno,
+                (sys_k12_mode ? "pd-l2ork-k12" : "pd-l2ork"),
+                guidir2,
+                (long unsigned int)pd_this);
 #else
             sprintf(cmdbuf,
                 "TCL_LIBRARY=\"%s/tcl/library\" TK_LIBRARY=\"%s/tk/library\" \
                  \"%s/pd-gui\" %d localhost %s\n",
                  sys_libdir->s_name, sys_libdir->s_name, guidir, portno, (sys_k12_mode ? "pd-l2ork-k12" : "pd-l2ork"));
 
-/* SUPERHACK - let's just load node-webkit and see what happens */
-//            sprintf(cmdbuf,
-//                  "/home/user/Downloads/nwjs-v0.12.2-linux-ia32/nw "
-//                  "/home/nu/Downloads/nwjs-v0.12.0-alpha2-linux-ia32/nw "
-//                "/home/user/pd-nw/pd/nw/ %d localhost %s\n",
-//                portno,
-//                (sys_k12_mode ? "pd-l2ork-k12" : "pd-l2ork"));
-
-fprintf(stderr, "guidir is %s\n", guidir);
+            fprintf(stderr, "guidir is %s\n", guidir);
 
             /* For some reason, the nw binary doesn't give you access to
                the first argument-- this is the path to the directory where
                package.json lives (or the zip file if it's compressed). So
                we add it again as the last argument to make sure we can fetch
                it on the GUI side. */
+            char data_dir_flag[MAXPDSTRING];
+            set_datadir(data_dir_flag, sys_unique, portno);
+
+            /* Make a copy in case the user wants to change to the repo
+               dir while developing... */
+            char guidir2[MAXPDSTRING];
+            /* Let's go ahead and quote the path in case there are spaces
+               in it. This won't happen on a sane Linux/BSD setup. But it
+               will happen under Windows, so we quote here, too, for
+               the sake of consistency. */
+            strcpy(guidir2, "\"");
+            strcat(guidir2, guidir);
+            strcat(guidir2, "\"");
+            /* Uncomment the following line if you want to
+               use the nw binary and GUI code from your local
+               copy of the Purr Data repo. (Make sure to run
+               tar_em_up.sh first to fetch the nw binary.) */
+            //strcpy(guidir2, "\"/home/grieg/purr-data/pd/nw\"");
             sprintf(cmdbuf,
-                "%s/nw/nw %s %d localhost %s %s " X_SPECIFIER,
-                guidir,
-                guidir,
-//                "/home/user/purr-data/pd/nw",
+                "%s/nw/nw %s %s "
+                "%d localhost %s %s " X_SPECIFIER,
+                guidir2,
+                data_dir_flag,
+                guidir2,
                 portno,
                 (sys_k12_mode ? "pd-l2ork-k12" : "pd-l2ork"),
-                guidir,
+                guidir2,
                 (long unsigned int)pd_this);
-
 #endif
             sys_guicmd = cmdbuf;
         }
@@ -1406,6 +1493,7 @@ fprintf(stderr, "guidir is %s\n", guidir);
                     close(stdinpipe[0]);
                 }
             }
+
 #endif
             execl("/bin/sh", "sh", "-c", sys_guicmd, (char*)0);
             perror("pd: exec");
@@ -1441,7 +1529,11 @@ fprintf(stderr, "guidir is %s\n", guidir);
         strcat(wishbuf, "/" PDBINDIR "nw/nw");
         sys_bashfilename(wishbuf, wishbuf);
 
-        spawnret = _spawnl(P_NOWAIT, wishbuf, "pd-nw", scriptbuf,
+        char data_dir_flag[MAXPDSTRING];
+        set_datadir(data_dir_flag, sys_unique, portno);
+        spawnret = _spawnl(P_NOWAIT, wishbuf, "pd-nw",
+            data_dir_flag,
+            scriptbuf,
             portbuf,
             "localhost",
             (sys_k12_mode ? "pd-l2ork-k12" : "pd-l2ork"),
