@@ -103,7 +103,7 @@ static void *pin_tilde_new(t_floatarg prob , t_floatarg tick)
 		prob = 0.5;
 	}
 	x->p_prob = prob;
-	x->p_normalized_prob = prob * RAND_MAX;
+	x->p_normalized_prob = (int)((double)prob * (double)RAND_MAX);
 	// set up our clocks
 	x->p_ticktime = tick;   
 	x->p_clock = clock_new(x, (t_method) pin_tilde_tick);
