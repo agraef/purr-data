@@ -1004,7 +1004,7 @@ static void oggamp_tick(t_oggamp *x)
 static void *oggamp_new(t_floatarg fdographics, t_floatarg fnchannels, t_floatarg fbufsize)
 {
     t_oggamp *x;
-    int nchannels = fnchannels, bufsize = fbufsize * 1024, i;
+    int nchannels = fnchannels, bufsize = ((double)fbufsize) * 1024, i;
     float *buf;
     
     if (nchannels < 1)

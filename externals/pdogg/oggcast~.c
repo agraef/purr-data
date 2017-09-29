@@ -998,7 +998,11 @@ static void oggcast_tick_pages(t_oggcast *x)
 static void *oggcast_new(t_floatarg fnchannels, t_floatarg fbufsize)
 {
     t_oggcast *x;
-    int nchannels = fnchannels, bufsize = fbufsize * 1024, i;
+    /* The cast to double below is a workaround for an unrecognized instruction
+       when running the arm CI runner under valgrind. Fortunately there are
+       only a handful of these in the entire codebase. Once this gets fixed
+       upstream in Valgrind these casts can be removed. */
+    int nchannels = fnchannels, bufsize = ((double)fbufsize) * 1024, i;
     float *buf;
     
     if (nchannels < 1)
