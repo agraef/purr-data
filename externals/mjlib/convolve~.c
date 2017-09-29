@@ -78,7 +78,7 @@ static void *convolve_tilde_new(t_floatarg prob , t_floatarg tick)
 		prob = 0.5;
 	}
 	x->p_prob = prob;
-	x->p_normalized_prob = prob * RAND_MAX;
+	x->p_normalized_prob = (int)((double)prob * (double)RAND_MAX);
 	// set up our clocks
 	x->p_ticktime = tick;   
 	x->p_clock = clock_new(x, (t_method) convolve_tilde_tick);
@@ -168,7 +168,7 @@ static void convolve_tilde_tick(t_convolve_tilde *x)
 
 void convolve_tilde_setup(void)
 {	
-	 srand( (unsigned) time( NULL ) );
+	 srand( (unsigned int) time( NULL ) );
     convolve_tilde_class = class_new(gensym("convolve~"), (t_newmethod) convolve_tilde_new, (t_method) convolve_tilde_free,
     	sizeof(t_convolve_tilde), 0, A_DEFFLOAT, A_DEFFLOAT, 0);    
     CLASS_MAINSIGNALIN( convolve_tilde_class, t_convolve_tilde, x_f);
