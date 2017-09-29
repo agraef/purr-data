@@ -109,7 +109,7 @@ static void image_erase(t_image* x,t_glist* glist)
 {
     gui_vmess("gui_gobj_erase", "xx", glist_getcanvas(glist), x);
     //sys_vgui("catch {.x%x.c delete %xS}\n",glist_getcanvas(glist), x);
-    sys_vgui("catch {image delete $img%x}\n", x);
+    //sys_vgui("catch {image delete $img%x}\n", x);
     //sys_vgui("catch {.x%x.c delete %xSEL}\n",glist_getcanvas(glist), x);
 }
 
@@ -271,8 +271,8 @@ static void image_select(t_gobj *z, t_glist *glist, int state)
     }
     else
     {
-        sys_vgui("catch {.x%x.c delete %xSEL}\n",
-        glist_getcanvas(glist), x);
+        //sys_vgui("catch {.x%x.c delete %xSEL}\n",
+        //glist_getcanvas(glist), x);
         //if (glist->gl_owner && !glist_istoplevel(glist))
         //sys_vgui(".x%lx.c dtag %xS selected\n", glist_getcanvas(glist), x);
         //sys_vgui(".x%lx.c dtag %xMT selected\n", glist_getcanvas(glist), x);
@@ -385,8 +385,28 @@ static void image_open(t_image* x, t_symbol *s, t_int argc, t_atom *argv)
     x->x_fname = get_filename(argc, argv);
     x->x_img_width = 0;
     x->x_img_height = 0;
-    image_vis((t_gobj *)x, x->x_glist, 0);
-    image_vis((t_gobj *)x, x->x_glist, 1);
+    t_symbol *fname = image_trytoopen(x);
+    if (fname) {
+        gui_vmess("gui_load_image", "xxs",
+            glist_getcanvas(x->x_glist), x, fname->s_name);
+    }
+    else
+    {
+        gui_vmess("gui_load_default_image", "xx",
+            glist_getcanvas(x->x_glist), x);
+    }
+    if (glist_isvisible(glist_getcanvas(x->x_glist)))
+    {
+        gui_vmess("gui_image_configure", "xxxs",
+            glist_getcanvas(x->x_glist),
+            x,
+            x,
+            "center");
+        gui_vmess("gui_image_size_callback", "xxs",
+            glist_getcanvas(x->x_glist), x, x->x_receive->s_name);
+    }
+    //image_vis((t_gobj *)x, x->x_glist, 0);
+    //image_vis((t_gobj *)x, x->x_glist, 1);
 }
 
 static void image_imagesize_callback(t_image *x, t_float w, t_float h) {
@@ -444,7 +464,8 @@ static void image_setwidget(void)
 
 static void image_free(t_image *x)
 {
-    sys_vgui("image delete img%x\n", x);
+    //sys_vgui("image delete img%x\n", x);
+    gui_vmess("gui_drawimage_free", "x", x);
     if (x->x_receive)
     {
         pd_unbind(&x->x_obj.ob_pd,x->x_receive);
