@@ -1101,9 +1101,9 @@ static void canvas_pop(t_canvas *x, t_floatarg fvis)
 extern void *svg_new(t_pd *x, t_symbol *s, int argc, t_atom *argv);
 extern t_pd *svg_header(t_pd *x);
 
-static void group_svginit(t_glist *gl)
+static void group_svginit(t_glist *gl, t_symbol *type, int argc, t_atom *argv)
 {
-    gl->gl_svg = (t_pd *)(svg_new((t_pd *)gl, gensym("g"), 0, 0));
+    gl->gl_svg = (t_pd *)(svg_new((t_pd *)gl, type, argc, argv));
     t_pd *proxy = svg_header(gl->gl_svg);
     inlet_new(&gl->gl_obj, proxy, 0, 0);
     outlet_new(&gl->gl_obj, &s_anything);
@@ -1116,10 +1116,14 @@ void canvas_restore(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     t_pd *z;
     int is_draw_command = 0;
     //fprintf(stderr,"canvas_restore %lx\n", x);
-    /* for [draw group] we add an inlet to the svg attr proxy */
-    if (argc > 2 && argv[2].a_w.w_symbol == gensym("draw"))
+    /* for [draw g] and [draw svg] we add an inlet to the svg attr proxy */
+    if (atom_getsymbolarg(2, argc, argv) == gensym("draw"))
     {
-        group_svginit(x);
+        t_symbol *type = (atom_getsymbolarg(3, argc, argv) == gensym("svg")) ?
+            gensym("svg") : gensym("g");
+        group_svginit(x, type,
+            (type == gensym("svg") && argc > 4) ? argc-4 : 0,
+            (type == gensym("svg") && argc > 4) ? argv+4 : 0);
         is_draw_command = 1;
     }
     if (argc > 3 || (is_draw_command && argc > 4))
@@ -1352,12 +1356,18 @@ static void *subcanvas_new(t_symbol *s)
     return (x);
 }
 
-void *group_new(t_symbol *s)
+void *group_new(t_symbol *type, int argc, t_atom *argv)
 {
-    t_canvas *x = subcanvas_new(s);
-    group_svginit(x);
+    t_symbol *groupname;
+    if (type == gensym("g"))
+        groupname = atom_getsymbolarg(0, argc, argv);
+    else /* no name for inner svg */
+        groupname = &s_;
+    t_canvas *x = subcanvas_new(groupname);
+    group_svginit(x, type, argc, argv);
     return (x);
 }
+
 static void canvas_click(t_canvas *x,
     t_floatarg xpos, t_floatarg ypos,
         t_floatarg shift, t_floatarg ctrl, t_floatarg alt)
@@ -1376,6 +1386,14 @@ void canvas_fattensub(t_canvas *x,
 
 static void canvas_rename_method(t_canvas *x, t_symbol *s, int ac, t_atom *av)
 {
+    /* special case for [draw g] where the 3rd arg is the receiver name */
+    if (x->gl_svg)
+    {
+        if (atom_getsymbolarg(0, ac, av) == gensym("g") && ac > 1)
+            ac--, av++;
+        else
+            ac = 0;
+    }
     if (ac && av->a_type == A_SYMBOL)
         canvas_rename(x, av->a_w.w_symbol, 0);
     else if (ac && av->a_type == A_DOLLSYM)

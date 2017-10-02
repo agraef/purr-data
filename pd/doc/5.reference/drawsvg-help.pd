@@ -1,0 +1,171 @@
+#N struct draw-svg-help-struct float x float y;
+#N canvas 157 53 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header draw\ svg 3 12 0
+18 -204280 -1 0;
+#X obj 0 347 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 494 296 482 332 META 0;
+#X text 12 115 LIBRARY internal;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 5 KEYWORDS control GUI data-structure;
+#X text 12 45 DESCRIPTION draw an svg shape to represent a scalar;
+#X text 12 65 INLET_0 float fill fill-opacity fill-rule stroke stroke-dasharray
+stroke-linecap stroke-linejoin stroke-miterlimit stroke-opacity stroke-width
+rx ry;
+#X text 12 135 AUTHOR Jonathan Wilkes;
+#X text 13 155 HELP_PATCH_AUTHORS Jonathan Wilkes;
+#X restore 500 597 pd META;
+#X obj 0 444 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 481 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 542 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X obj 78 355 cnv 17 3 80 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#N canvas 212 516 428 108 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 27 35 draw;
+#X text 7 1 [draw svg] Related Objects;
+#X restore 101 597 pd Related_objects;
+#X obj 78 453 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X text 98 394 [draw] also takes a number of messages. These are svg
+attributes that define how the object is drawn. See the subpatch above
+for a full list.;
+#X obj 172 552 pddp/pddplink drawarray-help.pd -text draw array;
+#X text 101 554 See also:;
+#X obj 172 572 pddp/pddplink drawimage-help.pd -text draw image;
+#X obj 242 552 pddp/pddplink drawsprite-help.pd -text draw sprite;
+#X text 11 20 draw shapes inside an svg container;
+#X obj 146 52 struct draw-svg-help-struct float x float y;
+#X scalar draw-svg-help-struct 207 120 \;;
+#X obj 34 137 r \$0-drag;
+#X obj 34 159 route drag;
+#N canvas 0 0 450 300 pan 0;
+#X obj 50 51 unpack p 0 0;
+#X floatatom 82 75 5 0 0 0 - - -, f 5;
+#X floatatom 123 72 5 0 0 0 - - -, f 5;
+#X obj 47 20 inlet;
+#X obj 71 122 * -1;
+#X obj 128 120 * -1;
+#X obj 71 154 +;
+#X obj 128 152 +;
+#X obj 71 176 t a;
+#X obj 128 174 t a;
+#X obj 71 198 outlet;
+#X obj 128 196 outlet;
+#X connect 0 1 1 0;
+#X connect 0 1 4 0;
+#X connect 0 2 2 0;
+#X connect 0 2 5 0;
+#X connect 3 0 0 0;
+#X connect 4 0 6 0;
+#X connect 5 0 7 0;
+#X connect 6 0 8 0;
+#X connect 7 0 9 0;
+#X connect 8 0 6 1;
+#X connect 8 0 10 0;
+#X connect 9 0 7 1;
+#X connect 9 0 11 0;
+#X restore 34 181 pd pan;
+#X obj 33 211 pack;
+#X text 98 354 viewBox;
+#X text 168 355 - Four floats to define the viewport of the container:
+xOrigin yOrigin width height. See svg spec for more details;
+#X text 99 453 anything;
+#X text 169 453 - messages in response to any events set for the object
+;
+#X text 81 498 1) float;
+#X text 171 498 - initial width of the container;
+#X text 81 515 2) float;
+#X text 171 515 - initial height of the container;
+#N canvas 492 53 686 639 (subpatch) 0;
+#X obj 41 52 draw path m 5 194.088 l 666.819 0 l 0 -36.9314 l -3.12158
+0 l 0 3.03125 l -5.96875 0 l 0 -1.5 l -7.40625 0 l 0 5.40625 l -5.65625
+0 l 0 1.6875 l -3.125 0 l 0 -1.65625 l -5.40625 0 l -6.84375 -6.84375
+l -1.84375 3.21875 l -2.5625 0 l 0 -19.1562 c 1.11498 -0.60865 1.90625
+-1.76523 1.90625 -3.125 c 0 -1.35977 -0.79127 -2.51635 -1.90625 -3.125
+l 0 -13.4375 l 2.03125 0 l 0 -2.3125 l -2.6938 0 l -0.99404 -12.4839
+l -0.90632 12.4839 l -3.62459 0 l 0 1.84375 l 2.51562 0 l 0 1.79466
+l -1.23437 0 l 0 1.99861 l 1.5625 0 l 0 10.0817 c -1.14211 0.60033
+-1.9375 1.77639 -1.9375 3.15625 c 0 1.37986 0.79539 2.55592 1.9375
+3.15625 l 0 19.625 l -2.90625 0 l 0 -5.59375 l -3.875 -3.90625 l -6.65625
+3.84375 l 0 -2.5 l -3.53125 0.96875 l 0 7.4375 l -2.59375 0 l 0 -3.8125
+l -17.5938 0 l 0 4 l -5.03125 0 l 0 -3.75 l -11.875 0 l 0 3.3125 l
+-3.78125 0 l -0.78125 -26.4688 l -0.78125 25.1875 l -2.3125 0 l 0 -3.96875
+l -2.9375 0 l 0 3.5 l -3.5 0 l 0 -2.1875 l -5.21875 0 l 0 5.1875 l
+-7.8125 0 l 0 -2.53125 l -7.53125 0 l 0.25 -20.8438 l -1.28125 21.3438
+l -4.09375 0 l 0 -6.3125 l -3.1875 0 l -0.9375 3.5 l -3.875 0 l 0 4.3125
+l -2.3125 0 l 0 -6.34375 l -2.03125 -0.53125 l 0 4.875 l -1.28125 0
+l 0 2.40625 l -1.59375 0 l 0 3.5 l -4.59375 0 l 0 -23.125 l -11.6875
+0 l 0 -3.15625 l -3.46875 0 l 0 3.15625 l -3.875 0 l 0 8.71875 l -4.09375
+0 l 0 5.15625 l -3.09375 0 l 0 4.375 l -2.125 0 l 0 -3.375 l -1.71875
+0 l 0 -5.40625 l -6.59375 0 l 0 2.59375 l -8.59375 0 l 0 3.34375 l
+-9.75 0 l 0 -14.7188 l -3.90625 0 l 0 -1.71875 l -3.5625 0 l 0 2.3125
+l -2.0625 0 l 0 -2.59375 l -6.15625 0 l 0 6.96875 l -3.125 0 l 0 5.1875
+l -1.5625 0 l 0 -9 l -1.5 0 l 0 -2.15625 l -5.75 0 l -0.65625 -2.53125
+l -12.0938 0 l 0 5.15625 l -2.0625 0 l 0 6.6875 l -4.375 0 l -1.84375
+-3.09375 l 0 -77.75 l -1.46875 0 l 0 -1.96875 l 3.15625 0 l 0 -5.1875
+l 1.6875 0 l 0 -3.84375 l -1.6875 0 l 0 -8.28125 l -1.375 0 l 0 -3.5
+l 6.03125 0 l 0 -2.5625 l -2.4375 0 l 0 -5.0625 l 2.1875 0 l 0 -2.1875
+l -4.03125 0 l 0 -1.21875 l -2.78125 0 l 0 -3.125 l 1.71875 0 l 0 -1.9375
+l -4.28125 0 L 405.166 5 l -1.40625 26.7812 l -5.34375 0 l 0 1.9375
+l 1.96875 0 l 0 3.4375 c -2.95107 0.40253 -5.2699 1.439 -6.375 3.6875
+l 0 2.96875 l 2.03125 0 l 0 2.78125 l -1.40625 0 l 0 1.78125 l 5.09375
+0 l 0 3 l -2.125 0 l 0 8.28125 l -1.9375 0 l 0 3.84375 l 1.9375 0 l
+0 4.6875 l 3.53125 0 l 0 2.46875 l -2.0625 0 l 0 78.25 l -12.4062 0
+l 0 11.8438 l -5.65625 0 l 0 -22.125 l -5.40625 0 l 0 -1.53125 l -6.375
+0 l -0.46875 -9.625 l -0.4375 9.625 l -8.57193 0 l 0 3.09375 l -3.0625
+0 l 0 5.375 l -16.6191 0 l 0 5.65625 l -5.125 0 l 0 -2.90625 l -0.78125
+-3 l -5.65625 0 l 0 2.84375 l -1.37218 0 l 0 15.3442 l -3.41612 0 l
+0 -18.438 l -8.0867 0 l 0 -3.59375 l -4 0 l 0 3.78125 l -1.90625 1.09375
+l 0 5.65625 l -33.2439 0 l 0 1.3125 l -1.8125 0 l 0 -4.40625 l -4.875
+0 l 0 -1.03125 l -3.875 0 l 0 -2.5625 l -4.375 0 l 0 6.6875 l -12.1514
+0 l 0 -2.5625 l -3.84375 0 l 0 -3.34375 l -4.25 0 l 0 10.4062 l -3.21875
+-3.21875 l 0 -25.9688 l -6.15625 0 l 0 -6.15625 l -5.15625 0 l 0 13.375
+l -6.99996 0 l 0 28.0945 l -6.09379 0 l 0 -8.06316 l -2.90625 -3.28125
+l -3.53125 3.28125 l 0 -8.8125 l -5.28125 0 l 0 -2.875 l -5.59375 0
+l 0 3.96875 l -3.5625 0 l 0 4.6875 l -1.5 0 l 0 -1.84375 l -10.7927
+0 l 0 3.125 l -17.4334 0 l 0 -3.34375 l -3.96875 0 l 0 -2.34375 l -6.9375
+0 l 0 -3.34375 l -3.84375 0 l -0.90625 -32.4375 c 1.7461 -0.54309 3.03125
+-2.16894 3.03125 -4.09375 c 0 -2.01445 -1.409 -3.66423 -3.28125 -4.125
+l -0.84375 -30.25 l -1.375 30.2812 c -1.77984 0.52232 -3.09375 2.14493
+-3.09375 4.09375 c 0 1.81116 1.13148 3.37093 2.71875 4 l -1.96875 43.7812
+l -4.46905 4.75707 l 0 3.18537 l -6.03095 -4.03614 l 0 -11.5625 l -19.25
+0 l 0 6.0625 l -2.59375 0 l 0 -78.5 l -32.9688 0 l 0 74.2188 l -4.53125
+0 l 0 2.5625 l -4.03125 0 l 0 2.34375 l -3.46875 0 l 0 -4.375 l -2.3125
+0 l 0 -5.40625 l -3.34375 0 l 0 -6.6875 l -6.0746 0 l 0 22.754 l -4.59819
+0 l 0 -1.83383 l -8.10846 0.0134 l 0 1.97273 l -4.875 0 l 0 8.96875
+l -4.875 0 l 0 -8.96878 l -4.15862 0 l 0 -3.01004 l -2.34138 0 l 0
+3.01004 l -11.75 0 l 0 7.43748 l -2.3125 0 l 0 3.34375 l -5.50958 0
+z;
+#X obj 41 9 loadbang;
+#X msg 41 31 drag 1;
+#X obj 41 981 s \$0-drag;
+#X text 135 6 Skyline from:;
+#X obj 135 26 pddp/pddplink https://upload.wikimedia.org/wikipedia/commons/1/13/JohannesburgArtisticSilhouette.svg
+;
+#X connect 0 0 3 0;
+#X connect 1 0 2 0;
+#X connect 2 0 0 0;
+#X restore 33 285 draw svg 300 200;
+#X msg 33 233 viewBox \$1 \$2 300 200;
+#X obj 34 52 loadbang;
+#X msg 34 84 fill none \, stroke-width 2 \, stroke black \, stroke-dasharray
+5 5, f 61;
+#X obj 34 107 draw rect 300 200;
+#X text 270 322 Click to drag the skyline;
+#X connect 19 0 20 0;
+#X connect 20 0 21 0;
+#X connect 21 0 22 0;
+#X connect 21 1 22 1;
+#X connect 22 0 32 0;
+#X connect 32 0 31 0;
+#X connect 33 0 34 0;
+#X connect 34 0 35 0;

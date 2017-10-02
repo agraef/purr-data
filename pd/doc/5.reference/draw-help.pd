@@ -1,10 +1,10 @@
 #N struct draw-help-struct float x float y;
-#N canvas 270 52 555 619 10;
+#N canvas 212 53 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header draw 3 12 0 18 -204280
 -1 0;
-#X obj 0 339 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+#X obj 0 309 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
 #N canvas 494 296 482 332 META 0;
 #X text 12 115 LIBRARY internal;
@@ -17,13 +17,13 @@ rx ry;
 #X text 12 135 AUTHOR Jonathan Wilkes;
 #X text 13 155 HELP_PATCH_AUTHORS Jonathan Wilkes;
 #X restore 500 597 pd META;
-#X obj 0 436 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+#X obj 0 406 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
 13 -228856 -1 0;
-#X obj 0 473 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+#X obj 0 443 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
 0 13 -228856 -1 0;
-#X obj 0 573 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+#X obj 0 543 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#X obj 78 347 cnv 17 3 80 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X obj 78 317 cnv 17 3 80 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #N canvas 212 516 428 108 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
@@ -34,37 +34,37 @@ rx ry;
 #X obj 162 36 drawsymbol;
 #X obj 232 36 plot;
 #X restore 101 597 pd Related_objects;
-#X text 99 445 float;
-#X obj 78 445 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X text 99 415 float;
+#X obj 78 415 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X text 169 445 - outputs the stored value as a float message.;
+#X text 169 415 - outputs the stored value as a float message.;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
 #X text 11 20 draw an svg shape to represent a scalar;
 #X obj 492 12 draw;
-#X text 101 554 float;
-#X text 171 525 - [draw] accepts a list of coordinates and/or shape
+#X text 101 524 float;
+#X text 171 495 - [draw] accepts a list of coordinates and/or shape
 data used to specify where and how to draw the object;
-#X scalar draw-help-struct 322 277 \;;
-#X obj 117 64 struct draw-help-struct float x float y;
-#X msg 128 201 stroke-width \$1;
-#X floatatom 128 177 5 0 0 0 - - -, f 5;
-#X floatatom 128 238 5 0 0 0 - - -, f 5;
-#X msg 128 262 transform skewx \$1;
-#X text 98 346 float;
-#X text 168 347 - any nonzero number will display the drawing to represent
+#X scalar draw-help-struct 322 250 \;;
+#X obj 117 59 struct draw-help-struct float x float y;
+#X msg 128 174 stroke-width \$1;
+#X floatatom 128 150 5 0 0 0 - - -, f 5;
+#X floatatom 128 211 5 0 0 0 - - -, f 5;
+#X msg 128 235 transform skewx \$1;
+#X text 98 316 float;
+#X text 168 317 - any nonzero number will display the drawing to represent
 the corresponding scalar. SSending a "0" will hide it.;
-#X text 98 386 [draw] also takes a number of messages. These are svg
+#X text 98 356 [draw] also takes a number of messages. These are svg
 attributes that define how the object is drawn. See the subpatch above
 for a full list.;
-#X text 81 490 1) symbol;
-#X text 81 525 n) symbol;
-#X text 107 539 or;
-#X text 171 490 - name of an svg shape. Can be circle \, ellipse \,
+#X text 81 460 1) symbol;
+#X text 81 495 n) symbol;
+#X text 107 509 or;
+#X text 171 460 - name of an svg shape. Can be circle \, ellipse \,
 line \, path \, polygon \, polyline \, rectangle \, or group.;
-#X obj 80 293 draw circle 40 40;
-#X obj 299 158 draw rect 80 80 100 -40;
-#X msg 80 112 fill red \, stroke blue;
+#X obj 80 266 draw circle 40 40;
+#X obj 299 138 draw rect 80 80 100 -40;
+#X msg 80 92 fill red \, stroke blue;
 #N canvas 326 113 587 553 more_messages 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
@@ -125,8 +125,13 @@ line \, path \, polygon \, polyline \, rectangle \, or group.;
 #X connect 30 0 32 0;
 #X connect 31 0 32 0;
 #X connect 33 0 32 0;
-#X restore 299 112 pd more_messages;
-#X msg 89 137 fill blue \, stroke black;
+#X restore 299 92 pd more_messages;
+#X msg 89 117 fill blue \, stroke black;
+#X obj 172 553 pddp/pddplink drawarray-help.pd -text draw array;
+#X text 101 555 See also:;
+#X obj 172 573 pddp/pddplink drawimage-help.pd -text draw image;
+#X obj 242 553 pddp/pddplink drawsprite-help.pd -text draw sprite;
+#X obj 242 573 pddp/pddplink ./drawsvg-help.pd -text draw svg;
 #X connect 19 0 30 0;
 #X connect 20 0 19 0;
 #X connect 21 0 22 0;

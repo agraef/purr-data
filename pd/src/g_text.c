@@ -3018,6 +3018,10 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
                     (void *)canvas_undo_set_recreate(glist_getcanvas(glist),
                     &x->te_g, pos));
                 typedmess(&x->te_pd, gensym("rename"), natom2-1, vec2+1);
+                // Special case for [draw svg] -- update the args
+                if (((t_canvas *)x)->gl_svg)
+                    typedmess(((t_canvas *)x)->gl_svg, gensym("update_svg"),
+                        natom2-1, vec2+1);
                 binbuf_free(x->te_binbuf);
                 x->te_binbuf = b;
                 glob_preset_node_list_seek_hub();

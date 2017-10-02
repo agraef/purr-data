@@ -409,6 +409,11 @@ extern int array_joc;
 extern void template_notifyforscalar(t_template *template, t_glist *owner,
     t_scalar *sc, t_symbol *s, int argc, t_atom *argv);
 
+extern void scalar_getinnersvgrect(t_gobj *z, t_glist *owner, t_word *data,
+    t_template *template, t_float basex, t_float basey,
+    int *xp1, int *yp1, int *xp2, int *yp2);
+
+extern t_symbol *group_gettype(t_glist *glist);
 static void scalar_getgrouprect(t_glist *owner, t_glist *groupcanvas,
     t_word *data, t_template *template, int basex, int basey,
     int *x1, int *x2, int *y1, int *y2)
@@ -420,8 +425,12 @@ static void scalar_getgrouprect(t_glist *owner, t_glist *groupcanvas,
             ((t_canvas *)y)->gl_svg)
         {
             /* todo: accumulate basex and basey for correct offset */
-            scalar_getgrouprect(owner, (t_glist *)y, data, template,
-                basex, basey, x1, x2, y1, y2);
+            if (group_gettype((t_canvas *)y) == gensym("g"))
+                scalar_getgrouprect(owner, (t_glist *)y, data, template,
+                    basex, basey, x1, x2, y1, y2);
+            else /* inner svg */
+                scalar_getinnersvgrect(y, owner, data, template, basex, basey,
+                    x1, y1, x2, y2);
         }
         else
         {
@@ -876,8 +885,9 @@ static void scalar_groupvis(t_scalar *x, t_glist *owner, t_template *template,
         char parentbuf[MAXPDSTRING];
         sprintf(parentbuf, "dgroup%lx.%lx", (long unsigned int)parent,
             (long unsigned int)x->sc_vec);
-        gui_start_vmess("gui_scalar_draw_group", "xss",
-            glist_getcanvas(owner), tagbuf, parentbuf);
+        gui_start_vmess("gui_scalar_draw_group", "xsss",
+            glist_getcanvas(owner), tagbuf, parentbuf,
+            group_gettype(gl)->s_name);
         svg_grouptogui(gl, template, x->sc_vec);
         gui_end_vmess();
 
@@ -998,8 +1008,8 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
         sprintf(tagbuf, "scalar%lxgobj", (long unsigned int)x->sc_vec);
         sprintf(groupbuf, "dgroup%lx.%lx", (long unsigned int)templatecanvas,
             (long unsigned int)x->sc_vec);
-        gui_vmess("gui_scalar_draw_group", "xss",
-            glist_getcanvas(owner), groupbuf, tagbuf);
+        gui_vmess("gui_scalar_draw_group", "xsss",
+            glist_getcanvas(owner), groupbuf, tagbuf, "g");
         pd_bind(&x->sc_gobj.g_pd, gensym(buf));
     }
 
