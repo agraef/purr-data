@@ -642,6 +642,9 @@ $(gem_src)/Gem.dll: $(gem_src)/configure
 		CXXFLAGS="-DHAVE_S_STUFF_H" \
 		--host=i686-w64-mingw32 \
 		--without-ALL \
+		--with-jpeg \
+		--with-jpeg-cflags="-I/mingw32/include" \
+		--with-jpeg-libs="-L/mingw32/lib -ljpeg" \
 		--with-ftgl \
 		--with-ftgl-cflags="-I/mingw32/include -I/mingw32/include/freetype2" \
 		--with-ftgl-libs="-L/mingw32/lib -lftgl" \
