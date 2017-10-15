@@ -1,0 +1,62 @@
+#N struct draw-image-help-struct float x float y;
+#N canvas 238 53 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header draw\ image 3 12
+0 18 -204280 -1 0;
+#X obj 0 329 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 494 296 482 332 META 0;
+#X text 12 115 LIBRARY internal;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 5 KEYWORDS control GUI data-structure;
+#X text 12 45 DESCRIPTION draw an svg shape to represent a scalar;
+#X text 12 65 INLET_0 float fill fill-opacity fill-rule stroke stroke-dasharray
+stroke-linecap stroke-linejoin stroke-miterlimit stroke-opacity stroke-width
+rx ry;
+#X text 12 135 AUTHOR Jonathan Wilkes;
+#X text 13 155 HELP_PATCH_AUTHORS Jonathan Wilkes;
+#X restore 500 597 pd META;
+#X obj 0 396 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 433 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 533 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X obj 78 337 cnv 17 3 50 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#N canvas 212 516 428 108 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 27 35 draw;
+#X text 7 1 [draw image] Related Objects;
+#X restore 101 597 pd Related_objects;
+#X text 99 405 float;
+#X obj 78 405 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 169 405 - outputs the stored value as a float message.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X floatatom 80 168 5 0 0 0 - - -, f 5;
+#X msg 80 192 transform skewx \$1;
+#X text 98 336 float;
+#X text 81 450 1) symbol;
+#X text 11 20 draw an svg image or sequence of images;
+#X obj 117 64 struct draw-image-help-struct float x float y;
+#X obj 80 253 draw image;
+#X scalar draw-image-help-struct 324 189 \;;
+#X text 168 337 - for [draw sprite] \, the index of the image to display.
+This has no effect for [draw image];
+#X text 171 450 - path to the image to display. Or for [draw sprite]
+the path which contains a sequence of images;
+#X text 81 485 2) float;
+#X text 171 485 - x origin for the image;
+#X text 81 505 3) float;
+#X text 171 505 - y origin for the image;
+#X obj 162 541 pddp/pddplink drawarray-help.pd -text draw array;
+#X text 91 543 See also:;
+#X obj 162 561 pddp/pddplink drawimage-help.pd -text draw image;
+#X obj 232 541 pddp/pddplink drawsprite-help.pd -text draw sprite;
+#X obj 232 561 pddp/pddplink ./drawsvg-help.pd -text draw svg;
+#X connect 13 0 14 0;
+#X connect 14 0 19 0;

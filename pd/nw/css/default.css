@@ -381,7 +381,7 @@ text {
     stroke: #ccc;
 }
 
-/* A little hack for special canvas of [cnv].
+/* A little hack for special case of [cnv].
    All other iemguis have a black border, but
    [cnv] sets its selection rectangle to the
    user-supplied fill color when the object

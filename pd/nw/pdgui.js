@@ -3264,9 +3264,9 @@ function gui_scalar_draw_select_rect(cid, tag, state, x1, y1, x2, y2, basex, bas
     }
 }
 
-function gui_scalar_draw_group(cid, tag, parent_tag, attr_array) {
+function gui_scalar_draw_group(cid, tag, parent_tag, type, attr_array) {
     var parent_elem,
-        g;
+        group;
     if (!patchwin[cid]) {
         return;
     }
@@ -3275,9 +3275,9 @@ function gui_scalar_draw_group(cid, tag, parent_tag, attr_array) {
         attr_array = [];
     }
     attr_array.push("id", tag);
-    g = create_item(cid, "g", attr_array);
-    parent_elem.appendChild(g);
-    return g;
+    group = create_item(cid, type, attr_array);
+    parent_elem.appendChild(group);
+    return group;
 }
 
 function gui_scalar_configure_gobj(cid, tag, isselected, t1, t2, t3, t4, t5, t6) {
@@ -3381,6 +3381,19 @@ function gui_draw_configure(cid, tag, attr, val) {
         obj[attr] = val;
     }
     configure_item(item, obj);
+}
+
+// Special case for viewBox which, in addition to its inexplicably inconsistent
+// camelcasing also has no "none" value in the spec. This requires us to create
+// a special case to remove the attribute if the user wants to get back to
+// the default behavior.
+function gui_draw_viewbox(cid, tag, attr, val) {
+    // Value will be an empty array if the user provided no values
+    if (val.length) {
+        gui_draw_configure(cid, tag, attr, val)
+    } else {
+        get_item(cid, tag).removeAttribute("viewBox");
+    }
 }
 
 // Configure multiple attr/val pairs (this should be merged with gui_draw_configure at some point
@@ -3507,55 +3520,58 @@ function gui_drawimage_new(obj_tag, file_path, canvasdir, flags) {
     var drawsprite = 1,
         drawimage_data = [], // array for base64 image data
         image_seq,
-        i,
+        count = 0,
         matchchar = "*",
         files,
         ext,
+        img_types = [".gif", ".jpeg", ".jpg", ".png", ".svg"],
         img; // dummy image to measure width and height
     image_seq = flags & drawsprite;
-    if (!path.isAbsolute(file_path)) {
-        file_path = path.join(canvasdir, file_path);
+    if (file_path !== "") {
+        if(!path.isAbsolute(file_path)) {
+            file_path = path.join(canvasdir, file_path);
+        }
+        file_path = path.normalize(file_path);
     }
-    file_path = path.normalize(file_path);
-    if (fs.existsSync(file_path) && fs.lstatSync(file_path).isDirectory()) {
+    if (file_path !== "" &&
+        fs.existsSync(file_path) &&
+        fs.lstatSync(file_path).isDirectory()) {
         files = fs.readdirSync(file_path)
                     .sort(); // Note that js's "sort" method doesn't do the
                              // "right thing" for numbers. For that we'd need
                              // to provide our own sorting function
         // todo: warn about image sequence with > 999
-        for (i = 0; i < files.length && i < 1000; i++) {
-            ext = path.extname(files[i]);
-
-        // todo: tolower()
-
-            if (ext === ".gif" ||
-                ext === ".jpg" ||
-                ext === ".png" ||
-                ext === ".jpeg" ||
-                ext === ".svg") {
-
+        files.forEach(function(file) {
+            ext = path.extname(file).toLowerCase();
+            if (img_types.indexOf(ext) != -1) {
                 // Now add an element to that array with the image data
                 drawimage_data.push({
                     type: ext === ".jpeg" ? "jpg" : ext.slice(1),
-                    data: fs.readFileSync(path.join(file_path, files[i]),"base64")
+                    data: fs.readFileSync(path.join(file_path, file),"base64")
                 });
+                count++;
             }
-        }
-    } else {
-        i = 0;
+        });
     }
-    //post("no of files: " + i);
+    post("no of files: " + count);
 
-    if (i > 0) {
-        img = new pd_window.Image(); // create an image in the pd_window context
-        img.onload = function() {
-            pdsend(obj_tag, "size", this.width, this.height);
-        };
-        img.src = "data:image/" + drawimage_data[0].type +
-            ";base64," + drawimage_data[0].data;
-    } else {
-        post("drawimage: warning: no images loaded");
+    if (count === 0) {
+        // set a default image
+        drawimage_data.push({
+            type: "png",
+            data: get_default_png_data()
+        });
+        if (file_path !== "") {
+            post("draw image: error: couldn't load image");
+        }
+        post("draw image: warning: no image loaded. Using default png");
     }
+    img = new pd_window.Image(); // create an image in the pd_window context
+    img.onload = function() {
+        pdsend(obj_tag, "size", this.width, this.height);
+    };
+    img.src = "data:image/" + drawimage_data[0].type +
+        ";base64," + drawimage_data[0].data;
     pd_cache.set(obj_tag, drawimage_data); // add the data to container
 }
 
@@ -3648,18 +3664,23 @@ function gui_drawimage_index(cid, obj, data, index) {
     configure_item(image, { visibility: "visible" });
 }
 
+// Default png image data
+function get_default_png_data() {
+    return ["iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAAb1BMVEWBgYHX19",
+            "f///8vLy/8/Pzx8PH3+Pf19fXz8/Pu7u7l5eXj4+Pn5+fs7Oza2tr6+vnq6urh",
+            "4eHe3t7c3Nza2dr6+fro6Og1NTXr6+xYWFi1tbWjo6OWl5aLjItDQ0PPz8+/v7",
+            "+wsLCenZ5zc3NOTk4Rpd0DAAAAqElEQVQoz62L2Q6CMBBFhcFdCsomq+v/f6Mn",
+            "bdOSBn3ypNO5Nyez+kG0zN9NWZZK8RRbB/2XmMLSvSZp2mehTMVcLGIYbcWcLW",
+            "1/U4PIZCvmOCMSaWzEHGaMIq2NmJNn4ORuMybP6xxYD0SnE4NJDdc0fYv0LCJg",
+            "9g4RqV3BrJfB7Bzc+ILZOjC+YDYOjC+YKqsyHlOZAX5Msgwm1iRxgDYBSWjCm+",
+            "98AAfDEgD0K69gAAAAAElFTkSuQmCC"
+           ].join("");
+}
+
 function gui_load_default_image(dummy_cid, key) {
     pd_cache.set(key, {
         type: "png",
-        data: ["iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAAb1BMVEWBgYHX19",
-               "f///8vLy/8/Pzx8PH3+Pf19fXz8/Pu7u7l5eXj4+Pn5+fs7Oza2tr6+vnq6urh",
-               "4eHe3t7c3Nza2dr6+fro6Og1NTXr6+xYWFi1tbWjo6OWl5aLjItDQ0PPz8+/v7",
-               "+wsLCenZ5zc3NOTk4Rpd0DAAAAqElEQVQoz62L2Q6CMBBFhcFdCsomq+v/f6Mn",
-               "bdOSBn3ypNO5Nyez+kG0zN9NWZZK8RRbB/2XmMLSvSZp2mehTMVcLGIYbcWcLW",
-               "1/U4PIZCvmOCMSaWzEHGaMIq2NmJNn4ORuMybP6xxYD0SnE4NJDdc0fYv0LCJg",
-               "9g4RqV3BrJfB7Bzc+ILZOjC+YDYOjC+YKqsyHlOZAX5Msgwm1iRxgDYBSWjCm+",
-               "98AAfDEgD0K69gAAAAAElFTkSuQmCC"
-              ].join("")
+        data: get_default_png_data()
     });
 }
 

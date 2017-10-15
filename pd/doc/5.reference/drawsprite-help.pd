@@ -1,0 +1,139 @@
+#N struct draw-sprite-help float x float y;
+#N canvas 255 53 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header draw\ sprite 3 12
+0 18 -204280 -1 0;
+#X obj 0 349 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 466 266 482 355 META 0;
+#X text 12 115 LIBRARY internal;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 5 KEYWORDS control GUI data-structure;
+#X text 12 45 DESCRIPTION draw an svg shape to represent a scalar;
+#X text 12 65 INLET_0 float fill fill-opacity fill-rule stroke stroke-dasharray
+stroke-linecap stroke-linejoin stroke-miterlimit stroke-opacity stroke-width
+rx ry;
+#X text 12 135 AUTHOR Jonathan Wilkes;
+#X text 13 155 HELP_PATCH_AUTHORS Jonathan Wilkes;
+#X restore 500 597 pd META;
+#X obj 0 446 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 483 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 553 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X obj 78 357 cnv 17 3 80 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#N canvas 212 516 428 108 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 17 35 draw image;
+#X obj 92 36 draw;
+#X text 7 1 [draw sprite] Related Objects;
+#X restore 101 597 pd Related_objects;
+#X obj 78 455 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 115 56 struct draw-sprite-help float x float y;
+#X obj 293 81 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 293 101 metro 72;
+#X obj 293 123 f;
+#X obj 333 123 + 1;
+#X obj 293 150 % 22;
+#X msg 293 235 index \$1;
+#N canvas 681 181 450 323 earth 0;
+#X obj 62 8 loadbang;
+#X msg 62 30 fill white \, stroke black \, stroke-width 3.98213;
+#X obj 62 52 draw path m 125.441 64.4134 a 60.2251 60.2251 0 1 1 -120.45
+0 a 60.2251 60.2251 0 1 1 120.45 0 z;
+#X obj 62 120 draw path m 36.6489 11.9887 c 4.57718 -3.98317 10.7935
+-5.0472 16.5767 -5.81134 c 3.18504 -1.70824 6.31674 0.661606 7.88578
+1.63077 c 1.39674 -2.8954 6.10067 1.22814 5.64238 -2.96455 c 2.59712
+-0.816215 4.03226 4.04543 6.8129 1.44597 c 3.1605 3.03694 -5.06567
+3.97271 -3.48434 6.17877 c 4.74075 -0.533508 7.14687 3.59104 10.9833
+5.05019 c -1.77232 -2.9487 -0.236351 -3.0666 -1.08089 -4.33422 c -1.70082
+-2.55124 -4.04772 -4.10695 0.967781 -2.90709 c 5.74748 3.20745 3.22719
+-1.26601 10.1905 4.28407 c 2.07054 -0.295027 2.88148 1.63521 2.82493
+2.80785 c -0.044815 0.936308 -0.633278 1.74884 -2.82493 0.431078 c
+-2.9471 2.10148 -3.04153 3.66146 -0.571915 1.14331 c 2.42639 0.024004
+2.46533 4.76796 5.33081 2.10042 c -0.071487 0.805065 -0.488159 1.82406
+-1.03928 2.06894 c -0.724503 0.322243 -1.68161 -0.250748 -2.39651 0.004803
+c -0.856285 0.306236 -1.03821 0.967253 -1.3231 2.68515 c -1.97984 0.488155
+-2.80679 1.55197 -2.74276 2.97484 c 0.102966 2.28127 1.64961 5.16915
+-1.95638 5.70373 c -4.16509 2.05453 4.11335 9.57379 0.125908 9.42281
+c -2.49682 -2.52563 -3.15836 -6.4101 -7.54754 -5.47752 c -1.92757 -0.336651
+-2.34103 2.93749 -5.05071 0.927769 c -5.55862 -0.333981 -6.88439 6.72913
+-4.55029 10.4562 c 1.51356 4.85706 7.67611 1.85447 8.48598 -1.4058
+c 7.43977 -1.17158 -2.99565 9.21956 5.04272 7.69373 c 5.22891 -0.359581
+0.569252 8.99388 7.2285 7.77055 c 3.93409 0.47855 8.10132 -7.83297
+11.7628 -2.46001 c 2.07641 -0.521767 4.44412 -1.20785 6.30073 -0.417732
+c 2.1479 0.914429 3.74896 3.43952 5.6221 4.62178 c 6.18336 -0.486023
+1.35885 7.8399 7.38376 7.29892 c 6.32047 -0.660477 1.77445 6.23991
+1.39778 9.54607 c -1.61172 4.81811 -3.62944 9.54338 -6.3514 13.844
+c -4.9643 2.33623 -7.06739 8.11413 -11.0516 11.623 c -4.88587 1.42712
+-8.13493 5.76881 -12.4457 8.1584 c -2.41359 2.19859 -7.34267 5.98543
+-9.65596 5.20863 c 2.23113 -4.06532 5.00697 -7.37788 7.69212 -11.2389
+c 2.08067 -4.69486 9.2889 -10.9513 6.09533 -15.8004 c -5.09981 -2.38317
+-5.30521 -9.2857 -8.58522 -13.4289 c 2.15698 -2.10842 -0.325966 -6.02116
+3.56171 -7.95834 c 1.90089 -1.61653 2.04974 -9.53913 -1.85608 -7.05512
+c -5.60664 -1.25427 -8.09438 -7.61102 -13.9587 -7.99727 c -3.67107
+-3.2544 -9.10806 -1.65655 -13.5826 -4.74289 c -4.299 -1.90676 -3.89513
+-8.03836 -7.90979 -10.5848 c -0.979523 -1.29376 -3.42725 -6.86838 -4.23018
+-3.91649 c 0.296097 2.15163 6.10867 10.2364 1.52423 5.52554 c -3.09061
+-4.2766 -4.67299 -9.39934 -7.4307 -13.9096 c -2.43407 -4.04186 2.31276
+-7.36615 1.52424 -11.0511 c 2.66701 -0.489227 -2.42106 -4.53055 -1.79099
+-7.16448 c -1.94709 -2.7337 -2.29984 0.273157 -4.68734 -0.457218 c
+-0.184116 2.0284 -1.78496 1.17265 -2.85816 0.476421 z;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X restore 335 177 draw g earth;
+#X scalar draw-sprite-help 87 105 \;;
+#X floatatom 293 175 5 0 0 0 - - -, f 5;
+#N canvas 0 0 450 300 rotate 0;
+#X obj 98 21 inlet;
+#X obj 98 182 outlet;
+#X obj 108 115 loadbang;
+#X msg 98 158 transform translate -30 85 rotate \$1 65 63;
+#X msg 98 46 360 \$1;
+#X obj 98 68 -;
+#X obj 98 90 * 2.5;
+#X msg 108 137 0;
+#X connect 0 0 4 0;
+#X connect 2 0 7 0;
+#X connect 3 0 1 0;
+#X connect 4 0 5 0;
+#X connect 5 0 6 0;
+#X connect 6 0 3 0;
+#X connect 7 0 3 0;
+#X restore 335 150 pd rotate;
+#X text 98 356 index;
+#X text 168 357 - index of the image to display from the loaded image
+sequence. Indices are zero-based.;
+#X text 98 396 [draw] also takes a number of messages. These are svg
+attributes that define how the object is drawn. See the [draw] object
+for more information about them.;
+#X text 99 455 -;
+#X text 169 455 - -;
+#X text 81 500 1) directory;
+#X text 91 570 Images may be: png \, jpg \, gif \, or svg;
+#X text 171 500 - directory in which a sequence of images may be found.
+Purr Data will load the images files found there in alphabetical order.
+Relative paths are relative to the patch.;
+#X obj 179 327 pddp/pddplink http://millionthvector.blogspot.com/p/free-sprites_12.html
+;
+#X text 237 309 Sprite from;
+#X obj 293 259 draw sprite ./drawsprite_images;
+#X text 11 20 draw a sprite from an image sequence;
+#X connect 12 0 13 0;
+#X connect 13 0 14 0;
+#X connect 14 0 15 0;
+#X connect 14 0 16 0;
+#X connect 14 0 21 0;
+#X connect 15 0 14 1;
+#X connect 16 0 20 0;
+#X connect 17 0 32 0;
+#X connect 20 0 17 0;
+#X connect 21 0 18 0;

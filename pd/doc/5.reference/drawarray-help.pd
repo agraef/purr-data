@@ -1,0 +1,73 @@
+#N struct draw-array-help-element float y;
+#N struct draw-array-help-struct float x float y array a draw-array-help-element
+;
+#N canvas 245 53 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header draw\ array 3 12
+0 18 -204280 -1 0;
+#X obj 0 339 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 494 296 482 332 META 0;
+#X text 12 115 LIBRARY internal;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 5 KEYWORDS control GUI data-structure;
+#X text 12 45 DESCRIPTION draw an svg shape to represent a scalar;
+#X text 12 65 INLET_0 float fill fill-opacity fill-rule stroke stroke-dasharray
+stroke-linecap stroke-linejoin stroke-miterlimit stroke-opacity stroke-width
+rx ry;
+#X text 12 135 AUTHOR Jonathan Wilkes;
+#X text 13 155 HELP_PATCH_AUTHORS Jonathan Wilkes;
+#X restore 500 597 pd META;
+#X obj 0 436 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 473 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 573 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X obj 78 347 cnv 17 3 80 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#N canvas 212 516 428 108 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [draw] Related Objects;
+#X obj 27 35 drawcurve;
+#X obj 92 36 drawnumber;
+#X obj 162 36 drawsymbol;
+#X obj 232 36 plot;
+#X restore 101 597 pd Related_objects;
+#X text 99 445 float;
+#X obj 78 445 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 169 445 - outputs the stored value as a float message.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X text 101 554 float;
+#X text 171 525 - [draw] accepts a list of coordinates and/or shape
+data used to specify where and how to draw the object;
+#X text 98 346 float;
+#X text 168 347 - any nonzero number will display the drawing to represent
+the corresponding scalar. SSending a "0" will hide it.;
+#X text 98 386 [draw] also takes a number of messages. These are svg
+attributes that define how the object is drawn. See the subpatch above
+for a full list.;
+#X text 81 490 1) symbol;
+#X text 81 525 n) symbol;
+#X text 107 539 or;
+#X text 171 490 - name of an svg shape. Can be circle \, ellipse \,
+line \, path \, polygon \, polyline \, rectangle \, or group.;
+#X text 11 20 draw an array of svg shapes;
+#N canvas 731 197 450 323 draw-array-help-element 1;
+#X obj 68 15 struct draw-array-help-element float y;
+#X obj 149 89 draw circle 5;
+#X restore 117 104 pd draw-array-help-element;
+#X obj 117 64 struct draw-array-help-struct float x float y array a
+draw-array-help-element;
+#X scalar draw-array-help-struct 121 134 \; 0 \; 20 \; 25 \; 17 \;
+8 \; 29 \; 30 \; 12 \; 14 \; 9 \; \;;
+#X obj 118 271 draw array a 50 50;
+#X floatatom 118 211 5 0 0 0 - - -, f 5;
+#X msg 118 237 viewBox \$1 0 50 50;
+#X text 261 245 Note: still a work-in-progress;
+#X connect 27 0 28 0;
+#X connect 28 0 26 0;
