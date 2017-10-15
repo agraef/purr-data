@@ -326,7 +326,7 @@ static void sys_initloadpreferences(void)
     //   "path1" : "\/System\/Library\/Fonts"     path1: /System/Library/Fonts
     // }
     snprintf(cmdbuf, MAXPDSTRING,
-        "plutil -convert json -r -o - %s.plist "
+        "plutil -convert json -r -o - \"%s.plist\" "
         "| sed -E "
           "-e 's/[{}]//g' "
           "-e 's/^ *\"(([^\"]|\\\\.)*)\" *: *\"(([^\"]|\\\\.)*)\".*/\\1: \\3/' "
