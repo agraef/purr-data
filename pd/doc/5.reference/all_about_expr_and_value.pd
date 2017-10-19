@@ -1,4 +1,4 @@
-#N canvas 430 58 448 350 10;
+#N canvas 416 53 448 471 10;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header expr_and_value 20
 10 1 18 -261106 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
@@ -23,7 +23,7 @@ aren't the names of functions or operators like some_number \, below:
 \, \$0-foo is interpretated as "\$0 minus foo". Additionally \, \$0
 cannot be at the beginning of the variable name (e.g. \, \$0foo). Underscores
 provide a workable \, if clunky \, solution:;
-#X obj 1 328 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+#X obj 1 478 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #N canvas 373 194 494 164 META 0;
 #X text 12 105 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
@@ -34,16 +34,26 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 two Pd objects;
 #X text 12 25 KEYWORDS expr expr~ fexpr~ value all_about_pd nonlocal
 ;
-#X restore 392 330 pd META;
+#X restore 392 480 pd META;
 #N canvas 218 216 428 141 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261106 -33289 0;
 #X text 7 2 [expr] and [value]- Related Objects;
-#X restore 103 330 pd Related_objects;
-#X obj 6 330 pddp/pddplink all_about.pd -text All About Pd;
+#X restore 103 480 pd Related_objects;
+#X obj 6 480 pddp/pddplink all_about.pd -text All About Pd;
+#X text 21 324 You can also use the assignment operator "=" to assign
+a new value to a [value] variable:;
+#X floatatom 24 368 5 0 0 0 - - -, f 5;
+#X obj 24 388 expr _\$0_foo = $f1 + 42;
+#X msg 215 366 bang;
+#X obj 215 388 v _\$0_foo;
+#X floatatom 215 410 5 0 0 0 - - -, f 5;
 #X connect 3 0 5 0;
 #X connect 4 0 3 0;
 #X connect 6 0 2 0;
 #X connect 7 0 11 0;
 #X connect 8 0 12 0;
 #X connect 12 0 9 0;
+#X connect 20 0 21 0;
+#X connect 22 0 23 0;
+#X connect 23 0 24 0;
