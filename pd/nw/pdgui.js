@@ -3533,13 +3533,18 @@ function gui_drawimage_new(obj_tag, file_path, canvasdir, flags) {
         }
         file_path = path.normalize(file_path);
     }
-    if (file_path !== "" &&
-        fs.existsSync(file_path) &&
-        fs.lstatSync(file_path).isDirectory()) {
-        files = fs.readdirSync(file_path)
+    if (file_path !== "" && fs.existsSync(file_path)) {
+        if (image_seq && fs.lstatSync(file_path).isDirectory()) {
+            // [draw sprite]
+            files = fs.readdirSync(file_path)
                     .sort(); // Note that js's "sort" method doesn't do the
                              // "right thing" for numbers. For that we'd need
                              // to provide our own sorting function
+        } else {
+            // [draw image]
+            files = [path.basename(file_path)];
+            file_path = path.dirname(file_path);
+        }
         // todo: warn about image sequence with > 999
         files.forEach(function(file) {
             ext = path.extname(file).toLowerCase();
