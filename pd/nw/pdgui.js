@@ -2211,7 +2211,7 @@ function suboptimal_font_map() {
 
 function gobj_fontsize_kludge(fontsize, return_type) {
     // These were tested on an X60 running Trisquel (based
-    // on Ubuntu)
+    // on Ubuntu 14.04)
     var ret, prop,
         fmap = font_stack_is_maintained_by_troglodytes() ?
             suboptimal_font_map() : font_map();
