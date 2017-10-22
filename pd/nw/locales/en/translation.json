@@ -306,6 +306,10 @@
         "viewbox_offsets": "viewbox offsets",
         "arrays": "array options"
       },
+      "no_scroll": "hide scrollbars",
+      "no_scroll_tt": "hide window scrollbars",
+      "no_menu": "hide menu",
+      "no_menu_tt": "hide window menu",
       "gop": "graph on parent",
       "gop_tt": "show the inner contents of this canvas in a rectangle on the containing canvas",
       "hide_name": "hide name and arguments",

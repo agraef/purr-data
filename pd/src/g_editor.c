@@ -2471,7 +2471,7 @@ void canvas_vis(t_canvas *x, t_floatarg f)
             //fprintf(stderr,"new\n");
             canvas_create_editor(x);
             canvas_args_to_string(argsbuf, x);
-            gui_vmess("gui_canvas_new", "xiisiissis",
+            gui_vmess("gui_canvas_new", "xiisiissiiis",
                 x,
                 (int)(x->gl_screenx2 - x->gl_screenx1),
                 (int)(x->gl_screeny2 - x->gl_screeny1),
@@ -2481,6 +2481,8 @@ void canvas_vis(t_canvas *x, t_floatarg f)
                 x->gl_name->s_name,
                 canvas_getdir(x)->s_name,
                 x->gl_dirty,
+                x->gl_noscroll,
+                x->gl_nomenu,
                 argsbuf);
 
             /* It looks like this font size call is no longer needed,
@@ -2684,6 +2686,8 @@ void canvas_properties(t_glist *x)
         gui_s("y_pix");    gui_i((int)x->gl_pixheight);
         gui_s("x_margin"); gui_i((int)x->gl_xmargin);
         gui_s("y_margin"); gui_i((int)x->gl_ymargin);
+        gui_s("no_scroll");   gui_i(x->gl_noscroll);
+        gui_s("no_menu");     gui_i(x->gl_nomenu);
     }
     else
     {
@@ -2705,6 +2709,8 @@ void canvas_properties(t_glist *x)
         gui_s("y_pix");    gui_i((int)x->gl_pixheight);
         gui_s("x_margin"); gui_i((int)x->gl_xmargin);
         gui_s("y_margin"); gui_i((int)x->gl_ymargin);
+        gui_s("no_scroll");   gui_i(x->gl_noscroll);
+        gui_s("no_menu");     gui_i(x->gl_nomenu);
     }
     //gfxstub_new(&x->gl_pd, x, graphbuf);
 
@@ -2760,6 +2766,9 @@ static void canvas_donecanvasdialog(t_glist *x,
     ypix = atom_getfloatarg(8, argc, argv);
     xmargin = atom_getfloatarg(9, argc, argv);
     ymargin = atom_getfloatarg(10, argc, argv);
+
+    x->gl_noscroll = atom_getintarg(11, argc, argv);
+    x->gl_nomenu = atom_getintarg(12, argc, argv);
 
     /* parent windows are treated differently than applies to
        individual objects */

@@ -217,6 +217,8 @@ struct _glist
     unsigned int gl_private:1;      /* private flag used in x_scalar.c */
     unsigned int gl_isclone:1;      /* exists as part of a clone object */
     unsigned int gl_gop_initialized:1;     /* used for tagged moving of gop-ed objects to avoid redundant reinit */
+    unsigned int gl_noscroll:1;     /* don't show window scrollbars */
+    unsigned int gl_nomenu:1;       /* don't show the window menu */
     //global preset array pointer
     t_preset_hub *gl_phub;
     //infinite undo goodies (have to stay here rather than the editor to prevent its obliteration when editor is deleted)
