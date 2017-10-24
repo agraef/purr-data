@@ -145,7 +145,7 @@ windows_i386_installer:
     - cd ../scripts
     - ../packages/win32_inno/build/bin/pd.exe -noprefs -nostdpath -nogui -noaudio external-tests.pd
   artifacts:
-    name: "%CI_RUNNER_DESCRIPTION%"
+    name: "$CI_RUNNER_DESCRIPTION"
     expire_in: 1 day
     paths:
       - Purr*.exe
