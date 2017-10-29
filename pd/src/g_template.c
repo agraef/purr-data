@@ -1753,7 +1753,7 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
     }
     else
     {
-        sprintf(tag, "draw%lx.%lx",
+        sprintf(tag, "%s%lx.%lx", (in_array ? "scelem": "draw"),
             (long unsigned int)x->x_parent,
             (long unsigned int)data);
     }
@@ -1927,7 +1927,7 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
     else if (s == gensym("d"))
     {
         char tagbuf[MAXPDSTRING];
-        sprintf(tagbuf, "draw%lx.%lx",
+        sprintf(tagbuf, "%s%lx.%lx", (in_array ? "scelem" : "draw"),
             (long unsigned int)parent, (long unsigned int)data);
         gui_start_vmess("gui_draw_configure", "xss",
             glist_getcanvas(c), tagbuf, "d"); 
@@ -4213,7 +4213,8 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
           one for this specific draw item
         */
         char tagbuf[MAXPDSTRING];
-        sprintf(tagbuf, "draw%lx.%lx", (long unsigned int)x,
+        sprintf(tagbuf, "%s%lx.%lx", in_array ? "scelem" : "draw",
+            (long unsigned int)x,
             (long unsigned int)data);
         gui_s(tagbuf);
         gui_end_array();
@@ -5424,7 +5425,7 @@ static void curve_setup(void)
 
 /* --------- plots for showing arrays --------------- */
 
-t_class *plot_class;
+static t_class *plot_class;
 
 typedef struct _plot
 {
@@ -5445,6 +5446,11 @@ typedef struct _plot
     t_fielddesc x_symoutlinecolor; /* color as hex symbol */
     t_fielddesc x_symfillcolor;    /* fill color as hex symbol */
 } t_plot;
+
+int is_plot_class(t_gobj *y)
+{
+    return (pd_class(&y->g_pd) == plot_class);
+}
 
 static void *plot_new(t_symbol *classsym, t_int argc, t_atom *argv)
 {
@@ -8287,8 +8293,6 @@ static void drawimage_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         t_float xloc = fielddesc_getcoord(&svg->x_x.a_attr, template, data, 0);
         t_float yloc = fielddesc_getcoord(&svg->x_y.a_attr, template, data, 0);
 
-fprintf(stderr, "xloc is %g\n", xloc);
-fprintf(stderr, "yloc is %g\n", yloc);
         char tagbuf[MAXPDSTRING];
         char parent_tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "draw%lx.%lx",
@@ -8617,7 +8621,8 @@ void svg_parentwidgettogui(t_gobj *z, t_scalar *sc, t_glist *owner,
     if (pd_class(&z->g_pd) == draw_class)
     {
         t_draw *x = (t_draw *)z;
-        sprintf(tagbuf, "draw%lx.%lx", (long unsigned int)x,
+        sprintf(tagbuf, "%s%lx.%lx", (sc->sc_vec == data) ? "draw" : "scelem",
+            (long unsigned int)x,
             (long unsigned int)data);
         gui_start_vmess("gui_draw_configure_all", "xs",
             glist_getcanvas(owner), tagbuf);
@@ -8627,7 +8632,8 @@ void svg_parentwidgettogui(t_gobj *z, t_scalar *sc, t_glist *owner,
     else if (pd_class(&z->g_pd) == drawimage_class)
     {
         t_drawimage *x = (t_drawimage *)z;
-        sprintf(tagbuf, "draw%lx.%lx", (long unsigned int)x,
+        sprintf(tagbuf, "%s%lx.%lx", (sc->sc_vec == data) ? "draw" : "scelem",
+            (long unsigned int)x,
             (long unsigned int)data);
         gui_start_vmess("gui_draw_configure_all", "xs",
             glist_getcanvas(owner), tagbuf);
