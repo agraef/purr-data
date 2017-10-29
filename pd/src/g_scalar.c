@@ -784,12 +784,12 @@ static void scalar_group_configure(t_scalar *x, t_glist *owner,
 {
     t_gobj *y;
     char tagbuf[MAXPDSTRING];
-    sprintf(tagbuf, "dgroup%lx.%lx", (long unsigned int)gl,
+    sprintf(tagbuf, "draw%lx.%lx", (long unsigned int)gl,
         (long unsigned int)data);
     char parentbuf[MAXPDSTRING];
     /* check if we're in an array-- really need to see if we can just
        get rid of the different tag names for arrays... */
-    sprintf(parentbuf, "%s%lx.%lx", (x->sc_vec == data) ? "dgroup" : "scelem",
+    sprintf(parentbuf, "draw%lx.%lx",
         (long unsigned int)parent,
         (long unsigned int)data);
     gui_start_vmess("gui_draw_configure_all", "xs",
@@ -963,7 +963,7 @@ static void scalar_groupvis(t_scalar *x, t_glist *owner, t_template *template,
      |      a [draw g] below can ignore basexy and gop junk
      |      when computing the transform matrix.
      v
-   group  - ".dgroup%lx.%lx", templatecanvas, x->sc_vec
+   dgroup - ".dgroup%lx.%lx", templatecanvas, x->sc_vec
      |      group used as parent for all the toplevel drawing
      |      commands of the scalar (i.e., the ones located on
      |      the same canvas as the [struct]).  Its matrix and
@@ -972,10 +972,10 @@ static void scalar_groupvis(t_scalar *x, t_glist *owner, t_template *template,
    (draw  - ".draw%lx.%lx", (t_draw *ptr), x->sc_vec
      |      the actual drawing command: rectangle, path, g, etc. 
      or     Each has its own matrix and options which can set
-   scelem   with messages to the corresponding [draw] object.
-     or   - ds arrays can nest arbitrarily deep. Scelem is for
-   group)   data structure arrays.  group is for [draw g] and [draw svg]
-     |
+   dgroup   with messages to the corresponding [draw] object.
+     |      Also, ds arrays have an additional group for the sake of
+     |      convenience.
+     |      Anything with "dgroup" is either [draw g] or [draw svg]
      v
     etc.
 
