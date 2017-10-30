@@ -450,8 +450,8 @@ var canvas_events = (function() {
                     ty = minv.b * dx + minv.d * dy;
                 var obj = scalar_draggables[draggable_elem.id];
                 pdgui.pdsend(obj.cid, "scalar_event", obj.scalar_sym,
-                    obj.drawcommand_sym, obj.event_name, dx, dy, tx, ty,
-                    obj.array_sym, obj.index);
+                    obj.drawcommand_sym, obj.array_sym, obj.index,
+                    obj.event_name, dx, dy, tx, ty);
                 last_draggable_x = new_x;
                 last_draggable_y = new_y;
             },

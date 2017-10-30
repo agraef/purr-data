@@ -1236,14 +1236,17 @@ typedef struct _drawarray
 
 extern t_outlet *obj_rightmost_outlet(t_object *x);
 
-void draw_notifyforscalar(t_object *x, t_glist *owner,
-    t_scalar *sc, t_symbol *s, int argc, t_atom *argv)
+void draw_notifyforscalar(t_object *x, t_glist *owner, t_array *a,
+    t_word *data, t_scalar *sc, t_symbol *s, int argc, t_atom *argv)
 {
     t_gpointer gp;
     t_binbuf *b = binbuf_new();
     t_atom at[1];
     gpointer_init(&gp);
-    gpointer_setglist(&gp, owner, &sc->sc_gobj);
+    if (a)
+        gpointer_setarray(&gp, a, data);
+    else
+        gpointer_setglist(&gp, owner, &sc->sc_gobj);
     SETPOINTER(at, &gp);
     binbuf_add(b, 1, at);
     binbuf_add(b, argc, argv);
@@ -4311,8 +4314,8 @@ static void draw_motion(void *z, t_floatarg dx, t_floatarg dy)
         /* LATER figure out what to do to notify for an array? */
     if (draw_motion_scalar)
     {
-        draw_notifyforscalar(&x->x_obj, draw_motion_glist, draw_motion_scalar,
-            gensym("drag"), 4, at);
+        draw_notifyforscalar(&x->x_obj, draw_motion_glist, 0, 0,
+            draw_motion_scalar, gensym("drag"), 4, at);
         template_notifyforscalar(draw_motion_template, draw_motion_glist, 
             draw_motion_scalar, gensym("change"), 1, at);
     }
@@ -4462,12 +4465,53 @@ static int draw_click(t_gobj *z, t_glist *glist,
     return (0);
 }
 
+/* given symbol "x123456", search the fields of a scalar's template for
+   a t_array that matches that addy. For now we only search the toplevel.
+   We can probably also search arbitrarily deep by making this recursive.
+   But the one person I know who uses nested ds arrays hasn't asked for
+   that, so let's see if we can just make it to the end of this software's
+   life before that happens. */
+static void scalar_spelunkforword(t_scalar *x, t_symbol *s, int word_index,
+    t_array **array, t_word **data)
+{
+    /* from glob_findinstance */
+    long obj = 0;
+    if (sscanf(s->s_name, "x%lx", &obj))
+    {
+        t_template *template = template_findbyname(x->sc_template);
+        if (!template)
+        {
+            pd_error(x, "scalar: template disappeared before notification "
+                        "from gui arrived");
+            return;
+        }
+        int i, nitems = template->t_n;
+        t_dataslot *datatypes = template->t_vec;
+        t_word *wp = x->sc_vec;
+        for (i = 0; i < nitems; i++, datatypes++, wp++)
+        {
+            if (datatypes->ds_type == DT_ARRAY &&
+                ((void *)wp->w_array) == (void *)obj &&
+                word_index < wp->w_array->a_n)
+            {
+                *array = wp->w_array;
+                *data = ((t_word *)(wp->w_array->a_vec +
+                    word_index * wp->w_array->a_elemsize));
+            }
+        }
+    }
+}
+
 void draw_notify(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 {
     char canvas_field_namebuf[20];
     t_symbol *canvas_field_event;
     t_symbol *scalarsym = atom_getsymbolarg(0, argc--, argv++);
     t_symbol *drawcommand_sym = atom_getsymbolarg(0, argc--, argv++);
+    t_symbol *array_sym = atom_getsymbolarg(0, argc--, argv++);
+    t_array *a = 0;
+    t_word *data = 0;
+    int index = atom_getintarg(0, argc--, argv++);
     t_scalar *sc;
     t_object *ob = 0;
     if (scalarsym->s_thing)
@@ -4476,6 +4520,20 @@ void draw_notify(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     {
         error("draw_notify: can't get scalar from symbol");
         return;
+    }
+
+    /* Now that we have our scalar, check if this callback is for an
+       array element that was drawn with [draw array]. If the index is zero
+       or greater then that's what we have */
+    if (index > -1)
+    {
+        scalar_spelunkforword(sc, array_sym, index, &a, &data);
+        if (!data)
+        {
+            pd_error(x, "scalar: couldn't get array data for event "
+                        "callback");
+            return;
+        }
     }
 
     /* Generate the symbol that would be bound by any [event] inside
@@ -4511,7 +4569,7 @@ void draw_notify(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
         return;
     }
     if (ob)
-        draw_notifyforscalar(ob, x, sc, event_name, argc, argv);
+        draw_notifyforscalar(ob, x, a, data, sc, event_name, argc, argv);
 }
 
 

@@ -752,7 +752,7 @@ static void set_setup(void)
         A_SYMBOL, A_SYMBOL, 0); 
 }
 
-/* ---------------------- elem ----------------------------- */
+/* ---------------------- element ----------------------------- */
 
 static t_class *elem_class;
 

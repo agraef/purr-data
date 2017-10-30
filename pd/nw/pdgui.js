@@ -3351,7 +3351,7 @@ function gui_draw_drag_event(cid, tag, scalar_sym, drawcommand_sym,
         win.canvas_events.remove_scalar_draggable(tag);
     } else {
         win.canvas_events.add_scalar_draggable(cid, tag, scalar_sym,
-            drawcommand_sym, event_name);
+            drawcommand_sym, event_name, array_sym, index);
     }
 }
 
@@ -3362,8 +3362,8 @@ function gui_draw_event(cid, tag, scalar_sym, drawcommand_sym, event_name,
         event_type = "on" + event_name;
     if (state === 1) {
         item[event_type] = function(e) {
-            pdsend(cid, "scalar_event", scalar_sym, drawcommand_sym, event_name,
-                e.pageX, e.pageY, array_sym, index);
+            pdsend(cid, "scalar_event", scalar_sym, drawcommand_sym,
+                array_sym, index, event_name, e.pageX, e.pageY);
         };
     } else {
         item[event_type] = null;
