@@ -450,7 +450,8 @@ var canvas_events = (function() {
                     ty = minv.b * dx + minv.d * dy;
                 var obj = scalar_draggables[draggable_elem.id];
                 pdgui.pdsend(obj.cid, "scalar_event", obj.scalar_sym,
-                    obj.drawcommand_sym, obj.event_name, dx, dy, tx, ty);
+                    obj.drawcommand_sym, obj.event_name, dx, dy, tx, ty,
+                    obj.array_sym, obj.index);
                 last_draggable_x = new_x;
                 last_draggable_y = new_y;
             },
@@ -963,12 +964,14 @@ var canvas_events = (function() {
             last_search_term = "";
         },
         add_scalar_draggable: function(cid, tag, scalar_sym, drawcommand_sym,
-            event_name) {
+            event_name, array_sym, index) {
             scalar_draggables[tag] = {
                 cid: cid,
                 scalar_sym: scalar_sym,
                 drawcommand_sym: drawcommand_sym,
-                event_name: event_name
+                event_name: event_name,
+                array_sym: array_sym,
+                index: index
             };
         },
         remove_scalar_draggable: function(id) {

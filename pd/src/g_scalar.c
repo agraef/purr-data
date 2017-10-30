@@ -777,10 +777,11 @@ extern void svg_parentwidgettogui(t_gobj *z, t_scalar *sc, t_glist *owner,
     t_word *data, t_template *template);
 
 extern void svg_register_events(t_gobj *z, t_canvas *c, t_scalar *sc,
-    t_template *template, t_word *data);
+    t_template *template, t_word *data, t_array *parentarray);
 
 static void scalar_group_configure(t_scalar *x, t_glist *owner,
-    t_template *template, t_word *data, t_glist *gl, t_glist *parent)
+    t_template *template, t_word *data, t_glist *gl, t_glist *parent,
+    t_array *parentarray)
 {
     t_gobj *y;
     char tagbuf[MAXPDSTRING];
@@ -796,20 +797,21 @@ static void scalar_group_configure(t_scalar *x, t_glist *owner,
         glist_getcanvas(owner), tagbuf);
     svg_grouptogui(gl, template, data);
     gui_end_vmess();
-    svg_register_events((t_gobj *)gl, owner, x, template, data);
+    svg_register_events((t_gobj *)gl, owner, x, template, data, parentarray);
     for (y = gl->gl_list; y; y = y->g_next)
     {
         if (pd_class(&y->g_pd) == canvas_class &&
             ((t_glist *)y)->gl_svg)
         {
-            scalar_group_configure(x, owner, template, data, (t_glist *)y, gl);
+            scalar_group_configure(x, owner, template, data, (t_glist *)y, gl,
+                0);
         }
         t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
         if (!wb) continue;
         //(*wb->w_parentvisfn)(y, owner, gl, x, data, template,
-        //   0, 0, vis);
+        //   0, 0, 0, vis);
         svg_parentwidgettogui(y, x, owner, data, template);
-        svg_register_events(y, owner, x, template, data);
+        svg_register_events(y, owner, x, template, data, parentarray);
     }
 }
 
@@ -853,14 +855,14 @@ void scalar_doconfigure(t_gobj *xgobj, t_glist *owner)
                     ((t_glist *)y)->gl_svg)
                 {
                     scalar_group_configure(x, owner, template, x->sc_vec,
-                        (t_glist *)y, templatecanvas);
+                        (t_glist *)y, templatecanvas, 0);
                 }
                 continue;
             }
             //(*wb->w_parentvisfn)(y, owner, 0, x, x->sc_vec, template,
-            //    basex, basey, vis);
+            //    basex, basey, 0, vis);
             svg_parentwidgettogui(y, x, owner, x->sc_vec, template);
-            svg_register_events(y, owner, x, template, x->sc_vec);
+            svg_register_events(y, owner, x, template, x->sc_vec, 0);
         }
         if (glist_isselected(owner, &x->sc_gobj))
         {
@@ -909,12 +911,12 @@ void array_configure(t_scalar *x, t_glist *owner, t_array *a, t_word *data)
                 ((t_glist *)y)->gl_svg)
             {
                 scalar_group_configure(x, owner, template, data,
-                    (t_glist *)y, elemtemplatecanvas);
+                    (t_glist *)y, elemtemplatecanvas, a);
             }
             continue;
         }
         svg_parentwidgettogui(y, x, owner, data, elemtemplate);
-        svg_register_events(y, owner, x, elemtemplate, data);
+        svg_register_events(y, owner, x, elemtemplate, data, a);
     }
 
 }
@@ -938,7 +940,7 @@ static void scalar_groupvis(t_scalar *x, t_glist *owner, t_template *template,
         gui_end_vmess();
 
         /* register events */
-        svg_register_events((t_gobj *)gl, owner, x, template, x->sc_vec);
+        svg_register_events((t_gobj *)gl, owner, x, template, x->sc_vec, 0);
     }
     for (y = gl->gl_list; y; y = y->g_next)
     {
@@ -950,7 +952,7 @@ static void scalar_groupvis(t_scalar *x, t_glist *owner, t_template *template,
         t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
         if (!wb) continue;
         (*wb->w_parentvisfn)(y, owner, gl, x, x->sc_vec, template,
-            0, 0, vis);
+            0, 0, 0, vis);
     }
 }
 
@@ -1076,7 +1078,7 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
             continue;
         }
         (*wb->w_parentvisfn)(y, owner, 0, x, x->sc_vec, template,
-            basex, basey, vis);
+            basex, basey, 0, vis);
     }
     if (!vis)
     {

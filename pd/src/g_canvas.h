@@ -344,7 +344,7 @@ struct _widgetbehavior
     t_deletefn w_deletefn;
     t_visfn w_visfn;
     t_clickfn w_clickfn;
-	t_displacefnwtag w_displacefnwtag;
+    t_displacefnwtag w_displacefnwtag;
 };
 
 /* -------- behaviors for scalars defined by objects in template --------- */
@@ -376,7 +376,7 @@ typedef void (*t_parentactivatefn)(t_gobj *x, struct _glist *glist,
 typedef void (*t_parentvisfn)(t_gobj *x, struct _glist *glist,
     struct _glist *parentglist, t_scalar *sc, 
     t_word *data, t_template *tmpl, t_float basex, t_float basey,
-    int flag);
+    struct _array *parentarray, int flag);
         /*  field a mouse click */
 typedef int (*t_parentclickfn)(t_gobj *x, struct _glist *glist,
     t_word *data, t_template *tmpl, t_scalar *sc, t_array *ap,
