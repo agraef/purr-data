@@ -491,6 +491,20 @@ function set_audioapi(val) {
     pd_whichapi = val;
 }
 
+var throttle_console_scroll = (function() {
+    var scroll_delay;
+    return function() {
+        if (!scroll_delay) {
+            scroll_delay = setTimeout(function() {
+                var printout = pd_window.document
+                    .getElementById("console_bottom");
+                printout.scrollTop = printout.scrollHeight;
+                scroll_delay = undefined;
+            }, 30);
+        }
+    }
+}());
+
 // Hmm, probably need a closure here...
 var current_string = "";
 var last_string = "";
@@ -518,13 +532,14 @@ function do_post(string, type) {
             text = pd_window.document.createTextNode(current_string);
             span.appendChild(text);
             myp.appendChild(span);
-            printout = pd_window.document.getElementById("console_bottom");
-            printout.scrollTop = printout.scrollHeight;
             last_string = current_string;
             current_string = "";
             last_child = span;
             last_object_id = "";
             duplicate = 0;
+            // update the scrollbars to the bottom, but throttle it
+            // since it is expensive
+            throttle_console_scroll();
         }
     }
 }
@@ -5234,7 +5249,7 @@ function canvas_params(cid)
 }
 
 function do_getscroll(cid) {
-    // Since we're debouncing these getscroll calls, they can happen after
+    // Since we're throttling these getscroll calls, they can happen after
     // the patch has been closed. We remove the cid from the patchwin
     // object on close, so we can just check to see if our Window object has
     // been set to null, and if so just return.
