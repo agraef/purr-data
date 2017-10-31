@@ -706,10 +706,12 @@ static void set_bang(t_set *x)
     else
     {
         t_array *owner_array = gs->gs_un.gs_array;
-        while (owner_array->a_gp.gp_stub->gs_which == GP_ARRAY)
-            owner_array = owner_array->a_gp.gp_stub->gs_un.gs_array;
-        scalar_redraw((t_scalar *)(owner_array->a_gp.gp_un.gp_gobj),
-            owner_array->a_gp.gp_stub->gs_un.gs_glist);
+        t_array *top_array = owner_array;
+        while (top_array->a_gp.gp_stub->gs_which == GP_ARRAY)
+            top_array = top_array->a_gp.gp_stub->gs_un.gs_array;
+        array_configure((t_scalar *)(top_array->a_gp.gp_un.gp_gobj),
+            top_array->a_gp.gp_stub->gs_un.gs_glist, owner_array,
+            vec);
     }
 }
 
@@ -750,7 +752,7 @@ static void set_setup(void)
         A_SYMBOL, A_SYMBOL, 0); 
 }
 
-/* ---------------------- elem ----------------------------- */
+/* ---------------------- element ----------------------------- */
 
 static t_class *elem_class;
 

@@ -1236,14 +1236,17 @@ typedef struct _drawarray
 
 extern t_outlet *obj_rightmost_outlet(t_object *x);
 
-void draw_notifyforscalar(t_object *x, t_glist *owner,
-    t_scalar *sc, t_symbol *s, int argc, t_atom *argv)
+void draw_notifyforscalar(t_object *x, t_glist *owner, t_array *a,
+    t_word *data, t_scalar *sc, t_symbol *s, int argc, t_atom *argv)
 {
     t_gpointer gp;
     t_binbuf *b = binbuf_new();
     t_atom at[1];
     gpointer_init(&gp);
-    gpointer_setglist(&gp, owner, &sc->sc_gobj);
+    if (a)
+        gpointer_setarray(&gp, a, data);
+    else
+        gpointer_setglist(&gp, owner, &sc->sc_gobj);
     SETPOINTER(at, &gp);
     binbuf_add(b, 1, at);
     binbuf_add(b, argc, argv);
@@ -1736,18 +1739,17 @@ extern void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state);
 
 void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
     t_template *template, t_word *data, int *predraw_bbox, void *parent,
-    t_scalar *sc)
+    t_scalar *sc, t_array *array)
 {
    /* todo-- I'm mixing "c" with glist_getcanvas(c) too freely...
       need to experiment with gop scalars to make sure I'm not breaking
       anything */ 
-    int in_array = (sc->sc_vec != data);
-    //post("in_array is %d", in_array);
     char tag[MAXPDSTRING];
+    int index = (array ?
+        ((((char *)data) - array->a_vec) / array->a_elemsize) : -1);
     if (x->x_type == gensym("g") || x->x_type == gensym("svg"))
     {
-        sprintf(tag, "%s%lx.%lx",
-            (in_array ? "scelem" : "dgroup"),
+        sprintf(tag, "dgroup%lx.%lx",
             (long unsigned int)x->x_parent,
             (long unsigned int)data);
     }
@@ -1847,57 +1849,57 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
     }
     else if (s == gensym("mouseover"))
     {
-        gui_vmess("gui_draw_event", "xsxxsi",
-            glist_getcanvas(c), tag, sc, x, "mouseover",
+        gui_vmess("gui_draw_event", "xsxxsxii",
+            glist_getcanvas(c), tag, sc, x, "mouseover", array, index,
             (int)fielddesc_getcoord(
                 &x->x_events.e_mouseover.a_attr, template, data, 0));
     }
     else if (s == gensym("mouseout"))
     {
-        gui_vmess("gui_draw_event", "xsxxsi",
-            glist_getcanvas(c), tag, sc, x, "mouseout",
+        gui_vmess("gui_draw_event", "xsxxsxii",
+            glist_getcanvas(c), tag, sc, x, "mouseout", array, index,
             (int)fielddesc_getcoord(
                 &x->x_events.e_mouseout.a_attr, template, data, 0));
     }
     else if (s == gensym("mousemove"))
     {
-        gui_vmess("gui_draw_event", "xsxxsi",
-            glist_getcanvas(c), tag, sc, x, "mousemove",
+        gui_vmess("gui_draw_event", "xsxxsxii",
+            glist_getcanvas(c), tag, sc, x, "mousemove", array, index,
             (int)fielddesc_getcoord(
                 &x->x_events.e_mousemove.a_attr, template, data, 0));
     }
     else if (s == gensym("mouseup"))
     {
-        gui_vmess("gui_draw_event", "xsxxsi",
-            glist_getcanvas(c), tag, sc, x, "mouseup",
+        gui_vmess("gui_draw_event", "xsxxsxii",
+            glist_getcanvas(c), tag, sc, x, "mouseup", array, index,
             (int)fielddesc_getcoord(
                 &x->x_events.e_mouseup.a_attr, template, data, 0));
     }
     else if (s == gensym("mousedown"))
     {
-        gui_vmess("gui_draw_event", "xsxxsi",
-            glist_getcanvas(c), tag, sc, x, "mousedown",
+        gui_vmess("gui_draw_event", "xsxxsxii",
+            glist_getcanvas(c), tag, sc, x, "mousedown", array, index,
             (int)fielddesc_getcoord(
                 &x->x_events.e_mousedown.a_attr, template, data, 0));
     }
     else if (s == gensym("mouseenter"))
     {
-        gui_vmess("gui_draw_event", "xsxxsi",
-            glist_getcanvas(c), tag, sc, x, "mouseenter",
+        gui_vmess("gui_draw_event", "xsxxsxii",
+            glist_getcanvas(c), tag, sc, x, "mouseenter", array, index,
             (int)fielddesc_getcoord(
                 &x->x_events.e_mouseenter.a_attr, template, data, 0));
     }
     else if (s == gensym("mouseleave"))
     {
-        gui_vmess("gui_draw_event", "xsxxsi",
-            glist_getcanvas(c), tag, sc, x, "mouseleave",
+        gui_vmess("gui_draw_event", "xsxxsxii",
+            glist_getcanvas(c), tag, sc, x, "mouseleave", array, index,
             (int)fielddesc_getcoord(
                 &x->x_events.e_mouseleave.a_attr, template, data, 0));
     }
     else if (s == gensym("drag"))
     {
-        gui_vmess("gui_draw_drag_event", "xsxxsi",
-            glist_getcanvas(c), tag, sc, x, "drag",
+        gui_vmess("gui_draw_drag_event", "xsxxsxii",
+            glist_getcanvas(c), tag, sc, x, "drag", array, index,
             (int)fielddesc_getcoord(
                 &x->x_events.e_drag.a_attr, template, data, 0));
     }
@@ -2059,7 +2061,7 @@ void svg_updatevec(t_canvas *c, t_word *data, t_template *template,
                 {
                     svg_sendupdate(x, glist_getcanvas(c), s,
                         elemtemplate, (t_word *)(elem + elemsize * j),
-                        predraw_bbox, parent, sc);
+                        predraw_bbox, parent, sc, array);
                 }
             }
             svg_updatevec(c, (t_word *)elem, elemtemplate, target, parent,
@@ -2097,7 +2099,7 @@ void svg_doupdate(t_svg *x, t_canvas *c, t_symbol *s)
             if (parenttemplate == template)
             { 
                 svg_sendupdate(x, visible, s, template,
-                    data, &redraw_bbox, parent, (t_scalar *)g);
+                    data, &redraw_bbox, parent, (t_scalar *)g, 0);
             }
             else
             {
@@ -2137,9 +2139,10 @@ void svg_update(t_svg *x, t_symbol *s)
 
 /* not sure if this will work with array elements */
 void svg_register_events(t_gobj *z, t_canvas *c, t_scalar *sc,
-    t_template *template, t_word *data)
+    t_template *template, t_word *data, t_array *a)
 {
     t_svg *svg;
+    int index = (a ? ((((char *)data) - a->a_vec) / a->a_elemsize) : -1);
     char tagbuf[MAXPDSTRING];
     if (pd_class(&z->g_pd) == canvas_class)
     {
@@ -2165,45 +2168,43 @@ void svg_register_events(t_gobj *z, t_canvas *c, t_scalar *sc,
         return;
     }
     if (svg->x_events.e_mouseover.a_flag)
-        gui_vmess("gui_draw_event", "xsxxsi",
-            glist_getcanvas(c), tagbuf, sc, svg, "mouseover",
+        gui_vmess("gui_draw_event", "xsxxsxii",
+            glist_getcanvas(c), tagbuf, sc, svg, "mouseover", a, index,
             (int)fielddesc_getcoord(&svg->x_events.e_mouseover.a_attr, template,
             data, 1));
     if (svg->x_events.e_mouseout.a_flag)
-        gui_vmess("gui_draw_event", "xsxxsi",
-            glist_getcanvas(c), tagbuf, sc, svg, "mouseout",
+        gui_vmess("gui_draw_event", "xsxxsxii",
+            glist_getcanvas(c), tagbuf, sc, svg, "mouseout", a, index,
             (int)fielddesc_getcoord(&svg->x_events.e_mouseout.a_attr, template,
             data, 1));
     if (svg->x_events.e_mousemove.a_flag)
-        gui_vmess("gui_draw_event", "xsxxsi",
-            glist_getcanvas(c), tagbuf, sc, svg, "mousemove",
+        gui_vmess("gui_draw_event", "xsxxsxii",
+            glist_getcanvas(c), tagbuf, sc, svg, "mousemove", a, index,
             (int)fielddesc_getcoord(&svg->x_events.e_mousemove.a_attr, template,
             data, 1));
     if (svg->x_events.e_mousedown.a_flag)
-        gui_vmess("gui_draw_event", "xsxxsi",
-            glist_getcanvas(c), tagbuf, sc, svg, "mousedown",
+        gui_vmess("gui_draw_event", "xsxxsxii",
+            glist_getcanvas(c), tagbuf, sc, svg, "mousedown", a, index,
             (int)fielddesc_getcoord(&svg->x_events.e_mousedown.a_attr, template,
             data, 1));
     if (svg->x_events.e_mouseup.a_flag)
-        gui_vmess("gui_draw_event", "xsxxsi",
-            glist_getcanvas(c), tagbuf, sc, svg, "mouseup",
+        gui_vmess("gui_draw_event", "xsxxsxii",
+            glist_getcanvas(c), tagbuf, sc, svg, "mouseup", a, index,
             (int)fielddesc_getcoord(&svg->x_events.e_mouseup.a_attr, template,
             data, 1));
-
-
     if (svg->x_events.e_mouseenter.a_flag)
-        gui_vmess("gui_draw_event", "xsxxsi",
-            glist_getcanvas(c), tagbuf, sc, svg, "mouseenter",
-            (int)fielddesc_getcoord(&svg->x_events.e_mouseenter.a_attr, template,
-            data, 1));
+        gui_vmess("gui_draw_event", "xsxxsxii",
+            glist_getcanvas(c), tagbuf, sc, svg, "mouseenter", a, index,
+            (int)fielddesc_getcoord(&svg->x_events.e_mouseenter.a_attr,
+            template, data, 1));
     if (svg->x_events.e_mouseleave.a_flag)
-        gui_vmess("gui_draw_event", "xsxxsi",
-            glist_getcanvas(c), tagbuf, sc, svg, "mouseleave",
-            (int)fielddesc_getcoord(&svg->x_events.e_mouseleave.a_attr, template,
-            data, 1));
+        gui_vmess("gui_draw_event", "xsxxsxii",
+            glist_getcanvas(c), tagbuf, sc, svg, "mouseleave", a, index,
+            (int)fielddesc_getcoord(&svg->x_events.e_mouseleave.a_attr,
+            template, data, 1));
     if (svg->x_events.e_drag.a_flag)
-        gui_vmess("gui_draw_drag_event", "xsxxsi",
-            glist_getcanvas(c), tagbuf, sc, svg, "drag",
+        gui_vmess("gui_draw_drag_event", "xsxxsxii",
+            glist_getcanvas(c), tagbuf, sc, svg, "drag", a, index,
             (int)fielddesc_getcoord(&svg->x_events.e_drag.a_attr, template,
             data, 1));
 }
@@ -4146,7 +4147,7 @@ void svg_grouptogui(t_glist *g, t_template *template, t_word *data)
 
 static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     t_scalar *sc, t_word *data, t_template *template,
-    t_float basex, t_float basey, int vis)
+    t_float basex, t_float basey, t_array *parentarray, int vis)
 {
     t_draw *x = (t_draw *)z;
     t_svg *sa = (t_svg *)x->x_attr;
@@ -4197,23 +4198,18 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
 
         gui_start_array();
         char parent_tagbuf[MAXPDSTRING];
-        if (in_array)
-        {
-            sprintf(parent_tagbuf, "scelem%lx.%lx", (long unsigned int)parentglist,
-                (long unsigned int)data);
-            gui_s(parent_tagbuf);
-        }
-        else
-        {
-            sprintf(parent_tagbuf, "dgroup%lx.%lx", (long unsigned int)x->x_canvas,
-                (long unsigned int)data);
-            gui_s(parent_tagbuf);
-        }
+        sprintf(parent_tagbuf, "dgroup%lx.%lx",
+            (in_array ?
+                (long unsigned int)parentglist :
+                (long unsigned int)x->x_canvas),
+            (long unsigned int)data);
+        gui_s(parent_tagbuf);
         /* tags - one for this scalar (not sure why the double glist thingy)
           one for this specific draw item
         */
         char tagbuf[MAXPDSTRING];
-        sprintf(tagbuf, "draw%lx.%lx", (long unsigned int)x,
+        sprintf(tagbuf, "draw%lx.%lx",
+            (long unsigned int)x,
             (long unsigned int)data);
         gui_s(tagbuf);
         gui_end_array();
@@ -4234,7 +4230,7 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         }
 
         /* register events */
-        svg_register_events(z, glist, sc, template, data);
+        svg_register_events(z, glist, sc, template, data, parentarray);
     }
     else
     {
@@ -4318,8 +4314,8 @@ static void draw_motion(void *z, t_floatarg dx, t_floatarg dy)
         /* LATER figure out what to do to notify for an array? */
     if (draw_motion_scalar)
     {
-        draw_notifyforscalar(&x->x_obj, draw_motion_glist, draw_motion_scalar,
-            gensym("drag"), 4, at);
+        draw_notifyforscalar(&x->x_obj, draw_motion_glist, 0, 0,
+            draw_motion_scalar, gensym("drag"), 4, at);
         template_notifyforscalar(draw_motion_template, draw_motion_glist, 
             draw_motion_scalar, gensym("change"), 1, at);
     }
@@ -4469,12 +4465,53 @@ static int draw_click(t_gobj *z, t_glist *glist,
     return (0);
 }
 
+/* given symbol "x123456", search the fields of a scalar's template for
+   a t_array that matches that addy. For now we only search the toplevel.
+   We can probably also search arbitrarily deep by making this recursive.
+   But the one person I know who uses nested ds arrays hasn't asked for
+   that, so let's see if we can just make it to the end of this software's
+   life before that happens. */
+static void scalar_spelunkforword(t_scalar *x, t_symbol *s, int word_index,
+    t_array **array, t_word **data)
+{
+    /* from glob_findinstance */
+    long obj = 0;
+    if (sscanf(s->s_name, "x%lx", &obj))
+    {
+        t_template *template = template_findbyname(x->sc_template);
+        if (!template)
+        {
+            pd_error(x, "scalar: template disappeared before notification "
+                        "from gui arrived");
+            return;
+        }
+        int i, nitems = template->t_n;
+        t_dataslot *datatypes = template->t_vec;
+        t_word *wp = x->sc_vec;
+        for (i = 0; i < nitems; i++, datatypes++, wp++)
+        {
+            if (datatypes->ds_type == DT_ARRAY &&
+                ((void *)wp->w_array) == (void *)obj &&
+                word_index < wp->w_array->a_n)
+            {
+                *array = wp->w_array;
+                *data = ((t_word *)(wp->w_array->a_vec +
+                    word_index * wp->w_array->a_elemsize));
+            }
+        }
+    }
+}
+
 void draw_notify(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 {
     char canvas_field_namebuf[20];
     t_symbol *canvas_field_event;
     t_symbol *scalarsym = atom_getsymbolarg(0, argc--, argv++);
     t_symbol *drawcommand_sym = atom_getsymbolarg(0, argc--, argv++);
+    t_symbol *array_sym = atom_getsymbolarg(0, argc--, argv++);
+    t_array *a = 0;
+    t_word *data = 0;
+    int index = atom_getintarg(0, argc--, argv++);
     t_scalar *sc;
     t_object *ob = 0;
     if (scalarsym->s_thing)
@@ -4483,6 +4520,20 @@ void draw_notify(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     {
         error("draw_notify: can't get scalar from symbol");
         return;
+    }
+
+    /* Now that we have our scalar, check if this callback is for an
+       array element that was drawn with [draw array]. If the index is zero
+       or greater then that's what we have */
+    if (index > -1)
+    {
+        scalar_spelunkforword(sc, array_sym, index, &a, &data);
+        if (!data)
+        {
+            pd_error(x, "scalar: couldn't get array data for event "
+                        "callback");
+            return;
+        }
     }
 
     /* Generate the symbol that would be bound by any [event] inside
@@ -4518,7 +4569,7 @@ void draw_notify(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
         return;
     }
     if (ob)
-        draw_notifyforscalar(ob, x, sc, event_name, argc, argv);
+        draw_notifyforscalar(ob, x, a, data, sc, event_name, argc, argv);
 }
 
 
@@ -5100,7 +5151,7 @@ static void numbertocolor(int n, char *s)
 
 static void curve_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     t_scalar *sc, t_word *data, t_template *template,
-    t_float basex, t_float basey, int vis)
+    t_float basex, t_float basey, t_array *parentarray, int vis)
 {
     t_curve *x = (t_curve *)z;
     int i, n = x->x_npoints;
@@ -5232,20 +5283,12 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             // Tags Array
             gui_start_array();
             char parent_tagbuf[MAXPDSTRING];
-            if (in_array)
-            {
-                /* If we're in an array we want to use the element template
-                   in the tag */
-                sprintf(parent_tagbuf, "scelem%lx.%lx", (long unsigned int)parentglist, (long unsigned int)data);
-                gui_s(parent_tagbuf);
-            }
-            else
-            {
-                /* Here we can just use x->x_canvas since curves can't appear
-                   inside groups */
-                sprintf(parent_tagbuf, "dgroup%lx.%lx", (long unsigned int)x->x_canvas, (long unsigned int)data);
-                gui_s(parent_tagbuf);
-            }
+ 
+            sprintf(parent_tagbuf, "dgroup%lx.%lx",
+                (in_array ? (long unsigned int)parentglist :
+                            (long unsigned int)x->x_canvas),
+                (long unsigned int)data);
+            gui_s(parent_tagbuf);
             char tagbuf[MAXPDSTRING];
             sprintf(tagbuf, "curve%lx.%lx", (long unsigned int)x,
                 (long unsigned int)data);
@@ -5424,7 +5467,7 @@ static void curve_setup(void)
 
 /* --------- plots for showing arrays --------------- */
 
-t_class *plot_class;
+static t_class *plot_class;
 
 typedef struct _plot
 {
@@ -5445,6 +5488,11 @@ typedef struct _plot
     t_fielddesc x_symoutlinecolor; /* color as hex symbol */
     t_fielddesc x_symfillcolor;    /* fill color as hex symbol */
 } t_plot;
+
+int is_plot_class(t_gobj *y)
+{
+    return (pd_class(&y->g_pd) == plot_class);
+}
 
 static void *plot_new(t_symbol *classsym, t_int argc, t_atom *argv)
 {
@@ -5879,13 +5927,14 @@ static void plot_activate(t_gobj *z, t_glist *glist,
 
 static void plot_groupvis(t_scalar *x, t_glist *owner, t_word *data,
     t_template *template,
-    t_glist *groupcanvas, t_glist *parent, t_float basex, t_float basey)
+    t_glist *groupcanvas, t_glist *parent, t_float basex, t_float basey,
+    t_array *parentarray)
 {
     t_gobj *y;
     char tagbuf[MAXPDSTRING], parent_tagbuf[MAXPDSTRING];
-    sprintf(tagbuf, "scelem%lx.%lx", (long unsigned int)groupcanvas,
+    sprintf(tagbuf, "dgroup%lx.%lx", (long unsigned int)groupcanvas,
         (long unsigned int)data);
-    sprintf(parent_tagbuf, "scelem%lx.%lx", (long unsigned int)parent,
+    sprintf(parent_tagbuf, "dgroup%lx.%lx", (long unsigned int)parent,
         (long unsigned int)data);
     gui_start_vmess("gui_scalar_draw_group", "xsss",
         glist_getcanvas(owner),
@@ -5900,12 +5949,12 @@ static void plot_groupvis(t_scalar *x, t_glist *owner, t_word *data,
             ((t_glist *)y)->gl_svg)
         {
             plot_groupvis(x, owner, data, template, (t_glist *)y, groupcanvas,
-                basex, basey);
+                basex, basey, parentarray);
         }
         t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
         if (!wb) continue;
         (*wb->w_parentvisfn)(y, owner, groupcanvas, x, data, template,
-            basex, basey, 1);
+            basex, basey, parentarray, 1);
     }
 }
 
@@ -5925,7 +5974,7 @@ int plot_has_drawcommand(t_canvas *elemtemplatecanvas)
 
 static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     t_scalar *sc, t_word *data, t_template *template,
-    t_float basex, t_float basey, int tovis)
+    t_float basex, t_float basey, t_array *parentarray, int tovis)
 {
     t_plot *x = (t_plot *)z;
     int elemsize, yonset, wonset, xonset, i;
@@ -5978,7 +6027,6 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         }
         if (symoutline == &s_) symoutline = gensym("#000000");
         if (symfill == &s_) symfill = gensym("#000000");
-
 
         t_float xscale = glist_xtopixels(glist, 1) - glist_xtopixels(glist, 0);
         t_float yscale = glist_ytopixels(glist, 1) - glist_ytopixels(glist, 0);
@@ -6099,15 +6147,16 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             gui_s(symoutline->s_name);
 
             gui_s("stroke-width");
-            gui_f(style == PLOTSTYLE_POINTS ? 0 :
-                y_inverse * (y_inverse >= 0 ? 1 : -1));
+            gui_f(style == PLOTSTYLE_POINTS ? 0 : 1);
+            gui_s("vector-effect");
+            gui_s("non-scaling-stroke");
             gui_end_array();
 
             /* tags */
             gui_start_array();
             char pbuf[MAXPDSTRING];
             char tbuf[MAXPDSTRING];
-            sprintf(pbuf, in_array ? "scelem%lx.%lx" : "dgroup%lx.%lx",
+            sprintf(pbuf, "dgroup%lx.%lx",
                 (long unsigned int)x->x_canvas,
                 (long unsigned int)data);
             sprintf(tbuf, ".x%lx.x%lx.template%lx",
@@ -6212,7 +6261,9 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 gui_start_array();
 
                 gui_s("stroke-width");
-                gui_f(y_inverse * (y_inverse >= 0 ? 1 : -1));
+                gui_f(1);
+                gui_s("vector-effect");
+                gui_s("non-scaling-stroke");
                 gui_s("stroke");
                 gui_s(symoutline->s_name);
                 gui_s("fill");
@@ -6224,7 +6275,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 gui_start_array();
                 char pbuf[MAXPDSTRING];
                 char tbuf[MAXPDSTRING];
-                sprintf(pbuf, in_array ? "scelem%lx.%lx" : "dgroup%lx.%lx",
+                sprintf(pbuf, "dgroup%lx.%lx",
                     (long unsigned int)x->x_canvas,
                     (long unsigned int)data);
                 sprintf(tbuf, ".x%lx.x%lx.template%lx",
@@ -6291,7 +6342,9 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
 
                 gui_start_array();
                 gui_s("stroke-width");
-                gui_f(linewidth * (y_inverse * (y_inverse >= 0 ? 1 : -1)));
+                gui_f(linewidth);
+                gui_s("vector-effect");
+                gui_s("non-scaling-stroke");
                 gui_s("stroke");
                 gui_s(symoutline->s_name);
                 gui_s("fill");
@@ -6302,7 +6355,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 gui_start_array();
                 char pbuf[MAXPDSTRING];
                 char tbuf[MAXPDSTRING];
-                sprintf(pbuf, in_array ? "scelem%lx.%lx" : "dgroup%lx.%lx",
+                sprintf(pbuf, "dgroup%lx.%lx",
                     (long unsigned int)x->x_canvas,
                     (long unsigned int)data);
                 sprintf(tbuf, ".x%lx.x%lx.template%lx",
@@ -6347,25 +6400,16 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                  /* We're setting up a special group that will get set as
                    the parent by array elements */
 
-
                    /* todo: need to check if plot itself is in an array */
                 char tagbuf[MAXPDSTRING];
-                sprintf(tagbuf, "scelem%lx.%lx",
+                sprintf(tagbuf, "dgroup%lx.%lx",
                     (long unsigned int)elemtemplatecanvas,
                     (long unsigned int)((t_word *)(elem + elemsize * i)));
                 char parent_tagbuf[MAXPDSTRING];
-                if (in_array)
-                {
-                    sprintf(parent_tagbuf, "scelem%lx.%lx",
-                        (long unsigned int)parentglist,
-                        (long unsigned int)data);
-                }
-                else
-                {
-                    sprintf(parent_tagbuf, "dgroup%lx.%lx",
-                        (long unsigned int)x->x_canvas,
-                        (long unsigned int)data);
-                }
+                sprintf(parent_tagbuf, "dgroup%lx.%lx",
+                    (in_array ? (long unsigned int)parentglist :
+                                (long unsigned int)x->x_canvas),
+                    (long unsigned int)data);
                 char transform_buf[MAXPDSTRING];
                 sprintf(transform_buf, "translate(%g,%g)", usexloc, useyloc);
 
@@ -6389,13 +6433,13 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                         plot_groupvis(sc, glist,
                             (t_word *)(elem + elemsize * i),
                         template, (t_glist *)y, 
-                            elemtemplatecanvas, usexloc, useyloc);
+                            elemtemplatecanvas, usexloc, useyloc, array);
                     }
                     t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
                     if (!wb) continue;
                     (*wb->w_parentvisfn)(y, glist, elemtemplatecanvas, sc,
                         (t_word *)(elem + elemsize * i),
-                            elemtemplate, usexloc, useyloc, tovis);
+                            elemtemplate, usexloc, useyloc, array, tovis);
                 }
             }
         }
@@ -6435,7 +6479,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                     if (!wb) continue;
                     (*wb->w_parentvisfn)(y, glist, elemtemplatecanvas, sc,
                         (t_word *)(elem + elemsize * i), elemtemplate,
-                            0, 0, 0);
+                            0, 0, parentarray, 0);
                 }
             }
         }
@@ -6744,13 +6788,14 @@ static void drawarray_activate(t_gobj *z, t_glist *glist,
 
 static void drawarray_groupvis(t_scalar *x, t_glist *owner, t_word *data,
     t_template *template,
-    t_glist *groupcanvas, t_glist *parent, t_float basex, t_float basey)
+    t_glist *groupcanvas, t_glist *parent, t_float basex, t_float basey,
+    t_array *parentarray)
 {
     t_gobj *y;
     char tagbuf[MAXPDSTRING], parent_tagbuf[MAXPDSTRING];
-    sprintf(tagbuf, "scelem%lx.%lx", (long unsigned int)groupcanvas,
+    sprintf(tagbuf, "dgroup%lx.%lx", (long unsigned int)groupcanvas,
         (long unsigned int)data);
-    sprintf(parent_tagbuf, "scelem%lx.%lx", (long unsigned int)parent,
+    sprintf(parent_tagbuf, "dgroup%lx.%lx", (long unsigned int)parent,
         (long unsigned int)data);
     gui_start_vmess("gui_scalar_draw_group", "xsss",
         glist_getcanvas(owner),
@@ -6765,12 +6810,12 @@ static void drawarray_groupvis(t_scalar *x, t_glist *owner, t_word *data,
             ((t_glist *)y)->gl_svg)
         {
             drawarray_groupvis(x, owner, data, template, (t_glist *)y,
-                groupcanvas, basex, basey);
+                groupcanvas, basex, basey, parentarray);
         }
         t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
         if (!wb) continue;
         (*wb->w_parentvisfn)(y, owner, groupcanvas, x, data, template,
-            basex, basey, 1);
+            basex, basey, parentarray, 1);
     }
 }
 
@@ -6791,7 +6836,7 @@ int drawarray_has_drawcommand(t_canvas *elemtemplatecanvas)
 
 static void drawarray_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     t_scalar *sc, t_word *data, t_template *template,
-    t_float basex, t_float basey, int tovis)
+    t_float basex, t_float basey, t_array *parentarray, int tovis)
 {
     t_drawarray *x = (t_drawarray *)z;
     int elemsize, yonset, wonset, xonset, i;
@@ -6833,19 +6878,10 @@ static void drawarray_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
 
         /* 1. Set up the main <g> for this widget */
         char parent_tagbuf[MAXPDSTRING];
-        if (in_array)
-        {
-            sprintf(parent_tagbuf, "scelem%lx.%lx",
-                (long unsigned int)parentglist,
-                (long unsigned int)data);
-        }
-        else
-        {
-            sprintf(parent_tagbuf, "dgroup%lx.%lx",
-                (long unsigned int)x->x_canvas,
-                (long unsigned int)data);
-        }
-
+        sprintf(parent_tagbuf, "dgroup%lx.%lx",
+            (in_array ? (long unsigned int)parentglist :
+                        (long unsigned int)x->x_canvas),
+            (long unsigned int)data);
         t_svg *sa = (t_svg *)x->x_attr;
         gui_start_vmess("gui_draw_vis", "xs",
             glist_getcanvas(glist), "g");
@@ -6885,7 +6921,7 @@ static void drawarray_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
 
                    /* todo: need to check if drawarray itself is in an array */
                 char tagbuf[MAXPDSTRING];
-                sprintf(tagbuf, "scelem%lx.%lx",
+                sprintf(tagbuf, "dgroup%lx.%lx",
                     (long unsigned int)elemtemplatecanvas,
                     (long unsigned int)((t_word *)(elem + elemsize * i)));
                 char transform_buf[MAXPDSTRING];
@@ -6911,13 +6947,13 @@ static void drawarray_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                         drawarray_groupvis(sc, glist,
                             (t_word *)(elem + elemsize * i),
                         template, (t_glist *)y, 
-                            elemtemplatecanvas, usexloc, useyloc);
+                            elemtemplatecanvas, usexloc, useyloc, parentarray);
                     }
                     t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
                     if (!wb) continue;
                     (*wb->w_parentvisfn)(y, glist, elemtemplatecanvas, sc,
                         (t_word *)(elem + elemsize * i),
-                            elemtemplate, usexloc, useyloc, tovis);
+                            elemtemplate, usexloc, useyloc, parentarray, tovis);
                 }
             }
         }
@@ -6945,7 +6981,7 @@ static void drawarray_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 if (!wb) continue;
                 (*wb->w_parentvisfn)(y, glist, elemtemplatecanvas, sc,
                     (t_word *)(elem + elemsize * i), elemtemplate,
-                        0, 0, 0);
+                        0, 0, parentarray, 0);
             }
         }
         /* Now remove our drawarray svg container */
@@ -7267,7 +7303,7 @@ static void drawnumber_activate(t_gobj *z, t_glist *glist,
 
 static void drawnumber_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     t_scalar *sc, t_word *data, t_template *template,
-    t_float basex, t_float basey, int vis)
+    t_float basex, t_float basey, t_array *parentarray, int vis)
 {
     //fprintf(stderr,"drawnumber_vis %d\n", vis);
     t_drawnumber *x = (t_drawnumber *)z;
@@ -7315,14 +7351,10 @@ static void drawnumber_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         //drawnumber_sprintf(x, buf, &at);
 
         char parent_tagbuf[MAXPDSTRING];
-        if (in_array)
-        {
-            sprintf(parent_tagbuf,"scelem%lx.%lx", (long unsigned int)parentglist, (long unsigned int)data);
-        }
-        else
-        {
-            sprintf(parent_tagbuf, "dgroup%lx.%lx", (long unsigned int)x->x_canvas, (long unsigned int)data);
-        }
+        sprintf(parent_tagbuf, "dgroup%lx.%lx",
+            (in_array ? (long unsigned int)parentglist :
+                        (long unsigned int)x->x_canvas),
+            (long unsigned int)data);
         char tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "drawnumber%lx.%lx", (long unsigned int)x, (long unsigned int)data);
         gui_vmess("gui_drawnumber_vis", "xssiiffsissii",
@@ -7757,7 +7789,7 @@ static void drawsymbol_activate(t_gobj *z, t_glist *glist,
 
 static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     t_scalar *sc, t_word *data, t_template *template,
-    t_float basex, t_float basey, int vis)
+    t_float basex, t_float basey, t_array *parentarray, int vis)
 {
     t_drawsymbol *x = (t_drawsymbol *)z;
 
@@ -7805,14 +7837,10 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         drawsymbol_getbuf(x, data, template, buf);
 
         char parent_tagbuf[MAXPDSTRING];
-        if (in_array)
-        {
-            sprintf(parent_tagbuf, "scelem%lx.%lx", (long unsigned int)parentglist, (long unsigned int)data);
-        }
-        else
-        {
-            sprintf(parent_tagbuf, "dgroup%lx.%lx", (long unsigned int)x->x_canvas, (long unsigned int)data);
-        }
+        sprintf(parent_tagbuf, "dgroup%lx.%lx",
+            (in_array ? (long unsigned int)parentglist :
+                        (long unsigned int)x->x_canvas),
+            (long unsigned int)data);
         char tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "drawnumber%lx.%lx", (long unsigned int)x, (long unsigned int)data);
 
@@ -8268,7 +8296,7 @@ static void drawimage_activate(t_gobj *z, t_glist *glist,
 
 static void drawimage_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     t_scalar *sc, t_word *data, t_template *template,
-    t_float basex, t_float basey, int vis)
+    t_float basex, t_float basey, t_array *parentarray, int vis)
 {
     t_drawimage *x = (t_drawimage *)z;
     t_svg *svg = (t_svg *)x->x_attr;
@@ -8287,14 +8315,11 @@ static void drawimage_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         t_float xloc = fielddesc_getcoord(&svg->x_x.a_attr, template, data, 0);
         t_float yloc = fielddesc_getcoord(&svg->x_y.a_attr, template, data, 0);
 
-fprintf(stderr, "xloc is %g\n", xloc);
-fprintf(stderr, "yloc is %g\n", yloc);
         char tagbuf[MAXPDSTRING];
         char parent_tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "draw%lx.%lx",
             (long unsigned int)x, (long unsigned int)data);
-        sprintf(parent_tagbuf,"%s%lx.%lx",
-            in_array ? "scelem" : "dgroup",
+        sprintf(parent_tagbuf,"dgroup%lx.%lx",
             in_array ? (long unsigned int)parentglist : (long unsigned int)parent,
             (long unsigned int)data);
 
@@ -8617,7 +8642,8 @@ void svg_parentwidgettogui(t_gobj *z, t_scalar *sc, t_glist *owner,
     if (pd_class(&z->g_pd) == draw_class)
     {
         t_draw *x = (t_draw *)z;
-        sprintf(tagbuf, "draw%lx.%lx", (long unsigned int)x,
+        sprintf(tagbuf, "draw%lx.%lx",
+            (long unsigned int)x,
             (long unsigned int)data);
         gui_start_vmess("gui_draw_configure_all", "xs",
             glist_getcanvas(owner), tagbuf);
@@ -8627,7 +8653,8 @@ void svg_parentwidgettogui(t_gobj *z, t_scalar *sc, t_glist *owner,
     else if (pd_class(&z->g_pd) == drawimage_class)
     {
         t_drawimage *x = (t_drawimage *)z;
-        sprintf(tagbuf, "draw%lx.%lx", (long unsigned int)x,
+        sprintf(tagbuf, "draw%lx.%lx",
+            (long unsigned int)x,
             (long unsigned int)data);
         gui_start_vmess("gui_draw_configure_all", "xs",
             glist_getcanvas(owner), tagbuf);
@@ -8643,12 +8670,12 @@ void svg_parentwidgettogui(t_gobj *z, t_scalar *sc, t_glist *owner,
            changing attributes instead of creating a new one.
            Not sure what to do with arrays yet-- we'll probably
            need a parentglist below instead of a "0" */
-        curve_vis(z, owner, 0, sc, data, template, 0, 0, -1);
+        curve_vis(z, owner, 0, sc, data, template, 0, 0, 0, -1);
     }
     else if (pd_class(&z->g_pd) == drawnumber_class)
-        drawnumber_vis(z, owner, 0, sc, data, template, 0, 0, -1);
+        drawnumber_vis(z, owner, 0, sc, data, template, 0, 0, 0, -1);
     else if (pd_class(&z->g_pd) == drawsymbol_class)
-        drawsymbol_vis(z, owner, 0, sc, data, template, 0, 0, -1);
+        drawsymbol_vis(z, owner, 0, sc, data, template, 0, 0, 0, -1);
 }
 
 /* ---------------------- setup function ---------------------------- */

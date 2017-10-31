@@ -3360,25 +3360,25 @@ function gui_draw_coords(cid, tag, shape, points) {
 // of the bbox of the shape will still register as part of the event.
 // (Attempting to set the event more than once is ignored.)
 function gui_draw_drag_event(cid, tag, scalar_sym, drawcommand_sym,
-    event_name, state) {
+    event_name, array_sym, index, state) {
     var win = patchwin[cid].window;
     if (state === 0) {
         win.canvas_events.remove_scalar_draggable(tag);
     } else {
         win.canvas_events.add_scalar_draggable(cid, tag, scalar_sym,
-            drawcommand_sym, event_name);
+            drawcommand_sym, event_name, array_sym, index);
     }
 }
 
 // Events for scalars-- mouseover, mouseout, etc.
 function gui_draw_event(cid, tag, scalar_sym, drawcommand_sym, event_name,
-    state) {
+    array_sym, index, state) {
     var item = get_item(cid, tag),
         event_type = "on" + event_name;
     if (state === 1) {
         item[event_type] = function(e) {
-            pdsend(cid, "scalar_event", scalar_sym, drawcommand_sym, event_name,
-                e.pageX, e.pageY);
+            pdsend(cid, "scalar_event", scalar_sym, drawcommand_sym,
+                array_sym, index, event_name, e.pageX, e.pageY);
         };
     } else {
         item[event_type] = null;
