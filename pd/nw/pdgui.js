@@ -435,7 +435,7 @@ var font_fixed_metrics = [
 */
 
 // Let's try to get some metrics specific to Node-webkit...
-    // Hard-coded Pd-l2ork font metrics
+// Hard-coded Pd-l2ork font metrics
 var font_fixed_metrics = [
     8, 5, 11,
     9, 6, 12,
@@ -447,6 +447,20 @@ var font_fixed_metrics = [
     24, 14, 29,
     30, 18, 37,
     36, 22, 44 ].join(" ");
+
+// Convenience object
+var font_metrics_object = {
+    8: { w: 5, h: 11 },
+    9: { w: 6, h: 12 },
+    10: { w: 6, h: 13 },
+    12: { w: 7, h: 16 },
+    14: { w: 8, h: 17 },
+    16: { w: 10, h: 19 },
+    18: { w: 11, h: 22 },
+    24: { w: 14, h: 29 },
+    30: { w: 18, h: 37 },
+    36: { w: 22, h: 44 }
+};
 
 // Utility Functions
 
@@ -4353,12 +4367,15 @@ function gui_graph_htick(cid, tag, y, r_x, l_x, tick_pix, basex, basey) {
 
 function gui_graph_tick_label(cid, tag, x, y, text, font, font_size, font_weight, basex, basey) {
     var g = get_gobj(cid, tag),
+        // adjustment to center the labels
+        x_adjustment = font_metrics_object[font_size].w / 2,
+        y_adjustment = font_metrics_object[font_size].h / 2,
         svg_text, text_node;
     svg_text = create_item(cid, "text", {
         // need a label "y" relative to baseline
-        x: x - basex,
-        y: y - basey,
-        "font-size": font_size,
+        x: x - basex - x_adjustment,
+        y: y - basey + y_adjustment - 1,
+        "font-size": pd_fontsize_to_gui_fontsize(font_size) + "px",
     });
     text_node = patchwin[cid].window.document.createTextNode(text);
     svg_text.appendChild(text_node);
