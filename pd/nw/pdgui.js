@@ -448,20 +448,6 @@ var font_fixed_metrics = [
     30, 18, 37,
     36, 22, 44 ].join(" ");
 
-// Convenience object
-var font_metrics_object = {
-    8: { w: 5, h: 11 },
-    9: { w: 6, h: 12 },
-    10: { w: 6, h: 13 },
-    12: { w: 7, h: 16 },
-    14: { w: 8, h: 17 },
-    16: { w: 10, h: 19 },
-    18: { w: 11, h: 22 },
-    24: { w: 14, h: 29 },
-    30: { w: 18, h: 37 },
-    36: { w: 22, h: 44 }
-};
-
 // Utility Functions
 
 // This is used to escape spaces and other special delimiters in FUDI
@@ -4365,16 +4351,35 @@ function gui_graph_htick(cid, tag, y, r_x, l_x, tick_pix, basex, basey) {
     g.appendChild(right_tick);
 }
 
-function gui_graph_tick_label(cid, tag, x, y, text, font, font_size, font_weight, basex, basey) {
+function gui_graph_tick_label(cid, tag, x, y, text, font, font_size, font_weight, basex, basey, tk_label_anchor) {
     var g = get_gobj(cid, tag),
-        // adjustment to center the labels
-        x_adjustment = font_metrics_object[font_size].w / 2,
-        y_adjustment = font_metrics_object[font_size].h / 2,
-        svg_text, text_node;
+        svg_text, text_node, text_anchor, alignment_baseline;
+    // We use anchor identifiers from the tk toolkit:
+    //
+    // "n" for north, or aligned at the top of the text
+    // "s" for south, or default baseline alignment
+    // "e" for east, or text-anchor at the end of the text
+    // "w" for west, or default text-anchor for left-to-right languages
+    //
+    // For x labels the tk_label_anchor will either be "n" for labels at the
+    // bottom of the graph, or "s" for labels at the top of the graph
+    //
+    // For y labels the tk_label_anchor will either be "e" for labels at the
+    // right of the graph, or "w" for labels at the right.
+    //
+    // In each case we want the label to be centered around the tick mark.
+    // So we default to value "middle" if we didn't get a value for that
+    // axis.
+    text_anchor = tk_label_anchor === "e" ? "end" :
+        tk_label_anchor === "w" ? "start" : "middle";
+    alignment_baseline = tk_label_anchor === "n" ? "hanging" :
+        tk_label_anchor === "s" ? "auto" : "middle";
     svg_text = create_item(cid, "text", {
         // need a label "y" relative to baseline
-        x: x - basex - x_adjustment,
-        y: y - basey + y_adjustment - 1,
+        x: x - basex,
+        y: y - basey,
+        "text-anchor": text_anchor,
+        "alignment-baseline": alignment_baseline,
         "font-size": pd_fontsize_to_gui_fontsize(font_size) + "px",
     });
     text_node = patchwin[cid].window.document.createTextNode(text);

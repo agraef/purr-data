@@ -960,7 +960,10 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
         t_gobj *g;
         t_symbol *arrayname;
             /* draw a rectangle around the graph */
-
+        char *ylabelanchor =
+            (x->gl_ylabelx > 0.5*(x->gl_x1 + x->gl_x2) ? "w" : "e");
+        char *xlabelanchor =
+            (x->gl_xlabely > 0.5*(x->gl_y1 + x->gl_y2) ? "s" : "n");
         char tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "%sR", tag);
 
@@ -1071,7 +1074,7 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
             /* draw x labels */
         for (i = 0; i < x->gl_nxlabels; i++)
         {
-            gui_vmess("gui_graph_tick_label", "xsiissisii",
+            gui_vmess("gui_graph_tick_label", "xsiissisiis",
                 glist_getcanvas(x),
                 tag,
                 (int)glist_xtopixels(x, atof(x->gl_xlabel[i]->s_name)),
@@ -1081,13 +1084,14 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
                 sys_hostfontsize(glist_getfont(x)),
                 sys_fontweight,
                 x1,
-                y1);
+                y1,
+                xlabelanchor);
         }
 
             /* draw y labels */
         for (i = 0; i < x->gl_nylabels; i++)
         {
-            gui_vmess("gui_graph_tick_label", "xsiissisii",
+            gui_vmess("gui_graph_tick_label", "xsiissisiis",
                 glist_getcanvas(x),
                 tag,
                 (int)glist_xtopixels(x, x->gl_ylabelx),
@@ -1097,7 +1101,8 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
                 sys_hostfontsize(glist_getfont(x)),
                 sys_fontweight,
                 x1,
-                y1);
+                y1,
+                ylabelanchor);
         }
 
             /* draw contents of graph as glist */
