@@ -270,6 +270,8 @@
     "devtools_tt": "Show the DevTools window (for debugging)"
   },
   "pd_window": {
+    "welcome": "Welcome to Purr Data",
+    "font_size_warning": "warning: your system's font stack is not optimal",
     "find": {
       "placeholder": "Search in Console"
     }

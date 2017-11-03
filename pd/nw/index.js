@@ -62,11 +62,6 @@ function set_vars(win) {
     // nw context callbacks (mostly just creating/destroying windows)
     pdgui.set_new_window_fn(nw_create_window);
     pdgui.set_close_window_fn(nw_close_window);
-    if (!font_engine_sanity) {
-        pdgui.post("warning: your system's font stack is maintained by troglodytes.");
-    } else {
-        pdgui.post("font stack check: using optimal font sizes.");
-    }
 }
 
 function app_quit() {
@@ -743,12 +738,25 @@ function nw_create_pd_window_menus(gui, w) {
     });
 }
 
+function post_startup_messages() {
+    // These will be the first messages printed to the main Pd window.
+    // Later let's use a link to the docs for new users.
+    pdgui.post(l("pd_window.welcome"));
+    // Warn the user if the font sizes aren't optimal. Font sizes which
+    // aren't optimal result in extra space at the end of object/message
+    // boxes
+    if (!pdgui.get_font_engine_sanity()) {
+        pdgui.post(l("pd_window.font_size_warning"));
+    }
+}
+
 function gui_init(win) {
     set_vars(win);
     add_events();
     nw_create_pd_window_menus(gui, win);
     // Set up the Pd Window
     gui.Window.get().setMinimumSize(350, 250);
+    post_startup_messages();
     // Now we create a connection from the GUI to Pd, in one of two ways:
     // 1) If the GUI was started by Pd, then we create a tcp client and
     //    connect on the port Pd fed us in our command line arguments.

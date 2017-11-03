@@ -127,6 +127,9 @@ exports.set_font_engine_sanity = function(win) {
         font_engine_sanity = false;
     }
     canvas.parentNode.removeChild(canvas);
+}
+
+exports.get_font_engine_sanity = function() {
     return font_engine_sanity;
 }
 
