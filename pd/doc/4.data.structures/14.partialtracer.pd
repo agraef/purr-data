@@ -831,7 +831,7 @@ above.;
 #X text 19 37 This patch derives sinusoidal "tracks" from a sampled
 sound using sigmund~ and the data structure facilities. The number
 of tracks may range from 1 to 50 You can edit the tracks (but note
-that the resynthezier is limited to 50-voice polyphony.);
+that the resynthesizer is limited to 50-voice polyphony.);
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header sinusoid_tracking
 20 10 1 18 -261139 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp

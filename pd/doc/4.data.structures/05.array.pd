@@ -67,7 +67,7 @@ the template subpatch.);
 #X text 210 264 template5;
 #X text 12 360 work as before \, but on;
 #X text 12 375 array elements...;
-#X text 12 345 normal "set" amd "get";
+#X text 12 345 normal "set" and "get";
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header arrays_in_data_structures
 20 10 1 18 -261139 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp

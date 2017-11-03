@@ -71,7 +71,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 19 37 links:;
 #X restore 103 461 pd References;
 #X obj 6 461 pddp/pddplink ../5.reference/pddp/help.pd -text help;
-#X text 19 143 The [butterworth3~] abstraction computes filter coeffients
+#X text 19 143 The [butterworth3~] abstraction computes filter coefficients
 using control messages \, and so it is not suitable for continuously
 time-varying Butterworth filters. For that \, it is often appropriate
 to use time-saving approximations \, but precisely which approximations

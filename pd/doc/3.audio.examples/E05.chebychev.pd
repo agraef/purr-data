@@ -235,7 +235,7 @@ rises from zero to one.;
 the table (which would be clipped appropriately). Anyway \, the polynomials
 increase rapidly in value outside the interval from -1 to 1 that we
 are using here.;
-#X text 20 457 When you get tired of Chebychef polynomials you can
+#X text 20 457 When you get tired of Chebychev polynomials you can
 draw your own functions by hand and/or try other formulas.;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header waveshaping_with_Chebychev_polynomials
 20 10 1 18 -261139 -33289 0;
