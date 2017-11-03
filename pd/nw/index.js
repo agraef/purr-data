@@ -741,12 +741,12 @@ function nw_create_pd_window_menus(gui, w) {
 function post_startup_messages() {
     // These will be the first messages printed to the main Pd window.
     // Later let's use a link to the docs for new users.
-    pdgui.post(l("pd_window.welcome"));
+    pdgui.post("Welcome to Purr Data");
     // Warn the user if the font sizes aren't optimal. Font sizes which
     // aren't optimal result in extra space at the end of object/message
     // boxes
     if (!pdgui.get_font_engine_sanity()) {
-        pdgui.post(l("pd_window.font_size_warning"));
+        pdgui.post("warning: your system's font stack is not optimal");
     }
 }
 
