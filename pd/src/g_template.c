@@ -1520,7 +1520,6 @@ static void *draw_new(t_symbol *classsym, t_int argc, t_atom *argv)
 
     t_draw *x = (t_draw *)pd_new(draw_class);
 
-
     /* create a proxy for drawing/svg attributes */
     if (!(x->x_attr = (t_pd *)svg_new((t_pd *)x, type, argc, argv)))
     {
@@ -8084,6 +8083,10 @@ static void *drawimage_new(t_symbol *classsym, int argc, t_atom *argv)
     else svg_attr_setfloat_const(&sa->x_x, 0);
     if (argc) svg_attr_setfloatarg(&sa->x_y, argc--, argv++);
     else svg_attr_setfloat_const(&sa->x_y, 0);
+
+    /* outlet for event notifications */
+    outlet_new(&x->x_obj, &s_anything);
+
     /* [drawimage] allocates memory for an image or image sequence
        while the object is creating. The corresponding scalar gets
        drawn as a canvas image item using the "parent" tk image as
@@ -8142,13 +8145,6 @@ void drawimage_symbol(t_drawimage *x, t_symbol *s)
     drawimage_index(x, 0, 1, at); 
 }
 
-static void drawimage_forward(t_drawimage *x, t_symbol *s, int argc,
-    t_atom *argv)
-{
-    /* forward to t_svg thingy */
-    pd_typedmess(x->x_attr, s, argc, argv);
-}
-
 /* With the current drawimage/sprite implementation we can't easily support
    the x and y attributes. The reason is that we're currently just applying
    attributes to the parent <g> for convenience, but <g> has no x/y atty.
@@ -8172,9 +8168,7 @@ static void drawimage_y(t_drawimage *x, t_symbol *s, int argc,
 static void drawimage_anything(t_drawimage *x, t_symbol *s, int argc,
     t_atom *argv)
 {
-    /* this could be used to just forward all messages to the svg. But
-       since tkpath's pimage only uses the matrix option we just use
-       drawimage_transform above for that. */
+    pd_typedmess(x->x_attr, s, argc, argv);
 }
 
 /* -------------------- widget behavior for drawimage ------------ */
@@ -8543,17 +8537,11 @@ static void drawimage_setup(void)
         gensym("size"), A_FLOAT, A_FLOAT, 0);
     class_addmethod(drawimage_class, (t_method)drawimage_index,
         gensym("index"), A_GIMME, 0);
-    class_addmethod(drawimage_class, (t_method)drawimage_forward,
-        gensym("transform"), A_GIMME, 0);
-    class_addmethod(drawimage_class, (t_method)drawimage_forward,
-        gensym("vis"), A_GIMME, 0);
-    class_addmethod(drawimage_class, (t_method)drawimage_forward,
-        gensym("bbox"), A_GIMME, 0);
     class_addmethod(drawimage_class, (t_method)drawimage_x,
         gensym("x"), A_GIMME, 0);
     class_addmethod(drawimage_class, (t_method)drawimage_y,
         gensym("y"), A_GIMME, 0);
-    //class_addanything(drawimage_class, drawimage_anything);
+    class_addanything(drawimage_class, drawimage_anything);
     class_setparentwidget(drawimage_class, &drawimage_widgetbehavior);
 }
 
