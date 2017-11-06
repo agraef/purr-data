@@ -1194,7 +1194,8 @@ function gui_startup(version, fontname_from_pd, fontweight_from_pd,
     //    } else {
     //        set oldtclversion 0
     //    }
-    pdsend("pd init", enquote(pwd), "0", font_fixed_metrics);
+    pdsend("pd init", enquote(defunkify_windows_path(pwd)), "0",
+        font_fixed_metrics);
 
     //    # add the audio and help menus to the Pd window.  We delayed this
     //    # so that we'd know the value of "apilist".
