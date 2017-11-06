@@ -1030,9 +1030,11 @@ function register_window_id(cid, attr_array) {
     // For now, there is no way for the cord inspector to be turned on by
     // default. But if this changes we need to set its menu item checkbox
     // accordingly here
-    //set_cord_inspector_checkbox();
+    // set_cord_inspector_checkbox();
 
-    // One final kludge-- because window creation is asyncronous, we may
+    // Set scroll bars
+    pdgui.canvas_set_scrollbars(cid, !attr_array.hide_scroll);
+    // One final kludge-- because window creation is asynchronous, we may
     // have gotten a dirty flag before the window was created. In that case
     // we check the title_queue to see if our title now contains an asterisk
     // (which is the visual cue for "dirty")

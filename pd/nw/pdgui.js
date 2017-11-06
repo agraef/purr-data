@@ -976,6 +976,17 @@ function gui_canvas_set_cordinspector(cid, state) {
     patchwin[cid].window.set_cord_inspector_checkbox(state !== 0 ? true : false);
 }
 
+function canvas_set_scrollbars(cid, scroll) {
+    patchwin[cid].window.document.body.style.
+        overflow = scroll ? "visible" : "hidden";
+}
+
+exports.canvas_set_scrollbars = canvas_set_scrollbars;
+
+function gui_canvas_set_scrollbars(cid, no_scrollbars) {
+    canvas_set_scrollbars(cid, no_scrollbars === 0);
+}
+
 exports.menu_send = menu_send;
 
 function gui_set_toplevel_window_list(dummy, attr_array) {
@@ -1417,7 +1428,8 @@ function gui_canvas_new(cid, width, height, geometry, zoom, editmode, name, dir,
             dirty: dirty_flag,
             args: cargs,
             zoom: zoom,
-            editmode: editmode
+            editmode: editmode,
+            hide_scroll: hide_scroll
     });
 }
 

@@ -2767,7 +2767,8 @@ static void canvas_donecanvasdialog(t_glist *x,
     xmargin = atom_getfloatarg(9, argc, argv);
     ymargin = atom_getfloatarg(10, argc, argv);
 
-    x->gl_noscroll = atom_getintarg(11, argc, argv);
+    pd_vmess(&x->gl_pd, gensym("scroll"), "f",
+        atom_getfloatarg(11, argc, argv));
     x->gl_nomenu = atom_getintarg(12, argc, argv);
 
     /* parent windows are treated differently than applies to
