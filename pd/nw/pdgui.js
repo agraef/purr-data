@@ -2941,14 +2941,19 @@ function gui_vumeter_update_rms(cid, tag, p1, p2, p3, p4, basex, basey) {
 }
 
 function gui_vumeter_update_peak(cid,tag,color,p1,p2,p3,p4,basex,basey) {
-    var line = get_item(cid, tag + "peak");
-    configure_item(line, {
-        x1: p1 - basex,
-        y1: p2 - basey,
-        x2: p3 - basex,
-        y2: p4 - basey,
-        stroke: color
-    });
+    var line;
+    if (patchwin[cid]) {
+        line = get_item(cid, tag + "peak");
+        if (line) {
+            configure_item(line, {
+                x1: p1 - basex,
+                y1: p2 - basey,
+                x2: p3 - basex,
+                y2: p4 - basey,
+                stroke: color
+            });
+        }
+    }
 }
 
 function gui_iemgui_base_color(cid, tag, color) {
