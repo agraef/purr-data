@@ -6893,13 +6893,13 @@ static void drawarray_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                         drawarray_groupvis(sc, glist,
                             (t_word *)(elem + elemsize * i),
                         template, (t_glist *)y, 
-                            elemtemplatecanvas, usexloc, useyloc, parentarray);
+                            elemtemplatecanvas, usexloc, useyloc, array);
                     }
                     t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
                     if (!wb) continue;
                     (*wb->w_parentvisfn)(y, glist, elemtemplatecanvas, sc,
                         (t_word *)(elem + elemsize * i),
-                            elemtemplate, usexloc, useyloc, parentarray, tovis);
+                            elemtemplate, usexloc, useyloc, array, tovis);
                 }
             }
         }
@@ -6927,7 +6927,7 @@ static void drawarray_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 if (!wb) continue;
                 (*wb->w_parentvisfn)(y, glist, elemtemplatecanvas, sc,
                     (t_word *)(elem + elemsize * i), elemtemplate,
-                        0, 0, parentarray, 0);
+                        0, 0, array, 0);
             }
         }
         /* Now remove our drawarray svg container */
