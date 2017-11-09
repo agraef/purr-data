@@ -3607,8 +3607,8 @@ static void svg_getrectrect(t_svg *x, t_glist *glist,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
-    int width, height, xoff, yoff;
-    int x1, y1, x2, y2;
+    t_float width, height, xoff, yoff;
+    t_float x1, y1, x2, y2;
     x1 = y1 = 0x7fffffff;
     x2 = y2 = -0x7fffffff;
 
@@ -3672,10 +3672,10 @@ static void svg_getrectrect(t_svg *x, t_glist *glist,
         *xp2 = *yp2 = -0x7fffffff;
         return;
     }
-    *xp1 = x1;
-    *yp1 = y1;
-    *xp2 = x2;
-    *yp2 = y2;
+    *xp1 = (int)x1;
+    *yp1 = (int)y1;
+    *xp2 = (int)x2;
+    *yp2 = (int)y2;
 }
 
 void scalar_getinnersvgrect(t_gobj *z, t_glist *owner, t_word *data,
@@ -6698,8 +6698,9 @@ static void drawarray_getrect(t_gobj *z, t_glist *glist,
 
        If users really want a bbox for this in the future we can just use the
        same expensive algorithm as plot_getrect and suggest nesting in an
-       [draw svg] for performance. But for now I don't think we need that.
-    */
+       [draw svg] for performance. But for now I don't think we need that. */
+    *xp1 = *yp1 = 0x7fffffff;
+    *xp2 = *yp2 = -0x7fffffff;
 }
 
 static void drawarray_displace(t_gobj *z, t_glist *glist,
