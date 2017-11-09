@@ -1,0 +1,14 @@
+#N struct drawtut-array float x float y;
+#N canvas 2 75 537 571 10;
+#N canvas 290 275 450 300 META 0;
+#X text 16 6 KEYWORDS tutorial data_structure draw;
+#X text 16 26 LICENSE SIBSD;
+#X text 16 76 AUTHOR Jonathan Wilkes;
+#X text 16 96 HELP_PATCH_AUTHORS Jonathan Wilkes;
+#X text 16 46 DESCRIPTION drawing arrays in scalars with the [draw
+array] command;
+#X restore 400 538 pd META;
+#X text 0 1 New Drawing Commands: arrays;
+#X text 1 1 ____________________________;
+#X obj 51 30 struct drawtut-array float x float y;
+#X text 144 202 Under construction;
