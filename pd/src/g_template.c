@@ -6690,77 +6690,16 @@ static void drawarray_getrect(t_gobj *z, t_glist *glist,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
-    t_drawarray *x = (t_drawarray *)z;
-    int width, height, xoff, yoff;
-    int x1, y1, x2, y2;
-    x1 = y1 = 0x7fffffff;
-    x2 = y2 = -0x7fffffff;
+    /* For now we just exclude drawarray from the bbox calculation.
+       Otherwise it gets too expensive and interferes with realtime audio.
 
-    t_float mtx1[3][3] = { {1, 0, 0}, {0, 1, 0}, {0, 0, 1} };
-    t_float mtx2[3][3] = { {1, 0, 0}, {0, 1, 0}, {1, 0, 1} };
-    t_float m1, m2, m3, m4, m5, m6,
-            tx1, ty1, tx2, ty2, t5, t6;
-    t_svg *sa = (t_svg *)x->x_attr;
-    if (!fielddesc_getfloat(&sa->x_bbox, template, data, 0) ||
-        (sa->x_vis.a_flag && !fielddesc_getfloat(&sa->x_vis.a_attr,
-            template, data, 0)))
-    {
-        *xp1 = *yp1 = 0x7fffffff;
-        *xp2 = *yp2 = -0x7fffffff;
-        return;
-    }
+       If the user wants bbox they can add a [draw rect] for an anchor
+       or manual bbox, or they can nest this in a [draw svg] for a viewport.
 
-    svg_groupmtx(sa, template, data, mtx1);
-    width = fielddesc_getcoord(&sa->x_width.a_attr, template, data, 0);
-    height = fielddesc_getcoord(&sa->x_height.a_attr, template, data, 0);
-    xoff = fielddesc_getcoord(&sa->x_x.a_attr, template, data, 0);
-    yoff = fielddesc_getcoord(&sa->x_y.a_attr, template, data, 0);
- 
-    mset(mtx2, xoff, yoff, xoff + width, yoff + height, 0, 0);
-    mtx2[2][0] = 1; mtx2[2][1] = 1;
-    mmult(mtx1, mtx2, mtx2);
-    mget(mtx2, &tx1, &ty1, &tx2, &ty2, &t5, &t6);
-    if (tx1 < x1) x1 = tx1;
-    if (tx2 < x1) x1 = tx2;
-    if (ty1 < y1) y1 = ty1;
-    if (ty2 < y1) y1 = ty2;
-    if (tx1 > x2) x2 = tx1;
-    if (tx2 > x2) x2 = tx2;
-    if (ty1 > y2) y2 = ty1;
-    if (ty2 > y2) y2 = ty2;
-    mset(mtx2, xoff, yoff + height, xoff + width, yoff, 0, 0);
-    mtx2[2][0] = 1; mtx2[2][1] = 1;
-    mmult(mtx1, mtx2, mtx2);
-    mget(mtx2, &tx1, &ty1, &tx2, &ty2, &t5, &t6);
-    if (tx1 < x1) x1 = tx1;
-    if (tx2 < x1) x1 = tx2;
-    if (ty1 < y1) y1 = ty1;
-    if (ty2 < y1) y1 = ty2;
-    if (tx1 > x2) x2 = tx1;
-    if (tx2 > x2) x2 = tx2;
-    if (ty1 > y2) y2 = ty1;
-    if (ty2 > y2) y2 = ty2;
-    //x1 = glist_xtopixels(glist, basex + x1);
-    //x2 = glist_xtopixels(glist, basex + x2);
-    //y1 = glist_ytopixels(glist, basey + y1);
-    //y2 = glist_ytopixels(glist, basey + y2);
-
-    x1 = basex + x1;
-    x2 = basex + x2;
-    y1 = basey + y1;
-    y2 = basey + y2;
-
-    /* todo: put these up top */
-    if (!fielddesc_getfloat(&sa->x_vis.a_attr, template, data, 0))
-    {
-        *xp1 = *yp1 = 0x7fffffff;
-        *xp2 = *yp2 = -0x7fffffff;
-        return;
-    }
-    *xp1 = x1;
-    *yp1 = y1;
-    *xp2 = x2;
-    *yp2 = y2;
+       If users really want a bbox for this in the future we can just use the
+       same expensive algorithm as plot_getrect and suggest nesting in an
+       [draw svg] for performance. But for now I don't think we need that.
+    */
 }
 
 static void drawarray_displace(t_gobj *z, t_glist *glist,
@@ -6929,8 +6868,15 @@ static void drawarray_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 gui_start_vmess("gui_draw_vis", "xs",
                     glist_getcanvas(glist), "g");
                 gui_start_array();
-                gui_s("transform");
-                gui_s(transform_buf);
+                /* For now we're not controlling x/y spacing at all. In the
+                   future we might want to add a method to help define grid
+                   spacing or something, but I can't currently think of a nice
+                   interface for that. (The [plot] object just uses a flag to
+                   reference fields from the element's template, but that is
+                   too complicated and gets in the way of efficient redrawing.
+                */
+                //gui_s("transform");
+                //gui_s(transform_buf);
                 gui_end_array();
                 gui_start_array();
                 gui_s(viewport_tagbuf);
