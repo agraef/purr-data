@@ -66,7 +66,7 @@ on and off. If on \, a test is run to determine whether to turn off
 20 10 1 18 -261139 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
-#X text 19 37 The [env~] object reports ths RMS signal level over the
+#X text 19 37 The [env~] object reports the RMS signal level over the
 last 256 samples (by default) or any other power of 2 that's at least
 twice the block size. The analysis is done in an overlapped fashion
 so that results appear every N/2 points if N is the analysis window

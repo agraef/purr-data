@@ -80,9 +80,9 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 6 567 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X text 19 37 An envelope follower measures the mean square power of
 an signal as it changes over time. (You can convert mean square power
-to RMS ampitude or to decibels if you wish.) The term "mean square"
+to RMS amplitude or to decibels if you wish.) The term "mean square"
 means simply that the signal should be squared \, and then averaged.
-The averageing is done using a low-pass filter such as [lop~].;
+The averaging is done using a low-pass filter such as [lop~].;
 #X text 18 203 The [env~] object at right \, which is a built-in envelope
 follower using a higher-quality low-pass filter than [lop~] \, is shown
 for comparison. Its output is artificially slowed down to match the

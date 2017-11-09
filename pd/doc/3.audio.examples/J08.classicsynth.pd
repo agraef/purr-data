@@ -98,7 +98,7 @@ and the amplitude to make the classic subtractive synthesis sound.
 Send an "s \$0-note" object a (pitch \, duration) pair to play a note.
 (Classic VC synths did not have velocity sensitive keyboards!) You
 can add controls to change the parameters of the ADSR envelopes and/or
-the vcf~ "Q" parameter. THe oscillators' waveforms and tuning relationship
+the vcf~ "Q" parameter. The oscillators' waveforms and tuning relationship
 is controlled by other parameters set within the "pd 16x" window.;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header the_classic_subtractive_synth_sound
 20 10 1 18 -261139 -33289 0;

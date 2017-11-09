@@ -10,7 +10,7 @@
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 45 LICENSE SIBSD;
 #X text 12 105 AUTHOR Miller Puckette;
-#X text 12 165 HELP_PATCH_AUTHORS Updated for pd version 0.40. Jonathan
+#X text 12 165 HELP_PATCH_AUTHORS Updated for Pd version 0.40. Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
 #X text 12 25 KEYWORDS control conversion MIDI;

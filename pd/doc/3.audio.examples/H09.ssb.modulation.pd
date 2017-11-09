@@ -67,7 +67,7 @@
 #X restore 125 505 pd startup;
 #X obj 19 478 output~;
 #X obj 186 330 phasor~;
-#X text 121 421 <-- complex multipier;
+#X text 121 421 <-- complex multiplier;
 #X text 120 438 (calculates real part);
 #X text 289 354 to form the real and;
 #X text 289 370 imaginary part of a;

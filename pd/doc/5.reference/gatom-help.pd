@@ -72,7 +72,7 @@ TIME. In a production patch \, you'll want to set a specific width.
 ;
 #X floatatom 70 143 0 0 0 0 - - -;
 #X text 148 143 width = 0 characters (read below);
-#X text 69 240 A width of one gives a clickable toggle switch ala Max.
+#X text 69 240 A width of one gives a clickable toggle switch a la Max.
 ;
 #X text 88 223 width = 1 character: toggle between 0 and 1;
 #X text 19 260 limits;
