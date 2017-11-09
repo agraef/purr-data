@@ -38,6 +38,26 @@ debian_stable_amd64_deb:
      paths:
        - pd*.deb
 
+debian_stretch_amd64_deb:
+   tags:
+     - debian
+     - stretch
+     - amd64
+   script:
+     - echo "" | sudo -S apt-get -qq purge -y pd-l2ork > /dev/null || echo "couldn't purge..."
+     - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive apt-get -qq -y update > /dev/null
+     - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive apt-get -qq -y upgrade > /dev/null
+     - cd l2ork_addons
+     - ./tar_em_up.sh -B
+     - cd ..
+     - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive dpkg --force-all -i pd-l2ork*.deb > /dev/null
+     - valgrind pd-l2ork -noprefs -nostdpath -nogui -nrt -noaudio scripts/external-tests.pd
+   artifacts:
+     name: "$CI_RUNNER_DESCRIPTION"
+     expire_in: 1 day
+     paths:
+       - pd*.deb
+
 ubuntu_14.04_i386_deb:
    tags:
      - ubuntu
