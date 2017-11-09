@@ -13,12 +13,28 @@
         <legend data-i18n="canvas.prop.heading.gop"></legend> 
 
         <table class="pairs">
-          <tr class="display_flags prop hidden" data-i18n="[title]canvas.prop.gop_tt">
-            <td>
-              <input type="checkbox" name="gop" value="on">
+          <tr class="prop no_scroll hidden" data-i18n="[title]canvas.prop.no_scroll_tt">
+            <td colspan="2">
+              <label>
+                <input type="checkbox" name="no_scroll" value="off">
+                <span data-i18n="canvas.prop.no_scroll"></span>
+              </label>
             </td>
-            <td>
-              <span id="gop_label" data-i18n="canvas.prop.gop"></span>
+          </tr>
+          <tr class="prop no_menu hidden" data-i18n="[title]canvas.prop.no_menu_tt">
+            <td colspan="2">
+              <label>
+                <input type="checkbox" name="no_menu" value="off">
+                <span data-i18n="canvas.prop.no_menu"></span>
+              </label>
+            </td>
+          </tr>
+          <tr class="display_flags prop hidden" data-i18n="[title]canvas.prop.gop_tt">
+            <td colspan="2">
+              <label>
+                <input type="checkbox" name="gop" value="on">
+                <span data-i18n="canvas.prop.gop"></span>
+              </label>
             </td>
           </tr>
           <tr class="x_pix prop hidden">
@@ -443,11 +459,6 @@ arrays_select.addEventListener("change", function(evt) {
     array_choose(evt.target.value);
 });
 
-var gop_label = document.getElementById("gop_label");
-gop_label.addEventListener("click", function() {
-    document.getElementsByName("gop")[0].click();
-});
-
 var gop_button = document.getElementsByName("gop")[0];
 gop_button.addEventListener("click", function(evt) {
     set_gop(this.checked);
@@ -510,8 +521,8 @@ function substitute_space(arg) {
 }
 
 function get_input(name) {
-    var val = document.getElementsByName(name)[0].value;
-    return val;
+    var elem = document.getElementsByName(name)[0];
+    return (elem.type === "checkbox") ? elem.checked : elem.value;
 }
 
 // get a value from the garray attr array
@@ -540,12 +551,12 @@ function get_array_slot_4(attrs) {
 
 function apply() {
     var gop, hide_name, slot_4;
-    // If this is a dialog to create a new array, we
+    // If this is a dialog to create a new array
     // skip the canvas dialog callback
     if (!new_array_dialog) {
         // Note: the "+" casts Boolean to Number
-        gop = +document.getElementsByName("gop")[0].checked;
-        hide_name = +document.getElementsByName("hide_name")[0].checked;
+        gop = +get_input("gop");
+        hide_name = +get_input("hide_name");
 
         pdgui.pdsend(pd_object_callback, "donecanvasdialog",
             +get_input("x_scale"),
@@ -558,7 +569,9 @@ function apply() {
             +get_input("x_pix"),
             +get_input("y_pix"),
             +get_input("x_margin"),
-            +get_input("y_margin")
+            +get_input("y_margin"),
+            +get_input("no_scroll"),
+            +get_input("no_menu")
         );
     }
 
@@ -759,6 +772,11 @@ function populate_form(attr_object) {
             .classList.add("hidden");
         // X/Y scaling-- garray is always in a gop so not needed
         document.getElementsByClassName("x_scale")[0]
+            .classList.add("hidden");
+        // scrollbars and menu
+        document.getElementsByClassName("no_scroll")[0]
+            .classList.add("hidden");
+         document.getElementsByClassName("no_menu")[0]
             .classList.add("hidden");
     }
 }

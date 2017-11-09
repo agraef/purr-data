@@ -742,6 +742,18 @@ void canvas_scalar_event(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
         draw_notify(x, s, argc, argv);
 }
 
+void canvas_show_scrollbars(t_canvas *x, t_floatarg f)
+{
+    x->gl_noscroll = (int)f;
+    gui_vmess("gui_canvas_set_scrollbars", "xi", x, (int)f);
+}
+
+void canvas_show_menu(t_canvas *x, t_floatarg f)
+{
+post("setting nomenu to %d", f);
+    x->gl_nomenu = (int)f;
+}
+
 extern void canvas_check_nlet_highlights(t_canvas *x);
 
 /*********** dpsaha@vt.edu resize move hooks ****************/
@@ -2579,6 +2591,10 @@ void g_canvas_setup(void)
 
     class_addmethod(canvas_class, (t_method)canvas_scalar_event,
         gensym("scalar_event"), A_GIMME, 0);
+    class_addmethod(canvas_class, (t_method)canvas_show_scrollbars,
+        gensym("scroll"), A_FLOAT, 0);
+    class_addmethod(canvas_class, (t_method)canvas_show_menu,
+        gensym("menu"), A_FLOAT, 0);
 
 /* ---------------------- list handling ------------------------ */
     class_addmethod(canvas_class, (t_method)glist_clear, gensym("clear"),

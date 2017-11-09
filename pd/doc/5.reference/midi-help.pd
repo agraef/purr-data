@@ -1,11 +1,9 @@
-#N canvas 430 38 555 619 10;
+#N canvas 1 53 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header (MIDI) 3 12 0 18
 -204280 -1 0;
-#X obj 0 288 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
--228856 -1 0;
-#N canvas 489 291 494 344 META 0;
+#N canvas 403 185 494 367 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 65 LICENSE SIBSD;
@@ -20,13 +18,8 @@ touchin bendout ctlout midiout noteout pgmout polytouchout touchout
 ;
 #X text 12 165 RELEASE_DATE 1997;
 #X restore 500 597 pd META;
-#X obj 0 495 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
-13 -228856 -1 0;
-#X obj 0 538 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+#X obj 0 561 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
-0 13 -228856 -1 0;
-#X text 98 542 (none);
 #N canvas 217 519 428 109 Related_objects 0;
 #X obj 62 43 makenote;
 #X obj 22 43 poly;
@@ -35,66 +28,110 @@ touchin bendout ctlout midiout noteout pgmout polytouchout touchout
 14 -204280 -1 0;
 #X text 8 2 (MIDI) Related Objects;
 #X restore 102 598 pd Related_objects;
-#X obj 79 297 cnv 17 3 130 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
--162280 0;
-#X text 98 296 float;
-#X text 98 353 list;
-#X text 98 503 float;
-#X obj 79 504 cnv 17 3 30 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
--162280 0;
-#X obj 79 440 cnv 17 3 45 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
--162280 0;
-#X text 98 439 float;
-#X text 98 383 flush;
-#X text 98 413 clear;
-#X text 168 383 - output all values one by one \, in the order they
-were received \, and clear the collection.;
-#X text 168 503 - upon sending the "flush" message to the left inlet
-\, [bag] will output each value in the order it was received.;
-#X text 168 353 - a (value \, flag) pair is distributed to the two
-inlets. Lists with more than two elements will be truncated.;
-#X text 168 413 - clear the collection.;
-#X text 167 439 - a float to the right inlet sets the "flag": if zero
-\, values to the left inlet will not be added to the collection. If
-nonzero \, values to the right inlet will be added to the collection.
-;
-#X text 168 296 - a float to the left inlet will be added to the collection
-if the last value the right inlet received was nonzero. If the last
-value the right inlet received was zero \, the float sent to the right
-inlet will be removed from the collection.;
 #X text 11 23 MIDI input/output objects;
-#X obj 86 86 bendin;
-#X obj 86 123 bendout;
-#X obj 131 86 ctlin;
-#X obj 137 123 ctlout;
-#X obj 215 86 notein;
-#X obj 233 123 noteout;
-#X obj 260 86 pgmin;
-#X obj 284 123 pgmout;
-#X obj 425 86 touchin;
-#X obj 299 86 polytouchin;
-#X obj 170 86 midiin;
-#X obj 374 86 sysexin;
-#X obj 182 123 midiout;
-#X obj 329 123 polytouchout;
-#X obj 410 123 touchout;
-#X text 10 86 MIDI input:;
-#X text 10 123 MIDI output:;
-#X obj 320 185 pddp/pddplink touchin-help.pd;
-#X obj 243 185 touchin;
-#X obj 243 210 polytouchin;
-#X obj 320 210 pddp/pddplink polytouchin-help.pd;
-#X obj 243 235 touchout;
-#X obj 320 235 pddp/pddplink touchout-help.pd;
-#X obj 243 260 polytouchout;
-#X obj 320 260 pddp/pddplink polytouchout-help.pd;
-#X obj 80 185 midiin;
-#X obj 80 235 sysexin;
-#X obj 80 210 midiout;
-#X obj 135 185 pddp/pddplink midiin-help.pd;
-#X obj 135 235 pddp/pddplink sysexin-help.pd;
-#X obj 135 210 pddp/pddplink midiout-help.pd;
+#X obj 86 57 bendin;
+#X obj 86 343 bendout;
+#X obj 86 113 ctlin;
+#X obj 86 403 ctlout;
+#X obj 85 237 notein;
+#X obj 267 343 noteout;
+#X obj 266 57 pgmin;
+#X obj 267 403 pgmout;
+#X obj 267 237 touchin;
+#X obj 267 113 polytouchin;
+#X obj 85 177 midiin;
+#X obj 267 177 sysexin;
+#X obj 86 463 midiout;
+#X obj 267 463 polytouchout;
+#X obj 267 523 touchout;
+#X text 10 57 MIDI input:;
+#X text 10 319 MIDI output:;
+#X obj 345 522 pddp/pddplink touchout-help.pd;
+#X obj 146 464 pddp/pddplink midiout-help.pd;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X text 77 151 Right-click the objects above and choose "Help" \, or
-follow the links below for help on these objects:;
+#X floatatom 86 78 5 0 0 0 - - -, f 5;
+#X floatatom 119 78 5 0 0 0 - - -, f 5;
+#X floatatom 86 141 5 0 0 0 - - -, f 5;
+#X floatatom 126 141 5 0 0 0 - - -, f 5;
+#X floatatom 166 141 5 0 0 0 - - -, f 5;
+#X obj 346 462 pddp/pddplink polytouchout-help.pd;
+#X floatatom 85 200 5 0 0 0 - - -, f 5;
+#X floatatom 125 200 5 0 0 0 - - -, f 5;
+#X floatatom 85 265 5 0 0 0 - - -, f 5;
+#X floatatom 125 265 5 0 0 0 - - -, f 5;
+#X floatatom 165 265 5 0 0 0 - - -, f 5;
+#X floatatom 266 79 5 0 0 0 - - -, f 5;
+#X floatatom 301 79 5 0 0 0 - - -, f 5;
+#X floatatom 267 135 5 0 0 0 - - -, f 5;
+#X floatatom 307 135 5 0 0 0 - - -, f 5;
+#X floatatom 347 135 5 0 0 0 - - -, f 5;
+#X floatatom 267 199 5 0 0 0 - - -, f 5;
+#X floatatom 307 199 5 0 0 0 - - -, f 5;
+#X floatatom 267 259 5 0 0 0 - - -, f 5;
+#X floatatom 307 259 5 0 0 0 - - -, f 5;
+#X floatatom 86 319 5 0 0 0 - - -, f 5;
+#X floatatom 125 319 5 0 0 0 - - -, f 5;
+#X floatatom 85 379 5 0 0 0 - - -, f 5;
+#X floatatom 124 379 5 0 0 0 - - -, f 5;
+#X floatatom 164 379 5 0 0 0 - - -, f 5;
+#X floatatom 86 439 5 0 0 0 - - -, f 5;
+#X floatatom 125 439 5 0 0 0 - - -, f 5;
+#X floatatom 267 319 5 0 0 0 - - -, f 5;
+#X floatatom 306 319 5 0 0 0 - - -, f 5;
+#X floatatom 346 319 5 0 0 0 - - -, f 5;
+#X floatatom 267 379 5 0 0 0 - - -, f 5;
+#X floatatom 306 379 5 0 0 0 - - -, f 5;
+#X floatatom 267 439 5 0 0 0 - - -, f 5;
+#X floatatom 306 439 5 0 0 0 - - -, f 5;
+#X floatatom 346 439 5 0 0 0 - - -, f 5;
+#X floatatom 267 499 5 0 0 0 - - -, f 5;
+#X floatatom 312 499 5 0 0 0 - - -, f 5;
+#X obj 131 57 pddp/pddplink bendin-help.pd;
+#X obj 129 112 pddp/pddplink ctlin-help.pd;
+#X obj 131 177 pddp/pddplink midiin-help.pd;
+#X obj 131 237 pddp/pddplink notein-help.pd;
+#X obj 346 57 pddp/pddplink pgmin-help.pd;
+#X obj 347 113 pddp/pddplink polytouchin-help.pd;
+#X obj 347 177 pddp/pddplink sysexin-help.pd;
+#X obj 346 237 pddp/pddplink touchin-help.pd;
+#X obj 146 343 pddp/pddplink bendout-help.pd;
+#X obj 146 403 pddp/pddplink ctlout-help.pd;
+#X obj 347 343 pddp/pddplink noteout-help.pd;
+#X obj 347 403 pddp/pddplink pgmout-help.pd;
+#X connect 6 0 26 0;
+#X connect 6 1 27 0;
+#X connect 8 0 28 0;
+#X connect 8 1 29 0;
+#X connect 8 2 30 0;
+#X connect 10 0 34 0;
+#X connect 10 1 35 0;
+#X connect 10 2 36 0;
+#X connect 12 0 37 0;
+#X connect 12 1 38 0;
+#X connect 14 0 44 0;
+#X connect 14 1 45 0;
+#X connect 15 0 39 0;
+#X connect 15 1 40 0;
+#X connect 15 2 41 0;
+#X connect 16 0 32 0;
+#X connect 16 1 33 0;
+#X connect 17 0 42 0;
+#X connect 17 1 43 0;
+#X connect 46 0 7 0;
+#X connect 47 0 7 1;
+#X connect 48 0 9 0;
+#X connect 49 0 9 1;
+#X connect 50 0 9 2;
+#X connect 51 0 18 0;
+#X connect 52 0 18 1;
+#X connect 53 0 11 0;
+#X connect 54 0 11 1;
+#X connect 55 0 11 2;
+#X connect 56 0 13 0;
+#X connect 57 0 13 1;
+#X connect 58 0 19 0;
+#X connect 59 0 19 1;
+#X connect 60 0 19 2;
+#X connect 61 0 20 0;
+#X connect 62 0 20 1;

@@ -991,6 +991,17 @@ function gui_canvas_set_cordinspector(cid, state) {
     patchwin[cid].window.set_cord_inspector_checkbox(state !== 0 ? true : false);
 }
 
+function canvas_set_scrollbars(cid, scroll) {
+    patchwin[cid].window.document.body.style.
+        overflow = scroll ? "visible" : "hidden";
+}
+
+exports.canvas_set_scrollbars = canvas_set_scrollbars;
+
+function gui_canvas_set_scrollbars(cid, no_scrollbars) {
+    canvas_set_scrollbars(cid, no_scrollbars === 0);
+}
+
 exports.menu_send = menu_send;
 
 function gui_set_toplevel_window_list(dummy, attr_array) {
@@ -1198,7 +1209,8 @@ function gui_startup(version, fontname_from_pd, fontweight_from_pd,
     //    } else {
     //        set oldtclversion 0
     //    }
-    pdsend("pd init", enquote(pwd), "0", font_fixed_metrics);
+    pdsend("pd init", enquote(defunkify_windows_path(pwd)), "0",
+        font_fixed_metrics);
 
     //    # add the audio and help menus to the Pd window.  We delayed this
     //    # so that we'd know the value of "apilist".
@@ -1381,7 +1393,7 @@ function create_window(cid, type, width, height, xpos, ypos, attr_array) {
 }
 
 // create a new canvas
-function gui_canvas_new(cid, width, height, geometry, zoom, editmode, name, dir, dirty_flag, cargs) {
+function gui_canvas_new(cid, width, height, geometry, zoom, editmode, name, dir, dirty_flag, hide_scroll, hide_menu, cargs) {
     // hack for buggy tcl popups... should go away for node-webkit
     //reset_ctrl_on_popup_window
 
@@ -1432,7 +1444,8 @@ function gui_canvas_new(cid, width, height, geometry, zoom, editmode, name, dir,
             dirty: dirty_flag,
             args: cargs,
             zoom: zoom,
-            editmode: editmode
+            editmode: editmode,
+            hide_scroll: hide_scroll
     });
 }
 

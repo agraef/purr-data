@@ -779,6 +779,13 @@ static void canvas_saveto(t_canvas *x, t_binbuf *b)
                 (t_float)x->gl_pixwidth, (t_float)x->gl_pixheight,
                 (t_float)x->gl_isgraph);
     }
+        /* save a message if scrollbars are disabled-- otherwise do nothing
+           for the sake of backwards compatibility. */
+    if (x->gl_noscroll)
+        binbuf_addv(b, "ssi;", gensym("#X"), gensym("scroll"), x->gl_noscroll);
+        /* same for menu */
+    if (x->gl_nomenu)
+        binbuf_addv(b, "ssi;", gensym("#X"), gensym("menu"), x->gl_nomenu);
 }
 
 /* yuck, wish I didn't have to do this... */
