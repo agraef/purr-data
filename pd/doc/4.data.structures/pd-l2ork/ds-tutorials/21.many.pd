@@ -1,0 +1,569 @@
+#N struct toogle float x0 float y0 symbol color;
+#N struct container float x float y array a toogle;
+#N canvas 56 53 873 554 10;
+#N canvas 744 246 538 405 toogle 0;
+#X obj 179 67 loadbang;
+#X obj 179 167 unpack p 0 0;
+#X obj 70 35 struct toogle float x0 float y0 symbol color;
+#X obj 179 189 trigger bang anything;
+#X obj 179 211 random 3;
+#X obj 179 233 sel 0 1 2;
+#X msg 213 259 blue;
+#X msg 179 319 red;
+#X msg 196 289 green;
+#X obj 213 366 set -symbol toogle color;
+#X obj 213 341 symbol;
+#X obj 179 123 draw rect 10 10;
+#X msg 179 90 stroke-width 1 \, stroke black \, fill symbol color \,
+x x0 \, y y0 \, mousedown 1;
+#X obj 179 145 route mousedown;
+#X connect 0 0 12 0;
+#X connect 1 0 3 0;
+#X connect 3 0 4 0;
+#X connect 3 1 9 1;
+#X connect 4 0 5 0;
+#X connect 5 0 7 0;
+#X connect 5 1 8 0;
+#X connect 5 2 6 0;
+#X connect 6 0 10 0;
+#X connect 7 0 10 0;
+#X connect 8 0 10 0;
+#X connect 10 0 9 0;
+#X connect 11 0 13 0;
+#X connect 12 0 11 0;
+#X connect 13 0 1 0;
+#X restore 139 20 pd toogle;
+#N canvas 870 269 450 346 container 0;
+#X obj 77 40 struct container float x float y array a toogle;
+#N canvas 790 365 450 323 (subpatch) 0;
+#X obj 66 55 draw array a;
+#X restore 61 148 draw svg;
+#X obj 61 86 loadbang;
+#X msg 61 117 width 400 \, height 400;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X restore 43 20 pd container;
+#X obj 354 21 namecanvas c;
+#X msg 680 163 traverse c \, next;
+#X obj 680 185 pointer;
+#X floatatom 542 149 5 0 0 0 - - -, f 5;
+#X obj 542 170 t a a;
+#X obj 644 219 setsize container a;
+#X obj 569 305 element container a;
+#X obj 542 192 t a 0;
+#X obj 542 224 until;
+#X obj 542 256 f;
+#X obj 572 256 + 1;
+#X obj 542 278 t a a;
+#X obj 547 384 set toogle x0 y0;
+#X scalar container 28 79 \; 1.5 1.5 red \; 11.5 1.5 symbol \; 21.5
+1.5 symbol \; 31.5 1.5 symbol \; 41.5 1.5 symbol \; 51.5 1.5 symbol
+\; 61.5 1.5 symbol \; 71.5 1.5 symbol \; 81.5 1.5 symbol \; 91.5 1.5
+symbol \; 101.5 1.5 symbol \; 111.5 1.5 symbol \; 121.5 1.5 symbol
+\; 131.5 1.5 symbol \; 141.5 1.5 symbol \; 151.5 1.5 symbol \; 161.5
+1.5 symbol \; 171.5 1.5 symbol \; 181.5 1.5 symbol \; 191.5 1.5 symbol
+\; 201.5 1.5 symbol \; 211.5 1.5 symbol \; 221.5 1.5 symbol \; 231.5
+1.5 symbol \; 241.5 1.5 symbol \; 251.5 1.5 symbol \; 261.5 1.5 symbol
+\; 271.5 1.5 symbol \; 281.5 1.5 symbol \; 291.5 1.5 symbol \; 301.5
+1.5 symbol \; 311.5 1.5 symbol \; 321.5 1.5 symbol \; 331.5 1.5 symbol
+\; 341.5 1.5 symbol \; 351.5 1.5 symbol \; 361.5 1.5 symbol \; 371.5
+1.5 symbol \; 381.5 1.5 symbol \; 391.5 1.5 symbol \; 1.5 11.5 symbol
+\; 11.5 11.5 symbol \; 21.5 11.5 symbol \; 31.5 11.5 symbol \; 41.5
+11.5 symbol \; 51.5 11.5 symbol \; 61.5 11.5 symbol \; 71.5 11.5 symbol
+\; 81.5 11.5 symbol \; 91.5 11.5 symbol \; 101.5 11.5 symbol \; 111.5
+11.5 symbol \; 121.5 11.5 symbol \; 131.5 11.5 symbol \; 141.5 11.5
+symbol \; 151.5 11.5 symbol \; 161.5 11.5 symbol \; 171.5 11.5 symbol
+\; 181.5 11.5 symbol \; 191.5 11.5 symbol \; 201.5 11.5 symbol \; 211.5
+11.5 symbol \; 221.5 11.5 symbol \; 231.5 11.5 symbol \; 241.5 11.5
+symbol \; 251.5 11.5 symbol \; 261.5 11.5 symbol \; 271.5 11.5 symbol
+\; 281.5 11.5 symbol \; 291.5 11.5 symbol \; 301.5 11.5 symbol \; 311.5
+11.5 symbol \; 321.5 11.5 symbol \; 331.5 11.5 symbol \; 341.5 11.5
+symbol \; 351.5 11.5 symbol \; 361.5 11.5 symbol \; 371.5 11.5 symbol
+\; 381.5 11.5 symbol \; 391.5 11.5 symbol \; 1.5 21.5 symbol \; 11.5
+21.5 symbol \; 21.5 21.5 symbol \; 31.5 21.5 symbol \; 41.5 21.5 symbol
+\; 51.5 21.5 symbol \; 61.5 21.5 symbol \; 71.5 21.5 symbol \; 81.5
+21.5 symbol \; 91.5 21.5 symbol \; 101.5 21.5 symbol \; 111.5 21.5
+symbol \; 121.5 21.5 symbol \; 131.5 21.5 symbol \; 141.5 21.5 symbol
+\; 151.5 21.5 symbol \; 161.5 21.5 symbol \; 171.5 21.5 symbol \; 181.5
+21.5 symbol \; 191.5 21.5 symbol \; 201.5 21.5 symbol \; 211.5 21.5
+symbol \; 221.5 21.5 symbol \; 231.5 21.5 symbol \; 241.5 21.5 symbol
+\; 251.5 21.5 symbol \; 261.5 21.5 symbol \; 271.5 21.5 symbol \; 281.5
+21.5 symbol \; 291.5 21.5 symbol \; 301.5 21.5 symbol \; 311.5 21.5
+symbol \; 321.5 21.5 symbol \; 331.5 21.5 symbol \; 341.5 21.5 symbol
+\; 351.5 21.5 symbol \; 361.5 21.5 symbol \; 371.5 21.5 symbol \; 381.5
+21.5 symbol \; 391.5 21.5 symbol \; 1.5 31.5 symbol \; 11.5 31.5 symbol
+\; 21.5 31.5 symbol \; 31.5 31.5 symbol \; 41.5 31.5 symbol \; 51.5
+31.5 symbol \; 61.5 31.5 symbol \; 71.5 31.5 symbol \; 81.5 31.5 symbol
+\; 91.5 31.5 symbol \; 101.5 31.5 symbol \; 111.5 31.5 symbol \; 121.5
+31.5 symbol \; 131.5 31.5 symbol \; 141.5 31.5 symbol \; 151.5 31.5
+symbol \; 161.5 31.5 symbol \; 171.5 31.5 symbol \; 181.5 31.5 symbol
+\; 191.5 31.5 symbol \; 201.5 31.5 symbol \; 211.5 31.5 symbol \; 221.5
+31.5 symbol \; 231.5 31.5 symbol \; 241.5 31.5 symbol \; 251.5 31.5
+symbol \; 261.5 31.5 red \; 271.5 31.5 symbol \; 281.5 31.5 symbol
+\; 291.5 31.5 symbol \; 301.5 31.5 symbol \; 311.5 31.5 symbol \; 321.5
+31.5 symbol \; 331.5 31.5 symbol \; 341.5 31.5 symbol \; 351.5 31.5
+symbol \; 361.5 31.5 symbol \; 371.5 31.5 symbol \; 381.5 31.5 symbol
+\; 391.5 31.5 symbol \; 1.5 41.5 symbol \; 11.5 41.5 symbol \; 21.5
+41.5 symbol \; 31.5 41.5 symbol \; 41.5 41.5 symbol \; 51.5 41.5 symbol
+\; 61.5 41.5 symbol \; 71.5 41.5 symbol \; 81.5 41.5 symbol \; 91.5
+41.5 symbol \; 101.5 41.5 symbol \; 111.5 41.5 symbol \; 121.5 41.5
+symbol \; 131.5 41.5 symbol \; 141.5 41.5 symbol \; 151.5 41.5 symbol
+\; 161.5 41.5 symbol \; 171.5 41.5 symbol \; 181.5 41.5 symbol \; 191.5
+41.5 symbol \; 201.5 41.5 symbol \; 211.5 41.5 symbol \; 221.5 41.5
+symbol \; 231.5 41.5 symbol \; 241.5 41.5 symbol \; 251.5 41.5 symbol
+\; 261.5 41.5 symbol \; 271.5 41.5 symbol \; 281.5 41.5 symbol \; 291.5
+41.5 symbol \; 301.5 41.5 symbol \; 311.5 41.5 symbol \; 321.5 41.5
+symbol \; 331.5 41.5 symbol \; 341.5 41.5 symbol \; 351.5 41.5 symbol
+\; 361.5 41.5 symbol \; 371.5 41.5 symbol \; 381.5 41.5 symbol \; 391.5
+41.5 symbol \; 1.5 51.5 symbol \; 11.5 51.5 symbol \; 21.5 51.5 symbol
+\; 31.5 51.5 symbol \; 41.5 51.5 symbol \; 51.5 51.5 symbol \; 61.5
+51.5 symbol \; 71.5 51.5 symbol \; 81.5 51.5 symbol \; 91.5 51.5 symbol
+\; 101.5 51.5 symbol \; 111.5 51.5 symbol \; 121.5 51.5 red \; 131.5
+51.5 symbol \; 141.5 51.5 symbol \; 151.5 51.5 symbol \; 161.5 51.5
+symbol \; 171.5 51.5 symbol \; 181.5 51.5 symbol \; 191.5 51.5 symbol
+\; 201.5 51.5 symbol \; 211.5 51.5 symbol \; 221.5 51.5 symbol \; 231.5
+51.5 symbol \; 241.5 51.5 symbol \; 251.5 51.5 symbol \; 261.5 51.5
+symbol \; 271.5 51.5 symbol \; 281.5 51.5 symbol \; 291.5 51.5 symbol
+\; 301.5 51.5 symbol \; 311.5 51.5 symbol \; 321.5 51.5 symbol \; 331.5
+51.5 symbol \; 341.5 51.5 symbol \; 351.5 51.5 symbol \; 361.5 51.5
+symbol \; 371.5 51.5 symbol \; 381.5 51.5 symbol \; 391.5 51.5 symbol
+\; 1.5 61.5 symbol \; 11.5 61.5 symbol \; 21.5 61.5 symbol \; 31.5
+61.5 symbol \; 41.5 61.5 symbol \; 51.5 61.5 symbol \; 61.5 61.5 symbol
+\; 71.5 61.5 symbol \; 81.5 61.5 symbol \; 91.5 61.5 symbol \; 101.5
+61.5 symbol \; 111.5 61.5 symbol \; 121.5 61.5 symbol \; 131.5 61.5
+symbol \; 141.5 61.5 symbol \; 151.5 61.5 symbol \; 161.5 61.5 symbol
+\; 171.5 61.5 symbol \; 181.5 61.5 symbol \; 191.5 61.5 symbol \; 201.5
+61.5 symbol \; 211.5 61.5 symbol \; 221.5 61.5 symbol \; 231.5 61.5
+symbol \; 241.5 61.5 symbol \; 251.5 61.5 symbol \; 261.5 61.5 symbol
+\; 271.5 61.5 symbol \; 281.5 61.5 symbol \; 291.5 61.5 symbol \; 301.5
+61.5 symbol \; 311.5 61.5 symbol \; 321.5 61.5 symbol \; 331.5 61.5
+symbol \; 341.5 61.5 symbol \; 351.5 61.5 symbol \; 361.5 61.5 symbol
+\; 371.5 61.5 symbol \; 381.5 61.5 symbol \; 391.5 61.5 symbol \; 1.5
+71.5 symbol \; 11.5 71.5 symbol \; 21.5 71.5 symbol \; 31.5 71.5 symbol
+\; 41.5 71.5 symbol \; 51.5 71.5 symbol \; 61.5 71.5 symbol \; 71.5
+71.5 symbol \; 81.5 71.5 symbol \; 91.5 71.5 symbol \; 101.5 71.5 symbol
+\; 111.5 71.5 symbol \; 121.5 71.5 symbol \; 131.5 71.5 symbol \; 141.5
+71.5 symbol \; 151.5 71.5 symbol \; 161.5 71.5 symbol \; 171.5 71.5
+symbol \; 181.5 71.5 symbol \; 191.5 71.5 symbol \; 201.5 71.5 symbol
+\; 211.5 71.5 symbol \; 221.5 71.5 symbol \; 231.5 71.5 symbol \; 241.5
+71.5 symbol \; 251.5 71.5 symbol \; 261.5 71.5 symbol \; 271.5 71.5
+symbol \; 281.5 71.5 symbol \; 291.5 71.5 symbol \; 301.5 71.5 symbol
+\; 311.5 71.5 symbol \; 321.5 71.5 symbol \; 331.5 71.5 symbol \; 341.5
+71.5 symbol \; 351.5 71.5 symbol \; 361.5 71.5 symbol \; 371.5 71.5
+symbol \; 381.5 71.5 symbol \; 391.5 71.5 symbol \; 1.5 81.5 symbol
+\; 11.5 81.5 symbol \; 21.5 81.5 symbol \; 31.5 81.5 symbol \; 41.5
+81.5 symbol \; 51.5 81.5 symbol \; 61.5 81.5 symbol \; 71.5 81.5 symbol
+\; 81.5 81.5 symbol \; 91.5 81.5 symbol \; 101.5 81.5 symbol \; 111.5
+81.5 symbol \; 121.5 81.5 symbol \; 131.5 81.5 symbol \; 141.5 81.5
+symbol \; 151.5 81.5 symbol \; 161.5 81.5 symbol \; 171.5 81.5 symbol
+\; 181.5 81.5 symbol \; 191.5 81.5 symbol \; 201.5 81.5 symbol \; 211.5
+81.5 symbol \; 221.5 81.5 symbol \; 231.5 81.5 symbol \; 241.5 81.5
+symbol \; 251.5 81.5 symbol \; 261.5 81.5 symbol \; 271.5 81.5 symbol
+\; 281.5 81.5 symbol \; 291.5 81.5 symbol \; 301.5 81.5 symbol \; 311.5
+81.5 symbol \; 321.5 81.5 symbol \; 331.5 81.5 symbol \; 341.5 81.5
+symbol \; 351.5 81.5 symbol \; 361.5 81.5 symbol \; 371.5 81.5 symbol
+\; 381.5 81.5 symbol \; 391.5 81.5 symbol \; 1.5 91.5 symbol \; 11.5
+91.5 symbol \; 21.5 91.5 symbol \; 31.5 91.5 symbol \; 41.5 91.5 symbol
+\; 51.5 91.5 symbol \; 61.5 91.5 symbol \; 71.5 91.5 symbol \; 81.5
+91.5 symbol \; 91.5 91.5 symbol \; 101.5 91.5 symbol \; 111.5 91.5
+symbol \; 121.5 91.5 symbol \; 131.5 91.5 symbol \; 141.5 91.5 symbol
+\; 151.5 91.5 symbol \; 161.5 91.5 symbol \; 171.5 91.5 symbol \; 181.5
+91.5 symbol \; 191.5 91.5 symbol \; 201.5 91.5 symbol \; 211.5 91.5
+symbol \; 221.5 91.5 symbol \; 231.5 91.5 symbol \; 241.5 91.5 symbol
+\; 251.5 91.5 symbol \; 261.5 91.5 symbol \; 271.5 91.5 symbol \; 281.5
+91.5 symbol \; 291.5 91.5 symbol \; 301.5 91.5 symbol \; 311.5 91.5
+symbol \; 321.5 91.5 symbol \; 331.5 91.5 symbol \; 341.5 91.5 symbol
+\; 351.5 91.5 symbol \; 361.5 91.5 symbol \; 371.5 91.5 symbol \; 381.5
+91.5 symbol \; 391.5 91.5 symbol \; 1.5 101.5 symbol \; 11.5 101.5
+symbol \; 21.5 101.5 symbol \; 31.5 101.5 symbol \; 41.5 101.5 symbol
+\; 51.5 101.5 symbol \; 61.5 101.5 symbol \; 71.5 101.5 symbol \; 81.5
+101.5 symbol \; 91.5 101.5 symbol \; 101.5 101.5 symbol \; 111.5 101.5
+symbol \; 121.5 101.5 symbol \; 131.5 101.5 symbol \; 141.5 101.5 symbol
+\; 151.5 101.5 symbol \; 161.5 101.5 symbol \; 171.5 101.5 symbol \;
+181.5 101.5 symbol \; 191.5 101.5 symbol \; 201.5 101.5 symbol \; 211.5
+101.5 symbol \; 221.5 101.5 symbol \; 231.5 101.5 symbol \; 241.5 101.5
+symbol \; 251.5 101.5 symbol \; 261.5 101.5 symbol \; 271.5 101.5 symbol
+\; 281.5 101.5 symbol \; 291.5 101.5 symbol \; 301.5 101.5 symbol \;
+311.5 101.5 symbol \; 321.5 101.5 green \; 331.5 101.5 symbol \; 341.5
+101.5 symbol \; 351.5 101.5 symbol \; 361.5 101.5 symbol \; 371.5 101.5
+symbol \; 381.5 101.5 symbol \; 391.5 101.5 symbol \; 1.5 111.5 symbol
+\; 11.5 111.5 symbol \; 21.5 111.5 symbol \; 31.5 111.5 symbol \; 41.5
+111.5 symbol \; 51.5 111.5 symbol \; 61.5 111.5 symbol \; 71.5 111.5
+symbol \; 81.5 111.5 symbol \; 91.5 111.5 symbol \; 101.5 111.5 symbol
+\; 111.5 111.5 symbol \; 121.5 111.5 symbol \; 131.5 111.5 symbol \;
+141.5 111.5 symbol \; 151.5 111.5 symbol \; 161.5 111.5 symbol \; 171.5
+111.5 symbol \; 181.5 111.5 symbol \; 191.5 111.5 symbol \; 201.5 111.5
+red \; 211.5 111.5 red \; 221.5 111.5 symbol \; 231.5 111.5 symbol
+\; 241.5 111.5 symbol \; 251.5 111.5 symbol \; 261.5 111.5 symbol \;
+271.5 111.5 symbol \; 281.5 111.5 symbol \; 291.5 111.5 symbol \; 301.5
+111.5 symbol \; 311.5 111.5 symbol \; 321.5 111.5 symbol \; 331.5 111.5
+symbol \; 341.5 111.5 symbol \; 351.5 111.5 symbol \; 361.5 111.5 symbol
+\; 371.5 111.5 symbol \; 381.5 111.5 symbol \; 391.5 111.5 symbol \;
+1.5 121.5 symbol \; 11.5 121.5 symbol \; 21.5 121.5 symbol \; 31.5
+121.5 symbol \; 41.5 121.5 symbol \; 51.5 121.5 symbol \; 61.5 121.5
+symbol \; 71.5 121.5 symbol \; 81.5 121.5 symbol \; 91.5 121.5 symbol
+\; 101.5 121.5 symbol \; 111.5 121.5 symbol \; 121.5 121.5 symbol \;
+131.5 121.5 symbol \; 141.5 121.5 symbol \; 151.5 121.5 symbol \; 161.5
+121.5 symbol \; 171.5 121.5 symbol \; 181.5 121.5 symbol \; 191.5 121.5
+symbol \; 201.5 121.5 symbol \; 211.5 121.5 symbol \; 221.5 121.5 symbol
+\; 231.5 121.5 symbol \; 241.5 121.5 symbol \; 251.5 121.5 symbol \;
+261.5 121.5 symbol \; 271.5 121.5 symbol \; 281.5 121.5 symbol \; 291.5
+121.5 symbol \; 301.5 121.5 symbol \; 311.5 121.5 symbol \; 321.5 121.5
+symbol \; 331.5 121.5 symbol \; 341.5 121.5 symbol \; 351.5 121.5 symbol
+\; 361.5 121.5 symbol \; 371.5 121.5 symbol \; 381.5 121.5 symbol \;
+391.5 121.5 symbol \; 1.5 131.5 symbol \; 11.5 131.5 symbol \; 21.5
+131.5 symbol \; 31.5 131.5 symbol \; 41.5 131.5 symbol \; 51.5 131.5
+symbol \; 61.5 131.5 symbol \; 71.5 131.5 symbol \; 81.5 131.5 symbol
+\; 91.5 131.5 symbol \; 101.5 131.5 symbol \; 111.5 131.5 symbol \;
+121.5 131.5 symbol \; 131.5 131.5 symbol \; 141.5 131.5 symbol \; 151.5
+131.5 symbol \; 161.5 131.5 symbol \; 171.5 131.5 symbol \; 181.5 131.5
+symbol \; 191.5 131.5 symbol \; 201.5 131.5 symbol \; 211.5 131.5 symbol
+\; 221.5 131.5 symbol \; 231.5 131.5 symbol \; 241.5 131.5 symbol \;
+251.5 131.5 symbol \; 261.5 131.5 symbol \; 271.5 131.5 symbol \; 281.5
+131.5 symbol \; 291.5 131.5 symbol \; 301.5 131.5 symbol \; 311.5 131.5
+symbol \; 321.5 131.5 symbol \; 331.5 131.5 symbol \; 341.5 131.5 symbol
+\; 351.5 131.5 symbol \; 361.5 131.5 symbol \; 371.5 131.5 symbol \;
+381.5 131.5 symbol \; 391.5 131.5 symbol \; 1.5 141.5 symbol \; 11.5
+141.5 symbol \; 21.5 141.5 symbol \; 31.5 141.5 symbol \; 41.5 141.5
+symbol \; 51.5 141.5 symbol \; 61.5 141.5 symbol \; 71.5 141.5 symbol
+\; 81.5 141.5 symbol \; 91.5 141.5 symbol \; 101.5 141.5 symbol \;
+111.5 141.5 symbol \; 121.5 141.5 symbol \; 131.5 141.5 symbol \; 141.5
+141.5 symbol \; 151.5 141.5 symbol \; 161.5 141.5 symbol \; 171.5 141.5
+symbol \; 181.5 141.5 symbol \; 191.5 141.5 symbol \; 201.5 141.5 symbol
+\; 211.5 141.5 symbol \; 221.5 141.5 symbol \; 231.5 141.5 symbol \;
+241.5 141.5 symbol \; 251.5 141.5 symbol \; 261.5 141.5 symbol \; 271.5
+141.5 symbol \; 281.5 141.5 symbol \; 291.5 141.5 symbol \; 301.5 141.5
+symbol \; 311.5 141.5 symbol \; 321.5 141.5 symbol \; 331.5 141.5 symbol
+\; 341.5 141.5 symbol \; 351.5 141.5 symbol \; 361.5 141.5 symbol \;
+371.5 141.5 symbol \; 381.5 141.5 symbol \; 391.5 141.5 symbol \; 1.5
+151.5 symbol \; 11.5 151.5 symbol \; 21.5 151.5 symbol \; 31.5 151.5
+symbol \; 41.5 151.5 symbol \; 51.5 151.5 symbol \; 61.5 151.5 symbol
+\; 71.5 151.5 symbol \; 81.5 151.5 symbol \; 91.5 151.5 symbol \; 101.5
+151.5 symbol \; 111.5 151.5 symbol \; 121.5 151.5 symbol \; 131.5 151.5
+symbol \; 141.5 151.5 symbol \; 151.5 151.5 symbol \; 161.5 151.5 symbol
+\; 171.5 151.5 symbol \; 181.5 151.5 symbol \; 191.5 151.5 symbol \;
+201.5 151.5 symbol \; 211.5 151.5 symbol \; 221.5 151.5 symbol \; 231.5
+151.5 symbol \; 241.5 151.5 symbol \; 251.5 151.5 symbol \; 261.5 151.5
+symbol \; 271.5 151.5 symbol \; 281.5 151.5 symbol \; 291.5 151.5 symbol
+\; 301.5 151.5 symbol \; 311.5 151.5 symbol \; 321.5 151.5 symbol \;
+331.5 151.5 symbol \; 341.5 151.5 symbol \; 351.5 151.5 symbol \; 361.5
+151.5 symbol \; 371.5 151.5 symbol \; 381.5 151.5 symbol \; 391.5 151.5
+symbol \; 1.5 161.5 symbol \; 11.5 161.5 symbol \; 21.5 161.5 symbol
+\; 31.5 161.5 symbol \; 41.5 161.5 symbol \; 51.5 161.5 symbol \; 61.5
+161.5 symbol \; 71.5 161.5 symbol \; 81.5 161.5 symbol \; 91.5 161.5
+symbol \; 101.5 161.5 symbol \; 111.5 161.5 symbol \; 121.5 161.5 symbol
+\; 131.5 161.5 symbol \; 141.5 161.5 symbol \; 151.5 161.5 symbol \;
+161.5 161.5 symbol \; 171.5 161.5 symbol \; 181.5 161.5 symbol \; 191.5
+161.5 symbol \; 201.5 161.5 symbol \; 211.5 161.5 symbol \; 221.5 161.5
+symbol \; 231.5 161.5 symbol \; 241.5 161.5 symbol \; 251.5 161.5 symbol
+\; 261.5 161.5 symbol \; 271.5 161.5 symbol \; 281.5 161.5 symbol \;
+291.5 161.5 symbol \; 301.5 161.5 symbol \; 311.5 161.5 symbol \; 321.5
+161.5 symbol \; 331.5 161.5 symbol \; 341.5 161.5 symbol \; 351.5 161.5
+symbol \; 361.5 161.5 symbol \; 371.5 161.5 symbol \; 381.5 161.5 symbol
+\; 391.5 161.5 symbol \; 1.5 171.5 symbol \; 11.5 171.5 symbol \; 21.5
+171.5 symbol \; 31.5 171.5 symbol \; 41.5 171.5 symbol \; 51.5 171.5
+symbol \; 61.5 171.5 symbol \; 71.5 171.5 symbol \; 81.5 171.5 symbol
+\; 91.5 171.5 symbol \; 101.5 171.5 symbol \; 111.5 171.5 symbol \;
+121.5 171.5 symbol \; 131.5 171.5 symbol \; 141.5 171.5 symbol \; 151.5
+171.5 symbol \; 161.5 171.5 symbol \; 171.5 171.5 symbol \; 181.5 171.5
+symbol \; 191.5 171.5 symbol \; 201.5 171.5 symbol \; 211.5 171.5 symbol
+\; 221.5 171.5 symbol \; 231.5 171.5 symbol \; 241.5 171.5 symbol \;
+251.5 171.5 symbol \; 261.5 171.5 symbol \; 271.5 171.5 symbol \; 281.5
+171.5 symbol \; 291.5 171.5 symbol \; 301.5 171.5 symbol \; 311.5 171.5
+symbol \; 321.5 171.5 symbol \; 331.5 171.5 symbol \; 341.5 171.5 symbol
+\; 351.5 171.5 symbol \; 361.5 171.5 symbol \; 371.5 171.5 symbol \;
+381.5 171.5 symbol \; 391.5 171.5 symbol \; 1.5 181.5 symbol \; 11.5
+181.5 symbol \; 21.5 181.5 symbol \; 31.5 181.5 symbol \; 41.5 181.5
+symbol \; 51.5 181.5 symbol \; 61.5 181.5 symbol \; 71.5 181.5 symbol
+\; 81.5 181.5 symbol \; 91.5 181.5 symbol \; 101.5 181.5 symbol \;
+111.5 181.5 symbol \; 121.5 181.5 symbol \; 131.5 181.5 symbol \; 141.5
+181.5 symbol \; 151.5 181.5 symbol \; 161.5 181.5 symbol \; 171.5 181.5
+symbol \; 181.5 181.5 symbol \; 191.5 181.5 symbol \; 201.5 181.5 symbol
+\; 211.5 181.5 symbol \; 221.5 181.5 symbol \; 231.5 181.5 symbol \;
+241.5 181.5 symbol \; 251.5 181.5 symbol \; 261.5 181.5 symbol \; 271.5
+181.5 symbol \; 281.5 181.5 symbol \; 291.5 181.5 symbol \; 301.5 181.5
+symbol \; 311.5 181.5 symbol \; 321.5 181.5 symbol \; 331.5 181.5 symbol
+\; 341.5 181.5 symbol \; 351.5 181.5 symbol \; 361.5 181.5 symbol \;
+371.5 181.5 symbol \; 381.5 181.5 symbol \; 391.5 181.5 symbol \; 1.5
+191.5 symbol \; 11.5 191.5 symbol \; 21.5 191.5 symbol \; 31.5 191.5
+symbol \; 41.5 191.5 symbol \; 51.5 191.5 symbol \; 61.5 191.5 symbol
+\; 71.5 191.5 symbol \; 81.5 191.5 green \; 91.5 191.5 symbol \; 101.5
+191.5 symbol \; 111.5 191.5 symbol \; 121.5 191.5 symbol \; 131.5 191.5
+symbol \; 141.5 191.5 symbol \; 151.5 191.5 symbol \; 161.5 191.5 symbol
+\; 171.5 191.5 symbol \; 181.5 191.5 symbol \; 191.5 191.5 symbol \;
+201.5 191.5 symbol \; 211.5 191.5 symbol \; 221.5 191.5 symbol \; 231.5
+191.5 symbol \; 241.5 191.5 symbol \; 251.5 191.5 symbol \; 261.5 191.5
+symbol \; 271.5 191.5 symbol \; 281.5 191.5 symbol \; 291.5 191.5 symbol
+\; 301.5 191.5 symbol \; 311.5 191.5 symbol \; 321.5 191.5 symbol \;
+331.5 191.5 symbol \; 341.5 191.5 symbol \; 351.5 191.5 symbol \; 361.5
+191.5 symbol \; 371.5 191.5 symbol \; 381.5 191.5 symbol \; 391.5 191.5
+symbol \; 1.5 201.5 symbol \; 11.5 201.5 symbol \; 21.5 201.5 symbol
+\; 31.5 201.5 symbol \; 41.5 201.5 symbol \; 51.5 201.5 symbol \; 61.5
+201.5 symbol \; 71.5 201.5 symbol \; 81.5 201.5 symbol \; 91.5 201.5
+symbol \; 101.5 201.5 symbol \; 111.5 201.5 symbol \; 121.5 201.5 symbol
+\; 131.5 201.5 symbol \; 141.5 201.5 symbol \; 151.5 201.5 symbol \;
+161.5 201.5 symbol \; 171.5 201.5 symbol \; 181.5 201.5 symbol \; 191.5
+201.5 symbol \; 201.5 201.5 symbol \; 211.5 201.5 symbol \; 221.5 201.5
+symbol \; 231.5 201.5 symbol \; 241.5 201.5 symbol \; 251.5 201.5 symbol
+\; 261.5 201.5 symbol \; 271.5 201.5 symbol \; 281.5 201.5 symbol \;
+291.5 201.5 symbol \; 301.5 201.5 symbol \; 311.5 201.5 symbol \; 321.5
+201.5 symbol \; 331.5 201.5 symbol \; 341.5 201.5 symbol \; 351.5 201.5
+symbol \; 361.5 201.5 symbol \; 371.5 201.5 symbol \; 381.5 201.5 symbol
+\; 391.5 201.5 symbol \; 1.5 211.5 symbol \; 11.5 211.5 symbol \; 21.5
+211.5 symbol \; 31.5 211.5 symbol \; 41.5 211.5 symbol \; 51.5 211.5
+symbol \; 61.5 211.5 symbol \; 71.5 211.5 symbol \; 81.5 211.5 symbol
+\; 91.5 211.5 symbol \; 101.5 211.5 symbol \; 111.5 211.5 symbol \;
+121.5 211.5 symbol \; 131.5 211.5 symbol \; 141.5 211.5 symbol \; 151.5
+211.5 symbol \; 161.5 211.5 symbol \; 171.5 211.5 symbol \; 181.5 211.5
+symbol \; 191.5 211.5 symbol \; 201.5 211.5 symbol \; 211.5 211.5 symbol
+\; 221.5 211.5 symbol \; 231.5 211.5 symbol \; 241.5 211.5 symbol \;
+251.5 211.5 symbol \; 261.5 211.5 symbol \; 271.5 211.5 symbol \; 281.5
+211.5 symbol \; 291.5 211.5 symbol \; 301.5 211.5 symbol \; 311.5 211.5
+symbol \; 321.5 211.5 symbol \; 331.5 211.5 symbol \; 341.5 211.5 symbol
+\; 351.5 211.5 symbol \; 361.5 211.5 symbol \; 371.5 211.5 symbol \;
+381.5 211.5 symbol \; 391.5 211.5 symbol \; 1.5 221.5 symbol \; 11.5
+221.5 symbol \; 21.5 221.5 symbol \; 31.5 221.5 symbol \; 41.5 221.5
+symbol \; 51.5 221.5 symbol \; 61.5 221.5 symbol \; 71.5 221.5 symbol
+\; 81.5 221.5 symbol \; 91.5 221.5 symbol \; 101.5 221.5 symbol \;
+111.5 221.5 symbol \; 121.5 221.5 symbol \; 131.5 221.5 symbol \; 141.5
+221.5 symbol \; 151.5 221.5 symbol \; 161.5 221.5 symbol \; 171.5 221.5
+symbol \; 181.5 221.5 symbol \; 191.5 221.5 symbol \; 201.5 221.5 symbol
+\; 211.5 221.5 symbol \; 221.5 221.5 symbol \; 231.5 221.5 symbol \;
+241.5 221.5 symbol \; 251.5 221.5 symbol \; 261.5 221.5 symbol \; 271.5
+221.5 symbol \; 281.5 221.5 symbol \; 291.5 221.5 symbol \; 301.5 221.5
+symbol \; 311.5 221.5 symbol \; 321.5 221.5 symbol \; 331.5 221.5 symbol
+\; 341.5 221.5 symbol \; 351.5 221.5 symbol \; 361.5 221.5 symbol \;
+371.5 221.5 symbol \; 381.5 221.5 symbol \; 391.5 221.5 symbol \; 1.5
+231.5 symbol \; 11.5 231.5 symbol \; 21.5 231.5 symbol \; 31.5 231.5
+symbol \; 41.5 231.5 symbol \; 51.5 231.5 symbol \; 61.5 231.5 symbol
+\; 71.5 231.5 symbol \; 81.5 231.5 symbol \; 91.5 231.5 symbol \; 101.5
+231.5 symbol \; 111.5 231.5 symbol \; 121.5 231.5 symbol \; 131.5 231.5
+symbol \; 141.5 231.5 symbol \; 151.5 231.5 symbol \; 161.5 231.5 symbol
+\; 171.5 231.5 symbol \; 181.5 231.5 symbol \; 191.5 231.5 symbol \;
+201.5 231.5 symbol \; 211.5 231.5 symbol \; 221.5 231.5 symbol \; 231.5
+231.5 symbol \; 241.5 231.5 symbol \; 251.5 231.5 symbol \; 261.5 231.5
+symbol \; 271.5 231.5 symbol \; 281.5 231.5 symbol \; 291.5 231.5 symbol
+\; 301.5 231.5 symbol \; 311.5 231.5 symbol \; 321.5 231.5 symbol \;
+331.5 231.5 symbol \; 341.5 231.5 symbol \; 351.5 231.5 symbol \; 361.5
+231.5 symbol \; 371.5 231.5 symbol \; 381.5 231.5 symbol \; 391.5 231.5
+symbol \; 1.5 241.5 symbol \; 11.5 241.5 symbol \; 21.5 241.5 symbol
+\; 31.5 241.5 symbol \; 41.5 241.5 symbol \; 51.5 241.5 symbol \; 61.5
+241.5 symbol \; 71.5 241.5 symbol \; 81.5 241.5 symbol \; 91.5 241.5
+symbol \; 101.5 241.5 symbol \; 111.5 241.5 symbol \; 121.5 241.5 symbol
+\; 131.5 241.5 symbol \; 141.5 241.5 symbol \; 151.5 241.5 symbol \;
+161.5 241.5 symbol \; 171.5 241.5 symbol \; 181.5 241.5 symbol \; 191.5
+241.5 symbol \; 201.5 241.5 symbol \; 211.5 241.5 symbol \; 221.5 241.5
+symbol \; 231.5 241.5 symbol \; 241.5 241.5 symbol \; 251.5 241.5 symbol
+\; 261.5 241.5 symbol \; 271.5 241.5 symbol \; 281.5 241.5 symbol \;
+291.5 241.5 symbol \; 301.5 241.5 symbol \; 311.5 241.5 symbol \; 321.5
+241.5 symbol \; 331.5 241.5 symbol \; 341.5 241.5 symbol \; 351.5 241.5
+symbol \; 361.5 241.5 symbol \; 371.5 241.5 symbol \; 381.5 241.5 symbol
+\; 391.5 241.5 symbol \; 1.5 251.5 symbol \; 11.5 251.5 symbol \; 21.5
+251.5 symbol \; 31.5 251.5 symbol \; 41.5 251.5 symbol \; 51.5 251.5
+symbol \; 61.5 251.5 symbol \; 71.5 251.5 symbol \; 81.5 251.5 symbol
+\; 91.5 251.5 symbol \; 101.5 251.5 symbol \; 111.5 251.5 symbol \;
+121.5 251.5 symbol \; 131.5 251.5 symbol \; 141.5 251.5 symbol \; 151.5
+251.5 symbol \; 161.5 251.5 symbol \; 171.5 251.5 symbol \; 181.5 251.5
+symbol \; 191.5 251.5 symbol \; 201.5 251.5 symbol \; 211.5 251.5 symbol
+\; 221.5 251.5 symbol \; 231.5 251.5 symbol \; 241.5 251.5 symbol \;
+251.5 251.5 symbol \; 261.5 251.5 symbol \; 271.5 251.5 symbol \; 281.5
+251.5 blue \; 291.5 251.5 symbol \; 301.5 251.5 symbol \; 311.5 251.5
+symbol \; 321.5 251.5 symbol \; 331.5 251.5 symbol \; 341.5 251.5 symbol
+\; 351.5 251.5 symbol \; 361.5 251.5 symbol \; 371.5 251.5 symbol \;
+381.5 251.5 symbol \; 391.5 251.5 symbol \; 1.5 261.5 symbol \; 11.5
+261.5 symbol \; 21.5 261.5 symbol \; 31.5 261.5 symbol \; 41.5 261.5
+symbol \; 51.5 261.5 symbol \; 61.5 261.5 symbol \; 71.5 261.5 symbol
+\; 81.5 261.5 symbol \; 91.5 261.5 symbol \; 101.5 261.5 symbol \;
+111.5 261.5 symbol \; 121.5 261.5 symbol \; 131.5 261.5 symbol \; 141.5
+261.5 symbol \; 151.5 261.5 symbol \; 161.5 261.5 symbol \; 171.5 261.5
+symbol \; 181.5 261.5 symbol \; 191.5 261.5 symbol \; 201.5 261.5 symbol
+\; 211.5 261.5 symbol \; 221.5 261.5 symbol \; 231.5 261.5 symbol \;
+241.5 261.5 symbol \; 251.5 261.5 symbol \; 261.5 261.5 symbol \; 271.5
+261.5 symbol \; 281.5 261.5 symbol \; 291.5 261.5 symbol \; 301.5 261.5
+symbol \; 311.5 261.5 symbol \; 321.5 261.5 symbol \; 331.5 261.5 symbol
+\; 341.5 261.5 symbol \; 351.5 261.5 symbol \; 361.5 261.5 symbol \;
+371.5 261.5 symbol \; 381.5 261.5 symbol \; 391.5 261.5 symbol \; 1.5
+271.5 symbol \; 11.5 271.5 symbol \; 21.5 271.5 symbol \; 31.5 271.5
+symbol \; 41.5 271.5 symbol \; 51.5 271.5 symbol \; 61.5 271.5 symbol
+\; 71.5 271.5 symbol \; 81.5 271.5 symbol \; 91.5 271.5 symbol \; 101.5
+271.5 symbol \; 111.5 271.5 symbol \; 121.5 271.5 green \; 131.5 271.5
+symbol \; 141.5 271.5 symbol \; 151.5 271.5 symbol \; 161.5 271.5 symbol
+\; 171.5 271.5 symbol \; 181.5 271.5 symbol \; 191.5 271.5 symbol \;
+201.5 271.5 symbol \; 211.5 271.5 symbol \; 221.5 271.5 symbol \; 231.5
+271.5 symbol \; 241.5 271.5 symbol \; 251.5 271.5 symbol \; 261.5 271.5
+symbol \; 271.5 271.5 symbol \; 281.5 271.5 symbol \; 291.5 271.5 symbol
+\; 301.5 271.5 symbol \; 311.5 271.5 symbol \; 321.5 271.5 symbol \;
+331.5 271.5 symbol \; 341.5 271.5 symbol \; 351.5 271.5 symbol \; 361.5
+271.5 symbol \; 371.5 271.5 symbol \; 381.5 271.5 symbol \; 391.5 271.5
+symbol \; 1.5 281.5 symbol \; 11.5 281.5 symbol \; 21.5 281.5 symbol
+\; 31.5 281.5 symbol \; 41.5 281.5 symbol \; 51.5 281.5 symbol \; 61.5
+281.5 symbol \; 71.5 281.5 symbol \; 81.5 281.5 symbol \; 91.5 281.5
+symbol \; 101.5 281.5 symbol \; 111.5 281.5 symbol \; 121.5 281.5 symbol
+\; 131.5 281.5 symbol \; 141.5 281.5 symbol \; 151.5 281.5 symbol \;
+161.5 281.5 symbol \; 171.5 281.5 symbol \; 181.5 281.5 symbol \; 191.5
+281.5 symbol \; 201.5 281.5 symbol \; 211.5 281.5 symbol \; 221.5 281.5
+symbol \; 231.5 281.5 symbol \; 241.5 281.5 symbol \; 251.5 281.5 symbol
+\; 261.5 281.5 symbol \; 271.5 281.5 symbol \; 281.5 281.5 symbol \;
+291.5 281.5 symbol \; 301.5 281.5 symbol \; 311.5 281.5 symbol \; 321.5
+281.5 symbol \; 331.5 281.5 symbol \; 341.5 281.5 symbol \; 351.5 281.5
+symbol \; 361.5 281.5 symbol \; 371.5 281.5 symbol \; 381.5 281.5 symbol
+\; 391.5 281.5 symbol \; 1.5 291.5 symbol \; 11.5 291.5 symbol \; 21.5
+291.5 symbol \; 31.5 291.5 symbol \; 41.5 291.5 symbol \; 51.5 291.5
+symbol \; 61.5 291.5 symbol \; 71.5 291.5 symbol \; 81.5 291.5 symbol
+\; 91.5 291.5 symbol \; 101.5 291.5 symbol \; 111.5 291.5 symbol \;
+121.5 291.5 symbol \; 131.5 291.5 symbol \; 141.5 291.5 symbol \; 151.5
+291.5 symbol \; 161.5 291.5 symbol \; 171.5 291.5 symbol \; 181.5 291.5
+symbol \; 191.5 291.5 symbol \; 201.5 291.5 symbol \; 211.5 291.5 symbol
+\; 221.5 291.5 symbol \; 231.5 291.5 symbol \; 241.5 291.5 symbol \;
+251.5 291.5 symbol \; 261.5 291.5 symbol \; 271.5 291.5 symbol \; 281.5
+291.5 symbol \; 291.5 291.5 symbol \; 301.5 291.5 symbol \; 311.5 291.5
+symbol \; 321.5 291.5 symbol \; 331.5 291.5 symbol \; 341.5 291.5 green
+\; 351.5 291.5 symbol \; 361.5 291.5 symbol \; 371.5 291.5 symbol \;
+381.5 291.5 symbol \; 391.5 291.5 symbol \; 1.5 301.5 symbol \; 11.5
+301.5 symbol \; 21.5 301.5 symbol \; 31.5 301.5 symbol \; 41.5 301.5
+symbol \; 51.5 301.5 symbol \; 61.5 301.5 symbol \; 71.5 301.5 symbol
+\; 81.5 301.5 symbol \; 91.5 301.5 symbol \; 101.5 301.5 symbol \;
+111.5 301.5 symbol \; 121.5 301.5 symbol \; 131.5 301.5 symbol \; 141.5
+301.5 symbol \; 151.5 301.5 symbol \; 161.5 301.5 symbol \; 171.5 301.5
+symbol \; 181.5 301.5 symbol \; 191.5 301.5 symbol \; 201.5 301.5 symbol
+\; 211.5 301.5 symbol \; 221.5 301.5 symbol \; 231.5 301.5 symbol \;
+241.5 301.5 symbol \; 251.5 301.5 symbol \; 261.5 301.5 symbol \; 271.5
+301.5 symbol \; 281.5 301.5 symbol \; 291.5 301.5 symbol \; 301.5 301.5
+symbol \; 311.5 301.5 symbol \; 321.5 301.5 symbol \; 331.5 301.5 symbol
+\; 341.5 301.5 symbol \; 351.5 301.5 symbol \; 361.5 301.5 symbol \;
+371.5 301.5 symbol \; 381.5 301.5 symbol \; 391.5 301.5 symbol \; 1.5
+311.5 symbol \; 11.5 311.5 symbol \; 21.5 311.5 symbol \; 31.5 311.5
+symbol \; 41.5 311.5 symbol \; 51.5 311.5 red \; 61.5 311.5 symbol
+\; 71.5 311.5 symbol \; 81.5 311.5 symbol \; 91.5 311.5 symbol \; 101.5
+311.5 symbol \; 111.5 311.5 symbol \; 121.5 311.5 symbol \; 131.5 311.5
+symbol \; 141.5 311.5 symbol \; 151.5 311.5 symbol \; 161.5 311.5 symbol
+\; 171.5 311.5 symbol \; 181.5 311.5 symbol \; 191.5 311.5 symbol \;
+201.5 311.5 symbol \; 211.5 311.5 symbol \; 221.5 311.5 symbol \; 231.5
+311.5 symbol \; 241.5 311.5 symbol \; 251.5 311.5 symbol \; 261.5 311.5
+symbol \; 271.5 311.5 symbol \; 281.5 311.5 symbol \; 291.5 311.5 symbol
+\; 301.5 311.5 symbol \; 311.5 311.5 symbol \; 321.5 311.5 symbol \;
+331.5 311.5 symbol \; 341.5 311.5 symbol \; 351.5 311.5 symbol \; 361.5
+311.5 symbol \; 371.5 311.5 symbol \; 381.5 311.5 symbol \; 391.5 311.5
+symbol \; 1.5 321.5 symbol \; 11.5 321.5 symbol \; 21.5 321.5 symbol
+\; 31.5 321.5 symbol \; 41.5 321.5 symbol \; 51.5 321.5 symbol \; 61.5
+321.5 symbol \; 71.5 321.5 symbol \; 81.5 321.5 symbol \; 91.5 321.5
+symbol \; 101.5 321.5 symbol \; 111.5 321.5 symbol \; 121.5 321.5 symbol
+\; 131.5 321.5 symbol \; 141.5 321.5 symbol \; 151.5 321.5 symbol \;
+161.5 321.5 symbol \; 171.5 321.5 symbol \; 181.5 321.5 symbol \; 191.5
+321.5 symbol \; 201.5 321.5 symbol \; 211.5 321.5 symbol \; 221.5 321.5
+symbol \; 231.5 321.5 symbol \; 241.5 321.5 symbol \; 251.5 321.5 symbol
+\; 261.5 321.5 symbol \; 271.5 321.5 symbol \; 281.5 321.5 symbol \;
+291.5 321.5 symbol \; 301.5 321.5 symbol \; 311.5 321.5 symbol \; 321.5
+321.5 symbol \; 331.5 321.5 symbol \; 341.5 321.5 symbol \; 351.5 321.5
+symbol \; 361.5 321.5 symbol \; 371.5 321.5 symbol \; 381.5 321.5 symbol
+\; 391.5 321.5 symbol \; 1.5 331.5 symbol \; 11.5 331.5 symbol \; 21.5
+331.5 symbol \; 31.5 331.5 symbol \; 41.5 331.5 symbol \; 51.5 331.5
+symbol \; 61.5 331.5 symbol \; 71.5 331.5 symbol \; 81.5 331.5 symbol
+\; 91.5 331.5 symbol \; 101.5 331.5 symbol \; 111.5 331.5 symbol \;
+121.5 331.5 symbol \; 131.5 331.5 symbol \; 141.5 331.5 symbol \; 151.5
+331.5 symbol \; 161.5 331.5 symbol \; 171.5 331.5 blue \; 181.5 331.5
+symbol \; 191.5 331.5 symbol \; 201.5 331.5 symbol \; 211.5 331.5 symbol
+\; 221.5 331.5 symbol \; 231.5 331.5 symbol \; 241.5 331.5 symbol \;
+251.5 331.5 symbol \; 261.5 331.5 symbol \; 271.5 331.5 symbol \; 281.5
+331.5 symbol \; 291.5 331.5 symbol \; 301.5 331.5 symbol \; 311.5 331.5
+symbol \; 321.5 331.5 symbol \; 331.5 331.5 symbol \; 341.5 331.5 symbol
+\; 351.5 331.5 symbol \; 361.5 331.5 symbol \; 371.5 331.5 symbol \;
+381.5 331.5 symbol \; 391.5 331.5 symbol \; 1.5 341.5 symbol \; 11.5
+341.5 symbol \; 21.5 341.5 symbol \; 31.5 341.5 symbol \; 41.5 341.5
+symbol \; 51.5 341.5 symbol \; 61.5 341.5 symbol \; 71.5 341.5 symbol
+\; 81.5 341.5 symbol \; 91.5 341.5 symbol \; 101.5 341.5 symbol \;
+111.5 341.5 symbol \; 121.5 341.5 symbol \; 131.5 341.5 symbol \; 141.5
+341.5 symbol \; 151.5 341.5 symbol \; 161.5 341.5 symbol \; 171.5 341.5
+symbol \; 181.5 341.5 symbol \; 191.5 341.5 symbol \; 201.5 341.5 symbol
+\; 211.5 341.5 symbol \; 221.5 341.5 symbol \; 231.5 341.5 symbol \;
+241.5 341.5 symbol \; 251.5 341.5 symbol \; 261.5 341.5 symbol \; 271.5
+341.5 symbol \; 281.5 341.5 symbol \; 291.5 341.5 symbol \; 301.5 341.5
+symbol \; 311.5 341.5 symbol \; 321.5 341.5 symbol \; 331.5 341.5 symbol
+\; 341.5 341.5 symbol \; 351.5 341.5 symbol \; 361.5 341.5 symbol \;
+371.5 341.5 symbol \; 381.5 341.5 symbol \; 391.5 341.5 symbol \; 1.5
+351.5 symbol \; 11.5 351.5 symbol \; 21.5 351.5 symbol \; 31.5 351.5
+symbol \; 41.5 351.5 symbol \; 51.5 351.5 green \; 61.5 351.5 symbol
+\; 71.5 351.5 symbol \; 81.5 351.5 symbol \; 91.5 351.5 symbol \; 101.5
+351.5 symbol \; 111.5 351.5 symbol \; 121.5 351.5 symbol \; 131.5 351.5
+symbol \; 141.5 351.5 symbol \; 151.5 351.5 symbol \; 161.5 351.5 symbol
+\; 171.5 351.5 symbol \; 181.5 351.5 symbol \; 191.5 351.5 symbol \;
+201.5 351.5 symbol \; 211.5 351.5 symbol \; 221.5 351.5 symbol \; 231.5
+351.5 symbol \; 241.5 351.5 symbol \; 251.5 351.5 symbol \; 261.5 351.5
+symbol \; 271.5 351.5 symbol \; 281.5 351.5 symbol \; 291.5 351.5 symbol
+\; 301.5 351.5 symbol \; 311.5 351.5 symbol \; 321.5 351.5 symbol \;
+331.5 351.5 symbol \; 341.5 351.5 symbol \; 351.5 351.5 symbol \; 361.5
+351.5 symbol \; 371.5 351.5 symbol \; 381.5 351.5 symbol \; 391.5 351.5
+symbol \; 1.5 361.5 symbol \; 11.5 361.5 symbol \; 21.5 361.5 symbol
+\; 31.5 361.5 symbol \; 41.5 361.5 symbol \; 51.5 361.5 symbol \; 61.5
+361.5 symbol \; 71.5 361.5 symbol \; 81.5 361.5 symbol \; 91.5 361.5
+symbol \; 101.5 361.5 symbol \; 111.5 361.5 symbol \; 121.5 361.5 symbol
+\; 131.5 361.5 symbol \; 141.5 361.5 symbol \; 151.5 361.5 symbol \;
+161.5 361.5 symbol \; 171.5 361.5 symbol \; 181.5 361.5 symbol \; 191.5
+361.5 symbol \; 201.5 361.5 symbol \; 211.5 361.5 symbol \; 221.5 361.5
+symbol \; 231.5 361.5 symbol \; 241.5 361.5 symbol \; 251.5 361.5 symbol
+\; 261.5 361.5 symbol \; 271.5 361.5 symbol \; 281.5 361.5 symbol \;
+291.5 361.5 symbol \; 301.5 361.5 symbol \; 311.5 361.5 symbol \; 321.5
+361.5 symbol \; 331.5 361.5 symbol \; 341.5 361.5 symbol \; 351.5 361.5
+symbol \; 361.5 361.5 symbol \; 371.5 361.5 symbol \; 381.5 361.5 symbol
+\; 391.5 361.5 symbol \; 1.5 371.5 symbol \; 11.5 371.5 symbol \; 21.5
+371.5 symbol \; 31.5 371.5 symbol \; 41.5 371.5 symbol \; 51.5 371.5
+symbol \; 61.5 371.5 symbol \; 71.5 371.5 symbol \; 81.5 371.5 symbol
+\; 91.5 371.5 symbol \; 101.5 371.5 symbol \; 111.5 371.5 symbol \;
+121.5 371.5 symbol \; 131.5 371.5 symbol \; 141.5 371.5 symbol \; 151.5
+371.5 symbol \; 161.5 371.5 symbol \; 171.5 371.5 symbol \; 181.5 371.5
+symbol \; 191.5 371.5 symbol \; 201.5 371.5 symbol \; 211.5 371.5 symbol
+\; 221.5 371.5 symbol \; 231.5 371.5 symbol \; 241.5 371.5 symbol \;
+251.5 371.5 symbol \; 261.5 371.5 symbol \; 271.5 371.5 symbol \; 281.5
+371.5 symbol \; 291.5 371.5 symbol \; 301.5 371.5 symbol \; 311.5 371.5
+symbol \; 321.5 371.5 symbol \; 331.5 371.5 symbol \; 341.5 371.5 symbol
+\; 351.5 371.5 symbol \; 361.5 371.5 symbol \; 371.5 371.5 symbol \;
+381.5 371.5 symbol \; 391.5 371.5 symbol \; 1.5 381.5 symbol \; 11.5
+381.5 symbol \; 21.5 381.5 symbol \; 31.5 381.5 symbol \; 41.5 381.5
+symbol \; 51.5 381.5 symbol \; 61.5 381.5 symbol \; 71.5 381.5 symbol
+\; 81.5 381.5 symbol \; 91.5 381.5 symbol \; 101.5 381.5 symbol \;
+111.5 381.5 symbol \; 121.5 381.5 symbol \; 131.5 381.5 symbol \; 141.5
+381.5 symbol \; 151.5 381.5 symbol \; 161.5 381.5 symbol \; 171.5 381.5
+symbol \; 181.5 381.5 symbol \; 191.5 381.5 symbol \; 201.5 381.5 symbol
+\; 211.5 381.5 symbol \; 221.5 381.5 symbol \; 231.5 381.5 symbol \;
+241.5 381.5 symbol \; 251.5 381.5 symbol \; 261.5 381.5 symbol \; 271.5
+381.5 symbol \; 281.5 381.5 symbol \; 291.5 381.5 symbol \; 301.5 381.5
+symbol \; 311.5 381.5 symbol \; 321.5 381.5 symbol \; 331.5 381.5 symbol
+\; 341.5 381.5 symbol \; 351.5 381.5 symbol \; 361.5 381.5 symbol \;
+371.5 381.5 symbol \; 381.5 381.5 symbol \; 391.5 381.5 symbol \; 1.5
+391.5 symbol \; 11.5 391.5 symbol \; 21.5 391.5 symbol \; 31.5 391.5
+symbol \; 41.5 391.5 symbol \; 51.5 391.5 symbol \; 61.5 391.5 symbol
+\; 71.5 391.5 symbol \; 81.5 391.5 symbol \; 91.5 391.5 symbol \; 101.5
+391.5 symbol \; 111.5 391.5 symbol \; 121.5 391.5 symbol \; 131.5 391.5
+symbol \; 141.5 391.5 symbol \; 151.5 391.5 symbol \; 161.5 391.5 symbol
+\; 171.5 391.5 symbol \; 181.5 391.5 symbol \; 191.5 391.5 symbol \;
+201.5 391.5 symbol \; 211.5 391.5 symbol \; 221.5 391.5 symbol \; 231.5
+391.5 symbol \; 241.5 391.5 symbol \; 251.5 391.5 symbol \; 261.5 391.5
+symbol \; 271.5 391.5 symbol \; 281.5 391.5 symbol \; 291.5 391.5 symbol
+\; 301.5 391.5 symbol \; 311.5 391.5 symbol \; 321.5 391.5 symbol \;
+331.5 391.5 symbol \; 341.5 391.5 symbol \; 351.5 391.5 symbol \; 361.5
+391.5 symbol \; 371.5 391.5 symbol \; 381.5 391.5 symbol \; 391.5 391.5
+symbol \; \;;
+#X obj 486 321 expr $f1 % 40 * 10 + 1.5 \; int($f1 / 40) * 10 + 1.5
+;
+#X text 40 41 Click the scalar below to change the color of an array
+element.;
+#X text 460 49 todo: get rid of namecanvas \, use canvasinfo to do
+traversing automatically \, rename structs to be "good"-- i.e. \, dollarsign
+zero prefixed;
+#X connect 3 0 4 0;
+#X connect 4 0 7 1;
+#X connect 4 0 8 1;
+#X connect 5 0 6 0;
+#X connect 6 0 9 0;
+#X connect 6 1 7 0;
+#X connect 8 0 14 2;
+#X connect 9 0 10 0;
+#X connect 9 1 11 1;
+#X connect 10 0 11 0;
+#X connect 11 0 12 0;
+#X connect 11 0 13 0;
+#X connect 12 0 11 1;
+#X connect 13 0 16 0;
+#X connect 13 1 8 0;
+#X connect 16 0 14 0;
+#X connect 16 1 14 1;

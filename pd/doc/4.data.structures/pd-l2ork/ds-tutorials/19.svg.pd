@@ -1,0 +1,66 @@
+#N struct drawtut-svg float x float y;
+#N canvas 1 53 537 618 10;
+#N canvas 290 275 450 300 META 0;
+#X text 16 6 KEYWORDS tutorial data_structure draw;
+#X text 16 26 LICENSE SIBSD;
+#X text 16 66 AUTHOR Jonathan Wilkes;
+#X text 16 86 HELP_PATCH_AUTHORS Jonathan Wilkes;
+#X text 16 46 DESCRIPTION getting a viewBox with the [draw] command
+;
+#X restore 470 584 pd META;
+#X text 0 1 New Drawing Commands: nested svg;
+#X text 1 1 ________________________________;
+#X obj 51 30 struct drawtut-svg float x float y;
+#X text 49 59 You can specify a container with a viewport using [draw
+svg]. Like [draw g] \, it is a container for other shapes \, but it
+also has a viewport outside which the graphics are clipped.;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X obj 107 66 draw circle 30 45 45;
+#X obj 107 22 inlet;
+#X msg 107 44 cx \$1;
+#X connect 1 0 2 0;
+#X connect 2 0 0 0;
+#X restore 49 344 draw svg;
+#X obj 124 223 loadbang;
+#X msg 124 245 width 350 \, height 100;
+#X scalar drawtut-svg 50 381 \;;
+#X obj 49 124 tgl 26 0 empty empty click\ to\ animate 31 5 0 10 -73190
+-1 -1 0 1;
+#X obj 49 201 f;
+#X obj 49 223 / 360;
+#X obj 49 245 * 6.28319;
+#X obj 49 267 sin;
+#X obj 49 289 * 200;
+#X floatatom 94 153 5 0 0 0 - - -, f 5;
+#X obj 49 311 + 200;
+#X obj 85 201 + 3;
+#X text 142 304 You can also change the origin and scaling factors
+using the "viewBox" message \, which can be used for panning. See the
+help file for [draw svg] for more details about that.;
+#X obj 49 179 metro 75;
+#X msg 141 275 viewBox 0 0 175 50;
+#X text 267 244 width and height of the viewport;
+#X obj 49 542 loadbang;
+#X obj 49 586 draw rect 350 100;
+#X msg 49 564 stroke-width 2 \, stroke-dasharray 4 6 \, stroke black
+\, fill none, f 61;
+#X text 106 541 dotted border to elucidate the size of the viewport
+;
+#X text 49 489 Unfortunately \, the clipped drawing is still used to
+calculate the size of the canvas for displaying the scrollbars.;
+#X connect 6 0 7 0;
+#X connect 7 0 5 1;
+#X connect 9 0 19 0;
+#X connect 10 0 11 0;
+#X connect 10 0 17 0;
+#X connect 11 0 12 0;
+#X connect 12 0 13 0;
+#X connect 13 0 14 0;
+#X connect 14 0 16 0;
+#X connect 15 0 19 1;
+#X connect 16 0 5 0;
+#X connect 17 0 10 1;
+#X connect 19 0 10 0;
+#X connect 20 0 5 1;
+#X connect 22 0 24 0;
+#X connect 24 0 23 0;
