@@ -693,6 +693,10 @@ function register_window_id(gfxstub, attr_objects) {
     }
         init_arrays(pd_garray_attrs);
 
+    // Disabling the menus does not yet work, so we hide that button for
+    // the moment
+    document.getElementsByClassName("no_menu")[0].style.setProperty("display",
+        "none");
     // We don't turn on rendering of the "container" div until
     // We've finished displaying all the spans and populating the
     // labels and form elements.  That makes it snappier, at least
