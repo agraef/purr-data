@@ -785,12 +785,10 @@ static void scalar_group_configure(t_scalar *x, t_glist *owner,
 {
     t_gobj *y;
     char tagbuf[MAXPDSTRING];
-    sprintf(tagbuf, "draw%lx.%lx", (long unsigned int)gl,
+    sprintf(tagbuf, "dgroup%lx.%lx", (long unsigned int)gl,
         (long unsigned int)data);
     char parentbuf[MAXPDSTRING];
-    /* check if we're in an array-- really need to see if we can just
-       get rid of the different tag names for arrays... */
-    sprintf(parentbuf, "draw%lx.%lx",
+    sprintf(parentbuf, "dgroup%lx.%lx",
         (long unsigned int)parent,
         (long unsigned int)data);
     gui_start_vmess("gui_draw_configure_all", "xs",
