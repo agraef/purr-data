@@ -2161,9 +2161,8 @@ void svg_register_events(t_gobj *z, t_canvas *c, t_scalar *sc,
         sprintf(tagbuf, "draw%lx.%lx", (long unsigned int)z,
             (long unsigned int)data);
     }
-    else
+    else /* legacy drawing commands: curve, drawnumber, etc. */
     {
-        error("scalar: can't set event for unknown drawing command");
         return;
     }
     if (svg->x_events.e_mouseover.a_flag)
