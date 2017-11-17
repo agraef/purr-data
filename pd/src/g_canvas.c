@@ -745,12 +745,12 @@ void canvas_scalar_event(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 void canvas_show_scrollbars(t_canvas *x, t_floatarg f)
 {
     x->gl_noscroll = (int)f;
-    gui_vmess("gui_canvas_set_scrollbars", "xi", x, (int)f);
+    if (x->gl_mapped)
+        gui_vmess("gui_canvas_set_scrollbars", "xi", x, (int)f);
 }
 
 void canvas_show_menu(t_canvas *x, t_floatarg f)
 {
-post("setting nomenu to %d", f);
     x->gl_nomenu = (int)f;
 }
 

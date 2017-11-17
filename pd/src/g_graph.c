@@ -311,11 +311,11 @@ void glist_grab(t_glist *x, t_gobj *y, t_glistmotionfn motionfn,
 t_canvas *glist_getcanvas(t_glist *x)
 {
     //fprintf(stderr,"glist_getcanvas\n");
-    while (x->gl_owner && !x->gl_havewindow && x->gl_isgraph &&
-        gobj_shouldvis(&x->gl_gobj, x->gl_owner))
+    while (x->gl_owner && !x->gl_havewindow && x->gl_isgraph)
     {
-            //fprintf(stderr,"x=%lx x->gl_owner=%d x->gl_havewindow=%d x->gl_isgraph=%d gobj_shouldvis=%d\n", 
-            //    x, (x->gl_owner ? 1:0), x->gl_havewindow, x->gl_isgraph, 
+            //fprintf(stderr,"x=%lx x->gl_owner=%d x->gl_havewindow=%d "
+            //               "x->gl_isgraph=%d gobj_shouldvis=%d\n", 
+            //    x, (x->gl_owner ? 1:0), x->gl_havewindow, x->gl_isgraph,
             //    gobj_shouldvis(&x->gl_gobj, x->gl_owner));
             x = x->gl_owner;
             //fprintf(stderr,"+\n");
@@ -1244,7 +1244,6 @@ static void graph_getrect(t_gobj *z, t_glist *glist,
         int hadwindow;
         t_gobj *g;
         int x21, y21, x22, y22;
-
         graph_graphrect(z, glist, &x1, &y1, &x2, &y2);
         //fprintf(stderr,"%d %d %d %d\n", x1, y1, x2, y2);
 
@@ -1435,7 +1434,7 @@ static void graph_select(t_gobj *z, t_glist *glist, int state)
         }
         if (glist_isvisible(glist) &&
                 (glist_istoplevel(glist) ||
-                 gobj_shouldvis(x, glist)))
+                 gobj_shouldvis(z, glist)))
         {
             if (state)
                 gui_vmess("gui_gobj_select", "xs",
