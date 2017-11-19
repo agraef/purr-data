@@ -231,19 +231,15 @@ void iemgui_receive(t_iemgui *x, t_symbol *s)
 
 void iemgui_label(t_iemgui *x, t_symbol *s)
 {
+    t_symbol *old;
     if (s == &s_) s = s_empty; //tb: fix for empty label
+    old = x->x_lab;
     t_symbol *lab = iemgui_raute2dollar(s);
     x->x_lab_unexpanded = lab;
     x->x_lab = lab = canvas_realizedollar(x->x_glist, lab);
 
-    if(glist_isvisible(x->x_glist))
-    {
-        gui_vmess("gui_iemgui_label_set", "xxs",
-            glist_getcanvas(x->x_glist),
-            x,
-            s != s_empty ? x->x_lab->s_name : "");
+    if (glist_isvisible(x->x_glist) && lab != old)
         iemgui_shouldvis(x, IEM_GUI_DRAW_MODE_CONFIG);
-    }
 }
 
 void iemgui_label_pos(t_iemgui *x, t_symbol *s, int ac, t_atom *av)

@@ -220,6 +220,13 @@ int gobj_shouldvis(t_gobj *x, struct _glist *glist)
     //fprintf(stderr,"shouldvis %d %d %d %d\n",
     //    glist->gl_havewindow, glist->gl_isgraph,
     //    glist->gl_goprect, glist->gl_owner != NULL);
+        /* if our parent is a graph, and if that graph itself isn't
+        visible, then we aren't either. */
+    if (!glist->gl_havewindow && glist->gl_isgraph && glist->gl_owner
+        && !gobj_shouldvis(&glist->gl_gobj, glist->gl_owner))
+            return (0);
+        /* if we're graphing-on-parent and the object falls outside the
+        graph rectangle, don't draw it. */
     if (!glist->gl_havewindow && glist->gl_isgraph && glist->gl_goprect &&
         glist->gl_owner && (pd_class(&x->g_pd) != scalar_class) &&
         (pd_class(&x->g_pd) != garray_class))
@@ -2880,7 +2887,7 @@ static void canvas_donecanvasdialog(t_glist *x,
     {
         glist_noselect(x);
         gobj_vis(&x->gl_gobj, x->gl_owner, 0);
-        if (gobj_shouldvis(&x->gl_obj, x->gl_owner))
+        if (gobj_shouldvis(&x->gl_gobj, x->gl_owner))
         {
             gobj_vis(&x->gl_gobj, x->gl_owner, 1);
             //fprintf(stderr,"yes\n");
