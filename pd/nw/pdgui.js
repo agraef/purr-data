@@ -4039,23 +4039,31 @@ function gui_grid_point(cid, tag, x, y) {
 
 // mknob from moonlib
 function gui_mknob_new(cid, tag, x, y, is_toplevel, show_in, show_out) {
-    var g = gui_gobj_new(cid, tag, "obj", x, y, is_toplevel),
+    var g, border, circle, line;
+    if (!patchwin[cid]) {
+        return;
+    }
+    g = gui_gobj_new(cid, tag, "obj", x, y, is_toplevel),
         border = create_item(cid, "path", {
             class: "border" // now we can inherit the css border styles
-        }),
-        circle = create_item(cid, "circle", {
-            class: "circle"
-        }),
-        line = create_item(cid, "line", {
-            class: "dial"
-        });
+    });
+    circle = create_item(cid, "circle", {
+       class: "circle"
+    });
+    line = create_item(cid, "line", {
+        class: "dial"
+    });
     g.appendChild(border);
     g.appendChild(circle);
     g.appendChild(line);
 }
 
 function gui_configure_mknob(cid, tag, size, bg_color, fg_color) {
-    var g = get_gobj(cid, tag);
+    var g;
+    if (!patchwin[cid]) {
+        return;
+    }
+    g = get_gobj(cid, tag);
     configure_item(g.querySelector(".border"), {
         d: ["M", 0, 0, size, 0,
             "M", 0, size, size, size,
