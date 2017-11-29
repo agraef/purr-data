@@ -5,9 +5,9 @@
 /* "expr" was written by Shahrokh Yadegari c. 1989. -msp */
 /* "expr~" and "fexpr~" conversion by Shahrokh Yadegari c. 1999,2000 */
 
-#define MSP
-#ifdef PD
-#undef MSP
+#define PD 1
+#ifdef MSP
+#undef PD
 #endif
 
 #ifdef PD
