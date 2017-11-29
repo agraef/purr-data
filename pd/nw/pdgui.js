@@ -2376,9 +2376,12 @@ function gui_text_set (cid, tag, text) {
 }
 
 function gui_text_redraw_border(cid, tag, x1, y1, x2, y2) {
-    var g = get_gobj(cid, tag),
-        b = g.querySelectorAll(".border"),
-        i;
+    var g, b, i;
+    if (!patchwin[cid]) {
+        return;
+    }
+    g = get_gobj(cid, tag);
+    b = g.querySelectorAll(".border");
     for (i = 0; i < b.length; b++) {
         configure_item(b[i], {
             width: x2 - x1,

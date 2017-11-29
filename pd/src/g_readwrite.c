@@ -402,6 +402,8 @@ void canvas_doaddtemplate(t_symbol *templatesym,
 
 static void glist_writelist(t_gobj *y, t_binbuf *b);
 
+void binbuf_savetext(t_binbuf *bfrom, t_binbuf *bto);
+
 void canvas_writescalar(t_symbol *templatesym, t_word *w, t_binbuf *b,
     int amarrayelement)
 {

@@ -826,28 +826,29 @@ void canvas_map(t_canvas *x, t_floatarg f)
     t_gobj *y;
     if (flag)
     {
-        t_selection *sel;
-        if (!x->gl_havewindow)
-        {
-            bug("canvas_map");
-            canvas_vis(x, 1);
+        if (!glist_isvisible(x)) {
+            t_selection *sel;
+            if (!x->gl_havewindow)
+            {
+                bug("canvas_map");
+                canvas_vis(x, 1);
+            }
+            if (!x->gl_list) {
+                //if there are no objects on the canvas
+                canvas_create_editor(x);
+            }
+            else for (y = x->gl_list; y; y = y->g_next) {
+                gobj_vis(y, x, 1);
+            }
+            if (x->gl_editor && x->gl_editor->e_selection)
+                for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
+                    gobj_select(sel->sel_what, x, 1);
+            x->gl_mapped = 1;
+            canvas_drawlines(x);
+            if (x->gl_isgraph && x->gl_goprect)
+                canvas_drawredrect(x, 1);
+            scrollbar_update(x);
         }
-
-        if (!x->gl_list) {
-            //if there are no objects on the canvas
-            canvas_create_editor(x);
-        }
-        else for (y = x->gl_list; y; y = y->g_next) {
-            gobj_vis(y, x, 1);
-        }
-        if (x->gl_editor && x->gl_editor->e_selection)
-            for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
-                gobj_select(sel->sel_what, x, 1);
-        x->gl_mapped = 1;
-        canvas_drawlines(x);
-        if (x->gl_isgraph && x->gl_goprect)
-            canvas_drawredrect(x, 1);
-        scrollbar_update(x);
     }
     else
     {

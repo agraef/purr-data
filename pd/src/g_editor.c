@@ -1336,6 +1336,14 @@ static void glist_doreload(t_glist *gl, t_symbol *name, t_symbol *dir,
                 do g = g->g_next in this case. */
             //int j = glist_getindex(gl, g);
             //fprintf(stderr, "rebuildlicious %d\n", j);
+
+            // Bugfix for cases where canvas_vis doesn't actually create a
+            // new editor. We need to fix canvas_vis so that the bug doesn't
+            // get triggered. But since we know this fixes a regression we'll
+            // keep this as a point in the history as we fix canvas_vis. Once
+            // that's done we can remove this call.
+            canvas_create_editor(gl);
+
             if (!gl->gl_havewindow)
             {
                 canvas_vis(glist_getcanvas(gl), 1);
@@ -1387,7 +1395,7 @@ static void glist_doreload(t_glist *gl, t_symbol *name, t_symbol *dir,
     them to reload an abstraction; also suppress window list update */
 int glist_amreloadingabstractions = 0;
 
-    /* call canvas_doreload on everyone */
+    /* call glist_doreload on everyone */
 void canvas_reload(t_symbol *name, t_symbol *dir, t_gobj *except)
 {
     t_canvas *x;
