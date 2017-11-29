@@ -1,10 +1,10 @@
 # Purr Data -- Linux Installation from Source on Ubuntu
 
-The recommended way of building Purr Data packages on Ubuntu its derivatives
-is via the debuild system in the debuild folder of the source code. This
-folder contains a Makefile which automates most of the process and creates a
-deb package with all the proper dependencies. Both signed and unsigned
-packages can be created that way, either binary packages, ready to be
+The recommended way of building Purr Data packages on Ubuntu and its
+derivatives is via the debuild system in the debuild folder of the source
+code. This folder contains a Makefile which automates most of the process and
+creates a deb package with all the proper dependencies. Both signed and
+unsigned packages can be created that way, either binary packages, ready to be
 installed on your system, or source packages which can be uploaded to a PPA
 (personal package archive) on Launchpad, if you have an account there. This is
 also the way that the JGU Ubuntu packages are built,
@@ -96,11 +96,11 @@ package instead.)
 
 This does all the necessary steps to grab the sources and set them up as
 required in a separate staging directory (so that your working copy of the
-sources remain untarnished), runs the `tar_em_up.sh` build tool to compile the
-sources and then runs debuild to create the package. When finished, you can
-find the resulting deb package along with a few other related files in the
-debuild folder (the temporary build directory will be removed automatically
-after the build is finished).
+sources remains untarnished), runs the `tar_em_up.sh` build tool to compile
+the sources and then runs `debuild` with the required options to create the
+package. When finished, you can find the resulting deb package along with a
+few other related files in the debuild folder (the temporary build directory
+will be removed automatically after the build is finished).
 
 If you only need the binary package then you're done. Otherwise proceed to
 the next section.
@@ -129,7 +129,7 @@ that the package builds locally.
 Finally, you may want to do this to remove any build products in the debuild
 folder:
 
-**Step 4.** Run 'make debclean' to get rid of any files that were created in
+**Step 4.** Run `make debclean` to get rid of any files that were created in
 steps 2 and 3.
 
 Note that this will *also* delete the created packages, so you may want to
