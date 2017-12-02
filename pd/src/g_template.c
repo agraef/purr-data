@@ -363,12 +363,6 @@ static t_scalar *template_conformscalar(t_template *tfrom, t_template *tto,
         }
         else if (ds->ds_type == DT_ARRAY)
         {
-            t_symbol *arraytemplate = ds->ds_fieldtemplate;
-            if (arraytemplate == tfrom->t_sym ||
-                arraytemplate == tto->t_sym)
-            {
-                return 0;
-            }
             template_conformarray(tfrom, tto, conformaction, 
                 x->sc_vec[i].w_array);
         }
