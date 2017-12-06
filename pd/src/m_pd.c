@@ -478,7 +478,6 @@ static t_pdinstance *pdinstance_donew(int useprefix)
     x->pd_bendin_sym = midi_gensym(midiprefix, "#bendin");
     x->pd_touchin_sym = midi_gensym(midiprefix, "#touchin");
     x->pd_polytouchin_sym = midi_gensym(midiprefix, "#polytouchin");
-    x->pd_midiclkin_sym = midi_gensym(midiprefix, "#midiclkin");
     x->pd_midirealtimein_sym = midi_gensym(midiprefix, "#midirealtimein");
     return (x);
 }
