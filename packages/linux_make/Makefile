@@ -12,11 +12,11 @@ BUILDLAYOUT_DIR = $(cvs_root_dir)/packages
 include $(BUILDLAYOUT_DIR)/Makefile.buildlayout
 
 # if machine has dpkg-deb, build a Debian package
-#ifeq ($(shell test -x /usr/bin/dpkg-deb && echo YES),YES)
-#  PACKAGE_TYPE = deb
-#else
-#  PACKAGE_TYPE = tarbz2
-#endif
+ifeq ($(shell test -x /usr/bin/dpkg-deb && echo YES),YES)
+  PACKAGE_TYPE = deb
+else
+  PACKAGE_TYPE = tarbz2
+endif
 
 # for command-line UNIX versions, you need to install Pd into the same
 # directory as $(prefix) otherwise Pd won't be able to find extra, doc, etc.
@@ -278,8 +278,8 @@ test_locations:
 	@echo "MANUALSDIR  $(manualsdir)"
 	@echo "EXAMPLESDIR  $(examplesdir)"
 	@echo --------------------------------------------------
-#	@echo "PACKAGE_DEPENDS 	$(PACKAGE_DEPENDS)"
-#	@echo --------------------------------------------------
+	@echo "PACKAGE_DEPENDS 	$(PACKAGE_DEPENDS)"
+	@echo --------------------------------------------------
 	autoconf --version
 	@echo --------------------------------------------------
 	make --version
