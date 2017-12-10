@@ -614,9 +614,9 @@ void preset_node_set_and_output_value(t_preset_node *x, t_alist val)
     if (val.l_n > 0)
     {
         alist_clear(&x->pn_val);
-        alist_clone(&val, &x->pn_val);
+        alist_clone(&val, &x->pn_val, 0, val.l_n);
         XL_ATOMS_ALLOCA(outv, x->pn_val.l_n);
-        alist_toatoms(&x->pn_val, outv);
+        alist_toatoms(&x->pn_val, outv, 0, x->pn_val.l_n);
         outlet_list(x->pn_outlet, &s_list, x->pn_val.l_n, outv);
         if(PH_DEBUG)
         {
@@ -1199,7 +1199,8 @@ void preset_hub_store(t_preset_hub *h, t_float f)
                             }
                         }
                         alist_clear(&np2->np_val);
-                        alist_clone(&hd1->phd_node->pn_val, &np2->np_val);
+                        alist_clone(&hd1->phd_node->pn_val, &np2->np_val,
+                            0, hd1->phd_node->pn_val.l_n);
                         if (PH_DEBUG)
                         {
                             fprintf(stderr,"    node data len = %d, "
