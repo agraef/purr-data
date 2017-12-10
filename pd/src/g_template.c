@@ -1738,8 +1738,15 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
       need to experiment with gop scalars to make sure I'm not breaking
       anything */ 
     char tag[MAXPDSTRING];
-    int index = (array ?
-        ((((char *)data) - array->a_vec) / array->a_elemsize) : -1);
+    int index;
+    if (array)
+    {
+        int elemsize = array->a_elemsize;
+        if (!elemsize) elemsize = 1;
+        index = (((char *)data) - array->a_vec) / elemsize;
+    }
+    else
+        index = -1;
     if (x->x_type == gensym("g") || x->x_type == gensym("svg"))
     {
         sprintf(tag, "dgroup%lx.%lx",
@@ -2135,7 +2142,22 @@ void svg_register_events(t_gobj *z, t_canvas *c, t_scalar *sc,
     t_template *template, t_word *data, t_array *a)
 {
     t_svg *svg;
-    int index = (a ? ((((char *)data) - a->a_vec) / a->a_elemsize) : -1);
+    int index;
+    if (a)
+    {
+        int elemsize = a->a_elemsize; 
+        /* avoid divide-by-zero in case our elemsize is 0. Currently
+           there's no practical use case for an array of elements which
+           have zero size as there's no way to differentiate their
+           visualization. However if [draw array] changes in the future
+           to allow spacing out element groups or something like that,
+           we will have to revisit this workaround we're using to get
+           the element's index. */
+        if (!elemsize) elemsize = 1;
+        index = (((char *)data) - a->a_vec) / elemsize;
+    }
+    else
+        index = -1;
     char tagbuf[MAXPDSTRING];
     if (pd_class(&z->g_pd) == canvas_class)
     {
@@ -4463,35 +4485,42 @@ static int draw_click(t_gobj *z, t_glist *glist,
    But the one person I know who uses nested ds arrays hasn't asked for
    that, so let's see if we can just make it to the end of this software's
    life before that happens. */
-static void scalar_spelunkforword(t_scalar *x, t_symbol *s, int word_index,
-    t_array **array, t_word **data)
+static void scalar_spelunkforword(void* word_candidate, t_template* template,
+    t_word *data, int word_index, t_array **arrayp, t_word **datap)
 {
-    /* from glob_findinstance */
-    long obj = 0;
-    if (sscanf(s->s_name, "x%lx", &obj))
+    int i, nitems = template->t_n;
+    t_dataslot *datatypes = template->t_vec;
+    t_word *wp = data;
+    for (i = 0; i < nitems; i++, datatypes++, wp++)
     {
-        t_template *template = template_findbyname(x->sc_template);
-        if (!template)
+        if (datatypes->ds_type == DT_ARRAY &&
+               ((void *)wp->w_array) == (void *)word_candidate)
         {
-            pd_error(x, "scalar: template disappeared before notification "
-                        "from gui arrived");
+                /* Make sure we're in range, as the array could have been
+                   resized. In that case simply return */
+            if (word_index >= wp->w_array->a_n) return;
+            *arrayp = wp->w_array;
+            *datap = ((t_word *)(wp->w_array->a_vec +
+                word_index * wp->w_array->a_elemsize));
             return;
         }
-        int i, nitems = template->t_n;
-        t_dataslot *datatypes = template->t_vec;
-        t_word *wp = x->sc_vec;
-        for (i = 0; i < nitems; i++, datatypes++, wp++)
-        {
-            if (datatypes->ds_type == DT_ARRAY &&
-                ((void *)wp->w_array) == (void *)obj &&
-                word_index < wp->w_array->a_n)
-            {
-                *array = wp->w_array;
-                *data = ((t_word *)(wp->w_array->a_vec +
-                    word_index * wp->w_array->a_elemsize));
-            }
-        }
     }
+        /* Now swoop through the headers again and recursively search
+           any arrays for nested data. We do this as a second step so
+           that toplevel arrays don't take a performance hit from deeply
+           nested arrays. (Probably not a big deal for click events, but
+           for complex data structures it could be noticeable for drag
+           events */
+    wp = data;
+    datatypes = template->t_vec;
+    for (i = 0; i < nitems; i++, datatypes++, wp++)
+        if (datatypes->ds_type == DT_ARRAY)
+        {
+            t_template* t = template_findbyname(wp->w_array->a_templatesym);
+            if (t)
+                scalar_spelunkforword(word_candidate, t,
+                    (t_word *)wp->w_array->a_vec, word_index, arrayp, datap);
+        }
 }
 
 void draw_notify(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
@@ -4519,11 +4548,24 @@ void draw_notify(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
        or greater then that's what we have */
     if (index > -1)
     {
-        scalar_spelunkforword(sc, array_sym, index, &a, &data);
+        t_template *template = template_findbyname(sc->sc_template);
+        if (!template)
+        {
+            pd_error(sc, "scalar: template disappeared before notification "
+                        "from gui arrived");
+            return;
+        }
+        long word_candidate = 0; /* from glob_findinstance */
+        if (!sscanf(array_sym->s_name, "x%lx", &word_candidate))
+        {
+            pd_error(sc, "scalar: couldn't read array datum from GUI");
+            return;
+        }
+        scalar_spelunkforword((void *)word_candidate, template, sc->sc_vec,
+            index, &a, &data);
         if (!data)
         {
-            pd_error(x, "scalar: couldn't get array data for event "
-                        "callback");
+            pd_error(x, "scalar: couldn't get array data for event callback");
             return;
         }
     }
