@@ -40,7 +40,7 @@
 and one unit thick \, through the points (0 \, 0) \, (w \, 0) \, (w
 \, h) \, and (0 \, h). Note that the three points containing variables
 become hot spots for mouse dragging.;
-#X text 26 204 Draw the value of q as an Araboc numeral \, at (0 \,
+#X text 26 204 Draw the value of q as an Arabic numeral \, at (0 \,
 0) \, in black.;
 #X obj 24 39 struct template3 float x float y float w float h float
 q;
