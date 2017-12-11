@@ -12,18 +12,16 @@ BUILDLAYOUT_DIR = $(cvs_root_dir)/packages
 include $(BUILDLAYOUT_DIR)/Makefile.buildlayout
 
 # if machine has dpkg-deb, build a Debian package
-#ifeq ($(shell test -x /usr/bin/dpkg-deb && echo YES),YES)
-#  PACKAGE_TYPE = deb
-#else
-#  PACKAGE_TYPE = tarbz2
-#endif
+ifeq ($(shell test -x /usr/bin/dpkg-deb && echo YES),YES)
+  PACKAGE_TYPE = deb
+else
+  PACKAGE_TYPE = tarbz2
+endif
 
 # for command-line UNIX versions, you need to install Pd into the same
 # directory as $(prefix) otherwise Pd won't be able to find extra, doc, etc.
 ifeq ($(PACKAGE_TYPE),deb)
   prefix = /usr
-  # generates the dependencies for all externals and pd itself
-  PACKAGE_DEPENDS := $(shell find $(DESTDIR) \( -name "*.pd_linux" -or -name pd-gui -or -wholename \*bin/pd \) -print0 | xargs -0 dpkg-shlibdeps -O | sed 's|shlibs:Depends=|, |' )
 else
   prefix = /usr/local
 endif
@@ -160,6 +158,9 @@ deb: debstage
 	cp $(packages_src)/linux_make/debian/control $(DESTDIR)/DEBIAN
 	cp $(packages_src)/linux_make/debian/pd-l2ork.postrm $(DESTDIR)/DEBIAN
 	cp $(packages_src)/linux_make/debian/pd-l2ork.postinst $(DESTDIR)/DEBIAN
+# generate the dependencies for all externals and pd itself
+	$(eval PACKAGE_DEPENDS := $(shell find $(DESTDIR) \( -name "*.pd_linux" -or -name pd-gui -or -wholename \*bin/pd \) -print0 | xargs -0 dpkg-shlibdeps -O | sed 's|shlibs:Depends=|, |' ))
+
 # set build architecture and version for the package
 	sed -i 's|^Version:.*|Version: $(DEB_PD_VERSION)|' \
 		$(DESTDIR)/DEBIAN/control
@@ -279,7 +280,7 @@ test_locations:
 	@echo "EXAMPLESDIR  $(examplesdir)"
 	@echo --------------------------------------------------
 #	@echo "PACKAGE_DEPENDS 	$(PACKAGE_DEPENDS)"
-#	@echo --------------------------------------------------
+	@echo --------------------------------------------------
 	autoconf --version
 	@echo --------------------------------------------------
 	make --version

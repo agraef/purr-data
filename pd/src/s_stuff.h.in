@@ -440,7 +440,7 @@ EXTERN void alist_init(t_alist *x);
 EXTERN void alist_clear(t_alist *x);
 EXTERN void alist_list(t_alist *x, t_symbol *s, int argc, t_atom *argv);
 EXTERN void alist_anything(t_alist *x, t_symbol *s, int argc, t_atom *argv);
-EXTERN void alist_toatoms(t_alist *x, t_atom *to);
-EXTERN void alist_clone(t_alist *x, t_alist *y);
+EXTERN void alist_toatoms(t_alist *x, t_atom *to, int onset, int count);
+EXTERN void alist_clone(t_alist *x, t_alist *y, int onset, int count);
 
 #endif /* __s_stuff_h_ */

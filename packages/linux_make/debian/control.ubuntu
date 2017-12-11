@@ -6,7 +6,7 @@ Maintainer: Ivica Ico Bukvic <ico@vt.edu>
 Homepage: http://l2ork.music.vt.edu
 Package: pd-l2ork
 Architecture: i386
-Depends: xterm | x-terminal-emulator, libc6 (>= 2.1.5), libasound2, libjack-jackd2-0, libbluetooth3, libgl1-mesa-glx, libgl1-mesa-dri, libglu1-mesa, libglew1.5, libmagick++4, libftgl2, libgmerlin0, libgmerlin-avdec1, libavifile-0.7c2, libmpeg3-1, libquicktime2, libv4l-0, libraw1394-11, libdc1394-22, libfftw3-3, libvorbis0a, libmp3lame0, libspeex1, libgsl0ldbl, python, libsmpeg0, libjpeg62, libflite1, libgsm1
+Depends: python, fluid-soundfont-gm
 Provides: pd-l2ork
 Installed-Size: 90624
 Recommends: xdg-utils, pulseaudio-utils, tap-plugins, ladspa-foo-plugins, invada-studio-plugins-ladspa, blepvco, swh-plugins, mcp-plugins, cmt, blop, slv2-jack, omins, ubuntustudio-audio-plugins, rev-plugins, dssi-utils, vco-plugins, wah-plugins, fil-plugins, mda-lv2
