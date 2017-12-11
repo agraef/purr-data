@@ -74,7 +74,6 @@ struct _pdinstance
     t_symbol *pd_bendin_sym;
     t_symbol *pd_touchin_sym;
     t_symbol *pd_polytouchin_sym;
-    t_symbol *pd_midiclkin_sym;
     t_symbol *pd_midirealtimein_sym;
 };
 
