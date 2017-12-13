@@ -2245,8 +2245,6 @@ void svg_setattr(t_svg *x, t_symbol *s, t_int argc, t_atom *argv)
    the arguments in an existing [draw svg] object. */
 void svg_update_args(t_svg *x, t_symbol *s, int argc, t_atom *argv)
 {
-post("made it to args");
-if (argc) post("first arg is %s", atom_getsymbolarg(0, argc, argv)->s_name);
     /* "g" doesn't take any args, so check for "svg" arg */
     if (atom_getsymbolarg(0, argc, argv) == gensym("svg"))
     {
@@ -4494,7 +4492,7 @@ static void scalar_spelunkforword(void* word_candidate, t_template* template,
     for (i = 0; i < nitems; i++, datatypes++, wp++)
     {
         if (datatypes->ds_type == DT_ARRAY &&
-               ((void *)wp->w_array) == (void *)word_candidate)
+            ((void *)wp->w_array) == (void *)word_candidate)
         {
                 /* Make sure we're in range, as the array could have been
                    resized. In that case simply return */
@@ -4518,8 +4516,14 @@ static void scalar_spelunkforword(void* word_candidate, t_template* template,
         {
             t_template* t = template_findbyname(wp->w_array->a_templatesym);
             if (t)
-                scalar_spelunkforword(word_candidate, t,
-                    (t_word *)wp->w_array->a_vec, word_index, arrayp, datap);
+            {
+                int i, elemsize = wp->w_array->a_elemsize;
+                char *vec;
+                for(i = 0, vec = wp->w_array->a_vec; i < wp->w_array->a_n; i++)
+                    scalar_spelunkforword(word_candidate, t,
+                        (t_word *)(wp->w_array->a_vec + i * elemsize),
+                            word_index, arrayp, datap);
+            }
         }
 }
 
