@@ -7,7 +7,8 @@ Jonathan Wilkes' **Purr Data** a.k.a. **Pd-l2ork** 2.0 is an improved version of
 - [Downloads](https://github.com/agraef/purr-data/releases): This is where you get ready-made packages for Linux, Mac and Windows.
 - [JGU packages](#jgu-packages): You can also use these if you're on [Arch](https://l2orkaur.bitbucket.io/) or a recent [Ubuntu](https://l2orkubuntu.bitbucket.io/) version.
 - [Sources](https://github.com/agraef/purr-data): Github mirror of the sources, updated regularly.
-- [Development](https://git.purrdata.net/jwilkes/purr-data): Wilkes' Gitlab repository. This is where you should go for submitting bug reports and pull requests.
+- [Development](https://git.purrdata.net/jwilkes/purr-data): Wilkes' Gitlab repository. **This is where you should go for submitting bug reports and pull requests.**
+- [Intro](https://agraef.github.io/purr-data-intro): Read this to learn more about Purr Data.
 
 ## About Purr Data
 
