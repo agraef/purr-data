@@ -2952,13 +2952,18 @@ function gui_vumeter_draw_peak(cid,tag,color,p1,p2,p3,p4,width,basex,basey) {
 
 // probably should change tag from "rect" to "cover"
 function gui_vumeter_update_rms(cid, tag, p1, p2, p3, p4, basex, basey) {
-    var rect = get_item(cid, tag + "rect");
-    configure_item(rect, {
-        x: p1 - basex,
-        y: p2 - basey,
-        width: p3 - p1,
-        height: p4 - p2 + 1
-    });
+    var rect;
+    if (patchwin[cid]) {
+        rect = get_item(cid, tag + "rect");
+        if (rect) {
+            configure_item(rect, {
+                x: p1 - basex,
+                y: p2 - basey,
+                width: p3 - p1,
+                height: p4 - p2 + 1
+            });
+        }
+    }
 }
 
 function gui_vumeter_update_peak(cid,tag,color,p1,p2,p3,p4,basex,basey) {
