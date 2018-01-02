@@ -305,8 +305,8 @@ static void imagebang_free(t_imagebang *x) {
     
     sprintf(key_a, "%lx_a", (long unsigned int)x);
     sprintf(key_b, "%lx_b", (long unsigned int)x);
-    gui_vmess("gui_drawimage_free", "s", key_a);
-    gui_vmess("gui_drawimage_free", "s", key_b);
+    gui_vmess("gui_image_free", "s", key_a);
+    gui_vmess("gui_image_free", "s", key_b);
     if (x->receive) {
         pd_unbind(&x->x_obj.ob_pd,x->receive);
     }
