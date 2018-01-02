@@ -8499,7 +8499,7 @@ static void drawimage_free(t_drawimage *x)
     //sprintf(buf, ".x%lx", (t_int)x);
     sprintf(buf, "x%lx", (long unsigned int)x);
     pd_unbind(&x->x_obj.ob_pd, gensym(buf));
-    gui_vmess("gui_drawimage_free", "x", x);
+    gui_vmess("gui_image_free", "x", x);
 }
 
 static void drawimage_setup(void)
