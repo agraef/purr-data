@@ -2813,8 +2813,14 @@ function gui_radio_button_coords(cid, tag, x1, y1, xi, yi, i, s, d, orient) {
 }
 
 function gui_radio_update(cid, tag, fgcolor, prev, next) {
+    // Make sure that we aren't invoked before the patchwin exists.
+    if (!patchwin[cid]) { return; }
     var prev = get_item(cid, tag + "button_" + prev),
         next = get_item(cid, tag + "button_" + next);
+    // There seems to be a race condition here so that in some rare
+    // circumstances related to gop areas prev/next may not be set yet. Bail
+    // out in that case. This resolves issue #401. -ag
+    if (!prev || !next) { return; }
     configure_item(prev, { display: "none" });
     configure_item(next, {
         display: "inline",
