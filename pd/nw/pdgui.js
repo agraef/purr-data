@@ -3999,7 +3999,7 @@ function gui_mknob_new(cid, tag, x, y, is_toplevel, show_in, show_out) {
     });
     gui(cid).get_gobj(tag)
     .append(function(frag) {
-        border = create_item(cid, "path", {
+        var border = create_item(cid, "path", {
             class: "border" // now we can inherit the css border styles
         }),
         circle = create_item(cid, "circle", {
