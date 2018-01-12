@@ -465,7 +465,7 @@ static void image_setwidget(void)
 static void image_free(t_image *x)
 {
     //sys_vgui("image delete img%x\n", x);
-    gui_vmess("gui_drawimage_free", "x", x);
+    gui_vmess("gui_image_free", "x", x);
     if (x->x_receive)
     {
         pd_unbind(&x->x_obj.ob_pd,x->x_receive);

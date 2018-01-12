@@ -46,7 +46,7 @@ void sys_doflags( void);
 
 #ifdef UNIX
 
-#define USER_CONFIG_DIR ".pd-l2ork"
+#define USER_CONFIG_DIR ".purr-data"
 
 static char *sys_prefbuf;
 

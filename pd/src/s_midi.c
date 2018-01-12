@@ -239,11 +239,6 @@ void outmidi_polyaftertouch(int portno, int channel, int pitch, int value)
         pitch, value);
 }
 
-void outmidi_mclk(int portno)
-{
-   sys_queuemidimess(portno, 1, 0xf8, 0,0);
-}
-
 void outmidi_byte(int portno, int value)
 {
 #ifdef USEAPI_ALSA
@@ -291,7 +286,6 @@ typedef struct midiparser
 
     /* functions in x_midi.c */
 void inmidi_realtimein(int portno, int cmd);
-void inmidi_clk(double timing);
 void inmidi_byte(int portno, int byte);
 void inmidi_sysex(int portno, int byte);
 void inmidi_noteon(int portno, int channel, int pitch, int velo);
@@ -316,14 +310,6 @@ static void sys_dispatchnextmidiin( void)
     if (byte >= 0xf8)
     {
         inmidi_realtimein(portno, byte);
-        if (byte == 0xf8) {
-          // AG: Not sure what the timebase for the right outlet is supposed
-          // to be. I'm using msecs right now, which is in line with the other
-          // tempo-related objects such as metro. Multiply with .001 to
-          // get seconds instead.
-          double timing = clock_gettimesince(sys_midiinittime);
-          inmidi_clk(timing);
-        }
     }
     else
     {

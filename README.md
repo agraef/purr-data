@@ -354,7 +354,7 @@ The following is adapted from Pd Vanilla's original source notes.  (Found
 in pd/src/CHANGELOG.txt for some reason...)
 
 Sections 2-3 below are quite old.  Someone needs to check whether they even
-hold true for Pd Vanilla any more.
+hold true for Pd Vanilla anymore.
 
 #### Structure definition roadmap.
 
@@ -364,19 +364,19 @@ and t_graph and t_canvas, should be unified...)
 
 BEFORE 0.35:
 
-    m_pd.h	    t_pd    	    	    anything with a class
-                    t_gobj	    	    "graphic object"
-                        t_text  	    text object
-    g_canvas.h  
-                        t_glist 	    list of graphic objects
-    g_canvas.c  	    	t_canvas    Pd "document"
+    m_pd.h      t_pd                        anything with a class
+                    t_gobj                  "graphic object"
+                        t_text              text object
+    g_canvas.h
+                        t_glist             list of graphic objects
+    g_canvas.c              t_canvas        Pd "document"
 
 AFTER 0.35:
 
-    m_pd.h	    t_pd    	    	    anything with a class
-                    t_gobj	    	    "graphic object"
-                        t_text  	    patchable object, AKA t_object
-    g_canvas.h     	    	t_glist     list of graphic objects, AKA t_canvas
+    m_pd.h      t_pd                        anything with a class
+                    t_gobj                  "graphic object"
+                        t_text              patchable object, AKA t_object
+    g_canvas.h              t_glist         list of graphic objects, AKA t_canvas
 
 Other structures:
 
@@ -390,7 +390,7 @@ Other structures:
 #### 1. Coding Style
 
 1.0  C coding style.  The source should pass most "warnings" of C compilers
-(-Wall on linux, for instance; see the makefile.)  Some informalities
+(-Wall on Linux, for instance-- see the makefile.)  Some informalities
 are intentional, for instance the loose use of function prototypes (see
 below) and uncast conversions from longer to shorter numerical formats.
 The code doesn't respect "const" yet.
@@ -483,7 +483,7 @@ which are all frequently called and which don't fit into simple categories.
 Important packages are:
 
     (pd-gui:)   pdgui -- everything
-    (pd:)	    pd -- functions common to all "pd" objects
+    (pd:)       pd -- functions common to all "pd" objects
                 obj -- fuctions common to all "patchable" objects ala Max
                 sys -- "system" level functions
                 binbuf -- functions manipulating binbufs

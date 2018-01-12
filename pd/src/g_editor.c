@@ -220,6 +220,13 @@ int gobj_shouldvis(t_gobj *x, struct _glist *glist)
     //fprintf(stderr,"shouldvis %d %d %d %d\n",
     //    glist->gl_havewindow, glist->gl_isgraph,
     //    glist->gl_goprect, glist->gl_owner != NULL);
+        /* if our parent is a graph, and if that graph itself isn't
+        visible, then we aren't either. */
+    if (!glist->gl_havewindow && glist->gl_isgraph && glist->gl_owner
+        && !gobj_shouldvis(&glist->gl_gobj, glist->gl_owner))
+            return (0);
+        /* if we're graphing-on-parent and the object falls outside the
+        graph rectangle, don't draw it. */
     if (!glist->gl_havewindow && glist->gl_isgraph && glist->gl_goprect &&
         glist->gl_owner && (pd_class(&x->g_pd) != scalar_class) &&
         (pd_class(&x->g_pd) != garray_class))
@@ -1329,6 +1336,14 @@ static void glist_doreload(t_glist *gl, t_symbol *name, t_symbol *dir,
                 do g = g->g_next in this case. */
             //int j = glist_getindex(gl, g);
             //fprintf(stderr, "rebuildlicious %d\n", j);
+
+            // Bugfix for cases where canvas_vis doesn't actually create a
+            // new editor. We need to fix canvas_vis so that the bug doesn't
+            // get triggered. But since we know this fixes a regression we'll
+            // keep this as a point in the history as we fix canvas_vis. Once
+            // that's done we can remove this call.
+            canvas_create_editor(gl);
+
             if (!gl->gl_havewindow)
             {
                 canvas_vis(glist_getcanvas(gl), 1);
@@ -1380,7 +1395,7 @@ static void glist_doreload(t_glist *gl, t_symbol *name, t_symbol *dir,
     them to reload an abstraction; also suppress window list update */
 int glist_amreloadingabstractions = 0;
 
-    /* call canvas_doreload on everyone */
+    /* call glist_doreload on everyone */
 void canvas_reload(t_symbol *name, t_symbol *dir, t_gobj *except)
 {
     t_canvas *x;
@@ -2880,7 +2895,7 @@ static void canvas_donecanvasdialog(t_glist *x,
     {
         glist_noselect(x);
         gobj_vis(&x->gl_gobj, x->gl_owner, 0);
-        if (gobj_shouldvis(&x->gl_obj, x->gl_owner))
+        if (gobj_shouldvis(&x->gl_gobj, x->gl_owner))
         {
             gobj_vis(&x->gl_gobj, x->gl_owner, 1);
             //fprintf(stderr,"yes\n");

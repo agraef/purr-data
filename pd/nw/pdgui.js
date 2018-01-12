@@ -3575,7 +3575,7 @@ function gui_drawimage_new(obj_tag, file_path, canvasdir, flags) {
     pd_cache.set(obj_tag, drawimage_data); // add the data to container
 }
 
-function gui_drawimage_free(obj_tag) {
+function gui_image_free(obj_tag) {
     var c = pd_cache.get(obj_tag);
     if (c) {
         pd_cache.free(obj_tag); // empty the image(s)

@@ -306,6 +306,8 @@
         "viewbox_offsets": "Anzeigebox-Offsets",
         "arrays": "Feld-Optionen"
       },
+      "no_scroll": "Rollbalken verbergen (experimentell)",
+      "no_scroll_tt": "Rollbalken verbergen (experimentell)",
       "gop": "Anzeige im übergeordneten Patch",
       "gop_tt": "Zeige den Inhalt dieses Patches in einem Rechteck im übergeordneten Patch",
       "hide_name": "Namen und Argumente verbergen",
