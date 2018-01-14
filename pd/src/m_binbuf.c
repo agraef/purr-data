@@ -1625,10 +1625,16 @@ int binbuf_match(t_binbuf *inbuf, t_binbuf *searchbuf, int wholeword)
                 if (a2->a_type != a1->a_type)
                     goto nomatch;
             }
-            else if (a1->a_type == A_FLOAT || a1->a_type == A_DOLLAR)
+            else if (a1->a_type == A_FLOAT)
+            {
+                if (a2->a_type != a1->a_type ||
+                    a1->a_w.w_float != a2->a_w.w_float)
+                        goto nomatch;
+            }
+            else if (a1->a_type == A_DOLLAR)
             {
                 if (a2->a_type != a1->a_type || 
-                    a1->a_w.w_float != a2->a_w.w_float)
+                    a1->a_w.w_index != a2->a_w.w_index)
                         goto nomatch;
             }
             else if (a1->a_type == A_SYMBOL || a1->a_type == A_DOLLSYM)
