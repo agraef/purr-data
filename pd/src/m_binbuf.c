@@ -1627,7 +1627,7 @@ int binbuf_match(t_binbuf *inbuf, t_binbuf *searchbuf, int wholeword)
             }
             else if (a1->a_type == A_FLOAT)
             {
-                if (a2->a_type != a1->a_type || 
+                if (a2->a_type != a1->a_type ||
                     a1->a_w.w_float != a2->a_w.w_float)
                         goto nomatch;
             }
