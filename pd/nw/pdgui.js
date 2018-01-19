@@ -5199,11 +5199,12 @@ function gui_undo_menu(cid, undo_text, redo_text) {
 }
 
 // leverages the get_nw_window method in the callers...
-function canvas_params(nw_win, svg_elem)
+function canvas_params(nw_win)
 {
     // calculate the canvas parameters (svg bounding box and window geometry)
     // for do_getscroll and do_optimalzoom
-    var bbox, width, height, min_width, min_height, x, y;
+    var bbox, width, height, min_width, min_height, x, y, svg_elem;
+    svg_elem = nw_win.window.document.getElementById("patchsvg");
     bbox = svg_elem.getBBox();
     // We try to do Pd-extended style canvas origins. That is, coord (0, 0)
     // should be in the top-left corner unless there are objects with a
@@ -5255,7 +5256,7 @@ function do_getscroll(cid) {
     gui(cid).get_nw_window(function(nw_win) {
         var svg_elem = nw_win.window.document.getElementById("patchsvg");
         var { x: x, y: y, w: width, h: height,
-            mw: min_width, mh: min_height } = canvas_params(nw_win, svg_elem);
+            mw: min_width, mh: min_height } = canvas_params(nw_win);
         if (width < min_width) {
             width = min_width;
         }
@@ -5305,7 +5306,7 @@ function do_optimalzoom(cid, hflag, vflag) {
     // the window
     gui(cid).get_nw_window(function(nw_win) {
         var { x: x, y: y, w: width, h: height, mw: min_width, mh: min_height } =
-            canvas_params(cid);
+            canvas_params(nw_win);
         // Calculate the optimal horizontal and vertical zoom values,
         // using floor to always round down to the nearest integer. Note
         // that these may well be negative, if the viewport is too small
