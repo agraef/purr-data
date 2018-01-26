@@ -78,12 +78,16 @@ static void inlet_wrong(t_inlet *x, t_symbol *s)
         x->i_symfrom->s_name, s->s_name);
 }
 
+static void inlet_list(t_inlet *x, t_symbol *s, int argc, t_atom *argv);
+
     /* LATER figure out how to make these efficient: */
 static void inlet_bang(t_inlet *x)
 {
     if (x->i_symfrom == &s_bang) 
         pd_vmess(x->i_dest, x->i_symto, "");
     else if (!x->i_symfrom) pd_bang(x->i_dest);
+    else if (x->i_symfrom == &s_list)
+        inlet_list(x, &s_bang, 0, 0);
     else inlet_wrong(x, &s_bang);
 }
 
@@ -92,6 +96,12 @@ static void inlet_pointer(t_inlet *x, t_gpointer *gp)
     if (x->i_symfrom == &s_pointer) 
         pd_vmess(x->i_dest, x->i_symto, "p", gp);
     else if (!x->i_symfrom) pd_pointer(x->i_dest, gp);
+    else if (x->i_symfrom == &s_list)
+    {
+        t_atom a;
+        SETPOINTER(&a, gp);
+        inlet_list(x, &s_pointer, 1, &a);
+    }
     else inlet_wrong(x, &s_pointer);
 }
 
@@ -103,6 +113,12 @@ static void inlet_float(t_inlet *x, t_float f)
         x->i_un.iu_floatsignalvalue = f;
     else if (!x->i_symfrom)
         pd_float(x->i_dest, f);
+    else if (x->i_symfrom == &s_list)
+    {
+        t_atom a;
+        SETFLOAT(&a, f);
+        inlet_list(x, &s_float, 1, &a);
+    }
     else inlet_wrong(x, &s_float);
 }
 
@@ -111,6 +127,12 @@ static void inlet_symbol(t_inlet *x, t_symbol *s)
     if (x->i_symfrom == &s_symbol) 
         pd_vmess(x->i_dest, x->i_symto, "s", s);
     else if (!x->i_symfrom) pd_symbol(x->i_dest, s);
+    else if (x->i_symfrom == &s_list)
+    {
+        t_atom a;
+        SETSYMBOL(&a, s);
+        inlet_list(x, &s_symbol, 1, &a);
+    }
     else inlet_wrong(x, &s_symbol);
 }
 
