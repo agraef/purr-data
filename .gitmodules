@@ -13,3 +13,6 @@
 [submodule "externals/lyonpotpourri"]
 	path = externals/lyonpotpourri
 	url = https://git.purrdata.net/jwilkes/lyonpotpourri3.0.git
+[submodule "l2ork_addons/raspberry_pi/disis_gpio/wiringPi"]
+	path = l2ork_addons/raspberry_pi/disis_gpio/wiringPi
+	url = https://git.purrdata.net/jwilkes/wiringPi.git
