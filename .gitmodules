@@ -4,9 +4,6 @@
 [submodule "l2ork_addons/cwiid"]
 	path = externals/disis/cwiid
 	url = https://github.com/pd-l2ork/cwiid
-[submodule "l2ork_addons/raspberry_pi/disis_gpio/wiringPi"]
-	path = l2ork_addons/raspberry_pi/disis_gpio/wiringPi
-	url = git://git.drogon.net/wiringPi
 [submodule "externals/fftease"]
 	path = externals/fftease
 	url = https://git.purrdata.net/jwilkes/fftease.git
@@ -16,3 +13,6 @@
 [submodule "externals/lyonpotpourri"]
 	path = externals/lyonpotpourri
 	url = https://git.purrdata.net/jwilkes/lyonpotpourri3.0.git
+[submodule "l2ork_addons/raspberry_pi/disis_gpio/wiringPi"]
+	path = l2ork_addons/raspberry_pi/disis_gpio/wiringPi
+	url = https://git.purrdata.net/jwilkes/wiringPi.git
