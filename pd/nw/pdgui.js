@@ -4466,7 +4466,7 @@ function gui_cord_inspector_update(cid, text, basex, basey, bg_size, y1, y2, mov
 
 function gui_cord_inspector_erase(cid) {
     gui(cid).get_gobj("cord_inspector", function(e) {
-        e.parentNode.removeChild(ci);
+        e.parentNode.removeChild(e);
     });
 }
 
