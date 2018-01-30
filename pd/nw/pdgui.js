@@ -2596,16 +2596,16 @@ function gui_toggle_resize_cross(cid,tag,w,p1,p2,p3,p4,p5,p6,p7,p8,basex,basey) 
     var points1 = [p1 - basex, p2 - basey,
                   p3 - basex, p4 - basey
     ].join(" "),
-        points_array = [p5 - basex, p6 - basey,
+        points2 = [p5 - basex, p6 - basey,
                         p7 - basex, p8 - basey
     ].join(" ");
     gui(cid)
     .get_elem(tag + "cross1", {
-        points1: points,
+        points: points1,
         "stroke-width": w
     })
     .get_elem(tag + "cross2", {
-        points2: points,
+        points: points2,
         "stroke-width": w
     });
 }
@@ -4402,7 +4402,7 @@ function gui_canvas_deleteredrect(cid) {
     // gui calls should really be minimized-- otherwise it's simply
     // too difficult to debug what's being passed over the socket.
     gui(cid).get_gobj(cid, function(e) {
-        e.parentNode.removeChild(r);
+        e.parentNode.removeChild(e);
     });
 }
 
