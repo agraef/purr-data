@@ -1964,15 +1964,15 @@ function gui_gobj_new(cid, tag, type, xpos, ypos, is_toplevel) {
     return g;
 }
 
-function gui_text_draw_border(cid, tag, bgcolor, isbroken, x1, y1, x2, y2) {
+function gui_text_draw_border(cid, tag, bgcolor, isbroken, width, height) {
     gui(cid).get_gobj(tag)
     .append(function(frag) {
         // isbroken means either
         //     a) the object couldn't create or
         //     b) the box is empty
         var rect = create_item(cid, "rect", {
-            width: x2 - x1,
-            height: y2 - y1,
+            width: width,
+            height: height,
             //"shape-rendering": "crispEdges",
             class: "border"
         });

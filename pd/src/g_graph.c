@@ -934,11 +934,13 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
     {
         if (vis && gobj_shouldvis(gr, parent_glist))
         {
-            gui_vmess("gui_text_draw_border", "xssiiiii",
+            gui_vmess("gui_text_draw_border", "xssiii",
                 glist_getcanvas(x->gl_owner),
                 tag,
                 "none",
-                0, x1, y1, x2, y2);
+                0,
+                x2 - x1,
+                y2 - y1);
             glist_noselect(x->gl_owner);
             gui_vmess("gui_graph_fill_border", "xsi",
                 glist_getcanvas(x->gl_owner),
@@ -966,12 +968,13 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
             (x->gl_xlabely > 0.5*(x->gl_y1 + x->gl_y2) ? "s" : "n");
         char tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "%sR", tag);
-
-        gui_vmess("gui_text_draw_border", "xssiiiii",
+        gui_vmess("gui_text_draw_border", "xssiii",
             glist_getcanvas(x->gl_owner),
             tag,
             "none",
-            0, x1, y1, x2, y2);
+            0,
+            x2 - x1,
+            y2 - y1);
             /* write garrays' names along the top */
         for (i = 0, g = x->gl_list; g; g = g->g_next, i++)
         {

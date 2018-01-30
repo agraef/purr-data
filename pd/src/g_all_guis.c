@@ -1180,12 +1180,13 @@ void iemgui_base_draw_new(t_iemgui *x) {
     sprintf(colorbuf, "#%6.6x", x->x_bcol);
     gui_vmess("gui_gobj_new", "xxsiii", canvas, x,
         "iemgui", x1, y1, glist_istoplevel(x->x_glist));
-    gui_vmess("gui_text_draw_border", "xxsiiiii",
+    gui_vmess("gui_text_draw_border", "xxsiii",
         canvas,
         x,
         colorbuf,
         0,
-        x1, y1, x2, y2);
+        x2 - x1,
+        y2 - y1);
     sprintf(colorbuf, "#%6.6x", x->x_bcol);
     gui_vmess("gui_iemgui_base_color", "xxs",
         canvas, x, colorbuf);

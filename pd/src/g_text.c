@@ -2659,15 +2659,13 @@ void text_drawborder(t_text *x, t_glist *glist,
         }
         if (firsttime)
         {
-            gui_vmess("gui_text_draw_border", "xssiiiii",
+            gui_vmess("gui_text_draw_border", "xssiii",
                 glist_getcanvas(glist),
                 tag,
                 "none",
                 broken,
-                x1,
-                y1,
-                x2,
-                y2);
+                x2 - x1,
+                y2 - y1);
                 //-dash %s -> pattern disabled for tkpath
         }
         else
