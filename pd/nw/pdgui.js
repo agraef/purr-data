@@ -2410,7 +2410,7 @@ function gui_text_set (cid, tag, text) {
     });
 }
 
-function gui_text_redraw_border(cid, tag, x1, y1, x2, y2) {
+function gui_text_redraw_border(cid, tag, width, height) {
     // Hm, need to figure out how to refactor to get rid of
     // configure_item call...
     gui(cid).get_gobj(tag, function(e) {
@@ -2418,8 +2418,8 @@ function gui_text_redraw_border(cid, tag, x1, y1, x2, y2) {
         i;
         for (i = 0; i < b.length; b++) {
             configure_item(b[i], {
-                width: x2 - x1,
-                height: y2 - y1
+                width: width,
+                height: height
             });
         }
     });

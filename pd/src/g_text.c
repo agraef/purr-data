@@ -2638,25 +2638,7 @@ void text_drawborder(t_text *x, t_glist *glist,
 
     if (x->te_type == T_OBJECT)
     {
-        char *pattern; char *outline; char *fill;
-        /* tag to identify broken boxes from tcl/tk */
-        char *box_tag;
-        if (pd_class(&x->te_pd) == text_class)
-        {
-            pattern = "-";
-            outline = "$pd_colors(dash_outline) -strokewidth 2 -strokelinecap projecting -strokedasharray {2 3}"; //-strokedasharray {4 1}
-            fill = invalid_fill;
-            box_tag = "broken box";
-            broken = 1;
-        }
-        else
-        {
-            pattern = "\"\"";
-            outline = "$pd_colors(box_border)";
-            fill = "$pd_colors(box)";
-            box_tag = "box";
-            broken = 0;
-        }
+        broken = (pd_class(&x->te_pd) == text_class) ? 1 : 0;
         if (firsttime)
         {
             gui_vmess("gui_text_draw_border", "xssiii",
@@ -2666,22 +2648,16 @@ void text_drawborder(t_text *x, t_glist *glist,
                 broken,
                 x2 - x1,
                 y2 - y1);
-                //-dash %s -> pattern disabled for tkpath
         }
         else
         {
             //fprintf(stderr, "redrawing rectangle? .x%lx.c %sR\n",
             //    (t_int)glist_getcanvas(glist), tag);
-            gui_vmess("gui_text_redraw_border", "xsiiii",
+            gui_vmess("gui_text_redraw_border", "xsii",
                 glist_getcanvas(glist),
                 tag,
-                x1,
-                y1,
-                x2,
-                y2);
-            /* this seems to be totally extraneous  hans@at.or.at
-             sys_vgui(".x%lx.c itemconfigure %sR -dash %s -outline %s\n", 
-                     glist_getcanvas(glist), tag, pattern, outline); */
+                x2 - x1,
+                y2 - y1);
         }
     }
     else if (x->te_type == T_MESSAGE)
@@ -2696,12 +2672,6 @@ void text_drawborder(t_text *x, t_glist *glist,
         }
         else
         {
-            //sys_vgui(".x%lx.c coords %sR "
-            //         "%d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
-            //    glist_getcanvas(glist), tag,
-            //    x1, y1,  x2+4, y1,  x2, y1+4,  x2, y2-4,  x2+4, y2,
-            //    x1, y2,  x1, y1);
-            /* These coords can be greatly simplified, as above... */
             gui_vmess("gui_message_redraw_border", "xsii",
                 glist_getcanvas(glist),
                 tag,
@@ -2713,16 +2683,6 @@ void text_drawborder(t_text *x, t_glist *glist,
     {
         if (firsttime)
         {
-            //sys_vgui(".x%lx.c create ppolygon "
-            //         "%d %d %d %d %d %d %d %d %d %d %d %d "
-            //         "-stroke %s "
-            //         "-fill $pd_colors(atom_box) "
-            //         "-tags {%sR %lx text atom box %s}\n",
-            //    glist_getcanvas(glist),
-            //    x1, y1,  x2-4, y1,  x2, y1+4,  x2, y2,  x1, y2,  x1, y1,
-            //    (selected ? "$pd_colors(selection)" : "$pd_colors(atom_box_border)"),
-            //        tag, tag, (selected ? "selected" : ""));
-            /* These coords can be greatly simplified... */
             gui_vmess("gui_atom_draw_border", "xsiii",
                 glist_getcanvas(glist),
                 tag,
@@ -2734,10 +2694,6 @@ void text_drawborder(t_text *x, t_glist *glist,
         else
         {
             /* doesn't look like this ever gets called... */
-            //sys_vgui(".x%lx.c coords %sR "
-            //         "%d %d %d %d %d %d %d %d %d %d %d %d\n",
-            //    glist_getcanvas(glist), tag,
-            //    x1, y1,  x2-4, y1,  x2, y1+4,  x2, y2,  x1, y2,  x1, y1);
             gui_vmess("gui_atom_redraw_border", "xsiii",
                 glist_getcanvas(glist),
                 tag,
@@ -2747,9 +2703,12 @@ void text_drawborder(t_text *x, t_glist *glist,
                 y2 - y1);
         }
     }
-        /* for comments, just draw a dotted rectangle unlocked; when a visible
-        canvas is unlocked we have to call this anew on all comments, and when
-        locked we erase them all via the annoying "commentbar" tag. IB: However
+        /* for comments a dotted rectangle is drawn in edit mode. Currently
+        this is probably inefficient because Pd assumes it must send GUI
+        updates for all comments when edit mode is toggled (due to the
+        "commentbar" sizing line in Pd Vanilla). However in Purr Data, we
+        let CSS do all that and thus don't require that inefficiency.
+        Also,
         we do not draw these unless the comments in question are being drawn
         on top level--this avoids bugggy behavior where comment rectangles are
         drawn inside a GOP on another toplevel glist when the GOP subpatch is
@@ -2758,23 +2717,21 @@ void text_drawborder(t_text *x, t_glist *glist,
     {
         if (firsttime)
         {
-            /*sys_vgui(".x%lx.c create pline\
-                 %d %d %d %d -tags [list %sR commentbar] -stroke $pd_colors(atom_box_border)\n",*/
-            /* Look like this isn't needed... */
-            //sys_vgui(".x%lx.c create ppolygon %d %d %d %d %d %d %d %d %d %d\
-            //    -tags [list %sR commentbar %s] -stroke %s\
-            //    -strokewidth 1 -strokedasharray {2 2} -strokelinecap butt\n",
-            //    glist_getcanvas(glist),
-            //    //x2, y1,  x2, y2, tag);
-            //    x1, y1,  x2, y1,  x2, y2,  x1, y2,  x1, y1, tag,
-            //    (selected ? "selected" : ""),
-            //    (selected ? "$pd_colors(selection)" : "$pd_colors(box_border)"));
+            gui_vmess("gui_text_draw_border", "xssiii",
+                glist_getcanvas(glist),
+                tag,
+                "none",
+                0,
+                x2 - x1,
+                y2 - y1);
         }
         else
         {
-            /* Not needed... only the parent gobj group needs to be displaced */
-            //sys_vgui(".x%lx.c coords %sR %d %d %d %d %d %d %d %d %d %d\n",
-            //    glist_getcanvas(glist), tag, x1, y1,  x2, y1,  x2, y2,  x1, y2,  x1, y1);
+            gui_vmess("gui_text_redraw_border", "xsii",
+                glist_getcanvas(glist),
+                tag,
+                x2 - x1,
+                y2 - y1);
         }
     }
 
