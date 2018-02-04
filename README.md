@@ -92,22 +92,19 @@ Hard drive space required: *roughly 2.5 GB*
 
 1. Install the dependencies
 
-        sudo apt-get install bison flex automake qjackctl \
-             tcl8.5-dev tk8.5-dev tcl-dev tk-dev libasound2-dev \
+        sudo apt-get install bison flex automake libasound2-dev \
              libjack-jackd2-dev libtool libbluetooth-dev libgl1-mesa-dev \
              libglu1-mesa-dev libglew-dev libmagick++-dev libftgl-dev \
              libgmerlin-dev libgmerlin-avdec-dev libavifile-0.7-dev \
              libmpeg3-dev libquicktime-dev libv4l-dev libraw1394-dev \
              libdc1394-22-dev libfftw3-dev libvorbis-dev ladspa-sdk \
-             dssi-dev tap-plugins ladspa-foo-plugins \
-             invada-studio-plugins-ladspa blepvco swh-plugins mcp-plugins \
-             cmt blop slv2-jack omins ubuntustudio-audio-plugins rev-plugins \
+             dssi-dev tap-plugins invada-studio-plugins-ladspa blepvco \
+             swh-plugins mcp-plugins cmt blop slv2-jack omins rev-plugins \
              libslv2-dev dssi-utils vco-plugins wah-plugins fil-plugins \
              mda-lv2 libmp3lame-dev libspeex-dev libgsl0-dev \
-             portaudio19-dev python-dev libsmpeg0 libjpeg62 tkpng flite1-dev \
-             libgsm1-dev libfftw3-dev libgtk2.0-dev subversion git libstk0-dev \
-             libsndobj-dev libfluidsynth-dev tclxapian fluid-soundfont-gm \
-             python-tk byacc
+             portaudio19-dev python-dev libsmpeg0 libjpeg62 flite1-dev \
+             libgsm1-dev libfftw3-dev libgtk2.0-dev git libstk0-dev \
+             libsndobj-dev libfluidsynth-dev fluid-soundfont-gm byacc
 
 2. Clone the Purr-Data repository *(10 minutes)*
 
