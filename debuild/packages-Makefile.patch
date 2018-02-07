@@ -1,0 +1,32 @@
+diff --git a/packages/Makefile b/packages/Makefile
+index f5c1f8c0..0a285b52 100644
+--- a/packages/Makefile
++++ b/packages/Makefile
+@@ -373,12 +373,14 @@ doc_format:
+ # AG: The set_version target is broken since it modifies m_pd.h in-place
+ # during the build, which is a bad thing to do to files which are supposed to
+ # be kept in a source code repository. Instead, we create s_stuff.h from
+-# s_stuff.h.in, where the latter is kept in the repo and the former gets created
+-# from the latter by substituting PD_BUILD_VERSION.
++# s_stuff.h.in, where the latter is kept in the repo and the former gets
++# created from the latter by substituting PD_BUILD_VERSION. (Only try to do
++# this if we're actually in the git repo, otherwise we'll get an empty
++# revision number.)
+ 
+ git_version: $(pd_src)/src/s_stuff.h.in
+-	cd $(pd_src)/src/ && \
+-	sed 's|^\(#define PD_BUILD_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' s_stuff.h.in > s_stuff.h
++	test -d $(cvs_root_dir)/.git && cd $(pd_src)/src/ && \
++	sed 's|^\(#define PD_BUILD_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' s_stuff.h.in > s_stuff.h || true
+ 
+ set_version:
+ # change Pd's version number to reflect the extended build
+@@ -421,7 +423,7 @@ distclean: cruft_clean
+ 	$(MAKE) -C $(abstractions_src) distclean
+ 	$(MAKE) -C $(extensions_src) distclean
+ 	$(MAKE) -C $(externals_src) distclean
+-	-$(MAKE) -C $(pd_src) distclean
++	-$(MAKE) -C $(pd_src) clean
+ 
+ test_locations:
+ 	@echo "PD_VERSION: $(PD_VERSION)"
