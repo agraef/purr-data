@@ -3553,7 +3553,6 @@ function gui_drawimage_new(obj_tag, file_path, canvasdir, flags) {
             }
         });
     }
-    post("no of files: " + count);
 
     if (count === 0) {
         // set a default image
