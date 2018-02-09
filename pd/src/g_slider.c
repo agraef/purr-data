@@ -110,26 +110,6 @@ static void slider_draw_config(t_slider *x, t_glist *glist)
         canvas, x, cbuf);
 }
 
-void slider_check_minmax(t_slider *x, double min, double max);
-void slider_check_length(t_slider *x, int w);
-
-static void hslider__clickhook2(t_scalehandle *sh, t_slider *x) {
-    double w_change_ratio = (double)(x->x_gui.x_w + sh->h_dragx)
-        /(double)x->x_gui.x_w;
-    x->x_val = x->x_val * w_change_ratio;
-    slider_check_length(x, x->x_gui.x_w + sh->h_dragx);
-    x->x_gui.x_h += sh->h_dragy;
-    slider_check_minmax(x, x->x_min, x->x_max);
-}
-static void vslider__clickhook2(t_scalehandle *sh, t_slider *x) {
-    double h_change_ratio = (double)(x->x_gui.x_h + sh->h_dragy)
-        /(double)x->x_gui.x_h;
-    x->x_val = x->x_val * h_change_ratio;
-    x->x_gui.x_w += sh->h_dragx;
-    slider_check_length(x, x->x_gui.x_h + sh->h_dragy);
-    slider_check_minmax(x, x->x_min, x->x_max);
-}
-
 static void slider__clickhook(t_scalehandle *sh, int newstate)
 {
     t_slider *x = (t_slider *)(sh->h_master);
@@ -141,6 +121,8 @@ static void slider__clickhook(t_scalehandle *sh, int newstate)
     }
     sh->h_dragon = newstate;
 }
+
+void slider_check_length(t_slider *x, int w);
 
 static void slider__motionhook(t_scalehandle *sh, t_floatarg mouse_x, t_floatarg mouse_y)
 {
@@ -418,7 +400,6 @@ static int slider_newclick(t_gobj *z, struct _glist *glist,
 static void slider_set(t_slider *x, t_floatarg f)
 {
     double g;
-    t_floatarg of=f;
     if(x->x_gui.x_reverse)
         f = maxf(minf(f,x->x_min),x->x_max);
     else

@@ -178,8 +178,6 @@ static void check_error(int err, const char *why)
 int alsamm_open_audio(int rate, int blocksize)
 {
   int err;
-  char devname[80];
-  char *cardname;
   snd_pcm_hw_params_t* hw_params;
   snd_pcm_sw_params_t* sw_params;
 
@@ -190,8 +188,6 @@ int alsamm_open_audio(int rate, int blocksize)
      ...we use periodsize and buffersize in frames */
 
   int i;
-  short* tmp_buf;
-  unsigned int tmp_uint;
 
   snd_pcm_hw_params_alloca(&hw_params);
   snd_pcm_sw_params_alloca(&sw_params);
@@ -315,8 +311,6 @@ int alsamm_open_audio(int rate, int blocksize)
   /* check for linked handles of input for each output*/
   
   for(i=0; i<(alsa_noutdev < alsa_nindev ? alsa_noutdev:alsa_nindev); i++){
-    t_alsa_dev *ad = &alsa_outdev[i];
-
     if (alsa_outdev[i].a_devno == alsa_indev[i].a_devno){
       if ((err = snd_pcm_link (alsa_indev[i].a_handle,
                                alsa_outdev[i].a_handle)) == 0){
@@ -838,7 +832,7 @@ static int alsamm_start()
 {
   int err = 0;
   int devno;
-  int chn,nchns;
+  int chn;
 
 #ifdef ALSAMM_DEBUG
   if(sys_verbose)
@@ -872,7 +866,7 @@ static int alsamm_start()
            avail,offset,alsamm_buffer_size);
 #endif
 
-    if(avail > 0){
+    if (avail > 0){
 
       int comitted = 0;
 
@@ -886,6 +880,9 @@ static int alsamm_start()
         memset(dev->a_addr[chn],0,avail*ALSAMM_SAMPLEWIDTH_32); 
     
       comitted = snd_pcm_mmap_commit (dev->a_handle, offset, avail);
+      if (comitted < 0) {
+        check_error(comitted, "couldn't commit frames");
+      }
 
       avail = snd_pcm_avail_update(dev->a_handle);
 
@@ -1044,7 +1041,6 @@ int alsamm_send_dacs(void)
   t_sample *fpo, *fpi, *fp1, *fp2;
   int i, err, devno; 
 
-  const snd_pcm_channel_area_t *my_areas;
   snd_pcm_sframes_t size;
   snd_pcm_sframes_t commitres;
   snd_pcm_state_t state;

@@ -187,7 +187,6 @@ t_binbuf *pointertobinbuf(t_pd *x, t_gpointer *gp, t_symbol *s,
     t_symbol *templatesym = gpointer_gettemplatesym(gp), *arraytype;
     t_template *template;
     int onset, type;
-    t_binbuf *b;
     t_gstub *gs = gp->gp_stub;
     t_word *vec;
     if (!templatesym)
@@ -661,6 +660,8 @@ static void set_set(t_set *x, t_symbol *templatesym, t_symbol *field)
 }
 
 extern void scalar_configure(t_scalar *x, t_glist *owner);
+extern void array_configure(t_scalar *x, t_glist *owner, t_array *a,
+    t_word *data);
 
 static void set_bang(t_set *x)
 {

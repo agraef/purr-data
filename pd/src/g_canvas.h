@@ -488,8 +488,6 @@ EXTERN int canvas_restore_original_position(t_glist *x, t_gobj *y, const char *o
 EXTERN void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos);
 EXTERN void text_drawborder(t_text *x, t_glist *glist, char *tag,
     int width, int height, int firsttime);
-EXTERN void text_drawborder_withtag(t_text *x, t_glist *glist, char *tag,
-    int width, int height, int firsttime);
 EXTERN void text_erase_gobj(t_text *x, t_glist *glist, char *tag);
 EXTERN void text_eraseborder(t_text *x, t_glist *glist, char *tag);
 EXTERN int text_xcoord(t_text *x, t_glist *glist);

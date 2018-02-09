@@ -1291,6 +1291,7 @@ static void graph_getrect(t_gobj *z, t_glist *glist,
         graph_checkgop_rect(z, glist, &x1, &y1, &x2, &y2);
 
         /* fix visibility of edge items for garrays */
+        /*
         int has_garray = 0;
         for (g = x->gl_list; g; g = g->g_next)
         {
@@ -1299,7 +1300,7 @@ static void graph_getrect(t_gobj *z, t_glist *glist,
                 has_garray = 1;
             }
         }
-        /*if (has_garray) {
+        if (has_garray) {
             x1 -= 1;
             y1 -= 2;
             //x2 += 1;
@@ -1505,48 +1506,6 @@ static void graph_delete(t_gobj *z, t_glist *glist)
     }
     if (glist_istoplevel(glist) && glist_isvisible(glist))
         canvas_getscroll(glist);
-}
-
-static t_float graph_lastxpix, graph_lastypix;
-
-static void graph_motion(void *z, t_floatarg dx, t_floatarg dy)
-{
-    t_glist *x = (t_glist *)z;
-    t_float newxpix = graph_lastxpix + dx, newypix = graph_lastypix + dy;
-    t_garray *a = (t_garray *)(x->gl_list);
-    int oldx = 0.5 + glist_pixelstox(x, graph_lastxpix);
-    int newx = 0.5 + glist_pixelstox(x, newxpix);
-    t_word *vec;
-    int nelem, i;
-    t_float oldy = glist_pixelstoy(x, graph_lastypix);
-    t_float newy = glist_pixelstoy(x, newypix);
-    graph_lastxpix = newxpix;
-    graph_lastypix = newypix;
-        /* verify that the array is OK */
-    if (!a || pd_class((t_pd *)a) != garray_class)
-        return;
-    if (!garray_getfloatwords(a, &nelem, &vec))
-        return;
-    if (oldx < 0) oldx = 0;
-    if (oldx >= nelem)
-        oldx = nelem - 1;
-    if (newx < 0) newx = 0;
-    if (newx >= nelem)
-        newx = nelem - 1;
-    if (oldx < newx - 1)
-    {
-        for (i = oldx + 1; i <= newx; i++)
-            vec[i].w_float = newy + (oldy - newy) *
-                ((t_float)(newx - i))/(t_float)(newx - oldx);
-    }
-    else if (oldx > newx + 1)
-    {
-        for (i = oldx - 1; i >= newx; i--)
-            vec[i].w_float = newy + (oldy - newy) *
-                ((t_float)(newx - i))/(t_float)(newx - oldx);
-    }
-    else vec[newx].w_float = newy;
-    garray_redraw(a);
 }
 
 extern t_class *my_canvas_class; // for ignoring runtime clicks

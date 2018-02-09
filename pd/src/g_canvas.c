@@ -2036,11 +2036,8 @@ static int canvas_open_iter(const char *path, t_canvasopen *co)
 int canvas_open(t_canvas *x, const char *name, const char *ext,
     char *dirresult, char **nameresult, unsigned int size, int bin)
 {
-    t_namelist *nl, thislist;
     int fd = -1;
-    char listbuf[MAXPDSTRING];
     char final_name[FILENAME_MAX];
-    t_canvas *y;
     t_canvasopen co;
 
     sys_expandpathelems(name, final_name);

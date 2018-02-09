@@ -34,8 +34,6 @@ void canvas_howputnew(t_canvas *x, int *connectp, int *xpixp, int *ypixp,
 void canvas_startmotion(t_canvas *x);
 t_widgetbehavior text_widgetbehavior;
 
-static char *invalid_fill = "$::pd_colors(dash_fill)";
-
 extern void canvas_displaceselection(t_canvas *x, int dx, int dy);
 extern void canvas_apply_setundo(t_canvas *x, t_gobj *y);
 extern void canvas_setundo(t_canvas *x, t_undofn undofn, void *buf,
@@ -283,14 +281,12 @@ void canvas_howputnew(t_canvas *x, int *connectp, int *xpixp, int *ypixp,
     {
         t_gobj *g, *selected = x->gl_editor->e_selection->sel_what;
         t_text *t = (t_text *)selected;
-        int recreate = 0;
         // if selected object has not yet been activated we need to recreate it first
         if (pd_class(&t->te_pd) == text_class && t->te_type != T_TEXT)
         {
             glist_noselect(x); // we do this to explicitly activate object
             glist_select(x, glist_nth(x, glist_getindex(x, 0)-1)); // then reselect it
             selected = x->gl_editor->e_selection->sel_what;
-            recreate = 1;
         }
         for (g = x->gl_list, nobj = 0; g; g = g->g_next, nobj++)
             if (g == selected)
@@ -582,10 +578,11 @@ static void messresponder_symbol(t_messresponder *x, t_symbol *s)
     outlet_symbol(x->mr_outlet, s);
 }
 
-static void messresponder_blob(t_messresponder *x, t_blob *st)
-{ /* MP 20070107 blob type */
-    outlet_blob(x->mr_outlet, st);
-}
+/* MP 20070107 blob type */
+//static void messresponder_blob(t_messresponder *x, t_blob *st)
+//{
+//    outlet_blob(x->mr_outlet, st);
+//}
 
 static void messresponder_list(t_messresponder *x, 
     t_symbol *s, int argc, t_atom *argv)
@@ -1215,14 +1212,7 @@ static void gatom_getwherelabel(t_gatom *x, t_glist *glist, int *xp, int *yp)
 static void gatom_displace(t_gobj *z, t_glist *glist,
     int dx, int dy)
 {
-    //fprintf(stderr,"gatom_displace\n");
-    t_gatom *x = (t_gatom*)z;
     text_displace(z, glist, dx, dy);
-    if (glist_isvisible(glist))
-    {
-        //sys_vgui(".x%lx.c move %lx.l %d %d\n", glist_getcanvas(glist), 
-        //    x, dx, dy);
-    }
 }
 
 /* for gatom's label */
@@ -1424,11 +1414,11 @@ static void dropdown_redraw(t_gobj *client, t_glist *glist)
                                 1 recolor */
 static void dropdown_retext(t_dropdown *x, int senditup, int recolor)
 {
-    t_canvas *canvas = glist_getcanvas(x->a_glist);
-    t_rtext *y = glist_findrtext(x->a_glist, &x->a_text);
     if (recolor)
     {
         /* not sure if we need to activate dropdown */
+        //t_rtext *y = glist_findrtext(x->a_glist, &x->a_text);
+        //t_canvas *canvas = glist_getcanvas(x->a_glist);
         //gui_vmess("gui_gatom_activate", "xsi",
         //    canvas, rtext_gettag(y), 0);
         post("note: dropdown is being activated!");
@@ -1459,7 +1449,7 @@ static void dropdown_set(t_dropdown *x, t_symbol *s, int argc, t_atom *argv)
 }
 
 static int dropdown_names_getmaxwidth(t_dropdown *x) {
-    char buf[MAXPDSTRING];
+    char *buf;
     t_binbuf *names = x->a_names, *b = binbuf_new();
     int len = binbuf_getnatom(x->a_names), maxwidth = 0;
     while (len--)
@@ -1899,7 +1889,7 @@ static void text_getrect(t_gobj *z, t_glist *glist,
             {
                 int font = glist_getfont(glist);
                 int fontwidth = sys_fontwidth(font);
-//                width += fontwidth * 2;
+                //width += fontwidth * 2;
                 width = fontwidth * (((t_dropdown *)x)->a_maxnamewidth + 2);
             }
             height = rtext_height(y) - (iscomment << 1);
@@ -1965,7 +1955,6 @@ static void text_getrect(t_gobj *z, t_glist *glist,
 static void text_displace(t_gobj *z, t_glist *glist,
     int dx, int dy)
 {
-    //fprintf(stderr,"text_displace\n");
     t_text *x = (t_text *)z;
     x->te_xpix += dx;
     x->te_ypix += dy;
@@ -1977,13 +1966,6 @@ static void text_displace(t_gobj *z, t_glist *glist,
             rtext_gettag(y),
             dx,
             dy);
-        /* Since the gui organizes all the text and shapes that
-           make an object into a container, we just displace
-           the container here */
-        //t_rtext *y = glist_findrtext(glist, x);
-        //rtext_displace(y, dx, dy);
-        //text_drawborder(x, glist, rtext_gettag(y),
-        //    rtext_width(y), rtext_height(y), 0);
         canvas_fixlinesfor(glist_getcanvas(glist), x);
     }
 }
@@ -1991,162 +1973,35 @@ static void text_displace(t_gobj *z, t_glist *glist,
 static void text_displace_withtag(t_gobj *z, t_glist *glist,
     int dx, int dy)
 {
-    //fprintf(stderr,"text_displace_withtag\n");
     t_text *x = (t_text *)z;
     x->te_xpix += dx;
     x->te_ypix += dy;
     if (glist_isvisible(glist))
-    {
-        //t_rtext *y = glist_findrtext(glist, x);
-        //text_drawborder_withtag(x, glist, rtext_gettag(y),
-        //    rtext_width(y), rtext_height(y), 0);
         canvas_fixlinesfor(glist_getcanvas(glist), x);
-        /* if this is a subpatcher in which case we may be
-           possibly moving nlets around
-           which in turn requires that we redraw parent's nlets */
-
-/*        if (glist->gl_owner && glist_isvisible(glist->gl_owner))
-          {
-            int resortin = 0, resortout = 0;
-            t_class *cl = pd_class(&z->g_pd);
-            if (cl == vinlet_class) resortin = 1;
-            else if (cl == voutlet_class) resortout = 1;
-            fprintf(stderr,"vinlet=%d voutlet=%d\n", resortin, resortout);
-            if (resortin) canvas_resortinlets(glist->gl_owner);
-            if (resortout) canvas_resortoutlets(glist->gl_owner);
-
-            char *buf;
-            char name[6];
-            int bufsize, i;
-            rtext_gettext(y, &buf, &bufsize);
-            for (i = 0; i < 5; i++)
-            {
-                name[i] = buf[i];
-            }
-            name[5] = '\0';
-            //fprintf(stderr,"yes, this is a subpatch with visible parent %s\n",
-            //    name);
-            if (!strcmp(name, "inlet") ||
-                !strcmp(name, "outle"))
-            {
-                
-                //fprintf(stderr,"yes, we're moving nlets around\n");    
-                glist_redraw(glist->gl_owner);
-            }
-        }*/
-    }    
 }
 
 static void text_select(t_gobj *z, t_glist *glist, int state)
 {
     t_text *x = (t_text *)z;
     t_rtext *y = glist_findrtext(glist, x);
-    char *outline;
     rtext_select(y, state);
-    //fprintf(stderr,"text_select %s %d\n", rtext_gettag(y), state);
 
     // text_class is either a comment or an object that failed to create
     // so we distinguish between it and comment using T_TEXT type check
-    if (pd_class(&x->te_pd) == text_class && x->te_type != T_TEXT)
-        outline = "$pd_colors(dash_outline)";
-    else if (z->g_pd == gatom_class)
-        outline = "$pd_colors(atom_box_border)";
-    else
-        outline = "$pd_colors(box_border)";
-    //fprintf(stderr,"text_select isvisible=%d shouldvis=%d istoplevel=%d\n",
-    //    glist_isvisible(glist), gobj_shouldvis(&x->te_g, glist),
-    //    glist_istoplevel(glist));
     if (gobj_shouldvis(&x->te_g, glist))
     {
-        if (glist_istoplevel(glist))
-        {
-            if (z->g_pd == gatom_class)
-            {
-                //sys_vgui(".x%lx.c itemconfigure %lx.l -fill %s\n",
-                //    glist_getcanvas(glist), x,
-                //    (state? "$pd_colors(selection)" : "$pd_colors(text)"));
-            }
-        }
         if (z->g_pd->c_wb && z->g_pd->c_wb->w_displacefnwtag)
         {
-            int i;
             if (state)
             {
-                if (z->g_pd == gatom_class)
-                {
-                    /* Since the label is a child of the parent gobj, we
-                       only need to select the gobj to displace it */
-                    //sys_vgui(".x%lx.c addtag selected withtag %lx.l\n",
-                    //    glist_getcanvas(glist), x);                    
-                }
                 gui_vmess("gui_gobj_select", "xs",
                     glist_getcanvas(glist), rtext_gettag(y));
-
-                if (pd_class(&x->te_pd) == text_class &&
-                             x->te_type != T_TEXT &&
-                             glist_istoplevel(glist))
-                {
-                    /* Not sure yet what this was doing... */
-                    //sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 1 "
-                    //         "-strokedasharray {} "
-                    //         "-fill $pd_colors(box)\n",
-                    //    glist_getcanvas(glist), rtext_gettag(y));
-                }
-
-                t_object *ob = pd_checkobject(&x->te_pd);
-                int no = obj_noutlets(ob);
-                int ni = obj_ninlets(ob);
-
-                for (i = 0; i < no; i++)
-                {
-                    /* Not necessary since xlet rect is child of gobj */
-                    //sys_vgui(".x%lx.c addtag selected withtag %so%d \n",
-                    //                glist_getcanvas(glist), rtext_gettag(y), i);
-                }
-                for (i = 0; i < ni; i++)
-                {
-                    /* Not necessary since xlet rect is child of gobj */
-                    //sys_vgui(".x%lx.c addtag selected withtag %si%d \n",
-                    //    glist_getcanvas(glist), rtext_gettag(y), i);
-                }
             }
             else
             {
-                if (z->g_pd == gatom_class)
-                {
-                    //sys_vgui(".x%lx.c dtag %lx.l selected\n",
-                    //    glist_getcanvas(glist), x);                    
-                }
                 gui_vmess("gui_gobj_deselect", "xs",
                     glist_getcanvas(glist),
                     rtext_gettag(y));
-
-                if (pd_class(&x->te_pd) == text_class &&
-                    x->te_type != T_TEXT)
-                {
-                    /* This is for broken objects, but we're doing
-                       it in CSS now... */
-                    //sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 2 "
-                    //    "-strokelinecap projecting -strokedasharray {2 3} "
-                    //    "-fill %s\n",
-                    //    glist_getcanvas(glist),
-                    //    rtext_gettag(y), invalid_fill);
-                }
-
-                t_object *ob = pd_checkobject(&x->te_pd);
-                int no = obj_noutlets(ob);
-                int ni = obj_ninlets(ob);
-
-                for (i = 0; i < no; i++)
-                {
-                    //sys_vgui(".x%lx.c dtag %so%d selected\n",
-                    //    glist_getcanvas(glist), rtext_gettag(y), i);
-                }
-                for (i = 0; i < ni; i++)
-                {
-                    //sys_vgui(".x%lx.c dtag %si%d selected\n",
-                    //    glist_getcanvas(glist), rtext_gettag(y), i);
-                }
             }
         }
     }
@@ -2446,7 +2301,6 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
     int n = obj_noutlets(ob), nplus = (n == 1 ? 1 : n-1), i;
     int width = x2 - x1;
     int issignal;
-    int selected = glist_isselected(glist, (t_gobj*)ob);
     for (i = 0; i < n; i++)
     {
         int onset = x1 + (width - IOWIDTH) * i / nplus;
@@ -2526,95 +2380,12 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
     }
 }
 
-    /* draw inlets and outlets for a text object or for a graph. */
-   /* this should never get called... */
-void glist_drawiofor_withtag(t_glist *glist, t_object *ob, int firsttime,
-    char *tag, int x1, int y1, int x2, int y2)
-{
-    post("glist_drawiofor_withtag: should never get called!");
-    return;
-    if (pd_class(&ob->te_pd) == text_class)
-        return;
-    //fprintf(stderr,"drawiofor_withtag\n");
-    int n = obj_noutlets(ob), nplus = (n == 1 ? 1 : n-1), i;
-    int width = x2 - x1;
-    int issignal;
-    for (i = 0; i < n; i++)
-    {
-        int onset = x1 + (width - IOWIDTH) * i / nplus;
-        if (firsttime)
-        {
-            //fprintf(stderr,"drawiofor_withtag o firsttime\n");
-            issignal = obj_issignaloutlet(ob,i);
-            /* Hm, I can't seem to find a case where this is needed
-               yet.  All the xlets in nw.js port load and get created
-               correctly without it... */
-            //sys_vgui(".x%lx.c create prect %d %d %d %d \
-            //          -fill %s -stroke %s -tags {%so%d %lx outlet}\n",
-            //    glist_getcanvas(glist), onset, y2 - 2, onset + IOWIDTH, y2,
-            //    (issignal ? "$pd_colors(signal_nlet)" :
-            //        "$pd_colors(control_nlet)"),
-            //    (issignal ? "$pd_colors(signal_cord)" :
-            //        "$pd_colors(control_cord)"),
-            //    tag, i, tag);
-        }
-        /*
-        else
-        {
-            sys_vgui(".x%lx.c addtag selected withtag %so%d \n",
-                glist_getcanvas(glist), tag, i);
-        }
-        */
-    }
-    n = obj_ninlets(ob);
-    //fprintf(stderr,"drawiofor_withtag n=%d\n", n);
-    nplus = (n == 1 ? 1 : n-1);
-    for (i = 0; i < n; i++)
-    {
-        int onset = x1 + (width - IOWIDTH) * i / nplus;
-        if (firsttime)
-        {
-            //fprintf(stderr,"drawiofor_withtag i firsttime\n");
-            issignal = obj_issignalinlet(ob,i);
-            /* Looks like this doesn't get called... */
-            //sys_vgui(".x%lx.c create prect %d %d %d %d \
-            //          -fill %s -stroke %s -tags {%si%d %lx inlet}\n",
-            //    glist_getcanvas(glist), onset, y1,
-            //    onset + IOWIDTH, y1 + EXTRAPIX,
-            //    (issignal ? "$pd_colors(signal_nlet)" :
-            //        "$pd_colors(control_nlet)"),
-            //    (issignal ? "$pd_colors(signal_cord)" :
-            //        "$pd_colors(control_cord)"),
-            //    tag, i, tag);
-        }
-/*        else
-        {
-            //sys_vgui(".x%lx.c addtag selected withtag %si%d \n",
-            //    glist_getcanvas(glist), tag, i);
-            fprintf(stderr,"drawiofor_withtag i redraw\n");
-            issignal = obj_issignalinlet(ob,i);
-            sys_vgui(".x%lx.c itemconfigure %si%d \
-                      -fill %s -outline %s\n",
-                glist_getcanvas(glist), tag, i,
-                (issignal ? "$pd_colors(signal_nlet)" :
-                    "$pd_colors(control_nlet)"),
-                (issignal ? "$pd_colors(signal_cord)" :
-                    "$pd_colors(control_cord)"));
-        }
-*/
-    }
-}
-
 void text_drawborder(t_text *x, t_glist *glist,
     char *tag, int width2, int height2, int firsttime)
 {
-    //fprintf(stderr,"text_drawborder\n");
-
     t_object *ob;
     int x1, y1, x2, y2;
     int broken;
-
-    int selected = glist_isselected(glist, (t_gobj*)x);
 
     /* if this is gop patcher, the getrect should be equal to gop-ed window
        rather than just the size of text */
@@ -2743,118 +2514,6 @@ void text_drawborder(t_text *x, t_glist *glist,
     /* raise cords over everything else */
     if (firsttime && glist==glist_getcanvas(glist))
         canvas_raise_all_cords(glist);
-
-    //ico@bukvic.net 100518 update scrollbars when GOP
-    //potentially exceeds window size
-    //canvas_getscroll(
-    //    (long unsigned int)glist_getcanvas(glist));
-}
-
-/* Should be able to remove this since it never gets called... */
-void text_drawborder_withtag(t_text *x, t_glist *glist,
-    char *tag, int width2, int height2, int firsttime)
-{
-    post("text_drawborder_withtag: should never get called!");
-    return;
-    t_object *ob;
-    int x1, y1, x2, y2, msg_draw_const, atom_draw_const;
-    text_getrect(&x->te_g, glist, &x1, &y1, &x2, &y2);
-
-    if (x->te_type == T_OBJECT)
-    {
-        char *pattern; char *outline; char *fill;
-        if (pd_class(&x->te_pd) == text_class)
-        {
-            pattern = "-";
-            outline = "$pd_colors(dash_outline) -strokewidth 2 -strokelinecap projecting -strokedasharray {2 3}";
-            fill = invalid_fill;
-        }
-        else
-        {
-            pattern = "\"\"";
-            outline = "$pd_colors(box_border)";
-            fill = "$pd_colors(box)";
-        }
-        if (firsttime)
-        {
-            /* Looks like this isn't needed... */
-            //sys_vgui(".x%lx.c create ppolygon %d %d %d %d %d %d %d %d %d %d"
-            //         "-stroke %s -fill %s -tags {%sR %lx text}\n", 
-            //    glist_getcanvas(glist),
-            //         x1, y1,  x2, y1,  x2, y2,  x1, y2,  x1, y1,  
-            //         outline, fill, tag, tag);
-            //    //-dash %s -> pattern disabled for tkpath
-        }
-    }
-    else if (x->te_type == T_MESSAGE)
-    {
-        msg_draw_const = ((y2-y1)/4);
-        if (msg_draw_const > 10) msg_draw_const = 10; /* looks bad if too big */
-        if (firsttime)
-        {
-            /* Doesn't look like this is necessary... */
-            sys_vgui(".x%lx.c create ppolygon "
-                     "%d %d %d %d %d %d %d %d %d %d %d %d %d %d "
-                     "-stroke $pd_colors(msg_border) -fill $pd_colors(msg) "
-                     "-tags {%sR %lx text msg box}\n",
-                glist_getcanvas(glist),
-                     x1, y1,  x2+msg_draw_const, y1,  x2, y1+msg_draw_const,  
-                     x2, y2-msg_draw_const,  x2+msg_draw_const, y2,  
-                x1, y2,  x1, y1,
-                    tag, tag);
-        }
-    }
-    else if (x->te_type == T_ATOM)
-    {
-        atom_draw_const = ((y2-y1)/3);
-        if (firsttime)
-        {
-            /* Looks like this isn't needed... */
-            //sys_vgui(".x%lx.c create ppolygon "
-            //         "%d %d %d %d %d %d %d %d %d %d %d %d "
-            //         "-stroke $pd_colors(atom_box_border) "
-            //         "-fill $pd_colors(atom_box) "
-            //         "-tags {%sR %lx text atom box}\n",
-            //    glist_getcanvas(glist),
-            //         x1, y1,  x2-atom_draw_const, y1,  x2, y1+atom_draw_const,  
-            //         x2, y2,  x1, y2,  x1, y1, 
-            //        tag, tag);
-        }
-    }
-        /* for comments, draw a dotted box; when a visible
-        canvas is unlocked we have to call this anew on all comments, and when
-        locked we erase them all via the annoying "commentbar" tag. */
-    else if (x->te_type == T_TEXT && glist->gl_edit)
-    {
-        if (firsttime)
-        {
-            /* Looks like this isn't needed... */
-            //sys_vgui(".x%lx.c create pline %d %d %d %d "
-            //         "-tags [list %sR commentbar] -stroke $box_outline\n",
-            //    glist_getcanvas(glist),
-            //    x2, y1,  x2, y2, tag);
-        }
-        else
-        {
-            /* Looks like this isn't needed... */
-            //sys_vgui(".x%lx.c coords %sR %d %d %d %d\n",
-            //    glist_getcanvas(glist), tag, x2, y1,  x2, y2);
-        }
-    }
-        /* draw inlets/outlets */
-    
-    if (ob = pd_checkobject(&x->te_pd))
-    {
-        glist_drawiofor_withtag(glist, ob, firsttime, tag, x1, y1, x2, y2);
-    }
-    /* raise cords over everything else */
-    if (firsttime && glist==glist_getcanvas(glist))
-        canvas_raise_all_cords(glist);
-
-    //ico@bukvic.net 100518 update scrollbars when GOP
-    //potentially exceeds window size
-    //canvas_getscroll(
-    //    (long unsigned int)glist_getcanvas(glist));
 }
 
 void glist_eraseiofor(t_glist *glist, t_object *ob, char *tag)
@@ -2889,8 +2548,6 @@ void text_eraseborder(t_text *x, t_glist *glist, char *tag)
 {
     if (x->te_type == T_TEXT && !glist->gl_edit) return;
     //if (!glist_isvisible(glist)) return;
-    //sys_vgui(".x%lx.c delete %sR\n",
-    //    glist_getcanvas(glist), tag);
     glist_eraseiofor(glist, x, tag);
 }
 
@@ -2928,10 +2585,13 @@ void text_checkvalidwidth(t_glist *glist)
            contains a scalar. */
         if (pd_class((t_pd *)yg) == scalar_class) return;
         t_text *newest_t = (t_text *)yg;
-        //fprintf(stderr, "newest object text class is %lx\n", newest_t);
         t_rtext *yn = glist_findrtext(glist, newest_t);
-        if (yn && pd_class(&newest_t->te_pd) == text_class && newest_t->te_type != T_TEXT)
-            text_drawborder(newest_t, glist, rtext_gettag(yn), rtext_width(yn), rtext_height(yn), 0);
+        if (yn && pd_class(&newest_t->te_pd) == text_class &&
+            newest_t->te_type != T_TEXT)
+        {
+            text_drawborder(newest_t, glist, rtext_gettag(yn),
+                rtext_width(yn), rtext_height(yn), 0);
+        }
     }
 }
 
@@ -3115,7 +2775,7 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
     }
 }
 
-    /* this gets called when amessage gets sent to an object whose creation
+    /* this gets called when a message gets sent to an object whose creation
     failed, presumably because of loading a patch with a missing extern or
     abstraction */
 static void text_anything(t_text *x, t_symbol *s, int argc, t_atom *argv)

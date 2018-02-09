@@ -3627,8 +3627,7 @@ static void svg_getrectrect(t_svg *x, t_glist *glist,
 
     t_float mtx1[3][3] = { {1, 0, 0}, {0, 1, 0}, {0, 0, 1} };
     t_float mtx2[3][3] = { {1, 0, 0}, {0, 1, 0}, {1, 0, 1} };
-    t_float m1, m2, m3, m4, m5, m6,
-            tx1, ty1, tx2, ty2, t5, t6;
+    t_float tx1, ty1, tx2, ty2, t5, t6;
     if (!fielddesc_getfloat(&x->x_bbox, template, data, 0) ||
         (x->x_vis.a_flag && !fielddesc_getfloat(&x->x_vis.a_attr,
             template, data, 0)))
@@ -4258,12 +4257,12 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     }
 }
 
-static int draw_motion_field;
+//static int draw_motion_field;
 static t_float draw_motion_xcumulative;
-static t_float draw_motion_xbase;
+//static t_float draw_motion_xbase;
 static t_float draw_motion_xper;
 static t_float draw_motion_ycumulative;
-static t_float draw_motion_ybase;
+//static t_float draw_motion_ybase;
 static t_float draw_motion_yper;
 static t_glist *draw_motion_glist;
 static t_scalar *draw_motion_scalar;
@@ -4426,7 +4425,7 @@ static int draw_click(t_gobj *z, t_glist *glist,
             SETFLOAT(at+2, ypix - glist_ytopixels(glist, basey));
             t_float mtx1[3][3];
             t_float mtx2[3][3];
-            t_float m1, m2, m3, m4, m5, m6, tdx, tdy;
+            t_float m1, m2, m3, m4, m5, m6;
 
             t_svg *sa = (t_svg *)x->x_attr;
             /* might use this to output the ctm */
@@ -4518,8 +4517,7 @@ static void scalar_spelunkforword(void* word_candidate, t_template* template,
             if (t)
             {
                 int i, elemsize = wp->w_array->a_elemsize;
-                char *vec;
-                for(i = 0, vec = wp->w_array->a_vec; i < wp->w_array->a_n; i++)
+                for(i = 0; i < wp->w_array->a_n; i++)
                     scalar_spelunkforword(word_candidate, t,
                         (t_word *)(wp->w_array->a_vec + i * elemsize),
                             word_index, arrayp, datap);
@@ -6146,7 +6144,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                         }
                     }
                     int mex1 = fielddesc_cvttocoord(xfielddesc, usexloc);
-                    t_float mey1 = fielddesc_cvttocoord(yfielddesc, minyval) - 1;
+                    //t_float mey1 = fielddesc_cvttocoord(yfielddesc, minyval) - 1;
                     int mex2 = fielddesc_cvttocoord(xfielddesc, xsum + x_inverse);
 
                     t_float mey2 = style == PLOTSTYLE_POINTS ?
@@ -6609,8 +6607,8 @@ static void *drawarray_new(t_symbol *s, int argc, t_atom *argv)
     t_svg *sa = (t_svg *)x->x_attr;
 
     x->x_canvas = canvas_getcurrent();
-    t_template *t = template_findbyname(
-        canvas_makebindsym(x->x_canvas->gl_name));
+    //t_template *t = template_findbyname(
+    //    canvas_makebindsym(x->x_canvas->gl_name));
 
     if (argc) fielddesc_setarrayarg(&x->x_data, argc--, argv++);
     else fielddesc_setfloat_const(&x->x_data, 1);
@@ -6679,51 +6677,6 @@ static int drawarray_readownertemplate(t_drawarray *x,
 
     return (0);
 }
-
-static void drawarray_getgrouprect(t_glist *glist, t_template *elemtemplate,
-    t_canvas *groupcanvas, int elemsize,
-    t_array *array, int i, t_float usexloc, t_float useyloc,
-    int *x1, int *y1, int *x2, int *y2)
-{
-    t_gobj *y;
-    for (y = groupcanvas->gl_list; y; y = y->g_next)
-    {
-        if (pd_class(&y->g_pd) == canvas_class &&
-            ((t_canvas *)y)->gl_svg)
-        {
-            drawarray_getgrouprect(glist, elemtemplate, (t_canvas *)y,
-                elemsize, array, i, usexloc, useyloc, x1, y1, x2, y2);
-        }
-        //fprintf(stderr,".-.-. usexloc %f useyloc %f "
-        //               "(alt %f %f)\n",
-        //  usexloc, useyloc,
-        //  basex + xloc +
-        //  fielddesc_cvttocoord(xfielddesc,
-        //      *(t_float *)(((char *)(array->a_vec) + elemsize * i)
-        //      + xonset)),
-        //  *(t_float *)(((char *)(array->a_vec) + elemsize * i) +
-        //  yonset));
-        int xx1, xx2, yy1, yy2;
-        t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
-        if (!wb) continue;
-        (*wb->w_parentgetrectfn)(y, glist,
-            (t_word *)((char *)(array->a_vec) + elemsize * i),
-                elemtemplate, usexloc, useyloc, 
-                    &xx1, &yy1, &xx2, &yy2);
-        //fprintf(stderr,"  .....drawarray_getrect %d %d %d %d\n",
-        //    xx1, yy1, xx2, yy2); 
-        if (xx1 < *x1)
-            *x1 = xx1;
-        if (yy1 < *y1)
-            *y1 = yy1;
-        if (xx2 > *x2)
-            *x2 = xx2;
-        if (yy2 > *y2)
-            *y2 = yy2;
-        //fprintf(stderr,"  ....drawarray_getrect %d %d %d %d\n",
-        //    x1, y1, x2, y2); 
-    }
-} 
 
 static void drawarray_getrect(t_gobj *z, t_glist *glist,
     t_word *data, t_template *template, t_float basex, t_float basey,
@@ -6821,10 +6774,10 @@ static void drawarray_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     t_canvas *elemtemplatecanvas;
     t_template *elemtemplate;
     t_symbol *elemtemplatesym;
-    t_fielddesc *xfielddesc, *yfielddesc, *wfielddesc;
     /* Let's just set constant increment values and see how they
        play out before adding xinc and yinc to the public interface... */
-    t_float xinc = 40, yinc = 40, xsum, yval;
+    t_float xinc = 40, xsum, yval;
+    //t_float yinc = 40;
     t_array *array;
     int nelem;
     char *elem;
@@ -8536,7 +8489,6 @@ static void drawimage_setup(void)
 t_template *canvas_findtemplate(t_canvas *c)
 {
     t_gobj *g;
-    t_symbol *s1 = gensym("struct");
     for (g = c->gl_list; g; g = g->g_next)
     {
         if (pd_class(&g->g_pd) == gtemplate_class)
