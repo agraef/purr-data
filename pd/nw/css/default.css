@@ -386,7 +386,8 @@ text {
 }
 
 #patchsvg.editmode .comment .border {
-    stroke: #ccc;
+    stroke: #aaa;
+    stroke-dasharray: 8 4;
 }
 
 /* A little hack for special case of [cnv].
