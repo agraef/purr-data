@@ -98,6 +98,10 @@ deb-us:
 debsrc-us:
 	$(MAKE) deb DEBUILD_FLAGS="-S -us -uc"
 
+# Determine the build version which needs git to be computed, so we can't do
+# it in a stand-alone build from a tarball.
+PD_BUILD_VERSION := $(shell git log -1 --format=%cd --date=short | sed -e 's/-//g')-rev.$(shell git rev-parse --short HEAD)
+
 $(debsrc):
 	rm -rf $(debdist)
 # Make sure that the submodules are initialized.
@@ -106,6 +110,12 @@ $(debsrc):
 	git -C .. archive --format=tar.gz --prefix=$(debdist)/ HEAD | tar xfz -
 # Grab the submodules.
 	for x in $(submodules); do (cd $(debdist) && rm -rf $$x && git -C ../../$$x archive --format=tar.gz --prefix=$$x/ HEAD | tar xfz -); done
+# Pre-generate and put s_stuff.h into the tarball (see above; the build
+# version is generated using git which can't be done outside the git repo).
+	sed 's|^\(#define PD_BUILD_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' ../pd/src/s_stuff.h.in > $(debdist)/pd/src/s_stuff.h
+# Patch packages/Makefile so that we do *not* try to regenerate s_stuff.h
+# during the build.
+	cd $(debdist) && patch -p1 < ../packages-Makefile.patch
 # Create the source tarball.
 	tar cfz $(debsrc) $(debdist)
 	rm -rf $(debdist)
