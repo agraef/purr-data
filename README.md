@@ -8,7 +8,7 @@ maintainers:
 
 [Downloads](https://github.com/jonwwilkes/purr-data/releases)
 
-[Mailing List](http://disis.music.vt.edu/cgi-bin/mailman/listinfo/l2ork-dev) (**2/7/18: the mailing list is currently down. The admins are working to get it back up.**)
+[Mailing List](http://disis.music.vt.edu/cgi-bin/mailman/listinfo/l2ork-dev)
 
 * [One Paragraph Overview](#one-paragraph-overview)
 * [Flavors of Pure Data](#flavors-of-pure-data)
