@@ -1964,15 +1964,15 @@ function gui_gobj_new(cid, tag, type, xpos, ypos, is_toplevel) {
     return g;
 }
 
-function gui_text_draw_border(cid, tag, bgcolor, isbroken, x1, y1, x2, y2) {
+function gui_text_draw_border(cid, tag, bgcolor, isbroken, width, height) {
     gui(cid).get_gobj(tag)
     .append(function(frag) {
         // isbroken means either
         //     a) the object couldn't create or
         //     b) the box is empty
         var rect = create_item(cid, "rect", {
-            width: x2 - x1,
-            height: y2 - y1,
+            width: width,
+            height: height,
             //"shape-rendering": "crispEdges",
             class: "border"
         });
@@ -2410,7 +2410,7 @@ function gui_text_set (cid, tag, text) {
     });
 }
 
-function gui_text_redraw_border(cid, tag, x1, y1, x2, y2) {
+function gui_text_redraw_border(cid, tag, width, height) {
     // Hm, need to figure out how to refactor to get rid of
     // configure_item call...
     gui(cid).get_gobj(tag, function(e) {
@@ -2418,8 +2418,8 @@ function gui_text_redraw_border(cid, tag, x1, y1, x2, y2) {
         i;
         for (i = 0; i < b.length; b++) {
             configure_item(b[i], {
-                width: x2 - x1,
-                height: y2 - y1
+                width: width,
+                height: height
             });
         }
     });

@@ -322,7 +322,7 @@ int canvas_restore_original_position(t_glist *x, t_gobj *y, const char* objtag,
     if (pd_class(&y->g_pd) != canvas_class || ((t_glist *)y)->gl_owner == x)
     {
         t_object *ob = NULL;
-        t_rtext *yrnxt = NULL, *yr = NULL;
+        t_rtext *yrnxt = NULL;
 
         if (y->g_next)
         {
@@ -339,10 +339,6 @@ int canvas_restore_original_position(t_glist *x, t_gobj *y, const char* objtag,
         else
         {
             ret = 1;
-        }
-        if (ob)
-        {
-            yr = glist_findrtext(x, (t_text *)&ob->ob_g);
         }
         if (ret != 1)
         {
@@ -455,13 +451,9 @@ void glist_deselectline(t_glist *x)
         do {
             oc = linetraverser_next(&t);
         } while (oc && oc != x->gl_editor->e_selectline_tag);
-        int issignal;
-        if(outlet_getsymbol(t.tr_outlet) == &s_signal)
-            issignal = 1;
-        else
-            issignal = 0;
         canvas_draw_gop_resize_hooks(x);
-        sprintf(tagbuf, "l%lx", (long unsigned int)x->gl_editor->e_selectline_tag);
+        sprintf(tagbuf, "l%lx",
+            (long unsigned int)x->gl_editor->e_selectline_tag);
         gui_vmess("gui_canvas_deselect_line", "xs", x, tagbuf);
     }    
 }
@@ -2661,7 +2653,8 @@ int garray_properties(t_garray *x, t_symbol **gfxstubp, t_symbol **namep,
 void canvas_properties(t_glist *x)
 {
     t_gobj *y;
-    char graphbuf[200], *gfx_tag;
+    //char graphbuf[200];
+    char *gfx_tag;
 
     gfx_tag = gfxstub_new2(&x->gl_pd, x);
 
@@ -2736,7 +2729,6 @@ void canvas_properties(t_glist *x)
     {
         if (pd_class(&y->g_pd) == garray_class) 
         {
-            t_garray *garray = (t_garray *)y;
             t_symbol *gfxstub, *name, *fill, *outline;
             int size, flags;
             /* garray_properties can fail to find an array, so we won't
@@ -5629,7 +5621,6 @@ void canvas_menuclose(t_canvas *x, t_floatarg fforce)
     /* put up a dialog which may call canvas_font back to do the work */
 static void canvas_menufont(t_canvas *x)
 {
-    char buf[80];
     t_canvas *x2 = canvas_getrootfor(x);
     gfxstub_deleteforkey(x2);
     char *gfxstub = gfxstub_new2(&x2->gl_pd, &x2->gl_pd);
@@ -7503,7 +7494,7 @@ static void canvas_enterobj(t_canvas *x, t_symbol *item, t_floatarg xpos,
     t_floatarg ypos, t_floatarg xletno)
 {
     if (x->gl_editor->e_onmotion == MA_MOVE) { return; }
-    t_symbol *name = 0, *helpname, *dir;
+    //t_symbol *name = 0, *helpname, *dir;
     int yoffset = 0, xoffset = 0;
     if (item == gensym("inlet"))
     {
@@ -7523,19 +7514,19 @@ static void canvas_enterobj(t_canvas *x, t_symbol *item, t_floatarg xpos,
         if (pd_class((t_pd *)g)==canvas_class ?
             canvas_isabstraction((t_canvas *)g) : 0)
         {
-            t_canvas *z = (t_canvas *)g;
-            name = z->gl_name;
-            helpname = z->gl_name;
-            dir = canvas_getdir(z);
+            //t_canvas *z = (t_canvas *)g;
+            //name = z->gl_name;
+            //helpname = z->gl_name;
+            //dir = canvas_getdir(z);
         }
         else
         {
-            name = g->g_pd->c_name;
-            helpname = g->g_pd->c_helpname;
-            dir = g->g_pd->c_externdir;
+            //name = g->g_pd->c_name;
+            //helpname = g->g_pd->c_helpname;
+            //dir = g->g_pd->c_externdir;
         }
-        //sys_vgui("pdtk_gettip .x%lx.c %s %d \
-        //[list %s] [list %s] [list %s]\n",
+        //sys_vgui("pdtk_gettip .x%lx.c %s %d "
+        //"[list %s] [list %s] [list %s]\n",
         //x, item->s_name, (int)xletno,
         //name->s_name, helpname->s_name, dir->s_name);
     }
@@ -7551,7 +7542,7 @@ static void canvas_tip(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     else
     {
         //sys_vgui("pdtk_tip .x%lx.c 1", x);
-        t_atom *at = argv;
+        //t_atom *at = argv;
         int i;
         for (i=0; i<argc; i++)
         {

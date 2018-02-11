@@ -65,14 +65,14 @@ void magicGlass_updateText(t_magicGlass *x, int moved)
     {
         if (!moved)
         {
-            char *color;
+            //char *color;
             if (x->x_issignal || strcmp(x->x_old_string, x->x_string))
             {
-                color = "$pd_colors(magic_glass_text)";
+                //color = "$pd_colors(magic_glass_text)";
             }
             else
             {
-                color = "$pd_colors(magic_glass_flash)";
+                //color = "$pd_colors(magic_glass_flash)";
                 gui_vmess("gui_cord_inspector_flash", "xi", x->x_c, 1);
                 clock_delay(x->x_flashClock, MG_CLOCK_FLASH_DELAY);
             }

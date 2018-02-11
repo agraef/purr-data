@@ -212,7 +212,6 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
     //fprintf(stderr,"rtext_senditup <%s>\n", x->x_buf);
     if (x)
     {
-        t_float dispx, dispy;
         char smallbuf[200] = { '\0' }, *tempbuf;
         int outchars_b = 0, nlines = 0, ncolumns = 0,
             pixwide, pixhigh, font, fontwidth, fontheight, findx, findy;
@@ -323,8 +322,6 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
         }
         if (!reportedindex)
             *indexp = outchars_b;
-        dispx = text_xpix(x->x_text, x->x_glist);
-        dispy = text_ypix(x->x_text, x->x_glist);
         if (nlines < 1) nlines = 1;
         if (!widthspec_c)
         {

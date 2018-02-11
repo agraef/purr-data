@@ -286,7 +286,6 @@ static int garray_get_largest_array(t_garray *x)
     t_gobj *g;
     t_array *a;
     t_garray *tmp;
-    int an = 0;
 
     // checks if there is a PLOTSTYLE_POLY vs others
     // longest array uses has_*, total_* gives total number
@@ -442,7 +441,6 @@ t_garray *graph_array(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
     int n = fsize, zonset, ztype, saveit;
     t_symbol *zarraytype;
     t_garray *x;
-    t_pd *x2;
     t_template *template, *ztemplate;
     t_symbol *templatesym;
     int flags = fflags;
@@ -1081,14 +1079,14 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
             /* if it has more than 2000 points, just check 1000 of them. */
         int incr = (array->a_n <= 2000 ? 1 : array->a_n / 1000);
         t_float pxpix1 = 0.0, pxpix2 = 0.0, pypix = 0.0, pwpix = 0.0,
-          dx, dy, dy2, dy3;
+          dy, dy2, dy3;
         for (i = 0; i < array->a_n; i += incr)
         {
             array_getcoordinate(glist, (char *)(array->a_vec) + i * elemsize,
                 xonset, yonset, wonset, i, xloc, yloc, xinc,
                 xfield, yfield, wfield, &pxpix1, &pxpix2, &pypix, &pwpix, 1);
-            //fprintf(stderr,"    array_getcoordinate %d: pxpix1:%f pxpix2:%f pypix:%f pwpix:%f dx:%f dy:%f elemsize:%d yonset:%d wonset:%d xonset:%d xloc:%f yloc:%f xinc:%f\n", i, pxpix1, pxpix2, pypix, pwpix, dx, dy, elemsize, yonset, wonset, xonset, xloc, yloc, xinc);
-            // increased following on 20140830 to 8 and updated array_getcoordinate
+            // increased following on 20140830 to 8 and updated
+            // array_getcoordinate
             // so that the smallest hitbox is always at least 8x8--check with
             // all_about_arrays.pd inside custom scalars in an array
             if (pwpix < 8)
@@ -1101,34 +1099,13 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
                 best = i;
                 break;
             }
-/*
-            if (pwpix < 4)
-                pwpix = 4;
-            dx = pxpix1 - xpix;
-            if (dx < 0) dx = -dx;
-            if (dx > pxpix2-pxpix1) //this is the arbitrary radius away from the actual object's center, originally 8
-                continue;   
-            dy = pypix - ypix;
-            if (dy < 0) dy = -dy;
-            if (dx + dy < best)
-                best = dx + dy;
-            if (wonset >= 0)
-            {
-                dy = (pypix + pwpix) - ypix;
-                if (dy < 0) dy = -dy;
-                if (dx + dy < best)
-                    best = dx + dy;
-                dy = (pypix - pwpix) - ypix;
-                if (dy < 0) dy = -dy;
-                if (dx + dy < best)
-                    best = dx + dy;
-            }
-            //fprintf(stderr,"    1st %f %f %f %f %f %d %d %d %d %d\n", pxpix, pypix, pwpix, dx, dy, elemsize, yonset, wonset, xonset, i);*/
         }
         //fprintf(stderr,"    best = %f\n", best);
-        if (best == -1 && (array_joc == 0)) //this is the arbitrary radius away from the actual object's center, originally 8
+        /* this is the arbitrary radius away from the actual object's
+           center, originally 8 */
+        if (best == -1 && (array_joc == 0))
         {
-            //fprintf(stderr,"    best > 8\n");
+            //fprintf(stderr,"best > 8\n");
             if (scalarvis != 0)
             {
                 //fprintf(stderr,"    array_doclick_element\n");
@@ -1143,176 +1120,156 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
                 return (0);
             }
         }
-        //best += 0.001;  /* add truncation error margin */
-        //for (i = 0; i < array->a_n; i += incr)
-        //{
-            //array_getcoordinate(glist, (char *)(array->a_vec) + i * elemsize,
-            //    xonset, yonset, wonset, i, xloc, yloc, xinc,
-            //    xfield, yfield, wfield, &pxpix1, &pxpix2, &pypix, &pwpix, 1);
-            //dx = pxpix1 - xpix;
-            //if (dx < 0) dx = -dx;
-            dy = pypix - ypix;
-            if (dy < 0) dy = -dy;
-            if (wonset >= 0)
-            {
-                dy2 = (pypix + pwpix) - ypix;
-                if (dy2 < 0) dy2 = -dy2;
-                dy3 = (pypix - pwpix) - ypix;
-                if (dy3 < 0) dy3 = -dy3;
-                if (yonset < 0)
-                    dy = 100;
-            }
-            else dy2 = dy3 = 100;
-            //fprintf(stderr,"    2nd %f %f %f %f %f %f %f %d %d %d %d %d\n", pxpix, pypix, pwpix, dx, dy, dy2, dy3, elemsize, yonset, wonset, xonset, i);
-            //if (dx + dy <= best || dx + dy2 <= best || dx + dy3 <= best)
-            //{
-            //fprintf(stderr, "dy=%f dy2=%f dy3=%f\n", dy, dy2, dy3);
-
-/* from array-rev */
-
+        dy = pypix - ypix;
+        if (dy < 0) dy = -dy;
+        if (wonset >= 0)
+        {
+            dy2 = (pypix + pwpix) - ypix;
+            if (dy2 < 0) dy2 = -dy2;
+            dy3 = (pypix - pwpix) - ypix;
+            if (dy3 < 0) dy3 = -dy3;
+            if (yonset < 0)
+                dy = 100;
+        }
+        else dy2 = dy3 = 100;
 #if 0 // this doesn't seem to be used anywhere -ag
-            int hit = 0;
-            if(array_joc)
+        int dx;
+        int hit = 0;
+        if(array_joc)
+        {
+                hit = (xpix >= pxpix1) && (xpix < pxpix2);
+        }
+        else
+            hit = dx + dy <= best || dx + dy2 <= best || dx + dy3 <= best;
+#endif
+        if (dy < dy2 && dy < dy3)
+        {
+            array_motion_fatten = 0;
+            //fprintf(stderr,"A\n");
+        }
+        else if (dy2 < dy3)
+        {
+            array_motion_fatten = -1;
+            //fprintf(stderr,"B\n");
+        }
+        else if (!array_joc)
+        {
+            array_motion_fatten = 1;
+            //fprintf(stderr,"C\n");
+        }
+        if (doit || (glob_lmclick && array_joc))
+        {
+            char *elem = (char *)array->a_vec;
+            array_motion_elemsize = elemsize;
+            array_motion_glist = glist;
+            array_motion_scalar = sc;
+            array_motion_array = ap;
+            array_motion_template = elemtemplate;
+            array_motion_xperpix = glist_dpixtodx(glist, 1);
+            array_motion_yperpix = glist_dpixtody(glist, 1);
+            if (alt) /* delete a point */
             {
-                    hit = (xpix >= pxpix1) && (xpix < pxpix2);
+                if (array->a_n <= 1)
+                    return (0);
+                memmove((char *)(array->a_vec) + elemsize * i, 
+                    (char *)(array->a_vec) + elemsize * (i+1),
+                        (array->a_n - 1 - i) * elemsize);
+                //array_resize_and_redraw(array, glist, array->a_n - 1);
+                garray_resize(array_garray, array->a_n - 1);
+                canvas_setcursor(glist_getcanvas(glist), 0);
+                return (0);
+            }
+            else if (shift)
+            {
+                /* add a point (after the clicked-on one) */
+                //fprintf(stderr,"add a point\n");
+                //array_resize_and_redraw(array, glist, array->a_n + 1);
+                elem = (char *)array->a_vec;
+                memmove(elem + elemsize * (i+1), 
+                    elem + elemsize * i,
+                        (array->a_n - i - 1) * elemsize);
+                i++;
+                garray_resize(array_garray, array->a_n + 1);
+                canvas_setcursor(glist_getcanvas(glist), 0);
+            }
+            if (xonset >= 0)
+            {
+                //fprintf(stderr, "   xonset >=0\n");
+                array_motion_xfield = xfield;
+                array_motion_xcumulative = 
+                    fielddesc_getcoord(xfield, array_motion_template,
+                        (t_word *)(elem + i * elemsize), 1);
+                    array_motion_wp = (t_word *)(elem + i * elemsize);
+                if (shift)
+                    array_motion_npoints = array->a_n - i;
+                else array_motion_npoints = 1;
             }
             else
-                hit = dx + dy <= best || dx + dy2 <= best || dx + dy3 <= best;
-#endif
-/* end array-rev */
+            {
+                //fprintf(stderr, "   !(xonset >=0)\n");
+                array_motion_xfield = 0;
+                array_motion_xcumulative = 0;
+                array_motion_wp = (t_word *)elem;
+                array_motion_npoints = array->a_n;
 
-                if (dy < dy2 && dy < dy3)
+                array_motion_initx = i;
+                array_motion_lastx = i;
+                array_motion_xperpix *= (xinc == 0 ? 1 : 1./xinc);
+            }
+            if (array_motion_fatten)
+            {
+                //fprintf(stderr, "   motion_fatten\n");
+                array_motion_yfield = wfield;
+                array_motion_ycumulative = 
+                    fielddesc_getcoord(wfield, array_motion_template,
+                        (t_word *)(elem + i * elemsize), 1);
+                array_motion_yperpix *= -array_motion_fatten;
+            }
+            else if (yonset >= 0)
+            {
+                //fprintf(stderr, "   yonset >=0\n");
+                array_motion_yfield = yfield;
+                array_motion_ycumulative =
+                    fielddesc_getcoord(yfield, array_motion_template,
+                        (t_word *)(elem + i * elemsize), 1);
+                    /* *(t_float *)((elem + elemsize * i) + yonset); */
+                // we do cursor detection based on the kind of a graph.
+                // (e.g. 3-point PLOYSTYLE_POINTS creates a graph that has 4
+                // delimiting points, while a 3-point PLOTSTYLE_POLY creates
+                // a graph that has only 3 delimiting points)
+                // This, therefore takes into account whether we should count
+                // the center point of a bar or the starting point (poly) as
+                // our reference.
+                // TODO: see if we can reimplement Bezier curves
+                if (array_garray != NULL &&
+                    (array_garray->x_style == PLOTSTYLE_POLY ||
+                     array_garray->x_style == PLOTSTYLE_BEZ))
                 {
-                    array_motion_fatten = 0;
-                    //fprintf(stderr,"A\n");
+                    array_motion(0, xpix - pxpix1, ypix - pypix);
                 }
-                else if (dy2 < dy3)
-                {
-                    array_motion_fatten = -1;
-                    //fprintf(stderr,"B\n");
-                }
-                else if (!array_joc)
-                {
-                    array_motion_fatten = 1;
-                    //fprintf(stderr,"C\n");
-                }
-                if (doit || (glob_lmclick && array_joc))
-                {
-                    char *elem = (char *)array->a_vec;
-                    array_motion_elemsize = elemsize;
-                    array_motion_glist = glist;
-                    array_motion_scalar = sc;
-                    array_motion_array = ap;
-                    array_motion_template = elemtemplate;
-                    array_motion_xperpix = glist_dpixtodx(glist, 1);
-                    array_motion_yperpix = glist_dpixtody(glist, 1);
-                    if (alt) /* delete a point */
-                    {
-                        if (array->a_n <= 1)
-                            return (0);
-                        memmove((char *)(array->a_vec) + elemsize * i, 
-                            (char *)(array->a_vec) + elemsize * (i+1),
-                                (array->a_n - 1 - i) * elemsize);
-                        //array_resize_and_redraw(array, glist, array->a_n - 1);
-                        garray_resize(array_garray, array->a_n - 1);
-                        canvas_setcursor(glist_getcanvas(glist), 0);
-                        return (0);
-                    }
-                    else if (shift)
-                    {
-                        /* add a point (after the clicked-on one) */
-                        //fprintf(stderr,"add a point\n");
-                        //array_resize_and_redraw(array, glist, array->a_n + 1);
-                        elem = (char *)array->a_vec;
-                        memmove(elem + elemsize * (i+1), 
-                            elem + elemsize * i,
-                                (array->a_n - i - 1) * elemsize);
-                        i++;
-                        garray_resize(array_garray, array->a_n + 1);
-                        canvas_setcursor(glist_getcanvas(glist), 0);
-                    }
-                    if (xonset >= 0)
-                    {
-                        //fprintf(stderr, "   xonset >=0\n");
-                        array_motion_xfield = xfield;
-                        array_motion_xcumulative = 
-                            fielddesc_getcoord(xfield, array_motion_template,
-                                (t_word *)(elem + i * elemsize), 1);
-                            array_motion_wp = (t_word *)(elem + i * elemsize);
-                        if (shift)
-                            array_motion_npoints = array->a_n - i;
-                        else array_motion_npoints = 1;
-                    }
-                    else
-                    {
-                        //fprintf(stderr, "   !(xonset >=0)\n");
-                        array_motion_xfield = 0;
-                        array_motion_xcumulative = 0;
-                        array_motion_wp = (t_word *)elem;
-                        array_motion_npoints = array->a_n;
-
-                        array_motion_initx = i;
-                        array_motion_lastx = i;
-                        array_motion_xperpix *= (xinc == 0 ? 1 : 1./xinc);
-                    }
-                    if (array_motion_fatten)
-                    {
-                        //fprintf(stderr, "   motion_fatten\n");
-                        array_motion_yfield = wfield;
-                        array_motion_ycumulative = 
-                            fielddesc_getcoord(wfield, array_motion_template,
-                                (t_word *)(elem + i * elemsize), 1);
-                        array_motion_yperpix *= -array_motion_fatten;
-                    }
-                    else if (yonset >= 0)
-                    {
-                        //fprintf(stderr, "   yonset >=0\n");
-                        array_motion_yfield = yfield;
-                        array_motion_ycumulative =
-                            fielddesc_getcoord(yfield, array_motion_template,
-                                (t_word *)(elem + i * elemsize), 1);
-                            /* *(t_float *)((elem + elemsize * i) + yonset); */
-                        //if (array_joc) {
-                        // we do cursor detection based on the kind of a graph.
-                        // (e.g. 3-point PLOYSTYLE_POINTS creates a graph that has 4 delimiting points,
-                        // while a 3-point PLOTSTYLE_POLY creates a graph that has only 3 delimiting points)
-                        // This, therefore takes into account whether we should count the center point
-                        // of a bar or the starting point (poly) as our reference
-                        // TODO: see if we can reimplement Bezier curves
-                        if (array_garray != NULL && (array_garray->x_style == PLOTSTYLE_POLY || array_garray->x_style == PLOTSTYLE_BEZ))
-                            array_motion(0, xpix - pxpix1, ypix - pypix);
-                        else
-                            array_motion(0, (xpix - (pxpix1 + (pxpix2 - pxpix1)/2)), ypix - pypix);
-                        //}
-                        //else {
-                        //    array_motion(0, (xpix - (pxpix1 + (pxpix2 - pxpix1)/2)), ypix - pypix);
-                        //}
-                        //fprintf(stderr, "xpix:%d pxpix1:%f half:%f result:%f\n", xpix, pxpix1, (pxpix2-pxpix1)/2, xpix - (pxpix1 + (pxpix2 - pxpix1)/2));
-                    }
-                    else
-                    {
-                        //fprintf(stderr, "   else 0\n");
-                        array_motion_yfield = 0;
-                        array_motion_ycumulative = 0;
-                    }
-                    //fprintf(stderr,"    glist_grab %d %d\n", xpix, ypix);
-                    glist_grab(glist, 0, array_motion, 0, xpix, ypix);
-                    //fprintf(stderr,"    VALUES: array_motion_initx:%f array_motion_lastx:%d array_motion_xperpix:%f array_motion_xcumulative:%f\n", array_motion_initx, array_motion_lastx, array_motion_xperpix, array_motion_xcumulative);
-                    //fprintf(stderr,"    array_getcoordinate %d: pxpix1:%f pxpix2:%f pypix:%f pwpix:%f dx:%f dy:%f elemsize:%d yonset:%d wonset:%d xonset:%d xloc:%f yloc:%f xinc:%f\n", i, pxpix1, pxpix2, pypix, pwpix, dx, dy, elemsize, yonset, wonset, xonset, xloc, yloc, xinc);
-
-                }
-                if (alt)
-                {
-                    return (CURSOR_EDITMODE_DISCONNECT);
-                }
-                else if (shift)
-                {
-                    return (CURSOR_RUNMODE_ADDPOINT);
-                }
-                else return (array_motion_fatten ?
-                    CURSOR_RUNMODE_THICKEN : CURSOR_RUNMODE_CLICKME);
-            //}
-        //}   
+                else
+                    array_motion(0, (xpix - (pxpix1 + (pxpix2 - pxpix1)/2)),
+                        ypix - pypix);
+            }
+            else
+            {
+                //fprintf(stderr, "   else 0\n");
+                array_motion_yfield = 0;
+                array_motion_ycumulative = 0;
+            }
+            //fprintf(stderr,"    glist_grab %d %d\n", xpix, ypix);
+            glist_grab(glist, 0, array_motion, 0, xpix, ypix);
+        }
+        if (alt)
+        {
+            return (CURSOR_EDITMODE_DISCONNECT);
+        }
+        else if (shift)
+        {
+            return (CURSOR_RUNMODE_ADDPOINT);
+        }
+        else return (array_motion_fatten ?
+            CURSOR_RUNMODE_THICKEN : CURSOR_RUNMODE_CLICKME);
     }
     return (0);
 }

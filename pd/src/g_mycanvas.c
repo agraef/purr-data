@@ -38,8 +38,6 @@ void my_canvas_draw_move(t_my_canvas *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
     if (!glist_isvisible(canvas)) return;
-    int x1=text_xpix(&x->x_gui.x_obj, glist);
-    int y1=text_ypix(&x->x_gui.x_obj, glist);
     iemgui_base_draw_move(&x->x_gui);
     gui_vmess("gui_mycanvas_coords", "xxiiii",
         canvas, x,

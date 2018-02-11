@@ -282,6 +282,15 @@ text {
     stroke: #3e3e3e;
 }
 
+.comment .border {
+    fill: none;
+}
+
+#patchsvg.editmode .comment .border {
+    stroke: #5f5f5f;
+    stroke-dasharray: 8 4;
+}
+
 /* A little hack for special canvas of [cnv].
    All other iemguis have a black border, but
    [cnv] sets its selection rectangle to the

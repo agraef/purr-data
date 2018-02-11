@@ -428,7 +428,7 @@ void iemgui_shouldvis(t_iemgui *x, int mode)
                    properties changed we'll adjust our layer position
                    to ensure that ordering is honored */
                 t_canvas *canvas = glist_getcanvas(x->x_glist);
-                t_gobj *y = (t_gobj *)x->x_glist;
+                //t_gobj *y = (t_gobj *)x->x_glist;
                 // this crashes when the label goes invisible and then
                 // needs to be made visible again, so for the time being
                 // we use the brute force redraw below for both the
@@ -437,7 +437,6 @@ void iemgui_shouldvis(t_iemgui *x, int mode)
                 //gobj_vis(y, canvas, 1);
                 // reorder it visually
                 glist_redraw(canvas);
-
             }
         }
         //fprintf(stderr,"draw move x->x_w=%d\n", x->x_w);
@@ -692,7 +691,8 @@ extern t_class *my_canvas_class;
 // in 18 cases only, because canvas does not fit the pattern below.
 // canvas has no label handle and has a motion handle
 // but in the case of canvas, the "iemgui" tag is added (it wasn't the case originally)
-void scalehandle_draw_select(t_scalehandle *h, int px, int py) {
+void scalehandle_draw_select(t_scalehandle *h, int px, int py)
+{
     char tagbuf[MAXPDSTRING];
     t_object *x = h->h_master;
     t_canvas *canvas=glist_getcanvas(h->h_glist);
@@ -710,7 +710,8 @@ void scalehandle_draw_select(t_scalehandle *h, int px, int py) {
     }
 }
 
-void scalehandle_draw_select2(t_iemgui *x) {
+void scalehandle_draw_select2(t_iemgui *x)
+{
     t_canvas *canvas=glist_getcanvas(x->x_glist);
     t_class *c = pd_class((t_pd *)x);
     int sx,sy;
@@ -735,29 +736,35 @@ void scalehandle_draw_select2(t_iemgui *x) {
         scalehandle_draw_select(x->x_lhandle,x->x_ldx,x->x_ldy);
 }
 
-void scalehandle_draw_erase(t_scalehandle *h) {
-    t_canvas *canvas = glist_getcanvas(h->h_glist);
+void scalehandle_draw_erase(t_scalehandle *h)
+{
+    //t_canvas *canvas = glist_getcanvas(h->h_glist);
     if (!h->h_vis) return;
     gui_vmess("gui_iemgui_label_show_drag_handle", "xxiiii",
         h->h_glist, h->h_master, 0, 0, 0, h->h_scale);
     h->h_vis = 0;
 }
 
-void scalehandle_draw_erase2(t_iemgui *x) {
+void scalehandle_draw_erase2(t_iemgui *x)
+{
     t_scalehandle *sh = (t_scalehandle *)(x->x_handle);
     t_scalehandle *lh = (t_scalehandle *)(x->x_lhandle);
     if (sh->h_vis) scalehandle_draw_erase(sh);
     if (lh->h_vis) scalehandle_draw_erase(lh);
 }
 
-void scalehandle_draw(t_iemgui *x) {
-    if (x->x_glist == glist_getcanvas(x->x_glist)) {
+void scalehandle_draw(t_iemgui *x)
+{
+    if (x->x_glist == glist_getcanvas(x->x_glist))
+    {
         if (x->x_selected == x->x_glist) scalehandle_draw_select2(x);
         else scalehandle_draw_erase2(x);
     }
 }
 
-t_scalehandle *scalehandle_new(t_object *x, t_glist *glist, int scale, t_clickhandlefn chf, t_motionhandlefn mhf) {
+t_scalehandle *scalehandle_new(t_object *x, t_glist *glist, int scale,
+    t_clickhandlefn chf, t_motionhandlefn mhf)
+{
     t_scalehandle *h = (t_scalehandle *)pd_new(scalehandle_class);
     char buf[19]; // 3 + max size of %lx
     h->h_master = x;
@@ -784,7 +791,8 @@ t_scalehandle *scalehandle_new(t_object *x, t_glist *glist, int scale, t_clickha
     return h;
 }
 
-void scalehandle_free(t_scalehandle *h) {
+void scalehandle_free(t_scalehandle *h)
+{
     if (!h->h_scale || pd_class((t_pd *)(h->h_master)) == my_canvas_class)
     { /* only binding label handles and my_canvas resize handle */
         pd_unbind((t_pd *)h, h->h_bindsym);
@@ -792,16 +800,18 @@ void scalehandle_free(t_scalehandle *h) {
     pd_free((t_pd *)h);
 }
 
-void properties_set_field_int(long props, const char *gui_field, int value) {
+void properties_set_field_int(long props, const char *gui_field, int value)
+{
     char tagbuf[MAXPDSTRING];
     sprintf(tagbuf, ".gfxstub%lx", props);
     gui_vmess("gui_dialog_set_field", "ssi",
         tagbuf,
         gui_field,
         value);
-};
+}
 
-void scalehandle_dragon_label(t_scalehandle *h, float mouse_x, float mouse_y) {
+void scalehandle_dragon_label(t_scalehandle *h, float mouse_x, float mouse_y)
+{
     if (h->h_dragon && !h->h_scale)
     {
         t_iemgui *x = (t_iemgui *)(h->h_master);
@@ -823,8 +833,8 @@ void scalehandle_dragon_label(t_scalehandle *h, float mouse_x, float mouse_y) {
 
         if (glist_isvisible(x->x_glist))
         {
-            int xpos=text_xpix(&x->x_obj, x->x_glist);
-            int ypos=text_ypix(&x->x_obj, x->x_glist);
+            //int xpos=text_xpix(&x->x_obj, x->x_glist);
+            //int ypos=text_ypix(&x->x_obj, x->x_glist);
             //iemgui_getrect_legacy_label(x, &xpos, &ypos);
             t_canvas *canvas=glist_getcanvas(x->x_glist);
             gui_vmess("gui_iemgui_label_coords", "xxii",
@@ -836,12 +846,13 @@ void scalehandle_dragon_label(t_scalehandle *h, float mouse_x, float mouse_y) {
     }
 }
 
-void scalehandle_click_label(t_scalehandle *h) {
+void scalehandle_click_label(t_scalehandle *h)
+{
     t_iemgui *x = (t_iemgui *)h->h_master;
     if (glist_isvisible(x->x_glist))
     {
         //sys_vgui("lower %s\n", h->h_pathname);
-        t_scalehandle *othersh = x->x_handle;
+        //t_scalehandle *othersh = x->x_handle;
         //sys_vgui("lower .x%lx.h%lx\n",
         //    (t_int)glist_getcanvas(x->x_glist), (t_int)othersh);
     }
@@ -965,10 +976,11 @@ void iemgui_label_draw_new(t_iemgui *x) {
         x->x_fontsize);
 }
 
-void iemgui_label_draw_move(t_iemgui *x) {
+void iemgui_label_draw_move(t_iemgui *x)
+{
     t_canvas *canvas=glist_getcanvas(x->x_glist);
-    int x1=text_xpix(&x->x_obj, x->x_glist)+x->legacy_x;
-    int y1=text_ypix(&x->x_obj, x->x_glist)+x->legacy_y;
+    //int x1=text_xpix(&x->x_obj, x->x_glist)+x->legacy_x;
+    //int y1=text_ypix(&x->x_obj, x->x_glist)+x->legacy_y;
     //iemgui_getrect_legacy_label(x, &x1, &y1);
     //sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
     //    canvas, x, x1+x->x_ldx, y1+x->x_ldy);
@@ -977,7 +989,7 @@ void iemgui_label_draw_move(t_iemgui *x) {
        Ivica's legacy logic isn't affecting us. Quick fix below by
        just adding the legacy offsets... */
     gui_vmess("gui_iemgui_label_coords", "xxii",
-        glist_getcanvas(x->x_glist),
+        canvas,
         x,
         x->x_ldx + x->legacy_x,
         x->x_ldy + x->legacy_y);
@@ -1180,12 +1192,13 @@ void iemgui_base_draw_new(t_iemgui *x) {
     sprintf(colorbuf, "#%6.6x", x->x_bcol);
     gui_vmess("gui_gobj_new", "xxsiii", canvas, x,
         "iemgui", x1, y1, glist_istoplevel(x->x_glist));
-    gui_vmess("gui_text_draw_border", "xxsiiiii",
+    gui_vmess("gui_text_draw_border", "xxsiii",
         canvas,
         x,
         colorbuf,
         0,
-        x1, y1, x2, y2);
+        x2 - x1,
+        y2 - y1);
     sprintf(colorbuf, "#%6.6x", x->x_bcol);
     gui_vmess("gui_iemgui_base_color", "xxs",
         canvas, x, colorbuf);

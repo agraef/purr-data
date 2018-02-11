@@ -231,7 +231,6 @@ static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
     char fg[8], bg[8];
     sprintf(fg, "#%6.6x",  x->x_gui.x_fcol);
     sprintf(bg, "#%6.6x",  x->x_gui.x_bcol);
-    int issel = x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas;
     gui_vmess("gui_numbox_update", "xxsssii",
         canvas,
         x,
@@ -283,13 +282,13 @@ static void my_numbox__clickhook(t_scalehandle *sh, int newstate)
 }
 
 static void my_numbox__motionhook(t_scalehandle *sh,
-                    t_floatarg mouse_x, t_floatarg mouse_y)
+    t_floatarg mouse_x, t_floatarg mouse_y)
 {
     if (sh->h_scale)
     {
         t_my_numbox *x = (t_my_numbox *)(sh->h_master);
-        int dx = (int)mouse_x - sh->h_offset_x,
-            dy = (int)mouse_y - sh->h_offset_y;
+        //int dx = (int)mouse_x - sh->h_offset_x;
+        int dy = (int)mouse_y - sh->h_offset_y;
 
         /* first calculate y */
         int newy = maxi(x->x_gui.x_obj.te_ypix + x->x_gui.x_h +

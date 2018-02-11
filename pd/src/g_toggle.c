@@ -43,7 +43,6 @@ void toggle_draw_new(t_toggle *x, t_glist *glist)
     int x1=text_xpix(&x->x_gui.x_obj, glist);
     int y1=text_ypix(&x->x_gui.x_obj, glist);
     int x2=x1+x->x_gui.x_w, y2=y1+x->x_gui.x_h;
-    int col = (x->x_on!=0.0)?x->x_gui.x_fcol:x->x_gui.x_bcol;
 
     iemgui_base_draw_new(&x->x_gui);
     gui_vmess("gui_toggle_new", "xxsiiiiiiiiiiii", canvas,
