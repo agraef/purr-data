@@ -703,7 +703,7 @@ extern t_class *glob_pdobject;
     /* start a midi settings dialog window */
 void glob_midi_properties(t_pd *dummy, t_floatarg flongform)
 {
-    char buf[1024 + 2 * MAXNDEV*(DEVDESCSIZE+4)];
+    //char buf[1024 + 2 * MAXNDEV*(DEVDESCSIZE+4)];
         /* these are the devices you're using: */
     int nindev, midiindev[MAXMIDIINDEV];
     int noutdev, midioutdev[MAXMIDIOUTDEV];
@@ -780,9 +780,9 @@ void glob_midi_properties(t_pd *dummy, t_floatarg flongform)
     if (sys_midiapi == API_ALSA)
     {
 //    sprintf(buf,
-//"pdtk_alsa_midi_dialog %%s \
-//%d %d %d %d %d %d %d %d \
-//%d 1\n",
+//"pdtk_alsa_midi_dialog %%s "
+//"%d %d %d %d %d %d %d %d "
+//"%d 1\n",
 //        midiindev1, midiindev2, midiindev3, midiindev4, 
 //        midioutdev1, midioutdev2, midioutdev3, midioutdev4,
 //        (flongform != 0));
@@ -795,9 +795,9 @@ void glob_midi_properties(t_pd *dummy, t_floatarg flongform)
     gui_end_array();
     gui_end_vmess();
 //    sprintf(buf,
-//"pdtk_midi_dialog %%s \
-//%d %d %d %d %d %d %d %d \
-//%d\n",
+//"pdtk_midi_dialog %%s "
+//"%d %d %d %d %d %d %d %d "
+//"%d\n",
 //        midiindev1, midiindev2, midiindev3, midiindev4, 
 //        midioutdev1, midioutdev2, midioutdev3, midioutdev4,
 //        (flongform != 0));
@@ -928,7 +928,7 @@ int sys_mididevnametonumber(int output, const char *name)
 void sys_mididevnumbertoname(int output, int devno, char *name, int namesize)
 {
     char indevlist[MAXNDEV*DEVDESCSIZE], outdevlist[MAXNDEV*DEVDESCSIZE];
-    int nindevs = 0, noutdevs = 0, i;
+    int nindevs = 0, noutdevs = 0;
     if (devno < 0)
     {
         *name = 0;

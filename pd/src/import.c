@@ -122,7 +122,6 @@ static void import_rewind(t_import* x)
 static void *import_new(t_symbol *s, int argc, t_atom *argv)
 {
     t_import *x = (t_import *)pd_new(import_class);
-    t_symbol *currentdir;
 
     x->x_data_outlet = outlet_new(&x->x_obj, &s_symbol);
     x->x_status_outlet = outlet_new(&x->x_obj, 0);

@@ -513,7 +513,7 @@ FILE *sys_fopen(const char *filename, const char *mode)
 #include <stdarg.h>
 int sys_open(const char *path, int oflag, ...)
 {
-    int i, fd;
+    int fd;
     char pathbuf[MAXPDSTRING];
     sys_bashfilename(path, pathbuf);
     if (oflag & O_CREAT)
@@ -770,26 +770,20 @@ t_symbol *sys_decodedialog(t_symbol *s)
     /* start a search path dialog window */
 void glob_start_path_dialog(t_pd *dummy)
 {
-    char buf[MAXPDSTRING];
-    int i;
     t_namelist *nl;
 
-    //sys_gui("global pd_path; set pd_path {}\n");
     gui_start_vmess("gui_path_properties", "xii",
         dummy,
         sys_usestdpath,
         sys_verbose
     );
     gui_start_array();
-    for (nl = sys_searchpath, i = 0; nl; nl = nl->nl_next, i++)
+    for (nl = sys_searchpath; nl; nl = nl->nl_next)
     {
-        //sys_vgui("lappend pd_path {%s}\n", nl->nl_string);
         gui_s(nl->nl_string);
     }
     gui_end_array();
     gui_end_vmess();
-    //sprintf(buf, "pdtk_path_dialog %%s %d %d\n", sys_usestdpath, sys_verbose);
-    //gfxstub_new(&glob_pdobject, (void *)glob_start_path_dialog, buf);
 }
 
     /* new values from dialog window */
@@ -811,27 +805,20 @@ void glob_path_dialog(t_pd *dummy, t_symbol *s, int argc, t_atom *argv)
     /* start a startup dialog window */
 void glob_start_startup_dialog(t_pd *dummy)
 {
-    char buf[MAXPDSTRING];
-    int i;
     t_namelist *nl;
 
-    //sys_gui("global pd_startup; set pd_startup {}\n");
     gui_start_vmess("gui_lib_properties", "xis",
         dummy,
         sys_defeatrt,
         sys_flags->s_name
     );
     gui_start_array();
-    for (nl = sys_externlist, i = 0; nl; nl = nl->nl_next, i++)
+    for (nl = sys_externlist; nl; nl = nl->nl_next)
     {
-        //sys_vgui("lappend pd_startup {%s}\n", nl->nl_string);
         gui_s(nl->nl_string);
     }
     gui_end_array();
     gui_end_vmess();
-    //sprintf(buf, "pdtk_startup_dialog %%s %d \"%s\"\n", sys_defeatrt,
-    //    sys_flags->s_name);
-    //gfxstub_new(&glob_pdobject, (void *)glob_start_startup_dialog, buf);
 }
 
     /* new values from dialog window */

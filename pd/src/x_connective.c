@@ -135,6 +135,8 @@ static void pdsymbol_anything(t_pdsymbol *x, t_symbol *s, int ac, t_atom *av)
     empty lists aren't equivalent to "bang"???  Should Pd's message passer
     always check and call the more specific method, or should it be the 
     object's responsibility?  Dunno... */
+    /* Currently this function isn't used... */
+/*
 static void pdsymbol_list(t_pdsymbol *x, t_symbol *s, int ac, t_atom *av)
 {
     if (!ac)
@@ -143,6 +145,7 @@ static void pdsymbol_list(t_pdsymbol *x, t_symbol *s, int ac, t_atom *av)
         pdsymbol_symbol(x, av->a_w.w_symbol);
     else pdsymbol_anything(x, s, ac, av);
 }
+*/
 
 void pdsymbol_setup(void)
 {
