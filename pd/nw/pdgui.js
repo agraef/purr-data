@@ -2149,7 +2149,7 @@ function gui_atom_draw_border(cid, tag, type, width, height) {
             var m = height < 20 ? 1 : height / 12;
             var arrow = create_item(cid, "polygon", {
                 points: atom_arrow_points(width, height),
-                "class": type === 1 ? "index_arrow" : "value_arrow"
+                "class": type === 1 ? "arrow index_arrow" : "arrow value_arrow"
             });
             frag.appendChild(arrow);
         }
@@ -2158,16 +2158,14 @@ function gui_atom_draw_border(cid, tag, type, width, height) {
 }
 
 function gui_atom_redraw_border(cid, tag, type, width, height) {
-    gui(cid).get_elem(tag)
+    gui(cid).get_gobj(tag)
     .q("polygon",  {
         points: atom_border_points(width, height, type !== 0) 
     });
     if (type !== 0) {
-        gui(cid).get_elem(tag, function(e) {
-            var a = e.querySelectorAll("polygon")[1];
-            configure_item(a, {
-                points: atom_arrow_points(width, height)
-            });
+        gui(cid).get_gobj(tag)
+        .q(".arrow", {
+            points: atom_arrow_points(width, height)
         });
     }
 }
