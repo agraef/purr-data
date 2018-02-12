@@ -1404,6 +1404,11 @@ typedef struct _dropdown
     t_symbol *a_expanded_to; /* a_symto after $0, $1, ...  expansion */
 } t_dropdown;
 
+int is_dropdown(t_text *x)
+{
+    return (x->te_type == T_ATOM && pd_class(&x->te_pd) == dropdown_class);
+}
+
 static void dropdown_redraw(t_gobj *client, t_glist *glist)
 {
     t_dropdown *x = (t_dropdown *)client;
@@ -1465,6 +1470,7 @@ static int dropdown_names_getmaxwidth(t_dropdown *x) {
 
 static void dropdown_names(t_dropdown *x, t_symbol *s, int argc, t_atom *argv)
 {
+    t_rtext *y = glist_findrtext(x->a_glist, &x->a_text);
     binbuf_clear(x->a_names);
     if (argc)
         binbuf_add(x->a_names, argc, argv);
@@ -1475,6 +1481,9 @@ static void dropdown_names(t_dropdown *x, t_symbol *s, int argc, t_atom *argv)
     x->a_maxnamewidth = dropdown_names_getmaxwidth(x);
     //dropdown_max_namelength(x);
     dropdown_retext(x, 1, 0);
+    /* Now redraw the border */
+    text_drawborder(&x->a_text, x->a_glist, rtext_gettag(y),
+        rtext_width(y), rtext_height(y), 0);
 }
 
 static void dropdown_bang(t_dropdown *x)
@@ -1846,8 +1855,7 @@ static void text_getrect(t_gobj *z, t_glist *glist,
         int fontwidth = sys_fontwidth(font), fontheight = sys_fontheight(font);
         width = (x->te_width > 0 ? x->te_width : 6) * fontwidth + 2;
         /* add an extra two characters for the dropdown box's arrow */
-        if (pd_class(&x->te_pd) == dropdown_class)
-            width += fontwidth * 2;
+        if (is_dropdown(x)) width += fontwidth * 2;
         height = fontheight + 3; /* borrowed from TMARGIN, etc, in g_rtext.c */
     }
     // jsarlo
@@ -1885,7 +1893,7 @@ static void text_getrect(t_gobj *z, t_glist *glist,
         if (y)
         {
             width = rtext_width(y);
-            if (pd_class(&x->te_pd) == dropdown_class)
+            if (is_dropdown(x))
             {
                 int font = glist_getfont(glist);
                 int fontwidth = sys_fontwidth(font);
@@ -2457,8 +2465,7 @@ void text_drawborder(t_text *x, t_glist *glist,
             gui_vmess("gui_atom_draw_border", "xsiii",
                 glist_getcanvas(glist),
                 tag,
-                pd_class(&x->te_pd) == dropdown_class ?
-                    ((t_dropdown *)x)->a_outtype + 1 : 0,
+                (is_dropdown(x) ? ((t_dropdown *)x)->a_outtype + 1 : 0),
                 x2 - x1,
                 y2 - y1);
         }
