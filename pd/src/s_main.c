@@ -284,6 +284,8 @@ void glob_forward_files_from_secondary_instance(void)
     gui_end_vmess();
 }
 
+extern void glob_recent_files(t_pd *dummy);
+
 /* this is called from main() in s_entry.c */
 int sys_main(int argc, char **argv)
 {

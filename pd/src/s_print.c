@@ -89,7 +89,6 @@ static void dologpost(const void *object, const int level, const char *s)
     }
     else
     {
-        char obuf[MAXPDSTRING];
         //sys_vgui("::pdwindow::logpost {%s} %d {%s}\n", 
                  //strnpointerid(obuf, object, MAXPDSTRING), 
                  //level, strnescape(upbuf, s, MAXPDSTRING));
@@ -133,8 +132,6 @@ void logpost(const void *object, const int level, const char *fmt, ...)
 {
     char buf[MAXPDSTRING];
     va_list ap;
-    t_int arg[8];
-    int i;
     va_start(ap, fmt);
     vsnprintf(buf, MAXPDSTRING-1, fmt, ap);
     va_end(ap);

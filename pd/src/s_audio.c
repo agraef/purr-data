@@ -221,7 +221,7 @@ void sys_set_audio_settings(int naudioindev, int *audioindev, int nchindev,
     int *chindev, int naudiooutdev, int *audiooutdev, int nchoutdev,
     int *choutdev, int rate, int advance, int callback, int blocksize)
 {
-    int i, *ip;
+    int i;
     int defaultchannels = SYS_DEFAULTCH;
     int inchans, outchans, nrealindev, nrealoutdev;
     int realindev[MAXAUDIOINDEV], realoutdev[MAXAUDIOOUTDEV];
@@ -711,7 +711,7 @@ static void sys_listaudiodevs(void )
     /* start an audio settings dialog window */
 void glob_audio_properties(t_pd *dummy, t_floatarg flongform)
 {
-    char buf[1024 + 2 * MAXNDEV*(DEVDESCSIZE+4)];
+    //char buf[1024 + 2 * MAXNDEV*(DEVDESCSIZE+4)];
         /* these are the devices you're using: */
     int naudioindev, audioindev[MAXAUDIOINDEV], chindev[MAXAUDIOINDEV];
     int naudiooutdev, audiooutdev[MAXAUDIOOUTDEV], choutdev[MAXAUDIOOUTDEV];
@@ -774,10 +774,10 @@ void glob_audio_properties(t_pd *dummy, t_floatarg flongform)
     audiooutchan4 = (naudiooutdev > 3 ? choutdev[3] : 0);
 
 //    sprintf(buf,
-//"pdtk_audio_dialog %%s \
-//%d %d %d %d %d %d %d %d \
-//%d %d %d %d %d %d %d %d \
-//%d %d %d %d %d %d\n",
+//"pdtk_audio_dialog %%s "
+//"%d %d %d %d %d %d %d %d "
+//"%d %d %d %d %d %d %d %d "
+//"%d %d %d %d %d %d\n",
 //        audioindev1, audioindev2, audioindev3, audioindev4, 
 //        audioinchan1, audioinchan2, audioinchan3, audioinchan4, 
 //        audiooutdev1, audiooutdev2, audiooutdev3, audiooutdev4,
@@ -834,10 +834,7 @@ extern int pa_foo;
     /* new values from dialog window */
 void glob_audio_dialog(t_pd *dummy, t_symbol *s, int argc, t_atom *argv)
 {
-    int naudioindev, audioindev[MAXAUDIOINDEV], chindev[MAXAUDIOINDEV];
-    int naudiooutdev, audiooutdev[MAXAUDIOOUTDEV], choutdev[MAXAUDIOOUTDEV];
-    int rate, advance, audioon, i, nindev, noutdev;
-    int audioindev1, audioinchan1, audiooutdev1, audiooutchan1;
+    int i, nindev, noutdev;
     int newaudioindev[4], newaudioinchan[4],
         newaudiooutdev[4], newaudiooutchan[4];
         /* the new values the dialog came back with: */
@@ -1145,7 +1142,7 @@ int sys_audiodevnametonumber(int output, const char *name)
 void sys_audiodevnumbertoname(int output, int devno, char *name, int namesize)
 {
     char indevlist[MAXNDEV*DEVDESCSIZE], outdevlist[MAXNDEV*DEVDESCSIZE];
-    int nindevs = 0, noutdevs = 0, i, canmulti, cancallback;
+    int nindevs = 0, noutdevs = 0, canmulti, cancallback;
     if (devno < 0)
     {
         *name = 0;
