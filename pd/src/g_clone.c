@@ -125,7 +125,7 @@ static void clone_in_set(t_in *x, t_floatarg f)
 
 static void clone_in_all(t_in *x, t_symbol *s, int argc, t_atom *argv)
 {
-    int phasewas = x->i_owner->x_phase, i;
+    int i;
     for (i = 0; i < x->i_owner->x_n; i++)
     {
         x->i_owner->x_phase = i;
@@ -145,7 +145,7 @@ static void clone_in_vis(t_in *x, t_floatarg fn, t_floatarg vis)
 
 static void clone_out_anything(t_out *x, t_symbol *s, int argc, t_atom *argv)
 {
-    t_atom *outv, *ap;
+    t_atom *outv;
     int first =
         1 + (s != &s_list && s != &s_float && s != &s_symbol && s != &s_bang),
             outc = argc + first;
