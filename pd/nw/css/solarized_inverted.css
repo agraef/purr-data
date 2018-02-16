@@ -395,11 +395,11 @@ text {
 
 /* Dialog to ask to save the patch before quitting */
 #save_before_quit {
-    background-color: #fdf6e3;
-    border:1px solid #eee8d5;
+    color: white;
+    background-color: #002b36;
+    border:1px solid #839496;
     padding: 12px;
     margin: 12px;
-    box-shadow: 7px 7px 5px grey;
 }
 
 /* Search dialog */
