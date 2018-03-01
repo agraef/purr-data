@@ -45,7 +45,7 @@ Name: {group}\puredata.org; Filename: {app}\pd.url
 Name: {group}\ASIO4ALL; Filename: {app}\asio4all.url
 Name: {group}\Uninstall Purr-Data; Filename: {uninstallexe}
 Name: {userdesktop}\Purr-Data; Filename: {app}\bin\pd.exe; Tasks: desktopicon; IconFilename: {app}\lib\pd.ico; IconIndex: 0; WorkingDir: {app}
-Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\Purr-Data; Filename: {app}\bin\pd.exe; Tasks: quicklaunchicon; WorkingDir: {app}; IconFilename: {app}\lib\pd.ico; IconIndex: 0
+Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\Purr-Data; Filename: {app}\bin\pd.exe; Tasks: quicklaunchicon; WorkingDir: {app}; IconFilename: {app}\lib\pd.ico; IconIndex: 0; UninstallDisplayIcon: {app}\lib\pdPatch_catGraphics.ico;
 Name: {group}\Documentation\Pd Manual; Filename: {app}\doc\1.manual\index.htm
 Name: {group}\Documentation\Pd Drums Tutorial; Filename: {app}\doc\tutorials\footils\pddrums\pddrums.html
 Name: {group}\Documentation\Pure Data FLOSSmanual; Filename: {app}\puredata.url
