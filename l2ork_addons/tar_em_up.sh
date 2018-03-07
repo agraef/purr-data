@@ -2,6 +2,14 @@
 # super-simplistic installer for l2ork things by Ivica Ico Bukvic <ico@vt.edu>
 # for info on L2Ork visit http://l2ork.music.vt.edu
 
+cleanup() {
+    # maybe we'd want to do some actual cleanup here
+    test $2 -ne 0 && echo "$0: $1: command failed with exit code $2, exiting now." && echo "$0: $1: $BASH_COMMAND"
+    exit $2
+}
+
+trap 'cleanup $LINENO $?' ERR
+
 if [ $# -eq 0 ] # should check for no arguments
 then
 	echo
@@ -142,7 +150,7 @@ if [ ! -d "../pd/nw/nw" ]; then
 	nwjs_url=${nwjs_url}/$nwjs_filename
 	echo "Fetching the nwjs binary from"
 	echo "$nwjs_url"
-        wget -nv $nwjs_url || exit 1
+        wget -nv $nwjs_url
 	if [[ $os == "win" || $os == "osx" ]]; then
 		unzip $nwjs_filename
 	else
@@ -178,7 +186,7 @@ then
 	echo "core Pd..."
 	rm -f ../Pd-l2ork-`date +%Y%m%d`.tar.bz2 2> /dev/null
 	cd pd/src/
-	make clean
+	make clean || true # this may fail on 1st attempt
 	cd ../../
 	tar -jcf ./Pd-l2ork-`date +%Y%m%d`.tar.bz2 pd
 fi
@@ -207,17 +215,17 @@ then
 	#	read dummy
 		# clean files that may remain stuck even after doing global make clean (if any)
 		cd externals/miXed
-		make clean
+		make clean || true # this may fail on 1st attempt
 		cd ../
-		make gem_clean
+		make gem_clean || true # this may fail on 1st attempt
 		cd ../Gem/src/
-		make distclean
+		make distclean || true # this may fail on 1st attempt
 		rm -rf ./.libs
 		rm -rf ./*/.libs
 		cd ../
-		make distclean
-		rm gemglutwindow.pd_linux
-		rm Gem.pd_linux
+		make distclean || true # this may fail on 1st attempt
+		rm -f gemglutwindow.pd_linux
+		rm -f Gem.pd_linux
 		aclocal
 		./autogen.sh
 		export INCREMENTAL=""
@@ -235,13 +243,14 @@ then
 	fi
 	if [ $full -gt 1 -o $deb -eq 2 -o $inno -eq 2 -o $dmg -eq 2 ]
 	then
-		make distclean
+		make distclean || true # this may fail on 1st attempt
 		cp ../../pd/src/g_all_guis.h ../../externals/build/include
 		cp ../../pd/src/g_canvas.h ../../externals/build/include
 		cp ../../pd/src/m_imp.h ../../externals/build/include
 		cp ../../pd/src/m_pd.h ../../externals/build/include
-		cp ../../pd/src/s_stuff.h ../../externals/build/include
-		cp ../../pd/src/t_tk.h ../../externals/build/include
+		# ag: s_stuff.h may not exist at this point yet (will be
+		# generated later), is this really needed here?
+		test -f ../../pd/src/s_stuff.h && cp ../../pd/src/s_stuff.h ../../externals/build/include
 		cp ../../pd/src/g_all_guis.h ../../externals/build/include								
 		rm -rf build/
 	fi
