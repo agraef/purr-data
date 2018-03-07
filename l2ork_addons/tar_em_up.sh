@@ -214,6 +214,7 @@ then
 	#	echo "Since we are doing a complete recompile we are assuming we will need to install l2ork version of the cwiid library. You will need to remove any existing cwiid libraries manually as they will clash with this one. L2Ork version is fully backwards compatible while also offering unique features like full extension support including the passthrough mode. YOU SHOULD REMOVE EXISTING CWIID LIBRARIES PRIOR TO RUNNING THIS INSTALL... You will also have to enter sudo password to install these... Press any key to continue or CTRL+C to cancel install..."
 	#	read dummy
 		# clean files that may remain stuck even after doing global make clean (if any)
+		test $os == "osx" && make -C packages/darwin_app clean || true
 		cd externals/miXed
 		make clean || true # this may fail on 1st attempt
 		cd ../
