@@ -15,20 +15,25 @@ then
 	echo
 	echo "   Usage: ./tar_em_up.sh -option1 -option2 ..."
 	echo "   Options:"
-	echo "     -a    l2ork addon to the dev package"
-	echo "     -b    build a deb (incremental, all platforms)"
+	echo "     -b    build a deb (incremental)"
 	echo "     -B    build a deb (complete recompile)"
 	echo "     -c    core Pd source tarball"
-	echo "     -e    everything"
 	echo "     -f    full installer (incremental)"
 	echo "     -F    full installer (complete recompile)"
+	echo "     -k    keep previous build products"
 	echo "     -n    skip package creation (-bB, -fF)"
 	echo "     -R    build a Raspberry Pi deb (complete recompile)"
 	echo "     -r    build a Raspberry Pi deb (incremental)"
-	echo "     -w    install custom version of cwiid system-wide"
 	echo "     -X    build an OSX installer (dmg)"
 	echo "     -z    build a Windows installer (incremental)"
 	echo "     -Z    build a Windows installer (complete recompile)"
+	echo
+	echo "   The incremental options bypass Gem compilation. This saves"
+	echo "   (lots of) time if Gem has already been built previously."
+	echo
+	echo "   The -k (keep) option doesn't clean before compilation,"
+	echo "   keeping the build products from a previous run. This also"
+	echo "   saves time if the script has been run previously."
 	echo
 	echo "   For custom install locations do the following before"
 	echo "   running this script:"
@@ -38,20 +43,17 @@ then
 	exit 1
 fi
 
-addon=0
 deb=0
 core=0
 full=0
-sys_cwiid=0
 rpi=0
 pkg=1
 inno=0
 dmg=0
+clean=1
 
-while getopts ":abBcdefFnRruwXzZ" Option
+while getopts ":bBcfFknRrXzZ" Option
 do case $Option in
-		a)		addon=1;;
-
 		b)		deb=1
 				inst_dir=${inst_dir:-/usr};;
 
@@ -60,13 +62,11 @@ do case $Option in
 
 		c)		core=1;;
 
-		e)		addon=1
-				core=1
-				full=1;;
-
 		f)		full=1;;
 
 		F)		full=2;;
+
+		k)		clean=0;;
 
 		n)		pkg=0;;
 
@@ -77,9 +77,6 @@ do case $Option in
 		r)		deb=1
 				inst_dir=/usr
 				rpi=1;;
-
-		w)		sys_cwiid=1
-				;;
 
 		X)		dmg=1
 				inst_dir=/usr;;
@@ -108,6 +105,8 @@ fi
 if [[ $os == "darwin" ]]; then
 	os=osx
 fi
+
+# XXXTODO: If no build target has been set, we should pick one by default.
 
 # Fetch the nw.js binary if we haven't already. We want to fetch it even
 # for building with no libs, so we do it regardless of the options
@@ -211,8 +210,9 @@ then
 
 	if [ $full -eq 2 -o $deb -eq 2 -o $inno -eq 2 -o $dmg -eq 2 ]
 	then
-	#	echo "Since we are doing a complete recompile we are assuming we will need to install l2ork version of the cwiid library. You will need to remove any existing cwiid libraries manually as they will clash with this one. L2Ork version is fully backwards compatible while also offering unique features like full extension support including the passthrough mode. YOU SHOULD REMOVE EXISTING CWIID LIBRARIES PRIOR TO RUNNING THIS INSTALL... You will also have to enter sudo password to install these... Press any key to continue or CTRL+C to cancel install..."
-	#	read dummy
+	        if [ $clean -eq 0 ]; then
+		cd externals
+		else
 		# clean files that may remain stuck even after doing global make clean (if any)
 		test $os == "osx" && make -C packages/darwin_app clean || true
 		cd externals/miXed
@@ -229,6 +229,7 @@ then
 		rm -f Gem.pd_linux
 		aclocal
 		./autogen.sh
+		fi
 		export INCREMENTAL=""
 	else
 		cd Gem/
@@ -244,7 +245,7 @@ then
 	fi
 	if [ $full -gt 1 -o $deb -eq 2 -o $inno -eq 2 -o $dmg -eq 2 ]
 	then
-		make distclean || true # this may fail on 1st attempt
+		test $clean -ne 0 && make distclean || true # this may fail on 1st attempt
 		cp ../../pd/src/g_all_guis.h ../../externals/build/include
 		cp ../../pd/src/g_canvas.h ../../externals/build/include
 		cp ../../pd/src/m_imp.h ../../externals/build/include
@@ -342,14 +343,6 @@ then
 	elif [ $inno -gt 0 ]; then
 		mv packages/win32_inno/Output/Purr*.exe .
 	fi
-fi
-
-if [ $addon -eq 1 ]
-then
-	echo "l2ork addons..."
-	rm -f ../l2ork_addons-`uname -m`-`date +%Y%m%d`.tar.bz2 2> /dev/null
-	#cp -rf /usr/local/lib/pd/* l2ork_addons/externals/
-	tar -jcf ../l2ork_addons-`uname -m`-`date +%Y%m%d`.tar.bz2 l2ork_addons
 fi
 
 cd l2ork_addons/
