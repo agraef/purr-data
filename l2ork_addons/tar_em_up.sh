@@ -211,7 +211,9 @@ then
 	echo "core Pd..."
 	rm -f ../Pd-l2ork-`date +%Y%m%d`.tar.bz2 2> /dev/null
 	cd pd/src/
-	make clean || true # this may fail on 1st attempt
+	# make sure that Pd is configured before trying to package it
+	test -f config.h || (aclocal && autoconf && make -C ../../packages pd)
+	make clean
 	cd ../../
 	tar -jcf ./Pd-l2ork-`date +%Y%m%d`.tar.bz2 pd
 fi
