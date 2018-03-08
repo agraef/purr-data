@@ -106,6 +106,10 @@ if [[ $os == "darwin" ]]; then
 	os=osx
 fi
 
+# Automagically disable Debian packaging when the Debian packaging tools are
+# not available.
+test $deb -eq 0 || test -x /usr/bin/dpkg-deb || pkg=0
+
 # XXXTODO: If no build target has been set, we should pick one by default.
 
 # Fetch the nw.js binary if we haven't already. We want to fetch it even

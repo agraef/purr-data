@@ -141,7 +141,9 @@ debstage: $(bindir)
 # Pd-related scripts
 	#install -p $(scripts_src)/pd-diff $(DESTDIR)$(bindir)
 
+ifeq ($(PACKAGE_TYPE),deb)
 deb: DEB_BUILD_ARCH := $(shell dpkg-architecture -qDEB_BUILD_ARCH)
+endif
 deb: DEB_PD_VERSION := $(shell echo $(PD_VERSION) | sed 's|\(.*\)-l2ork-\(.*\)|\1-\2|')
 deb: debstage
 # delete these since they are provided by the 'puredata-utils' and 'cyclist' package
