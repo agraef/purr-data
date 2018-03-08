@@ -39,7 +39,7 @@ checkout:
 	git submodule update --init
 
 clean:
-	test $os == "osx" && make -C packages/darwin_app clean || true
+	test "$(shell uname -s)" = "Darwin" && make -C packages/darwin_app clean || true
 	cd pd/src && aclocal && autoconf && make clean || true
 	cd externals/miXed && make clean || true
 	cd Gem/src/ && test -f Makefile && make distclean || true
