@@ -127,6 +127,20 @@ if [ $any -gt 0 ]; then
 	fi
 fi
 
+# Make sure that we don't try to build a tarball on Mac or Windows (that's
+# part of packages/linux_make and hence only works on Linux), build a regular
+# package for the platform instead.
+if [ $full -gt 0 ]; then
+	if [[ $os == "osx" ]]; then
+		dmg=1
+		echo "Warning: tarball installer not supported on Mac, building a dmg installer instead."
+	elif [[ $os == "win" ]]; then
+		inno=$full
+		echo "Warning: tarball installer not supported on Windows, building a Windows installer instead."
+	fi
+	full=0
+fi
+
 # Automagically disable Debian packaging when the Debian packaging tools are
 # not available.
 if test $deb -gt 0 && test $pkg -gt 0 && ! test -x /usr/bin/dpkg-deb; then
