@@ -420,7 +420,7 @@ clean: abstractions_clean doc_clean externals_clean pd_clean
 
 distclean: cruft_clean
 	$(MAKE) -C $(abstractions_src) distclean
-	$(MAKE) -C $(extensions_src) distclean
+	-$(MAKE) -C $(extensions_src) distclean
 	$(MAKE) -C $(externals_src) distclean
 	-$(MAKE) -C $(pd_src) distclean
 
