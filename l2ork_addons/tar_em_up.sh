@@ -15,28 +15,33 @@ then
 	echo
 	echo "   Usage: ./tar_em_up.sh -option1 -option2 ..."
 	echo "   Options:"
-	echo "     -b    build a deb (incremental)"
-	echo "     -B    build a deb (complete recompile)"
+	echo "     -b    build a Debian package (incremental)"
+	echo "     -B    build a Debian package (complete recompile)"
 	echo "     -c    core Pd source tarball"
-	echo "     -f    full installer (incremental)"
-	echo "     -F    full installer (complete recompile)"
+	echo "     -f    full tarball installer (incremental)"
+	echo "     -F    full tarball installer (complete recompile)"
 	echo "     -k    keep previous build products"
 	echo "     -n    skip package creation (-bB, -fF)"
-	echo "     -R    build a Raspberry Pi deb (complete recompile)"
 	echo "     -r    build a Raspberry Pi deb (incremental)"
+	echo "     -R    build a Raspberry Pi deb (complete recompile)"
+	echo "     -t    auto-detect target (incremental)"
+	echo "     -T    auto-detect target (complete recompile)"
 	echo "     -X    build an OSX installer (dmg)"
 	echo "     -z    build a Windows installer (incremental)"
 	echo "     -Z    build a Windows installer (complete recompile)"
 	echo
 	echo "   The incremental options bypass Gem compilation. This saves"
-	echo "   (lots of) time if Gem has already been built previously."
+	echo "   (lots of) time, but the generated package will lack Gem"
+	echo "   unless it has already been built previously. NOTE: Building"
+	echo "   Gem is NOT supported on OSX right now."
 	echo
 	echo "   The -k (keep) option doesn't clean before compilation,"
-	echo "   keeping the build products from a previous run. This also"
-	echo "   saves time if the script has been run previously."
+	echo "   preserving the build products from a previous run. This"
+	echo "   also saves time if the script has been run previously."
+	echo "   Not using this option forces a full recompile."
 	echo
-	echo "   For custom install locations do the following before"
-	echo "   running this script:"
+	echo "   For custom install locations and staged installations"
+	echo "   set the inst_dir environment variable as follows:"
 	echo
 	echo "           export inst_dir=/some/custom/location"
 	echo
@@ -50,9 +55,10 @@ rpi=0
 pkg=1
 inno=0
 dmg=0
+any=0
 clean=1
 
-while getopts ":bBcfFknRrXzZ" Option
+while getopts ":bBcfFknRrTtXzZ" Option
 do case $Option in
 		b)		deb=1
 				inst_dir=${inst_dir:-/usr};;
@@ -78,6 +84,10 @@ do case $Option in
 				inst_dir=/usr
 				rpi=1;;
 
+		t)		any=1;;
+
+		T)		any=2;;
+
 		X)		dmg=1
 				inst_dir=/usr;;
 
@@ -101,26 +111,28 @@ export TAR_EM_UP_PREFIX=$inst_dir
 os=`uname | tr '[:upper:]' '[:lower:]'`
 if [[ $os == *"mingw32"* ]]; then
 	os=win
-fi
-if [[ $os == "darwin" ]]; then
+elif [[ $os == "darwin" ]]; then
 	os=osx
 fi
 
-# Pick a default build target if none has been set.
-if [ $core -eq 0 -a $full -eq 0 -a $deb -eq 0 -a $inno -eq 0 -a $dmg -eq 0 ]
-then
+# Auto-detect the platform and pick an appropriate build target.
+if [ $any -gt 0 ]; then
 	if [[ $os == "osx" ]]; then
 		dmg=1
 	elif [[ $os == "win" ]]; then
-		inno=2
+		inno=$any
 	else
-		deb=2
+		deb=$any
+		inst_dir=${inst_dir:-/usr}
 	fi
 fi
 
 # Automagically disable Debian packaging when the Debian packaging tools are
 # not available.
-test $deb -eq 0 || test -x /usr/bin/dpkg-deb || pkg=0
+if test $deb -gt 0 && test $pkg -gt 0 && ! test -x /usr/bin/dpkg-deb; then
+    pkg=0;
+    echo "Debian toolchain unavailable, Debian packaging disabled"
+fi
 
 # Fetch the nw.js binary if we haven't already. We want to fetch it even
 # for building with no libs, so we do it regardless of the options
