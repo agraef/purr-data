@@ -110,7 +110,7 @@ fi
 
 # Fetch the nw.js binary if we haven't already. We want to fetch it even
 # for building with no libs, so we do it regardless of the options
-echo nwjs-sdk-v0.16.0-`uname | tr '[:upper:]' '[:lower:]'`
+#echo nwjs-sdk-v0.16.0-`uname | tr '[:upper:]' '[:lower:]'`
 if [ ! -d "../pd/nw/nw" ]; then
 	if [ `getconf LONG_BIT` -eq 32 ]; then
 		arch="ia32"
@@ -245,17 +245,20 @@ then
 	fi
 	if [ $full -gt 1 -o $deb -eq 2 -o $inno -eq 2 -o $dmg -eq 2 ]
 	then
-		test $clean -ne 0 && make distclean || true # this may fail on 1st attempt
+		test $clean -ne 0 && make distclean || true
+		# Run `make git_version` *now* so that we already have
+		# s_stuff.h when we copy it below. XXXNOTE AG: The build seems
+		# to work just fine even when skipping all this, so why again
+		# is this needed?
+		make -C .. git_version
 		cp ../../pd/src/g_all_guis.h ../../externals/build/include
 		cp ../../pd/src/g_canvas.h ../../externals/build/include
 		cp ../../pd/src/m_imp.h ../../externals/build/include
 		cp ../../pd/src/m_pd.h ../../externals/build/include
-		# ag: s_stuff.h may not exist at this point yet (will be
-		# generated later), is this really needed here?
-		test -f ../../pd/src/s_stuff.h && cp ../../pd/src/s_stuff.h ../../externals/build/include
-		cp ../../pd/src/g_all_guis.h ../../externals/build/include								
-		rm -rf build/
+		cp ../../pd/src/s_stuff.h ../../externals/build/include
+		cp ../../pd/src/g_all_guis.h ../../externals/build/include
 	fi
+	rm -rf build/
 	if [ $rpi -eq 0 ]
 	then
 		echo "installing desktop version..."
@@ -276,11 +279,11 @@ then
 		echo `pwd`
 		make install && make package
 	else
+		# create images folder
+		mkdir -p ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/images
 		make install prefix=$inst_dir
 	fi
 	echo "copying pd-l2ork-specific externals..."
-	# create images folder
-	mkdir -p ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/images
 	# patch_name
 	# spectdelay
 	if [[ $os == "win" ]]; then
