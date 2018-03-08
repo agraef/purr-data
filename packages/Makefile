@@ -204,7 +204,7 @@ extensions_install:
 #------------------------------------------------------------------------------
 # externals_install
 externals_install: 
-	$(MAKE) -C $(externals_src) $(DEST_PATHS) install
+	$(MAKE) -C $(externals_src) $(DEST_PATHS) install INCREMENTAL=$(INCREMENTAL)
 
 
 #------------------------------------------------------------------------------

@@ -137,7 +137,9 @@ LIB_TARGETS = adaptive arraysize autotune bassemu boids bsaylor comport creb cxc
 
 # this is for libraries that don't compile (yet) on all platforms
 ifeq ($(OS_NAME),windows)
-  LIB_TARGETS += gem
+  ifneq ($(INCREMENTAL),yes)
+    LIB_TARGETS += gem
+  endif
 else
   ifeq ($(OS_NAME),darwin)
 # on Mac OS X 10.6/Snow Leopard don't build hid since it needs Carbon

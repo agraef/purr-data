@@ -315,7 +315,7 @@ then
 	if [[ $os == "win" ]]; then
 		echo "Making Windows package..."
 		echo `pwd`
-		make install && make package
+		make install INCREMENTAL=$INCREMENTAL && make package
 	elif [[ $os == "osx" ]]; then
 		echo "Making OSX package (dmg)..."
 		echo `pwd`
