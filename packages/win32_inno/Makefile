@@ -153,6 +153,9 @@ $(PD_INNO_SETUP): $(PD_INNO_SETUP).in
 		sed 's/PD_VERSION/$(PD_VERSION)/g' | \
 		sed 's/PD_BUILD_VERSION/$(PD_BUILD_VERSION)/g' > \
 		$(PD_INNO_SETUP)
+# in incremental builds the lib directory may not exist, in that case we need
+# to edit the setup file to prevent an inno-setup error
+	test -d $(DESTDIR)$(libdir) || sed -i -e 's/^Source: build\\lib/;Source: build\\lib/' $(PD_INNO_SETUP)
 #	start $(PD_INNO_SETUP)
 
 
