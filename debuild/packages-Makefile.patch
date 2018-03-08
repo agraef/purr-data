@@ -1,27 +1,17 @@
 diff --git a/packages/Makefile b/packages/Makefile
-index f5c1f8c0..0a285b52 100644
+index a360dba7..b5b949b5 100644
 --- a/packages/Makefile
 +++ b/packages/Makefile
-@@ -373,12 +373,14 @@ doc_format:
- # AG: The set_version target is broken since it modifies m_pd.h in-place
- # during the build, which is a bad thing to do to files which are supposed to
- # be kept in a source code repository. Instead, we create s_stuff.h from
--# s_stuff.h.in, where the latter is kept in the repo and the former gets created
--# from the latter by substituting PD_BUILD_VERSION.
-+# s_stuff.h.in, where the latter is kept in the repo and the former gets
-+# created from the latter by substituting PD_BUILD_VERSION. (Only try to do
-+# this if we're actually in the git repo, otherwise we'll get an empty
-+# revision number.)
+@@ -377,7 +377,7 @@ doc_format:
+ # from the latter by substituting PD_BUILD_VERSION.
  
  git_version: $(pd_src)/src/s_stuff.h.in
--	cd $(pd_src)/src/ && \
--	sed 's|^\(#define PD_BUILD_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' s_stuff.h.in > s_stuff.h
-+	test -d $(cvs_root_dir)/.git && cd $(pd_src)/src/ && \
-+	sed 's|^\(#define PD_BUILD_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' s_stuff.h.in > s_stuff.h || true
+-	@cd $(pd_src)/src/ && \
++	@test -d $(cvs_root_dir)/.git && cd $(pd_src)/src/ && \
+ 	sed 's|^\(#define PD_BUILD_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' s_stuff.h.in > s_stuff.h.new && \
+ 	(test -f s_stuff.h && diff -q s_stuff.h s_stuff.h.new > /dev/null && rm -f s_stuff.h.new && echo s_stuff.h unchanged || (rm -f s_stuff.h && mv s_stuff.h.new s_stuff.h))
  
- set_version:
- # change Pd's version number to reflect the extended build
-@@ -421,7 +423,7 @@ distclean: cruft_clean
+@@ -422,7 +422,7 @@ distclean: cruft_clean
  	$(MAKE) -C $(abstractions_src) distclean
  	$(MAKE) -C $(extensions_src) distclean
  	$(MAKE) -C $(externals_src) distclean

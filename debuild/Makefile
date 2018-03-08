@@ -90,13 +90,13 @@ deb: $(debsrc) $(addprefix debian/nwjs/, $(nwjs))
 	rm -rf $(debdist)
 
 debsrc:
-	$(MAKE) deb DEBUILD_FLAGS=-S
+	$(MAKE) deb DEBUILD_FLAGS="-S -d"
 
 deb-us:
 	$(MAKE) deb DEBUILD_FLAGS="-us -uc"
 
 debsrc-us:
-	$(MAKE) deb DEBUILD_FLAGS="-S -us -uc"
+	$(MAKE) deb DEBUILD_FLAGS="-S -d -us -uc"
 
 # Determine the build version which needs git to be computed, so we can't do
 # it in a stand-alone build from a tarball.
