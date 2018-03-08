@@ -377,8 +377,9 @@ doc_format:
 # from the latter by substituting PD_BUILD_VERSION.
 
 git_version: $(pd_src)/src/s_stuff.h.in
-	cd $(pd_src)/src/ && \
-	sed 's|^\(#define PD_BUILD_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' s_stuff.h.in > s_stuff.h
+	@cd $(pd_src)/src/ && \
+	sed 's|^\(#define PD_BUILD_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' s_stuff.h.in > s_stuff.h.new && \
+	(test -f s_stuff.h && diff -q s_stuff.h s_stuff.h.new > /dev/null && rm -f s_stuff.h.new && echo s_stuff.h unchanged || (rm -f s_stuff.h && mv s_stuff.h.new s_stuff.h))
 
 set_version:
 # change Pd's version number to reflect the extended build
