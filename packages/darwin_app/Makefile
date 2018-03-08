@@ -181,6 +181,7 @@ package: dmg
 
 VOLUME_NAME = Pd-l2ork
 dmg:
+	rm -f build.dmg
 	hdiutil create -format UDRW -fs HFS+ -srcfolder "$(BUILD_BASE)" \
 		-volname $(VOLUME_NAME) build.dmg
 # detach one with the same name first
@@ -209,6 +210,7 @@ dmg:
 		DESTDIR="/Volumes/$(VOLUME_NAME)/*.app/Contents/Resources" doc_format
 	chmod -R a-w /Volumes/$(VOLUME_NAME)/*.app/Contents/Resources
 	hdiutil detach `mount | grep $(VOLUME_NAME) | cut -d ' ' -f 1`
+	rm -f "$(PACKAGE_NAME).dmg"
 	hdiutil convert -format UDZO -o "$(PACKAGE_NAME).dmg" build.dmg
 	rm -f build.dmg
 # install license
