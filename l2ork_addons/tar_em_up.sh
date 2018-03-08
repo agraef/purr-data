@@ -106,11 +106,21 @@ if [[ $os == "darwin" ]]; then
 	os=osx
 fi
 
+# Pick a default build target if none has been set.
+if [ $core -eq 0 -a $full -eq 0 -a $deb -eq 0 -a $inno -eq 0 -a $dmg -eq 0 ]
+then
+	if [[ $os == "osx" ]]; then
+		dmg=1
+	elif [[ $os == "win" ]]; then
+		inno=2
+	else
+		deb=2
+	fi
+fi
+
 # Automagically disable Debian packaging when the Debian packaging tools are
 # not available.
 test $deb -eq 0 || test -x /usr/bin/dpkg-deb || pkg=0
-
-# XXXTODO: If no build target has been set, we should pick one by default.
 
 # Fetch the nw.js binary if we haven't already. We want to fetch it even
 # for building with no libs, so we do it regardless of the options
