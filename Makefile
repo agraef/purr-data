@@ -4,9 +4,12 @@
 # build script.
 
 # The Pd-l2ork build system is very arcane and intricate. Its main purpose is
-# building installers for the supported platforms, compiling sources is just a
-# byproduct. Therefore `make` will most likely rebuild lots of things even if
-# you just finished another build.
+# putting together a staging area with a complete Pd-l2ork installation and
+# then building installers for the supported platforms from that, pulling
+# together a bunch of separate packages, each with their own build system.
+# Compiling sources is just one of the tasks that the builder does. Therefore
+# you'll notice that, unlike with other less complicated source packages,
+# `make` will rebuild lots of things even if you just finished another build.
 
 # The available build targets are:
 
@@ -19,7 +22,7 @@
 # check the tar_em_up.sh script for details
 
 # checkout: convenience target to check out all submodules in preparation for
-# a subsequent build (the `all` and `rebuild` targets also do this
+# a subsequent build (the `all`, `incremental` and `dist` targets also do this
 # automatically when needed)
 
 # clean: does something similar to what `tar_em_up.sh` does in order to start
@@ -28,8 +31,21 @@
 # realclean: put the sources into pristine state again (WARNING: this will get
 # rid of any uncommitted source changes, too); use this as a last resort to
 # get the sources into a compilable state again after things have gone awry
-# NOTE: this target only works in a working copy of the git repo, not in
-# static tarball snapshots of the source
+
+# dist: create a self-contained distribution tarball of the source
+
+# NOTES:
+
+# The realclean and dist targets use git commands and thus only work in a
+# working copy of the git repo, not in the static tarball snapshots produced
+# by the dist target.
+
+# On Linux systems running `make` will try to produce a Debian package. On
+# Linux distributions like Arch which are no Debian derivatives, the Debian
+# packaging tools are not available. In this case, `make` will stop right
+# before creating the actual package and leave the ready-made staged
+# installation tree under `packages/linux_make/build` from where it can be
+# copied or packaged up in any desired way.
 
 .PHONY: all incremental checkout clean realclean dist
 
@@ -55,8 +71,8 @@ realclean:
 # git clean doesn't see these, but we need to get rid of them to prevent
 # subsequent mysterious build failures
 	rm -rf pd/lib $(addprefix externals/disis/, flext/configure stk/configure)
-# The rest require a working copy of the git repo.
-	test -d .git || (echo "Not a git repository, bailing out." && false)
+# The rest requires a working copy of the git repo.
+	@test -d .git || (echo "Not a git repository, bailing out." && false)
 	git submodule deinit --all -f
 	git checkout .
 	git clean -dff
@@ -66,7 +82,7 @@ realclean:
 # repo.
 
 # The Debian version gets derived from the date and serial number of the last
-# commit. You can print it with 'make debversion'.
+# commit.
 debversion = $(shell grep PD_L2ORK_VERSION pd/src/m_pd.h | sed 's|^.define *PD_L2ORK_VERSION *"\(.*\)".*|\1|')+git$(shell test -d .git && git rev-list --count HEAD)+$(shell test -d .git && git rev-parse --short HEAD)
 # Source tarball and folder.
 debsrc = purr-data_$(debversion).orig.tar.gz
@@ -82,7 +98,7 @@ dist: $(debsrc)
 PD_BUILD_VERSION := $(shell test -d .git && (git log -1 --format=%cd --date=short | sed -e 's/-//g'))-rev.$(shell test -d .git && git rev-parse --short HEAD)
 
 $(debsrc):
-	test -d .git || (echo "Not a git repository, bailing out." && false)
+	@test -d .git || (echo "Not a git repository, bailing out." && false)
 	rm -rf $(debdist)
 # Make sure that the submodules are initialized.
 	git submodule update --init
