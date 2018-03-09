@@ -76,13 +76,6 @@ deb: $(debsrc) $(addprefix debian/nwjs/, $(nwjs))
 	tar xfz $(debsrc)
 # Add the NW.js binaries to the source package.
 	cd debian/source && rm -f include-binaries && for x in $(addprefix debian/nwjs/, $(nwjs)); do echo "$$x" >> include-binaries; done
-# This works around some problems compiling externals on Precise and earlier
-# (patch from pd-extended by Hans-Christoph Steiner, modified for pd-l2ork).
-# This can be removed once Ubuntu 12.04 finally goes the way of the dodo.
-#	cd $(debdist) && patch -p1 < ../precise-configure.patch
-# Patch the user config dir name so that purr-data can coexist with pd-l2ork.
-# Not needed with purr-data 2.4.5+ any more.
-#	cd $(debdist) && patch -Np1 < ../userconfig.patch
 # Make sure to copy the Debian files which may have uncommitted changes.
 # Then run debuild to create the package.
 	cd $(debdist) && cp -R ../debian . && debuild $(DEBUILD_FLAGS)

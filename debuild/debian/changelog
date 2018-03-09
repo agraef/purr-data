@@ -1,3 +1,9 @@
+purr-data (2.4.9+git3840+b9f17566-1) bionic; urgency=low
+
+  * Build from latest upstream source.
+
+ -- Albert Graef <aggraef@gmail.com>  Fri, 09 Mar 2018 10:45:41 +0100
+
 purr-data (2.0+git3322+50e3805-1) xenial; urgency=low
 
   * Build from latest upstream source.
