@@ -87,6 +87,15 @@ from the following site:
 
 ### Build Guide
 
+**NOTE:** The instructions below talk about running the `tar_em_up.sh` build
+script, which is still the recommended way to build Purr Data right now.
+However, Purr Data also has a new (and experimental) toplevel Makefile so that
+just typing `make` will build the package. You may find this easier. The
+Makefile also offers the customary targets to clean (`make clean`, or
+`make realclean` to put the sources in pristine state again) and to roll a
+self-contained distribution tarball (`make dist`). Please check the comments
+at the beginning of the Makefile for more information.
+
 #### Linux
 
 Time to build: *40 minutes to 1.5 hours*  
