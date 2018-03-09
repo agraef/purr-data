@@ -380,6 +380,7 @@ then
 		fi
 		elif [ $deb -gt 0 ]; then
 			make debstage prefix=$inst_dir
+			echo "Debian packaging skipped, build results can be found in packages/linux_make/build/."
 		fi
 		cd ../../
 	# move OSX dmg installer
