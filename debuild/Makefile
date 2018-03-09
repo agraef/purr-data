@@ -113,9 +113,6 @@ $(debsrc):
 # Pre-generate and put s_stuff.h into the tarball (see above; the build
 # version is generated using git which can't be done outside the git repo).
 	sed 's|^\(#define PD_BUILD_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' ../pd/src/s_stuff.h.in > $(debdist)/pd/src/s_stuff.h
-# Patch packages/Makefile so that we do *not* try to regenerate s_stuff.h
-# during the build.
-	cd $(debdist) && patch -p1 < ../packages-Makefile.patch
 # Create the source tarball.
 	tar cfz $(debsrc) $(debdist)
 	rm -rf $(debdist)
