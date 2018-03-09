@@ -31,6 +31,8 @@
 # NOTE: this target only works in a working copy of the git repo, not in
 # static tarball snapshots of the source
 
+.PHONY: all incremental checkout clean realclean dist
+
 all:
 	cd l2ork_addons && ./tar_em_up.sh -Tk
 
@@ -58,3 +60,39 @@ realclean:
 	git submodule deinit --all -f
 	git checkout .
 	git clean -dff
+
+# Build a self-contained distribution tarball (snapshot). This is pretty much
+# the same as in debuild/Makefile and must be run in a working copy of the git
+# repo.
+
+# The Debian version gets derived from the date and serial number of the last
+# commit. You can print it with 'make debversion'.
+debversion = $(shell grep PD_L2ORK_VERSION pd/src/m_pd.h | sed 's|^.define *PD_L2ORK_VERSION *"\(.*\)".*|\1|')+git$(shell test -d .git && git rev-list --count HEAD)+$(shell test -d .git && git rev-parse --short HEAD)
+# Source tarball and folder.
+debsrc = purr-data_$(debversion).orig.tar.gz
+debdist = purr-data-$(debversion)
+
+# Submodules (Gem, etc.).
+submodules = $(sort $(shell test -d .git && (git config --file .gitmodules --get-regexp path | awk '{ print $$2 }')))
+
+dist: $(debsrc)
+
+# Determine the build version which needs git to be computed, so we can't do
+# it in a stand-alone build from a tarball.
+PD_BUILD_VERSION := $(shell test -d .git && (git log -1 --format=%cd --date=short | sed -e 's/-//g'))-rev.$(shell test -d .git && git rev-parse --short HEAD)
+
+$(debsrc):
+	test -d .git || (echo "Not a git repository, bailing out." && false)
+	rm -rf $(debdist)
+# Make sure that the submodules are initialized.
+	git submodule update --init
+# Grab the main source.
+	git archive --format=tar.gz --prefix=$(debdist)/ HEAD | tar xfz -
+# Grab the submodules.
+	for x in $(submodules); do (cd $(debdist) && rm -rf $$x && git -C ../$$x archive --format=tar.gz --prefix=$$x/ HEAD | tar xfz -); done
+# Pre-generate and put s_stuff.h into the tarball (see above; the build
+# version is generated using git which can't be done outside the git repo).
+	sed 's|^\(#define PD_BUILD_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' pd/src/s_stuff.h.in > $(debdist)/pd/src/s_stuff.h
+# Create the source tarball.
+	tar cfz $(debsrc) $(debdist)
+	rm -rf $(debdist)
