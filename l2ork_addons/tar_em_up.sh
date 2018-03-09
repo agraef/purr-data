@@ -292,7 +292,7 @@ then
 		# s_stuff.h when we copy it below. XXXNOTE AG: The build seems
 		# to work just fine even when skipping all this, so why again
 		# is this needed?
-		make -C .. git_version
+		test -f ../../pd/src/s_stuff.h || make -C .. git_version
 		cp ../../pd/src/g_all_guis.h ../../externals/build/include
 		cp ../../pd/src/g_canvas.h ../../externals/build/include
 		cp ../../pd/src/m_imp.h ../../externals/build/include
