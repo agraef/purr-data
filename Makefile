@@ -68,14 +68,11 @@ clean:
 	cd Gem/ && rm -f gemglutwindow.pd_linux Gem.pd_linux
 
 realclean:
-# git clean doesn't see these, but we need to get rid of them to prevent
-# subsequent mysterious build failures
-	rm -rf pd/lib $(addprefix externals/disis/, flext/configure stk/configure)
-# The rest requires a working copy of the git repo.
+# This requires a working copy of the git repo.
 	@test -d .git || (echo "Not a git repository, bailing out." && false)
 	git submodule deinit --all -f
 	git checkout .
-	git clean -dff
+	git clean -dffx
 
 # Build a self-contained distribution tarball (snapshot). This is pretty much
 # the same as in debuild/Makefile and must be run in a working copy of the git
