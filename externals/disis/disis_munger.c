@@ -24,9 +24,8 @@ http://www.gnu.org/copyleft/gpl.html
 For latest changes please see changelog
 */
 
-#include <ADSR.h>
-//#include <flext.h>
 #include "m_pd.h"
+#include "ADSR.h" /* small C library ported from stk */
 #include <math.h>
 #include <time.h>
 #include <stdio.h>
@@ -34,7 +33,7 @@ For latest changes please see changelog
 
 //version
 #define MUNGER_MAJOR 1
-#define MUNGER_MINOR 3
+#define MUNGER_MINOR 4
 #define MUNGER_REV 3
 
 //MSVC doesn't know RANDOM(), while GCC's (at least on Linux) has rand() limit much higher
