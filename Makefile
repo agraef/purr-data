@@ -52,7 +52,9 @@
 # Installation prefix under which Pd-l2ork is installed (Linux only). If this
 # isn't set, a default location will be used (usually /usr/local). NOTE: The
 # default prefs file assumes /usr, if you choose anything else then you'll
-# have to edit $prefix/lib/pd-l2ork/default.settings accordingly.
+# have to edit $prefix/lib/pd-l2ork/default.settings accordingly. Also note
+# that we *always* assume that this variable is set properly in the install
+# targets (see below).
 prefix = /usr
 
 ifneq ($(prefix),)
@@ -84,6 +86,28 @@ realclean:
 	git submodule deinit --all -f
 	git checkout .
 	git clean -dffx
+
+# Installation targets. These don't work on Mac and Windows right now, you
+# should use the generated installers on these systems instead. Also,
+# $(prefix) must be set. $(DESTDIR) is supported as well, so you can do staged
+# installs (but then again presumably you already have a staged install
+# sitting in packages/*/build, so you might as well use that instead).
+
+# Note that these targets simply (un)install whatever is in the
+# packages/*/build directory at the time they're invoked, so you need to run
+# `make` (or `make incremental`, etc.) first. Also note that the extra cruft
+# under build/etc (except for the bash auto-completions) isn't installed as it
+# isn't needed on modern Linux systems any more.
+
+builddir = $(firstword $(wildcard packages/*/build))
+manifest = etc/bash_completion.d/pd-l2ork $(prefix:/%=%)/include/pd-l2ork $(prefix:/%=%)/lib/pd-l2ork $(patsubst $(builddir)/%,%, $(wildcard $(builddir)/$(prefix:/%=%)/bin/*) $(shell find $(builddir)/usr/share -type f))
+
+install:
+	test -z "$(DESTDIR)" || (rm -rf "$(DESTDIR)" && mkdir -p "$(DESTDIR)")
+	tar -c -C $(builddir) $(manifest) | tar -x -C $(DESTDIR)/
+
+uninstall:
+	rm -rf $(addprefix $(DESTDIR)/, $(manifest))
 
 # Build a self-contained distribution tarball (snapshot). This is pretty much
 # the same as in debuild/Makefile and must be run in a working copy of the git
