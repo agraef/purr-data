@@ -49,11 +49,21 @@
 
 .PHONY: all incremental checkout clean realclean dist
 
+# Installation prefix under which Pd-l2ork is installed (Linux only). If this
+# isn't set, a default location will be used (usually /usr/local). NOTE: The
+# default prefs file assumes /usr, if you choose anything else then you'll
+# have to edit $prefix/lib/pd-l2ork/default.settings accordingly.
+prefix = /usr
+
+ifneq ($(prefix),)
+env = inst_dir="$(prefix)"
+endif
+
 all:
-	cd l2ork_addons && ./tar_em_up.sh -Tk
+	cd l2ork_addons && $(env) ./tar_em_up.sh -Tk
 
 incremental:
-	cd l2ork_addons && ./tar_em_up.sh -tk
+	cd l2ork_addons && $(env) ./tar_em_up.sh -tk
 
 checkout:
 	git submodule update --init
