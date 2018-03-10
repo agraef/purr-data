@@ -59,6 +59,11 @@ void stk_ADSR_init(t_stk_ADSR *x)
   x->sampleRate = 44100;
 }
 
+t_env_state stk_ADSR_getState(t_stk_ADSR *x)
+{
+    return x->state;
+}
+
 void stk_ADSR_sampleRateChanged(t_stk_ADSR *x, t_float newRate,
     t_float oldRate)
 {
@@ -67,7 +72,7 @@ void stk_ADSR_sampleRateChanged(t_stk_ADSR *x, t_float newRate,
     x->releaseRate = oldRate * x->releaseRate / newRate;
 }
 
-void stkADSR_setSampleRate(t_stk_ADSR *x, t_float newRate)
+void stk_ADSR_setSampleRate(t_stk_ADSR *x, t_float newRate)
 {
     x->sampleRate = newRate;
 }

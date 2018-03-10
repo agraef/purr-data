@@ -81,6 +81,7 @@ typedef struct _disis_munger {
     t_float x_srate_ms;
     t_float x_one_over_srate_ms;
     t_float x_initbuflen;
+    t_symbol *x_bufname;
     int x_buflen;
     t_float x_maxdelay;
     int x_num_channels;
@@ -151,14 +152,7 @@ typedef struct _disis_munger {
     short x_smoothPitch;
     int x_scale_len;
 
-    t_float x_grate;
     t_float x_tempgrate;
-    t_float x_grate_var;
-    t_float x_glen;
-    t_float x_glen_var;
-    t_float x_gpitch;
-    t_float x_gpitch_var;
-    t_float x_gpan_spread;
     long x_time;
     t_float x_position;
     t_float x_gimme;
@@ -174,7 +168,7 @@ typedef struct _disis_munger {
     t_float x_pitchTable[PITCHTABLESIZE];
     t_float x_rampLength;
 
-    int x_recordOne
+    int x_recordOn;
     long x_recordCurrent;
     int x_recordRampVal;   /* ramp for when toggling record on and off */
     int x_rec_ramping;     /* -1 ramp down, 1 ramp up, 0 not ramping */
@@ -192,58 +186,58 @@ static void *munger_alloc(t_disis_munger *x)
     /* Heap allocated based on number of voices */
     int nv = x->x_numvoices, nchan = x->x_num_channels;
 
-    x_recordBuf = (t_float *)t_getbytes((x->x_buflen + 1) * sizeof(t_float));
+    x->x_recordBuf = (t_float *)t_getbytes((x->x_buflen + 1) * sizeof(t_float));
 
     /* If recordBuf didn't get allocated, let's go ahead and bail. Otherwise
        we just assume all the ones below will succeed. */
 
     if (!x->x_recordBuf)
     {
-        error("disis_munger~ %s: out of memory", munger_name);
+        error("disis_munger~ %s: out of memory", x->x_munger_name);
         return 0;
     }
-    x_winTime = (t_float *)t_getbytes(nv * sizeof(t_float));
-    x_winRate = (t_float *)t_getbytes(nv * sizeof(t_float));
-    long *x_gvoiceSize = (long *)t_getbytes(nv * sizeof(long));
-    x_gvoiceSpeed = (double *)t_getbytes(nv * sizeof(double));
-    x_gvoiceCurrent = (double *)t_getbytes(nv * sizeof(double));
-    x_gvoiceDirection = (int *)t_getbytes(nv * sizeof(int));
-    x_gvoiceOn = (int *)t_getbytes(nv * sizeof(int));
-    x_gvoiceDone = (long *)t_getbytes(nv * sizeof(long));
-    x_gvoiceLPan = (t_float *)t_getbytes(nv * sizeof(t_float));
-    x_gvoiceRPan = (t_float *)t_getbytes(nv * sizeof(t_float));
-    x_gvoiceRamp = (t_float *)t_getbytes(nv * sizeof(t_float));
-    x_gvoiceOneOverRamp = (t_float *)t_getbytes(nv * sizeof(t_float));
-    x_gvoiceGain = (t_float *)t_getbytes(nv * sizeof(t_float));
+    x->x_winTime = (t_float *)t_getbytes(nv * sizeof(t_float));
+    x->x_winRate = (t_float *)t_getbytes(nv * sizeof(t_float));
+    x->x_gvoiceSize = (long *)t_getbytes(nv * sizeof(long));
+    x->x_gvoiceSpeed = (double *)t_getbytes(nv * sizeof(double));
+    x->x_gvoiceCurrent = (double *)t_getbytes(nv * sizeof(double));
+    x->x_gvoiceDirection = (int *)t_getbytes(nv * sizeof(int));
+    x->x_gvoiceOn = (int *)t_getbytes(nv * sizeof(int));
+    x->x_gvoiceDone = (long *)t_getbytes(nv * sizeof(long));
+    x->x_gvoiceLPan = (t_float *)t_getbytes(nv * sizeof(t_float));
+    x->x_gvoiceRPan = (t_float *)t_getbytes(nv * sizeof(t_float));
+    x->x_gvoiceRamp = (t_float *)t_getbytes(nv * sizeof(t_float));
+    x->x_gvoiceOneOverRamp = (t_float *)t_getbytes(nv * sizeof(t_float));
+    x->x_gvoiceGain = (t_float *)t_getbytes(nv * sizeof(t_float));
 
     /* This is its own type */
-    x_gvoiceADSR = (t_stk_ADSR *)t_getbytes(nv * sizeof(t_stk_ADSR)); 
+    x->x_gvoiceADSR = (t_stk_ADSR *)t_getbytes(nv * sizeof(t_stk_ADSR)); 
 
-    x_gvoiceADSRon = (int *)t_getbytes(nv * sizeof(int));
-    x_noteTransp = (t_float *)t_getbytes(nv * sizeof(t_float));
-    x_noteSize = (t_float *)t_getbytes(nv * sizeof(t_float));
-    x_notePan = (t_float *)t_getbytes(nv * sizeof(t_float));
-    x_noteGain = (t_float *)t_getbytes(nv * sizeof(t_float));
-    x_noteAttack = (t_float *)t_getbytes(nv * sizeof(t_float));
-    x_noteDecay = (t_float *)t_getbytes(nv * sizeof(t_float));
-    x_noteSustain = (t_float *)t_getbytes(nv * sizeof(t_float));
-    x_noteRelease = (t_float *)t_getbytes(nv * sizeof(t_float));
-    x_noteDirection = (int *)t_getbytes(nv * sizeof(int));
+    x->x_gvoiceADSRon = (int *)t_getbytes(nv * sizeof(int));
+    x->x_noteTransp = (t_float *)t_getbytes(nv * sizeof(t_float));
+    x->x_noteSize = (t_float *)t_getbytes(nv * sizeof(t_float));
+    x->x_notePan = (t_float *)t_getbytes(nv * sizeof(t_float));
+    x->x_noteGain = (t_float *)t_getbytes(nv * sizeof(t_float));
+    x->x_noteAttack = (t_float *)t_getbytes(nv * sizeof(t_float));
+    x->x_noteDecay = (t_float *)t_getbytes(nv * sizeof(t_float));
+    x->x_noteSustain = (t_float *)t_getbytes(nv * sizeof(t_float));
+    x->x_noteRelease = (t_float *)t_getbytes(nv * sizeof(t_float));
+    x->x_noteDirection = (int *)t_getbytes(nv * sizeof(int));
 
     /* nvoices x nchannels */
-    x_gvoiceSpat =
+    x->x_gvoiceSpat =
         (t_float **)t_getbytes(nv * nchan * sizeof(t_float));
-    x_notechannelGain =
+    x->x_notechannelGain =
         (t_float **)t_getbytes(nv * nchan * sizeof(t_float));
-    x_notechannelGainSpread =
+    x->x_notechannelGainSpread =
         (t_float **)t_getbytes(nv * nchan * sizeof(t_float));
 
     /* Heap allocated for signal vector x nchannels */
-    x_out = (t_float **)t_getbytes(nchan * sizeof(t_float*));
+    x->x_out = (t_float **)t_getbytes(nchan * sizeof(t_float*));
     /* Heap allocated x nchannels */
-    x_outsamp = (t_float *)t_getbytes(nchan * sizeof(t_float));
-    x_channelGain = (t_float *)t_getbytes(nchan * sizeof(t_float));
-    x_channelGainSpread = (t_float *)t_getbytes(nchan * sizeof(t_float));
+    x->x_outsamp = (t_float *)t_getbytes(nchan * sizeof(t_float));
+    x->x_channelGain = (t_float *)t_getbytes(nchan * sizeof(t_float));
+    x->x_channelGainSpread = (t_float *)t_getbytes(nchan * sizeof(t_float));
     return x;
 }
 
@@ -253,7 +247,7 @@ static void *munger_free(t_disis_munger *x)
     int nv = x->x_numvoices, nchan = x->x_num_channels;
 
     if (x->x_recordBuf)
-        t_freebytes(x_recordBuf, (x->x_buflen + 1) * sizeof(t_float));
+        t_freebytes(x->x_recordBuf, (x->x_buflen + 1) * sizeof(t_float));
     if (x->x_winTime)
         t_freebytes(x->x_winTime, nv * sizeof(t_float));
     if (x->x_winRate)
@@ -271,7 +265,7 @@ static void *munger_free(t_disis_munger *x)
     if (x->x_gvoiceDone)
         t_freebytes(x->x_gvoiceDone, nv * sizeof(long));
     if (x->x_gvoiceLPan)
-        t_freebytes(x->x_gvoicePan, nv * sizeof(t_float));
+        t_freebytes(x->x_gvoiceLPan, nv * sizeof(t_float));
     if (x->x_gvoiceRPan)
         t_freebytes(x->x_gvoiceRPan, nv * sizeof(t_float));
     if (x->x_gvoiceRamp)
@@ -282,7 +276,7 @@ static void *munger_free(t_disis_munger *x)
         t_freebytes(x->x_gvoiceGain, nv * sizeof(t_float));
 
     if (x->x_gvoiceADSR)
-        t_freebytes(x_gvoiceADSR, nv * sizeof(t_stk_ADSR)); 
+        t_freebytes(x->x_gvoiceADSR, nv * sizeof(t_stk_ADSR)); 
 
     if (x->x_gvoiceADSRon)
         t_freebytes(x->x_gvoiceADSRon, nv * sizeof(int));
@@ -309,20 +303,20 @@ static void *munger_free(t_disis_munger *x)
     if (x->x_gvoiceSpat)
         t_freebytes(x->x_gvoiceSpat, nv * nchan * sizeof(t_float));
     if (x->x_notechannelGain)
-        t_freebytes(x_notechannelGain, nv * nchan * sizeof(t_float));
+        t_freebytes(x->x_notechannelGain, nv * nchan * sizeof(t_float));
     if (x->x_notechannelGainSpread)
-        t_freebytes(x_notechannelGainSpread, nv * nchan * sizeof(t_float));
+        t_freebytes(x->x_notechannelGainSpread, nv * nchan * sizeof(t_float));
 
     /* Heap allocated for signal vector x nchannels */
     if (x->x_out)
-        t_freebytes(x_out, nchan * sizeof(t_float*));
+        t_freebytes(x->x_out, nchan * sizeof(t_float*));
     /* Heap allocated x nchannels */
     if (x->x_outsamp)
-        t_freebytes(x_outsamp, nchan * sizeof(t_float));
+        t_freebytes(x->x_outsamp, nchan * sizeof(t_float));
     if (x->x_channelGain)
         t_freebytes(x->x_channelGain, nchan * sizeof(t_float));
     if (x->x_channelGainSpread)
-        t_freebytes(x_channelGainSpread, nchan * sizeof(t_float));
+        t_freebytes(x->x_channelGainSpread, nchan * sizeof(t_float));
 }
 
 static void *munger_new(t_symbol *s, int argc, t_atom *argv)
@@ -384,11 +378,11 @@ static void *munger_new(t_symbol *s, int argc, t_atom *argv)
     x->x_buflen = (int)x->x_initbuflen;
     x->x_maxsize = x->x_buflen / 3;
     x->x_twothirdBufsize = x->x_maxsize * 2;
-    x->x_onethirdBufsize = maxsize;
+    x->x_onethirdBufsize = x->x_maxsize;
     x->x_minsize = MINSIZE;
 
     /* allocate a ton of fields */
-    x = disis_munger_alloc(x);
+    x = munger_alloc(x);
 
     /* bail if we couldn't allocate... */
     if (!x) return 0;
@@ -449,7 +443,7 @@ static void *munger_new(t_symbol *s, int argc, t_atom *argv)
         stk_ADSR_init(&x->x_gvoiceADSR[i]);
         stk_ADSR_setSampleRate(&x->x_gvoiceADSR[i], sys_getsr());
 
-        for (j = 0; j < num_channels; j++)
+        for (j = 0; j < x->x_num_channels; j++)
         {
             x->x_gvoiceSpat[i][j] = 0.;
             x->x_notechannelGain[i][j] = 0.;
@@ -467,7 +461,7 @@ static void *munger_new(t_symbol *s, int argc, t_atom *argv)
         x->x_noteRelease[i] = 200.;
     }
 
-    for (i = 0; i < num_channels; i++)
+    for (i = 0; i < x->x_num_channels; i++)
     {
         x->x_channelGain[i] = 0.;
         x->x_channelGainSpread[i] = 0.;
@@ -542,6 +536,26 @@ t_float munger_newNoteSize(t_disis_munger *x, int whichOne, int newNote)
     return newsize;
 }
 
+static int munger_newDirection(t_disis_munger *x)
+{
+    //-1 == always backwards
+    //0  == backwards and forwards (default)
+    //1  == only forwards
+    int dir;
+    if (x->x_ambi == 0)
+    {
+        dir = RANDOM()- 16384;
+        if (dir < 0) dir = -1;
+        else dir = 1;
+    }
+    else
+    {
+        if (x->x_ambi == -1) dir = -1;
+	else dir = 1;
+    }
+    return dir;
+}
+
 static t_float munger_newNote(t_disis_munger *x, int whichVoice, int newNote)
 {
     t_float newPosition;
@@ -551,10 +565,10 @@ static t_float munger_newNote(t_disis_munger *x, int whichVoice, int newNote)
 
     x->x_gvoiceSize[whichVoice] =
         (long)munger_newNoteSize(x, whichVoice, newNote);
-    //x->x_gvoiceDirection[whichVoice] = x->x_newDirection(x);
+    //x->x_gvoiceDirection[whichVoice] = munger_newDirection(x);
     x->x_gvoiceDirection[whichVoice] = x->x_noteDirection[newNote];
 
-    if (num_channels == 2)
+    if (x->x_num_channels == 2)
     {
         //x->x_gvoiceLPan[whichVoice] = ((t_float)rand() - 16384.) *
         //    ONE_OVER_MAXRAND * x->x_gpan_spread + 0.5;
@@ -584,7 +598,7 @@ static t_float munger_newNote(t_disis_munger *x, int whichVoice, int newNote)
                 x->x_notechannelGainSpread[whichVoice][i] = 0.;
             }
             temp = (int)x->x_notePan[newNote];
-            if (temp >= num_channels) temp=0;
+            if (temp >= x->x_num_channels) temp=0;
             //update the one we want
             x->x_notechannelGain[whichVoice][temp] = 1.;
         }
@@ -605,10 +619,13 @@ static t_float munger_newNote(t_disis_munger *x, int whichVoice, int newNote)
     //post("adsr %f %f %f %f",
     //x->x_noteAttack[newNote], x->x_noteDecay[newNote],
     //x->x_noteSustain[newNote], x->x_noteRelease[newNote]);
-    x->x_gvoiceADSR[whichVoice].setAllTimes(x->x_noteAttack[newNote]/1000.,
-        x->x_noteDecay[newNote]/1000., x->x_noteSustain[newNote],
-        x->x_noteRelease[newNote]/1000.);
-    x->x_gvoiceADSR[whichVoice].keyOn();
+
+    stk_ADSR_setAllTimes(&x->x_gvoiceADSR[whichVoice],
+        x->x_noteAttack[newNote] / 1000.,
+        x->x_noteDecay[newNote] / 1000.,
+        x->x_noteSustain[newNote],
+        x->x_noteRelease[newNote] / 1000.);
+    stk_ADSR_keyOn(&x->x_gvoiceADSR[whichVoice]);
 
     /*** set start point; tricky, cause of moving buffer,
          variable playback rates, backwards/forwards, etc.... ***/
@@ -640,7 +657,7 @@ static t_float munger_newNote(t_disis_munger *x, int whichVoice, int newNote)
         {
             if (x->x_gvoiceDirection[whichVoice] == 1) /* going forward */
             {
-                if (gvoiceSpeed[whichVoice] > 1.)
+                if (x->x_gvoiceSpeed[whichVoice] > 1.)
                 {
                     //newPosition = x->x_recordCurrent - x->x_onethirdBufsize -
                     //    x->x_position * x->x_onethirdBufsize;
@@ -693,9 +710,11 @@ static t_float munger_newNote(t_disis_munger *x, int whichVoice, int newNote)
     {
         if (x->x_position == -1.)
         {
+// no Buffer type!
             newPosition = (long)(RANDOM()) * ONE_OVER_MAXRAND * b->Frames();
         }
-        else if (position >= 0.) newPosition = x->x_position * b->Frames();
+// no Buffer type!
+        else if (x->x_position >= 0.) newPosition = x->x_position * b->Frames();
     }
     return newPosition;
 }
@@ -710,7 +729,7 @@ static void munger_spat(t_disis_munger *x, t_symbol *s, int argc, t_atom *argv)
         {
             x->x_channelGain[j] = atom_getfloatarg(i, argc, argv);
             x->x_channelGainSpread[j] = atom_getfloatarg(i+1, argc, argv);
-            if (verbose > 1)
+            if (x->x_verbose > 1)
                 post("disis_munger~ %s: channel gain %d = %f, spread = %f",
                     x->x_munger_name, j, x->x_channelGain[j],
                     x->x_channelGainSpread[j]);
@@ -737,26 +756,27 @@ static void munger_note(t_disis_munger *x, t_symbol *s, int argc, t_atom *argv)
 
         if (x->x_newnote > x->x_voices)
         {
-            if (verbose > 0)
-                post("disis_munger~ %s: too many notes amadeus.", munger_name);
+            if (x->x_verbose > 0)
+                post("disis_munger~ %s: too many notes amadeus.",
+                    x->x_munger_name);
             return;
         }
 
-        x->x_noteTransp[newnote] = atom_getfloatarg(0, argc, argv);
-        x->x_noteGain[newnote] = atom_getfloatarg(1, argc, argv);
-        x->x_notePan[newnote] = atom_getfloatarg(2, argc, argv);
-        x->x_noteAttack[newnote] = atom_getfloatarg(3, argc, argv);
-        x->x_noteDecay[newnote] = atom_getfloatarg(4, argc, argv);
-        x->x_noteSustain[newnote] = atom_getfloatarg(5, argc, argv);
-        x->x_noteRelease[newnote] = atom_getfloatarg(6, argc, argv);
-        x->x_noteDirection[newnote] = atom_getfloatarg(7, argc, argv);
+        x->x_noteTransp[x->x_newnote] = atom_getfloatarg(0, argc, argv);
+        x->x_noteGain[x->x_newnote] = atom_getfloatarg(1, argc, argv);
+        x->x_notePan[x->x_newnote] = atom_getfloatarg(2, argc, argv);
+        x->x_noteAttack[x->x_newnote] = atom_getfloatarg(3, argc, argv);
+        x->x_noteDecay[x->x_newnote] = atom_getfloatarg(4, argc, argv);
+        x->x_noteSustain[x->x_newnote] = atom_getfloatarg(5, argc, argv);
+        x->x_noteRelease[x->x_newnote] = atom_getfloatarg(6, argc, argv);
+        x->x_noteDirection[x->x_newnote] = atom_getfloatarg(7, argc, argv);
 
         //Stk ADSR bug?
-        if (x->x_noteSustain[newnote] <= 0.001)
-            x->x_noteSustain[newnote] = 0.001;
+        if (x->x_noteSustain[x->x_newnote] <= 0.001)
+            x->x_noteSustain[x->x_newnote] = 0.001;
 
-        x->x_noteSize[newnote] = x->x_noteAttack[newnote] +
-            x->x_noteDecay[newnote] + x->x_noteRelease[newnote];
+        x->x_noteSize[x->x_newnote] = x->x_noteAttack[x->x_newnote] +
+            x->x_noteDecay[x->x_newnote] + x->x_noteRelease[x->x_newnote];
     }
 }
 
@@ -766,58 +786,16 @@ static void munger_note(t_disis_munger *x, t_symbol *s, int argc, t_atom *argv)
 static void munger_oneshot(t_disis_munger *x, t_symbol *s, int argc,
     t_atom *argv)
 {
-	int temp;
+    int temp;
 
-	if (argc)
-	{
-		temp = (int)atom_getintarg(0, argc, argv);
-		oneshot = temp;
-    		if (verbose > 1)
-                    post("disis_munger~ %s: setting oneshot: %d",
-                        x->x_munger_name, temp);
-	}
-}
-
-//external buffer stuff
-static int munger_checkbuffer(t_disis_munger *x, int reset)
-{
-    if (!x->x_l_buf)
+    if (argc)
     {
-        post("disis_munger~ %s: error: no valid buffer defined", munger_name);
-        return 0;
+        temp = (int)atom_getintarg(0, argc, argv);
+        x->x_oneshot = temp;
+        if (x->x_verbose > 1)
+            post("disis_munger~ %s: setting oneshot: %d",
+                x->x_munger_name, temp);
     }
-// we don't have type Buffer
-    if (reset)
-        l_buf->Set();  // try to re-associate buffer with munger_name
-
-//we don't have type Buffer
-    if (!x->x_l_buf->Ok())
-    {
-        post("disis_munger~ %s: buffer mysteriously dissapeared. "
-             "Reverting to internal buffer...",
-            x->x_munger_name);
-        munger_clearbuffer();
-        return 0;
-    }
-    else if (x->x_l_buf->Update())
-    {
-        // buffer parameters have been updated
-        if (x->x_l_buf->Valid())
-        {
-            if (verbose > 1)
-                post("disis_munger~ %s: updated buffer reference",
-                    x->x_munger_name);
-                return 1;
-        }
-        else
-        {
-            post("disis_munger~ %s: error: buffer has become invalid",
-                x->x_munger_name);
-                munger_clearbuffer();
-                return 0;
-        }
-    }
-    else return 1;
 }
 
 static void munger_clearbuffer(t_disis_munger *x)
@@ -825,17 +803,18 @@ static void munger_clearbuffer(t_disis_munger *x)
 // don't have a Buffer type
     if (x->x_l_buf)
     {
+// don't have delete!
         delete x->x_l_buf;
         x->x_l_buf = NULL;
         x->x_bufname = NULL;
         x->x_externalBuffer = 0;
-        if(verbose > 1)
+        if (x->x_verbose > 1)
             post("disis_munger~ %s: external buffer deleted.",
                 x->x_munger_name);
     }
 }
 
-static voic munger_setbuffer(t_disis_munger *x, t_symbol *s, int argc,
+static void munger_setbuffer(t_disis_munger *x, t_symbol *s, int argc,
     t_atom *argv)
 {
     if (argc == 0)
@@ -843,28 +822,28 @@ static voic munger_setbuffer(t_disis_munger *x, t_symbol *s, int argc,
         // argument list is empty
         // clear existing buffer
 // have no Buffer type
-        if (x->x_l_buf) munger_clearbuffer();
+        if (x->x_l_buf) munger_clearbuffer(x);
     }
     else if (argc == 1 && argv->a_type == A_SYMBOL)
     {
         // one symbol given as argument
         // clear existing buffer
-	if (x->x_l_buf) munger_clearbuffer();
+	if (x->x_l_buf) munger_clearbuffer(x);
        	// save buffer munger_name
        	x->x_bufname = atom_getsymbolarg(0, argc, argv);
        	// make new reference to system buffer object
-// no Buffer type
+// no Buffer type, and no new!
        	x->x_l_buf = new buffer(x->x_bufname);
        	if (!x->x_l_buf->Ok())
         {
-            if (verbose > 0)
+            if (x->x_verbose > 0)
                 post("disis_munger~ %s: error: buffer %s is currently not "
                      "valid!", x->x_munger_name,
                      atom_getsymbolarg(0, argc, argv));
         }
         else
         {
-            if (verbose > 1)
+            if (x->x_verbose > 1)
                 post("disis_munger~ %s: successfully associated with "
                      "the %s buffer.", x->x_munger_name,
                      atom_getsymbolarg(0, argc, argv));
@@ -881,8 +860,51 @@ static voic munger_setbuffer(t_disis_munger *x, t_symbol *s, int argc,
             post("disis_munger~ %s: error: message argument must be a string.",
                 x->x_munger_name);
 // no Buffer type
-        if (x->x_l_buf) munger_clearbuffer();
+        if (x->x_l_buf) munger_clearbuffer(x);
     }
+}
+
+//external buffer stuff
+static int munger_checkbuffer(t_disis_munger *x, int reset)
+{
+    if (!x->x_l_buf)
+    {
+        post("disis_munger~ %s: error: no valid buffer defined",
+            x->x_munger_name);
+        return 0;
+    }
+// we don't have type Buffer
+    if (reset)
+        x->x_l_buf->Set();  // try to re-associate buffer with munger_name
+
+//we don't have type Buffer
+    if (!x->x_l_buf->Ok())
+    {
+        post("disis_munger~ %s: buffer mysteriously dissapeared. "
+             "Reverting to internal buffer...",
+            x->x_munger_name);
+        munger_clearbuffer(x);
+        return 0;
+    }
+    else if (x->x_l_buf->Update())
+    {
+        // buffer parameters have been updated
+        if (x->x_l_buf->Valid())
+        {
+            if (x->x_verbose > 1)
+                post("disis_munger~ %s: updated buffer reference",
+                    x->x_munger_name);
+                return 1;
+        }
+        else
+        {
+            post("disis_munger~ %s: error: buffer has become invalid",
+                x->x_munger_name);
+                munger_clearbuffer(x);
+                return 0;
+        }
+    }
+    else return 1;
 }
 
 static void munger_setverbose(t_disis_munger *x, t_symbol *s, int argc,
@@ -931,6 +953,49 @@ static int munger_findVoice(t_disis_munger *x)
     return foundOne;
 }
 
+// creates a size for a new grain
+// actual number of samples PLAYED, regardless of pitch
+// might be shorter for higher pitches and long grains,
+// to avoid collisions with recordCurrent
+// size given now in milliseconds!
+static t_float munger_newSize(t_disis_munger *x, int whichOne)
+{
+    float newsize, temp;
+    int pitchChoice, pitchExponent;
+
+    //set grain pitch
+    if (x->x_smoothPitch == 1)
+        x->x_gvoiceSpeed[whichOne] = x->x_gpitch + ((long)RANDOM() - 16384.) *
+            ONE_OVER_HALFRAND * x->x_gpitch_var;
+    else
+    {
+        //temp = (long)RANDOM() * ONE_OVER_MAXRAND * x->x_gpitch_var *
+        //    (float)PITCHTABLESIZE;
+        temp = (long)RANDOM() * ONE_OVER_MAXRAND * x->x_gpitch_var *
+            (float)x->x_scale_len;
+        pitchChoice = (int) temp;
+        if (pitchChoice > PITCHTABLESIZE)
+            pitchChoice = PITCHTABLESIZE;
+        if (pitchChoice < 0)
+            pitchChoice = 0;
+        pitchExponent = (int)x->x_pitchTable[pitchChoice];
+        x->x_gvoiceSpeed[whichOne] = x->x_gpitch *
+            pow(x->x_semitone, pitchExponent);
+    }
+
+    if (x->x_gvoiceSpeed[whichOne] < MINSPEED)
+        x->x_gvoiceSpeed[whichOne] = MINSPEED;
+    newsize = x->x_srate_ms * (x->x_glen + ((long)RANDOM() - 16384.) *
+        ONE_OVER_HALFRAND * x->x_glen_var);
+    if (newsize > x->x_maxsize)
+        newsize = x->x_maxsize;
+    if (newsize * x->x_gvoiceSpeed[whichOne] > x->x_maxsize)
+        newsize = x->x_maxsize / x->x_gvoiceSpeed[whichOne];
+    if (newsize < x->x_minsize)
+        newsize = x->x_minsize;
+    return newsize;
+}
+
 // creates a new (RANDOM()) start position for a new grain,
 // returns beginning start sample
 // sets up size and direction
@@ -940,15 +1005,15 @@ static t_float munger_newSetup(t_disis_munger* x, int whichVoice)
 {
     t_float newPosition;
 // no Buffer type in Pd
-    buffer *b = l_buf;
+    buffer *b = x->x_l_buf;
     int i, tmpdiscretepan;
 
-    x->x_gvoiceSize[whichVoice] = (long)newSize(whichVoice);
-    x->x_gvoiceDirection[whichVoice] = x->x_newDirection();
+    x->x_gvoiceSize[whichVoice] = (long)munger_newSize(x, whichVoice);
+    x->x_gvoiceDirection[whichVoice] = munger_newDirection(x);
     if (x->x_num_channels == 2)
     {
         x->x_gvoiceLPan[whichVoice] = ((long)(RANDOM()) - 16384.) *
-            ONE_OVER_MAXRAND * gpan_spread + 0.5;
+            ONE_OVER_MAXRAND * x->x_gpan_spread + 0.5;
         x->x_gvoiceRPan[whichVoice] = 1. - x->x_gvoiceLPan[whichVoice];
         //make equal power panning....
         x->x_gvoiceLPan[whichVoice] = powf(x->x_gvoiceLPan[whichVoice], 0.5);
@@ -976,7 +1041,7 @@ static t_float munger_newSetup(t_disis_munger* x, int whichVoice)
     }
     x->x_gvoiceOn[whichVoice] = 1;
     x->x_gvoiceDone[whichVoice] = 0;
-    x->x_gvoiceGain[whichVoice] = gain + ((long)(RANDOM()) - 16384.) *
+    x->x_gvoiceGain[whichVoice] = x->x_gain + ((long)(RANDOM()) - 16384.) *
         ONE_OVER_HALFRAND * x->x_randgain;
     x->x_gvoiceADSRon[whichVoice] = 0;
 
@@ -1016,14 +1081,14 @@ static t_float munger_newSetup(t_disis_munger* x, int whichVoice)
                 }
                 else
                 {
-                    newPosition = recordCurrent - (long)RANDOM() *
-                        ONE_OVER_MAXRAND * onethirdBufsize;//was 2/3rds
+                    newPosition = x->x_recordCurrent - (long)RANDOM() *
+                        ONE_OVER_MAXRAND * x->x_onethirdBufsize; //was 2/3rds
                 }
             }
             else //going backwards
             {
-                newPosition = recordCurrent - (long)RANDOM() *
-                    ONE_OVER_MAXRAND * onethirdBufsize;
+                newPosition = x->x_recordCurrent - (long)RANDOM() *
+                    ONE_OVER_MAXRAND * x->x_onethirdBufsize;
             }
 	}
 
@@ -1100,74 +1165,11 @@ static t_float munger_newSetup(t_disis_munger* x, int whichVoice)
     return newPosition;
 }
 
-// creates a size for a new grain
-// actual number of samples PLAYED, regardless of pitch
-// might be shorter for higher pitches and long grains,
-// to avoid collisions with recordCurrent
-// size given now in milliseconds!
-static t_float munger_newSize(t_disis_munger *x, int whichOne)
-{
-    float newsize, temp;
-    int pitchChoice, pitchExponent;
-
-    //set grain pitch
-    if (x->x_smoothPitch == 1)
-        x->x_gvoiceSpeed[whichOne] = x->x_gpitch + ((long)RANDOM() - 16384.) *
-            ONE_OVER_HALFRAND * x->x_gpitch_var;
-    else
-    {
-        //temp = (long)RANDOM() * ONE_OVER_MAXRAND * x->x_gpitch_var *
-        //    (float)PITCHTABLESIZE;
-        temp = (long)RANDOM() * ONE_OVER_MAXRAND * x->x_gpitch_var *
-            (float)x->x_scale_len;
-        pitchChoice = (int) temp;
-        if (pitchChoice > PITCHTABLESIZE)
-            pitchChoice = PITCHTABLESIZE;
-        if (pitchChoice < 0)
-            pitchChoice = 0;
-        pitchExponent = (int)x->x_pitchTable[pitchChoice];
-        x->x_gvoiceSpeed[whichOne] = x->x_gpitch *
-            pow(x->x_semitone, pitchExponent);
-    }
-
-    if (x->x_gvoiceSpeed[whichOne] < MINSPEED)
-        x->x_gvoiceSpeed[whichOne] = MINSPEED;
-    newsize = x->x_srate_ms * (x->x_glen + ((long)RANDOM() - 16384.) *
-        ONE_OVER_HALFRAND * x->x_glen_var);
-    if (newsize > x->x_maxsize)
-        newsize = x->x_maxsize;
-    if (newsize * x->x_gvoiceSpeed[whichOne] > x->x_maxsize)
-        newsize = x->x_maxsize / x->x_gvoiceSpeed[whichOne];
-    if (newsize < x->x_minsize)
-        newsize = x->x_minsize;
-    return newsize;
-}
-
-static int munger_newDirection(t_disis_munger *x)
-{
-    //-1 == always backwards
-    //0  == backwards and forwards (default)
-    //1  == only forwards
-    int dir;
-    if (x->x_ambi == 0)
-    {
-        dir = RANDOM()- 16384;
-        if (dir < 0) dir = -1;
-        else dir = 1;
-    }
-    else
-    {
-        if (x->x_ambi == -1) dir = -1;
-	else dir = 1;
-    }
-    return dir;
-}
-
 static void munger_clear(t_disis_munger *x)
 {
     long i, len = (long)x->x_initbuflen;
     for (i = 0; i < len; i++)
-        recordBuf[i] = 0;
+        x->x_recordBuf[i] = 0;
 }
 
 static void munger_setramp(t_disis_munger *x, t_floatarg f)
@@ -1182,7 +1184,7 @@ static void munger_setramp(t_disis_munger *x, t_floatarg f)
 static void munger_scale(t_disis_munger *x, t_symbol *s, int argc, t_atom *argv)
 {
     int i,j;
-    if (verbose > 1)
+    if (x->x_verbose > 1)
         post("disis_munger~ %s: loading scale from input list",
             x->x_munger_name);
     x->x_smoothPitch = 0;
@@ -1215,21 +1217,21 @@ static void munger_bufsize(t_disis_munger *x, t_symbol *s, int argc,
             if (temp < 3. * (float)MINSIZE)
             {
                 temp = 3. * (float)MINSIZE;
-                if (verbose > 0)
+                if (x->x_verbose > 0)
                     post("disis_munger~ %s error: delaylength too small!",
                         x->x_munger_name);
             }
             if (temp > x->x_initbuflen)
             {
                 temp = x->x_initbuflen;
-                if (verbose > 0)
+                if (x->x_verbose > 0)
                     post("disis_munger~ %s error: delaylength too large!",
                         x->x_munger_name);
             }
             x->x_maxsize = temp / 3.;
             x->x_twothirdBufsize = x->x_maxsize * 2.;
             x->x_onethirdBufsize = x->x_maxsize;
-            if (verbose > 1)
+            if (x->x_verbose > 1)
                 post("disis_munger~ %s: setting delaylength to: %f seconds",
                     x->x_munger_name, temp / x->x_srate);
         }
@@ -1245,21 +1247,21 @@ static void munger_bufsize_ms(t_disis_munger *x, t_symbol *s, int argc,
         if (temp < 3. * (float)MINSIZE)
         {
             temp = 3. * (float)MINSIZE;
-            if (verbose > 0)
+            if (x->x_verbose > 0)
                 post("disis_munger~ %s error: delaylength_ms too small!",
                     x->x_munger_name);
         }
         if (temp > x->x_initbuflen)
         {
             temp = x->x_initbuflen;
-            if (verbose > 0)
+            if (x->x_verbose > 0)
                 post("disis_munger~ %s error: delaylength_ms too large!",
                     x->x_munger_name);
         }
         x->x_maxsize = temp / 3.;
         x->x_twothirdBufsize = x->x_maxsize * 2.;
         x->x_onethirdBufsize = x->x_maxsize;
-        if (verbose > 1)
+        if (x->x_verbose > 1)
             post("disis_munger~ %s: setting delaylength to: %d milliseconds",
                 x->x_munger_name, (long)(temp / x->x_srate_ms));
     }
@@ -1276,19 +1278,19 @@ static void munger_setminsize(t_disis_munger *x, t_symbol *s, int argc,
         if (temp < (float)MINSIZE)
         {
             temp = (float)MINSIZE;
-            if (verbose > 0)
+            if (x->x_verbose > 0)
                 post("disis_munger~ %s error: minsize too small!",
                     x->x_munger_name);
         }
         if (temp >= x->x_initbuflen)
         {
             temp = (float)MINSIZE;
-            if (verbose > 0)
+            if (x->x_verbose > 0)
                 post("disis_munger~ %s error: minsize too large!",
                     x->x_munger_name);
         }
         x->x_minsize = temp;
-        if (verbose > 1)
+        if (x->x_verbose > 1)
             post("disis_munger~ %s: setting min grain size to: %f ms",
                 x->x_munger_name, (x->x_minsize / x->x_srate_ms));
     }
@@ -1304,14 +1306,14 @@ static void munger_discretepan(t_disis_munger *x, t_symbol *s, int argc,
         temp = (int)atom_getintarg(0, argc, argv);
         if (temp < 0)
         {
-            if (verbose > 0)
+            if (x->x_verbose > 0)
                 post("disis_munger~ %s error: discretepan can be only 0 or 1!",
                     x->x_munger_name);
             temp = 0;
         }
         if (temp > 1)
         {
-            if (verbose > 0)
+            if (x->x_verbose > 0)
                 post("disis_munger~ %s error: error: discretepan can be only 0 "
                      "or 1!", x->x_munger_name);
             temp = 1;
@@ -1330,24 +1332,24 @@ static void munger_setvoices(t_disis_munger *x, t_symbol *s, int argc,
         temp = atom_getintarg(0, argc, argv);
         if (temp < 0)
         {
-            if (verbose > 0)
+            if (x->x_verbose > 0)
                 post("disis_munger~ %s error: voices has to be between "
                      "0 and maxvoices (currently %d)!",
                     x->x_munger_name, x->x_maxvoices);
             temp = 0;
         }
-        if (temp > maxvoices)
+        if (temp > x->x_maxvoices)
         {
-            if (verbose > 0)
+            if (x->x_verbose > 0)
                 post("disis_munger~ %s error: voices has to be between "
                      "0 and maxvoices (currently %d)!",
                     x->x_munger_name, x->x_maxvoices);
-                temp = maxvoices;
+                temp = x->x_maxvoices;
         }
-        if (verbose > 1)
+        if (x->x_verbose > 1)
             post("disis_munger~ %s: setting voices to: %d ",
                 x->x_munger_name, x->x_voices);
-        voices = temp;
+        x->x_voices = temp;
     }
 }
 
@@ -1361,13 +1363,13 @@ static void munger_maxvoices(t_disis_munger *x, t_symbol *s, int argc,
         temp = (int)atom_getintarg(0, argc, argv);
         if (temp < 0)
         {
-            if (verbose > 0)
+            if (x->x_verbose > 0)
                 post("disis_munger~ %s error: maxvoices cannot be less than 0!",
                     x->x_munger_name);
             temp = 0;
         }
         if (temp > x->x_numvoices) temp = x->x_numvoices;
-        if (verbose > 1)
+        if (x->x_verbose > 1)
             post("disis_munger~ %s: setting max voices to: %d ",
                 x->x_munger_name, x->x_maxvoices);
         x->x_maxvoices = temp;
@@ -1404,7 +1406,7 @@ static void munger_record(t_disis_munger *x, t_symbol *s, int argc,
             x->x_recordRampVal = 0;
             x->x_rec_ramping = 1;
         }
-        if (verbose > 1)
+        if (x->x_verbose > 1)
             post("disis_munger~ %s: setting record: %d",
                 x->x_munger_name, temp);
     }
@@ -1416,7 +1418,7 @@ static void munger_ambidirectional(t_disis_munger *x, t_symbol *s, int argc,
     if (argc)
     {
         x->x_ambi = atom_getfloatarg(0, argc, argv);
-        if (verbose > 1)
+        if (x->x_verbose > 1)
             post("disis_munger~ %s: setting ambidirectional: %d",
                 x->x_munger_name, x->x_ambi);
     }
@@ -1428,7 +1430,7 @@ static void munger_gain(t_disis_munger *x, t_symbol *s, int argc,
     if (argc)
     {
         x->x_gain = atom_getfloatarg(0, argc, argv);
-        if (verbose > 1)
+        if (x->x_verbose > 1)
             post("disis_munger~ %s: setting gain to: %f ",
                 x->x_munger_name, x->x_gain);
     }
@@ -1444,7 +1446,7 @@ static void munger_setposition(t_disis_munger *x, t_symbol *s, int argc,
         temp = atom_getfloatarg(0, argc, argv);
         if (temp > 1.) temp = 1.;
         if (temp < 0.) temp = -1.;
-        if (verbose > 1)
+        if (x->x_verbose > 1)
             post("disis_munger~ %s: setting position to: %f ",
                 x->x_munger_name, temp);
         x->x_position = temp;
@@ -1457,17 +1459,16 @@ static void munger_randgain(t_disis_munger *x, t_symbol *s, int argc,
     if (argc)
     {
         x->x_randgain = atom_getfloatarg(0, argc, argv);
-        if (verbose > 1)
+        if (x->x_verbose > 1)
             post("disis_munger~ %s: setting rand_gain to: %f ",
-                x->x_munger_name, temp);
-        x->x_randgain = temp;
+                x->x_munger_name, x->x_randgain);
     }
 }
 
 static void munger_sethanning(t_disis_munger *x)
 {
     x->x_doHanning = 1;
-    if (verbose > 1)
+    if (x->x_verbose > 1)
         post("disis_munger~ %s: hanning window is busted",
             x->x_munger_name);
 }
@@ -1475,7 +1476,7 @@ static void munger_sethanning(t_disis_munger *x)
 static void munger_tempered(t_disis_munger *x)
 {
     int i;
-    if (verbose > 1)
+    if (x->x_verbose > 1)
         post("disis_munger~ %s: doing tempered scale",
             x->x_munger_name);
     x->x_smoothPitch = 0;
@@ -1491,7 +1492,7 @@ static void munger_tempered(t_disis_munger *x)
 static void munger_smooth(t_disis_munger *x)
 {
     x->x_smoothPitch = 1;
-    if (verbose > 1)
+    if (x->x_verbose > 1)
         post("disis_munger~ %s: doing smooth scale", x->x_munger_name);
 }
 
@@ -1532,10 +1533,10 @@ static void munger_recordSamp(t_disis_munger *x, t_float sample)
     if (x->x_recordOn)
     {
         if (x->x_rec_ramping == 0)
-            x->x_recordBuf[recordCurrent++] = sample; //add sample
+            x->x_recordBuf[x->x_recordCurrent++] = sample; //add sample
         else //ramp up or down if turning on/off recording
         {
-            x->x_recordBuf[recordCurrent++] =
+            x->x_recordBuf[x->x_recordCurrent++] =
                 sample * RECORDRAMP_INV * (float)x->x_recordRampVal;
             x->x_recordRampVal += x->x_rec_ramping;
             if (x->x_recordRampVal <= 0)
@@ -1543,7 +1544,7 @@ static void munger_recordSamp(t_disis_munger *x, t_float sample)
                 x->x_rec_ramping = 0;
                 x->x_recordOn = 0;
             }
-            if (recordRampVal >= RECORDRAMP) rec_ramping = 0;
+            if (x->x_recordRampVal >= RECORDRAMP) x->x_rec_ramping = 0;
         }
     }
 }
@@ -1573,7 +1574,7 @@ static t_float munger_getSamp(t_disis_munger *x, double where)
     return (float)output;
 }
 
-static t_float munger_getExternalSamp(t_disis_munger*, double where)
+static t_float munger_getExternalSamp(t_disis_munger *x, double where)
 {
     double alpha, om_alpha, output;
     long first;
@@ -1587,7 +1588,7 @@ static t_float munger_getExternalSamp(t_disis_munger*, double where)
     {
         post("disis_munger~ %s: error: external buffer mysteriously AWOL, "
              "reverting to internatl buffer...", x->x_munger_name);
-        externalBuffer = 0;
+        x->x_externalBuffer = 0;
         return 0.;
     }
 
@@ -1612,7 +1613,7 @@ static t_float munger_getExternalSamp(t_disis_munger*, double where)
     return (float)output;
 }
 
-static void *munger_perform(t_int *w)
+static t_int *munger_perform(t_int *w)
 {
     /* Let's do it this way:
        (0: our function pointer)
@@ -1645,14 +1646,14 @@ static void *munger_perform(t_int *w)
     {
         while(n--)
         {
-            for (i = 0; i < x->x_num_channels; i++) *out[i]++ = 0.;
+            for (i = 0; i < x->x_num_channels; i++) *x->x_out[i]++ = 0.;
         }
     }
     else
     {
         while(n--)
         {
-            if (verbose > 2)
+            if (x->x_verbose > 2)
             {
                 x->x_countsamples++;
                 if (x->x_countsamples >= ((int)x->x_srate - 1))
@@ -1665,7 +1666,7 @@ static void *munger_perform(t_int *w)
             }
             for (i = 0; i < x->x_num_channels; i++) x->x_outsamp[i] = 0.;
             //record a sample
-            munger_recordSamp(*ins1++);
+            munger_recordSamp(x, *ins1++);
 
             //grab a note if requested; works in oneshot mode or otherwise
             if (x->x_oneshot)
@@ -1702,7 +1703,7 @@ static void *munger_perform(t_int *w)
             }
             x->x_time++;
             //mix 'em, pan 'em
-            for (i = 0; i < maxvoices; i++)
+            for (i = 0; i < x->x_maxvoices; i++)
                 {
                 if (x->x_gvoiceOn[i])
                 {
@@ -1712,19 +1713,19 @@ static void *munger_perform(t_int *w)
                     else
                         samp = munger_getSamp(x, x->x_gvoiceCurrent[i]);
                     if (!x->x_gvoiceADSRon[i])
-                        samp = envelope(x, i, samp) * x->x_gvoiceGain[i];
+                        samp = munger_envelope(x, i, samp) * x->x_gvoiceGain[i];
                     else
-                        samp = samp * x->x_gvoiceADSR[i].tick() *
-                            gvoiceGain[i]; //ADSR_ADRtick->computeSample()
+                        samp = samp * stk_ADSR_tick(&x->x_gvoiceADSR[i]) *
+                            x->x_gvoiceGain[i]; //ADSR_ADRtick->computeSample()
                     //pan it
-                    if (num_channels == 2)
+                    if (x->x_num_channels == 2)
                     {
                         x->x_outsamp[0] += samp * x->x_gvoiceLPan[i];
                         x->x_outsamp[1] += samp * x->x_gvoiceRPan[i];
                     }
                     else // multichannel subroutine
                     {
-                        for (j = 0;j < num_channels; j++)
+                        for (j = 0;j < x->x_num_channels; j++)
                         {
                             x->x_outsamp[j] += samp * x->x_gvoiceSpat[i][j];
                         }
@@ -1743,14 +1744,12 @@ static void *munger_perform(t_int *w)
                     }
                     else
                     {
-                        if (x->x_gvoiceADSR[i].getState() ==
-                            x->x_gvoiceADSR[i].SUSTAIN)
+                        if (stk_ADSR_getState(&x->x_gvoiceADSR[i]) == SUSTAIN)
                         {
-                            gvoiceADSR[i].keyOff();
+                            stk_ADSR_keyOff(&x->x_gvoiceADSR[i]);
                         }
                         if (++x->x_gvoiceDone[i] >= x->x_gvoiceSize[i] ||
-                            x->x_gvoiceADSR[i].getState() ==
-                                x->x_gvoiceADSR[i].IDLE)
+                            stk_ADSR_getState(&x->x_gvoiceADSR[i]) == IDLE)
                         {
                             x->x_gvoiceOn[i] = 0;
                         }
@@ -1760,7 +1759,7 @@ static void *munger_perform(t_int *w)
                 }
                 for (i = 0; i < x->x_num_channels;i++)
                 {
-                    *out[i]++ = outsamp[i];
+                    *x->x_out[i]++ = x->x_outsamp[i];
                 }
             }
         }
@@ -1776,7 +1775,7 @@ static void munger_dsp(t_disis_munger *x, t_signal **sp)
        3: insig
        4-n: outsigs
     */
-    t_int *args
+    t_int *args;
 
     args = (t_int *)t_getbytes((x->x_num_channels + 3) * sizeof(t_int));
 
@@ -1789,7 +1788,7 @@ static void munger_dsp(t_disis_munger *x, t_signal **sp)
     {
         args[i + 3] = (t_int)sp[i + 1]->s_vec;
     }
-    dsp_addv(munger_perform, 3 + num_channels, args);
+    dsp_addv(munger_perform, 3 + x->x_num_channels, args);
 
     t_freebytes(args, (x->x_num_channels + 3) * sizeof(t_int));
 }

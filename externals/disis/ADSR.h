@@ -16,13 +16,13 @@
 */
 /***************************************************/
 
-/* ADSR envelope states.
+/* ADSR envelope states. */
 typedef enum {
-    ATTACK,   /*!< Attack */
-    DECAY,    /*!< Decay */
-    SUSTAIN,  /*!< Sustain */
-    RELEASE,  /*!< Release */
-    IDLE      /*!< Before attack / after release */
+    ATTACK,   /* Attack */
+    DECAY,    /* Decay */
+    SUSTAIN,  /* Sustain */
+    RELEASE,  /* Release */
+    IDLE      /* Before attack / after release */
 } t_env_state;
 
 typedef struct _stk_ADSR {
@@ -37,6 +37,12 @@ typedef struct _stk_ADSR {
     // Currently setting this is dsp_add routine...
     t_float sampleRate;
 } t_stk_ADSR;
+
+/* initialize the struct members to sane values */
+void stk_ADSR_init(t_stk_ADSR *x);
+
+/* set the sample rate */
+void stk_ADSR_setSampleRate(t_stk_ADSR *x, t_float newRate);
 
 /* Set target = 1, state = ATTACK. */
 void stk_ADSR_keyOn(t_stk_ADSR *x);
@@ -60,7 +66,7 @@ void stk_ADSR_setSustainLevel(t_stk_ADSR *x, t_float level);
 void stk_ADSR_setReleaseRate(t_stk_ADSR *x, t_float rate);
 
 /* Set the attack rate based on a time duration (seconds). */
-void stk_ADSR_setAttackTime(t_stk_float *x, t_float time);
+void stk_ADSR_setAttackTime(t_stk_ADSR *x, t_float time);
 
 /* Set the decay rate based on a time duration (seconds). */
 void stk_ADSR_setDecayTime(t_stk_ADSR *x, t_float time);
