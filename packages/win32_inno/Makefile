@@ -27,7 +27,11 @@ DEST_PATHS = BUILDLAYOUT_DIR=$(BUILDLAYOUT_DIR) \
 				OPT_CFLAGS="$(OPT_CFLAGS)" \
 				UNAME=$(UNAME)
 
+ifeq ($(LIGHT),yes)
+PD_INNO_SETUP = pd-inno-light.iss
+else
 PD_INNO_SETUP = pd-inno.iss
+endif
 
 package:  $(PD_INNO_SETUP)
 ## this pops up the GUI app
@@ -64,7 +68,11 @@ install: pd_install prebuilt_install lib_install exe_install
 prebuilt_install:
 	$(MAKE) -C $(packages_src) $(DEST_PATHS) extended_install INCREMENTAL=$(INCREMENTAL) LIGHT=$(LIGHT)
 	$(MAKE) -C $(packages_src) $(DEST_PATHS) doc_format
+ifeq ($(LIGHT),yes)
+	install -p pd-settings-light.reg $(DESTDIR)$(prefix)/pd-settings.reg
+else
 	install -p pd-settings.reg $(DESTDIR)$(prefix)
+endif
 
 #==============================================================================#
 #

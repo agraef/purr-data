@@ -155,6 +155,11 @@ readme_install:
 
 
 #------------------------------------------------------------------------------#
+ifeq ($(LIGHT),yes)
+default = light
+else
+default = default
+endif
 darwin_app_core: darwin_app_wrapper
 	$(MAKE) -C $(packages_src) $(DEST_PATHS) \
 		PD_CONFIGURE_FLAGS="--enable-jack=no --disable-fat" \
@@ -164,7 +169,7 @@ darwin_app_core: darwin_app_wrapper
 		ln -s bin Scripts
 # support for Info Panel Plugins mgmt
 	cd "$(PD_APP_CONTENTS)" && ln -s Resources/app.nw/extra Plugins
-	install -p -m0644 org.puredata.pd-l2ork.default.plist "$(PD_APP_CONTENTS)/Resources/"
+	install -p -m0644 org.puredata.pd-l2ork.$(default).plist "$(PD_APP_CONTENTS)/Resources/org.puredata.pd-l2ork.default.plist"
 # since Pd-vanilla on Mac OS X doesn't have an 'include/pd' folder,
 # Pd-extended will mimic Pd-vanilla's include/pd until Pd-vanilla gets one
 	ln -s pd-l2ork "$(PD_APP_CONTENTS)/Resources/app.nw/include/pd"

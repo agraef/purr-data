@@ -72,6 +72,12 @@ install:
 
 PACKAGE_NAME = pd-l2ork-$(PD_VERSION)-`uname -m`
 
+ifeq ($(LIGHT),yes)
+default = light
+else
+default = default
+endif
+
 package: $(PACKAGE_TYPE)
 
 
@@ -133,7 +139,7 @@ endif
 	install -d $(DESTDIR)/etc/pd-l2ork
 	ln -s -f $(libpddir)/default.settings \
 		$(DESTDIR)/etc/pd-l2ork/default.settings
-	install -p $(packages_src)/linux_make/default.settings $(DESTDIR)$(libpddir)
+	install -p $(packages_src)/linux_make/$(default).settings $(DESTDIR)$(libpddir)/default.settings
 # app window icon
 	#install -p $(packages_src)/linux_make/pd-l2ork.gif $(DESTDIR)$(libpddir)
 # emacs mode for .pd files
@@ -189,7 +195,7 @@ installer_readme:
 		$(INSTALLER_README_FILE)
 
 installer_settings:
-	install -p $(packages_src)/linux_make/default.settings $(DESTDIR)$(libpddir)
+	install -p $(packages_src)/linux_make/$(default).settings $(DESTDIR)$(libpddir)/default.settings
 	# app window icon
 	# install -p $(packages_src)/linux_make/pd-l2ork.gif $(DESTDIR)$(libpddir)
 #	install -d $(DESTDIR)/usr/share/icons/hicolor/128x128/apps
