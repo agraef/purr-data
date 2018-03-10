@@ -1,5 +1,5 @@
 /*
-disis.munger~ 1.3.3
+disis.munger~ 1.4.3
 a realtime multichannel granulator
 
 a flext (cross-platform PD & Max/MSP) port of
