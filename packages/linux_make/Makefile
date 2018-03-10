@@ -83,10 +83,12 @@ tarbz2: installer_settings installer_makefile installer_readme
 
 # Any special staging for the "Burrito Supreme" installer goes here.
 debstage: $(bindir)
+ifneq ($(LIGHT),yes)
 # add K12 mode
 	cp -rf ../../l2ork_addons/K12/ $(DESTDIR)$(libpddir)/extra/
 # add arduino library
 	cp -rf ../../externals/hardware/arduino $(DESTDIR)$(libpddir)/extra/
+endif
 # free desktop menu, mime, and icon support
 # perhaps the icons should go in /usr/share/pixmaps like 'scribus'
 	install -d $(DESTDIR)/usr/share/icons/hicolor/128x128/apps

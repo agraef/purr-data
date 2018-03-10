@@ -21,6 +21,7 @@ then
 	echo "     -f    full tarball installer (incremental)"
 	echo "     -F    full tarball installer (complete recompile)"
 	echo "     -k    keep previous build products"
+	echo "     -l    do a light build (only essential externals)"
 	echo "     -n    skip package creation (-bB, -fF)"
 	echo "     -r    build a Raspberry Pi deb (incremental)"
 	echo "     -R    build a Raspberry Pi deb (complete recompile)"
@@ -57,8 +58,9 @@ inno=0
 dmg=0
 any=0
 clean=1
+light=0
 
-while getopts ":bBcfFknRrTtXzZ" Option
+while getopts ":bBcfFklnRrTtXzZ" Option
 do case $Option in
 		b)		deb=1
 				inst_dir=${inst_dir:-/usr};;
@@ -73,6 +75,8 @@ do case $Option in
 		F)		full=2;;
 
 		k)		clean=0;;
+
+		l)		light=1;;
 
 		n)		pkg=0;;
 
@@ -102,6 +106,13 @@ do case $Option in
 done
 
 inst_dir=${inst_dir:-/usr/local}
+
+# configure a light build if requested
+if [ $light -gt 0 ]; then
+    export LIGHT=yes
+else
+    export LIGHT=
+fi
 
 export TAR_EM_UP_PREFIX=$inst_dir
 
@@ -315,7 +326,7 @@ then
 	if [[ $os == "win" ]]; then
 		echo "Making Windows package..."
 		echo `pwd`
-		make install INCREMENTAL=$INCREMENTAL && make package
+		make install INCREMENTAL=$INCREMENTAL LIGHT=$LIGHT && make package
 	elif [[ $os == "osx" ]]; then
 		echo "Making OSX package (dmg)..."
 		echo `pwd`
@@ -332,7 +343,7 @@ then
 		cd ../../l2ork_addons
 	elif [[ $os == "osx" ]]; then
 		cd ../../l2ork_addons
-	else
+	elif [ $light -eq 0 ]; then
 		cd ../../l2ork_addons/spectdelay/spectdelay~
 		./linux-install.sh
 		cp -f spectdelay~.pd_linux ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
@@ -340,9 +351,11 @@ then
 		cp -f array* ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
 		# return to l2ork_addons folder
 		cd ../../
+	else
+		cd ../../l2ork_addons
 	fi
 	# install raspberry pi externals (if applicable)
-	if [ $inno -eq 0 -a $dmg -eq 0 ]; then
+	if [ $inno -eq 0 -a $dmg -eq 0 -a $light -eq 0 ]; then
 		cd raspberry_pi
 		./makeall.sh
 		cp -f disis_gpio/disis_gpio.pd_linux ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra

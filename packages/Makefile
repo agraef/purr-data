@@ -193,7 +193,9 @@ devel_install: pd_devel_install
 #------------------------------------------------------------------------------
 # abstractions_install
 abstractions_install:
+ifneq ($(LIGHT),yes)
 	$(MAKE) -C $(abstractions_src) $(DEST_PATHS) install
+endif
 
 #------------------------------------------------------------------------------
 # extensions_install
@@ -204,7 +206,7 @@ extensions_install:
 #------------------------------------------------------------------------------
 # externals_install
 externals_install: 
-	$(MAKE) -C $(externals_src) $(DEST_PATHS) install INCREMENTAL=$(INCREMENTAL)
+	$(MAKE) -C $(externals_src) $(DEST_PATHS) install INCREMENTAL=$(INCREMENTAL) LIGHT=$(LIGHT)
 
 
 #------------------------------------------------------------------------------

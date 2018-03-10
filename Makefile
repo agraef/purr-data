@@ -21,6 +21,10 @@
 # `tar_em_up.sh -tk`), bypassing Gem which takes an eternity to compile; please
 # check the tar_em_up.sh script for details
 
+# light: like `incremental`, but does a light build (equivalent to
+# `tar_em_up.sh -tkl`) which only includes the most essential externals;
+# please check the tar_em_up.sh script for details
+
 # checkout: convenience target to check out all submodules in preparation for
 # a subsequent build (the `all`, `incremental` and `dist` targets also do this
 # automatically when needed)
@@ -35,6 +39,13 @@
 # dist: create a self-contained distribution tarball of the source
 
 # NOTES:
+
+# The incremental and light builds assume an existing staging area
+# (packages/*/build directory) which is *not* cleaned before installing. This
+# makes it possible to update the existing staging area after recompiling just
+# a part of the system (all but Gem in the case of "incremental", only the
+# Pd core and a few essential externals in the case of "light"). Use `make
+# clean` beforehand if you want to install into a clean staging area.
 
 # The realclean and dist targets use git commands and thus only work in a
 # working copy of the git repo, not in the static tarball snapshots produced
@@ -64,6 +75,9 @@ all:
 
 incremental:
 	cd l2ork_addons && $(env) ./tar_em_up.sh -tk
+
+light:
+	cd l2ork_addons && $(env) ./tar_em_up.sh -tkl
 
 checkout:
 	git submodule update --init
