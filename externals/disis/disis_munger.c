@@ -36,31 +36,37 @@ For latest changes please see changelog
 #define MUNGER_MINOR 4
 #define MUNGER_REV 3
 
-//MSVC doesn't know RANDOM(), while GCC's (at least on Linux) has rand() limit much higher
+/* MSVC doesn't know RANDOM(), while GCC's
+   (at least on Linux) has rand() limit much higher */
 #ifndef __GNUC__
 #define RANDOM() (rand())
 #else
 #define RANDOM() (random()%32768)
 #endif
 
-#define ONE_OVER_HALFRAND 0.00006103516							// constant = 1. / 16384.0
-#define ONE_OVER_MAXRAND 0.000030517578							// 1 / 32768
-#define MINSPEED .001											//minimum speed through buffer on playback
+#define ONE_OVER_HALFRAND 0.00006103516	/* constant = 1. / 16384.0 */
+#define ONE_OVER_MAXRAND 0.000030517578	/* 1 / 32768 */
+#define MINSPEED .001 /* minimum speed through buffer on playback */
 #define ENVSIZE 32
 #define ONE_OVER_ENVSIZE .0078125
-#define MINSIZE 64												// twice ENVSIZE. minimum grainsize in samples
-#define RAND01 (((long)RANDOM() * ONE_OVER_MAXRAND)				//RANDOM() numbers 0-1
-#define RAND11 (((long)RANDOM() - 16384.) * ONE_OVER_HALFRAND)	//RANDOM() numbers -1 to 1
+#define MINSIZE 64 /* twice ENVSIZE. minimum grainsize in samples */
+#define RAND01 (((long)RANDOM() * ONE_OVER_MAXRAND) /* RANDOM() numbers 0-1 */
+
+/* RANDOM() numbers -1 to 1 */
+#define RAND11 (((long)RANDOM() - 16384.) * ONE_OVER_HALFRAND)
 #define WINLENGTH 1024
-#define PITCHTABLESIZE 1000										//max number of transpositions for the "scale" message
+
+/* max number of transpositions for the "scale" message */
+#define PITCHTABLESIZE 1000
 #define RECORDRAMP 1000
 #define RECORDRAMP_INV 0.001
 
-//these are arbitrary--can we trust users not to do something silly and remove these?
+/* these are arbitrary-- can we trust users not to
+   do something silly and remove these? */
 #define MAXCHANNELS 64
 #define MAXVOICES 1000
 
-//useful define
+/* useful define */
 #ifndef TWOPI
 #define TWOPI 6.28318530717958647692
 #endif
@@ -134,7 +140,7 @@ typedef struct _disis_munger {
     t_float *x_channelGain;
     t_float *x_channelGainSpread;
 
-    /* Holy crap there are more... */
+    /* Oh wow, there are more... */
     int x_graincounter;
     int x_countsamples;
     int x_voices;
@@ -241,7 +247,6 @@ static void *munger_alloc(t_disis_munger *x)
     return x;
 }
 
-
 static void *munger_free(t_disis_munger *x)
 {
     /* Heap allocated based on number of voices */
@@ -276,8 +281,8 @@ static void *munger_free(t_disis_munger *x)
     if (x->x_gvoiceGain)
         t_freebytes(x->x_gvoiceGain, nv * sizeof(t_float));
 
-// deallocate this
-    t_float *x->x_gvoiceADSR; /* this should probably be its own type... */
+    if (x->x_gvoiceADSR)
+        t_freebytes(x_gvoiceADSR, nv * sizeof(t_stk_ADSR)); 
 
     if (x->x_gvoiceADSRon)
         t_freebytes(x->x_gvoiceADSRon, nv * sizeof(int));
@@ -551,7 +556,8 @@ static t_float munger_newNote(t_disis_munger *x, int whichVoice, int newNote)
 
     if (num_channels == 2)
     {
-        //x->x_gvoiceLPan[whichVoice] = ((t_float)rand() - 16384.) * ONE_OVER_MAXRAND * x->x_gpan_spread + 0.5;
+        //x->x_gvoiceLPan[whichVoice] = ((t_float)rand() - 16384.) *
+        //    ONE_OVER_MAXRAND * x->x_gpan_spread + 0.5;
         //x->x_gvoiceRPan[whichVoice] = 1. - x->x_gvoiceLPan[whichVoice];
         //make equal power panning....
         //x->x_gvoiceLPan[whichVoice] = powf(x->x_gvoiceLPan[whichVoice], 0.5);
@@ -829,7 +835,8 @@ static void munger_clearbuffer(t_disis_munger *x)
     }
 }
 
-static voic munger_setbuffer(t_disis_munger *x, t_symbol *s, int argc, t_atom *argv)
+static voic munger_setbuffer(t_disis_munger *x, t_symbol *s, int argc,
+    t_atom *argv)
 {
     if (argc == 0)
     {
@@ -877,7 +884,6 @@ static voic munger_setbuffer(t_disis_munger *x, t_symbol *s, int argc, t_atom *a
         if (x->x_l_buf) munger_clearbuffer();
     }
 }
-
 
 static void munger_setverbose(t_disis_munger *x, t_symbol *s, int argc,
     t_atom *argv)
@@ -1489,7 +1495,7 @@ static void munger_smooth(t_disis_munger *x)
         post("disis_munger~ %s: doing smooth scale", x->x_munger_name);
 }
 
-void disis_munger::munger_poststate(short argc, t_atom *argv)
+static void munger_poststate(t_disis_munger *x)
 {
     post (">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     post ("***CURRENT disis_munger~ %s PARAMETER VALUES***:", x->x_munger_name);
@@ -1833,7 +1839,7 @@ void disis_munger_tilde_setup(void)
     class_addmethod(disis_munger_class, (t_method)munger_clear,
         gensym("clear"), 0);
     class_addmethod(disis_munger_class, (t_method)munger_poststate,
-        gensym("state"), A_GIMME, 0);
+        gensym("state"), 0);
     class_addmethod(disis_munger_class, (t_method)munger_setbuffer,
         gensym("buffer"), A_GIMME, 0);
     class_addmethod(disis_munger_class, (t_method)munger_spat,
