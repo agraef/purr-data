@@ -66,6 +66,7 @@ clean:
 	cd Gem/src/ && rm -rf ./.libs && rm -rf ./*/.libs
 	cd Gem/ && test -f Makefile && make distclean || true
 	cd Gem/ && rm -f gemglutwindow.pd_linux Gem.pd_linux
+	rm -rf packages/*/build/
 
 realclean:
 # This requires a working copy of the git repo.

@@ -299,8 +299,8 @@ then
 		cp ../../pd/src/m_pd.h ../../externals/build/include
 		cp ../../pd/src/s_stuff.h ../../externals/build/include
 		cp ../../pd/src/g_all_guis.h ../../externals/build/include
+		rm -rf build/
 	fi
-	rm -rf build/
 	if [ $rpi -eq 0 ]
 	then
 		echo "installing desktop version..."
