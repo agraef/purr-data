@@ -63,9 +63,9 @@ clean:
 	cd pd/src && aclocal && autoconf && make clean || true
 	cd externals/miXed && make clean || true
 	cd Gem/src/ && test -f Makefile && make distclean || true
-	cd Gem/src/ && rm -rf ./.libs && rm -rf ./*/.libs
+	cd Gem/src/ && rm -rf ./.libs && rm -rf ./*/.libs || true
 	cd Gem/ && test -f Makefile && make distclean || true
-	cd Gem/ && rm -f gemglutwindow.pd_linux Gem.pd_linux
+	cd Gem/ && rm -f gemglutwindow.pd_linux Gem.pd_linux || true
 	rm -rf packages/*/build/
 
 realclean:
