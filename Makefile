@@ -50,11 +50,9 @@
 .PHONY: all incremental checkout clean realclean dist
 
 # Installation prefix under which Pd-l2ork is installed (Linux only). If this
-# isn't set, a default location will be used (usually /usr/local). NOTE: The
-# default prefs file assumes /usr, if you choose anything else then you'll
-# have to edit $prefix/lib/pd-l2ork/default.settings accordingly. Also note
-# that we *always* assume that this variable is set properly in the install
-# targets (see below).
+# isn't set, a default location will be used (usually /usr/local). NOTE: We
+# *always* assume that this variable is set properly in the install targets
+# (see below).
 prefix = /usr
 
 ifneq ($(prefix),)
@@ -95,8 +93,8 @@ realclean:
 
 # Note that these targets simply (un)install whatever is in the
 # packages/*/build directory at the time they're invoked, so you need to run
-# `make` (or `make incremental`, etc.) first. Also note that the extra cruft
-# under build/etc (except for the bash auto-completions) isn't installed as it
+# `make` (or `make incremental`, etc.) first. Also note that some old cruft
+# under build/etc (all but the bash auto-completions) isn't installed as it
 # isn't needed on modern Linux systems any more.
 
 builddir = $(firstword $(wildcard packages/*/build))
@@ -105,6 +103,9 @@ manifest = etc/bash_completion.d/pd-l2ork $(prefix:/%=%)/include/pd-l2ork $(pref
 install:
 	test -z "$(DESTDIR)" || (rm -rf "$(DESTDIR)" && mkdir -p "$(DESTDIR)")
 	tar -c -C $(builddir) $(manifest) | tar -x -C $(DESTDIR)/
+# Edit the library paths in the default user.settings file so that it matches
+# our installation prefix.
+	test -f "$(DESTDIR)"$(prefix)/lib/pd-l2ork/default.settings && cd "$(DESTDIR)"$(prefix)/lib/pd-l2ork && sed -e "s!/usr/lib/pd-l2ork!$(prefix)/lib/pd-l2ork!g" -i default.settings || true
 
 uninstall:
 	rm -rf $(addprefix $(DESTDIR)/, $(manifest))
