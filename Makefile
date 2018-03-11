@@ -97,7 +97,7 @@ realclean:
 	@test -d .git || (echo "Not a git repository, bailing out." && false)
 	git submodule deinit --all -f
 	git checkout .
-	git clean -dffx
+	git clean -dffx -e pd/nw/nw/
 
 # Installation targets. These don't work on Mac and Windows right now, you
 # should use the generated installers on these systems instead. Also,
