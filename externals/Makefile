@@ -129,7 +129,13 @@ CXXFLAGS = $(CFLAGS)
 #
 # WARNING!  this MUST be all on one line because the automatic package
 # building scripts rely on it being that way.
+ifeq ($(LIGHT),yes)
+# minimal set of extensions for the "light" build
+LIB_TARGETS = loaders-libdir pddp
+INCREMENTAL = yes
+else
 LIB_TARGETS = adaptive arraysize autotune bassemu boids bsaylor comport creb cxc cyclone disis earplug ekext ext13 fftease fluid freeverb ggee hcs iem_ambi iem_bin_ambi iemlib iemgui iemguts iem_adaptfilt iemmatrix iemxmlrpc iem_delay iem_roomsim iem_spec2 iem_tab jasch_lib loaders-libdir lyonpotpourri mapping markex maxlib mjlib moocow moonlib motex mrpeach oscx pan pdcontainer pddp pdogg plugin pmpd rjlib sigpack smlib tof unauthorized vbap windowing zexy
+endif
 
 # DISABLED: flatgui
 
@@ -137,7 +143,9 @@ LIB_TARGETS = adaptive arraysize autotune bassemu boids bsaylor comport creb cxc
 
 # this is for libraries that don't compile (yet) on all platforms
 ifeq ($(OS_NAME),windows)
-  LIB_TARGETS += gem
+  ifneq ($(INCREMENTAL),yes)
+    LIB_TARGETS += gem
+  endif
 else
   ifeq ($(OS_NAME),darwin)
 # on Mac OS X 10.6/Snow Leopard don't build hid since it needs Carbon
@@ -145,8 +153,9 @@ else
     ifneq ($(shell uname -r | sed 's|10\.[0-9][0-9]*\.[0-9][0-9]*|10|'),10)
       LIB_TARGETS +=
     endif
-  else
-    # GNU/Linux, BSD, IRIX, etc. (we use exported variable INCREMENTAL to avoid rebuilding entire Gem lib that takes a long time to compile)
+  else ifneq ($(LIGHT),yes)
+    # GNU/Linux, BSD, IRIX, etc. (we use exported variable INCREMENTAL to
+    # avoid rebuilding entire Gem lib that takes a long time to compile)
     ifeq ($(INCREMENTAL),yes)
 	LIB_TARGETS += hid pdp iem16
     else

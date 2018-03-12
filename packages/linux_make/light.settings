@@ -1,0 +1,9 @@
+standardpath: 1
+verbose: 0
+defeatrt: 0
+loadlib1: libdir
+loadlib2: pddp
+nloadlib: 2
+path1: ~/pd-l2ork-externals
+path2: /usr/lib/pd-l2ork/extra/pddp
+npath: 2

@@ -193,7 +193,9 @@ devel_install: pd_devel_install
 #------------------------------------------------------------------------------
 # abstractions_install
 abstractions_install:
+ifneq ($(LIGHT),yes)
 	$(MAKE) -C $(abstractions_src) $(DEST_PATHS) install
+endif
 
 #------------------------------------------------------------------------------
 # extensions_install
@@ -204,7 +206,7 @@ extensions_install:
 #------------------------------------------------------------------------------
 # externals_install
 externals_install: 
-	$(MAKE) -C $(externals_src) $(DEST_PATHS) install
+	$(MAKE) -C $(externals_src) $(DEST_PATHS) install INCREMENTAL=$(INCREMENTAL) LIGHT=$(LIGHT)
 
 
 #------------------------------------------------------------------------------
@@ -373,12 +375,15 @@ doc_format:
 # AG: The set_version target is broken since it modifies m_pd.h in-place
 # during the build, which is a bad thing to do to files which are supposed to
 # be kept in a source code repository. Instead, we create s_stuff.h from
-# s_stuff.h.in, where the latter is kept in the repo and the former gets created
-# from the latter by substituting PD_BUILD_VERSION.
+# s_stuff.h.in, where the latter is kept in the repo and the former gets
+# created from the latter by substituting PD_BUILD_VERSION. NOTE: This may
+# fail if we're building in a static tarball snapshop of the repo, in which
+# case we assume that a pre-generated s_stuff.h is supplied.
 
 git_version: $(pd_src)/src/s_stuff.h.in
-	cd $(pd_src)/src/ && \
-	sed 's|^\(#define PD_BUILD_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' s_stuff.h.in > s_stuff.h
+	@test -d $(cvs_root_dir)/.git && cd $(pd_src)/src/ && \
+	sed 's|^\(#define PD_BUILD_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' s_stuff.h.in > s_stuff.h.new && \
+	(test -f s_stuff.h && diff -q s_stuff.h s_stuff.h.new > /dev/null && rm -f s_stuff.h.new && echo s_stuff.h unchanged || (rm -f s_stuff.h && mv s_stuff.h.new s_stuff.h)) || test -f $(pd_src)/src/s_stuff.h
 
 set_version:
 # change Pd's version number to reflect the extended build
@@ -419,9 +424,11 @@ clean: abstractions_clean doc_clean externals_clean pd_clean
 
 distclean: cruft_clean
 	$(MAKE) -C $(abstractions_src) distclean
-	$(MAKE) -C $(extensions_src) distclean
+	-$(MAKE) -C $(extensions_src) distclean
 	$(MAKE) -C $(externals_src) distclean
-	-$(MAKE) -C $(pd_src) distclean
+# Make sure that we don't remove the precious s_stuff.h file if we're building
+# outside of the repo.
+	-test -d $(cvs_root_dir)/.git && $(MAKE) -C $(pd_src) distclean || $(MAKE) -C $(pd_src) clean
 
 test_locations:
 	@echo "PD_VERSION: $(PD_VERSION)"

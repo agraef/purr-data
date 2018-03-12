@@ -25,6 +25,8 @@ prefix = /opt/purr-data
 
 override_dh_auto_configure:
 
+override_dh_auto_clean:
+
 override_dh_auto_build:
 # Copy the nw.js sources to where purr-data wants them.
 	tar -xf debian/nwjs/$(nwjspkg)-$(arch).tar.gz && rm -rf pd/nw/nw && mv $(nwjspkg)-$(arch) pd/nw/nw

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>defeatrt</key>
+	<string>0</string>
+	<key>flags</key>
+	<string>-helppath ~/Library/Pd-l2ork -helppath /Library/Pd-l2ork</string>
+	<key>loadlib1</key>
+	<string>libdir</string>
+	<key>loadlib2</key>
+	<string>pddp</string>
+	<key>nloadlib</key>
+	<string>2</string>
+	<key>path1</key>
+	<string>/System/Library/Fonts</string>
+	<key>path2</key>
+	<string>/Library/Fonts</string>
+	<key>path3</key>
+	<string>~/Library/Fonts</string>
+	<key>path4</key>
+	<string>/usr/X11R6/lib/X11/fonts/TTF</string>
+	<key>path5</key>
+	<string>/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Home/lib/fonts</string>
+	<key>npath</key>
+	<string>5</string>
+</dict>
+
+</plist>
+
