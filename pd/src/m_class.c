@@ -601,16 +601,6 @@ t_symbol *gensym(const char *s)
     return(dogensym(s, 0));
 }
 
-static t_symbol *addfileextent(t_symbol *s)
-{
-    char namebuf[FILENAME_MAX], *str = s->s_name;
-    int ln = strlen(str);
-    if (!strcmp(str + ln - 3, ".pd")) return (s);
-    strcpy(namebuf, str);
-    strcpy(namebuf+ln, ".pd");
-    return (gensym(namebuf));
-}
-
 #define MAXOBJDEPTH 1000
 static int tryingalready;
 

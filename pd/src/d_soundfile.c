@@ -231,7 +231,7 @@ int open_soundfile_via_fd(int fd, int headersize,
     int *p_bytespersamp, int *p_bigendian, int *p_nchannels, long *p_bytelimit,
     long skipframes)
 {
-    int format, nchannels, bigendian, bytespersamp, swap, sysrtn;
+    int nchannels, bigendian, bytespersamp, swap, sysrtn;
     long bytelimit = 0x7fffffff;
     errno = 0;
     if (headersize >= 0) /* header detection overridden */
@@ -1633,7 +1633,6 @@ static void *readsf_child_main(void *zz)
         }
         else if (x->x_requestcode == REQUEST_OPEN)
         {
-            char boo[80];
             int sysrtn, wantbytes;
             
                 /* copy file stuff out of the data structure so we can
@@ -1950,7 +1949,7 @@ static t_int *readsf_perform(t_int *w)
     t_sample *fp;
     if (x->x_state == STATE_STREAM)
     {
-        int wantbytes, nchannels, sfchannels = x->x_sfchannels;
+        int wantbytes, sfchannels = x->x_sfchannels;
         pthread_mutex_lock(&x->x_mutex);
         wantbytes = sfchannels * vecsize * bytespersample;
         while (
@@ -2189,14 +2188,10 @@ static void *writesf_child_main(void *zz)
         }
         else if (x->x_requestcode == REQUEST_OPEN)
         {
-            char boo[80];
             int fd, sysrtn, writebytes;
             
                 /* copy file stuff out of the data structure so we can
                 relinquish the mutex while we're in open_soundfile(). */
-            long onsetframes = x->x_onsetframes;
-            long bytelimit = 0x7fffffff;
-            int skipheaderbytes = x->x_skipheaderbytes;
             int bytespersample = x->x_bytespersample;
             int sfchannels = x->x_sfchannels;
             int bigendian = x->x_bigendian;
@@ -2360,7 +2355,6 @@ static void *writesf_child_main(void *zz)
             if (x->x_fd >= 0)
             {
                 int bytesperframe = x->x_bytespersample * x->x_sfchannels;
-                int bigendian = x->x_bigendian;
                 char *filename = x->x_filename;
                 int fd = x->x_fd;
                 int filetype = x->x_filetype;
@@ -2397,7 +2391,8 @@ static void *writesf_child_main(void *zz)
 
 /******** the object proper runs in the calling (parent) thread ****/
 
-static void writesf_tick(t_writesf *x);
+/* Not sure why this is declared here so commenting it out... */
+//static void writesf_tick(t_writesf *x);
 
 static void *writesf_new(t_floatarg fnchannels, t_floatarg fbufsize)
 {

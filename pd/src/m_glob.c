@@ -167,6 +167,8 @@ void glob_init(void)
         gensym("version"), A_FLOAT, 0);
     class_addmethod(glob_pdobject, (t_method)glob_perf,
         gensym("perf"), A_FLOAT, 0);
+    class_addmethod(glob_pdobject, (t_method)glob_compatibility,
+        gensym("compatibility"), A_FLOAT, 0);
     class_addmethod(glob_pdobject, (t_method)glob_clipboard_text,
         gensym("clipboardtext"), A_FLOAT, 0);
     class_addmethod(glob_pdobject, (t_method)glob_gui_prefs,

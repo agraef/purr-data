@@ -758,7 +758,6 @@ void x_arithmetic_setup(void)
 {
     t_symbol *binop1_sym = gensym("operators");
     t_symbol *binop23_sym = gensym("otherbinops");
-    t_symbol *math_sym = gensym("math");
 
     binop1_plus_class = class_new(gensym("+"), (t_newmethod)binop1_plus_new, 0,
         sizeof(t_binop), 0, A_DEFFLOAT, 0);

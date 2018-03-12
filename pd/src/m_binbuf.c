@@ -687,7 +687,6 @@ void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)
     t_atom *at = x->b_vec;
     int ac = x->b_n;
     int nargs, maxnargs = 0;
-    int at_arg = 0;
 
     //first we need to check if the list of arguments has $@
     //fprintf(stderr,"=========\nbinbuf_eval argc:%d ac:%d\n", argc, (int)ac);

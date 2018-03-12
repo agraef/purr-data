@@ -235,12 +235,10 @@ int alsa_open_audio(int naudioindev, int *audioindev, int nchindev,
     int *chindev, int naudiooutdev, int *audiooutdev, int nchoutdev,
     int *choutdev, int rate, int blocksize)
 {
-    int err, inchans = 0, outchans = 0, subunitdir;
+    int err, inchans = 0, outchans = 0;
     char devname[512];
-    snd_output_t* out;
     int frag_size = (blocksize ? blocksize : ALSA_DEFFRAGSIZE);
     int nfrags, i, iodev, dev2;
-    int wantinchans, wantoutchans, device;
 
     nfrags = sys_schedadvance * (float)rate / (1e6 * frag_size);
         /* save our belief as to ALSA's buffer size for later */
@@ -393,12 +391,12 @@ void alsa_close_audio(void)
 
 int alsa_send_dacs(void)
 {
+    static double timenow;
 #ifdef DEBUG_ALSA_XFER
     static int xferno = 0;
     static int callno = 0;
+    double timelast = timenow;
 #endif
-    static double timenow;
-    double timelast;
     t_sample *fp1, *fp2;
     int i, j, k, iodev, result, ch; 
     int chansintogo, chansouttogo;
@@ -414,7 +412,6 @@ int alsa_send_dacs(void)
     chansouttogo = sys_outchannels;
     transfersize = DEFDACBLKSIZE;
 
-    timelast = timenow;
     timenow = sys_getrealtime();
 
 #ifdef DEBUG_ALSA_XFER

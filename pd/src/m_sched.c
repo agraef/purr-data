@@ -220,7 +220,7 @@ static int sys_histphase;
 
 int sys_addhist(int phase)
 {
-    int i, j, phasewas = sys_histphase;
+    int j, phasewas = sys_histphase;
     double newtime = sys_getrealtime();
     int msec = (newtime - sys_histtime) * 1000.;
     for (j = NBIN-1; j >= 0; j--)
@@ -259,7 +259,7 @@ static char *(oss_errornames[]) = {
 
 void glob_audiostatus(void)
 {
-    int dev, nresync, nresyncphase, i;
+    int nresync, nresyncphase, i;
     nresync = (oss_nresync >= NRESYNC ? NRESYNC : oss_nresync);
     nresyncphase = oss_resyncphase - 1;
     post("audio I/O error history:");

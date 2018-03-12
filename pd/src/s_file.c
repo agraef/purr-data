@@ -493,6 +493,8 @@ static int check_exists(const char*path)
 }
 #endif
 
+extern void sys_expandpathelems(const char *name, char *result);
+
 void sys_loadpreferences( void)
 {
     int naudioindev, audioindev[MAXAUDIOINDEV], chindev[MAXAUDIOINDEV];
