@@ -263,7 +263,10 @@ then
 
 	if [ $full -eq 2 -o $deb -eq 2 -o $inno -eq 2 -o $dmg -eq 2 ]
 	then
-	        if [ $clean -eq 0 ]; then
+		# We bypass -k when doing a full build for the first time, so
+		# that things are set up properly in preparation of the build.
+		if [ ! -f Gem/configure ]; then clean=1; fi
+		if [ $clean -eq 0 ]; then
 		cd externals
 		else
 		# clean files that may remain stuck even after doing global make clean (if any)
