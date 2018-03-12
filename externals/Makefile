@@ -134,7 +134,7 @@ ifeq ($(LIGHT),yes)
 LIB_TARGETS = loaders-libdir pddp
 INCREMENTAL = yes
 else
-LIB_TARGETS = adaptive arraysize autotune bassemu boids bsaylor comport creb cxc cyclone disis earplug ekext ext13 fftease fluid freeverb ggee hcs iem_ambi iem_bin_ambi iemlib iemgui iemguts iem_adaptfilt iemmatrix iemxmlrpc iem_delay iem_roomsim iem_spec2 iem_tab jasch_lib loaders-libdir lyonpotpourri mapping markex maxlib mjlib moocow moonlib motex mrpeach oscx pan pdcontainer pddp pdogg plugin pmpd rjlib sigpack smlib tof unauthorized vbap windowing zexy
+LIB_TARGETS = adaptive arraysize autotune bassemu boids bsaylor comport creb cxc cyclone disis earplug ekext ext13 fftease fluid freeverb ggee hcs iem_ambi iem_bin_ambi iemlib iemgui iemguts iem_adaptfilt iemmatrix iemxmlrpc iem_delay iem_roomsim iem_spec2 iem_tab jasch_lib loaders-libdir lyonpotpourri mapping markex maxlib mjlib moocow moonlib motex mrpeach oscx pan pdcontainer pddp pdlua pdogg plugin pmpd rjlib sigpack smlib tof unauthorized vbap windowing zexy
 endif
 
 # DISABLED: flatgui
@@ -1402,6 +1402,18 @@ pddp_install:
 
 pddp_clean:
 	make -C $(externals_src)/pddp clean
+
+
+#------------------------------------------------------------------------------#
+# PDLUA
+pdlua:
+	make -C $(externals_src)/pd-lua LUA_CFLAGS="$(shell pkg-config --cflags lua)" LUA_LIBS="$(shell pkg-config --libs lua)" PD_PATH=$(pd_src) CFLAGS="$(CFLAGS)"
+
+pdlua_install:
+	make -C $(externals_src)/pd-lua DESTDIR="$(DESTDIR)" objectsdir="$(objectsdir)" install
+
+pdlua_clean:
+	make -C $(externals_src)/pd-lua clean
 
 
 #------------------------------------------------------------------------------#
