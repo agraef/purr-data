@@ -1411,7 +1411,7 @@ LUA_CFLAGS = $(shell (pkg-config --cflags lua5.3 || pkg-config --cflags lua5.2 |
 LUA_LIBS = $(shell (pkg-config --libs lua5.3 || pkg-config --libs lua5.2 || pkg-config --libs lua) 2> /dev/null)
 
 pdlua:
-	make -C $(externals_src)/pd-lua LUA_CFLAGS="$(LUA_CFLAGS)" LUA_LIBS="$(LUA_LIBS)" PD_PATH=$(pd_src) CFLAGS="$(CFLAGS)"
+	make -C $(externals_src)/pd-lua LUA_CFLAGS="$(LUA_CFLAGS)" LUA_LIBS="$(LUA_LIBS)" PD_PATH="$(pd_src)" PD_LIB="$(pd_src)/src" CFLAGS="$(CFLAGS)"
 
 pdlua_install:
 	make -C $(externals_src)/pd-lua DESTDIR="$(DESTDIR)" objectsdir="$(objectsdir)" install
