@@ -40,13 +40,6 @@
 
 # NOTES:
 
-# The incremental and light builds assume an existing staging area
-# (packages/*/build directory) which is *not* cleaned before installing. This
-# makes it possible to update the existing staging area after recompiling just
-# a part of the system (all but Gem in the case of "incremental", only the
-# Pd core and a few essential externals in the case of "light"). Use `make
-# clean` beforehand if you want to install into a clean staging area.
-
 # The realclean and dist targets use git commands and thus only work in a
 # working copy of the git repo, not in the static tarball snapshots produced
 # by the dist target.
@@ -57,6 +50,30 @@
 # before creating the actual package and leave the ready-made staged
 # installation tree under `packages/linux_make/build` from where it can be
 # copied or packaged up in any desired way.
+
+# The incremental and light builds assume an existing staging area
+# (packages/*/build directory) which is *not* cleaned before installing. This
+# makes it possible to update the existing staging area after recompiling just
+# a part of the system (all but Gem in the case of "incremental", only the
+# Pd core and a few essential externals in the case of "light"). Use `make
+# clean` beforehand if you want to install into a clean staging area.
+
+# When doing a `light` build, which only includes the most essential
+# externals, it may be desirable to manually include additional abstractions
+# and externals in the build. To these ends, after running `make light` you
+# can run `make` with the `foo_abs` or `foo_ext` target, where `foo` is the
+# name of the desired abstraction or external, respectively. E.g., you can run
+# `make light memento_abs pdlua_ext` to get a light build with the `memento`
+# abstraction and the `pdlua` external included. (This will not rebuild the
+# Debian package, though, so you'll have to install manually with `make
+# install` instead.) The names of the desired addons must be specified as
+# given in abstractions/Makefile and externals/Makefile, respectively (look
+# for targets looking like `foo_install`). Also note that even though a
+# subsequent `make install` will then include your addons, they won't be
+# enabled by default, so you'll have to do that manually in Purr Data's
+# `Startup` dialog. Simply adding the name of the addon in the `Libraries`
+# list should normally do the trick. Or you can add an option like `-lib foo`
+# when running Purr Data from the command line.
 
 .PHONY: all incremental checkout clean realclean dist
 
@@ -78,6 +95,12 @@ incremental:
 
 light:
 	cd l2ork_addons && $(env) ./tar_em_up.sh -tkl
+
+%_abs:
+	make -C abstractions $(@:%_abs=%_install) DESTDIR=$(firstword $(wildcard $(CURDIR)/packages/*/build)) prefix=$(prefix)
+
+%_ext:
+	make -C externals $(@:%_ext=%_install) DESTDIR=$(firstword $(wildcard $(CURDIR)/packages/*/build)) prefix=$(prefix)
 
 checkout:
 	git submodule update --init
