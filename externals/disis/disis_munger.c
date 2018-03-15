@@ -176,6 +176,8 @@ typedef struct _disis_munger {
 // apparently this is a flext type, so we need a replacement... perhaps a
 // garray? Not sure...
     buffer *x_l_buf;
+// instead of a flext buffer, let's try the old pd way:
+    t_atom *x_externalvec;
     short x_externalBuffer;  /* use internal buffer by default */
     long x_l_chan;           /* is there any other choice? */
     int x_discretepan;       /* off by default */
@@ -1768,6 +1770,9 @@ static t_int *munger_perform(t_int *w)
 
 static void munger_dsp(t_disis_munger *x, t_signal **sp)
 {
+    t_float old_srate;
+// need to add code from CDDsp here...
+    /* make s
     /* Let's do it this way:
        (0: our function pointer)
        (1: our pd)
