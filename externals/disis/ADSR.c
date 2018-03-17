@@ -1,12 +1,12 @@
 #include "ADSR.h"
 
-static t_float stk_ADSR_tick(t_stk_ADSR *x)
+t_float stk_ADSR_tick(t_stk_ADSR *x)
 {
     switch (x->state)
     {
         case ATTACK:
             x->value += x->attackRate;
-            if (x->value >= target)
+            if (x->value >= x->target)
             {
                 x->value = x->target;
                 x->target = x->sustainLevel;
@@ -15,7 +15,7 @@ static t_float stk_ADSR_tick(t_stk_ADSR *x)
             break;
 
         case DECAY:
-            if (x->x_value > x->sustainLevel)
+            if (x->value > x->sustainLevel)
             {
                 x->value -= x->decayRate;
                 if (x->value <= x->sustainLevel)
@@ -98,7 +98,7 @@ void stk_ADSR_keyOff(t_stk_ADSR *x)
 
 void stk_ADSR_setAttackRate(t_stk_ADSR *x, t_float rate)
 {
-    if (x->rate < 0.0)
+    if (rate < 0.0)
         fprintf(stderr, "stk_ADSR_setAttackRate: argument must be >= 0.0!");
     x->attackRate = rate;
 }
@@ -138,13 +138,13 @@ void stk_ADSR_setReleaseRate(t_stk_ADSR *x, t_float rate)
 
 void stk_ADSR_setAttackTime(t_stk_ADSR *x, t_float time)
 {
-    if (x->time <= 0.0)
+    if (time <= 0.0)
         fprintf(stderr,
             "ADSR::setAttackTime: negative or zero times not allowed!");
     x->attackRate = 1.0 / (time * x->sampleRate);
 }
 
-void stk_ADSR_setDecayTime(t_float time)
+void stk_ADSR_setDecayTime(t_stk_ADSR *x, t_float time)
 {
     if (time <= 0.0)
         fprintf(stderr,
@@ -152,7 +152,7 @@ void stk_ADSR_setDecayTime(t_float time)
     x->decayRate = (1.0 - x->sustainLevel) / (time * x->sampleRate);
 }
 
-void stk_ADSR_setReleaseTime(t_float time)
+void stk_ADSR_setReleaseTime(t_stk_ADSR *x, t_float time)
 {
     if (time <= 0.0)
         fprintf(stderr,
@@ -170,7 +170,7 @@ void stk_ADSR_setAllTimes(t_stk_ADSR *x, t_float aTime, t_float dTime,
     stk_ADSR_setReleaseTime(x, rTime);
 }
 
-void stk_ADSR_setTarget(stk_ADSR *x, t_float target)
+void stk_ADSR_setTarget(t_stk_ADSR *x, t_float target)
 {
     if (target < 0.0)
         fprintf(stderr, "ADSR::setTarget: negative target not allowed!");
@@ -181,7 +181,7 @@ void stk_ADSR_setTarget(stk_ADSR *x, t_float target)
     if (x->value > x->target) x->state = DECAY;
 }
 
-void stk_ADSR_setValue(stk_ADSR *x, t_float value)
+void stk_ADSR_setValue(t_stk_ADSR *x, t_float value)
 {
     x->state = SUSTAIN;
     x->target = value;

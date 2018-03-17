@@ -243,7 +243,7 @@ static void *munger_alloc(t_disis_munger *x)
     return x;
 }
 
-static void *munger_free(t_disis_munger *x)
+static void munger_free(t_disis_munger *x)
 {
     /* Heap allocated based on number of voices */
     int nv = x->x_numvoices, nchan = x->x_num_channels;
@@ -1207,20 +1207,20 @@ static void munger_scale(t_disis_munger *x, t_symbol *s, int argc, t_atom *argv)
 
     for (i = 0; i < PITCHTABLESIZE; i++)
         x->x_pitchTable[i] = 0.;
-        if (argc > PITCHTABLESIZE)
-            argc = PITCHTABLESIZE;
-        for (i = 0; i < argc; i++)
-        {
-            x->x_pitchTable[i] = atom_getfloatarg(i, argc, argv);
-        }
-        x->x_scale_len = argc;
+    if (argc > PITCHTABLESIZE)
+        argc = PITCHTABLESIZE;
+    for (i = 0; i < argc; i++)
+    {
+        x->x_pitchTable[i] = atom_getfloatarg(i, argc, argv);
+    }
+    x->x_scale_len = argc;
 
-        i = 0;
-        //wrap input list through all of pitchTable
-        for (j = argc; j < PITCHTABLESIZE; j++) {
-            x->x_pitchTable[j] = x->x_pitchTable[i++];
-            if (i >= argc) i = 0;
-        }
+    i = 0;
+    //wrap input list through all of pitchTable
+    for (j = argc; j < PITCHTABLESIZE; j++) {
+        x->x_pitchTable[j] = x->x_pitchTable[i++];
+        if (i >= argc) i = 0;
+    }
 }
 
 static void munger_bufsize(t_disis_munger *x, t_symbol *s, int argc,
@@ -1357,10 +1357,12 @@ static void munger_setvoices(t_disis_munger *x, t_symbol *s, int argc,
         if (temp > x->x_maxvoices)
         {
             if (x->x_verbose > 0)
+            {
                 post("disis_munger~ %s error: voices has to be between "
                      "0 and maxvoices (currently %d)!",
                     x->x_munger_name->s_name, x->x_maxvoices);
-                temp = x->x_maxvoices;
+            }
+            temp = x->x_maxvoices;
         }
         if (x->x_verbose > 1)
             post("disis_munger~ %s: setting voices to: %d ",
@@ -1781,6 +1783,7 @@ static t_int *munger_perform(t_int *w)
             }
         }
     }
+    return (w + 3 + x->x_num_channels);
 }
 
 static void munger_dsp(t_disis_munger *x, t_signal **sp)
@@ -1826,7 +1829,8 @@ static void munger_dsp(t_disis_munger *x, t_signal **sp)
 void disis_munger_tilde_setup(void)
 {
     disis_munger_class = class_new(gensym("disis_munger~"),
-        (t_newmethod)munger_new, 0, sizeof(t_disis_munger),
+        (t_newmethod)munger_new, (t_method)munger_free,
+        sizeof(t_disis_munger),
         CLASS_DEFAULT, A_GIMME, 0);
     CLASS_MAINSIGNALIN(disis_munger_class, t_disis_munger, x_f);
     class_addmethod(disis_munger_class, (t_method)munger_dsp,

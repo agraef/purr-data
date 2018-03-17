@@ -1,3 +1,5 @@
+#include "m_pd.h"
+
 /* port of stk's ADSR class to C */
 
 /* original class notes */
@@ -83,7 +85,7 @@ void stk_ADSR_setAllTimes(t_stk_ADSR *x, t_float aTime, t_float dTime,
 void stk_ADSR_setTarget(t_stk_ADSR *x, t_float target);
 
 /* Return the current envelope state (ATTACK, DECAY, SUSTAIN, RELEASE, IDLE).*/
-int stk_ADSR_getState(t_stk_ADSR *x);
+t_env_state stk_ADSR_getState(t_stk_ADSR *x);
 
 /* Set to state = ADSR::SUSTAIN with current and target values of value. */
 void stk_ADSR_setValue(t_stk_ADSR *x, t_float value);
