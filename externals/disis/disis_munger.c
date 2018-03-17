@@ -840,6 +840,12 @@ static void munger_setbuffer(t_disis_munger *x, t_symbol *s, int argc,
         if (x->x_arraylength) munger_clearbuffer(x);
        	// save buffer munger_name
        	x->x_arrayname = atom_getsymbolarg(0, argc, argv);
+        /* If our name is NULL then just clear out and return... */
+        if (!x->x_arrayname)
+        {
+            munger_clearbuffer(x);
+            return;
+        }
        	// make new reference to system buffer object
 // no Buffer type, and no new!
 //      x->x_l_buf = new buffer(x->x_arrayname);
@@ -864,6 +870,7 @@ static void munger_setbuffer(t_disis_munger *x, t_symbol *s, int argc,
 // no Buffer type
             x->x_l_chan = 0;
         }
+
     }
     else
     {
@@ -1664,6 +1671,7 @@ static t_int *munger_perform(t_int *w)
     if (x->x_gpan_spread > 1.) x->x_gpan_spread = 1.;
     if (x->x_gpan_spread < 0.) x->x_gpan_spread = 0.;
 
+
     if (!x->x_power)
     {
         while(n--)
@@ -1786,7 +1794,7 @@ static t_int *munger_perform(t_int *w)
             }
         }
     }
-    return (w + 3 + x->x_num_channels);
+    return (w + 4 + x->x_num_channels);
 }
 
 static void munger_dsp(t_disis_munger *x, t_signal **sp)
