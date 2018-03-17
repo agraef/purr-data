@@ -177,7 +177,7 @@ typedef struct _disis_munger {
 //    buffer *x_l_buf;
 // instead of a flext buffer, let's try the old pd way:
     t_symbol *x_arrayname;
-    int x_array_n;
+    int x_arraylength;
     t_word *x_arrayvec;      /* vec to use if we want an external buffer */
     long x_l_chan;           /* is there any other choice? */
     int x_discretepan;       /* off by default */
@@ -494,7 +494,7 @@ static void *munger_new(t_symbol *s, int argc, t_atom *argv)
 
     x->x_arrayname = NULL;
     x->x_arrayvec = NULL;
-    x->x_array_n = 0;         // use internal buffer by default
+    x->x_arraylength = 0;         // use internal buffer by default
     x->x_l_chan = 0;             //is there any other choice?
     x->x_discretepan = 0;        //off by default
 
@@ -564,7 +564,7 @@ static t_float munger_newNote(t_disis_munger *x, int whichVoice, int newNote)
     t_float newPosition;
     int i, temp;
 // replace with garray?
-    buffer *b = x->x_l_buf;
+//    buffer *b = x->x_l_buf;
 
     x->x_gvoiceSize[whichVoice] =
         (long)munger_newNoteSize(x, whichVoice, newNote);
@@ -633,7 +633,7 @@ static t_float munger_newNote(t_disis_munger *x, int whichVoice, int newNote)
     /*** set start point; tricky, cause of moving buffer,
          variable playback rates, backwards/forwards, etc.... ***/
 
-    if (!x->x_array_n)
+    if (!x->x_arraylength)
     {
         // 1. RANDOM() positioning and moving buffer (default)
         if (x->x_position == -1. && x->x_recordOn == 1)
@@ -713,10 +713,10 @@ static t_float munger_newNote(t_disis_munger *x, int whichVoice, int newNote)
     {
         if (x->x_position == -1.)
         {
-            newPosition = (long)(RANDOM()) * ONE_OVER_MAXRAND * x->x_array_n;
+            newPosition = (long)(RANDOM()) * ONE_OVER_MAXRAND * x->x_arraylength;
         }
         else if (x->x_position >= 0.) newPosition = x->x_position *
-            x->x_array_n;
+            x->x_arraylength;
     }
     return newPosition;
 }
@@ -803,14 +803,14 @@ static void munger_oneshot(t_disis_munger *x, t_symbol *s, int argc,
 static void munger_clearbuffer(t_disis_munger *x)
 {
 // don't have a Buffer type
-    if (x->x_array_n)
+    if (x->x_arraylength)
     {
 // don't have delete!
 //        delete x->x_l_buf;
 //        x->x_l_buf = NULL;
         x->x_arrayname = NULL;
         x->x_arrayname = NULL;
-        x->x_array_n = 0;
+        x->x_arraylength = 0;
         x->x_arrayvec = NULL;
         if (x->x_verbose > 1)
             post("disis_munger~ %s: external buffer deleted.",
@@ -826,7 +826,7 @@ static void munger_setbuffer(t_disis_munger *x, t_symbol *s, int argc,
         // argument list is empty
         // clear existing buffer
 // have no Buffer type
-        if (x->array_n) munger_clearbuffer(x);
+        if (x->x_arraylength) munger_clearbuffer(x);
 //        if (x->x_l_buf) munger_clearbuffer(x);
     }
     else if (argc == 1 && argv->a_type == A_SYMBOL)
@@ -834,7 +834,7 @@ static void munger_setbuffer(t_disis_munger *x, t_symbol *s, int argc,
         // one symbol given as argument
         // clear existing buffer
 //        if (x->x_l_buf) munger_clearbuffer(x);
-        if (x->x_array_n) munger_clearbuffer(x);
+        if (x->x_arraylength) munger_clearbuffer(x);
        	// save buffer munger_name
        	x->x_arrayname = atom_getsymbolarg(0, argc, argv);
        	// make new reference to system buffer object
@@ -847,7 +847,7 @@ static void munger_setbuffer(t_disis_munger *x, t_symbol *s, int argc,
             if (*s->s_name) pd_error(x, "disis_munger~: %s: no such array",
                 x->x_arrayname->s_name);
         }
-        else if (!garray_getfloatwords(g, &x->array_n, &x->arrayvec))
+        else if (!garray_getfloatwords(g, &x->x_arraylength, &x->x_arrayvec))
         {
             pd_error(x, "%s: bad template for disis_munger~'s array",
                 x->x_arrayname->s_name);
@@ -857,7 +857,7 @@ static void munger_setbuffer(t_disis_munger *x, t_symbol *s, int argc,
             if (x->x_verbose > 1)
                 post("disis_munger~ %s: successfully associated with "
                      "the %s array.", x->x_munger_name->s_name,
-                      x->x_arrayname->s_name));
+                      x->x_arrayname->s_name);
 // no Buffer type
             x->x_l_chan = 0;
         }
@@ -870,7 +870,7 @@ static void munger_setbuffer(t_disis_munger *x, t_symbol *s, int argc,
             post("disis_munger~ %s: error: message argument must be a string.",
                 x->x_munger_name->s_name);
 // no Buffer type
-        if (x->x_array_n) munger_clearbuffer(x);
+        if (x->x_arraylength) munger_clearbuffer(x);
     }
 }
 
@@ -879,7 +879,7 @@ static void munger_setbuffer(t_disis_munger *x, t_symbol *s, int argc,
 // and that's that.
 static int munger_checkbuffer(t_disis_munger *x, int reset)
 {
-    if (!x->array_n)
+    if (!x->x_arraylength)
     {
         post("disis_munger~ %s: error: no valid array defined",
             x->x_munger_name->s_name);
@@ -889,10 +889,10 @@ static int munger_checkbuffer(t_disis_munger *x, int reset)
 //    if (reset)
 //        x->x_l_buf->Set();  // try to re-associate buffer with munger_name
     if (reset)
-        pd_vmess((t_pd *)x->x_obj, gensym("buffer"), "s", x->arrayname);
+        pd_vmess(&x->x_obj.te_pd, gensym("buffer"), "s", x->x_arrayname);
 
 //we don't have type Buffer
-    if (!x->array_n)
+    if (!x->x_arraylength)
     {
         post("disis_munger~ %s: buffer mysteriously dissapeared. "
              "Reverting to internal buffer...",
@@ -1082,7 +1082,7 @@ static t_float munger_newSetup(t_disis_munger* x, int whichVoice)
     /*** set start point; tricky, cause of moving buffer,
          variable playback rates, backwards/forwards, etc.... ***/
 
-    if (!x->x_array_n)
+    if (!x->x_arraylength)
     {
 	// 1. RANDOM() positioning and moving buffer (default)
 	if (x->x_position == -1. && x->x_recordOn == 1)
@@ -1171,11 +1171,11 @@ static t_float munger_newSetup(t_disis_munger* x, int whichVoice)
         if (x->x_position == -1.)
         {
             newPosition = (float)(RANDOM() * ONE_OVER_MAXRAND *
-                (float)(x->x_array_n));
+                (float)(x->x_arraylength));
         }
         else if (x->x_position >= 0.)
 // don't have Buffer type
-            newPosition = x->x_position * (float)x->x_array_n;
+            newPosition = x->x_position * (float)x->x_arraylength;
     }
     return newPosition;
 }
@@ -1601,15 +1601,15 @@ static t_float munger_getExternalSamp(t_disis_munger *x, double where)
     double frames, sampNum, nc;
 
 // no Buffer type!
-    if (!x->x_array_n)
+    if (!x->x_arraylength)
     {
         post("disis_munger~ %s: error: external buffer mysteriously AWOL, "
              "reverting to internal buffer...", x->x_munger_name->s_name);
         return 0.;
     }
 
-    t_tab = (float *)a->x_arrayvec;
-    frames = (double)x->x_array_n;
+    tab = (t_float *)x->x_arrayvec;
+    frames = (double)x->x_arraylength;
     /* Hm... isn't this always 1 for a garray? Setting it to that for now... */
     nc = (double)1; //== buffer~ framesize...
 
@@ -1725,7 +1725,7 @@ static t_int *munger_perform(t_int *w)
                 if (x->x_gvoiceOn[i])
                 {
                     //get a sample, envelope it
-                    if (x->x_externalBuffer)
+                    if (x->x_arraylength)
                         samp = munger_getExternalSamp(x, x->x_gvoiceCurrent[i]);
                     else
                         samp = munger_getSamp(x, x->x_gvoiceCurrent[i]);
@@ -1788,13 +1788,13 @@ static void munger_dsp(t_disis_munger *x, t_signal **sp)
     t_float old_srate;
 
     // Go ahead and set the array based on the array name.
-    pd_vmess((t_pd *)x->x_obj, gensym("buffer"), "s", x->arrayname);
+    pd_vmess(&x->x_obj.te_pd, gensym("buffer"), "s", x->x_arrayname);
 
     old_srate = x->x_srate;
     x->x_srate = sys_getsr();
     if (x->x_srate != old_srate)
     {
-        x->x_one_over_srate = 1. / x->s_rate;
+        x->x_one_over_srate = 1. / x->x_srate;
         x->x_srate_ms = x->x_srate / 1000;
         x->x_one_over_srate_ms = 1. / x->x_srate_ms;
     }
