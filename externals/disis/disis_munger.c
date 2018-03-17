@@ -183,7 +183,18 @@ typedef struct _disis_munger {
     int x_discretepan;       /* off by default */
 } t_disis_munger;
 
-static void *munger_alloc(t_disis_munger *x)
+
+static void float_2d_alloc(t_float ***fp, int nrow, int ncol)
+{
+    int i;
+    *fp = t_getbytes(nrow * sizeof(t_float*));
+    for (i = 0; i < nrow; i++)
+    {
+        (*fp)[i] = t_getbytes(ncol * sizeof(t_float));
+    }
+}
+
+static t_disis_munger *munger_alloc(t_disis_munger *x)
 {
     /* Heap allocated based on number of voices */
     int nv = x->x_numvoices, nchan = x->x_num_channels;
@@ -214,7 +225,6 @@ static void *munger_alloc(t_disis_munger *x)
 
     /* This is its own type */
     x->x_gvoiceADSR = (t_stk_ADSR *)t_getbytes(nv * sizeof(t_stk_ADSR)); 
-
     x->x_gvoiceADSRon = (int *)t_getbytes(nv * sizeof(int));
     x->x_noteTransp = (t_float *)t_getbytes(nv * sizeof(t_float));
     x->x_noteSize = (t_float *)t_getbytes(nv * sizeof(t_float));
@@ -227,12 +237,9 @@ static void *munger_alloc(t_disis_munger *x)
     x->x_noteDirection = (int *)t_getbytes(nv * sizeof(int));
 
     /* nvoices x nchannels */
-    x->x_gvoiceSpat =
-        (t_float **)t_getbytes(nv * nchan * sizeof(t_float));
-    x->x_notechannelGain =
-        (t_float **)t_getbytes(nv * nchan * sizeof(t_float));
-    x->x_notechannelGainSpread =
-        (t_float **)t_getbytes(nv * nchan * sizeof(t_float));
+    float_2d_alloc(&x->x_gvoiceSpat, nv, nchan);
+    float_2d_alloc(&x->x_notechannelGain, nv, nchan);
+    float_2d_alloc(&x->x_notechannelGainSpread, nv, nchan);
 
     /* Heap allocated for signal vector x nchannels */
     x->x_out = (t_float **)t_getbytes(nchan * sizeof(t_float*));
@@ -385,7 +392,6 @@ static void *munger_new(t_symbol *s, int argc, t_atom *argv)
 
     /* allocate a ton of fields */
     x = munger_alloc(x);
-
     /* bail if we couldn't allocate... */
     if (!x) return 0;
 
@@ -444,14 +450,12 @@ static void *munger_new(t_symbol *s, int argc, t_atom *argv)
         /* init the stk_ADSR elements */
         stk_ADSR_init(&x->x_gvoiceADSR[i]);
         stk_ADSR_setSampleRate(&x->x_gvoiceADSR[i], sys_getsr());
-
         for (j = 0; j < x->x_num_channels; j++)
         {
             x->x_gvoiceSpat[i][j] = 0.;
             x->x_notechannelGain[i][j] = 0.;
             x->x_notechannelGainSpread[i][j] = 0.;
         }
-
         //note and oneshot inits
         x->x_noteTransp[i] = 0.;
         x->x_noteSize[i] = 100.;
@@ -462,7 +466,6 @@ static void *munger_new(t_symbol *s, int argc, t_atom *argv)
         x->x_noteSustain[i] = 0.3;
         x->x_noteRelease[i] = 200.;
     }
-
     for (i = 0; i < x->x_num_channels; i++)
     {
         x->x_channelGain[i] = 0.;
