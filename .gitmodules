@@ -18,4 +18,4 @@
 	url = https://git.purrdata.net/jwilkes/wiringPi.git
 [submodule "externals/pd-lua"]
 	path = externals/pd-lua
-	url = https://github.com/agraef/pd-lua.git
+	url = https://git.purrdata.net/jwilkes/pd-lua.git
