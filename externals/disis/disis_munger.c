@@ -172,10 +172,6 @@ typedef struct _disis_munger {
     int x_recordRampVal;   /* ramp for when toggling record on and off */
     int x_rec_ramping;     /* -1 ramp down, 1 ramp up, 0 not ramping */
 
-// apparently this is a flext type, so we need a replacement... perhaps a
-// garray? Not sure...
-//    buffer *x_l_buf;
-// instead of a flext buffer, let's try the old pd way:
     t_symbol *x_arrayname;
     int x_arraylength;
     t_word *x_arrayvec;      /* vec to use if we want an external buffer */
@@ -189,9 +185,15 @@ static void float_2d_alloc(t_float ***fp, int nrow, int ncol)
     int i;
     *fp = t_getbytes(nrow * sizeof(t_float*));
     for (i = 0; i < nrow; i++)
-    {
         (*fp)[i] = t_getbytes(ncol * sizeof(t_float));
-    }
+}
+
+static void float_2d_free(t_float ***fp, int nrow, int ncol)
+{
+    int i;
+    for (i = 0; i < nrow; i++)
+        t_freebytes((*fp)[i], ncol * sizeof(t_float));
+    t_freebytes(*fp, nrow * sizeof(t_float*));
 }
 
 static t_disis_munger *munger_alloc(t_disis_munger *x)
@@ -309,12 +311,9 @@ static void munger_free(t_disis_munger *x)
         t_freebytes(x->x_noteDirection, nv * sizeof(int));
 
     /* nvoices x nchannels */
-    if (x->x_gvoiceSpat)
-        t_freebytes(x->x_gvoiceSpat, nv * nchan * sizeof(t_float));
-    if (x->x_notechannelGain)
-        t_freebytes(x->x_notechannelGain, nv * nchan * sizeof(t_float));
-    if (x->x_notechannelGainSpread)
-        t_freebytes(x->x_notechannelGainSpread, nv * nchan * sizeof(t_float));
+    float_2d_free(&x->x_gvoiceSpat, nv, nchan);
+    float_2d_free(&x->x_notechannelGain, nv, nchan);
+    float_2d_free(&x->x_notechannelGainSpread, nv, nchan);
 
     /* Heap allocated for signal vector x nchannels */
     if (x->x_out)
@@ -566,8 +565,6 @@ static t_float munger_newNote(t_disis_munger *x, int whichVoice, int newNote)
 {
     t_float newPosition;
     int i, temp;
-// replace with garray?
-//    buffer *b = x->x_l_buf;
 
     x->x_gvoiceSize[whichVoice] =
         (long)munger_newNoteSize(x, whichVoice, newNote);
@@ -805,12 +802,8 @@ static void munger_oneshot(t_disis_munger *x, t_symbol *s, int argc,
 
 static void munger_clearbuffer(t_disis_munger *x)
 {
-// don't have a Buffer type
     if (x->x_arraylength)
     {
-// don't have delete!
-//        delete x->x_l_buf;
-//        x->x_l_buf = NULL;
         x->x_arrayname = NULL;
         x->x_arrayname = NULL;
         x->x_arraylength = 0;
@@ -828,15 +821,12 @@ static void munger_setbuffer(t_disis_munger *x, t_symbol *s, int argc,
     {
         // argument list is empty
         // clear existing buffer
-// have no Buffer type
         if (x->x_arraylength) munger_clearbuffer(x);
-//        if (x->x_l_buf) munger_clearbuffer(x);
     }
     else if (argc == 1 && argv->a_type == A_SYMBOL)
     {
         // one symbol given as argument
         // clear existing buffer
-//        if (x->x_l_buf) munger_clearbuffer(x);
         if (x->x_arraylength) munger_clearbuffer(x);
        	// save buffer munger_name
        	x->x_arrayname = atom_getsymbolarg(0, argc, argv);
@@ -847,8 +837,6 @@ static void munger_setbuffer(t_disis_munger *x, t_symbol *s, int argc,
             return;
         }
        	// make new reference to system buffer object
-// no Buffer type, and no new!
-//      x->x_l_buf = new buffer(x->x_arrayname);
         /* make a new reference to the array */
         t_garray *g = (t_garray *)pd_findbyclass(x->x_arrayname, garray_class);
         if (!g)
@@ -867,8 +855,8 @@ static void munger_setbuffer(t_disis_munger *x, t_symbol *s, int argc,
                 post("disis_munger~ %s: successfully associated with "
                      "the %s array.", x->x_munger_name->s_name,
                       x->x_arrayname->s_name);
-// no Buffer type
             x->x_l_chan = 0;
+            garray_usedindsp(g);
         }
 
     }
@@ -879,56 +867,8 @@ static void munger_setbuffer(t_disis_munger *x, t_symbol *s, int argc,
        	if (x->x_verbose > 0)
             post("disis_munger~ %s: error: message argument must be a string.",
                 x->x_munger_name->s_name);
-// no Buffer type
         if (x->x_arraylength) munger_clearbuffer(x);
     }
-}
-
-//external buffer stuff
-// Pretty sure we don't need this-- just set the buffer in the dsp routine
-// and that's that.
-static int munger_checkbuffer(t_disis_munger *x, int reset)
-{
-    if (!x->x_arraylength)
-    {
-        post("disis_munger~ %s: error: no valid array defined",
-            x->x_munger_name->s_name);
-        return 0;
-    }
-// we don't have type Buffer
-//    if (reset)
-//        x->x_l_buf->Set();  // try to re-associate buffer with munger_name
-    if (reset)
-        pd_vmess(&x->x_obj.te_pd, gensym("buffer"), "s", x->x_arrayname);
-
-//we don't have type Buffer
-    if (!x->x_arraylength)
-    {
-        post("disis_munger~ %s: buffer mysteriously dissapeared. "
-             "Reverting to internal buffer...",
-            x->x_munger_name->s_name);
-        munger_clearbuffer(x);
-        return 0;
-    }
-//    else if (x->x_l_buf->Update())
-//    {
-        // buffer parameters have been updated
-//        if (x->x_l_buf->Valid())
-//        {
-//            if (x->x_verbose > 1)
-//                post("disis_munger~ %s: updated buffer reference",
-//                    x->x_munger_name->s_name);
-//                return 1;
-//        }
-//        else
-//        {
-//            post("disis_munger~ %s: error: buffer has become invalid",
-//                x->x_munger_name->s_name);
-//                munger_clearbuffer(x);
-//                return 0;
-//        }
-//    }
-    else return 1;
 }
 
 static void munger_setverbose(t_disis_munger *x, t_symbol *s, int argc,
@@ -1029,8 +969,6 @@ static t_float munger_newSize(t_disis_munger *x, int whichOne)
 static t_float munger_newSetup(t_disis_munger* x, int whichVoice)
 {
     t_float newPosition;
-// no Buffer type in Pd
-//    buffer *b = x->x_l_buf;
     int i, tmpdiscretepan;
 
     x->x_gvoiceSize[whichVoice] = (long)munger_newSize(x, whichVoice);
@@ -1184,7 +1122,6 @@ static t_float munger_newSetup(t_disis_munger* x, int whichVoice)
                 (float)(x->x_arraylength));
         }
         else if (x->x_position >= 0.)
-// don't have Buffer type
             newPosition = x->x_position * (float)x->x_arraylength;
     }
     return newPosition;
@@ -1608,11 +1545,9 @@ static t_float munger_getExternalSamp(t_disis_munger *x, double where)
     double alpha, om_alpha, output;
     long first;
 
-//    buffer *b = x->x_l_buf;
     t_float *tab;
     double frames, sampNum, nc;
 
-// no Buffer type!
     if (!x->x_arraylength)
     {
         post("disis_munger~ %s: error: external buffer mysteriously AWOL, "
@@ -1647,41 +1582,35 @@ static t_int *munger_perform(t_int *w)
     /* Let's do it this way:
        (0: our function pointer)
        (1: our pd)
-       2: n
-       3: insig
-       4-n: outsigs
+       2: insig
+       3: n
+       The outsigs will be pointed to by x->x_out
     */
+
     t_disis_munger *x = (t_disis_munger *)(w[1]);
 
 // Hm... shouldn't we be using t_sample here as well as in x_out?
     t_float samp;
-    int newvoice, i, j, n, outlet_offset;
+    int newvoice, i, j, n, sample_number;
 
-    n = (int)(w[2]);
+    n = (int)(w[3]);
     /* ins1 holds the signal vector ofthe first inlet, index 0 */
-    t_sample *ins1 = (t_sample *)(w[3]);
+    t_sample *ins1 = (t_sample *)(w[2]);
 
-    outlet_offset = 4;
-    for (i = 0; i < x->x_num_channels; i++)
-    {
-// again-- t_sample here, right?
-        x->x_out[i] = (t_float *)(w[i + outlet_offset]);
-    }
-
+    /* pointer for incrementing the outlet samps */
+    t_float **out = x->x_out;
     if (x->x_gpan_spread > 1.) x->x_gpan_spread = 1.;
     if (x->x_gpan_spread < 0.) x->x_gpan_spread = 0.;
 
-
     if (!x->x_power)
     {
-        while(n--)
-        {
-            for (i = 0; i < x->x_num_channels; i++) *x->x_out[i]++ = 0.;
-        }
+        for (i = 0; i < x->x_num_channels; i++)
+            for (j = 0; j < x->x_num_channels; j++)
+                out[i][j] = 0.;
     }
     else
     {
-        while(n--)
+        for (sample_number = 0; sample_number < n; sample_number++)
         {
             if (x->x_verbose > 2)
             {
@@ -1734,7 +1663,7 @@ static t_int *munger_perform(t_int *w)
             x->x_time++;
             //mix 'em, pan 'em
             for (i = 0; i < x->x_maxvoices; i++)
-                {
+            {
                 if (x->x_gvoiceOn[i])
                 {
                     //get a sample, envelope it
@@ -1755,7 +1684,7 @@ static t_int *munger_perform(t_int *w)
                     }
                     else // multichannel subroutine
                     {
-                        for (j = 0;j < x->x_num_channels; j++)
+                        for (j = 0; j < x->x_num_channels; j++)
                         {
                             x->x_outsamp[j] += samp * x->x_gvoiceSpat[i][j];
                         }
@@ -1787,14 +1716,14 @@ static t_int *munger_perform(t_int *w)
                             x->x_graincounter++;
                     }
                 }
-                for (i = 0; i < x->x_num_channels;i++)
-                {
-                    *x->x_out[i]++ = x->x_outsamp[i];
-                }
+            }
+            for (i = 0; i < x->x_num_channels; i++)
+            {
+                out[i][sample_number] = x->x_outsamp[i];
             }
         }
     }
-    return (w + 4 + x->x_num_channels);
+    return (w+4);
 }
 
 static void munger_dsp(t_disis_munger *x, t_signal **sp)
@@ -1815,26 +1744,16 @@ static void munger_dsp(t_disis_munger *x, t_signal **sp)
     /* Let's do it this way:
        (0: our function pointer)
        (1: our pd)
-       2: n
-       3: insig
-       4-n: outsigs
+       2: insig
+       3: n
+       The outsigs will be pointed to by x->x_out
     */
-    t_int *args;
-
-    args = (t_int *)t_getbytes((x->x_num_channels + 3) * sizeof(t_int));
-
-    args[0] = (t_int)x;
-    args[1] = (t_int)sp[0]->s_n;
-    args[2] = (t_int)sp[0]->s_vec;
-
     int i;
     for (i = 0; i < x->x_num_channels; i++)
     {
-        args[i + 3] = (t_int)sp[i + 1]->s_vec;
+        x->x_out[i] = (t_float *)(sp[i + 1]->s_vec);
     }
-    dsp_addv(munger_perform, 3 + x->x_num_channels, args);
-
-    t_freebytes(args, (x->x_num_channels + 3) * sizeof(t_int));
+    dsp_add(munger_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
 }
 
 void disis_munger_tilde_setup(void)
