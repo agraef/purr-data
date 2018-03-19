@@ -287,11 +287,16 @@ A few guidelines:
   and libraries must be stable, consistent, well-documented, and easy to use.
 * Develop incrementally. Small, solid improvements to the software are
   preferable to large, disruptive ones.
-* Make sure you aren't duplicating existing functionality, especially core
-  functionality. For backwards compatibility Purr Data ships many legacy
+* Try not to duplicate existing functionality.
+  For backwards compatibility Purr Data ships many legacy
   libraries which unfortunately duplicate the same functionality. This makes
   it harder to learn how to use Pd, and makes it burdensome to read patches
   and keep track of all the disparate implementations.
+* Keep dependencies to a minimum. Cross-platform dependency handling is
+  unfortunately still an open research problem. In the even that you need
+  an external library dependency, please mirror it at git.purrdata.net
+  so that the build system doesn't depend on the availability of external
+  infrastructure.
 
 Here are some of the current tasks:
 
@@ -313,6 +318,8 @@ Here are some of the current tasks:
   * status: some externals have their own testing environments, but they are
     limited as they require manual intervention to run and read the
     results inside a graphical window.
+    We currently have a crude test system that at least ensures that each
+    external library instantiates without crashing.
     Here's an email thread with Katja Vetter's design, which looks to
     be automatable:
     http://markmail.org/message/t7yitfc55anus76i#query:+page:1+mid:chb56ve7kea2qumn+state:results
