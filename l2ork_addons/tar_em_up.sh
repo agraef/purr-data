@@ -248,16 +248,7 @@ then
 	echo "Pd-L2Ork full installer... IMPORTANT! To ensure you have the most up-to-date submodules, this process requires internet connection to pull sources from various repositories..."
 
 	if [ -d .git ]; then
-		# check if Gem submodule is empty, and if so do first init
-		if [ "$(ls -A Gem)" ]; then
-			git submodule update
-			#git submodule foreach git pull origin master
-		else
-			# init all submodules (only necessary the first time)
-			git submodule init
-			git submodule update
-			#git submodule foreach git pull origin master
-		fi
+		git submodule update --init
 	fi
 
 

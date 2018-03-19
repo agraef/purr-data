@@ -16,3 +16,6 @@
 [submodule "l2ork_addons/raspberry_pi/disis_gpio/wiringPi"]
 	path = l2ork_addons/raspberry_pi/disis_gpio/wiringPi
 	url = https://git.purrdata.net/jwilkes/wiringPi.git
+[submodule "externals/pd-lua"]
+	path = externals/pd-lua
+	url = https://git.purrdata.net/jwilkes/pd-lua.git
