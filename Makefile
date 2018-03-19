@@ -129,14 +129,18 @@ realclean:
 # sitting in packages/*/build, so you might as well use that instead).
 
 # Note that these targets simply (un)install whatever is in the
-# packages/*/build directory at the time they're invoked, so you need to run
-# `make` (or `make incremental`, etc.) first. Also note that some old cruft
-# under build/etc (all but the bash auto-completions) isn't installed as it
-# isn't needed on modern Linux systems any more.
+# packages/*/build directory at the time they're invoked. If no build
+# directory is present then nothing will happen, so you need to run `make` (or
+# `make incremental`, etc.) before running these targets. Also note that some
+# old cruft under build/etc (all but the bash auto-completions) isn't
+# installed as it isn't needed on modern Linux systems any more.
 
 builddir = $(firstword $(wildcard packages/*/build))
+ifneq ($(builddir),)
 manifest = etc/bash_completion.d/pd-l2ork $(prefix:/%=%)/include/pd-l2ork $(prefix:/%=%)/lib/pd-l2ork $(patsubst $(builddir)/%,%, $(wildcard $(builddir)/$(prefix:/%=%)/bin/*) $(shell find $(builddir)/usr/share -type f))
+endif
 
+ifneq ($(manifest),)
 install:
 	test -z "$(DESTDIR)" || (rm -rf "$(DESTDIR)" && mkdir -p "$(DESTDIR)")
 	tar -c -C $(builddir) $(manifest) | tar -x -C $(DESTDIR)/
@@ -146,6 +150,13 @@ install:
 
 uninstall:
 	rm -rf $(addprefix $(DESTDIR)/, $(manifest))
+else
+install:
+	@echo "no build directory, run make first" && false
+
+uninstall:
+	@echo "no build directory, run make first" && false
+endif
 
 # Build a self-contained distribution tarball (snapshot). This is pretty much
 # the same as in debuild/Makefile and must be run in a working copy of the git
