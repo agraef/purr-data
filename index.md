@@ -41,7 +41,7 @@ Purr Data is the official nickname of the Pd-l2ork 2.x branch. Quite obviously t
 
 ## Installation
 
-The easiest way to get up and running is to use one of the available binary packages and/or installers for Linux (Debian/Ubuntu), Mac and Windows available from the Github [releases page](https://github.com/agraef/purr-data/releases). Generally you can just double-click these packages and follow through the platform-dependent installation process.
+The easiest way to get up and running is to use one of the available binary packages and installers for Linux (Debian/Ubuntu), Mac and Windows available from the Github [releases page](https://github.com/agraef/purr-data/releases). Generally you can just double-click these packages and go through the usual (platform-dependent) installation process.
 
 In the case of the Debian/Ubuntu packages, this may require you to install a bunch of dependencies first, as described in the [README](https://github.com/agraef/purr-data/blob/master/README.md#linux) file. The Mac and Windows packages should be self-contained.
 
@@ -61,7 +61,7 @@ Please refer to the following links for more information and detailed installati
 
 ### Building from Source
 
-**CAVEAT:** Purr Data is a big package with many parts and many dependencies, building it from source can take a *long* time, even on modern hardware. So please be patient! :) Alternatively, you can also do a mimimal, vanilla-like build as described [below](#purr-data-light).
+**CAVEAT:** Purr Data is a big package with many parts and many dependencies, building it from source can take a *long* time, even on modern hardware. So please be patient! :) If you can't wait, though, there's also a minimal, vanilla-like build available, see [Purr Data "Light"](#purr-data-light) below.
 
 To build Purr Data from source, you'll have to clone the [git repository](https://github.com/agraef/purr-data) as follows:
 
