@@ -8,12 +8,12 @@ This repository is a mirror of Wilkes' original Gitlab repository available at <
 
 Here's a quick shopping list:
 
-- [Downloads](https://github.com/agraef/purr-data/releases): This is where you get ready-made packages for Linux, Mac and Windows. Please also make sure to check our [installation instructions](#installation) below.
-- [JGU packages](#jgu-packages): You can also use these if you're on [Arch](https://l2orkaur.bitbucket.io/) or a recent [Ubuntu](https://l2orkubuntu.bitbucket.io/) version.
-- [Sources](https://github.com/agraef/purr-data): Github mirror of the sources, updated regularly.
-- [Development](https://git.purrdata.net/jwilkes/purr-data): Wilkes' Gitlab repository. **This is where you should go for submitting bug reports and pull requests.**
-- [Mailing list](http://disis.music.vt.edu/listinfo/l2ork-dev): The DISIS Pd-l2ork mailing list is the right place for general support, questions and discussion.
-- [Intro](https://agraef.github.io/purr-data-intro): Read this to learn more about Purr Data.
+- [**Downloads**](https://github.com/agraef/purr-data/releases): This is where you get ready-made packages for Linux, Mac and Windows. Please also make sure to check our [installation instructions](#installation) below.
+- [**JGU packages**](#jgu-packages): You can also use these if you're on [Arch](https://l2orkaur.bitbucket.io/) or a recent [Ubuntu](https://l2orkubuntu.bitbucket.io/) version.
+- [**Sources**](https://github.com/agraef/purr-data): Github mirror of the sources, updated regularly.
+- [**Development**](https://git.purrdata.net/jwilkes/purr-data): Wilkes' Gitlab repository. **This is where you should go for submitting bug reports and pull requests.**
+- [**Mailing list**](http://disis.music.vt.edu/listinfo/l2ork-dev): The DISIS Pd-l2ork mailing list is the right place for getting help and discuss Purr Data, so please subscribe!
+- [**Intro**](https://agraef.github.io/purr-data-intro): Read this to learn more about Purr Data.
 
 There's also a [video](https://www.youtube.com/watch?v=T1wo496Zx0s) up on YouTube of the presentation *Meet the Cat: Pd-L2Ork and its New Cross-Platform Version "Purr Data"* at the Linux Audio Conference 2017 (Jean MONNET University, Saint-Etienne).
 
