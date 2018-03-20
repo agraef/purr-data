@@ -38,7 +38,7 @@ For latest changes please see changelog
 
 /* MSVC doesn't know RANDOM(), while GCC's
    (at least on Linux) has rand() limit much higher */
-#ifndef __GNUC__
+#if !defined(__GNUC__) || defined(__MINGW32__)
 #define RANDOM() (rand())
 #else
 #define RANDOM() (random()%32768)
