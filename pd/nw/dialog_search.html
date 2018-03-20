@@ -192,15 +192,12 @@ function add_doc_to_index(filename, data) {
 function read_file(err, filename, stat) {
     if (!err) {
         if (filename.slice(-3) === ".pd") {
-            fs.readFile(filename, { encoding: "utf8", flag: "r" },
-                function(read_err, data) {
-                    if (!read_err) {
-                        add_doc_to_index(filename, data);
-                    } else {
-                        pdgui.post("err: " + read_err);
-                    }
-                }
-            );
+            try {
+                var data = fs.readFileSync(filename, { encoding: "utf8", flag: "r" });
+                add_doc_to_index(filename, data);
+            } catch (read_err) {
+                pdgui.post("err: " + read_err);
+            }
         }
     } else {
         pdgui.post("err: " + err);
@@ -258,7 +255,7 @@ function finish_build() {
 }
 
 function build_index() {
-    var doc_path = path.join(pdgui.get_lib_dir(), "doc");
+    var doc_path = pdgui.get_lib_dir();
     pdgui.post("doc path is " + doc_path);
     dive(doc_path, read_file, finish_build);
 }
