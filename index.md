@@ -61,11 +61,15 @@ Please refer to the following links for more information and detailed installati
 
 ### Building from Source
 
-**CAVEAT:** Purr Data is a big package with many parts and many dependencies, so building it from source can take a *long* time, even on modern hardware. So please be patient! :)
+**CAVEAT:** Purr Data is a big package with many parts and many dependencies, building it from source can take a *long* time, even on modern hardware. So please be patient! :) Alternatively, you can also do a mimimal, vanilla-like build as described [below](#purr-data-light).
 
 To build Purr Data from source, you'll have to clone the [git repository](https://github.com/agraef/purr-data) as follows:
 
     git clone https://github.com/agraef/purr-data
+
+Or, if you prefer to build straight from Wilke's upstream repository:
+
+    git clone https://git.purrdata.net/jwilkes/purr-data.git
 
 Make sure that you have all the requisite dependencies installed ([Linux](https://github.com/agraef/purr-data/blob/master/README.md#linux), [Mac](https://github.com/agraef/purr-data/blob/master/README.md#osx-64-bit-using-homebrew), [Windows](https://github.com/agraef/purr-data/blob/master/README.md#windows-32-bit-using-msys2)), then run `make` in the toplevel source directory:
 
@@ -91,4 +95,4 @@ There are some ways to speed up the build, please check the Makefile for details
 
     make light
 
-This will build a minimal, no-frills, vanilla-like Purr Data system with just the essential externals included. This build finishes much faster. It will also lack the everything-and-the-kitchen-sink collection of externals which a Purr Data installation normally includes. But vanilla Pd users might actually prefer it that way.
+This will build a minimal, no-frills, vanilla-like Purr Data system with just the essential externals included. This build finishes *much* faster. It will also lack the everything-and-the-kitchen-sink collection of externals which a Purr Data installation normally includes. But vanilla Pd users might actually prefer it that way.
