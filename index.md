@@ -77,11 +77,11 @@ Make sure that you have all the requisite dependencies installed ([Linux](https:
 
 On Debian/Ubuntu, Mac and Windows this should leave the ready-made package in the toplevel source directory. Install this as usual. On other Linux systems you can run the following command instead (this also works on Debian/Ubuntu, if you prefer this method or if you don't have the Debian packaging tools installed):
 
-    make install
+    sudo make install
 
 You can uninstall the software again as follows:
 
-    make uninstall
+    sudo make uninstall
 
 Afterwards, to clean the source directory:
 
