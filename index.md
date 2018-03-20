@@ -25,7 +25,7 @@ Pd (Pure Data) is a graphical data-flow programming environment which is geared 
 
 Purr Data serves the same purpose, but offers a new and much improved graphical user interface and includes many 3rd party plug-ins. Like Pd, it runs on Linux, macOS and Windows, and is open-source throughout.
 
-![Purr Data running on macOS.](purr-data.png)
+![Purr Data running on macOS.|width=100%](purr-data.png)
 
 Purr Data also offers some notable advancements over "classic" Pd-l2ork:
 
