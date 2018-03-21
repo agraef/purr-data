@@ -2,6 +2,7 @@
 
 var pwd;
 var lib_dir;
+var help_path;
 var pd_engine_id;
 
 exports.set_pwd = function(pwd_string) {
@@ -26,11 +27,16 @@ exports.set_pd_engine_id = function (id) {
 
 exports.defunkify_windows_path = defunkify_windows_path;
 
+function gui_set_help_path(helppath) {
+    // post("gui_set_help_path: " + helppath.join(":"));
+    help_path = helppath;
+    // AG: Start building the keyword index for dialog_search.html. We do this
+    // here so that we can be sure that lib_dir and help_path are known already.
+    make_index();
+}
+
 function gui_set_lib_dir(dir) {
     lib_dir = dir;
-    // AG: Start building the keyword index for dialog_search.html. We do this
-    // here so that we can be sure that lib_dir is known already.
-    make_index();
 }
 
 exports.get_lib_dir = function() {
@@ -124,7 +130,8 @@ function read_file(err, filename, stat) {
             }
         }
     } else {
-        post("err: " + err);
+        // AG: Simply ignore missing/unreadable files and directories.
+        // post("err: " + err);
     }
 }
 
@@ -135,13 +142,41 @@ function finish_index() {
     post("finished building help index");
 }
 
+// AG: pilfered from https://stackoverflow.com/questions/21077670
+function expand_tilde(filepath) {
+    if (filepath[0] === '~') {
+        return path.join(process.env.HOME, filepath.slice(1));
+    }
+    return filepath;
+}
+
 // AG: This is supposed to be executed only once, after lib_dir has been set.
 // Note that dive() traverses lib_dir asynchronously, so we report back in
 // finish_index() when this is done.
 function make_index() {
     var doc_path = lib_dir;
+    var i = 0;
+    var l = help_path.length;
+    function make_index_cont() {
+        if (i < l) {
+            var doc_path = help_path[i++];
+            // AG: These paths might not exist, ignore them in this case. Also
+            // note that we need to expand ~ here.
+            var full_path = expand_tilde(doc_path);
+            fs.lstat(full_path, function(err, stat) {
+                if (!err) {
+                    post("building help index in " + doc_path);
+                    dive(full_path, read_file, make_index_cont);
+                } else {
+                    make_index_cont();
+                }
+            });
+        } else {
+            finish_index();
+        }
+    }
     post("building help index in " + doc_path);
-    dive(doc_path, read_file, finish_index);
+    dive(doc_path, read_file, make_index_cont);
 }
 
 // AG: This is called from dialog_search.html with a callback that expects to
