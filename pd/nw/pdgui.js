@@ -28,6 +28,9 @@ exports.defunkify_windows_path = defunkify_windows_path;
 
 function gui_set_lib_dir(dir) {
     lib_dir = dir;
+    // AG: Start building the keyword index for dialog_search.html. We do this
+    // here so that we can be sure that lib_dir is known already.
+    make_index();
 }
 
 exports.get_lib_dir = function() {
@@ -60,10 +63,104 @@ exports.set_focused_patchwin = function(cid) {
     last_focused = cid;
 }
 
+// Keyword index (cf. dialog_search.html)
+
+var fs = require("fs");
+var path = require("path");
+var dive = require("./dive.js"); // small module to recursively search dirs
+var elasticlunr = require("./elasticlunr.js"); // lightweight full-text search engine in JavaScript, cf. https://github.com/weixsong/elasticlunr.js/
+
+var index = elasticlunr();
+
+index.addField("title");
+index.addField("keywords");
+index.addField("description");
+//index.addField("body");
+index.addField("path");
+index.setRef("id");
+
+function add_doc_to_index(filename, data) {
+    var title = path.basename(filename, ".pd"),
+        big_line = data.replace("\n", " "),
+        keywords,
+        desc;
+        // We use [\s\S] to match across multiple lines...
+        keywords = big_line
+            .match(/#X text \-?[0-9]+ \-?[0-9]+ KEYWORDS ([\s\S]*?);/i),
+        desc = big_line
+            .match(/#X text \-?[0-9]+ \-?[0-9]+ DESCRIPTION ([\s\S]*?);/i);
+        keywords = keywords && keywords.length > 1 ? keywords[1].trim() : null;
+        desc = desc && desc.length > 1 ? desc[1].trim() : null;
+        // Remove the Pd escapes for commas
+        desc = desc ? desc.replace(" \\,", ",") : null;
+        if (desc) {
+            // format Pd's "comma atoms" as normal commas
+            desc = desc.replace(" \\,", ",");
+        }
+    if (title.slice(-5) === "-help") {
+        title = title.slice(0, -5);
+    }
+    index.addDoc({
+        "id": filename,
+        "title": title,
+        "keywords": keywords,
+        "description": desc
+        //"body": big_line,
+    });
+}
+
+function read_file(err, filename, stat) {
+    if (!err) {
+        if (filename.slice(-3) === ".pd") {
+            // AG: We MUST read the files synchronously here. This might be a
+            // performance issue on some systems, but if we don't do this then
+            // we may open a huge number of files simultaneously, causing the
+            // process to run out of file handles.
+            try {
+                var data = fs.readFileSync(filename, { encoding: "utf8", flag: "r" });
+                add_doc_to_index(filename, data);
+            } catch (read_err) {
+                post("err: " + read_err);
+            }
+        }
+    } else {
+        post("err: " + err);
+    }
+}
+
+var index_done = false;
+
+function finish_index() {
+    index_done = true;
+    post("finished building help index");
+}
+
+// AG: This is supposed to be executed only once, after lib_dir has been set.
+// Note that dive() traverses lib_dir asynchronously, so we report back in
+// finish_index() when this is done.
+function make_index() {
+    var doc_path = lib_dir;
+    post("building help index in " + doc_path);
+    dive(doc_path, read_file, finish_index);
+}
+
+// AG: This is called from dialog_search.html with a callback that expects to
+// receive the finished index as its sole argument. Note that this doesn't
+// really build the index (make_index does this), it simply waits for
+// make_index to finish (if needed) and then invokes the callback on the
+// resulting index.
+function build_index(cb) {
+    if (index_done == true) {
+        cb(index);
+    } else {
+        setTimeout(function() { build_index(cb); }, 500);
+    }
+}
+
+exports.build_index = build_index;
+
 // Modules
 
-var fs = require("fs");     // for fs.existsSync
-var path = require("path"); // for path.dirname path.extname path.join
 var cp = require("child_process"); // for starting core Pd from GUI in OSX
 
 var parse_svg_path = require("./parse-svg-path.js");
