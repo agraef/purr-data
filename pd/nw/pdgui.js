@@ -2,7 +2,7 @@
 
 var pwd;
 var lib_dir;
-var help_path;
+var help_path, browser_doc, browser_path;
 var pd_engine_id;
 
 exports.set_pwd = function(pwd_string) {
@@ -27,8 +27,10 @@ exports.set_pd_engine_id = function (id) {
 
 exports.defunkify_windows_path = defunkify_windows_path;
 
-function gui_set_help_path(helppath) {
-    // post("gui_set_help_path: " + helppath.join(":"));
+function gui_set_browser_config(doc_flag, path_flag, helppath) {
+    // post("gui_set_browser_config: " + helppath.join(":"));
+    browser_doc = doc_flag;
+    browser_path = path_flag;
     help_path = helppath;
     // AG: Start building the keyword index for dialog_search.html. We do this
     // here so that we can be sure that lib_dir and help_path are known already.
@@ -154,7 +156,7 @@ function expand_tilde(filepath) {
 // Note that dive() traverses lib_dir asynchronously, so we report back in
 // finish_index() when this is done.
 function make_index() {
-    var doc_path = lib_dir;
+    var doc_path = browser_doc?path.join(lib_dir, "doc"):lib_dir;
     var i = 0;
     var l = help_path.length;
     function make_index_cont() {
@@ -176,7 +178,7 @@ function make_index() {
         }
     }
     post("building help index in " + doc_path);
-    dive(doc_path, read_file, make_index_cont);
+    dive(doc_path, read_file, browser_path?make_index_cont:finish_index);
 }
 
 // AG: This is called from dialog_search.html with a callback that expects to
@@ -5096,9 +5098,9 @@ function gui_midi_properties(gfxstub, sys_indevs, sys_outdevs,
     }
 }
 
-function gui_gui_properties(dummy, name, save_zoom) {
+function gui_gui_properties(dummy, name, save_zoom, browser_doc, browser_path) {
     if (dialogwin["prefs"] !== null) {
-        dialogwin["prefs"].window.gui_prefs_callback(name, save_zoom);
+        dialogwin["prefs"].window.gui_prefs_callback(name, save_zoom, browser_doc, browser_path);
     }
 }
 

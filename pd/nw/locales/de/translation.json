@@ -407,6 +407,12 @@
       "zoom": {
         "save_zoom": "Speichern/Laden der Vergrößerung im Patch",
         "save_zoom_tt": "Speichere die aktuelle Vergrößerung mit dem Patch und stelle diese beim Laden des Patches wieder her"
+      },
+      "browser": {
+        "browser_doc": "Hilfe-Browser durchsucht nur den doc-Ordner",
+        "browser_doc_tt": "Der Hilfe-Browser durchkämmt nur Hilfe-Patches im doc-Ordner nach Suchbegriffen (schneller)",
+        "browser_path": "Hilfe-Browser durchsucht auch den Hilfe-Pfad",
+        "browser_path_tt": "Der Hilfe-Browser durchkämmt auch Hilfe-Patches im benutzerdefinierten Hilfe-Pfad nach Suchbegriffen (langsamer)"
       }
     },
     "audio": {
