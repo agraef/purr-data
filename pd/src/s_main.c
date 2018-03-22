@@ -285,7 +285,7 @@ void glob_forward_files_from_secondary_instance(void)
 }
 
 extern void glob_recent_files(t_pd *dummy);
-extern int sys_browser_doc, sys_browser_path;
+extern int sys_browser_doc, sys_browser_path, sys_browser_init;
 
 /* this is called from main() in s_entry.c */
 int sys_main(int argc, char **argv)
@@ -327,10 +327,10 @@ int sys_main(int argc, char **argv)
     gui_vmess("gui_set_gui_preset", "s", sys_gui_preset->s_name);
         /* send the recent files list */
     glob_recent_files(0);
-        /* AG: send the help path; this must come *after* gui_set_lib_dir so
-           that the lib_dir is available when help indexing starts */
-    gui_start_vmess("gui_set_browser_config", "ii",
-                    sys_browser_doc, sys_browser_path);
+        /* AG: send the browser config; this must come *after* gui_set_lib_dir
+           so that the lib_dir is available when help indexing starts */
+    gui_start_vmess("gui_set_browser_config", "iii",
+                    sys_browser_doc, sys_browser_path, sys_browser_init);
     gui_start_array();
     for (nl = sys_helppath; nl; nl = nl->nl_next)
     {

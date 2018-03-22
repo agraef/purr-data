@@ -40,7 +40,7 @@
 #define snprintf sprintf_s
 #endif
 
-int sys_defeatrt, sys_zoom, sys_browser_doc = 1, sys_browser_path;
+int sys_defeatrt, sys_zoom, sys_browser_doc = 1, sys_browser_path, sys_browser_init;
 t_symbol *sys_flags = &s_;
 void sys_doflags( void);
 
@@ -673,6 +673,8 @@ void sys_loadpreferences( void)
         sscanf(prefbuf, "%d", &sys_browser_doc);
     if (sys_getpreference("browser_path", prefbuf, MAXPDSTRING))
         sscanf(prefbuf, "%d", &sys_browser_path);
+    if (sys_getpreference("browser_init", prefbuf, MAXPDSTRING))
+        sscanf(prefbuf, "%d", &sys_browser_init);
     if (sys_getpreference("guipreset", prefbuf, MAXPDSTRING))
     {
         char preset_buf[MAXPDSTRING];
@@ -816,6 +818,8 @@ void glob_savepreferences(t_pd *dummy)
     sys_putpreference("browser_doc", buf1);
     sprintf(buf1, "%d", sys_browser_path);
     sys_putpreference("browser_path", buf1);
+    sprintf(buf1, "%d", sys_browser_init);
+    sys_putpreference("browser_init", buf1);
     sys_putpreference("guipreset", sys_gui_preset->s_name);
     sys_putpreference("flags", 
         (sys_flags ? sys_flags->s_name : ""));

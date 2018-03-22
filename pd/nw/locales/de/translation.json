@@ -412,7 +412,9 @@
         "browser_doc": "Hilfe-Browser durchsucht nur den doc-Ordner",
         "browser_doc_tt": "Der Hilfe-Browser durchkämmt nur Hilfe-Patches im doc-Ordner nach Suchbegriffen (schneller)",
         "browser_path": "Hilfe-Browser durchsucht auch den Hilfe-Pfad",
-        "browser_path_tt": "Der Hilfe-Browser durchkämmt auch Hilfe-Patches im benutzerdefinierten Hilfe-Pfad nach Suchbegriffen (langsamer)"
+        "browser_path_tt": "Der Hilfe-Browser durchkämmt auch Hilfe-Patches im benutzerdefinierten Hilfe-Pfad nach Suchbegriffen (langsamer)",
+        "browser_init": "Erstelle den Hilfe-Index beim Programmstart",
+        "browser_init_tt": "Erstelle den Index für den Hilfe-Browser beim Programmstart (falls aktiviert), oder wenn der Browser zum ersten Mal ausgeführt wird (falls nicht aktiviert)"
       }
     },
     "audio": {

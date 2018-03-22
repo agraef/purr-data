@@ -413,7 +413,9 @@
         "browser_doc": "help browser only searches the doc folder",
         "browser_doc_tt": "Only scan help patches in the doc folder for searchable keywords (faster)",
         "browser_path": "help browser also searches the help path",
-        "browser_path_tt": "Also scan help patches in the user-defined help path for searchable keywords (slower)"
+        "browser_path_tt": "Also scan help patches in the user-defined help path for searchable keywords (slower)",
+        "browser_init": "prepare the help index at application start",
+        "browser_init_tt": "Prepare the index for the help browser when the application starts (if checked), or when the browser first launches (if unchecked)"
       }
     },
     "audio": {

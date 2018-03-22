@@ -312,6 +312,11 @@
               <input type="checkbox" id="browser_path" name="browser_path">
               <span data-i18n="prefs.gui.browser.browser_path"></span>
             </label>
+            <br/>
+            <label data-i18n="[title]prefs.gui.browser.browser_init_tt">
+              <input type="checkbox" id="browser_init" name="browser_init">
+              <span data-i18n="prefs.gui.browser.browser_init"></span>
+            </label>
           </div>
         </div>
 
@@ -616,9 +621,10 @@ function apply(save_prefs) {
         midi_use_alsa ? get_attr("midi-outdev-names", attrs).length : 0
     );
 
-    // Send the gui prefs (currently just the name of the gui preset and the
-    // status of the save-zoom toggle) to Pd
-    pdgui.pdsend("pd gui-prefs", get_gui_preset(), get_bool_elem("save_zoom"), get_bool_elem("browser_doc"), get_bool_elem("browser_path"));
+    // Send the gui prefs (currently just the name of the gui preset, the
+    // status of the save-zoom toggle and various options related to the help
+    // browser) to Pd
+    pdgui.pdsend("pd gui-prefs", get_gui_preset(), get_bool_elem("save_zoom"), get_bool_elem("browser_doc"), get_bool_elem("browser_path"), get_bool_elem("browser_init"));
 
     // Send the startup config data to Pd
     pdgui.pdsend.apply(null, ["pd path-dialog", startup_use_stdpath, startup_verbose].concat(get_path_array()));
@@ -857,7 +863,7 @@ function midi_prefs_callback(attrs) {
     pdgui.resize_window(pd_object_callback);
 }
 
-function gui_prefs_callback(name, save_zoom, browser_doc, browser_path) {
+function gui_prefs_callback(name, save_zoom, browser_doc, browser_path, browser_init) {
     var s = document.getElementById("gui_preset"),
         i;
     for (i = 0; i < s.options.length; i++) {
@@ -869,6 +875,7 @@ function gui_prefs_callback(name, save_zoom, browser_doc, browser_path) {
     document.getElementById("save_zoom").checked = !!save_zoom;
     document.getElementById("browser_doc").checked = !!browser_doc;
     document.getElementById("browser_path").checked = !!browser_path;
+    document.getElementById("browser_init").checked = !!browser_init;
 }
 
 // startup settings

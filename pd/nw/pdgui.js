@@ -2,7 +2,7 @@
 
 var pwd;
 var lib_dir;
-var help_path, browser_doc, browser_path;
+var help_path, browser_doc, browser_path, browser_init;
 var pd_engine_id;
 
 exports.set_pwd = function(pwd_string) {
@@ -27,14 +27,17 @@ exports.set_pd_engine_id = function (id) {
 
 exports.defunkify_windows_path = defunkify_windows_path;
 
-function gui_set_browser_config(doc_flag, path_flag, helppath) {
+function gui_set_browser_config(doc_flag, path_flag, init_flag, helppath) {
     // post("gui_set_browser_config: " + helppath.join(":"));
     browser_doc = doc_flag;
     browser_path = path_flag;
+    browser_init = init_flag;
     help_path = helppath;
     // AG: Start building the keyword index for dialog_search.html. We do this
     // here so that we can be sure that lib_dir and help_path are known already.
-    make_index();
+    // (This may also be deferred until the browser is launched for the first
+    // time, depending on the value of browser_init.)
+    if (browser_init == 1) make_index();
 }
 
 function gui_set_lib_dir(dir) {
@@ -138,6 +141,7 @@ function read_file(err, filename, stat) {
 }
 
 var index_done = false;
+var index_started = false;
 
 function finish_index() {
     index_done = true;
@@ -177,21 +181,27 @@ function make_index() {
             finish_index();
         }
     }
+    index_started = true;
     post("building help index in " + doc_path);
     dive(doc_path, read_file, browser_path?make_index_cont:finish_index);
 }
 
 // AG: This is called from dialog_search.html with a callback that expects to
-// receive the finished index as its sole argument. Note that this doesn't
-// really build the index (make_index does this), it simply waits for
-// make_index to finish (if needed) and then invokes the callback on the
-// resulting index.
+// receive the finished index as its sole argument. We also build the index
+// here if needed, using make_index, then simply wait until make_index
+// finishes and finally invoke the callback on the resulting index.
 function build_index(cb) {
-    if (index_done == true) {
-        cb(index);
-    } else {
-        setTimeout(function() { build_index(cb); }, 500);
+    function build_index_worker() {
+        if (index_done == true) {
+            cb(index);
+        } else {
+            setTimeout(build_index_worker, 500);
+        }
     }
+    if (index_started == false) {
+        make_index();
+    }
+    build_index_worker();
 }
 
 exports.build_index = build_index;
@@ -5098,9 +5108,9 @@ function gui_midi_properties(gfxstub, sys_indevs, sys_outdevs,
     }
 }
 
-function gui_gui_properties(dummy, name, save_zoom, browser_doc, browser_path) {
+function gui_gui_properties(dummy, name, save_zoom, browser_doc, browser_path, browser_init) {
     if (dialogwin["prefs"] !== null) {
-        dialogwin["prefs"].window.gui_prefs_callback(name, save_zoom, browser_doc, browser_path);
+        dialogwin["prefs"].window.gui_prefs_callback(name, save_zoom, browser_doc, browser_path, browser_init);
     }
 }
 
