@@ -4,26 +4,17 @@
     <link id="page_style" rel="stylesheet"
           type="text/css" href="css/default.css">
     <title>Pd Search Engine</title>
-    <script type="text/javascript" src="./elasticlunr.js"></script>
     <script type="text/javascript" src="./console_search.js"></script>
     <script>
 "use strict";
 var pdgui = require("./pdgui.js");
 var fs = require("fs");
 var path = require("path");
-var dive = require("./dive.js"); // small module to recursively search dirs
 var l = pdgui.get_local_string;
 
-var index = elasticlunr();
+var index;
 
 pdgui.skin.apply(window);
-
-index.addField("title");
-index.addField("keywords");
-index.addField("description");
-//index.addField("body");
-index.addField("path");
-index.setRef("id");
 
 var filetypes = [".pd", ".txt", ".htm", ".html", ".pdf"];
 
@@ -159,54 +150,6 @@ function translate_form() {
     }
 }
 
-function add_doc_to_index(filename, data) {
-    var title = path.basename(filename, ".pd"),
-        big_line = data.replace("\n", " "),
-        keywords,
-        desc;
-        // We use [\s\S] to match across multiple lines...
-        keywords = big_line
-            .match(/#X text \-?[0-9]+ \-?[0-9]+ KEYWORDS ([\s\S]*?);/i),
-        desc = big_line
-            .match(/#X text \-?[0-9]+ \-?[0-9]+ DESCRIPTION ([\s\S]*?);/i);
-        keywords = keywords && keywords.length > 1 ? keywords[1].trim() : null;
-        desc = desc && desc.length > 1 ? desc[1].trim() : null;
-        // Remove the Pd escapes for commas
-        desc = desc ? desc.replace(" \\,", ",") : null;
-        if (desc) {
-            // format Pd's "comma atoms" as normal commas
-            desc = desc.replace(" \\,", ",");
-        }
-    if (title.slice(-5) === "-help") {
-        title = title.slice(0, -5);
-    }
-    index.addDoc({
-        "id": filename,
-        "title": title,
-        "keywords": keywords,
-        "description": desc
-        //"body": big_line,
-    });
-}
-
-function read_file(err, filename, stat) {
-    if (!err) {
-        if (filename.slice(-3) === ".pd") {
-            fs.readFile(filename, { encoding: "utf8", flag: "r" },
-                function(read_err, data) {
-                    if (!read_err) {
-                        add_doc_to_index(filename, data);
-                    } else {
-                        pdgui.post("err: " + read_err);
-                    }
-                }
-            );
-        }
-    } else {
-        pdgui.post("err: " + err);
-    }
-}
-
 function click_toc(dir) {
     document.getElementById("search_text").value = dir;
     doc_search();
@@ -251,16 +194,11 @@ function display_toc() {
     });
 }
 
-function finish_build() {
+function finish_build(idx) {
+    index = idx;
     document.getElementById("search_text").disabled = false;
     clear_results();
     display_toc();
-}
-
-function build_index() {
-    var doc_path = path.join(pdgui.get_lib_dir(), "doc");
-    pdgui.post("doc path is " + doc_path);
-    dive(doc_path, read_file, finish_build);
 }
 
 function clear_results() {
@@ -528,7 +466,7 @@ function register_window_id(id, attrs) {
     document.getElementById("search_text").disabled = true;
     document.getElementById("file_browser").setAttribute("nwworkingdir",
         doc_path); // Probably need a doc getter in pdgui
-    build_index();
+    pdgui.build_index(finish_build);
 }
 
 function display_no_results() {
