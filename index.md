@@ -2,7 +2,7 @@
 layout: default
 ---
 
-Jonathan Wilkes' **Purr Data** a.k.a. **Pd-l2ork** 2.0 is an improved version of Miller Puckette's **[Pd](http://puredata.info/)**. It is based on Ico Bukvic's **[Pd-l2ork](http://l2ork.music.vt.edu/main/make-your-own-l2ork/software/)**, which in turn is a fork of Hans-Christoph Steiner's **[Pd-extended](http://puredata.info/downloads/pd-extended)**.
+Jonathan Wilkes' **Purr Data** a.k.a. **Pd-l2ork 2** is an improved version of Miller Puckette's **[Pd](http://puredata.info/)**. It is based on Ico Bukvic's **[Pd-l2ork](http://l2ork.music.vt.edu/main/make-your-own-l2ork/software/)**, which in turn is a fork of Hans-Christoph Steiner's **[Pd-extended](http://puredata.info/downloads/pd-extended)**.
 
 This repository is a mirror of Wilkes' original Gitlab repository available at <https://git.purrdata.net/jwilkes/purr-data>. We mainly use this as a one-stop shop to make it easy for you to get your hands on the latest [source](https://github.com/agraef/purr-data) and the available [releases](https://github.com/agraef/purr-data/releases), including pre-built packages for Linux, macOS and Windows.
 
