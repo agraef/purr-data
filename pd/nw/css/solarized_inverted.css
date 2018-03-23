@@ -400,6 +400,7 @@ text {
     border:1px solid #839496;
     padding: 12px;
     margin: 12px;
+    box-shadow: 7px 7px 5px grey;
 }
 
 /* Search dialog */

@@ -406,6 +406,7 @@ text {
     border:1px solid #eee;
     padding: 12px;
     margin: 12px;
+    box-shadow: 7px 7px 5px #444;
 }
 
 #canvas_find_text {
