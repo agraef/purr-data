@@ -386,6 +386,16 @@ text {
     left: 0;
 }
 
+/* Dialog to ask to save the patch before quitting */
+#save_before_quit {
+    color: white;
+    background-color: #3e32a2;
+    border:3px solid #cc9933;
+    padding: 12px;
+    margin: 12px;
+    box-shadow: 7px 7px 5px black;
+}
+
 /* Search dialog */
 
 .search_body {

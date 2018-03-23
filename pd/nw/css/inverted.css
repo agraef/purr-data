@@ -399,6 +399,16 @@ text {
     left: 0;
 }
 
+/* Dialog to ask to save the patch before quitting */
+#save_before_quit {
+    color: #f3f3f3;
+    background-color: #222;
+    border:1px solid #eee;
+    padding: 12px;
+    margin: 12px;
+    box-shadow: 7px 7px 5px #444;
+}
+
 #canvas_find_text {
     background: black;
     border-style: solid;
