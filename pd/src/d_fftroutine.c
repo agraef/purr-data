@@ -486,7 +486,7 @@ void load_registers(FFT_NET *fft_net, SAMPLE *buf, int buf_form,
 {
          int      *load_index = fft_net->load_index;
          SAMPLE *window;
-         int index, i = 0, n = fft_net->n;
+         int index, i = 0;
 
          if      (trnsfrm_dir==FORWARD)   window = fft_net->window;
          else if (trnsfrm_dir==INVERSE)   window = fft_net->inv_window;
@@ -617,7 +617,7 @@ void store_registers(FFT_NET    *fft_net, SAMPLE *buf, int buf_form,
 
 {
          int        i;
-         SAMPLE     real, imag, mag, phase;
+         SAMPLE     real, imag;
          int        n;
 
          i = 0;
@@ -992,7 +992,7 @@ void short_to_float(short *short_buf, float *float_buf, int n)
 void pd_fft(t_float *buf, int npoints, int inverse)
 {
   double renorm;
-  SAMPLE *fp, *fp2;
+  SAMPLE *fp;
   int i;
   renorm = (inverse ? npoints : 1.);
   cfft((inverse ? INVERSE : FORWARD), npoints, RECTANGULAR, 

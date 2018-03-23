@@ -2,6 +2,7 @@
 
 var pwd;
 var lib_dir;
+var help_path, browser_doc, browser_path, browser_init;
 var pd_engine_id;
 
 exports.set_pwd = function(pwd_string) {
@@ -25,6 +26,19 @@ exports.set_pd_engine_id = function (id) {
 }
 
 exports.defunkify_windows_path = defunkify_windows_path;
+
+function gui_set_browser_config(doc_flag, path_flag, init_flag, helppath) {
+    // post("gui_set_browser_config: " + helppath.join(":"));
+    browser_doc = doc_flag;
+    browser_path = path_flag;
+    browser_init = init_flag;
+    help_path = helppath;
+    // AG: Start building the keyword index for dialog_search.html. We do this
+    // here so that we can be sure that lib_dir and help_path are known already.
+    // (This may also be deferred until the browser is launched for the first
+    // time, depending on the value of browser_init.)
+    if (browser_init == 1) make_index();
+}
 
 function gui_set_lib_dir(dir) {
     lib_dir = dir;
@@ -60,10 +74,140 @@ exports.set_focused_patchwin = function(cid) {
     last_focused = cid;
 }
 
+// Keyword index (cf. dialog_search.html)
+
+var fs = require("fs");
+var path = require("path");
+var dive = require("./dive.js"); // small module to recursively search dirs
+var elasticlunr = require("./elasticlunr.js"); // lightweight full-text search engine in JavaScript, cf. https://github.com/weixsong/elasticlunr.js/
+
+var index = elasticlunr();
+
+index.addField("title");
+index.addField("keywords");
+index.addField("description");
+//index.addField("body");
+index.addField("path");
+index.setRef("id");
+
+function add_doc_to_index(filename, data) {
+    var title = path.basename(filename, ".pd"),
+        big_line = data.replace("\n", " "),
+        keywords,
+        desc;
+        // We use [\s\S] to match across multiple lines...
+        keywords = big_line
+            .match(/#X text \-?[0-9]+ \-?[0-9]+ KEYWORDS ([\s\S]*?);/i),
+        desc = big_line
+            .match(/#X text \-?[0-9]+ \-?[0-9]+ DESCRIPTION ([\s\S]*?);/i);
+        keywords = keywords && keywords.length > 1 ? keywords[1].trim() : null;
+        desc = desc && desc.length > 1 ? desc[1].trim() : null;
+        // Remove the Pd escapes for commas
+        desc = desc ? desc.replace(" \\,", ",") : null;
+        if (desc) {
+            // format Pd's "comma atoms" as normal commas
+            desc = desc.replace(" \\,", ",");
+        }
+    if (title.slice(-5) === "-help") {
+        title = title.slice(0, -5);
+    }
+    index.addDoc({
+        "id": filename,
+        "title": title,
+        "keywords": keywords,
+        "description": desc
+        //"body": big_line,
+    });
+}
+
+function read_file(err, filename, stat) {
+    if (!err) {
+        if (filename.slice(-3) === ".pd") {
+            // AG: We MUST read the files synchronously here. This might be a
+            // performance issue on some systems, but if we don't do this then
+            // we may open a huge number of files simultaneously, causing the
+            // process to run out of file handles.
+            try {
+                var data = fs.readFileSync(filename, { encoding: "utf8", flag: "r" });
+                add_doc_to_index(filename, data);
+            } catch (read_err) {
+                post("err: " + read_err);
+            }
+        }
+    } else {
+        // AG: Simply ignore missing/unreadable files and directories.
+        // post("err: " + err);
+    }
+}
+
+var index_done = false;
+var index_started = false;
+
+function finish_index() {
+    index_done = true;
+    post("finished building help index");
+}
+
+// AG: pilfered from https://stackoverflow.com/questions/21077670
+function expand_tilde(filepath) {
+    if (filepath[0] === '~') {
+        return path.join(process.env.HOME, filepath.slice(1));
+    }
+    return filepath;
+}
+
+// AG: This is supposed to be executed only once, after lib_dir has been set.
+// Note that dive() traverses lib_dir asynchronously, so we report back in
+// finish_index() when this is done.
+function make_index() {
+    var doc_path = browser_doc?path.join(lib_dir, "doc"):lib_dir;
+    var i = 0;
+    var l = help_path.length;
+    function make_index_cont() {
+        if (i < l) {
+            var doc_path = help_path[i++];
+            // AG: These paths might not exist, ignore them in this case. Also
+            // note that we need to expand ~ here.
+            var full_path = expand_tilde(doc_path);
+            fs.lstat(full_path, function(err, stat) {
+                if (!err) {
+                    post("building help index in " + doc_path);
+                    dive(full_path, read_file, make_index_cont);
+                } else {
+                    make_index_cont();
+                }
+            });
+        } else {
+            finish_index();
+        }
+    }
+    index_started = true;
+    post("building help index in " + doc_path);
+    dive(doc_path, read_file, browser_path?make_index_cont:finish_index);
+}
+
+// AG: This is called from dialog_search.html with a callback that expects to
+// receive the finished index as its sole argument. We also build the index
+// here if needed, using make_index, then simply wait until make_index
+// finishes and finally invoke the callback on the resulting index.
+function build_index(cb) {
+    function build_index_worker() {
+        if (index_done == true) {
+            cb(index);
+        } else {
+            setTimeout(build_index_worker, 500);
+        }
+    }
+    if (index_started == false) {
+        make_index();
+    }
+    build_index_worker();
+}
+
+exports.build_index = build_index;
+
 // Modules
 
-var fs = require("fs");     // for fs.existsSync
-var path = require("path"); // for path.dirname path.extname path.join
 var cp = require("child_process"); // for starting core Pd from GUI in OSX
 
 var parse_svg_path = require("./parse-svg-path.js");
@@ -4964,9 +5108,9 @@ function gui_midi_properties(gfxstub, sys_indevs, sys_outdevs,
     }
 }
 
-function gui_gui_properties(dummy, name, save_zoom) {
+function gui_gui_properties(dummy, name, save_zoom, browser_doc, browser_path, browser_init) {
     if (dialogwin["prefs"] !== null) {
-        dialogwin["prefs"].window.gui_prefs_callback(name, save_zoom);
+        dialogwin["prefs"].window.gui_prefs_callback(name, save_zoom, browser_doc, browser_path, browser_init);
     }
 }
 

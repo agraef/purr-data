@@ -85,110 +85,110 @@ Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: flags; Val
 Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib1; ValueData: libdir; Tasks: libs; Flags: uninsdeletekey
 Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib1; ValueData: libdir; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib2; ValueData: Gem; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib2; ValueData: Gem; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib2; ValueData: pddp; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib2; ValueData: pddp; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib3; ValueData: cyclone; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib3; ValueData: cyclone; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: nloadlib; ValueData: 2; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: nloadlib; ValueData: 2; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib4; ValueData: zexy; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib4; ValueData: zexy; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib3; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib3; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib5; ValueData: creb; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib5; ValueData: creb; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib4; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib4; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib6; ValueData: cxc; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib6; ValueData: cxc; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib5; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib5; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib7; ValueData: iemlib; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib7; ValueData: iemlib; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib6; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib6; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib8; ValueData: list-abs; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib8; ValueData: list-abs; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib7; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib7; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib9; ValueData: mapping; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib9; ValueData: mapping; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib8; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib8; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib10; ValueData: markex; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib10; ValueData: markex; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib9; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib9; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib11; ValueData: maxlib; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib11; ValueData: maxlib; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib10; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib10; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib12; ValueData: memento; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib12; ValueData: memento; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib11; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib11; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib13; ValueData: mjlib; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib13; ValueData: mjlib; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib12; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib12; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib14; ValueData: motex; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib14; ValueData: motex; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib13; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib13; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib15; ValueData: oscx; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib15; ValueData: oscx; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib14; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib14; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib16; ValueData: pddp; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib16; ValueData: pddp; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib15; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib15; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib17; ValueData: pdogg; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib17; ValueData: pdogg; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib16; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib16; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib18; ValueData: pixeltango; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib18; ValueData: pixeltango; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib17; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib17; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib19; ValueData: pmpd; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib19; ValueData: pmpd; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib18; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib18; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib20; ValueData: rradical; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib20; ValueData: rradical; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib19; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib19; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib21; ValueData: sigpack; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib21; ValueData: sigpack; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib20; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib20; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib22; ValueData: smlib; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib22; ValueData: smlib; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib21; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib21; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib23; ValueData: unauthorized; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib23; ValueData: unauthorized; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib22; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib22; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib24; ValueData: vbap; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib24; ValueData: vbap; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib23; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib23; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib25; ValueData: pan; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib25; ValueData: pan; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib24; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib24; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib26; ValueData: freeverb~; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib26; ValueData: freeverb~; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib25; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib25; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib27; ValueData: hcs; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib27; ValueData: hcs; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib26; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib26; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib28; ValueData: jmmmp; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib28; ValueData: jmmmp; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib27; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib27; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib29; ValueData: ext13; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib29; ValueData: ext13; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib28; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib28; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib30; ValueData: ggee; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib30; ValueData: ggee; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib29; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib29; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib31; ValueData: iem_anything; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib31; ValueData: iem_anything; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib30; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib30; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib32; ValueData: ekext; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib32; ValueData: ekext; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib31; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib31; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib33; ValueData: disis; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib33; ValueData: disis; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib32; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib32; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib34; ValueData: lyonpotpourri; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib34; ValueData: lyonpotpourri; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib33; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib33; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib35; ValueData: pdlua; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: loadlib35; ValueData: pdlua; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib34; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib34; Tasks: libs; Flags: uninsdeletekey
 
-Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: nloadlib; ValueData: 35; Tasks: libs; Flags: uninsdeletekey
-Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: string; ValueName: nloadlib; ValueData: 35; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib35; Tasks: libs; Flags: uninsdeletekey
+Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib35; Tasks: libs; Flags: uninsdeletekey
 
 Root: HKLM; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib36; Tasks: libs; Flags: uninsdeletekey
 Root: HKCU; SubKey: SOFTWARE\Purr-Data; ValueType: none; ValueName: loadlib36; Tasks: libs; Flags: uninsdeletekey

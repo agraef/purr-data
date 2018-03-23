@@ -2,48 +2,66 @@
 # super-simplistic installer for l2ork things by Ivica Ico Bukvic <ico@vt.edu>
 # for info on L2Ork visit http://l2ork.music.vt.edu
 
+cleanup() {
+    # maybe we'd want to do some actual cleanup here
+    test $2 -ne 0 && echo "$0: $1: command failed with exit code $2, exiting now." && echo "$0: $1: $BASH_COMMAND"
+    exit $2
+}
+
+trap 'cleanup $LINENO $?' ERR
+
 if [ $# -eq 0 ] # should check for no arguments
 then
 	echo
 	echo "   Usage: ./tar_em_up.sh -option1 -option2 ..."
 	echo "   Options:"
-	echo "     -a    l2ork addon to the dev package"
-	echo "     -b    build a deb (incremental, all platforms)"
-	echo "     -B    build a deb (complete recompile)"
+	echo "     -b    build a Debian package (incremental)"
+	echo "     -B    build a Debian package (complete recompile)"
 	echo "     -c    core Pd source tarball"
-	echo "     -e    everything"
-	echo "     -f    full installer (incremental)"
-	echo "     -F    full installer (complete recompile)"
+	echo "     -f    full tarball installer (incremental)"
+	echo "     -F    full tarball installer (complete recompile)"
+	echo "     -k    keep previous build products"
+	echo "     -l    do a light build (only essential externals)"
 	echo "     -n    skip package creation (-bB, -fF)"
-	echo "     -R    build a Raspberry Pi deb (complete recompile)"
 	echo "     -r    build a Raspberry Pi deb (incremental)"
-	echo "     -w    install custom version of cwiid system-wide"
+	echo "     -R    build a Raspberry Pi deb (complete recompile)"
+	echo "     -t    auto-detect target (incremental)"
+	echo "     -T    auto-detect target (complete recompile)"
 	echo "     -X    build an OSX installer (dmg)"
 	echo "     -z    build a Windows installer (incremental)"
 	echo "     -Z    build a Windows installer (complete recompile)"
 	echo
-	echo "   For custom install locations do the following before"
-	echo "   running this script:"
+	echo "   The incremental options bypass Gem compilation. This saves"
+	echo "   (lots of) time, but the generated package will lack Gem"
+	echo "   unless it has already been built previously. NOTE: Building"
+	echo "   Gem is NOT supported on OSX right now."
+	echo
+	echo "   The -k (keep) option doesn't clean before compilation,"
+	echo "   preserving the build products from a previous run. This"
+	echo "   also saves time if the script has been run previously."
+	echo "   Not using this option forces a full recompile."
+	echo
+	echo "   For custom install locations and staged installations"
+	echo "   set the inst_dir environment variable as follows:"
 	echo
 	echo "           export inst_dir=/some/custom/location"
 	echo
 	exit 1
 fi
 
-addon=0
 deb=0
 core=0
 full=0
-sys_cwiid=0
 rpi=0
 pkg=1
 inno=0
 dmg=0
+any=0
+clean=1
+light=0
 
-while getopts ":abBcdefFnRruwXzZ" Option
+while getopts ":bBcfFklnRrTtXzZ" Option
 do case $Option in
-		a)		addon=1;;
-
 		b)		deb=1
 				inst_dir=${inst_dir:-/usr};;
 
@@ -52,13 +70,13 @@ do case $Option in
 
 		c)		core=1;;
 
-		e)		addon=1
-				core=1
-				full=1;;
-
 		f)		full=1;;
 
 		F)		full=2;;
+
+		k)		clean=0;;
+
+		l)		light=1;;
 
 		n)		pkg=0;;
 
@@ -70,8 +88,9 @@ do case $Option in
 				inst_dir=/usr
 				rpi=1;;
 
-		w)		sys_cwiid=1
-				;;
+		t)		any=1;;
+
+		T)		any=2;;
 
 		X)		dmg=1
 				inst_dir=/usr;;
@@ -88,6 +107,13 @@ done
 
 inst_dir=${inst_dir:-/usr/local}
 
+# configure a light build if requested
+if [ $light -gt 0 ]; then
+    export LIGHT=yes
+else
+    export LIGHT=
+fi
+
 export TAR_EM_UP_PREFIX=$inst_dir
 
 # Get the OS we're running under, normalized to names that can be used
@@ -96,14 +122,46 @@ export TAR_EM_UP_PREFIX=$inst_dir
 os=`uname | tr '[:upper:]' '[:lower:]'`
 if [[ $os == *"mingw32"* ]]; then
 	os=win
-fi
-if [[ $os == "darwin" ]]; then
+elif [[ $os == "darwin" ]]; then
 	os=osx
+fi
+
+# Auto-detect the platform and pick an appropriate build target.
+if [ $any -gt 0 ]; then
+	if [[ $os == "osx" ]]; then
+		dmg=1
+	elif [[ $os == "win" ]]; then
+		inno=$any
+	else
+		deb=$any
+		inst_dir=${inst_dir:-/usr}
+	fi
+fi
+
+# Make sure that we don't try to build a tarball on Mac or Windows (that's
+# part of packages/linux_make and hence only works on Linux), build a regular
+# package for the platform instead.
+if [ $full -gt 0 ]; then
+	if [[ $os == "osx" ]]; then
+		dmg=1
+		echo "Warning: tarball installer not supported on Mac, building a dmg installer instead."
+	elif [[ $os == "win" ]]; then
+		inno=$full
+		echo "Warning: tarball installer not supported on Windows, building a Windows installer instead."
+	fi
+	full=0
+fi
+
+# Automagically disable Debian packaging when the Debian packaging tools are
+# not available.
+if test $deb -gt 0 && test $pkg -gt 0 && ! test -x /usr/bin/dpkg-deb; then
+    pkg=0;
+    echo "Debian toolchain unavailable, Debian packaging disabled"
 fi
 
 # Fetch the nw.js binary if we haven't already. We want to fetch it even
 # for building with no libs, so we do it regardless of the options
-echo nwjs-sdk-v0.16.0-`uname | tr '[:upper:]' '[:lower:]'`
+#echo nwjs-sdk-v0.16.0-`uname | tr '[:upper:]' '[:lower:]'`
 if [ ! -d "../pd/nw/nw" ]; then
 	if [ `getconf LONG_BIT` -eq 32 ]; then
 		arch="ia32"
@@ -142,7 +200,7 @@ if [ ! -d "../pd/nw/nw" ]; then
 	nwjs_url=${nwjs_url}/$nwjs_filename
 	echo "Fetching the nwjs binary from"
 	echo "$nwjs_url"
-        wget -nv $nwjs_url || exit 1
+        wget -nv $nwjs_url
 	if [[ $os == "win" || $os == "osx" ]]; then
 		unzip $nwjs_filename
 	else
@@ -178,6 +236,8 @@ then
 	echo "core Pd..."
 	rm -f ../Pd-l2ork-`date +%Y%m%d`.tar.bz2 2> /dev/null
 	cd pd/src/
+	# make sure that Pd is configured before trying to package it
+	test -f config.h || (aclocal && autoconf && make -C ../../packages pd)
 	make clean
 	cd ../../
 	tar -jcf ./Pd-l2ork-`date +%Y%m%d`.tar.bz2 pd
@@ -188,38 +248,35 @@ then
 	echo "Pd-L2Ork full installer... IMPORTANT! To ensure you have the most up-to-date submodules, this process requires internet connection to pull sources from various repositories..."
 
 	if [ -d .git ]; then
-		# check if Gem submodule is empty, and if so do first init
-		if [ "$(ls -A Gem)" ]; then
-			git submodule update
-			#git submodule foreach git pull origin master
-		else
-			# init all submodules (only necessary the first time)
-			git submodule init
-			git submodule update
-			#git submodule foreach git pull origin master
-		fi
+		git submodule update --init
 	fi
 
 
 	if [ $full -eq 2 -o $deb -eq 2 -o $inno -eq 2 -o $dmg -eq 2 ]
 	then
-	#	echo "Since we are doing a complete recompile we are assuming we will need to install l2ork version of the cwiid library. You will need to remove any existing cwiid libraries manually as they will clash with this one. L2Ork version is fully backwards compatible while also offering unique features like full extension support including the passthrough mode. YOU SHOULD REMOVE EXISTING CWIID LIBRARIES PRIOR TO RUNNING THIS INSTALL... You will also have to enter sudo password to install these... Press any key to continue or CTRL+C to cancel install..."
-	#	read dummy
+		# We bypass -k when doing a full build for the first time, so
+		# that things are set up properly in preparation of the build.
+		if [ ! -f Gem/configure ]; then clean=1; fi
+		if [ $clean -eq 0 ]; then
+		cd externals
+		else
 		# clean files that may remain stuck even after doing global make clean (if any)
+		test $os == "osx" && make -C packages/darwin_app clean || true
 		cd externals/miXed
-		make clean
+		make clean || true # this may fail on 1st attempt
 		cd ../
-		make gem_clean
+		make gem_clean || true # this may fail on 1st attempt
 		cd ../Gem/src/
-		make distclean
+		make distclean || true # this may fail on 1st attempt
 		rm -rf ./.libs
 		rm -rf ./*/.libs
 		cd ../
-		make distclean
-		rm gemglutwindow.pd_linux
-		rm Gem.pd_linux
+		make distclean || true # this may fail on 1st attempt
+		rm -f gemglutwindow.pd_linux
+		rm -f Gem.pd_linux
 		aclocal
 		./autogen.sh
+		fi
 		export INCREMENTAL=""
 	else
 		cd Gem/
@@ -235,21 +292,25 @@ then
 	fi
 	if [ $full -gt 1 -o $deb -eq 2 -o $inno -eq 2 -o $dmg -eq 2 ]
 	then
-		make distclean
+		test $clean -ne 0 && make distclean || true
+		# Run `make git_version` *now* so that we already have
+		# s_stuff.h when we copy it below. XXXNOTE AG: The build seems
+		# to work just fine even when skipping all this, so why again
+		# is this needed?
+		test -f ../../pd/src/s_stuff.h || make -C .. git_version
 		cp ../../pd/src/g_all_guis.h ../../externals/build/include
 		cp ../../pd/src/g_canvas.h ../../externals/build/include
 		cp ../../pd/src/m_imp.h ../../externals/build/include
 		cp ../../pd/src/m_pd.h ../../externals/build/include
 		cp ../../pd/src/s_stuff.h ../../externals/build/include
-		cp ../../pd/src/t_tk.h ../../externals/build/include
-		cp ../../pd/src/g_all_guis.h ../../externals/build/include								
+		cp ../../pd/src/g_all_guis.h ../../externals/build/include
 		rm -rf build/
 	fi
 	if [ $rpi -eq 0 ]
 	then
 		echo "installing desktop version..."
-		cp -f debian/control.desktop debian/control
-		cp -f ../../l2ork_addons/flext/config-lnx-pd-gcc.txt.intel ../../externals/grill/trunk/flext/buildsys/config-lnx-pd-gcc.txt
+		test -f debian/control.desktop && cp -f debian/control.desktop debian/control
+		test -f ../../l2ork_addons/flext/config-lnx-pd-gcc.txt.intel && cp -f ../../l2ork_addons/flext/config-lnx-pd-gcc.txt.intel ../../externals/grill/trunk/flext/buildsys/config-lnx-pd-gcc.txt
 	else
 		echo "installing raspbian version..."
 		cp -f debian/control.raspbian debian/control
@@ -259,24 +320,24 @@ then
 	if [[ $os == "win" ]]; then
 		echo "Making Windows package..."
 		echo `pwd`
-		make install && make package
+		make install INCREMENTAL=$INCREMENTAL LIGHT=$LIGHT && make package
 	elif [[ $os == "osx" ]]; then
 		echo "Making OSX package (dmg)..."
 		echo `pwd`
 		make install && make package
 	else
+		# create images folder
+		mkdir -p ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/images
 		make install prefix=$inst_dir
 	fi
 	echo "copying pd-l2ork-specific externals..."
-	# create images folder
-	mkdir -p ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/images
 	# patch_name
 	# spectdelay
 	if [[ $os == "win" ]]; then
 		cd ../../l2ork_addons
 	elif [[ $os == "osx" ]]; then
 		cd ../../l2ork_addons
-	else
+	elif [ $light -eq 0 ]; then
 		cd ../../l2ork_addons/spectdelay/spectdelay~
 		./linux-install.sh
 		cp -f spectdelay~.pd_linux ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
@@ -284,9 +345,11 @@ then
 		cp -f array* ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
 		# return to l2ork_addons folder
 		cd ../../
+	else
+		cd ../../l2ork_addons
 	fi
 	# install raspberry pi externals (if applicable)
-	if [ $inno -eq 0 -a $dmg -eq 0 ]; then
+	if [ $inno -eq 0 -a $dmg -eq 0 -a $light -eq 0 ]; then
 		cd raspberry_pi
 		./makeall.sh
 		cp -f disis_gpio/disis_gpio.pd_linux ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
@@ -324,6 +387,7 @@ then
 		fi
 		elif [ $deb -gt 0 ]; then
 			make debstage prefix=$inst_dir
+			echo "Debian packaging skipped, build results can be found in packages/linux_make/build/."
 		fi
 		cd ../../
 	# move OSX dmg installer
@@ -332,14 +396,6 @@ then
 	elif [ $inno -gt 0 ]; then
 		mv packages/win32_inno/Output/Purr*.exe .
 	fi
-fi
-
-if [ $addon -eq 1 ]
-then
-	echo "l2ork addons..."
-	rm -f ../l2ork_addons-`uname -m`-`date +%Y%m%d`.tar.bz2 2> /dev/null
-	#cp -rf /usr/local/lib/pd/* l2ork_addons/externals/
-	tar -jcf ../l2ork_addons-`uname -m`-`date +%Y%m%d`.tar.bz2 l2ork_addons
 fi
 
 cd l2ork_addons/

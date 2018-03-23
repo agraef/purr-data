@@ -75,18 +75,21 @@ static void glob_perf(t_pd *dummy, float f)
     sys_perf = (f != 0);
 }
 
-extern int sys_zoom;
+extern int sys_zoom, sys_browser_doc, sys_browser_path, sys_browser_init;
 extern t_symbol *sys_gui_preset;
-static void glob_gui_prefs(t_pd *dummy, t_symbol *s, float f)
+static void glob_gui_prefs(t_pd *dummy, t_symbol *s, float f, float f2, float f3, float f4)
 {
     sys_gui_preset = s;
     sys_zoom = !!(int)f;
+    sys_browser_doc = !!(int)f2;
+    sys_browser_path = !!(int)f3;
+    sys_browser_init = !!(int)f4;
 }
 
-/* just the gui-preset and the save-zoom toggle for now */
+/* just the gui-preset, the save-zoom toggle and various help browser options for now */
 static void glob_gui_properties(t_pd *dummy)
 {
-    gui_vmess("gui_gui_properties", "xsi", 0, sys_gui_preset->s_name, sys_zoom);
+    gui_vmess("gui_gui_properties", "xsiiii", 0, sys_gui_preset->s_name, sys_zoom, sys_browser_doc, sys_browser_path, sys_browser_init);
 }
 
 // ths one lives inside g_editor so that it can access the clipboard
@@ -167,10 +170,12 @@ void glob_init(void)
         gensym("version"), A_FLOAT, 0);
     class_addmethod(glob_pdobject, (t_method)glob_perf,
         gensym("perf"), A_FLOAT, 0);
+    class_addmethod(glob_pdobject, (t_method)glob_compatibility,
+        gensym("compatibility"), A_FLOAT, 0);
     class_addmethod(glob_pdobject, (t_method)glob_clipboard_text,
         gensym("clipboardtext"), A_FLOAT, 0);
     class_addmethod(glob_pdobject, (t_method)glob_gui_prefs,
-        gensym("gui-prefs"), A_SYMBOL, A_FLOAT, 0);
+        gensym("gui-prefs"), A_SYMBOL, A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, 0);
     class_addmethod(glob_pdobject, (t_method)glob_gui_properties,
         gensym("gui-properties"), 0);
     class_addmethod(glob_pdobject, (t_method)glob_recent_files,

@@ -242,7 +242,6 @@ static int alsa_nmidiindevs, alsa_nmidioutdevs, alsa_initted;
 
 void midi_alsa_init(void)     
 {
-    int i;
     if (alsa_initted)
         return;
     alsa_initted = 1;

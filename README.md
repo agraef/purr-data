@@ -87,6 +87,15 @@ from the following site:
 
 ### Build Guide
 
+**NOTE:** The instructions below talk about running the `tar_em_up.sh` build
+script, which is still the recommended way to build Purr Data right now.
+However, Purr Data also has a new (and experimental) toplevel Makefile so that
+just typing `make` will build the package. You may find this easier. The
+Makefile also offers the customary targets to clean (`make clean`, or
+`make realclean` to put the sources in pristine state again) and to roll a
+self-contained distribution tarball (`make dist`). Please check the comments
+at the beginning of the Makefile for more information.
+
 #### Linux
 
 Time to build: *40 minutes to 1.5 hours*  
@@ -104,7 +113,7 @@ Hard drive space required: *roughly 2.5 GB*
              swh-plugins mcp-plugins cmt blop slv2-jack omins rev-plugins \
              libslv2-dev dssi-utils vco-plugins wah-plugins fil-plugins \
              mda-lv2 libmp3lame-dev libspeex-dev libgsl0-dev \
-             portaudio19-dev python-dev libsmpeg0 libjpeg62-turbo \
+             portaudio19-dev liblua5.3-dev python-dev libsmpeg0 libjpeg62-turbo \
              flite1-dev libgsm1-dev libgtk2.0-dev git libstk0-dev \
              libsndobj-dev libfluidsynth-dev fluid-soundfont-gm byacc
 
@@ -155,6 +164,7 @@ Hard drive space required: *roughly 2 GB*
         brew install libtool
         brew install fftw
         brew install python
+        brew install lua
         brew install fluidsynth
         brew install lame
         brew install libvorbis
@@ -259,22 +269,35 @@ Contributing is easy:
 
 1. Join the development list:
    http://disis.music.vt.edu/cgi-bin/mailman/listinfo/l2ork-dev
-2. Tell us what you'd like to work on. There are lots of possibilities. For 
-   example, there are _lots_ of externals and even core features that are
-   poorly documented.
-3. _No prototypes, please_. Purr Data's biggest strength is that users can
-   turn an idea into working code very quickly. But a prototyping language that 
-   is itself a prototype isn't very useful. That means Purr Data's core code
-   and libraries must be stable, consistent, well-documented, and easy to use.
-4. Develop incrementally. Small, solid improvements to the software are
-   preferable to large, disruptive ones.
-5. Make sure you aren't duplicating existing functionality, especially core
-   functionality. For backwards compatibility Purr Data ships many legacy
-   libraries which unfortunately duplicate the same functionality. This makes
-   it harder to learn how to use Pd, and makes it burdensome to read patches
-   and keep track of all the disparate implementations.
-6. Send us a merge request and we'll test it. If it's well-documented and
-   there aren't any bugs we'll add it to the software.
+2. Fork Purr Data using the gitlab UI and then try to build it from source
+   for your own platform using the [Build Guide](#build-guide) above. 
+   If you run into problems ask on the development list for help.
+3. Once you have successfully built Purr Data, install it and make sure it
+   runs correctly.
+4. Start making changes to the code with brief, clear commit messages. If you
+   want some practice you can try fixing one of the bugs on the issue tracker
+   labeled
+   ["good-first-bug"](https://git.purrdata.net/jwilkes/purr-data/issues?label_name%5B%5D=good-first-bug)
+5. One you are done fixing the bug or adding your feature, make a merge request
+   in the Gitlab UI so we can merge the fix for the next release.
+
+A few guidelines:
+* _No prototypes, please_. Purr Data's biggest strength is that users can
+  turn an idea into working code very quickly. But a prototyping language that 
+  is itself a prototype isn't very useful. That means Purr Data's core code
+  and libraries must be stable, consistent, well-documented, and easy to use.
+* Develop incrementally. Small, solid improvements to the software are
+  preferable to large, disruptive ones.
+* Try not to duplicate existing functionality.
+  For backwards compatibility Purr Data ships many legacy
+  libraries which unfortunately duplicate the same functionality. This makes
+  it harder to learn how to use Pd, and makes it burdensome to read patches
+  and keep track of all the disparate implementations.
+* Keep dependencies to a minimum. Cross-platform dependency handling is
+  unfortunately still an open research problem. In the even that you need
+  an external library dependency, please mirror it at git.purrdata.net
+  so that the build system doesn't depend on the availability of external
+  infrastructure.
 
 Here are some of the current tasks:
 
@@ -296,6 +319,8 @@ Here are some of the current tasks:
   * status: some externals have their own testing environments, but they are
     limited as they require manual intervention to run and read the
     results inside a graphical window.
+    We currently have a crude test system that at least ensures that each
+    external library instantiates without crashing.
     Here's an email thread with Katja Vetter's design, which looks to
     be automatable:
     http://markmail.org/message/t7yitfc55anus76i#query:+page:1+mid:chb56ve7kea2qumn+state:results

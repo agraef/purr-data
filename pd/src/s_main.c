@@ -284,10 +284,14 @@ void glob_forward_files_from_secondary_instance(void)
     gui_end_vmess();
 }
 
+extern void glob_recent_files(t_pd *dummy);
+extern int sys_browser_doc, sys_browser_path, sys_browser_init;
+
 /* this is called from main() in s_entry.c */
 int sys_main(int argc, char **argv)
 {
     int i, noprefs;
+    t_namelist *nl;
     sys_externalschedlib = 0;
     sys_extraflags = 0;
     sys_gui_preset = gensym("default");
@@ -323,6 +327,17 @@ int sys_main(int argc, char **argv)
     gui_vmess("gui_set_gui_preset", "s", sys_gui_preset->s_name);
         /* send the recent files list */
     glob_recent_files(0);
+        /* AG: send the browser config; this must come *after* gui_set_lib_dir
+           so that the lib_dir is available when help indexing starts */
+    gui_start_vmess("gui_set_browser_config", "iii",
+                    sys_browser_doc, sys_browser_path, sys_browser_init);
+    gui_start_array();
+    for (nl = sys_helppath; nl; nl = nl->nl_next)
+    {
+        gui_s(nl->nl_string);
+    }
+    gui_end_array();
+    gui_end_vmess();
 
     if (sys_externalschedlib)
         return (sys_run_scheduler(sys_externalschedlibname,

@@ -27,7 +27,11 @@ DEST_PATHS = BUILDLAYOUT_DIR=$(BUILDLAYOUT_DIR) \
 				OPT_CFLAGS="$(OPT_CFLAGS)" \
 				UNAME=$(UNAME)
 
+ifeq ($(LIGHT),yes)
+PD_INNO_SETUP = pd-inno-light.iss
+else
 PD_INNO_SETUP = pd-inno.iss
+endif
 
 package:  $(PD_INNO_SETUP)
 ## this pops up the GUI app
@@ -43,8 +47,9 @@ endif
 	@echo "win32_inno install succeeded!"
 
 git_version: $(pd_src)/src/s_stuff.h.in
-	cd $(pd_src)/src/ && \
-	sed 's|^\(#define PD_BUILD_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' s_stuff.h.in > s_stuff.h
+	@cd $(pd_src)/src/ && \
+	sed 's|^\(#define PD_BUILD_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' s_stuff.h.in > s_stuff.h.new && \
+	(test -f s_stuff.h && diff -q s_stuff.h s_stuff.h.new > /dev/null && rm -f s_stuff.h.new && echo s_stuff.h unchanged || (rm -f s_stuff.h && mv s_stuff.h.new s_stuff.h))
 
 build_pd: git_version
 	cd $(pd_src)/src && $(MAKE) -f makefile.mingw
@@ -61,9 +66,13 @@ install: pd_install prebuilt_install lib_install exe_install
 
 
 prebuilt_install:
-	$(MAKE) -C $(packages_src) $(DEST_PATHS) extended_install
+	$(MAKE) -C $(packages_src) $(DEST_PATHS) extended_install INCREMENTAL=$(INCREMENTAL) LIGHT=$(LIGHT)
 	$(MAKE) -C $(packages_src) $(DEST_PATHS) doc_format
+ifeq ($(LIGHT),yes)
+	install -p pd-settings-light.reg $(DESTDIR)$(prefix)/pd-settings.reg
+else
 	install -p pd-settings.reg $(DESTDIR)$(prefix)
+endif
 
 #==============================================================================#
 #
@@ -94,6 +103,7 @@ lib_install:
 	install -p $(bin_src)/libvorbisenc-2.dll  $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libvorbisfile-3.dll  $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libmp3lame-0.dll  $(DESTDIR)$(bindir)/
+ifneq ($(LIGHT),yes)
 	# I think these two are needed for zexy/matchbox and zexy/regex
 	install -p $(bin_src)/libsystre-0.dll $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libtre-5.dll $(DESTDIR)$(bindir)/
@@ -126,6 +136,7 @@ lib_install:
 	-install -p $(DESTDIR)/extra/Gem/gem_model*.dll $(DESTDIR)$(bindir)/
 	-install -p $(DESTDIR)/extra/Gem/gem_record*.dll $(DESTDIR)$(bindir)/
 	-install -p $(DESTDIR)/extra/Gem/gem_video*.dll $(DESTDIR)$(bindir)/
+endif
 # these stay with pd.exe
 # if these are installed, include them in the build root
 	-install -p $(system32)/msvcp71.dll   $(DESTDIR)$(bindir)
@@ -134,12 +145,14 @@ lib_install:
 	install -p $(bin_src)/libwinpthread-1.dll $(DESTDIR)$(bindir)
 	install -p $(bin_src)/libgcc_s_dw2-1.dll $(DESTDIR)$(bindir)
 	install -p $(bin_src)/libstdc++-6.dll $(DESTDIR)$(bindir)
+ifneq ($(LIGHT),yes)
 # lyonpotpourri compiles its own shared lib. On Windows it needs to be
 # in the path of the pd executable in order to get loaded. (There's probably
 # also a way to add the external lib's path but I don't know how to do that.)
 	install -p $(DESTDIR)/extra/lyonpotpourri/liblyonpotpourri.dll $(DESTDIR)$(bindir)
 # fftease also uses a shared lib...
 	install -p $(DESTDIR)/extra/fftease/libfftease.dll $(DESTDIR)$(bindir)
+endif
 
 
 exe_install:
@@ -152,6 +165,9 @@ $(PD_INNO_SETUP): $(PD_INNO_SETUP).in
 		sed 's/PD_VERSION/$(PD_VERSION)/g' | \
 		sed 's/PD_BUILD_VERSION/$(PD_BUILD_VERSION)/g' > \
 		$(PD_INNO_SETUP)
+# in incremental builds the lib directory may not exist, in that case we need
+# to edit the setup file to prevent an inno-setup error
+	test -d $(DESTDIR)$(libdir) || sed -i -e 's/^Source: build\\lib/;Source: build\\lib/' $(PD_INNO_SETUP)
 #	start $(PD_INNO_SETUP)
 
 

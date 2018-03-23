@@ -1,0 +1,719 @@
+#N canvas 149 44 1056 661 10;
+#X floatatom -8 598 0 0 100 0 - - -;
+#N canvas 331 136 786 621 output 0;
+#X obj 455 510 t b;
+#X obj 455 450 f;
+#X obj 455 390 inlet;
+#X obj 455 540 f;
+#X msg 566 532 0;
+#X msg 455 420 bang;
+#X obj 455 480 moses 1;
+#X obj 566 502 t b f;
+#X obj 535 460 moses 1;
+#X obj 107 121 dbtorms;
+#X obj 535 430 r master-lvl;
+#X obj 107 27 r master-lvl;
+#X obj 455 570 s master-lvl;
+#X obj 95 227 inlet~;
+#X obj 250 258 inlet;
+#X obj 268 283 s master-lvl;
+#X msg 119 57 set \$1;
+#X obj 119 87 outlet;
+#X msg 250 309 \; pd dsp 1;
+#X obj 107 181 line~;
+#X obj 96 257 *~;
+#X obj 107 151 pack 0 50;
+#X text 23 205 audio in;
+#X text 2 313 out both channels;
+#X text 273 182 Level input. Send to master-lvl and start DSP (we infer
+that if you're changing the level you want to hear the network.) If
+you start DSP when it's already running there's no effect.;
+#X text 59 542 here is the previous nonzero master-lvl -->;
+#X text 98 451 recall previous value of master-lvl -->;
+#X text 239 482 test if less than 1 -->;
+#X text 203 510 if true convert to bang -->;
+#X text 218 351 Mute control. If the master level is zero \, restore
+to the last nonzero one \, otherwise zero it.;
+#X text 182 86 <-- update the number box to show new level;
+#X text 178 120 <-- convert from dB to linear units;
+#X text 196 150 <-- make a smooth ramp to avoid clicks or zipper noise
+;
+#X text 333 318 <-- automatically start DSP;
+#X obj 36 228 inlet~;
+#X obj 36 258 *~;
+#X obj 64 290 dac~;
+#X obj 35 346 send~ left;
+#X obj 97 346 send~ right;
+#X connect 0 0 3 0;
+#X connect 1 0 6 0;
+#X connect 2 0 5 0;
+#X connect 3 0 12 0;
+#X connect 4 0 12 0;
+#X connect 5 0 1 0;
+#X connect 6 0 0 0;
+#X connect 6 1 7 0;
+#X connect 7 0 4 0;
+#X connect 8 1 3 1;
+#X connect 9 0 21 0;
+#X connect 10 0 1 1;
+#X connect 10 0 8 0;
+#X connect 11 0 9 0;
+#X connect 11 0 16 0;
+#X connect 13 0 20 0;
+#X connect 14 0 15 0;
+#X connect 14 0 18 0;
+#X connect 16 0 17 0;
+#X connect 19 0 20 1;
+#X connect 19 0 35 1;
+#X connect 20 0 36 1;
+#X connect 20 0 38 0;
+#X connect 21 0 19 0;
+#X connect 34 0 35 0;
+#X connect 35 0 36 0;
+#X connect 35 0 37 0;
+#X restore -18 620 pd output;
+#X msg 17 598 mute;
+#X text -44 18 stereo granulator...;
+#X text -44 33 munger~ takes a signal input;
+#X text -46 43 and granulates it \, allowing for;
+#X text -46 53 different transposition and;
+#X text 615 6 the 'voices' message tells the munger how many grains
+to;
+#X text 613 26 cpu intensive. you can smoothly sweep this parameter.
+;
+#X text -46 62 granular sampling effects.;
+#X text 613 35 'maxvoices' sets an upper limit to this \, and will
+have some;
+#X text 616 45 impact on performance if set really high (20 by default.)
+;
+#X text 615 79 'ramptime' sets the length (in ms) of the ramping envelope
+;
+#X text 613 89 on each grain. if the grain is smaller than the ramptime
+\,;
+#X text 613 99 the ramptime will be scaled to half the grain size.
+;
+#X text 613 121 turn the munger on and off \, to save CPU. (1) by default.
+;
+#X text 611 131 (NOTE: this was responsible for a bug in the previous
+;
+#X text 614 140 versions of munger which resulted in frustratingly
+silent;
+#X text 614 149 mungers. fixed now \, I believe.);
+#X text 614 172 constrain how far back in time the munger looks for
+grains.;
+#X text 612 182 the smaller this is \, the smaller the largest grain
+can be.;
+#X text 612 192 the numnger's argument sets the maximum delay length
+;
+#X text 613 201 possible ( and the default value for delaylength.)
+this is a;
+#X text 614 211 super cool parameter to mess with.;
+#X text 614 231 allows grains to play backwards and forwards (0) \,
+just;
+#X text 612 241 forward (1) \, or just backwards (-1). (0) by default.
+;
+#X text 614 265 sets the minimum allowable grainsize. useful when;
+#X text 612 275 randomizing with the 'grain size variation' input.
+;
+#X text 614 306 turn recording on and off. turning off freezes the
+buffer;
+#X text 612 316 on (1) by default.;
+#X text 614 338 set the playback position within the buffer (between
+0 and;
+#X text 615 348 1.) -1 = randomized position (which is the default.)
+It is;
+#X text 613 358 possible to get some interesting stretching effect
+by;
+#X text 612 368 scrubbing through this with 'record' on \, and some
+good;
+#X text 613 377 transposition effects with 'record' off.;
+#X text 613 397 set the baseline gain for grains (1 by default) \,
+and set a;
+#X text 611 407 randomization range around that baseline (0 by default.)
+;
+#X text 613 429 apply pitch sieves to the grains. control how deeply
+into;
+#X text 611 438 these sieves to go with the 'grain pitch variation'
+input;
+#X text 611 448 (below.) floats work too. set to 'smooth' (no sieve)
+by;
+#X text 611 457 default.;
+#X text 482 554 posts the values of user controlled variables to the
+;
+#X text 482 564 console;
+#X text 480 579 impolitely clears the internal sample buffer.;
+#X text 13 498 grain;
+#X text 0 507 separation;
+#X text 65 509 variation;
+#X text 128 499 grain;
+#X text 128 508 size;
+#X text 248 500 grain;
+#X text 249 509 pitch;
+#X text 297 509 variation;
+#X text 298 491 grain;
+#X text 297 500 pitch;
+#X text 360 500 stereo;
+#X text 360 508 spread;
+#X text 63 493 grain;
+#X text 65 502 rate;
+#X obj 182 27 loadbang;
+#X obj 182 48 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X obj 182 66 metro 250;
+#X obj 182 86 counter 0 15;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array mycoll 16 float 1 black black;
+#A 0 57 45 57 57 45 57 57 47 55 47 59 60 60 57 57 57;
+#X coords 0 72 15 40 100 70 1;
+#X restore 78 102 graph;
+#X obj 182 107 tabread mycoll;
+#X obj 181 129 sel 0;
+#X obj 181 153 mtof;
+#X obj 181 178 * 2;
+#X msg 206 200 20;
+#X obj 181 222 line~;
+#X obj 181 245 osc~ 200;
+#X text 426 8 send some messages...;
+#X msg 451 45 voices \$1;
+#X msg 436 102 ramptime \$1;
+#X obj 439 122 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X msg 439 140 power \$1;
+#X msg 441 239 ambidirectional \$1;
+#X msg 441 268 minsize 5;
+#X obj 443 292 tgl 15 1 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X msg 443 310 record \$1;
+#X msg 444 358 position \$1;
+#X msg 446 400 gain \$1;
+#X msg 446 419 rand_gain \$1;
+#X msg 446 446 smooth;
+#X msg 446 466 tempered;
+#X msg 446 486 scale 0 4 7 -2 12 15;
+#X msg 446 506 scale 0 4 4 4 7 7 11 11 14 18 -12 -12 -12;
+#X msg 446 559 state;
+#X msg 446 579 clear;
+#X obj -54 526 r msgs;
+#X obj 403 507 s msgs;
+#X obj 400 163 s msgs;
+#X msg 83 296 1;
+#X msg 88 315 2;
+#X msg 94 334 3;
+#X text 36 255 select a sound source;
+#X text 37 291 oscil;
+#X text 28 301 sequence;
+#X text 34 319 sample;
+#N canvas 0 0 473 362 choose 0;
+#X obj 78 50 inlet;
+#X obj 94 93 sel 1 2 3;
+#X msg 108 122 1 0 0;
+#X msg 114 143 0 1 0;
+#X msg 121 164 0 0 1;
+#X obj 138 188 unpack 0 0 0;
+#X obj 240 52 inlet~;
+#X obj 297 52 inlet~;
+#X obj 354 52 inlet~;
+#X obj 240 223 *~ 0;
+#X obj 303 221 *~ 0;
+#X obj 373 225 *~ 0;
+#X obj 346 257 +~;
+#X obj 280 289 +~;
+#X obj 287 331 outlet~;
+#X floatatom 121 223 5 0 0 0 - - -, f 5;
+#X floatatom 156 221 5 0 0 0 - - -, f 5;
+#X floatatom 190 221 5 0 0 0 - - -, f 5;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 1 1 3 0;
+#X connect 1 2 4 0;
+#X connect 2 0 5 0;
+#X connect 3 0 5 0;
+#X connect 4 0 5 0;
+#X connect 5 0 9 1;
+#X connect 5 0 15 0;
+#X connect 5 1 10 1;
+#X connect 5 1 16 0;
+#X connect 5 2 11 1;
+#X connect 5 2 17 0;
+#X connect 6 0 9 0;
+#X connect 7 0 10 0;
+#X connect 8 0 11 0;
+#X connect 9 0 13 0;
+#X connect 10 0 12 0;
+#X connect 11 0 12 1;
+#X connect 12 0 13 1;
+#X connect 13 0 14 0;
+#X restore 82 370 pd choose;
+#X obj 249 144 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 249 162 openpanel;
+#X obj 249 201 soundfiler;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array mysample 674138 float 0 black black;
+#X coords 0 1 674137 -1 100 70 1;
+#X restore 277 80 graph;
+#X obj 147 335 adc~;
+#X text 52 340 adc;
+#X msg 249 181 read -resize \$1 mysample;
+#X floatatom 248 259 12 0 0 0 - - -, f 12;
+#X obj 248 340 phasor~;
+#X floatatom 248 221 20 0 0 0 - - -, f 20;
+#X obj 248 296 f;
+#X obj 248 277 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 248 319 * 1;
+#X text 311 207 length in samples;
+#X obj 83 274 loadbang;
+#X obj 303 340 snapshot~;
+#X floatatom 303 363 5 0 0 0 - - -, f 5;
+#X obj 303 316 metro 20;
+#X obj 303 294 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 247 385 tabread4~ mysample;
+#X text 192 500 grain;
+#X text 184 509 size var;
+#X obj 436 85 nbx 5 14 0 1e+37 0 1 empty empty empty 0 -6 0 10 -262144
+-1 -1 1000 256 0;
+#X obj 451 27 nbx 5 14 0 500 0 1 empty empty empty 0 -6 0 10 -262144
+-1 -1 40 256 0;
+#X obj 445 168 nbx 5 14 0 1e+37 0 1 empty empty empty 0 -6 0 10 -262144
+-1 -1 3000 256 0;
+#X obj 444 219 nbx 5 14 -1 1 0 1 empty empty empty 0 -6 0 10 -262144
+-1 -1 0 256 0;
+#X obj 444 335 nbx 5 14 -1 1 0 1 empty empty empty 0 -6 0 10 -262144
+-1 -1 1 256 0;
+#X obj 446 376 nbx 5 14 0 1e+37 0 1 empty empty empty 0 -6 0 10 -262144
+-1 -1 1 256 0;
+#X obj 509 400 nbx 5 14 0 32767 0 1 empty empty empty 0 -6 0 10 -262144
+-1 -1 0 256 0;
+#X obj 353 527 nbx 5 14 0 10 0 1 empty empty empty 0 -6 0 10 -262144
+-1 -1 1 256 0;
+#X obj 296 527 nbx 5 14 0 100 0 1 empty empty empty 0 -6 0 10 -262144
+-1 -1 1 256 0;
+#X obj 240 527 nbx 5 14 0 1e+37 0 1 empty empty empty 0 -6 0 10 -262144
+-1 -1 1 256 0;
+#X obj 183 527 nbx 5 14 0 1e+37 0 1 empty empty empty 0 -6 0 10 -262144
+-1 -1 24 256 0;
+#X obj 126 527 nbx 5 14 0 1e+37 0 1 empty empty empty 0 -6 0 10 -262144
+-1 -1 24 256 0;
+#X obj 68 527 nbx 5 14 0 1e+37 0 1 empty empty empty 0 -6 0 10 -262144
+-1 -1 5 256 0;
+#X obj 11 527 nbx 5 14 0 1e+37 0 1 empty empty empty 0 -6 0 10 -262144
+-1 -1 2 256 0;
+#X msg 446 526 scale 0 -2 2 -4 4 -6 6 -8 8 -10 10 -12 12 -14 14 -16
+16 -18 18 -20 20;
+#X obj 562 31 loadbang;
+#X msg 581 98 1;
+#X obj 183 483 loadbang;
+#X obj 899 528 vu 15 120 empty empty -1 -8 0 8 -66577 -1 1 0;
+#X obj 898 488 env~ 16384;
+#X obj 815 528 vu 15 120 empty empty -1 -8 0 8 -66577 -1 1 0;
+#X obj 814 488 env~ 16384;
+#X obj 814 507 - 99;
+#X obj 898 507 - 99;
+#X obj 814 469 receive~ left;
+#X obj 899 469 receive~ right;
+#X msg 382 45 verbose \$1;
+#X obj 382 28 nbx 5 14 0 3 0 1 empty empty empty 0 -8 0 10 -262144
+-1 -1 2 256 0;
+#X text 240 1 pd console verbosity;
+#X text 240 12 0 - none;
+#X msg 439 195 delaylength_ms \$1;
+#X text 241 21 1 - critical(default);
+#X msg 172 458 oneshot \$1;
+#X obj 172 440 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 69 458 buffer mysample;
+#X obj 11 353 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 4 273 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
+-262144 -1 -1 0 256 0;
+#N canvas 419 193 490 272 optional_arguments 0;
+#X text 75 41 and allocates memory \, so be careful with large values.
+;
+#X text 72 51 (3000ms by default.) this also constrains the maximum
+;
+#X text 74 60 grain size \, to 1/3rd the maximum delay time.;
+#X text 51 12 optional arguments:;
+#X text 64 32 1 sets the maximum delay time (in ms);
+#X text 62 91 3 either optional max voices (default 50) or name;
+#X text 71 100 (optional). If more than one disis_munger~ object is
+used;
+#X text 74 110 in the same patch \, this enables easier tracking of
+the;
+#X text 73 120 PD console output.;
+#X text 59 135 4 if optional max voices was set as third argument;
+#X text 71 145 this argument is used for the name instead. Alternately
+\,;
+#X text 71 154 last argument can be also used for extending the visual
+;
+#X text 72 164 width of the object by typing _____. This can be also
+;
+#X text 71 173 used as the 3rd argument in which case all arguments
+that;
+#X text 70 183 follow are ignored.;
+#X text 67 217 IMPORTANT! In order to be able to name any instance
+\, you;
+#X text 67 228 must provide arguments first 3 arguments. Old 1-argument
+;
+#X text 67 240 format is provided for backwards compatibilitiy purposes.
+;
+#X text 63 76 2 sets number of output channels 2-64 (2 by default)
+;
+#X restore 123 621 pd optional_arguments;
+#X obj 206 596 send~ four;
+#X obj 255 576 send~ five;
+#X obj 275 596 send~ six;
+#X obj 324 576 send~ seven;
+#X obj 180 576 send~ three;
+#X obj 338 596 send~ eight;
+#N canvas 2 50 607 390 8chVU 0;
+#X obj 235 244 vu 15 120 empty empty -1 -8 0 8 -66577 -1 1 0;
+#X obj 234 204 env~ 16384;
+#X obj 234 223 - 99;
+#X obj 164 244 vu 15 120 empty empty -1 -8 0 8 -66577 -1 1 0;
+#X obj 163 204 env~ 16384;
+#X obj 163 223 - 99;
+#X obj 93 244 vu 15 120 empty empty -1 -8 0 8 -66577 -1 1 0;
+#X obj 92 204 env~ 16384;
+#X obj 92 223 - 99;
+#X obj 22 244 vu 15 120 empty empty -1 -8 0 8 -66577 -1 1 0;
+#X obj 21 204 env~ 16384;
+#X obj 21 223 - 99;
+#X obj 21 140 receive~ left;
+#X obj 517 244 vu 15 120 empty empty -1 -8 0 8 -66577 -1 1 0;
+#X obj 516 204 env~ 16384;
+#X obj 516 223 - 99;
+#X obj 446 244 vu 15 120 empty empty -1 -8 0 8 -66577 -1 1 0;
+#X obj 445 204 env~ 16384;
+#X obj 445 223 - 99;
+#X obj 375 244 vu 15 120 empty empty -1 -8 0 8 -66577 -1 1 0;
+#X obj 374 204 env~ 16384;
+#X obj 374 223 - 99;
+#X obj 304 244 vu 15 120 empty empty -1 -8 0 8 -66577 -1 1 0;
+#X obj 303 204 env~ 16384;
+#X obj 303 223 - 99;
+#X obj 92 140 receive~ right;
+#X obj 163 140 receive~ three;
+#X obj 234 140 receive~ four;
+#X obj 303 140 receive~ five;
+#X obj 374 140 receive~ six;
+#X obj 444 140 receive~ seven;
+#X obj 516 140 receive~ eight;
+#X obj 239 54 dbtorms;
+#X obj 239 5 r master-lvl;
+#X msg 250 30 set \$1;
+#X obj 239 114 line~;
+#X obj 239 84 pack 0 50;
+#X obj 374 171 *~;
+#X obj 164 171 *~;
+#X obj 235 171 *~;
+#X obj 445 171 *~;
+#X obj 516 171 *~;
+#X obj 302 171 *~;
+#X connect 1 0 2 0;
+#X connect 2 0 0 0;
+#X connect 2 0 0 1;
+#X connect 4 0 5 0;
+#X connect 5 0 3 0;
+#X connect 5 0 3 1;
+#X connect 7 0 8 0;
+#X connect 8 0 6 0;
+#X connect 8 0 6 1;
+#X connect 10 0 11 0;
+#X connect 11 0 9 0;
+#X connect 11 0 9 1;
+#X connect 12 0 10 0;
+#X connect 14 0 15 0;
+#X connect 15 0 13 0;
+#X connect 15 0 13 1;
+#X connect 17 0 18 0;
+#X connect 18 0 16 0;
+#X connect 18 0 16 1;
+#X connect 20 0 21 0;
+#X connect 21 0 19 0;
+#X connect 21 0 19 1;
+#X connect 23 0 24 0;
+#X connect 24 0 22 0;
+#X connect 24 0 22 1;
+#X connect 25 0 7 0;
+#X connect 26 0 38 0;
+#X connect 27 0 39 0;
+#X connect 28 0 42 0;
+#X connect 29 0 37 0;
+#X connect 30 0 40 0;
+#X connect 31 0 41 0;
+#X connect 32 0 36 0;
+#X connect 33 0 32 0;
+#X connect 33 0 34 0;
+#X connect 35 0 38 1;
+#X connect 35 0 39 1;
+#X connect 35 0 42 1;
+#X connect 35 0 37 1;
+#X connect 35 0 40 1;
+#X connect 35 0 41 1;
+#X connect 36 0 35 0;
+#X connect 37 0 20 0;
+#X connect 38 0 4 0;
+#X connect 39 0 1 0;
+#X connect 40 0 17 0;
+#X connect 41 0 14 0;
+#X connect 42 0 23 0;
+#X restore 263 621 pd 8chVU;
+#X msg 446 599 spatialize 0.1 0.5 0.1 0.5 0.1 0.5 0.1 0.5 0.1 0.5 0.1
+0.5 0.1 0.5 0.1 0.5;
+#X msg 275 436 discretepan \$1;
+#X text 275 450 multichannel only option;
+#X text 274 460 toggles whether every grain;
+#X text 274 469 can be only on one channel;
+#X text 275 478 at any given time.;
+#X obj 275 419 nbx 5 14 0 1 0 0 empty empty empty 0 -8 0 10 -262144
+-1 -1 0 256 0;
+#X obj 11 371 metro 20;
+#X msg -29 474 buffer;
+#X text -50 458 use internal buffer;
+#X text -29 448 revert to or;
+#X msg 391 65 maxvoices 500;
+#X text 240 30 2 - all;
+#X text 240 39 3 - grains/sec;
+#X text 445 627 spatialize multichannel grains (gain + rand_gain pairs/ch)
+;
+#X text 445 636 IMPORTANT! no sound will come out from multichannel
+object;
+#X text 445 644 until this option is passed through to it;
+#X msg 74 408 note 1 1 0.5 500 500 0.9 1000 -1;
+#X text 613 16 allow simultaneously (set to 15 here.) the more \, the
+more;
+#X text 617 55 munger by default has hardwired max of 50 which can
+be;
+#X text 460 65 <- click this one...;
+#X text 617 64 altered by using 3rd creation argument up to 1000;
+#X text -48 178 original munger~;
+#X text -47 187 by Dan Trueman \,;
+#X text -46 81 disis_munger~ by;
+#X text -47 91 Ivica Ico Bukvic;
+#X text -47 101 and Ji-Sun Kim;
+#X text -46 110 with help from;
+#X text -47 120 Thomas Grill and;
+#X text -46 130 Dan Trueman;
+#X text -46 139 Virginia Tech;
+#X text -46 149 DISIS;
+#X text -46 157 disis.music.vt.edu;
+#X text -47 197 Computer Music;
+#X text -47 206 Center \, Columbia;
+#X text -47 214 University;
+#X text -44 4 disis_munger~;
+#X obj 247 363 *~ 88200;
+#X obj 339 259 samplerate~;
+#X obj 248 239 expr ($f2/$f1);
+#X obj 339 239 loadbang;
+#X floatatom 56 598 0 0 100 0 - - -;
+#N canvas 331 136 786 621 output 0;
+#X obj 455 510 t b;
+#X obj 455 450 f;
+#X obj 455 390 inlet;
+#X obj 455 540 f;
+#X msg 566 532 0;
+#X msg 455 420 bang;
+#X obj 455 480 moses 1;
+#X obj 566 502 t b f;
+#X obj 535 460 moses 1;
+#X obj 107 121 dbtorms;
+#X obj 95 227 inlet~;
+#X obj 250 258 inlet;
+#X msg 119 57 set \$1;
+#X obj 119 87 outlet;
+#X msg 250 309 \; pd dsp 1;
+#X obj 107 181 line~;
+#X obj 96 257 *~;
+#X obj 107 151 pack 0 50;
+#X text 23 205 audio in;
+#X text 2 313 out both channels;
+#X text 273 182 Level input. Send to master-lvl and start DSP (we infer
+that if you're changing the level you want to hear the network.) If
+you start DSP when it's already running there's no effect.;
+#X text 59 542 here is the previous nonzero master-lvl -->;
+#X text 98 451 recall previous value of master-lvl -->;
+#X text 239 482 test if less than 1 -->;
+#X text 203 510 if true convert to bang -->;
+#X text 218 351 Mute control. If the master level is zero \, restore
+to the last nonzero one \, otherwise zero it.;
+#X text 182 86 <-- update the number box to show new level;
+#X text 178 120 <-- convert from dB to linear units;
+#X text 196 150 <-- make a smooth ramp to avoid clicks or zipper noise
+;
+#X text 333 318 <-- automatically start DSP;
+#X obj 36 228 inlet~;
+#X obj 36 258 *~;
+#X obj 64 290 dac~;
+#X obj 35 346 send~ left;
+#X obj 97 346 send~ right;
+#X obj 107 27 r master-lvl-dry;
+#X obj 268 283 s master-lvl-dry;
+#X obj 535 430 r master-lvl-dry;
+#X obj 455 570 s master-lvl-dry;
+#X connect 0 0 3 0;
+#X connect 1 0 6 0;
+#X connect 2 0 5 0;
+#X connect 3 0 38 0;
+#X connect 4 0 38 0;
+#X connect 5 0 1 0;
+#X connect 6 0 0 0;
+#X connect 6 1 7 0;
+#X connect 7 0 4 0;
+#X connect 8 1 3 1;
+#X connect 9 0 17 0;
+#X connect 10 0 16 0;
+#X connect 11 0 14 0;
+#X connect 11 0 36 0;
+#X connect 12 0 13 0;
+#X connect 15 0 16 1;
+#X connect 15 0 31 1;
+#X connect 16 0 32 1;
+#X connect 16 0 34 0;
+#X connect 17 0 15 0;
+#X connect 30 0 31 0;
+#X connect 31 0 32 0;
+#X connect 31 0 33 0;
+#X connect 35 0 9 0;
+#X connect 35 0 12 0;
+#X connect 37 0 1 1;
+#X connect 37 0 8 0;
+#X restore 46 620 pd output;
+#X msg 81 598 mute;
+#X text 2 634 WET;
+#X text 63 634 DRY;
+#X obj -18 549 disis_munger~ 3000 8 500 default, f 62;
+#X connect 0 0 1 2;
+#X connect 1 0 0 0;
+#X connect 2 0 1 3;
+#X connect 58 0 59 0;
+#X connect 59 0 60 0;
+#X connect 60 0 61 0;
+#X connect 61 0 63 0;
+#X connect 63 0 64 0;
+#X connect 64 1 65 0;
+#X connect 65 0 66 0;
+#X connect 66 0 67 0;
+#X connect 66 0 68 0;
+#X connect 67 0 68 1;
+#X connect 68 0 69 0;
+#X connect 69 0 98 1;
+#X connect 71 0 90 0;
+#X connect 72 0 90 0;
+#X connect 73 0 74 0;
+#X connect 74 0 90 0;
+#X connect 75 0 90 0;
+#X connect 76 0 90 0;
+#X connect 77 0 78 0;
+#X connect 78 0 90 0;
+#X connect 79 0 90 0;
+#X connect 80 0 89 0;
+#X connect 81 0 89 0;
+#X connect 82 0 89 0;
+#X connect 83 0 89 0;
+#X connect 84 0 89 0;
+#X connect 85 0 89 0;
+#X connect 86 0 89 0;
+#X connect 87 0 89 0;
+#X connect 88 0 212 0;
+#X connect 91 0 98 0;
+#X connect 92 0 98 0;
+#X connect 93 0 98 0;
+#X connect 98 0 208 0;
+#X connect 98 0 208 1;
+#X connect 98 0 212 0;
+#X connect 99 0 100 0;
+#X connect 100 0 105 0;
+#X connect 101 0 108 0;
+#X connect 103 0 98 3;
+#X connect 105 0 101 0;
+#X connect 106 0 109 1;
+#X connect 106 0 110 0;
+#X connect 106 0 107 1;
+#X connect 107 0 203 0;
+#X connect 108 0 203 1;
+#X connect 108 0 205 0;
+#X connect 109 0 111 0;
+#X connect 110 0 109 0;
+#X connect 111 0 107 0;
+#X connect 113 0 91 0;
+#X connect 114 0 115 0;
+#X connect 116 0 114 0;
+#X connect 117 0 116 0;
+#X connect 118 0 98 2;
+#X connect 118 0 114 0;
+#X connect 121 0 72 0;
+#X connect 122 0 71 0;
+#X connect 123 0 151 0;
+#X connect 124 0 75 0;
+#X connect 125 0 79 0;
+#X connect 126 0 80 0;
+#X connect 127 0 81 0;
+#X connect 128 0 212 7;
+#X connect 129 0 212 6;
+#X connect 130 0 212 5;
+#X connect 131 0 212 4;
+#X connect 132 0 212 3;
+#X connect 133 0 212 2;
+#X connect 134 0 212 1;
+#X connect 135 0 89 0;
+#X connect 136 0 122 0;
+#X connect 136 0 121 0;
+#X connect 136 0 137 0;
+#X connect 136 0 123 0;
+#X connect 136 0 124 0;
+#X connect 136 0 125 0;
+#X connect 136 0 126 0;
+#X connect 136 0 127 0;
+#X connect 136 0 148 0;
+#X connect 136 0 166 0;
+#X connect 136 0 84 0;
+#X connect 136 0 76 0;
+#X connect 137 0 73 0;
+#X connect 137 0 77 0;
+#X connect 138 0 128 0;
+#X connect 138 0 129 0;
+#X connect 138 0 130 0;
+#X connect 138 0 131 0;
+#X connect 138 0 132 0;
+#X connect 138 0 133 0;
+#X connect 138 0 134 0;
+#X connect 140 0 144 0;
+#X connect 142 0 143 0;
+#X connect 143 0 141 0;
+#X connect 143 0 141 1;
+#X connect 144 0 139 0;
+#X connect 144 0 139 1;
+#X connect 145 0 142 0;
+#X connect 146 0 140 0;
+#X connect 147 0 90 0;
+#X connect 148 0 147 0;
+#X connect 151 0 90 0;
+#X connect 153 0 212 0;
+#X connect 154 0 153 0;
+#X connect 155 0 212 0;
+#X connect 156 0 173 0;
+#X connect 157 0 173 1;
+#X connect 166 0 89 0;
+#X connect 167 0 89 0;
+#X connect 172 0 167 0;
+#X connect 173 0 183 0;
+#X connect 174 0 212 0;
+#X connect 177 0 90 0;
+#X connect 183 0 212 0;
+#X connect 203 0 118 0;
+#X connect 204 0 205 1;
+#X connect 205 0 106 0;
+#X connect 206 0 204 0;
+#X connect 207 0 208 2;
+#X connect 208 0 207 0;
+#X connect 209 0 208 3;
+#X connect 212 0 1 0;
+#X connect 212 1 1 1;
+#X connect 212 2 163 0;
+#X connect 212 3 159 0;
+#X connect 212 4 160 0;
+#X connect 212 5 161 0;
+#X connect 212 6 162 0;
+#X connect 212 7 164 0;

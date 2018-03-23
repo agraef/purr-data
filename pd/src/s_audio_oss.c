@@ -48,9 +48,6 @@ typedef int32_t t_oss_int32;
 #define OSS_XFERSIZE(chans, width) (DEFDACBLKSIZE * (chans) * (width))
 
 /* GLOBALS */
-static int linux_meters;        /* true if we're metering */
-static t_sample linux_inmax;       /* max input amplitude */
-static t_sample linux_outmax;      /* max output amplitude */
 static int linux_fragsize = 0;  /* for block mode; block size (sample frames) */
 extern int audio_blocksize;     /* stolen from s_audio.c */
 /* our device handles */
@@ -77,7 +74,6 @@ t_sample *sys_soundin;
 
     /* OSS-specific private variables */
 static int oss_blockmode = 1;   /* flag to use "blockmode"  */
-static char ossdsp[] = "/dev/dsp%d"; 
 
     /* don't assume we can turn all 31 bits when doing float-to-fix; 
     otherwise some audio drivers (e.g. Midiman/ALSA) wrap around. */
@@ -131,9 +127,8 @@ int oss_reset(int fd) {
 void oss_configure(t_oss_dev *dev, int srate, int dac, int skipblocksize,
     int suggestedblocksize)
 {
-    int orig, param, nblk, fd = dev->d_fd, wantformat;
+    int orig, param, fd = dev->d_fd, wantformat;
     int nchannels = dev->d_nchannels;
-    int advwas = sys_schedadvance;
 
     audio_buf_info ainfo;
 
@@ -272,10 +267,7 @@ int oss_open_audio(int nindev,  int *indev,  int nchin,  int *chin,
     char devname[20];
     int n, i, fd, flags;
     char buf[OSS_MAXSAMPLEWIDTH * DEFDACBLKSIZE * OSS_MAXCHPERDEV];
-    int num_devs = 0;
     int wantmore=0;
-    int spread = 0;
-    audio_buf_info ainfo;
 
     linux_nindevs = linux_noutdevs = 0;
         /* mark devices unopened */
@@ -551,7 +543,7 @@ in audio output and/or input. */
 
 static void oss_doresync( void)
 {
-    int dev, zeroed = 0, wantsize;
+    int dev, zeroed = 0;
     char buf[OSS_MAXSAMPLEWIDTH * DEFDACBLKSIZE * OSS_MAXCHPERDEV];
     audio_buf_info ainfo;
 
@@ -630,11 +622,9 @@ static void oss_doresync( void)
 int oss_send_dacs(void)
 {
     t_sample *fp1, *fp2;
-    long fill;
     int i, j, dev, rtnval = SENDDACS_YES;
     char buf[OSS_MAXSAMPLEWIDTH * DEFDACBLKSIZE * OSS_MAXCHPERDEV];
     t_oss_int16 *sp;
-    t_oss_int32 *lp;
         /* the maximum number of samples we should have in the ADC buffer */
     int idle = 0;
     int thischan;
@@ -675,7 +665,6 @@ int oss_send_dacs(void)
         for (dev = 0;dev < linux_nindevs; dev++) 
             if (linux_adcs[dev].d_space == 0)
         {
-            audio_buf_info ainfo;
             sys_microsleep(2000);
             oss_calcspace();
             if (linux_adcs[dev].d_space != 0) continue;
