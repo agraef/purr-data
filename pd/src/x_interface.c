@@ -215,10 +215,16 @@ void canvasinfo_args(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
         }
         else
         {
-            /* For "boxtext" have to escape semi, comma, dollar, and
-               dollsym atoms, which is what binbuf_addbinbuf does.
-               Otherwise the user could pass them around or save them
-               unescaped, which might cause trouble. */
+            /* For "boxtext" we have to convert semi, comma, dollar, and
+               dollsym atoms to symbol atoms. Otherwise we could end up
+               outputting a message containing stray semis/commas/etc. which
+               might cause trouble.
+
+               We sent the atoms through binbuf_addbinbuf which does the
+               conversion to symbols for us. That way the user will get
+               expected output-- e.g., special characters will be properly
+               escaped when printing.
+            */
             t_binbuf *escaped = binbuf_new();
             binbuf_addbinbuf(escaped, b);
             n = binbuf_getnatom(escaped);
