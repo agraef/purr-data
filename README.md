@@ -11,9 +11,9 @@ maintainers:
 [Mailing List](http://disis.music.vt.edu/cgi-bin/mailman/listinfo/l2ork-dev)
 
 * [One Paragraph Overview](#one-paragraph-overview)
-* [Flavors of Pure Data](#flavors-of-pure-data)
 * [Three Paragraph Overview](#three-paragraph-overview)
 * [Goals](#goals)
+* [Relationship of Purr Data to Pure Data](#relationship-of-purr-data-to-pure-data)
 * [Downloads](#downloads)
 * [Build Guide](#build-guide)
   * [Gnu/Linux](#linux)
@@ -32,19 +32,7 @@ create software graphically by drawing diagrams instead of writing lines of
 code.  These diagrams show how data flows through the software, displaying on
 the screen what text-based languages require you to piece together in your mind.
 
-### Flavors of Pure Data
 
-There are three maintained distributions of Pure Data:
-
-1. Purr Data. This is the 2.0 version of Pd-l2ork. It ships with lots of
-   external libraries and uses a modern GUI written using HTML5.
-2. Pd-L2Ork 1.0, the version used by Ivica Bukvic for his laptop orchestra.
-   Pd-l2ork 1.0 uses tcl/tk (and tkpath) for the GUI. You can find it
-   [here](http://l2ork.music.vt.edu/main/make-your-own-l2ork/software/)
-3. Pure Data "Vanilla".  Miller Puckette's personal version which he hosts on
-   his website and maintains.  It doesn't come with external libraries
-   pre-installed, but it does include an interface you can use to search
-   and install external libraries maintained and packaged by other developers.
 
 ### Three Paragraph Overview
 
@@ -77,6 +65,20 @@ Pd-L2ork has the following goals:
 4. Be consistent.  Consistent interfaces are themselves a kind of
    documentation.  We like documentation, so it follows that we like consistent
    interfaces.
+
+### Relationship of Purr Data to Pure Data
+
+There are three maintained distributions of Pure Data:
+
+1. Purr Data. This is the 2.0 version of Pd-l2ork. It ships with lots of
+   external libraries and uses a modern GUI written using HTML5.
+2. Pd-L2Ork 1.0, the version used by Ivica Bukvic for his laptop orchestra.
+   Pd-l2ork 1.0 uses tcl/tk (and tkpath) for the GUI. You can find it
+   [here](http://l2ork.music.vt.edu/main/make-your-own-l2ork/software/)
+3. Pure Data "Vanilla".  Miller Puckette's personal version which he hosts on
+   his website and maintains.  It doesn't come with external libraries
+   pre-installed, but it does include an interface you can use to search
+   and install external libraries maintained and packaged by other developers.
 
 ### Downloads
 
