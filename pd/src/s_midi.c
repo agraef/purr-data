@@ -707,8 +707,10 @@ void glob_midi_properties(t_pd *dummy, t_floatarg flongform)
         /* these are the devices you're using: */
     int nindev, midiindev[MAXMIDIINDEV];
     int noutdev, midioutdev[MAXMIDIOUTDEV];
-    int midiindev1, midiindev2, midiindev3, midiindev4,
-        midioutdev1, midioutdev2, midioutdev3, midioutdev4;
+    int midiindev1, midiindev2, midiindev3, midiindev4, midiindev5,
+        midiindev6, midiindev7, midiindev8, midiindev9, midiindev10,
+        midioutdev1, midioutdev2, midioutdev3, midioutdev4, midioutdev5,
+        midioutdev6, midioutdev7, midioutdev8, midioutdev9, midioutdev10;
 
         /* these are all the devices on your system: */
     char indevlist[MAXNDEV*DEVDESCSIZE], outdevlist[MAXNDEV*DEVDESCSIZE];
@@ -750,16 +752,34 @@ void glob_midi_properties(t_pd *dummy, t_floatarg flongform)
     midiindev2 = (nindev > 1 &&  midiindev[1]>= 0 ? midiindev[1]+1 : 0);
     midiindev3 = (nindev > 2 &&  midiindev[2]>= 0 ? midiindev[2]+1 : 0);
     midiindev4 = (nindev > 3 &&  midiindev[3]>= 0 ? midiindev[3]+1 : 0);
-    midioutdev1 = (noutdev > 0 && midioutdev[0]>=0 ? midioutdev[0]+1 : 0);  
-    midioutdev2 = (noutdev > 1 && midioutdev[1]>=0 ? midioutdev[1]+1 : 0);  
-    midioutdev3 = (noutdev > 2 && midioutdev[2]>=0 ? midioutdev[2]+1 : 0);  
-    midioutdev4 = (noutdev > 3 && midioutdev[3]>=0 ? midioutdev[3]+1 : 0);  
+    midiindev5 = (nindev > 4 &&  midiindev[4]>= 0 ? midiindev[4]+1 : 0);
+    midiindev6 = (nindev > 5 &&  midiindev[5]>= 0 ? midiindev[5]+1 : 0);
+    midiindev7 = (nindev > 6 &&  midiindev[6]>= 0 ? midiindev[6]+1 : 0);
+    midiindev8 = (nindev > 7 &&  midiindev[7]>= 0 ? midiindev[7]+1 : 0);
+    midiindev9 = (nindev > 8 &&  midiindev[8]>= 0 ? midiindev[8]+1 : 0);
+    midiindev10 = (nindev > 9 &&  midiindev[9]>= 0 ? midiindev[9]+1 : 0);
+    midioutdev1 = (noutdev > 0 && midioutdev[0]>=0 ? midioutdev[0]+1 : 0);
+    midioutdev2 = (noutdev > 1 && midioutdev[1]>=0 ? midioutdev[1]+1 : 0);
+    midioutdev3 = (noutdev > 2 && midioutdev[2]>=0 ? midioutdev[2]+1 : 0);
+    midioutdev4 = (noutdev > 3 && midioutdev[3]>=0 ? midioutdev[3]+1 : 0);
+    midioutdev5 = (noutdev > 4 && midioutdev[4]>=0 ? midioutdev[4]+1 : 0);
+    midioutdev6 = (noutdev > 5 && midioutdev[5]>=0 ? midioutdev[5]+1 : 0);
+    midioutdev7 = (noutdev > 6 && midioutdev[6]>=0 ? midioutdev[6]+1 : 0);
+    midioutdev8 = (noutdev > 7 && midioutdev[7]>=0 ? midioutdev[7]+1 : 0);
+    midioutdev9 = (noutdev > 8 && midioutdev[8]>=0 ? midioutdev[8]+1 : 0);
+    midioutdev10 = (noutdev > 9 && midioutdev[9]>=0 ? midioutdev[9]+1 : 0);
 
     gui_start_array(); // input devices
     gui_i(midiindev1);
     gui_i(midiindev2);
     gui_i(midiindev3);
     gui_i(midiindev4);
+    gui_i(midiindev5);
+    gui_i(midiindev6);
+    gui_i(midiindev7);
+    gui_i(midiindev8);
+    gui_i(midiindev9);
+    gui_i(midiindev10);
     gui_end_array();
 
     gui_start_array(); // output devices
@@ -767,6 +787,12 @@ void glob_midi_properties(t_pd *dummy, t_floatarg flongform)
     gui_i(midioutdev2);
     gui_i(midioutdev3);
     gui_i(midioutdev4);
+    gui_i(midioutdev5);
+    gui_i(midioutdev6);
+    gui_i(midioutdev7);
+    gui_i(midioutdev8);
+    gui_i(midioutdev9);
+    gui_i(midioutdev10);
     gui_end_array();
 
     gui_start_array();
@@ -810,16 +836,16 @@ void glob_midi_properties(t_pd *dummy, t_floatarg flongform)
 void glob_midi_dialog(t_pd *dummy, t_symbol *s, int argc, t_atom *argv)
 {
     int i, nindev, noutdev;
-    int newmidiindev[4], newmidioutdev[4];
+    int newmidiindev[10], newmidioutdev[10];
     int alsadevin, alsadevout;
 
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < 10; i++)
     {
         newmidiindev[i] = atom_getintarg(i, argc, argv);
-        newmidioutdev[i] = atom_getintarg(i+4, argc, argv);
+        newmidioutdev[i] = atom_getintarg(i+10, argc, argv);
     }
 
-    for (i = 0, nindev = 0; i < 4; i++)
+    for (i = 0, nindev = 0; i < 10; i++)
     {
         if (newmidiindev[i] > 0)
         {
@@ -827,7 +853,7 @@ void glob_midi_dialog(t_pd *dummy, t_symbol *s, int argc, t_atom *argv)
             nindev++;
         }
     }
-    for (i = 0, noutdev = 0; i < 4; i++)
+    for (i = 0, noutdev = 0; i < 10; i++)
     {
         if (newmidioutdev[i] > 0)
         {
@@ -835,8 +861,8 @@ void glob_midi_dialog(t_pd *dummy, t_symbol *s, int argc, t_atom *argv)
             noutdev++;
         }
     }
-    alsadevin = atom_getintarg(8, argc, argv);
-    alsadevout = atom_getintarg(9, argc, argv);
+    alsadevin = atom_getintarg(20, argc, argv);
+    alsadevout = atom_getintarg(21, argc, argv);
         
 #ifdef USEAPI_ALSA
             /* invent a story so that saving/recalling "settings" will
