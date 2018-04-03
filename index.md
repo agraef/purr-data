@@ -41,9 +41,9 @@ Purr Data is the official nickname of the Pd-l2ork 2.x branch. Quite obviously t
 
 ## Installation
 
-The easiest way to get up and running is to use one of the available binary packages and installers for Linux (Debian/Ubuntu), Mac and Windows available from the Github [releases page](https://github.com/agraef/purr-data/releases). Generally you can just double-click these packages and go through the usual (platform-dependent) installation process.
+The easiest way to get up and running is to use one of the available binary packages and installers for Linux (Debian/Ubuntu), Mac and Windows available from the Github [releases page](https://github.com/agraef/purr-data/releases). Generally you can just double-click these packages and go through the usual (platform-dependent) installation process. In the case of the Debian/Ubuntu packages, this may require you to install a bunch of dependencies first, as described in the [README](https://github.com/agraef/purr-data/blob/master/README.md#linux) file. The Mac and Windows packages should be self-contained.
 
-In the case of the Debian/Ubuntu packages, this may require you to install a bunch of dependencies first, as described in the [README](https://github.com/agraef/purr-data/blob/master/README.md#linux) file. The Mac and Windows packages should be self-contained.
+**Linux users:** The [downloads](https://github.com/agraef/purr-data/releases) offer Linux packages for a selection of stable Debian and Ubuntu releases (at the time of this writing: Debian Jessie and Stretch, Ubuntu 14.04 and 16.04 a.k.a. Trusty and Xenial). Please **check the package name** to make sure that you get the right package for your system. Packages for Arch and newer Ubuntu releases are provided by JGU, see [below](#jgu-packages). If your Linux distro is not among any of these then sorry, you'll just have to bite the bullet and build Purr Data [from source](#building-from-source). (It's not that hard any more once you got all the required dependencies installed, but it may take a little while.)
 
 ### JGU Packages
 
