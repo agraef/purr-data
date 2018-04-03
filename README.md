@@ -12,7 +12,7 @@ maintainers:
 * [One Paragraph Overview](#one-paragraph-overview)
 * [Three Paragraph Overview](#three-paragraph-overview)
 * [Goals](#goals)
-* [Introduction](#introduction-to-purr-data)
+* [User Guide](#user-guide)
 * [Relationship of Purr Data to Pure Data](#relationship-of-purr-data-to-pure-data)
 * [Build Guide](#build-guide)
   * [Gnu/Linux](#linux)
@@ -63,15 +63,15 @@ Pd-L2ork has the following goals:
    documentation.  We like documentation, so it follows that we like consistent
    interfaces.
 
-### Introduction to Purr Data
-
-For a quick introduction to Purr Data see:
-
-[https://agraef.github.io/purr-data/](https://agraef.github.io/purr-data/)
+### User Guide
 
 For a more in-depth look at Purr Data for new users and developers, see:
 
 [https://agraef.github.io/purr-data-intro/Purr-Data-Intro.html](https://agraef.github.io/purr-data-intro/Purr-Data-Intro.html)
+
+For more resources see:
+
+[https://agraef.github.io/purr-data/](https://agraef.github.io/purr-data/)
 
 ### Relationship of Purr Data to Pure Data
 
@@ -89,12 +89,11 @@ There are three maintained distributions of Pure Data:
 
 ### Downloads
 
-For Ubuntu PPAs and Arch AUR, see the JGU Packages:
+For Ubuntu PPAs and Arch AUR:
 
 [https://agraef.github.io/purr-data/#jgu-packages](https://agraef.github.io/purr-data/#jgu-packages)
 
-Precompiled installer for Gnu/Linux, Windows, or OSX
-are available here:
+Packages for Gnu/Linux, Windows, and OSX:
 
 [https://github.com/jonwwilkes/purr-data/releases](https://github.com/jonwwilkes/purr-data/releases)
  
