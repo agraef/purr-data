@@ -6,15 +6,14 @@ maintainers:
 * Albert Graef <aggraef@gmail.com>
 * Jonathan Wilkes <jancsika@yahoo.com>
 
-[Downloads](https://github.com/jonwwilkes/purr-data/releases)
-
 [Mailing List](http://disis.music.vt.edu/cgi-bin/mailman/listinfo/l2ork-dev)
 
+* [Downloads](#downloads)
 * [One Paragraph Overview](#one-paragraph-overview)
 * [Three Paragraph Overview](#three-paragraph-overview)
 * [Goals](#goals)
+* [User Guide](#user-guide)
 * [Relationship of Purr Data to Pure Data](#relationship-of-purr-data-to-pure-data)
-* [Downloads](#downloads)
 * [Build Guide](#build-guide)
   * [Gnu/Linux](#linux)
   * [OSX](#osx-64-bit-using-homebrew)
@@ -31,8 +30,6 @@ Pure Data (aka Pd) is a visual programming language.  That means you can use it 
 create software graphically by drawing diagrams instead of writing lines of
 code.  These diagrams show how data flows through the software, displaying on
 the screen what text-based languages require you to piece together in your mind.
-
-
 
 ### Three Paragraph Overview
 
@@ -66,6 +63,16 @@ Pd-L2ork has the following goals:
    documentation.  We like documentation, so it follows that we like consistent
    interfaces.
 
+### User Guide
+
+For a more in-depth look at Purr Data for new users and developers, see:
+
+[https://agraef.github.io/purr-data-intro/Purr-Data-Intro.html](https://agraef.github.io/purr-data-intro/Purr-Data-Intro.html)
+
+For more resources see:
+
+[https://agraef.github.io/purr-data/](https://agraef.github.io/purr-data/)
+
 ### Relationship of Purr Data to Pure Data
 
 There are three maintained distributions of Pure Data:
@@ -82,11 +89,14 @@ There are three maintained distributions of Pure Data:
 
 ### Downloads
 
-You can download a precompiled installer for Gnu/Linux, Windows, or OSX
-from the following site:
+For Ubuntu PPAs and Arch AUR:
+
+[https://agraef.github.io/purr-data/#jgu-packages](https://agraef.github.io/purr-data/#jgu-packages)
+
+Packages for Gnu/Linux, Windows, and OSX:
 
 [https://github.com/jonwwilkes/purr-data/releases](https://github.com/jonwwilkes/purr-data/releases)
-
+ 
 ### Build Guide
 
 **NOTE:** The instructions below talk about running the `tar_em_up.sh` build
