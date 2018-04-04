@@ -7,11 +7,23 @@
 #X obj 61 101 makefilename Pd-l2ork-%s;
 #X msg 61 126 label \$1;
 #X obj 61 151 s \$0-about_text;
+#X obj 250 77 pdinfo;
+#X obj 250 27 loadbang;
+#X msg 250 52 version;
+#X msg 250 102 \$1.\$2.\$3;
+#X msg 250 152 label \$1;
+#X obj 250 127 makefilename Pd-%s;
+#X obj 250 177 s \$0-vanilla_text;
 #X connect 0 0 1 0;
 #X connect 1 0 3 0;
 #X connect 2 0 0 0;
 #X connect 3 0 4 0;
 #X connect 4 0 5 0;
+#X connect 6 0 9 0;
+#X connect 7 0 8 0;
+#X connect 8 0 6 0;
+#X connect 10 0 12 0;
+#X connect 11 0 10 0;
 #X restore 18 416 pd version;
 #X text 18 76 A real-time graphical programming environment for live
 interactive computer music \, Pd-l2ork works on Linux \, Macintosh
@@ -54,3 +66,5 @@ version of Pd-l2ork. An introduction to Purr Data can be found at:
 #X connect 7 0 4 0;
 #X restore 454 416 pd cat;
 #X scalar cat 383 82 \;;
+#X obj 375 47 cnv 15 93 20 empty \$0-vanilla_text Pd-0.48.0 10 6 0
+14 -216373 -1 0;
