@@ -396,7 +396,7 @@ static void pd_tilde_donew(t_pd_tilde *x, char *pddir, char *schedlibdir,
             close(pipe1[1]);
         if (pipe2[0] >= 2)
             close(pipe2[0]);
-        execv("/usr/lib/pd-l2ork/bin/pd-l2ork", execargv);
+        execv(pdexecbuf, execargv);
         perror("pd~ execv:");
         _exit(1);
     }
