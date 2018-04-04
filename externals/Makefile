@@ -142,6 +142,7 @@ endif
 # NEW (IN-PROGRESS): flext
 
 # this is for libraries that don't compile (yet) on all platforms
+ifneq ($(LIGHT),yes)
 ifeq ($(OS_NAME),windows)
   ifneq ($(INCREMENTAL),yes)
     LIB_TARGETS += gem
@@ -163,6 +164,7 @@ else
     endif
   endif
 endif
+endif # ifneq ($(LIGHT),yes)
 
 #------------------------------------------------------------------------------#
 
