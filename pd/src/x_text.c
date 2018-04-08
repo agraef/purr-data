@@ -1355,7 +1355,7 @@ static void text_sequence_doit(t_text_sequence *x, int argc, t_atom *argv)
     if (i >= n)
         i = 0x7fffffff;
     x->x_onset = i;
-        /* generate output list, realizing dolar sign atoms.  Allocate one
+        /* generate output list, realizing dollar sign atoms.  Allocate one
         extra atom in case we want to prepend a symbol later */
     ATOMS_ALLOCA(outvec, nfield+1);
     for (i = 0, ap = vec+onset; i < nfield; i++, ap++)

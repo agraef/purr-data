@@ -549,7 +549,7 @@ int binbuf_resize(t_binbuf *x, int newsize)
     return (new != 0);
 }
 
-int canvas_getdollarzero( void);
+int canvas_getdollarzero(t_pd *x);
 
 /* JMZ:
  * s points to the first character after the $
@@ -602,7 +602,8 @@ int binbuf_expanddollsym(char*s, char*buf,t_atom dollar0, int ac, t_atom *av,
 
 /* LATER remove the dependence on the current canvas for $0; should be another
 argument. */
-t_symbol *binbuf_realizedollsym(t_symbol *s, int ac, t_atom *av, int tonew)
+static t_symbol *binbuf_dorealizedollsym(t_pd *target, t_symbol *s, int ac,
+    t_atom *av, int tonew)
 {
     char buf[MAXPDSTRING];
     char buf2[MAXPDSTRING];
@@ -610,7 +611,7 @@ t_symbol *binbuf_realizedollsym(t_symbol *s, int ac, t_atom *av, int tonew)
     char*substr;
     int next=0, i=MAXPDSTRING;
     t_atom dollarnull;
-    SETFLOAT(&dollarnull, canvas_getdollarzero());
+    SETFLOAT(&dollarnull, canvas_getdollarzero(target));
     while(i--)buf2[i]=0;
 
 #if 1
@@ -637,7 +638,7 @@ t_symbol *binbuf_realizedollsym(t_symbol *s, int ac, t_atom *av, int tonew)
         * JMZ: i am not sure what this means, so i might have broken it
         * it seems like that if "tonew" is set and the $arg cannot be expanded
         * (or the dollarsym is in reality a A_DOLLAR)
-        * 0 is returned from binbuf_realizedollsym
+        * 0 is returned from binbuf_dorealizedollsym
         * this happens, when expanding in a message-box, but does not happen
         * when the A_DOLLSYM is the name of a subpatch
         */
@@ -664,6 +665,11 @@ done:
     return (gensym(buf2));
 }
 
+t_symbol *binbuf_realizedollsym(t_symbol *s, int ac, t_atom *av, int tonew)
+{
+    return binbuf_dorealizedollsym(0, s, ac, av, tonew);
+}
+
 #define SMALLMSG 5
 #define HUGEMSG 1000
 #ifdef MSW
@@ -681,12 +687,28 @@ done:
 #define ATOMS_FREEA(x, n) (freebytes((x), (n) * sizeof(t_atom)))
 #endif
 
+t_pd *pd_mess_from_responder(t_pd *x);
+static void binbuf_error(t_pd *x, const char *fmt, ...)
+{
+    char buf[MAXPDSTRING];
+    va_list ap;
+    va_start(ap, fmt);
+    vsnprintf(buf, MAXPDSTRING-1, fmt, ap);
+    va_end(ap);
+    if (x)
+        pd_error(pd_mess_from_responder(x), buf);
+    else
+        error(buf);
+}
+
 void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)
 {
     t_atom smallstack[SMALLMSG], *mstack, *msp;
     t_atom *at = x->b_vec;
     int ac = x->b_n;
     int nargs, maxnargs = 0;
+    /* initial target for referencing $0 in msg boxes after a semicolon */
+    t_pd * init_target = target;
 
     //first we need to check if the list of arguments has $@
     //fprintf(stderr,"=========\nbinbuf_eval argc:%d ac:%d\n", argc, (int)ac);
@@ -769,13 +791,18 @@ void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)
                 /* would it make sense to consider $@ here? */
                 if (at->a_w.w_index <= 0 || at->a_w.w_index > argc)
                 {
-                    error("$%d: not enough arguments supplied",
-                            at->a_w.w_index);
+                    binbuf_error(init_target,
+                        "$%d: %s",
+                        at->a_w.w_index,
+                        (at->a_w.w_index == 0 ?
+                            "symbol needed as message destination" :
+                            "not enough arguments supplied"));
                     goto cleanup; 
                 }
                 else if (argv[at->a_w.w_index-1].a_type != A_SYMBOL)
                 {
-                    error("$%d: symbol needed as message destination",
+                    binbuf_error(init_target,
+                        "$%d: symbol needed as message destination",
                         at->a_w.w_index);
                     goto cleanup; 
                 }
@@ -783,10 +810,11 @@ void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)
             }
             else if (at->a_type == A_DOLLSYM)
             {
-                if (!(s = binbuf_realizedollsym(at->a_w.w_symbol,
+                if (!(s = binbuf_dorealizedollsym(init_target, at->a_w.w_symbol,
                     argc, argv, 0)))
                 {
-                    error("$%s: not enough arguments supplied",
+                    binbuf_error(init_target,
+                        "$%s: not enough arguments supplied",
                         at->a_w.w_symbol->s_name);
                     goto cleanup;
                 }
@@ -794,7 +822,8 @@ void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)
             else s = atom_getsymbol(at);
             if (!(target = s->s_thing))
             {
-                error("%s: no such object", s->s_name);
+                binbuf_error(init_target,
+                "%s: no such object", s->s_name);
             cleanup:
                 do at++, ac--;
                 while (ac && at->a_type != A_SEMI);
@@ -865,25 +894,27 @@ void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)
                 else if (at->a_w.w_index > 0 && at->a_w.w_index <= argc)
                     *msp = argv[at->a_w.w_index-1];
                 else if (at->a_w.w_index == 0)
-                    SETFLOAT(msp, canvas_getdollarzero());
+                    SETFLOAT(msp, canvas_getdollarzero(init_target));
                 else
                 {
                     if (target == &pd_objectmaker)
                         SETFLOAT(msp, 0);
                     else
                     {
-                        error("$%d: argument number out of range",
+                        binbuf_error(init_target,
+                            "$%d: argument number out of range",
                             at->a_w.w_index);
                         SETFLOAT(msp, 0);
                     }
                 }
                 break;
             case A_DOLLSYM:
-                s9 = binbuf_realizedollsym(at->a_w.w_symbol, argc, argv,
-                    target == &pd_objectmaker);
+                s9 = binbuf_dorealizedollsym(init_target, at->a_w.w_symbol,
+                    argc, argv, target == &pd_objectmaker);
                 if (!s9)
                 {
-                    error("%s: argument number out of range",
+                    binbuf_error(init_target,
+                        "%s: argument number out of range",
                         at->a_w.w_symbol->s_name);
                     SETSYMBOL(msp, at->a_w.w_symbol);
                 }

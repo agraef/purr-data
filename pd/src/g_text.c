@@ -550,6 +550,7 @@ void canvas_objfor(t_glist *gl, t_text *x, int argc, t_atom *argv)
 typedef struct _messresponder
 {
     t_pd mr_pd;
+    t_glist *mr_glist;
     t_outlet *mr_outlet;
 } t_messresponder;
 
@@ -561,7 +562,7 @@ typedef struct _message
     t_clock *m_clock;
 } t_message;
 
-static t_class *messresponder_class;
+t_class *messresponder_class;
 
 static void messresponder_bang(t_messresponder *x)
 {
@@ -596,13 +597,17 @@ static void messresponder_anything(t_messresponder *x,
     outlet_anything(x->mr_outlet, s, argc, argv);
 }
 
+/* get the glist cached in a message responder */
+t_glist *messresponder_getglist(t_pd *x)
+{
+    return ((t_messresponder *)x)->mr_glist;
+}
+
 static void message_bang(t_message *x)
 {
     /*  we do canvas_setcurrent/unsetcurrent to substitute canvas
         instance number for $0 */
-    canvas_setcurrent((t_canvas *)x->m_glist);
     binbuf_eval(x->m_text.te_binbuf, &x->m_messresponder.mr_pd, 0, 0);
-    canvas_unsetcurrent((t_canvas *)x->m_glist);
 }
 
 static void message_float(t_message *x, t_float f)
@@ -611,9 +616,7 @@ static void message_float(t_message *x, t_float f)
     SETFLOAT(&at, f);
     /*  we do canvas_setcurrent/unsetcurrent to substitute canvas
         instance number for $0 */
-    canvas_setcurrent((t_canvas *)x->m_glist);
     binbuf_eval(x->m_text.te_binbuf, &x->m_messresponder.mr_pd, 1, &at);
-    canvas_unsetcurrent((t_canvas *)x->m_glist);
 }
 
 static void message_symbol(t_message *x, t_symbol *s)
@@ -622,9 +625,7 @@ static void message_symbol(t_message *x, t_symbol *s)
     SETSYMBOL(&at, s);
     /*  we do canvas_setcurrent/unsetcurrent to substitute canvas
         instance number for $0 */
-    canvas_setcurrent((t_canvas *)x->m_glist);
     binbuf_eval(x->m_text.te_binbuf, &x->m_messresponder.mr_pd, 1, &at);
-    canvas_unsetcurrent((t_canvas *)x->m_glist);
 }
 
 static void message_blob(t_message *x, t_blob *st)
@@ -633,9 +634,7 @@ static void message_blob(t_message *x, t_blob *st)
     SETBLOB(&at, st);
     /*  we do canvas_setcurrent/unsetcurrent to substitute canvas
         instance number for $0 */
-    canvas_setcurrent((t_canvas *)x->m_glist);
     binbuf_eval(x->m_text.te_binbuf, &x->m_messresponder.mr_pd, 1, &at);
-    canvas_unsetcurrent((t_canvas *)x->m_glist);
 }
 
 static void message_list(t_message *x, t_symbol *s, int argc, t_atom *argv)
@@ -645,9 +644,7 @@ static void message_list(t_message *x, t_symbol *s, int argc, t_atom *argv)
     // but will this break anything?
     /*  we do canvas_setcurrent/unsetcurrent to substitute canvas
         instance number for $0 */
-    canvas_setcurrent((t_canvas *)x->m_glist);
     binbuf_eval(x->m_text.te_binbuf, &x->m_messresponder.mr_pd, argc, argv);
-    canvas_unsetcurrent(x->m_glist);
 }
 
 static void message_set(t_message *x, t_symbol *s, int argc, t_atom *argv)
@@ -779,6 +776,7 @@ void canvas_msg(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
     t_message *x = (t_message *)pd_new(message_class);
     x->m_messresponder.mr_pd = messresponder_class;
     x->m_messresponder.mr_outlet = outlet_new(&x->m_text, &s_float);
+    x->m_messresponder.mr_glist = gl;
     x->m_text.te_width = 0;                             /* don't know it yet. */
     x->m_text.te_type = T_MESSAGE;
     x->m_text.te_iemgui = 0;
