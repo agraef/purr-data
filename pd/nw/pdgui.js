@@ -3760,6 +3760,7 @@ function gui_drawimage_vis(cid, x, y, obj, data, seqno, parent_tag) {
             len = image_array.length,
             i,
             image_container,
+            xy_container,
             obj_tag = "draw" + obj.slice(1) + "." + data.slice(1);
         if (len < 1) {
             return;
@@ -3768,6 +3769,19 @@ function gui_drawimage_vis(cid, x, y, obj, data, seqno, parent_tag) {
         if (seqno >= len || seqno < 0) {
             seqno %= len;
         }
+        // Since sprites can have lots of images we don't want to
+        // set props on each one of them every time the user changes
+        // an attribute's value. So we use a "g" to receive all the
+        // relevant changes.
+        // Unfortunately "g" doesn't have x/y attys. So it can't propagate
+        // those values down to the child images. Thus we have to add
+        // another "g" as a parent and manually convert x/y changes
+        // the user makes to a transform. (And we can't use the inner g's
+        // transform because the user can set their own transform there.)
+        xy_container = create_item(cid, "g", {
+            id: obj_tag + "xy",
+            transform: "translate(" + x + "," + y + ")"
+        });
         image_container = create_item(cid, "g", {
             id: obj_tag
         });
@@ -3784,13 +3798,22 @@ function gui_drawimage_vis(cid, x, y, obj, data, seqno, parent_tag) {
                  image_array[i].data);
             image_container.appendChild(item);
         }
-        frag.appendChild(image_container);
+        xy_container.appendChild(image_container);
+        frag.appendChild(xy_container);
         // Hack to set correct width and height
         for (i = 0; i < len; i++) {
             img_size_setter(cid, obj_tag+i, pd_cache.get(obj)[i].type,
                 pd_cache.get(obj)[i].data);
         }
         return frag;
+    });
+}
+
+// Hack
+function gui_drawimage_xy(cid, obj, data, x, y) {
+    var obj_tag = "draw" + obj.slice(1) + "." + data.slice(1);
+    gui(cid).get_elem(obj_tag + "xy", {
+        transform: "translate(" + x + "," + y + ")"
     });
 }
 
