@@ -1,0 +1,22 @@
+#N canvas 144 129 582 396 12;
+#X obj 36 25 inlet;
+#X obj 36 225 outlet;
+#X obj 36 50 route float;
+#X obj 36 116 f 1;
+#X obj 36 75 select 0;
+#X obj 89 115 t b a;
+#X obj 121 152 list prepend dollarzero in a binbuf with no target should
+expand to "0". In this test it expanded to;
+#X obj 89 152 f 0;
+#X obj 36 195 list append;
+#X connect 0 0 2 0;
+#X connect 2 0 4 0;
+#X connect 2 1 5 0;
+#X connect 3 0 8 0;
+#X connect 4 0 3 0;
+#X connect 4 1 5 0;
+#X connect 5 0 7 0;
+#X connect 5 1 6 0;
+#X connect 6 0 8 1;
+#X connect 7 0 8 0;
+#X connect 8 0 1 0;

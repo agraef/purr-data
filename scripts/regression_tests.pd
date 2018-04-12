@@ -1,0 +1,64 @@
+#N canvas 3 60 749 617 12;
+#X obj 345 301 r \$0-result;
+#X obj 345 326 route 0;
+#X obj 453 470 print failure;
+#X obj 430 336 tgl 28 0 empty empty Print_All_Results 31 11 0 12 -262144
+-1 -1 1 1;
+#X obj 159 149 bng 31 250 50 0 empty empty Run_all 39 13 0 12 -262144
+-1 -1;
+#X obj 56 25 r init;
+#X obj 345 191 route dollarzero;
+#X obj 345 411 t b a;
+#X obj 345 541 s pd;
+#X obj 56 120 trigger bang bang anything;
+#X msg 56 145 gui;
+#X obj 56 170 pdinfo;
+#X obj 56 195 sel 0;
+#X obj 56 245 s pd;
+#X msg 345 516 quit 1;
+#X msg 56 220 quit;
+#X obj 145 191 rtest msg_dollarzero;
+#X obj 145 246 rtest msg_dollarzero_semi;
+#X obj 145 302 rtest msg_click;
+#X obj 345 216 rtest binbuf_dollarzero;
+#X msg 345 440 gui;
+#X obj 345 465 pdinfo;
+#X obj 345 490 sel 0;
+#X text 117 25 <- we start Pd with the -send "init etc." flag. This
+will automatically start the tests and allow us to send a comma-separated
+list of messages which will be evaluated by Pd without a target. This
+is handy for some binbuf tests.;
+#X text 345 120 To run this test we use the following startup-flag:
+;
+#X text 345 150 -send "init dollarzero \$0";
+#X text 536 150 <- we have to escape the arg;
+#X text 556 190 escape it in a comment.;
+#X text 556 170 in bash but we can't;
+#X obj 391 374 spigot;
+#X obj 407 440 route 1;
+#X obj 407 495 print success;
+#X connect 0 0 1 0;
+#X connect 1 0 7 0;
+#X connect 1 1 29 0;
+#X connect 3 0 29 1;
+#X connect 4 0 16 0;
+#X connect 5 0 9 0;
+#X connect 6 0 19 0;
+#X connect 7 0 20 0;
+#X connect 7 1 30 0;
+#X connect 9 0 10 0;
+#X connect 9 1 16 0;
+#X connect 9 2 6 0;
+#X connect 10 0 11 0;
+#X connect 11 0 12 0;
+#X connect 12 0 15 0;
+#X connect 14 0 8 0;
+#X connect 15 0 13 0;
+#X connect 16 0 17 0;
+#X connect 17 0 18 0;
+#X connect 20 0 21 0;
+#X connect 21 0 22 0;
+#X connect 22 0 14 0;
+#X connect 29 0 7 0;
+#X connect 30 0 31 0;
+#X connect 30 1 2 0;
