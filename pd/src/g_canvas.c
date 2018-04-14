@@ -155,10 +155,20 @@ t_canvasenvironment *canvas_getenv(t_canvas *x)
     return (x->gl_env);
 }
 
-int canvas_getdollarzero( void)
+extern t_class *messresponder_class;
+extern t_glist *messresponder_getglist(t_pd *x);
+
+int canvas_getdollarzero(t_pd *x)
 {
-    t_canvas *x = canvas_getcurrent();
-    t_canvasenvironment *env = (x ? canvas_getenv(x) : 0);
+    t_canvas *cnv;
+    /* binbuf_eval can send us a NULL target... */
+    if (x && pd_class(x) == messresponder_class)
+    {
+        cnv = messresponder_getglist(x);
+    }
+    else
+        cnv = canvas_getcurrent();
+    t_canvasenvironment *env = (cnv ? canvas_getenv(cnv) : 0);
     if (env)
         return (env->ce_dollarzero);
     else return (0);
