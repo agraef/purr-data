@@ -167,8 +167,6 @@ static void canvas_objtext(t_glist *gl, int xpix, int ypix,
                     return;
                 }
             }
-            binbuf_print(b);
-            post("... couldn't create");
             x = 0;
         }
         else if (!(x = pd_checkobject(newest)))
@@ -182,7 +180,16 @@ static void canvas_objtext(t_glist *gl, int xpix, int ypix,
     {
         /* LATER make the color reflect this */
         x = (t_text *)pd_new(text_class);
-        //fprintf(stderr,"creating blank object %lx\n", x);
+        if (binbuf_getnatom(b))
+        {
+            int bufsize;
+            char *buf;
+            binbuf_gettext(b, &buf, &bufsize);
+            buf = t_resizebytes(buf, bufsize, bufsize+1);
+            buf[bufsize] = 0;
+            pd_error(x, "couldn't create \"%s\"", buf);
+            t_freebytes(buf, bufsize + 1);
+        }
     }
     /* special case: an object, like preset_hub, hides its arguments
        beyond the first n, so we modify its binbuf here */
