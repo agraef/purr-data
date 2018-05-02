@@ -659,30 +659,50 @@ var last_child = {};
 var last_object_id = "";
 var duplicate = 0;
 
-function do_post(string, type) {
-    var myp, span, text, printout;
-    current_string += string;
-    myp = pd_window.document.getElementById("p1");
+function do_post(object_id, selector, string, type, loglevel) {
+    var my_p, my_a, span, text, sel_span, printout, dup_span;
+    current_string = current_string + (selector ? selector : "") + string;
+    my_p = pd_window.document.getElementById("p1");
+    // We can get posts from Pd that are build incrementally, with the final
+    // message having a "\n" at the end. So we test for that.
     if (string.slice(-1) === "\n") {
-        if (current_string === last_string) {
-            last_child.textContent = "[" + (duplicate + 2) + "] " + last_string;
-            duplicate++;
+        if (current_string === last_string
+            && object_id === last_object_id) {
+            duplicate += 1;
+            dup_span = last_child.firstElementChild;
+            dup_span.textContent = "[" + (duplicate + 1) + "] ";
             current_string = "";
-            if (myp.lastChild !== last_child) {
-                myp.appendChild(last_child);
+            if (my_p.lastChild !== last_child) {
+                my_p.appendChild(last_child);
             }
         } else {
             span = pd_window.document.createElement("span");
             if (type) {
                 span.classList.add(type);
             }
-            text = pd_window.document.createTextNode(current_string);
+            dup_span = pd_window.document.createElement("span");
+            sel_span = pd_window.document.createTextNode(
+                selector ? selector : "");
+            text = pd_window.document.createTextNode(
+                (selector && selector !== "") ? ": " + string : current_string);
+            if (object_id && object_id.length > 0) {
+                my_a = pd_window.document.createElement("a");
+                my_a.href = "javascript:pdgui.pd_error_select_by_id('" +
+                    object_id + "')";
+                my_a.appendChild(sel_span);
+                span.appendChild(dup_span); // duplicate tally
+                span.appendChild(my_a);
+            } else {
+                span.appendChild(dup_span);
+                span.appendChild(sel_span);
+                my_p.appendChild(span);
+            }
             span.appendChild(text);
-            myp.appendChild(span);
+            my_p.appendChild(span);
             last_string = current_string;
             current_string = "";
             last_child = span;
-            last_object_id = "";
+            last_object_id = object_id;
             duplicate = 0;
             // update the scrollbars to the bottom, but throttle it
             // since it is expensive
@@ -693,14 +713,14 @@ function do_post(string, type) {
 
 // print message to console-- add a newline for convenience
 function post(string, type) {
-    do_post(string + "\n", type);
+    do_post(null, null, string + "\n", type, null);
 }
 
 exports.post = post;
 
 // print message to console from Pd-- don't add newline
 function gui_post(string, type) {
-    do_post(string, type);
+    do_post(null, "", string, type, null);
 }
 
 function pd_error_select_by_id(objectid) {
@@ -709,46 +729,21 @@ function pd_error_select_by_id(objectid) {
     }
 }
 
-exports.pd_error_select_by_id = pd_error_select_by_id
+exports.pd_error_select_by_id = pd_error_select_by_id;
 
-function gui_post_error(objectid, loglevel, errormsg) {
-    var my_p, error_span, error_title, my_a, rest, printout, dup_span;
-    if (last_object_id === objectid
-        && last_string === errormsg)
-    {
-        dup_span = last_child.firstElementChild;
-        dup_span.textContent = "[" + (duplicate + 2) + "] ";
-        duplicate++;
-    } else {
-        my_p = pd_window.document.getElementById("p1");
-        // if we have an object id, make a friendly link...
-        error_span = pd_window.document.createElement("span");
-        error_span.classList.add("error");
-        dup_span = pd_window.document.createElement("span");
-        last_child = error_span;
-        error_title = pd_window.document.createTextNode("error");
-        if (objectid.length > 0) {
-            my_a = pd_window.document.createElement("a");
-            my_a.href =
-                "javascript:pdgui.pd_error_select_by_id('" + objectid + "')";
-            my_a.appendChild(error_title);
-            error_span.appendChild(dup_span); // for duplicate tally
-            error_span.appendChild(my_a);
-            my_p.appendChild(error_span);
-        } else {
-            error_span.appendChild(dup_span);
-            error_span.appendChild(error_title);
-            my_p.appendChild(error_span);
-        }
-        rest = pd_window.document.createTextNode(": " + errormsg);
-        error_span.appendChild(rest);
-        printout = pd_window.document.getElementById("console_bottom");
-        printout.scrollTop = printout.scrollHeight;
-        last_string = errormsg;
-        last_object_id = objectid;
-        current_string = "";
-        duplicate = 0;
-    }
+function gui_post_error(objectid, loglevel, error_msg) {
+    do_post(objectid, "error", error_msg, "error", loglevel);
+}
+
+// This is used specifically by [print] so that we can receive the full
+// message in a single call. This way we can call do_post with a single
+// string message and track the object id with the selector.
+
+function gui_print(object_id, selector, array_of_strings) {
+    // Unfortunately the instance finder still uses a "." prefix, so we
+    // have to add that here
+    do_post("." + object_id, selector, array_of_strings.join(" ") + "\n",
+        null, null);
 }
 
 function gui_legacy_tcl_command(file, line_number, text) {

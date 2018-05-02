@@ -244,7 +244,7 @@ void pd_error(void *object, const char *fmt, ...)
     {
         /* move this to a function in the GUI so that we can change the
            message without having to recompile */
-        post("... you might be able to track this down from the 'Find Last Error' item in the Edit menu, or by clicking the error link above.");
+        post("... click the link above to track it down, or click the 'Find Last Error' item in the Edit menu.");
         saidit = 1;
     }
 }

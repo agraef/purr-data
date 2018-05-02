@@ -56,39 +56,55 @@ static void *print_new(t_symbol *sel, int argc, t_atom *argv)
 
 static void print_bang(t_print *x)
 {
-    post("%s%sbang", x->x_sym->s_name, (*x->x_sym->s_name ? ": " : ""));
+    gui_start_vmess("gui_print", "xs", x, x->x_sym->s_name);
+    gui_start_array();
+    gui_s(s_bang.s_name);
+    gui_end_array();
+    gui_end_vmess();
 }
 
 static void print_pointer(t_print *x, t_gpointer *gp)
 {
-    post("%s%s(gpointer)", x->x_sym->s_name, (*x->x_sym->s_name ? ": " : ""));
+    gui_start_vmess("gui_print", "xs", x, x->x_sym->s_name);
+    gui_start_array();
+    gui_s("(gpointer)");
+    gui_end_array();
+    gui_end_vmess();
 }
 
-static void print_float(t_print *x, t_float f)
+static void print_float(t_print *x, t_floatarg f)
 {
-    post("%s%s%g", x->x_sym->s_name, (*x->x_sym->s_name ? ": " : ""), f);
+    gui_start_vmess("gui_print", "xs", x, x->x_sym->s_name);
+    gui_start_array();
+    gui_f(f);
+    gui_end_array();
+    gui_end_vmess();
 }
 
-static void print_list(t_print *x, t_symbol *s, int argc, t_atom *argv)
+static void print_symbol(t_print *x, t_symbol *s)
 {
-    if (argc && argv->a_type != A_SYMBOL)
-        startpost("%s%s%g", x->x_sym->s_name,
-            (*x->x_sym->s_name ? ": " : ""),
-            atom_getfloatarg(0, argc--, argv++));
-    else startpost("%s%s%s", x->x_sym->s_name,
-        (*x->x_sym->s_name ? ": " : ""),
-        (argc > 1 ? s_list.s_name : (argc == 1 ? s_symbol.s_name :
-            s_bang.s_name)));
-    postatom(argc, argv);
-    endpost();
+    gui_start_vmess("gui_print", "xs", x, x->x_sym->s_name);
+    gui_start_array();
+    gui_s(s_symbol.s_name);
+    gui_s(s->s_name);
+    gui_end_array();
+    gui_end_vmess();
 }
 
 static void print_anything(t_print *x, t_symbol *s, int argc, t_atom *argv)
 {
-    startpost("%s%s%s", x->x_sym->s_name, (*x->x_sym->s_name ? ": " : ""),
-        s->s_name);
-    postatom(argc, argv);
-    endpost();
+    char buf[MAXPDSTRING];
+    gui_start_vmess("gui_print", "xs", x, x->x_sym->s_name);
+    gui_start_array();
+    if (s && (s != &s_list || (argc && argv->a_type != A_FLOAT)))
+        gui_s(s->s_name);
+    for(; argc; argv++, argc--)
+    {
+        atom_string(argv, buf, MAXPDSTRING);
+        gui_s(buf);
+    }
+    gui_end_array();
+    gui_end_vmess();
 }
 
 static void print_setup(void)
@@ -98,7 +114,7 @@ static void print_setup(void)
     class_addbang(print_class, print_bang);
     class_addfloat(print_class, print_float);
     class_addpointer(print_class, print_pointer);
-    class_addlist(print_class, print_list);
+    class_addsymbol(print_class, print_symbol);
     class_addanything(print_class, print_anything);
 }
 
