@@ -89,9 +89,19 @@ typedef unsigned __int64  uint64_t;
 #if !defined(PD_LONGINTTYPE)
 #define PD_LONGINTTYPE long
 #endif
-#if !defined(PD_FLOATTYPE)
-#define PD_FLOATTYPE float
+
+#if !defined(PD_FLOAT_PRECISION)
+#define PD_FLOAT_PRECISION 32   /* 32 for single precision or 64 for double precision */
 #endif
+
+#if PD_FLOAT_PRECISION == 32
+#define PD_FLOATTYPE float
+#elif PD_FLOAT_PRECISION == 64
+#define PD_FLOATTYPE double
+#else
+#error invalid PD_FLOATPRECISION: must be 32 or 64
+#endif
+
 typedef PD_LONGINTTYPE t_int;       /* pointer-size integer */
 typedef PD_FLOATTYPE t_float;       /* a float type at most the same size */
 typedef PD_FLOATTYPE t_floatarg;    /* float type for function calls */
