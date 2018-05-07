@@ -623,7 +623,7 @@ EXTERN void mayer_ifft(int n, t_sample *real, t_sample *imag);
 EXTERN void mayer_realfft(int n, t_sample *real);
 EXTERN void mayer_realifft(int n, t_sample *real);
 
-EXTERN float *cos_table;
+EXTERN t_float *cos_table;
 #define LOGCOSTABSIZE 9
 #define COSTABSIZE (1<<LOGCOSTABSIZE)
 
@@ -765,17 +765,59 @@ defined, there is a "te_xpix" field in objects, not a "te_xpos" as before: */
 
 #define PD_USE_TE_XPIX
 
-#if defined(__i386__) || defined(__x86_64__)
-/* a test for NANs and denormals.  Should only be necessary on i386. */
-#define PD_BADFLOAT(f) ((((*(unsigned int*)&(f))&0x7f800000)==0) || \
-    (((*(unsigned int*)&(f))&0x7f800000)==0x7f800000))
-/* more stringent test: anything not between 1e-19 and 1e19 in absolute val */
-#define PD_BIGORSMALL(f) ((((*(unsigned int*)&(f))&0x60000000)==0) || \
-    (((*(unsigned int*)&(f))&0x60000000)==0x60000000))
-#else
+#if defined(__i386__) || defined(__x86_64__) // Type punning code:
+
+#if PD_FLOAT_PRECISION == 32
+
+typedef  union
+{
+    t_float f;
+    unsigned int ui; 
+}t_bigorsmall32; 
+
+static inline int PD_BADFLOAT(t_float f)    // test for NANs, infs and denormals
+{
+    t_bigorsmall32 pun;
+    pun.f = f;
+    pun.ui &= 0x7f800000;
+    return((pun.ui == 0) | (pun.ui == 0x7f800000));
+}
+
+static inline int PD_BIGORSMALL(t_float f)  // > abs(2^64) or < abs(2^-64)
+{
+    t_bigorsmall32 pun;
+    pun.f = f;
+    return((pun.ui & 0x20000000) == ((pun.ui >> 1) & 0x20000000));
+}
+    
+#elif PD_FLOAT_PRECISION == 64
+
+typedef  union
+{
+    t_float f;
+    unsigned int ui[2]; 
+}t_bigorsmall64; 
+
+static inline int PD_BADFLOAT(t_float f)    // test for NANs, infs and denormals
+{
+    t_bigorsmall64 pun;
+    pun.f = f;
+    pun.ui[1] &= 0x7ff00000;
+    return((pun.ui[1] == 0) | (pun.ui[1] == 0x7ff00000));
+}
+
+static inline int PD_BIGORSMALL(t_float f)  // > abs(2^512) or < abs(2^-512)
+{
+    t_bigorsmall64 pun;
+    pun.f = f;
+    return((pun.ui[1] & 0x20000000) == ((pun.ui[1] >> 1) & 0x20000000));
+}
+
+#endif // endif PD_FLOAT_PRECISION
+#else   // if not defined(__i386__) || defined(__x86_64__)
 #define PD_BADFLOAT(f) 0
 #define PD_BIGORSMALL(f) 0
-#endif
+#endif // end if defined(__i386__) || defined(__x86_64__)
 
     /* get version number at run time */
 EXTERN void sys_getversion(int *major, int *minor, int *bugfix);
