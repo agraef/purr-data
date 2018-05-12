@@ -90,13 +90,13 @@ typedef unsigned __int64  uint64_t;
 #define PD_LONGINTTYPE long
 #endif
 
-#if !defined(PD_FLOAT_PRECISION)
-#define PD_FLOAT_PRECISION 32   /* 32 for single precision or 64 for double precision */
+#if !defined(PD_FLOATSIZE)
+#define PD_FLOATSIZE 32   /* 32 for single precision or 64 for double precision */
 #endif
 
-#if PD_FLOAT_PRECISION == 32
+#if PD_FLOATSIZE == 32
 #define PD_FLOATTYPE float
-#elif PD_FLOAT_PRECISION == 64
+#elif PD_FLOATSIZE == 64
 #define PD_FLOATTYPE double
 #else
 #error invalid PD_FLOATPRECISION: must be 32 or 64
@@ -767,7 +767,7 @@ defined, there is a "te_xpix" field in objects, not a "te_xpos" as before: */
 
 #if defined(__i386__) || defined(__x86_64__) // Type punning code:
 
-#if PD_FLOAT_PRECISION == 32
+#if PD_FLOATSIZE == 32
 
 typedef  union
 {
@@ -790,7 +790,7 @@ static inline int PD_BIGORSMALL(t_float f)  // > abs(2^64) or < abs(2^-64)
     return((pun.ui & 0x20000000) == ((pun.ui >> 1) & 0x20000000));
 }
     
-#elif PD_FLOAT_PRECISION == 64
+#elif PD_FLOATSIZE == 64
 
 typedef  union
 {
@@ -813,7 +813,7 @@ static inline int PD_BIGORSMALL(t_float f)  // > abs(2^512) or < abs(2^-512)
     return((pun.ui[1] & 0x20000000) == ((pun.ui[1] >> 1) & 0x20000000));
 }
 
-#endif // endif PD_FLOAT_PRECISION
+#endif // endif PD_FLOATSIZE
 #else   // if not defined(__i386__) || defined(__x86_64__)
 #define PD_BADFLOAT(f) 0
 #define PD_BIGORSMALL(f) 0
