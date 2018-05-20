@@ -185,7 +185,7 @@ void binbuf_text(t_binbuf *x, char *text, size_t size)
             }
             while (textp != etext && bufp != ebuf && 
                 (slash || (*textp != ' ' && *textp != '\n' && *textp != '\r'
-                    && *textp != '\t' &&*textp != ',' && *textp != ';')));
+                    && *textp != '\t' && *textp != ',' && *textp != ';')));
             *bufp = 0;
 #if 0
             post("binbuf_text: buf %s, dollar=%d", buf, dollar);
@@ -725,7 +725,6 @@ void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)
             maxnargs = ac;
         }
     }
-
     if (ac <= SMALLMSG)
         mstack = smallstack;
     else
@@ -958,23 +957,6 @@ broken:
          ATOMS_FREEA(mstack, maxnargs);
 }
 
-static int binbuf_doopen(char *s, int mode)
-{
-    char namebuf[MAXPDSTRING];
-#ifdef MSW
-    mode |= O_BINARY;
-#endif
-    sys_bashfilename(s, namebuf);
-    return (open(namebuf, mode));
-}
-
-static FILE *binbuf_dofopen(char *s, char *mode)
-{
-    char namebuf[MAXPDSTRING];
-    sys_bashfilename(s, namebuf);
-    return (fopen(namebuf, mode));
-}
-
 int binbuf_read(t_binbuf *b, char *filename, char *dirname, int crflag)
 {
     long length;
@@ -989,7 +971,7 @@ int binbuf_read(t_binbuf *b, char *filename, char *dirname, int crflag)
         snprintf(namebuf, MAXPDSTRING-1, "%s", filename);
     namebuf[MAXPDSTRING-1] = 0;
     
-    if ((fd = binbuf_doopen(namebuf, 0)) < 0)
+    if ((fd = sys_open(namebuf, 0)) < 0)
     {
         //fprintf(stderr, "open: ");
         perror(namebuf);
@@ -1092,7 +1074,7 @@ int binbuf_write(t_binbuf *x, char *filename, char *dir, int crflag)
         deleteit = 1;
     }
     
-    if (!(f = binbuf_dofopen(fbuf, "w")))
+    if (!(f = sys_fopen(fbuf, "w")))
     {
         //fprintf(stderr, "open: ");
         sys_unixerror(fbuf);
