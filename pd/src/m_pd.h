@@ -786,7 +786,7 @@ static inline int PD_BADFLOAT(t_float f)
 
 /* Test to find unusually large or small normal values, in
    addition to denormals, NANs and infs:
-   f >= abs(2^65) or < abs(2^-63)
+   abs(f) >= 2^65 or < 2^-63
 
    This is useful for catching extreme values in, say, a filter,
    then bashing to zero before ever calculating a denormal. */
@@ -816,7 +816,7 @@ static inline int PD_BADFLOAT(t_float f)
 
 /* Test to find unusually large or small normal values, in
    addition to denormals, NANs and infs:
-   f >= abs(2^513) or < abs(2^-511)
+   abs(f) >= 2^513 or < 2^-511
 
    This is useful for catching extreme values in, say, a filter,
    then bashing to zero before ever calculating a denormal. */
