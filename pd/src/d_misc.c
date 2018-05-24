@@ -9,6 +9,13 @@
 #include <stdio.h>
 #include <string.h>
 
+// an attempt to align floating point numbers in columns
+#if PD_FLOATSIZE == 32
+#define FLOAT_SPECIFIER "%#-.6g     \t"
+#elif PD_FLOATSIZE == 64
+#define FLOAT_SPECIFIER "%#-.9lg  \t"
+#endif
+
 /* ------------------------- print~ -------------------------- */
 static t_class *print_class;
 
@@ -30,8 +37,8 @@ static t_int *print_perform(t_int *w)
         int i=0;
         startpost("%s:", x->x_sym->s_name);
         for(i=0; i<n; i++) {
-          if(i%8==0)endpost();
-          startpost("%-8.5g", in[i]);
+          if(i%4==0)endpost();
+          startpost(FLOAT_SPECIFIER, in[i]);
         }
         endpost();
         x->x_count--;
