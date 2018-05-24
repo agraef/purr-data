@@ -243,6 +243,41 @@ void glob_initfromgui(void *dummy, t_symbol *s, int argc, t_atom *argv)
     sys_messagelist = 0;
 }
 
+
+// font char metric triples: pointsize width(pixels) height(pixels)
+static int defaultfontshit[] = {
+ 8, 5, 11, 9, 6, 12,
+ 10, 6, 13, 12, 7, 16,
+ 14, 8, 17, 16, 10, 19,
+ 18, 11, 22, 24, 14, 29,
+ 30, 18, 37, 36, 22, 44
+};
+#define NDEFAULTFONT (sizeof(defaultfontshit)/sizeof(*defaultfontshit))
+
+static t_clock *sys_fakefromguiclk;
+static void sys_fakefromgui(void)
+{
+        /* fake the GUI's message giving cwd and font sizes in case
+        we aren't starting the gui. */
+    t_atom zz[NDEFAULTFONT+2];
+    int i;
+    char buf[MAXPDSTRING];
+#ifdef _WIN32
+    if (GetCurrentDirectory(MAXPDSTRING, buf) == 0)
+        strcpy(buf, ".");
+#else
+    if (!getcwd(buf, MAXPDSTRING))
+        strcpy(buf, ".");
+
+#endif
+    SETSYMBOL(zz, gensym(buf));
+    for (i = 0; i < (int)NDEFAULTFONT; i++)
+        SETFLOAT(zz+i+1, defaultfontshit[i]);
+    SETFLOAT(zz+NDEFAULTFONT+1,0);
+    glob_initfromgui(0, 0, 2+NDEFAULTFONT, zz);
+    clock_free(sys_fakefromguiclk);
+}
+
 static void sys_afterargparse(void);
 
 static void pd_makeversion(void)
@@ -298,6 +333,18 @@ int sys_main(int argc, char **argv)
 #ifdef PD_DEBUG
     fprintf(stderr, "Pd-L2Ork: COMPILED FOR DEBUGGING\n");
 #endif
+    /* use Win32 "binary" mode by default since we don't want the
+     * translation that Win32 does by default */
+#ifdef _WIN32
+# ifdef _MSC_VER /* MS Visual Studio */
+    _set_fmode( _O_BINARY );
+# else  /* MinGW */
+    {
+        extern int _fmode;
+        _fmode = _O_BINARY;
+    }
+# endif /* _MSC_VER */
+#endif  /* _WIN32 */
     pd_init();                                  /* start the message system */
     sys_findprogdir(argv[0]);                   /* set sys_progname, guipath */
     for (i = noprefs = 0; i < argc; i++)        /* prescan args for noprefs */
@@ -319,7 +366,10 @@ int sys_main(int argc, char **argv)
         pd_version, pd_compiletime, pd_compiledate);
     if (sys_version)    /* if we were just asked our version, exit here. */
         return (0);
-    if (sys_startgui(sys_guidir->s_name))       /* start the gui */
+    if (sys_nogui)
+        clock_set((sys_fakefromguiclk =
+            clock_new(0, (t_method)sys_fakefromgui)), 0);
+    else if (sys_startgui(sys_guidir->s_name))       /* start the gui */
         return(1);
         /* send the libdir to the GUI */
     gui_vmess("gui_set_lib_dir", "s", sys_libdir->s_name);

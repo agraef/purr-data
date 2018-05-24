@@ -405,8 +405,6 @@ void sched_set_using_audio(int flag)
                 post("sorry, can't turn off callbacks yet; restart Pd");
                     /* not right yet! */
 
-    sys_time_per_dsp_tick = (TIMEUNITPERSECOND) *
-        ((double)sys_schedblocksize) / sys_dacsr;
     // XXXFIXME
     //sys_vgui("pdtk_pd_dsp %s\n", flag ? "on" : "off");
 }
@@ -414,7 +412,8 @@ void sched_set_using_audio(int flag)
     /* take the scheduler forward one DSP tick, also handling clock timeouts */
 void sched_tick( void)
 {
-    double next_sys_time = pd_this->pd_systime + sys_time_per_dsp_tick;
+    double next_sys_time = pd_this->pd_systime +
+        (sys_schedblocksize / sys_dacsr) * TIMEUNITPERSECOND;
     int countdown = 5000;
     while (pd_this->pd_clock_setlist &&
         pd_this->pd_clock_setlist->c_settime < next_sys_time)
@@ -459,6 +458,7 @@ int (*sys_idlehook)(void);
 static void m_pollingscheduler( void)
 {
     int idlecount = 0;
+    /* delete this when I'm sure it's not needed for back compatibilty? */
     sys_time_per_dsp_tick = (TIMEUNITPERSECOND) *
         ((double)sys_schedblocksize) / sys_dacsr;
 
@@ -635,8 +635,6 @@ int m_mainloop(void)
 
 int m_batchmain(void)
 {
-    sys_time_per_dsp_tick = (TIMEUNITPERSECOND) *
-        ((double)sys_schedblocksize) / sys_dacsr;
     while (sys_quit != SYS_QUIT_QUIT)
         sched_tick();
     return (0);
