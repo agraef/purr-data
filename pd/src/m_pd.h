@@ -772,10 +772,11 @@ defined, there is a "te_xpix" field in objects, not a "te_xpos" as before: */
 typedef  union
 {
     t_float f;
-    unsigned int ui; 
+    uint32_t ui;
 }t_bigorsmall32; 
 
-static inline int PD_BADFLOAT(t_float f)    // test for NANs, infs and denormals
+/* Test strictly for NANs and infs */
+static inline int PD_BADFLOAT(t_float f)
 {
     t_bigorsmall32 pun;
     pun.f = f;
@@ -783,7 +784,13 @@ static inline int PD_BADFLOAT(t_float f)    // test for NANs, infs and denormals
     return((pun.ui == 0) | (pun.ui == 0x7f800000));
 }
 
-static inline int PD_BIGORSMALL(t_float f)  // > abs(2^64) or < abs(2^-64)
+/* Test to find unusually large or small normal values, in
+   addition to denormals, NANs and infs:
+   abs(f) >= 2^65 or < 2^-63
+
+   This is useful for catching extreme values in, say, a filter,
+   then bashing to zero before ever calculating a denormal. */
+static inline int PD_BIGORSMALL(t_float f)
 {
     t_bigorsmall32 pun;
     pun.f = f;
@@ -795,10 +802,11 @@ static inline int PD_BIGORSMALL(t_float f)  // > abs(2^64) or < abs(2^-64)
 typedef  union
 {
     t_float f;
-    unsigned int ui[2]; 
+    uint32_t ui[2];
 }t_bigorsmall64; 
 
-static inline int PD_BADFLOAT(t_float f)    // test for NANs, infs and denormals
+/* Test for NANs and infs */
+static inline int PD_BADFLOAT(t_float f)
 {
     t_bigorsmall64 pun;
     pun.f = f;
@@ -806,7 +814,13 @@ static inline int PD_BADFLOAT(t_float f)    // test for NANs, infs and denormals
     return((pun.ui[1] == 0) | (pun.ui[1] == 0x7ff00000));
 }
 
-static inline int PD_BIGORSMALL(t_float f)  // > abs(2^512) or < abs(2^-512)
+/* Test to find unusually large or small normal values, in
+   addition to denormals, NANs and infs:
+   abs(f) >= 2^513 or < 2^-511
+
+   This is useful for catching extreme values in, say, a filter,
+   then bashing to zero before ever calculating a denormal. */
+static inline int PD_BIGORSMALL(t_float f)
 {
     t_bigorsmall64 pun;
     pun.f = f;
