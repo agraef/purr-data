@@ -56,55 +56,92 @@ static void *print_new(t_symbol *sel, int argc, t_atom *argv)
 
 static void print_bang(t_print *x)
 {
-    gui_start_vmess("gui_print", "xs", x, x->x_sym->s_name);
-    gui_start_array();
-    gui_s(s_bang.s_name);
-    gui_end_array();
-    gui_end_vmess();
+    if (sys_nogui)
+        post("%s%sbang", x->x_sym->s_name, (*x->x_sym->s_name ? ": " : ""));
+    else
+    {
+        gui_start_vmess("gui_print", "xs", x, x->x_sym->s_name);
+        gui_start_array();
+        gui_s(s_bang.s_name);
+        gui_end_array();
+        gui_end_vmess();
+    }
 }
 
 static void print_pointer(t_print *x, t_gpointer *gp)
 {
-    gui_start_vmess("gui_print", "xs", x, x->x_sym->s_name);
-    gui_start_array();
-    gui_s("(gpointer)");
-    gui_end_array();
-    gui_end_vmess();
+    if (sys_nogui)
+        post("%s%s(gpointer)", x->x_sym->s_name,
+            (*x->x_sym->s_name ? ": " : ""));
+    else
+    {
+        gui_start_vmess("gui_print", "xs", x, x->x_sym->s_name);
+        gui_start_array();
+        gui_s("(gpointer)");
+        gui_end_array();
+        gui_end_vmess();
+    }
 }
 
 static void print_float(t_print *x, t_floatarg f)
 {
-    gui_start_vmess("gui_print", "xs", x, x->x_sym->s_name);
-    gui_start_array();
-    gui_f(f);
-    gui_end_array();
-    gui_end_vmess();
+    if (sys_nogui)
+        post("%s%s%g", x->x_sym->s_name, (*x->x_sym->s_name ? ": " : ""), f);
+    else
+    {
+        gui_start_vmess("gui_print", "xs", x, x->x_sym->s_name);
+        gui_start_array();
+        gui_f(f);
+        gui_end_array();
+        gui_end_vmess();
+    }
 }
 
 static void print_symbol(t_print *x, t_symbol *s)
 {
-    gui_start_vmess("gui_print", "xs", x, x->x_sym->s_name);
-    gui_start_array();
-    gui_s(s_symbol.s_name);
-    gui_s(s->s_name);
-    gui_end_array();
-    gui_end_vmess();
+    if (sys_nogui)
+        post("%s%s%s", x->x_sym->s_name, (*x->x_sym->s_name ? ": " : ""),
+            s->s_name);
+    else
+    {
+        gui_start_vmess("gui_print", "xs", x, x->x_sym->s_name);
+        gui_start_array();
+        gui_s(s_symbol.s_name);
+        gui_s(s->s_name);
+        gui_end_array();
+        gui_end_vmess();
+    }
 }
 
 static void print_anything(t_print *x, t_symbol *s, int argc, t_atom *argv)
 {
     char buf[MAXPDSTRING];
-    gui_start_vmess("gui_print", "xs", x, x->x_sym->s_name);
-    gui_start_array();
-    if (s && (s != &s_list || (argc && argv->a_type != A_FLOAT)))
-        gui_s(s->s_name);
-    for(; argc; argv++, argc--)
+    t_atom at;
+    if (sys_nogui)
     {
-        atom_string(argv, buf, MAXPDSTRING);
-        gui_s(buf);
+        startpost("%s%s", x->x_sym->s_name, (*x->x_sym->s_name ? ":" : ""));
+        if (s && (s != &s_list || (argc && argv->a_type != A_FLOAT)))
+        {
+            SETSYMBOL(&at, s);
+            postatom(1, &at);
+        }
+        postatom(argc, argv);
+        endpost();
     }
-    gui_end_array();
-    gui_end_vmess();
+    else
+    {
+        gui_start_vmess("gui_print", "xs", x, x->x_sym->s_name);
+        gui_start_array();
+        if (s && (s != &s_list || (argc && argv->a_type != A_FLOAT)))
+            gui_s(s->s_name);
+        for(; argc; argv++, argc--)
+        {
+            atom_string(argv, buf, MAXPDSTRING);
+            gui_s(buf);
+        }
+        gui_end_array();
+        gui_end_vmess();
+    }
 }
 
 static void print_setup(void)
