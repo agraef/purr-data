@@ -12,10 +12,18 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#if PD_FLOATSIZE == 32
+#define FLOAT_SPECIFIER "%s%s%.6g"
+#elif PD_FLOATSIZE == 64
+#define FLOAT_SPECIFIER "%s%s%.14lg"
+#endif
+
 /* we need the following for [pdinfo] ... */
 
 #define MAXNDEV 20
 #define DEVDESCSIZE 80
+
+
 
 /* -------------------------- print ------------------------------ */
 t_class *print_class;
@@ -86,7 +94,7 @@ static void print_pointer(t_print *x, t_gpointer *gp)
 static void print_float(t_print *x, t_floatarg f)
 {
     if (sys_nogui)
-        post("%s%s%g", x->x_sym->s_name, (*x->x_sym->s_name ? ": " : ""), f);
+        post(FLOAT_SPECIFIER, x->x_sym->s_name, (*x->x_sym->s_name ? ": " : ""), f);
     else
     {
         gui_start_vmess("gui_print", "xs", x, x->x_sym->s_name);
