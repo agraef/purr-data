@@ -32,7 +32,9 @@ static const char pd_compiledate[] = __DATE__;
 void pd_init(void);
 int sys_argparse(int argc, char **argv);
 void sys_findprogdir(char *progname);
+void sys_setsignalhandlers(void);
 int sys_startgui(const char *guipath);
+void sys_setrealtime(const char *guipath);
 int sys_rcfile(void);
 int m_mainloop(void);
 int m_batchmain(void);
@@ -345,6 +347,16 @@ int sys_main(int argc, char **argv)
     }
 # endif /* _MSC_VER */
 #endif  /* _WIN32 */
+#ifndef _WIN32
+    /* long ago Pd used setuid to promote itself to real-time priority.
+    Just in case anyone's installation script still makes it setuid, we
+    complain to stderr and lose setuid here. */
+    if (getuid() != geteuid())
+    {
+        fprintf(stderr, "warning: canceling setuid privilege\n");
+        setuid(getuid());
+    }
+#endif  /* _WIN32 */
     pd_init();                                  /* start the message system */
     sys_findprogdir(argv[0]);                   /* set sys_progname, guipath */
     for (i = noprefs = 0; i < argc; i++)        /* prescan args for noprefs */
@@ -366,6 +378,7 @@ int sys_main(int argc, char **argv)
         pd_version, pd_compiletime, pd_compiledate);
     if (sys_version)    /* if we were just asked our version, exit here. */
         return (0);
+    sys_setsignalhandlers();
     if (sys_nogui)
         clock_set((sys_fakefromguiclk =
             clock_new(0, (t_method)sys_fakefromgui)), 0);
@@ -389,6 +402,8 @@ int sys_main(int argc, char **argv)
     gui_end_array();
     gui_end_vmess();
 
+    if (sys_hipriority)
+        sys_setrealtime(sys_libdir->s_name); /* set desired process priority */
     if (sys_externalschedlib)
         return (sys_run_scheduler(sys_externalschedlibname,
             sys_extraflagsstring));

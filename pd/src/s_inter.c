@@ -291,11 +291,38 @@ void sys_setalarm(int microsec)
 
 #endif
 
-#ifdef __linux
+void sys_setsignalhandlers(void)
+{
+#if !defined(_WIN32) && !defined(__CYGWIN__)
+    signal(SIGHUP, sys_huphandler);
+    signal(SIGINT, sys_exithandler);
+    signal(SIGQUIT, sys_exithandler);
+    signal(SIGILL, sys_exithandler);
+# ifdef SIGIOT
+    signal(SIGIOT, sys_exithandler);
+# endif
+    signal(SIGFPE, SIG_IGN);
+    /* signal(SIGILL, sys_exithandler);
+    signal(SIGBUS, sys_exithandler);
+    signal(SIGSEGV, sys_exithandler); */
+    signal(SIGPIPE, SIG_IGN);
+    signal(SIGALRM, SIG_IGN);
+#if 0  /* GG says: don't use that */
+    signal(SIGSTKFLT, sys_exithandler);
+#endif
+#endif /* NOT _WIN32 && NOT __CYGWIN__ */
+}
+
+#if defined(__linux__) || defined(__FreeBSD_kernel__) || defined(__GNU__)
+
 
 #if defined(_POSIX_PRIORITY_SCHEDULING) || defined(_POSIX_MEMLOCK)
 #include <sched.h>
 #endif
+
+#define MODE_NRT 0
+#define MODE_RT 1
+#define MODE_WATCHDOG 2
 
 void sys_set_priority(int higher) 
 {
@@ -1216,22 +1243,6 @@ int sys_startgui(const char *guidir)
     sys_nfdpoll = 0;
     inbinbuf = binbuf_new();
 
-#ifdef HAVE_UNISTD_H
-    signal(SIGHUP, sys_huphandler);
-    signal(SIGINT, sys_exithandler);
-    signal(SIGQUIT, sys_exithandler);
-    signal(SIGILL, sys_exithandler);
-    signal(SIGIOT, sys_exithandler);
-    signal(SIGFPE, SIG_IGN);
-    /* signal(SIGILL, sys_exithandler);
-    signal(SIGBUS, sys_exithandler);
-    signal(SIGSEGV, sys_exithandler); */
-    signal(SIGPIPE, SIG_IGN);
-    signal(SIGALRM, SIG_IGN);
-#if 0  /* GG says: don't use that */
-    signal(SIGSTKFLT, sys_exithandler);
-#endif
-#endif
 #ifdef MSW
     if (WSAStartup(version, &nobby)) sys_sockerror("WSAstartup");
 #endif
@@ -1374,7 +1385,6 @@ int sys_startgui(const char *guidir)
             /* this glob is needed so the Wish executable can have the same
              * filename as the Pd.app, i.e. 'Pd-0.42-3.app' should have a Wish
              * executable called 'Pd-0.42-3.app/Contents/MacOS/Pd-0.42-3' */
-//            sprintf(embed_glob, "%s/../../MacOS/Pd*", guidir);
             sprintf(embed_glob, "%s/../../MacOS/nwjs", guidir);
             glob_buffer.gl_matchc = 1; /* we only need one match */
             glob(embed_glob, GLOB_LIMIT, NULL, &glob_buffer);
@@ -1408,7 +1418,7 @@ int sys_startgui(const char *guidir)
                use the nw binary and GUI code from your local
                copy of the Purr Data repo. (Make sure to run
                tar_em_up.sh first to fetch the nw binary.) */
-            //strcpy(guidir2, "\"/home/grieg/purr-data/pd/nw\"");
+            //strcpy(guidir2, "\"/home/user/purr-data/pd/nw\"");
             sprintf(cmdbuf,
                 "\"%s\" %s %s "
                 "%d localhost %s %s " X_SPECIFIER,
@@ -1449,7 +1459,7 @@ int sys_startgui(const char *guidir)
                use the nw binary and GUI code from your local
                copy of the Purr Data repo. (Make sure to run
                tar_em_up.sh first to fetch the nw binary.) */
-            //strcpy(guidir2, "\"/home/grieg/purr-data/pd/nw\"");
+            //strcpy(guidir2, "\"/home/user/purr-data/pd/nw\"");
             sprintf(cmdbuf,
                 "%s/nw/nw %s %s "
                 "%d localhost %s %s " X_SPECIFIER,
@@ -1472,11 +1482,15 @@ int sys_startgui(const char *guidir)
         {
             if (errno) perror("sys_startgui");
             else fprintf(stderr, "sys_startgui failed\n");
+            sys_closesocket(xsock);
             return (1);
         }
         else if (!childpid)                     /* we're the child */
         {
-            setuid(getuid());          /* lose setuid priveliges */
+            sys_closesocket(xsock); /* we're the child */
+#if defined(__linux__) || defined(__FreeBSD_kernel__) || defined(__GNU__)
+            sys_set_priority(MODE_NRT);
+#endif
 #ifndef __APPLE__
                 /* the wish process in Unix will make a wish shell and
                     read/write standard in and out unless we close the
@@ -1548,104 +1562,13 @@ int sys_startgui(const char *guidir)
 #endif /* MSW */
     }
 
-#if defined(__linux__) || defined(IRIX)
-        /* now that we've spun off the child process we can promote
-        our process's priority, if we can and want to.  If not specfied
-        (-1), we assume real-time was wanted.  Afterward, just in case
-        someone made Pd setuid in order to get permission to do this,
-        unset setuid and lose root priveliges after doing this.  Starting
-        in Linux 2.6 this is accomplished by putting lines like:
-                @audio - rtprio 99
-                @audio - memlock unlimited
-        in the system limits file, perhaps /etc/limits.conf or
-        /etc/security/limits.conf */
-    if (sys_hipriority == -1)
-        sys_hipriority = 1; //(!getuid() || !geteuid());
-    
-    sprintf(cmdbuf, "%s/pd-watchdog\n", guidir);
-    if (sys_hipriority)
-    {
-            /* To prevent lockup, we fork off a watchdog process with
-            higher real-time priority than ours.  The GUI has to send
-            a stream of ping messages to the watchdog THROUGH the Pd
-            process which has to pick them up from the GUI and forward
-            them.  If any of these things aren't happening the watchdog
-            starts sending "stop" and "cont" signals to the Pd process
-            to make it timeshare with the rest of the system.  (Version
-            0.33P2 : if there's no GUI, the watchdog pinging is done
-            from the scheduler idle routine in this process instead.) */
-        int pipe9[2], watchpid;
-
-        if (pipe(pipe9) < 0)
-        {
-            setuid(getuid());      /* lose setuid priveliges */
-            sys_sockerror("pipe");
-            return (1);
-        }
-        watchpid = fork();
-        if (watchpid < 0)
-        {
-            setuid(getuid());      /* lose setuid priveliges */
-            if (errno)
-                perror("sys_startgui");
-            else fprintf(stderr, "sys_startgui failed\n");
-            return (1);
-        }
-        else if (!watchpid)             /* we're the child */
-        {
-            sys_set_priority(1);
-            setuid(getuid());      /* lose setuid priveliges */
-            if (pipe9[1] != 0)
-            {
-                dup2(pipe9[0], 0);
-                close(pipe9[0]);
-            }
-            close(pipe9[1]);
-
-            if (sys_verbose) fprintf(stderr, "%s", cmdbuf);
-            execl("/bin/sh", "sh", "-c", cmdbuf, (char*)0);
-            perror("pd: exec");
-            _exit(1);
-        }
-        else                            /* we're the parent */
-        {
-            sys_set_priority(0);
-            setuid(getuid());      /* lose setuid priveliges */
-            close(pipe9[0]);
-            sys_watchfd = pipe9[1];
-                /* We also have to start the ping loop in the GUI;
-                this is done later when the socket is open. */
-        }
-    }
-
-    setuid(getuid());          /* lose setuid priveliges */
-#endif /* __linux__ */
-
-#ifdef MSW
-    if (!SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS))
-        fprintf(stderr, "pd: couldn't set high priority class\n");
-#endif
-#ifdef __APPLE__
-    if (sys_hipriority)
-    {
-        struct sched_param param;
-        int policy = SCHED_RR;
-        int err;
-        param.sched_priority = 80; /* adjust 0 : 100 */
-
-        err = pthread_setschedparam(pthread_self(), policy, &param);
-        if (err)
-            post("warning: high priority scheduling failed\n");
-    }
-#endif /* __APPLE__ */
-
     if (!sys_nogui && !sys_guisetportnumber)
     {
         if (sys_verbose)
             fprintf(stderr, "Waiting for connection request... \n");
         if (listen(xsock, 5) < 0) sys_sockerror("listen");
 
-        sys_guisock = accept(xsock, (struct sockaddr *) &server, 
+        sys_guisock = accept(xsock, (struct sockaddr *) &server,
             (socklen_t *)&len);
 #ifdef OOPS
         sys_closesocket(xsock);
@@ -1668,8 +1591,6 @@ int sys_startgui(const char *guidir)
 #endif
          sys_get_audio_apis(buf);
          sys_get_midi_apis(buf2);
-//         sys_vgui("pdtk_pd_startup {%s} %s %s {%s} %s\n", pd_version, buf, buf2, 
-//                  sys_font, sys_fontweight); 
 
         t_binbuf *aapis = binbuf_new(), *mapis = binbuf_new();
         sys_get_audio_apis2(aapis);
@@ -1703,6 +1624,113 @@ int sys_startgui(const char *guidir)
     }
     return (0);
 
+}
+
+void sys_setrealtime(const char *libdir)
+{
+    char cmdbuf[MAXPDSTRING];
+#if defined(__linux__) || defined(__FreeBSD_kernel__)
+        /*  promote this process's priority, if we can and want to.
+        If sys_hipriority not specfied (-1), we assume real-time was wanted.
+        Starting in Linux 2.6 one can permit real-time operation of Pd by
+        putting lines like:
+                @audio - rtprio 99
+                @audio - memlock unlimited
+        in the system limits file, perhaps /etc/limits.conf or
+        /etc/security/limits.conf, and calling Pd from a user in group audio. */
+    if (sys_hipriority == -1)
+        sys_hipriority = 1;
+
+    snprintf(cmdbuf, MAXPDSTRING, "%s/bin/pd-watchdog", libdir);
+    cmdbuf[MAXPDSTRING-1] = 0;
+    if (sys_hipriority)
+    {
+        struct stat statbuf;
+        if (stat(cmdbuf, &statbuf) < 0)
+        {
+            fprintf(stderr,
+              "disabling real-time priority due to missing pd-watchdog (%s)\n",
+                cmdbuf);
+            sys_hipriority = 0;
+        }
+    }
+    if (sys_hipriority)
+    {
+        int pipe9[2], watchpid;
+            /* To prevent lockup, we fork off a watchdog process with
+            higher real-time priority than ours.  The GUI has to send
+            a stream of ping messages to the watchdog THROUGH the Pd
+            process which has to pick them up from the GUI and forward
+            them.  If any of these things aren't happening the watchdog
+            starts sending "stop" and "cont" signals to the Pd process
+            to make it timeshare with the rest of the system.  (Version
+            0.33P2 : if there's no GUI, the watchdog pinging is done
+            from the scheduler idle routine in this process instead.) */
+
+        if (pipe(pipe9) < 0)
+        {
+            sys_sockerror("pipe");
+            return;
+        }
+        watchpid = fork();
+        if (watchpid < 0)
+        {
+            if (errno)
+                perror("sys_setpriority");
+            else fprintf(stderr, "sys_setpriority failed\n");
+            return;
+        }
+        else if (!watchpid)             /* we're the child */
+        {
+            sys_set_priority(MODE_WATCHDOG);
+            if (pipe9[1] != 0)
+            {
+                dup2(pipe9[0], 0);
+                close(pipe9[0]);
+            }
+            close(pipe9[1]);
+
+            if (sys_verbose) fprintf(stderr, "%s\n", cmdbuf);
+            execl("/bin/sh", "sh", "-c", cmdbuf, (char*)0);
+            perror("pd: exec");
+            _exit(1);
+        }
+        else                            /* we're the parent */
+        {
+            sys_set_priority(MODE_RT);
+            close(pipe9[0]);
+                /* set close-on-exec so that watchdog will see an EOF when we
+                close our copy - otherwise it might hang waiting for some
+                stupid child process (as seems to happen if jackd auto-starts
+                for us.) */
+            if(fcntl(pipe9[1], F_SETFD, FD_CLOEXEC) < 0)
+              perror("close-on-exec");
+            sys_watchfd = pipe9[1];
+                /* We also have to start the ping loop in the GUI;
+                this is done later when the socket is open. */
+        }
+    }
+    else if (sys_verbose)
+        post("not setting real-time priority");
+#endif /* __linux__ */
+
+#ifdef _WIN32
+    if (!SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS))
+        fprintf(stderr, "pd: couldn't set high priority class\n");
+#endif
+#ifdef __APPLE__
+    if (sys_hipriority)
+    {
+        struct sched_param param;
+        int policy = SCHED_RR;
+        int err;
+        param.sched_priority = 80; /* adjust 0 : 100 */
+
+        err = pthread_setschedparam(pthread_self(), policy, &param);
+        if (err)
+            post("warning: high priority scheduling failed\n");
+    }
+#endif /* __APPLE__ */
 }
 
 extern void sys_exit(void);
