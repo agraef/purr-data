@@ -581,7 +581,7 @@ void powtodb_tilde_setup(void)
         gensym("dsp"), A_CANT, 0);
 }
 
-/* ----------------------------- pow ----------------------------- */
+/* ----------------------------- pow~ ----------------------------- */
 static t_class *pow_tilde_class, *scalarpow_tilde_class;
 
 typedef struct _pow_tilde
