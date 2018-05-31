@@ -21,7 +21,7 @@ LIBS = @LIBS@
 LIBOSC = ../libOSC/@LIBOSC@
 
 CFLAGS = @CFLAGS@
-INCLUDES = @INCLUDES@
+INCLUDES = @INCLUDES@ -I/usr/include/tirpc
 LDFLAGS = @LDFLAGS@
 
 prefix=@prefix@
