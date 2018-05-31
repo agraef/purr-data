@@ -13,6 +13,12 @@
 #include <math.h>
 #define IEM_GUI_COLOR_EDITED 0xff0000
 
+#if PD_FLOATSIZE == 32
+#define MY_NUMBOX_FLOAT_SPECIFIER "%.6g"
+#elif PD_FLOATSIZE == 64
+#define MY_NUMBOX_FLOAT_SPECIFIER "%.14lg"
+#endif
+
 extern int gfxstub_haveproperties(void *key);
 static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist);
 static void my_numbox_key(void *z, t_floatarg fkey);
@@ -64,7 +70,7 @@ void my_numbox_ftoa(t_my_numbox *x)
     double f=x->x_val;
     int bufsize, is_exp=0, i, idecimal;
 
-    sprintf(x->x_buf, "%g", f);
+    sprintf(x->x_buf, MY_NUMBOX_FLOAT_SPECIFIER, f);
     bufsize = strlen(x->x_buf);
     if(bufsize >= 5)/* if it is in exponential mode */
     {
