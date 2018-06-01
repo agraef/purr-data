@@ -21,7 +21,7 @@ LIBS = -L../../../pd/bin -lc -lm
 LIBOSC = ../libOSC/libOSC.a
 
 CFLAGS = -g -O2 -DUNIX -Wall -Wimplicit -Wunused -Wmissing-prototypes -O1 -fPIC -I../libOSC -I../../pd/src -I../../../pd/src -I../src
-INCLUDES = -I../libOSC -I../../pd/src -I../../../pd/src -I../src
+INCLUDES = -I../libOSC -I../../pd/src -I../../../pd/src -I../src -I/usr/include/tirpc
 LDFLAGS = -Wl,--export-dynamic -shared
 
 prefix=/usr/local
