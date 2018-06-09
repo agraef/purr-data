@@ -8,7 +8,7 @@
 
 #include "m_pd.h"
 #include <math.h>
-#define LOGTEN 2.302585092994
+#define LOGTEN 2.302585092994046
 
 /* ------------------------- clip~ -------------------------- */
 static t_class *clip_class;
@@ -80,17 +80,22 @@ static float rsqrt_exptab[DUMTAB1SIZE], rsqrt_mantissatab[DUMTAB2SIZE];
 static void init_rsqrt(void)
 {
     int i;
-    for (i = 0; i < DUMTAB1SIZE; i++)
+    union
     {
         float f;
+        int32_t l;
+    } u;
+
+    for (i = 0; i < DUMTAB1SIZE; i++)
+    {
         int32_t l = (i ? (i == DUMTAB1SIZE-1 ? DUMTAB1SIZE-2 : i) : 1)<< 23;
-        *(int32_t *)(&f) = l;
-        rsqrt_exptab[i] = 1./sqrt(f);   
+        u.l = l;
+        rsqrt_exptab[i] = 1./sqrt(u.f);
     }
     for (i = 0; i < DUMTAB2SIZE; i++)
     {
         float f = 1 + (1./DUMTAB2SIZE) * i;
-        rsqrt_mantissatab[i] = 1./sqrt(f);      
+        rsqrt_mantissatab[i] = 1./sqrt(f);
     }
 }
 
@@ -98,20 +103,28 @@ static void init_rsqrt(void)
 
 t_float q8_rsqrt(t_float f0)
 {
-    float f = (float)f0;
-    long l = *(long *)(&f);
-    if (f < 0) return (0);
-    else return (rsqrt_exptab[(l >> 23) & 0xff] *
-            rsqrt_mantissatab[(l >> 13) & 0x3ff]);
+    union
+    {
+        float f;
+        int32_t l;
+    } u;
+    u.f = f0;
+    if (f0 < 0.) return (0.);
+    else return (t_float)(rsqrt_exptab[(u.l >> 23) & 0xff] *
+            rsqrt_mantissatab[(u.l >> 13) & 0x3ff]);
 }
 
 t_float q8_sqrt(t_float f0)
 {
-    float f = (float)f0;
-    long l = *(long *)(&f);
-    if (f < 0) return (0);
-    else return (f * rsqrt_exptab[(l >> 23) & 0xff] *
-            rsqrt_mantissatab[(l >> 13) & 0x3ff]);
+    union
+    {
+        float f;
+        int32_t l;
+    } u;
+    u.f = f0;
+    if (f0 < 0.) return (0.);
+    else return (t_float)(f0 * rsqrt_exptab[(u.l >> 23) & 0xff] *
+            rsqrt_mantissatab[(u.l >> 13) & 0x3ff]);
 }
 
     /* the old names are OK unless we're in IRIX N32 */
@@ -120,8 +133,6 @@ t_float q8_sqrt(t_float f0)
 t_float qsqrt(t_float f) {return (q8_sqrt(f)); }
 t_float qrsqrt(t_float f) {return (q8_rsqrt(f)); }
 #endif
-
-
 
 typedef struct sigrsqrt
 {
@@ -143,16 +154,21 @@ static t_int *sigrsqrt_perform(t_int *w)
 {
     t_sample *in = *(t_sample **)(w+1), *out = *(t_sample **)(w+2);
     t_int n = *(t_int *)(w+3);
+    union
+    {
+        float f;
+        int32_t l;
+    } u;
+
     while (n--)
     {   
-        t_sample f = *in;
-        long l = *(long *)(in++);
-        if (f < 0) *out++ = 0;
+        u.f = (float)*in++;
+        if (u.f < 0.) *out++ = 0.;
         else
         {
-            t_sample g = rsqrt_exptab[(l >> 23) & 0xff] *
-                rsqrt_mantissatab[(l >> 13) & 0x3ff];
-            *out++ = 1.5 * g - 0.5 * g * g * g * f;
+            float g = rsqrt_exptab[(u.l >> 23) & 0xff] *
+                rsqrt_mantissatab[(u.l >> 13) & 0x3ff];
+            *out++ = (t_float)(1.5 * g - 0.5 * g * g * g * u.f);
         }
     }
     return (w + 4);
@@ -198,16 +214,20 @@ t_int *sigsqrt_perform(t_int *w)    /* not static; also used in d_fft.c */
 {
     t_sample *in = *(t_sample **)(w+1), *out = *(t_sample **)(w+2);
     t_int n = *(t_int *)(w+3);
+    union
+    {
+        float f;
+        int32_t l;
+    } u;
     while (n--)
     {   
-        t_sample f = *in;
-        long l = *(long *)(in++);
-        if (f < 0) *out++ = 0;
+        u.f = (float)*in++;
+        if (u.f < 0.) *out++ = 0.;
         else
         {
-            t_sample g = rsqrt_exptab[(l >> 23) & 0xff] *
-                rsqrt_mantissatab[(l >> 13) & 0x3ff];
-            *out++ = f * (1.5 * g - 0.5 * g * g * g * f);
+            float g = rsqrt_exptab[(u.l >> 23) & 0xff] *
+                rsqrt_mantissatab[(u.l >> 13) & 0x3ff];
+            *out++ = (t_float)(u.f * (1.5 * g - 0.5 * g * g * g * u.f));
         }
     }
     return (w + 4);
@@ -229,6 +249,7 @@ void sigsqrt_setup(void)
 }
 
 /* ------------------------------ wrap~ -------------------------- */
+#define GOODINT(i) (!(i & 0xC0000000))      //used for integer overflow protection
 
 typedef struct wrap
 {
@@ -250,12 +271,24 @@ static t_int *sigwrap_perform(t_int *w)
 {
     t_sample *in = *(t_sample **)(w+1), *out = *(t_sample **)(w+2);
     t_int n = *(t_int *)(w+3);
+    int integer;
+
     while (n--)
     {
         t_sample f = *in++;
-        int k = f;
-        if (k <= f) *out++ = f-k;
-        else *out++ = f - (k-1);
+        if (f >= 0.)
+        {
+            integer = (int)f;
+            f = (GOODINT(integer)? f - integer : 0.);
+        }
+
+        else if(f < 0.)
+        {
+            integer = (int)f;
+            f = (GOODINT(integer)? f - integer + 1. : 0.);
+        }
+
+        *out++ = f;
     }
     return (w + 4);
 }
@@ -264,6 +297,7 @@ static t_int *sigwrap_perform_old(t_int *w)
 {
     t_sample *in = *(t_sample **)(w+1), *out = *(t_sample **)(w+2);
     t_int n = *(t_int *)(w+3);
+
     while (n--)
     {   
         t_sample f = *in++;
@@ -628,7 +662,7 @@ t_int *pow_tilde_perform(t_int *w)
     int n = (int)(w[4]);
     while (n--)
     {
-        float f = *in1++;
+        t_float f = *in1++;
         if (f > 0)
             *out = pow(f, *in2);
         else *out = 0;
@@ -771,7 +805,7 @@ t_int *log_tilde_perform(t_int *w)
     int n = (int)(w[4]);
     while (n--)
     {
-        float f = *in1++, g = *in2++;
+        t_float f = *in1++, g = *in2++;
         if (f <= 0)
             *out = -1000;   /* rather than blow up, output a number << 0 */
         else if (g <= 0)
@@ -851,7 +885,7 @@ t_int *abs_tilde_perform(t_int *w)
     int n = (int)(w[3]);
     while (n--)
     {
-        float f = *in1++;
+        t_float f = *in1++;
         *out++ = (f >= 0 ? f : -f);
     }
     return (w+4);
