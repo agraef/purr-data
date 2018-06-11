@@ -526,24 +526,24 @@ static t_int *tabosc4_tilde_perform(t_int *w)
     t_sample *freq = (t_sample *)(w[2]);
     t_sample *out = (t_sample *)(w[3]);
     int vecsize = (int)(w[4]);
-    
+
     int loopmask = x->looplength - 1;
     int index = 0;
     t_float baseincrement = x->oneoversamplerate * (t_float)x->looplength;
     double tabphase = x->tabphase;
     t_word *ptab = x->array;
     t_float frac = 0.,  a,  b,  c,  d, cminusb;
-    t_float endfreq = freq[vecsize-1];                
-    
+    t_float endfreq = freq[vecsize-1];
+
     if (!ptab) goto zero;
-    
+
     while (vecsize--)
     {
         index = (tabphase >= 0.? (int)tabphase : (int)tabphase - 1);
         frac = (GOODINT(index)? tabphase - index : 0.);
         index &= loopmask;
         tabphase += *freq++ * baseincrement;
-       
+
         // interpolation
         a = ptab[index].w_float;
         b = ptab[index+1].w_float;
@@ -553,10 +553,10 @@ static t_int *tabosc4_tilde_perform(t_int *w)
         *out++ = b + frac * (cminusb - 0.166666666666667 *
             (1.-frac) * ((d - a - 3.0 * cminusb) * frac + (d + 2.0*a - 3.0*b)));
     }
-    
+
     x->tabphase = frac + index + (endfreq * baseincrement);     // wrap phase state
     return (w+5);
-    
+
 zero:
     while (vecsize--) *out++ = 0;
     return (w+5);
@@ -566,7 +566,7 @@ void tabosc4_tilde_set(t_tabosc4_tilde *x, t_symbol *s)
 {
     t_garray *a;
     int looplength, pointsinarray;
-    
+
     x->arrayname = s;
     if (!(a = (t_garray *)pd_findbyclass(x->arrayname, garray_class)))
     {
@@ -602,7 +602,7 @@ static void tabosc4_tilde_dsp(t_tabosc4_tilde *x, t_signal **sp)
 {
     x->oneoversamplerate = 1. / sp[0]->s_sr;
     tabosc4_tilde_set(x, x->arrayname);
-    
+
     dsp_add(tabosc4_tilde_perform, 4, x,
         sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
 }
