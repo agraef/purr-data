@@ -8,6 +8,7 @@
 
 #include "m_pd.h"
 
+#define GOODINT(i) (!(i & 0xC0000000)) // used for integer overflow protection
 
 /* ------------------------- tabwrite~ -------------------------- */
 
@@ -494,76 +495,25 @@ static void tabread4_tilde_setup(void)
 
 /******************** tabosc4~ ***********************/
 
-/* this is all copied from d_osc.c... what include file could this go in? */
-#define UNITBIT32 1572864.  /* 3*2^19; bit 32 has place value 1 */
-
-    /* machine-dependent definitions.  These ifdefs really
-    should have been by CPU type and not by operating system! */
-#ifdef IRIX
-    /* big-endian.  Most significant byte is at low address in memory */
-#define HIOFFSET 0    /* word offset to find MSB */
-#define LOWOFFSET 1    /* word offset to find LSB */
-#define int32 long  /* a data type that has 32 bits */
-#endif /* IRIX */
-
-#ifdef MSW
-    /* little-endian; most significant byte is at highest address */
-#define HIOFFSET 1
-#define LOWOFFSET 0
-#define int32 long
-#endif
-
-#if defined(__FreeBSD__) || defined(__APPLE__)
-#include <machine/endian.h>
-#endif
-
-#ifdef __linux__
-#include <endian.h>
-#endif
-
-#if defined(__unix__) || defined(__APPLE__)
-#if !defined(BYTE_ORDER) || !defined(LITTLE_ENDIAN)                         
-#error No byte order defined                                                    
-#endif                                                                          
-
-#if BYTE_ORDER == LITTLE_ENDIAN                                             
-#define HIOFFSET 1                                                              
-#define LOWOFFSET 0                                                             
-#else                                                                           
-#define HIOFFSET 0    /* word offset to find MSB */                             
-#define LOWOFFSET 1    /* word offset to find LSB */                            
-#endif /* __BYTE_ORDER */                                                       
-#include <sys/types.h>
-#define int32 int32_t
-#endif /* __unix__ or __APPLE__*/
-
-union tabfudge
-{
-    double tf_d;
-    int32 tf_i[2];
-};
-
 static t_class *tabosc4_tilde_class;
 
 typedef struct _tabosc4_tilde
 {
     t_object x_obj;
-    t_float x_fnpoints;
-    t_float x_finvnpoints;
-    t_word *x_vec;
-    t_symbol *x_arrayname;
+    int looplength;
+    t_float oneoversamplerate;
+    double tabphase;
+    t_word *array;
+    t_symbol *arrayname;
     t_float x_f;
-    double x_phase;
-    t_float x_conv;
 } t_tabosc4_tilde;
 
 static void *tabosc4_tilde_new(t_symbol *s)
 {
     t_tabosc4_tilde *x = (t_tabosc4_tilde *)pd_new(tabosc4_tilde_class);
-    x->x_arrayname = s;
-    x->x_vec = 0;
-    x->x_fnpoints = 512.;
-    x->x_finvnpoints = (1./512.);
+    x->arrayname = s;
+    x->array = 0;
+    x->looplength = 512.;
     outlet_new(&x->x_obj, gensym("signal"));
     inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_float, gensym("ft1"));
     x->x_f = 0;
@@ -573,96 +523,85 @@ static void *tabosc4_tilde_new(t_symbol *s)
 static t_int *tabosc4_tilde_perform(t_int *w)
 {
     t_tabosc4_tilde *x = (t_tabosc4_tilde *)(w[1]);
-    t_sample *in = (t_sample *)(w[2]);
+    t_sample *freq = (t_sample *)(w[2]);
     t_sample *out = (t_sample *)(w[3]);
-    int n = (int)(w[4]);
-    int normhipart;
-    union tabfudge tf;
-    t_float fnpoints = x->x_fnpoints;
-    int mask = fnpoints - 1;
-    t_float conv = fnpoints * x->x_conv;
-    t_word *tab = x->x_vec, *addr;
-    double dphase = fnpoints * x->x_phase + UNITBIT32;
+    int vecsize = (int)(w[4]);
 
-    if (!tab) goto zero;
-    tf.tf_d = UNITBIT32;
-    normhipart = tf.tf_i[HIOFFSET];
+    int loopmask = x->looplength - 1;
+    int index = 0;
+    t_float baseincrement = x->oneoversamplerate * (t_float)x->looplength;
+    double tabphase = x->tabphase;
+    t_word *ptab = x->array;
+    t_float frac = 0.,  a,  b,  c,  d, cminusb;
+    t_float endfreq = freq[vecsize-1];
 
-#if 1
-    while (n--)
+    if (!ptab) goto zero;
+
+    while (vecsize--)
     {
-        t_sample frac,  a,  b,  c,  d, cminusb;
-        tf.tf_d = dphase;
-        dphase += *in++ * conv;
-        addr = tab + (tf.tf_i[HIOFFSET] & mask);
-        tf.tf_i[HIOFFSET] = normhipart;
-        frac = tf.tf_d - UNITBIT32;
-        a = addr[0].w_float;
-        b = addr[1].w_float;
-        c = addr[2].w_float;
-        d = addr[3].w_float;
+        index = (tabphase >= 0.? (int)tabphase : (int)tabphase - 1);
+        frac = (GOODINT(index)? tabphase - index : 0.);
+        index &= loopmask;
+        tabphase += *freq++ * baseincrement;
+
+        // interpolation
+        a = ptab[index].w_float;
+        b = ptab[index+1].w_float;
+        c = ptab[index+2].w_float;
+        d = ptab[index+3].w_float;
         cminusb = c-b;
-        *out++ = b + frac * (
-            cminusb - 0.1666667f * (1.-frac) * (
-                (d - a - 3.0f * cminusb) * frac + (d + 2.0f*a - 3.0f*b)
-            )
-        );
+        *out++ = b + frac * (cminusb - 0.166666666666667 *
+            (1.-frac) * ((d - a - 3.0 * cminusb) * frac + (d + 2.0*a - 3.0*b)));
     }
-#endif
 
-    tf.tf_d = UNITBIT32 * fnpoints;
-    normhipart = tf.tf_i[HIOFFSET];
-    tf.tf_d = dphase + (UNITBIT32 * fnpoints - UNITBIT32);
-    tf.tf_i[HIOFFSET] = normhipart;
-    x->x_phase = (tf.tf_d - UNITBIT32 * fnpoints)  * x->x_finvnpoints;
+    x->tabphase = frac + index + (endfreq * baseincrement);     // wrap phase state
     return (w+5);
- zero:
-    while (n--) *out++ = 0;
 
+zero:
+    while (vecsize--) *out++ = 0;
     return (w+5);
 }
 
 void tabosc4_tilde_set(t_tabosc4_tilde *x, t_symbol *s)
 {
     t_garray *a;
-    int npoints, pointsinarray;
+    int looplength, pointsinarray;
 
-    x->x_arrayname = s;
-    if (!(a = (t_garray *)pd_findbyclass(x->x_arrayname, garray_class)))
+    x->arrayname = s;
+    if (!(a = (t_garray *)pd_findbyclass(x->arrayname, garray_class)))
     {
         if (*s->s_name)
-            pd_error(x, "tabosc4~: %s: no such array", x->x_arrayname->s_name);
-        x->x_vec = 0;
+            pd_error(x, "tabosc4~: %s: no such array", x->arrayname->s_name);
+        x->array = 0;
     }
-    else if (!garray_getfloatwords(a, &pointsinarray, &x->x_vec))
+    else if (!garray_getfloatwords(a, &pointsinarray, &x->array))
     {
-        pd_error(x, "%s: bad template for tabosc4~", x->x_arrayname->s_name);
-        x->x_vec = 0;
+        pd_error(x, "%s: bad template for tabosc4~", x->arrayname->s_name);
+        x->array = 0;
     }
-    else if ((npoints = pointsinarray - 3) != (1 << ilog2(pointsinarray - 3)))
+    else if ((looplength = pointsinarray - 3) != (1 << ilog2(pointsinarray - 3)))
     {
         pd_error(x, "%s: number of points (%d) not a power of 2 plus three",
-            x->x_arrayname->s_name, pointsinarray);
-        x->x_vec = 0;
+            x->arrayname->s_name, pointsinarray);
+        x->array = 0;
         garray_usedindsp(a);
     }
     else
     {
-        x->x_fnpoints = npoints;
-        x->x_finvnpoints = 1./npoints;
+        x->looplength = looplength;
         garray_usedindsp(a);
     }
 }
 
 static void tabosc4_tilde_ft1(t_tabosc4_tilde *x, t_float f)
 {
-    x->x_phase = f;
+    x->tabphase = f * x->looplength;
 }
 
 static void tabosc4_tilde_dsp(t_tabosc4_tilde *x, t_signal **sp)
 {
-    x->x_conv = 1. / sp[0]->s_sr;
-    tabosc4_tilde_set(x, x->x_arrayname);
+    x->oneoversamplerate = 1. / sp[0]->s_sr;
+    tabosc4_tilde_set(x, x->arrayname);
 
     dsp_add(tabosc4_tilde_perform, 4, x,
         sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
