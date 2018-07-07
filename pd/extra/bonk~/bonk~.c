@@ -67,6 +67,7 @@ decay and other times in msec
 #include "ext_obex.h"
 
 typedef double t_floatarg;      /* from m_pd.h */
+typedef float t_float;      /* from m_pd.h */
 #define flog log
 #define fexp exp
 #define fsqrt sqrt
@@ -99,12 +100,12 @@ static t_class *bonk_class;
 #define DEFOVERLAP 1
 #define DEFFIRSTBIN 1
 #define DEFMINBANDWIDTH 1.5
-#define DEFHITHRESH 5
+#define DEFHITHRESH 5.
 #define DEFLOTHRESH 2.5
 #define DEFMASKTIME 4
 #define DEFMASKDECAY 0.7
 #define DEFDEBOUNCEDECAY 0
-#define DEFMINVEL 7
+#define DEFMINVEL 7.
 #define DEFATTACKBINS 1
 #define MAXATTACKWAIT 4
 
