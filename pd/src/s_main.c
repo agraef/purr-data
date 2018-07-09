@@ -335,9 +335,15 @@ int sys_main(int argc, char **argv)
 #ifdef PD_DEBUG
     fprintf(stderr, "Pd-L2Ork: COMPILED FOR DEBUGGING\n");
 #endif
+    /* We need to call WSAStartup regardless of gui mode, since a user
+     * might want to make socket connections even in -nogui mode. So we
+     * go ahead and do that here. */
+#ifdef _WIN32
+    short version = MAKEWORD(2, 0);
+    WSADATA nobby;
+    if (WSAStartup(version, &nobby)) sys_sockerror("WSAstartup");
     /* use Win32 "binary" mode by default since we don't want the
      * translation that Win32 does by default */
-#ifdef _WIN32
 # ifdef _MSC_VER /* MS Visual Studio */
     _set_fmode( _O_BINARY );
 # else  /* MinGW */

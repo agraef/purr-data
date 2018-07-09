@@ -1231,10 +1231,6 @@ int sys_startgui(const char *guidir)
     if (!getcwd(cwd, FILENAME_MAX))
         strcpy(cwd, ".");
 #endif
-#ifdef MSW
-    short version = MAKEWORD(2, 0);
-    WSADATA nobby;
-#endif
 #ifdef HAVE_UNISTD_H
     int stdinpipe[2];
 #endif
@@ -1242,11 +1238,6 @@ int sys_startgui(const char *guidir)
     sys_fdpoll = (t_fdpoll *)t_getbytes(0);
     sys_nfdpoll = 0;
     inbinbuf = binbuf_new();
-
-#ifdef MSW
-    if (WSAStartup(version, &nobby)) sys_sockerror("WSAstartup");
-#endif
-
     if (sys_nogui)
     {
             /* fake the GUI's message giving cwd and font sizes; then
