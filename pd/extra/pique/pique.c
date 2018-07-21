@@ -13,17 +13,25 @@ combustible materiel, or as part of any life support system or weapon. */
 #pragma warning( disable : 4305 )
 #endif
 
+#if PD_FLOATSIZE == 32
+#define PI 3.14159
+#elif PD_FLOATSIZE == 64
+#define PI 3.141592653589793
+#else
+#error invalid PD_FLOATSIZE must be 32 or 64
+#endif
+
 static t_class *pique_class;
 
 typedef struct _pique
 {
     t_object x_obj;
     int x_n;
-    float x_errthresh;
-    float *x_freq;
-    float *x_amp;
-    float *x_ampre;
-    float *x_ampim;
+    t_float x_errthresh;
+    t_float *x_freq;
+    t_float *x_amp;
+    t_float *x_ampre;
+    t_float *x_ampim;
 } t_pique;
 
 static void *pique_new(t_floatarg f)
@@ -41,31 +49,30 @@ static void *pique_new(t_floatarg f)
     return (x);
 }
 
-static float hanning(float pidetune, float sinpidetune)
+static t_float hanning(t_float pidetune, t_float sinpidetune)
 {
-    float pi = 3.14159;
     if (pidetune < 0.01 && pidetune > -0.01) return (1);
     else if (pidetune > 3.14 && pidetune < 3.143) return (0.5);
     else if (pidetune < -3.14 && pidetune > -3.143) return (0.5);
     else return (sinpidetune/pidetune - 0.5 *
-        (sinpidetune/(pidetune+pi) + sinpidetune/(pidetune-pi)));
+        (sinpidetune/(pidetune+ + sinpidetune/(pidetune-PI))));
 }
 
-static float peakerror(t_word *fpreal, t_word *fpimag, float pidetune,
-    float norm, float peakreal, float peakimag)
+static t_float peakerror(t_word *fpreal, t_word *fpimag, t_float pidetune,
+    t_float norm, t_float peakreal, t_float peakimag)
 {
-    float sinpidetune = sin(pidetune);
-    float cospidetune = cos(pidetune);
-    float windowshould = hanning(pidetune, sinpidetune);
-    float realshould = windowshould * (
+    t_float sinpidetune = sin(pidetune);
+    t_float cospidetune = cos(pidetune);
+    t_float windowshould = hanning(pidetune, sinpidetune);
+    t_float realshould = windowshould * (
         peakreal * cospidetune + peakimag * sinpidetune);
-    float imagshould =  windowshould * (
+    t_float imagshould =  windowshould * (
         peakimag * cospidetune - peakreal * sinpidetune);
-    float realgot = norm * (fpreal[0].w_float -
+    t_float realgot = norm * (fpreal[0].w_float -
         0.5 * (fpreal[1].w_float + fpreal[-1].w_float));
-    float imaggot = norm * (fpimag[0].w_float -
+    t_float imaggot = norm * (fpimag[0].w_float -
         0.5 * (fpimag[1].w_float + fpimag[-1].w_float));
-    float realdev = realshould - realgot, imagdev = imagshould - imaggot;
+    t_float realdev = realshould - realgot, imagdev = imagshould - imaggot;
     
     /* post("real %f->%f; imag %f->%f", realshould, realgot,
         imagshould, imaggot); */
@@ -74,16 +81,16 @@ static float peakerror(t_word *fpreal, t_word *fpimag, float pidetune,
 
 static void pique_doit(int npts, t_word *fpreal, t_word *fpimag,
     int npeak, int *nfound, t_float *fpfreq, t_float *fpamp,
-        t_float *fpampre, t_float *fpampim, float errthresh)
+        t_float *fpampre, t_float *fpampim, t_float errthresh)
 {
-    float srate = sys_getsr();      /* not sure how to get this correctly */
-    float oneovern = 1.0/ (float)npts;
-    float fperbin = srate * oneovern;
-    float pow1, pow2 = 0, pow3 = 0, pow4 = 0, pow5 = 0;
-    float re1, re2 = 0, re3 = fpreal->w_float;
-    float im1, im2 = 0, im3 = 0, powthresh, relativeerror;
+    t_float srate = sys_getsr();      /* not sure how to get this correctly */
+    t_float oneovern = 1.0/ (t_float)npts;
+    t_float fperbin = srate * oneovern;
+    t_float pow1, pow2 = 0, pow3 = 0, pow4 = 0, pow5 = 0;
+    t_float re1, re2 = 0, re3 = fpreal->w_float;
+    t_float im1, im2 = 0, im3 = 0, powthresh, relativeerror;
     int count, peakcount = 0, n2 = (npts >> 1);
-    float *fp1, *fp2;
+    t_float *fp1, *fp2;
     t_word *wp1, *wp2;
     for (count = n2, wp1 = fpreal, wp2 = fpimag, powthresh = 0;
         count--; wp1++, wp2++)
@@ -92,12 +99,12 @@ static void pique_doit(int npts, t_word *fpreal, t_word *fpimag,
     powthresh *= 0.00001;
     for (count = 1; count < n2; count++)
     {
-        float windreal, windimag, pi = 3.14159;
-        float detune, pidetune, sinpidetune, cospidetune,
+        t_float windreal, windimag;
+        t_float detune, pidetune, sinpidetune, cospidetune,
             ampcorrect, freqout, ampout, ampoutreal, ampoutimag;
-        float rpeak, rpeaknext, rpeakprev;
-        float ipeak, ipeaknext, ipeakprev;
-        float errleft, errright;
+        t_float rpeak, rpeaknext, rpeakprev;
+        t_float ipeak, ipeaknext, ipeakprev;
+        t_float errleft, errright;
         fpreal++;
         fpimag++;
         re1 = re2;
@@ -140,8 +147,8 @@ static void pique_doit(int npts, t_word *fpreal, t_word *fpimag,
         /* if (count < 30) post("detune %f", detune); */
         if (detune > 0.7 || detune < -0.7) continue;
             /* the frequency is the sum of the bin frequency and detuning */ 
-        freqout = fperbin * ((float)(count-3) + detune);
-        pidetune = pi * detune;
+        freqout = fperbin * ((t_float)(count-3) + detune);
+        pidetune = PI * detune;
         sinpidetune = sin(pidetune);
         cospidetune = cos(pidetune);
         ampcorrect = 1.0 / hanning(pidetune, sinpidetune);
@@ -158,9 +165,9 @@ static void pique_doit(int npts, t_word *fpreal, t_word *fpimag,
         if (errthresh > 0)
         {
             /* post("peak %f %f", freqout, ampout); */
-            errleft = peakerror(fpreal-4, fpimag-4, pidetune+pi,
+            errleft = peakerror(fpreal-4, fpimag-4, pidetune+PI,
                 2. * oneovern, ampoutreal, ampoutimag);
-            errright = peakerror(fpreal-2, fpimag-2, pidetune-pi,
+            errright = peakerror(fpreal-2, fpimag-2, pidetune-PI,
                 2. * oneovern,  ampoutreal, ampoutimag);
             relativeerror = (errleft + errright)/(ampout * ampout);
             if (relativeerror > errthresh) continue;
@@ -198,16 +205,16 @@ static void pique_list(t_pique *x, t_symbol *s, int argc, t_atom *argv)
     else
     {
         int nfound, i;
-        float *fpfreq = x->x_freq;
-        float *fpamp = x->x_amp;
-        float *fpampre = x->x_ampre;
-        float *fpampim = x->x_ampim;
+        t_float *fpfreq = x->x_freq;
+        t_float *fpamp = x->x_amp;
+        t_float *fpampre = x->x_ampre;
+        t_float *fpampim = x->x_ampim;
         pique_doit(npts, fpreal, fpimag, npeak,
             &nfound, fpfreq, fpamp, fpampre, fpampim, x->x_errthresh);
         for (i = 0; i < nfound; i++, fpamp++, fpfreq++, fpampre++, fpampim++)
         {
             t_atom at[5];
-            SETFLOAT(at, (float)i);
+            SETFLOAT(at, (t_float)i);
             SETFLOAT(at+1, *fpfreq);
             SETFLOAT(at+2, *fpamp);
             SETFLOAT(at+3, *fpampre);
