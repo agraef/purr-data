@@ -84,6 +84,12 @@ typedef int socklen_t;
 
 #define X_SPECIFIER "x%.6lx"
 
+#if PD_FLOATSIZE == 32
+#define FLOAT_SPECIFIER "%.6g"
+#elif PD_FLOATSIZE == 64
+#define FLOAT_SPECIFIER "%.14g"
+#endif
+
 static int stderr_isatty;
 
 /* I don't see any other systems where this header (and backtrace) are
@@ -865,7 +871,7 @@ void gui_do_vmess(const char *sel, char *fmt, int end, va_list ap)
         if (nargs > 0) sys_gui(",");
         switch(*fp++)
         {
-        case 'f': sys_vgui("%g", va_arg(ap, double)); break;
+        case 'f': sys_vgui(FLOAT_SPECIFIER, va_arg(ap, double)); break;
         case 's': escape_double_quotes(va_arg(ap, const char *)); break;
         case 'i': sys_vgui("%d", va_arg(ap, int)); break;
         case 'x': sys_vgui("\"" X_SPECIFIER "\"",
@@ -912,10 +918,10 @@ void gui_f(t_float f)
 {
     if (gui_array_head && !gui_array_tail)
     {
-        sys_vgui("%g", f);
+        sys_vgui(FLOAT_SPECIFIER, f);
     }
     else
-        sys_vgui(",%g", f);
+        sys_vgui("," FLOAT_SPECIFIER, f);
     gui_array_head = 0;
     gui_array_tail = 0;
 }

@@ -13,9 +13,9 @@
 #include <stdio.h>
 
 #if PD_FLOATSIZE == 32
-#define FLOAT_SPECIFIER "%s%s%.6g"
+#define FLOAT_SPECIFIER "%.6g"
 #elif PD_FLOATSIZE == 64
-#define FLOAT_SPECIFIER "%s%s%.14lg"
+#define FLOAT_SPECIFIER "%.14g"
 #endif
 
 /* we need the following for [pdinfo] ... */
@@ -94,7 +94,8 @@ static void print_pointer(t_print *x, t_gpointer *gp)
 static void print_float(t_print *x, t_floatarg f)
 {
     if (sys_nogui)
-        post(FLOAT_SPECIFIER, x->x_sym->s_name, (*x->x_sym->s_name ? ": " : ""), f);
+        post("%s%s" FLOAT_SPECIFIER, x->x_sym->s_name,
+            (*x->x_sym->s_name ? ": " : ""), f);
     else
     {
         gui_start_vmess("gui_print", "xs", x, x->x_sym->s_name);
@@ -612,6 +613,13 @@ void pdinfo_dsp(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
     info_out((t_text *)x, s, 1, at);
 }
 
+void pdinfo_floatsize(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_atom at[1];
+    SETFLOAT(at, (t_float)PD_FLOATSIZE);
+    info_out((t_text *)x, s, 1, at);
+}
+
 void pdinfo_audio_api(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_atom at[1];
@@ -1025,6 +1033,8 @@ void pdinfo_setup(void)
         gensym("dir"), A_GIMME, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_dsp,
         gensym("dsp-status"), A_GIMME, 0);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_floatsize,
+        gensym("floatsize"), A_GIMME, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_gui,
         gensym("gui"), A_GIMME, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_libdir,
