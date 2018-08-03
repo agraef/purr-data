@@ -68,7 +68,7 @@ static cfftw_info *cfftw_getplan(int n,int fwd)
 
 typedef struct {
     fftwf_plan plan;
-    float *in,*out;
+    t_float *in,*out;
 } rfftw_info;
 
 static rfftw_info rfftw_fwd[MAXFFT+1 - MINFFT],rfftw_bwd[MAXFFT+1 - MINFFT];
@@ -82,8 +82,8 @@ static rfftw_info *rfftw_getplan(int n,int fwd)
     info = (fwd?rfftw_fwd:rfftw_bwd)+(logn-MINFFT);
     if (!info->plan) 
     {
-        info->in = (float*) fftwf_malloc(sizeof(float) * n);
-        info->out = (float*) fftwf_malloc(sizeof(float) * n);
+        info->in = (t_float*) fftwf_malloc(sizeof(t_float) * n);
+        info->out = (t_float*) fftwf_malloc(sizeof(t_float) * n);
         info->plan = fftwf_plan_r2r_1d(n, info->in, info->out, fwd?FFTW_R2HC:FFTW_HC2R, FFTW_MEASURE);
     }
     return info;
@@ -91,34 +91,34 @@ static rfftw_info *rfftw_getplan(int n,int fwd)
 
 
 
-EXTERN void mayer_fht(float *fz, int n)
+EXTERN void mayer_fht(t_float *fz, int n)
 {
     post("FHT: not yet implemented");
 }
 
-static void mayer_do_cfft(int n, float *fz1, float *fz2, int fwd)
+static void mayer_do_cfft(int n, t_float *fz1, t_float *fz2, int fwd)
 {
     int i;
-    float *fz;
+    t_float *fz;
     cfftw_info *p = cfftw_getplan(n, fwd);
     if (!p)
         return;
         
-    for (i = 0, fz = (float *)p->in; i < n; i++)
+    for (i = 0, fz = (t_float *)p->in; i < n; i++)
         fz[i*2] = fz1[i], fz[i*2+1] = fz2[i];
         
     fftwf_execute(p->plan);
     
-    for (i = 0, fz = (float *)p->out; i < n; i++)
+    for (i = 0, fz = (t_float *)p->out; i < n; i++)
         fz1[i] = fz[i*2], fz2[i] = fz[i*2+1];
 }
 
-EXTERN void mayer_fft(int n, float *fz1, float *fz2)
+EXTERN void mayer_fft(int n, t_float *fz1, t_float *fz2)
 {
     mayer_do_cfft(n, fz1, fz2, 1);
 }
 
-EXTERN void mayer_ifft(int n, float *fz1, float *fz2)
+EXTERN void mayer_ifft(int n, t_float *fz1, t_float *fz2)
 {
     mayer_do_cfft(n, fz1, fz2, 0);
 }
@@ -129,7 +129,7 @@ EXTERN void mayer_ifft(int n, float *fz1, float *fz2)
     but it's probably the mayer_fft that should be corrected...
 */ 
 
-EXTERN void mayer_realfft(int n, float *fz)
+EXTERN void mayer_realfft(int n, t_float *fz)
 {
     int i;
     rfftw_info *p = rfftw_getplan(n, 1);
@@ -145,7 +145,7 @@ EXTERN void mayer_realfft(int n, float *fz)
         fz[i] = -p->out[i];
 }
 
-EXTERN void mayer_realifft(int n, float *fz)
+EXTERN void mayer_realifft(int n, t_float *fz)
 {
     int i;
     rfftw_info *p = rfftw_getplan(n, 0);

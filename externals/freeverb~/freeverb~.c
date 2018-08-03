@@ -143,26 +143,13 @@ typedef struct _freeverb
 //#define FIX_DENORM_NAN_FLOAT(v);
 //#endif
 
-typedef union ulf
+static inline float fix_denorm_nan_float(t_float v);
+
+static inline float fix_denorm_nan_float(t_float v)
 {
-    unsigned long   ul;
-    float           f;
-} ulf;
-
-static inline float fix_denorm_nan_float(float v);
-
-static inline float fix_denorm_nan_float(float v)
-{
-#ifndef IRIX
-    ulf u;
-
-    u.f = v;
-    if ((((u.ul & 0x7f800000) == 0L) && (u.f != 0.f)) || ((u.ul & 0x7f800000) == 0x7f800000))
-        /* if the float is denormal or NaN, return 0.0 */
-        v = 0.0f;
-        //return 0.0f;
-#endif //IRIX
-    return v;
+	if (PD_BADFLOAT(v))
+	    v = 0.0f;
+	return v;
 }
 
 /* we need prototypes for Mac for everything */

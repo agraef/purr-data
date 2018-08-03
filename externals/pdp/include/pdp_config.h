@@ -35,7 +35,7 @@
 #define HAVE_PDP_QT 1
 
 /* build pdp_sdl */
-/* #undef HAVE_PDP_SDL */
+#define HAVE_PDP_SDL 1
 
 /* build pdp_v4l */
 #define HAVE_PDP_V4L 1
