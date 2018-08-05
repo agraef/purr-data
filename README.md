@@ -339,6 +339,18 @@ Here are some of the current tasks:
     And Mathieu Bouchard's "pure unity" (not sure if this is the most
     recent link...):
     http://sourceforge.net/p/pure-data/svn/HEAD/tree/tags/externals/pureunity/pureunity-0.0/
+* adding support for double precision to the external libraries that ship with purr-data
+  * skills needed: knowledge about data types in C language(specially float and double)
+  * status: the core classes of purr data and the freeverb~ external library
+    have been changed to support both float and double but still the remaining
+    external libraries only have support for single precision.
+    The task ahead is to add double precision support to these external libraries.
+    As per the current resources we have the merge requests that have been used to add double
+    precision support to the core libraries:
+    https://git.purrdata.net/jwilkes/purr-data/merge_requests?scope=all&utf8=%E2%9C%93&state=merged&author_username=pranay_36
+    And Katja Vetter's double precision patches to the pd-double project which were
+    actually used for adding double precision support to the core libraries of purr-data.
+    https://github.com/pd-projects/pd-double/commit/982ad1aa1a82b9bcd29c5b6a6e6b597675d5f300
 
 ### Human Interface Guidelines
 
