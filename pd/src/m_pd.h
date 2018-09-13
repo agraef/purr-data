@@ -99,7 +99,7 @@ typedef unsigned __int64  uint64_t;
 #elif PD_FLOATSIZE == 64
 #define PD_FLOATTYPE double
 #else
-#error invalid PD_FLOATPRECISION: must be 32 or 64
+#error invalid PD_FLOATSIZE: must be 32 or 64
 #endif
 
 typedef PD_LONGINTTYPE t_int;       /* pointer-size integer */
