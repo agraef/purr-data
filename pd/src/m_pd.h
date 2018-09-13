@@ -14,7 +14,7 @@ extern "C" {
 #define PD_MINOR_VERSION 48
 #define PD_BUGFIX_VERSION 0
 #define PD_TEST_VERSION ""
-#define PD_L2ORK_VERSION "2.5.1"
+#define PD_L2ORK_VERSION "2.6.0"
 #define PDL2ORK
 extern int pd_compatibilitylevel;   /* e.g., 43 for pd 0.43 compatibility */
 
@@ -99,7 +99,7 @@ typedef unsigned __int64  uint64_t;
 #elif PD_FLOATSIZE == 64
 #define PD_FLOATTYPE double
 #else
-#error invalid PD_FLOATPRECISION: must be 32 or 64
+#error invalid PD_FLOATSIZE: must be 32 or 64
 #endif
 
 typedef PD_LONGINTTYPE t_int;       /* pointer-size integer */
