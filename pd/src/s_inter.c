@@ -12,6 +12,17 @@ that didn't really belong anywhere. */
 #include "m_imp.h"
 #include "g_canvas.h"   /* for GUI queueing stuff */
 
+/* Use this if you want to point the guidir at a local copy of the
+ * repo while developing. Then recompile and copy the pd-l2ork binary
+ * to the system path. After that you can make changes to the gui code
+ * in purr-data/pd/nw and test them without having to recompile the
+ * pd-l2ork binary.
+ * If you do this, make sure you have run tar_em_up.sh first to fetch and
+ * extract the nw binary to purr-data/pd/nw/nw
+ */
+
+#define GUIDIR "" /* "/home/user/purr-data/pd/nw" */
+
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #else // if isatty exists outside unistd, please add another #ifdef
@@ -1411,10 +1422,11 @@ int sys_startgui(const char *guidir)
             strcpy(guidir2, "\"");
             strcat(guidir2, guidir);
             strcat(guidir2, "\"");
-            /* Uncomment the following line if you want to
-               use the nw binary and GUI code from your local
-               copy of the Purr Data repo. (Make sure to run
-               tar_em_up.sh first to fetch the nw binary.) */
+            /* The following line checks if our GUIDIR was defined
+               to something other than empty string. If so it will
+               use that dir to find the nw binary. */
+            if (strcmp(GUIDIR, ""))
+                strcpy(guidir2, "\"" GUIDIR "\"");
             //strcpy(guidir2, "\"/home/user/purr-data/pd/nw\"");
             sprintf(cmdbuf,
                 "\"%s\" %s %s "
@@ -1452,10 +1464,11 @@ int sys_startgui(const char *guidir)
             strcpy(guidir2, "\"");
             strcat(guidir2, guidir);
             strcat(guidir2, "\"");
-            /* Uncomment the following line if you want to
-               use the nw binary and GUI code from your local
-               copy of the Purr Data repo. (Make sure to run
-               tar_em_up.sh first to fetch the nw binary.) */
+            /* The following line checks if our GUIDIR was defined
+               to something other than empty string. If so it will
+               use that dir to find the nw binary. */
+            if (strcmp(GUIDIR, ""))
+                strcpy(guidir2, "\"" GUIDIR "\"");
             //strcpy(guidir2, "\"/home/user/purr-data/pd/nw\"");
             sprintf(cmdbuf,
                 "%s/nw/nw %s %s "
