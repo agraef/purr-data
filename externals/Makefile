@@ -44,7 +44,7 @@ DEST_PATHS = BUILDLAYOUT_DIR=$(BUILDLAYOUT_DIR) \
 BUILDSRC_OS_NAME = $(OS_NAME)
 
 WARN_FLAGS = -Wall -W -Wno-unused-parameter
-CFLAGS = -DPD -I$(pd_src)/src $(WARN_FLAGS) $(DEBUG_CFLAGS) -I$(gem_src)/src
+CFLAGS = -DPD -I$(pd_src)/src $(WARN_FLAGS) $(DEBUG_CFLAGS) $(CFLAGS_ADD) -I$(gem_src)/src
 LDFLAGS =  
 LIBS = -lm
 
@@ -131,10 +131,10 @@ CXXFLAGS = $(CFLAGS)
 # building scripts rely on it being that way.
 ifeq ($(LIGHT),yes)
 # minimal set of extensions for the "light" build
-LIB_TARGETS = loaders-libdir pddp
+lib_targets = loaders-libdir pddp
 INCREMENTAL = yes
 else
-LIB_TARGETS = adaptive arraysize autotune bassemu boids bsaylor comport creb cxc cyclone disis earplug ekext ext13 fftease fluid freeverb ggee hcs iem_ambi iem_bin_ambi iemlib iemgui iemguts iem_adaptfilt iemmatrix iemxmlrpc iem_delay iem_roomsim iem_spec2 iem_tab jasch_lib loaders-libdir lyonpotpourri mapping markex maxlib mjlib moocow moonlib motex mrpeach oscx pan pdcontainer pddp pdlua pdogg plugin pmpd rjlib sigpack smlib tof unauthorized vbap windowing zexy
+lib_targets = adaptive arraysize autotune bassemu boids bsaylor comport creb cxc cyclone disis earplug ekext ext13 fftease fluid freeverb ggee hcs iem_ambi iem_bin_ambi iemlib iemgui iemguts iem_adaptfilt iemmatrix iemxmlrpc iem_delay iem_roomsim iem_spec2 iem_tab jasch_lib loaders-libdir lyonpotpourri mapping markex maxlib mjlib moocow moonlib motex mrpeach oscx pan pdcontainer pddp pdlua pdogg plugin pmpd rjlib sigpack smlib tof unauthorized vbap windowing zexy
 endif
 
 # DISABLED: flatgui
@@ -145,26 +145,29 @@ endif
 ifneq ($(LIGHT),yes)
 ifeq ($(OS_NAME),windows)
   ifneq ($(INCREMENTAL),yes)
-    LIB_TARGETS += gem
+    lib_targets += gem
   endif
 else
   ifeq ($(OS_NAME),darwin)
 # on Mac OS X 10.6/Snow Leopard don't build hid since it needs Carbon
-    LIB_TARGETS += pdp iem16 apple
+    lib_targets += pdp iem16 apple
     ifneq ($(shell uname -r | sed 's|10\.[0-9][0-9]*\.[0-9][0-9]*|10|'),10)
-      LIB_TARGETS +=
+      lib_targets +=
     endif
   else ifneq ($(LIGHT),yes)
     # GNU/Linux, BSD, IRIX, etc. (we use exported variable INCREMENTAL to
     # avoid rebuilding entire Gem lib that takes a long time to compile)
     ifeq ($(INCREMENTAL),yes)
-	LIB_TARGETS += hid pdp iem16
+	lib_targets += hid pdp iem16
     else
-	LIB_TARGETS += gem pdp hid iem16
+	lib_targets += gem pdp hid iem16
     endif
   endif
 endif
 endif # ifneq ($(LIGHT),yes)
+
+# filter out blacklist of all targets NOT to be built
+LIB_TARGETS = $(filter-out $(blacklist),$(lib_targets))
 
 #------------------------------------------------------------------------------#
 
@@ -441,9 +444,12 @@ cxc_clean:
 
 #------------------------------------------------------------------------------#
 # CYCLONE
+
+# AG: this external provides no sane way to pass custom CFLAGS, so we abuse
+# WARN_CFLAGS for that purpose.
 cyclone:
 	make -C $(externals_src)/miXed/cyclone -f Makefile.libdir \
-		PD_PATH=$(pd_src) PD_INCLUDE=$(DESTDIR)$(includedir)
+		PD_PATH=$(pd_src) PD_INCLUDE=$(DESTDIR)$(includedir) WARN_CFLAGS="-Wall -W -Wstrict-prototypes -Wno-unused -Wno-parentheses -Wno-switch $(CFLAGS_ADD)"
 
 cyclone_install:
 	make -C $(externals_src)/miXed/cyclone -f Makefile.libdir \
@@ -463,7 +469,7 @@ ifneq ($(OS_NAME),darwin)
 		./configure --with-python=python2 && make
 endif
 endif
-	make -C $(externals_src)/disis PD_PATH=$(pd_src) pdbinpath=$(pd_src)/src
+	make -C $(externals_src)/disis PD_PATH=$(pd_src) pdbinpath=$(pd_src)/src CFLAGS="$(CFLAGS_ADD)"
 
 disis_install:
 	make -C $(externals_src)/disis \
@@ -506,7 +512,7 @@ ext13_clean:
 FFTEASE_NAME=fftease
 
 fftease:
-	make -C $(externals_src)/$(FFTEASE_NAME) PD_PATH=$(pd_src)
+	make -C $(externals_src)/$(FFTEASE_NAME) PD_PATH=$(pd_src) CFLAGS="$(CFLAGS_ADD)"
 
 fftease_install:
 	#make -C $(externals_src)/$(FFTEASE_NAME) DESTDIR="$(DESTDIR)" \
@@ -621,7 +627,7 @@ flib_clean:
 
 fluid:
 	make -C $(externals_src)/fluid~ PD_PATH=$(pd_src) \
-		pdbinpath=$(pd_src)/src
+		pdbinpath=$(pd_src)/src CFLAGS="$(CFLAGS_ADD)"
 
 fluid_install:
 	make -C $(externals_src)/fluid~ DESTDIR="$(DESTDIR)" \
@@ -650,7 +656,7 @@ $(gem_src)/configure:
 
 $(gem_src)/Gem.dll: $(gem_src)/configure
 	cd $(gem_src) && ./configure \
-		CXXFLAGS="-DHAVE_S_STUFF_H" \
+		CXXFLAGS="-DHAVE_S_STUFF_H $(CFLAGS_ADD)" \
 		--host=i686-w64-mingw32 \
 		--without-ALL \
 		--with-jpeg \
@@ -668,7 +674,7 @@ $(gem_src)/Gem.dll: $(gem_src)/configure
 $(gem_src)/Gem.pd_linux: $(gem_src)/configure
 	test -s $(gem_src)/Gem.pd_linux || \
 		cd $(gem_src) && ./configure \
-			CXXFLAGS="-DHAVE_S_STUFF_H" \
+			CXXFLAGS="-DHAVE_S_STUFF_H $(CFLAGS_ADD)" \
 			--prefix=$(prefix) \
 			--with-video=plugins \
 			--with-film=plugins \
@@ -677,7 +683,7 @@ $(gem_src)/Gem.pd_linux: $(gem_src)/configure
 
 $(gem_src)/Gem.pd_darwin: $(gem_src)/configure
 	cd $(gem_src) && ./configure \
-		CXXFLAGS="-DHAVE_S_STUFF_H" \
+		CXXFLAGS="-DHAVE_S_STUFF_H $(CFLAGS_ADD)" \
 		PKG_FTGL_CFLAGS="-I/sw/include -I/sw/include/freetype2 -I/sw/include/FTGL" \
 		--prefix=$(prefix) \
 		--libdir=$(objectsdir) \
@@ -1141,7 +1147,7 @@ LYON_SRC=lyonpotpourri
 LYON_DEST=lyonpotpourri
 
 lyonpotpourri:
-	make -C $(externals_src)/$(LYON_SRC) PD_PATH=$(pd_src)
+	make -C $(externals_src)/$(LYON_SRC) PD_PATH=$(pd_src) CFLAGS="$(CFLAGS_ADD)"
 
 lyonpotpourri_install:
 	#make -C $(externals_src)/$(LYON_SRC) DESTDIR="$(DESTDIR)" \
