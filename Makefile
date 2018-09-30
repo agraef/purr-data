@@ -87,6 +87,18 @@ ifneq ($(prefix),)
 env = inst_dir="$(prefix)"
 endif
 
+install_vars = DESTDIR=$(firstword $(wildcard $(CURDIR)/packages/*/build)) prefix=$(prefix)
+
+# You can set CFLAGS to whatever special compile options are needed. E.g., to
+# build the double precision version: CFLAGS = -DPD_FLOATSIZE=64
+CFLAGS =
+export CFLAGS
+
+# You can also set this variable to specify externals NOT to be built. E.g.,
+# to prevent building Gem (which takes an eternity to build): blacklist = gem
+blacklist =
+export blacklist
+
 all:
 	cd l2ork_addons && $(env) ./tar_em_up.sh -Tk
 
@@ -96,11 +108,28 @@ incremental:
 light:
 	cd l2ork_addons && $(env) ./tar_em_up.sh -tkl
 
+# Convenience targets to build the double precision version.
+
+# Blacklist of externals which don't work with double precision yet.
+double_blacklist = autotune smlib
+# These are dubious, passing float* for t_float* pointers, and so are most
+# likely broken, even though they compile with double precision.
+double_blacklist += cyclone lyonpotpourri
+
+all-double:
+	cd l2ork_addons && $(env) CFLAGS=-DPD_FLOATSIZE=64 blacklist="$(double_blacklist)" ./tar_em_up.sh -Tk
+
+incremental-double:
+	cd l2ork_addons && $(env) CFLAGS=-DPD_FLOATSIZE=64 blacklist="$(double_blacklist)" ./tar_em_up.sh -tk
+
+light-double:
+	cd l2ork_addons && $(env) CFLAGS=-DPD_FLOATSIZE=64 blacklist="$(double_blacklist)" ./tar_em_up.sh -tkl
+
 %_abs:
-	make -C abstractions $(@:%_abs=%_install) DESTDIR=$(firstword $(wildcard $(CURDIR)/packages/*/build)) prefix=$(prefix)
+	make -C abstractions $(@:%_abs=%) $(@:%_abs=%_install) $(install_vars)
 
 %_ext:
-	make -C externals $(@:%_ext=%_install) DESTDIR=$(firstword $(wildcard $(CURDIR)/packages/*/build)) prefix=$(prefix)
+	make -C externals $(@:%_ext=%) $(@:%_ext=%_install) $(install_vars)
 
 checkout:
 	git submodule update --init

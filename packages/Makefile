@@ -206,7 +206,7 @@ extensions_install:
 #------------------------------------------------------------------------------
 # externals_install
 externals_install: 
-	$(MAKE) -C $(externals_src) $(DEST_PATHS) install INCREMENTAL=$(INCREMENTAL) LIGHT=$(LIGHT)
+	$(MAKE) -C $(externals_src) $(DEST_PATHS) install INCREMENTAL=$(INCREMENTAL) LIGHT=$(LIGHT) CFLAGS_ADD="$(CFLAGS)"
 
 
 #------------------------------------------------------------------------------
