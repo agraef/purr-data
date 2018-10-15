@@ -108,7 +108,7 @@ ifneq ($(LIGHT),yes)
 	install -p $(bin_src)/libsystre-0.dll $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libtre-5.dll $(DESTDIR)$(bindir)/
 	# For fluid~
-	install -p $(bin_src)/libfluidsynth-1.dll $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libfluidsynth-2.dll $(DESTDIR)$(bindir)/
 	# For other external libs
 	install -p $(bin_src)/lua53.dll          $(DESTDIR)$(bindir)/
 	#install -p $(bin_src)/pthreadGC2.dll     $(DESTDIR)$(bindir)/
