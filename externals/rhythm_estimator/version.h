@@ -1,6 +1,6 @@
 /* Rhythm estimation in real time
    Copyright (C) 2000 Jarno Seppänen and Piotr Majdak
-   $Id: version.h,v 1.1 2002-11-19 11:38:58 ggeiger Exp $
+   $Id: version.h.in,v 1.1 2002-11-19 11:42:03 ggeiger Exp $
 
    This file is part of rhythm_estimator.
 

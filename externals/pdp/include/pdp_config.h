@@ -5,13 +5,13 @@
 #define HAVE_INTTYPES_H 1
 
 /* Define to 1 if you have the `gslcblas' library (-lgslcblas). */
-#define HAVE_LIBGSLCBLAS 1
+/* #undef HAVE_LIBGSLCBLAS */
 
 /* Define to 1 if you have the `m' library (-lm). */
 #define HAVE_LIBM 1
 
 /* Define to 1 if you have the <libv4l1-videodev.h> header file. */
-#define HAVE_LIBV4L1_VIDEODEV_H 1
+/* #undef HAVE_LIBV4L1_VIDEODEV_H */
 
 /* Define to 1 if you have the <linux/videodev.h> header file. */
 /* #undef HAVE_LINUX_VIDEODEV_H */
@@ -23,7 +23,7 @@
 #define HAVE_PDP_GLX 1
 
 /* gsl support */
-#define HAVE_PDP_GSL 1
+/* #undef HAVE_PDP_GSL */
 
 /* build pdp_v4l with libv4l */
 /* #undef HAVE_PDP_LIBV4L */
@@ -32,13 +32,13 @@
 #define HAVE_PDP_PNG 1
 
 /* build pdp_qt */
-#define HAVE_PDP_QT 1
+/* #undef HAVE_PDP_QT */
 
 /* build pdp_sdl */
 #define HAVE_PDP_SDL 1
 
 /* build pdp_v4l */
-#define HAVE_PDP_V4L 1
+/* #undef HAVE_PDP_V4L */
 
 /* build X11 support */
 #define HAVE_PDP_X 1
