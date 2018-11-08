@@ -44,7 +44,7 @@ typedef struct
     /* Array-related variables */
     t_symbol*	array_symbol;
     int		array_nsampsintab;
-    float*	array_vec;
+    t_word*	array_vec;
 
 } pd_t_rhythm_quantum;
 

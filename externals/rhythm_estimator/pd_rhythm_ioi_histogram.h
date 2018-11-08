@@ -43,8 +43,9 @@ typedef struct
 
     /* Array-related variables */
     t_symbol*	array_symbol;
-    unsigned array_nsampsintab;
-    float*	array_vec;
+    // unsigned array_nsampsintab;
+    int array_nsampsintab;
+    t_word*	array_vec;
 
 } pd_t_rhythm_ioi_histogram;
 
@@ -73,7 +74,8 @@ static void	pd_rhythm_ioi_histogram_array_initialize (pd_t_rhythm_ioi_histogram*
 						   t_symbol* s);
 static void	pd_rhythm_ioi_histogram_array_write (pd_t_rhythm_ioi_histogram* x,
 					      float* vector,
-					      unsigned length);
+					      int length);
+//					      unsigned length);
 static void	pd_rhythm_ioi_histogram_array_finish (pd_t_rhythm_ioi_histogram* x);
 
 

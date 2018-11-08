@@ -280,7 +280,7 @@ pd_rhythm_ioi_histogram_array_initialize (pd_t_rhythm_ioi_histogram* x,
 
     /* Initialize array buffer length and pointer */
 
-    else if (!garray_getfloatarray (a, &x->array_nsampsintab, &x->array_vec))
+    else if (!garray_getfloatwords (a, &x->array_nsampsintab, &x->array_vec))
     {
     	error("rhythm_ioi_histogram: %s: bad array", x->array_symbol->s_name);
     	x->array_vec = 0;
@@ -293,9 +293,10 @@ pd_rhythm_ioi_histogram_array_initialize (pd_t_rhythm_ioi_histogram* x,
     }
 }
 
+//			      unsigned length)
 void
 pd_rhythm_ioi_histogram_array_write (pd_t_rhythm_ioi_histogram* x, float* vector,
-			      unsigned length)
+			      int length)
 {
     t_garray *a;
 
@@ -314,14 +315,14 @@ pd_rhythm_ioi_histogram_array_write (pd_t_rhythm_ioi_histogram* x, float* vector
 
     /* Initialize array buffer length and pointer */
 
-    else if (!garray_getfloatarray (a, &x->array_nsampsintab, &x->array_vec))
+    else if (!garray_getfloatwords (a, &x->array_nsampsintab, &x->array_vec))
     {
     	error("rhythm_ioi_histogram: %s: bad array", x->array_symbol->s_name);
     	x->array_vec = 0;
     }
     else
     {
-	unsigned i = 0;
+	int i = 0;
 
 	garray_usedindsp (a);
 
@@ -335,7 +336,7 @@ pd_rhythm_ioi_histogram_array_write (pd_t_rhythm_ioi_histogram* x, float* vector
 	}
 	for (i = 0; i < length; i++)
 	{
-	    x->array_vec[i] = vector[i];
+	    x->array_vec[i] = (t_word)vector[i];
 	}
 
 	/* Redraw array on screen, if needed -- FIXME don't */

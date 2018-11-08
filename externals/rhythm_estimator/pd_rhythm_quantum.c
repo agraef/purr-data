@@ -105,6 +105,8 @@ pd_rhythm_quantum_bang (pd_t_rhythm_quantum* x)
 #if RHYTHM_ESTIMATOR_DEBUG_PROFILE
     double time;
 #endif
+    len = 0;
+    vector = 0;
 
     /* precondition(s) */
     assert (x != NULL);
@@ -236,7 +238,7 @@ pd_rhythm_quantum_array_initialize (pd_t_rhythm_quantum* x,
 
     /* Get array buffer length and pointer */
 
-    else if (!garray_getfloatarray (a, &x->array_nsampsintab, &x->array_vec))
+    else if (!garray_getfloatwords (a, &x->array_nsampsintab, &x->array_vec))
     {
     	error("rhythm_quantum: %s: bad array", x->array_symbol->s_name);
     	x->array_vec = 0;
@@ -270,7 +272,7 @@ pd_rhythm_quantum_array_read (pd_t_rhythm_quantum* x, float** vector,
 
     /* Initialize array buffer length and pointer */
 
-    else if (!garray_getfloatarray (a, &x->array_nsampsintab, &x->array_vec))
+    else if (!garray_getfloatwords (a, &x->array_nsampsintab, &x->array_vec))
     {
     	error("rhythm_quantum: %s: bad array", x->array_symbol->s_name);
     	x->array_vec = 0;
@@ -278,7 +280,7 @@ pd_rhythm_quantum_array_read (pd_t_rhythm_quantum* x, float** vector,
     else
     {
 	garray_usedindsp (a);
-	*vector = x->array_vec;
+	*vector = (float*)x->array_vec;
 	*length = x->array_nsampsintab;
     }
 }
