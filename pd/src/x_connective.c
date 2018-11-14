@@ -1464,45 +1464,165 @@ typedef struct _makefilename
     t_printtype x_accept;
 } t_makefilename;
 
-static const char* makefilename_doscanformat(const char *str, t_printtype *typ)
+static const char* makefilename_doscanformat(const char *str, t_printtype *typ,
+    char *errormsg)
 {
-    int infmt=0;
+    int infmt = 0, i;
     for (; *str; str++)
     {
-        if (!infmt && *str=='%')
+        if (!infmt && *str == '%')
         {
-            infmt=1;
+            /* A string consisting of a single '%' character isn't a valid
+               format specifier. */
+            if (*(str+1) == '\0')
+            {
+                str++;
+                sprintf(errormsg, "field type missing after '%%'");
+                *typ = NONE;
+                return str;
+            }
+            infmt = 1;
             continue;
         }
         if (infmt)
         {
-            if (*str=='%')
+            /* 1) flag field
+               Check for a leading '%' after our format specifier. This
+               will be converted to a single '%' in the output. */
+            if (*str == '%')
             {
-                infmt=0;
+                /* Not in a format specifier after all, so start over... */
+                infmt = 0;
                 continue;
             }
-            if (strchr("-.#0123456789",*str)!=0)
-                continue;
-            if (*str=='s')
+            for (i = 0; *str && strchr("-+#0", *str) != 0; str++)
+            {
+                /* Check for flag chars. While a space is a legal part of this
+                   field, Pd's parser would split it off into a separate arg.
+                   Since makefilename has always truncated extra args we don't
+                   support spaces here. */
+                /* Since we're dealing with arbitrary input let's keep
+                   the total number of flags sane. */
+                if (i > 16)
+                {
+                    sprintf(errormsg, "too many flags");
+                    *typ = NONE;
+                    return str;
+                }
+            }
+            /* 2) width field
+               Consecutive digits. Technically a width field may also be
+               '*' to use a variable to set the value. But makefilename has
+               never supported that, either generating a memory error or crash
+               upon use. So we exclude it here. */
+            if (*str == '*')
+            {
+                sprintf(errormsg, "variable width value not supported");
+                *typ = NONE;
+                return str;
+            }
+            int maxwidth = 3;
+            for (i = 0; *str && strchr("0123456789", *str) != 0; str++, i++)
+            {
+                /* Limit width length to prevent out-of-memory errors. */
+                if (i >= maxwidth)
+                {
+                    sprintf(errormsg, "width field cannot be greater than "
+                        "%d digits", maxwidth);
+                    *typ = NONE;
+                    return str;
+                }
+            }
+            /* 3) precision field
+               A '.' followed by consecutive digits. Can also have a '*' for
+               variable, so we need to check and exclude as with the width
+               field above. */
+            if (*str == '.')
+            {
+                str++;
+                if (*str == '*')
+                {
+                    sprintf(errormsg, "variable precision field not supported");
+                    *typ = NONE;
+                    return str;
+                }
+                int maxwidth = 3;
+                for (i = 0; *str && strchr("0123456789", *str) != 0; str++, i++)
+                {
+                    if (i >= maxwidth)
+                    {
+                        sprintf(errormsg, "precision field cannot be greater "
+                            "than %d digits", maxwidth);
+                        *typ = NONE;
+                        return str;
+                    }
+                }
+                /* Fairly certain having '.' with no trailing digits or asterisk
+                   is undefined behavior. So let's trigger a syntax error. */
+                if (i == 0)
+                {
+                    sprintf(errormsg, "precision specifier requires a number "
+                                      "following the '.'");
+                    *typ = NONE;
+                    return str;
+                }
+            }
+            /* 4) length field
+               Fairly certain the length field doesn't make any sense
+               here. At least I've never seen it used, so let's skip it. */
+
+            /* 5) type field 
+               The type of value we want to fill the slot with. This is the
+               most complex field we support. */
+
+            /* a C string */
+            if (*str == 's')
             {
                 *typ = STRING;
                 return str;
             }
-            if (strchr("fgGeE",*str)!=0)
+
+            /* a float. There's also 'a' and 'A' from C99, but let's stick
+               to the old school ones for now... */
+            if (*str && strchr("fFgGeE", *str) != 0)
             {
                 *typ = FLOAT;
                 return str;
             }
-            if (strchr("xXdiouc",*str)!=0)
+
+            /* an int */
+            if (*str && strchr("xXdiouc", *str) != 0)
             {
                 *typ = INT;
                 return str;
             }
-            if (strchr("p",*str)!=0)
+
+            /* a pointer */
+            if (*str && strchr("p", *str) != 0)
             {
                 *typ = POINTER;
                 return str;
             }
+
+            /* if we've gotten here it means we are missing a type field.
+               Undefined behavior would result, so we will bail here */
+            
+            /* First, let's check for any remaining type fields which
+               we don't support. That way we can give a better error message. */
+            if (*str == 'a' || *str == 'A')
+                sprintf(errormsg, "hexfloat type not supported. If you "
+                                  "need this feature make a case on the "
+                                  "mailing list and we'll consider adding it");
+            else if (*str == 'n')
+                sprintf(errormsg, "n field type not supported");
+            else if (*str == 'm')
+                sprintf(errormsg, "m field type not supported");
+            else if (*str)
+                sprintf(errormsg, "bad field type '%c'", *str);
+            else
+                sprintf(errormsg, "field type missing");
+            *typ = NONE;
+            return str;
         }
     }
     *typ = NONE;
@@ -1511,21 +1631,41 @@ static const char* makefilename_doscanformat(const char *str, t_printtype *typ)
 
 static void makefilename_scanformat(t_makefilename *x)
 {
+    char errorbuf[MAXPDSTRING];
+    errorbuf[0] = '\0';
     const char *str;
     t_printtype typ;
     if (!x->x_format) return;
     str = x->x_format->s_name;
-    str = makefilename_doscanformat(str, &typ);
-    x->x_accept = typ;
-    if (str && (NONE != typ))
+    /* First attempt at parsing the format string for the field type. */
+    str = makefilename_doscanformat(str, &typ, errorbuf);
+    /* If we got any errors we will have some content in our errorbuf... */
+    if (*errorbuf)
     {
-            /* try again, to see if there's another format specifier
-               (which we forbid) */
-        str = makefilename_doscanformat(str, &typ);
-        if (NONE != typ)
+        pd_error(x, "makefilename: invalid format string '%s' "
+                    "(%s). Setting to empty string.",
+            x->x_format->s_name, errorbuf);
+        /* set the format string to nothing. It would be great to refuse to
+           create the object here, but we also have to deal with new format
+           strings with the 'set' message. So for consistency we zero out
+           the format string and make it a runtimer error. */
+        x->x_format = 0;
+        return;
+    }
+    x->x_accept = typ;
+    if (str && (typ != NONE))
+    {
+        /* try again, to see if there's another format specifier
+           (which we forbid) */
+        str = makefilename_doscanformat(str, &typ, errorbuf);
+        /* If we've got a type other than none-- OR if we've got something
+           in our errorbuf-- we've got a syntax error. */
+        if (typ != NONE || *errorbuf)
         {
             pd_error(x, "makefilename: invalid format string '%s' "
-                        "(too many format specifiers)", x->x_format->s_name);
+                        "(too many format specifiers). "
+                        "Setting to empty string.",
+                x->x_format->s_name);
             x->x_format = 0;
             return;
         }
@@ -1572,7 +1712,7 @@ static void makefilename_float(t_makefilename *x, t_floatarg f)
     switch(x->x_accept)
     {
     case NONE:
-        makefilename_snprintf(x, buf, "%s",  x->x_format->s_name);
+        makefilename_snprintf(x, buf, x->x_format->s_name);
         break;
     case INT: case POINTER:
         makefilename_snprintf(x, buf, x->x_format->s_name, (int)f);
@@ -1613,7 +1753,7 @@ static void makefilename_symbol(t_makefilename *x, t_symbol *s)
         makefilename_snprintf(x, buf, x->x_format->s_name, 0.);
         break;
     case NONE:
-        makefilename_snprintf(x, buf, "%s", x->x_format->s_name);
+        makefilename_snprintf(x, buf, x->x_format->s_name);
         break;
     default:
         makefilename_snprintf(x, buf, "%s", x->x_format->s_name);
@@ -1639,7 +1779,7 @@ static void makefilename_bang(t_makefilename *x)
         makefilename_snprintf(x, buf, x->x_format->s_name, 0.);
         break;
     case NONE:
-        makefilename_snprintf(x, buf, "%s", x->x_format->s_name);
+        makefilename_snprintf(x, buf, x->x_format->s_name);
         break;
     default:
         makefilename_snprintf(x, buf, "%s", x->x_format->s_name);

@@ -1,29 +1,29 @@
 #N canvas 3 60 749 617 12;
-#X obj 345 301 r \$0-result;
-#X obj 345 326 route 0;
-#X obj 453 470 print failure;
-#X obj 430 336 tgl 28 0 empty empty Print_All_Results 31 11 0 12 -262144
--1 -1 1 1;
+#X obj 475 301 r \$0-result;
+#X obj 475 326 route 0;
+#X obj 583 470 print failure;
+#X obj 560 336 tgl 28 0 empty empty Print_All_Results 31 11 0 12 -262144
+-1 -1 0 1;
 #X obj 159 149 bng 31 250 50 0 empty empty Run_all 39 13 0 12 -262144
 -1 -1;
 #X obj 56 25 r init;
 #X obj 345 191 route dollarzero;
-#X obj 345 411 t b a;
-#X obj 345 541 s pd;
+#X obj 475 411 t b a;
+#X obj 475 541 s pd;
 #X obj 56 120 trigger bang bang anything;
 #X msg 56 145 gui;
 #X obj 56 170 pdinfo;
 #X obj 56 195 sel 0;
 #X obj 56 245 s pd;
-#X msg 345 516 quit 1;
+#X msg 475 516 quit 1;
 #X msg 56 220 quit;
 #X obj 145 191 rtest msg_dollarzero;
 #X obj 145 246 rtest msg_dollarzero_semi;
 #X obj 145 302 rtest msg_click;
 #X obj 345 216 rtest binbuf_dollarzero;
-#X msg 345 440 gui;
-#X obj 345 465 pdinfo;
-#X obj 345 490 sel 0;
+#X msg 475 440 gui;
+#X obj 475 465 pdinfo;
+#X obj 475 490 sel 0;
 #X text 117 25 <- we start Pd with the -send "init etc." flag. This
 will automatically start the tests and allow us to send a comma-separated
 list of messages which will be evaluated by Pd without a target. This
@@ -34,9 +34,10 @@ is handy for some binbuf tests.;
 #X text 536 150 <- we have to escape the arg;
 #X text 556 190 escape it in a comment.;
 #X text 556 170 in bash but we can't;
-#X obj 391 374 spigot;
-#X obj 407 440 route 1;
-#X obj 407 495 print success;
+#X obj 521 374 spigot;
+#X obj 537 440 route 1;
+#X obj 537 495 print success;
+#X obj 145 353 rtest makefilename_percent_parsing;
 #X connect 0 0 1 0;
 #X connect 1 0 7 0;
 #X connect 1 1 29 0;
@@ -56,6 +57,7 @@ is handy for some binbuf tests.;
 #X connect 15 0 13 0;
 #X connect 16 0 17 0;
 #X connect 17 0 18 0;
+#X connect 18 0 32 0;
 #X connect 20 0 21 0;
 #X connect 21 0 22 0;
 #X connect 22 0 14 0;
