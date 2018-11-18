@@ -73,9 +73,10 @@ ifeq ($(OS_NAME),linux)
 endif
 ifeq ($(OS_NAME),windows)
   BUILDSRC_OS_NAME = win
-  WINDOWS_HACKS = -D'O_NONBLOCK=1' -D'srand48(n)=srand((n))' \
-    -D'drand48()=((double)rand()/RAND_MAX)' -D'bzero(p,n)=memset(p,0,n)'
+  WINDOWS_HACKS = -DO_NONBLOCK=1
 # These don't seem to be needed:
+# -D'srand48(n)=srand((n))' \
+#    -D'drand48()=((double)rand()/RAND_MAX)' -D'bzero(p,n)=memset(p,0,n)'
 #	-D'PROT_READ=1' \
 #	-D'MAP_PRIVATE=2' \
 #	-D'O_NDELAY=O_NONBLOCK'
