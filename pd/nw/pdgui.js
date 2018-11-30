@@ -1995,7 +1995,12 @@ function add_gobj_to_svg(svg, gobj) {
 
 var gui = (function() {
     var c = {}; // object to hold references to all our canvas closures
-    var last_thing; // last thing we got
+    // We store the last "thing" we fetched from the window. This is either
+    // the window itself or a "gobj". Regular old DOM elements that aren't
+    // a "gobj" container don't count. This way we can do a "get_gobj" then
+    // gang multiple element queries after it that work within our last
+    // "gobj." (Same for window.)
+    var last_thing;
     var null_fn, null_canvas;
     var create_canvas = function(cid, w) {
         var get = function(parent, sel, arg, suffix) {
@@ -4152,7 +4157,8 @@ function gui_grid_point(cid, tag, x, y) {
 }
 
 // mknob from moonlib
-function gui_mknob_new(cid, tag, x, y, is_toplevel, show_in, show_out) {
+function gui_mknob_new(cid, tag, x, y, is_toplevel, show_in, show_out,
+    is_footils_knob) {
     gui(cid).get_elem("patchsvg", function(svg_elem) {
         gui_gobj_new(cid, tag, "obj", x, y, is_toplevel);
     });
@@ -4162,50 +4168,89 @@ function gui_mknob_new(cid, tag, x, y, is_toplevel, show_in, show_out) {
             class: "border" // now we can inherit the css border styles
         }),
         circle = create_item(cid, "circle", {
-            class: "circle"
+            //class: "circle"
         }),
         line = create_item(cid, "line", {
-            class: "dial"
+            //class: "dial"
         });
         frag.appendChild(border);
         frag.appendChild(circle);
+        /* An extra circle for footils/knob */
+        if (!!is_footils_knob) {
+            frag.appendChild(create_item(cid, "circle", {
+                class: "dial_frag"
+            }));
+        }
         frag.appendChild(line);
         return frag;
     });
 }
 
-function gui_configure_mknob(cid, tag, size, bg_color, fg_color) {
-    gui(cid).get_gobj(tag)
+function knob_dashes(d, len) {
+    var c = d * 3.14159;
+    return (c * len) + " " + (c * (1 - len));
+}
+
+function knob_offset(d) {
+    return d * 3.14 * -0.28;
+}
+
+function gui_configure_mknob(cid, tag, size, bg_color, fg_color,
+    is_footils_knob) {
+    var w = size,
+        h = !!is_footils_knob ? size + 5 : size;
+    var g = gui(cid).get_gobj(tag)
     .q(".border", {
-        d: ["M", 0, 0, size, 0,
-            "M", 0, size, size, size,
-            "M", 0, 0, 0, size,
-            "M", size, 0, size, size
+        d: ["M", 0, 0, w, 0,
+            "M", 0, h, w, h,
+            "M", 0, 0, 0, h,
+            "M", w, 0, w, h
            ].join(" "),
         fill: "none",
     })
-    .q(".circle", {
+    .q("circle", {
         cx: size / 2,
         cy: size / 2,
         r: size / 2,
-        fill: bg_color,
+        fill: !!is_footils_knob ? "none" : bg_color,
         stroke: "black",
-        "stroke-width": 1
+        "stroke-width": !!is_footils_knob ? 3 : 1,
+        "stroke-dasharray": !!is_footils_knob ?
+            knob_dashes(size, 0.94) : "none",
+        "stroke-dashoffset": !!is_footils_knob ? knob_offset(size) : "0"
     })
-    .q(".dial", {
+    .q("line", { // indicator
         "stroke-width": 2,
         stroke: fg_color
     });
+
+    if (!!is_footils_knob) {
+        g.q(".dial_frag", {
+            cx: size / 2,
+            cy: size / 2,
+            r: size / 2,
+            fill: "none",
+            stroke: bg_color,
+            "stroke-width": 3,
+            "stroke-dasharray": knob_dashes(size, 0.94),
+            "stroke-dashoffset": knob_offset(size)
+        });
+    }
 }
 
-function gui_turn_mknob(cid, tag, x1, y1, x2, y2) {
-    gui(cid).get_gobj(tag)
-    .q(".dial", {
+function gui_turn_mknob(cid, tag, x1, y1, x2, y2, is_footils_knob, val) {
+    var g = gui(cid).get_gobj(tag)
+    .q("line", { // indicator
         x1: x1,
         y1: y1,
         x2: x2,
         y2: y2
     });
+    if (!!is_footils_knob) {
+        g.q(".dial_frag", {
+            "stroke-dasharray": knob_dashes(x1 * 2, val * 0.94)
+        });
+    }
 }
 
 function add_popup(cid, popup) {
