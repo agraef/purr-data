@@ -4208,6 +4208,156 @@ function gui_turn_mknob(cid, tag, x1, y1, x2, y2) {
     });
 }
 
+// room_sim_2d and room_sim_3d objects from iemlib
+function gui_room_sim_new(cid, tag, x, y, w, h, is_toplevel) {
+    gui(cid).get_elem("patchsvg", function(svg_elem) {
+        gui_gobj_new(cid, tag, "obj", x, y, is_toplevel);
+    });
+    gui(cid).get_gobj(tag)
+    .append(function(frag) {
+//        frag.appendChild(line);
+        return frag;
+    });
+}
+
+function gui_room_sim_map(cid, tag, w, h, rad, head, xpix, ypix, fontsize,
+    fcol, bcol, src_array, r3d) {
+    gui(cid).get_gobj(tag, function(e) {
+        gui_text_draw_border(cid, tag, 0, 0, w, h);
+        // Set the style for the background directly... otherwise the
+        // default theme bgcolor will be used
+        e.querySelector(".border").style.fill = bcol;
+    })
+    .append(function(frag) {
+        var x1 = xpix - rad,
+            x2 = xpix + rad - 1,
+            y1 = ypix - rad,
+            y2 = ypix + rad - 1,
+            dx = -((rad * Math.sin(head * 0.0174533) + 0.49999)|0),
+            dy = -((rad * Math.cos(head * 0.0174533) + 0.49999)|0),
+            i,
+            text;
+        for (i = 0; i < src_array.length; i++) {
+            text = create_item(cid, "text", {
+                x: src_array[i][0],
+                y: src_array[i][1],
+                fill: src_array[i][2],
+                "font-size": fontsize,
+                "dominant-baseline": "middle"
+            });
+            text.textContent = (i + 1).toString();
+            frag.appendChild(text);
+        }
+        var ellipse = create_item(cid, "ellipse", {
+            cx: (x2 - x1) * 0.5 + x1,
+            cy: (y2 - y1) * 0.5 + y1,
+            rx: (x2 - x1) * 0.5,
+            ry: (y2 - y1) * 0.5,
+            "stroke-width": 1,
+            "stroke": fcol,
+            "fill": "none"
+        }),
+        ellipse2 = create_item(cid, "ellipse", {
+            // for room_sim_3d
+            cx: r3d ? (r3d[2] - r3d[0]) * 0.5 + r3d[0] : 0,
+            cy: r3d ? (r3d[3] - r3d[1]) * 0.5 + r3d[1] : 0,
+            rx: r3d ? (r3d[2] - r3d[0]) * 0.5 : 0,
+            ry: r3d ? (r3d[3] - r3d[1]) * 0.5 : 0,
+            "stroke-width": 1,
+            stroke: fcol,
+            fill: "none"
+        }),
+        line = create_item(cid, "line", {
+            x1: xpix,
+            y1: ypix,
+            x2: xpix + dx,
+            y2: ypix + dy,
+            "stroke-width": 3,
+            stroke: fcol
+        });
+        frag.appendChild(ellipse);
+        frag.appendChild(ellipse2);
+        frag.appendChild(line);
+        return frag;
+    })
+}
+
+function gui_room_sim_update_src(cid, tag, i, x, y, font_size, col) {
+    gui(cid).get_gobj(tag, function(e) {
+        var a = e.querySelectorAll("text");
+        if (a.length && i < a.length) {
+            configure_item(a[i], {
+                x: x,
+                y: y,
+                "font-size": font_size,
+                fill: col
+            });
+        }
+    });
+}
+
+function gui_room_sim_update(cid, tag, x0, y0, dx, dy, pixrad) {
+    gui(cid).get_gobj(tag)
+    .q("line", {
+        x1: x0,
+        y1: y0,
+        x2: x0 + dx,
+        y2: y0 + dy
+    })
+    .q("ellipse", {
+        rx: ((x0 + pixrad - 1) - (x0 - pixrad)) * 0.5,
+        ry: ((y0 + pixrad - 1) - (y0 - pixrad)) * 0.5,
+        cx: ((x0 + pixrad - 1) - (x0 - pixrad)) * 0.5 + (x0 - pixrad),
+        cy: ((y0 + pixrad - 1) - (y0 - pixrad)) * 0.5 + (y0 - pixrad),
+    });
+}
+
+// for room_sim_3d
+function gui_room_sim_head2(cid, tag, x1, y1, x2, y2) {
+    gui(cid).get_gobj(tag, function(e) {
+        configure_item(e.querySelectorAll("ellipse")[1], {
+            rx: (x2 - x1) * 0.5,
+            ry: (y2 - y1) * 0.5,
+            cx: (x2 - x1) * 0.5 + x1,
+            cy: (y2 - y1) * 0.5 + y1
+        });
+    });
+}
+
+function gui_room_sim_fontsize(cid, tag, i, size) {
+    gui(cid).get_gobj(tag, function(e) {
+        var i, a;
+        a = e.querySelectorAll("text");
+        if (a.length) {
+            for (i = 0; i < a.length; i++) {
+                configure_item(a[i], {
+                    "font-size": size
+                });
+            }
+        }
+    });
+}
+
+// for the dial thingy
+function gui_room_sim_colors(cid, tag, fg, bg) {
+    gui(cid).get_gobj(tag)
+    .q("ellipse", {
+        stroke: fg
+    })
+    .q("line", {
+        stroke: fg
+    })
+    .q(".border", function(e) {
+        e.style.fill = bg;
+    });
+}
+
+function gui_room_sim_erase(cid, tag) {
+    gui(cid).get_gobj(tag, function(e) {
+        e.innerHTML = "";
+    });
+}
+
 function add_popup(cid, popup) {
     popup_menu[cid] = popup;
 }
