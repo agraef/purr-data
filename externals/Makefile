@@ -542,7 +542,7 @@ fftease_clean:
 #
 flatgui:
 	make -C $(externals_src)/footils/knob CFLAGS="$(CFLAGS)" \
-		PD_PATH=$(pd_src) pdbinpath=$(pd_src/src) \
+		PD_PATH=$(pd_src) pdbinpath=$(pd_src)/src \
 		PD_INCLUDE=$(pd_src)/src
 
 flatgui_install:
