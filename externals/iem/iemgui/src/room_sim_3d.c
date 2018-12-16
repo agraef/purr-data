@@ -7,7 +7,7 @@ iemgui written by Thomas Musil, Copyright (c) IEM KUG Graz Austria 2000 - 2006 *
 #include "iemlib.h"
 #include "iemgui.h"
 #include "g_canvas.h"
-#include "../../../old_g_all_guis.inc"
+#include "g_all_guis.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -54,6 +54,7 @@ typedef struct _room_sim_3d
   t_symbol  *x_s_head_xyz;
   t_symbol  *x_s_src_xyz;
   t_atom    x_at[6];
+  int       x_steady;
 } t_room_sim_3d;
 
 static void room_sim_3d_out_rho(t_room_sim_3d *x)
@@ -94,10 +95,103 @@ static void room_sim_3d_draw_update(t_room_sim_3d *x, t_glist *glist)
     
     dx = -(int)((t_float)x->x_pix_rad*(t_float)sin(x->x_rho_head*0.0174533f) + 0.49999f);
     dy = -(int)((t_float)x->x_pix_rad*(t_float)cos(x->x_rho_head*0.0174533f) + 0.49999f);
-    sys_vgui(".x%x.c coords %xNOSE %d %d %d %d\n",
-      canvas, x, xpos+x->x_pix_src_x[0], ypos+x->x_pix_src_y[0],
-      xpos+x->x_pix_src_x[0]+dx, ypos+x->x_pix_src_y[0]+dy);
+//    sys_vgui(".x%x.c coords %xNOSE %d %d %d %d\n",
+//      canvas, x, xpos+x->x_pix_src_x[0], ypos+x->x_pix_src_y[0],
+//      xpos+x->x_pix_src_x[0]+dx, ypos+x->x_pix_src_y[0]+dy);
+
+    gui_vmess("gui_room_sim_update", "xxiiiii",
+      canvas,
+      x,
+      x->x_pix_src_x[0],
+      x->x_pix_src_y[0],
+      dx,
+      dy,
+      x->x_pix_rad
+    );
   }
+}
+
+void room_sim_3d_draw_unmap(t_room_sim_3d *x, t_glist *glist)
+{
+    gui_vmess("gui_room_sim_erase", "xx",
+        x->x_gui.x_glist, x);
+}
+
+void room_sim_3d_draw_map(t_room_sim_3d *x, t_glist *glist)
+{
+  int xpos = text_xpix(&x->x_gui.x_obj, glist);
+  int ypos = text_ypix(&x->x_gui.x_obj, glist);
+  int dx, dy;
+  int H = (int)(0.5f * x->x_room_z * x->x_cnvrt_roomlx2pixh + 0.49999f);
+  int H2 = H*H;
+  int rad2;
+  int i, n = x->x_nr_src;
+  int fsi, fs = x->x_fontsize;
+  t_canvas *canvas = glist_getcanvas(glist);
+  char bcol[MAXPDSTRING];
+  char fcol[MAXPDSTRING];
+  char elemcol[MAXPDSTRING];
+  sprintf(fcol, "#%6.6x", x->x_gui.x_fcol);
+  sprintf(bcol, "#%6.6x", x->x_gui.x_bcol);
+  
+  gui_start_vmess("gui_room_sim_map", "xxiiifiiiss",
+    canvas,
+    x,
+    x->x_gui.x_w,
+    x->x_gui.x_h,
+    x->x_pix_rad,
+    x->x_rho_head,
+    x->x_pix_src_x[0],
+    x->x_pix_src_y[0],
+    x->x_fontsize,
+    fcol,
+    bcol
+  );
+  gui_start_array();
+  for (i = 1; i <= n; i++)
+  {
+    fsi = H2 + (H + 2 * x->x_pix_src_z[i]) * x->x_pix_src_z[i];
+    fsi *= fs;
+    fsi /= 2*H2;
+    gui_start_array();
+    gui_i(x->x_pix_src_x[i]);
+    gui_i(x->x_pix_src_y[i]);
+    sprintf(elemcol, "#%6.6x", x->x_col_src[i]);
+    gui_s(elemcol);
+    gui_i(fsi);
+    gui_end_array();
+//    sys_vgui(".x%x.c create text %d %d -text {%d} -anchor c \
+//      -font {times %d bold} -fill #%6.6x -tags %xSRC%d\n",
+//      canvas, xpos+x->x_pix_src_x[i], ypos+x->x_pix_src_y[i], i, fsi,
+//      x->x_col_src[i], x, i);
+  }
+  gui_end_array();
+  
+//  sys_vgui(".x%x.c create oval %d %d %d %d -outline #%6.6x -tags %xHEAD\n",
+//    canvas, xpos+x->x_pix_src_x[0]-x->x_pix_rad, ypos+x->x_pix_src_y[0]-x->x_pix_rad,
+//    xpos+x->x_pix_src_x[0]+x->x_pix_rad-1, ypos+x->x_pix_src_y[0]+x->x_pix_rad-1,
+//    x->x_gui.x_fcol, x);
+
+  rad2 = H2 + (H + 2 * x->x_pix_src_z[0]) * x->x_pix_src_z[0];
+  rad2 *= x->x_pix_rad;
+  rad2 /= 8*H2;
+  gui_start_array();
+  gui_i(x->x_pix_src_x[0] - rad2);
+  gui_i(x->x_pix_src_y[0] - rad2);
+  gui_i(x->x_pix_src_x[0] + rad2 - 1);
+  gui_i(x->x_pix_src_y[0] + rad2 - 1);
+  gui_end_array();
+  gui_end_vmess();
+//  sys_vgui(".x%x.c create oval %d %d %d %d -outline #%6.6x -tags %xHEAD2\n",
+//    canvas, xpos+x->x_pix_src_x[0]-rad2, ypos+x->x_pix_src_y[0]-rad2,
+//    xpos+x->x_pix_src_x[0]+rad2-1, ypos+x->x_pix_src_y[0]+rad2-1,
+//    x->x_gui.x_fcol, x);
+//  dx = -(int)((t_float)x->x_pix_rad*(t_float)sin(x->x_rho_head*0.0174533f) + 0.49999f);
+//  dy = -(int)((t_float)x->x_pix_rad*(t_float)cos(x->x_rho_head*0.0174533f) + 0.49999f);
+//  sys_vgui(".x%x.c create line %d %d %d %d -width 3 -fill #%6.6x -tags %xNOSE\n",
+//    canvas, xpos+x->x_pix_src_x[0], ypos+x->x_pix_src_y[0],
+//    xpos+x->x_pix_src_x[0]+dx, ypos+x->x_pix_src_y[0]+dy,
+//    x->x_gui.x_fcol, x);
 }
 
 void room_sim_3d_draw_new(t_room_sim_3d *x, t_glist *glist)
@@ -112,39 +206,20 @@ void room_sim_3d_draw_new(t_room_sim_3d *x, t_glist *glist)
   int fsi, fs=x->x_fontsize;
   t_canvas *canvas=glist_getcanvas(glist);
   
-  sys_vgui(".x%x.c create rectangle %d %d %d %d -fill #%6.6x -outline #%6.6x -tags %xBASE\n",
-    canvas, xpos, ypos, xpos + x->x_gui.x_w, ypos + x->x_gui.x_h,
-    x->x_gui.x_bcol, x->x_gui.x_fsf.x_selected?IEM_GUI_COLOR_SELECTED:IEM_GUI_COLOR_NORMAL, x);
-  for(i=1; i<=n; i++)
-  {
-    fsi = H2 + (H + 2 * x->x_pix_src_z[i]) * x->x_pix_src_z[i];
-    fsi *= fs;
-    fsi /= 2*H2;
-    sys_vgui(".x%x.c create text %d %d -text {%d} -anchor c \
-      -font {times %d bold} -fill #%6.6x -tags %xSRC%d\n",
-      canvas, xpos+x->x_pix_src_x[i], ypos+x->x_pix_src_y[i], i, fsi,
-      x->x_col_src[i], x, i);
-  }
-  
-  sys_vgui(".x%x.c create oval %d %d %d %d -outline #%6.6x -tags %xHEAD\n",
-    canvas, xpos+x->x_pix_src_x[0]-x->x_pix_rad, ypos+x->x_pix_src_y[0]-x->x_pix_rad,
-    xpos+x->x_pix_src_x[0]+x->x_pix_rad-1, ypos+x->x_pix_src_y[0]+x->x_pix_rad-1,
-    x->x_gui.x_fcol, x);
-  rad2 = H2 + (H + 2 * x->x_pix_src_z[0]) * x->x_pix_src_z[0];
-  rad2 *= x->x_pix_rad;
-  rad2 /= 8*H2;
-  sys_vgui(".x%x.c create oval %d %d %d %d -outline #%6.6x -tags %xHEAD2\n",
-    canvas, xpos+x->x_pix_src_x[0]-rad2, ypos+x->x_pix_src_y[0]-rad2,
-    xpos+x->x_pix_src_x[0]+rad2-1, ypos+x->x_pix_src_y[0]+rad2-1,
-    x->x_gui.x_fcol, x);
-  dx = -(int)((t_float)x->x_pix_rad*(t_float)sin(x->x_rho_head*0.0174533f) + 0.49999f);
-  dy = -(int)((t_float)x->x_pix_rad*(t_float)cos(x->x_rho_head*0.0174533f) + 0.49999f);
-  sys_vgui(".x%x.c create line %d %d %d %d -width 3 -fill #%6.6x -tags %xNOSE\n",
-    canvas, xpos+x->x_pix_src_x[0], ypos+x->x_pix_src_y[0],
-    xpos+x->x_pix_src_x[0]+dx, ypos+x->x_pix_src_y[0]+dy,
-    x->x_gui.x_fcol, x);
+  gui_vmess("gui_room_sim_new", "xxiiiii",
+    canvas,
+    x,
+    xpos,
+    ypos,
+    x->x_gui.x_w,
+    x->x_gui.x_h,
+    glist_istoplevel(glist)
+  );
+
+  room_sim_3d_draw_map(x, glist);
 }
 
+/*
 void room_sim_3d_draw_move(t_room_sim_3d *x, t_glist *glist)
 {
   int xpos=text_xpix(&x->x_gui.x_obj, glist);
@@ -185,52 +260,22 @@ void room_sim_3d_draw_move(t_room_sim_3d *x, t_glist *glist)
     canvas, x, xpos+x->x_pix_src_x[0], ypos+x->x_pix_src_y[0],
     xpos+x->x_pix_src_x[0]+dx, ypos+x->x_pix_src_y[0]+dy);
 }
-
-void room_sim_3d_draw_erase(t_room_sim_3d* x, t_glist* glist)
-{
-  int i, n;
-  t_canvas *canvas=glist_getcanvas(glist);
-  
-  sys_vgui(".x%x.c delete %xBASE\n", canvas, x);
-  n = x->x_nr_src;
-  for(i=1; i<=n; i++)
-  {
-    sys_vgui(".x%x.c delete %xSRC%d\n", canvas, x, i);
-  }
-  sys_vgui(".x%x.c delete %xHEAD\n", canvas, x);
-  sys_vgui(".x%x.c delete %xHEAD2\n", canvas, x);
-  sys_vgui(".x%x.c delete %xNOSE\n", canvas, x);
-}
-
-void room_sim_3d_draw_select(t_room_sim_3d* x, t_glist* glist)
-{
-  t_canvas *canvas=glist_getcanvas(glist);
-  
-  if(x->x_gui.x_fsf.x_selected)
-  {
-    int xpos=text_xpix(&x->x_gui.x_obj, glist);
-    int ypos=text_ypix(&x->x_gui.x_obj, glist);
-    
-    sys_vgui(".x%x.c itemconfigure %xBASE -outline #%6.6x\n", canvas, x, IEM_GUI_COLOR_SELECTED);
-  }
-  else
-  {
-    sys_vgui(".x%x.c itemconfigure %xBASE -outline #%6.6x\n", canvas, x, IEM_GUI_COLOR_NORMAL);
-  }
-}
+*/
 
 void room_sim_3d_draw(t_room_sim_3d *x, t_glist *glist, int mode)
 {
-  if(mode == IEM_GUI_DRAW_MODE_UPDATE)
+  if (mode == IEM_GUI_DRAW_MODE_UPDATE)
     room_sim_3d_draw_update(x, glist);
-  else if(mode == IEM_GUI_DRAW_MODE_MOVE)
-    room_sim_3d_draw_move(x, glist);
-  else if(mode == IEM_GUI_DRAW_MODE_NEW)
+  else if (mode == IEM_GUI_DRAW_MODE_MOVE)
+    iemgui_base_draw_move(&x->x_gui);
+  else if (mode == IEM_GUI_DRAW_MODE_NEW)
     room_sim_3d_draw_new(x, glist);
-  else if(mode == IEM_GUI_DRAW_MODE_SELECT)
+/*
+  else if (mode == IEM_GUI_DRAW_MODE_SELECT)
     room_sim_3d_draw_select(x, glist);
-  else if(mode == IEM_GUI_DRAW_MODE_ERASE)
+  else if (mode == IEM_GUI_DRAW_MODE_ERASE)
     room_sim_3d_draw_erase(x, glist);
+*/
 }
 
 /* ------------------------ cnv widgetbehaviour----------------------------- */
@@ -272,44 +317,44 @@ static void room_sim_3d_save(t_gobj *z, t_binbuf *b)
 
 static void room_sim_3d_motion(t_room_sim_3d *x, t_floatarg dx, t_floatarg dy)
 {
-  int i, n=x->x_nr_src;
-  int pixrad=x->x_pix_rad;
-  int sel=x->x_sel_index;
-  int xpos=text_xpix(&x->x_gui.x_obj, x->x_gui.x_glist);
-  int ypos=text_ypix(&x->x_gui.x_obj, x->x_gui.x_glist);
+  int i, n = x->x_nr_src;
+  int pixrad = x->x_pix_rad;
+  int sel = x->x_sel_index;
+  int xpos = text_xpix(&x->x_gui.x_obj, x->x_gui.x_glist);
+  int ypos = text_ypix(&x->x_gui.x_obj, x->x_gui.x_glist);
   int ddx, ddy;
-  int fs=x->x_fontsize, fsi;
-  int H=(int)(0.5f * x->x_room_z * x->x_cnvrt_roomlx2pixh + 0.49999f);
-  int H2=H*H;
+  int fs = x->x_fontsize, fsi;
+  int H = (int)(0.5f * x->x_room_z * x->x_cnvrt_roomlx2pixh + 0.49999f);
+  int H2 = H*H;
   int rad2;
-  t_canvas *canvas=glist_getcanvas(x->x_gui.x_glist);
+  t_canvas *canvas = glist_getcanvas(x->x_gui.x_glist);
   
-  if(x->x_gui.x_fsf.x_finemoved && (sel == 0))
+  if (x->x_gui.x_finemoved && (sel == 0))
   {
-    if(x->x_gui.x_fsf.x_steady)/*alt-key, rhoy, rhox*/
+    if (x->x_steady)/*alt-key, rhoy, rhox*/
     {
     }
     else
     {
       x->x_rho_head -= dy;
-      if(x->x_rho_head <= -180.0f)
+      if (x->x_rho_head <= -180.0f)
         x->x_rho_head += 360.0f;
-      if(x->x_rho_head > 180.0f)
+      if (x->x_rho_head > 180.0f)
         x->x_rho_head -= 360.0f;
       room_sim_3d_out_rho(x);
       (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
     }
   }
-  else if(sel == 0)
+  else if (sel == 0)
   {
-    if(x->x_gui.x_fsf.x_steady)/*alt-key, move head in z*/
+    if (x->x_steady) /*alt-key, move head in z */
     {
       x->x_pix_src_x[0] = x->x_pos_x;
       x->x_pix_src_y[0] = x->x_pos_y;
       x->x_pix_src_z[0] -= (int)dy;
-      if(x->x_pix_src_z[0] < 0)
+      if (x->x_pix_src_z[0] < 0)
         x->x_pix_src_z[0] = 0;
-      if(x->x_pix_src_z[0] > x->x_height_z)
+      if (x->x_pix_src_z[0] > x->x_height_z)
         x->x_pix_src_z[0] = x->x_height_z;
     }
     else
@@ -319,46 +364,66 @@ static void room_sim_3d_motion(t_room_sim_3d *x, t_floatarg dx, t_floatarg dy)
       x->x_pos_y += (int)dy;
       x->x_pix_src_x[0] = x->x_pos_x;
       x->x_pix_src_y[0] = x->x_pos_y;
-      if(x->x_pix_src_x[0] < 0)
+      if (x->x_pix_src_x[0] < 0)
         x->x_pix_src_x[0] = 0;
-      if(x->x_pix_src_x[0] > x->x_gui.x_w)
+      if (x->x_pix_src_x[0] > x->x_gui.x_w)
         x->x_pix_src_x[0] = x->x_gui.x_w;
-      if(x->x_pix_src_y[0] < 0)
+      if (x->x_pix_src_y[0] < 0)
         x->x_pix_src_y[0] = 0;
-      if(x->x_pix_src_y[0] > x->x_gui.x_h)
+      if (x->x_pix_src_y[0] > x->x_gui.x_h)
         x->x_pix_src_y[0] = x->x_gui.x_h;
     }
     room_sim_3d_out_para(x);
-    sys_vgui(".x%x.c coords %xHEAD %d %d %d %d\n",
-      canvas, x, xpos+x->x_pix_src_x[0]-pixrad, ypos+x->x_pix_src_y[0]-pixrad,
-      xpos+x->x_pix_src_x[0]+pixrad-1, ypos+x->x_pix_src_y[0]+pixrad-1);
+    (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
+//    sys_vgui(".x%x.c coords %xHEAD %d %d %d %d\n",
+//      canvas, x, xpos+x->x_pix_src_x[0]-pixrad, ypos+x->x_pix_src_y[0]-pixrad,
+//      xpos+x->x_pix_src_x[0]+pixrad-1, ypos+x->x_pix_src_y[0]+pixrad-1);
     rad2 = H2 + (H + 2 * x->x_pix_src_z[0]) * x->x_pix_src_z[0];
     rad2 *= x->x_pix_rad;
     rad2 /= 8*H2;
-    sys_vgui(".x%x.c coords %xHEAD2 %d %d %d %d\n",
-      canvas, x, xpos+x->x_pix_src_x[0]-rad2, ypos+x->x_pix_src_y[0]-rad2,
-      xpos+x->x_pix_src_x[0]+rad2-1, ypos+x->x_pix_src_y[0]+rad2-1);
-    ddx = -(int)((t_float)pixrad*(t_float)sin(x->x_rho_head*0.0174533f) + 0.49999f);
-    ddy = -(int)((t_float)pixrad*(t_float)cos(x->x_rho_head*0.0174533f) + 0.49999f);
-    sys_vgui(".x%x.c coords %xNOSE %d %d %d %d\n",
-      canvas, x, xpos+x->x_pix_src_x[0], ypos+x->x_pix_src_y[0],
-      xpos+x->x_pix_src_x[0]+ddx, ypos+x->x_pix_src_y[0]+ddy);
+//    sys_vgui(".x%x.c coords %xHEAD2 %d %d %d %d\n",
+//      canvas, x, xpos+x->x_pix_src_x[0]-rad2, ypos+x->x_pix_src_y[0]-rad2,
+//      xpos+x->x_pix_src_x[0]+rad2-1, ypos+x->x_pix_src_y[0]+rad2-1);
+    gui_vmess("gui_room_sim_head2", "xxiiii",
+      canvas,
+      x,
+      x->x_pix_src_x[0] - rad2,
+      x->x_pix_src_y[0] - rad2,
+      x->x_pix_src_x[0] + rad2 - 1,
+      x->x_pix_src_y[0] + rad2 - 1
+    );
+//    ddx = -(int)((t_float)pixrad*(t_float)sin(x->x_rho_head*0.0174533f) + 0.49999f);
+//    ddy = -(int)((t_float)pixrad*(t_float)cos(x->x_rho_head*0.0174533f) + 0.49999f);
+//    sys_vgui(".x%x.c coords %xNOSE %d %d %d %d\n",
+//      canvas, x, xpos+x->x_pix_src_x[0], ypos+x->x_pix_src_y[0],
+//      xpos+x->x_pix_src_x[0]+ddx, ypos+x->x_pix_src_y[0]+ddy);
   }
   else
   {
-    if(x->x_gui.x_fsf.x_steady)/*alt-key, move src in z*/
+    if (x->x_steady) /*alt-key, move src in z*/
     {
       x->x_pix_src_z[sel] -= (int)dy;
-      if(x->x_pix_src_z[sel] < 0)
+      if (x->x_pix_src_z[sel] < 0)
         x->x_pix_src_z[sel] = 0;
-      if(x->x_pix_src_z[sel] > x->x_height_z)
+      if (x->x_pix_src_z[sel] > x->x_height_z)
         x->x_pix_src_z[sel] = x->x_height_z;
       
       room_sim_3d_out_para(x);
       fsi = H2 + (H + 2 * x->x_pix_src_z[sel]) * x->x_pix_src_z[sel];
       fsi *= fs;
       fsi /= 2*H2;
-      sys_vgui(".x%x.c itemconfigure %xSRC%d -font {times %d bold}\n", canvas, x, sel, fsi);
+      char col[MAXPDSTRING];
+      sprintf(col, "#%6.6x", x->x_col_src[sel]);
+      gui_vmess("gui_room_sim_update_src", "xxiiiis",
+        canvas,
+        x,
+        sel - 1,
+        x->x_pix_src_x[sel],
+        x->x_pix_src_y[sel],
+        fsi,
+        col
+      );
+//      sys_vgui(".x%x.c itemconfigure %xSRC%d -font {times %d bold}\n", canvas, x, sel, fsi);
     }
     else
     {
@@ -367,22 +432,33 @@ static void room_sim_3d_motion(t_room_sim_3d *x, t_floatarg dx, t_floatarg dy)
       x->x_pix_src_x[sel] = x->x_pos_x;
       x->x_pix_src_y[sel] = x->x_pos_y;
       x->x_pix_src_z[sel] = x->x_pos_z;
-      if(x->x_pix_src_x[sel] < 0)
+      if (x->x_pix_src_x[sel] < 0)
         x->x_pix_src_x[sel] = 0;
-      if(x->x_pix_src_x[sel] > x->x_gui.x_w)
+      if (x->x_pix_src_x[sel] > x->x_gui.x_w)
         x->x_pix_src_x[sel] = x->x_gui.x_w;
-      if(x->x_pix_src_y[sel] < 0)
+      if (x->x_pix_src_y[sel] < 0)
         x->x_pix_src_y[sel] = 0;
-      if(x->x_pix_src_y[sel] > x->x_gui.x_h)
+      if (x->x_pix_src_y[sel] > x->x_gui.x_h)
         x->x_pix_src_y[sel] = x->x_gui.x_h;
       
       room_sim_3d_out_para(x);
       fsi = H2 + (H + 2 * x->x_pix_src_z[sel]) * x->x_pix_src_z[sel];
       fsi *= fs;
       fsi /= 2*H2;
-      sys_vgui(".x%x.c coords %xSRC%d %d %d\n",
-        canvas, x, sel, xpos+x->x_pix_src_x[sel], ypos+x->x_pix_src_y[sel]);
-      sys_vgui(".x%x.c itemconfigure %xSRC%d -font {times %d bold}\n", canvas, x, sel, fsi);
+      char col[MAXPDSTRING];
+      sprintf(col, "#%6.6x", x->x_col_src[sel]);
+      gui_vmess("gui_room_sim_update_src", "xxiiiis",
+        canvas,
+        x,
+        sel - 1,
+        x->x_pix_src_x[sel],
+        x->x_pix_src_y[sel],
+        fsi,
+        col
+      );
+      //sys_vgui(".x%x.c coords %xSRC%d %d %d\n",
+      //  canvas, x, sel, xpos+x->x_pix_src_x[sel], ypos+x->x_pix_src_y[sel]);
+      //sys_vgui(".x%x.c itemconfigure %xSRC%d -font {times %d bold}\n", canvas, x, sel, fsi);
     }
   }
 }
@@ -468,18 +544,18 @@ static int room_sim_3d_newclick(t_gobj *z, struct _glist *glist, int xpix, int y
   {
     room_sim_3d_click( x, (t_floatarg)xpix, (t_floatarg)ypix, (t_floatarg)shift, 0, (t_floatarg)alt);
     if(alt)
-      x->x_gui.x_fsf.x_steady = 1;
+      x->x_steady = 1;
     else
-      x->x_gui.x_fsf.x_steady = 0;
+      x->x_steady = 0;
     
     if(shift)
     {
-      x->x_gui.x_fsf.x_finemoved = 1;
+      x->x_gui.x_finemoved = 1;
       room_sim_3d_out_rho(x);
     }
     else
     {
-      x->x_gui.x_fsf.x_finemoved = 0;
+      x->x_gui.x_finemoved = 0;
       room_sim_3d_out_para(x);
     }
   }
@@ -511,7 +587,19 @@ static void room_sim_3d_src_font(t_room_sim_3d *x, t_floatarg ff)
     fsi = H2 + (H + 2 * x->x_pix_src_z[i]) * x->x_pix_src_z[i];
     fsi *= fs;
     fsi /= 2*H2;
-    sys_vgui(".x%x.c itemconfigure %xSRC%d -font {times %d bold}\n", canvas, x, i, fsi);
+
+    char col[MAXPDSTRING];
+    sprintf(col, "#%6.6x", x->x_col_src[i]);
+    gui_vmess("gui_room_sim_update_src", "xxiiiis",
+      canvas,
+      x,
+      i - 1,
+      x->x_pix_src_x[i],
+      x->x_pix_src_y[i],
+      fsi,
+      col
+    );
+    //sys_vgui(".x%x.c itemconfigure %xSRC%d -font {times %d bold}\n", canvas, x, i, fsi);
   }
 }
 
@@ -577,9 +665,21 @@ static void room_sim_3d_set_src_xyz(t_room_sim_3d *x, t_symbol *s, int argc, t_a
     fsi = H2 + (H + 2 * x->x_pix_src_z[i]) * x->x_pix_src_z[i];
     fsi *= fs;
     fsi /= 2*H2;
-    sys_vgui(".x%x.c coords %xSRC%d %d %d\n",
-      canvas, x, i, xpos+x->x_pix_src_x[i], ypos+x->x_pix_src_y[i]);
-    sys_vgui(".x%x.c itemconfigure %xSRC%d -font {times %d bold}\n", canvas, x, i, fsi);
+
+    char col[MAXPDSTRING];
+    sprintf(col, "#%6.6x", x->x_col_src[i]);
+    gui_vmess("gui_room_sim_update_src", "xxiiiis",
+      canvas,
+      x,
+      i - 1,
+      x->x_pix_src_x[i],
+      x->x_pix_src_y[i],
+      fsi,
+      col
+    );
+//    sys_vgui(".x%x.c coords %xSRC%d %d %d\n",
+//      canvas, x, i, xpos+x->x_pix_src_x[i], ypos+x->x_pix_src_y[i]);
+//    sys_vgui(".x%x.c itemconfigure %xSRC%d -font {times %d bold}\n", canvas, x, i, fsi);
   }
 }
 
@@ -626,20 +726,30 @@ static void room_sim_3d_set_head_xyz(t_room_sim_3d *x, t_symbol *s, int argc, t_
   x->x_pix_src_y[0] = x->x_gui.x_h/2 - (int)(x->x_cnvrt_roomlx2pixh * yh + 0.49999f);
   x->x_pix_src_z[0] = (int)(x->x_cnvrt_roomlx2pixh * zh + 0.49999f);
   
-  sys_vgui(".x%x.c coords %xHEAD %d %d %d %d\n",
-    canvas, x, xpos+x->x_pix_src_x[0]-pixrad, ypos+x->x_pix_src_y[0]-pixrad,
-    xpos+x->x_pix_src_x[0]+pixrad-1, ypos+x->x_pix_src_y[0]+pixrad-1);
+  (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
+
+//  sys_vgui(".x%x.c coords %xHEAD %d %d %d %d\n",
+//    canvas, x, xpos+x->x_pix_src_x[0]-pixrad, ypos+x->x_pix_src_y[0]-pixrad,
+//    xpos+x->x_pix_src_x[0]+pixrad-1, ypos+x->x_pix_src_y[0]+pixrad-1);
   rad2 = H2 + (H + 2 * x->x_pix_src_z[0]) * x->x_pix_src_z[0];
   rad2 *= pixrad;
   rad2 /= 8*H2;
-  sys_vgui(".x%x.c coords %xHEAD2 %d %d %d %d\n",
-    canvas, x, xpos+x->x_pix_src_x[0]-rad2, ypos+x->x_pix_src_y[0]-rad2,
-    xpos+x->x_pix_src_x[0]+rad2-1, ypos+x->x_pix_src_y[0]+rad2-1);
-  ddx = -(int)((t_float)pixrad*(t_float)sin(x->x_rho_head*0.0174533f) + 0.49999f);
-  ddy = -(int)((t_float)pixrad*(t_float)cos(x->x_rho_head*0.0174533f) + 0.49999f);
-  sys_vgui(".x%x.c coords %xNOSE %d %d %d %d\n",
-    canvas, x, xpos+x->x_pix_src_x[0], ypos+x->x_pix_src_y[0],
-    xpos+x->x_pix_src_x[0]+ddx, ypos+x->x_pix_src_y[0]+ddy);
+  gui_vmess("gui_room_sim_head2", "xxiiii",
+    canvas,
+    x,
+    x->x_pix_src_x[0] - rad2,
+    x->x_pix_src_y[0] - rad2,
+    x->x_pix_src_x[0] + rad2 - 1,
+    x->x_pix_src_y[0] + rad2 - 1
+  );
+//  sys_vgui(".x%x.c coords %xHEAD2 %d %d %d %d\n",
+//    canvas, x, xpos+x->x_pix_src_x[0]-rad2, ypos+x->x_pix_src_y[0]-rad2,
+//    xpos+x->x_pix_src_x[0]+rad2-1, ypos+x->x_pix_src_y[0]+rad2-1);
+//  ddx = -(int)((t_float)pixrad*(t_float)sin(x->x_rho_head*0.0174533f) + 0.49999f);
+//  ddy = -(int)((t_float)pixrad*(t_float)cos(x->x_rho_head*0.0174533f) + 0.49999f);
+//  sys_vgui(".x%x.c coords %xNOSE %d %d %d %d\n",
+//    canvas, x, xpos+x->x_pix_src_x[0], ypos+x->x_pix_src_y[0],
+//    xpos+x->x_pix_src_x[0]+ddx, ypos+x->x_pix_src_y[0]+ddy);
 }
 
 static void room_sim_3d_head_xyz(t_room_sim_3d *x, t_symbol *s, int argc, t_atom *argv)
@@ -673,13 +783,13 @@ static void room_sim_3d_room_dim(t_room_sim_3d *x, t_symbol *s, int argc, t_atom
   x->x_height_z = (int)(x->x_cnvrt_roomlx2pixh * x->x_room_z + 0.49999f);
   x->x_pix_rad = (int)(x->x_cnvrt_roomlx2pixh * x->x_r_ambi + 0.49999f);
   
-  for(i=0; i<=n; i++)
+  for (i = 0; i <= n; i++)
   {
-    if(x->x_pix_src_x[i] > x->x_gui.x_w)
+    if (x->x_pix_src_x[i] > x->x_gui.x_w)
       x->x_pix_src_x[i] = x->x_gui.x_w;
-    if(x->x_pix_src_y[i] > x->x_gui.x_h)
+    if (x->x_pix_src_y[i] > x->x_gui.x_h)
       x->x_pix_src_y[i] = x->x_gui.x_h;
-    if(x->x_pix_src_z[i] > x->x_height_z)
+    if (x->x_pix_src_z[i] > x->x_height_z)
       x->x_pix_src_z[i] = x->x_height_z;
   }
   
@@ -691,26 +801,38 @@ static void room_sim_3d_room_dim(t_room_sim_3d *x, t_symbol *s, int argc, t_atom
 static void room_sim_3d_room_col(t_room_sim_3d *x, t_floatarg fcol)
 {
   int col=(int)fcol;
+  char fgstring[MAXPDSTRING];
+  char bgstring[MAXPDSTRING];
   int i;
   t_canvas *canvas=glist_getcanvas(x->x_gui.x_glist);
   
-  if(col < 0)
+  if (col < 0)
   {
     i = -1 - col;
     x->x_gui.x_bcol = ((i & 0x3f000) << 6)|((i & 0xfc0) << 4)|((i & 0x3f) << 2);
   }
   else
   {
-    if(col > 29)
+    if (col > 29)
       col = 29;
     x->x_gui.x_bcol = my_iemgui_color_hex[col];
   }
-  sys_vgui(".x%x.c itemconfigure %xBASE -fill #%6.6x\n", canvas, x, x->x_gui.x_bcol);
+  sprintf(fgstring, "#%6.6x", x->x_gui.x_fcol);
+  sprintf(bgstring, "#%6.6x", x->x_gui.x_bcol);
+  gui_vmess("gui_room_sim_colors", "xxss",
+    canvas,
+    x,
+    fgstring,
+    bgstring
+  );
+//  sys_vgui(".x%x.c itemconfigure %xBASE -fill #%6.6x\n", canvas, x, x->x_gui.x_bcol);
 }
 
 static void room_sim_3d_head_col(t_room_sim_3d *x, t_floatarg fcol)
 {
   int col=(int)fcol;
+  char fgstring[MAXPDSTRING];
+  char bgstring[MAXPDSTRING];
   int i;
   t_canvas *canvas=glist_getcanvas(x->x_gui.x_glist);
   
@@ -725,35 +847,54 @@ static void room_sim_3d_head_col(t_room_sim_3d *x, t_floatarg fcol)
       col = 29;
     x->x_gui.x_fcol = my_iemgui_color_hex[col];
   }
-  sys_vgui(".x%x.c itemconfigure %xHEAD -outline #%6.6x\n", canvas, x, x->x_gui.x_fcol);
+  sprintf(fgstring, "#%6.6x", x->x_gui.x_fcol);
+  sprintf(bgstring, "#%6.6x", x->x_gui.x_bcol);
+  gui_vmess("gui_room_sim_colors", "xxss",
+    canvas,
+    x,
+    fgstring,
+    bgstring
+  );
+//  sys_vgui(".x%x.c itemconfigure %xHEAD -outline #%6.6x\n", canvas, x, x->x_gui.x_fcol);
   sys_vgui(".x%x.c itemconfigure %xHEAD2 -outline #%6.6x\n", canvas, x, x->x_gui.x_fcol);
-  sys_vgui(".x%x.c itemconfigure %xNOSE -fill #%6.6x\n", canvas, x, x->x_gui.x_fcol);
+//  sys_vgui(".x%x.c itemconfigure %xNOSE -fill #%6.6x\n", canvas, x, x->x_gui.x_fcol);
 }
 
 static void room_sim_3d_src_col(t_room_sim_3d *x, t_symbol *s, int argc, t_atom *argv)
 {
   int col;
+  char colstring[MAXPDSTRING];
   int i, j, n=x->x_nr_src;
   t_canvas *canvas=glist_getcanvas(x->x_gui.x_glist);
   
-  if((argc >= 2)&&IS_A_FLOAT(argv,0)&&IS_A_FLOAT(argv,1))
+  if ((argc >= 2)&&IS_A_FLOAT(argv,0)&&IS_A_FLOAT(argv,1))
   {
     j = (int)atom_getintarg(0, argc, argv);
-    if((j > 0)&&(j <= n))
+    if ((j > 0)&&(j <= n))
     {
       col = (int)atom_getintarg(1, argc, argv);
-      if(col < 0)
+      if (col < 0)
       {
         i = -1 - col;
         x->x_col_src[j] = ((i & 0x3f000) << 6)|((i & 0xfc0) << 4)|((i & 0x3f) << 2);
       }
       else
       {
-        if(col > 29)
+        if (col > 29)
           col = 29;
         x->x_col_src[j] = my_iemgui_color_hex[col];
       }
-      sys_vgui(".x%x.c itemconfigure %xSRC%d -fill #%6.6x\n", canvas, x, j, x->x_col_src[j]);
+      sprintf(colstring, "#%6.6x", x->x_col_src[j]);
+      gui_vmess("gui_room_sim_update_src", "xxiiiis",
+        canvas,
+        x,
+        j,
+        x->x_pix_src_x[j],
+        x->x_pix_src_y[j],
+        x->x_fontsize,
+        colstring
+      );
+//      sys_vgui(".x%x.c itemconfigure %xSRC%d -fill #%6.6x\n", canvas, x, j, x->x_col_src[j]);
     }
   }
 }
@@ -805,8 +946,9 @@ static void room_sim_3d_nr_src(t_room_sim_3d *x, t_floatarg fnr_src)
   
   if(nr_src != x->x_nr_src)
   {
-    if(glist_isvisible(x->x_gui.x_glist))
-      (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_ERASE);
+    if (glist_isvisible(x->x_gui.x_glist))
+      room_sim_3d_draw_unmap(x, x->x_gui.x_glist);
+//      (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_ERASE);
     
     old_nr_src = x->x_nr_src;
     x->x_nr_src = nr_src;
@@ -824,12 +966,64 @@ static void room_sim_3d_nr_src(t_room_sim_3d *x, t_floatarg fnr_src)
       j %= 7;
     }
     
-    if(glist_isvisible(x->x_gui.x_glist))
-      (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_NEW);
+    if (glist_isvisible(x->x_gui.x_glist))
+      room_sim_3d_draw_map(x, x->x_gui.x_glist);
+//      (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_NEW);
   }
 }
 
-static void *room_sim_3d_new(t_symbol *s, int argc, t_atom *argv)
+/* we may no longer need h_dragon... */
+static void room_sim_3d__clickhook(t_scalehandle *sh, int newstate)
+{
+    t_room_sim_3d *x = (t_room_sim_3d *)(sh->h_master);
+    if (newstate)
+    {
+        canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
+        if (!sh->h_scale) /* click on a label handle */
+            scalehandle_click_label(sh);
+    }
+    /* We no longer need this "clickhook", as we can handle the dragging
+       either in the GUI (for the label handle) or or in canvas_doclick */
+    //iemgui__clickhook3(sh,newstate);
+    sh->h_dragon = newstate;
+}
+
+static void room_sim_3d__motionhook(t_scalehandle *sh,
+                    t_floatarg mouse_x, t_floatarg mouse_y)
+{
+    if (sh->h_scale)
+    {
+        t_room_sim_3d *x = (t_room_sim_3d *)(sh->h_master);
+        int width = mouse_x - text_xpix(&x->x_gui.x_obj, x->x_gui.x_glist),
+            height = mouse_y - text_ypix(&x->x_gui.x_obj, x->x_gui.x_glist),
+            minx = IEM_GUI_MINSIZE,
+            miny = IEM_GUI_MINSIZE;
+        x->x_gui.x_w = maxi(width, minx);
+        x->x_gui.x_h = maxi(height, miny);
+//        slider_check_length(x, x->x_orient ? x->x_gui.x_h : x->x_gui.x_w);
+        if (glist_isvisible(x->x_gui.x_glist))
+        {
+            room_sim_3d_draw_unmap(x, x->x_gui.x_glist);
+            room_sim_3d_draw_map(x, x->x_gui.x_glist);
+            scalehandle_unclick_scale(sh);
+        }
+
+        int properties = gfxstub_haveproperties((void *)x);
+        if (properties)
+        {
+            /* No properties for room_sim externals atm */
+            //properties_set_field_int(properties,"width",new_w);
+            //properties_set_field_int(properties,"height",new_h);
+        }
+    }
+    scalehandle_dragon_label(sh,mouse_x, mouse_y);
+}
+
+/* from the old header... */
+#define IEM_GUI_COLNR_GREEN          16
+#define IEM_GUI_COLNR_D_ORANGE       24
+
+void *room_sim_3d_new(t_symbol *s, int argc, t_atom *argv)
 {
   t_room_sim_3d *x = (t_room_sim_3d *)pd_new(room_sim_3d_class);
   int i, j, n=1, c;
@@ -888,7 +1082,7 @@ static void *room_sim_3d_new(t_symbol *s, int argc, t_atom *argv)
     x->x_pix_src_y[0] = 200;
     x->x_pix_src_z[0] = 42;
     j = 0;
-    for(i=1; i<=n; i++)
+    for (i = 1; i <= n; i++)
     {
       x->x_col_src[i] = simularca_color_hex[j];
       if(i & 1)
@@ -915,6 +1109,15 @@ static void *room_sim_3d_new(t_symbol *s, int argc, t_atom *argv)
   
   x->x_s_head_xyz = gensym("head_xyz");
   x->x_s_src_xyz = gensym("src_xyz");
+
+  x->x_gui.x_lab = s_empty;
+
+  x->x_gui.x_obj.te_iemgui = 1;
+  x->x_gui.x_handle = scalehandle_new((t_object *)x,
+      x->x_gui.x_glist, 1, room_sim_3d__clickhook, room_sim_3d__motionhook);
+  x->x_gui.x_lhandle = scalehandle_new((t_object *)x,
+      x->x_gui.x_glist, 0, room_sim_3d__clickhook, room_sim_3d__motionhook);
+
   return (x);
 }
 
@@ -949,6 +1152,7 @@ void room_sim_3d_setup(void)
   class_addmethod(room_sim_3d_class, (t_method)room_sim_3d_nr_src, gensym("nr_src"), A_DEFFLOAT, 0);
   
   room_sim_3d_widgetbehavior.w_getrectfn = room_sim_3d_getrect;
+  room_sim_3d_widgetbehavior.w_displacefnwtag = iemgui_displace_withtag;
   room_sim_3d_widgetbehavior.w_displacefn = iemgui_displace;
   room_sim_3d_widgetbehavior.w_selectfn = iemgui_select;
   room_sim_3d_widgetbehavior.w_activatefn = NULL;
