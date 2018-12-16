@@ -134,10 +134,8 @@ ifeq ($(LIGHT),yes)
 lib_targets = loaders-libdir pddp
 INCREMENTAL = yes
 else
-lib_targets = adaptive arraysize autotune bassemu boids bsaylor comport creb cxc cyclone disis earplug ekext ext13 fftease fluid freeverb ggee hcs iem_ambi iem_bin_ambi iemlib iemgui iemguts iem_adaptfilt iemmatrix iemxmlrpc iem_delay iem_roomsim iem_spec2 iem_tab jasch_lib loaders-libdir lyonpotpourri mapping markex maxlib mjlib moocow moonlib motex mrpeach oscx pan pdcontainer pddp pdlua pdogg plugin pmpd rjlib sigpack smlib tof unauthorized vbap windowing zexy
+lib_targets = adaptive arraysize autotune bassemu boids bsaylor comport creb cxc cyclone disis earplug ekext ext13 fftease flatgui fluid freeverb ggee hcs iem_ambi iem_bin_ambi iemlib iemgui iemguts iem_adaptfilt iemmatrix iemxmlrpc iem_delay iem_roomsim iem_spec2 iem_tab jasch_lib loaders-libdir lyonpotpourri mapping markex maxlib mjlib moocow moonlib motex mrpeach oscx pan pdcontainer pddp pdlua pdogg plugin pmpd rjlib sigpack smlib tof unauthorized vbap windowing zexy
 endif
-
-# DISABLED: flatgui
 
 # NEW (IN-PROGRESS): flext
 
@@ -538,16 +536,21 @@ fftease_clean:
 
 #------------------------------------------------------------------------------#
 # FLATGUI
+#
+# Right now we're just building footils/knob and throwing it in the flatgui
+# external directory for compatibility
+#
 flatgui:
-	make -C $(externals_src)/flatgui CFLAGS="$(CFLAGS)" \
-		PD_PATH=$(pd_src) PD_INCLUDE=$(pd_src)/src
+	make -C $(externals_src)/footils/knob CFLAGS="$(CFLAGS)" \
+		PD_PATH=$(pd_src) pdbinpath=$(pd_src)/src \
+		PD_INCLUDE=$(pd_src)/src
 
 flatgui_install:
-	make -C $(externals_src)/flatgui STRIP="$(STRIP)" \
+	make -C $(externals_src)/footils/knob STRIP="$(STRIP)" \
 		DESTDIR="$(DESTDIR)" objectsdir="$(objectsdir)" install
 
 flatgui_clean:
-	make -C $(externals_src)/flatgui clean
+	make -C $(externals_src)/footils/knob clean
 
 #------------------------------------------------------------------------------#
 # FLEXT and FLEXT externals
