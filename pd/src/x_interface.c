@@ -198,7 +198,6 @@ static void *unpost_frame_new(t_unpost *x)
 
 static void unpost_frame_resize(t_unpost_frame *u, int newsize)
 {
-// error check
     u->u_buf = (char *)t_resizebytes(u->u_buf, sizeof(*u->u_buf) * u->u_bufsize,
        sizeof(*u->u_buf) * newsize);
     u->u_bufsize = newsize;
@@ -207,6 +206,7 @@ static void unpost_frame_resize(t_unpost_frame *u, int newsize)
 static void unpost_frame_free(t_unpost_frame* u)
 {
     t_freebytes(u->u_buf, sizeof(*u->u_buf));
+    u->u_buf = NULL;
 }
 
 static void *unpost_new(t_symbol *s)
@@ -233,10 +233,15 @@ static void unpost_printhook(const char *s) {
         unpost_frame_resize(current_unpost,
             current_unpost->u_bufsize * (1 << n));
     }
+
     else if (strlen(current_unpost->u_buf) + strlen(s) <
         current_unpost->u_bufsize / 4)
     {
-        /* Make the buffer smaller if it's four times too big. */
+        /* Pretty sure I prematurely optimized here. There's no good reason to
+           shrink the buffer in the midst of receiving some enormous number of
+           posts from an object chain. Besides, we free the buffer once the
+           object chain downstream from the [unpost] outlet finishes computing.
+           Anyhow, here we are. */
         unpost_frame_resize(current_unpost,
             (current_unpost->u_bufsize / 4 < NEWBUFSIZE) ?
                 NEWBUFSIZE :
