@@ -1477,7 +1477,7 @@ static const char* makefilename_doscanformat(const char *str, t_printtype *typ,
             if (*(str+1) == '\0')
             {
                 str++;
-                sprintf(errormsg, "field type missing after '%%'");
+                sprintf(errormsg, "field type missing");
                 *typ = NONE;
                 return str;
             }
@@ -1495,7 +1495,7 @@ static const char* makefilename_doscanformat(const char *str, t_printtype *typ,
                 infmt = 0;
                 continue;
             }
-            for (i = 0; *str && strchr("-+#0", *str) != 0; str++)
+            for (i = 0; *str && strchr("-+#0", *str) != 0; str++, i++)
             {
                 /* Check for flag chars. While a space is a legal part of this
                    field, Pd's parser would split it off into a separate arg.
@@ -1503,7 +1503,7 @@ static const char* makefilename_doscanformat(const char *str, t_printtype *typ,
                    support spaces here. */
                 /* Since we're dealing with arbitrary input let's keep
                    the total number of flags sane. */
-                if (i > 16)
+                if (i > 15)
                 {
                     sprintf(errormsg, "too many flags");
                     *typ = NONE;
