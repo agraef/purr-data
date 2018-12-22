@@ -1,0 +1,44 @@
+#N canvas 35 102 696 396 12;
+#X obj 36 25 inlet;
+#X obj 36 349 outlet;
+#X msg 36 63 unknown_method;
+#X obj 36 266 f 1;
+#X obj 528 228 print unpost_print;
+#X obj 378 146 unpost;
+#X msg 528 146 testing unpost...;
+#X obj 198 228 print unpost_print;
+#X msg 198 146 testing unpost error...;
+#X obj 58 146 unpost error;
+#X obj 139 171 float;
+#X obj 58 171 b;
+#X msg 58 201 test message;
+#X obj 36 88 trigger bang anything bang bang bang;
+#X text 155 16 Unpost allows printing from the left outlet *without*
+redirecting back to the outlet. This prevents infinite loops. Without
+this protection this test would crash.;
+#X obj 36 299 list append when unpost's left-outlet messages are printed
+to the console an infinite loop should not occur;
+#X obj 58 228 print -n;
+#X obj 378 228 print -n;
+#X obj 378 171 b;
+#X msg 378 196 test message;
+#X obj 417 171 print test;
+#X connect 0 0 2 0;
+#X connect 2 0 13 0;
+#X connect 3 0 15 0;
+#X connect 5 0 18 0;
+#X connect 5 1 20 0;
+#X connect 6 0 4 0;
+#X connect 8 0 7 0;
+#X connect 9 0 11 0;
+#X connect 9 1 10 0;
+#X connect 11 0 12 0;
+#X connect 12 0 16 0;
+#X connect 13 0 3 0;
+#X connect 13 1 9 0;
+#X connect 13 2 8 0;
+#X connect 13 3 5 0;
+#X connect 13 4 6 0;
+#X connect 15 0 1 0;
+#X connect 18 0 19 0;
+#X connect 19 0 17 0;

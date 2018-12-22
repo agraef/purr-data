@@ -64,7 +64,7 @@ static void *print_new(t_symbol *sel, int argc, t_atom *argv)
 
 static void print_bang(t_print *x)
 {
-    if (sys_nogui)
+    if (sys_nogui || sys_printhook)
         post("%s%sbang", x->x_sym->s_name, (*x->x_sym->s_name ? ": " : ""));
     else
     {
@@ -78,7 +78,7 @@ static void print_bang(t_print *x)
 
 static void print_pointer(t_print *x, t_gpointer *gp)
 {
-    if (sys_nogui)
+    if (sys_nogui || sys_printhook)
         post("%s%s(gpointer)", x->x_sym->s_name,
             (*x->x_sym->s_name ? ": " : ""));
     else
@@ -93,7 +93,7 @@ static void print_pointer(t_print *x, t_gpointer *gp)
 
 static void print_float(t_print *x, t_floatarg f)
 {
-    if (sys_nogui)
+    if (sys_nogui || sys_printhook)
         post("%s%s" FLOAT_SPECIFIER, x->x_sym->s_name,
             (*x->x_sym->s_name ? ": " : ""), f);
     else
@@ -108,7 +108,7 @@ static void print_float(t_print *x, t_floatarg f)
 
 static void print_symbol(t_print *x, t_symbol *s)
 {
-    if (sys_nogui)
+    if (sys_nogui || sys_printhook)
         post("%s%s%s", x->x_sym->s_name, (*x->x_sym->s_name ? ": " : ""),
             s->s_name);
     else
@@ -126,7 +126,7 @@ static void print_anything(t_print *x, t_symbol *s, int argc, t_atom *argv)
 {
     char buf[MAXPDSTRING];
     t_atom at;
-    if (sys_nogui)
+    if (sys_nogui || sys_printhook)
     {
         startpost("%s%s", x->x_sym->s_name, (*x->x_sym->s_name ? ":" : ""));
         if (s && (s != &s_list || (argc && argv->a_type != A_FLOAT)))
@@ -162,6 +162,134 @@ static void print_setup(void)
     class_addpointer(print_class, print_pointer);
     class_addsymbol(print_class, print_symbol);
     class_addanything(print_class, print_anything);
+}
+
+/* -------------------------- unpost ------------------------------ */
+
+#define NEWBUFSIZE MAXPDSTRING * 2
+static t_class *unpost_class;
+
+typedef struct _unpost {
+    t_object x_obj;
+    t_outlet *x_out0;
+    t_outlet *x_out1;
+    int x_all;
+} t_unpost;
+
+typedef struct _unpost_frame {
+    t_unpost *u_self;
+    char *u_buf;
+    unsigned int u_bufsize;
+    unsigned int u_index;
+} t_unpost_frame;
+
+static t_unpost_frame *current_unpost;
+
+static void *unpost_frame_new(t_unpost *x)
+{
+    t_unpost_frame *u = (t_unpost_frame *)t_getbytes(sizeof(t_unpost_frame));
+    u->u_self = x;
+    u->u_buf = (char *)t_getbytes(sizeof(char) * NEWBUFSIZE);
+    u->u_buf[0] = '\0';
+    u->u_bufsize = NEWBUFSIZE;
+    u->u_index = 0;
+    return u;
+}
+
+static void unpost_frame_resize(t_unpost_frame *u, int newsize)
+{
+    u->u_buf = (char *)t_resizebytes(u->u_buf, sizeof(*u->u_buf) * u->u_bufsize,
+       sizeof(*u->u_buf) * newsize);
+    u->u_bufsize = newsize;
+}
+
+static void unpost_frame_free(t_unpost_frame* u)
+{
+    t_freebytes(u->u_buf, sizeof(*u->u_buf));
+    u->u_buf = NULL;
+}
+
+static void *unpost_new(t_symbol *s)
+{
+    t_unpost *x = (t_unpost *)pd_new(unpost_class);
+    x->x_all = s != gensym("error");
+    x->x_out0 = outlet_new(&x->x_obj, &s_symbol);
+    x->x_out1 = outlet_new(&x->x_obj, &s_symbol);
+    return x;
+}
+
+extern t_printhook sys_printhook;
+extern t_printhook sys_printhook_error;
+static void unpost_printhook(const char *s) {
+    t_unpost *x = current_unpost->u_self;
+    /* does strlen include terminator? can't remember... */
+    unsigned int needbytes = strlen(current_unpost->u_buf) + strlen(s) + 1;
+    if (needbytes >= current_unpost->u_bufsize)
+    {
+        /* Raise the bufsize to NEWBUFSIZE * n where n is a power of two that
+           will fit the number of bytes we need) */
+        unsigned int n = ((needbytes / NEWBUFSIZE) >> 1) +
+            (needbytes % NEWBUFSIZE != 0);
+        unpost_frame_resize(current_unpost,
+            current_unpost->u_bufsize * (1 << n));
+    }
+
+    else if (strlen(current_unpost->u_buf) + strlen(s) <
+        current_unpost->u_bufsize / 4)
+    {
+        /* Pretty sure I prematurely optimized here. There's no good reason to
+           shrink the buffer in the midst of receiving some enormous number of
+           posts from an object chain. Besides, we free the buffer once the
+           object chain downstream from the [unpost] outlet finishes computing.
+           Anyhow, here we are. */
+        unpost_frame_resize(current_unpost,
+            (current_unpost->u_bufsize / 4 < NEWBUFSIZE) ?
+                NEWBUFSIZE :
+                current_unpost->u_bufsize / 4);
+    }
+    strcat(current_unpost->u_buf, s);
+    const char *p;
+    const char *d = current_unpost->u_buf, *dd = d;
+    for (;;) {
+        p = strchr(d, '\n');
+        if (!p) break;
+        /* To avoid infinite recursion, let's reset our hooks before we
+           send to the right outlet. */
+        t_printhook print_backup = sys_printhook,
+                    error_backup = sys_printhook_error;
+        sys_printhook = NULL;
+        sys_printhook_error = NULL;
+        outlet_symbol(x->x_out0, gensym(d));
+        sys_printhook = print_backup;
+        sys_printhook_error = error_backup;
+        d = p + 1;
+    }
+    if (d != dd)
+    {
+        char *q = strdup(d);
+        strcpy(current_unpost->u_buf, q);
+        t_freebytes(q, sizeof(*q) * strlen(q));
+    }
+}
+
+static void unpost_anything(t_unpost *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_printhook *myhook = x->x_all ? &sys_printhook : &sys_printhook_error;
+    t_printhook backup1 = *myhook;
+    t_unpost_frame *backup2 = current_unpost;
+    *myhook = unpost_printhook;
+    current_unpost = unpost_frame_new(x);
+    outlet_anything(x->x_out1, s, argc, argv);
+    *myhook = backup1;
+    unpost_frame_free(current_unpost);
+    current_unpost = backup2;
+}
+
+static void unpost_setup(void)
+{
+    unpost_class = class_new(gensym("unpost"), (t_newmethod)unpost_new, 0,
+        sizeof(t_unpost), 0, A_DEFSYM, 0);
+    class_addanything(unpost_class, unpost_anything);
 }
 
 /* --------------pdinfo, canvasinfo, classinfo, objectinfo --------------- */
@@ -1497,6 +1625,7 @@ void objectinfo_setup(void)
 void x_interface_setup(void)
 {
     print_setup();
+    unpost_setup();
     canvasinfo_setup();
     pdinfo_setup();
     classinfo_setup();
