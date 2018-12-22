@@ -14,6 +14,7 @@
 #endif
 
 t_printhook sys_printhook;
+t_printhook sys_printhook_error;
 int sys_printtostderr;
 
 /* escape characters for tcl/tk */
@@ -51,11 +52,13 @@ static void doerror(const void *object, const char *s)
     char upbuf[MAXPDSTRING];
     upbuf[MAXPDSTRING-1]=0;
 
-    // what about sys_printhook_error ?
-    if (sys_printhook)
+    if (sys_printhook || sys_printhook_error)
     {
         snprintf(upbuf, MAXPDSTRING-1, "error: %s", s);
-        (*sys_printhook)(upbuf);
+        if (sys_printhook_error)
+            (*sys_printhook_error)(upbuf);
+        if (sys_printhook)
+            (*sys_printhook)(upbuf);
     }
     else if (sys_printtostderr)
         fprintf(stderr, "error: %s", s);

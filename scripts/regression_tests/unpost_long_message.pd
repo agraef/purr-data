@@ -1,0 +1,22 @@
+#N canvas 86 182 696 396 12;
+#X obj 36 25 inlet;
+#X obj 36 349 outlet;
+#X obj 36 266 f 1;
+#X text 155 16 Unpost should be able to handle long messages. Here
+we trigger one by sending a list of all the class names to the left
+inlet of unpost.;
+#X msg 36 63 classlist;
+#X obj 36 88 unpost;
+#X obj 75 116 pdinfo;
+#X obj 75 148 print long_message;
+#X obj 36 113 b;
+#X obj 36 299 list append unpost should print long messages without
+crashing;
+#X connect 0 0 4 0;
+#X connect 2 0 9 0;
+#X connect 4 0 5 0;
+#X connect 5 0 8 0;
+#X connect 5 1 6 0;
+#X connect 6 0 7 0;
+#X connect 8 0 2 0;
+#X connect 9 0 1 0;

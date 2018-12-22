@@ -1995,7 +1995,12 @@ function add_gobj_to_svg(svg, gobj) {
 
 var gui = (function() {
     var c = {}; // object to hold references to all our canvas closures
-    var last_thing; // last thing we got
+    // We store the last "thing" we fetched from the window. This is either
+    // the window itself or a "gobj". Regular old DOM elements that aren't
+    // a "gobj" container don't count. This way we can do a "get_gobj" then
+    // gang multiple element queries after it that work within our last
+    // "gobj." (Same for window.)
+    var last_thing;
     var null_fn, null_canvas;
     var create_canvas = function(cid, w) {
         var get = function(parent, sel, arg, suffix) {
@@ -4152,7 +4157,8 @@ function gui_grid_point(cid, tag, x, y) {
 }
 
 // mknob from moonlib
-function gui_mknob_new(cid, tag, x, y, is_toplevel, show_in, show_out) {
+function gui_mknob_new(cid, tag, x, y, is_toplevel, show_in, show_out,
+    is_footils_knob) {
     gui(cid).get_elem("patchsvg", function(svg_elem) {
         gui_gobj_new(cid, tag, "obj", x, y, is_toplevel);
     });
@@ -4162,49 +4168,238 @@ function gui_mknob_new(cid, tag, x, y, is_toplevel, show_in, show_out) {
             class: "border" // now we can inherit the css border styles
         }),
         circle = create_item(cid, "circle", {
-            class: "circle"
+            //class: "circle"
         }),
         line = create_item(cid, "line", {
-            class: "dial"
+            //class: "dial"
         });
         frag.appendChild(border);
         frag.appendChild(circle);
+        /* An extra circle for footils/knob */
+        if (!!is_footils_knob) {
+            frag.appendChild(create_item(cid, "circle", {
+                class: "dial_frag"
+            }));
+        }
         frag.appendChild(line);
         return frag;
     });
 }
 
-function gui_configure_mknob(cid, tag, size, bg_color, fg_color) {
-    gui(cid).get_gobj(tag)
+function knob_dashes(d, len) {
+    var c = d * 3.14159;
+    return (c * len) + " " + (c * (1 - len));
+}
+
+function knob_offset(d) {
+    return d * 3.14 * -0.28;
+}
+
+function gui_configure_mknob(cid, tag, size, bg_color, fg_color,
+    is_footils_knob) {
+    var w = size,
+        h = !!is_footils_knob ? size + 5 : size;
+    var g = gui(cid).get_gobj(tag)
     .q(".border", {
-        d: ["M", 0, 0, size, 0,
-            "M", 0, size, size, size,
-            "M", 0, 0, 0, size,
-            "M", size, 0, size, size
+        d: ["M", 0, 0, w, 0,
+            "M", 0, h, w, h,
+            "M", 0, 0, 0, h,
+            "M", w, 0, w, h
            ].join(" "),
         fill: "none",
     })
-    .q(".circle", {
+    .q("circle", {
         cx: size / 2,
         cy: size / 2,
         r: size / 2,
-        fill: bg_color,
+        fill: !!is_footils_knob ? "none" : bg_color,
         stroke: "black",
-        "stroke-width": 1
+        "stroke-width": !!is_footils_knob ? 3 : 1,
+        "stroke-dasharray": !!is_footils_knob ?
+            knob_dashes(size, 0.94) : "none",
+        "stroke-dashoffset": !!is_footils_knob ? knob_offset(size) : "0"
     })
-    .q(".dial", {
+    .q("line", { // indicator
         "stroke-width": 2,
         stroke: fg_color
     });
+
+    if (!!is_footils_knob) {
+        g.q(".dial_frag", {
+            cx: size / 2,
+            cy: size / 2,
+            r: size / 2,
+            fill: "none",
+            stroke: bg_color,
+            "stroke-width": 3,
+            "stroke-dasharray": knob_dashes(size, 0.94),
+            "stroke-dashoffset": knob_offset(size)
+        });
+    }
 }
 
-function gui_turn_mknob(cid, tag, x1, y1, x2, y2) {
-    gui(cid).get_gobj(tag)
-    .q(".dial", {
+function gui_turn_mknob(cid, tag, x1, y1, x2, y2, is_footils_knob, val) {
+    var g = gui(cid).get_gobj(tag)
+    .q("line", { // indicator
         x1: x1,
         y1: y1,
         x2: x2,
         y2: y2
+    });
+    if (!!is_footils_knob) {
+        g.q(".dial_frag", {
+            "stroke-dasharray": knob_dashes(x1 * 2, val * 0.94)
+        });
+    }
+}
+
+// room_sim_2d and room_sim_3d objects from iemlib
+function gui_room_sim_new(cid, tag, x, y, w, h, is_toplevel) {
+    gui(cid).get_elem("patchsvg", function(svg_elem) {
+        gui_gobj_new(cid, tag, "obj", x, y, is_toplevel);
+    });
+    gui(cid).get_gobj(tag)
+    .append(function(frag) {
+//        frag.appendChild(line);
+        return frag;
+    });
+}
+
+function gui_room_sim_map(cid, tag, w, h, rad, head, xpix, ypix, fontsize,
+    fcol, bcol, src_array, r3d) {
+    gui(cid).get_gobj(tag, function(e) {
+        gui_text_draw_border(cid, tag, 0, 0, w, h);
+        // Set the style for the background directly... otherwise the
+        // default theme bgcolor will be used
+        e.querySelector(".border").style.fill = bcol;
+    })
+    .append(function(frag) {
+        var x1 = xpix - rad,
+            x2 = xpix + rad - 1,
+            y1 = ypix - rad,
+            y2 = ypix + rad - 1,
+            dx = -((rad * Math.sin(head * 0.0174533) + 0.49999)|0),
+            dy = -((rad * Math.cos(head * 0.0174533) + 0.49999)|0),
+            i,
+            text;
+        for (i = 0; i < src_array.length; i++) {
+            text = create_item(cid, "text", {
+                x: src_array[i][0],
+                y: src_array[i][1],
+                fill: src_array[i][2],
+                "font-size": fontsize,
+                "dominant-baseline": "middle"
+            });
+            text.textContent = (i + 1).toString();
+            frag.appendChild(text);
+        }
+        var ellipse = create_item(cid, "ellipse", {
+            cx: (x2 - x1) * 0.5 + x1,
+            cy: (y2 - y1) * 0.5 + y1,
+            rx: (x2 - x1) * 0.5,
+            ry: (y2 - y1) * 0.5,
+            "stroke-width": 1,
+            "stroke": fcol,
+            "fill": "none"
+        }),
+        ellipse2 = create_item(cid, "ellipse", {
+            // for room_sim_3d
+            cx: r3d ? (r3d[2] - r3d[0]) * 0.5 + r3d[0] : 0,
+            cy: r3d ? (r3d[3] - r3d[1]) * 0.5 + r3d[1] : 0,
+            rx: r3d ? (r3d[2] - r3d[0]) * 0.5 : 0,
+            ry: r3d ? (r3d[3] - r3d[1]) * 0.5 : 0,
+            "stroke-width": 1,
+            stroke: fcol,
+            fill: "none"
+        }),
+        line = create_item(cid, "line", {
+            x1: xpix,
+            y1: ypix,
+            x2: xpix + dx,
+            y2: ypix + dy,
+            "stroke-width": 3,
+            stroke: fcol
+        });
+        frag.appendChild(ellipse);
+        frag.appendChild(ellipse2);
+        frag.appendChild(line);
+        return frag;
+    })
+}
+
+function gui_room_sim_update_src(cid, tag, i, x, y, font_size, col) {
+    gui(cid).get_gobj(tag, function(e) {
+        var a = e.querySelectorAll("text");
+        if (a.length && i < a.length) {
+            configure_item(a[i], {
+                x: x,
+                y: y,
+                "font-size": font_size,
+                fill: col
+            });
+        }
+    });
+}
+
+function gui_room_sim_update(cid, tag, x0, y0, dx, dy, pixrad) {
+    gui(cid).get_gobj(tag)
+    .q("line", {
+        x1: x0,
+        y1: y0,
+        x2: x0 + dx,
+        y2: y0 + dy
+    })
+    .q("ellipse", {
+        rx: ((x0 + pixrad - 1) - (x0 - pixrad)) * 0.5,
+        ry: ((y0 + pixrad - 1) - (y0 - pixrad)) * 0.5,
+        cx: ((x0 + pixrad - 1) - (x0 - pixrad)) * 0.5 + (x0 - pixrad),
+        cy: ((y0 + pixrad - 1) - (y0 - pixrad)) * 0.5 + (y0 - pixrad),
+    });
+}
+
+// for room_sim_3d
+function gui_room_sim_head2(cid, tag, x1, y1, x2, y2) {
+    gui(cid).get_gobj(tag, function(e) {
+        configure_item(e.querySelectorAll("ellipse")[1], {
+            rx: (x2 - x1) * 0.5,
+            ry: (y2 - y1) * 0.5,
+            cx: (x2 - x1) * 0.5 + x1,
+            cy: (y2 - y1) * 0.5 + y1
+        });
+    });
+}
+
+function gui_room_sim_fontsize(cid, tag, i, size) {
+    gui(cid).get_gobj(tag, function(e) {
+        var i, a;
+        a = e.querySelectorAll("text");
+        if (a.length) {
+            for (i = 0; i < a.length; i++) {
+                configure_item(a[i], {
+                    "font-size": size
+                });
+            }
+        }
+    });
+}
+
+// for the dial thingy
+function gui_room_sim_colors(cid, tag, fg, bg) {
+    gui(cid).get_gobj(tag)
+    .q("ellipse", {
+        stroke: fg
+    })
+    .q("line", {
+        stroke: fg
+    })
+    .q(".border", function(e) {
+        e.style.fill = bg;
+    });
+}
+
+function gui_room_sim_erase(cid, tag) {
+    gui(cid).get_gobj(tag, function(e) {
+        e.innerHTML = "";
     });
 }
 

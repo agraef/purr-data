@@ -11,102 +11,6 @@ pdgui.skin.apply(window);
 
 var l = pdgui.get_local_string;
 
-console.log("my working dir is " + pdgui.get_pwd());
-document.getElementById("saveDialog")
-    .setAttribute("nwworkingdir", pdgui.get_pwd());
-document.getElementById("fileDialog")
-    .setAttribute("nwworkingdir", pdgui.get_pwd());
-document.getElementById("fileDialog").setAttribute("accept",
-    Object.keys(pdgui.pd_filetypes).toString());
-
-function close_save_dialog() {
-    document.getElementById("save_before_quit").close();
-}
-
-function text_to_normalized_svg_path(text) {
-    text = text.slice(4).trim()  // draw
-               .slice(4).trim()  // path
-               .slice(1).trim()  // d
-               .slice(1).trim(); // =
-    if (text.slice(0, 1) === '"') {
-        text = text.slice(1);
-    }
-    if (text.slice(-1) === '"') {
-        text = text.slice(0, -1);
-    }
-    text = pdgui.parse_svg_path(text);
-    return "draw path " + text.reduce(function (prev, curr) {
-        return prev.concat(curr)
-    }).join(" ");
-}
-
-function text_to_fudi(text) {
-    text = text.trim();
-    // special case for draw path d="arbitrary path string" ...
-    if (text.search(/^draw\s+path\s+d\s*=\s*"/) !== -1) {
-        text = text_to_normalized_svg_path(text);
-    }
-    text = text.replace(/(\$[0-9]+)/g, "\\$1");    // escape dollar signs
-    text = text.replace(/(\$@)/g, "\\$@");         // escape special $@ sign
-    text = text.replace(/(?!\\)(,|;)/g, " \\$1 "); // escape "," and ";"
-    text = text.replace(/\u0020+/g, " ");          // filter consecutive ascii32
-    return text;
-}
-
-// Convert a string (FUDI message) to an array of strings small enough
-// to fit in Pd's socketreceiver buffer of 4096 bytes
-function string_to_array_of_chunks(msg) {
-    var chunk_max = 1024,
-        max_pd_string = 1000,
-        left,
-        in_array = [],
-        out_array = [];
-    if (msg.length <= chunk_max) {
-        out_array.push([msg]);
-    } else {
-        in_array = msg.split(/[\s\n]/); // split on newlines or spaces
-        while (in_array.length) {
-            left = in_array.slice(); // make a copy of in_array
-            if (left.toString().length > chunk_max) {
-                while (1) {
-                    if (left.length < 2) {
-                        pdgui.post("Warning: string truncated:");
-                        pdgui.post(left.toString().
-                            match(/............................../g).join("\n")
-                        );
-                        break;
-                    }
-                    left = left.splice(0, left.length >> 1);
-                    if (left.toString().length <= chunk_max) {
-                        break;
-                    }
-                }
-            }
-            // might need a check here for max_pd_string to warn
-            // user if a string is going to get truncated. (That's
-            // what max_pd_string is for above.)
-            out_array.push(left);
-            in_array = in_array.splice(left.length);
-        }
-    }
-    return out_array;
-}
-
-// Super-simplistic guess at whether the string from the clipboard
-// starts with Pd code. This is just meant as a convenience so that
-// stuff in the copy buffer that obviously isn't Pd code doesn't get
-// in the way when editing.
-function might_be_a_pd_file(stuff_from_clipboard) {
-    var text = stuff_from_clipboard.trim(),
-        one = text.charAt(0),
-        two = text.charAt(1);
-    return (one === "#" && (two === "N" || two === "X"));
-}
-
-function permission_to_paste_from_external_clipboard() {
-    return global.confirm(l("canvas.paste_clipboard_prompt"));
-}
-
 function nw_window_focus_callback(name) {
     pdgui.set_focused_patchwin(name);
     // on OSX, update the menu on focus
@@ -132,28 +36,10 @@ function nw_window_zoom(name, delta) {
     }
 }
 
-// These three functions need to be inside canvas_events closure
-function canvas_find_whole_word(elem) {
-    canvas_events.match_words(elem.checked);
-}
-
-function canvas_find_blur() {
-    canvas_events.normal();
-}
-
-function canvas_find_focus() {
-    var state = canvas_events.get_state();
-    canvas_events.search();
-}
-
-function canvas_find_reset() {
-    canvas_events.find_reset();
-}
-
 var canvas_events = (function() {
     var name,
         state,
-        scalar_draggables = {}, // elements of a scalar which have the "drag" event enabled
+        scalar_draggables = {}, // scalar child with the "drag" event enabled
         draggable_elem,         // last scalar we dragged
         draggable_label,        // kluge for handling [cnv] label/size anchors
         last_draggable_x,       // last x coord for the element we're dragging
@@ -187,6 +73,89 @@ var canvas_events = (function() {
             } else {
                 return 0;
             }
+        },
+        text_to_normalized_svg_path = function(text) {
+            text = text.slice(4).trim()  // draw
+                       .slice(4).trim()  // path
+                       .slice(1).trim()  // d
+                       .slice(1).trim(); // =
+            if (text.slice(0, 1) === '"') {
+                text = text.slice(1);
+            }
+            if (text.slice(-1) === '"') {
+                text = text.slice(0, -1);
+            }
+            text = pdgui.parse_svg_path(text);
+            return "draw path " + text.reduce(function (prev, curr) {
+                return prev.concat(curr)
+            }).join(" ");
+        },
+        text_to_fudi = function(text) {
+            text = text.trim();
+            // special case for draw path d="arbitrary path string" ...
+            if (text.search(/^draw\s+path\s+d\s*=\s*"/) !== -1) {
+                text = text_to_normalized_svg_path(text);
+            }
+            // escape dollar signs
+            text = text.replace(/(\$[0-9]+)/g, "\\$1");
+
+            // escape special $@ sign
+            text = text.replace(/(\$@)/g, "\\$@");
+
+            // escape "," and ";"
+            text = text.replace(/(?!\\)(,|;)/g, " \\$1 ");
+
+            // filter consecutive ascii32
+            text = text.replace(/\u0020+/g, " ");
+            return text;
+        },
+        string_to_array_of_chunks = function(msg) {
+        // Convert a string (FUDI message) to an array of strings small enough
+        // to fit in Pd's socketreceiver buffer of 4096 bytes
+            var chunk_max = 1024,
+                max_pd_string = 1000,
+                left,
+                in_array = [],
+                out_array = [];
+            if (msg.length <= chunk_max) {
+                out_array.push([msg]);
+            } else {
+                in_array = msg.split(/[\s\n]/); // split on newlines or spaces
+                while (in_array.length) {
+                    left = in_array.slice(); // make a copy of in_array
+                    if (left.toString().length > chunk_max) {
+                        while (1) {
+                            if (left.length < 2) {
+                                pdgui.post("Warning: string truncated:");
+                                pdgui.post(left.toString().
+                                    match(/............................../g).join("\n")
+                                );
+                                break;
+                            }
+                            left = left.splice(0, left.length >> 1);
+                            if (left.toString().length <= chunk_max) {
+                                break;
+                            }
+                        }
+                    }
+                    // might need a check here for max_pd_string to warn
+                    // user if a string is going to get truncated. (That's
+                    // what max_pd_string is for above.)
+                    out_array.push(left);
+                    in_array = in_array.splice(left.length);
+                }
+            }
+            return out_array;
+        },
+        might_be_a_pd_file = function(stuff_from_clipboard) {
+            // Super-simplistic guess at whether the string from the clipboard
+            // starts with Pd code. This is just meant as a convenience so that
+            // stuff in the copy buffer that obviously isn't Pd code doesn't get
+            // in the way when editing.
+            var text = stuff_from_clipboard.trim(),
+                one = text.charAt(0),
+                two = text.charAt(1);
+            return (one === "#" && (two === "N" || two === "X"));
         },
         grow_svg_for_element= function(elem) {
             // See if an element overflows the svg bbox, and
@@ -683,175 +652,6 @@ var canvas_events = (function() {
         }
     ;
 
-    // Dialog events -- these are set elsewhere now because of a bug
-    // with nwworkingdir
-    document.querySelector("#saveDialog").addEventListener("change",
-        function(evt) {
-            pdgui.saveas_callback(name, evt.target.value, 0);
-            // reset value so that we can open the same file twice
-            evt.target.value = null;
-            console.log("tried to save something");
-        }, false
-    );
-
-    // Whoa-- huge workaround!
-    // Right now we're getting the popup menu the way Pd Vanilla does it:
-    // 1) send a mouse(down) message to Pd
-    // 2) Pd checks whether it wants to send us a popup
-    // 3) Pd checks what popup menu items are available for this object/canvas
-    // 4) Pd sends GUI back a message with this info
-    // 5) GUI finally displays the popup
-    // 6) GUI keeps a _global_ _variable_ to remember where the popup coords
-    // 7) User clicks an option in the popup
-    // 8) GUI sends a message back to Pd with the popup index and coords
-    // 9) Pd walks the linked list of objects to look up the object
-    // 10) Pd asks that object if it reacts to popups, and if it reacts to the
-    //     selected item in the popup
-    // 11) Pd sends a message to the relevant object for the item in question
-    // nw.js has a nice little "contextmenu" event handler, but it's too
-    // difficult to use when we're passing between GUI and Pd (twice). In the
-    // future we should just do all the popup menu event handling in the GUI,
-    // and only pass a message to Pd when the user has clicked an item.
-    // For now, however, we just turn off its default behavior and control
-    // it with a bunch of complicated callbacks. :(
-    document.addEventListener("contextmenu", function(evt) {
-        console.log("got a context menu evt...");
-        evt.preventDefault();
-    });
-
-    // Cut event
-    document.addEventListener("cut", function(evt) {
-        // This event doesn't currently get called because the
-        // nw menubar receives the event and doesn't propagate
-        // to the DOM. But if we add the ability to toggle menubar
-        // display, we might need to rely on this listener.
-        pdgui.pdsend(name, "cut");
-    });
-
-    // Copy event
-    document.addEventListener("copy", function(evt) {
-        // On OSX, this event gets triggered when we're editing
-        // inside an object/message box. So we only forward the
-        // copy message to Pd if we're in a "normal" canvas state
-        if (canvas_events.get_state() === "normal") {
-            pdgui.pdsend(name, "copy");
-        }
-    });
-
-    // Listen to paste event
-    // XXXTODO: Not sure whether this is even needed any more, as the
-    // paste-from-clipboard functionality has been moved to its own menu
-    // option. So this code may possibly be removed in the future. -ag
-    document.addEventListener("paste", function(evt) {
-        if (canvas_events.get_state() !== "normal") {
-            return;
-        }
-        // Send a canvas "paste" message to Pd
-        pdgui.pdsend(name, "paste");
-    });
-
-    // MouseWheel event for zooming
-    document.addEventListener("wheel", function(evt) {
-        var d = { deltaX: 0, deltaY: 0, deltaZ: 0 };
-        Object.keys(d).forEach(function(key) {
-            if (evt[key] < 0) {
-                d[key] = -1;
-            } else if (evt[key] > 0) {
-                d[key] = 1;
-            } else {
-                d[key] = 0;
-            }
-        });
-        if (pdgui.cmd_or_ctrl_key(evt)) {
-            // scroll up for zoom-in, down for zoom-out
-            nw_window_zoom(name, -d.deltaY);
-        }
-        // Send a message on to Pd for the [mousewheel] legacy object
-        // (in the future we can refcount if we want to prevent forwarding
-        // these messages when there's no extant receiver)
-        pdgui.pdsend(name, "legacy_mousewheel", d.deltaX, d.deltaY, d.deltaZ);
-    });
-
-    // The following is commented out because we have to set the
-    // event listener inside nw_create_pd_window_menus due to a
-    // bug with nwworkingdir
-
-    //document.querySelector("#fileDialog").addEventListener("change",
-    //    function(evt) {
-    //        var file_array = this.value;
-    //        // reset value so that we can open the same file twice
-    //        this.value = null;
-    //        pdgui.menu_open(file_array);
-    //        console.log("tried to open something\n\n\n\n\n\n\n\n");
-    //    }, false
-    //);
-    document.querySelector("#openpanel_dialog").addEventListener("change",
-        function(evt) {
-            var file_string = evt.target.value;
-            // reset value so that we can open the same file twice
-            evt.target.value = null;
-            pdgui.file_dialog_callback(file_string);
-            console.log("tried to openpanel something");
-        }, false
-    );
-    document.querySelector("#savepanel_dialog").addEventListener("change",
-        function(evt) {
-            var file_string = evt.target.value;
-            // reset value so that we can open the same file twice
-            evt.target.value = null;
-            pdgui.file_dialog_callback(file_string);
-            console.log("tried to savepanel something");
-        }, false
-    );
-    document.querySelector("#canvas_find_text").addEventListener("focusin",
-        canvas_find_focus, false
-    );
-
-    // disable drag and drop for the time being
-    window.addEventListener("dragover", function (evt) {
-        evt.preventDefault();
-    }, false);
-    window.addEventListener("drop", function (evt) {
-        evt.preventDefault();
-    }, false);
-
-    // Add placeholder text... this all needs to be collected into an 
-    // add_events function similiar to the one in index.js
-    document.querySelector("#canvas_find_text").placeholder =
-        l("canvas.find.placeholder");
-    document.querySelector("#canvas_find_text").addEventListener("blur",
-        canvas_find_blur, false
-    );
-    document.querySelector("#canvas_find_button").addEventListener("click",
-        events.find_click);
-    // We need to separate these into nw_window events and html5 DOM events
-    // closing the Window this isn't actually closing the window yet
-    gui.Window.get().on("close", function() {
-        pdgui.pdsend(name, "menuclose 0");
-    });
-    // update viewport size when window size changes
-    gui.Window.get().on("maximize", function() {
-        pdgui.gui_canvas_get_scroll(name);
-    });
-    gui.Window.get().on("unmaximize", function() {
-        pdgui.gui_canvas_get_scroll(name);
-    });
-    gui.Window.get().on("resize", function() {
-        pdgui.gui_canvas_get_scroll(name);
-    });
-    gui.Window.get().on("focus", function() {
-        nw_window_focus_callback(name);
-    });
-    gui.Window.get().on("blur", function() {
-        nw_window_blur_callback(name);
-    });
-    gui.Window.get().on("move", function(x, y) {
-        var w = gui.Window.get();
-        pdgui.pdsend(name, "setbounds", x, y, x + w.width, y + w.height);
-    });
-    // set minimum window size
-    gui.Window.get().setMinimumSize(150, 100);
-
     return {
         none: function() {
             var evt_name, prop;
@@ -868,7 +668,7 @@ var canvas_events = (function() {
             }
         },
         normal: function() {
-            this.none();
+            canvas_events.none();
 
             document.addEventListener("mousemove", events.mousemove, false);
             document.addEventListener("keydown", events.keydown, false);
@@ -895,14 +695,14 @@ var canvas_events = (function() {
             // The exception is my_canvas, which is weird because the visible
             // rectangle extends past the bbox that it reports to Pd.
             // Unfortunately that means a lot of work to treat it separately.
-            this.none();
+            canvas_events.none();
             document.addEventListener("mousemove",
                 events.iemgui_label_mousemove, false);
             document.addEventListener("mouseup",
                 events.iemgui_label_mouseup, false);
         },
         text: function() {
-            this.none();
+            canvas_events.none();
 
             document.addEventListener("mousemove", events.text_mousemove, false);
             document.addEventListener("keydown", events.text_keydown, false);
@@ -915,8 +715,8 @@ var canvas_events = (function() {
             set_edit_menu_modals(false);
         },
         floating_text: function() {
-            this.none();
-            this.text();
+            canvas_events.none();
+            canvas_events.text();
             document.removeEventListener("mousedown", events.text_mousedown, false);
             document.removeEventListener("mouseup", events.text_mouseup, false);
             document.removeEventListener("keypress", events.text_keypress, false);
@@ -928,7 +728,7 @@ var canvas_events = (function() {
             set_edit_menu_modals(false);
         },
         dropdown_menu: function() {
-            this.none();
+            canvas_events.none();
             document.addEventListener("mousedown", events.dropdown_menu_mousedown, false);
             document.addEventListener("mouseup", events.dropdown_menu_mouseup, false);
             document.addEventListener("mousemove", events.dropdown_menu_mousemove, false);
@@ -938,7 +738,7 @@ var canvas_events = (function() {
                 .addEventListener("wheel", events.dropdown_menu_wheel, false);
         },
         search: function() {
-            this.none();
+            canvas_events.none();
             document.addEventListener("keydown", events.find_keydown, false);
             state = "search";
         },
@@ -985,6 +785,189 @@ var canvas_events = (function() {
         close_without_saving: function(cid, force) {
             pdgui.pdsend(name, "dirty 0");
             pdgui.pdsend(cid, "menuclose", force);
+        },
+        close_save_dialog: function() {
+            document.getElementById("save_before_quit").close();
+        },
+        init: function() {
+            document.getElementById("saveDialog")
+                .setAttribute("nwworkingdir", pdgui.get_pwd());
+            document.getElementById("fileDialog")
+                .setAttribute("nwworkingdir", pdgui.get_pwd());
+            document.getElementById("fileDialog").setAttribute("accept",
+                Object.keys(pdgui.pd_filetypes).toString());
+            // Dialog events -- these are set elsewhere now because of a bug
+            // with nwworkingdir
+            document.querySelector("#saveDialog").addEventListener("change",
+                function(evt) {
+                    pdgui.saveas_callback(name, evt.target.value, 0);
+                    // reset value so that we can open the same file twice
+                    evt.target.value = null;
+                    console.log("tried to save something");
+                }, false
+            );
+            // Whoa-- huge workaround! Right now we're getting
+            // the popup menu the way Pd Vanilla does it:
+            // 1) send a mouse(down) message to Pd
+            // 2) Pd checks whether it wants to send us a popup
+            // 3) Pd checks what popup menu items are available for obj/canvas
+            // 4) Pd sends GUI back a message with this info
+            // 5) GUI finally displays the popup
+            // 6) GUI keeps a _global_ _variable_ to remember the popup coords
+            // 7) User clicks an option in the popup
+            // 8) GUI sends a message back to Pd with the popup index and coords
+            // 9) Pd walks the linked list of objects to look up the object
+            // 10) Pd asks the object if it reacts to popups, and if it reacts
+            //     to the selected item in the popup
+            // 11) Pd sends a message to the relevant object for the item in
+            //     question
+            // nw.js has a nice little "contextmenu" event handler, but it's too
+            // difficult to use when passing between GUI and Pd (twice). In the
+            // future we should do all popup menu event handling in the GUI,
+            // and only pass a message to Pd when the user has clicked an item.
+            // For now, however, we just turn off its default behavior and
+            // control it with a bunch of complicated callbacks.
+            document.addEventListener("contextmenu", function(evt) {
+                console.log("got a context menu evt...");
+                evt.preventDefault();
+            });
+
+            // Cut event
+            document.addEventListener("cut", function(evt) {
+                // This event doesn't currently get called because the
+                // nw menubar receives the event and doesn't propagate
+                // to the DOM. But if we add the ability to toggle menubar
+                // display, we might need to rely on this listener.
+                pdgui.pdsend(name, "cut");
+            });
+
+            // Copy event
+            document.addEventListener("copy", function(evt) {
+                // On OSX, this event gets triggered when we're editing
+                // inside an object/message box. So we only forward the
+                // copy message to Pd if we're in a "normal" canvas state
+                if (canvas_events.get_state() === "normal") {
+                    pdgui.pdsend(name, "copy");
+                }
+            });
+
+            // Listen to paste event
+            // XXXTODO: Not sure whether this is even needed any more, as the
+            // paste-from-clipboard functionality has been moved to its own menu
+            // option. So this code may possibly be removed in the future. -ag
+            document.addEventListener("paste", function(evt) {
+                if (canvas_events.get_state() !== "normal") {
+                    return;
+                }
+                // Send a canvas "paste" message to Pd
+                pdgui.pdsend(name, "paste");
+            });
+
+            // MouseWheel event for zooming
+            document.addEventListener("wheel", function(evt) {
+                var d = { deltaX: 0, deltaY: 0, deltaZ: 0 };
+                Object.keys(d).forEach(function(key) {
+                    if (evt[key] < 0) {
+                        d[key] = -1;
+                    } else if (evt[key] > 0) {
+                        d[key] = 1;
+                    } else {
+                        d[key] = 0;
+                    }
+                });
+                if (pdgui.cmd_or_ctrl_key(evt)) {
+                    // scroll up for zoom-in, down for zoom-out
+                    nw_window_zoom(name, -d.deltaY);
+                }
+                // Send a message on to Pd for the [mousewheel] legacy object
+                // (in the future we can refcount to prevent forwarding
+                // these messages when there's no extant receiver)
+                pdgui.pdsend(name, "legacy_mousewheel",
+                    d.deltaX, d.deltaY, d.deltaZ);
+            });
+
+            // The following is commented out because we have to set the
+            // event listener inside nw_create_pd_window_menus due to a
+            // bug with nwworkingdir
+
+            //document.querySelector("#fileDialog").addEventListener("change",
+            //    function(evt) {
+            //        var file_array = this.value;
+            //        // reset value so that we can open the same file twice
+            //        this.value = null;
+            //        pdgui.menu_open(file_array);
+            //        console.log("tried to open something\n\n\n\n\n\n\n\n");
+            //    }, false
+            //);
+            document.querySelector("#openpanel_dialog")
+                .addEventListener("change", function(evt) {
+                    var file_string = evt.target.value;
+                    // reset value so that we can open the same file twice
+                    evt.target.value = null;
+                    pdgui.file_dialog_callback(file_string);
+                    console.log("tried to openpanel something");
+                }, false
+            );
+            document.querySelector("#savepanel_dialog")
+                .addEventListener("change", function(evt) {
+                    var file_string = evt.target.value;
+                    // reset value so that we can open the same file twice
+                    evt.target.value = null;
+                    pdgui.file_dialog_callback(file_string);
+                    console.log("tried to savepanel something");
+                }, false
+            );
+            document.querySelector("#canvas_find_text")
+                .addEventListener("focusin", canvas_events.search, false
+            );
+
+            // disable drag and drop for the time being
+            window.addEventListener("dragover", function (evt) {
+                evt.preventDefault();
+            }, false);
+            window.addEventListener("drop", function (evt) {
+                evt.preventDefault();
+            }, false);
+
+            // Add placeholder text... this all needs to be collected into an 
+            // add_events function similiar to the one in index.js
+            document.querySelector("#canvas_find_text").placeholder =
+                l("canvas.find.placeholder");
+            document.querySelector("#canvas_find_text").addEventListener("blur",
+                canvas_events.normal, false
+            );
+            document.querySelector("#canvas_find_button")
+                .addEventListener("click", events.find_click
+            );
+            // We need to separate these into nw_window events and html5 DOM
+            // events closing the Window this isn't actually closing the window
+            // yet
+            gui.Window.get().on("close", function() {
+                pdgui.pdsend(name, "menuclose 0");
+            });
+            // update viewport size when window size changes
+            gui.Window.get().on("maximize", function() {
+                pdgui.gui_canvas_get_scroll(name);
+            });
+            gui.Window.get().on("unmaximize", function() {
+                pdgui.gui_canvas_get_scroll(name);
+            });
+            gui.Window.get().on("resize", function() {
+                pdgui.gui_canvas_get_scroll(name);
+            });
+            gui.Window.get().on("focus", function() {
+                nw_window_focus_callback(name);
+            });
+            gui.Window.get().on("blur", function() {
+                nw_window_blur_callback(name);
+            });
+            gui.Window.get().on("move", function(x, y) {
+                var w = gui.Window.get();
+                pdgui.pdsend(name, "setbounds", x, y,
+                    x + w.width, y + w.height);
+            });
+            // set minimum window size
+            gui.Window.get().setMinimumSize(150, 100);
         }
     };
 }());
@@ -1022,6 +1005,8 @@ function register_window_id(cid, attr_array) {
     }
     create_popup_menu(cid);
     canvas_events.register(cid);
+    // Initialize global DOM state/events
+    canvas_events.init(document);
     translate_form();
     // Trigger a "focus" event so that OSX updates the menu for this window
     nw_window_focus_callback(cid);
@@ -1156,11 +1141,6 @@ function canvas_paste_from_clipboard(name, clipboard_data)
 	pdgui.post("paste error: clipboard doesn't appear to contain valid Pd code");
         return;
     }
-
-    // Maybe we want a warning prompt here? Then uncomment the line below. I
-    // disabled this for now, as the paste-from-clipboard command now has its
-    // own menu option, so presumably the user knows what he's doing. -ag
-    //if (!permission_to_paste_from_external_clipboard()) return;
 
     // clear the buffer
     pdgui.pdsend(name, "copyfromexternalbuffer");

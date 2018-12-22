@@ -1,0 +1,83 @@
+#N canvas 430 62 555 619 10;
+#X obj 0 585 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header unpost 3 12 0 18
+-204280 -1 0;
+#X obj 0 279 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 497 325 482 332 META 0;
+#X text 12 145 LIBRARY internal;
+#X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 165 AUTHOR Miller Puckette;
+#X text 12 225 HELP_PATCH_AUTHORS Jonathan Wilkes revised the patch
+to conform to the PDDP template for Pd version 0.42.;
+#X text 12 25 KEYWORDS control storage;
+#X text 12 205 RELEASE_DATE 1997;
+#X text 12 65 DESCRIPTION reroute console messages to an outlet;
+#X text 12 85 INLET_0 anything;
+#X text 12 125 OUTLET_1 anything;
+#X text 12 105 OUTLET_0 symbol;
+#X restore 500 587 pd META;
+#X obj 0 336 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 503 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 553 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X obj 78 352 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#N canvas 215 545 428 131 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [unpost] Related Objects;
+#X obj 22 36 print;
+#X restore 101 587 pd Related_objects;
+#X obj 78 295 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 4 587 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X text 11 20 reroute console messages to an outlet;
+#X obj 502 12 unpost;
+#X msg 58 60 bad_method;
+#X obj 58 112 unpost;
+#X symbolatom 58 194 0 0 0 0 - - -;
+#X text 98 351 symbol;
+#X text 168 351 - outputs the console messages. The messages triggered
+by the right outlet are split at newlines. Then each resulting line
+is converted to a symbol and output in sequence. (This means a single
+message to the inlet of [unpost] may trigger multiple messages to this
+outlet.;
+#X text 99 295 anything;
+#X text 169 295 - then input is sent to the right outlet;
+#X obj 78 432 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 431 anything;
+#X obj 91 163 print redirected;
+#X msg 81 85 1;
+#X obj 91 141 + 41;
+#X msg 238 60 bad_method;
+#X symbolatom 238 194 0 0 0 0 - - -;
+#X obj 271 163 print redirected;
+#X msg 261 85 1;
+#X obj 271 141 + 41;
+#X obj 238 112 unpost error;
+#X text 319 112 <- only reroute errors;
+#X text 168 431 - the message sent to the inlet is received to this
+outlet. Any console messages which are triggered from the rest of object
+chain connected below it will get forwarded to the left outlet. If
+the "error" argument was given \, then only error messages will be
+redirected to the left outlet.;
+#X text 81 520 1) symbol;
+#X text 171 520 - the symbol "error" will only redirect error messages.
+All other console messages will get printed as usual.;
+#X connect 13 0 14 0;
+#X connect 14 0 15 0;
+#X connect 14 1 24 0;
+#X connect 23 0 14 0;
+#X connect 24 0 22 0;
+#X connect 25 0 30 0;
+#X connect 28 0 30 0;
+#X connect 29 0 27 0;
+#X connect 30 0 26 0;
+#X connect 30 1 29 0;
