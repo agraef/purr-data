@@ -1,7 +1,7 @@
-#N canvas 130 60 665 633 12;
+#N canvas 96 60 665 633 12;
 #X obj 41 8 inlet;
 #X msg 41 143 1;
-#X obj 43 1059 outlet;
+#X obj 43 1229 outlet;
 #X text 117 8 makefilename is a strange combination of the already
 complicated C format string format specification and Pd's syntax limitations.
 This is especially unfortunate given the object only accepts a single
@@ -10,40 +10,34 @@ substitution variable.;
 subject to all kinds of broken format specifiers settable at runtime
 with arbitrary user-input. All that complexity for an object of impressively
 limited usefulness.;
-#X text 117 168 Here \, we trigger every branch of the format specifier
-parser to make sure a run-time error results instead of a crash and/or
-memory error. We use [unpost] to redirect the error from the console
-to the patch.;
-#X obj 105 782 makefilename;
-#X text 184 664 * todo: add check for [makefilename] with no args to
+#X obj 105 982 makefilename;
+#X text 184 864 * todo: add check for [makefilename] with no args to
 make sure it ouputs file%d;
-#X obj 43 782 list;
-#X obj 43 807 route symbol bang;
-#X obj 145 928 list;
-#X obj 43 716 trigger bang anything bang anything;
-#X obj 43 832 b;
-#X obj 43 857 f 1;
-#X obj 100 831 f 0;
-#X obj 43 882 t a b;
-#X obj 43 1018 list append;
-#X msg 145 959 code coverage for error handling of poorly formed format
+#X obj 43 982 list;
+#X obj 43 1007 route symbol bang;
+#X obj 145 1118 list;
+#X obj 43 916 trigger bang anything bang anything;
+#X obj 43 1032 b;
+#X obj 43 1057 f 1;
+#X obj 100 1031 f 0;
+#X obj 43 1082 t a b;
+#X obj 43 1203 list append;
+#X msg 145 1149 code coverage for error handling of poorly formed format
 specifier: \$@;
 #X text 143 292 too many flags;
 #X text 50 240 no field type;
 #X text 129 414 max width/precision;
 #X text 115 354 variable width or precision field not supported;
-#X text 148 535 unsupported field types;
-#X text 154 600 non-existent field type;
+#X text 148 585 unsupported field types;
+#X text 154 650 non-existent field type;
 #X msg 41 265 % \, %0;
-#X obj 43 661 list prepend set;
-#X obj 43 686 list trim;
+#X obj 43 861 list prepend set;
+#X obj 43 886 list trim;
 #X msg 53 317 %-+#0-+#0-+#0-+#0- \, %-+#0-+#0-+#0-+#0-g;
 #X msg 63 379 %* \, %*s \, %.*s \, %*.*s;
 #X msg 73 439 %9999g \, %.9999g \, %9999.9999g;
-#X msg 83 499 %5.g \, %.g \, %5..g \, %..g;
-#X text 132 477 dot with no digit(s) following it;
-#X obj 66 746 unpost error;
-#X text 168 747 <- if there's an error we'll get it to the left inlet
+#X obj 66 946 unpost error;
+#X text 168 947 <- if there's an error we'll get it to the left inlet
 in the form of a symbol;
 #X obj 41 168 s \$0-b;
 #X obj 41 213 r \$0-b;
@@ -51,42 +45,68 @@ in the form of a symbol;
 #X obj 63 348 r \$0-b;
 #X obj 73 409 r \$0-b;
 #X obj 83 467 r \$0-b;
-#X obj 93 530 r \$0-b;
-#X obj 103 584 r \$0-b;
-#X msg 93 559 %a \, %A \, %n \, %m;
-#X msg 103 610 %z;
+#X obj 93 580 r \$0-b;
+#X obj 103 634 r \$0-b;
+#X msg 103 660 %z;
+#X obj 110 684 r \$0-b;
+#X text 185 697 more than one format specifier;
+#X msg 110 710 %g%g \, %g%;
+#X text 132 477 double dots;
+#X msg 83 499 %5..g \, %..g;
+#X obj 93 523 r \$0-b;
+#X text 142 533 precision field/specifier mismatch;
+#X msg 93 555 %5.3c;
+#X msg 93 609 %a \, %A \, %n \, %m \, %p;
+#X text 117 168 Here \, we trigger every branch of the format specifier
+parser to make sure our run-time errors prevent crashes and/or memory
+errors. We use [unpost] to redirect the error from the console to the
+patch.;
+#X obj 120 734 r \$0-b;
+#X msg 120 760 %#d \, %#i;
+#X obj 120 794 r \$0-b;
+#X text 195 747 hash flag mismatch;
+#X text 195 807 zero flag mismatch;
+#X msg 120 820 %0c \, %0s;
 #X connect 0 0 1 0;
-#X connect 1 0 34 0;
-#X connect 8 0 9 0;
-#X connect 9 0 12 0;
-#X connect 9 1 14 0;
-#X connect 10 0 17 0;
-#X connect 11 0 8 0;
-#X connect 11 1 32 0;
-#X connect 11 2 8 1;
-#X connect 11 3 10 1;
-#X connect 12 0 13 0;
-#X connect 13 0 15 0;
+#X connect 1 0 31 0;
+#X connect 7 0 8 0;
+#X connect 8 0 11 0;
+#X connect 8 1 13 0;
+#X connect 9 0 16 0;
+#X connect 10 0 7 0;
+#X connect 10 1 29 0;
+#X connect 10 2 7 1;
+#X connect 10 3 9 1;
+#X connect 11 0 12 0;
+#X connect 12 0 14 0;
+#X connect 13 0 14 0;
 #X connect 14 0 15 0;
-#X connect 15 0 16 0;
-#X connect 15 1 10 0;
-#X connect 16 0 2 0;
-#X connect 17 0 16 1;
+#X connect 14 1 9 0;
+#X connect 15 0 2 0;
+#X connect 16 0 15 1;
+#X connect 23 0 24 0;
 #X connect 24 0 25 0;
-#X connect 25 0 26 0;
-#X connect 26 0 11 0;
-#X connect 27 0 25 0;
-#X connect 28 0 25 0;
-#X connect 29 0 25 0;
-#X connect 30 0 25 0;
-#X connect 32 0 8 1;
-#X connect 32 1 6 0;
-#X connect 35 0 24 0;
-#X connect 36 0 27 0;
-#X connect 37 0 28 0;
-#X connect 38 0 29 0;
-#X connect 39 0 30 0;
+#X connect 25 0 10 0;
+#X connect 26 0 24 0;
+#X connect 27 0 24 0;
+#X connect 28 0 24 0;
+#X connect 29 0 7 1;
+#X connect 29 1 5 0;
+#X connect 32 0 23 0;
+#X connect 33 0 26 0;
+#X connect 34 0 27 0;
+#X connect 35 0 28 0;
+#X connect 36 0 44 0;
+#X connect 37 0 48 0;
+#X connect 38 0 39 0;
+#X connect 39 0 24 0;
 #X connect 40 0 42 0;
-#X connect 41 0 43 0;
-#X connect 42 0 25 0;
-#X connect 43 0 25 0;
+#X connect 42 0 24 0;
+#X connect 44 0 24 0;
+#X connect 45 0 47 0;
+#X connect 47 0 24 0;
+#X connect 48 0 24 0;
+#X connect 50 0 51 0;
+#X connect 51 0 24 0;
+#X connect 52 0 55 0;
+#X connect 55 0 24 0;

@@ -3,7 +3,7 @@
 #X obj 475 326 route 0;
 #X obj 583 470 print failure;
 #X obj 560 336 tgl 28 0 empty empty Print_All_Results 31 11 0 12 -262144
--1 -1 1 1;
+-1 -1 0 1;
 #X obj 159 149 bng 31 250 50 0 empty empty Run_all 39 13 0 12 -262144
 -1 -1;
 #X obj 56 25 r init;
@@ -44,9 +44,12 @@ is handy for some binbuf tests.;
 #X obj 145 569 rtest makefilename_double_percent;
 #X obj 145 620 rtest makefilename_code_coverage;
 #N canvas 461 242 450 323 (subpatch) 0;
-#X restore 148 875 pd;
+#X restore 148 1105 pd;
 #X obj 145 671 rtest makefilename_default;
 #X obj 145 722 rtest makefilename_default_bang;
+#X obj 145 773 rtest makefilename_float;
+#X obj 145 824 rtest makefilename_symbol;
+#X obj 145 875 rtest makefilename_bang;
 #X connect 0 0 1 0;
 #X connect 1 0 7 0;
 #X connect 1 1 29 0;
@@ -80,3 +83,6 @@ is handy for some binbuf tests.;
 #X connect 36 0 37 0;
 #X connect 37 0 39 0;
 #X connect 39 0 40 0;
+#X connect 40 0 41 0;
+#X connect 41 0 42 0;
+#X connect 42 0 43 0;

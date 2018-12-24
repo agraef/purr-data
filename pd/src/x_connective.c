@@ -1467,17 +1467,17 @@ typedef struct _makefilename
 static const char* makefilename_doscanformat(const char *str, t_printtype *typ,
     char *errormsg)
 {
-    int infmt = 0, i;
+    int infmt = 0, i, hashflag = 0, zeroflag = 0;
     for (; *str; str++)
     {
         if (!infmt && *str == '%')
         {
-            /* A string consisting of a single '%' character isn't a valid
-               format specifier. */
+            /* A single '%' character isn't a valid. It needs a conversion
+               specifier ('g', 's', etc.) to follow it */
             if (*(str+1) == '\0')
             {
                 str++;
-                sprintf(errormsg, "field type missing");
+                sprintf(errormsg, "specifier missing");
                 *typ = NONE;
                 return str;
             }
@@ -1486,21 +1486,28 @@ static const char* makefilename_doscanformat(const char *str, t_printtype *typ,
         }
         if (infmt)
         {
-            /* 1) flag field
-               Check for a leading '%' after our format specifier. This
-               will be converted to a single '%' in the output. */
+            /* 1) flags
+               Check for "%%" which produces a literal '%' in the output */
             if (*str == '%')
             {
-                /* Not in a format specifier after all, so start over... */
+                /* Not in a format specifier after all, so let's reset
+                   infmt and continue searching... */
                 infmt = 0;
                 continue;
             }
             for (i = 0; *str && strchr("-+#0", *str) != 0; str++, i++)
             {
-                /* Check for flag chars. While a space is a legal part of this
-                   field, Pd's parser would split it off into a separate arg.
-                   Since makefilename has always truncated extra args we don't
-                   support spaces here. */
+                /* Check for flags. While a space is a legal flag, Pd's
+                   parser would split it off into a separate arg. And since
+                   makefilename has always truncated extra args we don't
+                   support spaces here. We also don't support the single
+                   quote flag.
+                   Some flag/specifier combinations can cause undefined
+                   behavior so we need to track them. */
+
+                if (*str == '#') hashflag++;
+                if (*str == '0') zeroflag++;
+
                 /* Since we're dealing with arbitrary input let's keep
                    the total number of flags sane. */
                 if (i > 15)
@@ -1557,12 +1564,11 @@ static const char* makefilename_doscanformat(const char *str, t_printtype *typ,
                         return str;
                     }
                 }
-                /* Fairly certain having '.' with no trailing digits or asterisk
-                   is undefined behavior. So let's trigger a syntax error. */
-                if (i == 0)
+                /* precision isn't defined for all conversion specifiers. */
+                if (*str && strchr("diouxXeEfFgGs", *str) == 0)
                 {
-                    sprintf(errormsg, "precision specifier requires a number "
-                                      "following the '.'");
+                    sprintf(errormsg, "precision field restricted to "
+                                      "[diouxXeEfFgGs] specifiers");
                     *typ = NONE;
                     return str;
                 }
@@ -1571,9 +1577,24 @@ static const char* makefilename_doscanformat(const char *str, t_printtype *typ,
                Fairly certain the length field doesn't make any sense
                here. At least I've never seen it used, so let's skip it. */
 
-            /* 5) type field 
-               The type of value we want to fill the slot with. This is the
-               most complex field we support. */
+            /* 5) conversion specifier
+               The type of value we want to fill the slot with. */
+
+            /* First, check our flags against the allowed specifiers */
+            if (*str && hashflag && strchr("fFgGeExXo", *str) == 0)
+            {
+                sprintf(errormsg, "'#' flag restricted to [fFgGeExXo] "
+                                  "specifiers");
+                *typ = NONE;
+                return str;
+            }
+            if (*str && zeroflag && strchr("diouxXeEfFgG", *str) == 0)
+            {
+                sprintf(errormsg, "'0' flag restricted to [diouxXeEfFgG] "
+                                  "specifiers");
+                *typ = NONE;
+                return str;
+            }
 
             /* a C string */
             if (*str == 's')
@@ -1597,10 +1618,15 @@ static const char* makefilename_doscanformat(const char *str, t_printtype *typ,
                 return str;
             }
 
-            /* a pointer */
+            /* a pointer. We don't suppor this in Purr Data because of the
+               possibility of both undefined and implementation-specific
+               behavior. */
             if (*str && strchr("p", *str) != 0)
             {
-                *typ = POINTER;
+                /* *typ = POINTER; */
+                /* return str; */
+                sprintf(errormsg, "p specifier not supported");
+                *typ = NONE;
                 return str;
             }
 
@@ -1610,17 +1636,17 @@ static const char* makefilename_doscanformat(const char *str, t_printtype *typ,
             /* First, let's check for any remaining type fields which
                we don't support. That way we can give a better error message. */
             if (*str == 'a' || *str == 'A')
-                sprintf(errormsg, "hexfloat type not supported. If you "
+                sprintf(errormsg, "hexfloat specifier not supported. If you "
                                   "need this feature make a case on the "
                                   "mailing list and we'll consider adding it");
             else if (*str == 'n')
-                sprintf(errormsg, "n field type not supported");
+                sprintf(errormsg, "n specifier not supported");
             else if (*str == 'm')
-                sprintf(errormsg, "m field type not supported");
+                sprintf(errormsg, "m specifier not supported");
             else if (*str)
-                sprintf(errormsg, "bad field type '%c'", *str);
+                sprintf(errormsg, "bad specifier type '%c'", *str);
             else
-                sprintf(errormsg, "field type missing");
+                sprintf(errormsg, "specifier missing");
             *typ = NONE;
             return str;
         }
@@ -1643,9 +1669,9 @@ static void makefilename_scanformat(t_makefilename *x)
     if (*errorbuf)
     {
         pd_error(x, "makefilename: invalid format string '%s' "
-                    "(%s). Setting to empty string.",
+                    "(%s). Supressing output.",
             x->x_format->s_name, errorbuf);
-        /* set the format string to nothing. It would be great to refuse to
+        /* set the format string to zero. It would be great to refuse to
            create the object here, but we also have to deal with new format
            strings with the 'set' message. So for consistency we zero out
            the format string and make it a runtimer error. */
@@ -1663,8 +1689,8 @@ static void makefilename_scanformat(t_makefilename *x)
         if (typ != NONE || *errorbuf)
         {
             pd_error(x, "makefilename: invalid format string '%s' "
-                        "(too many format specifiers). "
-                        "Setting to empty string.",
+                        "(too many specifiers). "
+                        "Suppressing output.",
                 x->x_format->s_name);
             x->x_format = 0;
             return;
@@ -1711,25 +1737,30 @@ static void makefilename_float(t_makefilename *x, t_floatarg f)
     }
     switch(x->x_accept)
     {
-    case NONE:
-        makefilename_snprintf(x, buf, x->x_format->s_name);
-        break;
-    case INT: case POINTER:
-        makefilename_snprintf(x, buf, x->x_format->s_name, (int)f);
-        break;
     case FLOAT:
         makefilename_snprintf(x, buf, x->x_format->s_name, f);
+        break;
+    case INT:
+        makefilename_snprintf(x, buf, x->x_format->s_name, (int)f);
         break;
     case STRING: {
         char buf2[MAXPDSTRING];
         makefilename_snprintf(x, buf2, "%g", f);
         makefilename_snprintf(x, buf, x->x_format->s_name, buf2);
         break;
+    case NONE:
+        makefilename_snprintf(x, buf, x->x_format->s_name);
+        break;
     }
     default:
-        makefilename_snprintf(x, buf, "%s", x->x_format->s_name);
+        /* POINTER type would fall here. We probably don't want to expose
+           implementation-specific output for whatever rando float values
+           the user wants to hurl at makefilename. */
+        pd_error(x, "cannot convert float with specifier: %s",
+            x->x_format->s_name);
+        return;
     }
-    if (buf[0]!=0)
+    if (buf[0] != 0)
         outlet_symbol(x->x_obj.ob_outlet, gensym(buf));
 }
 
@@ -1743,7 +1774,7 @@ static void makefilename_symbol(t_makefilename *x, t_symbol *s)
     }
     switch(x->x_accept)
     {
-    case STRING: case POINTER:
+    case STRING:
         makefilename_snprintf(x, buf, x->x_format->s_name, s->s_name);
         break;
     case INT:
@@ -1756,9 +1787,15 @@ static void makefilename_symbol(t_makefilename *x, t_symbol *s)
         makefilename_snprintf(x, buf, x->x_format->s_name);
         break;
     default:
-        makefilename_snprintf(x, buf, "%s", x->x_format->s_name);
+         /* POINTER case falls here. Technically we could print out
+            symbol addys using whatever the compiler's implementation-specific
+            output format happens to be. But that probably shouldn't be exposed
+            within the patch like this. */
+        pd_error(x, "cannot convert symbol with specifier: %s",
+            x->x_format->s_name);
+        return;
     }
-    if (buf[0]!=0)
+    if (buf[0] != 0)
         outlet_symbol(x->x_obj.ob_outlet, gensym(buf));
 }
 
@@ -1778,13 +1815,18 @@ static void makefilename_bang(t_makefilename *x)
     case FLOAT:
         makefilename_snprintf(x, buf, x->x_format->s_name, 0.);
         break;
+    case STRING:
+        makefilename_snprintf(x, buf, x->x_format->s_name, "");
+        break;
     case NONE:
         makefilename_snprintf(x, buf, x->x_format->s_name);
         break;
     default:
-        makefilename_snprintf(x, buf, "%s", x->x_format->s_name);
+        pd_error(x, "cannot convert bang with specifier: %s",
+            x->x_format->s_name);
+        return;
     }
-    if (buf[0]!=0)
+    if (buf[0] != 0)
         outlet_symbol(x->x_obj.ob_outlet, gensym(buf));
 }
 
