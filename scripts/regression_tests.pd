@@ -1,29 +1,29 @@
 #N canvas 3 60 749 617 12;
-#X obj 345 301 r \$0-result;
-#X obj 345 326 route 0;
-#X obj 453 470 print failure;
-#X obj 430 336 tgl 28 0 empty empty Print_All_Results 31 11 0 12 -262144
--1 -1 1 1;
+#X obj 475 301 r \$0-result;
+#X obj 475 326 route 0;
+#X obj 583 470 print failure;
+#X obj 560 336 tgl 28 0 empty empty Print_All_Results 31 11 0 12 -262144
+-1 -1 0 1;
 #X obj 159 149 bng 31 250 50 0 empty empty Run_all 39 13 0 12 -262144
 -1 -1;
 #X obj 56 25 r init;
 #X obj 345 191 route dollarzero;
-#X obj 345 411 t b a;
-#X obj 345 541 s pd;
+#X obj 475 411 t b a;
+#X obj 475 541 s pd;
 #X obj 56 120 trigger bang bang anything;
 #X msg 56 145 gui;
 #X obj 56 170 pdinfo;
 #X obj 56 195 sel 0;
 #X obj 56 245 s pd;
-#X msg 345 516 quit 1;
+#X msg 475 516 quit 1;
 #X msg 56 220 quit;
 #X obj 145 191 rtest msg_dollarzero;
 #X obj 145 246 rtest msg_dollarzero_semi;
 #X obj 145 302 rtest msg_click;
 #X obj 345 216 rtest binbuf_dollarzero;
-#X msg 345 440 gui;
-#X obj 345 465 pdinfo;
-#X obj 345 490 sel 0;
+#X msg 475 440 gui;
+#X obj 475 465 pdinfo;
+#X obj 475 490 sel 0;
 #X text 117 25 <- we start Pd with the -send "init etc." flag. This
 will automatically start the tests and allow us to send a comma-separated
 list of messages which will be evaluated by Pd without a target. This
@@ -34,13 +34,22 @@ is handy for some binbuf tests.;
 #X text 536 150 <- we have to escape the arg;
 #X text 556 190 escape it in a comment.;
 #X text 556 170 in bash but we can't;
-#X obj 391 374 spigot;
-#X obj 407 440 route 1;
-#X obj 407 495 print success;
+#X obj 521 374 spigot;
+#X obj 537 440 route 1;
+#X obj 537 495 print success;
 #X obj 145 358 rtest unpost_sanity;
 #X obj 145 414 rtest unpost_error;
 #X obj 145 465 rtest unpost_print;
 #X obj 145 516 rtest unpost_long_message;
+#X obj 145 569 rtest makefilename_double_percent;
+#X obj 145 620 rtest makefilename_code_coverage;
+#N canvas 461 242 450 323 (subpatch) 0;
+#X restore 148 1105 pd;
+#X obj 145 671 rtest makefilename_default;
+#X obj 145 722 rtest makefilename_default_bang;
+#X obj 145 773 rtest makefilename_float;
+#X obj 145 824 rtest makefilename_symbol;
+#X obj 145 875 rtest makefilename_bang;
 #X connect 0 0 1 0;
 #X connect 1 0 7 0;
 #X connect 1 1 29 0;
@@ -70,3 +79,10 @@ is handy for some binbuf tests.;
 #X connect 32 0 33 0;
 #X connect 33 0 34 0;
 #X connect 34 0 35 0;
+#X connect 35 0 36 0;
+#X connect 36 0 37 0;
+#X connect 37 0 39 0;
+#X connect 39 0 40 0;
+#X connect 40 0 41 0;
+#X connect 41 0 42 0;
+#X connect 42 0 43 0;

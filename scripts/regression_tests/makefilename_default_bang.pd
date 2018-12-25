@@ -1,0 +1,21 @@
+#N canvas 72 248 589 329 12;
+#X obj 41 28 inlet;
+#X obj 136 153 list prepend 0;
+#X obj 41 229 outlet;
+#X obj 41 98 makefilename;
+#X text 117 28 [makefilename] in Pd Vanilla apparently converts an
+incoming bang to zero. Not sure why \, but we check for that default
+here.;
+#X msg 41 73 bang;
+#X obj 41 123 select file.0;
+#X msg 41 153 1 file.0;
+#X msg 41 187 \$1 a bang should bash to zero. Expected output: 'file.0'.
+Actual output: \$2;
+#X connect 0 0 5 0;
+#X connect 1 0 8 0;
+#X connect 3 0 6 0;
+#X connect 5 0 3 0;
+#X connect 6 0 7 0;
+#X connect 6 1 1 0;
+#X connect 7 0 8 0;
+#X connect 8 0 2 0;
