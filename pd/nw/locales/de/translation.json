@@ -402,7 +402,8 @@
         "solarized": "Solarized",
         "solarized_inverted": "Solarized (Inverted)",
         "extended": "Extended",
-        "c64": "C64"
+        "c64": "C64",
+        "footgun": "Fusspistole"
       },
       "zoom": {
         "save_zoom": "Speichern/Laden der Vergrößerung im Patch",

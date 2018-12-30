@@ -403,7 +403,8 @@
         "solarized": "Solarized",
         "solarized_inverted": "Solarized (Inverted)",
         "extended": "Extended",
-        "c64": "C64"
+        "c64": "C64",
+        "footgun": "Footgun"
       },
       "zoom": {
         "save_zoom": "save/load zoom level with patch",
