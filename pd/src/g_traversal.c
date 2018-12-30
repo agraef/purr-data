@@ -68,7 +68,6 @@ void gstub_cutoff(t_gstub *gs)
     if (!gs->gs_refcount) t_freebytes(gs, sizeof (*gs));
 }
 
-
 int gpointer_docheck(const t_gpointer *gp, int headok, int gobjok)
 {
     t_gstub *gs = gp->gp_stub;
@@ -1104,7 +1103,6 @@ static void setsize_float(t_setsize *x, t_float f)
     }
 }
 
-
 static void setsize_free(t_setsize *x)
 {
     gpointer_unset(&x->x_gp);
@@ -1118,7 +1116,6 @@ static void setsize_setup(void)
     class_addfloat(setsize_class, setsize_float);
     class_addmethod(setsize_class, (t_method)setsize_set, gensym("set"),
         A_SYMBOL, A_SYMBOL, 0); 
-
 }
 
 /* ---------------------- append ----------------------------- */
