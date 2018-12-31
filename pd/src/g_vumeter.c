@@ -265,12 +265,16 @@ static void vu_draw_select(t_vu* x,t_glist* glist)
 static void vu__clickhook(t_scalehandle *sh, int newstate)
 {
     t_vu *x = (t_vu *)(sh->h_master);
-    if (newstate)
+    if (sh->h_scale)
     {
-        canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
-        if (!sh->h_scale)
-            scalehandle_click_label(sh);
+        sh->h_adjust_x = sh->h_offset_x -
+            (((t_object *)x)->te_xpix + x->x_gui.x_w);
+        sh->h_adjust_y = sh->h_offset_y -
+            (((t_object *)x)->te_ypix + x->x_gui.x_h);
     }
+    else
+        scalehandle_click_label(sh);
+    canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
     sh->h_dragon = newstate;
 }
 
@@ -279,10 +283,14 @@ static void vu__motionhook(t_scalehandle *sh, t_floatarg mouse_x, t_floatarg mou
     if (sh->h_scale)
     {
         t_vu *x = (t_vu *)(sh->h_master);
-        int width = ((int)mouse_x) -
-                text_xpix(&x->x_gui.x_obj, x->x_gui.x_glist),
-            height = ((int)mouse_y) -
-                text_ypix(&x->x_gui.x_obj, x->x_gui.x_glist);
+        int width = (sh->h_constrain == CURSOR_EDITMODE_RESIZE_Y) ?
+            x->x_gui.x_w :
+            (int)mouse_x - text_xpix(&x->x_gui.x_obj, x->x_gui.x_glist) -
+                sh->h_adjust_x;
+        int height = (sh->h_constrain == CURSOR_EDITMODE_RESIZE_X) ?
+            x->x_gui.x_h :
+            (int)mouse_y - text_ypix(&x->x_gui.x_obj, x->x_gui.x_glist) -
+                sh->h_adjust_y;
 
         width = maxi(width, 8);
 

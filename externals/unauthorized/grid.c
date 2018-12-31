@@ -696,39 +696,43 @@ static void grid_bang(t_grid *x) {
 static void grid__clickhook(t_scalehandle *sh, int newstate)
 {
     t_grid *x = (t_grid *)(sh->h_master);
-    if (newstate)
-    {
-        canvas_apply_setundo(x->x_glist, (t_gobj *)x);
-    }
+    /* Use constrained dragging-- see g_canvas.c clickhook */
+    sh->h_constrain = newstate;
+    sh->h_adjust_x = sh->h_offset_x -
+        (((t_object *)x)->te_xpix + x->x_width);
+    sh->h_adjust_y = sh->h_offset_y -
+        (((t_object *)x)->te_ypix + x->x_height);
+    canvas_apply_setundo(x->x_glist, (t_gobj *)x);
     sh->h_dragon = newstate;
 }
 
 static void grid__motionhook(t_scalehandle *sh,
     t_floatarg mouse_x, t_floatarg mouse_y)
 {
-    if (sh->h_scale)
+    t_grid *x = (t_grid *)(sh->h_master);
+    int width = (sh->h_constrain == CURSOR_EDITMODE_RESIZE_Y) ?
+        x->x_width :
+        (int)mouse_x - text_xpix(&x->x_obj, x->x_glist) - sh->h_adjust_x;
+    int height = (sh->h_constrain == CURSOR_EDITMODE_RESIZE_X) ?
+        x->x_height :
+        (int)mouse_y - text_ypix(&x->x_obj, x->x_glist) - sh->h_adjust_y;
+    int minw = MIN_GRID_WIDTH,
+        minh = MIN_GRID_HEIGHT;
+    x->x_width = width < minw ? minw : width;
+    x->x_height = height < minh ? minh : height;
+    if (glist_isvisible(x->x_glist))
     {
-        t_grid *x = (t_grid *)(sh->h_master);
-        int width = mouse_x - text_xpix(&x->x_obj, x->x_glist),
-            height = mouse_y - text_ypix(&x->x_obj, x->x_glist),
-            minw = MIN_GRID_WIDTH,
-            minh = MIN_GRID_HEIGHT;
-        x->x_width = width < minw ? minw : width;
-        x->x_height = height < minh ? minh : height;
-        if (glist_isvisible(x->x_glist))
-        {
-            grid_draw_configure(x, x->x_glist);
-            //scalehandle_unclick_scale(sh);
-        }
+        grid_draw_configure(x, x->x_glist);
+        //scalehandle_unclick_scale(sh);
+    }
 
-        int properties = gfxstub_haveproperties((void *)x);
-        if (properties)
-        {
-            int new_w = x->x_width + sh->h_dragx;
-            int new_h = x->x_height + sh->h_dragy;
-            properties_set_field_int(properties,"width",new_w);
-            properties_set_field_int(properties,"height",new_h);
-        }
+    int properties = gfxstub_haveproperties((void *)x);
+    if (properties)
+    {
+        int new_w = x->x_width + sh->h_dragx;
+        int new_h = x->x_height + sh->h_dragy;
+        properties_set_field_int(properties,"width",new_w);
+        properties_set_field_int(properties,"height",new_h);
     }
 }
 
@@ -737,8 +741,9 @@ static void grid_click_for_resizing(t_grid *x, t_floatarg f,
     t_floatarg xxx, t_floatarg yyy)
 {
     t_scalehandle *sh = (t_scalehandle *)x->x_handle;
+    sh->h_offset_x = (int)xxx;
+    sh->h_offset_y = (int)yyy;
     grid__clickhook(sh, f);
-//    grid__clickhook(sh, f, xxx, yyy);
 }
 
 /* another wrapper for forwarding "scalehandle" motion data */

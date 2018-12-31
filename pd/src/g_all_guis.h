@@ -27,10 +27,10 @@
 #define SCALE_NUM_MINHEIGHT 8
 #define SCALE_GOP_MINWIDTH 12
 #define SCALE_GOP_MINHEIGHT 12
-#define SCALEHANDLE_WIDTH   5
-#define SCALEHANDLE_HEIGHT  5
-#define LABELHANDLE_WIDTH   5
-#define LABELHANDLE_HEIGHT  5
+#define SCALEHANDLE_WIDTH   14
+#define SCALEHANDLE_HEIGHT  14
+#define LABELHANDLE_WIDTH   14
+#define LABELHANDLE_HEIGHT  14
 
 typedef void (*t_iemfunptr)(void *x, t_glist *glist, int mode);
 
@@ -46,7 +46,7 @@ typedef struct _scalehandle
     t_object  *h_master;
     t_glist   *h_glist; // this is the canvas to draw on. Note that when objects are edited, "glist" and "canvas" mean the same.
     t_symbol  *h_bindsym;
-    int        h_scale; // bool
+    int        h_scale;
     char       h_pathname[37]; // max size for ".x%lx.h%lx" = 5+4*sizeof(long)
     char       h_outlinetag[18]; // max size for "h%lx" = 2+2*sizeof(long)
     int        h_dragon; // bool
@@ -54,6 +54,9 @@ typedef struct _scalehandle
     int        h_dragy;
     int        h_offset_x;
     int        h_offset_y;
+    int        h_adjust_x;
+    int        h_adjust_y;
+    int        h_constrain;
     int        h_vis; // bool
     t_clickhandlefn h_clickfn;
     t_motionhandlefn h_motionfn;

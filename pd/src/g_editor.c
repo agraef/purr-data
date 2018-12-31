@@ -2190,7 +2190,9 @@ static char *cursorlist[] = {
     "cursor_editmode_disconnect",
     "cursor_editmode_resize",
     "cursor_editmode_resize_bottom_right",
-    "cursor_scroll"
+    "cursor_scroll",
+    "cursor_editmode_resize_vert",
+    "cursor_editmode_move"
 };
 
 void canvas_setcursor(t_canvas *x, unsigned int cursornum)
@@ -3128,6 +3130,69 @@ void canvas_done_popup(t_canvas *x, t_float which, t_float xpos,
         open_via_helppath("intro.pd", canvas_getdir((t_canvas *)x)->s_name);
 }
 
+extern t_class *my_canvas_class; // for ignoring runtime clicks and resizing
+
+/* For triggering text_widgetbehavior objects, graphs, atom/dropdown, iemgui and
+   comment resizing */
+static int text_resizing_hotspot(t_canvas *x, t_object *ob, int xpos, int ypos,
+    int x1, int y1, int x2, int y2, int *typep)
+{
+    /* No resizing anchor in k12 mode, plus sanity checks */
+    if (sys_k12_mode || !ob || x->gl_editor->e_textedfor || xpos > x2 ||
+        ypos > y2)
+        return 0;
+    *typep = 0;
+        /* objects that can only be resized along x-axis: regular text
+           objects, atom boxes, and canvas without gop checked */
+    if (ob->te_pd->c_wb == &text_widgetbehavior ||
+        ob->te_type == T_ATOM ||
+        (ob->ob_pd == canvas_class && !((t_canvas *)ob)->gl_isgraph))
+    {
+        if (xpos >= x2 - 4 && ypos < y2 - 4 && ypos > y1 + 4)
+        {
+            *typep = 1;
+            return CURSOR_EDITMODE_RESIZE_X;
+        }
+    }
+
+        /* gop canvases, gop red rectangle, scope, grid, iemguis except [cnv] */
+    if ((ob->te_iemgui && ob->ob_pd != my_canvas_class) ||
+        ob->ob_pd == canvas_class ||
+        ob->ob_pd->c_name == gensym("Scope~") ||
+        ob->ob_pd->c_name == gensym("grid"))
+    {
+            /* stay out of the way of outlet in the bottom right-hand corner */
+        int offset = (obj_noutlets(ob) > 1) ? -4 : 0;
+            /* We want to disable horiz and vert anchors for [bng], [tgl],
+               [hradio] and [vradio]. These widgets only have one
+               dimension that can be resized-- the other is handled
+               automatically. */
+        int can_resize_x = (ob->ob_pd->c_name != gensym("bng") &&
+            ob->ob_pd->c_name != gensym("tgl") &&
+            ob->ob_pd->c_name != gensym("hradio") &&
+            ob->ob_pd->c_name != gensym("vradio"));
+
+        int can_resize_y = can_resize_x &&
+            (ob->ob_pd->c_name != gensym("vsl") || x2 - x1 > 15) &&
+            (ob->ob_pd->c_name != gensym("hsl") || x2 - x1 > 15);
+
+        if (can_resize_x &&
+            xpos >= x2 - 4 && ypos <= y2 + offset - 10 && ypos > y2 + offset - 24)
+            return CURSOR_EDITMODE_RESIZE_X;
+        else if (xpos >= x2 - 4 && ypos <= y2 + offset && ypos > y2 + offset - 10)
+            return CURSOR_EDITMODE_RESIZE;
+        else if (can_resize_y &&
+                 xpos >= x2 - 12 &&
+                 ypos >= y2 + offset - 5 &&
+                 ypos <= y2 + offset)
+            return CURSOR_EDITMODE_RESIZE_Y;
+        else
+            return 0;
+    }
+    else
+        return 0;
+}
+
 #define NOMOD 0
 #define SHIFTMOD 1
 #define CTRLMOD 2
@@ -3137,8 +3202,6 @@ void canvas_done_popup(t_canvas *x, t_float which, t_float xpos,
 static double canvas_upclicktime;
 static int canvas_upx, canvas_upy;
 #define DCLICKINTERVAL 0.25
-
-extern t_class *my_canvas_class; // for ignoring runtime clicks
 
     /* mouse click */
 void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
@@ -3151,7 +3214,8 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     array_garray = NULL;
 
     t_gobj *y;
-    int shiftmod, runmode, altmod, doublemod = 0, rightclick;
+    int shiftmod, runmode, altmod, doublemod = 0, rightclick,
+        in_text_resizing_hotspot, default_type;
     int x1=0, y1=0, x2=0, y2=0, clickreturned = 0;
     t_gobj *yclick = NULL;
     t_object *ob;
@@ -3282,14 +3346,34 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
         }
         return;
     }
+
         /* if in editmode click, fall here. */
-    if (y = canvas_findhitbox(x, xpos, ypos, &x1, &y1, &x2, &y2))
+        /* check you're in the rectangle */
+    y = canvas_findhitbox(x, xpos, ypos, &x1, &y1, &x2, &y2);
+        /* We've got a special case for handling the gop red rectangle. In that
+           case we want all other click actions to take precedence, so we run
+           the checks here first so we can keep the same conditional ordering
+           we've had for ages. */
+    if (y)
     {
-            /* check you're in the rectangle */
         ob = pd_checkobject(&y->g_pd);
+        in_text_resizing_hotspot = text_resizing_hotspot(x, ob, xpos, ypos,
+            x1, y1, x2, y2, &default_type);
+    }
+    else
+    {
+        in_text_resizing_hotspot = text_resizing_hotspot(x, &x->gl_obj,
+            xpos, ypos, x->gl_xmargin, x->gl_ymargin,
+            x->gl_xmargin + x->gl_pixwidth,
+            x->gl_ymargin + x->gl_pixheight, &default_type);
+    }
+
+    if (y)
+    {
         if (rightclick)
             canvas_rightclick(x, xpos, ypos, y);
-        else if (shiftmod && x->gl_editor->canvas_cnct_outlet_tag[0] == 0)
+        else if (shiftmod &&
+            x->gl_editor->canvas_cnct_outlet_tag[0] == 0)
         {
             //selection (only if we are not hovering above an outlet)
             if (doit)
@@ -3332,74 +3416,64 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                    extends well past the bounds of the bbox. For that reason
                    we have a virtual waterfall of conditionals flowing all
                    the way to the GUI just handle resizing a stupid rectangle.
-
-                   Also, the following conditional is way too complex.
                 */
-            if (ob && (ob->te_iemgui
-                 && pd_class((t_pd *)ob) != my_canvas_class
-                 || pd_class(&ob->te_pd)->c_name == gensym("Scope~")
-                 || pd_class(&ob->te_pd)->c_name == gensym("grid"))
-                && xpos >= x2-4 && ypos > y2-6)
+            if (in_text_resizing_hotspot)
             {
                 if (doit)
                 {
-                    x->gl_editor->e_onmotion = MA_RESIZE;
-                    x->gl_editor->e_xwas = x1;
-                    x->gl_editor->e_ywas = y1;
-                    x->gl_editor->e_xnew = xpos;
-                    x->gl_editor->e_ynew = ypos;
-                    if (ob->te_iemgui)
-                    {
-                        t_pd *sh = (t_pd *)((t_iemgui *)ob)->x_handle;
-                        pd_vmess(sh, gensym("_click"), "fff",
-                            (t_float)1, (t_float)xpos, (t_float)ypos);
-                    }
-                    else
-                    {
-                        pd_vmess((t_pd *)ob, gensym("_click_for_resizing"),
-                           "fff", (t_float)1, (t_float)xpos, (t_float)ypos);
-                    }
-                }
-                else
-                {
-                    canvas_setcursor(x,
-                        CURSOR_EDITMODE_RESIZE_BOTTOM_RIGHT);
-                }
-                canvas_check_nlet_highlights(x);
-            }
-            else if (!sys_k12_mode && ob && !x->gl_editor->e_textedfor &&
-                (ob->te_pd->c_wb == &text_widgetbehavior ||
-                 ob->te_type == T_ATOM ||
-                 ob->ob_pd == canvas_class) &&
-                 xpos >= x2-4 && ypos < y2-4 && ypos > y1+4)
-            {
-                if (doit)
-                {
-                    if (!glist_isselected(x, y) || x->gl_editor->e_selection->sel_next)
+                    if (!glist_isselected(x, y) ||
+                        x->gl_editor->e_selection->sel_next)
                     {
                         glist_noselect(x);
                         glist_select(x, y);
                     }
+
                     x->gl_editor->e_onmotion = MA_RESIZE;
                     x->gl_editor->e_xwas = x1;
                     x->gl_editor->e_ywas = y1;
                     x->gl_editor->e_xnew = xpos;
                     x->gl_editor->e_ynew = ypos;
-                    canvas_undo_add(x, 6, "resize",
-                        canvas_undo_set_apply(x, glist_getindex(x, y)));
-                }                                   
+                    /* For normal text objects/atom boxes, subpatches and
+                       graphs we just go ahead and set an undo point here.
+                       GUI objects have their own click callback where they
+                       do this. */
+                    int isgraph = (ob->ob_pd == canvas_class &&
+                        ((t_canvas *)ob)->gl_isgraph);
+
+                    if (default_type || isgraph)
+                        canvas_undo_add(x, 6, "resize",
+                            canvas_undo_set_apply(x, glist_getindex(x, y)));
+
+                    /* Scalehandle callbacks */
+                    if (isgraph)
+                    {
+                        t_scalehandle *sh = ((t_canvas *)ob)->x_handle;
+                        /* Special case: we're abusing the value of h_scale
+                           to differentiate between this case and the case
+                           of clicking the red gop rectangle. */
+                        sh->h_scale = 1;
+                        pd_vmess(&sh->h_pd, gensym("_click"), "fff",
+                            (t_float)in_text_resizing_hotspot,
+                            (t_float)xpos, (t_float)ypos);
+                    }
+                    else if (ob->te_iemgui)
+                    {
+                        t_scalehandle *sh = ((t_iemgui *)ob)->x_handle;
+                        pd_vmess(&sh->h_pd, gensym("_click"), "fff",
+                            (t_float)in_text_resizing_hotspot,
+                            (t_float)xpos, (t_float)ypos);
+                    }
+                    else if (!default_type)
+                    {
+                        /* Scope~ and grid */
+                        pd_vmess(&ob->ob_pd, gensym("_click_for_resizing"),
+                           "fff", (t_float)in_text_resizing_hotspot,
+                           (t_float)xpos, (t_float)ypos);
+                    }
+                }
                 else
                 {
-                    if (ob->ob_pd != canvas_class ||
-                        !((t_canvas *)ob)->gl_isgraph)
-                    {
-                        canvas_setcursor(x, CURSOR_EDITMODE_RESIZE);
-                    }
-                    else
-                    {
-                        canvas_setcursor(x,
-                            CURSOR_EDITMODE_RESIZE_BOTTOM_RIGHT);
-                    }
+                    canvas_setcursor(x, in_text_resizing_hotspot);
                     canvas_check_nlet_highlights(x);
                 }
             }
@@ -3616,13 +3690,9 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
             // end jsarlo
         }
         return;
-    } else if (x->gl_isgraph && x->gl_goprect &&
-               xpos <= x->gl_xmargin + x->gl_pixwidth + 4 &&
-               xpos >= x->gl_xmargin + x->gl_pixwidth - 2 &&
-               ypos <= x->gl_ymargin + x->gl_pixheight + 4 &&
-               ypos > x->gl_ymargin + x->gl_pixheight - 2)
+    }
+    else if (in_text_resizing_hotspot) /* red gop rectangle */
     {
-        // refactor the if into a function call...
         if (doit)
         {
             x->gl_editor->e_onmotion = MA_RESIZE;
@@ -3630,14 +3700,18 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
             x->gl_editor->e_ywas = y1;
             x->gl_editor->e_xnew = xpos;
             x->gl_editor->e_ynew = ypos;
-            t_pd *sh = (t_pd *)x->x_handle; // scale handle
+            t_pd *sh = (t_pd *)((t_canvas *)x)->x_handle; // scale handle
+            /* Special case-- we abuse the value of h_scale to differentiate
+               between clicking the corner of a subcanvas and resizing a
+               red gop rectangle. */
+            ((t_scalehandle *)sh)->h_scale = 2;
             pd_vmess(sh, gensym("_click"), "fff",
-                (t_float)1, (t_float)xpos, (t_float)ypos);
+                (t_float)in_text_resizing_hotspot, (t_float)xpos,
+                (t_float)ypos);
         }
         else
         {
-            canvas_setcursor(x,
-                CURSOR_EDITMODE_RESIZE_BOTTOM_RIGHT);
+            canvas_setcursor(x, in_text_resizing_hotspot);
         }
         canvas_check_nlet_highlights(x);
         return;
@@ -5192,7 +5266,7 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     pd_vmess(&x->gl_pd, gensym("motion"), "fff",
         (double)canvas_last_glist_x,
         (double)canvas_last_glist_y,
-        (double)(glob_shift+glob_ctrl*2+glob_alt*4));
+        (double)(glob_shift + glob_ctrl * 2 + glob_alt * 4));
 }
 
 extern void graph_checkgop_rect(t_gobj *z, t_glist *glist,
@@ -5293,35 +5367,9 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
             }
             else if (ob && ob->ob_pd == canvas_class)
             {
-                int tmpx1 = 0, tmpy1 = 0, tmpx2 = 0, tmpy2 = 0;
-                int tmp_x_final = 0, tmp_y_final = 0;
-                gobj_vis(y1, x, 0);
-                ((t_canvas *)ob)->gl_pixwidth += xpos - x->gl_editor->e_xnew;
-                ((t_canvas *)ob)->gl_pixheight += ypos - x->gl_editor->e_ynew;
-                graph_checkgop_rect((t_gobj *)ob, x, &tmpx1, &tmpy1, &tmpx2,
-                    &tmpy2);
-                tmpx1 = ob->te_xpix;
-                tmpy1 = ob->te_ypix;
-                //fprintf(stderr,"%d %d %d %d\n", tmpx1, tmpy1, tmpx2, tmpy2);
-                if (!((t_canvas *)ob)->gl_hidetext)
-                {
-                    tmp_x_final = tmpx2 - tmpx1;
-                    tmp_y_final    = tmpy2 - tmpy1;
-                }
-                else
-                {
-                    tmp_x_final = tmpx2;
-                    tmp_y_final = tmpy2;
-                }
-                if (tmp_x_final > ((t_canvas *)ob)->gl_pixwidth)
-                    ((t_canvas *)ob)->gl_pixwidth = tmp_x_final;
-                if (tmp_y_final > ((t_canvas *)ob)->gl_pixheight)
-                    ((t_canvas *)ob)->gl_pixheight = tmp_y_final;
-                x->gl_editor->e_xnew = xpos;
-                x->gl_editor->e_ynew = ypos;
-                canvas_fixlinesfor(x, ob);
-                gobj_vis(y1, x, 1);
-                canvas_dirty(x, 1);
+                t_pd *sh = (t_pd *)((t_canvas *)ob)->x_handle;
+                pd_vmess(sh, gensym("_motion"), "ff", (t_float)xpos,
+                    (t_float)ypos);
             }
             else if (ob && ob->te_iemgui)
             {

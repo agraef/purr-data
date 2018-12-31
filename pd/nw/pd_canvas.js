@@ -233,25 +233,50 @@ var canvas_events = (function() {
                 return false;
             },
             mousedown: function(evt) {
-                var target_id;
+                var target_id, resize_type;
                 if (target_is_scrollbar(evt)) {
                     return;
-                } else if (evt.target.classList.contains("clickable_resize_handle")) {
+                } else if (evt.target.parentNode &&
+                    evt.target.parentNode.classList
+                        .contains("clickable_resize_handle")) {
                     draggable_label =
-                        evt.target.classList.contains("move_handle");
+                        evt.target.parentNode.classList.contains("move_handle");
 
                     // get id ("x123456etcgobj" without the "x" or "gobj")
                     target_id = (draggable_label ? "_l" : "_s") +
-                        evt.target.parentNode.id.slice(0,-4).slice(1);
+                        evt.target.parentNode.parentNode.id.slice(0,-4).slice(1);
                     last_draggable_x = evt.pageX + svg_view.x;
                     last_draggable_y = evt.pageY + svg_view.y;
-                    pdgui.pdsend(target_id, "_click", 1,
+
+                    // Nasty-- we have to forward magic values from g_canvas.h
+                    // defines in order to get the correct constrain behavior.
+                    if (evt.target.classList.contains("constrain_top_right")) {
+                        resize_type = 7; // CURSOR_EDITMODE_RESIZE_X
+                    } else if (evt.target.classList
+                        .contains("constrain_bottom_right")) {
+                        resize_type = 10; // CURSOR_EDITMODE_RESIZE_Y
+                    } else if (draggable_label) {
+                        resize_type = 11; // CURSOR_EDITMODE_MOVE
+                    } else {
+                        resize_type = 8; // CURSOR_EDITMODE_RESIZE
+                    }
+
+                    // Even nastier-- we now must turn off the cursor styles
+                    // so that moving the pointer outside the hotspot doesn't
+                    // cause the cursor to change. This happens for the
+                    // drag handle to move the gop red rectangle. Unlike
+                    // the label handles, it doesn't get immediately
+                    // destroyed upon receiving its callback below.
+                    pdgui.toggle_drag_handle_cursors(evt.target.parentNode,
+                        !!draggable_label, false);
+
+                    pdgui.pdsend(target_id, "_click", resize_type,
                         (evt.pageX + svg_view.x),
                         (evt.pageY + svg_view.y));
                     canvas_events.iemgui_label_drag();
                     return;
                 }
-                // tk events (and, therefore, Pd evnets) are one greater
+                // tk events (and, therefore, Pd events) are one greater
                 // than html5...
                 var b = evt.button + 1;
                 var mod, match_elem;
@@ -472,16 +497,6 @@ var canvas_events = (function() {
                 last_draggable_x = evt.pageX + svg_view.x;
                 last_draggable_y = evt.pageY + svg_view.y;
 
-                if (!is_canvas_gop_rect) {
-                    // This is bad-- we should be translating
-                    // here so that the logic doesn't depend on the shape
-                    // type we chose in pdgui (here, it's "line").
-                    handle_elem.x1.baseVal.value += dx;
-                    handle_elem.y1.baseVal.value += dy;
-                    handle_elem.x2.baseVal.value += dx;
-                    handle_elem.y2.baseVal.value += dy;
-                }
-
                 pdgui.pdsend(target_id, "_motion",
                     (evt.pageX + svg_view.x),
                     (evt.pageY + svg_view.y));
@@ -491,6 +506,19 @@ var canvas_events = (function() {
                 // Set last state (none doesn't count as a state)
                 //pdgui.post("previous state is "
                 //    + canvas_events.get_previous_state());
+                var label_handle = document.querySelector(".move_handle");
+                var cnv_resize_handle =
+                    document.querySelector(".cnv_resize_handle");
+                // Restore our cursor bindings for any drag handles that
+                // happen to exist
+                if (label_handle) {
+                    pdgui.toggle_drag_handle_cursors(label_handle,
+                        true, true);
+                }
+                if (cnv_resize_handle) {
+                    pdgui.toggle_drag_handle_cursors(cnv_resize_handle,
+                        false, true);
+                }
                 canvas_events[canvas_events.get_previous_state()]();
             },
             dropdown_menu_keydown: function(evt) {

@@ -69,6 +69,15 @@ static void my_canvas__clickhook(t_scalehandle *sh, int newstate)
         if (!sh->h_scale)
             scalehandle_click_label(sh);
     }
+    if (sh->h_scale)
+    {
+        sh->h_adjust_x = sh->h_offset_x -
+            (((t_object *)x)->te_xpix + x->x_vis_w);
+        sh->h_adjust_y = sh->h_offset_y -
+            (((t_object *)x)->te_ypix + x->x_vis_h);
+        /* Hack to set the cursor since we're doing and end-run
+           around canas_doclick here */
+    }
     sh->h_dragon = newstate;
 }
 
@@ -77,16 +86,19 @@ static void my_canvas__motionhook(t_scalehandle *sh, t_floatarg mouse_x, t_float
     if (sh->h_scale)
     {
         t_my_canvas *x = (t_my_canvas *)(sh->h_master);
-        int dx = (int)(mouse_x - sh->h_offset_x),
-            dy = (int)(mouse_y - sh->h_offset_y);
-        dx = maxi(dx,1-x->x_vis_w);
-        dy = maxi(dy,1-x->x_vis_h);        
-        sh->h_dragx = dx;
-        sh->h_dragy = dy;
-        scalehandle_drag_scale(sh);
 
-        x->x_vis_w += dx;
-        x->x_vis_h += dy;
+        int width = (sh->h_constrain == CURSOR_EDITMODE_RESIZE_Y) ?
+            x->x_vis_w :
+            (int)mouse_x - text_xpix(&x->x_gui.x_obj, x->x_gui.x_glist) -
+                sh->h_adjust_x;
+        int height = (sh->h_constrain == CURSOR_EDITMODE_RESIZE_X) ?
+            x->x_vis_h :
+            (int)mouse_y - text_ypix(&x->x_gui.x_obj, x->x_gui.x_glist) -
+                sh->h_adjust_y;
+        x->x_vis_w = maxi(width, IEM_GUI_MINSIZE);
+        x->x_vis_h = maxi(height, IEM_GUI_MINSIZE);
+
+        scalehandle_drag_scale(sh);
 
         if (glist_isvisible(x->x_gui.x_glist))
         {
@@ -97,19 +109,11 @@ static void my_canvas__motionhook(t_scalehandle *sh, t_floatarg mouse_x, t_float
         int properties = gfxstub_haveproperties((void *)x);
         if (properties)
         {
-            int new_w = x->x_vis_w + sh->h_dragx;
-            int new_h = x->x_vis_h + sh->h_dragy;
-            properties_set_field_int(properties,"rng.min_ent",new_w);
-            properties_set_field_int(properties,"rng.max_ent",new_h);
-
-            int min = (new_w < new_h ? new_w : new_h);
-            if (min <= x->x_gui.x_w)
-            {
-                properties_set_field_int(properties,"dim.w_ent",min);
-            }
+            properties_set_field_int(properties,"rng.min_ent",width);
+            properties_set_field_int(properties,"rng.max_ent",height);
         }
     }
-    scalehandle_dragon_label(sh,mouse_x, mouse_y);
+    scalehandle_dragon_label(sh, mouse_x, mouse_y);
 }
 
 void my_canvas_draw(t_my_canvas *x, t_glist *glist, int mode)

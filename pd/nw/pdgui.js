@@ -1472,10 +1472,17 @@ function gui_canvas_cursor(cid, pd_event_type) {
             case "cursor_editmode_resize":
                 c = "ew-resize";
                 break;
-            case "cursor_editmode_resize_bottom_right": c = "se-resize";
+            case "cursor_editmode_resize_bottom_right":
+                c = "se-resize";
                 break;
             case "cursor_scroll":
                 c = "all-scroll";
+                break;
+            case "cursor_editmode_resize_vert":
+                c = "ns-resize";
+                break;
+            case "cursor_editmode_move":
+                c = "move";
                 break;
         }
         patch.style.cursor = c;
@@ -2021,7 +2028,7 @@ var gui = (function() {
         return {
             append: !w ? null_fn: function(cb) {
                 var frag = w.window.document.createDocumentFragment();
-                frag = cb(frag, w.window);
+                frag = cb(frag, w.window, c[cid]);
                 last_thing.appendChild(frag);
                 return c[cid];
             },
@@ -3239,12 +3246,29 @@ function gui_iemgui_label_font(cid, tag, fontname, fontweight, fontsize) {
     });
 }
 
+function toggle_drag_handle_cursors(e, is_label, state) {
+    e.querySelector(".constrain_top_right").style.cursor =
+        state ? "ew-resize" : "";
+    e.querySelector(".constrain_bottom_right").style.cursor =
+        state ? "ns-resize" : "";
+    e.querySelector(".unconstrained").style.cursor =
+        state ? (is_label ? "move" : "se-resize") : "";
+}
+
+exports.toggle_drag_handle_cursors = toggle_drag_handle_cursors;
+
 // Show or hide little handle for dragging around iemgui labels
 function gui_iemgui_label_show_drag_handle(cid, tag, state, x, y, cnv_resize) {
     if (state !== 0) {
         gui(cid).get_gobj(tag)
-        .append(function(frag) {
-            var rect;
+        .append(function(frag, w) {
+            var g, rect, top_right, bottom_right;
+            g = create_item(cid, "g", {
+                class: (cid === tag) ? "gop_drag_handle move_handle border" :
+                    cnv_resize !== 0 ? "cnv_resize_handle border" :
+                    "label_drag_handle move_handle border",
+                transform: "matrix(1, 0, 0, 1, 0, 0)"
+            });
             // Here we use a "line" shape so that we can control its color
             // using the "border" class (for iemguis) or the "gop_rect" class
             // for the graph-on-parent rectangle anchor. In both cases the
@@ -3252,33 +3276,73 @@ function gui_iemgui_label_show_drag_handle(cid, tag, state, x, y, cnv_resize) {
             // to define than a "rect" for that case.
             rect = create_item(cid, "line", {
                 x1: x,
-                y1: y + 3,
+                y1: y,
                 x2: x,
-                y2: y + 10,
-                "stroke-width": 7,
-                class: (cid === tag) ? "gop_drag_handle move_handle gop_rect" :
-                    cnv_resize !== 0 ? "cnv_resize_handle border" :
-                    "label_drag_handle move_handle border"
+                y2: y + 14,
+                "stroke-width": 14,
+                class: "unconstrained"
             });
-            rect.classList.add("clickable_resize_handle");
-            frag.appendChild(rect);
+            g.classList.add("clickable_resize_handle");
+            top_right = create_item(cid, "rect", {
+                x: x + 1.5,
+                y: y + 0.5,
+                width: 5,
+                height: 7,
+                fill: "black",
+                "fill-opacity": "0",
+                class: "constrain_top_right"
+            });
+            bottom_right = create_item(cid, "rect", {
+                x: x - 6.5,
+                y: y + 8.5,
+                width: 7,
+                height: 5,
+                fill: "black",
+                "fill-opacity": "0",
+                class: "constrain_bottom_right"
+            });
+            g.appendChild(rect);
+            g.appendChild(top_right);
+            g.appendChild(bottom_right);
+
+            // Quick hack for cursors on mouse-over. We only add them if
+            // we're not already dragging a label or resizing an iemgui.
+            // Apparently I didn't register all these edge-case event states
+            // in canvas_events. States like "iemgui_label_drag" actually
+            // just get registered as state "none". So we just check for "none"
+            // here and assume it means we're in the middle of dragging.
+            // If not we go ahead and set our cursor styles.
+            if (w.canvas_events.get_state() != "none") {
+                toggle_drag_handle_cursors(g, cnv_resize === 0, true);
+            }
+
+            frag.appendChild(g);
             return frag;
         });
     } else {
         gui(cid).get_gobj(tag, function(e) {
-            var rect =
+            var g =
                 e.getElementsByClassName((cid === tag) ? "gop_drag_handle" :
                     cnv_resize !== 0 ? "cnv_resize_handle" :
                         "label_drag_handle")[0];
             //rect = get_item(cid, "clickable_resize_handle");
             // Need to check for null here...
-            if (rect) {
-                rect.parentNode.removeChild(rect);
+            if (g) {
+                g.parentNode.removeChild(g);
             } else {
                 post("error: couldn't delete the iemgui drag handle!");
             }
         });
     }
+}
+
+function gui_iemgui_label_displace_drag_handle(cid, tag, dx, dy) {
+    gui(cid).get_gobj(tag)
+    .q(".label_drag_handle", function(e) {
+        var t = e.transform.baseVal.getItem(0);
+        t.matrix.e += dx;
+        t.matrix.f += dy;
+    });
 }
 
 function gui_mycanvas_new(cid,tag,color,x1,y1,x2_vis,y2_vis,x2,y2) {
