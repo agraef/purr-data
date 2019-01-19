@@ -235,8 +235,12 @@ that case, but I haven't tested doing it like that. Sorry. Get a better OS...)
 
         pacman -Syu
 
-   After closing and reopening the shell as prompted, issue the 
-   following command:
+   After closing and reopening the shell as prompted, you may need to do it
+   again:
+   
+        pacman -Syu
+   
+   Now everything should be up-to-date. Issue the following command:
 
         pacman -S autoconf automake git libtool \
           make mingw-w64-i686-dlfcn mingw-w64-i686-fftw \
