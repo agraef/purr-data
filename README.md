@@ -231,7 +231,16 @@ that case, but I haven't tested doing it like that. Sorry. Get a better OS...)
 
 4. Install the dependencies *(5-10 minutes)*  
    Once the shell opens, we need to install the dependencies for building
-   Purr Data. Issue the following command:
+   Purr Data. First we need to update all the packages:
+
+        pacman -Syu
+
+   After closing and reopening the shell as prompted, you may need to do it
+   again:
+   
+        pacman -Syu
+   
+   Now everything should be up-to-date. Issue the following command:
 
         pacman -S autoconf automake git libtool \
           make mingw-w64-i686-dlfcn mingw-w64-i686-fftw \
