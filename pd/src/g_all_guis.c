@@ -692,7 +692,6 @@ extern t_class *my_canvas_class;
 // but in the case of canvas, the "iemgui" tag is added (it wasn't the case originally)
 void scalehandle_draw_select(t_scalehandle *h, int px, int py)
 {
-    char tagbuf[MAXPDSTRING];
     t_object *x = h->h_master;
     t_canvas *canvas=glist_getcanvas(h->h_glist);
 
@@ -702,9 +701,8 @@ void scalehandle_draw_select(t_scalehandle *h, int px, int py)
     scalehandle_draw_erase(h);
 
     if (!h->h_vis) {
-        sprintf(tagbuf, "x%lx", (long unsigned int)x);
-        gui_vmess("gui_iemgui_label_show_drag_handle", "xsiiii",
-            canvas, tagbuf, 1, px - sx, py - sy, h->h_scale);
+        gui_vmess("gui_iemgui_label_show_drag_handle", "xxiiii",
+            canvas, x, 1, px - sx, py - sy, h->h_scale);
         h->h_vis = 1;
     }
 }
@@ -742,8 +740,13 @@ void scalehandle_draw_erase(t_scalehandle *h)
 {
     //t_canvas *canvas = glist_getcanvas(h->h_glist);
     if (!h->h_vis) return;
-    gui_vmess("gui_iemgui_label_show_drag_handle", "xxiiiii",
-        h->h_glist, h->h_master, 0, 0, 0, h->h_scale);
+    gui_vmess("gui_iemgui_label_show_drag_handle", "xxiiii",
+        h->h_glist,
+        h->h_master,
+        0,
+        0,
+        0,
+        h->h_scale);
     h->h_vis = 0;
 }
 
@@ -1071,7 +1074,7 @@ void iemgui_label_draw_config(t_iemgui *x)
 
 void iemgui_label_draw_select(t_iemgui *x)
 {
-    t_canvas *canvas=glist_getcanvas(x->x_glist);
+    t_canvas *canvas = glist_getcanvas(x->x_glist);
     if (x->x_selected == canvas && x->x_glist == canvas)
     {
         gui_vmess("gui_iemgui_label_select", "xxi",

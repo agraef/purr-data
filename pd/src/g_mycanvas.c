@@ -22,8 +22,8 @@ t_widgetbehavior my_canvas_widgetbehavior;
 void my_canvas_draw_new(t_my_canvas *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    int x1=text_xpix(&x->x_gui.x_obj, glist);
-    int y1=text_ypix(&x->x_gui.x_obj, glist);
+    int x1 = text_xpix(&x->x_gui.x_obj, glist);
+    int y1 = text_ypix(&x->x_gui.x_obj, glist);
     char cbuf[8];
     sprintf(cbuf, "#%6.6x", x->x_gui.x_bcol);
 
