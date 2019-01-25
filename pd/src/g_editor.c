@@ -2650,8 +2650,9 @@ int garray_properties(t_garray *x, t_symbol **gfxstubp, t_symbol **namep,
     /* tell GUI to create a properties dialog on the canvas.  We tell
     the user the negative of the "pixel" y scale to make it appear to grow
     naturally upward, whereas pixels grow downward. */
-void canvas_properties(t_glist *x)
+void canvas_properties(t_gobj *z, t_glist *dummy)
 {
+    t_glist *x = (t_glist *)z;
     t_gobj *y;
     //char graphbuf[200];
     char *gfx_tag;
@@ -3122,7 +3123,7 @@ void canvas_done_popup(t_canvas *x, t_float which, t_float xpos,
     {
         if (!x->gl_edit)
             canvas_editmode(x, 1);
-        canvas_properties(x);
+        canvas_properties((t_gobj *)x, x);
     }
     else if (which == 2)
         open_via_helppath("intro.pd", canvas_getdir((t_canvas *)x)->s_name);

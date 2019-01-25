@@ -2516,7 +2516,7 @@ extern void glist_scalar(t_glist *canvas, t_symbol *s, int argc, t_atom *argv);
 void g_graph_setup(void);
 void g_editor_setup(void);
 void g_readwrite_setup(void);
-extern void canvas_properties(t_gobj *z);
+extern void canvas_properties(t_gobj *z, t_glist *dummy);
 
 void g_canvas_setup(void)
 {
