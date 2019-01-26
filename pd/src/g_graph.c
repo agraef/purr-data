@@ -948,6 +948,17 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
         }
         else if (gobj_shouldvis(gr, parent_glist))
         {
+            /* erase contents of glist. We need to do this because
+               scalar_vis is currently using pd_bind/unbind to handle
+               scalar events. */
+            for (g = x->gl_list; g; g = g->g_next)
+            {
+                gop_redraw = 1;
+                //fprintf(stderr,"drawing gop objects\n");
+                gobj_vis(g, x, 0);
+                //fprintf(stderr,"done\n");
+                gop_redraw = 0;
+            }
             gui_vmess("gui_gobj_erase", "xs",
                 glist_getcanvas(x->gl_owner),
                 tag);
