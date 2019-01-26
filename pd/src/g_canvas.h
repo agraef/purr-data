@@ -125,8 +125,8 @@ typedef struct _editor
     unsigned int e_textdirty: 1;    /* one if e_textedfor has changed */
     unsigned int e_selectedline: 1; /* one if a line is selected */
     t_magicGlass *gl_magic_glass;   /* magic glass object */
-	char canvas_cnct_inlet_tag[4096]; /* tags for currently highlighted nlets */
-	char canvas_cnct_outlet_tag[4096];
+    char canvas_cnct_inlet_tag[4096]; /* tags for currently highlighted nlets */
+    char canvas_cnct_outlet_tag[4096];
     t_clock *e_clock;               /* clock to filter GUI move messages */
     int e_xnew;                     /* xpos for next move event */
     int e_ynew;                     /* ypos, similarly */
@@ -151,8 +151,8 @@ typedef struct _arrayvis
     t_garray *av_garray;            /* owning structure */    
 } t_arrayvis;
 
-t_garray* array_garray;				/* used for sending bangs when
-									   array is changed  via gui */
+t_garray* array_garray;    /* used for sending bangs when
+                              array is changed  via gui */
 
 /* the t_tick structure describes where to draw x and y "ticks" for a glist */
 
@@ -171,7 +171,7 @@ area of a window.
 //#include "g_undo.h"
 
 struct _glist
-{  
+{
     t_object gl_obj;            /* header in case we're a glist */
     t_gobj *gl_list;            /* the actual data */
     struct _gstub *gl_stub;     /* safe pointer handler */
@@ -738,7 +738,7 @@ EXTERN t_symbol *iemgui_dollar2raute(t_symbol *s);
 
 EXTERN t_undo_action *canvas_undo_init(t_canvas *x);
 EXTERN t_undo_action *canvas_undo_add(t_canvas *x,
-	int type, const char *name, void *data);
+    int type, const char *name, void *data);
 EXTERN void canvas_undo_undo(t_canvas *x);
 EXTERN void canvas_undo_redo(t_canvas *x);
 EXTERN void canvas_undo_rebranch(t_canvas *x);
