@@ -113,25 +113,36 @@ static void slider_draw_config(t_slider *x, t_glist *glist)
 static void slider__clickhook(t_scalehandle *sh, int newstate)
 {
     t_slider *x = (t_slider *)(sh->h_master);
-    if (newstate)
+    if (sh->h_scale)
     {
-        canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
-        if (!sh->h_scale)
-            scalehandle_click_label(sh);
+        sh->h_adjust_x = sh->h_offset_x -
+            (((t_object *)x)->te_xpix + x->x_gui.x_w);
+        sh->h_adjust_y = sh->h_offset_y -
+            (((t_object *)x)->te_ypix + x->x_gui.x_h);
     }
+    else
+        scalehandle_click_label(sh);
+    canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
     sh->h_dragon = newstate;
 }
 
 void slider_check_length(t_slider *x, int w);
 
-static void slider__motionhook(t_scalehandle *sh, t_floatarg mouse_x, t_floatarg mouse_y)
+static void slider__motionhook(t_scalehandle *sh, t_floatarg mouse_x,
+    t_floatarg mouse_y)
 {
     if (sh->h_scale)
     {
         t_slider *x = (t_slider *)(sh->h_master);
-        int width = mouse_x - text_xpix(&x->x_gui.x_obj, x->x_gui.x_glist),
-            height = mouse_y - text_ypix(&x->x_gui.x_obj, x->x_gui.x_glist),
-            minx = x->x_orient ? IEM_GUI_MINSIZE : IEM_SL_MINSIZE,
+        int width = (sh->h_constrain == CURSOR_EDITMODE_RESIZE_Y) ?
+            x->x_gui.x_w :
+            (int)mouse_x - text_xpix(&x->x_gui.x_obj, x->x_gui.x_glist) -
+                sh->h_adjust_x;
+        int height = (sh->h_constrain == CURSOR_EDITMODE_RESIZE_X) ?
+            x->x_gui.x_h :
+            (int)mouse_y - text_ypix(&x->x_gui.x_obj, x->x_gui.x_glist) -
+                sh->h_adjust_y;
+        int minx = x->x_orient ? IEM_GUI_MINSIZE : IEM_SL_MINSIZE,
             miny = x->x_orient ? IEM_SL_MINSIZE : IEM_GUI_MINSIZE;
         x->x_gui.x_w = maxi(width, minx);
         x->x_gui.x_h = maxi(height, miny);

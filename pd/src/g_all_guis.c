@@ -246,7 +246,7 @@ void iemgui_label_pos(t_iemgui *x, t_symbol *s, int ac, t_atom *av)
 {
     x->x_ldx = atom_getintarg(0, ac, av);
     x->x_ldy = atom_getintarg(1, ac, av);
-    if(glist_isvisible(x->x_glist))
+    if (glist_isvisible(x->x_glist))
     {
         int x1 = x->x_ldx;
         int y1 = x->x_ldy;
@@ -474,7 +474,7 @@ void iemgui_pos(t_iemgui *x, t_symbol *s, int ac, t_atom *av)
 {
     x->x_obj.te_xpix = atom_getintarg(0, ac, av);
     x->x_obj.te_ypix = atom_getintarg(1, ac, av);
-    if(glist_isvisible(x->x_glist))
+    if (glist_isvisible(x->x_glist))
         iemgui_shouldvis(x, IEM_GUI_DRAW_MODE_MOVE);
 }
 
@@ -488,7 +488,7 @@ void iemgui_color(t_iemgui *x, t_symbol *s, int ac, t_atom *av)
     }
     else
         x->x_lcol = iemgui_compatible_col(atom_getintarg(1, ac, av));
-    if(glist_isvisible(x->x_glist))
+    if (glist_isvisible(x->x_glist))
     {
         x->x_draw(x, x->x_glist, IEM_GUI_DRAW_MODE_CONFIG);
         iemgui_label_draw_config(x);
@@ -692,7 +692,6 @@ extern t_class *my_canvas_class;
 // but in the case of canvas, the "iemgui" tag is added (it wasn't the case originally)
 void scalehandle_draw_select(t_scalehandle *h, int px, int py)
 {
-    char tagbuf[MAXPDSTRING];
     t_object *x = h->h_master;
     t_canvas *canvas=glist_getcanvas(h->h_glist);
 
@@ -702,9 +701,8 @@ void scalehandle_draw_select(t_scalehandle *h, int px, int py)
     scalehandle_draw_erase(h);
 
     if (!h->h_vis) {
-        sprintf(tagbuf, "x%lx", (long unsigned int)x);
-        gui_vmess("gui_iemgui_label_show_drag_handle", "xsiiii",
-            canvas, tagbuf, 1, px - sx, py - sy, h->h_scale);
+        gui_vmess("gui_iemgui_label_show_drag_handle", "xxiiii",
+            canvas, x, 1, px - sx, py - sy, h->h_scale);
         h->h_vis = 1;
     }
 }
@@ -713,7 +711,7 @@ void scalehandle_draw_select2(t_iemgui *x)
 {
     t_canvas *canvas=glist_getcanvas(x->x_glist);
     t_class *c = pd_class((t_pd *)x);
-    int sx,sy;
+    int sx, sy;
     if (c == my_canvas_class)
     {
         t_my_canvas *y = (t_my_canvas *)x;
@@ -722,17 +720,20 @@ void scalehandle_draw_select2(t_iemgui *x)
     }
     else
     {
-        int x1,y1,x2,y2;
-        c->c_wb->w_getrectfn((t_gobj *)x,canvas,&x1,&y1,&x2,&y2);
+        int x1, y1, x2, y2;
+        c->c_wb->w_getrectfn((t_gobj *)x,canvas, &x1, &y1, &x2, &y2);
         //iemgui_getrect_draw(x, &x1, &y1, &x2, &y2);
-        sx=x2-x1; sy=y2-y1;
+        sx = x2 - x1; sy = y2 - y1;
     }
     /* we're not drawing the scalehandle for the actual iemgui-- just
-       the one for the label. */
+       the one for the label. Special case for [cnv] which for some reason
+       allows a smaller selection area than its painted rectangle. */
     if (c == my_canvas_class)
-        scalehandle_draw_select(x->x_handle,sx+8,sy+3);
+        scalehandle_draw_select(x->x_handle,
+            (int)(sx + SCALEHANDLE_WIDTH * 1.5) + 1,
+            sy + SCALEHANDLE_HEIGHT);
     if (x->x_lab != s_empty)
-        scalehandle_draw_select(x->x_lhandle,x->x_ldx,x->x_ldy);
+        scalehandle_draw_select(x->x_lhandle, x->x_ldx + 5, x->x_ldy + 10);
 }
 
 void scalehandle_draw_erase(t_scalehandle *h)
@@ -740,7 +741,12 @@ void scalehandle_draw_erase(t_scalehandle *h)
     //t_canvas *canvas = glist_getcanvas(h->h_glist);
     if (!h->h_vis) return;
     gui_vmess("gui_iemgui_label_show_drag_handle", "xxiiii",
-        h->h_glist, h->h_master, 0, 0, 0, h->h_scale);
+        h->h_glist,
+        h->h_master,
+        0,
+        0,
+        0,
+        h->h_scale);
     h->h_vis = 0;
 }
 
@@ -783,7 +789,10 @@ t_scalehandle *scalehandle_new(t_object *x, t_glist *glist, int scale,
     h->h_scale = scale;
     h->h_offset_x = 0;
     h->h_offset_y = 0;
+    h->h_adjust_x = 0;
+    h->h_adjust_y = 0;
     h->h_vis = 0;
+    h->h_constrain = 0;
     sprintf(h->h_pathname, ".x%lx.h%lx", (t_int)h->h_glist, (t_int)h);
     h->h_clickfn = chf;
     h->h_motionfn = mhf;
@@ -814,8 +823,10 @@ void scalehandle_dragon_label(t_scalehandle *h, float mouse_x, float mouse_y)
     if (h->h_dragon && !h->h_scale)
     {
         t_iemgui *x = (t_iemgui *)(h->h_master);
-        int dx = (int)mouse_x - (int)h->h_offset_x,
-            dy = (int)mouse_y - (int)h->h_offset_y;
+        int dx = (h->h_constrain == CURSOR_EDITMODE_RESIZE_Y) ? 0 :
+            (int)mouse_x - (int)h->h_offset_x,
+        dy = (h->h_constrain == CURSOR_EDITMODE_RESIZE_X) ? 0 :
+            (int)mouse_y - (int)h->h_offset_y;
         h->h_dragx = dx;
         h->h_dragy = dy;
 
@@ -841,6 +852,11 @@ void scalehandle_dragon_label(t_scalehandle *h, float mouse_x, float mouse_y)
                 x,
                 x->x_ldx,
                 x->x_ldy);
+            gui_vmess("gui_iemgui_label_displace_drag_handle", "xxii",
+                canvas,
+                x,
+                dx,
+                dy);
         }
     }
 }
@@ -914,15 +930,25 @@ void scalehandle_drag_scale(t_scalehandle *h) {
 static void scalehandle_clickhook(t_scalehandle *h, t_floatarg f,
     t_floatarg xxx, t_floatarg yyy)
 {
-    h->h_offset_x=xxx;
-    h->h_offset_y=yyy;
-    h->h_clickfn(h,f);
+    /* The label scalehandles do an end run around canvas_doclick,
+       which is where the cursor gets set. So we go ahead and set
+       the cursor here, too. "f" is our cursor number as defined
+       by the CURSOR_* macros in canvas.h */
+    canvas_setcursor(h->h_glist, (int)f);
+    /* We also go ahead and set h_constrain here so we don't have
+       to do it separately for each widget. Any widget that wants
+       to constrain movement along an axis can just check that
+       field against the CURSOR_* values in the motionhook callback. */
+    h->h_constrain = f;
+    h->h_offset_x = xxx;
+    h->h_offset_y = yyy;
+    h->h_clickfn(h, f);
 }
 
 static void scalehandle_motionhook(t_scalehandle *h,
     t_floatarg f1, t_floatarg f2)
 {
-    h->h_motionfn(h,f1,f2);
+    h->h_motionfn(h, f1, f2);
     // Now set the offset to the new mouse position
     h->h_offset_x = f1;
     h->h_offset_y = f2;
@@ -948,7 +974,8 @@ static void scalehandle_check_and_redraw(t_iemgui *x)
 //----------------------------------------------------------------
 // IEMGUI refactor (by Mathieu)
 
-void iemgui_tag_selected(t_iemgui *x) {
+void iemgui_tag_selected(t_iemgui *x)
+{
     t_canvas *canvas=glist_getcanvas(x->x_glist);
     if (x->x_selected)
         gui_vmess("gui_gobj_select", "xx", canvas, x);
@@ -956,7 +983,8 @@ void iemgui_tag_selected(t_iemgui *x) {
         gui_vmess("gui_gobj_deselect", "xx", canvas, x);
 }
 
-void iemgui_label_draw_new(t_iemgui *x) {
+void iemgui_label_draw_new(t_iemgui *x)
+{
     char col[8];
     t_canvas *canvas=glist_getcanvas(x->x_glist);
     int x1=text_xpix(&x->x_obj, x->x_glist)+x->legacy_x;
@@ -994,7 +1022,8 @@ void iemgui_label_draw_move(t_iemgui *x)
         x->x_ldy + x->legacy_y);
 }
 
-void iemgui_label_draw_config(t_iemgui *x) {
+void iemgui_label_draw_config(t_iemgui *x)
+{
     char col[8];
     t_canvas *canvas=glist_getcanvas(x->x_glist);
     if (x->x_selected == canvas && x->x_glist == canvas)
@@ -1036,15 +1065,16 @@ void iemgui_label_draw_config(t_iemgui *x) {
     if (x->x_selected == canvas && x->x_glist == canvas)
     {
         t_scalehandle *lh = (t_scalehandle *)(x->x_lhandle);
-        if (x->x_lab==s_empty)    
+        if (x->x_lab == s_empty)
             scalehandle_draw_erase(x->x_lhandle);
         else if (lh->h_vis == 0)
             scalehandle_draw_select(lh,x->x_ldx,x->x_ldy);
     }
 }
 
-void iemgui_label_draw_select(t_iemgui *x) {
-    t_canvas *canvas=glist_getcanvas(x->x_glist);
+void iemgui_label_draw_select(t_iemgui *x)
+{
+    t_canvas *canvas = glist_getcanvas(x->x_glist);
     if (x->x_selected == canvas && x->x_glist == canvas)
     {
         gui_vmess("gui_iemgui_label_select", "xxi",
@@ -1070,9 +1100,10 @@ void iemgui_draw_io(t_iemgui *x, int old_sr_flags)
     t_canvas *canvas=glist_getcanvas(x->x_glist);
     if (x->x_glist != canvas) return; // is gop
     t_class *c = pd_class((t_pd *)x);
-    if (c==my_numbox_class && ((t_my_numbox *)x)->x_hide_frame > 1) return; //sigh
-
-    if (!(old_sr_flags&4) && !glist_isvisible(canvas)) {
+    if (c == my_numbox_class && ((t_my_numbox *)x)->x_hide_frame > 1)
+        return; //sigh
+    if (!(old_sr_flags&4) && !glist_isvisible(canvas))
+    {
         return;
     }
     if (c==my_canvas_class) return;
@@ -1087,7 +1118,9 @@ void iemgui_draw_io(t_iemgui *x, int old_sr_flags)
         n = 0;
     int a=old_sr_flags&IEM_GUI_OLD_SND_FLAG;
     int b=x->x_snd!=s_empty;
-    //fprintf(stderr,"%lx SND: old_sr_flags=%d SND_FLAG=%d || OUTCOME: OLD_SND_FLAG=%d not_empty=%d\n", (t_int)x, old_sr_flags, IEM_GUI_OLD_SND_FLAG, a, b);
+    //fprintf(stderr, "%lx SND: old_sr_flags=%d SND_FLAG=%d || "
+    //                "OUTCOME: OLD_SND_FLAG=%d not_empty=%d\n",
+    //  (t_int)x, old_sr_flags, IEM_GUI_OLD_SND_FLAG, a, b);
     
     if (a && !b)
     {
@@ -1136,7 +1169,8 @@ void iemgui_draw_io(t_iemgui *x, int old_sr_flags)
     }
 }
 
-void iemgui_io_draw_move(t_iemgui *x) {
+void iemgui_io_draw_move(t_iemgui *x)
+{
     char tagbuf[MAXPDSTRING];
     t_canvas *canvas=glist_getcanvas(x->x_glist);
     t_class *c = pd_class((t_pd *)x);
@@ -1180,13 +1214,15 @@ void iemgui_io_draw_move(t_iemgui *x) {
     }
 }
 
-void iemgui_base_draw_new(t_iemgui *x) {
+void iemgui_base_draw_new(t_iemgui *x)
+{
     t_canvas *canvas=glist_getcanvas(x->x_glist);
     t_class *c = pd_class((t_pd *)x);
-    int x1,y1,x2,y2,gr=gop_redraw; gop_redraw=0;
-    c->c_wb->w_getrectfn((t_gobj *)x,x->x_glist,&x1,&y1,&x2,&y2);
+    int x1, y1, x2, y2, gr = gop_redraw;
+    gop_redraw = 0;
+    c->c_wb->w_getrectfn((t_gobj *)x, x->x_glist, &x1, &y1, &x2, &y2);
     //iemgui_getrect_draw(x, &x1, &y1, &x2, &y2); 
-    gop_redraw=gr;
+    gop_redraw = gr;
     char colorbuf[MAXPDSTRING];
     sprintf(colorbuf, "#%6.6x", x->x_bcol);
     gui_vmess("gui_gobj_new", "xxsiii", canvas, x,
@@ -1203,7 +1239,8 @@ void iemgui_base_draw_new(t_iemgui *x) {
         canvas, x, colorbuf);
 }
 
-void iemgui_base_draw_move(t_iemgui *x) {
+void iemgui_base_draw_move(t_iemgui *x)
+{
     t_canvas *canvas=glist_getcanvas(x->x_glist);
     t_class *c = pd_class((t_pd *)x);
     int x1,y1,x2,y2,gr=gop_redraw; gop_redraw=0;
@@ -1214,8 +1251,8 @@ void iemgui_base_draw_move(t_iemgui *x) {
         canvas, x, x1, y1, x2, y2);
 }
 
-void iemgui_base_draw_config(t_iemgui *x) {
-    
+void iemgui_base_draw_config(t_iemgui *x)
+{
     t_canvas *canvas=glist_getcanvas(x->x_glist);
     char fcol[8]; sprintf(fcol,"#%6.6x", x->x_fcol);
     char tagbuf[MAXPDSTRING];
@@ -1225,44 +1262,52 @@ void iemgui_base_draw_config(t_iemgui *x) {
         canvas, x, bcol); 
 }
 
-void iemgui_draw_update(t_iemgui *x, t_glist *glist) {
+void iemgui_draw_update(t_iemgui *x, t_glist *glist)
+{
     x->x_draw(x, x->x_glist, IEM_GUI_DRAW_MODE_UPDATE);
 }
 
-void iemgui_draw_new(t_iemgui *x) {
+void iemgui_draw_new(t_iemgui *x)
+{
     x->x_draw(x, x->x_glist, IEM_GUI_DRAW_MODE_NEW);
     iemgui_label_draw_new(x);
     iemgui_draw_io(x,7);
-    canvas_raise_all_cords(glist_getcanvas(x->x_glist)); // used to be inside x_draw
+    // used to be inside x_draw...
+    canvas_raise_all_cords(glist_getcanvas(x->x_glist));
 }
 
-void iemgui_draw_config(t_iemgui *x) {
+void iemgui_draw_config(t_iemgui *x)
+{
     x->x_draw(x, x->x_glist, IEM_GUI_DRAW_MODE_CONFIG);
     iemgui_label_draw_config(x);
     //iemgui_base_draw_config(x); // can't
 }
 
-void iemgui_draw_move(t_iemgui *x) {
+void iemgui_draw_move(t_iemgui *x)
+{
     x->x_draw(x, x->x_glist, IEM_GUI_DRAW_MODE_MOVE);
     iemgui_label_draw_move(x);
     //iemgui_base_draw_move(x); // can't
     iemgui_io_draw_move(x);
 }
 
-void iemgui_draw_erase(t_iemgui *x) {
+void iemgui_draw_erase(t_iemgui *x)
+{
     t_canvas *canvas=glist_getcanvas(x->x_glist);
     gui_vmess("gui_gobj_erase", "xx", canvas, x);
     scalehandle_draw_erase2(x);
 }
 
-void scrollbar_update(t_glist *glist) {
+void scrollbar_update(t_glist *glist)
+{
     //ico@bukvic.net 100518 update scrollbars when object potentially
     //exceeds window size
     t_canvas *canvas=(t_canvas *)glist_getcanvas(glist);
     canvas_getscroll(canvas);
 }
 
-void wb_init(t_widgetbehavior *wb, t_getrectfn gr, t_clickfn cl) {
+void wb_init(t_widgetbehavior *wb, t_getrectfn gr, t_clickfn cl)
+{
     wb->w_getrectfn = gr;
     wb->w_displacefn = iemgui_displace;
     wb->w_selectfn = iemgui_select;
@@ -1273,13 +1318,15 @@ void wb_init(t_widgetbehavior *wb, t_getrectfn gr, t_clickfn cl) {
     wb->w_displacefnwtag = iemgui_displace_withtag;
 }
 
-const char *iemgui_typeface(t_iemgui *x) {
+const char *iemgui_typeface(t_iemgui *x)
+{
     int f = x->x_font_style;
     if(f == 0) return sys_font;
     if(f == 1) return "helvetica";
     if(f == 2) return "times";
     return "invalid-font";
 }
+
 // this uses a static buffer, so don't use it twice in the same sys_vgui.
 // the static buffer could be replaced by a malloc when sys_vgui is replaced
 // by something that frees that memory.
@@ -1287,7 +1334,9 @@ const char *iemgui_typeface(t_iemgui *x) {
    separate arg so we don't have to parse on the gui side.
    Once we check to make sure all iemguis work without it we can safely
    remove it */
-const char *iemgui_font(t_iemgui *x) {
+
+const char *iemgui_font(t_iemgui *x)
+{
     static char buf[64];
     sprintf(buf, "{{%s} -%d %s}", iemgui_typeface(x), x->x_fontsize, sys_fontweight);
     return buf;
@@ -1295,7 +1344,8 @@ const char *iemgui_font(t_iemgui *x) {
 
 void iemgui_init(t_iemgui *x, t_floatarg f) {x->x_loadinit = f!=0.0;}
 
-void iemgui_class_addmethods(t_class *c) {
+void iemgui_class_addmethods(t_class *c)
+{
     class_addmethod(c, (t_method)iemgui_delta,
         gensym("delta"), A_GIMME, 0);
     class_addmethod(c, (t_method)iemgui_pos,
@@ -1314,7 +1364,8 @@ void iemgui_class_addmethods(t_class *c) {
         gensym("label_font"), A_GIMME, 0);
 }
 
-void g_iemgui_setup (void) {
+void g_iemgui_setup (void)
+{
     s_empty = gensym("empty");
     scalehandle_class = class_new(gensym("_scalehandle"), 0, 0,
                   sizeof(t_scalehandle), CLASS_PD, 0);
@@ -1330,16 +1381,21 @@ const char *border_color = "$pd_colors(iemgui_border)";
 #define GET_OUTLET t_outlet *out = x->x_obj.ob_outlet; /* can't use int o because there's not obj_nth_outlet function */
 #define SEND_BY_SYMBOL (iemgui_has_snd(x) && x->x_snd->s_thing && (!chk_putin || x->x_put_in2out))
 
-void iemgui_out_bang(t_iemgui *x, int o, int chk_putin) {
+void iemgui_out_bang(t_iemgui *x, int o, int chk_putin)
+{
     GET_OUTLET outlet_bang(out);
     if(SEND_BY_SYMBOL) pd_bang(x->x_snd->s_thing);
 }
-void iemgui_out_float(t_iemgui *x, int o, int chk_putin, t_float f) {
+
+void iemgui_out_float(t_iemgui *x, int o, int chk_putin, t_float f)
+{
     GET_OUTLET outlet_float(out,f);
     if(SEND_BY_SYMBOL) pd_float(x->x_snd->s_thing,f);
 }
-void iemgui_out_list(t_iemgui *x, int o, int chk_putin, t_symbol *s, int argc, t_atom *argv) {
-    GET_OUTLET outlet_list(out,s,argc,argv);
-    if(SEND_BY_SYMBOL) pd_list(x->x_snd->s_thing,s,argc,argv);
-}
 
+void iemgui_out_list(t_iemgui *x, int o, int chk_putin, t_symbol *s,
+    int argc, t_atom *argv)
+{
+    GET_OUTLET outlet_list(out, s, argc, argv);
+    if (SEND_BY_SYMBOL) pd_list(x->x_snd->s_thing, s, argc, argv);
+}

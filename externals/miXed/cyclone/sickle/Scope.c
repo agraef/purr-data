@@ -106,9 +106,8 @@ typedef struct _scope
     int        x_frozen;
     t_clock   *x_clock;
     t_pd      *x_handle;
-
-	int			scale_offset_x;
-	int			scale_offset_y;
+    int	      scale_offset_x;
+    int       scale_offset_y;
 } t_scope;
 
 typedef struct _scopehandle
@@ -118,6 +117,9 @@ typedef struct _scopehandle
     t_symbol  *h_bindsym;
     char       h_pathname[64];
     char       h_outlinetag[64];
+    int        h_adjust_x;
+    int        h_adjust_y;
+    int        h_constrain;
     int        h_dragon;
     int        h_dragx;
     int        h_dragy;
@@ -992,49 +994,16 @@ static void scope_tick(t_scope *x)
     scope_clear(x, 1);
 }
 
-static void scopehandle__clickhook(t_scopehandle *sh, t_floatarg f, t_floatarg xxx, t_floatarg yyy)
+extern void canvas_apply_setundo(t_canvas *x, t_gobj *y);
+static void scopehandle__clickhook(t_scopehandle *sh, t_floatarg f,
+    t_floatarg xxx, t_floatarg yyy)
 {
-
     t_scope *x = sh->h_master;
-
-    //if (xxx) x->scale_offset_x = xxx;
-    //if (yyy) x->scale_offset_y = yyy;
-
-    //int newstate = (int)f;
-    //if (sh->h_dragon && newstate == 0)
-    //{
-    //    /* done dragging */
-    //    t_canvas *cv;
-    //    if (sh->h_dragx || sh->h_dragy)
-    //    {
-    //        x->x_width = x->x_width + sh->h_dragx - x->scale_offset_x;
-    //        x->x_height = x->x_height + sh->h_dragy - x->scale_offset_y;
-    //    }
-    //    if (cv = scope_isvisible(x))
-    //    {
-    //        sys_vgui(".x%x.c delete %s\n", cv, sh->h_outlinetag);
-    //        scope_revis(x, cv);
-    //        sys_vgui("destroy %s\n", sh->h_pathname);
-    //        scope_select((t_gobj *)x, x->x_glist, 1);
-    //        canvas_fixlinesfor(x->x_glist, (t_text *)x);  /* 2nd inlet */
-    //    }
-    //}
-    //else if (!sh->h_dragon && newstate)
-    //{
-    //    /* dragging */
-    //    t_canvas *cv;
-    //    if (cv = scope_isvisible(x))
-    //    {
-    //        int x1, y1, x2, y2;
-    //        scope_getrect((t_gobj *)x, x->x_glist, &x1, &y1, &x2, &y2);
-    //        sys_vgui("lower %s\n", sh->h_pathname);
-    //        sys_vgui(".x%x.c create rectangle %d %d %d %d\
-    //            -outline $select_color -width %f -tags %s\n",
-    //        cv, x1, y1, x2, y2, SCOPE_SELBDWIDTH, sh->h_outlinetag);
-    //    }
-    //    sh->h_dragx = 0;
-    //    sh->h_dragy = 0;
-    //}
+    /* Use constrained dragging. See g_canvas.c clickhook */
+    sh->h_constrain = (int)f;
+    sh->h_adjust_x = xxx - (((t_object *)x)->te_xpix + x->x_width);
+    sh->h_adjust_y = yyy - (((t_object *)x)->te_ypix + x->x_height);
+    canvas_apply_setundo(x->x_glist, (t_gobj *)x);
     sh->h_dragon = f;
 }
 
@@ -1042,10 +1011,13 @@ static void scopehandle__motionhook(t_scopehandle *sh,
 				    t_floatarg mouse_x, t_floatarg mouse_y)
 {
     t_scope *x = (t_scope *)(sh->h_master);
-    int x1, y1, x2, y2, width, height;
-    scope_getrect((t_gobj *)x, x->x_glist, &x1, &y1, &x2, &y2);
-    width = mouse_x - x1;
-    height = mouse_y - y1;
+    int width = (sh->h_constrain == CURSOR_EDITMODE_RESIZE_Y) ?
+        x->x_width :
+        (int)mouse_x - text_xpix((t_text *)x, x->x_glist) - sh->h_adjust_x;
+    int height = (sh->h_constrain == CURSOR_EDITMODE_RESIZE_X) ?
+        x->x_height :
+        (int)mouse_y - text_ypix((t_text *)x, x->x_glist) - sh->h_adjust_y;
+
     x->x_width =  width < SCOPE_MINWIDTH ? SCOPE_MINWIDTH : width;
     x->x_height = height < SCOPE_MINHEIGHT ? SCOPE_MINHEIGHT : height;
 
@@ -1058,25 +1030,6 @@ static void scopehandle__motionhook(t_scopehandle *sh,
         scope_vis((t_gobj *)x, x->x_glist, 0);
         scope_vis((t_gobj *)x, x->x_glist, 1);
     }
-    //if (sh->h_dragon)
-    //{
-    //    t_scope *x = sh->h_master;
-    //    int dx = (int)f1, dy = (int)f2;
-    //    int x1, y1, x2, y2, newx, newy;
-    //    scope_getrect((t_gobj *)x, x->x_glist, &x1, &y1, &x2, &y2);
-    //    newx = x2 - x->scale_offset_x + dx;
-    //    newy = y2 - x->scale_offset_y + dy;
-
-    //    if (newx > x1 + SCOPE_MINWIDTH && newy > y1 + SCOPE_MINHEIGHT)
-    //    {
-    //        t_canvas *cv;
-    //        if (cv = scope_isvisible(x))
-    //            sys_vgui(".x%x.c coords %s %d %d %d %d\n",
-    //                cv, sh->h_outlinetag, x1, y1, newx, newy);
-    //        sh->h_dragx = dx;
-    //        sh->h_dragy = dy;
-    //    }
-    //}
 }
 
 /* wrapper method for forwarding "scopehandle" data */
@@ -1157,8 +1110,8 @@ static void *scope_new(t_symbol *s, int ac, t_atom *av)
     sprintf(sh->h_outlinetag, "h%x", (int)sh);
     sh->h_dragon = 0;
 
-	x->scale_offset_x = 0;
-	x->scale_offset_y = 0;
+    x->scale_offset_x = 0;
+    x->scale_offset_y = 0;
 
     return (x);
 }

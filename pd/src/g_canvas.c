@@ -340,6 +340,10 @@ void linetraverser_skipobject(t_linetraverser *t)
 /* -------------------- the canvas object -------------------------- */
 int glist_valid = 10000;
 
+void canvasgop__clickhook(t_scalehandle *sh, int newstate);
+void canvasgop__motionhook(t_scalehandle *sh,t_floatarg f1, t_floatarg f2);
+extern void glist_setlastxy(t_glist *gl, int xval, int yval);
+
 void glist_init(t_glist *x)
 {
         /* zero out everyone except "pd" field */
@@ -348,11 +352,13 @@ void glist_init(t_glist *x)
     x->gl_valid = ++glist_valid;
     x->gl_xlabel = (t_symbol **)t_getbytes(0);
     x->gl_ylabel = (t_symbol **)t_getbytes(0);
-}
 
-void canvasgop__clickhook(t_scalehandle *sh, int newstate);
-void canvasgop__motionhook(t_scalehandle *sh,t_floatarg f1, t_floatarg f2);
-extern void glist_setlastxy(t_glist *gl, int xval, int yval);
+    //dpsaha@vt.edu gop resize (refactored by mathieu)
+    x->x_handle = scalehandle_new((t_object *)x, x, 1,
+        canvasgop__clickhook, canvasgop__motionhook);
+    x->x_mhandle = scalehandle_new((t_object *)x, x, 0,
+        canvasgop__clickhook, canvasgop__motionhook);
+}
 
 /* These globals are used to set state for the "canvas" field in a
    struct. We try below to make sure they only get set for the toplevel
@@ -487,10 +493,6 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     x->gl_font = sys_nearestfontsize(font);
     x->gl_zoom = zoom;
     pd_pushsym(&x->gl_pd);
-
-    //dpsaha@vt.edu gop resize (refactored by mathieu)
-    x-> x_handle = scalehandle_new((t_object *)x,x,1,canvasgop__clickhook,canvasgop__motionhook);
-    x->x_mhandle = scalehandle_new((t_object *)x,x,0,canvasgop__clickhook,canvasgop__motionhook);
 
     x->u_queue = canvas_undo_init(x);
     //glist_setlastxy(x, 20, 20);
@@ -985,7 +987,7 @@ void canvas_free(t_canvas *x)
     if (x->gl_editor)
         canvas_destroy_editor(x);   /* bug workaround; should already be gone*/
 
-    if (x-> x_handle) scalehandle_free( x->x_handle);
+    if (x->x_handle) scalehandle_free(x->x_handle);
     if (x->x_mhandle) scalehandle_free(x->x_mhandle);
     
     canvas_unbind(x);
@@ -2318,108 +2320,50 @@ void canvasgop_checksize(t_canvas *x)
 void canvasgop__clickhook(t_scalehandle *sh, int newstate)
 {
     t_canvas *x = (t_canvas *)(sh->h_master);
-    if (sh->h_dragon && newstate == 0)
-    {
-        /* done dragging */
-        if(sh->h_scale) //enter if resize_gop hook
-        {
-            canvas_undo_add(x, 8, "apply", canvas_undo_set_canvas(x));
 
-            if (sh->h_dragx || sh->h_dragy) 
-            {
-                x->gl_pixwidth += sh->h_dragx;
-                x->gl_pixheight += sh->h_dragy;
-                // check if the text is not hidden. if so, make minimum
-                // width and height based retrieved from getrect.
-                if (!x->gl_hidetext)
-                {
-                    int x1=0, y1=0, x2=0, y2=0;
-                    if (x->gl_owner)
-                    {
-                        gobj_getrect((t_gobj*)x, x->gl_owner,
-                            &x1, &y1, &x2, &y2);
-                    }
-                    else
-                    {
-                        graph_checkgop_rect((t_gobj*)x, x, &x1, &y1, &x2, &y2);
-                    }
-                    if (x2-x1 > x->gl_pixwidth) x->gl_pixwidth = x2-x1;
-                    if (y2-y1 > x->gl_pixheight) x->gl_pixheight = y2-y1;
-                }
-                canvas_dirty(x, 1);
-            }
-
-            // can't remove this update because the text size check above is not in motionhook
-            int properties = gfxstub_haveproperties((void *)x);
-            if (properties)
-            {
-                properties_set_field_int(properties,"x_pix",x->gl_pixwidth);
-                properties_set_field_int(properties,"y_pix",x->gl_pixheight);
-            }
-
-            if (glist_isvisible(x))
-            {
-                /* Still not sure what this is doing... */
-                //sys_vgui(".x%x.c delete %s\n", x, sh->h_outlinetag);
-                canvasgop_draw_move(x,1);
-                canvas_fixlinesfor(x, (t_text *)x);
-                scrollbar_update(x);
-            }
-        }
-        else //enter if move_gop hook
-        {
-            // this block is similar to scalehandle_unclick_label but not enough
-            // We've actually removed scalehandle_unclick_label everywhere, so
-            // check to see whether this can be removed as well...
-            canvas_undo_add(x, 8, "apply", canvas_undo_set_canvas(x));
-            if (sh->h_dragx || sh->h_dragy) 
-            {
-                x->gl_xmargin += sh->h_dragx;
-                x->gl_ymargin += sh->h_dragy;
-                canvas_dirty(x, 1);
-            }
-            if (glist_isvisible(x))
-            {
-                canvasgop_draw_move(x,1);
-                canvas_fixlinesfor(x, (t_text *)x);
-                scrollbar_update(x);
-            }
-        }
-    }
-    else if (!sh->h_dragon && newstate)
-    {
-        /* set undo */
+    /* So ugly: if the user is dragging the bottom right-hand corner of
+       a gop subcanvas on the parent, we already set an undo event for it.
+       So we only add one here for resizing the gop red rectangle, or for
+       moving it with the red scalehandle. */
+    if (sh->h_scale != 1)
         canvas_undo_add(x, 8, "apply", canvas_undo_set_canvas(x));
 
-        if(sh->h_scale) //enter if resize_gop hook
-        {
-            /* We could port this, but it might be better to wait until we
-               just move the scalehandle stuff directly to the GUI... */
-            //sys_vgui("lower %s\n", sh->h_pathname);
-
-            //delete GOP rect where it started from
-            /* Doesn't look like we're using this anymore, so no need to
-               port it. */
-            //sys_vgui(".x%lx.c delete GOP\n", x);
-            //sys_vgui(".x%x.c create rectangle %d %d %d %d "
-            //     "-outline $pd_colors(selection) -width 1 -tags %s\n",
-            //     x, x->gl_xmargin, x->gl_ymargin,
-            //        x->gl_xmargin + x->gl_pixwidth,
-            //        x->gl_ymargin + x->gl_pixheight, sh->h_outlinetag);
-        }
-        else //enter if move_gop hook
-        {
-            //scalehandle_draw_erase(sh,x);
-            /* Same as above... */
-            //sys_vgui("lower %s\n", sh->h_pathname);
-
-            //delete GOP_resblob when moving the whole GOP
-            //sys_vgui(".x%lx.c delete %lxSCALE\n", x, x);
-        }
-        sh->h_dragx = 0;
-        sh->h_dragy = 0;
+    /* We're abusing h_scale to differentiate between clicking gop red
+       rectangle and clicking the corner of a subcanvas on the parent */
+    if (sh->h_scale == 1) /* clicking corner of gop subcanvas on parent */
+    {
+        /* This is for clicking on the bottom right-hand corner of the
+           gop canvas when it's displayed on the parent canvas. */
+        sh->h_adjust_x = sh->h_offset_x -
+            (((t_object *)x)->te_xpix + x->gl_pixwidth);
+        sh->h_adjust_y = sh->h_offset_y -
+            (((t_object *)x)->te_ypix + x->gl_pixheight);
     }
-    sh->h_dragon = newstate;
+    else if (sh->h_scale == 2) /* resize gop hook for (red) gop rect */
+    {
+        /* Store an adjustment for difference between the initial
+           pointer position-- which is within five pixels or so-- and the
+           bottom right-hand corner. Otherwise we'd get a "jump" from the
+           the current dimensions to the pointer offset. Such a jump would
+           become noticeable with constrained dragging, as the constrained
+           dimension would initially jump to the pointer position.
+
+           We could alternatively use dx/dy, but then the pointer position
+           would stray when the user attempts to drag past the minimum
+           width/height of the rectangle. */
+
+        sh->h_adjust_x = sh->h_offset_x - (x->gl_xmargin + x->gl_pixwidth);
+        sh->h_adjust_y = sh->h_offset_y - (x->gl_ymargin + x->gl_pixheight);
+
+        /* We could port this, but it might be better to wait until we
+           just move the scalehandle stuff directly to the GUI... */
+        //sys_vgui("lower %s\n", sh->h_pathname);
+    }
+    else /* move_gop hook */
+    {
+        /* Same as above... */
+        //sys_vgui("lower %s\n", sh->h_pathname);
+    }
 }
 
 void canvasgop__motionhook(t_scalehandle *sh, t_floatarg mouse_x,
@@ -2428,51 +2372,111 @@ void canvasgop__motionhook(t_scalehandle *sh, t_floatarg mouse_x,
     t_canvas *x = (t_canvas *)(sh->h_master);
     int dx = (int)mouse_x - sh->h_offset_x,
         dy = (int)mouse_y - sh->h_offset_y;
-    
-    if (sh->h_dragon)
+
+    if (sh->h_scale == 1) /* resize the gop on the parent */
     {
-        if (sh->h_scale) //enter if resize_gop hook
+        int tmpx1 = 0, tmpy1 = 0, tmpx2 = 0, tmpy2 = 0;
+        int tmp_x_final = 0, tmp_y_final = 0;
+        /* The member h_glist currently points our current glist x. I think
+           that is being used to draw the gop red rect move anchor atm. So
+           rather than muck around with that code, we just set a pointer to
+           whatever our toplevel is here: */
+        t_glist *owner = canvas_getrootfor(x);
+        /* Just unvis the object, then vis it once we've done our
+           mutation and checks */
+        gobj_vis((t_gobj *)x, owner, 0);
+        /* struct _glist has its own member e_xnew for storing our offset.
+           At some point we need to refactor since our t_scalehandle has
+           members for storing offsets already. */
+        x->gl_pixwidth = (sh->h_constrain == CURSOR_EDITMODE_RESIZE_Y) ?
+            x->gl_pixwidth :
+            (int)mouse_x - ((t_object *)x)->te_xpix - sh->h_adjust_x;
+        x->gl_pixheight = (sh->h_constrain == CURSOR_EDITMODE_RESIZE_X) ?
+            x->gl_pixheight :
+            (int)mouse_y - ((t_object *)x)->te_ypix - sh->h_adjust_y;
+        /* If the box text is not hidden then it sets a lower boundary for
+           box size... */
+        graph_checkgop_rect((t_gobj *)x, owner, &tmpx1, &tmpy1, &tmpx2,
+            &tmpy2);
+        tmpx1 = ((t_object *)x)->te_xpix;
+        tmpy1 = ((t_object *)x)->te_ypix;
+        //fprintf(stderr,"%d %d %d %d\n", tmpx1, tmpy1, tmpx2, tmpy2);
+        if (!x->gl_hidetext)
         {
-            int width = mouse_x - x->gl_xmargin,
-                height = mouse_y - x->gl_ymargin;
-            x->gl_pixwidth = width = maxi(SCALE_GOP_MINWIDTH, width);
-            x->gl_pixheight = height = maxi(SCALE_GOP_MINHEIGHT, height);
-            gui_vmess("gui_canvas_redrect_coords", "xiiii",
-                x,
-                x->gl_xmargin,
-                x->gl_ymargin,
-                x->gl_xmargin + width,
-                x->gl_ymargin + height);
-            int properties = gfxstub_haveproperties((void *)x);
-            if (properties)
-            {
-                properties_set_field_int(properties,
-                    "x_pix",x->gl_pixwidth + sh->h_dragx);
-                properties_set_field_int(properties,
-                    "y_pix",x->gl_pixheight + sh->h_dragy);
-            }
+            tmp_x_final = tmpx2 - tmpx1;
+            tmp_y_final = tmpy2 - tmpy1;
         }
-        else //enter if move_gop hook
+        else
         {
-            int properties = gfxstub_haveproperties((void *)x);
-            if (properties)
-            {
+            tmp_x_final = tmpx2;
+            tmp_y_final = tmpy2;
+        }
+        if (tmp_x_final > x->gl_pixwidth)
+            x->gl_pixwidth = tmp_x_final;
+        if (tmp_y_final > x->gl_pixheight)
+            x->gl_pixheight = tmp_y_final;
+        owner->gl_editor->e_xnew = mouse_x;
+        owner->gl_editor->e_ynew = mouse_y;
+        canvas_fixlinesfor(owner, (t_text *)x);
+        gobj_vis((t_gobj *)x, owner, 1);
+        canvas_dirty(owner, 1);
+
+        int properties = gfxstub_haveproperties((void *)x);
+        if (properties)
+        {
+            properties_set_field_int(properties,
+                "x_pix",x->gl_pixwidth + sh->h_dragx);
+            properties_set_field_int(properties,
+                "y_pix",x->gl_pixheight + sh->h_dragy);
+        }
+    }
+    else if (sh->h_scale == 2) /* resize_gop red rect hook */
+    {
+        int width = (sh->h_constrain == CURSOR_EDITMODE_RESIZE_Y) ?
+            x->gl_pixwidth :
+            (int)mouse_x - x->gl_xmargin - sh->h_adjust_x;
+        int height = (sh->h_constrain == CURSOR_EDITMODE_RESIZE_X) ?
+            x->gl_pixheight :
+            (int)mouse_y - x->gl_ymargin - sh->h_adjust_y;
+        x->gl_pixwidth = width = maxi(SCALE_GOP_MINWIDTH, width);
+        x->gl_pixheight = height = maxi(SCALE_GOP_MINHEIGHT, height);
+        gui_vmess("gui_canvas_redrect_coords", "xiiii",
+            x,
+            x->gl_xmargin,
+            x->gl_ymargin,
+            x->gl_xmargin + width,
+            x->gl_ymargin + height);
+        int properties = gfxstub_haveproperties((void *)x);
+        if (properties)
+        {
+            properties_set_field_int(properties,
+                "x_pix",x->gl_pixwidth + sh->h_dragx);
+            properties_set_field_int(properties,
+                "y_pix",x->gl_pixheight + sh->h_dragy);
+        }
+    }
+    else /* move_gop hook */
+    {
+        int properties = gfxstub_haveproperties((void *)x);
+        if (properties)
+        {
+            properties_set_field_int(properties,
+                "x_margin",x->gl_xmargin + dx);
                 properties_set_field_int(properties,
-                    "x_margin",x->gl_xmargin + dx);
-                properties_set_field_int(properties,
-                    "y_margin",x->gl_ymargin + dy);
-            }
+                "y_margin",x->gl_ymargin + dy);
+        }
+        if (sh->h_constrain != CURSOR_EDITMODE_RESIZE_Y)
             x->gl_xmargin += dx;
+        if (sh->h_constrain != CURSOR_EDITMODE_RESIZE_X)
             x->gl_ymargin += dy;
 
-            int x1 = x->gl_xmargin, x2 = x1+x->gl_pixwidth;
-            int y1 = x->gl_ymargin, y2 = y1+x->gl_pixheight;
+        int x1 = x->gl_xmargin, x2 = x1 + x->gl_pixwidth;
+        int y1 = x->gl_ymargin, y2 = y1 + x->gl_pixheight;
 
-            gui_vmess("gui_canvas_redrect_coords", "xiiii",
-                x, x1, y1, x2, y2);
-            sh->h_dragx = dx;
-            sh->h_dragy = dy;            
-        }
+        gui_vmess("gui_canvas_redrect_coords", "xiiii",
+            x, x1, y1, x2, y2);
+        sh->h_dragx = dx;
+        sh->h_dragy = dy;
     }
 }
 
