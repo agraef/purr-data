@@ -2952,6 +2952,23 @@ static void canvas_doarrange(t_canvas *x, t_float which, t_gobj *oldy,
     glob_preset_node_list_check_loc_and_update();
 }
 
+static char *canvas_gethelpname(t_object *ob)
+{
+    if (ob->te_binbuf &&
+        binbuf_getnatom(ob->te_binbuf) &&
+        binbuf_getvec(ob->te_binbuf)->a_type == A_SYMBOL)
+    {
+        t_atom *a = binbuf_getvec(ob->te_binbuf);
+        if (a->a_w.w_symbol == gensym("draw"))
+            return "draw";
+        else if (a->a_w.w_symbol == gensym("table"))
+            return "table";
+        else return (class_gethelpname(pd_class(&ob->te_pd)));
+    }
+    else
+        return (class_gethelpname(pd_class(&ob->te_pd)));
+}
+
     /* called from the gui when a popup menu comes back with "properties,"
         "open," or "help." */
     /* Ivica Ico Bukvic <ico@bukvic.net> 2010-11-17
@@ -3080,7 +3097,10 @@ void canvas_done_popup(t_canvas *x, t_float which, t_float xpos,
                     }
                     else
                     {
-                        strncpy(namebuf, class_gethelpname(pd_class(&y->g_pd)),
+                        char *obname = (pd_class(&y->g_pd) == canvas_class) ?
+                            canvas_gethelpname((t_object *)y) :
+                            class_gethelpname(pd_class(&y->g_pd));
+                        strncpy(namebuf, obname,
                             FILENAME_MAX-1);
                         namebuf[FILENAME_MAX-1] = 0;
                         dir = class_gethelpdir(pd_class(&y->g_pd));
