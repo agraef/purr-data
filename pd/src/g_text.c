@@ -296,6 +296,7 @@ void canvas_howputnew(t_canvas *x, int *connectp, int *xpixp, int *ypixp,
             selected = x->gl_editor->e_selection->sel_what;
         }
         for (g = x->gl_list, nobj = 0; g; g = g->g_next, nobj++)
+        {
             if (g == selected)
             {
                 gobj_getrect(g, x, &x1, &y1, &x2, &y2);
@@ -303,6 +304,7 @@ void canvas_howputnew(t_canvas *x, int *connectp, int *xpixp, int *ypixp,
                 *xpixp = x1;
                 *ypixp = y2 + 5;
             }
+        }
         glist_noselect(x);
             /* search back for 'selected' and if it isn't on the list, 
                 plan just to connect from the last item on the list. */
@@ -442,7 +444,7 @@ void canvas_iemguis(t_glist *gl, t_symbol *guiobjname)
     t_binbuf *b = binbuf_new();
     //int xpix, ypix;
 
-    if(!strcmp(guiobjname->s_name, "cnv"))
+    if (!strcmp(guiobjname->s_name, "cnv"))
         glist_noselect(gl);
 
     int connectme, xpix, ypix, indx, nobj;
@@ -453,11 +455,11 @@ void canvas_iemguis(t_glist *gl, t_symbol *guiobjname)
        in case of autopatch
     if (connectme)
     {
-        if(!strcmp(guiobjname->s_name, "hsl"))
+        if (!strcmp(guiobjname->s_name, "hsl"))
             xpix = xpix + 3;
-        else if(!strcmp(guiobjname->s_name, "vsl"))
+        else if (!strcmp(guiobjname->s_name, "vsl"))
             ypix = ypix + 2;
-        else if(!strcmp(guiobjname->s_name, "vu"))
+        else if (!strcmp(guiobjname->s_name, "vu"))
         {
             xpix = xpix + 1;
             ypix = ypix + 2;
@@ -2231,7 +2233,7 @@ void text_save(t_gobj *z, t_binbuf *b)
         for (i = 0; i < natom; i++)
         {
             t_symbol *s;
-            if(a[i].a_type == A_SYMBOL)
+            if (a[i].a_type == A_SYMBOL)
             {
                 //fprintf(stderr,"%d is a symbol\n", i);
                 s = a[i].a_w.w_symbol;
@@ -2241,7 +2243,7 @@ void text_save(t_gobj *z, t_binbuf *b)
                     char *c;
                     for(c = s->s_name; c != NULL && *c != '\0'; c++)
                     {
-                        if(*c == '\n')
+                        if (*c == '\n')
                         {
                             *c = '\v';
                             //fprintf(stderr,"n->v\n");
