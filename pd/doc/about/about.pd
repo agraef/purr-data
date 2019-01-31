@@ -56,8 +56,8 @@ version of Pd-l2ork. An introduction to Purr Data can be found at:
 #X text 18 360 Reference documentation for Pd lives in:;
 #X obj 18 378 pddp/pddplink @pd_help/../1.manual/index.htm -text doc/1.manual/index.htm
 ;
-#X obj 36 21 cnv 15 432 33 empty \$0-about_text Pd-l2ork 20 12 0 18
--261139 -1 0;
+#X obj 36 21 cnv 15 432 33 empty \$0-about_text Pd-l2ork-2.7.0\ 20181225-rev.8f8acb4
+20 12 0 18 -261139 -1 0;
 #N canvas 430 372 450 323 cat 0;
 #X obj 16 180 draw sprite ./cat;
 #X obj 16 21 struct cat float x float y;
@@ -76,7 +76,7 @@ version of Pd-l2ork. An introduction to Purr Data can be found at:
 #X connect 6 0 0 0;
 #X connect 7 0 4 0;
 #X restore 454 416 pd cat;
-#X scalar cat 383 82 \;;
+#X scalar cat 391 64 \;;
 #X obj 375 47 cnv 15 93 20 empty \$0-vanilla_text Pd-0.48.0 10 6 0
 14 -216373 -1 0;
 #X obj 393 378 cnv 15 31 20 empty \$0-precision_text 32 10 6 0 14 -262144
