@@ -137,7 +137,8 @@ typedef struct _editor
 #define MA_CONNECT 2    /* make a connection */
 #define MA_REGION  3    /* selection region */
 #define MA_PASSOUT 4    /* send on to e_grab */
-#define MA_DRAGTEXT 5   /* drag in text editor to alter selection */
+/* Text edition handled completely in the GUI now */
+//#define MA_DRAGTEXT 5   /* drag in text editor to alter selection */
 #define MA_RESIZE  6    /* drag to resize */
 #define MA_SCROLL  7    /* scroll with middle click onto empty canvas */
 
@@ -498,10 +499,6 @@ EXTERN int text_xpix(t_text *x, t_glist *glist);
 EXTERN int text_ypix(t_text *x, t_glist *glist);
 
 /* -------------------- functions on rtexts ------------------------- */
-#define RTEXT_DOWN 1
-#define RTEXT_DRAG 2
-#define RTEXT_DBL 3
-#define RTEXT_SHIFT 4
 
 // number in comment is the number in grep -w|wc
 EXTERN t_rtext *rtext_new(t_glist *glist, t_text *who); //5

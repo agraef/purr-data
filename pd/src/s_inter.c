@@ -717,8 +717,8 @@ void blargh(void) {
 
 static int lastend = -1;
 void sys_vvgui(const char *fmt, va_list ap) {
-	va_list aq;
-	va_copy(aq,ap);
+    va_list aq;
+    va_copy(aq, ap);
     int msglen;
 
     if (sys_nogui)
@@ -738,7 +738,7 @@ void sys_vvgui(const char *fmt, va_list ap) {
     msglen = vsnprintf(sys_guibuf + sys_guibufhead,
         sys_guibufsize - sys_guibufhead, fmt, ap);
     va_end(ap);
-    if(msglen < 0) 
+    if (msglen < 0)
     {
         fprintf(stderr, "Pd: buffer space wasn't sufficient for long GUI string\n");
         return;
@@ -749,7 +749,7 @@ void sys_vvgui(const char *fmt, va_list ap) {
             (msglen > GUI_ALLOCCHUNK ? msglen : GUI_ALLOCCHUNK);
         sys_trytogetmoreguibuf(newsize);
 
-        va_copy(ap,aq);
+        va_copy(ap, aq);
         msglen2 = vsnprintf(sys_guibuf + sys_guibufhead,
             sys_guibufsize - sys_guibufhead, fmt, ap);
         va_end(ap);
