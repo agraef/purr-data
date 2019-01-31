@@ -32,3 +32,4 @@ packages/linux_make/build/
 pd/src/makefile
 l2ork_addons/cwiid/defs.mak
 CVS
+.DS_Store
