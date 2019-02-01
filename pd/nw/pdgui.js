@@ -1764,6 +1764,14 @@ function connect_as_client() {
     client.setNoDelay(true);
     // uncomment the next line to use fast_parser (then set its callback below)
     //client.setEncoding("utf8");
+    client.on("error", function(e) {
+        var eString = "";
+        Object.keys(e).forEach(function(k) {
+            eString += " " + k + ": " + e[k];
+        });
+        pd_window.prompt("Error:" + eString);
+    });
+
     client.connect(PORT, HOST, function() {
         console.log("CONNECTED TO: " + HOST + ":" + PORT);
     });
