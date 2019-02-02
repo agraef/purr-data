@@ -5240,9 +5240,13 @@ function gui_text_dialog(did, width, height, font_size) {
         font_size);
 }
 
+function dialog_raise(did) {
+    dialogwin[did].focus();
+}
+
 function gui_text_dialog_raise(did) {
     if (dialogwin[did]) {
-        dialogwin[did].focus();
+        dialog_raise(did);
     }
 }
 
@@ -5285,6 +5289,8 @@ function gui_pd_dsp(state) {
 function open_prefs() {
     if (!dialogwin["prefs"]) {
         create_window("prefs", "prefs", 370, 470, 0, 0, null);
+    } else {
+        dialog_raise("prefs");
     }
 }
 
@@ -5293,6 +5299,8 @@ exports.open_prefs = open_prefs;
 function open_search() {
     if (!dialogwin["search"]) {
         create_window("search", "search", 300, 400, 20, 20, null);
+    } else {
+        dialog_raise("search");
     }
 }
 

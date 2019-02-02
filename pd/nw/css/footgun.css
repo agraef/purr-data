@@ -750,6 +750,11 @@ div.y2 {
     padding-top: 8px;
 }
 
+/* Sample rate input */
+input[name="rate"] {
+    width: 4em;
+}
+
 #prefs_buttons {
     display: table;
     height: 10vh;

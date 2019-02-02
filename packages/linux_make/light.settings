@@ -7,3 +7,4 @@ nloadlib: 2
 path1: ~/pd-l2ork-externals
 path2: /usr/lib/pd-l2ork/extra/pddp
 npath: 2
+flags: -font-size 12

@@ -1,7 +1,7 @@
 Windows Registry Editor Version 5.00
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Pd-extended]
-"flags"=""
+"flags"="-font-size 12"
 "loadlib1"="libdir"
 "loadlib2"="pddp"
 "nloadlib"=2
