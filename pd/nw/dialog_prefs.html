@@ -40,57 +40,72 @@
         </label>
 
         <div class="tab1">
-          <div class="tab_settings">
-            <label data-i18n="[title]prefs.audio.api_tt">
-              <span data-i18n="prefs.audio.api"></span>
-              <select id="audio_api" onchange="change_api(this);">
-              </select>
-            </label>
-          </div>
-          <div class="tab_settings">
-            <label data-i18n="[title]prefs.audio.sr_tt">
-              <span data-i18n="prefs.audio.sr"></span>
-              <input type="text"
-                     id="rate"
-                     name="rate"
-                     onchange="attr_change(this);">
-            </label>
-          </div>
-          <div class="tab_settings">
-            <label data-i18n="[title]prefs.audio.blocksize_tt">
-              <span data-i18n="prefs.audio.blocksize"></span>
-              <select id="blocksize"
-                      onchange="attr_change(this);">
-                <option value="64">64</option>
-                <option value="128">128</option>
-                <option value="256">256</option>
-                <option value="512">512</option>
-                <option value="1024">1024</option>
-                <option value="2048">2048</option>
-              </select>
-            </label>
-            <label data-i18n="[title]prefs.audio.advance_tt">
-              <span data-i18n="prefs.audio.advance"></span>
-              <input type="text"
-                     id="advance"
-                     name="advance"
-                     onchange="attr_change(this);">
-            </label>
-          </div>
-          <div class="tab_settings">
-            <span id="callback_container" class="hidden">
-              <label data-i18n="[title]prefs.audio.callback_tt">
+          <table class="tab_settings">
+            <tr data-i18n="[title]prefs.audio.api_tt">
+              <td>
+                <span data-i18n="prefs.audio.api"></span>
+              </td>
+              <td>
+                <select id="audio_api" onchange="change_api(this);">
+                </select>
+              </td>
+            </tr>
+            <tr data-i18n="[title]prefs.audio.sr_tt">
+              <td>
+                <span data-i18n="prefs.audio.sr"></span>
+              </td>
+              <td>
+                <input type="text"
+                       id="rate"
+                       name="rate"
+                       onchange="attr_change(this);">
+              </td>
+            </tr>
+            <tr data-i18n="[title]prefs.audio.blocksize_tt">
+              <td>
+                <span data-i18n="prefs.audio.blocksize"></span>
+              </td>
+              <td>
+                <select id="blocksize"
+                        onchange="attr_change(this);">
+                  <option value="64">64</option>
+                  <option value="128">128</option>
+                  <option value="256">256</option>
+                  <option value="512">512</option>
+                  <option value="1024">1024</option>
+                  <option value="2048">2048</option>
+                </select>
+              </td>
+            <tr data-i18n="[title]prefs.audio.advance_tt">
+              <td>
+                <span data-i18n="prefs.audio.advance"></span>
+              </td>
+              <td>
+                <input type="text"
+                       id="advance"
+                       name="advance"
+                       onchange="attr_change(this);">
+              </td>
+            </tr>
+            <tr id="callback_container" class="hidden"
+                data-i18n="[title]prefs.audio.callback_tt">
+              <td>
                 <span data-i18n="prefs.audio.callback"></span>
+              </td>
+              <td>
                 <input type="checkbox" id="callback" name="callback">
-              </label>
-            </span>
-            <span id="multi_dev_container" class="hidden">
-              <label data-i18n="[title]prefs.audio.callback_tt">
+              </td>
+            </tr>
+            <tr id="multi_dev_container" class="hidden"
+                data-i18n="[title]prefs.audio.callback_tt">
+              <td>
                 <span data-i18n="prefs.audio.callback"></span>
+              </td>
+              <td>
                 <input type="checkbox" id="multi-dev" name="multi-dev">
-              </label>
-            </span>
-          </div>
+              </td>
+            </tr>
+          </table>
           <table class="tab_settings">
             <tr>
               <td data-i18n="[title]prefs.audio.input_title_tt">

@@ -1764,6 +1764,14 @@ function connect_as_client() {
     client.setNoDelay(true);
     // uncomment the next line to use fast_parser (then set its callback below)
     //client.setEncoding("utf8");
+    client.on("error", function(e) {
+        var eString = "";
+        Object.keys(e).forEach(function(k) {
+            eString += " " + k + ": " + e[k];
+        });
+        pd_window.prompt("Error:" + eString);
+    });
+
     client.connect(PORT, HOST, function() {
         console.log("CONNECTED TO: " + HOST + ":" + PORT);
     });
@@ -5232,9 +5240,13 @@ function gui_text_dialog(did, width, height, font_size) {
         font_size);
 }
 
+function dialog_raise(did) {
+    dialogwin[did].focus();
+}
+
 function gui_text_dialog_raise(did) {
     if (dialogwin[did]) {
-        dialogwin[did].focus();
+        dialog_raise(did);
     }
 }
 
@@ -5277,6 +5289,8 @@ function gui_pd_dsp(state) {
 function open_prefs() {
     if (!dialogwin["prefs"]) {
         create_window("prefs", "prefs", 370, 470, 0, 0, null);
+    } else {
+        dialog_raise("prefs");
     }
 }
 
@@ -5285,6 +5299,8 @@ exports.open_prefs = open_prefs;
 function open_search() {
     if (!dialogwin["search"]) {
         create_window("search", "search", 300, 400, 20, 20, null);
+    } else {
+        dialog_raise("search");
     }
 }
 
