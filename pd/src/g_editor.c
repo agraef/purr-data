@@ -3399,28 +3399,9 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
             //selection (only if we are not hovering above an outlet)
             if (doit)
             {
-                t_rtext *rt;
-                if (ob && (rt = x->gl_editor->e_textedfor) &&
-                    rt == glist_findrtext(x, ob))
-                {
-                    rtext_mouse(rt, xpos - x1, ypos - y1, RTEXT_SHIFT);
-                    x->gl_editor->e_onmotion = MA_DRAGTEXT;
-                    x->gl_editor->e_xwas = x1;
-                    x->gl_editor->e_ywas = y1;
-                }
-                else
-                {
-                    //t_undo_redo_sel *buf =
-                    //    (t_undo_redo_sel *)getbytes(sizeof(*buf));
-                    //buf->u_undo = (t_undo_sel *)canvas_undo_set_selection(x);
-
-                    if (glist_isselected(x, y))
-                        glist_deselect(x, y);
-                    else glist_select(x, y);
-
-                    //buf->u_redo = (t_undo_sel *)canvas_undo_set_selection(x);
-                    //canvas_undo_add(x, 11, "selection", buf);
-                }
+                if (glist_isselected(x, y))
+                    glist_deselect(x, y);
+                else glist_select(x, y);
             }
         }
         else
@@ -3636,45 +3617,33 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                 t_rtext *rt;
                     /* check if the box is being text edited */
                 nooutletafterall:
-                if (ob && (rt = x->gl_editor->e_textedfor) &&
-                    rt == glist_findrtext(x, ob))
+                    /* otherwise select and drag to displace */
+                if (!glist_isselected(x, y))
                 {
-                    rtext_mouse(rt, xpos - x1, ypos - y1,
-                        (doublemod ? RTEXT_DBL : RTEXT_DOWN));
-                    x->gl_editor->e_onmotion = MA_DRAGTEXT;
-                    x->gl_editor->e_xwas = x1;
-                    x->gl_editor->e_ywas = y1;
+                    //t_undo_redo_sel *buf =
+                    //    (t_undo_redo_sel *)getbytes(sizeof(*buf));
+                    //buf->u_undo =
+                    //    (t_undo_sel *)canvas_undo_set_selection(x);
+
+                    glist_noselect(x);
+                    glist_select(x, y);
+                    //buf->u_redo =
+                    //    (t_undo_sel *)canvas_undo_set_selection(x);
+                    //canvas_undo_add(x, 11, "selection", buf);
                 }
                 else
                 {
-                        /* otherwise select and drag to displace */
-                    if (!glist_isselected(x, y))
-                    {
-                        //t_undo_redo_sel *buf =
-                        //    (t_undo_redo_sel *)getbytes(sizeof(*buf));
-                        //buf->u_undo =
-                        //    (t_undo_sel *)canvas_undo_set_selection(x);
-
-                        glist_noselect(x);
-                        glist_select(x, y);
-                        //buf->u_redo =
-                        //    (t_undo_sel *)canvas_undo_set_selection(x);
-                        //canvas_undo_add(x, 11, "selection", buf);
-                    }
-                    else
-                    {
-                        canvas_check_nlet_highlights(x);
-                    }
-                    //toggle_moving = 1;
-                    //sys_vgui("pdtk_update_xy_tooltip .x%lx %d %d\n",
-                    //    x, (int)xpos, (int)ypos);
-                    //sys_vgui("pdtk_toggle_xy_tooltip .x%lx %d\n", x, 1);
-                    x->gl_editor->e_onmotion = MA_MOVE;
-                    /* once the code for creating a new object looks sane
-                       we'll leave rendering the tooltips to the GUI. */
-                    //if (tooltips)
-                    //    sys_vgui("pdtk_tip .x%x.c 0 0\n", x);
+                    canvas_check_nlet_highlights(x);
                 }
+                //toggle_moving = 1;
+                //sys_vgui("pdtk_update_xy_tooltip .x%lx %d %d\n",
+                //    x, (int)xpos, (int)ypos);
+                //sys_vgui("pdtk_toggle_xy_tooltip .x%lx %d\n", x, 1);
+                x->gl_editor->e_onmotion = MA_MOVE;
+                /* once the code for creating a new object looks sane
+                   we'll leave rendering the tooltips to the GUI. */
+                //if (tooltips)
+                //    sys_vgui("pdtk_tip .x%x.c 0 0\n", x);
             }
             else
             // jsarlo 
@@ -5350,13 +5319,6 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
             ypos - x->gl_editor->e_ywas);
         x->gl_editor->e_xwas = xpos;
         x->gl_editor->e_ywas = ypos;
-    }
-    else if (x->gl_editor->e_onmotion == MA_DRAGTEXT)
-    {
-        t_rtext *rt = x->gl_editor->e_textedfor;
-        if (rt)
-            rtext_mouse(rt, xpos - x->gl_editor->e_xwas,
-                ypos - x->gl_editor->e_ywas, RTEXT_DRAG);
     }
     else if (x->gl_editor->e_onmotion == MA_RESIZE)
     {

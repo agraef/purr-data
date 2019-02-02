@@ -42,7 +42,6 @@ struct _rtext
     int x_selstart; /*-- byte offset --*/
     int x_selend;   /*-- byte offset --*/
     int x_active;
-    int x_dragfrom;
     int x_drawnwidth;
     int x_drawnheight;
     t_text *x_text;
@@ -575,7 +574,7 @@ void rtext_activate(t_rtext *x, int state)
         //sys_vgui(".x%lx.c focus %s\n", canvas, x->x_tag);
         glist->gl_editor->e_textedfor = x;
         glist->gl_editor->e_textdirty = 0;
-        x->x_dragfrom = x->x_selstart = 0;
+        x->x_selstart = 0;
         x->x_selend = x->x_bufsize;
         x->x_active = 1;
     }
@@ -1042,65 +1041,6 @@ be printable in whatever 8-bit character set we find ourselves. */
             x->x_selstart = swap;
             last_sel = 2;
         }
-    }
-    rtext_senditup(x, SEND_UPDATE, &w, &h, &indx);
-}
-
-void rtext_mouse(t_rtext *x, int xval, int yval, int flag)
-{
-    int w = xval, h = yval, indx;
-    rtext_senditup(x, SEND_CHECK, &w, &h, &indx);
-    if (flag == RTEXT_DOWN)
-    {
-        x->x_dragfrom = x->x_selstart = x->x_selend = indx;
-    }
-    else if (flag == RTEXT_DBL)
-    {
-        int whereseparator, newseparator;
-        x->x_dragfrom = -1;
-        whereseparator = 0;
-        if ((newseparator = lastone(x->x_buf, ' ', indx)) > whereseparator)
-            whereseparator = newseparator+1;
-        if ((newseparator = lastone(x->x_buf, '\n', indx)) > whereseparator)
-            whereseparator = newseparator+1;
-        if ((newseparator = lastone(x->x_buf, ';', indx)) > whereseparator)
-            whereseparator = newseparator+1;
-        if ((newseparator = lastone(x->x_buf, ',', indx)) > whereseparator)
-            whereseparator = newseparator+1;
-        x->x_selstart = whereseparator;
-        
-        whereseparator = x->x_bufsize - indx;
-        if ((newseparator =
-            firstone(x->x_buf+indx, ' ', x->x_bufsize - indx)) >= 0 &&
-                newseparator < whereseparator)
-                    whereseparator = newseparator;
-        if ((newseparator =
-            firstone(x->x_buf+indx, '\n', x->x_bufsize - indx)) >= 0 &&
-                newseparator < whereseparator)
-                    whereseparator = newseparator;
-        if ((newseparator =
-            firstone(x->x_buf+indx, ';', x->x_bufsize - indx)) >= 0 &&
-                newseparator < whereseparator)
-                    whereseparator = newseparator;
-        if ((newseparator =
-            firstone(x->x_buf+indx, ',', x->x_bufsize - indx)) >= 0 &&
-                newseparator < whereseparator)
-                    whereseparator = newseparator;
-        x->x_selend = indx + whereseparator;
-    }
-    else if (flag == RTEXT_SHIFT)
-    {
-        if (indx * 2 > x->x_selstart + x->x_selend)
-            x->x_dragfrom = x->x_selstart, x->x_selend = indx;
-        else
-            x->x_dragfrom = x->x_selend, x->x_selstart = indx;
-    }
-    else if (flag == RTEXT_DRAG)
-    {
-        if (x->x_dragfrom < 0)
-            return;
-        x->x_selstart = (x->x_dragfrom < indx ? x->x_dragfrom : indx);
-        x->x_selend = (x->x_dragfrom > indx ? x->x_dragfrom : indx);
     }
     rtext_senditup(x, SEND_UPDATE, &w, &h, &indx);
 }
