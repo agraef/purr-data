@@ -1058,7 +1058,7 @@ function canvas_menuclose_callback(cid_for_dialog, cid, force) {
         w.canvas_events.close_without_saving(cid, force);
     };
     cancel_button.onclick = function() {
-        w.close_save_dialog();
+        w.canvas_events.close_save_dialog();
         w.canvas_events[w.canvas_events.get_previous_state()]();
     }
 
