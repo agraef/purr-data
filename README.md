@@ -110,7 +110,7 @@ at the beginning of the Makefile for more information.
 
 #### Linux
 
-Time to build: *40 minutes to 1.5 hours*  
+Time to build: *10 minutes light install, 45 minutes to 1.5 hours full install*
 Hard drive space required: *roughly 2.5 GB*
 
 1. Install the dependencies
@@ -129,26 +129,23 @@ Hard drive space required: *roughly 2.5 GB*
              flite1-dev libgsm1-dev libgtk2.0-dev git libstk0-dev \
              libsndobj-dev libfluidsynth-dev fluid-soundfont-gm byacc
 
-2. Clone the Purr-Data repository *(10 minutes)*
+2. The gui toolkit may require installing the following extra dependencies
+        sudo apt-get install gconf2 libnss3
+
+3. Clone the Purr-Data repository *(2 to 10 minutes)*
 
         git clone https://git.purrdata.net/jwilkes/purr-data.git
 
-4. Change to the directory
+4. Compile the code *(5 minutes to 1.5 hours)* full 
 
-        cd purr-data/l2ork_addons
+   * to build only the core: `make light` *(5 minutes)*
+   * to build core and all externals: `make all` *(20 minutes to 1.5 hours)*
+   * to build everything *except* Gem: `make incremental` *(10 to 20 minutes)*
 
-5. Run the installer *(15 minutes)*  
-   Choose one of the following options:
-   * to build a deb installer, type `./tar_em_up.sh -B`
-   * to build an rpi deb installer, type `./tar_em_up.sh -R`
-   * for a generic tar installer type `./tar_em_up.sh -F`
-
-6. When the installer finishes, type
-
-        cd ..
-
-7. There should now be a .deb file in your current directory
-
+5. There should now be an installer file in the main directory of the repo. 
+   If you're using an apt-based Linux distribution it will be an apt package.
+   Otherwise, it will be a tarball which you can unzip, enter, and run
+   `make install` (as well as `make uninstall` to remove it).
 
 To install using a pre-compiled binary, follow these instructions:
 http://l2ork.music.vt.edu/main/?page_id=56
