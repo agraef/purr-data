@@ -748,12 +748,12 @@ static void scalar_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
         t_gobj *y;
         t_canvas *templatecanvas = template_findcanvas(template);
         for (y = templatecanvas->gl_list; y; y = y->g_next)
-            {
-                t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
-                if (!wb) continue;
-                (*wb->w_parentdisplacefn)(y, glist, x->sc_vec, template,
-                    basex, basey, dx, dy);
-            }
+        {
+            t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
+            if (!wb) continue;
+            (*wb->w_parentdisplacefn)(y, glist, x->sc_vec, template,
+                basex, basey, dx, dy);
+        }
     }
     */
 

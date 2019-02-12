@@ -4269,12 +4269,9 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     }
 }
 
-//static int draw_motion_field;
 static t_float draw_motion_xcumulative;
-//static t_float draw_motion_xbase;
 static t_float draw_motion_xper;
 static t_float draw_motion_ycumulative;
-//static t_float draw_motion_ybase;
 static t_float draw_motion_yper;
 static t_glist *draw_motion_glist;
 static t_scalar *draw_motion_scalar;
@@ -7014,514 +7011,23 @@ static void drawarray_setup(void)
     class_setparentwidget(drawarray_class, &drawarray_widgetbehavior);
 }
 
-/* ---------------- drawnumber: draw a number (or symbol) ---------------- */
-
-/*
-    drawnumbers draw numeric fields at controllable locations, with
-    controllable color and label.  invocation:
-    (drawnumber|drawsymbol) [-v <visible>] variable x y color label
-*/
-
-t_class *drawnumber_class;
-
-#define DRAW_SYMBOL 1
-
-typedef struct _drawnumber
-{
-    t_object x_obj;
-    t_fielddesc x_value;
-    t_fielddesc x_xloc;
-    t_fielddesc x_yloc;
-    t_fielddesc x_color;
-    t_fielddesc x_vis;
-    t_fielddesc x_fontsize;
-    t_symbol *x_label;
-    int x_flags;
-    t_canvas *x_canvas;
-} t_drawnumber;
-
-static void *drawnumber_new(t_symbol *classsym, t_int argc, t_atom *argv)
-{
-    if (legacy_draw_in_group(canvas_getcurrent()))
-        return 0;
-
-    t_drawnumber *x = (t_drawnumber *)pd_new(drawnumber_class);
-    char *classname = classsym->s_name;
-    int flags = 0;
-    int got_font_size = 0;
-    
-    if (classname[4] == 's')
-        flags |= DRAW_SYMBOL;
-    x->x_flags = flags;
-    fielddesc_setfloat_const(&x->x_vis, 1);
-    x->x_canvas = canvas_getcurrent();
-    while (1)
-    {
-        t_symbol *firstarg = atom_getsymbolarg(0, argc, argv);
-        if (!strcmp(firstarg->s_name, "-v") && argc > 1)
-        {
-            fielddesc_setfloatarg(&x->x_vis, 1, argv+1);
-            argc -= 2; argv += 2;
-        }
-        else break;
-    }
-    if (flags & DRAW_SYMBOL)
-    {
-        if (argc) fielddesc_setsymbolarg(&x->x_value, argc--, argv++);
-        else fielddesc_setsymbol_const(&x->x_value, &s_);
-    }
-    else
-    {
-        if (argc) fielddesc_setfloatarg(&x->x_value, argc--, argv++);
-        else fielddesc_setfloat_const(&x->x_value, 0);
-    }
-    if (argc) fielddesc_setfloatarg(&x->x_xloc, argc--, argv++);
-    else fielddesc_setfloat_const(&x->x_xloc, 0);
-    if (argc) fielddesc_setfloatarg(&x->x_yloc, argc--, argv++);
-    else fielddesc_setfloat_const(&x->x_yloc, 0);
-    if (argc) fielddesc_setfloatarg(&x->x_color, argc--, argv++);
-    else fielddesc_setfloat_const(&x->x_color, 1);
-
-    if (argc == 2)
-    {
-        fielddesc_setfloatarg(&x->x_fontsize, argc--, argv++);
-        got_font_size = 1;
-    }
-    if (argc)
-    {
-        if (argv->a_type == A_SYMBOL || got_font_size)
-        {
-            x->x_label = atom_getsymbolarg(0, argc, argv);
-            if (!got_font_size) 
-                fielddesc_setfloatarg(&x->x_fontsize, 0, NULL);         
-        }
-        else if (argv->a_type == A_FLOAT)
-        {
-            fielddesc_setfloatarg(&x->x_fontsize, argc, argv);
-            x->x_label = &s_;
-        }
-    } else {
-        fielddesc_setfloatarg(&x->x_fontsize, 0, NULL);
-        x->x_label = &s_;
-    }
-
-    return (x);
-}
-
-void drawnumber_float(t_drawnumber *x, t_floatarg f)
-{
-    int viswas;
-    if (x->x_vis.fd_type != A_FLOAT || x->x_vis.fd_var)
-    {
-        pd_error(x, "global vis/invis for a template with variable visibility");
-        return;
-    }
-    viswas = (x->x_vis.fd_un.fd_float != 0);
-    
-    if ((f != 0 && viswas) || (f == 0 && !viswas))
-        return;
-    canvas_redrawallfortemplatecanvas(x->x_canvas, 2);
-    fielddesc_setfloat_const(&x->x_vis, (f != 0));
-    canvas_redrawallfortemplatecanvas(x->x_canvas, 1);
-}
-
-/* -------------------- widget behavior for drawnumber ------------ */
-
-/*#define DRAWNUMBER_BUFSIZE 80
-static void drawnumber_sprintf(t_drawnumber *x, char *buf, t_atom *ap)
-{
-    int nchars;
-    strncpy(buf, x->x_label->s_name, DRAWNUMBER_BUFSIZE);
-    buf[DRAWNUMBER_BUFSIZE - 1] = 0;
-    nchars = strlen(buf);
-    atom_string(ap, buf + nchars, DRAWNUMBER_BUFSIZE - nchars);
-}*/
-
-static int drawnumber_gettype(t_drawnumber *x, t_word *data,
-    t_template *template, int *onsetp)
-{
-    int type;
-    t_symbol *arraytype;
-    if (template_find_field(template, /*x->x_fieldname*/ x->x_value.fd_un.fd_varsym, onsetp, &type,
-        &arraytype) && type != DT_ARRAY)
-            return (type);
-    else return (-1);
-}
-
-#define DRAWNUMBER_BUFSIZE 1024
-static void drawnumber_getbuf(t_drawnumber *x, t_word *data,
-    t_template *template, char *buf)
-{
-    int nchars, onset, type = drawnumber_gettype(x, data, template, &onset);
-    if (type < 0)
-        buf[0] = 0;
-    else
-    {
-        strncpy(buf, x->x_label->s_name, DRAWNUMBER_BUFSIZE);
-        buf[DRAWNUMBER_BUFSIZE - 1] = 0;
-        nchars = strlen(buf);
-        if (type == DT_TEXT)
-        {
-            char *buf2;
-            int size2, ncopy;
-            binbuf_gettext(((t_word *)((char *)data + onset))->w_binbuf,
-                &buf2, &size2);
-            ncopy = (size2 > DRAWNUMBER_BUFSIZE-1-nchars ?
-                DRAWNUMBER_BUFSIZE-1-nchars: size2);
-            memcpy(buf+nchars, buf2, ncopy);
-            buf[nchars+ncopy] = 0;
-            if (nchars+ncopy == DRAWNUMBER_BUFSIZE-1)
-                strcpy(buf+(DRAWNUMBER_BUFSIZE-4), "...");
-            t_freebytes(buf2, size2);
-        }
-        else
-        {
-            t_atom at;
-            if (type == DT_FLOAT)
-                SETFLOAT(&at, ((t_word *)((char *)data + onset))->w_float);
-            else SETSYMBOL(&at, ((t_word *)((char *)data + onset))->w_symbol);
-            atom_string(&at, buf + nchars, DRAWNUMBER_BUFSIZE - nchars);
-        }
-    }
-}
-
-static void drawnumber_getrect(t_gobj *z, t_glist *glist,
-    t_word *data, t_template *template, t_float basex, t_float basey,
-    int *xp1, int *yp1, int *xp2, int *yp2)
-{
-    t_drawnumber *x = (t_drawnumber *)z;
-    t_atom at;
-        int xloc, yloc, font, fontwidth, fontheight;
-    char buf[DRAWNUMBER_BUFSIZE];
-
-    if (!fielddesc_getfloat(&x->x_vis, template, data, 0))
-    {
-        *xp1 = *yp1 = 0x7fffffff;
-        *xp2 = *yp2 = -0x7fffffff;
-        return;
-    }
-    /* hack to keep the font scaling with the gop */
-    t_float xscale = glist_xtopixels(glist, 1) - glist_xtopixels(glist, 0);
-    t_float yscale = glist_ytopixels(glist, 1) - glist_ytopixels(glist, 0);
-
-    xloc = glist_xtopixels(glist,
-        basex + fielddesc_getcoord(&x->x_xloc, template, data, 0));
-    yloc = glist_ytopixels(glist,
-        basey + fielddesc_getcoord(&x->x_yloc, template, data, 0));
-    font = fielddesc_getfloat(&x->x_fontsize, template, data, 0);
-    if (!font) font = glist_getfont(glist);
-    fontwidth = sys_fontwidth(font);
-        fontheight = sys_fontheight(font);
-    if (x->x_flags & DRAW_SYMBOL)
-        SETSYMBOL(&at, fielddesc_getsymbol(&x->x_value, template, data, 0));
-    else SETFLOAT(&at, fielddesc_getfloat(&x->x_value, template, data, 0));
-    //drawnumber_sprintf(x, buf, &at);
-    drawnumber_getbuf(x, data, template, buf);
-    *xp1 = xloc;
-    *yp1 = yloc;
-    // Ico 20140830: another regression from the 20140731 where getrect is not accurate
-    // this, in addition to the vis call fix makes things work right again
-    // namely, this fixes the getrect inconsistency, while the one in the vis
-    // function fixes sizing problems
-    *xp2 = xloc + (fontwidth * strlen(buf) * xscale);
-    *yp2 = yloc + (fontheight * yscale);
-    //*xp2 = xloc + (fontwidth * strlen(buf));
-    //*yp2 = yloc + (fontheight);
-}
-
-static void drawnumber_displace(t_gobj *z, t_glist *glist,
-    t_word *data, t_template *template, t_float basex, t_float basey,
-    int dx, int dy)
-{
-    /* refuse */
-}
-
-static void drawnumber_select(t_gobj *z, t_glist *glist,
-    t_word *data, t_template *template, t_float basex, t_float basey,
-    int state)
-{
-    //fprintf(stderr,"drawnumber_select %d", state);
-    /* fill in later */
-}
-
-static void drawnumber_activate(t_gobj *z, t_glist *glist,
-    t_word *data, t_template *template, t_float basex, t_float basey,
-    int state)
-{
-    //post("drawnumber_activate %d", state);
-}
-
-static void drawnumber_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
-    t_scalar *sc, t_word *data, t_template *template,
-    t_float basex, t_float basey, t_array *parentarray, int vis)
-{
-    //fprintf(stderr,"drawnumber_vis %d\n", vis);
-    t_drawnumber *x = (t_drawnumber *)z;
-
-    /*// get the universal tag for all nested objects
-    t_canvas *tag = x->x_canvas;
-    while (tag->gl_owner)
-    {
-        tag = tag->gl_owner;
-    }*/
-    
-        /* see comment in plot_vis() */
-    //if (vis && !fielddesc_getfloat(&x->x_vis, template, data, 0))
-    //    return;
-    if (vis)
-    {
-        t_atom at;
-        int in_array = (sc->sc_vec == data) ? 0 : 1;
-        // Ico: why are we using scale here? For group transforms? I thought
-        // that drawsymbol was not eligible for group transforms since it is 
-        // a legacy object? keepin xscale and yscale 1.0 makes things look good
-        // again on the disis_wiimote-help.pd patch
-        t_float xscale = 1.0;
-        t_float yscale = 1.0;
-        /*t_float xscale = glist_xtopixels(glist, 1) - glist_xtopixels(glist, 0);
-        t_float yscale = glist_ytopixels(glist, 1) - glist_ytopixels(glist, 0);
-        if (xscale != 0) xscale = 1.0 / xscale;
-        if (yscale != 0) yscale = 1.0 / yscale;*/
-        int fontsize = fielddesc_getfloat(&x->x_fontsize, template, data, 0);
-        if (!fontsize) fontsize = glist_getfont(glist);
-        /*int xloc = glist_xtopixels(glist,
-            basex + fielddesc_getcoord(&x->x_xloc, template, data, 0));
-        int yloc = glist_ytopixels(glist,
-            basey + fielddesc_getcoord(&x->x_yloc, template, data, 0));*/
-        int xloc = fielddesc_getcoord(&x->x_xloc, template, data, 0);
-        int yloc = fielddesc_getcoord(&x->x_yloc, template, data, 0);
-
-        char colorstring[20], buf[DRAWNUMBER_BUFSIZE];
-        numbertocolor(fielddesc_getfloat(&x->x_color, template, data, 1),
-            colorstring);
-        if (x->x_flags & DRAW_SYMBOL)
-            SETSYMBOL(&at, fielddesc_getsymbol(&x->x_value, template, data, 0));
-        else SETFLOAT(&at, fielddesc_getfloat(&x->x_value, template, data, 0));
-        drawnumber_getbuf(x, data, template, buf);
-        //drawnumber_sprintf(x, buf, &at);
-
-        char parent_tagbuf[MAXPDSTRING];
-        sprintf(parent_tagbuf, "dgroup%lx.%lx",
-            (in_array ? (long unsigned int)parentglist :
-                        (long unsigned int)x->x_canvas),
-            (long unsigned int)data);
-        char tagbuf[MAXPDSTRING];
-        sprintf(tagbuf, "drawnumber%lx.%lx", (long unsigned int)x, (long unsigned int)data);
-        gui_vmess("gui_drawnumber_vis", "xssiiffsissii",
-            glist_getcanvas(glist),
-            parent_tagbuf,
-            tagbuf,
-            xloc,
-            yloc, // Wrong-- we need to take font height into account
-            xscale,
-            yscale,
-            sys_font,
-            fontsize,
-            colorstring,
-            buf,
-            vis,
-            (int)fielddesc_getfloat(&x->x_vis, template, data, 0));
-    }
-    else
-    {
-        char tagbuf[MAXPDSTRING];
-        sprintf(tagbuf, "drawnumber%lx.%lx", (long unsigned int)x, (long unsigned int)data);
-        gui_vmess("gui_draw_erase_item", "xs", glist_getcanvas(glist),
-            tagbuf);
-    }
-}
-
-static t_float drawnumber_motion_ycumulative;
-static t_glist *drawnumber_motion_glist;
-static t_scalar *drawnumber_motion_scalar;
-static t_array *drawnumber_motion_array;
-static t_word *drawnumber_motion_wp;
-static t_template *drawnumber_motion_template;
-static t_gpointer drawnumber_motion_gpointer;
-static int drawnumber_motion_symbol;
-static int drawnumber_motion_firstkey;
-
-    /* LATER protect against the template changing or the scalar disappearing
-    probably by attaching a gpointer here ... */
-
-static void drawnumber_motion(void *z, t_floatarg dx, t_floatarg dy)
-{
-    t_drawnumber *x = (t_drawnumber *)z;
-    t_fielddesc *f = &x->x_value;
-    t_atom at;
-    if (!gpointer_check(&drawnumber_motion_gpointer, 0))
-    {
-        post("drawnumber_motion: scalar disappeared");
-        return;
-    }
-    if (drawnumber_motion_symbol)
-    {
-        post("drawnumber_motion: symbol");
-        return;
-    }
-    drawnumber_motion_ycumulative -= dy;
-    template_setfloat(drawnumber_motion_template,
-        f->fd_un.fd_varsym,
-            drawnumber_motion_wp, 
-            drawnumber_motion_ycumulative,
-                1);
-    if (drawnumber_motion_scalar)
-        template_notifyforscalar(drawnumber_motion_template,
-            drawnumber_motion_glist, drawnumber_motion_scalar,
-                gensym("change"), 1, &at);
-
-    if (drawnumber_motion_scalar)
-        scalar_redraw(drawnumber_motion_scalar, drawnumber_motion_glist);
-    if (drawnumber_motion_array)
-        array_redraw(drawnumber_motion_array, drawnumber_motion_glist);
-}
-
-static void drawnumber_key(void *z, t_floatarg fkey)
-{
-    t_drawnumber *x = (t_drawnumber *)z;
-    t_fielddesc *f = &x->x_value;
-    int key = fkey;
-    char sbuf[MAXPDSTRING];
-    t_atom at;
-    if (!gpointer_check(&drawnumber_motion_gpointer, 0))
-    {
-        post("drawnumber_motion: scalar disappeared");
-        return;
-    }
-    if (key == 0)
-        return;
-    if (drawnumber_motion_symbol)
-    {
-            /* key entry for a symbol field */
-        if (drawnumber_motion_firstkey)
-            sbuf[0] = 0;
-        else strncpy(sbuf, template_getsymbol(drawnumber_motion_template,
-            f->fd_un.fd_varsym, drawnumber_motion_wp, 1)->s_name,
-                MAXPDSTRING);
-        sbuf[MAXPDSTRING-1] = 0;
-        if (key == '\b')
-        {
-            if (*sbuf)
-                sbuf[strlen(sbuf)-1] = 0;
-        }
-        else
-        {
-            sbuf[strlen(sbuf)+1] = 0;
-            sbuf[strlen(sbuf)] = key;
-        }
-    }
-    else
-    {
-            /* key entry for a numeric field.  This is just a stopgap. */
-        float newf;
-        if (drawnumber_motion_firstkey)
-            sbuf[0] = 0;
-        else sprintf(sbuf, "%g", template_getfloat(drawnumber_motion_template,
-            f->fd_un.fd_varsym, drawnumber_motion_wp, 1));
-        drawnumber_motion_firstkey = (key == '\n');
-        if (key == '\b')
-        {
-            if (*sbuf)
-                sbuf[strlen(sbuf)-1] = 0;
-        }
-        else
-        {
-            sbuf[strlen(sbuf)+1] = 0;
-            sbuf[strlen(sbuf)] = key;
-        }
-        if (sscanf(sbuf, "%g", &newf) < 1)
-            newf = 0;
-        template_setfloat(drawnumber_motion_template,
-            f->fd_un.fd_varsym, drawnumber_motion_wp, newf, 1);
-        if (drawnumber_motion_scalar)
-            template_notifyforscalar(drawnumber_motion_template,
-                drawnumber_motion_glist, drawnumber_motion_scalar,
-                    gensym("change"), 1, &at);
-        if (drawnumber_motion_scalar)
-            scalar_redraw(drawnumber_motion_scalar, drawnumber_motion_glist);
-        if (drawnumber_motion_array)
-            array_redraw(drawnumber_motion_array, drawnumber_motion_glist);
-    }
-}
-
-static int drawnumber_click(t_gobj *z, t_glist *glist, 
-    t_word *data, t_template *template, t_scalar *sc, t_array *ap,
-    t_float basex, t_float basey,
-    int xpix, int ypix, int shift, int alt, int dbl, int doit)
-{
-    t_drawnumber *x = (t_drawnumber *)z;
-    int x1, y1, x2, y2;
-    drawnumber_getrect(z, glist,
-        data, template, basex, basey,
-        &x1, &y1, &x2, &y2);
-    if (xpix >= x1 && xpix <= x2 && ypix >= y1 && ypix <= y2
-        && x->x_value.fd_var &&
-            fielddesc_getfloat(&x->x_vis, template, data, 0))
-    {
-        if (doit)
-        {
-            drawnumber_motion_glist = glist;
-            drawnumber_motion_wp = data;
-            drawnumber_motion_template = template;
-            drawnumber_motion_scalar = sc;
-            drawnumber_motion_array = ap;
-            drawnumber_motion_firstkey = 1;
-            drawnumber_motion_ycumulative =
-                fielddesc_getfloat(&x->x_value, template, data, 0);
-            drawnumber_motion_symbol = ((x->x_flags & DRAW_SYMBOL) != 0);
-            if (drawnumber_motion_scalar)
-                gpointer_setglist(&drawnumber_motion_gpointer, 
-                    drawnumber_motion_glist, &drawnumber_motion_scalar->sc_gobj);
-            else gpointer_setarray(&drawnumber_motion_gpointer,
-                    drawnumber_motion_array, drawnumber_motion_wp);
-           glist_grab(glist, z, drawnumber_motion, drawnumber_key,
-                xpix, ypix);
-        }
-        return (1);
-    }
-    else return (0);
-}
-
-t_parentwidgetbehavior drawnumber_widgetbehavior =
-{
-    drawnumber_getrect,
-    drawnumber_displace,
-    drawnumber_select,
-    drawnumber_activate,
-    drawnumber_vis,
-    drawnumber_click,
-};
-
-static void drawnumber_free(t_drawnumber *x)
-{
-}
-
-static void drawnumber_setup(void)
-{
-    drawnumber_class = class_new(gensym("drawnumber"),
-        (t_newmethod)drawnumber_new, (t_method)drawnumber_free,
-        sizeof(t_drawnumber), 0, A_GIMME, 0);
-    class_setdrawcommand(drawnumber_class);
-    class_addfloat(drawnumber_class, drawnumber_float);
-    class_setparentwidget(drawnumber_class, &drawnumber_widgetbehavior);
-}
-
-/* ---------------------- drawsymbol -------------------------------- */
+/* ---------------- drawnumber, drawsymbol, drawtext ------------ */
 
 t_class *drawsymbol_class;
 
 typedef struct _drawsymbol
 {
     t_object x_obj;
-    t_fielddesc x_value;
+    t_symbol *x_fieldname;
     t_fielddesc x_xloc;
     t_fielddesc x_yloc;
     t_fielddesc x_color;
     t_fielddesc x_vis;
     t_fielddesc x_fontsize;
     t_symbol *x_label;
-    int x_flags;
     t_canvas *x_canvas;
+    int x_wanttype;
+    int x_typerror;
 } t_drawsymbol;
 
 static void *drawsymbol_new(t_symbol *classsym, t_int argc, t_atom *argv)
@@ -7530,15 +7036,24 @@ static void *drawsymbol_new(t_symbol *classsym, t_int argc, t_atom *argv)
         return 0;
 
     t_drawsymbol *x = (t_drawsymbol *)pd_new(drawsymbol_class);
-    char *classname = classsym->s_name;
-    int flags = 0;
-    int got_font_size = 0;
-    
-    if (classname[4] == 's')
-        flags |= DRAW_SYMBOL;
-    x->x_flags = flags;
+
+        /* cache our expected field type for when we vis. Otherwise
+           the user can display any field with any creator to cause
+           subtle widgetbehavior errors down the line. */
+    if (classsym == gensym("drawnumber")) x->x_wanttype = DT_FLOAT;
+    else if (classsym == gensym("drawsymbol")) x->x_wanttype = DT_SYMBOL;
+    else if (classsym == gensym("drawtext")) x->x_wanttype = DT_TEXT;
+    else
+    {
+        pd_error(x, "drawnumber: unknown type");
+        return (0);
+    }
+
     fielddesc_setfloat_const(&x->x_vis, 1);
     x->x_canvas = canvas_getcurrent();
+
+    int got_font_size = 0;
+    
     while (1)
     {
         t_symbol *firstarg = atom_getsymbolarg(0, argc, argv);
@@ -7549,16 +7064,18 @@ static void *drawsymbol_new(t_symbol *classsym, t_int argc, t_atom *argv)
         }
         else break;
     }
-    if (flags & DRAW_SYMBOL)
+
+        /* if the first arg exists, typecheck it. While it's allowed to have
+           no args at all we want to error out if we get the wrong type. */
+    if (argc && argv->a_type != A_SYMBOL)
     {
-        if (argc) fielddesc_setsymbolarg(&x->x_value, argc--, argv++);
-        else fielddesc_setsymbol_const(&x->x_value, &s_);
+        error("%s: first argument (field name) must be a symbol",
+            classsym->s_name);
+        return (0);
     }
-    else
-    {
-        if (argc) fielddesc_setfloatarg(&x->x_value, argc--, argv++);
-        else fielddesc_setfloat_const(&x->x_value, 0);
-    }
+
+    x->x_fieldname = atom_getsymbolarg(0, argc, argv);
+    if (argc) argc--, argv++;
     if (argc) fielddesc_setfloatarg(&x->x_xloc, argc--, argv++);
     else fielddesc_setfloat_const(&x->x_xloc, 0);
     if (argc) fielddesc_setfloatarg(&x->x_yloc, argc--, argv++);
@@ -7588,6 +7105,13 @@ static void *drawsymbol_new(t_symbol *classsym, t_int argc, t_atom *argv)
         fielddesc_setfloatarg(&x->x_fontsize, 0, NULL);
         x->x_label = &s_;
     }
+
+        /* We don't yet know whether our field exists. Since this code
+           is used for three different object names we want to give our
+           users an error in the future if they try to use the wrong object
+           for a given type of x_fieldname. For that purpose we report an
+           error when attempting to vis the text with drawsymbol_vis. */
+    x->x_typerror = 0;
 
     return (x);
 }
@@ -7610,24 +7134,12 @@ void drawsymbol_float(t_drawsymbol *x, t_floatarg f)
 }
 
 /* -------------------- widget behavior for drawsymbol ------------ */
-
-/*#define DRAWSYMBOL_BUFSIZE 80
-static void drawsymbol_sprintf(t_drawsymbol *x, char *buf, t_atom *ap)
-{
-    int nchars;
-    strncpy(buf, x->x_label->s_name, DRAWSYMBOL_BUFSIZE);
-    buf[DRAWSYMBOL_BUFSIZE - 1] = 0;
-    nchars = strlen(buf);
-    atom_string(ap, buf + nchars, DRAWSYMBOL_BUFSIZE - nchars);
-    //fprintf(stderr,"drawsymbol_sprintf %s\n", buf);
-}*/
-
 static int drawsymbol_gettype(t_drawsymbol *x, t_word *data,
     t_template *template, int *onsetp)
 {
     int type;
     t_symbol *arraytype;
-    if (template_find_field(template, /*x->x_fieldname*/ x->x_value.fd_un.fd_varsym, onsetp, &type,
+    if (template_find_field(template, x->x_fieldname, onsetp, &type,
         &arraytype) && type != DT_ARRAY)
             return (type);
     else return (-1);
@@ -7676,8 +7188,8 @@ static void drawsymbol_getrect(t_gobj *z, t_glist *glist,
 {
     t_drawsymbol *x = (t_drawsymbol *)z;
     t_atom at;
-        int xloc, yloc, font, fontwidth, fontheight;
-    char buf[DRAWSYMBOL_BUFSIZE];
+    int xloc, yloc, font, fontwidth, fontheight, width, height;
+    char buf[DRAWSYMBOL_BUFSIZE], *startline, *newline;
 
     if (!fielddesc_getfloat(&x->x_vis, template, data, 0))
     {
@@ -7698,19 +7210,26 @@ static void drawsymbol_getrect(t_gobj *z, t_glist *glist,
     if (!font) font = glist_getfont(glist);
     fontwidth = sys_fontwidth(font);
     fontheight = sys_fontheight(font);
-    if (x->x_flags & DRAW_SYMBOL)
-        SETSYMBOL(&at, fielddesc_getsymbol(&x->x_value, template, data, 0));
-    else SETFLOAT(&at, fielddesc_getfloat(&x->x_value, template, data, 0));
-    //drawsymbol_sprintf(x, buf, &at);
     drawsymbol_getbuf(x, data, template, buf);
+    width = 0;
+    height = 1;
+    for (startline = buf; (newline = strchr(startline, '\n'));
+        startline = newline + 1)
+    {
+        if (newline - startline > width)
+            width = (int)(newline - startline);
+        height++;
+    }
+    if (strlen(startline) > (unsigned)width)
+        width = (int)strlen(startline);
     *xp1 = xloc;
     *yp1 = yloc;
     // Ico 20140830: another regression from the 20140731 where getrect is not accurate
     // this, in addition to the vis call fix makes things work right again
     // namely, this fixes the getrect inconsistency, while the one in the vis
     // function fixes sizing problems
-    *xp2 = xloc + (fontwidth * strlen(buf) * xscale);
-    *yp2 = yloc + (fontheight * yscale);
+    *xp2 = xloc + (fontwidth * width * xscale);
+    *yp2 = yloc + (fontheight * height * yscale);
     //*xp2 = xloc + (fontwidth * strlen(buf));
     //*yp2 = yloc + (fontheight);
 }
@@ -7743,13 +7262,6 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
 {
     t_drawsymbol *x = (t_drawsymbol *)z;
 
-    /*// get the universal tag for all nested objects
-    t_canvas *tag = x->x_canvas;
-    while (tag->gl_owner)
-    {
-        tag = tag->gl_owner;
-    }*/
-    
         /* see comment in plot_vis() */
     //if (vis && !fielddesc_getfloat(&x->x_vis, template, data, 0))
     //    return;
@@ -7777,23 +7289,35 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         int xloc = fielddesc_getcoord(&x->x_xloc, template, data, 0);
         int yloc = fielddesc_getcoord(&x->x_yloc, template, data, 0);
 
+            /* Refuse to draw if the type expected by the object doesn't
+               match the type of the field. We ignore the case where
+               the field isn't specified so that an object with no args
+               won't spit out errors. */
+        int dummy, gottype;
+        gottype = drawsymbol_gettype(x, data, template, &dummy);
+        if (x->x_wanttype != gottype && x->x_fieldname != &s_)
+        {
+            pd_error(x, "%s: expected %s field but '%s' is a %s field",
+                atom_getsymbol(binbuf_getvec(x->x_obj.te_binbuf))->s_name,
+                (x->x_wanttype == DT_FLOAT ? "float" :
+                    (x->x_wanttype == DT_SYMBOL ? "symbol" : "text")),
+                x->x_fieldname->s_name,
+                (gottype == DT_FLOAT ? "float" :
+                    (gottype == DT_SYMBOL ? "symbol" : "text")));
+            x->x_typerror = 1;
+        }
         char colorstring[20], buf[DRAWSYMBOL_BUFSIZE];
         numbertocolor(fielddesc_getfloat(&x->x_color, template, data, 1),
             colorstring);
-        if (x->x_flags & DRAW_SYMBOL)
-            SETSYMBOL(&at, fielddesc_getsymbol(&x->x_value, template, data, 0));
-        else SETFLOAT(&at, fielddesc_getfloat(&x->x_value, template, data, 0));
-        //drawsymbol_sprintf(x, buf, &at);
         drawsymbol_getbuf(x, data, template, buf);
-
         char parent_tagbuf[MAXPDSTRING];
         sprintf(parent_tagbuf, "dgroup%lx.%lx",
             (in_array ? (long unsigned int)parentglist :
                         (long unsigned int)x->x_canvas),
             (long unsigned int)data);
         char tagbuf[MAXPDSTRING];
-        sprintf(tagbuf, "drawnumber%lx.%lx", (long unsigned int)x, (long unsigned int)data);
-
+        sprintf(tagbuf, "drawnumber%lx.%lx", (long unsigned int)x,
+            (long unsigned int)data);
         gui_vmess("gui_drawnumber_vis", "xssiiffsissii",
             glist_getcanvas(glist),
             parent_tagbuf,
@@ -7812,7 +7336,8 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     else
     {
         char tagbuf[MAXPDSTRING];
-        sprintf(tagbuf, "drawnumber%lx.%lx", (long unsigned int)x, (long unsigned int)data);
+        sprintf(tagbuf, "drawnumber%lx.%lx", (long unsigned int)x,
+            (long unsigned int)data);
         gui_vmess("gui_draw_erase_item", "xs", glist_getcanvas(glist),
             tagbuf);
     }
@@ -7825,7 +7350,7 @@ static t_array *drawsymbol_motion_array;
 static t_word *drawsymbol_motion_wp;
 static t_template *drawsymbol_motion_template;
 static t_gpointer drawsymbol_motion_gpointer;
-static int drawsymbol_motion_symbol;
+static int drawsymbol_motion_type;
 static int drawsymbol_motion_firstkey;
 
     /* LATER protect against the template changing or the scalar disappearing
@@ -7834,21 +7359,20 @@ static int drawsymbol_motion_firstkey;
 static void drawsymbol_motion(void *z, t_floatarg dx, t_floatarg dy)
 {
     t_drawsymbol *x = (t_drawsymbol *)z;
-    t_fielddesc *f = &x->x_value;
+
+    if (x->x_typerror) return;
+
     t_atom at;
     if (!gpointer_check(&drawsymbol_motion_gpointer, 0))
     {
         post("drawsymbol_motion: scalar disappeared");
         return;
     }
-    if (drawsymbol_motion_symbol)
-    {
-        post("drawsymbol_motion: symbol");
+    if (drawsymbol_motion_type != DT_FLOAT)
         return;
-    }
     drawsymbol_motion_ycumulative -= dy;
     template_setfloat(drawsymbol_motion_template,
-        f->fd_un.fd_varsym,
+        x->x_fieldname,
             drawsymbol_motion_wp, 
             drawsymbol_motion_ycumulative,
                 1);
@@ -7866,7 +7390,9 @@ static void drawsymbol_motion(void *z, t_floatarg dx, t_floatarg dy)
 static void drawsymbol_key(void *z, t_floatarg fkey)
 {
     t_drawsymbol *x = (t_drawsymbol *)z;
-    t_fielddesc *f = &x->x_value;
+
+    if (x->x_typerror) return;
+
     int key = fkey;
     char sbuf[MAXPDSTRING];
     t_atom at;
@@ -7877,34 +7403,46 @@ static void drawsymbol_key(void *z, t_floatarg fkey)
     }
     if (key == 0)
         return;
-    if (drawsymbol_motion_symbol)
+    if (drawsymbol_motion_type == DT_SYMBOL)
     {
             /* key entry for a symbol field */
         if (drawsymbol_motion_firstkey)
             sbuf[0] = 0;
         else strncpy(sbuf, template_getsymbol(drawsymbol_motion_template,
-            f->fd_un.fd_varsym, drawsymbol_motion_wp, 1)->s_name,
-                MAXPDSTRING);
-        sbuf[MAXPDSTRING-1] = 0;
+            x->x_fieldname, drawsymbol_motion_wp, 1)->s_name,
+                MAXPDSTRING - 1);
+        sbuf[MAXPDSTRING - 1] = 0;
+        drawsymbol_motion_firstkey = (key == '\n');
         if (key == '\b')
         {
             if (*sbuf)
                 sbuf[strlen(sbuf)-1] = 0;
         }
-        else
+        else if (!drawsymbol_motion_firstkey)
         {
             sbuf[strlen(sbuf)+1] = 0;
             sbuf[strlen(sbuf)] = key;
         }
+        template_setsymbol(drawsymbol_motion_template,
+            x->x_fieldname, drawsymbol_motion_wp, gensym(sbuf), 1);
+        if (drawsymbol_motion_scalar)
+            template_notifyforscalar(drawsymbol_motion_template,
+                drawsymbol_motion_glist, drawsymbol_motion_scalar,
+                    gensym("change"), 1, &at);
+        if (drawsymbol_motion_scalar)
+            scalar_redraw(drawsymbol_motion_scalar, drawsymbol_motion_glist);
+        if (drawsymbol_motion_array)
+            array_redraw(drawsymbol_motion_array, drawsymbol_motion_glist);
+
     }
-    else
+    else if (drawsymbol_motion_type == DT_FLOAT)
     {
             /* key entry for a numeric field.  This is just a stopgap. */
-        float newf;
+        double newf;
         if (drawsymbol_motion_firstkey)
             sbuf[0] = 0;
         else sprintf(sbuf, "%g", template_getfloat(drawsymbol_motion_template,
-            f->fd_un.fd_varsym, drawsymbol_motion_wp, 1));
+            x->x_fieldname, drawsymbol_motion_wp, 1));
         drawsymbol_motion_firstkey = (key == '\n');
         if (key == '\b')
         {
@@ -7916,10 +7454,10 @@ static void drawsymbol_key(void *z, t_floatarg fkey)
             sbuf[strlen(sbuf)+1] = 0;
             sbuf[strlen(sbuf)] = key;
         }
-        if (sscanf(sbuf, "%g", &newf) < 1)
+        if (sscanf(sbuf, "%lg", &newf) < 1)
             newf = 0;
         template_setfloat(drawsymbol_motion_template,
-            f->fd_un.fd_varsym, drawsymbol_motion_wp, newf, 1);
+            x->x_fieldname, drawsymbol_motion_wp, (t_float)newf, 1);
         if (drawsymbol_motion_scalar)
             template_notifyforscalar(drawsymbol_motion_template,
                 drawsymbol_motion_glist, drawsymbol_motion_scalar,
@@ -7937,14 +7475,18 @@ static int drawsymbol_click(t_gobj *z, t_glist *glist,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
     t_drawsymbol *x = (t_drawsymbol *)z;
-    int x1, y1, x2, y2;
+
+    if (x->x_typerror) return (0);
+
+    int x1, y1, x2, y2, type, onset;
     drawsymbol_getrect(z, glist,
         data, template, basex, basey,
         &x1, &y1, &x2, &y2);
-    if (xpix >= x1 && xpix <= x2 && ypix >= y1 && ypix <= y2
-        && x->x_value.fd_var &&
-            fielddesc_getfloat(&x->x_vis, template, data, 0))
+    if (xpix >= x1 && xpix <= x2 && ypix >= y1 && ypix <= y2)
     {
+        type = drawsymbol_gettype(x, data, template, &onset);
+        if (type != DT_FLOAT && type != DT_SYMBOL)
+            return 0;
         if (doit)
         {
             drawsymbol_motion_glist = glist;
@@ -7954,8 +7496,8 @@ static int drawsymbol_click(t_gobj *z, t_glist *glist,
             drawsymbol_motion_array = ap;
             drawsymbol_motion_firstkey = 1;
             drawsymbol_motion_ycumulative =
-                fielddesc_getfloat(&x->x_value, template, data, 0);
-            drawsymbol_motion_symbol = ((x->x_flags & DRAW_SYMBOL) != 0);
+                template_getfloat(template, x->x_fieldname, data, 0);
+            drawsymbol_motion_type = type;
             if (drawsymbol_motion_scalar)
                 gpointer_setglist(&drawsymbol_motion_gpointer, 
                     drawsymbol_motion_glist, &drawsymbol_motion_scalar->sc_gobj);
@@ -7985,11 +7527,15 @@ static void drawsymbol_free(t_drawsymbol *x)
 
 static void drawsymbol_setup(void)
 {
-    drawsymbol_class = class_new(gensym("drawsymbol"),
+    drawsymbol_class = class_new(gensym("drawtext"),
         (t_newmethod)drawsymbol_new, (t_method)drawsymbol_free,
         sizeof(t_drawsymbol), 0, A_GIMME, 0);
     class_setdrawcommand(drawsymbol_class);
     class_addfloat(drawsymbol_class, drawsymbol_float);
+    class_addcreator((t_newmethod)drawsymbol_new, gensym("drawsymbol"),
+        A_GIMME, 0);
+    class_addcreator((t_newmethod)drawsymbol_new, gensym("drawnumber"),
+        A_GIMME, 0);
     class_setparentwidget(drawsymbol_class, &drawsymbol_widgetbehavior);
 }
 
@@ -8354,71 +7900,7 @@ static void drawimage_motion(void *z, t_floatarg dx, t_floatarg dy)
 
 static void drawimage_key(void *z, t_floatarg fkey)
 {
-    return;
-    t_drawnumber *x = (t_drawnumber *)z;
-    t_fielddesc *f = &x->x_value;
-    int key = fkey;
-    char sbuf[MAXPDSTRING];
-    t_atom at;
-    if (!gpointer_check(&drawnumber_motion_gpointer, 0))
-    {
-        post("drawnumber_motion: scalar disappeared");
-        return;
-    }
-    if (key == 0)
-        return;
-    if (drawnumber_motion_symbol)
-    {
-            /* key entry for a symbol field */
-        if (drawnumber_motion_firstkey)
-            sbuf[0] = 0;
-        else strncpy(sbuf, template_getsymbol(drawnumber_motion_template,
-            f->fd_un.fd_varsym, drawnumber_motion_wp, 1)->s_name,
-                MAXPDSTRING);
-        sbuf[MAXPDSTRING-1] = 0;
-        if (key == '\b')
-        {
-            if (*sbuf)
-                sbuf[strlen(sbuf)-1] = 0;
-        }
-        else
-        {
-            sbuf[strlen(sbuf)+1] = 0;
-            sbuf[strlen(sbuf)] = key;
-        }
-    }
-    else
-    {
-            /* key entry for a numeric field.  This is just a stopgap. */
-        double newf;
-        if (drawnumber_motion_firstkey)
-            sbuf[0] = 0;
-        else sprintf(sbuf, "%g", template_getfloat(drawnumber_motion_template,
-            f->fd_un.fd_varsym, drawnumber_motion_wp, 1));
-        drawnumber_motion_firstkey = (key == '\n');
-        if (key == '\b')
-        {
-            if (*sbuf)
-                sbuf[strlen(sbuf)-1] = 0;
-        }
-        else
-        {
-            sbuf[strlen(sbuf)+1] = 0;
-            sbuf[strlen(sbuf)] = key;
-        }
-        if (sscanf(sbuf, "%lg", &newf) < 1)
-            newf = 0;
-        template_setfloat(drawnumber_motion_template,
-            f->fd_un.fd_varsym, drawnumber_motion_wp, (t_float)newf, 1);
-        if (drawnumber_motion_scalar)
-            template_notifyforscalar(drawnumber_motion_template,
-                drawnumber_motion_glist, drawnumber_motion_scalar,
-                    gensym("change"), 1, &at);
-        if (drawnumber_motion_scalar)
-            scalar_redraw(drawnumber_motion_scalar, drawnumber_motion_glist);
-        if (drawnumber_motion_array)
-            array_redraw(drawnumber_motion_array, drawnumber_motion_glist);
-    }
+    /* nothing to do */
 }
 
 static int drawimage_click(t_gobj *z, t_glist *glist, 
@@ -8549,8 +8031,6 @@ t_template *template_findbydrawcommand(t_gobj *g)
         c = ((t_draw *)g)->x_canvas;
     else if (g->g_pd == curve_class)
         c = ((t_curve *)g)->x_canvas;
-    else if (g->g_pd == drawnumber_class)
-        c = ((t_drawnumber *)g)->x_canvas;
     else if (g->g_pd == drawsymbol_class)
         c = ((t_drawsymbol *)g)->x_canvas;
     else if (g->g_pd == drawimage_class)
@@ -8625,8 +8105,6 @@ void svg_parentwidgettogui(t_gobj *z, t_scalar *sc, t_glist *owner,
            need a parentglist below instead of a "0" */
         curve_vis(z, owner, 0, sc, data, template, 0, 0, 0, -1);
     }
-    else if (pd_class(&z->g_pd) == drawnumber_class)
-        drawnumber_vis(z, owner, 0, sc, data, template, 0, 0, 0, -1);
     else if (pd_class(&z->g_pd) == drawsymbol_class)
         drawsymbol_vis(z, owner, 0, sc, data, template, 0, 0, 0, -1);
 }
@@ -8641,7 +8119,6 @@ void g_template_setup(void)
     draw_setup();
     event_setup();
     plot_setup();
-    drawnumber_setup();
     drawsymbol_setup();
     drawimage_setup();
     drawarray_setup();

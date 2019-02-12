@@ -1,0 +1,21 @@
+#N struct drawtext-selector-test float x float y text a;
+#N canvas 3 60 620 461 12;
+#X obj 183 18 struct drawtext-selector-test float x float y text a
+;
+#X obj 392 182 drawnumber a;
+#N canvas 143 190 450 300 \$0-test 0;
+#X scalar drawtext-selector-test 80 59 \; \;;
+#X restore 251 339 pd \$0-test;
+#X obj 157 214 send pd-\$0-test;
+#X text 322 214 drawnumber can't display a text field;
+#X msg 157 179 vis 1;
+#X obj 41 48 bng 39 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 41 143 trigger bang bang;
+#X text 155 52 drawtext/drawsymbol/drawtext should report an error
+when the field type doesn't match the required type. After pressing
+the button to open the subpatch you should see the error reported to
+the console.;
+#X connect 5 0 3 0;
+#X connect 6 0 7 0;
+#X connect 7 1 5 0;

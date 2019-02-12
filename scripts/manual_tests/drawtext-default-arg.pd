@@ -1,0 +1,21 @@
+#N struct drawtext-default-arg-test float x float y text a;
+#N canvas 6 89 620 461 12;
+#N canvas 363 260 450 323 \$0-test 0;
+#X scalar drawtext-default-arg-test 89 55 \; \;;
+#X restore 251 339 pd \$0-test;
+#X obj 157 214 send pd-\$0-test;
+#X msg 157 179 vis 1;
+#X obj 41 48 bng 39 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 41 143 trigger bang bang;
+#X obj 183 18 struct drawtext-default-arg-test float x float y text
+a;
+#X obj 282 214 drawnumber;
+#X text 212 246 drawnumber with no args shouldn't report a type-checking
+error;
+#X text 155 52 drawtext/drawsymbol/drawtext with no args should just
+silently fail to display anything. When clicking the bng to display
+the subject should not generate any errors.;
+#X connect 2 0 1 0;
+#X connect 3 0 4 0;
+#X connect 4 1 2 0;
