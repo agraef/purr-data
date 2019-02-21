@@ -5401,9 +5401,11 @@ function gui_midi_properties(gfxstub, sys_indevs, sys_outdevs,
     }
 }
 
-function gui_gui_properties(dummy, name, save_zoom, browser_doc, browser_path, browser_init) {
+function gui_gui_properties(dummy, name, save_zoom, browser_doc, browser_path,
+    browser_init, autopatch_yoffset) {
     if (dialogwin["prefs"] !== null) {
-        dialogwin["prefs"].window.gui_prefs_callback(name, save_zoom, browser_doc, browser_path, browser_init);
+        dialogwin["prefs"].window.gui_prefs_callback(name, save_zoom,
+            browser_doc, browser_path, browser_init, autopatch_yoffset);
     }
 }
 
