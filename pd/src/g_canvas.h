@@ -180,7 +180,7 @@ struct _glist
     struct _glist *gl_owner;    /* parent glist, supercanvas, or 0 if none */
     int gl_pixwidth;            /* width in pixels (on parent, if a graph) */
     int gl_pixheight;
-    t_float gl_x1;                /* bounding rectangle in our own coordinates */
+    t_float gl_x1;              /* bounding rectangle in our own coordinates */
     t_float gl_y1;
     t_float gl_x2;
     t_float gl_y2;
