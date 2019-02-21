@@ -385,6 +385,17 @@
               <input type="checkbox" id="save_zoom" name="save_zoom">
               <span data-i18n="prefs.gui.zoom.save_zoom"></span>
             </label>
+            <br/>
+            <label data-i18n="[title]prefs.gui.autopatch_yoffset_checkbox_tt">
+              <input type="checkbox" id="autopatch_yoffset"
+                     name="autopatch_yoffset"
+                     onchange="autopatch_yoffset_toggle(this.checked);">
+            <span data-i18n="prefs.gui.autopatch_yoffset"></span></span>:
+            </label>
+            <input type="text"
+                   id="autopatch_yoffset_value"
+                   name="autopatch_yoffset_value"
+                   data-i18n="[title]prefs.gui.autopatch_yoffset_tt">
             <br/><br/>
             <span data-i18n="prefs.gui.browser.browser_title"></span>
             <br/>
@@ -498,6 +509,14 @@ function get_gui_preset() {
 
 function get_bool_elem(elem) {
     return +document.getElementById(elem).checked;
+}
+
+function get_autopatch_yoffset() {
+    if (get_bool_elem("autopatch_yoffset")) {
+        return document.getElementById("autopatch_yoffset_value").value;
+    } else {
+        return "0";
+    }
 }
 
 // startup config data
@@ -721,7 +740,14 @@ function apply(save_prefs) {
     // Send the gui prefs (currently just the name of the gui preset, the
     // status of the save-zoom toggle and various options related to the help
     // browser) to Pd
-    pdgui.pdsend("pd gui-prefs", get_gui_preset(), get_bool_elem("save_zoom"), get_bool_elem("browser_doc"), get_bool_elem("browser_path"), get_bool_elem("browser_init"));
+    pdgui.pdsend("pd gui-prefs",
+        get_gui_preset(),
+        get_bool_elem("save_zoom"),
+        get_bool_elem("browser_doc"),
+        get_bool_elem("browser_path"),
+        get_bool_elem("browser_init"),
+        get_autopatch_yoffset()
+    );
 
     // Send the startup config data to Pd
     pdgui.pdsend.apply(null, ["pd path-dialog", startup_use_stdpath, startup_verbose].concat(get_path_array()));
@@ -960,7 +986,13 @@ function midi_prefs_callback(attrs) {
     pdgui.resize_window(pd_object_callback);
 }
 
-function gui_prefs_callback(name, save_zoom, browser_doc, browser_path, browser_init) {
+function autopatch_yoffset_toggle(checked) {
+    document.getElementById("autopatch_yoffset_value").disabled = !checked;
+    document.getElementById("autopatch_yoffset").checked = checked;
+}
+
+function gui_prefs_callback(name, save_zoom, browser_doc, browser_path,
+    browser_init, autopatch_yoffset) {
     var s = document.getElementById("gui_preset"),
         i;
     for (i = 0; i < s.options.length; i++) {
@@ -973,6 +1005,14 @@ function gui_prefs_callback(name, save_zoom, browser_doc, browser_path, browser_
     document.getElementById("browser_doc").checked = !!browser_doc;
     document.getElementById("browser_path").checked = !!browser_path;
     document.getElementById("browser_init").checked = !!browser_init;
+
+    if (+autopatch_yoffset !== 0) {
+        document.getElementById("autopatch_yoffset_value").value =
+            autopatch_yoffset;
+        autopatch_yoffset_toggle(true);
+    } else {
+        autopatch_yoffset_toggle(false);
+    }
 }
 
 // startup settings

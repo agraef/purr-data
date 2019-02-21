@@ -262,6 +262,28 @@ static void canvas_objtext(t_glist *gl, int xpix, int ypix,
     }
 }
 
+
+extern int sys_autopatch_yoffset;
+static int get_autopatch_yoffset(t_canvas *x)
+{
+    if (sys_autopatch_yoffset)
+        return sys_autopatch_yoffset;
+    else
+    {
+        int fontsize = glist_getfont(x);
+        switch (fontsize)
+        {
+        case 8: return 8;
+        case 10: return 8;
+        case 12: return 9;
+        case 16: return 10;
+        case 24: return 13;
+        case 36: return 18;
+        }
+        return 10;
+    }
+}
+
 extern int sys_noautopatch;
 extern t_gobj *glist_nth(t_glist *x, int n);
 extern int glist_getindex(t_glist *x, t_gobj *y);
@@ -302,7 +324,7 @@ void canvas_howputnew(t_canvas *x, int *connectp, int *xpixp, int *ypixp,
                 gobj_getrect(g, x, &x1, &y1, &x2, &y2);
                 indx = nobj;
                 *xpixp = x1;
-                *ypixp = y2 + 5;
+                *ypixp = y2 + get_autopatch_yoffset(x);
             }
         }
         glist_noselect(x);
@@ -358,7 +380,7 @@ void canvas_obj(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
         post("unable to create stub object in closed canvas!");
     else
     {
-            /* interactively create new obect */
+            /* interactively create new object */
         t_binbuf *b = binbuf_new();
         int connectme, xpix, ypix, indx, nobj;
         canvas_howputnew(gl, &connectme, &xpix, &ypix, &indx, &nobj);

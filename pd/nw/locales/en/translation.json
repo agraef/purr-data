@@ -390,6 +390,9 @@
       "del_tt": "Delete the selected item"
     },
     "gui": {
+      "autopatch_yoffset_tt": "specify a distance in pixels from the bottom of the object to which the new object will be connected",
+      "autopatch_yoffset": "custom autopatching y-offset",
+      "autopatch_yoffset_checkbox_tt": "check to enable a custom autopatching y-offset",
       "presets": {
         "gui_preset": "GUI preset",
         "gui_preset_tt": "Collection of patch colors and styles",
