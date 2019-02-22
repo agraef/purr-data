@@ -310,11 +310,14 @@ void canvas_howputnew(t_canvas *x, int *connectp, int *xpixp, int *ypixp,
     {
         t_gobj *g, *selected = x->gl_editor->e_selection->sel_what;
         t_text *t = (t_text *)selected;
-        // if selected object has not yet been activated we need to recreate it first
+        // if selected object has not yet been activated we need to
+        // recreate it first
         if (pd_class(&t->te_pd) == text_class && t->te_type != T_TEXT)
         {
-            glist_noselect(x); // we do this to explicitly activate object
-            glist_select(x, glist_nth(x, glist_getindex(x, 0)-1)); // then reselect it
+            // we do this to explicitly activate object...
+            glist_noselect(x);
+            // then reselect it
+            glist_select(x, glist_nth(x, glist_getindex(x, 0)-1));
             selected = x->gl_editor->e_selection->sel_what;
         }
         for (g = x->gl_list, nobj = 0; g; g = g->g_next, nobj++)
