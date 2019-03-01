@@ -263,7 +263,7 @@ that case, but I haven't tested doing it like that. Sorry. Get a better OS...)
 
         ./tar_em_up.sh -Z
 
-8. Look in purr-data/packages/win32_inno/Output and click the setup file to
+8. Look in the top level directory of the Git repository and click the setup file to
    start installing Purr Data to your machine.
 
 ### Code of Conduct
