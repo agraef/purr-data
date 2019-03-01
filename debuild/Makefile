@@ -103,9 +103,9 @@ $(debsrc):
 	git -C .. archive --format=tar.gz --prefix=$(debdist)/ HEAD | tar xfz -
 # Grab the submodules.
 	for x in $(submodules); do (cd $(debdist) && rm -rf $$x && git -C ../../$$x archive --format=tar.gz --prefix=$$x/ HEAD | tar xfz -); done
-# Pre-generate and put s_stuff.h into the tarball (see above; the build
+# Pre-generate and put s_version.h into the tarball (see above; the build
 # version is generated using git which can't be done outside the git repo).
-	sed 's|^\(#define PD_BUILD_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' ../pd/src/s_stuff.h.in > $(debdist)/pd/src/s_stuff.h
+	sed 's|^\(#define PD_BUILD_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' ../pd/src/s_version.h.in > $(debdist)/pd/src/s_version.h
 # Create the source tarball.
 	tar cfz $(debsrc) $(debdist)
 	rm -rf $(debdist)

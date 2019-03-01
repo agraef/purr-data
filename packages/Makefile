@@ -374,16 +374,16 @@ doc_format:
 
 # AG: The set_version target is broken since it modifies m_pd.h in-place
 # during the build, which is a bad thing to do to files which are supposed to
-# be kept in a source code repository. Instead, we create s_stuff.h from
-# s_stuff.h.in, where the latter is kept in the repo and the former gets
+# be kept in a source code repository. Instead, we create s_version.h from
+# s_version.h.in, where the latter is kept in the repo and the former gets
 # created from the latter by substituting PD_BUILD_VERSION. NOTE: This may
 # fail if we're building in a static tarball snapshop of the repo, in which
-# case we assume that a pre-generated s_stuff.h is supplied.
+# case we assume that a pre-generated s_version.h is supplied.
 
-git_version: $(pd_src)/src/s_stuff.h.in
+git_version: $(pd_src)/src/s_version.h.in
 	@test -d $(cvs_root_dir)/.git && cd $(pd_src)/src/ && \
-	sed 's|^\(#define PD_BUILD_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' s_stuff.h.in > s_stuff.h.new && \
-	(test -f s_stuff.h && diff -q s_stuff.h s_stuff.h.new > /dev/null && rm -f s_stuff.h.new && echo s_stuff.h unchanged || (rm -f s_stuff.h && mv s_stuff.h.new s_stuff.h)) || test -f $(pd_src)/src/s_stuff.h
+	sed 's|^\(#define PD_BUILD_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' s_version.h.in > s_version.h.new && \
+	(test -f s_version.h && diff -q s_version.h s_version.h.new > /dev/null && rm -f s_version.h.new && echo s_version.h unchanged || (rm -f s_version.h && mv s_version.h.new s_version.h)) || test -f $(pd_src)/src/s_version.h
 
 set_version:
 # change Pd's version number to reflect the extended build
