@@ -106,7 +106,7 @@ PMOBJ =  $(PMSRC:.c=.o)
 
 GSRC =
 
-HEADERS = g_all_guis.h m_imp.h g_canvas.h g_magicglass.h m_pd.h s_stuff.h \
+HEADERS = g_all_guis.h m_imp.h g_canvas.h g_magicglass.h m_pd.h s_stuff.h s_version.h \
 	g_undo.h x_preset.h s_utf8.h \
 	$(wildcard ../portaudio/common/*.h) s_audio_paring.h
 
@@ -165,7 +165,7 @@ all: config.h $(PDDLL) $(PDEXEC) pdsend.exe pdreceive.exe pd.com externs
 config.h: config.h.in
 	cp config.h.in config.h
 
-s_stuff.h: s_stuff.h.in
+s_version.h: s_version.h.in
 	sed 's|^\(#define PD_BUILD_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' $< > $@
 
 $(OBJ) : %.o : %.c
@@ -280,6 +280,7 @@ install:  all
 	install -p m_imp.h $(DESTDIR)$(includedir)/pdl2ork/m_imp.h
 	install -p g_canvas.h $(DESTDIR)$(includedir)/pdl2ork/g_canvas.h
 	install -p s_stuff.h $(DESTDIR)$(includedir)/pdl2ork/s_stuff.h
+	install -p s_version.h $(DESTDIR)$(includedir)/pdl2ork/s_version.h
 	install -p g_all_guis.h $(DESTDIR)$(includedir)/pdl2ork/g_all_guis.h
 # since Pd-vanilla on Mac OS X doesn't have an 'include/pd' folder,
 # Pd-extended will mimic Pd-vanilla's include/pd until Pd-vanilla gets one
@@ -300,6 +301,7 @@ install:  all
 	install -d $(DESTDIR)$(includedir)
 	install -p m_pd.h $(DESTDIR)$(includedir)/m_pd.h
 	install -p s_stuff.h $(DESTDIR)$(includedir)/s_stuff.h
+	install -p s_version.h $(DESTDIR)$(includedir)/s_version.h
 	@echo "Pd install succeeded."
 
 
@@ -312,7 +314,7 @@ clean:
 	-rm -f makefile.dependencies
 
 distclean: clean
-	rm -rf -- s_stuff.h config.cache config.log config.status makefile tags \
+	rm -rf -- s_version.h config.cache config.log config.status makefile tags \
 	     autom4te-*.cache
 
 tags: $(SRC) $(GSRC); ctags *.[ch]

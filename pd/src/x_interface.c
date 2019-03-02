@@ -8,6 +8,7 @@
 #include "m_imp.h"
 #include "g_canvas.h"
 #include "s_stuff.h"
+#include "s_version.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>

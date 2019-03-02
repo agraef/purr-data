@@ -10,6 +10,7 @@
 
 #include "m_pd.h"
 #include "s_stuff.h"
+#include "s_version.h"
 #include "g_canvas.h"
 
 #include <stdio.h>

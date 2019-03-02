@@ -203,6 +203,7 @@ install: all
 	install -m644 m_imp.h $(DESTDIR)$(includedir)/pd-l2ork/m_imp.h
 	install -m644 g_canvas.h $(DESTDIR)$(includedir)/pd-l2ork/g_canvas.h
 	install -m644 s_stuff.h $(DESTDIR)$(includedir)/pd-l2ork/s_stuff.h
+	install -m644 s_version.h $(DESTDIR)$(includedir)/pd-l2ork/s_version.h
 	install -m644 g_all_guis.h $(DESTDIR)$(includedir)/pd-l2ork/g_all_guis.h
 	install -d $(DESTDIR)$(mandir)/man1
 	gzip < ../man/pd.1 >  $(DESTDIR)$(mandir)/man1/@PDEXEC@.1.gz
@@ -230,7 +231,7 @@ extra-clean:
 clean: extra-clean local-clean
 
 distclean: clean
-	-rm -f s_stuff.h config.cache config.log config.status makefile tags \
+	-rm -f s_version.h config.cache config.log config.status makefile tags \
 		autom4te.cache/output.* autom4te.cache/traces.* autom4te.cache/requests
 	-rm -rf autom4te*.cache
 
@@ -238,10 +239,10 @@ tags: $(SRC); ctags *.[ch]
 
 depend: makefile.dependencies
 
-makefile.dependencies: makefile s_stuff.h
+makefile.dependencies: makefile s_version.h
 	$(CC) $(CPPFLAGS) -M $(SRC) > makefile.dependencies
 
-s_stuff.h: s_stuff.h.in
+s_version.h: s_version.h.in
 	sed 's|^\(#define PD_BUILD_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' $< > $@
 
 uninstall:
