@@ -99,7 +99,7 @@ Packages for Gnu/Linux, Windows, and OSX:
  
 ### Build Guide
 
-**NOTE:** The instructions below talk about running the `tar_em_up.sh` build
+**NOTE:** The instructions for Windows and OSX below talk about running the `tar_em_up.sh` build
 script, which is still the recommended way to build Purr Data right now.
 However, Purr Data also has a new (and experimental) toplevel Makefile so that
 just typing `make` will build the package. You may find this easier. The
