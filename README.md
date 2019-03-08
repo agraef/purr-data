@@ -300,6 +300,9 @@ Contributing is easy:
    in the Gitlab UI so we can merge the fix for the next release.
 
 A few guidelines:
+* There should be a short and clear commit message for each merge request.
+* Short and clear title and description are required for each merge request.
+* There should be a short branch name related to the issue, like "update-readme".
 * _No prototypes, please_. Purr Data's biggest strength is that users can
   turn an idea into working code very quickly. But a prototyping language that 
   is itself a prototype isn't very useful. That means Purr Data's core code
