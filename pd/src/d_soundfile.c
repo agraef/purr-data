@@ -864,7 +864,7 @@ static int create_soundfile(t_canvas *canvas, const char *filename,
 
     canvas_makefilename(canvas, filenamebuf, buf2, FILENAME_MAX);
     sys_bashfilename(buf2, buf2);
-    if ((fd = open(buf2, BINCREATE, 0666)) < 0)
+    if ((fd = sys_open(buf2, BINCREATE, 0666)) < 0)
         return (-1);
 
     if (write(fd, headerbuf, headersize) < headersize)
