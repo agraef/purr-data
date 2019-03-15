@@ -640,6 +640,7 @@ function nw_create_pd_window_menus(gui, w) {
         minit(m.put.number, { enabled: false });
         minit(m.put.symbol, { enabled: false });
         minit(m.put.comment, { enabled: false });
+        minit(m.put.dropdown, { enabled: false });
         minit(m.put.bang, { enabled: false });
         minit(m.put.toggle, { enabled: false });
         minit(m.put.number2, { enabled: false });
