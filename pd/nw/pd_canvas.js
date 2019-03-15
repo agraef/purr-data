@@ -157,7 +157,7 @@ var canvas_events = (function() {
                 two = text.charAt(1);
             return (one === "#" && (two === "N" || two === "X"));
         },
-        grow_svg_for_element= function(elem) {
+        grow_svg_for_element = function(elem) {
             // See if an element overflows the svg bbox, and
             // enlarge the svg to accommodate it.
             // Note: window.scrollX and window.scrollY might not work
@@ -817,6 +817,59 @@ var canvas_events = (function() {
         close_save_dialog: function() {
             document.getElementById("save_before_quit").close();
         },
+        paste_from_pd_file: function(name, clipboard_data) {
+            var line, lines, i, pd_message;
+            // This lets the user copy some Pd source file from another
+            // application and paste the code directly into a canvas window
+            // (empty or otherwise). It does a quick check to make sure the OS
+            // clipboard is holding text that could conceivably be Pd source
+            // code. But that's not 100% foolproof and the engine might crash
+            // and burn, so be careful! :)
+
+            // We only want to check the external buffer and/or send a "paste"
+            // event to Pd if the canvas is in a "normal" state.
+            if (canvas_events.get_state() !== "normal") {
+                return;
+            }
+            if (!might_be_a_pd_file(clipboard_data)) {
+                pdgui.post("paste error: clipboard doesn't appear to contain valid Pd code");
+                return;
+            }
+
+            // clear the buffer
+            pdgui.pdsend(name, "copyfromexternalbuffer");
+            pd_message = "";
+            lines = clipboard_data.split("\n");
+            for (i = 0; i < lines.length; i++) {
+                line = lines[i];
+                // process pd_message if it ends with a semicolon that
+                // isn't preceded by a backslash
+                if (line.slice(-1) === ";" &&
+                    (line.length < 2 || line.slice(-2, -1) !== "\\")) {
+                    if (pd_message === "") {
+                        pd_message = line;
+                    } else {
+                        pd_message = pd_message + " " + line;
+                    }
+                    pdgui.pdsend(name, "copyfromexternalbuffer", pd_message);
+                    pd_message = "";
+                } else {
+                    pd_message = pd_message + " " + line;
+                    pd_message = pd_message.replace(/\n/g, "");
+                }
+            }
+            // This signals to the engine that we're done filling the external
+            // buffer, that it can do necessary checks and call some internal
+            // cleanup code.
+
+            pdgui.pdsend(name, "copyfromexternalbuffer");
+            // Send a canvas "paste" message to Pd
+            pdgui.pdsend(name, "paste");
+            // Finally, make sure to reset the buffer so that next time around
+            // we start from a clean slate. (Otherwise, the engine will just
+            // add stuff to the existing buffer contents.)
+            pdgui.pdsend(name, "reset_copyfromexternalbuffer");
+        },
         init: function() {
             document.getElementById("saveDialog")
                 .setAttribute("nwworkingdir", pdgui.get_pwd());
@@ -1149,60 +1202,6 @@ function instantiate_live_box() {
     }
 }
 
-function canvas_paste_from_clipboard(name, clipboard_data)
-{
-    var line, lines, i, pd_message;
-
-    // This lets the user copy some Pd source file from another application
-    // and paste the code directly into a canvas window (empty or otherwise).
-    // It does a quick check to make sure the OS clipboard is holding text
-    // that could conceivably be Pd source code. But that's not 100% foolproof
-    // and if it's not then the engine might crash and burn, so be careful! :)
-
-    // We only want to check the external buffer and/or send a "paste" event
-    // to Pd if the canvas is in a "normal" state.
-    if (canvas_events.get_state() !== "normal") {
-        return;
-    }
-
-    if (!might_be_a_pd_file(clipboard_data)) {
-	pdgui.post("paste error: clipboard doesn't appear to contain valid Pd code");
-        return;
-    }
-
-    // clear the buffer
-    pdgui.pdsend(name, "copyfromexternalbuffer");
-    pd_message = "";
-    lines = clipboard_data.split("\n");
-    for (i = 0; i < lines.length; i++) {
-        line = lines[i];
-        // process pd_message if it ends with a semicolon that
-        // isn't preceded by a backslash
-        if (line.slice(-1) === ";" &&
-            (line.length < 2 || line.slice(-2, -1) !== "\\")) {
-            if (pd_message === "") {
-                pd_message = line;
-            } else {
-                pd_message = pd_message + " " + line;
-            }
-            pdgui.pdsend(name, "copyfromexternalbuffer", pd_message);
-            pd_message = "";
-        } else {
-            pd_message = pd_message + " " + line;
-            pd_message = pd_message.replace(/\n/g, "");
-        }
-    }
-    // This signals to the engine that we're done filling the external buffer,
-    // that it can do necessary checks and call some internal cleanup code.
-    pdgui.pdsend(name, "copyfromexternalbuffer");
-    // Send a canvas "paste" message to Pd
-    pdgui.pdsend(name, "paste");
-    // Finally, make sure to reset the buffer so that next time around we
-    // start from a clean slate. (Otherwise, the engine will just add stuff to
-    // the existing buffer contents.)
-    pdgui.pdsend(name, "reset_copyfromexternalbuffer");
-}
-
 // Menus for the Patch window
 
 var canvas_menu = {};
@@ -1362,7 +1361,7 @@ function nw_create_patch_window_menus(gui, w, name) {
 	    var clipboard = nw.Clipboard.get();
 	    var text = clipboard.get('text');
 	    //pdgui.post("** paste from clipboard: "+text);
-	    canvas_paste_from_clipboard(name, text);
+	    canvas_events.paste_from_pd_file(name, text);
 	}
     });
     minit(m.edit.duplicate, {

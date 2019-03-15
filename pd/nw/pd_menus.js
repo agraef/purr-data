@@ -4,6 +4,7 @@ var pdgui = require("./pdgui.js");
 var l = pdgui.get_local_string; // For menu names
 var osx_menu = null; // OSX App menu -- a single one per running instance
 var recent_files_submenu = null;
+var shortcuts = require("./pd_shortcuts.js");
 
 function create_menu(gui, type) {
     // On OSX we create a menu only once, and then enable/disable menuitems
@@ -16,7 +17,6 @@ function create_menu(gui, type) {
     // won't let you update the keyboard shortcut binding later.)
     var m = {},
         osx = process.platform === "darwin",
-        cmd_or_ctrl = osx ? "cmd" : "ctrl", // for keybindings
         canvas_menu, // menu for canvas = true,  menu for Pd console = false
         window_menu, // window menu bar, or-- for OSX-- app menu bar
         file_menu, // submenus for window menubar...
@@ -64,14 +64,14 @@ function create_menu(gui, type) {
     m.file = {};
     file_menu.append(m.file.new_file = new gui.MenuItem({
         label: l("menu.new"),
-        key: "n",
-        modifiers: cmd_or_ctrl,
+        key: shortcuts.menu.new.key,
+        modifiers: shortcuts.menu.new.modifiers,
         tooltip: l("menu.new_tt")
     }));
     file_menu.append(m.file.open = new gui.MenuItem({
         label: l("menu.open"),
-        key: "o",
-        modifiers: cmd_or_ctrl,
+        key: shortcuts.menu.open.key,
+        modifiers: shortcuts.menu.open.modifiers,
         tooltip: l("menu.open_tt")
     }));
     file_menu.append(m.file.recent_files = new gui.MenuItem({
@@ -89,20 +89,20 @@ function create_menu(gui, type) {
     if (canvas_menu) {
         file_menu.append(m.file.save = new gui.MenuItem({
             label: l("menu.save"),
-            key: "s",
-            modifiers: cmd_or_ctrl,
+            key: shortcuts.menu.save.key,
+            modifiers: shortcuts.menu.save.modifiers,
             tooltip: l("menu.save_tt")
         }));
         file_menu.append(m.file.saveas = new gui.MenuItem({
             label: l("menu.saveas"),
-            key: "s",
-            modifiers: cmd_or_ctrl + "+shift",
+            key: shortcuts.menu.saveas.key,
+            modifiers: shortcuts.menu.saveas.modifiers,
             tooltip: l("menu.saveas_tt")
         }));
         file_menu.append(m.file.print = new gui.MenuItem({
             label: l("menu.print"),
-            key: "p",
-            modifiers: cmd_or_ctrl + "+shift",
+            key: shortcuts.menu.print.key,
+            modifiers: shortcuts.menu.print.modifiers,
             tooltip: l("menu.print_tt")
         }));
     }
@@ -111,8 +111,8 @@ function create_menu(gui, type) {
     }
     file_menu.append(m.file.message = new gui.MenuItem({
         label: l("menu.message"),
-        key: "m",
-        modifiers: cmd_or_ctrl,
+        key: shortcuts.menu.message.key,
+        modifiers: shortcuts.menu.message.modifiers,
         tooltip: l("menu.message_tt")
     }));
     if (pdgui.k12_mode == 0) {
@@ -121,15 +121,15 @@ function create_menu(gui, type) {
     if (canvas_menu) {
         file_menu.append(m.file.close = new gui.MenuItem({
             label: l("menu.close"),
-            key: "w",
-            modifiers: cmd_or_ctrl,
+            key: shortcuts.menu.close.key,
+            modifiers: shortcuts.menu.close.modifiers,
             tooltip: l("menu.close_tt")
         }));
     }
     file_menu.append(m.file.quit = new gui.MenuItem({
         label: l("menu.quit"),
-        key: "q",
-        modifiers: cmd_or_ctrl
+        key: shortcuts.menu.quit.key,
+        modifiers: shortcuts.menu.quit.modifiers 
     }));
 
     // Edit menu
@@ -150,8 +150,8 @@ function create_menu(gui, type) {
         edit_menu.insert(m.edit.undo = new gui.MenuItem({
             label: l("menu.undo"),
             tooltip: l("menu.undo_tt"),
-            key: "z",
-            modifiers: cmd_or_ctrl
+            key: shortcuts.menu.undo.key,
+            modifiers: shortcuts.menu.undo.modifiers
         }), 0);
 
         m.edit.redo = window_menu.items[1].submenu.items[1];
@@ -163,8 +163,8 @@ function create_menu(gui, type) {
         edit_menu.insert(m.edit.redo = new gui.MenuItem({
             label: l("menu.redo"),
             tooltip: l("menu.redo_tt"),
-            key: "z",
-            modifiers: "shift+" + cmd_or_ctrl
+            key: shortcuts.menu.redo.key,
+            modifiers: shortcuts.menu.redo.modifiers
         }), 1);
 
         // Note: window_menu.items[1].submenu.items[2] is the separator
@@ -183,8 +183,8 @@ function create_menu(gui, type) {
         edit_menu.append(m.edit.selectall = new gui.MenuItem({
             label: l("menu.selectall"),
             tooltip: l("menu.selectall_tt"),
-            key: "a",
-            modifiers: cmd_or_ctrl
+            key: shortcuts.menu.selectall.key,
+            modifiers: shortcuts.menu.selectall.modifiers
         }));
         // Finally, let's remove the "Delete" item since it's not hooked
         // in to anything yet...
@@ -196,34 +196,34 @@ function create_menu(gui, type) {
             edit_menu.append(m.edit.undo = new gui.MenuItem({
                 label: l("menu.undo"),
                 tooltip: l("menu.undo_tt"),
-                key: "z",
-                modifiers: cmd_or_ctrl
+                key: shortcuts.menu.undo.key,
+                modifiers: shortcuts.menu.undo.modifiers
             }));
             edit_menu.append(m.edit.redo = new gui.MenuItem({
                 label: l("menu.redo"),
                 tooltip: l("menu.redo_tt"),
-                key: "z",
-                modifiers: "shift+" + cmd_or_ctrl
+                key: shortcuts.menu.redo.key,
+                modifiers: shortcuts.menu.redo.modifiers
             }));
             edit_menu.append(new gui.MenuItem({ type: "separator" }));
             edit_menu.append(m.edit.cut = new gui.MenuItem({
                 label: l("menu.cut"),
-                key: "x",
-                modifiers: cmd_or_ctrl,
+                key: shortcuts.menu.cut.key,
+                modifiers: shortcuts.menu.cut.modifiers,
                 tooltip: l("menu.cut_tt")
             }));
         }
         edit_menu.append(m.edit.copy = new gui.MenuItem({
             label: l("menu.copy"),
-            key: "c",
-            modifiers: cmd_or_ctrl,
+            key: shortcuts.menu.copy.key,
+            modifiers: shortcuts.menu.copy.modifiers,
             tooltip: l("menu.copy_tt")
         }));
         if (canvas_menu) {
             edit_menu.append(m.edit.paste = new gui.MenuItem({
                 label: l("menu.paste"),
-                key: "v",
-                modifiers: cmd_or_ctrl,
+                key: shortcuts.menu.paste.key,
+                modifiers: shortcuts.menu.paste.modifiers,
                 tooltip: l("menu.paste_tt")
             }));
         }
@@ -235,14 +235,14 @@ function create_menu(gui, type) {
     if (canvas_menu) {
         edit_menu.append(m.edit.paste_clipboard = new gui.MenuItem({
             label: l("menu.paste_clipboard"),
-            key: "v",
-            modifiers: cmd_or_ctrl + "+alt",
+            key: shortcuts.menu.paste_clipboard.key,
+            modifiers: shortcuts.menu.paste_clipboard.modifiers,
             tooltip: l("menu.paste_clipboard_tt")
         }));
         edit_menu.append(m.edit.duplicate = new gui.MenuItem({
             label: l("menu.duplicate"),
-            key: "d",
-            modifiers: cmd_or_ctrl,
+            key: shortcuts.menu.duplicate.key,
+            modifiers: shortcuts.menu.duplicate.modifiers,
             tooltip: l("menu.duplicate_tt")
         }));
     }
@@ -251,8 +251,8 @@ function create_menu(gui, type) {
     if (!osx) {
         edit_menu.append(m.edit.selectall = new gui.MenuItem({
             label: l("menu.selectall"),
-            key: "a",
-            modifiers: cmd_or_ctrl,
+            key: shortcuts.menu.selectall.key,
+            modifiers: shortcuts.menu.selectall.modifiers,
             tooltip: l("menu.selectall_tt")
         }));
     }
@@ -264,8 +264,8 @@ function create_menu(gui, type) {
         // tried fromCharCode...)
         edit_menu.append(m.edit.reselect = new gui.MenuItem({
             label: l("menu.reselect"),
-            key: String.fromCharCode(10),
-            modifiers: cmd_or_ctrl,
+            key: shortcuts.menu.reselect.key,
+            modifiers: shortcuts.menu.reselect.modifiers,
             tooltip: l("menu.reselect_tt")
         }));
     }
@@ -273,15 +273,15 @@ function create_menu(gui, type) {
     edit_menu.append(m.edit.clear_console = new gui.MenuItem({
         label: l("menu.clear_console"),
         tooltip: l("menu.clear_console"),
-        key: "l",
-        modifiers: "shift+" + cmd_or_ctrl
+        key: shortcuts.menu.clear_console.key,
+        modifiers: shortcuts.menu.clear_console.modifiers
     }));
         edit_menu.append(new gui.MenuItem({ type: "separator" }));
     if (canvas_menu) {
         edit_menu.append(m.edit.tidyup = new gui.MenuItem({
             label: l("menu.tidyup"),
-            key: "y",
-            modifiers: cmd_or_ctrl,
+            key: shortcuts.menu.tidyup.key,
+            modifiers: shortcuts.menu.tidyup.modifiers,
             tooltip: l("menu.tidyup_tt")
         }));
         edit_menu.append(m.edit.font = new gui.MenuItem({
@@ -291,23 +291,23 @@ function create_menu(gui, type) {
         edit_menu.append(m.edit.cordinspector = new gui.MenuItem({
             type: "checkbox",
             label: l("menu.cordinspector"),
-            key: "r",
-            modifiers: cmd_or_ctrl + "+shift",
+            key: shortcuts.menu.cordinspector.key,
+            modifiers: shortcuts.menu.cordinspector.modifiers,
             tooltip: l("menu.cordinspector_tt")
         }));
         edit_menu.append(new gui.MenuItem({ type: "separator" }));
     }
     edit_menu.append(m.edit.find = new gui.MenuItem({
         label: l("menu.find"),
-        key: "f",
-        modifiers: cmd_or_ctrl,
+        key: shortcuts.menu.find.key,
+        modifiers: shortcuts.menu.find.modifiers,
         tooltip: l("menu.find_tt")
     }));
     if (canvas_menu) {
         edit_menu.append(m.edit.findagain = new gui.MenuItem({
             label: l("menu.findagain"),
-            key: "g",
-            modifiers: cmd_or_ctrl,
+            key: shortcuts.menu.findagain.key,
+            modifiers: shortcuts.menu.findagain.modifiers,
             tooltip: l("menu.findagain")
         }));
         edit_menu.append(m.edit.finderror = new gui.MenuItem({
@@ -324,16 +324,16 @@ function create_menu(gui, type) {
         edit_menu.append(m.edit.editmode = new gui.MenuItem({
             type: "checkbox",
             label: l("menu.editmode"),
-            key: "e",
-            modifiers: cmd_or_ctrl,
+            key: shortcuts.menu.editmode.key,
+            modifiers: shortcuts.menu.editmode.modifiers,
             tooltip: l("menu.editmode_tt")
         }));
         edit_menu.append(new gui.MenuItem({ type: "separator" }));
     }
     edit_menu.append(m.edit.preferences = new gui.MenuItem({
         label: l("menu.preferences"),
-        key: osx ? "," : "p",
-        modifiers: cmd_or_ctrl,
+        key: shortcuts.menu.preferences.key,
+        modifiers: shortcuts.menu.preferences.modifiers,
         tooltip: l("menu.preferences_tt")
     }));
 
@@ -344,48 +344,48 @@ function create_menu(gui, type) {
     m.view = {};
     view_menu.append(m.view.zoomin = new gui.MenuItem({
         label: l("menu.zoomin"),
-        key: "=",
-        modifiers: cmd_or_ctrl,
+        key: shortcuts.menu.zoomin.key,
+        modifiers: shortcuts.menu.zoomin.modifiers,
         tooltip: l("menu.zoomin_tt")
     }));
     view_menu.append(m.view.zoomout = new gui.MenuItem({
         label: l("menu.zoomout"),
-        key: "-",
-        modifiers: cmd_or_ctrl,
+        key: shortcuts.menu.zoomout.key,
+        modifiers: shortcuts.menu.zoomout.modifiers,
         tooltip: l("menu.zoomout_tt")
     }));
     view_menu.append(new gui.MenuItem({ type: "separator" }));
     view_menu.append(m.view.zoomreset = new gui.MenuItem({
         label: l("menu.zoomreset"),
-        key: "0",
-        modifiers: cmd_or_ctrl,
+        key: shortcuts.menu.zoomreset.key,
+        modifiers: shortcuts.menu.zoomreset.modifiers,
         tooltip: l("menu.zoomreset_tt")
     }));
     if (canvas_menu) {
 	view_menu.append(m.view.optimalzoom = new gui.MenuItem({
             label: l("menu.zoomoptimal"),
-            key: "9",
-            modifiers: cmd_or_ctrl,
+            key: shortcuts.menu.zoomoptimal.key,
+            modifiers: shortcuts.menu.zoomoptimal.modifiers,
             tooltip: l("menu.zoomoptimal_tt")
 	}));
 	view_menu.append(m.view.horizzoom = new gui.MenuItem({
             label: l("menu.zoomhoriz"),
-            key: "9",
-            modifiers: cmd_or_ctrl + "+alt",
+            key: shortcuts.menu.zoomhoriz.key,
+            modifiers: shortcuts.menu.zoomhoriz.modifiers,
             tooltip: l("menu.zoomhoriz_tt")
 	}));
 	view_menu.append(m.view.vertzoom = new gui.MenuItem({
             label: l("menu.zoomvert"),
-            key: "9",
-            modifiers: cmd_or_ctrl + "+shift",
+            key: shortcuts.menu.zoomvert.key,
+            modifiers: shortcuts.menu.zoomvert.modifiers,
             tooltip: l("menu.zoomvert_tt")
 	}));
     }
     view_menu.append(new gui.MenuItem({ type: "separator" }));
     view_menu.append(m.view.fullscreen = new gui.MenuItem({
         label: l("menu.fullscreen"),
-        key: process.platform === "darwin" ? "f" : "F11",
-        modifiers: process.platform === "darwin" ? "cmd+ctrl" : null,
+        key: shortcuts.menu.fullscreen.key,
+        modifiers: shortcuts.menu.fullscreen.modifiers,
         tooltip: l("menu.fullscreen_tt")
     }));
 
@@ -397,93 +397,93 @@ function create_menu(gui, type) {
         m.put = {};
         put_menu.append(m.put.object = new gui.MenuItem({
             label: l("menu.object"),
-            key: "1",
-            modifiers: cmd_or_ctrl,
+            key: shortcuts.menu.object.key,
+            modifiers: shortcuts.menu.object.modifiers,
             tooltip: l("menu.object_tt")
         }));
         put_menu.append(m.put.message = new gui.MenuItem({
             label: l("menu.msgbox"),
-            key: "2",
-            modifiers: cmd_or_ctrl,
+            key: shortcuts.menu.msgbox.key,
+            modifiers: shortcuts.menu.msgbox.modifiers,
             tooltip: l("menu.msgbox_tt")
         }));
         put_menu.append(m.put.number = new gui.MenuItem({
             label: l("menu.number"),
-            key: "3",
-            modifiers: cmd_or_ctrl,
+            key: shortcuts.menu.number.key,
+            modifiers: shortcuts.menu.number.modifiers,
             tooltip: l("menu.number_tt")
         }));
         put_menu.append(m.put.symbol = new gui.MenuItem({
             label: l("menu.symbol"),
-            key: "4",
-            modifiers: cmd_or_ctrl,
+            key: shortcuts.menu.symbol.key,
+            modifiers: shortcuts.menu.symbol.modifiers,
             tooltip: l("menu.symbol_tt")
         }));
         put_menu.append(m.put.comment = new gui.MenuItem({
             label: l("menu.comment"),
-            key: "5",
-            modifiers: cmd_or_ctrl,
+            key: shortcuts.menu.comment.key,
+            modifiers: shortcuts.menu.comment.modifiers,
             tooltip: l("menu.comment_tt")
         }));
         put_menu.append(m.put.dropdown = new gui.MenuItem({
             label: l("menu.dropdown"),
-            //key: "6",
-            //modifiers: cmd_or_ctrl,
+            key: shortcuts.menu.dropdown.key,
+            modifiers: shortcuts.menu.dropdown.modifiers,
             tooltip: l("menu.dropdown_tt")
         }));
         put_menu.append(new gui.MenuItem({ type: "separator" }));
         put_menu.append(m.put.bang = new gui.MenuItem({
             label: l("menu.bang"),
-            key: "b",
-            modifiers: cmd_or_ctrl + "+shift",
+            key: shortcuts.menu.bang.key,
+            modifiers: shortcuts.menu.bang.modifiers,
             tooltip: l("menu.bang_tt")
         }));
         put_menu.append(m.put.toggle = new gui.MenuItem({
             label: l("menu.toggle"),
-            key: "t",
-            modifiers: cmd_or_ctrl + "+shift",
+            key: shortcuts.menu.toggle.key,
+            modifiers: shortcuts.menu.toggle.modifiers,
             tooltip: l("menu.toggle_tt")
         }));
         put_menu.append(m.put.number2 = new gui.MenuItem({
             label: l("menu.number2"),
-            key: "n",
-            modifiers: cmd_or_ctrl + "+shift",
+            key: shortcuts.menu.number2.key,
+            modifiers: shortcuts.menu.number2.modifiers,
             tooltip: l("menu.number2")
         }));
         put_menu.append(m.put.vslider = new gui.MenuItem({
             label: l("menu.vslider"),
-            key: "v",
-            modifiers: cmd_or_ctrl + "+shift",
+            key: shortcuts.menu.vslider.key,
+            modifiers: shortcuts.menu.vslider.modifiers,
             tooltip: l("menu.vslider_tt")
         }));
         put_menu.append(m.put.hslider = new gui.MenuItem({
             label: l("menu.hslider"),
-            key: "h",
-            modifiers: cmd_or_ctrl + "+shift",
+            key: shortcuts.menu.hslider.key,
+            modifiers: shortcuts.menu.hslider.modifiers,
             tooltip: l("menu.hslider_tt")
         }));
         put_menu.append(m.put.vradio = new gui.MenuItem({
             label: l("menu.vradio"),
-            key: "d",
-            modifiers: cmd_or_ctrl + "+shift",
+            key: shortcuts.menu.vradio.key,
+            modifiers: shortcuts.menu.vradio.modifiers,
             tooltip: l("menu.vradio_tt")
         }));
         put_menu.append(m.put.hradio = new gui.MenuItem({
             label: l("menu.hradio"),
-            key: "i",
-            modifiers: cmd_or_ctrl,
+            key: shortcuts.menu.hradio.key,
+            modifiers: shortcuts.menu.hradio.modifiers,
             tooltip: l("menu.hradio_tt")
         }));
         put_menu.append(m.put.vu = new gui.MenuItem({
             label: l("menu.vu"),
-            key: "u",
-            modifiers: cmd_or_ctrl,
+            key: shortcuts.menu.vu.key,
+            modifiers: shortcuts.menu.vu.modifiers,
             tooltip: l("menu.vu_tt")
         }));
         put_menu.append(m.put.cnv = new gui.MenuItem({
             label: l("menu.cnv"),
-            key: "c",
-            modifiers: cmd_or_ctrl + "+shift",
+            key: shortcuts.menu.cnv.key,
+            modifiers: shortcuts.menu.cnv.modifiers,
             tooltip: l("menu.cnv_tt")
         }));
         put_menu.append(new gui.MenuItem({ type: "separator" }));
@@ -506,16 +506,14 @@ function create_menu(gui, type) {
     m.win = {};
     winman_menu.append(m.win.nextwin = new gui.MenuItem({
         label: l("menu.nextwin"),
-        key: "PageDown",
-        //key: String.fromCharCode(12), // Page down
-        modifiers: cmd_or_ctrl,
+        key: shortcuts.menu.nextwin.key,
+        modifiers: shortcuts.menu.nextwin.modifiers,
         tooltip: l("menu.nextwin_tt")
     }));
     winman_menu.append(m.win.prevwin = new gui.MenuItem({
         label: l("menu.prevwin"),
-        key: "PageUp",
-        //key: String.fromCharCode(11), // Page up
-        modifiers: cmd_or_ctrl,
+        key: shortcuts.menu.prevwin.key,
+        modifiers: shortcuts.menu.prevwin.modifiers,
         tooltip: l("menu.prevwin_tt")
     }));
     if (canvas_menu) {
@@ -531,8 +529,8 @@ function create_menu(gui, type) {
         winman_menu.append(m.win.pdwin = new gui.MenuItem({
             label: l("menu.pdwin"),
             tooltip: l("menu.pdwin_tt"),
-            key: "r",
-            modifiers: cmd_or_ctrl
+            key: shortcuts.menu.pdwin.key,
+            modifiers: shortcuts.menu.pdwin.modifiers
         }));
     }
 
@@ -543,14 +541,14 @@ function create_menu(gui, type) {
     m.media = {};
     media_menu.append(m.media.audio_on = new gui.MenuItem({
         label: l("menu.audio_on"),
-        key: "/",
-        modifiers: cmd_or_ctrl,
+        key: shortcuts.menu.audio_on.key,
+        modifiers: shortcuts.menu.audio_on.modifiers,
         tooltip: l("menu.audio_on_tt")
     }));
     media_menu.append(m.media.audio_off = new gui.MenuItem({
         label: l("menu.audio_off"),
-        key: ".",
-        modifiers: cmd_or_ctrl,
+        key: shortcuts.menu.audio_off.key,
+        modifiers: shortcuts.menu.audio_off.modifiers,
         tooltip: l("menu.audio_off_tt")
     }));
     media_menu.append(new gui.MenuItem({ type: "separator" }));
@@ -578,8 +576,8 @@ function create_menu(gui, type) {
     }));
     help_menu.append(m.help.browser = new gui.MenuItem({
         label: l("menu.browser"),
-        key: "b",
-        modifiers: cmd_or_ctrl,
+        key: shortcuts.menu.browser.key,
+        modifiers: shortcuts.menu.browser.modifiers,
         tooltip: l("menu.browser_tt")
     }));
     help_menu.append(m.help.intro = new gui.MenuItem({
