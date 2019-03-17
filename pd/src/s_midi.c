@@ -666,38 +666,21 @@ void midi_alsa_setndevs(int in, int out);
 void glob_midi_setapi(void *dummy, t_floatarg f)
 {
     int newapi = f;
-    if (newapi)
+    if (newapi != sys_midiapi)
     {
-        if (newapi == sys_midiapi)
-        {
-          //if (!midi_isopen())
-          //  s_reopen_midi();
-        }
-        else
-        {
 #ifdef USEAPI_ALSA
-            if (sys_midiapi == API_ALSA)
-                sys_alsa_close_midi();
-            else
+        if (sys_midiapi == API_ALSA)
+            sys_alsa_close_midi();
+        else
 #endif
-                sys_close_midi();
-            sys_midiapi = newapi;
-            /* bash device params back to default */
-//            midi_nmidiindev = midi_nmidioutdev = 1;
-            //midi_midiindev[0] = midi_midioutdev[0] = DEFAULTMIDIDEV;
-            //midi_midichindev[0] = midi_midichoutdev[0] = SYS_DEFAULTCH;
-            sys_reopen_midi();
-        }
+            sys_close_midi();
+        sys_midiapi = newapi;
+        sys_reopen_midi();
+    }
 #ifdef USEAPI_ALSA
     midi_alsa_setndevs(midi_nmidiindev, midi_nmidioutdev);
 #endif
-        glob_midi_properties(0, 0);
-    }
-    else //if (midi_isopen())
-    {
-        sys_close_midi();
-        //midi_state = 0;
-    }
+    glob_midi_properties(0, (midi_nmidiindev > 1 || midi_nmidioutdev > 1));
 }
 
 extern t_class *glob_pdobject;
@@ -808,9 +791,9 @@ void glob_midi_properties(t_pd *dummy, t_floatarg flongform)
     if (sys_midiapi == API_ALSA)
     {
 //    sprintf(buf,
-//"pdtk_alsa_midi_dialog %%s "
-//"%d %d %d %d %d %d %d %d "
-//"%d 1\n",
+// "pdtk_alsa_midi_dialog %%s "
+// "%d %d %d %d %d %d %d %d "
+// "%d 1\n",
 //        midiindev1, midiindev2, midiindev3, midiindev4, 
 //        midioutdev1, midioutdev2, midioutdev3, midioutdev4,
 //        (flongform != 0));
