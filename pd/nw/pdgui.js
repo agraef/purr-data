@@ -408,163 +408,169 @@ function cmd_or_ctrl_key(evt) {
 
 exports.cmd_or_ctrl_key = cmd_or_ctrl_key;
 
-var last_keydown = "";
+(function () {
 
-exports.keydown = function(cid, evt) {
-    var key_code = evt.keyCode,
-        hack = null, // hack for unprintable ascii codes
-        cmd_or_ctrl
-    switch(key_code) {
-        case 8: // backspace
-        case 9:
-        case 10:
-        case 27:
-        //case 32:
-        case 127: hack = key_code; break;
-        case 46: hack = 127; break; // some platforms report 46 for Delete
-        case 37: hack = add_keymods("Left", evt); break;
-        case 38: hack = add_keymods("Up", evt); break;
-        case 39: hack = add_keymods("Right", evt); break;
-        case 40: hack = add_keymods("Down", evt); break;
-        case 33: hack = add_keymods("Prior", evt); break;
-        case 34: hack = add_keymods("Next", evt); break;
-        case 35: hack = add_keymods("End", evt); break;
-        case 36: hack = add_keymods("Home", evt); break;
+    var last_keydown = "";
+    var keydown_repeat = 0;
 
-        // These may be different on Safari...
-        case 112: hack = add_keymods("F1", evt); break;
-        case 113: hack = add_keymods("F2", evt); break;
-        case 114: hack = add_keymods("F3", evt); break;
-        case 115: hack = add_keymods("F4", evt); break;
-        case 116: hack = add_keymods("F5", evt); break;
-        case 117: hack = add_keymods("F6", evt); break;
-        case 118: hack = add_keymods("F7", evt); break;
-        case 119: hack = add_keymods("F8", evt); break;
-        case 120: hack = add_keymods("F9", evt); break;
-        case 121: hack = add_keymods("F10", evt); break;
-        case 122: hack = add_keymods("F11", evt); break;
-        case 123: hack = add_keymods("F12", evt); break;
+    exports.keydown = function(cid, evt) {
+        var key_code = evt.keyCode,
+            hack = null, // hack for unprintable ascii codes
+            cmd_or_ctrl
+        switch(key_code) {
+            case 8: // backspace
+            case 9:
+            case 10:
+            case 27:
+            //case 32:
+            case 127: hack = key_code; break;
+            case 46: hack = 127; break; // some platforms report 46 for Delete
+            case 37: hack = add_keymods("Left", evt); break;
+            case 38: hack = add_keymods("Up", evt); break;
+            case 39: hack = add_keymods("Right", evt); break;
+            case 40: hack = add_keymods("Down", evt); break;
+            case 33: hack = add_keymods("Prior", evt); break;
+            case 34: hack = add_keymods("Next", evt); break;
+            case 35: hack = add_keymods("End", evt); break;
+            case 36: hack = add_keymods("Home", evt); break;
 
-        // Handle weird behavior for clipboard shortcuts
-        // Which don't fire a keypress for some odd reason
+            // These may be different on Safari...
+            case 112: hack = add_keymods("F1", evt); break;
+            case 113: hack = add_keymods("F2", evt); break;
+            case 114: hack = add_keymods("F3", evt); break;
+            case 115: hack = add_keymods("F4", evt); break;
+            case 116: hack = add_keymods("F5", evt); break;
+            case 117: hack = add_keymods("F6", evt); break;
+            case 118: hack = add_keymods("F7", evt); break;
+            case 119: hack = add_keymods("F8", evt); break;
+            case 120: hack = add_keymods("F9", evt); break;
+            case 121: hack = add_keymods("F10", evt); break;
+            case 122: hack = add_keymods("F11", evt); break;
+            case 123: hack = add_keymods("F12", evt); break;
 
-        case 65:
-            if (cmd_or_ctrl_key(evt)) { // ctrl-a
-                // This is handled in the nwjs menu, but we
-                // add a way to toggle the window menubar
-                // the following command should be uncommented...
-                //pdsend(name, "selectall");
-                hack = 0; // not sure what to report here...
-            }
-            break;
-        case 88:
-            if (cmd_or_ctrl_key(evt)) { // ctrl-x
-                // This is handled in the nwjs menubar. If we
-                // add a way to toggle the menubar it will be
-                // handled with the "cut" DOM listener, so we
-                // can probably remove this code...
-                //pdsend(name, "cut");
-                hack = 0; // not sure what to report here...
-            }
-            break;
-        case 67:
-            if (cmd_or_ctrl_key(evt)) { // ctrl-c
-                // Handled in nwjs menubar (see above)
-                //pdsend(name, "copy");
-                hack = 0; // not sure what to report here...
-            }
-            break;
-        case 86:
-            if (cmd_or_ctrl_key(evt)) { // ctrl-v
-                // We also use "cut" and "copy" DOM event handlers
-                // and leave this code in case we need to change
-                // tactics for some reason.
-                //pdsend(name, "paste");
-                hack = 0; // not sure what to report here...
-            }
-            break;
-        case 90:
-            if (cmd_or_ctrl_key(evt)) { // ctrl-z undo/redo
-                // We have to catch undo and redo here.
-                // undo and redo have nw.js menu item shortcuts,
-                // and those shortcuts don't behave consistently
-                // across platforms:
-                // Gnu/Linux: key events for the shortcut do not
-                //   propogate down to the DOM
-                // OSX: key events for the shortcut _do_ propogate
-                //   down to the DOM
-                // Windows: not sure...
+            // Handle weird behavior for clipboard shortcuts
+            // Which don't fire a keypress for some odd reason
 
-                // Solution-- let the menu item shortcuts handle
-                // undo/redo functionality, and do nothing here...
-                //if (evt.shiftKey) {
-                //    pdsend(name, "redo");
-                //} else {
-                //    pdsend(name, "undo");
-                //}
-            }
-            break;
+            case 65:
+                if (cmd_or_ctrl_key(evt)) { // ctrl-a
+                    // This is handled in the nwjs menu, but we
+                    // add a way to toggle the window menubar
+                    // the following command should be uncommented...
+                    //pdsend(name, "selectall");
+                    hack = 0; // not sure what to report here...
+                }
+                break;
+            case 88:
+                if (cmd_or_ctrl_key(evt)) { // ctrl-x
+                    // This is handled in the nwjs menubar. If we
+                    // add a way to toggle the menubar it will be
+                    // handled with the "cut" DOM listener, so we
+                    // can probably remove this code...
+                    //pdsend(name, "cut");
+                    hack = 0; // not sure what to report here...
+                }
+                break;
+            case 67:
+                if (cmd_or_ctrl_key(evt)) { // ctrl-c
+                    // Handled in nwjs menubar (see above)
+                    //pdsend(name, "copy");
+                    hack = 0; // not sure what to report here...
+                }
+                break;
+            case 86:
+                if (cmd_or_ctrl_key(evt)) { // ctrl-v
+                    // We also use "cut" and "copy" DOM event handlers
+                    // and leave this code in case we need to change
+                    // tactics for some reason.
+                    //pdsend(name, "paste");
+                    hack = 0; // not sure what to report here...
+                }
+                break;
+            case 90:
+                if (cmd_or_ctrl_key(evt)) { // ctrl-z undo/redo
+                    // We have to catch undo and redo here.
+                    // undo and redo have nw.js menu item shortcuts,
+                    // and those shortcuts don't behave consistently
+                    // across platforms:
+                    // Gnu/Linux: key events for the shortcut do not
+                    //   propogate down to the DOM
+                    // OSX: key events for the shortcut _do_ propogate
+                    //   down to the DOM
+                    // Windows: not sure...
 
-        // Need to handle Control key, Alt
+                    // Solution-- let the menu item shortcuts handle
+                    // undo/redo functionality, and do nothing here...
+                    //if (evt.shiftKey) {
+                    //    pdsend(name, "redo");
+                    //} else {
+                    //    pdsend(name, "undo");
+                    //}
+                }
+                break;
 
-        case 16: hack = "Shift"; break;
-        case 17: hack = "Control"; break;
-        case 18: hack = "Alt"; break;
+            // Need to handle Control key, Alt
 
-        // keycode 55 = 7 key (shifted = '/' on German keyboards)
-        case 55:
-            if (cmd_or_ctrl_key(evt)) {
-                evt.preventDefault();
-                pdsend("pd dsp 1");
-            }
-            break;
+            case 16: hack = "Shift"; break;
+            case 17: hack = "Control"; break;
+            case 18: hack = "Alt"; break;
 
-    }
-    if (hack !== null) {
-        canvas_sendkey(cid, 1, evt, hack, evt.repeat);
-        set_keymap(key_code, hack);
-    }
+            // keycode 55 = 7 key (shifted = '/' on German keyboards)
+            case 55:
+                if (cmd_or_ctrl_key(evt)) {
+                    evt.preventDefault();
+                    pdsend("pd dsp 1");
+                }
+                break;
 
-    //post("keydown time: keycode is " + evt.keyCode);
-    last_keydown = evt.keyCode;
-    //evt.stopPropagation();
-    //evt.preventDefault();
-};
+        }
+        if (hack !== null) {
+            canvas_sendkey(cid, 1, evt, hack, evt.repeat);
+            set_keymap(key_code, hack);
+        }
 
-exports.keypress = function(cid, evt) {
-    // For some reasons <ctrl-e> registers a keypress with
-    // charCode of 5. We filter that out here so it doesn't
-    // cause trouble when toggling editmode.
-    // Also, we're capturing <ctrl-or-cmd-Enter> in the "Edit"
-    // menu item "reselect", so we filter it out here as well.
-    // (That may change once we find a more flexible way of
-    // handling keyboard shortcuts
-    if (evt.charCode !== 5 &&
-          (!cmd_or_ctrl_key(evt) || evt.charCode !== 10)) {
-        canvas_sendkey(cid, 1, evt, evt.charCode,
-            evt.repeat);
-        set_keymap(last_keydown, evt.charCode,
-            evt.repeat);
-    }
-    //post("keypress time: charcode is " + evt.charCode);
-    // Don't do things like scrolling on space, arrow keys, etc.
-};
+        //post("keydown time: keycode is " + evt.keyCode);
+        last_keydown = evt.keyCode;
+        keydown_repeat = evt.repeat;
+        //evt.stopPropagation();
+        //evt.preventDefault();
+    };
 
-exports.keyup = function(cid, evt) {
-    var my_char_code = get_char_code(evt.keyCode);
-    // Sometimes we don't have char_code. For example, the
-    // nw menu doesn't propogate shortcut events, so we don't get
-    // to map a charcode on keydown/keypress. In those cases we'll
-    // get null, so we check for that here...
-    if (my_char_code) {
-        canvas_sendkey(cid, 0, evt, my_char_code, evt.repeat);
-    }
-    // This can probably be removed
-    //if (cmd_or_ctrl_key(evt) &&
-    //      (evt.keyCode === 13 || evt.keyCode === 10)) {
-    //    pdgui.pdsend(name, "reselect");
-    //}
-};
+    exports.keypress = function(cid, evt) {
+        // For some reasons <ctrl-e> registers a keypress with
+        // charCode of 5. We filter that out here so it doesn't
+        // cause trouble when toggling editmode.
+        // Also, we're capturing <ctrl-or-cmd-Enter> in the "Edit"
+        // menu item "reselect", so we filter it out here as well.
+        // (That may change once we find a more flexible way of
+        // handling keyboard shortcuts
+        if (evt.charCode !== 5 &&
+              (!cmd_or_ctrl_key(evt) || evt.charCode !== 10)) {
+            canvas_sendkey(cid, 1, evt, evt.charCode,
+                keydown_repeat);
+            set_keymap(last_keydown, evt.charCode,
+                keydown_repeat);
+        }
+        //post("keypress time: charcode is " + evt.charCode);
+        // Don't do things like scrolling on space, arrow keys, etc.
+    };
+
+    exports.keyup = function(cid, evt) {
+        var my_char_code = get_char_code(evt.keyCode);
+        // Sometimes we don't have char_code. For example, the
+        // nw menu doesn't propogate shortcut events, so we don't get
+        // to map a charcode on keydown/keypress. In those cases we'll
+        // get null, so we check for that here...
+        if (my_char_code) {
+            canvas_sendkey(cid, 0, evt, my_char_code, keydown_repeat);
+        }
+        // This can probably be removed
+        //if (cmd_or_ctrl_key(evt) &&
+        //      (evt.keyCode === 13 || evt.keyCode === 10)) {
+        //    pdgui.pdsend(name, "reselect");
+        //}
+    };
+
+})();
 
     // Hard-coded Pd-l2ork font metrics
 /*
