@@ -1,0 +1,11 @@
+#N canvas 447 229 471 300 12;
+#X obj 29 33 inlet;
+#X obj 29 102 ../utils/creation-test;
+#X msg 29 62 symbol ../regression_tests/canvas_f_abstraction;
+#X obj 29 131 list prepend apply manual width setting to subpatch with
+'#X f' syntax;
+#X obj 29 176 outlet;
+#X connect 0 0 2 0;
+#X connect 1 0 3 0;
+#X connect 2 0 1 0;
+#X connect 3 0 4 0;
