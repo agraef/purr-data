@@ -357,11 +357,12 @@ var pd_myversion,    // Pd version string
 // Keycode vs Charcode: A Primer
 // -----------------------------
 // * keycode is a unique number assigned to a physical key on the keyboard
+// * keycode is device dependent
 // * charcode is the ASCII character (printable or otherwise) that gets output
 //     when you depress a particular key
 // * keydown and keyup events report keycodes but not charcodes
 // * keypress events report charcodes but not keycodes
-// * keypress events do _not_ report non-ASCII chars like arrow keys,
+// * keypress events do _not_ fire for non-printing chars like arrow keys,
 //     Alt keypress, Ctrl, (possibly) the keypad Delete key, and others
 // * in Pd, we want to send ASCII codes + arrow keys et al to Pd for
 //     both keydown and keyup events
@@ -369,13 +370,13 @@ var pd_myversion,    // Pd version string
 //       1) keydown
 //       2) keypress
 //       3) keyup
-// Therefore...
-// * solution #1: we check for non-ASCII keycodes like arrow keys inside
-//     the keydown event
-// * solution #2: in the keypress event, we map the charcode to the
-//     last keydown keycode we received
-// * solution #3: on keyup, we use the keycode to look up the corresponding
-//     charcode, and send the charcode on to Pd
+// Therefore are solution is:
+// 1. We check for non-printable keycodes like arrow keys inside
+//    the keydown event.
+// 2. In the keypress event, we map the charcode to the
+//    last keydown keycode we received.
+// 3. On keyup, we use the keycode to look up the corresponding
+//    charcode, and send the charcode on to Pd
 var pd_keymap = {}; // to iteratively map keydown/keyup keys
                     // to keypress char codes
 
@@ -415,7 +416,7 @@ exports.cmd_or_ctrl_key = cmd_or_ctrl_key;
 
     exports.keydown = function(cid, evt) {
         var key_code = evt.keyCode,
-            hack = null, // hack for unprintable ascii codes
+            hack = null, // hack for non-printable ascii codes
             cmd_or_ctrl
         switch(key_code) {
             case 8: // backspace
@@ -524,6 +525,11 @@ exports.cmd_or_ctrl_key = cmd_or_ctrl_key;
 
         }
         if (hack !== null) {
+            // To match Pd Vanilla behavior, fake a keyup if this
+            // is an auto-repeating key
+            if (evt.repeat) {
+                canvas_sendkey(cid, 0, evt, hack, 1);
+            }
             canvas_sendkey(cid, 1, evt, hack, evt.repeat);
             set_keymap(key_code, hack);
         }
@@ -545,6 +551,11 @@ exports.cmd_or_ctrl_key = cmd_or_ctrl_key;
         // handling keyboard shortcuts
         if (evt.charCode !== 5 &&
               (!cmd_or_ctrl_key(evt) || evt.charCode !== 10)) {
+            // To match Pd Vanilla behavior, fake a keyup if this
+            // is an auto-repeating key
+            if (keydown_repeat) {
+                canvas_sendkey(cid, 0, evt, evt.charCode, 1);
+            }
             canvas_sendkey(cid, 1, evt, evt.charCode,
                 keydown_repeat);
             set_keymap(last_keydown, evt.charCode,
@@ -560,8 +571,12 @@ exports.cmd_or_ctrl_key = cmd_or_ctrl_key;
         // nw menu doesn't propogate shortcut events, so we don't get
         // to map a charcode on keydown/keypress. In those cases we'll
         // get null, so we check for that here...
+
+        // Also, HTML5 keyup event appears not to ever trigger on autorepeat.
+        // So we always send a zero here and fake the autorepeat above to
+        // maintain consistency with Pd Vanilla.
         if (my_char_code) {
-            canvas_sendkey(cid, 0, evt, my_char_code, keydown_repeat);
+            canvas_sendkey(cid, 0, evt, my_char_code, 0);
         }
         // This can probably be removed
         //if (cmd_or_ctrl_key(evt) &&
