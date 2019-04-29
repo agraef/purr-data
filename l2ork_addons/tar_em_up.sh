@@ -200,7 +200,7 @@ if [ ! -d "../pd/nw/nw" ]; then
 	nwjs_url=${nwjs_url}/$nwjs_filename
 	echo "Fetching the nwjs binary from"
 	echo "$nwjs_url"
-	wget -nv $nwjs_url
+	wget -cnv $nwjs_url
 	if [[ $os == "win" || $os == "osx" ]]; then
 		unzip $nwjs_filename
 	else
@@ -223,7 +223,7 @@ fi
 if [[ $os == "win" ]]; then
 	if [ ! -d "../pd/lib" ]; then
 		mkdir ../pd/lib
-		wget http://www.steinberg.net/sdk_downloads/asiosdk2.3.zip
+		wget -c http://www.steinberg.net/sdk_downloads/asiosdk2.3.zip
 		unzip asiosdk2.3.zip
 		mv ASIOSDK2.3 ../pd/lib
 	fi
