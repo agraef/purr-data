@@ -127,7 +127,7 @@ Hard drive space required: *roughly 2.5 GB*
              mda-lv2 libmp3lame-dev libspeex-dev libgsl0-dev \
              portaudio19-dev liblua5.3-dev python-dev libsmpeg0 libjpeg62-turbo \
              flite1-dev libgsm1-dev libgtk2.0-dev git libstk0-dev \
-             libsndobj-dev libfluidsynth-dev fluid-soundfont-gm byacc
+             libfluidsynth-dev fluid-soundfont-gm byacc
 
 2. The gui toolkit may require installing the following extra dependencies
         sudo apt-get install gconf2 libnss3
