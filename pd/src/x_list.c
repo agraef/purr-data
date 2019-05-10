@@ -336,15 +336,16 @@ static void list_cat_list(t_list_cat *x, t_symbol *s,
         t_alist y;
         alist_clone(&x->x_alist, &y, 0, n);
         alist_toatoms(&y, outv, 0, n);
+        alist_list(&x->x_alist, s, outc, outv);
         outlet_list(x->x_obj.ob_outlet, &s_list, outc, outv);
         alist_clear(&y);
     }
     else
     {
         alist_toatoms(&x->x_alist, outv, 0, n);
+        alist_list(&x->x_alist, s, outc, outv);
         outlet_list(x->x_obj.ob_outlet, &s_list, outc, outv);
     }
-    alist_list(&x->x_alist, s, outc, outv);
     XL_ATOMS_FREEA(outv, outc);
 }
 
@@ -363,24 +364,23 @@ static void list_cat_anything(t_list_cat *x, t_symbol *s,
         t_alist y;
         alist_clone(&x->x_alist, &y, 0, n);
         alist_toatoms(&y, outv, 0, n);
+        alist_list(&x->x_alist, s, outc, outv);
         outlet_list(x->x_obj.ob_outlet, &s_list, outc, outv);
         alist_clear(&y);
     }
     else
     {
         alist_toatoms(&x->x_alist, outv, 0, n);
+        alist_list(&x->x_alist, s, outc, outv);
         outlet_list(x->x_obj.ob_outlet, &s_list, outc, outv);
     }
-    if (x->x_alist.l_n <= 1)
-        alist_anything(&x->x_alist, s, outc, outv);
-    else
-        alist_list(&x->x_alist, s, outc, outv);
     XL_ATOMS_FREEA(outv, outc);
 }
 
 static void list_cat_clear(t_list_cat *x)
 {
     alist_clear(&x->x_alist);
+    alist_init(&x->x_alist);
 }
 
 static void list_cat_free(t_list_cat *x)

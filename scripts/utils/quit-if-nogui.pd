@@ -1,0 +1,14 @@
+#N canvas 461 242 450 300 12;
+#X obj 119 31 inlet;
+#X obj 119 60 bang;
+#X msg 119 88 gui;
+#X obj 119 113 pdinfo;
+#X obj 119 138 sel 0;
+#X obj 119 188 s pd;
+#X msg 119 163 quit;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 4 0 6 0;
+#X connect 6 0 5 0;
