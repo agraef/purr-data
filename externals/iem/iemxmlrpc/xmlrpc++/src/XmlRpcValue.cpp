@@ -2,7 +2,6 @@
 #include "XmlRpcValue.h"
 #include "XmlRpcException.h"
 #include "XmlRpcUtil.h"
-#include "base64.h"
 
 #ifndef MAKEDEPEND
 # include <iostream>
@@ -10,6 +9,8 @@
 # include <stdlib.h>
 # include <stdio.h>
 #endif
+
+#include "base64.h"
 
 namespace XmlRpc {
 
