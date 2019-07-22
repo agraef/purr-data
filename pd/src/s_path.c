@@ -848,9 +848,10 @@ t_symbol *pd_getdirname(void)
         buf[len] = '\0';
     sys_unbashfilename(buf, buf);
 #elif defined(__APPLE__)
-    len = sizeof(buf);
-    _NSGetExecutablePath(buf, &len);
-    if (len != -1) buf[len] = '\0';
+    int ret;
+    len = sizeof(buf); buf[0] = '\0';
+    ret = _NSGetExecutablePath(buf, &len);
+    if (ret) len = -1;
 #elif defined(__FreeBSD__)
     len = (ssize_t)(readlink("/proc/curproc/file", buf, sizeof(buf)-1));
     if (len != -1) buf[len] = '\0';
