@@ -33,6 +33,10 @@ EXTRA_DIST =
 #
 #------------------------------------------------------------------------------#
 
+ifeq ($(macos_target),)
+macos_target = 10.9
+endif
+
 # where Pd lives
 PD_PATH = ../../../pd
 # where to install the library
@@ -78,7 +82,7 @@ ifeq ($(UNAME),Darwin)
     EXTENSION = pd_darwin
     OS = macosx
     OPT_CFLAGS = -ftree-vectorize -ftree-vectorizer-verbose=2 -fast
-    FAT_FLAGS = -arch i386 -arch ppc -mmacosx-version-min=10.4
+    FAT_FLAGS = -arch i386 -arch ppc -mmacosx-version-min=$(macos_target)
     CFLAGS += $(FAT_FLAGS) -fPIC -I/sw/include \
       -I/Applications/Pd-extended.app/Contents/Resources/include
     LDFLAGS += $(FAT_FLAGS) -bundle -undefined dynamic_lookup -L/sw/lib

@@ -15,8 +15,12 @@ cvs_root_dir := $(shell cd $(CWD)/.. && pwd)
 DESTDIR = $(CWD)/build/
 BUILDLAYOUT_DIR = $(cvs_root_dir)/packages
 
+ifeq ($(macos_target),)
+macos_target = 10.9
+endif
+
 # turn on weak linking and dlopen support
-export MACOSX_DEPLOYMENT_TARGET = 10.3
+export MACOSX_DEPLOYMENT_TARGET = $(macos_target)
 
 # default target
 default: all
