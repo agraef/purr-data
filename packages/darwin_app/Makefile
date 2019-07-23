@@ -236,10 +236,8 @@ dmg:
 distclean: package_clean
 	$(MAKE) -C $(packages_src) $(DEST_PATHS) distclean
 
-
 clean: package_clean
 	$(MAKE) -C $(packages_src) $(DEST_PATHS) clean
-
 
 package_clean: darwin_app_clean spotlight_importer_clean
 	-chmod -R u+w -- $(BUILD_BASE)
