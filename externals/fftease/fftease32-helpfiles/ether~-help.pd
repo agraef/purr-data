@@ -1,0 +1,51 @@
+#N canvas 945 525 525 499 10;
+#X obj 143 202 ether~;
+#X obj 143 137 readsf~;
+#X obj 143 81 openpanel;
+#X msg 143 106 open \$1;
+#X msg 143 54 bang;
+#X msg 211 106 1;
+#X obj 278 140 readsf~;
+#X obj 278 84 openpanel;
+#X msg 278 109 open \$1;
+#X msg 278 57 bang;
+#X text 314 61 load sf2;
+#X floatatom 292 178 5 0 512 0 - - -, f 5;
+#X obj 160 283 *~ 0.05;
+#X obj 160 314 dac~;
+#X obj 202 243 hsl 128 15 0 1 0 0 empty empty Gain -2 -8 0 10 -262144
+-1 -1 2600 1;
+#X floatatom 199 263 5 0 0 0 - - -, f 5;
+#X msg 36 163 invert \$1;
+#X obj 36 129 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 13 337 ether~ selects portions of two input signals and creates
+a composite output spectrum based upon the amplitude of the inputs.
+In a bin-by-bin comparison \, the strongest bin of the two inputs will
+be selected. Sending the inverse message will reverse this behavior
+\, selecting the weakest bins. The composite index is a scalar for
+the selection of the second input. Higher values for the composite
+index will favor the second input. Useful values will vary according
+to the amplitude characteristics of the input signals. Try values greater
+than 0 and less than 100 But higher values may be effective depending
+upon the input signals.;
+#X text 331 176 composite index;
+#X text 179 58 load sf1;
+#X connect 0 0 12 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X connect 4 0 2 0;
+#X connect 5 0 1 0;
+#X connect 5 0 6 0;
+#X connect 6 0 0 1;
+#X connect 7 0 8 0;
+#X connect 8 0 6 0;
+#X connect 9 0 7 0;
+#X connect 11 0 0 2;
+#X connect 12 0 13 0;
+#X connect 12 0 13 1;
+#X connect 14 0 15 0;
+#X connect 15 0 12 1;
+#X connect 16 0 0 0;
+#X connect 17 0 16 0;

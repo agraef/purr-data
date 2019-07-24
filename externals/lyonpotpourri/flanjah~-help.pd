@@ -1,0 +1,62 @@
+#N canvas 698 193 450 406 10;
+#X obj 26 104 phasor~ 350;
+#X obj 124 294 *~ 0.1;
+#X obj 124 341 dac~;
+#X obj 124 79 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X floatatom 135 154 5 -0.5 0.5 2 feedback feedback -, f 5;
+#X floatatom 195 153 5 0 0 2 speed1 speed1 -, f 5;
+#X floatatom 244 151 5 0 0 2 speed2 speed2 -, f 5;
+#X floatatom 295 152 5 0 1 2 depth depth -, f 5;
+#X floatatom 189 320 5 0 0 0 - - -, f 5;
+#X msg 124 106 protect \$1;
+#X obj 124 259 flanjah~;
+#X obj 258 264 hsl 128 15 -0.425 0.425 0 0 feedback feedback-in feedback
+-2 -6 0 8 -167887 -1 -1 12326 1;
+#X obj 258 293 hsl 128 15 0 4 0 0 speed1 speed1-in speed1 -2 -6 0 8
+-167887 -1 -1 1048 1;
+#X obj 258 322 hsl 128 15 0 4 0 0 speed2 speed2-in speed2 -2 -6 0 8
+-167887 -1 -1 794 1;
+#X obj 258 350 hsl 128 15 0 1 0 0 depth depth-in depth -2 -6 0 8 -167887
+-1 -1 1524 1;
+#X text 145 76 protect from dangerous feedback;
+#X obj 189 276 vsl 15 32 0 0.5 0 0 empty empty gain 0 -8 0 8 -261728
+-1 -1 0 1;
+#X obj 26 129 killdc~;
+#X obj 23 9 cnv 15 160 25 empty empty LyonPotpourri 20 12 1 18 -260097
+-204786 0;
+#X floatatom 26 82 5 0 0 0 - - -, f 5;
+#X text 22 45 flanjah~ - A simple flanger;
+#N canvas 339 464 318 192 initialize 0;
+#X msg 172 66 0.33;
+#X msg 187 87 0.25;
+#X obj 207 22 loadbang;
+#X msg 207 107 0.12;
+#X msg 163 45 0.4;
+#X obj 37 62 s feedback-in;
+#X obj 39 82 s speed1-in;
+#X obj 39 104 s speed2-in;
+#X obj 40 123 s depth-in;
+#X connect 0 0 6 0;
+#X connect 1 0 7 0;
+#X connect 2 0 4 0;
+#X connect 2 0 0 0;
+#X connect 2 0 1 0;
+#X connect 2 0 3 0;
+#X connect 3 0 8 0;
+#X connect 4 0 5 0;
+#X restore 303 218 pd initialize;
+#X connect 0 0 17 0;
+#X connect 1 0 2 0;
+#X connect 1 0 2 1;
+#X connect 3 0 9 0;
+#X connect 4 0 10 1;
+#X connect 5 0 10 2;
+#X connect 6 0 10 3;
+#X connect 7 0 10 4;
+#X connect 8 0 1 1;
+#X connect 9 0 10 0;
+#X connect 10 0 1 0;
+#X connect 16 0 8 0;
+#X connect 17 0 10 0;
+#X connect 19 0 0 0;

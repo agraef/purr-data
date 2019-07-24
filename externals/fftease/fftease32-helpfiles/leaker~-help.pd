@@ -1,0 +1,50 @@
+#N canvas 802 314 518 484 10;
+#X obj 197 210 leaker~;
+#X obj 155 149 readsf~;
+#X obj 155 93 openpanel;
+#X msg 155 118 open \$1;
+#X msg 155 66 bang;
+#X msg 223 118 1;
+#X obj 274 153 readsf~;
+#X obj 274 97 openpanel;
+#X msg 274 122 open \$1;
+#X msg 274 70 bang;
+#X text 310 74 load sf2;
+#X text 191 70 load sf1;
+#X floatatom 298 188 5 0 0 0 - - -, f 5;
+#X obj 358 162 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 12700 1;
+#X obj 197 301 *~ 0.05;
+#X obj 197 332 dac~;
+#X obj 239 261 hsl 128 15 0 1 0 0 empty empty Gain -2 -8 0 10 -262144
+-1 -1 10700 1;
+#X floatatom 236 281 5 0 0 0 - - -, f 5;
+#X msg 22 96 upsieve;
+#X msg 23 122 downsieve;
+#X msg 23 155 randsieve;
+#X text 33 360 leaker~ combines two input sounds \, with the spectral
+contribution of each sound determined by an internally maintained sieve
+and a threshold selection value. At value 0 \, only sound 1 is heard
+and at value 1 \, only sound 2 is heard. At intermediate values \,
+parts of each spectrum are aggregated according to the sieve structure
+which may be specified as upsieve \, downsieve or randsieve.;
+#X connect 0 0 14 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X connect 4 0 2 0;
+#X connect 5 0 1 0;
+#X connect 5 0 6 0;
+#X connect 6 0 0 1;
+#X connect 7 0 8 0;
+#X connect 8 0 6 0;
+#X connect 9 0 7 0;
+#X connect 12 0 0 2;
+#X connect 13 0 12 0;
+#X connect 14 0 15 0;
+#X connect 14 0 15 1;
+#X connect 16 0 17 0;
+#X connect 17 0 14 1;
+#X connect 18 0 0 0;
+#X connect 19 0 0 0;
+#X connect 20 0 0 0;

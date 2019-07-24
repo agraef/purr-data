@@ -1,0 +1,73 @@
+#N canvas 552 251 450 300 10;
+#X obj 39 260 dac~;
+#X obj 39 200 *~ 0.01;
+#X obj 39 125 noise~;
+#N canvas 532 235 601 529 fft-hipass 0;
+#X obj 86 50 inlet~;
+#X obj 225 472 outlet~;
+#X obj 225 98 windowvec~;
+#X obj 225 136 rfft~, f 6;
+#X obj 225 171 cartopol~;
+#X obj 225 346 poltocar~;
+#X obj 225 376 rifft~;
+#X obj 225 439 windowvec~;
+#X obj 225 406 *~ 0;
+#X obj 421 264 *;
+#X msg 373 186 1 1024 8;
+#X obj 373 217 unpack f f f;
+#X obj 373 296 /;
+#X floatatom 373 328 12 0 0 0 - - -, f 12;
+#X text 454 329 rescale factor;
+#X obj 373 155 loadbang;
+#X obj 185 311 *~;
+#X obj 125 268 greater~ 20;
+#X obj 91 212 vecdex~;
+#X msg 162 212 top \$1;
+#X obj 162 180 inlet;
+#X text 164 22 only pass through bin magnitudes for bin numbers greater
+than the "top" number sent to greater~;
+#X obj 79 484 block~ 1024 8;
+#X connect 0 0 2 0;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 3 1 4 1;
+#X connect 4 0 16 1;
+#X connect 4 1 5 1;
+#X connect 5 0 6 0;
+#X connect 5 1 6 1;
+#X connect 6 0 8 0;
+#X connect 7 0 1 0;
+#X connect 8 0 7 0;
+#X connect 9 0 12 1;
+#X connect 10 0 11 0;
+#X connect 11 0 12 0;
+#X connect 11 1 9 0;
+#X connect 11 2 9 1;
+#X connect 12 0 13 0;
+#X connect 13 0 8 1;
+#X connect 15 0 10 0;
+#X connect 16 0 5 0;
+#X connect 17 0 16 0;
+#X connect 18 0 17 0;
+#X connect 19 0 17 0;
+#X connect 20 0 19 0;
+#X restore 39 164 pd fft-hipass;
+#X obj 117 94 hsl 128 15 0 100 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X floatatom 114 128 5 0 0 0 - - -, f 5;
+#X text 253 99 set cutoff bin;
+#X obj 118 200 hsl 128 15 0 0.2 0 0 empty empty gain -2 -8 0 10 -262144
+-1 -1 0 1;
+#X text 129 165 <- open to see workings of this hipass filter;
+#X obj 26 4 cnv 15 155 25 empty empty LyonPotpourri 20 12 1 18 -260097
+-204786 0;
+#X text 28 36 vecdex~ - outputs the current index within a signal vector.
+It can be useful for spectral processing \, as demonstrated here.,
+f 64;
+#X connect 1 0 0 0;
+#X connect 1 0 0 1;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X connect 4 0 5 0;
+#X connect 5 0 3 1;
+#X connect 7 0 1 1;

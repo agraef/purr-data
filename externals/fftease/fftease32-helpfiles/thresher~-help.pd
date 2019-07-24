@@ -1,0 +1,45 @@
+#N canvas 815 263 505 512 10;
+#X obj 100 193 thresher~;
+#X obj 45 108 readsf~;
+#X obj 45 52 openpanel;
+#X msg 45 77 open \$1;
+#X msg 45 25 bang;
+#X msg 113 77 1;
+#X text 81 29 load sf;
+#X floatatom 164 136 5 0 0 0 - - -, f 5;
+#X floatatom 290 137 5 0 0 0 - - -, f 5;
+#X obj 294 -19 vsl 15 128 0.7 1 0 0 empty thresher-damp empty 0 -9
+0 10 -262144 -1 -1 12067 1;
+#X obj 164 -19 vsl 15 128 0 0.5 0 0 empty thresher-thresh empty 0 -9
+0 10 -262144 -1 -1 900 1;
+#X obj 108 273 *~ 0.05;
+#X obj 108 304 dac~;
+#X obj 150 233 hsl 128 15 0 1 0 0 empty empty Gain -2 -8 0 10 -262144
+-1 -1 12700 1;
+#X floatatom 147 253 5 0 0 0 - - -, f 5;
+#X text 46 330 thresher~ sustains the amplitude and frequency in lower-energy
+FFT bins. The extent of this effect is controlled by the threshold
+parameter: at 0 all frames pass \, at higher values more frames are
+sustained. The damping factor controls the decay time. A value of 1
+gives an infinite freeze.;
+#X text 329 137 damping factor;
+#X text 201 139 threshold;
+#N canvas 0 22 450 300 init 0;
+#X msg 164 150 \; thresher-thresh 0.05 \; thresher-damp 0.9;
+#X obj 214 82 loadbang;
+#X connect 1 0 0 0;
+#X restore 334 211 pd init;
+#X connect 0 0 11 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X connect 4 0 2 0;
+#X connect 5 0 1 0;
+#X connect 7 0 0 1;
+#X connect 8 0 0 2;
+#X connect 9 0 8 0;
+#X connect 10 0 7 0;
+#X connect 11 0 12 0;
+#X connect 11 0 12 1;
+#X connect 13 0 14 0;
+#X connect 14 0 11 1;

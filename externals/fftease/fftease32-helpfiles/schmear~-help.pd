@@ -1,0 +1,68 @@
+#N canvas 663 510 451 371 10;
+#X obj 152 146 schmear~;
+#X obj 152 234 *~ 0.05;
+#X obj 152 265 dac~;
+#X obj 194 194 hsl 128 15 0 1 0 0 empty empty Gain -2 -8 0 10 -262144
+-1 -1 0 1;
+#X floatatom 191 214 5 0 0 0 - - -, f 5;
+#X obj 40 116 r schmear-msgs;
+#X obj 152 98 osc~ 140;
+#N canvas 1092 277 472 423 vibrato 0;
+#X obj 110 127 osc~ 0.3;
+#X obj 110 173 *~ 50;
+#X obj 109 214 +~ 100;
+#X obj 109 261 *~;
+#X obj 229 71 inlet;
+#X obj 106 340 outlet~;
+#X obj 107 303 +~ 140;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 3 0 6 0;
+#X connect 4 0 3 1;
+#X connect 6 0 5 0;
+#X restore 101 54 pd vibrato;
+#X obj 101 21 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#N canvas 1290 542 450 300 impulses 0;
+#X msg 27 90 schmimp 1;
+#X msg 36 121 schmimp 0 0 0 0 0 0 0.25 0 0 1 1 1 1;
+#X msg 46 146 schmimp 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.001 0 1 0
+0 1 0 0 0 1;
+#X msg 63 184 schmimp 0 0 0 0 0 0 0 0 0 0 1 0.1 0 1 0.1 0 0.1 1 0.1
+0 0;
+#X obj 41 247 s schmear-msgs;
+#X text 92 92 no smear;
+#X text 227 105 a few different kernels:;
+#X connect 0 0 4 0;
+#X connect 1 0 4 0;
+#X connect 2 0 4 0;
+#X connect 3 0 4 0;
+#X restore 276 91 pd impulses;
+#N canvas 1159 204 450 300 control 0;
+#X obj 49 185 s schmear-msgs;
+#X msg 51 135 threshold \$1;
+#X floatatom 49 98 5 0 0 0 - - -, f 5;
+#X obj 56 67 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X msg 248 138 shift \$1;
+#X floatatom 249 109 5 0 511 0 - - -, f 5;
+#X text 246 84 shift bin energy upward;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;
+#X connect 4 0 0 0;
+#X connect 5 0 4 0;
+#X restore 276 116 pd control;
+#X text 51 290 schmear~ convolves the amplitude spectrum with a user-supplied
+impulse response \, thus smearing the spectrum \, for those times when
+you need a New York moment.;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 1 0 2 1;
+#X connect 3 0 4 0;
+#X connect 4 0 1 1;
+#X connect 5 0 0 0;
+#X connect 6 0 0 0;
+#X connect 7 0 6 0;
+#X connect 8 0 7 0;

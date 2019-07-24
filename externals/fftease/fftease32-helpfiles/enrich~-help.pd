@@ -1,0 +1,68 @@
+#N canvas 851 431 869 609 10;
+#N canvas 0 22 450 278 (subpatch) 0;
+#X array enrich-buffer 8195 float 2;
+#X coords 0 1 8195 -1 200 140 1 0 0;
+#X restore 361 27 graph;
+#X msg 252 355 \; enrich-buffer cosinesum 8192 0 1;
+#X obj 41 121 readsf~;
+#X obj 41 65 openpanel;
+#X msg 41 90 open \$1;
+#X msg 41 38 bang;
+#X msg 114 92 1;
+#X obj 41 259 enrich~ enrich-buffer;
+#X obj 41 371 *~ 0.05;
+#X obj 41 402 dac~;
+#X obj 83 331 hsl 128 15 0 1 0 0 empty empty Gain -2 -8 0 10 -262144
+-1 -1 0 1;
+#X floatatom 80 351 5 0 0 0 - - -, f 5;
+#X obj 149 210 sig~ 1;
+#X obj 220 208 sig~ 0.001;
+#X msg 250 397 \; enrich-buffer cosinesum 8192 0 0.333 0.333 0.33;
+#X text 460 354 normal resynthesis with a cosine;
+#X text 548 404 add more harmonics;
+#X msg 250 441 \; enrich-buffer cosinesum 8192 0 0 0 0 0.2 0.4 0 0
+0.4;
+#X obj 252 328 loadbang;
+#X text 566 27 try drawing directly into the array;
+#X text 565 45 for lots of harmonics;
+#X text 81 43 load a sound file;
+#X text 143 91 play it;
+#X obj 152 148 hsl 128 15 0.5 1.9999 0 0 empty enrich-tfac transpose-factor
+-2 -8 0 10 -262144 -1 -1 4234 1;
+#X floatatom 149 181 9 0 0 0 - - -, f 9;
+#X msg 371 226 highfreq \$1;
+#X floatatom 371 200 5 0 0 0 - enrich-hfr -, f 5;
+#N canvas 365 262 450 300 init 0;
+#X msg 87 143 \; enrich-hfr 10000 \; enrich-tfac 1 \; enrich-lofr 0
+;
+#X obj 101 105 loadbang;
+#X connect 1 0 0 0;
+#X restore 499 313 pd init;
+#X floatatom 461 198 5 0 0 0 - enrich-lofr -, f 5;
+#X msg 461 224 lowfreq \$1;
+#X obj 9 190 r fftz-enrich-msgs;
+#X obj 371 268 s fftz-enrich-msgs;
+#X text 46 501 enrich~ synthesizes an oscillator bank that reads from
+a Pd array \, which can contain any user-specified waveform. Useful
+for distortion.;
+#X text 575 450 way high harmonics;
+#X connect 2 0 7 0;
+#X connect 3 0 4 0;
+#X connect 4 0 2 0;
+#X connect 5 0 3 0;
+#X connect 6 0 2 0;
+#X connect 7 0 8 0;
+#X connect 8 0 9 0;
+#X connect 8 0 9 1;
+#X connect 10 0 11 0;
+#X connect 11 0 8 1;
+#X connect 12 0 7 1;
+#X connect 13 0 7 2;
+#X connect 18 0 1 0;
+#X connect 23 0 24 0;
+#X connect 24 0 12 0;
+#X connect 25 0 31 0;
+#X connect 26 0 25 0;
+#X connect 28 0 29 0;
+#X connect 29 0 31 0;
+#X connect 30 0 7 0;

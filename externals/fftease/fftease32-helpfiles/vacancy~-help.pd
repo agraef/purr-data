@@ -1,0 +1,64 @@
+#N canvas 713 398 517 445 10;
+#X obj 152 182 vacancy~;
+#X obj 146 115 readsf~;
+#X obj 146 59 openpanel;
+#X msg 146 84 open \$1;
+#X msg 146 32 bang;
+#X msg 214 84 1;
+#X text 182 36 load sf;
+#X obj 263 114 readsf~;
+#X obj 263 58 openpanel;
+#X msg 263 83 open \$1;
+#X msg 263 31 bang;
+#X text 299 35 load sf;
+#X obj 183 227 *~ 0.05;
+#X obj 183 258 dac~;
+#X obj 225 187 hsl 128 15 0 1 0 0 empty empty Gain -2 -8 0 10 -262144
+-1 -1 6700 1;
+#X floatatom 222 207 5 0 0 0 - - -, f 5;
+#X floatatom 357 129 5 0 0 0 - - -, f 5;
+#X obj 23 139 r vacancy-msgs;
+#N canvas 1360 274 450 300 control 0;
+#X obj 129 174 s vacancy-msgs;
+#X msg 98 107 rms \$1;
+#X obj 98 62 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1 1
+;
+#X obj 178 55 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X msg 178 100 invert \$1;
+#X obj 272 69 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X msg 272 114 swapphase \$1;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X connect 3 0 4 0;
+#X connect 4 0 0 0;
+#X connect 5 0 6 0;
+#X connect 6 0 0 0;
+#X restore 44 225 pd control;
+#X text 45 296 vacancy~ performs spectral compositing. The threshold
+controls the compositing. Useful values lie in the range from -90 dB
+to 90 dB. Threshold inversion is available via the invert message.
+The threshold can also track the current RMS value of of the signal.
+In RMS tracking mode \, the useful threshold range will be somewhat
+different depending upon the character of the input signals. Phases
+will be derived from the left input unless phase swapping is specified.
+In this case phases will be taken from the right input signal when
+the threshold test is true.;
+#X connect 0 0 12 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X connect 4 0 2 0;
+#X connect 5 0 1 0;
+#X connect 5 0 7 0;
+#X connect 7 0 0 1;
+#X connect 8 0 9 0;
+#X connect 9 0 7 0;
+#X connect 10 0 8 0;
+#X connect 12 0 13 0;
+#X connect 12 0 13 1;
+#X connect 14 0 15 0;
+#X connect 15 0 12 1;
+#X connect 16 0 0 2;
+#X connect 17 0 0 0;

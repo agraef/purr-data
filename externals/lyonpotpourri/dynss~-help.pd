@@ -1,0 +1,54 @@
+#N canvas 804 342 414 292 10;
+#X obj 33 212 *~ 0.1;
+#X obj 33 244 dac~;
+#X obj 23 13 cnv 15 160 25 empty empty LyonPotpourri 20 12 1 18 -260097
+-204786 0;
+#X msg 93 107 devx \$1;
+#X obj 270 140 hsl 70 12 0 1 0 0 dynss-devx dynss-devx-in devx -2 -8
+0 10 -261682 -1 -1 0 1;
+#X floatatom 93 89 5 0 0 0 - dynss-devx -, f 5;
+#X obj 270 165 hsl 70 12 0 1 0 0 dynss-devy dynss-devy-in devy -2 -8
+0 10 -261682 -1 -1 0 1;
+#X floatatom 154 88 5 0 0 0 - dynss-devy -, f 5;
+#X msg 154 106 devy \$1;
+#X obj 270 191 hsl 70 12 0 1 0 0 dynss-gain dynss-gain-in gain -2 -8
+0 10 -261682 -1 -1 0 1;
+#X floatatom 66 194 5 0 0 1 gain dynss-gain -, f 5;
+#X msg 34 106 freq \$1;
+#X obj 270 115 hsl 70 12 50 600 0 0 dynss-freq dynss-freq-in frequency
+-2 -8 0 10 -261682 -1 -1 0 1;
+#X floatatom 34 89 5 0 0 0 - dynss-freq -, f 5;
+#X obj 33 172 dynss~;
+#X obj 120 144 r dynss.messages;
+#N canvas 23 22 686 335 messages 0;
+#X msg 177 130 new_wave;
+#X msg 179 153 new_amps;
+#X msg 176 105 printwave;
+#X obj 107 225 s dynss.messages;
+#X msg 172 77 pointcount \$1;
+#X msg 172 40 4;
+#X msg 220 38 15;
+#X text 279 78 set the number of breakpoints in the waveform;
+#X text 250 111 print the breakpoints to the Pd window;
+#X text 245 137 generate a new waveform;
+#X text 245 154 generate new amplitudes \, but keep the y-values;
+#X connect 0 0 3 0;
+#X connect 2 0 3 0;
+#X connect 4 0 3 0;
+#X connect 5 0 4 0;
+#X connect 6 0 4 0;
+#X restore 71 243 pd messages;
+#X text 153 244 <- more info here;
+#X text 21 42 dynss~ - dynamic stochastic synthesis as described by
+Iannis Xenakis in "Formalized Music";
+#X connect 0 0 1 0;
+#X connect 0 0 1 1;
+#X connect 3 0 14 0;
+#X connect 5 0 3 0;
+#X connect 7 0 8 0;
+#X connect 8 0 14 0;
+#X connect 10 0 0 1;
+#X connect 11 0 14 0;
+#X connect 13 0 11 0;
+#X connect 14 0 0 0;
+#X connect 15 0 14 0;

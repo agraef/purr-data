@@ -1,0 +1,37 @@
+#N canvas 606 234 406 508 10;
+#X obj 31 269 rotapan~ 5;
+#X obj 31 373 shoehorn~ 5 2;
+#X obj 31 414 *~ 0.01;
+#X obj 106 415 *~ 0.01;
+#X obj 31 97 osc~ 400;
+#X obj 65 120 osc~ 500;
+#X obj 120 228 phasor~ 0.08;
+#X obj 31 463 dac~;
+#X obj 110 164 osc~ 430;
+#X obj 129 187 osc~ 479;
+#X obj 95 142 osc~ 300;
+#X text 22 34 rotapan~ rotates an array of channels preserving spatial
+relations. The rightmost inlet controls the phase of the rotation \,
+in the range (0-1). The argument determines the length of the channel
+array.;
+#X obj 26 4 cnv 15 155 25 empty empty LyonPotpourri 20 12 1 18 -260097
+-204786 0;
+#X obj 148 374 hsl 128 15 0 0.15 0 0 empty empty gain -2 -8 0 10 -232576
+-1 -1 0 1;
+#X connect 0 0 1 0;
+#X connect 0 1 1 1;
+#X connect 0 2 1 2;
+#X connect 0 3 1 3;
+#X connect 0 4 1 4;
+#X connect 1 0 2 0;
+#X connect 1 1 3 0;
+#X connect 2 0 7 0;
+#X connect 3 0 7 1;
+#X connect 4 0 0 0;
+#X connect 5 0 0 1;
+#X connect 6 0 0 5;
+#X connect 8 0 0 3;
+#X connect 9 0 0 4;
+#X connect 10 0 0 2;
+#X connect 13 0 3 1;
+#X connect 13 0 2 1;

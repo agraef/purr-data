@@ -1,0 +1,11 @@
+#N canvas 719 335 316 238 10;
+#X floatatom 34 177 5 0 0 0 - - -, f 5;
+#X obj 34 77 samm~ 120 1;
+#X obj 34 143 click2float~;
+#X obj 34 109 mask~ 2 4 6.333 8;
+#X obj 23 13 cnv 15 160 25 empty empty LyonPotpourri 20 12 1 18 -260097
+-204786 0;
+#X text 21 47 click2float~ - Convert a click to a float;
+#X connect 1 0 3 0;
+#X connect 2 0 0 0;
+#X connect 3 0 2 0;

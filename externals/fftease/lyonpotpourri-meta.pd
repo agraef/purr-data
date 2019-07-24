@@ -1,0 +1,7 @@
+#N canvas 15 49 200 200 10;
+#N canvas 25 49 420 300 META 1;
+#X text 13 41 NAME lyonpotpourri;
+#X text 10 25 AUTHOR Eric Lyon <e.lyon@qub.ac.uk>;
+#X text 10 10 VERSION 2.0;
+#X text 10 60 LICENSE MIT;
+#X restore 10 10 pd META;
