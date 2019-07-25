@@ -1,0 +1,35 @@
+#N canvas 879 506 472 383 10;
+#X obj 149 181 xsyn~;
+#X obj 31 100 readsf~;
+#X obj 31 44 openpanel;
+#X msg 31 69 open \$1;
+#X msg 31 17 bang;
+#X msg 99 69 1;
+#X text 67 21 load sf;
+#X obj 200 113 readsf~;
+#X obj 200 57 openpanel;
+#X msg 200 82 open \$1;
+#X msg 200 30 bang;
+#X text 236 34 load sf;
+#X obj 152 234 *~ 0.05;
+#X obj 152 265 dac~;
+#X obj 194 194 hsl 128 15 0 1 0 0 empty empty Gain -2 -8 0 10 -262144
+-1 -1 0 1;
+#X floatatom 191 214 5 0 0 0 - - -, f 5;
+#X text 34 320 xsyn~ filters the first input with the second input
+\, creating a spectral cross synthesis effect.;
+#X connect 0 0 12 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X connect 4 0 2 0;
+#X connect 5 0 1 0;
+#X connect 5 0 7 0;
+#X connect 7 0 0 1;
+#X connect 8 0 9 0;
+#X connect 9 0 7 0;
+#X connect 10 0 8 0;
+#X connect 12 0 13 0;
+#X connect 12 0 13 1;
+#X connect 14 0 15 0;
+#X connect 15 0 12 1;

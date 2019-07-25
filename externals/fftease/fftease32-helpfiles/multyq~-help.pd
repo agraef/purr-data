@@ -1,0 +1,60 @@
+#N canvas 1099 521 568 422 10;
+#X obj 52 50 noise~;
+#X obj 52 261 *~ 0.05;
+#X obj 52 292 dac~;
+#X obj 94 221 hsl 128 15 0 1 0 0 empty empty Gain -2 -8 0 10 -262144
+-1 -1 0 1;
+#X floatatom 91 241 5 0 0 0 - - -, f 5;
+#X floatatom 69 100 5 0 0 0 - multyq-f1 -, f 5;
+#X floatatom 105 100 5 0 0 0 - multyq-bw1 -, f 5;
+#X floatatom 141 99 5 0 0 0 - multyq-g1 -, f 5;
+#N canvas 609 675 450 300 init 0;
+#X msg 33 95 \; multyq-f1 565 \; multyq-bw1 0.5 \; multyq-g1 4 \; multyq-bw2
+0.45 \; multyq-bw3 0.2 \; multyq-g3 12 \;;
+#X obj 33 64 loadbang;
+#X connect 1 0 0 0;
+#X restore 437 184 pd init;
+#X obj 193 106 *~;
+#X obj 193 41 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 282 30 osc~ 0.2;
+#X obj 282 52 *~ 1000;
+#X obj 282 74 +~ 1300;
+#X obj 52 156 multyq~ 1024 8, f 71;
+#X obj 263 107 * 4;
+#X floatatom 228 126 5 0 0 0 - multyq-bw2 -, f 5;
+#X text 124 41 autosweep;
+#X floatatom 445 85 5 0 0 0 - multyq-bw3 -, f 5;
+#X floatatom 487 85 5 0 0 0 - multyq-g3 -, f 5;
+#X obj 407 45 hsl 128 15 1000 10000 0 0 empty empty empty -2 -8 0 10
+-262144 -1 -1 0 1;
+#X floatatom 404 86 5 0 0 0 - - -, f 5;
+#X text 397 21 sweep high end;
+#X text 289 137 room for one more;
+#X text 52 319 multyq~ is a four band equalizer. Gain values below
+0 create notches rather than peaks \, but only go as far as -1.0. Bandwidth
+is from 0 to 1 Only three bands are used in this example \, but CPU
+usage is the same regardless of how many are used. As the filter is
+FFT-based \, its performance is spotty in the low frequency range.
+;
+#X connect 0 0 14 0;
+#X connect 1 0 2 0;
+#X connect 1 0 2 1;
+#X connect 3 0 4 0;
+#X connect 4 0 1 1;
+#X connect 5 0 14 1;
+#X connect 6 0 14 2;
+#X connect 7 0 14 3;
+#X connect 9 0 14 4;
+#X connect 10 0 9 0;
+#X connect 10 0 15 0;
+#X connect 11 0 12 0;
+#X connect 12 0 13 0;
+#X connect 13 0 9 1;
+#X connect 14 0 1 0;
+#X connect 15 0 14 6;
+#X connect 16 0 14 5;
+#X connect 18 0 14 11;
+#X connect 19 0 14 12;
+#X connect 20 0 21 0;
+#X connect 21 0 14 10;

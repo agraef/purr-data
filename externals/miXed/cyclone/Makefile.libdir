@@ -14,6 +14,9 @@ INSTALL_DIR     = $(INSTALL) -p -m 755 -d
 
 UNAME := $(shell uname -s)
 ifeq ($(UNAME),Darwin)
+  ifeq ($(macos_target),)
+  macos_target = 10.9
+  endif
   CPU := $(shell uname -p)
   ifeq ($(CPU),arm) # iPhone/iPod Touch
     EXTENSION = pd_darwin
@@ -39,9 +42,9 @@ ifeq ($(UNAME),Darwin)
     OPT_CFLAGS = -ftree-vectorize -ftree-vectorizer-verbose=2 -fast
 # build universal 32-bit on 10.4 and 32/64 on newer
     ifeq ($(shell uname -r | sed 's|\([0-9][0-9]*\)\.[0-9][0-9]*\.[0-9][0-9]*|\1|'), 8)
-      FAT_FLAGS = -arch ppc -arch i386 -mmacosx-version-min=10.4
+      FAT_FLAGS = -arch ppc -arch i386 -mmacosx-version-min=$(macos_target)
     else
-      FAT_FLAGS = -arch ppc -arch i386 -arch x86_64 -mmacosx-version-min=10.4
+      FAT_FLAGS = -arch ppc -arch i386 -arch x86_64 -mmacosx-version-min=$(macos_target)
     endif
     CFLAGS += $(FAT_FLAGS) -fPIC -I/sw/include
     LDFLAGS += $(FAT_FLAGS) -bundle -undefined dynamic_lookup -L/sw/lib

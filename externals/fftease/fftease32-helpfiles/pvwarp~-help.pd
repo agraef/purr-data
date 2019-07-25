@@ -1,0 +1,68 @@
+#N canvas 891 601 544 383 10;
+#X obj 34 179 pvwarp~, f 63;
+#X obj 34 140 readsf~;
+#X obj 34 84 openpanel;
+#X msg 34 109 open \$1;
+#X msg 34 57 bang;
+#X msg 102 109 1;
+#X text 70 61 load sf;
+#X obj 34 264 *~ 0.05;
+#X obj 34 295 dac~;
+#X obj 76 224 hsl 128 15 0 1 0 0 empty empty Gain -2 -8 0 10 -262144
+-1 -1 0 1;
+#X floatatom 73 244 5 0 0 0 - - -, f 5;
+#X obj 379 117 sig~ 0.0001;
+#X floatatom 367 97 5 0 0 0 - - -, f 5;
+#X floatatom 318 124 5 0 0 0 - - -, f 5;
+#X msg 177 86 autofunc 0.1 2;
+#N canvas 946 176 450 300 a-lump 0;
+#X obj 85 206 outlet;
+#X obj 85 172 pack f f f;
+#X floatatom 175 93 5 0 0 0 - - -, f 5;
+#X obj 175 114 t b f;
+#X floatatom 123 88 5 0 0 0 - - -, f 5;
+#X obj 123 109 t b f;
+#X floatatom 62 87 5 0 0 0 - - -, f 5;
+#X msg 61 29 667 0.45 0.25;
+#X obj 62 54 unpack f f f;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X connect 3 1 1 2;
+#X connect 4 0 5 0;
+#X connect 5 0 1 0;
+#X connect 5 1 1 1;
+#X connect 6 0 1 0;
+#X connect 7 0 8 0;
+#X connect 8 0 6 0;
+#X connect 8 1 4 0;
+#X connect 8 2 2 0;
+#X restore 166 121 pd a-lump;
+#X obj 166 143 unpack f f f;
+#X obj 370 63 hsl 128 15 0.25 2 0 0 empty empty Transposition -2 -8
+0 10 -262144 -1 -1 0 1;
+#X obj 279 29 hsl 128 15 0 1 0 0 empty empty function-read-offset -2
+-8 0 10 -262144 -1 -1 0 1;
+#X text 32 327 Spectrum warper. An internal frequency warping function
+is created either according to specification or with the autofunc message.
+Try it on vocal sounds.;
+#X connect 0 0 7 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X connect 4 0 2 0;
+#X connect 5 0 1 0;
+#X connect 7 0 8 0;
+#X connect 7 0 8 1;
+#X connect 9 0 10 0;
+#X connect 10 0 7 1;
+#X connect 11 0 0 9;
+#X connect 12 0 0 8;
+#X connect 13 0 0 7;
+#X connect 14 0 0 0;
+#X connect 15 0 16 0;
+#X connect 16 0 0 1;
+#X connect 16 1 0 2;
+#X connect 16 2 0 3;
+#X connect 17 0 12 0;
+#X connect 18 0 13 0;

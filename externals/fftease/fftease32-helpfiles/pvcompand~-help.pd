@@ -1,0 +1,31 @@
+#N canvas 1205 620 541 378 10;
+#X obj 43 149 pvcompand~;
+#X obj 43 109 readsf~;
+#X obj 43 53 openpanel;
+#X msg 43 78 open \$1;
+#X msg 43 26 bang;
+#X msg 111 78 1;
+#X text 79 30 load sf;
+#X floatatom 192 96 5 0 0 0 - - -, f 5;
+#X text 189 74 threshold factor;
+#X obj 43 225 *~ 0.05;
+#X obj 43 256 dac~;
+#X obj 85 185 hsl 128 15 0 1 0 0 empty empty Gain -2 -8 0 10 -262144
+-1 -1 0 1;
+#X floatatom 82 205 5 0 0 0 - - -, f 5;
+#X text 41 274 pvcompand~ either expands or compresses the differences
+between the amplitudes of the spectral frames. The threshold is interpreted
+as dB and useful ranges are from about -60 to +60. Positive values
+increase the "peakiness" of the sound and negative values tend to whiten
+the spectrum.;
+#X connect 0 0 9 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X connect 4 0 2 0;
+#X connect 5 0 1 0;
+#X connect 7 0 0 1;
+#X connect 9 0 10 0;
+#X connect 9 0 10 1;
+#X connect 11 0 12 0;
+#X connect 12 0 9 1;

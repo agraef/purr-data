@@ -1,0 +1,40 @@
+#N canvas 316 98 349 304 10;
+#X obj 96 238 dac~;
+#X obj 96 83 phasor~ 450;
+#X floatatom 186 105 5 0 0 2 - g-transpose -, f 5;
+#X obj 96 212 *~ 0.05;
+#X obj 189 83 hsl 128 15 0.1 3 0 0 g-transpose granola-transpose-in
+transpose_factor -2 -6 0 10 -4075 -1 -1 3941 1;
+#X obj 25 79 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X msg 25 111 mute \$1;
+#X obj 145 178 hsl 90 12 0 0.1 0 0 empty granola-gain-in gain -2 -8
+0 10 -212981 -1 -1 4450 1;
+#X floatatom 142 192 5 0 0 0 - - -, f 5;
+#X obj 23 9 cnv 15 160 25 empty empty LyonPotpourri 20 12 1 18 -260097
+-204786 0;
+#X obj 96 142 granola~ 100;
+#X obj 96 114 killdc~;
+#N canvas 235 115 191 186 initialize 0;
+#X msg 3 111 1;
+#X obj 3 88 loadbang;
+#X obj 3 133 s granola-transpose-in;
+#X obj 3 63 s granola-gain-in;
+#X obj 3 18 loadbang;
+#X msg 3 41 0.05;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 4 0 5 0;
+#X connect 5 0 3 0;
+#X restore 135 238 pd initialize;
+#X text 24 42 granola~ - a granular pitch transposer;
+#X connect 1 0 11 0;
+#X connect 2 0 10 1;
+#X connect 3 0 0 0;
+#X connect 3 0 0 1;
+#X connect 5 0 6 0;
+#X connect 6 0 10 0;
+#X connect 7 0 8 0;
+#X connect 8 0 3 1;
+#X connect 10 0 3 0;
+#X connect 11 0 10 0;

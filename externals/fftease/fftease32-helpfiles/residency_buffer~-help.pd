@@ -1,0 +1,76 @@
+#N canvas 771 474 726 482 10;
+#N canvas 0 22 450 278 (subpatch) 0;
+#X array analysis-array1 1.76744e+06 float 2;
+#X coords 0 32767 1.76744e+06 -32768 200 140 1 0 0;
+#X restore 456 47 graph;
+#X obj 88 148 residency_buffer~ analysis-array1;
+#X obj 88 119 readsf~;
+#X obj 88 63 openpanel;
+#X msg 88 88 open \$1;
+#X msg 88 36 bang;
+#X msg 156 88 1;
+#X text 124 40 load sf;
+#X obj 89 260 *~ 0.05;
+#X obj 89 291 dac~;
+#X obj 131 220 hsl 128 15 0 1 0 0 empty empty Gain -2 -8 0 10 -262144
+-1 -1 0 1;
+#X floatatom 128 240 5 0 0 0 - - -, f 5;
+#X floatatom 204 71 5 0 0 0 - - -, f 5;
+#X floatatom 272 73 5 0 0 0 - - -, f 5;
+#X obj 274 29 hsl 128 15 0 1 0 0 empty empty position -2 -8 0 10 -262144
+-1 -1 8900 1;
+#X msg 5 117 calcbuf 5000;
+#X msg 273 216 set \$1;
+#X msg 273 242 1.76745e+06;
+#N canvas 404 737 450 300 showsync 0;
+#X obj 205 102 inlet~;
+#X obj 205 159 snapshot~;
+#X obj 325 121 metro 50;
+#X obj 325 89 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 325 22 loadbang;
+#X msg 325 57 1;
+#X obj 205 225 outlet;
+#X connect 0 0 1 0;
+#X connect 1 0 6 0;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;
+#X connect 4 0 5 0;
+#X connect 5 0 3 0;
+#X restore 220 269 pd showsync;
+#X floatatom 220 294 5 0 0 0 - - -, f 5;
+#X obj 200 112 sig~ 0;
+#X obj 276 108 sig~ 0;
+#X msg 11 12 acquire_sample;
+#X text 458 191 warning: do not write into this array \, as you will
+create extremely loud glitches if you do so.;
+#X text 46 349 residency_buffer~ is like residency~ except that it
+uses a Pd array rather than an internal buffer. This makes it more
+complicated to work with \, but potentially more efficient than residency~.
+Any number of units may access the same array (or different ones).
+The array name is the obbligatory first argument. Do NOT attempt to
+play the recorded buffer with tabread~ or other time-domain audio objects
+unless you have some idea of what you are doing (and turn the volume
+way down before attempting this).;
+#X text 353 243 required array size;
+#X connect 1 0 8 0;
+#X connect 1 1 18 0;
+#X connect 1 2 16 0;
+#X connect 2 0 1 0;
+#X connect 3 0 4 0;
+#X connect 4 0 2 0;
+#X connect 5 0 3 0;
+#X connect 6 0 2 0;
+#X connect 8 0 9 0;
+#X connect 8 0 9 1;
+#X connect 10 0 11 0;
+#X connect 11 0 8 1;
+#X connect 12 0 20 0;
+#X connect 13 0 21 0;
+#X connect 14 0 13 0;
+#X connect 15 0 1 0;
+#X connect 16 0 17 0;
+#X connect 18 0 19 0;
+#X connect 20 0 1 1;
+#X connect 21 0 1 2;
+#X connect 22 0 1 0;

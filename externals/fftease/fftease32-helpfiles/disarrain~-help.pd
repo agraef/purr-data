@@ -1,0 +1,86 @@
+#N canvas 889 356 642 531 10;
+#X obj 142 209 disarrain~;
+#X obj 98 101 phasor~ 261;
+#X obj 98 129 -~ 0.5;
+#X msg 198 131 fadetime \$1;
+#X floatatom 198 109 5 0 0 0 - disarrain-fadetime -, f 5;
+#X floatatom 296 126 5 0 0 0 - disarrain-switchct -, f 5;
+#X obj 98 335 *~ 0.05;
+#X obj 98 366 dac~;
+#X obj 140 295 hsl 128 15 0 1 0 0 empty empty Gain -2 -8 0 10 -262144
+-1 -1 3900 1;
+#X floatatom 137 315 5 0 0 0 - - -, f 5;
+#N canvas 404 737 450 300 showsync 0;
+#X obj 205 102 inlet~;
+#X obj 205 159 snapshot~;
+#X obj 325 121 metro 50;
+#X obj 325 89 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 325 22 loadbang;
+#X msg 325 57 1;
+#X obj 205 225 outlet;
+#X connect 0 0 1 0;
+#X connect 1 0 6 0;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;
+#X connect 4 0 5 0;
+#X connect 5 0 3 0;
+#X restore 183 247 pd showsync;
+#X floatatom 183 273 5 0 0 0 - - -, f 5;
+#X msg 296 151 switch_count \$1;
+#X obj 36 180 metro 3000;
+#X obj 37 27 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1 1
+;
+#N canvas 309 378 450 300 init 0;
+#X obj -52 38 loadbang;
+#X msg -52 65 \; disarrain-fadetime 3000 \; disarrain-switchct 70 \;
+disarrain-topfreq 2000;
+#X connect 0 0 1 0;
+#X restore 286 293 pd init;
+#X text 22 388 fftz.disarrain~ reorders a certain number of bins \,
+which can significantly transform the timbre. The spectral reordering
+is reported from the third outlet.;
+#X msg 332 177 showstate;
+#N canvas 0 22 450 300 showbins 0;
+#X obj 103 48 inlet;
+#X msg 42 210 62 70 5 20 43 30 48 49 60 44 32 11 8 46 35 6 65 38 34
+33 14 21 22 61 53 25 45 57 16 10 3 37 52 17 18 55 36 66 2 26 68 4 69
+0 42 47 31 39 54 27 40 50 13 63 58 24 56 59 67 7 19 23 1 9 64 41 29
+51 15 28;
+#X msg 42 109 set \$1 \$2 \$3 \$4 \$5 \$6 \$7 \$8 \$9 \$10 \$11 \$12
+\$13 \$14 \$15 \$16 \$17 \$18 \$19 \$20 \$21 \$22 \$23 \$24 \$25 \$26
+\$27 \$28 \$29 \$30 \$31 \$32 \$33 \$34 \$35 \$36 \$37 \$38 \$39 \$40
+\$41 \$42 \$43 \$44 \$45 \$46 \$47 \$48 \$49 \$50 \$51 \$52 \$53 \$54
+\$55 \$56 \$57 \$58 \$59 \$60 \$61 \$62 \$63 \$64 \$65 \$66 \$67 \$68
+\$69 \$70;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X restore 271 245 pd showbins;
+#X text 59 26 turn on for interpolation;
+#X obj 37 56 t f b b;
+#X obj 223 50 s disarrain-switchct;
+#X obj 223 70 s disarrain-fadetime;
+#X floatatom 469 181 5 0 0 0 - disarrain-topfreq -, f 5;
+#X msg 469 209 topfreq \$1;
+#X connect 0 0 6 0;
+#X connect 0 1 10 0;
+#X connect 0 2 18 0;
+#X connect 1 0 2 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 3 0;
+#X connect 5 0 12 0;
+#X connect 6 0 7 0;
+#X connect 6 0 7 1;
+#X connect 8 0 9 0;
+#X connect 9 0 6 1;
+#X connect 10 0 11 0;
+#X connect 12 0 0 0;
+#X connect 13 0 0 0;
+#X connect 14 0 20 0;
+#X connect 17 0 0 0;
+#X connect 20 0 13 0;
+#X connect 20 1 22 0;
+#X connect 20 2 21 0;
+#X connect 23 0 24 0;
+#X connect 24 0 0 0;

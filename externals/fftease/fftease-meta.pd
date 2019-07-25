@@ -1,0 +1,6 @@
+#N canvas 15 49 195 101 10;
+#N canvas 285 484 420 300 META 0;
+#X text 10 25 AUTHOR ericlyon@vt.edu;
+#X text 13 41 NAME FFTease;
+#X text 10 10 VERSION 3;
+#X restore 10 10 pd META;

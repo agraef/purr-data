@@ -1,0 +1,78 @@
+#N canvas 979 487 505 383 10;
+#X obj 193 107 cavoc~;
+#X obj 193 199 *~ 0.05;
+#X obj 193 230 dac~;
+#X obj 235 159 hsl 128 15 0 1 0 0 empty empty Gain -2 -8 0 10 -262144
+-1 -1 0 1;
+#X floatatom 232 179 5 0 0 0 - - -, f 5;
+#X text 16 323 cavoc~ generates spectra with an 8 rule cellular automaton.
+Start with very low gain.;
+#X obj 193 75 r fftz.cavoc.msgs;
+#N canvas 1230 207 504 565 more-messages 0;
+#X obj 74 472 s fftz.cavoc.msgs;
+#X msg 70 129 retune 0.5 1.5;
+#X msg 273 163 bottomfreq \$1;
+#X msg 231 84 topfreq \$1;
+#X floatatom 232 49 8 500 8000 0 - - -, f 8;
+#X floatatom 271 134 8 0 400 0 - - -, f 8;
+#X msg 23 103 mute \$1;
+#X obj 23 73 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
+;
+#X obj 99 30 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
+;
+#X msg 99 60 external_trigger \$1;
+#X msg 170 163 bang;
+#X msg 259 259 hold_time \$1;
+#X floatatom 258 230 5 100 1000 0 - - -, f 5;
+#X floatatom 328 49 5 0.01 0.25 0 - - -, f 5;
+#X msg 328 68 density \$1;
+#X msg 270 387 oscbank \$1;
+#X obj 278 347 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 326 26 hsl 128 15 0.01 0.2 0 0 empty empty empty -2 -8 0 10
+-262144 -1 -1 0 1;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 3 0;
+#X connect 5 0 2 0;
+#X connect 6 0 0 0;
+#X connect 7 0 6 0;
+#X connect 8 0 9 0;
+#X connect 9 0 0 0;
+#X connect 10 0 0 0;
+#X connect 11 0 0 0;
+#X connect 12 0 11 0;
+#X connect 13 0 14 0;
+#X connect 14 0 0 0;
+#X connect 15 0 0 0;
+#X connect 16 0 15 0;
+#X connect 17 0 13 0;
+#X restore 30 247 pd more-messages;
+#N canvas 805 281 465 670 rules 0;
+#X obj 30 503 s fftz.cavoc.msgs;
+#X msg 87 107 rule 0 1 0 1 0 0 1 1;
+#X msg 59 79 rule 0 1 1 0 1 0 0 1;
+#X msg 122 127 rule 0 0 0 0 1 1 1 1;
+#X msg 129 158 rule 0 0 0 1 1 0 0 0;
+#X msg 153 215 rule 1 0 0 1 1 0 0 1;
+#X msg 180 259 rule 1 1 0 1 0 1 0 0;
+#X msg 205 302 rule 1 1 0 1 0 1 1 0;
+#X msg 223 342 rule 1 1 0 0 1 1 0 0;
+#X msg 233 387 rule 0 0 1 0 1 0 1 1;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X connect 5 0 0 0;
+#X connect 6 0 0 0;
+#X connect 7 0 0 0;
+#X connect 8 0 0 0;
+#X connect 9 0 0 0;
+#X restore 27 105 pd rules;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 1 0 2 1;
+#X connect 3 0 4 0;
+#X connect 4 0 1 1;
+#X connect 6 0 0 0;

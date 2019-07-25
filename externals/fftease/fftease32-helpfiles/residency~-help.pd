@@ -1,0 +1,62 @@
+#N canvas 759 530 540 383 10;
+#X obj 109 147 residency~ 5000;
+#X obj 109 114 readsf~;
+#X obj 109 56 openpanel;
+#X msg 109 81 open \$1;
+#X msg 109 29 bang;
+#X msg 177 81 1;
+#X text 145 33 load sf;
+#X obj 109 239 *~ 0.05;
+#X obj 109 270 dac~;
+#X obj 151 199 hsl 128 15 0 1 0 0 empty empty Gain -2 -8 0 10 -262144
+-1 -1 12700 1;
+#X floatatom 148 219 5 0 0 0 - - -, f 5;
+#N canvas 404 737 450 300 showsync 0;
+#X obj 205 102 inlet~;
+#X obj 205 159 snapshot~;
+#X obj 325 121 metro 50;
+#X obj 325 89 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 325 22 loadbang;
+#X msg 325 57 1;
+#X obj 205 225 outlet;
+#X connect 0 0 1 0;
+#X connect 1 0 6 0;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;
+#X connect 4 0 5 0;
+#X connect 5 0 3 0;
+#X restore 346 212 pd showsync;
+#X floatatom 346 237 5 0 0 0 - - -, f 5;
+#X floatatom 233 105 5 0 0 0 - - -, f 5;
+#X floatatom 359 110 5 0 0 0 - - -, f 5;
+#X msg 276 39 0 0;
+#X obj 276 64 unpack f f;
+#X msg 13 59 acquire_sample;
+#X obj 364 54 hsl 128 15 0 1 0 0 empty empty position -2 -8 0 10 -262144
+-1 -1 2200 1;
+#X obj 276 10 loadbang;
+#X text 274 105 speed;
+#X text 108 306 residency~ samples input to an internal buffer \, after
+which the sound can be resynthesized with arbitrary speed and pitch.
+;
+#X connect 0 0 7 0;
+#X connect 0 1 11 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X connect 4 0 2 0;
+#X connect 5 0 1 0;
+#X connect 7 0 8 0;
+#X connect 7 0 8 1;
+#X connect 9 0 10 0;
+#X connect 10 0 7 1;
+#X connect 11 0 12 0;
+#X connect 13 0 0 1;
+#X connect 14 0 0 2;
+#X connect 15 0 16 0;
+#X connect 16 0 13 0;
+#X connect 16 1 14 0;
+#X connect 17 0 0 0;
+#X connect 18 0 14 0;
+#X connect 19 0 15 0;

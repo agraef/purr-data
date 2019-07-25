@@ -1,0 +1,129 @@
+#N canvas 428 168 584 467 10;
+#N canvas 0 22 450 300 (subpatch) 0;
+#X array sf4player 14274 float 2;
+#X coords 0 1 14274 -1 200 140 1;
+#X restore 358 63 graph;
+#X obj 26 344 dac~;
+#N canvas 113 308 712 535 load-a-sound 0;
+#X obj 49 170 soundfiler;
+#X obj 49 119 openpanel;
+#X obj 49 92 inlet;
+#X msg 49 142 read -resize \$1 sf4player;
+#X msg 339 115 read -resize sound/bell.aiff sf4player;
+#X connect 1 0 3 0;
+#X connect 2 0 1 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X restore 133 390 pd load-a-sound;
+#X obj 133 333 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 286 190 5 0 0 0 - increment -, f 5;
+#X obj 266 424 hsl 128 15 -2 2 0 0 increment empty increment -2 -6
+0 10 -143299 -1 -1 1800 1;
+#N canvas 144 217 774 527 triggers 0;
+#X obj 93 107 samm~ 60 1;
+#X msg 93 79 mute \$1;
+#X obj 93 46 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 36 253 outlet~;
+#X msg 208 113 bang;
+#X msg 205 72 tempo \$1;
+#X floatatom 205 52 5 0 0 0 - - -, f 5;
+#X obj 208 25 hsl 128 15 20 200 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X text 244 115 manual play;
+#X text 111 48 stop metro;
+#X obj 169 250 loadbang;
+#X msg 169 274 1;
+#X obj 169 296 s increment;
+#X obj 353 344 outlet~;
+#X obj 353 283 clickhold~;
+#X obj 37 185 mask~ 1 0.7 0.5 0.3 0.1;
+#X obj 353 228 mask~ 1 3 2 4;
+#X obj 208 138 click~;
+#X connect 0 0 15 0;
+#X connect 0 0 16 0;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X connect 4 0 17 0;
+#X connect 5 0 0 0;
+#X connect 6 0 5 0;
+#X connect 7 0 6 0;
+#X connect 10 0 11 0;
+#X connect 11 0 12 0;
+#X connect 14 0 13 0;
+#X connect 15 0 3 0;
+#X connect 16 0 14 0;
+#X connect 17 0 3 0;
+#X restore 58 181 pd triggers;
+#X msg 26 161 static_increment \$1;
+#X obj 26 134 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#N canvas 184 101 652 543 Learn-About-Me 0;
+#X text 30 61 (up to 8 simultaneous plays) so that;
+#X text 30 83 if you retrigger before the last play;
+#X text 33 104 is done \, the tail of the sound does;
+#X text 33 127 not get cut off abruptly.;
+#X text 31 41 other players \, player~ allows overlap;
+#X text 42 176 By default you have continuous control;
+#X text 42 215 the right inlet.) This increment controls;
+#X text 42 233 ALL currently active playbacks. If you;
+#X text 43 255 want independent playback (say a drum;
+#X text 42 277 machine with different increments on;
+#X text 45 301 each note) then turn on "static_increment.";
+#X text 46 328 Then you lose direct control over increment -;
+#X text 45 372 is constant. But then you can have multiple notes;
+#X text 45 398 playing at different increments.;
+#X text 29 22 player~ plays sound from an array. Unlike;
+#X text 40 194 over the sound increment (the input to;
+#X text 44 437 player~ is sample-triggered \, which means it can;
+#X text 46 461 be controlled with a sample-accurate metronome;
+#X text 48 482 such as samm~. This can make for a much more steady
+;
+#X text 46 504 rhythm then using metro.;
+#X text 44 351 whatever increment is set at the onset of each note
+;
+#X restore 130 423 pd Learn-About-Me;
+#X text 177 348 do this before turning on DACs;
+#X text 161 330 <- first load in a short sound (recommend 1-5 secs.)
+;
+#X floatatom 63 303 5 0 0 0 - player-gain -, f 5;
+#X obj 26 321 *~ 0.2;
+#X obj 266 396 hsl 128 15 0 1 0 0 player-gain player-gain-in gain -2
+-8 0 10 -260987 -1 -1 0 1;
+#X obj 26 91 loadbang;
+#X obj 286 211 sig~;
+#X obj 170 234 clean_selector~ 2;
+#X obj 170 182 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X msg 170 205 channel \$1;
+#X obj 9 7 cnv 15 160 25 empty empty LyonPotpourri 20 12 1 18 -260097
+-204786 0;
+#X obj 26 276 player~ sf4player 1 8;
+#N canvas 0 22 450 300 initialize 0;
+#X obj 164 103 s phasemod-scope-tog;
+#X obj 153 36 loadbang;
+#X msg 154 62 0.1;
+#X connect 1 0 2 0;
+#X restore 26 387 pd initialize;
+#X msg 26 112 1;
+#X text 47 137 set this for fixed increments (and polyphony);
+#X text 13 53 player~ - click-driven sample-accurate array playback
+;
+#X text 169 275 args: channel count \, overlap count, f 38;
+#X connect 3 0 2 0;
+#X connect 4 0 16 0;
+#X connect 6 0 21 0;
+#X connect 6 1 17 0;
+#X connect 7 0 21 0;
+#X connect 8 0 7 0;
+#X connect 12 0 13 1;
+#X connect 13 0 1 0;
+#X connect 13 0 1 1;
+#X connect 15 0 23 0;
+#X connect 16 0 17 1;
+#X connect 17 0 21 1;
+#X connect 18 0 19 0;
+#X connect 19 0 17 0;
+#X connect 21 0 13 0;
+#X connect 23 0 8 0;

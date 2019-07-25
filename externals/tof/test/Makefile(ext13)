@@ -29,11 +29,14 @@ LIBS =
 
 UNAME := $(shell uname -s)
 ifeq ($(UNAME),Darwin)
+  ifeq ($(macos_target),)
+  macos_target = 10.9
+  endif
   SOURCES += $(SOURCES_Darwin)
   EXTENSION = pd_darwin
   OS = macosx
   OPT_CFLAGS = -ftree-vectorize -ftree-vectorizer-verbose=2 -fast
-  FAT_FLAGS = -arch i386 -arch ppc -mmacosx-version-min=10.4
+  FAT_FLAGS = -arch i386 -arch ppc -mmacosx-version-min=$(macos_target)
   CFLAGS += -fPIC $(FAT_FLAGS)
   LDFLAGS += -bundle -undefined dynamic_lookup $(FAT_FLAGS)
   LIBS += -lc 

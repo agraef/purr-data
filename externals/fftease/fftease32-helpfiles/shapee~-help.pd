@@ -1,0 +1,38 @@
+#N canvas 736 486 451 368 10;
+#X obj 27 107 readsf~;
+#X obj 27 51 openpanel;
+#X msg 27 76 open \$1;
+#X msg 27 24 bang;
+#X msg 95 76 1;
+#X obj 187 110 readsf~;
+#X obj 187 54 openpanel;
+#X msg 187 79 open \$1;
+#X msg 187 27 bang;
+#X text 63 28 load frequency sf;
+#X text 223 31 load formant sf;
+#X floatatom 355 113 5 1 511 2 shape-width - -, f 5;
+#X obj 27 247 *~ 0.05;
+#X obj 27 278 dac~;
+#X obj 69 207 hsl 128 15 0 1 0 0 empty empty Gain -2 -8 0 10 -262144
+-1 -1 0 1;
+#X floatatom 66 227 5 0 0 0 - - -, f 5;
+#X obj 27 167 shapee~;
+#X text 23 308 shapee~ shapes the frequency evolution of one signal
+with that of another. The shape width controls the amount of the frequency
+shaping effect.;
+#X connect 0 0 16 0;
+#X connect 1 0 2 0;
+#X connect 2 0 0 0;
+#X connect 3 0 1 0;
+#X connect 4 0 0 0;
+#X connect 4 0 5 0;
+#X connect 5 0 16 1;
+#X connect 6 0 7 0;
+#X connect 7 0 5 0;
+#X connect 8 0 6 0;
+#X connect 11 0 16 2;
+#X connect 12 0 13 0;
+#X connect 12 0 13 1;
+#X connect 14 0 15 0;
+#X connect 15 0 12 1;
+#X connect 16 0 12 0;

@@ -1,0 +1,37 @@
+#N canvas 803 561 465 402 10;
+#X obj 113 188 swinger~;
+#X obj 55 119 readsf~;
+#X obj 55 63 openpanel;
+#X msg 55 88 open \$1;
+#X msg 55 36 bang;
+#X msg 123 88 1;
+#X obj 222 120 readsf~;
+#X obj 222 64 openpanel;
+#X msg 222 89 open \$1;
+#X msg 222 37 bang;
+#X text 91 40 load amplitude sf;
+#X text 258 41 load phase sf;
+#X obj 156 241 *~ 0.05;
+#X obj 156 272 dac~;
+#X obj 198 201 hsl 128 15 0 1 0 0 empty empty Gain -2 -8 0 10 -262144
+-1 -1 8300 1;
+#X floatatom 195 221 5 0 0 0 - - -, f 5;
+#X text 48 309 swinger~ replaces the phases of one signal (left) with
+those from another (right). The result often sounds like victory. A
+swinging trick: Don't connect any signal to the right inlet and listen
+to the result.;
+#X connect 0 0 12 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X connect 4 0 2 0;
+#X connect 5 0 1 0;
+#X connect 5 0 6 0;
+#X connect 6 0 0 1;
+#X connect 7 0 8 0;
+#X connect 8 0 6 0;
+#X connect 9 0 7 0;
+#X connect 12 0 13 0;
+#X connect 12 0 13 1;
+#X connect 14 0 15 0;
+#X connect 15 0 12 1;

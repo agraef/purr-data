@@ -408,6 +408,9 @@ endif
 # OSX x86_64.
 
 ifeq ($(system), Darwin)
+  ifeq ($(macos_target),)
+  macos_target = 10.9
+  endif
   pkglibdir = $(HOME)/Library/Pd
   pdincludepath := $(firstword $(wildcard \
     $(externalsdir)/../pd/src \
@@ -427,12 +430,12 @@ ifeq ($(system), Darwin)
   stripflags = -x
   ifeq ($(machine), i386)
     cxx.flags := -fcheck-new
-    arch.c.flags := -arch ppc -arch i386 -arch x86_64 -mmacosx-version-min=10.4
-    arch.ld.flags := -arch ppc -arch i386 -arch x86_64 -mmacosx-version-min=10.4
+    arch.c.flags := -arch ppc -arch i386 -arch x86_64 -mmacosx-version-min=$(macos_target)
+    arch.ld.flags := -arch ppc -arch i386 -arch x86_64 -mmacosx-version-min=$(macos_target)
   endif
   ifeq ($(machine), x86_64)
-    arch.c.flags := -arch x86_64 -mmacosx-version-min=10.5
-    arch.ld.flags := -arch x86_64 -mmacosx-version-min=10.5
+    arch.c.flags := -arch x86_64 -mmacosx-version-min=$(macos_target)
+    arch.ld.flags := -arch x86_64 -mmacosx-version-min=$(macos_target)
   endif
 endif
 

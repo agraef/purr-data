@@ -1,0 +1,51 @@
+#N canvas 812 597 450 300 10;
+#X obj 142 111 drown~;
+#X obj 142 189 *~ 0.05;
+#X obj 142 220 dac~;
+#X obj 184 149 hsl 128 15 0 1 0 0 empty empty Gain -2 -8 0 10 -262144
+-1 -1 0 1;
+#X floatatom 181 169 5 0 0 0 - - -, f 5;
+#X obj 60 58 osc~ 440;
+#X floatatom 175 88 5 0 0 0 - - -, f 5;
+#X obj 178 64 hsl 128 15 0 1 0 0 empty empty noise-reduction-factor
+-2 -8 0 10 -262144 -1 -1 11000 1;
+#X floatatom 131 51 5 0 0 0 - - -, f 5;
+#X obj 134 27 hsl 128 15 0 1 0 0 empty empty noise-threshold -2 -8
+0 10 -262144 -1 -1 0 1;
+#N canvas 1336 367 450 300 add-noise 0;
+#X obj 89 109 noise~;
+#X obj 135 169 *~;
+#X obj 190 77 inlet;
+#X obj 130 227 outlet~;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 2 0 1 1;
+#X restore 50 143 pd add-noise;
+#X obj 50 117 tgl 15 0 empty drown-noisetog empty 17 7 0 10 -262144
+-1 -1 1 1;
+#X msg -19 57 adaptive \$1;
+#X obj -19 27 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text -16 242 drown~ reduces the energy of low energy bins for noise
+reduction. Or you could use a factor > 1 to increase the noise in the
+signal. In adaptive mode \, the threshold is determined relative to
+each FFT frame peak.;
+#N canvas 285 462 450 300 init 0;
+#X msg 141 120 \; drown-noisetog 1 \;;
+#X obj 142 84 loadbang;
+#X connect 1 0 0 0;
+#X restore 260 207 pd init;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 1 0 2 1;
+#X connect 3 0 4 0;
+#X connect 4 0 1 1;
+#X connect 5 0 0 0;
+#X connect 6 0 0 2;
+#X connect 7 0 6 0;
+#X connect 8 0 0 1;
+#X connect 9 0 8 0;
+#X connect 10 0 0 0;
+#X connect 11 0 10 0;
+#X connect 12 0 0 0;
+#X connect 13 0 12 0;

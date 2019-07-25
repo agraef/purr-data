@@ -1,0 +1,51 @@
+#N canvas 665 223 458 308 10;
+#X obj 135 164 vdp~ 20 0 0.5;
+#N canvas 627 438 458 308 input-sound 0;
+#X obj 130 125 phasor~ 96;
+#X obj 130 158 -~ 0.5;
+#X obj 130 190 outlet~;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X restore 90 79 pd input-sound;
+#X floatatom 281 125 5 0 0 0 - - -, f 5;
+#N canvas 643 483 454 304 delaytime 0;
+#X obj 177 107 osc~ 0.1;
+#X obj 177 140 *~ 9.9;
+#X obj 177 169 +~ 10;
+#X obj 177 198 outlet~;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X restore 172 107 pd delaytime;
+#X obj 90 255 *~ 0.1;
+#X obj 90 280 dac~;
+#X obj 284 113 hsl 80 8 -0.99 0.99 0 0 empty empty feedback_amount
+-2 -8 1 10 -76846 -1 -1 4200 1;
+#X floatatom 128 235 5 0 0 0 - - -, f 5;
+#X obj 132 224 hsl 80 8 0 0.2 0 0 empty empty gain -2 -8 1 10 -76846
+-1 -1 2900 1;
+#N canvas 0 22 458 308 capture 0;
+#N canvas 0 22 450 300 (subpatch) 0;
+#X array vdp-catch 882 float 2;
+#X coords 0 1 882 -1 200 140 1;
+#X restore 35 85 graph;
+#X obj 263 152 s vdp-msgs;
+#X msg 263 117 copy_to_buffer vdp-catch;
+#X connect 2 0 1 0;
+#X restore 238 166 pd capture;
+#X obj 13 79 r vdp-msgs;
+#X obj 8 10 cnv 15 160 25 empty empty LyonPotpourri 20 12 1 18 -260097
+-204786 0;
+#X text 9 46 vdp~ - a simple \, self-contained delay unit with feedback
+;
+#X connect 0 0 4 0;
+#X connect 1 0 0 0;
+#X connect 1 0 4 0;
+#X connect 2 0 0 2;
+#X connect 3 0 0 1;
+#X connect 4 0 5 0;
+#X connect 4 0 5 1;
+#X connect 6 0 2 0;
+#X connect 7 0 4 1;
+#X connect 8 0 7 0;
+#X connect 10 0 0 0;

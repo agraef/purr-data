@@ -1,0 +1,16 @@
+#N canvas 643 117 374 266 10;
+#X obj 38 74 samm~ 120 1;
+#X obj 38 103 mask~ 440 550 660 880;
+#X obj 38 155 osc~;
+#X obj 38 132 clickhold~;
+#X obj 38 215 dac~;
+#X obj 38 184 *~ 0.025;
+#X obj 23 13 cnv 15 160 25 empty empty LyonPotpourri 20 12 1 18 -260097
+-204786 0;
+#X text 23 48 clickhold~ - convert click to sustained signal;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 2 0 5 0;
+#X connect 3 0 2 0;
+#X connect 5 0 4 0;
+#X connect 5 0 4 1;

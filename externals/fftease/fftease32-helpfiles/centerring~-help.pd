@@ -1,0 +1,51 @@
+#N canvas 1282 501 452 406 10;
+#X obj 126 116 centerring~;
+#X obj 126 198 *~ 0.05;
+#X obj 126 256 dac~;
+#X obj 168 156 hsl 128 15 0 1 0 0 empty empty Gain -2 -8 0 10 -262144
+-1 -1 9200 1;
+#X floatatom 165 178 5 0 0 0 - - -, f 5;
+#X obj 125 34 phasor~ 67;
+#X obj 125 59 -~ 0.5;
+#X obj 126 87 *~ 2;
+#X floatatom 125 11 5 0 0 0 - - -, f 5;
+#X floatatom 244 56 5 0 0 0 base centerring-basefreq -, f 5;
+#X floatatom 259 77 5 0 0 0 bw centerring-freqbandw -, f 5;
+#X floatatom 291 96 5 0 0 0 const centerring-freqconst -, f 5;
+#X msg 8 60 zerophases;
+#X msg 15 127 randphases;
+#N canvas 804 464 450 300 init 0;
+#X msg 60 85 \; centerring-basefreq 1 \; centerring-freqbandw 0.15
+\; centerring-freqconst 1 \;;
+#X msg 132 216 \; centerring-basefreq \$1 \; centerring-freqbandw \$2
+\; centerring-freqconst \$3 \;;
+#X msg 81 167 300 0.2 1;
+#X msg 164 168 1.1 10 7;
+#X msg 249 169 1 1 1;
+#X obj 57 54 loadbang;
+#X text 82 146 a few other settings;
+#X connect 2 0 1 0;
+#X connect 3 0 1 0;
+#X connect 4 0 1 0;
+#X connect 5 0 0 0;
+#X restore 261 225 pd init;
+#X text 21 279 centerring~ performs frequency independent amplitude
+modulation upon the spectral magnitudes of input signals. The effect
+is somewhat akin to flanging. The base frequency is used to derive
+the frequency of an oscillator associated with each frequency band.
+The frequency bandwidth and constant control the deviation of a particular
+frequency band's modulation oscillator frequency.;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 1 0 2 1;
+#X connect 3 0 4 0;
+#X connect 4 0 1 1;
+#X connect 5 0 6 0;
+#X connect 6 0 7 0;
+#X connect 7 0 0 0;
+#X connect 8 0 5 0;
+#X connect 9 0 0 1;
+#X connect 10 0 0 2;
+#X connect 11 0 0 3;
+#X connect 12 0 0 0;
+#X connect 13 0 0 0;

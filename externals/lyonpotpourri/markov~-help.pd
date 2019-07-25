@@ -1,0 +1,114 @@
+#N canvas 379 48 488 369 10;
+#X obj 132 186 markov~ 10;
+#X obj 132 220 phasor~;
+#X obj 132 250 lop~ 3000;
+#X obj 132 279 *~ 0.1;
+#X obj 132 307 dac~;
+#X floatatom 229 259 5 0 0 0 - - -, f 5;
+#N canvas 447 119 548 433 bach 0;
+#X obj 153 44 inlet;
+#X obj 135 415 outlet;
+#X obj 153 73 t b b;
+#X msg 183 107 set_length 9;
+#X obj 15 107 t b b b b b b b b b b;
+#X msg 15 360 values 261.626 293.665 329.628 391.995 440 523.251 587.33
+659.255 698.456;
+#X text 11 340 the notes in first 2 bars of JS Bach WTC 1 no. 1 prelude
+;
+#X msg 711 134;
+#X msg 724 156;
+#X msg 280 152 event_odds 0 0 1 1 0 0 0 0 0 0;
+#X msg 280 172 event_odds 1 0 0 0 0 1 0 0 0 0;
+#X msg 280 192 event_odds 2 0 0 0 1 0 0 0 0 0;
+#X msg 280 212 event_odds 3 0 0 0 0 0 1 0 0 0;
+#X msg 280 232 event_odds 4 0 0 0 0 0 0 1 0 0;
+#X msg 280 254 event_odds 5 0 0 0 0 0 0 0 1 0;
+#X msg 280 276 event_odds 6 0 0 0 0 0 0 0 0 1;
+#X msg 281 297 event_odds 7 1 0 0 1 0 0 0 0 0;
+#X msg 281 317 event_odds 8 1 0 0 0 1 0 0 0 0;
+#X text 189 398 If you do not know about transition matrices please
+see Xenakis's Formalized Music or whatever Web info you can find on
+first order Markov chains.;
+#X connect 0 0 2 0;
+#X connect 2 0 4 0;
+#X connect 2 1 3 0;
+#X connect 3 0 1 0;
+#X connect 4 0 5 0;
+#X connect 4 1 17 0;
+#X connect 4 2 16 0;
+#X connect 4 3 15 0;
+#X connect 4 4 14 0;
+#X connect 4 5 13 0;
+#X connect 4 6 12 0;
+#X connect 4 7 11 0;
+#X connect 4 8 10 0;
+#X connect 4 9 9 0;
+#X connect 5 0 1 0;
+#X connect 9 0 1 0;
+#X connect 10 0 1 0;
+#X connect 11 0 1 0;
+#X connect 12 0 1 0;
+#X connect 13 0 1 0;
+#X connect 14 0 1 0;
+#X connect 15 0 1 0;
+#X connect 16 0 1 0;
+#X connect 17 0 1 0;
+#X restore 132 142 pd bach;
+#X obj 132 117 loadbang;
+#N canvas 0 22 458 308 tempo-control 0;
+#X obj 138 45 loadbang;
+#X msg 138 69 120 4;
+#X obj 138 101 unpack f f;
+#X floatatom 138 127 5 0 0 0 - - -, f 5;
+#X floatatom 203 127 5 0 0 0 - - -, f 5;
+#X msg 138 157 tempo \$1;
+#X msg 203 154 subdiv \$1;
+#X obj 138 207 outlet;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 2 1 4 0;
+#X connect 3 0 5 0;
+#X connect 4 0 6 0;
+#X connect 5 0 7 0;
+#X connect 6 0 7 0;
+#X restore 0 87 pd tempo-control;
+#X obj 131 77 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 232 218 snapshot~;
+#X floatatom 232 239 5 0 0 0 - - -, f 5;
+#X obj 232 174 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 232 195 metro 50;
+#N canvas 0 22 458 308 override 0;
+#X obj 141 168 outlet;
+#X msg 116 120 manual_override \$1;
+#X obj 116 87 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 280 103 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X connect 3 0 0 0;
+#X restore -4 158 pd override;
+#X text 254 175 see phase (1 cycle per note);
+#X text 183 138 is there a pdq external?;
+#X obj -14 16 cnv 15 160 25 empty empty LyonPotpourri 20 12 1 18 -260097
+-204786 0;
+#X text -14 51 markov~ - 1st order Markov chains for basic melodic
+coherence, f 67;
+#X connect 0 0 1 0;
+#X connect 0 1 10 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 3 0 4 1;
+#X connect 5 0 3 1;
+#X connect 6 0 0 0;
+#X connect 7 0 6 0;
+#X connect 8 0 0 0;
+#X connect 9 0 6 0;
+#X connect 10 0 11 0;
+#X connect 12 0 13 0;
+#X connect 13 0 10 0;
+#X connect 14 0 0 0;
