@@ -1291,6 +1291,8 @@ moocow_clean:
 	$(MAKE) -C $(externals_src)/moocow/extended distclean
 	-rm -f -- $(MOOCOW_DIR)/*.bak
 	-rm -f -- $(MOOCOW_DIR)/*.*~
+	-rm -rf -- $(externals_src)/moocow/*/common/*
+	-rm -rf -- $(externals_src)/moocow/*/a.out.dSYM/*
 	cp -f $(MOOCOW_DIR)/../gfsm/gfsm/src/libgfsm/default/* $(MOOCOW_DIR)/../gfsm/gfsm/src/libgfsm/ 
 
 
@@ -1392,6 +1394,7 @@ oscx_clean:
 	-$(MAKE) -C $(externals_src)/OSCx CC=gcc clean
 	-rm $(externals_src)/OSCx/Makefile
 	-rm $(externals_src)/OSCx/configure
+	-rm -f -- $(cvs_root_dir)/externals/OSCx/*/Makefile
 
 
 
@@ -1496,6 +1499,7 @@ pdp_clean:
 	-find $(externals_src)/pdp -name '*.bak' | xargs rm -f --
 	-rm -f -- $(externals_src)/pdp/Makefile.config
 	-rm -f -- $(externals_src)/pdp/configure
+	-rm -f -- $(externals_src)/pdp/include/pdp_config.h
 
 
 #------------------------------------------------------------------------------#
@@ -1899,7 +1903,7 @@ zexy_install: zexy
 #endif
 
 zexy_clean:
-	cd $(externals_src)/zexy && ./autogen.sh
+	cd $(externals_src)/zexy
 	-$(MAKE) -C $(externals_src)/zexy clean
 	-rm -rf -- $(externals_src)/zexy/autom4te.cache
 	-rm -f -- $(externals_src)/zexy/aclocal.m4
@@ -1909,6 +1913,18 @@ zexy_clean:
 	-rm -f -- $(externals_src)/zexy/m4/libtool.m4
 	-rm -f -- $(externals_src)/zexy/configure
 	-rm -f -- $(externals_src)/zexy/src/*.o
+	-rm -f -- $(externals_src)/zexy/Makefile
+	-rm -f -- $(externals_src)/zexy/Makefile.in
+	-rm -f -- $(externals_src)/zexy/*/Makefile
+	-rm -f -- $(externals_src)/zexy/*/Makefile.in
+	-rm -f -- $(externals_src)/zexy/compile
+	-rm -f -- $(externals_src)/zexy/config.*
+	-rm -f -- $(externals_src)/zexy/depcomp
+	-rm -f -- $(externals_src)/zexy/install-sh
+	-rm -f -- $(externals_src)/zexy/missing
+	-rm -f -- $(externals_src)/zexy/stamp-h1
+	-rm -f -- $(externals_src)/zexy/test-driver
+	-rm -f -- $(externals_src)/zexy/*.pd
 
 
 

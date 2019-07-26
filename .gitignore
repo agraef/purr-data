@@ -30,6 +30,11 @@ pd.pc
 .svn
 packages/linux_make/build/
 pd/src/makefile
+pd/src/config.h
+pd/src/s_version.h
+pd/nw/nw/
 l2ork_addons/cwiid/defs.mak
 CVS
 .DS_Store
+*.dmg
+.vscode/
