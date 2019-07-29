@@ -189,7 +189,7 @@ if [ ! -d "../pd/nw/nw" ]; then
 		if [ `uname -m` == "armv7l" ]; then
 			nwjs_version="v0.17.6"
 		else
-			nwjs_version="v0.22.1"
+			nwjs_version="v0.24.4"
 		fi
 	fi
 
