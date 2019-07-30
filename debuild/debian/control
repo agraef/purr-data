@@ -8,8 +8,9 @@ Homepage: https://git.purrdata.net/jwilkes/purr-data
 
 Package: purr-data
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, python, fluid-soundfont-gm
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Recommends: xdg-utils, pulseaudio-utils, tap-plugins, ladspa-foo-plugins, invada-studio-plugins-ladspa, blepvco, swh-plugins, mcp-plugins, cmt, blop, omins, ubuntustudio-audio-plugins, rev-plugins, dssi-utils, vco-plugins, wah-plugins, fil-plugins, mda-lv2
+Suggests: python, fluid-soundfont-gm
 Description:  Interactive multimedia programming environment (NW.js variant)
  This is Jonathan Wilkes' nw.js variant of Pd-L2Ork, nick-named
  "Purr-Data". Basically, it is Pd-L2Ork with the Tk GUI replaced
