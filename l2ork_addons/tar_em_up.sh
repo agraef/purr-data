@@ -200,7 +200,12 @@ if [ ! -d "../pd/nw/nw" ]; then
 	nwjs_url=${nwjs_url}/$nwjs_filename
 	echo "Fetching the nwjs binary from"
 	echo "$nwjs_url"
-	wget -nv $nwjs_url
+	if ! wget -nv $nwjs_url; then
+		nwjs_url=https://dl.nwjs.io/${nwjs_version}/$nwjs_filename
+		echo "Fetching the nwjs binary from"
+		echo "$nwjs_url"
+		wget -nv $nwjs_url
+	fi
 	if [[ $os == "win" || $os == "osx" ]]; then
 		unzip $nwjs_filename
 	else
