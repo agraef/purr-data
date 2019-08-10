@@ -68,7 +68,7 @@ debchange:
 
 debclean:
 	rm -rf $(debdist)
-	rm -f purr-data_*+git*
+	rm -f purr-data_*+git* purr-data-dbgsym_*+git*
 
 deb: $(debsrc) $(addprefix debian/nwjs/, $(nwjs))
 # Unpack the source into our temporary build directory.
