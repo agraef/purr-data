@@ -155,12 +155,16 @@ function click_toc(dir) {
     doc_search();
 }
 
+var current_dir;
+
 function display_toc() {
     var results_elem = document.getElementById("results"),
         div,
         a,
         header,
         text_node;
+    // reset current_dir to doc
+    current_dir = path.join(pdgui.get_lib_dir(), "doc");
     toc.forEach(function(doc, i, a) {
         div = document.createElement("div");
 	if (doc.id) {
@@ -205,8 +209,6 @@ function clear_results() {
     document.getElementById("results").innerHTML = "";
 }
 
-var current_dir;
-
 function display_directory_callback(err, files) {
     var doc, doc_path;
     if (err) {
@@ -233,6 +235,10 @@ function display_directory(dir) {
 }
 
 function file_browser_click() {
+    // open the file browser on whatever directory we visited last, or the
+    // doc directory by default
+    document.getElementById("file_browser").setAttribute("nwworkingdir",
+        current_dir);
     document.getElementById("file_browser").click();
 }
 
@@ -501,6 +507,8 @@ function doc_search() {
         results,
         doc,
         i;
+    // reset current_dir to doc
+    current_dir = path.join(pdgui.get_lib_dir(), "doc");
     // if the search term is empty then just redisplay the toc
     if (!search_text) {
         clear_results();
