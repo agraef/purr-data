@@ -802,6 +802,22 @@ void glob_path_dialog(t_pd *dummy, t_symbol *s, int argc, t_atom *argv)
     }
 }
 
+    /* AG 20190801: add one item to search path (backported from
+       vanilla rev. c917dd19, to make GEM happy). */
+void glob_addtopath(t_pd *dummy, t_symbol *path, t_float saveit)
+{
+  t_symbol *s = sys_decodedialog(path);
+  if (*s->s_name)
+  {
+    sys_searchpath = namelist_append_files(sys_searchpath, s->s_name);
+    if (saveit) {
+      /* AG: We just ignore this flag for now, later maybe save the
+         preferences here. GEM doesn't need this, and we don't use
+         Deken, so we can do without this. */
+    }
+  }
+}
+
     /* start a startup dialog window */
 void glob_start_startup_dialog(t_pd *dummy)
 {

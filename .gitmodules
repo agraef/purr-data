@@ -6,7 +6,7 @@
 	url = https://github.com/pd-l2ork/cwiid
 [submodule "Gem"]
 	path = Gem
-	url = https://git.purrdata.net/jwilkes/Gem.git
+	url = https://git.purrdata.net/aggraef/gem.git
 [submodule "l2ork_addons/raspberry_pi/disis_gpio/wiringPi"]
 	path = l2ork_addons/raspberry_pi/disis_gpio/wiringPi
 	url = https://git.purrdata.net/jwilkes/wiringPi.git
