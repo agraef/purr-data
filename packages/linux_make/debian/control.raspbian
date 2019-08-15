@@ -6,10 +6,11 @@ Maintainer: Ivica Ico Bukvic <ico@vt.edu>
 Homepage: http://l2ork.music.vt.edu
 Package: pd-l2ork
 Architecture: i386
+Depends: python
 Provides: pd-l2ork
 Installed-Size: 90624
 Recommends: xdg-utils, pulseaudio-utils, tap-plugins, ladspa-foo-plugins, invada-studio-plugins-ladspa, blepvco, swh-plugins, mcp-plugins, cmt, blop, slv2-jack, omins, ubuntustudio-audio-plugins, rev-plugins, dssi-utils, vco-plugins, wah-plugins, fil-plugins, mda-lv2
-Suggests: python, fluid-soundfont-gm
+Suggests: fluid-soundfont-gm
 Conflicts:
 Replaces: pd-l2ork
 Description:  Interactive multimedia programming environment
