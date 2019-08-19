@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Pd-L2Ork K12 DEBUG
 Comment=L2Ork Iteration of Pure-Data Interactive DSP Environment Tailored Specially Towards K12 Students, Debug Version
-Exec=bash -c "( echo r ; cat ) | gdb --args pd-l2ork -k12 -noautopatch -rt -audiobuf 20 -inchannels 2 -outchannels 2 -alsamidi -mididev 0 -d 3 %U"
+Exec=bash -c "( echo r ; cat ) | gdb --args pd-l2ork -k12 -noautopatch -rt -audiobuf 20 -d 3 %U"
 Terminal=true
 Type=Application
 Icon=pd-l2ork-k12-red.xpm
@@ -11,12 +11,12 @@ MimeType=application/x-puredata;
 
 [ALSA Shortcut Group]
 Name=ALSA
-Exec=pd-l2ork -k12 -noautopatch -rt -alsa -audiobuf 20 -inchannels 2 -outchannels 2 -alsamidi -mididev 0 -d 3 %U
+Exec=pd-l2ork -k12 -noautopatch -rt -alsa -audiobuf 20 -d 3 %U
 TargetEnvironment=Unity
 
 [JACK Shortcut Group]
 Name=JACK
-Exec=pd-l2ork -k12 -noautopatch -rt -jack -audiobuf 20 -inchannels 2 -outchannels 2 -alsamidi -mididev 0 -d 3 %U
+Exec=pd-l2ork -k12 -noautopatch -rt -jack -audiobuf 20 -d 3 %U
 TargetEnvironment=Unity
 
 [ForceQuit Shortcut Group]

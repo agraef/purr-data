@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Pd-L2Ork
 Comment=L2Ork Iteration of Pure-Data Interactive DSP Environment
-Exec=pd-l2ork -rt -audiobuf 20 -inchannels 2 -outchannels 2 -alsamidi -mididev 0 %U
+Exec=pd-l2ork -rt -audiobuf 20 %U
 Terminal=false
 Type=Application
 Icon=pd-l2ork.xpm
@@ -11,12 +11,12 @@ MimeType=application/x-puredata;
 
 [ALSA Shortcut Group]
 Name=ALSA
-Exec=pd-l2ork -rt -alsa -audiobuf 20 -inchannels 2 -outchannels 2 -alsamidi -mididev 0 %U
+Exec=pd-l2ork -rt -alsa -audiobuf 20 %U
 TargetEnvironment=Unity
 
 [JACK Shortcut Group]
 Name=JACK
-Exec=pd-l2ork -rt -jack -audiobuf 20 -inchannels 2 -outchannels 2 -alsamidi -mididev 0 %U
+Exec=pd-l2ork -rt -jack -audiobuf 20 %U
 TargetEnvironment=Unity
 
 [ForceQuit Shortcut Group]
