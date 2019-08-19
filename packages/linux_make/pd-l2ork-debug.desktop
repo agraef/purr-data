@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Pd-L2Ork DEBUG
-Comment=L2Ork Iteration of Pure-Data Interactive DSP Environment Tailored Specially Towards K12 Students
+Comment=L2Ork Iteration of Pure-Data Interactive DSP Environment, Debug Version
 Exec=bash -c "( echo r ; cat ) | gdb --args pd-l2ork -rt -audiobuf 20 -inchannels 2 -outchannels 2 -alsamidi -mididev 0 -d 3 %U"
 Terminal=true
 Type=Application
@@ -20,6 +20,6 @@ Exec=pd-l2ork -rt -jack -audiobuf 20 -inchannels 2 -outchannels 2 -alsamidi -mid
 TargetEnvironment=Unity
 
 [ForceQuit Shortcut Group]
-Name=Force Quit Pd-L2Ork K12
+Name=Force Quit Pd-L2Ork
 Exec=/usr/bin/killall pd-l2ork pd-gui
 TargetEnvironment=Unity

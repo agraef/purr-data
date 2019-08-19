@@ -20,6 +20,6 @@ Exec=pd-l2ork -k12 -noautopatch -rt -jack -audiobuf 20 -inchannels 2 -outchannel
 TargetEnvironment=Unity
 
 [ForceQuit Shortcut Group]
-Name=Force Quit Pd-L2Ork K12
+Name=Force Quit Pd-L2Ork
 Exec=/usr/bin/killall pd-l2ork pd-gui
 TargetEnvironment=Unity
