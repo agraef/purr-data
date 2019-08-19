@@ -11,15 +11,15 @@ MimeType=application/x-puredata;
 
 [Desktop Action ALSA]
 Name=ALSA
-Exec=pd-l2ork -rt -alsa -audiobuf 20 %U
+Exec=/bin/sh -c "pd-l2ork -rt -alsa -audiobuf 20 %U"
 TargetEnvironment=Unity
 
 [Desktop Action JACK]
 Name=JACK
-Exec=pd-l2ork -rt -jack -audiobuf 20 %U
+Exec=/bin/sh -c "pd-l2ork -rt -jack -audiobuf 20 %U"
 TargetEnvironment=Unity
 
 [Desktop Action ForceQuit]
 Name=Force Quit Pd-L2Ork
-Exec=/usr/bin/killall pd-l2ork pd-gui
+Exec=/bin/sh -c "/usr/bin/killall pd-l2ork pd-gui"
 TargetEnvironment=Unity
