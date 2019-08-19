@@ -9,17 +9,45 @@ Actions=ALSA;JACK;ForceQuit
 Categories=AudioVideo;Audio;
 MimeType=application/x-puredata;
 
+# These actions will be shown if you right-click on the application icon in
+# your freedesktop.org compliant DE. See: https://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html#extra-actions
+
 [Desktop Action ALSA]
+# Force ALSA audio.
 Name=ALSA
 Exec=/bin/sh -c "pd-l2ork -rt -alsa -audiobuf 20"
 TargetEnvironment=Unity
 
 [Desktop Action JACK]
+# Force JACK audio.
 Name=JACK
 Exec=/bin/sh -c "pd-l2ork -rt -jack -audiobuf 20"
 TargetEnvironment=Unity
 
 [Desktop Action ForceQuit]
+# Kill all running instances of Purr Data and the corresponding nw.js
+# processes. Useful as a last resort if the application seems to hang for some
+# reason. You might want to add the -9 option to kill the application even if
+# it's completely locked up.
 Name=Force Quit Pd-L2Ork
 Exec=/bin/sh -c "/usr/bin/killall pd-l2ork nw"
 TargetEnvironment=Unity
+
+# Here are some more examples of actions that you may find useful. To enable
+# these, add them to the Actions= line above.
+
+[Desktop Action Unique]
+# Launch a new instance of Purr Data each time this action is invoked.
+Name=Unique
+Exec=/bin/sh -c "purr-data -unique -rt -audiobuf 20"
+
+[Desktop Action Verbose]
+# Launch Purr Data in verbose mode (lots of messages useful for debugging).
+Name=Verbose
+Exec=/bin/sh -c "purr-data -verbose -rt -audiobuf 20"
+
+[Desktop Action NoPrefs]
+# Launch Purr Data without reading its configuration file (useful if the
+# program won't launch because the preferences got messed up very badly).
+Name=No Prefs
+Exec=/bin/sh -c "purr-data -noprefs -rt -audiobuf 20"
