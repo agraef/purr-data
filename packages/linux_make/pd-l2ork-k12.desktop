@@ -12,14 +12,11 @@ MimeType=application/x-puredata;
 [Desktop Action ALSA]
 Name=ALSA
 Exec=/bin/sh -c "pd-l2ork -k12 -noautopatch -rt -alsa -audiobuf 20"
-TargetEnvironment=Unity
 
 [Desktop Action JACK]
 Name=JACK
 Exec=/bin/sh -c "pd-l2ork -k12 -noautopatch -rt -jack -audiobuf 20"
-TargetEnvironment=Unity
 
 [Desktop Action ForceQuit]
 Name=Force Quit Pd-L2Ork
 Exec=/bin/sh -c "/usr/bin/killall pd-l2ork nw"
-TargetEnvironment=Unity

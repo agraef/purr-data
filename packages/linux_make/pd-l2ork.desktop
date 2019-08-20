@@ -16,13 +16,11 @@ MimeType=application/x-puredata;
 # Force ALSA audio.
 Name=ALSA
 Exec=/bin/sh -c "pd-l2ork -rt -alsa -audiobuf 20"
-TargetEnvironment=Unity
 
 [Desktop Action JACK]
 # Force JACK audio.
 Name=JACK
 Exec=/bin/sh -c "pd-l2ork -rt -jack -audiobuf 20"
-TargetEnvironment=Unity
 
 [Desktop Action ForceQuit]
 # Kill all running instances of Purr Data and the corresponding nw.js
@@ -31,7 +29,6 @@ TargetEnvironment=Unity
 # it's completely locked up.
 Name=Force Quit Pd-L2Ork
 Exec=/bin/sh -c "/usr/bin/killall pd-l2ork nw"
-TargetEnvironment=Unity
 
 # Here are some more examples of actions that you may find useful. To enable
 # these, add them to the Actions= line above.
