@@ -252,7 +252,7 @@ void sys_setvirtualalarm( void);
 #define DEFAULTADVANCE 100
 #endif
 #ifdef __linux__
-#define DEFAULTADVANCE 50
+#define DEFAULTADVANCE 20
 #endif
 #ifdef __APPLE__
 #define DEFAULTADVANCE 20
