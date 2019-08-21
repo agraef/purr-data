@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Pd-L2Ork K12
 Comment=L2Ork Iteration of Pure-Data Interactive DSP Environment Tailored Specially Towards K12 Students
-Exec=pd-l2ork -k12 -noautopatch -rt -audiobuf 20 %U
+Exec=pd-l2ork -k12 -noautopatch %U
 Terminal=false
 Type=Application
 Icon=pd-l2ork-k12.xpm
@@ -11,11 +11,11 @@ MimeType=application/x-puredata;
 
 [Desktop Action ALSA]
 Name=ALSA
-Exec=/bin/sh -c "pd-l2ork -k12 -noautopatch -rt -alsa -audiobuf 20"
+Exec=/bin/sh -c "pd-l2ork -k12 -noautopatch -alsa"
 
 [Desktop Action JACK]
 Name=JACK
-Exec=/bin/sh -c "pd-l2ork -k12 -noautopatch -rt -jack -audiobuf 20"
+Exec=/bin/sh -c "pd-l2ork -k12 -noautopatch -jack"
 
 [Desktop Action ForceQuit]
 Name=Force Quit Pd-L2Ork

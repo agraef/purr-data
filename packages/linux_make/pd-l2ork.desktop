@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Pd-L2Ork
 Comment=L2Ork Iteration of Pure-Data Interactive DSP Environment
-Exec=pd-l2ork -rt -audiobuf 20 %U
+Exec=pd-l2ork %U
 Terminal=false
 Type=Application
 Icon=pd-l2ork.xpm
@@ -15,12 +15,12 @@ MimeType=application/x-puredata;
 [Desktop Action ALSA]
 # Force ALSA audio.
 Name=ALSA
-Exec=/bin/sh -c "pd-l2ork -rt -alsa -audiobuf 20"
+Exec=/bin/sh -c "pd-l2ork -alsa"
 
 [Desktop Action JACK]
 # Force JACK audio.
 Name=JACK
-Exec=/bin/sh -c "pd-l2ork -rt -jack -audiobuf 20"
+Exec=/bin/sh -c "pd-l2ork -jack"
 
 [Desktop Action ForceQuit]
 # Kill all running instances of Purr Data and the corresponding nw.js
@@ -36,15 +36,15 @@ Exec=/bin/sh -c "/usr/bin/killall pd-l2ork nw"
 [Desktop Action Unique]
 # Launch a new instance of Purr Data each time this action is invoked.
 Name=Unique
-Exec=/bin/sh -c "purr-data -unique -rt -audiobuf 20"
+Exec=/bin/sh -c "purr-data -unique"
 
 [Desktop Action Verbose]
 # Launch Purr Data in verbose mode (lots of messages useful for debugging).
 Name=Verbose
-Exec=/bin/sh -c "purr-data -verbose -rt -audiobuf 20"
+Exec=/bin/sh -c "purr-data -verbose"
 
 [Desktop Action NoPrefs]
 # Launch Purr Data without reading its configuration file (useful if the
 # program won't launch because the preferences got messed up very badly).
 Name=No Prefs
-Exec=/bin/sh -c "purr-data -noprefs -rt -audiobuf 20"
+Exec=/bin/sh -c "purr-data -noprefs"

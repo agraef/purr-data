@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Pd-L2Ork DEBUG
 Comment=L2Ork Iteration of Pure-Data Interactive DSP Environment, Debug Version
-Exec=bash -c "( echo r ; cat ) | gdb --args pd-l2ork -rt -audiobuf 20 -d 3 %U"
+Exec=bash -c "( echo r ; cat ) | gdb --args pd-l2ork -d 3 %U"
 Terminal=true
 Type=Application
 Icon=pd-l2ork-red.xpm
@@ -11,11 +11,11 @@ MimeType=application/x-puredata;
 
 [Desktop Action ALSA]
 Name=ALSA
-Exec=/bin/sh -c "pd-l2ork -rt -alsa -audiobuf 20 -d 3"
+Exec=/bin/sh -c "pd-l2ork -alsa -d 3"
 
 [Desktop Action JACK]
 Name=JACK
-Exec=/bin/sh -c "pd-l2ork -rt -jack -audiobuf 20 -d 3"
+Exec=/bin/sh -c "pd-l2ork -jack -d 3"
 
 [Desktop Action ForceQuit]
 Name=Force Quit Pd-L2Ork
