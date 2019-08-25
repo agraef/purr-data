@@ -1,25 +1,22 @@
 [Desktop Entry]
 Name=Pd-L2Ork K12
 Comment=L2Ork Iteration of Pure-Data Interactive DSP Environment Tailored Specially Towards K12 Students
-Exec=pd-l2ork -k12 -noautopatch -rt -audiobuf 20 -inchannels 2 -outchannels 2 -alsamidi -mididev 0 %U
+Exec=pd-l2ork -k12 -noautopatch %U
 Terminal=false
 Type=Application
 Icon=pd-l2ork-k12.xpm
-X-Ayatana-Desktop-Shortcuts=ALSA;JACK;ForceQuit
+Actions=ALSA;JACK;ForceQuit
 Categories=AudioVideo;Audio;
 MimeType=application/x-puredata;
 
-[ALSA Shortcut Group]
+[Desktop Action ALSA]
 Name=ALSA
-Exec=pd-l2ork -k12 -noautopatch -rt -alsa -audiobuf 20 -inchannels 2 -outchannels 2 -alsamidi -mididev 0 %U
-TargetEnvironment=Unity
+Exec=/bin/sh -c "pd-l2ork -k12 -noautopatch -alsa"
 
-[JACK Shortcut Group]
+[Desktop Action JACK]
 Name=JACK
-Exec=pd-l2ork -k12 -noautopatch -rt -jack -audiobuf 20 -inchannels 2 -outchannels 2 -alsamidi -mididev 0 %U
-TargetEnvironment=Unity
+Exec=/bin/sh -c "pd-l2ork -k12 -noautopatch -jack"
 
-[ForceQuit Shortcut Group]
-Name=Force Quit Pd-L2Ork K12
-Exec=/usr/bin/killall pd-l2ork pd-gui
-TargetEnvironment=Unity
+[Desktop Action ForceQuit]
+Name=Force Quit Pd-L2Ork
+Exec=/bin/sh -c "/usr/bin/killall pd-l2ork nw"
