@@ -111,7 +111,10 @@ static void tabsort2_float(t_tabsort2 *x, t_floatarg n)
     if(n>n2) n=n2;
     if(n>n3) n=n3;
 
-    for(i=0; i<n; vec3[i]=i++);
+    for(i = 0; i < n; i++)
+    {
+        vec3[i] = i;
+    }
 
     for(i=0; i<n-1; i++)
         for(j=n-1; j>i; j--)

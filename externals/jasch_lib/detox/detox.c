@@ -229,7 +229,7 @@ void detox_reset(t_detox *x)
 {
     short i;
     x->t_treecount = 0;
-    for(i=0;i<256; i++) x->t_tree[i].a_w.w_symbol = ps_nothing;
+    for (i = 0; i < 256; i++) x->t_tree[i].a_w.w_symbol = ps_nothing;
 }
 
 void detox_debug(t_detox *x, float f)
@@ -302,7 +302,7 @@ void detox_action(t_detox *x)
     if ((local[0] != '<') || (local[j-1] != '>'))
     {
         tagtype = 0; // not a well formed tag
-        if(x->t_debug) post("tagtype 0");
+        if (x->t_debug) post("tagtype 0");
         goto content;
     }
     if ((local[1] == '?') || (local[1] == '!'))
@@ -536,7 +536,8 @@ attributes:
             if (x->t_debug) post("first quotetype found is %c", quotetype[0]);
             // copy end pointer to pos of startpointer + 1,
             // right after the quote
-            ptr2 = ++ptr1;
+            ptr1++;
+            ptr2 = ptr1;
             while (ptr2 != NULL)
             {   // looking for next quote of stored type
                 if (ptr2[0] == quotetype[0])
@@ -665,7 +666,8 @@ attributes:
                     post("first quotetype found is %c", quotetype[0]);
                 // copy end pointer to pos of startpointer + 1,
                 // right after the quote
-                ptr2 = ++ptr1;
+                ptr1++;
+                ptr2 = ptr1;
                 while (ptr2 != NULL)
                 {   // looking for next quote of stored type
                     if (ptr2[0] == quotetype[0])
@@ -720,7 +722,8 @@ attributes:
                 outlet_anything(x->s_outlet, x->t_attrpair[0].a_w.w_symbol,
                     1, &x->t_attrpair[1]);
 
-                ptr1 = ++ptr2; // move start pointer to end of atrr-content
+                ptr2++;
+                ptr1 = ptr2; // move start pointer to end of attr-content
                 while (ptr1 != NULL)
                 {   // find next non-whitespace char
                     if (ptr1[0] != ' ')
