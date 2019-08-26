@@ -677,7 +677,7 @@ $(gem_src)/Gem.dll: $(gem_src)/configure
 		--prefix=$(prefix) \
 		--libdir=$(objectsdir) \
 		--with-pd=$(DESTDIR)
-	$(MAKE) -C $(gem_src)
+	$(MAKE) $(GEM_MAKEFLAGS) -C $(gem_src)
 
 $(gem_src)/Gem.pd_linux: $(gem_src)/configure
 	test -s $(gem_src)/Gem.pd_linux || \
@@ -687,7 +687,7 @@ $(gem_src)/Gem.pd_linux: $(gem_src)/configure
 			--with-video=plugins \
 			--with-film=plugins \
 			--with-pd=$(pd_src)
-	$(MAKE) -C $(gem_src)
+	$(MAKE) $(GEM_MAKEFLAGS) -C $(gem_src)
 
 $(gem_src)/Gem.pd_darwin: $(gem_src)/configure
 	cd $(gem_src) && ./configure \
@@ -701,7 +701,7 @@ $(gem_src)/Gem.pd_darwin: $(gem_src)/configure
 		--with-video=plugins \
 		--with-film=plugins \
 		--with-pd=$(pd_src)
-	$(MAKE) -C $(gem_src)
+	$(MAKE) $(GEM_MAKEFLAGS) -C $(gem_src)
 
 gem: $(gem_src)/Gem.$(EXTENSION)
 
