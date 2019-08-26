@@ -30,8 +30,8 @@ typedef struct _split
 
 void split_symbol(t_split *x, t_symbol *s)
 {
-  t_atom* a;
-  split_anything(x, s, 0, a);
+  t_atom a;
+  split_anything(x, s, 0, &a);
 }
 
 
