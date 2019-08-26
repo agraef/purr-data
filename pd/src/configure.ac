@@ -121,7 +121,7 @@ dnl This should be fixed so Pd can use ALSA shared libraries where appropriate.
       LDFLAGS="$LDFLAGS -static"
     fi 
     EXT=pd_linux
-    CPPFLAGS="-DHAVE_LIBDL -DPA_USE_OSS -DUNIX -DUNISTD -fno-strict-aliasing"
+    CPPFLAGS="-DHAVE_LIBDL -DPA_USE_OSS -DUNIX -DHAVE_UNISTD_H -fno-strict-aliasing"
 dnl No OSS on hurd
     if test `uname -s` = "GNU";
     then

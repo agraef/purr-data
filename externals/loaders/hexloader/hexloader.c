@@ -36,7 +36,7 @@
 #ifdef DL_OPEN
 # include <dlfcn.h>
 #endif
-#ifdef UNISTD
+#ifdef HAVE_UNISTD_H
 # include <stdlib.h>
 # include <unistd.h>
 #endif
