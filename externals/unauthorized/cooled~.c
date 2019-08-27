@@ -259,7 +259,7 @@ static void cooled_erase_block(t_cooled *x, t_glist *glist, int sample )
 
             for ( i=0; i<x->x_zoom; i++ )
             {
-                strcpy( x->x_gifdata+i*sizeof("#FFFFFF "), strcat( COOLED_BGCOLOR, " ") );
+                strcat(strcpy( x->x_gifdata+i*sizeof("#FFFFFF "), COOLED_BGCOLOR), " ");
             }
             if ( glist_isvisible( x->x_glist ) )
                 SYS_VGUI5("COOLEDIMAGE%x put {%s} -to %d %d\n", x, x->x_gifdata,
