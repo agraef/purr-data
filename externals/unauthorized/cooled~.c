@@ -171,7 +171,7 @@ static void cooled_update_block(t_cooled *x, t_glist *glist, int bnumber)
     int hi, i=0;
     t_float fspectrum=0.0;
     int phase=0;
-    char color[8];
+    char color[9];
 
     memset( x->x_gifdata, 0x0, x->x_height*x->x_zoom*sizeof("#FFFFFF ") );
 
