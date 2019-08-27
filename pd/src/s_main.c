@@ -14,7 +14,7 @@
 #include <fcntl.h>
 #include <stdlib.h>
 
-#ifdef UNISTD
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
 #ifdef MSW
@@ -519,7 +519,7 @@ static char *(usagemessage[]) = {
 "-send \"msg...\"   -- send a message at startup, after patches are loaded\n",
 "-noprefs         -- suppress loading preferences on startup\n",
 "-console         -- open the console along with the pd window\n",
-#ifdef UNISTD
+#ifdef HAVE_UNISTD_H
 "-rt or -realtime -- use real-time priority\n",
 "-nrt             -- don't use real-time priority\n",
 #endif
@@ -996,7 +996,7 @@ int sys_argparse(int argc, char **argv)
             sys_noautopatch = 0;
             argc--; argv++;
         }
-#ifdef UNISTD
+#ifdef HAVE_UNISTD_H
         else if (!strcmp(*argv, "-rt") || !strcmp(*argv, "-realtime"))
         {
             sys_hipriority = 1;

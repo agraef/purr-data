@@ -374,7 +374,7 @@ boids_clean:
 #------------------------------------------------------------------------------#
 # BSAYLOR
 bsaylor:
-	make -C $(externals_src)/bsaylor PD_PATH=$(pd_src) CFLAGS="$(CFLAGS)"
+	make -C $(externals_src)/bsaylor PD_PATH=$(pd_src) CFLAGS="$(CFLAGS) -fno-strict-aliasing"
 
 bsaylor_install:
 	make -C $(externals_src)/bsaylor \
@@ -1300,7 +1300,7 @@ moocow_clean:
 #------------------------------------------------------------------------------#
 # MOONLIB
 moonlib:
-	make -C $(externals_src)/moonlib PD_PATH=$(pd_src) CFLAGS="$(CFLAGS)"
+	make -C $(externals_src)/moonlib PD_PATH=$(pd_src) CFLAGS="$(CFLAGS) -fno-strict-aliasing"
 
 moonlib_install:
 	make -C $(externals_src)/moonlib DESTDIR="$(DESTDIR)" objectsdir="$(objectsdir)" install

@@ -84,7 +84,7 @@ ifeq ($(UNAME),Darwin)
     CXX=$(IPHONE_BASE)/g++
     ISYSROOT = -isysroot /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS3.0.sdk
     IPHONE_CFLAGS = -miphoneos-version-min=3.0 $(ISYSROOT) -arch armv6
-    OPT_CFLAGS = -fast -funroll-loops -fomit-frame-pointer
+    OPT_CFLAGS = -fast -funroll-loops -fomit-frame-pointer -fno-strict-aliasing
 	CFLAGS := $(IPHONE_CFLAGS) $(OPT_CFLAGS) $(CFLAGS)
     LDFLAGS += -arch armv6 -bundle -undefined dynamic_lookup $(ISYSROOT)
     LIBS += -lc 
@@ -120,7 +120,7 @@ ifeq ($(UNAME),Linux)
   EXTENSION = pd_linux
   OS = linux
   PD_PATH = /usr
-  OPT_CFLAGS = -O6 -funroll-loops -fomit-frame-pointer
+  OPT_CFLAGS = -O6 -funroll-loops -fomit-frame-pointer -fno-strict-aliasing
   CFLAGS += -fPIC
   LDFLAGS += -Wl,--export-dynamic  -shared -fPIC
   LIBS += -lc
@@ -133,7 +133,7 @@ ifeq (CYGWIN,$(findstring CYGWIN,$(UNAME)))
   EXTENSION = dll
   OS = cygwin
   PD_PATH = $(cygpath $(PROGRAMFILES))/pd
-  OPT_CFLAGS = -O6 -funroll-loops -fomit-frame-pointer
+  OPT_CFLAGS = -O6 -funroll-loops -fomit-frame-pointer -fno-strict-aliasing
   CFLAGS += 
   LDFLAGS += -Wl,--export-dynamic -shared -L"$(PD_PATH)/src" -L"$(PD_PATH)/bin"
   LIBS += -lc -lpd
@@ -146,7 +146,7 @@ ifeq (MINGW,$(findstring MINGW,$(UNAME)))
   EXTENSION = dll
   OS = windows
   PD_PATH = $(shell cd "$(PROGRAMFILES)"/pd && pwd)
-  OPT_CFLAGS = -O3 -funroll-loops -fomit-frame-pointer
+  OPT_CFLAGS = -O3 -funroll-loops -fomit-frame-pointer -fno-strict-aliasing
   CFLAGS += -mms-bitfields
   LDFLAGS += -s -shared -Wl,--enable-auto-import
   LIBS += -L"$(PD_PATH)/src" -L"$(PD_PATH)/bin" -L"$(PD_PATH)/obj" -lpd -lwsock32 -lkernel32 -luser32 -lgdi32
