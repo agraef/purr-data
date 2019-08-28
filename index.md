@@ -47,15 +47,15 @@ The easiest way to get up and running on **Mac** and **Windows** is to use one o
 
 ### JGU Packages
 
-This is a collection of ready-made Linux packages for Arch Linux and recent Debian, Raspbian and Ubuntu releases, maintained by the Johannes Gutenberg University (JGU) at the [OBS](https://build.opensuse.org/project/show/home:aggraef) (Open Build System). They offer the following advantages:
+This is a collection of ready-made Linux packages for Arch Linux, openSUSE, and recent Debian, Raspbian and Ubuntu releases, maintained by the Johannes Gutenberg University (JGU) at the [OBS](https://build.opensuse.org/project/show/home:aggraef) (Open Build System). They offer the following advantages:
 
-- Support for Arch and up-to-date Debian/Ubuntu versions: We generally support the two most recent stable (or long term support) releases, as well as Debian Sid, Testing, and the current (non-LTS) Ubuntu release. Packages for other (RPM-based) distributions such as Fedora and openSUSE are planned.
-
-- "Classic" Pd-l2ork and Purr Data can be installed alongside each other.
+- Support for a wider range of different Linux systems, including the latest Debian/Ubuntu versions: We generally support the two most recent stable (or long term support) releases, as well as current (or rolling) releases.
 
 - The packages are available through proper package repositories and thus can be installed and updated automatically through your distribution's standard package manager. Required dependencies will also be installed automatically.
 
 - The packages are updated more frequently (also between upstream releases) from the current git sources. Sometimes we're even ahead of upstream, if there are important new features or bugfixes which have already been tested, but haven't been merged upstream yet.
+
+- "Classic" Pd-l2ork and Purr Data can be installed alongside each other.
 
 - Additional programming extensions for the [Faust](http://faust.grame.fr/) and [Pure](https://agraef.github.io/pure-lang/) programming languages are available.
 
