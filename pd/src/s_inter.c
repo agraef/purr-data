@@ -66,6 +66,7 @@ typedef int socklen_t;
 #include <errno.h>
 #include <string.h>
 #include <stdio.h>
+#include <ctype.h>
 
 #ifdef __APPLE__
 #include <sys/types.h>
