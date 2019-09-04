@@ -31,7 +31,8 @@ static void serial_mt_float( t_serial_mt* x,t_floatarg f)
 
      x->x_c[x->x_count] = (char) f;
 
-     x->x_count = (++x->x_count)%3;
+     x->x_count++;
+     x->x_count = x->x_count % 3;
      
      if (x->x_count==2) {
 	  dx=      (signed char)(((x->x_c[0] & 0x03) << 6) | 

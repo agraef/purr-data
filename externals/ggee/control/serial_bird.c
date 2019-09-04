@@ -128,8 +128,8 @@ static void serial_bird_float( t_serial_bird* x,t_floatarg f)
 /*	  post("posx %d, posy %d",x->x_posx,x->x_posy);*/
 	  outlet_list(x->x_obj.ob_outlet,&s_list, ac, at);
      }
-
-     x->x_count = (++x->x_count)%(x->x_maxcount);
+     x->x_count++;
+     x->x_count = x->x_count % x->x_maxcount;
 }
 
 static void serial_bird_poll( t_serial_bird* x) 

@@ -8,9 +8,8 @@
 #include <netdb.h>
 #include <sys/errno.h>
 #include <sys/socket.h>
-#else
-#include <stdlib.h>
 #endif
+#include <stdlib.h>
 
 /* ------------------------ scramble_tilde~ ----------------------------- */
 
