@@ -141,7 +141,7 @@ static void mtx_dispersive_dline_resize(t_mtx_dispersive_dline *x, t_symbol *s,
    }
 }
 
-static allpass_chain_cycle (t_float x, t_float *y, t_float *z, int n, t_float a) {
+static void allpass_chain_cycle (t_float x, t_float *y, t_float *z, int n, t_float a) {
 	t_float w, in;
         int c;
 	in = y[0] = x;
