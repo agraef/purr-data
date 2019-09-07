@@ -1,11 +1,24 @@
-#N canvas 447 229 471 300 12;
+#N canvas 3 60 953 300 12;
 #X obj 29 33 inlet;
-#X obj 29 102 ../utils/creation-test;
-#X msg 29 62 symbol ../regression_tests/canvas_f_abstraction;
-#X obj 29 131 list prepend apply manual width setting to subpatch with
+#X obj 29 142 ../utils/creation-test;
+#X msg 29 112 symbol ../regression_tests/canvas_f_abstraction;
+#X obj 29 171 list prepend apply manual width setting to subpatch with
 '#X f' syntax;
-#X obj 29 176 outlet;
-#X connect 0 0 2 0;
+#X obj 29 246 outlet;
+#X obj 29 62 trigger bang bang;
+#X obj 469 142 ../utils/creation-test;
+#X msg 469 112 symbol ../regression_tests/canvas_f_abstraction2;
+#X obj 469 171 list prepend apply manual width setting to subpatch
+with comma syntax;
+#X text 176 23 Pd originally used the "#X restore etc. \, f 12" syntax
+to set manual width. Now it uses an "#X f 12" on a separate line. We
+support both in Purr Data and check here for regressions.;
+#X connect 0 0 5 0;
 #X connect 1 0 3 0;
 #X connect 2 0 1 0;
 #X connect 3 0 4 0;
+#X connect 5 0 2 0;
+#X connect 5 1 7 0;
+#X connect 6 0 8 0;
+#X connect 7 0 6 0;
+#X connect 8 0 4 0;
