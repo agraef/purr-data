@@ -10,7 +10,6 @@ Build-Depends:
  dh-python | python-support,
  flex,
  flite1-dev,
- git,
  ladspa-sdk,
  libasound2-dev,
  libavifile-0.7-dev,
