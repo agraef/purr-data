@@ -1,4 +1,0 @@
-?package(pd-l2ork):needs="x11" section="Applications/Sound"\
-  title="Pd-L2Ork" \
-  command="/usr/bin/pd-l2ork" \
-  icon="/usr/share/icons/hicolor/128x128/apps/pd-l2ork.png"
