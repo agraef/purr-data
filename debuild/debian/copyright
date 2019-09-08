@@ -8,7 +8,7 @@ License: BSD
 
 Files: debian/*
 Copyright:
- 2012 Albert Graef <Dr.Graef@t-online.de>
+ 2012-2019 Albert Graef <Dr.Graef@t-online.de>
  2019 Olivier Humbert <trebmuh@tuxfamily.org>
 License: GPL-2+
  This package is free software; you can redistribute it and/or modify
