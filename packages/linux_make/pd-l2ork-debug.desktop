@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Pd-L2Ork DEBUG
 Comment=L2Ork Iteration of Pure-Data Interactive DSP Environment, Debug Version
+Comment[fr]=Itération L2Ork de l'environnement DSP interactif Pure-Data, version de débogage
 Exec=bash -c "( echo r ; cat ) | gdb --args pd-l2ork -d 3 %U"
 Terminal=true
 Type=Application
