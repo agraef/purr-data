@@ -83,7 +83,7 @@ Recommends:
 Suggests:
  fluid-soundfont-gm,
  python,
-Description:  Interactive multimedia programming environment (NW.js variant)
+Description: Interactive multimedia programming environment (NW.js variant)
  This is Jonathan Wilkes' nw.js variant of Pd-L2Ork, nick-named
  "Purr-Data". Basically, it is Pd-L2Ork with the Tk GUI replaced
  with a JavaScript GUI implemented using nw.js (http://nwjs.io/).
