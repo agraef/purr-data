@@ -1,4 +1,4 @@
-#N canvas 3 60 749 617 12;
+#N canvas 3 60 749 571 12;
 #X obj 465 281 r \$0-result;
 #X obj 159 179 bng 31 250 50 0 empty empty Run_all 39 13 0 12 -262144
 -1 -1;
@@ -38,6 +38,7 @@ is handy for some binbuf tests.;
 #X obj 145 1011 rtest list_cat_clear;
 #X obj 145 1066 rtest list_cat_anything;
 #X obj 145 1121 rtest list_cat_reentrancy;
+#X obj 145 1176 rtest canvas_f;
 #X connect 0 0 28 0;
 #X connect 1 0 5 0;
 #X connect 2 0 4 0;
@@ -62,3 +63,4 @@ is handy for some binbuf tests.;
 #X connect 27 0 30 0;
 #X connect 30 0 31 0;
 #X connect 31 0 32 0;
+#X connect 32 0 33 0;

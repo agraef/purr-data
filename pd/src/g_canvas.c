@@ -2186,39 +2186,52 @@ int canvas_path_iterate(t_canvas*x, t_canvas_path_iterator fun, void *user_data)
     return(result);
 }*/
 
-extern t_symbol *last_typedmess; // see g_readwrite.c for the explanation of this ugly hack
+extern t_symbol *last_typedmess; // see m_class.c for details on this ugly hack
+extern t_pd *last_typedmess_pd; // same as above
 
 static void canvas_f(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 {
-    static int warned;
-    //fprintf(stderr,"canvas_f %lx %d current=%lx %s\n", (t_int)x, argc, canvas_getcurrent(), last_typedmess != NULL ? last_typedmess->s_name : "none");
+    static int warned_future_version;
+    static int warned_old_syntax;
+    //fprintf(stderr,"canvas_f %lx %d current=%lx %s\n",
+    //    (t_int)x, argc, canvas_getcurrent(),
+    //    last_typedmess != NULL ? last_typedmess->s_name : "none");
     t_canvas *xp = x; //parent window for a special case dealing with subpatches
     t_gobj *g, *g2;
     t_object *ob;
-    if (argc > 1 && !warned)
+    if (argc > 1 && !warned_future_version)
     {
         post("** ignoring width or font settings from future Pd version **");
-        warned = 1;
+        warned_future_version = 1;
     }
-    // if we are either an empty canvas or are a part of a restore message of a subpatch
-    if (!x->gl_list || !strcmp(last_typedmess->s_name, "restore")) {
-        if (x->gl_owner && !x->gl_isgraph) {
-            // this means that we are a canvas that was just created or have just
-            // fnished restoring and that our width applies to our appearance on
-            // our parent
-            xp = x->gl_owner;
-            for (g = xp->gl_list; g != (t_gobj *)x; g = g->g_next) {
-                //fprintf(stderr,".x%lx .x%lx\n", (t_int)g, (t_int)x);
-                ;
+    // if we are part of a restore message
+    // of a subpatch in the form "#X restore..., f 123456789+;"
+    if (pd_class(last_typedmess_pd) == canvas_class &&
+        (t_canvas *)last_typedmess_pd == x &&
+        last_typedmess == gensym("restore"))
+    {
+        if (x->gl_owner && !x->gl_isgraph)
+        {
+            // this means that we are a canvas that
+            // just finished restoring and that our width applies to our
+            // appearance on our parent.
+            if (!warned_old_syntax)
+            {
+                post("warning: old box-width syntax detected. Please save the "
+                     "patch to switch to the new syntax.");
+                warned_old_syntax = 1;
             }
-            //fprintf(stderr,"done %d\n", (g != NULL ? 1: 0));
-        } else return;
-    } else {
-    for (g = x->gl_list; g2 = g->g_next; g = g2)
-        ;
+            xp = x->gl_owner;
+            g = &x->gl_gobj;
+        }
+        else return;
+    }
+    else
+    {
+        for (g = x->gl_list; g2 = g->g_next; g = g2)
+            ;
         //fprintf(stderr,"same canvas .x%lx .x%lx\n", (t_int)g, (t_int)x);
     }
-    //fprintf(stderr,"is canvas_class? %d\n", (pd_class(&g->g_pd) == canvas_class ? 1:0));
     if ((ob = pd_checkobject(&g->g_pd)) || pd_class(&g->g_pd) == canvas_class)
     {
         //fprintf(stderr,"f received\n");
