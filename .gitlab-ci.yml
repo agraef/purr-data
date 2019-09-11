@@ -11,7 +11,7 @@ debian_stretch_x86_64_deb:
      - ./tar_em_up.sh -B
      - cd ..
      - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive dpkg --force-all -i pd-l2ork*.deb > /dev/null
-     - valgrind pd-l2ork -noprefs -nostdpath -nogui -nrt -noaudio -send "init dollarzero \$0" scripts/regression_tests.pd
+     - valgrind pd-l2ork -noprefs -nogui -nrt -noaudio -send "init dollarzero \$0" scripts/regression_tests.pd
      - valgrind pd-l2ork -noprefs -nostdpath -nogui -nrt -noaudio scripts/external-tests.pd
    artifacts:
      name: "$CI_RUNNER_DESCRIPTION"
@@ -33,7 +33,7 @@ ubuntu_14.04_i386_deb:
      - cd ..
      - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive dpkg --force-all -i pd-l2ork*.deb > /dev/null
      - cd scripts
-     - valgrind pd-l2ork -noprefs -nostdpath -nogui -nrt -noaudio -send "init dollarzero \$0" regression_tests.pd
+     - valgrind pd-l2ork -noprefs -nogui -nrt -noaudio -send "init dollarzero \$0" regression_tests.pd
      - valgrind pd-l2ork -noprefs -nostdpath -nogui -nrt -noaudio external-tests.pd
    artifacts:
      name: "$CI_RUNNER_DESCRIPTION"
@@ -55,7 +55,7 @@ ubuntu_14.04_x86_64_deb:
      - cd ..
      - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive dpkg --force-all -i pd-l2ork*.deb > /dev/null
      - cd scripts
-     - valgrind pd-l2ork -noprefs -nostdpath -nogui -nrt -noaudio -send "init dollarzero \$0" regression_tests.pd
+     - valgrind pd-l2ork -noprefs -nogui -nrt -noaudio -send "init dollarzero \$0" regression_tests.pd
      - valgrind pd-l2ork -noprefs -nostdpath -nogui -nrt -noaudio external-tests.pd
    artifacts:
      name: "$CI_RUNNER_DESCRIPTION"
@@ -77,7 +77,7 @@ ubuntu_16.04_x86_64_deb:
      - cd ..
      - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive dpkg --force-all -i pd-l2ork*.deb > /dev/null
      - cd scripts
-     - valgrind pd-l2ork -noprefs -nostdpath -nogui -nrt -noaudio -send "init dollarzero \$0" regression_tests.pd
+     - valgrind pd-l2ork -noprefs -nogui -nrt -noaudio -send "init dollarzero \$0" regression_tests.pd
      - valgrind pd-l2ork -noprefs -nostdpath -nogui -nrt -noaudio external-tests.pd
    artifacts:
      name: "$CI_RUNNER_DESCRIPTION"
@@ -95,7 +95,7 @@ osx_10.11_x86_64_dmg:
      - cd l2ork_addons
      - ./tar_em_up.sh -X
      - cd ../scripts
-     - ../packages/darwin_app/build/*.app/Contents/Resources/app.nw/bin/pd-l2ork -noprefs -nostdpath -nogui -noaudio -send "init dollarzero \$0" regression_tests.pd
+     - ../packages/darwin_app/build/*.app/Contents/Resources/app.nw/bin/pd-l2ork -noprefs -nogui -noaudio -send "init dollarzero \$0" regression_tests.pd
      - ../packages/darwin_app/build/*.app/Contents/Resources/app.nw/bin/pd-l2ork -noprefs -nostdpath -nogui -noaudio external-tests.pd
    artifacts:
      name: "$CI_RUNNER_DESCRIPTION"
@@ -113,7 +113,7 @@ osx_10.8_x86_64_dmg:
      - cd l2ork_addons
      - osx_version=10.8 ./tar_em_up.sh -X
      - cd ../scripts
-     - ../packages/darwin_app/build/*.app/Contents/Resources/app.nw/bin/pd-l2ork -noprefs -nostdpath -nogui -noaudio -send "init dollarzero \$0" regression_tests.pd
+     - ../packages/darwin_app/build/*.app/Contents/Resources/app.nw/bin/pd-l2ork -noprefs -nogui -noaudio -send "init dollarzero \$0" regression_tests.pd
      - ../packages/darwin_app/build/*.app/Contents/Resources/app.nw/bin/pd-l2ork -noprefs -nostdpath -nogui -noaudio external-tests.pd
    artifacts:
      name: "$CI_RUNNER_DESCRIPTION"
@@ -130,8 +130,8 @@ windows_i386_innosetup:
     - cd l2ork_addons
     - ./tar_em_up.sh -Z
     - cd ../scripts
-    - ../packages/win32_inno/build/bin/pd.exe -noprefs -nostdpath -nogui -noaudio -send "init dollarzero \$0" regression_tests.pd
-    - ../packages/win32_inno/build/bin/pd.exe -noprefs -nostdpath -nogui -noaudio external-tests.pd
+    - ../packages/win32_inno/build/bin/pd.com -noprefs -nogui -noaudio -send "init dollarzero \$0" regression_tests.pd
+    - ../packages/win32_inno/build/bin/pd.com -noprefs -nostdpath -nogui -noaudio external-tests.pd
   artifacts:
     name: "$CI_RUNNER_DESCRIPTION"
     expire_in: 1 day
@@ -152,7 +152,7 @@ raspbian_stretch_armv7l_deb:
      - ./tar_em_up.sh -r
      - cd ..
      - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive dpkg --force-all -i pd-l2ork*.deb > /dev/null
-     - valgrind pd-l2ork -noprefs -nostdpath -nogui -nrt -noaudio -send "init dollarzero \$0" scripts/regression_tests.pd
+     - valgrind pd-l2ork -noprefs -nogui -nrt -noaudio -send "init dollarzero \$0" scripts/regression_tests.pd
      - valgrind pd-l2ork -noprefs -nostdpath -nogui -nrt -noaudio scripts/external-tests.pd
    artifacts:
      name: "$CI_RUNNER_DESCRIPTION"
