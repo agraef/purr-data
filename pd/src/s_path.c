@@ -14,7 +14,7 @@
 #define DEBUG(x)
 
 #include <stdlib.h>
-#ifdef UNISTD
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #include <sys/stat.h>
 #endif
@@ -360,7 +360,7 @@ int sys_trytoopenone(const char *dir, const char *name, const char* ext,
     if ((fd=open(dirresult,O_RDONLY | MSWOPENFLAG(bin))) >= 0)
     {
             /* in unix, further check that it's not a directory */
-#ifdef UNISTD
+#ifdef HAVE_UNISTD_H
         struct stat statbuf;
         int ok =  ((fstat(fd, &statbuf) >= 0) &&
             !S_ISDIR(statbuf.st_mode));
@@ -802,6 +802,22 @@ void glob_path_dialog(t_pd *dummy, t_symbol *s, int argc, t_atom *argv)
     }
 }
 
+    /* AG 20190801: add one item to search path (backported from
+       vanilla rev. c917dd19, to make GEM happy). */
+void glob_addtopath(t_pd *dummy, t_symbol *path, t_float saveit)
+{
+  t_symbol *s = sys_decodedialog(path);
+  if (*s->s_name)
+  {
+    sys_searchpath = namelist_append_files(sys_searchpath, s->s_name);
+    if (saveit) {
+      /* AG: We just ignore this flag for now, later maybe save the
+         preferences here. GEM doesn't need this, and we don't use
+         Deken, so we can do without this. */
+    }
+  }
+}
+
     /* start a startup dialog window */
 void glob_start_startup_dialog(t_pd *dummy)
 {
@@ -848,9 +864,10 @@ t_symbol *pd_getdirname(void)
         buf[len] = '\0';
     sys_unbashfilename(buf, buf);
 #elif defined(__APPLE__)
-    len = sizeof(buf);
-    _NSGetExecutablePath(buf, &len);
-    if (len != -1) buf[len] = '\0';
+    int ret;
+    len = sizeof(buf); buf[0] = '\0';
+    ret = _NSGetExecutablePath(buf, &len);
+    if (ret) len = -1;
 #elif defined(__FreeBSD__)
     len = (ssize_t)(readlink("/proc/curproc/file", buf, sizeof(buf)-1));
     if (len != -1) buf[len] = '\0';

@@ -1,0 +1,50 @@
+#N canvas 867 556 734 372 10;
+#X obj 112 160 disarray~;
+#X obj 97 50 phasor~ 261;
+#X obj 97 77 -~ 0.5;
+#X obj 112 249 *~ 0.05;
+#X obj 112 280 dac~;
+#X obj 154 209 hsl 128 15 0 1 0 0 empty empty Gain -2 -8 0 10 -262144
+-1 -1 3500 1;
+#X floatatom 151 229 5 0 0 0 - - -, f 5;
+#X msg 191 51 switch_count \$1;
+#X floatatom 191 18 5 0 0 0 - disarray-swcnt -, f 5;
+#X msg 389 178 topfreq \$1;
+#X floatatom 389 149 5 0 0 0 - disarray-topf -, f 5;
+#X msg 18 131 bang;
+#X msg 347 219 set \$1 \$2 \$3 \$4 \$5 \$6 \$7 \$8 \$9 \$10 \$11 \$12
+\$13 \$14 \$15 \$16 \$17 \$18 \$19 \$20 \$21 \$22 \$23 \$24 \$25 \$26
+\$27 \$28 \$29 \$30;
+#X msg 347 269 68 23 20 16 53 18 14 32 5 58 50 8 33 28 3 29 52 62 70
+35 13 48 42 69 26 12 37 39 17 0;
+#X msg 298 52 showstate;
+#X msg 310 76 setstate 68 23 20 16 53 18 14 32 5 58 50 8 33 28 3 29
+52 62 70 35 13 48 42 69 26 12 37 39 17 0;
+#X msg 309 113 setstate 40 108 102 115 104 49 10 21 89 45 84 22 4 28
+92 83 68 14 46 65 110 63 25 116 24 117 30 32 31 72;
+#X text 14 112 new scramble;
+#N canvas 398 725 450 300 init 0;
+#X msg 130 129 \; disarray-swcnt 30 \; disarray-topf 3000 \;;
+#X obj 167 74 loadbang;
+#X connect 1 0 0 0;
+#X restore 479 37 pd init;
+#X text 23 312 disarray~ reorders a certain number of bins \, which
+can significantly transform the timbre. The spectral reordering is
+reported from the second outlet.;
+#X connect 0 0 3 0;
+#X connect 0 1 12 0;
+#X connect 1 0 2 0;
+#X connect 2 0 0 0;
+#X connect 3 0 4 0;
+#X connect 3 0 4 1;
+#X connect 5 0 6 0;
+#X connect 6 0 3 1;
+#X connect 7 0 0 0;
+#X connect 8 0 7 0;
+#X connect 9 0 0 0;
+#X connect 10 0 9 0;
+#X connect 11 0 0 0;
+#X connect 12 0 13 0;
+#X connect 14 0 0 0;
+#X connect 15 0 0 0;
+#X connect 16 0 0 0;

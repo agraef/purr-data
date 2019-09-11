@@ -1,0 +1,85 @@
+#N canvas 670 336 409 359 10;
+#X obj 20 229 squash~;
+#X obj 14 14 cnv 15 160 25 empty empty LyonPotpourri 20 12 1 18 -260097
+-204786 0;
+#N canvas 565 63 450 300 taps 0;
+#X obj 43 111 noise~;
+#X obj 118 79 metro 1000;
+#X msg 118 56 1;
+#X obj 118 33 loadbang;
+#X obj 168 201 line~;
+#X obj 63 226 *~;
+#X obj 63 260 outlet~;
+#X msg 118 155 1;
+#X msg 209 176 0.05 50;
+#X msg 271 176 0.01 900;
+#X msg 340 177 0 50;
+#X obj 209 149 delay 1;
+#X obj 271 149 delay 50;
+#X obj 339 149 delay 900;
+#X connect 0 0 5 0;
+#X connect 1 0 7 0;
+#X connect 1 0 11 0;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;
+#X connect 4 0 5 1;
+#X connect 5 0 6 0;
+#X connect 7 0 4 0;
+#X connect 8 0 4 0;
+#X connect 9 0 4 0;
+#X connect 10 0 4 0;
+#X connect 11 0 8 0;
+#X connect 11 0 12 0;
+#X connect 12 0 9 0;
+#X connect 12 0 13 0;
+#X connect 13 0 10 0;
+#X restore 20 170 pd taps;
+#X obj 20 273 *~ 0.1;
+#X obj 20 308 dac~;
+#X floatatom 59 253 5 0 0 0 - squash-gain -, f 5;
+#X obj 66 308 hsl 128 15 0 0.1 0 0 squash-gain empty gain -2 -8 0 10
+-261682 -1 -1 4400 1;
+#X obj 49 196 r squash.messages;
+#N canvas 741 67 448 403 squash-controls 0;
+#X obj 31 130 s squash.messages;
+#X msg 31 106 ratio \$1;
+#X obj 34 62 hsl 128 15 0.5 1 0 0 empty empty ratio -2 -8 0 10 -204786
+-1 -1 0 1;
+#X floatatom 31 86 5 0 0 0 - - -, f 5;
+#X obj 29 234 s squash.messages;
+#X obj 32 166 hsl 128 15 0 0.001 0 0 empty empty noise_threshold -2
+-8 0 10 -204786 -1 -1 0 1;
+#X floatatom 29 190 7 0 0 0 - - -, f 7;
+#X msg 29 210 nt \$1;
+#X text 171 165 set noise floor;
+#X obj 28 347 s squash.messages;
+#X obj 31 279 hsl 128 15 0 1 0 0 empty empty compression_threshold
+-2 -8 0 10 -204786 -1 -1 1000 1;
+#X floatatom 28 303 7 0 0 0 - - -, f 7;
+#X msg 28 323 thresh \$1;
+#X text 170 278 set compression threshold;
+#X text 29 18 lower ratio values give higher compression \, values
+greater than 1 result in expansion.;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X connect 5 0 6 0;
+#X connect 6 0 7 0;
+#X connect 7 0 4 0;
+#X connect 10 0 11 0;
+#X connect 11 0 12 0;
+#X connect 12 0 9 0;
+#X restore 111 243 pd squash-controls;
+#X text 16 50 squash~ is based on a compression algorithm by Christopher
+Penrose. It can be useful for extreme effects \, and is notable for
+employing the overlap-add system found in FFTease externals \, though
+all processing is done in the time domain here. This processor is capable
+of generating extreme amplitude ranges. Use with caution \, with a
+low playback gain \, and do not use this external in performance until
+you are very familiar with its operation.;
+#X connect 0 0 3 0;
+#X connect 2 0 0 0;
+#X connect 3 0 4 0;
+#X connect 3 0 4 1;
+#X connect 5 0 3 1;
+#X connect 7 0 0 0;

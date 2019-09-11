@@ -47,6 +47,10 @@ ALL_LIBS =
 #
 #------------------------------------------------------------------------------#
 
+ifeq ($(macos_target),)
+macos_target = 10.9
+endif
+
 # these can be set from outside without (usually) breaking the build
 CFLAGS = -Wall -W -g
 LDFLAGS =
@@ -106,9 +110,9 @@ ifeq ($(UNAME),Darwin)
     OPT_CFLAGS = -ftree-vectorize -ftree-vectorizer-verbose=2 -fast
 # build universal 32-bit on 10.4 and 32/64 on newer
     ifeq ($(shell uname -r | sed 's|\([0-9][0-9]*\)\.[0-9][0-9]*\.[0-9][0-9]*|\1|'), 8)
-      FAT_FLAGS = -arch ppc -arch i386 -mmacosx-version-min=10.4
+      FAT_FLAGS = -arch ppc -arch i386 -mmacosx-version-min=$(macos_target)
     else
-      FAT_FLAGS = -arch ppc -arch i386 -arch x86_64 -mmacosx-version-min=10.4
+      FAT_FLAGS = -arch ppc -arch i386 -arch x86_64 -mmacosx-version-min=$(macos_target)
       SOURCES += $(SOURCES_iphoneos)
     endif
     ALL_CFLAGS += $(FAT_FLAGS) -fPIC -I/sw/include
@@ -139,7 +143,7 @@ ifeq ($(UNAME),ANDROID)
   NDK_UNAME := $(shell uname -s | tr '[A-Z]' '[a-z]')
   NDK_TOOLCHAIN_BASE=$(NDK_BASE)/toolchains/arm-linux-androideabi-4.4.3/prebuilt/$(NDK_UNAME)-x86
   CC := $(NDK_TOOLCHAIN_BASE)/bin/arm-linux-androideabi-gcc --sysroot=$(NDK_SYSROOT)
-  OPT_CFLAGS = -O6 -funroll-loops -fomit-frame-pointer
+  OPT_CFLAGS = -O6 -funroll-loops -fomit-frame-pointer -fno-strict-aliasing
   CFLAGS += 
   LDFLAGS += -rdynamic -shared
   SHARED_LDFLAGS += -Wl,-soname,$(SHARED_LIB) -shared
@@ -155,7 +159,7 @@ ifeq ($(UNAME),Linux)
   SHARED_EXTENSION = so
   OS = linux
   PD_PATH = /usr
-  OPT_CFLAGS = -O6 -funroll-loops -fomit-frame-pointer
+  OPT_CFLAGS = -O6 -funroll-loops -fomit-frame-pointer -fno-strict-aliasing
   ALL_CFLAGS += -fPIC
   ALL_LDFLAGS += -rdynamic -shared -fPIC
   SHARED_LDFLAGS += -Wl,-soname,$(SHARED_LIB) -shared
@@ -171,7 +175,7 @@ ifeq ($(UNAME),GNU)
   SHARED_EXTENSION = so
   OS = linux
   PD_PATH = /usr
-  OPT_CFLAGS = -O6 -funroll-loops -fomit-frame-pointer
+  OPT_CFLAGS = -O6 -funroll-loops -fomit-frame-pointer -fno-strict-aliasing
   ALL_CFLAGS += -fPIC
   ALL_LDFLAGS += -rdynamic -shared -fPIC
   SHARED_LDFLAGS += -shared -Wl,-soname,$(SHARED_LIB)
@@ -187,7 +191,7 @@ ifeq ($(UNAME),GNU/kFreeBSD)
   SHARED_EXTENSION = so
   OS = linux
   PD_PATH = /usr
-  OPT_CFLAGS = -O6 -funroll-loops -fomit-frame-pointer
+  OPT_CFLAGS = -O6 -funroll-loops -fomit-frame-pointer -fno-strict-aliasing
   ALL_CFLAGS += -fPIC
   ALL_LDFLAGS += -rdynamic -shared -fPIC
   SHARED_LDFLAGS += -shared -Wl,-soname,$(SHARED_LIB)
@@ -202,7 +206,7 @@ ifeq (CYGWIN,$(findstring CYGWIN,$(UNAME)))
   SHARED_EXTENSION = dll
   OS = cygwin
   PD_PATH = $(shell cygpath $$PROGRAMFILES)/pd
-  OPT_CFLAGS = -O6 -funroll-loops -fomit-frame-pointer
+  OPT_CFLAGS = -O6 -funroll-loops -fomit-frame-pointer -fno-strict-aliasing
   ALL_CFLAGS += 
   ALL_LDFLAGS += -rdynamic -shared -L"$(PD_PATH)/src" -L"$(PD_PATH)/bin"
   SHARED_LDFLAGS += -shared -Wl,-soname,$(SHARED_LIB)
@@ -219,7 +223,7 @@ ifeq (MINGW,$(findstring MINGW,$(UNAME)))
   PD_PATH = $(shell cd "$$PROGRAMFILES/pd" && pwd)
   # MinGW doesn't seem to include cc so force gcc
   CC=gcc
-  OPT_CFLAGS = -O3 -funroll-loops -fomit-frame-pointer
+  OPT_CFLAGS = -O3 -funroll-loops -fomit-frame-pointer -fno-strict-aliasing
   ALL_CFLAGS += -mms-bitfields
   ALL_LDFLAGS += -s -shared -Wl,--enable-auto-import -L"$(PD_PATH)/src" -L"$(PD_PATH)/bin" -L"$(PD_PATH)/obj"
   SHARED_LDFLAGS += -shared

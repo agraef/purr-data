@@ -1,0 +1,27 @@
+#N canvas 648 97 510 369 10;
+#X obj 34 180 killdc~;
+#X obj 34 128 +~ 0.5;
+#X obj 34 98 *~ 0.5;
+#N canvas 0 22 450 300 (subpatch) 0;
+#X array sine+dc 441 float 2;
+#X coords 0 1 441 -1 200 140 1;
+#X restore 295 27 graph;
+#X obj 13 260 tabwrite~ sine+dc;
+#X msg 88 202 bang;
+#N canvas 0 22 450 300 (subpatch) 0;
+#X array dc-gone 441 float 2;
+#X coords 0 1 441 -1 200 140 1;
+#X restore 294 181 graph;
+#X obj 140 260 tabwrite~ dc-gone;
+#X obj 34 68 osc~ 100;
+#X obj 9 7 cnv 15 160 25 empty empty LyonPotpourri 20 12 1 18 -260097
+-204786 0;
+#X text 13 40 killdc~ removes DC from signal;
+#X text 125 202 <- see DC cut in action;
+#X connect 0 0 7 0;
+#X connect 1 0 0 0;
+#X connect 1 0 4 0;
+#X connect 2 0 1 0;
+#X connect 5 0 4 0;
+#X connect 5 0 7 0;
+#X connect 8 0 2 0;

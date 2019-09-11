@@ -1,0 +1,53 @@
+#N canvas 808 479 612 478 10;
+#X obj 181 140 readsf~;
+#X obj 181 84 openpanel;
+#X msg 181 109 open \$1;
+#X msg 181 57 bang;
+#X msg 249 109 1;
+#X obj 312 139 readsf~;
+#X obj 312 83 openpanel;
+#X msg 312 108 open \$1;
+#X msg 312 56 bang;
+#X text 348 60 load sf2;
+#X text 217 61 load sf1;
+#X msg 60 135 transition \$1;
+#X floatatom 60 104 5 0 0 0 - morphine-trans -, f 5;
+#X obj 193 265 *~ 0.05;
+#X obj 193 296 dac~;
+#X obj 235 225 hsl 128 15 0 1 0 0 empty empty Gain -2 -8 0 10 -262144
+-1 -1 11800 1;
+#X floatatom 232 245 5 0 0 0 - - -, f 5;
+#X obj 191 187 morphine~ 4096 8;
+#X text 19 318 morphine~ performs spectral morphing \, creating a new
+spectrum from its two inputs. Values between 0 and 1 are the useful
+range for the morph index. The progression depends upon the exponential
+transition scaling value. Progressively smaller negative values will
+widen the transition space between the two sounds. Larger FFT sizes
+\, such as 4096 \, produce smoother results.;
+#X obj 407 169 hsl 128 15 0 1 0 0 empty empty morph-index -2 -8 0 10
+-262144 -1 -1 5500 1;
+#X floatatom 404 195 5 0 0 0 - - -, f 5;
+#N canvas 0 22 450 300 init 0;
+#X msg 151 157 \; morphine-trans -5;
+#X obj 151 125 loadbang;
+#X connect 1 0 0 0;
+#X restore 441 258 pd init;
+#X connect 0 0 17 0;
+#X connect 1 0 2 0;
+#X connect 2 0 0 0;
+#X connect 3 0 1 0;
+#X connect 4 0 0 0;
+#X connect 4 0 5 0;
+#X connect 5 0 17 1;
+#X connect 6 0 7 0;
+#X connect 7 0 5 0;
+#X connect 8 0 6 0;
+#X connect 11 0 17 0;
+#X connect 12 0 11 0;
+#X connect 13 0 14 0;
+#X connect 13 0 14 1;
+#X connect 15 0 16 0;
+#X connect 16 0 13 1;
+#X connect 17 0 13 0;
+#X connect 19 0 20 0;
+#X connect 20 0 17 2;

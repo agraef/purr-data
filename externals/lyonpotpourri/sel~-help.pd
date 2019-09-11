@@ -1,0 +1,46 @@
+#N canvas 192 248 489 337 10;
+#X obj 41 184 sel~ 1 2 5.5, f 27;
+#X obj 41 226 click2bang~;
+#X obj 120 227 click2bang~;
+#X obj 200 225 click2bang~;
+#X obj 41 87 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 41 269 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 120 268 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 200 266 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 114 75 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 114 142 *~ 2;
+#X obj 268 88 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 41 125 click~;
+#X obj 114 112 click~;
+#X obj 268 126 click~;
+#X obj 26 4 cnv 15 155 25 empty empty LyonPotpourri 20 12 1 18 -260097
+-204786 0;
+#X obj 26 4 cnv 15 155 25 empty empty LyonPotpourri 20 12 1 18 -260097
+-204786 0;
+#X text 28 41 sel~ - sample-accurate implementation of the sel algorithm
+;
+#X text 281 224 impulses are numerically matched by sending a click
+(impulse with value 1.0) to the appropriate outlet, f 31;
+#X msg 312 99 set 5.5;
+#X obj 312 70 loadbang;
+#X connect 0 0 1 0;
+#X connect 0 1 2 0;
+#X connect 0 2 3 0;
+#X connect 1 0 5 0;
+#X connect 2 0 6 0;
+#X connect 3 0 7 0;
+#X connect 4 0 11 0;
+#X connect 8 0 12 0;
+#X connect 9 0 0 0;
+#X connect 10 0 13 0;
+#X connect 11 0 0 0;
+#X connect 12 0 9 0;
+#X connect 13 0 0 0;
+#X connect 18 0 13 0;
+#X connect 19 0 18 0;

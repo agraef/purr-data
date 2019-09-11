@@ -1,0 +1,10 @@
+#N canvas 514 317 333 242 10;
+#X obj 30 90 samm~ 60 1;
+#X obj 30 125 click2bang~;
+#X obj 30 162 bng 40 100 50 0 empty empty empty 17 7 0 10 -216994 -1
+-1;
+#X obj 23 13 cnv 15 160 25 empty empty LyonPotpourri 20 12 1 18 -260097
+-204786 0;
+#X text 24 45 click2bang~ - Convert click trigger to a bang;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;

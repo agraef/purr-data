@@ -1,0 +1,69 @@
+#N canvas 1256 420 532 415 10;
+#X obj 112 222 pileup~;
+#X msg 39 167 mode \$1;
+#X obj 111 188 readsf~;
+#X obj 111 132 openpanel;
+#X msg 111 157 open \$1;
+#X msg 111 105 bang;
+#X msg 179 157 1;
+#X text 147 109 load sf;
+#X obj 112 299 *~ 0.05;
+#X obj 112 330 dac~;
+#X obj 154 259 hsl 128 15 0 1 0 0 empty empty Gain -2 -8 0 10 -262144
+-1 -1 0 1;
+#X floatatom 151 279 5 0 0 0 - - -, f 5;
+#X obj 218 186 r fftz-pileup-msgs;
+#N canvas 1208 223 683 377 controls 0;
+#X obj 96 277 s fftz-pileup-msgs;
+#X msg 100 149 persistence \$1;
+#X floatatom 100 110 5 0 0 0 - pileup-pers -, f 5;
+#X msg 209 148 oscbank \$1, f 11;
+#X obj 209 114 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 303 148 synthresh \$1;
+#X floatatom 303 118 5 0 0 0 - - -, f 5;
+#X obj 300 72 hsl 128 15 0 0.2 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X floatatom 454 120 5 0 0 0 - - -, f 5;
+#X obj 451 74 hsl 128 15 0.5 1.999 0 0 empty pileup-transp empty -2
+-8 0 10 -262144 -1 -1 4236 1;
+#X msg 454 150 transpose \$1;
+#X msg 349 240 clear;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X connect 3 0 0 0;
+#X connect 4 0 3 0;
+#X connect 5 0 0 0;
+#X connect 6 0 5 0;
+#X connect 7 0 6 0;
+#X connect 8 0 10 0;
+#X connect 9 0 8 0;
+#X connect 10 0 0 0;
+#X connect 11 0 0 0;
+#X restore 254 133 pd controls;
+#N canvas 568 719 450 300 init 0;
+#X msg 97 151 \; pileup-transp 1 \; pileup-pers 0.99;
+#X obj 97 107 loadbang;
+#X connect 1 0 0 0;
+#X restore 250 88 pd init;
+#X obj 38 16 vradio 20 1 0 3 empty empty empty 0 -8 0 10 -262144 -1
+-1 0;
+#X text 65 17 persistent amplitude and phase;
+#X text 66 36 persistent amplitude only;
+#X text 66 58 inverse persistence;
+#X text 52 353 pileup~ maintains amplitude/phase information in bins
+(with possible damping) until new information comes in above a given
+threshold. This is useful for various reverberant effects.;
+#X connect 0 0 8 0;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 4 0;
+#X connect 4 0 2 0;
+#X connect 5 0 3 0;
+#X connect 6 0 2 0;
+#X connect 8 0 9 0;
+#X connect 8 0 9 1;
+#X connect 10 0 11 0;
+#X connect 11 0 8 1;
+#X connect 12 0 0 0;
+#X connect 15 0 1 0;

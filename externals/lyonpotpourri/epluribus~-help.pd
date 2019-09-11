@@ -1,0 +1,32 @@
+#N canvas 732 505 416 313 10;
+#X obj 129 165 epluribus~ 3;
+#X obj 210 191 click2float~;
+#X obj 129 224 *~ 0.1;
+#X obj 129 256 dac~;
+#X obj 205 256 hsl 70 12 0 1 0 0 epluribus-gain epluribus-gain-in gain
+-2 -8 0 10 -261443 -1 -1 0 1;
+#X floatatom 167 206 5 0 0 0 - epluribus-gain -, f 5;
+#X obj 23 13 cnv 15 160 25 empty empty LyonPotpourri 20 12 1 18 -260097
+-204786 0;
+#X obj 25 108 phasor~ 620;
+#X obj 25 131 killdc~;
+#X obj 120 131 killdc~;
+#X obj 120 108 phasor~ 620.77;
+#X obj 233 130 killdc~;
+#X floatatom 211 224 5 0 0 0 - - -, f 5;
+#X text 254 221 selected channel;
+#X obj 233 107 phasor~ 600.9;
+#X text 25 47 epluribus~ selects the highest absolute-valued sample
+from all its inputs \, on a pre-sample basis;
+#X connect 0 0 2 0;
+#X connect 0 1 1 0;
+#X connect 1 0 12 0;
+#X connect 2 0 3 0;
+#X connect 2 0 3 1;
+#X connect 5 0 2 1;
+#X connect 7 0 8 0;
+#X connect 8 0 0 0;
+#X connect 9 0 0 1;
+#X connect 10 0 9 0;
+#X connect 11 0 0 2;
+#X connect 14 0 11 0;

@@ -1,0 +1,101 @@
+#N canvas 849 580 545 411 10;
+#X obj 93 109 r pvtuner-msgs;
+#N canvas 1344 734 450 300 control 0;
+#X obj 103 205 s pvtuner-msgs;
+#X msg 103 175 basefreq \$1;
+#X floatatom 103 143 5 0 0 0 - - -, f 5;
+#X msg 205 175 interpolation \$1;
+#X obj 205 148 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 103 100 mtof;
+#X floatatom 103 62 5 21 64 0 - pvtuner-scalestp -, f 5;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X connect 3 0 0 0;
+#X connect 4 0 3 0;
+#X connect 5 0 2 0;
+#X connect 6 0 5 0;
+#X restore 364 189 pd control;
+#X obj 150 150 sig~ 1;
+#X obj 287 146 sig~ 0;
+#X floatatom 287 120 5 0 1 0 - - -, f 5;
+#X obj 290 95 hsl 128 15 0 1 0 0 empty pvtuner-interslide empty -2
+-8 0 10 -262144 -1 -1 0 1;
+#X obj 56 58 noise~;
+#X obj 100 271 *~ 0.05;
+#X obj 100 302 dac~;
+#X obj 142 231 hsl 128 15 0 1 0 0 empty empty Gain -2 -8 0 10 -262144
+-1 -1 1000 1;
+#X floatatom 139 251 5 0 0 0 - - -, f 5;
+#X obj 200 151 sig~ 0.01;
+#N canvas 249 593 683 461 scales 0;
+#X obj 49 418 s pvtuner-msgs;
+#X msg 118 96 minor_seventh_chord;
+#X msg 130 128 diatonic;
+#X msg 62 54 eq12;
+#N canvas 0 22 450 300 werkmeisterIII 0;
+#X msg 134 125 32.625 36.4726 40.9036 43.4989 48.7835 54.5367 61.357
+65.25 72.9451 81.8072 86.9977 97.5671 109.073 122.714 130.5 145.89
+163.614 173.995 195.134 218.147 245.428 261 291.78 327.229 347.991
+390.268 436.294 490.856 522 583.561 654.458 695.982 780.537 872.588
+981.712 1044 1167.12 1308.92 1391.96 1561.07 1745.18 1963.42 2088 2334.24
+2617.83 2783.93 3122.15 3490.35 3926.85 4176 4668.49 5235.66 5567.86
+6244.29 6980.7 7853.7;
+#X obj 146 55 inlet;
+#X obj 69 246 outlet;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X restore 318 116 pd werkmeisterIII;
+#X msg 320 80 bang;
+#X msg 289 190 added_sixth_minor;
+#X msg 294 222 added_sixth_major;
+#X msg 101 65 major_seventh_chord;
+#X msg 300 255 pelog;
+#X msg 326 301 slendro;
+#X msg 315 280 pentaclust;
+#X msg 307 334 pentatonic;
+#X msg 377 390 quarterclust;
+#X msg 14 121 eq8;
+#X msg 10 171 eq5;
+#X msg 208 150 eqn 7;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X connect 5 0 4 0;
+#X connect 6 0 0 0;
+#X connect 7 0 0 0;
+#X connect 8 0 0 0;
+#X connect 9 0 0 0;
+#X connect 10 0 0 0;
+#X connect 11 0 0 0;
+#X connect 12 0 0 0;
+#X connect 13 0 0 0;
+#X connect 14 0 0 0;
+#X connect 15 0 0 0;
+#X connect 16 0 0 0;
+#X restore 364 167 pd scales;
+#N canvas 739 94 450 300 init 0;
+#X obj 108 104 loadbang;
+#X msg 108 135 \; pvtuner-scalestp 21 \; pvtuner-interslide 1;
+#X connect 0 0 1 0;
+#X restore 364 211 pd init;
+#X text 44 342 pvtuner~ allows you to impose an arbitrary tuning scale
+on any input sound. Several scales are built into the object \, and
+you can provide arbitrary tunings with a sorted list of numbers representing
+Hz values.;
+#X text 188 57 Interpolate between scales \, when interpolation is
+on;
+#X obj 56 191 pvtuner~ 2048;
+#X connect 0 0 16 0;
+#X connect 2 0 16 1;
+#X connect 3 0 16 3;
+#X connect 4 0 3 0;
+#X connect 5 0 4 0;
+#X connect 6 0 16 0;
+#X connect 7 0 8 0;
+#X connect 7 0 8 1;
+#X connect 9 0 10 0;
+#X connect 10 0 7 1;
+#X connect 11 0 16 2;
+#X connect 16 0 7 0;

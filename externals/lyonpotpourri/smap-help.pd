@@ -1,0 +1,9 @@
+#N canvas 246 169 450 300 10;
+#X obj 141 163 smap 0 4;
+#X obj 144 113 hsl 128 15 0 127 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X floatatom 141 195 5 0 0 0 - - -;
+#X text 49 56 remap a 0-127 MIDI input range to the output range specified
+in the arguments;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;

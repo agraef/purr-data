@@ -4,10 +4,13 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-nwjsver = 0.22.1
+nwjsver = 0.24.4
 nwjspkg = nwjs-sdk-v$(nwjsver)-linux
 
-ifeq ("$(shell dpkg-architecture -qDEB_HOST_ARCH)","amd64")
+ifeq ("$(shell dpkg-architecture -qDEB_HOST_ARCH)","armhf")
+arch = arm
+nwjsver = 0.24.5
+else ifeq ("$(shell dpkg-architecture -qDEB_HOST_ARCH)","amd64")
 arch = x64
 else
 arch = ia32
@@ -42,6 +45,10 @@ override_dh_auto_install:
 # Remove some unneeded files.
 	cd debian/purr-data/ && rm -rf Makefile README.txt etc usr/share/emacs
 	cd debian/purr-data$(prefix)/lib/pd-l2ork/extra && rm -rf */*.pd_linux_o */*.la
+ifeq ($(arch),ia32)
+# This causes trouble in 32 bit builds (64 bit executable in the 32 bit nw.js distribution?), remove it.
+	cd debian/purr-data$(prefix)/lib/pd-l2ork && rm -rf bin/nw/minidump_stackwalk
+endif
 # Add the bash completion file again, and edit it accordingly.
 	mkdir -p debian/purr-data/etc/bash_completion.d
 	sed -e 's/pd-l2ork/purr-data/g' < scripts/bash_completion/pd-l2ork > debian/purr-data/etc/bash_completion.d/purr-data

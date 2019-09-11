@@ -78,7 +78,7 @@ if test -z "$GCC"; then
 else
         case $host in 
         *86*-linux*)
-                CFLAGS="$CFLAGS -DUNIX -Wall -Wimplicit -Wunused -Wmissing-prototypes -O2 -fPIC"
+                CFLAGS="$CFLAGS -DUNIX -Wall -Wimplicit -Wunused -Wmissing-prototypes -O2 -fno-strict-aliasing -fPIC"
 					 LDFLAGS="-Wl,--export-dynamic -shared"
 					 dnl we could test for bad glibc here, but don't
 					 pd_suffix=pd_linux
@@ -115,7 +115,7 @@ else
 					 LIBS="-L../../../pd/src -L../../../pd/bin -L../../../pd/obj -lpd -lm -lwsock32"
 					 ;;
         *-*-darwin*)
-                CFLAGS="$CFLAGS -DUNIX -Wall -Wimplicit -Wunused -Wmissing-prototypes -O3 "
+                CFLAGS="$CFLAGS -DUNIX -Wall -Wimplicit -Wunused -Wmissing-prototypes -O3 -fno-strict-aliasing "
 					 LDFLAGS=" -bundle -bundle_loader ../../../pd/bin/pd-l2ork -flat_namespace "
 					 pd_suffix=pd_darwin
 					 LIBS="-lc -lm"

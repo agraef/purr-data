@@ -77,6 +77,12 @@
 
 .PHONY: all incremental checkout clean realclean dist
 
+# Target platform (OSX/macOS only): On Mojave (10.14 with Xcode 10) this needs
+# to be at least 10.9, which is the default now. With older Xcode versions you
+# can try earlier versions (>= 10.4) if you need to compile for legacy OSX
+# versions.
+export macos_target = 10.9
+
 # Installation prefix under which Pd-l2ork is installed (Linux only). If this
 # isn't set, a default location will be used (usually /usr/local). NOTE: We
 # *always* assume that this variable is set properly in the install targets

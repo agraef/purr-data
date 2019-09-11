@@ -1,0 +1,120 @@
+#N canvas 1082 165 576 304 10;
+#X obj 160 156 cavoc27~;
+#X obj 193 199 *~ 0.05;
+#X obj 193 257 dac~;
+#X obj 235 157 hsl 128 15 0 1 0 0 empty cavoc27-gain Gain -2 -8 0 10
+-262144 -1 -1 0 1;
+#X floatatom 232 179 5 0 0 0 - - -, f 5;
+#X obj 229 110 r fftz.cavoc27.msgs;
+#N canvas 1379 450 450 300 rules 0;
+#X obj 65 222 s fftz.cavoc27.msgs;
+#X msg 29 88 rule 1 0 1 0 0 0 1 0 0 1 2 1 0 2 0 2 0 0 1 0 2 0 2 1 2
+1 1;
+#X msg 51 115 rule 0 2 1 0 0 1 0 0 0 1 1 2 0 1 2 1 1 1 1 0 0 0 1 1
+0 1 1;
+#X msg 73 143 rule 2 2 0 1 0 2 1 1 0 2 1 2 0 1 1 2 0 2 2 1 2 1 1 2
+0 0 0;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X restore 36 132 pd rules;
+#N canvas 1371 522 450 300 triggering 0;
+#X obj 65 222 s fftz.cavoc27.msgs;
+#X msg 65 163 trigger;
+#X msg 204 160 manual \$1;
+#X obj 204 128 tgl 15 0 empty cavoc27-triggertog empty 17 7 0 10 -262144
+-1 -1 0 1;
+#X obj 65 128 metro 250;
+#X obj 64 72 tgl 15 0 empty cavoc27-metro-tog empty 17 7 0 10 -262144
+-1 -1 0 1;
+#X floatatom 103 99 5 0 0 0 - - -, f 5;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 2 0;
+#X connect 4 0 1 0;
+#X connect 5 0 4 0;
+#X connect 6 0 4 1;
+#X restore 35 156 pd triggering;
+#N canvas 221 259 450 300 init 0;
+#X obj 28 34 loadbang;
+#X msg 28 62 \; cavoc27-triggertog 0 \; cavoc27-metro-tog 1 \; cavoc27-infreq
+133 \; cavoc27-gain 0.02 \; cavoc27-holdtime 250 \;;
+#X connect 0 0 1 0;
+#X restore 35 178 pd init;
+#X text 228 250 cavoc27~ generates spectra with a 27 rule cellular
+automaton. Start with very low gain.;
+#N canvas 1167 563 450 300 sample-input-spectrum 1;
+#X msg 237 101 capture_spectrum \$1;
+#X obj 237 70 inlet;
+#X floatatom 22 31 5 0 0 0 - cavoc27-infreq -, f 5;
+#X obj 20 111 phasor~;
+#X obj 20 137 -~ 0.5;
+#X obj 73 111 phasor~;
+#X obj 73 137 -~ 0.5;
+#X obj 128 112 phasor~;
+#X obj 128 138 -~ 0.5;
+#X obj 36 185 *~ 0.5;
+#X obj 35 236 outlet~;
+#X obj 60 73 * 1.25;
+#X obj 126 74 * 1.5;
+#X obj 237 133 s fftz.cavoc27.msgs;
+#X connect 0 0 13 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 2 0 11 0;
+#X connect 2 0 12 0;
+#X connect 3 0 4 0;
+#X connect 4 0 9 0;
+#X connect 5 0 6 0;
+#X connect 6 0 9 0;
+#X connect 7 0 8 0;
+#X connect 8 0 9 0;
+#X connect 9 0 10 0;
+#X connect 11 0 5 0;
+#X connect 12 0 7 0;
+#X restore 160 82 pd sample-input-spectrum;
+#X obj 160 41 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#N canvas 637 695 517 307 more-msgs 0;
+#X obj 31 268 s fftz.cavoc27.msgs;
+#X msg 43 184 density \$1;
+#X floatatom 43 154 5 0 0 0 - - -, f 5;
+#X msg 31 99 oscbank \$1;
+#X obj 31 60 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1 1
+;
+#X obj 215 66 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 215 103 interpolate \$1;
+#X msg 317 180 transpose \$1;
+#X floatatom 317 151 5 0 0 0 - - -, f 5;
+#X obj 320 102 hsl 128 15 0.5 2 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 8300 1;
+#X msg 221 226 retune 0.5 2;
+#X msg 351 247 freeze \$1;
+#X obj 351 219 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 158 178 hold_time \$1;
+#X floatatom 193 151 5 0 0 0 - cavoc27-holdtime -, f 5;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X connect 3 0 0 0;
+#X connect 4 0 3 0;
+#X connect 5 0 6 0;
+#X connect 6 0 0 0;
+#X connect 7 0 0 0;
+#X connect 8 0 7 0;
+#X connect 9 0 8 0;
+#X connect 10 0 0 0;
+#X connect 11 0 0 0;
+#X connect 12 0 11 0;
+#X connect 13 0 0 0;
+#X connect 14 0 13 0;
+#X restore 35 215 pd more-msgs;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 1 0 2 1;
+#X connect 3 0 4 0;
+#X connect 4 0 1 1;
+#X connect 5 0 0 0;
+#X connect 10 0 0 0;
+#X connect 11 0 10 0;

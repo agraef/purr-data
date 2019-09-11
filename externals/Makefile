@@ -15,8 +15,12 @@ cvs_root_dir := $(shell cd $(CWD)/.. && pwd)
 DESTDIR = $(CWD)/build/
 BUILDLAYOUT_DIR = $(cvs_root_dir)/packages
 
+ifeq ($(macos_target),)
+macos_target = 10.9
+endif
+
 # turn on weak linking and dlopen support
-export MACOSX_DEPLOYMENT_TARGET = 10.3
+export MACOSX_DEPLOYMENT_TARGET = $(macos_target)
 
 # default target
 default: all
@@ -69,9 +73,10 @@ ifeq ($(OS_NAME),linux)
 endif
 ifeq ($(OS_NAME),windows)
   BUILDSRC_OS_NAME = win
-  WINDOWS_HACKS = -D'O_NONBLOCK=1' -D'srand48(n)=srand((n))' \
-    -D'drand48()=((double)rand()/RAND_MAX)' -D'bzero(p,n)=memset(p,0,n)'
+  WINDOWS_HACKS = -DO_NONBLOCK=1
 # These don't seem to be needed:
+# -D'srand48(n)=srand((n))' \
+#    -D'drand48()=((double)rand()/RAND_MAX)' -D'bzero(p,n)=memset(p,0,n)'
 #	-D'PROT_READ=1' \
 #	-D'MAP_PRIVATE=2' \
 #	-D'O_NDELAY=O_NONBLOCK'
@@ -369,7 +374,7 @@ boids_clean:
 #------------------------------------------------------------------------------#
 # BSAYLOR
 bsaylor:
-	make -C $(externals_src)/bsaylor PD_PATH=$(pd_src) CFLAGS="$(CFLAGS)"
+	make -C $(externals_src)/bsaylor PD_PATH=$(pd_src) CFLAGS="$(CFLAGS) -fno-strict-aliasing"
 
 bsaylor_install:
 	make -C $(externals_src)/bsaylor \
@@ -672,7 +677,7 @@ $(gem_src)/Gem.dll: $(gem_src)/configure
 		--prefix=$(prefix) \
 		--libdir=$(objectsdir) \
 		--with-pd=$(DESTDIR)
-	$(MAKE) -C $(gem_src)
+	$(MAKE) $(GEM_MAKEFLAGS) -C $(gem_src)
 
 $(gem_src)/Gem.pd_linux: $(gem_src)/configure
 	test -s $(gem_src)/Gem.pd_linux || \
@@ -682,7 +687,7 @@ $(gem_src)/Gem.pd_linux: $(gem_src)/configure
 			--with-video=plugins \
 			--with-film=plugins \
 			--with-pd=$(pd_src)
-	$(MAKE) -C $(gem_src)
+	$(MAKE) $(GEM_MAKEFLAGS) -C $(gem_src)
 
 $(gem_src)/Gem.pd_darwin: $(gem_src)/configure
 	cd $(gem_src) && ./configure \
@@ -696,7 +701,7 @@ $(gem_src)/Gem.pd_darwin: $(gem_src)/configure
 		--with-video=plugins \
 		--with-film=plugins \
 		--with-pd=$(pd_src)
-	$(MAKE) -C $(gem_src)
+	$(MAKE) $(GEM_MAKEFLAGS) -C $(gem_src)
 
 gem: $(gem_src)/Gem.$(EXTENSION)
 
@@ -1287,13 +1292,15 @@ moocow_clean:
 	$(MAKE) -C $(externals_src)/moocow/extended distclean
 	-rm -f -- $(MOOCOW_DIR)/*.bak
 	-rm -f -- $(MOOCOW_DIR)/*.*~
+	-rm -rf -- $(externals_src)/moocow/*/common/*
+	-rm -rf -- $(externals_src)/moocow/*/a.out.dSYM/*
 	cp -f $(MOOCOW_DIR)/../gfsm/gfsm/src/libgfsm/default/* $(MOOCOW_DIR)/../gfsm/gfsm/src/libgfsm/ 
 
 
 #------------------------------------------------------------------------------#
 # MOONLIB
 moonlib:
-	make -C $(externals_src)/moonlib PD_PATH=$(pd_src) CFLAGS="$(CFLAGS)"
+	make -C $(externals_src)/moonlib PD_PATH=$(pd_src) CFLAGS="$(CFLAGS) -fno-strict-aliasing"
 
 moonlib_install:
 	make -C $(externals_src)/moonlib DESTDIR="$(DESTDIR)" objectsdir="$(objectsdir)" install
@@ -1388,6 +1395,7 @@ oscx_clean:
 	-$(MAKE) -C $(externals_src)/OSCx CC=gcc clean
 	-rm $(externals_src)/OSCx/Makefile
 	-rm $(externals_src)/OSCx/configure
+	-rm -f -- $(cvs_root_dir)/externals/OSCx/*/Makefile
 
 
 
@@ -1492,6 +1500,7 @@ pdp_clean:
 	-find $(externals_src)/pdp -name '*.bak' | xargs rm -f --
 	-rm -f -- $(externals_src)/pdp/Makefile.config
 	-rm -f -- $(externals_src)/pdp/configure
+	-rm -f -- $(externals_src)/pdp/include/pdp_config.h
 
 
 #------------------------------------------------------------------------------#
@@ -1895,7 +1904,7 @@ zexy_install: zexy
 #endif
 
 zexy_clean:
-	cd $(externals_src)/zexy && ./autogen.sh
+	cd $(externals_src)/zexy
 	-$(MAKE) -C $(externals_src)/zexy clean
 	-rm -rf -- $(externals_src)/zexy/autom4te.cache
 	-rm -f -- $(externals_src)/zexy/aclocal.m4
@@ -1905,6 +1914,18 @@ zexy_clean:
 	-rm -f -- $(externals_src)/zexy/m4/libtool.m4
 	-rm -f -- $(externals_src)/zexy/configure
 	-rm -f -- $(externals_src)/zexy/src/*.o
+	-rm -f -- $(externals_src)/zexy/Makefile
+	-rm -f -- $(externals_src)/zexy/Makefile.in
+	-rm -f -- $(externals_src)/zexy/*/Makefile
+	-rm -f -- $(externals_src)/zexy/*/Makefile.in
+	-rm -f -- $(externals_src)/zexy/compile
+	-rm -f -- $(externals_src)/zexy/config.*
+	-rm -f -- $(externals_src)/zexy/depcomp
+	-rm -f -- $(externals_src)/zexy/install-sh
+	-rm -f -- $(externals_src)/zexy/missing
+	-rm -f -- $(externals_src)/zexy/stamp-h1
+	-rm -f -- $(externals_src)/zexy/test-driver
+	-rm -f -- $(externals_src)/zexy/*.pd
 
 
 

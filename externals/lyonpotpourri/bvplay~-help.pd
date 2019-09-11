@@ -1,0 +1,52 @@
+#N canvas 234 181 552 434 10;
+#N canvas 348 477 724 547 load-a-sound 0;
+#X obj 49 170 soundfiler;
+#X obj 49 119 openpanel;
+#X obj 49 92 inlet;
+#X msg 49 142 read -resize \$1 bvplay-demo-array;
+#X obj 354 89 loadbang;
+#X msg 354 125 read -resize sound/voice.wav bvplay-demo-array;
+#X connect 1 0 3 0;
+#X connect 2 0 1 0;
+#X connect 3 0 0 0;
+#X connect 4 0 5 0;
+#X connect 5 0 0 0;
+#X restore 9 86 pd load-a-sound;
+#X obj 9 57 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1 -1
+;
+#N canvas 0 22 450 300 (subpatch) 0;
+#X array bvplay-demo-array 62079 float 2;
+#X coords 0 1 62079 -1 200 140 1;
+#X restore 10 140 graph;
+#X obj 250 217 bvplay~ bvplay-demo-array 1 30;
+#X obj 250 283 *~ 0.5;
+#X floatatom 289 263 5 0 0 0 - - -, f 5;
+#X obj 292 242 hsl 64 12 0 1 0 0 empty empty empty -2 -8 0 10 -180201
+-1 -1 0 1;
+#X obj 250 316 dac~;
+#X text 12 345 Send note statements to bvplay~ in list format: [skip
+duration increment amplitude], f 83;
+#X text 271 201 args: name \, chans \, taper;
+#X msg 225 101 taper \$1;
+#X floatatom 225 84 5 0 0 0 - - -, f 5;
+#X text 290 100 set fadein/fadeout for each note;
+#X text 12 369 bvplay~ will omit overlapped notes \, but multiple units
+can be used for polyphony., f 82;
+#X text 187 32 bvplay~ - Enveloped array playback;
+#X text 28 58 <- first load in a sound (recommend at least 5 secs.)
+;
+#X text 368 133 example notes;
+#X msg 250 133 0 500 1.2 1;
+#X msg 271 153 900 1000 -0.5 1;
+#X obj 8 22 cnv 15 160 25 empty empty LyonPotpourri 20 12 1 18 -260097
+-204786 0;
+#X connect 1 0 0 0;
+#X connect 3 0 4 0;
+#X connect 4 0 7 0;
+#X connect 4 0 7 1;
+#X connect 5 0 4 1;
+#X connect 6 0 5 0;
+#X connect 10 0 3 0;
+#X connect 11 0 10 0;
+#X connect 17 0 3 0;
+#X connect 18 0 3 0;

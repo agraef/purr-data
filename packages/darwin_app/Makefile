@@ -1,7 +1,14 @@
 current: darwin_app
 
+# Target platform: On Mojave (10.14 with Xcode 10) this needs to be at least
+# 10.9, which is the default now. With older Xcode versions you can try
+# earlier versions (>= 10.4) if you need to compile for legacy OSX versions.
+ifeq ($(macos_target),)
+macos_target = 10.9
+endif
+
 # turn on weak linking and dlopen support
-export MACOSX_DEPLOYMENT_TARGET = 10.4
+export MACOSX_DEPLOYMENT_TARGET = $(macos_target)
 
 CWD := $(shell pwd)
 BUILD_BASE = $(CWD)/build
@@ -23,20 +30,15 @@ include $(BUILDLAYOUT_DIR)/Makefile.buildlayout
 # http://hpc.sourceforge.net/
 
 OPT_CFLAGS = -fast -fPIC -ftree-vectorize
-FAT_FLAGS = -mmacosx-version-min=10.4
-CFLAGS = -mmacosx-version-min=10.4
-LDFLAGS = -mmacosx-version-min=10.4
+FAT_FLAGS = -mmacosx-version-min=$(macos_target)
+CFLAGS = -mmacosx-version-min=$(macos_target)
+LDFLAGS = -mmacosx-version-min=$(macos_target)
 
 # which CPU to compile for
 TARGET_PLATFORM := $(shell uname -p)
 ifeq ($(TARGET_PLATFORM),i386)
-  # if on 10.6/Intel, then build as 64-bit with core2 as minimum CPU
-  ifeq ($(shell uname -r | sed 's|\([0-9][0-9]*\)\.[0-9][0-9]*\.[0-9][0-9]*|\1|'), 10)
-    OPT_CFLAGS += -march=core2 -msse3 -mssse3 -mfpmath=sse
-    FAT_FLAGS = -mmacosx-version-min=10.6
-  else
-    OPT_CFLAGS += -msse3 -mfpmath=sse
-  endif
+  # assume Intel 64-bit with core2 as minimum CPU
+  OPT_CFLAGS += -march=core2 -msse3 -mssse3 -mfpmath=sse
 else
   OPT_CFLAGS += -mcpu=7450 -mtune=7450
 endif
@@ -236,10 +238,8 @@ dmg:
 distclean: package_clean
 	$(MAKE) -C $(packages_src) $(DEST_PATHS) distclean
 
-
 clean: package_clean
 	$(MAKE) -C $(packages_src) $(DEST_PATHS) clean
-
 
 package_clean: darwin_app_clean spotlight_importer_clean
 	-chmod -R u+w -- $(BUILD_BASE)

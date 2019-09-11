@@ -697,11 +697,24 @@ typedef t_pd *(*t_fun6)(t_int i1, t_int i2, t_int i3, t_int i4, t_int i5, t_int 
 /* needed for proper error reporting */
 extern t_pd *pd_mess_from_responder(t_pd *x);
 
-// hackish way to figure out what was the last command we invoked so that commands
-// that follow it (via commas, like the new width ability), can understand whom
-// they belong to. This is a problem with subpatches whose values get assigned to
-// their last created object, as opposed themselves
+/* This is a hack for the messages in Pd files that follow a comma, such as:
+     #X restore..., f 12
+   In that case the "f 12" would get sent to the subcanvas where we actually
+   want it to apply to the parent.
+
+   Pd Vanilla apparently made a special case to handle this-- instead of using
+   the comma after the "restore" message it starts a new "#X f 12;" which
+   ensures that the #X is bound to the correct canvas. But that means it fails
+   for the old the old syntax, and there are patches in the wild that use it.
+
+   So we support _both_ of these styles in Purr Data by doing the following:
+   1. Checking if the last typedmess was "restore" selector.
+   2. Checking if the last t_pd was a canvas that matches the current one.
+      If so, we're dealing with the old "#X..., f 12;" syntax. If not, it's
+      the new Pd Vanilla syntax.
+*/
 t_symbol *last_typedmess;
+t_pd *last_typedmess_pd;
 
 void pd_typedmess(t_pd *x, t_symbol *s, int argc, t_atom *argv)
 {
@@ -878,6 +891,7 @@ badarg:
         s->s_name, c->c_name->s_name);
 lastmess:
     last_typedmess = s;    
+    last_typedmess_pd = x;
     return;
 }
 

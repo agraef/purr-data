@@ -53,6 +53,10 @@ ALL_LIBS =
 #
 #------------------------------------------------------------------------------#
 
+ifeq ($(macos_target),)
+macos_target = 10.9
+endif
+
 # these can be set from outside without (usually) breaking the build
 CFLAGS = -Wall -W -g
 LDFLAGS =
@@ -112,9 +116,9 @@ ifeq ($(UNAME),Darwin)
     OPT_CFLAGS = -ftree-vectorize -ftree-vectorizer-verbose=2 -fast
 # build universal 32-bit on 10.4 and 32/64 on newer
     ifeq ($(shell uname -r | sed 's|\([0-9][0-9]*\)\.[0-9][0-9]*\.[0-9][0-9]*|\1|'), 8)
-      FAT_FLAGS = -arch ppc -arch i386 -mmacosx-version-min=10.4
+      FAT_FLAGS = -arch ppc -arch i386 -mmacosx-version-min=$(macos_target)
     else
-      FAT_FLAGS = -arch ppc -arch i386 -arch x86_64 -mmacosx-version-min=10.4
+      FAT_FLAGS = -arch ppc -arch i386 -arch x86_64 -mmacosx-version-min=$(macos_target)
       SOURCES += $(SOURCES_iphoneos)
     endif
     ALL_CFLAGS += $(FAT_FLAGS) -fPIC -I/sw/include
@@ -260,7 +264,7 @@ all: $(SOURCES:.c=.$(EXTENSION)) $(SHARED_LIB)
 
 multitouch.$(EXTENSION): multitouch.c
 	$(CC) $(ALL_CFLAGS) -o multitouch.o -c multitouch.c
-	$(CC) $(ALL_LDFLAGS) -mmacosx-version-min=10.5 -F/System/Library/PrivateFrameworks \
+	$(CC) $(ALL_LDFLAGS) -mmacosx-version-min=$(macos_target) -F/System/Library/PrivateFrameworks \
 		-o multitouch.$(EXTENSION) multitouch.o $(ALL_LIBS) \
 		-framework MultitouchSupport
 	chmod a-x multitouch.$(EXTENSION)

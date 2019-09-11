@@ -1,0 +1,28 @@
+#N canvas 375 428 410 405 10;
+#X obj 11 117 osc~ 340;
+#X obj 11 283 *~ 0.01;
+#X obj 87 285 *~ 0.01;
+#X obj 11 338 dac~;
+#X obj 48 168 osc~ 546;
+#X obj 29 141 osc~ 739;
+#X obj 11 246 shoehorn~ 5 2;
+#X obj 67 193 osc~ 1666;
+#X obj 86 216 osc~ 665;
+#X text -2 47 shoehorn~ collapses an arbitrary number of input channels
+into an arbitrary number of output channels \, by spacing them from
+left to right with equal power panning.;
+#X obj -3 9 cnv 15 160 25 empty empty LyonPotpourri 20 12 1 18 -260097
+-204786 0;
+#X obj 153 250 hsl 128 15 0 0.15 0 0 empty empty gain -2 -8 0 10 -232576
+-1 -1 1300 1;
+#X connect 0 0 6 0;
+#X connect 1 0 3 0;
+#X connect 2 0 3 1;
+#X connect 4 0 6 2;
+#X connect 5 0 6 1;
+#X connect 6 0 1 0;
+#X connect 6 1 2 0;
+#X connect 7 0 6 3;
+#X connect 8 0 6 4;
+#X connect 11 0 2 1;
+#X connect 11 0 1 1;

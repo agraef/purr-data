@@ -1,0 +1,82 @@
+#N canvas 638 328 720 564 10;
+#X obj 153 253 taint~, f 18;
+#X obj 301 112 expr pow(10 \, $f1/20);
+#X floatatom 301 55 5 -180 0 0 - taint-invthresh -, f 5;
+#X floatatom 230 201 5 0 0 0 - taint-scaleexp -, f 5;
+#X obj 38 105 readsf~;
+#X obj 38 49 openpanel;
+#X msg 38 74 open \$1;
+#X msg 38 22 bang;
+#X msg 106 74 1;
+#X text 74 26 load sf;
+#X obj 156 105 readsf~;
+#X obj 156 49 openpanel;
+#X msg 156 74 open \$1;
+#X msg 156 22 bang;
+#X text 192 26 load sf;
+#X obj 161 334 *~ 0.05;
+#X obj 161 365 dac~;
+#X obj 203 294 hsl 128 15 0 1 0 0 empty empty Gain -2 -8 0 10 -262144
+-1 -1 3900 1;
+#X floatatom 200 314 5 0 0 0 - - -, f 5;
+#X text 28 404 taint~ multiplies the spectra of two input signals.
+Multiplication of spectra can cause significant drops in the amplitude
+of the output signal. The inverse option allows division of the input
+spectra. Division requires the use of a threshold to avert division
+by zero. Also \, signal division will cause massive amplitude gains.
+Be careful of your ears and equipment. Start the amplitude very low
+(-100dB) and slowly work up to an acceptable level. A pad is provided
+to balance gain between normal and invert options.;
+#X obj 24 197 r taint-msgs;
+#N canvas 1384 608 450 300 control 0;
+#X obj 115 206 s taint-msgs;
+#X floatatom 114 54 5 0 0 0 - taint-pad -, f 5;
+#X obj 114 77 expr pow(10 \, $f1/20);
+#X floatatom 114 99 5 0 0 0 - - -, f 5;
+#X msg 114 118 pad \$1;
+#X msg 287 146 invert \$1;
+#X obj 287 113 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 21 11 this pad only affects the gain when "invert" is turned
+on thus it may be used to balance levels between the two states of
+taint~;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 4 0 0 0;
+#X connect 5 0 0 0;
+#X connect 6 0 5 0;
+#X restore 257 337 pd control;
+#N canvas 0 22 450 300 init 1;
+#X obj 185 126 loadbang;
+#X msg 182 165 \; taint-pad -36 \; taint-scaleexp 0.2 \; taint-invthresh
+-40;
+#X connect 0 0 1 0;
+#X restore 258 362 pd init;
+#X text 339 50 inverse threshold (lower values intensify effect but
+only when "invert" is turned on);
+#X text 278 202 scaling exponent (lower values increase amplitude)
+;
+#X obj 492 289 hsl 128 15 0.05 1 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 1200 1;
+#X obj 489 309 s taint-scaleexp;
+#X connect 0 0 15 0;
+#X connect 1 0 0 3;
+#X connect 2 0 1 0;
+#X connect 3 0 0 2;
+#X connect 4 0 0 0;
+#X connect 5 0 6 0;
+#X connect 6 0 4 0;
+#X connect 7 0 5 0;
+#X connect 8 0 4 0;
+#X connect 8 0 10 0;
+#X connect 10 0 0 1;
+#X connect 11 0 12 0;
+#X connect 12 0 10 0;
+#X connect 13 0 11 0;
+#X connect 15 0 16 0;
+#X connect 15 0 16 1;
+#X connect 17 0 18 0;
+#X connect 18 0 15 1;
+#X connect 20 0 0 0;
+#X connect 25 0 26 0;
