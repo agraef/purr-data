@@ -109,7 +109,8 @@ static t_int *sigdelwrite_perform(t_int *w)
 
 static void sigdelwrite_dsp(t_sigdelwrite *x, t_signal **sp)
 {
-    dsp_add(sigdelwrite_perform, 3, sp[0]->s_vec, &x->x_cspace, sp[0]->s_n);
+    dsp_add(sigdelwrite_perform, 3, sp[0]->s_vec, &x->x_cspace,
+        (t_int)sp[0]->s_n);
     x->x_sortno = ugen_getsortno();
     sigdelwrite_checkvecsize(x, sp[0]->s_n);
 }
@@ -213,7 +214,8 @@ static void sigdelread_dsp(t_sigdelread *x, t_signal **sp)
             0 : delwriter->x_vecsize);
         sigdelread_float(x, x->x_deltime);
         dsp_add(sigdelread_perform, 4,
-            sp[0]->s_vec, &delwriter->x_cspace, &x->x_delsamps, sp[0]->s_n);
+            sp[0]->s_vec, &delwriter->x_cspace, &x->x_delsamps,
+            (t_int)sp[0]->s_n);
     }
     else if (*x->x_sym->s_name)
         error("delread~: %s: no such delwrite~",x->x_sym->s_name);
@@ -306,7 +308,7 @@ static void sigvd_dsp(t_sigvd *x, t_signal **sp)
             0 : delwriter->x_vecsize);
         dsp_add(sigvd_perform, 5,
             sp[0]->s_vec, sp[1]->s_vec,
-                &delwriter->x_cspace, x, sp[0]->s_n);
+                &delwriter->x_cspace, x, (t_int)sp[0]->s_n);
     }
     else error("vd~: %s: no such delwrite~",x->x_sym->s_name);
 }
