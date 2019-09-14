@@ -1,0 +1,17 @@
+#N canvas 3 60 593 392 12;
+#X obj 41 8 inlet;
+#X obj 41 344 outlet;
+#X obj 41 136 cxc/hex2dec;
+#X msg 41 106 list 0x00 0x01 0x02 0x03;
+#X obj 41 165 list length;
+#X obj 41 194 == 4;
+#X obj 41 37 bang;
+#X obj 41 242 list append input list length should be equal to output
+list length;
+#X connect 0 0 6 0;
+#X connect 2 0 4 0;
+#X connect 3 0 2 0;
+#X connect 4 0 5 0;
+#X connect 5 0 7 0;
+#X connect 6 0 3 0;
+#X connect 7 0 1 0;

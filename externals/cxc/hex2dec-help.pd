@@ -1,22 +1,45 @@
-#N canvas 0 31 450 300 10;
-#X obj 138 153 hex2dec;
-#X floatatom 137 189 5 0 0 0 - - -;
-#X msg 139 105 symbol fff;
-#X msg 237 123 123;
-#X obj 257 194 print;
-#X text 136 51 doesn't seem to work;
-#N canvas 397 200 494 344 META 0;
+#N canvas 3 60 560 479 10;
+#X obj 29 413 hex2dec;
+#N canvas 334 170 494 344 META 0;
 #X text 12 135 HELP_PATCH_AUTHORS Jonathan Wilkes revised the patch
 to conform to the PDDP template for Pd version 0.42.;
 #X text 12 55 DESCIPTION hexadecimal to decimal conversion;
 #X text 12 75 INLET_0 symbol float;
 #X text 12 95 OUTLET_0 float symbol;
-#X text 12 5 KEYWORDS control conversion symbol_op needs_work (object
-doesn't work);
 #X text 12 35 LICENSE GPL v2;
 #X text 12 115 AUTHOR jdl@xdv.org;
-#X restore 394 274 pd META;
-#X connect 0 0 1 0;
-#X connect 0 0 4 0;
-#X connect 2 0 0 0;
+#X text 12 5 KEYWORDS control conversion symbol_op;
+#X restore 504 454 pd META;
+#X text 22 11 treat input as a hex string and convert to float;
+#X msg 39 181 symbol ff;
+#X msg 65 237 symbol 255;
+#X msg 29 145 symbol 0xff \, symbol 0x02;
+#X text 28 104 To minimize errors due to Pd's type limitations \, prepend
+a "0x" to each hex string like so:;
+#X obj 29 448 print;
+#X text 187 145 <- "0x" makes everything a symbol atom;
+#X msg 57 209 3 \, 3.14;
+#X msg 73 279 symbol 0xffffff;
+#X floatatom 89 448 14 0 0 0 - - -, f 14;
+#X text 107 181 <- Unprefixed hex strings will work...;
+#X text 117 209 ... as will floats (truncated to ints)...;
+#X text 178 279 <- Also \, try to limit your input to byte-sized hex
+strings. Even 32-bit ints won't fit losslessly into single-precision
+floating point numbers. (Although they will fit into double-precision
+floats.);
+#X text 59 39 An incoming symbol message with a valid hex string is
+output in decimal notation as a float.;
+#X text 137 237 ... but without the "0x" prefix it's too easy to introduce
+subtle bugs like this one. So always use the "0x" prefix.;
+#X msg 73 361 list ff aa cc;
+#X text 165 360 lists may be sent \, too. But be careful-- more than
+10 elements will cause memory allocation that is not realtime safe.
+;
+#X connect 0 0 7 0;
+#X connect 0 0 11 0;
 #X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X connect 5 0 0 0;
+#X connect 9 0 0 0;
+#X connect 10 0 0 0;
+#X connect 17 0 0 0;
