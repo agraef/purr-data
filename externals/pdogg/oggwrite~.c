@@ -291,7 +291,7 @@ static t_int *oggwrite_perform(t_int *w)
 
 static void oggwrite_dsp(t_oggwrite *x, t_signal **sp)
 {
-    dsp_add(oggwrite_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, sp[0]->s_n);
+    dsp_add(oggwrite_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)sp[0]->s_n);
 }
 
     /* initialize the vorbisenc library */

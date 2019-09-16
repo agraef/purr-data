@@ -66,7 +66,7 @@ static t_int *diode_tilde_perform(t_int *w)
 
 static void diode_tilde_dsp(t_diode_tilde *x, t_signal **sp)
 {
-    dsp_add(diode_tilde_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+    dsp_add(diode_tilde_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 void diode_tilde_setup(void)

@@ -47,7 +47,7 @@ static t_int * atodb_perform(t_int *w)
 
 static void atodb_dsp(t_atodb *x, t_signal **sp)
 {
-  dsp_add(atodb_perform, 4, x, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+  dsp_add(atodb_perform, 4, x, (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
 }
 
 void *atodb_new(void)

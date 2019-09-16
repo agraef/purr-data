@@ -355,7 +355,7 @@ static t_int *streamin_perform(t_int *w)
 
 static void streamin_dsp(t_streamin *x, t_signal **sp)
 {
-    dsp_add(streamin_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
+    dsp_add(streamin_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
 }
 
 

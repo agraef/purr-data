@@ -74,7 +74,7 @@ static t_int *pink_perform(t_int *w)
 
 static void pink_dsp(t_pink *x, t_signal **sp)
 {
-    dsp_add(pink_perform, 3, x, sp[1]->s_n, sp[1]->s_vec);
+    dsp_add(pink_perform, 3, x, (t_int)sp[1]->s_n, sp[1]->s_vec);
 }
 
 static void *pink_new(void)

@@ -50,7 +50,7 @@ static t_int *metro_perform(t_int *w);
 #define DSP_ARG(type, name, source) type name = (type)source
 static void metro_dsp(t_metro *x, t_signal **sp)
 {
-    dsp_add(metro_perform, 3, x, sp[0]->s_n, (int)sys_getsr());
+    dsp_add(metro_perform, 3, x, (t_int)sp[0]->s_n, (t_int)sys_getsr());
 }
 static t_int *metro_perform(t_int *w){
     DSP_ARG(t_metro*, x,  w[1]);

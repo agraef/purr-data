@@ -258,7 +258,7 @@ static t_int *rj_barkflux_accum_perform(t_int *w)
     out the samples. */
 static void rj_barkflux_accum_dsp(t_rj_barkflux_accum *x, t_signal **sp)
 {
-    dsp_add(rj_barkflux_accum_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
+    dsp_add(rj_barkflux_accum_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
 }
 
 void accum_set_st(t_rj_barkflux_accum *x, t_floatarg g)

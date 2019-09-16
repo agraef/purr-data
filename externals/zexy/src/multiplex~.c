@@ -64,7 +64,7 @@ static void mux_tilde_dsp(t_mux *x, t_signal **sp)
     *dummy++=sp[n]->s_vec;
   }
 
-  dsp_add(mux_tilde_perform, 3, x, sp[n]->s_vec, sp[0]->s_n);
+  dsp_add(mux_tilde_perform, 3, x, sp[n]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void mux_tilde_helper(void)

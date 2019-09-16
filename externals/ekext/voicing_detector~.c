@@ -99,7 +99,7 @@ void voicing_detector_tilde_method(t_voicing_detector_tilde *x, t_floatarg f)
 void *voicing_detector_tilde_dsp(t_voicing_detector_tilde *x, t_signal **sp)
 {
   x->x_ctl.c_input = sp[0]->s_vec;
-  dsp_add(voicing_detector_tilde_perform, 3, x, &x->x_ctl, sp[0]->s_n);
+  dsp_add(voicing_detector_tilde_perform, 3, x, &x->x_ctl, (t_int)sp[0]->s_n);
   return (void *)x;
 }
 

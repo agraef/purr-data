@@ -278,7 +278,7 @@ static t_int *streamout13_perform(t_int *w)
 static void streamout13_dsp(t_streamout13 *x, t_signal **sp)
 {
 /*
-    dsp_add(streamout13_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
+    dsp_add(streamout13_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
 */
   int i;
   t_int** myvec = getbytes(sizeof(t_int)*(x->x_n + 3));
@@ -287,7 +287,7 @@ static void streamout13_dsp(t_streamout13 *x, t_signal **sp)
   myvec[1] = (t_int*)sp[0]->s_n;
   for (i=0;i < x->x_n/*+1*/;i++)
     myvec[2 + i] = (t_int*)sp[i]->s_vec;
-  dsp_addv(streamout13_perform, x->x_n + 3, (t_int*)myvec);
+  dsp_addv(streamout13_perform, (t_int)(x->x_n + 3), (t_int*)myvec);
   freebytes(myvec,sizeof(t_int)*(x->x_n + 3));
 }
 

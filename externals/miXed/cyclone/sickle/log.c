@@ -50,7 +50,7 @@ static t_int *log_perform(t_int *w)
 
 static void log_dsp(t_log *x, t_signal **sp)
 {
-    dsp_add(log_perform, 4, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec,
+    dsp_add(log_perform, 4, (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec,
 	    &x->x_rcplogbase);
 }
 

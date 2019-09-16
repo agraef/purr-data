@@ -357,7 +357,7 @@ static void resofilt_dsp(t_resofilt *x, t_signal **sp)
   dsp_add(x->x_dsp,
 	  6, 
 	  &x->x_ctl, 
-	  sp[0]->s_n, 
+	  (t_int)sp[0]->s_n, 
 	  sp[0]->s_vec, 
 	  sp[1]->s_vec, 
 	  sp[2]->s_vec, 

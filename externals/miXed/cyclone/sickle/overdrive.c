@@ -56,7 +56,7 @@ static t_int *overdrive_perform(t_int *w)
 static void overdrive_dsp(t_overdrive *x, t_signal **sp)
 {
     dsp_add(overdrive_perform, 4, &x->x_drivefactor,
-	    sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+	    (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
 }
 
 static void *overdrive_new(t_floatarg f)

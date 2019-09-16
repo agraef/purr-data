@@ -72,7 +72,7 @@ static void peakamp_dsp(t_peakamp *x, t_signal **sp)
 {
     x->x_ksr = sp[0]->s_sr * 0.001;
     x->x_nwait = (int)(x->x_waittime * x->x_ksr);
-    dsp_add(peakamp_perform, 3, x, sp[0]->s_n, sp[0]->s_vec);
+    dsp_add(peakamp_perform, 3, x, (t_int)sp[0]->s_n, sp[0]->s_vec);
 }
 
 static void peakamp_free(t_peakamp *x)

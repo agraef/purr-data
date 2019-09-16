@@ -91,7 +91,7 @@ static void mixer_dsp(t_mixer *x, t_signal **sp)
   for (i=0;i < x->x_n+1;i++)
     myvec[2 + i] = (t_int*)sp[i]->s_vec;
 
-  dsp_addv(mixer_perform, x->x_n + 3, (t_int*)myvec);
+  dsp_addv(mixer_perform, (t_int)(x->x_n + 3), (t_int*)myvec);
   freebytes(myvec,sizeof(t_int)*(x->x_n + 3));
 }
 

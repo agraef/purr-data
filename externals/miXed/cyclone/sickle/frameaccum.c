@@ -37,7 +37,7 @@ static void frameaccum_dsp(t_frameaccum *x, t_signal **sp)
 				 FRAMEACCUM_INISIZE, x->x_frameini,
 				 sizeof(*x->x_frame));
     memset(x->x_frame, 0, nblock * sizeof(*x->x_frame));  /* CHECKED */
-    dsp_add(frameaccum_perform, 4, nblock, x->x_frame,
+    dsp_add(frameaccum_perform, 4, (t_int)nblock, x->x_frame,
 	    sp[0]->s_vec, sp[1]->s_vec);
 }
 

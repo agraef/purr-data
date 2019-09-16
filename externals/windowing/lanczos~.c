@@ -77,7 +77,7 @@ static t_int* lanczos_perform(t_int *w) {
 }
 
 static void lanczos_dsp(t_lanczos *x, t_signal **sp) {
-  dsp_add(lanczos_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+  dsp_add(lanczos_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void* lanczos_new(void) {

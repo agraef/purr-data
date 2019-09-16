@@ -72,7 +72,7 @@ static t_int* cosine_perform(t_int *w) {
 }
 
 static void cosine_dsp(t_cosine *x, t_signal **sp) {
-  dsp_add(cosine_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+  dsp_add(cosine_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void* cosine_new(void) {

@@ -379,9 +379,9 @@ static void mean_tilde_set(t_mean_tilde *x, t_symbol *s)
 static void mean_tilde_dsp(t_mean_tilde *x, t_signal **sp)
 {
   mean_tilde_set(x, x->x_arrayname);
-  //dsp_add(mean_tilde_perform, 2, x, sp[0]->s_vec, sp[0]->s_n);
-  //dsp_add(mean_tilde_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
-  dsp_add(mean_tilde_perform, 2, x, sp[0]->s_n);
+  //dsp_add(mean_tilde_perform, 2, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
+  //dsp_add(mean_tilde_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
+  dsp_add(mean_tilde_perform, 2, x, (t_int)sp[0]->s_n);
 }
 
 static void mean_tilde_bang(t_mean_tilde *x)

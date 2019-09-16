@@ -91,7 +91,7 @@ static void peakenv_hold_tilde_dsp(t_peakenv_hold_tilde *x, t_signal **sp)
   x->x_sr = (double)sp[0]->s_sr;
   peakenv_hold_tilde_ft1(x, x->x_holdtime);
   peakenv_hold_tilde_ft2(x, x->x_releasetime);
-  dsp_add(peakenv_hold_tilde_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, sp[0]->s_n);
+  dsp_add(peakenv_hold_tilde_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)sp[0]->s_n);
 }
 
 static void *peakenv_hold_tilde_new(t_float t_hold, t_float t_rel)

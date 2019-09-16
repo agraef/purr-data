@@ -264,7 +264,7 @@ t_int* pix_recNN::perform(t_int* w)
  */
 void pix_recNN::dspMess(void *data, t_signal** sp)
 {
-  dsp_add(perform, 4, data, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+  dsp_add(perform, 4, data, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 //----------------------------------------------------------

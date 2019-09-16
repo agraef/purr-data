@@ -74,7 +74,7 @@ static t_int *sigzero_perform(t_int *w)
 
 static void sigzero_dsp(t_sigzero *x, t_signal **sp)
 {
-  dsp_add(sigzero_perform, 3, sp[0]->s_vec, x, sp[0]->s_n);
+  dsp_add(sigzero_perform, 3, sp[0]->s_vec, x, (t_int)sp[0]->s_n);
 }
 
 static void sigzero_tilde_helper(void)

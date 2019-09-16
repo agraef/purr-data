@@ -558,38 +558,38 @@ static void clone_dsp(t_clone *x, t_signal **sp)
 			switch (nsig)
 			{
 				case 1:
-					dsp_add(clone_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
+					dsp_add(clone_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
 					break;
 				case 2:
 					dsp_add(clone_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, 
-						sp[0]->s_n);
+						(t_int)sp[0]->s_n);
 					break;
 				case 3:
 					dsp_add(clone_perform, 5, x, sp[0]->s_vec, sp[1]->s_vec, 
-						sp[2]->s_vec, sp[0]->s_n);
+						sp[2]->s_vec, (t_int)sp[0]->s_n);
 					break;
 				case 4:
 					dsp_add(clone_perform, 6, x, sp[0]->s_vec, sp[1]->s_vec, 
-						sp[2]->s_vec, sp[3]->s_vec, sp[0]->s_n);
+						sp[2]->s_vec, sp[3]->s_vec, (t_int)sp[0]->s_n);
 					break;
 				case 5:
 					dsp_add(clone_perform, 6, x, sp[0]->s_vec, sp[1]->s_vec, 
-						sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[0]->s_n);
+						sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, (t_int)sp[0]->s_n);
 					break;
 				case 6:
 					dsp_add(clone_perform, 6, x, sp[0]->s_vec, sp[1]->s_vec, 
 						sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec,
-						sp[0]->s_n);
+						(t_int)sp[0]->s_n);
 					break;
 				case 7:
 					dsp_add(clone_perform, 6, x, sp[0]->s_vec, sp[1]->s_vec, 
 						sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec,
-						sp[6]->s_vec, sp[0]->s_n);
+						sp[6]->s_vec, (t_int)sp[0]->s_n);
 					break;
 				case 8:
 					dsp_add(clone_perform, 6, x, sp[0]->s_vec, sp[1]->s_vec, 
 						sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec,
-						sp[6]->s_vec, sp[7]->s_vec, sp[0]->s_n);
+						sp[6]->s_vec, sp[7]->s_vec, (t_int)sp[0]->s_n);
 					break;
 				default:
 					break;

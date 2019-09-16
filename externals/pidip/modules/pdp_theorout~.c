@@ -518,7 +518,7 @@ static t_int *pdp_theorout_perform(t_int *w)
 
 static void pdp_theorout_dsp(t_pdp_theorout *x, t_signal **sp)
 {
-    dsp_add(pdp_theorout_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, sp[0]->s_n);
+    dsp_add(pdp_theorout_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)sp[0]->s_n);
 }
 
 static void pdp_theorout_process_yv12(t_pdp_theorout *x)

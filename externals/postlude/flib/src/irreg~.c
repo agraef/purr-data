@@ -46,7 +46,7 @@ static t_int *irreg_perform(t_int *w)
 static void irreg_dsp(t_irreg *x, t_signal **sp)
 {
   dsp_add(irreg_perform, 3,
-          sp[0]->s_vec, x, sp[0]->s_n);
+          sp[0]->s_vec, x, (t_int)sp[0]->s_n);
 }
 
 static void *irreg_new(void)

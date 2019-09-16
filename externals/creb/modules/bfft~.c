@@ -177,7 +177,7 @@ static void bfft_dsp(t_bfft *x, t_signal **sp)
       in = out;
     }
 
-  dsp_add(bfft_perform, 4, &x->x_ctl, n, in, out);
+  dsp_add(bfft_perform, 4, &x->x_ctl, (t_int)n, in, out);
 
 }
 
@@ -196,7 +196,7 @@ static void ibfft_dsp(t_bfft *x, t_signal **sp)
       in = out;
     }
 
-  dsp_add(ibfft_perform, 4, &x->x_ctl, n, in, out);
+  dsp_add(ibfft_perform, 4, &x->x_ctl, (t_int)n, in, out);
 
 }
 
@@ -214,7 +214,7 @@ static void fht_dsp(t_bfft *x, t_signal **sp)
       in = out;
     }
 
-  dsp_add(fht_perform, 4, &x->x_ctl, n, in, out);
+  dsp_add(fht_perform, 4, &x->x_ctl, (t_int)n, in, out);
 
 }
 

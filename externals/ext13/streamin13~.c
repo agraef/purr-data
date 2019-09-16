@@ -290,7 +290,7 @@ static void streamin13_dsp(t_streamin13 *x, t_signal **sp)
   myvec[1] = (t_int*)sp[0]->s_n;
   for (i=0;i < x->x_n;i++)
     myvec[2 + i] = (t_int*)sp[i]->s_vec;
-  dsp_addv(streamin13_perform, x->x_n + 3, (t_int*)myvec);
+  dsp_addv(streamin13_perform, (t_int)(x->x_n + 3), (t_int*)myvec);
   freebytes(myvec,sizeof(t_int)*(x->x_n + 3));
 
 }

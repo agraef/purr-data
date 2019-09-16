@@ -547,7 +547,7 @@ void autotune_dsp(t_autotune *x, t_signal **sp, short *count)
 	
 	if(x->fs != sp[0]->s_sr)  autotune_init(x, sp[0]->s_sr);
 	
-	dsp_add(autotune_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+	dsp_add(autotune_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 

@@ -125,9 +125,9 @@ static void spec2_tabreceive_tilde_dsp(t_spec2_tabreceive_tilde *x, t_signal **s
       vecsize = n;
     vecsize /= 2;
     if(vecsize&15)
-      dsp_add(spec2_tabreceive_tilde_perform, 3, x, sp[0]->s_vec, vecsize);
+      dsp_add(spec2_tabreceive_tilde_perform, 3, x, sp[0]->s_vec, (t_int)vecsize);
     else
-      dsp_add(spec2_tabreceive_tilde_perf16, 3, x, sp[0]->s_vec, vecsize);
+      dsp_add(spec2_tabreceive_tilde_perf16, 3, x, sp[0]->s_vec, (t_int)vecsize);
   }
 }
 

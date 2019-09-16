@@ -191,9 +191,9 @@ static void nz_tilde_dsp(t_nz_tilde *x, t_signal **sp)
 	for(i=0; i<num_dels; i++)
 		x->x_io[i] = sp[i]->s_vec;
 	if(n&7)
-		dsp_add(nz_tilde_perform, 2, x, n);
+		dsp_add(nz_tilde_perform, 2, x, (t_int)n);
 	else
-		dsp_add(nz_tilde_perf8, 2, x, n);
+		dsp_add(nz_tilde_perf8, 2, x, (t_int)n);
 }
 
 static void *nz_tilde_new(t_floatarg n_delays, t_floatarg max_delay_samples)

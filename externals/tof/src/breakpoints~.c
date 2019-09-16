@@ -103,7 +103,7 @@ static t_int *breakpointssig_perform(t_int *w)
     out the samples. */
 static void breakpointssig_dsp(t_breakpoints *x, t_signal **sp)
 {
-    dsp_add(breakpointssig_perform, 4, x,sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+    dsp_add(breakpointssig_perform, 4, x,sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void breakpoints_totaldur(t_breakpoints* x,t_float dur)

@@ -337,12 +337,12 @@ static void pong_tilde_dsp(t_pong_tilde *x, t_signal **sp)
 {
 	/*
 	if(x->x_numargs <= 1){
-		dsp_add(pong_tilde_perform_maxonly, 5, x, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec,  sp[0]->s_n);
+		dsp_add(pong_tilde_perform_maxonly, 5, x, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec,  (t_int)sp[0]->s_n);
 	}
 	
 	else{
 	*/	
-		dsp_add(pong_tilde_perform, 6, x, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[0]->s_n);
+		dsp_add(pong_tilde_perform, 6, x, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, (t_int)sp[0]->s_n);
 	//	};
 }
 

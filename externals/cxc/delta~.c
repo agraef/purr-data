@@ -35,7 +35,7 @@ static t_int *delta_perform(t_int *w)
 
 static void delta_dsp(t_delta *x, t_signal **sp)
 {
-  dsp_add(delta_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+  dsp_add(delta_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void *delta_new(void)

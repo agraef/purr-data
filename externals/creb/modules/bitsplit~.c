@@ -71,7 +71,7 @@ static void bitsplit_dsp(t_bitsplit *x, t_signal **sp)
     for (i=0;i<x->x_ctl.c_outputs;i++){
 	x->x_ctl.c_output[i] = sp[i+1]->s_vec;
     }
-    dsp_add(bitsplit_perform, 2, &x->x_ctl, sp[0]->s_n);
+    dsp_add(bitsplit_perform, 2, &x->x_ctl, (t_int)sp[0]->s_n);
 }                                  
 
 

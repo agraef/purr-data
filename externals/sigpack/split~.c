@@ -60,7 +60,7 @@ static t_int *split_tilde_perform(t_int *w)
 
 static void split_tilde_dsp(t_split_tilde *x, t_signal **sp)
 {
-    dsp_add(split_tilde_perform, 5, x, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
+    dsp_add(split_tilde_perform, 5, x, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, (t_int)sp[0]->s_n);
 }
 
 void split_tilde_setup(void)

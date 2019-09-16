@@ -67,7 +67,7 @@ static t_int* connes_perform(t_int *w) {
 }
 
 static void connes_dsp(t_connes *x, t_signal **sp) {
-  dsp_add(connes_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+  dsp_add(connes_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void* connes_new(void) {

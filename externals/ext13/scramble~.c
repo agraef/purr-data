@@ -460,12 +460,12 @@ static void scramble_tilde_dsp(t_scramble_tilde *x, t_signal **sp)
     switch (x->x_channels) {
        case 1:
           dsp_add(scramble_tilde_perform, 4, x, sp[0]->s_vec,
-          sp[1]->s_vec, sp[0]->s_n);
+          sp[1]->s_vec, (t_int)sp[0]->s_n);
 //          post ("1 channel");
           break;
        case 2:
           dsp_add(scramble_tilde_perform, 6, x, sp[0]->s_vec,
-          sp[1]->s_vec,sp[2]->s_vec, sp[3]->s_vec, sp[0]->s_n);
+          sp[1]->s_vec,sp[2]->s_vec, sp[3]->s_vec, (t_int)sp[0]->s_n);
 //          post ("2 channels");
           break;
      }

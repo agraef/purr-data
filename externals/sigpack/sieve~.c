@@ -93,7 +93,7 @@ static t_int *sieve_tilde_perform(t_int *w)
 
 static void sieve_tilde_dsp(t_sieve_tilde *x, t_signal **sp)
 {
-    dsp_add(sieve_tilde_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+    dsp_add(sieve_tilde_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 void sieve_tilde_setup(void)

@@ -1166,7 +1166,7 @@ static t_int *cooled_perform(t_int *w)
 
 static void cooled_dsp(t_cooled *x, t_signal **sp)
 {
-    dsp_add(cooled_perform, 6, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[0]->s_n, x);
+    dsp_add(cooled_perform, 6, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, (t_int)sp[0]->s_n, x);
 }
 
 /* record the cooled */

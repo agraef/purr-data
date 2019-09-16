@@ -129,7 +129,7 @@ static void statwav_tilde_dsp(t_statwav_tilde *x, t_signal **sp)
     statwav_tilde_set(x, x->x_arrayname);
 
     dsp_add(statwav_tilde_perform, 4, x,
-        sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+        sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 
 }
 

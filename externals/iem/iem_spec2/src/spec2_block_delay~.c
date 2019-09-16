@@ -125,9 +125,9 @@ static void spec2_block_delay_tilde_dsp(t_spec2_block_delay_tilde *x, t_signal *
     x->x_blocksize = n;
   }
   if(n&15)
-    dsp_add(spec2_block_delay_tilde_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, n);
+    dsp_add(spec2_block_delay_tilde_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)n);
   else
-    dsp_add(spec2_block_delay_tilde_perf16, 4, sp[0]->s_vec, sp[1]->s_vec, x, n);
+    dsp_add(spec2_block_delay_tilde_perf16, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)n);
 }
 
 static void *spec2_block_delay_tilde_new(void)

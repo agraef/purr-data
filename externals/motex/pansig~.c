@@ -95,7 +95,7 @@ static void pansig_dsp(t_pansig *x, t_signal **sp)
   float *out2 = sp[3]->s_vec;
 
   dsp_add(pansig_perform, 6,
-	  in1, in2, out1, out2, n, x);
+	  in1, in2, out1, out2, (t_int)n, x);
 }
 
 void pansig_f(t_pansig *x, t_floatarg f)

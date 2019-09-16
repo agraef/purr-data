@@ -47,7 +47,7 @@ static t_int *ss_perform(t_int *w)
 static void ss_dsp(t_ss *x, t_signal **sp)
 {
   dsp_add(ss_perform, 3,
-          sp[0]->s_vec, x, sp[0]->s_n);
+          sp[0]->s_vec, x, (t_int)sp[0]->s_n);
 }
 
 static void *ss_new(void)

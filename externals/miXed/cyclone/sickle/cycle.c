@@ -136,7 +136,7 @@ static void cycle_dsp(t_cycle *x, t_signal **sp)
 {
     cycle_gettable(x);
     x->x_conv = CYCLE_TABSIZE / sp[0]->s_sr;
-    dsp_add(cycle_perform, 5, x, sp[0]->s_n,
+    dsp_add(cycle_perform, 5, x, (t_int)sp[0]->s_n,
 	    sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec);
 }
 

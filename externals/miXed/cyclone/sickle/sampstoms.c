@@ -34,7 +34,7 @@ static void sampstoms_dsp(t_sampstoms *x, t_signal **sp)
 {
     x->x_rcpksr = 1000. / sp[0]->s_sr;
     dsp_add(sampstoms_perform, 4, x,
-	    sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+	    (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
 }
 
 static void *sampstoms_new(void)

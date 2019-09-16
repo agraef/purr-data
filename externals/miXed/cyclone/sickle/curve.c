@@ -333,7 +333,7 @@ static void curve_dsp(t_curve *x, t_signal **sp)
 	    segp++;
 	}
     }
-    dsp_add(curve_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
+    dsp_add(curve_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void curve_free(t_curve *x)

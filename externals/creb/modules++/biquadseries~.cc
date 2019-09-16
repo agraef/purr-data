@@ -77,7 +77,7 @@ static t_int *biquadseries_perform(t_int *w)
 
 static void biquadseries_dsp(t_biquadseries *x, t_signal **sp)
 {
-    dsp_add(biquadseries_perform, 4, x->biquadseries, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+    dsp_add(biquadseries_perform, 4, x->biquadseries, (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
 
 }                                  
 void biquadseries_free(void)

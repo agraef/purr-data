@@ -148,7 +148,7 @@ void *atari_2600_new(void)
 
 void atari_2600_dsp(t_atari_2600 *x, t_signal **sp, short *count) 
 {   
-  dsp_add(atari_2600_perform, 3, sp[0]->s_vec, sp[0]->s_n, x); 
+  dsp_add(atari_2600_perform, 3, sp[0]->s_vec, (t_int)sp[0]->s_n, x); 
 }  
 
 t_int *atari_2600_perform(t_int *w) 

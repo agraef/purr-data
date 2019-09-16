@@ -74,7 +74,7 @@ static void tab16send_dsp(t_tab16send *x, t_signal **sp){
     if (x->x_graphcount > ticksper) x->x_graphcount = ticksper;
     if (n < vecsize) vecsize = n;
     table16_usedindsp(a);
-    dsp_add(tab16send_perform, 3, x, sp[0]->s_vec, vecsize);
+    dsp_add(tab16send_perform, 3, x, sp[0]->s_vec, (t_int)vecsize);
   }
 }
 

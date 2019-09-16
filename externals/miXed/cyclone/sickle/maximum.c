@@ -29,7 +29,7 @@ static t_int *maximum_perform(t_int *w)
 
 static void maximum_dsp(t_maximum *x, t_signal **sp)
 {
-    dsp_add(maximum_perform, 4, sp[0]->s_n,
+    dsp_add(maximum_perform, 4, (t_int)sp[0]->s_n,
 	    sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec);
 }
 

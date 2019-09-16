@@ -3758,7 +3758,7 @@ static void mp3play_tilde_dsp(t_mp3play_tilde *x, t_signal **sp)
 {
     x->obj_sr = (int)(sp[0]->s_sr);
     x->obj_n = (int)(sp[0]->s_n);
-    dsp_add(mp3play_tilde_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+    dsp_add(mp3play_tilde_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 

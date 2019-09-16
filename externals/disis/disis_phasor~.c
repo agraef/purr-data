@@ -118,7 +118,7 @@ t_int *disis_phasor_perform(t_int *w)
 static void disis_phasor_dsp(t_disis_phasor *x, t_signal **sp)
 {
     x->x_conv = 1./sp[0]->s_sr;
-    dsp_add(disis_phasor_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+    dsp_add(disis_phasor_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 void disis_phasor_free(t_disis_phasor *x)

@@ -105,7 +105,7 @@ static void sigdoublepole_dsp(t_sigdoublepole *x, t_signal **sp)
 {
   dsp_add(sigdoublepole_perform, 4,
           sp[0]->s_vec, sp[1]->s_vec,
-          x->x_ctl, sp[0]->s_n);
+          x->x_ctl, (t_int)sp[0]->s_n);
 
 }
 

@@ -52,7 +52,7 @@ static t_int *erfc_perfcorm(t_int *w)
 
 static void erfc_dsp(t_erfc *x, t_signal **sp)
 {
-    dsp_add(erfc_perfcorm, 3, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+    dsp_add(erfc_perfcorm, 3, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 void erfc_tilde_setup(void)

@@ -1331,10 +1331,10 @@ void bashfest_dsp(t_bashfest *x, t_signal **sp)
 	
     if(x->hosed){
         dsp_add(bashfest_perform_hosed, 5, x, 
-                sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);	
+                sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, (t_int)sp[0]->s_n);
     } else {
         dsp_add(bashfest_perform, 5, x, 
-                sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);		
+                sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, (t_int)sp[0]->s_n);
     }
 }
 /*

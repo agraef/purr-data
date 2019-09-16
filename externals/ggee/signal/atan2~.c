@@ -67,9 +67,9 @@ t_int *atan2_perf8(t_int *w)
 void dsp_add_atan2(t_sample *in1, t_sample *in2, t_sample *out, int n)
 {
     if (n&7)
-    	dsp_add(atan2_perform, 4, in1, in2, out, n);
+    	dsp_add(atan2_perform, 4, in1, in2, out, (t_int)n);
     else	
-    	dsp_add(atan2_perf8, 4, in1, in2, out, n);
+    	dsp_add(atan2_perf8, 4, in1, in2, out, (t_int)n);
 }
 
 static void atan2_dsp(t_atan2 *x, t_signal **sp)

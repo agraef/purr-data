@@ -171,13 +171,13 @@ static void sgnTilde_dsp(t_sgnTilde *x, t_signal **sp)
                  sgnTilde_performSSE,
                  1,1)
   ) {
-    dsp_add(sgnTilde_performSSE, 3, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+    dsp_add(sgnTilde_performSSE, 3, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
   } else
 #endif
     if (sp[0]->s_n & 7) {
-      dsp_add(sgnTilde_perform , 3, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+      dsp_add(sgnTilde_perform , 3, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
     } else {
-      dsp_add(sgnTilde_perform8, 3, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+      dsp_add(sgnTilde_perform8, 3, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
     }
 
 }

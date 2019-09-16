@@ -59,7 +59,7 @@ static t_int *iem_sqrt4_tilde_perform(t_int *w)
 
 static void iem_sqrt4_tilde_dsp(t_iem_sqrt4_tilde *x, t_signal **sp)
 {
-  dsp_add(iem_sqrt4_tilde_perform, 3, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+  dsp_add(iem_sqrt4_tilde_perform, 3, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void iem_sqrt4_tilde_init(void)

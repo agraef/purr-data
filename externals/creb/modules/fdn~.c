@@ -255,7 +255,7 @@ static void fdn_dsp(t_fdn *x, t_signal **sp)
   dsp_add(fdn_perform, 
 	  5, 
 	  &x->x_ctl, 
-	  sp[0]->s_n, 
+	  (t_int)sp[0]->s_n, 
 	  sp[0]->s_vec, 
 	  sp[1]->s_vec, 
 	  sp[2]->s_vec);

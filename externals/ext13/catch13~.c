@@ -62,9 +62,9 @@ t_int *sigcatch13_perf8(t_int *w)
     if (x->x_n == sp[0]->s_n)
     {
 	if(sp[0]->s_n&7)
-	    dsp_add(sigcatch13_perform, 3, x->x_vec, sp[0]->s_vec, sp[0]->s_n);
+	    dsp_add(sigcatch13_perform, 3, x->x_vec, sp[0]->s_vec, (t_int)sp[0]->s_n);
 	else
-	    dsp_add(sigcatch13_perf8, 3, x->x_vec, sp[0]->s_vec, sp[0]->s_n);
+	    dsp_add(sigcatch13_perf8, 3, x->x_vec, sp[0]->s_vec, (t_int)sp[0]->s_n);
     }
     else error("sigcatch13 %s: unexpected vector size", x->x_sym->s_name);
 }

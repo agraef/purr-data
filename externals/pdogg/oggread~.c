@@ -215,7 +215,7 @@ static t_int *oggread_perform(t_int *w)
 
 static void oggread_dsp(t_oggread *x, t_signal **sp)
 {
-    dsp_add(oggread_perform, 4, x, sp[1]->s_vec, sp[2]->s_vec, sp[1]->s_n);
+    dsp_add(oggread_perform, 4, x, sp[1]->s_vec, sp[2]->s_vec, (t_int)sp[1]->s_n);
 }
 
 

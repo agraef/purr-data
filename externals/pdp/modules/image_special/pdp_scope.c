@@ -255,7 +255,7 @@ static t_int *pdp_scope_perform(t_int *w)
 }
 static void pdp_scope_dsp(t_pdp_scope *x, t_signal **sp)
 {
-    dsp_add(pdp_scope_perform, 3, x, sp[0]->s_n, sp[0]->s_vec);
+    dsp_add(pdp_scope_perform, 3, x, (t_int)sp[0]->s_n, sp[0]->s_vec);
 
 }
   

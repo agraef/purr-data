@@ -107,5 +107,5 @@ static void latch_dsp(t_latch *x, t_signal **sp)
 		x->sr = sp[0]->s_sr;
 		x->dsamps = x->duration * x->sr;
 	}
-    dsp_add(latch_perform, 5, x, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
+    dsp_add(latch_perform, 5, x, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, (t_int)sp[0]->s_n);
 }

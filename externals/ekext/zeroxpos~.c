@@ -157,7 +157,7 @@ void zeroxpos_tilde_mode(t_zeroxpos_tilde *x, t_floatarg fmode)
 void *zeroxpos_tilde_dsp(t_zeroxpos_tilde *x, t_signal **sp) 
 {
   x->x_ctl.c_input = sp[0]->s_vec;
-  dsp_add(zeroxpos_tilde_perform, 3, x, &x->x_ctl, sp[0]->s_n);
+  dsp_add(zeroxpos_tilde_perform, 3, x, &x->x_ctl, (t_int)sp[0]->s_n);
   return (void *)x;
 }
 

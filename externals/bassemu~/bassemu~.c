@@ -230,7 +230,8 @@ static t_int *bassemu_perform(t_int *ww)
 static void bassemu_dsp(t_bassemu *x, t_signal **sp)
 {
 	x->sr = sp[0]->s_sr;
-	dsp_add(bassemu_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+	dsp_add(bassemu_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec,
+            (t_int)sp[0]->s_n);
 }
 
 static void recalc(t_bassemu *x)

@@ -359,9 +359,9 @@ static void n_delay1p_line_tilde_dsp(t_n_delay1p_line_tilde *x, t_signal **sp)
 	for(i=0; i<nd; i++)
 		x->x_io[i] = sp[i]->s_vec;
 	if(n&7)
-		dsp_add(n_delay1p_line_tilde_perform, 2, x, n);
+		dsp_add(n_delay1p_line_tilde_perform, 2, x, (t_int)n);
 	else
-		dsp_add(n_delay1p_line_tilde_perf8, 2, x, n);
+		dsp_add(n_delay1p_line_tilde_perf8, 2, x, (t_int)n);
 }
 
 static void *n_delay1p_line_tilde_new(t_floatarg fout, t_floatarg delay_ms, t_floatarg interpol_ms)

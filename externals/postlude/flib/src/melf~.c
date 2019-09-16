@@ -72,7 +72,7 @@ static void melf_dsp(t_melf *x, t_signal **sp)
 {
   int n;
   dsp_add(melf_perform, 3,
-          sp[0]->s_vec, sp[0]->s_n, x);
+          sp[0]->s_vec, (t_int)sp[0]->s_n, x);
 }
 
 static void *melf_new(t_symbol *s, t_int argc, t_atom *argv)

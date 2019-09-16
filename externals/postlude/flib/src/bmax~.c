@@ -74,7 +74,7 @@ static t_int *bmax_perform(t_int *w)
 static void bmax_dsp(t_bmax *x, t_signal **sp)
 {
   dsp_add(bmax_perform, 4,
-          sp[0]->s_vec, x, sp[0]->s_n);
+          sp[0]->s_vec, x, (t_int)sp[0]->s_n);
 }
 
 static void *bmax_new(t_floatarg f)

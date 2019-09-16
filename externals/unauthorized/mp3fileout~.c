@@ -333,7 +333,7 @@ static t_int *mp3fileout_perform(t_int *w)
 
 static void mp3fileout_dsp(t_mp3fileout *x, t_signal **sp)
 {
-    dsp_add(mp3fileout_perform, 2, x, sp[0]->s_n);
+    dsp_add(mp3fileout_perform, 2, x, (t_int)sp[0]->s_n);
 }
 
 /* start streaming */

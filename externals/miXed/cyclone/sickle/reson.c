@@ -91,7 +91,7 @@ static void reson_dsp(t_reson *x, t_signal **sp)
 {
     x->x_srcoef = SHARED_2PI / sp[0]->s_sr;
     reson_clear(x);
-    dsp_add(reson_perform, 7, x, sp[0]->s_n,
+    dsp_add(reson_perform, 7, x, (t_int)sp[0]->s_n,
 	    sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec,
 	    sp[4]->s_vec);
 }

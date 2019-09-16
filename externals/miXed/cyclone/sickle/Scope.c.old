@@ -312,9 +312,9 @@ static void scope_dsp(t_scope *x, t_signal **sp)
     scope_setxymode(x,
 		    forky_hasfeeders((t_object *)x, x->x_glist, 1, &s_signal));
     if (x->x_xymode)
-	dsp_add(scope_xyperform, 4, x, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+	dsp_add(scope_xyperform, 4, x, (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
     else
-	dsp_add(scope_monoperform, 3, x, sp[0]->s_n, sp[0]->s_vec);
+	dsp_add(scope_monoperform, 3, x, (t_int)sp[0]->s_n, sp[0]->s_vec);
 }
 
 static t_canvas *scope_getcanvas(t_scope *x, t_glist *glist)

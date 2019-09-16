@@ -139,7 +139,7 @@ static void vectral_dsp(t_vectral *x, t_signal **sp)
     int nblock = sp[0]->s_n;
     if (nblock > x->x_bufsize)
 	nblock = x->x_bufsize;  /* CHECKME */
-    dsp_add(vectral_perform, 6, x, nblock,
+    dsp_add(vectral_perform, 6, x, (t_int)nblock,
 	    sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec);
 }
 

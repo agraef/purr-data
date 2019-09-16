@@ -167,7 +167,7 @@ static t_int *earplug_perform(t_int *w)
 static void earplug_dsp(t_earplug *x, t_signal **sp)
 {
 		// callback, params, userdata, in_samples, out_L,		out_R,		blocksize.
-    dsp_add(earplug_perform, 5, x,  sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
+    dsp_add(earplug_perform, 5, x,  sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void *earplug_new(t_floatarg azimArg, t_floatarg elevArg)

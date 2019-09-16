@@ -55,7 +55,7 @@ static t_int *avg_perform(t_int *w)
 static void avg_dsp(t_avg *x, t_signal **sp)
 {
   x->n_inv=1./sp[0]->s_n;
-  dsp_add(avg_perform, 3, sp[0]->s_vec, x, sp[0]->s_n);
+  dsp_add(avg_perform, 3, sp[0]->s_vec, x, (t_int)sp[0]->s_n);
 }
 
 static void *avg_new(void)

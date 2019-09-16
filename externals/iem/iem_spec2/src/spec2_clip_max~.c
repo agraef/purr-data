@@ -138,9 +138,9 @@ static void spec2_clip_max_tilde_dsp(t_spec2_clip_max_tilde *x, t_signal **sp)
   int n = (sp[0]->s_n)/2;
   
   if(n&15)
-    dsp_add(spec2_clip_max_tilde_perform, 4, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, n);
+    dsp_add(spec2_clip_max_tilde_perform, 4, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, (t_int)n);
   else
-    dsp_add(spec2_clip_max_tilde_perf16, 4, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, n);
+    dsp_add(spec2_clip_max_tilde_perf16, 4, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, (t_int)n);
 }
 
 static void *spec2_clip_max_tilde_new(void)

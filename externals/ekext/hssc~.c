@@ -62,7 +62,7 @@ t_int *hssc_tilde_perform(t_int *w)
 void hssc_tilde_dsp(t_hssc_tilde *x, t_signal **sp)
 {
   dsp_add(hssc_tilde_perform, 4, x,
-	  sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+	  sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 void *hssc_tilde_new(t_floatarg f)

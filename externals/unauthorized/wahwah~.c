@@ -339,7 +339,7 @@ static void wahwah_preset(t_wahwah *x, t_float pnumber)
 
 static void wahwah_dsp(t_wahwah *x, t_signal **sp)
 {
-    dsp_add(wahwah_perform, 4, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n, x );
+    dsp_add(wahwah_perform, 4, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n, x );
 }
 
 /* clean up */

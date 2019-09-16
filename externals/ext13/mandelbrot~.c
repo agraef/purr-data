@@ -101,9 +101,9 @@ t_int *mandelbrot_tilde_perf8(t_int *w)
 void dsp_add_mandelbrot_tilde(t_mandelbrot_tilde *x,t_sample *in1, t_sample *in2, t_sample *out, int n)
 {
     if (n&7)
-    	dsp_add(mandelbrot_tilde_perform, 5, x, in1, in2, out, n);
+    	dsp_add(mandelbrot_tilde_perform, 5, x, in1, in2, out, (t_int)n);
     else	
-    	dsp_add(mandelbrot_tilde_perf8, 5, x, in1, in2, out, n);
+    	dsp_add(mandelbrot_tilde_perf8, 5, x, in1, in2, out, (t_int)n);
 }
 
 void mandelbrot_tilde_dsp(t_mandelbrot_tilde *x, t_signal **sp)

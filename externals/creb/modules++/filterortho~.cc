@@ -68,7 +68,8 @@ static t_int *filterortho_perform(t_int *w)
 
 static void filterortho_dsp(t_filterortho *x, t_signal **sp)
 {
-    dsp_add(filterortho_perform, 4, x->filterortho, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+    dsp_add(filterortho_perform, 4, x->filterortho, (t_int)sp[0]->s_n,
+        sp[0]->s_vec, sp[1]->s_vec);
 
 }                                  
 void filterortho_free(t_filterortho *x)

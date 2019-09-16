@@ -126,7 +126,7 @@ static t_int *cmath_perform_nifft(t_int *w)
 
 static void cmath_dsp(t_cmath *x, t_signal **sp)
 {
-    dsp_add(x->x_perf, 5, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec);
+    dsp_add(x->x_perf, 5, (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec);
 
 }                                  
 void cmath_free(void)

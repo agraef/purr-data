@@ -590,7 +590,7 @@ static t_int *mp3streamin_perform(t_int *w)
 
 static void mp3streamin_dsp(t_mp3streamin *x, t_signal **sp)
 {
-    dsp_add(mp3streamin_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+    dsp_add(mp3streamin_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 

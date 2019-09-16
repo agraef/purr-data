@@ -355,27 +355,27 @@ static void polygate_dsp(t_polygate *x, t_signal **sp)
   // must be a smarter way....
   switch (x->ninlets) 
     {
-    case 1: dsp_add(polygate_perform, 4, x, n, sp[0]->s_vec, sp[1]->s_vec);
+    case 1: dsp_add(polygate_perform, 4, x, (t_int)n, sp[0]->s_vec, sp[1]->s_vec);
       break;
-    case 2: dsp_add(polygate_perform, 5, x, n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec);
+    case 2: dsp_add(polygate_perform, 5, x, (t_int)n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec);
       break;
-    case 3: dsp_add(polygate_perform, 6, x, n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec);
+    case 3: dsp_add(polygate_perform, 6, x, (t_int)n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec);
       break;
-    case 4: dsp_add(polygate_perform, 7, x, n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec);
+    case 4: dsp_add(polygate_perform, 7, x, (t_int)n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec);
       break;
-    case 5: dsp_add(polygate_perform, 8, x, n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec);
+    case 5: dsp_add(polygate_perform, 8, x, (t_int)n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec);
       break;
-    case 6: dsp_add(polygate_perform, 9, x, n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec, sp[6]->s_vec);
+    case 6: dsp_add(polygate_perform, 9, x, (t_int)n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec, sp[6]->s_vec);
       break;
-    case 7: dsp_add(polygate_perform, 10, x, n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec, sp[6]->s_vec, sp[7]->s_vec);
+    case 7: dsp_add(polygate_perform, 10, x, (t_int)n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec, sp[6]->s_vec, sp[7]->s_vec);
       break;
-    case 8: dsp_add(polygate_perform, 11, x, n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, 
+    case 8: dsp_add(polygate_perform, 11, x, (t_int)n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, 
 		    sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec, sp[6]->s_vec, sp[7]->s_vec, sp[8]->s_vec);
     break;
-    case 9: dsp_add(polygate_perform, 12, x, n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, 
+    case 9: dsp_add(polygate_perform, 12, x, (t_int)n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, 
 		    sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec, sp[6]->s_vec, sp[7]->s_vec, sp[8]->s_vec, sp[9]->s_vec);
     break;
-    case 10: dsp_add(polygate_perform, 13, x, n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, 
+    case 10: dsp_add(polygate_perform, 13, x, (t_int)n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, 
 		     sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec, sp[6]->s_vec, sp[7]->s_vec, sp[8]->s_vec, sp[9]->s_vec, sp[10]->s_vec);
     break;
     }

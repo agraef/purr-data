@@ -124,7 +124,7 @@ static t_int *svf_perform(t_int *w)
 
 static void svf_dsp(t_svf *x, t_signal **sp)
 {
-	dsp_add(svf_perform, 7, x, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[0]->s_n);
+	dsp_add(svf_perform, 7, x, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void *svf_new(t_symbol *s, int argc, t_atom *argv)

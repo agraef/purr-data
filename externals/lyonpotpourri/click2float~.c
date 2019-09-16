@@ -63,6 +63,6 @@ t_int *click2float_perform(t_int *w)
 
 void click2float_dsp(t_click2float *x, t_signal **sp)
 {
-    dsp_add(click2float_perform, 3, x, sp[0]->s_vec,sp[0]->s_n);
+    dsp_add(click2float_perform, 3, x, sp[0]->s_vec,(t_int)sp[0]->s_n);
 }
 

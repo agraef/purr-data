@@ -238,18 +238,18 @@ static void sfwrite13_dsp(t_sfwrite13 *x, t_signal **sp)
      switch (x->x_channels) {
      case 1:
 	  dsp_add(sfwrite13_perform, 3, x, sp[0]->s_vec, 
-		   sp[0]->s_n);
+		   (t_int)sp[0]->s_n);
 	  break;
      case 2:
 	  dsp_add(sfwrite13_perform, 4, x, sp[0]->s_vec, 
-		  sp[1]->s_vec, sp[0]->s_n);
+		  sp[1]->s_vec, (t_int)sp[0]->s_n);
 	  break;
      case 4:
 	  dsp_add(sfwrite13_perform, 6, x, sp[0]->s_vec, 
 		  sp[1]->s_vec,
 		  sp[2]->s_vec,
 		  sp[3]->s_vec,
-		  sp[0]->s_n);
+		  (t_int)sp[0]->s_n);
 	  break;
      }
 }

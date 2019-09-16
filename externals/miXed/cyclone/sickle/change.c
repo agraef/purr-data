@@ -32,7 +32,7 @@ static t_int *change_perform(t_int *w)
 
 static void change_dsp(t_change *x, t_signal **sp)
 {
-    dsp_add(change_perform, 4, x, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+    dsp_add(change_perform, 4, x, (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
 }
 
 static void *change_new(void)

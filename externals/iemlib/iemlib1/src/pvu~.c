@@ -110,7 +110,7 @@ static t_int *pvu_tilde_perform(t_int *w)
 
 static void pvu_tilde_dsp(t_pvu_tilde *x, t_signal **sp)
 {
-  dsp_add(pvu_tilde_perform, 3, sp[0]->s_vec, x, sp[0]->s_n);
+  dsp_add(pvu_tilde_perform, 3, sp[0]->s_vec, x, (t_int)sp[0]->s_n);
   clock_delay(x->x_clock, x->x_metro_time);
 }
 

@@ -2155,7 +2155,7 @@ void buffet_dsp(t_buffet *x, t_signal **sp)
 	}
 	
 	dsp_add(buffet_perform, 3, x,
-			sp[0]->s_vec, sp[0]->s_n);
+			sp[0]->s_vec, (t_int)sp[0]->s_n);
 	
 }
 

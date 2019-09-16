@@ -84,7 +84,7 @@ static t_int *perform0(t_int *w)
 /*------------------------------------------------------------------*/
 static void rojo_dsp(t_rojo *x, t_signal **sp)
 {
-    dsp_add(perform0, 3, x, sp[0]->s_vec, sp[0]->s_n);
+    dsp_add(perform0, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
 }
 /*------------------------------------------------------------------*/
 /* outlet 0:  red noise outlet       */

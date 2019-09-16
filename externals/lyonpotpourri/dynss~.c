@@ -320,5 +320,5 @@ void dynss_dsp(t_dynss *x, t_signal **sp)
 	if(x->srate != sp[0]->s_sr) {
 		x->srate = sp[0]->s_sr;
 	}
-	dsp_add(dynss_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec,sp[0]->s_n);
+	dsp_add(dynss_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec,(t_int)sp[0]->s_n);
 }

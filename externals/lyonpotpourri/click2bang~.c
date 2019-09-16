@@ -59,6 +59,6 @@ t_int *click2bang_perform(t_int *w)
 
 void click2bang_dsp(t_click2bang *x, t_signal **sp)
 {
-    dsp_add(click2bang_perform, 3, x, sp[0]->s_vec,sp[0]->s_n);
+    dsp_add(click2bang_perform, 3, x, sp[0]->s_vec,(t_int)sp[0]->s_n);
 }
 

@@ -102,7 +102,7 @@ void *lpreson_tilde_dsp(t_lpreson_tilde *x, t_signal **sp)
 {
   x->x_ctl.c_residual = sp[0]->s_vec;
   x->x_ctl.c_output = sp[1]->s_vec;
-  dsp_add(lpreson_tilde_perform, 3, x, &x->x_ctl, sp[0]->s_n);
+  dsp_add(lpreson_tilde_perform, 3, x, &x->x_ctl, (t_int)sp[0]->s_n);
   return (void *)x;
 }
 

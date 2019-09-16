@@ -28,7 +28,7 @@ t_int *fluid_tilde_perform(t_int *w)
 static void fluid_tilde_dsp(t_fluid_tilde *x, t_signal **sp)
 {
     dsp_add(fluid_tilde_perform, 4, x,
-        sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+        sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void fluid_tilde_free(t_fluid_tilde *x)

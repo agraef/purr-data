@@ -151,9 +151,9 @@ static void iem_delay_tilde_dsp(t_iem_delay_tilde *x, t_signal **sp)
   }
   
   if(blocksize&7)
-    dsp_add(iem_delay_tilde_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, blocksize);
+    dsp_add(iem_delay_tilde_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)blocksize);
   else
-    dsp_add(iem_delay_tilde_perf8, 4, sp[0]->s_vec, sp[1]->s_vec, x, blocksize);
+    dsp_add(iem_delay_tilde_perf8, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)blocksize);
 }
 
 static void *iem_delay_tilde_new(t_floatarg max_delay_ms, t_floatarg current_delay_ms)

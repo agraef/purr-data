@@ -92,7 +92,7 @@ static void sig16vd_dsp(t_sig16vd *x, t_signal **sp){
 		    0 : delwriter->x_vecsize);
     dsp_add(sig16vd_perform, 5,
     	    sp[0]->s_vec, sp[1]->s_vec,
-	    &delwriter->x_cspace, x, sp[0]->s_n);
+	    &delwriter->x_cspace, x, (t_int)sp[0]->s_n);
   }
   else error("vd~: %s: no such delwrite~",x->x_sym->s_name);
 }

@@ -106,7 +106,7 @@ static void allpass_dsp(t_allpass *x, t_signal **sp)
 	allpass_resize(x, x->x_ksr * x->x_maxdelay);
     }
     else allpass_clear(x);
-    dsp_add(allpass_perform, 6, x, sp[0]->s_n,
+    dsp_add(allpass_perform, 6, x, (t_int)sp[0]->s_n,
 	    sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec);
 }
 

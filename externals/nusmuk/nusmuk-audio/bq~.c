@@ -93,7 +93,7 @@ static void bq_tilde_dsp(t_bq_tilde *x, t_signal **sp)
 {
     dsp_add(bq_tilde_perform, 9,
         sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, 
-			sp[5]->s_vec, sp[6]->s_vec, x->x_ctl, sp[0]->s_n);
+			sp[5]->s_vec, sp[6]->s_vec, x->x_ctl, (t_int)sp[0]->s_n);
 
 }
 

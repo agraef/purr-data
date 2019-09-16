@@ -88,13 +88,13 @@ static void phasewrap_dsp(t_phasewrap *x, t_signal **sp)
     switch (x->x_algo)
     {
     case 1:
-	dsp_add(phasewrap_perform1, 3, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+	dsp_add(phasewrap_perform1, 3, (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
 	break;
     case 2:
-	dsp_add(phasewrap_perform2, 3, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+	dsp_add(phasewrap_perform2, 3, (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
 	break;
     default:
-	dsp_add(phasewrap_perform, 3, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+	dsp_add(phasewrap_perform, 3, (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
     }
 }
 

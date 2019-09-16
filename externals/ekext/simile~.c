@@ -51,7 +51,7 @@ t_int *simile_tilde_perform(t_int *w) {
 
 void simile_tilde_dsp(t_simile_tilde *x, t_signal **sp) {
   dsp_add(simile_tilde_perform, 6, x, 
-	  sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[0]->s_n);
+	  sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, (t_int)sp[0]->s_n);
 }
 
 void *simile_tilde_new(t_floatarg f) {

@@ -67,7 +67,7 @@ static t_int *sigdel16write_perform(t_int *w){
 static void sigdel16write_dsp(t_sigdel16write *x, t_signal **sp){
   dsp_add(sigdel16write_perform, 3, sp[0]->s_vec, &x->x_cspace, sp[0]->s_n);
   x->x_sortno = ugen_getsortno();
-  sigdel16write_checkvecsize(x, sp[0]->s_n);
+  sigdel16write_checkvecsize(x, (t_int)sp[0]->s_n);
 }
 
 static void sigdel16write_free(t_sigdel16write *x){

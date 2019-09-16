@@ -105,7 +105,7 @@ static t_int *count_perform(t_int *w)
 static void count_dsp(t_count *x, t_signal **sp)
 {
     if (x->x_autoreset) count_bang(x);
-    dsp_add(count_perform, 3, x, sp[0]->s_n, sp[0]->s_vec);
+    dsp_add(count_perform, 3, x, (t_int)sp[0]->s_n, sp[0]->s_vec);
 }
 
 static void *count_new(t_floatarg minval, t_floatarg maxval,

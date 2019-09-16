@@ -102,7 +102,7 @@ static t_int *random1_tilde_perform(t_int *w)
 
 static void random1_tilde_dsp(t_random1_tilde *x, t_signal **sp)
 {
-  dsp_add(random1_tilde_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
+  dsp_add(random1_tilde_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
 }
 
 void random1_tilde_setup(void)

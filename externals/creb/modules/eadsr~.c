@@ -122,7 +122,7 @@ static t_int *eadsr_perform(t_int *w)
 static void eadsr_dsp(t_eadsr *x, t_signal **sp)
 {
     x->x_sr = sp[0]->s_sr;
-    dsp_add(eadsr_perform, 3, &x->x_ctl, sp[0]->s_n, sp[0]->s_vec);
+    dsp_add(eadsr_perform, 3, &x->x_ctl, sp[0]->s_n, (t_int)sp[0]->s_vec);
 
 }                                  
 void eadsr_free(void)

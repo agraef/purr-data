@@ -180,7 +180,7 @@ static void accum_tilde_dsp(t_accum_tilde *x, t_signal **sp) {
     // point to number of samples
     // point to inlet~
     // point to outlet~
-    dsp_add(accum_tilde_perform, 4, x, sp[0]->s_n, sp[0]->s_vec,sp[1]->s_vec);
+    dsp_add(accum_tilde_perform, 4, x, (t_int)sp[0]->s_n, sp[0]->s_vec,sp[1]->s_vec);
 }
 
 static void *accum_tilde_new(t_floatarg minval, t_floatarg maxval,

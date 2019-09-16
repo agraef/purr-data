@@ -54,7 +54,7 @@ static void tab16receive_dsp(t_tab16receive *x, t_signal **sp){
     int n = sp[0]->s_n;
     if (n < vecsize) vecsize = n;
     table16_usedindsp(a);
-    dsp_add(tab16receive_perform, 3, x, sp[0]->s_vec, vecsize);
+    dsp_add(tab16receive_perform, 3, x, sp[0]->s_vec, (t_int)vecsize);
   }
 }
 

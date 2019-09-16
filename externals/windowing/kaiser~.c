@@ -74,7 +74,7 @@ static t_int* kaiser_perform(t_int *w) {
 }
 
 static void kaiser_dsp(t_kaiser *x, t_signal **sp) {
-  dsp_add(kaiser_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+  dsp_add(kaiser_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void kaiser_float(t_kaiser *x, t_float alpha) {

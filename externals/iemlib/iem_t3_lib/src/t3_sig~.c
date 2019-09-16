@@ -154,9 +154,9 @@ static void t3_sig_tilde_dsp(t_t3_sig_tilde *x, t_signal **sp)
     *trans++ = val;
   
   if((sp[0]->s_n)&7)
-    dsp_add(t3_sig_tilde_perform, 3, sp[0]->s_vec, x, sp[0]->s_n);
+    dsp_add(t3_sig_tilde_perform, 3, sp[0]->s_vec, x, (t_int)sp[0]->s_n);
   else
-    dsp_add(t3_sig_tilde_perf8, 3, sp[0]->s_vec, x, sp[0]->s_n);
+    dsp_add(t3_sig_tilde_perf8, 3, sp[0]->s_vec, x, (t_int)sp[0]->s_n);
 }
 
 static void t3_sig_tilde_free(t_t3_sig_tilde *x)

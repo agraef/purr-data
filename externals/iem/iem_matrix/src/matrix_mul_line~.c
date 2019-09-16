@@ -586,11 +586,11 @@ static void matrix_mul_line_tilde_dsp(t_matrix_mul_line_tilde *x, t_signal **sp)
   
   if(n&7)
   {
-    dsp_add(matrix_mul_line_tilde_perform_zero, 2, x, n);
+    dsp_add(matrix_mul_line_tilde_perform_zero, 2, x, (t_int)n);
     post("ERROR!!! matrix_mul_line~ : blocksize is %d and not a multiple of 8", n);
   }
   else
-    dsp_add(matrix_mul_line_tilde_perf8, 2, x, n);
+    dsp_add(matrix_mul_line_tilde_perf8, 2, x, (t_int)n);
 }
 
 

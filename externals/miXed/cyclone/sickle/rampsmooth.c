@@ -129,7 +129,7 @@ static t_int *rampsmooth_perform(t_int *w)
 
 static void rampsmooth_dsp(t_rampsmooth *x, t_signal **sp)
 {
-    dsp_add(rampsmooth_perform, 4, x, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+    dsp_add(rampsmooth_perform, 4, x, (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
 }
 
 static void rampsmooth_rampup(t_rampsmooth *x, t_floatarg f)

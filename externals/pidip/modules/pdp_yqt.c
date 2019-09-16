@@ -428,7 +428,7 @@ static t_int *pdp_yqt_perform(t_int *w)
 
 static void pdp_yqt_dsp(t_pdp_yqt *x, t_signal **sp)
 {
-    dsp_add(pdp_yqt_perform, 4, x, sp[1]->s_vec, sp[2]->s_vec, sp[1]->s_n);
+    dsp_add(pdp_yqt_perform, 4, x, sp[1]->s_vec, sp[2]->s_vec, (t_int)sp[1]->s_n);
 }
 
 

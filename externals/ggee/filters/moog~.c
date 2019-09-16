@@ -161,9 +161,9 @@ t_int *moog_perf8(t_int *w)
 void dsp_add_moog(t_moog *x, t_sample *in1, t_sample *in2, t_sample *in3, t_sample *out, int n)
 {
     if (n&7)
-    	dsp_add(moog_perform, 6,(t_int)x, in1,in2,in3, out, n);
+    	dsp_add(moog_perform, 6,(t_int)x, in1,in2,in3, out, (t_int)n);
     else	
-    	dsp_add(moog_perf8, 6,(t_int) x, in1, in2, in3, out, n);
+    	dsp_add(moog_perf8, 6,(t_int) x, in1, in2, in3, out, (t_int)n);
 }
 
 static void moog_dsp(t_moog *x, t_signal **sp)

@@ -128,11 +128,11 @@ static void sigABS_dsp(t_abs *x, t_signal **sp)
                  sigABS_performSSE,
                  1, 1)
   ) {
-    dsp_add(sigABS_performSSE, 3, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+    dsp_add(sigABS_performSSE, 3, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
   } else
 #endif
   {
-    dsp_add(sigABS_perform, 3, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+    dsp_add(sigABS_perform, 3, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
   }
 }
 

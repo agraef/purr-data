@@ -72,7 +72,7 @@ static t_int* hanning_perform(t_int *w) {
 }
 
 static void hanning_dsp(t_hanning *x, t_signal **sp) {
-  dsp_add(hanning_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+  dsp_add(hanning_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void* hanning_new(void) {

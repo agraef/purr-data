@@ -82,7 +82,7 @@ static t_int *dfreq_perform(t_int *w)
 
 static void dfreq_dsp(t_dfreq *x, t_signal **sp)
 {
-  dsp_add(dfreq_perform, 4, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n,x);
+  dsp_add(dfreq_perform, 4, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n,x);
 }
 
 

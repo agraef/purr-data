@@ -303,7 +303,7 @@ static void nlms3_tilde_dsp(t_nlms3_tilde *x, t_signal **sp)
 
   dsp_add(nlms3_tilde_perform, 8, sp[0]->s_vec, sp[1]->s_vec, 
           sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, 
-          sp[5]->s_vec, sp[0]->s_n, x);
+          sp[5]->s_vec, (t_int)sp[0]->s_n, x);
 }
 
 static void nlms3_tilde_helper(void)

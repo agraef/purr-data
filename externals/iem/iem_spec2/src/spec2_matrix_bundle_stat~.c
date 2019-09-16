@@ -219,9 +219,9 @@ static void spec2_matrix_bundle_stat_tilde_dsp(t_spec2_matrix_bundle_stat_tilde 
   
   n = sp[0]->s_n/2;
   if(n&7)
-    dsp_add(spec2_matrix_bundle_stat_tilde_perform, 2, x, n);
+    dsp_add(spec2_matrix_bundle_stat_tilde_perform, 2, x, (t_int)n);
   else
-    dsp_add(spec2_matrix_bundle_stat_tilde_perf8, 2, x, n);
+    dsp_add(spec2_matrix_bundle_stat_tilde_perf8, 2, x, (t_int)n);
 }
 
 

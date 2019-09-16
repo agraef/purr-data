@@ -92,9 +92,9 @@ static void block_delay_tilde_dsp(t_block_delay_tilde *x, t_signal **sp)
 		x->x_begmem = (t_float *)resizebytes(x->x_begmem, x->x_blocksize*sizeof(t_float), n*sizeof(t_float));
 	x->x_blocksize = n;
 	if(n&7)
-		dsp_add(block_delay_tilde_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, sp[0]->s_n);
+		dsp_add(block_delay_tilde_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)sp[0]->s_n);
 	else
-		dsp_add(block_delay_tilde_perf8, 4, sp[0]->s_vec, sp[1]->s_vec, x, sp[0]->s_n);
+		dsp_add(block_delay_tilde_perf8, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)sp[0]->s_n);
 }
 
 static void *block_delay_tilde_new(void)

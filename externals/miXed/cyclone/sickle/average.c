@@ -142,7 +142,7 @@ static t_int *average_perform(t_int *w)
 
 static void average_dsp(t_average *x, t_signal **sp)
 {
-    dsp_add(average_perform, 3, x, sp[0]->s_n, sp[0]->s_vec);
+    dsp_add(average_perform, 3, x, (t_int)sp[0]->s_n, sp[0]->s_vec);
 }
 
 static void average_free(t_average *x)

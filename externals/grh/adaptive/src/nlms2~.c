@@ -249,7 +249,7 @@ static void nlms2_tilde_dsp(t_nlms2_tilde *x, t_signal **sp)
   }
 
   dsp_add(nlms2_tilde_perform, 6, sp[0]->s_vec, sp[1]->s_vec, 
-          sp[2]->s_vec, sp[3]->s_vec, sp[0]->s_n, x);
+          sp[2]->s_vec, sp[3]->s_vec, (t_int)sp[0]->s_n, x);
 }
 
 static void nlms2_tilde_helper(void)

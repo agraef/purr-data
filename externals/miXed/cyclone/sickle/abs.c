@@ -70,12 +70,12 @@ static void abs_dsp(t_abs *x, t_signal **sp)
 #ifdef ABS_TEST
     t_symbol *tst = fitter_getsymbol(gensym("test"));
     if (tst == gensym("unroll"))
-	dsp_add(abs_perf8, 3, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+	dsp_add(abs_perf8, 3, (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
     else if (tst == gensym("branch"))
-	dsp_add(abs_perf0, 3, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+	dsp_add(abs_perf0, 3, (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
     else
 #endif
-	dsp_add(abs_perform, 3, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+	dsp_add(abs_perform, 3, (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
 }
 
 static void *abs_new(void)

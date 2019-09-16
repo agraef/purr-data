@@ -49,7 +49,7 @@ static t_int *rectify_tilde_perform(t_int *w)
 
 static void rectify_tilde_dsp(t_rectify_tilde *x, t_signal **sp)
 {
-    dsp_add(rectify_tilde_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+    dsp_add(rectify_tilde_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 void rectify_tilde_setup(void)

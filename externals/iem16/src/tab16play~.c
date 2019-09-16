@@ -90,7 +90,7 @@ void tab16play_tilde_set(t_tab16play_tilde *x, t_symbol *s){
 
 static void tab16play_tilde_dsp(t_tab16play_tilde *x, t_signal **sp){
   tab16play_tilde_set(x, x->x_arrayname);
-  dsp_add(tab16play_tilde_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
+  dsp_add(tab16play_tilde_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void tab16play_tilde_list(t_tab16play_tilde *x, t_symbol *s,

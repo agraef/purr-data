@@ -72,7 +72,7 @@ static t_int* blackman_perform(t_int *w) {
 }
 
 static void blackman_dsp(t_blackman *x, t_signal **sp) {
-  dsp_add(blackman_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+  dsp_add(blackman_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void* blackman_new(void) {

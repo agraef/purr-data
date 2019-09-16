@@ -162,9 +162,9 @@ static void lp1_t_tilde_dsp(t_lp1_t_tilde *x, t_signal **sp)
     x->c1 = exp((x->sr)/x->cur_t);
   x->c0 = 1.0 - x->c1;
   if(n&7)
-    dsp_add(lp1_t_tilde_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, n);
+    dsp_add(lp1_t_tilde_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)n);
   else
-    dsp_add(lp1_t_tilde_perf8, 4, sp[0]->s_vec, sp[1]->s_vec, x, n);
+    dsp_add(lp1_t_tilde_perf8, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)n);
 }
 
 static void *lp1_t_tilde_new(t_symbol *s, int argc, t_atom *argv)

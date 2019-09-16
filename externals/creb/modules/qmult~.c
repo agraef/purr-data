@@ -129,7 +129,7 @@ static void qmult_dsp(t_qmult *x, t_signal **sp)
       x->x_ctl.c_output[i] = sp[i+8]->s_vec;
     }
 
-  dsp_add(qmult_perform, 2, &x->x_ctl, sp[0]->s_n);
+  dsp_add(qmult_perform, 2, &x->x_ctl, (t_int)sp[0]->s_n);
 
 
 }                                  

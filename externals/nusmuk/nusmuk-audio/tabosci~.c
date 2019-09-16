@@ -297,7 +297,7 @@ static void tabosci_tilde_dsp(t_tabosci_tilde *x, t_signal **sp)
         x->x_conv = 1. / sp[0]->s_sr;
     }
     tabosci_tilde_set(x, x->x_arrayname);
-    dsp_add(tabosci_tilde_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+    dsp_add(tabosci_tilde_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 void tabosci_tilde_setup(void)

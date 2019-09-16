@@ -99,10 +99,10 @@ void sigreceive13_set(t_sigreceive13 *x, t_symbol *s)
     	sigreceive13_set(x, x->x_sym);
 	if(sp[0]->s_n&7)
 	    dsp_add(sigreceive13_perform, 3,
-		    x, sp[0]->s_vec, sp[0]->s_n);
+		    x, sp[0]->s_vec, (t_int)sp[0]->s_n);
 	else
 	    dsp_add(sigreceive13_perf8, 3,
-		    x, sp[0]->s_vec, sp[0]->s_n);
+		    x, sp[0]->s_vec, (t_int)sp[0]->s_n);
     }
 }
 

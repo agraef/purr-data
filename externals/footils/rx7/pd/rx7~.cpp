@@ -226,7 +226,7 @@ static t_int *rx7_perform(t_int *w)
 
 static void rx7_dsp(t_rx7 *x, t_signal **sp)
 {
-	dsp_add(rx7_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
+	dsp_add(rx7_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
 }
 
 extern "C" void rx7_tilde_setup(void)

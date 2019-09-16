@@ -102,7 +102,7 @@ static void sigreson_dsp(t_sigreson *x, t_signal **sp)
 	x->x_ctl->c_samprate = sp[0]->s_sr;
 	sigreson_float(x, x->x_ctl->c_freq);
 	dsp_add(cu_reson, 5, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, 
-		x->x_ctl, sp[0]->s_n);
+		x->x_ctl, (t_int)sp[0]->s_n);
 }
 
 static void sigreson_ft1(t_sigreson *x, t_floatarg f) /* sets feedback */

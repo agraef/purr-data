@@ -96,7 +96,7 @@ static t_int *step_perform(t_int *w)
 
 static void step_dsp(t_step *x, t_signal **sp)
 {
-  dsp_add(step_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
+  dsp_add(step_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
 }
 
 

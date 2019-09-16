@@ -30,7 +30,7 @@ static t_int *abs_perform(t_int *w)
 
 static void abs_dsp(t_abs *x, t_signal **sp)
 {
-    dsp_add(abs_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+    dsp_add(abs_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void *abs_new(void)

@@ -73,6 +73,6 @@ t_int *click_perform(t_int *w)
 
 void click_dsp(t_click *x, t_signal **sp)
 {
-    dsp_add(click_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
+    dsp_add(click_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
 }
 

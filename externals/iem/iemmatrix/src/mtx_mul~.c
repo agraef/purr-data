@@ -776,10 +776,10 @@ static void matrix_multilde_dsp(t_matrix_multilde *x, t_signal **sp)
 
   if(n&7)
     {
-      dsp_add(matrix_multilde_perform, 2, x, n);
+      dsp_add(matrix_multilde_perform, 2, x, (t_int)n);
     }
   else {
-    dsp_add(matrix_multilde_perf8, 2, x, n);
+    dsp_add(matrix_multilde_perf8, 2, x, (t_int)n);
   }
 }
 
