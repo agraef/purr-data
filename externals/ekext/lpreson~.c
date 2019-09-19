@@ -108,9 +108,18 @@ void *lpreson_tilde_dsp(t_lpreson_tilde *x, t_signal **sp)
 
 void *lpreson_tilde_new(t_floatarg f)
 {
+  t_atom *init;
   t_lpreson_tilde *x = (t_lpreson_tilde *)pd_new(lpreson_tilde_class);
   x->x_order = f >= 1 ? (int)f : 5;
-  
+  init = (t_atom *)t_getbytes(sizeof(t_atom) * x->x_order);
+  int i;
+  /* init the list-- not sure what an identity list would be
+     so I'm just setting zeroes here. */
+  for (i = 0; i < x->x_order; i++)
+      SETFLOAT(init + i, 0.);
+
+  lpreson_tilde_list(x, &s_, x->x_order, init);
+
   outlet_new(&x->x_obj, &s_signal);
   return (void *)x;
 }
