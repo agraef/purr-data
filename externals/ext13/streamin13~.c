@@ -187,7 +187,8 @@ static t_int *streamin13_perform(t_int *w)
    for (i=0;i < x->x_n;i++) {
       out[i] = (t_float *)(w[offset+i]);
    }
-   if (x->x_connectsocket){
+
+   if (x->x_connectsocket >= 0){
 	     timeout.tv_sec = 0;
 	     timeout.tv_usec = 0;
 	
@@ -210,8 +211,11 @@ static t_int *streamin13_perform(t_int *w)
 	            }
 	         }
 	       }
-	 free(out);	      
-	 return (w+offset+1+i);
+
+#ifdef _WIN32
+	 free(out);
+#endif
+	 return (w+offset+i);
 	     } else {
 	        x->x_ndone++;
 	     }
@@ -276,7 +280,7 @@ static t_int *streamin13_perform(t_int *w)
 #ifdef _WIN32
 	free(out);
 #endif 
-     return (w+offset+1+i);
+     return (w+offset+i);
 }
 	
 	
@@ -284,14 +288,14 @@ static t_int *streamin13_perform(t_int *w)
 static void streamin13_dsp(t_streamin13 *x, t_signal **sp)
 {
   int i;
-  t_int** myvec = getbytes(sizeof(t_int)*(x->x_n + 3));
+  t_int** myvec = getbytes(sizeof(t_int)*(x->x_n + 2));
    
   myvec[0] = (t_int*)x;
   myvec[1] = (t_int*)sp[0]->s_n;
   for (i=0;i < x->x_n;i++)
     myvec[2 + i] = (t_int*)sp[i]->s_vec;
-  dsp_addv(streamin13_perform, (t_int)(x->x_n + 3), (t_int*)myvec);
-  freebytes(myvec,sizeof(t_int)*(x->x_n + 3));
+  dsp_addv(streamin13_perform, x->x_n + 2, (t_int*)myvec);
+  freebytes(myvec,sizeof(t_int)*(x->x_n + 2));
 
 }
 
