@@ -179,7 +179,6 @@ static t_int *nlms3_tilde_perform(t_int *w)
   int i, j, tmp;
   t_sample x_2;
   
-  
   // calculate inlet2 (filter+adaptation)
   if(x->adapt)
   {
@@ -288,16 +287,16 @@ static void nlms3_tilde_dsp(t_nlms3_tilde *x, t_signal **sp)
   {
     if(sp[0]->s_n < x->N)
       post("nlms3~ WARNING: buffersize must be bigger than N, you will get wrong results !!!"); 
-    
+
     if(x->in_tmp) freebytes(x->in_tmp, sizeof(t_sample) * x->bufsize);
     x->in_tmp = (t_sample *)getbytes(sizeof(t_sample) * sp[0]->s_n);
-    
+
     if(x->y_tmp) freebytes(x->y_tmp, sizeof(t_sample) * x->bufsize);
     x->y_tmp = (t_sample *)getbytes(sizeof(t_sample) * sp[0]->s_n);
-    
+
     if(x->e_tmp) freebytes(x->e_tmp, sizeof(t_sample) * x->bufsize);
     x->e_tmp = (t_sample *)getbytes(sizeof(t_sample) * sp[0]->s_n);
-    
+
     x->bufsize =  sp[0]->s_n;
   }
 
@@ -379,7 +378,7 @@ static void nlms3_tilde_free(t_nlms3_tilde *x)
   if(x->c) freebytes(x->c, sizeof(t_float) * x->N);
   if(x->buf) freebytes(x->buf, sizeof(t_sample) * x->N-1);
   if(x->xbuf) freebytes(x->xbuf, sizeof(t_sample) * x->N-1);
-  if(x->in_tmp) freebytes(x->y_tmp, sizeof(t_sample) * x->bufsize);
+  if(x->in_tmp) freebytes(x->in_tmp, sizeof(t_sample) * x->bufsize);
   if(x->y_tmp) freebytes(x->y_tmp, sizeof(t_sample) * x->bufsize);
   if(x->e_tmp) freebytes(x->e_tmp, sizeof(t_sample) * x->bufsize);
   if(x->coef) freebytes(x->coef, sizeof(t_atom) * x->N);
