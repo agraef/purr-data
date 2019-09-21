@@ -273,6 +273,8 @@ void *bashfest_new(t_symbol *msg, short argc, t_atom *argv)
 	
     /* argument list: buffer name, work buffer duration, latency in samples, number of overlaps */
     atom_arg_getsym(&x->wavename,0,argc,argv);
+    /* We probably don't want to segfault when instantiating with no args, so */
+    if (!x->wavename) x->wavename = &s_;
     atom_arg_getfloat(&x->work_buffer_size,1,argc,argv);
     tmpfloat = DEFAULT_LATENCY;
     atom_arg_getfloat(&tmpfloat,2,argc,argv);
@@ -437,7 +439,7 @@ void bashfest_setbuf(t_bashfest *x, t_symbol *wavename)
         garray_usedindsp(a);
         x->b_valid = 1;
     }
-    
+
 }
 
 
@@ -1310,7 +1312,7 @@ void bashfest_dsp_free(t_bashfest *x)
 void bashfest_dsp(t_bashfest *x, t_signal **sp)
 {
     bashfest_setbuf(x, x->wavename);
-	
+
     if( x->hosed ){
         error("bashfest~ needs a valid buffer");
     }

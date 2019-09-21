@@ -1081,6 +1081,8 @@ void *buffet_new(t_symbol *msg, short argc, t_atom *argv)
             OBJECT_NAME);
     }
     atom_arg_getsym(&x->wavename,0,argc,argv);
+    /* Let's not crash just yet... */
+    if (!x->wavename) x->wavename = &s_;
     atom_arg_getfloat(&x->minframes,1,argc,argv);
     atom_arg_getfloat(&x->maxframes,2,argc,argv);
     if(!x->minframes)
