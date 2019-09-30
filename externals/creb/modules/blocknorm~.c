@@ -90,7 +90,7 @@ static void blocknorm_dsp(t_blocknorm *x, t_signal **sp)
 	x->x_ctl.c_input[i] = sp[i]->s_vec;
 	x->x_ctl.c_output[i] = sp[c+i]->s_vec;
     }
-    dsp_add(blocknorm_perform, 2, &x->x_ctl, sp[0]->s_n);
+    dsp_add(blocknorm_perform, 2, &x->x_ctl, (t_int)sp[0]->s_n);
 }                                  
 
 

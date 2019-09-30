@@ -149,7 +149,7 @@ static t_int *permut_perform(t_int *w)
 static void permut_dsp(t_permut *x, t_signal **sp)
 {
   permut_resize_table(x, sp[0]->s_n);
-  dsp_add(permut_perform, 4, &x->x_ctl, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+  dsp_add(permut_perform, 4, &x->x_ctl, (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
 
 }
                                   

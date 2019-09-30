@@ -99,7 +99,7 @@ static t_int *aenv_perform(t_int *w)
 
 static void aenv_dsp(t_aenv *x, t_signal **sp)
 {
-	dsp_add(aenv_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
+	dsp_add(aenv_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void aenv_float(t_aenv *x, t_float f)

@@ -51,7 +51,7 @@ static t_int *minmax_perform(t_int *w)
 
 static void minmax_dsp(t_minmax *x, t_signal **sp)
 {
-    dsp_add(minmax_perform, 5, x, sp[0]->s_n, sp[0]->s_vec,
+    dsp_add(minmax_perform, 5, x, (t_int)sp[0]->s_n, sp[0]->s_vec,
 	    sp[1]->s_vec, sp[2]->s_vec);
 }
 

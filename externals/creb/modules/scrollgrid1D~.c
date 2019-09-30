@@ -159,7 +159,7 @@ static void scrollgrid1D_dsp(t_scrollgrid1D *x, t_signal **sp)
   dsp_add(scrollgrid1D_perform, 
 	  9, 
 	  &x->x_ctl, 
-	  sp[0]->s_n, 
+	  (t_int)sp[0]->s_n, 
 	  sp[0]->s_vec, 
 	  sp[1]->s_vec, 
 	  sp[2]->s_vec,

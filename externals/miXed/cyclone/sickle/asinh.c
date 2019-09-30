@@ -29,7 +29,7 @@ static t_int *asinh_perform(t_int *w)
 
 static void asinh_dsp(t_asinh *x, t_signal **sp)
 {
-    dsp_add(asinh_perform, 3, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+    dsp_add(asinh_perform, 3, (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
 }
 
 static void *asinh_new(void)

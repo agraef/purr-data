@@ -285,6 +285,6 @@ void markov_dsp(t_markov *x, t_signal **sp)
         x->count = 0;
     }
     dsp_add(markov_perform, 5, x, sp[0]->s_vec , sp[1]->s_vec, sp[2]->s_vec, 
-            sp[0]->s_n);
+            (t_int)sp[0]->s_n);
 }
 

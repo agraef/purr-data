@@ -125,7 +125,7 @@ t_int *promiscous_tilde_perform(t_int *w)
 static void promiscous_tilde_dsp(t_promiscous_tilde *x, t_signal **sp)
 {
 	dsp_add(promiscous_tilde_perform, 3, x, sp[0]->s_vec,
-	sp[0]->s_n);
+	(t_int)sp[0]->s_n);
 }
 
 

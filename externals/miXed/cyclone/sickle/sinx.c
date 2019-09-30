@@ -32,7 +32,7 @@ static t_int *sinx_perform(t_int *w)
 
 static void sinx_dsp(t_sinx *x, t_signal **sp)
 {
-    dsp_add(sinx_perform, 3, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+    dsp_add(sinx_perform, 3, (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
 }
 
 static void *sinx_new(void)

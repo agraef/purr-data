@@ -55,7 +55,7 @@ static t_int *chop_tilde_perform(t_int *w)
 
 static void chop_tilde_dsp(t_chop_tilde *x, t_signal **sp)
 {
-    dsp_add(chop_tilde_perform, 5, x, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
+    dsp_add(chop_tilde_perform, 5, x, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, (t_int)sp[0]->s_n);
 }
 
 void chop_tilde_setup(void)

@@ -201,7 +201,7 @@ static void lms_tilde_dsp(t_lms_tilde *x, t_signal **sp)
   }
 
   dsp_add(lms_tilde_perform, 5, x, sp[0]->s_vec, sp[1]->s_vec, 
-	  sp[2]->s_vec, sp[0]->s_n);
+	  sp[2]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void lms_tilde_helper(void)

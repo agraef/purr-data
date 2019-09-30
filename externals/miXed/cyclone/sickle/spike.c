@@ -76,7 +76,7 @@ static void spike_dsp(t_spike *x, t_signal **sp)
     x->x_ksr = sp[0]->s_sr * 0.001;
     x->x_rcpksr = 1000.0 / sp[0]->s_sr;
     x->x_nwait = (int)(x->x_waittime * x->x_ksr);
-    dsp_add(spike_perform, 3, x, sp[0]->s_n, sp[0]->s_vec);
+    dsp_add(spike_perform, 3, x, (t_int)sp[0]->s_n, sp[0]->s_vec);
 }
 
 static void spike_free(t_spike *x)

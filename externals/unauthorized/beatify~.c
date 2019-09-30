@@ -166,7 +166,7 @@ static t_int *beatify_perform(t_int *w)
 
 static void beatify_dsp(t_beatify *x, t_signal **sp)
 {
-    dsp_add(beatify_perform, 4, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n, x );
+    dsp_add(beatify_perform, 4, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n, x );
 }
 
 void beatify_tilde_setup(void)

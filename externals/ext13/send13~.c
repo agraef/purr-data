@@ -52,7 +52,7 @@
  void sigsend13_dsp(t_sigsend13 *x, t_signal **sp)
 {
     if (x->x_n == sp[0]->s_n)
-    	dsp_add(sigsend13_perform, 3, sp[0]->s_vec, x->x_vec, sp[0]->s_n);
+    	dsp_add(sigsend13_perform, 3, sp[0]->s_vec, x->x_vec, (t_int)sp[0]->s_n);
     else error("sigsend13 %s: unexpected vector size", x->x_sym->s_name);
 }
 

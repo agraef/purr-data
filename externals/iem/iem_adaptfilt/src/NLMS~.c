@@ -246,9 +246,9 @@ static void NLMS_tilde_dsp(t_NLMS_tilde *x, t_signal **sp)
     x->x_w_array_mem_beg = NLMS_tilde_check_array(x->x_w_array_sym_name, x->x_n_order);
 
     if(!x->x_w_array_mem_beg)
-        dsp_add(NLMS_tilde_perform_zero, 2, x, n);
+        dsp_add(NLMS_tilde_perform_zero, 2, x, (t_int)n);
     else
-        dsp_add(NLMS_tilde_perform, 2, x, n);
+        dsp_add(NLMS_tilde_perform, 2, x, (t_int)n);
 }
 
 

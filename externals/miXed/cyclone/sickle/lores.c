@@ -83,7 +83,7 @@ static void lores_dsp(t_lores *x, t_signal **sp)
 {
     x->x_srcoef = SHARED_2PI / sp[0]->s_sr;
     lores_clear(x);
-    dsp_add(lores_perform, 6, x, sp[0]->s_n,
+    dsp_add(lores_perform, 6, x, (t_int)sp[0]->s_n,
 	    sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec);
 }
 

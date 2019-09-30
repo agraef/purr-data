@@ -283,14 +283,14 @@ void bvplay_dsp(t_bvplay *x, t_signal **sp)
     	x->taper_frames = x->R * x->taper_dur;
     }
     // Pd buffers always mono ...
-    dsp_add(bvplay_perform_mono, 3, x, sp[0]->s_vec, sp[0]->s_n);
+    dsp_add(bvplay_perform_mono, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
     /*
     if( x->wavebuf->b_nchans == 1 ) {
     	// post("initiating mono processor");
-   	 	dsp_add(bvplay_perform_mono, 3, x, sp[0]->s_vec, sp[0]->s_n);
+   	 	dsp_add(bvplay_perform_mono, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
     } else if( x->wavebuf->b_nchans == 2) {
     	// post("initiating stereo processor");
-   	 	dsp_add(bvplay_perform_stereo,4,x,sp[0]->s_vec,sp[1]->s_vec,sp[0]->s_n);
+   	 	dsp_add(bvplay_perform_stereo,4,x,sp[0]->s_vec,sp[1]->s_vec,(t_int)sp[0]->s_n);
     } else {
      	post("%s: bad channel spec: %d, cannot initiate dsp code",OBJECT_NAME,  x->wavebuf->b_nchans);
     }*/

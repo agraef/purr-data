@@ -326,7 +326,7 @@ void adsr_dsp(t_adsr *x, t_signal **sp)
 		x->ebreak3 = x->asamps+x->dsamps+x->ssamps;
 		x->counter = 0;	
 	}
-	dsp_add(adsr_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+	dsp_add(adsr_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 

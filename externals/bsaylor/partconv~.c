@@ -65,6 +65,7 @@ typedef struct _partconv {
 	int nbins;
 	int nparts;
 	int ir_prepared;
+	int hosed;	/* set if our array doesn't exist */
 	int pd_blocksize;
 
 	// partitions of impulse response
@@ -121,6 +122,16 @@ static void partconv_deal_work(t_partconv *x)
 #include "altivec-perform.inc.c"
 #else
 
+static t_int *partconv_perform_hosed(t_int *w)
+{
+	t_float *out = (t_float *)(w[3]);
+	int n = (int)(w[4]);
+	int i;
+	for (i = 0; i < n; i++)
+		out[i] = 0;
+	return (w+5);
+}
+
 static t_int *partconv_perform(t_int *w)
 {
 	t_partconv *x = (t_partconv *)(w[1]);
@@ -132,7 +143,6 @@ static t_int *partconv_perform(t_int *w)
 	int k;	// bin
 	int p;	// partition
 	int endpart;
-
 #ifdef USE_SSE
 	int v1;
 	int v2;
@@ -148,7 +158,6 @@ static t_int *partconv_perform(t_int *w)
 
 	float *sumbuf1ptr;
 	float *sumbuf2ptr;
-
 	memcpy(&(x->inbuf[x->inbufpos]), in, n*sizeof(float));  // gather a block of input into input buffer
 	x->inbufpos += n;
 	if (x->inbufpos >= x->partsize) {
@@ -235,13 +244,12 @@ static t_int *partconv_perform(t_int *w)
 static void partconv_free(t_partconv *x)
 {
 	int i;
-
 	fftwf_free(x->inbuf);
 	for (i = 0; i < x->nparts; i++)
 		fftwf_free(x->irpart_td[i]);
 	fftwf_free(x->input_td);
 	fftwf_destroy_plan(x->input_plan);
-	for (i  = 0; i < x->nsumbufs; i++) {
+	for (i = 0; i < x->nsumbufs; i++) {
 		fftwf_free(x->sumbufs[i].fd);
 		fftwf_destroy_plan(x->sumbufs[i].plan);
 	}
@@ -259,20 +267,25 @@ static void partconv_set(t_partconv *x, t_symbol *s)
 	// get the array from pd
 	x->arrayname = s;
 	if ( ! (arrayobj = (t_garray *)pd_findbyclass(x->arrayname, garray_class))) {
-		if (*x->arrayname->s_name) {
-			pd_error(x, "partconv~: %s: no such array", x->arrayname->s_name);
-			return;
-		}
+		x->hosed = 1;
+		if (x->arrayname && *x->arrayname->s_name)
+			pd_error(x, "partconv~: %s: no such array",
+			x->arrayname->s_name);
+		else
+			pd_error(x, "partconv~: need an array name");
+		return;
 	} else if ( ! garray_getfloatarray(arrayobj, &arraysize, &array)) {
+		x->hosed = 1;
 		pd_error(x, "%s: bad template", x->arrayname->s_name);
 		return;
+	} else {
+		x->hosed = 0;
 	}
 
 	// if the IR has already been prepared, free everything first
 	if (x->ir_prepared == 1) {
 		partconv_free(x);
 	}
-
 	// caculate number of partitions
 	x->nparts = arraysize / x->partsize;
 	if (arraysize % x->partsize != 0)
@@ -336,8 +349,12 @@ static void partconv_dsp(t_partconv *x, t_signal **sp)
 	if (x->ir_prepared == 0) {
 		partconv_set(x, x->arrayname);
 	}
-
-	dsp_add(partconv_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+	if (x->hosed)
+		dsp_add(partconv_perform_hosed, 4, x, sp[0]->s_vec,
+			sp[1]->s_vec, (t_int)sp[0]->s_n);
+	else
+		dsp_add(partconv_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec,
+			(t_int)sp[0]->s_n);
 }
 
 static void *partconv_new(t_symbol *s, int argc, t_atom *argv)
@@ -352,11 +369,12 @@ static void *partconv_new(t_symbol *s, int argc, t_atom *argv)
                instantiate and get to the help patch */
             if (!argc)
             {
-                post("partconv~: warning: no arguments given");
                 SETSYMBOL(sane_defaults, &s_);
-                SETFLOAT(sane_defaults+1, 2.);
+                SETFLOAT(sane_defaults+1, 64.);
                 argc = 2;
                 argv = sane_defaults;
+                pd_error(x, "partconv~: no arguments given. Setting some "
+			"sane defaults to keep Purr Data from crashing.");
             }
             else
             {

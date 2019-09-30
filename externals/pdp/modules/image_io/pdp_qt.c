@@ -838,7 +838,7 @@ static t_int *pdp_qt_perform(t_int *w)
 
 static void pdp_qt_dsp(t_pdp_qt *x, t_signal **sp)
 {
-    dsp_add(pdp_qt_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+    dsp_add(pdp_qt_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 
 }
 

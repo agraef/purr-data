@@ -41,7 +41,7 @@ t_int *convolve_tilde_perform(t_int *w)
 
 static void convolve_tilde_dsp(t_convolve_tilde *x, t_signal **sp)
 {
-   dsp_add(convolve_tilde_perform, 5,sp[0]->s_vec, sp[1]->s_vec , sp[2]->s_vec , x ,sp[0]->s_n);
+   dsp_add(convolve_tilde_perform, 5,sp[0]->s_vec, sp[1]->s_vec , sp[2]->s_vec , x , (t_int)sp[0]->s_n);
 }
 
 /**

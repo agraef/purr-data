@@ -77,7 +77,7 @@ static t_int *trapezoid_perform(t_int *w)
 
 static void trapezoid_dsp(t_trapezoid *x, t_signal **sp)
 {
-    dsp_add(trapezoid_perform, 6, x, sp[0]->s_n,
+    dsp_add(trapezoid_perform, 6, x, (t_int)sp[0]->s_n,
 	    sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec);
 }
 

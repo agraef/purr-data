@@ -110,7 +110,7 @@ static void comb_dsp(t_comb *x, t_signal **sp)
 	comb_resize(x, x->x_ksr * x->x_maxdelay);
     }
     else comb_clear(x);
-    dsp_add(comb_perform, 8, x, sp[0]->s_n,
+    dsp_add(comb_perform, 8, x, (t_int)sp[0]->s_n,
 	    sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec,
 	    sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec);
 }

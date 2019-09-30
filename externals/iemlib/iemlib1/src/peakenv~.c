@@ -66,7 +66,7 @@ static void peakenv_tilde_dsp(t_peakenv_tilde *x, t_signal **sp)
 {
   x->x_sr = (double)sp[0]->s_sr;
   peakenv_tilde_ft1(x, x->x_releasetime);
-  dsp_add(peakenv_tilde_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, sp[0]->s_n);
+  dsp_add(peakenv_tilde_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)sp[0]->s_n);
 }
 
 static void *peakenv_tilde_new(t_floatarg f)

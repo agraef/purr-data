@@ -135,7 +135,7 @@ static void round_tilde_nearest(t_round_tilde *x, t_float f, t_float glob){
 }
 static void round_tilde_dsp(t_round_tilde *x, t_signal **sp)
 {
-	dsp_add(round_tilde_perform, 5, x, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
+	dsp_add(round_tilde_perform, 5, x, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, (t_int)sp[0]->s_n);
 }
 
 

@@ -73,7 +73,7 @@ static void demux_dsp(t_demux *x, t_signal **sp)
   while(n--) {
     *dummy++=sp[x->n_out-n]->s_vec;
   }
-  dsp_add(demux_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
+  dsp_add(demux_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
 }
 
 

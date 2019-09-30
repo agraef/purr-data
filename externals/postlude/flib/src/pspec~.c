@@ -51,7 +51,7 @@ static t_int *pspec_perform(t_int *w)
 static void pspec_dsp(t_pspec *x, t_signal **sp)
 {
   dsp_add(pspec_perform, 4,
-          sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
+          sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void *pspec_new(void)

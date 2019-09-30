@@ -88,7 +88,7 @@ static t_int *susloop_perform(t_int *w)
 
 static void susloop_dsp(t_susloop *x, t_signal **sp)
 {
-	    dsp_add(susloop_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+	    dsp_add(susloop_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void *susloop_new(t_symbol *s, int argc, t_atom *argv)

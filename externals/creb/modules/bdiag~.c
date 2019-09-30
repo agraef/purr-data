@@ -215,7 +215,7 @@ static void bdiag_dsp(t_bdiag *x, t_signal **sp)
 	}
       
            
-      dsp_add(bdiag_perform, 4, &x->x_ctl, sp[0]->s_n, 
+      dsp_add(bdiag_perform, 4, &x->x_ctl, (t_int)sp[0]->s_n, 
 	      sp[0]->s_vec, sp[1]->s_vec);
     }
 

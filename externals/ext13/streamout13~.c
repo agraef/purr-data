@@ -172,7 +172,6 @@ static t_int *streamout13_perform(t_int *w)
       in[i] = (t_float *)(w[offset+i]);
     }
 
-
    if (x->x_fd > 0){
 
      if (n != x->nsamples)
@@ -272,23 +271,24 @@ static t_int *streamout13_perform(t_int *w)
 #ifdef _WIN32
   free(in);
 #endif
-  return (w + 2 + i * 2);
+  return (w + 3 + i);
 }
 
 static void streamout13_dsp(t_streamout13 *x, t_signal **sp)
 {
 /*
-    dsp_add(streamout13_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
+    dsp_add(streamout13_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
 */
+
   int i;
-  t_int** myvec = getbytes(sizeof(t_int)*(x->x_n + 3));
+  t_int** myvec = getbytes(sizeof(t_int)*(x->x_n + 2));
    
   myvec[0] = (t_int*)x;
   myvec[1] = (t_int*)sp[0]->s_n;
   for (i=0;i < x->x_n/*+1*/;i++)
     myvec[2 + i] = (t_int*)sp[i]->s_vec;
-  dsp_addv(streamout13_perform, x->x_n + 3, (t_int*)myvec);
-  freebytes(myvec,sizeof(t_int)*(x->x_n + 3));
+  dsp_addv(streamout13_perform, x->x_n + 2, (t_int *)myvec);
+  freebytes(myvec,sizeof(t_int)*(x->x_n + 2));
 }
 
 static void streamout13_grain(t_streamout13 *x,t_floatarg grain)

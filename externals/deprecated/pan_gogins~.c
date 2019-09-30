@@ -84,7 +84,7 @@ static void pan_gogins_dsp(t_pan_gogins *x, t_signal **sp)
   float *out2 = sp[2]->s_vec;
 
   dsp_add(pan_gogins_perform, 5,
-	  in1, out1, out2, n, x);
+	  in1, out1, out2, (t_int)n, x);
 }
 
 void pan_gogins_f(t_pan_gogins *x, t_floatarg f)

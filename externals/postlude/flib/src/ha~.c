@@ -49,7 +49,7 @@ static t_int *hca_perform(t_int *w)
 static void hca_dsp(t_hca *x, t_signal **sp)
 {
   dsp_add(hca_perform, 3,
-          sp[0]->s_vec, sp[0]->s_n, x->p);
+          sp[0]->s_vec, (t_int)sp[0]->s_n, x->p);
 
 }
 

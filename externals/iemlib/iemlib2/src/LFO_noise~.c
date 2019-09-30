@@ -107,7 +107,7 @@ static void LFO_noise_tilde_float(t_LFO_noise_tilde *x, t_floatarg freq)
 static void LFO_noise_tilde_dsp(t_LFO_noise_tilde *x, t_signal **sp)
 {
   x->x_fact = 2.0f / sp[0]->s_sr;
-  dsp_add(LFO_noise_tilde_perform, 3, sp[0]->s_vec, x, sp[0]->s_n);
+  dsp_add(LFO_noise_tilde_perform, 3, sp[0]->s_vec, x, (t_int)sp[0]->s_n);
 }
 
 void LFO_noise_tilde_setup(void)

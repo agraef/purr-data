@@ -206,7 +206,7 @@ static  void common_tilde_dsp(t_common_tilde *x, t_signal **sp)
 {
 	
 	if ( (int) sp[0]->s_n == 64 ) {
-		dsp_add(common_tilde_perform, 4, x,sp[0]->s_vec,sp[1]->s_vec, sp[0]->s_n);
+		dsp_add(common_tilde_perform, 4, x,sp[0]->s_vec,sp[1]->s_vec, (t_int)sp[0]->s_n);
 		
 	  } else {
 		  error("common~ only works with a block size of 64");

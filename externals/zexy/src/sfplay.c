@@ -560,14 +560,14 @@ static void sfplay_dsp(t_sfplay *x, t_signal **sp)
     dsp_add(sfplay_perform, 4, x,
             sp[0]->s_vec,
             sp[1]->s_vec, /* out 1 */
-            sp[0]->s_n);
+            (t_int)sp[0]->s_n);
     break;
   case 2:
     dsp_add(sfplay_perform, 5, x,
             sp[0]->s_vec, /* out 1*/
             sp[1]->s_vec, /* out 2*/
             sp[2]->s_vec,
-            sp[0]->s_n);
+            (t_int)sp[0]->s_n);
     break;
   case 4:
     dsp_add(sfplay_perform, 7, x,
@@ -576,7 +576,7 @@ static void sfplay_dsp(t_sfplay *x, t_signal **sp)
             sp[2]->s_vec,
             sp[3]->s_vec,
             sp[4]->s_vec,
-            sp[0]->s_n);
+            (t_int)sp[0]->s_n);
     break;
   case 8:
     dsp_add(sfplay_perform, 11, x,
@@ -589,7 +589,7 @@ static void sfplay_dsp(t_sfplay *x, t_signal **sp)
             sp[6]->s_vec,
             sp[7]->s_vec,
             sp[8]->s_vec,
-            sp[0]->s_n);
+            (t_int)sp[0]->s_n);
     break;
   }
 }

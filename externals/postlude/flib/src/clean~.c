@@ -60,7 +60,7 @@ static t_int *clean_perform(t_int *w)
 static void clean_dsp(t_clean *x, t_signal **sp)
 {
   dsp_add(clean_perform, 4,
-          sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n, x);
+          sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n, x);
 }
 
 static void clean_float(t_clean *x, t_float f)  

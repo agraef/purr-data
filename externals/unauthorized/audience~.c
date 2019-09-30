@@ -965,43 +965,43 @@ static void audience_dsp(t_audience_tilde *x, t_signal **sp)
     switch ( x->x_nbinputs+x->x_nboutputs )
     {
     case 2 :
-        dsp_add(audience_perform, 4, x, sp[1]->s_n, sp[1]->s_vec, sp[2]->s_vec );
+        dsp_add(audience_perform, 4, x, (t_int)sp[1]->s_n, sp[1]->s_vec, sp[2]->s_vec );
         break;
 
     case 3 :
-        dsp_add(audience_perform, 5, x, sp[1]->s_n, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec );
+        dsp_add(audience_perform, 5, x, (t_int)sp[1]->s_n, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec );
         break;
 
     case 4 :
-        dsp_add(audience_perform, 6, x, sp[1]->s_n, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec );
+        dsp_add(audience_perform, 6, x, (t_int)sp[1]->s_n, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec );
         break;
 
     case 5 :
-        dsp_add(audience_perform, 7, x, sp[1]->s_n, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec );
+        dsp_add(audience_perform, 7, x, (t_int)sp[1]->s_n, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec );
         break;
 
     case 6 :
-        dsp_add(audience_perform, 8, x, sp[1]->s_n, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec,
+        dsp_add(audience_perform, 8, x, (t_int)sp[1]->s_n, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec,
                 sp[5]->s_vec, sp[6]->s_vec );
         break;
 
     case 7 :
-        dsp_add(audience_perform, 9, x, sp[1]->s_n, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec,
+        dsp_add(audience_perform, 9, x, (t_int)sp[1]->s_n, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec,
                 sp[5]->s_vec, sp[6]->s_vec, sp[7]->s_vec );
         break;
 
     case 8 :
-        dsp_add(audience_perform, 10, x, sp[1]->s_n, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec,
+        dsp_add(audience_perform, 10, x, (t_int)sp[1]->s_n, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec,
                 sp[5]->s_vec, sp[6]->s_vec, sp[7]->s_vec, sp[8]->s_vec );
         break;
 
     case 9 :
-        dsp_add(audience_perform, 11, x, sp[1]->s_n, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec,
+        dsp_add(audience_perform, 11, x, (t_int)sp[1]->s_n, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec,
                 sp[5]->s_vec, sp[6]->s_vec, sp[7]->s_vec, sp[8]->s_vec, sp[9]->s_vec );
         break;
 
     case 10 :
-        dsp_add(audience_perform, 12, x, sp[1]->s_n, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec,
+        dsp_add(audience_perform, 12, x, (t_int)sp[1]->s_n, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec,
                 sp[5]->s_vec, sp[6]->s_vec, sp[7]->s_vec, sp[8]->s_vec,
                 sp[9]->s_vec, sp[10]->s_vec );
         break;

@@ -563,10 +563,10 @@ void sigseq_dsp(t_sigseq *x, t_signal **sp)
     }
     if(x->method == EXTERNAL_CLOCK){
         dsp_add(sigseq_perform_clickin, 5, x, 
-                sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
+                sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, (t_int)sp[0]->s_n);
     } else {
         dsp_add(sigseq_perform, 5, x, 
-                sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
+                sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, (t_int)sp[0]->s_n);
     }
 }
 

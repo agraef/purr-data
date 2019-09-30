@@ -111,9 +111,9 @@ t_int *ln_perf8(t_int *w)
 void dsp_add_ln(t_sample *in1, t_sample *out, int n, int flag)
 {
     if (n&7)
-    	dsp_add(ln_perform, 4, in1, out, n, flag);
+    	dsp_add(ln_perform, 4, in1, out, (t_int)n, (t_int)flag);
     else	
-    	dsp_add(ln_perf8, 4, in1, out, n, flag);
+    	dsp_add(ln_perf8, 4, in1, out, (t_int)n, (t_int)flag);
 }
 
 static void ln_dsp(t_ln *x, t_signal **sp)

@@ -57,7 +57,7 @@ static t_int *tavg_perform(t_int *w)
 static void tavg_dsp(t_tavgtilde *x, t_signal **sp)
 {
   x->n_inv=1./sp[0]->s_n;
-  dsp_add(tavg_perform, 3, sp[0]->s_vec, x, sp[0]->s_n);
+  dsp_add(tavg_perform, 3, sp[0]->s_vec, x, (t_int)sp[0]->s_n);
 }
 
 static void *tavg_new(void)

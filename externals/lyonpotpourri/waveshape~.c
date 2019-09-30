@@ -166,6 +166,6 @@ t_int *waveshape_perform(t_int *w)
 
 void waveshape_dsp(t_waveshape *x, t_signal **sp)
 {
-    dsp_add(waveshape_perform, 4, x, sp[0]->s_vec,sp[1]->s_vec,sp[0]->s_n);
+    dsp_add(waveshape_perform, 4, x, sp[0]->s_vec,sp[1]->s_vec,(t_int)sp[0]->s_n);
 }
 

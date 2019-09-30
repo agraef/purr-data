@@ -63,7 +63,7 @@ static t_int *sin_freq_tilde_perform(t_int *w)
 static void sin_freq_tilde_dsp(t_sin_freq_tilde *x, t_signal **sp)
 {
   x->x_sr = (t_sample)sp[0]->s_sr;
-  dsp_add(sin_freq_tilde_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, sp[0]->s_n);
+  dsp_add(sin_freq_tilde_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)sp[0]->s_n);
 }
 
 static void *sin_freq_tilde_new(void)

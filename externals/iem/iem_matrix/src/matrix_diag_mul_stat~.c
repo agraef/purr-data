@@ -171,9 +171,9 @@ static void matrix_diag_mul_stat_tilde_dsp(t_matrix_diag_mul_stat_tilde *x, t_si
   
   n = sp[0]->s_n;
   if(n&7)
-    dsp_add(matrix_diag_mul_stat_tilde_perform, 2, x, n);
+    dsp_add(matrix_diag_mul_stat_tilde_perform, 2, x, (t_int)n);
   else
-    dsp_add(matrix_diag_mul_stat_tilde_perf8, 2, x, n);
+    dsp_add(matrix_diag_mul_stat_tilde_perf8, 2, x, (t_int)n);
 }
 
 

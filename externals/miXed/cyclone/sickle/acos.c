@@ -29,7 +29,7 @@ static t_int *acos_perform(t_int *w)
 
 static void acos_dsp(t_acos *x, t_signal **sp)
 {
-    dsp_add(acos_perform, 3, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+    dsp_add(acos_perform, 3, (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
 }
 
 static void *acos_new(void)

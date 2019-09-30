@@ -287,11 +287,11 @@ static void capture_dsp(t_capture *x, t_signal **sp)
     if (x->x_indices)
 	dsp_add((x->x_mode == 'f' ?
 		 capture_perform_first : capture_perform_last),
-		3, x, sp[0]->s_vec, sp[0]->s_n);
+		3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
     else
 	dsp_add((x->x_mode == 'f' ?
 		 capture_perform_allfirst : capture_perform_alllast),
-		3, x, sp[0]->s_vec, sp[0]->s_n);
+		3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void capture_free(t_capture *x)

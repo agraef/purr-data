@@ -101,7 +101,7 @@ static void mov_avrg_kern_tilde_dsp(t_mov_avrg_kern_tilde *x, t_signal **sp)
   x->x_counter = x->x_nsamps;
   x->x_wn1 = 0.0;
   x->x_a0 = 1.0/(double)(x->x_nsamps);
-  dsp_add(mov_avrg_kern_tilde_perform, 5, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, x, sp[0]->s_n);
+  dsp_add(mov_avrg_kern_tilde_perform, 5, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, x, (t_int)sp[0]->s_n);
 }
 
 static void *mov_avrg_kern_tilde_new(t_floatarg mstime)

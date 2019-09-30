@@ -32,7 +32,7 @@ static t_int *tanx_perform(t_int *w)
 
 static void tanx_dsp(t_tanx *x, t_signal **sp)
 {
-    dsp_add(tanx_perform, 3, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+    dsp_add(tanx_perform, 3, (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
 }
 
 static void *tanx_new(void)

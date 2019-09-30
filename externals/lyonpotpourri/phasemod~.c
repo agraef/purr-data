@@ -162,6 +162,6 @@ void phasemod_dsp(t_phasemod *x, t_signal **sp)
 		x->sr = sp[0]->s_sr;
 		x->si_fac = 1.0/x->sr;
 	}
-	dsp_add(phasemod_perform, 5, x, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec,  sp[0]->s_n);
+	dsp_add(phasemod_perform, 5, x, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec,  (t_int)sp[0]->s_n);
 }
 

@@ -67,7 +67,7 @@ static t_int *rand_perform(t_int *w)
 static void rand_dsp(t_rand *x, t_signal **sp)
 {
     x->x_rcpsr = 1. / sp[0]->s_sr;
-    dsp_add(rand_perform, 4, x, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+    dsp_add(rand_perform, 4, x, (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
 }
 
 static void *rand_new(t_floatarg f)

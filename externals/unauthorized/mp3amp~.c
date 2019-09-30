@@ -578,7 +578,7 @@ static t_int *mp3amp_perform(t_int *w)
 
 static void mp3amp_dsp(t_mp3amp *x, t_signal **sp)
 {
-    dsp_add(mp3amp_perform, 4, x, sp[1]->s_vec, sp[2]->s_vec, sp[1]->s_n);
+    dsp_add(mp3amp_perform, 4, x, sp[1]->s_vec, sp[2]->s_vec, (t_int)sp[1]->s_n);
 }
 
 

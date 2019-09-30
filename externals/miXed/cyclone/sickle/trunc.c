@@ -47,7 +47,7 @@ static t_int * trunc_perform(t_int *w){
 // DSP Function
 // ---------------------------------------------------
 static void trunc_dsp(t_trunc *x, t_signal **sp){
-   dsp_add(trunc_perform, 4, x, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+   dsp_add(trunc_perform, 4, x, (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
 }
 
 // ---------------------------------------------------

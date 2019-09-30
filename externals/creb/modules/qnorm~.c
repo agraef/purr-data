@@ -101,7 +101,7 @@ static void qnorm_dsp(t_qnorm *x, t_signal **sp)
       x->x_ctl.c_output[i] = sp[i+4]->s_vec;
     }
 
-  dsp_add(qnorm_perform, 2, &x->x_ctl, sp[0]->s_n);
+  dsp_add(qnorm_perform, 2, &x->x_ctl, (t_int)sp[0]->s_n);
 
 
 }                                  

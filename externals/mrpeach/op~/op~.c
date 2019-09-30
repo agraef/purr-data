@@ -221,7 +221,7 @@ static void op_tilde_dsp(t_op_tilde *x, t_signal **sp)
     t_sample    *out = sp[2]->s_vec;
     int         n = sp[0]->s_n;
 
-    dsp_add(op_tilde_perform, 5, x, in1, in2, out, n);
+    dsp_add(op_tilde_perform, 5, x, in1, in2, out, (t_int)n);
 }
 
 void op_tilde_setup(void)

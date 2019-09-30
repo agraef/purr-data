@@ -291,9 +291,35 @@ void *magfreq_analysis_new(t_symbol *s, int argc, t_atom *argv)
 	
 	x->lofreq = atom_getfloatarg(0,argc,argv);
 	x->hifreq = atom_getfloatarg(1,argc,argv);
-	x->overlap = atom_getfloatarg(2,argc,argv);
+
+	x->overlap = (int)atom_getfloatarg(2,argc,argv);
+        /* Totally guessing that overlap should default to 1... */
+        if (x->overlap <= 0)
+        {
+            x->overlap = 1;
+            pd_error(x, OBJECT_NAME
+                ": this object's default overlap of zero is incorrect. "
+                "Purr Data will change it to an overlap factor of 1 to "
+                "prevent DSP errors. "
+                "For compatibility with Pd Vanilla please set the "
+                "arguments manually so that the overlap (third argument) "
+                "is nonzero.");
+        }
+
 	x->winfac = atom_getfloatarg(3,argc,argv);
-	
+        /* Again-- just assuming the window factor shouldn't ever be zero
+           since that will cause negative indices in the perf routine... */
+        if (x->winfac < 1)
+        {
+            x->winfac = 1;
+            pd_error(x, OBJECT_NAME
+                ": this object's default window factor of zero is "
+                "incorrect. Purr Data will change it to 1 to prevent "
+                "DSP errors. For compatibility with Pd Vanilla please "
+                "set the arguments manually so that the window factor "
+                "(fourth argument) is nonzero.");
+        }
+
 	if(x->lofreq <0 || x->lofreq> 22050)
 		x->lofreq = 0;
 	if(x->hifreq <50 || x->hifreq> 22050)
@@ -343,7 +369,6 @@ t_int *magfreq_analysis_perform(t_int *w)
 	float *channel = x->channel;
 	in = on = x->inCount ;
 	
-	
 	if(x->mute){
 		for( j = 0; j < n; j++ ) {
 			*magnitude_vec++ = 0;
@@ -353,7 +378,6 @@ t_int *magfreq_analysis_perform(t_int *w)
 		return w+7;
 	}
     
-	
 	if (x->bypass_state) {
 		for( j = 0; j < n; j++ ) {
 			*magnitude_vec++ = 0;
@@ -371,6 +395,8 @@ t_int *magfreq_analysis_perform(t_int *w)
     for ( j = 0 ; j < (Nw - D) ; j++ ){
         input[j] = input[j+D];
     }
+
+    /* Bug: this loop creates negative indices! */
     for ( j = (Nw-D); j < Nw; j++) {
         input[j] = *inbuf++;
     }
@@ -433,6 +459,6 @@ void magfreq_analysis_dsp(t_magfreq_analysis *x, t_signal **sp)
 	
 	dsp_add(magfreq_analysis_perform, 6, x,
 			sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec,
-			sp[0]->s_n);
+			(t_int)sp[0]->s_n);
 }
 

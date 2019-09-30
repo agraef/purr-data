@@ -160,7 +160,7 @@ static void diag_dsp(t_diag *x, t_signal **sp)
 
 
 
-  dsp_add(diag_perform, 4, &x->x_ctl, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+  dsp_add(diag_perform, 4, &x->x_ctl, (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
 
 }
                                   

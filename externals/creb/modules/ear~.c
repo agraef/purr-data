@@ -95,7 +95,7 @@ static t_int *ear_perform(t_int *w)
 static void ear_dsp(t_ear *x, t_signal **sp)
 {
     x->x_sr = sp[0]->s_sr;
-    dsp_add(ear_perform, 3, &x->x_ctl, sp[0]->s_n, sp[0]->s_vec);
+    dsp_add(ear_perform, 3, &x->x_ctl, (t_int)sp[0]->s_n, sp[0]->s_vec);
 
 }                                  
 void ear_free(void)

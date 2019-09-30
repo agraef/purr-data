@@ -95,7 +95,8 @@ static t_int *phasor_perform(t_int *w)
 static void phasor_dsp(t_phasor *x, t_signal **sp)
 {
     x->x_oneoversamplerate= 1. / sp[0]->s_sr;
-    dsp_add(phasor_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+    dsp_add(phasor_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec,
+        (t_int)sp[0]->s_n);
 }
 
 static void phasor_ft1(t_phasor *x, t_float f)
@@ -157,7 +158,8 @@ static t_int *cos_perform(t_int *w)
 
 static void cos_dsp(t_cos *x, t_signal **sp)
 {
-    dsp_add(cos_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+    dsp_add(cos_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec,
+        (t_int)sp[0]->s_n);
 }
 
 void cos_tilde_setup(void)
@@ -221,7 +223,7 @@ static t_int *osc_perform(t_int *w)
 static void osc_dsp(t_osc *x, t_signal **sp)
 {
     x->x_oneoversamplerate = 1. / sp[0]->s_sr;
-    dsp_add(osc_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+    dsp_add(osc_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void osc_ft1(t_osc *x, t_float phase)
@@ -341,7 +343,7 @@ static void vcf_dsp(t_vcf *x, t_signal **sp)
 {
     x->x_ctl->c_oneoversamplerate = 1. / sp[0]->s_sr;
     dsp_add(vcf_perform, 6, sp[0]->s_vec, sp[1]->s_vec,
-        sp[2]->s_vec, sp[3]->s_vec, x->x_ctl, sp[0]->s_n);
+        sp[2]->s_vec, sp[3]->s_vec, x->x_ctl, (t_int)sp[0]->s_n);
 }
 
 void vcf_tilde_setup(void)
@@ -391,7 +393,7 @@ static t_int *noise_perform(t_int *w)
 
 static void noise_dsp(t_noise *x, t_signal **sp)
 {
-    dsp_add(noise_perform, 3, sp[0]->s_vec, &x->x_val, sp[0]->s_n);
+    dsp_add(noise_perform, 3, sp[0]->s_vec, &x->x_val, (t_int)sp[0]->s_n);
 }
 
 static void noise_tilde_setup(void)

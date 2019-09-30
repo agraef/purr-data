@@ -164,7 +164,7 @@ static t_int *wdv_perform(t_int *w)
 static void wdv_dsp(t_wdv *x, t_signal **sp)
 {
   dsp_add(wdv_perform, 3,
-          sp[0]->s_vec, sp[0]->s_n, x);
+          sp[0]->s_vec, (t_int)sp[0]->s_n, x);
 }
 
 static void *wdv_new(t_symbol *s, t_int argc, t_atom *argv)

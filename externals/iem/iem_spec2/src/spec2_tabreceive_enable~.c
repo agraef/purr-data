@@ -124,8 +124,11 @@ static void spec2_tabreceive_enable_tilde_dsp(t_spec2_tabreceive_enable_tilde *x
   
   if(!(a = (t_garray *)pd_findbyclass(x->x_arrayname, garray_class)))
   {
-    if(*x->x_arrayname->s_name)
-      error("spec2_tabreceive_enable~: %s: no such array", x->x_arrayname->s_name);
+      if (x->x_arrayname && *x->x_arrayname->s_name)
+          pd_error(x, "spec2_tabreceive_enable~: %s: no such array",
+              x->x_arrayname->s_name);
+      else
+          pd_error(x, "spec2_tabreceive_enable~: no array name given");
   }
   else if(!iemarray_getarray(a, &vecsize, &x->x_vec))
     error("%s: bad template for spec2_tabreceive_enable~", x->x_arrayname->s_name);
@@ -137,9 +140,9 @@ static void spec2_tabreceive_enable_tilde_dsp(t_spec2_tabreceive_enable_tilde *x
       vecsize = n;
     vecsize /= 2;
     if(vecsize&15)
-      dsp_add(spec2_tabreceive_enable_tilde_perform, 3, x, sp[0]->s_vec, vecsize);
+      dsp_add(spec2_tabreceive_enable_tilde_perform, 3, x, sp[0]->s_vec, (t_int)vecsize);
     else
-      dsp_add(spec2_tabreceive_enable_tilde_perf16, 3, x, sp[0]->s_vec, vecsize);
+      dsp_add(spec2_tabreceive_enable_tilde_perf16, 3, x, sp[0]->s_vec, (t_int)vecsize);
   }
 }
 
@@ -148,6 +151,7 @@ static void *spec2_tabreceive_enable_tilde_new(t_symbol *s, int argc, t_atom *ar
   t_spec2_tabreceive_enable_tilde *x = (t_spec2_tabreceive_enable_tilde *)pd_new(spec2_tabreceive_enable_tilde_class);
   
   x->x_enable = 0;
+  x->x_arrayname = &s_;
   if((argc >= 1) && IS_A_SYMBOL(argv,0))
     x->x_arrayname = atom_getsymbolarg(0, argc, argv);
   if((argc >= 2) && IS_A_FLOAT(argv,1))

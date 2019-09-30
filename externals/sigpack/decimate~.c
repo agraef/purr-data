@@ -64,7 +64,7 @@ static t_int *decimate_tilde_perform(t_int *w)
 
 static void decimate_tilde_dsp(t_decimate_tilde *x, t_signal **sp)
 {
-    dsp_add(decimate_tilde_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+    dsp_add(decimate_tilde_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 void decimate_tilde_setup(void)

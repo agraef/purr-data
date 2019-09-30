@@ -151,15 +151,15 @@ static void sigeq_dsp(t_sigeq *x, t_signal **sp)
     switch (x->x_algo)
     {
     case 1:
-	dsp_add(sigeq_perform1, 4, sp[0]->s_n,
+	dsp_add(sigeq_perform1, 4, (t_int)sp[0]->s_n,
 		sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec);
 	break;
     case 2:
-	dsp_add(sigeq_perform2, 4, sp[0]->s_n,
+	dsp_add(sigeq_perform2, 4, (t_int)sp[0]->s_n,
 		sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec);
 	break;
     default:
-	dsp_add(sigeq_perform0, 4, sp[0]->s_n,
+	dsp_add(sigeq_perform0, 4, (t_int)sp[0]->s_n,
 		sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec);
     }
 }
@@ -203,7 +203,7 @@ static t_int *signeq_perform(t_int *w)
 
 static void signeq_dsp(t_signeq *x, t_signal **sp)
 {
-    dsp_add(signeq_perform, 4, sp[0]->s_n,
+    dsp_add(signeq_perform, 4, (t_int)sp[0]->s_n,
 	    sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec);
 }
 
@@ -235,7 +235,7 @@ static t_int *siglt_perform(t_int *w)
 
 static void siglt_dsp(t_siglt *x, t_signal **sp)
 {
-    dsp_add(siglt_perform, 4, sp[0]->s_n,
+    dsp_add(siglt_perform, 4, (t_int)sp[0]->s_n,
 	    sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec);
 }
 
@@ -267,7 +267,7 @@ static t_int *siggt_perform(t_int *w)
 
 static void siggt_dsp(t_siggt *x, t_signal **sp)
 {
-    dsp_add(siggt_perform, 4, sp[0]->s_n,
+    dsp_add(siggt_perform, 4, (t_int)sp[0]->s_n,
 	    sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec);
 }
 
@@ -299,7 +299,7 @@ static t_int *sigleq_perform(t_int *w)
 
 static void sigleq_dsp(t_sigleq *x, t_signal **sp)
 {
-    dsp_add(sigleq_perform, 4, sp[0]->s_n,
+    dsp_add(sigleq_perform, 4, (t_int)sp[0]->s_n,
 	    sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec);
 }
 
@@ -331,7 +331,7 @@ static t_int *siggeq_perform(t_int *w)
 
 static void siggeq_dsp(t_siggeq *x, t_signal **sp)
 {
-    dsp_add(siggeq_perform, 4, sp[0]->s_n,
+    dsp_add(siggeq_perform, 4, (t_int)sp[0]->s_n,
 	    sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec);
 }
 
@@ -358,7 +358,7 @@ static t_int *sigrminus_perform(t_int *w)
 
 static void sigrminus_dsp(t_sigrminus *x, t_signal **sp)
 {
-    dsp_add(sigrminus_perform, 4, sp[0]->s_n,
+    dsp_add(sigrminus_perform, 4, (t_int)sp[0]->s_n,
 	    sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec);
 }
 
@@ -392,7 +392,7 @@ static t_int *sigrover_perform(t_int *w)
 
 static void sigrover_dsp(t_sigrover *x, t_signal **sp)
 {
-    dsp_add(sigrover_perform, 4, sp[0]->s_n,
+    dsp_add(sigrover_perform, 4, (t_int)sp[0]->s_n,
 	    sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec);
 }
 
@@ -427,7 +427,7 @@ static t_int *sigmod_perform(t_int *w)
 
 static void sigmod_dsp(t_sigmod *x, t_signal **sp)
 {
-    dsp_add(sigmod_perform, 4, sp[0]->s_n,
+    dsp_add(sigmod_perform, 4, (t_int)sp[0]->s_n,
 	    sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec);
 }
 
@@ -462,7 +462,7 @@ static t_int *sigaccum_perform(t_int *w)
 
 static void sigaccum_dsp(t_sigaccum *x, t_signal **sp)
 {
-    dsp_add(sigaccum_perform, 4, x, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+    dsp_add(sigaccum_perform, 4, x, (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
 }
 
 static void sigaccum_bang(t_sigaccum *x)

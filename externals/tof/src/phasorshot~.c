@@ -141,7 +141,7 @@ void phasorshot_tick(t_phasorshot *x)
  void phasorshot_dsp(t_phasorshot *x, t_signal **sp)
 {
     x->x_conv = 1./sp[0]->s_sr;
-    dsp_add(phasorshot_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+    dsp_add(phasorshot_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
  void phasorshot_ft1(t_phasorshot *x, t_float f)

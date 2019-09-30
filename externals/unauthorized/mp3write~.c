@@ -343,7 +343,7 @@ static t_int *mp3write_perform(t_int *w)
 
 static void mp3write_dsp(t_mp3write *x, t_signal **sp)
 {
-    dsp_add(mp3write_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, sp[0]->s_n);
+    dsp_add(mp3write_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)sp[0]->s_n);
 }
 
 /* initialize the lame library */

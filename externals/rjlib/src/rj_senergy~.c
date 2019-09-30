@@ -54,7 +54,7 @@ static t_int *rj_senergy_perform(t_int *w)
     out the samples. */
 static void rj_senergy_dsp(t_rj_senergy *x, t_signal **sp)
 {
-    dsp_add(rj_senergy_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
+    dsp_add(rj_senergy_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void *rj_senergy_new(void)

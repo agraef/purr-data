@@ -54,10 +54,10 @@ static t_int *poltocar_perform_noimag(t_int *w)
 static void poltocar_dsp(t_poltocar *x, t_signal **sp)
 {
     if (fragile_outlet_connections(x->x_out2))
-	dsp_add(poltocar_perform, 5, sp[0]->s_n, sp[0]->s_vec,
+	dsp_add(poltocar_perform, 5, (t_int)sp[0]->s_n, sp[0]->s_vec,
 		sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec);
     else
-	dsp_add(poltocar_perform_noimag, 4, sp[0]->s_n, sp[0]->s_vec,
+	dsp_add(poltocar_perform_noimag, 4, (t_int)sp[0]->s_n, sp[0]->s_vec,
 		sp[1]->s_vec, sp[2]->s_vec);
 }
 

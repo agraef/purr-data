@@ -141,7 +141,7 @@ void FIR_tilde_set(t_FIR_tilde *x, t_symbol *table_name, t_floatarg forder)
 static void FIR_tilde_dsp(t_FIR_tilde *x, t_signal **sp)
 {
   FIR_tilde_set(x, x->x_table_name, x->x_fir_order);
-  dsp_add(FIR_tilde_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, sp[0]->s_n);
+  dsp_add(FIR_tilde_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)sp[0]->s_n);
 }
 
 static void *FIR_tilde_new(t_symbol *array_name, t_floatarg forder)

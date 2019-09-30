@@ -344,13 +344,13 @@ static void volctl_dsp(t_volctl *x, t_signal **sp)
 {
     const int n = sp[0]->s_n;
     if (n&7)
-    	dsp_add(volctl_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, n);
+    	dsp_add(volctl_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)n);
     else 
     {
 		if(SIMD_CHECK2(n,sp[0]->s_vec,sp[1]->s_vec))
-			dsp_add(volctl_perf_simd, 4, x, sp[0]->s_vec, sp[1]->s_vec, n);
+			dsp_add(volctl_perf_simd, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)n);
 		else
-			dsp_add(volctl_perf8, 4, x, sp[0]->s_vec, sp[1]->s_vec, n);
+			dsp_add(volctl_perf8, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)n);
     }
 
 	x->x_blocksize = n;

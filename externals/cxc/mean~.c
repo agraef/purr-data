@@ -67,9 +67,16 @@ static void cxmean_mean(t_cxmean *x)
 
   cnt = 0;
   if(!(a = (t_garray *)pd_findbyclass(x->x_arrayname,garray_class))) {
-    pd_error(x, "%s: no such table", x->x_arrayname->s_name);
+    pd_error(x, "mean: %s: no such table", x->x_arrayname->s_name);
+    x->x_vec = 0;
+    return;
   }
-  garray_getfloatarray(a,&x->x_nsampsintab,&x->x_vec);
+  else if (!garray_getfloatarray(a,&x->x_nsampsintab,&x->x_vec))
+  {
+    error("%s: bad template for mean", x->x_arrayname->s_name);
+    x->x_vec = 0;
+    return;
+  }
 
   fp = x->x_vec;
 
@@ -168,8 +175,15 @@ static void cxavgdev_float(t_cxavgdev *x, t_float f)
   cnt = 0;
   if(!(a = (t_garray *)pd_findbyclass(x->x_arrayname,garray_class))) {
     pd_error(x, "%s: no such table", x->x_arrayname->s_name);
+    x->x_vec = 0;
+    return;
   }
-  garray_getfloatarray(a,&x->x_nsampsintab,&x->x_vec);
+  else if (!garray_getfloatarray(a,&x->x_nsampsintab,&x->x_vec))
+  {
+    error("%s: bad template for mean", x->x_arrayname->s_name);
+    x->x_vec = 0;
+    return;
+  }
 
   fp = x->x_vec;
 
@@ -347,6 +361,14 @@ static t_int *mean_tilde_perform(t_int *w)
   int n = (int)(w[2]);
   t_float xz = 0.;
   fp = x->x_vec;
+
+  /* If array doesn't exist just make it zero */
+  if (!fp)
+  {
+    x->x_mean = 0;
+    return (w+3);
+  }
+
   while(n--) {
     xz += abs(*fp++);
     //post("cxc/mean.c: %d : %f : %f",n,xz,fp);
@@ -354,7 +376,6 @@ static t_int *mean_tilde_perform(t_int *w)
   x->x_mean = (t_float)(xz / n);
   //post("cxc/mean.c: %f",xz);
   return (w+3);
-  //return 0;
 }
 
 static void mean_tilde_set(t_mean_tilde *x, t_symbol *s)
@@ -379,9 +400,9 @@ static void mean_tilde_set(t_mean_tilde *x, t_symbol *s)
 static void mean_tilde_dsp(t_mean_tilde *x, t_signal **sp)
 {
   mean_tilde_set(x, x->x_arrayname);
-  //dsp_add(mean_tilde_perform, 2, x, sp[0]->s_vec, sp[0]->s_n);
-  //dsp_add(mean_tilde_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
-  dsp_add(mean_tilde_perform, 2, x, sp[0]->s_n);
+  //dsp_add(mean_tilde_perform, 2, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
+  //dsp_add(mean_tilde_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
+  dsp_add(mean_tilde_perform, 2, x, (t_int)sp[0]->s_n);
 }
 
 static void mean_tilde_bang(t_mean_tilde *x)
@@ -400,8 +421,15 @@ static void mean_tilde_mean(t_mean_tilde *x)
   cnt = 0;
   if(!(a = (t_garray *)pd_findbyclass(x->x_arrayname,garray_class))) {
     pd_error(x, "%s: no such table", x->x_arrayname->s_name);
+    x->x_vec = 0;
+    return;
   }
-  garray_getfloatarray(a,&x->x_nsampsintab,&x->x_vec);
+  else if (!garray_getfloatarray(a,&x->x_nsampsintab,&x->x_vec))
+  {
+    error("%s: bad template for mean", x->x_arrayname->s_name);
+    x->x_vec = 0;
+    return;
+  }
 
   fp = x->x_vec;
 

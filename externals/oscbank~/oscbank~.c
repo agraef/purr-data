@@ -226,7 +226,7 @@ static void oscbank_dsp(t_oscbank *x, t_signal **sp)
 {
     x->sampleRate =  sp[0]->s_sr;
     x->sampleperiod = 1 / x->sampleRate;
-    dsp_add(oscbank_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
+    dsp_add(oscbank_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void *oscbank_new(void)

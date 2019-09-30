@@ -41,7 +41,7 @@ static t_int *sah_perform(t_int *w)
 
 static void sah_dsp(t_sah *x, t_signal **sp)
 {
-    dsp_add(sah_perform, 5, x, sp[0]->s_n,
+    dsp_add(sah_perform, 5, x, (t_int)sp[0]->s_n,
 	    sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec);
 }
 

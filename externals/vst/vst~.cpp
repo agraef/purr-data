@@ -75,11 +75,11 @@ static void vst_tilde_dsp(t_vst_tilde *x, t_signal **sp)
 		//post("*");
 		if ( x->plug->replace() )
 		{
-			dsp_add(vst_tilde_perform_replace, 2 , x->d_args , sp[0]->s_n );
+			dsp_add(vst_tilde_perform_replace, 2 , x->d_args , (t_int)sp[0]->s_n );
 		}
 		else
 		{
-			dsp_add(vst_tilde_perform_acc, 2 , x->d_args , sp[0]->s_n );
+			dsp_add(vst_tilde_perform_acc, 2 , x->d_args , (t_int)sp[0]->s_n );
 		}
 	}
 

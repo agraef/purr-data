@@ -1178,16 +1178,16 @@ static void filter_tilde_dsp(t_filter_tilde *x, t_signal **sp)
     if(x->x_para.dp.filter_function_is_first_order)
     {
       if(n&7)
-        dsp_add(filter_tilde_dp_perform_1o, 4, sp[0]->s_vec, sp[1]->s_vec, x, n);
+        dsp_add(filter_tilde_dp_perform_1o, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)n);
       else
-        dsp_add(filter_tilde_dp_perf8_1o, 4, sp[0]->s_vec, sp[1]->s_vec, x, n);
+        dsp_add(filter_tilde_dp_perf8_1o, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)n);
     }
     else
     {
       if(n&7)
-        dsp_add(filter_tilde_dp_perform_2o, 4, sp[0]->s_vec, sp[1]->s_vec, x, n);
+        dsp_add(filter_tilde_dp_perform_2o, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)n);
       else
-        dsp_add(filter_tilde_dp_perf8_2o, 4, sp[0]->s_vec, sp[1]->s_vec, x, n);
+        dsp_add(filter_tilde_dp_perf8_2o, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)n);
     }
   }
   else
@@ -1221,16 +1221,16 @@ static void filter_tilde_dsp(t_filter_tilde *x, t_signal **sp)
     if(x->x_para.sp.filter_function_is_first_order)
     {
       if(n&7)
-        dsp_add(filter_tilde_sp_perform_1o, 4, sp[0]->s_vec, sp[1]->s_vec, x, n);
+        dsp_add(filter_tilde_sp_perform_1o, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)n);
       else
-        dsp_add(filter_tilde_sp_perf8_1o, 4, sp[0]->s_vec, sp[1]->s_vec, x, n);
+        dsp_add(filter_tilde_sp_perf8_1o, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)n);
     }
     else
     {
       if(n&7)
-        dsp_add(filter_tilde_sp_perform_2o, 4, sp[0]->s_vec, sp[1]->s_vec, x, n);
+        dsp_add(filter_tilde_sp_perform_2o, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)n);
       else
-        dsp_add(filter_tilde_sp_perf8_2o, 4, sp[0]->s_vec, sp[1]->s_vec, x, n);
+        dsp_add(filter_tilde_sp_perf8_2o, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)n);
     }
   }
 }

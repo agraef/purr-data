@@ -526,6 +526,6 @@ void stutter_dsp(t_stutter *x, t_signal **sp)
 		x->loop_min_samps = .02 * (t_float)x->R;
 		x->loop_max_samps = .2 * (t_float) x->R;
 	}
-	dsp_add(stutter_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
+	dsp_add(stutter_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
 }
 

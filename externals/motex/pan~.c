@@ -79,7 +79,7 @@ static void pan_dsp(t_pan *x, t_signal **sp)
   float *out2 = sp[2]->s_vec;
 
   dsp_add(pan_perform, 5,
-	  in1, out1, out2, n, x);
+	  in1, out1, out2, (t_int)n, x);
 }
 
 void pan_f(t_pan *x, t_floatarg f)

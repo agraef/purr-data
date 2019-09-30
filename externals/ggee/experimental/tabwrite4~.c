@@ -156,7 +156,7 @@ void tabwrite4_tilde_set(t_tabwrite4_tilde *x, t_symbol *s)
 static void tabwrite4_tilde_dsp(t_tabwrite4_tilde *x, t_signal **sp)
 {
     tabwrite4_tilde_set(x, x->x_arrayname);
-    dsp_add(tabwrite4_tilde_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+    dsp_add(tabwrite4_tilde_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void tabwrite4_tilde_bang(t_tabwrite4_tilde *x)

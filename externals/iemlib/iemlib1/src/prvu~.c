@@ -136,7 +136,7 @@ static void prvu_tilde_dsp(t_prvu_tilde *x, t_signal **sp)
 {
   x->x_sr = 0.001*(t_float)sp[0]->s_sr;
   x->x_rcp = 1.0/(x->x_sr*x->x_metro_time);
-  dsp_add(prvu_tilde_perform, 3, sp[0]->s_vec, x, sp[0]->s_n);
+  dsp_add(prvu_tilde_perform, 3, sp[0]->s_vec, x, (t_int)sp[0]->s_n);
   clock_delay(x->x_clock_metro, x->x_metro_time);
 }
 

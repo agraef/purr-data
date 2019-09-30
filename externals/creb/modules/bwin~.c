@@ -138,7 +138,7 @@ static void window_dsp(t_window *x, t_signal **sp)
 	window_type(x, x->x_type, x->x_typearg);
     }
 
-    dsp_add(window_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, n);
+    dsp_add(window_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)n);
 }
 
 static void window_free(t_window *x)

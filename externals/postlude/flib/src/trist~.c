@@ -67,7 +67,7 @@ static t_int *trist_perform(t_int *w)
 static void trist_dsp(t_trist *x, t_signal **sp)
 {
   dsp_add(trist_perform, 3,
-          sp[0]->s_vec, x, sp[0]->s_n);
+          sp[0]->s_vec, x, (t_int)sp[0]->s_n);
 }
 
 static void *trist_new(t_symbol *s)

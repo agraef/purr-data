@@ -76,7 +76,7 @@ static t_int *edge_perform(t_int *w)
 
 static void edge_dsp(t_edge *x, t_signal **sp)
 {
-    dsp_add(edge_perform, 3, x, sp[0]->s_n, sp[0]->s_vec);
+    dsp_add(edge_perform, 3, x, (t_int)sp[0]->s_n, sp[0]->s_vec);
 }
 
 static void edge_free(t_edge *x)

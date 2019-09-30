@@ -42,6 +42,25 @@ void *rotapan_new(t_symbol *s, int argc, t_atom *argv)
     
     t_rotapan *x = (t_rotapan *)pd_new(rotapan_class);
     x->rchans = (long) atom_getfloatarg(0,argc,argv);
+
+    /* The rotapan_perform routine does a modulo computation with
+       x->rchans value as the right operand. Thus, the value cannot
+       be zero.
+
+       Here, we set rchans to 1 to keep from hitting the issue when
+       no arguments are given.
+
+       However, we want to encourage the user to actually set the argument
+       in order to remain compatible with lyonpotpourri in Pd Vanilla.
+       So we send an error here, too.
+    */
+    if (x->rchans < 1)
+    {
+        x->rchans = 1;
+        pd_error(x, "need an argument to specify the number of channels. "
+                    "Defaulting to 1.");
+    }
+
     /* allocate in chans plus 1 for controlling the pan */
     for(i = 0; i < x->rchans; i++){
         inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("signal"),gensym("signal"));

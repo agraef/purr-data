@@ -59,7 +59,7 @@ t_int *synapseA_tilde_perform(t_int *w)
 static void synapseA_tilde_dsp(t_synapseA_tilde *x, t_signal **sp)
 {
 	x->n_inv=1./sp[0]->s_n;
-   dsp_add(synapseA_tilde_perform, 3,sp[0]->s_vec , x ,sp[0]->s_n);
+   dsp_add(synapseA_tilde_perform, 3,sp[0]->s_vec , x , (t_int)sp[0]->s_n);
 }
 
 /**

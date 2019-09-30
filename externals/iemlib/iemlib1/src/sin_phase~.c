@@ -89,7 +89,7 @@ static t_int *sin_phase_tilde_perform(t_int *w)
 
 static void sin_phase_tilde_dsp(t_sin_phase_tilde *x, t_signal **sp)
 {
-  dsp_add(sin_phase_tilde_perform, 5, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, x, sp[0]->s_n);
+  dsp_add(sin_phase_tilde_perform, 5, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, x, (t_int)sp[0]->s_n);
 }
 
 static void *sin_phase_tilde_new(void)

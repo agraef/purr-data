@@ -200,9 +200,9 @@ static void NLMSerr_in_tilde_dsp(t_NLMSerr_in_tilde *x, t_signal **sp)
     x->x_w_array_mem_beg = NLMSerr_in_tilde_check_array(x->x_w_array_sym_name, x->x_n_order);
 
     if(!x->x_w_array_mem_beg)
-        dsp_add(NLMSerr_in_tilde_perform_zero, 6, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, x, sp[0]->s_n);
+        dsp_add(NLMSerr_in_tilde_perform_zero, 6, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, x, (t_int)sp[0]->s_n);
     else
-        dsp_add(NLMSerr_in_tilde_perform, 6, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, x, sp[0]->s_n);
+        dsp_add(NLMSerr_in_tilde_perform, 6, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, x, (t_int)sp[0]->s_n);
 }
 
 

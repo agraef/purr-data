@@ -74,7 +74,7 @@ static t_int *bitshift_perform(t_int *w)
 
 static void bitshift_dsp(t_bitshift *x, t_signal **sp)
 {
-    dsp_add(bitshift_perform, 4, x, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+    dsp_add(bitshift_perform, 4, x, (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
 }
 
 static void bitshift_mode(t_bitshift *x, t_floatarg f)

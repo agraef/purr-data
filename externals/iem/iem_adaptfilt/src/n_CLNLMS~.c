@@ -376,9 +376,9 @@ static void n_CLNLMS_tilde_dsp(t_n_CLNLMS_tilde *x, t_signal **sp)
   }
   
   if(!ok_w)
-    dsp_add(n_CLNLMS_tilde_perform_zero, 2, x, n);
+    dsp_add(n_CLNLMS_tilde_perform_zero, 2, x, (t_int)n);
   else
-    dsp_add(n_CLNLMS_tilde_perform, 2, x, n);
+    dsp_add(n_CLNLMS_tilde_perform, 2, x, (t_int)n);
 }
 
 

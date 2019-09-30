@@ -85,7 +85,7 @@ static t_int *shuffle_perform(t_int *w)
 static void shuffle_dsp(t_shuffle *x, t_signal **sp)
 {
 	  dsp_add(shuffle_perform, 5, x, sp[0]->s_vec, 
-		  sp[1]->s_vec,sp[2]->s_vec, sp[0]->s_n);
+		  sp[1]->s_vec,sp[2]->s_vec, (t_int)sp[0]->s_n);
 
 }
 

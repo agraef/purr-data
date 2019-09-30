@@ -46,7 +46,7 @@ t_int *route_tilde_perform(t_int *w)
 static void route_tilde_dsp(t_route_tilde *x, t_signal **sp)
 {
   if(sp) {
-    dsp_add(route_tilde_perform, 3, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+    dsp_add(route_tilde_perform, 3, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
   } else {
     route_tilde_any(x, gensym("dsp"), 0, 0);
   }

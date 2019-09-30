@@ -61,7 +61,7 @@ static t_int *spigot_perform(t_int *w)
 static void spigot_dsp(t_spigot *x, t_signal **sp)
 {
     dsp_add(spigot_perform, 5, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec,
-            sp[0]->s_n, x);
+            (t_int)sp[0]->s_n, x);
 }
 
 static void spigot_set(t_spigot *x, t_float f)

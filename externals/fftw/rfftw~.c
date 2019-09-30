@@ -64,7 +64,7 @@ static void sigrfftw_dsp(t_sigrfftw *x, t_signal **sp)
                                               NULL,
                                               in, out1, out2,
                                               FFTW_ESTIMATE | FFTW_PRESERVE_INPUT);
-      dsp_add(sigrfftw_perform,3,&x->plan,out2+1,n2-1);
+      dsp_add(sigrfftw_perform,3,&x->plan,out2+1,(t_int)(n2-1));
     }
 
   dsp_add_zero(out1 + n2, n2);

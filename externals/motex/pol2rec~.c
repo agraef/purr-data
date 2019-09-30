@@ -116,11 +116,11 @@ static void pol2rec_dsp(t_pol2rec *x, t_signal **sp)
 
     if (n&7)
       {
-      dsp_add(pol2rec_perform, 5, in1, in2, out1, out2, n);
+      dsp_add(pol2rec_perform, 5, in1, in2, out1, out2, (t_int)n);
       post("it's a seven");
       }
     else
-      dsp_add(pol2rec_perform8, 5, in1, in2, out1, out2, n);
+      dsp_add(pol2rec_perform8, 5, in1, in2, out1, out2, (t_int)n);
 }
 
 

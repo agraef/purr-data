@@ -282,20 +282,20 @@ static void vcf_filter_tilde_dsp(t_vcf_filter_tilde *x, t_signal **sp)
 {
   if(!strcmp(x->x_filtname,"bp2"))
     dsp_add(vcf_filter_tilde_perform_bp2, 6, sp[0]->s_vec, sp[1]->s_vec, 
-    sp[2]->s_vec, sp[3]->s_vec, x, sp[0]->s_n);
+    sp[2]->s_vec, sp[3]->s_vec, x, (t_int)sp[0]->s_n);
   else if(!strcmp(x->x_filtname,"rbp2"))
     dsp_add(vcf_filter_tilde_perform_rbp2, 6, sp[0]->s_vec, sp[1]->s_vec, 
-    sp[2]->s_vec, sp[3]->s_vec, x, sp[0]->s_n);
+    sp[2]->s_vec, sp[3]->s_vec, x, (t_int)sp[0]->s_n);
   else if(!strcmp(x->x_filtname,"lp2"))
     dsp_add(vcf_filter_tilde_perform_lp2, 6, sp[0]->s_vec, sp[1]->s_vec,
-    sp[2]->s_vec, sp[3]->s_vec, x, sp[0]->s_n);
+    sp[2]->s_vec, sp[3]->s_vec, x, (t_int)sp[0]->s_n);
   else if(!strcmp(x->x_filtname,"hp2"))
     dsp_add(vcf_filter_tilde_perform_hp2, 6, sp[0]->s_vec, sp[1]->s_vec,
-    sp[2]->s_vec, sp[3]->s_vec, x, sp[0]->s_n);
+    sp[2]->s_vec, sp[3]->s_vec, x, (t_int)sp[0]->s_n);
   else
   {
     dsp_add(vcf_filter_tilde_perform_snafu, 6, sp[0]->s_vec, sp[1]->s_vec,
-      sp[2]->s_vec, sp[3]->s_vec, x, sp[0]->s_n);
+      sp[2]->s_vec, sp[3]->s_vec, x, (t_int)sp[0]->s_n);
     post("vcf_filter~-Error: 1. initial-arguments: <sym> kind: lp2, bp2, rbp2, hp2!");
   }
 }

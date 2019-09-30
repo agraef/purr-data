@@ -426,7 +426,7 @@ static void disto_preset(t_disto *x, t_float pnumber)
 
 static void disto_dsp(t_disto *x, t_signal **sp)
 {
-    dsp_add(disto_perform, 4, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n, x );
+    dsp_add(disto_perform, 4, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n, x );
 }
 
 /* clean up */

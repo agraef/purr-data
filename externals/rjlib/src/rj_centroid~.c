@@ -61,7 +61,7 @@ static t_int *rj_centroid_perform(t_int *w)
     out the samples. */
 static void rj_centroid_dsp(t_rj_centroid *x, t_signal **sp)
 {
-    dsp_add(rj_centroid_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
+    dsp_add(rj_centroid_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void *rj_centroid_new(void)

@@ -92,7 +92,7 @@ static t_int *compressor_perform(t_int *w)
 
 static void compressor_dsp(t_compressor *x, t_signal **sp)
 {
-    dsp_add(compressor_perform, 4, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n, x );
+    dsp_add(compressor_perform, 4, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n, x );
 }
 
 void compressor_tilde_setup(void)

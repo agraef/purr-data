@@ -126,7 +126,7 @@ static void sigenvrms_dsp(t_sigenvrms *x, t_signal **sp)
   else {
     x->x_realperiod = x->x_period;
   }
-  dsp_add(sigenvrms_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
+  dsp_add(sigenvrms_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
   if (sp[0]->s_n > MAXVSTAKEN) {
     bug("sigenvrms_dsp");
   }

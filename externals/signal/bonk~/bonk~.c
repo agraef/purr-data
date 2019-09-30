@@ -510,7 +510,7 @@ static void bonk_dsp(t_bonk *x, t_signal **sp)
     	gp->g_invec = (*(sp++))->s_vec;
 
     for (i = 0; i < n; i += vsize)
-    	dsp_add(bonk_perform, 3, x, vsize, i);
+    	dsp_add(bonk_perform, 3, x, (t_int)vsize, i);
 }
 
 static void bonk_thresh(t_bonk *x, t_floatarg f1, t_floatarg f2)

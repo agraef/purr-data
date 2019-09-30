@@ -527,9 +527,9 @@ static void dsp_add_freeverb(t_freeverb *x, t_sample *in1, t_sample *in2,
 							 t_sample *out1, t_sample *out2, int n)
 {
 	if(n & 7)	// check whether block size is multiple of 8
-		dsp_add(freeverb_perform, 6, x, in1, in2, out1, out2, n);
+		dsp_add(freeverb_perform, 6, x, in1, in2, out1, out2, (t_int)n);
 	else
-		dsp_add(freeverb_perf8, 6, x, in1, in2, out1, out2, n);
+		dsp_add(freeverb_perf8, 6, x, in1, in2, out1, out2, (t_int)n);
 }
 
 void freeverb_dsp(t_freeverb *x, t_signal **sp)

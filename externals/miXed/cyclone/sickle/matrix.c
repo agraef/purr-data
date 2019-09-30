@@ -348,9 +348,9 @@ static void matrix_dsp(t_matrix *x, t_signal **sp)
     if (x->x_gains)
     {
 	x->x_ksr = sp[0]->s_sr * .001;
-	dsp_add(matrixnb_perform, 2, x, nblock);
+	dsp_add(matrixnb_perform, 2, x, (t_int)nblock);
     }
-    else dsp_add(matrix01_perform, 2, x, nblock);
+    else dsp_add(matrix01_perform, 2, x, (t_int)nblock);
 }
 
 static void matrix_cellout(t_matrix *x, int indx, int ondx,

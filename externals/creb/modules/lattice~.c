@@ -85,7 +85,7 @@ static t_int *lattice_perform(t_int *w)
 
 static void lattice_dsp(t_lattice *x, t_signal **sp)
 {
-    dsp_add(lattice_perform, 4, &x->x_ctl, sp[0]->s_n,
+    dsp_add(lattice_perform, 4, &x->x_ctl, (t_int)sp[0]->s_n,
 	    sp[0]->s_vec, sp[1]->s_vec);
 
 }                                  

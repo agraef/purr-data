@@ -380,7 +380,7 @@ void vdp_dsp(t_vdp *x, t_signal **sp)
 	}
     dsp_add(vdp_perform, 6, x,
     		sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec,
-    		sp[0]->s_n);
+    		(t_int)sp[0]->s_n);
     
 }
 

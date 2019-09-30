@@ -88,7 +88,7 @@ static void sigdel16read_dsp(t_sigdel16read *x, t_signal **sp){
 		    0 : delwriter->x_vecsize);
     sigdel16read_16bit(x, x->x_deltime);
     dsp_add(sigdel16read_perform, 4,
-    	    sp[0]->s_vec, &delwriter->x_cspace, &x->x_delsamps, sp[0]->s_n);
+    	    sp[0]->s_vec, &delwriter->x_cspace, &x->x_delsamps, (t_int)sp[0]->s_n);
   }
   else if (*x->x_sym->s_name)
     error("delread~: %s: no such delwrite~",x->x_sym->s_name);

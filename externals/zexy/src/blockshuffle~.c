@@ -116,7 +116,7 @@ static void blockshuffle_dsp(t_blockshuffle *x, t_signal **sp)
   blockshuffle_buildindex(x, sp[0]->s_n);
 
   dsp_add(blockshuffle_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec,
-          sp[0]->s_n);
+          (t_int)sp[0]->s_n);
 }
 
 static void blockshuffle_helper(void)

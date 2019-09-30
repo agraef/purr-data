@@ -59,7 +59,7 @@ static t_int *foldover_tilde_perform(t_int *w)
 
 static void foldover_tilde_dsp(t_foldover_tilde *x, t_signal **sp)
 {
-    dsp_add(foldover_tilde_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+    dsp_add(foldover_tilde_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 void foldover_tilde_setup(void)

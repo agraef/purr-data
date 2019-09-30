@@ -65,7 +65,7 @@ static void impulse_tilde_ft1(t_impulse_tilde *x, t_float f)
 
 static void impulse_tilde_dsp(t_impulse_tilde *x, t_signal **sp)
 {
-    dsp_add(impulse_tilde_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+    dsp_add(impulse_tilde_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 void impulse_tilde_setup(void)

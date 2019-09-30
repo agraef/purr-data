@@ -172,7 +172,7 @@ void *lpc_tilde_dsp(t_lpc_tilde *x, t_signal **sp)
 {
   x->x_schur.c_input = sp[0]->s_vec;
   x->x_schur.c_residual = sp[1]->s_vec;
-  dsp_add(lpc_tilde_perform, 3, x, &x->x_schur, sp[0]->s_n);
+  dsp_add(lpc_tilde_perform, 3, x, &x->x_schur, (t_int)sp[0]->s_n);
   return (void *)x;
 }
 

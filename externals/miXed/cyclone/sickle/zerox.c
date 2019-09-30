@@ -53,7 +53,7 @@ static t_int *zerox_perform(t_int *w)
 
 static void zerox_dsp(t_zerox *x, t_signal **sp)
 {
-    dsp_add(zerox_perform, 5, x, sp[0]->s_n,
+    dsp_add(zerox_perform, 5, x, (t_int)sp[0]->s_n,
 	    sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec);
 }
 

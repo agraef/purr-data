@@ -296,9 +296,9 @@ static void matrix_diag_mul_line8_tilde_dsp(t_matrix_diag_mul_line8_tilde *x, t_
   x->x_8overn = 8.0f / (t_float)n;
   
   if(n&7)
-    dsp_add(matrix_diag_mul_line8_tilde_perform_zero, 2, x, n);
+    dsp_add(matrix_diag_mul_line8_tilde_perform_zero, 2, x, (t_int)n);
   else
-    dsp_add(matrix_diag_mul_line8_tilde_perf8, 2, x, n);
+    dsp_add(matrix_diag_mul_line8_tilde_perf8, 2, x, (t_int)n);
 }
 
 

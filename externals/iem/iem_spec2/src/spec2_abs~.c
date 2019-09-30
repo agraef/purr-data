@@ -68,9 +68,9 @@ static void spec2_abs_tilde_dsp(t_spec2_abs_tilde *x, t_signal **sp)
   int n = (sp[0]->s_n)/2;
   
   if(n&15)
-    dsp_add(spec2_abs_tilde_perform, 3, sp[0]->s_vec, sp[0]->s_vec, n);
+    dsp_add(spec2_abs_tilde_perform, 3, sp[0]->s_vec, sp[0]->s_vec, (t_int)n);
   else
-    dsp_add(spec2_abs_tilde_perf16, 3, sp[0]->s_vec, sp[0]->s_vec, n);
+    dsp_add(spec2_abs_tilde_perf16, 3, sp[0]->s_vec, sp[0]->s_vec, (t_int)n);
 }
 
 static void *spec2_abs_tilde_new(void)

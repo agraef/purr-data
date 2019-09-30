@@ -231,7 +231,7 @@ static void t3_line_tilde_dsp(t_t3_line_tilde *x, t_signal **sp)
     *trans++ = val;
   x->x_ms2samps = 0.001*(double)sp[0]->s_sr;
   x->x_ticks2ms = (double)x->x_n / x->x_ms2samps;
-  dsp_add(t3_line_tilde_perform, 3, sp[0]->s_vec, x, sp[0]->s_n);
+  dsp_add(t3_line_tilde_perform, 3, sp[0]->s_vec, x, (t_int)sp[0]->s_n);
 }
 
 static void t3_line_tilde_free(t_t3_line_tilde *x)

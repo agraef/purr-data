@@ -879,7 +879,7 @@ static t_int *pdp_theorin_perform(t_int *w)
 
 static void pdp_theorin_dsp(t_pdp_theorin *x, t_signal **sp)
 {
-    dsp_add(pdp_theorin_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, sp[0]->s_n);
+    dsp_add(pdp_theorin_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)sp[0]->s_n);
 }
 
 static void pdp_theorin_free(t_pdp_theorin *x)

@@ -1753,7 +1753,7 @@ static void munger_dsp(t_disis_munger *x, t_signal **sp)
     {
         x->x_out[i] = (t_float *)(sp[i + 1]->s_vec);
     }
-    dsp_add(munger_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
+    dsp_add(munger_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
 }
 
 void disis_munger_tilde_setup(void)

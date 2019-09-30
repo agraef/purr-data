@@ -156,7 +156,7 @@ static void pdp_scan_input_0(t_pdp_scan *x, t_symbol *s, t_floatarg f)
 
 static void pdp_scan_dsp (t_pdp_scan *x, t_signal **sp)
 {
-    dsp_add(pdp_scan_perform, 4, x, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+    dsp_add(pdp_scan_perform, 4, x, (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
 
 }
 

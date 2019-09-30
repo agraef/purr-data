@@ -76,7 +76,7 @@ static void blockswap_dsp(t_blockswap *x, t_signal **sp)
     x->blocksize = sp[0]->s_n/2;
     x->blockbuffer = getbytes(sizeof(*x->blockbuffer)*x->blocksize);
   }
-  dsp_add(blockswap_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+  dsp_add(blockswap_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void blockswap_helper(t_blockswap *x)

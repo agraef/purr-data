@@ -503,7 +503,7 @@ static void eblosc_dsp(t_eblosc *x, t_signal **sp)
   if (x->x_ctl.c_waveform == gensym("syncsaw")){
       x->x_ctl.c_scale = 1.0f;
       x->x_ctl.c_scale_update = 1.0f;
-      dsp_add(eblosc_perform_hardsync_saw, 5, &x->x_ctl, sp[0]->s_n,
+      dsp_add(eblosc_perform_hardsync_saw, 5, &x->x_ctl, (t_int)sp[0]->s_n,
 	      sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec);
   }
 
@@ -511,26 +511,26 @@ static void eblosc_dsp(t_eblosc *x, t_signal **sp)
   else if (x->x_ctl.c_waveform == gensym("pulse")){
       x->x_ctl.c_scale = 1.0f;
       x->x_ctl.c_scale_update = 1.0f;
-      dsp_add(eblosc_perform_pulse, 4, &x->x_ctl, sp[0]->s_n,
+      dsp_add(eblosc_perform_pulse, 4, &x->x_ctl, (t_int)sp[0]->s_n,
 	      sp[0]->s_vec, sp[1]->s_vec);
   }
   else if (x->x_ctl.c_waveform == gensym("pulse2")){
       x->x_ctl.c_phase_inc_scale *= 2;
       x->x_ctl.c_scale = 1.0f;
       x->x_ctl.c_scale_update = -1.0f;
-      dsp_add(eblosc_perform_pulse, 4, &x->x_ctl, sp[0]->s_n,
+      dsp_add(eblosc_perform_pulse, 4, &x->x_ctl, (t_int)sp[0]->s_n,
 	      sp[0]->s_vec, sp[1]->s_vec);
   }
   else if (x->x_ctl.c_waveform == gensym("comparator")){
       x->x_ctl.c_scale = 1.0f;
       x->x_ctl.c_scale_update = 1.0f;
       dsp_add(eblosc_perform_comparator, 4, &x->x_ctl,
-	      sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+	      (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
   }
   else{
        x->x_ctl.c_scale = 1.0f;
       x->x_ctl.c_scale_update = 1.0f;
-      dsp_add(eblosc_perform_saw, 4, &x->x_ctl, sp[0]->s_n,
+      dsp_add(eblosc_perform_saw, 4, &x->x_ctl, (t_int)sp[0]->s_n,
 	      sp[0]->s_vec, sp[1]->s_vec);
   }
 

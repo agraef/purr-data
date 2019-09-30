@@ -60,7 +60,7 @@ static t_int *mspec_perform(t_int *w)
 static void mspec_dsp(t_mspec *x, t_signal **sp)
 {
   dsp_add(mspec_perform, 5,
-          sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n, x->p);
+          sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, (t_int)sp[0]->s_n, x->p);
 }
 
 static void *mspec_new(t_floatarg f)

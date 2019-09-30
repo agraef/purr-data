@@ -123,7 +123,7 @@ static t_int *vocoder_perform(t_int *w)
 
 static void vocoder_dsp(t_vocoder *x, t_signal **sp)
 {
-    dsp_add(vocoder_perform, 5, x, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
+    dsp_add(vocoder_perform, 5, x, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void *vocoder_new(void)

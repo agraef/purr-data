@@ -288,9 +288,9 @@ static void NLMSCC_tilde_dsp(t_NLMSCC_tilde *x, t_signal **sp)
     x->x_wmax_array_mem_beg = NLMSCC_tilde_check_array(x->x_wmax_array_sym_name, x->x_n_order);
 
     if(!(x->x_w_array_mem_beg && x->x_wmin_array_mem_beg && x->x_wmax_array_mem_beg))
-        dsp_add(NLMSCC_tilde_perform_zero, 2, x, n);
+        dsp_add(NLMSCC_tilde_perform_zero, 2, x, (t_int)n);
     else
-        dsp_add(NLMSCC_tilde_perform, 2, x, n);
+        dsp_add(NLMSCC_tilde_perform, 2, x, (t_int)n);
 }
 
 

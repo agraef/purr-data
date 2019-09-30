@@ -67,7 +67,7 @@ static t_int* welch_perform(t_int *w) {
 }
 
 static void welch_dsp(t_welch *x, t_signal **sp) {
-  dsp_add(welch_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+  dsp_add(welch_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void* welch_new(void) {

@@ -122,7 +122,7 @@ static void svf_dsp(t_svf *x, t_signal **sp)
 {
     x->x_srcoef = SHARED_2PI / sp[0]->s_sr;
     svf_clear(x);
-    dsp_add(svf_perform, 9, x, sp[0]->s_n,
+    dsp_add(svf_perform, 9, x, (t_int)sp[0]->s_n,
 	    sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec,
 	    sp[4]->s_vec, sp[5]->s_vec, sp[6]->s_vec);
 }

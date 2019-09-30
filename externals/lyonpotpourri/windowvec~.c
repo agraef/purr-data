@@ -93,5 +93,5 @@ void windowvec_dsp(t_windowvec *x, t_signal **sp, short *count)
 			x->envelope[i] = - 0.5 * cos(twopi * (i / (float)x->vecsize)) + 0.5;
 		}
 	}
-	dsp_add(windowvec_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+	dsp_add(windowvec_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }

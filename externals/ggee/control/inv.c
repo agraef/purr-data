@@ -30,7 +30,7 @@ static t_int *inv_perform(t_int *w)    /* not static; also used in d_fft.c */
 
 static void inv_dsp(t_inv *x, t_signal **sp)
 {
-    dsp_add(inv_perform, 3, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+    dsp_add(inv_perform, 3, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 void inv_tilde_setup(void)

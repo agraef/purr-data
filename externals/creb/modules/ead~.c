@@ -107,7 +107,7 @@ static t_int *ead_perform(t_int *w)
 
 static void ead_dsp(t_ead *x, t_signal **sp)
 {
-  dsp_add(ead_perform, 3, &x->x_ctl, sp[0]->s_n, sp[0]->s_vec);
+  dsp_add(ead_perform, 3, &x->x_ctl, (t_int)sp[0]->s_n, sp[0]->s_vec);
 }                                  
 
 /* destructor */

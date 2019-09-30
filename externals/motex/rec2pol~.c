@@ -110,10 +110,10 @@ static void rec2pol_dsp(t_rec2pol *x, t_signal **sp)
   float *out1 = sp[2]->s_vec;
   float *out2 = sp[3]->s_vec;
   if (n&7)
-    dsp_add(rec2pol_perform, 5, in1, in2, out1, out2, n);
+    dsp_add(rec2pol_perform, 5, in1, in2, out1, out2, (t_int)n);
   else 
-    dsp_add(rec2pol_perform8, 5, in1, in2, out1, out2, n);
-/*   dsp_add(sigsqrt_perform, 3, out2, out2, n); */
+    dsp_add(rec2pol_perform8, 5, in1, in2, out1, out2, (t_int)n);
+/*   dsp_add(sigsqrt_perform, 3, out2, out2, (t_int)n); */
 }
 
 

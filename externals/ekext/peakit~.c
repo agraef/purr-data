@@ -112,7 +112,7 @@ void *peakit_tilde_dsp(t_peakit_tilde *x, t_signal **sp)
 {
   x->x_ctl.f_real = sp[0]->s_vec;
   x->x_ctl.f_imag = sp[1]->s_vec;
-  dsp_add(peakit_tilde_perform, 4, x, &x->x_ctl, sp[0]->s_vec, sp[0]->s_n);
+  dsp_add(peakit_tilde_perform, 4, x, &x->x_ctl, sp[0]->s_vec, (t_int)sp[0]->s_n);
   return (void *)x;
 }
 

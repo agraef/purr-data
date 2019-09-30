@@ -489,13 +489,13 @@ static void sfrecord_dsp(t_sfrecord *x, t_signal **sp)
   case 1:
     dsp_add(sfrecord_perform, 3, x,
             sp[0]->s_vec, /* in 1 */
-            sp[0]->s_n);
+            (t_int)sp[0]->s_n);
     break;
   case 2:
     dsp_add(sfrecord_perform, 4, x,
             sp[0]->s_vec,
             sp[1]->s_vec,
-            sp[0]->s_n);
+            (t_int)sp[0]->s_n);
     break;
   case 4:
     dsp_add(sfrecord_perform, 6, x,
@@ -503,7 +503,7 @@ static void sfrecord_dsp(t_sfrecord *x, t_signal **sp)
             sp[1]->s_vec,
             sp[2]->s_vec,
             sp[3]->s_vec,
-            sp[0]->s_n);
+            (t_int)sp[0]->s_n);
     break;
   case 8:
     dsp_add(sfrecord_perform, 9, x,
@@ -515,7 +515,7 @@ static void sfrecord_dsp(t_sfrecord *x, t_signal **sp)
             sp[5]->s_vec,
             sp[6]->s_vec,
             sp[7]->s_vec,
-            sp[0]->s_n);
+            (t_int)sp[0]->s_n);
     break;
   }
 }

@@ -68,7 +68,7 @@ static t_int* bartlett_perform(t_int *w) {
 }
 
 static void bartlett_dsp(t_bartlett *x, t_signal **sp) {
-  dsp_add(bartlett_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+  dsp_add(bartlett_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void* bartlett_new(void) {

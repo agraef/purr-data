@@ -256,7 +256,7 @@ static t_int *speexout_perform(t_int *w)
 
 static void speexout_dsp(t_speexout *x, t_signal **sp)
 {
-    dsp_add(speexout_perform, 3, sp[0]->s_vec, x, sp[0]->s_n);
+    dsp_add(speexout_perform, 3, sp[0]->s_vec, x, (t_int)sp[0]->s_n);
 }
 
 /* initialize the speex library */

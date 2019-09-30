@@ -75,7 +75,7 @@ void clone_sigout_set(t_clone_sigout *x, int vs, t_float *vec)
 static void clone_sigout_dsp(t_clone_sigout *x, t_signal **sp)
 {
     if (sp[0]->s_n == x->x_vs)
-		dsp_add(clone_sigout_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
+		dsp_add(clone_sigout_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
     else
     	pd_error(x, "out~: vector size mismatch (dsp)");
 }
@@ -142,7 +142,7 @@ void clone_sigin_set(t_clone_sigin *x, int vs, t_float *vec)
 static void clone_sigin_dsp(t_clone_sigin *x, t_signal **sp)
 {
     if (sp[0]->s_n == x->x_vs)
-		dsp_add(clone_sigin_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
+		dsp_add(clone_sigin_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
     else
     	pd_error(x, "in~: vector size mismatch (dsp)");
 }

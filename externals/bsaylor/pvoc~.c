@@ -258,7 +258,7 @@ static t_int *pvoc_perform(t_int *w)
 
 static void pvoc_dsp(t_pvoc *x, t_signal **sp)
 {
-	    dsp_add(pvoc_perform, 5, x, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
+	    dsp_add(pvoc_perform, 5, x, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, (t_int)sp[0]->s_n);
 }
 
 // adapted from jsarlo's windowing library

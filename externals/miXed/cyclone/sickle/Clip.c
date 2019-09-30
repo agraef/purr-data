@@ -37,7 +37,7 @@ static t_int *Clip_perform(t_int *w)
 
 static void clip_dsp(t_clip *x, t_signal **sp)
 {
-    dsp_add(Clip_perform, 5, sp[0]->s_n,
+    dsp_add(Clip_perform, 5, (t_int)sp[0]->s_n,
 	    sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec);
 }
 

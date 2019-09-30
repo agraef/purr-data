@@ -63,5 +63,5 @@ t_int *poltocar_perform(t_int *w)
 void poltocar_dsp(t_poltocar *x, t_signal **sp)
 {
     dsp_add(poltocar_perform,6, x,
-            sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[0]->s_n);
+            sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, (t_int)sp[0]->s_n);
 }

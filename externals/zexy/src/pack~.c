@@ -64,7 +64,7 @@ static void sigpack_dsp(t_sigpack *x, t_signal **sp)
     x->vector_length = sp[0]->s_n;
     x->buffer = (t_atom *)getbytes(x->vector_length * sizeof(t_atom));
   }
-  dsp_add(sigpack_perform, 3, sp[0]->s_vec, x, sp[0]->s_n);
+  dsp_add(sigpack_perform, 3, sp[0]->s_vec, x, (t_int)sp[0]->s_n);
 }
 
 static void sigpack_free(t_sigpack*x)

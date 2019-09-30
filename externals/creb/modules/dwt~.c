@@ -716,16 +716,16 @@ static void dwt_dsp(t_dwt *x, t_signal **sp)
 
   switch(x->x_ctl.c_type){
   case DWT:
-    dsp_add(dwt_perform, 4, &x->x_ctl, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+    dsp_add(dwt_perform, 4, &x->x_ctl, (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
     break;
   case IDWT:
-    dsp_add(idwt_perform, 4, &x->x_ctl, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+    dsp_add(idwt_perform, 4, &x->x_ctl, (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
     break;
   case DWT16:
-    dsp_add(dwt16_perform, 4, &x->x_ctl, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+    dsp_add(dwt16_perform, 4, &x->x_ctl, (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
     break;
   case IDWT16:
-    dsp_add(idwt16_perform, 4, &x->x_ctl, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+    dsp_add(idwt16_perform, 4, &x->x_ctl, (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
     break;
 
 

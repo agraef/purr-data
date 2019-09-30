@@ -41,7 +41,7 @@ static t_int *kink_perform(t_int *w)
 
 static void kink_dsp(t_kink *x, t_signal **sp)
 {
-    dsp_add(kink_perform, 4, sp[0]->s_n,
+    dsp_add(kink_perform, 4, (t_int)sp[0]->s_n,
 	    sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec);
 }
 

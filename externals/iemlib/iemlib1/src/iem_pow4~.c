@@ -64,7 +64,7 @@ static t_int *iem_pow4_tilde_perform(t_int *w)
 
 static void iem_pow4_tilde_dsp(t_iem_pow4_tilde *x, t_signal **sp)
 {
-  dsp_add(iem_pow4_tilde_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, sp[0]->s_n);
+  dsp_add(iem_pow4_tilde_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)sp[0]->s_n);
 }
 
 static void *iem_pow4_tilde_new(t_floatarg f)

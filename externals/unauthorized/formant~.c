@@ -152,7 +152,7 @@ static t_int *formant_perform(t_int *w)
 
 static void formant_dsp(t_formant *x, t_signal **sp)
 {
-    dsp_add(formant_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
+    dsp_add(formant_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
 }
 
 /* replay the sample */

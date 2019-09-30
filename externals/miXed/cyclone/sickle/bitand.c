@@ -96,10 +96,10 @@ static void bitand_dsp(t_bitand *x, t_signal **sp)
     if (forky_hasfeeders((t_object *)x, x->x_glist, 1, 0))
 	/* use the mask set by a second inlet's signal or float,
 	   CHECKED (incompatible) second inlet's int is persistent */
-	dsp_add(bitand_perform, 5, x, sp[0]->s_n, sp[0]->s_vec,
+	dsp_add(bitand_perform, 5, x, (t_int)sp[0]->s_n, sp[0]->s_vec,
 		sp[1]->s_vec, sp[2]->s_vec);
     else  /* use the mask set by a 'bits' message or a creation argument */
-	dsp_add(bitand_perform_noin2, 4, x, sp[0]->s_n, sp[0]->s_vec,
+	dsp_add(bitand_perform_noin2, 4, x, (t_int)sp[0]->s_n, sp[0]->s_vec,
 		sp[1]->s_vec);
 }
 

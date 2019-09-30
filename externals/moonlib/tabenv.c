@@ -224,7 +224,7 @@ static void sigenv_dsp(t_tabenv *x, t_signal **sp)
     if (x->x_period % sp[0]->s_n) x->x_realperiod =
             x->x_period + sp[0]->s_n - (x->x_period % sp[0]->s_n);
     else x->x_realperiod = x->x_period;
-    dsp_add(sigenv_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
+    dsp_add(sigenv_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
     if (sp[0]->s_n > MAXVSTAKEN) bug("sigenv_dsp");
 }
 

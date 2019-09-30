@@ -237,7 +237,7 @@ static t_int *dist_perform(t_int *w)
 
 static void dist_dsp(t_dist *x, t_signal **sp)
 {
-    dsp_add(dist_perform, 4, &x->x_ctl, sp[0]->s_n, 
+    dsp_add(dist_perform, 4, &x->x_ctl, (t_int)sp[0]->s_n, 
 	    sp[0]->s_vec, sp[1]->s_vec);
 
 }                                  

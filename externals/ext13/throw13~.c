@@ -75,7 +75,7 @@
     {
     	sigthrow13_set(x, x->x_sym);
     	dsp_add(sigthrow13_perform, 3,
-    	    x, sp[0]->s_vec, sp[0]->s_n);
+    	    x, sp[0]->s_vec, (t_int)sp[0]->s_n);
     }
 }
 

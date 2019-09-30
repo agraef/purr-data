@@ -322,7 +322,7 @@ static void sqosc_dsp(t_sqosc *x, t_signal **sp)
     x->x_conv = SQOSCTABSIZE/sp[0]->s_sr;
 /* conv = table period = (samples/cycle)/(samples/sec) = sec/cycle = 0.011610sec for 512/44100 */
 
-    dsp_add(sqosc_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+    dsp_add(sqosc_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void sqosc_ft1(t_sqosc *x, t_float f)

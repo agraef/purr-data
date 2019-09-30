@@ -97,7 +97,7 @@ static t_int *peak_perform(t_int *w)
 
 static void peak_dsp(t_peak *x, t_signal **sp)
 {
-  dsp_add(peak_perform, 6, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n,&x->thresh, x);
+  dsp_add(peak_perform, 6, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, (t_int)sp[0]->s_n,&x->thresh, x);
 }
 
 static void *peak_new(t_symbol *s, t_int argc, t_atom *argv)

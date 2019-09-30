@@ -102,7 +102,8 @@ static void matrix_dsp(t_matrix *x, t_signal **sp)
   
   for (i=0;i<n;i++) x->x_ctl.c_A[i] = 1;
 
-  dsp_add(matrix_perform, 4, &x->x_ctl, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+  dsp_add(matrix_perform, 4, &x->x_ctl, (t_int)sp[0]->s_n, sp[0]->s_vec,
+    sp[1]->s_vec);
 
 
 }                                  

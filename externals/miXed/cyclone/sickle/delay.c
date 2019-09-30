@@ -63,7 +63,7 @@ static void delay_dsp(t_delay *x, t_signal **sp)
 {
     memset(x->x_buf, 0, x->x_maxsize * sizeof(*x->x_buf));  /* CHECKED */
     x->x_whead = x->x_buf;
-    dsp_add(delay_perform, 4, x, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
+    dsp_add(delay_perform, 4, x, (t_int)sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec);
 }
 
 static void *delay_new(t_floatarg f1, t_floatarg f2)

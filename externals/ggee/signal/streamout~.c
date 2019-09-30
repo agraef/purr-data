@@ -252,16 +252,16 @@ static void streamout_dsp(t_streamout *x, t_signal **sp)
 {
   switch (x->x_tag.channels) {
   case 1:
-    dsp_add(streamout_perform, 3, x,sp[0]->s_vec, sp[0]->s_n);
+    dsp_add(streamout_perform, 3, x,sp[0]->s_vec, (t_int)sp[0]->s_n);
     post("one channel mode");
     break;
   case 2:
-    dsp_add(streamout_perform, 4, x,sp[0]->s_vec, sp[1]->s_vec,sp[0]->s_n);
+    dsp_add(streamout_perform, 4, x,sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
     post("two channel mode");
     break;
   case 4:
     dsp_add(streamout_perform, 6, x,sp[0]->s_vec, sp[1]->s_vec,
-	    sp[2]->s_vec,sp[3]->s_vec,sp[0]->s_n);
+	    sp[2]->s_vec,sp[3]->s_vec, (t_int)sp[0]->s_n);
     post("four channel mode");
     break;
   default:

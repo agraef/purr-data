@@ -219,7 +219,7 @@ void pmpd_tilde_dsp(t_pmpd_tilde *x, t_signal **sp)
 	for (i=0; i<x->nb_outlet; i++)
 		x->outlet_vector[i] = sp[i+x->nb_inlet]->s_vec;
 
-	dsp_add(pmpd_tilde_perform, 2, x, sp[0]->s_n);
+	dsp_add(pmpd_tilde_perform, 2, x, (t_int)sp[0]->s_n);
 }
 
 void pmpd_tilde_bang(t_pmpd_tilde *x)

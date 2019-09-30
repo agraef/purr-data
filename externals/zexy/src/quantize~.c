@@ -75,7 +75,7 @@ static t_int *quantize_perform(t_int *w)
 
 static void quantize_dsp(t_quantize *x, t_signal **sp)
 {
-  dsp_add(quantize_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+  dsp_add(quantize_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void quantize_tilde_helper(t_quantize* UNUSED(x))

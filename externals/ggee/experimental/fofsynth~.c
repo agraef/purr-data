@@ -277,7 +277,7 @@ static void fofsynth_dsp(t_fofsynth *x, t_signal **sp)
      }
                
      dsp_add(fofsynth_perform, 4, x,
-	     sp[0]->s_vec,sp[1]->s_vec, sp[0]->s_n);
+	     sp[0]->s_vec,sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 

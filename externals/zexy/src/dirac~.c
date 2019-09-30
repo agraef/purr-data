@@ -110,9 +110,9 @@ static t_int *dirac_perf8(t_int *w)
 static void dirac_dsp(t_dirac *x, t_signal **sp)
 {
   if (sp[0]->s_n & 7) {
-    dsp_add(dirac_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
+    dsp_add(dirac_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
   } else {
-    dsp_add(dirac_perf8, 3, x, sp[0]->s_vec, sp[0]->s_n);
+    dsp_add(dirac_perf8, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
   }
 }
 

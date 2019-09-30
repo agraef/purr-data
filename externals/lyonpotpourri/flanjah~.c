@@ -241,7 +241,7 @@ void flanjah_dsp(t_flanjah *x, t_signal **sp)
     }
     dsp_add(flanjah_perform, 8, x,
             sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec,
-            sp[0]->s_n);
+            (t_int)sp[0]->s_n);
 }
 
 void flanjah_mute(t_flanjah *x, t_floatarg state)

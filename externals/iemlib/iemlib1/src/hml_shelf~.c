@@ -457,9 +457,9 @@ static void hml_shelf_tilde_dsp(t_hml_shelf_tilde *x, t_signal **sp)
   x->ticks = i;
   x->rcp_ticks = 1.0f / (t_float)i;
   if(n&7)
-    dsp_add(hml_shelf_tilde_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, n);
+    dsp_add(hml_shelf_tilde_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)n);
   else
-    dsp_add(hml_shelf_tilde_perf8, 4, sp[0]->s_vec, sp[1]->s_vec, x, n);
+    dsp_add(hml_shelf_tilde_perf8, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)n);
 }
 
 static void *hml_shelf_tilde_new(t_symbol *s, int argc, t_atom *argv)

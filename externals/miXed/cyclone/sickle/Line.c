@@ -271,7 +271,7 @@ static void line_stop(t_line *x)
 
 static void line_dsp(t_line *x, t_signal **sp)
 {
-    dsp_add(line_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
+    dsp_add(line_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
     x->x_ksr = sp[0]->s_sr * 0.001;
 }
 

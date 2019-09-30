@@ -463,9 +463,9 @@ static void spec2_1p1z_freq_tilde_dsp(t_spec2_1p1z_freq_tilde *x, t_signal **sp)
   }
   
   if(n&15)
-    dsp_add(spec2_1p1z_freq_tilde_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, n);
+    dsp_add(spec2_1p1z_freq_tilde_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)n);
   else
-    dsp_add(spec2_1p1z_freq_tilde_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, n);
+    dsp_add(spec2_1p1z_freq_tilde_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)n);
 }
 
 static void spec2_1p1z_freq_tilde_free(t_spec2_1p1z_freq_tilde *x)

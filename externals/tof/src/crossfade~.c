@@ -79,7 +79,7 @@ static void crossfade_tilde_dsp(t_crossfade_tilde *x, t_signal **sp)
   for(n=0;n<x->n_out;n++)*dummy++=sp[n+x->n_in+1]->s_vec;
 
   
-  dsp_add(crossfade_tilde_perform, 3, x, sp[0]->s_n, sp[x->n_in]->s_vec);
+  dsp_add(crossfade_tilde_perform, 3, x, (t_int)sp[0]->s_n, sp[x->n_in]->s_vec);
   
 }
 

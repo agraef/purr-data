@@ -343,7 +343,7 @@ static t_int *pdp_segsnd_perform(t_int *w)
 
 static void pdp_segsnd_dsp(t_pdp_segsnd *x, t_signal **sp)
 {
-    dsp_add(pdp_segsnd_perform, 3, sp[0]->s_vec, x, sp[0]->s_n);
+    dsp_add(pdp_segsnd_perform, 3, sp[0]->s_vec, x, (t_int)sp[0]->s_n);
 }
 
 t_class *pdp_segsnd_class;
