@@ -223,9 +223,12 @@ var canvas_events = (function() {
             mousemove: function(evt) {
                 //pdgui.post("x: " + evt.pageX + " y: " + evt.pageY +
                 //    " modifier: " + (evt.shiftKey + (pdgui.cmd_or_ctrl_key(evt) << 1)));
+                let [pointer_x, pointer_y] = evt.type === "touchmove"
+                    ? [evt.touches[0].pageX, evt.touches[0].pageY]
+                    : [evt.pageX, evt.pageY];
                 pdgui.pdsend(name, "motion",
-                    (evt.pageX + svg_view.x),
-                    (evt.pageY + svg_view.y),
+                    (pointer_x + svg_view.x),
+                    (pointer_y + svg_view.y),
                     (evt.shiftKey + (pdgui.cmd_or_ctrl_key(evt) << 1))
                 );
                 evt.stopPropagation();
@@ -240,6 +243,9 @@ var canvas_events = (function() {
                     evt.stopPropagation();
                     evt.preventDefault();                
                 }*/
+                let [pointer_x, pointer_y] = evt.type === "touchstart"
+                    ? [evt.touches[0].pageX, evt.touches[0].pageY]
+                    : [evt.pageX, evt.pageY];
                 var target_id, resize_type;
                 if (target_is_scrollbar(evt)) {
                     return;
@@ -252,8 +258,8 @@ var canvas_events = (function() {
                     // get id ("x123456etcgobj" without the "x" or "gobj")
                     target_id = (draggable_label ? "_l" : "_s") +
                         evt.target.parentNode.parentNode.id.slice(0,-4).slice(1);
-                    last_draggable_x = evt.pageX + svg_view.x;
-                    last_draggable_y = evt.pageY + svg_view.y;
+                    last_draggable_x = pointer_x + svg_view.x;
+                    last_draggable_y = pointer_y + svg_view.y;
 
                     // Nasty-- we have to forward magic values from g_canvas.h
                     // defines in order to get the correct constrain behavior.
@@ -278,14 +284,14 @@ var canvas_events = (function() {
                         !!draggable_label, false);
 
                     pdgui.pdsend(target_id, "_click", resize_type,
-                        (evt.pageX + svg_view.x),
-                        (evt.pageY + svg_view.y));
+                        (pointer_x + svg_view.x),
+                        (pointer_y + svg_view.y));
                     canvas_events.iemgui_label_drag();
                     return;
                 }
                 // tk events (and, therefore, Pd events) are one greater
                 // than html5...
-                var b = evt.button + 1;
+                var b = evt.button + 1 || 1;
                 var mod, match_elem;
                 // See if there are any draggable scalar shapes...
                 if (Object.keys(scalar_draggables).length) {
@@ -294,8 +300,8 @@ var canvas_events = (function() {
                     if (match_elem) {
                         // then set some state and turn on the drag events
                         draggable_elem = match_elem;
-                        last_draggable_x = evt.pageX;
-                        last_draggable_y = evt.pageY;
+                        last_draggable_x = pointer_x;
+                        last_draggable_y = pointer_y;
                         canvas_events.scalar_drag();
                     }
                 }
@@ -309,8 +315,8 @@ var canvas_events = (function() {
                     mod = (evt.shiftKey + (pdgui.cmd_or_ctrl_key(evt) << 1));
                 }
                 pdgui.pdsend(name, "mouse",
-                    (evt.pageX + svg_view.x),
-                    (evt.pageY + svg_view.y),
+                    (pointer_x + svg_view.x),
+                    (pointer_y + svg_view.y),
                     b, mod
                 );
                 //evt.stopPropagation();
@@ -320,10 +326,13 @@ var canvas_events = (function() {
                 //pdgui.post("mouseup: x: " +
                 //    evt.pageX + " y: " + evt.pageY +
                 //    " button: " + (evt.button + 1));
+                let [pointer_x, pointer_y] = evt.type === "touchend"
+                    ? [evt.changedTouches[0].pageX, evt.changedTouches[0].pageY]
+                    : [evt.pageX, evt.pageY];
                 pdgui.pdsend(name, "mouseup",
-                    (evt.pageX + svg_view.x),
-                    (evt.pageY + svg_view.y),
-                    (evt.button + 1)
+                    (pointer_x + svg_view.x),
+                    (pointer_y + svg_view.y),
+                    (evt.button + 1) || 1
                 );
                 evt.stopPropagation();
                 evt.preventDefault();
@@ -433,8 +442,9 @@ var canvas_events = (function() {
                 }
             },
             scalar_draggable_mousemove: function(evt) {
-                var new_x = evt.pageX,
-                    new_y = evt.pageY,
+                let [new_x, new_y] = evt.type === "touchmove"
+                    ? [evt.touches[0].pageX, evt.touches[0].pageY]
+                    : [evt.pageX, evt.pageY],
                     dx = new_x - last_draggable_x,
                     dy = new_y - last_draggable_y,
                     // For the sake of convenience we're sending transformed
@@ -763,11 +773,14 @@ var canvas_events = (function() {
             canvas_events.none();
 
             document.addEventListener("mousemove", events.mousemove, false);
+            document.addEventListener("touchmove", events.mousemove, false);
             document.addEventListener("keydown", events.keydown, false);
             document.addEventListener("keypress", events.keypress, false);
             document.addEventListener("keyup", events.keyup, false);
             document.addEventListener("mousedown", events.mousedown, false);
+            document.addEventListener("touchstart", events.mousedown, false);
             document.addEventListener("mouseup", events.mouseup, false);
+            document.addEventListener("touchend", events.mouseup, false);
             state = "normal";
             set_edit_menu_modals(true);
         },
