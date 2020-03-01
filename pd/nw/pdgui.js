@@ -2630,9 +2630,11 @@ function elem_get_coords(elem) {
     }
 }
 
-// used for tidy up
+// used for tidy up and GUI external displacefn callbacks
 function gui_text_displace(name, tag, dx, dy) {
-    elem_displace(get_gobj(name, tag), dx, dy);
+    gui(name).get_gobj(tag, function(e) {
+        elem_displace(e, dx, dy);
+    });
 }
 
 function textentry_displace(t, dx, dy) {
@@ -4271,6 +4273,13 @@ function gui_pianoroll_update_rect(cid, tag, type, i, j, fill) {
     gui(cid)
     .get_elem(pianoroll_get_id(tag, type, i, j), {
         fill: fill
+    });
+}
+
+// just clear out everything inside the container
+function gui_pianoroll_erase_innards(cid, tag) {
+    gui(cid).get_gobj(tag, function(e) {
+        e.innerHTML = "";
     });
 }
 

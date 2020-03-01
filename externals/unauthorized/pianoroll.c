@@ -136,7 +136,7 @@ static void pianoroll_draw_update(t_pianoroll *x, t_glist *glist)
     }
 }
 
-static void pianoroll_draw_new(t_pianoroll *x, t_glist *glist)
+static void pianoroll_draw_innards(t_pianoroll *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
 
@@ -274,49 +274,76 @@ static void pianoroll_draw_new(t_pianoroll *x, t_glist *glist)
     canvas_fixlinesfor( canvas, (t_text*)x );
 }
 
-static void pianoroll_draw_move(t_pianoroll *x, t_glist *glist)
+static void pianoroll_draw_new(t_pianoroll *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
 
+    // create a gobj container in the GUI
+    gui_vmess("gui_gobj_new", "xxsiii",
+        canvas,
+        x,
+        "obj",
+        text_xpix(&x->x_obj, glist),
+        text_ypix(&x->x_obj, glist),
+        glist_istoplevel(glist)
+    );
+
+    // now draw the rectangles inside it
+    pianoroll_draw_innards(x, glist);
+}
+
+//static void pianoroll_draw_move(t_pianoroll *x, t_glist *glist)
+//{
+//    t_canvas *canvas=glist_getcanvas(glist);
+//
     // move the grid
-    {
-        int gi, gj;
-        t_float xgstep = x->x_width/x->x_nbsteps;
-        t_float ygstep = x->x_height/x->x_nbgrades;
-        for ( gi=0; gi<x->x_nbsteps; gi++ )
-        {
-            for ( gj=0; gj<x->x_nbgrades; gj++ )
-            {
-                SYS_VGUI9(".x%lx.c coords  %xPITCH%.4d%.4d %d %d %d %d\n",
-                          canvas, x, gi, gj,
-                          text_xpix(&x->x_obj, glist)+(int)(gi*xgstep),
-                          text_ypix(&x->x_obj, glist)+(int)(gj*ygstep),
-                          text_xpix(&x->x_obj, glist)+(int)(gi*xgstep)+(int)(2*xgstep/3),
-                          text_ypix(&x->x_obj, glist)+(int)((gj+1)*ygstep)
-                         );
-                SYS_VGUI9(".x%lx.c coords %xVOLUME%.4d%.4d %d %d %d %d\n",
-                          canvas, x, gi, gj,
-                          text_xpix(&x->x_obj, glist)+(int)(gi*xgstep)+(int)(2*xgstep/3),
-                          text_ypix(&x->x_obj, glist)+(int)(gj*ygstep),
-                          text_xpix(&x->x_obj, glist)+(int)((gi+1)*xgstep),
-                          text_ypix(&x->x_obj, glist)+(int)((gj+1)*ygstep)
-                         );
-            }
-        }
-    }
-    SYS_VGUI7(".x%lx.c coords %xIN %d %d %d %d \n",
-              canvas, x, text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist) - 1,
-              text_xpix(&x->x_obj, glist)+7, text_ypix(&x->x_obj, glist)
-             );
-    SYS_VGUI7(".x%lx.c coords %xOUTL %d %d %d %d\n",
-              canvas, x, text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist) + x->x_height+1,
-              text_xpix(&x->x_obj, glist)+7, text_ypix(&x->x_obj, glist) + x->x_height+2
-             );
-    SYS_VGUI7(".x%lx.c coords %xOUTR %d %d %d %d\n",
-              canvas, x, text_xpix(&x->x_obj, glist)+x->x_width-7, text_ypix(&x->x_obj, glist) + x->x_height+1,
-              text_xpix(&x->x_obj, glist)+x->x_width, text_ypix(&x->x_obj, glist) + x->x_height+2
-             );
-    canvas_fixlinesfor( canvas, (t_text*)x );
+//    {
+//        int gi, gj;
+//        t_float xgstep = x->x_width/x->x_nbsteps;
+//        t_float ygstep = x->x_height/x->x_nbgrades;
+//        for ( gi=0; gi<x->x_nbsteps; gi++ )
+//        {
+//            for ( gj=0; gj<x->x_nbgrades; gj++ )
+//            {
+//                SYS_VGUI9(".x%lx.c coords  %xPITCH%.4d%.4d %d %d %d %d\n",
+//                          canvas, x, gi, gj,
+//                          text_xpix(&x->x_obj, glist)+(int)(gi*xgstep),
+//                          text_ypix(&x->x_obj, glist)+(int)(gj*ygstep),
+//                          text_xpix(&x->x_obj, glist)+(int)(gi*xgstep)+(int)(2*xgstep/3),
+//                          text_ypix(&x->x_obj, glist)+(int)((gj+1)*ygstep)
+//                         );
+//                SYS_VGUI9(".x%lx.c coords %xVOLUME%.4d%.4d %d %d %d %d\n",
+//                          canvas, x, gi, gj,
+//                          text_xpix(&x->x_obj, glist)+(int)(gi*xgstep)+(int)(2*xgstep/3),
+//                          text_ypix(&x->x_obj, glist)+(int)(gj*ygstep),
+//                          text_xpix(&x->x_obj, glist)+(int)((gi+1)*xgstep),
+//                          text_ypix(&x->x_obj, glist)+(int)((gj+1)*ygstep)
+//                         );
+//            }
+//        }
+//    }
+//    SYS_VGUI7(".x%lx.c coords %xIN %d %d %d %d \n",
+//              canvas, x, text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist) - 1,
+//              text_xpix(&x->x_obj, glist)+7, text_ypix(&x->x_obj, glist)
+//             );
+//    SYS_VGUI7(".x%lx.c coords %xOUTL %d %d %d %d\n",
+//              canvas, x, text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist) + x->x_height+1,
+//              text_xpix(&x->x_obj, glist)+7, text_ypix(&x->x_obj, glist) + x->x_height+2
+//             );
+//    SYS_VGUI7(".x%lx.c coords %xOUTR %d %d %d %d\n",
+//              canvas, x, text_xpix(&x->x_obj, glist)+x->x_width-7, text_ypix(&x->x_obj, glist) + x->x_height+1,
+//              text_xpix(&x->x_obj, glist)+x->x_width, text_ypix(&x->x_obj, glist) + x->x_height+2
+//             );
+//    canvas_fixlinesfor( canvas, (t_text*)x );
+//}
+
+// Erase the innards while leaving the gobj intact. This way we don't lose our
+// Z-order for things like redrawing after the user changes stuff in the
+// Properties dialog
+static void pianoroll_draw_erase_innards(t_pianoroll* x,t_glist* glist)
+{
+    t_canvas *canvas=glist_getcanvas(glist);
+    gui_vmess("gui_pianoroll_erase_innards", "xx", canvas, x);
 }
 
 static void pianoroll_draw_erase(t_pianoroll* x,t_glist* glist)
@@ -403,13 +430,31 @@ static void pianoroll_save(t_gobj *z, t_binbuf *b)
 static void pianoroll_properties(t_gobj *z, t_glist *owner)
 {
     char buf[800];
+    char *gfx_tag;
     t_pianoroll *x=(t_pianoroll *)z;
 
-    sprintf(buf, "pdtk_pianoroll_dialog %%s %s %d %d %.2f %.2f %d %d %d %d\n",
-            x->x_name->s_name, x->x_width, x->x_height, x->x_pmin, x->x_pmax,
-            x->x_nbgrades, x->x_nbsteps, x->x_defvalue, x->x_save );
+    //sprintf(buf, "pdtk_pianoroll_dialog %%s %s %d %d %.2f %.2f %d %d %d %d\n",
+    //        x->x_name->s_name, x->x_width, x->x_height, x->x_pmin, x->x_pmax,
+    //        x->x_nbgrades, x->x_nbsteps, x->x_defvalue, x->x_save );
     // post("pianoroll_properties : %s", buf );
-    gfxstub_new(&x->x_obj.ob_pd, x, buf);
+    //gfxstub_new(&x->x_obj.ob_pd, x, buf);
+    gfx_tag = gfxstub_new2(&x->x_obj.ob_pd, x);
+
+    gui_start_vmess("gui_external_dialog", "ss", gfx_tag, "pianoroll");
+    gui_start_array();
+
+    gui_s("name_symbol"); gui_s(x->x_name->s_name);
+    gui_s("width"); gui_i(x->x_width);
+    gui_s("height"); gui_i(x->x_height);
+    gui_s("pitch low"); gui_f(x->x_pmin);
+    gui_s("pitch high"); gui_f(x->x_pmax);
+    gui_s("grades"); gui_i(x->x_nbgrades);
+    gui_s("steps"); gui_i(x->x_nbsteps);
+    gui_s("default value"); gui_i(x->x_defvalue);
+    gui_s("save contents_toggle"); gui_i(x->x_save);
+
+    gui_end_array();
+    gui_end_vmess();
 }
 
 static void pianoroll_select(t_gobj *z, t_glist *glist, int selected)
@@ -471,7 +516,7 @@ static void pianoroll_dialog(t_pianoroll *x, t_symbol *s, int argc, t_atom *argv
         post( "pianoroll : wrong arguments" );
         return;
     }
-    pianoroll_draw_erase(x, x->x_glist);
+    pianoroll_draw_erase_innards(x, x->x_glist);
     x->x_name = argv[0].a_w.w_symbol;
     x->x_width = (int)argv[1].a_w.w_float;
     x->x_height = (int)argv[2].a_w.w_float;
@@ -508,7 +553,7 @@ static void pianoroll_dialog(t_pianoroll *x, t_symbol *s, int argc, t_atom *argv
         x->x_ipeaches = ( t_int* ) getbytes( x->x_nbsteps*sizeof(t_int) );
         x->x_ivolumes = ( t_int* ) getbytes( x->x_nbsteps*sizeof(t_int) );
     }
-    pianoroll_draw_new(x, x->x_glist);
+    pianoroll_draw_innards(x, x->x_glist);
     pianoroll_draw_update(x, x->x_glist);
 }
 
@@ -529,7 +574,14 @@ static void pianoroll_displace(t_gobj *z, t_glist *glist, int dx, int dy)
     x->x_obj.te_ypix += dy;
     if(xold != x->x_obj.te_xpix || yold != x->x_obj.te_ypix)
     {
-        pianoroll_draw_move(x, x->x_glist);
+        //pianoroll_draw_move(x, x->x_glist);
+        gui_vmess("gui_text_displace", "xxii",
+            glist_getcanvas(glist),
+            x,
+            dx,
+            dy
+        );
+        canvas_fixlinesfor( glist, (t_text*)x );
     }
 }
 
@@ -1036,7 +1088,7 @@ void pianoroll_setup(void)
 
     class_setwidget(pianoroll_class, &pianoroll_widgetbehavior);
 
-    sys_vgui("eval [read [open {%s/%s.tcl}]]\n",
-             pianoroll_class->c_externdir->s_name,
-             pianoroll_class->c_name->s_name);
+    //sys_vgui("eval [read [open {%s/%s.tcl}]]\n",
+    //         pianoroll_class->c_externdir->s_name,
+    //         pianoroll_class->c_name->s_name);
 }
