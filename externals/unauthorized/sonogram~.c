@@ -2265,9 +2265,9 @@ static void *sonogram_new(t_floatarg fsize, t_floatarg fgraphic, t_floatarg fpha
 void sonogram_tilde_setup(void)
 {
     logpost(NULL, 4, "%s", sonogram_version);
-    sonogram_class = class_new(gensym("sonogram~"), (t_newmethod)sonogram_new, (t_method)sonogram_free,
-                               sizeof(t_sonogram), 0, A_DEFFLOAT, A_DEFFLOAT, A_DEFFLOAT, 0);
-
+    sonogram_class = class_new(gensym("sonogram~"), (t_newmethod)sonogram_new,
+        (t_method)sonogram_free, sizeof(t_sonogram), 0,
+        A_DEFFLOAT, A_DEFFLOAT, A_DEFFLOAT, 0);
 
     // set callbacks
     sonogram_widgetbehavior.w_getrectfn =    sonogram_getrect;
@@ -2288,32 +2288,60 @@ void sonogram_tilde_setup(void)
 #endif
 
     CLASS_MAINSIGNALIN( sonogram_class, t_sonogram, x_f );
-    class_addmethod(sonogram_class, (t_method)sonogram_dsp, gensym("dsp"), A_CANT, A_NULL);
-    class_addmethod(sonogram_class, (t_method)sonogram_record, gensym("record"), A_NULL);
-    class_addmethod(sonogram_class, (t_method)sonogram_enhance, gensym("enhance"), A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_NULL);
-    class_addmethod(sonogram_class, (t_method)sonogram_add, gensym("add"), A_FLOAT, A_FLOAT, A_FLOAT, A_NULL);
-    class_addmethod(sonogram_class, (t_method)sonogram_resize, gensym("resize"), A_FLOAT, A_NULL);
-    class_addmethod(sonogram_class, (t_method)sonogram_zoom, gensym("zoom"), A_FLOAT, A_NULL);
-    class_addmethod(sonogram_class, (t_method)sonogram_swappoints, gensym("swappoints"), A_FLOAT, A_NULL);
-    class_addmethod(sonogram_class, (t_method)sonogram_average, gensym("average"), A_FLOAT, A_NULL);
-    class_addmethod(sonogram_class, (t_method)sonogram_swapblocks, gensym("swapblocks"), A_FLOAT, A_FLOAT, A_FLOAT, A_NULL);
-    class_addmethod(sonogram_class, (t_method)sonogram_swapfreqs, gensym("swapfreqs"), A_FLOAT, A_FLOAT, A_NULL);
-    class_addmethod(sonogram_class, (t_method)sonogram_flipfreqs, gensym("flipfreqs"), A_NULL);
-    class_addmethod(sonogram_class, (t_method)sonogram_flipblocks, gensym("flipblocks"), A_NULL);
-    class_addmethod(sonogram_class, (t_method)sonogram_play, gensym("play"), A_NULL);
-    class_addmethod(sonogram_class, (t_method)sonogram_refresh, gensym("refresh"), A_NULL);
-    class_addmethod(sonogram_class, (t_method)sonogram_enhancemode, gensym("enhancemode"), A_FLOAT, A_NULL);
-    class_addmethod(sonogram_class, (t_method)sonogram_goup, gensym("goup"), A_FLOAT, A_NULL);
-    class_addmethod(sonogram_class, (t_method)sonogram_godown, gensym("godown"), A_FLOAT, A_NULL);
-    class_addmethod(sonogram_class, (t_method)sonogram_roll, gensym("roll"), A_FLOAT, A_NULL);
-    class_addmethod(sonogram_class, (t_method)sonogram_threshold, gensym("threshold"), A_FLOAT, A_NULL);
-    class_addmethod(sonogram_class, (t_method)sonogram_phase, gensym("phase"), A_FLOAT, A_NULL);
-    class_addmethod(sonogram_class, (t_method)sonogram_zswap, gensym("zswap"), A_NULL);
-    class_addmethod(sonogram_class, (t_method)sonogram_modstep, gensym("modstep"), A_FLOAT, A_NULL);
-    class_addmethod(sonogram_class, (t_method)sonogram_modstart, gensym("modstart"), A_FLOAT, A_NULL);
-    class_addmethod(sonogram_class, (t_method)sonogram_modend, gensym("modend"), A_FLOAT, A_NULL);
-    class_addmethod(sonogram_class, (t_method)sonogram_readstart, gensym("readstart"), A_FLOAT, A_NULL);
-    class_addmethod(sonogram_class, (t_method)sonogram_readend, gensym("readend"), A_FLOAT, A_NULL);
-    class_addmethod(sonogram_class, (t_method)sonogram_readspeed, gensym("readspeed"), A_FLOAT, A_NULL);
-    class_addmethod(sonogram_class, (t_method)sonogram_undo, gensym("undo"), A_NULL);
+    class_addmethod(sonogram_class, (t_method)sonogram_dsp,
+        gensym("dsp"), A_CANT, A_NULL);
+    class_addmethod(sonogram_class, (t_method)sonogram_record,
+        gensym("record"), A_NULL);
+    class_addmethod(sonogram_class, (t_method)sonogram_enhance,
+        gensym("enhance"), A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_NULL);
+    class_addmethod(sonogram_class, (t_method)sonogram_add,
+        gensym("add"), A_FLOAT, A_FLOAT, A_FLOAT, A_NULL);
+    class_addmethod(sonogram_class, (t_method)sonogram_resize,
+        gensym("resize"), A_FLOAT, A_NULL);
+    class_addmethod(sonogram_class, (t_method)sonogram_zoom,
+        gensym("zoom"), A_FLOAT, A_NULL);
+    class_addmethod(sonogram_class, (t_method)sonogram_swappoints,
+        gensym("swappoints"), A_FLOAT, A_NULL);
+    class_addmethod(sonogram_class, (t_method)sonogram_average,
+        gensym("average"), A_FLOAT, A_NULL);
+    class_addmethod(sonogram_class, (t_method)sonogram_swapblocks,
+        gensym("swapblocks"), A_FLOAT, A_FLOAT, A_FLOAT, A_NULL);
+    class_addmethod(sonogram_class, (t_method)sonogram_swapfreqs,
+        gensym("swapfreqs"), A_FLOAT, A_FLOAT, A_NULL);
+    class_addmethod(sonogram_class, (t_method)sonogram_flipfreqs,
+        gensym("flipfreqs"), A_NULL);
+    class_addmethod(sonogram_class, (t_method)sonogram_flipblocks,
+        gensym("flipblocks"), A_NULL);
+    class_addmethod(sonogram_class, (t_method)sonogram_play,
+        gensym("play"), A_NULL);
+    class_addmethod(sonogram_class, (t_method)sonogram_refresh,
+        gensym("refresh"), A_NULL);
+    class_addmethod(sonogram_class, (t_method)sonogram_enhancemode,
+        gensym("enhancemode"), A_FLOAT, A_NULL);
+    class_addmethod(sonogram_class, (t_method)sonogram_goup,
+        gensym("goup"), A_FLOAT, A_NULL);
+    class_addmethod(sonogram_class, (t_method)sonogram_godown,
+        gensym("godown"), A_FLOAT, A_NULL);
+    class_addmethod(sonogram_class, (t_method)sonogram_roll,
+        gensym("roll"), A_FLOAT, A_NULL);
+    class_addmethod(sonogram_class, (t_method)sonogram_threshold,
+        gensym("threshold"), A_FLOAT, A_NULL);
+    class_addmethod(sonogram_class, (t_method)sonogram_phase,
+        gensym("phase"), A_FLOAT, A_NULL);
+    class_addmethod(sonogram_class, (t_method)sonogram_zswap,
+        gensym("zswap"), A_NULL);
+    class_addmethod(sonogram_class, (t_method)sonogram_modstep,
+        gensym("modstep"), A_FLOAT, A_NULL);
+    class_addmethod(sonogram_class, (t_method)sonogram_modstart,
+        gensym("modstart"), A_FLOAT, A_NULL);
+    class_addmethod(sonogram_class, (t_method)sonogram_modend,
+        gensym("modend"), A_FLOAT, A_NULL);
+    class_addmethod(sonogram_class, (t_method)sonogram_readstart,
+        gensym("readstart"), A_FLOAT, A_NULL);
+    class_addmethod(sonogram_class, (t_method)sonogram_readend,
+        gensym("readend"), A_FLOAT, A_NULL);
+    class_addmethod(sonogram_class, (t_method)sonogram_readspeed,
+        gensym("readspeed"), A_FLOAT, A_NULL);
+    class_addmethod(sonogram_class, (t_method)sonogram_undo,
+        gensym("undo"), A_NULL);
 }
