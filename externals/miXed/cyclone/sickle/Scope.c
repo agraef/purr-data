@@ -572,8 +572,14 @@ static void scope_displace(t_gobj *z, t_glist *glist, int dx, int dy)
     if (glist_isvisible(glist))
     {
 	t_canvas *cv = scope_getcanvas(x, glist);
-	//sys_vgui(".x%x.c move %s %d %d\n", cv, x->x_tag, dx, dy);
-	//canvas_fixlinesfor(cv, t);
+	//sys_vgui(".x%x.c move %s %d %d\n", cv, x->x_tag, dx, dy)
+        gui_vmess("gui_text_displace", "xxii",
+            cv,
+            x,
+            dx,
+            dy
+        );
+	canvas_fixlinesfor(cv, t);
     }
 }
 
