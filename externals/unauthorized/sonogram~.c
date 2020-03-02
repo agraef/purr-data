@@ -1,34 +1,32 @@
-/*------------------------ sonogram~ ------------------------------------------ */
-/*                                                                              */
-/* sonogram~ : lets you record, play back and modify a sonogram                 */
-/* constructor : sonogram <size> <graphical=0|1> <phasogram=0|1>                */
-/*                                                                              */
-/* Copyleft Yves Degoyon ( ydegoyon@free.fr )                                   */
-/*                                                                              */
-/* This program is free software; you can redistribute it and/or                */
-/* modify it under the terms of the GNU General Public License                  */
-/* as published by the Free Software Foundation; either version 2               */
-/* of the License, or (at your option) any later version.                       */
-/*                                                                              */
-/* See file LICENSE for further informations on licensing terms.                */
-/*                                                                              */
-/* This program is distributed in the hope that it will be useful,              */
-/* but WITHOUT ANY WARRANTY; without even the implied warranty of               */
-/* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                */
-/* GNU General Public License for more details.                                 */
-/*                                                                              */
-/* You should have received a copy of the GNU General Public License            */
-/* along with this program; if not, write to the Free Software                  */
-/* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.  */
-/*                                                                              */
-/* Based on PureData by Miller Puckette and others.                             */
-/*                                                                              */
-/* "Living at night"                                                            */
-/* "Doesn't help for my complexion"                                             */
-/* David Thomas - Final Solution                                                */
-/* ---------------------------------------------------------------------------- */
-
-
+/*------------------------ sonogram~ ---------------------------------------- */
+/*                                                                            */
+/* sonogram~ : lets you record, play back and modify a sonogram               */
+/* constructor : sonogram <size> <graphical=0|1> <phasogram=0|1>              */
+/*                                                                            */
+/* Copyleft Yves Degoyon ( ydegoyon@free.fr )                                 */
+/*                                                                            */
+/* This program is free software; you can redistribute it and/or              */
+/* modify it under the terms of the GNU General Public License                */
+/* as published by the Free Software Foundation; either version 2             */
+/* of the License, or (at your option) any later version.                     */
+/*                                                                            */
+/* See file LICENSE for further informations on licensing terms.              */
+/*                                                                            */
+/* This program is distributed in the hope that it will be useful,            */
+/* but WITHOUT ANY WARRANTY; without even the implied warranty of             */
+/* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              */
+/* GNU General Public License for more details.                               */
+/*                                                                            */
+/* You should have received a copy of the GNU General Public License          */
+/* along with this program; if not, write to the Free Software                */
+/* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.*/
+/*                                                                            */
+/* Based on PureData by Miller Puckette and others.                           */
+/*                                                                            */
+/* "Living at night"                                                          */
+/* "Doesn't help for my complexion"                                           */
+/* David Thomas - Final Solution                                              */
+/* ---------------------------------------------------------------------------*/
 
 #include <sys/types.h>
 #include <string.h>
@@ -113,65 +111,65 @@ typedef struct _sonogram
 {
     t_object x_obj;
 
-    t_int x_size;                  /* size of the stored fft ( in blocks~ ) */
-    t_float x_samplerate;          /* sample rate */
-    t_int x_blocksize;             /* current block size ( might be modified by block~ object ) */
-    t_float x_readpos;             /* data's playing position                                   */
-    t_int x_writepos;              /* data's recording position                                 */
-    t_int x_readstart;             /* data's starting position for reading                      */
-    t_int x_readend;               /* data's ending position for reading                        */
-    t_int x_modstart;              /* data's starting position for modifications                */
-    t_int x_modend;                /* data's ending position for modifications                  */
-    t_int x_play;                  /* playing on/off flag                                       */
-    t_float x_readspeed;           /* number of grouped blocks for reading                      */
-    t_float x_record;              /* flag to start recording process                           */
-    t_float x_empty;               /* flag to indicate it's a brand new sonogram                */
-    t_float *x_rdata;              /* table containing real part of the fft                     */
-    t_float *x_rudata;             /* undo real data                                            */
-    t_float *x_idata;              /* table containing imaginery part of the fft                */
-    t_float *x_iudata;             /* undo imaginery data                                       */
-    t_float x_phase;               /* phase to apply on output                                  */
-    t_outlet *x_end;               /* outlet for end of restitution                             */
-    t_outlet *x_recend;            /* outlet for end of recording                               */
-    t_int *x_multfreq;             /* array of multiplicative factor                            */
-    char  *x_gifdata;              /* buffer for graphical data                                 */
-    char  *x_guicommand;           /* buffer for graphical command                              */
-    t_int x_uxs;                   /* starting x position for undo                              */
-    t_int x_uxe;                   /* ending x position for undo                                */
-    t_int x_uys;                   /* starting y position for undo                              */
-    t_int x_uye;                   /* ending y position for undo                                */
+    t_int x_size;          /* size of the stored fft ( in blocks~ )         */
+    t_float x_samplerate;  /* sample rate                                   */
+    t_int x_blocksize;     /* current block size ( might be modified by block~ object ) */
+    t_float x_readpos;     /* data's playing position                       */
+    t_int x_writepos;      /* data's recording position                     */
+    t_int x_readstart;     /* data's starting position for reading          */
+    t_int x_readend;       /* data's ending position for reading            */
+    t_int x_modstart;      /* data's starting position for modifications    */
+    t_int x_modend;        /* data's ending position for modifications      */
+    t_int x_play;          /* playing on/off flag                           */
+    t_float x_readspeed;   /* number of grouped blocks for reading          */
+    t_float x_record;      /* flag to start recording process               */
+    t_float x_empty;       /* flag to indicate it's a brand new sonogram    */
+    t_float *x_rdata;      /* table containing real part of the fft         */
+    t_float *x_rudata;     /* undo real data                                */
+    t_float *x_idata;      /* table containing imaginery part of the fft    */
+    t_float *x_iudata;     /* undo imaginery data                           */
+    t_float x_phase;       /* phase to apply on output                      */
+    t_outlet *x_end;       /* outlet for end of restitution                 */
+    t_outlet *x_recend;    /* outlet for end of recording                   */
+    t_int *x_multfreq;     /* array of multiplicative factor                */
+    char  *x_gifdata;      /* buffer for graphical data                     */
+    char  *x_guicommand;   /* buffer for graphical command                  */
+    t_int x_uxs;           /* starting x position for undo                  */
+    t_int x_uxe;           /* ending x position for undo                    */
+    t_int x_uys;           /* starting y position for undo                  */
+    t_int x_uye;           /* ending y position for undo                    */
 
     /* graphical data block */
-    t_int x_enhancemode;           /* flag to set enhance mode                    */
-    t_int x_graphic;               /* flag to set graphic mode                    */
-    t_int x_phaso;                 /* flag to indicate if phasogram is shown      */
-    t_int x_selected;              /* flag to remember if we are seleted or not   */
-    t_int x_erase;                 /* flag used when an erase is needed           */
-    t_int x_redraw;                /* flag used when drawing  is needed           */
-    t_int x_nbupdated;             /* number of points updated                    */
-    t_glist *x_glist;              /* keep graphic context for various operations */
-    t_int x_zoom;                  /* zoom factor                                 */
+    t_int x_enhancemode;   /* flag to set enhance mode                      */
+    t_int x_graphic;       /* flag to set graphic mode                      */
+    t_int x_phaso;         /* flag to indicate if phasogram is shown        */
+    t_int x_selected;      /* flag to remember if we are seleted or not     */
+    t_int x_erase;         /* flag used when an erase is needed             */
+    t_int x_redraw;        /* flag used when drawing  is needed             */
+    t_int x_nbupdated;     /* number of points updated                      */
+    t_glist *x_glist;      /* keep graphic context for various operations   */
+    t_int x_zoom;          /* zoom factor                                   */
 #ifndef _WIN32
-    pthread_t x_updatechild;       /* thread id for the update child              */
+    pthread_t x_updatechild;   /* thread id for the update child            */
 #else
     int x_updatechild;
 #endif
-    t_int x_updatestart;           /* starting position for update                */
-    t_int x_updateend;             /* ending position for update                  */
-    t_int x_xpos;                  /* stuck x position                            */
-    t_int x_ypos;                  /* stuck y position                            */
-    t_int x_shifted;               /* remember shift state from last click        */
-    t_int x_alted;                 /* remember alt state from last click          */
-    t_int x_aftermousedown;        /* indicates the mousedown event               */
-    t_int x_xstartcapture;         /* x of the start of the capture               */
-    t_int x_ystartcapture;         /* y of the start of the capture               */
-    t_int x_xendcapture;           /* x of the start of the capture               */
-    t_int x_yendcapture;           /* y of the start of the capture               */
-    t_int x_xdraw;                 /* x drawing position                          */
-    t_int x_ydraw;                 /* y drawing position                          */
-    t_float x_modstep;             /* step for graphical modifications            */
+    t_int x_updatestart;   /* starting position for update                  */
+    t_int x_updateend;     /* ending position for update                    */
+    t_int x_xpos;          /* stuck x position                              */
+    t_int x_ypos;          /* stuck y position                              */
+    t_int x_shifted;       /* remember shift state from last click          */
+    t_int x_alted;         /* remember alt state from last click            */
+    t_int x_aftermousedown;    /* indicates the mousedown event             */
+    t_int x_xstartcapture; /* x of the start of the capture                 */
+    t_int x_ystartcapture; /* y of the start of the capture                 */
+    t_int x_xendcapture;   /* x of the start of the capture                 */
+    t_int x_yendcapture;   /* y of the start of the capture                 */
+    t_int x_xdraw;         /* x drawing position                            */
+    t_int x_ydraw;         /* y drawing position                            */
+    t_float x_modstep;     /* step for graphical modifications              */
 
-    t_float x_f;                   /* float needed for signal input */
+    t_float x_f;           /* float needed for signal input */
 
 } t_sonogram;
 
