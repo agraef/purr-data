@@ -964,13 +964,13 @@ int binbuf_read(t_binbuf *b, char *filename, char *dirname, int crflag)
     int readret;
     char *buf;
     char namebuf[MAXPDSTRING];
-    
+
     if (*dirname)
         snprintf(namebuf, MAXPDSTRING-1, "%s/%s", dirname, filename);
     else
         snprintf(namebuf, MAXPDSTRING-1, "%s", filename);
     namebuf[MAXPDSTRING-1] = 0;
-    
+
     if ((fd = sys_open(namebuf, 0)) < 0)
     {
         //fprintf(stderr, "open: ");
@@ -982,14 +982,14 @@ int binbuf_read(t_binbuf *b, char *filename, char *dirname, int crflag)
     {
         //fprintf(stderr, "lseek: ");
         perror(namebuf);
-        close(fd);
+        sys_close(fd);
         return(1);
     }
     if ((readret = read(fd, buf, length)) < length)
     {
         //fprintf(stderr, "read (%d %ld) -> %d\n", fd, length, readret);
         perror(namebuf);
-        close(fd);
+        sys_close(fd);
         t_freebytes(buf, length);
         return(1);
     }
@@ -1008,7 +1008,7 @@ int binbuf_read(t_binbuf *b, char *filename, char *dirname, int crflag)
 #endif
 
     t_freebytes(buf, length);
-    close(fd);
+    sys_close(fd);
     return (0);
 }
 
@@ -1024,7 +1024,7 @@ int binbuf_read_via_canvas(t_binbuf *b, char *filename, t_canvas *canvas,
         error("%s: can't open", filename);
         return (1);
     }
-    else close (filedesc);
+    else sys_close(filedesc);
     if (binbuf_read(b, bufptr, buf, crflag))
         return (1);
     else return (0);
@@ -1042,7 +1042,7 @@ int binbuf_read_via_path(t_binbuf *b, char *filename, char *dirname,
         error("%s: can't open", filename);
         return (1);
     }
-    else close (filedesc);
+    else sys_close(filedesc);
     if (binbuf_read(b, bufptr, buf, crflag))
         return (1);
     else return (0);

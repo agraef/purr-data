@@ -9,7 +9,7 @@ These operations are not to be done in "real time" as they may have to wait
 for disk accesses (even the write routine.)  Finally, the realtime objects
 readsf~ and writesf~ are defined which confine disk operations to a separate
 thread so that they can be used in real time.  The readsf~ and writesf~
-objects use Posix-like threads.  */
+objects use Posix-like threads. */
 
 #include "config.h"
 
@@ -38,10 +38,10 @@ objects use Posix-like threads.  */
 #ifdef _LARGEFILE64_SOURCE
 # define open open64
 # define lseek lseek64
-#define off_t __off64_t
+# define off_t __off64_t
 #endif
 #ifdef MSW
-#define off_t long
+# define off_t long
 #endif
 
 /***************** soundfile header structures ************************/
@@ -869,7 +869,7 @@ static int create_soundfile(t_canvas *canvas, const char *filename,
 
     if (write(fd, headerbuf, headersize) < headersize)
     {
-        close (fd);
+        sys_close (fd);
         return (-1);
     }
     return (fd);
@@ -1382,7 +1382,7 @@ usage:
     post("-raw <headerbytes> <channels> <bytespersamp> <endian (b, l, or n)>.");
 done:
     if (fd >= 0)
-        close (fd);
+        sys_close(fd);
     outlet_float(x->x_obj.ob_outlet, (t_float)itemsread); 
 }
 
@@ -1487,7 +1487,7 @@ long soundfiler_dowrite(void *obj, t_canvas *canvas,
     {
         soundfile_finishwrite(obj, filesym->s_name, fd,
             filetype, nframes, itemswritten, nchannels * bytespersamp, swap);
-        close (fd);
+        sys_close(fd);
     }
     return ((float)itemswritten); 
 usage:
@@ -1497,7 +1497,7 @@ usage:
     post("(defaults to a 16-bit wave file).");
 fail:
     if (fd >= 0)
-        close (fd);
+        sys_close(fd);
     return (0); 
 }
 
@@ -1680,7 +1680,7 @@ static void *readsf_child_main(void *zz)
             {
                 fd = x->x_fd;
                 pthread_mutex_unlock(&x->x_mutex);
-                close (fd);
+                sys_close(fd);
                 pthread_mutex_lock(&x->x_mutex);
                 x->x_fd = -1;
                 if (x->x_requestcode != REQUEST_BUSY)
@@ -1863,7 +1863,7 @@ static void *readsf_child_main(void *zz)
             {
                 fd = x->x_fd;
                 pthread_mutex_unlock(&x->x_mutex);
-                close (fd);
+                sys_close(fd);
                 pthread_mutex_lock(&x->x_mutex);
                 x->x_fd = -1;
             }
@@ -1876,7 +1876,7 @@ static void *readsf_child_main(void *zz)
             {
                 fd = x->x_fd;
                 pthread_mutex_unlock(&x->x_mutex);
-                close (fd);
+                sys_close(fd);
                 pthread_mutex_lock(&x->x_mutex);
                 x->x_fd = -1;
             }
@@ -1890,7 +1890,7 @@ static void *readsf_child_main(void *zz)
             {
                 fd = x->x_fd;
                 pthread_mutex_unlock(&x->x_mutex);
-                close (fd);
+                sys_close(fd);
                 pthread_mutex_lock(&x->x_mutex);
                 x->x_fd = -1;
             }
@@ -2246,7 +2246,7 @@ static void *writesf_child_main(void *zz)
                 soundfile_finishwrite(x, filename, fd,
                     filetype, 0x7fffffff, itemswritten,
                     bytesperframe, swap);
-                close (fd);
+                sys_close(fd);
 
                 pthread_mutex_lock(&x->x_mutex);
                 x->x_fd = -1;
@@ -2387,7 +2387,7 @@ static void *writesf_child_main(void *zz)
                 soundfile_finishwrite(x, filename, fd,
                     filetype, 0x7fffffff, itemswritten,
                     bytesperframe, swap);
-                close (fd);
+                sys_close(fd);
 
                 pthread_mutex_lock(&x->x_mutex);
                 x->x_fd = -1;

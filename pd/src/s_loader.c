@@ -219,7 +219,7 @@ static int sys_do_load_lib(t_canvas *canvas, const char *objectname,
 #endif
     return (0);
 gotone:
-    close(fd);
+    sys_close(fd);
     class_set_extern_dir(gensym(dirbuf));
 
         /* rebuild the absolute pathname */
@@ -444,7 +444,6 @@ int sys_run_scheduler(const char *externalschedlibname,
     }
 }
 
-
 /* abstraction loading */
 void canvas_popabstraction(t_canvas *x);
 int pd_setloadingabstraction(t_symbol *sym);
@@ -474,7 +473,7 @@ static t_pd *do_create_abstraction(t_symbol*s, int argc, t_atom *argv)
             (fd = canvas_open(canvas, classslashclass, ".pd",
                   dirbuf, &nameptr, MAXPDSTRING, 0)) >= 0)
         {
-            close(fd);
+            sys_close(fd);
             canvas_setargs(argc, argv);
 
             binbuf_evalfile(gensym(nameptr), gensym(dirbuf));
@@ -510,11 +509,11 @@ static int sys_do_load_abs(t_canvas *canvas, const char *objectname,
         (fd = sys_trytoopenone(path, classslashclass, ".pd",
               dirbuf, &nameptr, MAXPDSTRING, 1)) >= 0)
     {
-        t_class*c=0;
-        close(fd);
+        t_class *c = 0;
+        sys_close(fd);
             /* found an abstraction, now register it as a new pseudo-class */
         class_set_extern_dir(gensym(dirbuf));
-        if((c=class_new(gensym(objectname),
+        if ((c=class_new(gensym(objectname),
                         (t_newmethod)do_create_abstraction, 0,
                         0, 0, A_GIMME, 0)))
         {
