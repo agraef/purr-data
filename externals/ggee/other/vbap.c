@@ -122,7 +122,7 @@ static void *vbap_new(t_symbol* s)
      canvas_makefilename(canvas_getcurrent(),s->s_name,
                          fname,MAXPDSTRING);
 
-     if((fp=fopen(fname,"r"))==NULL){
+     if((fp=sys_fopen(fname,"r"))==NULL){
 	  post("vbap: Could not open loudspeaker data file %s\n",fname);
 	  x->opened = 0;
      }
@@ -130,7 +130,7 @@ static void *vbap_new(t_symbol* s)
 	  if (!read_ls_conf(x,fp))
 	       return NULL;
 	  x->opened = 1;
-	  fclose(fp);
+	  sys_fclose(fp);
      }
 
      x->lasttrip[0] = 0;

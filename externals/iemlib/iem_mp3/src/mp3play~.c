@@ -3174,7 +3174,7 @@ static void *mp3play_tilde_new(void)
 static void mp3play_tilde_cleanup(t_mp3play_tilde *x)
 {
     x->file_is_open = 0;
-    fclose(x->fh);
+    sys_fclose(x->fh);
     x->play_state = 0;
     x->mp3_out_index = 0;
     x->mp_is_init = 0;
@@ -3404,7 +3404,7 @@ static void mp3play_tilde_do_open(t_mp3play_tilde *x, char *str, int calc_it)
         strcat(completefilename, str);
       }
 
-  if((x->fh = fopen(completefilename, "rb")) == NULL)
+  if((x->fh = sys_fopen(completefilename, "rb")) == NULL)
   {
       post("mp3play-ERROR: cannot open %s", completefilename);
   }
@@ -3520,13 +3520,13 @@ static void mp3play_tilde_do_open(t_mp3play_tilde *x, char *str, int calc_it)
     {
         x->file_is_open = 0;
         x->mp3_out_index = 0;
-        fclose(x->fh);
+        sys_fclose(x->fh);
     }
       }
       else
       {
     x->file_is_open = 0;
-    fclose(x->fh);
+    sys_fclose(x->fh);
       }
   }
   x->play_state = 2;

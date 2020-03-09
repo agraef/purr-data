@@ -79,7 +79,7 @@ void adaptation_write(const char *filename, t_int N, t_float mu, t_float *c)
   int i;
 
   // open file
-  f = fopen(filename, "w");
+  f = sys_fopen(filename, "w");
   if(!f)
   {
     post("adaptive, save: error open file");
@@ -96,7 +96,7 @@ void adaptation_write(const char *filename, t_int N, t_float mu, t_float *c)
     fprintf(f, "%.30f\n", c[i]);
 
   // close file
-  if (f) fclose(f);
+  if (f) sys_fclose(f);
   post("adaptive, save: coefficients written to file");
 }
 
@@ -107,7 +107,7 @@ void adaptation_read(const char *filename, t_int *N, t_float *mu,
   int i, n=0;
 
   // open file
-  f = fopen(filename, "r");
+  f = sys_fopen(filename, "r");
   if(!f)
   {
     post("adaptive, open: error open file");

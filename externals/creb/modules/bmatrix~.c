@@ -49,7 +49,7 @@ static void matrix_load(t_matrix *x, t_symbol *s)
   if(s && s->s_name)
     {
       post("matrix: loading %s",s->s_name);
-      if(matrix = fopen(s->s_name, "r"))
+      if(matrix = sys_fopen(s->s_name, "r"))
 	{
 	  int n = x->x_ctl.c_order;
 	  fread(x->x_ctl.c_A, sizeof(t_float), n*n, matrix);

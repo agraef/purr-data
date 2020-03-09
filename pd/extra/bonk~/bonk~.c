@@ -1150,7 +1150,7 @@ static void bonk_write(t_bonk *x, t_symbol *s)
         buf, MAXPDSTRING);
     sys_bashfilename(buf, buf);
 
-    if (!(fd = fopen(buf, "w")))
+    if (!(fd = sys_fopen(buf, "w")))
     {
         post("%s: couldn't create", s->s_name);
         return;

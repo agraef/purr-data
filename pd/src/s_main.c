@@ -172,7 +172,7 @@ static void openit(const char *dirname, const char *filename)
         FILENAME_MAX, 0);
     if (fd >= 0)
     {
-        close (fd);
+        sys_close(fd);
         glob_evalfile(0, gensym(nameptr), gensym(dirbuf));
         gui_vmess("gui_process_open_arg", "s", filename);
     }

@@ -99,7 +99,7 @@ static void soundfile_info_overwrite_sr(t_soundfile_info *x, t_symbol *filename,
     strcat(completefilename, filename->s_name);
   }
   
-  fh = fopen(completefilename,"r+b");
+  fh = sys_fopen(completefilename,"r+b");
   if(!fh)
   {
     post("soundfile_info_read: cannot open %s !!\n", completefilename);
@@ -187,7 +187,7 @@ static void soundfile_info_overwrite_sr(t_soundfile_info *x, t_symbol *filename,
       
       fseek(fh,0,SEEK_SET);
       read_chars = (int)fwrite (x->x_begmem, sizeof(char), n4, fh);
-      fclose(fh);
+      sys_fclose(fh);
       post("written");
       
       sr = (int)ul_sr;
@@ -268,7 +268,7 @@ static void soundfile_info_read(t_soundfile_info *x, t_symbol *filename)
     strcat(completefilename, filename->s_name);
   }
   
-  fh = fopen(completefilename,"rb");
+  fh = sys_fopen(completefilename,"rb");
   if(!fh)
   {
     post("soundfile_info_read: cannot open %s !!\n", completefilename);
@@ -282,7 +282,7 @@ static void soundfile_info_read(t_soundfile_info *x, t_symbol *filename)
     filesize = ftell(fh);
     fseek(fh,0,SEEK_SET);
     read_chars = (int)fread(x->x_begmem, sizeof(char), n4, fh) / 2;
-    fclose(fh);
+    sys_fclose(fh);
     //    post("read chars = %d", read_chars);
     cvec = (char *)x->x_begmem;
     if(read_chars > 4)

@@ -45,9 +45,9 @@ t_symbol *image_trytoopen(t_image* x)
     canvas_makefilename(glist_getcanvas(x->x_glist), x->x_fname->s_name,
         fname, FILENAME_MAX);
     // try to open the file
-    if (file = fopen(fname, "r"))
+    if (file = sys_fopen(fname, "r"))
     {
-        fclose(file);
+        sys_fclose(file);
         return gensym(fname);
     }
     else

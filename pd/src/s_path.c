@@ -357,7 +357,7 @@ int sys_trytoopenone(const char *dir, const char *name, const char* ext,
 
     DEBUG(post("looking for %s",dirresult));
         /* see if we can open the file for reading */
-    if ((fd=open(dirresult,O_RDONLY | MSWOPENFLAG(bin))) >= 0)
+    if ((fd = sys_open(dirresult,O_RDONLY | MSWOPENFLAG(bin))) >= 0)
     {
             /* in unix, further check that it's not a directory */
 #ifdef HAVE_UNISTD_H

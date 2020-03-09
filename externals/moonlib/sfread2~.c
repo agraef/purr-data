@@ -317,7 +317,7 @@ static void sfread_open(t_sfread *x,t_symbol *filename)
     /* close the old file */
 
     if (x->x_mapaddr) munmap(x->x_mapaddr,x->x_size);
-    if (x->x_fd >= 0) close(x->x_fd);
+    if (x->x_fd >= 0) sys_close(x->x_fd);
 
     /*if ((x->x_fd = open(fname,O_RDONLY)) < 0)*/
     //post("fname: %s",fname);

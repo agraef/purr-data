@@ -72,7 +72,7 @@ static void sys_initloadpreferences( void)
     else
         return;
     filenamebuf[FILENAME_MAX-1] = 0;
-    if ((fd = open(filenamebuf, 0)) < 0)
+    if ((fd = sys_open(filenamebuf, 0)) < 0)
     {
         if (sys_verbose)
             perror(filenamebuf);
@@ -83,14 +83,14 @@ static void sys_initloadpreferences( void)
     {
         if (sys_verbose)
             perror(filenamebuf);
-        close(fd);
+        sys_close(fd);
         return;
     }
     lseek(fd, 0, 0);
     if (!(sys_prefbuf = malloc(length + 2)))
     {
         error("couldn't allocate memory for preferences buffer");
-        close(fd);
+        sys_close(fd);
         return;
     }
     sys_prefbuf[0] = '\n';
@@ -98,11 +98,11 @@ static void sys_initloadpreferences( void)
     {
         perror(filenamebuf);
         sys_prefbuf[0] = 0;
-        close(fd);
+        sys_close(fd);
         return;
     }
     sys_prefbuf[length+1] = 0;
-    close(fd);
+    sys_close(fd);
     if (sys_verbose)
         post("success reading preferences from: %s", filenamebuf);
 }
@@ -156,7 +156,7 @@ static void sys_initsavepreferences( void)
     }
     snprintf(filenamebuf, FILENAME_MAX, "%s/" USER_CONFIG_DIR "/user.settings", homedir);
     filenamebuf[FILENAME_MAX-1] = 0;
-    if ((sys_prefsavefp = fopen(filenamebuf, "w")) == NULL)
+    if ((sys_prefsavefp = sys_fopen(filenamebuf, "w")) == NULL)
     {
         //snprintf(errbuf, FILENAME_MAX, "%s: %s",filenamebuf, strerror(errno));
         pd_error(0, "%s: %s",filenamebuf, strerror(errno));
@@ -883,7 +883,7 @@ void sys_save_recent_files(void)
   }
   snprintf(filenamebuf, FILENAME_MAX, "%s/" USER_CONFIG_DIR "/recent_files", homedir);
   filenamebuf[FILENAME_MAX-1] = 0;
-  if ((fp = fopen(filenamebuf, "w")) == NULL) {
+  if ((fp = sys_fopen(filenamebuf, "w")) == NULL) {
     pd_error(0, "%s: %s",filenamebuf, strerror(errno));
     return;
   }
@@ -914,7 +914,7 @@ void sys_load_recent_files(void)
   if (!homedir) return;
   snprintf(filenamebuf, FILENAME_MAX, "%s/" USER_CONFIG_DIR "/recent_files", homedir);
   filenamebuf[FILENAME_MAX-1] = 0;
-  if ((fp = fopen(filenamebuf, "r")) == NULL) return;
+  if ((fp = sys_fopen(filenamebuf, "r")) == NULL) return;
   for (sys_n_recent_files = 0; sys_n_recent_files < MAX_RECENT_FILES &&
          fgets(filenamebuf, FILENAME_MAX, fp); ) {
     char *s;
