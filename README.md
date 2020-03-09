@@ -89,14 +89,18 @@ There are three maintained distributions of Pure Data:
 
 ### Downloads
 
+Packages for Windows and OSX:
+
+[https://github.com/jonwwilkes/purr-data/releases](https://github.com/jonwwilkes/purr-data/releases)
+
+Packages for Gnu/Linux:
+
+[https://build.opensuse.org/package/show/home:aggraef/purr-data](https://build.opensuse.org/package/show/home:aggraef/purr-data)
+
 For Ubuntu PPAs and Arch AUR:
 
 [https://agraef.github.io/purr-data/#jgu-packages](https://agraef.github.io/purr-data/#jgu-packages)
 
-Packages for Gnu/Linux, Windows, and OSX:
-
-[https://github.com/jonwwilkes/purr-data/releases](https://github.com/jonwwilkes/purr-data/releases)
- 
 ### Build Guide
 
 **NOTE:** The instructions for Windows and OSX below talk about running the `tar_em_up.sh` build
