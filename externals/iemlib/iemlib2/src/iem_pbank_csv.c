@@ -88,7 +88,7 @@ static void iem_pbank_csv_write(t_iem_pbank_csv *x, t_symbol *filename, t_symbol
     strcat(completefilename, filename->s_name);
   }
   
-  fh = fopen(completefilename,"wb");
+  fh = sys_fopen(completefilename,"wb");
   if(!fh)
   {
     post("iem_pbank_csv_write: cannot create %s !!\n", completefilename);
@@ -172,7 +172,7 @@ static void iem_pbank_csv_write(t_iem_pbank_csv *x, t_symbol *filename, t_symbol
         fprintf(fh, "%s%s", ap->a_w.w_symbol->s_name, eol+eol_offset);
       ap++;
     }
-    fclose(fh);
+    sys_fclose(fh);
     post("iem_pbank_csv: wrote %d parameters x %d lines to file:\n%s\nwith following format:\n%s\n", nrp, nrl, completefilename, formattext);
   }
 }
@@ -407,7 +407,7 @@ static void iem_pbank_csv_read(t_iem_pbank_csv *x, t_symbol *filename, t_symbol 
        strcat(completefilename, filename->s_name);
      }
      
-     fh = fopen(completefilename,"rb");
+     fh = sys_fopen(completefilename,"rb");
      if(!fh)
      {
        post("iem_pbank_csv_read: cannot open %s !!\n", completefilename);
@@ -481,7 +481,7 @@ static void iem_pbank_csv_read(t_iem_pbank_csv *x, t_symbol *filename, t_symbol 
        txbuf2 = (char *)getbytes((2 * txalloc + 256) * sizeof(char));
        if(fread(txbuf1, sizeof(char), txalloc, fh) < sizeof(char)*txalloc)
          post("pbank.csv:435: warning read error (not specified)");
-       fclose(fh);
+       sys_fclose(fh);
        
 	// 1.)  allow only readable ASCII (0x09, 0x0a, 0x0d, 0x20...0x7e = 
   //      = TAB, LF, CR, ' ' ... '~' = 

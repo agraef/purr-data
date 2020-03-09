@@ -200,7 +200,7 @@ static void *earplug_new(t_floatarg azimArg, t_floatarg elevArg)
 				fscanf(fp, "%f %f ", &earplug_impulses[i][0][j], &earplug_impulses[i][1][j]);
             }
         }
-        fclose(fp) ;
+        sys_fclose(fp) ;
     }
     x->impulses = earplug_impulses;
     

@@ -99,7 +99,7 @@ static void sfwrite_close(t_sfwrite *x)
 	  sfwrite_wave_setup(x,&w);
 	  lseek(x->x_file,0,SEEK_SET);
 	  write(x->x_file,&w,sizeof(w));
-	  close(x->x_file);
+	  sys_close(x->x_file);
      }
      x->x_file = -1;
 }
@@ -123,7 +123,7 @@ static void sfwrite_open(t_sfwrite *x,t_symbol *filename)
 
      sfwrite_close(x);
 
-     if ((x->x_file = open(fname,OPENPARAMS,0664)) < 0)
+     if ((x->x_file = sys_open(fname,OPENPARAMS,0664)) < 0)
      {
 	  error("can't create %s",fname);
 	  return;

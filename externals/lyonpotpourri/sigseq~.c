@@ -141,7 +141,7 @@ void sigseq_readfile(t_sigseq *x, t_symbol *filename)
     FILE *fp;
     float data;
     post("requested path: %s", filename->s_name);
-    fp = fopen(filename->s_name, "r");
+    fp = sys_fopen(filename->s_name, "r");
     if( fp == NULL ){
         post("could not open file!");
         return;
@@ -149,7 +149,7 @@ void sigseq_readfile(t_sigseq *x, t_symbol *filename)
     while( fscanf(fp, "%f", &data) != EOF ){
         post("%f",data);
     }
-    fclose(fp);
+    sys_fclose(fp);
 }
 
 void sigseq_mute(t_sigseq *x, t_symbol *msg, short argc, t_atom *argv)

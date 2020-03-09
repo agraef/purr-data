@@ -523,12 +523,12 @@ static int create_soundfile2(t_canvas *canvas, const char *filename,
 
     canvas_makefilename(canvas, filenamebuf, buf2, MAXPDSTRING);
     sys_bashfilename(buf2, buf2);
-    if ((fd = open(buf2, BINCREATE, 0666)) < 0)
+    if ((fd = sys_open(buf2, BINCREATE, 0666)) < 0)
         return (-1);
 
     if (write(fd, headerbuf, headersize) < headersize)
     {
-        close (fd);
+        sys_close (fd);
         return (-1);
     }
     return (fd);
@@ -914,7 +914,7 @@ static void soundfiler2_read(t_soundfiler2 *x, t_symbol *s,
     /* do all graphics updates */
     for (i = 0; i < argc; i++)
         garray_redraw(garrays[i]);
-    fclose(fp);
+    sys_fclose(fp);
     fd = -1;
     goto done;
 usage:
@@ -923,7 +923,7 @@ usage:
     post("-raw <headerbytes> <channels> <bytespersamp> <endian (b, l, or n)>.");
 done:
     if (fd >= 0)
-        close (fd);
+        sys_close (fd);
     outlet_float(x->x_obj.ob_outlet, (float)itemsread);
 }
 
@@ -1029,7 +1029,7 @@ static long soundfiler2_dowrite(void *obj, t_canvas *canvas,
     {
         soundfile_finishwrite(obj, filesym->s_name, fd,
                               filetype, nframes, itemswritten, nchannels * bytespersamp, swap);
-        close (fd);
+        sys_close (fd);
     }
     return ((float)itemswritten);
 usage:
@@ -1039,7 +1039,7 @@ usage:
     post("(defaults to a 16-bit wave file).");
 fail:
     if (fd >= 0)
-        close (fd);
+        sys_close (fd);
     return (0);
 }
 
@@ -1230,7 +1230,7 @@ static void *readsf_child_main(void *zz)
             {
                 fd = x->x_fd;
                 pthread_mutex_unlock(&x->x_mutex);
-                close (fd);
+                sys_close (fd);
                 pthread_mutex_lock(&x->x_mutex);
                 x->x_fd = -1;
                 if (x->x_requestcode != REQUEST_BUSY)
@@ -1383,7 +1383,7 @@ lost:
             {
                 fd = x->x_fd;
                 pthread_mutex_unlock(&x->x_mutex);
-                close (fd);
+                sys_close (fd);
                 pthread_mutex_lock(&x->x_mutex);
                 x->x_fd = -1;
             }
@@ -1396,7 +1396,7 @@ lost:
             {
                 fd = x->x_fd;
                 pthread_mutex_unlock(&x->x_mutex);
-                close (fd);
+                sys_close (fd);
                 pthread_mutex_lock(&x->x_mutex);
                 x->x_fd = -1;
             }
@@ -1410,7 +1410,7 @@ lost:
             {
                 fd = x->x_fd;
                 pthread_mutex_unlock(&x->x_mutex);
-                close (fd);
+                sys_close (fd);
                 pthread_mutex_lock(&x->x_mutex);
                 x->x_fd = -1;
             }

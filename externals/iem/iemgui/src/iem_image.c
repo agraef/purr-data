@@ -57,11 +57,11 @@ static t_symbol *iem_image_calc_size(t_iem_image *x)
   else
   {
     if(fd >= 0)
-      close(fd);
+      sys_close(fd);
     strcpy(namebuf, dirbuf);
     strcat(namebuf, "/");
     strcat(namebuf, namebufptr);
-    fh = fopen(namebuf, "r");
+    fh = sys_fopen(namebuf, "r");
     if(fh == NULL)
     {
       post("iem_image-ERROR: cannot open %s second time", namebuf);
@@ -76,7 +76,7 @@ static t_symbol *iem_image_calc_size(t_iem_image *x)
         x->x_gifsym = (t_symbol *)0;
         return((t_symbol *)0);
         };
-      fclose(fh);
+      sys_fclose(fh);
       c = (char *)buf;
       if((c[0] != 'G')||(c[1] != 'I')||(c[2] != 'F'))
       {

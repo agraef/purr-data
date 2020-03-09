@@ -90,7 +90,7 @@ void state_dosave(t_state *x)
      else
 	  sprintf(name,"%s%s.%d",dirstr,x->x_name->s_name,x->x_slot);
 
-     fp = fopen(name,"w");
+     fp = sys_fopen(name,"w");
      if (!fp) {
 	  post("state: unable to open %s",name);
 	  return;
@@ -151,7 +151,7 @@ void state_dosave(t_state *x)
      } while ((a = (t_text*)((t_gobj*)a)->g_next));
      post("state saved to: %s",name);
 
-     fclose(fp);
+     sys_fclose(fp);
 
 }
 

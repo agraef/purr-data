@@ -43,7 +43,7 @@ static const char *image_get_filename(t_image *x, char *file)
            retrieve the full path... */
         fullpath = dirresult;
         fullpath[strlen(fullpath)] = '/';
-        close(fd);
+        sys_close(fd);
         return fullpath;
     }
     else return 0;

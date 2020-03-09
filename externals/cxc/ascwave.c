@@ -49,7 +49,7 @@ static void ascwave_open(t_ascwave *x, t_symbol *filename)
      post("ascwave: open");
      x->filename = filename;
      post("ascwave: filename = %s",x->filename->s_name);
-     if ((x->x_file = fopen(x->filename->s_name,"w")) < 0)
+     if ((x->x_file = sys_fopen(x->filename->s_name,"w")) < 0)
      {
 	  error("can't create %s",filename->s_name);
 	  return;
