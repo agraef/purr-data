@@ -89,33 +89,33 @@ There are three maintained distributions of Pure Data:
 
 ### Downloads
 
-**Packages for Windows and OSX:
+Packages for Windows and OSX:
 
 [https://github.com/jonwwilkes/purr-data/releases](https://github.com/jonwwilkes/purr-data/releases)
 
-**Packages for Gnu/Linux:
+Packages for Gnu/Linux:
 
 * Arch
 
-[See Installation Guide for Arch](####arch)
+[See Installation Guide for Arch](#arch)
 
 * Debian 9, 10, and testing
 
-[See Installation Guide for Debian](####debian)
+[See Installation Guide for Debian](#debian)
 
 * Raspbian 9, and 10
 
-[See Installation Guide for Raspbian](####raspbian)
+[See Installation Guide for Raspbian](#raspbian)
 
 * Ubuntu 16.04, 18.04, 19.04, and 19.10 
 
-[See Installation Guide for Ubuntu](####ubuntu)
+[See Installation Guide for Ubuntu](#ubuntu)
 
 * openSUSE
 
-[See Installation Guide for openSUSE](####opensuse)
+[See Installation Guide for openSUSE](#opensuse)
 
-**For Ubuntu PPAs and Arch AUR:
+For Ubuntu PPAs and Arch AUR:
 
 [https://agraef.github.io/purr-data/#jgu-packages](https://agraef.github.io/purr-data/#jgu-packages)
 
