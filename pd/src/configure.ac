@@ -116,7 +116,7 @@ dnl This should be fixed so Pd can use ALSA shared libraries where appropriate.
         AC_CHECK_LIB(jack,jack_set_error_function,PDLIB="$PDLIB -ljack";jack=yes,jack=no)
     fi
 
-    LDFLAGS="-Wl,-export-dynamic"
+    LDFLAGS="$LDFLAGS -Wl,-export-dynamic"
     if test "$static" = "yes"; then 
       LDFLAGS="$LDFLAGS -static"
     fi 
