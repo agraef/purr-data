@@ -89,14 +89,139 @@ There are three maintained distributions of Pure Data:
 
 ### Downloads
 
-For Ubuntu PPAs and Arch AUR:
-
-[https://agraef.github.io/purr-data/#jgu-packages](https://agraef.github.io/purr-data/#jgu-packages)
-
-Packages for Gnu/Linux, Windows, and OSX:
+Packages for Windows and OSX:
 
 [https://github.com/jonwwilkes/purr-data/releases](https://github.com/jonwwilkes/purr-data/releases)
- 
+
+Gnu/Linux installation instructions:
+
+* [Arch](#arch)
+
+* [Debian 9, 10, and testing](#debian)
+
+* [Raspbian 9, and 10](#raspbian)
+
+* [Ubuntu 16.04, 18.04, 19.04, and 19.10](#ubuntu)
+
+* [openSUSE](#opensuse)
+
+### Installation Guide
+
+#### Arch
+
+All of this needs to be done as root, using either `sudo` or `su`.
+
+The following goes into /etc/pacman.conf:
+
+~~~
+[home_aggraef_Arch]
+SigLevel = Never
+Server = https://download.opensuse.org/repositories/home:aggraef/Arch/$arch
+~~~
+
+Then just run:
+
+~~~
+pacman -Sy
+pacman -S purr-data
+~~~
+
+#### Debian 
+
+All of this needs to be done as root, using either `sudo` or `su`. Use "Debian_9.0" instead if you're running Debian Stretch rather than Buster; likewise if you're running Unstable or Testing.
+
+You should import the repository key first, so that the packages can be updated automatically (this only needs to be done once):
+
+~~~
+wget -nv https://download.opensuse.org/repositories/home:aggraef/Debian_10/Release.key
+apt-key add Release.key
+~~~
+
+Then add the repository to your apt sources as follows (taking Debian 10 as an example):
+
+~~~
+echo 'deb http://download.opensuse.org/repositories/home:/aggraef/Debian_10/ /' > /etc/apt/sources.list.d/home:aggraef.list
+apt update
+~~~
+
+**NOTE:** This creates the source in a separate file /etc/apt/sources.list.d/home:aggraef.list. You can just remove this file when you don't need the repository any more.
+
+Finally install the package:
+
+~~~
+apt install purr-data
+~~~
+
+#### Raspbian
+
+All of this needs to be done as root, using either `sudo` or `su`. Use "Raspbian_9.0" instead if you're running Raspbian Stretch rather than Buster.
+
+~~~
+sudo su
+~~~
+
+You should import the repository key first, so that the packages can be updated automatically (this only needs to be done once):
+
+~~~
+wget -nv https://download.opensuse.org/repositories/home:aggraef/Raspbian_10/Release.key
+apt-key add Release.key
+~~~
+
+Then add the repository to your apt sources as follows:
+
+~~~
+echo 'deb http://download.opensuse.org/repositories/home:/aggraef/Raspbian_10/ /' > /etc/apt/sources.list.d/home:aggraef.list
+apt update
+~~~
+
+Finally install the package:
+
+~~~
+apt install purr-data
+~~~
+
+#### Ubuntu
+
+All of this needs to be done as root, using either `sudo` or `su`. Replace "18.04" with the version of Ubuntu you use.
+
+~~~
+sudo su
+~~~
+
+You should import the repository key first, so that the packages can be updated automatically (this only needs to be done once):
+
+~~~
+wget -nv https://download.opensuse.org/repositories/home:aggraef/xUbuntu_18.04/Release.key
+apt-key add Release.key
+~~~
+
+Then add the repository to your apt sources as follows:
+
+~~~
+echo 'deb http://download.opensuse.org/repositories/home:/aggraef/xUbuntu_18.04/ /' > /etc/apt/sources.list.d/home:aggraef.list
+apt update
+~~~
+
+Finally install the package:
+
+~~~
+apt install purr-data
+~~~
+
+#### openSUSE
+
+**NOTE:** The openSUSE builds are somewhat experimental right now. In particular, the flite external is not supported, because the required dependencies are not available. Also note that some of the multimedia functionality (Gem video, in particular) will require proprietary media codecs and thus won't work in stock openSUSE. You will need to add third-party repositories like [Packman](https://en.opensuse.org/Additional_package_repositories#Packman) to make these work.
+
+We take Tumbleweed as an example here, if you're running Leap then replace "Tumbleweed" with "Leap_15.1" or whatever version you use.
+
+~~~
+sudo su
+
+zypper addrepo https://download.opensuse.org/repositories/home:aggraef/openSUSE_Tumbleweed/home:aggraef.repo
+zypper refresh
+zypper install purr-data
+~~~
+
 ### Build Guide
 
 **NOTE:** The instructions for Windows and OSX below talk about running the `tar_em_up.sh` build
