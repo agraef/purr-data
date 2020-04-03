@@ -2630,9 +2630,11 @@ function elem_get_coords(elem) {
     }
 }
 
-// used for tidy up
+// used for tidy up and GUI external displacefn callbacks
 function gui_text_displace(name, tag, dx, dy) {
-    elem_displace(get_gobj(name, tag), dx, dy);
+    gui(name).get_gobj(tag, function(e) {
+        elem_displace(e, dx, dy);
+    });
 }
 
 function textentry_displace(t, dx, dy) {
@@ -4231,13 +4233,53 @@ function gui_grid_new(cid, tag, x, y, is_toplevel) {
     });
 }
 
-
 function gui_grid_point(cid, tag, x, y) {
     gui(cid).get_gobj(tag)
     .q(".point", {
         x: x,
         y: y,
         style: "visibility: visible;"
+    });
+}
+
+// unauthorized/pianoroll
+function pianoroll_get_id(tag, type, i, j) {
+    // Because i and j are just integers we want to prevent ambiguity.
+    // For example, "1" and "23" concatenate the same as "12" and "3". So
+    // we separate the two with an underscore.
+    return tag + "_" + type + "_" + i + "_" + j;
+}
+
+function gui_pianoroll_draw_rect(cid, tag, x1, y1, x2, y2, i, j, type) {
+    gui(cid).get_gobj(tag)
+    .append(function(frag) {
+        var r = create_item(cid, "rect", {
+            x: x1,
+            y: y1,
+            width: x2 - x1,
+            height: y2 - y1,
+            id: pianoroll_get_id(tag, type, i, j),
+            fill: type === "pitch" ? "#771623" : "#562663",
+            stroke: "#998121",
+            "stroke-width": "1"
+        });
+        frag.appendChild(r);
+        return frag;
+    });
+}
+
+// consider doing a single call with an array of data here...
+function gui_pianoroll_update_rect(cid, tag, type, i, j, fill) {
+    gui(cid)
+    .get_elem(pianoroll_get_id(tag, type, i, j), {
+        fill: fill
+    });
+}
+
+// just clear out everything inside the container
+function gui_pianoroll_erase_innards(cid, tag) {
+    gui(cid).get_gobj(tag, function(e) {
+        e.innerHTML = "";
     });
 }
 

@@ -450,6 +450,12 @@ static void grid_displace(t_gobj *z, t_glist *glist, int dx, int dy)
     x->y_current += dy;
     if (xold != text_xpix(&x->x_obj, glist) || yold != text_ypix(&x->x_obj, glist))
     {
+        gui_vmess("gui_text_displace", "xxii",
+            glist_getcanvas(glist),
+            x,
+            dx,
+            dy
+        );
 	//grid_draw_move(x, x->x_glist);
         canvas_fixlinesfor(glist, (t_text *)z);
     }
