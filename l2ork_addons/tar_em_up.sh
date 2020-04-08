@@ -174,6 +174,11 @@ if [ ! -d "../pd/nw/nw" ]; then
 		arch="armv7l"
 	fi
 
+	# for pinebook, probably also rpi 4
+	if [ `uname -m` == "aarch64" ]; then
+		arch="armv7l"
+	fi
+
 	if [[ $os == "win" || $os == "osx" ]]; then
 		ext="zip"
 	else
@@ -186,7 +191,7 @@ if [ ! -d "../pd/nw/nw" ]; then
 		nwjs_version="v0.14.7"
 	else
 		# temporary kluge for rpi-- only 0.15.1 is available atm
-		if [ `uname -m` == "armv7l" ]; then
+		if [ $arch == "armv7l" ]; then
 			nwjs_version="v0.17.6"
 		else
 			nwjs_version="v0.24.4"
@@ -213,7 +218,7 @@ if [ ! -d "../pd/nw/nw" ]; then
 	fi
 	# Special case for arm binary's inconsistent directory name
 	# (It's not the same as the `uname -m` output)
-	if [ `uname -m` == "armv7l" ]; then
+	if [ $arch == "armv7l" ]; then
 		nwjs_dirname=`echo $nwjs_dirname | sed 's/armv7l/arm/'`
 	fi
         mv $nwjs_dirname ../pd/nw/nw
