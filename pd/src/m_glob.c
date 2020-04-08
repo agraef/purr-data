@@ -9,8 +9,11 @@ t_class *glob_pdobject;
 static t_class *maxclass;
 
 int sys_perf;   /* true if we should query user on close and quit */
-int pd_compatibilitylevel = 43;  /* e.g., 43 for pd 0.43 compatibility */
 
+/* Compatibility level, e.g., 43 for pd 0.43 compatibility. We default to
+   the current minor version. If Pd Vanilla ever changes the major version
+   we will need to revisit them implementation of this feature */
+int pd_compatibilitylevel = PD_MINOR_VERSION;
 /* These "glob" routines, which implement messages to Pd, are from all
 over.  Some others are prototyped in m_imp.h as well. */
 
