@@ -1681,6 +1681,7 @@ void preset_hub_read(t_preset_hub *x, t_symbol *filename)
         if (binbuf_read_via_canvas(b, filename->s_name, x->ph_canvas, 1))
         {
             pd_error(x, "%s: read failed", filename->s_name);
+            goto preset_hub_read_fail;
         }
         else
         {
@@ -1691,7 +1692,9 @@ void preset_hub_read(t_preset_hub *x, t_symbol *filename)
             ignore_entry = 0;
 
             // load the data from the buffer and add to the preset db
-            natom = binbuf_getnatom(b);
+            // we subtract 1 from the total count as the binbuf's last
+            // atom is a semicolon that we do not use here
+            natom = binbuf_getnatom(b) - 1;
             if (pos < natom && natom > 1)
             {
                 argv = binbuf_getvec(b);
@@ -1867,10 +1870,11 @@ void preset_hub_read(t_preset_hub *x, t_symbol *filename)
 
                                 data_count = 0;
                                 argv++;
+                                pos++;
 
                                 /* figure out how long of variable data list
                                    follows the preset descriptor */
-                                while (data_count < natom &&
+                                while (pos + data_count < natom &&
                                        strcmp(
                                         atom_getsymbol(argv+data_count)->s_name,
                                         "%preset%") &&
@@ -1892,7 +1896,7 @@ void preset_hub_read(t_preset_hub *x, t_symbol *filename)
                                 if (PH_DEBUG)
                                     fprintf(stderr,"    data_count = %d "
                                                    "starting @ %d out of %d\n",
-                                        data_count, pos+1, natom);
+                                        data_count, pos, natom);
                                 alist_init(&np2->np_val);
                                 alist_list(&np2->np_val, 0, data_count, argv);
 
@@ -1909,10 +1913,10 @@ void preset_hub_read(t_preset_hub *x, t_symbol *filename)
                                           "    1st_element = unknown format\n");
                                 }
 
-                                pos = pos + data_count;
                                 /* we already incremented it above before
                                    figuring out how long data list is so
                                    we do one less */
+                                pos = pos + data_count - 1;
                                 argv = argv + data_count - 1;
                                 h_cur = H_PRESET_DATA;
                             }
@@ -2058,6 +2062,7 @@ void preset_hub_readpreset(t_preset_hub *x, t_symbol *filename)
         if (binbuf_read_via_canvas(b, filename->s_name, x->ph_canvas, 1))
         {
             pd_error(x, "%s: read failed", filename->s_name);
+            goto preset_hub_readpreset_fail;
         }
         else
         {
@@ -2068,7 +2073,9 @@ void preset_hub_readpreset(t_preset_hub *x, t_symbol *filename)
             ignore_entry = 0;
 
             // load the data from the buffer and add to the preset db
-            natom = binbuf_getnatom(b);
+            // we subtract 1 from the total count as the binbuf's last
+            // atom is a semicolon that we do not use here
+            natom = binbuf_getnatom(b) - 1;
             if (pos < natom && natom > 1)
             {
                 argv = binbuf_getvec(b);
@@ -2256,10 +2263,11 @@ void preset_hub_readpreset(t_preset_hub *x, t_symbol *filename)
 
                                 data_count = 0;
                                 argv++;
+                                pos++;
 
                                 /* figure out how long of variable data list
                                    follows the preset descriptor */
-                                while (data_count < natom &&
+                                while (pos + data_count < natom &&
                                        strcmp(
                                         atom_getsymbol(argv+data_count)->s_name,
                                             "%preset%") &&
@@ -2281,7 +2289,7 @@ void preset_hub_readpreset(t_preset_hub *x, t_symbol *filename)
                                 if (PH_DEBUG)
                                     fprintf(stderr,"    data_count = %d "
                                                    "starting @ %d out of %d\n",
-                                        data_count, pos+1, natom);
+                                        data_count, pos, natom);
                                 alist_init(&np2->np_val);
                                 alist_list(&np2->np_val, 0, data_count, argv);
 
@@ -2298,10 +2306,10 @@ void preset_hub_readpreset(t_preset_hub *x, t_symbol *filename)
                                           "    1st_element = unknown format\n");
                                 }
 
-                                pos = pos + data_count;
                                 /* we already incremented it above before
                                    figuring out how long data list is so we
                                    do one less */
+                                pos = pos + data_count - 1;
                                 argv = argv + data_count - 1;
                                 h_cur = H_PRESET_DATA;
                             }
