@@ -8,8 +8,8 @@ This repository is a mirror of Wilkes' original Gitlab repository available at <
 
 Here's a quick shopping list:
 
-- [**Downloads**](https://github.com/agraef/purr-data/releases): This is where you get ready-made packages for Linux, Mac and Windows. Please also make sure to check our [installation instructions](#installation) below.
-- [**JGU packages**](#jgu-packages): Use these if you're on Arch or a recent Debian/Ubuntu version. The main advantage is that these offer proper package repositories including all dependencies which aren't readily available in the official repositories of your Linux distribution.
+- [**Downloads**](https://github.com/agraef/purr-data/releases): This is where you get ready-made packages for **Mac and Windows**. Please also make sure to check our [installation instructions](#installation) below.
+- [**JGU packages**](#jgu-packages): Use these if you're on **Arch** or a recent **Debian/Ubuntu** version. The main advantage is that these offer proper package repositories including all dependencies which aren't readily available in the official repositories of your Linux distribution. **[Download](https://software.opensuse.org/download/package?package=purr-data&project=home%3Aaggraef)**
 - [**Sources**](https://github.com/agraef/purr-data): Github mirror of the sources, updated regularly.
 - [**Development**](https://git.purrdata.net/jwilkes/purr-data): Wilkes' Gitlab repository. **This is where you should go for submitting bug reports and pull requests.**
 - [**Mailing list**](http://disis.music.vt.edu/listinfo/l2ork-dev): The DISIS Pd-l2ork mailing list is the right place for getting help and discuss Purr Data, so please subscribe!
@@ -58,6 +58,8 @@ This is a collection of ready-made Linux packages for Arch Linux, openSUSE, and 
 - "Classic" Pd-l2ork and Purr Data can be installed alongside each other.
 
 - Additional programming extensions for the [Faust](http://faust.grame.fr/) and [Pure](https://agraef.github.io/pure-lang/) programming languages are available.
+
+**[Download](https://software.opensuse.org/download/package?package=purr-data&project=home%3Aaggraef)**
 
 Please refer to the [Installation](https://github.com/agraef/purr-data/wiki/Installation#linux) wiki page for more information and detailed installation instructions.
 
