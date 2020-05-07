@@ -231,8 +231,9 @@ var canvas_events = (function() {
                     (pointer_y + svg_view.y),
                     (evt.shiftKey + (pdgui.cmd_or_ctrl_key(evt) << 1))
                 );
-                evt.stopPropagation();
-                evt.preventDefault();
+                // Commented lines below due to interference with touch scroll behavior
+                // evt.stopPropagation();
+                // evt.preventDefault();
                 return false;
             },
             mousedown: function(evt) {
@@ -662,6 +663,10 @@ var canvas_events = (function() {
                 }
             },
             dropdown_menu_mousedown: function(evt) {
+                let [pointer_x, pointer_y] = evt.type === "touchstart"
+                ? [evt.touches[0].pageX, evt.touches[0].pageY]
+                : [evt.pageX, evt.pageY];
+                
                 var select_elem = document.querySelector("#dropdown_list"),
                     in_dropdown = evt.target;
                 while (in_dropdown) {
@@ -672,10 +677,11 @@ var canvas_events = (function() {
                 }
                 // Allow scrollbar click and drag without closing the menu
                 if (in_dropdown &&
-                        evt.pageX - select_elem.offsetLeft >
+                        pointer_x - select_elem.offsetLeft >
                         select_elem.clientWidth) {
-                    return;
+                        return;
                 }
+
                 // Special case for OSX, where the scrollbar doesn't take
                 // up any extra space
                 if (nw.process.platform === "darwin"
@@ -716,6 +722,9 @@ var canvas_events = (function() {
                 last_dropdown_menu_y = Number.MIN_VALUE;
             },
             dropdown_menu_mousemove: function(evt) {
+                let [pointer_x, pointer_y] = evt.type === "touchmove"
+                ? [evt.touches[0].pageX, evt.touches[0].pageY]
+                : [evt.pageX, evt.pageY];
                 // For whatever reason, Chromium decides to trigger the
                 // mousemove/mouseenter/mouseover events if the element
                 // underneath it changes (or for mousemove, if the element
@@ -723,8 +732,8 @@ var canvas_events = (function() {
                 // the mouse position the entire time to filter out the
                 // true mousemove events from the ones Chromium generates
                 // when a scroll event changes the element under the mouse.
-                if (evt.pageX !== last_dropdown_menu_x
-                    || evt.pageY !== last_dropdown_menu_y) {
+                if (pointer_x !== last_dropdown_menu_x
+                    || pointer_y !== last_dropdown_menu_y) {
                     if (evt.target.parentNode
                         && evt.target.parentNode.parentNode
                         && evt.target.parentNode.parentNode.id === "dropdown_list") {
@@ -733,8 +742,8 @@ var canvas_events = (function() {
                         dropdown_clear_highlight();
                     }
                 }
-                last_dropdown_menu_x = evt.pageX;
-                last_dropdown_menu_y = evt.pageY;
+                last_dropdown_menu_x = pointer_x;
+                last_dropdown_menu_y = pointer_y;
             }
         },
         utils = {
@@ -844,11 +853,20 @@ var canvas_events = (function() {
         },
         dropdown_menu: function() {
             canvas_events.none();
+          
             document.addEventListener("mousedown", events.dropdown_menu_mousedown, false);
+            document.addEventListener("touchstart", events.dropdown_menu_mousedown, false);
+            
             document.addEventListener("mouseup", events.dropdown_menu_mouseup, false);
+            document.addEventListener("touchend", events.dropdown_menu_mouseup, false);
+            
             document.addEventListener("mousemove", events.dropdown_menu_mousemove, false);
+            document.addEventListener("touchmove", events.dropdown_menu_mousemove, false);
+            
             document.addEventListener("keydown", events.dropdown_menu_keydown, false);
+            
             document.addEventListener("keypress", events.dropdown_menu_keypress, false);
+            
             document.querySelector("#dropdown_list")
                 .addEventListener("wheel", events.dropdown_menu_wheel, false);
         },
