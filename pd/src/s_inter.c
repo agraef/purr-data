@@ -582,7 +582,7 @@ void socketreceiver_read(t_socketreceiver *x, int fd)
                 if (x == sys_socketreceiver) sys_bail(1);
                 else
                 {
-                    if (x->sr_notifier) (*x->sr_notifier)(x->sr_owner);
+                    if (x->sr_notifier) (*x->sr_notifier)(x->sr_owner, fd);
                     sys_rmpollfn(fd);
                     sys_closesocket(fd);
                 }
@@ -598,7 +598,7 @@ void socketreceiver_read(t_socketreceiver *x, int fd)
                 else
                 {
                     post("EOF on socket %d\n", fd);
-                    if (x->sr_notifier) (*x->sr_notifier)(x->sr_owner);
+                    if (x->sr_notifier) (*x->sr_notifier)(x->sr_owner, fd);
                     sys_rmpollfn(fd);
                     sys_closesocket(fd);
                 }
