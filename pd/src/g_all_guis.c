@@ -1018,8 +1018,8 @@ void iemgui_label_draw_move(t_iemgui *x)
     gui_vmess("gui_iemgui_label_coords", "xxii",
         canvas,
         x,
-        x->x_ldx + x->legacy_x,
-        x->x_ldy + x->legacy_y);
+        x->x_ldx + (sys_legacy ? x->legacy_x : 0),
+        x->x_ldy + (sys_legacy ? x->legacy_y : 0));
 }
 
 void iemgui_label_draw_config(t_iemgui *x)
