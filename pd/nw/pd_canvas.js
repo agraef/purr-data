@@ -696,7 +696,9 @@ var canvas_events = (function() {
                 // This selects whatever item is highlighted even
                 // if we click outside the menu. Might be better to
                 // cancel in that case.
-                dropdown_index_to_pd(select_elem);
+                if(evt.type === "mousedown") {  // For some reason calling dropdown_index_to_pd() on touchstart sends the selected data twice. @spidercatnat
+                    dropdown_index_to_pd(select_elem);
+                }
                 select_elem.style.setProperty("display", "none");
                 canvas_events.normal();
             },
