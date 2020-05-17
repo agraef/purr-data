@@ -38,10 +38,10 @@ package:  $(PD_INNO_SETUP)
 #	start $(PD_INNO_SETUP)
 ## this compiles the package on the command line. On 64-bit Windows
 #  we have to look in a different path, hence the ugly ifeq below...
-ifeq (,$(wildcard /c/Program\ Files/Inno\ Setup\ 5/ISCC.exe))
-	/c/Program\ Files\ \(x86\)/Inno\ Setup\ 5/ISCC.exe $(PD_INNO_SETUP)
+ifeq (,$(wildcard /c/Program\ Files/Inno\ Setup\ 6/ISCC.exe))
+	/c/Program\ Files\ \(x86\)/Inno\ Setup\ 6/ISCC.exe $(PD_INNO_SETUP)
 else
-	/c/Program\ Files/Inno\ Setup\ 5/ISCC.exe $(PD_INNO_SETUP)
+	/c/Program\ Files/Inno\ Setup\ 6/ISCC.exe $(PD_INNO_SETUP)
 endif
 	@echo " "
 	@echo "win32_inno install succeeded!"
