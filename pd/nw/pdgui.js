@@ -4759,11 +4759,62 @@ function gui_graph_deleteborder(cid, tag) {
     });
 }
 
-function gui_graph_label(cid, tag, label_number, font_height, array_name,
-    font, font_size, font_weight, is_selected) {
-    gui(cid).get_elem("patchsvg", function(e) {
-        var y = font_height * label_number * -1;
-        gui_text_new(cid, tag, "graph_label", 0, 0, y, array_name, font_size);
+function gui_graph_label(cid, tag, font_size, font_height, is_selected,
+    legacy_mode, array_of_attr_arrays) {
+    // first let's check if we have any colors other than black. If so we
+    // we will create a little rectangle next to the label to show the color.
+    var show_color_rect = false;
+    array_of_attr_arrays.forEach(function(e) {
+        var c;
+        if (!show_color_rect) {
+            c = attr_array_to_object(e).color;
+            show_color_rect = (c !== "black" && c !== "#000000");
+        }
+    });
+
+    // if the graph only holds a single array, don't display the color
+    if (array_of_attr_arrays.length <= 1) {
+        show_color_rect = false;
+    }
+
+    array_of_attr_arrays.forEach(function(e, i) {
+        var a = attr_array_to_object(e),
+            narrays = array_of_attr_arrays.length;
+        // a.label for the label
+        // a.color for the color
+        gui(cid).get_elem("patchsvg", function(elem) {
+            var x, y;
+            if (!!legacy_mode) { // Pd Vanilla labels go above the box
+                y = -font_height * (narrays - (i + 1)) - 1;
+            } else { // In L2ork they go inside the box
+                // shift the label to the right if we're displaying a small
+                // rectangle to show the color
+                x = show_color_rect ? 17 : 2;
+                y = font_height * (i + 1);
+            }
+            gui_text_new(cid, tag, "graph_label", !!is_selected,
+                x, y, a.label, font_size);
+        })
+        .get_gobj(tag)
+        .append(function(frag) {
+            var colorbar;
+            if (legacy_mode == 0 && show_color_rect) {
+                colorbar = create_item(cid, "rect", {
+                    fill: a.color,
+                    stroke: "black",
+                    "stroke-width": 1,
+                    x: 4,
+                    y: font_height * i + (font_height * 0.5),
+                    width: 10,
+                    height: 10
+                });
+                frag.appendChild(colorbar);
+            }
+            return frag;
+        })
+        .get_elem(tag + "text", function(e) {
+            e.id = tag + "text" + i;
+        });
     });
 }
 
@@ -5089,7 +5140,9 @@ function file_dialog_callback(file_string) {
 exports.file_dialog_callback = file_dialog_callback;
 
 // Used to convert the ["key", "value"...] arrays coming from
-// Pd to a javascript object
+// Pd to a javascript object. This is a hack that I employ because
+// I had already implemented JSON arrays in the Pd->GUI interface
+// and didn't feel like adding object notation.
 function attr_array_to_object(attr_array) {
     var i,
         len = attr_array.length,

@@ -862,6 +862,7 @@ void glist_redraw(t_glist *x)
 /* --------------------------- widget behavior  ------------------- */
 
 int garray_getname(t_garray *x, t_symbol **namep);
+t_symbol *garray_getlabelcolor(t_garray *x);
 
 
     /* Note that some code in here would also be useful for drawing
@@ -977,8 +978,6 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
             (x->gl_ylabelx > 0.5*(x->gl_x1 + x->gl_x2) ? "w" : "e");
         char *xlabelanchor =
             (x->gl_xlabely > 0.5*(x->gl_y1 + x->gl_y2) ? "s" : "n");
-        char tagbuf[MAXPDSTRING];
-        sprintf(tagbuf, "%sR", tag);
         gui_vmess("gui_text_draw_border", "xssiii",
             glist_getcanvas(x->gl_owner),
             tag,
@@ -986,7 +985,23 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
             0,
             x2 - x1,
             y2 - y1);
-            /* write garrays' names along the top */
+            /* write garrays' names along the top. Since we can have multiple
+               arrays inside a single graph, we want to send all the fun
+               label data to the GUI in one message. That way the GUI can do
+               fun stuff like selectively displaying a color key if we have
+               multiple arrays with different colors. */
+        gui_start_vmess("gui_graph_label", "xsiiii",
+            glist_getcanvas(x),
+            tag,
+            sys_hostfontsize(glist_getfont(x)),
+            sys_fontheight(glist_getfont(x)),
+            glist_isselected(x, gr),
+            sys_legacy
+        );
+
+            /* Now start an array to hold each array of label info */
+        gui_start_array();
+
         for (i = 0, g = x->gl_list; g; g = g->g_next, i++)
         {
             //fprintf(stderr,".\n");
@@ -995,18 +1010,18 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
             if (g->g_pd == garray_class &&
                 !garray_getname((t_garray *)g, &arrayname))
             {
-                gui_vmess("gui_graph_label", "xsiissisi",
-                    glist_getcanvas(x),
-                    tag,
-                    i,
-                    sys_fontheight(glist_getfont(x)),
-                    arrayname->s_name,
-                    sys_font,
-                    sys_hostfontsize(glist_getfont(x)),
-                    sys_fontweight,
-                    glist_isselected(x, gr));
+                t_symbol *labelcolor = garray_getlabelcolor((t_garray *)g);
+                    /* Now send an attribute array with the label data */
+                gui_start_array();
+                gui_s("label"); gui_s(arrayname->s_name);
+                gui_s("color"); gui_s(labelcolor->s_name);
+                gui_end_array();
             }
         }
+            /* Finally, end the final array as wel as the call to the GUI */
+        gui_end_array();
+        gui_end_vmess();
+
             /* draw ticks on horizontal borders.  If lperb field is
             zero, this is disabled. */
         if (x->gl_xtick.k_lperb)
