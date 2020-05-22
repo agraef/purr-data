@@ -18,7 +18,7 @@ typedef struct _namelist    /* element in a linked list of stored strings */
     char *nl_string;            /* the string */
 } t_namelist;
 
-t_namelist *pd_extrapath;
+extern t_namelist *pd_extrapath;
 t_namelist *namelist_append(t_namelist *listwas, const char *s, int allowdup);
 t_namelist *namelist_append_files(t_namelist *listwas, const char *s);
 void namelist_free(t_namelist *listwas);

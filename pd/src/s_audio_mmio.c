@@ -32,7 +32,8 @@ int nt_realdacblksize;
 #define MAXBUFFER 100   /* number of buffers in use at maximum advance */
 #define DEFBUFFER 30    /* default is about 30x6 = 180 msec! */
 static int nt_naudiobuffer = DEFBUFFER;
-t_float sys_dacsr = DEFAULTSRATE;
+
+sys_dacsr = DEFAULTSRATE;
 
 static int nt_whichapi = API_MMIO;
 static int nt_meters;        /* true if we're metering */
@@ -485,11 +486,6 @@ void nt_logerror(int which)
     }
 #endif
 }
-
-/* system buffer with t_sample types for one tick */
-t_sample *sys_soundout;
-t_sample *sys_soundin;
-t_float sys_dacsr;
 
 int mmio_send_dacs(void)
 {

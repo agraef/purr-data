@@ -67,11 +67,6 @@ static t_oss_dev linux_adcs[OSS_MAXDEV];
 static int linux_noutdevs = 0;
 static int linux_nindevs = 0;
 
-    /* exported variables */
-t_float sys_dacsr;
-t_sample *sys_soundout;
-t_sample *sys_soundin;
-
     /* OSS-specific private variables */
 static int oss_blockmode = 1;   /* flag to use "blockmode"  */
 
