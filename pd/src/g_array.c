@@ -192,6 +192,8 @@ static t_garray *graph_scalar(t_glist *gl, t_symbol *s, t_symbol *templatesym,
     if (!(template = template_findbyname(templatesym)))
         return (0);
     x = (t_garray *)pd_new(garray_class);
+    x->x_fillcolor = fill;
+    x->x_outlinecolor = outline;
     x->x_scalar = scalar_new(gl, templatesym);
     x->x_name = s;
     x->x_realname = canvas_realizedollar(gl, s);
@@ -488,8 +490,6 @@ t_garray *graph_array(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
     x = graph_scalar(gl, name, templatesym, fill, outline, saveit);
     x->x_hidename = ((flags & 8) >> 3);
     x->x_joc = ((flags & 16) >> 4);
-    x->x_fillcolor = fill;
-    x->x_outlinecolor = outline;
     x->x_style = style;
 
     if (n <= 0)
