@@ -25,11 +25,11 @@ iemlib written by Thomas Musil, Copyright (c) IEM KUG Graz Austria 2000 - 2012 *
  */
 
 #ifdef MSW
-int sys_noloadbang;
+//int sys_noloadbang;
 //t_symbol *iemgui_key_sym=0;
 #include <io.h>
 #else
-extern int sys_noloadbang;
+//extern int sys_noloadbang;
 //extern t_symbol *iemgui_key_sym;
 #include <unistd.h>
 #endif

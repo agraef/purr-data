@@ -32,7 +32,6 @@ int nt_realdacblksize;
 #define MAXBUFFER 100   /* number of buffers in use at maximum advance */
 #define DEFBUFFER 30    /* default is about 30x6 = 180 msec! */
 static int nt_naudiobuffer = DEFBUFFER;
-t_float sys_dacsr = DEFAULTSRATE;
 
 static int nt_whichapi = API_MMIO;
 static int nt_meters;        /* true if we're metering */
@@ -127,6 +126,13 @@ int mmio_do_open_audio(void)
     if (sys_verbose)
         post("%d devices in, %d devices out",
             nt_nwavein, nt_nwaveout);
+
+        /* quick check to make sure we've got a sane sys_dacsr. This file
+           initially redeclared sys_dacsr *and* redefined it to DEFAULTSRATE
+           in the global scope. That not valid C, so I'm just guessing at the
+           author's motives and conditionally setting to that default in this
+           function scope, right before sys_dacsr gets used in the code. */
+    if (sys_dacsr == 0) sys_dacsr = DEFAULTSRATE;
 
     form.wf.wFormatTag = WAVE_FORMAT_PCM;
     form.wf.nChannels = CHANNELS_PER_DEVICE;
@@ -486,11 +492,6 @@ void nt_logerror(int which)
 #endif
 }
 
-/* system buffer with t_sample types for one tick */
-t_sample *sys_soundout;
-t_sample *sys_soundin;
-t_float sys_dacsr;
-
 int mmio_send_dacs(void)
 {
     HMMIO hmmio; 
@@ -723,7 +724,10 @@ int mmio_open_audio(int naudioindev, int *audioindev,
     nt_whichdac = (naudiooutdev < 1 ?
         (nt_nwaveout > 1 ? WAVE_MAPPER : -1) : audiooutdev[0]);
     if (naudiooutdev > 1 || naudioindev > 1)
- post("separate audio device choice not supported; using sequential devices.");
+    {
+        post("separate audio device choice not supported; "
+             "using sequential devices.");
+    }
     return (mmio_do_open_audio());
 }
 

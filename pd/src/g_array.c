@@ -136,8 +136,8 @@ struct _garray
     char x_hidename;        /* don't print name above graph */
     int x_style;            /* so much simpler to keep it here */
     t_symbol *x_send;       /* send_changed hook */
-    t_symbol *x_fillcolor;       /* color for filled area of the are */
-    t_symbol *x_outlinecolor;    /* color of the outline around the element */
+    t_symbol *x_fillcolor;     /* filled area of bar in bar graph */
+    t_symbol *x_outlinecolor;  /* bar graph: bar outline. Others: line color */
 };
 
 t_pd *garray_arraytemplatecanvas;
@@ -192,6 +192,8 @@ static t_garray *graph_scalar(t_glist *gl, t_symbol *s, t_symbol *templatesym,
     if (!(template = template_findbyname(templatesym)))
         return (0);
     x = (t_garray *)pd_new(garray_class);
+    x->x_fillcolor = fill;
+    x->x_outlinecolor = outline;
     x->x_scalar = scalar_new(gl, templatesym);
     x->x_name = s;
     x->x_realname = canvas_realizedollar(gl, s);
@@ -277,6 +279,13 @@ t_glist *garray_getglist(t_garray *x)
 t_scalar *garray_getscalar(t_garray *x)
 {
     return (x->x_scalar);
+}
+
+    /* get a garray's colors and style */
+t_symbol *garray_getlabelcolor(t_garray *x)
+{
+    if (x->x_style == PLOTSTYLE_BARS) return x->x_fillcolor;
+    else return x->x_outlinecolor;
 }
 
     /* helper function for fittograph to see if the same GOP has multiple
@@ -481,8 +490,6 @@ t_garray *graph_array(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
     x = graph_scalar(gl, name, templatesym, fill, outline, saveit);
     x->x_hidename = ((flags & 8) >> 3);
     x->x_joc = ((flags & 16) >> 4);
-    x->x_fillcolor = fill;
-    x->x_outlinecolor = outline;
     x->x_style = style;
 
     if (n <= 0)

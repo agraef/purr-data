@@ -45,6 +45,7 @@ t_namelist *sys_searchpath;
 t_namelist *sys_staticpath;
 t_namelist *sys_helppath;
 
+t_namelist *pd_extrapath;
 
     /* change '/' characters to the system's native file separator */
 void sys_bashfilename(const char *from, char *to)
