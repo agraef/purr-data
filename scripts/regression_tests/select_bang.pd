@@ -1,0 +1,67 @@
+#N canvas 52 178 1182 741 12;
+#X obj 100 33 inlet;
+#X msg 307 359 0;
+#X obj 101 566 outlet;
+#X obj 176 131 unpost;
+#X obj 307 329 select bang;
+#X obj 151 290 list;
+#X obj 342 101 unpost;
+#X obj 294 133 list;
+#X obj 294 162 list length;
+#X obj 294 191 != 0;
+#X obj 294 223 list append right inlet of select should not accept
+"bang" message;
+#X obj 151 319 list length;
+#X obj 151 348 != 0;
+#X obj 151 497 list append left inlet of select should not accept "bang"
+;
+#X obj 232 413 f;
+#X msg 355 359 0;
+#X msg 403 359 1;
+#X obj 232 285 trigger bang bang bang;
+#X obj 101 497 list;
+#X obj 100 62 trigger bang bang bang bang bang bang bang;
+#X obj 232 443 list append "bang" message to left inlet should not
+trigger output;
+#X obj 856 311 t a;
+#X obj 856 490 t a;
+#X text 508 134 These tests ensure that a "bang" message triggers an
+error on both inlets \, and that a "bang" message doesn't match argument
+bang or produce any output whatsoever.;
+#X text 508 34 For awhile pd-l2ork would match an incoming "bang" message
+against argument "bang". This created an ambiguity because argument
+"bang" is supposed to match "symbol bang". (Besides \, [route bang]
+may be used to match bang messages unambiguously.);
+#X connect 0 0 19 0;
+#X connect 1 0 14 1;
+#X connect 3 0 5 1;
+#X connect 3 1 17 0;
+#X connect 4 0 1 0;
+#X connect 4 1 15 0;
+#X connect 5 0 11 0;
+#X connect 6 0 7 1;
+#X connect 6 1 4 1;
+#X connect 7 0 8 0;
+#X connect 8 0 9 0;
+#X connect 9 0 10 0;
+#X connect 10 0 21 0;
+#X connect 11 0 12 0;
+#X connect 12 0 13 0;
+#X connect 13 0 2 0;
+#X connect 14 0 20 0;
+#X connect 15 0 14 1;
+#X connect 16 0 14 1;
+#X connect 17 0 14 0;
+#X connect 17 1 4 0;
+#X connect 17 2 16 0;
+#X connect 18 0 2 0;
+#X connect 19 0 18 0;
+#X connect 19 1 5 0;
+#X connect 19 2 3 0;
+#X connect 19 3 5 1;
+#X connect 19 4 7 0;
+#X connect 19 5 6 0;
+#X connect 19 6 7 1;
+#X connect 20 0 18 1;
+#X connect 21 0 22 0;
+#X connect 22 0 2 0;
