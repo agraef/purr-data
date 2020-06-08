@@ -125,7 +125,8 @@ mark.console_find_highlighted {
 
 /* selected connection between objects */
 .cord.signal.selected_line,
-.cord.control.selected_line {
+.cord.control.selected_line,
+#newcord {
     stroke: #53b83b;
 }
 
