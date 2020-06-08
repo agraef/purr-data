@@ -3479,10 +3479,14 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                     canvas_check_nlet_highlights(x);
                 }
             }
-                /* look for an outlet */
-                // if object is valid, has outlets,
-                // and we are within the bottom area of an object
-            else if (ob && (noutlet = obj_noutlets(ob)) && ypos >= y2-4)
+                /* look for an outlet
+                   if object is valid, has outlets,
+                   and we are within the bottom area of an object
+                   ico@vt.edu: 2020-06-05 added expanded hotspot for
+                   nlets for easier pinpointing
+                */
+            else if (ob && (noutlet = obj_noutlets(ob)) &&
+                ypos >= y2-4-(x->gl_editor->canvas_cnct_inlet_tag[0] != 0 ? 2 : 0))
             {
                 int width = x2 - x1;
                 int nout1 = (noutlet > 1 ? noutlet - 1 : 1);
@@ -3490,8 +3494,13 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                 int hotspot = x1 +
                     (width - IOWIDTH) * closest / (nout1);
                 // if we are within the boundaries of an nlet
+                /* ico@vt.edu: account for enlarged nlet when already
+                   highlighted to make it easier to "hit" the nlet */
+                int enlarged = 0;
+                if (x->gl_editor->canvas_cnct_inlet_tag[0] == closest)
+                    enlarged = 5;
                 if (closest < noutlet &&
-                    xpos >= (hotspot-1) && xpos <= hotspot + (IOWIDTH+1))
+                    xpos >= (hotspot-1-enlarged) && xpos <= hotspot + (IOWIDTH+1+enlarged))
                 {
                     if (doit)
                     {
@@ -3566,8 +3575,12 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                 }
             }
                 /* look for an inlet (these are colored differently
-                   since they are not connectable) */
-            else if (ob && (ninlet = obj_ninlets(ob)) && ypos <= y1+4)
+                   since they are not connectable)
+                   ico@vt.edu: 2020-06-05 added expanded hotspot for
+                   nlets for easier pinpointing
+                */
+            else if (ob && (ninlet = obj_ninlets(ob))
+                && ypos <= y1+4+(x->gl_editor->canvas_cnct_inlet_tag[0] != 0 ? 2 : 0))
             {
                 canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
                 int width = x2 - x1;
@@ -3575,8 +3588,13 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                 int closest = ((xpos-x1) * (nin1) + width/2)/width;
                 int hotspot = x1 +
                     (width - IOWIDTH) * closest / (nin1);
+                /* ico@vt.edu: account for enlarged nlet when already
+                   highlighted to make it easier to "hit" the nlet */
+                int enlarged = 0;
+                if (x->gl_editor->canvas_cnct_inlet_tag[0] == closest)
+                    enlarged = 5;
                 if (closest < ninlet &&
-                    xpos >= (hotspot-1) && xpos <= hotspot + (IOWIDTH+1))
+                    xpos >= (hotspot-1-enlarged) && xpos <= hotspot + (IOWIDTH+1+enlarged))
                 {
                        t_rtext *yr = glist_findrtext(x, (t_text *)&ob->ob_g);
 
