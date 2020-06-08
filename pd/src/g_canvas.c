@@ -2421,7 +2421,9 @@ void canvasgop__motionhook(t_scalehandle *sh, t_floatarg mouse_x,
         //fprintf(stderr,"%d %d %d %d\n", tmpx1, tmpy1, tmpx2, tmpy2);
         if (!x->gl_hidetext)
         {
-            tmp_x_final = tmpx2 - tmpx1;
+            /* ico@vt.edu: we add pixels to match minimum space
+               on the right side of the text to that of the left side */
+            tmp_x_final = tmpx2 - tmpx1 + 2;
             tmp_y_final = tmpy2 - tmpy1;
         }
         else

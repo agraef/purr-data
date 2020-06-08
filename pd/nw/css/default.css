@@ -271,7 +271,8 @@ mark.console_find_highlighted {
     min-width: 3ch;
     position: absolute;
     display: table-cell;
-    padding: 3px 2px 3px 2px;
+    padding: 3px 1.5px 3px 1.5px;
+    margin-left: 1px;
     /* box-shadow: inset 1px 0px 0px 1px #000; */
     color: black; /* text color */
     background-color: transparent;
@@ -281,7 +282,7 @@ mark.console_find_highlighted {
 }
 
 #new_object_textentry.obj {
-    outline: 1px solid #e87216;
+    outline: 2px solid #e87216;
 }
 
 /* We're dynamically creating the svg background data in javascript
