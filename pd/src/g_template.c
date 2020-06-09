@@ -6148,8 +6148,10 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                         }
                         else
                         {
-                            /* case for open window displaying the array */
-                            /* tbd */
+                            /* case for open window displaying the array,
+                               apparently we use the same value for the bottom
+                               of the bar */
+                            py2 = glist->gl_y2;
                         }
                     }
                     int mex1 = fielddesc_cvttocoord(xfielddesc, usexloc);
