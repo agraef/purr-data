@@ -150,6 +150,7 @@ static void tooltip_erase (t_canvas *x) {
     }
 }
 
+// removes highlight from an nlet
 static void canvas_nlet_conf (t_canvas *x, int type) {
     int isiemgui = type=='o' ? last_outlet_filter : last_inlet_filter;
     int issignal = type=='o' ? outlet_issignal : inlet_issignal;
@@ -3389,14 +3390,19 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
             x->gl_ymargin + x->gl_pixheight, &default_type);
     }
 
+    // if we have located an object under the mouse
     if (y)
     {
+
+        // if we are right-clicking
         if (rightclick)
             canvas_rightclick(x, xpos, ypos, y);
+        // if we are holding shift and we are not above an outlet
         else if (shiftmod &&
             x->gl_editor->canvas_cnct_outlet_tag[0] == 0)
         {
-            //selection (only if we are not hovering above an outlet)
+            // we are clicking and making a (de)selection
+            // (only if we are not hovering above an outlet)
             if (doit)
             {
                 if (glist_isselected(x, y))
@@ -3406,7 +3412,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
         }
         else
         {
-            /* look for an outlet we just clicked onto */
+            /* look for other stuff */
             int noutlet;
             int ninlet;
                 /* resize?  only for "true" text boxes, canvases, iemguis,
@@ -3419,10 +3425,14 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                    we have a virtual waterfall of conditionals flowing all
                    the way to the GUI just handle resizing a stupid rectangle.
                 */
+
+            // if we are inside a resizing hotspot of a text object...
             if (in_text_resizing_hotspot)
             {
+                // ...and we are clicking...
                 if (doit)
                 {
+                    // ...select the object
                     if (!glist_isselected(x, y) ||
                         x->gl_editor->e_selection->sel_next)
                     {
@@ -3473,20 +3483,20 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                            (t_float)xpos, (t_float)ypos);
                     }
                 }
+                // we are in the resize hotspot but are not clicking yet
                 else
                 {
                     canvas_setcursor(x, in_text_resizing_hotspot);
                     canvas_check_nlet_highlights(x);
                 }
             }
-                /* look for an outlet
-                   if object is valid, has outlets,
-                   and we are within the bottom area of an object
-                   ico@vt.edu: 2020-06-05 added expanded hotspot for
-                   nlets for easier pinpointing
-                */
-            else if (ob && (noutlet = obj_noutlets(ob)) &&
-                ypos >= y2-4-(x->gl_editor->canvas_cnct_inlet_tag[0] != 0 ? 2 : 0))
+            /* look for an outlet
+                if object is valid, has outlets,
+                and we are within the bottom area of an object
+                ico@vt.edu: 2020-06-05 added expanded hotspot for
+                nlets for easier pinpointing
+            */
+            else if (ob && (noutlet = obj_noutlets(ob)) && ypos >= y2-6)
             {
                 int width = x2 - x1;
                 int nout1 = (noutlet > 1 ? noutlet - 1 : 1);
@@ -3496,52 +3506,67 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                 // if we are within the boundaries of an nlet
                 /* ico@vt.edu: account for enlarged nlet when already
                    highlighted to make it easier to "hit" the nlet */
-                int enlarged = 0;
-                if (x->gl_editor->canvas_cnct_inlet_tag[0] == closest)
-                    enlarged = 5;
+                //int enlarged = 0;
+                //if (closest == last_outlet)
+                //    enlarged = 5;
+                //post("xpos=%d closest=%d noutlet=%d \
+                    nout1=%d hotspot=%d IOWIDTH=%d enlarged=%d",
+                //    xpos, closest, noutlet, nout1, hotspot, IOWIDTH, enlarged);
+                // if have found an outlet and are within its range...
                 if (closest < noutlet &&
-                    xpos >= (hotspot-1-enlarged) && xpos <= hotspot + (IOWIDTH+1+enlarged))
+                    xpos >= (hotspot-6) && xpos <= (hotspot+IOWIDTH+6))
                 {
+                    //post("Outlet found...");
+                    //...and we are clicking on it
                     if (doit)
                     {
                         //fprintf(stderr,"start connection\n");
                         int issignal = obj_issignaloutlet(ob, closest);
                         x->gl_editor->e_onmotion = MA_CONNECT;
-                        x->gl_editor->e_xwas = xpos;
-                        x->gl_editor->e_ywas = ypos;
+                        x->gl_editor->e_xwas = hotspot + IOWIDTH / 2;
+                        x->gl_editor->e_ywas = y2 - 2;
                         /* This repetition of args needs to be pruned below */
                         gui_vmess("gui_canvas_line", "xssiiiiiiiiii",
                             x,
                             "newcord",
                             (issignal ? "signal" : "control"),
-                            xpos,
-                            ypos,
-                            xpos,
-                            ypos,
-                            xpos,
-                            ypos,
-                            xpos,
-                            ypos,
-                            xpos,
-                            ypos);
+                            hotspot + IOWIDTH / 2,
+                            y2 - 2,
+                            hotspot + IOWIDTH / 2,
+                            y2 - 2,
+                            hotspot + IOWIDTH / 2,
+                            y2 - 2,
+                            hotspot + IOWIDTH / 2,
+                            y2 - 2,
+                            hotspot + IOWIDTH / 2,
+                            y2 - 2,
+                            1);
                     }   
                     else
-                    // jsarlo
+                    // jsarlo (...or, we are *not* clicking on it)
                     {
                         t_rtext *yr = glist_findrtext(x, (t_text *)&ob->ob_g);
 
+                        // I guess this removes highlight from an outlet, but why?
+                        // Perhaps just to make sure in case we were just hitting on
+                        // another nlet in a previous update?
                         if (x->gl_editor->canvas_cnct_outlet_tag[0] != 0)
                             canvas_nlet_conf(x,'o');
+                        
+                        // if we have found an object's rtext which we
+                        // will use to tag the highlighted nlet accordingly
                         if (yr)
                         {
                             last_outlet_filter =
                                 gobj_filter_highlight_behavior(
                                     (t_text *)&ob->ob_g);
+                            // fill the outlet_tag name with hte detected outlet
                             sprintf(x->gl_editor->canvas_cnct_outlet_tag, 
                                 "%so%d", rtext_gettag(yr), closest);
-                            gui_vmess("gui_gobj_highlight_io", "xs",
+                            gui_vmess("gui_gobj_highlight_io", "xsi",
                                 x,
-                                x->gl_editor->canvas_cnct_outlet_tag);
+                                x->gl_editor->canvas_cnct_outlet_tag,
+                                1);
 
                             /* Might need a gui_vmess call here, but I haven't
                                seen where this code is called yet... */
@@ -3556,7 +3581,8 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                                     x->gl_editor->canvas_cnct_outlet_tag);
                             }
                         }
-                        // jsarlo
+                        // jsarlo (get rid of the cord inspector here since we are
+                        // not on a cord)
                         if(x->gl_editor && x->gl_editor->gl_magic_glass)
                         {
                             magicGlass_unbind(x->gl_editor->gl_magic_glass);
@@ -3567,20 +3593,23 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                     }
                     // end jsarlo
                 }
+                // otherwise we are not hitting any outlet and are making sure
+                // the previously highlighted outlets are not anymore highlighted
                 else {
+                    //post("Comb the Desert!");
                     canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
                     canvas_check_nlet_highlights(x);
                     if (doit)
                         goto nooutletafterall;
                 }
             }
-                /* look for an inlet (these are colored differently
-                   since they are not connectable)
-                   ico@vt.edu: 2020-06-05 added expanded hotspot for
-                   nlets for easier pinpointing
-                */
+            /* look for an inlet (these are colored differently
+                since they are not connectable)
+                ico@vt.edu: 2020-06-05 added expanded hotspot for
+                nlets for easier pinpointing
+            */
             else if (ob && (ninlet = obj_ninlets(ob))
-                && ypos <= y1+4+(x->gl_editor->canvas_cnct_inlet_tag[0] != 0 ? 2 : 0))
+                && ypos <= y1+6)
             {
                 canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
                 int width = x2 - x1;
@@ -3590,11 +3619,9 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                     (width - IOWIDTH) * closest / (nin1);
                 /* ico@vt.edu: account for enlarged nlet when already
                    highlighted to make it easier to "hit" the nlet */
-                int enlarged = 0;
-                if (x->gl_editor->canvas_cnct_inlet_tag[0] == closest)
-                    enlarged = 5;
+                // if have found an inlet and are within its range...
                 if (closest < ninlet &&
-                    xpos >= (hotspot-1-enlarged) && xpos <= hotspot + (IOWIDTH+1+enlarged))
+                    xpos >= (hotspot-6) && xpos <= (hotspot+IOWIDTH+6))
                 {
                        t_rtext *yr = glist_findrtext(x, (t_text *)&ob->ob_g);
 
@@ -3607,9 +3634,10 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                             gobj_filter_highlight_behavior((t_text *)&ob->ob_g);
                         sprintf(x->gl_editor->canvas_cnct_inlet_tag, 
                             "%si%d", rtext_gettag(yr), closest);
-                        gui_vmess("gui_gobj_highlight_io", "xs",
+                        gui_vmess("gui_gobj_highlight_io", "xsi",
                             x,
-                            x->gl_editor->canvas_cnct_inlet_tag);
+                            x->gl_editor->canvas_cnct_inlet_tag,
+                            0);
                         inlet_issignal = obj_issignalinlet(ob,closest);
                         if (tooltips)
                         {
@@ -3697,6 +3725,8 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
             }
             // end jsarlo
         }
+        // we mark last highlighted object here for nlet highlighting below
+        //post("Returning from the nlet crusade...");
         return;
     }
     else if (in_text_resizing_hotspot) /* red gop rectangle */
@@ -4742,15 +4772,18 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                             "%si%d",
                             rtext_gettag(y),
                             closest2);
-                    gui_vmess("gui_gobj_highlight_io", "xs",
+                    inlet_issignal = obj_issignalinlet(ob2, closest2);
+                    //post("o-sig=%d i-sig=%d", outlet_issignal, inlet_issignal);
+                    gui_vmess("gui_gobj_highlight_io", "xsi",
                         x,
-                        x->gl_editor->canvas_cnct_inlet_tag);
+                        x->gl_editor->canvas_cnct_inlet_tag,
+                        (!outlet_issignal ||
+                        (outlet_issignal && inlet_issignal)) ? 1 : 0);
 
                     /* Didn't I just see this code above? */
                     //sys_vgui(".x%x.c raise %s\n",
                     //         x,
                     //         x->gl_editor->canvas_cnct_inlet_tag);
-                    inlet_issignal = obj_issignalinlet(ob2, closest2);
                     if (tooltips)
                     {
                         objtooltip = 1;

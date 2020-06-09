@@ -471,22 +471,12 @@ text {
    for every pixel we move inside an xlet. */
 @-webkit-keyframes fizzle {
     0% {
-        stroke-width: 1;
-        stroke-opacity: 1;
-        rx: 1;
-        ry: 1;
-    }
-    33% {
         stroke-width: 12;
         stroke-opacity: 1;
-        rx: 1;
-        ry: 1;
     }
-    66% {
+    100% {
         stroke-width: 5;
         stroke-opacity: 1;
-        rx: 1;
-        ry: 1;
     }
 }
 
@@ -495,7 +485,12 @@ text {
     stroke: #e87216;
     fill: #e87216;
     stroke-width: 5;
-    -webkit-animation: fizzle 0.4s ease-in 1;
+    -webkit-animation: fizzle 0.1s ease-in 1;
+}
+
+.xlet_disabled {
+    stroke: gray !important;
+    fill: gray !important;
 }
 
 #canvas_find {
