@@ -722,6 +722,10 @@ t_float glist_pixelstoy(t_glist *x, t_float ypix)
     }
 }
 
+/* ico@vt.edu: used by the scalar_vis to adjust visual offset
+   based on the graph drawing style, affects bar graph */
+extern int garray_get_style(t_garray *x);
+
     /* convert an x coordinate value to an x pixel location in window */
 t_float glist_xtopixels(t_glist *x, t_float xval)
 {
@@ -732,11 +736,21 @@ t_float glist_xtopixels(t_glist *x, t_float xval)
             (xval - x->gl_x1) / (x->gl_x2 - x->gl_x1);
     else
     {
+        /* ico@vt.edu: some really stupid code to compensate for the fact
+           that the svg stroke featue adds unaccounted width to the bars */
+        t_float plot_offset = 0;
+        t_gobj *g = x->gl_list;
+        if (g != NULL && g->g_pd == garray_class)
+        {
+            t_garray *g_a = (t_garray *)g;
+            if (garray_get_style(g_a) == PLOTSTYLE_BARS)
+                plot_offset = 2;
+        }
         int x1, y1, x2, y2;
         if (!x->gl_owner)
             bug("glist_pixelstox");
         graph_graphrect(&x->gl_gobj, x->gl_owner, &x1, &y1, &x2, &y2);
-        return (x1 + (x2 - x1) * (xval - x->gl_x1) / (x->gl_x2 - x->gl_x1));
+        return (x1 + (x2 - x1 - plot_offset) * (xval - x->gl_x1) / (x->gl_x2 - x->gl_x1));
     }
 }
 
@@ -749,11 +763,22 @@ t_float glist_ytopixels(t_glist *x, t_float yval)
                 (yval - x->gl_y1) / (x->gl_y2 - x->gl_y1);
     else 
     {
+        /* ico@vt.edu: some really stupid code to compensate for the fact
+           that the poly and bezier tend to overlap the GOP edges */
+        t_float plot_offset = 0;
+        t_gobj *g = x->gl_list;
+        if (g != NULL && g->g_pd == garray_class)
+        {
+            t_garray *g_a = (t_garray *)g;
+            if (garray_get_style(g_a) == PLOTSTYLE_POLY ||
+                    garray_get_style(g_a) == PLOTSTYLE_BEZ)
+                plot_offset = 2;
+        }
         int x1, y1, x2, y2;
         if (!x->gl_owner)
             bug("glist_pixelstoy");
         graph_graphrect(&x->gl_gobj, x->gl_owner, &x1, &y1, &x2, &y2);
-        return (y1 + (y2 - y1) * (yval - x->gl_y1) / (x->gl_y2 - x->gl_y1));
+        return (y1 + (y2 - y1 - plot_offset) * (yval - x->gl_y1) / (x->gl_y2 - x->gl_y1));
     }
 }
 
