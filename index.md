@@ -53,7 +53,7 @@ This is a collection of ready-made Linux packages for Arch Linux, openSUSE, and 
 
 - The packages are available through proper package repositories and thus can be installed and updated automatically through your distribution's standard package manager. Required dependencies will also be installed automatically.
 
-- The packages are updated more frequently (also between upstream releases) from the current git sources, if there are important new features or bugfixes which have already been tested, but haven't been merged upstream yet.
+- The packages are updated more frequently (also between upstream releases) from the current git sources, if there are important new features or bugfixes.
 
 - "Classic" Pd-l2ork and Purr Data can be installed alongside each other.
 
