@@ -5063,6 +5063,7 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     {
         gotkeysym = av[1].a_w.w_symbol;
         //fprintf(stderr,"gotkeysym=%s\n", gotkeysym->s_name);
+        //post("key: %d %s", keynum, gotkeysym->s_name);
     }
     else if (av[1].a_type == A_FLOAT)
     {
@@ -5252,7 +5253,12 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     {
         //fprintf(stderr,"ctrl\n");
         glob_ctrl = down;
-        if (x->gl_edit && x->gl_editor->e_onmotion == MA_NONE)
+        //post("glob_ctrl=%d", down);
+        /* ico@vt.edu: commenting MA_NONE part as that prevents the patch 
+           from assuming editmode after it has had an object added via 
+           a ctrl+(1-5) shortcut while not in edit mode
+        */
+        if (x->gl_edit /*&& x->gl_editor->e_onmotion == MA_NONE*/)
         {
             canvas_setcursor(x, down ?
                 CURSOR_RUNMODE_NOTHING : CURSOR_EDITMODE_NOTHING);
