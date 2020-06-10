@@ -425,6 +425,7 @@ function create_menu(gui, type) {
             modifiers: shortcuts.menu.comment.modifiers,
             tooltip: l("menu.comment_tt")
         }));
+        put_menu.append(new gui.MenuItem({ type: "separator" }));
         put_menu.append(m.put.dropdown = new gui.MenuItem({
             label: l("menu.dropdown"),
             key: shortcuts.menu.dropdown.key,
