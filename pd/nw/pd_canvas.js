@@ -325,8 +325,7 @@ var canvas_events = (function() {
                 pdgui.keydown(name, evt);
                 // prevent the default behavior of scrolling
                 // on arrow keys in editmode
-                if (document.querySelector("#patchsvg")
-                    .classList.contains("editmode")) {
+                if (document.querySelector("#patchsvg")) {
                     if ([32, 37, 38, 39, 40].indexOf(evt.keyCode) > -1) {
                         evt.preventDefault();
                     }
