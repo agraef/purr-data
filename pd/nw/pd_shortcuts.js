@@ -34,6 +34,8 @@ exports.menu = {
 
   "zoomin": { key: "=", modifiers: cmd_or_ctrl },
   "zoomout": { key: "-", modifiers: cmd_or_ctrl },
+  // uncomment this for AZERTY keyboards:
+  //"zoomout": { key: "6", modifiers: cmd_or_ctrl },
   "zoomreset": { key: "0", modifiers: cmd_or_ctrl },
   "zoomoptimal": { key: "9", modifiers: cmd_or_ctrl },
   "zoomhoriz": { key: "9", modifiers: cmd_or_ctrl + "+alt" },
