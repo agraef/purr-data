@@ -987,8 +987,8 @@ void iemgui_label_draw_new(t_iemgui *x)
 {
     char col[8];
     t_canvas *canvas=glist_getcanvas(x->x_glist);
-    int x1=text_xpix(&x->x_obj, x->x_glist)+x->legacy_x;
-    int y1=text_ypix(&x->x_obj, x->x_glist)+x->legacy_y;
+    int x1=text_xpix(&x->x_obj, x->x_glist) + (sys_legacy ? x->legacy_x : 0);
+    int y1=text_ypix(&x->x_obj, x->x_glist) + (sys_legacy ? x->legacy_y : 0);
     iemgui_getrect_legacy_label(x, &x1, &y1);
     sprintf(col, "#%6.6x", x->x_lcol);
     gui_vmess("gui_iemgui_label_new", "xxiissssi",
@@ -1018,8 +1018,8 @@ void iemgui_label_draw_move(t_iemgui *x)
     gui_vmess("gui_iemgui_label_coords", "xxii",
         canvas,
         x,
-        x->x_ldx + x->legacy_x,
-        x->x_ldy + x->legacy_y);
+        x->x_ldx + (sys_legacy ? x->legacy_x : 0),
+        x->x_ldy + (sys_legacy ? x->legacy_y : 0));
 }
 
 void iemgui_label_draw_config(t_iemgui *x)
