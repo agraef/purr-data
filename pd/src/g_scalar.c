@@ -1028,6 +1028,26 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
     {
         t_float xscale = glist_xtopixels(owner, 1) - glist_xtopixels(owner, 0);
         t_float yscale = glist_ytopixels(owner, 1) - glist_ytopixels(owner, 0);
+        // this has been moved into pdgui.js gui_scalar_new, leaving here just
+        // in case the other implementation proves problematic
+        //t_float nw_yoffset = 0;
+        /*switch (plot_style)
+        {
+            case 0:
+                nw_yoffset = -0.5;
+                yscale += 1;
+                break;
+            case 1:
+                nw_yoffset = 1.5;
+                break;
+            case 2:
+                nw_yoffset = 1.5;
+                break;
+            case 3:
+                nw_yoffset = 0.5;
+                yscale += 1;
+                break;
+        }*/
         /* we translate the .scalar%lx group to displace it on the tk side.
            This is the outermost group for the scalar, something like a
            poor man's viewport.
@@ -1040,14 +1060,15 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
            understand "None"-- instead we must send an empty symbol.) */
         char tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "scalar%lx", (long unsigned int)x->sc_vec);
-        gui_vmess("gui_scalar_new", "xsiffffiii",
-            glist_getcanvas(owner), 
+        gui_vmess("gui_scalar_new", "xsiffffffii",
+            glist_getcanvas(owner),
             tagbuf,
             glist_isselected(owner, &x->sc_gobj),
             xscale, 0.0, 0.0, yscale,
-            (int)glist_xtopixels(owner, basex),
-            (int)glist_ytopixels(owner, basey),
-            glist_istoplevel(owner));
+            glist_xtopixels(owner, basex),
+            glist_ytopixels(owner, basey),
+            glist_istoplevel(owner),
+            plot_style);
         char groupbuf[MAXPDSTRING];
         // Quick hack to make gui_scalar_draw_group more general (so we
         // don't have to tack on "gobj" manually)
@@ -1267,7 +1288,7 @@ int scalar_doclick(t_word *data, t_template *template, t_scalar *sc,
 static int scalar_click(t_gobj *z, struct _glist *owner,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
-    //fprintf(stderr,"scalar_click %d %d\n", xpix, ypix);
+    //post("scalar_click %d %d %d", xpix, ypix, doit);
     t_scalar *x = (t_scalar *)z;
 
     x->sc_bboxcache = 0;

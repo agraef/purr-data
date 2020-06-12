@@ -20,6 +20,13 @@ body {
     font-family: "DejaVu Sans Mono";
 }
 
+/* delete the default scrollbars, and let's make our own */
+body::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+    background: transparent;
+}
+
 .noselect {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
