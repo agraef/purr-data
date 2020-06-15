@@ -943,6 +943,7 @@ var canvas_events = (function() {
             // control it with a bunch of complicated callbacks.
             document.addEventListener("contextmenu", function(evt) {
                 console.log("got a context menu evt...");
+                evt.stopPropagation()
                 evt.preventDefault();
             });
 
