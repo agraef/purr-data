@@ -360,6 +360,16 @@ text {
     fill: red;
 }
 
+/* Increases dropdown scrollbar and scrollbar track area for better touch UX */
+#dropdown_list::-webkit-scrollbar {
+    width: 16px;
+}
+
+#dropdown_list::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #555;
+}
+
 #dropdown_list {
     position: absolute;
     border-width: 1px;
