@@ -1264,6 +1264,7 @@ int scalar_doclick(t_word *data, t_template *template, t_scalar *sc,
 /* Unfortunately, nested gops don't yet handle scalar clicks correctly. The
    nested scalar seems not to receive the click.  However, the enter/leave
    messages happen just fine since most of their logic is in tcl/tk. */
+/* ico@vt.edu: I tried nested GOP and it appears to work ok */
 static int scalar_click(t_gobj *z, struct _glist *owner,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {

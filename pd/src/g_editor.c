@@ -6487,6 +6487,9 @@ static void canvas_paste(t_canvas *x)
 {
     if (!x->gl_editor)
         return;
+    // ico@vt.edu: prevent pasting in a toplevel garray window
+    if (x->gl_list && glist_istoplevel(x) && canvas_hasarray(x))
+        return;
     if (x->gl_editor->e_textedfor)
     {
             /* simulate keystrokes as if the copy buffer were typed in. */
