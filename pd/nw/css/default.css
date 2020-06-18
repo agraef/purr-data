@@ -513,10 +513,18 @@ text {
 /* Dialog to ask to save the patch before quitting */
 #save_before_quit {
     background-color: #f3f3f3;
-    border:1px solid #bbb;
+    border:1px solid #f3f3f3;
     padding: 12px;
     margin: 12px;
-    box-shadow: 7px 7px 5px grey;
+    /*box-shadow: 7px 7px 5px grey;*/
+    left: 50%;
+    top: 50%;
+    width: 40%;
+    transform: translate(-50%, -50%);
+}
+
+dialog::backdrop {
+    background: rgba(0, 0, 0, 0.5);
 }
 
 /* Search dialog */
