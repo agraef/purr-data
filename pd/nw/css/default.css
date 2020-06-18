@@ -352,7 +352,7 @@ text {
 
 /* Increases dropdown scrollbar and scrollbar track area for better touch UX */
 #dropdown_list::-webkit-scrollbar {
-    width: 16px;
+    width: 32px;
 }
 
 #dropdown_list::-webkit-scrollbar-thumb {
