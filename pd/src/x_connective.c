@@ -8,6 +8,7 @@
 
 #include <string.h>
 #include <stdio.h>
+
 extern t_pd *newest;
 
 /* -------------------------- int ------------------------------ */
@@ -85,6 +86,24 @@ static void pdfloat_float(t_pdfloat *x, t_float f)
     outlet_float(x->x_obj.ob_outlet, x->x_f = f);
 }
 
+int symbol_can_float(t_symbol *s, t_float *f);
+
+char *type_hint(t_symbol *s, int argc, t_atom *argv);
+
+static void pdfloat_symbol(t_pdfloat *x, t_symbol *s)
+{
+        t_float f;
+        if (symbol_can_float(s, &f))
+            outlet_float(x->x_obj.ob_outlet, x->x_f = f);
+        else
+        {
+            t_atom at;
+            SETSYMBOL(&at, s);
+            pd_error(x, "couldn't convert %s to float%s",
+                s->s_name, type_hint(&s_symbol, 1, &at));
+        }
+}
+
 void pdfloat_setup(void)
 {
     pdfloat_class = class_new(gensym("float"), (t_newmethod)pdfloat_new, 0,
@@ -92,6 +111,7 @@ void pdfloat_setup(void)
     class_addcreator((t_newmethod)pdfloat_new2, gensym("f"), A_DEFFLOAT, 0);
     class_addbang(pdfloat_class, pdfloat_bang);
     class_addfloat(pdfloat_class, (t_method)pdfloat_float);
+    class_addsymbol(pdfloat_class, (t_method)pdfloat_symbol);
 }
 
 /* -------------------------- symbol ------------------------------ */

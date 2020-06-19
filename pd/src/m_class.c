@@ -43,9 +43,45 @@ t_classtable *ct;
 
 static t_symbol *class_extern_dir = &s_;
 
+int symbol_can_float(t_symbol *s, t_float *f)
+{
+    char c;
+    if (!s || s == &s_) return 0;
+    c = s->s_name[0];
+    if (c != '-' && c != '+' && c < 48 && c > 57) return 0;
+    char *str_end = NULL;
+    *f = strtod(s->s_name, &str_end);
+    /* Add error checking here like in cxc/hex2dec */
+    if (*f == 0 && s->s_name == str_end)
+        return 0;
+    return 1;
+}
+
+char *type_hint(t_symbol *s, int argc, t_atom *argv)
+{
+    static char hint[MAXPDSTRING];
+    t_float f;
+    if (!s)
+        sprintf(hint, " (null selector detected)");
+    else if (s == &s_)
+        sprintf(hint, " (empty symbol selector)");
+    else if (s && s == &s_symbol && argc && argv->a_type == A_SYMBOL
+            && argv->a_w.w_symbol == &s_)
+        sprintf(hint, " (empty symbol message detected)");
+    else if (symbol_can_float(s, &f))
+        sprintf(hint, " (%s is actually a symbol atom here)", s->s_name);
+    else if (symbol_can_float(atom_getsymbolarg(0, argc, argv), &f))
+        sprintf(hint, " (symbol message with floatlike payload detected."
+                      " Did you mean 'float %s'?)", argv->a_w.w_symbol->s_name);
+    else
+        hint[0] = '\0';
+    return hint;
+}
+
 static void pd_defaultanything(t_pd *x, t_symbol *s, int argc, t_atom *argv)
 {
-    pd_error(x, "%s: no method for '%s'", (*x)->c_name->s_name, s->s_name);
+    pd_error(x, "%s: no method for '%s'%s",
+        (*x)->c_name->s_name, s->s_name, type_hint(s, argc, argv));
 }
 
 static void pd_defaultbang(t_pd *x)
