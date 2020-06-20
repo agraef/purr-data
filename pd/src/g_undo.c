@@ -50,7 +50,18 @@ t_undo_action *canvas_undo_add(t_canvas *x, int type, const char *name,
 {
     //fprintf(stderr,"canvas_undo_add %d\n", type);
 
-    /* Check for empty sequences? */
+    if(UNDO_SEQUENCE_END == type
+       && x && x->u_last
+       && UNDO_SEQUENCE_START == x->u_last->type)
+    {
+            /* empty undo sequence...get rid of it */
+        x->u_last = x->u_last->prev;
+        canvas_undo_rebranch(x);
+        x->u_last->next = 0;
+        canvas_undo_name = x->u_last->name;
+        gui_vmess("gui_undo_menu", "xss", x, x->u_last->name, "no");
+        return 0;
+    }
 
     t_undo_action *a = canvas_undo_init(x);
     a->type = type;

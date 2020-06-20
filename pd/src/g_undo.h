@@ -62,7 +62,7 @@ typedef enum
 struct _undo_action
 {
 	t_canvas *x;				/* canvas undo is associated with */
-	t_undo_type type;					/* defines what kind of data container it is */
+	t_undo_type type;			/* defines what kind of data container it is */
 	void *data;					/* each action will have a different data container */
 	char *name;					/* name of current action */
 	struct _undo_action *prev;	/* previous undo action */
