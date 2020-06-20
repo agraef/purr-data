@@ -879,6 +879,7 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
     char tag[50];
     t_gobj *g;
     int x1, y1, x2, y2;
+    t_rtext *rtext;
         /* ordinary subpatches: just act like a text object */
     if (!x->gl_isgraph)
     {
@@ -886,6 +887,14 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
         return;
     }
 
+        /* Sanity check */
+    rtext = glist_findrtext(parent_glist, &x->gl_obj);
+    if (!rtext)
+    {
+        bug("graph_vis");
+        return;
+    }
+    sprintf(tag, "%s", rtext_gettag(rtext));
     // weird exception
     //int exception = 0;
     //t_canvas* tgt = glist_getcanvas(x->gl_owner);
@@ -895,8 +904,6 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
     //    exception = 1;
     //}
     //fprintf(stderr,"tgt=.x%lx %d\n", (t_int)tgt, exception);
-
-    sprintf(tag, "%s", rtext_gettag(glist_findrtext(parent_glist, &x->gl_obj)));
 
     if (vis & gobj_shouldvis(gr, parent_glist))
     {

@@ -2399,7 +2399,7 @@ void canvasgop__motionhook(t_scalehandle *sh, t_floatarg mouse_x,
            that is being used to draw the gop red rect move anchor atm. So
            rather than muck around with that code, we just set a pointer to
            whatever our toplevel is here: */
-        t_glist *owner = canvas_getrootfor(x);
+        t_glist *owner = glist_getcanvas(x);
         /* Just unvis the object, then vis it once we've done our
            mutation and checks */
         gobj_vis((t_gobj *)x, owner, 0);
