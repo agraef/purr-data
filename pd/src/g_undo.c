@@ -49,6 +49,20 @@ t_undo_action *canvas_undo_add(t_canvas *x, int type, const char *name,
     void *data)
 {
     //fprintf(stderr,"canvas_undo_add %d\n", type);
+
+    if(UNDO_SEQUENCE_END == type
+       && x && x->u_last
+       && UNDO_SEQUENCE_START == x->u_last->type)
+    {
+            /* empty undo sequence...get rid of it */
+        x->u_last = x->u_last->prev;
+        canvas_undo_rebranch(x);
+        x->u_last->next = 0;
+        canvas_undo_name = x->u_last->name;
+        gui_vmess("gui_undo_menu", "xss", x, x->u_last->name, "no");
+        return 0;
+    }
+
     t_undo_action *a = canvas_undo_init(x);
     a->type = type;
     a->data = (void *)data;
@@ -56,6 +70,30 @@ t_undo_action *canvas_undo_add(t_canvas *x, int type, const char *name,
     canvas_undo_name = name;
     gui_vmess("gui_undo_menu", "xss", x, a->name, "no");
     return(a);
+}
+
+static void canvas_undo_doit(t_canvas *x, t_undo_action *udo, int action)
+{
+    switch(udo->type)
+    {
+    case UNDO_CONNECT:      canvas_undo_connect(x, udo->data, action); break;     //connect
+    case UNDO_DISCONNECT:   canvas_undo_disconnect(x, udo->data, action); break;  //disconnect
+    case UNDO_CUT:          canvas_undo_cut(x, udo->data, action); break;         //cut
+    case UNDO_MOTION:       canvas_undo_move(x, udo->data, action); break;        //move
+    case UNDO_PASTE:        canvas_undo_paste(x, udo->data, action); break;       //paste
+    case UNDO_APPLY:        canvas_undo_apply(x, udo->data, action); break;       //apply
+    case UNDO_ARRANGE:      canvas_undo_arrange(x, udo->data, action); break;     //arrange
+    case UNDO_CANVAS_APPLY: canvas_undo_canvas_apply(x, udo->data, action); break;//canvas apply
+    case UNDO_CREATE:       canvas_undo_create(x, udo->data, action); break;      //create
+    case UNDO_RECREATE:     canvas_undo_recreate(x, udo->data, action); break;    //recreate
+    case UNDO_FONT:         canvas_undo_font(x, udo->data, action); break;        //font
+            /* undo sequences are handled in canvas_undo_undo resp canvas_undo_redo */
+    case UNDO_SEQUENCE_START: break;                                            //start undo sequence
+    case UNDO_SEQUENCE_END: break;                                              //end undo sequence
+    case UNDO_INIT: /* catch whether is called with a non FREE action */ break; //init
+    default:
+        error("canvas_undo: unsupported command %d", udo->type);
+    }
 }
 
 void canvas_undo_undo(t_canvas *x)
@@ -68,22 +106,35 @@ void canvas_undo_undo(t_canvas *x)
         canvas_editmode(x, 1);
         glist_noselect(x);
         canvas_undo_name = x->u_last->name;
-        switch(x->u_last->type)
+
+        if(UNDO_SEQUENCE_END == x->u_last->type)
         {
-            case 1:    canvas_undo_connect(x, x->u_last->data, UNDO_UNDO); break;         //connect
-            case 2:    canvas_undo_disconnect(x, x->u_last->data, UNDO_UNDO); break;     //disconnect
-            case 3:    canvas_undo_cut(x, x->u_last->data, UNDO_UNDO); break;             //cut
-            case 4:    canvas_undo_move(x, x->u_last->data, UNDO_UNDO); break;            //move
-            case 5:    canvas_undo_paste(x, x->u_last->data, UNDO_UNDO); break;        //paste
-            case 6:    canvas_undo_apply(x, x->u_last->data, UNDO_UNDO); break;        //apply
-            case 7:    canvas_undo_arrange(x, x->u_last->data, UNDO_UNDO); break;        //arrange
-            case 8:    canvas_undo_canvas_apply(x, x->u_last->data, UNDO_UNDO); break;    //canvas apply
-            case 9:    canvas_undo_create(x, x->u_last->data, UNDO_UNDO); break;        //create
-            case 10:canvas_undo_recreate(x, x->u_last->data, UNDO_UNDO); break;        //recreate
-            case 11:canvas_undo_font(x, x->u_last->data, UNDO_UNDO); break;            //font
-            default:
-                error("canvas_undo_undo: unsupported undo command %d", x->u_last->type);
+            int sequence_depth = 1;
+            while((x->u_last = x->u_last->prev)
+                  && (UNDO_INIT != x->u_last->type))
+            {
+                switch(x->u_last->type)
+                {
+                case UNDO_SEQUENCE_START:
+                    sequence_depth--;
+                    break;
+                case UNDO_SEQUENCE_END:
+                    sequence_depth++;
+                    break;
+                default:
+                    canvas_undo_doit(x, x->u_last, UNDO_UNDO);
+                }
+                if (sequence_depth < 1)
+                    break;
+            }
+            if (sequence_depth < 0)
+                bug("undo sequence missing end");
+            else if (sequence_depth > 0)
+                bug("undo sequence missing start");
         }
+
+        canvas_undo_doit(x, x->u_last, UNDO_UNDO);
+
         x->u_last = x->u_last->prev;
         char *undo_action = x->u_last->name;
         char *redo_action = x->u_last->next->name;
@@ -116,22 +167,34 @@ void canvas_undo_redo(t_canvas *x)
         canvas_editmode(x, 1);
         glist_noselect(x);
         canvas_undo_name = x->u_last->name;
-        switch(x->u_last->type)
+
+        if(UNDO_SEQUENCE_START == x->u_last->type)
         {
-            case 1:    canvas_undo_connect(x, x->u_last->data, UNDO_REDO); break;         //connect
-            case 2:    canvas_undo_disconnect(x, x->u_last->data, UNDO_REDO); break;     //disconnect
-            case 3:    canvas_undo_cut(x, x->u_last->data, UNDO_REDO); break;             //cut
-            case 4:    canvas_undo_move(x, x->u_last->data, UNDO_REDO); break;            //move
-            case 5:    canvas_undo_paste(x, x->u_last->data, UNDO_REDO); break;        //paste
-            case 6:    canvas_undo_apply(x, x->u_last->data, UNDO_REDO); break;        //apply
-            case 7:    canvas_undo_arrange(x, x->u_last->data, UNDO_REDO); break;        //arrange
-            case 8:    canvas_undo_canvas_apply(x, x->u_last->data, UNDO_REDO); break;    //canvas apply
-            case 9:    canvas_undo_create(x, x->u_last->data, UNDO_REDO); break;        //create
-            case 10:canvas_undo_recreate(x, x->u_last->data, UNDO_REDO); break;        //recreate
-            case 11:canvas_undo_font(x, x->u_last->data, UNDO_REDO); break;            //font
-            default:
-                error("canvas_undo_redo: unsupported redo command %d", x->u_last->type);
+            int sequence_depth = 1;
+            while(x->u_last->next && (x->u_last = x->u_last->next))
+            {
+                switch(x->u_last->type)
+                {
+                case UNDO_SEQUENCE_END:
+                    sequence_depth--;
+                    break;
+                case UNDO_SEQUENCE_START:
+                    sequence_depth++;
+                    break;
+                default:
+                    canvas_undo_doit(x, x->u_last, UNDO_REDO);
+                }
+                if (sequence_depth < 1)
+                    break;
+            }
+            if (sequence_depth < 0)
+                bug("undo sequence end without start");
+            else if (sequence_depth > 0)
+                bug("undo sequence start without end");
         }
+
+        canvas_undo_doit(x, x->u_last, UNDO_REDO);
+
         char *undo_action = x->u_last->name;
         char *redo_action = (x->u_last->next ? x->u_last->next->name : "no");
         we_are_undoing = 0;
@@ -163,27 +226,14 @@ void canvas_undo_rebranch(t_canvas *x)
         while(a1)
         {
             //fprintf(stderr,".");
-            switch(a1->type)
-            {
-                case 1:    canvas_undo_connect(x, a1->data, UNDO_FREE); break;         //connect
-                case 2:    canvas_undo_disconnect(x, a1->data, UNDO_FREE); break;         //disconnect
-                case 3:    canvas_undo_cut(x, a1->data, UNDO_FREE); break;             //cut
-                case 4:    canvas_undo_move(x, a1->data, UNDO_FREE); break;            //move
-                case 5:    canvas_undo_paste(x, a1->data, UNDO_FREE); break;            //paste
-                case 6:    canvas_undo_apply(x, a1->data, UNDO_FREE); break;            //apply
-                case 7:    canvas_undo_arrange(x, a1->data, UNDO_FREE); break;            //arrange
-                case 8:    canvas_undo_canvas_apply(x, a1->data, UNDO_FREE); break;    //canvas apply
-                case 9:    canvas_undo_create(x, a1->data, UNDO_FREE); break;            //create
-                case 10:canvas_undo_recreate(x, a1->data, UNDO_FREE); break;        //recreate
-                case 11:canvas_undo_font(x, a1->data, UNDO_FREE); break;            //font
-                default:
-                    error("canvas_undo_rebranch: unsupported undo command %d", a1->type);
-            }
+            canvas_undo_doit(x, a1, UNDO_FREE);
             a2 = a1->next;
             freebytes(a1, sizeof(*a1));
             a1 = a2;
         }
+        //x->u_last->next = 0; /* ??? */
     }
+    //gui_vmess("gui_undo_menu", "xss", x, x->u_last->name, "no"); /* ??? */
     canvas_resume_dsp(dspwas);
     //fprintf(stderr,"done!\n");
 }
@@ -211,23 +261,7 @@ void canvas_undo_free(t_canvas *x)
         while(a1)
         {
             //fprintf(stderr,".");
-            switch(a1->type)
-            {
-                case 0: break;                                                        //init
-                case 1:    canvas_undo_connect(x, a1->data, UNDO_FREE); break;         //connect
-                case 2:    canvas_undo_disconnect(x, a1->data, UNDO_FREE); break;         //disconnect
-                case 3:    canvas_undo_cut(x, a1->data, UNDO_FREE); break;             //cut
-                case 4:    canvas_undo_move(x, a1->data, UNDO_FREE); break;            //move
-                case 5:    canvas_undo_paste(x, a1->data, UNDO_FREE); break;            //paste
-                case 6:    canvas_undo_apply(x, a1->data, UNDO_FREE); break;            //apply
-                case 7:    canvas_undo_arrange(x, a1->data, UNDO_FREE); break;            //arrange
-                case 8:    canvas_undo_canvas_apply(x, a1->data, UNDO_FREE); break;    //canvas apply
-                case 9:    canvas_undo_create(x, a1->data, UNDO_FREE); break;            //create
-                case 10:canvas_undo_recreate(x, a1->data, UNDO_FREE); break;        //recreate
-                case 11:canvas_undo_font(x, a1->data, UNDO_FREE); break;            //font
-                default:
-                    error("canvas_undo_free: unsupported undo command %d", a1->type);
-            }
+            canvas_undo_doit(x, a1, UNDO_FREE);
             a2 = a1->next;
             freebytes(a1, sizeof(*a1));
             a1 = a2;
