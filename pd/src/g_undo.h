@@ -39,10 +39,30 @@ Types of undo data:
 10 - recreate
 */
 
+typedef enum
+{
+    UNDO_INIT = 0,
+    UNDO_CONNECT,      /* 1 */
+    UNDO_DISCONNECT,   /* 2 */
+    UNDO_CUT,          /* 3 */
+    UNDO_MOTION,       /* 4 */
+    UNDO_PASTE,        /* 5 */
+    UNDO_APPLY,        /* 6 */
+    UNDO_ARRANGE,      /* 7 */
+    UNDO_CANVAS_APPLY, /* 8 */
+    UNDO_CREATE,       /* 9 */
+    UNDO_RECREATE,     /* 10 */
+    UNDO_FONT,         /* 11 */
+    UNDO_SEQUENCE_START, /* 12 start an atomic sequence of undo actions*/
+    UNDO_SEQUENCE_END,   /* 13 end an atomic sequence of undo actions */
+
+    UNDO_LAST
+} t_undo_type;
+
 struct _undo_action
 {
 	t_canvas *x;				/* canvas undo is associated with */
-	int type;					/* defines what kind of data container it is */
+	t_undo_type type;					/* defines what kind of data container it is */
 	void *data;					/* each action will have a different data container */
 	char *name;					/* name of current action */
 	struct _undo_action *prev;	/* previous undo action */
