@@ -133,15 +133,20 @@ void canvas_undo_undo(t_canvas *x)
                 bug("undo sequence missing start");
         }
 
-        canvas_undo_doit(x, x->u_last, UNDO_UNDO);
+        /* prevent from crashing if there was no sequence starting point */
+        if(x->u_last != x->u_queue)
+        {
+            canvas_undo_doit(x, x->u_last, UNDO_UNDO);
+            x->u_last = x->u_last->prev;
+        }
 
-        x->u_last = x->u_last->prev;
         char *undo_action = x->u_last->name;
         char *redo_action = x->u_last->next->name;
         we_are_undoing = 0;
+
         /* here we call updating of all unpaired hubs and nodes since
-           their regular call will fail in case their position needed
-           to be updated by undo/redo first to reflect the old one */
+        their regular call will fail in case their position needed
+        to be updated by undo/redo first to reflect the old one */
         glob_preset_node_list_seek_hub();
         glob_preset_node_list_check_loc_and_update();
         if (glist_isvisible(x) && glist_istoplevel(x))
