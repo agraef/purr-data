@@ -1,4 +1,4 @@
-#N canvas 126 96 749 571 12;
+#N canvas 755 138 749 571 12;
 #X obj 465 281 r \$0-result;
 #X obj 212 239 bng 31 250 50 0 empty empty Run_all 39 13 0 12 -262144
 -1 -1;
@@ -52,6 +52,7 @@ is handy for some binbuf tests.;
 #X obj 127 172 print Done;
 #X obj 198 1701 rtest wrap~_compatibility_bug;
 #X obj 198 1756 rtest select_bang;
+#X obj 198 1811 rtest route_reject_bang;
 #X connect 0 0 27 0;
 #X connect 1 0 4 0;
 #X connect 2 0 42 0;
@@ -89,3 +90,4 @@ is handy for some binbuf tests.;
 #X connect 42 3 3 0;
 #X connect 43 0 44 0;
 #X connect 45 0 46 0;
+#X connect 46 0 47 0;
