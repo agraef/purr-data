@@ -2520,6 +2520,11 @@ function gobj_font_y_kludge(fontsize) {
 }
 
 function gui_text_new(cid, tag, type, isselected, left_margin, font_height, text, font) {
+    //ico@vt.edu: different text spacing for GOPs
+    var xoff = 0.5; // Default value for normal objects, GOP uses -0.5
+    gui(cid).get_gobj(tag, function(e) {
+        xoff = e.classList.contains("graph") ? -0.5 : 0.5;
+    });
     gui(cid).get_gobj(tag)
     .append(function(frag) {
         var svg_text = create_item(cid, "text", {
@@ -2538,8 +2543,8 @@ function gui_text_new(cid, tag, type, isselected, left_margin, font_height, text
             // shapes, and I haven't yet found any documentation for it. All I
             // know is an integer offset results in blurry text, and the 0.5
             // offset doesn't.
-            transform: "translate(" + (left_margin - 0.5) + ")",
-            y: font_height + gobj_font_y_kludge(font),
+            transform: "translate(" + (left_margin - xoff) + ")",
+            y: font_height - 0.5 + gobj_font_y_kludge(font),
             // Turns out we can't do 'hanging' baseline
             // because it's borked when scaled. Bummer, because that's how Pd's
             // text is handled under tk...
@@ -5659,7 +5664,10 @@ function shove_svg_background_data_into_css(w) {
 function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
     font_size, is_gop, state) {
     var range, svg_view, p,
-        gobj = get_gobj(cid, tag);
+        gobj = get_gobj(cid, tag), zoom;
+    gui(cid).get_nw_window(function(nw_win) {
+        zoom = nw_win.zoomLevel;
+    });
     if (state !== 0) {
         // Make sure we're in editmode
         canvas_set_editmode(cid, 1);
@@ -5681,23 +5689,43 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
         svg_view = patchwin[cid].window.document.getElementById("patchsvg")
             .viewBox.baseVal;
         p.classList.add(type);
+        // ico@vt.edu: is there a better way to monitor vars inside nw?
+        // p.classList.add("zoom=" + zoom);
         p.contentEditable = "true";
+
+        if (is_gop == 0) {
+            // do we need to assign here color from the css theme instead?
+            p.style.setProperty("background-color", "#f6f8f8");
+        } else {
+            // ico@vt.edu: added tweaks to ensure the GOP selection
+            // border is near identical to that of its regular border
+            p.style.setProperty("min-height", height_spec - 7 + "px");
+            p.style.setProperty("padding-left", "2px");
+            /* ico@vt.edu:
+               should the graph be transparent or opaque? legacy compatibility
+               suggests it should be transparent, although that may go against
+               common sense UI design. Perhaps we can make this an option? If
+               so, we could do so here. Better yet, we could capture background
+               color of the subpatcher and use it to apply the same color here.
+               p.style.setProperty("background-color", "white");
+            */   
+        }
+        
         p.style.setProperty("left", (x - svg_view.x) + "px");
         p.style.setProperty("top", (y - svg_view.y) + "px");
         p.style.setProperty("font-size",
             pd_fontsize_to_gui_fontsize(font_size) + "px");
         p.style.setProperty("line-height",
-            text_line_height_kludge(font_size, "pd") + "px");
-        p.style.setProperty("transform", "translate(0px, 0px)");
+            pd_fontsize_to_gui_fontsize(font_size) + 1 + "px");
+        p.style.setProperty("transform", "translate(0px, " + 
+            (zoom > 0 ? 0.5 : 0) + "px)");
         p.style.setProperty("max-width",
             width_spec !== 0 ? width_spec + "ch" : "60ch");
         p.style.setProperty("min-width",
             width_spec <= 0 ? "3ch" :
-                (is_gop == 1 ? width_spec + "px" :
+                (is_gop == 1 ? (width_spec - 5) + "px" :
                     width_spec + "ch"));
-        if (is_gop == 1) {
-            p.style.setProperty("min-height", height_spec + "px");
-        }
+        
         // set backgroundimage for message box
         if (type === "msg") {
             shove_svg_background_data_into_css(patchwin[cid].window);
@@ -5863,7 +5891,7 @@ function do_optimalzoom(cid, hflag, vflag) {
         // Optimal zoom is the minimum of the horizontal and/or the vertical
         // zoom values, depending on the h and v flags. This gives us the offset
         // to the current zoom level. We then need to clamp the resulting new
-        // zoom level to the valid zoom level range of -8..+7.
+        // zoom level to the valid zoom level range of -7..+7.
         var actz = nw_win.zoomLevel, z = 0;
         if (hflag && vflag)
             z = Math.min(zx, zy);
@@ -5872,7 +5900,7 @@ function do_optimalzoom(cid, hflag, vflag) {
         else if (vflag)
             z = zy;
         z += actz;
-        if (z < -8) z = -8; if (z > 7) z = 7;
+        if (z < -7) z = -7; if (z > 7) z = 7;
         //post("bbox: "+width+"x"+height+"+"+x+"+"+y+" window size: "+min_width+"x"+min_height+" current zoom level: "+actz+" optimal zoom level: "+z);
         if (z != actz) {
             nw_win.zoomLevel = z;
