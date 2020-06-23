@@ -2225,12 +2225,17 @@ function gui_gobj_configure_io(cid, tag, is_iemgui, is_signal, width) {
         }
         e.classList.add(type);
         e.classList.remove("xlet_selected");
+        e.classList.remove("xlet_disabled");
     });
 }
 
-function gui_gobj_highlight_io(cid, tag) {
+function gui_gobj_highlight_io(cid, tag, enabled) {
     gui(cid).get_elem(tag, function(e) {
         e.classList.add("xlet_selected");
+        if (enabled == 0)
+        {
+            e.classList.add("xlet_disabled");
+        }
     });
 }
 
