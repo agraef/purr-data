@@ -705,7 +705,7 @@ extern t_pd *pd_mess_from_responder(t_pd *x);
    Pd Vanilla apparently made a special case to handle this-- instead of using
    the comma after the "restore" message it starts a new "#X f 12;" which
    ensures that the #X is bound to the correct canvas. But that means it fails
-   for the old the old syntax, and there are patches in the wild that use it.
+   for the old syntax, and there are patches in the wild that use it.
 
    So we support _both_ of these styles in Purr Data by doing the following:
    1. Checking if the last typedmess was "restore" selector.

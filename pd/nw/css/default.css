@@ -20,6 +20,13 @@ body {
     font-family: "DejaVu Sans Mono";
 }
 
+/* delete the default scrollbars, and let's make our own */
+body::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+    background: transparent;
+}
+
 .noselect {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -228,9 +235,10 @@ mark.console_find_highlighted {
     stroke: #565;
 }
 
-/* selected connection between objects */
+/* selected connection between objects, or a new cord not yet connected */
 .cord.signal.selected_line,
-.cord.control.selected_line {
+.cord.control.selected_line,
+#newcord {
     stroke: #e87216;
 }
 
@@ -387,7 +395,7 @@ text {
 
 #patchsvg.editmode .comment .border {
     stroke: #aaa;
-    stroke-dasharray: 8 4;
+    stroke-dasharray: 3 2;
 }
 
 /* A little hack for special case of [cnv].
@@ -425,21 +433,22 @@ text {
 
 /* text inside selected objects */
 :not(.gop).selected text {
-    fill: blue;
+    fill: #e87216;
 }
 
 /* for an object that didn't create */
 .obj .border.broken_border {
-    fill: #f7f7f7;
+    fill: #f7d7d7;
     stroke: #f00;
-    stroke-dasharray: 3 2;
+    stroke-width: 2;
+    stroke-dasharray: 6 2;
 }
 
 /* control inlet */
 .xlet_control {
     stroke: #777;
     fill: white;
-//    stroke-width: 1;
+    stroke-width: 1;
 }
 
 /* signal inlet */
@@ -458,7 +467,7 @@ text {
 
 /* text label for an iemgui */
 .iemgui_label_selected {
-    fill: blue;
+    fill: #e87216;
 }
 
 /* test of xlet hover animation... this should 
@@ -474,19 +483,26 @@ text {
         rx: 1;
         ry: 1;
     }
-    100% {
-        stroke-width: 20;
-        stroke-opacity: 0.2;
-        rx: 50;
-        ry: 50;
+    33% {
+        stroke-width: 12;
+        stroke-opacity: 1;
+        rx: 1;
+        ry: 1;
+    }
+    66% {
+        stroke-width: 5;
+        stroke-opacity: 1;
+        rx: 1;
+        ry: 1;
     }
 }
 
 /* can't remember why this was tagged !important */
 .xlet_selected {
-    stroke: orange !important;
-    fill: orange;
-    -webkit-animation: fizzle 0.4s linear 1;
+    stroke: #e87216;
+    fill: #e87216;
+    stroke-width: 5;
+    -webkit-animation: fizzle 0.4s ease-in 1;
 }
 
 #canvas_find {

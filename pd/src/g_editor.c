@@ -172,7 +172,7 @@ static void canvas_nlet_conf (t_canvas *x, int type) {
 
 void canvas_getscroll (t_canvas *x) {
     //sys_vgui("pdtk_canvas_getscroll .x%lx.c\n",(long)x);
-    gui_vmess("gui_canvas_get_scroll", "x", x);
+    gui_vmess("gui_canvas_get_overriding_scroll", "x", x);
 }
 
 /* ---------------- generic widget behavior ------------------------- */
@@ -2299,7 +2299,11 @@ static void canvas_rightclick(t_canvas *x, int xpos, int ypos, t_gobj *y_sel)
        otherwise they end-up being dirty without visible notification
        besides, why would one mess with their properties without
        seeing what is inside them? CURRENTLY DISABLED */
+    //post("canvas_rightclick %d", (y && pd_class(&y->g_pd) == garray_class ? 1 : 0));
     canprop = (!y || (y && class_getpropertiesfn(pd_class(&y->g_pd)))
+               // ico@vt.edu: the following ensures that even if we are clicking on
+               // a garray, we should still be able to get the canvas properties
+                || (y && pd_class(&y->g_pd) == garray_class)
                /*&& !canvas_isabstraction( ((t_glist*)y) )*/ );
     canopen = (y && zgetfn(&y->g_pd, gensym("menu-open")));
     /* we add an extra check for scalars to enable the "Open" button
@@ -2478,9 +2482,12 @@ void canvas_vis(t_canvas *x, t_floatarg f)
                 canvas_destroy_editor(x);
             }
             //fprintf(stderr,"new\n");
+            /* ico@vt.edu: here we use hasarray only for toplevel garrays
+               because they require check_config every time resize is invoked.
+               We may need to expand this to include scalars, as well. */
             canvas_create_editor(x);
             canvas_args_to_string(argsbuf, x);
-            gui_vmess("gui_canvas_new", "xiisiissiiis",
+            gui_vmess("gui_canvas_new", "xiisiissiiiis",
                 x,
                 (int)(x->gl_screenx2 - x->gl_screenx1),
                 (int)(x->gl_screeny2 - x->gl_screeny1),
@@ -2492,6 +2499,7 @@ void canvas_vis(t_canvas *x, t_floatarg f)
                 x->gl_dirty,
                 x->gl_noscroll,
                 x->gl_nomenu,
+                canvas_hasarray(x),
                 argsbuf);
 
             /* It looks like this font size call is no longer needed,
@@ -2618,13 +2626,7 @@ void canvas_setgraph(t_glist *x, int flag, int nogoprect)
 
         // check if we have array inside GOP, if so,
         // make sure hidetext is always hidden no matter what
-        t_gobj *g = x->gl_list;
-        int hasarray = 0;
-        while (g)
-        {
-            if (pd_class(&g->g_pd) == garray_class) hasarray = 1;
-            g = g->g_next;
-        }
+        int hasarray = canvas_hasarray(x);
         if (hasarray) x->gl_hidetext = 1;
 
         if (!nogoprect && !x->gl_goprect && !hasarray)
@@ -2810,13 +2812,7 @@ static void canvas_donecanvasdialog(t_glist *x,
 
     // check if we have array inside GOP, if so,
     // make sure GOP/hidetext is always enabled no matter what
-    t_gobj *g = x->gl_list;
-    int hasarray = 0;
-    while (g)
-    {
-        if (pd_class(&g->g_pd) == garray_class) hasarray = 1;
-        g = g->g_next;
-    }
+    int hasarray = canvas_hasarray(x);
     if (hasarray && graphme != 3)
     {
         graphme = 3; //gop flag + bit-shifted hidetext
@@ -3233,6 +3229,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
        to array_motion so that we can update corresponding send when
        the array has been changed */
     array_garray = NULL;
+    //post("canvas_doclick %d", doit);
 
     t_gobj *y;
     int shiftmod, runmode, altmod, doublemod = 0, rightclick,
@@ -3479,10 +3476,14 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                     canvas_check_nlet_highlights(x);
                 }
             }
-                /* look for an outlet */
-                // if object is valid, has outlets,
-                // and we are within the bottom area of an object
-            else if (ob && (noutlet = obj_noutlets(ob)) && ypos >= y2-4)
+                /* look for an outlet
+                   if object is valid, has outlets,
+                   and we are within the bottom area of an object
+                   ico@vt.edu: 2020-06-05 added expanded hotspot for
+                   nlets for easier pinpointing
+                */
+            else if (ob && (noutlet = obj_noutlets(ob)) &&
+                ypos >= y2-4-(x->gl_editor->canvas_cnct_inlet_tag[0] != 0 ? 2 : 0))
             {
                 int width = x2 - x1;
                 int nout1 = (noutlet > 1 ? noutlet - 1 : 1);
@@ -3490,8 +3491,13 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                 int hotspot = x1 +
                     (width - IOWIDTH) * closest / (nout1);
                 // if we are within the boundaries of an nlet
+                /* ico@vt.edu: account for enlarged nlet when already
+                   highlighted to make it easier to "hit" the nlet */
+                int enlarged = 0;
+                if (x->gl_editor->canvas_cnct_inlet_tag[0] == closest)
+                    enlarged = 5;
                 if (closest < noutlet &&
-                    xpos >= (hotspot-1) && xpos <= hotspot + (IOWIDTH+1))
+                    xpos >= (hotspot-1-enlarged) && xpos <= hotspot + (IOWIDTH+1+enlarged))
                 {
                     if (doit)
                     {
@@ -3566,8 +3572,12 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                 }
             }
                 /* look for an inlet (these are colored differently
-                   since they are not connectable) */
-            else if (ob && (ninlet = obj_ninlets(ob)) && ypos <= y1+4)
+                   since they are not connectable)
+                   ico@vt.edu: 2020-06-05 added expanded hotspot for
+                   nlets for easier pinpointing
+                */
+            else if (ob && (ninlet = obj_ninlets(ob))
+                && ypos <= y1+4+(x->gl_editor->canvas_cnct_inlet_tag[0] != 0 ? 2 : 0))
             {
                 canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
                 int width = x2 - x1;
@@ -3575,8 +3585,13 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                 int closest = ((xpos-x1) * (nin1) + width/2)/width;
                 int hotspot = x1 +
                     (width - IOWIDTH) * closest / (nin1);
+                /* ico@vt.edu: account for enlarged nlet when already
+                   highlighted to make it easier to "hit" the nlet */
+                int enlarged = 0;
+                if (x->gl_editor->canvas_cnct_inlet_tag[0] == closest)
+                    enlarged = 5;
                 if (closest < ninlet &&
-                    xpos >= (hotspot-1) && xpos <= hotspot + (IOWIDTH+1))
+                    xpos >= (hotspot-1-enlarged) && xpos <= hotspot + (IOWIDTH+1+enlarged))
                 {
                        t_rtext *yr = glist_findrtext(x, (t_text *)&ob->ob_g);
 

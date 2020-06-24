@@ -729,21 +729,32 @@ extern int garray_get_style(t_garray *x);
     /* convert an x coordinate value to an x pixel location in window */
 t_float glist_xtopixels(t_glist *x, t_float xval)
 {
+    // ico@vt.edu: used to deal with the bar graph
+    t_float plot_offset = 0;
+    t_gobj *g = x->gl_list;
+
     if (!x->gl_isgraph)
         return ((xval - x->gl_x1) / (x->gl_x2 - x->gl_x1));
     else if (x->gl_isgraph && x->gl_havewindow)
-        return (x->gl_screenx2 - x->gl_screenx1) * 
-            (xval - x->gl_x1) / (x->gl_x2 - x->gl_x1);
-    else
     {
-        /* ico@vt.edu: some really stupid code to compensate for the fact
-           that the svg stroke featue adds unaccounted width to the bars */
-        t_float plot_offset = 0;
-        t_gobj *g = x->gl_list;
         if (g != NULL && g->g_pd == garray_class)
         {
             t_garray *g_a = (t_garray *)g;
             if (garray_get_style(g_a) == PLOTSTYLE_BARS)
+                plot_offset = 10;
+        }
+        //fprintf(stderr, "xtopixels xval=%f gl_x1=%f gl_x2=%f screenx1=%d screenx2=%d\n",
+        //    xval, x->gl_x1, x->gl_x2, x->gl_screenx1, x->gl_screenx2);
+        return (x->gl_screenx2 - x->gl_screenx1) *
+            (xval - x->gl_x1 - plot_offset) / (x->gl_x2 - x->gl_x1);
+    }
+    else
+    {
+        /* ico@vt.edu: some really stupid code to compensate for the fact
+           that the svg stroke featue adds unaccounted width to the bars */
+        if (g != NULL && g->g_pd == garray_class)
+        {
+            if (garray_get_style((t_garray *)g) == PLOTSTYLE_BARS)
                 plot_offset = 2;
         }
         int x1, y1, x2, y2;
@@ -756,23 +767,61 @@ t_float glist_xtopixels(t_glist *x, t_float xval)
 
 t_float glist_ytopixels(t_glist *x, t_float yval)
 {
+    t_float plot_offset = 0;
+    t_gobj *g = x->gl_list;
+
     if (!x->gl_isgraph)
         return ((yval - x->gl_y1) / (x->gl_y2 - x->gl_y1));
     else if (x->gl_isgraph && x->gl_havewindow)
-        return (x->gl_screeny2 - x->gl_screeny1) * 
-                (yval - x->gl_y1) / (x->gl_y2 - x->gl_y1);
+    {
+        if (g != NULL && g->g_pd == garray_class)
+        {
+            /*t_garray *g_a = (t_garray *)g;
+            if (garray_get_style((t_garray *)g) == PLOTSTYLE_POLY ||
+                    garray_get_style((t_garray *)g) == PLOTSTYLE_BEZ)*/
+            switch (garray_get_style((t_garray *)g))
+            {
+            case PLOTSTYLE_POINTS:
+                plot_offset = 2;
+                break;
+            case PLOTSTYLE_POLY:
+                plot_offset = 2;
+                break;
+            case PLOTSTYLE_BEZ:
+                plot_offset = 2;
+                break;
+            case PLOTSTYLE_BARS:
+                plot_offset = 2;
+                break;
+            }
+        }
+        return (x->gl_screeny2 - x->gl_screeny1 - plot_offset) *
+            (yval - x->gl_y1) / (x->gl_y2 - x->gl_y1);
+    }
     else 
     {
         /* ico@vt.edu: some really stupid code to compensate for the fact
            that the poly and bezier tend to overlap the GOP edges */
-        t_float plot_offset = 0;
-        t_gobj *g = x->gl_list;
         if (g != NULL && g->g_pd == garray_class)
         {
-            t_garray *g_a = (t_garray *)g;
-            if (garray_get_style(g_a) == PLOTSTYLE_POLY ||
-                    garray_get_style(g_a) == PLOTSTYLE_BEZ)
-                plot_offset = 2;
+            /*t_garray *g_a = (t_garray *)g;
+            if (garray_get_style((t_garray *)g) == PLOTSTYLE_POLY ||
+                    garray_get_style((t_garray *)g) == PLOTSTYLE_BEZ)*/
+            switch (garray_get_style((t_garray *)g))
+            {
+                case PLOTSTYLE_POINTS:
+                    plot_offset = 2;
+                    break;
+                case PLOTSTYLE_POLY:
+                    plot_offset = 2;
+                    break;
+                case PLOTSTYLE_BEZ:
+                    plot_offset = 2;
+                    break;
+                case PLOTSTYLE_BARS:
+                    plot_offset = 2;
+                    break;
+            }
         }
         int x1, y1, x2, y2;
         if (!x->gl_owner)
@@ -974,17 +1023,6 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
         }
         else if (gobj_shouldvis(gr, parent_glist))
         {
-            /* erase contents of glist. We need to do this because
-               scalar_vis is currently using pd_bind/unbind to handle
-               scalar events. */
-            for (g = x->gl_list; g; g = g->g_next)
-            {
-                gop_redraw = 1;
-                //fprintf(stderr,"drawing gop objects\n");
-                gobj_vis(g, x, 0);
-                //fprintf(stderr,"done\n");
-                gop_redraw = 0;
-            }
             gui_vmess("gui_gobj_erase", "xs",
                 glist_getcanvas(x->gl_owner),
                 tag);
