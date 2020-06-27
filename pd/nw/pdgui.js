@@ -5560,15 +5560,33 @@ var skin = exports.skin = (function () {
     };
 }());
 
-function select_text(cid, elem) {
+function select_text(cid, elem, state) {
     var range, win = patchwin[cid].window;
     if (win.document.selection) {
         range = win.document.body.createTextRange();
         range.moveToElementText(elem);
+        if(state > 2)
+        {
+            var b = state & 0x0000FFFF, e = state >>> 16, l = elem.textContent.length;
+            var ms = Math.max(Math.min(b, l), 0);
+            var me = Math.max(Math.min(e, l), ms);
+            post(ms + " " + me);
+            range.moveStart("character", ms);
+            range.moveEnd("character", me-l);
+        }
         range.select();
     } else if (win.getSelection) {
         range = win.document.createRange();
         range.selectNodeContents(elem);
+        if(state > 2)
+        {
+            var b = state & 0x0000FFFF, e = state >>> 16, l = elem.textContent.length;
+            var ms = Math.max(Math.min(b, l), 0);
+            var me = Math.max(Math.min(e, l), ms);
+            post(ms + " " + me);
+            range.setStart(elem.firstChild, ms);
+            range.setEnd(elem.firstChild, me);
+        }
         win.getSelection().removeAllRanges();
         win.getSelection().addRange(range);
     }
@@ -5708,11 +5726,11 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
         // append to doc body
         patchwin[cid].window.document.body.appendChild(p);
         p.focus();
-        select_text(cid, p);
-        if (state === 1) {
-            patchwin[cid].window.canvas_events.text();
-        } else {
+        select_text(cid, p, state);
+        if (state == 2) {
             patchwin[cid].window.canvas_events.floating_text();
+        } else {
+            patchwin[cid].window.canvas_events.text();
         }
     } else {
         configure_item(gobj, { visibility: "normal" });
