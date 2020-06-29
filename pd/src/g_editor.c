@@ -5044,7 +5044,7 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
 
     // check if user released shift while trying manual multi-connect
     if (x && x->gl_editor &&
-	x->gl_editor->e_onmotion == MA_CONNECT && !glob_shift && !glob_lmclick)
+        x->gl_editor->e_onmotion == MA_CONNECT && !glob_shift && !glob_lmclick)
     {
         //fprintf(stderr,"shift released during connect\n");
         gui_vmess("gui_canvas_delete_line", "xs", x, "newcord");
@@ -5053,7 +5053,7 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
 
     // check if user released shift while dragging inside an object
     if (x && x->gl_editor &&
-	x->gl_editor->e_onmotion == MA_PASSOUT && !glob_shift && !glob_lmclick)
+        x->gl_editor->e_onmotion == MA_PASSOUT && !glob_shift && !glob_lmclick)
     {
         //fprintf(stderr,"shift released during button+shift drag\n");
         canvas_mouseup(x, x->gl_editor->e_xwas, x->gl_editor->e_ywas, 0);
@@ -5954,28 +5954,27 @@ static void canvas_copyfromexternalbuffer(t_canvas *x, t_symbol *s,
         copiedfont = 0;
         binbuf_free(copy_binbuf);
         copy_binbuf = binbuf_new();
-	    line = level = 0;
+        line = level = 0;
     }
     else if (ac && copyfromexternalbuffer)
     {
         int begin_patch = av[0].a_type == A_SYMBOL &&
-	       !strcmp(av[0].a_w.w_symbol->s_name, "#N");
+            !strcmp(av[0].a_w.w_symbol->s_name, "#N");
         int end_patch = av[0].a_type == A_SYMBOL &&
-	       !strcmp(av[0].a_w.w_symbol->s_name, "#X") &&
-	        av[1].a_type == A_SYMBOL &&
-	       !strcmp(av[1].a_w.w_symbol->s_name, "restore");
-	    line++;
-    	// Keep track of the nesting of (sub)patches. Improperly nested
-    	// patches will make Pd crash and burn if we just paste them, so we
-    	// rather report such conditions as errors instead.
-    	if (end_patch && --level < 0) {
-    	    post("paste error: "
-    		 "unmatched end of subpatch at line %d",
-    		 line);
-    	    copyfromexternalbuffer = 0;
-    	    binbuf_clear(copy_binbuf);
-    	    return;
-    	}
+            !strcmp(av[0].a_w.w_symbol->s_name, "#X") &&
+            av[1].a_type == A_SYMBOL &&
+            !strcmp(av[1].a_w.w_symbol->s_name, "restore");
+        line++;
+        // Keep track of the nesting of (sub)patches. Improperly nested
+        // patches will make Pd crash and burn if we just paste them, so we
+        // rather report such conditions as errors instead.
+        if (end_patch && --level < 0) {
+            post("paste error: unmatched end of subpatch at line %d",
+                line);
+            copyfromexternalbuffer = 0;
+            binbuf_clear(copy_binbuf);
+            return;
+        }
         //fprintf(stderr,"fill %d\n", ac);
         if (copyfromexternalbuffer != 1 || !begin_patch || ac != 7)
         {
@@ -5986,7 +5985,7 @@ static void canvas_copyfromexternalbuffer(t_canvas *x, t_symbol *s,
             copyfromexternalbuffer++;
         }
         else if (copyfromexternalbuffer == 1 &&
-    	 begin_patch && ac == 7)
+            begin_patch && ac == 7)
         {
         // patch header, if the canvas is empty adjust window size and
         // position here...
@@ -6020,11 +6019,10 @@ static void canvas_copyfromexternalbuffer(t_canvas *x, t_symbol *s,
             }
             if (check != 5)
             {
-                post("paste error: "
-    	          "canvas info has invalid data at line %d",
-    	          line);
+                post("paste error: canvas info has invalid data at line %d",
+                    line);
                 copyfromexternalbuffer = 0;
-    	        binbuf_clear(copy_binbuf);
+                binbuf_clear(copy_binbuf);
             }
             else
             {
@@ -6037,13 +6035,12 @@ static void canvas_copyfromexternalbuffer(t_canvas *x, t_symbol *s,
         // here we can do things after the copying process has been completed.
         // in particular, we use this to check whether there's an incomplete
         // subpatch definition
-    	if (level > 0) {
-    	    post("paste error: "
-    		 "unmatched beginning of subpatch at line %d",
-    		 line);
-    	    copyfromexternalbuffer = 0;
-    	    binbuf_clear(copy_binbuf);
-    	}
+        if (level > 0) {
+            post("paste error: unmatched beginning of subpatch at line %d",
+                line);
+            copyfromexternalbuffer = 0;
+            binbuf_clear(copy_binbuf);
+        }
     }
 }
 
