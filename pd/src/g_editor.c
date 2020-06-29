@@ -5074,7 +5074,7 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
 
     // check if user released shift while trying manual multi-connect
     if (x && x->gl_editor &&
-	x->gl_editor->e_onmotion == MA_CONNECT && !glob_shift && !glob_lmclick)
+        x->gl_editor->e_onmotion == MA_CONNECT && !glob_shift && !glob_lmclick)
     {
         //fprintf(stderr,"shift released during connect\n");
         gui_vmess("gui_canvas_delete_line", "xs", x, "newcord");
@@ -5083,7 +5083,7 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
 
     // check if user released shift while dragging inside an object
     if (x && x->gl_editor &&
-	x->gl_editor->e_onmotion == MA_PASSOUT && !glob_shift && !glob_lmclick)
+        x->gl_editor->e_onmotion == MA_PASSOUT && !glob_shift && !glob_lmclick)
     {
         //fprintf(stderr,"shift released during button+shift drag\n");
         canvas_mouseup(x, x->gl_editor->e_xwas, x->gl_editor->e_ywas, 0);
@@ -5975,7 +5975,7 @@ int abort_when_pasting_from_external_buffer = 0;
 static void canvas_copyfromexternalbuffer(t_canvas *x, t_symbol *s,
     int ac, t_atom *av)
 {
-  static int level, line;
+    static int level, line;
     if (!x->gl_editor)
         return;
 
@@ -5990,42 +5990,41 @@ static void canvas_copyfromexternalbuffer(t_canvas *x, t_symbol *s,
         copiedfont = 0;
         binbuf_free(copy_binbuf);
         copy_binbuf = binbuf_new();
-	line = level = 0;
+        line = level = 0;
     }
     else if (ac && copyfromexternalbuffer)
     {
         int begin_patch = av[0].a_type == A_SYMBOL &&
-	  !strcmp(av[0].a_w.w_symbol->s_name, "#N");
+            !strcmp(av[0].a_w.w_symbol->s_name, "#N");
         int end_patch = av[0].a_type == A_SYMBOL &&
-	  !strcmp(av[0].a_w.w_symbol->s_name, "#X") &&
-	  av[1].a_type == A_SYMBOL &&
-	  !strcmp(av[1].a_w.w_symbol->s_name, "restore");
-	line++;
-	// Keep track of the nesting of (sub)patches. Improperly nested
-	// patches will make Pd crash and burn if we just paste them, so we
-	// rather report such conditions as errors instead.
-	if (end_patch && --level < 0) {
-	    post("paste error: "
-		 "unmatched end of subpatch at line %d",
-		 line);
-	    copyfromexternalbuffer = 0;
-	    binbuf_clear(copy_binbuf);
-	    return;
-	}
+            !strcmp(av[0].a_w.w_symbol->s_name, "#X") &&
+            av[1].a_type == A_SYMBOL &&
+            !strcmp(av[1].a_w.w_symbol->s_name, "restore");
+        line++;
+        // Keep track of the nesting of (sub)patches. Improperly nested
+        // patches will make Pd crash and burn if we just paste them, so we
+        // rather report such conditions as errors instead.
+        if (end_patch && --level < 0) {
+            post("paste error: unmatched end of subpatch at line %d",
+                line);
+            copyfromexternalbuffer = 0;
+            binbuf_clear(copy_binbuf);
+            return;
+        }
         //fprintf(stderr,"fill %d\n", ac);
         if (copyfromexternalbuffer != 1 || !begin_patch || ac != 7)
         {
-	    // not a patch header, just copy
-	    if (begin_patch) level++;
+        // not a patch header, just copy
+            if (begin_patch) level++;
             binbuf_add(copy_binbuf, ac, av);
             binbuf_addsemi(copy_binbuf);
             copyfromexternalbuffer++;
         }
         else if (copyfromexternalbuffer == 1 &&
-		 begin_patch && ac == 7)
+            begin_patch && ac == 7)
         {
-	    // patch header, if the canvas is empty adjust window size and
-	    // position here...
+        // patch header, if the canvas is empty adjust window size and
+        // position here...
             int check = 0;
             //fprintf(stderr,
             //    "copying canvas properties for copyfromexternalbuffer\n");
@@ -6056,11 +6055,10 @@ static void canvas_copyfromexternalbuffer(t_canvas *x, t_symbol *s,
             }
             if (check != 5)
             {
-                post("paste error: "
-		     "canvas info has invalid data at line %d",
-		     line);
+                post("paste error: canvas info has invalid data at line %d",
+                    line);
                 copyfromexternalbuffer = 0;
-		binbuf_clear(copy_binbuf);
+                binbuf_clear(copy_binbuf);
             }
             else
             {
@@ -6073,13 +6071,12 @@ static void canvas_copyfromexternalbuffer(t_canvas *x, t_symbol *s,
         // here we can do things after the copying process has been completed.
         // in particular, we use this to check whether there's an incomplete
         // subpatch definition
-	if (level > 0) {
-	    post("paste error: "
-		 "unmatched beginning of subpatch at line %d",
-		 line);
-	    copyfromexternalbuffer = 0;
-	    binbuf_clear(copy_binbuf);
-	}
+        if (level > 0) {
+            post("paste error: unmatched beginning of subpatch at line %d",
+                line);
+            copyfromexternalbuffer = 0;
+            binbuf_clear(copy_binbuf);
+        }
     }
 }
 
@@ -6360,6 +6357,11 @@ extern int we_are_undoing;
 static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 {
     //fprintf(stderr,"start dopaste\n");
+    // ico@vt.edu: paste is enabled at startup (GUI-end problem),
+    // so until we figure out why that is so, here we double-check the
+    // sanity of the paste command
+    if (binbuf_getnatom(b) == 0)
+        return;
     do_not_redraw += 1;
     int was_dnr = do_not_redraw;
     
@@ -6542,7 +6544,13 @@ static void canvas_paste(t_canvas *x)
         }*/
 //#endif
     }
-    else if (!clipboard_istext)
+    // ico@vt.edu: need to check that the copy_binbuf is not null. This
+    // currently prevents the crash when opening a new patch with nothing
+    // in the buffer and pressing paste since the paste menu item is not
+    // being properly initialized. This is probably a good safety check
+    // anyhow. We will also have to investigate why the undo/paste menus
+    // are not being properly initialized and fix them accordingly.
+    else if (!clipboard_istext && copy_binbuf != NULL)
     {
         //canvas_setundo(x, canvas_undo_paste, canvas_undo_set_paste(x),
         //    "paste");

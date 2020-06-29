@@ -2248,9 +2248,7 @@ static void canvas_f(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     }
     // if we are part of a restore message
     // of a subpatch in the form "#X restore..., f 123456789+;"
-    if (pd_class(last_typedmess_pd) == canvas_class &&
-        (t_canvas *)last_typedmess_pd == x &&
-        last_typedmess == gensym("restore"))
+    if (!x->gl_list || !strcmp(last_typedmess->s_name, "restore"))
     {
         if (x->gl_owner && !x->gl_isgraph)
         {
