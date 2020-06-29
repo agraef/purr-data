@@ -320,9 +320,10 @@ text {
     //cursor: default;
 }
 
-/* not sure if this is still needed */
+/* not sure if this is still needed...
+   updated the coloring just in case */
 .selected_border {
-    stroke: blue;
+    stroke: #e87216;
     stroke-dasharray: none;
     stroke-width: 1;
 }
@@ -399,6 +400,12 @@ text {
     stroke-dasharray: 3 2;
 }
 
+/* ico@vt.edu: added selected border coloring
+   in edit mode only */
+#patchsvg.editmode .comment.selected .border {
+    stroke: #e87216;
+}
+
 /* A little hack for special case of [cnv].
    All other iemguis have a black border, but
    [cnv] sets its selection rectangle to the
@@ -426,14 +433,17 @@ text {
    in plain English:
       This lets us highlight an object's border, unless it is inside a gop
       canvas.
+   
+   ico@vt.edu added selection highlight only if we are in editmode
 */
-:not(.gop).selected .border {
+#patchsvg.editmode :not(.gop).selected .border {
     stroke: #e87216;
     display: inline;
 }
 
-/* text inside selected objects */
-:not(.gop).selected text {
+/* text inside selected objects
+   ico@vt.edu added selection highlight only if we are in editmode */
+#patchsvg.editmode :not(.gop).selected text {
     fill: #e87216;
 }
 
