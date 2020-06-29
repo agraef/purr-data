@@ -704,6 +704,8 @@ t_symbol *canvas_makebindsym(t_symbol *s)
     return (gensym(buf));
 }
 
+int garray_getname(t_garray *x, t_symbol **namep);
+
 void canvas_args_to_string(char *namebuf, t_canvas *x)
 {
     t_canvasenvironment *env = canvas_getenv(x);
@@ -726,15 +728,14 @@ void canvas_args_to_string(char *namebuf, t_canvas *x)
     {
         namebuf[0] = 0;
         t_gobj *g = NULL;
-        t_garray *a = NULL;
         t_symbol *arrayname;
-        int found = 0, res;
+        int found = 0;
         for (g = x->gl_list; g; g = g->g_next)
         {
 
             if (pd_class(&g->g_pd) == garray_class)
             {
-                res = garray_getname((t_garray *)g, &arrayname);
+                garray_getname((t_garray *)g, &arrayname);
                 if (found)
                 {
                     strcat(namebuf, " ");
