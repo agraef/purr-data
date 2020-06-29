@@ -5567,10 +5567,9 @@ function select_text(cid, elem, state) {
         range.moveToElementText(elem);
         if(state > 2)
         {
-            var b = state & 0x0000FFFF, e = state >>> 16, l = elem.textContent.length;
+            var b = state & 0xFFFF, e = state >>> 16, l = elem.textContent.length;
             var ms = Math.max(Math.min(b, l), 0);
             var me = Math.max(Math.min(e, l), ms);
-            post(ms + " " + me);
             range.moveStart("character", ms);
             range.moveEnd("character", me-l);
         }
@@ -5580,10 +5579,9 @@ function select_text(cid, elem, state) {
         range.selectNodeContents(elem);
         if(state > 2)
         {
-            var b = state & 0x0000FFFF, e = state >>> 16, l = elem.textContent.length;
+            var b = state & 0xFFFF, e = state >>> 16, l = elem.textContent.length;
             var ms = Math.max(Math.min(b, l), 0);
             var me = Math.max(Math.min(e, l), ms);
-            post(ms + " " + me);
             range.setStart(elem.firstChild, ms);
             range.setEnd(elem.firstChild, me);
         }
