@@ -408,7 +408,8 @@ function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
         // the window.  Ideally we would just get rid of the canvas menu
         // altogether to simplify things. But we'd have to add some kind of
         // widget for the "Put" menu.
-        height: height + 23,
+        // ico@vt.edu: on 0.46.2 this is now 25, go figure...
+        height: height + 25,
         x: xpos,
         y: ypos
     }, function (new_win) {

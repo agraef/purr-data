@@ -722,38 +722,112 @@ t_float glist_pixelstoy(t_glist *x, t_float ypix)
     }
 }
 
+/* ico@vt.edu: used by the scalar_vis to adjust visual offset
+   based on the graph drawing style, affects bar graph */
+extern int garray_get_style(t_garray *x);
+
     /* convert an x coordinate value to an x pixel location in window */
 t_float glist_xtopixels(t_glist *x, t_float xval)
 {
+    // ico@vt.edu: used to deal with the bar graph
+    t_float plot_offset = 0;
+    t_gobj *g = x->gl_list;
+
     if (!x->gl_isgraph)
         return ((xval - x->gl_x1) / (x->gl_x2 - x->gl_x1));
     else if (x->gl_isgraph && x->gl_havewindow)
-        return (x->gl_screenx2 - x->gl_screenx1) * 
-            (xval - x->gl_x1) / (x->gl_x2 - x->gl_x1);
+    {
+        if (g != NULL && g->g_pd == garray_class)
+        {
+            t_garray *g_a = (t_garray *)g;
+            if (garray_get_style(g_a) == PLOTSTYLE_BARS)
+                plot_offset = 10;
+        }
+        //fprintf(stderr, "xtopixels xval=%f gl_x1=%f gl_x2=%f screenx1=%d screenx2=%d\n",
+        //    xval, x->gl_x1, x->gl_x2, x->gl_screenx1, x->gl_screenx2);
+        return (x->gl_screenx2 - x->gl_screenx1) *
+            (xval - x->gl_x1 - plot_offset) / (x->gl_x2 - x->gl_x1);
+    }
     else
     {
+        /* ico@vt.edu: some really stupid code to compensate for the fact
+           that the svg stroke featue adds unaccounted width to the bars */
+        if (g != NULL && g->g_pd == garray_class)
+        {
+            if (garray_get_style((t_garray *)g) == PLOTSTYLE_BARS)
+                plot_offset = 2;
+        }
         int x1, y1, x2, y2;
         if (!x->gl_owner)
             bug("glist_pixelstox");
         graph_graphrect(&x->gl_gobj, x->gl_owner, &x1, &y1, &x2, &y2);
-        return (x1 + (x2 - x1) * (xval - x->gl_x1) / (x->gl_x2 - x->gl_x1));
+        return (x1 + (x2 - x1 - plot_offset) * (xval - x->gl_x1) / (x->gl_x2 - x->gl_x1));
     }
 }
 
 t_float glist_ytopixels(t_glist *x, t_float yval)
 {
+    t_float plot_offset = 0;
+    t_gobj *g = x->gl_list;
+
     if (!x->gl_isgraph)
         return ((yval - x->gl_y1) / (x->gl_y2 - x->gl_y1));
     else if (x->gl_isgraph && x->gl_havewindow)
-        return (x->gl_screeny2 - x->gl_screeny1) * 
-                (yval - x->gl_y1) / (x->gl_y2 - x->gl_y1);
+    {
+        if (g != NULL && g->g_pd == garray_class)
+        {
+            /*t_garray *g_a = (t_garray *)g;
+            if (garray_get_style((t_garray *)g) == PLOTSTYLE_POLY ||
+                    garray_get_style((t_garray *)g) == PLOTSTYLE_BEZ)*/
+            switch (garray_get_style((t_garray *)g))
+            {
+            case PLOTSTYLE_POINTS:
+                plot_offset = 2;
+                break;
+            case PLOTSTYLE_POLY:
+                plot_offset = 2;
+                break;
+            case PLOTSTYLE_BEZ:
+                plot_offset = 2;
+                break;
+            case PLOTSTYLE_BARS:
+                plot_offset = 2;
+                break;
+            }
+        }
+        return (x->gl_screeny2 - x->gl_screeny1 - plot_offset) *
+            (yval - x->gl_y1) / (x->gl_y2 - x->gl_y1);
+    }
     else 
     {
+        /* ico@vt.edu: some really stupid code to compensate for the fact
+           that the poly and bezier tend to overlap the GOP edges */
+        if (g != NULL && g->g_pd == garray_class)
+        {
+            /*t_garray *g_a = (t_garray *)g;
+            if (garray_get_style((t_garray *)g) == PLOTSTYLE_POLY ||
+                    garray_get_style((t_garray *)g) == PLOTSTYLE_BEZ)*/
+            switch (garray_get_style((t_garray *)g))
+            {
+                case PLOTSTYLE_POINTS:
+                    plot_offset = 2;
+                    break;
+                case PLOTSTYLE_POLY:
+                    plot_offset = 2;
+                    break;
+                case PLOTSTYLE_BEZ:
+                    plot_offset = 2;
+                    break;
+                case PLOTSTYLE_BARS:
+                    plot_offset = 2;
+                    break;
+            }
+        }
         int x1, y1, x2, y2;
         if (!x->gl_owner)
             bug("glist_pixelstoy");
         graph_graphrect(&x->gl_gobj, x->gl_owner, &x1, &y1, &x2, &y2);
-        return (y1 + (y2 - y1) * (yval - x->gl_y1) / (x->gl_y2 - x->gl_y1));
+        return (y1 + (y2 - y1 - plot_offset) * (yval - x->gl_y1) / (x->gl_y2 - x->gl_y1));
     }
 }
 
