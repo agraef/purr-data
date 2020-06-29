@@ -1292,7 +1292,7 @@ void graph_checkgop_rect(t_gobj *z, t_glist *glist,
     }
 
     // check if the gop has array members and if so,
-    // make its minimum size based on array names size
+    // make its minimum size based on array name's size
     t_symbol *arrayname;
     int cols_tmp = 0;
     int arrayname_cols = 0;
@@ -1311,10 +1311,10 @@ void graph_checkgop_rect(t_gobj *z, t_glist *glist,
     {
         int fontwidth = sys_fontwidth(x->gl_font);
         int fontheight = sys_fontheight(x->gl_font);
-        if ((arrayname_rows * fontheight - 1) > (*yp2 - *yp1))
-            *yp2 = *yp1 + (arrayname_rows * fontheight - 1);
-        if ((arrayname_cols * fontwidth + 2) > (*xp2 - *xp1))
-            *xp2 = *xp1 + (arrayname_cols * fontwidth + 2);
+        if ((arrayname_rows * fontheight + 4) > (*yp2 - *yp1))
+            *yp2 = *yp1 + (arrayname_rows * fontheight + 4);
+        if ((arrayname_cols * fontwidth + 5) > (*xp2 - *xp1))
+            *xp2 = *xp1 + (arrayname_cols * fontwidth + 5);
     }
 
     // failsafe where we cannot have a gop that is smaller than 1x1 pixels
