@@ -4246,6 +4246,7 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
         if (!x->gl_editor->e_selection->sel_next->sel_next &&
             glist_isselected(x, y1) && glist_isselected(x, y2))
         {
+            canvas_undo_add(x, UNDO_SEQUENCE_START, "multiconnect (mode-1)", 0);
             //fprintf(stderr,"first option\n");
             ob1 = pd_checkobject(&y1->g_pd);
             ob2 = pd_checkobject(&y2->g_pd);
@@ -4287,6 +4288,7 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                 }
                 hotspot1=hotspot1; hotspot2=hotspot2; // silence warnings (unused vars)
             }
+            canvas_undo_add(x, UNDO_SEQUENCE_END, "multiconnect (mode-1)", 0);
             return(return_val);
         /* end of FIRST OPTION */
         }
@@ -4297,6 +4299,7 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
         else if (x->gl_editor->e_selection->sel_next &&
                  !glist_isselected(x, y1) && glist_isselected(x, y2))
         {
+            canvas_undo_add(x, UNDO_SEQUENCE_START, "multiconnect (mode-2)", 0);
             //fprintf(stderr,"second option\n");
             ob1 = pd_checkobject(&y1->g_pd);
             ob2 = pd_checkobject(&y2->g_pd);
@@ -4352,6 +4355,7 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                 }    
                 hotspot1=hotspot1; hotspot2=hotspot2; // silence warnings (unused vars)
             }
+            canvas_undo_add(x, UNDO_SEQUENCE_END, "multiconnect (mode-2)", 0);
             return(return_val);
         /* end of SECOND OPTION */
         }
@@ -4364,6 +4368,7 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
         else if (x->gl_editor->e_selection->sel_next &&
                  glist_isselected(x, y1) && !glist_isselected(x, y2))
         {
+            canvas_undo_add(x, UNDO_SEQUENCE_START, "multiconnect (mode-3)", 0);
             //fprintf(stderr,"third option\n");
             ob1 = pd_checkobject(&y1->g_pd);
             ob2 = pd_checkobject(&y2->g_pd);
@@ -4420,6 +4425,7 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                 }
                 hotspot1=hotspot1; hotspot2=hotspot2; // silence warnings (unused vars)
             }
+            canvas_undo_add(x, UNDO_SEQUENCE_END, "multiconnect (mode-3)", 0);
             return(return_val);
         /* end of THIRD OPTION */
         }
@@ -4439,6 +4445,7 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
         else if (x->gl_editor->e_selection->sel_next->sel_next &&
                  glist_isselected(x, y1) && glist_isselected(x, y2))
         {
+            canvas_undo_add(x, UNDO_SEQUENCE_START, "multiconnect (mode-4)", 0);
             //fprintf(stderr,"fourth option\n");
             ob1 = pd_checkobject(&y1->g_pd);
             ob2 = pd_checkobject(&y2->g_pd);
@@ -4645,7 +4652,8 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                         }
                     }
                 }            
-            }            
+            }
+            canvas_undo_add(x, UNDO_SEQUENCE_END, "multiconnect (mode-4)", 0);
             return(return_val);
         // end of FOURTH OPTION
         }
