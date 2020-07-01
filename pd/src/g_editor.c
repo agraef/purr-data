@@ -358,13 +358,13 @@ int canvas_restore_original_position(t_glist *x, t_gobj *y, const char* objtag,
                     gui_vmess("gui_find_lowest_and_arrange", "xss",
                         x, rtext_gettag(yrnxt), objtag ? objtag : "selected");
                 }
-                else
+                /*else
                 {
-                    /* fall back to legacy redraw for objects
-                       that are not patchable */
+                    // fall back to legacy redraw for objects
+                    //   that are not patchable
                     canvas_redraw(x);
                     ret = -1;
-                }
+                }*/
             }
             else
             {
@@ -381,13 +381,13 @@ int canvas_restore_original_position(t_glist *x, t_gobj *y, const char* objtag,
                     gui_vmess("gui_raise", "xs",
                         x, objtag ? objtag : "selected");
                 }
-                else
+                /*else
                 {
-                    /* fall back to legacy redraw for objects
-                       that are not patchable */
+                    // fall back to legacy redraw for objects
+                    //   that are not patchable
                     canvas_redraw(x);
                     ret = -1;
-                }
+                }*/
             }
         }
     }

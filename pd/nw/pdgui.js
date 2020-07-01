@@ -3591,7 +3591,7 @@ function gui_scalar_draw_select_rect(cid, tag, state, x1, y1, x2, y2, basex, bas
     });
 }
 
-function gui_scalar_draw_group(cid, tag, parent_tag, type, plot_style, attr_array) {
+function gui_scalar_draw_group(cid, tag, parent_tag, type, attr_array) {
     gui(cid).get_elem(parent_tag)
     .append(function(frag) {
         if (!attr_array) {
@@ -3599,10 +3599,6 @@ function gui_scalar_draw_group(cid, tag, parent_tag, type, plot_style, attr_arra
         }
         attr_array.push("id", tag);
         var group = create_item(cid, type, attr_array);
-        if (plot_style == 3)
-        {
-            group.style.setProperty("transform", "translateX(0.2px)");
-        }
         frag.appendChild(group);
         return frag;
     });

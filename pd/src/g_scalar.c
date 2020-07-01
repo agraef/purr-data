@@ -929,28 +929,15 @@ static void scalar_groupvis(t_scalar *x, t_glist *owner, t_template *template,
     t_gobj *y;
     if (vis)
     {
-        /* ico@vt.edu check for the plot style if available,
-           so that we can adjust visual offset, as needed.
-           This may have to be refactored later, since there
-           is another identical implementation below
-        */
-        int plot_style = -1;
-        t_gobj *g = owner->gl_list;
-        if (g != NULL && g->g_pd == garray_class)
-        {
-            t_garray *g_a = (t_garray *)g;
-            plot_style = garray_get_style(g_a);
-        }
-
         char tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "dgroup%lx.%lx", (long unsigned int)gl,
             (long unsigned int)x->sc_vec);
         char parentbuf[MAXPDSTRING];
         sprintf(parentbuf, "dgroup%lx.%lx", (long unsigned int)parent,
             (long unsigned int)x->sc_vec);
-        gui_start_vmess("gui_scalar_draw_group", "xsssi",
+        gui_start_vmess("gui_scalar_draw_group", "xsss",
             glist_getcanvas(owner), tagbuf, parentbuf,
-            group_gettype(gl)->s_name, plot_style);
+            group_gettype(gl)->s_name);
         svg_grouptogui(gl, template, x->sc_vec);
         gui_end_vmess();
 
@@ -1056,26 +1043,6 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
         }
         t_float xscale = ((glist_xtopixels(owner, 1) - glist_xtopixels(owner, 0)));
         t_float yscale = glist_ytopixels(owner, 1) - glist_ytopixels(owner, 0);
-        // this has been moved into pdgui.js gui_scalar_new, leaving here just
-        // in case the other implementation proves problematic
-        //t_float nw_yoffset = 0;
-        /*switch (plot_style)
-        {
-            case 0:
-                nw_yoffset = -0.5;
-                yscale += 1;
-                break;
-            case 1:
-                nw_yoffset = 1.5;
-                break;
-            case 2:
-                nw_yoffset = 1.5;
-                break;
-            case 3:
-                nw_yoffset = 0.5;
-                yscale += 1;
-                break;
-        }*/
         /* we translate the .scalar%lx group to displace it on the tk side.
            This is the outermost group for the scalar, something like a
            poor man's viewport.
@@ -1103,8 +1070,8 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
         sprintf(tagbuf, "scalar%lxgobj", (long unsigned int)x->sc_vec);
         sprintf(groupbuf, "dgroup%lx.%lx", (long unsigned int)templatecanvas,
             (long unsigned int)x->sc_vec);
-        gui_vmess("gui_scalar_draw_group", "xsssi",
-            glist_getcanvas(owner), groupbuf, tagbuf, "g", plot_style);
+        gui_vmess("gui_scalar_draw_group", "xsss",
+            glist_getcanvas(owner), groupbuf, tagbuf, "g");
         pd_bind(&x->sc_gobj.g_pd, gensym(buf));
     }
 
