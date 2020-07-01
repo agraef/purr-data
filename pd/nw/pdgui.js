@@ -3512,7 +3512,11 @@ function gui_scalar_new(cid, tag, isselected, t1, t2, t3, t4, t5, t6,
                     transform_string = "translate(" + 0 +
                         "," + (t6+1) + ") scale(" + t1 + "," + t4 + ")";
                     //post("transform_string = " + transform_string);
-                    break;                  
+                    break;
+                default:
+                    // we are a non-plot scalar
+                    matrix = [t1,t2,t3,t4,t5,t6];
+                    break;        
             }
         }        
         else {
@@ -3533,6 +3537,10 @@ function gui_scalar_new(cid, tag, isselected, t1, t2, t3, t4, t5, t6,
                         "," + (t6+1) + ") scale(" + t1 + "," + t4 + ")";
                     //post("transform_string = " + transform_string);
                     break;
+                default:
+                    // we are a non-plot scalar
+                    matrix = [t1,t2,t3,t4,t5,t6];
+                    break; 
             }
         }
         
