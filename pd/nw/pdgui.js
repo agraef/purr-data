@@ -3624,7 +3624,6 @@ function gui_draw_vis(cid, type, attr_array, tag_array) {
     gui(cid).get_elem(tag_array[0])
     .append(function(frag) {
         var item;
-        post("gui_draw_vis cid=" + cid + " type=" + type + " attr_array=" + attr_array);
         attr_array.push("id", tag_array[1]);
         item = create_item(cid, type, attr_array);
         frag.appendChild(item);
