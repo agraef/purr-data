@@ -607,7 +607,9 @@ void rtext_activate(t_rtext *x, int state)
     }
     else
     {
-        widthspec = x->x_text->te_width; // width if any specified
+        int xmin, xmax, tmp;
+        gobj_getrect(&x->x_text->te_g, x->x_glist, &xmin, &tmp, &xmax, &tmp);
+        widthspec = (x->x_text->te_width ? x->x_text->te_width : -(xmax-xmin)); // width if any specified
         heightspec = -1; // signal that we don't have a heightspec
         isgop = 0;
     }

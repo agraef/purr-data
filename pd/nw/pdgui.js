@@ -5822,11 +5822,10 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
         p.style.setProperty("transform", "translate(0px, " + 
             (zoom > 0 ? 0.5 : 0) + "px)");
         p.style.setProperty("max-width",
-            width_spec !== 0 ? width_spec + "ch" : "60ch");
+            width_spec > 0 ? width_spec + "ch" : "60ch");
         p.style.setProperty("min-width",
-            width_spec <= 0 ? "3ch" :
-                (is_gop == 1 ? (width_spec - 5) + "px" :
-                    width_spec + "ch"));
+                is_gop == 1 ? (width_spec - 5) + "px" :
+                    (width_spec < 0 ? (-width_spec) + "px" : width_spec + "ch"));
         
         // set backgroundimage for message box
         if (type === "msg") {
