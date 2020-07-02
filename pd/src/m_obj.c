@@ -72,12 +72,12 @@ t_inlet *signalinlet_new(t_object *owner, t_float f)
     return (x);
 }
 
-char *type_hint(t_symbol *s, int argc, t_atom *argv);
+char *type_hint(t_symbol *s, int argc, t_atom *argv, int dostof);
 
 static void inlet_wrong(t_inlet *x, t_symbol *s, int argc, t_atom *argv)
 {
     pd_error(x->i_owner, "inlet: expected '%s' but got '%s'%s",
-        x->i_symfrom->s_name, s->s_name, type_hint(s, argc, argv));
+        x->i_symfrom->s_name, s->s_name, type_hint(s, argc, argv, 1));
 }
 
 static void inlet_list(t_inlet *x, t_symbol *s, int argc, t_atom *argv);
