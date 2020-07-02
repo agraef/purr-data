@@ -43,19 +43,7 @@ t_classtable *ct;
 
 static t_symbol *class_extern_dir = &s_;
 
-int symbol_can_float(t_symbol *s, t_float *f)
-{
-    char c;
-    if (!s || s == &s_) return 0;
-    c = s->s_name[0];
-    if (c != '-' && c != '+' && c < 48 && c > 57) return 0;
-    char *str_end = NULL;
-    *f = strtod(s->s_name, &str_end);
-    /* Add error checking here like in cxc/hex2dec */
-    if (*f == 0 && s->s_name == str_end)
-        return 0;
-    return 1;
-}
+int symbol_can_float(t_symbol *s, t_float *f);
 
 char *type_hint(t_symbol *s, int argc, t_atom *argv)
 {

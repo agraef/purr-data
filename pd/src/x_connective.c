@@ -86,7 +86,19 @@ static void pdfloat_float(t_pdfloat *x, t_float f)
     outlet_float(x->x_obj.ob_outlet, x->x_f = f);
 }
 
-int symbol_can_float(t_symbol *s, t_float *f);
+int symbol_can_float(t_symbol *s, t_float *f)
+{
+        char c;
+        if (!s || s == &s_) return 0;
+        c = s->s_name[0];
+        if (c != '-' && c != '+' && c < 48 && c > 57) return 0;
+        char *str_end = NULL;
+        *f = strtod(s->s_name, &str_end);
+        /* Add error checking here like in cxc/hex2dec */
+        if (*f == 0 && s->s_name == str_end)
+            return 0;
+        return 1;
+}
 
 char *type_hint(t_symbol *s, int argc, t_atom *argv);
 
