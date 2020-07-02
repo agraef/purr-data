@@ -13,7 +13,7 @@ Here's a quick shopping list:
 - [**Sources**](https://github.com/agraef/purr-data): Github mirror of the sources, updated regularly.
 - [**Development**](https://git.purrdata.net/jwilkes/purr-data): Wilkes' Gitlab repository. **This is where you should go for submitting bug reports and pull requests.**
 - [**Mailing list**](http://disis.music.vt.edu/listinfo/l2ork-dev): The DISIS Pd-l2ork mailing list is the right place for getting help and discuss Purr Data, so please subscribe!
-- [**"Meet the Cat" Tutorial**](https://agraef.github.io/purr-data-intro): A quick introduction to Purr Data, how it came about, and how to use it.
+- [**"Meet the Cat" Tutorial**](https://agraef.github.io/purr-data-intro): A quick introduction to Purr Data, how it came about, and how to use it. (French translation by Joseph Gastelais: [Rencontrez le Chat](https://www.linuxrouen.fr/wp/programmation/rencontrez-le-chat-introduction-rapide-a-purr-data-vs-pd-l2ork-vs-pd-extended-vs-pure-data-28047/))
 
 There's also a [video](https://www.youtube.com/watch?v=T1wo496Zx0s) up on YouTube of the presentation *Meet the Cat: Pd-L2Ork and its New Cross-Platform Version "Purr Data"* at the Linux Audio Conference 2017 (Jean MONNET University, Saint-Etienne).
 
