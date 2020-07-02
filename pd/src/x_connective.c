@@ -579,7 +579,8 @@ static void route_list(t_route *x, t_symbol *sel, int argc, t_atom *argv)
     if (x->x_type == A_FLOAT || x->x_mixed)
     {
         t_float f;
-        if (!argc || argv->a_type != A_FLOAT)
+        if (!argc) return;
+        if (argv->a_type != A_FLOAT)
             goto try_symbol;
         f = atom_getfloat(argv);
         for (nelement = x->x_nelement, e = x->x_vec; nelement--; e++)
