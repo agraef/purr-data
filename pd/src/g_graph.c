@@ -722,112 +722,38 @@ t_float glist_pixelstoy(t_glist *x, t_float ypix)
     }
 }
 
-/* ico@vt.edu: used by the scalar_vis to adjust visual offset
-   based on the graph drawing style, affects bar graph */
-extern int garray_get_style(t_garray *x);
-
     /* convert an x coordinate value to an x pixel location in window */
 t_float glist_xtopixels(t_glist *x, t_float xval)
 {
-    // ico@vt.edu: used to deal with the bar graph
-    t_float plot_offset = 0;
-    t_gobj *g = x->gl_list;
-
     if (!x->gl_isgraph)
         return ((xval - x->gl_x1) / (x->gl_x2 - x->gl_x1));
     else if (x->gl_isgraph && x->gl_havewindow)
-    {
-        if (g != NULL && g->g_pd == garray_class)
-        {
-            t_garray *g_a = (t_garray *)g;
-            if (garray_get_style(g_a) == PLOTSTYLE_BARS)
-                plot_offset = 10;
-        }
-        //fprintf(stderr, "xtopixels xval=%f gl_x1=%f gl_x2=%f screenx1=%d screenx2=%d\n",
-        //    xval, x->gl_x1, x->gl_x2, x->gl_screenx1, x->gl_screenx2);
-        return (x->gl_screenx2 - x->gl_screenx1) *
-            (xval - x->gl_x1 - plot_offset) / (x->gl_x2 - x->gl_x1);
-    }
+        return (x->gl_screenx2 - x->gl_screenx1) * 
+            (xval - x->gl_x1) / (x->gl_x2 - x->gl_x1);
     else
     {
-        /* ico@vt.edu: some really stupid code to compensate for the fact
-           that the svg stroke featue adds unaccounted width to the bars */
-        if (g != NULL && g->g_pd == garray_class)
-        {
-            if (garray_get_style((t_garray *)g) == PLOTSTYLE_BARS)
-                plot_offset = 2;
-        }
         int x1, y1, x2, y2;
         if (!x->gl_owner)
             bug("glist_pixelstox");
         graph_graphrect(&x->gl_gobj, x->gl_owner, &x1, &y1, &x2, &y2);
-        return (x1 + (x2 - x1 - plot_offset) * (xval - x->gl_x1) / (x->gl_x2 - x->gl_x1));
+        return (x1 + (x2 - x1) * (xval - x->gl_x1) / (x->gl_x2 - x->gl_x1));
     }
 }
 
 t_float glist_ytopixels(t_glist *x, t_float yval)
 {
-    t_float plot_offset = 0;
-    t_gobj *g = x->gl_list;
-
     if (!x->gl_isgraph)
         return ((yval - x->gl_y1) / (x->gl_y2 - x->gl_y1));
     else if (x->gl_isgraph && x->gl_havewindow)
-    {
-        if (g != NULL && g->g_pd == garray_class)
-        {
-            /*t_garray *g_a = (t_garray *)g;
-            if (garray_get_style((t_garray *)g) == PLOTSTYLE_POLY ||
-                    garray_get_style((t_garray *)g) == PLOTSTYLE_BEZ)*/
-            switch (garray_get_style((t_garray *)g))
-            {
-            case PLOTSTYLE_POINTS:
-                plot_offset = 2;
-                break;
-            case PLOTSTYLE_POLY:
-                plot_offset = 2;
-                break;
-            case PLOTSTYLE_BEZ:
-                plot_offset = 2;
-                break;
-            case PLOTSTYLE_BARS:
-                plot_offset = 2;
-                break;
-            }
-        }
-        return (x->gl_screeny2 - x->gl_screeny1 - plot_offset) *
-            (yval - x->gl_y1) / (x->gl_y2 - x->gl_y1);
-    }
+        return (x->gl_screeny2 - x->gl_screeny1) * 
+                (yval - x->gl_y1) / (x->gl_y2 - x->gl_y1);
     else 
     {
-        /* ico@vt.edu: some really stupid code to compensate for the fact
-           that the poly and bezier tend to overlap the GOP edges */
-        if (g != NULL && g->g_pd == garray_class)
-        {
-            /*t_garray *g_a = (t_garray *)g;
-            if (garray_get_style((t_garray *)g) == PLOTSTYLE_POLY ||
-                    garray_get_style((t_garray *)g) == PLOTSTYLE_BEZ)*/
-            switch (garray_get_style((t_garray *)g))
-            {
-                case PLOTSTYLE_POINTS:
-                    plot_offset = 2;
-                    break;
-                case PLOTSTYLE_POLY:
-                    plot_offset = 2;
-                    break;
-                case PLOTSTYLE_BEZ:
-                    plot_offset = 2;
-                    break;
-                case PLOTSTYLE_BARS:
-                    plot_offset = 2;
-                    break;
-            }
-        }
         int x1, y1, x2, y2;
         if (!x->gl_owner)
             bug("glist_pixelstoy");
         graph_graphrect(&x->gl_gobj, x->gl_owner, &x1, &y1, &x2, &y2);
-        return (y1 + (y2 - y1 - plot_offset) * (yval - x->gl_y1) / (x->gl_y2 - x->gl_y1));
+        return (y1 + (y2 - y1) * (yval - x->gl_y1) / (x->gl_y2 - x->gl_y1));
     }
 }
 
@@ -953,7 +879,6 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
     char tag[50];
     t_gobj *g;
     int x1, y1, x2, y2;
-    t_rtext *rtext;
         /* ordinary subpatches: just act like a text object */
     if (!x->gl_isgraph)
     {
@@ -961,14 +886,6 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
         return;
     }
 
-        /* Sanity check */
-    rtext = glist_findrtext(parent_glist, &x->gl_obj);
-    if (!rtext)
-    {
-        bug("graph_vis");
-        return;
-    }
-    sprintf(tag, "%s", rtext_gettag(rtext));
     // weird exception
     //int exception = 0;
     //t_canvas* tgt = glist_getcanvas(x->gl_owner);
@@ -979,6 +896,8 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
     //}
     //fprintf(stderr,"tgt=.x%lx %d\n", (t_int)tgt, exception);
 
+    sprintf(tag, "%s", rtext_gettag(glist_findrtext(parent_glist, &x->gl_obj)));
+
     if (vis & gobj_shouldvis(gr, parent_glist))
     {
         int xpix, ypix;
@@ -986,8 +905,7 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
         ypix = text_ypix(&x->gl_obj, parent_glist);
         gui_vmess("gui_gobj_new", "xssiii",
             glist_getcanvas(x->gl_owner),
-            tag, "graph", xpix, ypix,
-            parent_glist == glist_getcanvas(x->gl_owner) ? 1 : 0);
+            tag, "graph", xpix, ypix, 1);
         if (canvas_showtext(x))
             rtext_draw(glist_findrtext(parent_glist, &x->gl_obj));
     }
@@ -1292,7 +1210,7 @@ void graph_checkgop_rect(t_gobj *z, t_glist *glist,
     }
 
     // check if the gop has array members and if so,
-    // make its minimum size based on array name's size
+    // make its minimum size based on array names size
     t_symbol *arrayname;
     int cols_tmp = 0;
     int arrayname_cols = 0;
@@ -1311,10 +1229,10 @@ void graph_checkgop_rect(t_gobj *z, t_glist *glist,
     {
         int fontwidth = sys_fontwidth(x->gl_font);
         int fontheight = sys_fontheight(x->gl_font);
-        if ((arrayname_rows * fontheight + 4) > (*yp2 - *yp1))
-            *yp2 = *yp1 + (arrayname_rows * fontheight + 4);
-        if ((arrayname_cols * fontwidth + 5) > (*xp2 - *xp1))
-            *xp2 = *xp1 + (arrayname_cols * fontwidth + 5);
+        if ((arrayname_rows * fontheight - 1) > (*yp2 - *yp1))
+            *yp2 = *yp1 + (arrayname_rows * fontheight - 1);
+        if ((arrayname_cols * fontwidth + 2) > (*xp2 - *xp1))
+            *xp2 = *xp1 + (arrayname_cols * fontwidth + 2);
     }
 
     // failsafe where we cannot have a gop that is smaller than 1x1 pixels
