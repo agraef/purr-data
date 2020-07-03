@@ -1,0 +1,41 @@
+#N canvas 24 73 846 509 12;
+#X obj 78 23 inlet;
+#X obj 78 431 outlet;
+#X obj 239 168 unpost;
+#X obj 78 274 f;
+#X obj 239 240 list;
+#X obj 78 60 trigger bang bang bang bang;
+#X obj 323 168 loadbang;
+#X msg 323 197 1;
+#X obj 239 330 list append [\$1] should accept "send" method for non-local
+sending of its stored value;
+#X obj 78 383 list append "send" method of \$1 should send its stored
+value wirelessly to the given receiver symbol;
+#X obj 96 239 r \$0-the-value;
+#X msg 239 109 send \$0-the-value;
+#X text 272 139 1) Check for method error;
+#X text 83 209 2) check value arrived;
+#X text 366 197 (loadbang left inlet since [value] doesn't have a 2nd
+inlet for storage);
+#X obj 278 239 \$1 \$2;
+#X obj 239 269 list length;
+#X obj 239 298 == 0;
+#X text 207 20 A convenience wrapper for float/int/value_send_method
+tests;
+#X connect 0 0 5 0;
+#X connect 2 0 4 0;
+#X connect 2 1 15 0;
+#X connect 3 0 9 0;
+#X connect 4 0 16 0;
+#X connect 5 0 3 0;
+#X connect 5 1 4 0;
+#X connect 5 2 11 0;
+#X connect 5 3 4 1;
+#X connect 6 0 7 0;
+#X connect 7 0 15 0;
+#X connect 8 0 1 0;
+#X connect 9 0 1 0;
+#X connect 10 0 3 1;
+#X connect 11 0 2 0;
+#X connect 16 0 17 0;
+#X connect 17 0 8 0;
