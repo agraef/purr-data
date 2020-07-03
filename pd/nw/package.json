@@ -4,6 +4,9 @@
   "main": "index.html",
   "chromium-args": "--proxy-server=http://127.0.0.1 --password-store=basic",
   "window": {
-    "icon": "./purr.png"
+    "icon": "./purr.png",
+    "position": "center",
+    "width": 540,
+    "height": 440
   }
 }

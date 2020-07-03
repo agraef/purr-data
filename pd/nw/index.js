@@ -399,16 +399,25 @@ function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
     var eval_string = "register_window_id(" +
                       JSON.stringify(cid) + ", " +
                       JSON.stringify(attr_array) + ");";
+    //pdgui.post("x=" + xpos + " y=" + ypos);
+    var pos;
+    if (xpos == 0 && ypos == 0) {
+        pos = "center";
+    } else {
+        pos = "null";
+    }
     gui.Window.open(my_file, {
         title: my_title,
-        position: "center",
+        // ico@vt.edu: position in 0.46.2 overrides x and y below
+        position: pos,
         focus: true,
         width: width,
         // We add 23 as a kludge to account for the menubar at the top of
         // the window.  Ideally we would just get rid of the canvas menu
         // altogether to simplify things. But we'd have to add some kind of
         // widget for the "Put" menu.
-        height: height + 23,
+        // ico@vt.edu: on 0.46.2 this is now 25, go figure...
+        height: height + 25,
         x: xpos,
         y: ypos
     }, function (new_win) {

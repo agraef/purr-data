@@ -1553,10 +1553,10 @@ void garray_redraw(t_garray *x)
         */
         sys_queuegui(&x->x_gobj, x->x_glist, garray_doredraw);
 
-        /* 1-24-2015 Ico: this however causes painfully slow and inefficient red
-           when we use tabwrite which writes one point per array and requests
-           redraw after each point is changed. Thus it is deprecated in favor of
-           of the approach above */
+        /* 1-24-2015 Ico: the approach below, however causes painfully slow and
+           inefficient redraw when we use tabwrite which writes one point per
+           array and requests redraw after each point is changed. Thus it is
+           deprecated in favor of the approach above */
         //garray_doredraw(&x->x_gobj, x->x_glist);
 }
 
@@ -1948,6 +1948,12 @@ static void garray_print(t_garray *x)
     t_array *array = garray_getarray(x);
     post("garray %s: template %s, length %d",
         x->x_realname->s_name, array->a_templatesym->s_name, array->a_n);
+}
+
+/* ico@vt.edu: used for scalar to detect type and thereby adjust visual offset */
+int garray_get_style(t_garray *x)
+{
+    return(x->x_style);
 }
 
 void g_array_setup(void)

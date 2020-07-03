@@ -150,6 +150,7 @@ static void tooltip_erase (t_canvas *x) {
     }
 }
 
+// removes highlight from an nlet
 static void canvas_nlet_conf (t_canvas *x, int type) {
     int isiemgui = type=='o' ? last_outlet_filter : last_inlet_filter;
     int issignal = type=='o' ? outlet_issignal : inlet_issignal;
@@ -172,7 +173,7 @@ static void canvas_nlet_conf (t_canvas *x, int type) {
 
 void canvas_getscroll (t_canvas *x) {
     //sys_vgui("pdtk_canvas_getscroll .x%lx.c\n",(long)x);
-    gui_vmess("gui_canvas_get_scroll", "x", x);
+    gui_vmess("gui_canvas_get_overriding_scroll", "x", x);
 }
 
 /* ---------------- generic widget behavior ------------------------- */
@@ -2299,7 +2300,11 @@ static void canvas_rightclick(t_canvas *x, int xpos, int ypos, t_gobj *y_sel)
        otherwise they end-up being dirty without visible notification
        besides, why would one mess with their properties without
        seeing what is inside them? CURRENTLY DISABLED */
+    //post("canvas_rightclick %d", (y && pd_class(&y->g_pd) == garray_class ? 1 : 0));
     canprop = (!y || (y && class_getpropertiesfn(pd_class(&y->g_pd)))
+               // ico@vt.edu: the following ensures that even if we are clicking on
+               // a garray, we should still be able to get the canvas properties
+                || (y && pd_class(&y->g_pd) == garray_class)
                /*&& !canvas_isabstraction( ((t_glist*)y) )*/ );
     canopen = (y && zgetfn(&y->g_pd, gensym("menu-open")));
     /* we add an extra check for scalars to enable the "Open" button
@@ -2478,9 +2483,12 @@ void canvas_vis(t_canvas *x, t_floatarg f)
                 canvas_destroy_editor(x);
             }
             //fprintf(stderr,"new\n");
+            /* ico@vt.edu: here we use hasarray only for toplevel garrays
+               because they require check_config every time resize is invoked.
+               We may need to expand this to include scalars, as well. */
             canvas_create_editor(x);
             canvas_args_to_string(argsbuf, x);
-            gui_vmess("gui_canvas_new", "xiisiissiiis",
+            gui_vmess("gui_canvas_new", "xiisiissiiiis",
                 x,
                 (int)(x->gl_screenx2 - x->gl_screenx1),
                 (int)(x->gl_screeny2 - x->gl_screeny1),
@@ -2492,6 +2500,7 @@ void canvas_vis(t_canvas *x, t_floatarg f)
                 x->gl_dirty,
                 x->gl_noscroll,
                 x->gl_nomenu,
+                canvas_hasarray(x),
                 argsbuf);
 
             /* It looks like this font size call is no longer needed,
@@ -2618,13 +2627,7 @@ void canvas_setgraph(t_glist *x, int flag, int nogoprect)
 
         // check if we have array inside GOP, if so,
         // make sure hidetext is always hidden no matter what
-        t_gobj *g = x->gl_list;
-        int hasarray = 0;
-        while (g)
-        {
-            if (pd_class(&g->g_pd) == garray_class) hasarray = 1;
-            g = g->g_next;
-        }
+        int hasarray = canvas_hasarray(x);
         if (hasarray) x->gl_hidetext = 1;
 
         if (!nogoprect && !x->gl_goprect && !hasarray)
@@ -2810,13 +2813,7 @@ static void canvas_donecanvasdialog(t_glist *x,
 
     // check if we have array inside GOP, if so,
     // make sure GOP/hidetext is always enabled no matter what
-    t_gobj *g = x->gl_list;
-    int hasarray = 0;
-    while (g)
-    {
-        if (pd_class(&g->g_pd) == garray_class) hasarray = 1;
-        g = g->g_next;
-    }
+    int hasarray = canvas_hasarray(x);
     if (hasarray && graphme != 3)
     {
         graphme = 3; //gop flag + bit-shifted hidetext
@@ -3233,6 +3230,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
        to array_motion so that we can update corresponding send when
        the array has been changed */
     array_garray = NULL;
+    //post("canvas_doclick %d", doit);
 
     t_gobj *y;
     int shiftmod, runmode, altmod, doublemod = 0, rightclick,
@@ -3389,14 +3387,19 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
             x->gl_ymargin + x->gl_pixheight, &default_type);
     }
 
+    // if we have located an object under the mouse
     if (y)
     {
+
+        // if we are right-clicking
         if (rightclick)
             canvas_rightclick(x, xpos, ypos, y);
+        // if we are holding shift and we are not above an outlet
         else if (shiftmod &&
             x->gl_editor->canvas_cnct_outlet_tag[0] == 0)
         {
-            //selection (only if we are not hovering above an outlet)
+            // we are clicking and making a (de)selection
+            // (only if we are not hovering above an outlet)
             if (doit)
             {
                 if (glist_isselected(x, y))
@@ -3406,7 +3409,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
         }
         else
         {
-            /* look for an outlet we just clicked onto */
+            /* look for other stuff */
             int noutlet;
             int ninlet;
                 /* resize?  only for "true" text boxes, canvases, iemguis,
@@ -3419,10 +3422,14 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                    we have a virtual waterfall of conditionals flowing all
                    the way to the GUI just handle resizing a stupid rectangle.
                 */
+
+            // if we are inside a resizing hotspot of a text object...
             if (in_text_resizing_hotspot)
             {
+                // ...and we are clicking...
                 if (doit)
                 {
+                    // ...select the object
                     if (!glist_isselected(x, y) ||
                         x->gl_editor->e_selection->sel_next)
                     {
@@ -3473,20 +3480,20 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                            (t_float)xpos, (t_float)ypos);
                     }
                 }
+                // we are in the resize hotspot but are not clicking yet
                 else
                 {
                     canvas_setcursor(x, in_text_resizing_hotspot);
                     canvas_check_nlet_highlights(x);
                 }
             }
-                /* look for an outlet
-                   if object is valid, has outlets,
-                   and we are within the bottom area of an object
-                   ico@vt.edu: 2020-06-05 added expanded hotspot for
-                   nlets for easier pinpointing
-                */
-            else if (ob && (noutlet = obj_noutlets(ob)) &&
-                ypos >= y2-4-(x->gl_editor->canvas_cnct_inlet_tag[0] != 0 ? 2 : 0))
+            /* look for an outlet
+                if object is valid, has outlets,
+                and we are within the bottom area of an object
+                ico@vt.edu: 2020-06-05 added expanded hotspot for
+                nlets for easier pinpointing
+            */
+            else if (ob && (noutlet = obj_noutlets(ob)) && ypos >= y2-6)
             {
                 int width = x2 - x1;
                 int nout1 = (noutlet > 1 ? noutlet - 1 : 1);
@@ -3496,52 +3503,67 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                 // if we are within the boundaries of an nlet
                 /* ico@vt.edu: account for enlarged nlet when already
                    highlighted to make it easier to "hit" the nlet */
-                int enlarged = 0;
-                if (x->gl_editor->canvas_cnct_inlet_tag[0] == closest)
-                    enlarged = 5;
+                //int enlarged = 0;
+                //if (closest == last_outlet)
+                //    enlarged = 5;
+                //post("xpos=%d closest=%d noutlet=%d \
+                    nout1=%d hotspot=%d IOWIDTH=%d enlarged=%d",
+                //    xpos, closest, noutlet, nout1, hotspot, IOWIDTH, enlarged);
+                // if have found an outlet and are within its range...
                 if (closest < noutlet &&
-                    xpos >= (hotspot-1-enlarged) && xpos <= hotspot + (IOWIDTH+1+enlarged))
+                    xpos >= (hotspot-6) && xpos <= (hotspot+IOWIDTH+6))
                 {
+                    //post("Outlet found...");
+                    //...and we are clicking on it
                     if (doit)
                     {
                         //fprintf(stderr,"start connection\n");
                         int issignal = obj_issignaloutlet(ob, closest);
                         x->gl_editor->e_onmotion = MA_CONNECT;
-                        x->gl_editor->e_xwas = xpos;
-                        x->gl_editor->e_ywas = ypos;
+                        x->gl_editor->e_xwas = hotspot + IOWIDTH / 2;
+                        x->gl_editor->e_ywas = y2 - 2;
                         /* This repetition of args needs to be pruned below */
                         gui_vmess("gui_canvas_line", "xssiiiiiiiiii",
                             x,
                             "newcord",
                             (issignal ? "signal" : "control"),
-                            xpos,
-                            ypos,
-                            xpos,
-                            ypos,
-                            xpos,
-                            ypos,
-                            xpos,
-                            ypos,
-                            xpos,
-                            ypos);
+                            hotspot + IOWIDTH / 2,
+                            y2 - 2,
+                            hotspot + IOWIDTH / 2,
+                            y2 - 2,
+                            hotspot + IOWIDTH / 2,
+                            y2 - 2,
+                            hotspot + IOWIDTH / 2,
+                            y2 - 2,
+                            hotspot + IOWIDTH / 2,
+                            y2 - 2,
+                            1);
                     }   
                     else
-                    // jsarlo
+                    // jsarlo (...or, we are *not* clicking on it)
                     {
                         t_rtext *yr = glist_findrtext(x, (t_text *)&ob->ob_g);
 
+                        // I guess this removes highlight from an outlet, but why?
+                        // Perhaps just to make sure in case we were just hitting on
+                        // another nlet in a previous update?
                         if (x->gl_editor->canvas_cnct_outlet_tag[0] != 0)
                             canvas_nlet_conf(x,'o');
+                        
+                        // if we have found an object's rtext which we
+                        // will use to tag the highlighted nlet accordingly
                         if (yr)
                         {
                             last_outlet_filter =
                                 gobj_filter_highlight_behavior(
                                     (t_text *)&ob->ob_g);
+                            // fill the outlet_tag name with hte detected outlet
                             sprintf(x->gl_editor->canvas_cnct_outlet_tag, 
                                 "%so%d", rtext_gettag(yr), closest);
-                            gui_vmess("gui_gobj_highlight_io", "xs",
+                            gui_vmess("gui_gobj_highlight_io", "xsi",
                                 x,
-                                x->gl_editor->canvas_cnct_outlet_tag);
+                                x->gl_editor->canvas_cnct_outlet_tag,
+                                1);
 
                             /* Might need a gui_vmess call here, but I haven't
                                seen where this code is called yet... */
@@ -3556,7 +3578,8 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                                     x->gl_editor->canvas_cnct_outlet_tag);
                             }
                         }
-                        // jsarlo
+                        // jsarlo (get rid of the cord inspector here since we are
+                        // not on a cord)
                         if(x->gl_editor && x->gl_editor->gl_magic_glass)
                         {
                             magicGlass_unbind(x->gl_editor->gl_magic_glass);
@@ -3567,20 +3590,23 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                     }
                     // end jsarlo
                 }
+                // otherwise we are not hitting any outlet and are making sure
+                // the previously highlighted outlets are not anymore highlighted
                 else {
+                    //post("Comb the Desert!");
                     canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
                     canvas_check_nlet_highlights(x);
                     if (doit)
                         goto nooutletafterall;
                 }
             }
-                /* look for an inlet (these are colored differently
-                   since they are not connectable)
-                   ico@vt.edu: 2020-06-05 added expanded hotspot for
-                   nlets for easier pinpointing
-                */
+            /* look for an inlet (these are colored differently
+                since they are not connectable)
+                ico@vt.edu: 2020-06-05 added expanded hotspot for
+                nlets for easier pinpointing
+            */
             else if (ob && (ninlet = obj_ninlets(ob))
-                && ypos <= y1+4+(x->gl_editor->canvas_cnct_inlet_tag[0] != 0 ? 2 : 0))
+                && ypos <= y1+6)
             {
                 canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
                 int width = x2 - x1;
@@ -3590,11 +3616,9 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                     (width - IOWIDTH) * closest / (nin1);
                 /* ico@vt.edu: account for enlarged nlet when already
                    highlighted to make it easier to "hit" the nlet */
-                int enlarged = 0;
-                if (x->gl_editor->canvas_cnct_inlet_tag[0] == closest)
-                    enlarged = 5;
+                // if have found an inlet and are within its range...
                 if (closest < ninlet &&
-                    xpos >= (hotspot-1-enlarged) && xpos <= hotspot + (IOWIDTH+1+enlarged))
+                    xpos >= (hotspot-6) && xpos <= (hotspot+IOWIDTH+6))
                 {
                        t_rtext *yr = glist_findrtext(x, (t_text *)&ob->ob_g);
 
@@ -3607,9 +3631,10 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                             gobj_filter_highlight_behavior((t_text *)&ob->ob_g);
                         sprintf(x->gl_editor->canvas_cnct_inlet_tag, 
                             "%si%d", rtext_gettag(yr), closest);
-                        gui_vmess("gui_gobj_highlight_io", "xs",
+                        gui_vmess("gui_gobj_highlight_io", "xsi",
                             x,
-                            x->gl_editor->canvas_cnct_inlet_tag);
+                            x->gl_editor->canvas_cnct_inlet_tag,
+                            0);
                         inlet_issignal = obj_issignalinlet(ob,closest);
                         if (tooltips)
                         {
@@ -3697,6 +3722,8 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
             }
             // end jsarlo
         }
+        // we mark last highlighted object here for nlet highlighting below
+        //post("Returning from the nlet crusade...");
         return;
     }
     else if (in_text_resizing_hotspot) /* red gop rectangle */
@@ -4742,15 +4769,18 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                             "%si%d",
                             rtext_gettag(y),
                             closest2);
-                    gui_vmess("gui_gobj_highlight_io", "xs",
+                    inlet_issignal = obj_issignalinlet(ob2, closest2);
+                    //post("o-sig=%d i-sig=%d", outlet_issignal, inlet_issignal);
+                    gui_vmess("gui_gobj_highlight_io", "xsi",
                         x,
-                        x->gl_editor->canvas_cnct_inlet_tag);
+                        x->gl_editor->canvas_cnct_inlet_tag,
+                        (!outlet_issignal ||
+                        (outlet_issignal && inlet_issignal)) ? 1 : 0);
 
                     /* Didn't I just see this code above? */
                     //sys_vgui(".x%x.c raise %s\n",
                     //         x,
                     //         x->gl_editor->canvas_cnct_inlet_tag);
-                    inlet_issignal = obj_issignalinlet(ob2, closest2);
                     if (tooltips)
                     {
                         objtooltip = 1;
@@ -5044,7 +5074,7 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
 
     // check if user released shift while trying manual multi-connect
     if (x && x->gl_editor &&
-	x->gl_editor->e_onmotion == MA_CONNECT && !glob_shift && !glob_lmclick)
+        x->gl_editor->e_onmotion == MA_CONNECT && !glob_shift && !glob_lmclick)
     {
         //fprintf(stderr,"shift released during connect\n");
         gui_vmess("gui_canvas_delete_line", "xs", x, "newcord");
@@ -5053,7 +5083,7 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
 
     // check if user released shift while dragging inside an object
     if (x && x->gl_editor &&
-	x->gl_editor->e_onmotion == MA_PASSOUT && !glob_shift && !glob_lmclick)
+        x->gl_editor->e_onmotion == MA_PASSOUT && !glob_shift && !glob_lmclick)
     {
         //fprintf(stderr,"shift released during button+shift drag\n");
         canvas_mouseup(x, x->gl_editor->e_xwas, x->gl_editor->e_ywas, 0);
@@ -5063,6 +5093,7 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     {
         gotkeysym = av[1].a_w.w_symbol;
         //fprintf(stderr,"gotkeysym=%s\n", gotkeysym->s_name);
+        //post("key: %d %s", keynum, gotkeysym->s_name);
     }
     else if (av[1].a_type == A_FLOAT)
     {
@@ -5252,7 +5283,12 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     {
         //fprintf(stderr,"ctrl\n");
         glob_ctrl = down;
-        if (x->gl_edit && x->gl_editor->e_onmotion == MA_NONE)
+        //post("glob_ctrl=%d", down);
+        /* ico@vt.edu: commenting MA_NONE part as that prevents the patch 
+           from assuming editmode after it has had an object added via 
+           a ctrl+(1-5) shortcut while not in edit mode
+        */
+        if (x->gl_edit /*&& x->gl_editor->e_onmotion == MA_NONE*/)
         {
             canvas_setcursor(x, down ?
                 CURSOR_RUNMODE_NOTHING : CURSOR_EDITMODE_NOTHING);
@@ -5939,7 +5975,7 @@ int abort_when_pasting_from_external_buffer = 0;
 static void canvas_copyfromexternalbuffer(t_canvas *x, t_symbol *s,
     int ac, t_atom *av)
 {
-  static int level, line;
+    static int level, line;
     if (!x->gl_editor)
         return;
 
@@ -5954,42 +5990,41 @@ static void canvas_copyfromexternalbuffer(t_canvas *x, t_symbol *s,
         copiedfont = 0;
         binbuf_free(copy_binbuf);
         copy_binbuf = binbuf_new();
-	line = level = 0;
+        line = level = 0;
     }
     else if (ac && copyfromexternalbuffer)
     {
         int begin_patch = av[0].a_type == A_SYMBOL &&
-	  !strcmp(av[0].a_w.w_symbol->s_name, "#N");
+            !strcmp(av[0].a_w.w_symbol->s_name, "#N");
         int end_patch = av[0].a_type == A_SYMBOL &&
-	  !strcmp(av[0].a_w.w_symbol->s_name, "#X") &&
-	  av[1].a_type == A_SYMBOL &&
-	  !strcmp(av[1].a_w.w_symbol->s_name, "restore");
-	line++;
-	// Keep track of the nesting of (sub)patches. Improperly nested
-	// patches will make Pd crash and burn if we just paste them, so we
-	// rather report such conditions as errors instead.
-	if (end_patch && --level < 0) {
-	    post("paste error: "
-		 "unmatched end of subpatch at line %d",
-		 line);
-	    copyfromexternalbuffer = 0;
-	    binbuf_clear(copy_binbuf);
-	    return;
-	}
+            !strcmp(av[0].a_w.w_symbol->s_name, "#X") &&
+            av[1].a_type == A_SYMBOL &&
+            !strcmp(av[1].a_w.w_symbol->s_name, "restore");
+        line++;
+        // Keep track of the nesting of (sub)patches. Improperly nested
+        // patches will make Pd crash and burn if we just paste them, so we
+        // rather report such conditions as errors instead.
+        if (end_patch && --level < 0) {
+            post("paste error: unmatched end of subpatch at line %d",
+                line);
+            copyfromexternalbuffer = 0;
+            binbuf_clear(copy_binbuf);
+            return;
+        }
         //fprintf(stderr,"fill %d\n", ac);
         if (copyfromexternalbuffer != 1 || !begin_patch || ac != 7)
         {
-	    // not a patch header, just copy
-	    if (begin_patch) level++;
+        // not a patch header, just copy
+            if (begin_patch) level++;
             binbuf_add(copy_binbuf, ac, av);
             binbuf_addsemi(copy_binbuf);
             copyfromexternalbuffer++;
         }
         else if (copyfromexternalbuffer == 1 &&
-		 begin_patch && ac == 7)
+            begin_patch && ac == 7)
         {
-	    // patch header, if the canvas is empty adjust window size and
-	    // position here...
+        // patch header, if the canvas is empty adjust window size and
+        // position here...
             int check = 0;
             //fprintf(stderr,
             //    "copying canvas properties for copyfromexternalbuffer\n");
@@ -6020,11 +6055,10 @@ static void canvas_copyfromexternalbuffer(t_canvas *x, t_symbol *s,
             }
             if (check != 5)
             {
-                post("paste error: "
-		     "canvas info has invalid data at line %d",
-		     line);
+                post("paste error: canvas info has invalid data at line %d",
+                    line);
                 copyfromexternalbuffer = 0;
-		binbuf_clear(copy_binbuf);
+                binbuf_clear(copy_binbuf);
             }
             else
             {
@@ -6037,13 +6071,12 @@ static void canvas_copyfromexternalbuffer(t_canvas *x, t_symbol *s,
         // here we can do things after the copying process has been completed.
         // in particular, we use this to check whether there's an incomplete
         // subpatch definition
-	if (level > 0) {
-	    post("paste error: "
-		 "unmatched beginning of subpatch at line %d",
-		 line);
-	    copyfromexternalbuffer = 0;
-	    binbuf_clear(copy_binbuf);
-	}
+        if (level > 0) {
+            post("paste error: unmatched beginning of subpatch at line %d",
+                line);
+            copyfromexternalbuffer = 0;
+            binbuf_clear(copy_binbuf);
+        }
     }
 }
 
@@ -6324,6 +6357,11 @@ extern int we_are_undoing;
 static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 {
     //fprintf(stderr,"start dopaste\n");
+    // ico@vt.edu: paste is enabled at startup (GUI-end problem),
+    // so until we figure out why that is so, here we double-check the
+    // sanity of the paste command
+    if (binbuf_getnatom(b) == 0)
+        return;
     do_not_redraw += 1;
     int was_dnr = do_not_redraw;
     
@@ -6487,6 +6525,9 @@ static void canvas_paste(t_canvas *x)
 {
     if (!x->gl_editor)
         return;
+    // ico@vt.edu: prevent pasting in a toplevel garray window
+    if (x->gl_list && glist_istoplevel(x) && canvas_hasarray(x))
+        return;
     if (x->gl_editor->e_textedfor)
     {
             /* simulate keystrokes as if the copy buffer were typed in. */
@@ -6503,7 +6544,13 @@ static void canvas_paste(t_canvas *x)
         }*/
 //#endif
     }
-    else if (!clipboard_istext)
+    // ico@vt.edu: need to check that the copy_binbuf is not null. This
+    // currently prevents the crash when opening a new patch with nothing
+    // in the buffer and pressing paste since the paste menu item is not
+    // being properly initialized. This is probably a good safety check
+    // anyhow. We will also have to investigate why the undo/paste menus
+    // are not being properly initialized and fix them accordingly.
+    else if (!clipboard_istext && copy_binbuf != NULL)
     {
         //canvas_setundo(x, canvas_undo_paste, canvas_undo_set_paste(x),
         //    "paste");
