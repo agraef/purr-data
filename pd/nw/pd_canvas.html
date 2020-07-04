@@ -39,13 +39,11 @@
                     defaultValue="Search in Canvas"
                     style="width:10em"/>
       </label>
-      <label><span data-i18n="canvas.find.whole_word"
-          style="margin-left: 7px;  margin-right: -3px;"></span>
-          <input type="checkbox"
+      <label><span data-i18n="canvas.find.whole_word"></span>
+        <input type="checkbox"
                id="canvas_find_whole_word"
                name="canvas_find_whole_word"
-               onchange="canvas_find_whole_word(this);"
-               style="position: relative; top: 2px; margin-right: 5px;"/> 
+               onchange="canvas_find_whole_word(this);"/> 
       </label>
       <button type="button"
               id="canvas_find_button"
@@ -57,9 +55,9 @@
       <ol></ol>
     </div>
     <dialog id="save_before_quit">
-      <h5 style="text-align: center;"><span data-i18n="canvas.save_dialog.prompt"></span>
+      <h4><span data-i18n="canvas.save_dialog.prompt"></span>
         <span id="save_before_quit_filename"></span>?
-      </h5>
+      </h4>
       <div class="submit_buttons">
         <button type="button"
                 id="yes_button"
@@ -78,8 +76,6 @@
         </button>
       </div>
     </dialog>
-	<div id="hscroll" style="background-color: #00000044; position: fixed; left: 2px; bottom: 2px; border-radius: 0px; width: 10px; height: 5px; visibility: hidden;"></div>
-	<div id="vscroll" style="background-color: #00000044; position: fixed; right: 2px; top: 2px; border-radius: 0px; width: 5px; height: 10px; visibility: hidden;"></div>
     <script type="text/javascript" src="./pd_canvas.js"></script>
   </body>
 </html>

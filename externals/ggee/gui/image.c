@@ -235,6 +235,8 @@ static void image_select(t_gobj *z, t_glist *glist, int state)
 {
     //fprintf(stderr,"image_select %d\n", state);
     t_image *x = (t_image *)z;
+    gui_vmess("gui_image_toggle_border", "xxi",
+        glist_getcanvas(glist), x, state);
     if (state)
     {
         if (x->x_glist == glist_getcanvas(glist))
@@ -260,14 +262,12 @@ static void image_select(t_gobj *z, t_glist *glist, int state)
                     text_xpix(&x->x_obj, glist) + x->x_width/2,
                     text_ypix(&x->x_obj, glist) + x->x_height/2, x);
             }
-            gui_vmess("gui_image_toggle_border", "xxi", glist_getcanvas(glist),
-                x, 1);
         }
-        gui_vmess("gui_gobj_select", "xx", glist_getcanvas(glist), x);
         //if (glist->gl_owner && !glist_istoplevel(glist))
         //sys_vgui(".x%x.c addtag selected withtag %xS\n", glist_getcanvas(glist), x);
         //sys_vgui(".x%x.c addtag selected withtag %xMT\n", glist_getcanvas(glist), x);
         //sys_vgui(".x%x.c addtag selected withtag %xSEL\n", glist_getcanvas(glist), x);
+        gui_vmess("gui_gobj_select", "xx", glist_getcanvas(glist), x);
     }
     else
     {
@@ -276,8 +276,6 @@ static void image_select(t_gobj *z, t_glist *glist, int state)
         //if (glist->gl_owner && !glist_istoplevel(glist))
         //sys_vgui(".x%lx.c dtag %xS selected\n", glist_getcanvas(glist), x);
         //sys_vgui(".x%lx.c dtag %xMT selected\n", glist_getcanvas(glist), x);
-        gui_vmess("gui_image_toggle_border", "xxi", glist_getcanvas(glist),
-            x, 0);
         gui_vmess("gui_gobj_deselect", "xx", glist_getcanvas(glist), x);
     }
 }
@@ -342,7 +340,7 @@ static int image_newclick(t_gobj *z, struct _glist *glist, int xpix, int ypix, i
     if (doit && x->x_click)
         outlet_bang(x->x_obj.ob_outlet);
     // LATER: figure out how to do click on and click off
-    // and provide a toggle button behavior instead
+    // and provide a toggle button behavior insteadS
     /*{
         x->x_clicked = 1;
         outlet_float(x->x_obj.ob_outlet, x->x_clicked);

@@ -233,13 +233,6 @@ var canvas_events = (function() {
                 return false;
             },
             mousedown: function(evt) {
-                // ico@vt.edu capture middle click for a different type of scroll
-                // currently disabled due to problem with scrollBy and zoom
-                /*if (evt.which == 2)
-                {
-                    evt.stopPropagation();
-                    evt.preventDefault();                
-                }*/
                 var target_id, resize_type;
                 if (target_is_scrollbar(evt)) {
                     return;
@@ -332,7 +325,8 @@ var canvas_events = (function() {
                 pdgui.keydown(name, evt);
                 // prevent the default behavior of scrolling
                 // on arrow keys in editmode
-                if (document.querySelector("#patchsvg")) {
+                if (document.querySelector("#patchsvg")
+                    .classList.contains("editmode")) {
                     if ([32, 37, 38, 39, 40].indexOf(evt.keyCode) > -1) {
                         evt.preventDefault();
                     }
@@ -526,64 +520,6 @@ var canvas_events = (function() {
                         false, true);
                 }
                 canvas_events[canvas_events.get_previous_state()]();
-            },
-            hscroll_mouseup: function(evt) {
-                canvas_events[canvas_events.get_previous_state()]();
-            },
-            hscroll_mousemove: function(evt) {
-                if (evt.movementX != 0) {
-                    //console.log("move: " + e.movementX);
-                    
-                    var hscroll = document.getElementById("hscroll");
-                    var svg_elem = document.getElementById("patchsvg");
-                    
-                    var min_width = document.body.clientWidth + 3;
-                    var width = svg_elem.getAttribute('width');
-                    var xScrollSize;
-                    
-                    xScrollSize = hscroll.offsetWidth;
-                  
-                    var xTranslate = evt.movementX *
-                        ((width - min_width)/(min_width - xScrollSize)) *
-                        (evt.movementX > 0 ? 1 : 0.75);
-                    if (xTranslate > 0 && xTranslate < 1) {
-                        xTranslate = 1;
-                    }
-                    if (xTranslate < 0 && xTranslate > -1) {
-                        xTranslate = -1;
-                    }
-                    //console.log(xTranslate);
-                    window.scrollBy(xTranslate, 0);
-                }
-            },
-            vscroll_mouseup: function(evt) {
-                canvas_events[canvas_events.get_previous_state()]();
-            },
-            vscroll_mousemove: function(evt) {
-                if (evt.movementY != 0) {
-                    //console.log("move: " + e.movementY);
-                    
-                    var vscroll = document.getElementById("vscroll");
-                    var svg_elem = document.getElementById("patchsvg");
-                    
-                    var min_height = document.body.clientHeight + 3;
-                    var height = svg_elem.getAttribute('height');
-                    var yScrollSize;
-                    
-                    yScrollSize = vscroll.offsetHeight;
-                  
-                    var yTranslate = evt.movementY *
-                        ((height - min_height)/(min_height - yScrollSize)) *
-                        (evt.movementY > 0 ? 2 : 1.5);
-                    if (yTranslate > 0 && yTranslate < 1) {
-                        yTranslate = 1;
-                    }
-                    if (yTranslate < 0 && yTranslate > -1) {
-                        yTranslate = -1;
-                    }
-                    //console.log(yTranslate);
-                    window.scrollBy(0, yTranslate);
-                }
             },
             dropdown_menu_keydown: function(evt) {
                 var select_elem = document.querySelector("#dropdown_list"),
@@ -793,16 +729,6 @@ var canvas_events = (function() {
             document.addEventListener("mouseup",
                 events.iemgui_label_mouseup, false);
         },
-        hscroll_drag: function() {
-            canvas_events.none();
-            document.addEventListener("mouseup", events.hscroll_mouseup, false);
-            document.addEventListener("mousemove", events.hscroll_mousemove, false);
-        },
-        vscroll_drag: function() {
-            canvas_events.none();
-            document.addEventListener("mouseup", events.vscroll_mouseup, false);
-            document.addEventListener("mousemove", events.vscroll_mousemove, false);
-        },
         text: function() {
             canvas_events.none();
 
@@ -843,9 +769,6 @@ var canvas_events = (function() {
             canvas_events.none();
             document.addEventListener("keydown", events.find_keydown, false);
             state = "search";
-        },
-        update_scrollbars: function() {
-            pdgui.gui_update_scrollbars(name);
         },
         register: function(n) {
             name = n;
@@ -964,13 +887,6 @@ var canvas_events = (function() {
                     console.log("tried to save something");
                 }, false
             );
-                       
-            // add listener for the scrollbars
-            document.getElementById("hscroll").
-                addEventListener("mousedown", canvas_events.hscroll_drag, false);
-            document.getElementById("vscroll").
-                addEventListener("mousedown", canvas_events.vscroll_drag, false);
-            
             // Whoa-- huge workaround! Right now we're getting
             // the popup menu the way Pd Vanilla does it:
             // 1) send a mouse(down) message to Pd
@@ -1114,16 +1030,15 @@ var canvas_events = (function() {
             gui.Window.get().on("maximize", function() {
                 pdgui.gui_canvas_get_scroll(name);
             });
-            gui.Window.get().on("restore", function() {
+            gui.Window.get().on("unmaximize", function() {
                 pdgui.gui_canvas_get_scroll(name);
             });
             gui.Window.get().on("resize", function() {
-                pdgui.post("resize");
                 pdgui.gui_canvas_get_scroll(name);
             });
             gui.Window.get().on("focus", function() {
                 nw_window_focus_callback(name);
-            });            
+            });
             gui.Window.get().on("blur", function() {
                 nw_window_blur_callback(name);
             });
@@ -1132,12 +1047,6 @@ var canvas_events = (function() {
                 pdgui.pdsend(name, "setbounds", x, y,
                     x + w.width, y + w.height);
             });
-            
-            // map onscroll event
-            document.addEventListener("scroll", function() {
-                pdgui.gui_update_scrollbars(name);
-            });
-            
             // set minimum window size
             gui.Window.get().setMinimumSize(150, 100);
         }
@@ -1605,7 +1514,6 @@ function nw_create_patch_window_menus(gui, w, name) {
         click: function() {
             var win = gui.Window.get();
             win.toggleFullscreen();
-            pdgui.gui_canvas_get_scroll(name);
         }
     });
 
