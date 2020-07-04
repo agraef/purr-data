@@ -1118,7 +1118,6 @@ var canvas_events = (function() {
                 pdgui.gui_canvas_get_scroll(name);
             });
             gui.Window.get().on("resize", function() {
-                pdgui.post("resize");
                 pdgui.gui_canvas_get_scroll(name);
             });
             gui.Window.get().on("focus", function() {
