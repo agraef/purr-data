@@ -71,7 +71,7 @@ char *type_hint(t_symbol *s, int argc, t_atom *argv, int dostof)
            one with [symbol( or [symbol] then send to [list trim]. */
     if (s == &s_)
     {
-        sprintf(hint, " (Note: empty symbol selector)");
+        sprintf(hint, " (Note: empty symbol selector detected)");
         return hint;
     }
 
@@ -81,7 +81,7 @@ char *type_hint(t_symbol *s, int argc, t_atom *argv, int dostof)
     if (s && s == &s_symbol && argc && argv->a_type == A_SYMBOL
             && argv->a_w.w_symbol == &s_)
     {
-        sprintf(hint, " (Note: empty symbol message payload detected)");
+        sprintf(hint, " (Note: symbol message with empty payload detected)");
         return hint;
     }
 
@@ -122,14 +122,14 @@ char *type_hint(t_symbol *s, int argc, t_atom *argv, int dostof)
         if (symbol_can_float(s, &f))
         {
             sprintf(hint, " (Note: %s looks like a float but is actually a "
-                "symbol which cannot be saved properly)", s->s_name);
+                "symbol atom which cannot be saved properly)", s->s_name);
             return hint;
         }
         else if (f == -1 || f == 1)
         {
                 /* For values which would overflow, give a hint but don't
                    suggest float type */
-            sprintf(hint, " (Note: this symbol message has an %s floatlike "
+            sprintf(hint, " (Note: this symbol atom has an %s floatlike "
                 "payload which cannot be saved properly.",
                 f == 1 ? "overflowing" : "underflowing");
             return hint;
