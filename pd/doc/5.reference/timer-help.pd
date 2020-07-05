@@ -1,9 +1,9 @@
-#N canvas 209 25 555 619 10;
+#N canvas 210 49 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header timer 3 12 0 18
 -204280 -1 0;
-#X obj 0 354 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+#X obj 0 309 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
 #N canvas 484 259 494 368 META 0;
 #X text 12 125 LIBRARY internal;
@@ -22,13 +22,12 @@ for Pd version 0.42.;
 #X text 12 105 OUTLET_0 float;
 #X text 12 185 RELEASE_DATE 1997;
 #X restore 500 597 pd META;
-#X obj 0 470 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+#X obj 0 425 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
 13 -228856 -1 0;
-#X obj 0 512 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+#X obj 0 467 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
 0 13 -228856 -1 0;
-#X obj 0 539 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+#X obj 0 514 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#X text 98 516 (none);
 #N canvas 220 379 428 246 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
@@ -49,35 +48,35 @@ may not exist in a single library.;
 #X text 22 70 Externals;
 #X obj 24 95 pddp/helplink iemlib/t3_timer;
 #X restore 102 597 pd Related_objects;
-#X obj 78 363 cnv 17 3 60 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X obj 78 318 cnv 17 3 60 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X text 98 478 float;
-#X obj 78 479 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X text 98 433 float;
+#X obj 78 434 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 78 434 cnv 17 3 25 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+#X obj 78 389 cnv 17 3 25 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
-#X text 168 478 - upon sending the "flush" message to the left inlet
+#X text 168 433 - upon sending the "flush" message to the left inlet
 \, [bag] will output each value in the order it was received.;
 #X obj 503 9 timer;
-#X msg 64 220 bang;
-#X msg 39 108 bang;
-#X obj 39 242 timer;
-#X floatatom 39 264 0 0 0 0 - - -;
-#X text 74 108 Click here to start or reset;
-#X text 34 61 The [timer] object measures elapsed logical time. Logical
+#X msg 94 190 bang;
+#X msg 69 108 bang;
+#X obj 69 212 timer;
+#X floatatom 69 234 0 0 0 0 - - -;
+#X text 104 108 Click here to start or reset;
+#X text 94 51 The [timer] object measures elapsed logical time. Logical
 time moves forward as if all computation were instantaneous and as
 if all [delay] and [metro] objects were exact.;
-#X text 102 221 Click here to get elapsed logical time. Click again...and
+#X text 132 191 Click here to get elapsed logical time. Click again...and
 again...to see periodic measurements from the start or reset time.
 ;
-#X text 37 290 NOTE: Unlike most other objects in Pd \, the right inlet
-of [timer] is the hot one (i.e. \, a bang to it triggers the output).
-;
-#X text 98 362 bang;
-#X text 168 362 - an initial "bang" to the left inlet starts the timer.
+#X text 117 260 NOTE: Unlike most other objects in Pd \, the right
+inlet of [timer] is the hot one (i.e. \, a bang to it triggers the
+output).;
+#X text 98 317 bang;
+#X text 168 317 - an initial "bang" to the left inlet starts the timer.
 Subsequent "bangs" reset the timer.;
-#X text 98 433 bang;
-#X text 167 433 - a bang to the right inlet causes the elapsed time
+#X text 98 388 bang;
+#X text 167 388 - a bang to the right inlet causes the elapsed time
 to be output (in milliseconds).;
 #N canvas 94 193 428 419 Time_Objects 0;
 #X text 21 38 In a fantasy world \, computers could exist somehow beyond
@@ -105,7 +104,7 @@ operating system's internal clock.;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 7 2 [cputime] Why the Discrepencies Between Clocks?;
-#X restore 102 548 pd Time_Objects;
+#X restore 102 523 pd Time_Objects;
 #N canvas 73 72 428 495 Time_Measurements 0;
 #X text 21 38 [timer] works like essentially like a stop-watch. Once
 it starts \, you can continue to "poll" the [timer] to view the elapsed
@@ -150,20 +149,24 @@ three...please wait for approximately 3 seconds.;
 #X connect 18 0 3 0;
 #X connect 18 1 4 0;
 #X connect 18 2 5 0;
-#X restore 102 572 pd Time_Measurements;
+#X restore 102 547 pd Time_Measurements;
 #X text 11 23 measure logical time;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X msg 59 145 tempo 1 sec;
-#X msg 67 169 tempo 2 msec;
-#X text 111 266 Output defaults to milliseconds;
-#X text 98 392 tempo;
-#X text 152 145 set tempo in units of seconds;
-#X text 152 169 set tempo in units of milliseconds;
-#X text 168 392 - set tempo to some number of units (msec for short)
+#X msg 89 135 tempo 1 sec;
+#X msg 97 159 tempo 2 msec;
+#X text 141 236 Output defaults to milliseconds;
+#X text 98 347 tempo;
+#X text 182 135 set tempo in units of seconds;
+#X text 182 159 set tempo in units of milliseconds;
+#X text 168 347 - set tempo to some number of units (msec for short)
 \, seconds (sec) \, minutes (min) or samples (samp).;
-#X connect 15 0 17 1;
+#X obj 102 572 pddp/pddplink all_about_tempo.pd;
+#X text 98 481 1-2);
+#X text 168 481 (optional) float followed by a symbol to set the tempo
+;
+#X connect 14 0 16 1;
+#X connect 15 0 16 0;
 #X connect 16 0 17 0;
-#X connect 17 0 18 0;
-#X connect 31 0 17 0;
-#X connect 32 0 17 0;
+#X connect 30 0 16 0;
+#X connect 31 0 16 0;
