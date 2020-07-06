@@ -21,7 +21,7 @@ that didn't really belong anywhere. */
  * extract the nw binary to purr-data/pd/nw/nw
  */
 
-#define GUIDIR "" /* "/home/user/purr-data/pd/nw" */
+#define GUIDIR "/home/user/purr-data/pd/nw"
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
