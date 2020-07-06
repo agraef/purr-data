@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Pd-L2Ork
 Comment=L2Ork Iteration of Pure-Data Interactive DSP Environment
+Comment[de]=L2Ork-Iteration der interaktiven DSP-Umgebung Pure-Data
 Comment[fr]=Itération L2Ork de l'environnement DSP interactif Pure-Data
 Exec=pd-l2ork %U
 Terminal=false
@@ -29,6 +30,7 @@ Exec=/bin/sh -c "pd-l2ork -jack"
 # reason. You might want to add the -9 option to kill the application even if
 # it's completely locked up.
 Name=Force Quit Pd-L2Ork
+Name[de]=Pd-L2Ork sofort beenden
 Name[fr]=Forcer à quitter Pd-L2Ork
 Exec=/bin/sh -c "/usr/bin/killall pd-l2ork nw"
 
@@ -38,11 +40,13 @@ Exec=/bin/sh -c "/usr/bin/killall pd-l2ork nw"
 [Desktop Action Unique]
 # Launch a new instance of Purr Data each time this action is invoked.
 Name=Unique
+Name[de]=Unikat
 Exec=/bin/sh -c "purr-data -unique"
 
 [Desktop Action Verbose]
 # Launch Purr Data in verbose mode (lots of messages useful for debugging).
 Name=Verbose
+Name[de]=Ausführlich
 Name[fr]=Verbeux
 Exec=/bin/sh -c "purr-data -verbose"
 
@@ -50,5 +54,6 @@ Exec=/bin/sh -c "purr-data -verbose"
 # Launch Purr Data without reading its configuration file (useful if the
 # program won't launch because the preferences got messed up very badly).
 Name=No Prefs
+Name[de]=Ohne Voreinstellungen
 Name[fr]=Sans Préférence
 Exec=/bin/sh -c "purr-data -noprefs"

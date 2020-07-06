@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Pd-L2Ork K12
 Comment=L2Ork Iteration of Pure-Data Interactive DSP Environment Tailored Specially Towards K12 Students
+Comment[de]=L2Ork-Iteration der interaktiven DSP-Umgebung Pure-Data speziell für Schüler
 Comment[fr]=Itération L2Ork de l'environnement DSP interactif Pure-Data taillé spécialement pour les étudiants K12
 Exec=pd-l2ork -k12 -noautopatch %U
 Terminal=false
