@@ -1,11 +1,11 @@
-#N canvas 430 34 555 619 10;
+#N canvas 238 49 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header delay 3 12 0 18
 -204280 -1 0;
 #X obj 0 200 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 482 240 494 386 META 1;
+#N canvas 482 240 494 386 META 0;
 #X text 12 145 LIBRARY internal;
 #X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 45 LICENSE SIBSD;
@@ -23,7 +23,7 @@ for Pd version 0.42.;
 #X text 12 25 KEYWORDS control time bang_op;
 #X text 12 205 RELEASE_DATE 1997;
 #X restore 500 597 pd META;
-#X obj 0 393 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+#X obj 0 413 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
 13 -228856 -1 0;
 #X obj 0 446 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
 0 13 -228856 -1 0;
@@ -57,34 +57,31 @@ may not exist in a single library.;
 #X obj 138 133 idelay~;
 #X obj 192 133 delay~;
 #X restore 101 597 pd Related_objects;
-#X obj 78 209 cnv 17 3 145 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X obj 78 209 cnv 17 3 160 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 78 402 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X obj 78 422 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 78 360 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+#X obj 78 380 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
-#X text 98 359 float;
+#X text 98 379 float;
 #X obj 452 12 delay;
 #X text 492 12 or;
 #X obj 518 11 del;
-#X obj 100 102 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X obj 170 102 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X obj 100 150 delay 2000;
-#X obj 100 173 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X obj 170 155 delay 2000;
+#X obj 170 178 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X text 98 253 bang;
-#X text 98 313 stop;
-#X text 168 359 - a float to the right inlet sets the delay time (in
+#X text 98 252 bang;
+#X text 98 309 stop;
+#X text 168 379 - a float to the right inlet sets the delay time (in
 milliseconds).;
-#X text 98 336 list;
-#X text 98 401 bang;
-#X msg 168 101 stop;
-#X msg 122 101 500;
-#X floatatom 157 128 0 0 0 0 - - -;
-#X text 188 129 <- scroll to change delay time in milliseconds;
-#X text 168 401 - [delay] only outputs a bang. It cannot be used like
-an "echo" or to delay messages other than bang. For that purpose \,
-you should explore [pipe].;
+#X text 98 330 list;
+#X text 98 421 bang;
+#X msg 248 102 stop;
+#X msg 202 102 500;
+#X floatatom 242 133 0 0 0 0 - - -;
+#X text 268 134 <- scroll to change delay time in milliseconds;
 #N canvas 106 287 428 250 A_delay_based_metronome 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
@@ -153,14 +150,14 @@ output of SC's "Dust" object.;
 #X connect 9 0 8 1;
 #X connect 9 0 7 1;
 #X restore 101 572 pd Random_Impulse_Generator;
-#X text 168 313 - causes [delay] to cancel its scheduled output.;
-#X text 168 336 - a list of floats will be truncated to the first element.
+#X text 168 309 - causes [delay] to cancel its scheduled output.;
+#X text 168 330 - a list of floats will be truncated to the first element.
 ;
 #X text 80 465 1) float;
-#X text 97 54 The [delay] object sends a bang to its outlet after a
+#X text 87 54 The [delay] object sends a bang to its outlet after a
 delay (in milliseconds) \, specified by its right inlet or its creation
 argument.;
-#X text 168 253 - a bang to the left inlet will output a bang after
+#X text 168 252 - a bang to the left inlet will output a bang after
 the prescribed time (set either at the right inlet creation argument).
 In the above example \, you should notice a delay of 2 seconds \, then
 a bang at the outlet.;
@@ -178,8 +175,15 @@ is already set will reschedule its output \, cancelling the old one.
 ;
 #X obj 298 550 pddp/pddplink ../2.control.examples/07.time.pd;
 #X text 11 23 bang after time delay;
+#X msg 73 121 tempo 2 msec;
+#X text 168 421 - [delay] outputs a bang after the specified delay
+;
+#X text 98 352 tempo;
+#X text 168 352 - set the tempo:;
+#X obj 275 352 pddp/pddplink all_about_tempo.pd;
 #X connect 15 0 16 0;
 #X connect 16 0 17 0;
 #X connect 23 0 16 0;
 #X connect 24 0 16 0;
 #X connect 25 0 16 1;
+#X connect 41 0 16 0;

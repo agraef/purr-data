@@ -1,0 +1,71 @@
+#N canvas 283 77 448 570 10;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header tempo 20 10 1 18
+-261106 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 548 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 383 422 494 163 META 0;
+#X text 12 45 KEYWORDS tempo all_about_pd;
+#X text 12 65 DESCRIPTION using the tempo message with delay and metro
+;
+#X text 12 85 LIBRARY Vanilla;
+#X text 12 105 HELP_PATCH_AUTHORS;
+#X restore 392 550 pd META;
+#N canvas 522 300 428 392 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X obj 22 42 metro;
+#X obj 82 42 delay;
+#X text 7 2 tempo- Related Objects;
+#X obj 132 42 timer;
+#X restore 103 550 pd Related_objects;
+#X obj 6 550 pddp/pddplink all_about.pd -text All About Pd;
+#X text 35 375 If the tempo is changed while the delay is in progress
+\, the change only applies to the remaining fraction of the delay.
+;
+#X text 53 33 The [delay] \, [metro] \, and [timer] objects allow you
+to set the tempo. Units can be:;
+#X text 73 69 * milliseconds (msec for short);
+#X text 73 87 * seconds (sec);
+#X text 73 105 * minutes (min);
+#X text 73 123 * samples (samp);
+#X msg 103 249 2000;
+#X obj 75 353 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 74 249 bng 20 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 74 326 delay 1000 1 msec;
+#X msg 106 285 tempo 0.5 msec;
+#X msg 296 272 2000;
+#X obj 255 353 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 254 249 bng 20 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X msg 299 297 tempo 0.5 msec;
+#X msg 283 249 stop;
+#X obj 254 326 metro 1000 1 msec;
+#X text 54 181 Equivalently you can say "tempo 2 permsec" or even "120000
+permin". A more traditionally musical way to specify a one-second delay
+would be "delay 1" with "tempo 60 permin" as in the second example
+below.;
+#X text 53 147 In the two examples below the unit is set to 1/2 millisecond
+so that '1000' gives a delay of 500 msec (1/2 second).;
+#X obj 210 419 delay 1 60 permin;
+#X text 5 419 delay of one beat at 60 beats per minute, f 31;
+#X text 5 474 other possible ways to get a one second delay (but the
+rightmost ones are sample-rate dependent), f 32;
+#X obj 209 488 delay 1 1 persec;
+#X obj 209 464 delay 1 1 sec;
+#X obj 209 511 delay 0.01676 1 min;
+#X obj 327 464 delay 1 44100 samp;
+#X obj 327 488 delay 44100 1 samp;
+#X connect 12 0 15 0;
+#X connect 14 0 15 0;
+#X connect 15 0 13 0;
+#X connect 16 0 15 0;
+#X connect 17 0 22 0;
+#X connect 19 0 22 0;
+#X connect 20 0 22 0;
+#X connect 21 0 22 0;
+#X connect 22 0 18 0;

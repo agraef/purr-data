@@ -1,9 +1,9 @@
-#N canvas 426 34 555 619 10;
+#N canvas 255 53 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header metro 3 12 0 18
 -204280 -1 0;
-#X obj 0 327 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+#X obj 0 262 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
 #N canvas 465 262 507 361 META 0;
 #X text 12 125 LIBRARY internal;
@@ -22,9 +22,9 @@ revised the patch to conform to the PDDP template for Pd version 0.42.
 #X text 12 5 KEYWORDS control time bang_op;
 #X text 12 185 RELEASE_DATE 1997;
 #X restore 500 597 pd META;
-#X obj 0 483 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+#X obj 0 448 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
 13 -228856 -1 0;
-#X obj 0 525 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+#X obj 0 495 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
 0 13 -228856 -1 0;
 #X obj 0 567 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
@@ -45,53 +45,62 @@ is:;
 #X obj 24 55 pddp/helplink iemlib/t3_metro;
 #X obj 24 75 pddp/helplink maxlib/pulse;
 #X restore 102 597 pd Related_objects;
-#X obj 78 336 cnv 17 3 75 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X obj 78 271 cnv 17 3 95 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X text 98 335 float;
-#X text 98 395 list;
-#X obj 78 492 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X text 98 270 float;
+#X text 98 330 list;
+#X obj 78 457 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 78 417 cnv 17 3 55 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+#X obj 78 382 cnv 17 3 55 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
-#X text 98 416 float;
+#X text 98 381 float;
 #X obj 503 11 metro;
-#X obj 109 224 metro 500;
-#X floatatom 160 201 4 0 0 0 - - -, f 4;
-#X msg 109 125 1;
-#X text 177 124 nonzero number or "bang" to start;
-#X msg 150 158 0;
-#X msg 141 125 bang;
-#X msg 182 158 stop;
-#X obj 109 247 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X obj 79 209 metro 500;
+#X floatatom 130 186 4 0 0 0 - - -, f 4;
+#X msg 79 60 1;
+#X text 147 59 nonzero number or "bang" to start;
+#X msg 120 93 0;
+#X msg 111 60 bang;
+#X msg 152 93 stop;
+#X obj 79 232 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X text 219 158 zero or "stop" to stop;
-#X text 168 335 - sending a nonzero number to the left inlet starts
+#X text 189 93 zero or "stop" to stop;
+#X text 168 270 - sending a nonzero number to the left inlet starts
 the metronome. Sending a zero stops it.;
-#X text 98 361 bang;
-#X text 98 378 stop;
-#X text 98 446 list;
-#X text 167 446 - a list to the right inlet will be truncated to the
+#X text 98 296 bang;
+#X text 98 313 stop;
+#X text 98 411 list;
+#X text 167 411 - a list to the right inlet will be truncated to the
 first item.;
-#X text 143 247 The metro object sends a series of bangs at a constant
+#X text 113 232 The metro object sends a series of bangs at a constant
 rate.;
-#X text 98 491 bang;
-#X text 168 544 - (optional) sets the initial rate in milliseconds.
+#X text 98 456 bang;
+#X text 168 514 - (optional) sets the initial rate in milliseconds.
 ;
-#X text 168 361 - start the metronome.;
-#X text 168 378 - the "stop" message turns off the metronome.;
-#X text 167 416 - the right inlet sets the interval in milliseconds
+#X text 168 296 - start the metronome.;
+#X text 168 313 - the "stop" message turns off the metronome.;
+#X text 167 381 - the right inlet sets the interval in milliseconds
 between each "bang" that is sent to the outlet of [metro].;
-#X text 168 491 - [metro] outputs a bang at a constant rate \, defined
+#X text 168 456 - [metro] outputs a bang at a constant rate \, defined
 by the creation argument or a value sent to its right inlet.;
-#X text 80 544 1) float;
+#X text 80 514 1) float;
 #X text 11 23 send a bang periodically ala metronome;
-#X text 168 395 - a list will be distributed to the inlets of [metro].
+#X text 168 330 - a list will be distributed to the inlets of [metro].
 ;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
+#X msg 148 137 tempo 2 msec;
+#X text 98 350 tempo;
+#X text 168 350 - set tempo:;
+#X obj 252 350 pddp/pddplink all_about_tempo.pd;
+#X text 234 137 set tempo;
+#X text 80 534 2-3);
+#X text 168 534 - (optional) float and symbol to set tempo. See all_about_tempo.pd
+above.;
 #X connect 15 0 22 0;
 #X connect 16 0 15 1;
 #X connect 17 0 15 0;
 #X connect 19 0 15 0;
 #X connect 20 0 15 0;
 #X connect 21 0 15 0;
+#X connect 40 0 15 0;
