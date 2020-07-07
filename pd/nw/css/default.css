@@ -21,7 +21,7 @@ body {
 }
 
 /* delete the default scrollbars, and let's make our own */
-body::-webkit-scrollbar {
+.patch_body::-webkit-scrollbar {
     width: 0px;
     height: 0px;
     background: transparent;
