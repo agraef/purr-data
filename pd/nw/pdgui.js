@@ -814,16 +814,23 @@ function canvas_check_geometry(cid) {
     var win_w = patchwin[cid].width,
         // "23" is a kludge to account for the menubar size.  See comment
         // in nw_create_window of index.js
-        win_h = patchwin[cid].height - 23,
+        // ico@vt.edu in 0.46.2 this is now 25 pixels, so I guess
+        // it is now officially kludge^2
+        win_h = patchwin[cid].height - 25,
         win_x = patchwin[cid].x,
         win_y = patchwin[cid].y,
         cnv_width = patchwin[cid].window.innerWidth,
-        cnv_height = patchwin[cid].window.innerHeight - 23;
+        cnv_height = patchwin[cid].window.innerHeight - 25;
     // We're reusing win_x and win_y below, as it
     // shouldn't make a difference to the bounds
-    // algorithm in Pd
+    // algorithm in Pd (ico@vt.edu: this is not true anymore)
+    //post("relocate " + pd_geo_string(cnv_width, cnv_height, win_x, win_y) + " " +
+    //       pd_geo_string(cnv_width, cnv_height, win_x, win_y));
+    // ico@vt.edu: replaced first pd_geo_string's first two args (originally
+    // win_x and win_y with cnv_width and cnv_height + 25 to ensure the window
+    // reopens exactly how it was saved)
     pdsend(cid, "relocate",
-           pd_geo_string(win_w, win_h, win_x, win_y),
+           pd_geo_string(cnv_width, cnv_height + 25, win_x, win_y),
            pd_geo_string(cnv_width, cnv_height, win_x, win_y)
     );
 }
@@ -1412,7 +1419,8 @@ var scroll = {},
     last_focused, // last focused canvas (doesn't include Pd window or dialogs)
     loading = {},
     title_queue= {}, // ugly kluge to work around an ugly race condition
-    popup_menu = {};
+    popup_menu = {},
+    toplevel_scalars = {};
 
     var patchwin = {}; // object filled with cid: [Window object] pairs
     var dialogwin = {}; // object filled with did: [Window object] pairs
@@ -1574,9 +1582,13 @@ function create_window(cid, type, width, height, xpos, ypos, attr_array) {
 }
 
 // create a new canvas
-function gui_canvas_new(cid, width, height, geometry, zoom, editmode, name, dir, dirty_flag, hide_scroll, hide_menu, cargs) {
+function gui_canvas_new(cid, width, height, geometry, zoom, editmode, name, dir, dirty_flag, hide_scroll, hide_menu, has_toplevel_scalars, cargs) {
     // hack for buggy tcl popups... should go away for node-webkit
     //reset_ctrl_on_popup_window
+    
+    // ico@vt.edu: added has_toplevel_scalars, which is primarily
+    // being used for detecting toplevel garrays but may need to be
+    // expanded to also deal with scalars
 
     // local vars for window-specific behavior
     // visibility of menu and scrollbars, plus canvas background
@@ -1597,6 +1609,7 @@ function gui_canvas_new(cid, width, height, geometry, zoom, editmode, name, dir,
     redo[cid] = false;
     font[cid] = 10;
     doscroll[cid] = 0;
+    toplevel_scalars[cid] = has_toplevel_scalars;
     // geometry is just the x/y screen offset "+xoff+yoff"
     geometry = geometry.slice(1);   // remove the leading "+"
     geometry = geometry.split("+"); // x/y screen offset (in pixels)
@@ -2225,12 +2238,17 @@ function gui_gobj_configure_io(cid, tag, is_iemgui, is_signal, width) {
         }
         e.classList.add(type);
         e.classList.remove("xlet_selected");
+        e.classList.remove("xlet_disabled");
     });
 }
 
-function gui_gobj_highlight_io(cid, tag) {
+function gui_gobj_highlight_io(cid, tag, enabled) {
     gui(cid).get_elem(tag, function(e) {
         e.classList.add("xlet_selected");
+        if (enabled == 0)
+        {
+            e.classList.add("xlet_disabled");
+        }
     });
 }
 
@@ -2520,6 +2538,11 @@ function gobj_font_y_kludge(fontsize) {
 }
 
 function gui_text_new(cid, tag, type, isselected, left_margin, font_height, text, font) {
+    //ico@vt.edu: different text spacing for GOPs
+    var xoff = 0.5; // Default value for normal objects, GOP uses -0.5
+    gui(cid).get_gobj(tag, function(e) {
+        xoff = e.classList.contains("graph") ? -0.5 : 0.5;
+    });
     gui(cid).get_gobj(tag)
     .append(function(frag) {
         var svg_text = create_item(cid, "text", {
@@ -2538,8 +2561,8 @@ function gui_text_new(cid, tag, type, isselected, left_margin, font_height, text
             // shapes, and I haven't yet found any documentation for it. All I
             // know is an integer offset results in blurry text, and the 0.5
             // offset doesn't.
-            transform: "translate(" + (left_margin - 0.5) + ")",
-            y: font_height + gobj_font_y_kludge(font),
+            transform: "translate(" + (left_margin - xoff) + ")",
+            y: font_height - 0.5 + gobj_font_y_kludge(font),
             // Turns out we can't do 'hanging' baseline
             // because it's borked when scaled. Bummer, because that's how Pd's
             // text is handled under tk...
@@ -2604,6 +2627,10 @@ function gui_gobj_select(cid, tag) {
 function gui_gobj_deselect(cid, tag) {
     gui(cid).get_gobj(tag, function(e) {
         e.classList.remove("selected");
+        // ico@vt.edu: check for scroll in case the handle disappears
+        // during deselect. LATER: make handles always fit inside the
+        // object, so this won't be necessary
+        gui_canvas_get_scroll(cid);
     });
 }
 
@@ -3430,15 +3457,96 @@ function gui_mycanvas_coords(cid, tag, vis_width, vis_height, select_width, sele
     });
 }
 
+/* this creates a group immediately below the patchsvg object */
 function gui_scalar_new(cid, tag, isselected, t1, t2, t3, t4, t5, t6,
-    is_toplevel) {
+    is_toplevel, plot_style) {
     var g;
     // we should probably use gui_gobj_new here, but we"re doing some initial
     // scaling that normal gobjs don't need...
+    //post("gui_scalar_new " + t1 + " " + t2 +
+    //    " " + t3 + " " + t4 + " " + t5 + " " + t6);
+        
+    /* ico@vt.edu HACKTASCTIC: calculating scrollbars is throwing 0.997 for
+       plots drawn inside the subpatch and it is a result of the -1 in the 
+       (min_width - 1) / width call inside canvas_params. Yet, if we don't
+       call this, we don't have nice flush scrollbars with the regular edges.
+       This is why here we make a hacklicious hack and simply hide hscrollbar
+       since the scroll is not doing anything anyhow.
+       
+       After further testing, it seems that the aforesaid margin is a hit'n'miss
+       depending on the patch, so we will disable this and make the aforesaid
+       canvas_params equation min_width / width.
+
+    if (is_toplevel === 1) {
+        gui(cid).get_elem("hscroll", function(elem) {
+            elem.style.setProperty("display", "none");
+        });
+        gui(cid).get_elem("vscroll", function(elem) {
+            elem.style.setProperty("display", "none");
+        });
+    }*/
+      
     gui(cid).get_elem("patchsvg", function(svg_elem) {
         var matrix, transform_string, selection_rect;
-        matrix = [t1,t2,t3,t4,t5,t6];
-        transform_string = "matrix(" + matrix.join() + ")";
+        if (is_toplevel === 1) {
+            // here we deal with weird scrollbar offsets and
+            // inconsistencies for the various plot styles.
+            // the matrix format is xscale, 0, 0, yscale, width, height
+            // we don't use the matrix for the bar graph since it is
+            // difficult to get the right ratio, so we do the manual
+            // translate and scale instead.
+            // cases are: 0=points, 1=plot, 2=bezier, 3=bars
+            switch (plot_style) {
+                case 0:
+                    matrix = [t1,t2,t3,t4,t5,t6+0.5];
+                    break;
+                case 1:
+                    matrix = [t1,t2,t3,t4,t5,t6+1.5];
+                    break;
+                case 2:
+                    matrix = [t1,t2,t3,t4,t5,t6+1.5];
+                    break;
+                case 3:
+                    //matrix = [t1*.995,t2,t3,t4+1,t5+0.5,t6-2];
+                    matrix = 0;
+                    transform_string = "translate(" + 0 +
+                        "," + (t6+1) + ") scale(" + t1 + "," + t4 + ")";
+                    //post("transform_string = " + transform_string);
+                    break;
+                default:
+                    // we are a non-plot scalar
+                    matrix = [t1,t2,t3,t4,t5,t6];
+                    break;        
+            }
+        }        
+        else {
+            switch (plot_style) {
+                case 0:
+                    matrix = [t1,t2,t3,t4,t5,t6+0.5];
+                    break;
+                case 1:
+                    matrix = [t1,t2,t3,t4,t5,t6+1.5];
+                    break;
+                case 2:
+                    matrix = [t1,t2,t3,t4,t5,t6+1.5];
+                    break;
+                case 3:
+                    //matrix = [t1,t2,t3,t4+1,t5+0.5,t6+0.5];
+                    matrix = 0;
+                    transform_string = "translate(" + (t5+(t1 < 1 ? 0.5 : 1.5)) +
+                        "," + (t6+1) + ") scale(" + t1 + "," + t4 + ")";
+                    //post("transform_string = " + transform_string);
+                    break;
+                default:
+                    // we are a non-plot scalar
+                    matrix = [t1,t2,t3,t4,t5,t6];
+                    break; 
+            }
+        }
+        
+        if (matrix !== 0) {
+            transform_string = "matrix(" + matrix.join() + ")";
+        }
         g = create_item(cid, "g", {
             id: tag + "gobj",
             transform: transform_string,
@@ -3617,6 +3725,7 @@ function gui_draw_configure(cid, tag, attr, val) {
 // the default behavior.
 function gui_draw_viewbox(cid, tag, attr, val) {
     // Value will be an empty array if the user provided no values
+    post("gui_draw_viewbox cid=" + cid + " tag=" + tag + " attr=" + attr + " val=" + val);
     gui(cid).get_elem("patchsvg", function(svg_elem) {
         if (val.length) {
             gui_draw_configure(cid, tag, attr, val)
@@ -4676,8 +4785,9 @@ function zoom_kludge(zoom_level) {
 function gui_canvas_popup(cid, xpos, ypos, canprop, canopen, isobject) {
     // Get page coords for top of window, in case we're scrolled
     gui(cid).get_nw_window(function(nw_win) {
-        var win_left = nw_win.window.document.body.scrollLeft,
-            win_top = nw_win.window.document.body.scrollTop,
+        // ico@vt.edu updated win_left and win_top for the 0.46.2
+        var win_left = nw_win.window.scrollX,
+            win_top = nw_win.window.scrollY,
             zoom_level = nw_win.zoomLevel, // these were used to work
             zfactor,                       // around an old nw.js popup pos
                                            // bug. Now it's only necessary
@@ -5659,7 +5769,10 @@ function shove_svg_background_data_into_css(w) {
 function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
     font_size, is_gop, state) {
     var range, svg_view, p,
-        gobj = get_gobj(cid, tag);
+        gobj = get_gobj(cid, tag), zoom;
+    gui(cid).get_nw_window(function(nw_win) {
+        zoom = nw_win.zoomLevel;
+    });
     if (state !== 0) {
         // Make sure we're in editmode
         canvas_set_editmode(cid, 1);
@@ -5681,23 +5794,43 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
         svg_view = patchwin[cid].window.document.getElementById("patchsvg")
             .viewBox.baseVal;
         p.classList.add(type);
+        // ico@vt.edu: is there a better way to monitor vars inside nw?
+        // p.classList.add("zoom=" + zoom);
         p.contentEditable = "true";
+
+        if (is_gop == 0) {
+            // do we need to assign here color from the css theme instead?
+            p.style.setProperty("background-color", "#f6f8f8");
+        } else {
+            // ico@vt.edu: added tweaks to ensure the GOP selection
+            // border is near identical to that of its regular border
+            p.style.setProperty("min-height", height_spec - 7 + "px");
+            p.style.setProperty("padding-left", "2px");
+            /* ico@vt.edu:
+               should the graph be transparent or opaque? legacy compatibility
+               suggests it should be transparent, although that may go against
+               common sense UI design. Perhaps we can make this an option? If
+               so, we could do so here. Better yet, we could capture background
+               color of the subpatcher and use it to apply the same color here.
+               p.style.setProperty("background-color", "white");
+            */   
+        }
+        
         p.style.setProperty("left", (x - svg_view.x) + "px");
         p.style.setProperty("top", (y - svg_view.y) + "px");
         p.style.setProperty("font-size",
             pd_fontsize_to_gui_fontsize(font_size) + "px");
         p.style.setProperty("line-height",
-            text_line_height_kludge(font_size, "pd") + "px");
-        p.style.setProperty("transform", "translate(0px, 0px)");
+            pd_fontsize_to_gui_fontsize(font_size) + 1 + "px");
+        p.style.setProperty("transform", "translate(0px, " + 
+            (zoom > 0 ? 0.5 : 0) + "px)");
         p.style.setProperty("max-width",
             width_spec !== 0 ? width_spec + "ch" : "60ch");
         p.style.setProperty("min-width",
             width_spec <= 0 ? "3ch" :
-                (is_gop == 1 ? width_spec + "px" :
+                (is_gop == 1 ? (width_spec - 5) + "px" :
                     width_spec + "ch"));
-        if (is_gop == 1) {
-            p.style.setProperty("min-height", height_spec + "px");
-        }
+        
         // set backgroundimage for message box
         if (type === "msg") {
             shove_svg_background_data_into_css(patchwin[cid].window);
@@ -5742,11 +5875,64 @@ function gui_undo_menu(cid, undo_text, redo_text) {
     });
 }
 
+function zoom_level_to_chrome_percent(nw_win) {
+    var zoom = nw_win.zoomLevel;
+    switch (zoom) {
+        case -7:
+            zoom = 4;
+            break;
+        case -6:
+            zoom = 100/33;
+            break;
+        case -5:
+            zoom = 2;
+            break;
+        case -4:
+            zoom = 100/67;
+            break;
+        case -3:
+            zoom = 100/75;
+            break;
+        case -2:
+            zoom = 100/80;
+            break;
+        case -1:
+            zoom = 100/90;
+            break;
+        case 0:
+            zoom = 1;
+            break;
+        case 1:
+            zoom = 100/110;
+            break;
+        case 2:
+            zoom = 100/125;
+            break;
+        case 3:
+            zoom = 100/150;
+            break;
+        case 4:
+            zoom = 100/175;
+            break;
+        case 5:
+            zoom = 100/200;
+            break;
+        case 6:
+            zoom = 100/250;
+            break;
+        case 7:
+            zoom = 100/300;
+            break;  
+    }
+    return zoom;
+}
+
 // leverages the get_nw_window method in the callers...
 function canvas_params(nw_win)
 {
     // calculate the canvas parameters (svg bounding box and window geometry)
     // for do_getscroll and do_optimalzoom
+    //post("nw_win=" + nw_win + " " + nw_win.window + " " + nw_win.window.document);
     var bbox, width, height, min_width, min_height, x, y, svg_elem;
     svg_elem = nw_win.window.document.getElementById("patchsvg");
     bbox = svg_elem.getBBox();
@@ -5760,22 +5946,18 @@ function canvas_params(nw_win)
     x = bbox.x > 0 ? 0 : bbox.x,
     y = bbox.y > 0 ? 0 : bbox.y;
 
-    // The svg "overflow" attribute on an <svg> seems to be buggy-- for example,
-    // you can't trigger a mouseover event for a <rect> that is outside of the
-    // explicit bounds of the svg.
-    // To deal with this, we want to set the svg width/height to always be
-    // at least as large as the browser's viewport. There are a few ways to
-    // do this this, like documentElement.clientWidth, but window.innerWidth
-    // seems to give the best results.
-    // However, there is either a bug or some strange behavior regarding
-    // the viewport size: setting both the height and width of an <svg> to
-    // the viewport height/width will display the scrollbars. The height or
-    // width must be set to 4 less than the viewport size in order to keep
-    // the scrollbars from appearing. Here, we just subtract 4 from both
-    // of them. This could lead to some problems with event handlers but I
-    // haven't had a problem with it yet.
-    min_width = nw_win.window.innerWidth - 4;
-    min_height = nw_win.window.innerHeight - 4;
+    // ico@vt.edu: adjust body width and height to match patchsvg to ensure
+    // scrollbars only come up when we are indeed inside svg and not before
+    // with extra margins around. This is accurate to a pixel on nw 0.47.0.
+    // This is also needed when maximizing and restoring the window in order
+    // to trigger resizing of scrollbars.
+    min_width = nw_win.window.innerWidth;
+    min_height = nw_win.window.innerHeight;
+    
+    var body_elem = nw_win.window.document.body;
+    body_elem.style.width = min_width + "px";
+    body_elem.style.height = min_height + "px";
+
     // Since we don't do any transformations on the patchsvg,
     // let's try just using ints for the height/width/viewBox
     // to keep things simple.
@@ -5785,11 +5967,78 @@ function canvas_params(nw_win)
     min_height |= 0;
     x |= 0;
     y |= 0;
+
+    /* ico@vt.edu: now let's draw/update our own scrollbars, so that we
+       don't have to deal with the window size nonsense caused by the
+       built-in ones... */  
+    // zoom var is used to compensate for the zoom level and keep
+    // the scrollbars the same height
+    var zoom = zoom_level_to_chrome_percent(nw_win);
+    var yScrollSize, yScrollTopOffset;
+    var vscroll = nw_win.window.document.getElementById("vscroll");
+    yScrollSize = min_height / height; // used to be (min_height - 1) / height
+    yScrollTopOffset = Math.floor((nw_win.window.scrollY / height) * (min_height + 3));
+    
+    // yScrollSize reflects the amount of the patch we currently see,
+    // so if it drops below 1, that means we need our scrollbars 
+    if (yScrollSize < 1) {
+        var yHeight = Math.floor(yScrollSize * (min_height + 3));
+        vscroll.style.setProperty("height", (yHeight - 6) + "px");
+        vscroll.style.setProperty("top", (yScrollTopOffset + 2) + "px");
+        vscroll.style.setProperty("-webkit-clip-path",
+            "polygon(0px 0px, 5px 0px, 5px " + (yHeight - 6) +
+            "px, 0px " + (yHeight - 11) + "px, 0px 5px)");
+        vscroll.style.setProperty("width", (5 * zoom) + "px");
+        vscroll.style.setProperty("right", (2 * zoom) + "px");
+        vscroll.style.setProperty("visibility", "visible");
+    } else {
+        vscroll.style.setProperty("visibility", "hidden");
+    }
+    
+    var xScrollSize, xScrollLeftOffset;
+    var hscroll = nw_win.window.document.getElementById("hscroll");
+    xScrollSize = min_width / width; // used to be (min_width - 1) / width
+    xScrollLeftOffset = Math.floor((nw_win.window.scrollX / width) * (min_width + 3));
+
+    if (xScrollSize < 1) {
+        var xWidth = Math.floor(xScrollSize * (min_width + 3));
+        hscroll.style.setProperty("width", (xWidth - 6) + "px");
+        hscroll.style.setProperty("left", (xScrollLeftOffset + 2) + "px");
+        hscroll.style.setProperty("-webkit-clip-path",
+            "polygon(0px 0px, " + (xWidth - 11) + "px 0px, " +
+            (xWidth - 6) + "px 5px, 0px 5px)");
+        hscroll.style.setProperty("height", (5 * zoom) + "px");
+        hscroll.style.setProperty("bottom", (2 * zoom) + "px");
+        hscroll.style.setProperty("visibility", "visible");
+    } else {
+        hscroll.style.setProperty("visibility", "hidden");    
+    }
+    
+    //post("x=" + xScrollSize + " y=" + yScrollSize);
+    
     return { x: x, y: y, w: width, h: height,
              mw: min_width, mh: min_height };
 }
 
-function do_getscroll(cid) {
+
+// ico@vt.edu:
+// the timeout is a bad hack and does not solve the problem consistently
+// even on a fast computer, while also slowing down the overall user 
+// experience. As such, ti is disabled and left here for reference.
+/*var pd_getscroll_var = {};
+
+function pd_do_getscroll(cid) {
+    if (!pd_getscroll_var[cid]) {
+        pd_getscroll_var[cid] = setTimeout(function() {
+            do_getscroll(cid, 0);
+            pd_getscroll_var[cid] = null;
+        }, 250);
+    }
+}
+
+exports.pd_do_getscroll = pd_do_getscroll;*/
+
+function do_getscroll(cid, checkgeom) {
     // Since we're throttling these getscroll calls, they can happen after
     // the patch has been closed. We remove the cid from the patchwin
     // object on close, so we can just check to see if our Window object has
@@ -5797,6 +6046,11 @@ function do_getscroll(cid) {
     // This is an awfully bad pattern. The whole scroll-checking mechanism
     // needs to be rethought, but in the meantime this should prevent any
     // errors wrt the rendering context disappearing.
+    //post("do_getscroll " + checkgeom);
+    if (checkgeom == 1) {
+        canvas_check_geometry(cid);
+        return;
+    }
     gui(cid).get_nw_window(function(nw_win) {
         var svg_elem = nw_win.window.document.getElementById("patchsvg");
         var { x: x, y: y, w: width, h: height,
@@ -5820,7 +6074,11 @@ function do_getscroll(cid) {
     });
 }
 
+exports.do_getscroll = do_getscroll;
+
 var getscroll_var = {};
+var checkgeom_and_getscroll_var = {};
+var overriding_getscroll_var = {};
 
 // We use a setTimeout here for two reasons:
 // 1. nw.js has a nasty Renderer bug  when you try to modify the
@@ -5835,15 +6093,50 @@ var getscroll_var = {};
 //    graphics from displaying until the user releases the mouse,
 //    which would be a buggy UI
 function gui_canvas_get_scroll(cid) {
-    if (!getscroll_var[cid]) {
-        getscroll_var[cid] = setTimeout(function() {
-            do_getscroll(cid);
+    //post("win=" + cid);
+    //win_width = win.style.width;
+    //win_height = win.style.height;
+    if (toplevel_scalars[cid]) {
+        // we have scalars, so let's override the previous call
+        // because this will be a cpu intensive redraw, so we
+        // should do it only when the action that requested it
+        // is either done or stopped for long enough for the
+        // recalculation to happen
+        if (getscroll_var[cid]) {
+            clearTimeout(getscroll_var[cid]);
             getscroll_var[cid] = null;
-        }, 250);
+        }
+    }
+    if (!getscroll_var[cid]) {
+        getscroll_var[cid] = setTimeout(function() {              
+            do_getscroll(cid, toplevel_scalars[cid]);
+            getscroll_var[cid] = null;
+        }, 50);
     }
 }
 
 exports.gui_canvas_get_scroll = gui_canvas_get_scroll;
+
+/* ico@vt.edu: here is one alternative getscroll call, it focuses on
+   overriding the previous call, so the getscroll is more delayed. This
+   is useful when manipulating a plot with a mouse, for instance, so that
+   we prevent excessive getscroll calls which can be rather cpu intensive.
+*/
+
+function gui_canvas_get_overriding_scroll(cid) {
+    //post("win=" + cid);
+    //win_width = win.style.width;
+    //win_height = win.style.height;
+    if (overriding_getscroll_var[cid]) {
+        clearTimeout(overriding_getscroll_var[cid]);
+    }
+    overriding_getscroll_var[cid] = setTimeout(function() {
+        do_getscroll(cid, 0);
+        overriding_getscroll_var[cid] = null;
+    }, 100);
+}
+
+exports.gui_canvas_get_overriding_scroll = gui_canvas_get_overriding_scroll;
 
 function do_optimalzoom(cid, hflag, vflag) {
     // determine an optimal zoom level that makes the entire patch fit within
@@ -5863,7 +6156,7 @@ function do_optimalzoom(cid, hflag, vflag) {
         // Optimal zoom is the minimum of the horizontal and/or the vertical
         // zoom values, depending on the h and v flags. This gives us the offset
         // to the current zoom level. We then need to clamp the resulting new
-        // zoom level to the valid zoom level range of -8..+7.
+        // zoom level to the valid zoom level range of -7..+7.
         var actz = nw_win.zoomLevel, z = 0;
         if (hflag && vflag)
             z = Math.min(zx, zy);
@@ -5872,7 +6165,7 @@ function do_optimalzoom(cid, hflag, vflag) {
         else if (vflag)
             z = zy;
         z += actz;
-        if (z < -8) z = -8; if (z > 7) z = 7;
+        if (z < -7) z = -7; if (z > 7) z = 7;
         //post("bbox: "+width+"x"+height+"+"+x+"+"+y+" window size: "+min_width+"x"+min_height+" current zoom level: "+actz+" optimal zoom level: "+z);
         if (z != actz) {
             nw_win.zoomLevel = z;
@@ -6008,3 +6301,73 @@ function gui_pddplink_open(filename, dir) {
         post("pddplink: error: file not found: " + filename);
     }
 }
+
+
+/* ico@vt.edu: this function is run when we scroll with a mouse wheel,
+   a touchpad (e.g. two-finger scroll), or some other HID. It is
+   linked from the pd_canvas.js and called from the garray_fittograph 1
+   call when we are resizing the plot toplevel window to avoid race condition.
+*/
+function gui_update_scrollbars(cid) {
+    //post("gui_update_scrollbars " + cid);
+    gui(cid).get_nw_window(function(nw_win) {
+        var hscroll = nw_win.window.document.getElementById("hscroll");
+        var vscroll = nw_win.window.document.getElementById("vscroll");
+        var svg_elem = nw_win.window.document.getElementById("patchsvg");
+        
+        if (vscroll.style.visibility == "visible")
+        {
+            var height, min_height;  
+            min_height = nw_win.window.innerHeight + 3;
+            height = svg_elem.getAttribute('height');
+            
+            var yScrollSize, yScrollTopOffset;
+            yScrollSize = (min_height - 4) / height;
+            yScrollTopOffset = Math.floor((nw_win.window.scrollY / height) * min_height);
+            
+            if (yScrollSize < 1) {
+                var yHeight = Math.floor(yScrollSize * min_height);
+                vscroll.style.setProperty("height", (yHeight - 6) + "px");
+                vscroll.style.setProperty("top", (yScrollTopOffset + 2) + "px");
+                vscroll.style.setProperty("-webkit-clip-path",
+                    "polygon(0px 0px, 5px 0px, 5px " + (yHeight - 6) +
+                    "px, 0px " + (yHeight - 11) + "px, 0px 5px)");
+                vscroll.style.setProperty("visibility", "visible");
+            } else {
+                vscroll.style.setProperty("visibility", "hidden");    
+            }
+        }
+
+        if (hscroll.style.visibility == "visible")
+        {
+            var min_width = nw_win.window.innerWidth + 3;
+            var width = svg_elem.getAttribute('width');
+            var xScrollSize, xScrollTopOffset;
+            
+            xScrollSize = (min_width - 4) / width;
+            xScrollTopOffset = Math.floor((nw_win.window.scrollX / width) * min_width);
+            
+            /* console.log("win_width=" + min_width + " bbox=" +
+                width + " xScrollSize=" + (xScrollSize * min_width) +
+                " topOffset=" + xScrollTopOffset); */
+
+            if (xScrollSize < 1) {
+                var xWidth = Math.floor(xScrollSize * min_width);
+                hscroll.style.setProperty("width", (xWidth - 6) + "px");
+                hscroll.style.setProperty("left", (xScrollTopOffset + 2) + "px");
+                hscroll.style.setProperty("-webkit-clip-path",
+                    "polygon(0px 0px, " + (xWidth - 11) + "px 0px, " +
+                    (xWidth - 6) + "px 5px, 0px 5px)");
+                hscroll.style.setProperty("visibility", "visible");
+            } else {
+                hscroll.style.setProperty("visibility", "hidden");    
+            }
+        }
+        // for future reference
+        //nw_win.document.getElementById("hscroll").
+        //    style.setProperty("visibility", "visible");
+        //console.log("width="+width);
+    });
+}
+
+exports.gui_update_scrollbars = gui_update_scrollbars;

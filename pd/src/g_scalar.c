@@ -22,6 +22,10 @@ extern t_symbol *canvas_field_templatesym; /* for "canvas" data type */
 extern t_word *canvas_field_vec;           /* for "canvas" data type */
 extern t_gpointer *canvas_field_gp;        /* parent for "canvas" data type */
 
+/* ico@vt.edu: used by the scalar_vis to adjust visual offset
+   based on the graph drawing style, affects bar graph */
+extern int garray_get_style(t_garray *x);
+
 void word_init(t_word *data, t_template *template, t_gpointer *gp)
 {
     int i, nitems = template->t_n;
@@ -1026,7 +1030,18 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
 
     if (vis)
     {
-        t_float xscale = glist_xtopixels(owner, 1) - glist_xtopixels(owner, 0);
+        /* ico@vt.edu:
+            Check if we are a bar graph and add to it a bit of left padding.
+            This is done inside pdgui.js gui_scalar_new */
+        int plot_style = -1;
+        t_gobj *g = owner->gl_list;
+
+        if (g != NULL && g->g_pd == garray_class)
+        {
+            t_garray *g_a = (t_garray *)g;
+            plot_style = garray_get_style(g_a);
+        }
+        t_float xscale = ((glist_xtopixels(owner, 1) - glist_xtopixels(owner, 0)));
         t_float yscale = glist_ytopixels(owner, 1) - glist_ytopixels(owner, 0);
         /* we translate the .scalar%lx group to displace it on the tk side.
            This is the outermost group for the scalar, something like a
@@ -1034,20 +1049,21 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
            Also:
              * the default stroke is supposed to be "none"
              * default fill is supposed to be black.
-             * stroke-linejoin should be "miter", not "round"  
+             * stroke-linejoin should be "miter", not "round"
            To fix these, we set the correct fill/stroke/strokelinjoin options
            here on the .scalar%lx group. (Notice also that tkpath doesn't
            understand "None"-- instead we must send an empty symbol.) */
         char tagbuf[MAXPDSTRING];
         sprintf(tagbuf, "scalar%lx", (long unsigned int)x->sc_vec);
-        gui_vmess("gui_scalar_new", "xsiffffiii",
-            glist_getcanvas(owner), 
+        gui_vmess("gui_scalar_new", "xsiffffffii",
+            glist_getcanvas(owner),
             tagbuf,
             glist_isselected(owner, &x->sc_gobj),
             xscale, 0.0, 0.0, yscale,
-            (int)glist_xtopixels(owner, basex),
-            (int)glist_ytopixels(owner, basey),
-            glist_istoplevel(owner));
+            glist_xtopixels(owner, basex),
+            glist_ytopixels(owner, basey),
+            glist_istoplevel(owner),
+            plot_style);
         char groupbuf[MAXPDSTRING];
         // Quick hack to make gui_scalar_draw_group more general (so we
         // don't have to tack on "gobj" manually)
@@ -1264,10 +1280,11 @@ int scalar_doclick(t_word *data, t_template *template, t_scalar *sc,
 /* Unfortunately, nested gops don't yet handle scalar clicks correctly. The
    nested scalar seems not to receive the click.  However, the enter/leave
    messages happen just fine since most of their logic is in tcl/tk. */
+/* ico@vt.edu: I tried nested GOP and it appears to work ok */
 static int scalar_click(t_gobj *z, struct _glist *owner,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
-    //fprintf(stderr,"scalar_click %d %d\n", xpix, ypix);
+    //post("scalar_click %d %d %d", xpix, ypix, doit);
     t_scalar *x = (t_scalar *)z;
 
     x->sc_bboxcache = 0;

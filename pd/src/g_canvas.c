@@ -704,6 +704,8 @@ t_symbol *canvas_makebindsym(t_symbol *s)
     return (gensym(buf));
 }
 
+int garray_getname(t_garray *x, t_symbol **namep);
+
 void canvas_args_to_string(char *namebuf, t_canvas *x)
 {
     t_canvasenvironment *env = canvas_getenv(x);
@@ -713,16 +715,37 @@ void canvas_args_to_string(char *namebuf, t_canvas *x)
         strcpy(namebuf, " (");
         for (i = 0; i < env->ce_argc; i++)
         {
-            if (strlen(namebuf) > MAXPDSTRING/2 - 5)
+            if (strlen(namebuf) > MAXPDSTRING / 2 - 5)
                 break;
             if (i != 0)
                 strcat(namebuf, " ");
-            atom_string(&env->ce_argv[i], namebuf + strlen(namebuf), 
-                MAXPDSTRING/2);
+            atom_string(&env->ce_argv[i], namebuf + strlen(namebuf),
+                MAXPDSTRING / 2);
         }
         strcat(namebuf, ")");
     }
-    else namebuf[0] = 0;
+    else
+    {
+        namebuf[0] = 0;
+        t_gobj *g = NULL;
+        t_symbol *arrayname;
+        int found = 0;
+        for (g = x->gl_list; g; g = g->g_next)
+        {
+
+            if (pd_class(&g->g_pd) == garray_class)
+            {
+                garray_getname((t_garray *)g, &arrayname);
+                if (found)
+                {
+                    strcat(namebuf, " ");
+                }
+                strcat(namebuf, arrayname->s_name);
+                found++;
+                //post("found=%d %s %s", found, arrayname->s_name, namebuf);
+            }
+        }
+    }
 }
 
 void canvas_reflecttitle(t_canvas *x)
@@ -1314,8 +1337,8 @@ static void canvas_relocate(t_canvas *x, t_symbol *canvasgeom,
         < 4 ||
         sscanf(topgeom->s_name, "%dx%d+%d+%d", &tw, &th, &txpix, &typix) < 4)
         bug("canvas_relocate");
-            /* for some reason this is initially called with cw=ch=1 so
-            we just suppress that here. */
+    /* for some reason this is initially called with cw=ch=1 so
+    we just suppress that here. */
     if (cw > 5 && ch > 5)
         canvas_dosetbounds(x, txpix, typix,
             txpix + cw, typix + ch);
@@ -1325,24 +1348,44 @@ static void canvas_relocate(t_canvas *x, t_symbol *canvasgeom,
     t_array *a = NULL;
     int  num_elem = 0;
 
+    //int found_garray = 0;
+
     for (g = x->gl_list; g; g = g->g_next)
     {
         //fprintf(stderr, "searching\n");
-
+        //post("searching");
         //for subpatch garrays
         if (pd_class(&g->g_pd) == garray_class)
         {
             //fprintf(stderr,"found ya\n");
+            //post("found ya");
             ga = (t_garray *)g;
             if (ga)
             {
                 a = garray_getarray(ga);
                 num_elem = a->a_n;
                 garray_fittograph(ga, num_elem, 1);
+                //found_garray = 1;
             }
         }
     }
     canvas_checkconfig(x);
+
+    // ico@vt.edu:
+    // Here we update only scrollbars to avoid race condition
+    // caused by doing gui_canvas_get_scroll which in turn
+    // calls canvas_relocate to ensure garrays in subpatches
+    // are properly updated when those windows are resized.
+    // given that the scroll update will happen likely faster
+    // than the return value from the backend, we do this to
+    // get rid of the stale scrollbars, e.g. when making the
+    // window smaller (at first the scrollbars are there because
+    // the garray has not been redrawn yet, and then we update
+    // scrollbars once again here below.
+    //if (found_garray == 1) {
+        //post("found garray");
+    gui_vmess("do_getscroll", "xi", x, 0);
+    //}
 }
 
 void canvas_popabstraction(t_canvas *x)
@@ -2206,9 +2249,7 @@ static void canvas_f(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     }
     // if we are part of a restore message
     // of a subpatch in the form "#X restore..., f 123456789+;"
-    if (pd_class(last_typedmess_pd) == canvas_class &&
-        (t_canvas *)last_typedmess_pd == x &&
-        last_typedmess == gensym("restore"))
+    if (!x->gl_list || !strcmp(last_typedmess->s_name, "restore"))
     {
         if (x->gl_owner && !x->gl_isgraph)
         {
@@ -2399,7 +2440,7 @@ void canvasgop__motionhook(t_scalehandle *sh, t_floatarg mouse_x,
            that is being used to draw the gop red rect move anchor atm. So
            rather than muck around with that code, we just set a pointer to
            whatever our toplevel is here: */
-        t_glist *owner = canvas_getrootfor(x);
+        t_glist *owner = glist_getcanvas(x);
         /* Just unvis the object, then vis it once we've done our
            mutation and checks */
         gobj_vis((t_gobj *)x, owner, 0);
@@ -2421,7 +2462,9 @@ void canvasgop__motionhook(t_scalehandle *sh, t_floatarg mouse_x,
         //fprintf(stderr,"%d %d %d %d\n", tmpx1, tmpy1, tmpx2, tmpy2);
         if (!x->gl_hidetext)
         {
-            tmp_x_final = tmpx2 - tmpx1;
+            /* ico@vt.edu: we add pixels to match minimum space
+               on the right side of the text to that of the left side */
+            tmp_x_final = tmpx2 - tmpx1 + 2;
             tmp_y_final = tmpy2 - tmpy1;
         }
         else
