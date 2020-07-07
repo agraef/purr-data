@@ -8,6 +8,9 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+
 extern t_pd *newest;
 
 /* -------------------------- int ------------------------------ */
@@ -95,6 +98,59 @@ static void pdfloat_float(t_pdfloat *x, t_float f)
     outlet_float(x->x_obj.ob_outlet, x->x_f = f);
 }
 
+    /* check if a symbol payload can be interpreted as a floating point number.
+       We get these cases sometimes from [makefilename], [keyname], and some
+       externals that shoot out data that would be parsed as a float if loaded
+       from a file.
+
+       return values are: 0 not a number
+                          1 successfully parsed as float (stored in f)
+
+       if the number would underflow f is set to -1
+       if the number would overflow f is set to greater than zero
+    */
+int symbol_can_float(t_symbol *s, t_float *f)
+{
+        int ret;
+        char c, *str_end;
+        c = s->s_name[0];
+        if (c != '-' && c != '+' && (c < 48 || c > 57)) return 0;
+        errno = 0;
+        *f = strtod(s->s_name, &str_end);
+        if (errno == ERANGE)
+        {
+            ret = 0;
+            if (*f == 0) *f = -1; /* underflow */
+            else *f = 1; /* assume overflow otherwise */
+        }
+        else if (*f == 0 && s->s_name == str_end)
+        {
+            ret = 0;
+        }
+        else
+            ret = 1;
+        return ret;
+}
+
+char *type_hint(t_symbol *s, int argc, t_atom *argv, int check_symforfloat);
+
+static void pdfloat_symbol(t_pdfloat *x, t_symbol *s)
+{
+        t_float f = 0;
+        if (symbol_can_float(s, &f))
+            outlet_float(x->x_obj.ob_outlet, x->x_f = f);
+        else
+        {
+            t_atom at;
+            SETSYMBOL(&at, s);
+            pd_error(x, "couldn't convert 'symbol %s' to float%s",
+                s->s_name,
+                f == -1 ? " (number too small)" :
+                    f == 1 ? " (number too large)" :
+                        type_hint(&s_symbol, 1, &at, 0));
+        }
+}
+
 static void pdfloat_send(t_pdfloat *x, t_symbol *s)
 {
     if (s->s_thing)
@@ -111,6 +167,7 @@ void pdfloat_setup(void)
         A_SYMBOL, 0);
     class_addbang(pdfloat_class, pdfloat_bang);
     class_addfloat(pdfloat_class, (t_method)pdfloat_float);
+    class_addsymbol(pdfloat_class, (t_method)pdfloat_symbol);
 }
 
 /* -------------------------- symbol ------------------------------ */

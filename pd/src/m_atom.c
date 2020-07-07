@@ -44,7 +44,7 @@ t_blob *atom_getblob(t_atom *a)  /* MP 20070108 */
     else return (&st);
 }
 
-t_symbol *atom_gensym(t_atom *a)  /* this works  better for graph labels */
+t_symbol *atom_gensym(t_atom *a)  /* this works better for graph labels */
 {
     char buf[30];
     if (a->a_type == A_SYMBOL) return (a->a_w.w_symbol);

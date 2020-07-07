@@ -43,9 +43,108 @@ t_classtable *ct;
 
 static t_symbol *class_extern_dir = &s_;
 
+int symbol_can_float(t_symbol *s, t_float *f);
+
+    /* try to give the user some help with the uglier cases of unexpected
+       atom types in messages.
+
+       dostof flag controls whether we want to try to convert a symbol
+       to a float.
+
+       for [float]'s symbol conversion we even check if we received an
+       out of range error, but here for the general case we don't do that. */
+char *type_hint(t_symbol *s, int argc, t_atom *argv, int dostof)
+{
+    static char hint[MAXPDSTRING];
+    t_float f = 0;
+
+        /* Null selectors-- the user typically shouldn't encounter these,
+           especially one that triggers an unknown method error. But we
+           check for them anyway. */
+    if (!s)
+    {
+        sprintf(hint, " (Note: null selector detected)");
+        return hint;
+    }
+
+        /* Empty symbol selector is also rare. But a user can easily generate
+           one with [symbol( or [symbol] then send to [list trim]. */
+    if (s == &s_)
+    {
+        sprintf(hint, " (Note: empty symbol selector detected)");
+        return hint;
+    }
+
+        /* More commonly, the user may have a "symbol" message where the
+           payload is an empty symbol. This can cause confusion for debugging
+           since the empty symbol doesn't print out anything. */
+    if (s && s == &s_symbol && argc && argv->a_type == A_SYMBOL
+            && argv->a_w.w_symbol == &s_)
+    {
+        sprintf(hint, " (Note: symbol message with empty payload detected)");
+        return hint;
+    }
+
+        /* Somewhat common edge case-- [makefilename] and other objects can
+           output a symbol message with a payload that looks numeric but is
+           indeed a symbol atom. In fact, Pd's text parser would interpret
+           such a string as a float if you sent it through the parser.
+
+           This can cause problems if the user tries to serialize the data
+           and read it back-- say, by saving the symbol message "symbol 123"
+           in a file. The next time they load it, "123" will be parsed as
+           a float atom, and any symbol methods will read from the wrong
+           union field and (probably) interpret it as an empty symbol. */
+    if (dostof)
+    {
+        if (symbol_can_float(atom_getsymbolarg(0, argc, argv), &f))
+        {
+            sprintf(hint, " (Note: this symbol message has a floatlike payload "
+                "which cannot be saved properly. Did you mean 'float %s'?)",
+                argv->a_w.w_symbol->s_name);
+            return hint;
+        }
+        else if (f == -1 || f == 1)
+        {
+                /* For values which would overflow, give a hint but don't
+                   suggest float type */
+            sprintf(hint, " (Note: this symbol message has an %s floatlike "
+                "payload which cannot be saved properly.",
+                f == 1 ? "overflowing" : "underflowing");
+            return hint;
+        }
+    }
+
+        /* Rather uncommon case where the selector itself is a symbol atom
+           that would normally have been parsed as a float. */
+    if (dostof)
+    {
+        if (symbol_can_float(s, &f))
+        {
+            sprintf(hint, " (Note: %s looks like a float but is actually a "
+                "symbol atom which cannot be saved properly)", s->s_name);
+            return hint;
+        }
+        else if (f == -1 || f == 1)
+        {
+                /* For values which would overflow, give a hint but don't
+                   suggest float type */
+            sprintf(hint, " (Note: this symbol atom has an %s floatlike "
+                "payload which cannot be saved properly.",
+                f == 1 ? "overflowing" : "underflowing");
+            return hint;
+        }
+    }
+
+    hint[0] = '\0';
+    return hint;
+}
+
 static void pd_defaultanything(t_pd *x, t_symbol *s, int argc, t_atom *argv)
 {
-    pd_error(x, "%s: no method for '%s'", (*x)->c_name->s_name, s->s_name);
+    pd_error(x, "%s: no method for '%s'%s",
+        (*x)->c_name->s_name, s->s_name, type_hint(s, argc, argv,
+            *(*x)->c_floatmethod != pd_defaultfloat ? 1 : 0));
 }
 
 static void pd_defaultbang(t_pd *x)
