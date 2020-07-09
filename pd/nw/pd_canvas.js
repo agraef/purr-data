@@ -74,6 +74,16 @@ var canvas_events = (function() {
                 return 0;
             }
         },
+        target_is_popup = function(evt) {
+            // ag: Check whether the event goes to the confirmation popup, in
+            // order to prevent special processing in touch events.
+            if (evt.target.constructor.name == "HTMLButtonElement" ||
+                evt.target.constructor.name == "HTMLSpanElement") {
+                return 1;
+            } else {
+                return 0;
+            }
+        },
         text_to_normalized_svg_path = function(text) {
             text = text.slice(4).trim()  // draw
                        .slice(4).trim()  // path
@@ -223,6 +233,12 @@ var canvas_events = (function() {
             mousemove: function(evt) {
                 //pdgui.post("x: " + evt.pageX + " y: " + evt.pageY +
                 //    " modifier: " + (evt.shiftKey + (pdgui.cmd_or_ctrl_key(evt) << 1)));
+                if (evt.type === "touchmove" && target_is_popup(evt)) {
+                    // ag: Presumably the confirmation popup, we don't want to
+                    // do any special processing there at all, so bail out
+                    // immediately and let the default handlers take over.
+                    return;
+                }
                 let [pointer_x, pointer_y] = evt.type === "touchmove"
                     ? [evt.touches[0].pageX, evt.touches[0].pageY]
                     : [evt.pageX, evt.pageY];
@@ -244,6 +260,9 @@ var canvas_events = (function() {
                     evt.stopPropagation();
                     evt.preventDefault();                
                 }*/
+                if (evt.type === "touchstart" && target_is_popup(evt)) {
+                    return;
+                }
                 let [pointer_x, pointer_y] = evt.type === "touchstart"
                     ? [evt.touches[0].pageX, evt.touches[0].pageY]
                     : [evt.pageX, evt.pageY];
@@ -327,6 +346,9 @@ var canvas_events = (function() {
                 //pdgui.post("mouseup: x: " +
                 //    evt.pageX + " y: " + evt.pageY +
                 //    " button: " + (evt.button + 1));
+                if (evt.type === "touchend" && target_is_popup(evt)) {
+                    return;
+                }
                 let [pointer_x, pointer_y] = evt.type === "touchend"
                     ? [evt.changedTouches[0].pageX, evt.changedTouches[0].pageY]
                     : [evt.pageX, evt.pageY];
