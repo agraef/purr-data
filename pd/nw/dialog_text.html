@@ -64,6 +64,7 @@ function apply() {
         line = line.replace("$", " \\$ ");
         pdgui.pdsend(pd_object_callback, "addline", line);
     });
+    pdgui.pdsend(pd_object_callback, "notify");
     dirty = 0;
 }
 
@@ -100,10 +101,12 @@ function set_dirty(state) {
 // This gets called from the nw_create_window function in index.html
 // It provides us with our window id from the C side.  Once we have it
 // we can create the menu and register event callbacks
-function register_window_id(gfxstub, text_string) {
+function register_window_id(gfxstub, attr) {
     var head, tail, templates, data, data_separator;
     pd_object_callback = gfxstub;
     add_events(gfxstub);
+
+pdgui.post("title is " + attr.title);
 
     translate_form();
     // We request the text data only after we're certain our window
@@ -114,12 +117,24 @@ function register_window_id(gfxstub, text_string) {
     // creates the window.
     pdgui.pdsend(gfxstub, "map");
 
+    // Quick and dirty-- just set the host fontsize in "pt" here. We probably
+    // do all kinds of kludges to get fonts sized correctly to fit into boxes
+    // on the canvas. I don't think it matters whether it's exactly the same
+    // here, so let's just use point sizes.
+    document.getElementsByClassName("container")[0]
+        .style.setProperty("font-size", attr.fontsize + "pt");
     // We don't turn on rendering of the "container" div until
     // We've finished displaying all the spans and populating the
     // labels and form elements.  That makes it more efficient and
     // snappier, at least on older machines.
     document.getElementsByClassName("container")[0]
         .style.setProperty("display", "inline");
+
+    // Hack-- add the title. Currently this is set first by nw.js when the
+    // nwjs window, so you'll see a flicker to the title set here if it's
+    // not "text". We need to change this so that the title can be different
+    // from the dialog type in nw_create_window.
+    document.title = attr.title;
 }
 
 // Stop-gap translator

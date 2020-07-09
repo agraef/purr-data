@@ -1,59 +1,77 @@
 #N struct text-help-struct float x float y text z;
-#N canvas 781 162 622 555 12;
-#X obj 131 499 list;
+#N canvas 976 92 622 580 12;
+#X obj 131 529 list;
 #X obj 18 6 text;
-#X text 25 498 see also:;
+#X text 25 528 see also:;
 #N canvas 0 50 600 400 (subpatch) 0;
 #N canvas 0 50 450 250 (subpatch) 0;
-#X array table4 100 float 0;
+#X array table4 100 float 0 black black;
 #X coords 0 1 99 -1 500 300 1;
 #X restore 50 50 graph;
-#X restore 171 499 array;
+#X restore 171 529 array;
 #X obj 280 217 text define;
 #X text 81 173 The text object's first argument sets its function:
 , f 30;
-#N canvas 636 69 631 661 define 0;
+#N canvas 1163 93 631 733 define 0;
 #X msg 39 141 clear;
-#X msg 37 167 read text-object-help.txt;
-#X msg 40 196 write text-object-help.txt;
+#X msg 46 167 read text-object-help.txt;
+#X msg 51 196 write text-object-help.txt;
 #X text 32 20 "text define" maintains a text object and can name it
 so that other objects can find it (and later should have some alternative
 \, anonymous way to be found).;
-#X text 61 376 click to open and edit text:;
-#X text 296 364 creation arguments:;
-#X text 324 382 optional -k flag to keep contents;
-#X text 326 399 optional name;
+#X text 91 416 click to open and edit text:;
+#X text 296 404 creation arguments:;
+#X text 306 439 optional name;
 #X text 77 263 (optionally you can read or write to/from a file interpreting
 carriage returns as separators \; this should allow reading some text
 file formats - like this:);
-#X text 274 165 read from a file;
-#X text 276 196 write to a file;
-#X text 277 139 clear;
-#X obj 48 228 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+#X text 253 165 read from a file;
+#X text 257 196 write to a file;
+#X obj 58 228 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
-#X obj 38 491 t b p;
-#X obj 38 540 text get -s text t;
-#X msg 39 515 0;
-#X obj 38 590 print;
-#X obj 38 565 list trim;
-#X text 204 499 machinery for printing out first line of text when
-output as a pointer (by "bang" method above)., f 30;
-#X text 69 222 bang to output a pointer to a scalar (struct) containing
+#X obj 38 531 t b p;
+#X obj 38 580 text get -s text t;
+#X msg 39 555 0;
+#X obj 38 630 print;
+#X obj 38 605 list trim;
+#X text 79 222 bang to output a pointer to a scalar (struct) containing
 the text, f 35;
-#X obj 38 400 text define -k text-help-1;
+#X obj 38 440 text define -k text-help-1;
 #A set this is a message \; this is another 1 ... \;;
 #X msg 149 326 write -c /tmp/test-cr.txt;
-#X connect 0 0 20 0;
-#X connect 1 0 20 0;
-#X connect 2 0 20 0;
-#X connect 12 0 20 0;
-#X connect 13 0 15 0;
-#X connect 13 1 14 3;
-#X connect 14 0 17 0;
+#X msg 68 354 send text-help-send;
+#X text 213 354 send pointer to a named receive object;
+#X obj 438 110 r text-help-send;
+#X obj 438 139 print;
+#X obj 217 470 print notify-outlet;
+#X text 215 498 Second outlet notifies you when text changes. As of
+Pd 0.48 this only outputs the message "updated" when text changes \,
+but this might be extended to offer more information in the future.
+, f 42;
+#X text 119 616 First outlet is pointer to a "text" scalar containing
+the text \, which is output when the object is sent a "bang". For example
+\, here's machinery for printing out first line of text., f 46;
+#X text 107 139 clear the object's state;
+#X msg 105 384 click;
+#X msg 153 384 close;
+#X text 201 384 open and close text window;
+#X text 304 422 optional -k flag to save contents with patch;
+#X connect 0 0 17 0;
+#X connect 1 0 17 0;
+#X connect 2 0 17 0;
+#X connect 10 0 17 0;
+#X connect 11 0 13 0;
+#X connect 11 1 12 3;
+#X connect 12 0 15 0;
+#X connect 13 0 12 0;
 #X connect 15 0 14 0;
-#X connect 17 0 16 0;
-#X connect 20 0 13 0;
-#X connect 21 0 20 0;
+#X connect 17 0 11 0;
+#X connect 17 1 23 0;
+#X connect 18 0 17 0;
+#X connect 19 0 17 0;
+#X connect 21 0 22 0;
+#X connect 27 0 17 0;
+#X connect 28 0 17 0;
 #X restore 392 217 pd define;
 #X obj 280 240 text get;
 #N canvas 885 156 859 566 get 0;
@@ -159,7 +177,7 @@ inlet -- none to specify whole line), f 63;
 #X text 58 35 a simple example showing how to access text in data structures
 via pointers.;
 #N canvas 851 144 450 300 text-help-data 0;
-#X scalar text-help-struct 20 20 \; 1 2 3 \\\; a b c d \\\; \;;
+#X scalar text-help-struct 20 20 \; 1 2 3 \;;
 #X text 13 86 We have one datum (above) whose "z" field is text.;
 #X restore 209 108 pd text-help-data;
 #X msg 205 258 traverse pd-text-help-data \, next, f 18;
@@ -194,11 +212,11 @@ via pointers.;
 #X connect 21 0 18 0;
 #X connect 22 0 17 0;
 #X connect 23 0 17 0;
-#X restore 83 459 pd text-and-data-structures;
-#X text 73 435 here's how to access texts inside data structures:;
+#X restore 83 489 pd text-and-data-structures;
+#X text 73 465 here's how to access texts inside data structures:;
 #X text 63 6 - manage a list of messages;
-#X obj 219 499 scalar;
-#X obj 280 312 text size;
+#X obj 219 529 scalar;
+#X obj 280 342 text size;
 #N canvas 847 155 741 313 size 0;
 #X obj 71 55 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
@@ -220,7 +238,7 @@ of range);
 #X connect 2 0 3 0;
 #X connect 4 0 2 0;
 #X connect 9 0 2 1;
-#X restore 392 311 pd size;
+#X restore 392 341 pd size;
 #X obj 280 264 text set;
 #N canvas 483 595 834 537 set 0;
 #X floatatom 107 197 5 0 0 0 - - -, f 5;
@@ -270,14 +288,14 @@ to whole line), f 47;
 #X text 60 216 create \, store \, and/or edit;
 #X text 91 239 read and output a line;
 #X text 100 263 replace or add a line;
-#X text 115 313 get number of lines;
+#X text 115 343 get number of lines;
 #X text 62 50 In Pd a "text" refers to a list of atoms that can include
 commas \, semicolons \, and dollar-sign constructs - anything that
 can go in a message box or a patch (as a saved file). You can use them
 to store a semicolon-separated list of lists \, or as messages to "execute"
 as in a sequencer or message box.;
-#X text 145 337 convert to list;
-#X obj 280 335 text tolist;
+#X text 145 367 convert to list;
+#X obj 280 365 text tolist;
 #N canvas 842 231 590 379 tolist 0;
 #X obj 86 99 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
@@ -289,7 +307,7 @@ backslashes).;
 #X obj 86 180 text tolist text-help-1;
 #X obj 173 218 list prepend set;
 #X obj 173 241 list trim;
-#X msg 173 291 this is a message \\\; this is another 1 ... \\\;;
+#X msg 173 291 this is a message \; this is another 1 ... \;;
 #X msg 187 265 set;
 #X obj 87 218 print;
 #X text 72 326 N.B.: text-help-1 is defined in 'pd define' subwindow.
@@ -305,16 +323,15 @@ backslashes).;
 #X connect 5 0 6 0;
 #X connect 7 0 6 0;
 #X connect 11 0 3 1;
-#X restore 392 335 pd tolist;
-#X obj 280 359 text fromlist;
+#X restore 392 365 pd tolist;
+#X obj 280 389 text fromlist;
 #N canvas 842 231 604 318 fromlist 0;
 #X obj 81 202 text fromlist text-help-fromlist;
 #X obj 114 263 text define text-help-fromlist;
 #X text 46 21 "text fromlist" converts a list such as "text tolist"
 would output and fills the text with it. Whatever the text had previously
 contained is discarded.;
-#X msg 81 115 list this is a message \\\; this is another 1 ... \\\;
-;
+#X msg 81 115 list this is a message \; this is another 1 ... \;;
 #X text 135 241 click here to see contents;
 #X msg 92 145 list 1 2 3;
 #X text 437 157 find another text by name or pointer, f 18;
@@ -323,10 +340,10 @@ contained is discarded.;
 #X connect 3 0 0 0;
 #X connect 5 0 0 0;
 #X connect 7 0 0 1;
-#X restore 392 359 pd fromlist;
-#X text 131 361 convert from list;
-#X text 218 384 search;
-#X obj 280 383 text search;
+#X restore 392 389 pd fromlist;
+#X text 131 391 convert from list;
+#X text 218 414 search;
+#X obj 280 413 text search;
 #N canvas 626 77 1011 913 search 0;
 #X floatatom 60 313 5 0 0 0 - - -, f 5;
 #X text 385 232 find another text by name or pointer, f 18;
@@ -426,9 +443,9 @@ far from it) so line 0 whose second field is closer to 1 wins., f
 #X connect 42 0 40 0;
 #X connect 43 0 40 0;
 #X connect 44 0 40 0;
-#X restore 393 383 pd search;
-#X text 76 408 sequencer/message-sender;
-#X obj 280 406 text sequence;
+#X restore 393 413 pd search;
+#X text 76 438 sequencer/message-sender;
+#X obj 280 436 text sequence;
 #N canvas 199 57 1155 839 sequence 0;
 #X msg 138 468 symbol text-help-search;
 #X text 101 443 specify another text by name or pointer;
@@ -578,10 +595,10 @@ simply sequence a list of numbers:;
 #X connect 61 2 62 0;
 #X connect 65 0 30 0;
 #X connect 69 0 7 0;
-#X restore 393 406 pd sequence;
-#X text 365 497 updated for Pd version 0.47;
-#X text 100 287 delete a line or clear;
-#X obj 280 288 text delete;
+#X restore 393 436 pd sequence;
+#X text 365 527 updated for Pd version 0.47;
+#X text 100 317 delete a line or clear;
+#X obj 280 318 text delete;
 #N canvas 1058 154 749 465 delete 0;
 #X text 409 144 find another text by name or pointer;
 #X text 319 257 <-- click here to see text;
@@ -595,8 +612,8 @@ simply sequence a list of numbers:;
 #X msg 58 89 -1;
 #X text 98 92 clear whole text;
 #X obj 57 401 text fromlist text-help-delete;
-#X msg 57 376 list line 0 \\\; line 1 \\\; line 2 \\\; line 3 \\\;
-line 4 \\\;;
+#X msg 57 376 list line 0 \; line 1 \; line 2 \; line 3 \; line 4 \;
+;
 #X text 78 353 click below to get original text back:;
 #X text 46 9 "text delete" deletes the nth line.;
 #X text 88 62 delete line nyumber 2 (counting from 0);
@@ -604,4 +621,38 @@ line 4 \\\;;
 #X connect 6 0 2 0;
 #X connect 7 0 2 0;
 #X connect 10 0 9 0;
-#X restore 392 287 pd delete;
+#X restore 392 317 pd delete;
+#X text 166 290 insert a line;
+#X obj 280 291 text insert;
+#N canvas 1076 169 744 566 insert 0;
+#X text 448 177 find another text by name or pointer;
+#X msg 275 177 symbol text-help-delete;
+#X msg 171 109 2;
+#X msg 163 353 list line 0 \; line 1 \; line 2 \; line 3 \; line 4
+\;;
+#X text 184 330 click below to get original text back:;
+#X obj 163 464 text fromlist text-help-insert;
+#X obj 98 283 text define -k text-help-insert;
+#A set line 0 \; line 1 \; line 2 \; 12 23 34 45 56 56 \; line 3 \;
+line 4 \;;
+#X msg 183 137 1e+09;
+#X text 232 139 insert after end;
+#X msg 69 84 list x y z w;
+#X msg 85 111 1 2 3;
+#X msg 50 57 12 23 34 45 56 56;
+#X text 183 57 list to insert into the text;
+#X text 292 210 arguments: name of the text object or "-s struct-name"
+;
+#X text 293 231 one optional arg to set inlet 1 (line number);
+#X obj 68 210 text insert text-help-insert 3;
+#X text 71 14 "text insert" inserts a line.;
+#X text 210 109 insert before line number 2 (counting from 0);
+#X text 333 285 <= click here to see text;
+#X connect 1 0 15 2;
+#X connect 2 0 15 1;
+#X connect 3 0 5 0;
+#X connect 7 0 15 1;
+#X connect 9 0 15 0;
+#X connect 10 0 15 0;
+#X connect 11 0 15 0;
+#X restore 392 291 pd insert;

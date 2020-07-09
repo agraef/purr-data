@@ -9,6 +9,7 @@
 #include "s_stuff.h"
 #include "g_canvas.h"
 #include <stdio.h>
+#include <errno.h>
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
@@ -1673,12 +1674,12 @@ void binbuf_evalfile(t_symbol *name, t_symbol *dir)
     t_binbuf *b = binbuf_new();
     int import = !strcmp(name->s_name + strlen(name->s_name) - 4, ".pat") ||
         !strcmp(name->s_name + strlen(name->s_name) - 4, ".mxt");
-        /* set filename so that new canvases can pick them up */
     int dspstate = canvas_suspend_dsp();
+        /* set filename so that new canvases can pick them up */
     glob_setfilename(0, name, dir);
     if (binbuf_read(b, name->s_name, dir->s_name, 0))
     {
-        error("%s: read failed", name->s_name);
+        error("%s: read failed: %s", name->s_name, strerror(errno));
     }
     else
     {
