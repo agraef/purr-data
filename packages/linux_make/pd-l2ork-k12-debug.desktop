@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name=Pd-L2Ork K12 DEBUG
 Comment=L2Ork Iteration of Pure-Data Interactive DSP Environment Tailored Specially Towards K12 Students, Debug Version
+Comment[de]=L2Ork-Iteration der interaktiven DSP-Umgebung Pure-Data speziell für Schüler, Debug-Version
+Comment[fr]=Itération L2Ork de l'environnement DSP interactif Pure-Data taillé spécialement pour les étudiants K12, version de débogage
 Exec=bash -c "( echo r ; cat ) | gdb --args pd-l2ork -k12 -noautopatch -d 3 %U"
 Terminal=true
 Type=Application
