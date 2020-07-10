@@ -57,6 +57,14 @@ static void dac_dsp(t_dac *x, t_signal **sp)
     }    
 }
 
+static void dac_set(t_dac *x, t_symbol *s, int argc, t_atom *argv)
+{
+    int i;
+    for (i = 0; i < argc && i < x->x_n; i++)
+        x->x_vec[i] = atom_getfloatarg(i, argc, argv);
+    canvas_update_dsp();
+}
+
 static void dac_free(t_dac *x)
 {
     freebytes(x->x_vec, x->x_n * sizeof(*x->x_vec));
@@ -68,6 +76,7 @@ static void dac_setup(void)
         (t_method)dac_free, sizeof(t_dac), 0, A_GIMME, 0);
     CLASS_MAINSIGNALIN(dac_class, t_dac, x_f);
     class_addmethod(dac_class, (t_method)dac_dsp, gensym("dsp"), A_CANT, 0);
+    class_addmethod(dac_class, (t_method)dac_set, gensym("set"), A_GIMME, 0);
     class_sethelpsymbol(dac_class, gensym("adc~_dac~"));
 }
 
@@ -164,6 +173,14 @@ static void adc_dsp(t_adc *x, t_signal **sp)
     }    
 }
 
+static void adc_set(t_adc *x, t_symbol *s, int argc, t_atom *argv)
+{
+        int i;
+        for (i = 0; i < argc && i < x->x_n; i++)
+            x->x_vec[i] = atom_getfloatarg(i, argc, argv);
+        canvas_update_dsp();
+}
+
 static void adc_free(t_adc *x)
 {
     freebytes(x->x_vec, x->x_n * sizeof(*x->x_vec));
@@ -174,6 +191,7 @@ static void adc_setup(void)
     adc_class = class_new(gensym("adc~"), (t_newmethod)adc_new,
         (t_method)adc_free, sizeof(t_adc), 0, A_GIMME, 0);
     class_addmethod(adc_class, (t_method)adc_dsp, gensym("dsp"), A_CANT, 0);
+    class_addmethod(adc_class, (t_method)adc_set, gensym("set"), A_GIMME, 0);
     class_sethelpsymbol(adc_class, gensym("adc~_dac~"));
 }
 
