@@ -5452,10 +5452,14 @@ function gui_text_dialog_set_dirty(did, state) {
     }
 }
 
-function gui_text_dialog(did, width, height, font_size) {
+function gui_text_dialog(did, name, width, height, font_size) {
     dialogwin[did] = create_window(did, "text", width, height,
         popup_coords[2], popup_coords[3],
-        font_size);
+        {
+            fontsize: font_size,
+            title: name
+        }
+    );
 }
 
 function dialog_raise(did) {
