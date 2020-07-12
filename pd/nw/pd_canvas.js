@@ -75,10 +75,25 @@ var canvas_events = (function() {
             }
         },
         target_is_popup = function(evt) {
-            // ag: Check whether the event goes to the confirmation popup, in
-            // order to prevent special processing in touch events.
+            // ag: Check whether the event actually goes to the confirmation
+            // popup, in order to prevent special processing in touch events.
+            // Like target_is_scrollbar above, this just looks for certain
+            // constructor names, which may be fragile.
             if (evt.target.constructor.name == "HTMLButtonElement" ||
-                evt.target.constructor.name == "HTMLSpanElement") {
+                evt.target.constructor.name == "HTMLSpanElement" ||
+                evt.target.constructor.name == "HTMLDialogElement") {
+                return 1;
+            } else {
+                return 0;
+            }
+        },
+        target_is_canvas = function(evt) {
+            // ag: Here we're looking for canvas touches, so that we can keep
+            // scrolling enabled in this case. This check is a bit more
+            // specific as we're also testing the parent class, so this is
+            // hopefully a bit more robust in case of DOM changes.
+            if (evt.target.constructor.name == "SVGSVGElement" &&
+                evt.target.parentNode.classList.contains("patch_body")) {
                 return 1;
             } else {
                 return 0;
@@ -233,14 +248,31 @@ var canvas_events = (function() {
             mousemove: function(evt) {
                 //pdgui.post("x: " + evt.pageX + " y: " + evt.pageY +
                 //    " modifier: " + (evt.shiftKey + (pdgui.cmd_or_ctrl_key(evt) << 1)));
-                if (evt.type === "touchmove" && target_is_popup(evt)) {
-                    // ag: Presumably the confirmation popup, we don't want to
-                    // do any special processing there at all, so bail out
-                    // immediately and let the default handlers take over.
-                    return;
+                if (evt.type === "touchmove") {
+                    if (target_is_popup(evt)) {
+                        // ag: Presumably this is the confirmation popup, we
+                        // don't want to do any special processing there at
+                        // all, so bail out immediately and let the default
+                        // handlers take over.
+                        return;
+                    } else if (canvas_menu.edit.editmode.checked &&
+                               !pdgui.cmd_or_ctrl_key(evt)) {
+                        // ag: Disable touch scrolling while we're doing a
+                        // selection-drag, for the same reasons we're
+                        // suppressing it while touching an object (see
+                        // mousedown, below). Note that to scroll in edit mode
+                        // you can just press the Ctrl/Cmd key while dragging,
+                        // which will also suppress the selection rectangle to
+                        // appear.
+                        document.body.style.overflow = 'hidden';
+                    }
                 }
+                // ag: It seems possible to get fractional values here, which
+                // pdsend doesn't seem to like, so we truncate the touch
+                // coordinates to integers.
                 let [pointer_x, pointer_y] = evt.type === "touchmove"
-                    ? [evt.touches[0].pageX, evt.touches[0].pageY]
+                    ? [Math.trunc(evt.touches[0].pageX),
+                       Math.trunc(evt.touches[0].pageY)]
                     : [evt.pageX, evt.pageY];
                 pdgui.pdsend(name, "motion",
                     (pointer_x + svg_view.x),
@@ -260,11 +292,23 @@ var canvas_events = (function() {
                     evt.stopPropagation();
                     evt.preventDefault();                
                 }*/
-                if (evt.type === "touchstart" && target_is_popup(evt)) {
-                    return;
+                if (evt.type === "touchstart") {
+                    if (target_is_popup(evt)) {
+                        return;
+                    } else if (!target_is_canvas(evt)) {
+                        // ag: Disable touch scrolling while we're operating a
+                        // GUI element, since trying to operate a slider while
+                        // the canvas keeps moving beneath you is difficult.
+                        // Actually, we're not overly specific here, we just
+                        // test whether we're touching anything but the canvas
+                        // itself. So, to initiate a scroll using touch,
+                        // you'll have to touch a blank spot on the canvas.
+                        document.body.style.overflow = 'hidden';
+                    }
                 }
                 let [pointer_x, pointer_y] = evt.type === "touchstart"
-                    ? [evt.touches[0].pageX, evt.touches[0].pageY]
+                    ? [Math.trunc(evt.touches[0].pageX),
+                       Math.trunc(evt.touches[0].pageY)]
                     : [evt.pageX, evt.pageY];
                 var target_id, resize_type;
                 if (target_is_scrollbar(evt)) {
@@ -346,11 +390,16 @@ var canvas_events = (function() {
                 //pdgui.post("mouseup: x: " +
                 //    evt.pageX + " y: " + evt.pageY +
                 //    " button: " + (evt.button + 1));
-                if (evt.type === "touchend" && target_is_popup(evt)) {
-                    return;
+                if (evt.type === "touchend") {
+                    if (target_is_popup(evt)) {
+                        return;
+                    }
+                    // re-enable scrolling
+                    document.body.style.overflow = '';
                 }
                 let [pointer_x, pointer_y] = evt.type === "touchend"
-                    ? [evt.changedTouches[0].pageX, evt.changedTouches[0].pageY]
+                    ? [Math.trunc(evt.changedTouches[0].pageX),
+                       Math.trunc(evt.changedTouches[0].pageY)]
                     : [evt.pageX, evt.pageY];
                 pdgui.pdsend(name, "mouseup",
                     (pointer_x + svg_view.x),
@@ -466,7 +515,8 @@ var canvas_events = (function() {
             },
             scalar_draggable_mousemove: function(evt) {
                 let [new_x, new_y] = evt.type === "touchmove"
-                    ? [evt.touches[0].pageX, evt.touches[0].pageY]
+                    ? [Math.trunc(evt.touches[0].pageX),
+                       Math.trunc(evt.touches[0].pageY)]
                     : [evt.pageX, evt.pageY],
                     dx = new_x - last_draggable_x,
                     dy = new_y - last_draggable_y,
@@ -520,8 +570,12 @@ var canvas_events = (function() {
                 //      handle (which will eventually get erased by Pd anyway).
                 //      Anyhow, this is all very bad, but it works so it's
                 //      at least not the worst of all possible worlds.
-                var dx = (evt.pageX + svg_view.x) - last_draggable_x,
-                    dy = (evt.pageY + svg_view.y) - last_draggable_y,
+                let [new_x, new_y] = evt.type === "touchmove"
+                    ? [Math.trunc(evt.touches[0].pageX),
+                       Math.trunc(evt.touches[0].pageY)]
+                    : [evt.pageX, evt.pageY];
+                var dx = (new_x + svg_view.x) - last_draggable_x,
+                    dy = (new_y + svg_view.y) - last_draggable_y,
                     handle_elem = document.querySelector(
                         draggable_label ?
                             ".move_handle" :
@@ -533,12 +587,12 @@ var canvas_events = (function() {
                         getElementsByClassName("gop_drag_handle").length ?
                         true : false;
 
-                last_draggable_x = evt.pageX + svg_view.x;
-                last_draggable_y = evt.pageY + svg_view.y;
+                last_draggable_x = new_x + svg_view.x;
+                last_draggable_y = new_y + svg_view.y;
 
                 pdgui.pdsend(target_id, "_motion",
-                    (evt.pageX + svg_view.x),
-                    (evt.pageY + svg_view.y));
+                    (new_x + svg_view.x),
+                    (new_y + svg_view.y));
             },
             iemgui_label_mouseup: function(evt) {
                 //pdgui.post("lifting the mousebutton on an iemgui label");
@@ -686,9 +740,10 @@ var canvas_events = (function() {
             },
             dropdown_menu_mousedown: function(evt) {
                 let [pointer_x, pointer_y] = evt.type === "touchstart"
-                ? [evt.touches[0].pageX, evt.touches[0].pageY]
+                ? [Math.trunc(evt.touches[0].pageX),
+                   Math.trunc(evt.touches[0].pageY)]
                 : [evt.pageX, evt.pageY];
-                
+
                 var select_elem = document.querySelector("#dropdown_list"),
                     in_dropdown = evt.target;
                 while (in_dropdown) {
@@ -747,7 +802,8 @@ var canvas_events = (function() {
             },
             dropdown_menu_mousemove: function(evt) {
                 let [pointer_x, pointer_y] = evt.type === "touchmove"
-                ? [evt.touches[0].pageX, evt.touches[0].pageY]
+                ? [Math.trunc(evt.touches[0].pageX),
+                   Math.trunc(evt.touches[0].pageY)]
                 : [evt.pageX, evt.pageY];
                 // For whatever reason, Chromium decides to trigger the
                 // mousemove/mouseenter/mouseover events if the element
@@ -799,6 +855,19 @@ var canvas_events = (function() {
                     evt_name = prop.split("_");
                     evt_name = evt_name[evt_name.length - 1];
                     document.removeEventListener(evt_name, events[prop], false);
+                    // ag: Also get rid of the touch event handlers, which are
+                    // bound to the same handlers as the corresponding mouse
+                    // events.
+                    if (evt_name == "mousemove") {
+                        document.removeEventListener("touchmove",
+                                                     events[prop], false);
+                    } else if (evt_name == "mousedown") {
+                        document.removeEventListener("touchstart",
+                                                     events[prop], false);
+                    } else if (evt_name == "mouseup") {
+                        document.removeEventListener("touchend",
+                                                     events[prop], false);
+                    }
                 }
             }
         },
@@ -824,7 +893,9 @@ var canvas_events = (function() {
             // selection still happens from the Pd engine.
             //this.none();
             document.addEventListener("mousemove", events.scalar_draggable_mousemove, false);
+            document.addEventListener("touchmove", events.scalar_draggable_mousemove, false);
             document.addEventListener("mouseup", events.scalar_draggable_mouseup, false);
+            document.addEventListener("touchend", events.scalar_draggable_mouseup, false);
         },
         iemgui_label_drag: function() {
             // This is a workaround for dragging iemgui labels. Resizing iemguis
@@ -836,7 +907,11 @@ var canvas_events = (function() {
             canvas_events.none();
             document.addEventListener("mousemove",
                 events.iemgui_label_mousemove, false);
+            document.addEventListener("touchmove",
+                events.iemgui_label_mousemove, false);
             document.addEventListener("mouseup",
+                events.iemgui_label_mouseup, false);
+            document.addEventListener("touchend",
                 events.iemgui_label_mouseup, false);
         },
         hscroll_drag: function() {
