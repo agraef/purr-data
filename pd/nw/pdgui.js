@@ -6186,7 +6186,7 @@ var optimalzoom_var = {};
 // 100 msec are enough for do_optimalzoom to finish.
 function gui_canvas_optimal_zoom(cid, h, v) {
     clearTimeout(optimalzoom_var[cid]);
-    optimalzoom_var[cid] = setTimeout(do_optimalzoom, 150, cid, h, v);
+    optimalzoom_var[cid] = setTimeout(do_optimalzoom, 10, cid, h, v);
 }
 
 exports.gui_canvas_optimal_zoom = gui_canvas_optimal_zoom;
