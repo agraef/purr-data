@@ -74,6 +74,31 @@ var canvas_events = (function() {
                 return 0;
             }
         },
+        target_is_popup = function(evt) {
+            // ag: Check whether the event actually goes to the confirmation
+            // popup, in order to prevent special processing in touch events.
+            // Like target_is_scrollbar above, this just looks for certain
+            // constructor names, which may be fragile.
+            if (evt.target.constructor.name == "HTMLButtonElement" ||
+                evt.target.constructor.name == "HTMLSpanElement" ||
+                evt.target.constructor.name == "HTMLDialogElement") {
+                return 1;
+            } else {
+                return 0;
+            }
+        },
+        target_is_canvas = function(evt) {
+            // ag: Here we're looking for canvas touches, so that we can keep
+            // scrolling enabled in this case. This check is a bit more
+            // specific as we're also testing the parent class, so this is
+            // hopefully a bit more robust in case of DOM changes.
+            if (evt.target.constructor.name == "SVGSVGElement" &&
+                evt.target.parentNode.classList.contains("patch_body")) {
+                return 1;
+            } else {
+                return 0;
+            }
+        },
         text_to_normalized_svg_path = function(text) {
             text = text.slice(4).trim()  // draw
                        .slice(4).trim()  // path
@@ -223,13 +248,40 @@ var canvas_events = (function() {
             mousemove: function(evt) {
                 //pdgui.post("x: " + evt.pageX + " y: " + evt.pageY +
                 //    " modifier: " + (evt.shiftKey + (pdgui.cmd_or_ctrl_key(evt) << 1)));
+                if (evt.type === "touchmove") {
+                    if (target_is_popup(evt)) {
+                        // ag: Presumably this is the confirmation popup, we
+                        // don't want to do any special processing there at
+                        // all, so bail out immediately and let the default
+                        // handlers take over.
+                        return;
+                    } else if (canvas_menu.edit.editmode.checked &&
+                               !pdgui.cmd_or_ctrl_key(evt)) {
+                        // ag: Disable touch scrolling while we're doing a
+                        // selection-drag, for the same reasons we're
+                        // suppressing it while touching an object (see
+                        // mousedown, below). Note that to scroll in edit mode
+                        // you can just press the Ctrl/Cmd key while dragging,
+                        // which will also suppress the selection rectangle to
+                        // appear.
+                        document.body.style.overflow = 'hidden';
+                    }
+                }
+                // ag: It seems possible to get fractional values here, which
+                // pdsend doesn't seem to like, so we truncate the touch
+                // coordinates to integers.
+                let [pointer_x, pointer_y] = evt.type === "touchmove"
+                    ? [Math.trunc(evt.touches[0].pageX),
+                       Math.trunc(evt.touches[0].pageY)]
+                    : [evt.pageX, evt.pageY];
                 pdgui.pdsend(name, "motion",
-                    (evt.pageX + svg_view.x),
-                    (evt.pageY + svg_view.y),
+                    (pointer_x + svg_view.x),
+                    (pointer_y + svg_view.y),
                     (evt.shiftKey + (pdgui.cmd_or_ctrl_key(evt) << 1))
                 );
-                evt.stopPropagation();
-                evt.preventDefault();
+                // Commented lines below due to interference with touch scroll behavior
+                // evt.stopPropagation();
+                // evt.preventDefault();
                 return false;
             },
             mousedown: function(evt) {
@@ -240,6 +292,24 @@ var canvas_events = (function() {
                     evt.stopPropagation();
                     evt.preventDefault();                
                 }*/
+                if (evt.type === "touchstart") {
+                    if (target_is_popup(evt)) {
+                        return;
+                    } else if (!target_is_canvas(evt)) {
+                        // ag: Disable touch scrolling while we're operating a
+                        // GUI element, since trying to operate a slider while
+                        // the canvas keeps moving beneath you is difficult.
+                        // Actually, we're not overly specific here, we just
+                        // test whether we're touching anything but the canvas
+                        // itself. So, to initiate a scroll using touch,
+                        // you'll have to touch a blank spot on the canvas.
+                        document.body.style.overflow = 'hidden';
+                    }
+                }
+                let [pointer_x, pointer_y] = evt.type === "touchstart"
+                    ? [Math.trunc(evt.touches[0].pageX),
+                       Math.trunc(evt.touches[0].pageY)]
+                    : [evt.pageX, evt.pageY];
                 var target_id, resize_type;
                 if (target_is_scrollbar(evt)) {
                     return;
@@ -252,8 +322,8 @@ var canvas_events = (function() {
                     // get id ("x123456etcgobj" without the "x" or "gobj")
                     target_id = (draggable_label ? "_l" : "_s") +
                         evt.target.parentNode.parentNode.id.slice(0,-4).slice(1);
-                    last_draggable_x = evt.pageX + svg_view.x;
-                    last_draggable_y = evt.pageY + svg_view.y;
+                    last_draggable_x = pointer_x + svg_view.x;
+                    last_draggable_y = pointer_y + svg_view.y;
 
                     // Nasty-- we have to forward magic values from g_canvas.h
                     // defines in order to get the correct constrain behavior.
@@ -278,14 +348,14 @@ var canvas_events = (function() {
                         !!draggable_label, false);
 
                     pdgui.pdsend(target_id, "_click", resize_type,
-                        (evt.pageX + svg_view.x),
-                        (evt.pageY + svg_view.y));
+                        (pointer_x + svg_view.x),
+                        (pointer_y + svg_view.y));
                     canvas_events.iemgui_label_drag();
                     return;
                 }
                 // tk events (and, therefore, Pd events) are one greater
                 // than html5...
-                var b = evt.button + 1;
+                var b = evt.button + 1 || 1;
                 var mod, match_elem;
                 // See if there are any draggable scalar shapes...
                 if (Object.keys(scalar_draggables).length) {
@@ -294,8 +364,8 @@ var canvas_events = (function() {
                     if (match_elem) {
                         // then set some state and turn on the drag events
                         draggable_elem = match_elem;
-                        last_draggable_x = evt.pageX;
-                        last_draggable_y = evt.pageY;
+                        last_draggable_x = pointer_x;
+                        last_draggable_y = pointer_y;
                         canvas_events.scalar_drag();
                     }
                 }
@@ -309,8 +379,8 @@ var canvas_events = (function() {
                     mod = (evt.shiftKey + (pdgui.cmd_or_ctrl_key(evt) << 1));
                 }
                 pdgui.pdsend(name, "mouse",
-                    (evt.pageX + svg_view.x),
-                    (evt.pageY + svg_view.y),
+                    (pointer_x + svg_view.x),
+                    (pointer_y + svg_view.y),
                     b, mod
                 );
                 //evt.stopPropagation();
@@ -320,10 +390,21 @@ var canvas_events = (function() {
                 //pdgui.post("mouseup: x: " +
                 //    evt.pageX + " y: " + evt.pageY +
                 //    " button: " + (evt.button + 1));
+                if (evt.type === "touchend") {
+                    if (target_is_popup(evt)) {
+                        return;
+                    }
+                    // re-enable scrolling
+                    document.body.style.overflow = '';
+                }
+                let [pointer_x, pointer_y] = evt.type === "touchend"
+                    ? [Math.trunc(evt.changedTouches[0].pageX),
+                       Math.trunc(evt.changedTouches[0].pageY)]
+                    : [evt.pageX, evt.pageY];
                 pdgui.pdsend(name, "mouseup",
-                    (evt.pageX + svg_view.x),
-                    (evt.pageY + svg_view.y),
-                    (evt.button + 1)
+                    (pointer_x + svg_view.x),
+                    (pointer_y + svg_view.y),
+                    (evt.button + 1) || 1
                 );
                 evt.stopPropagation();
                 evt.preventDefault();
@@ -433,8 +514,10 @@ var canvas_events = (function() {
                 }
             },
             scalar_draggable_mousemove: function(evt) {
-                var new_x = evt.pageX,
-                    new_y = evt.pageY,
+                let [new_x, new_y] = evt.type === "touchmove"
+                    ? [Math.trunc(evt.touches[0].pageX),
+                       Math.trunc(evt.touches[0].pageY)]
+                    : [evt.pageX, evt.pageY],
                     dx = new_x - last_draggable_x,
                     dy = new_y - last_draggable_y,
                     // For the sake of convenience we're sending transformed
@@ -487,8 +570,12 @@ var canvas_events = (function() {
                 //      handle (which will eventually get erased by Pd anyway).
                 //      Anyhow, this is all very bad, but it works so it's
                 //      at least not the worst of all possible worlds.
-                var dx = (evt.pageX + svg_view.x) - last_draggable_x,
-                    dy = (evt.pageY + svg_view.y) - last_draggable_y,
+                let [new_x, new_y] = evt.type === "touchmove"
+                    ? [Math.trunc(evt.touches[0].pageX),
+                       Math.trunc(evt.touches[0].pageY)]
+                    : [evt.pageX, evt.pageY];
+                var dx = (new_x + svg_view.x) - last_draggable_x,
+                    dy = (new_y + svg_view.y) - last_draggable_y,
                     handle_elem = document.querySelector(
                         draggable_label ?
                             ".move_handle" :
@@ -500,12 +587,12 @@ var canvas_events = (function() {
                         getElementsByClassName("gop_drag_handle").length ?
                         true : false;
 
-                last_draggable_x = evt.pageX + svg_view.x;
-                last_draggable_y = evt.pageY + svg_view.y;
+                last_draggable_x = new_x + svg_view.x;
+                last_draggable_y = new_y + svg_view.y;
 
                 pdgui.pdsend(target_id, "_motion",
-                    (evt.pageX + svg_view.x),
-                    (evt.pageY + svg_view.y));
+                    (new_x + svg_view.x),
+                    (new_y + svg_view.y));
             },
             iemgui_label_mouseup: function(evt) {
                 //pdgui.post("lifting the mousebutton on an iemgui label");
@@ -652,6 +739,11 @@ var canvas_events = (function() {
                 }
             },
             dropdown_menu_mousedown: function(evt) {
+                let [pointer_x, pointer_y] = evt.type === "touchstart"
+                ? [Math.trunc(evt.touches[0].pageX),
+                   Math.trunc(evt.touches[0].pageY)]
+                : [evt.pageX, evt.pageY];
+
                 var select_elem = document.querySelector("#dropdown_list"),
                     in_dropdown = evt.target;
                 while (in_dropdown) {
@@ -662,10 +754,11 @@ var canvas_events = (function() {
                 }
                 // Allow scrollbar click and drag without closing the menu
                 if (in_dropdown &&
-                        evt.pageX - select_elem.offsetLeft >
+                        pointer_x - select_elem.offsetLeft >
                         select_elem.clientWidth) {
-                    return;
+                        return;
                 }
+
                 // Special case for OSX, where the scrollbar doesn't take
                 // up any extra space
                 if (nw.process.platform === "darwin"
@@ -680,7 +773,9 @@ var canvas_events = (function() {
                 // This selects whatever item is highlighted even
                 // if we click outside the menu. Might be better to
                 // cancel in that case.
-                dropdown_index_to_pd(select_elem);
+                if(evt.type === "mousedown") {  // For some reason calling dropdown_index_to_pd() on touchstart sends the selected data twice. @spidercatnat
+                    dropdown_index_to_pd(select_elem);
+                }
                 select_elem.style.setProperty("display", "none");
                 canvas_events.normal();
             },
@@ -706,6 +801,10 @@ var canvas_events = (function() {
                 last_dropdown_menu_y = Number.MIN_VALUE;
             },
             dropdown_menu_mousemove: function(evt) {
+                let [pointer_x, pointer_y] = evt.type === "touchmove"
+                ? [Math.trunc(evt.touches[0].pageX),
+                   Math.trunc(evt.touches[0].pageY)]
+                : [evt.pageX, evt.pageY];
                 // For whatever reason, Chromium decides to trigger the
                 // mousemove/mouseenter/mouseover events if the element
                 // underneath it changes (or for mousemove, if the element
@@ -713,8 +812,8 @@ var canvas_events = (function() {
                 // the mouse position the entire time to filter out the
                 // true mousemove events from the ones Chromium generates
                 // when a scroll event changes the element under the mouse.
-                if (evt.pageX !== last_dropdown_menu_x
-                    || evt.pageY !== last_dropdown_menu_y) {
+                if (pointer_x !== last_dropdown_menu_x
+                    || pointer_y !== last_dropdown_menu_y) {
                     if (evt.target.parentNode
                         && evt.target.parentNode.parentNode
                         && evt.target.parentNode.parentNode.id === "dropdown_list") {
@@ -723,8 +822,8 @@ var canvas_events = (function() {
                         dropdown_clear_highlight();
                     }
                 }
-                last_dropdown_menu_x = evt.pageX;
-                last_dropdown_menu_y = evt.pageY;
+                last_dropdown_menu_x = pointer_x;
+                last_dropdown_menu_y = pointer_y;
             }
         },
         utils = {
@@ -756,6 +855,19 @@ var canvas_events = (function() {
                     evt_name = prop.split("_");
                     evt_name = evt_name[evt_name.length - 1];
                     document.removeEventListener(evt_name, events[prop], false);
+                    // ag: Also get rid of the touch event handlers, which are
+                    // bound to the same handlers as the corresponding mouse
+                    // events.
+                    if (evt_name == "mousemove") {
+                        document.removeEventListener("touchmove",
+                                                     events[prop], false);
+                    } else if (evt_name == "mousedown") {
+                        document.removeEventListener("touchstart",
+                                                     events[prop], false);
+                    } else if (evt_name == "mouseup") {
+                        document.removeEventListener("touchend",
+                                                     events[prop], false);
+                    }
                 }
             }
         },
@@ -763,11 +875,14 @@ var canvas_events = (function() {
             canvas_events.none();
 
             document.addEventListener("mousemove", events.mousemove, false);
+            document.addEventListener("touchmove", events.mousemove, false);
             document.addEventListener("keydown", events.keydown, false);
             document.addEventListener("keypress", events.keypress, false);
             document.addEventListener("keyup", events.keyup, false);
             document.addEventListener("mousedown", events.mousedown, false);
+            document.addEventListener("touchstart", events.mousedown, false);
             document.addEventListener("mouseup", events.mouseup, false);
+            document.addEventListener("touchend", events.mouseup, false);
             state = "normal";
             set_edit_menu_modals(true);
         },
@@ -778,7 +893,9 @@ var canvas_events = (function() {
             // selection still happens from the Pd engine.
             //this.none();
             document.addEventListener("mousemove", events.scalar_draggable_mousemove, false);
+            document.addEventListener("touchmove", events.scalar_draggable_mousemove, false);
             document.addEventListener("mouseup", events.scalar_draggable_mouseup, false);
+            document.addEventListener("touchend", events.scalar_draggable_mouseup, false);
         },
         iemgui_label_drag: function() {
             // This is a workaround for dragging iemgui labels. Resizing iemguis
@@ -790,7 +907,11 @@ var canvas_events = (function() {
             canvas_events.none();
             document.addEventListener("mousemove",
                 events.iemgui_label_mousemove, false);
+            document.addEventListener("touchmove",
+                events.iemgui_label_mousemove, false);
             document.addEventListener("mouseup",
+                events.iemgui_label_mouseup, false);
+            document.addEventListener("touchend",
                 events.iemgui_label_mouseup, false);
         },
         hscroll_drag: function() {
@@ -831,11 +952,20 @@ var canvas_events = (function() {
         },
         dropdown_menu: function() {
             canvas_events.none();
+          
             document.addEventListener("mousedown", events.dropdown_menu_mousedown, false);
+            document.addEventListener("touchstart", events.dropdown_menu_mousedown, false);
+            
             document.addEventListener("mouseup", events.dropdown_menu_mouseup, false);
+            document.addEventListener("touchend", events.dropdown_menu_mouseup, false);
+            
             document.addEventListener("mousemove", events.dropdown_menu_mousemove, false);
+            document.addEventListener("touchmove", events.dropdown_menu_mousemove, false);
+            
             document.addEventListener("keydown", events.dropdown_menu_keydown, false);
+            
             document.addEventListener("keypress", events.dropdown_menu_keypress, false);
+            
             document.querySelector("#dropdown_list")
                 .addEventListener("wheel", events.dropdown_menu_wheel, false);
         },
@@ -994,6 +1124,7 @@ var canvas_events = (function() {
             // control it with a bunch of complicated callbacks.
             document.addEventListener("contextmenu", function(evt) {
                 console.log("got a context menu evt...");
+                evt.stopPropagation()
                 evt.preventDefault();
             });
 
