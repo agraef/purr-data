@@ -5565,9 +5565,9 @@ function select_text(cid, elem, state) {
     if (win.document.selection) {
         range = win.document.body.createTextRange();
         range.moveToElementText(elem);
-        if(state > 2)
+        if(state & (0b1 << 31))
         {
-            var b = state & 0xFFFF, e = state >>> 16, l = elem.textContent.length;
+            var e = state & 0xFFFF, b = (state >>> 16) & 0x7FFF, l = elem.textContent.length;
             var ms = Math.max(Math.min(b, l), 0);
             var me = Math.max(Math.min(e, l), ms);
             range.moveStart("character", ms);
@@ -5577,9 +5577,9 @@ function select_text(cid, elem, state) {
     } else if (win.getSelection) {
         range = win.document.createRange();
         range.selectNodeContents(elem);
-        if(state > 2)
+        if(state & (0b1 << 31))
         {
-            var b = state & 0xFFFF, e = state >>> 16, l = elem.textContent.length;
+            var e = state & 0xFFFF, b = (state >>> 16) & 0x7FFF, l = elem.textContent.length;
             var ms = Math.max(Math.min(b, l), 0);
             var me = Math.max(Math.min(e, l), ms);
             range.setStart(elem.firstChild, ms);
