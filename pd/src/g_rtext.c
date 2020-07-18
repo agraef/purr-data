@@ -560,7 +560,8 @@ void rtext_select(t_rtext *x, int state)
 void rtext_activate(t_rtext *x, int state)
 {
     //fprintf(stderr,"rtext_activate state=%d\n", state);
-    int w = 0, h = 0, widthspec, heightspec, indx, isgop;
+    int w = 0, h = 0, widthspec, heightspec, indx, isgop,
+        selstart = -1, selend = -1;
     char *tmpbuf;
     t_glist *glist = x->x_glist;
     t_canvas *canvas = glist_getcanvas(glist);
@@ -612,6 +613,13 @@ void rtext_activate(t_rtext *x, int state)
         isgop = 0;
     }
 
+    if(state & (0b1 << 31)) /* arbitray selection */
+    {
+        selstart = (state >> 16) & 0x7FFF;
+        selend = state & 0xFFFF;
+        state = 1; // set to editing state
+    }
+
     /* we need to get scroll to make sure we've got the
        correct bbox for the svg */
     canvas_getscroll(glist_getcanvas(canvas));
@@ -622,7 +630,7 @@ void rtext_activate(t_rtext *x, int state)
     sprintf(tmpbuf, "%.*s", x->x_bufsize, x->x_buf);
     /* in case x_bufsize is 0... */
     tmpbuf[x->x_bufsize] = '\0';
-    gui_vmess("gui_textarea", "xssiiiisiii",
+    gui_vmess("gui_textarea", "xssiiiisiiiii",
         canvas,
         x->x_tag,
         (pd_class((t_pd *)x->x_text) == message_class ? "msg" : "obj"),
@@ -633,7 +641,10 @@ void rtext_activate(t_rtext *x, int state)
         tmpbuf,
         sys_hostfontsize(glist_getfont(glist)),
         isgop,
-        state);
+        state,
+        selstart,
+        selend
+        );
     freebytes(tmpbuf, x->x_bufsize + 1);
 }
 

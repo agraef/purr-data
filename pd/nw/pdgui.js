@@ -5560,31 +5560,25 @@ var skin = exports.skin = (function () {
     };
 }());
 
-function select_text(cid, elem, state) {
+function select_text(cid, elem, sel_start, sel_end) {
     var range, win = patchwin[cid].window;
     if (win.document.selection) {
         range = win.document.body.createTextRange();
         range.moveToElementText(elem);
-        if(state & (0b1 << 31))
-        {
-            var e = state & 0xFFFF, b = (state >>> 16) & 0x7FFF, l = elem.textContent.length;
-            var ms = Math.max(Math.min(b, l), 0);
-            var me = Math.max(Math.min(e, l), ms);
-            range.moveStart("character", ms);
-            range.moveEnd("character", me-l);
-        }
+        var len = elem.textContent.length,
+            ms = Math.max(Math.min(sel_start, len), 0),
+            me = Math.max(Math.min(sel_end, len), ms);
+        if(sel_start != -1) range.moveStart("character", ms);
+        if(sel_end != -1) range.moveEnd("character", me-len);
         range.select();
     } else if (win.getSelection) {
         range = win.document.createRange();
         range.selectNodeContents(elem);
-        if(state & (0b1 << 31))
-        {
-            var e = state & 0xFFFF, b = (state >>> 16) & 0x7FFF, l = elem.textContent.length;
-            var ms = Math.max(Math.min(b, l), 0);
-            var me = Math.max(Math.min(e, l), ms);
-            range.setStart(elem.firstChild, ms);
-            range.setEnd(elem.firstChild, me);
-        }
+        var len = elem.textContent.length,
+            ms = Math.max(Math.min(sel_start, len), 0),
+            me = Math.max(Math.min(sel_end, len), ms);
+        if(sel_start != -1) range.setStart(elem.firstChild, ms);
+        if(sel_end != -1) range.setEnd(elem.firstChild, me);
         win.getSelection().removeAllRanges();
         win.getSelection().addRange(range);
     }
@@ -5673,7 +5667,7 @@ function shove_svg_background_data_into_css(w) {
 }
 
 function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
-    font_size, is_gop, state) {
+    font_size, is_gop, state, sel_start, sel_end) {
     var range, svg_view, p,
         gobj = get_gobj(cid, tag);
     if (state !== 0) {
@@ -5724,11 +5718,11 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
         // append to doc body
         patchwin[cid].window.document.body.appendChild(p);
         p.focus();
-        select_text(cid, p, state);
-        if (state == 2) {
-            patchwin[cid].window.canvas_events.floating_text();
-        } else {
+        select_text(cid, p, sel_start, sel_end);
+        if (state === 1) {
             patchwin[cid].window.canvas_events.text();
+        } else {
+            patchwin[cid].window.canvas_events.floating_text();
         }
     } else {
         configure_item(gobj, { visibility: "normal" });
