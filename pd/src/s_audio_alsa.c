@@ -838,19 +838,29 @@ void alsa_getdevs(char *indevlist, int *nindevs,
     char *outdevlist, int *noutdevs, int *canmulti, 
         int maxndev, int devdescsize)
 {
-    int ndev = 0, cardno = -1, i, j;
+    int ndev = 0, cardno = -1;
     *canmulti = 2;  /* supports multiple devices */
+
+    /* First list devices from the -alsa-adddev command line arg */
+    for (ndev = 0; ndev < alsa_nnames; ndev++)
+    {
+        if (ndev >= maxndev)
+            break;
+        snprintf(indevlist + ndev * devdescsize, devdescsize, "%s",
+            alsa_names[ndev]);
+        snprintf(outdevlist + ndev * devdescsize, devdescsize, "%s",
+            alsa_names[ndev]);
+    }
+
+    /* Then query hardware devices from ALSA */
     while (!snd_card_next(&cardno) && cardno >= 0)
     {
         snd_ctl_t *ctl;
         snd_ctl_card_info_t *info = NULL;
         char devname[80];
         const char *desc;
-        if (2 * ndev + 2  > maxndev)
+        if (ndev + 2  > maxndev)
             break;
-            /* apparently, "cardno" is just a counter; but check that here */
-        if (ndev != cardno)
-            fprintf(stderr, "oops: ALSA cards not reported in order?\n");
         sprintf(devname, "hw:%d", cardno);
         // fprintf(stderr, "\ntry %s...\n", devname);
         if (snd_ctl_open(&ctl, devname, 0) >= 0)
@@ -865,25 +875,17 @@ void alsa_getdevs(char *indevlist, int *nindevs,
             desc = "???";
         }
         /* fprintf(stderr, "name: %s\n", snd_ctl_card_info_get_name(info)); */
-        sprintf(indevlist + 2*ndev * devdescsize, "%s (hardware)", desc);
-        sprintf(indevlist + (2*ndev + 1) * devdescsize, "%s (plug-in)", desc);
-        sprintf(outdevlist + 2*ndev * devdescsize, "%s (hardware)", desc);
-        sprintf(outdevlist + (2*ndev + 1) * devdescsize, "%s (plug-in)", desc);
-        ndev++;
+        sprintf(indevlist + ndev * devdescsize, "%s (hardware)", desc);
+        sprintf(indevlist + (ndev + 1) * devdescsize, "%s (plug-in)", desc);
+        sprintf(outdevlist + ndev * devdescsize, "%s (hardware)", desc);
+        sprintf(outdevlist + (ndev + 1) * devdescsize, "%s (plug-in)", desc);
+        ndev += 2;
         if (info)
         {
             snd_ctl_card_info_free(info);
             info = NULL;
         }
     }
-    for (i = 0, j = 2*ndev; i < alsa_nnames; i++, j++)
-    {
-        if (j >= maxndev)
-            break;
-        snprintf(indevlist + j * devdescsize, devdescsize, "%s",
-            alsa_names[i]);
-        snprintf(outdevlist + j * devdescsize, devdescsize, "%s",
-            alsa_names[i]);
-    }
-    *nindevs = *noutdevs = j;
+
+    *nindevs = *noutdevs = ndev;
 }
