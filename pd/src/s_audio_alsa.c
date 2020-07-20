@@ -880,7 +880,9 @@ void alsa_getdevs(char *indevlist, int *nindevs,
     {
         if (j >= maxndev)
             break;
-        snprintf(indevlist + j * devdescsize, devdescsize, "%s", 
+        snprintf(indevlist + j * devdescsize, devdescsize, "%s",
+            alsa_names[i]);
+        snprintf(outdevlist + j * devdescsize, devdescsize, "%s",
             alsa_names[i]);
     }
     *nindevs = *noutdevs = j;
