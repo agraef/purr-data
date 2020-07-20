@@ -5828,6 +5828,13 @@ static void canvas_find_parent(t_canvas *x, t_floatarg f)
     }
 }
 
+    /* tell the gui to bring a gobj into view, possibly with an animation */
+static void gobj_emphasize(t_glist *g, t_gobj *x)
+{
+    t_rtext *y = glist_findrtext(g, (t_text *)x);
+    gui_vmess("gui_gobj_emphasize", "xs", g, rtext_gettag(y));
+}
+
 static int glist_dofinderror(t_glist *gl, void *error_object)
 {
     t_gobj *g;
@@ -5840,6 +5847,7 @@ static int glist_dofinderror(t_glist *gl, void *error_object)
             canvas_vis(glist_getcanvas(gl), 1);
             canvas_editmode(glist_getcanvas(gl), 1.);
             glist_select(gl, g);
+            gobj_emphasize(gl, g);
             return (1);
         }
         else if (g->g_pd == canvas_class)
@@ -5860,11 +5868,10 @@ void canvas_finderror(void *error_object)
         if ((void *)x == error_object)
         {
             /* If the error is associated with a toplevel canvas, we
-               do a quick-and-dirty unvis and vis to give some basic
-               visual feedback to the user */
+               we raise it to the top and do a quick-and-dirty background
+               animation for visual feedback to the user */
             glist_noselect(x);
-            canvas_vis(glist_getcanvas(x), 0);
-            canvas_vis(glist_getcanvas(x), 1);
+            gui_vmess("gui_canvas_emphasize", "x", glist_getcanvas(x));
             return;
         }
         if (glist_dofinderror(x, error_object))
