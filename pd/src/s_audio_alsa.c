@@ -747,10 +747,10 @@ static void alsa_checkiosync( void)
             }
             if (result < 0)
             {
-                post("output snd_pcm_delay failed: %s", snd_strerror(result));
-                if (snd_pcm_status(alsa_outdev[iodev].a_handle,
+                post("input snd_pcm_delay failed: %s", snd_strerror(result));
+                if (snd_pcm_status(alsa_indev[iodev].a_handle,
                     alsa_status) < 0)
-                    post("output snd_pcm_status failed");
+                    post("input snd_pcm_status failed");
                 else post("astate %d",
                      snd_pcm_status_get_state(alsa_status));
                 return;
