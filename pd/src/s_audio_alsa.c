@@ -421,7 +421,8 @@ int alsa_send_dacs(void)
     callno++;
 #endif
 
-    alsa_checkiosync();     /* check I/O are in sync and data not late */
+    if (alsa_nindev > 0 && alsa_noutdev > 0)
+        alsa_checkiosync();     /* check I/O are in sync and data not late */
 
     for (iodev = 0; iodev < alsa_nindev; iodev++)
     {
