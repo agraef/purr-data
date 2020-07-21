@@ -5324,6 +5324,17 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
 extern void graph_checkgop_rect(t_gobj *z, t_glist *glist,
     int *xp1, int *yp1, int *xp2, int *yp2);
 
+
+
+static void delay_move(t_canvas *x)
+{
+    canvas_displaceselection(x,
+        x->gl_editor->e_xnew - x->gl_editor->e_xwas,
+        x->gl_editor->e_ynew - x->gl_editor->e_ywas);
+    x->gl_editor->e_xwas = x->gl_editor->e_xnew;
+    x->gl_editor->e_ywas = x->gl_editor->e_ynew;
+}
+
 void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
     t_floatarg fmod)
 {
@@ -5350,10 +5361,10 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
     {
         //fprintf(stderr,"x-was=%g y-was=%g xwas=%d ywas=%d x=%g y=%g\n", xpos - x->gl_editor->e_xwas,
         //    ypos - x->gl_editor->e_ywas, x->gl_editor->e_xwas, x->gl_editor->e_ywas, xpos, ypos);
-        canvas_displaceselection(x, 
-            xpos - x->gl_editor->e_xwas, ypos - x->gl_editor->e_ywas);
-        x->gl_editor->e_xwas = xpos;
-        x->gl_editor->e_ywas = ypos;
+        if (!x->gl_editor->e_clock)
+            x->gl_editor->e_clock = clock_new(x, (t_method)delay_move);
+        clock_unset(x->gl_editor->e_clock);
+        clock_delay(x->gl_editor->e_clock, 5);
         x->gl_editor->e_xnew = xpos;
         x->gl_editor->e_ynew = ypos;
         //    scrollbar_update(x);
