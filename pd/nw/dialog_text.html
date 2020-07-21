@@ -106,8 +106,6 @@ function register_window_id(gfxstub, attr) {
     pd_object_callback = gfxstub;
     add_events(gfxstub);
 
-pdgui.post("title is " + attr.title);
-
     translate_form();
     // We request the text data only after we're certain our window
     // has loaded. Otherwise the node.js context might try to populate
