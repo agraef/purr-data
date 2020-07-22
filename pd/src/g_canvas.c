@@ -1391,6 +1391,8 @@ static void canvas_relocate(t_canvas *x, t_symbol *canvasgeom,
 void canvas_popabstraction(t_canvas *x)
 {
     newest = &x->gl_pd;
+    gensym("#A")->s_thing = 0;
+    pd_bind(newest, gensym("#A"));
     pd_popsym(&x->gl_pd);
     //x->gl_loading = 1;
     //fprintf(stderr,"loading = 1 .x%lx owner=.x%lx\n", x, x->gl_owner);

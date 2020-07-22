@@ -2182,6 +2182,7 @@ static int text_click(t_gobj *z, struct _glist *glist,
     else return (0);
 }
 
+void canvas_statesavers_doit(t_glist *x, t_binbuf *b);
 void text_save(t_gobj *z, t_binbuf *b)
 {
     //fprintf(stderr, "text_save\n");
@@ -2211,6 +2212,7 @@ void text_save(t_gobj *z, t_binbuf *b)
         //fprintf(stderr, "this must be it\n");
         binbuf_addbinbuf(b, x->te_binbuf);
         //fprintf(stderr, "DONE this must be it\n");
+
     }
     else if (x->te_type == T_MESSAGE)
     {
@@ -2292,6 +2294,13 @@ void text_save(t_gobj *z, t_binbuf *b)
             binbuf_addv(b, ",si", gensym("f"), (int)x->te_width);
     }
     binbuf_addv(b, ";");
+
+        /* if an abstraction, give it a chance to save state */
+    if (pd_class(&x->te_pd) == canvas_class &&
+        canvas_isabstraction((t_canvas *)x))
+    {
+        canvas_statesavers_doit((t_glist *)x, b);
+    }
 }
 
     /* this one is for everyone but "gatoms"; it's imposed in m_class.c */
