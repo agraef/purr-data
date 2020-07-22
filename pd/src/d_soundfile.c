@@ -1219,7 +1219,7 @@ static void soundfile_xferout_float(int nchannels, t_float **vecs,
 }
 
 /* ------- soundfiler - reads and writes soundfiles to/from "garrays" ---- */
-#define DEFMAXSIZE 4000000      /* default maximum 16 MB per channel */
+#define DEFMAXSIZE 0x7fffffff /* default maximum 16 MB per channel */
 #define SAMPBUFSIZE 1024
 
 
