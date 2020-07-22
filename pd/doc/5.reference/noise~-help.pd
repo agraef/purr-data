@@ -1,9 +1,9 @@
-#N canvas 429 34 555 619 10;
+#N canvas 475 24 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header noise~ 3 12 0 18
 -204280 -1 0;
-#X obj 0 466 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+#X obj 0 446 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
 #N canvas 481 283 494 344 META 0;
 #X text 12 105 LIBRARY internal;
@@ -32,7 +32,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 8 2 [noise~] Related Objects;
 #X obj 22 43 random;
 #X restore 102 597 pd Related_objects;
-#X obj 78 475 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X obj 78 455 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #X obj 78 512 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
@@ -41,18 +41,22 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 218 217 noise~;
 #X obj 284 256 print~;
 #X obj 218 256 env~ 4096;
-#X text 216 192 the output range is -1 to 1...;
+#X text 156 322 the output range is -1 to 1...;
 #X obj 152 256 snapshot~;
 #X floatatom 152 283 0 0 0 0 - - -;
 #X msg 152 229 bang;
 #X msg 284 229 bang;
-#X text 168 474 - the inlet to [noise~] is not used.;
 #X text 98 511 signal;
 #X text 11 23 uniformly distributed white noise;
-#X text 98 474 (inactive);
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
 #X obj 480 53 pddp/dsp;
+#X msg 218 169 seed 42;
+#X text 278 169 provide a seed for a deterministic sequence of samples
+;
+#X text 98 454 seed;
+#X text 168 454 - provide a seed for the random number generator. A
+given seed will always output the same sequence of samples.;
 #X connect 13 0 14 0;
 #X connect 13 0 15 0;
 #X connect 13 0 17 0;
@@ -60,3 +64,4 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X connect 17 0 18 0;
 #X connect 19 0 17 0;
 #X connect 20 0 14 0;
+#X connect 25 0 13 0;
