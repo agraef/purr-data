@@ -1300,8 +1300,7 @@ static void soundfiler_read(t_soundfiler *x, t_symbol *s,
     int argc, t_atom *argv)
 {
     t_soundfile_info info;
-    int channels = 0,
-        resize = 0, i, j;
+    int resize = 0, i, j;
     long skipframes = 0, finalsize = 0,
         maxsize = DEFMAXSIZE, itemsread = 0;
     int fd = -1;
@@ -1476,7 +1475,7 @@ static void soundfiler_read(t_soundfiler *x, t_symbol *s,
         nitems = fread(sampbuf, info.channels * info.bytespersample, thisread,
             fp);
         if (nitems <= 0) break;
-        soundfile_xferin_float(channels, argc, (t_float **)vecs, itemsread,
+        soundfile_xferin_float(info.channels, argc, (t_float **)vecs, itemsread,
             (unsigned char *)sampbuf, nitems, info.bytespersample,
             info.bigendian, sizeof(t_word)/sizeof(t_sample));
         itemsread += nitems;
