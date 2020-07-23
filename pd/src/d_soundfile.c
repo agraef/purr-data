@@ -674,9 +674,61 @@ static void soundfile_xferin_float(int sfchannels, int nvecs, t_float **vecs,
         -little
     */
 
+
+static void argerror(void *obj, const char *fmt, ...)
+{
+    char msg[MAXPDSTRING];
+    char *classname = class_getname(pd_class((t_pd *)obj));
+    va_list ap;
+    va_start(ap, fmt);
+    vsnprintf(msg, MAXPDSTRING-1, fmt, ap);
+    va_end(ap);
+    pd_error(obj, "%s: %s", classname, msg);
+}
+
+static int verify_flag(void *obj, char *flag)
+{
+    if (!flag)
+    {
+        argerror(obj, "empty symbol detected");
+        return 0;
+    }
+    if (flag[0] != '-')
+    {
+        argerror(obj, "expected '-%s' flag but got '%s'", flag, flag);
+        return 0;
+    }
+    return 1;
+}
+
+static int flag_and_floatarg(void *obj, char *flag, int argc, t_atom *argv)
+{
+    if (!verify_flag(obj, flag))
+        return 0;
+    if (argc < 2)
+    {
+        argerror(obj, "need a float argument for '-%s' flag", flag);
+        return 0;
+    }
+    if (argv[1].a_type != A_FLOAT)
+    {
+        argerror(obj, "'-%s' flag expects float but got '%s'",
+           flag,
+           argv[1].a_type == A_SYMBOL ?
+           argv[1].a_w.w_symbol->s_name :
+           "unexpected arg type");
+        return 0;
+    }
+    return 1;
+}
+
+static int matchstring(char *str, char *flag)
+{
+    return (!strcmp(str, flag) || !strcmp(str+1, flag));
+}
+
     /* the routine which actually does the work should LATER also be called
     from garray_write16. */
-
 
     /* Parse arguments for writing.  The "obj" argument is only for flagging
     errors.  For streaming to a file the "normalize", "onset" and "nframes"
@@ -695,70 +747,105 @@ static int soundfiler_writeargparse(void *obj, int *p_argc, t_atom **p_argv,
     t_symbol *filesym;
     t_float rate = -1;
     
-    while (argc > 0 && argv->a_type == A_SYMBOL &&
-        *argv->a_w.w_symbol->s_name == '-')
+    while (argc > 0 && argv->a_type == A_SYMBOL)
     {
-        char *flag = argv->a_w.w_symbol->s_name + 1;
-        if (!strcmp(flag, "skip"))
+        char *flag = argv->a_w.w_symbol->s_name;
+        if (matchstring(flag, "skip"))
         {
-            if (argc < 2 || argv[1].a_type != A_FLOAT ||
-                ((onset = argv[1].a_w.w_float) < 0))
-                    goto usage;
+            if (!flag_and_floatarg(obj, flag, argc, argv))
+                goto usage;
+            if ((onset = argv[1].a_w.w_float) < 0)
+            {
+                argerror(obj, "'-skip' flag does not allow a negative number");
+                goto usage;
+            }
             argc -= 2; argv += 2;
         }
-        else if (!strcmp(flag, "nframes"))
+        else if (matchstring(flag, "nframes"))
         {
-            if (argc < 2 || argv[1].a_type != A_FLOAT ||
-                ((nframes = argv[1].a_w.w_float) < 0))
-                    goto usage;
+            if (!flag_and_floatarg(obj, flag, argc, argv))
+                goto usage;
+            if ((nframes = argv[1].a_w.w_float) < 0)
+            {
+                argerror(obj, "'-nframes' flag does not allow a negative "
+                    "number");
+                goto usage;
+            }
             argc -= 2; argv += 2;
         }
-        else if (!strcmp(flag, "bytes"))
+        else if (matchstring(flag, "bytes"))
         {
-            if (argc < 2 || argv[1].a_type != A_FLOAT ||
-                ((bytespersamp = argv[1].a_w.w_float) < 2) ||
-                    bytespersamp > 4)
-                        goto usage;
+            if (!flag_and_floatarg(obj, flag, argc, argv))
+                goto usage;
+            if ((bytespersamp = argv[1].a_w.w_float) < 2 ||
+                   bytespersamp > 4)
+            {
+                argerror(obj, "'-bytes' flag requires a number "
+                    "between 2 and 4");
+                goto usage;
+            }
             argc -= 2; argv += 2;
         }
-        else if (!strcmp(flag, "normalize"))
+        else if (matchstring(flag, "normalize"))
         {
+            if (!verify_flag(obj, flag))
+                goto usage;
             normalize = 1;
             argc -= 1; argv += 1;
         }
-        else if (!strcmp(flag, "wave"))
+        else if (matchstring(flag, "wave"))
         {
+            if (!verify_flag(obj, flag))
+                goto usage;
             filetype = FORMAT_WAVE;
             argc -= 1; argv += 1;
         }
-        else if (!strcmp(flag, "nextstep"))
+        else if (matchstring(flag, "nextstep"))
         {
+            if (!verify_flag(obj, flag))
+                goto usage;
             filetype = FORMAT_NEXT;
             argc -= 1; argv += 1;
         }
-        else if (!strcmp(flag, "aiff"))
+        else if (matchstring(flag, "aiff"))
         {
+            if (!verify_flag(obj, flag))
+               goto usage;
             filetype = FORMAT_AIFF;
             argc -= 1; argv += 1;
         }
-        else if (!strcmp(flag, "big"))
+        else if (matchstring(flag, "big"))
         {
+            if (!verify_flag(obj, flag))
+               goto usage;
+
             endianness = 1;
             argc -= 1; argv += 1;
         }
-        else if (!strcmp(flag, "little"))
+        else if (matchstring(flag, "little"))
         {
+            if (!verify_flag(obj, flag))
+                goto usage;
             endianness = 0;
             argc -= 1; argv += 1;
         }
-        else if (!strcmp(flag, "r") || !strcmp(flag, "rate"))
+        else if (matchstring(flag, "r") || matchstring(flag, "rate"))
         {
-            if (argc < 2 || argv[1].a_type != A_FLOAT ||
-                ((rate = argv[1].a_w.w_float) <= 0))
-                    goto usage;
+            if (!flag_and_floatarg(obj, flag, argc, argv))
+                goto usage;
+            if ((rate = argv[1].a_w.w_float) <= 0)
+            {
+                argerror(obj, "'%s' flag must have a float arg greater than "
+                    "zero", flag);
+                goto usage;
+            }
             argc -= 2; argv += 2;
         }
-        else goto usage;
+        else
+        {
+            argerror(obj, "unknown flag '%s'", flag);
+            goto usage;
+        }
     }
     if (!argc || argv->a_type != A_SYMBOL)
         goto usage;
@@ -1317,26 +1404,33 @@ static void soundfiler_read(t_soundfiler *x, t_symbol *s,
     info.headersize = -1;
     info.bigendian = 0;
     info.bytelimit = 0x7fffffff;
-    while (argc > 0 && argv->a_type == A_SYMBOL &&
-        *argv->a_w.w_symbol->s_name == '-')
+    while (argc > 0 && argv->a_type == A_SYMBOL)
     {
-        char *flag = argv->a_w.w_symbol->s_name + 1;
-        if (!strcmp(flag, "skip"))
+        char *flag = argv->a_w.w_symbol->s_name;
+        if (matchstring(flag, "skip"))
         {
-            if (argc < 2 || argv[1].a_type != A_FLOAT ||
-                ((skipframes = argv[1].a_w.w_float) < 0))
-                    goto usage;
+            if (!flag_and_floatarg(x, flag, argc, argv))
+                goto usage;
+            if ((skipframes = argv[1].a_w.w_float) < 0)
+            {
+                argerror(x, "'-skip' flag does not allow a negative number");
+                goto usage;
+            }
             argc -= 2; argv += 2;
         }
-        else if (!strcmp(flag, "ascii"))
+        else if (matchstring(flag, "ascii"))
         {
+            if (!verify_flag(x, flag))
+                goto usage;
             if (info.headersize >= 0)
                 post("soundfiler_read: '-raw' overidden by '-ascii'");
             ascii = 1;
             argc--; argv++;
         }
-        else if (!strcmp(flag, "raw"))
+        else if (matchstring(flag, "raw"))
         {
+            if (!verify_flag(x, flag))
+                goto usage;
             if (ascii)
                 post("soundfiler_read: '-raw' overridden by '-ascii'");
             if (argc < 5 ||
@@ -1361,21 +1455,38 @@ static void soundfiler_read(t_soundfiler *x, t_symbol *s,
             info.samplerate = sys_getsr();
             argc -= 5; argv += 5;
         }
-        else if (!strcmp(flag, "resize"))
+        else if (matchstring(flag, "resize"))
         {
+            if (!verify_flag(x, flag))
+                goto usage;
             resize = 1;
             argc -= 1; argv += 1;
         }
-        else if (!strcmp(flag, "maxsize"))
+        else if (matchstring(flag, "maxsize"))
         {
-            if (argc < 2 || argv[1].a_type != A_FLOAT ||
-                ((maxsize = (argv[1].a_w.w_float > LONG_MAX ?
-                LONG_MAX : argv[1].a_w.w_float)) < 0))
-                    goto usage;
+            if (!flag_and_floatarg(x, flag, argc, argv))
+                goto usage;
+            maxsize = argv[1].a_w.w_float;
+            if (maxsize > LONG_MAX)
+            {
+                argerror(x, "'-maxsize' flag cannot be greater than %d. "
+                    "Setting '-maxsize' to %d and continuing", LONG_MAX,
+                    LONG_MAX);
+                maxsize = LONG_MAX;
+            }
+            if (maxsize < 0)
+            {
+                argerror(x, "'-maxsize' flag cannot be less than zero");
+                goto usage;
+            }
             resize = 1;     /* maxsize implies resize. */
             argc -= 2; argv += 2;
         }
-        else goto usage;
+        else
+        {
+            argerror(x, "unknown flag '%s'", flag);
+            goto usage;
+        }
     }
     if (argc < 1 || argc > MAXSFCHANS + 1 || argv[0].a_type != A_SYMBOL)
         goto usage;
@@ -1505,7 +1616,7 @@ static void soundfiler_read(t_soundfiler *x, t_symbol *s,
     fd = -1;
     goto done;
 usage:
-    pd_error(x, "usage: read [flags] filename tablename...");
+    post("usage: read [flags] filename tablename...");
     post("flags: -skip <n> -resize -maxsize <n> ...");
     post("-raw <headerbytes> <channels> <bytespersamp> <endian (b, l, or n)>.");
 done:
@@ -1627,7 +1738,7 @@ long soundfiler_dowrite(void *obj, t_canvas *canvas,
     }
     return ((float)itemswritten); 
 usage:
-    pd_error(obj, "usage: write [flags] filename tablename...");
+    post("usage: write [flags] filename tablename...");
     post("flags: -skip <n> -nframes <n> -bytes <n> -wave -aiff -nextstep ...");
     post("-big -little -normalize");
     post("(defaults to a 16-bit wave file).");
