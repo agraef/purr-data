@@ -19,6 +19,7 @@ maintainers:
   * [OSX](#osx-64-bit-using-homebrew)
   * [Windows](#windows-32-bit-using-msys2)
 * [Code of Conduct](#code-of-conduct)
+* [Project Governance](#project-governance)
 * [Contributor Guide](#contributor-guide)
 * [Human Interface Guidelines](#human-interface-guidelines)
 * [Core Pd Notes](#core-pd-notes)
