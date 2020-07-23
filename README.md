@@ -406,6 +406,16 @@ that case, but I haven't tested doing it like that. Sorry. Get a better OS...)
 It is a bad idea to break this Code of Conduct *even if* no one complains
 about your behavior.
 
+### Project Governance
+
+* the three maintainers listed at the top of this document are the ones in
+  charge of this project
+* unanimous decisions are preferred
+* 2 out of 3 can break a disagreement
+* there will only ever be three maintainers of this project at any given time.
+  If you'd like to temporarily step in as one of the three,
+  send an inquiry to the list and we cany discuss it
+
 ### Contributor Guide
 
 Contributing is easy:
