@@ -2634,6 +2634,36 @@ function gui_gobj_deselect(cid, tag) {
     });
 }
 
+function gui_canvas_emphasize(cid) {
+    gui(cid).get_elem("patchsvg", function(e) {
+        // raise the window
+        gui_raise_window(cid);
+        // animate the background
+        e.animate([
+            {"backgroundColor": "white"},
+            {"backgroundColor": "#ff000099"},
+            {"backgroundColor": "white"}
+        ], { duration: 900, easing: "ease-in-out", iterations: 1 });
+    });
+}
+
+// bring a gobj into the viewport, plus do an animation to catch the
+// user's attention
+function gui_gobj_emphasize(cid, tag) {
+    gui(cid).get_gobj(tag, function(e) {
+        var border = e.querySelector(".border");
+        e.scrollIntoView();
+        // quick and dirty
+        if (border) {
+            border.animate([
+                 {fill: "white"},
+                 {fill: "#ff000099"},
+                 {fill: "white"}
+            ], { duration: 300, easing: "ease-in-out", iterations: 3});
+        }
+    });
+}
+
 // This adds a 0.5 offset to align to pixel grid, so it should
 // only be used to move gobjs to a new position.  (Should probably
 // be renamed to gobj_move to make this more obvious.)
