@@ -169,7 +169,7 @@ static int alsaio_setup(t_alsa_dev *dev, int out, int *channels, int *rate,
         /* set the sampling rate */
     err = snd_pcm_hw_params_set_rate_min(dev->a_handle, hw_params, 
         (unsigned int *)rate, 0);
-    check_error(err, "snd_pcm_hw_params_set_rate_min (input)");
+    check_error(err, "snd_pcm_hw_params_set_rate_min");
 #if 0
     err = snd_pcm_hw_params_get_rate(hw_params, &subunitdir);
     post("input sample rate %d", err);
@@ -185,7 +185,7 @@ static int alsaio_setup(t_alsa_dev *dev, int out, int *channels, int *rate,
     err = snd_pcm_hw_params_set_period_size_near(dev->a_handle,
         hw_params, &tmp_snd_pcm_uframes, 0);
 #endif
-    check_error(err, "snd_pcm_hw_params_set_period_size_near (input)");
+    check_error(err, "snd_pcm_hw_params_set_period_size_near");
 
         /* set the buffer size */
 #ifdef ALSAAPI9
@@ -196,10 +196,10 @@ static int alsaio_setup(t_alsa_dev *dev, int out, int *channels, int *rate,
     err = snd_pcm_hw_params_set_buffer_size_near(dev->a_handle,
         hw_params, &tmp_snd_pcm_uframes);
 #endif
-    check_error(err, "snd_pcm_hw_params_set_buffer_size_near (input)");
+    check_error(err, "snd_pcm_hw_params_set_buffer_size_near");
 
     err = snd_pcm_hw_params(dev->a_handle, hw_params);
-    check_error(err, "snd_pcm_hw_params (input)");
+    check_error(err, "snd_pcm_hw_params");
 
         /* set up the buffer */
     bufsizeforthis = DEFDACBLKSIZE * dev->a_sampwidth * *channels;
@@ -254,7 +254,7 @@ int alsa_open_audio(int naudioindev, int *audioindev, int nchindev,
         alsa_numbertoname(audioindev[iodev], devname, 512);
         err = snd_pcm_open(&alsa_indev[alsa_nindev].a_handle, devname,
             SND_PCM_STREAM_CAPTURE, SND_PCM_NONBLOCK);
-        check_error(err, "snd_pcm_open");
+        check_error(err, "snd_pcm_open (input)");
         if (err < 0)
             continue;
         alsa_indev[alsa_nindev].a_devno = audioindev[iodev];
@@ -268,7 +268,7 @@ int alsa_open_audio(int naudioindev, int *audioindev, int nchindev,
         alsa_numbertoname(audiooutdev[iodev], devname, 512);
         err = snd_pcm_open(&alsa_outdev[alsa_noutdev].a_handle, devname,
             SND_PCM_STREAM_PLAYBACK, SND_PCM_NONBLOCK);
-        check_error(err, "snd_pcm_open");
+        check_error(err, "snd_pcm_open (output)");
         if (err < 0)
             continue;
         alsa_outdev[alsa_noutdev].a_devno = audiooutdev[iodev];
@@ -421,7 +421,8 @@ int alsa_send_dacs(void)
     callno++;
 #endif
 
-    alsa_checkiosync();     /* check I/O are in sync and data not late */
+    if (alsa_nindev > 0 && alsa_noutdev > 0)
+        alsa_checkiosync();     /* check I/O are in sync and data not late */
 
     for (iodev = 0; iodev < alsa_nindev; iodev++)
     {
@@ -746,10 +747,10 @@ static void alsa_checkiosync( void)
             }
             if (result < 0)
             {
-                post("output snd_pcm_delay failed: %s", snd_strerror(result));
-                if (snd_pcm_status(alsa_outdev[iodev].a_handle,
+                post("input snd_pcm_delay failed: %s", snd_strerror(result));
+                if (snd_pcm_status(alsa_indev[iodev].a_handle,
                     alsa_status) < 0)
-                    post("output snd_pcm_status failed");
+                    post("input snd_pcm_status failed");
                 else post("astate %d",
                      snd_pcm_status_get_state(alsa_status));
                 return;
