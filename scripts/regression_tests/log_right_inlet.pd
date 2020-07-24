@@ -1,0 +1,14 @@
+#N canvas 328 228 685 317 12;
+#X obj 57 22 inlet;
+#X obj 57 230 outlet;
+#X obj 57 111 ../utils/object-test inlets;
+#X msg 57 81 symbol log;
+#X obj 57 140 == 2;
+#X obj 57 169 list append log has a right inlet for the base;
+#X obj 57 51 bang;
+#X connect 0 0 6 0;
+#X connect 2 0 4 0;
+#X connect 3 0 2 0;
+#X connect 4 0 5 0;
+#X connect 5 0 1 0;
+#X connect 6 0 3 0;
