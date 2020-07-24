@@ -609,7 +609,10 @@ void rtext_activate(t_rtext *x, int state)
     {
         int xmin, xmax, tmp;
         gobj_getrect(&x->x_text->te_g, x->x_glist, &xmin, &tmp, &xmax, &tmp);
-        widthspec = (x->x_text->te_width ? x->x_text->te_width : -(xmax-xmin)); // width if any specified
+            /* width if specified. If not, we send the bounding width as
+               a negative number */
+        widthspec = (x->x_text->te_width ? x->x_text->te_width : -(xmax-xmin));
+            /* signal with negative number that we don't have a heightspec */
         heightspec = -1; // signal that we don't have a heightspec
         isgop = 0;
     }
