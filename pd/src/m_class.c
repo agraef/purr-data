@@ -439,6 +439,11 @@ void class_addmethod(t_class *c, t_method fn, t_symbol *sel,
     t_atomtype argtype = arg1;
     int nargs;
     
+    if (!c)
+    {
+        bug("class_addmethod");
+        return;
+    }
     va_start(ap, arg1);
         /* "signal" method specifies that we take audio signals but
         that we don't want automatic float to signal conversion.  This
@@ -527,61 +532,121 @@ phooey:
     /* Instead of these, see the "class_addfloat", etc.,  macros in m_pd.h */
 void class_addbang(t_class *c, t_method fn)
 {
+    if (!c)
+    {
+        bug("class_addbang");
+        return;
+    }
     c->c_bangmethod = (t_bangmethod)fn;
 }
 
 void class_addpointer(t_class *c, t_method fn)
 {
+    if (!c)
+    {
+        bug("class_addpointer");
+        return;
+    }
     c->c_pointermethod = (t_pointermethod)fn;
 }
 
 void class_doaddfloat(t_class *c, t_method fn)
 {
+    if (!c)
+    {
+        bug("class_doaddfloat");
+        return;
+    }
     c->c_floatmethod = (t_floatmethod)fn;
 }
 
 void class_addsymbol(t_class *c, t_method fn)
 {
+    if (!c)
+    {
+        bug("class_addsymbol");
+        return;
+    }
     c->c_symbolmethod = (t_symbolmethod)fn;
 }
 
 void class_addblob(t_class *c, t_method fn) /* MP 20061226 blob type */
 {
+    if (!c)
+    {
+        bug("class_addblob");
+        return;
+    }
     c->c_blobmethod = (t_blobmethod)fn;
 }
 
 void class_addlist(t_class *c, t_method fn)
 {
+    if (!c)
+    {
+        bug("class_addlist");
+        return;
+    }
     c->c_listmethod = (t_listmethod)fn;
 }
 
 void class_addanything(t_class *c, t_method fn)
 {
+    if (!c)
+    {
+        bug("class_addanything");
+        return;
+    }
     c->c_anymethod = (t_anymethod)fn;
 }
 
 void class_setwidget(t_class *c, t_widgetbehavior *w)
 {
+    if (!c)
+    {
+        bug("class_setwidget");
+        return;
+    }
     c->c_wb = w;
 }
 
 void class_setparentwidget(t_class *c, t_parentwidgetbehavior *pw)
 {
+    if (!c)
+    {
+        bug("class_setparentwidget");
+        return;
+    }
     c->c_pwb = pw;
 }
 
 char *class_getname(t_class *c)
 {
+    if (!c)
+    {
+        bug("class_getname");
+        return 0;
+    }
     return (c->c_name->s_name);
 }
 
 char *class_gethelpname(t_class *c)
 {
+    if (!c)
+    {
+        bug("class_gethelpname");
+        return 0;
+    }
     return (c->c_helpname->s_name);
 }
 
 void class_sethelpsymbol(t_class *c, t_symbol *s)
 {
+    if (!c)
+    {
+        bug("class_sethelpsymbol");
+        return;
+    }
     c->c_helpname = s;
 }
 
@@ -592,11 +657,21 @@ t_parentwidgetbehavior *pd_getparentwidget(t_pd *x)
 
 void class_setdrawcommand(t_class *c)
 {
+    if (!c)
+    {
+        bug("class_setdrawcommand");
+        return;
+    }
     c->c_drawcommand = 1;
 }
 
 int class_isdrawcommand(t_class *c)
 {
+    if (!c)
+    {
+        bug("class_isdrawcommand");
+        return 0;
+    }
     return (c->c_drawcommand);
 }
 
@@ -612,6 +687,11 @@ static void pd_floatforsignal(t_pd *x, t_float f)
 
 void class_domainsignalin(t_class *c, int onset)
 {
+    if (!c)
+    {
+        bug("class_domainsignalin");
+        return;
+    }
     if (onset <= 0) onset = -1;
     else
     {
@@ -629,6 +709,11 @@ void class_set_extern_dir(t_symbol *s)
 
 char *class_gethelpdir(t_class *c)
 {
+    if (!c)
+    {
+        bug("class_gethelpdir");
+        return 0;
+    }
     return (c->c_externdir->s_name);
 }
 
@@ -639,21 +724,41 @@ static void class_nosavefn(t_gobj *z, t_binbuf *b)
 
 void class_setsavefn(t_class *c, t_savefn f)
 {
+    if (!c)
+    {
+        bug("class_setsavefn");
+        return;
+    }
     c->c_savefn = f;
 }
 
 t_savefn class_getsavefn(t_class *c)
 {
+    if (!c)
+    {
+        bug("class_getsavefn");
+        return 0;
+    }
     return (c->c_savefn);
 }
 
 void class_setpropertiesfn(t_class *c, t_propertiesfn f)
 {
+    if (!c)
+    {
+        bug("class_setpropertiesfn");
+        return;
+    }
     c->c_propertiesfn = f;
 }
 
 t_propertiesfn class_getpropertiesfn(t_class *c)
 {
+    if (!c)
+    {
+        bug("class_getpropertiesfn");
+        return 0;
+    }
     return (c->c_propertiesfn);
 }
 
