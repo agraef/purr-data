@@ -151,10 +151,10 @@ static void my_canvas_getrect(t_gobj *z, t_glist *glist,
 static void my_canvas_save(t_gobj *z, t_binbuf *b)
 {
     t_my_canvas *x = (t_my_canvas *)z;
-    int bflcol[3];
+    t_symbol *bflcol[3];
     t_symbol *srl[3];
     iemgui_save(&x->x_gui, srl, bflcol);
-    binbuf_addv(b, "ssiisiiisssiiiiiii;", gensym("#X"),gensym("obj"),
+    binbuf_addv(b, "ssiisiiisssiiiissi;", gensym("#X"),gensym("obj"),
         (int)x->x_gui.x_obj.te_xpix, (int)x->x_gui.x_obj.te_ypix,
         gensym("cnv"), x->x_gui.x_w, x->x_vis_w, x->x_vis_h,
         srl[0], srl[1], srl[2], x->x_gui.x_ldx, x->x_gui.x_ldy,
@@ -277,13 +277,16 @@ static void my_canvas_vis_size(t_my_canvas *x, t_symbol *s, int ac, t_atom *av)
 static void *my_canvas_new(t_symbol *s, int argc, t_atom *argv)
 {
     t_my_canvas *x = (t_my_canvas *)pd_new(my_canvas_class);
-    int bflcol[]={-233017, -1, -66577};
     int a=IEM_GUI_DEFAULTSIZE, w=100, h=60;
     int ldx=20, ldy=12, i=0;
     int fs=14;
 
     iem_inttosymargs(&x->x_gui, 0);
     iem_inttofstyle(&x->x_gui, 0);
+
+    x->x_gui.x_bcol = 0xE0E0E0;
+    x->x_gui.x_fcol = 0x00;
+    x->x_gui.x_lcol = 0x404040;
 
     if(((argc >= 10)&&(argc <= 13))
        &&IS_A_FLOAT(argv,0)&&IS_A_FLOAT(argv,1)&&IS_A_FLOAT(argv,2))
@@ -308,8 +311,7 @@ static void *my_canvas_new(t_symbol *s, int argc, t_atom *argv)
     if(((argc >= 10)&&(argc <= 13))
        &&(IS_A_SYMBOL(argv,i+3)||IS_A_FLOAT(argv,i+3))&&IS_A_FLOAT(argv,i+4)
        &&IS_A_FLOAT(argv,i+5)&&IS_A_FLOAT(argv,i+6)
-       &&IS_A_FLOAT(argv,i+7)&&IS_A_FLOAT(argv,i+8)
-       &&IS_A_FLOAT(argv,i+9))
+       &&IS_A_FLOAT(argv,i+7))
     {
             /* disastrously, the "label" sits in a different part of the
             message.  So we have to track its location separately (in
@@ -320,8 +322,7 @@ static void *my_canvas_new(t_symbol *s, int argc, t_atom *argv)
         ldy = atom_getintarg(i+5, argc, argv);
         iem_inttofstyle(&x->x_gui, atom_getintarg(i+6, argc, argv));
         fs = atom_getintarg(i+7, argc, argv);
-        bflcol[0] = atom_getintarg(i+8, argc, argv);
-        bflcol[2] = atom_getintarg(i+9, argc, argv);
+        iemgui_all_loadcolors(&x->x_gui, argv+i+8, 0, argv+i+9);
     }
     if((argc == 13)&&IS_A_FLOAT(argv,i+10))
     {
@@ -340,7 +341,6 @@ static void *my_canvas_new(t_symbol *s, int argc, t_atom *argv)
     if(fs < 4)
         fs = 4;
     x->x_gui.x_fontsize = fs;
-    iemgui_all_colfromload(&x->x_gui, bflcol);
     x->x_at[0].a_type = A_FLOAT;
     x->x_at[1].a_type = A_FLOAT;
     iemgui_verify_snd_ne_rcv(&x->x_gui);

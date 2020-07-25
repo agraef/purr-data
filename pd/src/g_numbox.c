@@ -387,7 +387,7 @@ static void my_numbox_getrect(t_gobj *z, t_glist *glist,
 static void my_numbox_save(t_gobj *z, t_binbuf *b)
 {
     t_my_numbox *x = (t_my_numbox *)z;
-    int bflcol[3];
+    t_symbol *bflcol[3];
     t_symbol *srl[3];
 
     iemgui_save(&x->x_gui, srl, bflcol);
@@ -398,7 +398,7 @@ static void my_numbox_save(t_gobj *z, t_binbuf *b)
         x->x_gui.x_changed = 1;
         sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
     }
-    binbuf_addv(b, "ssiisiiffiisssiiiiiiifii;", gensym("#X"),gensym("obj"),
+    binbuf_addv(b, "ssiisiiffiisssiiiisssfii;", gensym("#X"),gensym("obj"),
         (int)x->x_gui.x_obj.te_xpix, (int)x->x_gui.x_obj.te_ypix,
         gensym("nbx"), x->x_gui.x_w, x->x_gui.x_h,
         (t_float)x->x_min, (t_float)x->x_max,
@@ -759,12 +759,15 @@ static void my_numbox_list(t_my_numbox *x, t_symbol *s, int ac, t_atom *av)
 static void *my_numbox_new(t_symbol *s, int argc, t_atom *argv)
 {
     t_my_numbox *x = (t_my_numbox *)pd_new(my_numbox_class);
-    int bflcol[]={-262144, -1, -1};
     int w=5, h=14;
     int lilo=0, ldx=0, ldy=-8;
     int fs=10;
     int log_height=256;
     double min=-1.0e+37, max=1.0e+37,v=0.0;
+
+    x->x_gui.x_bcol = 0xFCFCFC;
+    x->x_gui.x_fcol = 0x00;
+    x->x_gui.x_lcol = 0x00;
 
     if((argc >= 17)&&IS_A_FLOAT(argv,0)&&IS_A_FLOAT(argv,1)
        &&IS_A_FLOAT(argv,2)&&IS_A_FLOAT(argv,3)
@@ -773,8 +776,7 @@ static void *my_numbox_new(t_symbol *s, int argc, t_atom *argv)
        &&(IS_A_SYMBOL(argv,7)||IS_A_FLOAT(argv,7))
        &&(IS_A_SYMBOL(argv,8)||IS_A_FLOAT(argv,8))
        &&IS_A_FLOAT(argv,9)&&IS_A_FLOAT(argv,10)
-       &&IS_A_FLOAT(argv,11)&&IS_A_FLOAT(argv,12)&&IS_A_FLOAT(argv,13)
-       &&IS_A_FLOAT(argv,14)&&IS_A_FLOAT(argv,15)&&IS_A_FLOAT(argv,16))
+       &&IS_A_FLOAT(argv,11)&&IS_A_FLOAT(argv,12)&&IS_A_FLOAT(argv,16))
     {
         w = maxi(atom_getintarg(0, argc, argv),1);
         h = maxi(atom_getintarg(1, argc, argv),8);
@@ -787,9 +789,7 @@ static void *my_numbox_new(t_symbol *s, int argc, t_atom *argv)
         ldy = atom_getintarg(10, argc, argv);
         iem_inttofstyle(&x->x_gui, atom_getintarg(11, argc, argv));
         fs = maxi(atom_getintarg(12, argc, argv),4);
-        bflcol[0] = atom_getintarg(13, argc, argv);
-        bflcol[1] = atom_getintarg(14, argc, argv);
-        bflcol[2] = atom_getintarg(15, argc, argv);
+        iemgui_all_loadcolors(&x->x_gui, argv+13, argv+14, argv+15);
         v = atom_getfloatarg(16, argc, argv);
     }
     else iemgui_new_getnames(&x->x_gui, 6, 0);
@@ -814,7 +814,6 @@ static void *my_numbox_new(t_symbol *s, int argc, t_atom *argv)
     x->x_buf[0] = 0;
     x->x_numwidth = my_numbox_calc_fontwidth(x);
     my_numbox_check_minmax(x, min, max);
-    iemgui_all_colfromload(&x->x_gui, bflcol);
     iemgui_verify_snd_ne_rcv(&x->x_gui);
     x->x_clock_reset = clock_new(x, (t_method)my_numbox_tick_reset);
     x->x_clock_wait = clock_new(x, (t_method)my_numbox_tick_wait);

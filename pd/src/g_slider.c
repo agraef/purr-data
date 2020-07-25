@@ -189,10 +189,10 @@ static void slider_getrect(t_gobj *z, t_glist *glist,
 static void slider_save(t_gobj *z, t_binbuf *b)
 {
     t_slider *x = (t_slider *)z;
-    int bflcol[3];
+    t_symbol *bflcol[3];
     t_symbol *srl[3];
     iemgui_save(&x->x_gui, srl, bflcol);
-    binbuf_addv(b, "ssiisiiffiisssiiiiiiiii", gensym("#X"),gensym("obj"),
+    binbuf_addv(b, "ssiisiiffiisssiiiisssii", gensym("#X"),gensym("obj"),
         (int)x->x_gui.x_obj.te_xpix, (int)x->x_gui.x_obj.te_ypix,
         gensym(x->x_orient ? "vsl" : "hsl"), x->x_gui.x_w, x->x_gui.x_h,
         (t_float)x->x_min, (t_float)x->x_max,
@@ -489,7 +489,7 @@ static void *slider_new(t_symbol *s, int argc, t_atom *argv)
     int orient = s==gensym("vsl") || s==gensym("vslider");
     t_slider *x = (t_slider *)pd_new(orient ? vslider_class : hslider_class);
     x->x_orient = orient;
-    int bflcol[]={-262144, -1, -1};
+//    int bflcol[]={-262144, -1, -1};
     int lilo=0;
     int w,h,ldx,ldy,fs=10, v=0, steady=1;
     if (orient) {
@@ -502,6 +502,11 @@ static void *slider_new(t_symbol *s, int argc, t_atom *argv)
     iem_inttosymargs(&x->x_gui, 0);
     iem_inttofstyle(&x->x_gui, 0);
 
+    x->x_gui.x_bcol = 0xFCFCFC;
+    x->x_gui.x_fcol = 0x00;
+    x->x_gui.x_lcol = 0x00;
+
+
     if(((argc == 17)||(argc == 18))&&IS_A_FLOAT(argv,0)&&IS_A_FLOAT(argv,1)
        &&IS_A_FLOAT(argv,2)&&IS_A_FLOAT(argv,3)
        &&IS_A_FLOAT(argv,4)&&IS_A_FLOAT(argv,5)
@@ -509,8 +514,7 @@ static void *slider_new(t_symbol *s, int argc, t_atom *argv)
        &&(IS_A_SYMBOL(argv,7)||IS_A_FLOAT(argv,7))
        &&(IS_A_SYMBOL(argv,8)||IS_A_FLOAT(argv,8))
        &&IS_A_FLOAT(argv,9)&&IS_A_FLOAT(argv,10)
-       &&IS_A_FLOAT(argv,11)&&IS_A_FLOAT(argv,12)&&IS_A_FLOAT(argv,13)
-       &&IS_A_FLOAT(argv,14)&&IS_A_FLOAT(argv,15)&&IS_A_FLOAT(argv,16))
+       &&IS_A_FLOAT(argv,11)&&IS_A_FLOAT(argv,12)&&IS_A_FLOAT(argv,16))
     {
         w = atom_getintarg(0, argc, argv);
         h = atom_getintarg(1, argc, argv);
@@ -523,9 +527,10 @@ static void *slider_new(t_symbol *s, int argc, t_atom *argv)
         ldy = atom_getintarg(10, argc, argv);
         iem_inttofstyle(&x->x_gui, atom_getintarg(11, argc, argv));
         fs = maxi(atom_getintarg(12, argc, argv),4);
-        bflcol[0] = (int)atom_getintarg(13, argc, argv);
-        bflcol[1] = (int)atom_getintarg(14, argc, argv);
-        bflcol[2] = (int)atom_getintarg(15, argc, argv);
+//        bflcol[0] = (int)atom_getintarg(13, argc, argv);
+//        bflcol[1] = (int)atom_getintarg(14, argc, argv);
+//        bflcol[2] = (int)atom_getintarg(15, argc, argv);
+        iemgui_all_loadcolors(&x->x_gui, argv+13, argv+14, argv+15);
         v = atom_getintarg(16, argc, argv);
     }
     else iemgui_new_getnames(&x->x_gui, 6, 0);
@@ -554,7 +559,7 @@ static void *slider_new(t_symbol *s, int argc, t_atom *argv)
         slider_check_length(x, w);
     }
     slider_check_minmax(x, min, max);
-    iemgui_all_colfromload(&x->x_gui, bflcol);
+//    iemgui_all_colfromload(&x->x_gui, bflcol);
     x->x_thick = 0;
     iemgui_verify_snd_ne_rcv(&x->x_gui);
     outlet_new(&x->x_gui.x_obj, &s_float);
@@ -572,7 +577,6 @@ static void *slider_new(t_symbol *s, int argc, t_atom *argv)
         x->x_gui.legacy_x = -3;
         x->x_gui.legacy_y = 1;
     }
-
 
     return (x);
 }

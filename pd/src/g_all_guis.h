@@ -204,7 +204,11 @@ EXTERN void iemgui_verify_snd_ne_rcv(t_iemgui *iemgui);
 EXTERN t_symbol *iemgui_getfloatsym(t_atom *a);
 EXTERN t_symbol *iemgui_getfloatsymarg(int i, int argc, t_atom *argv);
 EXTERN void iemgui_new_getnames(t_iemgui *iemgui, int indx, t_atom *argv);
+    /* old interface, in case we have old externals calling it */
 EXTERN void iemgui_all_colfromload(t_iemgui *iemgui, int *bflcol);
+    /* new interface for handling colors */
+EXTERN void iemgui_all_loadcolors(t_iemgui *x, t_atom *bcol, t_atom *fcol,
+    t_atom*lcol);
 EXTERN void iemgui_send(t_iemgui *x, t_symbol *s);
 EXTERN void iemgui_receive(t_iemgui *x, t_symbol *s);
 EXTERN void iemgui_label(t_iemgui *x, t_symbol *s);
@@ -221,7 +225,7 @@ EXTERN void iemgui_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy);
 EXTERN void iemgui_select(t_gobj *z, t_glist *glist, int selected);
 EXTERN void iemgui_delete(t_gobj *z, t_glist *glist);
 EXTERN void iemgui_vis(t_gobj *z, t_glist *glist, int vis);
-EXTERN void iemgui_save(t_iemgui *x, t_symbol **srl, int *bflcol);
+EXTERN void iemgui_save(t_iemgui *x, t_symbol **srl, t_symbol **bflcol);
 EXTERN void iemgui_properties(t_iemgui *x, t_symbol **srl);
 EXTERN int iemgui_dialog(t_iemgui *x, int argc, t_atom *argv);
 
