@@ -1,0 +1,27 @@
+#N canvas 320 117 911 463 12;
+#X obj 41 28 inlet;
+#X obj 41 404 outlet;
+#X msg 41 56 bang;
+#X msg 41 135 -2;
+#X obj 41 164 ../utils/sigtofloat~ pow~ 2;
+#X obj 41 193 == 4;
+#X obj 41 222 list append pow~ should handle negative numbers correctly
+for integer powers;
+#X obj 41 85 trigger bang bang;
+#X msg 461 135 -2;
+#X obj 461 164 ../utils/sigtofloat~ pow~ 2.5;
+#X obj 461 222 list append pow~ should output zero for negative numbers
+when given a non-integer power;
+#X obj 461 193 == 0;
+#X connect 0 0 2 0;
+#X connect 2 0 7 0;
+#X connect 3 0 4 0;
+#X connect 4 0 5 0;
+#X connect 5 0 6 0;
+#X connect 6 0 1 0;
+#X connect 7 0 3 0;
+#X connect 7 1 8 0;
+#X connect 8 0 9 0;
+#X connect 9 0 11 0;
+#X connect 10 0 1 0;
+#X connect 11 0 10 0;

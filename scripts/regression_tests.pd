@@ -1,4 +1,4 @@
-#N canvas 340 157 750 572 12;
+#N canvas 225 102 750 572 12;
 #X obj 465 281 r \$0-result;
 #X obj 212 239 bng 31 250 50 0 empty empty Run_all 39 13 0 12 -262144
 -1 -1;
@@ -59,6 +59,7 @@ is handy for some binbuf tests.;
 #X obj 198 2031 rtest type_hint_coverage;
 #X obj 198 2086 rtest route_reject_bang;
 #X obj 198 2141 rtest text_sort;
+#X obj 198 2196 rtest pow~_negative_numbers;
 #X connect 0 0 27 0;
 #X connect 1 0 4 0;
 #X connect 2 0 42 0;
@@ -103,3 +104,4 @@ is handy for some binbuf tests.;
 #X connect 50 0 51 0;
 #X connect 51 0 52 0;
 #X connect 52 0 53 0;
+#X connect 53 0 54 0;
