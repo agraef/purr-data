@@ -1,4 +1,4 @@
-#N canvas 244 48 750 572 12;
+#N canvas 245 72 750 572 12;
 #X obj 465 281 r \$0-result;
 #X obj 212 239 bng 15 250 50 0 empty empty Run_all 17 7 0 10 -262144
 -1 -1;
@@ -25,7 +25,7 @@ is handy for some binbuf tests.;
 #X obj 198 659 rtest makefilename_double_percent;
 #X obj 198 710 rtest makefilename_code_coverage;
 #N canvas 461 242 450 323 (subpatch) 0;
-#X restore 201 2555 pd;
+#X restore 201 2605 pd;
 #X obj 198 761 rtest makefilename_default;
 #X obj 198 812 rtest makefilename_default_bang;
 #X obj 198 863 rtest makefilename_float;
@@ -64,6 +64,7 @@ is handy for some binbuf tests.;
 #X obj 198 2306 rtest log_base;
 #X obj 198 2361 rtest inlet~_no_fwd;
 #X obj 198 2416 rtest inlet~_fwd_large_message;
+#X obj 198 2471 rtest pow~_negative_numbers;
 #X connect 0 0 27 0;
 #X connect 1 0 4 0;
 #X connect 2 0 42 0;
@@ -113,3 +114,4 @@ is handy for some binbuf tests.;
 #X connect 55 0 56 0;
 #X connect 56 0 57 0;
 #X connect 57 0 58 0;
+#X connect 58 0 59 0;

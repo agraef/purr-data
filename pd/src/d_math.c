@@ -660,12 +660,10 @@ t_int *pow_tilde_perform(t_int *w)
     int n = (int)(w[4]);
     while (n--)
     {
-        t_float f = *in1++;
-        if (f > 0)
-            *out = pow(f, *in2);
-        else *out = 0;
-        out++;
-        in2++;
+        t_sample f1 = *in1++, f2 = *in2++;
+        *out++ = (f1 == 0 && f2 < 0) ||
+            (f1 < 0 && (f2 - (int)f2) != 0) ?
+            0 : pow(f1, f2);
     }
     return (w+5);
 }
@@ -678,11 +676,10 @@ t_int *scalarpow_tilde_perform(t_int *w)
     int n = (int)(w[4]);
     while (n--)
     {
-        t_float f = *in++;
-        if (f > 0)
-            *out = pow(f, g);
-        else *out = 0;
-        out++;
+        t_sample f1 = *in++;
+        *out++ = (f1 == 0 && g < 0) ||
+            (f1 < 0 && (g - (int)g) != 0) ?
+            0 : pow(f1, g);
     }
     return(w+5);
 }
