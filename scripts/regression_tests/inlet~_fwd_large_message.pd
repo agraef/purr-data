@@ -1,0 +1,23 @@
+#N canvas 240 193 835 453 12;
+#X obj 57 22 inlet;
+#X obj 57 260 outlet;
+#X msg 57 51 bang;
+#X obj 321 27 array define \$0-big;
+#X obj 318 160 array size \$0-big;
+#X msg 318 135 5e+06;
+#X obj 132 138 array get \$0-big;
+#N canvas 0 0 450 300 \$0-fwd-test~ 0;
+#X obj 61 40 inlet~ fwd;
+#X restore 132 176 pd \$0-fwd-test~;
+#X obj 57 79 trigger bang bang bang;
+#X obj 57 138 f 1;
+#X obj 57 215 list append large messages to [inlet~ fwd] should not
+blow the stack;
+#X connect 0 0 2 0;
+#X connect 2 0 8 0;
+#X connect 5 0 4 0;
+#X connect 8 0 9 0;
+#X connect 8 1 6 0;
+#X connect 8 2 5 0;
+#X connect 9 0 10 0;
+#X connect 10 0 1 0;

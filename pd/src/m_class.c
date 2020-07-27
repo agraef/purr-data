@@ -1182,3 +1182,37 @@ t_gotfn zgetfn(t_pd *x, t_symbol *s)
         if (m->me_name == s) return(m->me_fun);
     return(0);
 }
+
+t_gotfn zcheckgetfn(t_pd *x, t_symbol *s, t_atomtype arg1, ...)
+{
+    t_class *c = *x;
+    t_methodentry *m;
+    int i, j;
+
+    /* get arg types */
+    va_list ap;
+    int nargs = 0;
+    t_atomtype args[MAXPDARG+1], curr = arg1;
+    va_start(ap, arg1);
+    while (curr != A_NULL && nargs < MAXPDARG)
+    {
+        args[nargs++] = curr;
+        curr = va_arg(ap, t_atomtype);
+    }
+    if (curr != A_NULL) error("zcheckgetfn: only 5 arguments are typecheckable");
+    args[nargs] = A_NULL;
+    va_end(ap);
+
+    for (i = c->c_nmethod, m = c->c_methods; i--; m++)
+    {
+        if (m->me_name == s)
+        {
+            j = 0;
+            /* both argtype lists are valid, dont need to check whether j < MAXDPARG */
+            while(m->me_arg[j] != A_NULL && args[j] != A_NULL
+                    && m->me_arg[j] == args[j]) j++;
+            if(m->me_arg[j] == A_NULL && args[j] == A_NULL) return(m->me_fun);
+        }
+    }
+    return(0);
+}

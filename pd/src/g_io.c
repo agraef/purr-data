@@ -36,8 +36,8 @@ typedef struct _vinlet
   /* if not reblocking, the next slot communicates the parent's inlet
      signal from the prolog to the DSP routine: */
     t_signal *x_directsignal;
-
-  t_resample x_updown;
+    t_resample x_updown;
+    t_outlet *x_fwdout;  /* optional outlet for forwarding messages to inlet~ */
 } t_vinlet;
 
 static void *vinlet_new(t_symbol *s)
@@ -114,6 +114,19 @@ t_int *vinlet_perform(t_int *w)
     if (in == x->x_endbuf) in = x->x_buf;
     x->x_read = in;
     return (w+4);
+}
+
+static void vinlet_fwd(t_vinlet *x, t_symbol *s, int argc, t_atom *argv)
+{
+    if(x->x_fwdout) /* inlet~ fwd */
+        outlet_anything(x->x_fwdout, s, argc, argv);
+    else if(x->x_buf == 0) /* inlet, need to forward message because we want
+                                it to accept fwd selector */
+        outlet_anything(x->x_obj.ob_outlet, s, argc, argv);
+    else /* inlet~ without fwd */
+        pd_error(x->x_canvas, "inlet~: expected 'signal' but got '%s' "
+            "(Note: [inlet~] does not forward non-signal messages unless "
+            "argument 'fwd' is defined)", s->s_name);
 }
 
 static void vinlet_dsp(t_vinlet *x, t_signal **sp)
@@ -251,8 +264,10 @@ static void *vinlet_newsig(t_symbol *s)
     x->x_endbuf = x->x_buf = (t_float *)getbytes(0);
     x->x_bufsize = 0;
     x->x_directsignal = 0;
+    x->x_fwdout = 0;
     outlet_new(&x->x_obj, &s_signal);
-
+    /* this line was in pd vanilla but I don't think it is necessary
+       inlet_new(&x->x_obj, (t_pd *)x->x_inlet, 0, 0); */
     resample_init(&x->x_updown);
 
     /* this should be thought over: 
@@ -265,6 +280,8 @@ static void *vinlet_newsig(t_symbol *s)
     else if (s == gensym("lin"))x->x_updown.method=2; /* up: linear interpolation */
     else x->x_updown.method=0;                        /* up: zero-padding */
 
+    if (s == gensym("fwd"))         /* turn on forwarding */
+        x->x_fwdout = outlet_new(&x->x_obj, 0);
     return (x);
 }
 
@@ -279,6 +296,8 @@ static void vinlet_setup(void)
     class_addsymbol(vinlet_class, vinlet_symbol);
     class_addlist(vinlet_class, vinlet_list);
     class_addanything(vinlet_class, vinlet_anything);
+    class_addmethod(vinlet_class,(t_method)vinlet_fwd,  gensym("fwd"),
+        A_GIMME, 0);
     class_addmethod(vinlet_class, (t_method)vinlet_dsp, gensym("dsp"),
         A_CANT, 0);
     class_sethelpsymbol(vinlet_class, gensym("pd"));
