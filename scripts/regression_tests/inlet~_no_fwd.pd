@@ -1,0 +1,23 @@
+#N canvas 239 169 507 299 12;
+#X obj 57 22 inlet;
+#X obj 57 230 outlet;
+#N canvas 0 0 450 300 \$0-test~ 0;
+#X obj 61 40 inlet~;
+#X restore 171 146 pd \$0-test~;
+#X obj 132 117 unpost;
+#X obj 57 117 list;
+#X obj 57 146 list length;
+#X obj 57 185 list append non-signal message to inlet~ should trigger
+an error;
+#X msg 57 51 bang;
+#X obj 57 79 trigger bang bang bang;
+#X connect 0 0 7 0;
+#X connect 3 0 4 1;
+#X connect 3 1 2 0;
+#X connect 4 0 5 0;
+#X connect 5 0 6 0;
+#X connect 6 0 1 0;
+#X connect 7 0 8 0;
+#X connect 8 0 4 0;
+#X connect 8 1 3 0;
+#X connect 8 2 4 1;
