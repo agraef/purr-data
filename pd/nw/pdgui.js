@@ -6023,10 +6023,16 @@ function canvas_params(nw_win)
         vscroll.style.setProperty("height", (yHeight - 6) + "px");
         vscroll.style.setProperty("top", (yScrollTopOffset + 2) + "px");
         vscroll.style.setProperty("-webkit-clip-path",
-            "polygon(0px 0px, 5px 0px, 5px " + (yHeight - 6) +
-            "px, 0px " + (yHeight - 11) + "px, 0px 5px)");
-        vscroll.style.setProperty("width", (5 * zoom) + "px");
-        vscroll.style.setProperty("right", (2 * zoom) + "px");
+            "polygon(0px 0px, 5px 0px, 5px " + (yHeight - 6 + nw_version_bbox_offset) +
+            "px, 0px " + (yHeight - 11 + nw_version_bbox_offset) + "px, 0px 5px)");
+        // ico@vt.edu: this could go either way. We can zoom here to compensate for
+        // the zoom and keep the scrollbars the same size, or, as is the case with
+        // this new commit, we enlarge them together with the patch since one of the
+        // possible rationales is that zooming is there to improve visibility. If
+        // we decide to reenable this, we may want to fine-tune scrollbar height to
+        // ensure its size is accurate.
+        //vscroll.style.setProperty("width", (5 * zoom) + "px");
+        //vscroll.style.setProperty("right", (2 * zoom) + "px");
         vscroll.style.setProperty("visibility", "visible");
     } else {
         vscroll.style.setProperty("visibility", "hidden");
@@ -6044,8 +6050,14 @@ function canvas_params(nw_win)
         hscroll.style.setProperty("-webkit-clip-path",
             "polygon(0px 0px, " + (xWidth - 11) + "px 0px, " +
             (xWidth - 6) + "px 5px, 0px 5px)");
-        hscroll.style.setProperty("height", (5 * zoom) + "px");
-        hscroll.style.setProperty("bottom", (2 * zoom) + "px");
+        // ico@vt.edu: this could go either way. We can zoom here to compensate for
+        // the zoom and keep the scrollbars the same size, or, as is the case with
+        // this new commit, we enlarge them together with the patch since one of the
+        // possible rationales is that zooming is there to improve visibility. If
+        // we decide to reenable this, we may want to fine-tune scrollbar width to
+        // ensure its size is accurate.
+        //hscroll.style.setProperty("height", (5 * zoom) + "px");
+        //hscroll.style.setProperty("bottom", (2 * zoom) + "px");
         hscroll.style.setProperty("visibility", "visible");
     } else {
         hscroll.style.setProperty("visibility", "hidden");    
@@ -6208,6 +6220,7 @@ function do_optimalzoom(cid, hflag, vflag) {
             nw_win.zoomLevel = z;
             pdsend(cid, "zoom", z);
         }
+        do_getscroll(cid,1);
     });
 }
 
