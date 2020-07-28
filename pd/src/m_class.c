@@ -99,18 +99,29 @@ char *type_hint(t_symbol *s, int argc, t_atom *argv, int dostof)
     {
         if (symbol_can_float(atom_getsymbolarg(0, argc, argv), &f))
         {
-            sprintf(hint, " (Note: this symbol message has a floatlike payload "
-                "which cannot be saved properly. Did you mean 'float %s'?)",
-                argv->a_w.w_symbol->s_name);
+            if (s == &s_symbol)
+                sprintf(hint, " (Warning: symbol message with numeric payload "
+                "detected. This data cannot be saved properly in a patch.");
+            else
+                sprintf(hint, " (Note: '%s' is actually a symbol atom, not "
+                    "a float)",
+                    argv->a_w.w_symbol->s_name);
             return hint;
         }
         else if (f == -1 || f == 1)
         {
                 /* For values which would overflow, give a hint but don't
                    suggest float type */
-            sprintf(hint, " (Note: this symbol message has an %s floatlike "
-                "payload which cannot be saved properly.",
-                f == 1 ? "overflowing" : "underflowing");
+            if (s == &s_symbol)
+                sprintf(hint, " (Note: this symbol message has an %s floatlike "
+                    "payload which cannot be saved properly.",
+                    f == 1 ? "overflowing" : "underflowing");
+            else
+                sprintf(hint, " (Note: '%s' is actually a symbol atom. If you "
+                    "save it Pd will parse it as a float and cause an %s "
+                    "error.",
+                    argv->a_w.w_symbol->s_name,
+                    f == 1 ? "overflow" : "underflow");
             return hint;
         }
     }
@@ -129,11 +140,31 @@ char *type_hint(t_symbol *s, int argc, t_atom *argv, int dostof)
         {
                 /* For values which would overflow, give a hint but don't
                    suggest float type */
-            sprintf(hint, " (Note: this symbol atom has an %s floatlike "
+            sprintf(hint, " (Note: the symbol atom '%s' has an %s floatlike "
                 "payload which cannot be saved properly.",
+                s->s_name,
                 f == 1 ? "overflowing" : "underflowing");
             return hint;
         }
+    }
+
+        /* Now that we've checked for symbols that could be floats, let's
+           catch the generic case where a user entered a symbol payload for a
+           "float" message. This can be typed into a messsage box, for
+           example. We also check for empty symbol payload here, and other
+           odd atom types */
+    if (s && s == &s_float && argc && argv->a_type != A_FLOAT)
+    {
+        if (argv->a_type == A_SYMBOL && argv->a_w.w_symbol == &s_)
+            sprintf(hint, " (Expected a float argument but got empty symbol)");
+        else if (argv->a_type == A_SYMBOL)
+            sprintf(hint, " (Expected a float argument but got '%s')",
+                argv->a_w.w_symbol->s_name);
+        else if (argv->a_type == A_POINTER)
+            sprintf(hint, " (Expected a float argument but got a gpointer)");
+        else
+            sprintf(hint, " (Note: got an argument that's not a float)");
+        return hint;
     }
 
     hint[0] = '\0';
@@ -150,7 +181,7 @@ static void pd_defaultanything(t_pd *x, t_symbol *s, int argc, t_atom *argv)
 static void pd_defaultbang(t_pd *x)
 {
     if (*(*x)->c_listmethod != pd_defaultlist)
-        (*(*x)->c_listmethod)(x, 0, 0, 0);
+        (*(*x)->c_listmethod)(x, &s_bang, 0, 0);
     else (*(*x)->c_anymethod)(x, &s_bang, 0, 0);
 }
 
@@ -165,7 +196,7 @@ static void pd_defaultpointer(t_pd *x, t_gpointer *gp)
     {
         t_atom at;
         SETPOINTER(&at, gp);
-        (*(*x)->c_listmethod)(x, 0, 1, &at);
+        (*(*x)->c_listmethod)(x, &s_pointer, 1, &at);
     }
     else
     {
@@ -181,7 +212,7 @@ static void pd_defaultfloat(t_pd *x, t_float f)
     {
         t_atom at;
         SETFLOAT(&at, f);
-        (*(*x)->c_listmethod)(x, 0, 1, &at);
+        (*(*x)->c_listmethod)(x, &s_float, 1, &at);
     }
     else
     {
@@ -197,7 +228,7 @@ static void pd_defaultsymbol(t_pd *x, t_symbol *s)
     {
         t_atom at;
         SETSYMBOL(&at, s);
-        (*(*x)->c_listmethod)(x, 0, 1, &at);
+        (*(*x)->c_listmethod)(x, &s_symbol, 1, &at);
     }
     else
     {
@@ -1091,8 +1122,10 @@ badarg:
        message that contains it (so it can be selected when 'Find
        Error' is used). */
     x = pd_mess_from_responder(x);
-    pd_error(x, "Bad arguments for message '%s' to object '%s'",
-        s->s_name, c->c_name->s_name);
+    pd_error(x, "Bad arguments for message '%s' to object '%s'%s",
+        s->s_name,
+        c->c_name->s_name,
+        type_hint(s, argc, argv, 1));
 lastmess:
     last_typedmess = s;    
     last_typedmess_pd = x;
@@ -1168,7 +1201,10 @@ t_gotfn getfn(t_pd *x, t_symbol *s)
 
     for (i = c->c_nmethod, m = c->c_methods; i--; m++)
         if (m->me_name == s) return(m->me_fun);
-    pd_error(x, "%s: no method for message '%s'", c->c_name->s_name, s->s_name);
+    pd_error(x, "%s: no method for message '%s'%s",
+            c->c_name->s_name,
+            s->s_name,
+            type_hint(s, 0, 0, 1));
     return((t_gotfn)nullfn);
 }
 

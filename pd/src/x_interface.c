@@ -325,6 +325,12 @@ typedef struct _objectinfo {
     t_canvas *x_canvas;
 } t_objectinfo;
 
+static t_class *debuginfo_class;
+
+typedef struct _debuginfo {
+    t_object x_obj;
+} t_debuginfo;
+
 /* used by all the *info objects */
 
 static int info_to_console = 0;
@@ -1623,12 +1629,43 @@ void objectinfo_setup(void)
     post("stable objectinfo methods: class");
 }
 
+void debuginfo_print(t_debuginfo *x)
+{
+    info_print((t_text *)x);
+}
+
+    /* replace incoming message's selector with zero and output it */
+void debuginfo_nullselector(t_debuginfo *x, t_symbol *s, int argc,
+    t_atom *argv)
+{
+    info_out((t_text *)x, 0, argc, argv);
+}
+
+void *debuginfo_new(void)
+{
+    t_debuginfo *x = (t_debuginfo *)pd_new(debuginfo_class);
+    outlet_new(&x->x_obj, &s_anything);
+    return (void *)x;
+}
+
+void debuginfo_setup(void)
+{
+    debuginfo_class = class_new(gensym("debuginfo"),
+        (t_newmethod)debuginfo_new, 0, sizeof(t_debuginfo),
+        CLASS_DEFAULT, 0);
+    class_addmethod(debuginfo_class, (t_method)debuginfo_nullselector,
+        gensym("null-selector"), A_GIMME, 0);
+    class_addmethod(debuginfo_class, (t_method)debuginfo_print,
+        gensym("print"), A_GIMME, 0);
+}
+
 void x_interface_setup(void)
 {
+    canvasinfo_setup();
+    classinfo_setup();
+    debuginfo_setup();
+    objectinfo_setup();
+    pdinfo_setup();
     print_setup();
     unpost_setup();
-    canvasinfo_setup();
-    pdinfo_setup();
-    classinfo_setup();
-    objectinfo_setup();
 }
