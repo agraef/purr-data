@@ -793,13 +793,38 @@ function pd_geo_string(w, h, x, y) {
     return  [w,"x",h,"+",x,"+",y].join("");
 }
 
+// ico@vt.edu: we moved this from index.js, so that we can use the versioning
+// to also deal with weird offsets between nwjs 0.14/0.24 and 0.46 and upwards
+function check_nwjs_version(version) {
+    // aggraef: check that process.versions["nw"] is at least the given version
+    // NOTE: We assume that "0.x.y" > "0.x", and just ignore any -beta
+    // suffixes if present.
+    var nwjs_array = process.versions["nw"].split("-")[0].
+        split(".").map(Number);
+    var vers_array = version.split("-")[0].
+        split(".").map(Number);
+    // lexicographic comparison
+    for (var i = 0; i < vers_array.length; ++i) {
+        if (nwjs_array.length <= i || vers_array[i] > nwjs_array[i])
+            return false;
+        else if (vers_array[i] < nwjs_array[i])
+            return true;
+    }
+    return vers_array.length <= nwjs_array.length;
+}
+
+exports.check_nwjs_version = check_nwjs_version;
+
+var menu_offset = check_nwjs_version("0.46") ? 25 : 23;
+
 // quick hack so that we can paste pd code from clipboard and
 // have it affect an empty canvas' geometry
 // requires nw.js API
 function gui_canvas_change_geometry(cid, w, h, x, y) {
     gui(cid).get_nw_window(function(nw_win) {
         nw_win.width = w;
-        nw_win.height = h + 23; // 23 is a kludge to account for menubar
+        // menu_offset is a kludge to account for menubar
+        nw_win.height = h + menu_offset;
         nw_win.x = x;
         nw_win.y = y;
     });
@@ -816,11 +841,11 @@ function canvas_check_geometry(cid) {
         // in nw_create_window of index.js
         // ico@vt.edu in 0.46.2 this is now 25 pixels, so I guess
         // it is now officially kludge^2
-        win_h = patchwin[cid].height - 25,
+        win_h = patchwin[cid].height - menu_offset,
         win_x = patchwin[cid].x,
         win_y = patchwin[cid].y,
         cnv_width = patchwin[cid].window.innerWidth,
-        cnv_height = patchwin[cid].window.innerHeight - 25;
+        cnv_height = patchwin[cid].window.innerHeight - menu_offset;
     // We're reusing win_x and win_y below, as it
     // shouldn't make a difference to the bounds
     // algorithm in Pd (ico@vt.edu: this is not true anymore)
@@ -830,7 +855,7 @@ function canvas_check_geometry(cid) {
     // win_x and win_y with cnv_width and cnv_height + 25 to ensure the window
     // reopens exactly how it was saved)
     pdsend(cid, "relocate",
-           pd_geo_string(cnv_width, cnv_height + 25, win_x, win_y),
+           pd_geo_string(cnv_width, cnv_height + menu_offset, win_x, win_y),
            pd_geo_string(cnv_width, cnv_height, win_x, win_y)
     );
 }
@@ -6019,14 +6044,20 @@ function canvas_params(nw_win)
     // yScrollSize reflects the amount of the patch we currently see,
     // so if it drops below 1, that means we need our scrollbars 
     if (yScrollSize < 1) {
-        var yHeight = Math.floor(yScrollSize * (min_height + 3));
-        vscroll.style.setProperty("height", (yHeight - 6) + "px");
+        var yHeight = Math.floor(yScrollSize * (min_height + 3 + nw_version_bbox_offset));
+        vscroll.style.setProperty("height", (yHeight - 6 + nw_version_bbox_offset) + "px");
         vscroll.style.setProperty("top", (yScrollTopOffset + 2) + "px");
         vscroll.style.setProperty("-webkit-clip-path",
-            "polygon(0px 0px, 5px 0px, 5px " + (yHeight - 6) +
-            "px, 0px " + (yHeight - 11) + "px, 0px 5px)");
-        vscroll.style.setProperty("width", (5 * zoom) + "px");
-        vscroll.style.setProperty("right", (2 * zoom) + "px");
+            "polygon(0px 0px, 5px 0px, 5px " + (yHeight - 6 + nw_version_bbox_offset) +
+            "px, 0px " + (yHeight - 11 + nw_version_bbox_offset) + "px, 0px 5px)");
+        // ico@vt.edu: this could go either way. We can zoom here to compensate for
+        // the zoom and keep the scrollbars the same size, or, as is the case with
+        // this new commit, we enlarge them together with the patch since one of the
+        // possible rationales is that zooming is there to improve visibility. If
+        // we decide to reenable this, we may want to fine-tune scrollbar height to
+        // ensure its size is accurate.
+        //vscroll.style.setProperty("width", (5 * zoom) + "px");
+        //vscroll.style.setProperty("right", (2 * zoom) + "px");
         vscroll.style.setProperty("visibility", "visible");
     } else {
         vscroll.style.setProperty("visibility", "hidden");
@@ -6044,8 +6075,14 @@ function canvas_params(nw_win)
         hscroll.style.setProperty("-webkit-clip-path",
             "polygon(0px 0px, " + (xWidth - 11) + "px 0px, " +
             (xWidth - 6) + "px 5px, 0px 5px)");
-        hscroll.style.setProperty("height", (5 * zoom) + "px");
-        hscroll.style.setProperty("bottom", (2 * zoom) + "px");
+        // ico@vt.edu: this could go either way. We can zoom here to compensate for
+        // the zoom and keep the scrollbars the same size, or, as is the case with
+        // this new commit, we enlarge them together with the patch since one of the
+        // possible rationales is that zooming is there to improve visibility. If
+        // we decide to reenable this, we may want to fine-tune scrollbar width to
+        // ensure its size is accurate.
+        //hscroll.style.setProperty("height", (5 * zoom) + "px");
+        //hscroll.style.setProperty("bottom", (2 * zoom) + "px");
         hscroll.style.setProperty("visibility", "visible");
     } else {
         hscroll.style.setProperty("visibility", "hidden");    
@@ -6075,6 +6112,8 @@ function pd_do_getscroll(cid) {
 
 exports.pd_do_getscroll = pd_do_getscroll;*/
 
+var nw_version_bbox_offset = check_nwjs_version("0.46") ? 0 : -4;
+
 function do_getscroll(cid, checkgeom) {
     // Since we're throttling these getscroll calls, they can happen after
     // the patch has been closed. We remove the cid from the patchwin
@@ -6092,6 +6131,9 @@ function do_getscroll(cid, checkgeom) {
         var svg_elem = nw_win.window.document.getElementById("patchsvg");
         var { x: x, y: y, w: width, h: height,
             mw: min_width, mh: min_height } = canvas_params(nw_win);
+
+        min_height += nw_version_bbox_offset;
+
         if (width < min_width) {
             width = min_width;
         }
@@ -6208,6 +6250,7 @@ function do_optimalzoom(cid, hflag, vflag) {
             nw_win.zoomLevel = z;
             pdsend(cid, "zoom", z);
         }
+        do_getscroll(cid,1);
     });
 }
 
@@ -6364,11 +6407,11 @@ function gui_update_scrollbars(cid) {
             
             if (yScrollSize < 1) {
                 var yHeight = Math.floor(yScrollSize * min_height);
-                vscroll.style.setProperty("height", (yHeight - 6) + "px");
+                vscroll.style.setProperty("height", (yHeight - 6 + nw_version_bbox_offset) + "px");
                 vscroll.style.setProperty("top", (yScrollTopOffset + 2) + "px");
                 vscroll.style.setProperty("-webkit-clip-path",
-                    "polygon(0px 0px, 5px 0px, 5px " + (yHeight - 6) +
-                    "px, 0px " + (yHeight - 11) + "px, 0px 5px)");
+                    "polygon(0px 0px, 5px 0px, 5px " + (yHeight - 6 + nw_version_bbox_offset) +
+                    "px, 0px " + (yHeight - 11 + nw_version_bbox_offset) + "px, 0px 5px)");
                 vscroll.style.setProperty("visibility", "visible");
             } else {
                 vscroll.style.setProperty("visibility", "hidden");    

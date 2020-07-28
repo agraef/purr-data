@@ -381,27 +381,9 @@ function nw_close_window(window) {
     window.close(true);
 }
 
-function check_nwjs_version(version) {
-    // aggraef: check that process.versions["nw"] is at least the given version
-    // NOTE: We assume that "0.x.y" > "0.x", and just ignore any -beta
-    // suffixes if present.
-    var nwjs_array = process.versions["nw"].split("-")[0].
-        split(".").map(Number);
-    var vers_array = version.split("-")[0].
-        split(".").map(Number);
-    // lexicographic comparison
-    for (var i = 0; i < vers_array.length; ++i) {
-        if (nwjs_array.length <= i || vers_array[i] > nwjs_array[i])
-            return false;
-        else if (vers_array[i] < nwjs_array[i])
-            return true;
-    }
-    return vers_array.length <= nwjs_array.length;
-}
-
 // 0.46+ seems to be required for "null" to work. TODO: Bisect to get the
 // actual minimum required version for this.
-var null_pos = check_nwjs_version("0.46") ? "null" : "center";
+var null_pos = pdgui.check_nwjs_version("0.46") ? "null" : "center";
 
 function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
         // todo: make a separate way to format the title for OSX
