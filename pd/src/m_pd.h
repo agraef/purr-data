@@ -305,6 +305,7 @@ EXTERN void pd_forwardmess(t_pd *x, int argc, t_atom *argv);
 EXTERN t_symbol *gensym(const char *s);
 EXTERN t_gotfn getfn(t_pd *x, t_symbol *s);
 EXTERN t_gotfn zgetfn(t_pd *x, t_symbol *s);
+EXTERN t_gotfn zcheckgetfn(t_pd *x, t_symbol *s, t_atomtype arg1, ...);
 EXTERN void nullfn(void);
 EXTERN void pd_vmess(t_pd *x, t_symbol *s, char *fmt, ...);
 #define mess0(x, s) ((*getfn((x), (s)))((x)))
