@@ -2663,12 +2663,17 @@ function gui_canvas_emphasize(cid) {
     gui(cid).get_elem("patchsvg", function(e) {
         // raise the window
         gui_raise_window(cid);
-        // animate the background
-        e.animate([
-            {"backgroundColor": "white"},
-            {"backgroundColor": "#ff000099"},
-            {"backgroundColor": "white"}
-        ], { duration: 900, easing: "ease-in-out", iterations: 1 });
+        // animate the background, except for Windows and old OSX versions.
+        // We *really* have to update all platforms to the same most recent
+        // stable version. Otherwise the entire codebase is going to become
+        // conditional branches...
+        if (check_nwjs_version("0.15")) {
+            e.animate([
+                {"backgroundColor": "white"},
+                {"backgroundColor": "#ff9999"},
+                {"backgroundColor": "white"}
+            ], { duration: 900, easing: "ease-in-out", iterations: 1 });
+        }
     });
 }
 
@@ -2678,11 +2683,12 @@ function gui_gobj_emphasize(cid, tag) {
     gui(cid).get_gobj(tag, function(e) {
         var border = e.querySelector(".border");
         e.scrollIntoView();
-        // quick and dirty
-        if (border) {
+        // quick and dirty, plus another check because Windows and old OSX
+        // versions of nwjs are ancient and don't include web animations API...
+        if (border && check_nwjs_version("0.15")) {
             border.animate([
                  {fill: "white"},
-                 {fill: "#ff000099"},
+                 {fill: "#ff9999"},
                  {fill: "white"}
             ], { duration: 300, easing: "ease-in-out", iterations: 3});
         }
