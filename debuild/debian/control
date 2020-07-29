@@ -8,7 +8,7 @@ Homepage: https://git.purrdata.net/jwilkes/purr-data
 
 Package: purr-data
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, liblua5.3-0 | liblua5.2-0
 Recommends: xdg-utils, pulseaudio-utils, tap-plugins, ladspa-foo-plugins, invada-studio-plugins-ladspa, blepvco, swh-plugins, mcp-plugins, cmt, blop, omins, ubuntustudio-audio-plugins, rev-plugins, dssi-utils, vco-plugins, wah-plugins, fil-plugins, mda-lv2
 Suggests: python, fluid-soundfont-gm
 Description:  Interactive multimedia programming environment (NW.js variant)
