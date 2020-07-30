@@ -74,5 +74,4 @@ path33: /usr/lib/pd-l2ork/extra/flext
 path34: /usr/lib/pd-l2ork/extra/rjlib
 path35: /usr/lib/pd-l2ork/extra/disis
 path36: /usr/lib/pd-l2ork/extra/lyonpotpourri
-path37: /usr/lib/pd-l2ork/extra/pdlua
-npath: 37
+npath: 36
