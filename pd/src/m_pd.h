@@ -713,7 +713,7 @@ EXTERN void sys_vguid(const char *file, int line, const char *fmt, ...);
 EXTERN void sys_vvguid(const char *file, int line, const char *fmt, va_list);
 #endif
 EXTERN void sys_gui(const char *s);
-#define sys_vgui(args...) sys_vguid(__FILE__,__LINE__,args)
+#define sys_vgui(...) sys_vguid(__FILE__,__LINE__,__VA_ARGS__)
 #define sys_gui(s)        sys_vguid(__FILE__,__LINE__,"%s",s)
 EXTERN void gui_vmess(const char *sel, char *fmt, ...);
 /* some more gui interfaces for building incremental messages */
