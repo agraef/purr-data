@@ -190,15 +190,6 @@ void iemgui_all_col2save(t_iemgui *x, t_symbol **bflcol)
     bflcol[2] = color2symbol(x->x_lcol);
 }
 
-static void expand_shorthex(char *source, char *doubled)
-{
-    while(*source)
-    {
-        *doubled++ = *source;
-        *doubled++ = *source++;
-    }
-}
-
 static int iemgui_getcolorarg(t_iemgui *x, int index, int argc, t_atom *argv)
 {
     char *classname;
@@ -215,11 +206,14 @@ static int iemgui_getcolorarg(t_iemgui *x, int index, int argc, t_atom *argv)
         if ('#' == s->s_name[0])
         {
             char *start = s->s_name + 1, *end;
-            char expanded[6];
+            char expanded[7];
             int len = strlen(start);
             if (len == 3)
             {
-                expand_shorthex(start, expanded);
+                sprintf(expanded, "%c%c%c%c%c%c",
+                    start[0], start[0],
+                    start[1], start[1],
+                    start[2], start[2]);
                 start = expanded;
                 len = 6;
             }
