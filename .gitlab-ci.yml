@@ -10,6 +10,7 @@
 .build_all: &build_all
   - echo -e "section_start:`date +%s`:build_all\r\e[0KBuilding Purr Data"
   - cd l2ork_addons
+  - export V=0
   - ./tar_em_up.sh $BUILD_TYPE_FLAG
   - cd ..
   - echo -e "section_end:`date +%s`:build_all\r\e[0K"
