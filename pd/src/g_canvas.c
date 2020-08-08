@@ -74,6 +74,8 @@ static t_symbol *canvas_newdirectory = &s_;
 static int canvas_newargc;
 static t_atom *canvas_newargv;
 
+static t_ab_definition *canvas_newabsource = 0;
+
     /* maintain the list of visible toplevels for the GUI's "windows" menu */
 void canvas_updatewindowlist( void)
 {
@@ -134,6 +136,12 @@ void glob_setfilename(void *dummy, t_symbol *filesym, t_symbol *dirsym)
 {
     canvas_newfilename = filesym;
     canvas_newdirectory = dirsym;
+}
+
+/* set the source for the next canvas, it will be an ab instance */
+void canvas_setabsource(t_ab_definition *abdef)
+{
+    canvas_newabsource = abdef;
 }
 
 t_canvas *canvas_getcurrent(void)
@@ -463,6 +471,16 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     }
     else x->gl_env = 0;
 
+    x->gl_abdefs = 0;
+    if(canvas_newabsource) /* if absource is set means that this canvas is 
+                                going to be an ab instance */
+    {
+        x->gl_isab = 1;
+        x->gl_absource = canvas_newabsource;
+        canvas_newabsource = 0;
+    }
+    else x->gl_isab = 0;
+
     if (yloc < GLIST_DEFCANVASYLOC)
         yloc = GLIST_DEFCANVASYLOC;
     if (xloc < 0)
@@ -700,6 +718,14 @@ t_symbol *canvas_makebindsym(t_symbol *s)
 {
     char buf[MAXPDSTRING];
     snprintf(buf, MAXPDSTRING-1, "pd-%s", s->s_name);
+    buf[MAXPDSTRING-1] = 0;
+    return (gensym(buf));
+}
+
+t_symbol *canvas_makebindsym_ab(t_symbol *s)
+{
+    char buf[MAXPDSTRING];
+    snprintf(buf, MAXPDSTRING-1, "ab-%s", s->s_name);
     buf[MAXPDSTRING-1] = 0;
     return (gensym(buf));
 }
@@ -992,6 +1018,7 @@ int glist_getfont(t_glist *x)
 }
 
 extern void canvas_group_free(t_pd *x);
+static int canvas_deregister_ab(t_canvas *x, t_ab_definition *a);
 
 void canvas_free(t_canvas *x)
 {
@@ -1033,6 +1060,23 @@ void canvas_free(t_canvas *x)
         canvas_takeofflist(x);
     if (x->gl_svg)                   /* for groups, free the data */
         canvas_group_free(x->gl_svg);
+
+    /* free stored ab definitions */
+    t_ab_definition *d = x->gl_abdefs, *daux;
+    while(d)
+    {
+        daux = d->ad_next;
+        binbuf_free(d->ad_source);
+        freebytes(d, sizeof(t_ab_definition));
+        d = daux;
+    }
+    
+    /* freeing an ab instance */
+    if(x->gl_isab)
+    {
+        x->gl_absource->ad_numinstances--;
+        canvas_deregister_ab(x->gl_owner, x->gl_absource);
+    }
 }
 
 /* ----------------- lines ---------- */
@@ -1566,13 +1610,17 @@ static int canvas_should_bind(t_canvas *x)
 
 static void canvas_bind(t_canvas *x)
 {
-    if (canvas_should_bind(x))
+    if (x->gl_isab) /* if it is an ab instance, we bind it to symbol 'ab-<name>' */
+        pd_bind(&x->gl_pd, canvas_makebindsym_ab(x->gl_name));
+    else if (canvas_should_bind(x))
         pd_bind(&x->gl_pd, canvas_makebindsym(x->gl_name));
 }
 
 static void canvas_unbind(t_canvas *x)
 {
-    if (canvas_should_bind(x))
+    if (x->gl_isab)
+        pd_unbind(&x->gl_pd, canvas_makebindsym_ab(x->gl_name));
+    else if (canvas_should_bind(x))
         pd_unbind(&x->gl_pd, canvas_makebindsym(x->gl_name));
 }
 
@@ -1853,6 +1901,347 @@ void canvas_redrawallfortemplatecanvas(t_canvas *x, int action)
         canvas_redrawallfortemplate(tmpl, action);
     }
     canvas_redrawallfortemplate(0, action);
+}
+
+/* ------------------------------- ab ------------------------ */
+
+static char ab_templatecanvas[] = "#N canvas;\n";
+
+/* create an ab instance from its source */
+static t_pd *do_create_ab(t_ab_definition *abdef, int argc, t_atom *argv)
+{
+
+    canvas_setargs(argc, argv);
+    int dspstate = canvas_suspend_dsp();
+    glob_setfilename(0, abdef->ad_name, gensym("[ab]"));
+
+    canvas_setabsource(abdef); // set the ab source
+    binbuf_eval(abdef->ad_source, 0, 0, 0);
+    canvas_initbang((t_canvas *)(s__X.s_thing));
+
+    glob_setfilename(0, &s_, &s_);
+    canvas_resume_dsp(dspstate);
+    canvas_popabstraction((t_canvas *)(s__X.s_thing));
+    canvas_setargs(0, 0);
+
+    return(newest);
+}
+
+/* get root canvas crossing ab boundaries, where ab definitions are stored */
+static t_canvas *canvas_getrootfor_ab(t_canvas *x)
+{
+    if (!x->gl_owner || (canvas_isabstraction(x) && !x->gl_isab))
+        return (x);
+    else 
+        return (canvas_getrootfor_ab(x->gl_owner));
+}
+
+/* check if the dependency graph has a cycle, assuming an new edge between parent and current nodes */
+static int ab_check_cycle(t_ab_definition *current, t_ab_definition *parent)
+{
+    if(current == parent)
+        return (1);
+    else
+    {
+        int i, cycle = 0;
+        for(i = 0; !cycle && i < current->ad_numdep; i++)
+        {
+            cycle = ab_check_cycle(current->ad_dep[i], parent);
+        }
+        return (cycle);
+    }
+}
+
+static int definingabs = 0;
+
+/* try to register a new dependency into the dependency graph,
+    returns 0 if a dependency issue is found */
+static int canvas_register_ab(t_canvas *x, t_ab_definition *a)
+{
+    t_canvas *r = canvas_getrootfor_ab(x), *c = x;
+
+    while(c != r)
+    {
+        if(c->gl_isab)
+        {
+            t_ab_definition *f = c->gl_absource;
+
+            int i, found = 0;
+            for(i = 0; !found && i < a->ad_numdep; i++)
+                found = (a->ad_dep[i] == f);
+
+            if(!found)
+            {
+                if(!ab_check_cycle(f, a))
+                {
+                    t_ab_definition **ad = 
+                            (t_ab_definition **)getbytes(sizeof(t_ab_definition *) * (a->ad_numdep + 1));
+                    int *adr = (int *)getbytes(sizeof(int) * (a->ad_numdep + 1));
+                    memcpy(ad, a->ad_dep, sizeof(t_ab_definition *) * a->ad_numdep);
+                    memcpy(adr, a->ad_deprefs, sizeof(int) * a->ad_numdep);
+                    freebytes(a->ad_dep, sizeof(t_ab_definition *) * a->ad_numdep);
+                    freebytes(a->ad_deprefs, sizeof(int) * a->ad_numdep);
+                    ad[a->ad_numdep] = f;
+                    adr[a->ad_numdep] = 1;
+                    a->ad_numdep++;
+                    a->ad_dep = ad;
+                    a->ad_deprefs = adr;
+                }
+                else return (0);
+            }
+            else
+            {
+                a->ad_deprefs[i-1]++;
+            }
+        }
+        c = c->gl_owner;
+    }
+    return (1);
+}
+
+static int canvas_deregister_ab(t_canvas *x, t_ab_definition *a)
+{
+    t_canvas *r = canvas_getrootfor_ab(x), *c = x;
+
+    while(c != r)
+    {
+        if(c->gl_isab)
+        {
+            t_ab_definition *f = c->gl_absource;
+
+            int i, found = 0;
+            for(i = 0; !found && i < a->ad_numdep; i++)
+                found = (a->ad_dep[i] == f);
+
+            if(found)
+            {
+                a->ad_deprefs[i-1]--;
+
+                if(!a->ad_deprefs[i-1])
+                {
+                    t_ab_definition **ad =
+                            (t_ab_definition **)getbytes(sizeof(t_ab_definition *) * (a->ad_numdep - 1));
+                    int *adr = (int *)getbytes(sizeof(int) * (a->ad_numdep - 1));
+                    memcpy(ad, a->ad_dep, sizeof(t_ab_definition *) * (i-1));
+                    memcpy(ad+(i-1), a->ad_dep+i, sizeof(t_ab_definition *) * (a->ad_numdep - i));
+                    memcpy(adr, a->ad_deprefs, sizeof(int) * (i-1));
+                    memcpy(adr+(i-1), a->ad_deprefs+i, sizeof(int) * (a->ad_numdep - i));
+                    freebytes(a->ad_dep, sizeof(t_ab_definition *) * a->ad_numdep);
+                    freebytes(a->ad_deprefs, sizeof(int) * a->ad_numdep);
+                    a->ad_numdep--;
+                    a->ad_dep = ad;
+                    a->ad_deprefs = adr;
+                }
+            }
+            else bug("canvas_deregister_ab");
+        }
+        c = c->gl_owner;
+    }
+    return (1);
+}
+
+/* reloads ab instances */
+void canvas_reload_ab(t_canvas *x)
+{
+    t_canvas *c = canvas_getrootfor_ab(x);
+    int dspwas = canvas_suspend_dsp();
+    glist_amreloadingabstractions = 1;
+    canvas_reload_ab_rec(c, x->gl_absource, &x->gl_obj);
+    glist_amreloadingabstractions = 0;
+    canvas_resume_dsp(dspwas);
+    canvas_dirty(c, 1);
+}
+
+/* tries to find an ab definition given its name */
+static t_ab_definition *canvas_find_ab(t_canvas *x, t_symbol *name)
+{
+    t_canvas *c = canvas_getrootfor_ab(x);
+    t_ab_definition* d;
+    for (d = c->gl_abdefs; d; d = d->ad_next)
+    {
+        if (d->ad_name == name)
+            return d;
+    }
+    return 0;
+}
+
+/* adds a new ab definition. returns the definition if it has been added, 0 otherwise */ 
+static t_ab_definition *canvas_add_ab(t_canvas *x, t_symbol *name, t_binbuf *source)
+{
+    if(!canvas_find_ab(x, name))
+    {
+        t_canvas *c = canvas_getrootfor_ab(x);
+        t_ab_definition *abdef = (t_ab_definition *)getbytes(sizeof(t_ab_definition));
+
+        abdef->ad_name = name;
+        abdef->ad_source = source;
+        abdef->ad_numinstances = 0;
+        abdef->ad_numdep = 0;
+        abdef->ad_dep = (t_ab_definition **)getbytes(0);
+        abdef->ad_deprefs = (int *)getbytes(0);
+        abdef->ad_visflag = 0;
+
+        abdef->ad_next = c->gl_abdefs;
+        c->gl_abdefs = abdef;
+        return (abdef);
+    }
+    return (0);    
+}
+
+/* given the ab definitions list, returns its topological ordering */
+
+static int currvisflag = 0;
+
+static void ab_topological_sort_rec(t_ab_definition *a, t_ab_definition **stack, int *head)
+{
+    a->ad_visflag = currvisflag;
+
+    int i;
+    for(i = 0; i < a->ad_numdep; i++)
+    {
+        if(a->ad_dep[i]->ad_visflag != currvisflag)
+            ab_topological_sort_rec(a->ad_dep[i], stack, head);
+    }
+
+    stack[*head] = a;
+    (*head)++;
+}
+
+static void ab_topological_sort(t_ab_definition *abdefs, t_ab_definition **stack, int *head)
+{
+    currvisflag++;
+    t_ab_definition *abdef;
+    for(abdef = abdefs; abdef; abdef = abdef->ad_next)
+    {
+        if(abdef->ad_visflag != currvisflag)
+            ab_topological_sort_rec(abdef, stack, head);
+    }
+}
+
+/* saves all the ab definition within the scope into the b binbuf,
+    they are sorted topollogially before saving in order to get exactly the 
+    same state (ab objects that can't be instantiated due dependencies) when reloading the file */
+void canvas_saveabdefinitionsto(t_canvas *x, t_binbuf *b)
+{
+    if(!x->gl_abdefs)
+        return;
+
+    int numabdefs = 0;
+    t_ab_definition *abdef;
+    for(abdef = x->gl_abdefs; abdef; abdef = abdef->ad_next)
+        numabdefs++;
+
+    t_ab_definition **stack =
+        (t_ab_definition **)getbytes(sizeof(t_ab_definition *) * numabdefs);
+    int head = 0;
+    ab_topological_sort(x->gl_abdefs, stack, &head);
+
+    binbuf_addv(b, "ssi;", gensym("#X"), gensym("frame_ab"), 1);
+    int i;
+    for(i = 0; i < head; i++)
+    {
+        if(stack[i]->ad_numinstances)
+        {
+            binbuf_add(b, binbuf_getnatom(stack[i]->ad_source), binbuf_getvec(stack[i]->ad_source));
+            binbuf_addv(b, "sss", gensym("#X"), gensym("define_ab"), stack[i]->ad_name);
+
+            int j;
+            for(j = 0; j < stack[i]->ad_numdep; j++)
+                binbuf_addv(b, "s", stack[i]->ad_dep[j]->ad_name);
+            binbuf_addsemi(b);
+        }
+    }
+    binbuf_addv(b, "ssi;", gensym("#X"), gensym("frame_ab"), 0);
+
+    freebytes(stack, sizeof(t_ab_definition *) * numabdefs);
+}
+
+/* saves last canvas as an ab definition */
+static void canvas_define_ab(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
+{
+    canvas_pop(x, 0);
+
+    t_canvas *c = canvas_getcurrent();
+    t_symbol *name = argv[0].a_w.w_symbol;
+    t_binbuf *source = binbuf_new();
+    x->gl_env = 0xF1A6; //to save it as a root canvas
+    mess1(&((t_text *)x)->te_pd, gensym("saveto"), source);
+    x->gl_env = 0;
+    
+    t_ab_definition *n;
+    if(!(n = canvas_add_ab(c, name, source)))
+    {
+        error("canvas_define_ab: ab definition for '%s' already exists, skipping", 
+                name->s_name);
+    }
+    else
+    {
+        if(argc > 1)
+        {
+            freebytes(n->ad_dep, 0);
+            freebytes(n->ad_deprefs, 0);
+            n->ad_numdep = argc-1;
+            n->ad_dep =
+                (t_ab_definition **)getbytes(sizeof(t_ab_definition *) * n->ad_numdep);
+            n->ad_deprefs = (int *)getbytes(sizeof(int) * n->ad_numdep);
+
+            int i;
+            for(i = 0; i < n->ad_numdep; i++) n->ad_deprefs[i] = 0;
+            for(i = 1; i < argc; i++)
+            {
+                t_symbol *abname = argv[i].a_w.w_symbol;
+                t_ab_definition *absource = canvas_find_ab(c, abname);
+                if(!absource) { bug("canvas_define_ab"); return; }
+                n->ad_dep[i-1] = absource;
+            }
+        }
+    }
+    
+    pd_free(x);
+}
+
+static void canvas_frame_ab(t_canvas *x, t_float val)
+{
+    definingabs = val;
+}
+
+/* creator for "ab" objects */
+static void *ab_new(t_symbol *s, int argc, t_atom *argv)
+{
+    if(definingabs)
+        return (0);
+
+    t_canvas *c = canvas_getcurrent();
+
+    if (!argc || argv[0].a_type != A_SYMBOL)
+    {
+        error("ab_new: not recognized syntax. Usage: ab <name>");
+        newest = 0;
+    }
+    else
+    {
+        t_symbol *name = argv[0].a_w.w_symbol;
+        t_ab_definition *source;
+
+        if(!(source = canvas_find_ab(c, name)))
+        {
+            t_binbuf *b = binbuf_new();
+            binbuf_text(b, ab_templatecanvas, strlen(ab_templatecanvas));
+            source = canvas_add_ab(c, name, b);
+        }
+
+        if(canvas_register_ab(c, source))
+        {
+            newest = do_create_ab(source, argc-1, argv+1);
+            source->ad_numinstances++;
+        }
+        else
+        {
+            error("ab_new: can't insantiate ab within itself");
+            newest = 0;
+        }
+    }
+    return (newest);
 }
 
 /* ------------------------------- declare ------------------------ */
@@ -2694,6 +3083,14 @@ void g_canvas_setup(void)
 
     class_addcreator((t_newmethod)table_new, gensym("table"),
         A_DEFSYM, A_DEFFLOAT, 0);
+
+/*---------------------------- ab ------------------- */
+
+    class_addcreator((t_newmethod)ab_new, gensym("ab"), A_GIMME, 0);
+    class_addmethod(canvas_class, (t_method)canvas_define_ab,
+        gensym("define_ab"), A_GIMME, 0);
+    class_addmethod(canvas_class, (t_method)canvas_frame_ab,
+        gensym("frame_ab"), A_FLOAT, 0);
 
 /*---------------------------- declare ------------------- */
     declare_class = class_new(gensym("declare"), (t_newmethod)declare_new,

@@ -1401,6 +1401,53 @@ void canvas_reload(t_symbol *name, t_symbol *dir, t_gobj *except)
     canvas_resume_dsp(dspwas);
 }
 
+/* recursive ab reload method */
+void canvas_reload_ab_rec(t_canvas *x, t_ab_definition *a, t_gobj *e)
+{
+    t_gobj *g;
+    int i, nobj = glist_getindex(x, 0);
+    int hadwindow = x->gl_havewindow, found = 0;
+
+    for (g = x->gl_list, i = 0; g && i < nobj; i++)
+    {
+        if(g != e && pd_class(&g->g_pd) == canvas_class && canvas_isabstraction((t_canvas *)g)
+            && ((t_canvas *)g)->gl_isab && ((t_canvas *)g)->gl_absource == a)
+        {
+            canvas_create_editor(x);
+
+            if (!x->gl_havewindow) //necessary?
+            {
+                canvas_vis(glist_getcanvas(x), 1);
+            }
+            if (!found)
+            {
+                glist_noselect(x);
+                found = 1;
+            }
+            glist_select(x, g);
+        }
+        g = g->g_next;
+    }
+    if (found)
+    {
+        canvas_cut(x);
+        canvas_undo_undo(x);
+        glist_noselect(x);
+    }
+
+    for (g = x->gl_list, i = 0; g && i < nobj; i++)
+    {
+        if(pd_class(&g->g_pd) == canvas_class
+            && (!canvas_isabstraction((t_canvas *)g) 
+                    || (((t_canvas *)g)->gl_isab 
+                        && (((t_canvas *)g)->gl_absource != a))))
+            canvas_reload_ab_rec((t_canvas *)g, a, e);
+        g = g->g_next;
+    }
+    if (!hadwindow && x->gl_havewindow)
+        canvas_vis(glist_getcanvas(x), 0);
+}
+
 /* --------- 6. apply  ----------- */
 
 typedef struct _undo_apply        

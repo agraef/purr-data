@@ -164,6 +164,23 @@ typedef struct _tick    /* where to put ticks on x or y axes */
     int k_lperb;        /* little ticks per big; 0 if no ticks to draw */
 } t_tick;
 
+/* the t_ab_definition structure holds an ab definiton and all the attributes we need
+    to handle them */
+typedef struct _ab_definition
+{
+    t_symbol *ad_name;      /* id for the ab definition */
+    t_binbuf *ad_source;    /* binbuf where source is stored */
+    int ad_numinstances;    /* the num of instances of this abstraction */
+    struct _ab_definition *ad_next; /* next ab definition */
+    
+    /* dependency graph stuff */
+    int ad_numdep;      /* number of other ab definitions that it depends on */
+    struct _ab_definition **ad_dep;     /* the actual ab defintitions */
+    int *ad_deprefs;
+    int ad_visflag;     /* visited flag for topological sort algorithm */
+} t_ab_definition;
+
+
 /* the t_glist structure, which describes a list of elements that live on an
 area of a window.
 
@@ -232,6 +249,11 @@ struct _glist
     t_symbol *gl_templatesym; /* for "canvas" data type */
     t_word *gl_vec;            /* for "canvas" data type */
     t_gpointer gl_gp;            /* parent for "canvas" data type */
+
+    unsigned int gl_isab:1;         /* is an ab instance */
+    t_ab_definition *gl_absource;   /* ab definition pointer, 
+                                        in the case it is an ab instance */
+    t_ab_definition *gl_abdefs;     /* stored ab definitions */
 };
 
 #define gl_gobj gl_obj.te_g
