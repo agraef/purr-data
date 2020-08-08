@@ -1,4 +1,4 @@
-#N canvas 9 60 659 633 12;
+#N canvas 10 84 659 633 12;
 #X obj 61 34 loadbang;
 #N canvas 107 123 756 233 load_hcs/folder_list 0;
 #X obj 357 47 inlet;
@@ -368,7 +368,7 @@ works.;
 #X connect 28 1 19 1;
 #X connect 29 0 19 0;
 #X restore 132 653 pd get-creator-names;
-#N canvas 310 187 450 421 test-object 0;
+#N canvas 311 211 450 421 test-object 0;
 #X obj 26 36 inlet;
 #X text 72 34 creator_name argtype1 argtype2 etc.;
 #N canvas 372 37 649 659 right_outlet_for_aliases 0;
@@ -434,7 +434,7 @@ tests;
 #X connect 26 1 3 0;
 #X connect 27 0 12 1;
 #X restore 194 129 pd right_outlet_for_aliases;
-#N canvas 6 60 740 633 load_the_object 0;
+#N canvas 787 103 740 854 load_the_object 0;
 #X obj 22 13 inlet;
 #X obj 86 115 list split 1;
 #N canvas 238 121 613 490 set_args 0;
@@ -512,29 +512,29 @@ arguments in order to continue the tests, f 45;
 #X restore 193 168 pd set_args;
 #X obj 126 140 route bang;
 #X obj 86 213 list;
-#X obj 86 381 s pd-\$0-load_the_object_subpatch;
+#X obj 125 521 s pd-\$0-load_the_object_subpatch;
 #X obj 86 238 t a b;
 #X msg 118 264 clear;
 #X text 216 107 Try to instantiate the object and connect up the primary
 inlet and outlet;
-#X msg 54 430 find \$1;
-#X obj 54 455 s \$0-load_canvasinfo_input;
-#X obj 54 480 r \$0-load_canvasinfo_output;
-#X obj 54 505 list split 1;
-#X text 261 429 <-- find the object by box text-- it was the first
+#X msg 54 570 find \$1;
+#X obj 54 595 s \$0-load_canvasinfo_input;
+#X obj 54 620 r \$0-load_canvasinfo_output;
+#X obj 54 645 list split 1;
+#X text 261 569 <-- find the object by box text-- it was the first
 one on the canvas to get created so it will get returned first if there
 are any duplicate matches;
-#X text 149 505 <-- filter out any duplicate matches from our "helper"
+#X text 149 645 <-- filter out any duplicate matches from our "helper"
 object chain;
-#X obj 54 530 t b a;
-#X msg 54 555 class;
-#X obj 54 580 objectinfo;
-#X obj 54 605 select text;
-#X text 140 604 <-- the "text" class is an internal class that essentially
+#X obj 54 670 t b a;
+#X msg 54 695 class;
+#X obj 54 720 objectinfo;
+#X obj 54 745 select text;
+#X text 140 744 <-- the "text" class is an internal class that essentially
 represents an object box that currently holds no object. So if we query
 our object and get "text" here \, it means Pd couldn't load the object.
 ;
-#X obj 54 406 trigger anything anything;
+#X obj 54 546 trigger anything anything;
 #N canvas 365 98 450 323 fail 0;
 #X obj 41 34 inlet;
 #X obj 112 34 inlet;
@@ -548,8 +548,8 @@ our object and get "text" here \, it means Pd couldn't load the object.
 #X connect 3 0 6 0;
 #X connect 5 0 3 1;
 #X connect 6 0 4 0;
-#X restore 54 630 pd fail;
-#X obj 22 665 outlet;
+#X restore 54 770 pd fail;
+#X obj 22 805 outlet;
 #N canvas 436 87 569 401 plain_then_with_libdir_prefix 0;
 #X obj 35 26 inlet;
 #X text 128 26 try both the lone creator name and the libdir prefix:
@@ -579,10 +579,17 @@ may be other oddities in external libs with regard to libdir prefixes.
 #X restore 128 57 pd plain_then_with_libdir_prefix;
 #X obj 22 38 t a a;
 #X obj 54 89 t a a;
-#X msg 86 291 obj 5 30 \$@ \, obj 5 100 r \$0-load_canvasinfo_input
+#X msg 125 441 obj 5 30 \$@ \, obj 5 100 r \$0-load_canvasinfo_input
 \, obj 5 130 canvasinfo \, obj 5 160 s \$0-load_canvasinfo_output \,
 obj 5 190 r \$0-switch \, obj 5 220 switch~ \, connect 1 0 2 0 \, connect
 2 0 3 0 \, connect 4 0 5 0;
+#X obj 86 307 unpost;
+#X text 137 306 suppress any constructor/error messages associated
+with creating this object. In the future we may want to fail the test
+if there are errors. For now there are just too many abstractions that
+have dependencies on other abstractions \, and the way we're doing
+the tests those standard paths aren't accessible. So for now \, we're
+just looking for crashers and memory errors...;
 #X connect 0 0 24 0;
 #X connect 1 0 4 0;
 #X connect 1 1 3 0;
@@ -591,7 +598,7 @@ obj 5 190 r \$0-switch \, obj 5 220 switch~ \, connect 1 0 2 0 \, connect
 #X connect 3 0 4 1;
 #X connect 3 1 2 0;
 #X connect 4 0 6 0;
-#X connect 6 0 26 0;
+#X connect 6 0 27 0;
 #X connect 6 1 7 0;
 #X connect 7 0 5 0;
 #X connect 9 0 10 0;
@@ -610,11 +617,12 @@ obj 5 190 r \$0-switch \, obj 5 220 switch~ \, connect 1 0 2 0 \, connect
 #X connect 25 0 20 0;
 #X connect 25 1 1 0;
 #X connect 26 0 5 0;
-#X restore 46 206 pd load_the_object;
+#X connect 27 1 26 0;
+#X restore 66 206 pd load_the_object;
 #N canvas 844 164 450 369 \$0-load_the_object_subpatch 0;
-#X restore 191 207 pd \$0-load_the_object_subpatch;
-#X msg 46 291 clear;
-#X obj 46 316 s pd-\$0-load_the_object_subpatch;
+#X restore 211 207 pd \$0-load_the_object_subpatch;
+#X msg 66 271 clear;
+#X obj 66 296 s pd-\$0-load_the_object_subpatch;
 #N canvas 135 60 704 645 check_for_namespace_collisions 0;
 #X obj 42 26 inlet;
 #X obj 42 51 t a a;
@@ -709,10 +717,10 @@ nameclash is in the current library we're testing then we ignore it.
 #X connect 24 0 22 0;
 #X restore 194 164 pd check_for_namespace_collisions;
 #X obj 86 87 s \$0-object-test;
-#X obj 66 160 s pd;
+#X obj 46 160 s pd;
 #X obj 26 61 t b b a b;
-#X msg 66 131 dsp 1 \, dsp 0;
-#X obj 26 345 outlet;
+#X msg 46 131 dsp 1 \, dsp 0;
+#X obj 26 325 outlet;
 #N canvas 798 213 450 323 test-dsp 0;
 #X obj 46 32 inlet;
 #X obj 46 61 t b b b b;
@@ -732,7 +740,7 @@ non-optimized branches.;
 #X connect 1 3 3 0;
 #X connect 3 0 4 0;
 #X connect 6 0 4 0;
-#X restore 46 248 pd test-dsp;
+#X restore 66 238 pd test-dsp;
 #X connect 0 0 10 0;
 #X connect 2 0 7 0;
 #X connect 2 1 7 0;
