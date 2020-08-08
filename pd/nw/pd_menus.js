@@ -278,6 +278,12 @@ function create_menu(gui, type) {
     }));
         edit_menu.append(new gui.MenuItem({ type: "separator" }));
     if (canvas_menu) {
+        edit_menu.append(m.edit.encapsulate = new gui.MenuItem({
+            label: l("menu.encapsulate"),
+            key: shortcuts.menu.encapsulate.key,
+            modifiers: shortcuts.menu.encapsulate.modifiers,
+            tooltip: l("menu.encapsulate_tt")
+        }));
         edit_menu.append(m.edit.tidyup = new gui.MenuItem({
             label: l("menu.tidyup"),
             key: shortcuts.menu.tidyup.key,

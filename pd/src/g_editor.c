@@ -6280,6 +6280,270 @@ static void canvas_cut(t_canvas *x)
     }
 }
 
+/* ------------------------- encapsulate ------------------------ */
+
+typedef struct _xletholder
+{
+    t_gobj *xlh_addr;
+    int xlh_seln;
+    int xlh_xletn;
+    int xlh_type;
+    int xlh_x;
+    int xlh_y;
+    t_binbuf *xlh_conn;
+    struct _xletholder *xlh_next;
+} t_xletholder;
+
+#define X_PLAOFF 40
+#define Y_PLAOFF 80
+#define XLETSGAP 10
+
+static void canvas_dofancycopy(t_canvas *x, t_binbuf **object, t_binbuf **connections)
+{
+    t_gobj *y;
+    t_linetraverser t;
+    t_outconnect *oc;
+    t_binbuf *b = binbuf_new();
+    int maxx, maxy, minx, miny, numobj = 0;
+    maxx = maxy = 0;
+    minx = miny = INT_MAX;
+
+    binbuf_addv(b, "ssiiiisi;", gensym("#N"), gensym("canvas"),
+        0, 0, 450, 300, gensym("subpatch"), 0);
+
+    /* compute global rect */
+    for (y = x->gl_list; y; y = y->g_next)
+    {
+        if (glist_isselected(x, y))
+        {
+            int tminx, tmaxx, tminy, tmaxy;
+            gobj_getrect(y, x, &tminx, &tminy, &tmaxx, &tmaxy);
+            if(tminx < minx) minx = tminx;
+            if(tmaxx > maxx) maxx = tmaxx;
+            if(tminy < miny) miny = tminy;
+            if(tmaxy > maxy) maxy = tmaxy;
+        }
+    }
+
+    /* save selected objects into binbbuf */
+    for (y = x->gl_list; y; y = y->g_next)
+    {
+        if (glist_isselected(x, y))
+        {
+            gobj_displace(y, x, X_PLAOFF-minx, Y_PLAOFF-miny);
+            gobj_save(y, b);
+            gobj_displace(y, x, minx-X_PLAOFF, miny-Y_PLAOFF);
+            numobj++;
+        }
+    }
+
+    /* traverse all the lines */
+    t_xletholder *inlets = 0, *outlets = 0, *lastoutlet = 0;
+    linetraverser_start(&t, x);
+    while (oc = linetraverser_next(&t))
+    {
+        int s1 = glist_isselected(x, &t.tr_ob->ob_g);
+        int s2 = glist_isselected(x, &t.tr_ob2->ob_g);
+        /* if inner connection */
+        if (s1 && s2)
+        {
+            binbuf_addv(b, "ssiiii;", gensym("#X"), gensym("connect"),
+                glist_selectionindex(x, &t.tr_ob->ob_g, 1), t.tr_outno,
+                glist_selectionindex(x, &t.tr_ob2->ob_g, 1), t.tr_inno);
+        }
+        /* if outer outlet connection */
+        else if(s1 && !s2)
+        {
+            /* if we continue in the same outlet, we add the object and inlet number to the list and skip */
+            if (lastoutlet && lastoutlet->xlh_addr == t.tr_outlet)
+            {
+                binbuf_addv(lastoutlet->xlh_conn, "ii", glist_selectionindex(x, &t.tr_ob2->ob_g, 0), t.tr_inno);
+                continue;
+            }
+
+            /* create and fill outlet handling structure */
+            t_xletholder *newoutlet = (t_xletholder *)getbytes(sizeof(t_xletholder));
+            newoutlet->xlh_addr = t.tr_outlet;
+            newoutlet->xlh_seln = glist_selectionindex(x, &t.tr_ob->ob_g, 1);
+            newoutlet->xlh_xletn = t.tr_outno;
+            newoutlet->xlh_type = obj_issignaloutlet(t.tr_ob, t.tr_outno);
+            newoutlet->xlh_x = t.tr_lx1;
+            newoutlet->xlh_y = t.tr_ly1;
+            newoutlet->xlh_conn = binbuf_new();
+            binbuf_addv(newoutlet->xlh_conn, "ii", glist_selectionindex(x, &t.tr_ob2->ob_g, 0), t.tr_inno);
+            /* insert structure regarding its coords */
+            t_xletholder *prev = 0, *curr = outlets;
+            while(curr && (t.tr_lx1 > curr->xlh_x || (t.tr_lx1 == curr->xlh_x && t.tr_ly1 > curr->xlh_y)))
+            {
+                prev = curr;
+                curr = curr->xlh_next;
+            }
+            if(prev) prev->xlh_next = newoutlet;
+            else outlets = newoutlet;
+            newoutlet->xlh_next = curr;
+
+            lastoutlet = newoutlet;
+        }
+        /* if outer inlet connection */
+        else if(!s1 && s2)
+        {
+            /* check if inlet is already visited */
+            int alr = 0;
+            t_xletholder *it;
+            for(it = inlets; it && !alr; )
+            {
+                alr = ((t.tr_inno ? t.tr_inlet : t.tr_ob2) == it->xlh_addr);
+                if(!alr) it = it->xlh_next;
+            }
+
+            int type = obj_issignaloutlet(t.tr_ob, t.tr_outno);
+            /* if so, we add the object and outlet number to the list and skip */
+            if(alr)
+            {
+                binbuf_addv(it->xlh_conn, "ii", glist_selectionindex(x, &t.tr_ob->ob_g, 0), t.tr_outno);
+                if(it->xlh_type >= 0 && it->xlh_type != type) it->xlh_type = -1;
+                continue;
+            }
+
+            /* create and fill inlet handling structure */
+            t_xletholder *newinlet = (t_xletholder *)getbytes(sizeof(t_xletholder));
+            newinlet->xlh_addr = (t.tr_inno ? t.tr_inlet : t.tr_ob2);
+            newinlet->xlh_seln = glist_selectionindex(x, &t.tr_ob2->ob_g, 1);
+            newinlet->xlh_xletn = t.tr_inno;
+            newinlet->xlh_type = type;
+            newinlet->xlh_x = t.tr_lx2;
+            newinlet->xlh_y = t.tr_ly2;
+            newinlet->xlh_conn = binbuf_new();
+            binbuf_addv(newinlet->xlh_conn, "ii", glist_selectionindex(x, &t.tr_ob->ob_g, 0), t.tr_outno);
+            /* insert structure regarding its coords */
+            t_xletholder *prev = 0, *curr = inlets;
+            while(curr && (t.tr_lx2 > curr->xlh_x || (t.tr_lx2 == curr->xlh_x && t.tr_ly2 > curr->xlh_y)))
+            {
+                prev = curr;
+                curr = curr->xlh_next;
+            }
+            if(prev) prev->xlh_next = newinlet;
+            else inlets = newinlet;
+            newinlet->xlh_next = curr;
+        }
+    }
+
+    /* store outer connections in a binbuf */
+    t_binbuf *conns = binbuf_new();
+    int subnum = glist_selectionindex(x, 0, 0), nin = 0, nout = 0, xplac = 0;
+    while(inlets)
+    {
+        if(inlets->xlh_type >= 0)
+        {
+            binbuf_addv(b, "ssiis;", gensym("#X"), gensym("obj"),
+                X_PLAOFF/3 + xplac, Y_PLAOFF/3, (inlets->xlh_type ? gensym("inlet~") : gensym("inlet")));
+
+            xplac += (inlets->xlh_type ? 46 : 40) + XLETSGAP; //hardcoded
+        }
+        else
+        {
+            binbuf_addv(b, "ssiiss;", gensym("#X"), gensym("obj"),
+                X_PLAOFF/3 + xplac, Y_PLAOFF/3, gensym("inlet~"), gensym("fwd"));
+
+            xplac += 64 + XLETSGAP; //hardcoded
+
+            binbuf_addv(b, "ssiiii;", gensym("#X"), gensym("connect"),
+            numobj+nin, 1,
+            inlets->xlh_seln, inlets->xlh_xletn);
+        }
+
+        binbuf_addv(b, "ssiiii;", gensym("#X"), gensym("connect"),
+            numobj+nin, 0,
+            inlets->xlh_seln, inlets->xlh_xletn);
+
+
+        int nvec = binbuf_getnatom(inlets->xlh_conn);
+        t_atom *vec = binbuf_getvec(inlets->xlh_conn);
+        for(int i = 0; i < nvec/2; i++)
+        {
+            binbuf_addv(conns, "ssffii;", gensym("#X"), gensym("connect"),
+                atom_getfloat(vec+(2*i)), atom_getfloat(vec+(2*i+1)), subnum, nin);
+        }
+        binbuf_free(inlets->xlh_conn);
+        t_xletholder *tmp = inlets->xlh_next;
+        freebytes(inlets, sizeof(t_xletholder));
+        inlets = tmp;
+        nin++;
+    }
+    xplac = 0;
+    while(outlets)
+    {
+        binbuf_addv(b, "ssiis;", gensym("#X"), gensym("obj"),
+            X_PLAOFF/3 + xplac, (maxy-miny) + Y_PLAOFF*5/3, (outlets->xlh_type ? gensym("outlet~") : gensym("outlet")));
+
+        xplac += (outlets->xlh_type ? 52 : 46) + XLETSGAP; //hardcoded
+
+        binbuf_addv(b, "ssiiii;", gensym("#X"), gensym("connect"),
+            outlets->xlh_seln, outlets->xlh_xletn,
+            numobj+nin+nout, 0);
+
+        int nvec = binbuf_getnatom(outlets->xlh_conn);
+        t_atom *vec = binbuf_getvec(outlets->xlh_conn);
+        for(int i = 0; i < nvec/2; i++)
+        {
+            binbuf_addv(conns, "ssiiff;", gensym("#X"), gensym("connect"),
+                subnum, nout, atom_getfloat(vec+(2*i)), atom_getfloat(vec+(2*i+1)));
+        }
+        binbuf_free(outlets->xlh_conn);
+        t_xletholder *tmp = outlets->xlh_next;
+        freebytes(outlets, sizeof(t_xletholder));
+        outlets = tmp;
+        nout++;
+    }
+
+    int m = (nin > nout ? nin : nout);
+    int width = (IOWIDTH * m) * 2 - IOWIDTH;
+
+    binbuf_addv(b, "ssiiss;", gensym("#X"), gensym("restore"),
+        (minx+maxx)/2 - width/2, (miny+maxy)/2, gensym("pd"), gensym("[name]"));
+
+    *object = b;
+    *connections = conns;
+}
+
+static void canvas_encapsulate(t_canvas *x)
+{
+    /* check preconditions */
+    // num selected objects > 0
+    if (!x->gl_editor || !x->gl_editor->e_selection)
+        return;
+
+    canvas_undo_add(x, UNDO_SEQUENCE_START, "encapsulate", 0);
+    /* cut selected objects using special copy method, based on canvas_cut */
+    t_binbuf *object, *connections;
+    int centx, centy;
+    canvas_undo_add(x, UNDO_CUT, "cut", canvas_undo_set_cut(x, UCUT_CUT));
+    canvas_dofancycopy(x, &object, &connections);
+    canvas_doclear(x);
+    glob_preset_node_list_check_loc_and_update();
+    scrollbar_update(x);
+
+    /* subcanvas creation */
+    canvas_dopaste(x, object);
+    /* trace connections between unselectd objects and patch object */
+    pd_bind(&x->gl_pd, gensym("#X"));
+    binbuf_eval(connections, 0, 0, 0);
+    pd_unbind(&x->gl_pd, gensym("#X"));
+
+    canvas_undo_add(x, UNDO_CREATE, "create", canvas_undo_set_create(x));
+
+    binbuf_free(object);
+    binbuf_free(connections);
+
+    /* select subpatch object */
+    t_gobj *sub = glist_nth(x, glist_getindex(x, 0)-1);
+    gobj_activate(sub, x, (0b1 << 31) | (0x0003 << 16) | 0x0009);
+
+    canvas_undo_add(x, UNDO_SEQUENCE_END, "encapsulate", 0);
+}
+
+/* ------------------------------------------------- */
+
 static int paste_onset;
 static t_canvas *paste_canvas;
 
@@ -7773,6 +8037,8 @@ void g_editor_setup(void)
         gensym("redo"), A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_tidy,
         gensym("tidy"), A_NULL);
+    class_addmethod(canvas_class, (t_method)canvas_encapsulate,
+        gensym("encapsulate"), A_NULL);
     //class_addmethod(canvas_class, (t_method)canvas_texteditor,
     //    gensym("texteditor"), A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_editmode,
