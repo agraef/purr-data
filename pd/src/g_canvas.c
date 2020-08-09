@@ -1974,18 +1974,15 @@ static int canvas_register_ab(t_canvas *x, t_ab_definition *a)
             {
                 if(!ab_check_cycle(f, a))
                 {
-                    t_ab_definition **ad = 
-                            (t_ab_definition **)getbytes(sizeof(t_ab_definition *) * (a->ad_numdep + 1));
-                    int *adr = (int *)getbytes(sizeof(int) * (a->ad_numdep + 1));
-                    memcpy(ad, a->ad_dep, sizeof(t_ab_definition *) * a->ad_numdep);
-                    memcpy(adr, a->ad_deprefs, sizeof(int) * a->ad_numdep);
-                    freebytes(a->ad_dep, sizeof(t_ab_definition *) * a->ad_numdep);
-                    freebytes(a->ad_deprefs, sizeof(int) * a->ad_numdep);
-                    ad[a->ad_numdep] = f;
-                    adr[a->ad_numdep] = 1;
+                    a->ad_dep =
+                        (t_ab_definition **)resizebytes(a->ad_dep, sizeof(t_ab_definition *)*a->ad_numdep,
+                             sizeof(t_ab_definition *)*(a->ad_numdep+1));
+                    a->ad_deprefs =
+                        (int *)resizebytes(a->ad_deprefs, sizeof(int)*a->ad_numdep,
+                             sizeof(int)*(a->ad_numdep+1));
+                    a->ad_dep[a->ad_numdep] = f;
+                    a->ad_deprefs[a->ad_numdep] = 1;
                     a->ad_numdep++;
-                    a->ad_dep = ad;
-                    a->ad_deprefs = adr;
                 }
                 else return (0);
             }
@@ -2178,21 +2175,20 @@ static void canvas_define_ab(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     {
         if(argc > 1)
         {
-            freebytes(n->ad_dep, 0);
-            freebytes(n->ad_deprefs, 0);
             n->ad_numdep = argc-1;
             n->ad_dep =
-                (t_ab_definition **)getbytes(sizeof(t_ab_definition *) * n->ad_numdep);
-            n->ad_deprefs = (int *)getbytes(sizeof(int) * n->ad_numdep);
+                (t_ab_definition **)resizebytes(n->ad_dep, 0, sizeof(t_ab_definition *)*n->ad_numdep);
+            n->ad_deprefs =
+                (int *)resizebytes(n->ad_deprefs, 0, sizeof(int)*n->ad_numdep);
 
             int i;
-            for(i = 0; i < n->ad_numdep; i++) n->ad_deprefs[i] = 0;
             for(i = 1; i < argc; i++)
             {
                 t_symbol *abname = argv[i].a_w.w_symbol;
                 t_ab_definition *absource = canvas_find_ab(c, abname);
                 if(!absource) { bug("canvas_define_ab"); return; }
                 n->ad_dep[i-1] = absource;
+                n->ad_deprefs[i-1] = 0;
             }
         }
     }
