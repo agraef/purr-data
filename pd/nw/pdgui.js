@@ -846,16 +846,17 @@ function canvas_check_geometry(cid) {
         win_y = patchwin[cid].y,
         cnv_width = patchwin[cid].window.innerWidth,
         cnv_height = patchwin[cid].window.innerHeight - menu_offset;
+        post("canvas_check_geometry: cnv_width=" + cnv_width + " cnv_height=" + cnv_height);
     // We're reusing win_x and win_y below, as it
     // shouldn't make a difference to the bounds
-    // algorithm in Pd (ico@vt.edu: this is not true anymore)
+    // algorithm in Pd (ico@vt.edu: this is not true anymore for nw 0.46+)
     //post("relocate " + pd_geo_string(cnv_width, cnv_height, win_x, win_y) + " " +
     //       pd_geo_string(cnv_width, cnv_height, win_x, win_y));
-    // ico@vt.edu: replaced first pd_geo_string's first two args (originally
-    // win_x and win_y with cnv_width and cnv_height + 25 to ensure the window
-    // reopens exactly how it was saved)
+    // IMPORTANT! ico@vt.edu: for nw 0.46+ we will need to replace first pd_geo_string's
+    // first two args (win_x and win_y with cnv_width and cnv_height + menu_offset
+    // to ensure the window reopens exactly how it was saved)
     pdsend(cid, "relocate",
-           pd_geo_string(cnv_width, cnv_height + menu_offset, win_x, win_y),
+           pd_geo_string(win_x, win_y + menu_offset, win_x, win_y),
            pd_geo_string(cnv_width, cnv_height, win_x, win_y)
     );
 }
@@ -6061,11 +6062,12 @@ function canvas_params(nw_win)
     // so if it drops below 1, that means we need our scrollbars 
     if (yScrollSize < 1) {
         var yHeight = Math.floor(yScrollSize * (min_height + 3 + nw_version_bbox_offset));
-        vscroll.style.setProperty("height", (yHeight - 6 + nw_version_bbox_offset) + "px");
-        vscroll.style.setProperty("top", (yScrollTopOffset + 2) + "px");
+        vscroll.style.setProperty("height", (yHeight - 1 + nw_version_bbox_offset) + "px");
+        // was (yScrollTopOffset + 2) to make it peel away from the edge
+        vscroll.style.setProperty("top", (yScrollTopOffset + 0) + "px");
         vscroll.style.setProperty("-webkit-clip-path",
-            "polygon(0px 0px, 5px 0px, 5px " + (yHeight - 6 + nw_version_bbox_offset) +
-            "px, 0px " + (yHeight - 11 + nw_version_bbox_offset) + "px, 0px 5px)");
+            "polygon(0px 0px, 5px 0px, 5px " + (yHeight - 1 + nw_version_bbox_offset) +
+            "px, 0px " + (yHeight - 6 + nw_version_bbox_offset) + "px, 0px 5px)");
         // ico@vt.edu: this could go either way. We can zoom here to compensate for
         // the zoom and keep the scrollbars the same size, or, as is the case with
         // this new commit, we enlarge them together with the patch since one of the
@@ -6086,11 +6088,12 @@ function canvas_params(nw_win)
 
     if (xScrollSize < 1) {
         var xWidth = Math.floor(xScrollSize * (min_width + 3));
-        hscroll.style.setProperty("width", (xWidth - 6) + "px");
-        hscroll.style.setProperty("left", (xScrollLeftOffset + 2) + "px");
+        hscroll.style.setProperty("width", (xWidth - 1) + "px");
+        // was (xScrollTopOffset + 2) to make it peel away from the edge
+        hscroll.style.setProperty("left", (xScrollLeftOffset + 0) + "px");
         hscroll.style.setProperty("-webkit-clip-path",
-            "polygon(0px 0px, " + (xWidth - 11) + "px 0px, " +
-            (xWidth - 6) + "px 5px, 0px 5px)");
+            "polygon(0px 0px, " + (xWidth - 6) + "px 0px, " +
+            (xWidth - 1) + "px 5px, 0px 5px)");
         // ico@vt.edu: this could go either way. We can zoom here to compensate for
         // the zoom and keep the scrollbars the same size, or, as is the case with
         // this new commit, we enlarge them together with the patch since one of the
@@ -6278,7 +6281,7 @@ var optimalzoom_var = {};
 // 100 msec are enough for do_optimalzoom to finish.
 function gui_canvas_optimal_zoom(cid, h, v) {
     clearTimeout(optimalzoom_var[cid]);
-    optimalzoom_var[cid] = setTimeout(do_optimalzoom, 10, cid, h, v);
+    optimalzoom_var[cid] = setTimeout(do_optimalzoom, 50, cid, h, v);
 }
 
 exports.gui_canvas_optimal_zoom = gui_canvas_optimal_zoom;
@@ -6423,11 +6426,11 @@ function gui_update_scrollbars(cid) {
             
             if (yScrollSize < 1) {
                 var yHeight = Math.floor(yScrollSize * min_height);
-                vscroll.style.setProperty("height", (yHeight - 6 + nw_version_bbox_offset) + "px");
-                vscroll.style.setProperty("top", (yScrollTopOffset + 2) + "px");
+                vscroll.style.setProperty("height", (yHeight - 1 + nw_version_bbox_offset) + "px");
+                vscroll.style.setProperty("top", (yScrollTopOffset + 0) + "px");
                 vscroll.style.setProperty("-webkit-clip-path",
-                    "polygon(0px 0px, 5px 0px, 5px " + (yHeight - 6 + nw_version_bbox_offset) +
-                    "px, 0px " + (yHeight - 11 + nw_version_bbox_offset) + "px, 0px 5px)");
+                    "polygon(0px 0px, 5px 0px, 5px " + (yHeight - 1 + nw_version_bbox_offset) +
+                    "px, 0px " + (yHeight - 6 + nw_version_bbox_offset) + "px, 0px 5px)");
                 vscroll.style.setProperty("visibility", "visible");
             } else {
                 vscroll.style.setProperty("visibility", "hidden");    
@@ -6449,11 +6452,11 @@ function gui_update_scrollbars(cid) {
 
             if (xScrollSize < 1) {
                 var xWidth = Math.floor(xScrollSize * min_width);
-                hscroll.style.setProperty("width", (xWidth - 6) + "px");
-                hscroll.style.setProperty("left", (xScrollTopOffset + 2) + "px");
+                hscroll.style.setProperty("width", (xWidth - 1) + "px");
+                hscroll.style.setProperty("left", (xScrollTopOffset + 0) + "px");
                 hscroll.style.setProperty("-webkit-clip-path",
-                    "polygon(0px 0px, " + (xWidth - 11) + "px 0px, " +
-                    (xWidth - 6) + "px 5px, 0px 5px)");
+                    "polygon(0px 0px, " + (xWidth - 6) + "px 0px, " +
+                    (xWidth - 1) + "px 5px, 0px 5px)");
                 hscroll.style.setProperty("visibility", "visible");
             } else {
                 hscroll.style.setProperty("visibility", "hidden");    
