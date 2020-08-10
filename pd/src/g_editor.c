@@ -6305,11 +6305,12 @@ static void canvas_dofancycopy(t_canvas *x, t_binbuf **object, t_binbuf **connec
     t_outconnect *oc;
     t_binbuf *b = binbuf_new();
     int maxx, maxy, minx, miny, numobj = 0;
-    maxx = maxy = 0;
-    minx = miny = INT_MAX;
 
     binbuf_addv(b, "ssiiiisi;", gensym("#N"), gensym("canvas"),
         0, 0, 450, 300, gensym("subpatch"), 0);
+
+    gobj_getrect(x->gl_editor->e_selection->sel_what, x,
+                    &minx, &miny, &maxx, &maxy);
 
     /* compute global rect */
     for (y = x->gl_list; y; y = y->g_next)
