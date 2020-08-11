@@ -2215,14 +2215,14 @@ static void *ab_new(t_symbol *s, int argc, t_atom *argv)
 
     t_canvas *c = canvas_getcurrent();
 
-    if (!argc || argv[0].a_type != A_SYMBOL)
+    if (argc && argv[0].a_type != A_SYMBOL)
     {
-        error("ab_new: not recognized syntax. Usage: ab <name>");
+        error("ab_new: ab name must be a symbol");
         newest = 0;
     }
     else
     {
-        t_symbol *name = argv[0].a_w.w_symbol;
+        t_symbol *name = (argc ? argv[0].a_w.w_symbol : gensym("(ab)"));
         t_ab_definition *source;
 
         if(!(source = canvas_find_ab(c, name)))
@@ -2234,7 +2234,7 @@ static void *ab_new(t_symbol *s, int argc, t_atom *argv)
 
         if(canvas_register_ab(c, source))
         {
-            newest = do_create_ab(source, argc-1, argv+1);
+            newest = do_create_ab(source, (argc ? argc-1 : 0), (argc ? argv+1 : 0));
             source->ad_numinstances++;
         }
         else
