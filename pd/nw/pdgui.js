@@ -815,7 +815,9 @@ function check_nwjs_version(version) {
 
 exports.check_nwjs_version = check_nwjs_version;
 
-var menu_offset = check_nwjs_version("0.46") ? 25 : 23;
+// ico@vt.edu 2020-08-11: this appears to have to be 25 at all times
+// perhaps this is different on Linux and OSX?
+var menu_offset = check_nwjs_version("0.46") ? 25 : 25;
 
 // quick hack so that we can paste pd code from clipboard and
 // have it affect an empty canvas' geometry
@@ -846,17 +848,16 @@ function canvas_check_geometry(cid) {
         win_y = patchwin[cid].y,
         cnv_width = patchwin[cid].window.innerWidth,
         cnv_height = patchwin[cid].window.innerHeight - menu_offset;
-        post("canvas_check_geometry: cnv_width=" + cnv_width + " cnv_height=" + cnv_height);
     // We're reusing win_x and win_y below, as it
     // shouldn't make a difference to the bounds
     // algorithm in Pd (ico@vt.edu: this is not true anymore for nw 0.46+)
     //post("relocate " + pd_geo_string(cnv_width, cnv_height, win_x, win_y) + " " +
     //       pd_geo_string(cnv_width, cnv_height, win_x, win_y));
     // IMPORTANT! ico@vt.edu: for nw 0.46+ we will need to replace first pd_geo_string's
-    // first two args (win_x and win_y with cnv_width and cnv_height + menu_offset
+    // first two args (win_w and win_h with cnv_width and cnv_height + menu_offset
     // to ensure the window reopens exactly how it was saved)
     pdsend(cid, "relocate",
-           pd_geo_string(win_x, win_y + menu_offset, win_x, win_y),
+           pd_geo_string(win_w, win_h, win_x, win_y),
            pd_geo_string(cnv_width, cnv_height, win_x, win_y)
     );
 }
