@@ -172,7 +172,7 @@ typedef struct _ab_definition
     t_binbuf *ad_source;    /* binbuf where source is stored */
     int ad_numinstances;    /* the num of instances of this abstraction */
     struct _ab_definition *ad_next; /* next ab definition */
-    
+
     /* dependency graph stuff */
     int ad_numdep;      /* number of other ab definitions that it depends on */
     struct _ab_definition **ad_dep;     /* the actual ab defintitions */
@@ -251,7 +251,7 @@ struct _glist
     t_gpointer gl_gp;            /* parent for "canvas" data type */
 
     unsigned int gl_isab:1;         /* is an ab instance */
-    t_ab_definition *gl_absource;   /* ab definition pointer, 
+    t_ab_definition *gl_absource;   /* ab definition pointer,
                                         in the case it is an ab instance */
     t_ab_definition *gl_abdefs;     /* stored ab definitions */
 };

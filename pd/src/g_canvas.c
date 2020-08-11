@@ -472,7 +472,7 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     else x->gl_env = 0;
 
     x->gl_abdefs = 0;
-    if(canvas_newabsource) /* if absource is set means that this canvas is 
+    if(canvas_newabsource) /* if absource is set means that this canvas is
                                 going to be an ab instance */
     {
         x->gl_isab = 1;
@@ -1067,10 +1067,12 @@ void canvas_free(t_canvas *x)
     {
         daux = d->ad_next;
         binbuf_free(d->ad_source);
+        freebytes(d->ad_dep, sizeof(t_ab_definition*)*d->ad_numdep);
+        freebytes(d->ad_deprefs, sizeof(int)*d->ad_numdep);
         freebytes(d, sizeof(t_ab_definition));
         d = daux;
     }
-    
+
     /* freeing an ab instance */
     if(x->gl_isab)
     {
@@ -1932,7 +1934,7 @@ static t_canvas *canvas_getrootfor_ab(t_canvas *x)
 {
     if (!x->gl_owner || (canvas_isabstraction(x) && !x->gl_isab))
         return (x);
-    else 
+    else
         return (canvas_getrootfor_ab(x->gl_owner));
 }
 
@@ -1951,8 +1953,6 @@ static int ab_check_cycle(t_ab_definition *current, t_ab_definition *parent)
         return (cycle);
     }
 }
-
-static int definingabs = 0;
 
 /* try to register a new dependency into the dependency graph,
     returns 0 if a dependency issue is found */
@@ -2062,7 +2062,7 @@ static t_ab_definition *canvas_find_ab(t_canvas *x, t_symbol *name)
     return 0;
 }
 
-/* adds a new ab definition. returns the definition if it has been added, 0 otherwise */ 
+/* adds a new ab definition. returns the definition if it has been added, 0 otherwise */
 static t_ab_definition *canvas_add_ab(t_canvas *x, t_symbol *name, t_binbuf *source)
 {
     if(!canvas_find_ab(x, name))
@@ -2082,7 +2082,7 @@ static t_ab_definition *canvas_add_ab(t_canvas *x, t_symbol *name, t_binbuf *sou
         c->gl_abdefs = abdef;
         return (abdef);
     }
-    return (0);    
+    return (0);
 }
 
 /* given the ab definitions list, returns its topological ordering */
@@ -2115,8 +2115,8 @@ static void ab_topological_sort(t_ab_definition *abdefs, t_ab_definition **stack
     }
 }
 
-/* saves all the ab definition within the scope into the b binbuf,
-    they are sorted topollogially before saving in order to get exactly the 
+/* saves all ab definition within the scope into the b binbuf,
+    they are sorted topollogially before saving in order to get exactly the
     same state (ab objects that can't be instantiated due dependencies) when reloading the file */
 void canvas_saveabdefinitionsto(t_canvas *x, t_binbuf *b)
 {
@@ -2133,14 +2133,19 @@ void canvas_saveabdefinitionsto(t_canvas *x, t_binbuf *b)
     int head = 0;
     ab_topological_sort(x->gl_abdefs, stack, &head);
 
-    binbuf_addv(b, "ssi;", gensym("#X"), gensym("frame_ab"), 1);
-    int i;
+    int i, fra = 0;
     for(i = 0; i < head; i++)
     {
         if(stack[i]->ad_numinstances)
         {
+            if(!fra)
+            {
+                binbuf_addv(b, "ssi;", gensym("#X"), gensym("abframe"), 1);
+                fra = 1;
+            }
+
             binbuf_add(b, binbuf_getnatom(stack[i]->ad_source), binbuf_getvec(stack[i]->ad_source));
-            binbuf_addv(b, "sss", gensym("#X"), gensym("define_ab"), stack[i]->ad_name);
+            binbuf_addv(b, "sss", gensym("#X"), gensym("abpush"), stack[i]->ad_name);
 
             int j;
             for(j = 0; j < stack[i]->ad_numdep; j++)
@@ -2148,13 +2153,13 @@ void canvas_saveabdefinitionsto(t_canvas *x, t_binbuf *b)
             binbuf_addsemi(b);
         }
     }
-    binbuf_addv(b, "ssi;", gensym("#X"), gensym("frame_ab"), 0);
+    if(fra) binbuf_addv(b, "ssi;", gensym("#X"), gensym("abframe"), 0);
 
     freebytes(stack, sizeof(t_ab_definition *) * numabdefs);
 }
 
 /* saves last canvas as an ab definition */
-static void canvas_define_ab(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
+static void canvas_abpush(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 {
     canvas_pop(x, 0);
 
@@ -2164,11 +2169,11 @@ static void canvas_define_ab(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     x->gl_env = 0xF1A6; //to save it as a root canvas
     mess1(&((t_text *)x)->te_pd, gensym("saveto"), source);
     x->gl_env = 0;
-    
+
     t_ab_definition *n;
     if(!(n = canvas_add_ab(c, name, source)))
     {
-        error("canvas_define_ab: ab definition for '%s' already exists, skipping", 
+        error("canvas_abpush: ab definition for '%s' already exists, skipping",
                 name->s_name);
     }
     else
@@ -2186,25 +2191,26 @@ static void canvas_define_ab(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
             {
                 t_symbol *abname = argv[i].a_w.w_symbol;
                 t_ab_definition *absource = canvas_find_ab(c, abname);
-                if(!absource) { bug("canvas_define_ab"); return; }
+                if(!absource) { bug("canvas_abpush"); return; }
                 n->ad_dep[i-1] = absource;
                 n->ad_deprefs[i-1] = 0;
             }
         }
     }
-    
+
     pd_free(x);
 }
 
-static void canvas_frame_ab(t_canvas *x, t_float val)
+static int abframe = 0;
+static void canvas_abframe(t_canvas *x, t_float val)
 {
-    definingabs = val;
+    abframe = val;
 }
 
 /* creator for "ab" objects */
 static void *ab_new(t_symbol *s, int argc, t_atom *argv)
 {
-    if(definingabs)
+    if(abframe)
         return (0);
 
     t_canvas *c = canvas_getcurrent();
@@ -3083,10 +3089,10 @@ void g_canvas_setup(void)
 /*---------------------------- ab ------------------- */
 
     class_addcreator((t_newmethod)ab_new, gensym("ab"), A_GIMME, 0);
-    class_addmethod(canvas_class, (t_method)canvas_define_ab,
-        gensym("define_ab"), A_GIMME, 0);
-    class_addmethod(canvas_class, (t_method)canvas_frame_ab,
-        gensym("frame_ab"), A_FLOAT, 0);
+    class_addmethod(canvas_class, (t_method)canvas_abpush,
+        gensym("abpush"), A_GIMME, 0);
+    class_addmethod(canvas_class, (t_method)canvas_abframe,
+        gensym("abframe"), A_FLOAT, 0);
 
 /*---------------------------- declare ------------------- */
     declare_class = class_new(gensym("declare"), (t_newmethod)declare_new,

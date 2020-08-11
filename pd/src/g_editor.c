@@ -1438,8 +1438,8 @@ void canvas_reload_ab_rec(t_canvas *x, t_ab_definition *a, t_gobj *e)
     for (g = x->gl_list, i = 0; g && i < nobj; i++)
     {
         if(pd_class(&g->g_pd) == canvas_class
-            && (!canvas_isabstraction((t_canvas *)g) 
-                    || (((t_canvas *)g)->gl_isab 
+            && (!canvas_isabstraction((t_canvas *)g)
+                    || (((t_canvas *)g)->gl_isab
                         && (((t_canvas *)g)->gl_absource != a))))
             canvas_reload_ab_rec((t_canvas *)g, a, e);
         g = g->g_next;
