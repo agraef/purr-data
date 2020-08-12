@@ -331,6 +331,14 @@ typedef struct _debuginfo {
     t_object x_obj;
 } t_debuginfo;
 
+static t_class *abinfo_class;
+
+typedef struct _abinfo
+{
+    t_object x_obj;
+    t_ab_definition *abdef;
+} t_abinfo;
+
 /* used by all the *info objects */
 
 static int info_to_console = 0;
@@ -1629,6 +1637,55 @@ void objectinfo_setup(void)
     post("stable objectinfo methods: class");
 }
 
+/* -------------------------- abinfo ------------------------------ */
+
+void *abinfo_new(void)
+{
+    t_abinfo *x;
+    t_canvas *c = canvas_getcurrent();
+    while(c->gl_owner && !c->gl_isab) c = c->gl_owner;
+    if(c->gl_isab)
+    {
+        x = (t_abinfo *)pd_new(abinfo_class);
+        x->abdef = c->gl_absource;
+        outlet_new(&x->x_obj, &s_list);
+    }
+    else
+    {
+        error("abinfo: only instantiable inside an ab object");
+        x = 0;
+    }
+    return (x);
+}
+
+void abinfo_name(t_abinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_atom at[1];
+    SETSYMBOL(at, x->abdef->ad_name);
+    info_out((t_text *)x, s, 1, at);
+}
+
+void abinfo_instances(t_abinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_atom at[1];
+    SETFLOAT(at, x->abdef->ad_numinstances);
+    info_out((t_text *)x, s, 1, at);
+}
+
+//ADD MORE METHODS
+
+void abinfo_setup(void)
+{
+    abinfo_class = class_new(gensym("abinfo"), (t_newmethod)abinfo_new, 0,
+        sizeof(t_abinfo), CLASS_DEFAULT, 0);
+
+    class_addmethod(abinfo_class, (t_method)abinfo_name,
+        gensym("name"), A_GIMME, 0);
+    class_addmethod(abinfo_class, (t_method)abinfo_instances,
+        gensym("instances"), A_GIMME, 0);
+}
+
+
 void debuginfo_print(t_debuginfo *x)
 {
     info_print((t_text *)x);
@@ -1665,6 +1722,7 @@ void x_interface_setup(void)
     classinfo_setup();
     debuginfo_setup();
     objectinfo_setup();
+    abinfo_setup();
     pdinfo_setup();
     print_setup();
     unpost_setup();
