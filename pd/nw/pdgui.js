@@ -815,9 +815,21 @@ function check_nwjs_version(version) {
 
 exports.check_nwjs_version = check_nwjs_version;
 
+// ico@vt.edu 2020-08-12: check which OS we have since Windows has a different
+// windows positioning logic on nw.js 0.14.7 than Linux/OSX. Go figure...
+function check_os(name) {
+
+    var os = require('os');
+    //post("os=" + os.platform());
+    return os.platform() === name ? 1 : 0;
+}
+
+exports.check_os = check_os;
+
 // ico@vt.edu 2020-08-11: this appears to have to be 25 at all times
-// perhaps this is different on Linux and OSX?
-var menu_offset = check_nwjs_version("0.46") ? 25 : 25;
+// we will leave this here for later if we encounter issues with inconsistencies
+// across different nw.js versions...
+var nwjs_menu_offset = check_nwjs_version("0.46") ? 25 : 25;
 
 // quick hack so that we can paste pd code from clipboard and
 // have it affect an empty canvas' geometry
@@ -825,8 +837,8 @@ var menu_offset = check_nwjs_version("0.46") ? 25 : 25;
 function gui_canvas_change_geometry(cid, w, h, x, y) {
     gui(cid).get_nw_window(function(nw_win) {
         nw_win.width = w;
-        // menu_offset is a kludge to account for menubar
-        nw_win.height = h + menu_offset;
+        // nwjs_menu_offset is a kludge to account for menubar
+        nw_win.height = h + nwjs_menu_offset;
         nw_win.x = x;
         nw_win.y = y;
     });
@@ -843,18 +855,18 @@ function canvas_check_geometry(cid) {
         // in nw_create_window of index.js
         // ico@vt.edu in 0.46.2 this is now 25 pixels, so I guess
         // it is now officially kludge^2
-        win_h = patchwin[cid].height - menu_offset,
+        win_h = patchwin[cid].height - nwjs_menu_offset,
         win_x = patchwin[cid].x,
         win_y = patchwin[cid].y,
         cnv_width = patchwin[cid].window.innerWidth,
-        cnv_height = patchwin[cid].window.innerHeight - menu_offset;
+        cnv_height = patchwin[cid].window.innerHeight - nwjs_menu_offset;
     // We're reusing win_x and win_y below, as it
     // shouldn't make a difference to the bounds
     // algorithm in Pd (ico@vt.edu: this is not true anymore for nw 0.46+)
     //post("relocate " + pd_geo_string(cnv_width, cnv_height, win_x, win_y) + " " +
     //       pd_geo_string(cnv_width, cnv_height, win_x, win_y));
     // IMPORTANT! ico@vt.edu: for nw 0.46+ we will need to replace first pd_geo_string's
-    // first two args (win_w and win_h with cnv_width and cnv_height + menu_offset
+    // first two args (win_w and win_h with cnv_width and cnv_height + nwjs_menu_offset
     // to ensure the window reopens exactly how it was saved)
     pdsend(cid, "relocate",
            pd_geo_string(win_w, win_h, win_x, win_y),
@@ -2412,6 +2424,8 @@ function gui_canvas_line(cid,tag,type,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10) {
         frag.appendChild(path);
         return frag;
     });
+    // ico@vt.edu 2020-08-12: update scroll when cord is drawn
+    gui_canvas_get_scroll(cid);
 }
 
 function gui_canvas_select_line(cid, tag) {
@@ -2431,6 +2445,8 @@ function gui_canvas_delete_line(cid, tag) {
     gui(cid).get_elem(tag, function(e) {
         e.parentNode.removeChild(e);
     });
+    // ico@vt.edu 2020-08-12: update scroll when cord is deleted
+    gui_canvas_get_scroll(cid);
 }
 
 function gui_canvas_update_line(cid, tag, x1, y1, x2, y2, yoff) {
@@ -6022,7 +6038,9 @@ function canvas_params(nw_win)
     // To implement the Pd-l2ork behavior, the top-left of the canvas should
     // always be the topmost, leftmost object.
     width = bbox.x > 0 ? bbox.x + bbox.width : bbox.width;
-    height = bbox.y > 0 ? bbox.y + bbox.height : bbox.height;
+    // ico@vt.edu 2020-08-12: we add 1 due to an unknown nw.js discrapancy,
+    // perhaps because of rounding taking place further below?
+    height = bbox.y > 0 ? bbox.y + bbox.height + 1 : bbox.height + 1;
     x = bbox.x > 0 ? 0 : bbox.x,
     y = bbox.y > 0 ? 0 : bbox.y;
 
