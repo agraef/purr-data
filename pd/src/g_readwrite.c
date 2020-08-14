@@ -1011,7 +1011,8 @@ static void canvas_menusaveas(t_canvas *x, t_floatarg fdestroy)
                 x2->gl_name->s_name : "title"),
             canvas_getdir(x2)->s_name,
             fdestroy != 0);
-    else canvas_save_ab(x2, fdestroy);
+    else if(x->gl_dirty)
+        canvas_save_ab(x2, fdestroy);
 }
 
 static void canvas_menusave(t_canvas *x, t_floatarg fdestroy)
@@ -1026,7 +1027,8 @@ static void canvas_menusave(t_canvas *x, t_floatarg fdestroy)
                 canvas_savetofile(x2, x2->gl_name, canvas_getdir(x2), fdestroy);
         else canvas_menusaveas(x2, fdestroy);
     }
-    else canvas_save_ab(x2, fdestroy);
+    else if(x->gl_dirty)
+        canvas_save_ab(x2, fdestroy);
 }
 
 static void canvas_menuprint(t_canvas *x)

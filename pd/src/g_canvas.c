@@ -1926,6 +1926,9 @@ static t_pd *do_create_ab(t_ab_definition *abdef, int argc, t_atom *argv)
     canvas_popabstraction((t_canvas *)(s__X.s_thing));
     canvas_setargs(0, 0);
 
+    canvas_vis((t_canvas *)newest, !glist_amreloadingabstractions 
+                                    && binbuf_getnatom(abdef->ad_source) == 3);
+
     return(newest);
 }
 

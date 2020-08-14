@@ -1426,6 +1426,8 @@ void canvas_reload_ab_rec(t_canvas *x, t_ab_definition *a, t_gobj *e)
             }
             glist_select(x, g);
         }
+        else if(g == e)
+            canvas_initbang((t_canvas *)g);
         g = g->g_next;
     }
     if (found)
