@@ -383,12 +383,7 @@ function nw_close_window(window) {
 
 // 0.46+ seems to be required for "null" to work. TODO: Bisect to get the
 // actual minimum required version for this.
-var null_pos = pdgui.check_nwjs_version("0.46") ? "null" : "center";
-// ico@vt.edu 2020-08-12: this is no longer needed as it turns out that
-// there are OS differences rather than nw.js differences. That said,
-// we are still keeping this here for once we migrate to 0.46+ as it may
-// still prove useful...
-var menu_offset = pdgui.check_nwjs_version("0.46") ? 25 : 25;
+var null_pos = pdgui.check_nw_version("0.46") ? "null" : "center";
 
 function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
         // todo: make a separate way to format the title for OSX
@@ -416,9 +411,18 @@ function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
         pos = null_pos;
         //pdgui.post("check_os=" + pdgui.check_os("win32"));
         if (pdgui.check_os("linux") == 1) {
-            ypos = ypos - menu_offset - 3;
+            ypos = ypos - pdgui.nw_menu_offset - 3;
         }
     }
+
+    //pdgui.post("nw_create_window w=" + width + " h=" + height);
+
+    // ico@vt.edu 2020-08-13:
+    // why does Windows have different innerWidth and innerHeight from other OSs?
+    // See pdgui.js' canvas_params for the explanation...
+    width -= 16 * pdgui.nw_os_is_windows;
+    height -= 8 * pdgui.nw_os_is_windows;
+
     gui.Window.open(my_file, {
         title: my_title,
         // ico@vt.edu: position in 0.46.2 overrides x and y below
@@ -430,7 +434,7 @@ function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
         // altogether to simplify things. But we'd have to add some kind of
         // widget for the "Put" menu.
         // ico@vt.edu: on 0.46.2 this is now 25, go figure...
-        height: height + menu_offset,
+        height: height + (pdgui.nw_menu_offset * (pdgui.check_os("darwin") == 1 ? 0 : 1)),
         x: xpos,
         y: ypos
     }, function (new_win) {

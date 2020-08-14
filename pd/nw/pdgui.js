@@ -795,7 +795,7 @@ function pd_geo_string(w, h, x, y) {
 
 // ico@vt.edu: we moved this from index.js, so that we can use the versioning
 // to also deal with weird offsets between nwjs 0.14/0.24 and 0.46 and upwards
-function check_nwjs_version(version) {
+function check_nw_version(version) {
     // aggraef: check that process.versions["nw"] is at least the given version
     // NOTE: We assume that "0.x.y" > "0.x", and just ignore any -beta
     // suffixes if present.
@@ -813,7 +813,7 @@ function check_nwjs_version(version) {
     return vers_array.length <= nwjs_array.length;
 }
 
-exports.check_nwjs_version = check_nwjs_version;
+exports.check_nw_version = check_nw_version;
 
 // ico@vt.edu 2020-08-12: check which OS we have since Windows has a different
 // windows positioning logic on nw.js 0.14.7 than Linux/OSX. Go figure...
@@ -826,10 +826,18 @@ function check_os(name) {
 
 exports.check_os = check_os;
 
+// ico@vt.edu 2020-08-14: used to speed-up window size consistency operations
+// in index.js' nw_create_window and pdgui.js' canvas_check_geometry
+var nw_os_is_windows = check_os("win32");
+
+exports.nw_os_is_windows = nw_os_is_windows;
+
 // ico@vt.edu 2020-08-11: this appears to have to be 25 at all times
 // we will leave this here for later if we encounter issues with inconsistencies
 // across different nw.js versions...
-var nwjs_menu_offset = check_nwjs_version("0.46") ? 25 : 25;
+var nw_menu_offset = check_nw_version("0.46") ? 25 : 25;
+
+exports.nw_menu_offset = nw_menu_offset;
 
 // quick hack so that we can paste pd code from clipboard and
 // have it affect an empty canvas' geometry
@@ -837,8 +845,8 @@ var nwjs_menu_offset = check_nwjs_version("0.46") ? 25 : 25;
 function gui_canvas_change_geometry(cid, w, h, x, y) {
     gui(cid).get_nw_window(function(nw_win) {
         nw_win.width = w;
-        // nwjs_menu_offset is a kludge to account for menubar
-        nw_win.height = h + nwjs_menu_offset;
+        // nw_menu_offset is a kludge to account for menubar
+        nw_win.height = h + nw_menu_offset;
         nw_win.x = x;
         nw_win.y = y;
     });
@@ -855,18 +863,28 @@ function canvas_check_geometry(cid) {
         // in nw_create_window of index.js
         // ico@vt.edu in 0.46.2 this is now 25 pixels, so I guess
         // it is now officially kludge^2
-        win_h = patchwin[cid].height - nwjs_menu_offset,
+        win_h = patchwin[cid].height - 
+            (nw_menu_offset * (check_os("darwin") == 1 ? 0 : 1)),
         win_x = patchwin[cid].x,
         win_y = patchwin[cid].y,
         cnv_width = patchwin[cid].window.innerWidth,
-        cnv_height = patchwin[cid].window.innerHeight - nwjs_menu_offset;
+        cnv_height = patchwin[cid].window.innerHeight;
+    //post("canvas_check_geometry w=" + win_w + " h=" + win_h +
+    //    " x=" + win_x + " y=" + win_y + "cnv_w=" + cnw_width + " cnv_h=" + cnv_height);
+
+    // ico@vt.edu 2020-08-31:
+    // why does Windows have different innerWidth and innerHeight from other OSs?
+    // See canvas_params for the explanation...
+    win_w += 16 * nw_os_is_windows;
+    win_h += 8 * nw_os_is_windows;
+
     // We're reusing win_x and win_y below, as it
     // shouldn't make a difference to the bounds
     // algorithm in Pd (ico@vt.edu: this is not true anymore for nw 0.46+)
     //post("relocate " + pd_geo_string(cnv_width, cnv_height, win_x, win_y) + " " +
     //       pd_geo_string(cnv_width, cnv_height, win_x, win_y));
     // IMPORTANT! ico@vt.edu: for nw 0.46+ we will need to replace first pd_geo_string's
-    // first two args (win_w and win_h with cnv_width and cnv_height + nwjs_menu_offset
+    // first two args (win_w and win_h with cnv_width and cnv_height + nw_menu_offset
     // to ensure the window reopens exactly how it was saved)
     pdsend(cid, "relocate",
            pd_geo_string(win_w, win_h, win_x, win_y),
@@ -2685,7 +2703,7 @@ function gui_canvas_emphasize(cid) {
         // We *really* have to update all platforms to the same most recent
         // stable version. Otherwise the entire codebase is going to become
         // conditional branches...
-        if (check_nwjs_version("0.15")) {
+        if (check_nw_version("0.15")) {
             e.animate([
                 {"backgroundColor": "white"},
                 {"backgroundColor": "#ff9999"},
@@ -2703,7 +2721,7 @@ function gui_gobj_emphasize(cid, tag) {
         e.scrollIntoView();
         // quick and dirty, plus another check because Windows and old OSX
         // versions of nwjs are ancient and don't include web animations API...
-        if (border && check_nwjs_version("0.15")) {
+        if (border && check_nw_version("0.15")) {
             border.animate([
                  {fill: "white"},
                  {fill: "#ff9999"},
@@ -6032,6 +6050,7 @@ function canvas_params(nw_win)
     var bbox, width, height, min_width, min_height, x, y, svg_elem;
     svg_elem = nw_win.window.document.getElementById("patchsvg");
     bbox = svg_elem.getBBox();
+    //post("canvas_params calculated bbox: " + bbox.width + " " + bbox.height);
     // We try to do Pd-extended style canvas origins. That is, coord (0, 0)
     // should be in the top-left corner unless there are objects with a
     // negative x or y.
@@ -6047,14 +6066,22 @@ function canvas_params(nw_win)
     // ico@vt.edu: adjust body width and height to match patchsvg to ensure
     // scrollbars only come up when we are indeed inside svg and not before
     // with extra margins around. This is accurate to a pixel on nw 0.47.0.
-    // This is also needed when maximizing and restoring the window in order
-    // to trigger resizing of scrollbars.
+    // This is needed when maximizing and restoring the window in order
+    // to trigger resizing of scrollbars. This value reflects the pre-zoom
+    // size but this is good enough for detecting window resizing changes.
+
+    // ico @vt.edu 2020-08-13 UPDATE: I tracked down the inconsistency in
+    // measuring window size between Windows and OSX/Linux and it boils down
+    // to innerWidth and innerHeight for some reason giving out inconsistent
+    // values. For this reason, I have added the checks in the index.js'
+    // nw_create_window, and the pdgui.js' canvas_check_geometry.
     min_width = nw_win.window.innerWidth;
     min_height = nw_win.window.innerHeight;
     
     var body_elem = nw_win.window.document.body;
     body_elem.style.width = min_width + "px";
     body_elem.style.height = min_height + "px";
+    //post("canvas_params min_w=" + min_width + " min_h=" + min_height);
 
     // Since we don't do any transformations on the patchsvg,
     // let's try just using ints for the height/width/viewBox
@@ -6127,6 +6154,8 @@ function canvas_params(nw_win)
     }
     
     //post("x=" + xScrollSize + " y=" + yScrollSize);
+    //post("canvas_params final: x=" + x + " y=" + y + "w=" + width +
+    //  " h=" + height + " min_w=" + min_width + " min_h=" + min_height);
     
     return { x: x, y: y, w: width, h: height,
              mw: min_width, mh: min_height };
@@ -6150,7 +6179,9 @@ function pd_do_getscroll(cid) {
 
 exports.pd_do_getscroll = pd_do_getscroll;*/
 
-var nw_version_bbox_offset = check_nwjs_version("0.46") ? 0 : -4;
+// ico@vt.edu: we need this because of inconsistent canvas size between
+// nw <=0.24 and >=0.46
+var nw_version_bbox_offset = check_nw_version("0.46") ? 0 : -4;
 
 function do_getscroll(cid, checkgeom) {
     // Since we're throttling these getscroll calls, they can happen after
@@ -6170,7 +6201,10 @@ function do_getscroll(cid, checkgeom) {
         var { x: x, y: y, w: width, h: height,
             mw: min_width, mh: min_height } = canvas_params(nw_win);
 
+        //post("nw_version_bbox_offset=" + nw_version_bbox_offset +
+        //  " min_height=" + min_height);
         min_height += nw_version_bbox_offset;
+        //post("post-calc min_height=" + min_height);
 
         if (width < min_width) {
             width = min_width;
