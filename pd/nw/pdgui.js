@@ -959,7 +959,7 @@ function gui_canvas_saveas(name, initfile, initdir, close_flag) {
         type: "file",
         id: "saveDialog",
         // using an absolute path here, see comment above
-        nwsaveas: path.join(initdir, initfile),
+        nwsaveas: check_nw_version("0.46") ? initfile : path.join(initdir, initfile),
         nwworkingdir: initdir,
         accept: ".pd"
     });
