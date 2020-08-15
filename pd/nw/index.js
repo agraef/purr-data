@@ -410,7 +410,7 @@ function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
     } else {
         pos = null_pos;
         //pdgui.post("check_os=" + pdgui.check_os("win32"));
-        if (pdgui.check_os("linux") == 1) {
+        if (pdgui.nw_os_is_linux == 1) {
             ypos = ypos - pdgui.nw_menu_offset - 3;
         }
     }
@@ -434,7 +434,7 @@ function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
         // altogether to simplify things. But we'd have to add some kind of
         // widget for the "Put" menu.
         // ico@vt.edu: on 0.46.2 this is now 25, go figure...
-        height: height + (pdgui.nw_menu_offset * (pdgui.check_os("darwin") == 1 ? 0 : 1)),
+        height: height + (pdgui.nw_menu_offset * !pdgui.nw_os_is_osx),
         x: xpos,
         y: ypos
     }, function (new_win) {

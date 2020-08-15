@@ -826,10 +826,16 @@ function check_os(name) {
 
 exports.check_os = check_os;
 
-// ico@vt.edu 2020-08-14: used to speed-up window size consistency operations
-// in index.js' nw_create_window and pdgui.js' canvas_check_geometry
+// ico@vt.edu 2020-08-14: used to speed-up window size consistency and other
+// OS-centric operations by avoiding constant calls to string comparisons.
+// Most pertinent calls can be found in index.js' nw_create_window and pdgui.js'
+// canvas_check_geometry
+var nw_os_is_linux = check_os("linux");
+var nw_os_is_osx = check_os("darwin");
 var nw_os_is_windows = check_os("win32");
 
+exports.nw_os_is_linux = nw_os_is_linux;
+exports.nw_os_is_osx = nw_os_is_osx;
 exports.nw_os_is_windows = nw_os_is_windows;
 
 // ico@vt.edu 2020-08-11: this appears to have to be 25 at all times
@@ -864,7 +870,7 @@ function canvas_check_geometry(cid) {
         // ico@vt.edu in 0.46.2 this is now 25 pixels, so I guess
         // it is now officially kludge^2
         win_h = patchwin[cid].height - 
-            (nw_menu_offset * (check_os("darwin") == 1 ? 0 : 1)),
+            (nw_menu_offset * !nw_os_is_osx),
         win_x = patchwin[cid].x,
         win_y = patchwin[cid].y,
         cnv_width = patchwin[cid].window.innerWidth,
