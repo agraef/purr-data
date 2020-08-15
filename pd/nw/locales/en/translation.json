@@ -270,7 +270,8 @@
   },
   "pd_window": {
     "find": {
-      "placeholder": "Search in Console"
+      "placeholder": "Search in Console",
+      "highlight": "Highlight All"
     }
   },
   "canvas": {

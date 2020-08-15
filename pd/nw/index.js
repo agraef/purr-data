@@ -383,7 +383,7 @@ function nw_close_window(window) {
 
 // 0.46+ seems to be required for "null" to work. TODO: Bisect to get the
 // actual minimum required version for this.
-var null_pos = pdgui.check_nwjs_version("0.46") ? "null" : "center";
+var null_pos = pdgui.check_nw_version("0.46") ? "null" : "center";
 
 function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
         // todo: make a separate way to format the title for OSX
@@ -409,7 +409,20 @@ function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
         pos = "center";
     } else {
         pos = null_pos;
+        //pdgui.post("check_os=" + pdgui.check_os("win32"));
+        if (pdgui.nw_os_is_linux == 1) {
+            ypos = ypos - pdgui.nw_menu_offset - 3;
+        }
     }
+
+    //pdgui.post("nw_create_window w=" + width + " h=" + height);
+
+    // ico@vt.edu 2020-08-13:
+    // why does Windows have different innerWidth and innerHeight from other OSs?
+    // See pdgui.js' canvas_params for the explanation...
+    width -= 16 * pdgui.nw_os_is_windows;
+    height -= 8 * pdgui.nw_os_is_windows;
+
     gui.Window.open(my_file, {
         title: my_title,
         // ico@vt.edu: position in 0.46.2 overrides x and y below
@@ -421,7 +434,7 @@ function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
         // altogether to simplify things. But we'd have to add some kind of
         // widget for the "Put" menu.
         // ico@vt.edu: on 0.46.2 this is now 25, go figure...
-        height: height + 25,
+        height: height + (pdgui.nw_menu_offset * !pdgui.nw_os_is_osx),
         x: xpos,
         y: ypos
     }, function (new_win) {
@@ -597,7 +610,7 @@ function nw_create_pd_window_menus(gui, w) {
             if (state === "none") {
                 text_container.style.setProperty("bottom", "1.6em");
                 find_bar.style.setProperty("display", "inline");
-                find_bar.style.setProperty("height", "1.2em");
+                //find_bar.style.setProperty("height", "1.2em");
                 // Don't do the following in logical time so that the
                 // console_find keypress event won't receive this shortcut key
                 window.setTimeout(function() {
