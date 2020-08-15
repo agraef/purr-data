@@ -63,6 +63,7 @@ typedef struct _clone
     int x_phase;
     int x_startvoice;   /* number of first voice, 0 by default */
     int x_suppressvoice; /* suppress voice number as $1 arg */
+    t_canvas *x_owner;
 } t_clone;
 
 int clone_match(t_pd *z, t_symbol *name, t_symbol *dir)
@@ -72,6 +73,36 @@ int clone_match(t_pd *z, t_symbol *name, t_symbol *dir)
         return (0);
     return (x->x_vec[0].c_gl->gl_name == name &&
         canvas_getdir(x->x_vec[0].c_gl) == dir);
+}
+
+int clone_isab(t_pd *z)
+{
+    t_clone *x = (t_clone *)z;
+    if (!x->x_n)
+        return (0);
+    return (x->x_vec[0].c_gl->gl_isab);
+}
+
+int clone_matchab(t_pd *z, t_ab_definition *source)
+{
+    t_clone *x = (t_clone *)z;
+    return (clone_isab(z) && x->x_vec[0].c_gl->gl_absource == source);
+}
+
+int clone_getncopies(t_pd *z)
+{
+    t_clone *x = (t_clone *)z;
+    return (x->x_n);
+}
+
+t_glist **clone_getglists(t_pd *z)
+{
+    t_clone *x = (t_clone *)z;
+    t_glist **glists = (t_glist *)getbytes(sizeof(t_glist *)*x->x_n);
+    int i;
+    for(i = 0; i < x->x_n; i++)
+        glists[i] = x->x_vec[i].c_gl;
+    return glists;
 }
 
 void obj_sendinlet(t_object *x, int n, t_symbol *s, int argc, t_atom *argv);
@@ -175,6 +206,8 @@ static void clone_free(t_clone *x)
         for (i = 0; i < x->x_n; i++)
         {
             canvas_closebang(x->x_vec[i].c_gl);
+            if(x->x_vec[i].c_gl->gl_isab) //only for abs?
+                x->x_vec[i].c_gl->gl_owner = x->x_owner;
             pd_free(&x->x_vec[i].c_gl->gl_pd);
             t_freebytes(x->x_outvec[i],
                 x->x_nout * sizeof(*x->x_outvec[i]));
@@ -228,7 +261,7 @@ void clone_setn(t_clone *x, t_floatarg f)
     {
         t_canvas *c;
         t_out *outvec;
-        SETFLOAT(x->x_argv, x->x_startvoice + i);
+        SETFLOAT((x->x_vec[0].c_gl->gl_isab ? x->x_argv+1 : x->x_argv), x->x_startvoice + i);
         if (!(c = clone_makeone(x->x_s, x->x_argc - x->x_suppressvoice,
             x->x_argv + x->x_suppressvoice)))
         {
@@ -354,6 +387,7 @@ static void clone_dsp(t_clone *x, t_signal **sp)
     }
 }
 
+static int clone_newab = 0;
 static void *clone_new(t_symbol *s, int argc, t_atom *argv)
 {
     t_clone *x = (t_clone *)pd_new(clone_class);
@@ -393,10 +427,24 @@ static void *clone_new(t_symbol *s, int argc, t_atom *argv)
     else goto usage;
         /* store a copy of the argmuents with an extra space (argc+1) for
         supplying an instance number, which we'll bash as we go. */
-    x->x_argc = argc - 1;
-    x->x_argv = getbytes(x->x_argc * sizeof(*x->x_argv));
-    memcpy(x->x_argv, argv+1, x->x_argc * sizeof(*x->x_argv));
-    SETFLOAT(x->x_argv, x->x_startvoice);
+    if(clone_newab)
+    {
+        x->x_argc = argc;
+        x->x_argv = getbytes(x->x_argc * sizeof(*x->x_argv));
+        memcpy(x->x_argv, argv, x->x_argc * sizeof(*x->x_argv));
+        SETSYMBOL(x->x_argv, x->x_s);
+        SETFLOAT(x->x_argv+1, x->x_startvoice);
+        x->x_s = gensym("ab");
+        x->x_owner = canvas_getcurrent();
+        clone_newab = 0;
+    }
+    else
+    {
+        x->x_argc = argc - 1;
+        x->x_argv = getbytes(x->x_argc * sizeof(*x->x_argv));
+        memcpy(x->x_argv, argv+1, x->x_argc * sizeof(*x->x_argv));
+        SETFLOAT(x->x_argv, x->x_startvoice);
+    }
     if (!(c = clone_makeone(x->x_s, x->x_argc - x->x_suppressvoice,
         x->x_argv + x->x_suppressvoice)))
             goto fail;
@@ -444,10 +492,19 @@ fail:
     return (0);
 }
 
+static void *abclone_new(t_symbol *s, int argc, t_atom *argv)
+{
+    clone_newab = 1;
+    return clone_new(s, argc, argv);
+}
+
 void clone_setup(void)
 {
     clone_class = class_new(gensym("clone"), (t_newmethod)clone_new,
         (t_method)clone_free, sizeof(t_clone), CLASS_NOINLET, A_GIMME, 0);
+
+    class_addcreator((t_newmethod)abclone_new, gensym("abclone"), A_GIMME, 0);
+
     class_addmethod(clone_class, (t_method)clone_click, gensym("click"),
         A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, 0);
     class_addmethod(clone_class, (t_method)clone_loadbang, gensym("loadbang"),

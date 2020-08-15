@@ -172,6 +172,7 @@ typedef struct _ab_definition
     t_binbuf *ad_source;    /* binbuf where source is stored */
     int ad_numinstances;    /* the num of instances of this abstraction */
     struct _ab_definition *ad_next; /* next ab definition */
+    t_canvas *ad_owner;
 
     /* dependency graph stuff */
     int ad_numdep;      /* number of other ab definitions that it depends on */

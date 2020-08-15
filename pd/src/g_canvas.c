@@ -1926,7 +1926,8 @@ static t_pd *do_create_ab(t_ab_definition *abdef, int argc, t_atom *argv)
     canvas_popabstraction((t_canvas *)(s__X.s_thing));
     canvas_setargs(0, 0);
 
-    canvas_vis((t_canvas *)newest, !glist_amreloadingabstractions 
+    canvas_vis((t_canvas *)newest, !glist_amreloadingabstractions
+                                    && !abdef->ad_numinstances
                                     && binbuf_getnatom(abdef->ad_source) == 3);
 
     return(newest);
@@ -1935,8 +1936,10 @@ static t_pd *do_create_ab(t_ab_definition *abdef, int argc, t_atom *argv)
 /* get root canvas crossing ab boundaries, where ab definitions are stored */
 static t_canvas *canvas_getrootfor_ab(t_canvas *x)
 {
-    if (!x->gl_owner || (canvas_isabstraction(x) && !x->gl_isab))
+    if ((!x->gl_owner && !x->gl_isclone) || (canvas_isabstraction(x) && !x->gl_isab))
         return (x);
+    else if (x->gl_isab)
+        return (x->gl_absource->ad_owner);
     else
         return (canvas_getrootfor_ab(x->gl_owner));
 }
@@ -1963,7 +1966,7 @@ static int canvas_register_ab(t_canvas *x, t_ab_definition *a)
 {
     t_canvas *r = canvas_getrootfor_ab(x), *c = x;
 
-    while(c != r)
+    while(c && c != r)
     {
         if(c->gl_isab)
         {
@@ -1993,6 +1996,7 @@ static int canvas_register_ab(t_canvas *x, t_ab_definition *a)
             {
                 a->ad_deprefs[i-1]++;
             }
+            return (1);
         }
         c = c->gl_owner;
     }
@@ -2034,6 +2038,7 @@ static int canvas_deregister_ab(t_canvas *x, t_ab_definition *a)
                 }
             }
             else bug("canvas_deregister_ab");
+            return (1);
         }
         c = c->gl_owner;
     }
@@ -2076,6 +2081,7 @@ static t_ab_definition *canvas_add_ab(t_canvas *x, t_symbol *name, t_binbuf *sou
         abdef->ad_name = name;
         abdef->ad_source = source;
         abdef->ad_numinstances = 0;
+        abdef->ad_owner = c;
         abdef->ad_numdep = 0;
         abdef->ad_dep = (t_ab_definition **)getbytes(0);
         abdef->ad_deprefs = (int *)getbytes(0);

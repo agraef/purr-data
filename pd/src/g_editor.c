@@ -1401,17 +1401,27 @@ void canvas_reload(t_symbol *name, t_symbol *dir, t_gobj *except)
     canvas_resume_dsp(dspwas);
 }
 
+int clone_isab(t_pd *z);
+int clone_matchab(t_pd *z, t_ab_definition *source);
+int clone_getncopies(t_pd *z);
+t_glist **clone_getglists(t_pd *z);
+
 /* recursive ab reload method */
 void canvas_reload_ab_rec(t_canvas *x, t_ab_definition *a, t_gobj *e)
 {
     t_gobj *g;
     int i, nobj = glist_getindex(x, 0);
     int hadwindow = x->gl_havewindow, found = 0;
+    int remakeit = 0;
 
     for (g = x->gl_list, i = 0; g && i < nobj; i++)
     {
-        if(g != e && pd_class(&g->g_pd) == canvas_class && canvas_isabstraction((t_canvas *)g)
-            && ((t_canvas *)g)->gl_isab && ((t_canvas *)g)->gl_absource == a)
+        remakeit = (g != e && pd_class(&g->g_pd) == canvas_class && canvas_isabstraction((t_canvas *)g)
+            && ((t_canvas *)g)->gl_isab && ((t_canvas *)g)->gl_absource == a);
+
+        remakeit = remakeit || (pd_class(&g->g_pd) == clone_class && clone_matchab(&g->g_pd, a));
+
+        if(remakeit)
         {
             canvas_create_editor(x);
 
@@ -1439,11 +1449,20 @@ void canvas_reload_ab_rec(t_canvas *x, t_ab_definition *a, t_gobj *e)
 
     for (g = x->gl_list, i = 0; g && i < nobj; i++)
     {
-        if(pd_class(&g->g_pd) == canvas_class
-            && (!canvas_isabstraction((t_canvas *)g)
-                    || (((t_canvas *)g)->gl_isab
-                        && (((t_canvas *)g)->gl_absource != a))))
+        if(pd_class(&g->g_pd) == canvas_class && (!canvas_isabstraction((t_canvas *)g)
+                    || (((t_canvas *)g)->gl_isab && (((t_canvas *)g)->gl_absource != a))))
             canvas_reload_ab_rec((t_canvas *)g, a, e);
+
+        if(pd_class(&g->g_pd) == clone_class
+            && clone_isab(&g->g_pd) && !clone_matchab(&g->g_pd, a))
+        {
+            int numglists = clone_getncopies(&g->g_pd), j;
+            t_glist **glists = clone_getglists(&g->g_pd);
+            for(j = 0; j < numglists; j++)
+                canvas_reload_ab_rec((t_canvas *)glists[j], a, e);
+            freebytes(glists, sizeof(t_glist *)*numglists);
+        }
+
         g = g->g_next;
     }
     if (!hadwindow && x->gl_havewindow)
