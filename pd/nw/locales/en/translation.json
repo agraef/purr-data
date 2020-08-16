@@ -285,6 +285,16 @@
       "cancel": "Cancel",
       "cancel_tt": "Don't save any changes, and don't close the patch"
     },
+    "abstract_dialog": {
+      "prompt": "Would you like to turn the identical subpatches into abstractions?\nCandidates found in the subpatch tree, from root canvas: ",
+      "note": "Note: this can't be undone all at once – any changes made in subpatches can be undone from that subpatch",
+      "single": "Only this one",
+      "single_tt": "Replace the subpatch you just saved with the corresponding abstraction",
+      "all": "All candidates",
+      "all_tt": "Replace all subpatches in the subpatch tree identical to the one you just saved with the corresponding abstraction",
+      "none": "None",
+      "none_tt": "Do not replace any subpatch"
+    },
     "find": {
       "placeholder": "Search in Canvas",
       "search": "Search",
@@ -294,6 +304,7 @@
     "menu": {
       "props": "Properties",
       "open": "Open",
+      "saveas": "Save as",
       "help": "Help",
       "front": "Bring to Front",
       "back": "Send to Back"
