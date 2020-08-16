@@ -2311,9 +2311,13 @@ static void abstracthandler_callback(t_abstracthandler *x, t_symbol *s)
         /* check if there is a creator with the same name or if it's one of the built-in methods */
         t_symbol *sym = gensym(label);
         creator = (sym == &s_bang || sym == &s_float || sym == &s_symbol || sym == &s_blob
-                    || sym == &s_list || sym == &s_anything || zgetfn(&pd_objectmaker, sym));
-
-        if(!len && creator) { prefix = 1; creator = 0; }
+                    || sym == &s_list || sym == &s_anything);
+        if(!len && creator)
+        {
+            prefix = (!len && creator);
+            creator = 0;
+        }
+        creator = (creator || zgetfn(&pd_objectmaker, sym));
 
         /* check if there in an abstraction with the same name in the search path */
         if(!creator)
@@ -2336,7 +2340,7 @@ static void abstracthandler_callback(t_abstracthandler *x, t_symbol *s)
             strncat(label, filename, strlen(filename)-3);
         }
         else if(!flag)
-            post("warning: couldn't use relative path, there is a coincidence in the creator list or the search path");
+            error("warning: couldn't use relative path, there is a coincidence in the creator list or the search path");
     }
     if(!flag) /* absolute path is required */
     {
