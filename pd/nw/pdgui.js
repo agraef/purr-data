@@ -2659,6 +2659,24 @@ function gui_gobj_deselect(cid, tag) {
     });
 }
 
+function gui_gobj_setdirty(cid, tag, state) {
+    var color;
+    switch (state) {
+        case 1:
+            color = "crimson";
+            break;
+        case 2:
+            color = "coral";
+            break;
+        default:
+            color = "none";
+            break;
+    }
+    gui(cid).get_elem(tag + "text", function(e) {
+        e.setAttribute("stroke", color);
+    });
+}
+
 function gui_canvas_emphasize(cid) {
     gui(cid).get_elem("patchsvg", function(e) {
         // raise the window

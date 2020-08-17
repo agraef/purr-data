@@ -5914,6 +5914,12 @@ static void gobj_emphasize(t_glist *g, t_gobj *x)
     gui_vmess("gui_gobj_emphasize", "xs", g, rtext_gettag(y));
 }
 
+void gobj_isdirty(t_glist *g, t_gobj *x, int on)
+{
+    t_rtext *y = glist_findrtext(g, (t_text *)x);
+    gui_vmess("gui_gobj_setdirty", "xsi", g, rtext_gettag(y), on);
+}
+
 static int glist_dofinderror(t_glist *gl, void *error_object)
 {
     t_gobj *g;

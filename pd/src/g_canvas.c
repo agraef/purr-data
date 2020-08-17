@@ -481,6 +481,8 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     }
     else x->gl_isab = 0;
 
+    x->gl_subdirties = 0;
+
     if (yloc < GLIST_DEFCANVASYLOC)
         yloc = GLIST_DEFCANVASYLOC;
     if (xloc < 0)
@@ -794,6 +796,19 @@ void canvas_dirty(t_canvas *x, t_floatarg n)
         x2->gl_dirty = n;
         if (x2->gl_havewindow)
             canvas_reflecttitle(x2);
+        if (x2->gl_owner)
+        {
+            gobj_isdirty(x2->gl_owner, x2,
+                (x2->gl_dirty ? 1 : (x2->gl_subdirties ? 2 : 0)));
+            x2 = x2->gl_owner;
+            while(x2->gl_owner)
+            {
+                x2->gl_subdirties += (n ? 1 : -1);
+                if(!x2->gl_dirty)
+                    gobj_isdirty(x2->gl_owner, x2, (x2->gl_subdirties ? 2 : 0));
+                x2 = x2->gl_owner;
+            }
+        }
     }
 }
 

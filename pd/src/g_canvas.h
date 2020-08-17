@@ -225,6 +225,7 @@ struct _glist
     unsigned int gl_havewindow:1;   /* true if we own a window */
     unsigned int gl_mapped:1;       /* true if, moreover, it's "mapped" */
     unsigned int gl_dirty:1;        /* (root canvas only:) patch has changed */
+    int gl_subdirties;
     unsigned int gl_loading:1;      /* am now loading from file */
     unsigned int gl_willvis:1;      /* make me visible after loading */ 
     unsigned int gl_edit:1;         /* edit mode */
