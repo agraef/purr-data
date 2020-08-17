@@ -1960,24 +1960,32 @@ static t_canvas *canvas_getrootfor_ab(t_canvas *x)
 }
 
 /* check if the dependency graph has a cycle, assuming an new edge between parent and current nodes */
-static int ab_check_cycle(t_ab_definition *current, t_ab_definition *parent)
+static int ab_check_cycle(t_ab_definition *current, t_ab_definition *parent, int pathlen, char *path, char *res)
 {
     if(current == parent)
+    {
+        sprintf(path+pathlen, "[ab %s]", current->ad_name->s_name);
+        strcpy(res, path);
         return (1);
+    }
     else
     {
+        int len = strlen(current->ad_name->s_name);
+        sprintf(path+pathlen, "[ab %s]<-", current->ad_name->s_name);
+        pathlen += (len+7);
         int i, cycle = 0;
         for(i = 0; !cycle && i < current->ad_numdep; i++)
         {
-            cycle = ab_check_cycle(current->ad_dep[i], parent);
+            cycle = ab_check_cycle(current->ad_dep[i], parent, pathlen, path, res);
         }
+        pathlen -= (len+7);
         return (cycle);
     }
 }
 
 /* try to register a new dependency into the dependency graph,
     returns 0 if a dependency issue is found */
-static int canvas_register_ab(t_canvas *x, t_ab_definition *a)
+static int canvas_register_ab(t_canvas *x, t_ab_definition *a, char *res)
 {
     t_canvas *r = canvas_getrootfor_ab(x), *c = x;
 
@@ -1993,7 +2001,9 @@ static int canvas_register_ab(t_canvas *x, t_ab_definition *a)
 
             if(!found)
             {
-                if(!ab_check_cycle(f, a))
+                char path[MAXPDSTRING];
+                sprintf(path, "[ab %s]<-", a->ad_name->s_name);
+                if(!ab_check_cycle(f, a, strlen(path), path, res))
                 {
                     a->ad_dep =
                         (t_ab_definition **)resizebytes(a->ad_dep, sizeof(t_ab_definition *)*a->ad_numdep,
@@ -2231,11 +2241,15 @@ static void canvas_abframe(t_canvas *x, t_float val)
     abframe = val;
 }
 
+extern t_class *text_class;
+
 /* creator for "ab" objects */
 static void *ab_new(t_symbol *s, int argc, t_atom *argv)
 {
     if(abframe)
-        return (0);
+        /* return dummy text object so that creator
+            does not throw an error */
+        return pd_new(text_class);
 
     t_canvas *c = canvas_getcurrent();
 
@@ -2256,14 +2270,15 @@ static void *ab_new(t_symbol *s, int argc, t_atom *argv)
             source = canvas_add_ab(c, name, b);
         }
 
-        if(canvas_register_ab(c, source))
+        char res[MAXPDSTRING];
+        if(canvas_register_ab(c, source, res))
         {
             newest = do_create_ab(source, (argc ? argc-1 : 0), (argc ? argv+1 : 0));
             source->ad_numinstances++;
         }
         else
         {
-            error("ab_new: can't insantiate ab within itself");
+            error("ab_new: can't insantiate ab within itself\n cycle: %s", res);
             newest = 0;
         }
     }

@@ -1425,10 +1425,10 @@ void canvas_reload_ab_rec(t_canvas *x, t_ab_definition *a, t_gobj *e)
         {
             canvas_create_editor(x);
 
-            if (!x->gl_havewindow) //necessary?
-            {
-                canvas_vis(glist_getcanvas(x), 1);
-            }
+            //if (!x->gl_havewindow) //necessary?
+            //{
+            //    canvas_vis(glist_getcanvas(x), 1);
+            //}
             if (!found)
             {
                 glist_noselect(x);
@@ -1465,8 +1465,8 @@ void canvas_reload_ab_rec(t_canvas *x, t_ab_definition *a, t_gobj *e)
 
         g = g->g_next;
     }
-    if (!hadwindow && x->gl_havewindow)
-        canvas_vis(glist_getcanvas(x), 0);
+    //if (!hadwindow && x->gl_havewindow)
+    //    canvas_vis(glist_getcanvas(x), 0);
 }
 
 /* --------- 6. apply  ----------- */
