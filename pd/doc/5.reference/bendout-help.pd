@@ -1,10 +1,10 @@
-#N canvas 432 35 555 619 10;
+#N canvas 432 38 556 623 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
-14 -228856 -66577 0;
+14 #dcdcdc #404040 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header bendout 3 12 0 18
--204280 -1 0;
+#c4dcdc #000000 0;
 #X obj 0 377 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
--228856 -1 0;
+#dcdcdc #000000 0;
 #N canvas 489 282 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
@@ -22,15 +22,15 @@ to conform to the PDDP template for Pd version 0.42.;
 #X text 12 165 RELEASE_DATE 2009;
 #X restore 500 597 pd META;
 #X obj 0 458 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
-13 -228856 -1 0;
+13 #dcdcdc #000000 0;
 #X obj 0 486 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
-0 13 -228856 -1 0;
+0 13 #dcdcdc #000000 0;
 #X obj 0 561 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
-0 13 -228856 -1 0;
+0 13 #dcdcdc #000000 0;
 #X text 98 387 float;
 #N canvas 204 206 441 421 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
-14 -204280 -1 0;
+14 #c4dcdc #000000 0;
 #X text 8 2 [bendout] Related Objects;
 #X obj 73 80 ctlin;
 #X obj 216 80 pgmin;
@@ -65,10 +65,10 @@ by Olaf Matthes);
 #X obj 22 390 pddp/helplink cyclone/midiflush;
 #X restore 101 598 pd Related_objects;
 #X text 98 462 (none);
-#X obj 78 387 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
--162280 0;
-#X obj 78 430 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
--162280 0;
+#X obj 78 387 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 #dcdcdc
+#9c9c9c 0;
+#X obj 78 430 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 #dcdcdc
+#9c9c9c 0;
 #X text 98 430 float;
 #X obj 99 565 pddp/pddplink all_about_midi_flags.pd -text all_about_midi_flags
 ;
@@ -83,14 +83,14 @@ by Olaf Matthes);
 #X text 168 505 - (optional) the MIDI channel number to be written
 to. If no argument is given \, [bendout] defaults to channel 1 . The
 channel can be changed by sending an integer to the right inlet.;
-#X text 168 387 - pitchbend value (0-127).;
 #X text 168 430 - MIDI channel number (defaults to channel 1).;
-#X text 168 462 - [bendin] writes directly to the MIDI port.;
 #X text 80 505 1) float;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
 #X text 98 407 list;
 #X text 168 407 - a list is distributed to the inlets.;
+#X text 168 387 - pitchbend value (-8192 - 8191).;
+#X text 168 462 - [bendout] writes directly to the MIDI port.;
 #X connect 15 0 17 0;
 #X connect 16 0 17 1;
 #X connect 18 0 20 0;
