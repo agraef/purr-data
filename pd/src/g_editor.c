@@ -2179,6 +2179,250 @@ void canvas_undo_font(t_canvas *x, void *z, int action)
     }
 }
 
+/* ------------------------------- abstract feature --------------------- */
+
+static t_class *abstracthandler_class;
+
+typedef struct abstracthandler
+{
+    t_object x_obj;
+    t_symbol *sym;          /* symbol bound to the object */
+    t_canvas *dialog;       /* canvas where the dialog will be displayed */
+    t_canvas *tarjet;       /* tarjet subpatch */
+    char *path;             /* abstraction path */
+    t_binbuf *subpatch;     /* subpatch contents */
+} t_abstracthandler;
+
+static void *abstracthandler_new(void)
+{
+    t_abstracthandler *x = (t_abstracthandler *)pd_new(abstracthandler_class);
+    char namebuf[80];
+    sprintf(namebuf, "ah%lx", (t_int)x);
+    x->sym = gensym(namebuf);
+    pd_bind(&x->x_obj.ob_pd, x->sym);
+    return (x);
+}
+
+static void abstracthandler_free(t_abstracthandler *x)
+{
+    freebytes(x->path, MAXPDSTRING);
+    binbuf_free(x->subpatch);
+    pd_unbind(&x->x_obj.ob_pd, x->sym);
+}
+
+/* gobj_activate, canvas_addtobuf and canvas_buftotex toghether and simplified*/
+static void do_rename_light(t_gobj *z, t_glist *glist, const char *text)
+{
+    t_rtext *y = glist_findrtext(glist, (t_text *)z);
+    glist->gl_editor->e_textedfor = y;
+    char *buf = getbytes(strlen(text)+1);
+    strcpy(buf, text);
+    rtext_settext(y, buf, strlen(text)+1);
+    glist->gl_editor->e_textdirty = 1;
+    canvas_dirty(glist, 1);
+    glist->gl_editor->e_onmotion = MA_NONE; //necessary?
+}
+
+/* traverses the whole subtree of the given canvas/patch, replacing all subpatches identical to the
+    given one with an abstraction */
+static int do_replace_subpatches(t_canvas *x, const char* label, t_binbuf *original)
+{
+    t_selection *list = 0;
+    int edi = 0, num = 0;
+    /* editor is needed in order to do the operations below */
+    if(label && !x->gl_editor) { canvas_create_editor(x); edi = 1; }
+    t_gobj *y, *yn;
+    canvas_undo_add(x, UNDO_SEQUENCE_START, "replace", "subpatch replacements have been redone. "
+    "All other possible replacements within other (sub)patches have not been affected");
+    for(y = x->gl_list; y; y = yn)
+    {
+        yn = y->g_next; /* dirty hack,
+                            'canvas_stowconnections' inside 'glist_deselect'
+                            rearranges the glist */
+        if(pd_class(&y->g_pd) == canvas_class &&
+                !canvas_isabstraction((t_canvas *)y))
+            {
+                t_binbuf *tmp = binbuf_new(), *tmps = binbuf_new();
+                gobj_save((t_gobj *)y, tmp);
+                int i = 0, j = binbuf_getnatom(tmp)-2;
+                t_atom *v = binbuf_getvec(tmp);
+                while(v[i].a_type != A_SEMI) i++;
+                i++;
+                while(v[j].a_type != A_SEMI) j--;
+                binbuf_restore(tmps, j-i+1, v+i);
+                binbuf_free(tmp);
+                if(binbuf_match(original, tmps, 0) &&
+                        binbuf_getnatom(original) == binbuf_getnatom(tmps))
+                {
+                    if(label)
+                    {
+                        binbuf_free(tmps);
+                        glist_noselect(x);
+                        glist_select(x, y);
+                        do_rename_light(y, x, label);
+                        glist_deselect(x, y);
+                    }
+                    else num++;
+                }
+                else
+                {
+                    binbuf_free(tmps);
+                    /* all the non-matching subpatches are stored in a list, */
+                    t_selection *new = (t_selection *)getbytes(sizeof(t_selection));
+                    new->sel_what = y;
+                    new->sel_next = list;
+                    list = new;
+                }
+            }
+    }
+    canvas_undo_add(x, UNDO_SEQUENCE_END, "replace", "subpatch replacements have been undone. "
+    "All other possible replacements within other (sub)patches have not been affected");
+    if(edi) canvas_destroy_editor(x);
+    t_selection *z, *zn;
+    /* the function is called recursively on each non-matching canvas.
+        this has been left for last due to a visual bug that happens if
+        they are explored as soon as they are traversed*/
+    for(z = list; z; z = zn)
+    {
+        zn = z->sel_next;
+        num += do_replace_subpatches((t_canvas *)z->sel_what, label, original);
+        freebytes(z, sizeof(t_selection));
+    }
+    return num;
+}
+
+static void abstracthandler_callback(t_abstracthandler *x, t_symbol *s)
+{
+    char fullpath[MAXPDSTRING], label[MAXPDSTRING], *dir, *filename, *o = s->s_name;
+    memset(fullpath, '\0', MAXPDSTRING); memset(label, '\0', MAXPDSTRING);
+    sys_unbashfilename(s->s_name, fullpath);
+    if(strlen(fullpath) < 3 || strcmp(fullpath+strlen(fullpath)-3, ".pd"))
+        strcat(fullpath, ".pd");
+    filename = strrchr(fullpath, '/')+1;
+    fullpath[(int)filename-(int)fullpath-1] = '\0';
+    dir = fullpath;
+
+    int flag, prefix = 0;
+    if(flag = sys_relativizepath(canvas_getdir(canvas_getrootfor(x->tarjet))->s_name, dir, label))
+    {
+        int len = strlen(label), creator, fd = -1;
+        if(len && label[len-1] != '/') label[len] = '/';
+        strncat(label, filename, strlen(filename)-3);
+        /* check if there is a creator with the same name or if it's one of the built-in methods */
+        t_symbol *sym = gensym(label);
+        creator = (sym == &s_bang || sym == &s_float || sym == &s_symbol || sym == &s_blob
+                    || sym == &s_list || sym == &s_anything);
+        if(!len && creator)
+        {
+            prefix = (!len && creator);
+            creator = 0;
+        }
+        creator = (creator || zgetfn(&pd_objectmaker, sym));
+
+        /* check if there in an abstraction with the same name in the search path */
+        if(!creator)
+        {
+            char opendir[MAXPDSTRING], *filenameptr;
+            fd = canvas_open(canvas_getrootfor(x->tarjet), label, ".pd", opendir,
+                                &filenameptr, MAXPDSTRING, 0); //high load
+            if(fd > 0)
+            {
+                sys_close(fd);
+                /* check if we are overwriting the file */
+                if(!strncmp(dir, opendir, (int)filenameptr-(int)opendir-1)) fd = -1;
+            }
+        }
+        flag = !(creator || (fd > 0));
+
+        if(flag && prefix)
+        {
+            strcpy(label, "./");
+            strncat(label, filename, strlen(filename)-3);
+        }
+        else if(!flag)
+            error("warning: couldn't use relative path, there is a coincidence in the creator list or the search path");
+    }
+    if(!flag) /* absolute path is required */
+    {
+        memset(label, '\0', MAXPDSTRING);
+        strcpy(label, dir);
+        strcat(label, "/");
+        strncat(label, filename, strlen(filename)-3);
+        /* should check if 'filename' is one of the built-in special methods
+            in order to inform the user about the nameclash problem */
+    }
+    x->path = (char *)getbytes(MAXPDSTRING);
+    strcpy(x->path, label);
+
+    /* save the subpatch into a separated pd file */
+    t_atom at[3];
+    SETSYMBOL(at, gensym(filename)); SETSYMBOL(at+1, gensym(dir)); SETFLOAT(at+2, 0.f);
+    x->tarjet->gl_env = 0xF1A6; /* gl_env is set to non-zero in order to save the subcanvas as a root canvas */
+    typedmess(&x->tarjet->gl_pd, gensym("savetofile"), 3, at);
+    x->tarjet->gl_env = 0;
+
+    t_binbuf *tmp = binbuf_new(), *tmps = binbuf_new();
+    gobj_save((t_gobj *)x->tarjet, tmp);
+    /* only the internals are kept, the position on the parent canvas may differ */
+    int i = 0, j = binbuf_getnatom(tmp)-2, matches;
+    t_atom *v = binbuf_getvec(tmp);
+    while(v[i].a_type != A_SEMI) i++;
+    i++;
+    while(v[j].a_type != A_SEMI) j--;
+    binbuf_restore(tmps, j-i+1, v+i);
+    binbuf_free(tmp);
+    matches = do_replace_subpatches(canvas_getrootfor(x->tarjet), 0, tmps);
+    x->subpatch = tmps;
+
+    /* trigger the frontend dialog for replacing options */
+    gui_vmess("gui_canvas_abstract", "xsi",
+                    x->dialog,
+                    x->sym->s_name,
+                    matches);
+}
+
+static void abstracthandler_dialog(t_abstracthandler *x, t_floatarg val)
+{
+    if(x->tarjet == x->dialog) canvas_vis(x->dialog, 0);
+    t_canvas *owner = x->tarjet->gl_owner, *root = canvas_getrootfor(x->tarjet);
+    int all = val;
+    if(!all)
+    {
+        /* change the text of the subpatch object to create the abstraction,
+            emulating the procedure done by the user. could be simplified */
+        int edi = 0;
+        if(!owner->gl_editor) { canvas_create_editor(owner); edi = 1; }
+        glist_noselect(owner);
+        glist_select(owner, x->tarjet);
+        do_rename_light(x->tarjet, owner, x->path);
+        glist_deselect(owner, x->tarjet);
+        if(edi) canvas_destroy_editor(owner);
+
+        /* select '[args]' slice
+        canvas_editmode(owner, 1);
+        t_gobj *abst = glist_nth(owner, glist_getindex(owner, 0)-1);
+        int len = strlen(x->path);
+        glist_select(owner, abst);
+        gobj_activate(abst, owner, (0b1 << 31) | (((len+1) & 0x7FFF) << 16) | ((len+7) & 0xFFFF)); */
+    }
+    else
+    {
+        do_replace_subpatches(root, x->path, x->subpatch);
+    }
+    pd_free(&x->x_obj.ob_pd);
+}
+
+void abstracthandler_setup(void)
+{
+    abstracthandler_class = class_new(gensym("abstracthandler"), 0,
+                                        abstracthandler_free, sizeof(t_abstracthandler),
+                                        CLASS_NOINLET, 0);
+    class_addmethod(abstracthandler_class, (t_method)abstracthandler_callback,
+                        gensym("callback"), A_SYMBOL, 0);
+    class_addmethod(abstracthandler_class, (t_method)abstracthandler_dialog,
+                        gensym("dialog"), A_FLOAT, 0);
+}
+
 /* ------------------------ event handling ------------------------ */
 
 static char *cursorlist[] = {
@@ -2271,7 +2515,7 @@ static void canvas_rightclick(t_canvas *x, int xpos, int ypos, t_gobj *y_sel)
 {
     //fprintf(stderr,"e_onmotion=%d\n",x->gl_editor->e_onmotion);
     if (x->gl_editor->e_onmotion != MA_NONE) return;
-    int canprop, canopen, isobject;
+    int canprop, canopen, isobject, cansaveas;
     t_gobj *y = NULL;
     int x1, y1, x2, y2, scalar_has_canvas = 0;
     if (x->gl_editor->e_selection)
@@ -2328,12 +2572,19 @@ static void canvas_rightclick(t_canvas *x, int xpos, int ypos, t_gobj *y_sel)
         // LATER: consider enabling help and perhaps even limited properties...
         return;
     }
-    gui_vmess("gui_canvas_popup", "xiiiii",
+    /* saveas option, only if it's a canvas and it isn't an abstraction */
+    cansaveas = (canopen && pd_class(&y->g_pd) == canvas_class &&
+                    !canvas_isabstraction((t_canvas *)y));
+    /* or if it is the background of a subpatch */
+    cansaveas = (cansaveas || (!y && canvas_getrootfor(x) != x &&
+                    !canvas_isabstraction((t_canvas *)x)));
+    gui_vmess("gui_canvas_popup", "xiiiiii",
         x,
         xpos,
         ypos,
         canprop,
         canopen,
+        cansaveas,
         isobject);
 }
 
@@ -3078,6 +3329,22 @@ void canvas_done_popup(t_canvas *x, t_float which, t_float xpos,
                     vmess(&y->g_pd, gensym("menu-open"), "");
                     return;
                 }
+                else if(which == 5)    /* saveas */
+                {
+                    t_abstracthandler *ah = abstracthandler_new();
+                    ah->tarjet = y;
+                    ah->dialog = x;
+
+                    char buf[MAXPDSTRING];
+                    sprintf(buf, "%s/%s.pd", canvas_getdir(canvas_getrootfor(y))->s_name, ((t_canvas *)y)->gl_name->s_name);
+
+                    gui_vmess("gui_savepanel", "xss",
+                        x,
+                        ah->sym->s_name,
+                        buf);
+
+                    return;
+                }
                 else if (which == 2)   /* help */
                 {
                     char *dir;
@@ -3146,6 +3413,21 @@ void canvas_done_popup(t_canvas *x, t_float which, t_float xpos,
     }
     else if (which == 2)
         open_via_helppath("intro.pd", canvas_getdir((t_canvas *)x)->s_name);
+
+    if (which == 5)
+    {
+        t_abstracthandler *ah = abstracthandler_new();
+        ah->tarjet = x;
+        ah->dialog = x;
+
+        char buf[MAXPDSTRING];
+        sprintf(buf, "%s/%s.pd", canvas_getdir(canvas_getrootfor(x))->s_name, ((t_canvas *)x)->gl_name->s_name);
+
+        gui_vmess("gui_savepanel", "xss",
+            x,
+            ah->sym->s_name,
+            buf);
+    }
 }
 
 extern t_class *my_canvas_class; // for ignoring runtime clicks and resizing
@@ -7815,6 +8097,8 @@ void g_editor_setup(void)
         gensym("disconnect"), A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_NULL);
 /* -------------- copy buffer ------------------ */
     copy_binbuf = binbuf_new();
+
+    abstracthandler_setup();
 }
 
 void canvas_editor_for_class(t_class *c)

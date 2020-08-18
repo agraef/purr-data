@@ -1358,6 +1358,12 @@ function create_popup_menu(name) {
         }
     }));
     popup_menu.append(new gui.MenuItem({
+        label: l("canvas.menu.saveas"),
+        click: function() {
+            pdgui.popup_action(name, 5);
+        }
+    }));
+    popup_menu.append(new gui.MenuItem({
         label: l("canvas.menu.help"),
         click: function() {
             pdgui.popup_action(name, 2);

@@ -195,6 +195,60 @@ int sys_isabsolutepath(const char *dir)
     }
 }
 
+int sys_relativizepath(const char *from, const char *to, char *result)
+{
+    char fromext[FILENAME_MAX];
+    sys_unbashfilename(from, fromext);
+    char toext[FILENAME_MAX];
+    sys_unbashfilename(to, toext);
+
+    int i = 0, j;
+    while(fromext[i] && toext[i] && fromext[i] == toext[i]) i++;
+    if(!i) return 0;
+
+    j = i;
+    if(fromext[i])
+        while(i > 0 && fromext[i] != '/') i--;
+    if(toext[j])
+        while(j > 0 && toext[j] != '/') j--;
+
+    if(fromext[i])
+    {
+        int k = 0;
+        while(fromext[i])
+        {
+            if(fromext[i] == '/')
+            {
+                if(k == 0)
+                {
+                    strcpy(result+k, "..");
+                    k += 2;
+                }
+                else
+                {
+                    strcpy(result+k, "/..");
+                    k += 3;
+                }
+            }
+            i++;
+        }
+        if(toext[j])
+        {
+            result[k] = '/';
+            strcpy(result+k+1, toext+j+1);
+        }
+    }
+    else if(!fromext[i] && toext[j])
+    {
+        strcpy(result, toext+j+1);
+    }
+    else
+    {
+        strcpy(result, "");
+    }
+    return 1;
+}
+
 
 /*******************  Utility functions used below ******************/
 
