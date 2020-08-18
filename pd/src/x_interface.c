@@ -1672,6 +1672,18 @@ void abinfo_instances(t_abinfo *x, t_symbol *s, int argc, t_atom *argv)
     info_out((t_text *)x, s, 1, at);
 }
 
+void abinfo_within(t_abinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_binbuf *buf = binbuf_new();
+    int i;
+    for(i = 0; i < x->abdef->ad_numdep; i++)
+    {
+        binbuf_addv(buf, "s", x->abdef->ad_dep[i]->ad_name);
+    }
+    info_out((t_text *)x, s, binbuf_getnatom(buf), binbuf_getvec(buf));
+    binbuf_free(buf);
+}
+
 //ADD MORE METHODS
 
 void abinfo_setup(void)
@@ -1683,6 +1695,8 @@ void abinfo_setup(void)
         gensym("name"), A_GIMME, 0);
     class_addmethod(abinfo_class, (t_method)abinfo_instances,
         gensym("instances"), A_GIMME, 0);
+    class_addmethod(abinfo_class, (t_method)abinfo_within,
+        gensym("within"), A_GIMME, 0);
 }
 
 
