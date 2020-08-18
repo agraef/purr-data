@@ -1927,10 +1927,11 @@ static char ab_templatecanvas[] = "#N canvas;\n";
 /* create an ab instance from its source */
 static t_pd *do_create_ab(t_ab_definition *abdef, int argc, t_atom *argv)
 {
-
     canvas_setargs(argc, argv);
     int dspstate = canvas_suspend_dsp();
-    glob_setfilename(0, abdef->ad_name, gensym("[ab]"));
+    char filename[MAXPDSTRING];
+    sprintf(filename, "[ab] %s", abdef->ad_name->s_name);
+    glob_setfilename(0, gensym(filename), canvas_getdir(canvas_getcurrent()));
 
     canvas_setabsource(abdef); // set the ab source
     binbuf_eval(abdef->ad_source, 0, 0, 0);
