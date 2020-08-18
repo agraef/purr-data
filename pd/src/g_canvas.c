@@ -1970,8 +1970,11 @@ static int ab_check_cycle(t_ab_definition *current, t_ab_definition *parent, int
     }
     else
     {
-        int len = strlen(current->ad_name->s_name);
-        sprintf(path+pathlen, "[ab %s]<-", current->ad_name->s_name);
+        char *hash = strrchr(current->ad_name->s_name, '#');
+        if(!hash) hash = current->ad_name->s_name;
+        else hash += 1;
+        int len = strlen(hash);
+        sprintf(path+pathlen, "[ab %s]<-", hash);
         pathlen += (len+7);
         int i, cycle = 0;
         for(i = 0; !cycle && i < current->ad_numdep; i++)
@@ -2235,6 +2238,31 @@ static void canvas_abpush(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     pd_free(x);
 }
 
+static int ab_is_local(t_canvas *x, t_symbol *s)
+{
+    int num;
+    char *name = s->s_name, *end;
+    if((end = strchr(name, '-')))
+    {
+        *end = '\0';
+        num = atoi(name);
+        *end = '-';
+        return (num == canvas_getdollarzero(x));
+    }
+    return (0);
+}
+
+static t_symbol *ab_extend_name(t_canvas *x, t_symbol *s)
+{
+    char res[MAXPDSTRING], *beg = strchr(s->s_name, '-');
+    t_canvas *next = canvas_getrootfor(x);
+    if(next->gl_isab)
+        sprintf(res, "%s#$0-%s", next->gl_absource->ad_name->s_name, beg+1);
+    else
+        sprintf(res, "$0-%s", beg+1);
+    return gensym(res);
+}
+
 static int abframe = 0;
 static void canvas_abframe(t_canvas *x, t_float val)
 {
@@ -2262,6 +2290,9 @@ static void *ab_new(t_symbol *s, int argc, t_atom *argv)
     {
         t_symbol *name = (argc ? argv[0].a_w.w_symbol : gensym("(ab)"));
         t_ab_definition *source;
+
+        if(ab_is_local(c, name))
+            name = ab_extend_name(c, name);
 
         if(!(source = canvas_find_ab(c, name)))
         {
