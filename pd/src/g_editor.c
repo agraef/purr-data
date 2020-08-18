@@ -1348,6 +1348,13 @@ static void glist_doreload(t_glist *gl, t_symbol *name, t_symbol *dir,
                 found = 1;
             }
             glist_select(gl, g);
+            if(((t_canvas *)g)->gl_dirty)
+            /* set dirty to 0 to remove the dirty markings*/
+            {
+                glist_amreloadingabstractions = 0;
+                canvas_dirty((t_canvas *)g, 0);
+                glist_amreloadingabstractions = 1;
+            }
             //canvas_setundo(gl, canvas_undo_cut,
             //    canvas_undo_set_cut(gl, UCUT_CLEAR), "clear");
             //canvas_undo_add(gl, 3, "clear",
@@ -1435,6 +1442,13 @@ void canvas_reload_ab_rec(t_canvas *x, t_ab_definition *a, t_gobj *e)
                 found = 1;
             }
             glist_select(x, g);
+            if(((t_canvas *)g)->gl_dirty)
+            /* set dirty to 0 to remove the dirty markings*/
+            {
+                glist_amreloadingabstractions = 0;
+                canvas_dirty((t_canvas *)g, 0);
+                glist_amreloadingabstractions = 1;
+            }
         }
         else if(g == e)
             canvas_initbang((t_canvas *)g);
