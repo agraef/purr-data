@@ -57,6 +57,8 @@ int sys_unique = 0;     /* by default off, prevents multiple instances
                            of pd-l2ork */
 int sys_legacy = 0;     /* by default off, used to enable legacy features,
                            such as offsets in iemgui object positioning */
+int sys_legacy_bendin = 0; /* by default off, used to enable vanilla-
+                              compatible (unsigned) pitch bend input */
 char *sys_guicmd;
 t_symbol *sys_gui_preset; /* name of gui theme to be used */
 t_symbol *sys_libdir;
@@ -531,6 +533,7 @@ static char *(usagemessage[]) = {
 "-k12             -- enable K-12 education mode (requires L2Ork K12 lib)\n",
 "-unique          -- enable multiple instances (disabled by default)\n",
 "-legacy          -- enable legacy features (disabled by default)\n", 
+"-legacy-bendin   -- enable legacy (unsigned) bendin (disabled by default)\n", 
 "\n",
 };
 
@@ -935,6 +938,12 @@ int sys_argparse(int argc, char **argv)
         else if (!strcmp(*argv, "-legacy"))
         {
             sys_legacy = 1;
+            argc -= 1;
+            argv += 1;
+        }
+        else if (!strcmp(*argv, "-legacy-bendin"))
+        {
+            sys_legacy_bendin = 1;
             argc -= 1;
             argv += 1;
         }

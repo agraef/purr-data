@@ -307,14 +307,21 @@ typedef struct _bendin
 {
     t_object x_obj;
     t_float x_channel;
+    t_float x_offs;
     t_outlet *x_outlet1;
     t_outlet *x_outlet2;
 } t_bendin;
 
-static void *bendin_new(t_floatarg f)
+static void *bendin_new(t_symbol *s, int argc, t_atom *argv)
 {
     t_bendin *x = (t_bendin *)pd_new(bendin_class);
+    extern int sys_legacy_bendin;
+    t_float f = 0.0, g = sys_legacy_bendin;
+    f = atom_getfloatarg(0, argc, argv);
+    if (argc > 1)
+      g = atom_getfloatarg(1, argc, argv);
     x->x_channel = f;
+    x->x_offs = g==0.0?-8192.0:0.0;
     x->x_outlet1 = outlet_new(&x->x_obj, &s_float);
     if (f == 0) x->x_outlet2 = outlet_new(&x->x_obj, &s_float);
     pd_bind(&x->x_obj.ob_pd, pd_this->pd_bendin_sym);
@@ -328,12 +335,12 @@ static void bendin_list(t_bendin *x, t_symbol *s, int argc, t_atom *argv)
     if (x->x_channel != 0)
     {
         if (channel != x->x_channel) return;
-        outlet_float(x->x_outlet1, value);
+        outlet_float(x->x_outlet1, value + x->x_offs);
     }
     else
     {
         outlet_float(x->x_outlet2, channel);
-        outlet_float(x->x_outlet1, value);
+        outlet_float(x->x_outlet1, value + x->x_offs);
     }
 }
 
@@ -345,7 +352,7 @@ static void bendin_free(t_bendin *x)
 static void bendin_setup(void)
 {
     bendin_class = class_new(gensym("bendin"), (t_newmethod)bendin_new,
-        (t_method)bendin_free, sizeof(t_bendin), CLASS_NOINLET, A_DEFFLOAT, 0);
+        (t_method)bendin_free, sizeof(t_bendin), CLASS_NOINLET, A_GIMME, 0);
     class_addlist(bendin_class, bendin_list);
     class_sethelpsymbol(bendin_class, gensym("midi"));
 }
@@ -355,11 +362,7 @@ void inmidi_pitchbend(int portno, int channel, int value)
     if (pd_this->pd_bendin_sym->s_thing)
     {
         t_atom at[2];
-        // AG: -legacy behavior was changed so that it is consistent with
-        // vanilla bendin.
-        extern int sys_legacy;
-        int shift = sys_legacy ? 0 : 8192;
-        SETFLOAT(at, value-shift); // Ico fix the offset of the incoming pitchbend
+        SETFLOAT(at, value);
         SETFLOAT(at+1, (channel + (portno << 4) + 1));
         pd_list(pd_this->pd_bendin_sym->s_thing, &s_list, 2, at);
     }
