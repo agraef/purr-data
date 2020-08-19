@@ -218,12 +218,13 @@ t_symbol *canvas_realizedollar(t_canvas *x, t_symbol *s)
 
 t_symbol *canvas_getcurrentdir(void)
 {
-    t_canvasenvironment *e = canvas_getenv(canvas_getcurrent());
-    return (e->ce_dir);
+    return (canvas_getdir(canvas_getcurrent()));
 }
 
 t_symbol *canvas_getdir(t_canvas *x)
 {
+    x = canvas_getrootfor(x);
+    if(x->gl_isab) x = x->gl_absource->ad_owner;
     t_canvasenvironment *e = canvas_getenv(x);
     return (e->ce_dir);
 }
@@ -785,6 +786,8 @@ void canvas_reflecttitle(t_canvas *x)
         namebuf, canvas_getdir(x)->s_name, x->gl_dirty);
 }
 
+void gobj_isdirty(t_glist *g, t_gobj *x, int on);
+
     /* mark a glist dirty or clean */
 void canvas_dirty(t_canvas *x, t_floatarg n)
 {
@@ -798,14 +801,14 @@ void canvas_dirty(t_canvas *x, t_floatarg n)
             canvas_reflecttitle(x2);
         if (x2->gl_owner)
         {
-            gobj_isdirty(x2->gl_owner, x2,
+            gobj_isdirty(x2->gl_owner, &x2->gl_gobj,
                 (x2->gl_dirty ? 1 : (x2->gl_subdirties ? 2 : 0)));
             x2 = x2->gl_owner;
             while(x2->gl_owner)
             {
                 x2->gl_subdirties += (n ? 1 : -1);
                 if(!x2->gl_dirty)
-                    gobj_isdirty(x2->gl_owner, x2, (x2->gl_subdirties ? 2 : 0));
+                    gobj_isdirty(x2->gl_owner, &x2->gl_gobj, (x2->gl_subdirties ? 2 : 0));
                 x2 = x2->gl_owner;
             }
         }
@@ -1929,10 +1932,7 @@ static t_pd *do_create_ab(t_ab_definition *abdef, int argc, t_atom *argv)
 {
     canvas_setargs(argc, argv);
     int dspstate = canvas_suspend_dsp();
-    /* prepend [ab] to indicate that it is a private abstraction */
-    char filename[MAXPDSTRING];
-    sprintf(filename, "[ab] %s", abdef->ad_name->s_name);
-    glob_setfilename(0, gensym(filename), canvas_getdir(canvas_getcurrent()));
+    glob_setfilename(0, abdef->ad_name, gensym("[ab]"));
 
     /* set ab source, next canvas is going to be a private abstraction */
     canvas_setabsource(abdef);
@@ -2074,13 +2074,15 @@ static void canvas_deregister_ab(t_canvas *x, t_ab_definition *a)
     }
 }
 
+void canvas_reload_ab_rec(t_canvas *x, t_ab_definition *a, t_gobj *e);
+
 /* reload ab instances */
 void canvas_reload_ab(t_canvas *x)
 {
     t_canvas *c = canvas_getrootfor_ab(x);
     int dspwas = canvas_suspend_dsp();
     glist_amreloadingabstractions = 1;
-    canvas_reload_ab_rec(c, x->gl_absource, &x->gl_obj);
+    canvas_reload_ab_rec(c, x->gl_absource, &x->gl_gobj);
     glist_amreloadingabstractions = 0;
     canvas_resume_dsp(dspwas);
     canvas_dirty(c, 1);
@@ -2238,7 +2240,7 @@ static void canvas_abpush(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
         }
     }
 
-    pd_free(x);
+    pd_free(&x->gl_pd);
 }
 
 static int ab_is_local(t_canvas *x, t_symbol *s)
@@ -2250,7 +2252,7 @@ static int ab_is_local(t_canvas *x, t_symbol *s)
         *end = '\0';
         num = atoi(name);
         *end = '-';
-        return (num == canvas_getdollarzero(x));
+        return (num == canvas_getdollarzero(&x->gl_pd));
     }
     return (0);
 }
