@@ -1033,7 +1033,7 @@ int glist_getfont(t_glist *x)
 }
 
 extern void canvas_group_free(t_pd *x);
-static int canvas_deregister_ab(t_canvas *x, t_ab_definition *a);
+static void canvas_deregister_ab(t_canvas *x, t_ab_definition *a);
 
 void canvas_free(t_canvas *x)
 {
@@ -1929,11 +1929,13 @@ static t_pd *do_create_ab(t_ab_definition *abdef, int argc, t_atom *argv)
 {
     canvas_setargs(argc, argv);
     int dspstate = canvas_suspend_dsp();
+    /* prepend [ab] to indicate that it is a private abstraction */
     char filename[MAXPDSTRING];
     sprintf(filename, "[ab] %s", abdef->ad_name->s_name);
     glob_setfilename(0, gensym(filename), canvas_getdir(canvas_getcurrent()));
 
-    canvas_setabsource(abdef); // set the ab source
+    /* set ab source, next canvas is going to be a private abstraction */
+    canvas_setabsource(abdef);
     binbuf_eval(abdef->ad_source, 0, 0, 0);
     canvas_initbang((t_canvas *)(s__X.s_thing));
 
@@ -1942,6 +1944,7 @@ static t_pd *do_create_ab(t_ab_definition *abdef, int argc, t_atom *argv)
     canvas_popabstraction((t_canvas *)(s__X.s_thing));
     canvas_setargs(0, 0);
 
+    /* open the canvas if we are creating it for the first time */
     canvas_vis((t_canvas *)newest, !glist_amreloadingabstractions
                                     && !abdef->ad_numinstances
                                     && binbuf_getnatom(abdef->ad_source) == 3);
@@ -1954,13 +1957,14 @@ static t_canvas *canvas_getrootfor_ab(t_canvas *x)
 {
     if ((!x->gl_owner && !x->gl_isclone) || (canvas_isabstraction(x) && !x->gl_isab))
         return (x);
-    else if (x->gl_isab)
+    else if (x->gl_isab) /* shortcut + workaround for clones (since they haven't owner)*/
         return (x->gl_absource->ad_owner);
     else
         return (canvas_getrootfor_ab(x->gl_owner));
 }
 
-/* check if the dependency graph has a cycle, assuming an new edge between parent and current nodes */
+/* check if the dependency graph has a cycle, assuming an new edge between parent and current nodes
+    if there is a cycle, a visual scheme of the cycle is stored in 'res' */
 static int ab_check_cycle(t_ab_definition *current, t_ab_definition *parent, int pathlen, char *path, char *res)
 {
     if(current == parent)
@@ -1971,6 +1975,7 @@ static int ab_check_cycle(t_ab_definition *current, t_ab_definition *parent, int
     }
     else
     {
+        /* if it is a local private abstraction, get rid of class member-like names (only used internally) */
         char *hash = strrchr(current->ad_name->s_name, '#');
         if(!hash) hash = current->ad_name->s_name;
         else hash += 1;
@@ -1988,93 +1993,88 @@ static int ab_check_cycle(t_ab_definition *current, t_ab_definition *parent, int
 }
 
 /* try to register a new dependency into the dependency graph,
-    returns 0 if a dependency issue is found */
+    returns 0 and the scheme in 'res', if a dependency issue is found */
 static int canvas_register_ab(t_canvas *x, t_ab_definition *a, char *res)
 {
-    t_canvas *r = canvas_getrootfor_ab(x), *c = x;
+    /* climb to closest ab */
+    while(x && !x->gl_isab)
+        x = x->gl_owner;
 
-    while(c && c != r)
+    if(x && x->gl_isab)
     {
-        if(c->gl_isab)
+        t_ab_definition *f = x->gl_absource;
+
+        int i, found = 0;
+        for(i = 0; !found && i < a->ad_numdep; i++)
+            found = (a->ad_dep[i] == f);
+
+        if(!found)
         {
-            t_ab_definition *f = c->gl_absource;
-
-            int i, found = 0;
-            for(i = 0; !found && i < a->ad_numdep; i++)
-                found = (a->ad_dep[i] == f);
-
-            if(!found)
+            char path[MAXPDSTRING];
+            sprintf(path, "[ab %s]<-", a->ad_name->s_name);
+            if(!ab_check_cycle(f, a, strlen(path), path, res))
             {
-                char path[MAXPDSTRING];
-                sprintf(path, "[ab %s]<-", a->ad_name->s_name);
-                if(!ab_check_cycle(f, a, strlen(path), path, res))
-                {
-                    a->ad_dep =
-                        (t_ab_definition **)resizebytes(a->ad_dep, sizeof(t_ab_definition *)*a->ad_numdep,
-                             sizeof(t_ab_definition *)*(a->ad_numdep+1));
-                    a->ad_deprefs =
-                        (int *)resizebytes(a->ad_deprefs, sizeof(int)*a->ad_numdep,
-                             sizeof(int)*(a->ad_numdep+1));
-                    a->ad_dep[a->ad_numdep] = f;
-                    a->ad_deprefs[a->ad_numdep] = 1;
-                    a->ad_numdep++;
-                }
-                else return (0);
+                /* no dependency issues found so we add the new dependency */
+                a->ad_dep =
+                    (t_ab_definition **)resizebytes(a->ad_dep, sizeof(t_ab_definition *)*a->ad_numdep,
+                            sizeof(t_ab_definition *)*(a->ad_numdep+1));
+                a->ad_deprefs =
+                    (int *)resizebytes(a->ad_deprefs, sizeof(int)*a->ad_numdep,
+                            sizeof(int)*(a->ad_numdep+1));
+                a->ad_dep[a->ad_numdep] = f;
+                a->ad_deprefs[a->ad_numdep] = 1;
+                a->ad_numdep++;
             }
-            else
-            {
-                a->ad_deprefs[i-1]++;
-            }
-            return (1);
+            else return (0);
         }
-        c = c->gl_owner;
+        else
+        {
+            a->ad_deprefs[i-1]++;
+        }
     }
     return (1);
 }
 
-static int canvas_deregister_ab(t_canvas *x, t_ab_definition *a)
+static void canvas_deregister_ab(t_canvas *x, t_ab_definition *a)
 {
-    t_canvas *r = canvas_getrootfor_ab(x), *c = x;
+    /* climb to closest ab */
+    while(x && !x->gl_isab)
+        x = x->gl_owner;
 
-    while(c != r)
+    if(x && x->gl_isab)
     {
-        if(c->gl_isab)
+        t_ab_definition *f = x->gl_absource;
+
+        int i, found = 0;
+        for(i = 0; !found && i < a->ad_numdep; i++)
+            found = (a->ad_dep[i] == f);
+
+        if(found)
         {
-            t_ab_definition *f = c->gl_absource;
+            a->ad_deprefs[i-1]--;
 
-            int i, found = 0;
-            for(i = 0; !found && i < a->ad_numdep; i++)
-                found = (a->ad_dep[i] == f);
-
-            if(found)
+            if(!a->ad_deprefs[i-1])
             {
-                a->ad_deprefs[i-1]--;
-
-                if(!a->ad_deprefs[i-1])
-                {
-                    t_ab_definition **ad =
-                            (t_ab_definition **)getbytes(sizeof(t_ab_definition *) * (a->ad_numdep - 1));
-                    int *adr = (int *)getbytes(sizeof(int) * (a->ad_numdep - 1));
-                    memcpy(ad, a->ad_dep, sizeof(t_ab_definition *) * (i-1));
-                    memcpy(ad+(i-1), a->ad_dep+i, sizeof(t_ab_definition *) * (a->ad_numdep - i));
-                    memcpy(adr, a->ad_deprefs, sizeof(int) * (i-1));
-                    memcpy(adr+(i-1), a->ad_deprefs+i, sizeof(int) * (a->ad_numdep - i));
-                    freebytes(a->ad_dep, sizeof(t_ab_definition *) * a->ad_numdep);
-                    freebytes(a->ad_deprefs, sizeof(int) * a->ad_numdep);
-                    a->ad_numdep--;
-                    a->ad_dep = ad;
-                    a->ad_deprefs = adr;
-                }
+                /* we can delete the dependency since there are no instances left */
+                t_ab_definition **ad =
+                        (t_ab_definition **)getbytes(sizeof(t_ab_definition *) * (a->ad_numdep - 1));
+                int *adr = (int *)getbytes(sizeof(int) * (a->ad_numdep - 1));
+                memcpy(ad, a->ad_dep, sizeof(t_ab_definition *) * (i-1));
+                memcpy(ad+(i-1), a->ad_dep+i, sizeof(t_ab_definition *) * (a->ad_numdep - i));
+                memcpy(adr, a->ad_deprefs, sizeof(int) * (i-1));
+                memcpy(adr+(i-1), a->ad_deprefs+i, sizeof(int) * (a->ad_numdep - i));
+                freebytes(a->ad_dep, sizeof(t_ab_definition *) * a->ad_numdep);
+                freebytes(a->ad_deprefs, sizeof(int) * a->ad_numdep);
+                a->ad_numdep--;
+                a->ad_dep = ad;
+                a->ad_deprefs = adr;
             }
-            else bug("canvas_deregister_ab");
-            return (1);
         }
-        c = c->gl_owner;
+        else bug("canvas_deregister_ab");
     }
-    return (1);
 }
 
-/* reloads ab instances */
+/* reload ab instances */
 void canvas_reload_ab(t_canvas *x)
 {
     t_canvas *c = canvas_getrootfor_ab(x);
@@ -2218,6 +2218,8 @@ static void canvas_abpush(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     {
         if(argc > 1)
         {
+            /* restore all dependencies, to get exactly the
+                same state (ab objects that can't be instantiated due dependencies) as before */
             n->ad_numdep = argc-1;
             n->ad_dep =
                 (t_ab_definition **)resizebytes(n->ad_dep, 0, sizeof(t_ab_definition *)*n->ad_numdep);

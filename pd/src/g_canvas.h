@@ -225,7 +225,6 @@ struct _glist
     unsigned int gl_havewindow:1;   /* true if we own a window */
     unsigned int gl_mapped:1;       /* true if, moreover, it's "mapped" */
     unsigned int gl_dirty:1;        /* (root canvas only:) patch has changed */
-    int gl_subdirties;
     unsigned int gl_loading:1;      /* am now loading from file */
     unsigned int gl_willvis:1;      /* make me visible after loading */ 
     unsigned int gl_edit:1;         /* edit mode */
@@ -251,6 +250,8 @@ struct _glist
     t_symbol *gl_templatesym; /* for "canvas" data type */
     t_word *gl_vec;            /* for "canvas" data type */
     t_gpointer gl_gp;            /* parent for "canvas" data type */
+
+    unsigned int gl_subdirties;     /* number of descending dirty abstractions */
 
     unsigned int gl_isab:1;         /* is an ab instance */
     t_ab_definition *gl_absource;   /* ab definition pointer,
