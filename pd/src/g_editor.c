@@ -1408,18 +1408,18 @@ void canvas_reload(t_symbol *name, t_symbol *dir, t_gobj *except)
     canvas_resume_dsp(dspwas);
 }
 
+
 int clone_isab(t_pd *z);
 int clone_matchab(t_pd *z, t_ab_definition *source);
 int clone_getncopies(t_pd *z);
 t_glist **clone_getglists(t_pd *z);
 
 /* recursive ab reload method */
-void canvas_reload_ab_rec(t_canvas *x, t_ab_definition *a, t_gobj *e)
+static void glist_doreload_ab(t_canvas *x, t_ab_definition *a, t_gobj *e)
 {
     t_gobj *g;
     int i, nobj = glist_getindex(x, 0);
-    int hadwindow = x->gl_havewindow, found = 0;
-    int remakeit = 0;
+    int found = 0, remakeit = 0;
 
     for (g = x->gl_list, i = 0; g && i < nobj; i++)
     {
@@ -1431,11 +1431,6 @@ void canvas_reload_ab_rec(t_canvas *x, t_ab_definition *a, t_gobj *e)
         if(remakeit)
         {
             canvas_create_editor(x);
-
-            //if (!x->gl_havewindow) //necessary?
-            //{
-            //    canvas_vis(glist_getcanvas(x), 1);
-            //}
             if (!found)
             {
                 glist_noselect(x);
@@ -1465,7 +1460,7 @@ void canvas_reload_ab_rec(t_canvas *x, t_ab_definition *a, t_gobj *e)
     {
         if(pd_class(&g->g_pd) == canvas_class && (!canvas_isabstraction((t_canvas *)g)
                     || (((t_canvas *)g)->gl_isab && (((t_canvas *)g)->gl_absource != a))))
-            canvas_reload_ab_rec((t_canvas *)g, a, e);
+            glist_doreload_ab((t_canvas *)g, a, e);
 
         if(pd_class(&g->g_pd) == clone_class
             && clone_isab(&g->g_pd) && !clone_matchab(&g->g_pd, a))
@@ -1473,14 +1468,26 @@ void canvas_reload_ab_rec(t_canvas *x, t_ab_definition *a, t_gobj *e)
             int numglists = clone_getncopies(&g->g_pd), j;
             t_glist **glists = clone_getglists(&g->g_pd);
             for(j = 0; j < numglists; j++)
-                canvas_reload_ab_rec((t_canvas *)glists[j], a, e);
+                glist_doreload_ab((t_canvas *)glists[j], a, e);
             freebytes(glists, sizeof(t_glist *)*numglists);
         }
 
         g = g->g_next;
     }
-    //if (!hadwindow && x->gl_havewindow)
-    //    canvas_vis(glist_getcanvas(x), 0);
+}
+
+t_canvas *canvas_getrootfor_ab(t_canvas *x);
+
+/* reload ab instances */
+void canvas_reload_ab(t_canvas *x)
+{
+    t_canvas *c = canvas_getrootfor_ab(x);
+    int dspwas = canvas_suspend_dsp();
+    glist_amreloadingabstractions = 1;
+    glist_doreload_ab(c, x->gl_absource, &x->gl_gobj);
+    glist_amreloadingabstractions = 0;
+    canvas_resume_dsp(dspwas);
+    canvas_dirty(c, 1);
 }
 
 /* --------- 6. apply  ----------- */

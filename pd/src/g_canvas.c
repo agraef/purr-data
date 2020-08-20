@@ -1953,7 +1953,7 @@ static t_pd *do_create_ab(t_ab_definition *abdef, int argc, t_atom *argv)
 }
 
 /* get root canvas crossing ab boundaries, where ab definitions are stored */
-static t_canvas *canvas_getrootfor_ab(t_canvas *x)
+t_canvas *canvas_getrootfor_ab(t_canvas *x)
 {
     if ((!x->gl_owner && !x->gl_isclone) || (canvas_isabstraction(x) && !x->gl_isab))
         return (x);
@@ -2072,20 +2072,6 @@ static void canvas_deregister_ab(t_canvas *x, t_ab_definition *a)
         }
         else bug("canvas_deregister_ab");
     }
-}
-
-void canvas_reload_ab_rec(t_canvas *x, t_ab_definition *a, t_gobj *e);
-
-/* reload ab instances */
-void canvas_reload_ab(t_canvas *x)
-{
-    t_canvas *c = canvas_getrootfor_ab(x);
-    int dspwas = canvas_suspend_dsp();
-    glist_amreloadingabstractions = 1;
-    canvas_reload_ab_rec(c, x->gl_absource, &x->gl_gobj);
-    glist_amreloadingabstractions = 0;
-    canvas_resume_dsp(dspwas);
-    canvas_dirty(c, 1);
 }
 
 /* tries to find an ab definition given its name */
