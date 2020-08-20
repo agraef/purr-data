@@ -1313,6 +1313,15 @@ static void glist_doreload(t_glist *gl, t_symbol *name, t_symbol *dir,
             canvas_isabstraction((t_canvas *)g) &&
                 ((t_canvas *)g)->gl_name == name &&
                     canvas_getdir((t_canvas *)g) == dir);
+
+        if(remakeit && ((t_canvas *)g)->gl_dirty)
+        /* set dirty to 0 to remove the dirty markings*/
+        {
+            glist_amreloadingabstractions = 0;
+            canvas_dirty((t_canvas *)g, 0);
+            glist_amreloadingabstractions = 1;
+        }
+
             /* also remake it if it's a "clone" with that name */
         if (pd_class(&g->g_pd) == clone_class &&
             clone_match(&g->g_pd, name, dir))
@@ -1348,13 +1357,6 @@ static void glist_doreload(t_glist *gl, t_symbol *name, t_symbol *dir,
                 found = 1;
             }
             glist_select(gl, g);
-            if(((t_canvas *)g)->gl_dirty)
-            /* set dirty to 0 to remove the dirty markings*/
-            {
-                glist_amreloadingabstractions = 0;
-                canvas_dirty((t_canvas *)g, 0);
-                glist_amreloadingabstractions = 1;
-            }
             //canvas_setundo(gl, canvas_undo_cut,
             //    canvas_undo_set_cut(gl, UCUT_CLEAR), "clear");
             //canvas_undo_add(gl, 3, "clear",
@@ -1408,11 +1410,16 @@ void canvas_reload(t_symbol *name, t_symbol *dir, t_gobj *except)
     canvas_resume_dsp(dspwas);
 }
 
+typedef struct _reload_ab_data
+{
+    t_ab_definition *a;
+    t_gobj *e;
+} t_reload_ab_data;
 
+static void glist_doreload_ab_packed(t_canvas *x, t_reload_ab_data *data);
+void clone_iterate(t_pd *z, t_canvas_iterator it, void* data);
 int clone_isab(t_pd *z);
 int clone_matchab(t_pd *z, t_ab_definition *source);
-int clone_getncopies(t_pd *z);
-t_glist **clone_getglists(t_pd *z);
 
 /* recursive ab reload method */
 static void glist_doreload_ab(t_canvas *x, t_ab_definition *a, t_gobj *e)
@@ -1426,6 +1433,14 @@ static void glist_doreload_ab(t_canvas *x, t_ab_definition *a, t_gobj *e)
         remakeit = (g != e && pd_class(&g->g_pd) == canvas_class && canvas_isabstraction((t_canvas *)g)
             && ((t_canvas *)g)->gl_isab && ((t_canvas *)g)->gl_absource == a);
 
+        if(remakeit && ((t_canvas *)g)->gl_dirty)
+        /* set dirty to 0 to remove the dirty markings*/
+        {
+            glist_amreloadingabstractions = 0;
+            canvas_dirty((t_canvas *)g, 0);
+            glist_amreloadingabstractions = 1;
+        }
+
         remakeit = remakeit || (pd_class(&g->g_pd) == clone_class && clone_matchab(&g->g_pd, a));
 
         if(remakeit)
@@ -1437,13 +1452,6 @@ static void glist_doreload_ab(t_canvas *x, t_ab_definition *a, t_gobj *e)
                 found = 1;
             }
             glist_select(x, g);
-            if(((t_canvas *)g)->gl_dirty)
-            /* set dirty to 0 to remove the dirty markings*/
-            {
-                glist_amreloadingabstractions = 0;
-                canvas_dirty((t_canvas *)g, 0);
-                glist_amreloadingabstractions = 1;
-            }
         }
         else if(g == e)
             canvas_initbang((t_canvas *)g);
@@ -1465,15 +1473,18 @@ static void glist_doreload_ab(t_canvas *x, t_ab_definition *a, t_gobj *e)
         if(pd_class(&g->g_pd) == clone_class
             && clone_isab(&g->g_pd) && !clone_matchab(&g->g_pd, a))
         {
-            int numglists = clone_getncopies(&g->g_pd), j;
-            t_glist **glists = clone_getglists(&g->g_pd);
-            for(j = 0; j < numglists; j++)
-                glist_doreload_ab((t_canvas *)glists[j], a, e);
-            freebytes(glists, sizeof(t_glist *)*numglists);
+            t_reload_ab_data d;
+            d.a = a; d.e = e;
+            clone_iterate(&g->g_pd, glist_doreload_ab_packed, &d);
         }
 
         g = g->g_next;
     }
+}
+
+static void glist_doreload_ab_packed(t_canvas *x, t_reload_ab_data *data)
+{
+    glist_doreload_ab(x, data->a, data->e);
 }
 
 t_canvas *canvas_getrootfor_ab(t_canvas *x);

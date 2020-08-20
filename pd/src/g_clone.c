@@ -75,6 +75,14 @@ int clone_match(t_pd *z, t_symbol *name, t_symbol *dir)
         canvas_getdir(x->x_vec[0].c_gl) == dir);
 }
 
+void clone_iterate(t_pd *z, t_canvas_iterator it, void* data)
+{
+    t_clone *x = (t_clone *)z;
+    int i;
+    for(i = 0; i < x->x_n; i++)
+        it(x->x_vec[i].c_gl, data);
+}
+
 int clone_isab(t_pd *z)
 {
     t_clone *x = (t_clone *)z;
@@ -87,22 +95,6 @@ int clone_matchab(t_pd *z, t_ab_definition *source)
 {
     t_clone *x = (t_clone *)z;
     return (clone_isab(z) && x->x_vec[0].c_gl->gl_absource == source);
-}
-
-int clone_getncopies(t_pd *z)
-{
-    t_clone *x = (t_clone *)z;
-    return (x->x_n);
-}
-
-t_glist **clone_getglists(t_pd *z)
-{
-    t_clone *x = (t_clone *)z;
-    t_glist **glists = (t_glist *)getbytes(sizeof(t_glist *)*x->x_n);
-    int i;
-    for(i = 0; i < x->x_n; i++)
-        glists[i] = x->x_vec[i].c_gl;
-    return glists;
 }
 
 void obj_sendinlet(t_object *x, int n, t_symbol *s, int argc, t_atom *argv);
