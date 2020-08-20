@@ -1288,7 +1288,19 @@ void canvas_undo_paste(t_canvas *x, void *z, int action)
     }
 }
 
+void clone_iterate(t_pd *z, t_canvas_iterator it, void* data);
 int clone_match(t_pd *z, t_symbol *name, t_symbol *dir);
+int clone_isab(t_pd *z);
+int clone_matchab(t_pd *z, t_ab_definition *source);
+
+typedef struct _reload_data
+{
+    t_symbol *n;
+    t_symbol *d;
+    t_gobj *e;
+} t_reload_data;
+
+static void glist_doreload_packed(t_canvas *x, t_reload_data *data);
 
     /* recursively check for abstractions to reload as result of a save. 
     Don't reload the one we just saved ("except") though. */
@@ -1310,7 +1322,7 @@ static void glist_doreload(t_glist *gl, t_symbol *name, t_symbol *dir,
             /* remake the object if it's an abstraction that appears to have
             been loaded from the file we just saved */
         remakeit = (g != except && pd_class(&g->g_pd) == canvas_class &&
-            canvas_isabstraction((t_canvas *)g) &&
+            canvas_isabstraction((t_canvas *)g) && !((t_canvas *)g)->gl_isab &&
                 ((t_canvas *)g)->gl_name == name &&
                     canvas_getdir((t_canvas *)g) == dir);
 
@@ -1383,14 +1395,27 @@ static void glist_doreload(t_glist *gl, t_symbol *name, t_symbol *dir,
         if (g != except && pd_class(&g->g_pd) == canvas_class &&
 
             (!canvas_isabstraction((t_canvas *)g) ||
+                 ((t_canvas *)g)->gl_isab ||
                  ((t_canvas *)g)->gl_name != name ||
                  canvas_getdir((t_canvas *)g) != dir)
            )
                 glist_doreload((t_canvas *)g, name, dir, except);
+
+        if(pd_class(&g->g_pd) == clone_class && clone_isab(&g->g_pd))
+        {
+            t_reload_data d;
+            d.n = name; d.d = dir; d.e = except;
+            clone_iterate(&g->g_pd, glist_doreload_packed, &d);
+        }
         g = g->g_next;
     }
     if (!hadwindow && gl->gl_havewindow)
         canvas_vis(glist_getcanvas(gl), 0);
+}
+
+static void glist_doreload_packed(t_canvas *x, t_reload_data *data)
+{
+    glist_doreload(x, data->n, data->d, data->e);
 }
 
     /* this flag stops canvases from being marked "dirty" if we have to touch
@@ -1417,9 +1442,6 @@ typedef struct _reload_ab_data
 } t_reload_ab_data;
 
 static void glist_doreload_ab_packed(t_canvas *x, t_reload_ab_data *data);
-void clone_iterate(t_pd *z, t_canvas_iterator it, void* data);
-int clone_isab(t_pd *z);
-int clone_matchab(t_pd *z, t_ab_definition *source);
 
 /* recursive ab reload method */
 static void glist_doreload_ab(t_canvas *x, t_ab_definition *a, t_gobj *e)
@@ -5952,9 +5974,9 @@ void gobj_dirty(t_glist *g, t_gobj *x, int on)
     gui_vmess("gui_gobj_dirty", "xsi", g, rtext_gettag(y), on);
 }
 
-void canvas_multipledirty(t_glist *g, int on)
+void canvas_multipledirty(t_canvas *c, int on)
 {
-    gui_vmess("gui_canvas_multipledirty", "xi", g, on);
+    gui_vmess("gui_canvas_multipledirty", "xi", c, on);
 }
 
 static int glist_dofinderror(t_glist *gl, void *error_object)

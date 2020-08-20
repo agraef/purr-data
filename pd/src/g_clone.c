@@ -66,21 +66,22 @@ typedef struct _clone
     t_canvas *x_owner;
 } t_clone;
 
-int clone_match(t_pd *z, t_symbol *name, t_symbol *dir)
-{
-    t_clone *x = (t_clone *)z;
-    if (!x->x_n)
-        return (0);
-    return (x->x_vec[0].c_gl->gl_name == name &&
-        canvas_getdir(x->x_vec[0].c_gl) == dir);
-}
-
 void clone_iterate(t_pd *z, t_canvas_iterator it, void* data)
 {
     t_clone *x = (t_clone *)z;
     int i;
     for(i = 0; i < x->x_n; i++)
         it(x->x_vec[i].c_gl, data);
+}
+
+int clone_match(t_pd *z, t_symbol *name, t_symbol *dir)
+{
+    t_clone *x = (t_clone *)z;
+    if (!x->x_n)
+        return (0);
+    return (!x->x_vec[0].c_gl->gl_isab
+            && x->x_vec[0].c_gl->gl_name == name
+            && canvas_getdir(x->x_vec[0].c_gl) == dir);
 }
 
 int clone_isab(t_pd *z)
