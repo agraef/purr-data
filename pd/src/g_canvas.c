@@ -786,7 +786,7 @@ void canvas_reflecttitle(t_canvas *x)
         namebuf, canvas_getdir(x)->s_name, x->gl_dirty);
 }
 
-void gobj_isdirty(t_glist *g, t_gobj *x, int on);
+void gobj_dirty(t_glist *g, t_gobj *x, int on);
 
     /* mark a glist dirty or clean */
 void canvas_dirty(t_canvas *x, t_floatarg n)
@@ -801,14 +801,14 @@ void canvas_dirty(t_canvas *x, t_floatarg n)
             canvas_reflecttitle(x2);
         if (x2->gl_owner)
         {
-            gobj_isdirty(x2->gl_owner, &x2->gl_gobj,
+            gobj_dirty(x2->gl_owner, &x2->gl_gobj,
                 (x2->gl_dirty ? 1 : (x2->gl_subdirties ? 2 : 0)));
             x2 = x2->gl_owner;
             while(x2->gl_owner)
             {
                 x2->gl_subdirties += (n ? 1 : -1);
                 if(!x2->gl_dirty)
-                    gobj_isdirty(x2->gl_owner, &x2->gl_gobj, (x2->gl_subdirties ? 2 : 0));
+                    gobj_dirty(x2->gl_owner, &x2->gl_gobj, (x2->gl_subdirties ? 2 : 0));
                 x2 = x2->gl_owner;
             }
         }

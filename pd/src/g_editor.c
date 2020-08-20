@@ -5946,10 +5946,15 @@ static void gobj_emphasize(t_glist *g, t_gobj *x)
     gui_vmess("gui_gobj_emphasize", "xs", g, rtext_gettag(y));
 }
 
-void gobj_isdirty(t_glist *g, t_gobj *x, int on)
+void gobj_dirty(t_glist *g, t_gobj *x, int on)
 {
     t_rtext *y = glist_findrtext(g, (t_text *)x);
-    gui_vmess("gui_gobj_setdirty", "xsi", g, rtext_gettag(y), on);
+    gui_vmess("gui_gobj_dirty", "xsi", g, rtext_gettag(y), on);
+}
+
+void canvas_multipledirty(t_glist *g, int on)
+{
+    gui_vmess("gui_canvas_multipledirty", "xi", g, on);
 }
 
 static int glist_dofinderror(t_glist *gl, void *error_object)

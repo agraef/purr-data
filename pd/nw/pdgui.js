@@ -2659,7 +2659,7 @@ function gui_gobj_deselect(cid, tag) {
     });
 }
 
-function gui_gobj_setdirty(cid, tag, state) {
+function gui_gobj_dirty(cid, tag, state) {
     var color;
     switch (state) {
         case 1:
@@ -2675,6 +2675,10 @@ function gui_gobj_setdirty(cid, tag, state) {
     gui(cid).get_elem(tag + "text", function(e) {
         e.setAttribute("stroke", color);
     });
+}
+
+function gui_canvas_multipledirty(cid, state) {
+    post("gui_canvas_multipledirty " + state + ": CALLED");
 }
 
 function gui_canvas_emphasize(cid) {
