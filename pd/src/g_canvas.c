@@ -2229,28 +2229,14 @@ static void canvas_abpush(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     pd_free(&x->gl_pd);
 }
 
-static int ab_is_local(t_canvas *x, t_symbol *s)
-{
-    int num;
-    char *name = s->s_name, *end;
-    if((end = strchr(name, '-')))
-    {
-        *end = '\0';
-        num = atoi(name);
-        *end = '-';
-        return (num == canvas_getdollarzero(&x->gl_pd));
-    }
-    return (0);
-}
-
 static t_symbol *ab_extend_name(t_canvas *x, t_symbol *s)
 {
-    char res[MAXPDSTRING], *beg = strchr(s->s_name, '-');
+    char res[MAXPDSTRING];
     t_canvas *next = canvas_getrootfor(x);
     if(next->gl_isab)
-        sprintf(res, "%s#$0-%s", next->gl_absource->ad_name->s_name, beg+1);
+        sprintf(res, "%s#%s", next->gl_absource->ad_name->s_name, s->s_name);
     else
-        sprintf(res, "$0-%s", beg+1);
+        strcpy(res, s->s_name);
     return gensym(res);
 }
 
@@ -2282,7 +2268,7 @@ static void *ab_new(t_symbol *s, int argc, t_atom *argv)
         t_symbol *name = (argc ? argv[0].a_w.w_symbol : gensym("(ab)"));
         t_ab_definition *source;
 
-        if(ab_is_local(c, name))
+        if(name->s_name[0] == '@') /* is local ab */
             name = ab_extend_name(c, name);
 
         if(!(source = canvas_find_ab(c, name)))
