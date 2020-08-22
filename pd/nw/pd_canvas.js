@@ -1338,6 +1338,8 @@ function register_window_id(cid, attr_array) {
         nw.Window.get().title = kludge_title;
     }
     pdgui.free_title_queue(cid);
+
+    if(attr_array.muldirty) pdgui.gui_canvas_multipledirty(cid, 1);
 }
 
 function create_popup_menu(name) {

@@ -1288,6 +1288,7 @@ void canvas_undo_paste(t_canvas *x, void *z, int action)
     }
 }
 
+void canvas_dirtyclimb(t_canvas *x, int n);
 void clone_iterate(t_pd *z, t_canvas_iterator it, void* data);
 int clone_match(t_pd *z, t_symbol *name, t_symbol *dir);
 int clone_isab(t_pd *z);
@@ -1326,13 +1327,9 @@ static void glist_doreload(t_glist *gl, t_symbol *name, t_symbol *dir,
                 ((t_canvas *)g)->gl_name == name &&
                     canvas_getdir((t_canvas *)g) == dir);
 
-        if(remakeit && ((t_canvas *)g)->gl_dirty)
         /* set dirty to 0 to remove the dirty markings*/
-        {
-            glist_amreloadingabstractions = 0;
-            canvas_dirty((t_canvas *)g, 0);
-            glist_amreloadingabstractions = 1;
-        }
+        if(remakeit && ((t_canvas *)g)->gl_dirty)
+            canvas_dirtyclimb((t_canvas *)g, 0);
 
             /* also remake it if it's a "clone" with that name */
         if (pd_class(&g->g_pd) == clone_class &&
@@ -1455,13 +1452,9 @@ static void glist_doreload_ab(t_canvas *x, t_ab_definition *a, t_gobj *e)
         remakeit = (g != e && pd_class(&g->g_pd) == canvas_class && canvas_isabstraction((t_canvas *)g)
             && ((t_canvas *)g)->gl_isab && ((t_canvas *)g)->gl_absource == a);
 
-        if(remakeit && ((t_canvas *)g)->gl_dirty)
         /* set dirty to 0 to remove the dirty markings*/
-        {
-            glist_amreloadingabstractions = 0;
-            canvas_dirty((t_canvas *)g, 0);
-            glist_amreloadingabstractions = 1;
-        }
+        if(remakeit && ((t_canvas *)g)->gl_dirty)
+            canvas_dirtyclimb((t_canvas *)g, 0);
 
         remakeit = remakeit || (pd_class(&g->g_pd) == clone_class && clone_matchab(&g->g_pd, a));
 
@@ -2610,7 +2603,7 @@ void canvas_vis(t_canvas *x, t_floatarg f)
                We may need to expand this to include scalars, as well. */
             canvas_create_editor(x);
             canvas_args_to_string(argsbuf, x);
-            gui_vmess("gui_canvas_new", "xiisiissiiiis",
+            gui_vmess("gui_canvas_new", "xiisiissiiiiis",
                 x,
                 (int)(x->gl_screenx2 - x->gl_screenx1),
                 (int)(x->gl_screeny2 - x->gl_screeny1),
@@ -2620,6 +2613,7 @@ void canvas_vis(t_canvas *x, t_floatarg f)
                 x->gl_name->s_name,
                 canvas_getdir(x)->s_name,
                 x->gl_dirty,
+                (x->gl_dirty && x->gl_dirties > 1),
                 x->gl_noscroll,
                 x->gl_nomenu,
                 canvas_hasarray(x),
@@ -5968,15 +5962,15 @@ static void gobj_emphasize(t_glist *g, t_gobj *x)
     gui_vmess("gui_gobj_emphasize", "xs", g, rtext_gettag(y));
 }
 
-void gobj_dirty(t_glist *g, t_gobj *x, int on)
+void gobj_dirty(t_gobj *x, t_glist *g, int state)
 {
     t_rtext *y = glist_findrtext(g, (t_text *)x);
-    gui_vmess("gui_gobj_dirty", "xsi", g, rtext_gettag(y), on);
+    gui_vmess("gui_gobj_dirty", "xsi", g, rtext_gettag(y), state);
 }
 
-void canvas_multipledirty(t_canvas *c, int on)
+void canvas_multipledirty(t_canvas *x, int on)
 {
-    gui_vmess("gui_canvas_multipledirty", "xi", c, on);
+    gui_vmess("gui_canvas_multipledirty", "xi", x, (on > 0));
 }
 
 static int glist_dofinderror(t_glist *gl, void *error_object)

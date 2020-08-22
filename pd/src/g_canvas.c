@@ -483,6 +483,7 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     else x->gl_isab = 0;
 
     x->gl_subdirties = 0;
+    x->gl_dirties = 0;
 
     if (yloc < GLIST_DEFCANVASYLOC)
         yloc = GLIST_DEFCANVASYLOC;
@@ -531,6 +532,15 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     canvas_field_templatesym = NULL;
     canvas_field_vec = NULL;
     canvas_field_gp = NULL;
+
+    if(x->gl_env)
+    {
+        if(!x->gl_isab)
+            x->gl_dirties = canvas_dirty_broadcast_all(x->gl_name,
+                                canvas_getdir(x), 0);
+        else
+            x->gl_dirties = canvas_dirty_broadcast_ab_all(x->gl_absource, 0);
+    }
 
     return(x);
 }
@@ -786,7 +796,169 @@ void canvas_reflecttitle(t_canvas *x)
         namebuf, canvas_getdir(x)->s_name, x->gl_dirty);
 }
 
-void gobj_dirty(t_glist *g, t_gobj *x, int on);
+/* --------------------- */
+
+void clone_iterate(t_pd *z, t_canvas_iterator it, void* data);
+int clone_match(t_pd *z, t_symbol *name, t_symbol *dir);
+
+typedef struct _dirty_broadcast_data
+{
+    t_symbol *name;
+    t_symbol *dir;
+    int mess;
+    int *res;
+} t_dirty_broadcast_data;
+
+static void canvas_dirty_deliver_packed(t_canvas *x, t_dirty_broadcast_data *data)
+{
+    *data->res += (x->gl_dirty > 0);
+    x->gl_dirties += data->mess;
+    if(x->gl_havewindow)
+        canvas_multipledirty(x, (x->gl_dirties > 1));
+}
+
+static int canvas_dirty_broadcast_packed(t_canvas *x, t_dirty_broadcast_data *data);
+
+static int canvas_dirty_broadcast(t_canvas *x, t_symbol *name, t_symbol *dir, int mess)
+{
+    int res = 0;
+    t_gobj *g;
+    for (g = x->gl_list; g; g = g->g_next)
+    {
+        if(pd_class(&g->g_pd) == canvas_class)
+        {
+            if(canvas_isabstraction((t_canvas *)g) && !((t_canvas *)g)->gl_isab
+                && ((t_canvas *)g)->gl_name == name
+                && canvas_getdir((t_canvas *)g) == dir)
+            {
+                res += (((t_canvas *)g)->gl_dirty > 0);
+                ((t_canvas *)g)->gl_dirties += mess;
+                if(((t_canvas *)g)->gl_havewindow)
+                    canvas_multipledirty((t_canvas *)g, (((t_canvas *)g)->gl_dirties > 1));
+            }
+            else
+                res += canvas_dirty_broadcast((t_canvas *)g, name, dir, mess);
+        }
+        else if(pd_class(&g->g_pd) == clone_class)
+        {
+            int cres = 0;
+            t_dirty_broadcast_data data;
+            data.name = name; data.dir = dir; data.mess = mess; data.res = &cres;
+            if(clone_match(&g->g_pd, name, dir))
+            {
+                clone_iterate(&g->g_pd, canvas_dirty_deliver_packed, &data);
+            }
+            else
+            {
+                clone_iterate(&g->g_pd, canvas_dirty_broadcast_packed, &data);
+            }
+            res += cres;
+        }
+    }
+    return (res);
+}
+
+static int canvas_dirty_broadcast_packed(t_canvas *x, t_dirty_broadcast_data *data)
+{
+    *data->res = canvas_dirty_broadcast(x, data->name, data->dir, data->mess);
+}
+
+int canvas_dirty_broadcast_all(t_symbol *name, t_symbol *dir, int mess)
+{
+    int res = 0;
+    t_canvas *x;
+    for (x = pd_this->pd_canvaslist; x; x = x->gl_next)
+        res += canvas_dirty_broadcast(x, name, dir, mess);
+    return (res);
+}
+
+/* same but for ab */
+
+typedef struct _dirty_broadcast_ab_data
+{
+    t_ab_definition *abdef;
+    int mess;
+    int *res;
+} t_dirty_broadcast_ab_data;
+
+static void canvas_dirty_deliver_ab_packed(t_canvas *x, t_dirty_broadcast_ab_data *data)
+{
+    *data->res += (x->gl_dirty > 0);
+    x->gl_dirties += data->mess;
+    if(x->gl_havewindow)
+        canvas_multipledirty(x, (x->gl_dirties > 1));
+}
+
+static int canvas_dirty_broadcast_ab_packed(t_canvas *x, t_dirty_broadcast_ab_data *data);
+
+static int canvas_dirty_broadcast_ab(t_canvas *x, t_ab_definition *abdef, int mess)
+{
+    int res = 0;
+    t_gobj *g;
+    for (g = x->gl_list; g; g = g->g_next)
+    {
+        if(pd_class(&g->g_pd) == canvas_class)
+        {
+            if(canvas_isabstraction((t_canvas *)g) && ((t_canvas *)g)->gl_isab
+                && ((t_canvas *)g)->gl_absource == abdef)
+            {
+                res += (((t_canvas *)g)->gl_dirty > 0);
+                ((t_canvas *)g)->gl_dirties += mess;
+                if(((t_canvas *)g)->gl_havewindow)
+                    canvas_multipledirty((t_canvas *)g, (((t_canvas *)g)->gl_dirties > 1));
+            }
+            else
+                res += canvas_dirty_broadcast_ab((t_canvas *)g, abdef, mess);
+        }
+        else if(pd_class(&g->g_pd) == clone_class)
+        {
+            int cres = 0;
+            t_dirty_broadcast_ab_data data;
+            data.abdef = abdef; data.mess = mess; data.res = &cres;
+            if(clone_matchab(&g->g_pd, abdef))
+            {
+                clone_iterate(&g->g_pd, canvas_dirty_deliver_ab_packed, &data);
+            }
+            else if(clone_isab(&g->g_pd))
+            {
+                clone_iterate(&g->g_pd, canvas_dirty_broadcast_ab_packed, &data);
+            }
+            res += cres;
+        }
+    }
+    return (res);
+}
+
+static int canvas_dirty_broadcast_ab_packed(t_canvas *x, t_dirty_broadcast_ab_data *data)
+{
+    *data->res = canvas_dirty_broadcast_ab(x, data->abdef, data->mess);
+}
+
+int canvas_dirty_broadcast_ab_all(t_ab_definition *abdef, int mess)
+{
+    int res = 0;
+    t_canvas *x;
+    for (x = pd_this->pd_canvaslist; x; x = x->gl_next)
+        res += canvas_dirty_broadcast_ab(x, abdef, mess);
+    return (res);
+}
+
+void canvas_dirtyclimb(t_canvas *x, int n)
+{
+    if (x->gl_owner)
+    {
+        gobj_dirty(&x->gl_gobj, x->gl_owner,
+            (n ? 1 : (x->gl_subdirties ? 2 : 0)));
+        x = x->gl_owner;
+        while(x->gl_owner)
+        {
+            x->gl_subdirties += ((unsigned)n ? 1 : -1);
+            if(!x->gl_dirty)
+                gobj_dirty(&x->gl_gobj, x->gl_owner, (x->gl_subdirties ? 2 : 0));
+            x = x->gl_owner;
+        }
+    }
+}
 
     /* mark a glist dirty or clean */
 void canvas_dirty(t_canvas *x, t_floatarg n)
@@ -799,18 +971,18 @@ void canvas_dirty(t_canvas *x, t_floatarg n)
         x2->gl_dirty = n;
         if (x2->gl_havewindow)
             canvas_reflecttitle(x2);
-        if (x2->gl_owner)
+
+        canvas_dirtyclimb(x2, (unsigned)n);
+
+        if(canvas_isabstraction(x2)
+            && (x2->gl_owner || x2->gl_isclone))
         {
-            gobj_dirty(x2->gl_owner, &x2->gl_gobj,
-                (x2->gl_dirty ? 1 : (x2->gl_subdirties ? 2 : 0)));
-            x2 = x2->gl_owner;
-            while(x2->gl_owner)
-            {
-                x2->gl_subdirties += (n ? 1 : -1);
-                if(!x2->gl_dirty)
-                    gobj_dirty(x2->gl_owner, &x2->gl_gobj, (x2->gl_subdirties ? 2 : 0));
-                x2 = x2->gl_owner;
-            }
+            if(!x2->gl_isab)
+                canvas_dirty_broadcast_all(x2->gl_name, canvas_getdir(x2),
+                    (x2->gl_dirty ? 1 : -1));
+            else
+                canvas_dirty_broadcast_ab_all(x2->gl_absource,
+                    (x2->gl_dirty ? 1 : -1));
         }
     }
 }
@@ -1041,6 +1213,15 @@ static void canvas_deregister_ab(t_canvas *x, t_ab_definition *a);
 void canvas_free(t_canvas *x)
 {
     //fprintf(stderr,"canvas_free %lx\n", (t_int)x);
+
+    if(x->gl_dirty)
+    {
+        if(!x->gl_isab)
+            canvas_dirty_broadcast_all(x->gl_name, canvas_getdir(x), -1);
+        else
+            canvas_dirty_broadcast_ab_all(x->gl_absource, -1);
+    }
+
     t_gobj *y;
     int dspstate = canvas_suspend_dsp();
 
@@ -1079,6 +1260,13 @@ void canvas_free(t_canvas *x)
     if (x->gl_svg)                   /* for groups, free the data */
         canvas_group_free(x->gl_svg);
 
+    /* freeing an ab instance */
+    if(x->gl_isab)
+    {
+        x->gl_absource->ad_numinstances--;
+        canvas_deregister_ab(x->gl_owner, x->gl_absource);
+    }
+
     /* free stored ab definitions */
     t_ab_definition *d = x->gl_abdefs, *daux;
     while(d)
@@ -1089,13 +1277,6 @@ void canvas_free(t_canvas *x)
         freebytes(d->ad_deprefs, sizeof(int)*d->ad_numdep);
         freebytes(d, sizeof(t_ab_definition));
         d = daux;
-    }
-
-    /* freeing an ab instance */
-    if(x->gl_isab)
-    {
-        x->gl_absource->ad_numinstances--;
-        canvas_deregister_ab(x->gl_owner, x->gl_absource);
     }
 }
 

@@ -252,6 +252,7 @@ struct _glist
     t_gpointer gl_gp;            /* parent for "canvas" data type */
 
     unsigned int gl_subdirties;     /* number of descending dirty abstractions */
+    int gl_dirties;    /* number of diry instances of this type */
 
     unsigned int gl_isab:1;         /* is an ab instance */
     t_ab_definition *gl_absource;   /* ab definition pointer,
@@ -463,6 +464,7 @@ EXTERN void gobj_save(t_gobj *x, t_binbuf *b);
 EXTERN void gobj_properties(t_gobj *x, struct _glist *glist);
 EXTERN void gobj_save(t_gobj *x, t_binbuf *b);
 EXTERN int gobj_shouldvis(t_gobj *x, struct _glist *glist);
+EXTERN void gobj_dirty(t_gobj *x, t_glist *g, int state);
 
 /* -------------------- functions on glists --------------------- */
 EXTERN t_glist *glist_new( void);
@@ -599,6 +601,8 @@ EXTERN t_gobj *canvas_findhitbox(t_canvas *x, int xpos, int ypos,
     int *x1p, int *y1p, int *x2p, int *y2p);
 EXTERN int canvas_setdeleting(t_canvas *x, int flag);
 EXTERN int canvas_hasarray(t_canvas *x);
+
+EXTERN void canvas_multipledirty(t_canvas *x, int on);
 
 #define LB_LOAD 0       /* "loadbang" actions - 0 for original meaning */
 #define LB_INIT 1       /* loaded but not yet connected to parent patch */

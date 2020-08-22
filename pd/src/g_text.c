@@ -2125,9 +2125,9 @@ static void text_vis(t_gobj *z, t_glist *glist, int vis)
                 if(pd_class(&x->te_pd) == canvas_class)
                 {
                     if (((t_canvas *)x)->gl_dirty)
-                        gobj_dirty(glist, x, 1);
+                        gobj_dirty(x, glist, 1);
                     else if (((t_canvas *)x)->gl_subdirties)
-                        gobj_dirty(glist, x, 2);
+                        gobj_dirty(x, glist, 2);
                 }
             }
         }
