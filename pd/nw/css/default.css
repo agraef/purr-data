@@ -401,6 +401,14 @@ text {
     stroke: #ccc;
 }
 
+.obj .border.dirty {
+    stroke: #ff0000;
+}
+
+.obj .border.subdirty {
+    stroke: #ff8800;
+}
+
 .comment .border {
     fill: none;
 }

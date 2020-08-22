@@ -2660,25 +2660,19 @@ function gui_gobj_deselect(cid, tag) {
 }
 
 function gui_gobj_dirty(cid, tag, state) {
-    var color;
-    switch (state) {
-        case 1:
-            color = "crimson";
-            break;
-        case 2:
-            color = "coral";
-            break;
-        default:
-            color = "none";
-            break;
-    }
-    gui(cid).get_elem(tag + "text", function(e) {
-        e.setAttribute("stroke", color);
+    gui(cid).get_gobj(tag, function(e) {
+        var border = e.querySelector(".border");
+        border.classList.remove("dirty");
+        border.classList.remove("subdirty");
+        if(state == 1) border.classList.add("dirty");
+        else if(state == 2) border.classList.add("subdirty");
     });
 }
 
 function gui_canvas_multipledirty(cid, state) {
-    post("gui_canvas_multipledirty " + state + ": CALLED");
+    var warning = patchwin[cid].window.document.getElementById("dirtywarning");
+    if (state !== 0) warning.style.setProperty("display", "inline");
+    else warning.style.setProperty("display", "none");
 }
 
 function gui_canvas_emphasize(cid) {
