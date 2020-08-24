@@ -1508,8 +1508,6 @@ static void glist_doreload_ab_packed(t_canvas *x, t_reload_ab_data *data)
     glist_doreload_ab(x, data->a, data->e);
 }
 
-t_canvas *canvas_getrootfor_ab(t_canvas *x);
-
 /* reload ab instances */
 void canvas_reload_ab(t_canvas *x)
 {
