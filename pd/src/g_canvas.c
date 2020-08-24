@@ -400,6 +400,9 @@ static int calculate_zoom(t_float zoom_hack)
   return zoom;
 }
 
+int canvas_dirty_broadcast_all(t_symbol *name, t_symbol *dir, int mess);
+int canvas_dirty_broadcast_ab_all(t_ab_definition *abdef, int mess);
+
     /* make a new glist.  It will either be a "root" canvas or else
     it appears as a "text" object in another window (canvas_getcurrent() 
     tells us which.) */
@@ -810,6 +813,8 @@ void canvas_reflecttitle(t_canvas *x)
 
 void clone_iterate(t_pd *z, t_canvas_iterator it, void* data);
 int clone_match(t_pd *z, t_symbol *name, t_symbol *dir);
+int clone_isab(t_pd *z);
+int clone_matchab(t_pd *z, t_ab_definition *source);
 
 /* packed data passing structure for canvas_dirty_broadcast */
 typedef struct _dirty_broadcast_data
@@ -1239,12 +1244,8 @@ void canvas_free(t_canvas *x)
         For ab instances, we have set the owner inside clone_free because we need it
         in order to deregister the dependencies.
         here we set it to NULL again to prevent any error in the functions called bellow */
-    t_canvas *aux;
-    if(x->gl_isclone)
-    {
-        aux = x->gl_owner;
-        x->gl_owner = 0;
-    }
+    t_canvas *aux = x->gl_owner;
+    if(x->gl_isclone) x->gl_owner = 0;
 
     /* in the case it is a dirty abstraction, we tell all other
         instances that there is one less dirty instance */
