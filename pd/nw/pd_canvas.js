@@ -1329,6 +1329,9 @@ function register_window_id(cid, attr_array) {
     // we check the title_queue to see if our title now contains an asterisk
     // (which is the visual cue for "dirty")
 
+    // Enable/disable the warning for multiple dirty instances
+    pdgui.gui_canvas_multipledirty(cid, attr_array.multipledirty);
+
     // Two possibilities for handling this better:
     // have a representation of canvas attys in pdgui.js (editmode, dirty, etc.)
     // or
@@ -1338,8 +1341,6 @@ function register_window_id(cid, attr_array) {
         nw.Window.get().title = kludge_title;
     }
     pdgui.free_title_queue(cid);
-
-    if(attr_array.muldirty) pdgui.gui_canvas_multipledirty(cid, 1);
 }
 
 function create_popup_menu(name) {

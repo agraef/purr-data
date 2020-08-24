@@ -221,9 +221,12 @@ t_symbol *canvas_getcurrentdir(void)
     return (canvas_getdir(canvas_getcurrent()));
 }
 
+/* ** refactored function, check for errors */
 t_symbol *canvas_getdir(t_canvas *x)
 {
     x = canvas_getrootfor(x);
+    /* in the case the root is an ab instance, we borrow the
+        dir from the main root canvas (where the definition is stored) */
     if(x->gl_isab) x = x->gl_absource->ad_owner;
     t_canvasenvironment *e = canvas_getenv(x);
     return (e->ce_dir);
@@ -473,8 +476,9 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     else x->gl_env = 0;
 
     x->gl_abdefs = 0;
-    if(canvas_newabsource) /* if absource is set means that this canvas is
-                                going to be an ab instance */
+    /* if canvas_newabsource is set means that
+        this canvas is going to be an ab instance */
+    if(canvas_newabsource)
     {
         x->gl_isab = 1;
         x->gl_absource = canvas_newabsource;
@@ -533,6 +537,8 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     canvas_field_vec = NULL;
     canvas_field_gp = NULL;
 
+    /* in the case it is an abstraction (gl_env is not null)
+        get the number of dirty instances of this same abstraction */
     if(x->gl_env)
     {
         if(!x->gl_isab)
@@ -798,15 +804,20 @@ void canvas_reflecttitle(t_canvas *x)
 
 /* --------------------- */
 
+/* the following functions are used to broadcast messages to all instances of
+    a specific abstraction (either file-based or ab).
+    the state of these instances change accoring to the message sent. */
+
 void clone_iterate(t_pd *z, t_canvas_iterator it, void* data);
 int clone_match(t_pd *z, t_symbol *name, t_symbol *dir);
 
+/* packed data passing structure for canvas_dirty_broadcast */
 typedef struct _dirty_broadcast_data
 {
     t_symbol *name;
     t_symbol *dir;
     int mess;
-    int *res;
+    int *res;   /* return value */
 } t_dirty_broadcast_data;
 
 static void canvas_dirty_deliver_packed(t_canvas *x, t_dirty_broadcast_data *data)
@@ -831,10 +842,11 @@ static int canvas_dirty_broadcast(t_canvas *x, t_symbol *name, t_symbol *dir, in
                 && ((t_canvas *)g)->gl_name == name
                 && canvas_getdir((t_canvas *)g) == dir)
             {
-                res += (((t_canvas *)g)->gl_dirty > 0);
-                ((t_canvas *)g)->gl_dirties += mess;
-                if(((t_canvas *)g)->gl_havewindow)
-                    canvas_multipledirty((t_canvas *)g, (((t_canvas *)g)->gl_dirties > 1));
+                t_canvas *z = (t_canvas *)g;
+                res += (z->gl_dirty > 0);
+                z->gl_dirties += mess;
+                if(z->gl_havewindow)
+                    canvas_multipledirty(z, (z->gl_dirties > 1));
             }
             else
                 res += canvas_dirty_broadcast((t_canvas *)g, name, dir, mess);
@@ -902,10 +914,11 @@ static int canvas_dirty_broadcast_ab(t_canvas *x, t_ab_definition *abdef, int me
             if(canvas_isabstraction((t_canvas *)g) && ((t_canvas *)g)->gl_isab
                 && ((t_canvas *)g)->gl_absource == abdef)
             {
-                res += (((t_canvas *)g)->gl_dirty > 0);
-                ((t_canvas *)g)->gl_dirties += mess;
-                if(((t_canvas *)g)->gl_havewindow)
-                    canvas_multipledirty((t_canvas *)g, (((t_canvas *)g)->gl_dirties > 1));
+                t_canvas *z = (t_canvas *)g;
+                res += (z->gl_dirty > 0);
+                z->gl_dirties += mess;
+                if(z->gl_havewindow)
+                    canvas_multipledirty(z, (z->gl_dirties > 1));
             }
             else
                 res += canvas_dirty_broadcast_ab((t_canvas *)g, abdef, mess);
@@ -943,6 +956,10 @@ int canvas_dirty_broadcast_ab_all(t_ab_definition *abdef, int mess)
     return (res);
 }
 
+/* --------------------- */
+
+/* climbs up to the root canvas while enabling or disabling visual markings for dirtiness
+    of traversed canvases */
 void canvas_dirtyclimb(t_canvas *x, int n)
 {
     if (x->gl_owner)
@@ -972,8 +989,12 @@ void canvas_dirty(t_canvas *x, t_floatarg n)
         if (x2->gl_havewindow)
             canvas_reflecttitle(x2);
 
+        /* set dirtiness visual markings */
         canvas_dirtyclimb(x2, (unsigned)n);
 
+        /* in the case it is an abstraction, we tell all other
+            instances that there is eiher one more dirty instance or
+            one less dirty instance */
         if(canvas_isabstraction(x2)
             && (x2->gl_owner || x2->gl_isclone))
         {
@@ -1214,7 +1235,21 @@ void canvas_free(t_canvas *x)
 {
     //fprintf(stderr,"canvas_free %lx\n", (t_int)x);
 
-    if(x->gl_dirty)
+    /* crude hack. in the case it was a clone instance, it shouldn't have an owner.
+        For ab instances, we have set the owner inside clone_free because we need it
+        in order to deregister the dependencies.
+        here we set it to NULL again to prevent any error in the functions called bellow */
+    t_canvas *aux;
+    if(x->gl_isclone)
+    {
+        aux = x->gl_owner;
+        x->gl_owner = 0;
+    }
+
+    /* in the case it is a dirty abstraction, we tell all other
+        instances that there is one less dirty instance */
+    if(canvas_isabstraction(x) && x->gl_dirty
+        && (x->gl_owner || x->gl_isclone))
     {
         if(!x->gl_isab)
             canvas_dirty_broadcast_all(x->gl_name, canvas_getdir(x), -1);
@@ -1264,7 +1299,8 @@ void canvas_free(t_canvas *x)
     if(x->gl_isab)
     {
         x->gl_absource->ad_numinstances--;
-        canvas_deregister_ab(x->gl_owner, x->gl_absource);
+        canvas_deregister_ab((x->gl_isclone ? aux : x->gl_owner),
+            x->gl_absource);
     }
 
     /* free stored ab definitions */
@@ -2144,9 +2180,10 @@ t_canvas *canvas_getrootfor_ab(t_canvas *x)
         return (canvas_getrootfor_ab(x->gl_owner));
 }
 
-/* check if the dependency graph has a cycle, assuming an new edge between parent and current nodes
-    if there is a cycle, a visual scheme of the cycle is stored in 'res' */
-static int ab_check_cycle(t_ab_definition *current, t_ab_definition *parent, int pathlen, char *path, char *res)
+/* check if the dependency graph has a cycle, assuming an new edge between parent and
+    current nodes if there is a cycle, a visual scheme of the cycle is stored in 'res' */
+static int ab_check_cycle(t_ab_definition *current, t_ab_definition *parent, int pathlen,
+    char *path, char *res)
 {
     if(current == parent)
     {
@@ -2156,7 +2193,7 @@ static int ab_check_cycle(t_ab_definition *current, t_ab_definition *parent, int
     }
     else
     {
-        /* if it is a local private abstraction, get rid of class member-like names (only used internally) */
+        /* if it is a local private abstraction, get rid of classmember-like names (only used internally) */
         char *hash = strrchr(current->ad_name->s_name, '#');
         if(!hash) hash = current->ad_name->s_name;
         else hash += 1;
@@ -2174,7 +2211,7 @@ static int ab_check_cycle(t_ab_definition *current, t_ab_definition *parent, int
 }
 
 /* try to register a new dependency into the dependency graph,
-    returns 0 and the scheme in 'res', if a dependency issue is found */
+    returns 0 and the scheme in 'res' if a dependency issue is found */
 static int canvas_register_ab(t_canvas *x, t_ab_definition *a, char *res)
 {
     /* climb to closest ab */
@@ -2268,7 +2305,7 @@ static t_ab_definition *canvas_find_ab(t_canvas *x, t_symbol *name)
     return 0;
 }
 
-/* adds a new ab definition. returns the definition if it has been added, 0 otherwise */
+/* tries to add a new ab definition. returns the definition if it has been added, 0 otherwise */
 static t_ab_definition *canvas_add_ab(t_canvas *x, t_symbol *name, t_binbuf *source)
 {
     if(!canvas_find_ab(x, name))
@@ -2410,6 +2447,7 @@ static void canvas_abpush(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     pd_free(&x->gl_pd);
 }
 
+/* extends the name for a local ab, using a classmember-like format */
 static t_symbol *ab_extend_name(t_canvas *x, t_symbol *s)
 {
     char res[MAXPDSTRING];

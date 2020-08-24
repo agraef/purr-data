@@ -165,19 +165,19 @@ typedef struct _tick    /* where to put ticks on x or y axes */
 } t_tick;
 
 /* the t_ab_definition structure holds an ab definiton and all the attributes we need
-    to handle them */
+    to handle it */
 typedef struct _ab_definition
 {
     t_symbol *ad_name;      /* id for the ab definition */
-    t_binbuf *ad_source;    /* binbuf where source is stored */
-    int ad_numinstances;    /* the num of instances of this abstraction */
-    struct _ab_definition *ad_next; /* next ab definition */
-    t_canvas *ad_owner;
+    t_binbuf *ad_source;    /* binbuf where the source is stored */
+    int ad_numinstances;    /* number of instances */
+    struct _ab_definition *ad_next;     /* next ab definition */
+    t_canvas *ad_owner;     /* canvas that stores this definition */
 
     /* dependency graph stuff */
     int ad_numdep;      /* number of other ab definitions that it depends on */
     struct _ab_definition **ad_dep;     /* the actual ab defintitions */
-    int *ad_deprefs;
+    int *ad_deprefs;    /*  number of instances that define the dependency */
     int ad_visflag;     /* visited flag for topological sort algorithm */
 } t_ab_definition;
 
@@ -251,8 +251,8 @@ struct _glist
     t_word *gl_vec;            /* for "canvas" data type */
     t_gpointer gl_gp;            /* parent for "canvas" data type */
 
-    unsigned int gl_subdirties;     /* number of descending dirty abstractions */
-    int gl_dirties;    /* number of diry instances of this type */
+    int gl_subdirties;     /* number of descending dirty abstractions */
+    int gl_dirties;        /* number of diry instances, for multiple dirty warning */
 
     unsigned int gl_isab:1;         /* is an ab instance */
     t_ab_definition *gl_absource;   /* ab definition pointer,
@@ -601,7 +601,6 @@ EXTERN t_gobj *canvas_findhitbox(t_canvas *x, int xpos, int ypos,
     int *x1p, int *y1p, int *x2p, int *y2p);
 EXTERN int canvas_setdeleting(t_canvas *x, int flag);
 EXTERN int canvas_hasarray(t_canvas *x);
-
 EXTERN void canvas_multipledirty(t_canvas *x, int on);
 
 #define LB_LOAD 0       /* "loadbang" actions - 0 for original meaning */

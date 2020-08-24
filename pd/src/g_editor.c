@@ -1294,6 +1294,7 @@ int clone_match(t_pd *z, t_symbol *name, t_symbol *dir);
 int clone_isab(t_pd *z);
 int clone_matchab(t_pd *z, t_ab_definition *source);
 
+/* packed data passing structure for glist_doreload */
 typedef struct _reload_data
 {
     t_symbol *n;
@@ -1327,7 +1328,7 @@ static void glist_doreload(t_glist *gl, t_symbol *name, t_symbol *dir,
                 ((t_canvas *)g)->gl_name == name &&
                     canvas_getdir((t_canvas *)g) == dir);
 
-        /* set dirty to 0 to remove the dirty markings*/
+        /* remove dirtiness visual markings */
         if(remakeit && ((t_canvas *)g)->gl_dirty)
             canvas_dirtyclimb((t_canvas *)g, 0);
 
@@ -1398,6 +1399,9 @@ static void glist_doreload(t_glist *gl, t_symbol *name, t_symbol *dir,
            )
                 glist_doreload((t_canvas *)g, name, dir, except);
 
+        /* also reload the instances within ab-based clone objects
+            *COMMENT: missing recursive case for abstraction-based clone
+                objects that don't match with the one we are reloading?  */
         if(pd_class(&g->g_pd) == clone_class && clone_isab(&g->g_pd))
         {
             t_reload_data d;
@@ -1432,6 +1436,7 @@ void canvas_reload(t_symbol *name, t_symbol *dir, t_gobj *except)
     canvas_resume_dsp(dspwas);
 }
 
+/* packed data passing structure for glist_doreload_ab */
 typedef struct _reload_ab_data
 {
     t_ab_definition *a;
@@ -1452,7 +1457,7 @@ static void glist_doreload_ab(t_canvas *x, t_ab_definition *a, t_gobj *e)
         remakeit = (g != e && pd_class(&g->g_pd) == canvas_class && canvas_isabstraction((t_canvas *)g)
             && ((t_canvas *)g)->gl_isab && ((t_canvas *)g)->gl_absource == a);
 
-        /* set dirty to 0 to remove the dirty markings*/
+        /* remove dirtiness visual markings */
         if(remakeit && ((t_canvas *)g)->gl_dirty)
             canvas_dirtyclimb((t_canvas *)g, 0);
 
@@ -1468,6 +1473,7 @@ static void glist_doreload_ab(t_canvas *x, t_ab_definition *a, t_gobj *e)
             }
             glist_select(x, g);
         }
+        /* since this one won't be reloaded, we need to trigger initbang manually */
         else if(g == e)
             canvas_initbang((t_canvas *)g);
         g = g->g_next;
@@ -1485,6 +1491,7 @@ static void glist_doreload_ab(t_canvas *x, t_ab_definition *a, t_gobj *e)
                     || (((t_canvas *)g)->gl_isab && (((t_canvas *)g)->gl_absource != a))))
             glist_doreload_ab((t_canvas *)g, a, e);
 
+        /* also reload the instances within ab-based clone objects */
         if(pd_class(&g->g_pd) == clone_class
             && clone_isab(&g->g_pd) && !clone_matchab(&g->g_pd, a))
         {
@@ -1492,7 +1499,6 @@ static void glist_doreload_ab(t_canvas *x, t_ab_definition *a, t_gobj *e)
             d.a = a; d.e = e;
             clone_iterate(&g->g_pd, glist_doreload_ab_packed, &d);
         }
-
         g = g->g_next;
     }
 }
@@ -1513,6 +1519,9 @@ void canvas_reload_ab(t_canvas *x)
     glist_doreload_ab(c, x->gl_absource, &x->gl_gobj);
     glist_amreloadingabstractions = 0;
     canvas_resume_dsp(dspwas);
+    /* we set the dirty flag of the root canvas (where the ab definitions
+        are stored) because its file contents (in this case, the definition
+        for an specific ab) has been edited */
     canvas_dirty(c, 1);
 }
 
@@ -5962,12 +5971,15 @@ static void gobj_emphasize(t_glist *g, t_gobj *x)
     gui_vmess("gui_gobj_emphasize", "xs", g, rtext_gettag(y));
 }
 
+    /* tell the gui to mark a gobj as dirty (change border color) */
 void gobj_dirty(t_gobj *x, t_glist *g, int state)
 {
     t_rtext *y = glist_findrtext(g, (t_text *)x);
     gui_vmess("gui_gobj_dirty", "xsi", g, rtext_gettag(y), state);
 }
 
+    /* tell the gui to display a warning about the existence of
+        multiple dirty instances of the same abstraction */
 void canvas_multipledirty(t_canvas *x, int on)
 {
     gui_vmess("gui_canvas_multipledirty", "xi", x, (on > 0));

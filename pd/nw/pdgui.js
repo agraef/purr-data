@@ -1607,7 +1607,7 @@ function create_window(cid, type, width, height, xpos, ypos, attr_array) {
 }
 
 // create a new canvas
-function gui_canvas_new(cid, width, height, geometry, zoom, editmode, name, dir, dirty_flag, muldirty, hide_scroll, hide_menu, has_toplevel_scalars, cargs) {
+function gui_canvas_new(cid, width, height, geometry, zoom, editmode, name, dir, dirty_flag, multipledirty, hide_scroll, hide_menu, has_toplevel_scalars, cargs) {
     // hack for buggy tcl popups... should go away for node-webkit
     //reset_ctrl_on_popup_window
     
@@ -1661,7 +1661,7 @@ function gui_canvas_new(cid, width, height, geometry, zoom, editmode, name, dir,
             name: name,
             dir: dir,
             dirty: dirty_flag,
-            muldirty: muldirty,
+            multipledirty: multipledirty,
             args: cargs,
             zoom: zoom,
             editmode: editmode,
@@ -2665,13 +2665,13 @@ function gui_gobj_dirty(cid, tag, state) {
         var border = e.querySelector(".border");
         border.classList.remove("dirty");
         border.classList.remove("subdirty");
-        if(state == 1) border.classList.add("dirty");
-        else if(state == 2) border.classList.add("subdirty");
+        if(state === 1) border.classList.add("dirty");
+        else if(state === 2) border.classList.add("subdirty");
     });
 }
 
 function gui_canvas_multipledirty(cid, state) {
-    var warning = patchwin[cid].window.document.getElementById("dirtywarning");
+    var warning = get_item(cid, "dirtywarning");
     if (state !== 0) warning.style.setProperty("display", "inline");
     else warning.style.setProperty("display", "none");
 }

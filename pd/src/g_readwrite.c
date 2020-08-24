@@ -982,7 +982,7 @@ static void canvas_savetofile(t_canvas *x, t_symbol *filename, t_symbol *dir,
 
 void canvas_reload_ab(t_canvas *x);
 
-/* updates the shared ab definition and reloads all the instances */
+/* updates the shared ab definition and reloads all instances */
 static void canvas_save_ab(t_canvas *x, t_floatarg fdestroy)
 {
     if(!x->gl_absource) bug("canvas_save_ab");

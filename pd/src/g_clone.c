@@ -63,9 +63,11 @@ typedef struct _clone
     int x_phase;
     int x_startvoice;   /* number of first voice, 0 by default */
     int x_suppressvoice; /* suppress voice number as $1 arg */
-    t_canvas *x_owner;
+    t_canvas *x_owner;  /* clone owner */
 } t_clone;
 
+/* the given 'it' function is executed over each of the underlying canvases
+    (they are passed as first parameter). 'data' is passed as second argument */
 void clone_iterate(t_pd *z, t_canvas_iterator it, void* data)
 {
     t_clone *x = (t_clone *)z;
@@ -199,8 +201,13 @@ static void clone_free(t_clone *x)
         for (i = 0; i < x->x_n; i++)
         {
             canvas_closebang(x->x_vec[i].c_gl);
-            if(x->x_vec[i].c_gl->gl_isab) //only for abs?
+            if(x->x_vec[i].c_gl->gl_isab)
+            {
+                /* crude hack. since clones don't have owner,
+                    we set it manually to allow the clone to
+                    deregister the dependencies */
                 x->x_vec[i].c_gl->gl_owner = x->x_owner;
+            }
             pd_free(&x->x_vec[i].c_gl->gl_pd);
             t_freebytes(x->x_outvec[i],
                 x->x_nout * sizeof(*x->x_outvec[i]));
@@ -254,6 +261,7 @@ void clone_setn(t_clone *x, t_floatarg f)
     {
         t_canvas *c;
         t_out *outvec;
+        /* in the case they are [ab]s, the instance number is one atom beyond */
         SETFLOAT((x->x_vec[0].c_gl->gl_isab ? x->x_argv+1 : x->x_argv), x->x_startvoice + i);
         if (!(c = clone_makeone(x->x_s, x->x_argc - x->x_suppressvoice,
             x->x_argv + x->x_suppressvoice)))
@@ -380,7 +388,7 @@ static void clone_dsp(t_clone *x, t_signal **sp)
     }
 }
 
-static int clone_newab = 0;
+static int clone_newabclone = 0;
 static void *clone_new(t_symbol *s, int argc, t_atom *argv)
 {
     t_clone *x = (t_clone *)pd_new(clone_class);
@@ -420,7 +428,10 @@ static void *clone_new(t_symbol *s, int argc, t_atom *argv)
     else goto usage;
         /* store a copy of the argmuents with an extra space (argc+1) for
         supplying an instance number, which we'll bash as we go. */
-    if(clone_newab)
+    if(clone_newabclone)
+    /* we are creating a clone from an [ab] definition, we use the same creation
+        method as for normal clones but the name we pass to objectmaker is
+        'ab <name>' instead of just '<name>' */
     {
         x->x_argc = argc;
         x->x_argv = getbytes(x->x_argc * sizeof(*x->x_argv));
@@ -429,7 +440,7 @@ static void *clone_new(t_symbol *s, int argc, t_atom *argv)
         SETFLOAT(x->x_argv+1, x->x_startvoice);
         x->x_s = gensym("ab");
         x->x_owner = canvas_getcurrent();
-        clone_newab = 0;
+        clone_newabclone = 0;
     }
     else
     {
@@ -485,9 +496,10 @@ fail:
     return (0);
 }
 
+/* creator for [ab]-based clones */
 static void *abclone_new(t_symbol *s, int argc, t_atom *argv)
 {
-    clone_newab = 1;
+    clone_newabclone = 1;
     return clone_new(s, argc, argv);
 }
 
