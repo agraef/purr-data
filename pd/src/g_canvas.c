@@ -2572,7 +2572,7 @@ static void abdefs_get(t_abdefs *x)
     t_ab_definition *abdef;
     for(abdef = r->gl_abdefs; abdef; abdef = abdef->ad_next)
     {
-        binbuf_addv(out, "si;", abdef->ad_name, abdef->ad_numinstances);
+        binbuf_addv(out, "si", abdef->ad_name, abdef->ad_numinstances);
     }
     outlet_list(x->x_obj.ob_outlet, &s_list,
         binbuf_getnatom(out), binbuf_getvec(out));
@@ -2610,11 +2610,14 @@ static void abdefs_clean(t_abdefs *x)
 {
     t_canvas *c = canvas_getrootfor_ab(x->x_canvas);
     t_ab_definition *abdef, *abdefpre;
+    t_binbuf *buf = binbuf_new();
     int tot = 0;
     for(abdef = c->gl_abdefs, abdefpre = 0; abdef; )
     {
         if(!abdef->ad_numinstances)
         {
+            binbuf_addv(buf, "s", abdef->ad_name);
+            tot++;
             if(abdefpre) abdefpre->ad_next = abdef->ad_next;
             else c->gl_abdefs = abdef->ad_next;
             binbuf_free(abdef->ad_source);
@@ -2623,7 +2626,6 @@ static void abdefs_clean(t_abdefs *x)
             freebytes(abdef, sizeof(t_ab_definition));
             if(abdefpre) abdef = abdefpre->ad_next;
             else abdef = c->gl_abdefs;
-            tot++;
         }
         else
         {
@@ -2631,7 +2633,10 @@ static void abdefs_clean(t_abdefs *x)
             abdef = abdef->ad_next;
         }
     }
-    post("abdefs: a total of [%d] ab definitions with zero instances have been deleted", tot);
+    startpost("abdefs: a total of [%d] ab definitions have been deleted\n> ", tot);
+    postatom(binbuf_getnatom(buf), binbuf_getvec(buf));
+    endpost();
+    binbuf_free(buf);
 }
 
 static void abdefs_menuopen(t_abdefs *x)
@@ -2668,12 +2673,16 @@ static void abdefs_dialog(t_abdefs *x, t_symbol *s, int argc, t_atom *argv)
 
     t_canvas *c = canvas_getrootfor_ab(x->x_canvas);
     t_ab_definition *abdef, *abdefpre;
+    t_binbuf *buf = binbuf_new();
     int tot = 0;
     for(abdef = c->gl_abdefs, abdefpre = 0; abdef; )
     {
         if(atom_getfloat(argv))
         {
             if(abdef->ad_numinstances) bug("abdefs_dialog");
+
+            binbuf_addv(buf, "s", abdef->ad_name);
+            tot++;
 
             if(abdefpre) abdefpre->ad_next = abdef->ad_next;
             else c->gl_abdefs = abdef->ad_next;
@@ -2683,7 +2692,6 @@ static void abdefs_dialog(t_abdefs *x, t_symbol *s, int argc, t_atom *argv)
             freebytes(abdef, sizeof(t_ab_definition));
             if(abdefpre) abdef = abdefpre->ad_next;
             else abdef = c->gl_abdefs;
-            tot++;
         }
         else
         {
@@ -2694,7 +2702,12 @@ static void abdefs_dialog(t_abdefs *x, t_symbol *s, int argc, t_atom *argv)
     }
 
     if(tot)
-        post("abdefs: a total of [%d] ab definitions with zero instances have been deleted", tot);
+    {
+        startpost("abdefs: a total of [%d] ab definitions have been deleted\n> ", tot);
+        postatom(binbuf_getnatom(buf), binbuf_getvec(buf));
+        endpost();
+    }
+    binbuf_free(buf);
 
     gfxstub_deleteforkey(x);
 }
