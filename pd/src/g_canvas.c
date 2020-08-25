@@ -830,7 +830,9 @@ static void canvas_dirty_deliver_packed(t_canvas *x, t_dirty_broadcast_data *dat
     *data->res += (x->gl_dirty > 0);
     x->gl_dirties += data->mess;
     if(x->gl_havewindow)
-        canvas_multipledirty(x, (x->gl_dirties > 1));
+        canvas_warning(x, (x->gl_dirties > 1 ?
+                            (x->gl_dirty ? 2 : 1)
+                            : (x->gl_dirties ? !x->gl_dirty : 0)));
 }
 
 static int canvas_dirty_broadcast_packed(t_canvas *x, t_dirty_broadcast_data *data);
@@ -851,7 +853,9 @@ static int canvas_dirty_broadcast(t_canvas *x, t_symbol *name, t_symbol *dir, in
                 res += (z->gl_dirty > 0);
                 z->gl_dirties += mess;
                 if(z->gl_havewindow)
-                    canvas_multipledirty(z, (z->gl_dirties > 1));
+                    canvas_warning(z, (z->gl_dirties > 1 ?
+                            (z->gl_dirty ? 2 : 1)
+                            : (z->gl_dirties ? !z->gl_dirty : 0)));
             }
             else
                 res += canvas_dirty_broadcast((t_canvas *)g, name, dir, mess);
@@ -903,7 +907,9 @@ static void canvas_dirty_deliver_ab_packed(t_canvas *x, t_dirty_broadcast_ab_dat
     *data->res += (x->gl_dirty > 0);
     x->gl_dirties += data->mess;
     if(x->gl_havewindow)
-        canvas_multipledirty(x, (x->gl_dirties > 1));
+        canvas_warning(x, (x->gl_dirties > 1 ?
+                            (x->gl_dirty ? 2 : 1)
+                            : (x->gl_dirties ? !x->gl_dirty : 0)));
 }
 
 static int canvas_dirty_broadcast_ab_packed(t_canvas *x, t_dirty_broadcast_ab_data *data);
@@ -923,7 +929,9 @@ static int canvas_dirty_broadcast_ab(t_canvas *x, t_ab_definition *abdef, int me
                 res += (z->gl_dirty > 0);
                 z->gl_dirties += mess;
                 if(z->gl_havewindow)
-                    canvas_multipledirty(z, (z->gl_dirties > 1));
+                    canvas_warning(z, (z->gl_dirties > 1 ?
+                            (z->gl_dirty ? 2 : 1)
+                            : (z->gl_dirties ? !z->gl_dirty : 0)));
             }
             else
                 res += canvas_dirty_broadcast_ab((t_canvas *)g, abdef, mess);

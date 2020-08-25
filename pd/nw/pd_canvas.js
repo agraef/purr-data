@@ -1330,7 +1330,7 @@ function register_window_id(cid, attr_array) {
     // (which is the visual cue for "dirty")
 
     // Enable/disable the warning for multiple dirty instances
-    pdgui.gui_canvas_multipledirty(cid, attr_array.multipledirty);
+    pdgui.gui_canvas_warning(cid, attr_array.warid);
 
     // Two possibilities for handling this better:
     // have a representation of canvas attys in pdgui.js (editmode, dirty, etc.)

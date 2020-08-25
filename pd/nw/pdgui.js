@@ -1607,7 +1607,7 @@ function create_window(cid, type, width, height, xpos, ypos, attr_array) {
 }
 
 // create a new canvas
-function gui_canvas_new(cid, width, height, geometry, zoom, editmode, name, dir, dirty_flag, multipledirty, hide_scroll, hide_menu, has_toplevel_scalars, cargs) {
+function gui_canvas_new(cid, width, height, geometry, zoom, editmode, name, dir, dirty_flag, warid, hide_scroll, hide_menu, has_toplevel_scalars, cargs) {
     // hack for buggy tcl popups... should go away for node-webkit
     //reset_ctrl_on_popup_window
     
@@ -1661,7 +1661,7 @@ function gui_canvas_new(cid, width, height, geometry, zoom, editmode, name, dir,
             name: name,
             dir: dir,
             dirty: dirty_flag,
-            multipledirty: multipledirty,
+            warid: warid,
             args: cargs,
             zoom: zoom,
             editmode: editmode,
@@ -2670,13 +2670,32 @@ function gui_gobj_dirty(cid, tag, state) {
     });
 }
 
-function gui_canvas_multipledirty(cid, state) {
-    var warning = get_item(cid, "dirtywarning");
-    if (state !== 0) warning.style.setProperty("display", "inline");
-    else warning.style.setProperty("display", "none");
+function gui_canvas_warning(cid, warid) {
+    var warning = get_item(cid, "canvas_warning");
+    switch(warid)
+    {
+        case 0:
+            warning.style.setProperty("display", "none");
+            break;
+        case 1:
+            warning.title = lang.get_local_string("canvas.warning.unsaved_tt");
+            warning.style.setProperty("color", "coral");
+            warning.style.setProperty("font-size", "x-large");
+            warning.style.setProperty("display", "inline");
+            break;
+        case 2:
+            warning.title = lang.get_local_string("canvas.warning.multipleunsaved_tt");
+            warning.style.setProperty("color", "red");
+            warning.style.setProperty("font-size", "xx-large");
+            warning.style.setProperty("display", "inline");
+            break;
+
+        default:
+            break;
+    }
 }
 
-exports.gui_canvas_multipledirty = gui_canvas_multipledirty;
+exports.gui_canvas_warning = gui_canvas_warning;
 
 function gui_canvas_emphasize(cid) {
     gui(cid).get_elem("patchsvg", function(e) {

@@ -284,6 +284,10 @@
       "cancel": "Cancel",
       "cancel_tt": "Don't save any changes, and don't close the patch"
     },
+    "warning": {
+      "unsaved_tt": "There is an unsaved edited instance of this abstraction",
+      "multipleunsaved_tt": "There is another unsaved edited instance of this abstraction"
+    },
     "find": {
       "placeholder": "Search in Canvas",
       "search": "Search",

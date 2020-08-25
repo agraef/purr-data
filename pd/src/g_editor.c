@@ -2620,7 +2620,9 @@ void canvas_vis(t_canvas *x, t_floatarg f)
                 x->gl_name->s_name,
                 canvas_getdir(x)->s_name,
                 x->gl_dirty,
-                (x->gl_dirty && x->gl_dirties > 1),
+                (x->gl_dirties > 1 ?
+                    (x->gl_dirty ? 2 : 1)
+                    : (x->gl_dirties ? !x->gl_dirty : 0)),
                 x->gl_noscroll,
                 x->gl_nomenu,
                 canvas_hasarray(x),
@@ -5976,11 +5978,11 @@ void gobj_dirty(t_gobj *x, t_glist *g, int state)
     gui_vmess("gui_gobj_dirty", "xsi", g, rtext_gettag(y), state);
 }
 
-    /* tell the gui to display a warning about the existence of
-        multiple dirty instances of the same abstraction */
-void canvas_multipledirty(t_canvas *x, int on)
+    /* tell the gui to display a specific message in the
+        top right corner */
+void canvas_warning(t_canvas *x, int warid)
 {
-    gui_vmess("gui_canvas_multipledirty", "xi", x, (on > 0));
+    gui_vmess("gui_canvas_warning", "xi", x, warid);
 }
 
 static int glist_dofinderror(t_glist *gl, void *error_object)
