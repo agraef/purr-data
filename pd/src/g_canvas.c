@@ -816,6 +816,26 @@ int clone_match(t_pd *z, t_symbol *name, t_symbol *dir);
 int clone_isab(t_pd *z);
 int clone_matchab(t_pd *z, t_ab_definition *source);
 
+static void canvas_dirty_common(t_canvas *x, int mess)
+{
+    if(mess == 2)
+    {
+        if(x->gl_dirty)
+        {
+            if(!x->gl_havewindow) canvas_vis(x, 1);
+            gui_vmess("gui_canvas_emphasize", "x", x);
+        }
+    }
+    else
+    {
+        x->gl_dirties += mess;
+        if(x->gl_havewindow)
+            canvas_warning(x, (x->gl_dirties > 1 ?
+                                (x->gl_dirty ? 2 : 1)
+                                : (x->gl_dirties ? !x->gl_dirty : 0)));
+    }
+}
+
 /* packed data passing structure for canvas_dirty_broadcast */
 typedef struct _dirty_broadcast_data
 {
@@ -828,11 +848,7 @@ typedef struct _dirty_broadcast_data
 static void canvas_dirty_deliver_packed(t_canvas *x, t_dirty_broadcast_data *data)
 {
     *data->res += (x->gl_dirty > 0);
-    x->gl_dirties += data->mess;
-    if(x->gl_havewindow)
-        canvas_warning(x, (x->gl_dirties > 1 ?
-                            (x->gl_dirty ? 2 : 1)
-                            : (x->gl_dirties ? !x->gl_dirty : 0)));
+    canvas_dirty_common(x, data->mess);
 }
 
 static int canvas_dirty_broadcast_packed(t_canvas *x, t_dirty_broadcast_data *data);
@@ -849,13 +865,8 @@ static int canvas_dirty_broadcast(t_canvas *x, t_symbol *name, t_symbol *dir, in
                 && ((t_canvas *)g)->gl_name == name
                 && canvas_getdir((t_canvas *)g) == dir)
             {
-                t_canvas *z = (t_canvas *)g;
-                res += (z->gl_dirty > 0);
-                z->gl_dirties += mess;
-                if(z->gl_havewindow)
-                    canvas_warning(z, (z->gl_dirties > 1 ?
-                            (z->gl_dirty ? 2 : 1)
-                            : (z->gl_dirties ? !z->gl_dirty : 0)));
+                res += (((t_canvas *)g)->gl_dirty > 0);
+                canvas_dirty_common((t_canvas *)g, mess);
             }
             else
                 res += canvas_dirty_broadcast((t_canvas *)g, name, dir, mess);
@@ -905,11 +916,7 @@ typedef struct _dirty_broadcast_ab_data
 static void canvas_dirty_deliver_ab_packed(t_canvas *x, t_dirty_broadcast_ab_data *data)
 {
     *data->res += (x->gl_dirty > 0);
-    x->gl_dirties += data->mess;
-    if(x->gl_havewindow)
-        canvas_warning(x, (x->gl_dirties > 1 ?
-                            (x->gl_dirty ? 2 : 1)
-                            : (x->gl_dirties ? !x->gl_dirty : 0)));
+    canvas_dirty_common(x, data->mess);
 }
 
 static int canvas_dirty_broadcast_ab_packed(t_canvas *x, t_dirty_broadcast_ab_data *data);
@@ -925,13 +932,8 @@ static int canvas_dirty_broadcast_ab(t_canvas *x, t_ab_definition *abdef, int me
             if(canvas_isabstraction((t_canvas *)g) && ((t_canvas *)g)->gl_isab
                 && ((t_canvas *)g)->gl_absource == abdef)
             {
-                t_canvas *z = (t_canvas *)g;
-                res += (z->gl_dirty > 0);
-                z->gl_dirties += mess;
-                if(z->gl_havewindow)
-                    canvas_warning(z, (z->gl_dirties > 1 ?
-                            (z->gl_dirty ? 2 : 1)
-                            : (z->gl_dirties ? !z->gl_dirty : 0)));
+                res += (((t_canvas *)g)->gl_dirty > 0);
+                canvas_dirty_common((t_canvas *)g, mess);
             }
             else
                 res += canvas_dirty_broadcast_ab((t_canvas *)g, abdef, mess);
@@ -2712,6 +2714,16 @@ static void abdefs_dialog(t_abdefs *x, t_symbol *s, int argc, t_atom *argv)
     gfxstub_deleteforkey(x);
 }
 
+/* --------- */
+
+static void canvas_showdirty(t_canvas *x)
+{
+    if(!x->gl_isab)
+        canvas_dirty_broadcast_all(x->gl_name, canvas_getdir(x), 2);
+    else
+        canvas_dirty_broadcast_ab_all(x->gl_absource, 2);
+}
+
 /* ------------------------------- declare ------------------------ */
 
 /* put "declare" objects in a patch to tell it about the environment in
@@ -3570,6 +3582,8 @@ void g_canvas_setup(void)
     class_addmethod(abdefs_class, (t_method)abdefs_menuopen, gensym("menu-open"), 0);
     class_addmethod(abdefs_class, (t_method)abdefs_dialog, gensym("dialog"), A_GIMME, 0);
 
+    class_addmethod(canvas_class, (t_method)canvas_showdirty,
+        gensym("showdirty"), 0);
 /*---------------------------- declare ------------------- */
     declare_class = class_new(gensym("declare"), (t_newmethod)declare_new,
         (t_method)declare_free, sizeof(t_declare), CLASS_NOINLET, A_GIMME, 0);

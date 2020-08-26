@@ -2679,12 +2679,14 @@ function gui_canvas_warning(cid, warid) {
             break;
         case 1:
             warning.title = lang.get_local_string("canvas.warning.unsaved_tt");
+            warning.onclick = function(){ pdsend(cid, "showdirty"); }
             warning.style.setProperty("color", "coral");
             warning.style.setProperty("font-size", "x-large");
             warning.style.setProperty("display", "inline");
             break;
         case 2:
             warning.title = lang.get_local_string("canvas.warning.multipleunsaved_tt");
+            warning.onclick = function(){ pdsend(cid, "showdirty"); }
             warning.style.setProperty("color", "red");
             warning.style.setProperty("font-size", "xx-large");
             warning.style.setProperty("display", "inline");
