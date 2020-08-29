@@ -2543,6 +2543,61 @@ static void *ab_new(t_symbol *s, int argc, t_atom *argv)
     return (newest);
 }
 
+static void canvas_getabstractions(t_canvas *x)
+{
+    t_canvas *c = canvas_getrootfor_ab(x),
+             *r = canvas_getrootfor(x);
+    gfxstub_deleteforkey(x);
+    char *gfxstub = gfxstub_new2(&x->gl_pd, &x->gl_pd);
+    t_ab_definition *abdef;
+    gui_start_vmess("gui_abstractions_dialog", "xs", x, gfxstub);
+    gui_start_array();
+    gui_end_array();
+    gui_start_array();
+    for(abdef = c->gl_abdefs; abdef; abdef = abdef->ad_next)
+    {
+        char *hash = strrchr(abdef->ad_name->s_name, '#');
+        if(!hash)
+        {
+            if(abdef->ad_name->s_name[0] != '@' || !r->gl_isab)
+            {
+                gui_s(abdef->ad_name->s_name);
+                gui_i(abdef->ad_numinstances);
+            }
+        }
+        else
+        {
+            *hash = '\0';
+            if(r->gl_isab &&
+                gensym(abdef->ad_name->s_name) == r->gl_absource->ad_name)
+            {
+                gui_s(hash+1);
+                gui_i(abdef->ad_numinstances);
+            }
+            *hash = '#';
+        }
+    }
+    gui_end_array();
+    gui_end_vmess();
+}
+
+static void canvas_delabstractions(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_symbol *name;
+    int i;
+    for(i = 0; i < argc; i++)
+    {
+        name = atom_getsymbol(argv++);
+        if(name->s_name[0] == '@')
+            name = ab_extend_name(x, name);
+        if(!canvas_del_ab(x, name))
+            bug("canvas_delabstractions");
+    }
+    startpost("info: a total of [%d] ab definitions have been deleted\n      > ", argc);
+    postatom(argc, argv-argc);
+    endpost();
+}
+
 /* --------- */
 
 static t_class *abdefs_class;
@@ -2594,53 +2649,6 @@ static void abdefs_instances(t_abdefs *x, t_symbol *s)
         error("abdefs: couldn't find definition for '%s'", s->s_name);
 }
 
-static void abdefs_del(t_abdefs *x, t_symbol *s)
-{
-    t_ab_definition *abdef;
-    if((abdef = canvas_find_ab(x->x_canvas, s)) && !abdef->ad_numinstances)
-    {
-        canvas_del_ab(x->x_canvas, s);
-        post("abdefs: definition for '%s' has been deleted", s->s_name);
-    }
-    else if(abdef)
-        error("abdefs: couldn't delete '%s', it has at least one instance", s->s_name);
-    else
-        error("abdefs: couldn't find definition for '%s'", s->s_name);
-}
-
-static void abdefs_clean(t_abdefs *x)
-{
-    t_canvas *c = canvas_getrootfor_ab(x->x_canvas);
-    t_ab_definition *abdef, *abdefpre;
-    t_binbuf *buf = binbuf_new();
-    int tot = 0;
-    for(abdef = c->gl_abdefs, abdefpre = 0; abdef; )
-    {
-        if(!abdef->ad_numinstances)
-        {
-            binbuf_addv(buf, "s", abdef->ad_name);
-            tot++;
-            if(abdefpre) abdefpre->ad_next = abdef->ad_next;
-            else c->gl_abdefs = abdef->ad_next;
-            binbuf_free(abdef->ad_source);
-            freebytes(abdef->ad_dep, sizeof(t_ab_definition*)*abdef->ad_numdep);
-            freebytes(abdef->ad_deprefs, sizeof(int)*abdef->ad_numdep);
-            freebytes(abdef, sizeof(t_ab_definition));
-            if(abdefpre) abdef = abdefpre->ad_next;
-            else abdef = c->gl_abdefs;
-        }
-        else
-        {
-            abdefpre = abdef;
-            abdef = abdef->ad_next;
-        }
-    }
-    startpost("abdefs: a total of [%d] ab definitions have been deleted\n> ", tot);
-    postatom(binbuf_getnatom(buf), binbuf_getvec(buf));
-    endpost();
-    binbuf_free(buf);
-}
-
 static void abdefs_menuopen(t_abdefs *x)
 {
     char buf[MAXPDSTRING];
@@ -2650,18 +2658,13 @@ static void abdefs_menuopen(t_abdefs *x)
     gui_start_vmess("gui_external_dialog", "s", gfx_tag);
     gui_s("[ab] definitions");
     gui_start_array();
-    gui_s("name  |  #instances   [delete?]_hidden"); gui_i(0);
-    gui_s("----------------------------------------_hidden"); gui_i(0);
     if(!c->gl_abdefs)
     {
-        gui_s("*no definitions*_hidden"); gui_i(0);
+        gui_s("Ø_hidden"); gui_i(0);
     }
     for(abdef = c->gl_abdefs; abdef; abdef = abdef->ad_next)
     {
-        if(abdef->ad_numinstances)
-            sprintf(buf, "%s  |  %d    _hidden", abdef->ad_name->s_name, abdef->ad_numinstances);
-        else
-            sprintf(buf, "%s  |  %d    _toggle", abdef->ad_name->s_name, 0);
+        sprintf(buf, "%s (%d)_hidden", abdef->ad_name->s_name, abdef->ad_numinstances);
         gui_s(buf); gui_i(0);
     }
     gui_end_array();
@@ -2670,47 +2673,6 @@ static void abdefs_menuopen(t_abdefs *x)
 
 static void abdefs_dialog(t_abdefs *x, t_symbol *s, int argc, t_atom *argv)
 {
-    argc -= 2;
-    argv += 2;
-
-    t_canvas *c = canvas_getrootfor_ab(x->x_canvas);
-    t_ab_definition *abdef, *abdefpre;
-    t_binbuf *buf = binbuf_new();
-    int tot = 0;
-    for(abdef = c->gl_abdefs, abdefpre = 0; abdef; )
-    {
-        if(atom_getfloat(argv))
-        {
-            if(abdef->ad_numinstances) bug("abdefs_dialog");
-
-            binbuf_addv(buf, "s", abdef->ad_name);
-            tot++;
-
-            if(abdefpre) abdefpre->ad_next = abdef->ad_next;
-            else c->gl_abdefs = abdef->ad_next;
-            binbuf_free(abdef->ad_source);
-            freebytes(abdef->ad_dep, sizeof(t_ab_definition*)*abdef->ad_numdep);
-            freebytes(abdef->ad_deprefs, sizeof(int)*abdef->ad_numdep);
-            freebytes(abdef, sizeof(t_ab_definition));
-            if(abdefpre) abdef = abdefpre->ad_next;
-            else abdef = c->gl_abdefs;
-        }
-        else
-        {
-            abdefpre = abdef;
-            abdef = abdef->ad_next;
-        }
-        argv++;
-    }
-
-    if(tot)
-    {
-        startpost("abdefs: a total of [%d] ab definitions have been deleted\n> ", tot);
-        postatom(binbuf_getnatom(buf), binbuf_getvec(buf));
-        endpost();
-    }
-    binbuf_free(buf);
-
     gfxstub_deleteforkey(x);
 }
 
@@ -3577,13 +3539,15 @@ void g_canvas_setup(void)
     class_addbang(abdefs_class, (t_method)abdefs_bang);
     class_addmethod(abdefs_class, (t_method)abdefs_get, gensym("get"), 0);
     class_addmethod(abdefs_class, (t_method)abdefs_instances, gensym("instances"), A_SYMBOL, 0);
-    class_addmethod(abdefs_class, (t_method)abdefs_del, gensym("del"), A_SYMBOL, 0);
-    class_addmethod(abdefs_class, (t_method)abdefs_clean, gensym("clean"), 0);
     class_addmethod(abdefs_class, (t_method)abdefs_menuopen, gensym("menu-open"), 0);
     class_addmethod(abdefs_class, (t_method)abdefs_dialog, gensym("dialog"), A_GIMME, 0);
 
     class_addmethod(canvas_class, (t_method)canvas_showdirty,
         gensym("showdirty"), 0);
+    class_addmethod(canvas_class, (t_method)canvas_getabstractions,
+        gensym("getabstractions"), 0);
+    class_addmethod(canvas_class, (t_method)canvas_delabstractions,
+        gensym("delabstractions"), A_GIMME, 0);
 /*---------------------------- declare ------------------- */
     declare_class = class_new(gensym("declare"), (t_newmethod)declare_new,
         (t_method)declare_free, sizeof(t_declare), CLASS_NOINLET, A_GIMME, 0);
