@@ -105,7 +105,8 @@ static void import_output(t_import* x)
  * namespace, [import] will output the new element on the next bang. */
     if(x->x_current)
     {
-        strncpy(buffer, x->x_current->nl_string, MAXPDSTRING);
+        strncpy(buffer, x->x_current->nl_string, MAXPDSTRING-1);
+        buffer[MAXPDSTRING-1] = 0;
         outlet_symbol( x->x_data_outlet, gensym(buffer));
         x->x_current = x->x_current->nl_next;
     }
