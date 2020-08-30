@@ -2624,12 +2624,30 @@ static void abdefs_bang(t_abdefs *x)
 
 static void abdefs_get(t_abdefs *x)
 {
-    t_canvas *r = canvas_getrootfor_ab(x->x_canvas);
+    t_canvas *c = canvas_getrootfor_ab(x->x_canvas),
+             *r = canvas_getrootfor(x->x_canvas);
     t_binbuf *out = binbuf_new();
     t_ab_definition *abdef;
-    for(abdef = r->gl_abdefs; abdef; abdef = abdef->ad_next)
+    for(abdef = c->gl_abdefs; abdef; abdef = abdef->ad_next)
     {
-        binbuf_addv(out, "si", abdef->ad_name, abdef->ad_numinstances);
+        char *hash = strrchr(abdef->ad_name->s_name, '#');
+        if(!hash)
+        {
+            if(abdef->ad_name->s_name[0] != '@' || !r->gl_isab)
+            {
+                binbuf_addv(out, "si", abdef->ad_name, abdef->ad_numinstances);
+            }
+        }
+        else
+        {
+            *hash = '\0';
+            if(r->gl_isab &&
+                gensym(abdef->ad_name->s_name) == r->gl_absource->ad_name)
+            {
+                binbuf_addv(out, "si", gensym(hash+1), abdef->ad_numinstances);
+            }
+            *hash = '#';
+        }
     }
     outlet_list(x->x_obj.ob_outlet, &s_list,
         binbuf_getnatom(out), binbuf_getvec(out));
@@ -2647,33 +2665,6 @@ static void abdefs_instances(t_abdefs *x, t_symbol *s)
     }
     else
         error("abdefs: couldn't find definition for '%s'", s->s_name);
-}
-
-static void abdefs_menuopen(t_abdefs *x)
-{
-    char buf[MAXPDSTRING];
-    t_canvas *c = canvas_getrootfor_ab(x->x_canvas);
-    t_ab_definition *abdef;
-    char *gfx_tag = gfxstub_new2(&x->x_obj.ob_pd, x);
-    gui_start_vmess("gui_external_dialog", "s", gfx_tag);
-    gui_s("[ab] definitions");
-    gui_start_array();
-    if(!c->gl_abdefs)
-    {
-        gui_s("Ø_hidden"); gui_i(0);
-    }
-    for(abdef = c->gl_abdefs; abdef; abdef = abdef->ad_next)
-    {
-        sprintf(buf, "%s (%d)_hidden", abdef->ad_name->s_name, abdef->ad_numinstances);
-        gui_s(buf); gui_i(0);
-    }
-    gui_end_array();
-    gui_end_vmess();
-}
-
-static void abdefs_dialog(t_abdefs *x, t_symbol *s, int argc, t_atom *argv)
-{
-    gfxstub_deleteforkey(x);
 }
 
 /* --------- */
@@ -3539,8 +3530,6 @@ void g_canvas_setup(void)
     class_addbang(abdefs_class, (t_method)abdefs_bang);
     class_addmethod(abdefs_class, (t_method)abdefs_get, gensym("get"), 0);
     class_addmethod(abdefs_class, (t_method)abdefs_instances, gensym("instances"), A_SYMBOL, 0);
-    class_addmethod(abdefs_class, (t_method)abdefs_menuopen, gensym("menu-open"), 0);
-    class_addmethod(abdefs_class, (t_method)abdefs_dialog, gensym("dialog"), A_GIMME, 0);
 
     class_addmethod(canvas_class, (t_method)canvas_showdirty,
         gensym("showdirty"), 0);
