@@ -47,7 +47,7 @@ static void slider_draw_update(t_gobj *client, t_glist *glist)
         /* the indicator thickens when it's right in the middle... but
            it's pretty obscure, undocumented, and looks a bit like a bug
            if you're not expecting it */ 
-        //sys_vgui(".x%lx.c itemconfigure %lxKNOB -strokewidth %d\n",
+        //sys_vgui(".x%zx.c itemconfigure %zxKNOB -strokewidth %d\n",
         //    canvas, x, 4*x->x_thick+3);
     }
 }

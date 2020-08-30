@@ -271,7 +271,7 @@ static void udpreceive_sock_err(t_udpreceive *x, char *err_string)
                 break;
             }
         }
-        pd_error(x, "%s: %s (%d)", err_string, lpMsgBuf, dwRetVal);
+        pd_error(x, "%s: %s (%ld)", err_string, lpMsgBuf, dwRetVal);
         LocalFree(lpMsgBuf);
     }
 #else

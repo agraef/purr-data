@@ -110,7 +110,7 @@ static void *cursor_new(void)
 
     x->parent_canvas = canvas_getcurrent();
 
-    sprintf(buf, "#%lx", (t_int)x);
+    sprintf(buf, "#%zx", (t_int)x);
     x->receive_symbol = gensym(buf);
     pd_bind(&x->x_obj.ob_pd, x->receive_symbol);
 	x->data_outlet = outlet_new(&x->x_obj, 0);

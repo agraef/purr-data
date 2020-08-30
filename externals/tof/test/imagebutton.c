@@ -345,7 +345,7 @@ static void *imagebutton_new(t_symbol *s, int argc, t_atom *argv)
 		return NULL;
 	}
 	char buf[MAXPDSTRING];
-	sprintf(buf, "#%lx", (long)x);
+	sprintf(buf, "#%zx", (long)x);
 	x->receive = gensym(buf);
     pd_bind(&x->x_obj.ob_pd, x->receive );
     

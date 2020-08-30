@@ -47,8 +47,8 @@ typedef struct _scalehandle
     t_glist   *h_glist; // this is the canvas to draw on. Note that when objects are edited, "glist" and "canvas" mean the same.
     t_symbol  *h_bindsym;
     int        h_scale;
-    char       h_pathname[37]; // max size for ".x%lx.h%lx" = 5+4*sizeof(long)
-    char       h_outlinetag[18]; // max size for "h%lx" = 2+2*sizeof(long)
+    char       h_pathname[37]; // max size for ".x%llx.h%llx" = 5+4*sizeof(long)
+    char       h_outlinetag[18]; // max size for "h%llx" = 2+2*sizeof(long)
     int        h_dragon; // bool
     int        h_dragx;
     int        h_dragy;
@@ -244,7 +244,7 @@ EXTERN void scalehandle_draw_erase2(t_iemgui *x);
 EXTERN void scalehandle_draw(t_iemgui *x);
 EXTERN t_scalehandle *scalehandle_new(t_object *x, t_glist *glist, int scale, t_clickhandlefn chf, t_motionhandlefn mhf);
 EXTERN void scalehandle_free(t_scalehandle *h);
-EXTERN void properties_set_field_int(long props, const char *gui_field, int value);
+EXTERN void properties_set_field_int(t_int props, const char *gui_field, int value);
 EXTERN void scalehandle_dragon_label(t_scalehandle *h, float f1, float f2);
 EXTERN void scalehandle_click_label(t_scalehandle *h);
 EXTERN void scalehandle_click_scale(t_scalehandle *h);

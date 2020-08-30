@@ -223,7 +223,7 @@ static void udpreceive_tilde_datapoll(t_udpreceive_tilde *x)
         if (!((tag_ptr->tag[0] == 'T')&&(tag_ptr->tag[1] == 'A')&&(tag_ptr->tag[2] == 'G')&&(tag_ptr->tag[3] == '!')))
         {
             ++x->x_tag_errors;
-            if (x->x_sync) error("udpreceive~: bad header tag (%d)", x->x_tag_errors);
+            if (x->x_sync) error("udpreceive~: bad header tag (%ld)", x->x_tag_errors);
             x->x_sync = 0;
             /* tag length is 16 bytes, a multiple of the data frame size, so eventually we should resync on a tag */
             return;
@@ -849,7 +849,7 @@ static void udpreceive_tilde_sock_err(t_udpreceive_tilde *x, char *err_string)
                 break;
             }
         }
-        pd_error(x, "%s: %s (%d)", err_string, lpMsgBuf, dwRetVal);
+        pd_error(x, "%s: %s (%ld)", err_string, lpMsgBuf, dwRetVal);
         LocalFree(lpMsgBuf);
     }
 #else

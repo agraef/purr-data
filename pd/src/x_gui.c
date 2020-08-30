@@ -68,7 +68,7 @@ void gfxstub_new(t_pd *owner, void *key, const char *cmd)
         return;
     }
     x = (t_gfxstub *)pd_new(gfxstub_class);
-    sprintf(namebuf, ".gfxstub%lx", (t_int)x);
+    sprintf(namebuf, ".gfxstub%zx", (t_int)x);
 
     s = gensym(namebuf);
     pd_bind(&x->x_pd, s);
@@ -99,7 +99,7 @@ char *gfxstub_new2(t_pd *owner, void *key)
         if (x->x_key == key)
             gfxstub_deleteforkey(key);
     x = (t_gfxstub *)pd_new(gfxstub_class);
-    sprintf(namebuf, ".gfxstub%lx", (t_int)x);
+    sprintf(namebuf, ".gfxstub%zx", (t_int)x);
     s = gensym(namebuf);
     pd_bind(&x->x_pd, s);
     x->x_owner = owner;
@@ -154,7 +154,7 @@ void gfxstub_deleteforkey(void *key)
             if (y->x_key == key)
             {
                 char tagbuf[MAXPDSTRING];
-                sprintf(tagbuf, ".gfxstub%lx", (long unsigned int)y);
+                sprintf(tagbuf, ".gfxstub%zx", (t_int)y);
                 gui_vmess("gui_remove_gfxstub", "s",
                     tagbuf);
                  
@@ -245,7 +245,7 @@ static void *openpanel_new( void)
     char buf[50];
     t_openpanel *x = (t_openpanel *)pd_new(openpanel_class);
     x->x_canvas = canvas_getcurrent();
-    sprintf(buf, "d%lx", (t_int)x);
+    sprintf(buf, "d%zx", (t_int)x);
     x->x_s = gensym(buf);
     pd_bind(&x->x_obj.ob_pd, x->x_s);
     outlet_new(&x->x_obj, &s_symbol);
@@ -303,7 +303,7 @@ static void *savepanel_new( void)
 {
     char buf[50];
     t_savepanel *x = (t_savepanel *)pd_new(savepanel_class);
-    sprintf(buf, "d%lx", (t_int)x);
+    sprintf(buf, "d%zx", (t_int)x);
     x->x_s = gensym(buf);
     x->x_canvas = canvas_getcurrent();
     pd_bind(&x->x_obj.ob_pd, x->x_s);

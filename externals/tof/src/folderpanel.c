@@ -57,7 +57,7 @@ static void *folderpanel_new( void)
 {
     char buf[50];
     t_folderpanel *x = (t_folderpanel *)pd_new(folderpanel_class);
-    sprintf(buf, "d%lx", (t_int)x);
+    sprintf(buf, "d%zx", (t_int)x);
     x->x_s = gensym(buf);
     pd_bind(&x->x_obj.ob_pd, x->x_s);
     outlet_new(&x->x_obj, &s_symbol);

@@ -44,13 +44,13 @@ static void draw_inlets(t_button *x, t_glist *glist, int firsttime, int nin, int
      {
 	  int onset = text_xpix(&x->x_obj, glist) + (x->x_rect_width - IOWIDTH) * i / nplus;
 	  if (firsttime)
-	       sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags { %lxo%d %lxS }\n",
+	       sys_vgui(".x%zx.c create rectangle %d %d %d %d -tags { %zxo%d %zxS }\n",
 			glist_getcanvas(glist),
 			onset, text_ypix(&x->x_obj, glist) + x->x_rect_height - 2,
 			onset + IOWIDTH, text_ypix(&x->x_obj, glist) + x->x_rect_height-1,
 			x, i, x);
 	  else
-	       sys_vgui(".x%lx.c coords %lxo%d %d %d %d %d\n",
+	       sys_vgui(".x%zx.c coords %zxo%d %d %d %d %d\n",
 			glist_getcanvas(glist), x, i,
 			onset, text_ypix(&x->x_obj, glist) + x->x_rect_height - 2,
 			onset + IOWIDTH, text_ypix(&x->x_obj, glist) + x->x_rect_height-1);
@@ -61,13 +61,13 @@ static void draw_inlets(t_button *x, t_glist *glist, int firsttime, int nin, int
      {
 	  int onset = text_xpix(&x->x_obj, glist) + (x->x_rect_width - IOWIDTH) * i / nplus;
 	  if (firsttime)
-	       sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags { %lxi%d %lxS }\n",
+	       sys_vgui(".x%zx.c create rectangle %d %d %d %d -tags { %zxi%d %zxS }\n",
 			glist_getcanvas(glist),
 			onset, text_ypix(&x->x_obj, glist),
 			     onset + IOWIDTH, text_ypix(&x->x_obj, glist)+5,
 			x, i, x);
 	  else
-	       sys_vgui(".x%lx.c coords %lxi%d %d %d %d %d\n",
+	       sys_vgui(".x%zx.c coords %zxi%d %d %d %d %d\n",
 			glist_getcanvas(glist), x, i,
 			onset, text_ypix(&x->x_obj, glist),
 			onset + IOWIDTH, text_ypix(&x->x_obj, glist)+5);
@@ -81,13 +81,13 @@ static void draw_handle(t_button *x, t_glist *glist, int firsttime) {
   int onset = text_xpix(&x->x_obj, glist) + (x->x_rect_width - IOWIDTH+2);
 
   if (firsttime)
-    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags { %lxhandle %lxS }\n",
+    sys_vgui(".x%zx.c create rectangle %d %d %d %d -tags { %zxhandle %zxS }\n",
 	     glist_getcanvas(glist),
 	     onset, text_ypix(&x->x_obj, glist) + x->x_rect_height - 12,
 	     onset + IOWIDTH-2, text_ypix(&x->x_obj, glist) + x->x_rect_height-4,
 	     x, x);
   else
-    sys_vgui(".x%lx.c coords %lxhandle %d %d %d %d\n",
+    sys_vgui(".x%zx.c coords %zxhandle %d %d %d %d\n",
 	     glist_getcanvas(glist), x, 
 	     onset, text_ypix(&x->x_obj, glist) + x->x_rect_height - 12,
 	     onset + IOWIDTH-2, text_ypix(&x->x_obj, glist) + x->x_rect_height-4);
@@ -107,8 +107,8 @@ static void create_widget(t_button *x, t_glist *glist)
     if (text[i] == '_')
       text[i] = ' ';
   }
-  sys_vgui("destroy .x%lx.c.s%lx\n",glist_getcanvas(glist),x);
-  sys_vgui("button .x%lx.c.s%lx -height %d -text \"%s\" -command button_cb%lx\n",canvas,x,
+  sys_vgui("destroy .x%zx.c.s%zx\n",glist_getcanvas(glist),x);
+  sys_vgui("button .x%zx.c.s%zx -height %d -text \"%s\" -command button_cb%zx\n",canvas,x,
 	   x->x_height,text,
 	   x);
 }
@@ -122,17 +122,17 @@ static void button_drawme(t_button *x, t_glist *glist, int firsttime)
   t_canvas *canvas=glist_getcanvas(glist);
   DEBUG(post("drawme %d",firsttime);)
      if (firsttime) {
-       DEBUG(post("glist %lx canvas %lx",x->x_glist,canvas);)
+       DEBUG(post("glist %zx canvas %zx",x->x_glist,canvas);)
 	 //       if (x->x_glist != canvas) {
 	 create_widget(x,glist);	       
 	 x->x_glist = canvas;
 	 //       }
-       sys_vgui(".x%lx.c create window %d %d -anchor nw -window .x%lx.c.s%lx -tags %lxS\n", 
+       sys_vgui(".x%zx.c create window %d %d -anchor nw -window .x%zx.c.s%zx -tags %zxS\n", 
 		canvas,text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist),x->x_glist,x,x);
               
      }     
      else {
-       sys_vgui(".x%lx.c coords %lxS \
+       sys_vgui(".x%zx.c coords %zxS \
 %d %d\n",
 		canvas, x,
 		text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist));
@@ -148,15 +148,15 @@ static void button_erase(t_button* x,t_glist* glist)
      int n;
 
      DEBUG(post("erase");)
-     sys_vgui("destroy .x%lx.c.s%lx\n",glist_getcanvas(glist),x);
+     sys_vgui("destroy .x%zx.c.s%zx\n",glist_getcanvas(glist),x);
 
-     sys_vgui(".x%lx.c delete %lxS\n",glist_getcanvas(glist), x);
+     sys_vgui(".x%zx.c delete %zxS\n",glist_getcanvas(glist), x);
 
      /* inlets and outlets */
      
-     sys_vgui(".x%lx.c delete %lxi%d\n",glist_getcanvas(glist),x,0);
-     sys_vgui(".x%lx.c delete %lxo%d\n",glist_getcanvas(glist),x,0);
-     sys_vgui(".x%lx.c delete  %lxhandle\n",glist_getcanvas(glist),x,0);
+     sys_vgui(".x%zx.c delete %zxi%d\n",glist_getcanvas(glist),x,0);
+     sys_vgui(".x%zx.c delete %zxo%d\n",glist_getcanvas(glist),x,0);
+     sys_vgui(".x%zx.c delete  %zxhandle\n",glist_getcanvas(glist),x,0);
 }
 	
 
@@ -187,7 +187,7 @@ static void button_displace(t_gobj *z, t_glist *glist,
     x->x_obj.te_ypix += dy;
     if (glist_isvisible(glist))
     {
-      sys_vgui(".x%lx.c coords %lxSEL %d %d %d %d\n",
+      sys_vgui(".x%zx.c coords %zxSEL %d %d %d %d\n",
 	       glist_getcanvas(glist), x,
 	       text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist)-1,
 	       text_xpix(&x->x_obj, glist) + x->x_rect_width, text_ypix(&x->x_obj, glist) + x->x_rect_height-2);
@@ -202,18 +202,18 @@ static void button_select(t_gobj *z, t_glist *glist, int state)
 {
      t_button *x = (t_button *)z;
      if (state) {
-	  sys_vgui(".x%lx.c create rectangle \
-%d %d %d %d -tags { %lxSEL %lxS } -outline $select_color\n",
+	  sys_vgui(".x%zx.c create rectangle \
+%d %d %d %d -tags { %zxSEL %zxS } -outline $select_color\n",
 		   glist_getcanvas(glist),
 		   text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist)-1,
 		   text_xpix(&x->x_obj, glist) + x->x_rect_width, text_ypix(&x->x_obj, glist) + x->x_rect_height-2,
 		   x, x);
-      sys_vgui(".x%x.c addtag selected withtag %lxS\n", glist_getcanvas(glist), x);
+      sys_vgui(".x%x.c addtag selected withtag %zxS\n", glist_getcanvas(glist), x);
      }
      else {
-	  sys_vgui(".x%lx.c delete %lxSEL\n",
+	  sys_vgui(".x%zx.c delete %zxSEL\n",
 		   glist_getcanvas(glist), x);
-      sys_vgui(".x%lx.c dtag %lxS selected\n", glist_getcanvas(glist), x);
+      sys_vgui(".x%zx.c dtag %zxS selected\n", glist_getcanvas(glist), x);
      }
 
 
@@ -268,7 +268,7 @@ void button_color(t_button* x,t_symbol* col)
 
 static void button_bang(t_button* x)
 {
-  sys_vgui(".x%lx.c.s%lx flash\n",x->x_glist,x);
+  sys_vgui(".x%zx.c.s%zx flash\n",x->x_glist,x);
   outlet_bang(x->x_obj.ob_outlet); 
 }
 
@@ -313,13 +313,13 @@ static void *button_new(t_symbol* text)
     /* TODO .. ask the button for its width */
     x->x_width += strlen(x->x_text->s_name)*5.2;
 
-    sprintf(buf,"button%lx", (long unsigned int)x);
+    sprintf(buf,"button%zx", (t_int)x);
     x->x_sym = gensym(buf);
     pd_bind(&x->x_obj.ob_pd, x->x_sym);
 
 /* pipe startup code to tk */
 
-    sys_vgui("proc button_cb%lx {} {pd [concat %s b \\;]}\n", x, buf);
+    sys_vgui("proc button_cb%zx {} {pd [concat %s b \\;]}\n", x, buf);
 
     outlet_new(&x->x_obj, &s_float);
     return (x);

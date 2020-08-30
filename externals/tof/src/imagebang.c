@@ -46,7 +46,7 @@ static void imagebang_bang(t_imagebang *x)
         clock_delay(x->clock_brk, 50);
         //x->flashed = 1;
         // key_a:
-        sprintf(image_key, "%lx_a", (long unsigned int)x);
+        sprintf(image_key, "%zx_a", (t_int)x);
         gui_vmess("gui_image_configure", "xxss",
             glist_getcanvas(x->glist),
             x,
@@ -58,7 +58,7 @@ static void imagebang_bang(t_imagebang *x)
         sys_vgui(".x%x.c itemconfigure %ximage -image %x_imagebang \n",
             glist, x,x->image_b);
         // key_b:
-        sprintf(image_key, "%lx_b", (long unsigned int)x);
+        sprintf(image_key, "%zx_b", (t_int)x);
         gui_vmess("gui_image_configure", "xxss",
             glist_getcanvas(x->glist),
             x,
@@ -78,7 +78,7 @@ static void imagebang_flash_timeout(t_imagebang *x)
     t_glist* glist = glist_getcanvas(x->glist);
     char key_a[MAXPDSTRING];
     x->flashing = 0;
-    sprintf(key_a, "%lx_a", (long unsigned int)x);
+    sprintf(key_a, "%zx_a", (t_int)x);
     gui_vmess("gui_image_configure", "xxss",
         glist_getcanvas(x->glist),
         x,
@@ -97,7 +97,7 @@ static void imagebang_brk_timeout(t_imagebang *x)
     x->flashing = 1;
     //sys_vgui(".x%x.c itemconfigure %ximage -image %x_imagebang \n",
     //    glist, x,x->image_b);
-    sprintf(key_b, "%lx_b", (long unsigned int)x);
+    sprintf(key_b, "%zx_b", (t_int)x);
     gui_vmess("gui_image_configure", "xxss",
         glist_getcanvas(x->glist),
         x,
@@ -153,7 +153,7 @@ static void imagebang_drawme(t_imagebang *x, t_glist *glist, int firsttime)
             text_xpix(&x->x_obj, glist),
             text_ypix(&x->x_obj, glist),
             glist_istoplevel(glist));
-        sprintf(key_a, "%lx_a", (long unsigned int)x);
+        sprintf(key_a, "%zx_a", (t_int)x);
         gui_vmess("gui_gobj_draw_image", "xxss",
             glist_getcanvas(glist),
             x,
@@ -303,8 +303,8 @@ static void imagebang_free(t_imagebang *x) {
     DEBUG(sys_vgui("pd [concat DEBUG b exists [info exists %x_imagebang] \\;]\n",x->image_b);)
      DEBUG(sys_vgui("pd [concat DEBUG a exists [info exists %x_imagebang] \\;]\n",x->image_a);)
     
-    sprintf(key_a, "%lx_a", (long unsigned int)x);
-    sprintf(key_b, "%lx_b", (long unsigned int)x);
+    sprintf(key_a, "%zx_a", (t_int)x);
+    sprintf(key_b, "%zx_b", (t_int)x);
     gui_vmess("gui_image_free", "s", key_a);
     gui_vmess("gui_image_free", "s", key_b);
     if (x->receive) {
@@ -352,7 +352,7 @@ static void *imagebang_new(t_symbol *s, int argc, t_atom *argv)
     if ( argc && (argv)->a_type == A_SYMBOL )
     {
         image_a= atom_getsymbol(argv);
-        sprintf(key_a, "%lx_a", (long unsigned int)x);
+        sprintf(key_a, "%zx_a", (t_int)x);
 
         // Get image file path
         fname = imagebang_get_filename(x,image_a->s_name);
@@ -385,7 +385,7 @@ static void *imagebang_new(t_symbol *s, int argc, t_atom *argv)
     if ( argc > 1 && (argv+1)->a_type == A_SYMBOL )
     {
         image_b= atom_getsymbol(argv+1);
-        sprintf(key_b, "%lx_b", (long unsigned int)x);
+        sprintf(key_b, "%zx_b", (t_int)x);
 
         // Get image file path
         fname = imagebang_get_filename(x,image_b->s_name);
@@ -436,7 +436,7 @@ static void *imagebang_new(t_symbol *s, int argc, t_atom *argv)
     {
        // Create default receiver if none set
         char buf[MAXPDSTRING];
-        sprintf(buf, "#%lx", (long)x);
+        sprintf(buf, "#%zx", (long)x);
         x->receive = gensym(buf);
     }
 

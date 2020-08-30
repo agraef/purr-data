@@ -25,7 +25,7 @@ void *getbytes(size_t nbytes)
     ret = (void *)calloc(nbytes, 1);
 
 #ifdef LOUD
-    fprintf(stderr, "new  %lx %d\n", (int)ret, nbytes);
+    fprintf(stderr, "new  %zx %d\n", (int)ret, nbytes);
 #endif /* LOUD */
 #ifdef DEBUGMEM
 
@@ -59,7 +59,7 @@ void *resizebytes(void *old, size_t oldsize, size_t newsize)
     if (newsize > oldsize && ret)
         memset(((char *)ret) + oldsize, 0, newsize - oldsize);
 #ifdef LOUD
-    fprintf(stderr, "resize %lx %d --> %lx %d\n", (int)old, oldsize, (int)ret, newsize);
+    fprintf(stderr, "resize %zx %d --> %zx %d\n", (int)old, oldsize, (int)ret, newsize);
 #endif /* LOUD */
 #ifdef DEBUGMEM
     totalmem += (newsize - oldsize);
@@ -74,7 +74,7 @@ void freebytes(void *fatso, size_t nbytes)
     if (nbytes == 0)
         nbytes = 1;
 #ifdef LOUD
-    fprintf(stderr, "free %lx %d\n", (int)fatso, nbytes);
+    fprintf(stderr, "free %zx %d\n", (int)fatso, nbytes);
 #endif /* LOUD */
 #ifdef DEBUGMEM
     totalmem -= nbytes;

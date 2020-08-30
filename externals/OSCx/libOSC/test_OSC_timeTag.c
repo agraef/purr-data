@@ -22,15 +22,15 @@ main() {
     OSCTimeTag now, later;
 
     now = OSCTT_CurrentTime();
-    printf("Now it's %llu (0x%llx)\n", now, now);
+    printf("Now it's %llu (0x%zx)\n", now, now);
 
-    printf("Immediately would be %llu (0x%llx)\n", OSCTT_Immediately(),
+    printf("Immediately would be %llu (0x%zx)\n", OSCTT_Immediately(),
 	   OSCTT_Immediately());
 
     later = OSCTT_PlusSeconds(now, 1.0f);
-    printf("One second from now would be %llu (0x%llx)\n", later, later);
+    printf("One second from now would be %llu (0x%zx)\n", later, later);
 
     now = OSCTT_CurrentTime();
-    printf("And *now* it's %llu (0x%llx)\n", now, now);
+    printf("And *now* it's %llu (0x%zx)\n", now, now);
 }
 

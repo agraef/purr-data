@@ -67,7 +67,7 @@ static int dataslot_matches(t_dataslot *ds1, t_dataslot *ds2,
 t_template *template_new(t_symbol *templatesym, int argc, t_atom *argv)
 {
     t_template *x = (t_template *)pd_new(template_class);
-    //fprintf(stderr,"template_new %lx\n", x);
+    //fprintf(stderr,"template_new %zx\n", x);
     x->t_n = 0;
     x->t_transformable = 0;
     x->t_vec = (t_dataslot *)t_getbytes(0);
@@ -1460,7 +1460,7 @@ void *svg_new(t_pd *parent, t_symbol *s, int argc, t_atom *argv)
     // Here we bind the parent object to the addy for
     // the svg. This way both [group] and [draw] will have
     // the same binding symbol
-    sprintf(buf, "x%lx", (long unsigned int)x);
+    sprintf(buf, "x%zx", (t_int)x);
     pd_bind(parent, gensym(buf));
 
     return (x);
@@ -1749,15 +1749,15 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
         index = -1;
     if (x->x_type == gensym("g") || x->x_type == gensym("svg"))
     {
-        sprintf(tag, "dgroup%lx.%lx",
-            (long unsigned int)x->x_parent,
-            (long unsigned int)data);
+        sprintf(tag, "dgroup%zx.%zx",
+            (t_int)x->x_parent,
+            (t_int)data);
     }
     else
     {
-        sprintf(tag, "draw%lx.%lx",
-            (long unsigned int)x->x_parent,
-            (long unsigned int)data);
+        sprintf(tag, "draw%zx.%zx",
+            (t_int)x->x_parent,
+            (t_int)data);
     }
     if (s == gensym("bbox"))
         *predraw_bbox = 1;
@@ -1929,8 +1929,8 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
     else if (s == gensym("d"))
     {
         char tagbuf[MAXPDSTRING];
-        sprintf(tagbuf, "draw%lx.%lx",
-            (long unsigned int)parent, (long unsigned int)data);
+        sprintf(tagbuf, "draw%zx.%zx",
+            (t_int)parent, (t_int)data);
         gui_start_vmess("gui_draw_configure", "xss",
             glist_getcanvas(c), tagbuf, "d"); 
         /* let's turn off bbox caching so we can recalculate the bbox */
@@ -1998,8 +1998,8 @@ void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
     else if (s == gensym("points"))
     {
         char tagbuf[MAXPDSTRING];
-        sprintf(tagbuf, "draw%lx.%lx",
-            (long unsigned int)parent, (long unsigned int)data);
+        sprintf(tagbuf, "draw%zx.%zx",
+            (t_int)parent, (t_int)data);
         gui_start_vmess("gui_draw_coords", "xss",
             glist_getcanvas(c), tagbuf, x->x_type->s_name);
         gui_start_array();
@@ -2174,20 +2174,20 @@ void svg_register_events(t_gobj *z, t_canvas *c, t_scalar *sc,
     if (pd_class(&z->g_pd) == canvas_class)
     {
         svg = (t_svg *)((t_glist *)z)->gl_svg;
-        sprintf(tagbuf, "dgroup%lx.%lx", (long unsigned int)z,
-            (long unsigned int)data);
+        sprintf(tagbuf, "dgroup%zx.%zx", (t_int)z,
+            (t_int)data);
     }
     else if (pd_class(&z->g_pd) == draw_class)
     {
         svg = (t_svg *)((t_draw *)z)->x_attr;
-        sprintf(tagbuf, "draw%lx.%lx", (long unsigned int)z,
-            (long unsigned int)data);
+        sprintf(tagbuf, "draw%zx.%zx", (t_int)z,
+            (t_int)data);
     }
     else if (pd_class(&z->g_pd) == drawimage_class)
     {
         svg = (t_svg *)((t_drawimage *)z)->x_attr;
-        sprintf(tagbuf, "draw%lx.%lx", (long unsigned int)z,
-            (long unsigned int)data);
+        sprintf(tagbuf, "draw%zx.%zx", (t_int)z,
+            (t_int)data);
     }
     else /* legacy drawing commands: curve, drawnumber, etc. */
     {
@@ -4221,19 +4221,19 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
 
         gui_start_array();
         char parent_tagbuf[MAXPDSTRING];
-        sprintf(parent_tagbuf, "dgroup%lx.%lx",
+        sprintf(parent_tagbuf, "dgroup%zx.%zx",
             (in_array ?
-                (long unsigned int)parentglist :
-                (long unsigned int)x->x_canvas),
-            (long unsigned int)data);
+                (t_int)parentglist :
+                (t_int)x->x_canvas),
+            (t_int)data);
         gui_s(parent_tagbuf);
         /* tags - one for this scalar (not sure why the double glist thingy)
           one for this specific draw item
         */
         char tagbuf[MAXPDSTRING];
-        sprintf(tagbuf, "draw%lx.%lx",
-            (long unsigned int)x,
-            (long unsigned int)data);
+        sprintf(tagbuf, "draw%zx.%zx",
+            (t_int)x,
+            (t_int)data);
         gui_s(tagbuf);
         gui_end_array();
         gui_end_vmess();
@@ -4246,7 +4246,7 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             //glist_noselect(gl);
             //glist_select(gl, (t_gobj *)glist);
             char objtag[64];
-            sprintf(objtag, ".x%lx.x%lx.template%lx",
+            sprintf(objtag, ".x%zx.x%zx.template%zx",
                 (t_int)gl, (t_int)glist, (t_int)data);
             canvas_restore_original_position(gl, (t_gobj *)glist,
                 objtag, -1);
@@ -4260,8 +4260,8 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         if (n > 1)
         {
             char itemtagbuf[MAXPDSTRING];
-            sprintf(itemtagbuf, "draw%lx.%lx", (long unsigned int)x,
-                (long unsigned int)data);
+            sprintf(itemtagbuf, "draw%zx.%zx", (t_int)x,
+                (t_int)data);
             gui_vmess("gui_draw_erase_item", "xs", glist_getcanvas(glist),
                 itemtagbuf);
         }
@@ -4411,7 +4411,7 @@ static int draw_click(t_gobj *z, t_glist *glist,
     t_float basex, t_float basey,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
-    //fprintf(stderr,"draw_click %f %f %d %d %g %g %lx\n",
+    //fprintf(stderr,"draw_click %f %f %d %d %g %g %zx\n",
     //    basex, basey, xpix, ypix, glist_xtopixels(glist, basex),
     //    glist_ytopixels(glist, basey), (t_int)data);
     t_draw *x = (t_draw *)z;
@@ -4566,8 +4566,8 @@ void draw_notify(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
                         "from gui arrived");
             return;
         }
-        long word_candidate = 0; /* from glob_findinstance */
-        if (!sscanf(array_sym->s_name, "x%lx", &word_candidate))
+        uint64_t word_candidate = 0; /* from glob_findinstance */
+        if (!sscanf(array_sym->s_name, "x%zx", &word_candidate))
         {
             pd_error(sc, "scalar: couldn't read array datum from GUI");
             return;
@@ -4585,7 +4585,7 @@ void draw_notify(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
        a canvas field.  If there's any in existence, forward the event
        notification. pd_bind takes care of the details of this-- if 
        there are multiple [event] objects it will dispatch to each */
-    sprintf(canvas_field_namebuf, "%lx_event", (long unsigned int)sc->sc_vec);
+    sprintf(canvas_field_namebuf, "%zx_event", (t_int)sc->sc_vec);
     canvas_field_event = gensym(canvas_field_namebuf);
     t_pd *target = canvas_field_event->s_thing;
     if (target)
@@ -4625,7 +4625,7 @@ static int draw_click(t_gobj *z, t_glist *glist,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
     post("hello?");
-    //fprintf(stderr,"draw_click %f %f %d %d %lx\n",
+    //fprintf(stderr,"draw_click %f %f %d %d %zx\n",
     //    basex, basey, xpix, ypix, (t_int)data);
     t_draw *x = (t_draw *)z;
     t_svg *sa = (t_svg *)x->x_attr;
@@ -4748,7 +4748,7 @@ static void svg_free(t_svg *x)
         t_freebytes(x->x_nargs_per_cmd, x->x_npathcmds * sizeof(*x->x_nargs_per_cmd));
     }
     char buf[50];
-    sprintf(buf, "x%lx", (long unsigned int)x);
+    sprintf(buf, "x%zx", (t_int)x);
     pd_unbind((t_pd *)x->x_parent, gensym(buf));
 }
 
@@ -4894,7 +4894,7 @@ static void *event_new(void)
     t_canvas *c = canvas_getrootfor(canvas_getcurrent());
     if (c->gl_vec)
     {
-        sprintf(namebuf, "%lx_event", (long unsigned int)c->gl_vec);
+        sprintf(namebuf, "%zx_event", (t_int)c->gl_vec);
         x->x_bindsym = gensym(namebuf);
         pd_bind(&x->x_obj.ob_pd, x->x_bindsym);
     }
@@ -5115,7 +5115,7 @@ static void curve_getrect(t_gobj *z, t_glist *glist,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
-    //fprintf(stderr,">>>>>>>>>>>>>>>>>>>>>>curve_getrect %lx\n", (t_int)z);
+    //fprintf(stderr,">>>>>>>>>>>>>>>>>>>>>>curve_getrect %zx\n", (t_int)z);
     t_curve *x = (t_curve *)z;
     int i, n = x->x_npoints;
     t_fielddesc *f = x->x_vec;
@@ -5329,14 +5329,14 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             gui_start_array();
             char parent_tagbuf[MAXPDSTRING];
  
-            sprintf(parent_tagbuf, "dgroup%lx.%lx",
-                (in_array ? (long unsigned int)parentglist :
-                            (long unsigned int)x->x_canvas),
-                (long unsigned int)data);
+            sprintf(parent_tagbuf, "dgroup%zx.%zx",
+                (in_array ? (t_int)parentglist :
+                            (t_int)x->x_canvas),
+                (t_int)data);
             gui_s(parent_tagbuf);
             char tagbuf[MAXPDSTRING];
-            sprintf(tagbuf, "curve%lx.%lx", (long unsigned int)x,
-                (long unsigned int)data);
+            sprintf(tagbuf, "curve%zx.%zx", (t_int)x,
+                (t_int)data);
             gui_s(tagbuf);
             gui_end_array(); /* end of tags array */
             gui_end_vmess();
@@ -5346,7 +5346,7 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 //glist_noselect(gl);
                 //glist_select(gl, (t_gobj *)glist);
                 char objtag[64];
-                sprintf(objtag, ".x%lx.x%lx.template%lx",
+                sprintf(objtag, ".x%zx.x%zx.template%zx",
                     (t_int)gl, (t_int)glist, (t_int)data);
                 canvas_restore_original_position(gl, (t_gobj *)glist,
                     objtag, -1);
@@ -5359,8 +5359,8 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         if (n > 1)
         {
             char itemtagbuf[MAXPDSTRING];
-            sprintf(itemtagbuf, "curve%lx.%lx", (long unsigned int)x,
-                (long unsigned int)data);
+            sprintf(itemtagbuf, "curve%zx.%zx", (t_int)x,
+                (t_int)data);
         }
     }
 }
@@ -5422,7 +5422,7 @@ static int curve_click(t_gobj *z, t_glist *glist,
     t_float basex, t_float basey,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
-    //fprintf(stderr,"curve_click %f %f %d %d %lx\n", basex, basey,
+    //fprintf(stderr,"curve_click %f %f %d %d %zx\n", basex, basey,
     //    xpix, ypix, (t_int)data);
     t_curve *x = (t_curve *)z;
     int i, n = x->x_npoints;
@@ -5977,10 +5977,10 @@ static void plot_groupvis(t_scalar *x, t_glist *owner, t_word *data,
 {
     t_gobj *y;
     char tagbuf[MAXPDSTRING], parent_tagbuf[MAXPDSTRING];
-    sprintf(tagbuf, "dgroup%lx.%lx", (long unsigned int)groupcanvas,
-        (long unsigned int)data);
-    sprintf(parent_tagbuf, "dgroup%lx.%lx", (long unsigned int)parent,
-        (long unsigned int)data);
+    sprintf(tagbuf, "dgroup%zx.%zx", (t_int)groupcanvas,
+        (t_int)data);
+    sprintf(parent_tagbuf, "dgroup%zx.%zx", (t_int)parent,
+        (t_int)data);
     gui_start_vmess("gui_scalar_draw_group", "xsss",
         glist_getcanvas(owner),
         tagbuf,
@@ -6203,13 +6203,13 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             gui_start_array();
             char pbuf[MAXPDSTRING];
             char tbuf[MAXPDSTRING];
-            sprintf(pbuf, "dgroup%lx.%lx",
-                (long unsigned int)x->x_canvas,
-                (long unsigned int)data);
-            sprintf(tbuf, ".x%lx.x%lx.template%lx",
-                (long unsigned int)glist_getcanvas(glist),
-                (long unsigned int)glist,
-                (long unsigned int)data);
+            sprintf(pbuf, "dgroup%zx.%zx",
+                (t_int)x->x_canvas,
+                (t_int)data);
+            sprintf(tbuf, ".x%zx.x%zx.template%zx",
+                (t_int)glist_getcanvas(glist),
+                (t_int)glist,
+                (t_int)data);
             gui_s(pbuf);
             gui_s(pbuf);
             gui_end_array();
@@ -6322,13 +6322,13 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 gui_start_array();
                 char pbuf[MAXPDSTRING];
                 char tbuf[MAXPDSTRING];
-                sprintf(pbuf, "dgroup%lx.%lx",
-                    (long unsigned int)x->x_canvas,
-                    (long unsigned int)data);
-                sprintf(tbuf, ".x%lx.x%lx.template%lx",
-                    (long unsigned int)glist_getcanvas(glist),
-                    (long unsigned int)glist,
-                    (long unsigned int)data);
+                sprintf(pbuf, "dgroup%zx.%zx",
+                    (t_int)x->x_canvas,
+                    (t_int)data);
+                sprintf(tbuf, ".x%zx.x%zx.template%zx",
+                    (t_int)glist_getcanvas(glist),
+                    (t_int)glist,
+                    (t_int)data);
                 gui_s(pbuf);
                 gui_s(pbuf);
                 gui_end_array();
@@ -6402,13 +6402,13 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 gui_start_array();
                 char pbuf[MAXPDSTRING];
                 char tbuf[MAXPDSTRING];
-                sprintf(pbuf, "dgroup%lx.%lx",
-                    (long unsigned int)x->x_canvas,
-                    (long unsigned int)data);
-                sprintf(tbuf, ".x%lx.x%lx.template%lx",
-                    (long unsigned int)glist_getcanvas(glist),
-                    (long unsigned int)glist,
-                    (long unsigned int)data);
+                sprintf(pbuf, "dgroup%zx.%zx",
+                    (t_int)x->x_canvas,
+                    (t_int)data);
+                sprintf(tbuf, ".x%zx.x%zx.template%zx",
+                    (t_int)glist_getcanvas(glist),
+                    (t_int)glist,
+                    (t_int)data);
                 gui_s(pbuf);
                 gui_s(pbuf);
                 gui_end_array();
@@ -6418,7 +6418,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
 
         /* make sure the array drawings are behind the graph */
         /* not doing this yet with the GUI port... */
-        //sys_vgui(".x%lx.c lower plot%lx graph%lx\n", glist_getcanvas(glist),
+        //sys_vgui(".x%zx.c lower plot%zx graph%zx\n", glist_getcanvas(glist),
         //    data, glist);
 
             /* We're done with the outline; now draw all the points.
@@ -6449,14 +6449,14 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
 
                    /* todo: need to check if plot itself is in an array */
                 char tagbuf[MAXPDSTRING];
-                sprintf(tagbuf, "dgroup%lx.%lx",
-                    (long unsigned int)elemtemplatecanvas,
-                    (long unsigned int)((t_word *)(elem + elemsize * i)));
+                sprintf(tagbuf, "dgroup%zx.%zx",
+                    (t_int)elemtemplatecanvas,
+                    (t_int)((t_word *)(elem + elemsize * i)));
                 char parent_tagbuf[MAXPDSTRING];
-                sprintf(parent_tagbuf, "dgroup%lx.%lx",
-                    (in_array ? (long unsigned int)parentglist :
-                                (long unsigned int)x->x_canvas),
-                    (long unsigned int)data);
+                sprintf(parent_tagbuf, "dgroup%zx.%zx",
+                    (in_array ? (t_int)parentglist :
+                                (t_int)x->x_canvas),
+                    (t_int)data);
                 char transform_buf[MAXPDSTRING];
                 sprintf(transform_buf, "translate(%g,%g)", usexloc, useyloc);
 
@@ -6494,16 +6494,16 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         {
             t_canvas *gl = glist_getcanvas(glist);
             char objtag[64];
-            sprintf(objtag, ".x%lx.x%lx.template%lx",
+            sprintf(objtag, ".x%zx.x%zx.template%zx",
                 (t_int)gl, (t_int)glist, (t_int)data);
             canvas_restore_original_position(gl, (t_gobj *)glist, objtag, -1);
         }
         /*
-        sys_vgui(".x%lx.c lower .x%lx.x%lx.plot%lx %s\n",
+        sys_vgui(".x%zx.c lower .x%zx.x%zx.plot%zx %s\n",
             glist_getcanvas(glist), glist_getcanvas(glist), glist, data,
             rtext_gettag(glist_findrtext(glist_getcanvas(glist),
             &glist->gl_obj)));
-        sys_vgui(".x%lx.c raise .x%lx.x%lx.plot%lx %s\n",
+        sys_vgui(".x%zx.c raise .x%zx.x%zx.plot%zx %s\n",
             glist_getcanvas(glist), glist_getcanvas(glist), glist, data,
             rtext_gettag(glist_findrtext(glist_getcanvas(glist),
             &glist->gl_obj)));
@@ -6532,7 +6532,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         }
 
             /* and then the trace */
-        //sys_vgui(".x%lx.c delete .x%lx.x%lx.template%lx\n",
+        //sys_vgui(".x%zx.c delete .x%zx.x%zx.template%zx\n",
         //    glist_getcanvas(glist), glist_getcanvas(glist), glist, data);      
     }
 }
@@ -6542,7 +6542,7 @@ static int plot_click(t_gobj *z, t_glist *glist,
     t_float basex, t_float basey,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
-    //fprintf(stderr,"plot_click %lx %lx %f %f %d %d\n",
+    //fprintf(stderr,"plot_click %zx %zx %f %f %d %d\n",
     //    (t_int)z, (t_int)glist, basex, basey, xpix, ypix);
     t_plot *x = (t_plot *)z;
     t_symbol *elemtemplatesym;
@@ -6582,7 +6582,7 @@ static void plot_free(t_plot *x)
     if (t)
     {
         t->t_transformable--;
-        //fprintf(stderr,"plot_free > template:%lx(%s) transform:%d\n",
+        //fprintf(stderr,"plot_free > template:%zx(%s) transform:%d\n",
         //    (t_int)t, canvas_makebindsym(x->x_canvas->gl_name)->s_name,
         //    t->t_transformable);
     }
@@ -6735,10 +6735,10 @@ static void drawarray_groupvis(t_scalar *x, t_glist *owner, t_word *data,
 {
     t_gobj *y;
     char tagbuf[MAXPDSTRING], parent_tagbuf[MAXPDSTRING];
-    sprintf(tagbuf, "dgroup%lx.%lx", (long unsigned int)groupcanvas,
-        (long unsigned int)data);
-    sprintf(parent_tagbuf, "dgroup%lx.%lx", (long unsigned int)parent,
-        (long unsigned int)data);
+    sprintf(tagbuf, "dgroup%zx.%zx", (t_int)groupcanvas,
+        (t_int)data);
+    sprintf(parent_tagbuf, "dgroup%zx.%zx", (t_int)parent,
+        (t_int)data);
     gui_start_vmess("gui_scalar_draw_group", "xsss",
         glist_getcanvas(owner),
         tagbuf,
@@ -6805,8 +6805,8 @@ static void drawarray_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     /* id for the the viewport-- we prefix it with "draw" to be
        compatible with the other svg-based drawcommands */
     char viewport_tagbuf[MAXPDSTRING];
-    sprintf(viewport_tagbuf, "draw%lx.%lx",
-        (long unsigned int)x, (long unsigned int)data);
+    sprintf(viewport_tagbuf, "draw%zx.%zx",
+        (t_int)x, (t_int)data);
 
     if (tovis)
     {
@@ -6815,15 +6815,15 @@ static void drawarray_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
 
         /* make sure the array drawings are behind the graph */
         /* not doing this yet with the GUI port... */
-        //sys_vgui(".x%lx.c lower plot%lx graph%lx\n", glist_getcanvas(glist),
+        //sys_vgui(".x%zx.c lower plot%zx graph%zx\n", glist_getcanvas(glist),
         //    data, glist);
 
         /* 1. Set up the main <g> for this widget */
         char parent_tagbuf[MAXPDSTRING];
-        sprintf(parent_tagbuf, "dgroup%lx.%lx",
-            (in_array ? (long unsigned int)parentglist :
-                        (long unsigned int)x->x_canvas),
-            (long unsigned int)data);
+        sprintf(parent_tagbuf, "dgroup%zx.%zx",
+            (in_array ? (t_int)parentglist :
+                        (t_int)x->x_canvas),
+            (t_int)data);
         t_svg *sa = (t_svg *)x->x_attr;
         gui_start_vmess("gui_draw_vis", "xs",
             glist_getcanvas(glist), "g");
@@ -6863,9 +6863,9 @@ static void drawarray_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
 
                    /* todo: need to check if drawarray itself is in an array */
                 char tagbuf[MAXPDSTRING];
-                sprintf(tagbuf, "dgroup%lx.%lx",
-                    (long unsigned int)elemtemplatecanvas,
-                    (long unsigned int)((t_word *)(elem + elemsize * i)));
+                sprintf(tagbuf, "dgroup%zx.%zx",
+                    (t_int)elemtemplatecanvas,
+                    (t_int)((t_word *)(elem + elemsize * i)));
                 char transform_buf[MAXPDSTRING];
                 sprintf(transform_buf, "translate(%g,%g)", usexloc, useyloc);
 
@@ -6910,7 +6910,7 @@ static void drawarray_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         {
             t_canvas *gl = glist_getcanvas(glist);
             char objtag[64];
-            sprintf(objtag, ".x%lx.x%lx.template%lx",
+            sprintf(objtag, ".x%zx.x%zx.template%zx",
                 (t_int)gl, (t_int)glist, (t_int)data);
             canvas_restore_original_position(gl, (t_gobj *)glist, objtag, -1);
         }
@@ -6945,7 +6945,7 @@ static int drawarray_click(t_gobj *z, t_glist *glist,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
 /* Let's hold off on this for a bit...
-    //fprintf(stderr,"drawarray_click %lx %lx %f %f %d %d\n",
+    //fprintf(stderr,"drawarray_click %zx %zx %f %f %d %d\n",
     //    (t_int)z, (t_int)glist, basex, basey, xpix, ypix);
     t_drawarray *x = (t_drawarray *)z;
     t_symbol *elemtemplatesym;
@@ -6984,7 +6984,7 @@ static void drawarray_free(t_drawarray *x)
     if (t)
     {
         t->t_transformable--;
-        //fprintf(stderr,"drawarray_free > template:%lx(%s) transform:%d\n",
+        //fprintf(stderr,"drawarray_free > template:%zx(%s) transform:%d\n",
         //    (t_int)t, canvas_makebindsym(x->x_canvas->gl_name)->s_name,
         //    t->t_transformable);
     }
@@ -7313,13 +7313,13 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             colorstring);
         drawsymbol_getbuf(x, data, template, buf);
         char parent_tagbuf[MAXPDSTRING];
-        sprintf(parent_tagbuf, "dgroup%lx.%lx",
-            (in_array ? (long unsigned int)parentglist :
-                        (long unsigned int)x->x_canvas),
-            (long unsigned int)data);
+        sprintf(parent_tagbuf, "dgroup%zx.%zx",
+            (in_array ? (t_int)parentglist :
+                        (t_int)x->x_canvas),
+            (t_int)data);
         char tagbuf[MAXPDSTRING];
-        sprintf(tagbuf, "drawnumber%lx.%lx", (long unsigned int)x,
-            (long unsigned int)data);
+        sprintf(tagbuf, "drawnumber%zx.%zx", (t_int)x,
+            (t_int)data);
         gui_vmess("gui_drawnumber_vis", "xssiiffsissii",
             glist_getcanvas(glist),
             parent_tagbuf,
@@ -7338,8 +7338,8 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     else
     {
         char tagbuf[MAXPDSTRING];
-        sprintf(tagbuf, "drawnumber%lx.%lx", (long unsigned int)x,
-            (long unsigned int)data);
+        sprintf(tagbuf, "drawnumber%zx.%zx", (t_int)x,
+            (t_int)data);
         gui_vmess("gui_draw_erase_item", "xs", glist_getcanvas(glist),
             tagbuf);
     }
@@ -7564,7 +7564,7 @@ static void *drawimage_new(t_symbol *classsym, int argc, t_atom *argv)
     
     char *classname = classsym->s_name;
     char buf[50];
-    sprintf(buf, "x%lx", (t_int)x);
+    sprintf(buf, "x%zx", (t_int)x);
     pd_bind(&x->x_obj.ob_pd, gensym(buf));
     int flags = 0;
     
@@ -7816,17 +7816,17 @@ static void drawimage_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             basex + fielddesc_getcoord(&svg->x_x.a_attr, template, data, 0));
         int yloc = glist_ytopixels(glist,
             basey + fielddesc_getcoord(&svg->x_y.a_attr, template, data, 0));
-        sys_vgui("pdtk_drawimage_vis .x%lx.c %d %d .x%lx .x%lx.i %d ",*/
+        sys_vgui("pdtk_drawimage_vis .x%zx.c %d %d .x%zx .x%zx.i %d ",*/
         t_float xloc = fielddesc_getcoord(&svg->x_x.a_attr, template, data, 0);
         t_float yloc = fielddesc_getcoord(&svg->x_y.a_attr, template, data, 0);
 
         char tagbuf[MAXPDSTRING];
         char parent_tagbuf[MAXPDSTRING];
-        sprintf(tagbuf, "draw%lx.%lx",
-            (long unsigned int)x, (long unsigned int)data);
-        sprintf(parent_tagbuf,"dgroup%lx.%lx",
-            in_array ? (long unsigned int)parentglist : (long unsigned int)parent,
-            (long unsigned int)data);
+        sprintf(tagbuf, "draw%zx.%zx",
+            (t_int)x, (t_int)data);
+        sprintf(parent_tagbuf,"dgroup%zx.%zx",
+            in_array ? (t_int)parentglist : (t_int)parent,
+            (t_int)data);
 
         gui_vmess("gui_drawimage_vis", "xffxxis",
             glist_getcanvas(glist),
@@ -7846,7 +7846,7 @@ static void drawimage_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     {
         /* We don't actually need this-- the image should get destroyed
            automatically. */
-        //sys_vgui("pdtk_drawimage_unvis .x%lx.c .x%lx.i\n",
+        //sys_vgui("pdtk_drawimage_unvis .x%zx.c .x%zx.i\n",
         //    glist_getcanvas(glist), data);
     }
 }
@@ -7957,8 +7957,8 @@ static void drawimage_free(t_drawimage *x)
 {
     /* delete the parent image in the gui */
     char buf[50];
-    //sprintf(buf, ".x%lx", (t_int)x);
-    sprintf(buf, "x%lx", (long unsigned int)x);
+    //sprintf(buf, ".x%zx", (t_int)x);
+    sprintf(buf, "x%zx", (t_int)x);
     pd_unbind(&x->x_obj.ob_pd, gensym(buf));
     gui_vmess("gui_image_free", "x", x);
 }
@@ -8071,9 +8071,9 @@ void svg_parentwidgettogui(t_gobj *z, t_scalar *sc, t_glist *owner,
     if (pd_class(&z->g_pd) == draw_class)
     {
         t_draw *x = (t_draw *)z;
-        sprintf(tagbuf, "draw%lx.%lx",
-            (long unsigned int)x,
-            (long unsigned int)data);
+        sprintf(tagbuf, "draw%zx.%zx",
+            (t_int)x,
+            (t_int)data);
         gui_start_vmess("gui_draw_configure_all", "xs",
             glist_getcanvas(owner), tagbuf);
         svg_togui((t_svg *)x->x_attr, template, data);
@@ -8082,9 +8082,9 @@ void svg_parentwidgettogui(t_gobj *z, t_scalar *sc, t_glist *owner,
     else if (pd_class(&z->g_pd) == drawimage_class)
     {
         t_drawimage *x = (t_drawimage *)z;
-        sprintf(tagbuf, "draw%lx.%lx",
-            (long unsigned int)x,
-            (long unsigned int)data);
+        sprintf(tagbuf, "draw%zx.%zx",
+            (t_int)x,
+            (t_int)data);
         gui_start_vmess("gui_draw_configure_all", "xs",
             glist_getcanvas(owner), tagbuf);
         svg_togui((t_svg *)x->x_attr, template, data);

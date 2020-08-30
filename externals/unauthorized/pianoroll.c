@@ -732,7 +732,7 @@ static void pianoroll_load(t_pianoroll *x, t_symbol *ffile)
     freebytes( x->x_ipeaches, x->x_nbsteps*sizeof( t_int ) );
     freebytes( x->x_ivolumes, x->x_nbsteps*sizeof( t_int ) );
 
-    if ( fscanf(tmph, "%d %d %f %f %d %d %d %f %d",
+    if ( fscanf(tmph, "%d %d %f %f %zd %zd %zd %f %d",
                 &x->x_width, &x->x_height,
                 &x->x_pmin, &x->x_pmax,
                 &x->x_nbgrades, &x->x_nbsteps,

@@ -135,7 +135,7 @@ void glist_update_redrect(t_glist *x)
 
 void glist_add(t_glist *x, t_gobj *y)
 {
-    //fprintf(stderr,"glist_add %lx %d\n", (t_int)x, (x->gl_editor ? 1 : 0));    
+    //fprintf(stderr,"glist_add %zx %d\n", (t_int)x, (x->gl_editor ? 1 : 0));    
     t_object *ob;
     y->g_next = 0;
     int index = 0;
@@ -205,7 +205,7 @@ void canvas_closebang(t_canvas *x);
     /* delete an object from a glist and free it */
 void glist_delete(t_glist *x, t_gobj *y)
 {
-    //fprintf(stderr,"glist_delete y=%lx x=%lx glist_getcanvas=%lx\n", y, x, glist_getcanvas(x));
+    //fprintf(stderr,"glist_delete y=%zx x=%zx glist_getcanvas=%zx\n", y, x, glist_getcanvas(x));
     if (x->gl_list)
     {
         //fprintf(stderr,"glist_delete YES\n");
@@ -255,7 +255,7 @@ void glist_delete(t_glist *x, t_gobj *y)
                     if (gl->gl_isgraph)
                     {
                         char tag[80];
-                        //sprintf(tag, "graph%lx", (t_int)gl);
+                        //sprintf(tag, "graph%zx", (t_int)gl);
                         //t_glist *yy = (t_glist *)y;
                         sprintf(tag, "%s",
                             rtext_gettag(glist_findrtext(x, &gl->gl_obj)));
@@ -284,7 +284,7 @@ void glist_delete(t_glist *x, t_gobj *y)
         }
         if (glist_isvisible(canvas))
         {
-            //fprintf(stderr,"...deleting %lx %lx\n", x, glist_getcanvas(x));
+            //fprintf(stderr,"...deleting %zx %zx\n", x, glist_getcanvas(x));
             gobj_vis(y, x, 0);
         }
         if (x->gl_editor && (ob = pd_checkobject(&y->g_pd)))
@@ -386,7 +386,7 @@ t_canvas *glist_getcanvas(t_glist *x)
     //fprintf(stderr,"glist_getcanvas\n");
     while (x->gl_owner && !x->gl_havewindow && x->gl_isgraph)
     {
-            //fprintf(stderr,"x=%lx x->gl_owner=%d x->gl_havewindow=%d "
+            //fprintf(stderr,"x=%zx x->gl_owner=%d x->gl_havewindow=%d "
             //               "x->gl_isgraph=%d gobj_shouldvis=%d\n", 
             //    x, (x->gl_owner ? 1:0), x->gl_havewindow, x->gl_isgraph,
             //    gobj_shouldvis(&x->gl_gobj, x->gl_owner));
@@ -491,7 +491,7 @@ void glist_sort(t_glist *x)
 
 t_inlet *canvas_addinlet(t_canvas *x, t_pd *who, t_symbol *s)
 {
-    //fprintf(stderr,"canvas_addinlet %d %lx %d\n", x->gl_loading, x->gl_owner, glist_isvisible(x->gl_owner));
+    //fprintf(stderr,"canvas_addinlet %d %zx %d\n", x->gl_loading, x->gl_owner, glist_isvisible(x->gl_owner));
     t_inlet *ip = inlet_new(&x->gl_obj, who, s, 0);
     if (!x->gl_loading && x->gl_owner && glist_isvisible(x->gl_owner))
     {
@@ -563,7 +563,7 @@ void canvas_resortinlets(t_canvas *x)
     {
         canvas_fixlinesfor(x->gl_owner, &x->gl_obj);
         //fprintf(stderr,"good place to fix redrawing of inlets "
-        //               ".x%lx owner=.x%lx %d (parent)%d\n",
+        //               ".x%zx owner=.x%zx %d (parent)%d\n",
         //    x, x->gl_owner, x->gl_loading, x->gl_owner->gl_loading);
 
         /*
@@ -980,7 +980,7 @@ void glist_redraw(t_glist *x)
             linetraverser_start(&t, x);
             while (oc = linetraverser_next(&t))
                 canvas_updateconnection(glist_getcanvas(x), t.tr_lx1, t.tr_ly1, t.tr_lx2, t.tr_ly2, (t_int)oc);
-                //sys_vgui(".x%lx.c coords l%lx %d %d %d %d\n",
+                //sys_vgui(".x%zx.c coords l%zx %d %d %d %d\n",
                 //    glist_getcanvas(x), oc,
                 //        t.tr_lx1, t.tr_ly1, t.tr_lx2, t.tr_ly2);
             canvas_drawredrect(x, 0);
@@ -1017,10 +1017,10 @@ t_symbol *garray_getlabelcolor(t_garray *x);
 static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
 {
     t_glist *x = (t_glist *)gr;
-    //fprintf(stderr,"graph vis canvas=%lx gobj=%lx %d\n",
+    //fprintf(stderr,"graph vis canvas=%zx gobj=%zx %d\n",
     //    (t_int)parent_glist, (t_int)gr, vis);
-    //fprintf(stderr, "graph_vis gr=.x%lx parent_glist=.x%lx "
-    //                "glist_getcanvas(x->gl_owner)=.x%lx vis=%d\n",
+    //fprintf(stderr, "graph_vis gr=.x%zx parent_glist=.x%zx "
+    //                "glist_getcanvas(x->gl_owner)=.x%zx vis=%d\n",
     //    (t_int)gr, (t_int)parent_glist,
     //    (t_int)glist_getcanvas(x->gl_owner), vis);  
     char tag[50];
@@ -1051,7 +1051,7 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
     //    tgt = parent_glist;
     //    exception = 1;
     //}
-    //fprintf(stderr,"tgt=.x%lx %d\n", (t_int)tgt, exception);
+    //fprintf(stderr,"tgt=.x%zx %d\n", (t_int)tgt, exception);
 
     if (vis & gobj_shouldvis(gr, parent_glist))
     {
@@ -1082,8 +1082,8 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
     if (!vis)
         rtext_erase(glist_findrtext(parent_glist, &x->gl_obj));
 
-    //sprintf(tag, "graph%lx", (t_int)x);
-    //fprintf(stderr, "gettag=%s, tag=graph%lx\n",
+    //sprintf(tag, "graph%zx", (t_int)x);
+    //fprintf(stderr, "gettag=%s, tag=graph%zx\n",
     //    rtext_gettag(glist_findrtext(parent_glist, &x->gl_obj)),(t_int)x);
     /* if we look like a graph but have been moved to a toplevel,
        just show the bounding rectangle */
@@ -1518,9 +1518,9 @@ static void graph_displace(t_gobj *z, t_glist *glist, int dx, int dy)
         sprintf(tag, "%s",
             rtext_gettag(
                 glist_findrtext((x->gl_owner ? x->gl_owner: x), &x->gl_obj)));
-        sys_vgui(".x%lx.c move %s %d %d\n",
+        sys_vgui(".x%zx.c move %s %d %d\n",
             glist_getcanvas(x->gl_owner), tag, dx, dy);
-        sys_vgui(".x%lx.c move %sR %d %d\n",
+        sys_vgui(".x%zx.c move %sR %d %d\n",
             glist_getcanvas(x->gl_owner), tag, dx, dy);*/
         if (!do_not_redraw)
         {
@@ -1592,7 +1592,7 @@ static void graph_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
 
 static void graph_select(t_gobj *z, t_glist *glist, int state)
 {
-    //fprintf(stderr,"graph_select .x%lx .x%lx %d...\n",
+    //fprintf(stderr,"graph_select .x%zx .x%zx %d...\n",
     //    (t_int)z, (t_int)glist, state);
     t_glist *x = (t_glist *)z;
     if (!x->gl_isgraph)
@@ -1600,7 +1600,7 @@ static void graph_select(t_gobj *z, t_glist *glist, int state)
     else //if(glist_istoplevel(glist))
     {
         //fprintf(stderr,"...yes\n");
-        //fprintf(stderr,"%lx %lx %lx\n", glist_getcanvas(glist), glist, x);
+        //fprintf(stderr,"%zx %zx %zx\n", glist_getcanvas(glist), glist, x);
         t_rtext *y = glist_findrtext(glist, &x->gl_obj);
         if (canvas_showtext(x))
         {
@@ -1645,7 +1645,7 @@ static void graph_select(t_gobj *z, t_glist *glist, int state)
         }
         // Don't yet understand the purpose of this call, so not deleting
         // it just yet...
-        //sys_vgui("pdtk_select_all_gop_widgets .x%lx %s %d\n",
+        //sys_vgui("pdtk_select_all_gop_widgets .x%zx %s %d\n",
         //    canvas, rtext_gettag(glist_findrtext(glist, &x->gl_obj)), state);
     }
 }
@@ -1669,7 +1669,7 @@ static void graph_delete(t_gobj *z, t_glist *glist)
         while (y = x->gl_list) glist_delete(x, y);
 #if 0       /* I think this was just wrong. */
         if (glist_isvisible(x))
-            sys_vgui(".x%lx.c delete graph%lx\n", glist_getcanvas(glist), x);
+            sys_vgui(".x%zx.c delete graph%zx\n", glist_getcanvas(glist), x);
 #endif
     }
 }
@@ -1740,7 +1740,7 @@ static int graph_click(t_gobj *z, struct _glist *glist,
         }
         if (!doit)
         {
-            //fprintf(stderr,"    not clicking %lx %d\n",
+            //fprintf(stderr,"    not clicking %zx %d\n",
             //    (t_int)clickme, clickreturned);
             if (clickme != NULL)
             {

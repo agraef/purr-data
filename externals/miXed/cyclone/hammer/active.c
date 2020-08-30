@@ -36,7 +36,7 @@ static void *active_new(void)
 {
     t_active *x = (t_active *)pd_new(active_class);
     char buf[32];
-    sprintf(buf, ".x%lx.c", (unsigned long)canvas_getcurrent());
+    sprintf(buf, ".x%zx.c", (t_int)canvas_getcurrent());
     x->x_cvname = gensym(buf);
     x->x_on = 0;
     outlet_new((t_object *)x, &s_float);

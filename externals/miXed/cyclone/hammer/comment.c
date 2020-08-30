@@ -463,10 +463,10 @@ static void comment_select(t_gobj *z, t_glist *glist, int state)
     sys_vgui(".x%x.c itemconfigure %s -fill %s\n", x->x_canvas,
 	     x->x_texttag, (state ? "$select_color" : x->x_color));
 	if (state && !x->x_dragon)
-		sys_vgui(".x%lx.c addtag selected withtag %s\n", 
+		sys_vgui(".x%zx.c addtag selected withtag %s\n", 
 			glist_getcanvas(glist), x->x_texttag);
 	else if (!x->x_dragon)
-		sys_vgui(".x%lx.c dtag %s selected\n",
+		sys_vgui(".x%zx.c dtag %s selected\n",
 			glist_getcanvas(glist), x->x_texttag);
     /* A regular rtext should now set 'canvas_editing' variable to its canvas,
        but we do not do that, because we get the keys through a global binding
@@ -743,9 +743,9 @@ static void *comment_new(t_symbol *s, int ac, t_atom *av)
     t->te_type = T_TEXT;
     x->x_glist = canvas_getcurrent();
     x->x_canvas = 0;
-    sprintf(x->x_tag, "all%lx", (t_int)x);
-    sprintf(x->x_texttag, "t%lx", (t_int)x);
-    sprintf(x->x_outlinetag, "h%lx", (t_int)x);
+    sprintf(x->x_tag, "all%zx", (t_int)x);
+    sprintf(x->x_texttag, "t%zx", (t_int)x);
+    sprintf(x->x_outlinetag, "h%zx", (t_int)x);
     x->x_pixwidth = 0;
     x->x_fontsize = 0;
     x->x_fontfamily = 0;
@@ -826,7 +826,7 @@ textpart:
     x->x_transclock = clock_new(x, (t_method)comment_transtick);
     x->x_bbset = 0;
     x->x_bbpending = 0;
-    sprintf(buf, "miXed%lx", (t_int)x);
+    sprintf(buf, "miXed%zx", (t_int)x);
     x->x_bindsym = gensym(buf);
     pd_bind((t_pd *)x, x->x_bindsym);
     if (!commentsink)

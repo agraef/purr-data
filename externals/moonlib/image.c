@@ -64,8 +64,8 @@ static void image_drawme(t_image *x, t_glist *glist, int firsttime)
             glist_istoplevel(glist));
         if (x->x_image == &s_) // if we have a blank image name, use the included filler
         {
-            sprintf(key, "x%lx", (long unsigned int)pd_class(&x->x_obj.te_pd));
-            sprintf(key2, "x%lx", (long unsigned int)pd_class(&x->x_obj.te_pd));
+            sprintf(key, "x%zx", (t_int)pd_class(&x->x_obj.te_pd));
+            sprintf(key2, "x%zx", (t_int)pd_class(&x->x_obj.te_pd));
             strcat(key, key2);
             strcat(key, "default");
             //x->x_image = gensym("::moonlib::image::noimage");
@@ -75,12 +75,12 @@ static void image_drawme(t_image *x, t_glist *glist, int firsttime)
         }
         if (x->x_type)
         {
-            //sys_vgui(".x%lx.c create image %d %d -tags %xS\n",
+            //sys_vgui(".x%zx.c create image %d %d -tags %xS\n",
             //         glist_getcanvas(glist),
             //         text_xpix(&x->x_obj, glist),
             //         text_ypix(&x->x_obj, glist),
             //         x);
-            //sys_vgui(".x%lx.c itemconfigure %xS -image %s\n",
+            //sys_vgui(".x%zx.c itemconfigure %xS -image %s\n",
             //         glist_getcanvas(glist), x, x->x_image->s_name);
             gui_vmess("gui_gobj_draw_image", "xxss",
                 glist_getcanvas(glist),
@@ -90,7 +90,7 @@ static void image_drawme(t_image *x, t_glist *glist, int firsttime)
         }
         else
         {
-            sprintf(key, "x%lx", (long unsigned int)x);
+            sprintf(key, "x%zx", (t_int)x);
             const char *fname = image_get_filename(x, x->x_image->s_name);
             if (!x->x_localimage)
             {
@@ -100,12 +100,12 @@ static void image_drawme(t_image *x, t_glist *glist, int firsttime)
             if (fname)
             {
                 /* associate a filename with the image */
-                //sys_vgui("::moonlib::image::configure .x%lx img%x {%s}\n",
+                //sys_vgui("::moonlib::image::configure .x%zx img%x {%s}\n",
                 //    x, x, fname);
                 gui_vmess("gui_load_image", "xss",
                     glist_getcanvas(glist), key, fname);
             }
-            //sys_vgui(".x%lx.c create image %d %d -image img%x -tags %xS\n",
+            //sys_vgui(".x%zx.c create image %d %d -image img%x -tags %xS\n",
             //         glist_getcanvas(glist),
             //         text_xpix(&x->x_obj, glist),
             //         text_ypix(&x->x_obj, glist),
@@ -131,7 +131,7 @@ static void image_drawme(t_image *x, t_glist *glist, int firsttime)
     }
     else
     {
-        //sys_vgui(".x%lx.c coords %xS %d %d\n",
+        //sys_vgui(".x%zx.c coords %xS %d %d\n",
         //         glist_getcanvas(glist), x,
         //         text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist));
         gui_vmess("gui_image_coords", "xxii",
@@ -144,7 +144,7 @@ static void image_drawme(t_image *x, t_glist *glist, int firsttime)
 
 static void image_erase(t_image *x, t_glist *glist)
 {
-    //sys_vgui(".x%lx.c delete %xS\n", glist_getcanvas(glist), x);
+    //sys_vgui(".x%zx.c delete %xS\n", glist_getcanvas(glist), x);
     gui_vmess("gui_gobj_erase", "xx", glist_getcanvas(glist), x);
 }
 
@@ -170,7 +170,7 @@ static void image_displace(t_gobj *z, t_glist *glist, int dx, int dy)
     t_image *x = (t_image *)z;
     x->x_obj.te_xpix += dx;
     x->x_obj.te_ypix += dy;
-    //sys_vgui(".x%lx.c coords %xSEL %d %d %d %d\n",
+    //sys_vgui(".x%zx.c coords %xSEL %d %d %d %d\n",
     //    glist_getcanvas(glist), x,
     //    text_xpix(&x->x_obj, glist),
     //    text_ypix(&x->x_obj, glist),
@@ -185,7 +185,7 @@ static void image_displace_wtag(t_gobj *z, t_glist *glist, int dx, int dy)
     t_image *x = (t_image *)z;
     x->x_obj.te_xpix += dx;
     x->x_obj.te_ypix += dy;
-    //sys_vgui(".x%lx.c coords %xSEL %d %d %d %d\n",
+    //sys_vgui(".x%zx.c coords %xSEL %d %d %d %d\n",
     //    glist_getcanvas(glist), x,
     //    text_xpix(&x->x_obj, glist),
     //    text_ypix(&x->x_obj, glist),
@@ -200,7 +200,7 @@ static void image_select(t_gobj *z, t_glist *glist, int state)
     t_image *x = (t_image *)z;
     //if (state)
     //{
-    //    sys_vgui(".x%lx.c create rectangle "
+    //    sys_vgui(".x%zx.c create rectangle "
     //             "%d %d %d %d -tags %xSEL -outline blue\n",
     //        glist_getcanvas(glist),
     //        text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist),
@@ -210,7 +210,7 @@ static void image_select(t_gobj *z, t_glist *glist, int state)
     //}
     //else
     //{
-    //    sys_vgui(".x%lx.c delete %xSEL\n",
+    //    sys_vgui(".x%zx.c delete %xSEL\n",
     //        glist_getcanvas(glist), x);
     //}
     gui_vmess("gui_image_toggle_border", "xxi",
@@ -283,7 +283,7 @@ static void image_open(t_gobj *z, t_symbol *file)
     fname = image_get_filename(x, file->s_name);
     if (fname)
     {
-        sprintf(key, "x%lx", (long unsigned int)x);
+        sprintf(key, "x%zx", (t_int)x);
         x->x_image = gensym(fname);
         x->x_key = gensym(key);
         x->x_type = 0;
@@ -295,13 +295,13 @@ static void image_open(t_gobj *z, t_symbol *file)
                 x->x_localimage = 1;
             }
             //sys_vgui("img%x blank\n", x);
-            //sys_vgui("::moonlib::image::configure .x%lx img%x {%s}\n",
+            //sys_vgui("::moonlib::image::configure .x%zx img%x {%s}\n",
             //    x, x, fname);
             gui_vmess("gui_load_image", "xss",
                 glist_getcanvas(x->x_glist), key, fname);
             if (oldtype == 0)
             {
-                //sys_vgui(".x%lx.c itemconfigure %xS -image img%x\n",
+                //sys_vgui(".x%zx.c itemconfigure %xS -image img%x\n",
                 //    glist_getcanvas(x->x_glist), x, x);
                 gui_vmess("gui_image_configure", "xxss",
                     glist_getcanvas(x->x_glist),
@@ -323,11 +323,11 @@ static void image_load(t_gobj *z, t_symbol *image, t_symbol *file)
     fname = image_get_filename(x, file->s_name);
     if (fname)
     {
-        //sys_vgui("::moonlib::image::create_photo .x%lx %s {%s}\n",
+        //sys_vgui("::moonlib::image::create_photo .x%zx %s {%s}\n",
         //    x, image->s_name, fname);
         /* For these class-accessible names, we prefix the user-provided
            name with a class pointer. */
-        sprintf(key, "x%lx", (long unsigned int)pd_class(&x->x_obj.te_pd));
+        sprintf(key, "x%zx", (t_int)pd_class(&x->x_obj.te_pd));
         strcat(key, image->s_name);
         gui_vmess("gui_load_image", "xss",
             glist_getcanvas(x->x_glist), key, fname);
@@ -343,14 +343,14 @@ static void image_set(t_gobj *z, t_symbol *image)
     char key[MAXPDSTRING];
     t_image *x = (t_image *)z;
     /* key is the class address followed by the user-supplied string */
-    sprintf(key, "x%lx", (long unsigned int)pd_class(&x->x_obj.te_pd));
+    sprintf(key, "x%zx", (t_int)pd_class(&x->x_obj.te_pd));
     strcat(key, image->s_name);
     x->x_image = image;
     x->x_key = gensym(key);
     x->x_type = 1;
     if (glist_isvisible(x->x_glist))
     {
-        //sys_vgui(".x%lx.c itemconfigure %xS -image %s\n",
+        //sys_vgui(".x%zx.c itemconfigure %xS -image %s\n",
         //         glist_getcanvas(x->x_glist), x, x->x_image->s_name);
         gui_vmess("gui_image_configure", "xxss",
             glist_getcanvas(x->x_glist),
@@ -394,7 +394,7 @@ static void *image_new(t_symbol *image, t_float type)
     {
         if (x->x_type)
         {
-            sprintf(key, "x%lx", (long unsigned int)pd_class(&x->x_obj.te_pd));
+            sprintf(key, "x%zx", (t_int)pd_class(&x->x_obj.te_pd));
             strcat(key, image->s_name);
             x->x_image = image;
             x->x_key = gensym(key);
@@ -434,13 +434,13 @@ void image_setup(void)
     class_setsavefn(image_class, &image_save);
 #endif
     /* cache a default image (question mark) for case where no image argument
-       is given. The key is ("x%lxx%lxdefault", image_class, image_class),
+       is given. The key is ("x%zxx%zxdefault", image_class, image_class),
        to protect against namespace clashes with the complicated interface
        of moonlib/image */
     char key[MAXPDSTRING];
     char key2[MAXPDSTRING];
-    sprintf(key, "x%lx", (long unsigned int)image_class);
-    sprintf(key2, "x%lx", (long unsigned int)image_class);
+    sprintf(key, "x%zx", (t_int)image_class);
+    sprintf(key2, "x%zx", (t_int)image_class);
     strcat(key, key2);
     strcat(key, "default");
     gui_vmess("gui_load_default_image", "ss", "dummy", key);

@@ -238,7 +238,7 @@ static void cooled_update_block(t_cooled *x, t_glist *glist, int bnumber)
 
     for ( i=0; i<x->x_zoom; i++ )
     {
-        sprintf( x->x_guicommand, "COOLEDIMAGE%lx put {%s} -to %d 0\n", (long unsigned int)x, x->x_gifdata, (bnumber*x->x_zoom)+i );
+        sprintf( x->x_guicommand, "COOLEDIMAGE%zx put {%s} -to %d 0\n", (t_int)x, x->x_gifdata, (bnumber*x->x_zoom)+i );
         if ( glist_isvisible( x->x_glist ) )
             sys_gui( x->x_guicommand );
     }

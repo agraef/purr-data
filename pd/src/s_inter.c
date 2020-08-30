@@ -57,7 +57,7 @@ static int isatty(int fd) {return 0;}
 typedef int pid_t;
 # endif
 typedef int socklen_t;
-#define EADDRINUSE WSAEADDRINUSE
+//#define EADDRINUSE WSAEADDRINUSE
 #endif
 
 #include <stdarg.h>
@@ -94,7 +94,7 @@ typedef int socklen_t;
 #define LOCALHOST "localhost"
 #endif
 
-#define X_SPECIFIER "x%.6lx"
+#define X_SPECIFIER "x%.6zx"
 
 #if PD_FLOATSIZE == 32
 #define FLOAT_SPECIFIER "%.6g"
@@ -501,12 +501,12 @@ static int socketreceiver_doread(t_socketreceiver *x)
         if (c == ';' && (!indx || inbuf[indx-1] != '\\'))
         {
             intail = (indx+1)&(INBUFSIZE-1);
-            binbuf_text(inbinbuf, messbuf, bp - messbuf);
+            binbuf_text(inbinbuf, messbuf, (int)(bp - messbuf));
             if (sys_debuglevel & DEBUG_MESSDOWN) {
                 if (stderr_isatty)
-                    fprintf(stderr,"\n<- \e[0;1;36m%.*s\e[0m", bp - messbuf, messbuf);
+                    fprintf(stderr,"\n<- \e[0;1;36m%.*s\e[0m", (int)(bp - messbuf), messbuf);
                 else
-                    fprintf(stderr,"\n<- %.*s", bp - messbuf, messbuf);
+                    fprintf(stderr,"\n<- %.*s", (int)(bp - messbuf), messbuf);
             }
             x->sr_inhead = inhead;
             x->sr_intail = intail;
@@ -887,7 +887,7 @@ void gui_do_vmess(const char *sel, char *fmt, int end, va_list ap)
         case 's': escape_double_quotes(va_arg(ap, const char *)); break;
         case 'i': sys_vgui("%d", va_arg(ap, int)); break;
         case 'x': sys_vgui("\"" X_SPECIFIER "\"",
-            va_arg(ap, long unsigned int));
+            va_arg(ap, t_int));
             break;
         //case 'p': SETPOINTER(at, va_arg(ap, t_gpointer *)); break;
         default: goto done;
@@ -965,7 +965,7 @@ void gui_s(const char *s)
     gui_array_tail = 0;
 }
 
-void gui_x(long unsigned int i)
+void gui_x(t_int i)
 {
     if (gui_array_head && !gui_array_tail)
         sys_vgui("\"x%.6lx\"", i);
@@ -1438,7 +1438,7 @@ int sys_startgui(const char *guidir)
                 portno,
                 (sys_k12_mode ? "pd-l2ork-k12" : "pd-l2ork"),
                 guidir2,
-                (long unsigned int)pd_this);
+                (t_int)pd_this);
 #else
             sprintf(cmdbuf,
                 "TCL_LIBRARY=\"%s/tcl/library\" TK_LIBRARY=\"%s/tk/library\" \
@@ -1480,7 +1480,7 @@ int sys_startgui(const char *guidir)
                 portno,
                 (sys_k12_mode ? "pd-l2ork-k12" : "pd-l2ork"),
                 guidir2,
-                (long unsigned int)pd_this);
+                (t_int)pd_this);
 #endif
             sys_guicmd = cmdbuf;
         }
@@ -1537,7 +1537,7 @@ int sys_startgui(const char *guidir)
         //sys_bashfilename(scriptbuf, scriptbuf);
 
         char pd_this_string[80];
-        sprintf(pd_this_string, X_SPECIFIER, (long unsigned int)pd_this);
+        sprintf(pd_this_string, X_SPECIFIER, (t_int)pd_this);
         sprintf(scriptbuf, "\""); /* use quotes in case there are spaces */
         strcat(scriptbuf, sys_libdir->s_name);
         strcat(scriptbuf, "/" PDBINDIR);

@@ -108,7 +108,7 @@ main() {
 
     printf("Testing time tags\n");
     tt = OSCTT_CurrentTime();
-    printf("Time now is %llx\n", tt);
+    printf("Time now is %zx\n", tt);
 
     printf("Testing bundles\n");
     if (OSC_openBundle(b, tt)) {

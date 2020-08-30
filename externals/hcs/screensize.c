@@ -29,7 +29,7 @@ static void *screensize_new(void)
     char buf[MAXPDSTRING];
     t_screensize *x = (t_screensize *)pd_new(screensize_class);
 
-    sprintf(buf, "#%lx", (t_int)x);
+    sprintf(buf, "#%zx", (t_int)x);
     x->receive_symbol = gensym(buf);
     pd_bind(&x->x_obj.ob_pd, x->receive_symbol);
 

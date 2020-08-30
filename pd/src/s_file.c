@@ -230,8 +230,8 @@ static void sys_putpreference(const char *key, const char *value)
         NULL, &hkey, NULL);
     if (err != ERROR_SUCCESS)
     {
-        post("unable to create registry entry: %s: error %lx\n", key,
-            (long unsigned int)err);
+        post("unable to create registry entry: %s: error %zx\n", key,
+            (t_int)err);
         return;
     }
     err = RegSetValueEx(hkey, key, 0, REG_EXPAND_SZ, value, strlen(value)+1);
