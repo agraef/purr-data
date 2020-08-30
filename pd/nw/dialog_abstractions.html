@@ -6,12 +6,6 @@
   <body class="dialog_body">
     <div class="container">
       <form>
-        <fieldset style="width: 90%; border: 2px solid grey" disabled>
-          <legend data-i18n="abstractions.filebased"></legend>
-          <table style="width: 90%; table-layout: fixed;">
-          </table>
-        </fieldset>
-        <hr>
         <fieldset style="width: 90%; border: 2px solid grey">
           <legend data-i18n="abstractions.private"></legend>
             <strong data-i18n="abstractions.global"></strong>
@@ -33,6 +27,13 @@
             <span data-i18n="abstractions.delete"></span>
           </button>
         </div>
+        <hr>
+        <fieldset style="width: 90%; border: 2px solid grey">
+          <legend data-i18n="abstractions.filebased"></legend>
+          <i>NOT IMPLEMENTED</i>
+          <table style="width: 90%; table-layout: fixed;">
+          </table>
+        </fieldset>
         <hr>
         <div class="submit_buttons">
           <button type="button" onClick="cancel()" data-i18n="[title]abstractions.close_tt">
@@ -82,9 +83,9 @@ function populate_form(attrs) {
     canvas = attrs.canvas;
     deletequeue = new Set();
     var tables = document.querySelectorAll("table"),
-        filebased_table = tables[0],
-        privateglobal_table = tables[1],
-        privatelocal_table = tables[2];
+        filebased_table = tables[2],
+        privateglobal_table = tables[0],
+        privatelocal_table = tables[1];
 
     for(i = 0; i < filebased_abs.length; i += 2)
     {
