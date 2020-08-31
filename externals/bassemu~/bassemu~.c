@@ -311,7 +311,7 @@ static void bassemu_list(t_bassemu *x, t_symbol *s, int argc, t_atom *argv)
 	}
 	if (argc >= 1)
 	{
-		if(argv[0].a_type = A_FLOAT && (atom_getfloatarg(0,argc,argv) != -1))
+		if(argv[0].a_type == A_FLOAT && (atom_getfloatarg(0,argc,argv) != -1))
 		{ // note
 			x->thisnote = atom_getfloatarg(0,argc,argv)-57;
 			x->vco_inc = ((x->tune/x->sr)*pow(2, (x->thisnote)*(1.0/12.0)) / 2.);
