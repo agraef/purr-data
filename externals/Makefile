@@ -1343,6 +1343,7 @@ motex_clean:
 # MRPEACH
 MRPEACH_NAME=mrpeach
 MRPEACH_OBJECTS := $(wildcard $(externals_src)/mrpeach/*/*.c)
+mrpeach: WARN_FLAGS=-Wno-pedantic-ms-format
 mrpeach: $(MRPEACH_OBJECTS:.c=.$(EXTENSION))
 
 mrpeach_install: mrpeach
