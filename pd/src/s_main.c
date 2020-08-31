@@ -93,6 +93,11 @@ char sys_extraflagsstring[MAXPDSTRING];
 int sys_run_scheduler(const char *externalschedlibname,
     const char *sys_extraflagsstring);
 int sys_noautopatch = 0;    /* temporary hack to defeat new 0.42 editing */
+int glob_autopatch_connectme = 0;   /* added to compensate for weird gui objects 
+                                       whose positioning is not true to its xy
+                                       origin, to ensure they can be at least
+                                       somewhat reasonably autopatched
+                                    */
 
     /* here the "-1" counts signify that the corresponding vector hasn't been
     specified in command line arguments; sys_set_audio_settings will detect it

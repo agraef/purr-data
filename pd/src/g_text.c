@@ -44,6 +44,11 @@ extern int we_are_undoing;
 extern void glob_preset_node_list_check_loc_and_update(void);
 extern void glob_preset_node_list_seek_hub(void);
 
+extern int sys_noautopatch;
+extern int glob_autopatch_connectme;
+extern t_gobj *glist_nth(t_glist *x, int n);
+extern int glist_getindex(t_glist *x, t_gobj *y);
+
 /* ----------------- the "text" object.  ------------------ */
 
     /* add a "text" object (comment) to a glist.  While this one goes for any
@@ -78,8 +83,8 @@ void glist_text(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
     else
     {
         //int xpix, ypix;
-        int connectme, xpix, ypix, indx, nobj;
-        canvas_howputnew(gl, &connectme, &xpix, &ypix, &indx, &nobj);
+        int xpix, ypix, indx, nobj;
+        canvas_howputnew(gl, &glob_autopatch_connectme, &xpix, &ypix, &indx, &nobj);
         pd_vmess((t_pd *)glist_getcanvas(gl), gensym("editmode"), "i", 1);
         SETSYMBOL(&at, gensym("comment"));
         glist_noselect(gl);
@@ -99,7 +104,7 @@ void glist_text(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
         if (!we_are_undoing)
             canvas_undo_add(glist_getcanvas(gl), 9, "create",
                 (void *)canvas_undo_set_create(glist_getcanvas(gl)));
-        if (connectme == 0)
+        if (glob_autopatch_connectme == 0)
         {
             canvas_displaceselection(glist_getcanvas(gl), -8, -8);
             canvas_startmotion(glist_getcanvas(gl));
@@ -284,9 +289,6 @@ static int get_autopatch_yoffset(t_canvas *x)
     }
 }
 
-extern int sys_noautopatch;
-extern t_gobj *glist_nth(t_glist *x, int n);
-extern int glist_getindex(t_glist *x, t_gobj *y);
     /* utility routine to figure out where to put a new text box from menu
     and whether to connect to it automatically */
 void canvas_howputnew(t_canvas *x, int *connectp, int *xpixp, int *ypixp,
@@ -304,9 +306,9 @@ void canvas_howputnew(t_canvas *x, int *connectp, int *xpixp, int *ypixp,
         t_object *ob = pd_checkobject(&selected->g_pd);
         connectme = (obj_noutlets(ob) ? 1 : 0);
     }*/
-    int connectme = (x->gl_editor->e_selection &&
+    glob_autopatch_connectme = (x->gl_editor->e_selection &&
         !x->gl_editor->e_selection->sel_next);
-    if (connectme)
+    if (glob_autopatch_connectme)
     {
         t_gobj *g, *selected = x->gl_editor->e_selection->sel_what;
         t_text *t = (t_text *)selected;
@@ -353,10 +355,10 @@ void canvas_howputnew(t_canvas *x, int *connectp, int *xpixp, int *ypixp,
     }
     if (sys_noautopatch)
     {
-        if (connectme == 1) connectme = -1;
-        else connectme = 0;
+        if (glob_autopatch_connectme == 1) glob_autopatch_connectme = -1;
+        else glob_autopatch_connectme = 0;
     }
-    *connectp = connectme;
+    *connectp = glob_autopatch_connectme;
     *indexp = indx;
     *totalp = nobj;
 }
@@ -385,21 +387,21 @@ void canvas_obj(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
     {
             /* interactively create new object */
         t_binbuf *b = binbuf_new();
-        int connectme, xpix, ypix, indx, nobj;
-        canvas_howputnew(gl, &connectme, &xpix, &ypix, &indx, &nobj);
+        int xpix, ypix, indx, nobj;
+        canvas_howputnew(gl, &glob_autopatch_connectme, &xpix, &ypix, &indx, &nobj);
         pd_vmess(&gl->gl_pd, gensym("editmode"), "i", 1);
         canvas_objtext(gl,
-            connectme ? xpix : xpix - 8,
-            connectme ? ypix : ypix - 8,
-            0, 1, b, connectme);
-        if (connectme == 1)
+            glob_autopatch_connectme ? xpix : xpix - 8,
+            glob_autopatch_connectme ? ypix : ypix - 8,
+            0, 1, b, glob_autopatch_connectme);
+        if (glob_autopatch_connectme == 1)
         {
             //fprintf(stderr,"canvas_obj calls canvas_connect\n");
             connect_exception = 1;
             canvas_connect(gl, indx, 0, nobj, 0);
             connect_exception = 0;
         }
-        else if (connectme == 0)
+        else if (glob_autopatch_connectme == 0)
         {
             //fprintf(stderr,"canvas_obj calls canvas_startmotion\n");
             //canvas_displaceselection(glist_getcanvas(gl), -8, -8);
@@ -426,8 +428,8 @@ void canvas_obj_abstraction_from_menu(t_glist *gl, t_symbol *s,
 
     t_binbuf *b = binbuf_new();
     binbuf_restore(b, 2, argv);
-    int connectme, xpix, ypix, indx, nobj;
-    canvas_howputnew(gl, &connectme, &xpix, &ypix, &indx, &nobj);
+    int xpix, ypix, indx, nobj;
+    canvas_howputnew(gl, &glob_autopatch_connectme, &xpix, &ypix, &indx, &nobj);
     pd_vmess(&gl->gl_pd, gensym("editmode"), "i", 1);
 #ifdef PDL2ORK
     if (sys_k12_mode)
@@ -445,11 +447,11 @@ void canvas_obj_abstraction_from_menu(t_glist *gl, t_symbol *s,
         y = y->g_next;
     canvas_loadbang((t_canvas *)y);
 
-    if (connectme == 1)
+    if (glob_autopatch_connectme == 1)
     {
         canvas_connect(gl, indx, 0, nobj, 0);
     }
-    else if (connectme == 0)
+    else if (glob_autopatch_connectme == 0)
     {
         //glist_setlastxy(glist_getcanvas(gl), xpix, ypix);
         canvas_startmotion(glist_getcanvas(gl));
@@ -472,9 +474,9 @@ void canvas_iemguis(t_glist *gl, t_symbol *guiobjname)
     if (!strcmp(guiobjname->s_name, "cnv"))
         glist_noselect(gl);
 
-    int connectme, xpix, ypix, indx, nobj;
+    int xpix, ypix, indx, nobj;
 
-    canvas_howputnew(gl, &connectme, &xpix, &ypix, &indx, &nobj);
+    canvas_howputnew(gl, &glob_autopatch_connectme, &xpix, &ypix, &indx, &nobj);
 
     /* NOT NECESSARY ANY MORE: compensate for the iemgui sliders' xyoffset
        in case of autopatch
@@ -496,11 +498,11 @@ void canvas_iemguis(t_glist *gl, t_symbol *guiobjname)
     SETSYMBOL(&at, guiobjname);
     binbuf_restore(b, 1, &at);
     canvas_objtext(gl, xpix, ypix, 0, 1, b, 0);
-    if (connectme == 1)
+    if (glob_autopatch_connectme == 1)
         canvas_connect(gl, indx, 0, nobj, 0);
     //glist_getnextxy(gl, &xpix, &ypix);
     //canvas_objtext(gl, xpix, ypix, 1, b, 0);
-    else if (connectme == 0)
+    else if (glob_autopatch_connectme == 0)
     {
         canvas_displaceselection(glist_getcanvas(gl), -8, -8);
         canvas_startmotion(glist_getcanvas(gl));
@@ -828,8 +830,8 @@ void canvas_msg(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
         post("unable to create stub message in closed canvas!");
     else
     {
-        int connectme, xpix, ypix, indx, nobj;
-        canvas_howputnew(gl, &connectme, &xpix, &ypix, &indx, &nobj);
+        int xpix, ypix, indx, nobj;
+        canvas_howputnew(gl, &glob_autopatch_connectme, &xpix, &ypix, &indx, &nobj);
         
         pd_vmess(&gl->gl_pd, gensym("editmode"), "i", 1);
         x->m_text.te_xpix = xpix;
@@ -838,10 +840,10 @@ void canvas_msg(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
         glist_noselect(gl);
         glist_select(gl, &x->m_text.te_g);
         gobj_activate(&x->m_text.te_g, gl,
-            connectme ? 1 : 2); // <-- hack to signal we're a new message box
-        if (connectme == 1)
+            glob_autopatch_connectme ? 1 : 2); // <-- hack to signal we're a new message box
+        if (glob_autopatch_connectme == 1)
             canvas_connect(gl, indx, 0, nobj, 0);
-        else if (connectme == 0)
+        else if (glob_autopatch_connectme == 0)
         {
             canvas_displaceselection(glist_getcanvas(gl), -8, -8);
             canvas_startmotion(glist_getcanvas(gl));
@@ -1347,8 +1349,8 @@ void canvas_atom(t_glist *gl, t_atomtype type,
     }
     else
     {
-        int connectme, xpix, ypix, indx, nobj;
-        canvas_howputnew(gl, &connectme, &xpix, &ypix, &indx, &nobj);
+        int xpix, ypix, indx, nobj;
+        canvas_howputnew(gl, &glob_autopatch_connectme, &xpix, &ypix, &indx, &nobj);
         outlet_new(&x->a_text,
             x->a_atom.a_type == A_FLOAT ? &s_float: &s_symbol);
         inlet_new(&x->a_text, &x->a_text.te_pd, 0, 0);
@@ -1358,9 +1360,9 @@ void canvas_atom(t_glist *gl, t_atomtype type,
         glist_add(gl, &x->a_text.te_g);
         glist_noselect(gl);
         glist_select(gl, &x->a_text.te_g);
-        if (connectme == 1)
+        if (glob_autopatch_connectme == 1)
             canvas_connect(gl, indx, 0, nobj, 0);
-        else if (connectme == 0)
+        else if (glob_autopatch_connectme == 0)
         {
             canvas_displaceselection(glist_getcanvas(gl), -8, -8);
             canvas_startmotion(glist_getcanvas(gl));
@@ -1801,8 +1803,8 @@ void canvas_dropdown(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
     }
     else
     {
-        int connectme, xpix, ypix, indx, nobj;
-        canvas_howputnew(gl, &connectme, &xpix, &ypix, &indx, &nobj);
+        int xpix, ypix, indx, nobj;
+        canvas_howputnew(gl, &glob_autopatch_connectme, &xpix, &ypix, &indx, &nobj);
         outlet_new(&x->a_text, &s_float);
         inlet_new(&x->a_text, &x->a_text.te_pd, 0, 0);
         pd_vmess(&gl->gl_pd, gensym("editmode"), "i", 1);
@@ -1811,9 +1813,9 @@ void canvas_dropdown(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
         glist_add(gl, &x->a_text.te_g);
         glist_noselect(gl);
         glist_select(gl, &x->a_text.te_g);
-        if (connectme == 1)
+        if (glob_autopatch_connectme == 1)
             canvas_connect(gl, indx, 0, nobj, 0);
-        else if (connectme == 0)
+        else if (glob_autopatch_connectme == 0)
         {
             canvas_displaceselection(glist_getcanvas(gl), -8, -8);
             canvas_startmotion(glist_getcanvas(gl));
