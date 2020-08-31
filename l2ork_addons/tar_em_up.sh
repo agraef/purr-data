@@ -120,7 +120,9 @@ export TAR_EM_UP_PREFIX=$inst_dir
 # to fetch the nwjs binaries below
 
 os=`uname | tr '[:upper:]' '[:lower:]'`
-if [[ $os == *"mingw"* ]]; then
+if [[ $os == *"mingw64"* ]]; then
+	os=win64
+elif [[ $os == *"mingw"* ]]; then
 	os=win
 elif [[ $os == "darwin" ]]; then
 	os=osx
@@ -130,7 +132,7 @@ fi
 if [ $any -gt 0 ]; then
 	if [[ $os == "osx" ]]; then
 		dmg=1
-	elif [[ $os == "win" ]]; then
+	elif [[ $os == "win" || $os == "win64" ]]; then
 		inno=$any
 	else
 		deb=$any
@@ -145,7 +147,7 @@ if [ $full -gt 0 ]; then
 	if [[ $os == "osx" ]]; then
 		dmg=1
 		echo "Warning: tarball installer not supported on Mac, building a dmg installer instead."
-	elif [[ $os == "win" ]]; then
+	elif [[ $os == "win" || $os == "win64" ]]; then
 		inno=$full
 		echo "Warning: tarball installer not supported on Windows, building a Windows installer instead."
 	fi
@@ -179,7 +181,14 @@ if [ ! -d "../pd/nw/nw" ]; then
 		arch="armv7l"
 	fi
 
-	if [[ $os == "win" || $os == "osx" ]]; then
+	# MSYS: Pick the right architecture depending on whether we're
+	# running in the 32 or 64 bit version of the MSYS shell.
+	if [[ $os == "win" ]]; then
+		arch="ia32"
+	elif [[ $os == "win64" ]]; then
+		arch="x64"
+	fi
+	if [[ $os == "win" || $os == "win64" || $os == "osx" ]]; then
 		ext="zip"
 	else
 		ext="tar.gz"
@@ -199,7 +208,11 @@ if [ ! -d "../pd/nw/nw" ]; then
 	fi
 
 	nwjs="nwjs-sdk"
-	nwjs_dirname=${nwjs}-${nwjs_version}-${os}-${arch}
+	if [[ $os == "win64" ]]; then
+		nwjs_dirname=${nwjs}-${nwjs_version}-win-${arch}
+	else
+		nwjs_dirname=${nwjs}-${nwjs_version}-${os}-${arch}
+	fi
 	nwjs_filename=${nwjs_dirname}.${ext}
 	nwjs_url=https://git.purrdata.net/jwilkes/nwjs-binaries/raw/master
 	nwjs_url=${nwjs_url}/$nwjs_filename
@@ -211,7 +224,7 @@ if [ ! -d "../pd/nw/nw" ]; then
 		echo "$nwjs_url"
 		wget -nv $nwjs_url
 	fi
-	if [[ $os == "win" || $os == "osx" ]]; then
+	if [[ $os == "win" || $os == "win64" || $os == "osx" ]]; then
 		unzip $nwjs_filename
 	else
 		tar -xf $nwjs_filename
@@ -230,7 +243,7 @@ if [ ! -d "../pd/nw/nw" ]; then
 fi
 
 # For Windows, fetch the ASIO SDK if we don't have it already
-if [[ $os == "win" ]]; then
+if [[ $os == "win" || $os == "win64" ]]; then
 	if [ ! -d "../pd/lib" ]; then
 		mkdir ../pd/lib
 		wget http://www.steinberg.net/sdk_downloads/asiosdk2.3.zip
@@ -295,6 +308,8 @@ then
 	cd ../pd/src && aclocal && autoconf
 	if [[ $os == "win" ]]; then
 		cd ../../packages/win32_inno
+	elif [[ $os == "win64" ]]; then
+		cd ../../packages/win64_inno
 	elif [[ $os == "osx" ]]; then
 		cd ../../packages/darwin_app
 	else
@@ -328,7 +343,7 @@ then
 		cp -f ../../l2ork_addons/flext/config-lnx-pd-gcc.txt.rpi ../../externals/grill/trunk/flext/buildsys/config-lnx-pd-gcc.txt
 		cat ../../externals/OSCx/src/Makefile | sed -e s/-lpd//g > ../../externals/OSCx/src/Makefile
 	fi
-	if [[ $os == "win" ]]; then
+	if [[ $os == "win" || $os == "win64" ]]; then
 		echo "Making Windows package..."
 		echo `pwd`
 		make install INCREMENTAL=$INCREMENTAL LIGHT=$LIGHT && make package
@@ -344,7 +359,7 @@ then
 	echo "copying pd-l2ork-specific externals..."
 	# patch_name
 	# spectdelay
-	if [[ $os == "win" ]]; then
+	if [[ $os == "win" || $os == "win64" ]]; then
 		cd ../../l2ork_addons
 	elif [[ $os == "osx" ]]; then
 		cd ../../l2ork_addons
@@ -405,7 +420,11 @@ then
 	elif [ $dmg -gt 0 ]; then
 		mv packages/darwin_app/Pd*.dmg .
 	elif [ $inno -gt 0 ]; then
-		mv packages/win32_inno/Output/Purr*.exe .
+		if [[ $os == "win64" ]]; then
+		    mv packages/win64_inno/Output/Purr*.exe .
+		else
+		    mv packages/win32_inno/Output/Purr*.exe .
+		fi
 	fi
 fi
 
