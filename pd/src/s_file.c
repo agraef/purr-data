@@ -14,6 +14,7 @@
 
 #include "m_pd.h"
 #include "s_stuff.h"
+#include "s_utf8.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -35,6 +36,7 @@
 #ifdef MSW
 #include <windows.h>
 #include <tchar.h>
+#include <io.h>
 #endif
 #ifdef _MSC_VER  /* This is only for Microsoft's compiler, not cygwin, e.g. */
 #define snprintf sprintf_s
