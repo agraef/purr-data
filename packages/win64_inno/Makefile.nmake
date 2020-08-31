@@ -1,0 +1,27 @@
+# ----------------------- NT -----------------------
+
+
+.SUFFIXES: .dll
+
+VC="C:\Program Files\Microsoft Visual Studio\Vc98"
+
+PDNTINCLUDE = /I. /I /I..\..\pd\src /I$(VC)\include
+
+PDNTLDIR = $(VC)\lib
+
+
+all: 
+# externals
+	cd ..\..\externals\build\win && nmake
+# flext
+# non-standard paths in T. Grill's config-pd-*.txt files
+# use need to edit config-pd-msvc.txt to get this to work
+#	cd ..\..\externals\grill\flext && nmake /f makefile.pd-msvc
+
+
+clean:
+# externals
+	cd ..\..\externals\build\win && nmake clean
+# flext
+	cd ..\..\externals\grill\flext && nmake /f makefile.pd-msvc clean
+
