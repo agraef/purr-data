@@ -278,7 +278,7 @@ AC_DEFUN([AX_PD_EXTERNAL],
    Darwin)
      AC_MSG_RESULT(darwin)
      ;;
-   MINGW32_NT-*)
+   MINGW*_NT-*)
      ##-- build farm: `uname -s` = MINGW32_NT-5.1
      AC_MSG_RESULT(win32)
      uname_s="MINGW32_NT" ##-- normalize
