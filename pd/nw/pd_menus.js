@@ -25,7 +25,8 @@ function create_menu(gui, type) {
         put_menu,
         winman_menu,
         media_menu,
-        help_menu;
+        help_menu,
+        font_submenu;
 
     // We only maintain a single instance of the recent files submenu which
     // gets updated in pdgui.js via a callback from the engine.
@@ -36,6 +37,41 @@ function create_menu(gui, type) {
         // either case.
         pdgui.populate_recent_files(recent_files_submenu);
     }
+
+    // File sub-entries
+    m.font = {};
+    font_submenu = new gui.Menu();
+
+    font_submenu.append(m.font.s8 = new gui.MenuItem({
+        label: 8,
+        tooltip: 8,
+        type: "checkbox"
+    }));
+    font_submenu.append(m.font.s10 = new gui.MenuItem({
+        label: 10,
+        tooltip: 10,
+        type: "checkbox"
+    }));
+    font_submenu.append(m.font.s12 = new gui.MenuItem({
+        label: 12,
+        tooltip: 12,
+        type: "checkbox"
+    }));
+    font_submenu.append(m.font.s16 = new gui.MenuItem({
+        label: 16,
+        tooltip: 16,
+        type: "checkbox"
+    }));
+    font_submenu.append(m.font.s24 = new gui.MenuItem({
+        label: 24,
+        tooltip: 24,
+        type: "checkbox"
+    }));
+    font_submenu.append(m.font.s36 = new gui.MenuItem({
+        label: 36,
+        tooltip: 36,
+        type: "checkbox"
+    }));
 
     // OSX just spawns a single canvas menu and then enables/disables
     // the various menu items as needed.
@@ -290,10 +326,14 @@ function create_menu(gui, type) {
             modifiers: shortcuts.menu.tidyup.modifiers,
             tooltip: l("menu.tidyup_tt")
         }));
+
         edit_menu.append(m.edit.font = new gui.MenuItem({
             label: l("menu.font"),
-            tooltip: l("menu.font_tt")
+            tooltip: l("menu.font_tt"),
+            submenu: font_submenu
         }));
+
+
         edit_menu.append(m.edit.cordinspector = new gui.MenuItem({
             type: "checkbox",
             label: l("menu.cordinspector"),

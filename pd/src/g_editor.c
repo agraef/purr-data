@@ -2674,6 +2674,14 @@ void canvas_map(t_canvas *x, t_floatarg f);
 //extern t_rtext *glist_findrtext(t_glist *gl, t_text *who);
 //extern void rtext_gettext(t_rtext *x, char **buf, int *bufsize);
 
+// ico@vt.edu 2020-08-24: update initial menu settings
+void canvas_init_menu(t_canvas *x)
+{   
+    //post("g_editor.c canvas_init_menu %d", x->gl_font);
+    // ico@vt.edu 2020-08-24: we now need this to init the menu font size
+    gui_vmess("gui_menu_font_set_initial_size", "xi", x, x->gl_font);
+}
+
 void canvas_vis(t_canvas *x, t_floatarg f)
 {
     //fprintf(stderr,"canvas_vis .x%lx %f\n", (t_int)x, f);
@@ -2757,6 +2765,7 @@ void canvas_vis(t_canvas *x, t_floatarg f)
             /* It looks like this font size call is no longer needed,
                but I'm not sure why it was needed in the first place... */
             //sys_vgui("pdtk_canvas_set_font .x%lx %d\n", x, x->gl_font);
+
             //canvas_reflecttitle(x);
             x->gl_havewindow = 1;
 
@@ -3457,7 +3466,7 @@ static int text_resizing_hotspot(t_canvas *x, t_object *ob, int xpos, int ypos,
 
         /* gop canvases, gop red rectangle, scope, grid, iemguis except [cnv] */
     if ((ob->te_iemgui && ob->ob_pd != my_canvas_class) ||
-        ob->ob_pd == canvas_class ||
+        (ob->ob_pd == canvas_class && ((t_canvas *)ob)->gl_isgraph) ||
         ob->ob_pd->c_name == gensym("Scope~") ||
         ob->ob_pd->c_name == gensym("grid"))
     {
@@ -3805,7 +3814,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                         x->gl_editor->e_xwas = hotspot + IOWIDTH / 2;
                         x->gl_editor->e_ywas = y2 - 2;
                         /* This repetition of args needs to be pruned below */
-                        gui_vmess("gui_canvas_line", "xssiiiiiiiiii",
+                        gui_vmess("gui_canvas_line", "xssiiiiiiiiiii",
                             x,
                             "newcord",
                             (issignal ? "signal" : "control"),
@@ -4309,7 +4318,7 @@ void canvas_drawconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2,
     }
     if (yoff > ymax) yoff = ymax;
     sprintf(tagbuf, "l%lx", (long unsigned int)tag);
-    gui_vmess("gui_canvas_line", "xssiiiiiiiiii",
+    gui_vmess("gui_canvas_line", "xssiiiiiiiiiii",
         x,
         tagbuf,
         (issignal ? "signal" : "control"),
@@ -4322,7 +4331,8 @@ void canvas_drawconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2,
         lx2,
         ly2 - yoff,
         lx2,
-        ly2);
+        ly2,
+        0);
 }
 
 void canvas_updateconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2,
@@ -6005,15 +6015,22 @@ void canvas_menuclose(t_canvas *x, t_floatarg fforce)
 }
 
     /* put up a dialog which may call canvas_font back to do the work */
-static void canvas_menufont(t_canvas *x)
+static void canvas_menufont(t_canvas *x, t_floatarg newsize)
 {
     t_canvas *x2 = canvas_getrootfor(x);
-    gfxstub_deleteforkey(x2);
-    char *gfxstub = gfxstub_new2(&x2->gl_pd, &x2->gl_pd);
-    gui_vmess("gui_font_dialog", "xsi",
-        x2,
-        gfxstub,
-        x2->gl_font);
+    //gfxstub_deleteforkey(x2);
+    //char *gfxstub = gfxstub_new2(&x2->gl_pd, &x2->gl_pd);
+    if (newsize != x2->gl_font)
+    {
+        // additional args copied from dialog_font.html
+        canvas_font(x2, newsize, x2->gl_font, 100.0, 0.0);
+    }
+    /*{
+        gui_vmess("gui_font_dialog", "xi",
+            x2,
+            //gfxstub,
+            x2->gl_font);
+    }*/
 }
 
 static int canvas_find_index1, canvas_find_index2, canvas_find_wholeword;
@@ -7948,7 +7965,10 @@ void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
     //fprintf(stderr,"canvas_editmode %f\n", fyesplease);
 
     /* first check if this is a canvas hosting an array and if so
-       refuse to add any further objects */
+       refuse to add any further objects. we allow edit mode on the
+       subpatches that have only scalars, as that allows for their
+       repositioning/deletion/etc.
+    */
     if (canvas_hasarray(x)) return;
 
     int yesplease = fyesplease;
@@ -8067,11 +8087,11 @@ static void canvas_dofont(t_canvas *x, t_floatarg font, t_floatarg xresize,
 {
     t_gobj *y;
     x->gl_font = font;
-    if (x->gl_isgraph && !canvas_isabstraction(x) &&
+    /*if (x->gl_isgraph && !canvas_isabstraction(x) &&
         (xresize != 1 || yresize != 1) && !glist_istoplevel(x))
     {
         vmess(&x->gl_pd, gensym("menu-open"), "");
-    }
+    }*/
     if (xresize != 1 || yresize != 1)
     {
         for (y = x->gl_list; y; y = y->g_next)
@@ -8335,7 +8355,9 @@ void g_editor_setup(void)
     class_addmethod(canvas_class, (t_method)canvas_print,
         gensym("print"), A_SYMBOL, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_menufont,
-        gensym("menufont"), A_NULL);
+        gensym("menufont"), A_FLOAT, A_NULL);
+    class_addmethod(canvas_class, (t_method)canvas_init_menu,
+        gensym("updatemenu"), A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_font,
         gensym("font"), A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_zoom,

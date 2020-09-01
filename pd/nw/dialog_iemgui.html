@@ -4,8 +4,20 @@
     <link id="page_style" rel="stylesheet"
           type="text/css" href="css/default.css">
   </head>
-  <body class="dialog_body">
+  <body class="dialog_body" style="overflow: hidden;">
     <div class="container">
+      <table id="titlebar">
+        <tr>
+          <td style="width: 100%;">
+            <div id="titlebar_title">Iemgui Properties</div>
+          </td>
+          <td>
+            <div class="titlebar_buttons">
+              <div id="titlebar_close_button" onclick="cancel(false);">&#215</div>
+            </div>
+          </td>
+        </tr>
+      </table>
     <form> 
       <fieldset> 
         <legend data-i18n="iem.prop.heading.size"></legend> 
@@ -24,7 +36,7 @@
           </tr>
           <tr class="selection_size prop hidden">
             <td>
-              <label data-i18n="[title]iem.select_size_tt">
+              <label data-i18n="[title]iem.prop.select_size_tt">
                 <span data-i18n="iem.prop.select_size"></span>
               </label>
             </td>
@@ -86,7 +98,7 @@
                      onchange="update_attr(this);">
             </td>
             <td>
-              <label data-i18n="iem.prop.visible_height">
+              <label data-i18n="[title]iem.prop.visible_height_tt">
                 <span data-i18n="iem.prop.visible_height"></span>
               </label>
             </td>
@@ -198,7 +210,8 @@
             </td>
             <td data-i18n="[title]iem.prop.send_tt">
               <input type="text" name="send_symbol"
-                     onchange="update_attr(this, true);">
+                     onchange="update_attr(this, true);"
+                     style="width: 12em;">
             </td>
             <td>
           <tr class="receive_symbol prop hidden">
@@ -209,7 +222,8 @@
             </td>
             <td data-i18n="[title]iem.prop.receive_tt">
               <input type="text" name="receive_symbol"
-                     onchange="update_attr(this, true);">
+                     onchange="update_attr(this, true);"
+                     style="width: 12em;">
             </td>
             <td>
           </tr>
@@ -228,7 +242,8 @@
             </td>
             <td data-i18n="[title]iem.prop.label_tt">
               <input type="text" name="label"
-                     onchange="update_attr(this, true);">
+                     onchange="update_attr(this, true);"
+                     style="width: 131px;">
             </td>
             <td>
               <label data-i18n="[title]iem.prop.xoffset_tt">
@@ -577,14 +592,21 @@ function register_window_id(gfxstub, attr_object) {
             new_attrs[attr] = old_attrs[attr];
         }
     }
-    console.log("attr object is " + attr_object.toString());
+    console.log("attr object is " + attr_object.toString() +
+        " and its type is " + attr_object.type);
     add_events(gfxstub);
+    pdgui.gui_check_for_dialog_appearance_inconsistencies(gfxstub);
 
     // Special case for [moonlib/mknob] which leverages the iemgui dialog--
     // change the label for "height" to "steps"
     if (attr_object.type === "mknob") {
         change_width_and_height_labels();
     }
+
+    // ico@vt.edu TODO: translate the window title
+    // for the timebeing we just give it english version
+    document.getElementById("titlebar_title").textContent = "[" + 
+        attr_object.type + "] Iemgui Properties";
 
     translate_form();
     populate_form(attr_object);

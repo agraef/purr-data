@@ -1628,6 +1628,8 @@ function gui_canvas_cursor(cid, pd_event_type) {
 function canvas_sendkey(cid, state, evt, char_code, repeat) {
     var shift = evt.shiftKey ? 1 : 0,
         repeat_number = repeat ? 1 : 0;
+    //post("canvas_sendkey state=" + state + " evt=" + evt +
+    //	" char_code=<" + char_code + "> repeat=" + repeat);
     pdsend(cid, "key", state, char_code, shift, 1, repeat_number);
 }
 
@@ -1732,6 +1734,8 @@ function gui_canvas_new(cid, width, height, geometry, zoom, editmode, name, dir,
     last_loaded = cid;
     // Not sure why resize and topmost are here-- but we'll pass them on for
     // the time being...
+    // ico@vt.edu 2020-08-24: this is because in 1.x we can change these window
+    // properties via scripting. We should add this to 2.x soon...
     create_window(cid, "pd_canvas", width, height,
         xpos, ypos, {
             menu_flag: menu_flag,
@@ -2466,7 +2470,9 @@ function gui_atom_redraw_border(cid, tag, type, width, height) {
 }
 
 // draw a patch cord
-function gui_canvas_line(cid,tag,type,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10) {
+// ico@vt.edu: p11 added to provide different color for when the cord is
+// being created vs when it is being finished
+function gui_canvas_line(cid,tag,type,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11) {
     gui(cid).get_elem("patchsvg")
     .append(function(frag) {
         var svg = get_item(cid, "patchsvg"),
@@ -2484,8 +2490,8 @@ function gui_canvas_line(cid,tag,type,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10) {
             d: d_array.join(" "),
             fill: "none",
             //"shape-rendering": "optimizeSpeed",
-            id: tag,
-            "class": "cord " + type
+            id: tag, 
+            "class": "cord " + type + (p11 == 1 ? " new" : "")
         });
         frag.appendChild(path);
         return frag;
@@ -3010,6 +3016,8 @@ function gui_numbox_draw_text(cid,tag,text,font_size,color,xpos,ypos,basex,basey
     // below. But it works for most font sizes.
     gui(cid).get_gobj(tag)
     .append(function(frag, w) {
+    	//post("ypos=" + ypos + " int=" + Math.floor(ypos));
+    	//ypos = Math.floor(ypos);
         var svg_text = create_item(cid, "text", {
             transform: "translate(" +
                         (xpos - basex) + "," +
@@ -3679,7 +3687,7 @@ function gui_scalar_new(cid, tag, isselected, t1, t2, t3, t4, t5, t6,
                     //matrix = [t1,t2,t3,t4+1,t5+0.5,t6+0.5];
                     matrix = 0;
                     transform_string = "translate(" + (t5+(t1 < 1 ? 0.5 : 1.5)) +
-                        "," + (t6+1) + ") scale(" + t1 + "," + t4 + ")";
+                        "," + (t6+1.5) + ") scale(" + t1 + "," + t4 + ")";
                     //post("transform_string = " + transform_string);
                     break;
                 default:
@@ -4083,9 +4091,11 @@ function img_size_setter(cid, svg_image_tag, type, data, tk_anchor) {
     img.onload = function() {
         w = this.width,
         h = this.height;
+        // ico@vt.edu here we subtract one from the svg interpretation
+        // of the anchor to keep it 1.x and K12 mode compatible
         configure_item(get_item(cid, svg_image_tag), {
-            width: w,
-            height: h,
+            width: w + 1,
+            height: h + 1,
             x: tk_anchor === "center" ? 0 - w/2 : 0,
             y: tk_anchor === "center" ? 0 - h/2 : 0
         });
@@ -4233,31 +4243,38 @@ function gui_image_size_callback(cid, key, callback) {
         ";base64," + pd_cache.get(key).data;
 }
 
-function gui_image_draw_border(cid, tag, x, y, w, h) {
-    gui(cid).get_gobj(tag)
-    .append(function(frag) {
-        var b = create_item(cid, "path", {
-            "stroke-width": "1",
-            fill: "none",
-            d: ["m", x, y, w, 0,
-                "m", 0, 0, 0, h,
-                "m", 0, 0, -w, 0,
-                "m", 0, 0, 0, -h
-               ].join(" "),
-            visibility: "hidden",
-            class: "border"
+function gui_image_toggle_border(cid, tag, x, y, w, h, onoff) {
+    if (onoff == 0) {
+        gui(cid).get_gobj(tag)
+        .q("path", function(border) {
+            border.parentNode.removeChild(border);
         });
-        frag.appendChild(b);
-        return frag;
-    });
+    } else {
+        gui(cid).get_gobj(tag)
+        .append(function(frag) {
+            var b = create_item(cid, "path", {
+                "stroke-width": "1",
+                fill: "none",
+                d: ["m", x, y, w, 0,
+                    "m", 0, 0, 0, h,
+                    "m", 0, 0, -w, 0,
+                    "m", 0, 0, 0, -h
+                   ].join(" "),
+                visibility: "visible",
+                class: "border"
+            });
+            frag.appendChild(b);
+            return frag;
+        });
+    }
 }
 
-function gui_image_toggle_border(cid, tag, state) {
+/*function gui_image_toggle_border(cid, tag, state) {
     gui(cid).get_gobj(tag)
     .q(".border", {
         visibility: state === 0 ? "hidden" : "visible"
     });
-}
+}*/
 
 // Switch the data for an existing svg image
 function gui_image_configure(cid, tag, image_key, tk_anchor) {
@@ -5410,7 +5427,7 @@ function attr_array_to_object(attr_array) {
 }
 
 function gui_gatom_dialog(did, attr_array) {
-    dialogwin[did] = create_window(did, "gatom", 265, 300,
+    dialogwin[did] = create_window(did, "gatom", 259, 278-5,
         popup_coords[2], popup_coords[3],
         attr_array_to_object(attr_array));
 }
@@ -5426,10 +5443,14 @@ function gui_gatom_activate(cid, tag, state) {
 }
 
 function gui_dropdown_dialog(did, attr_array) {
-    // Just reuse the "gatom" dialog
-    dialogwin[did] = create_window(did, "gatom", 265, 300,
+    // Just reuse the "gatom" dialog (this is not true anymore, see below)
+    // ico@vt.edu 2020-08-21: made this into a separate dialog due to inability to easily retitle
+    // the window
+    dialogwin[did] = create_window(did, "dropdown", 222, 268-5,
         popup_coords[2], popup_coords[3],
         attr_array_to_object(attr_array));
+    // ico@vt.edu 2020-08-21: the following does not work because the window is not created yet?
+    //dialogwin[did].window.document.getElementById("titlebar_title").innerHTML = "dropdown properties";
 }
 
 function dropdown_populate(w, label_array, current_index) {
@@ -5522,8 +5543,12 @@ function gui_iemgui_dialog(did, attr_array) {
     //for (var i = 0; i < attr_array.length; i++) {
     //    attr_array[i] = '"' + attr_array[i] + '"';
     //}
-    create_window(did, "iemgui", 265, 450,
-        popup_coords[2], popup_coords[3],
+    // ico@vt.edu: updated window size to match actual, thereby minimizing the flicker
+    // We are subtracting 25 for the menu
+    // ico@vt.edu: since adding frameless window, we use top 20px for draggable titlebar,
+    // so now we subtract only 5 (25-20)
+    create_window(did, "iemgui", 298, 414-5,
+        popup_coords[2] + 10, popup_coords[3] + 60,
         attr_array_to_object(attr_array));
 }
 
@@ -5544,6 +5569,28 @@ function gui_font_dialog_change_size(did, font_size) {
     }
 }
 
+function gui_menu_font_change_size(canvas, newsize) {
+    pdsend(canvas, "menufont", newsize);
+    	// ico@vt.edu 2020-08-24: changed to use submenu
+    	// this was the following
+        /*+document.querySelector('input[name="font_size"]:checked').value,
+        current_size,
+        100,
+        0 // "$noundo" from pd.tk-- not sure what it does*/
+}
+
+exports.gui_menu_font_change_size = gui_menu_font_change_size;
+
+function gui_menu_font_set_initial_size(cid, size) {
+	//post("gui_menu_font_set_initial_size " + cid + " " + size);
+	gui(cid).get_nw_window(function(nw_win) {
+		if (cid !== "nobody") {
+    		nw_win.window.init_menu_font_size(size);
+    		//post("this should work");
+    	}
+    });
+}
+
 function gui_array_new(did, count) {
     var attr_array = [{
         array_gfxstub: did,
@@ -5554,11 +5601,13 @@ function gui_array_new(did, count) {
         array_outline: "black",
         array_in_existing_graph: 0
     }];
-    dialogwin[did] = create_window(did, "canvas", 265, 340, 20, 20,
+    dialogwin[did] = create_window(did, "canvas",
+        240 + (5 * nw_os_is_linux) - (30 * nw_os_is_osx), 268-25, 20, 20,
         attr_array);
 }
 
 function gui_canvas_dialog(did, attr_arrays) {
+	//post("gui_canvas_dialog");
     var i, j, inner_array, prop;
     // Convert array of arrays to an array of objects
     for (i = 0; i < attr_arrays.length; i++) {
@@ -5569,13 +5618,26 @@ function gui_canvas_dialog(did, attr_arrays) {
             }
         }
     }
-    dialogwin[did] = create_window(did, "canvas", 300, 100,
+    var has_array = (attr_arrays.length > 1 ? 1 : 0);
+    /*
+    post("array.length=" + attr_arrays.length + " has_array=" + has_array +" width=" +
+    	(230 - (8 * has_array)) + " height=" +
+    	(attr_arrays.length > 1 ? 494-25+(attr_arrays.length > 2 ? 38 : 0) : 392-25));
+    */
+    dialogwin[did] = create_window(did, "canvas",
+        // ico@vt.edu: property dialog size is larger when one has
+        // arrays inside the canvas.
+        // 1 for regular canvas and 2 for a canvas with 1 array,
+        // 3 for canvas with 2 arrays, etc.
+        // We also substract here 5 for the smaller top bar...
+        238 + (8 * has_array),
+        (attr_arrays.length > 1 ? 535-25 : 392-25),
         popup_coords[2], popup_coords[3],
         attr_arrays);
 }
 
 function gui_data_dialog(did, data_string) {
-    dialogwin[did] = create_window(did, "data", 250, 300,
+    dialogwin[did] = create_window(did, "data", 195, 323 + (22 * nw_os_is_osx),
         popup_coords[2], popup_coords[3],
         data_string);
 }
@@ -5631,14 +5693,16 @@ function gui_remove_gfxstub(did) {
     }
 }
 
-function gui_font_dialog(cid, gfxstub, font_size) {
-    var attrs = { canvas: cid, font_size: font_size };
-    dialogwin[gfxstub] = create_window(gfxstub, "font", 265, 200, 0, 0,
-        attrs);
+function gui_font_dialog(cid, font_size) {
+    //var attrs = { canvas: cid, font_size: font_size };
+    //dialogwin[gfxstub] = create_window(gfxstub, "font", 136, 187, 0, 0,
+    //    attrs);
+    // ico@vt.edu: 2020-08-24: we don't need this anymore since everything
+    // is now inside the menu
 }
 
 function gui_external_dialog(did, external_name, attr_array) {
-    create_window(did, "external", 265, 450,
+    create_window(did, "external", 202, 323 + (22 * nw_os_is_osx),
         popup_coords[2], popup_coords[3],
         {
             name: external_name,
@@ -5656,7 +5720,7 @@ function gui_pd_dsp(state) {
 
 function open_prefs() {
     if (!dialogwin["prefs"]) {
-        create_window("prefs", "prefs", 370, 470, 0, 0, null);
+        create_window("prefs", "prefs", 486, 532, 0, 0, null);
     } else {
         dialog_raise("prefs");
     }
@@ -5672,7 +5736,7 @@ function open_search() {
     }
 }
 
-exports.open_search= open_search;
+exports.open_search = open_search;
 
 // This is the same for all windows (initialization is in pd_menus.js).
 var recent_files_submenu = null;
@@ -5881,8 +5945,12 @@ exports.get_style_by_selector = get_style_by_selector;
 // the user clicks a box in edit mode. One set of points for
 // the "head", or main box, and the other for the "tail", or
 // message flag at the right.
-function generate_msg_box_bg_data(type, stroke) {
-   return 'url(\"data:image/svg+xml;utf8,' +
+// ico@vt.edu 2020-08-31: if you thought the original hack was
+// ugly, wait until you see this new version. Hold onto your 
+// binary barf bags...
+function generate_msg_box_bg_data(type, stroke, height) {
+    //post("height="+height);
+    var header = 'url(\"data:image/svg+xml;utf8,' +
             '<svg ' +
               "xmlns:svg='http://www.w3.org/2000/svg' " +
               "xmlns='http://www.w3.org/2000/svg' " +
@@ -5890,20 +5958,43 @@ function generate_msg_box_bg_data(type, stroke) {
               "version='1.0' " +
               "viewBox='0 0 10 10' " +
               "preserveAspectRatio='none'" +
-            ">" +
-              "<polyline vector-effect='non-scaling-stroke' " +
+            ">";
+
+    var line_header = "<polyline vector-effect='non-scaling-stroke' " +
                 "id='bubbles' " +
                 "fill='none' " +
                 "stroke=' " +
                   stroke + // Here's our stroke color
-                "' " +
-                "stroke-width='1' " +
-                (type === "head" ?
-                    "points='10 0 0 0 0 10 10 10' " : // box
-                    "points='0 0 10 0 0 2 0 8 10 10 0 10' ") + // flag
-              "/>" +
-            "</svg>" +
+                "' ";
+
+    var line_ender = "</svg>" +
           '")';
+
+    if (type === "head")
+    {
+        return header + line_header + "stroke-width='2' points='10 0 0 0 0 10 10 10' />" + line_ender;
+    }
+    else {
+        // testing scaling of the flags with the increasing number of lines, top_flag, then bottom_flag
+        // 1 line:  2.5   7.5
+        // 2 lines: 1.5   8.5
+        // 3 lines: 1     9
+        // 4 lines: 0.75  9.25
+        var top_flag  = 2.5;
+        var decrement = 1;
+        while(height > 1)
+        {
+            top_flag -= decrement;
+            decrement /= 2;
+            height--;
+        }
+        var bottom_flag = 10 - top_flag;
+        return header +
+            line_header + "stroke-width='2' points='0 0 10 0' />" +
+            line_header + "stroke-width='2' points='0 10 10 10' />" +
+            line_header + "stroke-width='1' points='10 0 1 " + top_flag + " 1 " + bottom_flag + " 10 10' />" +
+            line_ender;
+    }
 }
 
 // Big problem here-- CSS fails miserably at something as simple as the
@@ -5918,12 +6009,47 @@ function generate_msg_box_bg_data(type, stroke) {
 // more and more apparent.
 // Anyhow, this enormous workaround makes it possible to just specify the
 // edit box color in CSS for the presets.
-function shove_svg_background_data_into_css(w) {
+function shove_svg_background_data_into_css(w, height) {
     var head_style = get_style_by_selector(w, "#new_object_textentry.msg"),
         tail_style = get_style_by_selector(w, "p.msg::after"),
         stroke = head_style.outlineColor;
-    head_style.backgroundImage = generate_msg_box_bg_data("head", stroke);
-    tail_style.backgroundImage = generate_msg_box_bg_data("tail", stroke);
+    head_style.backgroundImage = generate_msg_box_bg_data("head", stroke, height);
+    tail_style.backgroundImage = generate_msg_box_bg_data("tail", stroke, height);
+}
+
+function textarea_line_height_kludge(font_size) {
+	switch(font_size) {
+		case 8: return "133%";
+		case 10: return "133%";
+		case 12: return "140%";
+		case 16: return "120%";
+		case 24: return "128%";
+		case 36: return "122%";
+	}
+}
+
+function textarea_y_offset_kludge(font_size) {
+	switch(font_size) {
+		case 8: return 1.5;
+		case 10: return 0.5;
+		case 12: return 1.5;
+		case 16: return 1.5;
+		case 24: return 1.5;
+		case 36: return 1.5;
+	}
+}
+
+function textarea_msg_kludge(zoom) {
+    switch(zoom) {
+        case 0: return -1;
+        case 1: return -0.5;
+        case 2: return -0.5;
+        case 3: return -0.5;
+        case 4: return -0.5;
+        case 5: return -0.5;
+        case 6: return -0.5;
+        case 7: return -0.5;
+    }
 }
 
 function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
@@ -5954,8 +6080,6 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
         svg_view = patchwin[cid].window.document.getElementById("patchsvg")
             .viewBox.baseVal;
         p.classList.add(type);
-        // ico@vt.edu: is there a better way to monitor vars inside nw?
-        // p.classList.add("zoom=" + zoom);
         p.contentEditable = "true";
 
         if (is_gop == 0) {
@@ -5976,27 +6100,39 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
             */   
         }
         
-        p.style.setProperty("left", (x - svg_view.x) + "px");
-        p.style.setProperty("top", (y - svg_view.y) + "px");
+        p.style.setProperty("left", (x - svg_view.x - 0.5) + "px");
+        p.style.setProperty("top", (y - svg_view.y + textarea_y_offset_kludge(font_size)) + "px");
         p.style.setProperty("font-size",
             pd_fontsize_to_gui_fontsize(font_size) + "px");
         p.style.setProperty("line-height",
-            pd_fontsize_to_gui_fontsize(font_size) + 1 + "px");
+        	textarea_line_height_kludge(font_size));
+            //pd_fontsize_to_gui_fontsize(font_size) + 1 + "px");
         p.style.setProperty("transform", "translate(0px, " + 
             (zoom > 0 ? 0.5 : 0) + "px)");
         p.style.setProperty("max-width",
             width_spec > 0 ? width_spec + "ch" : "60ch");
+        //p.style.setProperty("width", -width_spec - 2 + "px");
+        p.style.setProperty("-webkit-padding-after", "1px");
         p.style.setProperty("min-width",
             width_spec == 0 ? "3ch" :
-                (is_gop == 1 ? width_spec + "px" :
-                    (width_spec < 0 ? (-width_spec) + "px" : width_spec + "ch")));
+                (is_gop == 1 ? width_spec - 3 + "px" :
+                    (width_spec < 0 ? (-width_spec) - 2 + "px" : width_spec + "ch")));
 
         if (is_gop == 1) {
-            p.style.setProperty("min-height", height_spec + "px");
+            p.style.setProperty("min-height", height_spec - 5 + "px");
         }
         // set backgroundimage for message box
         if (type === "msg") {
-            shove_svg_background_data_into_css(patchwin[cid].window);
+            // ico@vt.edu: 2020-08-31: message boxes are uniquely borked
+            // so, we do our best to address that here
+            p.style.setProperty("-webkit-padding-before", "2px");
+            p.style.setProperty("-webkit-padding-after", "3px");
+            p.style.setProperty("transform", "translate(0px, " +
+                textarea_msg_kludge(zoom) + "px)");
+            //post("line-height="+ parseInt(p.style.lineHeight) / 100 * font_size);
+            shove_svg_background_data_into_css(patchwin[cid].window,
+                parseInt(get_gobj(cid, tag).getBoundingClientRect().height /
+                    (parseInt(p.style.lineHeight) / 100 * font_size)));
         }
         // remove leading/trailing whitespace
         text = text.trim();
@@ -6005,6 +6141,13 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
         patchwin[cid].window.document.body.appendChild(p);
         p.focus();
         select_text(cid, p, sel_start, sel_end);
+        if (font_size === 36) {
+            if (is_gop) {
+                p.style.setProperty("padding", "2px 0px 2px 2.5px");
+            } else {
+                p.style.setProperty("padding", "2px 0px 2px 1.5px");
+            }
+        }
         if (state === 1) {
             patchwin[cid].window.canvas_events.text();
         } else {
@@ -6480,8 +6623,20 @@ exports.dialog_bindings = function(did) {
 exports.resize_window = function(did) {
     var w = dialogwin[did].window.document.body.scrollWidth,
         h = dialogwin[did].window.document.body.scrollHeight;
-    dialogwin[did].width = w;
-    dialogwin[did].height = h;
+    // ico@vt.edu: the following is a change needed for the nw.js 0.47
+    // for the dialog window to be properly resized
+    //dialogwin[did].width = w;
+    //dialogwin[did].height = h;
+    //dialogwin[did].window.document.body.titlebar_close_button.style.setProperty
+    //    ("font-size", (process.platform === "win32" ? "21px" : "15px"));
+    /*post(did + " body: w=" + dialogwin[did].window.document.body.clientWidth +
+        " h=" + dialogwin[did].window.document.body.clientHeight + " scroll: w=" +
+        w + " h=" + h);*/
+    dialogwin[did].resizeTo(w,h);
+    //ico@vt.edu: comment the following line when working on dialog sizes...
+    dialogwin[did].setResizable(false);
+    //post("dialog set always on top");
+    dialogwin[did].setAlwaysOnTop(true);
 }
 
 // External GUI classes
@@ -6572,3 +6727,21 @@ function gui_update_scrollbars(cid) {
 }
 
 exports.gui_update_scrollbars = gui_update_scrollbars;
+
+// ico@vt.edu 2020-08-29: fine-tune appearance of various
+// css elements because, consistency in HTML font rendering
+// across different OSs is a joke
+function gui_check_for_dialog_appearance_inconsistencies(id)
+{
+    if (nw_os_is_osx)
+        gui_osx_dialog_appearance(id);
+}
+
+exports.gui_check_for_dialog_appearance_inconsistencies = gui_check_for_dialog_appearance_inconsistencies;
+
+function gui_osx_dialog_appearance(id)
+{
+    var close_button = dialogwin[id].window.document.getElementById("titlebar_close_button");
+    close_button.style.setProperty("line-height", "14px");
+    close_button.style.setProperty("border-radius", "10px");
+}

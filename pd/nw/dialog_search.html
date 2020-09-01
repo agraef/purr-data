@@ -383,14 +383,22 @@ function find_bar_shortcut(evt) {
     return (evt.keyCode === 70 && evt[modifier]) // <ctrl-f>
 }
 
+function window_close_shortcut(evt) {
+    var osx = process.platform === "darwin",
+    modifier = osx ? "metaKey" : "ctrlKey";
+    return (evt.keyCode === 87 && evt[modifier]) // <ctrl-w>
+}
+
 function toggle_find_bar() {
     // this is copied from index.js m.edit.find...
     var find_div = document.getElementById("console_find"),
         find_bar_text = document.getElementById("console_find_text"),
         state = find_div.style.getPropertyValue("display");
     if (state !== "inline") {
-        find_div.style.setProperty("height", "1.4em");
+        find_div.style.setProperty("height", "1.2em");
         find_div.style.setProperty("display", "inline");
+        find_div.style.setProperty("padding-left", "3px");
+        find_div.style.setProperty("padding-bottom", "9px");
         window.setTimeout(function() {
                 find_bar_text.focus();
                 find_bar_text.select();
@@ -419,6 +427,10 @@ function add_events() {
             if (find_bar_shortcut(evt)) {
                 toggle_find_bar();
                 evt.stopPropagation();
+            } else if (window_close_shortcut(evt)) {
+                evt.stopPropagation();
+                pdgui.remove_dialogwin("search");
+                nw.Window.get().close(true);
             } else {
                 evt.stopPropagation();
                 return console_find_keydown(this, evt);
@@ -448,10 +460,15 @@ function add_events() {
                    evt.keyCode === 10 || evt.keyCode === 13) {
         } else if (evt.target !== input_elem) {
             input_elem.focus();
+        } else if (window_close_shortcut(evt)) {
+                evt.stopPropagation();
+                pdgui.remove_dialogwin("search");
+                nw.Window.get().close(true);
         } else {
             // If we want to trigger a search on each keystroke we can do it
             // here.
         }
+
     });
     document.getElementById("search_text").addEventListener("search",
         function() {
@@ -571,11 +588,12 @@ function doc_search() {
                       defaultValue="Search in Console"
                       style="width:10em;"/>
         </label>
-        <label>Highlight All
+        <label style="margin-left: 7px;">Highlight All
                <input type="checkbox"
                       id="console_find_highlight"
                       name="console_find_highlight"
-                      onchange="console_find_highlight_all(this);"/>
+                      onchange="console_find_highlight_all(this);"
+                      style="left: -3px;"/>
         </label>
       </div>
     </div>

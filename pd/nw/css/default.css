@@ -27,6 +27,17 @@ body {
     background: transparent;
 }
 
+#hscroll:hover, #vscroll:hover {
+    background-color: rgba(0, 0, 0, 0.39) !important;
+}
+#hscroll, #vscroll {
+  background-color: rgba(0, 0, 0, 0.267);
+}
+
+#hscroll, #vscroll {
+    cursor: -webkit-grabbing;
+}
+
 .noselect {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -279,7 +290,7 @@ mark.console_find_highlighted {
     min-width: 3ch;
     position: absolute;
     display: table-cell;
-    padding: 3px 1.5px 3px 1.5px;
+    padding: 1px 0px 3px 1.5px;
     margin-left: 1px;
     /* box-shadow: inset 1px 0px 0px 1px #000; */
     color: black; /* text color */
@@ -513,7 +524,7 @@ text {
     stroke: #e87216;
     fill: #e87216;
     stroke-width: 5;
-    -webkit-animation: fizzle 0.2s ease-in 1;
+    -webkit-animation: fizzle 0.1s ease-in 1;
 }
 
 .xlet_disabled {
@@ -525,8 +536,8 @@ text {
     width: 100%;
     height: 1em;
     padding-top: 2px;
-    padding-left: 2px;
-    padding-bottom: 8px;
+    padding-left: 3px;
+    padding-bottom: 9px;
     background: silver;
     position: fixed;
     bottom: 0;
@@ -537,8 +548,8 @@ text {
     width: 100%;
     height: 1em;
     padding-top: 2px;
-    padding-left: 2px;
-    padding-bottom: 8px;
+    padding-left: 3px;
+    padding-bottom: 9px;
     background: silver;
     position: fixed;
     bottom: 0;
@@ -554,7 +565,7 @@ text {
     /*box-shadow: 7px 7px 5px grey;*/
     left: 50%;
     top: 50%;
-    width: 40%;
+    width: 70%;
     transform: translate(-50%, -50%);
 }
 
@@ -575,7 +586,7 @@ dialog::backdrop {
 .dialog_body {
     font-family: "DejaVu Sans", sans-serif;
     font-size: 10pt;
-    background-color: #f3f3f3;
+    background: rgba(243, 243, 243, 0.941); /* #f3f3f3f0; */
 }
 
 .submit_buttons {
@@ -583,9 +594,14 @@ dialog::backdrop {
     padding: 8px;
 }
 
+form {
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
 fieldset {
 /*    font-family:Georgia; */
-    background-color:#f3f3f3;
+    background-color: rgba(243, 243, 243, 0.627); /* #f3f3f3a0; */
     border-radius:3px;
     border:1px solid #ddd;
     margin-left:auto;
@@ -651,7 +667,7 @@ input[name="receive_symbol"] {
 }
 
 input[name="label"] {
-    width: 8em;
+    width: 9em;
 }
 
 input[name="font_size"] {
@@ -660,6 +676,18 @@ input[name="font_size"] {
 
 input[name="startup_flags"] {
     width: 16em;
+}
+
+/* All radios */
+input[type="radio"] {
+    position: relative;
+    top: 2px;
+}
+
+/* All checkboxes */
+input[type=checkbox] {
+    position: relative;
+    top: 2px;
 }
 
 /* Canvas dialog */
@@ -731,13 +759,13 @@ div.y2 {
    without becoming an order of magnitude more complex, do feel free... */
 .prefs_tab_group {
     display: table;
-    width: 90%;
+    width: 96%;
 }
 
 /* Configure the radio buttons to hide off-screen */
 .prefs_tab {
     position: absolute;
-    left:-100px;
+    left:-500px;
     top:-100px;
 }
 
@@ -792,6 +820,13 @@ div.y2 {
     height: 78vh;
 }
 
+#midi_in1, #midi_in2, #midi_in3, #midi_in4, #midi_in5, 
+    #midi_in6, #midi_in7, #midi_in8, #midi_in9, #midi_in10,
+    #midi_out1, #midi_out2, #midi_out3, #midi_out4, #midi_out5, 
+    #midi_out6, #midi_out7, #midi_out8, #midi_out9, #midi_out10 {
+    width: 205px;
+}
+
 .tab_settings {
     padding-top: 8px;
 }
@@ -809,4 +844,69 @@ input[name="rate"] {
     margin-top: -10px;
     margin-bottom: -10px;
     padding: 30px;
+}
+
+/* used for the custom dialog titlebar */
+#titlebar {
+    width: 100%;
+    height: 20px;
+    margin-bottom: 4px;
+    -webkit-app-region: drag;
+    background-color: gray;
+    cursor: grab;
+}
+
+#titlebar_buttons {
+    top: 2px;
+    right: 2px;
+    text-align: right;
+    background-color: gray;
+}
+
+#titlebar_title {
+    color: white;
+    position: relative;
+    left: 1px;
+    top: 1px;
+    background-color: gray;
+}
+
+#titlebar_close_button {
+    width: 16px;
+    height: 16px;
+    background: #a2a2a2;
+    -webkit-app-region: no-drag;
+    color: #FFF;
+    font-size: 18px;
+    text-align: center;
+    line-height: 16px;
+    cursor: default;
+}
+
+/*#titlebar_close_button:after {
+    position: absolute;
+    right: 6px;
+    top: 1px;
+    content: "\d7";
+    font-size: 20px;
+    color: #FFF;
+}*/
+
+#titlebar_close_button:hover {
+    background: #b2b2b2;
+}
+
+#titlebar_close_button:active {
+    background: #e2e2e2;
+}
+
+input[type="color"] {
+    margin-bottom: 2px;
+}
+
+.foreground_color span, 
+.background_color span,
+.label_color span {
+    position: relative;
+    bottom: 2px;
 }

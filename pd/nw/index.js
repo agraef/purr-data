@@ -386,16 +386,29 @@ function nw_close_window(window) {
 var null_pos = pdgui.check_nw_version("0.46") ? "null" : "center";
 
 function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
-        // todo: make a separate way to format the title for OSX
+    // todo: make a separate way to format the title for OSX
     var my_title;
+    var win_frame = true;
+    var win_transparent = false;
     if (type === "pd_canvas") {
         my_title = pdgui.format_window_title(
             attr_array.name,
             attr_array.dirty,
             attr_array.args,
             attr_array.dir);
+
+	    // ico@vt.edu 2020-08-13:
+	    // why does Windows have different innerWidth and innerHeight from other OSs?
+	    // See pdgui.js' canvas_params for the explanation...
+	    // ico@vt.edu 2020-08-21: this should only apply to patch windows
+	    width -= 16 * pdgui.nw_os_is_windows;
+	    height -= 8 * pdgui.nw_os_is_windows;
     } else {
         my_title = type;
+        if (type !== "search" && type !== "text") {
+            win_frame = false;
+            win_transparent = true;
+        }
     }
     var my_file =
         type === "pd_canvas" ? "pd_canvas.html" : "dialog_" + type + ".html";
@@ -417,12 +430,24 @@ function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
 
     //pdgui.post("nw_create_window w=" + width + " h=" + height);
 
-    // ico@vt.edu 2020-08-13:
-    // why does Windows have different innerWidth and innerHeight from other OSs?
-    // See pdgui.js' canvas_params for the explanation...
-    width -= 16 * pdgui.nw_os_is_windows;
-    height -= 8 * pdgui.nw_os_is_windows;
+    /*
+    // ico@vt.edu: instantiate default options for the window behavior
+    // the first two vars (transparent is currently disabled) are options
+    // to be passed to the window at creation time, while second two are
+    // activated via a function call after the window has been created
+    var frame_val = true,
+        //transparent_val = true,
+        resize_val = true,
+        topmost_val = false,
+        menu_val = true;
 
+    if (frame_option !== undefined) {
+        pdgui.post("window_options have content");
+        process_window_options(window_options,
+            frame_val, transparent_val,
+            resize_val, topmost_val);
+        // TODO: do stuff here
+    }*/
     gui.Window.open(my_file, {
         title: my_title,
         // ico@vt.edu: position in 0.46.2 overrides x and y below
@@ -436,7 +461,9 @@ function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
         // ico@vt.edu: on 0.46.2 this is now 25, go figure...
         height: height + (pdgui.nw_menu_offset * !pdgui.nw_os_is_osx),
         x: xpos,
-        y: ypos
+        y: ypos,
+        frame: win_frame,
+        transparent: win_transparent
     }, function (new_win) {
         if (type === "pd_canvas") {
             pdgui.set_patchwin(cid, new_win);

@@ -148,7 +148,7 @@ void word_restore(t_word *wp, t_template *template,
                 argv++, argc--;
             }
             else f = 0;
-            wp->w_float = f; 
+            wp->w_float = f;
         }
         else if (type == DT_SYMBOL)
         {
