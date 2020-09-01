@@ -6119,7 +6119,7 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
                     (width_spec < 0 ? (-width_spec) - 2 + "px" : width_spec + "ch")));
 
         if (is_gop == 1) {
-            p.style.setProperty("min-height", height_spec - 5 + "px");
+            p.style.setProperty("min-height", height_spec - 4 + "px");
         }
         // set backgroundimage for message box
         if (type === "msg") {
