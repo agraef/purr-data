@@ -66,7 +66,12 @@ ARCH_CFLAGS = -DPD -DPD_INTERNAL -DMSW -DPA_USE_ASIO -DPA_USE_WMME \
 
 CFLAGS += $(ARCH_CFLAGS) $(WARN_CFLAGS) $(OPT_CFLAGS) $(MORECFLAGS)
 
+ifeq ($(filter -g -ggdb, $(CFLAGS)),)
 STRIP = strip --strip-unneeded -R .note -R .comment
+else
+# don't strip, we need the debugging symbols
+STRIP = true
+endif
 
 # the sources
 
