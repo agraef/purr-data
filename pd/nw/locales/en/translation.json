@@ -144,6 +144,8 @@
     "reselect_tt": "Restore the previous selection",
     "find": "Find",
     "find_tt": "Find text in the console output",
+    "encapsulate": "Encapsulate",
+    "encapsulate_tt": "Encapsulate automatically the current selection into a subpatch",
     "tidyup": "Tidy Up",
     "tidyup_tt": "Line up the selected objects in straight rows and columns",
     "clear_console": "Clear Console",

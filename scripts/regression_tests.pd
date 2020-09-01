@@ -1,7 +1,7 @@
-#N canvas 245 72 750 572 12;
+#N canvas -9 -9 771 392 12;
 #X obj 465 281 r \$0-result;
-#X obj 212 239 bng 15 250 50 0 empty empty Run_all 17 7 0 10 -262144
--1 -1;
+#X obj 212 239 bng 15 250 50 0 empty empty Run_all 17 7 0 10 #fcfcfc
+#000000 #000000;
 #X obj 56 25 r init;
 #X obj 345 191 route dollarzero;
 #X obj 198 281 rtest msg_dollarzero;
@@ -65,6 +65,7 @@ is handy for some binbuf tests.;
 #X obj 198 2361 rtest inlet~_no_fwd;
 #X obj 198 2416 rtest inlet~_fwd_large_message;
 #X obj 198 2471 rtest pow~_negative_numbers;
+#X obj 198 2526 rtest encapsulate;
 #X connect 0 0 27 0;
 #X connect 1 0 4 0;
 #X connect 2 0 42 0;
@@ -115,3 +116,4 @@ is handy for some binbuf tests.;
 #X connect 56 0 57 0;
 #X connect 57 0 58 0;
 #X connect 58 0 59 0;
+#X connect 59 0 60 0;

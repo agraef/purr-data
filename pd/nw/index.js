@@ -597,6 +597,7 @@ function nw_create_pd_window_menus(gui, w) {
         minit(m.edit.reselect, { enabled: false });
     }
     if (osx) {
+        minit(m.edit.encapsulate, { enabled: false });
         minit(m.edit.tidyup, { enabled: false });
         minit(m.edit.font, { enabled: false });
         minit(m.edit.cordinspector, { enabled: false });
