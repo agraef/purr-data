@@ -587,6 +587,10 @@ void rtext_activate(t_rtext *x, int state)
             glist->gl_editor->e_textedfor = 0;
         x->x_active = 0;
     }
+
+    /* check if it has a window */
+    if(!glist->gl_havewindow) return;
+
     rtext_senditup(x, SEND_UPDATE, &w, &h, &indx);
     /* hack...
        state = 0 no editing

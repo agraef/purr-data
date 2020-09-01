@@ -110,6 +110,7 @@ void canvas_undo_undo(t_canvas *x)
         if(UNDO_SEQUENCE_END == x->u_last->type)
         {
             int sequence_depth = 1;
+            if(x->u_last->data) post("undo info: %s", (char *)x->u_last->data);
             while((x->u_last = x->u_last->prev)
                   && (UNDO_INIT != x->u_last->type))
             {
@@ -120,6 +121,7 @@ void canvas_undo_undo(t_canvas *x)
                     break;
                 case UNDO_SEQUENCE_END:
                     sequence_depth++;
+                    if(x->u_last->data) post("undo info: %s", (char *)x->u_last->data);
                     break;
                 default:
                     canvas_undo_doit(x, x->u_last, UNDO_UNDO);
@@ -176,6 +178,7 @@ void canvas_undo_redo(t_canvas *x)
         if(UNDO_SEQUENCE_START == x->u_last->type)
         {
             int sequence_depth = 1;
+            if(x->u_last->data) post("redo info: %s", (char *)x->u_last->data);
             while(x->u_last->next && (x->u_last = x->u_last->next))
             {
                 switch(x->u_last->type)
@@ -185,6 +188,7 @@ void canvas_undo_redo(t_canvas *x)
                     break;
                 case UNDO_SEQUENCE_START:
                     sequence_depth++;
+                    if(x->u_last->data) post("redo info: %s", (char *)x->u_last->data);
                     break;
                 default:
                     canvas_undo_doit(x, x->u_last, UNDO_REDO);

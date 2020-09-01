@@ -1185,6 +1185,48 @@ function gui_canvas_menuclose(cid_for_dialog, cid, force) {
         }, 450);
 }
 
+function canvas_abstract_callback(cid_for_dialog, cid, matches) {
+    var nw = patchwin[cid_for_dialog],
+        w = nw.window,
+        doc = w.document,
+        dialog = doc.getElementById("abstract_dialog"),
+        dialog_candidates = doc.getElementById("abstract_dialog_candidates"),
+        single_button = doc.getElementById("abstract_single_button"),
+        all_button = doc.getElementById("abstract_all_button"),
+        none_button = doc.getElementById("abstract_none_button");
+
+    dialog_candidates.textContent = matches.toString();
+    dialog_candidates.title = matches.toString()
+    all_button.disabled = (matches === 1);
+
+    single_button.onclick = function() {
+        dialog.close();
+        w.canvas_events[w.canvas_events.get_previous_state()]();
+        pdsend(cid, "dialog", 0);
+    };
+    all_button.onclick = function() {
+        dialog.close();
+        w.canvas_events[w.canvas_events.get_previous_state()]();
+        pdsend(cid, "dialog", 1);
+    };
+    none_button.onclick = function() {
+        dialog.close();
+        w.canvas_events[w.canvas_events.get_previous_state()]();
+    }
+
+    w.canvas_events.none();
+
+    w.setTimeout(function() {
+        dialog.showModal();
+    }, 150);
+}
+
+function gui_canvas_abstract(cid_for_dialog, cid, matches) {
+    setTimeout(function() {
+            canvas_abstract_callback(cid_for_dialog, cid, matches);
+        }, 450);
+}
+
 function gui_quit_dialog() {
     gui_raise_pd_window();
     var reply = pd_window.window.confirm("Really quit?");
@@ -4885,7 +4927,7 @@ function zoom_kludge(zoom_level) {
     return zfactor;
 }
 
-function gui_canvas_popup(cid, xpos, ypos, canprop, canopen, isobject) {
+function gui_canvas_popup(cid, xpos, ypos, canprop, canopen, cansaveas, isobject) {
     // Get page coords for top of window, in case we're scrolled
     gui(cid).get_nw_window(function(nw_win) {
         // ico@vt.edu updated win_left and win_top for the 0.46.2
@@ -4908,6 +4950,7 @@ function gui_canvas_popup(cid, xpos, ypos, canprop, canopen, isobject) {
         //popup_coords[1] = ypos;
         popup_menu[cid].items[0].enabled = canprop;
         popup_menu[cid].items[1].enabled = canopen;
+        popup_menu[cid].items[2].enabled = cansaveas;
 
         // We'll use "isobject" to enable/disable "To Front" and "To Back"
         //isobject;
