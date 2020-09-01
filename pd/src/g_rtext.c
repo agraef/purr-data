@@ -527,7 +527,7 @@ void rtext_erase(t_rtext *x)
     //    sys_vgui(".x%lx.c delete %s\n", glist_getcanvas(x->x_glist), x->x_tag);
 }
 
-/* Not needed since the rtext gets erased along with the parent gobj group */
+/* Not needed since the rtext gets displaced along with the parent gobj group */
 void rtext_displace(t_rtext *x, int dx, int dy)
 {
     //sys_vgui(".x%lx.c move %s %d %d\n", glist_getcanvas(x->x_glist), 
@@ -565,7 +565,10 @@ void rtext_activate(t_rtext *x, int state)
     char *tmpbuf;
     t_glist *glist = x->x_glist;
     t_canvas *canvas = glist_getcanvas(glist);
-    //if (state && x->x_active) printf("duplicate rtext_activate\n");
+    if (state && x->x_active) {
+        //fprintf(stderr, "duplicate rtext_activate\n");
+        return;
+    }
     // the following prevents from selecting all when inside an
     // object that is already being texted for... please *test*
     // "fixes" before committing them
