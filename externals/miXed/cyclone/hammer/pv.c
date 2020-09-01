@@ -362,7 +362,7 @@ static void pv_objstatus(t_pv *x, t_glist *glist)
 		 (t_int)g, glist->gl_name->s_name);
 	else if (pd_class(&g->g_pd) == pv_class
 		 && ((t_pv *)g)->x_name == x->x_name)
-	    post("%zx owning patcher [%s]", (t_int)g, glist->gl_name->s_name);
+	    post("%zx owning patcher [%s]", (t_uint)g, glist->gl_name->s_name);
     }
 }
 

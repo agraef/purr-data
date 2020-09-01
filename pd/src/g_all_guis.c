@@ -944,15 +944,15 @@ t_scalehandle *scalehandle_new(t_object *x, t_glist *glist, int scale,
     h->h_glist = glist;
     if (!scale) /* Only bind for labels-- scaling uses pd_vmess in g_editor.c */
     {
-        sprintf(buf, "_l%zx", (t_int)x);
+        sprintf(buf, "_l%zx", (t_uint)x);
         pd_bind((t_pd *)h, h->h_bindsym = gensym(buf));
     }
     else if (scale && pd_class((t_pd *)x) == my_canvas_class)
     {
-        sprintf(buf, "_s%zx", (t_int)x);
+        sprintf(buf, "_s%zx", (t_uint)x);
         pd_bind((t_pd *)h, h->h_bindsym = gensym(buf));
     }
-    sprintf(h->h_outlinetag, "h%zx", (t_int)h);
+    sprintf(h->h_outlinetag, "h%zux", (t_uint)h);
     h->h_dragon = 0;
     h->h_scale = scale;
     h->h_offset_x = 0;
@@ -961,7 +961,7 @@ t_scalehandle *scalehandle_new(t_object *x, t_glist *glist, int scale,
     h->h_adjust_y = 0;
     h->h_vis = 0;
     h->h_constrain = 0;
-    sprintf(h->h_pathname, ".x%zx.h%zx", (t_int)h->h_glist, (t_int)h);
+    sprintf(h->h_pathname, ".x%zx.h%zx", (t_uint)h->h_glist, (t_uint)h);
     h->h_clickfn = chf;
     h->h_motionfn = mhf;
     return h;

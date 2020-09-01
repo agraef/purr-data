@@ -621,7 +621,7 @@ static void *popup_new(t_symbol *s, int argc, t_atom *argv)
     }
 
       /* Bind the recieve "popup%zx" to the widget outlet*/
-      sprintf(buf,"popup%zx", (t_int)x);
+      sprintf(buf,"popup%zx", (t_uint)x);
       x->x_sym = gensym(buf);
       pd_bind(&x->x_obj.ob_pd, x->x_sym);
 

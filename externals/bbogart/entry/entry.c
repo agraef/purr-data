@@ -133,32 +133,32 @@ static void set_tk_widget_ids(t_entry *x, t_canvas *canvas)
     x->x_canvas = canvas;
 
     /* Tk ID for the current canvas that this object is drawn in */
-    sprintf(buf,".x%zx.c", (t_int) canvas);
+    sprintf(buf,".x%zx.c", (t_uint) canvas);
     x->canvas_id = getbytes(strlen(buf) + 1);
     strcpy(x->canvas_id, buf);
 
     /* Tk ID for the "frame" the other things are drawn in */
-    sprintf(buf,"%s.frame%zx", x->canvas_id, (t_int)x);
+    sprintf(buf,"%s.frame%zx", x->canvas_id, (t_uint)x);
     x->frame_id = getbytes(strlen(buf) + 1);
     strcpy(x->frame_id, buf);
 
-    sprintf(buf,"%s.text%zx", x->frame_id, (t_int)x);
+    sprintf(buf,"%s.text%zx", x->frame_id, (t_uint)x);
     x->text_id = getbytes(strlen(buf) + 1);
     strcpy(x->text_id, buf);    /* Tk ID for the "text", the meat! */
 
-    sprintf(buf,"%s.window%zx", x->canvas_id, (t_int)x);
+    sprintf(buf,"%s.window%zx", x->canvas_id, (t_uint)x);
     x->window_tag = getbytes(strlen(buf) + 1);
     strcpy(x->window_tag, buf);    /* Tk ID for the resizing "window" */
 
-    sprintf(buf,"%s.handle%zx", x->canvas_id, (t_int)x);
+    sprintf(buf,"%s.handle%zx", x->canvas_id, (t_uint)x);
     x->handle_id = getbytes(strlen(buf) + 1);
     strcpy(x->handle_id, buf);    /* Tk ID for the resizing "handle" */
 
-    sprintf(buf,"%s.scrollbar%zx", x->frame_id, (t_int)x);
+    sprintf(buf,"%s.scrollbar%zx", x->frame_id, (t_uint)x);
     x->scrollbar_id = getbytes(strlen(buf) + 1);
     strcpy(x->scrollbar_id, buf);    /* Tk ID for the optional "scrollbar" */
 
-    sprintf(buf,"all%zx", (t_int)x);
+    sprintf(buf,"all%zx", (t_uint)x);
     x->all_tag = getbytes(strlen(buf) + 1);
     strcpy(x->all_tag, buf);    /* Tk ID for the optional "scrollbar" */
 }
@@ -760,7 +760,7 @@ static void *entry_new(t_symbol *s, int argc, t_atom *argv)
     x->x_data_outlet = outlet_new(&x->x_obj, &s_float);
     x->x_status_outlet = outlet_new(&x->x_obj, &s_symbol);
 
-    sprintf(buf,"entry%zx",(t_int)x);
+    sprintf(buf,"entry%zx",(t_uint)x);
     x->tcl_namespace = getbytes(strlen(buf) + 1);
     strcpy(x->tcl_namespace, buf);    
 

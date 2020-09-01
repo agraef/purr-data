@@ -1888,7 +1888,7 @@ void canvas_dropdown(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
     x->a_text.te_width = 6;
 
     /* bind symbol for sending index updates from the GUI */
-    sprintf(tagbuf, "x%zx", (t_int)x);
+    sprintf(tagbuf, "x%zx", (t_uint)x);
     pd_bind(&x->a_text.te_pd, gensym(tagbuf));
 
     binbuf_add(x->a_text.te_binbuf, 1, binbuf_getvec(x->a_names));
@@ -1951,7 +1951,7 @@ void canvas_dropdown(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
 static void dropdown_free(t_dropdown *x)
 {
     char tagbuf[MAXPDSTRING];
-    sprintf(tagbuf, "x%zx", (t_int)x);
+    sprintf(tagbuf, "x%zx", (t_uint)x);
     pd_unbind(&x->a_text.te_pd, gensym(tagbuf));
 
     if (*x->a_symfrom->s_name)

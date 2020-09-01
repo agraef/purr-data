@@ -743,9 +743,9 @@ static void *comment_new(t_symbol *s, int ac, t_atom *av)
     t->te_type = T_TEXT;
     x->x_glist = canvas_getcurrent();
     x->x_canvas = 0;
-    sprintf(x->x_tag, "all%zx", (t_int)x);
-    sprintf(x->x_texttag, "t%zx", (t_int)x);
-    sprintf(x->x_outlinetag, "h%zx", (t_int)x);
+    sprintf(x->x_tag, "all%zx", (t_uint)x);
+    sprintf(x->x_texttag, "t%zx", (t_uint)x);
+    sprintf(x->x_outlinetag, "h%zx", (t_uint)x);
     x->x_pixwidth = 0;
     x->x_fontsize = 0;
     x->x_fontfamily = 0;
@@ -826,7 +826,7 @@ textpart:
     x->x_transclock = clock_new(x, (t_method)comment_transtick);
     x->x_bbset = 0;
     x->x_bbpending = 0;
-    sprintf(buf, "miXed%zx", (t_int)x);
+    sprintf(buf, "miXed%zx", (t_uint)x);
     x->x_bindsym = gensym(buf);
     pd_bind((t_pd *)x, x->x_bindsym);
     if (!commentsink)

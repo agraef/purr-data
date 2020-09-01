@@ -65,7 +65,7 @@ static void *sys_gui_new(t_symbol *s)
 	x->x_outlet = outlet_new(&x->x_obj, &s_anything);
 
     char buf[MAXPDSTRING];
-    sprintf(buf, "#%zx", (t_int)x);
+    sprintf(buf, "#%zx", (t_uint)x);
     x->x_receive_symbol = gensym(buf);
     pd_bind(&x->x_obj.ob_pd, x->x_receive_symbol);
 

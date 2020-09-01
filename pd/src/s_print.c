@@ -43,7 +43,7 @@ static char* strnpointerid(char *dest, const void *pointer, size_t len)
 {
     *dest=0;
     if (pointer)
-        snprintf(dest, len, ".x%zx", (t_int)pointer);
+        snprintf(dest, len, ".x%zx", (t_uint)pointer);
     return dest;
 }
 

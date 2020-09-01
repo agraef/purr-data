@@ -64,8 +64,8 @@ static void image_drawme(t_image *x, t_glist *glist, int firsttime)
             glist_istoplevel(glist));
         if (x->x_image == &s_) // if we have a blank image name, use the included filler
         {
-            sprintf(key, "x%zx", (t_int)pd_class(&x->x_obj.te_pd));
-            sprintf(key2, "x%zx", (t_int)pd_class(&x->x_obj.te_pd));
+            sprintf(key, "x%zx", (t_uint)pd_class(&x->x_obj.te_pd));
+            sprintf(key2, "x%zx", (t_uint)pd_class(&x->x_obj.te_pd));
             strcat(key, key2);
             strcat(key, "default");
             //x->x_image = gensym("::moonlib::image::noimage");
@@ -90,7 +90,7 @@ static void image_drawme(t_image *x, t_glist *glist, int firsttime)
         }
         else
         {
-            sprintf(key, "x%zx", (t_int)x);
+            sprintf(key, "x%zx", (t_uint)x);
             const char *fname = image_get_filename(x, x->x_image->s_name);
             if (!x->x_localimage)
             {
@@ -283,7 +283,7 @@ static void image_open(t_gobj *z, t_symbol *file)
     fname = image_get_filename(x, file->s_name);
     if (fname)
     {
-        sprintf(key, "x%zx", (t_int)x);
+        sprintf(key, "x%zx", (t_uint)x);
         x->x_image = gensym(fname);
         x->x_key = gensym(key);
         x->x_type = 0;
@@ -327,7 +327,7 @@ static void image_load(t_gobj *z, t_symbol *image, t_symbol *file)
         //    x, image->s_name, fname);
         /* For these class-accessible names, we prefix the user-provided
            name with a class pointer. */
-        sprintf(key, "x%zx", (t_int)pd_class(&x->x_obj.te_pd));
+        sprintf(key, "x%zx", (t_uint)pd_class(&x->x_obj.te_pd));
         strcat(key, image->s_name);
         gui_vmess("gui_load_image", "xss",
             glist_getcanvas(x->x_glist), key, fname);
@@ -343,7 +343,7 @@ static void image_set(t_gobj *z, t_symbol *image)
     char key[MAXPDSTRING];
     t_image *x = (t_image *)z;
     /* key is the class address followed by the user-supplied string */
-    sprintf(key, "x%zx", (t_int)pd_class(&x->x_obj.te_pd));
+    sprintf(key, "x%zx", (t_uint)pd_class(&x->x_obj.te_pd));
     strcat(key, image->s_name);
     x->x_image = image;
     x->x_key = gensym(key);
@@ -394,7 +394,7 @@ static void *image_new(t_symbol *image, t_float type)
     {
         if (x->x_type)
         {
-            sprintf(key, "x%zx", (t_int)pd_class(&x->x_obj.te_pd));
+            sprintf(key, "x%zx", (t_uint)pd_class(&x->x_obj.te_pd));
             strcat(key, image->s_name);
             x->x_image = image;
             x->x_key = gensym(key);
@@ -439,8 +439,8 @@ void image_setup(void)
        of moonlib/image */
     char key[MAXPDSTRING];
     char key2[MAXPDSTRING];
-    sprintf(key, "x%zx", (t_int)image_class);
-    sprintf(key2, "x%zx", (t_int)image_class);
+    sprintf(key, "x%zx", (t_uint)image_class);
+    sprintf(key2, "x%zx", (t_uint)image_class);
     strcat(key, key2);
     strcat(key, "default");
     gui_vmess("gui_load_default_image", "ss", "dummy", key);

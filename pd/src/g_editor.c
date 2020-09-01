@@ -2151,7 +2151,7 @@ void canvas_undo_font(t_canvas *x, void *z, int action)
         if (properties)
         {
             char tagbuf[MAXPDSTRING];
-            sprintf(tagbuf, ".gfxstub%zx", (t_int)properties);
+            sprintf(tagbuf, ".gfxstub%zx", (t_uint)properties);
             gui_vmess("gui_font_dialog_change_size", "si",
                 tagbuf,
                 u_f->font);
@@ -2601,7 +2601,7 @@ static t_editor *editor_new(t_glist *owner)
     x->e_connectbuf = binbuf_new();
     x->e_deleted = binbuf_new();
     x->e_glist = owner;
-    sprintf(buf, "x%.6zx", (t_int)owner);
+    sprintf(buf, "x%.6zx", (t_uint)owner);
     x->e_guiconnect = guiconnect_new(&owner->gl_pd, gensym(buf));
     x->gl_magic_glass = magicGlass_new(owner);
     x->canvas_cnct_inlet_tag[0] = 0;
@@ -2737,7 +2737,7 @@ void canvas_vis(t_canvas *x, t_floatarg f)
                 }
                 else
                 {
-                    sys_vgui("focus .x%zx\n", (t_int)x);
+                    sys_vgui("focus .x%zx\n", (t_uint)x);
                 }
             }
             else

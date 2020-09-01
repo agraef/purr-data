@@ -477,7 +477,7 @@ static void preset_node_update_my_glist_location(t_preset_node *x)
    as well as when hubs try to query nodes that have not been paired yet.  */
 void preset_node_seek_hub(t_preset_node *x)
 {
-    if(PH_DEBUG) fprintf(stderr,"preset_node_seek_hub %zx\n", (t_int)x->pn_hub);
+    if(PH_DEBUG) fprintf(stderr,"preset_node_seek_hub %zx\n", (t_uint)x->pn_hub);
     if (we_are_undoing)
         return;
     t_canvas *y = x->pn_canvas;
@@ -529,7 +529,7 @@ static int preset_node_location_changed(t_preset_node *x)
 
 static void preset_node_anything(t_preset_node *x, t_symbol *s, int argc, t_atom *argv)
 {
-    if (PH_DEBUG) fprintf(stderr,"preset_node_anything %zx %s %d\n", (t_int)x, s->s_name, argc);
+    if (PH_DEBUG) fprintf(stderr,"preset_node_anything %zx %s %d\n", (t_uint)x, s->s_name, argc);
     int i;
     alist_list(&x->pn_val, 0, argc, argv);
     if (PH_DEBUG)
@@ -609,7 +609,7 @@ void preset_node_request_hub_writepreset(t_preset_node *x, t_symbol *filename,
 void preset_node_set_and_output_value(t_preset_node *x, t_alist val)
 {
     if(PH_DEBUG)
-        fprintf(stderr,"preset_node_set_and_output_value %zx\n", (t_int)x);
+        fprintf(stderr,"preset_node_set_and_output_value %zx\n", (t_uint)x);
     t_atom *outv;
     if (val.l_n > 0)
     {

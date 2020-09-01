@@ -198,7 +198,7 @@ void pd_bind(t_pd *x, t_symbol *s)
     {
         if (*s->s_thing == bindlist_class)
         {
-            //fprintf(stderr,"    pd_bind option 1A %zx\n", (t_int)x);
+            //fprintf(stderr,"    pd_bind option 1A %zx\n", (t_uint)x);
             t_bindlist *b = (t_bindlist *)s->s_thing;
             t_bindelem *e = (t_bindelem *)getbytes(sizeof(t_bindelem));
             e->e_next = b->b_list;
@@ -208,7 +208,7 @@ void pd_bind(t_pd *x, t_symbol *s)
         }
         else
         {
-            //fprintf(stderr,"    pd_bind option 1B %zx\n", (t_int)x);
+            //fprintf(stderr,"    pd_bind option 1B %zx\n", (t_uint)x);
             t_bindlist *b = (t_bindlist *)pd_new(bindlist_class);
             t_bindelem *e1 = (t_bindelem *)getbytes(sizeof(t_bindelem));
             t_bindelem *e2 = (t_bindelem *)getbytes(sizeof(t_bindelem));
@@ -223,7 +223,7 @@ void pd_bind(t_pd *x, t_symbol *s)
         }
     }
     else {
-        //fprintf(stderr,"pd_bind option 2 %zx\n", (t_int)x);
+        //fprintf(stderr,"pd_bind option 2 %zx\n", (t_uint)x);
         s->s_thing = x;
     }
 }
@@ -232,7 +232,7 @@ void pd_unbind(t_pd *x, t_symbol *s)
 {
     //fprintf(stderr,"pd_unbind %s\n", s->s_name);
     if (s->s_thing == x) {
-        //fprintf(stderr,"    pd_unbind option A %zx\n", (t_int)x);
+        //fprintf(stderr,"    pd_unbind option A %zx\n", (t_uint)x);
         s->s_thing = 0;
     }
     else if (s->s_thing && *s->s_thing == bindlist_class)
@@ -248,7 +248,7 @@ void pd_unbind(t_pd *x, t_symbol *s)
            which we call bindlist_cleanup(). we control the execution via
            static int variable change_bindlist_via_graph */
 
-        //fprintf(stderr,"    pd_unbind option B %zx\n", (t_int)x);
+        //fprintf(stderr,"    pd_unbind option B %zx\n", (t_uint)x);
 
         t_bindlist *b = (t_bindlist *)s->s_thing;
         t_bindelem *e, *e2;

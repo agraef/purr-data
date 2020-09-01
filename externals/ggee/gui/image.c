@@ -502,7 +502,7 @@ static void *image_new(t_symbol *s, t_int argc, t_atom *argv)
     }
     // Create default receiver
     char buf[MAXPDSTRING];
-    sprintf(buf, "#%zx", (t_int)x);
+    sprintf(buf, "#%zx", (t_uint)x);
     x->x_receive = gensym(buf);
     pd_bind(&x->x_obj.ob_pd, x->x_receive);
     outlet_new(&x->x_obj, &s_bang);

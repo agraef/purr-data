@@ -135,7 +135,7 @@ void glist_update_redrect(t_glist *x)
 
 void glist_add(t_glist *x, t_gobj *y)
 {
-    //fprintf(stderr,"glist_add %zx %d\n", (t_int)x, (x->gl_editor ? 1 : 0));    
+    //fprintf(stderr,"glist_add %zx %d\n", (t_uint)x, (x->gl_editor ? 1 : 0));    
     t_object *ob;
     y->g_next = 0;
     int index = 0;
@@ -255,7 +255,7 @@ void glist_delete(t_glist *x, t_gobj *y)
                     if (gl->gl_isgraph)
                     {
                         char tag[80];
-                        //sprintf(tag, "graph%zx", (t_int)gl);
+                        //sprintf(tag, "graph%zx", (t_uint)gl);
                         //t_glist *yy = (t_glist *)y;
                         sprintf(tag, "%s",
                             rtext_gettag(glist_findrtext(x, &gl->gl_obj)));
@@ -1051,7 +1051,7 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
     //    tgt = parent_glist;
     //    exception = 1;
     //}
-    //fprintf(stderr,"tgt=.x%zx %d\n", (t_int)tgt, exception);
+    //fprintf(stderr,"tgt=.x%zx %d\n", (t_uint)tgt, exception);
 
     if (vis & gobj_shouldvis(gr, parent_glist))
     {
@@ -1082,7 +1082,7 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
     if (!vis)
         rtext_erase(glist_findrtext(parent_glist, &x->gl_obj));
 
-    //sprintf(tag, "graph%zx", (t_int)x);
+    //sprintf(tag, "graph%zx", (t_uint)x);
     //fprintf(stderr, "gettag=%s, tag=graph%zx\n",
     //    rtext_gettag(glist_findrtext(parent_glist, &x->gl_obj)),(t_int)x);
     /* if we look like a graph but have been moved to a toplevel,

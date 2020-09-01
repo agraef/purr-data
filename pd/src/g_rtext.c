@@ -65,7 +65,7 @@ t_rtext *rtext_new(t_glist *glist, t_text *who)
     // supposed to be there (they don't belong to that canvas). See
     // in pd.tk pdtk_select_all_gop_widgets function and how it affects
     // draw data structures that are displayed via gop (Ico 20140831)
-    sprintf(x->x_tag, ".x%zx.t%zx", (t_int)glist_getcanvas(x->x_glist),
+    sprintf(x->x_tag, ".x%zx.t%zx", (t_uint)glist_getcanvas(x->x_glist),
         (t_int)x);
     return (x);
 }

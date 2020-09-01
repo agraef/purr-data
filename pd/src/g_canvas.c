@@ -489,7 +489,7 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     canvas_bind(x);
     x->gl_loading = 1;
     x->gl_unloading = 0;
-    //fprintf(stderr,"loading = 1 .x%zx owner=.x%zx\n", (t_int)x, (t_int)x->gl_owner);
+    //fprintf(stderr,"loading = 1 .x%zx owner=.x%zx\n", (t_uint)x, (t_uint)x->gl_owner);
     x->gl_goprect = 0;      /* no GOP rectangle unless it's turned on later */
         /* cancel "vis" flag if we're a subpatch of an
          abstraction inside another patch.  A separate mechanism prevents
@@ -845,9 +845,9 @@ void canvas_draw_gop_resize_hooks(t_canvas* x)
         x->gl_goprect && !x->gl_editor->e_selection)
     {
         //Drawing and Binding Resize_Blob for GOP
-        //fprintf(stderr,"draw_gop_resize_hooks DRAW %zx %zx\n", (t_int)x, (t_int)glist_getcanvas(x));
-        sprintf(sh->h_pathname, ".x%zx.h%zx", (t_int)x, (t_int)sh);
-        sprintf(mh->h_pathname, ".x%zx.h%zx", (t_int)x, (t_int)mh);
+        //fprintf(stderr,"draw_gop_resize_hooks DRAW %zx %zx\n", (t_uint)x, (t_uint)glist_getcanvas(x));
+        sprintf(sh->h_pathname, ".x%zx.h%zx", (t_uint)x, (t_uint)sh);
+        sprintf(mh->h_pathname, ".x%zx.h%zx", (t_uint)x, (t_uint)mh);
 
         /* These are handled now in canvas_doclick */
         //scalehandle_draw_select(sh,
@@ -898,7 +898,7 @@ void canvas_drawredrect(t_canvas *x, int doit)
     called from the GUI after the fact to "notify" us that we're mapped. */
 void canvas_map(t_canvas *x, t_floatarg f)
 {
-    //fprintf(stderr,"canvas_map %zx %f\n", (t_int)x, f);
+    //fprintf(stderr,"canvas_map %zx %f\n", (t_uint)x, f);
     int flag = (f != 0);
     t_gobj *y;
     if (flag)
@@ -952,7 +952,7 @@ void canvas_map(t_canvas *x, t_floatarg f)
 void canvas_redraw(t_canvas *x)
 {
     if (do_not_redraw) return;
-    //fprintf(stderr,"canvas_redraw %zx\n", (t_int)x);
+    //fprintf(stderr,"canvas_redraw %zx\n", (t_uint)x);
     if (glist_isvisible(x))
     {
         //fprintf(stderr,"canvas_redraw glist_isvisible=true\n");
@@ -995,7 +995,7 @@ void glist_menu_open(t_glist *x)
         else
         {
             // Not sure if this needs to get ported... need to test
-            //sys_vgui("focus .x%zx\n", (t_int)x);
+            //sys_vgui("focus .x%zx\n", (t_uint)x);
         }
     }
     else
@@ -1032,7 +1032,7 @@ extern void canvas_group_free(t_pd *x);
 
 void canvas_free(t_canvas *x)
 {
-    //fprintf(stderr,"canvas_free %zx\n", (t_int)x);
+    //fprintf(stderr,"canvas_free %zx\n", (t_uint)x);
     t_gobj *y;
     int dspstate = canvas_suspend_dsp();
 
@@ -1143,7 +1143,7 @@ void canvas_eraselinesfor(t_canvas *x, t_text *text)
             if (x->gl_editor)
             {
                 char tagbuf[MAXPDSTRING];
-                sprintf(tagbuf, "l%zx", (t_int)oc);
+                sprintf(tagbuf, "l%zx", (t_uint)oc);
                 gui_vmess("gui_canvas_delete_line", "xs",
                     glist_getcanvas(x), tagbuf);
             }
@@ -1167,7 +1167,7 @@ void canvas_deletelinesforio(t_canvas *x, t_text *text,
             if (x->gl_editor)
             {
                 char buf[MAXPDSTRING];
-                sprintf(buf, "l%zx", (t_int)oc);
+                sprintf(buf, "l%zx", (t_uint)oc);
                 gui_vmess("gui_canvas_delete_line", "xs",
                     glist_getcanvas(x),
                     buf);
@@ -1454,7 +1454,7 @@ static void *subcanvas_new(t_symbol *s)
 {
     t_atom a[6];
     t_canvas *x, *z = canvas_getcurrent();
-    //fprintf(stderr,"subcanvas_new current canvas .x%zx\n", (t_int)z);
+    //fprintf(stderr,"subcanvas_new current canvas .x%zx\n", (t_uint)z);
     if (!*s->s_name) s = gensym("/SUBPATCH/");
     SETFLOAT(a, 0);
     SETFLOAT(a+1, GLIST_DEFCANVASYLOC);
@@ -2310,7 +2310,7 @@ static void canvas_f(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     {
         for (g = x->gl_list; g2 = g->g_next; g = g2)
             ;
-        //fprintf(stderr,"same canvas .x%zx .x%zx\n", (t_int)g, (t_int)x);
+        //fprintf(stderr,"same canvas .x%zx .x%zx\n", (t_uint)g, (t_uint)x);
     }
     if ((ob = pd_checkobject(&g->g_pd)) || pd_class(&g->g_pd) == canvas_class)
     {

@@ -126,7 +126,7 @@ static void textbuf_open(t_textbuf *x)
         //    x, 600, 340, "myname", "text",
         //         sys_hostfontsize(glist_getfont(x->b_canvas)));//,
                     //glist_getzoom(x->b_canvas)));
-        sprintf(buf, "x%zx", (t_int)x);
+        sprintf(buf, "x%zx", (t_uint)x);
         x->b_guiconnect = guiconnect_new(&x->b_ob.ob_pd, gensym(buf));
         gui_vmess("gui_text_dialog", "xsiii",
             x,
