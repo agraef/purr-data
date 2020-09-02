@@ -132,6 +132,11 @@ ifneq ($(LIGHT),yes)
 	install -p $(bin_src)/libpcre-1.dll $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libgraphite2.dll $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libjpeg-8.dll $(DESTDIR)$(bindir)/
+	# New: lossless compression algorithm. Gem.dll won't load without it.
+	# Cf.: https://github.com/bagder/libbrotli. Looks like this recently
+	# got added to MSYS2. Apparently Gem needs only the decoder , but we
+	# include the entire shebang just in case.
+	install -p $(bin_src)/libbrotli*.dll $(DESTDIR)$(bindir)/
 	# Apparently these Gem dependencies must be in the bindir
 	# to be found on Windows
 	-install -p $(DESTDIR)/extra/Gem/gem_film*.dll $(DESTDIR)$(bindir)/
