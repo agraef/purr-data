@@ -316,8 +316,14 @@ p.msg::after {
 
 /* not sure what this is doing here... */
 text {
-    // fill: red;
+    //fill: red;
     //cursor: default;
+}
+
+/* not sure what this is doing here... */
+text.activated {
+    fill: red;
+    cursor: default;
 }
 
 /* not sure if this is still needed...
