@@ -26,6 +26,9 @@ static void my_numbox_draw_update(t_gobj *client, t_glist *glist);
 t_widgetbehavior my_numbox_widgetbehavior;
 /*static*/ t_class *my_numbox_class;
 
+// forward declaration
+static void my_numbox_set_change(t_my_numbox *x, t_floatarg f);
+
 static t_symbol *numbox_keyname_sym_a;
 
 static void my_numbox_tick_reset(t_my_numbox *x)
@@ -46,7 +49,7 @@ static void my_numbox_tick_wait(t_my_numbox *x)
 }
 
 // to enable ability to change values using arrow keys (only when focused)
-void my_numbox_set_change(t_my_numbox *x, t_floatarg f)
+static void my_numbox_set_change(t_my_numbox *x, t_floatarg f)
 {
     if (f == 0 && x->x_gui.x_change != 0)
     {
