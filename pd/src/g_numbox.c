@@ -806,7 +806,7 @@ static void my_numbox_list(t_my_numbox *x, t_symbol *s, int ac, t_atom *av)
     }
     else if (ac == 2 && x->x_gui.x_change == 1 && IS_A_FLOAT(av,0) && IS_A_SYMBOL(av,1) && av[0].a_w.w_float == 1)
     {
-        fprintf(stderr,"got keyname %s while grabbed\n", av[1].a_w.w_symbol->s_name);
+        //fprintf(stderr,"got keyname %s while grabbed\n", av[1].a_w.w_symbol->s_name);
         if (!strcmp("Up", av[1].a_w.w_symbol->s_name))
         {
             //fprintf(stderr,"...Up\n");
