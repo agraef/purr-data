@@ -2223,6 +2223,8 @@ static void do_rename_light(t_gobj *z, t_glist *glist, const char *text)
     glist->gl_editor->e_onmotion = MA_NONE; //necessary?
 }
 
+int binbuf_match(t_binbuf *inbuf, t_binbuf *searchbuf, int wholeword);
+
 /* traverses the whole subtree of the given canvas/patch, replacing all subpatches identical to the
     given one with an abstraction */
 static int do_replace_subpatches(t_canvas *x, const char* label, t_binbuf *original)
@@ -2290,6 +2292,8 @@ static int do_replace_subpatches(t_canvas *x, const char* label, t_binbuf *origi
     }
     return num;
 }
+
+int sys_relativizepath(const char *from, const char *to, char *result);
 
 static void abstracthandler_callback(t_abstracthandler *x, t_symbol *s)
 {
@@ -2393,9 +2397,9 @@ static void abstracthandler_dialog(t_abstracthandler *x, t_floatarg val)
         int edi = 0;
         if(!owner->gl_editor) { canvas_create_editor(owner); edi = 1; }
         glist_noselect(owner);
-        glist_select(owner, x->tarjet);
-        do_rename_light(x->tarjet, owner, x->path);
-        glist_deselect(owner, x->tarjet);
+        glist_select(owner, &x->tarjet->gl_gobj);
+        do_rename_light(&x->tarjet->gl_gobj, owner, x->path);
+        glist_deselect(owner, &x->tarjet->gl_gobj);
         if(edi) canvas_destroy_editor(owner);
 
         /* select '[args]' slice
@@ -2415,7 +2419,8 @@ static void abstracthandler_dialog(t_abstracthandler *x, t_floatarg val)
 void abstracthandler_setup(void)
 {
     abstracthandler_class = class_new(gensym("abstracthandler"), 0,
-                                        abstracthandler_free, sizeof(t_abstracthandler),
+                                        (t_method)abstracthandler_free,
+                                        sizeof(t_abstracthandler),
                                         CLASS_NOINLET, 0);
     class_addmethod(abstracthandler_class, (t_method)abstracthandler_callback,
                         gensym("callback"), A_SYMBOL, 0);
@@ -3332,11 +3337,13 @@ void canvas_done_popup(t_canvas *x, t_float which, t_float xpos,
                 else if(which == 5)    /* saveas */
                 {
                     t_abstracthandler *ah = abstracthandler_new();
-                    ah->tarjet = y;
+                    ah->tarjet = (t_canvas *)y;
                     ah->dialog = x;
 
                     char buf[MAXPDSTRING];
-                    sprintf(buf, "%s/%s.pd", canvas_getdir(canvas_getrootfor(y))->s_name, ((t_canvas *)y)->gl_name->s_name);
+                    sprintf(buf, "%s/%s.pd",
+                        canvas_getdir(canvas_getrootfor((t_canvas *)y))->s_name,
+                        ((t_canvas *)y)->gl_name->s_name);
 
                     gui_vmess("gui_savepanel", "xss",
                         x,
@@ -6018,7 +6025,6 @@ static void canvas_menufont(t_canvas *x)
 
 static int canvas_find_index1, canvas_find_index2, canvas_find_wholeword;
 static t_binbuf *canvas_findbuf;
-int binbuf_match(t_binbuf *inbuf, t_binbuf *searchbuf, int wholeword);
 
     /* find an atom or string of atoms */
 static int canvas_dofind(t_canvas *x, int *myindex1p)
@@ -6566,7 +6572,7 @@ static void canvas_cut(t_canvas *x)
 
 typedef struct _xletholder
 {
-    t_gobj *xlh_addr;
+    void *xlh_addr;
     int xlh_seln;
     int xlh_xletn;
     int xlh_type;
@@ -6638,7 +6644,7 @@ static void canvas_dofancycopy(t_canvas *x, t_binbuf **object, t_binbuf **connec
         else if(s1 && !s2)
         {
             /* if we continue in the same outlet, we add the object and inlet number to the list and skip */
-            if (lastoutlet && lastoutlet->xlh_addr == t.tr_outlet)
+            if (lastoutlet && lastoutlet->xlh_addr == (void *)t.tr_outlet)
             {
                 binbuf_addv(lastoutlet->xlh_conn, "ii", glist_selectionindex(x, &t.tr_ob2->ob_g, 0), t.tr_inno);
                 continue;
@@ -6646,7 +6652,7 @@ static void canvas_dofancycopy(t_canvas *x, t_binbuf **object, t_binbuf **connec
 
             /* create and fill outlet handling structure */
             t_xletholder *newoutlet = (t_xletholder *)getbytes(sizeof(t_xletholder));
-            newoutlet->xlh_addr = t.tr_outlet;
+            newoutlet->xlh_addr = (void *)t.tr_outlet;
             newoutlet->xlh_seln = glist_selectionindex(x, &t.tr_ob->ob_g, 1);
             newoutlet->xlh_xletn = t.tr_outno;
             newoutlet->xlh_type = obj_issignaloutlet(t.tr_ob, t.tr_outno);
@@ -6675,7 +6681,7 @@ static void canvas_dofancycopy(t_canvas *x, t_binbuf **object, t_binbuf **connec
             t_xletholder *it;
             for(it = inlets; it && !alr; )
             {
-                alr = ((t.tr_inno ? t.tr_inlet : t.tr_ob2) == it->xlh_addr);
+                alr = ((t.tr_inno ? (void *)t.tr_inlet : (void *)t.tr_ob2) == it->xlh_addr);
                 if(!alr) it = it->xlh_next;
             }
 
@@ -6690,7 +6696,7 @@ static void canvas_dofancycopy(t_canvas *x, t_binbuf **object, t_binbuf **connec
 
             /* create and fill inlet handling structure */
             t_xletholder *newinlet = (t_xletholder *)getbytes(sizeof(t_xletholder));
-            newinlet->xlh_addr = (t.tr_inno ? t.tr_inlet : t.tr_ob2);
+            newinlet->xlh_addr = (t.tr_inno ? (void *)t.tr_inlet : (void *)t.tr_ob2);
             newinlet->xlh_seln = glist_selectionindex(x, &t.tr_ob2->ob_g, 1);
             newinlet->xlh_xletn = t.tr_inno;
             newinlet->xlh_type = type;
