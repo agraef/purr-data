@@ -1,5 +1,4 @@
 {
-  "hello": "world",
   "iem": {
     "prop": {
       "heading": {
@@ -145,6 +144,8 @@
     "reselect_tt": "Rétablir la sélection précédente",
     "find":    "Rechercher",
     "find_tt": "Rechercher un texte dans la sortie de la console",
+    "encapsulate": "Encapsulate",
+    "encapsulate_tt": "Encapsulate automatically the current selection into a subpatch",
     "tidyup":    "Arranger",
     "tidyup_tt": "Aligner la sélection d'objets en lignes et colonnes strictes",
     "clear_console":    "Effacer la Console",
@@ -271,7 +272,8 @@
   },
   "pd_window": {
     "find": {
-      "placeholder": "Chercher dans la Console"
+      "placeholder": "Chercher dans la Console",
+      "highlight": "Highlight All"
     }
   },
   "canvas": {
@@ -285,6 +287,16 @@
       "cancel":    "Annuler",
       "cancel_tt": "N'enregistrer aucune modification et ne pas fermer le patch"
     },
+    "abstract_dialog": {
+      "prompt": "Would you like to turn the identical subpatches into abstractions?\nCandidates found in the subpatch tree, from root canvas: ",
+      "note": "Note: this can't be undone all at once – any changes made in subpatches can be undone from that subpatch",
+      "single": "Only this one",
+      "single_tt": "Replace the subpatch you just saved with the corresponding abstraction",
+      "all": "All candidates",
+      "all_tt": "Replace all subpatches in the subpatch tree identical to the one you just saved with the corresponding abstraction",
+      "none": "None",
+      "none_tt": "Do not replace any subpatch"
+    },
     "find": {
       "placeholder": "Chercher dans le Canevas",
       "search":    "Chercher",
@@ -294,6 +306,7 @@
     "menu": {
       "props": "Propriétés",
       "open":  "Ouvrir",
+      "saveas": "Sauvegarder comme",
       "help":  "Aide",
       "front": "Envoyer au Premier plan",
       "back":  "Envoyer à l'Arrière plan"
