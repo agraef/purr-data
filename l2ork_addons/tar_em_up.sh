@@ -194,9 +194,8 @@ if [ ! -d "../pd/nw/nw" ]; then
 		ext="tar.gz"
 	fi
 
-	if [[ $os == "win" || $osx_version == "10.8" ]]; then
-		# We need the lts version to be able to run on XP. For
-                # simplicity we use that same version for 64 bit Windows, too
+	if [[ $osx_version == "10.8" ]]; then
+		# We need the lts version to be able to run on legacy systems.
 		nwjs_version="v0.14.7"
 	else
 		# temporary kluge for rpi-- only 0.15.1 is available atm
