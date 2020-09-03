@@ -430,7 +430,8 @@ int sys_main(int argc, char **argv)
         sys_reopen_midi();
         sys_reopen_audio();
 
-        if (sys_console) sys_vgui("pdtk_toggle_console 1\n");
+        // ag: no longer needed (cruft from the pd-l2ork1 days)
+        //if (sys_console) sys_vgui("pdtk_toggle_console 1\n");
         if (sys_k12_mode)
         {
             t_namelist *path = pd_extrapath;
