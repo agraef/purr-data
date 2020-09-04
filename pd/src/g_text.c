@@ -866,18 +866,22 @@ void canvas_msg(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
 typedef struct _gatom
 {
     t_text a_text;
-    t_atom a_atom;          /* this holds the value and the type */
-    t_glist *a_glist;       /* owning glist */
-    t_float a_toggle;       /* value to toggle to */
-    t_float a_draghi;       /* high end of drag range */
-    t_float a_draglo;       /* low end of drag range */
-    t_symbol *a_label;      /* symbol to show as label next to box */
-    t_symbol *a_symfrom;    /* "receive" name -- bind ourselvs to this */
-    t_symbol *a_symto;      /* "send" name -- send to this on output */
-    char a_buf[ATOMBUFSIZE];/* string buffer for typing */
-    char a_shift;           /* was shift key down when dragging started? */
-    char a_wherelabel;      /* 0-3 for left, right, above, below */
+    t_atom a_atom;           /* this holds the value and the type */
+    t_atom a_atomold;        /* this holds old value, used to reverting to
+                                when changing the number value using arrows */
+    t_glist *a_glist;        /* owning glist */
+    t_float a_toggle;        /* value to toggle to */
+    t_float a_draghi;        /* high end of drag range */
+    t_float a_draglo;        /* low end of drag range */
+    t_symbol *a_label;       /* symbol to show as label next to box */
+    t_symbol *a_symfrom;     /* "receive" name -- bind ourselvs to this */
+    t_symbol *a_symto;       /* "send" name -- send to this on output */
+    char a_buf[ATOMBUFSIZE]; /* string buffer for typing */
+    char a_shift;            /* was shift key down when dragging started? */
+    char a_wherelabel;       /* 0-3 for left, right, above, below */
     t_symbol *a_expanded_to; /* a_symto after $0, $1, ...  expansion */
+    int a_shift_clicked;	 /* used to keep old text after \n. this is
+    							activated by shift+clicking no the object */
 } t_gatom;
 
     /* prepend "-" as necessary to avoid empty strings, so we can
@@ -913,16 +917,20 @@ static void gatom_redraw(t_gobj *client, t_glist *glist)
     glist_retext(x->a_glist, &x->a_text);
 }
 
-    /* recolor option offers     0 ignore recolor
+    /* recolor option offers    0 ignore recolor
                                 1 recolor */
 static void gatom_retext(t_gatom *x, int senditup, int recolor)
 {
+	//post("gatom_retext senditup=%d recolor=%d", senditup, recolor);
     t_canvas *canvas = glist_getcanvas(x->a_glist);
     t_rtext *y = glist_findrtext(x->a_glist, &x->a_text);
     if (recolor)
     {
+        //post("gatom click off");
         gui_vmess("gui_gatom_activate", "xsi",
             canvas, rtext_gettag(y), 0);
+    	x->a_shift_clicked = 0;
+    	x->a_shift = 0;
     }
     binbuf_clear(x->a_text.te_binbuf);
     binbuf_add(x->a_text.te_binbuf, 1, &x->a_atom);
@@ -947,6 +955,7 @@ static void gatom_set(t_gatom *x, t_symbol *s, int argc, t_atom *argv)
             gatom_retext(x, 1, 1);
         else
             gatom_retext(x, 1, 0);
+        x->a_atomold = x->a_atom;
     }
     x->a_buf[0] = 0;
 }
@@ -1013,12 +1022,59 @@ static void gatom_symbol(t_gatom *x, t_symbol *s)
     "nofirstin" flag, the standard list behavior gets confused. */
 static void gatom_list(t_gatom *x, t_symbol *s, int argc, t_atom *argv)
 {
+    //post("gatom_list <%s>", s->s_name);
     if (!argc)
         gatom_bang(x);
-    else if (argv->a_type == A_FLOAT)
-        gatom_float(x, argv->a_w.w_float);
-    else if (argv->a_type == A_SYMBOL)
-        gatom_symbol(x, argv->a_w.w_symbol);
+    else if (argc == 1)
+    {
+    	if (argv->a_type == A_FLOAT)
+        	gatom_float(x, argv->a_w.w_float);
+    	else if (argv->a_type == A_SYMBOL)
+        	gatom_symbol(x, argv->a_w.w_symbol);
+    }
+    /* ico@vt.edu 20200904 like g_numbox.c, here we hijack list to capture
+       keyname keypresses, so that we can use shift+backspace to delete
+       entire text */
+    else if (argc == 2 && argv[0].a_type == A_FLOAT && argv[1].a_type == A_SYMBOL)
+    {
+        //post("got keyname %s while grabbed\n", argv[1].a_w.w_symbol->s_name);
+        if (!strcmp("Shift", argv[1].a_w.w_symbol->s_name))
+        {
+            x->a_shift = (int)argv[0].a_w.w_float;
+            //post("...Shift %d", x->a_shift);
+        }
+        if (x->a_atom.a_type == A_FLOAT && argv[0].a_w.w_float == 1)
+        {
+            if (!strcmp("Up", argv[1].a_w.w_symbol->s_name))
+            {
+                //fprintf(stderr,"...Up\n");
+                x->a_atom.a_w.w_float += 1;
+                //sprintf(x->a_buf, "%g", x->a_atom.a_w.w_float);
+                gatom_retext(x, 1, 0);
+            }
+            else if (!strcmp("ShiftUp", argv[1].a_w.w_symbol->s_name))
+            {
+                //fprintf(stderr,"...ShiftUp\n");
+                x->a_atom.a_w.w_float += 0.01;
+                //sprintf(x->a_buf, "%g", x->a_atom.a_w.w_float);
+                gatom_retext(x, 1, 0);
+            }
+            if (!strcmp("Down", argv[1].a_w.w_symbol->s_name))
+            {
+                //fprintf(stderr,"...Down\n");
+                x->a_atom.a_w.w_float -= 1;
+                //sprintf(x->a_buf, "%g", x->a_atom.a_w.w_float);
+                gatom_retext(x, 1, 0);
+            }
+            else if (!strcmp("ShiftDown", argv[1].a_w.w_symbol->s_name))
+            {
+                //fprintf(stderr,"...ShiftDown\n");
+                x->a_atom.a_w.w_float -= 0.01;
+                //sprintf(x->a_buf, "%g", x->a_atom.a_w.w_float);
+                gatom_retext(x, 1, 0);
+            }
+        }
+    }
     else pd_error(x, "gatom_list: need float or symbol");
 }
 
@@ -1049,37 +1105,85 @@ static void gatom_motion(void *z, t_floatarg dx, t_floatarg dy)
 
 static void gatom_key(void *z, t_floatarg f)
 {
-    //fprintf(stderr,"gatom_key %f\n", f);
     t_gatom *x = (t_gatom *)z;
     int c = f;
+    //post("gatom_key <%c> %d", c, x->a_shift);
     int len = strlen(x->a_buf);
     t_atom at;
     char sbuf[ATOMBUFSIZE + 4];
     if (c == 0)
     {
-        /* we're being notified that no more keys will come for this grab */
-        if (x->a_buf[0])
+        // we're being notified that no more keys will come for this grab
+    	//post("gatom_key end <%s> <%s>", x->a_buf, x->a_atom.a_w.w_symbol->s_name);
+    	pd_unbind(&x->a_text.ob_pd, gensym("#keyname_a"));
+    	//post("unbind <%s>", x->a_buf);
+        if (x->a_atom.a_type == A_FLOAT)
+        {
+            x->a_atom = x->a_atomold;
+            //if (x->a_buf[0]) x->a_atom.a_w.w_float = atof(x->a_buf);
+            //sprintf(x->a_buf, "%f", x->a_atom.a_w.w_float);
+            //post("got float f=<%f> s=<%s>", x->a_atom.a_w.w_float, x->a_buf);
+
+            // ico@vt.edu 20200904:
+            // we reset internal buffer since there is currently no graceful way
+            // to handle conversion from float to string and back without loss
+            // in the value accuracy
+            x->a_buf[0] = 0;
             gatom_retext(x, 1, 1);
-        else
-            gatom_retext(x, 0, 1);
+        }
+        else if (x->a_atom.a_type == A_SYMBOL)
+        {
+            //post("gatom_key release");
+            if (strcmp(x->a_buf, x->a_atom.a_w.w_symbol->s_name))
+            {
+                strcpy(x->a_buf, x->a_atom.a_w.w_symbol->s_name);
+                gatom_retext(x, 1, 1);
+                //post("gatom_key buf=<%s> s_name=<%s>", x->a_buf,
+                //    x->a_atom.a_w.w_symbol->s_name);
+            }
+            else
+                gatom_retext(x, 0, 1);
+        }
         return;
     }
     else if (c == '\b')
     {
         if (len > 0)
-        x->a_buf[len-1] = 0;
+        {
+        	if (x->a_shift)
+        		x->a_buf[0] = 0;
+        	else
+        		x->a_buf[len-1] = 0;
+        }
         goto redraw;
     }
     else if (c == '\n')
     {
-        if (x->a_atom.a_type == A_FLOAT)
-            x->a_atom.a_w.w_float = atof(x->a_buf);
+        if (x->a_atom.a_type == A_FLOAT) {
+            if (x->a_buf[0]) x->a_atom.a_w.w_float = atof(x->a_buf);
+            //sprintf(x->a_buf, "%f", x->a_atom.a_w.w_float);
+            //post("got float f=<%f> s=<%s>", x->a_atom.a_w.w_float, x->a_buf);
+
+            // ico@vt.edu 20200904:
+            // we reset internal buffer since there is currently no graceful way
+            // to handle conversion from float to string and back without loss
+            // in the value accuracy
+            x->a_buf[0] = 0;
+        }
         else if (x->a_atom.a_type == A_SYMBOL)
-            x->a_atom.a_w.w_symbol = gensym(x->a_buf);
+			x->a_atom.a_w.w_symbol = gensym(x->a_buf);
         else bug("gatom_key");
+
+        x->a_atomold = x->a_atom;
         gatom_bang(x);
         gatom_retext(x, 1, 0);
-        x->a_buf[0] = 0;
+        /* ico@vt.edu 20200904: We prevent deleting of internal buffer,
+		   so that we can keep adding to the existing text unless we click
+		   the second time in which case we will always start with an
+		   empty symbol
+		*/
+		if (!x->a_shift_clicked)
+        	x->a_buf[0] = 0;
         /* We want to keep grabbing the keyboard after hitting "Enter", so
            we're commenting the following out */
         //glist_grab(x->a_glist, 0, 0, 0, 0, 0);
@@ -1124,6 +1228,9 @@ static void gatom_click(t_gatom *x,
     t_floatarg xpos, t_floatarg ypos, t_floatarg shift, t_floatarg ctrl,
     t_floatarg alt)
 {
+	//post("gatom_click %f %f", ctrl, alt);
+    pd_bind(&x->a_text.ob_pd, gensym("#keyname_a"));
+	//post("bind");
     if (x->a_text.te_width == 1)
     {
         if (x->a_atom.a_type == A_FLOAT)
@@ -1144,9 +1251,14 @@ static void gatom_click(t_gatom *x,
             return;
         }
         x->a_shift = shift;
-        x->a_buf[0] = 0;
-        glist_grab(x->a_glist, &x->a_text.te_g, gatom_motion, gatom_key,
-            xpos, ypos);
+	   	glist_grab(x->a_glist, &x->a_text.te_g, gatom_motion, gatom_key,
+	        xpos, ypos);
+	    //post("a_shift_clicked=%d", x->a_shift_clicked);
+        x->a_shift_clicked = shift;
+	    	// second click wipes prior text
+	    if (!x->a_shift_clicked)
+			x->a_buf[0] = 0;
+	    //post("a_shift_clicked=%d", x->a_shift_clicked);
     }
 }
 
@@ -1252,7 +1364,7 @@ static void gatom_displace(t_gobj *z, t_glist *glist,
 /* for gatom's label */
 static void gatom_vis(t_gobj *z, t_glist *glist, int vis)
 {
-    //fprintf(stderr,"gatom_vis\n");
+    //post("gatom_vis");
     t_gatom *x = (t_gatom*)z;
     text_vis(z, glist, vis);
     if (*x->a_label->s_name)
@@ -1305,6 +1417,7 @@ void canvas_atom(t_glist *gl, t_atomtype type,
     x->a_label = &s_;
     x->a_symfrom = &s_;
     x->a_symto = x->a_expanded_to = &s_;
+    x->a_shift_clicked = 0;
     if (type == A_FLOAT)
     {
         x->a_atom.a_w.w_float = 0;
@@ -1317,6 +1430,7 @@ void canvas_atom(t_glist *gl, t_atomtype type,
         x->a_text.te_width = 10;
         SETSYMBOL(&at, &s_symbol);
     }
+    x->a_atomold = x->a_atom;
     binbuf_add(x->a_text.te_binbuf, 1, &at);
     if (argc > 1)
         /* create from file. x, y, width, low-range, high-range, flags,
@@ -2165,8 +2279,8 @@ static int text_click(t_gobj *z, struct _glist *glist,
         t_rtext *y = glist_findrtext(glist, x);
         if (doit)
         {
-            //fprintf(stderr,"atom click\n");
-            /* Change the gatom blue when it's clicked? Need to test... */
+            //post("gatom click on");
+            /* Change the gatom text color when it's clicked? Need to test... */
             gui_vmess("gui_gatom_activate", "xsi",
                 canvas, rtext_gettag(y), 1);
             gatom_click((t_gatom *)x, (t_floatarg)xpix, (t_floatarg)ypix,

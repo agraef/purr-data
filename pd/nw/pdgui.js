@@ -2654,7 +2654,20 @@ function gobj_font_y_kludge(fontsize) {
 
 function gui_text_new(cid, tag, type, isselected, left_margin, font_height, text, font) {
     //ico@vt.edu: different text spacing for GOPs
+    //post("gui_text_new type=" + type + " tag=" + tag);
     var xoff = 0.5; // Default value for normal objects, GOP uses -0.5
+    /* ico@vt.edu 20200907: the following id_suffix is used for gatom objects.
+    When activated, they tend to highlight both the label and the gatom contents
+    since prior to this there was no differentiation between the two in terms of
+    their tags. However, g_rtext.c instantiates gatom contents with type "atom"
+    whereas the label inside g_text.c is instantiated as "gatom". We use this
+    difference here to provide the two with different tag names, so that we can
+    prevent the label from being also "activated" (e.g. when user clicks on the
+    gatom to edit its contents in non-edit mode). */
+    var classname = "box_text";
+    if (type === "atom") {
+        classname = "box_text data";
+    }
     gui(cid).get_gobj(tag, function(e) {
         xoff = e.classList.contains("graph") ? -0.5 : 0.5;
     });
@@ -2686,7 +2699,7 @@ function gui_text_new(cid, tag, type, isselected, left_margin, font_height, text
             "font-size": pd_fontsize_to_gui_fontsize(font) + "px",
             "font-weight": "normal",
             id: tag + "text",
-            "class": "box_text"
+            "class": classname
         });
         // trim off any extraneous leading/trailing whitespace. Because of
         // the way binbuf_gettext works we almost always have a trailing
@@ -5433,6 +5446,7 @@ function gui_gatom_dialog(did, attr_array) {
 }
 
 function gui_gatom_activate(cid, tag, state) {
+    //post("gui_gatom_activate tag=" + tag + " state=" + state);
     gui(cid).get_gobj(tag, function(e) {
         if (state !== 0) {
             e.classList.add("activated");
