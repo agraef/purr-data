@@ -2293,8 +2293,6 @@ static int do_replace_subpatches(t_canvas *x, const char* label, t_binbuf *origi
     return num;
 }
 
-int sys_relativizepath(const char *from, const char *to, char *result);
-
 static void abstracthandler_callback(t_abstracthandler *x, t_symbol *s)
 {
     char fullpath[MAXPDSTRING], label[MAXPDSTRING], *dir, *filename, *o = s->s_name;
