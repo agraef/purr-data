@@ -1775,6 +1775,16 @@ extern int do_not_redraw;
 
 void glob_quit(void *dummy, t_floatarg status)
 {
+    if (sys_nogui)
+    {
+        // ag: Take the quick way out. Specifically, we do *not* want to clean
+        // up a non-existent gui here (which also causes spurious segfaults in
+        // gui-less operation on Windows).
+        canvas_suspend_dsp();
+        sys_bail(status);
+        // sys_bail shouldn't return, but just in case:
+        return;
+    }
     /* If we're going to try to cleanly close everything here, we should
        do the same for all open patches and that is currently not the case,
        so for the time being, let's just leave OS to deal with freeing of all
