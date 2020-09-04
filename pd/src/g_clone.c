@@ -65,6 +65,16 @@ typedef struct _clone
     int x_suppressvoice; /* suppress voice number as $1 arg */
 } t_clone;
 
+/* the given 'it' function is executed over each of the underlying canvases
+    (they are passed as first parameter). 'data' is passed as second argument */
+void clone_iterate(t_pd *z, t_canvas_iterator it, void* data)
+{
+    t_clone *x = (t_clone *)z;
+    int i;
+    for(i = 0; i < x->x_n; i++)
+        it(x->x_vec[i].c_gl, data);
+}
+
 int clone_match(t_pd *z, t_symbol *name, t_symbol *dir)
 {
     t_clone *x = (t_clone *)z;

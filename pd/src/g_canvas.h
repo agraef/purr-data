@@ -237,6 +237,8 @@ struct _glist
 #define gl_gobj gl_obj.te_g
 #define gl_pd gl_gobj.g_pd
 
+typedef void (*t_canvas_iterator)(t_canvas *x, void *data);
+
 /*-------------------universal preset stuff---------------------*/
 // for the universal preset_node ability (see g_editor.c doconnect/disconnect functions)
 // this is where all the classes capable of being controlled via preset should be defined
