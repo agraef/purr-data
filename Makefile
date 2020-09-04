@@ -157,6 +157,44 @@ realclean:
 	git checkout .
 	git clean -dffx -e pd/nw/nw/
 
+# Check targets. These run the regression tests in scripts.
+# Requires a full build.
+
+os = $(shell uname|sed 's/^\(MINGW[0-9]*\)_NT.*/\1/')
+
+# NOTE: For mingw64 the external tests report 2176 instead of the
+# expected 2251 objects, which makes the 'check' target fail; you can
+# have 'make' ignore such errors by invoking it as 'make -i check'.
+
+ifeq ($(os),Linux)
+# Linux (all flavors)
+pdprog = packages/linux_make/build/usr/bin/pd-l2ork
+else ifeq ($(os),Darwin)
+# Mac
+pdprog = packages/darwin_app/build/*.app/Contents/Resources/app.nw/bin/pd-l2ork
+else ifeq ($(os),MINGW64)
+# Msys2 mingw64
+pdprog = packages/win64_inno/build/bin/pd.exe
+else ifeq ($(os),MINGW32)
+# Msys2 mingw32
+pdprog = packages/win32_inno/build/bin/pd.exe
+endif
+
+ifneq ($(pdprog),)
+# This runs just a quick regression test, useful to see whether the program
+# works at all.
+check1:
+	$(pdprog) -noprefs -nogui -noaudio -send 'init dollarzero $$0' scripts/regression_tests.pd
+
+# This runs the full test suite, including the test of the externals.
+check:
+	$(pdprog) -noprefs -nogui -noaudio -send 'init dollarzero $$0' scripts/regression_tests.pd
+	$(pdprog) -noprefs -nostdpath -nogui -noaudio scripts/external-tests.pd
+else
+check1 check:
+	@echo "Target $(os) not recognized, can't run 'make $@'!"; false
+endif
+
 # Installation targets. These don't work on Mac and Windows right now, you
 # should use the generated installers on these systems instead. Also,
 # $(prefix) must be set. $(DESTDIR) is supported as well, so you can do staged
