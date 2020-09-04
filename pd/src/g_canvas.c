@@ -463,6 +463,8 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     }
     else x->gl_env = 0;
 
+    x->gl_subdirties = 0;
+
     if (yloc < GLIST_DEFCANVASYLOC)
         yloc = GLIST_DEFCANVASYLOC;
     if (xloc < 0)
@@ -757,6 +759,27 @@ void canvas_reflecttitle(t_canvas *x)
         namebuf, canvas_getdir(x)->s_name, x->gl_dirty);
 }
 
+/* --------------------- */
+
+/* climbs up to the root canvas while enabling or disabling visual markings for dirtiness
+    of traversed canvases */
+void canvas_dirtyclimb(t_canvas *x, int n)
+{
+    if (x->gl_owner)
+    {
+        gobj_dirty(&x->gl_gobj, x->gl_owner,
+            (n ? 1 : (x->gl_subdirties ? 2 : 0)));
+        x = x->gl_owner;
+        while(x->gl_owner)
+        {
+            x->gl_subdirties += ((unsigned)n ? 1 : -1);
+            if(!x->gl_dirty)
+                gobj_dirty(&x->gl_gobj, x->gl_owner, (x->gl_subdirties ? 2 : 0));
+            x = x->gl_owner;
+        }
+    }
+}
+
     /* mark a glist dirty or clean */
 void canvas_dirty(t_canvas *x, t_floatarg n)
 {
@@ -768,6 +791,9 @@ void canvas_dirty(t_canvas *x, t_floatarg n)
         x2->gl_dirty = n;
         if (x2->gl_havewindow)
             canvas_reflecttitle(x2);
+
+        /* set dirtiness visual markings */
+        canvas_dirtyclimb(x2, (unsigned)n);
     }
 }
 

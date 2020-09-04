@@ -2121,6 +2121,16 @@ static void text_vis(t_gobj *z, t_glist *glist, int vis)
                 text_drawborder(x, glist, rtext_gettag(y),
                     rtext_width(y), rtext_height(y), 1);
                 rtext_draw(y);
+
+                /* check whether we have to tell the gui to mark
+                    (border color) the gobj as dirty or not */
+                if(pd_class(&x->te_pd) == canvas_class)
+                {
+                    if (((t_canvas *)x)->gl_dirty)
+                        gobj_dirty(x, glist, 1);
+                    else if (((t_canvas *)x)->gl_subdirties)
+                        gobj_dirty(x, glist, 2);
+                }
             }
         }
         else

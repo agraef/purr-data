@@ -232,6 +232,8 @@ struct _glist
     t_symbol *gl_templatesym; /* for "canvas" data type */
     t_word *gl_vec;            /* for "canvas" data type */
     t_gpointer gl_gp;            /* parent for "canvas" data type */
+
+    int gl_subdirties;     /* number of descending dirty abstractions */
 };
 
 #define gl_gobj gl_obj.te_g
@@ -436,6 +438,7 @@ EXTERN void gobj_save(t_gobj *x, t_binbuf *b);
 EXTERN void gobj_properties(t_gobj *x, struct _glist *glist);
 EXTERN void gobj_save(t_gobj *x, t_binbuf *b);
 EXTERN int gobj_shouldvis(t_gobj *x, struct _glist *glist);
+EXTERN void gobj_dirty(t_gobj *x, t_glist *g, int state);
 
 /* -------------------- functions on glists --------------------- */
 EXTERN t_glist *glist_new( void);
