@@ -6636,7 +6636,7 @@ exports.resize_window = function(did) {
     //ico@vt.edu: comment the following line when working on dialog sizes...
     dialogwin[did].setResizable(false);
     //post("dialog set always on top");
-    dialogwin[did].setAlwaysOnTop(true);
+    //dialogwin[did].setAlwaysOnTop(true);
 }
 
 // External GUI classes
