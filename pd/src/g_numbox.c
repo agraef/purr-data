@@ -804,44 +804,52 @@ static void my_numbox_list(t_my_numbox *x, t_symbol *s, int ac, t_atom *av)
         my_numbox_set(x, atom_getfloatarg(0, ac, av));
         my_numbox_bang(x);
     }
-    else if (ac == 2 && x->x_gui.x_change == 1 && IS_A_FLOAT(av,0) && IS_A_SYMBOL(av,1) && av[0].a_w.w_float == 1)
+    else if (ac == 2 && x->x_gui.x_change == 1 && IS_A_FLOAT(av,0) && IS_A_SYMBOL(av,1))
     {
         //fprintf(stderr,"got keyname %s while grabbed\n", av[1].a_w.w_symbol->s_name);
-        if (!strcmp("Up", av[1].a_w.w_symbol->s_name))
+        if (!strcmp("Shift", av[1].a_w.w_symbol->s_name))
         {
-            //fprintf(stderr,"...Up\n");
-            if(x->x_buf[0] == 0 && x->x_val != 0)
-                sprintf(x->x_buf, "%g", x->x_val+1);
-            else
-                sprintf(x->x_buf, "%g", atof(x->x_buf) + 1);
-            my_numbox_key((void *)x, -1);
+            x->x_gui.x_finemoved = (int)av[0].a_w.w_float;
+            //post("...Shift %d", x->a_shift);
         }
-        else if (!strcmp("ShiftUp", av[1].a_w.w_symbol->s_name))
+        if (av[0].a_w.w_float == 1)
         {
-            //fprintf(stderr,"...ShiftUp\n");
-            if(x->x_buf[0] == 0 && x->x_val != 0)
-                sprintf(x->x_buf, "%g", x->x_val+0.01);
-            else
-                sprintf(x->x_buf, "%g", atof(x->x_buf) + 0.01);
-            my_numbox_key((void *)x, -1);
-        }
-        else if (!strcmp("Down", av[1].a_w.w_symbol->s_name))
-        {
-            //fprintf(stderr,"...Down\n");
-            if(x->x_buf[0] == 0 && x->x_val != 0)
-                sprintf(x->x_buf, "%g", x->x_val-1);
-            else
-                sprintf(x->x_buf, "%g", atof(x->x_buf) - 1);
-            my_numbox_key((void *)x, -1);
-        }
-        else if (!strcmp("ShiftDown", av[1].a_w.w_symbol->s_name))
-        {
-            //fprintf(stderr,"...ShiftDown\n");
-            if(x->x_buf[0] == 0 && x->x_val != 0)
-                sprintf(x->x_buf, "%g", x->x_val-0.01);
-            else
-                sprintf(x->x_buf, "%g", atof(x->x_buf) - 0.01);
-            my_numbox_key((void *)x, -1);
+            if (!strcmp("Up", av[1].a_w.w_symbol->s_name))
+            {
+                //fprintf(stderr,"...Up\n");
+                if(x->x_buf[0] == 0 && x->x_val != 0)
+                    sprintf(x->x_buf, "%g", x->x_val+1);
+                else
+                    sprintf(x->x_buf, "%g", atof(x->x_buf) + 1);
+                my_numbox_key((void *)x, -1);
+            }
+            else if (!strcmp("ShiftUp", av[1].a_w.w_symbol->s_name))
+            {
+                //fprintf(stderr,"...ShiftUp\n");
+                if(x->x_buf[0] == 0 && x->x_val != 0)
+                    sprintf(x->x_buf, "%g", x->x_val+0.01);
+                else
+                    sprintf(x->x_buf, "%g", atof(x->x_buf) + 0.01);
+                my_numbox_key((void *)x, -1);
+            }
+            else if (!strcmp("Down", av[1].a_w.w_symbol->s_name))
+            {
+                //fprintf(stderr,"...Down\n");
+                if(x->x_buf[0] == 0 && x->x_val != 0)
+                    sprintf(x->x_buf, "%g", x->x_val-1);
+                else
+                    sprintf(x->x_buf, "%g", atof(x->x_buf) - 1);
+                my_numbox_key((void *)x, -1);
+            }
+            else if (!strcmp("ShiftDown", av[1].a_w.w_symbol->s_name))
+            {
+                //fprintf(stderr,"...ShiftDown\n");
+                if(x->x_buf[0] == 0 && x->x_val != 0)
+                    sprintf(x->x_buf, "%g", x->x_val-0.01);
+                else
+                    sprintf(x->x_buf, "%g", atof(x->x_buf) - 0.01);
+                my_numbox_key((void *)x, -1);
+            }
         }
     }
 }
