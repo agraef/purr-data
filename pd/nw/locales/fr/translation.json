@@ -144,8 +144,8 @@
     "reselect_tt": "Rétablir la sélection précédente",
     "find":    "Rechercher",
     "find_tt": "Rechercher un texte dans la sortie de la console",
-    "encapsulate": "Encapsulate",
-    "encapsulate_tt": "Encapsulate automatically the current selection into a subpatch",
+    "encapsulate": "Encapsuler",
+    "encapsulate_tt": "Encapsuler automatiquement la sélection actuelle dans un sous-patch",
     "tidyup":    "Arranger",
     "tidyup_tt": "Aligner la sélection d'objets en lignes et colonnes strictes",
     "clear_console":    "Effacer la Console",
@@ -273,7 +273,7 @@
   "pd_window": {
     "find": {
       "placeholder": "Chercher dans la Console",
-      "highlight": "Highlight All"
+      "highlight": "Surligner toutes les occurrences"
     }
   },
   "canvas": {
@@ -288,14 +288,14 @@
       "cancel_tt": "N'enregistrer aucune modification et ne pas fermer le patch"
     },
     "abstract_dialog": {
-      "prompt": "Would you like to turn the identical subpatches into abstractions?\nCandidates found in the subpatch tree, from root canvas: ",
-      "note": "Note: this can't be undone all at once – any changes made in subpatches can be undone from that subpatch",
-      "single": "Only this one",
-      "single_tt": "Replace the subpatch you just saved with the corresponding abstraction",
-      "all": "All candidates",
-      "all_tt": "Replace all subpatches in the subpatch tree identical to the one you just saved with the corresponding abstraction",
-      "none": "None",
-      "none_tt": "Do not replace any subpatch"
+      "prompt": "Voudriez-vous transformer tous les sous-patchs identiques en abstractions ?\nCandidats trouvés dans l'arborescence des sous-patchs, depuis le canevas racine : ",
+      "note": "Note : Cela ne peut pas être défait d'un seul coup - Toutes les modifications apportées aux sous-patchs peuvent être annulées à partir de ce sous-patch",
+      "single": "Seulement celui-ci",
+      "single_tt": "Remplacer le sous-patch que vous venez de sauvegarder par l'abstraction correspondante",
+      "all": "Tous les candidats",
+      "all_tt": "Remplacer tous les sous-patchs de l'arborescence des sous-patchs identiques à celui que vous venez d'enregistrer par l'abstraction correspondante",
+      "none": "Aucun",
+      "none_tt": "Ne remplacer aucun sous-patch"
     },
     "find": {
       "placeholder": "Chercher dans le Canevas",
