@@ -8049,6 +8049,14 @@ void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
     }
 }
 
+void canvas_query_editmode(t_canvas *x)
+{
+  int edit = /*!glob_ctrl && */x->gl_edit;
+  gui_vmess("gui_canvas_set_editmode", "xi",
+            glist_getcanvas(x),
+            edit);
+}
+
 // jsarlo
 void canvas_magicglass(t_canvas *x, t_floatarg fyesplease)
 {

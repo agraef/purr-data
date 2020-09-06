@@ -1302,6 +1302,13 @@ function gui_canvas_set_editmode(cid, state) {
     canvas_set_editmode(cid, state);
 }
 
+// ask the engine about the current edit mode
+function canvas_query_editmode(cid) {
+    pdsend(cid, "query-editmode");
+}
+
+exports.canvas_query_editmode = canvas_query_editmode;
+
 function update_grid(grid) {
     // Update the grid background of all canvas windows when the corresponding
     // option in the gui prefs changes.
