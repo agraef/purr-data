@@ -166,7 +166,11 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
     t_canvas *canvas=glist_getcanvas(glist);
     char cbuf[8];
     sprintf(cbuf, "#%6.6x", x->x_gui.x_bcol);
-    int half=x->x_gui.x_h/2, d=1+x->x_gui.x_h/34;
+    int half=x->x_gui.x_h/2;
+    // ico@vt.edu 2020-08-24: this offset is better as float to ensure
+    // that the vertical positioning of the number is as close to the center
+    // as nw.js allows
+    t_float d=0.5+x->x_gui.x_h/34.0;
     int x1=text_xpix(&x->x_gui.x_obj, glist), x2=x1+x->x_numwidth;
     int y1=text_ypix(&x->x_gui.x_obj, glist), y2=y1+x->x_gui.x_h;
 
@@ -190,7 +194,7 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
     }
     my_numbox_ftoa(x);
     sprintf(cbuf, "#%6.6x", x->x_gui.x_fcol);
-    gui_vmess("gui_numbox_draw_text", "xxsisiiii",
+    gui_vmess("gui_numbox_draw_text", "xxsisifii",
         canvas,
         x,
         x->x_buf,

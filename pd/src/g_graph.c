@@ -60,6 +60,79 @@ int canvas_isgroup(t_canvas *x)
 extern t_template *canvas_findtemplate(t_canvas *c);
 extern t_canvas *canvas_templatecanvas_forgroup(t_canvas *c);
 
+
+/* ico@vt.edu 2020-08-24:
+check if canvas consists of only scalars and returns 2. if the canvas only
+has the last object as a non-scalar (e.g. a new object has just been created,
+then we return 1, otherwise return 0. this is used to prevent creation of new
+objects in an GOP window that only has scalars inside it or scalars with one
+newly created object that is yet to be typed into and therefore properly
+instantiated */
+int canvas_has_scalars_only(t_canvas *x)
+{
+    t_gobj *g = x->gl_list;
+    int hasonlyscalars = 2;
+    while (g)
+    {
+        //post("g...");
+        if (pd_class(&g->g_pd) != scalar_class)
+        {
+            /*
+            post("...scalar=NO %s %s", 
+                (pd_class(&g->g_pd) == text_class ? "text_class" : "NOT_text_class"),
+                (((t_text *)g)->te_type == T_TEXT) ? "T_TEXT" : "NOT_T_TEXT");
+            */
+
+            /* ico@vt.edu 2020-08-24:
+            if we have one more object or the last object is not newly
+            instantiated text object
+            to distinguish between a comment and a text object that is 
+            yet to be instantiated we use:
+               1) comment is text_class and its te_type is T_TEXT
+               2) blank object one is typing into is text_class but is NOT T_TEXT
+               3) instantiated object is something other than text_class (unless)
+                  it is a comment
+               4) object that has failed to create is same as blank object
+            */
+            if (g->g_next || (pd_class(&g->g_pd) != text_class || ((t_text *)g)->te_type == T_TEXT))
+                hasonlyscalars = 0;
+            else
+                hasonlyscalars = 1;
+            break;
+        }
+        //post("...scalar, comment, or uninitialized object=yes");
+        g = g->g_next;
+    }
+    //post("has scalars only=%d", hasonlyscalars);
+    return(hasonlyscalars);
+}
+
+/* ico@vt.edu 2020-08-24: this draws or erases redrect on a gop window
+   and is being refactored due to complex logic involving subpatches with
+   scalars only that should not have a redrect until a non-scalar object
+   has been instantiated (this does not include empty objects that are
+   yet to be typed into, as this is one way how one can instantiate new
+   scalar inside a subpatch)
+*/
+void glist_update_redrect(t_glist *x)
+{
+    t_gobj *y = x->gl_list;
+    while(y->g_next) y = y->g_next;
+
+    if (x->gl_editor && x->gl_isgraph && !x->gl_goprect
+        && pd_checkobject(&y->g_pd) && !canvas_has_scalars_only(x))
+    {
+        //post("glist_add drawredrect %d", canvas_has_scalars_only(x));
+        x->gl_goprect = 1;
+        canvas_drawredrect(x, 1);
+    }
+    else if (canvas_has_scalars_only(x) && x->gl_goprect)
+    {
+         x->gl_goprect = 0;
+        canvas_drawredrect(x, 0);       
+    }
+}
+
 void glist_add(t_glist *x, t_gobj *y)
 {
     //fprintf(stderr,"glist_add %lx %d\n", (t_int)x, (x->gl_editor ? 1 : 0));    
@@ -84,12 +157,7 @@ void glist_add(t_glist *x, t_gobj *y)
         //    canvas_undo_set_create(x, index), "create");
         //glist_noselect(x);
     }
-    if (x->gl_editor && x->gl_isgraph && !x->gl_goprect
-        && pd_checkobject(&y->g_pd))
-    {
-        x->gl_goprect = 1;
-        canvas_drawredrect(x, 1);
-    }
+    glist_update_redrect(x);
     if (glist_isvisible(x))
         gobj_vis(y, x, 1);
     if (class_isdrawcommand(y->g_pd)) 
@@ -257,6 +325,8 @@ void glist_delete(t_glist *x, t_gobj *y)
             //fprintf(stderr,"glist_delete late_rtext_free\n");
             rtext_free(rt);
         }
+
+        if (x->gl_list) glist_update_redrect(x);
     }
 }
 
@@ -962,6 +1032,7 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
     }
 
         /* Sanity check */
+    //post("parent_glist=%lx x->gl_obj=%lx", parent_glist, &x->gl_obj);
     rtext = glist_findrtext(parent_glist, &x->gl_obj);
     if (!rtext)
     {
@@ -1028,6 +1099,16 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
             gui_vmess("gui_graph_fill_border", "xsi",
                 glist_getcanvas(x->gl_owner),
                 tag);
+			/* ico@vt.edu: do we need to redraw scalars here? */
+			for (g = x->gl_list; g; g = g->g_next)
+			{
+				gop_redraw = 1;
+				//fprintf(stderr,"drawing gop objects\n");
+				if (g->g_pd == scalar_class)
+					gobj_vis(g, x, 1);
+				//fprintf(stderr,"done\n");
+				gop_redraw = 0;
+			}
         }
         else if (gobj_shouldvis(gr, parent_glist))
         {
@@ -1089,7 +1170,7 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
                 gui_end_array();
             }
         }
-            /* Finally, end the final array as wel as the call to the GUI */
+            /* Finally, end the final array as well as the call to the GUI */
         gui_end_array();
         gui_end_vmess();
 

@@ -131,8 +131,8 @@ static void textbuf_open(t_textbuf *x)
         gui_vmess("gui_text_dialog", "xsiii",
             x,
             x->b_sym->s_name,
-            600,
-            340,
+            480,
+            550,
             sys_hostfontsize(glist_getfont(x->b_canvas)));
         //textbuf_senditup(x);
     }

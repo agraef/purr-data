@@ -3,7 +3,7 @@
     "prop": {
       "heading": {
           "size":    "size and behavior",
-          "messages": "messages",
+          "messages": "messaging",
           "label":   "label",
           "colors":  "colors"
       },
@@ -154,8 +154,8 @@
     "tofront_tt": "Bring the selected object visually in front of all other objects",
     "toback": "Send to Back",
     "toback_tt": "Send the selected object visually behind all other objects",
-    "font": "Font",
-    "font_tt": "Font settings for this patch",
+    "font": "Font Size",
+    "font_tt": "Font size settings for this patch",
     "cordinspector": "Cord Inspector",
     "cordinspector_tt": "Move the mouse over cords to inspect the data moving between objects",
     "find": "Find",
@@ -319,9 +319,9 @@
         "viewbox_offsets": "viewbox offsets",
         "arrays": "array options"
       },
-      "no_scroll": "hide scrollbars (experimental)",
+      "no_scroll": "hide scrollbars",
       "no_scroll_tt": "hide window scrollbars",
-      "no_menu": "hide menu (experimental)",
+      "no_menu": "hide menu",
       "no_menu_tt": "hide window menu",
       "gop": "graph on parent",
       "gop_tt": "show the inner contents of this canvas in a rectangle on the containing canvas",

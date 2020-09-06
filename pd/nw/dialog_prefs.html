@@ -3,8 +3,25 @@
   <head>
     <link id="page_style" rel="stylesheet" type="text/css" href="css/default.css">
   </head>
-  <body class="dialog_body prefs_body">
+  <style>
+td {
+  padding-right: 0px;
+}
+  </style>
+  <body class="dialog_body prefs_body" style="overflow: hidden;">
     <div class="container noselect prefs_container">
+      <table id="titlebar">
+        <tr>
+          <td style="width: 100%;">
+            <div id="titlebar_title">Pd-L2Ork Properties</div>
+          </td>
+          <td>
+            <div class="titlebar_buttons">
+              <div id="titlebar_close_button" onclick="cancel(false);">&#215</div>
+            </div>
+          </td>
+        </tr>
+      </table>
       <div class="prefs_tab_group">
         <input type="radio"
                name="prefs_radio_group"
@@ -259,7 +276,7 @@
             <span data-i18n="[title]prefs.midi.input_title_tt">
               <span data-i18n="prefs.midi.input_title"></span>
             </span>
-            <table class="tab_settings">
+            <table class="tab_settings" style="width: 100%;">
               <tr>
                 <td>1</td><td>
                   <select id="midi_in1" onchange="dev_change(this);"></select>
@@ -421,7 +438,8 @@
             <label data-i18n="[title]prefs.startup.paths_tt">
               <span data-i18n="prefs.startup.paths"></span>
             </label>
-            <div style="height:24vh; width:89vw; background:white; border: 1px solid #bbb; overflow-y:auto; overflow-x:auto; padding:0px;">
+            <div style="height:24vh; background:white; border: 1px solid #bbb;
+                margin-right: -4px; overflow-y:auto; overflow-x:auto; padding:0px;">
               <table id="startup_paths" style="width:100%; background:white;">
               </table>
             </div>
@@ -439,7 +457,8 @@
             <label data-i18n="[title]prefs.startup.libs_tt">
               <span data-i18n="prefs.startup.libs"></span>
             </label>
-            <div style="height:24vh; width:89vw; background:white; border: 1px solid #bbb; overflow-y:auto; overflow-x:auto; padding:0px;">
+            <div style="height:24vh; background:white; border: 1px solid #bbb;
+                margin-right: -4px; overflow-y:auto; overflow-x:auto; padding:0px;">
               <table id="startup_libs" style="width:100%; background:white;">
               </table>
             </div>
@@ -460,7 +479,7 @@
               <input type="text"
                      id="startup_flags"
                      name="startup_flags"
-                     style="width:89vw">
+                     style="width:100%">
             </label>
           </div>
         </div>
@@ -1240,6 +1259,7 @@ function startup_path_delete() {
 function register_window_id(gfxstub, attr_arrays) {
     pd_object_callback = gfxstub;
     add_events(gfxstub);
+    pdgui.gui_check_for_dialog_appearance_inconsistencies(gfxstub);
     translate_form();
 
     // We don't turn on rendering of the "container" div until

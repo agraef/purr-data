@@ -3,12 +3,13 @@
   <head>
     <link id="page_style" rel="stylesheet" type="text/css" href="css/default.css">
   </head>
-  <body class="dialog_body">
+  <body class="dialog_body" onload="resize_textarea();" onresize="resize_textarea();"
+  		style="overflow: hidden;">
     <div class="container">
-      <textarea id="text" style="width: 100%; box-sizing: border-box; height: 85vh; resize: none;"> 
+      <textarea id="text" style="margin: 5px 5px 4px 5px; box-sizing: border-box; resize: none;">
       </textarea>
     </div>
-    <div class="submit_buttons">
+    <div class="submit_buttons" style="padding: 0px;">
       <button type="button" onClick="ok()" data-i18n="[title]iem.prop.ok_tt">
         <span data-i18n="iem.prop.ok"></span>
       </button>
@@ -53,6 +54,8 @@ pdgui.skin.apply(window);
 
 var pd_object_callback;
 var dirty = false;
+
+gui.Window.get().setMinimumSize(260, 70);
 
 function apply() {
     var text_array = document.getElementById("text").value.split("\n");
@@ -132,7 +135,7 @@ function register_window_id(gfxstub, attr) {
     // nwjs window, so you'll see a flicker to the title set here if it's
     // not "text". We need to change this so that the title can be different
     // from the dialog type in nw_create_window.
-    document.title = attr.title;
+    document.title = "[" + attr.title + "] Text Editor";
 }
 
 // Stop-gap translator
@@ -184,6 +187,14 @@ function add_events(name) {
     // Right now the bindings are limited to "Enter = Ok" and "Escape = Cancel".
     // We leave off those bindings since Enter starts a new line in the textarea
     //pdgui.dialog_bindings(name);
+}
+
+function resize_textarea() {
+	var text = document.getElementById("text");
+	var textwidth = (window.innerWidth - 10 > 200 ? (window.innerWidth - 10) : 200);
+	var textheight = (window.innerHeight - 40 > 21 ? (window.innerHeight - 40) : 21);
+	text.style.setProperty("width", textwidth + "px");
+	text.style.setProperty("height", textheight + "px");
 }
   </script>
   </body>

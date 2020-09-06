@@ -618,6 +618,8 @@ void glist_glist(t_glist *g, t_symbol *s, int argc, t_atom *argv)
 {
     if (canvas_hasarray(g)) return;
     pd_vmess(&g->gl_pd, gensym("editmode"), "i", 1);
+    // disallow creation of new objects in scalars only window
+    if (canvas_has_scalars_only(g) == 2) return;
     t_symbol *sym = atom_getsymbolarg(0, argc, argv);
     /* if we wish to put a graph where the mouse is we need to replace bogus name */
     if (!strcmp(sym->s_name, "NULL")) sym = &s_;  
@@ -728,14 +730,15 @@ void canvas_args_to_string(char *namebuf, t_canvas *x)
     {
         namebuf[0] = 0;
         t_gobj *g = NULL;
+        t_garray *a = NULL;
         t_symbol *arrayname;
-        int found = 0;
+        int found = 0, res;
         for (g = x->gl_list; g; g = g->g_next)
         {
 
             if (pd_class(&g->g_pd) == garray_class)
             {
-                garray_getname((t_garray *)g, &arrayname);
+                res = garray_getname((t_garray *)g, &arrayname);
                 if (found)
                 {
                     strcat(namebuf, " ");
@@ -2445,7 +2448,16 @@ void canvasgop__motionhook(t_scalehandle *sh, t_floatarg mouse_x,
         t_glist *owner = glist_getcanvas(x);
         /* Just unvis the object, then vis it once we've done our
            mutation and checks */
-        gobj_vis((t_gobj *)x, owner, 0);
+        /* ico@vt.edu 2020-08-26: this was owner instead of x->gl_owner However,
+           there is a special case where this causes consistency check error 
+           in canvas_vis because a gop patch size is being manipulated on the
+           parent window and its window is also visible, glist_getcanvas() will
+           return its own window even though the user is manipulating the size
+           on the parent window. So, here we ensure that we are always getting
+           the parent window, and then we update the red rectangle on its own
+           window below (see if (x->gl_havewindow)). The same is true for vising
+           towards the bottom of this function. */
+        gobj_vis((t_gobj *)x, x->gl_owner, 0);
         /* struct _glist has its own member e_xnew for storing our offset.
            At some point we need to refactor since our t_scalehandle has
            members for storing offsets already. */
@@ -2481,8 +2493,21 @@ void canvasgop__motionhook(t_scalehandle *sh, t_floatarg mouse_x,
         owner->gl_editor->e_xnew = mouse_x;
         owner->gl_editor->e_ynew = mouse_y;
         canvas_fixlinesfor(owner, (t_text *)x);
-        gobj_vis((t_gobj *)x, owner, 1);
+        gobj_vis((t_gobj *)x, x->gl_owner, 1);
         canvas_dirty(owner, 1);
+
+        /* ico@vt.edu 2020-08-26: if we are changing the gop size
+           on the parent window with our own window open, updated the 
+           red rectangle on our own window */
+        if (x->gl_havewindow)
+        {
+            gui_vmess("gui_canvas_redrect_coords", "xiiii",
+                x,
+                x->gl_xmargin,
+                x->gl_ymargin,
+                x->gl_xmargin + x->gl_pixwidth,
+                x->gl_ymargin + x->gl_pixheight);
+        }
 
         int properties = gfxstub_haveproperties((void *)x);
         if (properties)
@@ -2516,6 +2541,14 @@ void canvasgop__motionhook(t_scalehandle *sh, t_floatarg mouse_x,
                 "x_pix",x->gl_pixwidth + sh->h_dragx);
             properties_set_field_int(properties,
                 "y_pix",x->gl_pixheight + sh->h_dragy);
+        }
+        /* ico@vt.edu: resize parent window gop rectangle if visible
+           as an added bonus, this also works even if it is only
+           visible inside another gop (gop within a gop within a gop) */
+        if (x->gl_owner && glist_isvisible(x->gl_owner))
+        {
+            gobj_vis(&x->gl_gobj, x->gl_owner, 0);
+            gobj_vis(&x->gl_gobj, x->gl_owner, 1);
         }
     }
     else /* move_gop hook */

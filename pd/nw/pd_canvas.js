@@ -614,6 +614,8 @@ var canvas_events = (function() {
                 canvas_events[canvas_events.get_previous_state()]();
             },
             hscroll_mouseup: function(evt) {
+                document.getElementById("hscroll").style.setProperty("background-color", "rgba(0, 0, 0, 0.267)");
+                document.getElementById("patchsvg").style.cursor = "default";
                 canvas_events[canvas_events.get_previous_state()]();
             },
             hscroll_mousemove: function(evt) {
@@ -643,6 +645,8 @@ var canvas_events = (function() {
                 }
             },
             vscroll_mouseup: function(evt) {
+                document.getElementById("vscroll").style.setProperty("background-color", "rgba(0, 0, 0, 0.267)");
+                document.getElementById("patchsvg").style.cursor = "default";
                 canvas_events[canvas_events.get_previous_state()]();
             },
             vscroll_mousemove: function(evt) {
@@ -915,11 +919,15 @@ var canvas_events = (function() {
         },
         hscroll_drag: function() {
             canvas_events.none();
+            document.getElementById("hscroll").style.cssText += "background-color: rgba(0, 0, 0, 0.5) !important";
+            document.getElementById("patchsvg").style.cursor = "-webkit-grabbing";
             document.addEventListener("mouseup", events.hscroll_mouseup, false);
             document.addEventListener("mousemove", events.hscroll_mousemove, false);
         },
         vscroll_drag: function() {
             canvas_events.none();
+            document.getElementById("vscroll").style.cssText += "background-color: rgba(0, 0, 0, 0.5) !important";
+            document.getElementById("patchsvg").style.cursor = "-webkit-grabbing";
             document.addEventListener("mouseup", events.vscroll_mouseup, false);
             document.addEventListener("mousemove", events.vscroll_mousemove, false);
         },
@@ -1337,6 +1345,7 @@ function register_window_id(cid, attr_array) {
         nw.Window.get().title = kludge_title;
     }
     pdgui.free_title_queue(cid);
+    document.body.addEventListener("load", update_menu_items(cid), false);
 }
 
 function create_popup_menu(name) {
@@ -1443,6 +1452,7 @@ function set_edit_menu_modals(state) {
     canvas_menu.edit.copy.enabled = state;
     canvas_menu.edit.paste.enabled = state;
     canvas_menu.edit.selectall.enabled = state;
+    canvas_menu.edit.font.enabled = state;
 }
 
 function set_editmode_checkbox(state) {
@@ -1477,9 +1487,12 @@ function minit(menu_item, options) {
     }
 }
 
+// used, so that we can reference menu later
+var m  = null;
+
 function nw_create_patch_window_menus(gui, w, name) {
     // if we're on GNU/Linux or Windows, create the menus:
-    var m = canvas_menu = pd_menus.create_menu(gui);
+    m = canvas_menu = pd_menus.create_menu(gui);
 
     // File sub-entries
     // We explicitly enable these menu items because on OSX
@@ -1641,7 +1654,79 @@ function nw_create_patch_window_menus(gui, w, name) {
     });
     minit(m.edit.font, {
         enabled: true,
-        click: function () { pdgui.pdsend(name, "menufont"); }
+        /*click: function () { pdgui.pdsend(name, "menufont"); } */
+    });
+    minit(m.font.s8, {
+        enabled: true,
+        click: function () {
+            m.font.s8.checked = true;
+            m.font.s10.checked = false;
+            m.font.s12.checked = false;
+            m.font.s16.checked = false;
+            m.font.s24.checked = false;
+            m.font.s36.checked = false;
+            pdgui.gui_menu_font_change_size(name, 8);
+        }
+    });
+    minit(m.font.s10, {
+        enabled: true,
+        click: function () {
+            m.font.s8.checked = false;
+            m.font.s10.checked = true;
+            m.font.s12.checked = false;
+            m.font.s16.checked = false;
+            m.font.s24.checked = false;
+            m.font.s36.checked = false;
+            pdgui.gui_menu_font_change_size(name, 10);
+        }
+    });
+    minit(m.font.s12, {
+        enabled: true,
+        click: function () {
+            m.font.s8.checked = false;
+            m.font.s10.checked = false;
+            m.font.s12.checked = true;
+            m.font.s16.checked = false;
+            m.font.s24.checked = false;
+            m.font.s36.checked = false;
+            pdgui.gui_menu_font_change_size(name, 12);
+        }
+    });
+    minit(m.font.s16, {
+        enabled: true,
+        click: function () {
+            m.font.s8.checked = false;
+            m.font.s10.checked = false;
+            m.font.s12.checked = false;
+            m.font.s16.checked = true;
+            m.font.s24.checked = false;
+            m.font.s36.checked = false;
+            pdgui.gui_menu_font_change_size(name, 16);
+        }
+    });
+    minit(m.font.s24, {
+        enabled: true,
+        click: function () {
+            m.font.s8.checked = false;
+            m.font.s10.checked = false;
+            m.font.s12.checked = false;
+            m.font.s16.checked = false;
+            m.font.s24.checked = false;
+            m.font.s36.checked = false;
+            pdgui.gui_menu_font_change_size(name, 24);
+        }
+    });
+    minit(m.font.s36, {
+        enabled: true,
+        click: function () {
+            m.font.s8.checked = false;
+            m.font.s10.checked = false;
+            m.font.s12.checked = false;
+            m.font.s16.checked = false;
+            m.font.s24.checked = false;
+            m.font.s36.checked = true;
+            pdgui.gui_menu_font_change_size(name, 36);
+        }
     });
     minit(m.edit.cordinspector, {
         enabled: true,
@@ -1983,4 +2068,43 @@ function nw_create_patch_window_menus(gui, w, name) {
             gui.Window.get().showDevTools();
         }
     });
+}
+
+function init_menu_font_size(size) {
+    //pdgui.post("init_menu_font_size " + size);
+    m.font.s8.checked = false;
+    m.font.s10.checked = false;
+    m.font.s12.checked = false;
+    m.font.s16.checked = false;
+    m.font.s24.checked = false;
+    m.font.s36.checked = false;
+
+    switch(size)
+    {
+        case 8:
+            m.font.s8.checked = true;
+            break;
+        case 10:
+            m.font.s10.checked = true;
+            break;
+        case 12:
+            m.font.s12.checked = true;
+            break;
+        case 16:
+            m.font.s16.checked = true;
+            break;
+        case 24:
+            m.font.s24.checked = true;
+            break;
+        case 36:
+            m.font.s36.checked = true;
+            break;
+    } 
+}
+
+// ico@vt.edu 2020-08-24: this is called when the window is finally
+// loaded and then asks libpd to tell us what is the font state
+// LATER: we can use this to also update the undo state appropriately
+function update_menu_items(cid) {
+    pdgui.pdsend(cid, "updatemenu");
 }
