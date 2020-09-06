@@ -8042,7 +8042,7 @@ void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
     }
     if (glist_isvisible(x))
     {
-        int edit = !glob_ctrl && x->gl_edit;
+        int edit = /*!glob_ctrl && */x->gl_edit;
         gui_vmess("gui_canvas_set_editmode", "xi",
             glist_getcanvas(x),
             edit);
