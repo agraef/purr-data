@@ -320,7 +320,7 @@ text {
     //cursor: default;
 }
 
-/* not sure what this is doing here... */
+/* used for numbox2 to highlight contents when clicked on in runmode */
 text.activated {
     fill: red;
     cursor: default;
