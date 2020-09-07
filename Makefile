@@ -162,10 +162,6 @@ realclean:
 
 os = $(shell uname|sed 's/^\(MINGW[0-9]*\)_NT.*/\1/')
 
-# NOTE: For mingw64 the external tests report 2176 instead of the
-# expected 2251 objects, which makes the 'check' target fail; you can
-# have 'make' ignore such errors by invoking it as 'make -i check'.
-
 ifeq ($(os),Linux)
 # Linux (all flavors)
 pdprog = packages/linux_make/build/usr/bin/pd-l2ork
