@@ -1,5 +1,4 @@
 {
-  "hello": "world",
   "iem": {
     "prop": {
       "heading": {
@@ -145,6 +144,8 @@
     "reselect_tt": "Rétablir la sélection précédente",
     "find":    "Rechercher",
     "find_tt": "Rechercher un texte dans la sortie de la console",
+    "encapsulate": "Encapsuler",
+    "encapsulate_tt": "Encapsuler automatiquement la sélection actuelle dans un sous-patch",
     "tidyup":    "Arranger",
     "tidyup_tt": "Aligner la sélection d'objets en lignes et colonnes strictes",
     "clear_console":    "Effacer la Console",
@@ -271,7 +272,8 @@
   },
   "pd_window": {
     "find": {
-      "placeholder": "Chercher dans la Console"
+      "placeholder": "Chercher dans la Console",
+      "highlight": "Surligner toutes les occurrences"
     }
   },
   "canvas": {
@@ -285,6 +287,16 @@
       "cancel":    "Annuler",
       "cancel_tt": "N'enregistrer aucune modification et ne pas fermer le patch"
     },
+    "abstract_dialog": {
+      "prompt": "Voudriez-vous transformer tous les sous-patchs identiques en abstractions ?\nCandidats trouvés dans l'arborescence des sous-patchs, depuis le canevas racine : ",
+      "note": "Note : Cela ne peut pas être défait d'un seul coup - Toutes les modifications apportées aux sous-patchs peuvent être annulées à partir de ce sous-patch",
+      "single": "Seulement celui-ci",
+      "single_tt": "Remplacer le sous-patch que vous venez de sauvegarder par l'abstraction correspondante",
+      "all": "Tous les candidats",
+      "all_tt": "Remplacer tous les sous-patchs de l'arborescence des sous-patchs identiques à celui que vous venez d'enregistrer par l'abstraction correspondante",
+      "none": "Aucun",
+      "none_tt": "Ne remplacer aucun sous-patch"
+    },
     "find": {
       "placeholder": "Chercher dans le Canevas",
       "search":    "Chercher",
@@ -294,6 +306,7 @@
     "menu": {
       "props": "Propriétés",
       "open":  "Ouvrir",
+      "saveas": "Sauvegarder comme",
       "help":  "Aide",
       "front": "Envoyer au Premier plan",
       "back":  "Envoyer à l'Arrière plan"

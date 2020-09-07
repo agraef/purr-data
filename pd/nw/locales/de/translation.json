@@ -1,5 +1,4 @@
 {
-  "hello": "world",
   "iem": {
     "prop": {
       "heading": {
@@ -145,6 +144,8 @@
     "reselect_tt": "Stellt die vorhergehende Selektion wieder her",
     "find": "Finde",
     "find_tt": "Finde Text in Konsole-Ausgabe",
+    "encapsulate": "Zusammenfassen",
+    "encapsulate_tt": "Fasse die aktuelle Auswahl automatisch in einem Subpatch zusammen",
     "tidyup": "Aufräumen",
     "tidyup_tt": "Richte die selektierten Objekte in geraden Zeilen und Spalten aus",
     "clear_console": "Konsole löschen",
@@ -271,7 +272,8 @@
   },
   "pd_window": {
     "find": {
-      "placeholder": "Suche in der Konsole"
+      "placeholder": "Suche in der Konsole",
+      "highlight": "Alle hervorheben"
     }
   },
   "canvas": {
@@ -285,6 +287,16 @@
       "cancel": "Abbrechen",
       "cancel_tt": "Kein Speichern der Änderungen und kein Schließen des Patches"
     },
+    "abstract_dialog": {
+      "prompt": "Möchten Sie identische Subpatches in Abstraktionen ändern?\nKandidaten in der Subpatch-Hierarchie, ausgehend vom Stammpatch: ",
+      "note": "Hinweis: diese Änderungen können nicht auf einmal rückgängig gemacht werden – Änderungen in einem Subpatch können in diesem Subpatch rückgängig gemacht werden",
+      "single": "Nur dieser Subpatch",
+      "single_tt": "Ersetze den gerade gespeicherten Subpatch mit der entsprechenden Abstraktion",
+      "all": "Alle Kandidaten",
+      "all_tt": "Ersetze alle Subpatches in der Subpatch-Hierarchie, die mit dem gerade gespeicherten Subpatch identisch sind",
+      "none": "Keinen",
+      "none_tt": "Ersetze keinen der Subpatches"
+    },
     "find": {
       "placeholder": "Suche im Patch",
       "search": "Suche",
@@ -294,6 +306,7 @@
     "menu": {
       "props": "Einstellungen",
       "open": "Öffnen",
+      "saveas": "Speichern unter",
       "help": "Hilfe",
       "front": "Nach vorne",
       "back": "Nach hinten"
@@ -308,6 +321,8 @@
       },
       "no_scroll": "Rollbalken verbergen (experimentell)",
       "no_scroll_tt": "Rollbalken verbergen (experimentell)",
+      "no_menu": "Fenstermenü verbergen (experimentell)",
+      "no_menu_tt": "Fenstermenü verbergen (experimentell)",
       "gop": "Anzeige im übergeordneten Patch",
       "gop_tt": "Zeige den Inhalt dieses Patches in einem Rechteck im übergeordneten Patch",
       "hide_name": "Namen und Argumente verbergen",
