@@ -423,6 +423,10 @@
         "c64":       "C64",
         "footgun":   "Footgun"
       },
+      "grid": {
+        "show_grid": "Fond de grille en mode Édition",
+        "show_grid_tt": "Afficher l'arrière-plan de la grille en mode Édition"
+      },
       "zoom": {
         "save_zoom":    "Sauver/Charger niveau zoom avec patch",
         "save_zoom_tt": "Enregistrer le niveau de zoom actuel avec le patch et le restaurer lors du chargement du patch"

@@ -423,6 +423,10 @@
         "c64": "C64",
         "footgun": "Fusspistole"
       },
+      "grid": {
+        "show_grid": "Gitter-Hintergrund im Edit-Modus",
+        "show_grid_tt": "Gitter-Hintergrund im Edit-Modus anzeigen"
+      },
       "zoom": {
         "save_zoom": "Speichern/Laden der Vergrößerung im Patch",
         "save_zoom_tt": "Speichere die aktuelle Vergrößerung mit dem Patch und stelle diese beim Laden des Patches wieder her"
