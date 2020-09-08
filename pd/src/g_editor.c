@@ -2692,6 +2692,7 @@ void canvas_vis(t_canvas *x, t_floatarg f)
 
     t_gobj *g;
     t_int properties;
+    extern int sys_grid;
 
     int flag = (f != 0);
     if (flag)
@@ -2747,11 +2748,12 @@ void canvas_vis(t_canvas *x, t_floatarg f)
                We may need to expand this to include scalars, as well. */
             canvas_create_editor(x);
             canvas_args_to_string(argsbuf, x);
-            gui_vmess("gui_canvas_new", "xiisiissiiiis",
+            gui_vmess("gui_canvas_new", "xiisiiissiiiis",
                 x,
                 (int)(x->gl_screenx2 - x->gl_screenx1),
                 (int)(x->gl_screeny2 - x->gl_screeny1),
                 geobuf,
+                sys_grid,
                 x->gl_zoom,
                 x->gl_edit,
                 x->gl_name->s_name,

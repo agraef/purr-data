@@ -1455,6 +1455,10 @@ function set_edit_menu_modals(state) {
     canvas_menu.edit.font.enabled = state;
 }
 
+function get_editmode_checkbox() {
+    return canvas_menu.edit.editmode.checked;
+}
+
 function set_editmode_checkbox(state) {
     canvas_menu.edit.editmode.checked = state;
 }

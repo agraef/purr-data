@@ -762,8 +762,8 @@ function apply(save_prefs) {
     );
 
     // Send the gui prefs (currently just the name of the gui preset, the
-    // status of the save-zoom toggle and various options related to the help
-    // browser) to Pd
+    // status of the show_grid and save_zoom toggles and various options
+    // related to the help browser) to Pd
     pdgui.pdsend("pd gui-prefs",
         get_gui_preset(),
         get_bool_elem("show_grid"),
@@ -773,6 +773,8 @@ function apply(save_prefs) {
         get_bool_elem("browser_init"),
         get_autopatch_yoffset()
     );
+    // Update the grid on all open windows.
+    pdgui.update_grid(get_bool_elem("show_grid"));
 
     // Send the startup config data to Pd
     pdgui.pdsend.apply(null, ["pd path-dialog", startup_use_stdpath, startup_verbose].concat(get_path_array()));
