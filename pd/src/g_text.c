@@ -957,7 +957,12 @@ static void gatom_set(t_gatom *x, t_symbol *s, int argc, t_atom *argv)
             gatom_retext(x, 1, 0);
         x->a_atomold = x->a_atom;
     }
-    x->a_buf[0] = 0;
+    if (x->a_atom.a_type == A_FLOAT)
+    {
+        x->a_buf[0] = 0;
+    } else {
+        strcpy(x->a_buf, x->a_atom.a_w.w_symbol->s_name);
+    }
 }
 
 static void gatom_bang(t_gatom *x)
