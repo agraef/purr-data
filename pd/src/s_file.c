@@ -40,7 +40,7 @@
 #define snprintf sprintf_s
 #endif
 
-int sys_defeatrt, sys_autopatch_yoffset, sys_grid, sys_zoom, sys_browser_doc = 1,
+int sys_defeatrt, sys_autopatch_yoffset, sys_grid = 1, sys_zoom, sys_browser_doc = 1,
     sys_browser_path, sys_browser_init;
 t_symbol *sys_flags = &s_;
 void sys_doflags( void);
