@@ -1288,6 +1288,7 @@ void canvas_undo_paste(t_canvas *x, void *z, int action)
     }
 }
 
+void canvas_dirtyclimb(t_canvas *x, int n);
 int clone_match(t_pd *z, t_symbol *name, t_symbol *dir);
 
     /* recursively check for abstractions to reload as result of a save. 
@@ -1313,6 +1314,11 @@ static void glist_doreload(t_glist *gl, t_symbol *name, t_symbol *dir,
             canvas_isabstraction((t_canvas *)g) &&
                 ((t_canvas *)g)->gl_name == name &&
                     canvas_getdir((t_canvas *)g) == dir);
+
+        /* remove dirtiness visual markings */
+        if(remakeit && ((t_canvas *)g)->gl_dirty)
+            canvas_dirtyclimb((t_canvas *)g, 0);
+
             /* also remake it if it's a "clone" with that name */
         if (pd_class(&g->g_pd) == clone_class &&
             clone_match(&g->g_pd, name, dir))
@@ -6147,6 +6153,13 @@ static void gobj_emphasize(t_glist *g, t_gobj *x)
 {
     t_rtext *y = glist_findrtext(g, (t_text *)x);
     gui_vmess("gui_gobj_emphasize", "xs", g, rtext_gettag(y));
+}
+
+    /* tell the gui to mark a gobj as dirty (change border color) */
+void gobj_dirty(t_gobj *x, t_glist *g, int state)
+{
+    t_rtext *y = glist_findrtext(g, (t_text *)x);
+    gui_vmess("gui_gobj_dirty", "xsi", g, rtext_gettag(y), state);
 }
 
 static int glist_dofinderror(t_glist *gl, void *error_object)
