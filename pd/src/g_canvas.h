@@ -235,6 +235,7 @@ struct _glist
     t_gpointer gl_gp;            /* parent for "canvas" data type */
 
     int gl_subdirties;     /* number of descending dirty abstractions */
+    int gl_dirties;        /* number of diry instances, for multiple dirty warning */
 };
 
 #define gl_gobj gl_obj.te_g
@@ -581,6 +582,7 @@ EXTERN int canvas_setdeleting(t_canvas *x, int flag);
 EXTERN int canvas_hasarray(t_canvas *x);
 EXTERN int canvas_has_scalars_only(t_canvas *x);
 
+EXTERN void canvas_warning(t_canvas *x, int warid);
 
 #define LB_LOAD 0       /* "loadbang" actions - 0 for original meaning */
 #define LB_INIT 1       /* loaded but not yet connected to parent patch */

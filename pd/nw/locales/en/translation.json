@@ -297,6 +297,10 @@
       "none": "None",
       "none_tt": "Do not replace any subpatch"
     },
+    "warning": {
+      "unsaved_tt": "There is an unsaved edited instance of this abstraction",
+      "multipleunsaved_tt": "There is another unsaved edited instance of this abstraction"
+    },
     "find": {
       "placeholder": "Search in Canvas",
       "search": "Search",

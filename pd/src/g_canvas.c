@@ -396,6 +396,8 @@ static int calculate_zoom(t_float zoom_hack)
   return zoom;
 }
 
+int canvas_dirty_broadcast_all(t_symbol *name, t_symbol *dir, int mess);
+
     /* make a new glist.  It will either be a "root" canvas or else
     it appears as a "text" object in another window (canvas_getcurrent() 
     tells us which.) */
@@ -472,6 +474,7 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     else x->gl_env = 0;
 
     x->gl_subdirties = 0;
+    x->gl_dirties = 0;
 
     if (yloc < GLIST_DEFCANVASYLOC)
         yloc = GLIST_DEFCANVASYLOC;
@@ -521,6 +524,14 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     canvas_field_templatesym = NULL;
     canvas_field_vec = NULL;
     canvas_field_gp = NULL;
+
+    /* in the case it is an abstraction (gl_env is not null)
+        get the number of dirty instances of this same abstraction */
+    if(x->gl_env)
+    {
+        x->gl_dirties = canvas_dirty_broadcast_all(x->gl_name,
+                                canvas_getdir(x), 0);
+    }
 
     return(x);
 }
@@ -792,6 +803,100 @@ void canvas_dirtyclimb(t_canvas *x, int n)
     }
 }
 
+/* the following functions are used to broadcast messages to all instances of
+    a specific abstraction (either file-based or ab).
+    the state of these instances change accoring to the message sent. */
+
+void clone_iterate(t_pd *z, t_canvas_iterator it, void* data);
+int clone_match(t_pd *z, t_symbol *name, t_symbol *dir);
+
+static void canvas_dirty_common(t_canvas *x, int mess)
+{
+    if(mess == 2)
+    {
+        if(x->gl_dirty)
+        {
+            if(!x->gl_havewindow) canvas_vis(x, 1);
+            gui_vmess("gui_canvas_emphasize", "x", x);
+        }
+    }
+    else
+    {
+        x->gl_dirties += mess;
+        if(x->gl_havewindow)
+            canvas_warning(x, (x->gl_dirties > 1 ?
+                                (x->gl_dirty ? 2 : 1)
+                                : (x->gl_dirties ? !x->gl_dirty : 0)));
+    }
+}
+
+/* packed data passing structure for canvas_dirty_broadcast */
+typedef struct _dirty_broadcast_data
+{
+    t_symbol *name;
+    t_symbol *dir;
+    int mess;
+    int *res;   /* return value */
+} t_dirty_broadcast_data;
+
+static void canvas_dirty_deliver_packed(t_canvas *x, t_dirty_broadcast_data *data)
+{
+    *data->res += (x->gl_dirty > 0);
+    canvas_dirty_common(x, data->mess);
+}
+
+static int canvas_dirty_broadcast_packed(t_canvas *x, t_dirty_broadcast_data *data);
+
+static int canvas_dirty_broadcast(t_canvas *x, t_symbol *name, t_symbol *dir, int mess)
+{
+    int res = 0;
+    t_gobj *g;
+    for (g = x->gl_list; g; g = g->g_next)
+    {
+        if(pd_class(&g->g_pd) == canvas_class)
+        {
+            if(canvas_isabstraction((t_canvas *)g)
+                && ((t_canvas *)g)->gl_name == name
+                && canvas_getdir((t_canvas *)g) == dir)
+            {
+                res += (((t_canvas *)g)->gl_dirty > 0);
+                canvas_dirty_common((t_canvas *)g, mess);
+            }
+            else
+                res += canvas_dirty_broadcast((t_canvas *)g, name, dir, mess);
+        }
+        else if(pd_class(&g->g_pd) == clone_class)
+        {
+            int cres = 0;
+            t_dirty_broadcast_data data;
+            data.name = name; data.dir = dir; data.mess = mess; data.res = &cres;
+            if(clone_match(&g->g_pd, name, dir))
+            {
+                clone_iterate(&g->g_pd, canvas_dirty_deliver_packed, &data);
+            }
+            else
+            {
+                clone_iterate(&g->g_pd, canvas_dirty_broadcast_packed, &data);
+            }
+            res += cres;
+        }
+    }
+    return (res);
+}
+
+static int canvas_dirty_broadcast_packed(t_canvas *x, t_dirty_broadcast_data *data)
+{
+    *data->res = canvas_dirty_broadcast(x, data->name, data->dir, data->mess);
+}
+
+int canvas_dirty_broadcast_all(t_symbol *name, t_symbol *dir, int mess)
+{
+    int res = 0;
+    t_canvas *x;
+    for (x = pd_this->pd_canvaslist; x; x = x->gl_next)
+        res += canvas_dirty_broadcast(x, name, dir, mess);
+    return (res);
+}
     /* mark a glist dirty or clean */
 void canvas_dirty(t_canvas *x, t_floatarg n)
 {
@@ -806,6 +911,15 @@ void canvas_dirty(t_canvas *x, t_floatarg n)
 
         /* set dirtiness visual markings */
         canvas_dirtyclimb(x2, (unsigned)n);
+        /* in the case it is an abstraction, we tell all other
+            instances that there is eiher one more dirty instance or
+            one less dirty instance */
+        if(canvas_isabstraction(x2)
+            && (x2->gl_owner || x2->gl_isclone))
+        {
+            canvas_dirty_broadcast_all(x2->gl_name, canvas_getdir(x2),
+                (x2->gl_dirty ? 1 : -1));
+        }
     }
 }
 
@@ -1034,6 +1148,15 @@ extern void canvas_group_free(t_pd *x);
 void canvas_free(t_canvas *x)
 {
     //fprintf(stderr,"canvas_free %zx\n", (t_uint)x);
+
+    /* in the case it is a dirty abstraction, we tell all other
+        instances that there is one less dirty instance */
+    if(canvas_isabstraction(x) && x->gl_dirty
+        && (x->gl_owner || x->gl_isclone))
+    {
+        canvas_dirty_broadcast_all(x->gl_name, canvas_getdir(x), -1);
+    }
+
     t_gobj *y;
     int dspstate = canvas_suspend_dsp();
 
@@ -1891,6 +2014,13 @@ void canvas_redrawallfortemplatecanvas(t_canvas *x, int action)
         canvas_redrawallfortemplate(tmpl, action);
     }
     canvas_redrawallfortemplate(0, action);
+}
+
+/* --------- */
+
+static void canvas_showdirty(t_canvas *x)
+{
+    canvas_dirty_broadcast_all(x->gl_name, canvas_getdir(x), 2);
 }
 
 /* ------------------------------- declare ------------------------ */
@@ -2765,6 +2895,8 @@ void g_canvas_setup(void)
     class_addcreator((t_newmethod)table_new, gensym("table"),
         A_DEFSYM, A_DEFFLOAT, 0);
 
+    class_addmethod(canvas_class, (t_method)canvas_showdirty,
+        gensym("showdirty"), 0);
 /*---------------------------- declare ------------------- */
     declare_class = class_new(gensym("declare"), (t_newmethod)declare_new,
         (t_method)declare_free, sizeof(t_declare), CLASS_NOINLET, A_GIMME, 0);

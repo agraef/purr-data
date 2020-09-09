@@ -297,6 +297,10 @@
       "none": "Keinen",
       "none_tt": "Ersetze keinen der Subpatches"
     },
+    "warning": {
+      "unsaved_tt": "There is an unsaved edited instance of this abstraction",
+      "multipleunsaved_tt": "There is another unsaved edited instance of this abstraction"
+    },
     "find": {
       "placeholder": "Suche im Patch",
       "search": "Suche",
