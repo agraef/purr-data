@@ -3532,7 +3532,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     //post("canvas_doclick %d", doit);
 
     t_gobj *y;
-    int shiftmod, runmode, altmod, doublemod = 0, rightclick,
+    int shiftmod, runmode, ctrlmod, altmod, doublemod = 0, rightclick,
         in_text_resizing_hotspot, default_type;
     int x1=0, y1=0, x2=0, y2=0, clickreturned = 0;
     t_gobj *yclick = NULL;
@@ -3551,8 +3551,9 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     
     // read key and mouse button states
     shiftmod = (mod & SHIFTMOD);
-    runmode = ((mod & CTRLMOD) || (!x->gl_edit));
+    ctrlmod = (mod & CTRLMOD);
     altmod = (mod & ALTMOD);
+    runmode = (altmod || (!x->gl_edit));
     rightclick = (mod & RIGHTCLICK);
 
     // set global left mouse click variable
@@ -3644,7 +3645,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
         if (yclick)
         {
                 clickreturned = gobj_click(yclick, x, xpos, ypos,
-                    shiftmod, ((mod & CTRLMOD) && (!x->gl_edit)) || altmod,
+                    shiftmod, (altmod && (!x->gl_edit)) || ctrlmod,
                     0, doit);
                 //fprintf(stderr, "    MAIN clicking\n");
         }
@@ -4063,7 +4064,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
         return;
     }
         /* having failed to find a box, we try lines now. */
-    if (!runmode && !altmod && !shiftmod)
+    if (!runmode && !ctrlmod && !shiftmod)
     {
         t_linetraverser t;
         t_outconnect *oc;
@@ -5578,20 +5579,20 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     }
 
     if (x && keynum == 0 && x->gl_edit &&
-        !strncmp(gotkeysym->s_name, "Alt", 3))
+        !strncmp(gotkeysym->s_name, "Control", 7))
     {
-        glob_alt = down;
+        glob_ctrl = down;
     }
 
-        /* if control key goes up or down, and if we're in edit mode, change
+        /* if alt key goes up or down, and if we're in edit mode, change
         cursor to indicate how the click action changes
         NEW: do so only if not doing anything else in edit mode */
     if (x && keynum == 0 &&
-        !strncmp(gotkeysym->s_name, "Control", 7))
+        !strncmp(gotkeysym->s_name, "Alt", 3))
     {
         //fprintf(stderr,"ctrl\n");
-        glob_ctrl = down;
-        //post("glob_ctrl=%d", down);
+        glob_alt = down;
+        //post("glob_alt=%d", down);
         /* ico@vt.edu: commenting MA_NONE part as that prevents the patch 
            from assuming editmode after it has had an object added via 
            a ctrl+(1-5) shortcut while not in edit mode
