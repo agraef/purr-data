@@ -1308,11 +1308,11 @@ function update_grid(grid) {
     var bg = grid != 0 ? gui_editmode_svg_background : "none";
     for (var cid in patchwin) {
 	gui(cid).get_elem("patchsvg", function(patchsvg, w) {
-            var editmode = w.get_editmode_checkbox();
-	    if (editmode) {
+            var editmode = patchsvg.classList.contains("editmode");
+            if (editmode) {
                 patchwin[cid].window.document.body.style.setProperty
                 ("background-image", bg);
-	    }
+            }
 	});
     }
     // Also update the showgrid flags.
