@@ -373,7 +373,7 @@ text.activated {
 }
 
 /* gatom "activated" text (i.e., when it has the keyboard focus) */
-.atom.activated text {
+.atom.activated .data {
     fill: red;
 }
 
