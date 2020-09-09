@@ -1022,7 +1022,6 @@ extern void canvas_group_free(t_pd *x);
 void canvas_free(t_canvas *x)
 {
     //fprintf(stderr,"canvas_free %lx\n", (t_int)x);
-
     t_gobj *y;
     int dspstate = canvas_suspend_dsp();
 
