@@ -497,6 +497,7 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     }
     x->gl_willvis = vis;
     x->gl_edit = !strncmp(x->gl_name->s_name, "Untitled", 8);
+    x->gl_edit_save = 0;
     x->gl_font = sys_nearestfontsize(font);
     x->gl_zoom = zoom;
     pd_pushsym(&x->gl_pd);

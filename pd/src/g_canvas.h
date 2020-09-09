@@ -210,6 +210,7 @@ struct _glist
     unsigned int gl_loading:1;      /* am now loading from file */
     unsigned int gl_willvis:1;      /* make me visible after loading */ 
     unsigned int gl_edit:1;         /* edit mode */
+    unsigned int gl_edit_save:1;    /* set in temporary run mode */
     unsigned int gl_isdeleting:1;   /* we're inside glist_delete -- hack! */
     unsigned int gl_unloading:1;    /* we're inside canvas_free */
     unsigned int gl_goprect:1;      /* draw rectangle for graph-on-parent */

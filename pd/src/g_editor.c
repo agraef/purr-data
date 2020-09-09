@@ -5596,13 +5596,16 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
            from assuming editmode after it has had an object added via 
            a ctrl+(1-5) shortcut while not in edit mode
         */
-        if (x->gl_edit /*&& x->gl_editor->e_onmotion == MA_NONE*/)
+        if (x->gl_edit /*&& x->gl_editor->e_onmotion == MA_NONE*/ ||
+            x->gl_edit_save)
         {
             canvas_setcursor(x, down ?
                 CURSOR_RUNMODE_NOTHING : CURSOR_EDITMODE_NOTHING);
+            x->gl_edit = down ? 0 : 1;
+            x->gl_edit_save = !x->gl_edit;
             gui_vmess("gui_canvas_set_editmode", "xi",
                 x,
-                down ? 0 : 1);
+                x->gl_edit);
             if(x->gl_editor && x->gl_editor->gl_magic_glass)
             {
                 if (down)
@@ -7993,6 +7996,8 @@ void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
         return;
     }
     x->gl_edit = !x->gl_edit;
+    // make sure to exit temporary run mode here
+    x->gl_edit_save = 0;
     if (x->gl_edit && glist_isvisible(x) && glist_istoplevel(x)){
         //dpsaha@vt.edu add the resize blobs on GOP
         t_gobj *g;
