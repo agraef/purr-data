@@ -162,6 +162,9 @@ void glist_delete(t_glist *x, t_gobj *y)
           /* if we are a group, let's call ourselves a drawcommand */
           if (((t_canvas *)y)->gl_svg)
               drawcommand = 1;
+
+            if(((t_canvas *)y)->gl_dirty)
+                canvas_dirtyclimb((t_canvas *)y, 0);
         }
      
         wasdeleting = canvas_setdeleting(canvas, 1);
