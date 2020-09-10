@@ -3520,6 +3520,8 @@ static double canvas_upclicktime;
 static int canvas_upx, canvas_upy;
 #define DCLICKINTERVAL 0.25
 
+static int ctrl_runmode_warned;
+
     /* mouse click */
 void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     int mod, int doit)
@@ -3690,6 +3692,14 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     // if we have located an object under the mouse
     if (y)
     {
+
+        /* check for ctrlmod click and give a warning once in the console that
+           the hotkey for temporary runmode has changed */
+        if (!ctrl_runmode_warned && ctrlmod && !rightclick && doit) {
+          post("\nwarning: The hotkey for temporary run mode has changed. "
+               "Please press Alt instead of Ctrl to enable it.\n");
+          ctrl_runmode_warned = 1;
+        }
 
         // if we are right-clicking
         if (rightclick)
