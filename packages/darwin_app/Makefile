@@ -105,6 +105,7 @@ extended_app_install:
 # build a standalone nw.js app
 darwin_app_wrapper: Info.plist
 # nwjs.app
+	rm -rf "$(BUILD_BASE)"
 	install -d "$(BUILD_BASE)"
 	rsync -ax $(cvs_root_dir)/pd/nw/nw/nwjs.app/ $(BUILD_BASE)/$(PD_APP_NAME).app/
 # set up app wrapper
