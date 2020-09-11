@@ -373,6 +373,7 @@ that case, but I haven't tested doing it like that. Sorry. Get a better OS...)
           mingw-w64-i686-libsndfile mingw-w64-i686-libvorbis \
           mingw-w64-i686-lua mingw-w64-i686-toolchain \
           mingw-w64-i686-libjpeg-turbo \
+          mingw-w64-i686-speex \
           rsync unzip wget
 
 5. Download the source code *(3-6 minutes)*  
