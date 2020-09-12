@@ -1036,9 +1036,29 @@ function autopatch_yoffset_toggle(checked) {
 
 function gui_prefs_callback(name, show_grid, save_zoom, browser_doc, browser_path,
     browser_init, autopatch_yoffset) {
-    var s = document.getElementById("gui_preset"),
-        i;
-    for (i = 0; i < s.options.length; i++) {
+    var s = document.getElementById("gui_preset");
+
+    // ag: scan the css subdir for user-defined styles
+    var predefined = // built-in styles
+        [ "c64.css", "default.css", "dejavu.css", "extended.css",
+          "footgun.css", "inverted.css", "solarized.css",
+          "solarized_inverted.css", "strongbad.css", "subdued.css",
+          "vanilla.css", "vanilla_inverted.css"];
+    var fs = require('fs');
+    var base = process.platform === "darwin" ? pdgui.get_lib_dir() : ".";
+    var files = fs.readdirSync(base + "/css/");
+    files.forEach(file => {
+        var pos = file.lastIndexOf('.');
+        var ext = file.substr(pos);
+        if (ext === ".css" && predefined.indexOf(file) === -1) {
+            var base = file.substr(0, pos);
+            var option = document.createElement("option");
+            option.text = base;
+            s.add(option);
+        }
+    });
+
+    for (var i = 0; i < s.options.length; i++) {
         if (s.options[i].value.toLowerCase() === name.toLowerCase()) {
             s.selectedIndex = i;
             break;

@@ -5973,7 +5973,12 @@ var skin = exports.skin = (function () {
             return dir + preset + ".css";
         },
         set: function (name) {
-            preset = name;
+            // ag: if the preset doesn't exist (e.g., user preset that
+            // has disappeared), just stick to the default
+            var base = process.platform === "darwin" ? (lib_dir + "/") : "";
+            if (fs.existsSync(base + dir + name + ".css")) {
+                preset = name;
+            }
             for (id in patchwin) {
                 if (patchwin.hasOwnProperty(id) && patchwin[id]) {
                     set_css(patchwin[id].window);
