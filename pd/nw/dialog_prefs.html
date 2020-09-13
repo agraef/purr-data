@@ -7,6 +7,22 @@
 td {
   padding-right: 0px;
 }
+
+select {
+  height: 1.6em;
+}
+
+#in1, #in2, #in3, #in4, #out1, #out2, #out3, #out4 {
+  width: 100%;
+}
+
+#inchans1, #inchans2, #inchans3, #inchans4, #outchans1, #outchans2, #outchans3, #outchans4 {
+  margin-left: 3px;
+}
+
+#midilabel {
+  vertical-align: bottom;
+}
   </style>
   <body class="dialog_body prefs_body" style="overflow: hidden;">
     <div class="container noselect prefs_container">
@@ -15,7 +31,7 @@ td {
           <td style="width: 100%;">
             <div id="titlebar_title">Pd-L2Ork Properties</div>
           </td>
-          <td>
+          <td id="titlebar_buttons_td">
             <div class="titlebar_buttons">
               <div id="titlebar_close_button" onclick="cancel(false);">&#215</div>
             </div>
@@ -133,7 +149,7 @@ td {
               </td>
             </tr>
             <tr>
-              <td>
+              <td style="width: 80%">
                 <select id="in1" onchange="dev_change(this);"></select>
               </td>
               <td>
@@ -146,7 +162,7 @@ td {
               </td>
             </tr>
             <tr>
-              <td>
+              <td style="width: 80%">
                 <select id="in2" onchange="dev_change(this);"></select>
               </td>
               <td>
@@ -159,7 +175,7 @@ td {
               </td>
             </tr>
             <tr>
-              <td>
+              <td style="width: 80%">
                 <select id="in3" onchange="dev_change(this);"></select>
               </td>
               <td>
@@ -172,7 +188,7 @@ td {
               </td>
             </tr>
             <tr>
-              <td>
+              <td style="width: 80%">
                 <select id="in4" onchange="dev_change(this);"></select>
               </td>
               <td>
@@ -185,15 +201,15 @@ td {
               </td>
             </tr>
             <tr>
-              <td data-i18n="[title]prefs.audio.output_title_tt">
+              <td data-i18n="[title]prefs.audio.output_title_tt" style="padding-top: 10px;">
                 <span data-i18n="prefs.audio.output_title"></span>
               </td>
-              <td>
+              <td style="padding-top: 10px;">
                 <span data-i18n="prefs.audio.channels"></span>
               </td>
             </tr>
             <tr>
-              <td>
+              <td style="width: 80%">
                 <select id="out1" onchange="dev_change(this);"></select>
               </td>
               <td>
@@ -206,7 +222,7 @@ td {
               </td>
             </tr>
             <tr>
-              <td>
+              <td style="width: 80%">
                 <select id="out2" onchange="dev_change(this);"></select>
               </td>
               <td>
@@ -219,7 +235,7 @@ td {
               </td>
             </tr>
             <tr>
-              <td>
+              <td style="width: 80%">
                 <select id="out3" onchange="dev_change(this);"></select>
               </td>
               <td>
@@ -232,7 +248,7 @@ td {
               </td>
             </tr>
             <tr>
-              <td>
+              <td style="width: 80%">
                 <select id="out4" onchange="dev_change(this);"></select>
               </td>
               <td>
@@ -278,42 +294,42 @@ td {
             </span>
             <table class="tab_settings" style="width: 100%;">
               <tr>
-                <td>1</td><td>
+                <td id="midilabel">1</td><td>
                   <select id="midi_in1" onchange="dev_change(this);"></select>
                 </td>
-                <td align="right">6</td><td>
+                <td align="right" id="midilabel">6</td><td>
                   <select id="midi_in6" onchange="dev_change(this);"></select>
                 </td>
               </tr>
               <tr>
-                <td>2</td><td>
+                <td id="midilabel">2</td><td>
                   <select id="midi_in2" onchange="dev_change(this);"></select>
                 </td>
-                <td align="right">7</td><td>
+                <td align="right" id="midilabel">7</td><td>
                   <select id="midi_in7" onchange="dev_change(this);"></select>
                 </td>
               </tr>
               <tr>
-                <td>3</td><td>
+                <td id="midilabel">3</td><td>
                   <select id="midi_in3" onchange="dev_change(this);"></select>
                 </td>
-                <td align="right">8</td><td>
+                <td align="right" id="midilabel">8</td><td>
                   <select id="midi_in8" onchange="dev_change(this);"></select>
                 </td>
               </tr>
               <tr>
-                <td>4</td><td>
+                <td id="midilabel">4</td><td>
                   <select id="midi_in4" onchange="dev_change(this);"></select>
                 </td>
-                <td align="right">9</td><td>
+                <td align="right" id="midilabel">9</td><td>
                   <select id="midi_in9" onchange="dev_change(this);"></select>
                 </td>
               </tr>
               <tr>
-                <td>5</td><td>
+                <td id="midilabel">5</td><td>
                   <select id="midi_in5" onchange="dev_change(this);"></select>
                 </td>
-                <td align="right">10</td><td>
+                <td align="right" id="midilabel">10</td><td>
                   <select id="midi_in10" onchange="dev_change(this);"></select>
                 </td>
               </tr>
@@ -324,42 +340,42 @@ td {
             </span>
             <table class="tab_settings">
               <tr>
-                <td>1</td><td>
+                <td id="midilabel">1</td><td>
                   <select id="midi_out1" onchange="dev_change(this);"></select>
                 </td>
-                <td align="right">6</td><td>
+                <td align="right" id="midilabel">6</td><td>
                   <select id="midi_out6" onchange="dev_change(this);"></select>
                 </td>
               </tr>
               <tr>
-                <td>2</td><td>
+                <td id="midilabel">2</td><td>
                   <select id="midi_out2" onchange="dev_change(this);"></select>
                 </td>
-                <td align="right">7</td><td>
+                <td align="right" id="midilabel">7</td><td>
                   <select id="midi_out7" onchange="dev_change(this);"></select>
                 </td>
               </tr>
               <tr>
-                <td>3</td><td>
+                <td id="midilabel">3</td><td>
                   <select id="midi_out3" onchange="dev_change(this);"></select>
                 </td>
-                <td align="right">8</td><td>
+                <td align="right" id="midilabel">8</td><td>
                   <select id="midi_out8" onchange="dev_change(this);"></select>
                 </td>
               </tr>
               <tr>
-                <td>4</td><td>
+                <td id="midilabel">4</td><td>
                   <select id="midi_out4" onchange="dev_change(this);"></select>
                 </td>
-                <td align="right">9</td><td>
+                <td align="right" id="midilabel">9</td><td>
                   <select id="midi_out9" onchange="dev_change(this);"></select>
                 </td>
               </tr>
               <tr>
-                <td>5</td><td>
+                <td id="midilabel">5</td><td>
                   <select id="midi_out5" onchange="dev_change(this);"></select>
                 </td>
-                <td align="right">10</td><td>
+                <td align="right" id="midilabel">10</td><td>
                   <select id="midi_out10" onchange="dev_change(this);"></select>
                 </td>
               </tr>
@@ -443,12 +459,12 @@ td {
             <label data-i18n="[title]prefs.startup.paths_tt">
               <span data-i18n="prefs.startup.paths"></span>
             </label>
-            <div style="height:24vh; background:white; border: 1px solid #bbb;
-                margin-right: -4px; overflow-y:auto; overflow-x:auto; padding:0px;">
+            <div style="height:24vh; background:white; border: 1px solid #bbb; width: 96.5vw;
+                overflow-y:auto; overflow-x:auto; padding:0px;">
               <table id="startup_paths" style="width:100%; background:white;">
               </table>
             </div>
-            <div class="submit_buttons">
+            <div class="submit_buttons" style="width: 93%;">
               <button type="button" onClick="startup_path_new()" data-i18n="[title]prefs.startup.new_tt">
                 <span data-i18n="prefs.startup.new"></span>
               </button>
@@ -462,12 +478,12 @@ td {
             <label data-i18n="[title]prefs.startup.libs_tt">
               <span data-i18n="prefs.startup.libs"></span>
             </label>
-            <div style="height:24vh; background:white; border: 1px solid #bbb;
-                margin-right: -4px; overflow-y:auto; overflow-x:auto; padding:0px;">
+            <div style="height:24vh; background:white; border: 1px solid #bbb; width: 96.5vw;
+                overflow-y:auto; overflow-x:auto; padding:0px;">
               <table id="startup_libs" style="width:100%; background:white;">
               </table>
             </div>
-            <div class="submit_buttons">
+            <div class="submit_buttons" style="width: 93%;">
               <button type="button" onClick="startup_lib_new()" data-i18n="[title]prefs.startup.new_tt">
                 <span data-i18n="prefs.startup.new"></span>
               </button>
@@ -484,7 +500,7 @@ td {
               <input type="text"
                      id="startup_flags"
                      name="startup_flags"
-                     style="width:100%">
+                     style="width: 96%">
             </label>
           </div>
         </div>

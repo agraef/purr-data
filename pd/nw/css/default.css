@@ -773,7 +773,7 @@ div.y2 {
    without becoming an order of magnitude more complex, do feel free... */
 .prefs_tab_group {
     display: table;
-    width: 96%;
+    width: 100%;
 }
 
 /* Configure the radio buttons to hide off-screen */
@@ -870,11 +870,8 @@ input[name="rate"] {
     cursor: grab;
 }
 
-#titlebar_buttons {
-    top: 2px;
-    right: 2px;
-    text-align: right;
-    background-color: gray;
+#titlebar_buttons_td {
+    padding-right: 1px;
 }
 
 #titlebar_title {
