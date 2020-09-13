@@ -87,7 +87,18 @@ typedef unsigned __int64  uint64_t;
 
 /* signed and unsigned integer types the size of a pointer:  */
 #if !defined(PD_LONGINTTYPE)
+#if defined(_WIN32) && defined(_WIN64)
+#define PD_LONGINTTYPE long long
+#else
 #define PD_LONGINTTYPE long
+#endif
+#endif
+#if !defined(PD_LONGUINTTYPE)
+#if defined(_WIN32) && defined(_WIN64)
+#define PD_LONGUINTTYPE unsigned long long
+#else
+#define PD_LONGUINTTYPE unsigned long
+#endif
 #endif
 
 #if !defined(PD_FLOATSIZE)
@@ -103,6 +114,7 @@ typedef unsigned __int64  uint64_t;
 #endif
 
 typedef PD_LONGINTTYPE t_int;       /* pointer-size integer */
+typedef PD_LONGUINTTYPE t_uint;     /* pointer-size unsigned integer */
 typedef PD_FLOATTYPE t_float;       /* a float type at most the same size */
 typedef PD_FLOATTYPE t_floatarg;    /* float type for function calls */
 
@@ -724,7 +736,7 @@ EXTERN void gui_start_array(void);
 EXTERN void gui_f(t_float f); /* send a float element in an array */
 EXTERN void gui_i(int i);     /* send an int element in an array */
 EXTERN void gui_s(const char *s); /* send a string element in an array */
-EXTERN void gui_x(long unsigned int i);
+EXTERN void gui_x(t_uint i);
 EXTERN void gui_end_array(void);
 EXTERN void gui_end_vmess(void);
 

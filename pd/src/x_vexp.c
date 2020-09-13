@@ -541,7 +541,7 @@ ex_parse(struct expr *x, struct ex_ex *iptr, struct ex_ex *optr, long int *argc)
         long count;
 
         if (!iptr) {
-                post("ex_parse: input is null, iptr = 0x%lx\n", iptr);
+                post("ex_parse: input is null, iptr = 0x%zx\n", iptr);
                 return (exNULL);
         }
         if (!iptr->ex_type)
@@ -674,7 +674,7 @@ ex_parse(struct expr *x, struct ex_ex *iptr, struct ex_ex *optr, long int *argc)
                 case ET_STR:
                 default:
                         ex_print(eptr);
-                        post("expr: ex_parse: type = 0x%lx\n", eptr->ex_type);
+                        post("expr: ex_parse: type = 0x%zx\n", eptr->ex_type);
                         return (exNULL);
                 }
 
@@ -2077,10 +2077,10 @@ ex_print(struct ex_ex *eptr)
                         post("$f%ld ", eptr->ex_int + 1);
                         break;
                 case ET_SI:
-                        post("$s%lx ", eptr->ex_ptr);
+                        post("$s%zx ", eptr->ex_ptr);
                         break;
                 case ET_VI:
-                        post("$v%lx ", eptr->ex_vec);
+                        post("$v%zx ", eptr->ex_vec);
                         break;
                 case ET_VEC:
                         post("vec = %ld ", eptr->ex_vec);
@@ -2180,11 +2180,11 @@ ex_print(struct ex_ex *eptr)
                                 post("%c", ';');
                                 break;
                         default:
-                                post("expr: ex_print: bad op 0x%lx\n", eptr->ex_op);
+                                post("expr: ex_print: bad op 0x%zx\n", eptr->ex_op);
                         }
                         break;
                 default:
-                        post("expr: ex_print: bad type 0x%lx\n", eptr->ex_type);
+                        post("expr: ex_print: bad type 0x%zx\n", eptr->ex_type);
                 }
                 eptr++;
         }

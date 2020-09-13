@@ -97,7 +97,7 @@ static void image_drawme(t_image *x, t_glist *glist, int firstime)
             x,
             x,
             "center");
-        //sys_vgui("catch {.x%lx.c delete %xS}\n", glist_getcanvas(glist), x);
+        //sys_vgui("catch {.x%zx.c delete %xS}\n", glist_getcanvas(glist), x);
         //sys_vgui(".x%x.c create image %d %d -tags %xS\n",
         //    glist_getcanvas(glist),text_xpix(&x->x_obj, glist),
         //    text_ypix(&x->x_obj, glist), x);
@@ -268,8 +268,8 @@ static void image_select(t_gobj *z, t_glist *glist, int state)
         //sys_vgui("catch {.x%x.c delete %xSEL}\n",
         //glist_getcanvas(glist), x);
         //if (glist->gl_owner && !glist_istoplevel(glist))
-        //sys_vgui(".x%lx.c dtag %xS selected\n", glist_getcanvas(glist), x);
-        //sys_vgui(".x%lx.c dtag %xMT selected\n", glist_getcanvas(glist), x);
+        //sys_vgui(".x%zx.c dtag %xS selected\n", glist_getcanvas(glist), x);
+        //sys_vgui(".x%zx.c dtag %xMT selected\n", glist_getcanvas(glist), x);
         gui_vmess("gui_image_toggle_border", "xxi", glist_getcanvas(glist),
             x, 0);
         gui_vmess("gui_gobj_deselect", "xx", glist_getcanvas(glist), x);
@@ -502,7 +502,7 @@ static void *image_new(t_symbol *s, t_int argc, t_atom *argv)
     }
     // Create default receiver
     char buf[MAXPDSTRING];
-    sprintf(buf, "#%lx", (long)x);
+    sprintf(buf, "#%zx", (t_uint)x);
     x->x_receive = gensym(buf);
     pd_bind(&x->x_obj.ob_pd, x->x_receive);
     outlet_new(&x->x_obj, &s_bang);

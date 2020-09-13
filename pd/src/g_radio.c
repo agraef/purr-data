@@ -115,7 +115,7 @@ void radio_draw_config(t_radio *x, t_glist *glist)
     iemgui_base_draw_config(&x->x_gui);
     for (i=0; i<n; i++)
     {
-        //sys_vgui(".x%lx.c itemconfigure %lxBUT%d -fill #%6.6x -stroke #%6.6x\n",
+        //sys_vgui(".x%zx.c itemconfigure %zxBUT%d -fill #%6.6x -stroke #%6.6x\n",
         //    canvas, x, i,
         //    (x->x_on==i) ? x->x_gui.x_fcol : x->x_gui.x_bcol,
         //    (x->x_on==i) ? x->x_gui.x_fcol : x->x_gui.x_bcol);

@@ -14,6 +14,7 @@
 
 #include "m_pd.h"
 #include "s_stuff.h"
+#include "s_utf8.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -35,6 +36,7 @@
 #ifdef MSW
 #include <windows.h>
 #include <tchar.h>
+#include <io.h>
 #endif
 #ifdef _MSC_VER  /* This is only for Microsoft's compiler, not cygwin, e.g. */
 #define snprintf sprintf_s
@@ -228,8 +230,8 @@ static void sys_putpreference(const char *key, const char *value)
         NULL, &hkey, NULL);
     if (err != ERROR_SUCCESS)
     {
-        post("unable to create registry entry: %s: error %lx\n", key,
-            (long unsigned int)err);
+        post("unable to create registry entry: %s: error %zx\n", key,
+            (t_int)err);
         return;
     }
     err = RegSetValueEx(hkey, key, 0, REG_EXPAND_SZ, value, strlen(value)+1);

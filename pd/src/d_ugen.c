@@ -304,14 +304,14 @@ void dsp_add(t_perfroutine f, int n, ...)
         pd_this->pd_dspchainsize * sizeof (t_int), newsize * sizeof (t_int));
     pd_this->pd_dspchain[pd_this->pd_dspchainsize-1] = (t_int)f;
     if (ugen_loud)
-        post("add to chain: %lx",
+        post("add to chain: %zx",
             pd_this->pd_dspchain[pd_this->pd_dspchainsize-1]);
     va_start(ap, n);
     for (i = 0; i < n; i++)
     {
         pd_this->pd_dspchain[pd_this->pd_dspchainsize + i] = va_arg(ap, t_int);
         if (ugen_loud)
-            post("add to chain: %lx",
+            post("add to chain: %zx",
                 pd_this->pd_dspchain[pd_this->pd_dspchainsize + i]);
     }
     va_end(ap);
@@ -402,7 +402,7 @@ void signal_makereusable(t_signal *sig)
         }
     }
 #endif
-    if (ugen_loud) post("free %lx: %d", sig, sig->s_isborrowed);
+    if (ugen_loud) post("free %zx: %d", sig, sig->s_isborrowed);
     if (sig->s_isborrowed)
     {
             /* if the signal is borrowed, decrement the borrowed-from signal's
@@ -471,7 +471,7 @@ t_signal *signal_new(int n, t_float sr)
     ret->s_sr = sr;
     ret->s_refcount = 0;
     ret->s_borrowedfrom = 0;
-    if (ugen_loud) post("new %lx: %lx", ret, ret->s_vec);
+    if (ugen_loud) post("new %zx: %zx", ret, ret->s_vec);
     return (ret);
 }
 
@@ -490,7 +490,7 @@ void signal_setborrowed(t_signal *sig, t_signal *sig2)
     sig->s_vec = sig2->s_vec;
     sig->s_n = sig2->s_n;
     sig->s_vecsize = sig2->s_vecsize;
-    if (ugen_loud) post("set borrowed %lx: %lx", sig, sig->s_vec);
+    if (ugen_loud) post("set borrowed %zx: %zx", sig, sig->s_vec);
 }
 
 int signal_compatible(t_signal *s1, t_signal *s2)
@@ -815,12 +815,12 @@ static void ugen_doit(t_dspcontext *dc, t_ugenbox *u)
     {
         if (u->u_nin + u->u_nout == 0) post("put %s %d",
             class_getname(u->u_obj->ob_pd), ugen_index(dc, u));
-        else if (u->u_nin + u->u_nout == 1) post("put %s %d (%lx)",
+        else if (u->u_nin + u->u_nout == 1) post("put %s %d (%zx)",
             class_getname(u->u_obj->ob_pd), ugen_index(dc, u), sig[0]);
-        else if (u->u_nin + u->u_nout == 2) post("put %s %d (%lx %lx)",
+        else if (u->u_nin + u->u_nout == 2) post("put %s %d (%zx %zx)",
             class_getname(u->u_obj->ob_pd), ugen_index(dc, u),
                 sig[0], sig[1]);
-        else post("put %s %d (%lx %lx %lx ...)",
+        else post("put %s %d (%zx %zx %zx ...)",
             class_getname(u->u_obj->ob_pd), ugen_index(dc, u),
                 sig[0], sig[1], sig[2]);
     }
@@ -1000,7 +1000,7 @@ void ugen_done_graph(t_dspcontext *dc)
                     signal_new(parent_vecsize, parent_srate));
                 (*sigp)->s_refcount++;
 
-                if (ugen_loud) post("set %lx->%lx", *sigp,
+                if (ugen_loud) post("set %zx->%zx", *sigp,
                     (*sigp)->s_borrowedfrom);
             }
         }
@@ -1083,7 +1083,7 @@ void ugen_done_graph(t_dspcontext *dc)
                 (*sigp)->s_refcount++;
                 dsp_add_zero(s3->s_vec, s3->s_n);
                 if (ugen_loud)
-                    post("oops, belatedly set %lx->%lx", *sigp,
+                    post("oops, belatedly set %zx->%zx", *sigp,
                         (*sigp)->s_borrowedfrom);
             }
         }
@@ -1123,7 +1123,7 @@ void ugen_done_graph(t_dspcontext *dc)
         if (!dc->dc_parentcontext)
             for (i = pd_this->pd_dspchainsize, ip = pd_this->pd_dspchain;
                 i--; ip++)
-                    post("chain %lx", *ip);
+                    post("chain %zx", *ip);
         post("... ugen_done_graph done.");
     }
         /* now delete everything. */

@@ -18,7 +18,7 @@ typedef struct _window_name
 static t_symbol* make_canvas_symbol(t_canvas* canvas)
 {
         char buf[MAXPDSTRING];
-        snprintf(buf, MAXPDSTRING, ".x%lx", (long unsigned int)canvas);
+        snprintf(buf, MAXPDSTRING, ".x%zx", (t_uint)canvas);
         return gensym(buf);
 }
 

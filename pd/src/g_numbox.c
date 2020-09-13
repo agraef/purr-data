@@ -211,8 +211,8 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
        k12? */
     if (!x->x_hide_frame || x->x_hide_frame == 2)
     {
-        //sys_vgui(".x%lx.c create polyline %d %d %d %d %d %d -stroke #%6.6x "
-        //    "-tags {%lxBASE2 x%lx text iemgui}\n",
+        //sys_vgui(".x%zx.c create polyline %d %d %d %d %d %d -stroke #%6.6x "
+        //    "-tags {%zxBASE2 x%zx text iemgui}\n",
         //    canvas, x1, y1, x1 + half, y1 + half, x1, y2,
         //    x->x_gui.x_fcol, x, x);
     }
@@ -242,7 +242,7 @@ static void my_numbox_draw_move(t_my_numbox *x, t_glist *glist)
         iemgui_io_draw_move(&x->x_gui);
     if (!x->x_hide_frame || x->x_hide_frame == 2)
     {
-        //sys_vgui(".x%lx.c coords %lxBASE2 %d %d %d %d %d %d\n",
+        //sys_vgui(".x%zx.c coords %zxBASE2 %d %d %d %d %d %d\n",
         //    canvas, x, x1, y1, x1 + half, y1 + half, x1, y2);
     }
 
@@ -290,11 +290,11 @@ static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist)
     char bcol[8]; sprintf(bcol, "#%6.6x", x->x_gui.x_bcol);
     // The logic in these sys_vgui calls is being taken care
     // of in the gui now...
-    //sys_vgui(".x%lx.c itemconfigure %lxBASE1 -stroke %s\n", canvas, x,
+    //sys_vgui(".x%zx.c itemconfigure %zxBASE1 -stroke %s\n", canvas, x,
     //    issel ? selection_color : x->x_hide_frame <= 1 ? "$pd_colors(iemgui_border)" : bcol);
-    //sys_vgui(".x%lx.c itemconfigure %lxBASE2 -stroke %s\n", canvas, x,
+    //sys_vgui(".x%zx.c itemconfigure %zxBASE2 -stroke %s\n", canvas, x,
     //    issel ? selection_color : fcol);
-    //sys_vgui(".x%lx.c itemconfigure %lxNUMBER -fill %s\n", canvas, x,
+    //sys_vgui(".x%zx.c itemconfigure %zxNUMBER -fill %s\n", canvas, x,
     //    issel ? selection_color : fcol);
     if(issel) 
         scalehandle_draw_select2(&x->x_gui);

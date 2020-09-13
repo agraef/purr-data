@@ -259,7 +259,7 @@ static void *envgen_new(t_symbol *s,int argc,t_atom* argv)
      x->args = STATES;
      x->finalvalues = getbytes( x->args*sizeof(t_float));
      x->duration = getbytes( x->args*sizeof(t_float));
-     DEBUG(post("finalvalues %lx",x->finalvalues););
+     DEBUG(post("finalvalues %zx",x->finalvalues););
      
      /* widget */
      

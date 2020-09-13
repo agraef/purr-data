@@ -10,11 +10,19 @@ to be different but are now unified except for some fossilized names.) */
 #include "m_pd.h"
 #include "m_imp.h"
 #include "s_stuff.h"
+#include "s_utf8.h"
 #include "g_magicglass.h"
 #include "g_canvas.h"
 #include "g_all_guis.h"
 #include <string.h>
 #include <math.h>
+
+#ifdef MSW
+#include <io.h>
+#endif
+#ifdef _MSC_VER
+#define snprintf _snprintf
+#endif
 
 t_garray *array_garray;
 t_class *preset_hub_class;
@@ -90,7 +98,7 @@ void canvas_updatewindowlist( void)
             if (x->gl_havewindow)
             {
                 gui_s(x->gl_name->s_name);
-                gui_x((long unsigned int)x);
+                gui_x((t_int)x);
             }
         }
     }
@@ -416,7 +424,7 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     x->gl_obj.te_type = T_OBJECT;
     if (!owner)
         canvas_addtolist(x);
-    /* post("canvas %lx, owner %lx", x, owner); */
+    /* post("canvas %zx, owner %zx", x, owner); */
 
     if (argc == 5)  /* toplevel: x, y, w, h, font */
     {
@@ -481,7 +489,7 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     canvas_bind(x);
     x->gl_loading = 1;
     x->gl_unloading = 0;
-    //fprintf(stderr,"loading = 1 .x%lx owner=.x%lx\n", (t_int)x, (t_int)x->gl_owner);
+    //fprintf(stderr,"loading = 1 .x%zx owner=.x%zx\n", (t_uint)x, (t_uint)x->gl_owner);
     x->gl_goprect = 0;      /* no GOP rectangle unless it's turned on later */
         /* cancel "vis" flag if we're a subpatch of an
          abstraction inside another patch.  A separate mechanism prevents
@@ -838,9 +846,9 @@ void canvas_draw_gop_resize_hooks(t_canvas* x)
         x->gl_goprect && !x->gl_editor->e_selection)
     {
         //Drawing and Binding Resize_Blob for GOP
-        //fprintf(stderr,"draw_gop_resize_hooks DRAW %lx %lx\n", (t_int)x, (t_int)glist_getcanvas(x));
-        sprintf(sh->h_pathname, ".x%lx.h%lx", (t_int)x, (t_int)sh);
-        sprintf(mh->h_pathname, ".x%lx.h%lx", (t_int)x, (t_int)mh);
+        //fprintf(stderr,"draw_gop_resize_hooks DRAW %zx %zx\n", (t_uint)x, (t_uint)glist_getcanvas(x));
+        sprintf(sh->h_pathname, ".x%zx.h%zx", (t_uint)x, (t_uint)sh);
+        sprintf(mh->h_pathname, ".x%zx.h%zx", (t_uint)x, (t_uint)mh);
 
         /* These are handled now in canvas_doclick */
         //scalehandle_draw_select(sh,
@@ -891,7 +899,7 @@ void canvas_drawredrect(t_canvas *x, int doit)
     called from the GUI after the fact to "notify" us that we're mapped. */
 void canvas_map(t_canvas *x, t_floatarg f)
 {
-    //fprintf(stderr,"canvas_map %lx %f\n", (t_int)x, f);
+    //fprintf(stderr,"canvas_map %zx %f\n", (t_uint)x, f);
     int flag = (f != 0);
     t_gobj *y;
     if (flag)
@@ -945,7 +953,7 @@ void canvas_map(t_canvas *x, t_floatarg f)
 void canvas_redraw(t_canvas *x)
 {
     if (do_not_redraw) return;
-    //fprintf(stderr,"canvas_redraw %lx\n", (t_int)x);
+    //fprintf(stderr,"canvas_redraw %zx\n", (t_uint)x);
     if (glist_isvisible(x))
     {
         //fprintf(stderr,"canvas_redraw glist_isvisible=true\n");
@@ -988,7 +996,7 @@ void glist_menu_open(t_glist *x)
         else
         {
             // Not sure if this needs to get ported... need to test
-            //sys_vgui("focus .x%lx\n", (t_int)x);
+            //sys_vgui("focus .x%zx\n", (t_uint)x);
         }
     }
     else
@@ -1025,7 +1033,7 @@ extern void canvas_group_free(t_pd *x);
 
 void canvas_free(t_canvas *x)
 {
-    //fprintf(stderr,"canvas_free %lx\n", (t_int)x);
+    //fprintf(stderr,"canvas_free %zx\n", (t_uint)x);
     t_gobj *y;
     int dspstate = canvas_suspend_dsp();
 
@@ -1113,7 +1121,7 @@ void canvas_deletelinesfor(t_canvas *x, t_text *text)
             {
                 /* Still don't see any place where this gets used. Maybe it's
                    used by older externals? Need to test... */
-                //sys_vgui(".x%lx.c delete l%lx\n",
+                //sys_vgui(".x%zx.c delete l%zx\n",
                 //    glist_getcanvas(x), oc);
                 /* probably need a gui_vmess here */
             }
@@ -1136,7 +1144,7 @@ void canvas_eraselinesfor(t_canvas *x, t_text *text)
             if (x->gl_editor)
             {
                 char tagbuf[MAXPDSTRING];
-                sprintf(tagbuf, "l%lx", (long unsigned int)oc);
+                sprintf(tagbuf, "l%zx", (t_uint)oc);
                 gui_vmess("gui_canvas_delete_line", "xs",
                     glist_getcanvas(x), tagbuf);
             }
@@ -1160,7 +1168,7 @@ void canvas_deletelinesforio(t_canvas *x, t_text *text,
             if (x->gl_editor)
             {
                 char buf[MAXPDSTRING];
-                sprintf(buf, "l%lx", (long unsigned int)oc);
+                sprintf(buf, "l%zx", (t_uint)oc);
                 gui_vmess("gui_canvas_delete_line", "xs",
                     glist_getcanvas(x),
                     buf);
@@ -1178,7 +1186,7 @@ static void canvas_pop(t_canvas *x, t_floatarg fvis)
     canvas_resortinlets(x);
     canvas_resortoutlets(x);
     x->gl_loading = 0;
-    //fprintf(stderr,"loading = 0 .x%lx owner=.x%lx\n", x, x->gl_owner);
+    //fprintf(stderr,"loading = 0 .x%zx owner=.x%zx\n", x, x->gl_owner);
 }
 
 extern void *svg_new(t_pd *x, t_symbol *s, int argc, t_atom *argv);
@@ -1198,7 +1206,7 @@ void canvas_restore(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_pd *z;
     int is_draw_command = 0;
-    //fprintf(stderr,"canvas_restore %lx\n", x);
+    //fprintf(stderr,"canvas_restore %zx\n", x);
     /* for [draw g] and [draw svg] we add an inlet to the svg attr proxy */
     if (atom_getsymbolarg(2, argc, argv) == gensym("draw"))
     {
@@ -1241,7 +1249,7 @@ void canvas_loadbangsubpatches(t_canvas *x, t_symbol *s)
         {
             if (!canvas_isabstraction((t_canvas *)y))
             {
-            //fprintf(stderr,"%lx s:canvas_loadbangsubpatches %s\n",
+            //fprintf(stderr,"%zx s:canvas_loadbangsubpatches %s\n",
             //    x, s->s_name);
             canvas_loadbangsubpatches((t_canvas *)y, s);
             }
@@ -1250,7 +1258,7 @@ void canvas_loadbangsubpatches(t_canvas *x, t_symbol *s)
         if ((pd_class(&y->g_pd) != canvas_class) &&
             zgetfn(&y->g_pd, s))
         {
-            //fprintf(stderr,"%lx s:obj_loadbang %s\n",x,s->s_name);
+            //fprintf(stderr,"%zx s:obj_loadbang %s\n",x,s->s_name);
             pd_vmess(&y->g_pd, s, "f", (t_floatarg)LB_LOAD);
         }
 }
@@ -1264,13 +1272,13 @@ static void canvas_loadbangabstractions(t_canvas *x, t_symbol *s)
         {
             if (canvas_isabstraction((t_canvas *)y))
             {
-                //fprintf(stderr,"%lx a:canvas_loadbang %s\n",x,s->s_name);
+                //fprintf(stderr,"%zx a:canvas_loadbang %s\n",x,s->s_name);
                 canvas_loadbangabstractions((t_canvas *)y, s);
                 canvas_loadbangsubpatches((t_canvas *)y, s);
             }
             else
             {
-                //fprintf(stderr,"%lx a:canvas_loadbangabstractions %s\n",
+                //fprintf(stderr,"%zx a:canvas_loadbangabstractions %s\n",
                 //    x, s->s_name);
                 canvas_loadbangabstractions((t_canvas *)y, s);
             }
@@ -1281,14 +1289,14 @@ void canvas_loadbang(t_canvas *x)
 {
     //t_gobj *y;
     // first loadbang preset hubs and nodes
-    //fprintf(stderr,"%lx 0\n", x);
+    //fprintf(stderr,"%zx 0\n", x);
     canvas_loadbangabstractions(x, gensym("pre-loadbang"));
     canvas_loadbangsubpatches(x, gensym("pre-loadbang"));
-    //fprintf(stderr,"%lx 1\n", x);
+    //fprintf(stderr,"%zx 1\n", x);
     // then do the regular loadbang
     canvas_loadbangabstractions(x, gensym("loadbang"));
     canvas_loadbangsubpatches(x, gensym("loadbang"));
-    //fprintf(stderr,"%lx 2\n", x);
+    //fprintf(stderr,"%zx 2\n", x);
 }
 
 /* JMZ/MSP:
@@ -1425,11 +1433,11 @@ void canvas_popabstraction(t_canvas *x)
     pd_bind(newest, gensym("#A"));
     pd_popsym(&x->gl_pd);
     //x->gl_loading = 1;
-    //fprintf(stderr,"loading = 1 .x%lx owner=.x%lx\n", x, x->gl_owner);
+    //fprintf(stderr,"loading = 1 .x%zx owner=.x%zx\n", x, x->gl_owner);
     canvas_resortinlets(x);
     canvas_resortoutlets(x);
     x->gl_loading = 0;
-    //fprintf(stderr,"loading = 0 .x%lx owner=.x%lx\n", x, x->gl_owner);
+    //fprintf(stderr,"loading = 0 .x%zx owner=.x%zx\n", x, x->gl_owner);
 }
 
 void canvas_logerror(t_object *y)
@@ -1447,7 +1455,7 @@ static void *subcanvas_new(t_symbol *s)
 {
     t_atom a[6];
     t_canvas *x, *z = canvas_getcurrent();
-    //fprintf(stderr,"subcanvas_new current canvas .x%lx\n", (t_int)z);
+    //fprintf(stderr,"subcanvas_new current canvas .x%zx\n", (t_uint)z);
     if (!*s->s_name) s = gensym("/SUBPATCH/");
     SETFLOAT(a, 0);
     SETFLOAT(a+1, GLIST_DEFCANVASYLOC);
@@ -1844,7 +1852,7 @@ static void glist_redrawall(t_template *template, t_glist *gl, int action)
     {
         /* Haven't tested scalars inside gop yet, but we
            probably need a gui_vmess here */
-        sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n",
+        sys_vgui("pdtk_select_all_gop_widgets .x%zx %zx %d\n",
             glist_getcanvas(gl), gl, 1);
     }
 }
@@ -2268,7 +2276,7 @@ static void canvas_f(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 {
     static int warned_future_version;
     static int warned_old_syntax;
-    //fprintf(stderr,"canvas_f %lx %d current=%lx %s\n",
+    //fprintf(stderr,"canvas_f %zx %d current=%zx %s\n",
     //    (t_int)x, argc, canvas_getcurrent(),
     //    last_typedmess != NULL ? last_typedmess->s_name : "none");
     t_canvas *xp = x; //parent window for a special case dealing with subpatches
@@ -2303,7 +2311,7 @@ static void canvas_f(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     {
         for (g = x->gl_list; g2 = g->g_next; g = g2)
             ;
-        //fprintf(stderr,"same canvas .x%lx .x%lx\n", (t_int)g, (t_int)x);
+        //fprintf(stderr,"same canvas .x%zx .x%zx\n", (t_uint)g, (t_uint)x);
     }
     if ((ob = pd_checkobject(&g->g_pd)) || pd_class(&g->g_pd) == canvas_class)
     {
@@ -2323,7 +2331,7 @@ void canvasgop_draw_move(t_canvas *x, int doit)
     //delete the earlier GOP window so that when dragging 
     //there is only one GOP window present on parent
     /* don't think we need this anymore */
-    //sys_vgui(".x%lx.c delete GOP\n",  x);
+    //sys_vgui(".x%zx.c delete GOP\n",  x);
         
     //redraw the GOP
     canvas_setgraph(x, x->gl_isgraph+2*x->gl_hidetext, 0);

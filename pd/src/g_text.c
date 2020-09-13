@@ -1395,7 +1395,7 @@ static void gatom_vis(t_gobj *z, t_glist *glist, int vis)
             /* We're just deleting the parent gobj in the GUI, which takes
                care of removing all the children. So we don't need to send
                a message here */
-            //sys_vgui(".x%lx.c delete %lx.l\n", glist_getcanvas(glist), x);
+            //sys_vgui(".x%zx.c delete %zx.l\n", glist_getcanvas(glist), x);
         }
     }
     if (!vis)
@@ -1855,7 +1855,7 @@ static void dropdown_vis(t_gobj *z, t_glist *glist, int vis)
             /* We're just deleting the parent gobj in the GUI, which takes
                care of removing all the children. So we don't need to send
                a message here */
-            //sys_vgui(".x%lx.c delete %lx.l\n", glist_getcanvas(glist), x);
+            //sys_vgui(".x%zx.c delete %zx.l\n", glist_getcanvas(glist), x);
         }
     }
     if (!vis)
@@ -1888,7 +1888,7 @@ void canvas_dropdown(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
     x->a_text.te_width = 6;
 
     /* bind symbol for sending index updates from the GUI */
-    sprintf(tagbuf, "x%lx", (long unsigned int)x);
+    sprintf(tagbuf, "x%zx", (t_uint)x);
     pd_bind(&x->a_text.te_pd, gensym(tagbuf));
 
     binbuf_add(x->a_text.te_binbuf, 1, binbuf_getvec(x->a_names));
@@ -1951,7 +1951,7 @@ void canvas_dropdown(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
 static void dropdown_free(t_dropdown *x)
 {
     char tagbuf[MAXPDSTRING];
-    sprintf(tagbuf, "x%lx", (long unsigned int)x);
+    sprintf(tagbuf, "x%zx", (t_uint)x);
     pd_unbind(&x->a_text.te_pd, gensym(tagbuf));
 
     if (*x->a_symfrom->s_name)
@@ -2259,7 +2259,7 @@ static void text_vis(t_gobj *z, t_glist *glist, int vis)
             t_rtext *y = glist_findrtext(glist, x);
             if (gobj_shouldvis(&x->te_g, glist))
             {
-                //fprintf(stderr,"    erase it %lx %lx\n", x, glist);
+                //fprintf(stderr,"    erase it %zx %zx\n", x, glist);
                 text_erase_gobj(x, glist, rtext_gettag(y));
                 //text_eraseborder(x, glist, rtext_gettag(y));
                 //rtext_erase(y);
@@ -2609,7 +2609,7 @@ void text_drawborder(t_text *x, t_glist *glist,
         }
         else
         {
-            //fprintf(stderr, "redrawing rectangle? .x%lx.c %sR\n",
+            //fprintf(stderr, "redrawing rectangle? .x%zx.c %sR\n",
             //    (t_int)glist_getcanvas(glist), tag);
             gui_vmess("gui_text_redraw_border", "xsii",
                 glist_getcanvas(glist),
@@ -2711,13 +2711,13 @@ void glist_eraseiofor(t_glist *glist, t_object *ob, char *tag)
     n = obj_noutlets(ob);
     for (i = 0; i < n; i++)
     {
-        //sys_vgui(".x%lx.c delete %so%d\n",
+        //sys_vgui(".x%zx.c delete %so%d\n",
         //    glist_getcanvas(glist), tag, i);
     }
     n = obj_ninlets(ob);
     for (i = 0; i < n; i++)
     {
-        //sys_vgui(".x%lx.c delete %si%d\n",
+        //sys_vgui(".x%zx.c delete %si%d\n",
         //    glist_getcanvas(glist), tag, i);
     }
 }

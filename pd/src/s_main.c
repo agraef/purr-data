@@ -352,14 +352,14 @@ int sys_main(int argc, char **argv)
     if (WSAStartup(version, &nobby)) sys_sockerror("WSAstartup");
     /* use Win32 "binary" mode by default since we don't want the
      * translation that Win32 does by default */
-# ifdef _MSC_VER /* MS Visual Studio */
+# ifdef MSC /* MS Visual Studio */
     _set_fmode( _O_BINARY );
 # else  /* MinGW */
     {
         extern int _fmode;
         _fmode = _O_BINARY;
     }
-# endif /* _MSC_VER */
+# endif /* MSC */
 #endif  /* _WIN32 */
 #ifndef _WIN32
     /* long ago Pd used setuid to promote itself to real-time priority.
@@ -372,7 +372,7 @@ int sys_main(int argc, char **argv)
     }
 #endif  /* _WIN32 */
     pd_init();                                  /* start the message system */
-    logpost(NULL, 2, "PD_FLOATSIZE = %lu bits", sizeof(t_float)*8);
+    logpost(NULL, 2, "PD_FLOATSIZE = %u bits", (unsigned)sizeof(t_float)*8);
     sys_findprogdir(argv[0]);                   /* set sys_progname, guipath */
     for (i = noprefs = 0; i < argc; i++)        /* prescan args for noprefs */
         if (!strcmp(argv[i], "-noprefs"))

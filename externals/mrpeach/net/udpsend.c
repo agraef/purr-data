@@ -414,7 +414,7 @@ static void udpsend_sock_err(t_udpsend *x, char *err_string)
                 break;
             }
         }
-        pd_error(x, "%s: %s (%d)", err_string, lpMsgBuf, errornumber);
+        pd_error(x, "%s: %s (%ld)", err_string, lpMsgBuf, errornumber);
         LocalFree(lpMsgBuf);
     }
 #else

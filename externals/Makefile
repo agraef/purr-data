@@ -48,7 +48,7 @@ DEST_PATHS = BUILDLAYOUT_DIR=$(BUILDLAYOUT_DIR) \
 BUILDSRC_OS_NAME = $(OS_NAME)
 
 WARN_FLAGS = -Wall -W -Wno-unused-parameter
-CFLAGS = -DPD -I$(pd_src)/src $(WARN_FLAGS) $(DEBUG_CFLAGS) $(CFLAGS_ADD) -I$(gem_src)/src
+CFLAGS = -DPD -D__USE_MINGW_ANSI_STDIO=1 -I$(pd_src)/src $(WARN_FLAGS) $(DEBUG_CFLAGS) $(CFLAGS_ADD) -I$(gem_src)/src
 LDFLAGS =  
 LIBS = -lm
 
@@ -1343,6 +1343,7 @@ motex_clean:
 # MRPEACH
 MRPEACH_NAME=mrpeach
 MRPEACH_OBJECTS := $(wildcard $(externals_src)/mrpeach/*/*.c)
+mrpeach: WARN_FLAGS=-Wno-pedantic-ms-format
 mrpeach: $(MRPEACH_OBJECTS:.c=.$(EXTENSION))
 
 mrpeach_install: mrpeach

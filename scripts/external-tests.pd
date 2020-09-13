@@ -835,8 +835,8 @@ non-optimized branches.;
 #X text 432 224 Where did we get 2275? It is the number of creators
 that we found on OSX-- which does not yet ship K12 mode. (Still need
 to set up Windows tests \, however.;
-#X obj 335 262 moses 2251;
-#X msg 335 320 only counted \$1 objects. Need 2251 to succeed;
+#X obj 335 262 moses 2176;
+#X msg 335 320 only counted \$1 objects. Need 2176 to succeed;
 #X connect 0 0 38 0;
 #X connect 1 0 4 0;
 #X connect 2 0 3 0;

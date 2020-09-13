@@ -38,11 +38,11 @@
 
 /* callback routines */
 static void CALLBACK winmm_in_callback(HMIDIIN hMidiIn,
-                                       WORD wMsg, DWORD dwInstance, 
-                                       DWORD dwParam1, DWORD dwParam2);
+                                       WORD wMsg, DWORD_PTR dwInstance, 
+                                       DWORD_PTR dwParam1, DWORD_PTR dwParam2);
 static void CALLBACK winmm_streamout_callback(HMIDIOUT hmo, UINT wMsg,
-                                              DWORD dwInstance, DWORD dwParam1, 
-                                              DWORD dwParam2);
+                                              DWORD_PTR dwInstance, DWORD_PTR dwParam1, 
+                                              DWORD_PTR dwParam2);
 #ifdef USE_SYSEX_BUFFERS
 static void CALLBACK winmm_out_callback(HMIDIOUT hmo, UINT wMsg,
                                         DWORD dwInstance, DWORD dwParam1, 
@@ -667,9 +667,9 @@ static PmError winmm_in_close(PmInternal *midi)
 static void FAR PASCAL winmm_in_callback(
     HMIDIIN hMidiIn,    /* midiInput device Handle */
     WORD wMsg,          /* midi msg */
-    DWORD dwInstance,   /* application data */
-    DWORD dwParam1,     /* MIDI data */
-    DWORD dwParam2)    /* device timestamp (wrt most recent midiInStart) */
+    DWORD_PTR dwInstance,   /* application data */
+    DWORD_PTR dwParam1,     /* MIDI data */
+    DWORD_PTR dwParam2)    /* device timestamp (wrt most recent midiInStart) */
 {
     static int entry = 0;
     PmInternal *midi = (PmInternal *) dwInstance;
@@ -1328,7 +1328,7 @@ static void CALLBACK winmm_out_callback(HMIDIOUT hmo, UINT wMsg,
 
 /* winmm_streamout_callback -- unprepare (free) buffer header */
 static void CALLBACK winmm_streamout_callback(HMIDIOUT hmo, UINT wMsg,
-        DWORD dwInstance, DWORD dwParam1, DWORD dwParam2)
+        DWORD_PTR dwInstance, DWORD_PTR dwParam1, DWORD_PTR dwParam2)
 {
     PmInternal *midi = (PmInternal *) dwInstance;
     midiwinmm_type m = (midiwinmm_type) midi->descriptor;
