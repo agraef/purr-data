@@ -398,6 +398,11 @@ td {
               </option>
             </select>
             <br/>
+            <label data-i18n="[title]prefs.gui.grid.show_grid_tt">
+              <input type="checkbox" id="show_grid" name="show_grid">
+              <span data-i18n="prefs.gui.grid.show_grid"></span>
+            </label>
+            <br/>
             <label data-i18n="[title]prefs.gui.zoom.save_zoom_tt">
               <input type="checkbox" id="save_zoom" name="save_zoom">
               <span data-i18n="prefs.gui.zoom.save_zoom"></span>
@@ -757,16 +762,19 @@ function apply(save_prefs) {
     );
 
     // Send the gui prefs (currently just the name of the gui preset, the
-    // status of the save-zoom toggle and various options related to the help
-    // browser) to Pd
+    // status of the show_grid and save_zoom toggles and various options
+    // related to the help browser) to Pd
     pdgui.pdsend("pd gui-prefs",
         get_gui_preset(),
+        get_bool_elem("show_grid"),
         get_bool_elem("save_zoom"),
         get_bool_elem("browser_doc"),
         get_bool_elem("browser_path"),
         get_bool_elem("browser_init"),
         get_autopatch_yoffset()
     );
+    // Update the grid on all open windows.
+    pdgui.update_grid(get_bool_elem("show_grid"));
 
     // Send the startup config data to Pd
     pdgui.pdsend.apply(null, ["pd path-dialog", startup_use_stdpath, startup_verbose].concat(get_path_array()));
@@ -1010,7 +1018,7 @@ function autopatch_yoffset_toggle(checked) {
     document.getElementById("autopatch_yoffset").checked = checked;
 }
 
-function gui_prefs_callback(name, save_zoom, browser_doc, browser_path,
+function gui_prefs_callback(name, show_grid, save_zoom, browser_doc, browser_path,
     browser_init, autopatch_yoffset) {
     var s = document.getElementById("gui_preset"),
         i;
@@ -1020,6 +1028,7 @@ function gui_prefs_callback(name, save_zoom, browser_doc, browser_path,
             break;
         }
     }
+    document.getElementById("show_grid").checked = !!show_grid;
     document.getElementById("save_zoom").checked = !!save_zoom;
     document.getElementById("browser_doc").checked = !!browser_doc;
     document.getElementById("browser_path").checked = !!browser_path;
