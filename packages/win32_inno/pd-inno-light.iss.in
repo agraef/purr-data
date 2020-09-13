@@ -706,12 +706,12 @@ Source: pd.ico; DestDir: {app}\lib
 ;-----------------------------------------------------------------------------
 ; put pdsend and pdreceive in the System dir so that they are in the path
 ;
-Source: build\bin\pdsend.exe; DestDir: {sys}; Flags: confirmoverwrite promptifolder
-Source: build\bin\pdreceive.exe; DestDir: {sys}; Flags: confirmoverwrite promptifolder
+;Source: build\bin\pdsend.exe; DestDir: {sys}; Flags: confirmoverwrite promptifolder
+;Source: build\bin\pdreceive.exe; DestDir: {sys}; Flags: confirmoverwrite promptifolder
 ; add Cyclone's cyclist.exe if it is present
-#ifexist "build\bin\cyclist.exe"
-Source: build\bin\cyclist.exe; DestDir: {sys}; Flags: confirmoverwrite promptifolder
-#endif
+;#ifexist "build\bin\cyclist.exe"
+;Source: build\bin\cyclist.exe; DestDir: {sys}; Flags: confirmoverwrite promptifolder
+;#endif
 ;
 ;
 ;-----------------------------------------------------------------------------
@@ -756,13 +756,13 @@ Source: build\lib\*.*; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs
 ;
 ; DLLs
 ;
-Source: build\bin\lib*.dll; DestDir: {sys}; Flags: restartreplace confirmoverwrite sharedfile
-#ifexist "build\msvcp71.dll"
-Source: build\msvcp71.dll; DestDir: {sys}; Flags: restartreplace uninsneveruninstall sharedfile
-#endif
-#ifexist "build\msvcr71.dll"
-Source: build\msvcr71.dll; DestDir: {sys}; Flags: restartreplace uninsneveruninstall sharedfile
-#endif
+;Source: build\bin\lib*.dll; DestDir: {sys}; Flags: restartreplace confirmoverwrite sharedfile
+;#ifexist "build\msvcp71.dll"
+;Source: build\msvcp71.dll; DestDir: {sys}; Flags: restartreplace uninsneveruninstall sharedfile
+;#endif
+;#ifexist "build\msvcr71.dll"
+;Source: build\msvcr71.dll; DestDir: {sys}; Flags: restartreplace ;uninsneveruninstall sharedfile
+;#endif
 ;; build stuff is not included now
 ;Source: build\portaudio\*.*; DestDir: {app}\portaudio; Flags: ignoreversion recursesubdirs
 ;Source: build\src\*.*; DestDir: {app}\src; Flags: ignoreversion recursesubdirs
