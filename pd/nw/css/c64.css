@@ -634,3 +634,54 @@ input[name="rate"] {
     margin-bottom: -10px;
     padding: 30px;
 }
+
+/* used for the custom dialog titlebar */
+#titlebar {
+    width: 100%;
+    height: 20px;
+    margin-bottom: 4px;
+    -webkit-app-region: drag;
+    background-color: gray;
+    cursor: grab;
+}
+
+#titlebar_buttons_td {
+    padding-right: 1px;
+}
+
+#titlebar_title {
+    color: white;
+    position: relative;
+    left: 1px;
+    top: 1px;
+    background-color: gray;
+}
+
+#titlebar_close_button {
+    width: 16px;
+    height: 16px;
+    background: #a2a2a2;
+    -webkit-app-region: no-drag;
+    color: #FFF;
+    font-size: 18px;
+    text-align: center;
+    line-height: 16px;
+    cursor: default;
+}
+
+/*#titlebar_close_button:after {
+    position: absolute;
+    right: 6px;
+    top: 1px;
+    content: "\d7";
+    font-size: 20px;
+    color: #FFF;
+}*/
+
+#titlebar_close_button:hover {
+    background: #b2b2b2;
+}
+
+#titlebar_close_button:active {
+    background: #e2e2e2;
+}
