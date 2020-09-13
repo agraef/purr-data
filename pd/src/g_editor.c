@@ -3520,6 +3520,8 @@ static double canvas_upclicktime;
 static int canvas_upx, canvas_upy;
 #define DCLICKINTERVAL 0.25
 
+static int ctrl_runmode_warned;
+
     /* mouse click */
 void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     int mod, int doit)
@@ -3532,7 +3534,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     //post("canvas_doclick %d", doit);
 
     t_gobj *y;
-    int shiftmod, runmode, altmod, doublemod = 0, rightclick,
+    int shiftmod, runmode, ctrlmod, altmod, doublemod = 0, rightclick,
         in_text_resizing_hotspot, default_type;
     int x1=0, y1=0, x2=0, y2=0, clickreturned = 0;
     t_gobj *yclick = NULL;
@@ -3551,8 +3553,9 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     
     // read key and mouse button states
     shiftmod = (mod & SHIFTMOD);
-    runmode = ((mod & CTRLMOD) || (!x->gl_edit));
+    ctrlmod = (mod & CTRLMOD);
     altmod = (mod & ALTMOD);
+    runmode = (altmod || (!x->gl_edit));
     rightclick = (mod & RIGHTCLICK);
 
     // set global left mouse click variable
@@ -3644,7 +3647,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
         if (yclick)
         {
                 clickreturned = gobj_click(yclick, x, xpos, ypos,
-                    shiftmod, ((mod & CTRLMOD) && (!x->gl_edit)) || altmod,
+                    shiftmod, (altmod && (!x->gl_edit)) || ctrlmod,
                     0, doit);
                 //fprintf(stderr, "    MAIN clicking\n");
         }
@@ -3689,6 +3692,14 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     // if we have located an object under the mouse
     if (y)
     {
+
+        /* check for ctrlmod click and give a warning once in the console that
+           the hotkey for temporary runmode has changed */
+        if (!ctrl_runmode_warned && ctrlmod && !rightclick && doit) {
+          post("\nwarning: The hotkey for temporary run mode has changed. "
+               "Please press Alt instead of Ctrl to enable it.\n");
+          ctrl_runmode_warned = 1;
+        }
 
         // if we are right-clicking
         if (rightclick)
@@ -4063,7 +4074,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
         return;
     }
         /* having failed to find a box, we try lines now. */
-    if (!runmode && !altmod && !shiftmod)
+    if (!runmode && !ctrlmod && !shiftmod)
     {
         t_linetraverser t;
         t_outconnect *oc;
@@ -5578,31 +5589,34 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     }
 
     if (x && keynum == 0 && x->gl_edit &&
-        !strncmp(gotkeysym->s_name, "Alt", 3))
+        !strncmp(gotkeysym->s_name, "Control", 7))
     {
-        glob_alt = down;
+        glob_ctrl = down;
     }
 
-        /* if control key goes up or down, and if we're in edit mode, change
+        /* if alt key goes up or down, and if we're in edit mode, change
         cursor to indicate how the click action changes
         NEW: do so only if not doing anything else in edit mode */
     if (x && keynum == 0 &&
-        !strncmp(gotkeysym->s_name, "Control", 7))
+        !strncmp(gotkeysym->s_name, "Alt", 3))
     {
         //fprintf(stderr,"ctrl\n");
-        glob_ctrl = down;
-        //post("glob_ctrl=%d", down);
+        glob_alt = down;
+        //post("glob_alt=%d", down);
         /* ico@vt.edu: commenting MA_NONE part as that prevents the patch 
            from assuming editmode after it has had an object added via 
            a ctrl+(1-5) shortcut while not in edit mode
         */
-        if (x->gl_edit /*&& x->gl_editor->e_onmotion == MA_NONE*/)
+        if (x->gl_edit /*&& x->gl_editor->e_onmotion == MA_NONE*/ ||
+            x->gl_edit_save)
         {
             canvas_setcursor(x, down ?
                 CURSOR_RUNMODE_NOTHING : CURSOR_EDITMODE_NOTHING);
+            x->gl_edit = down ? 0 : 1;
+            x->gl_edit_save = !x->gl_edit;
             gui_vmess("gui_canvas_set_editmode", "xi",
                 x,
-                down ? 0 : 1);
+                x->gl_edit);
             if(x->gl_editor && x->gl_editor->gl_magic_glass)
             {
                 if (down)
@@ -7993,6 +8007,8 @@ void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
         return;
     }
     x->gl_edit = !x->gl_edit;
+    // make sure to exit temporary run mode here
+    x->gl_edit_save = 0;
     if (x->gl_edit && glist_isvisible(x) && glist_istoplevel(x)){
         //dpsaha@vt.edu add the resize blobs on GOP
         t_gobj *g;
@@ -8042,11 +8058,19 @@ void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
     }
     if (glist_isvisible(x))
     {
-        int edit = !glob_ctrl && x->gl_edit;
+        int edit = /*!glob_ctrl && */x->gl_edit;
         gui_vmess("gui_canvas_set_editmode", "xi",
             glist_getcanvas(x),
             edit);
     }
+}
+
+void canvas_query_editmode(t_canvas *x)
+{
+  int edit = /*!glob_ctrl && */x->gl_edit;
+  gui_vmess("gui_canvas_set_editmode", "xi",
+            glist_getcanvas(x),
+            edit);
 }
 
 // jsarlo

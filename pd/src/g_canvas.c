@@ -497,6 +497,7 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     }
     x->gl_willvis = vis;
     x->gl_edit = !strncmp(x->gl_name->s_name, "Untitled", 8);
+    x->gl_edit_save = 0;
     x->gl_font = sys_nearestfontsize(font);
     x->gl_zoom = zoom;
     pd_pushsym(&x->gl_pd);
@@ -2717,6 +2718,8 @@ void g_canvas_setup(void)
         gensym("vis"), A_FLOAT, A_NULL);
     class_addmethod(canvas_class, (t_method)glist_menu_open,
         gensym("menu-open"), A_NULL);
+    class_addmethod(canvas_class, (t_method)canvas_query_editmode,
+        gensym("query-editmode"), A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_map,
         gensym("map"), A_FLOAT, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_dirty,

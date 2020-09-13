@@ -210,6 +210,7 @@ struct _glist
     unsigned int gl_loading:1;      /* am now loading from file */
     unsigned int gl_willvis:1;      /* make me visible after loading */ 
     unsigned int gl_edit:1;         /* edit mode */
+    unsigned int gl_edit_save:1;    /* set in temporary run mode */
     unsigned int gl_isdeleting:1;   /* we're inside glist_delete -- hack! */
     unsigned int gl_unloading:1;    /* we're inside canvas_free */
     unsigned int gl_goprect:1;      /* draw rectangle for graph-on-parent */
@@ -564,6 +565,7 @@ EXTERN void canvas_resortoutlets(t_canvas *x);
 EXTERN void canvas_free(t_canvas *x);
 EXTERN void canvas_updatewindowlist( void);
 EXTERN void canvas_editmode(t_canvas *x, t_floatarg yesplease);
+EXTERN void canvas_query_editmode(t_canvas *x);
 EXTERN int canvas_isabstraction(t_canvas *x);
 EXTERN int canvas_istable(t_canvas *x);
 EXTERN int canvas_showtext(t_canvas *x);
