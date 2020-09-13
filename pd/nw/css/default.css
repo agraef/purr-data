@@ -575,11 +575,11 @@ text.activated {
     background-color: #f3f3f3;
     border:1px solid #f3f3f3;
     padding: 12px;
-    margin: 12px;
+    /* margin: 12px; */
     /*box-shadow: 7px 7px 5px grey;*/
+    width: 70%;
     left: 50%;
     top: 50%;
-    width: 70%;
     transform: translate(-50%, -50%);
 }
 
