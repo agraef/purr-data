@@ -298,8 +298,8 @@
       "none_tt": "Ne remplacer aucun sous-patch"
     },
     "warning": {
-      "unsaved_tt": "There is an unsaved edited instance of this abstraction",
-      "multipleunsaved_tt": "There is another unsaved edited instance of this abstraction"
+      "unsaved_tt": "Il existe une instance modifiée non enregistrée de cette abstraction",
+      "multipleunsaved_tt": "Il existe une autre instance modifiée non enregistrée de cette abstraction"
     },
     "find": {
       "placeholder": "Chercher dans le Canevas",

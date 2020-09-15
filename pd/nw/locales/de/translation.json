@@ -298,8 +298,8 @@
       "none_tt": "Ersetze keinen der Subpatches"
     },
     "warning": {
-      "unsaved_tt": "There is an unsaved edited instance of this abstraction",
-      "multipleunsaved_tt": "There is another unsaved edited instance of this abstraction"
+      "unsaved_tt": "Es gibt ein ungesichertes Exemplar dieser Abstraktion",
+      "multipleunsaved_tt": "Es gibt ein weiteres ungesichertes Exemplar dieser Abstraktion"
     },
     "find": {
       "placeholder": "Suche im Patch",
