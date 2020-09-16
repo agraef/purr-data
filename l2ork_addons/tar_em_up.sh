@@ -238,7 +238,6 @@ if [ ! -d "../pd/nw/nw" ]; then
 	if [[ $os != "win" && $dmg == 0 ]]; then
 		chmod 755 ../pd/nw/nw/nw
 	fi
-	rm $nwjs_filename
 fi
 
 # For Windows, fetch the ASIO SDK if we don't have it already
