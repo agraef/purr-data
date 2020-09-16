@@ -105,6 +105,7 @@ do case $Option in
 	esac
 done
 
+script_dir=$(dirname $0)
 inst_dir=${inst_dir:-/usr/local}
 
 # configure a light build if requested
@@ -163,56 +164,9 @@ fi
 
 # Fetch the nw.js binary if we haven't already. We want to fetch it even
 # for building with no libs, so we do it regardless of the options
-#echo nwjs-sdk-v0.16.0-`uname | tr '[:upper:]' '[:lower:]'`
 if [ ! -d "../pd/nw/nw" ]; then
-	if [ `getconf LONG_BIT` -eq 32 ]; then
-		arch="ia32"
-	else
-		arch="x64"
-	fi
-
-	# for rpi
-	if [ `uname -m` == "armv7l" ]; then
-		arch="armv7l"
-	fi
-
-	# for pinebook, probably also rpi 4
-	if [ `uname -m` == "aarch64" ]; then
-		arch="armv7l"
-	fi
-
-	# MSYS: Pick the right architecture depending on whether we're
-	# running in the 32 or 64 bit version of the MSYS shell.
-	if [[ $os == "win" ]]; then
-		arch="ia32"
-	elif [[ $os == "win64" ]]; then
-		arch="x64"
-	fi
-	if [[ $os == "win" || $os == "win64" || $os == "osx" ]]; then
-		ext="zip"
-	else
-		ext="tar.gz"
-	fi
-
-	if [[ $osx_version == "10.8" ]]; then
-		# We need the lts version to be able to run on legacy systems.
-		nwjs_version="v0.14.7"
-	else
-		# temporary kluge for rpi-- only 0.15.1 is available atm
-		if [ $arch == "armv7l" ]; then
-			nwjs_version="v0.17.6"
-		else
-			nwjs_version="v0.24.4"
-		fi
-	fi
-
-	nwjs="nwjs-sdk"
-	if [[ $os == "win64" ]]; then
-		nwjs_dirname=${nwjs}-${nwjs_version}-win-${arch}
-	else
-		nwjs_dirname=${nwjs}-${nwjs_version}-${os}-${arch}
-	fi
-	nwjs_filename=${nwjs_dirname}.${ext}
+	nwjs_filename=$($script_dir/nwjs_version_for_platform.sh)
+	nwjs_version=$(echo $nwjs_filename | egrep -o 'v[^-]+')
 	nwjs_url=https://git.purrdata.net/jwilkes/nwjs-binaries/raw/master
 	nwjs_url=${nwjs_url}/$nwjs_filename
 	echo "Fetching the nwjs binary from"
@@ -225,15 +179,17 @@ if [ ! -d "../pd/nw/nw" ]; then
 	fi
 	if [[ $os == "win" || $os == "win64" || $os == "osx" ]]; then
 		unzip $nwjs_filename
+		nwjs_dirname=$(basename --suffix=.zip $nwjs_filename)
 	else
 		tar -xf $nwjs_filename
+		nwjs_dirname=$(basename --suffix=.tar.gz $nwjs_filename)
 	fi
 	# Special case for arm binary's inconsistent directory name
 	# (It's not the same as the `uname -m` output)
-	if [ $arch == "armv7l" ]; then
+	if echo $nwjs_filename | grep -q armv7l ; then
 		nwjs_dirname=`echo $nwjs_dirname | sed 's/armv7l/arm/'`
 	fi
-        mv $nwjs_dirname ../pd/nw/nw
+	mv $nwjs_dirname ../pd/nw/nw
 	# make sure the nw binary is executable on GNU/Linux
 	if [[ $os != "win" && $dmg == 0 ]]; then
 		chmod 755 ../pd/nw/nw/nw
