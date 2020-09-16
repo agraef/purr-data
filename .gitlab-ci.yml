@@ -97,6 +97,7 @@ osx_10.8_x86_64_dmg:
      - dmg
    variables:
      BUILD_TYPE_FLAG: -X
+     osx_version: "10.8"
    script:
      - echo `pwd`
      - *build_all
