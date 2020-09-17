@@ -159,7 +159,7 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
             gui_vmess("gui_vumeter_draw_text", "xxsiisiiiis",
                 canvas, x,
                 cbuf, end+1, yyy+k3+2, iemgui_vu_scale_str[i/4],
-                i, x1, y1,
+                i, x1, y1 - 3,
                 x->x_gui.x_fontsize,
                 sys_fontweight);
         }
