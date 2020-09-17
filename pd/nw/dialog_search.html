@@ -247,10 +247,13 @@ function toc_add_bookmark(id, title, descr)
     if (toc_bookmarks() < 0) {
 	toc_add_bookmarks();
     }
-    toc[toc.length] = {
+    toc[toc.length] = descr ? {
 	id: id,
 	title: title,
 	description: descr
+    } : {
+	id: id,
+	title: title
     };
     pdgui.post("add bookmark: "+title+" ("+id+")");
     toc_save();
@@ -298,14 +301,6 @@ function toc_is_bookmarked(id)
     }
 }
 
-function toc_bookmark_update(dir)
-{
-    var bookmark = document.getElementById("bookmark_indicator");
-    var rel = path.relative(pdgui.get_lib_dir(), dir);
-    var id = dir.length <= rel.length ? dir : rel;
-    bookmark.src = toc_is_bookmarked(id) ? "bookmark2.svg" : "bookmark.svg";
-}
-
 // Stop-gap translator
 function translate_form() {
     var elements = document.querySelectorAll("[data-i18n]"),
@@ -328,6 +323,14 @@ function click_toc(dir) {
 
 var current_dir;
 
+function canonical_path(dir)
+{
+    // normalize
+    dir = path.normalize(dir);
+    // get rid of Windows' '\', '/' works just as well and is more portable
+    return pdgui.defunkify_windows_path(dir);
+}
+
 function check_dir(dirname)
 {
     var absname = dirname;
@@ -338,10 +341,20 @@ function check_dir(dirname)
 	absname = path.join(pdgui.get_lib_dir(), dirname);
     }
     try {
-	if (fs.lstatSync(absname).isDirectory()) return absname;
+	if (fs.lstatSync(absname).isDirectory())
+	    return canonical_path(absname);
     } catch (err) {
     }
     return null;
+}
+
+function toc_bookmark_update(dir)
+{
+    var bookmark = document.getElementById("bookmark_indicator");
+    var rel = canonical_path(path.relative(pdgui.get_lib_dir(), dir));
+    dir = canonical_path(dir);
+    var id = dir.length <= rel.length ? dir : rel;
+    bookmark.src = toc_is_bookmarked(id) ? "bookmark2.svg" : "bookmark.svg";
 }
 
 function display_toc() {
@@ -359,7 +372,8 @@ function display_toc() {
 	    try {
 		fs.accessSync(check_dir(doc.id), fs.F_OK);
 		a = document.createElement("a");
-		a.href = "javascript: click_toc('" + doc.id + "');";
+		// We need to properly stringify click_toc's argument here.
+		a.href = "javascript: click_toc(" + JSON.stringify(doc.id) + ");";
 		a.textContent = doc.title;
 		// set title to path for tooltip
 		a.title = doc.id;
@@ -439,9 +453,16 @@ function bookmark_indicator_click() {
 function file_browser_callback(elem) {
     var doc = elem.value;
     if (doc !== "") {
-        pdgui.doc_open(pdgui.defunkify_windows_path(path.dirname(doc)),
-            pdgui.defunkify_windows_path(path.basename(doc)));
-        display_directory(pdgui.defunkify_windows_path(path.dirname(doc)));
+        var defunkify = pdgui.defunkify_windows_path;
+        var dir = path.dirname(doc);
+        pdgui.doc_open(defunkify(dir), defunkify(path.basename(doc)));
+        display_directory(defunkify(dir));
+        // update the search field accordingly; use a relative path if that
+        // makes sense, and canonicalize
+        var rel = canonical_path(path.relative(pdgui.get_lib_dir(), dir));
+        dir = canonical_path(dir);
+        dir = dir.length <= rel.length ? dir : rel;
+        document.getElementById("search_text").value = dir;
     }
 }
 
@@ -615,14 +636,22 @@ function toggle_find_bar() {
 // Adds (or deletes, if del is true) a bookmark to the toc.
 function do_bookmark(dirname, del)
 {
+    if (current_dir === path.join(pdgui.get_lib_dir(), "doc")) {
+	/* We don't want to bookmark the doc directory. There's nothing
+	   interesting to see there anyway, and, since the toc also lives
+	   there, just bailing out at this point we prevent an interesting
+	   race condition which arises if we try to update the toc while we're
+	   displaying it. */
+	return;
+    }
     /* id (dirname) for the bookmark. We take this relative to the libdir if
        the relative designation is shorter than the absolute path, which gives
        prettier ids for documents in the doc and extra hierarchies and
        siblings. Note that these ids only ever appear in the toc, never in
        documents in the search database. */
-    var relname = path.relative(pdgui.get_lib_dir(), dirname);
-    var id = dirname.length <= relname.length ?
-	dirname : relname;
+    var relname = canonical_path(path.relative(pdgui.get_lib_dir(), dirname));
+    dirname = canonical_path(dirname);
+    var id = dirname.length <= relname.length ? dirname : relname;
     // Default name for the bookmark.
     var name = path.basename(dirname);
     // Let's check whether the directory contains a meta file from which we
@@ -650,18 +679,15 @@ function do_bookmark(dirname, del)
 	toc_delete_bookmark(id, name);
     else
 	toc_add_bookmark(id, name, meta_descr);
-    if (current_dir === path.join(pdgui.get_lib_dir(), "doc"))
-	// need to redisplay the toc which is currently shown
-	display_toc();
-    else
-	toc_bookmark_update(dirname);
+    toc_bookmark_update(dirname);
 }
 
 // Toggle bookmark for the given directory. This is invoked by clicking on
 // the bookmark indicator to the right of the search field. 
 function toggle_bookmark(dir)
 {
-    var rel = path.relative(pdgui.get_lib_dir(), dir);
+    var rel = canonical_path(path.relative(pdgui.get_lib_dir(), dir));
+    dir = canonical_path(dir);
     var id = dir.length <= rel.length ? dir : rel;
     do_bookmark(dir, toc_is_bookmarked(id));
 }
