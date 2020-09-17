@@ -2752,7 +2752,7 @@ void canvas_vis(t_canvas *x, t_floatarg f)
                We may need to expand this to include scalars, as well. */
             canvas_create_editor(x);
             canvas_args_to_string(argsbuf, x);
-            gui_vmess("gui_canvas_new", "xiisiiissiiiis",
+            gui_vmess("gui_canvas_new", "xiisiiissiiiiis",
                 x,
                 (int)(x->gl_screenx2 - x->gl_screenx1),
                 (int)(x->gl_screeny2 - x->gl_screeny1),
@@ -2763,6 +2763,9 @@ void canvas_vis(t_canvas *x, t_floatarg f)
                 x->gl_name->s_name,
                 canvas_getdir(x)->s_name,
                 x->gl_dirty,
+                (x->gl_dirties > 1 ?
+                    (x->gl_dirty ? 2 : 1)
+                    : (x->gl_dirties ? !x->gl_dirty : 0)),
                 x->gl_noscroll,
                 x->gl_nomenu,
                 canvas_hasarray(x),
@@ -6170,6 +6173,12 @@ void gobj_dirty(t_gobj *x, t_glist *g, int state)
 {
     t_rtext *y = glist_findrtext(g, (t_text *)x);
     gui_vmess("gui_gobj_dirty", "xsi", g, rtext_gettag(y), state);
+}
+    /* tell the gui to display a specific message in the
+        top right corner */
+void canvas_warning(t_canvas *x, int warid)
+{
+    gui_vmess("gui_canvas_warning", "xi", x, warid);
 }
 
 static int glist_dofinderror(t_glist *gl, void *error_object)

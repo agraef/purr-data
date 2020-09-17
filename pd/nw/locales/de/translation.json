@@ -297,6 +297,10 @@
       "none": "Keinen",
       "none_tt": "Ersetze keinen der Subpatches"
     },
+    "warning": {
+      "unsaved_tt": "Es gibt ein ungesichertes Exemplar dieser Abstraktion",
+      "multipleunsaved_tt": "Es gibt ein weiteres ungesichertes Exemplar dieser Abstraktion"
+    },
     "find": {
       "placeholder": "Suche im Patch",
       "search": "Suche",

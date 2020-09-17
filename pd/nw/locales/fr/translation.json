@@ -297,6 +297,10 @@
       "none": "Aucun",
       "none_tt": "Ne remplacer aucun sous-patch"
     },
+    "warning": {
+      "unsaved_tt": "Il existe une instance modifiée non enregistrée de cette abstraction",
+      "multipleunsaved_tt": "Il existe une autre instance modifiée non enregistrée de cette abstraction"
+    },
     "find": {
       "placeholder": "Chercher dans le Canevas",
       "search":    "Chercher",
