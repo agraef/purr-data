@@ -166,17 +166,23 @@ fi
 # for building with no libs, so we do it regardless of the options
 if [ ! -d "../pd/nw/nw" ]; then
 	nwjs_filename=$($script_dir/nwjs_version_for_platform.sh)
-	nwjs_version=$(echo $nwjs_filename | egrep -o 'v[^-]+')
-	nwjs_url=https://git.purrdata.net/jwilkes/nwjs-binaries/raw/master
-	nwjs_url=${nwjs_url}/$nwjs_filename
-	echo "Fetching the nwjs binary from"
-	echo "$nwjs_url"
-	if ! wget -nv $nwjs_url; then
-		nwjs_url=https://dl.nwjs.io/${nwjs_version}/$nwjs_filename
+
+	if [ -e "./$nwjs_filename" ]; then
+		echo "Found $nwjs_filename"
+	else
+		nwjs_version=$(echo $nwjs_filename | egrep -o 'v[^-]+')
+		nwjs_url=https://git.purrdata.net/jwilkes/nwjs-binaries/raw/master
+		nwjs_url=${nwjs_url}/$nwjs_filename
 		echo "Fetching the nwjs binary from"
 		echo "$nwjs_url"
-		wget -nv $nwjs_url
+		if ! wget -nv $nwjs_url; then
+			nwjs_url=https://dl.nwjs.io/${nwjs_version}/$nwjs_filename
+			echo "Fetching the nwjs binary from"
+			echo "$nwjs_url"
+			wget -nv $nwjs_url
+		fi
 	fi
+
 	if [[ $os == "win" || $os == "win64" || $os == "osx" ]]; then
 		unzip $nwjs_filename
 		nwjs_dirname=$(basename --suffix=.zip $nwjs_filename)
