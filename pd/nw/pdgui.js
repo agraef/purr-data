@@ -74,6 +74,29 @@ exports.set_focused_patchwin = function(cid) {
     last_focused = cid;
 }
 
+// ico@vt.edu 2020-08-12: check which OS we have since Windows has a different
+// windows positioning logic on nw.js 0.14.7 than Linux/OSX. Go figure...
+function check_os(name) {
+
+    var os = require('os');
+    //post("os=" + os.platform());
+    return os.platform() === name ? 1 : 0;
+}
+
+exports.check_os = check_os;
+
+// ico@vt.edu 2020-08-14: used to speed-up window size consistency and other
+// OS-centric operations by avoiding constant calls to string comparisons.
+// Most pertinent calls can be found in index.js' nw_create_window and pdgui.js'
+// canvas_check_geometry
+var nw_os_is_linux = check_os("linux");
+var nw_os_is_osx = check_os("darwin");
+var nw_os_is_windows = check_os("win32");
+
+exports.nw_os_is_linux = nw_os_is_linux;
+exports.nw_os_is_osx = nw_os_is_osx;
+exports.nw_os_is_windows = nw_os_is_windows;
+
 // Keyword index (cf. dialog_search.html)
 
 var fs = require("fs");
@@ -81,14 +104,30 @@ var path = require("path");
 var dive = require("./dive.js"); // small module to recursively search dirs
 var elasticlunr = require("./elasticlunr.js"); // lightweight full-text search engine in JavaScript, cf. https://github.com/weixsong/elasticlunr.js/
 
-var index = elasticlunr();
+function init_elasticlunr()
+{
+    index = elasticlunr();
+    index.addField("title");
+    index.addField("keywords");
+    index.addField("description");
+    //index.addField("body");
+    index.addField("path");
+    index.setRef("id");
+    return index;
+}
 
-index.addField("title");
-index.addField("keywords");
-index.addField("description");
-//index.addField("body");
-index.addField("path");
-index.setRef("id");
+var index = init_elasticlunr();
+var index_cache = new Array();
+var index_manif = new Set();
+
+function index_entry_esc(s) {
+    if (s) {
+	var t = s.replace(/\\/g, "\\\\").replace(/:/g, "\\:");
+	return t.replace(/(?:\r\n|\r|\n)/g, "\\n");
+    } else {
+	return "";
+    }
+}
 
 function add_doc_to_index(filename, data) {
     var title = path.basename(filename, ".pd"),
@@ -111,6 +150,12 @@ function add_doc_to_index(filename, data) {
     if (title.slice(-5) === "-help") {
         title = title.slice(0, -5);
     }
+    index_cache[index_cache.length] = [filename, title, keywords, desc]
+	.map(index_entry_esc).join(":");
+    var d = path.dirname(filename);
+    index_manif.add(d);
+    // Also add the parent directory to catch additions of siblings.
+    index_manif.add(path.dirname(d));
     index.addDoc({
         "id": filename,
         "title": title,
@@ -142,21 +187,82 @@ function read_file(err, filename, stat) {
 
 var index_done = false;
 var index_started = false;
+var index_start_time;
+
+// Filenames for the index cache, relative to the user's homedir.
+const cache_basename = nw_os_is_windows
+      ? "~/AppData/Roaming/Purr-Data/search"
+      : "~/.purr-data/search";
+const cache_name = cache_basename + ".index";
+const stamps_name = cache_basename + ".stamps";
 
 function finish_index() {
     index_done = true;
-    post("finished building help index");
+    var have_cache = index_cache.length > 0;
+    try {
+	// write the index cache if we have one
+	if (have_cache) {
+	    var a = new Array();
+	    index_manif.forEach(function(x) {
+		var st = fs.statSync(x);
+		a[a.length] = index_entry_esc(x) + ":" + st.mtimeMs;
+	    });
+	    a.sort();
+	    // Make sure that the target dir exists:
+	    try {
+		fs.mkdirSync(expand_tilde(path.dirname(cache_name)));
+	    } catch (err) {
+		//console.log(err);
+	    }
+	    fs.writeFileSync(expand_tilde(cache_name),
+			     index_cache.join("\n"), {mode: 0o644});
+	    // also write a manifest with the timestamps of all directories:
+	    fs.writeFileSync(expand_tilde(stamps_name),
+			     a.join("\n"), {mode: 0o644});
+	}
+    } catch (err) {
+	console.log(err);
+    }
+    var t = new Date().getTime() / 1000;
+    post("finished " + (have_cache?"building":"loading") + " help index (" +
+	 (t-index_start_time).toFixed(2) + " secs)");
 }
 
 // AG: pilfered from https://stackoverflow.com/questions/21077670
 function expand_tilde(filepath) {
     if (filepath[0] === '~') {
-        return path.join(process.env.HOME, filepath.slice(1));
+        var home = nw_os_is_windows ? process.env.HOMEPATH : process.env.HOME;
+        return path.join(home, filepath.slice(1));
     }
     return filepath;
 }
 
-// AG: This is supposed to be executed only once, after lib_dir has been set.
+function check_timestamps(manif)
+{
+    manif = manif.split('\n');
+    for (var j = 0, l = manif.length; j < l; j++) {
+	if (manif[j]) {
+	    var e = manif[j].replace(/\\:/g, "\x1c").split(':')
+		.map(x => x
+		     .replace(/\x1c/g, ":")
+		     .replace(/\\n/g, "\n")
+		     .replace(/\\\\/g, "\\"));
+	    var dirname = e[0] ? e[0] : null;
+	    var stamp = e[1] ? parseFloat(e[1]) : 0.0;
+	    try {
+		var st = fs.statSync(dirname);
+		if (st.mtimeMs > stamp) {
+		    return false;
+		}
+	    } catch (err) {
+		return false;
+	    }
+	}
+    }
+    return true;
+}
+
+// AG: This is normally executed only once, after lib_dir has been set.
 // Note that dive() traverses lib_dir asynchronously, so we report back in
 // finish_index() when this is done.
 function make_index() {
@@ -182,8 +288,47 @@ function make_index() {
         }
     }
     index_started = true;
-    post("building help index in " + doc_path);
-    dive(doc_path, read_file, browser_path?make_index_cont:finish_index);
+    index_start_time = new Date().getTime() / 1000;
+    var idx, manif;
+    try {
+	// test for index cache and manifest
+	idx = fs.readFileSync
+	(expand_tilde(cache_name), 'utf8');
+	manif = fs.readFileSync
+	(expand_tilde(stamps_name), 'utf8');
+    } catch (err) {
+	//console.log(err);
+    }
+    if (idx && manif && check_timestamps(manif)) {
+	// index cache is present and up-to-date, load it
+	post("loading cached help index from " + cache_name);
+	idx = idx.split('\n');
+	for (var j = 0, l = idx.length; j < l; j++) {
+	    if (idx[j]) {
+		var e = idx[j].replace(/\\:/g, "\x1c").split(':')
+		    .map(x => x
+			 .replace(/\x1c/g, ":")
+			 .replace(/\\n/g, "\n")
+			 .replace(/\\\\/g, "\\"));
+		var filename = e[0] ? e[0] : null;
+		var title = e[1] ? e[1] : null;
+		var keywords = e[2] ? e[2] : null;
+		var descr = e[3] ? e[3] : null;
+		index.addDoc({
+		    "id": filename,
+		    "title": title,
+		    "keywords": keywords,
+		    "description": descr
+		});
+	    }
+	}
+        finish_index();
+    } else {
+	// no index cache, or it is out of date, so (re)build it now, and
+	// save the new cache along the way
+	post("building help index in " + doc_path);
+	dive(doc_path, read_file, browser_path?make_index_cont:finish_index);
+    }
 }
 
 // AG: This is called from dialog_search.html with a callback that expects to
@@ -205,6 +350,42 @@ function build_index(cb) {
 }
 
 exports.build_index = build_index;
+
+// this doesn't actually rebuild the index, it just clears it, so that it
+// will be rebuilt the next time the help browser is opened
+function rebuild_index()
+{
+    post("clearing help index (reopen browser to rebuild!)");
+    index = init_elasticlunr();
+    index_started = index_done = false;
+    try {
+	fs.unlink(expand_tilde(cache_name));
+	fs.unlink(expand_tilde(stamps_name));
+    } catch (err) {
+	//console.log(err);
+    }
+}
+
+// this is called from the gui tab of the prefs dialog
+function update_browser(doc_flag, path_flag)
+{
+    var changed = false;
+    doc_flag = doc_flag?1:0;
+    path_flag = path_flag?1:0;
+    if (browser_doc !== doc_flag) {
+	browser_doc = doc_flag;
+	changed = true;
+    }
+    if (browser_path !== path_flag) {
+	browser_path = path_flag;
+	changed = true;
+    }
+    if (changed) {
+	rebuild_index();
+    }
+}
+
+exports.update_browser = update_browser;
 
 // Modules
 
@@ -814,29 +995,6 @@ function check_nw_version(version) {
 }
 
 exports.check_nw_version = check_nw_version;
-
-// ico@vt.edu 2020-08-12: check which OS we have since Windows has a different
-// windows positioning logic on nw.js 0.14.7 than Linux/OSX. Go figure...
-function check_os(name) {
-
-    var os = require('os');
-    //post("os=" + os.platform());
-    return os.platform() === name ? 1 : 0;
-}
-
-exports.check_os = check_os;
-
-// ico@vt.edu 2020-08-14: used to speed-up window size consistency and other
-// OS-centric operations by avoiding constant calls to string comparisons.
-// Most pertinent calls can be found in index.js' nw_create_window and pdgui.js'
-// canvas_check_geometry
-var nw_os_is_linux = check_os("linux");
-var nw_os_is_osx = check_os("darwin");
-var nw_os_is_windows = check_os("win32");
-
-exports.nw_os_is_linux = nw_os_is_linux;
-exports.nw_os_is_osx = nw_os_is_osx;
-exports.nw_os_is_windows = nw_os_is_windows;
 
 // ico@vt.edu 2020-08-11: this appears to have to be 25 at all times
 // we will leave this here for later if we encounter issues with inconsistencies
