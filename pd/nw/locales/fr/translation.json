@@ -499,6 +499,7 @@
   },
   "search": {
     "browse": "Parcourir la documentation",
+    "bookmark": "Ajouter ou enlever un favori",
     "search": "Chercher",
     "building_index": "Construction de l'index...",
     "no_results": "Aucun résultat trouvé !",

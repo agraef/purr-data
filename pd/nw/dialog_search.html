@@ -283,6 +283,29 @@ function toc_delete_bookmark(id, title)
     toc_save();
 }
 
+function toc_is_bookmarked(id)
+{
+    var i = toc_bookmarks();
+    if (i >= 0) {
+	var l = toc.length;
+	while (i < l && toc[i].id !== id) {
+	    i++;
+	}
+	return i<l;
+    } else {
+	// no bookmarks
+	return false;
+    }
+}
+
+function toc_bookmark_update(dir)
+{
+    var bookmark = document.getElementById("bookmark_indicator");
+    var rel = path.relative(pdgui.get_lib_dir(), dir);
+    var id = dir.length <= rel.length ? dir : rel;
+    bookmark.src = toc_is_bookmarked(id) ? "bookmark2.svg" : "bookmark.svg";
+}
+
 // Stop-gap translator
 function translate_form() {
     var elements = document.querySelectorAll("[data-i18n]"),
@@ -329,6 +352,7 @@ function display_toc() {
         text_node;
     // reset current_dir to doc
     current_dir = path.join(pdgui.get_lib_dir(), "doc");
+    toc_bookmark_update(current_dir);
     toc.forEach(function(doc, i, a) {
         div = document.createElement("div");
 	if (doc.id) {
@@ -397,6 +421,7 @@ function display_directory(dir) {
     current_dir = dir;
     clear_results();
     fs.readdir(dir, display_directory_callback);
+    toc_bookmark_update(dir);
 }
 
 function file_browser_click() {
@@ -405,6 +430,10 @@ function file_browser_click() {
     document.getElementById("file_browser").setAttribute("nwworkingdir",
         current_dir);
     document.getElementById("file_browser").click();
+}
+
+function bookmark_indicator_click() {
+    toggle_bookmark(current_dir);
 }
 
 function file_browser_callback(elem) {
@@ -621,6 +650,20 @@ function do_bookmark(dirname, del)
 	toc_delete_bookmark(id, name);
     else
 	toc_add_bookmark(id, name, meta_descr);
+    if (current_dir === path.join(pdgui.get_lib_dir(), "doc"))
+	// need to redisplay the toc which is currently shown
+	display_toc();
+    else
+	toc_bookmark_update(dirname);
+}
+
+// Toggle bookmark for the given directory. This is invoked by clicking on
+// the bookmark indicator to the right of the search field. 
+function toggle_bookmark(dir)
+{
+    var rel = path.relative(pdgui.get_lib_dir(), dir);
+    var id = dir.length <= rel.length ? dir : rel;
+    do_bookmark(dir, toc_is_bookmarked(id));
 }
 
 function add_events() {
@@ -661,13 +704,22 @@ function add_events() {
             }
     });
 
+    document.getElementById("bookmark_indicator").addEventListener("click",
+        function(evt) {
+            if (evt.currentTarget === document.activeElement) {
+                bookmark_indicator_click();
+            }
+    });
+
     // Keydown in the document
     document.body.addEventListener("keydown", function(evt) {
         var input_elem = document.getElementById("search_text"),
-            button_elem = document.getElementById("file_browser_button");
+            button_elem = document.getElementById("file_browser_button"),
+            button_elem2 = document.getElementById("bookmark_indicator");
         if (find_bar_shortcut(evt)) {
             toggle_find_bar();
-        } else if (evt.target === button_elem &&
+        } else if ((evt.target === button_elem ||
+		    evt.target === button_elem2) &&
                    evt.keyCode === 10 || evt.keyCode === 13) {
         } else if (evt.target !== input_elem) {
             input_elem.focus();
@@ -712,6 +764,7 @@ function register_window_id(id, attrs) {
 
 function display_no_results() {
     document.getElementById("results").textContent = l("search.no_results");
+    toc_bookmark_update(current_dir);
 }
 
 function display_doc(doc) {
@@ -734,6 +787,7 @@ function display_doc(doc) {
 	div.appendChild(text_node);
     }
     results_elem.appendChild(div);
+    toc_bookmark_update(current_dir);
 }
 
 function doc_search() {
@@ -790,10 +844,14 @@ function doc_search() {
              name="search_text"
              id="search_text"
              data-i18n="[title]search.search">
-      <input type="image"
+      <input type="image" style="vertical-align:middle;"
              src="folder.svg"
              id="file_browser_button"
              data-i18n="[title]search.browse">
+      <input type="image" style="vertical-align:middle;"
+             src="bookmark.svg"
+             id="bookmark_indicator"
+             data-i18n="[title]search.bookmark">
    </form>
     <div id="results">
     </div>
