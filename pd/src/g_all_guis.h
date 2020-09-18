@@ -191,8 +191,10 @@ typedef struct _my_numbox
     int      x_scalewidth;  /* temporary value for scalehandle */
     int      x_scaleheight; /* temporary value for scalehandle */
     int      x_tmpfontsize; /* temporary value for scalehandle */
+    int      x_num_fontsize; /* font size for the number only that should
+                                automatically adjust to the box size */
     int      x_log_height;
-    int      x_hide_frame;  /* 0 default, 1 just arrow, 2, just frame, 3 both */
+    int      x_drawstyle;  /* 0 default, 1 just frame, 2, just arrow, 3 number only */
 } t_my_numbox;
 
 extern int sys_noloadbang;

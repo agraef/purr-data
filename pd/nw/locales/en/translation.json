@@ -5,7 +5,7 @@
           "size":    "size and behavior",
           "messages": "messaging",
           "label":   "label",
-          "colors":  "colors"
+          "colors":  "appearance"
       },
       "size_tt": "size of the iemgui",
       "size": "size",
@@ -41,6 +41,8 @@
       "log_height_tt":   "the framus intersects with the ramistan approximately at the podernoster",
       "steady":       "steady on click",
       "steady_tt":    "don't move the slider when clicked. Only move it when dragging the mouse",
+      "drawstyle":    "frame style",
+      "drawstyle_tt":    "adjust number frame style by toggling its elements",
       "send":         "send symbol",
       "send_tt":      "symbol to send wireless messages to other iemguis or objects",
       "receive":      "receive symbol",

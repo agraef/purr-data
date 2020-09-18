@@ -291,6 +291,27 @@
       <fieldset> 
       <legend data-i18n="iem.prop.heading.colors"></legend> 
 
+      <table class="draw_style prop hidden" style="margin-bottom: 7px;">
+        <tr>
+          <td>
+            <label data-i18n="[title]iem.prop.drawstyle_tt">
+              <span data-i18n="iem.prop.drawstyle"
+                style="margin-right: 6px;"></span>
+            </label>
+          </td>
+          <td data-i18n="[title]iem.prop.drawstyle_tt">
+            <select name="draw_style"
+                   onchange="update_attr(this, true);"
+                   style="width: 14em;">
+              <option value="0">draw everything (default)</option>
+              <option value="1">draw frame only</option>
+              <option value="2">draw triangle only</option>
+              <option value="3">draw number only</option> 
+            </select>
+          </td>
+          <td>
+      </table>
+
       <div class="background_color prop hidden">
         <label data-i18n="[title]iem.prop.bgcolor_tt">
           <input type="color" name="background_color"
@@ -512,6 +533,8 @@ function send_params(attrs, create_undo_point) {
 
     var slot18 = attrs.steady_on_click ? +attrs.steady_on_click : 0;
 
+    var draw_style = attrs.draw_style ? +attrs.draw_style : 0;
+
     pdgui.pdsend(pd_object_callback, "dialog",
         width, height,
         slot3, // bng: flash_interrupt
@@ -532,7 +555,7 @@ function send_params(attrs, create_undo_point) {
         background_color, foreground_color,
         label_color,
         slot18, // steady on click
-        0, // not sure what this is doing here
+        draw_style, // numbox draw style
         create_undo_point ? 1 : 0 // whether we set an undo point
     );
 }

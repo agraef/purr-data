@@ -3272,13 +3272,18 @@ function gui_toggle_update(cid, tag, state, color) {
     })
 }
 
-function numbox_data_string(w, h) {
+function numbox_data_string_frame(w, h) {
     return ["M", 0, 0,
             "L", w - 4, 0,
                  w, 4,
                  w, h,
                  0, h,
-            "z",
+            "z"]
+    .join(" ");
+}
+
+function numbox_data_string_triangle(w, h) {
+    return ["M", 0, 0,
             "L", 0, 0,
                  (h / 2)|0, (h / 2)|0, // |0 to force int
                  0, h]
@@ -3286,27 +3291,38 @@ function numbox_data_string(w, h) {
 }
 
 // Todo: send fewer parameters from c
-function gui_numbox_new(cid, tag, color, x, y, w, h, is_toplevel) {
+function gui_numbox_new(cid, tag, color, x, y, w, h, drawstyle, is_toplevel) {
     // numbox doesn't have a standard iemgui border,
     // so we must create its gobj manually
     gui(cid).get_elem("patchsvg", function() {
         var g = gui_gobj_new(cid, tag, "iemgui", x, y, is_toplevel);
-        var data = numbox_data_string(w, h);
         var border = create_item(cid, "path", {
-            d: data,
+            d: numbox_data_string_frame(w, h),
             fill: color,
             stroke: "black",
-            "stroke-width": 1,
+            "stroke-width": (drawstyle < 2 ? 1 : 0),
             id: (tag + "border"),
             "class": "border"
         });
         g.appendChild(border);
+        var triangle = create_item(cid, "path", {
+            d: numbox_data_string_triangle(w, h),
+            fill: color,
+            stroke: "black",
+            "stroke-width": (drawstyle == 0 || drawstyle ==  2 ? 1 : 0),
+            id: (tag + "triangle"),
+            "class": "border"
+        });
+        g.appendChild(triangle);
     });
 }
 
 function gui_numbox_coords(cid, tag, w, h) {
     gui(cid).get_elem(tag + "border", {
-        d: numbox_data_string(w, h)
+        d: numbox_data_string_frame(w, h)
+    });
+    gui(cid).get_elem(tag + "triangle", {
+        d: numbox_data_string_triangle(w, h)
     });
 }
 
