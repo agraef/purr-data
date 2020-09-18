@@ -357,6 +357,11 @@ function toc_bookmark_update(dir)
     bookmark.src = toc_is_bookmarked(id) ? "bookmark2.svg" : "bookmark.svg";
 }
 
+function toc_bookmark_status(enabled) {
+    document.getElementById("bookmark_indicator").style.
+	setProperty("opacity", enabled?"1.0":"0.5");
+}
+
 function display_toc() {
     var results_elem = document.getElementById("results"),
         div,
@@ -366,6 +371,7 @@ function display_toc() {
     // reset current_dir to doc
     current_dir = path.join(pdgui.get_lib_dir(), "doc");
     toc_bookmark_update(current_dir);
+    toc_bookmark_status(false);
     toc.forEach(function(doc, i, a) {
         div = document.createElement("div");
 	if (doc.id) {
@@ -433,9 +439,11 @@ function display_directory_callback(err, files) {
 
 function display_directory(dir) {
     current_dir = dir;
+    var is_doc = current_dir === path.join(pdgui.get_lib_dir(), "doc");
     clear_results();
     fs.readdir(dir, display_directory_callback);
     toc_bookmark_update(dir);
+    toc_bookmark_status(!is_doc);
 }
 
 function file_browser_click() {
@@ -839,6 +847,7 @@ function doc_search() {
     }
     clear_results();
     text_elem.blur();
+    toc_bookmark_status(false);
     results = index.search(search_text);
     for (i = 0; i < results.length; i++) {
         doc = index.documentStore.getDoc(results[i].ref);
