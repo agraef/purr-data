@@ -135,6 +135,172 @@ var toc = [
     },
 ];
 
+// ag: Some functions to add bookmarks to the toc, and save them in the user's
+// personal config file.
+
+function toc_add_bookmarks()
+{
+    toc[toc.length] = {
+        title: "Bookmarks",
+    };
+}
+
+function toc_bookmarks()
+{
+    for (var i = 0, len = toc.length; i < len; i++) {
+	if (!toc[i].id && !toc[i].description &&
+	    toc[i].title == "Bookmarks") {
+	    return i;
+	}
+    }
+    return -1;
+}
+
+function expand_tilde(filepath) {
+    if (filepath[0] === '~') {
+        var home = pdgui.check_os("win32") ? process.env.HOMEPATH :
+	    process.env.HOME;
+        return path.join(home, filepath.slice(1));
+    }
+    return filepath;
+}
+
+const toc_config = expand_tilde(
+    pdgui.check_os("win32")
+	? "~/AppData/Roaming/Purr-Data/bookmarks.json"
+	: "~/.purr-data/bookmarks.json"
+);
+
+function toc_save()
+{
+    var i = toc_bookmarks();
+    if (i >= 0) {
+	// the actual bookmarks start at index i+1, i is the section title
+	var data = JSON.stringify(toc.slice(i+1), null, 2);
+	fs.writeFileSync(toc_config, data);
+    } else {
+	// no bookmarks, get rid of the bookmarks file if present
+	try {
+	    fs.unlinkSync(toc_config);
+	} catch (err) {
+	    // ignore
+	}
+    }
+}
+
+// this should be executed just once, when the browser is first shown
+function toc_load()
+{
+    function toc_valid(doc) {
+	// validate the bookmark entries
+	if (doc.id && doc.title) {
+	    try {
+		fs.accessSync(check_dir(doc.id), fs.F_OK);
+		return true;
+	    } catch (e) {
+		return false;
+	    }
+	} else {
+	    return false;
+	}
+    };
+    var bookmarks;
+    try {
+	bookmarks = fs.readFileSync(toc_config);
+	try {
+	    bookmarks = JSON.parse(bookmarks);
+	} catch (err) {
+	    // might be a syntax error, if the user edited the file manually,
+	    // so lets provide some (hopefully useful) diagnostic in the
+	    // console
+	    pdgui.post("error reading bookmarks: "+toc_config, "error");
+	    pdgui.post(err);
+	    return;
+	}
+    } catch (err) {
+	// no bookmarks, just bail out
+	return;
+    }
+    try {
+	// this might still fail if the JSON we read is some (syntactically
+	// correct) random garbage, in this case give some diagnostic below 
+	bookmarks = bookmarks.filter(toc_valid);
+	if (bookmarks && bookmarks.length > 0) {
+	    toc_add_bookmarks();
+	    toc = toc.concat(bookmarks);
+	    // this message would be shown each time the browser is opened,
+	    // which would create a lot of noise; commented, but we leave it
+	    // in here since it might be useful for debugging purposes
+	    //pdgui.post("loaded bookmarks: "+toc_config);
+	}
+    } catch (err) {
+	pdgui.post("error reading bookmarks: "+toc_config, "error");
+	pdgui.post("format error (expected an array, got " +
+		   (typeof bookmarks === "object" ? "an " :
+		    typeof bookmarks === "undefined" ? "" : "a ") +
+		   typeof bookmarks + ")");
+    }
+}
+
+function toc_add_bookmark(id, title, descr)
+{
+    if (toc_bookmarks() < 0) {
+	toc_add_bookmarks();
+    }
+    toc[toc.length] = descr ? {
+	id: id,
+	title: title,
+	description: descr
+    } : {
+	id: id,
+	title: title
+    };
+    pdgui.post("add bookmark: "+title+" ("+id+")");
+    toc_save();
+}
+
+function toc_delete_bookmark(id, title)
+{
+    var i = toc_bookmarks();
+    if (i >= 0) {
+	var l = toc.length;
+	while (i < l &&
+	       (toc[i].id !== id || toc[i].title !== title)) {
+	    i++;
+	}
+	if (i < l) {
+	    toc.splice(i, 1);
+	    pdgui.post("delete bookmark: "+title+" ("+id+")");
+	} else {
+	    // not found, we're done
+	    return;
+	}
+    } else {
+	// no bookmarks, we're done
+	return;
+    }
+    if (toc_bookmarks() == toc.length-1) {
+	// empty bookmark section, remove the section title
+	toc.pop();
+    }
+    toc_save();
+}
+
+function toc_is_bookmarked(id)
+{
+    var i = toc_bookmarks();
+    if (i >= 0) {
+	var l = toc.length;
+	while (i < l && toc[i].id !== id) {
+	    i++;
+	}
+	return i<l;
+    } else {
+	// no bookmarks
+	return false;
+    }
+}
+
 // Stop-gap translator
 function translate_form() {
     var elements = document.querySelectorAll("[data-i18n]"),
@@ -157,6 +323,45 @@ function click_toc(dir) {
 
 var current_dir;
 
+function canonical_path(dir)
+{
+    // normalize
+    dir = path.normalize(dir);
+    // get rid of Windows' '\', '/' works just as well and is more portable
+    return pdgui.defunkify_windows_path(dir);
+}
+
+function check_dir(dirname)
+{
+    var absname = dirname;
+    if (!path.isAbsolute(dirname)) {
+	// A relative path is taken relative to libdir, so that, e.g., doc/*
+	// and extra/* can be used to access documentation in the doc and
+	// extra hierarchies.
+	absname = path.join(pdgui.get_lib_dir(), dirname);
+    }
+    try {
+	if (fs.lstatSync(absname).isDirectory())
+	    return canonical_path(absname);
+    } catch (err) {
+    }
+    return null;
+}
+
+function toc_bookmark_update(dir)
+{
+    var bookmark = document.getElementById("bookmark_indicator");
+    var rel = canonical_path(path.relative(pdgui.get_lib_dir(), dir));
+    dir = canonical_path(dir);
+    var id = dir.length <= rel.length ? dir : rel;
+    bookmark.src = toc_is_bookmarked(id) ? "bookmark2.svg" : "bookmark.svg";
+}
+
+function toc_bookmark_status(enabled) {
+    document.getElementById("bookmark_indicator").style.
+	setProperty("opacity", enabled?"1.0":"0.5");
+}
+
 function display_toc() {
     var results_elem = document.getElementById("results"),
         div,
@@ -165,13 +370,16 @@ function display_toc() {
         text_node;
     // reset current_dir to doc
     current_dir = path.join(pdgui.get_lib_dir(), "doc");
+    toc_bookmark_update(current_dir);
+    toc_bookmark_status(false);
     toc.forEach(function(doc, i, a) {
         div = document.createElement("div");
 	if (doc.id) {
 	    try {
-		fs.accessSync(path.join(pdgui.get_lib_dir(), doc.id), fs.F_OK);
+		fs.accessSync(check_dir(doc.id), fs.F_OK);
 		a = document.createElement("a");
-		a.href = "javascript: click_toc('" + doc.id + "');";
+		// We need to properly stringify click_toc's argument here.
+		a.href = "javascript: click_toc(" + JSON.stringify(doc.id) + ");";
 		a.textContent = doc.title;
 		// set title to path for tooltip
 		a.title = doc.id;
@@ -202,6 +410,7 @@ function finish_build(idx) {
     index = idx;
     document.getElementById("search_text").disabled = false;
     clear_results();
+    toc_load();
     display_toc();
 }
 
@@ -230,8 +439,11 @@ function display_directory_callback(err, files) {
 
 function display_directory(dir) {
     current_dir = dir;
+    var is_doc = current_dir === path.join(pdgui.get_lib_dir(), "doc");
     clear_results();
     fs.readdir(dir, display_directory_callback);
+    toc_bookmark_update(dir);
+    toc_bookmark_status(!is_doc);
 }
 
 function file_browser_click() {
@@ -242,12 +454,23 @@ function file_browser_click() {
     document.getElementById("file_browser").click();
 }
 
+function bookmark_indicator_click() {
+    toggle_bookmark(current_dir);
+}
+
 function file_browser_callback(elem) {
     var doc = elem.value;
     if (doc !== "") {
-        pdgui.doc_open(pdgui.defunkify_windows_path(path.dirname(doc)),
-            pdgui.defunkify_windows_path(path.basename(doc)));
-        display_directory(pdgui.defunkify_windows_path(path.dirname(doc)));
+        var defunkify = pdgui.defunkify_windows_path;
+        var dir = path.dirname(doc);
+        pdgui.doc_open(defunkify(dir), defunkify(path.basename(doc)));
+        display_directory(defunkify(dir));
+        // update the search field accordingly; use a relative path if that
+        // makes sense, and canonicalize
+        var rel = canonical_path(path.relative(pdgui.get_lib_dir(), dir));
+        dir = canonical_path(dir);
+        dir = dir.length <= rel.length ? dir : rel;
+        document.getElementById("search_text").value = dir;
     }
 }
 
@@ -389,6 +612,12 @@ function window_close_shortcut(evt) {
     return (evt.keyCode === 87 && evt[modifier]) // <ctrl-w>
 }
 
+function bookmark_shortcut(evt) {
+    var osx = process.platform === "darwin",
+    modifier = osx ? "metaKey" : "ctrlKey";
+    return (evt.keyCode === 68 && evt[modifier]) // <ctrl-d> adds, <ctrl-shift-d> deletes a bookmark
+}
+
 function toggle_find_bar() {
     // this is copied from index.js m.edit.find...
     var find_div = document.getElementById("console_find"),
@@ -410,6 +639,65 @@ function toggle_find_bar() {
         // receive our shortcut key
         find_div.blur();
     }
+}
+
+// Adds (or deletes, if del is true) a bookmark to the toc.
+function do_bookmark(dirname, del)
+{
+    if (current_dir === path.join(pdgui.get_lib_dir(), "doc")) {
+	/* We don't want to bookmark the doc directory. There's nothing
+	   interesting to see there anyway, and, since the toc also lives
+	   there, just bailing out at this point we prevent an interesting
+	   race condition which arises if we try to update the toc while we're
+	   displaying it. */
+	return;
+    }
+    /* id (dirname) for the bookmark. We take this relative to the libdir if
+       the relative designation is shorter than the absolute path, which gives
+       prettier ids for documents in the doc and extra hierarchies and
+       siblings. Note that these ids only ever appear in the toc, never in
+       documents in the search database. */
+    var relname = canonical_path(path.relative(pdgui.get_lib_dir(), dirname));
+    dirname = canonical_path(dirname);
+    var id = dirname.length <= relname.length ? dirname : relname;
+    // Default name for the bookmark.
+    var name = path.basename(dirname);
+    // Let's check whether the directory contains a meta file from which we
+    // may get name and description of the external.
+    var meta = path.join(dirname, name+"-meta.pd");
+    var meta_name, meta_descr;
+    try {
+        var data = fs.readFileSync(meta, 'utf8').replace("\n", " ");
+	meta_name = data.match
+	(/#X text \-?[0-9]+ \-?[0-9]+ NAME ([\s\S]*?);/i);
+	meta_descr = data.match
+	(/#X text \-?[0-9]+ \-?[0-9]+ DESCRIPTION ([\s\S]*?);/i);
+	meta_name = meta_name && meta_name.length > 1 ?
+	    meta_name[1].trim() : null;
+	meta_descr = meta_descr && meta_descr.length > 1 ?
+	    meta_descr[1].trim() : null;
+	// Remove the Pd escapes for commas
+	meta_descr = meta_descr ?
+	    meta_descr.replace(" \\,", ",") : null;
+    } catch (err) {
+        // ignore
+    }
+    name = meta_name ? meta_name : name;
+    if (del)
+	toc_delete_bookmark(id, name);
+    else
+	toc_add_bookmark(id, name, meta_descr);
+    toc_bookmark_update(dirname);
+}
+
+// Toggle bookmark for the given directory. This is invoked by clicking on
+// the bookmark indicator to the right of the search field. 
+function toggle_bookmark(dir)
+{
+    var rel = canonical_path(path.relative(pdgui.get_lib_dir(), dir));
+    dir = canonical_path(dir);
+    var id = dir.length <= rel.length ? dir : rel;
+    do_bookmark(dir, toc_is_bookmarked(id));
 }
 
 function add_events() {
@@ -450,16 +738,32 @@ function add_events() {
             }
     });
 
+    document.getElementById("bookmark_indicator").addEventListener("click",
+        function(evt) {
+            if (evt.currentTarget === document.activeElement) {
+                bookmark_indicator_click();
+            }
+    });
+
     // Keydown in the document
     document.body.addEventListener("keydown", function(evt) {
         var input_elem = document.getElementById("search_text"),
-            button_elem = document.getElementById("file_browser_button");
+            button_elem = document.getElementById("file_browser_button"),
+            button_elem2 = document.getElementById("bookmark_indicator");
         if (find_bar_shortcut(evt)) {
             toggle_find_bar();
-        } else if (evt.target === button_elem &&
+        } else if ((evt.target === button_elem ||
+		    evt.target === button_elem2) &&
                    evt.keyCode === 10 || evt.keyCode === 13) {
         } else if (evt.target !== input_elem) {
             input_elem.focus();
+        } else if (bookmark_shortcut(evt)) {
+	    // We assume here that current_dir is set and points to the
+	    // directory to be bookmarked.
+	    if (current_dir) {
+                evt.stopPropagation();
+		do_bookmark(current_dir, evt.shiftKey);
+	    }
         } else if (window_close_shortcut(evt)) {
                 evt.stopPropagation();
                 pdgui.remove_dialogwin("search");
@@ -494,6 +798,7 @@ function register_window_id(id, attrs) {
 
 function display_no_results() {
     document.getElementById("results").textContent = l("search.no_results");
+    toc_bookmark_update(current_dir);
 }
 
 function display_doc(doc) {
@@ -516,6 +821,7 @@ function display_doc(doc) {
 	div.appendChild(text_node);
     }
     results_elem.appendChild(div);
+    toc_bookmark_update(current_dir);
 }
 
 function doc_search() {
@@ -532,16 +838,16 @@ function doc_search() {
         display_toc();
         return;
     }
-    // if the search term is doc/* or extra/* then short circuit
+    // if the search term is a directory then short circuit
     // the search and just list the docs in that directory
-    if ((search_text.slice(0, 4) === "doc/" ||
-         search_text.slice(0, 6) === "extra/") &&
-        search_text.indexOf(" ") === -1) {
-        display_directory(path.join(pdgui.get_lib_dir(), search_text));
+    var dirname = check_dir(search_text);
+    if (dirname) {
+        display_directory(dirname);
         return;
     }
     clear_results();
     text_elem.blur();
+    toc_bookmark_status(false);
     results = index.search(search_text);
     for (i = 0; i < results.length; i++) {
         doc = index.documentStore.getDoc(results[i].ref);
@@ -573,10 +879,14 @@ function doc_search() {
              name="search_text"
              id="search_text"
              data-i18n="[title]search.search">
-      <input type="image"
+      <input type="image" style="vertical-align:middle;"
              src="folder.svg"
              id="file_browser_button"
              data-i18n="[title]search.browse">
+      <input type="image" style="vertical-align:middle;"
+             src="bookmark.svg"
+             id="bookmark_indicator"
+             data-i18n="[title]search.bookmark">
    </form>
     <div id="results">
     </div>

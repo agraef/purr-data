@@ -499,6 +499,7 @@
   },
   "search": {
     "browse": "Durchsuche die Dokumentation",
+    "bookmark": "Lesezeichen hinzufügen oder entfernen",
     "search": "Suche",
     "building_index": "Erstelle Index...",
     "no_results": "Keine Resultate gefunden.",
