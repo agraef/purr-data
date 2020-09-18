@@ -5476,32 +5476,37 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     t_atom at[2];
 
     // now broadcast key press to key et al. objects
-    if (!autorepeat)
+    // ico@vt.edu 20200918: only do so if we do not have an object
+    // that has grabbed the keyboard, such as gatom or iemgui numbox
+    if (!x->gl_editor->e_keyfn)
     {
-        if (keynumsym->s_thing && down)
-            pd_float(keynumsym->s_thing, (t_float)keynum);
-        if (keyupsym->s_thing && !down)
-            pd_float(keyupsym->s_thing, (t_float)keynum);
-        if (keynamesym->s_thing)
+        if (!autorepeat)
+        {
+            if (keynumsym->s_thing && down)
+                pd_float(keynumsym->s_thing, (t_float)keynum);
+            if (keyupsym->s_thing && !down)
+                pd_float(keyupsym->s_thing, (t_float)keynum);
+            if (keynamesym->s_thing)
+            {
+                at[0] = av[0];
+                SETFLOAT(at, down);
+                SETSYMBOL(at+1, gotkeysym);
+                pd_list(keynamesym->s_thing, 0, 2, at);
+            }
+        }
+
+        // now do the same for autorepeat-enabled objects (key et al. alternative behavior)
+        if (keynumsym_a->s_thing && down)
+            pd_float(keynumsym_a->s_thing, (t_float)keynum);
+        if (keyupsym_a->s_thing && !down)
+            pd_float(keyupsym_a->s_thing, (t_float)keynum);
+        if (keynamesym_a->s_thing)
         {
             at[0] = av[0];
             SETFLOAT(at, down);
             SETSYMBOL(at+1, gotkeysym);
-            pd_list(keynamesym->s_thing, 0, 2, at);
+            pd_list(keynamesym_a->s_thing, 0, 2, at);
         }
-    }
-
-    // now do the same for autorepeat-enabled objects (key et al. alternative behavior)
-    if (keynumsym_a->s_thing && down)
-        pd_float(keynumsym_a->s_thing, (t_float)keynum);
-    if (keyupsym_a->s_thing && !down)
-        pd_float(keyupsym_a->s_thing, (t_float)keynum);
-    if (keynamesym_a->s_thing)
-    {
-        at[0] = av[0];
-        SETFLOAT(at, down);
-        SETSYMBOL(at+1, gotkeysym);
-        pd_list(keynamesym_a->s_thing, 0, 2, at);
     }
 
     if (!x || !x->gl_editor)
