@@ -26,8 +26,9 @@ static void my_numbox_draw_update(t_gobj *client, t_glist *glist);
 t_widgetbehavior my_numbox_widgetbehavior;
 /*static*/ t_class *my_numbox_class;
 
-// forward declaration
+// forward declarations
 static void my_numbox_set_change(t_my_numbox *x, t_floatarg f);
+static void my_numbox_ftoa(t_my_numbox *x);
 
 static t_symbol *numbox_keyname_sym_a;
 
@@ -90,7 +91,7 @@ int my_numbox_calc_fontwidth(t_my_numbox *x)
         x->x_num_fontsize);
 }
 
-void my_numbox_ftoa(t_my_numbox *x)
+static void my_numbox_ftoa(t_my_numbox *x)
 {
     double f=x->x_val;
     int bufsize, is_exp=0, i, idecimal;
