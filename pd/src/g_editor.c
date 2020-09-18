@@ -5472,7 +5472,7 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
         else if (keynum == 29)
             keynum = 0, gotkeysym = gensym("Right");
 #endif
-    // set the shared variable for broadcasting of keypresses to key et al. objectss
+    // set the shared variable for broadcasting of keypresses to key et al. objects
     t_atom at[2];
 
     // now broadcast key press to key et al. objects
