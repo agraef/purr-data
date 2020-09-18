@@ -5478,7 +5478,7 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     // now broadcast key press to key et al. objects
     // ico@vt.edu 20200918: only do so if we do not have an object
     // that has grabbed the keyboard, such as gatom or iemgui numbox
-    if (!x->gl_editor->e_keyfn)
+    if (!x || !x->gl_editor || !x->gl_editor->e_keyfn)
     {
         if (!autorepeat)
         {
