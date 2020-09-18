@@ -2964,7 +2964,7 @@ function gui_text_set (cid, tag, text) {
 
 function gui_text_set_mynumbox (cid, tag, text, active) {
     gui(cid).get_elem(tag + "text", function(e) {
-        //post("guit_text_set_activate " + tag + " " + text + " " + active);
+        //post("gui_text_set_mynumbox " + tag + " " + text + " " + active);
         text = text.trim();
         e.textContent = "";
         text_to_tspans(cid, e, text);
