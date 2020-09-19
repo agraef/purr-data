@@ -500,7 +500,7 @@ function console_find_text(elem, evt, callback) {
         } else {
             window.findAndReplaceDOMText(console_text, {
                 //preset: "prose",
-                find: elem.value.toLowerCase(),
+                find: elem.value,
                 wrap: wrap_tag
             });
             // The searchAndReplace API is so bad you can't even know how
