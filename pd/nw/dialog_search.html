@@ -372,8 +372,8 @@ function display_toc() {
     current_dir = path.join(pdgui.get_lib_dir(), "doc");
     toc_bookmark_update(current_dir);
     toc_bookmark_status(false);
+    div = document.createElement("div");
     toc.forEach(function(doc, i, a) {
-        div = document.createElement("div");
 	if (doc.id) {
 	    try {
 		fs.accessSync(check_dir(doc.id), fs.F_OK);
@@ -700,6 +700,15 @@ function toggle_bookmark(dir)
     do_bookmark(dir, toc_is_bookmarked(id));
 }
 
+function is_special_key(key)
+{
+    // determine all special keys which should be handled on the spot and
+    // *not* be forwarded to the search text field
+    return key === 9 // tab key
+        || (key >= 16 && key <= 18) // modifier (shift, ctrl, alt)
+        || (key >= 33 && key <= 40); // cursor keys
+}
+
 function add_events() {
     // closing the Window
     nw.Window.get().on("close", function() {
@@ -755,6 +764,7 @@ function add_events() {
         } else if ((evt.target === button_elem ||
 		    evt.target === button_elem2) &&
                    evt.keyCode === 10 || evt.keyCode === 13) {
+        } else if (is_special_key(evt.keyCode)) {
         } else if (evt.target !== input_elem) {
             input_elem.focus();
         } else if (bookmark_shortcut(evt)) {
@@ -887,7 +897,7 @@ function doc_search() {
              src="bookmark.svg"
              id="bookmark_indicator"
              data-i18n="[title]search.bookmark">
-   </form>
+    </form>
     <div id="results">
     </div>
     <div id = "console_find" style="display:none;">
