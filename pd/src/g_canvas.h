@@ -111,8 +111,7 @@ typedef struct _editor
     t_gobj *e_grab;                 /* object being dragged/focused */
     t_glistmotionfn e_motionfn;     /* ... motion callback */
     t_glistkeyfn e_keyfn;           /* ... keypress callback */
-    t_glistkeynamefn e_keynamefn;   /* ... keyname press callback */
-    t_glistkeynameafn e_keynameafn; /* ... keynamea press callback */
+    t_glistkeynameafn e_keynameafn; /* ... keyname with autorepeat press callback */
     t_binbuf *e_connectbuf;         /* connections to deleted objects */
     t_binbuf *e_deleted;            /* last stuff we deleted */
     t_guiconnect *e_guiconnect;     /* GUI connection for filtering messages */
@@ -462,7 +461,7 @@ EXTERN void glist_selectall(t_glist *x);
 EXTERN void glist_delete(t_glist *x, t_gobj *y);
 EXTERN void glist_retext(t_glist *x, t_text *y);
 EXTERN void glist_grab(t_glist *x, t_gobj *y, t_glistmotionfn motionfn,
-    t_glistkeyfn keyfn, t_glistkeynamefn keynamefn, t_glistkeynameafn keynameafn,
+    t_glistkeyfn keyfn, t_glistkeynameafn keynameafn,
     int xpos, int ypos);
 EXTERN int glist_isvisible(t_glist *x);
 EXTERN int glist_istoplevel(t_glist *x);

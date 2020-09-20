@@ -367,7 +367,7 @@ void glist_retext(t_glist *glist, t_text *y)
 }
 
 void glist_grab(t_glist *x, t_gobj *y, t_glistmotionfn motionfn, t_glistkeyfn keyfn,
-    t_glistkeynamefn keynamefn, t_glistkeynameafn keynameafn, int xpos, int ypos)
+    t_glistkeynameafn keynameafn, int xpos, int ypos)
 {
     //fprintf(stderr,"glist_grab\n");
     t_glist *x2 = glist_getcanvas(x);
@@ -377,7 +377,6 @@ void glist_grab(t_glist *x, t_gobj *y, t_glistmotionfn motionfn, t_glistkeyfn ke
     x2->gl_editor->e_grab = y;
     x2->gl_editor->e_motionfn = motionfn;
     x2->gl_editor->e_keyfn = keyfn;
-    x2->gl_editor->e_keynamefn = keynamefn;
     x2->gl_editor->e_keynameafn = keynameafn;
     x2->gl_editor->e_xwas = xpos;
     x2->gl_editor->e_ywas = ypos;
