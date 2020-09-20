@@ -6291,10 +6291,7 @@ void gobj_dirty(t_gobj *x, t_glist *g, int state)
     t_rtext *y = glist_findrtext(g, (t_text *)x);
     gui_vmess("gui_gobj_dirty", "xsi", g, rtext_gettag(y), state);
 }
-<<<<<<< HEAD
-=======
 
->>>>>>> feature_privateabstractions2
     /* tell the gui to display a specific message in the
         top right corner */
 void canvas_warning(t_canvas *x, int warid)
