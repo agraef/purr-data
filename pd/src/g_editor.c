@@ -3577,7 +3577,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     if (doit && x->gl_editor->e_grab && x->gl_editor->e_keyfn)
     {
         (* x->gl_editor->e_keyfn) (x->gl_editor->e_grab, 0);
-        glist_grab(x, 0, 0, 0, 0, 0);
+        glist_grab(x, 0, 0, 0, 0, 0, 0, 0);
     }
 
     if (doit && !runmode && xpos == canvas_upx && ypos == canvas_upy &&
@@ -5478,7 +5478,7 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     // now broadcast key press to key et al. objects
     // ico@vt.edu 20200918: only do so if we do not have an object
     // that has grabbed the keyboard, such as gatom or iemgui numbox
-    if (!x || !x->gl_editor || !x->gl_editor->e_keyfn)
+    if (!x || !x->gl_editor || !x->gl_editor->e_grab)
     {
         if (!autorepeat)
         {
@@ -5507,6 +5507,38 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
             SETSYMBOL(at+1, gotkeysym);
             pd_list(keynamesym_a->s_thing, 0, 2, at);
         }
+    }
+    // we need to explicitly pass key/keyname/keyname_a to the grabbed object
+    // since the above code is being bypassed. Only do so to the grabbed object.
+    else if (x && x->gl_editor && x->gl_editor->e_grab)
+    {
+        if (!autorepeat)
+        {
+            if (x->gl_editor->e_keyfn && down)
+                pd_float((void *)x->gl_editor->e_keyfn, (t_float)keynum);
+            if (x->gl_editor->e_keyfn && !down)
+                pd_float((void *)x->gl_editor->e_keyfn, (t_float)keynum);
+            if (x->gl_editor->e_keynamefn)
+            {
+                at[0] = av[0];
+                SETFLOAT(at, down);
+                SETSYMBOL(at+1, gotkeysym);
+                pd_list((void *)x->gl_editor->e_keynamefn, 0, 2, at);
+            }
+        }
+
+        // now do the same for autorepeat-enabled objects (key et al. alternative behavior)
+        if (x->gl_editor->e_keyfn && down)
+            pd_float((void *)x->gl_editor->e_keyfn, (t_float)keynum);
+        if (x->gl_editor->e_keyfn && !down)
+            pd_float((void *)x->gl_editor->e_keyfn, (t_float)keynum);
+        if (keynamesym_a->s_thing)
+        {
+            at[0] = av[0];
+            SETFLOAT(at, down);
+            SETSYMBOL(at+1, gotkeysym);
+            pd_list((void *)x->gl_editor->e_keynameafn, 0, 2, at);
+        }        
     }
 
     if (!x || !x->gl_editor)

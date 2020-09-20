@@ -28,6 +28,7 @@ t_widgetbehavior my_numbox_widgetbehavior;
 
 // forward declaration
 static void my_numbox_set_change(t_my_numbox *x, t_floatarg f);
+static void my_numbox_list(t_my_numbox *x, t_symbol *s, int ac, t_atom *av);
 
 static t_symbol *numbox_keyname_sym_a;
 
@@ -593,7 +594,7 @@ static void my_numbox_click(t_my_numbox *x, t_floatarg xpos, t_floatarg ypos,
 {
 	//post("my_numbox_click");
     glist_grab(x->x_gui.x_glist, &x->x_gui.x_obj.te_g,
-        (t_glistmotionfn)my_numbox_motion, my_numbox_key, xpos, ypos);
+        (t_glistmotionfn)my_numbox_motion, my_numbox_key, 0, my_numbox_list, xpos, ypos);
 }
 
 static int my_numbox_newclick(t_gobj *z, struct _glist *glist,

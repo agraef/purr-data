@@ -60,6 +60,8 @@ typedef struct _updateheader
     /* types to support glists grabbing mouse motion or keys from parent */
 typedef void (*t_glistmotionfn)(void *z, t_floatarg dx, t_floatarg dy);
 typedef void (*t_glistkeyfn)(void *z, t_floatarg key);
+typedef void (*t_glistkeynamefn)(void *z, t_symbol *s, int argc, t_atom *argv);
+typedef void (*t_glistkeynameafn)(void *z, t_symbol *s, int argc, t_atom *argv);
 
 EXTERN_STRUCT _rtext;
 #define t_rtext struct _rtext
@@ -106,9 +108,11 @@ typedef struct _editor
     t_rtext *e_rtext;               /* text responder linked list */
     t_selection *e_selection;       /* head of the selection list */
     t_rtext *e_textedfor;           /* the rtext if any that we are editing */
-    t_gobj *e_grab;                 /* object being "dragged" */
+    t_gobj *e_grab;                 /* object being dragged/focused */
     t_glistmotionfn e_motionfn;     /* ... motion callback */
     t_glistkeyfn e_keyfn;           /* ... keypress callback */
+    t_glistkeynamefn e_keynamefn;   /* ... keyname press callback */
+    t_glistkeynameafn e_keynameafn; /* ... keynamea press callback */
     t_binbuf *e_connectbuf;         /* connections to deleted objects */
     t_binbuf *e_deleted;            /* last stuff we deleted */
     t_guiconnect *e_guiconnect;     /* GUI connection for filtering messages */
@@ -458,7 +462,8 @@ EXTERN void glist_selectall(t_glist *x);
 EXTERN void glist_delete(t_glist *x, t_gobj *y);
 EXTERN void glist_retext(t_glist *x, t_text *y);
 EXTERN void glist_grab(t_glist *x, t_gobj *y, t_glistmotionfn motionfn,
-    t_glistkeyfn keyfn, int xpos, int ypos);
+    t_glistkeyfn keyfn, t_glistkeynamefn keynamefn, t_glistkeynameafn keynameafn,
+    int xpos, int ypos);
 EXTERN int glist_isvisible(t_glist *x);
 EXTERN int glist_istoplevel(t_glist *x);
 EXTERN t_glist *glist_findgraph(t_glist *x);
