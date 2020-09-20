@@ -6015,6 +6015,13 @@ function gui_external_dialog(did, external_name, attr_array) {
         });
 }
 
+function gui_abstractions_dialog(cid, gfxstub, filebased_abs, private_abs) {
+    var attrs = { canvas: cid, filebased_abs: filebased_abs,
+                    private_abs: private_abs };
+    dialogwin[gfxstub] = create_window(gfxstub, "abstractions", 300, 600,
+        0, 0, attrs);
+}
+
 // Global settings
 
 function gui_pd_dsp(state) {

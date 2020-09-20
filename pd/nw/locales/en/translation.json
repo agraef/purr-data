@@ -237,6 +237,8 @@
     "visible_ancestor_tt": "give focus to the closest ancestor of this window that is currently visible",
     "pdwin": "Pd Window",
     "pdwin_tt": "Give focus to the main Pd window",
+    "abstractions": "Abstractions",
+    "abstractions_tt": "Consult and handle abstractions",
 
     "media": "Media",
 
@@ -504,5 +506,17 @@
     "building_index": "Building index...",
     "no_results": "No results found.",
     "search_placeholder": "Search Pd Docs"
+  },
+  "abstractions": {
+    "filebased": "File-based abstractions",
+    "private": "Private abstractions",
+    "global": "Global scope",
+    "local": "Local scope",
+    "selectall": "Select all",
+    "selectall_tt": "Select all definitions with zero instances",
+    "delete": "Delete",
+    "delete_tt": "Delete all selected definitions",
+    "close": "Close",
+    "close_tt": "Close the dialog window"
   }
 }

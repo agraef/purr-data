@@ -579,6 +579,11 @@ function create_menu(gui, type) {
             key: shortcuts.menu.pdwin.key,
             modifiers: shortcuts.menu.pdwin.modifiers
         }));
+        winman_menu.append(new gui.MenuItem({ type: "separator" }));
+        winman_menu.append(m.win.abstractions = new gui.MenuItem({
+            label: l("menu.abstractions"),
+            tooltip: l("menu.abstractions_tt")
+        }));
     }
 
     // Media menu

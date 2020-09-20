@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link id="page_style" rel="stylesheet" type="text/css" href="css/default.css">
+  </head>
+  <body class="dialog_body">
+    <div class="container">
+      <form>
+        <fieldset style="width: 90%; border: 2px solid grey">
+          <legend data-i18n="abstractions.private"></legend>
+            <strong data-i18n="abstractions.global"></strong>
+            <hr>
+            <table style="width: 90%; table-layout: fixed;">
+            </table>
+            <br>
+            <strong data-i18n="abstractions.local"></strong>
+            <hr>
+            <table style="width: 90%; table-layout: fixed;">
+            </table>
+            <br>
+            <button id="selectall_button" type="button" onClick="selectall()" data-i18n="[title]abstractions.selectall_tt" style="float: right;">
+              <span data-i18n="abstractions.selectall"></span>
+            </button>
+        </fieldset>
+        <div class="submit_buttons">
+          <button id="delete_button" type="button" onClick="deleteselected()" data-i18n="[title]abstractions.delete_tt">
+            <span data-i18n="abstractions.delete"></span>
+          </button>
+        </div>
+        <hr>
+        <fieldset style="width: 90%; border: 2px solid grey">
+          <legend data-i18n="abstractions.filebased"></legend>
+          <i>NOT IMPLEMENTED</i>
+          <table style="width: 90%; table-layout: fixed;">
+          </table>
+        </fieldset>
+        <hr>
+        <div class="submit_buttons">
+          <button type="button" onClick="cancel()" data-i18n="[title]abstractions.close_tt">
+            <span data-i18n="abstractions.close"></span>
+          </button>
+        </div>
+      </form>
+    </div>
+  <script>
+"use strict";
+var gui = require("nw.gui");
+var pdgui = require("./pdgui.js");
+
+// For translations
+var l = pdgui.get_local_string;
+
+pdgui.skin.apply(window);
+
+var pd_object_callback;
+var canvas;
+var deletequeue;
+
+function selectall() {
+    var checkboxes = document.querySelectorAll('input[type="checkbox"]:not(:checked)');
+    for(var i = 0, n = checkboxes.length; i < n; i++) {
+      if(!checkboxes[i].checked)
+      {
+        checkboxes[i].click();
+      }
+    }
+}
+
+function deleteselected() {
+    pdgui.pdsend(pd_object_callback, "delabstractions", Array.from(deletequeue).join(" "));
+    cancel();
+}
+
+function cancel() {
+    pdgui.pdsend(pd_object_callback, "cancel");
+}
+
+function populate_form(attrs) {
+    var filebased_abs = attrs.filebased_abs,
+        private_abs = attrs.private_abs,
+        i,
+        zero = 0;
+    canvas = attrs.canvas;
+    deletequeue = new Set();
+    var tables = document.querySelectorAll("table"),
+        filebased_table = tables[2],
+        privateglobal_table = tables[0],
+        privatelocal_table = tables[1];
+
+    for(i = 0; i < filebased_abs.length; i += 2)
+    {
+      var row = document.createElement("tr");
+          cell1 = document.createElement("td"),
+          cell2 = document.createElement("td"),
+          cell3 = document.createElement("td");
+      
+      cell1.textContent = filebased_abs[i];
+      cell1.style.setProperty("width", "70%");
+      cell2.textContent = filebased_abs[i+1];
+      cell2.style.setProperty("width", "20%");
+      row.appendChild(cell1);
+      row.appendChild(cell2);
+      row.appendChild(cell3);
+      filebased_table.appendChild(row);
+    }
+
+    for(i = 0; i < private_abs.length; i += 2)
+    {
+      var row = document.createElement("tr"),
+          cell1 = document.createElement("td"),
+          cell2 = document.createElement("td"),
+          cell3 = document.createElement("td");
+      
+      cell1.textContent = private_abs[i];
+      cell1.style.setProperty("width", "70%");
+      cell2.textContent = private_abs[i+1];
+      cell2.style.setProperty("width", "20%");
+
+      if(private_abs[i+1] === 0)
+      {
+        let input_elem = document.createElement("input"),
+            j = i;
+        input_elem.type = "checkbox";
+        input_elem.onchange = function() {
+            if(input_elem.checked) {
+                deletequeue.add(private_abs[j]);
+            } else {
+                deletequeue.delete(private_abs[j]);
+            }
+            get_elem("delete_button").disabled = (deletequeue.size === 0);
+            console.log(deletequeue.size);
+        };
+        cell3.appendChild(input_elem);
+        zero++;
+      }
+
+      row.appendChild(cell1);
+      row.appendChild(cell2);
+      row.appendChild(cell3);
+
+      if(private_abs[i][0] === '@') {
+          privatelocal_table.appendChild(row);
+      } else {
+          privateglobal_table.appendChild(row);
+      }
+    }
+
+    get_elem("selectall_button").disabled = (zero === 0);
+    get_elem("delete_button").disabled = true;
+}
+
+// This gets called from the nw_create_window function in index.html
+// It provides us with our window id from the C side.  Once we have it
+// we can create the menu and register event callbacks
+function register_window_id(gfxstub, attrs) {
+    pd_object_callback = gfxstub;
+    add_events(gfxstub);
+    // not sure that we need this for properties windows
+    //pdgui.canvas_map(gfxstub);
+    translate_form();
+    populate_form(attrs);
+    // We don't turn on rendering of the "container" div until
+    // We've finished displaying all the spans and populating the
+    // labels and form elements.  That makes it more efficient and
+    // snappier, at least on older machines.
+    document.getElementsByClassName("container")[0].style.setProperty("display", "inline");
+
+    gui.Window.get().setResizable(false);
+}
+
+function get_elem(name) {
+    return document.getElementById(name);
+}
+
+// Stop-gap translator
+function translate_form() {
+    var elements = document.querySelectorAll("[data-i18n]"),
+        data,
+        i;
+    for (i = 0; i < elements.length; i++) {
+        data = elements[i].dataset.i18n;
+        if (data.slice(0, 7) === "[title]") {
+            elements[i].title = l(data.slice(7));
+        } else {
+            elements[i].textContent = l(data);
+        }
+    }
+}
+
+function add_events(name) {
+    gui.Window.get().on("close", function () {
+        cancel();
+    });
+    pdgui.dialog_bindings(name);
+}
+  </script>
+  </body>
+</html>
