@@ -417,7 +417,7 @@ static int scratcher_click(t_gobj *z, struct _glist *glist,
     {
         // activate motion callback
         glist_grab( glist, &x->x_obj.te_g, (t_glistmotionfn)scratcher_motion,
-                    0, xpix, ypix );
+                    0, 0, xpix, ypix );
         x->x_readspeed=0.;
         x->x_motioned = 1;
         if ( x->x_showspeed )

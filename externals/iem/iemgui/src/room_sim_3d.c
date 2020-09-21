@@ -532,7 +532,7 @@ static void room_sim_3d_click(t_room_sim_3d *x, t_floatarg xpos, t_floatarg ypos
     x->x_pos_x = x->x_pix_src_x[sel];
     x->x_pos_y = x->x_pix_src_y[sel];
     x->x_pos_z = x->x_pix_src_z[sel];
-    glist_grab(x->x_gui.x_glist, &x->x_gui.x_obj.te_g, (t_glistmotionfn)room_sim_3d_motion, 0, xpos, ypos);
+    glist_grab(x->x_gui.x_glist, &x->x_gui.x_obj.te_g, (t_glistmotionfn)room_sim_3d_motion, 0, 0, xpos, ypos);
   }
 }
 
