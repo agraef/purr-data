@@ -6791,6 +6791,21 @@ function gui_canvas_get_overriding_scroll(cid) {
 
 exports.gui_canvas_get_overriding_scroll = gui_canvas_get_overriding_scroll;
 
+/* ico@vt.edu 20200920: this last variant that executes immediately
+   is needed for g_text.c when one displaces a text object and it
+   immediately activates and it falls outside the visible canvas bounds
+   this can trigger the object to have its activated box at an incorrect
+   location due to asynchronous behavior of other getscroll calls. Having
+   it here as a separate call as it may prove useful later in other contexts.
+*/
+
+function gui_canvas_get_immediate_scroll(cid) {
+    //post("gui_canvas_get_immediate_scroll");
+    do_getscroll(cid, 0);
+}
+
+exports.gui_canvas_get_immediate_scroll = gui_canvas_get_immediate_scroll;
+
 function do_optimalzoom(cid, hflag, vflag) {
     // determine an optimal zoom level that makes the entire patch fit within
     // the window

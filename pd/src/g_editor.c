@@ -5216,12 +5216,12 @@ void canvas_mouseup(t_canvas *x,
     {
             /* after motion or resizing, if there's only one text item
                 selected, activate the text */
+        scrollbar_synchronous_update(x);
         if (x->gl_editor->e_selection &&
             !(x->gl_editor->e_selection->sel_next))
         {
             gobj_activate(x->gl_editor->e_selection->sel_what, x, 1);
         }
-        scrollbar_update(x);
     }
     else if (x->gl_editor->e_onmotion == MA_SCROLL)
     {

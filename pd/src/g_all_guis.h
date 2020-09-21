@@ -285,6 +285,7 @@ EXTERN const char *iemgui_typeface(t_iemgui *x);
 
 EXTERN void iemgui_class_addmethods(t_class *c);
 EXTERN void scrollbar_update(t_glist *glist);
+EXTERN void scrollbar_synchronous_update(t_glist *glist);
 EXTERN void iemgui_init(t_iemgui *x, t_floatarg f);
 
 EXTERN void iemgui_out_bang(t_iemgui *x, int o, int chk_putin);
