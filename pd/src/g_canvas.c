@@ -43,6 +43,19 @@ struct _canvasenvironment
     t_namelist *ce_path;   /* search path */
 };
 
+t_canvasenvironment *dummy_canvas_env(const char *dir)
+{
+ static t_canvasenvironment dummy_env = {
+   .ce_dir = NULL,
+   .ce_argc = 0,
+   .ce_argv = NULL,
+   .ce_dollarzero = 0,
+   .ce_path = NULL
+ };
+ dummy_env.ce_dir = gensym(dir);
+ return &dummy_env;
+}
+
 #define GLIST_DEFCANVASWIDTH 450
 #define GLIST_DEFCANVASHEIGHT 300
 
