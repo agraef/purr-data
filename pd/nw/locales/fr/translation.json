@@ -237,6 +237,8 @@
     "visible_ancestor_tt": "Donner le focus à l'ancêtre le plus proche de cette fenêtre qui est actuellement visible",
     "pdwin":    "Fenêtre Console Pd",
     "pdwin_tt": "Donner le focus à la fenêtre principale de Pd",
+    "abstractions": "Abstractions",
+    "abstractions_tt": "Interroger et gérer les abstractions",
 
     "media": "Média",
 
@@ -504,5 +506,17 @@
     "building_index": "Construction de l'index...",
     "no_results": "Aucun résultat trouvé !",
     "search_placeholder": "Chercher dans les Docs Pd"
+  },
+  "abstractions": {
+    "filebased": "Abstractions basées sur des fichiers",
+    "private": "Abstractions privées",
+    "global": "Portée globale",
+    "local": "Portée locale",
+    "selectall": "Tout sélectionner",
+    "selectall_tt": "Sélectionner toutes les définitions avec zéro instance",
+    "delete": "Supprimer",
+    "delete_tt": "Supprimer toutes les définitions sélectionnées",
+    "close": "Fermer",
+    "close_tt": "Fermer la fenêtre de dialogue"
   }
 }

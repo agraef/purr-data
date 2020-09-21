@@ -237,6 +237,8 @@
     "visible_ancestor_tt": "Zeige den nächsten aktuell sichtbaren Vorgänger des aktuellen Fensters",
     "pdwin": "Pd-Fenster",
     "pdwin_tt": "Zeige das Pd-Hauptfenster",
+    "abstractions": "Abstraktionen",
+    "abstractions_tt": "Abstraktionen abfragen und verwalten",
 
     "media": "Medien",
 
@@ -504,5 +506,17 @@
     "building_index": "Erstelle Index...",
     "no_results": "Keine Resultate gefunden.",
     "search_placeholder": "Suche Pd-Doku"
+  },
+  "abstractions": {
+    "filebased": "Datei-basierte Abstraktionen",
+    "private": "Private Abstraktionen",
+    "global": "Globaler Geltungsbereich",
+    "local": "Lokaler Geltungsbereich",
+    "selectall": "Alles auswählen",
+    "selectall_tt": "Wähle alle uninstanziierten Definitionen aus",
+    "delete": "Löschen",
+    "delete_tt": "Löscht alle ausgewählten Definitionen",
+    "close": "Schließen",
+    "close_tt": "Schließt das Dialog-Fenster"
   }
 }
