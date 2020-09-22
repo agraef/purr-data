@@ -76,6 +76,8 @@ EXTERN_STRUCT _tscalar;
 EXTERN_STRUCT _canvasenvironment;
 #define t_canvasenvironment struct _canvasenvironment 
 
+extern t_canvasenvironment *dummy_canvas_env(const char *dir);
+
 EXTERN_STRUCT _fielddesc;
 #define t_fielddesc struct _fielddesc
 
