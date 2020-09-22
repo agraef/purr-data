@@ -845,7 +845,7 @@ static void canvas_dirty_deliver_packed(t_canvas *x, t_dirty_broadcast_data *dat
     canvas_dirty_common(x, data->mess);
 }
 
-static int canvas_dirty_broadcast_packed(t_canvas *x, t_dirty_broadcast_data *data);
+static void canvas_dirty_broadcast_packed(t_canvas *x, t_dirty_broadcast_data *data);
 
 static int canvas_dirty_broadcast(t_canvas *x, t_symbol *name, t_symbol *dir, int mess)
 {
@@ -884,7 +884,7 @@ static int canvas_dirty_broadcast(t_canvas *x, t_symbol *name, t_symbol *dir, in
     return (res);
 }
 
-static int canvas_dirty_broadcast_packed(t_canvas *x, t_dirty_broadcast_data *data)
+static void canvas_dirty_broadcast_packed(t_canvas *x, t_dirty_broadcast_data *data)
 {
     *data->res = canvas_dirty_broadcast(x, data->name, data->dir, data->mess);
 }
