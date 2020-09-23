@@ -202,6 +202,8 @@ int canvas_hasarray(t_canvas *x)
 /* JMZ: emit a closebang message */
 void canvas_closebang(t_canvas *x);
 
+void canvas_dirtyclimb(t_canvas *x, int n);
+
     /* delete an object from a glist and free it */
 void glist_delete(t_glist *x, t_gobj *y)
 {

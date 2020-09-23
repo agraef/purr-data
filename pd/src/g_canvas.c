@@ -2464,7 +2464,7 @@ static void canvas_abpush(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     t_canvas *c = canvas_getcurrent();
     t_symbol *name = argv[0].a_w.w_symbol;
     t_binbuf *source = binbuf_new();
-    x->gl_env = 0xF1A6; //to save it as a root canvas
+    x->gl_env = dummy_canvas_env(canvas_getdir(x)->s_name); //to save it as a root canvas
     mess1(&((t_text *)x)->te_pd, gensym("saveto"), source);
     x->gl_env = 0;
 
@@ -2559,7 +2559,8 @@ static void *ab_new(t_symbol *s, int argc, t_atom *argv)
         }
         else
         {
-            error("ab_new: can't insantiate ab within itself\n cycle: %s", res);
+            if(!glist_amreloadingabstractions)
+                error("ab_new: can't insantiate ab within itself\n cycle: %s", res);
             newest = 0;
         }
     }
