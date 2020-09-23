@@ -422,7 +422,7 @@ static int calculate_zoom(t_float zoom_hack)
 }
 
 int canvas_dirty_broadcast_all(t_symbol *name, t_symbol *dir, int mess);
-int canvas_dirty_broadcast_ab_all(t_ab_definition *abdef, int mess);
+int canvas_dirty_broadcast_ab(t_canvas *x, t_ab_definition *abdef, int mess);
 
     /* make a new glist.  It will either be a "root" canvas or else
     it appears as a "text" object in another window (canvas_getcurrent() 
@@ -570,7 +570,7 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
             x->gl_dirties = canvas_dirty_broadcast_all(x->gl_name,
                                 canvas_getdir(x), 0);
         else
-            x->gl_dirties = canvas_dirty_broadcast_ab_all(x->gl_absource, 0);
+            x->gl_dirties = canvas_dirty_broadcast_ab(canvas_getrootfor_ab(x), x->gl_absource, 0);
     }
 
     return(x);
@@ -913,7 +913,9 @@ static int canvas_dirty_broadcast(t_canvas *x, t_symbol *name, t_symbol *dir, in
                 canvas_dirty_common((t_canvas *)g, mess);
             }
             else
+            {
                 res += canvas_dirty_broadcast((t_canvas *)g, name, dir, mess);
+            }
         }
         else if(pd_class(&g->g_pd) == clone_class)
         {
@@ -963,9 +965,9 @@ static void canvas_dirty_deliver_ab_packed(t_canvas *x, t_dirty_broadcast_ab_dat
     canvas_dirty_common(x, data->mess);
 }
 
-static int canvas_dirty_broadcast_ab_packed(t_canvas *x, t_dirty_broadcast_ab_data *data);
+static void canvas_dirty_broadcast_ab_packed(t_canvas *x, t_dirty_broadcast_ab_data *data);
 
-static int canvas_dirty_broadcast_ab(t_canvas *x, t_ab_definition *abdef, int mess)
+int canvas_dirty_broadcast_ab(t_canvas *x, t_ab_definition *abdef, int mess)
 {
     int res = 0;
     t_gobj *g;
@@ -979,8 +981,10 @@ static int canvas_dirty_broadcast_ab(t_canvas *x, t_ab_definition *abdef, int me
                 res += (((t_canvas *)g)->gl_dirty > 0);
                 canvas_dirty_common((t_canvas *)g, mess);
             }
-            else
+            else if(!canvas_isabstraction((t_canvas *)g) || ((t_canvas *)g)->gl_isab)
+            {
                 res += canvas_dirty_broadcast_ab((t_canvas *)g, abdef, mess);
+            }
         }
         else if(pd_class(&g->g_pd) == clone_class)
         {
@@ -1001,18 +1005,9 @@ static int canvas_dirty_broadcast_ab(t_canvas *x, t_ab_definition *abdef, int me
     return (res);
 }
 
-static int canvas_dirty_broadcast_ab_packed(t_canvas *x, t_dirty_broadcast_ab_data *data)
+static void canvas_dirty_broadcast_ab_packed(t_canvas *x, t_dirty_broadcast_ab_data *data)
 {
     *data->res = canvas_dirty_broadcast_ab(x, data->abdef, data->mess);
-}
-
-int canvas_dirty_broadcast_ab_all(t_ab_definition *abdef, int mess)
-{
-    int res = 0;
-    t_canvas *x;
-    for (x = pd_this->pd_canvaslist; x; x = x->gl_next)
-        res += canvas_dirty_broadcast_ab(x, abdef, mess);
-    return (res);
 }
 
     /* mark a glist dirty or clean */
@@ -1040,7 +1035,7 @@ void canvas_dirty(t_canvas *x, t_floatarg n)
                 canvas_dirty_broadcast_all(x2->gl_name, canvas_getdir(x2),
                     (x2->gl_dirty ? 1 : -1));
             else
-                canvas_dirty_broadcast_ab_all(x2->gl_absource,
+                canvas_dirty_broadcast_ab(canvas_getrootfor_ab(x2), x2->gl_absource,
                     (x2->gl_dirty ? 1 : -1));
         }
     }
@@ -1288,7 +1283,7 @@ void canvas_free(t_canvas *x)
         if(!x->gl_isab)
             canvas_dirty_broadcast_all(x->gl_name, canvas_getdir(x), -1);
         else
-            canvas_dirty_broadcast_ab_all(x->gl_absource, -1);
+            canvas_dirty_broadcast_ab(canvas_getrootfor_ab(x), x->gl_absource, -1);
     }
 
     t_gobj *y;
@@ -2698,7 +2693,7 @@ static void canvas_showdirty(t_canvas *x)
     if(!x->gl_isab)
         canvas_dirty_broadcast_all(x->gl_name, canvas_getdir(x), 2);
     else
-        canvas_dirty_broadcast_ab_all(x->gl_absource, 2);
+        canvas_dirty_broadcast_ab(canvas_getrootfor_ab(x), x->gl_absource, 2);
 }
 
 /* ------------------------------- declare ------------------------ */

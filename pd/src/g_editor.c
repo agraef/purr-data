@@ -1453,10 +1453,6 @@ static void glist_doreload_ab(t_canvas *x, t_ab_definition *a, t_gobj *e)
         remakeit = (g != e && pd_class(&g->g_pd) == canvas_class && canvas_isabstraction((t_canvas *)g)
             && ((t_canvas *)g)->gl_isab && ((t_canvas *)g)->gl_absource == a);
 
-        /* remove dirtiness visual markings */
-        if(remakeit && ((t_canvas *)g)->gl_dirty)
-            canvas_dirtyclimb((t_canvas *)g, 0);
-
         remakeit = remakeit || (pd_class(&g->g_pd) == clone_class && clone_matchab(&g->g_pd, a));
 
         if(remakeit)

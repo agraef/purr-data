@@ -1417,41 +1417,6 @@ function nw_undo_menu(undo_text, redo_text) {
     }
 }
 
-function ab_callback(cid, name) {
-    return function() {
-        pdgui.pdsend(cid, "delab", name);
-    }
-}
-
-function nw_ab_menu(cid, definitions) {
-    while(canvas_menu.ab.this.items.length > 2)
-        canvas_menu.ab.this.removeAt(2);
-    if(definitions.length === 0)
-    {
-        var item = new nw.MenuItem({
-            label: "Ø",
-            enabled: false
-        });
-        canvas_menu.ab.this.append(item);
-        canvas_menu.ab.clean.enabled = 0;
-    }
-    else
-    {
-        var i, del = 0;
-        for(i = 0; i < definitions.length; i += 2)
-        {
-            var item = new nw.MenuItem({
-                label: definitions[i] + " (" + definitions[i+1] + ")",
-                click: ab_callback(cid, definitions[i]),
-                enabled: (definitions[i+1] === 0)
-            });
-            canvas_menu.ab.this.append(item);
-            if(definitions[i+1] === 0) del++;
-        }
-        canvas_menu.ab.clean.enabled = (del > 0);
-    }
-}
-
 function have_live_box() {
     var state = canvas_events.get_state();
     if (state === "text" || state === "floating_text") {
