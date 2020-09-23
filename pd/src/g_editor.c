@@ -2477,7 +2477,7 @@ static void abstracthandler_callback(t_abstracthandler *x, t_symbol *s)
     /* save the subpatch into a separated pd file */
     t_atom at[3];
     SETSYMBOL(at, gensym(filename)); SETSYMBOL(at+1, gensym(dir)); SETFLOAT(at+2, 0.f);
-    x->tarjet->gl_env = 0xF1A6; /* gl_env is set to non-zero in order to save the subcanvas as a root canvas */
+    x->tarjet->gl_env = dummy_canvas_env(dir); /* gl_env is set to non-zero in order to save the subcanvas as a root canvas */
     typedmess(&x->tarjet->gl_pd, gensym("savetofile"), 3, at);
     x->tarjet->gl_env = 0;
 

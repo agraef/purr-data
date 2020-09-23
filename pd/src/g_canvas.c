@@ -43,6 +43,19 @@ struct _canvasenvironment
     t_namelist *ce_path;   /* search path */
 };
 
+t_canvasenvironment *dummy_canvas_env(const char *dir)
+{
+ static t_canvasenvironment dummy_env = {
+   .ce_dir = NULL,
+   .ce_argc = 0,
+   .ce_argv = NULL,
+   .ce_dollarzero = 0,
+   .ce_path = NULL
+ };
+ dummy_env.ce_dir = gensym(dir);
+ return &dummy_env;
+}
+
 #define GLIST_DEFCANVASWIDTH 450
 #define GLIST_DEFCANVASHEIGHT 300
 
@@ -882,7 +895,7 @@ static void canvas_dirty_deliver_packed(t_canvas *x, t_dirty_broadcast_data *dat
     canvas_dirty_common(x, data->mess);
 }
 
-static int canvas_dirty_broadcast_packed(t_canvas *x, t_dirty_broadcast_data *data);
+static void canvas_dirty_broadcast_packed(t_canvas *x, t_dirty_broadcast_data *data);
 
 static int canvas_dirty_broadcast(t_canvas *x, t_symbol *name, t_symbol *dir, int mess)
 {
@@ -921,7 +934,7 @@ static int canvas_dirty_broadcast(t_canvas *x, t_symbol *name, t_symbol *dir, in
     return (res);
 }
 
-static int canvas_dirty_broadcast_packed(t_canvas *x, t_dirty_broadcast_data *data)
+static void canvas_dirty_broadcast_packed(t_canvas *x, t_dirty_broadcast_data *data)
 {
     *data->res = canvas_dirty_broadcast(x, data->name, data->dir, data->mess);
 }

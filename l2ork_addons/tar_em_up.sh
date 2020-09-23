@@ -106,6 +106,7 @@ do case $Option in
 done
 
 inst_dir=${inst_dir:-/usr/local}
+dpkg=${dpkg:-/usr/bin/dpkg-deb}
 
 # configure a light build if requested
 if [ $light -gt 0 ]; then
@@ -156,9 +157,9 @@ fi
 
 # Automagically disable Debian packaging when the Debian packaging tools are
 # not available.
-if test $deb -gt 0 && test $pkg -gt 0 && ! test -x /usr/bin/dpkg-deb; then
+if test $deb -gt 0 && test $pkg -gt 0 && ! test -x "$dpkg"; then
     pkg=0;
-    echo "Debian toolchain unavailable, Debian packaging disabled"
+    echo "Debian toolchain unavailable, skipping Debian packaging"
 fi
 
 # Fetch the nw.js binary if we haven't already. We want to fetch it even
