@@ -5668,6 +5668,9 @@ function file_dialog(cid, type, target, start_path) {
     // it just doesn't work. So this requires us to have the parent <span>
     // around the <input>. Then when we change the innerHTML of the span the
     // new value for nwworkingdir magically works.
+    if(nw_os_is_windows) {
+        start_path = start_path.replace(/\//g, '\\');
+    }
     dialog_options = {
         style: "display: none;",
         type: "file",
