@@ -2237,7 +2237,14 @@ void canvas_declare(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
             canvas_stdlib(e, atom_getsymbolarg(i+1, argc, argv)->s_name);
             i++;
         }
-        else post("declare: %s: unknown declaration", flag);
+        // ag: Handle the case of an unrecognized option argument (presumably
+        // a float).
+        else if (!*flag) {
+            post("declare: %g: unknown argument", atom_getfloatarg(i, argc, argv));
+        }
+        else {
+            post("declare: %s: unknown declaration", flag);
+        }
     }
 }
 
