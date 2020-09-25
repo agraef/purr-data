@@ -383,6 +383,15 @@ var canvas_events = (function() {
                     (pointer_y + svg_view.y),
                     b, mod
                 );
+                // If Alt is pressed on a box_text, fake a keyup to prevent
+                // dangling temp runmode in case the click opens a subpatch.
+                // XXXFIXME: This will also end temporary runmode if the
+                // object being clicked is *not* a subpatch, so we might want
+                // to check for this -- I just don't know how to do that. -ag
+                if (evt.altKey &&
+                    evt.target.parentNode.classList.contains("box_text")) {
+                    pdgui.canvas_sendkey(name, 0, evt, "Alt", 0);
+                }
                 //evt.stopPropagation();
                 //evt.preventDefault();
             },
