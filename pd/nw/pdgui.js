@@ -3348,14 +3348,14 @@ function gui_numbox_draw_text(cid,tag,text,font_size,color,xpos,ypos,basex,basey
     });
 }
 
-function gui_numbox_update(cid, tag, fcolor, bgcolor, font_name, font_size, font_weight) {
+function gui_numbox_update(cid, tag, fcolor, bgcolor, num_font_size, font_name, font_size, font_weight) {
     gui(cid)
     .get_elem(tag + "border", {
         fill: bgcolor
     })
     .get_elem(tag + "text", {
         fill: fcolor,
-        "font-size": font_size
+        "font-size": num_font_size
     })
     // label may or may not exist, but that's covered by the API
     .get_elem(tag + "label", function() {
@@ -5863,12 +5863,7 @@ function gui_iemgui_dialog(did, attr_array) {
     // We are subtracting 25 for the menu
     // ico@vt.edu: since adding frameless window, we use top 20px for draggable titlebar,
     // so now we subtract only 5 (25-20)
-    //post("attr_array=" + attr_array);
-    var height = 409;
-    if (attr_array[1] === "vu") {
-        height = 360;
-    }
-    create_window(did, "iemgui", 298, height,
+    create_window(did, "iemgui", 298, 414-5,
         popup_coords[2] + 10, popup_coords[3] + 60,
         attr_array_to_object(attr_array));
 }

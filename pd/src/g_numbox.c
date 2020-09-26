@@ -28,7 +28,7 @@ t_widgetbehavior my_numbox_widgetbehavior;
 
 // forward declarations
 static void my_numbox_set_change(t_my_numbox *x, t_floatarg f);
-static void my_numbox_ftoa(t_my_numbox *x);
+static void my_numbox_ftoa(t_my_numbox *x , int append);
 
 static t_symbol *numbox_keyname_sym_a;
 
@@ -39,7 +39,7 @@ static void my_numbox_tick_reset(t_my_numbox *x)
     {
         //post("    success\n");
         my_numbox_set_change(x, 0);
-        my_numbox_ftoa(x);
+        my_numbox_ftoa(x, 0);
         sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
     }
     glist_grab(x->x_gui.x_glist, 0, 0, 0, 0, 0);
@@ -77,7 +77,7 @@ void my_numbox_clip(t_my_numbox *x)
 
 int my_numbox_calc_fontwidth2(t_my_numbox *x, int w, int h, int fontsize)
 {
-    int f=31;
+    int f=25;
     // ico@vt.edu 20200917: below options are disabled for the value
     // inside the numbox since we ignore those in 2.x
     //if     (x->x_gui.x_font_style == 1) f = 27;
@@ -91,7 +91,7 @@ int my_numbox_calc_fontwidth(t_my_numbox *x)
         x->x_num_fontsize);
 }
 
-static void my_numbox_ftoa(t_my_numbox *x)
+static void my_numbox_ftoa(t_my_numbox *x, int append)
 {
     double f=x->x_val;
     int bufsize, is_exp=0, i, idecimal;
@@ -108,7 +108,7 @@ static void my_numbox_ftoa(t_my_numbox *x)
     {
         if(is_exp)
         {
-            if(x->x_gui.x_w <= 5)
+            if(!append && x->x_gui.x_w <= 5)
             {
                 x->x_buf[0] = (f < 0.0 ? '-' : '+');
                 x->x_buf[1] = 0;
@@ -117,7 +117,7 @@ static void my_numbox_ftoa(t_my_numbox *x)
             for(idecimal=0; idecimal < i; idecimal++)
                 if(x->x_buf[idecimal] == '.')
                     break;
-            if(idecimal > (x->x_gui.x_w - 4))
+            if(!append && idecimal > (x->x_gui.x_w - 4))
             {
                 x->x_buf[0] = (f < 0.0 ? '-' : '+');
                 x->x_buf[1] = 0;
@@ -137,12 +137,12 @@ static void my_numbox_ftoa(t_my_numbox *x)
             for(idecimal=0; idecimal < bufsize; idecimal++)
                 if(x->x_buf[idecimal] == '.')
                     break;
-            if(idecimal > x->x_gui.x_w)
+            if(!append && idecimal > x->x_gui.x_w)
             {
                 x->x_buf[0] = (f < 0.0 ? '-' : '+');
                 x->x_buf[1] = 0;
             }
-            else
+            else if (!append)
                 x->x_buf[x->x_gui.x_w] = 0;
         }
     }
@@ -169,6 +169,12 @@ static void my_numbox_draw_update(t_gobj *client, t_glist *glist)
         {
             x->x_buf[sl] = '>';
             x->x_buf[sl+1] = 0;
+        } else if (x->x_focused == 2) {
+            // this is triggered when one presses return while retaining the focus of the number
+            // so, we make sure to subtract the '>' that has disappeared and adjust visible digits
+            // accordingly below
+            x->x_buf[sl] = 0;
+            sl--;
         }
         if(sl >= x->x_gui.x_w)
             cp += sl - x->x_gui.x_w + 1;
@@ -177,7 +183,9 @@ static void my_numbox_draw_update(t_gobj *client, t_glist *glist)
             x,
             cp,
             1);
-        x->x_buf[sl] = 0;
+        // here we check that we are not in the focused mode 2 that has this already taken care of above
+        if (x->x_focused != 2)
+            x->x_buf[sl] = 0;
     }
     else
     {
@@ -190,7 +198,7 @@ static void my_numbox_draw_update(t_gobj *client, t_glist *glist)
         }
         else
         {
-            my_numbox_ftoa(x); /* mmm... side-effects */
+            my_numbox_ftoa(x, 0); /* mmm... side-effects */
         }
         gui_vmess("gui_text_set_mynumbox", "xxsi",
             glist_getcanvas(glist),
@@ -210,10 +218,7 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
     char cbuf[8];
     sprintf(cbuf, "#%6.6x", x->x_gui.x_bcol);
     int half=x->x_gui.x_h/2;
-    // ico@vt.edu 2020-08-24: this offset is better as float to ensure
-    // that the vertical positioning of the number is as close to the center
-    // as nw.js allows
-    t_float d=0.5+x->x_gui.x_h/34.0;
+    t_float d=1+x->x_gui.x_h/34.0;
     int x1=text_xpix(&x->x_gui.x_obj, glist), x2=x1+x->x_numwidth;
     int y1=text_ypix(&x->x_gui.x_obj, glist), y2=y1+x->x_gui.x_h;
 
@@ -227,16 +232,8 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
         y2 - y1,
         x->x_drawstyle,
         glist_istoplevel(glist));
-    /* Not sure when it is necessary to hide the frame... perhaps for
-       k12? */
-    if (!x->x_drawstyle || x->x_drawstyle == 2)
-    {
-        //sys_vgui(".x%zx.c create polyline %d %d %d %d %d %d -stroke #%6.6x "
-        //    "-tags {%zxBASE2 x%zx text iemgui}\n",
-        //    canvas, x1, y1, x1 + half, y1 + half, x1, y2,
-        //    x->x_gui.x_fcol, x, x);
-    }
-    my_numbox_ftoa(x);
+
+    my_numbox_ftoa(x, 0);
     sprintf(cbuf, "#%6.6x", x->x_gui.x_fcol);
     gui_vmess("gui_numbox_draw_text", "xxsisifii",
         canvas,
@@ -285,13 +282,14 @@ static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
     char fg[8], bg[8];
     sprintf(fg, "#%6.6x",  x->x_gui.x_fcol);
     sprintf(bg, "#%6.6x",  x->x_gui.x_bcol);
-    gui_vmess("gui_numbox_update", "xxsssii",
+    gui_vmess("gui_numbox_update", "xxssisii",
         canvas,
         x,
         fg,
         bg,
-        iemgui_typeface((t_iemgui *)x),
         x->x_num_fontsize,
+        iemgui_typeface((t_iemgui *)x),
+        x->x_gui.x_fontsize,
         sys_fontweight);
 }
 
@@ -360,7 +358,7 @@ static void my_numbox__motionhook(t_scalehandle *sh,
         x->x_tmpfontsize = maxi((newy - x->x_gui.x_obj.te_ypix) * 0.9,
             IEM_FONT_MINSIZE);
 
-        int f = 31;
+        int f = 25;
         // ico@vt.edu 20200917: below options are disabled for the value
         // inside the numbox since we ignore those in 2.x
         //if     (x->x_gui.x_font_style == 1) f = 27;
@@ -413,7 +411,7 @@ static void my_numbox__motionhook(t_scalehandle *sh,
         {
             properties_set_field_int(properties,"width",x->x_scalewidth);
             properties_set_field_int(properties,"height",x->x_scaleheight);
-            properties_set_field_int(properties,"font_size",x->x_tmpfontsize);
+            //properties_set_field_int(properties,"font_size",x->x_tmpfontsize);
         }
     }
     scalehandle_dragon_label(sh,mouse_x, mouse_y);
@@ -614,7 +612,7 @@ static void my_numbox_motion(t_my_numbox *x, t_floatarg dx, t_floatarg dy)
     if (old != x->x_val)
     {
         x->x_gui.x_changed = 1;
-        my_numbox_ftoa(x);
+        my_numbox_ftoa(x, 0);
         sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
         my_numbox_bang(x);
     }
@@ -651,7 +649,7 @@ static int my_numbox_newclick(t_gobj *z, struct _glist *glist,
             clock_delay(x->x_clock_reset, 3000);
 
             if (shift)
-                my_numbox_ftoa(x);
+                my_numbox_ftoa(x, 1);
             else
                 x->x_buf[0] = 0;
             x->x_focused = 2;
