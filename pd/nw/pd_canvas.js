@@ -99,6 +99,22 @@ var canvas_events = (function() {
                 return 0;
             }
         },
+        target_is_canvasobj = function(evt) {
+            function is_canvas_obj(target) {
+                return target.classList.contains("obj") &&
+                    target.classList.contains("canvasobj");
+            };
+            // ag: A bit of (maybe over-)defensive programming here: depending
+            // on where exactly the user clicked, the actual object may be the
+            // parent or the grandparent of the clicked target.
+            if (evt.target.classList.contains("border") ||
+                evt.target.classList.contains("box_text"))
+                return is_canvas_obj(evt.target.parentNode);
+            else if (evt.target.parentNode.classList.contains("box_text"))
+                return is_canvas_obj(evt.target.parentNode.parentNode);
+            else
+                return is_canvas_obj(evt.target);
+        },
         text_to_normalized_svg_path = function(text) {
             text = text.slice(4).trim()  // draw
                        .slice(4).trim()  // path
@@ -385,11 +401,7 @@ var canvas_events = (function() {
                 );
                 // If Alt is pressed on a box_text, fake a keyup to prevent
                 // dangling temp runmode in case the click opens a subpatch.
-                // XXXFIXME: This will also end temporary runmode if the
-                // object being clicked is *not* a subpatch, so we might want
-                // to check for this -- I just don't know how to do that. -ag
-                if (evt.altKey &&
-                    evt.target.parentNode.classList.contains("box_text")) {
+                if (evt.altKey && target_is_canvasobj(evt)) {
                     pdgui.canvas_sendkey(name, 0, evt, "Alt", 0);
                 }
                 //evt.stopPropagation();
