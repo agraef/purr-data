@@ -3,6 +3,31 @@
   <head>
     <link id="page_style" rel="stylesheet" type="text/css" href="css/default.css">
   </head>
+  <style>
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0); 
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.267); 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
+
+label {
+	margin-left: 5px;
+}
+  </style>
   <body class="dialog_body">
     <div class="container">
       <form>
@@ -27,6 +52,7 @@
             <span data-i18n="abstractions.delete"></span>
           </button>
         </div>
+        <!--
         <hr>
         <fieldset style="width: 90%; border: 2px solid grey">
           <legend data-i18n="abstractions.filebased"></legend>
@@ -34,6 +60,7 @@
           <table style="width: 90%; table-layout: fixed;">
           </table>
         </fieldset>
+        -->
         <hr>
         <div class="submit_buttons">
           <button type="button" onClick="cancel()" data-i18n="[title]abstractions.close_tt">
@@ -83,10 +110,11 @@ function populate_form(attrs) {
     canvas = attrs.canvas;
     deletequeue = new Set();
     var tables = document.querySelectorAll("table"),
-        filebased_table = tables[2],
         privateglobal_table = tables[0],
         privatelocal_table = tables[1];
+        //filebased_table = tables[2]
 
+    /*
     for(i = 0; i < filebased_abs.length; i += 2)
     {
       var row = document.createElement("tr");
@@ -103,6 +131,7 @@ function populate_form(attrs) {
       row.appendChild(cell3);
       filebased_table.appendChild(row);
     }
+    */
 
     for(i = 0; i < private_abs.length; i += 2)
     {
@@ -121,6 +150,8 @@ function populate_form(attrs) {
         let input_elem = document.createElement("input"),
             j = i;
         input_elem.type = "checkbox";
+        input_elem.style.setProperty("max-height", "10px");
+        input_elem.style.setProperty("top", "0px");
         input_elem.onchange = function() {
             if(input_elem.checked) {
                 deletequeue.add(private_abs[j]);
@@ -128,7 +159,6 @@ function populate_form(attrs) {
                 deletequeue.delete(private_abs[j]);
             }
             get_elem("delete_button").disabled = (deletequeue.size === 0);
-            console.log(deletequeue.size);
         };
         cell3.appendChild(input_elem);
         zero++;
