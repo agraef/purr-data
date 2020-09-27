@@ -2508,7 +2508,7 @@ static t_symbol *ab_extend_name(t_canvas *x, t_symbol *s)
     return gensym(res);
 }
 
-static int abframe = 0;
+int abframe = 0;
 static void canvas_abframe(t_canvas *x, t_float val)
 {
     abframe = val;

@@ -1652,8 +1652,13 @@ void *abinfo_new(void)
     }
     else
     {
-        error("abinfo: only instantiable inside an ab object");
-        x = 0;
+        if(!abframe)
+        {
+            error("abinfo: only instantiable inside an ab object");
+            x = 0;
+        }
+        else
+            x = pd_new(text_class);
     }
     return (x);
 }
