@@ -4,32 +4,21 @@
     <link id="page_style" rel="stylesheet" type="text/css" href="css/default.css">
   </head>
   <style>
-/* width */
-::-webkit-scrollbar {
-  width: 5px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  background: rgba(0,0,0,0); 
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.267); 
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #888;
-}
-
-label {
-	margin-left: 5px;
-}
   </style>
-  <body class="dialog_body">
-    <div class="container">
+  <body class="dialog_body prefs_body" style="overflow: hidden;">
+    <div class="container noselect prefs_container">
+      <table id="titlebar">
+        <tr>
+          <td style="width: 100%;">
+            <div id="titlebar_title">Abstractions</div>
+          </td>
+          <td id="titlebar_buttons_td">
+            <div class="titlebar_buttons">
+              <div id="titlebar_close_button" onclick="cancel();">&#215</div>
+            </div>
+          </td>
+        </tr>
+      </table>
       <form>
         <fieldset style="width: 90%; border: 2px solid grey">
           <legend data-i18n="abstractions.private"></legend>
@@ -110,8 +99,8 @@ function populate_form(attrs) {
     canvas = attrs.canvas;
     deletequeue = new Set();
     var tables = document.querySelectorAll("table"),
-        privateglobal_table = tables[0],
-        privatelocal_table = tables[1];
+        privateglobal_table = tables[1],
+        privatelocal_table = tables[2];
         //filebased_table = tables[2]
 
     /*
