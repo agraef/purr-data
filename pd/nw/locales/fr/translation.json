@@ -281,7 +281,7 @@
   "canvas": {
     "paste_clipboard_prompt": "Attention: vous êtes sur le point de coller du 'code Pd' provenant de l'extérieur de Pd. Voulez-vous continuer ?",
     "save_dialog": {
-      "prompt": "Voulez-vous enregistrer les modifications apportées à ce patch ?",
+      "prompt": "Voulez-vous enregistrer les modifications apportées à",
       "yes":    "Oui",
       "yes_tt": "Enregistrer les modifications dans le fichier avant de fermer le patch ?",
       "no":    "Non",
