@@ -99,6 +99,22 @@ var canvas_events = (function() {
                 return 0;
             }
         },
+        target_is_canvasobj = function(evt) {
+            function is_canvas_obj(target) {
+                return target.classList.contains("obj") &&
+                    target.classList.contains("canvasobj");
+            };
+            // ag: A bit of (maybe over-)defensive programming here: depending
+            // on where exactly the user clicked, the actual object may be the
+            // parent or the grandparent of the clicked target.
+            if (evt.target.classList.contains("border") ||
+                evt.target.classList.contains("box_text"))
+                return is_canvas_obj(evt.target.parentNode);
+            else if (evt.target.parentNode.classList.contains("box_text"))
+                return is_canvas_obj(evt.target.parentNode.parentNode);
+            else
+                return is_canvas_obj(evt.target);
+        },
         text_to_normalized_svg_path = function(text) {
             text = text.slice(4).trim()  // draw
                        .slice(4).trim()  // path
@@ -383,6 +399,11 @@ var canvas_events = (function() {
                     (pointer_y + svg_view.y),
                     b, mod
                 );
+                // If Alt is pressed on a box_text, fake a keyup to prevent
+                // dangling temp runmode in case the click opens a subpatch.
+                if (evt.altKey && target_is_canvasobj(evt)) {
+                    pdgui.canvas_sendkey(name, 0, evt, "Alt", 0);
+                }
                 //evt.stopPropagation();
                 //evt.preventDefault();
             },

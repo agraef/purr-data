@@ -2473,7 +2473,7 @@ exports.gui = gui;
 // In the future, it might make sense to combine the scalar and object
 // creation, in which case a flag to toggle the offset would be appropriate.
 
-function gui_gobj_new(cid, tag, type, xpos, ypos, is_toplevel) {
+function gui_gobj_new(cid, tag, type, xpos, ypos, is_toplevel, is_canvas_obj) {
     var g;
     xpos += 0.5,
     ypos += 0.5,
@@ -2482,7 +2482,7 @@ function gui_gobj_new(cid, tag, type, xpos, ypos, is_toplevel) {
         g = create_item(cid, "g", {
             id: tag + "gobj",
             transform: transform_string,
-            class: type + (is_toplevel !== 0 ? "" : " gop")
+            class: type + (is_toplevel !== 0 ? "" : " gop") + (is_canvas_obj === 0 ? "" : " canvasobj")
         });
         add_gobj_to_svg(svg_elem, g);
     });

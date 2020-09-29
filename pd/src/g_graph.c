@@ -1058,10 +1058,10 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
         int xpix, ypix;
         xpix = text_xpix(&x->gl_obj, parent_glist);
         ypix = text_ypix(&x->gl_obj, parent_glist);
-        gui_vmess("gui_gobj_new", "xssiii",
+        gui_vmess("gui_gobj_new", "xssiiii",
             glist_getcanvas(x->gl_owner),
             tag, "graph", xpix, ypix,
-            parent_glist == glist_getcanvas(x->gl_owner) ? 1 : 0);
+            parent_glist == glist_getcanvas(x->gl_owner) ? 1 : 0, 0);
         if (canvas_showtext(x))
             rtext_draw(glist_findrtext(parent_glist, &x->gl_obj));
     }
