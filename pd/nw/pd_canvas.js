@@ -2029,6 +2029,12 @@ function nw_create_patch_window_menus(gui, w, name) {
             pdgui.raise_pd_window();
         }
     });
+    minit(m.win.abstractions, {
+        enabled: true,
+        click: function () {
+            pdgui.pdsend(name, "getabstractions");
+        }
+    });
 
     // Media menu
     minit(m.media.audio_on, {

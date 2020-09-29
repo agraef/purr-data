@@ -169,6 +169,24 @@ typedef struct _tick    /* where to put ticks on x or y axes */
     int k_lperb;        /* little ticks per big; 0 if no ticks to draw */
 } t_tick;
 
+/* the t_ab_definition structure holds an ab definiton and all the attributes we need
+    to handle it */
+typedef struct _ab_definition
+{
+    t_symbol *ad_name;      /* id for the ab definition */
+    t_binbuf *ad_source;    /* binbuf where the source is stored */
+    int ad_numinstances;    /* number of instances */
+    struct _ab_definition *ad_next;     /* next ab definition */
+    t_canvas *ad_owner;     /* canvas that stores this definition */
+
+    /* dependency graph stuff */
+    int ad_numdep;      /* number of other ab definitions that it depends on */
+    struct _ab_definition **ad_dep;     /* the actual ab defintitions */
+    int *ad_deprefs;    /*  number of instances that define the dependency */
+    int ad_visflag;     /* visited flag for topological sort algorithm */
+} t_ab_definition;
+
+
 /* the t_glist structure, which describes a list of elements that live on an
 area of a window.
 
@@ -241,6 +259,11 @@ struct _glist
 
     int gl_subdirties;     /* number of descending dirty abstractions */
     int gl_dirties;        /* number of diry instances, for multiple dirty warning */
+
+    unsigned int gl_isab:1;         /* is an ab instance */
+    t_ab_definition *gl_absource;   /* ab definition pointer,
+                                        in the case it is an ab instance */
+    t_ab_definition *gl_abdefs;     /* stored ab definitions */
 };
 
 #define gl_gobj gl_obj.te_g
@@ -560,6 +583,8 @@ EXTERN void canvas_setcurrent(t_canvas *x);
 EXTERN void canvas_unsetcurrent(t_canvas *x);
 EXTERN t_symbol *canvas_realizedollar(t_canvas *x, t_symbol *s);
 EXTERN t_canvas *canvas_getrootfor(t_canvas *x);
+EXTERN t_canvas *canvas_getrootfor_ab(t_canvas *x);
+EXTERN int abframe;
 EXTERN void canvas_dirty(t_canvas *x, t_floatarg n);
 EXTERN int canvas_getfont(t_canvas *x);
 typedef int (*t_canvasapply)(t_canvas *x, t_int x1, t_int x2, t_int x3);

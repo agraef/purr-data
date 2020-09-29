@@ -103,6 +103,7 @@ void canvas_saved(t_glist *x, t_symbol *s, int argc, t_atom *argv)
 }
 
 void canvas_savedeclarationsto(t_canvas *x, t_binbuf *b);
+void canvas_saveabdefinitionsto(t_canvas *x, t_binbuf *b);
 
     /* the following routines read "scalars" from a file into a canvas. */
 
@@ -830,6 +831,9 @@ static void canvas_saveto(t_canvas *x, t_binbuf *b)
         }
         canvas_savedeclarationsto(x, b);
     }
+
+    canvas_saveabdefinitionsto(x, b);
+
     for (y = x->gl_list; y; y = y->g_next)
         gobj_save(y, b);
 
@@ -976,26 +980,55 @@ static void canvas_savetofile(t_canvas *x, t_symbol *filename, t_symbol *dir,
     binbuf_free(b);
 }
 
+void canvas_reload_ab(t_canvas *x);
+
+/* updates the shared ab definition and reloads all instances */
+static void canvas_save_ab(t_canvas *x, t_floatarg fdestroy)
+{
+    if(!x->gl_absource) bug("canvas_save_ab");
+
+    t_binbuf *b = binbuf_new();
+    canvas_savetemplatesto(x, b, 1);
+    canvas_saveto(x, b);
+
+    binbuf_free(x->gl_absource->ad_source);
+    x->gl_absource->ad_source = b;
+
+    canvas_dirty(x, 0);
+    canvas_reload_ab(x);
+
+    if (fdestroy != 0) //necessary?
+        vmess(&x->gl_pd, gensym("menuclose"), "f", 1.);
+}
+
 static void canvas_menusaveas(t_canvas *x, t_floatarg fdestroy)
 {
     t_canvas *x2 = canvas_getrootfor(x);
-    gui_vmess("gui_canvas_saveas", "xssi",
-        x2,
-        (strncmp(x2->gl_name->s_name, "Untitled", 8) ?
-            x2->gl_name->s_name : "title"),
-        canvas_getdir(x2)->s_name,
-        fdestroy != 0);
+    if(!x->gl_isab)
+        gui_vmess("gui_canvas_saveas", "xssi",
+            x2,
+            (strncmp(x2->gl_name->s_name, "Untitled", 8) ?
+                x2->gl_name->s_name : "title"),
+            canvas_getdir(x2)->s_name,
+            fdestroy != 0);
+    else if(x->gl_dirty)
+        canvas_save_ab(x2, fdestroy);
 }
 
 static void canvas_menusave(t_canvas *x, t_floatarg fdestroy)
 {
     t_canvas *x2 = canvas_getrootfor(x);
     char *name = x2->gl_name->s_name;
-    if (*name && strncmp(name, "Untitled", 8)
-            && (strlen(name) < 4 || strcmp(name + strlen(name)-4, ".pat")
-                || strcmp(name + strlen(name)-4, ".mxt")))
-            canvas_savetofile(x2, x2->gl_name, canvas_getdir(x2), fdestroy);
-    else canvas_menusaveas(x2, fdestroy);
+    if(!x->gl_isab)
+    {
+        if (*name && strncmp(name, "Untitled", 8)
+                && (strlen(name) < 4 || strcmp(name + strlen(name)-4, ".pat")
+                    || strcmp(name + strlen(name)-4, ".mxt")))
+                canvas_savetofile(x2, x2->gl_name, canvas_getdir(x2), fdestroy);
+        else canvas_menusaveas(x2, fdestroy);
+    }
+    else if(x->gl_dirty)
+        canvas_save_ab(x2, fdestroy);
 }
 
 static void canvas_menuprint(t_canvas *x)
