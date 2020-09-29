@@ -6019,7 +6019,7 @@ function gui_abstractions_dialog(cid, gfxstub, filebased_abs, private_abs) {
     var attrs = { canvas: cid, filebased_abs: filebased_abs,
                     private_abs: private_abs };
     dialogwin[gfxstub] = create_window(gfxstub, "abstractions", 300, 
-        Math.min(600, (private_abs.length*10 + 190)), 0, 0, attrs);
+        Math.min(600, (private_abs.length*10 + 190+(nw_os_is_osx?20:0))), 0, 0, attrs);
 }
 
 // Global settings
