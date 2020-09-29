@@ -1474,6 +1474,17 @@ void scrollbar_update(t_glist *glist)
     canvas_getscroll(canvas);
 }
 
+/* ico@vt.edu 20200920: introduced for situation where getscroll
+needs to occur before the next command, e.g. automate. */
+void scrollbar_synchronous_update(t_glist *glist)
+{
+    // glist_getcanvas is probably not needed but not before we make
+    // sure that there are unneded calls of this kind being made by
+    // non-toplevel objects...
+    gui_vmess("gui_canvas_get_immediate_scroll",
+        "x", glist_getcanvas(glist));
+}
+
 void wb_init(t_widgetbehavior *wb, t_getrectfn gr, t_clickfn cl)
 {
     wb->w_getrectfn = gr;
