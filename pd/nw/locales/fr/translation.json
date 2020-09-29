@@ -5,7 +5,7 @@
           "size":    "Taille et comportement",
           "messages": "Messages",
           "label":   "Label",
-          "colors":  "Couleurs"
+          "colors":  "Apparence"
       },
       "size":    "Taille",
       "size_tt": "Taille de l'objet IemGui",
@@ -41,6 +41,8 @@
       "log_height_tt": "Le framus se croise avec le ramistan approximativement au paternoster !",
       "steady":       "Fixe au clic",
       "steady_tt":    "Ne bouge pas le curseur quand cliqué. Bouge seulement quand on le fait glisser avec la souris",
+      "drawstyle":    "Style du cadre",
+      "drawstyle_tt":    "Ajuster le style du cadre en choisissant ses éléments",
       "send":         "Envoyer au symbole",
       "send_tt":      "Messages sans-fil à envoyer à travers le Symbole vers d'autres IemGui ou Objets",
       "receive":      "Recevoir du symbole",

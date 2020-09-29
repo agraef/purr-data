@@ -5,7 +5,7 @@
           "size":    "Größe und Verhalten",
           "messages": "Nachrichten",
           "label":   "Etikett",
-          "colors":  "Farben"
+          "colors":  "Erscheinungsbild"
       },
       "size_tt": "Größe des iemgui-Elements",
       "size": "Größe",
@@ -41,6 +41,8 @@
       "log_height_tt":   "the framus intersects with the ramistan approximately at the podernoster",
       "steady":       "stabil beim Klicken",
       "steady_tt":    "verschiebe den Schieberegler nicht beim Klicken. Verschiebe ihn nur beim Ziehen der Maus",
+      "drawstyle":    "Rahmen-Stil",
+      "drawstyle_tt":    "Rahmen-Stil durch Auswahl der Elemente anpassen",
       "send":         "Sende-Symbol",
       "send_tt":      "Symbol zum Senden drahtloser Nachrichten an andere iemgui-Elemente oder Objekte",
       "receive":      "Empfangs-Symbol",

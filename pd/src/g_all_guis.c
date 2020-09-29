@@ -1268,7 +1268,7 @@ void iemgui_draw_io(t_iemgui *x, int old_sr_flags)
     t_canvas *canvas=glist_getcanvas(x->x_glist);
     if (x->x_glist != canvas) return; // is gop
     t_class *c = pd_class((t_pd *)x);
-    if (c == my_numbox_class && ((t_my_numbox *)x)->x_hide_frame > 1)
+    if (c == my_numbox_class && ((t_my_numbox *)x)->x_drawstyle > 1)
         return; //sigh
     if (!(old_sr_flags&4) && !glist_isvisible(canvas))
     {
