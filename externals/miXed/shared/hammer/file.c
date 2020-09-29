@@ -188,7 +188,9 @@ void hammereditor_open(t_hammerfile *f, char *title, char *owner)
 
 static void hammereditor_tick(t_hammerfile *f)
 {
-    sys_vgui("hammereditor_close .%x 1\n", (int)f);
+    // ico@vt.edu 20200923: disabling all legacy commands that keep
+    // spamming the console and otherwise have no effect
+    //sys_vgui("hammereditor_close .%x 1\n", (int)f);
 }
 
 void hammereditor_close(t_hammerfile *f, int ask)
@@ -197,8 +199,8 @@ void hammereditor_close(t_hammerfile *f, int ask)
 	/* hack: deferring modal dialog creation in order to allow for
 	   a message box redraw to happen -- LATER investigate */
  	clock_delay(f->f_editorclock, 0);
-    else
-	sys_vgui("hammereditor_close .%x 0\n", (int)f);
+    //else
+	//sys_vgui("hammereditor_close .%x 0\n", (int)f);
 }
 
 void hammereditor_append(t_hammerfile *f, char *contents)
