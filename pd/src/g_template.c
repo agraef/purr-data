@@ -4475,7 +4475,7 @@ static int draw_click(t_gobj *z, t_glist *glist,
                         &draw_motion_scalar->sc_gobj);
                 else gpointer_setarray(&draw_motion_gpointer,
                         draw_motion_array, draw_motion_wp);
-                glist_grab(glist, z, draw_motion, 0, xpix, ypix);
+                glist_grab(glist, z, draw_motion, 0, 0, xpix, ypix);
                 //outlet_anything(x->x_obj.ob_outlet, gensym("click"), 0, 0);
             }
             //draw_notifyforscalar(x, glist, sc, gensym("mousedown"), 5, at);
@@ -4693,7 +4693,7 @@ static int draw_click(t_gobj *z, t_glist *glist,
                 &draw_motion_scalar->sc_gobj);
         else gpointer_setarray(&draw_motion_gpointer,
                 draw_motion_array, draw_motion_wp);
-        glist_grab(glist, z, draw_motion, 0, xpix, ypix);
+        glist_grab(glist, z, draw_motion, 0, 0, xpix, ypix);
     }
     post("we got clicked");
     outlet_anything(x->x_obj.ob_outlet, gensym("click"), 0, 0);
@@ -5475,7 +5475,7 @@ static int curve_click(t_gobj *z, t_glist *glist,
                 &curve_motion_scalar->sc_gobj);
         else gpointer_setarray(&curve_motion_gpointer,
                 curve_motion_array, curve_motion_wp);
-        glist_grab(glist, z, curve_motion, 0, xpix, ypix);
+        glist_grab(glist, z, curve_motion, 0, 0, xpix, ypix);
     }
     return (1);
 }
@@ -7505,8 +7505,9 @@ static int drawsymbol_click(t_gobj *z, t_glist *glist,
                     drawsymbol_motion_glist, &drawsymbol_motion_scalar->sc_gobj);
             else gpointer_setarray(&drawsymbol_motion_gpointer,
                     drawsymbol_motion_array, drawsymbol_motion_wp);
-           glist_grab(glist, z, drawsymbol_motion, drawsymbol_key,
-                xpix, ypix);
+            /* ico@vt.edu 20200920: LATER consider also using keyname (currently 0) */
+            glist_grab(glist, z, drawsymbol_motion, drawsymbol_key,
+                0, xpix, ypix);
         }
         return (1);
     }
@@ -7935,8 +7936,9 @@ static int drawimage_click(t_gobj *z, t_glist *glist,
                     drawimage_motion_glist, &drawimage_motion_scalar->sc_gobj);
             else gpointer_setarray(&drawimage_motion_gpointer,
                     drawimage_motion_array, drawimage_motion_wp);
+            /* ico@vt.edu 20200920: LATER consider also using keyname (currently 0) */
            glist_grab(glist, z, drawimage_motion, drawimage_key,
-                xpix, ypix);
+                0, xpix, ypix);
         }
         return (1);
     }

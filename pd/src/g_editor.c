@@ -3577,7 +3577,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     if (doit && x->gl_editor->e_grab && x->gl_editor->e_keyfn)
     {
         (* x->gl_editor->e_keyfn) (x->gl_editor->e_grab, 0);
-        glist_grab(x, 0, 0, 0, 0, 0);
+        glist_grab(x, 0, 0, 0, 0, 0, 0);
     }
 
     if (doit && !runmode && xpos == canvas_upx && ypos == canvas_upy &&
@@ -5472,36 +5472,41 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
         else if (keynum == 29)
             keynum = 0, gotkeysym = gensym("Right");
 #endif
-    // set the shared variable for broadcasting of keypresses to key et al. objectss
+    // set the shared variable for broadcasting of keypresses to key et al. objects
     t_atom at[2];
 
     // now broadcast key press to key et al. objects
-    if (!autorepeat)
+    // ico@vt.edu 20200918: only do so if we do not have an object
+    // that has grabbed the keyboard, such as gatom or iemgui numbox
+    if (!x || !x->gl_editor || !x->gl_editor->e_grab)
     {
-        if (keynumsym->s_thing && down)
-            pd_float(keynumsym->s_thing, (t_float)keynum);
-        if (keyupsym->s_thing && !down)
-            pd_float(keyupsym->s_thing, (t_float)keynum);
-        if (keynamesym->s_thing)
+        if (!autorepeat)
+        {
+            if (keynumsym->s_thing && down)
+                pd_float(keynumsym->s_thing, (t_float)keynum);
+            if (keyupsym->s_thing && !down)
+                pd_float(keyupsym->s_thing, (t_float)keynum);
+            if (keynamesym->s_thing)
+            {
+                at[0] = av[0];
+                SETFLOAT(at, down);
+                SETSYMBOL(at+1, gotkeysym);
+                pd_list(keynamesym->s_thing, 0, 2, at);
+            }
+        }
+
+        // now do the same for autorepeat-enabled objects (key et al. alternative behavior)
+        if (keynumsym_a->s_thing && down)
+            pd_float(keynumsym_a->s_thing, (t_float)keynum);
+        if (keyupsym_a->s_thing && !down)
+            pd_float(keyupsym_a->s_thing, (t_float)keynum);
+        if (keynamesym_a->s_thing)
         {
             at[0] = av[0];
             SETFLOAT(at, down);
             SETSYMBOL(at+1, gotkeysym);
-            pd_list(keynamesym->s_thing, 0, 2, at);
+            pd_list(keynamesym_a->s_thing, 0, 2, at);
         }
-    }
-
-    // now do the same for autorepeat-enabled objects (key et al. alternative behavior)
-    if (keynumsym_a->s_thing && down)
-        pd_float(keynumsym_a->s_thing, (t_float)keynum);
-    if (keyupsym_a->s_thing && !down)
-        pd_float(keyupsym_a->s_thing, (t_float)keynum);
-    if (keynamesym_a->s_thing)
-    {
-        at[0] = av[0];
-        SETFLOAT(at, down);
-        SETSYMBOL(at+1, gotkeysym);
-        pd_list(keynamesym_a->s_thing, 0, 2, at);
     }
 
     if (!x || !x->gl_editor)
@@ -5512,10 +5517,19 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
         if (x->gl_editor->e_onmotion == MA_MOVE)
             x->gl_editor->e_onmotion = MA_NONE;
             /* if an object has "grabbed" keys just send them on */
-        if (x->gl_editor->e_grab
-            && x->gl_editor->e_keyfn && keynum && focus)
+        if (x->gl_editor->e_grab)
+        {
+            if (x->gl_editor->e_keyfn && keynum && focus)
                 (* x->gl_editor->e_keyfn)
                     (x->gl_editor->e_grab, (t_float)keynum);
+          	if (x->gl_editor->e_keynameafn && gotkeysym && focus)
+          	{
+          		at[0] = av[0];
+            	SETFLOAT(at, down);
+            	SETSYMBOL(at+1, gotkeysym);
+            	(* x->gl_editor->e_keynameafn) (x->gl_editor->e_grab, 0, 2, at);
+          	}
+        }
             /* if a text editor is open send the key on, as long as
             it is either "real" (has a key number) or else is an arrow key. */
         else if (x->gl_editor->e_textedfor && focus && (keynum
