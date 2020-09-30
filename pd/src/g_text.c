@@ -1191,7 +1191,7 @@ static void gatom_key(void *z, t_floatarg f)
         	x->a_buf[0] = 0;
         /* We want to keep grabbing the keyboard after hitting "Enter", so
            we're commenting the following out */
-        //glist_grab(x->a_glist, 0, 0, 0, 0, 0);
+        //glist_grab(x->a_glist, 0, 0, 0, 0, 0, 0);
     }
     else if (len < (ATOMBUFSIZE-1))
     {
@@ -1257,7 +1257,7 @@ static void gatom_click(t_gatom *x,
         }
         x->a_shift = shift;
 	   	glist_grab(x->a_glist, &x->a_text.te_g, gatom_motion, gatom_key,
-	        xpos, ypos);
+	        gatom_list, xpos, ypos);
 	    //post("a_shift_clicked=%d", x->a_shift_clicked);
         x->a_shift_clicked = shift;
 	    	// second click wipes prior text
@@ -2230,13 +2230,14 @@ static void text_vis(t_gobj *z, t_glist *glist, int vis)
                 t_rtext *y = glist_findrtext(glist, x);
                 // make a group
                 text_getrect(&x->te_g, glist, &x1, &y1, &x2, &y2);
-                gui_vmess("gui_gobj_new", "xssiii",
+                gui_vmess("gui_gobj_new", "xssiiii",
                     glist_getcanvas(glist),
                     rtext_gettag(y),
                     type,
                     x1,
                     y1,
-                    glist_istoplevel(glist));
+                    glist_istoplevel(glist),
+                    pd_class(&x->te_pd) == canvas_class);
                 if (x->te_type == T_ATOM)
                     glist_retext(glist, x);
                 text_drawborder(x, glist, rtext_gettag(y),

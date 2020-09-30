@@ -2473,7 +2473,7 @@ exports.gui = gui;
 // In the future, it might make sense to combine the scalar and object
 // creation, in which case a flag to toggle the offset would be appropriate.
 
-function gui_gobj_new(cid, tag, type, xpos, ypos, is_toplevel) {
+function gui_gobj_new(cid, tag, type, xpos, ypos, is_toplevel, is_canvas_obj) {
     var g;
     xpos += 0.5,
     ypos += 0.5,
@@ -2482,7 +2482,7 @@ function gui_gobj_new(cid, tag, type, xpos, ypos, is_toplevel) {
         g = create_item(cid, "g", {
             id: tag + "gobj",
             transform: transform_string,
-            class: type + (is_toplevel !== 0 ? "" : " gop")
+            class: type + (is_toplevel !== 0 ? "" : " gop") + (is_canvas_obj === 0 ? "" : " canvasobj")
         });
         add_gobj_to_svg(svg_elem, g);
     });
@@ -2964,7 +2964,7 @@ function gui_text_set (cid, tag, text) {
 
 function gui_text_set_mynumbox (cid, tag, text, active) {
     gui(cid).get_elem(tag + "text", function(e) {
-        //post("guit_text_set_activate " + tag + " " + text + " " + active);
+        //post("gui_text_set_mynumbox " + tag + " " + text + " " + active);
         text = text.trim();
         e.textContent = "";
         text_to_tspans(cid, e, text);
@@ -3272,13 +3272,18 @@ function gui_toggle_update(cid, tag, state, color) {
     })
 }
 
-function numbox_data_string(w, h) {
+function numbox_data_string_frame(w, h) {
     return ["M", 0, 0,
             "L", w - 4, 0,
                  w, 4,
                  w, h,
                  0, h,
-            "z",
+            "z"]
+    .join(" ");
+}
+
+function numbox_data_string_triangle(w, h) {
+    return ["M", 0, 0,
             "L", 0, 0,
                  (h / 2)|0, (h / 2)|0, // |0 to force int
                  0, h]
@@ -3286,27 +3291,38 @@ function numbox_data_string(w, h) {
 }
 
 // Todo: send fewer parameters from c
-function gui_numbox_new(cid, tag, color, x, y, w, h, is_toplevel) {
+function gui_numbox_new(cid, tag, color, x, y, w, h, drawstyle, is_toplevel) {
     // numbox doesn't have a standard iemgui border,
     // so we must create its gobj manually
     gui(cid).get_elem("patchsvg", function() {
         var g = gui_gobj_new(cid, tag, "iemgui", x, y, is_toplevel);
-        var data = numbox_data_string(w, h);
         var border = create_item(cid, "path", {
-            d: data,
+            d: numbox_data_string_frame(w, h),
             fill: color,
             stroke: "black",
-            "stroke-width": 1,
+            "stroke-width": (drawstyle < 2 ? 1 : 0),
             id: (tag + "border"),
             "class": "border"
         });
         g.appendChild(border);
+        var triangle = create_item(cid, "path", {
+            d: numbox_data_string_triangle(w, h),
+            fill: color,
+            stroke: "black",
+            "stroke-width": (drawstyle == 0 || drawstyle ==  2 ? 1 : 0),
+            id: (tag + "triangle"),
+            "class": "border"
+        });
+        g.appendChild(triangle);
     });
 }
 
 function gui_numbox_coords(cid, tag, w, h) {
     gui(cid).get_elem(tag + "border", {
-        d: numbox_data_string(w, h)
+        d: numbox_data_string_frame(w, h)
+    });
+    gui(cid).get_elem(tag + "triangle", {
+        d: numbox_data_string_triangle(w, h)
     });
 }
 
@@ -3332,14 +3348,14 @@ function gui_numbox_draw_text(cid,tag,text,font_size,color,xpos,ypos,basex,basey
     });
 }
 
-function gui_numbox_update(cid, tag, fcolor, bgcolor, font_name, font_size, font_weight) {
+function gui_numbox_update(cid, tag, fcolor, bgcolor, num_font_size, font_name, font_size, font_weight) {
     gui(cid)
     .get_elem(tag + "border", {
         fill: bgcolor
     })
     .get_elem(tag + "text", {
         fill: fcolor,
-        "font-size": font_size
+        "font-size": num_font_size
     })
     // label may or may not exist, but that's covered by the API
     .get_elem(tag + "label", function() {
@@ -5668,6 +5684,9 @@ function file_dialog(cid, type, target, start_path) {
     // it just doesn't work. So this requires us to have the parent <span>
     // around the <input>. Then when we change the innerHTML of the span the
     // new value for nwworkingdir magically works.
+    if(nw_os_is_windows) {
+        start_path = start_path.replace(/\//g, '\\');
+    }
     dialog_options = {
         style: "display: none;",
         type: "file",
@@ -5847,12 +5866,7 @@ function gui_iemgui_dialog(did, attr_array) {
     // We are subtracting 25 for the menu
     // ico@vt.edu: since adding frameless window, we use top 20px for draggable titlebar,
     // so now we subtract only 5 (25-20)
-    //post("attr_array=" + attr_array);
-    var height = 409;
-    if (attr_array[1] === "vu") {
-        height = 360;
-    }
-    create_window(did, "iemgui", 298, height,
+    create_window(did, "iemgui", 298, 414-5,
         popup_coords[2] + 10, popup_coords[3] + 60,
         attr_array_to_object(attr_array));
 }
@@ -6013,6 +6027,13 @@ function gui_external_dialog(did, external_name, attr_array) {
             name: external_name,
             attributes: attr_array
         });
+}
+
+function gui_abstractions_dialog(cid, gfxstub, filebased_abs, private_abs) {
+    var attrs = { canvas: cid, filebased_abs: filebased_abs,
+                    private_abs: private_abs };
+    dialogwin[gfxstub] = create_window(gfxstub, "abstractions", 300, 
+        Math.min(600, (private_abs.length*10 + 190+(nw_os_is_osx?20:0))), 0, 0, attrs);
 }
 
 // Global settings
@@ -6790,6 +6811,21 @@ function gui_canvas_get_overriding_scroll(cid) {
 }
 
 exports.gui_canvas_get_overriding_scroll = gui_canvas_get_overriding_scroll;
+
+/* ico@vt.edu 20200920: this last variant that executes immediately
+   is needed for g_text.c when one displaces a text object and it
+   immediately activates and it falls outside the visible canvas bounds
+   this can trigger the object to have its activated box at an incorrect
+   location due to asynchronous behavior of other getscroll calls. Having
+   it here as a separate call as it may prove useful later in other contexts.
+*/
+
+function gui_canvas_get_immediate_scroll(cid) {
+    //post("gui_canvas_get_immediate_scroll");
+    do_getscroll(cid, 0);
+}
+
+exports.gui_canvas_get_immediate_scroll = gui_canvas_get_immediate_scroll;
 
 function do_optimalzoom(cid, hflag, vflag) {
     // determine an optimal zoom level that makes the entire patch fit within

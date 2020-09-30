@@ -5,7 +5,7 @@
           "size":    "Größe und Verhalten",
           "messages": "Nachrichten",
           "label":   "Etikett",
-          "colors":  "Farben"
+          "colors":  "Erscheinungsbild"
       },
       "size_tt": "Größe des iemgui-Elements",
       "size": "Größe",
@@ -41,6 +41,8 @@
       "log_height_tt":   "the framus intersects with the ramistan approximately at the podernoster",
       "steady":       "stabil beim Klicken",
       "steady_tt":    "verschiebe den Schieberegler nicht beim Klicken. Verschiebe ihn nur beim Ziehen der Maus",
+      "drawstyle":    "Rahmen-Stil",
+      "drawstyle_tt":    "Rahmen-Stil durch Auswahl der Elemente anpassen",
       "send":         "Sende-Symbol",
       "send_tt":      "Symbol zum Senden drahtloser Nachrichten an andere iemgui-Elemente oder Objekte",
       "receive":      "Empfangs-Symbol",
@@ -237,6 +239,8 @@
     "visible_ancestor_tt": "Zeige den nächsten aktuell sichtbaren Vorgänger des aktuellen Fensters",
     "pdwin": "Pd-Fenster",
     "pdwin_tt": "Zeige das Pd-Hauptfenster",
+    "abstractions": "Abstraktionen",
+    "abstractions_tt": "Abstraktionen abfragen und verwalten",
 
     "media": "Medien",
 
@@ -504,5 +508,17 @@
     "building_index": "Erstelle Index...",
     "no_results": "Keine Resultate gefunden.",
     "search_placeholder": "Suche Pd-Doku"
+  },
+  "abstractions": {
+    "filebased": "Datei-basierte Abstraktionen",
+    "private": "Private Abstraktionen",
+    "global": "Globaler Geltungsbereich",
+    "local": "Lokaler Geltungsbereich",
+    "selectall": "Alles auswählen",
+    "selectall_tt": "Wähle alle uninstanziierten Definitionen aus",
+    "delete": "Löschen",
+    "delete_tt": "Löscht alle ausgewählten Definitionen",
+    "close": "Schließen",
+    "close_tt": "Schließt das Dialog-Fenster"
   }
 }

@@ -190,9 +190,14 @@ typedef struct _my_numbox
     int      x_numwidth; // unsigned (width in pixels)
     int      x_scalewidth;  /* temporary value for scalehandle */
     int      x_scaleheight; /* temporary value for scalehandle */
+    int      x_yresize_x;   /* value of x when y resize started */
     int      x_tmpfontsize; /* temporary value for scalehandle */
+    int      x_num_fontsize;/* font size for the number only that should
+                               automatically adjust to the box size */
+    int      x_focused;     /* helps us determine when and how we are editing value
+                               0 no focus, 1 keyboard focus, 2 mouse focus */
     int      x_log_height;
-    int      x_hide_frame;  /* 0 default, 1 just arrow, 2, just frame, 3 both */
+    int      x_drawstyle;  /* 0 default, 1 just frame, 2, just arrow, 3 number only */
 } t_my_numbox;
 
 extern int sys_noloadbang;
@@ -285,6 +290,7 @@ EXTERN const char *iemgui_typeface(t_iemgui *x);
 
 EXTERN void iemgui_class_addmethods(t_class *c);
 EXTERN void scrollbar_update(t_glist *glist);
+EXTERN void scrollbar_synchronous_update(t_glist *glist);
 EXTERN void iemgui_init(t_iemgui *x, t_floatarg f);
 
 EXTERN void iemgui_out_bang(t_iemgui *x, int o, int chk_putin);

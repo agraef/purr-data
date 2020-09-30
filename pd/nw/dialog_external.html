@@ -149,7 +149,8 @@ function parse_attrs(attrs) {
             if (token.length > 1) {
                 elem.type = token[token.length - 1];
                 if (elem.type !== "symbol" &&
-                    elem.type !== "toggle") {
+                    elem.type !== "toggle" &&
+                    elem.type !== "hidden") {
                     // no suffix defaults to "number"
                     elem.type = "number";
                 } else {
@@ -218,6 +219,7 @@ function get_input_type(t) {
     return t === "symbol" ? "text" :
            t === "number" ? "text" : 
            t === "toggle" ? "checkbox":
+           t === "hidden" ? "hidden":
                             "text";
 }
 

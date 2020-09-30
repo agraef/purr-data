@@ -1268,7 +1268,7 @@ void iemgui_draw_io(t_iemgui *x, int old_sr_flags)
     t_canvas *canvas=glist_getcanvas(x->x_glist);
     if (x->x_glist != canvas) return; // is gop
     t_class *c = pd_class((t_pd *)x);
-    if (c == my_numbox_class && ((t_my_numbox *)x)->x_hide_frame > 1)
+    if (c == my_numbox_class && ((t_my_numbox *)x)->x_drawstyle > 1)
         return; //sigh
     if (!(old_sr_flags&4) && !glist_isvisible(canvas))
     {
@@ -1393,8 +1393,8 @@ void iemgui_base_draw_new(t_iemgui *x)
     gop_redraw = gr;
     char colorbuf[MAXPDSTRING];
     sprintf(colorbuf, "#%6.6x", x->x_bcol);
-    gui_vmess("gui_gobj_new", "xxsiii", canvas, x,
-        "iemgui", x1, y1, glist_istoplevel(x->x_glist));
+    gui_vmess("gui_gobj_new", "xxsiiii", canvas, x,
+        "iemgui", x1, y1, glist_istoplevel(x->x_glist), 0);
     gui_vmess("gui_text_draw_border", "xxsiii",
         canvas,
         x,
@@ -1472,6 +1472,17 @@ void scrollbar_update(t_glist *glist)
     //exceeds window size
     t_canvas *canvas=(t_canvas *)glist_getcanvas(glist);
     canvas_getscroll(canvas);
+}
+
+/* ico@vt.edu 20200920: introduced for situation where getscroll
+needs to occur before the next command, e.g. automate. */
+void scrollbar_synchronous_update(t_glist *glist)
+{
+    // glist_getcanvas is probably not needed but not before we make
+    // sure that there are unneded calls of this kind being made by
+    // non-toplevel objects...
+    gui_vmess("gui_canvas_get_immediate_scroll",
+        "x", glist_getcanvas(glist));
 }
 
 void wb_init(t_widgetbehavior *wb, t_getrectfn gr, t_clickfn cl)

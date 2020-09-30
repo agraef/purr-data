@@ -5,7 +5,7 @@
           "size":    "Taille et comportement",
           "messages": "Messages",
           "label":   "Label",
-          "colors":  "Couleurs"
+          "colors":  "Apparence"
       },
       "size":    "Taille",
       "size_tt": "Taille de l'objet IemGui",
@@ -41,6 +41,8 @@
       "log_height_tt": "Le framus se croise avec le ramistan approximativement au paternoster !",
       "steady":       "Fixe au clic",
       "steady_tt":    "Ne bouge pas le curseur quand cliqué. Bouge seulement quand on le fait glisser avec la souris",
+      "drawstyle":    "Style du cadre",
+      "drawstyle_tt":    "Ajuster le style du cadre en choisissant ses éléments",
       "send":         "Envoyer au symbole",
       "send_tt":      "Messages sans-fil à envoyer à travers le Symbole vers d'autres IemGui ou Objets",
       "receive":      "Recevoir du symbole",
@@ -237,6 +239,8 @@
     "visible_ancestor_tt": "Donner le focus à l'ancêtre le plus proche de cette fenêtre qui est actuellement visible",
     "pdwin":    "Fenêtre Console Pd",
     "pdwin_tt": "Donner le focus à la fenêtre principale de Pd",
+    "abstractions": "Abstractions",
+    "abstractions_tt": "Interroger et gérer les abstractions",
 
     "media": "Média",
 
@@ -279,7 +283,7 @@
   "canvas": {
     "paste_clipboard_prompt": "Attention: vous êtes sur le point de coller du 'code Pd' provenant de l'extérieur de Pd. Voulez-vous continuer ?",
     "save_dialog": {
-      "prompt": "Voulez-vous enregistrer les modifications apportées à ce patch ?",
+      "prompt": "Voulez-vous enregistrer les modifications apportées à",
       "yes":    "Oui",
       "yes_tt": "Enregistrer les modifications dans le fichier avant de fermer le patch ?",
       "no":    "Non",
@@ -504,5 +508,17 @@
     "building_index": "Construction de l'index...",
     "no_results": "Aucun résultat trouvé !",
     "search_placeholder": "Chercher dans les Docs Pd"
+  },
+  "abstractions": {
+    "filebased": "Abstractions basées sur des fichiers",
+    "private": "Abstractions privées",
+    "global": "Portée globale",
+    "local": "Portée locale",
+    "selectall": "Tout sélectionner",
+    "selectall_tt": "Sélectionner toutes les définitions avec zéro instance",
+    "delete": "Supprimer",
+    "delete_tt": "Supprimer toutes les définitions sélectionnées",
+    "close": "Fermer",
+    "close_tt": "Fermer la fenêtre de dialogue"
   }
 }

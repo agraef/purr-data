@@ -1288,7 +1288,21 @@ void canvas_undo_paste(t_canvas *x, void *z, int action)
     }
 }
 
+void canvas_dirtyclimb(t_canvas *x, int n);
+void clone_iterate(t_pd *z, t_canvas_iterator it, void* data);
 int clone_match(t_pd *z, t_symbol *name, t_symbol *dir);
+int clone_isab(t_pd *z);
+int clone_matchab(t_pd *z, t_ab_definition *source);
+
+/* packed data passing structure for glist_doreload */
+typedef struct _reload_data
+{
+    t_symbol *n;
+    t_symbol *d;
+    t_gobj *e;
+} t_reload_data;
+
+static void glist_doreload_packed(t_canvas *x, t_reload_data *data);
 
     /* recursively check for abstractions to reload as result of a save. 
     Don't reload the one we just saved ("except") though. */
@@ -1310,7 +1324,7 @@ static void glist_doreload(t_glist *gl, t_symbol *name, t_symbol *dir,
             /* remake the object if it's an abstraction that appears to have
             been loaded from the file we just saved */
         remakeit = (g != except && pd_class(&g->g_pd) == canvas_class &&
-            canvas_isabstraction((t_canvas *)g) &&
+            canvas_isabstraction((t_canvas *)g) && !((t_canvas *)g)->gl_isab &&
                 ((t_canvas *)g)->gl_name == name &&
                     canvas_getdir((t_canvas *)g) == dir);
 
@@ -1375,14 +1389,30 @@ static void glist_doreload(t_glist *gl, t_symbol *name, t_symbol *dir,
         if (g != except && pd_class(&g->g_pd) == canvas_class &&
 
             (!canvas_isabstraction((t_canvas *)g) ||
+                 ((t_canvas *)g)->gl_isab ||
                  ((t_canvas *)g)->gl_name != name ||
                  canvas_getdir((t_canvas *)g) != dir)
            )
                 glist_doreload((t_canvas *)g, name, dir, except);
+
+        /* also reload the instances within ab-based clone objects
+            *COMMENT: missing recursive case for abstraction-based clone
+                objects that don't match with the one we are reloading?  */
+        if(pd_class(&g->g_pd) == clone_class && clone_isab(&g->g_pd))
+        {
+            t_reload_data d;
+            d.n = name; d.d = dir; d.e = except;
+            clone_iterate(&g->g_pd, glist_doreload_packed, &d);
+        }
         g = g->g_next;
     }
     if (!hadwindow && gl->gl_havewindow)
         canvas_vis(glist_getcanvas(gl), 0);
+}
+
+static void glist_doreload_packed(t_canvas *x, t_reload_data *data)
+{
+    glist_doreload(x, data->n, data->d, data->e);
 }
 
     /* this flag stops canvases from being marked "dirty" if we have to touch
@@ -1400,6 +1430,89 @@ void canvas_reload(t_symbol *name, t_symbol *dir, t_gobj *except)
         glist_doreload(x, name, dir, except);
     glist_amreloadingabstractions = 0;
     canvas_resume_dsp(dspwas);
+}
+
+/* packed data passing structure for glist_doreload_ab */
+typedef struct _reload_ab_data
+{
+    t_ab_definition *a;
+    t_gobj *e;
+} t_reload_ab_data;
+
+static void glist_doreload_ab_packed(t_canvas *x, t_reload_ab_data *data);
+
+/* recursive ab reload method */
+static void glist_doreload_ab(t_canvas *x, t_ab_definition *a, t_gobj *e)
+{
+    t_gobj *g;
+    int i, nobj = glist_getindex(x, 0);
+    int found = 0, remakeit = 0;
+
+    for (g = x->gl_list, i = 0; g && i < nobj; i++)
+    {
+        remakeit = (g != e && pd_class(&g->g_pd) == canvas_class && canvas_isabstraction((t_canvas *)g)
+            && ((t_canvas *)g)->gl_isab && ((t_canvas *)g)->gl_absource == a);
+
+        remakeit = remakeit || (pd_class(&g->g_pd) == clone_class && clone_matchab(&g->g_pd, a));
+
+        if(remakeit)
+        {
+            canvas_create_editor(x);
+            if (!found)
+            {
+                glist_noselect(x);
+                found = 1;
+            }
+            glist_select(x, g);
+        }
+        /* since this one won't be reloaded, we need to trigger initbang manually */
+        else if(g == e)
+            canvas_initbang((t_canvas *)g);
+        g = g->g_next;
+    }
+    if (found)
+    {
+        canvas_cut(x);
+        canvas_undo_undo(x);
+        glist_noselect(x);
+    }
+
+    for (g = x->gl_list, i = 0; g && i < nobj; i++)
+    {
+        if(pd_class(&g->g_pd) == canvas_class && (!canvas_isabstraction((t_canvas *)g)
+                    || (((t_canvas *)g)->gl_isab && (((t_canvas *)g)->gl_absource != a))))
+            glist_doreload_ab((t_canvas *)g, a, e);
+
+        /* also reload the instances within ab-based clone objects */
+        if(pd_class(&g->g_pd) == clone_class
+            && clone_isab(&g->g_pd) && !clone_matchab(&g->g_pd, a))
+        {
+            t_reload_ab_data d;
+            d.a = a; d.e = e;
+            clone_iterate(&g->g_pd, glist_doreload_ab_packed, &d);
+        }
+        g = g->g_next;
+    }
+}
+
+static void glist_doreload_ab_packed(t_canvas *x, t_reload_ab_data *data)
+{
+    glist_doreload_ab(x, data->a, data->e);
+}
+
+/* reload ab instances */
+void canvas_reload_ab(t_canvas *x)
+{
+    t_canvas *c = canvas_getrootfor_ab(x);
+    int dspwas = canvas_suspend_dsp();
+    glist_amreloadingabstractions = 1;
+    glist_doreload_ab(c, x->gl_absource, &x->gl_gobj);
+    glist_amreloadingabstractions = 0;
+    canvas_resume_dsp(dspwas);
+    /* we set the dirty flag of the root canvas (where the ab definitions
+        are stored) because its file contents (in this case, the definition
+        for an specific ab) has been edited */
+    canvas_dirty(c, 1);
 }
 
 /* --------- 6. apply  ----------- */
@@ -3577,7 +3690,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     if (doit && x->gl_editor->e_grab && x->gl_editor->e_keyfn)
     {
         (* x->gl_editor->e_keyfn) (x->gl_editor->e_grab, 0);
-        glist_grab(x, 0, 0, 0, 0, 0);
+        glist_grab(x, 0, 0, 0, 0, 0, 0);
     }
 
     if (doit && !runmode && xpos == canvas_upx && ypos == canvas_upy &&
@@ -5216,12 +5329,12 @@ void canvas_mouseup(t_canvas *x,
     {
             /* after motion or resizing, if there's only one text item
                 selected, activate the text */
+        scrollbar_synchronous_update(x);
         if (x->gl_editor->e_selection &&
             !(x->gl_editor->e_selection->sel_next))
         {
             gobj_activate(x->gl_editor->e_selection->sel_what, x, 1);
         }
-        scrollbar_update(x);
     }
     else if (x->gl_editor->e_onmotion == MA_SCROLL)
     {
@@ -5472,36 +5585,41 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
         else if (keynum == 29)
             keynum = 0, gotkeysym = gensym("Right");
 #endif
-    // set the shared variable for broadcasting of keypresses to key et al. objectss
+    // set the shared variable for broadcasting of keypresses to key et al. objects
     t_atom at[2];
 
     // now broadcast key press to key et al. objects
-    if (!autorepeat)
+    // ico@vt.edu 20200918: only do so if we do not have an object
+    // that has grabbed the keyboard, such as gatom or iemgui numbox
+    if (!x || !x->gl_editor || !x->gl_editor->e_grab)
     {
-        if (keynumsym->s_thing && down)
-            pd_float(keynumsym->s_thing, (t_float)keynum);
-        if (keyupsym->s_thing && !down)
-            pd_float(keyupsym->s_thing, (t_float)keynum);
-        if (keynamesym->s_thing)
+        if (!autorepeat)
+        {
+            if (keynumsym->s_thing && down)
+                pd_float(keynumsym->s_thing, (t_float)keynum);
+            if (keyupsym->s_thing && !down)
+                pd_float(keyupsym->s_thing, (t_float)keynum);
+            if (keynamesym->s_thing)
+            {
+                at[0] = av[0];
+                SETFLOAT(at, down);
+                SETSYMBOL(at+1, gotkeysym);
+                pd_list(keynamesym->s_thing, 0, 2, at);
+            }
+        }
+
+        // now do the same for autorepeat-enabled objects (key et al. alternative behavior)
+        if (keynumsym_a->s_thing && down)
+            pd_float(keynumsym_a->s_thing, (t_float)keynum);
+        if (keyupsym_a->s_thing && !down)
+            pd_float(keyupsym_a->s_thing, (t_float)keynum);
+        if (keynamesym_a->s_thing)
         {
             at[0] = av[0];
             SETFLOAT(at, down);
             SETSYMBOL(at+1, gotkeysym);
-            pd_list(keynamesym->s_thing, 0, 2, at);
+            pd_list(keynamesym_a->s_thing, 0, 2, at);
         }
-    }
-
-    // now do the same for autorepeat-enabled objects (key et al. alternative behavior)
-    if (keynumsym_a->s_thing && down)
-        pd_float(keynumsym_a->s_thing, (t_float)keynum);
-    if (keyupsym_a->s_thing && !down)
-        pd_float(keyupsym_a->s_thing, (t_float)keynum);
-    if (keynamesym_a->s_thing)
-    {
-        at[0] = av[0];
-        SETFLOAT(at, down);
-        SETSYMBOL(at+1, gotkeysym);
-        pd_list(keynamesym_a->s_thing, 0, 2, at);
     }
 
     if (!x || !x->gl_editor)
@@ -5512,10 +5630,19 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
         if (x->gl_editor->e_onmotion == MA_MOVE)
             x->gl_editor->e_onmotion = MA_NONE;
             /* if an object has "grabbed" keys just send them on */
-        if (x->gl_editor->e_grab
-            && x->gl_editor->e_keyfn && keynum && focus)
+        if (x->gl_editor->e_grab)
+        {
+            if (x->gl_editor->e_keyfn && keynum && focus)
                 (* x->gl_editor->e_keyfn)
                     (x->gl_editor->e_grab, (t_float)keynum);
+          	if (x->gl_editor->e_keynameafn && gotkeysym && focus)
+          	{
+          		at[0] = av[0];
+            	SETFLOAT(at, down);
+            	SETSYMBOL(at+1, gotkeysym);
+            	(* x->gl_editor->e_keynameafn) (x->gl_editor->e_grab, 0, 2, at);
+          	}
+        }
             /* if a text editor is open send the key on, as long as
             it is either "real" (has a key number) or else is an arrow key. */
         else if (x->gl_editor->e_textedfor && focus && (keynum
@@ -6174,6 +6301,7 @@ void gobj_dirty(t_gobj *x, t_glist *g, int state)
     t_rtext *y = glist_findrtext(g, (t_text *)x);
     gui_vmess("gui_gobj_dirty", "xsi", g, rtext_gettag(y), state);
 }
+
     /* tell the gui to display a specific message in the
         top right corner */
 void canvas_warning(t_canvas *x, int warid)

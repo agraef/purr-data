@@ -1,0 +1,136 @@
+#N canvas 717 240 480 339 12;
+#X abframe 1;
+#N canvas 870 153 488 334 12;
+#X obj 27 32 inlet;
+#X obj 27 61 t f b b;
+#X obj 27 140 expr 2*$f1*$f2+$f3;
+#X obj 27 169 outlet;
+#X obj 88 104 f \$1;
+#X obj 150 104 f \$2;
+#X obj 252 225 abinfo;
+#X obj 252 254 print abinfo;
+#X msg 219 188 name;
+#X msg 264 188 instances;
+#X msg 344 188 within;
+#X obj 27 233 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc #000000
+#000000;
+#X obj 27 257 f \$0;
+#X obj 27 286 print;
+#X text 94 61 private abstractions can have arguments...;
+#X text 26 202 ... and have their own \$0;
+#X obj 115 233 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc
+#000000 #000000;
+#X obj 115 257 ab bar;
+#X floatatom 115 286 5 0 0 0 - - -, f 5;
+#X text 218 98 abinfo yields the name of the abstraction \, the number
+of its instances \, and the names of other private abstractions they
+are contained in (if any), f 35;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 1 1 4 0;
+#X connect 1 2 5 0;
+#X connect 2 0 3 0;
+#X connect 4 0 2 1;
+#X connect 5 0 2 2;
+#X connect 6 0 7 0;
+#X connect 8 0 6 0;
+#X connect 9 0 6 0;
+#X connect 10 0 6 0;
+#X connect 11 0 12 0;
+#X connect 12 0 13 0;
+#X connect 16 0 17 0;
+#X connect 17 0 18 0;
+#X abpush foo;
+#N canvas 869 280 453 305 12;
+#X obj 23 21 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc #000000
+#000000;
+#X obj 23 45 ab bar;
+#X floatatom 23 74 5 0 0 0 - - -, f 5;
+#X text 81 45 <-- open "bar" and try abinfo "within"!;
+#X obj 23 203 ab other_foobar;
+#X text 20 233 Normally \, private abstractions such as [ab bar] above
+have global scope \, so they are visible through the entire root patch
+\, including all its subpatches and private abstractions., f 57;
+#X text 20 109 Note that @foobar has local scope (indicated by the
+"@" prefix) \, which includes all subpatches \, but doesn't cross (private)
+abstraction boundaries. Thus the @foobar inside the other_foobar abstraction
+below is a different @foobar than this one.;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X abpush @foobar;
+#N canvas 1023 266 454 304 12;
+#X obj 44 54 f \$0;
+#X obj 44 83 outlet;
+#X obj 44 25 inlet;
+#X obj 147 63 abinfo;
+#X obj 147 92 print abinfo;
+#X msg 114 26 name;
+#X msg 159 26 instances;
+#X msg 239 26 within;
+#X connect 0 0 1 0;
+#X connect 2 0 0 0;
+#X connect 3 0 4 0;
+#X connect 5 0 3 0;
+#X connect 6 0 3 0;
+#X connect 7 0 3 0;
+#X abpush bar foo @foobar;
+#N canvas 788 330 452 303 12;
+#X obj 22 24 ab @foobar;
+#X text 112 24 <-- click here;
+#X abpush other_foobar @foobar;
+#N canvas 950 315 452 304 12;
+#X text 16 31 Note that this instance of @foobar is different from
+the one in the main patch!;
+#X abpush other_foobar#@foobar other_foobar;
+#X abframe 0;
+#X floatatom 31 12 5 0 0 0 - - -, f 5;
+#X floatatom 31 70 5 0 0 0 - - -, f 5;
+#X obj 31 41 ab foo 3 2;
+#X obj 267 89 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc #000000
+#000000;
+#X obj 267 113 abdefs;
+#X obj 267 142 print defs;
+#X floatatom 30 159 5 0 0 0 - - -, f 5;
+#X floatatom 30 217 5 0 0 0 - - -, f 5;
+#X floatatom 128 71 5 0 0 0 - - -, f 5;
+#X text 127 28 ... and cloned, f 10;
+#X obj 128 99 pack f f;
+#X msg 128 128 \$2 \$1;
+#X obj 128 187 unpack f f;
+#X floatatom 128 216 5 0 0 0 - - -, f 5;
+#X floatatom 195 216 5 0 0 0 - - -, f 5;
+#X text 29 117 ab's can be copied..., f 11;
+#X obj 30 188 ab foo 3 5;
+#X text 265 13 abdefs prints the list of all private abstractions contained
+in a patch \, along with their instance counts, f 27;
+#X text 22 266 CAVEAT: Private abstractions are identified by their
+name. In contrast to one-offs \, editing their name may create a new
+(and empty) abstraction!;
+#X obj 128 158 abclone foo 4 5;
+#X obj 181 73 hradio 15 0 0 4 empty empty empty 0 -8 0 10 #fcfcfc #000000
+#000000 0;
+#X obj 267 230 ab @foobar;
+#N canvas 432 306 417 220 META 0;
+#X text 13 47 LIBRARY internal;
+#X text 13 1 KEYWORDS abstraction private;
+#X text 13 24 DESCRIPTION creates a private abstraction;
+#X text 13 70 AUTHOR Guillem Bartrina;
+#X text 13 116 RELEASE_DATE 2020;
+#X text 13 139 HELP_PATCH_AUTHORS Albert Gräf;
+#X text 13 93 WEBSITE https://agraef.github.io/purr-data/;
+#X restore 408 306 pd META;
+#X text 265 174 a "local" abstraction which illustrates local scope
+as well as abinfo "within"., f 27;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X connect 3 0 4 0;
+#X connect 4 0 5 0;
+#X connect 6 0 16 0;
+#X connect 8 0 10 0;
+#X connect 10 0 11 0;
+#X connect 11 0 19 0;
+#X connect 12 0 13 0;
+#X connect 12 1 14 0;
+#X connect 16 0 7 0;
+#X connect 19 0 12 0;
+#X connect 20 0 10 1;

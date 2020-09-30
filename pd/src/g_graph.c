@@ -202,6 +202,8 @@ int canvas_hasarray(t_canvas *x)
 /* JMZ: emit a closebang message */
 void canvas_closebang(t_canvas *x);
 
+void canvas_dirtyclimb(t_canvas *x, int n);
+
     /* delete an object from a glist and free it */
 void glist_delete(t_glist *x, t_gobj *y)
 {
@@ -366,8 +368,8 @@ void glist_retext(t_glist *glist, t_text *y)
     }
 }
 
-void glist_grab(t_glist *x, t_gobj *y, t_glistmotionfn motionfn,
-    t_glistkeyfn keyfn, int xpos, int ypos)
+void glist_grab(t_glist *x, t_gobj *y, t_glistmotionfn motionfn, t_glistkeyfn keyfn,
+    t_glistkeynameafn keynameafn, int xpos, int ypos)
 {
     //fprintf(stderr,"glist_grab\n");
     t_glist *x2 = glist_getcanvas(x);
@@ -377,6 +379,7 @@ void glist_grab(t_glist *x, t_gobj *y, t_glistmotionfn motionfn,
     x2->gl_editor->e_grab = y;
     x2->gl_editor->e_motionfn = motionfn;
     x2->gl_editor->e_keyfn = keyfn;
+    x2->gl_editor->e_keynameafn = keynameafn;
     x2->gl_editor->e_xwas = xpos;
     x2->gl_editor->e_ywas = ypos;
 }
@@ -1058,10 +1061,10 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
         int xpix, ypix;
         xpix = text_xpix(&x->gl_obj, parent_glist);
         ypix = text_ypix(&x->gl_obj, parent_glist);
-        gui_vmess("gui_gobj_new", "xssiii",
+        gui_vmess("gui_gobj_new", "xssiiii",
             glist_getcanvas(x->gl_owner),
             tag, "graph", xpix, ypix,
-            parent_glist == glist_getcanvas(x->gl_owner) ? 1 : 0);
+            parent_glist == glist_getcanvas(x->gl_owner) ? 1 : 0, 0);
         if (canvas_showtext(x))
             rtext_draw(glist_findrtext(parent_glist, &x->gl_obj));
     }
