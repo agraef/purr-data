@@ -85,8 +85,8 @@ export macos_target = 10.9
 
 # Installation prefix under which Pd-l2ork is installed (Linux only). If this
 # isn't set, a default location will be used (usually /usr/local). NOTE: We
-# *always* assume that this variable is set properly in the install targets
-# (see below).
+# *always* assume that this variable is set properly in the install targets,
+# as well as the (Linux) check target (see below).
 prefix = /usr
 
 ifneq ($(prefix),)
@@ -164,7 +164,7 @@ os = $(shell uname|sed 's/^\(MINGW[0-9]*\)_NT.*/\1/')
 
 ifeq ($(os),Linux)
 # Linux (all flavors)
-pdprog = packages/linux_make/build/usr/bin/pd-l2ork
+pdprog = packages/linux_make/build$(prefix)/bin/pd-l2ork
 else ifeq ($(os),Darwin)
 # Mac
 pdprog = packages/darwin_app/build/*.app/Contents/Resources/app.nw/bin/pd-l2ork
