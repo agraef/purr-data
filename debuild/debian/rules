@@ -30,14 +30,16 @@ override_dh_auto_configure:
 
 override_dh_auto_clean:
 
-# Need to disable this, 'make check' currently fails, probably due to our
-# meddling with the directory layout, executable names, etc.
+# This runs too late, 'make check' then fails, probably due to our meddling
+# with the directory layout, executable names, etc., during 'make install'.
+# Instead we invoke 'make check' right after the build, see below.
 override_dh_auto_test:
 
 override_dh_auto_build:
 # Copy the nw.js sources to where purr-data wants them.
 	tar -xf debian/nwjs/$(nwjspkg)-$(arch).tar.gz && rm -rf pd/nw/nw && mv $(nwjspkg)-$(arch) pd/nw/nw
-	cd l2ork_addons && (export inst_dir=$(prefix); ./tar_em_up.sh -B -n)
+	cd l2ork_addons && (export V=0 inst_dir=$(prefix); ./tar_em_up.sh -Bn)
+	make check prefix=$(prefix)
 
 override_dh_auto_install:
 	mkdir -p debian/purr-data && mv packages/linux_make/build/* debian/purr-data
