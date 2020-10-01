@@ -6286,10 +6286,10 @@ function textarea_line_height_kludge(font_size, zoom) {
 	switch(font_size) {
 		// zoom levels      -7  -6  -5  -4  -3  -2  -1  0   1   2   3   4   5   6   7
 		case 8: 
-			height_array = [133,133,133,133,133,133,133,133,133,133,133,133,133,133,133];
+			height_array = [ 40, 48, 70, 90,116,140,150,133,133,136,133,135,136,133,135];
 			break;
 		case 10:
-			height_array = [133,133,133,133,133,133,133,133,133,133,133,133,133,133,133];
+			height_array = [ 50, 70, 90,116,132,133,133,133,134,133,134,133,132,130,130];
 			break;
 		case 12:
 			height_array = [ 80, 90,100,134,148,140,140,140,144,140,140,140,140,140,140];
@@ -6298,14 +6298,48 @@ function textarea_line_height_kludge(font_size, zoom) {
 			height_array = [ 90,100,120,120,120,120,120,120,120,115,115,115,115,115,115];
 			break;
 		case 24:
-			height_array = [128,128,128,128,128,128,128,128,128,128,128,128,128,128,128];
+			height_array = [128,128,128,128,128,128,128,128,128,128,128,126,126,126,125];
 			break;
 		case 36:
-			height_array = [122,122,122,122,122,122,122,122,122,122,122,122,122,122,122];
+			height_array = [127,124,124,122,122,122,122,122,122,122,121,121,120,121,121];
 			break;
 	}
-	post("textarea_line_height_kludge " + font_size + " " + zoom + " " + height_array[zoom+7]);
+	//post("textarea_line_height_kludge " + font_size + " " + zoom + " " + height_array[zoom+7]);
 	return height_array[zoom+7]+"%";
+}
+
+function textarea_x_offset_kludge(font_size, zoom) {
+	if (font_size === 36) {
+		return -2;
+	} else {
+		return -0.5;
+	}
+	/*
+	var offset_array;
+	switch(font_size) {
+		// zoom levels      -7  -6  -5  -4  -3  -2  -1  0   1   2   3   4   5   6   7
+		case 8: 
+			offset_array = [-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5];
+			break;
+		case 10:
+			offset_array = [-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.4,-.5,-.5,-.5,-.5];
+			break;
+		case 12:
+			offset_array = [-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5];
+			break;
+		case 16:
+			offset_array = [-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5];
+			break;
+		case 24:
+			offset_array = [-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5];
+			break;
+		case 36:
+			offset_array = [-2.,-2.,-2.,-2.,-2.,-2.,-2.,-2.,-2.,-2.,-2.,-2.,-2.,-2.,-2.];
+			break;
+	}
+	//post("textarea_x_offset_kludge " + font_size + " " + zoom + " " + offset_array[zoom+7]);
+	return offset_array[zoom+7];
+	*/
 }
 
 function textarea_y_offset_kludge(font_size, zoom) {
@@ -6313,10 +6347,10 @@ function textarea_y_offset_kludge(font_size, zoom) {
 	switch(font_size) {
 		// zoom levels      -7  -6  -5  -4  -3  -2  -1  0   1   2   3   4   5   6   7
 		case 8: 
-			offset_array = [1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5];
+			offset_array = [1.5,1.5,1.5,1.5,1.5,0. ,-2.,1.5,1.5,1.0,1.0,1.0,0.2,0.5,0.5];
 			break;
 		case 10:
-			offset_array = [0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5];
+			offset_array = [0.5,0.5,0.5,1.5,0.5,1.5,0. ,0.5,0.7,0.8,0.8,1.0,0.5,0.7,0.8];
 			break;
 		case 12:
 			offset_array = [1.5,1.5,1.5,2.0,1.5,1.5,1.5,1.5,1.5,1.5,1.5,2.0,1.5,1.5,1.5];
@@ -6325,13 +6359,13 @@ function textarea_y_offset_kludge(font_size, zoom) {
 			offset_array = [1.5,1.5,-1.,1.5,1.0,1.5,0.0,1.5,1.5,1.5,1.2,1.5,1.0,0.7,1.2];
 			break;
 		case 24:
-			offset_array = [1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5];
+			offset_array = [1.5,2.5,2.5,3.0,1.5,2.5,2.5,1.5,2.5,2.5,1.5,2.0,1.5,1.5,2.2];
 			break;
 		case 36:
-			offset_array = [1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5];
+			offset_array = [1.5,1.5,1.5,3.0,1.5,1.5,1.5,2.5,2.5,1.5,2.0,2.5,1.7,1.6,1.9];
 			break;
 	}
-	post("textarea_y_offset_kludge " + font_size + " " + zoom + " " + offset_array[zoom+7]);
+	//post("textarea_y_offset_kludge " + font_size + " " + zoom + " " + offset_array[zoom+7]);
 	return offset_array[zoom+7];
 }
 
@@ -6421,7 +6455,7 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
             */   
         }
         
-        p.style.setProperty("left", (x - svg_view.x - 0.5) + "px");
+        p.style.setProperty("left", (x - svg_view.x + textarea_x_offset_kludge(font_size, zoom)) + "px");
         p.style.setProperty("top", (y - svg_view.y + textarea_y_offset_kludge(font_size, zoom)) + "px");
         p.style.setProperty("font-size",
             pd_fontsize_to_gui_fontsize(font_size) + "px");
