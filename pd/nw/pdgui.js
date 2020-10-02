@@ -3325,17 +3325,24 @@ function gui_numbox_coords(cid, tag, w, h) {
     });
 }
 
-function gui_numbox_draw_text(cid,tag,text,font_size,color,xpos,ypos,basex,basey) {
+function gui_numbox_draw_text(cid,tag,text,font_size,color,xpos,ypos,basex,basey,fontmargin) {
     // kludge alert -- I'm not sure why I need to add half to the ypos
     // below. But it works for most font sizes.
     gui(cid).get_gobj(tag)
     .append(function(frag, w) {
-    	//post("ypos=" + ypos + " int=" + Math.floor(ypos));
-    	//ypos = Math.floor(ypos);
+        var trans_y = 0;
+        // fine-tuning the translate y rule:
+        if (font_size === 18 && fontmargin === 2) {
+            trans_y = 16.5;
+        } else if (font_size === 17 && fontmargin === 2) {
+            trans_y = 15.5;
+        } else {
+            trans_y = (font_size - fontmargin/2);
+        }
         var svg_text = create_item(cid, "text", {
             transform: "translate(" +
-                        (xpos - basex) + "," +
-                        ((ypos - basey + (ypos - basey) * 0.5)|0) + ")",
+                        (xpos - basex) + "," + trans_y + ")",
+                        //((ypos - basey + (ypos - basey) * 0.5)|0) + ")",
             "font-size": font_size,
             fill: color,
             id: tag + "text"
@@ -3362,9 +3369,19 @@ function gui_numbox_update(cid, tag, fcolor, bgcolor, num_font_size, font_name, 
     });
 }
 
-function gui_numbox_update_text_position(cid, tag, x, y) {
+function gui_numbox_update_text_position(cid, tag, x, y, font_size, fontmargin) {
+    var trans_y = 0;
+    // fine-tuning the translate y rule:
+    if (font_size === 18 && fontmargin === 2) {
+        trans_y = 16.5;
+    } else if (font_size === 17 && fontmargin === 2) {
+        trans_y = 15.5;
+    } else {
+        trans_y = (font_size - fontmargin/2);
+    }
     gui(cid).get_elem(tag + "text", {
-        transform: "translate( " + x + "," + ((y + y*0.5)|0) + ")"
+        //transform: "translate(" + x + "," + ((y + y*0.5)|0) + ")"
+        transform: "translate(" + x + "," + trans_y + ")"
     });
 }
 

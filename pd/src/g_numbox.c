@@ -31,8 +31,6 @@ static void my_numbox_set_change(t_my_numbox *x, t_floatarg f);
 static void my_numbox_ftoa(t_my_numbox *x , int append);
 static void my_numbox_list(t_my_numbox *x, t_symbol *s, int ac, t_atom *av);
 
-static t_symbol *numbox_keyname_sym_a;
-
 static void my_numbox_tick_reset(t_my_numbox *x)
 {
     //post("tick_reset\n");
@@ -152,7 +150,7 @@ static void my_numbox_ftoa(t_my_numbox *x, int append)
                 x->x_buf[x->x_gui.x_w] = 0;
         }
     }
-    post("ftoa buf=%s", x->x_buf);
+    //post("ftoa buf=%s", x->x_buf);
 }
 
 static void my_numbox_draw_update(t_gobj *client, t_glist *glist)
@@ -168,7 +166,7 @@ static void my_numbox_draw_update(t_gobj *client, t_glist *glist)
     if (!glist_isvisible(glist)) return;
     if(x->x_gui.x_change && x->x_buf[0])
     {
-        post("draw_update 1 : focused=%d", x->x_focused);
+        //post("draw_update 1 : focused=%d", x->x_focused);
         char *cp=x->x_buf;
         int sl = strlen(x->x_buf);
         if (x->x_focused == 1)
@@ -205,7 +203,7 @@ static void my_numbox_draw_update(t_gobj *client, t_glist *glist)
     else
     {
         //if (!x->x_focused || x->x_focused == 2)
-        post("draw_update 2: x->x_buf=<%s> focused=%d change=%d", x->x_buf, x->x_focused, x->x_gui.x_change);
+        //post("draw_update 2: x->x_buf=<%s> focused=%d change=%d", x->x_buf, x->x_focused, x->x_gui.x_change);
         if (!x->x_buf[0] && x->x_focused == 1 && x->x_gui.x_change == 1)
         {
             x->x_buf[0] = '>';
@@ -234,7 +232,7 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
     char cbuf[8];
     sprintf(cbuf, "#%6.6x", x->x_gui.x_bcol);
     int half=x->x_gui.x_h/2;
-    t_float d=1+x->x_gui.x_h/34.0;
+    int d=1+x->x_gui.x_h/34;
     int x1=text_xpix(&x->x_gui.x_obj, glist), x2=x1+x->x_numwidth;
     int y1=text_ypix(&x->x_gui.x_obj, glist), y2=y1+x->x_gui.x_h;
 
@@ -251,13 +249,13 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
 
     my_numbox_ftoa(x, 0);
     sprintf(cbuf, "#%6.6x", x->x_gui.x_fcol);
-    gui_vmess("gui_numbox_draw_text", "xxsisifii",
+    gui_vmess("gui_numbox_draw_text", "xxsisiiiii",
         canvas,
         x,
         x->x_buf,
         x->x_num_fontsize,
         cbuf,
-        x1+half+2, y1+half+d, x1, y1);
+        x1+half+2, y1+half+d, x1, y1, x->x_gui.x_h - x->x_num_fontsize);
 }
 
 /* Not sure that this is needed anymore */
@@ -285,11 +283,13 @@ static void my_numbox_draw_move(t_my_numbox *x, t_glist *glist)
         x2 - x1,
         y2 - y1);
 
-    gui_vmess("gui_numbox_update_text_position", "xxii",
+    gui_vmess("gui_numbox_update_text_position", "xxiiii",
         canvas,
         x,
         half + 2,
-        half + d);
+        half + d,
+        x->x_num_fontsize,
+        x->x_gui.x_h - x->x_num_fontsize);
 }
 
 static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
@@ -664,9 +664,13 @@ static int my_numbox_newclick(t_gobj *z, struct _glist *glist,
         if(shift)
         {
             x->x_gui.x_finemoved = 1;
+            x->x_shiftclick = 1;
         }
         else
+        {
             x->x_gui.x_finemoved = 0;
+            x->x_shiftclick = 0;
+        }
         if(!x->x_gui.x_change)
         {
             clock_delay(x->x_clock_wait, 50);
@@ -826,14 +830,20 @@ static void my_numbox_key(void *z, t_floatarg fkey)
     if(((c>='0')&&(c<='9'))||(c=='.')||(c=='-')||
         (c=='e')||(c=='+')||(c=='E'))
     {
+        if (x->x_shiftclick == -1)
+        {
+            x->x_buf[0] = 0;
+            x->x_shiftclick = 0;
+        }
         if(strlen(x->x_buf) < (IEMGUI_MAX_NUM_LEN-2))
         {
             buf[0] = c;
             if (strlen(x->x_buf) == 1 && x->x_buf[0] == '0')
             {
-                // if we have just entered a number and the numbox is still
-                // focused, and we got clipped down to 0, make sure that our
-                // first digit goes to the first, not second place
+                // if we have just committed a number by pressing return
+                // and the numbox is still focused, and we got clipped
+                // down to 0, make sure that our first digit goes to the
+                // first, not second place
                 strcpy(x->x_buf, buf); 
             }
             else
@@ -872,6 +882,11 @@ static void my_numbox_key(void *z, t_floatarg fkey)
             x->x_gui.x_changed = 1;
         my_numbox_bang(x);
         x->x_focused = 2;
+        if (x->x_shiftclick == 0)
+        {
+            // we do this to make the next valid keypress after return clear the box
+            x->x_shiftclick = -1;
+        }
         sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
     }
 
@@ -916,8 +931,8 @@ static void my_numbox_list(t_my_numbox *x, t_symbol *s, int ac, t_atom *av)
             if (!strcmp("Up", av[1].a_w.w_symbol->s_name))
             {
                 //fprintf(stderr,"...Up\n");
-                if((x->x_buf[0] == 0 || x->x_buf[0] == '>') && x->x_val != 0)
-                    sprintf(x->x_buf, "%g", x->x_val+1);
+                if(x->x_buf[0] == 0 || x->x_buf[0] == '>')
+                    sprintf(x->x_buf, "%g", 1);
                 else
                     sprintf(x->x_buf, "%g", atof(x->x_buf) + 1);
                 my_numbox_key((void *)x, -1);
@@ -925,8 +940,8 @@ static void my_numbox_list(t_my_numbox *x, t_symbol *s, int ac, t_atom *av)
             else if (!strcmp("ShiftUp", av[1].a_w.w_symbol->s_name))
             {
                 //fprintf(stderr,"...ShiftUp\n");
-                if((x->x_buf[0] == 0 || x->x_buf[0] == '>') && x->x_val != 0)
-                    sprintf(x->x_buf, "%g", x->x_val+0.01);
+                if(x->x_buf[0] == 0 || x->x_buf[0] == '>')
+                    sprintf(x->x_buf, "%g", 0.01);
                 else
                     sprintf(x->x_buf, "%g", atof(x->x_buf) + 0.01);
                 my_numbox_key((void *)x, -1);
@@ -934,8 +949,8 @@ static void my_numbox_list(t_my_numbox *x, t_symbol *s, int ac, t_atom *av)
             else if (!strcmp("Down", av[1].a_w.w_symbol->s_name))
             {
                 //fprintf(stderr,"...Down\n");
-                if((x->x_buf[0] == 0 || x->x_buf[0] == '>') && x->x_val != 0)
-                    sprintf(x->x_buf, "%g", x->x_val-1);
+                if(x->x_buf[0] == 0 || x->x_buf[0] == '>')
+                    sprintf(x->x_buf, "%g", -1);
                 else
                     sprintf(x->x_buf, "%g", atof(x->x_buf) - 1);
                 my_numbox_key((void *)x, -1);
@@ -943,8 +958,8 @@ static void my_numbox_list(t_my_numbox *x, t_symbol *s, int ac, t_atom *av)
             else if (!strcmp("ShiftDown", av[1].a_w.w_symbol->s_name))
             {
                 //fprintf(stderr,"...ShiftDown\n");
-                if((x->x_buf[0] == 0 || x->x_buf[0] == '>') && x->x_val != 0)
-                    sprintf(x->x_buf, "%g", x->x_val-0.01);
+                if(x->x_buf[0] == 0 || x->x_buf[0] == '>')
+                    sprintf(x->x_buf, "%g", -0.01);
                 else
                     sprintf(x->x_buf, "%g", atof(x->x_buf) - 0.01);
                 my_numbox_key((void *)x, -1);
@@ -1034,6 +1049,7 @@ static void *my_numbox_new(t_symbol *s, int argc, t_atom *argv)
 
     x->x_focused = 0;
     x->x_yresize_x = 0;
+    x->x_shiftclick = 0;
     x->x_dragged = 0;
 
     return (x);
@@ -1086,8 +1102,6 @@ void g_numbox_setup(void)
         gensym("log_height"), A_FLOAT, 0);
     class_addmethod(my_numbox_class, (t_method)my_numbox_drawstyle,
         gensym("drawstyle"), A_FLOAT, 0);
-
-    numbox_keyname_sym_a = gensym("#keyname_a");
 
     wb_init(&my_numbox_widgetbehavior,my_numbox_getrect,my_numbox_newclick);
     class_setwidget(my_numbox_class, &my_numbox_widgetbehavior);

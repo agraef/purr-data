@@ -5628,7 +5628,7 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     if (!x || !x->gl_editor)
         return;
 
-    // we need to do keynameafn here for key releases
+    // we need to do grabbed keynameafn here for key releases
     if (x && x->gl_editor && x->gl_editor->e_grab && !down)
     {
         if (x->gl_editor->e_keynameafn && gotkeysym && focus)
