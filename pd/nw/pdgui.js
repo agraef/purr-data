@@ -1857,8 +1857,8 @@ function gui_canvas_cursor(cid, pd_event_type) {
 function canvas_sendkey(cid, state, evt, char_code, repeat) {
     var shift = evt.shiftKey ? 1 : 0,
         repeat_number = repeat ? 1 : 0;
-    post("canvas_sendkey state=" + state + " evt=" + evt +
-    	" char_code=<" + char_code + "> repeat=" + repeat + " shift=" + shift);
+    //post("canvas_sendkey state=" + state + " evt=" + evt +
+    //	" char_code=<" + char_code + "> repeat=" + repeat + " shift=" + shift);
     pdsend(cid, "key", state, char_code, shift, 1, repeat_number);
 }
 
@@ -2964,7 +2964,6 @@ function gui_text_set (cid, tag, text) {
 
 function gui_text_set_mynumbox (cid, tag, text, active) {
     gui(cid).get_elem(tag + "text", function(e) {
-        post("gui_text_set_mynumbox " + tag + " " + text + " " + active);
         text = text.trim();
         e.textContent = "";
         text_to_tspans(cid, e, text);

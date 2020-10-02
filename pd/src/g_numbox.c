@@ -59,12 +59,12 @@ static void my_numbox_set_change(t_my_numbox *x, t_floatarg f)
     if (f == 0 && x->x_gui.x_change != 0)
     {
         x->x_gui.x_change = 0;
-        pd_unbind(&x->x_gui.x_obj.ob_pd, numbox_keyname_sym_a);
+        //pd_unbind(&x->x_gui.x_obj.ob_pd, numbox_keyname_sym_a);
     }
     else if (f == 1 && x->x_gui.x_change != 1)
     {
         x->x_gui.x_change = 1;
-        pd_bind(&x->x_gui.x_obj.ob_pd, numbox_keyname_sym_a);        
+        //pd_bind(&x->x_gui.x_obj.ob_pd, numbox_keyname_sym_a);        
     }
 }
 
@@ -646,7 +646,6 @@ static void my_numbox_click(t_my_numbox *x, t_floatarg xpos, t_floatarg ypos,
                             t_floatarg shift, t_floatarg ctrl, t_floatarg alt)
 {
     // by default we have an exclusive grab (this may have to be done better...)
-    post("my_numbox_click");
     glist_grab(x->x_gui.x_glist, &x->x_gui.x_obj.te_g,
         (t_glistmotionfn)my_numbox_motion, my_numbox_key, my_numbox_list, xpos, ypos, 1);
 }
@@ -830,7 +829,15 @@ static void my_numbox_key(void *z, t_floatarg fkey)
         if(strlen(x->x_buf) < (IEMGUI_MAX_NUM_LEN-2))
         {
             buf[0] = c;
-            strcat(x->x_buf, buf);
+            if (strlen(x->x_buf) == 1 && x->x_buf[0] == '0')
+            {
+                // if we have just entered a number and the numbox is still
+                // focused, and we got clipped down to 0, make sure that our
+                // first digit goes to the first, not second place
+                strcpy(x->x_buf, buf); 
+            }
+            else
+                strcat(x->x_buf, buf);
             x->x_gui.x_changed = 1;
             sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
         }
@@ -842,7 +849,6 @@ static void my_numbox_key(void *z, t_floatarg fkey)
             sl = 0;
         else
             sl=strlen(x->x_buf)-1;
-        post("DELETING============== %d", sl);
         if(sl < 0)
             sl = 0;
         x->x_buf[sl] = 0;
@@ -899,11 +905,11 @@ static void my_numbox_list(t_my_numbox *x, t_symbol *s, int ac, t_atom *av)
     }
     else if (ac == 2 && x->x_gui.x_change == 1 && IS_A_FLOAT(av,0) && IS_A_SYMBOL(av,1))
     {
-        //fprintf(stderr,"got keyname %s while grabbed\n", av[1].a_w.w_symbol->s_name);
+        post("got keyname %s %d while grabbed\n", av[1].a_w.w_symbol->s_name, av[0].a_w.w_float);
         if (!strcmp("Shift", av[1].a_w.w_symbol->s_name))
         {
             x->x_gui.x_finemoved = (int)av[0].a_w.w_float;
-            post("...Shift %d", x->x_gui.x_finemoved);
+            //post("...Shift %d", x->x_gui.x_finemoved);
         }
         if (av[0].a_w.w_float == 1)
         {

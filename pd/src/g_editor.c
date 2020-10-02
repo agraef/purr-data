@@ -5554,7 +5554,6 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     else gotkeysym = gensym("?");
     //fflag = (av[0].a_type == A_FLOAT ? av[0].a_w.w_float : 0);
     keynum = (av[1].a_type == A_FLOAT ? av[1].a_w.w_float : 0);
-    post("canvas_key down=%d shift=%d <%s>", down, shift, (gotkeysym != NULL ? gotkeysym->s_name : "null"));
     if (keynum == '\\')
     {
         post("keycode %d: dropped", (int)keynum);
@@ -5630,14 +5629,13 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
         return;
 
     // we need to do keynameafn here for key releases
-    if (x && x->gl_editor && x->gl_editor->e_grab)
+    if (x && x->gl_editor && x->gl_editor->e_grab && !down)
     {
         if (x->gl_editor->e_keynameafn && gotkeysym && focus)
         {
             at[0] = av[0];
             SETFLOAT(at, down);
             SETSYMBOL(at+1, gotkeysym);
-            post("...SENDING <%s> down=%d", gotkeysym->s_name, down);
             (* x->gl_editor->e_keynameafn) (x->gl_editor->e_grab, 0, 2, at);
         }
     }
@@ -5659,7 +5657,6 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
           		at[0] = av[0];
             	SETFLOAT(at, down);
             	SETSYMBOL(at+1, gotkeysym);
-                post("...SENDING <%s> down=%d", gotkeysym->s_name, down);
             	(* x->gl_editor->e_keynameafn) (x->gl_editor->e_grab, 0, 2, at);
           	}
         }
