@@ -716,7 +716,7 @@ static void numberbox_matrix_click(t_numberbox_matrix *x, t_floatarg xpos, t_flo
                                    t_floatarg shift, t_floatarg ctrl, t_floatarg alt)
 {
   glist_grab(x->x_gui.x_glist, &x->x_gui.x_obj.te_g,
-    (t_glistmotionfn)numberbox_matrix_motion, numberbox_matrix_key, 0, xpos, ypos);
+    (t_glistmotionfn)numberbox_matrix_motion, numberbox_matrix_key, 0, xpos, ypos, 0);
 }
 
 static int numberbox_matrix_newclick(t_gobj *z, struct _glist *glist, int xpix, int ypix, int shift, int alt, int dbl, int doit)

@@ -86,7 +86,9 @@ typedef struct _iemgui
     t_scalehandle *x_handle;         //24
     t_scalehandle *x_lhandle;        //19
     int            x_vis;     //bool //64  /* is the object drawn? */
-    int            x_changed; //bool //30  /* has the value changed so that we need to do graphic update */
+    int            x_changed; //bool //30  /* has the value changed so that we need to do graphic update
+                                           /* in numbox we also use it to signify when the activated value
+                                              has been changed and clipped */
 
                                   // grep -w "$1" *.[ch]|wc -l
     t_glist     *x_selected;      // 24 matches
@@ -197,7 +199,9 @@ typedef struct _my_numbox
     int      x_focused;     /* helps us determine when and how we are editing value
                                0 no focus, 1 keyboard focus, 2 mouse focus */
     int      x_log_height;
-    int      x_drawstyle;  /* 0 default, 1 just frame, 2, just arrow, 3 number only */
+    int      x_drawstyle;   /* 0 default, 1 just frame, 2, just arrow, 3 number only */
+    int      x_dragged;     /* whether the object has been dragged since it was clicked
+                               we use this to fine-tune the exclusive focus */
 } t_my_numbox;
 
 extern int sys_noloadbang;

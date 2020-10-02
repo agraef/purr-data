@@ -43,7 +43,7 @@ static void my_numbox_tick_reset(t_my_numbox *x)
         my_numbox_ftoa(x, 0);
         sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
     }
-    glist_grab(x->x_gui.x_glist, 0, 0, 0, 0, 0, 0);
+    glist_grab(x->x_gui.x_glist, 0, 0, 0, 0, 0, 0, 0);
     x->x_focused = 0;
 }
 
@@ -71,9 +71,14 @@ static void my_numbox_set_change(t_my_numbox *x, t_floatarg f)
 void my_numbox_clip(t_my_numbox *x)
 {
     if(x->x_val < x->x_min)
+    {
         x->x_val = x->x_min;
+
+    }
     if(x->x_val > x->x_max)
+    {
         x->x_val = x->x_max;
+    }
 }
 
 int my_numbox_calc_fontwidth2(t_my_numbox *x, int w, int h, int fontsize)
@@ -147,6 +152,7 @@ static void my_numbox_ftoa(t_my_numbox *x, int append)
                 x->x_buf[x->x_gui.x_w] = 0;
         }
     }
+    post("ftoa buf=%s", x->x_buf);
 }
 
 static void my_numbox_draw_update(t_gobj *client, t_glist *glist)
@@ -159,11 +165,10 @@ static void my_numbox_draw_update(t_gobj *client, t_glist *glist)
     // but should not be used for this reason
     // if (!x->x_gui.x_changed) return;
 
-    x->x_gui.x_changed = 0;
     if (!glist_isvisible(glist)) return;
     if(x->x_gui.x_change && x->x_buf[0])
     {
-        //post("draw_update 1 : focused=%d", x->x_focused);
+        post("draw_update 1 : focused=%d", x->x_focused);
         char *cp=x->x_buf;
         int sl = strlen(x->x_buf);
         if (x->x_focused == 1)
@@ -174,8 +179,17 @@ static void my_numbox_draw_update(t_gobj *client, t_glist *glist)
             // this is triggered when one presses return while retaining the focus of the number
             // so, we make sure to subtract the '>' that has disappeared and adjust visible digits
             // accordingly below
-            x->x_buf[sl] = 0;
-            sl--;
+            if (x->x_gui.x_changed == 2)
+            {
+                my_numbox_ftoa(x, 0);
+                sl = strlen(x->x_buf);
+                post("changed and clipped");
+            }
+            else
+            {
+                x->x_buf[sl] = 0;
+                sl--;
+            }
         }
         if(sl >= x->x_gui.x_w)
             cp += sl - x->x_gui.x_w + 1;
@@ -191,7 +205,7 @@ static void my_numbox_draw_update(t_gobj *client, t_glist *glist)
     else
     {
         //if (!x->x_focused || x->x_focused == 2)
-        //post("draw_update 2: x->x_buf=<%s> focused=%d change=%d", x->x_buf, x->x_focused, x->x_gui.x_change);
+        post("draw_update 2: x->x_buf=<%s> focused=%d change=%d", x->x_buf, x->x_focused, x->x_gui.x_change);
         if (!x->x_buf[0] && x->x_focused == 1 && x->x_gui.x_change == 1)
         {
             x->x_buf[0] = '>';
@@ -211,6 +225,7 @@ static void my_numbox_draw_update(t_gobj *client, t_glist *glist)
         x->x_buf[0] = 0; /* mmm... more side-effects... no clue why we'd need
                             to mutate a struct member in order to draw stuff */
     }
+    x->x_gui.x_changed = 0;
 }
 
 static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
@@ -619,15 +634,25 @@ static void my_numbox_motion(t_my_numbox *x, t_floatarg dx, t_floatarg dy)
     }
     clock_unset(x->x_clock_reset);
     clock_delay(x->x_clock_reset, 3000);
+    // if we have clicked and have started dragging, this means we don't necessarily
+    // want to type into the box but change number by dragging, so here we disable
+    // the exclusive nature of glist_grab
+    glist_grab_exclusive(x->x_gui.x_glist, 0);
 }
 
+// this is called whenever there is a mousedown with left mouse button on top of the object
+// this DOES NOT get called on mouse up
 static void my_numbox_click(t_my_numbox *x, t_floatarg xpos, t_floatarg ypos,
                             t_floatarg shift, t_floatarg ctrl, t_floatarg alt)
 {
+    // by default we have an exclusive grab (this may have to be done better...)
+    post("my_numbox_click");
     glist_grab(x->x_gui.x_glist, &x->x_gui.x_obj.te_g,
-        (t_glistmotionfn)my_numbox_motion, my_numbox_key, my_numbox_list, xpos, ypos);
+        (t_glistmotionfn)my_numbox_motion, my_numbox_key, my_numbox_list, xpos, ypos, 1);
 }
 
+// this one gets called on both mouse down and mouse up (doit reports the mouse state)
+// it is also called when there is motion without dragging, which alos reports doit as 0
 static int my_numbox_newclick(t_gobj *z, struct _glist *glist,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
@@ -770,6 +795,7 @@ static void my_numbox_loadbang(t_my_numbox *x, t_floatarg action)
 static void my_numbox_key(void *z, t_floatarg fkey)
 {
     t_my_numbox *x = z;
+    post("numbox_key %f <%s>", fkey, x->x_buf);
     if (fkey != 0)
         x->x_focused = 1;
 
@@ -816,7 +842,7 @@ static void my_numbox_key(void *z, t_floatarg fkey)
             sl = 0;
         else
             sl=strlen(x->x_buf)-1;
-
+        post("DELETING============== %d", sl);
         if(sl < 0)
             sl = 0;
         x->x_buf[sl] = 0;
@@ -829,9 +855,16 @@ static void my_numbox_key(void *z, t_floatarg fkey)
         //x->x_buf[0] = 0;
         my_numbox_set_change(x, 1);
         clock_unset(x->x_clock_reset);
+        double oldval = x->x_val;
         my_numbox_clip(x);
+        if (oldval != x->x_val)
+        {
+            // we have changed the value and it was clipped
+            x->x_gui.x_changed = 2;
+        }
+        else
+            x->x_gui.x_changed = 1;
         my_numbox_bang(x);
-        x->x_gui.x_changed = 1;
         x->x_focused = 2;
         sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
     }
@@ -870,14 +903,14 @@ static void my_numbox_list(t_my_numbox *x, t_symbol *s, int ac, t_atom *av)
         if (!strcmp("Shift", av[1].a_w.w_symbol->s_name))
         {
             x->x_gui.x_finemoved = (int)av[0].a_w.w_float;
-            //post("...Shift %d", x->a_shift);
+            post("...Shift %d", x->x_gui.x_finemoved);
         }
         if (av[0].a_w.w_float == 1)
         {
             if (!strcmp("Up", av[1].a_w.w_symbol->s_name))
             {
                 //fprintf(stderr,"...Up\n");
-                if((x->x_buf[0] == 0 || x->x_buf == '>') && x->x_val != 0)
+                if((x->x_buf[0] == 0 || x->x_buf[0] == '>') && x->x_val != 0)
                     sprintf(x->x_buf, "%g", x->x_val+1);
                 else
                     sprintf(x->x_buf, "%g", atof(x->x_buf) + 1);
@@ -886,7 +919,7 @@ static void my_numbox_list(t_my_numbox *x, t_symbol *s, int ac, t_atom *av)
             else if (!strcmp("ShiftUp", av[1].a_w.w_symbol->s_name))
             {
                 //fprintf(stderr,"...ShiftUp\n");
-                if((x->x_buf[0] == 0 || x->x_buf == '>') && x->x_val != 0)
+                if((x->x_buf[0] == 0 || x->x_buf[0] == '>') && x->x_val != 0)
                     sprintf(x->x_buf, "%g", x->x_val+0.01);
                 else
                     sprintf(x->x_buf, "%g", atof(x->x_buf) + 0.01);
@@ -895,7 +928,7 @@ static void my_numbox_list(t_my_numbox *x, t_symbol *s, int ac, t_atom *av)
             else if (!strcmp("Down", av[1].a_w.w_symbol->s_name))
             {
                 //fprintf(stderr,"...Down\n");
-                if((x->x_buf[0] == 0 || x->x_buf == '>') && x->x_val != 0)
+                if((x->x_buf[0] == 0 || x->x_buf[0] == '>') && x->x_val != 0)
                     sprintf(x->x_buf, "%g", x->x_val-1);
                 else
                     sprintf(x->x_buf, "%g", atof(x->x_buf) - 1);
@@ -904,7 +937,7 @@ static void my_numbox_list(t_my_numbox *x, t_symbol *s, int ac, t_atom *av)
             else if (!strcmp("ShiftDown", av[1].a_w.w_symbol->s_name))
             {
                 //fprintf(stderr,"...ShiftDown\n");
-                if((x->x_buf[0] == 0 || x->x_buf == '>') && x->x_val != 0)
+                if((x->x_buf[0] == 0 || x->x_buf[0] == '>') && x->x_val != 0)
                     sprintf(x->x_buf, "%g", x->x_val-0.01);
                 else
                     sprintf(x->x_buf, "%g", atof(x->x_buf) - 0.01);
@@ -995,6 +1028,7 @@ static void *my_numbox_new(t_symbol *s, int argc, t_atom *argv)
 
     x->x_focused = 0;
     x->x_yresize_x = 0;
+    x->x_dragged = 0;
 
     return (x);
 }

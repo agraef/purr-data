@@ -1265,7 +1265,7 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
                 array_motion_ycumulative = 0;
             }
             //fprintf(stderr,"    glist_grab %d %d\n", xpix, ypix);
-            glist_grab(glist, 0, array_motion, 0, 0, xpix, ypix);
+            glist_grab(glist, 0, array_motion, 0, 0, xpix, ypix, 0);
         }
         if (alt)
         {

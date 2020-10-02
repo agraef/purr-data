@@ -120,6 +120,7 @@ typedef struct _editor
     struct _glist *e_glist;         /* glist which owns this */
     int e_xwas;                     /* xpos on last mousedown or motion event */
     int e_ywas;                     /* ypos, similarly */
+    int exclusive;                  /* should the glist_grab be exclusive? */
     int e_selectline_index1;        /* indices for the selected line if any */
     int e_selectline_outno;         /* (only valid if e_selectedline is set) */
     int e_selectline_index2;
@@ -487,7 +488,8 @@ EXTERN void glist_delete(t_glist *x, t_gobj *y);
 EXTERN void glist_retext(t_glist *x, t_text *y);
 EXTERN void glist_grab(t_glist *x, t_gobj *y, t_glistmotionfn motionfn,
     t_glistkeyfn keyfn, t_glistkeynameafn keynameafn,
-    int xpos, int ypos);
+    int xpos, int ypos, int exclusive);
+EXTERN int glist_grab_exclusive(t_glist *x, int exclusive);
 EXTERN int glist_isvisible(t_glist *x);
 EXTERN int glist_istoplevel(t_glist *x);
 EXTERN t_glist *glist_findgraph(t_glist *x);
