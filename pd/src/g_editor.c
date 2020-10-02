@@ -5509,8 +5509,6 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     //    (x->gl_editor->e_onmotion == MA_CONNECT ? 1 : 0),
     //    glob_shift, glob_lmclick);
 
-    post("canvas_key down=%d shift=%d <%s>", down, shift);
-
     // check if user released shift while trying manual multi-connect
     if (x && x->gl_editor &&
         x->gl_editor->e_onmotion == MA_CONNECT && !glob_shift && !glob_lmclick)
@@ -5630,12 +5628,27 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
 
     if (!x || !x->gl_editor)
         return;
+
+    // we need to do keynameafn here for key releases
+    if (x && x->gl_editor && x->gl_editor->e_grab)
+    {
+        if (x->gl_editor->e_keynameafn && gotkeysym && focus)
+        {
+            at[0] = av[0];
+            SETFLOAT(at, down);
+            SETSYMBOL(at+1, gotkeysym);
+            post("...SENDING <%s> down=%d", gotkeysym->s_name, down);
+            (* x->gl_editor->e_keynameafn) (x->gl_editor->e_grab, 0, 2, at);
+        }
+    }
+
     if (x && down)
     {
             /* cancel any dragging action */
         if (x->gl_editor->e_onmotion == MA_MOVE)
             x->gl_editor->e_onmotion = MA_NONE;
-            /* if an object has "grabbed" keys just send them on */
+            /* if an object has "grabbed" keys just send them on
+               but deal with key release above outside this loop */
         if (x->gl_editor->e_grab)
         {
             if (x->gl_editor->e_keyfn && keynum && focus)
