@@ -27,7 +27,7 @@ typedef struct _absgn {
 
 /* ------------------------ sigABSGN~ ----------------------------- */
 
-static t_class *sigABSGN_class;
+static t_class *sigABSGN_class=NULL;
 
 static t_int *sigABSGN_perform(t_int *w)
 {
@@ -38,7 +38,7 @@ static t_int *sigABSGN_perform(t_int *w)
 
   while (n--) {
     t_sample val = *in++;
-    *out++ = fabsf(val);
+    *out++ = Z_FABS(val);
 
     if (val>0.) {
       *out2++=1.;
@@ -106,12 +106,12 @@ static void sigABSGN_dsp(t_absgn* UNUSED(x), t_signal **sp)
     zexy_testSSE(sigABSGN_perform, sigABSGN_performSSE, 1, 2)
   ) {
     dsp_add(sigABSGN_performSSE, 4, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec,
-            (t_int)sp[0]->s_n);
+            sp[0]->s_n);
   } else
 #endif
   {
     dsp_add(sigABSGN_perform, 4, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec,
-            (t_int)sp[0]->s_n);
+            sp[0]->s_n);
   }
 }
 
@@ -132,16 +132,14 @@ static void *sigABSGN_new(void)
   return (x);
 }
 
-void absgn_tilde_setup(void)
+ZEXY_SETUP void absgn_tilde_setup(void)
 {
-  sigABSGN_class = class_new(gensym("absgn~"), (t_newmethod)sigABSGN_new, 0,
-                             sizeof(t_absgn), 0, A_DEFFLOAT, 0);
+  sigABSGN_class = zexy_new("absgn~",
+                            sigABSGN_new, 0, t_absgn, 0, "");
   CLASS_MAINSIGNALIN(sigABSGN_class, t_absgn, x_f);
-  class_addmethod(sigABSGN_class, (t_method)sigABSGN_dsp, gensym("dsp"),
-                  A_CANT, 0);
+  zexy_addmethod(sigABSGN_class, (t_method)sigABSGN_dsp, "dsp", "!");
 
-  class_addmethod(sigABSGN_class, (t_method)sigABSGN_helper, gensym("help"),
-                  0);
+  zexy_addmethod(sigABSGN_class, (t_method)sigABSGN_helper, "help", "");
   class_sethelpsymbol(sigABSGN_class, gensym("zigbinops"));
 
   zexy_register("absgn~");

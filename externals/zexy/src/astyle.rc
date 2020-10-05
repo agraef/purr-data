@@ -1,5 +1,5 @@
 ## asytyle configuration for zexy
-# usage: astyle --options=astyle.conf *.c *.h
+# usage: astyle --options=astyle.rc *.c *.h
 
 ## CRLF line-ending
 lineend=linux

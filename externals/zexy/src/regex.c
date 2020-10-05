@@ -34,7 +34,7 @@
 
 /* match a regular expression against a string */
 
-static t_class *regex_class;
+static t_class *regex_class=NULL;
 
 typedef struct _regex {
   t_object x_obj;
@@ -76,11 +76,11 @@ static char*regex_l2s(int *reslen, t_symbol*s, int argc, t_atom*argv)
   i=argc;
   ap=argv;
   while(i--) {
-    char buffer[MAXPDSTRING];
     int len=0;
     if(A_SYMBOL==ap->a_type) {
       len=strlen(ap->a_w.w_symbol->s_name);
     } else {
+      char buffer[MAXPDSTRING];
       atom_string(ap, buffer, MAXPDSTRING);
       len=strlen(buffer);
     }
@@ -95,7 +95,7 @@ static char*regex_l2s(int *reslen, t_symbol*s, int argc, t_atom*argv)
   result = (char*)getbytes((length+1)*sizeof(char));
 
   if (s) {
-    char *buf = s->s_name;
+    const char *buf = s->s_name;
     strcpy(result+pos, buf);
     pos+=strlen(buf);
     if(i) {
@@ -173,7 +173,8 @@ static void regex_case(t_regex *x, t_float f)
 }
 
 
-static void regex_regex(t_regex *x, t_symbol*s, int argc, t_atom*argv)
+static void regex_regex(t_regex *x, t_symbol*UNUSED(s), int argc,
+                        t_atom*argv)
 {
 #ifdef HAVE_REGEX_H
   char*result=0;
@@ -200,7 +201,8 @@ static void regex_regex(t_regex *x, t_symbol*s, int argc, t_atom*argv)
 }
 
 /* compare the given list as string with the precompiled regex */
-static void regex_symbol(t_regex *x, t_symbol *s, int argc, t_atom*argv)
+static void regex_symbol(t_regex *x, t_symbol *UNUSED(s), int argc,
+                         t_atom*argv)
 {
 #ifdef HAVE_REGEX_H
   char*teststring=0;
@@ -280,7 +282,7 @@ cleanup:
 #endif
 }
 
-static void *regex_new(t_symbol *s, int argc, t_atom*argv)
+static void *regex_new(t_symbol *UNUSED(s), int argc, t_atom*argv)
 {
   t_regex *x = (t_regex *)pd_new(regex_class);
 
@@ -330,23 +332,22 @@ static void regex_free(t_regex *x)
 #endif
 }
 
-static void regex_help(t_regex*x)
+static void regex_help(t_regex*UNUSED(x))
 {
-  post("\n"HEARTSYMBOL " regex\t\t:: test the input whether it matches a regular expression");
+  post("\n"HEARTSYMBOL
+       " regex\t\t:: test the input whether it matches a regular expression");
 }
 
-void regex_setup(void)
+ZEXY_SETUP void regex_setup(void)
 {
-  regex_class = class_new(gensym("regex"), (t_newmethod)regex_new,
-                          (t_method)regex_free, sizeof(t_regex), 0, A_GIMME, 0);
+  regex_class = zexy_new("regex",
+                         regex_new, regex_free, t_regex, 0, "*");
 
   class_addlist  (regex_class, regex_symbol);
-  class_addmethod(regex_class, (t_method)regex_regex, gensym("regex"),
-                  A_GIMME, 0);
+  zexy_addmethod(regex_class, (t_method)regex_regex, "regex", "*");
 
-  class_addmethod(regex_class, (t_method)regex_case, gensym("case"), A_FLOAT,
-                  0);
+  zexy_addmethod(regex_class, (t_method)regex_case, "case", "f");
 
-  class_addmethod(regex_class, (t_method)regex_help, gensym("help"), A_NULL);
+  zexy_addmethod(regex_class, (t_method)regex_help, "help", "");
   zexy_register("regex");
 }

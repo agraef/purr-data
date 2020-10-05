@@ -38,7 +38,7 @@
 
 /* -------------------------- relay ------------------------------ */
 
-static t_class *relay_class;
+static t_class *relay_class=NULL;
 
 typedef struct _relayelement {
   t_word e_w;
@@ -56,9 +56,9 @@ typedef struct _relay {
 static void relay_anything(t_relay *x, t_symbol *sel, int argc,
                            t_atom *argv)
 {
-  t_relayelement *e;
-  int nelement;
   if (x->x_type == A_SYMBOL) {
+    int nelement;
+    t_relayelement *e;
     for (nelement = x->x_nelement, e = x->x_vec; nelement--; e++) {
       if (e->e_w.w_symbol == sel) {
         outlet_anything(e->e_outlet, sel, argc, argv);
@@ -82,9 +82,9 @@ static void relay_list(t_relay *x, t_symbol *sel, int argc, t_atom *argv)
     f = atom_getfloat(argv);
     for (nelement = x->x_nelement, e = x->x_vec; nelement--; e++) {
       if (e->e_w.w_float == f) {
-	if (!sel) {
-	  sel=(argc==1)?gensym("float"):gensym("list");
-	}
+        if (!sel) {
+          sel=(argc==1)?gensym("float"):gensym("list");
+        }
         outlet_anything(e->e_outlet, sel, argc, argv);
         return;
       }
@@ -155,10 +155,10 @@ static void *relay_new(t_symbol* UNUSED(s), int argc, t_atom *argv)
   return (x);
 }
 
-void relay_setup(void)
+ZEXY_SETUP void relay_setup(void)
 {
-  relay_class = class_new(gensym("relay"), (t_newmethod)relay_new,
-                          (t_method)relay_free, sizeof(t_relay), 0, A_GIMME, 0);
+  relay_class = zexy_new("relay",
+                         relay_new, relay_free, t_relay, 0, "*");
   class_addlist(relay_class, relay_list);
   class_addanything(relay_class, relay_anything);
   zexy_register("relay");

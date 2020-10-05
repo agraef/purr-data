@@ -23,7 +23,7 @@
 
 /* ------------------------- symbol2list ------------------------------- */
 
-static t_class *symbol2list_class;
+static t_class *symbol2list_class = NULL;
 
 typedef struct _symbol2list {
   t_object x_obj;
@@ -38,12 +38,12 @@ static void symbol2list_delimiter(t_symbol2list *x, t_symbol *s)
   x->delimiter = s;
 }
 
-STATIC_INLINE void string2atom(t_atom *ap, char* cp, int clen)
+STATIC_INLINE void string2atom(t_atom *ap, const char* cp, int clen)
 {
   char *buffer=getbytes(sizeof(char)*(clen+1));
   char *endptr[1];
   t_float ftest;
-  strncpy(buffer, cp, clen);
+  strncpy(buffer, cp, clen+1);
   buffer[clen]=0;
   ftest=strtod(buffer, endptr);
   /* what should we do with the special cases of hexadecimal values, "INF" and "NAN" ???
@@ -62,10 +62,10 @@ STATIC_INLINE void string2atom(t_atom *ap, char* cp, int clen)
 }
 static void symbol2list_process(t_symbol2list *x)
 {
-  char *cc;
-  char *deli;
+  const char *cc, *cp;
+  const char *deli;
   int   dell;
-  char *cp, *d;
+  char *d;
   int i=1;
 
   if (x->s==NULL) {
@@ -159,31 +159,35 @@ static void *symbol2list_new(t_symbol* UNUSED(s), int argc, t_atom *argv)
   return (x);
 }
 
-static void symbol2list_free(t_symbol2list *x)
+static void symbol2list_free(t_symbol2list *UNUSED(x))
 {}
 
-static void symbol2list_help(t_symbol2list*x)
+static void symbol2list_help(t_symbol2list*UNUSED(x))
 {
-  post("\n"HEARTSYMBOL " symbol2list\t:: split a symbol into a list of atoms");
+  post("\n"HEARTSYMBOL
+       " symbol2list\t:: split a symbol into a list of atoms");
 }
-
-void symbol2list_setup(void)
+static t_class* zclass_setup(const char*name)
 {
-  symbol2list_class = class_new(gensym("symbol2list"),
-                                (t_newmethod)symbol2list_new,
-                                (t_method)symbol2list_free, sizeof(t_symbol2list), 0, A_GIMME, 0);
-
-  class_addcreator((t_newmethod)symbol2list_new, gensym("s2l"), A_GIMME, 0);
-  class_addsymbol (symbol2list_class, symbol2list_symbol);
-  class_addbang   (symbol2list_class, symbol2list_bang);
-  class_addmethod  (symbol2list_class, (t_method)symbol2list_delimiter,
-                    gensym(""), A_SYMBOL, 0);
-  class_addmethod(symbol2list_class, (t_method)symbol2list_help,
-                  gensym("help"), A_NULL);
-
+  t_class*c = zexy_new(name,
+                       symbol2list_new, symbol2list_free, t_symbol2list, 0, "*");
+  class_addsymbol (c, symbol2list_symbol);
+  class_addbang   (c, symbol2list_bang);
+  zexy_addmethod(c, (t_method)symbol2list_delimiter, "", "s");
+  zexy_addmethod(c, (t_method)symbol2list_help, "help", "");
+  return c;
+}
+static void dosetup()
+{
   zexy_register("symbol2list");
+  symbol2list_class=zclass_setup("symbol2list");
+  zclass_setup("s2l");
+}
+ZEXY_SETUP void symbol2list_setup(void)
+{
+  dosetup();
 }
 void s2l_setup(void)
 {
-  symbol2list_setup();
+  dosetup();
 }

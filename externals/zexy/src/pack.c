@@ -30,8 +30,8 @@
 
 /* ------------------------- zexy/pack ------------------------------- */
 
-static t_class *zpack_class;
-static t_class *zpackproxy_class;
+static t_class *zpack_class=NULL;
+static t_class *zpackproxy_class=NULL;
 
 typedef struct _zpack {
   t_object x_obj;
@@ -86,13 +86,15 @@ static void zpack_any(t_zpack*x, t_symbol *s, int argc, t_atom *argv)
   zpack_bang(x);
 }
 
-static void zpack_list(t_zpack*x, t_symbol *s, int argc, t_atom *argv)
+static void zpack_list(t_zpack*x, t_symbol *UNUSED(s), int argc,
+                       t_atom *argv)
 {
   zpack_any(x, 0, argc, argv);
 }
 
 
-static void zpack_proxy_list(t_zpackproxy *y, t_symbol *s, int argc,
+static void zpack_proxy_list(t_zpackproxy *y, t_symbol *UNUSED(s),
+                             int argc,
                              t_atom *argv)
 {
   /* until we have lists of lists, this only uses the 1st element */
@@ -100,8 +102,8 @@ static void zpack_proxy_list(t_zpackproxy *y, t_symbol *s, int argc,
     setatom(y->p_master, argv, y->id);
   }
 }
-static void zpack_proxy_any(t_zpackproxy *y, t_symbol *s, int argc,
-                            t_atom *argv)
+static void zpack_proxy_any(t_zpackproxy *y, t_symbol *s,
+                            int UNUSED(argc), t_atom *UNUSED(argv))
 {
   /* until we have lists of lists, this only uses the selector */
   t_atom a;
@@ -109,7 +111,7 @@ static void zpack_proxy_any(t_zpackproxy *y, t_symbol *s, int argc,
   setatom(y->p_master, &a, y->id);
 }
 
-static void *zpack_new(t_symbol *s, int argc, t_atom *argv)
+static void *zpack_new(t_symbol *UNUSED(s), int argc, t_atom *argv)
 {
   t_zpack *x = (t_zpack *)pd_new(zpack_class);
   int n =0;
@@ -170,10 +172,10 @@ static void zpack_free(t_zpack*x)
   }
 }
 
-void zpack_setup(void)
+ZEXY_SETUP void zpack_setup(void)
 {
-  zpack_class = class_new(gensym("zexy/pack"), (t_newmethod)zpack_new,
-                          (t_method)zpack_free, sizeof(t_zpack), 0, A_GIMME,  0);
+  zpack_class = zexy_new("zexy/pack",
+                         zpack_new, zpack_free, t_zpack, 0, "*");
 #if 0
   /* oops Pd>=0.42 allows us to override built-ins
    * this is bad as long as the 2 objects are not compatible */
@@ -183,9 +185,8 @@ void zpack_setup(void)
   class_addlist(zpack_class, zpack_list);
   class_addanything(zpack_class, zpack_any);
 
-  zpackproxy_class = class_new(gensym("zpack proxy"), 0, 0,
-                               sizeof(t_zpackproxy),
-                               CLASS_PD | CLASS_NOINLET, 0);
+  zpackproxy_class = zexy_new("zpack proxy",
+                              0, 0, t_zpackproxy, CLASS_PD | CLASS_NOINLET, "");
   class_addlist(zpackproxy_class, zpack_proxy_list);
   class_addanything(zpackproxy_class, zpack_proxy_any);
 
@@ -196,4 +197,3 @@ void pack_setup(void)
 {
   zpack_setup();
 }
-

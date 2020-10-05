@@ -31,27 +31,6 @@
 #ifndef INCLUDE_ZEXY_H__
 #define INCLUDE_ZEXY_H__
 
-#ifdef __WIN32__
-# ifndef NT
-#  define NT
-# endif
-# ifndef MSW
-#  define MSW
-# endif
-#endif
-
-/*
- * to use the zexyconf.h compile-time configurations, you have to set HAVE_CONFIG_H
- * usually this is done in Make.config by configure
- */
-#ifdef HAVE_CONFIG_H
-# include "config.h"
-#else
-# include "zexyconf.h"
-#endif /* HAVE_CONFIG_H */
-
-
-
 /* these pragmas are only used for MSVC, not MinGW or Cygwin */
 #ifdef _MSC_VER
 # pragma warning( disable : 4018 )
@@ -61,8 +40,6 @@
 #endif
 
 #include "m_pd.h"
-
-
 
 
 #ifndef VERSION
@@ -93,20 +70,17 @@
 # define STATIC_INLINE static
 #endif
 
-#ifdef __APPLE__
-# include <AvailabilityMacros.h>
-# if defined (MAC_OS_X_VERSION_10_3) && MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_3
-#  define sqrtf sqrt
-# endif /* OSX-10.3 */
-#endif /* APPLE */
-
-
 #ifdef __GNUC__
-#  define UNUSED(x) ZUNUSED_ ## x __attribute__((__unused__))
-#  define UNUSED_FUNCTION(x) __attribute__((__unused__)) ZUNUSEDFUN_ ## x
+# define UNUSED(x) ZUNUSED_ ## x __attribute__((__unused__))
+# define UNUSED_FUNCTION(x) __attribute__((__unused__)) ZUNUSEDFUN_ ## x
+# define MAYBE_USED_FUNCTION(x) __attribute__((__unused__)) x
+# if __GNUC__ >= 9
+#  pragma GCC diagnostic ignored "-Wcast-function-type"
+# endif
 #else
-#  define UNUSED(x) ZUNUSED_ ## x
-#  define UNUSED_FUNCTION(x) ZUNUSEDFUN_ ## x
+# define UNUSED(x) ZUNUSED_ ## x
+# define UNUSED_FUNCTION(x) ZUNUSEDFUN_ ## x
+# define MAYBE_USED_FUNCTION(x) x
 #endif
 
 #define ZEXY_TYPE_EQUAL(type1, type2) (sizeof(type1) == sizeof(type2))
@@ -122,67 +96,93 @@ typedef struct _mypdlist {
 # define BUILD_DATE  __DATE__
 #endif
 
+#if PD_FLOATSIZE == 32
+# define Z_FABS(f) fabsf(f)
+#else
+# define Z_FABS(f) fabs(f)
+#endif
+
+/* marker for setup-functions to be called by zexy_setup() */
+#define ZEXY_SETUP
+
+/* convenience functions */
+static int zexy_argparse(const char*argstring, int argc, t_atomtype*argv)
+{
+  const char*args = argstring;
+  int i;
+  for(i=0; i<argc; i++) {
+    argv[i]=A_NULL;
+  }
+  for(i=0; i<argc && *args; i++, args++) {
+    switch(*args) {
+    case 'f':
+      argv[i] = A_FLOAT;
+      break;
+    case 'F':
+      argv[i] = A_DEFFLOAT;
+      break;
+    case 's':
+      argv[i] = A_SYMBOL;
+      break;
+    case 'S':
+      argv[i] = A_DEFSYM;
+      break;
+    case 'p':
+      argv[i] = A_POINTER;
+      break;
+    case '!':
+      argv[i] = A_CANT;
+      break;
+    case '*':
+      argv[i] = A_GIMME;
+      break;
+    default:
+      error("ZEXYERROR: unknown argument specifier '%s'", argstring);
+      return -1;
+    }
+  }
+  return i;
+}
+
+static t_class MAYBE_USED_FUNCTION(*zexy_classnew) (const char*name,
+    t_newmethod newmethod, t_method freemethod, size_t size, int flags,
+    const char*args)
+{
+  t_atomtype at[5];
+  if(zexy_argparse(args, 5, at) < 0) {
+    return 0;
+  }
+  return class_new(gensym(name), newmethod, freemethod, size, flags, at[0],
+                   at[1], at[2], at[3], at[4], A_NULL);
+}
+#define zexy_new(name, ctor, dtor, memberstruct, flags, args) \
+  zexy_classnew(name, (t_newmethod)ctor, (t_method)dtor, sizeof(memberstruct), flags, args)
+
+
+static void MAYBE_USED_FUNCTION(zexy_addmethod) (t_class*c, t_method fn,
+    const char*s, const char*args)
+{
+  /* wrapper around 'class_addmethod' that is a bit more terse... */
+  t_atomtype at[5];
+  if(zexy_argparse(args, 5, at) < 0) {
+    return;
+  }
+  class_addmethod(c, fn, gensym(s), at[0], at[1], at[2], at[3], at[4],
+                  A_NULL);
+}
 
 #ifndef ZEXY_LIBRARY
 static void zexy_register(char*object)
 {
   if(object!=0) {
     post("[%s] part of zexy-%s (compiled "BUILD_DATE")", object, VERSION);
-    post("\tCopyright (c) 1999-2012 IOhannes m zmölnig, forum::für::umläute & IEM");
+    post("\tCopyright (c) 1999-2018 IOhannes m zmölnig, forum::für::umläute & IEM");
   }
 }
 #else
-static void zexy_register(char*object)
+static void zexy_register(char*UNUSED(object))
 {
-  object=0;
 }
 #endif /* ZEXY_LIBRARY */
-
-#if (defined PD_MAJOR_VERSION && defined PD_MINOR_VERSION) && (PD_MAJOR_VERSION > 0 || PD_MINOR_VERSION > 38)
-/*
- * pd>=0.39 has a verbose() function; older versions don't
- * btw, this finally makes zexy binary incompatible with older version
- */
-# define z_verbose verbose
-
-/* when compiling zexy as library, we also provide now provide a dummy verbose() function,
- * which will chime in, when pd is lacking one
- * this should make zexy binary compatible with older pd versions again
- */
-# ifndef __WIN32__
-void verbose(int level, const char *fmt, ...);
-# endif
-#else
-/*
- * on older version we just shut up!
- */
-# define z_verbose
-#endif
-
-#if (defined PD_MAJOR_VERSION && defined PD_MINOR_VERSION) && (PD_MAJOR_VERSION > 0 || PD_MINOR_VERSION > 43)
-# define z_open sys_open
-# define z_close sys_close
-# define z_fopen sys_fopen
-# define z_fclose sys_fclose
-#else
-# define z_open open
-# define z_close close
-# define z_fopen fopen
-# define z_fclose fclose
-#endif
-
-
-#if (defined __x86_64__) && (defined PD_MAJOR_VERSION && defined PD_MINOR_VERSION) && (PD_MAJOR_VERSION > 0 || PD_MINOR_VERSION >= 41)
-# define zarray_t t_word
-# define zarray_getarray garray_getfloatwords
-# define zarray_getfloat(pointer, index) (pointer[index].w_float)
-# define zarray_setfloat(pointer, index, value) ((pointer[index].w_float)=value)
-#else
-# define zarray_t t_float
-# define zarray_getarray garray_getfloatarray
-# define zarray_getfloat(pointer, index) (pointer[index])
-# define zarray_setfloat(pointer, index, value) ((pointer[index])=value)
-#endif
-
 
 #endif /* INCLUDE_ZEXY_H__ */

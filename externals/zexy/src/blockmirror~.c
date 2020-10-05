@@ -26,7 +26,7 @@
    {x[0], x[1], ... x[n-1]} --> {x[n-1], x[n-2], ... x[0]}
 */
 
-static t_class *blockmirror_class;
+static t_class *blockmirror_class=NULL;
 
 typedef struct _blockmirror {
   t_object x_obj;
@@ -42,7 +42,7 @@ static void blockmirror_float(t_blockmirror *x, t_floatarg f)
 
 static t_int *blockmirror_perform(t_int *w)
 {
-  t_blockmirror	*x = (t_blockmirror *)(w[1]);
+  t_blockmirror *x = (t_blockmirror *)(w[1]);
   t_sample *in = (t_sample *)(w[2]);
   t_sample *out = (t_sample *)(w[3]);
   int n = (int)(w[4]);
@@ -78,10 +78,10 @@ static void blockmirror_dsp(t_blockmirror *x, t_signal **sp)
     x->blocksize = sp[0]->s_n;
     x->blockbuffer = getbytes(sizeof(*x->blockbuffer)*x->blocksize);
   }
-  dsp_add(blockmirror_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
+  dsp_add(blockmirror_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
 }
 
-static void blockmirror_helper(t_blockmirror*x)
+static void blockmirror_helper(t_blockmirror* UNUSED(x))
 {
   post("\n"HEARTSYMBOL " blockmirror~-object for reverting a signal");
   post("'help' : view this\n"
@@ -104,19 +104,16 @@ static void *blockmirror_new(void)
   return (x);
 }
 
-void blockmirror_tilde_setup(void)
+ZEXY_SETUP void blockmirror_tilde_setup(void)
 {
-  blockmirror_class = class_new(gensym("blockmirror~"),
-                                (t_newmethod)blockmirror_new,
-                                (t_method)blockmirror_free,
-                                sizeof(t_blockmirror), 0, A_NULL);
-  class_addmethod(blockmirror_class, nullfn, gensym("signal"), 0);
-  class_addmethod(blockmirror_class, (t_method)blockmirror_dsp,
-                  gensym("dsp"), A_CANT, 0);
+  blockmirror_class = zexy_new("blockmirror~",
+                               blockmirror_new, blockmirror_free, t_blockmirror, 0, "");
+  zexy_addmethod(blockmirror_class, (t_method)nullfn, "signal", "");
+  zexy_addmethod(blockmirror_class, (t_method)blockmirror_dsp, "dsp", "!");
 
   class_addfloat(blockmirror_class, blockmirror_float);
 
-  class_addmethod(blockmirror_class, (t_method)blockmirror_helper,
-                  gensym("help"), 0);
+  zexy_addmethod(blockmirror_class, (t_method)blockmirror_helper, "help",
+                 "");
   zexy_register("blockmirror~");
 }

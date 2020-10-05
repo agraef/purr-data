@@ -33,10 +33,10 @@ else
   RUNTESTS_LOG=tmp$$.log
 fi
 
-LIBFLAGS="-path ../src/.libs/:../src/:../ -lib zexy -path ../abs/:${TESTDIR}:."
+LIBFLAGS="-path ../ -lib zexy -path ../abs/:${TESTDIR}:."
 
 list_tests() {
-#  find . -mindepth 2  -name "*.pd" | sed 's|\.pd$|;|' 
+#  find . -mindepth 2  -name "*.pd" | sed 's|\.pd$|;|'
  ls -1 ${TESTDIR}/*/*.pd | sed 's|\.pd$|;|'
 }
 
@@ -81,7 +81,7 @@ evaluate_tests() {
 
 run_nogui() {
  debug "running test without gui"
- ${PD} ${LIBFLAGS} -nogui runtests_nogui.pd > ${RUNTESTS_LOG} 2>&1 
+ ${PD} ${LIBFLAGS} -nrt -noprefs -nostdpath -batch runtests_nogui.pd > ${RUNTESTS_LOG} 2>&1
  SUCCESS=$?
  debug "testing done"
  evaluate_tests ${RUNTESTS_TXT} ${RUNTESTS_LOG}
@@ -128,7 +128,9 @@ if [ "x${RUNTESTS_NOLOG}" != "x" ]; then
   RUNTESTS_FINAL_LOG=
 fi
 if [ "x${RUNTESTS_FINAL_LOG}" = "x" ]; then
- :
+ if [ ${SUCCESS} -ne 0 ]; then
+   cat "${RUNTESTS_LOG}"
+ fi
 else
  cat ${RUNTESTS_LOG} >> ${RUNTESTS_FINAL_LOG}
 fi

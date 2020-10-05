@@ -8,8 +8,8 @@
 #X obj 62 401 print REVERSE_ELEMENT;
 #X text 146 75 creation: packel [<n>];
 #X text 185 92 n indicates the index of the element to be output;
-#X text 185 110 n==0 ouputs the whole package;
-#X text 185 127 n<0 ouputs the nth-last element;
+#X text 185 110 n==0 outputs the whole package;
+#X text 185 127 n<0 outputs the nth-last element;
 #X text 461 26 part of zexy;
 #X msg 62 191 list uno dva drei quattre five;
 #X msg 62 357 list uno dva drei quattre five;

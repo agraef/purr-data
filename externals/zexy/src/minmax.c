@@ -20,7 +20,7 @@
 
 #include "zexy.h"
 
-static t_class *minmax_class;
+static t_class *minmax_class=NULL;
 
 typedef struct _minmax {
   t_object x_obj;
@@ -76,14 +76,14 @@ static void minmax_help(void)
   post("minmax\t:: get minimum and maximum of a list of floats");
 }
 
-void minmax_setup(void)
+ZEXY_SETUP void minmax_setup(void)
 {
-  minmax_class = class_new(gensym("minmax"), (t_newmethod)minmax_new, 0,
-                           sizeof(t_minmax), 0, A_DEFFLOAT, 0);
+  minmax_class = zexy_new("minmax",
+                          minmax_new, 0, t_minmax, 0, "");
 
   class_addlist(minmax_class, (t_method)minmax_list);
   class_addbang(minmax_class, (t_method)minmax_bang);
-  class_addmethod(minmax_class, (t_method)minmax_help, gensym("help"), 0);
+  zexy_addmethod(minmax_class, (t_method)minmax_help, "help", "");
 
   zexy_register("minmax");
 }
