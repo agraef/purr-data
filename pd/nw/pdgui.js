@@ -2967,9 +2967,7 @@ function gui_text_set_mynumbox (cid, tag, text, active) {
         text = text.trim();
         e.textContent = "";
         text_to_tspans(cid, e, text);
-        if (active === 2) {
-            e.classList.remove("activated");
-        } else if (active === 1) {
+        if (active === 1) {
             e.classList.add("activated");
         } else {
             e.classList.remove("activated");           

@@ -368,6 +368,10 @@ void glist_retext(t_glist *glist, t_text *y)
     }
 }
 
+// 2020-10-05 ico@vt.edu:
+// exclusive flag only applies to keyboard events (keyfn and keynameafn)
+// as of right now I cannot think of a scenario where mouse motion should be
+// exclusive to a single object.
 void glist_grab(t_glist *x, t_gobj *y, t_glistmotionfn motionfn, t_glistkeyfn keyfn,
     t_glistkeynameafn keynameafn, int xpos, int ypos, int exclusive)
 {
@@ -389,10 +393,10 @@ void glist_grab(t_glist *x, t_gobj *y, t_glistmotionfn motionfn, t_glistkeyfn ke
 // only do so if e_grab is not null
 int glist_grab_exclusive(t_glist *x, int exclusive)
 {
-    if (x->gl_editor->e_grab)
+    t_glist *x2 = glist_getcanvas(x);
+    if (x2->gl_editor->e_grab)
     {
-        t_glist *x2 = glist_getcanvas(x);
-        if (exclusive != 0 || exclusive != 1) return(1);
+        if (exclusive != 0 && exclusive != 1) return(1);
         x2->gl_editor->exclusive = exclusive;
         return(0);
     }

@@ -182,8 +182,8 @@ typedef struct _my_numbox
 {
     t_iemgui x_gui;
     t_clock  *x_clock_reset;
-    t_clock  *x_clock_wait;
     double   x_val;
+    double   x_oldval;
     double   x_min;
     double   x_max;
     double   x_k;
@@ -197,15 +197,15 @@ typedef struct _my_numbox
     int      x_num_fontsize;/* font size for the number only that should
                                automatically adjust to the box size */
     int      x_focused;     /* helps us determine when and how we are editing value
-                               0 no focus, 1 keyboard focus, 2 mouse focus */
+                               0 no focus, 1 mouse focus, 2 keyboard focus without
+                               the trailing '>', and, 3 keyboard focus with the
+                               trailing '>' */
     int      x_log_height;
     int      x_drawstyle;   /* 0 default, 1 just frame, 2, just arrow, 3 number only */
     int      x_shiftclick;  /* used to keep track how the number was originally focused
                                so that when it is shift-clicked, it is in append mode, and
                                when focused without the shift, it is operating in the old
                                mode */
-    int      x_dragged;     /* whether the object has been dragged since it was clicked
-                               we use this to fine-tune the exclusive focus */
 } t_my_numbox;
 
 extern int sys_noloadbang;

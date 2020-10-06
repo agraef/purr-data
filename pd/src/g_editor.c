@@ -3688,13 +3688,13 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     canvas_undo_already_set_move = 0;
 
     // if keyboard was grabbed, notify grabber and cancel the grab
-    if (doit && x->gl_editor->e_grab && x->gl_editor->e_keyfn)
+    if (doit > 0 && x->gl_editor->e_grab && x->gl_editor->e_keyfn)
     {
         (* x->gl_editor->e_keyfn) (x->gl_editor->e_grab, 0);
         glist_grab(x, 0, 0, 0, 0, 0, 0, 0);
     }
 
-    if (doit && !runmode && xpos == canvas_upx && ypos == canvas_upy &&
+    if (doit > 0 && !runmode && xpos == canvas_upx && ypos == canvas_upy &&
         sys_getrealtime() - canvas_upclicktime < DCLICKINTERVAL)
             doublemod = 1;
     x->gl_editor->e_lastmoved = 0;
@@ -3703,7 +3703,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
        to check for any regressions as this is needed to re-check
        scrollbar after something was created->startmotion->clicked
        to let go */
-    if (doit)
+    if (doit > 0)
     {
         //fprintf(stderr,"doit %d\n", x->gl_editor->e_onmotion);
         if (x->gl_editor->e_onmotion == MA_MOVE)
@@ -3728,6 +3728,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
         {
             x->gl_editor->e_grab = 0;
             x->gl_editor->e_onmotion = MA_NONE;
+            post("canvas_doclick e_onmotion=0");
         }
     }
     //post("click %d %d %d %d", xpos, ypos, which, mod);
@@ -3811,7 +3812,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
 
         /* check for ctrlmod click and give a warning once in the console that
            the hotkey for temporary runmode has changed */
-        if (!ctrl_runmode_warned && ctrlmod && !rightclick && doit) {
+        if (!ctrl_runmode_warned && ctrlmod && !rightclick && doit > 0) {
           post("\nwarning: The hotkey for temporary run mode has changed. "
                "Please press Alt instead of Ctrl to enable it.\n");
           ctrl_runmode_warned = 1;
@@ -3826,7 +3827,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
         {
             // we are clicking and making a (de)selection
             // (only if we are not hovering above an outlet)
-            if (doit)
+            if (doit > 0)
             {
                 if (glist_isselected(x, y))
                     glist_deselect(x, y);
@@ -3853,7 +3854,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
             if (in_text_resizing_hotspot)
             {
                 // ...and we are clicking...
-                if (doit)
+                if (doit > 0)
                 {
                     // ...select the object
                     if (!glist_isselected(x, y) ||
@@ -3941,7 +3942,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                 {
                     //post("Outlet found...");
                     //...and we are clicking on it
-                    if (doit)
+                    if (doit > 0)
                     {
                         //fprintf(stderr,"start connection\n");
                         int issignal = obj_issignaloutlet(ob, closest);
@@ -4022,7 +4023,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                     //post("Comb the Desert!");
                     canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
                     canvas_check_nlet_highlights(x);
-                    if (doit)
+                    if (doit > 0)
                         goto nooutletafterall;
                 }
             }
@@ -4076,12 +4077,12 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                     {
                         canvas_check_nlet_highlights(x);
                     }
-                    if (doit)
+                    if (doit > 0)
                         goto nooutletafterall;
                 }
             }
                 /* not in an outlet; select and move */
-            else if (doit)
+            else if (doit > 0)
             {
                 t_rtext *rt;
                     /* check if the box is being text edited */
@@ -4154,7 +4155,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     }
     else if (in_text_resizing_hotspot) /* red gop rectangle */
     {
-        if (doit)
+        if (doit > 0)
         {
             x->gl_editor->e_onmotion = MA_RESIZE;
             x->gl_editor->e_xwas = x1;
@@ -4217,7 +4218,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                 if (area * area >= 50 * dsquare) continue;
                 if ((lx2-lx1) * (fx-lx1) + (ly2-ly1) * (fy-ly1) < 0) continue;
                 if ((lx2-lx1) * (lx2-fx) + (ly2-ly1) * (ly2-fy) < 0) continue;
-                if (doit)
+                if (doit > 0)
                 {
                     glist_selectline(glist2, oc, 
                         canvas_getindex(glist2, &t.tr_ob->ob_g), t.tr_outno,
@@ -4283,7 +4284,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     // end jsarlo
     if (x->gl_editor->e_onmotion != MA_SCROLL)
         canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
-    if (doit)
+    if (doit > 0)
     {
         if (!shiftmod &&
             (x->gl_editor->e_selection || x->gl_editor->e_selectedline))
@@ -5290,6 +5291,7 @@ static void canvas_doregion(t_canvas *x, int xpos, int ypos, int doit)
         canvas_selectinrect(x, lox, loy, hix, hiy);
         gui_vmess("gui_canvas_hide_selection", "x", x);
         x->gl_editor->e_onmotion = MA_NONE;
+        post("canvas_do_region MA_NONE");
     }
     else
     {
@@ -5305,6 +5307,7 @@ static void canvas_doregion(t_canvas *x, int xpos, int ypos, int doit)
 void canvas_mouseup(t_canvas *x,
     t_floatarg fxpos, t_floatarg fypos, t_floatarg fwhich)
 {
+    post("CANVAS_MOUSEUP");
     //if (toggle_moving == 1) {
     //    toggle_moving = 0;
     //    sys_vgui("pdtk_toggle_xy_tooltip .x%zx %d\n", x, 0);
@@ -5346,7 +5349,8 @@ void canvas_mouseup(t_canvas *x,
         canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);        
     }
     
-    if (x->gl_editor->e_onmotion != MA_CONNECT ||
+    if ((x->gl_editor->e_onmotion != MA_CONNECT &&
+         x->gl_editor->e_onmotion != MA_PASSOUT) ||
         x->gl_editor->e_onmotion == MA_CONNECT && !glob_shift)
     {
         //fprintf(stderr,"releasing shift during connect without "
@@ -5360,13 +5364,23 @@ void canvas_mouseup(t_canvas *x,
         }
 
         x->gl_editor->e_onmotion = MA_NONE;
+        post("mouseup MA_NONE");
     }
     //fprintf(stderr,"canvas_mouseup -> canvas_doclick %d\n", which);
     /* this is to ignore scrollbar clicks from within tcl and is
-       unused within nw.js 2.x implementation and onward */
+       unused within nw.js 2.x implementation and onward. here,
+       we use doit = -1 to signify mouseup */
     //if (canvas_last_glist_mod == -1) {
+    post("...broadcasting onmotion=%d", x->gl_editor->e_onmotion);
+    if (x->gl_editor->e_onmotion == MA_PASSOUT)
+    {
+        int clickreturned = gobj_click(
+            x->gl_editor->e_grab, x, xpos, ypos, 0, 0, 0, -1);
+        post("clickreturned=%d", clickreturned);
+    }
+
     canvas_doclick(x, xpos, ypos, 0,
-        (glob_shift + glob_ctrl*2 + glob_alt*4), 0);
+        (glob_shift + glob_ctrl*2 + glob_alt*4), -1);
     //}
     // now dispatch to any click listeners
     canvas_dispatch_mouseclick(0., xpos, ypos, which);
@@ -5591,9 +5605,37 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     // set the shared variable for broadcasting of keypresses to key et al. objects
     t_atom at[2];
 
+    // 2020-10-04 ico@vt.edu: we are here changing the order of broadcasting
+    // key presses to grabbed objects first, and only then to all bound objects
+    // this change should be heavily scrutinized as it may introduce subtle
+    // and not so subtle regressions. I am here introducing it becuase doing so
+    // allows us to have some really nice flexibility in respect to grabbed objects.
+    // For instance, by allowing grabbed events to propagate first, objects like
+    // iemgui numbox and gatom can grab exclusive hold of key presses in select cases
+    // before such events propagate to other bound elements. So, here
+    // we do grabbed keynameafn here for key presses and releases
+    if (x && x->gl_editor && x->gl_editor->e_grab)
+    {
+        // as per vanilla behavior, we first send keynums, then keynames
+        if (x->gl_editor->e_keyfn && keynum && focus && down)
+            (* x->gl_editor->e_keyfn)
+                (x->gl_editor->e_grab, (t_float)keynum);
+        // this takes care of both keyname presses and releases
+        // because we don't discriminate between the down states
+        // as we used to...
+        if (x->gl_editor->e_keynameafn && gotkeysym && focus)
+        {
+            at[0] = av[0];
+            SETFLOAT(at, down);
+            SETSYMBOL(at+1, gotkeysym);
+            (* x->gl_editor->e_keynameafn) (x->gl_editor->e_grab, 0, 2, at);
+        }
+    }
+
     // now broadcast key press to key et al. objects
-    // ico@vt.edu 20200918: only do so if we do not have an object
+    // 2020-10-05 ico@vt.edu: only do so if we do not have an object
     // that has grabbed the keyboard exclusively, such as gatom or iemgui numbox
+    post("canvas_key exclusive=%d", (x  && x->gl_editor ? x->gl_editor->exclusive : 0));
     if (!x || !x->gl_editor || !x->gl_editor->e_grab || !x->gl_editor->exclusive)
     {
         if (!autorepeat)
@@ -5628,41 +5670,15 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     if (!x || !x->gl_editor)
         return;
 
-    // we need to do grabbed keynameafn here for key releases
-    if (x && x->gl_editor && x->gl_editor->e_grab && !down)
-    {
-        if (x->gl_editor->e_keynameafn && gotkeysym && focus)
-        {
-            at[0] = av[0];
-            SETFLOAT(at, down);
-            SETSYMBOL(at+1, gotkeysym);
-            (* x->gl_editor->e_keynameafn) (x->gl_editor->e_grab, 0, 2, at);
-        }
-    }
-
     if (x && down)
     {
             /* cancel any dragging action */
         if (x->gl_editor->e_onmotion == MA_MOVE)
             x->gl_editor->e_onmotion = MA_NONE;
-            /* if an object has "grabbed" keys just send them on
-               but deal with key release above outside this loop */
-        if (x->gl_editor->e_grab)
-        {
-            if (x->gl_editor->e_keyfn && keynum && focus)
-                (* x->gl_editor->e_keyfn)
-                    (x->gl_editor->e_grab, (t_float)keynum);
-          	if (x->gl_editor->e_keynameafn && gotkeysym && focus)
-          	{
-          		at[0] = av[0];
-            	SETFLOAT(at, down);
-            	SETSYMBOL(at+1, gotkeysym);
-            	(* x->gl_editor->e_keynameafn) (x->gl_editor->e_grab, 0, 2, at);
-          	}
-        }
+
             /* if a text editor is open send the key on, as long as
             it is either "real" (has a key number) or else is an arrow key. */
-        else if (x->gl_editor->e_textedfor && focus && (keynum
+        if (!x->gl_editor->e_grab && x->gl_editor->e_textedfor && focus && (keynum
             || !strcmp(gotkeysym->s_name, "Up")
             || !strcmp(gotkeysym->s_name, "Down")
             || !strcmp(gotkeysym->s_name, "Left")
@@ -5799,6 +5815,7 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
     t_floatarg fmod)
 {
     static t_symbol *mousemotionsym;
+    post("CANVAS_MOTION=%d", x->gl_editor->e_onmotion);
     //fprintf(stderr,"motion %d %d %d %d\n",
     //    (int)xpos, (int)ypos, (int)fmod, canvas_last_glist_mod);
     //fprintf(stderr,"canvas_motion=%d\n",x->gl_editor->e_onmotion);
