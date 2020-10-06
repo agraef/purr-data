@@ -183,7 +183,6 @@ typedef struct _my_numbox
     t_iemgui x_gui;
     t_clock  *x_clock_reset;
     double   x_val;
-    double   x_oldval;
     double   x_min;
     double   x_max;
     double   x_k;
@@ -206,6 +205,10 @@ typedef struct _my_numbox
                                so that when it is shift-clicked, it is in append mode, and
                                when focused without the shift, it is operating in the old
                                mode */
+    int      x_dragged;     /* used to keep track if the number box was dragged, so that 
+                               even if we arrive back at the previous number, it does not
+                               activate with exclusive keyboard focus. This is why old_val
+                               comparison is not a good one */
 } t_my_numbox;
 
 extern int sys_noloadbang;
