@@ -1347,10 +1347,11 @@ int sys_startgui(const char *guidir)
         {
 #ifdef MSW
             int err = WSAGetLastError();
+            if ((ntry++ > 20) || (err != WSAEADDRINUSE))
 #else
             int err = errno;
-#endif
             if ((ntry++ > 20) || (err != EADDRINUSE))
+#endif
             {
                 perror("bind");
                 fprintf(stderr,
