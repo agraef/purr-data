@@ -1039,8 +1039,9 @@ function canvas_check_geometry(cid) {
     // ico@vt.edu 2020-08-31:
     // why does Windows have different innerWidth and innerHeight from other OSs?
     // See canvas_params for the explanation...
-    win_w += 16 * nw_os_is_windows;
-    win_h += 8 * nw_os_is_windows;
+    // 2020-10-01: this was a bug in 0.14.7 but is no longer needed
+    //win_w += 16 * nw_os_is_windows;
+    //win_h += 8 * nw_os_is_windows;
 
     // We're reusing win_x and win_y below, as it
     // shouldn't make a difference to the bounds
