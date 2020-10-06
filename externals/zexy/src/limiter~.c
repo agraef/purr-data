@@ -1,7 +1,8 @@
 /*
  * limiter~: limit/compress signals
  *
- * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃŒr::umlÃ€ute, institute of electronic music and acoustics (iem)
+ * (c) 1999-2011 IOhannes m zmölnig, forum::für::umläute,
+ *               institute of electronic music and acoustics (iem)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,10 +23,10 @@
 /*
   --------------------------------- limiter/compressor ---------------------------------
 
-  for details on how it works watch out for   "http://iem.kug.ac.at/~zmoelnig/pd"
+  for details on how it works watch out for "http://users.iem.at/zmoelnig/pd"
   ...and search for "limiter"
 
-  mail2me4more!n4m8ion : zmoelnig@iem.kug.ac.at
+  mail2me4more!n4m8ion : zmoelnig@iem.at
 */
 
 /*
@@ -33,7 +34,7 @@
    the limiter is based on Falkner's thesis
    "Entwicklung eines digitalen Stereo-limiters mit Hilfe des Signalprozessors DSP56001" pp.14
 
-   2108:forum::fÃŒr::umlÃ€ute:1999		all rights reserved and no warranties...
+   2108:forum::für::umläute:1999              all rights reserved and no warranties...
 
    see GNU-license for details
 */
@@ -73,7 +74,7 @@
 
 static t_sample SINC[9];
 
-#define PI  3.1415926535897932384626433832795029L  /* pi */
+#define PI 3.1415926535897932384626433832795029L /* pi */
 
 static void init_sinc(void)
 {
@@ -89,7 +90,7 @@ static void init_sinc(void)
 /* ------------------------------------------------------------------------------------ */
 /* first define the structs... */
 
-static t_class *limiter_class;
+static t_class *limiter_class=NULL;
 
 typedef struct _limctl {
   /* variables changed by user */
@@ -99,42 +100,42 @@ typedef struct _limctl {
 } t_limctl;
 
 typedef struct _cmpctl {
-  t_float treshold,
-          ratio;		/* uclimit is the very same is the limiter1-limit (decalculated relative to our treshold) */
+  t_float threshold,
+          ratio;                /* uclimit is the very same is the limiter1-limit (decalculated relative to our threshold) */
   t_float uclimit,
-          climit_inverse;	/* climit == compressed limit (uclimit == uncompressed limit) */
+          climit_inverse;       /* climit == compressed limit (uclimit == uncompressed limit) */
 
-  t_float limiter_limit;		/* start limiting (stop compressing); == tresh/limit; */
+  t_float limiter_limit;                /* start limiting (stop compressing); == tresh/limit; */
 
   t_float treshdB, oneminusratio;
 } t_cmpctl;
 
 typedef struct _inbuf {
-  t_sample*	ringbuf;
-  int		buf_position;
+  t_sample* ringbuf;
+  int       buf_position;
 } t_inbuf;
 
 typedef struct _limiter {
-  t_object	x_obj;
+  t_object x_obj;
 
-  int		number_of_inlets, s_n;
+  int      number_of_inlets, s_n;
 
   /* variables changed by process */
-  t_sample	amplification;
-  t_float	samples_left, still_left;
+  t_sample amplification;
+  t_float  samples_left, still_left;
 
-  int		mode;
+  int      mode;
 
-  t_limctl	*val1, *val2;
-  t_cmpctl	*cmp;
+  t_limctl *val1, *val2;
+  t_cmpctl *cmp;
 
-  /* note :	limit is not the same for val1 & val2 :
-   *			at val1 it is the limit of the INPUT_VALUE
-   *			at val2 it is the limit for the AMPLIFICATION (in fact it is abs_limit1/abs_limit2)
+  /* note: limit is not the same for val1 & val2 :
+   *       at val1 it is the limit of the INPUT_VALUE
+   *       at val2 it is the limit for the AMPLIFICATION (in fact it is abs_limit1/abs_limit2)
    */
 
-  t_inbuf*	in;
-  int		buf_size;
+  t_inbuf  *in;
+  int       buf_size;
 
 } t_limiter;
 
@@ -161,7 +162,7 @@ static void set_uclimit(t_limiter *x)
 {
   t_cmpctl *c = x->cmp;
   t_float limit = x->val1->limit, limitdB = rmstodb(limit), ratio = c->ratio,
-          tresh = c->treshold, treshdB = rmstodb(tresh);
+          tresh = c->threshold, treshdB = rmstodb(tresh);
 
   c->climit_inverse  = limit / tresh;
   c->uclimit = tresh / dbtorms(treshdB+(limitdB - treshdB)/ratio);
@@ -172,15 +173,15 @@ static void set_uclimit(t_limiter *x)
 
 /* settings */
 
-static void set_treshold(t_limiter *x, t_float treshold)
+static void set_threshold(t_limiter *x, t_float threshold)
 {
   t_cmpctl *c = x->cmp;
-  t_float tresh = dbtorms (treshold);
+  t_float tresh = dbtorms (threshold);
   if (tresh > x->val1->limit) {
     tresh = x->val1->limit;
   }
 
-  c->treshold = tresh;
+  c->threshold = tresh;
 
   set_uclimit(x);
 }
@@ -246,8 +247,8 @@ static void set_limit(t_limiter *x, t_floatarg limit)
   }
   x->val1->limit = dbtorms(limit);
 
-  if (x->val1->limit < x->cmp->treshold) {
-    x->cmp->treshold = x->val1->limit;
+  if (x->val1->limit < x->cmp->threshold) {
+    x->cmp->threshold = x->val1->limit;
   }
   set_uclimit(x);
 }
@@ -264,15 +265,15 @@ static void set_limits(t_limiter *x, t_floatarg limit1, t_floatarg limit2)
   lim2 = dbtorms(limit2);
 
   if (lim2 < lim1) {
-    lim2 = 2*lim1;	/* this is to prevent lim2 (which should trigger the FAST regulation) */
-    x->mode = 0;	/* to underrun the SLOW regulation; this would cause distortion */
+    lim2 = 2*lim1;      /* this is to prevent lim2 (which should trigger the FAST regulation) */
+    x->mode = 0;        /* to underrun the SLOW regulation; this would cause distortion */
   }
 
   x->val1->limit = lim1;
   x->val2->limit = lim1/lim2;
 
-  if (lim1 < x->cmp->treshold) {
-    x->cmp->treshold = lim1;
+  if (lim1 < x->cmp->threshold) {
+    x->cmp->threshold = lim1;
   }
   set_uclimit(x);
 }
@@ -286,8 +287,8 @@ static void set1(t_limiter *x, t_floatarg limit, t_floatarg hold,
   x->val1->hold_samples = calc_holdsamples(hold, x->buf_size);
   x->val1->change_of_amplification = calc_coa(release);
 
-  if (lim < x->cmp->treshold) {
-    x->cmp->treshold = lim;
+  if (lim < x->cmp->threshold) {
+    x->cmp->threshold = lim;
   }
   set_uclimit(x);
 }
@@ -305,13 +306,13 @@ static void set2(t_limiter *x, t_floatarg limit, t_floatarg hold,
 
 
 static void set_compressor(t_limiter *x, t_floatarg limit,
-                           t_floatarg treshold, t_floatarg ratio)
+                           t_floatarg threshold, t_floatarg ratio)
 {
   t_cmpctl *c = x->cmp;
   t_float lim = dbtorms(limit);
-  t_float tresh = dbtorms(treshold);
+  t_float tresh = dbtorms(threshold);
 
-  if ((limit == 0) && (treshold == 0) && (ratio == 0)) {
+  if ((limit == 0) && (threshold == 0) && (ratio == 0)) {
     set_mode(x, COMPRESS);
     return;
   }
@@ -325,7 +326,7 @@ static void set_compressor(t_limiter *x, t_floatarg limit,
 
   c->ratio = ratio;
   x->val1->limit = lim;
-  c->treshold = tresh;
+  c->threshold = tresh;
   set_uclimit(x);
 
   set_mode(x, COMPRESS);
@@ -368,12 +369,12 @@ static void status(t_limiter *x)
     break;
   case COMPRESS:
     post("%d-channel compressor @ %fkHz\n"
-         "\noutput-limit\t= %fdB\ntreshold\t= %fdB\ninput-limit\t= %f\nratio\t\t= 1:%f\n"
+         "\noutput-limit\t= %fdB\nthreshold\t= %fdB\ninput-limit\t= %f\nratio\t\t= 1:%f\n"
          "\nhold\t\t= %fms\nrelease\t\t= %fms\n"
          "\namplify\t\t= %fdB\n",
          x->number_of_inlets, sr,
-         rmstodb(c->treshold * c->climit_inverse), rmstodb(c->treshold),
-         rmstodb(c->treshold / c->uclimit), 1./c->ratio,
+         rmstodb(c->threshold * c->climit_inverse), rmstodb(c->threshold),
+         rmstodb(c->threshold / c->uclimit), 1./c->ratio,
          (v1->hold_samples) / sr, LN2 / (log(v1->change_of_amplification) * sr),
          rmstodb(x->amplification));
   }
@@ -399,9 +400,9 @@ static void limiter_tilde_helper(t_limiter *x)
                "\n'set2 <limit2><htime2><rtime2>'\t: set crack-limiter");
     break;
   case COMPRESS:
-    poststring("\n'ratio <compressratio>'\t\t: set compressratio (Åœ0.5Åœ instead of Åœ1:2Åœ)"
-               "\n'treshold <treshold>'\t\t: set treshold of the compressor"
-               "\n'compress <limit><treshold><ratio>'\t: set compressor"
+    poststring("\n'ratio <compressratio>'\t\t: set compressratio ('0.5' instead of '1:2')"
+               "\n'threshold <threshold>'\t\t: set threshold of the compressor"
+               "\n'compress <limit><threshold><ratio>'\t: set compressor"
                "\n..........note that <limit> is the same for COMPRESSOR and LIMITER..........");
     break;
   default:
@@ -410,21 +411,21 @@ static void limiter_tilde_helper(t_limiter *x)
   poststring("\n'print'\t\t\t\t: view actual settings"
              "\n'help'\t\t\t\t: view this\n");
   poststring("\ncreating arguments are :\n"
-             "\"limiter~ [<in1> [<in2> [<in3> [...]]]]\":	<in*> may be anything\n");
+             "\"limiter~ [<in1> [<in2> [<in3> [...]]]]\":       <in*> may be anything\n");
   endpost();
 }
 
 
-/* ------------------------------------------------------------------------------------ */
-/* now do the dsp - thing							                                                  */
-/* ------------------------------------------------------------------------------------ */
+/* ---------------------- */
+/* now do the dsp - thing */
+/* ---------------------- */
 
 static t_int *oversampling_maxima(t_int *w)
 {
-  t_limiter *x = (t_limiter *)w[1];
-  t_inbuf *buf = (t_inbuf *)w[2];
-  t_sample *in	 = (t_sample *)w[3];
-  t_sample *out = (t_sample *)w[4];
+  t_limiter *x  = (t_limiter *)w[1];
+  t_inbuf *buf  = (t_inbuf *)  w[2];
+  t_sample *in  = (t_sample *) w[3];
+  t_sample *out = (t_sample *) w[4];
 
   int n = x->s_n;
   int bufsize = x->buf_size;
@@ -468,7 +469,7 @@ static t_int *oversampling_maxima(t_int *w)
 
     sinccurrent = SINC[4] * current;
 
-    os1= fabsf(SINC[0] * last4 +
+    os1= Z_FABS(SINC[0] * last4 +
                SINC[1] * last3 +
                SINC[2] * last2 +
                SINC[3] * last1 +
@@ -478,7 +479,7 @@ static t_int *oversampling_maxima(t_int *w)
                SINC[7] * next3 +
                SINC[8] * next4);
 
-    os2= fabsf(SINC[0] * next4 +
+    os2= Z_FABS(SINC[0] * next4 +
                SINC[1] * next3 +
                SINC[2] * next2 +
                SINC[3] * next1 +
@@ -488,7 +489,7 @@ static t_int *oversampling_maxima(t_int *w)
                SINC[7] * last3 +
                SINC[8] * last4);
 
-    max = fabsf(current);
+    max = Z_FABS(current);
 
 #if 0
     if(max>1. || os1>1. || os2>1.)
@@ -527,34 +528,34 @@ static t_int *limiter_perform(t_int *w)
   t_limiter *x=(t_limiter *)w[1];
   int n = x->s_n;
 
-  t_sample *in	= (t_sample *)w[2];
-  t_sample *out= (t_sample *)w[3];
+  t_sample *in  = (t_sample *)w[2];
+  t_sample *out = (t_sample *)w[3];
 
-  t_limctl *v1	= (t_limctl *)(x->val1);
-  t_limctl *v2	= (t_limctl *)(x->val2);
-  t_cmpctl *c     = (t_cmpctl *)(x->cmp);
+  t_limctl *v1  = (t_limctl *)(x->val1);
+  t_limctl *v2  = (t_limctl *)(x->val2);
+  t_cmpctl *c   = (t_cmpctl *)(x->cmp);
 
   /* now let's make things a little bit faster */
 
   /* these MUST NOT be changed by process */
-  const t_float limit		= v1->limit;
-  const t_float holdlong	= v1->hold_samples;
-  const t_float coa_long	= v1->change_of_amplification;
+  const t_float limit    = v1->limit;
+  const t_float holdlong = v1->hold_samples;
+  const t_float coa_long = v1->change_of_amplification;
 
-  const t_float alimit		= v2->limit;
-  const t_float holdshort	= v2->hold_samples;
-  const t_float coa_short	= v2->change_of_amplification;
+  const t_float alimit    = v2->limit;
+  const t_float holdshort = v2->hold_samples;
+  const t_float coa_short = v2->change_of_amplification;
 
-  t_float tresh  = c->treshold;
+  t_float tresh  = c->threshold;
   t_float uclimit = c->uclimit;
   t_float climit_inv = c->climit_inverse;
 
   t_float oneminusratio = c->oneminusratio;
 
   /* these will be changed by process */
-  t_float amp				= x->amplification;
-  t_float samplesleft		= x->samples_left;
-  t_float stillleft		= x->still_left;
+  t_float amp         = x->amplification;
+  t_float samplesleft = x->samples_left;
+  t_float stillleft   = x->still_left;
 
   /* an intern variable... */
   t_float max_val;
@@ -564,7 +565,7 @@ static t_int *limiter_perform(t_int *w)
     while (n--) {
       max_val = *in;
 
-      /* the MAIN routine for the 1-treshold-limiter */
+      /* the MAIN routine for the 1-threshold-limiter */
 
       if ((max_val * amp) > limit) {
         amp = limit / max_val;
@@ -620,7 +621,7 @@ static t_int *limiter_perform(t_int *w)
     while (n--) {
       max_val = *in;
 
-      /* the MAIN routine for the compressor (very similar to the 1-treshold-limiter) */
+      /* the MAIN routine for the compressor (very similar to the 1-threshold-limiter) */
 
       if (max_val * amp > tresh) {
         amp = tresh / max_val;
@@ -637,8 +638,7 @@ static t_int *limiter_perform(t_int *w)
         } else {
           *out++ = amp *
                    climit_inv;  /* amp must fit for limiting : amp(new) = limit/maxval; = amp(old)*limitOUT/tresh; */
-        }
-      else {
+        } else {
         *out++ = 1.;
       }
 
@@ -653,8 +653,8 @@ static t_int *limiter_perform(t_int *w)
   }
 
   /* now return the goodies */
-  x->amplification	= amp;
-  x->samples_left		= samplesleft;
+  x->amplification = amp;
+  x->samples_left  = samplesleft;
 
   return (w+4);
 }
@@ -688,7 +688,7 @@ static void limiter_dsp(t_limiter *x, t_signal **sp)
 /* ------------------------------------------------------------------------------------ */
 /* finally do the creation - things */
 
-static void *limiter_new(t_symbol *s, int argc, t_atom *argv)
+static void *limiter_new(t_symbol *UNUSED(s), int argc, t_atom *argv)
 {
   t_limiter *x = (t_limiter *)pd_new(limiter_class);
   int i = 0;
@@ -700,10 +700,10 @@ static void *limiter_new(t_symbol *s, int argc, t_atom *argv)
     set_bufsize(x, 0);
   }
 
-  if (argc > 64)	{
+  if (argc > 64) {
     argc=64;
   }
-  if (argc == 0)	{
+  if (argc == 0) {
     argc=1;
   }
 
@@ -719,8 +719,8 @@ static void *limiter_new(t_symbol *s, int argc, t_atom *argv)
   while (i < x->number_of_inlets) {
     int n;
     t_sample* buf = (t_sample *)getbytes(sizeof(*buf) * x->buf_size);
-    x->in[i].ringbuf		= buf;
-    x->in[i].buf_position	= 0;
+    x->in[i].ringbuf      = buf;
+    x->in[i].buf_position = 0;
     for (n = 0; n < x->buf_size; n++) {
       x->in[i].ringbuf[n] = 0.;
     }
@@ -729,16 +729,16 @@ static void *limiter_new(t_symbol *s, int argc, t_atom *argv)
 
   x->val1 = (t_limctl *)getbytes(sizeof(t_limctl));
   x->val2 = (t_limctl *)getbytes(sizeof(t_limctl));
-  x->cmp = (t_cmpctl *)getbytes(sizeof(t_cmpctl));
+  x->cmp  = (t_cmpctl *)getbytes(sizeof(t_cmpctl));
 
   x->cmp->ratio = 1.;
-  x->cmp->treshold = 1;
+  x->cmp->threshold = 1;
 
   set1(x, 100, 30, 139);
   set2(x, 110, 5, 14.2);
 
-  x->amplification= 1;
-  x->samples_left	= x->still_left = x->mode = 0;
+  x->amplification = 1;
+  x->samples_left  = x->still_left = x->mode = 0;
 
   return (x);
 }
@@ -749,9 +749,9 @@ static void limiter_free(t_limiter *x)
 
   freebytes(x->val1, sizeof(t_limctl));
   freebytes(x->val2, sizeof(t_limctl));
-  freebytes(x->cmp , sizeof(t_cmpctl));
+  freebytes(x->cmp, sizeof(t_cmpctl));
 
-  while (i < x->number_of_inlets)	{
+  while (i < x->number_of_inlets)       {
     freebytes(x->in[i++].ringbuf, x->buf_size * sizeof(t_sample));
   }
 
@@ -765,50 +765,39 @@ static void limiter_free(t_limiter *x)
 
 
 
-void limiter_tilde_setup(void)
+ZEXY_SETUP void limiter_tilde_setup(void)
 {
   init_sinc();
 
-  limiter_class = class_new(gensym("limiter~"), (t_newmethod)limiter_new,
-                            (t_method)limiter_free,
-                            sizeof(t_limiter), 0, A_GIMME, 0);
+  limiter_class = zexy_new("limiter~",
+                           limiter_new, limiter_free, t_limiter, 0, "*");
 
-  class_addmethod(limiter_class, nullfn,					gensym("signal"), 0);
-  class_addmethod(limiter_class, (t_method)limiter_dsp,	gensym("dsp"),
-                  A_CANT, 0);
+  zexy_addmethod(limiter_class, (t_method)nullfn, "signal", "");
+  zexy_addmethod(limiter_class, (t_method)limiter_dsp, "dsp", "!");
 
-  class_addmethod(limiter_class, (t_method)limiter_tilde_helper,
-                  gensym("help"), 0);
-  class_addmethod(limiter_class, (t_method)status,	gensym("print"), 0);
+  zexy_addmethod(limiter_class, (t_method)limiter_tilde_helper, "help", "");
+  zexy_addmethod(limiter_class, (t_method)status, "print", "");
 
-  class_addmethod(limiter_class, (t_method)set_mode,	gensym("mode"), A_FLOAT,
-                  0);
-  class_addmethod(limiter_class, (t_method)set_LIMIT,	gensym("LIMIT"),  0);
-  class_addmethod(limiter_class, (t_method)set_CRACK,	gensym("CRACK"),  0);
-  class_addmethod(limiter_class, (t_method)set_COMPRESS,	gensym("COMPRESS"),
-                  0);
+  zexy_addmethod(limiter_class, (t_method)set_mode, "mode", "f");
+  zexy_addmethod(limiter_class, (t_method)set_LIMIT, "LIMIT", "");
+  zexy_addmethod(limiter_class, (t_method)set_CRACK, "CRACK", "");
+  zexy_addmethod(limiter_class, (t_method)set_COMPRESS, "COMPRESS", "");
 
 
-  class_addmethod(limiter_class, (t_method)set_treshold,	gensym("tresh"),
-                  A_FLOAT, 0);
-  class_addmethod(limiter_class, (t_method)set_treshold,	gensym("treshold"),
-                  A_FLOAT, 0);
-  class_addmethod(limiter_class, (t_method)set_ratio,	gensym("ratio"),
-                  A_FLOAT, 0);
-  class_addmethod(limiter_class, (t_method)set1,		gensym("set"), A_FLOAT,
-                  A_FLOAT, A_FLOAT, 0);
-  class_addmethod(limiter_class, (t_method)set2,		gensym("set2"), A_FLOAT,
-                  A_FLOAT, A_FLOAT, 0);
-  class_addmethod(limiter_class, (t_method)set_compressor,gensym("compress"),
-                  A_FLOAT, A_FLOAT, A_FLOAT, 0);
+  zexy_addmethod(limiter_class, (t_method)set_threshold, "tresh", "f");
+  zexy_addmethod(limiter_class, (t_method)set_threshold, "treshold", "f");
+  zexy_addmethod(limiter_class, (t_method)set_threshold, "thresh", "f");
+  zexy_addmethod(limiter_class, (t_method)set_threshold, "threshold", "f");
+  zexy_addmethod(limiter_class, (t_method)set_ratio, "ratio", "f");
+  zexy_addmethod(limiter_class, (t_method)set1, "set", "fff");
+  zexy_addmethod(limiter_class, (t_method)set2, "set2", "fff");
+  zexy_addmethod(limiter_class, (t_method)set_compressor, "compress", "fff");
 
-  class_addmethod(limiter_class, (t_method)set_limits,	gensym("limits"),
-                  A_FLOAT, A_FLOAT, 0);
-  class_addmethod(limiter_class, (t_method)set_limit,	gensym("limit"),
-                  A_FLOAT, 0);
+  zexy_addmethod(limiter_class, (t_method)set_limits, "limits", "ff");
+  zexy_addmethod(limiter_class, (t_method)set_limit, "limit", "f");
   class_addfloat (limiter_class, set_limit);
 
-  class_addmethod(limiter_class, (t_method)reset,		gensym("reset"), 0);
+  zexy_addmethod(limiter_class, (t_method)reset, "reset", "");
 
   zexy_register("limiter~");
 }

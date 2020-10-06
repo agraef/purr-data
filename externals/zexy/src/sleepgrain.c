@@ -24,7 +24,7 @@ EXTERN int* get_sys_sleepgrain(void ) ;
 /* ------------------------- sleepgrain ------------------------------- */
 
 
-static t_class *sleepgrain_class;
+static t_class *sleepgrain_class=NULL;
 
 typedef struct _sleepgrain {
   t_object x_obj;
@@ -61,11 +61,10 @@ static void *sleepgrain_new(void)
   return (x);
 }
 
-void sleepgrain_setup(void)
+ZEXY_SETUP void sleepgrain_setup(void)
 {
-  sleepgrain_class = class_new(gensym("sleepgrain"),
-                               (t_newmethod)sleepgrain_new,
-                               0, sizeof(t_sleepgrain), 0, A_NULL);
+  sleepgrain_class = zexy_new("sleepgrain",
+                              sleepgrain_new, 0, t_sleepgrain, 0, "");
 
   class_addbang  (sleepgrain_class, sleepgrain_bang);
   class_addfloat (sleepgrain_class, sleepgrain_float);

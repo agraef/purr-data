@@ -23,12 +23,14 @@
 
 /*
   divides a package into 2 sub-packages at a specified point
-  like the niagara-falls, some water goes down to the left side, the rest to the right side, devided by the rock
+  like the niagara-falls, some water goes down to the left side,
+  the rest to the right side, divided by the rock
 
-  nowadays you can do this with [list split] (though this cannot handle negative indices)
+  nowadays you can do this with [list split]
+  (though this cannot handle negative indices)
 */
 
-static t_class *niagara_class;
+static t_class *niagara_class=NULL;
 
 typedef struct _niagara {
   t_object x_obj;
@@ -61,7 +63,7 @@ static void niagara_any(t_niagara *x, t_symbol *s, int argc, t_atom *argv)
 {
   int n_l, n_r;
   t_atom *ap_l, *ap_r;
-  t_symbol *s_r, *s_l;
+  t_symbol *s_l;
   int dumrock = x->rock;
   int rock = ((dumrock < 0.f)?(argc+dumrock):dumrock-1);
 
@@ -73,7 +75,7 @@ static void niagara_any(t_niagara *x, t_symbol *s, int argc, t_atom *argv)
   ap_r = &argv[n_l];
 
   if (n_r) {
-    s_r = 0;
+    t_symbol *s_r = 0;
     if (ap_r->a_type == A_FLOAT) {
       s_r = gensym("list");
     } else {
@@ -103,10 +105,10 @@ static void *niagara_new(t_floatarg f)
   return (x);
 }
 
-void niagara_setup(void)
+ZEXY_SETUP void niagara_setup(void)
 {
-  niagara_class = class_new(gensym("niagara"), (t_newmethod)niagara_new,
-                            0, sizeof(t_niagara), 0, A_DEFFLOAT,  0);
+  niagara_class = zexy_new("niagara",
+                           niagara_new, 0, t_niagara, 0, "F");
 
   class_addlist    (niagara_class, niagara_list);
   class_addanything(niagara_class, niagara_any);

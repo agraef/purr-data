@@ -1,0 +1,23 @@
+#N canvas 181 112 569 329 10;
+#X obj 91 107 inlet bang;
+#X obj 91 290 outlet result;
+#X obj 91 128 t b b b;
+#X obj 91 260 i;
+#X msg 107 233 1;
+#X msg 139 233 0;
+#X msg 107 159 1;
+#X obj 107 184 relay 1;
+#X obj 107 206 select 1;
+#X text 38 51 Pd's implicit float->list coercion on the inlet results
+in NULL-selectors \, wich eventually crashes Pd when passed to the
+outlet...;
+#X connect 0 0 2 0;
+#X connect 2 0 3 0;
+#X connect 2 1 6 0;
+#X connect 2 2 5 0;
+#X connect 3 0 1 0;
+#X connect 4 0 3 1;
+#X connect 5 0 3 1;
+#X connect 6 0 7 0;
+#X connect 7 0 8 0;
+#X connect 8 0 4 0;

@@ -28,7 +28,7 @@
 
 /* ------------------------ quantize~ ----------------------------- */
 
-static t_class *quantize_class;
+static t_class *quantize_class=NULL;
 
 typedef struct _quantize {
   t_object x_obj;
@@ -55,7 +55,7 @@ static void quantize_8bit(t_quantize *x)
 
 static t_int *quantize_perform(t_int *w)
 {
-  t_quantize	*x = (t_quantize *)(w[1]);
+  t_quantize *x = (t_quantize *)(w[1]);
   t_sample *in = (t_sample *)(w[2]);
   t_sample *out = (t_sample *)(w[3]);
   int n = (int)(w[4]);
@@ -65,8 +65,7 @@ static t_int *quantize_perform(t_int *w)
   if (quantiz)
     while (n--) {
       *out++ = dequantiz*(int)(quantiz**in++);
-    }
-  else while (n--) {
+    } else while (n--) {
       *out++ = *in++;
     }
 
@@ -75,12 +74,13 @@ static t_int *quantize_perform(t_int *w)
 
 static void quantize_dsp(t_quantize *x, t_signal **sp)
 {
-  dsp_add(quantize_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
+  dsp_add(quantize_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
 }
 
 static void quantize_tilde_helper(t_quantize* UNUSED(x))
 {
-  post(""HEARTSYMBOL " quantize~-object\t:: used for quantizing signals by various degrees");
+  post(""HEARTSYMBOL
+       " quantize~-object\t:: used for quantizing signals by various degrees");
   post("<quants> : quantize a signal into <quants> steps ('0' turns quantizing off)\n"
        "'8bit'   : quantize to 8 bit\n"
        "'16bit'  : quantize to 16 bit (default)\n"
@@ -104,22 +104,18 @@ static void *quantize_new(t_floatarg f)
   return (x);
 }
 
-void quantize_tilde_setup(void)
+ZEXY_SETUP void quantize_tilde_setup(void)
 {
-  quantize_class = class_new(gensym("quantize~"), (t_newmethod)quantize_new,
-                             0,
-                             sizeof(t_quantize), 0, A_DEFFLOAT, 0);
-  class_addmethod(quantize_class, nullfn, gensym("signal"), 0);
-  class_addmethod(quantize_class, (t_method)quantize_dsp, gensym("dsp"),
-                  A_CANT, 0);
+  quantize_class = zexy_new("quantize~",
+                            quantize_new, 0, t_quantize, 0, "F");
+  zexy_addmethod(quantize_class, (t_method)nullfn, "signal", "");
+  zexy_addmethod(quantize_class, (t_method)quantize_dsp, "dsp", "!");
 
   class_addfloat(quantize_class, quantize_float);
-  class_addmethod(quantize_class, (t_method)quantize_8bit, gensym("8bit"),
-                  0);
-  class_addmethod(quantize_class, (t_method)quantize_16bit, gensym("16bit"),
-                  0);
+  zexy_addmethod(quantize_class, (t_method)quantize_8bit, "8bit", "");
+  zexy_addmethod(quantize_class, (t_method)quantize_16bit, "16bit", "");
 
-  class_addmethod(quantize_class, (t_method)quantize_tilde_helper,
-                  gensym("help"), 0);
+  zexy_addmethod(quantize_class, (t_method)quantize_tilde_helper, "help",
+                 "");
   zexy_register("quantize~");
 }

@@ -30,7 +30,7 @@
 #define FLOAT2SHORT 32768.
 #define SHORT2FLOAT 1./32768.
 
-static t_class *swap_class;
+static t_class *swap_class=NULL;
 
 typedef struct _swap {
   t_object x_obj;
@@ -49,19 +49,17 @@ static void swap_bang(t_swap *x)
 
 static t_int *swap_perform(t_int *w)
 {
-  t_swap	*x = (t_swap *)(w[1]);
+  t_swap *x = (t_swap *)(w[1]);
   t_sample *in = (t_sample *)(w[2]);
   t_sample *out = (t_sample *)(w[3]);
   int n = (int)(w[4]);
-
 
   if (x->swapper)
     while (n--) {
       short dummy = FLOAT2SHORT **in++;
       *out++ = SHORT2FLOAT * (short)( ((dummy & 0xFF) << 8) | ((
                                         dummy & 0xFF00) >> 8) );
-    }
-  else while (n--) {
+    } else while (n--) {
       *out++ = *in++;
     }
 
@@ -70,7 +68,7 @@ static t_int *swap_perform(t_int *w)
 
 static void swap_dsp(t_swap *x, t_signal **sp)
 {
-  dsp_add(swap_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
+  dsp_add(swap_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
 }
 
 static void swap_helper(void)
@@ -91,17 +89,16 @@ static void *swap_new(void)
   return (x);
 }
 
-void swap_tilde_setup(void)
+ZEXY_SETUP void swap_tilde_setup(void)
 {
-  swap_class = class_new(gensym("swap~"), (t_newmethod)swap_new, 0,
-                         sizeof(t_swap), 0, A_NULL);
-  class_addmethod(swap_class, nullfn, gensym("signal"), 0);
-  class_addmethod(swap_class, (t_method)swap_dsp, gensym("dsp"),
-                  A_CANT, 0);
+  swap_class = zexy_new("swap~",
+                        swap_new, 0, t_swap, 0, "");
+  zexy_addmethod(swap_class, (t_method)nullfn, "signal", "");
+  zexy_addmethod(swap_class, (t_method)swap_dsp, "dsp", "!");
 
   class_addfloat(swap_class, swap_float);
   class_addbang(swap_class, swap_bang);
 
-  class_addmethod(swap_class, (t_method)swap_helper, gensym("help"), 0);
+  zexy_addmethod(swap_class, (t_method)swap_helper, "help", "");
   zexy_register("swap~");
 }

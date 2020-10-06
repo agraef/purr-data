@@ -24,12 +24,12 @@
 /*
  * This external makes the two main test-functions available :
  * dirac~: will make a single peak (eg: a 1 in all the 0s) at
- *	   a desired position in the signal-vector
- *	   the position can be passed as an argument when creating the object
+ *         a desired position in the signal-vector
+ *         the position can be passed as an argument when creating the object
  *
  * NOTE : the inlets do NOT specify any times but sample-NUMBERS;
- *	  there are 64 samples in a "standard" signal-vector,
- *	  each "lasting" for 1/44100 secs.
+ *        there are 64 samples in a "standard" signal-vector,
+ *        each "lasting" for 1/44100 secs.
  */
 
 #include "zexy.h"
@@ -37,7 +37,7 @@
 /* ------------------------ dirac~ ----------------------------- */
 
 
-static t_class *dirac_class;
+static t_class *dirac_class=NULL;
 
 typedef struct _dirac {
   t_object x_obj;
@@ -76,8 +76,8 @@ static t_int *dirac_perform(t_int *w)
 }
 
 #ifndef __WIN32__
-/* LATER: investigate the occurence of zero_perf8() */
-/* it seems, like pd has the symbol zero_perf8(),
+/* LATER: investigate the occurrence of zero_perf8() */
+/* it seems, like Pd has the symbol zero_perf8(),
  * but it is not exported by m_pd.h:
  * so linux can use it, but w32 not
  * have to tell miller about that
@@ -110,9 +110,9 @@ static t_int *dirac_perf8(t_int *w)
 static void dirac_dsp(t_dirac *x, t_signal **sp)
 {
   if (sp[0]->s_n & 7) {
-    dsp_add(dirac_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
+    dsp_add(dirac_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
   } else {
-    dsp_add(dirac_perf8, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
+    dsp_add(dirac_perf8, 3, x, sp[0]->s_vec, sp[0]->s_n);
   }
 }
 
@@ -145,15 +145,14 @@ static void *dirac_new(t_floatarg where)
   return (x);
 }
 
-void dirac_tilde_setup(void)
+ZEXY_SETUP void dirac_tilde_setup(void)
 {
-  dirac_class = class_new(gensym("dirac~"), (t_newmethod)dirac_new, 0,
-                          sizeof(t_dirac), 0, A_DEFFLOAT, 0);
+  dirac_class = zexy_new("dirac~",
+                         dirac_new, 0, t_dirac, 0, "F");
   class_addfloat(dirac_class, dirac_float);
   class_addbang(dirac_class, dirac_bang);
-  class_addmethod(dirac_class, (t_method)dirac_dsp, gensym("dsp"),
-                  A_CANT, 0);
+  zexy_addmethod(dirac_class, (t_method)dirac_dsp, "dsp", "!");
 
-  class_addmethod(dirac_class, (t_method)dirac_helper, gensym("help"), 0);
+  zexy_addmethod(dirac_class, (t_method)dirac_helper, "help", "");
   zexy_register("dirac~");
 }

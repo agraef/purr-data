@@ -18,22 +18,23 @@
  */
 
 /*
-  step~  : will make a unity step at a desired point in the signal-vector; the second input specifies a
-  length:	after the so-specified time has elapsed, the step will toggle back to the previous
-  value;
-  the length can be passed as an argument when creating the object
-  with length==1 you might do the dirac~ thing a little bit more complicated
-  with length==0 the output just toggles between 0 and 1 every time you bang the object
+  step~ : will make a unity step at a desired point in the signal-vector;
+           the second input specifies a
+  length: after the so-specified time has elapsed,
+          the step will toggle back to the previous value;
+          the length can be passed as an argument when creating the object
+          with length==1 you might do the dirac~ thing a little bit more complicated
+          with length==0 the output just toggles between 0 and 1 every time you bang the object
 
-  NOTE : the inlets do NOT specify any times but sample-NUMBERS; there are 64 samples in a signal-vector,
-  each "lasting" for 1/44100 secs.
+  NOTE  : the inlets do NOT specify any times but sample-NUMBERS;
+          there are 64 samples in a signal-vector, each "lasting" for 1/44100 secs.
 */
 
 #include "zexy.h"
 
 /* ------------------------ step~ ----------------------------- */
 
-static t_class *step_class;
+static t_class *step_class=NULL;
 
 typedef struct _step {
   t_object x_obj;
@@ -96,7 +97,7 @@ static t_int *step_perform(t_int *w)
 
 static void step_dsp(t_step *x, t_signal **sp)
 {
-  dsp_add(step_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
+  dsp_add(step_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
 }
 
 
@@ -129,19 +130,17 @@ static void *step_new(t_floatarg farg)
   return (x);
 }
 
-void step_tilde_setup(void)
+ZEXY_SETUP void step_tilde_setup(void)
 {
-  step_class = class_new(gensym("step~"), (t_newmethod)step_new, 0,
-                         sizeof(t_step), 0, A_DEFFLOAT, 0);
+  step_class = zexy_new("step~",
+                        step_new, 0, t_step, 0, "F");
 
   class_addfloat(step_class, step_float);
   class_addbang(step_class, step_bang);
-  class_addmethod(step_class, (t_method)step_setlength, gensym("ft1"),
-                  A_FLOAT, 0);
-  class_addmethod(step_class, (t_method)step_dsp, gensym("dsp"),
-                  A_CANT, 0);
+  zexy_addmethod(step_class, (t_method)step_setlength, "ft1", "f");
+  zexy_addmethod(step_class, (t_method)step_dsp, "dsp", "!");
 
-  class_addmethod(step_class, (t_method)step_helper, gensym("help"), 0);
+  zexy_addmethod(step_class, (t_method)step_helper, "help", "");
 
   zexy_register("step~");
 }

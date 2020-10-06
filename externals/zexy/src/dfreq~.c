@@ -26,7 +26,7 @@
 
 /* datendefinition */
 
-static t_class *dfreq_class;
+static t_class *dfreq_class=NULL;
 
 typedef struct _dfreq {
   t_object x_obj;
@@ -82,7 +82,7 @@ static t_int *dfreq_perform(t_int *w)
 
 static void dfreq_dsp(t_dfreq *x, t_signal **sp)
 {
-  dsp_add(dfreq_perform, 4, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n,x);
+  dsp_add(dfreq_perform, 4, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n,x);
 }
 
 
@@ -99,21 +99,20 @@ static void *dfreq_new(void)
 
 static void dfreq_tilde_helper(void)
 {
-  post("\n"HEARTSYMBOL " dfreq~\t :: pitch-detector that counts zero-crossings");
+  post("\n"HEARTSYMBOL
+       " dfreq~\t :: pitch-detector that counts zero-crossings");
   post("\noutputs a frequency estimate as a stream~ that will be updated every zero-X");
   post("\ncreation::\t'dfreq~': that's all");
 }
 
 
-void dfreq_tilde_setup(void)
+ZEXY_SETUP void dfreq_tilde_setup(void)
 {
-  dfreq_class = class_new(gensym("dfreq~"), (t_newmethod)dfreq_new, 0,
-                          sizeof(t_dfreq), 0, A_NULL);
-  class_addmethod(dfreq_class, nullfn, gensym("signal"), 0);
-  class_addmethod(dfreq_class, (t_method)dfreq_dsp, gensym("dsp"),
-                  A_CANT, 0);
+  dfreq_class = zexy_new("dfreq~",
+                         dfreq_new, 0, t_dfreq, 0, "");
+  zexy_addmethod(dfreq_class, (t_method)nullfn, "signal", "");
+  zexy_addmethod(dfreq_class, (t_method)dfreq_dsp, "dsp", "!");
 
-  class_addmethod(dfreq_class, (t_method)dfreq_tilde_helper, gensym("help"),
-                  0);
+  zexy_addmethod(dfreq_class, (t_method)dfreq_tilde_helper, "help", "");
   zexy_register("dfreq~");
 }

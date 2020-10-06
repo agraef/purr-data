@@ -21,6 +21,12 @@
 
 #include "zexy.h"
 
+#ifdef _WIN32
+# include <sys/timeb.h>
+#else
+# include <sys/time.h>
+#endif
+
 /* -------------------------- multireceive ------------------------------ */
 
 static t_class *multireceive_class=NULL;
@@ -42,6 +48,27 @@ typedef struct _multireceive {
   t_symlist*x_symlist;
   t_outlet *x_out;
 } t_multireceive;
+
+
+static unsigned long long unique(void)
+{
+  unsigned long long uid = 0;
+#ifdef _WIN32
+  struct _timeb tb;
+  _ftime(&tb);
+  uid=(((unsigned long long)tb.time)<<(4*sizeof(uid))) |
+      (unsigned long long)(tb.millitm);
+#else
+  struct timeval tv;
+
+  gettimeofday(&tv, 0);
+
+  /* First get the seconds right */
+  uid=((unsigned long)tv.tv_sec)<<(4*sizeof(uid)) | tv.tv_usec;
+#endif
+  return uid;
+}
+
 
 static void multireceive_any(t_multireceive_proxy *x, t_symbol*s, int argc,
                              t_atom*argv)
@@ -94,7 +121,8 @@ static void multireceive_clear(t_multireceive *x)
 }
 
 
-static void multireceive_set(t_multireceive *x, t_symbol*s, int argc,
+static void multireceive_set(t_multireceive *x, t_symbol*UNUSED(s),
+                             int argc,
                              t_atom*argv)
 {
   multireceive_clear(x);
@@ -119,7 +147,7 @@ static void multireceive_free(t_multireceive *x)
   x->x_out=NULL;
 }
 
-static void *multireceive_new(t_symbol *s, int argc, t_atom *argv)
+static void *multireceive_new(t_symbol *UNUSED(s), int argc, t_atom *argv)
 {
   t_multireceive *x = (t_multireceive *)pd_new(multireceive_class);
   x->x_proxy=(t_multireceive_proxy*)pd_new(multireceive_proxy_class);
@@ -131,29 +159,20 @@ static void *multireceive_new(t_symbol *s, int argc, t_atom *argv)
   return (x);
 }
 
-void multireceive_setup(void)
+ZEXY_SETUP void multireceive_setup(void)
 {
-  multireceive_class = class_new(gensym("multireceive"),
-                                 (t_newmethod)multireceive_new,
-                                 (t_method)multireceive_free,
-                                 sizeof(t_multireceive),
-                                 0,
-                                 A_GIMME, 0);
-  class_addmethod(multireceive_class,
-                  (t_method)multireceive_set,
-                  gensym("set"),
-                  A_GIMME, 0);
+  char uniqsym[MAXPDSTRING];
+  unsigned long long uid=unique();
 
-  class_addmethod(multireceive_class,
-                  (t_method)multireceive_add,
-                  gensym("add"),
-                  A_SYMBOL, 0);
+  multireceive_class = zexy_new("multireceive",
+                                multireceive_new, multireceive_free, t_multireceive, 0, "*");
+  zexy_addmethod(multireceive_class, (t_method)multireceive_set, "set", "*");
 
-  multireceive_proxy_class = class_new(
-                               gensym("multireceive proxy "__DATE__""__TIME__""),
-                               0, 0,
-                               sizeof(t_multireceive_proxy),
-                               CLASS_PD | CLASS_NOINLET, 0);
+  zexy_addmethod(multireceive_class, (t_method)multireceive_add, "add", "s");
+  snprintf(uniqsym, MAXPDSTRING-2, "multireceive proxy %0llx", uid);
+  uniqsym[MAXPDSTRING-1]=0;
+  multireceive_proxy_class = zexy_new(uniqsym,
+                                      0, 0, t_multireceive_proxy, CLASS_PD | CLASS_NOINLET, "");
 
   class_addanything(multireceive_proxy_class, multireceive_any);
 

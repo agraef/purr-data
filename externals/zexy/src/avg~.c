@@ -23,7 +23,7 @@
 
 /* tilde object to take absolute value. */
 
-static t_class *avg_class;
+static t_class *avg_class=NULL;
 
 typedef struct _avg {
   t_object x_obj;
@@ -55,7 +55,7 @@ static t_int *avg_perform(t_int *w)
 static void avg_dsp(t_avg *x, t_signal **sp)
 {
   x->n_inv=1./sp[0]->s_n;
-  dsp_add(avg_perform, 3, sp[0]->s_vec, x, (t_int)sp[0]->s_n);
+  dsp_add(avg_perform, 3, sp[0]->s_vec, x, sp[0]->s_n);
 }
 
 static void *avg_new(void)
@@ -71,14 +71,13 @@ static void avg_help(void)
 }
 
 
-void avg_tilde_setup(void)
+ZEXY_SETUP void avg_tilde_setup(void)
 {
-  avg_class = class_new(gensym("avg~"), (t_newmethod)avg_new, 0,
-                        sizeof(t_avg), 0, A_DEFFLOAT, 0);
-  class_addmethod(avg_class, nullfn, gensym("signal"), 0);
-  class_addmethod(avg_class, (t_method)avg_dsp, gensym("dsp"),
-                  A_CANT, 0);
+  avg_class = zexy_new("avg~",
+                       avg_new, 0, t_avg, 0, "");
+  zexy_addmethod(avg_class, (t_method)nullfn, "signal", "");
+  zexy_addmethod(avg_class, (t_method)avg_dsp, "dsp", "!");
 
-  class_addmethod(avg_class, (t_method)avg_help, gensym("help"), 0);
+  zexy_addmethod(avg_class, (t_method)avg_help, "help", "");
   zexy_register("avg~");
 }

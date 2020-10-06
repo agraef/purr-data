@@ -20,8 +20,8 @@
 
 #include "zexy.h"
 
-static t_class *scalmul_class;
-static t_class *scalmul_scal_class;
+static t_class *scalmul_class=NULL;
+static t_class *scalmul_scal_class=NULL;
 
 typedef struct _scalmul {
   t_object x_obj;
@@ -156,26 +156,23 @@ static void *scalmul_new(t_symbol* UNUSED(s), int argc, t_atom *argv)
   return (x);
 }
 
-static void scalmul_help(t_scalmul*x)
+static void scalmul_help(t_scalmul* UNUSED(x))
 {
   post("\n"HEARTSYMBOL " .\t\t:: scalar multiplication (in-product)");
 }
 
-void setup_0x2e(void)
+ZEXY_SETUP void setup_0x2e(void)
 {
-  scalmul_class = class_new(gensym("."), (t_newmethod)scalmul_new,
-                            (t_method)scalmul_free, sizeof(t_scalmul), 0, A_GIMME, 0);
+  scalmul_class = zexy_new(".",
+                           scalmul_new, scalmul_free, t_scalmul, 0, "*");
   class_addlist(scalmul_class, scalmul_lst);
-  class_addmethod  (scalmul_class, (t_method)scalmul_lst2, gensym(""),
-                    A_GIMME, 0);
-  class_addmethod(scalmul_class, (t_method)scalmul_help, gensym("help"),
-                  A_NULL);
+  zexy_addmethod(scalmul_class, (t_method)scalmul_lst2, "", "*");
+  zexy_addmethod(scalmul_class, (t_method)scalmul_help, "help", "");
 
-  scalmul_scal_class = class_new(gensym("."), 0, (t_method)scalmul_free,
-                                 sizeof(t_scalmul), 0, 0);
+  scalmul_scal_class = zexy_new(".",
+                                0, scalmul_free, t_scalmul, 0, "");
   class_addlist(scalmul_scal_class, scalmul_lst);
-  class_addmethod(scalmul_scal_class, (t_method)scalmul_help, gensym("help"),
-                  A_NULL);
+  zexy_addmethod(scalmul_scal_class, (t_method)scalmul_help, "help", "");
 
   class_sethelpsymbol(scalmul_class, gensym("scalarmult"));
   class_sethelpsymbol(scalmul_scal_class, gensym("scalarmult"));

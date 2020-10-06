@@ -25,7 +25,7 @@
    {x[0], x[1], ... x[n-1]} --> {x[n-1], x[n-2], ... x[0]}
 */
 
-static t_class *blockswap_class;
+static t_class *blockswap_class=NULL;
 
 typedef struct _blockswap {
   t_object x_obj;
@@ -41,7 +41,7 @@ static void blockswap_float(t_blockswap *x, t_floatarg f)
 
 static t_int *blockswap_perform(t_int *w)
 {
-  t_blockswap	*x = (t_blockswap *)(w[1]);
+  t_blockswap *x = (t_blockswap *)(w[1]);
   t_sample *in = (t_sample *)(w[2]);
   t_sample *out = (t_sample *)(w[3]);
   int N = (int)(w[4]);
@@ -76,12 +76,13 @@ static void blockswap_dsp(t_blockswap *x, t_signal **sp)
     x->blocksize = sp[0]->s_n/2;
     x->blockbuffer = getbytes(sizeof(*x->blockbuffer)*x->blocksize);
   }
-  dsp_add(blockswap_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
+  dsp_add(blockswap_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
 }
 
-static void blockswap_helper(t_blockswap *x)
+static void blockswap_helper(t_blockswap* UNUSED(x))
 {
-  post("\n"HEARTSYMBOL " blockswap~-object for blockwise-swapping of a signal ");
+  post("\n"HEARTSYMBOL
+       " blockswap~-object for blockwise-swapping of a signal ");
   post("'help' : view this\n"
        "signal~");
   post("outlet : signal~");
@@ -104,18 +105,15 @@ static void *blockswap_new(void)
   return (x);
 }
 
-void blockswap_tilde_setup(void)
+ZEXY_SETUP void blockswap_tilde_setup(void)
 {
-  blockswap_class = class_new(gensym("blockswap~"),
-                              (t_newmethod)blockswap_new, (t_method)blockswap_free,
-                              sizeof(t_blockswap), 0, A_NULL);
-  class_addmethod(blockswap_class, nullfn, gensym("signal"), 0);
-  class_addmethod(blockswap_class, (t_method)blockswap_dsp, gensym("dsp"),
-                  A_CANT, 0);
+  blockswap_class = zexy_new("blockswap~",
+                             blockswap_new, blockswap_free, t_blockswap, 0, "");
+  zexy_addmethod(blockswap_class, (t_method)nullfn, "signal", "");
+  zexy_addmethod(blockswap_class, (t_method)blockswap_dsp, "dsp", "!");
 
   class_addfloat(blockswap_class, blockswap_float);
 
-  class_addmethod(blockswap_class, (t_method)blockswap_helper,
-                  gensym("help"), 0);
+  zexy_addmethod(blockswap_class, (t_method)blockswap_helper, "help", "");
   zexy_register("blockswap~");
 }

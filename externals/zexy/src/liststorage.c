@@ -62,7 +62,7 @@ typedef struct _liststorage {
   t_msglist**x_slots;
 } t_liststorage;
 
-static t_class *liststorage_class;
+static t_class *liststorage_class=NULL;
 
 
 /* ************************************************************************ */
@@ -234,16 +234,14 @@ static void liststorage_bang(t_liststorage *x)
 }
 
 /* add a new list to the current slot */
-static void liststorage_add(t_liststorage *x, t_symbol *s, int ac,
+static void liststorage_add(t_liststorage *x, t_symbol *UNUSED(s), int ac,
                             t_atom *av)
 {
-  t_msglist*list=NULL;
   int slot=_liststorage_checkslot(x,
                                   "attempting to add data to invalid slot", 1);
   if(slot<0) {
     return;
   }
-  list=_liststorage_getslot(x, slot);
   x->x_slots[slot]=_liststorage_add2slot(x->x_slots[slot], ac, av);
 }
 
@@ -271,7 +269,7 @@ static void liststorage_clearall(t_liststorage *x)
 static void liststorage_insert(t_liststorage *x, t_floatarg f)
 {
   int current=x->x_currentslot;
-  int slot=-1;
+  int slot;
   int i=0;
 
   x->x_currentslot=f;
@@ -394,43 +392,39 @@ static void *liststorage_new(t_floatarg f)
   return (x);
 }
 
-void liststorage_setup(void)
+ZEXY_SETUP void liststorage_setup(void)
 {
-  liststorage_class = class_new(gensym("liststorage"),
-                                (t_newmethod)liststorage_new,
-                                (t_method)liststorage_free, sizeof(t_liststorage), 0, A_DEFFLOAT, 0);
+  liststorage_class = zexy_new("liststorage",
+                               liststorage_new, liststorage_free, t_liststorage, 0, "F");
 
   /* recall all lists from the current slot */
   class_addbang(liststorage_class, (t_method)liststorage_bang);
 
   /* add a new list to the current slot */
-  class_addmethod(liststorage_class, (t_method)liststorage_add,
-                  gensym("add"), A_GIMME, 0);
+  zexy_addmethod(liststorage_class, (t_method)liststorage_add, "add", "*");
   /* clear the current slot */
-  class_addmethod(liststorage_class, (t_method)liststorage_clear,
-                  gensym("clear"), 0);
+  zexy_addmethod(liststorage_class, (t_method)liststorage_clear, "clear",
+                 "");
   /* clear all slots */
-  class_addmethod(liststorage_class, (t_method)liststorage_clearall,
-                  gensym("clearall"), 0);
+  zexy_addmethod(liststorage_class, (t_method)liststorage_clearall,
+                 "clearall", "");
 
 
   /* add a new list to the current slot */
-  class_addmethod(liststorage_class, (t_method)liststorage_slot,
-                  gensym("slot"), A_FLOAT, 0);
+  zexy_addmethod(liststorage_class, (t_method)liststorage_slot, "slot", "f");
 
 
   /* insert an empty slot at (before) given position */
-  class_addmethod(liststorage_class, (t_method)liststorage_insert,
-                  gensym("insert"), A_DEFFLOAT, 0);
+  zexy_addmethod(liststorage_class, (t_method)liststorage_insert, "insert",
+                 "F");
 
   /* remove empty slots */
-  class_addmethod(liststorage_class, (t_method)liststorage_compress,
-                  gensym("compress"), 0);
+  zexy_addmethod(liststorage_class, (t_method)liststorage_compress,
+                 "compress", "");
 
 
   /* get the number of slots */
-  class_addmethod(liststorage_class, (t_method)liststorage_info,
-                  gensym("info"), 0);
+  zexy_addmethod(liststorage_class, (t_method)liststorage_info, "info", "");
 
   zexy_register("liststorage");
 }

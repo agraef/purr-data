@@ -1,6 +1,6 @@
 #!/bin/sh
 
-EXTENSIONS=".pd -help.pd .pd_linux .pd_darwin .pd_freebsd .dll .b_i386 .l_ia64 .l_i386 .d_fat .d_i386 .d_ppc .m_i386" 
+EXTENSIONS=".pd -help.pd .pd_linux .pd_darwin .pd_freebsd .dll .b_i386 .l_ia64 .l_i386 .d_fat .d_i386 .d_ppc .m_i386"
 
 ALIASFILE=$1
 shift

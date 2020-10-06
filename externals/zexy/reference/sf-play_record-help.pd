@@ -30,7 +30,7 @@
 #X text 52 64 up to now \, the "sfrecord" only supports .RAW format
 ;
 #X text 51 78 "sfplay" can skip any header \, if you know it's size::
-just call "sfplay <num.of.chan> <skip.bytes>;
+just call "sfplay <num.of.chan> <skip.bytes>";
 #X floatatom 471 356 0 0 0 0 - - -;
 #N canvas 160 49 495 266 output 0;
 #X obj 338 160 t b;

@@ -36,11 +36,11 @@ Modified:
   to search for, then with the first skip the first part of a
   soundfile is also loaded by the OS.
 
-  I experimented with asynchronous buffering with paralell
+  I experimented with asynchronous buffering with parallel
   process,which has shown no much performance hit, since more
   processes has to be handled and the modern OS's do caching anyway
   also caching is done in modern hard disk, so an additional cache
-  woud be an overhead, if not special behaviour is needed (big jumps
+  would be an overhead, if not special behaviour is needed (big jumps
   etc).
 
   This sfplayers should be used with an appropriate audio buffer for
@@ -58,7 +58,7 @@ Todo:
   then players and to enable glueless switching between soundfiles.
 
 please mail problems and ideas for improvements to
-ritsch@iem.kug.ac.at */
+ritsch@iem.at */
 
 /*#define DEBUG_ME // for debugging messages */
 
@@ -81,7 +81,7 @@ ritsch@iem.kug.ac.at */
 # define BINREADMODE "r"
 #endif
 
-static t_class *sfplay_class;
+static t_class *sfplay_class=NULL;
 
 typedef struct _sfplay {
   t_object x_obj;
@@ -153,7 +153,7 @@ static void sfplay_helper(t_sfplay* UNUSED(x))
 
 /* METHOD: "open" file */
 
-/* this dont use memory map, because I dont know about this on NT ?
+/* this don't use memory map, because I don't know about this on NT ?
 Use of the buffered functions fopen, fseek fread fclose instead the
 non buffered ones open read close */
 
@@ -184,10 +184,10 @@ static void sfplay_open(t_sfplay *x,t_symbol *filename,t_symbol *endian)
 #endif
 
   if (x->fp != NULL) {
-    z_fclose(x->fp);  /* should not happen */
+    sys_fclose(x->fp);  /* should not happen */
   }
 
-  if (!(x->fp = z_fopen(x->filename->s_name,BINREADMODE))) {
+  if (!(x->fp = sys_fopen(x->filename->s_name,BINREADMODE))) {
     error("sfplay: can't open %s", x->filename->s_name);
   }
 }
@@ -203,7 +203,7 @@ static void sfplay_close(t_sfplay *x)
   /* now in state machine
   if(x->fp != NULL)
   {
-     z_fclose(x->fp);
+     sys_fclose(x->fp);
      x->fp = NULL;
   }
   */
@@ -214,7 +214,7 @@ static void sfplay_close(t_sfplay *x)
   return;
 }
 
-/* for skipping header of soundfile  Dont use this for memory map */
+/* for skipping header of soundfile. don't use this for memory map */
 
 static int sfplay_skip(t_sfplay *x)
 {
@@ -255,7 +255,7 @@ static void sfplay_start(t_sfplay *x)
   post("sfplay: start");
 #endif
 
-  /* new offset postion ? (fom inlet offset) */
+  /* new offset position ? (fom inlet offset) */
   if( ((t_float) of) != x->x_offset) {
     x->skip=1;
     x->x_offset = of;
@@ -426,7 +426,7 @@ static t_int *sfplay_perform(t_int *w)
 
     if(!x->play || x->please_stop) {
 
-      /* if closing dont need o go to stop */
+      /* if closing don't need o go to stop */
       if(x->please_close) {
         x->state = SFPLAY_CLOSE;
         x->count = SFPLAY_WAITTICKS;
@@ -495,7 +495,7 @@ static t_int *sfplay_perform(t_int *w)
         *out[i]++ = s*(1./32768.);
       }
     }
-    return (w+c+4); /* dont zero out outs */
+    return (w+c+4); /* don't zero out outs */
 
   /* ok read error please close */
   case SFPLAY_ERROR:
@@ -523,7 +523,7 @@ static t_int *sfplay_perform(t_int *w)
 
       /* avoid openfiles */
       if(x->fp) {
-        z_fclose(x->fp);
+        sys_fclose(x->fp);
         x->fp = NULL;
       };
 
@@ -560,14 +560,14 @@ static void sfplay_dsp(t_sfplay *x, t_signal **sp)
     dsp_add(sfplay_perform, 4, x,
             sp[0]->s_vec,
             sp[1]->s_vec, /* out 1 */
-            (t_int)sp[0]->s_n);
+            sp[0]->s_n);
     break;
   case 2:
     dsp_add(sfplay_perform, 5, x,
             sp[0]->s_vec, /* out 1*/
             sp[1]->s_vec, /* out 2*/
             sp[2]->s_vec,
-            (t_int)sp[0]->s_n);
+            sp[0]->s_n);
     break;
   case 4:
     dsp_add(sfplay_perform, 7, x,
@@ -576,7 +576,7 @@ static void sfplay_dsp(t_sfplay *x, t_signal **sp)
             sp[2]->s_vec,
             sp[3]->s_vec,
             sp[4]->s_vec,
-            (t_int)sp[0]->s_n);
+            sp[0]->s_n);
     break;
   case 8:
     dsp_add(sfplay_perform, 11, x,
@@ -589,14 +589,14 @@ static void sfplay_dsp(t_sfplay *x, t_signal **sp)
             sp[6]->s_vec,
             sp[7]->s_vec,
             sp[8]->s_vec,
-            (t_int)sp[0]->s_n);
+            sp[0]->s_n);
     break;
   }
 }
 
 
 /* create sfplay with args <channels> <skip> */
-static void *sfplay_new(t_floatarg chan,t_floatarg skip)
+static void *sfplay_new(t_floatarg chan, t_floatarg skip)
 {
   t_sfplay *x = (t_sfplay *)pd_new(sfplay_class);
   t_int c = chan;
@@ -662,33 +662,24 @@ static void sfplay_free(t_sfplay *x)
   freebytes(x->filep, DACBLKSIZE*sizeof(short)*x->x_channels);
 }
 
-void sfplay_setup(void)
+ZEXY_SETUP void sfplay_setup(void)
 {
-  sfplay_class = class_new(gensym("sfplay"), (t_newmethod)sfplay_new,
-                           (t_method)sfplay_free,
-                           sizeof(t_sfplay), 0, A_DEFFLOAT, A_DEFFLOAT,0);
-  class_addmethod(sfplay_class, nullfn, gensym("signal"), 0);
-  class_addmethod(sfplay_class, (t_method)sfplay_dsp, gensym("dsp"),
-                  A_CANT, 0);
+  sfplay_class = zexy_new("sfplay",
+                          sfplay_new, sfplay_free, t_sfplay, 0, "FF");
+  zexy_addmethod(sfplay_class, (t_method)nullfn, "signal", "");
+  zexy_addmethod(sfplay_class, (t_method)sfplay_dsp, "dsp", "!");
 
-  class_addmethod(sfplay_class, (t_method)sfplay_helper, gensym("help"),
-                  A_NULL);
+  zexy_addmethod(sfplay_class, (t_method)sfplay_helper, "help", "");
   class_sethelpsymbol(sfplay_class, gensym("sf-play_record"));
 
   /* method open with filename */
-  class_addmethod(sfplay_class, (t_method)sfplay_open, gensym("open"),
-                  A_SYMBOL,A_SYMBOL,A_NULL);
-  class_addmethod(sfplay_class, (t_method)sfplay_close, gensym("close"),
-                  A_NULL);
+  zexy_addmethod(sfplay_class, (t_method)sfplay_open, "open", "ss");
+  zexy_addmethod(sfplay_class, (t_method)sfplay_close, "close", "");
 
-  class_addmethod(sfplay_class, (t_method)sfplay_start, gensym("start"),
-                  A_NULL);
-  class_addmethod(sfplay_class, (t_method)sfplay_stop,  gensym("stop"),
-                  A_NULL);
-  class_addmethod(sfplay_class, (t_method)sfplay_rewind, gensym("rewind"),
-                  A_NULL);
-  class_addmethod(sfplay_class, (t_method)sfplay_offset, gensym("goto"),
-                  A_DEFFLOAT, A_NULL);
+  zexy_addmethod(sfplay_class, (t_method)sfplay_start, "start", "");
+  zexy_addmethod(sfplay_class, (t_method)sfplay_stop, "stop", "");
+  zexy_addmethod(sfplay_class, (t_method)sfplay_rewind, "rewind", "");
+  zexy_addmethod(sfplay_class, (t_method)sfplay_offset, "goto", "F");
 
   /* start stop with 0 and 1 */
   class_addfloat(sfplay_class, sfplay_float);

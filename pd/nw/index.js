@@ -401,8 +401,10 @@ function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
 	    // why does Windows have different innerWidth and innerHeight from other OSs?
 	    // See pdgui.js' canvas_params for the explanation...
 	    // ico@vt.edu 2020-08-21: this should only apply to patch windows
-	    width -= 16 * pdgui.nw_os_is_windows;
-	    height -= 8 * pdgui.nw_os_is_windows;
+        // 2020-10-01: this is not needed anymore since it was a bug specific to 0.14.7
+        // and Windows is now using 0.24.4
+	    //width -= 16 * pdgui.nw_os_is_windows;
+	    //height -= 8 * pdgui.nw_os_is_windows;
     } else {
         my_title = type;
         if (type !== "search" && type !== "text") {

@@ -1,0 +1,12 @@
+#N canvas 359 534 538 390 10;
+#X obj 182 84 r test;
+#X obj 182 106 symbol;
+#X msg 259 171 \; pd dsp 1;
+#X obj 182 197 testunit;
+#X obj 182 128 t s b;
+#X msg 182 227 \; pd quit;
+#X connect 0 0 1 0;
+#X connect 1 0 4 0;
+#X connect 3 0 5 0;
+#X connect 4 0 3 0;
+#X connect 4 1 2 0;

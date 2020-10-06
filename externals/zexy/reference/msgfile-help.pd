@@ -1,4 +1,4 @@
-#N canvas 0 31 854 331 10;
+#N canvas 80 115 854 331 10;
 #X obj 425 235 print done;
 #X text 72 260 see also:;
 #X msg 423 39 bang;
@@ -10,7 +10,7 @@
 #X text 18 57 The msgfile object is derived from the textfile object
 and expands its features.;
 #X text 15 97 new features are :;
-#X text 127 110 insert \, append \, delete \, replace;
+#X text 126 111 insert \, append \, delete \, replace;
 #X text 472 36 output one line as a list and move to the next;
 #X text 90 201 add2 : read "add too" \; append to an existing line
 ;
@@ -18,8 +18,8 @@ and expands its features.;
 sequence \; it will also get the current position when using "when"
 ;
 #X text 127 97 end \, goto \, skip;
-#X text 131 127 flush \, where \, this \, prev \, next;
-#X text 128 145 find;
+#X text 126 127 flush \, where \, this \, prev \, next;
+#X text 126 143 find;
 #X text 73 163 read/write can handle csv files too;
 #X text 598 7 part of zexy;
 #N canvas 112 31 646 300 navigation 0;
@@ -130,32 +130,68 @@ and the list is output (via the 2nd and 1st outlet).;
 #X connect 2 0 0 0;
 #X connect 6 0 0 0;
 #X restore 423 124 pd searching;
-#N canvas 0 0 853 402 file-i/o 0;
-#X obj 54 312 outlet;
+#N canvas 5 51 853 726 file-i/o 1;
+#X obj 57 532 outlet;
 #X text 265 75 read a file;
-#X text 299 96 write one;
-#X text 305 164 write a file \, terminating lines only with carriage
-return (omitting semicolons.) You can read files this way too \, in
-which case carriage returns are mapped to semicolons.;
-#X msg 87 76 read msgfile.txt;
-#X msg 87 168 write /tmp/msgfile2.txt cr;
-#X msg 87 191 read msgfile2.txt cr;
-#X msg 87 97 write /tmp/msgfile.txt;
+#X msg 97 76 read msgfile.txt;
+#X msg 127 248 write /tmp/msgfile2.txt cr;
+#X msg 127 268 read msgfile2.txt cr;
+#X msg 97 97 write /tmp/msgfile.txt;
 #X text 51 26 reading from and writing the contents of [msgfile] to
 files;
-#X msg 111 248 write /tmp/msgfile3.txt $$;
-#X text 331 238 on writing replace every occurence of $$ with a single
-$. This way you can write pd-patches which can handle arguments.;
-#X msg 146 291 add #X obj f $\$1;
-#X msg 92 130 read2 msgfile.txt;
+#X msg 102 130 read2 msgfile.txt;
 #X text 264 131 read file and append it to the current buffer;
-#X connect 4 0 0 0;
-#X connect 5 0 0 0;
-#X connect 6 0 0 0;
-#X connect 7 0 0 0;
-#X connect 9 0 0 0;
-#X connect 11 0 0 0;
-#X connect 12 0 0 0;
+#X msg 127 308 write /tmp/msgfile2.csv csv;
+#X msg 127 328 read msgfile2.csv csv;
+#X msg 127 468 read /tmp/msgfile2.txt txt;
+#X msg 127 418 read /tmp/msgfile.txt fudi;
+#X text 266 96 write a file;
+#X msg 127 186 read msgfile.txt pd;
+#X msg 127 206 write /tmp/msgfile.txt pd;
+#X text 343 170 read a file in Pd's native format (lines are terminated
+with semicolon). this is the DEFAULT.;
+#X text 343 200 write a file in Pd's native format (lines are terminated
+with semicolon). this is the DEFAULT.;
+#X text 343 240 write a file \, terminating lines only with carriage
+return (omitting semicolons). You can read files this way too \, in
+which case carriage returns are mapped to semicolons.;
+#X text 343 380 read a file in Pd's native format (with semicolons
+as line terminators): very much like the default mode ("pd") \, but
+handles backslash-escaped whitespace (so you can read symbols with
+spaces). You can write files this way too (which is the same as writing
+in 'pd' format);
+#X text 343 480 read a text file (with carriage return as line terminators):
+very much like the "cr" mode \, but handles backslash-escaped whitespace
+(so you can read symbols with spaces). You can write files this way
+too (which is the same as writing in 'cr' format);
+#X obj 57 161 t a;
+#X obj 57 237 t a;
+#X obj 57 298 t a;
+#X obj 57 358 t a;
+#X obj 57 498 t a;
+#X text 151 600 you can set the DEFAULT read/write mode as a creation
+argument.;
+#X obj 502 602 msgfile txt;
+#X text 343 300 write a CSV-file (Comma-Separated-Values) \, separating
+atoms with comma and terminating lines with carriage return. Symbol-atoms
+that contain whitespace (e.g. ' ') are automatically quoted. You can
+read files this way too.;
+#X connect 2 0 21 0;
+#X connect 3 0 23 0;
+#X connect 4 0 23 0;
+#X connect 5 0 21 0;
+#X connect 7 0 21 0;
+#X connect 9 0 24 0;
+#X connect 10 0 24 0;
+#X connect 11 0 25 0;
+#X connect 12 0 25 0;
+#X connect 14 0 22 0;
+#X connect 15 0 22 0;
+#X connect 21 0 22 0;
+#X connect 22 0 23 0;
+#X connect 23 0 24 0;
+#X connect 24 0 25 0;
+#X connect 25 0 0 0;
 #X restore 423 144 pd file-i/o;
 #N canvas 67 162 450 397 misc 0;
 #X obj 84 282 outlet;

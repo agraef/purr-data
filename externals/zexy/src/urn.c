@@ -21,7 +21,7 @@
 
 /* ------------------------- urn ------------------------------- */
 
-static t_class *urn_class;
+static t_class *urn_class=NULL;
 
 typedef struct _urn {
   t_object x_obj;
@@ -147,23 +147,23 @@ static void *urn_new(t_symbol* UNUSED(s), int argc, t_atom *argv)
   return (x);
 }
 
-static void urn_help(t_urn*x)
+static void urn_help(t_urn*UNUSED(x))
 {
-  post("\n"HEARTSYMBOL " urn\t\t:: generate randum numbers without repetition");
+  post("\n"HEARTSYMBOL
+       " urn\t\t:: generate randum numbers without repetition");
 }
 
-void urn_setup(void)
+ZEXY_SETUP void urn_setup(void)
 {
-  urn_class = class_new(gensym("urn"), (t_newmethod)urn_new,
-                        0, sizeof(t_urn), 0, A_GIMME,  0);
+  urn_class = zexy_new("urn",
+                       urn_new, 0, t_urn, 0, "*");
 
   class_addbang (urn_class, urn_bang);
-  class_addmethod(urn_class, (t_method)urn_clear, gensym("clear"), 0);
-  class_addmethod(urn_class, (t_method)urn_flt2, gensym(""), A_DEFFLOAT, 0);
-  class_addmethod(urn_class, (t_method)urn_seed, gensym("seed"), A_DEFFLOAT,
-                  0);
+  zexy_addmethod(urn_class, (t_method)urn_clear, "clear", "");
+  zexy_addmethod(urn_class, (t_method)urn_flt2, "", "F");
+  zexy_addmethod(urn_class, (t_method)urn_seed, "seed", "F");
 
-  class_addmethod(urn_class, (t_method)urn_help, gensym("help"), A_NULL);
+  zexy_addmethod(urn_class, (t_method)urn_help, "help", "");
 
   zexy_register("urn");
 }

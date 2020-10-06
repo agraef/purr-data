@@ -19,7 +19,7 @@
 
 #include "zexy.h"
 
-static t_class *packel_class;
+static t_class *packel_class=NULL;
 
 typedef struct _packel {
   t_object x_obj;
@@ -59,6 +59,7 @@ static void packel_outelement(t_packel*x, int id, t_symbol*s,int argc,
     switch (current->a_type) {
     case A_NULL:
       outlet_bang(out);
+      break;
     default:
       outlet_list(out, gensym("list"), 1, current);
     }
@@ -122,7 +123,7 @@ static void packel_free(t_packel *x)
 }
 
 
-static void *packel_new(t_symbol*s, int argc, t_atom*argv)
+static void *packel_new(t_symbol*UNUSED(s), int argc, t_atom*argv)
 {
   t_packel *x = (t_packel *)pd_new(packel_class);
 
@@ -150,12 +151,10 @@ static void *packel_new(t_symbol*s, int argc, t_atom*argv)
   return (x);
 }
 
-void packel_setup(void)
+ZEXY_SETUP void packel_setup(void)
 {
-  packel_class = class_new(gensym("packel"),
-                           (t_newmethod)packel_new, (t_method)packel_free,
-                           sizeof(t_packel), 0,
-                           A_GIMME, 0);
+  packel_class = zexy_new("packel",
+                          packel_new, packel_free, t_packel, 0, "*");
 
   class_addlist  (packel_class, packel_list);
   class_addanything(packel_class, packel_anything);

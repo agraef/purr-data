@@ -32,7 +32,7 @@
  * high priority means low numeric value
  */
 
-static t_class *lifop_class;
+static t_class *lifop_class=NULL;
 
 typedef struct _lifop_list {
   int                 argc;
@@ -189,7 +189,7 @@ static void lifop_bang(t_lifop *x)
 }
 static void lifop_query(t_lifop*x)
 {
-  z_verbose(1, "%d elements in lifo", (int)x->counter);
+  verbose(1, "%d elements in lifo", (int)x->counter);
 
   outlet_float(x->x_infout, (t_float)x->counter);
 }
@@ -270,27 +270,24 @@ static void *lifop_new(void)
 
   return (x);
 }
-static void lifop_help(t_lifop*x)
+static void lifop_help(t_lifop*UNUSED(x))
 {
-  post("\n"HEARTSYMBOL " lifop\t\t:: a Last-In-First-Out queue with priorities");
+  post("\n"HEARTSYMBOL
+       " lifop\t\t:: a Last-In-First-Out queue with priorities");
 }
-void lifop_setup(void)
+ZEXY_SETUP void lifop_setup(void)
 {
-  lifop_class = class_new(gensym("lifop"), (t_newmethod)lifop_new,
-                          (t_method)lifop_free, sizeof(t_lifop), 0, A_NULL);
+  lifop_class = zexy_new("lifop",
+                         lifop_new, lifop_free, t_lifop, 0, "");
 
   class_addbang    (lifop_class, lifop_bang);
   class_addlist    (lifop_class, lifop_list);
 
-  class_addmethod  (lifop_class, (t_method)lifop_clear, gensym("clear"),
-                    A_NULL);
-  class_addmethod  (lifop_class, (t_method)lifop_dump, gensym("dump"),
-                    A_NULL);
+  zexy_addmethod(lifop_class, (t_method)lifop_clear, "clear", "");
+  zexy_addmethod(lifop_class, (t_method)lifop_dump, "dump", "");
 
-  class_addmethod  (lifop_class, (t_method)lifop_query, gensym("info"),
-                    A_NULL);
-  class_addmethod  (lifop_class, (t_method)lifop_help, gensym("help"),
-                    A_NULL);
+  zexy_addmethod(lifop_class, (t_method)lifop_query, "info", "");
+  zexy_addmethod(lifop_class, (t_method)lifop_help, "help", "");
 
   zexy_register("lifop");
 }

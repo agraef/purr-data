@@ -1140,7 +1140,11 @@ static void gatom_key(void *z, t_floatarg f)
         else if (x->a_atom.a_type == A_SYMBOL)
         {
             //post("gatom_key release");
-            if (strcmp(x->a_buf, x->a_atom.a_w.w_symbol->s_name))
+            // ico@vt.edu 20200923: we also check for empty a_buf to ensure that
+            // the ... is deleted. This was created when the object was originally
+            // clicked on below, but only if the current gatom is symbol type and
+            // is empty.
+            if (x->a_buf[0] == 0 || strcmp(x->a_buf, x->a_atom.a_w.w_symbol->s_name))
             {
                 strcpy(x->a_buf, x->a_atom.a_w.w_symbol->s_name);
                 gatom_retext(x, 1, 1);
@@ -1256,7 +1260,18 @@ static void gatom_click(t_gatom *x,
             gatom_retext(x, 0, 1);
             return;
         }
-        x->a_shift = (int)shift;
+        x->a_shift = shift;
+        if (x->a_atom.a_type == A_SYMBOL &&
+            !strlen(x->a_atom.a_w.w_symbol->s_name))
+        {
+            char sbuf[ATOMBUFSIZE + 4];
+            t_atom at;
+            sprintf(sbuf, "%s...", x->a_buf);
+            SETSYMBOL(&at, gensym(sbuf));
+            binbuf_clear(x->a_text.te_binbuf);
+            binbuf_add(x->a_text.te_binbuf, 1, &at);
+            glist_retext(x->a_glist, &x->a_text);
+        }
         // unlike iemgui numbox, here we are unable to distinguish
         // between the exclusive and non-exclusive focus because
         // the old school "click" message passed to the object does

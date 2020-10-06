@@ -29,7 +29,7 @@
 the second inlet lets you change the default package size
 */
 
-static t_class *repack_class;
+static t_class *repack_class=NULL;
 
 typedef struct _repack {
   t_object x_obj;
@@ -165,10 +165,10 @@ static void *repack_new(t_floatarg f)
   return (x);
 }
 
-void repack_setup(void)
+ZEXY_SETUP void repack_setup(void)
 {
-  repack_class = class_new(gensym("repack"), (t_newmethod)repack_new,
-                           0, sizeof(t_repack), 0, A_DEFFLOAT, 0);
+  repack_class = zexy_new("repack",
+                          repack_new, 0, t_repack, 0, "F");
 
   class_addbang    (repack_class, repack_bang);
   class_addfloat   (repack_class, repack_float);
@@ -176,8 +176,7 @@ void repack_setup(void)
   class_addpointer (repack_class, repack_pointer);
   class_addlist    (repack_class, repack_list);
   class_addanything(repack_class, repack_anything);
-  class_addmethod  (repack_class, (t_method)repack_set, gensym(""),
-                    A_DEFFLOAT, 0);
+  zexy_addmethod(repack_class, (t_method)repack_set, "", "F");
 
   zexy_register("repack");
 }
