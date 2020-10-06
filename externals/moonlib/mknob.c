@@ -450,13 +450,13 @@ static void mknob_click(t_mknob *x, t_floatarg xpos, t_floatarg ypos,
 
     if (x->x_gui.x_h<0)
         glist_grab(x->x_gui.x_glist, &x->x_gui.x_obj.te_g,
-                   (t_glistmotionfn)mknob_motion_fullcircular, 0, 0, xpos, ypos);
+                   (t_glistmotionfn)mknob_motion_fullcircular, 0, 0, xpos, ypos, 0);
     else if (x->x_gui.x_h==0)
         glist_grab(x->x_gui.x_glist, &x->x_gui.x_obj.te_g,
-                   (t_glistmotionfn)mknob_motion_circular, 0, 0, xpos, ypos);
+                   (t_glistmotionfn)mknob_motion_circular, 0, 0, xpos, ypos, 0);
     else
         glist_grab(x->x_gui.x_glist, &x->x_gui.x_obj.te_g,
-                   (t_glistmotionfn)mknob_motion, 0, 0, xpos, ypos);
+                   (t_glistmotionfn)mknob_motion, 0, 0, xpos, ypos, 0);
 }
 
 static int mknob_newclick(t_gobj *z, struct _glist *glist,

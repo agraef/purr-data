@@ -528,7 +528,7 @@ static void knob_click(t_knob *x, t_floatarg xpos, t_floatarg ypos,
     (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
     knob_bang(x);
     glist_grab(x->x_gui.x_glist, &x->x_gui.x_obj.te_g, (t_glistmotionfn)knob_motion,
-	       0, 0, xpos, ypos);
+	       0, 0, xpos, ypos, 0);
 }
 
 static int knob_newclick(t_gobj *z, struct _glist *glist,
