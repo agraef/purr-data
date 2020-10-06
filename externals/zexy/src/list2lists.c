@@ -1,5 +1,5 @@
 /*
- * list2lists:  split a list into several sublists given by their lenghts
+ * list2lists:  split a list into several sublists given by their lengths
  *
  * (c) 1999-2011 IOhannes m zmölnig, forum::für::umläute, institute of electronic music and acoustics (iem)
  *
@@ -29,7 +29,7 @@
 # define DEBUGFUN(x)
 #endif
 
-static t_class *list2lists_class;
+static t_class *list2lists_class=NULL;
 
 typedef struct _list2lists {
   t_object       x_obj;
@@ -44,7 +44,7 @@ typedef struct _list2lists {
 
 
 
-static void list2lists_list2(t_list2lists*x,t_symbol*s, int argc,
+static void list2lists_list2(t_list2lists*x,t_symbol*UNUSED(s), int argc,
                              t_atom*argv)
 {
   if(x->x_length!=0) {
@@ -132,21 +132,19 @@ static void *list2lists_new(t_symbol* UNUSED(s), int argc, t_atom *argv)
 }
 
 
-static void list2lists_help(t_list2lists*x)
+static void list2lists_help(t_list2lists*UNUSED(x))
 {
-  post("\n"HEARTSYMBOL " list2lists\t\t:: split lists into multiple sublists based on matches");
+  post("\n"HEARTSYMBOL
+       " list2lists\t\t:: split lists into multiple sublists based on matches");
 }
 
-void list2lists_setup(void)
+ZEXY_SETUP void list2lists_setup(void)
 {
-  list2lists_class = class_new(gensym("list2lists"),
-                               (t_newmethod)list2lists_new,
-                               (t_method)list2lists_free, sizeof(t_list2lists), 0, A_GIMME, 0);
+  list2lists_class = zexy_new("list2lists",
+                              list2lists_new, list2lists_free, t_list2lists, 0, "*");
   class_addlist    (list2lists_class, list2lists_list);
-  class_addmethod  (list2lists_class, (t_method)list2lists_list2,
-                    gensym("lst2"), A_GIMME, 0);
+  zexy_addmethod(list2lists_class, (t_method)list2lists_list2, "lst2", "*");
 
-  class_addmethod(list2lists_class, (t_method)list2lists_help,
-                  gensym("help"), A_NULL);
+  zexy_addmethod(list2lists_class, (t_method)list2lists_help, "help", "");
   zexy_register("list2lists");
 }

@@ -28,7 +28,7 @@
 #endif
 
 
-static t_class *longload_class;
+static t_class *longload_class=NULL;
 
 typedef struct _longload {
   t_object x_obj;
@@ -55,13 +55,9 @@ static void *longload_new(t_float f)
   return (x);
 }
 
-void longload_setup(void)
+ZEXY_SETUP void longload_setup(void)
 {
-  longload_class = class_new(gensym("longload"),
-                             (t_newmethod)longload_new,
-                             0,
-                             sizeof(t_longload),
-                             CLASS_NOINLET,
-                             A_DEFFLOAT, 0);
+  longload_class = zexy_new("longload",
+                            longload_new, 0, t_longload, CLASS_NOINLET, "F");
   zexy_register("longload");
 }

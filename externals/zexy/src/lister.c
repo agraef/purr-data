@@ -19,24 +19,8 @@
 
 #include "zexy.h"
 
-#ifdef HAVE_ALLOCA_H
-# include <alloca.h>
-#endif
+static t_class *lister_class = NULL;
 
-#define LIST_NGETBYTE 100 /* bigger that this we use alloc, not alloca */
-
-
-static t_class *mypdlist_class;
-
-#ifdef HAVE_ALLOCA_H
-# define ATOMS_ALLOCA(x, n) ((x) = (t_atom *)((n) < LIST_NGETBYTE ?  \
-        alloca((n) * sizeof(t_atom)) : getbytes((n) * sizeof(t_atom))))
-# define ATOMS_FREEA(x, n) ( \
-    ((n) < LIST_NGETBYTE || (freebytes((x), (n) * sizeof(t_atom)), 0)))
-#else
-# define ATOMS_ALLOCA(x, n) ((x) = (t_atom *)getbytes((n) * sizeof(t_atom)))
-# define ATOMS_FREEA(x, n) (freebytes((x), (n) * sizeof(t_atom)))
-#endif
 
 static void atoms_copy(int argc, t_atom *from, t_atom *to)
 {
@@ -57,7 +41,8 @@ static void mypdlist_storelist(t_mypdlist *x, int argc, t_atom *argv)
 
   atoms_copy(argc, argv, x->x_list);
 }
-static void mypdlist_secondlist(t_mypdlist *x, t_symbol *s, int argc,
+static void mypdlist_secondlist(t_mypdlist *x, t_symbol *UNUSED(s),
+                                int argc,
                                 t_atom *argv)
 {
   mypdlist_storelist(x, argc, argv);
@@ -66,11 +51,10 @@ static void mypdlist_secondlist(t_mypdlist *x, t_symbol *s, int argc,
 static void mypdlist_bang(t_mypdlist *x)
 {
   int outc=x->x_n;
-  t_atom*outv;
-  ATOMS_ALLOCA(outv, outc);
+  t_atom*outv = (t_atom*)getbytes(outc * sizeof(t_atom));
   atoms_copy(x->x_n, x->x_list, outv);
   outlet_list(x->x_obj.ob_outlet, gensym("list"), outc, outv);
-  ATOMS_FREEA(outv, outc);
+  freebytes(outv, outc * sizeof(t_atom));
 }
 
 
@@ -87,9 +71,9 @@ static void mypdlist_free(t_mypdlist *x)
   freebytes(x->x_list, x->x_n * sizeof(t_atom));
 }
 
-static void *mypdlist_new(t_symbol *s, int argc, t_atom *argv)
+static void *mypdlist_new(t_symbol *UNUSED(s), int argc, t_atom *argv)
 {
-  t_mypdlist *x = (t_mypdlist *)pd_new(mypdlist_class);
+  t_mypdlist *x = (t_mypdlist *)pd_new(lister_class);
 
   outlet_new(&x->x_obj, 0);
   inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("list"), gensym("lst2"));
@@ -105,29 +89,33 @@ static void *mypdlist_new(t_symbol *s, int argc, t_atom *argv)
 }
 
 
-static void mypdlist_help(t_mypdlist*x)
+static void mypdlist_help(t_mypdlist*UNUSED(x))
 {
-  post("\n"HEARTSYMBOL " lister\t\t:: basic list storage (use pd>=0.39 for real [list] objects)");
+  post("\n"HEARTSYMBOL
+       " lister\t\t:: basic list storage (use pd>=0.39 for real [list] objects)");
 }
 
-void lister_setup(void)
+static t_class* zclass_setup(const char*name)
 {
-  mypdlist_class = class_new(gensym("lister"), (t_newmethod)mypdlist_new,
-                             (t_method)mypdlist_free, sizeof(t_mypdlist), 0, A_GIMME, 0);
-  /* i don't know how to get this work with name=="list" !!! */
-
-  class_addcreator((t_newmethod)mypdlist_new, gensym("l"), A_GIMME, 0);
-
-  class_addbang    (mypdlist_class, mypdlist_bang);
-  class_addlist    (mypdlist_class, mypdlist_list);
-  class_addmethod  (mypdlist_class, (t_method)mypdlist_secondlist,
-                    gensym("lst2"), A_GIMME, 0);
-
-  class_addmethod(mypdlist_class, (t_method)mypdlist_help, gensym("help"),
-                  A_NULL);
+  t_class *c = zexy_new(name,
+                        mypdlist_new, mypdlist_free, t_mypdlist, 0, "*");
+  class_addbang    (c, mypdlist_bang);
+  class_addlist    (c, mypdlist_list);
+  zexy_addmethod(c, (t_method)mypdlist_secondlist, "lst2", "*");
+  zexy_addmethod(c, (t_method)mypdlist_help, "help", "");
+  return c;
+}
+static void dosetup()
+{
   zexy_register("lister");
+  lister_class = zclass_setup("lister");
+  zclass_setup("l");
+}
+ZEXY_SETUP void lister_setup(void)
+{
+  dosetup();
 }
 void l_setup(void)
 {
-  lister_setup();
+  dosetup();
 }

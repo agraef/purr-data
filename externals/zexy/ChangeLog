@@ -1,10 +1,57 @@
+zexy (2.3.0) RELEASED; urgency=medium
+
+  * [msgfile] new formats:
+    - 'csv': import/export of CSV-files (","-separated), with proper escaping
+    - 'fudi': "pd"-like import that handles escaped linebreaks
+    - 'txt': "cr"-like import that handles escaped linebreaks
+  * [lpt] completely new implementation for windows
+  * Bug-fixes
+  * Thin wrappers around class_new/class_addmethod for terser declarations
+  * Re-format entire code-base
+  * Switch to pd-lib-builder (drop all other build-systems)
+  * Switch to cerntralized iem-ci configuration
+  * Fix older ChangeLog entries
+
+ -- IOhannes m zmölnig (Debian/GNU) <umlaeute@debian.org>  Thu, 20 Feb 2020 22:02:20 +0200
+
+zexy (2.2.8) RELEASED; urgency=medium
+
+  * Fix typos (including limiter's "treshold")
+  * Drop support for Pd<0.41
+  * Fix MinGW linking issues with [time]/[date]
+  * Use (const char*) for t_symbol->s_name
+  * Fix line-endings
+  * Continuous Integration
+    * linux/macOS/w32/w64 builds & deken-uploads
+
+ -- IOhannes m zmölnig <zmoelnig@iem.at>  Tue, 2 Oct 2018 21:10:42 +0200
+
+zexy (2.2.7) RELEASED; urgency=medium
+
+  * [multireceive]
+  *  - dynamically calculate proxy names
+  *  - added help-patch
+  * [demultiplex] / [multiplex]
+  *  - use passive inlet instead of "select" method
+  * Turn aliases into proper clases
+    (Closes: https://sourceforge.net/p/pure-data/bugs/929/)
+  * Fix crasher bug with "dsp" methods
+  * Minor and major Bug-fixes
+  * Properly initialize variables
+  * More tests
+  * Fix typos
+  * Add CI-configuration
+  * Don't include repository-settings in release-tarballs
+
+ -- IOhannes m zmölnig <zmoelnig@iem.at>  Sun, 21 Jan 2018 22:55:11 +0100
+
 zexy (2.2.6) RELEASED; urgency=low
 
-  * Fixes NULL-pointer access and file handle leaks
-  * Fixes for autotools
+  * Fix NULL-pointer access and file handle leaks
+  * Fix for autotools
   * Allow to build both single-object and multiobject binaries in one go
     (just use "--enable-library=both")
-  * Allow  setting the build-date string via autoconf-args
+  * Allow setting the build-date string via autoconf-args
   * Consistency fixes for objects.
 
   * Switched to git
@@ -13,17 +60,17 @@ zexy (2.2.6) RELEASED; urgency=low
 
 zexy (2.2.5) RELEASED; urgency=low
 
-  * switched to autotools
-  * generate ChangeLog with "dch -c ChangeLog"
+  * Switch to autotools
+  * Generate ChangeLog with "dch -c ChangeLog"
 
  -- IOhannes m zmoelnig (gpg-key at iem) <zmoelnig@iem.at>  Thu, 29 Sep 2011 14:19:18 +0200
 
 zexy (2.2.4) RELEASED; urgency=low
 
-  * disable SIMD code by default (prevent crashes)
+  * Disable SIMD code by default (prevent crashes)
   * [msgfile] does not crash with [add2( on an emtpy buffer
   * [pack]/[unpack] now accept all messages (like their vanilla counterparts)
   * [limiter~] on-the-fly oversampling parameters (higher precision)
-  * all code is now UTF-8
+  * All code is now UTF-8
 
  -- IOhannes m zmoelnig (gpg-key at iem) <zmoelnig@iem.at>  Wed, 26 Sep 2011 21:20:20 +0200

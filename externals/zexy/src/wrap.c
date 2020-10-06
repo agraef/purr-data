@@ -18,7 +18,7 @@
  */
 #include "zexy.h"
 
-static t_class *wrap_class;
+static t_class *wrap_class=NULL;
 
 typedef struct _wrap {
   t_object  x_obj;
@@ -71,20 +71,18 @@ static void *wrap_new(t_symbol *s, int argc, t_atom*argv)
   return (x);
 }
 
-static void wrap_help(t_wrap*x)
+static void wrap_help(t_wrap*UNUSED(x))
 {
   post("\n"HEARTSYMBOL " wrap\t\t:: wrap a float between to boundaries");
 }
 
-void wrap_setup(void)
+ZEXY_SETUP void wrap_setup(void)
 {
-  wrap_class = class_new(gensym("wrap"),
-                         (t_newmethod)wrap_new,
-                         0, sizeof(t_wrap),
-                         CLASS_DEFAULT, A_GIMME, A_NULL);
+  wrap_class = zexy_new("wrap",
+                        wrap_new, 0, t_wrap, CLASS_DEFAULT, "*");
 
   class_addfloat (wrap_class, wrap_float);
-  class_addmethod(wrap_class, (t_method)wrap_set, gensym("set"), A_GIMME, 0);
-  class_addmethod(wrap_class, (t_method)wrap_help, gensym("help"), A_NULL);
+  zexy_addmethod(wrap_class, (t_method)wrap_set, "set", "*");
+  zexy_addmethod(wrap_class, (t_method)wrap_help, "help", "");
   zexy_register("wrap");
 }

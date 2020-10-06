@@ -68,7 +68,7 @@ static void set_noisseed(t_nois *x, t_floatarg seed)
 
 /* ------------------------ noish~ ----------------------------- */
 
-static t_class *noish_class;
+static t_class *noish_class=NULL;
 
 static t_int *noish_perform(t_int *w)
 {
@@ -118,7 +118,7 @@ static t_int *noish_perform(t_int *w)
   } else {
     /* anything else */
     while (n--) {
-      if (still_to_go-- <= 0) {	/* update only if all time has elapsed */
+      if (still_to_go-- <= 0) { /* update only if all time has elapsed */
         still_to_go += all_to_go;
 
         i_value *= 435898247;
@@ -141,7 +141,7 @@ static t_int *noish_perform(t_int *w)
 
 static void noish_dsp(t_nois *x, t_signal **sp)
 {
-  dsp_add(noish_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
+  dsp_add(noish_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
 }
 
 static void noish_helper(void)
@@ -170,18 +170,16 @@ static void *noish_new(t_floatarg f)
   return (x);
 }
 
-void noish_tilde_setup(void)
+ZEXY_SETUP void noish_tilde_setup(void)
 {
-  noish_class = class_new(gensym("noish~"), (t_newmethod)noish_new, 0,
-                          sizeof(t_nois), 0, A_DEFFLOAT, 0);
+  noish_class = zexy_new("noish~",
+                         noish_new, 0, t_nois, 0, "F");
 
   class_addfloat(noish_class, set_freq);
-  class_addmethod(noish_class, (t_method)noish_dsp, gensym("dsp"),
-                  A_CANT, 0);
+  zexy_addmethod(noish_class, (t_method)noish_dsp, "dsp", "!");
 
-  class_addmethod(noish_class, (t_method)set_noisseed, gensym("seed"),
-                  A_FLOAT, 0);
+  zexy_addmethod(noish_class, (t_method)set_noisseed, "seed", "f");
 
-  class_addmethod(noish_class, (t_method)noish_helper, gensym("help"), 0);
+  zexy_addmethod(noish_class, (t_method)noish_helper, "help", "");
   zexy_register("noish~");
 }

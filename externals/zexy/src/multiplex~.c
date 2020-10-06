@@ -19,7 +19,7 @@
 
 #include "zexy.h"
 
-static t_class *mux_tilde_class;
+static t_class *mux_tilde_class=NULL;
 
 typedef struct _mux {
   t_object x_obj;
@@ -64,12 +64,13 @@ static void mux_tilde_dsp(t_mux *x, t_signal **sp)
     *dummy++=sp[n]->s_vec;
   }
 
-  dsp_add(mux_tilde_perform, 3, x, sp[n]->s_vec, (t_int)sp[0]->s_n);
+  dsp_add(mux_tilde_perform, 3, x, sp[n]->s_vec, sp[0]->s_n);
 }
 
 static void mux_tilde_helper(void)
 {
-  post("\n"HEARTSYMBOL " multiplex~\t:: multiplex a one of various signals to one outlet");
+  post("\n"HEARTSYMBOL
+       " multiplex~\t:: multiplex a one of various signals to one outlet");
   post("<#out>\t : the inlet-number (counting from 0) witch is routed to the outlet"
        "'help'\t : view this");
   post("creation : \"mux~ [arg1 [arg2...]]\"\t: the number of arguments equals the number of inlets\n");
@@ -106,25 +107,31 @@ static void *mux_tilde_new(t_symbol* UNUSED(s), int argc,
 
   return (x);
 }
-
-void multiplex_tilde_setup(void)
+static t_class* zclass_setup(const char*name)
 {
-  mux_tilde_class = class_new(gensym("multiplex~"),
-                              (t_newmethod)mux_tilde_new, (t_method)mux_tilde_free, sizeof(t_mux), 0,
-                              A_GIMME, 0);
-  class_addcreator((t_newmethod)mux_tilde_new, gensym("mux~"), A_GIMME, 0);
+  t_class*c = zexy_new(name,
+                       mux_tilde_new, mux_tilde_free, t_mux, 0, "*");
 
-  class_addfloat(mux_tilde_class, mux_tilde_input);
-  class_addmethod(mux_tilde_class, (t_method)mux_tilde_dsp, gensym("dsp"),
-                  A_CANT, 0);
-  class_addmethod(mux_tilde_class, nullfn, gensym("signal"), 0);
+  /* ouch, that hurts... */
+  class_addfloat(c, mux_tilde_input);
 
-  class_addmethod(mux_tilde_class, (t_method)mux_tilde_helper,
-                  gensym("help"), 0);
+  zexy_addmethod(c, (t_method)mux_tilde_dsp, "dsp", "!");
+  zexy_addmethod(c, (t_method)nullfn, "signal", "");
+
+  zexy_addmethod(c, (t_method)mux_tilde_helper, "help", "");
+  return c;
+}
+static void dosetup()
+{
   zexy_register("multiplex~");
+  mux_tilde_class=zclass_setup("multiplex~");
+  zclass_setup("mux~");
+}
+ZEXY_SETUP void multiplex_tilde_setup(void)
+{
+  dosetup();
 }
 void mux_tilde_setup(void)
 {
-  multiplex_tilde_setup();
+  dosetup();
 }
-

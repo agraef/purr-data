@@ -24,7 +24,7 @@
 
 /* =================== tabset ====================== */
 
-static t_class *tabset_class;
+static t_class *tabset_class=NULL;
 
 typedef struct _tabset {
   t_object x_obj;
@@ -35,15 +35,15 @@ static void tabset_float(t_tabset *x, t_floatarg f)
 {
   t_garray *A;
   int npoints;
-  zarray_t *vec;
+  t_word *vec;
 
   if (!(A = (t_garray *)pd_findbyclass(x->x_arrayname, garray_class))) {
     error("%s: no such array", x->x_arrayname->s_name);
-  } else if (!zarray_getarray(A, &npoints, &vec)) {
+  } else if (!garray_getfloatwords(A, &npoints, &vec)) {
     error("%s: bad template for tabset", x->x_arrayname->s_name);
   } else {
     while(npoints--) {
-      zarray_setfloat(vec, 0, f);
+      vec->w_float = f;
       vec++;
     }
     garray_redraw(A);
@@ -55,28 +55,27 @@ static void tabset_list(t_tabset *x, t_symbol* UNUSED(s), int argc,
 {
   t_garray *A;
   int npoints;
-  zarray_t *vec;
+  t_word *vec;
 
   if (!(A = (t_garray *)pd_findbyclass(x->x_arrayname, garray_class))) {
     error("%s: no such array", x->x_arrayname->s_name);
-  } else if (!zarray_getarray(A, &npoints, &vec)) {
+  } else if (!garray_getfloatwords(A, &npoints, &vec)) {
     error("%s: bad template for tabset", x->x_arrayname->s_name);
   } else {
     if (argc>=npoints)
       while(npoints--) {
         t_float f= atom_getfloat(argv++);
-        zarray_setfloat(vec, 0, f);
+        vec->w_float = f;
         vec++;
-      }
-    else {
+      } else {
       npoints-=argc;
       while (argc--) {
         t_float f= atom_getfloat(argv++);
-        zarray_setfloat(vec, 0, f);
+        vec->w_float = f;
         vec++;
       }
       while (npoints--) {
-        zarray_setfloat(vec, 0, 0);
+        vec->w_float = 0.;
         vec++;
       }
     }
@@ -98,22 +97,22 @@ static void *tabset_new(t_symbol *s)
 
 static void tabset_helper(void)
 {
-  post("\n"HEARTSYMBOL " tabset - object : set a table with a package of floats");
+  post("\n"HEARTSYMBOL
+       " tabset - object : set a table with a package of floats");
   post("'set <table>'\t: set another table\n"
        "<list>\t\t: set the table"
        "<float>\t\t: set the table to constant float\n");
   post("creation\t: \"tabset <table>\"");
 }
 
-void tabset_setup(void)
+ZEXY_SETUP void tabset_setup(void)
 {
-  tabset_class = class_new(gensym("tabset"), (t_newmethod)tabset_new,
-                           0, sizeof(t_tabset), 0, A_DEFSYM, 0);
+  tabset_class = zexy_new("tabset",
+                          tabset_new, 0, t_tabset, 0, "S");
   class_addfloat(tabset_class, (t_method)tabset_float);
   class_addlist (tabset_class, (t_method)tabset_list);
-  class_addmethod(tabset_class, (t_method)tabset_set, gensym("set"),
-                  A_SYMBOL, 0);
+  zexy_addmethod(tabset_class, (t_method)tabset_set, "set", "s");
 
-  class_addmethod(tabset_class, (t_method)tabset_helper, gensym("help"), 0);
+  zexy_addmethod(tabset_class, (t_method)tabset_helper, "help", "");
   zexy_register("tabset");
 }

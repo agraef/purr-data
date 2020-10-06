@@ -21,7 +21,7 @@
 
 /* ------------------------- repeat ------------------------------- */
 
-static t_class *repeat_class;
+static t_class *repeat_class=NULL;
 
 typedef struct _repeat {
   t_object x_obj;
@@ -58,10 +58,10 @@ static void *repeat_new(t_symbol* UNUSED(s), int argc, t_atom*argv)
   return (x);
 }
 
-void repeat_setup(void)
+ZEXY_SETUP void repeat_setup(void)
 {
-  repeat_class = class_new(gensym("repeat"), (t_newmethod)repeat_new,
-                           0, sizeof(t_repeat), 0, A_GIMME, 0);
+  repeat_class = zexy_new("repeat",
+                          repeat_new, 0, t_repeat, 0, "*");
   class_addanything(repeat_class, repeat_anything);
 
   zexy_register("repeat");

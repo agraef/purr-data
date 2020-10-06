@@ -22,8 +22,12 @@
  */
 #include "zexy.h"
 
-#ifdef __WIN32__
-#define USE_TIMEB
+#if (defined __WIN32__)
+# if (defined __i386__) && (defined __MINGW32__)
+/* unless compiling under mingw/32bit, we want USE_TIMEB in redmond-land */
+# else
+#  define USE_TIMEB
+# endif
 #endif
 
 #ifdef __APPLE__
@@ -43,7 +47,7 @@
 
 /* ----------------------- time --------------------- */
 
-static t_class *time_class;
+static t_class *time_class=NULL;
 
 typedef struct _time {
   t_object x_obj;
@@ -59,10 +63,10 @@ typedef struct _time {
 static void *time_new(t_symbol* UNUSED(s), int argc, t_atom *argv)
 {
   t_time *x = (t_time *)pd_new(time_class);
-  char buf[5];
 
   x->GMT=0;
   if (argc) {
+    char buf[5];
     atom_string(argv, buf, 5);
     if (buf[0]=='G' && buf[1]=='M' && buf[2]=='T') {
       x->GMT = 1;
@@ -80,7 +84,7 @@ static void *time_new(t_symbol* UNUSED(s), int argc, t_atom *argv)
 static void time_bang(t_time *x)
 {
   struct tm *resolvetime;
-  float  ms = 0.f;
+  t_float  ms = 0.f;
 #ifdef USE_TIMEB
   struct timeb mytime;
   ftime(&mytime);
@@ -105,14 +109,13 @@ static void help_time(t_time* UNUSED(x))
   post("\ncreation\t:: 'time [GMT]': show local time or GMT");
 }
 
-void time_setup(void)
+ZEXY_SETUP void time_setup(void)
 {
-  time_class = class_new(gensym("time"),
-                         (t_newmethod)time_new, 0,
-                         sizeof(t_time), 0, A_GIMME, 0);
+  time_class = zexy_new("time",
+                        time_new, 0, t_time, 0, "*");
 
   class_addbang(time_class, time_bang);
 
-  class_addmethod(time_class, (t_method)help_time, gensym("help"), 0);
+  zexy_addmethod(time_class, (t_method)help_time, "help", "");
   zexy_register("time");
 }

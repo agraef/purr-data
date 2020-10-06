@@ -19,7 +19,7 @@
 
 #include "zexy.h"
 
-static t_class *route_tilde_class;
+static t_class *route_tilde_class=NULL;
 typedef struct _route_tilde {
   t_object x_obj;
 
@@ -46,7 +46,7 @@ t_int *route_tilde_perform(t_int *w)
 static void route_tilde_dsp(t_route_tilde *x, t_signal **sp)
 {
   if(sp) {
-    dsp_add(route_tilde_perform, 3, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
+    dsp_add(route_tilde_perform, 3, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
   } else {
     route_tilde_any(x, gensym("dsp"), 0, 0);
   }
@@ -65,16 +65,14 @@ static void *route_tilde_new(void)
   return (x);
 }
 
-void route_tilde_setup(void)
+ZEXY_SETUP void route_tilde_setup(void)
 {
-  route_tilde_class = class_new(gensym("route~"),
-                                (t_newmethod)route_tilde_new, (t_method)route_tilde_free,
-                                sizeof(t_route_tilde), 0, A_NULL);
+  route_tilde_class = zexy_new("route~",
+                               route_tilde_new, route_tilde_free, t_route_tilde, 0, "");
 
   class_addanything(route_tilde_class, (t_method)route_tilde_any);
-  class_addmethod(route_tilde_class, nullfn, gensym("signal"), 0);
-  class_addmethod(route_tilde_class, (t_method)route_tilde_dsp,
-                  gensym("dsp"), A_CANT, 0);
+  zexy_addmethod(route_tilde_class, (t_method)nullfn, "signal", "");
+  zexy_addmethod(route_tilde_class, (t_method)route_tilde_dsp, "dsp", "!");
 
   zexy_register("route~");
 }
