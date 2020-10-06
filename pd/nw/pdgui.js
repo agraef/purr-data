@@ -6281,31 +6281,49 @@ function get_style_by_selector(w, selector) {
 // for debugging purposes
 exports.get_style_by_selector = get_style_by_selector;
 
+// 2020-10-06 ico@vt.edu: the following deals with nw.js' discrepancy between
+// positioning svg text, versus html paragraph (editable) text
+var textarea_font_height_array_kludge = [
+// zoom levels      -7  -6  -5  -4  -3  -2  -1  0   1   2   3   4   5   6   7
+/* font size 8  */ [ 40, 48, 70, 90,116,140,150,133,133,136,133,135,136,133,135],
+/* font size 10 */ [ 50, 70, 90,116,132,133,133,133,134,133,134,133,132,131,130],
+/* font size 12 */ [ 80, 90,100,134,148,140,140,140,144,140,140,140,140,140,140],
+/* font size 16 */ [ 90,100,120,120,120,120,120,120,120,115,115,115,115,115,115],
+/* font size 24 */ [128,128,128,128,128,128,128,128,128,128,128,126,126,126,125],
+/* font size 36 */ [127,124,124,122,122,122,122,122,122,122,121,121,120,121,121]
+];
+
+var textarea_y_offset_array_kludge = [
+// zoom levels      -7  -6  -5  -4  -3  -2  -1  0   1   2   3   4   5   6   7
+/* font size 8  */ [1.5,1.5,1.5,1.5,1.5,0. ,-2.,1.5,1.5,1.0,1.0,1.0,0.2,0.5,0.5],
+/* font size 10 */ [0.5,0.5,0.5,1.5,0.5,1.5,0. ,0.5,0.7,0.8,0.8,1.0,0.5,0.5,0.8],
+/* font size 12 */ [1.5,1.5,1.5,2.0,1.5,1.5,1.5,1.5,1.5,1.5,1.5,2.0,1.5,1.5,1.5],
+/* font size 16 */ [1.5,1.5,-1.,1.5,1.0,1.5,0.0,1.5,1.5,1.5,1.2,1.5,1.0,0.7,1.2],
+/* font size 24 */ [1.5,2.5,2.5,3.0,1.5,2.5,2.5,1.5,2.5,2.5,1.5,2.0,1.5,1.5,2.2],
+/* font size 36 */ [1.5,1.5,1.5,3.0,1.5,1.5,1.5,2.5,2.5,1.5,2.0,2.5,1.7,1.6,1.9]
+];
+
+// helper function to get the right index inside the aforesaid kludge arrays
+// used by functions below
+function textarea_font_size_to_index(font_size) {
+    switch(font_size) {
+        case  8: return 0;
+        case 10: return 1;
+        case 12: return 2;
+        case 16: return 3;
+        case 24: return 4;
+        case 36: return 5;
+    }
+}
+
 function textarea_line_height_kludge(font_size, zoom) {
-	var height_array;
-	switch(font_size) {
-		// zoom levels      -7  -6  -5  -4  -3  -2  -1  0   1   2   3   4   5   6   7
-		case 8: 
-			height_array = [ 40, 48, 70, 90,116,140,150,133,133,136,133,135,136,133,135];
-			break;
-		case 10:
-			height_array = [ 50, 70, 90,116,132,133,133,133,134,133,134,133,132,130,130];
-			break;
-		case 12:
-			height_array = [ 80, 90,100,134,148,140,140,140,144,140,140,140,140,140,140];
-			break;
-		case 16:
-			height_array = [ 90,100,120,120,120,120,120,120,120,115,115,115,115,115,115];
-			break;
-		case 24:
-			height_array = [128,128,128,128,128,128,128,128,128,128,128,126,126,126,125];
-			break;
-		case 36:
-			height_array = [127,124,124,122,122,122,122,122,122,122,121,121,120,121,121];
-			break;
-	}
-	//post("textarea_line_height_kludge " + font_size + " " + zoom + " " + height_array[zoom+7]);
-	return height_array[zoom+7]+"%";
+	return textarea_font_height_array_kludge
+        [textarea_font_size_to_index(font_size)][zoom+7]+"%";
+}
+
+function textarea_y_offset_kludge(font_size, zoom) {
+    return textarea_y_offset_array_kludge
+        [textarea_font_size_to_index(font_size)][zoom+7];
 }
 
 function textarea_x_offset_kludge(font_size, zoom) {
@@ -6314,72 +6332,16 @@ function textarea_x_offset_kludge(font_size, zoom) {
 	} else {
 		return -0.5;
 	}
-	/*
-	var offset_array;
-	switch(font_size) {
-		// zoom levels      -7  -6  -5  -4  -3  -2  -1  0   1   2   3   4   5   6   7
-		case 8: 
-			offset_array = [-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5];
-			break;
-		case 10:
-			offset_array = [-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.4,-.5,-.5,-.5,-.5];
-			break;
-		case 12:
-			offset_array = [-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5];
-			break;
-		case 16:
-			offset_array = [-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5];
-			break;
-		case 24:
-			offset_array = [-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5,-.5];
-			break;
-		case 36:
-			offset_array = [-2.,-2.,-2.,-2.,-2.,-2.,-2.,-2.,-2.,-2.,-2.,-2.,-2.,-2.,-2.];
-			break;
-	}
-	//post("textarea_x_offset_kludge " + font_size + " " + zoom + " " + offset_array[zoom+7]);
-	return offset_array[zoom+7];
-	*/
 }
 
-function textarea_y_offset_kludge(font_size, zoom) {
-	var offset_array;
-	switch(font_size) {
-		// zoom levels      -7  -6  -5  -4  -3  -2  -1  0   1   2   3   4   5   6   7
-		case 8: 
-			offset_array = [1.5,1.5,1.5,1.5,1.5,0. ,-2.,1.5,1.5,1.0,1.0,1.0,0.2,0.5,0.5];
-			break;
-		case 10:
-			offset_array = [0.5,0.5,0.5,1.5,0.5,1.5,0. ,0.5,0.7,0.8,0.8,1.0,0.5,0.7,0.8];
-			break;
-		case 12:
-			offset_array = [1.5,1.5,1.5,2.0,1.5,1.5,1.5,1.5,1.5,1.5,1.5,2.0,1.5,1.5,1.5];
-			break;
-		case 16:
-			offset_array = [1.5,1.5,-1.,1.5,1.0,1.5,0.0,1.5,1.5,1.5,1.2,1.5,1.0,0.7,1.2];
-			break;
-		case 24:
-			offset_array = [1.5,2.5,2.5,3.0,1.5,2.5,2.5,1.5,2.5,2.5,1.5,2.0,1.5,1.5,2.2];
-			break;
-		case 36:
-			offset_array = [1.5,1.5,1.5,3.0,1.5,1.5,1.5,2.5,2.5,1.5,2.0,2.5,1.7,1.6,1.9];
-			break;
-	}
-	//post("textarea_y_offset_kludge " + font_size + " " + zoom + " " + offset_array[zoom+7]);
-	return offset_array[zoom+7];
-}
-
-function textarea_msg_kludge(zoom) {
-    switch(zoom) {
-        case 0: return -1;
-        case 1: return -0.5;
-        case 2: return -0.5;
-        case 3: return -0.5;
-        case 4: return -0.5;
-        case 5: return -0.5;
-        case 6: return -0.5;
-        case 7: return -0.5;
-        default: return 0;
+function textarea_msg_y_offset_kludge(zoom) {
+    if (zoom == 0) {
+        return -1;
+    } else if (zoom > 0) {
+        return -0.5;
+    } else {
+        //default
+        return 0;
     }
 }
 
@@ -6491,7 +6453,7 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
             p.style.setProperty("-webkit-padding-end", "0px");
             p.style.setProperty("margin-left", "2.5px");
             p.style.setProperty("transform", "translate(0px, " +
-                textarea_msg_kludge(zoom) + "px)");
+                textarea_msg_y_offset_kludge(zoom) + "px)");
             p.style.setProperty("background-color", "");
             //post("line-height="+ parseInt(p.style.lineHeight) / 100 * font_size);
             //shove_svg_background_data_into_css(patchwin[cid].window,
