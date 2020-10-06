@@ -476,6 +476,9 @@ var canvas_events = (function() {
             },
             text_keydown: function(evt) {
                 evt.stopPropagation();
+                setTimeout(function() {
+                    pdgui.gui_message_update_textarea_border(textbox(), 0);
+                }, 0);
                 //evt.preventDefault();
                 return false;
             },

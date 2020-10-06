@@ -6725,7 +6725,7 @@ static void canvas_cut(t_canvas *x)
         if (!bufsize)
             return;
         canvas_copy(x);
-        rtext_key(x->gl_editor->e_textedfor, 127, &s_);
+        //rtext_key(x->gl_editor->e_textedfor, 127, &s_);
         canvas_fixlinesfor(x,(t_text*) x->gl_editor->e_selection->sel_what);
         canvas_dirty(x, 1);
     }

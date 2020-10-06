@@ -2603,6 +2603,36 @@ function message_border_points(width, height) {
         .join(" ");
 }
 
+// called from pd_canvas.js text events to deal with 
+// the drawing of the msg box
+function gui_message_update_textarea_border(elem, init_width) {
+	if (elem.classList.contains("msg")) {
+		if (init_width) {
+			var i, ncols = 0,
+			    text = elem.innerHTML,
+			    textByLine = text.split(/\r*\n/);
+			for (i = 0; i < textByLine.length; i++) {
+				if (textByLine[i].length > ncols) {
+					ncols = textByLine[i].length;
+				}
+			}
+			configure_item(elem, {
+	            cols: ncols
+        	});
+        	gui_gobj_erase_io(elem.getAttribute("cid"), elem.getAttribute("tag"));
+		}
+
+		gui_message_redraw_border(
+			elem.getAttribute("cid"),
+			elem.getAttribute("tag"),
+			parseInt(elem.offsetWidth / elem.getAttribute("font_width")) * elem.getAttribute("font_width") + 4,
+			parseInt(elem.offsetHeight / elem.getAttribute("font_height")) * elem.getAttribute("font_height") + 4
+			);
+	}
+}
+
+exports.gui_message_update_textarea_border = gui_message_update_textarea_border;
+
 function gui_message_draw_border(cid, tag, width, height) {
     gui(cid).get_gobj(tag)
     .append(function(frag) {
@@ -6272,119 +6302,72 @@ function get_style_by_selector(w, selector) {
 // for debugging purposes
 exports.get_style_by_selector = get_style_by_selector;
 
-// Big, stupid, ugly SVG data url to shove into CSS when
-// the user clicks a box in edit mode. One set of points for
-// the "head", or main box, and the other for the "tail", or
-// message flag at the right.
-// ico@vt.edu 2020-08-31: if you thought the original hack was
-// ugly, wait until you see this new version. Hold onto your 
-// binary barf bags...
-function generate_msg_box_bg_data(type, stroke, height) {
-    //post("height="+height);
-    var header = 'url(\"data:image/svg+xml;utf8,' +
-            '<svg ' +
-              "xmlns:svg='http://www.w3.org/2000/svg' " +
-              "xmlns='http://www.w3.org/2000/svg' " +
-              "xmlns:xlink='http://www.w3.org/1999/xlink' " +
-              "version='1.0' " +
-              "viewBox='0 0 10 10' " +
-              "preserveAspectRatio='none'" +
-            ">";
+// 2020-10-06 ico@vt.edu: the following deals with nw.js' discrepancy between
+// positioning svg text, versus html paragraph (editable) text
+var textarea_font_height_array_kludge = [
+// zoom levels      -7  -6  -5  -4  -3  -2  -1  0   1   2   3   4   5   6   7
+/* font size 8  */ [ 40, 48, 70, 90,116,140,150,133,133,136,133,135,136,133,135],
+/* font size 10 */ [ 50, 70, 90,116,132,133,133,133,134,133,134,133,132,131,130],
+/* font size 12 */ [ 80, 90,100,134,148,140,140,140,144,140,140,140,140,140,140],
+/* font size 16 */ [ 90,100,120,120,120,120,120,120,120,115,115,115,115,115,115],
+/* font size 24 */ [128,128,128,128,128,128,128,128,128,128,128,126,126,126,125],
+/* font size 36 */ [127,124,124,122,122,122,122,122,122,122,121,121,120,121,121]
+];
 
-    var line_header = "<polyline vector-effect='non-scaling-stroke' " +
-                "id='bubbles' " +
-                "fill='none' " +
-                "stroke=' " +
-                  stroke + // Here's our stroke color
-                "' ";
+var textarea_y_offset_array_kludge = [
+// zoom levels      -7  -6  -5  -4  -3  -2  -1  0   1   2   3   4   5   6   7
+/* font size 8  */ [1.5,1.5,1.5,1.5,1.5,0. ,-2.,1.5,1.5,1.0,1.0,1.0,0.2,0.5,0.5],
+/* font size 10 */ [0.5,0.5,0.5,1.5,0.5,1.5,0. ,0.5,0.7,0.8,0.8,1.0,0.5,0.5,0.8],
+/* font size 12 */ [1.5,1.5,1.5,2.0,1.5,1.5,1.5,1.5,1.5,1.5,1.5,2.0,1.5,1.5,1.5],
+/* font size 16 */ [1.5,1.5,-1.,1.5,1.0,1.5,0.0,1.5,1.5,1.5,1.2,1.5,1.0,0.7,1.2],
+/* font size 24 */ [1.5,2.5,2.5,3.0,1.5,2.5,2.5,1.5,2.5,2.5,1.5,2.0,1.5,1.5,2.2],
+/* font size 36 */ [1.5,1.5,1.5,3.0,1.5,1.5,1.5,2.5,2.5,1.5,2.0,2.5,1.7,1.6,1.9]
+];
 
-    var line_ender = "</svg>" +
-          '")';
-
-    if (type === "head")
-    {
-        return header + line_header + "stroke-width='2' points='10 0 0 0 0 10 10 10' />" + line_ender;
-    }
-    else {
-        // testing scaling of the flags with the increasing number of lines, top_flag, then bottom_flag
-        // 1 line:  2.5   7.5
-        // 2 lines: 1.5   8.5
-        // 3 lines: 1     9
-        // 4 lines: 0.75  9.25
-        var top_flag  = 2.5;
-        var decrement = 1;
-        while(height > 1)
-        {
-            top_flag -= decrement;
-            decrement /= 2;
-            height--;
-        }
-        var bottom_flag = 10 - top_flag;
-        return header +
-            line_header + "stroke-width='2' points='0 0 10 0' />" +
-            line_header + "stroke-width='2' points='0 10 10 10' />" +
-            line_header + "stroke-width='1' points='10 0 1 " + top_flag + " 1 " + bottom_flag + " 10 10' />" +
-            line_ender;
+// helper function to get the right index inside the aforesaid kludge arrays
+// used by functions below
+function textarea_font_size_to_index(font_size) {
+    switch(font_size) {
+        case  8: return 0;
+        case 10: return 1;
+        case 12: return 2;
+        case 16: return 3;
+        case 24: return 4;
+        case 36: return 5;
     }
 }
 
-// Big problem here-- CSS fails miserably at something as simple as the
-// message box flag. We use a backgroundImage svg to address this, but
-// for security reasons HTML5 doesn't provide access to svg image styles.
-// As a workaround we just seek out the relevant CSS rules and shove the
-// whole svg data url into them. We do this each time the user
-// clicks a box to edit.
-// Also, notice that both CSS and SVG _still_ fail miserably at drawing a
-// message box flag that expands in the middle while retaining the same angles
-// at the edges. As the message spans more and more lines the ugliness becomes
-// more and more apparent.
-// Anyhow, this enormous workaround makes it possible to just specify the
-// edit box color in CSS for the presets.
-function shove_svg_background_data_into_css(w, height) {
-    var head_style = get_style_by_selector(w, "#new_object_textentry.msg"),
-        tail_style = get_style_by_selector(w, "p.msg::after"),
-        stroke = head_style.outlineColor;
-    head_style.backgroundImage = generate_msg_box_bg_data("head", stroke, height);
-    tail_style.backgroundImage = generate_msg_box_bg_data("tail", stroke, height);
+function textarea_line_height_kludge(font_size, zoom) {
+	return textarea_font_height_array_kludge
+        [textarea_font_size_to_index(font_size)][zoom+7]+"%";
 }
 
-function textarea_line_height_kludge(font_size) {
-	switch(font_size) {
-		case 8: return "133%";
-		case 10: return "133%";
-		case 12: return "140%";
-		case 16: return "120%";
-		case 24: return "128%";
-		case 36: return "122%";
+function textarea_y_offset_kludge(font_size, zoom) {
+    return textarea_y_offset_array_kludge
+        [textarea_font_size_to_index(font_size)][zoom+7];
+}
+
+function textarea_x_offset_kludge(font_size, zoom) {
+	if (font_size === 36) {
+		return -2;
+	} else {
+		return -0.5;
 	}
 }
 
-function textarea_y_offset_kludge(font_size) {
-	switch(font_size) {
-		case 8: return 1.5;
-		case 10: return 0.5;
-		case 12: return 1.5;
-		case 16: return 1.5;
-		case 24: return 1.5;
-		case 36: return 1.5;
-	}
-}
-
-function textarea_msg_kludge(zoom) {
-    switch(zoom) {
-        case 0: return -1;
-        case 1: return -0.5;
-        case 2: return -0.5;
-        case 3: return -0.5;
-        case 4: return -0.5;
-        case 5: return -0.5;
-        case 6: return -0.5;
-        case 7: return -0.5;
+function textarea_msg_y_offset_kludge(zoom) {
+    if (zoom == 0) {
+        return -1;
+    } else if (zoom > 0) {
+        return -0.5;
+    } else {
+        //default
+        return 0;
     }
 }
 
 function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
-    font_size, is_gop, state, sel_start, sel_end) {
+    font_size, font_width, font_height, is_gop, state, sel_start, sel_end) {
     var range, svg_view, p,
         gobj = get_gobj(cid, tag), zoom;
     gui(cid).get_nw_window(function(nw_win) {
@@ -6403,10 +6386,34 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
         // (We can probably solve this problem by throwing in yet another
         // gui_canvas_get_scroll, but this seems like the right way to go
         // anyway.)
-        configure_item(gobj, { visibility: "hidden" });
+
+        // Hide elements:
+        // all text objects except for the message box hide everything,
+        // while the message box has a new approach that retains the svg
+        // shape below it. LATER: we may want to:
+        //     1) extend this to support nlets (currently we hide them);
+        //     2) extend this to adjust patch cords as things are being edited, and
+        //     3) extend this to all text objects.
+        if (type === "msg") {
+        	// Message approach
+	        var i, nlets = patchwin[cid].window.document
+	        	.getElementById(tag+"gobj").querySelectorAll(".xlet_control");
+	        for (i = 0; i < nlets.length; i++) {
+	        	nlets[i].style.setProperty("visibility", "hidden");        	
+	        }
+	        gui(cid).get_gobj(tag).q(".box_text", { visibility: "hidden" });
+	    } else {
+	    	// Anything else but message
+			configure_item(gobj, { visibility: "hidden" });
+	    }
+
         p = patchwin[cid].window.document.createElement("p");
         configure_item(p, {
-            id: "new_object_textentry"
+            id: "new_object_textentry",
+            cid: cid,
+            tag: tag,
+            font_width: font_width,
+            font_height: font_height
         });
         svg_view = patchwin[cid].window.document.getElementById("patchsvg")
             .viewBox.baseVal;
@@ -6431,12 +6438,12 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
             */   
         }
         
-        p.style.setProperty("left", (x - svg_view.x - 0.5) + "px");
-        p.style.setProperty("top", (y - svg_view.y + textarea_y_offset_kludge(font_size)) + "px");
+        p.style.setProperty("left", (x - svg_view.x + textarea_x_offset_kludge(font_size, zoom)) + "px");
+        p.style.setProperty("top", (y - svg_view.y + textarea_y_offset_kludge(font_size, zoom)) + "px");
         p.style.setProperty("font-size",
             pd_fontsize_to_gui_fontsize(font_size) + "px");
         p.style.setProperty("line-height",
-        	textarea_line_height_kludge(font_size));
+        	textarea_line_height_kludge(font_size, zoom));
             //pd_fontsize_to_gui_fontsize(font_size) + 1 + "px");
         p.style.setProperty("transform", "translate(0px, " + 
             (zoom > 0 ? 0.5 : 0) + "px)");
@@ -6452,24 +6459,29 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
         if (is_gop == 1) {
             p.style.setProperty("min-height", height_spec - 4 + "px");
         }
-        // set backgroundimage for message box
-        if (type === "msg") {
-            // ico@vt.edu: 2020-08-31: message boxes are uniquely borked
-            // so, we do our best to address that here
-            p.style.setProperty("-webkit-padding-before", "2px");
-            p.style.setProperty("-webkit-padding-after", "3px");
-            p.style.setProperty("transform", "translate(0px, " +
-                textarea_msg_kludge(zoom) + "px)");
-            //post("line-height="+ parseInt(p.style.lineHeight) / 100 * font_size);
-            shove_svg_background_data_into_css(patchwin[cid].window,
-                parseInt(get_gobj(cid, tag).getBoundingClientRect().height /
-                    (parseInt(p.style.lineHeight) / 100 * font_size)));
-        }
         // remove leading/trailing whitespace
         text = text.trim();
         p.textContent = text;
         // append to doc body
         patchwin[cid].window.document.body.appendChild(p);
+        if (type === "msg")
+        {
+            // ico@vt.edu 2020-09-30: New approach to drawing
+            // messages that utilizes the original svg border
+            p.style.setProperty("-webkit-padding-before", "2px");
+            p.style.setProperty("-webkit-padding-after", "3px");
+            p.style.setProperty("-webkit-padding-start", "0px");
+            p.style.setProperty("-webkit-padding-end", "0px");
+            p.style.setProperty("margin-left", "2.5px");
+            p.style.setProperty("transform", "translate(0px, " +
+                textarea_msg_y_offset_kludge(zoom) + "px)");
+            p.style.setProperty("background-color", "");
+            //post("line-height="+ parseInt(p.style.lineHeight) / 100 * font_size);
+            //shove_svg_background_data_into_css(patchwin[cid].window,
+            //    parseInt(get_gobj(cid, tag).getBoundingClientRect().height /
+            //        (parseInt(p.style.lineHeight) / 100 * font_size)));
+        	gui_message_update_textarea_border(p,1);
+        }
         p.focus();
         select_text(cid, p, sel_start, sel_end);
         if (font_size === 36) {
@@ -6490,6 +6502,15 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
         if (p !== null) {
             p.parentNode.removeChild(p);
         }
+
+        // MSG approach
+        var i, nlets = patchwin[cid].window.document
+        	.getElementById(tag+"gobj").querySelectorAll(".xlet_control");
+        for (i = 0; i < nlets.length; i++) {
+        	nlets[i].style.setProperty("visibility", "visible");        	
+        }
+        gui(cid).get_gobj(tag).q(".box_text", { visibility: "visible" });
+
         if (patchwin[cid].window.canvas_events.get_previous_state() ===
                "search") {
             patchwin[cid].window.canvas_events.search();

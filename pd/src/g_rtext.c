@@ -642,7 +642,7 @@ void rtext_activate(t_rtext *x, int state)
     sprintf(tmpbuf, "%.*s", (int)x->x_bufsize, x->x_buf);
     /* in case x_bufsize is 0... */
     tmpbuf[x->x_bufsize] = '\0';
-    gui_vmess("gui_textarea", "xssiiiisiiiii",
+    gui_vmess("gui_textarea", "xssiiiisiiiiiii",
         canvas,
         x->x_tag,
         (pd_class((t_pd *)x->x_text) == message_class ? "msg" : "obj"),
@@ -652,6 +652,8 @@ void rtext_activate(t_rtext *x, int state)
         heightspec,
         tmpbuf,
         sys_hostfontsize(glist_getfont(glist)),
+        sys_fontwidth(glist_getfont(glist)),
+        sys_fontheight(glist_getfont(glist)),
         isgop,
         state,
         selstart,
