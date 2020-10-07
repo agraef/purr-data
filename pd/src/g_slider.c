@@ -373,20 +373,6 @@ static void slider_motion(t_slider *x, t_floatarg dx, t_floatarg dy)
     }
 }
 
-
-// we use this exclusively to dynamically capture shift presses when
-// dragging the slider
-static void slider_list(t_my_numbox *x, t_symbol *s, int ac, t_atom *av)
-{
-    if (ac == 2 && IS_A_FLOAT(av,0) && IS_A_SYMBOL(av,1))
-    {
-        if (!strcmp("Shift", av[1].a_w.w_symbol->s_name))
-        {
-            x->x_gui.x_finemoved = (int)av[0].a_w.w_float;
-        }
-    }
-}
-
 static void slider_click(t_slider *x, t_floatarg xpos, t_floatarg ypos,
     t_floatarg shift, t_floatarg ctrl, t_floatarg alt)
 {
@@ -406,26 +392,18 @@ static void slider_click(t_slider *x, t_floatarg xpos, t_floatarg ypos,
     x->x_is_last_float=0; // does anyone know how this works with !steady && rcv==snd ?
     slider_bang(x);
     glist_grab(x->x_gui.x_glist, &x->x_gui.x_obj.te_g,
-        (t_glistmotionfn)slider_motion, 0, slider_list, xpos, ypos, 0);
+        (t_glistmotionfn)slider_motion, 0, 0, xpos, ypos);
 }
 
 static int slider_newclick(t_gobj *z, struct _glist *glist,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
     t_slider *x = (t_slider *)z;
-    //post("slider_newclick dbl=%d doit=%d grabbed=%d", \
-        dbl, doit, x->x_gui.x_glist->gl_editor->e_grab ? 1 : 0);
-
     if(doit)
     {
         slider_click(x, (t_floatarg)xpix, (t_floatarg)ypix, (t_floatarg)shift,
             0, (t_floatarg)alt);
         x->x_gui.x_finemoved = !!shift;
-    }
-    else if (dbl == -1)
-    {
-        // genuine mouseup
-        glist_grab(x->x_gui.x_glist, 0, 0, 0, 0, 0, 0, 0);
     }
     return (1);
 }

@@ -366,7 +366,7 @@ static void cube_sphere_click(t_cube_sphere *x, t_floatarg xpos, t_floatarg ypos
         x->x_sel_index = sel;
         x->x_pos_x = x->x_pix_src_x[sel];
         x->x_pos_y = x->x_pix_src_y[sel];
-        glist_grab(x->x_gui.x_glist, &x->x_gui.x_obj.te_g, (t_glistmotionfn)cube_sphere_motion, 0, 0, xpos, ypos, 0);
+        glist_grab(x->x_gui.x_glist, &x->x_gui.x_obj.te_g, (t_glistmotionfn)cube_sphere_motion, 0, 0, xpos, ypos);
       }
     }
   }

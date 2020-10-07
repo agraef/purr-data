@@ -2719,7 +2719,6 @@ static t_editor *editor_new(t_glist *owner)
     x->gl_magic_glass = magicGlass_new(owner);
     x->canvas_cnct_inlet_tag[0] = 0;
     x->canvas_cnct_outlet_tag[0] = 0;
-    x->exclusive = 0;
     return (x);
 }
 
@@ -3691,7 +3690,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     if (doit && x->gl_editor->e_grab && x->gl_editor->e_keyfn)
     {
         (* x->gl_editor->e_keyfn) (x->gl_editor->e_grab, 0);
-        glist_grab(x, 0, 0, 0, 0, 0, 0, 0);
+        glist_grab(x, 0, 0, 0, 0, 0, 0);
     }
 
     if (doit && !runmode && xpos == canvas_upx && ypos == canvas_upy &&
@@ -5346,8 +5345,7 @@ void canvas_mouseup(t_canvas *x,
         canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);        
     }
     
-    if ((x->gl_editor->e_onmotion != MA_CONNECT &&
-         x->gl_editor->e_onmotion != MA_PASSOUT) ||
+    if (x->gl_editor->e_onmotion != MA_CONNECT ||
         x->gl_editor->e_onmotion == MA_CONNECT && !glob_shift)
     {
         //fprintf(stderr,"releasing shift during connect without "
@@ -5363,23 +5361,10 @@ void canvas_mouseup(t_canvas *x,
         x->gl_editor->e_onmotion = MA_NONE;
     }
     //fprintf(stderr,"canvas_mouseup -> canvas_doclick %d\n", which);
-    /* this is to ignore scrollbar clicks from within tcl and is
-       unused within nw.js 2.x implementation and onward. here,
-       we use doit = -1 to signify mouseup */
-    //if (canvas_last_glist_mod == -1) {
-    if (x->gl_editor->e_onmotion == MA_PASSOUT)
-    {
-        // here we borrow the double-click flag and make it -1 which signifies
-        // mouse up since otherwise doit (the last argument) value of 0 is
-        // shared between mouse up and mouse motion, making this unclear
-        int clickreturned = gobj_click(
-            x->gl_editor->e_grab, x, xpos, ypos, glob_shift, glob_alt, -1, 0);
-        x->gl_editor->e_onmotion = MA_NONE;
-    }
-
-    canvas_doclick(x, xpos, ypos, 0,
-        (glob_shift + glob_ctrl*2 + glob_alt*4), 0);
-    //}
+    /* this is to ignore scrollbar clicks from within tcl */
+    if (canvas_last_glist_mod == -1)
+        canvas_doclick(x, xpos, ypos, 0,
+            (glob_shift + glob_ctrl*2 + glob_alt*4), 0);
     // now dispatch to any click listeners
     canvas_dispatch_mouseclick(0., xpos, ypos, which);
 }
@@ -5603,38 +5588,10 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     // set the shared variable for broadcasting of keypresses to key et al. objects
     t_atom at[2];
 
-    // 2020-10-04 ico@vt.edu: we are here changing the order of broadcasting
-    // key presses to grabbed objects first, and only then to all bound objects
-    // this change should be heavily scrutinized as it may introduce subtle
-    // and not so subtle regressions. I am here introducing it becuase doing so
-    // allows us to have some really nice flexibility in respect to grabbed objects.
-    // For instance, by allowing grabbed events to propagate first, objects like
-    // iemgui numbox and gatom can grab exclusive hold of key presses in select cases
-    // before such events propagate to other bound elements. So, here
-    // we do grabbed keynameafn here for key presses and releases
-    if (x && x->gl_editor && x->gl_editor->e_grab)
-    {
-        // as per vanilla behavior, we first send keynums, then keynames
-        if (x->gl_editor->e_keyfn && keynum && focus && down)
-            (* x->gl_editor->e_keyfn)
-                (x->gl_editor->e_grab, (t_float)keynum);
-        // this takes care of both keyname presses and releases
-        // because we don't discriminate between the down states
-        // as we used to...
-        if (x->gl_editor->e_keynameafn && gotkeysym && focus)
-        {
-            at[0] = av[0];
-            SETFLOAT(at, down);
-            SETSYMBOL(at+1, gotkeysym);
-            (* x->gl_editor->e_keynameafn) (x->gl_editor->e_grab, 0, 2, at);
-        }
-    }
-
     // now broadcast key press to key et al. objects
-    // 2020-10-05 ico@vt.edu: only do so if we do not have an object
-    // that has grabbed the keyboard exclusively, such as gatom or iemgui numbox
-    //post("canvas_key exclusive=%d", (x  && x->gl_editor ? x->gl_editor->exclusive : 0));
-    if (!x || !x->gl_editor || !x->gl_editor->e_grab || !x->gl_editor->exclusive)
+    // ico@vt.edu 20200918: only do so if we do not have an object
+    // that has grabbed the keyboard, such as gatom or iemgui numbox
+    if (!x || !x->gl_editor || !x->gl_editor->e_grab)
     {
         if (!autorepeat)
         {
@@ -5667,16 +5624,28 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
 
     if (!x || !x->gl_editor)
         return;
-
     if (x && down)
     {
             /* cancel any dragging action */
         if (x->gl_editor->e_onmotion == MA_MOVE)
             x->gl_editor->e_onmotion = MA_NONE;
-
+            /* if an object has "grabbed" keys just send them on */
+        if (x->gl_editor->e_grab)
+        {
+            if (x->gl_editor->e_keyfn && keynum && focus)
+                (* x->gl_editor->e_keyfn)
+                    (x->gl_editor->e_grab, (t_float)keynum);
+          	if (x->gl_editor->e_keynameafn && gotkeysym && focus)
+          	{
+          		at[0] = av[0];
+            	SETFLOAT(at, down);
+            	SETSYMBOL(at+1, gotkeysym);
+            	(* x->gl_editor->e_keynameafn) (x->gl_editor->e_grab, 0, 2, at);
+          	}
+        }
             /* if a text editor is open send the key on, as long as
             it is either "real" (has a key number) or else is an arrow key. */
-        if (!x->gl_editor->e_grab && x->gl_editor->e_textedfor && focus && (keynum
+        else if (x->gl_editor->e_textedfor && focus && (keynum
             || !strcmp(gotkeysym->s_name, "Up")
             || !strcmp(gotkeysym->s_name, "Down")
             || !strcmp(gotkeysym->s_name, "Left")
@@ -5789,7 +5758,6 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     //fprintf(stderr," %d %d %d %s %d %d\n",
     //    glob_shift, glob_ctrl, glob_alt, gotkeysym->s_name, keynum, down);
     //canvas_motion(x, canvas_last_glist_x, canvas_last_glist_y, canvas_last_glist_mod);
-    // call canvas_motion, so that we can update modifiers...
     pd_vmess(&x->gl_pd, gensym("motion"), "fff",
         (double)canvas_last_glist_x,
         (double)canvas_last_glist_y,
@@ -5823,8 +5791,6 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
         bug("editor");
         return;
     }
-    /* the following is not being used since this was used by tcl/tk
-       with nw.js we never issue a mod lesser than 0
     if (canvas_last_glist_mod == -1 && mod != -1)
     {
         //fprintf(stderr,"revert the cursor %d\n", x->gl_edit);
@@ -5832,7 +5798,7 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
             canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
         else
             canvas_setcursor(x, CURSOR_RUNMODE_NOTHING);
-    }*/
+    }
     glist_setlastxymod(x, xpos, ypos, mod);
     if (x->gl_editor->e_onmotion == MA_MOVE)
     {

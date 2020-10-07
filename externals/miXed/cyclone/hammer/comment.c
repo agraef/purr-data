@@ -195,7 +195,7 @@ static void comment_dograb(t_comment *x)
        Here we use it just to prevent backspace from erasing entire text.
        This has to be done also when we are already active, because
        after being clicked at we have lost our previous grab. */
-    glist_grab(x->x_glist, (t_gobj *)x, 0, comment_grabbedkey, 0, 0, 0, 0);
+    glist_grab(x->x_glist, (t_gobj *)x, 0, comment_grabbedkey, 0, 0, 0);
 }
 
 static void comment__bboxhook(t_comment *x, t_symbol *bindsym,
