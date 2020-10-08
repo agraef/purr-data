@@ -1,4 +1,11 @@
+// Original version by Frank Barknecht (fbar@footils.org) 2003
+// Ported from Flext/C++ to plain C/pdlibbuilder by Jonathan Wilkes 2016
+// SMMF mode and various other little improvements by Albert Gräf 2020
+// Distributed under the GPLv2+, please check the LICENSE file for details.
+
 #include <fluidsynth.h>
+#include <string.h>
+#include <unistd.h>
 
 #include "m_pd.h"
  
@@ -10,8 +17,10 @@ typedef struct _fluid_tilde {
     fluid_settings_t *x_settings;
     t_outlet *x_out_left;
     t_outlet *x_out_right;
+    t_canvas *x_canvas;
+    int smmf_mode;
 } t_fluid_tilde;
- 
+
 t_int *fluid_tilde_perform(t_int *w)
 {
     t_fluid_tilde *x = (t_fluid_tilde *)(w[1]);
@@ -40,11 +49,13 @@ static void fluid_tilde_free(t_fluid_tilde *x)
 static void fluid_help(void)
 {
     const char * helptext =
-        "_ __fluid~_ _  a soundfont external for Pd and Max/MSP \n"
-        "_ argument: \"/path/to/soundfont.sf\" to load on object creation\n"
-        "_ messages: \n"
-        "load /path/to/soundfont.sf2  --- Loads a Soundfont \n"
-        "note 0 0 0                   --- Play note. Arguments: \n"
+        "fluid~: a soundfont external for Pd and Max/MSP\n"
+        "options:\n"
+        "-smmf: enable SMMF mode (https://bitbucket.org/agraef/pd-smmf)\n"
+        "any other symbol: soundfont file to load on object creation\n"
+        "messages:\n"
+        "load /path/to/soundfont.sf2  --- Loads a Soundfont\n"
+        "note 0 0 0                   --- Play note, arguments:\n"
         "                                 channel-# note-#  veloc-#\n"
         "n 0 0 0                      --- Play note, same as above\n"
         "0 0 0                        --- Play note, same as above\n"
@@ -57,7 +68,7 @@ static void fluid_help(void)
     post("%s", helptext);
 }
 
-static void fluid_note(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
+static void fluid_legacy_note(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
 {
     if (x->x_synth == NULL) return;
     if (argc == 3)
@@ -70,7 +81,7 @@ static void fluid_note(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
     }
 }
 
-static void fluid_program_change(t_fluid_tilde *x, t_symbol *s, int argc,
+static void fluid_legacy_program_change(t_fluid_tilde *x, t_symbol *s, int argc,
     t_atom *argv)
 {
     if (x->x_synth == NULL) return;
@@ -79,11 +90,11 @@ static void fluid_program_change(t_fluid_tilde *x, t_symbol *s, int argc,
         int chan, prog;
         chan = atom_getintarg(0, argc, argv);
         prog = atom_getintarg(1, argc, argv);
-        fluid_synth_program_change(x->x_synth, chan - 1, prog);
+        fluid_synth_program_change(x->x_synth, chan - 1, prog - 1);
     }
 }
 
-static void fluid_control_change(t_fluid_tilde *x, t_symbol *s, int argc,
+static void fluid_legacy_control_change(t_fluid_tilde *x, t_symbol *s, int argc,
     t_atom *argv)
 {
     if (x->x_synth == NULL) return;
@@ -97,7 +108,7 @@ static void fluid_control_change(t_fluid_tilde *x, t_symbol *s, int argc,
     }
 }
 
-static void fluid_pitch_bend(t_fluid_tilde *x, t_symbol *s, int argc,
+static void fluid_legacy_pitch_bend(t_fluid_tilde *x, t_symbol *s, int argc,
     t_atom *argv)
 {
     if (x->x_synth == NULL) return;
@@ -110,7 +121,7 @@ static void fluid_pitch_bend(t_fluid_tilde *x, t_symbol *s, int argc,
     }
 }
 
-static void fluid_bank(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
+static void fluid_legacy_bank(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
 {
     if (x->x_synth == NULL) return;
     if (argc == 2)
@@ -122,7 +133,7 @@ static void fluid_bank(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
     }
 }
 
-static void fluid_gen(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
+static void fluid_legacy_gen(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
 {
     if (x->x_synth == NULL) return;
     if (argc == 3)
@@ -136,21 +147,153 @@ static void fluid_gen(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
     }
 }
 
+// Note that in all the SMMF methods we allow the channel to be omitted, in
+// which case it defaults to 1. Also note that the channel argument *always*
+// comes last, and that the argument order, being in 1-1 correspondence with
+// the Pd MIDI objects, is a bit different from the legacy message format
+// above which follows the MIDI standard instead.
+
+// The system realtime messages start, stop, and cont are in SMMF, but not
+// recognized by fluidsynth, so we don't support them here either. (MTS) sysex
+// messages (which fluidsynth recognizes) are supported, however.
+
+// Please check https://bitbucket.org/agraef/pd-smmf for details.
+
+static void fluid_note(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
+{
+    if (!x->smmf_mode)
+    {
+        fluid_legacy_note(x, s, argc, argv); return;
+    }
+    if (x->x_synth == NULL) return;
+    if (argc == 2 || argc == 3)
+    {
+        int key = atom_getintarg(0, argc, argv);
+        int vel = atom_getintarg(1, argc, argv);
+        int chan = argc>2 ? atom_getintarg(2, argc, argv) : 1;
+        fluid_synth_noteon(x->x_synth, chan - 1, key, vel);
+    }
+}
+
+static void fluid_ctl(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
+{
+    if (!x->smmf_mode || x->x_synth == NULL) return;
+    if (argc == 2 || argc == 3)
+    {
+        int val = atom_getintarg(0, argc, argv);
+        int ctrl = atom_getintarg(1, argc, argv);
+        int chan = argc>2 ? atom_getintarg(2, argc, argv) : 1;
+        fluid_synth_cc(x->x_synth, chan - 1, ctrl, val);
+    }
+}
+
+static void fluid_pgm(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
+{
+    if (!x->smmf_mode || x->x_synth == NULL) return;
+    if (argc == 1 || argc == 2)
+    {
+        int prog = atom_getintarg(0, argc, argv);
+        int chan = argc>1 ? atom_getintarg(1, argc, argv) : 1;
+        fluid_synth_program_change(x->x_synth, chan - 1, prog - 1);
+    }
+}
+
+static void fluid_polytouch(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
+{
+    if (!x->smmf_mode || x->x_synth == NULL) return;
+    if (argc == 2 || argc == 3)
+    {
+        int val = atom_getintarg(0, argc, argv);
+        int key = atom_getintarg(1, argc, argv);
+        int chan = argc>2 ? atom_getintarg(2, argc, argv) : 1;
+        fluid_synth_key_pressure(x->x_synth, chan - 1, key, val);
+    }
+}
+
+static void fluid_touch(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
+{
+    if (!x->smmf_mode || x->x_synth == NULL) return;
+    if (argc == 1 || argc == 2)
+    {
+        int val = atom_getintarg(0, argc, argv);
+        int chan = argc>1 ? atom_getintarg(1, argc, argv) : 1;
+        fluid_synth_channel_pressure(x->x_synth, chan - 1, val);
+    }
+}
+
+static void fluid_bend(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
+{
+    if (!x->smmf_mode)
+    {
+        fluid_legacy_pitch_bend(x, s, argc, argv); return;
+    }
+    if (x->x_synth == NULL) return;
+    if (argc == 1 || argc == 2)
+    {
+        int val = atom_getintarg(0, argc, argv);
+        int chan = argc>1 ? atom_getintarg(1, argc, argv) : 1;
+        fluid_synth_pitch_bend(x->x_synth, chan - 1, val);
+    }
+}
+
+// Maximum size of sysex data (excluding the f0 and f7 bytes) that we can
+// handle. The size below should be plenty to handle any kind of MTS message,
+// which at the time of this writing is the only kind of sysex message
+// recognized by fluidsynth.
+#define MAXSYSEXSIZE 1024
+
+static void fluid_sysex(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
+{
+    if (!x->smmf_mode || x->x_synth == NULL) return;
+    if (argc > 0)
+    {
+        char buf[MAXSYSEXSIZE];
+        int len = 0;
+        while (len < MAXSYSEXSIZE && len < argc) {
+            buf[len] = atom_getintarg(len, argc, argv);
+            len++;
+        }
+        // TODO: In order to handle bulk dump requests in the future, we will
+        // have to pick up fluidsynth's response here and output that to a
+        // control outlet (which doesn't exist at present).
+        fluid_synth_sysex(x->x_synth, buf, len, NULL, NULL, NULL, 0);
+    }
+}
+
 static void fluid_load(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
 {
     if (x->x_synth == NULL)
     {
-        post("No fluidsynth");
+        pd_error(x, "fluid~: no fluidsynth");
         return;
     }
     if (argc >= 1 && argv->a_type == A_SYMBOL)
     {
         const char* filename = atom_getsymbolarg(0, argc, argv)->s_name;
-        if (fluid_synth_sfload(x->x_synth, filename, 0) >= 0)
+        const char* ext = strrchr(filename, '.');
+        if (ext && !strchr(ext, '/'))
+          // extension already supplied, no default extension
+          ext = "";
+        else
+          ext = ".sf2";
+        char realdir[MAXPDSTRING], *realname = NULL;
+        int fd = canvas_open(x->x_canvas, filename, ext, realdir,
+                             &realname, MAXPDSTRING, 0);
+        if (fd < 0) {
+          pd_error(x, "fluid~: can't find soundfont %s", filename);
+          return;
+        }
+        // Save the current working directory.
+        char buf[MAXPDSTRING], *cwd = getcwd(buf, MAXPDSTRING);
+        sys_close(fd);
+        if (chdir(realdir)) {}
+        if (fluid_synth_sfload(x->x_synth, realname, 0) >= 0)
         {
-            post("Loaded Soundfont: %s", filename);
+            post("fluid~: loaded soundfont %s", realname);
             fluid_synth_program_reset(x->x_synth);
         }
+        // Restore the working directory.
+        cwd && chdir(cwd);
     }
 }
 
@@ -164,7 +307,7 @@ static void fluid_init(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
 
     if (x->x_settings == NULL)
     {
-        post("fluid~: couldn't create synth settings\n");
+        pd_error(x, "fluid~: couldn't create synth settings\n");
     }
     else
     {
@@ -186,7 +329,13 @@ static void fluid_init(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
         x->x_synth = new_fluid_synth(x->x_settings);
         if (x->x_synth == NULL )
         {
-            post("fluid~: couldn't create synth\n");
+            pd_error(x, "fluid~: couldn't create synth");
+        }
+        // check for SMMF mode
+        const char* arg = atom_getsymbolarg(0, argc, argv)->s_name;
+        if (strcmp(arg, "-smmf") == 0)
+        {
+            x->smmf_mode = 1; argc--; argv++;
         }
         // try to load argument as soundfont
         fluid_load(x, gensym("load"), argc, argv);
@@ -195,7 +344,7 @@ static void fluid_init(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
 
         // We're done constructing:
         if (x->x_synth)
-            post("-- fluid~ for Pd ---");
+            post("-- fluid~ for Pd%s --", x->smmf_mode?" (SMMF mode)":"");
     }
 }
 
@@ -204,6 +353,8 @@ static void *fluid_tilde_new(t_symbol *s, int argc, t_atom *argv)
     t_fluid_tilde *x = (t_fluid_tilde *)pd_new(fluid_tilde_class);
     x->x_out_left = outlet_new(&x->x_obj, &s_signal);
     x->x_out_right = outlet_new(&x->x_obj, &s_signal);
+    x->smmf_mode = 0;
+    x->x_canvas = canvas_getcurrent();
     fluid_init(x, gensym("init"), argc, argv);
     return (void *)x;
 }
@@ -217,32 +368,60 @@ void fluid_tilde_setup(void)
         A_GIMME, 0);
     class_addmethod(fluid_tilde_class, (t_method)fluid_load, gensym("load"),
         A_GIMME, 0);
-    class_addmethod(fluid_tilde_class, (t_method)fluid_note, gensym("note"),
+
+    // "legacy" methods. These are 100% backwards-compatible, and are all
+    // enabled by default. NOTE: When in SMMF mode (-smmf), the "note" and
+    // "bend" messages actually invoke the corresponding SMMF methods below,
+    // while all other legacy methods still work (in particular, the "note"
+    // and "bend" shortcuts are still available).
+#if 0
+    class_addmethod(fluid_tilde_class, (t_method)fluid_legacy_note, gensym("note"),
         A_GIMME, 0);
-    class_addmethod(fluid_tilde_class, (t_method)fluid_program_change,
+#endif
+    class_addmethod(fluid_tilde_class, (t_method)fluid_legacy_program_change,
         gensym("prog"), A_GIMME, 0);
-    class_addmethod(fluid_tilde_class, (t_method)fluid_control_change,
+    class_addmethod(fluid_tilde_class, (t_method)fluid_legacy_control_change,
         gensym("control"), A_GIMME, 0);
-    class_addmethod(fluid_tilde_class, (t_method)fluid_pitch_bend,
+#if 0
+    class_addmethod(fluid_tilde_class, (t_method)fluid_legacy_pitch_bend,
         gensym("bend"), A_GIMME, 0);
-    class_addmethod(fluid_tilde_class, (t_method)fluid_bank, gensym("bank"),
+#endif
+    class_addmethod(fluid_tilde_class, (t_method)fluid_legacy_bank, gensym("bank"),
         A_GIMME, 0);
-    class_addmethod(fluid_tilde_class, (t_method)fluid_gen, gensym("gen"),
+    class_addmethod(fluid_tilde_class, (t_method)fluid_legacy_gen, gensym("gen"),
         A_GIMME, 0);
 
-    // list input calls fluid_note(...)
-    class_addlist(fluid_tilde_class, (t_method)fluid_note);
+    // list input calls fluid_legacy_note(...)
+    class_addlist(fluid_tilde_class, (t_method)fluid_legacy_note);
 
     // some alias shortcuts:
-    class_addmethod(fluid_tilde_class, (t_method)fluid_note, gensym("n"),
+    class_addmethod(fluid_tilde_class, (t_method)fluid_legacy_note, gensym("n"),
         A_GIMME, 0);
-    class_addmethod(fluid_tilde_class, (t_method)fluid_program_change,
+    class_addmethod(fluid_tilde_class, (t_method)fluid_legacy_program_change,
         gensym("p"), A_GIMME, 0);
-    class_addmethod(fluid_tilde_class, (t_method)fluid_control_change,
+    class_addmethod(fluid_tilde_class, (t_method)fluid_legacy_control_change,
         gensym("c"), A_GIMME, 0);
-    class_addmethod(fluid_tilde_class, (t_method)fluid_control_change,
+    class_addmethod(fluid_tilde_class, (t_method)fluid_legacy_control_change,
         gensym("cc"), A_GIMME, 0);
-    class_addmethod(fluid_tilde_class, (t_method)fluid_pitch_bend, gensym("b"),
+    class_addmethod(fluid_tilde_class, (t_method)fluid_legacy_pitch_bend, gensym("b"),
+        A_GIMME, 0);
+
+    // SMMF methods (new interface methods for MIDI, enabled with -smmf)
+    // NOTE: When in the default legacy mode, fluid_note and fluid_bend
+    // actually invoke the corresponding legacy methods above.
+    class_addmethod(fluid_tilde_class, (t_method)fluid_note, gensym("note"),
+        A_GIMME, 0);
+    class_addmethod(fluid_tilde_class, (t_method)fluid_ctl, gensym("ctl"),
+        A_GIMME, 0);
+    class_addmethod(fluid_tilde_class, (t_method)fluid_pgm, gensym("pgm"),
+        A_GIMME, 0);
+    class_addmethod(fluid_tilde_class, (t_method)fluid_polytouch, gensym("polytouch"),
+        A_GIMME, 0);
+    class_addmethod(fluid_tilde_class, (t_method)fluid_touch, gensym("touch"),
+        A_GIMME, 0);
+    class_addmethod(fluid_tilde_class, (t_method)fluid_bend, gensym("bend"),
+        A_GIMME, 0);
+    class_addmethod(fluid_tilde_class, (t_method)fluid_sysex, gensym("sysex"),
         A_GIMME, 0);
 
     // Simulate Flext's help message
