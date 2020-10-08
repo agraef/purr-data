@@ -5810,7 +5810,7 @@ function gui_dropdown_dialog(did, attr_array) {
     // Just reuse the "gatom" dialog (this is not true anymore, see below)
     // ico@vt.edu 2020-08-21: made this into a separate dialog due to inability to easily retitle
     // the window
-    dialogwin[did] = create_window(did, "dropdown", 222, 268-5,
+    dialogwin[did] = create_window(did, "dropdown", 228, 268-5,
         popup_coords[2], popup_coords[3],
         attr_array_to_object(attr_array));
     // ico@vt.edu 2020-08-21: the following does not work because the window is not created yet?
