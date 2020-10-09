@@ -5940,7 +5940,7 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
         //fprintf(stderr,"canvas_motion MA_SCROLL\n");
     }
     else {
-        post("canvas_motion -> doclick %d %d\n", \
+        //post("canvas_motion -> doclick %d %d\n", \
             x->gl_editor->e_onmotion, mod);
         //canvas_getscroll( x);
         canvas_doclick(x, xpos, ypos, 0, mod, 0);
