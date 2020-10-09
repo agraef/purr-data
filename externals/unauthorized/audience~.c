@@ -670,7 +670,7 @@ static int audience_click(t_gobj *z, struct _glist *glist,
         }
         audience_draw_update(x, glist);
         glist_grab(glist, &x->x_obj.te_g, (t_glistmotionfn)audience_motion,
-                   0, 0, xpix, ypix, 0);
+                   0, 0, xpix, ypix);
     }
     return (1);
 }

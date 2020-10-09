@@ -1116,7 +1116,7 @@ static int sonogram_click(t_gobj *z, struct _glist *glist,
         x->x_alted = alt;
         // activate motion callback
         glist_grab( glist, &x->x_obj.te_g, (t_glistmotionfn)sonogram_motion,
-                    0, 0, xpix, ypix, 0 );
+                    0, 0, xpix, ypix );
 
         if ( shift && alt && (x->x_xstartcapture != x->x_xendcapture ) )
         {

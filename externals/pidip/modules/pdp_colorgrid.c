@@ -1481,7 +1481,7 @@ static int pdp_colorgrid_click(t_gobj *z, struct _glist *glist,
       pdp_colorgrid_output_current(x);
       pdp_colorgrid_draw_update(x, glist);
       glist_grab(glist, &x->x_obj.te_g, (t_glistmotionfn)pdp_colorgrid_motion,
-	       0, 0, xpix, ypix, 0);
+	       0, 0, xpix, ypix);
     }
     return (1);
 }

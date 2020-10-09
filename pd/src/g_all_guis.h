@@ -86,9 +86,7 @@ typedef struct _iemgui
     t_scalehandle *x_handle;         //24
     t_scalehandle *x_lhandle;        //19
     int            x_vis;     //bool //64  /* is the object drawn? */
-    int            x_changed; //bool //30  /* has the value changed so that we need to do graphic update
-                                           /* in numbox we also use it to signify when the activated value
-                                              has been changed and clipped */
+    int            x_changed; //bool //30  /* has the value changed so that we need to do graphic update */
 
                                   // grep -w "$1" *.[ch]|wc -l
     t_glist     *x_selected;      // 24 matches
@@ -182,6 +180,7 @@ typedef struct _my_numbox
 {
     t_iemgui x_gui;
     t_clock  *x_clock_reset;
+    t_clock  *x_clock_wait;
     double   x_val;
     double   x_min;
     double   x_max;
@@ -196,19 +195,9 @@ typedef struct _my_numbox
     int      x_num_fontsize;/* font size for the number only that should
                                automatically adjust to the box size */
     int      x_focused;     /* helps us determine when and how we are editing value
-                               0 no focus, 1 mouse focus, 2 keyboard focus without
-                               the trailing '>', and, 3 keyboard focus with the
-                               trailing '>' */
+                               0 no focus, 1 keyboard focus, 2 mouse focus */
     int      x_log_height;
-    int      x_drawstyle;   /* 0 default, 1 just frame, 2, just arrow, 3 number only */
-    int      x_shiftclick;  /* used to keep track how the number was originally focused
-                               so that when it is shift-clicked, it is in append mode, and
-                               when focused without the shift, it is operating in the old
-                               mode */
-    int      x_dragged;     /* used to keep track if the number box was dragged, so that 
-                               even if we arrive back at the previous number, it does not
-                               activate with exclusive keyboard focus. This is why old_val
-                               comparison is not a good one */
+    int      x_drawstyle;  /* 0 default, 1 just frame, 2, just arrow, 3 number only */
 } t_my_numbox;
 
 extern int sys_noloadbang;

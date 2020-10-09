@@ -232,7 +232,7 @@ static int iem_event_click(t_gobj *z, struct _glist *glist, int xpix, int ypix, 
   if(doit)
   {
     glist_grab(x->x_gui.x_glist, &x->x_gui.x_obj.te_g,
-      (t_glistmotionfn)iem_event_motion, iem_event_key, 0, (t_float)xpix, (t_float)ypix, 0);
+      (t_glistmotionfn)iem_event_motion, iem_event_key, 0, (t_float)xpix, (t_float)ypix);
     
     outlet_anything(x->x_gui.x_obj.ob_outlet, x->x_dragg_x_y, 2, x->x_at_out);
     if(x->x_gui.x_fsf.x_snd_able && x->x_gui.x_snd->s_thing)
