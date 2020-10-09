@@ -218,7 +218,7 @@ since it will usually contain spaces, making the build fail.
    Note: don't run the shell after installation finishes. You'll do that
    manually in step 3.
 
-2. Download and install [inno setup](http://www.jrsoftware.org/isdl.php) *(5 minutes)*
+2. Download and install the [inno setup Quickstart Pack](http://www.jrsoftware.org/isdl.php) which includes the Script Editor *(5 minutes)*
 
 3. Run the "MSYS2 MinGW 32-bit" shell *(less than a minute)*  
    msys2 adds three Start Menu items for different "flavors" of shell:
