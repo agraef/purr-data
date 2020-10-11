@@ -99,6 +99,7 @@ lib_install:
 	#install -p $(bin_src)/libgnurx-0.dll  $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libogg-0.dll  $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libsndfile-1.dll  $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libopus-0.dll  $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libvorbis-0.dll  $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libvorbisenc-2.dll  $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libvorbisfile-3.dll  $(DESTDIR)$(bindir)/
@@ -109,6 +110,7 @@ ifneq ($(LIGHT),yes)
 	install -p $(bin_src)/libtre-5.dll $(DESTDIR)$(bindir)/
 	# For fluid~
 	install -p $(bin_src)/libfluidsynth-2.dll $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/SDL2.dll $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libgmodule-2.0-0.dll $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libreadline8.dll $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libtermcap-0.dll $(DESTDIR)$(bindir)/
