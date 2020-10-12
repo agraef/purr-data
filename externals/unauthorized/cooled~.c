@@ -880,7 +880,7 @@ static int cooled_click(t_gobj *z, struct _glist *glist,
             x->x_alted = alt;
             // activate motion callback
             glist_grab( glist, &x->x_obj.te_g, (t_glistmotionfn)cooled_motion,
-                        0, 0, xpix, ypix );
+                        0, 0, xpix, ypix, 0 );
 
             // draw insertion line
             if ( glist_isvisible( x->x_glist ) )

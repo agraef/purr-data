@@ -426,7 +426,7 @@ static int scrolllist_click(t_gobj *z, struct _glist *glist,
         }
         x->x_glist = glist;
         glist_grab( glist, &x->x_obj.te_g, (t_glistmotionfn)scrolllist_motion,
-                    NULL, NULL, xpix, ypix );
+                    NULL, NULL, xpix, ypix, 0 );
     }
     return (1);
 }

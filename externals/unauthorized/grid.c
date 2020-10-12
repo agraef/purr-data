@@ -510,7 +510,7 @@ static int grid_click(t_gobj *z, struct _glist *glist,
         grid_output_current(x);
         grid_draw_update(x, glist);
         glist_grab(glist, &x->x_obj.te_g, (t_glistmotionfn)grid_motion,
-            0, 0, xpix, ypix);
+            0, 0, xpix, ypix, 0);
     }
     return (1);
 }
