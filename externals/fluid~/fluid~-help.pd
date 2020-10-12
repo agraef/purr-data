@@ -1,109 +1,141 @@
-#N canvas 8 25 1015 671 10;
-#X text 35 71 A soundfont player using If I Were You \, from www.iiwu.org
+#N canvas 645 66 561 627 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 #dcdcdc #404040 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header fluid~ 3 12 0 18
+#c4dcdc #000000 0;
+#X obj 0 294 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+#dcdcdc #000000 0;
+#N canvas 484 286 496 371 META 0;
+#X text 12 5 KEYWORDS synthesizer soundfont;
+#X text 12 25 LICENSE GPLv2+;
+#X text 12 75 AUTHOR Frank Barknecht \, Jonathan Wilkes \, Albert Gräf
 ;
-#X text 170 296 fluid~ wants channel # first: should I change this?
+#X text 12 115 RELEASE_DATE 2003 \, 2016 \, 2020;
+#X text 12 45 DESCRIPTION MIDI synthesizer using fluidsynth;
+#X text 12 95 WEBSITE http://www.fluidsynth.org/;
+#X text 12 135 HELP_PATCH_AUTHORS Albert Gräf \, based on an earlier
+help patch by Frank Barknecht and others.;
+#X restore 500 597 pd META;
+#X obj 0 441 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 #dcdcdc #000000 0;
+#X obj 0 510 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 #dcdcdc #000000 0;
+#X obj 0 568 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 #dcdcdc #000000 0;
+#X obj 78 303 cnv 17 3 130 empty \$0-pddp.cnv.let.0 0 5 9 0 16 #dcdcdc
+#9c9c9c 0;
+#X obj 78 450 cnv 17 3 17 empty \$0-pddp.cnv.let.n l 5 9 0 16 #dcdcdc
+#9c9c9c 0;
+#X obj 78 472 cnv 17 3 17 empty \$0-pddp.cnv.let.r r 5 9 0 16 #dcdcdc
+#9c9c9c 0;
+#X text 98 450 signal;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X text 287 518 Program change ( prog or p + chan + value);
-#X text 170 246 Note messages start with note \, n or with nothing
-(pure list input): chan + note + velocity;
-#X obj 36 34 cnv 15 102 32 empty empty empty 20 12 1 14 -1 -66577 0
+#X obj 492 12 fluid~;
+#X text 11 23 soundfont synthesizer based on fluidsynth;
+#X obj 14 118 output~;
+#X obj 14 89 fluid~ -smmf TimGM6mb;
+#X text 164 61 Download Tim Brechbill's small (~6MB) GM soundfont here:
 ;
-#X obj 37 35 cnv 15 100 30 empty empty fluid~ 20 15 1 14 -257472 -66577
-0;
-#X obj 593 18 cnv 15 374 160 empty empty empty 20 12 1 14 -1 -66577
-0;
-#X text 181 120 load soundfonts. Creation argument is possible as well:
+#X obj 164 91 pddp/pddplink https://musescore.org/en/handbook/soundfonts-and-sfz-files#list
+-text More soundfonts here (musescore.org);
+#X obj 14 60 r \$0-fluid;
+#X msg 90 60 help;
+#X text 98 473 signal;
+#X text 168 449 - [fluid~] outputs a stereo signal to its two signal
+outlets.;
+#X text 79 519 1) -smmf;
+#X text 79 536 2) symbol;
+#X text 168 519 - (optional) enables SMMF mode.;
+#X text 98 303 sym f f f;
+#X text 180 390 - load the given soundfont file (automatic .sf2 extension).
 ;
-#X obj 594 19 cnv 15 372 158 empty Notes Soundfonts 20 12 1 14 -228992
--66577 0;
-#X msg 650 109 load /usr/lib/awe/sfbank/2gmgsmt.sf2;
-#X msg 644 89 load \$1;
-#X obj 644 67 openpanel;
-#X obj 644 47 bng 15 250 50 0 empty empty empty 0 -6 0 8 -260818 -1
--1;
-#X obj 629 134 s \$0-iiwu;
-#X obj 375 146 fluid~ notavail.sf2;
-#X obj 593 182 cnv 15 374 160 empty empty empty 20 12 1 14 -1 -66577
+#X text 168 536 - (optional) any other symbol specifies a soundfont
+file to be loaded at creation time.;
+#X text 216 415 - reinitialize \, load the given soundfont file if
+any.;
+#X obj 15 196 notein;
+#X obj 15 221 pack 0 0 0;
+#X msg 15 246 \$3 \$1 \$2;
+#X text 15 172 MIDI input (legacy mode):;
+#X obj 95 221 pack 0 0 0;
+#X obj 95 196 ctlin;
+#X obj 175 196 bendin 0 1;
+#X obj 175 221 pack 0 0;
+#X msg 95 246 cc \$3 \$2 \$1;
+#X floatatom 264 221 5 0 0 0 - - -, f 5;
+#X msg 264 245 prog 1 \$1;
+#X floatatom 341 221 5 0 0 0 - - -, f 5;
+#X msg 341 245 bank 1 \$1;
+#X text 261 200 prog change;
+#X text 339 200 bank select;
+#X msg 175 246 b \$2 \$1;
+#X obj 15 271 s \$0-legacy;
+#N canvas 769 250 453 354 switch 0;
+#X obj 40 110 r \$0-legacy;
+#X obj 40 135 spigot 1;
+#X obj 121 110 r \$0-smmf;
+#X obj 121 135 spigot;
+#X obj 85 15 inlet;
+#X obj 85 40 t f f;
+#X obj 85 65 == 0;
+#X obj 154 65 != 0;
+#X obj 40 160 outlet;
+#X connect 0 0 1 0;
+#X connect 1 0 8 0;
+#X connect 2 0 3 0;
+#X connect 3 0 8 0;
+#X connect 4 0 5 0;
+#X connect 5 0 6 0;
+#X connect 5 1 7 0;
+#X connect 6 0 1 1;
+#X connect 7 0 3 1;
+#X restore 460 159 pd switch;
+#X obj 460 134 tgl 15 0 empty empty smmf-mode 17 7 0 10 #fcfcfc #000000
+#000000 0 1;
+#X obj 460 184 s \$0-fluid;
+#X obj 460 86 midi-input;
+#X obj 460 111 s \$0-smmf;
+#X text 182 113 SMMF mode supports all voice messages and sysex (useful
+for transmitting MTS tuning data). This is usually to be preferred
+because it offers more capabilities. See:, f 42;
+#X text 168 303 - MIDI message. In "legacy" mode (default) \, args
+are channel \, first and second data byte (if any) \, and the supported
+message selectors are (shortcuts in parentheses): note (n \, list)
+\, control (c \, cc) \, prog (p). In SMMF mode (-smmf) \, all SMMF
+voice messages and sysex are supported (most legacy messages still
+continue to work as well)., f 62;
+#X obj 264 270 s \$0-fluid;
+#N canvas 1990 266 450 302 generators 0;
+#X obj 22 64 cnv 15 302 110 empty empty empty 20 12 1 14 #000000 #404040
 0;
-#X obj 594 183 cnv 15 372 158 empty Notes Notes 20 12 1 14 -228992
--66577 0;
-#X obj 837 224 notein;
-#X obj 837 246 pack 0 0 0;
-#X msg 695 288 n 1 60 0;
-#X obj 640 311 s \$0-iiwu;
-#X obj 695 244 bang;
-#X msg 837 268 \$3 \$1 \$2;
-#X obj 837 290 s \$0-iiwu;
-#X obj 593 345 cnv 15 374 160 empty empty empty 20 12 1 14 -1 -66577
-0;
-#X text 159 413 Controller Change: control or c or cc + chan + cc#
-+ value;
-#X obj 594 346 cnv 15 372 158 empty Notes Controller_Change/Pitch_Bend
-20 12 1 14 -228992 -66577 0;
-#X obj 632 473 s \$0-iiwu;
-#X floatatom 632 388 5 0 0 0 - - -, f 5;
-#X msg 649 441 c 2 \$1;
-#X msg 632 407 control 1 2 \$1;
-#X obj 593 509 cnv 15 374 160 empty empty empty 20 12 1 14 -1 -66577
-0;
-#X obj 594 510 cnv 15 372 158 empty Notes Program_Change 20 12 1 14
--228992 -66577 0;
-#X obj 703 627 s \$0-iiwu;
-#X msg 703 580 prog 1 \$1;
-#X msg 783 580 p 2 \$1;
-#X floatatom 703 550 5 0 0 0 - - -, f 5;
-#X obj 695 202 bng 15 250 50 0 empty empty empty 0 -6 0 8 -24198 -1
--1;
-#X floatatom 783 550 5 0 0 0 - - -, f 5;
-#X floatatom 673 388 5 0 0 0 - - -, f 5;
-#X msg 695 222 note 1 60 120;
-#X obj 741 388 ctlin;
-#X obj 741 410 pack 0 0 0;
-#X obj 856 396 bendin;
-#X obj 856 418 pack 0 0;
-#X obj 856 462 s \$0-iiwu;
-#X msg 856 440 bend \$2 \$1;
-#X text 159 445 Pitch Bend works the same: bend or b + chan + val;
-#X msg 857 574 bank 1 \$1;
-#X floatatom 857 555 5 0 0 0 - - -, f 5;
-#X text 857 595 bank select;
-#X obj 789 187 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
-1;
-#X obj 715 187 metro 1000;
-#X obj 40 261 cnv 15 102 32 empty empty empty 20 12 1 14 -1 -66577
-0;
-#X obj 41 262 cnv 15 100 30 empty empty empty 20 15 1 14 -257472 -66577
-0;
-#X obj 66 199 r \$0-iiwu;
-#X msg 66 233 help;
-#X msg 146 217 init /usr/lib/awe/sfbank/2gmgsmt.sf2;
-#X obj 66 269 fluid~;
-#X text 145 185 init [soundfont] can (re)initialize fluid~ for example
-to adapt to new samplerates.;
-#X msg 741 432 cc \$3 \$2 \$1;
-#X obj 203 617 cnv 15 302 110 empty empty empty 20 12 1 14 -1 -66577
-0;
-#X obj 204 618 cnv 15 300 108 empty Notes generators 20 12 1 14 -228992
--66577 0;
-#X msg 231 682 gen 1 \$2 \$1;
-#X obj 231 704 s \$0-iiwu;
-#X floatatom 289 642 5 0 60 0 - - -, f 5;
-#X floatatom 231 642 5 0 0 0 - - -, f 5;
-#X obj 231 662 pack 0 17;
-#X text 78 607 gen 17 is "pan".;
-#X text 78 594 Setting generators like for example:;
-#X obj 695 266 del 1000;
-#X symbolatom 343 684 20 0 0 0 - - -, f 20;
-#X obj 343 656 fluid.gen2sym;
-#X text 345 700 a little helper;
-#N canvas 402 274 605 444 dust 0;
+#X obj 23 65 cnv 15 300 108 empty Notes generators 20 12 1 14 #dce4fc
+#404040 0;
+#X msg 50 129 gen 1 \$2 \$1;
+#X floatatom 108 89 5 0 60 0 - - -, f 5;
+#X floatatom 50 89 5 0 0 0 - - -, f 5;
+#X obj 50 109 pack 0 17;
+#X text 23 32 gen 17 is "pan".;
+#X text 23 19 Setting generators like for example:;
+#X symbolatom 162 131 20 0 0 0 - - -, f 20;
+#X obj 162 103 fluid.gen2sym;
+#X text 164 147 a little helper;
+#X obj 50 151 s \$0-fluid;
+#X connect 2 0 11 0;
+#X connect 3 0 5 1;
+#X connect 3 0 9 0;
+#X connect 4 0 5 0;
+#X connect 5 0 2 0;
+#X connect 9 0 8 0;
+#X restore 435 214 pd generators;
+#X text 435 239 A composition:;
+#N canvas 400 273 610 524 dust 0;
 #X obj 119 135 del 10;
-#X obj 119 41 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
-;
+#X obj 119 41 tgl 15 0 empty empty empty 0 -6 0 8 #fcfcfc #000000 #000000
+0 1;
 #X floatatom 386 66 5 0 0 1 dustiness - -, f 5;
 #X floatatom 386 164 5 0 0 1 note_range - -, f 5;
 #X floatatom 387 198 5 0 0 1 note_center - -, f 5;
-#X obj 237 417 s \$0-iiwu;
 #X obj 387 242 / 2;
 #X floatatom 387 223 5 0 0 1 pan_mod - -, f 5;
 #X msg 237 281 gen 1 17 \$1;
@@ -112,7 +144,6 @@ to adapt to new samplerates.;
 #X obj 119 273 pack 0 0;
 #X obj 119 63 metro;
 #X obj 126 339 pack 0 0;
-#X msg 126 371 note 1 \$1 \$2;
 #X obj 119 251 makenote 100 2;
 #X obj 119 212 + 60;
 #X obj 119 178 random 24;
@@ -121,80 +152,61 @@ to adapt to new samplerates.;
 #X obj 198 108 t f f;
 #X text 98 11 Inspired by Hans-Christoph Steiner and Derek Holzer;
 #X text 15 11 __Dust__;
-#X connect 0 0 9 0;
-#X connect 0 0 17 0;
-#X connect 1 0 12 0;
-#X connect 2 0 18 1;
-#X connect 3 0 17 1;
-#X connect 4 0 16 1;
-#X connect 6 0 10 1;
-#X connect 7 0 6 0;
-#X connect 7 0 9 1;
-#X connect 8 0 5 0;
-#X connect 9 0 10 0;
-#X connect 10 0 8 0;
-#X connect 11 0 19 0;
-#X connect 12 0 0 0;
-#X connect 12 0 18 0;
-#X connect 13 0 14 0;
-#X connect 14 0 5 0;
-#X connect 15 0 11 0;
-#X connect 15 1 11 1;
-#X connect 16 0 15 0;
-#X connect 17 0 16 0;
-#X connect 18 0 20 0;
-#X connect 19 1 13 0;
-#X connect 19 2 13 1;
-#X connect 20 0 0 1;
-#X restore 709 715 pd dust;
-#X text 601 716 A composition:;
-#X msg 705 87 load /home/ico/Downloads/Soundfonts/jRhodes3.sf2;
-#X obj 66 320 output~;
-#X connect 9 0 13 0;
-#X connect 10 0 13 0;
-#X connect 11 0 10 0;
-#X connect 12 0 11 0;
-#X connect 17 0 18 0;
-#X connect 17 1 18 1;
-#X connect 17 2 18 2;
-#X connect 18 0 22 0;
-#X connect 19 0 20 0;
-#X connect 21 0 70 0;
-#X connect 22 0 23 0;
-#X connect 28 0 30 0;
-#X connect 29 0 27 0;
-#X connect 30 0 27 0;
+#X obj 237 417 s \$0-fluid;
+#X msg 126 371 1 \$1 \$2;
+#X connect 0 0 8 0;
+#X connect 0 0 15 0;
+#X connect 1 0 11 0;
+#X connect 2 0 16 1;
+#X connect 3 0 15 1;
+#X connect 4 0 14 1;
+#X connect 5 0 9 1;
+#X connect 6 0 5 0;
+#X connect 6 0 8 1;
+#X connect 7 0 21 0;
+#X connect 8 0 9 0;
+#X connect 9 0 7 0;
+#X connect 10 0 17 0;
+#X connect 11 0 0 0;
+#X connect 11 0 16 0;
+#X connect 12 0 22 0;
+#X connect 13 0 10 0;
+#X connect 13 1 10 1;
+#X connect 14 0 13 0;
+#X connect 15 0 14 0;
+#X connect 16 0 18 0;
+#X connect 17 1 12 0;
+#X connect 17 2 12 1;
+#X connect 18 0 0 1;
+#X connect 22 0 21 0;
+#X restore 435 259 pd dust;
+#X obj 182 169 pddp/pddplink https://bitbucket.org/agraef/pd-smmf;
+#X text 86 390 load sf-file;
+#X text 86 415 init [-smmf] sf-file;
+#X obj 164 78 pddp/pddplink http://sourceforge.net/p/mscore/code/HEAD/tree/trunk/mscore/share/sound/TimGM6mb.sf2?format=raw
+-text TimGM6mb.sf2 (sf.net);
+#X connect 15 0 14 0;
+#X connect 15 1 14 1;
+#X connect 18 0 15 0;
+#X connect 19 0 15 0;
+#X connect 29 0 30 0;
+#X connect 29 1 30 1;
+#X connect 29 2 30 2;
+#X connect 30 0 31 0;
+#X connect 31 0 45 0;
+#X connect 33 0 37 0;
 #X connect 34 0 33 0;
-#X connect 35 0 33 0;
-#X connect 36 0 34 0;
-#X connect 37 0 40 0;
-#X connect 38 0 35 0;
-#X connect 39 0 29 0;
-#X connect 40 0 20 0;
-#X connect 40 0 21 0;
-#X connect 41 0 42 0;
-#X connect 41 1 42 1;
-#X connect 41 2 42 2;
-#X connect 42 0 60 0;
-#X connect 43 0 44 0;
-#X connect 43 1 44 1;
-#X connect 44 0 46 0;
-#X connect 46 0 45 0;
-#X connect 48 0 33 0;
-#X connect 49 0 48 0;
-#X connect 51 0 52 0;
-#X connect 52 0 37 0;
-#X connect 55 0 58 0;
-#X connect 56 0 58 0;
-#X connect 57 0 58 0;
-#X connect 58 0 77 0;
-#X connect 58 1 77 1;
-#X connect 60 0 27 0;
-#X connect 63 0 64 0;
-#X connect 65 0 67 1;
-#X connect 65 0 72 0;
-#X connect 66 0 67 0;
-#X connect 67 0 63 0;
-#X connect 70 0 19 0;
-#X connect 72 0 71 0;
-#X connect 76 0 13 0;
+#X connect 34 1 33 1;
+#X connect 34 2 33 2;
+#X connect 35 0 36 0;
+#X connect 35 1 36 1;
+#X connect 36 0 44 0;
+#X connect 37 0 45 0;
+#X connect 38 0 39 0;
+#X connect 39 0 53 0;
+#X connect 40 0 41 0;
+#X connect 41 0 53 0;
+#X connect 44 0 45 0;
+#X connect 46 0 48 0;
+#X connect 47 0 46 0;
+#X connect 49 0 50 0;
