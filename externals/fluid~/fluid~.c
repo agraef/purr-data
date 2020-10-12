@@ -42,8 +42,8 @@ static void fluid_tilde_dsp(t_fluid_tilde *x, t_signal **sp)
 
 static void fluid_tilde_free(t_fluid_tilde *x)
 {
-    outlet_free(x->x_out_left);
-    outlet_free(x->x_out_right);
+    if (x->x_synth) delete_fluid_synth(x->x_synth);
+    if (x->x_settings) delete_fluid_settings(x->x_settings);
 }
 
 static void fluid_help(void)
@@ -300,6 +300,7 @@ static void fluid_load(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
 static void fluid_init(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
 {
     if (x->x_synth) delete_fluid_synth(x->x_synth);
+    if (x->x_settings) delete_fluid_settings(x->x_settings);
 
     float sr = sys_getsr();
 
@@ -339,8 +340,6 @@ static void fluid_init(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
         }
         // try to load argument as soundfont
         fluid_load(x, gensym("load"), argc, argv);
-        //if (settings != NULL )
-        //      delete_fluid_settings(settings);
 
         // We're done constructing:
         if (x->x_synth)
@@ -351,6 +350,7 @@ static void fluid_init(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
 static void *fluid_tilde_new(t_symbol *s, int argc, t_atom *argv)
 {
     t_fluid_tilde *x = (t_fluid_tilde *)pd_new(fluid_tilde_class);
+    x->x_synth = NULL; x->x_settings = NULL;
     x->x_out_left = outlet_new(&x->x_obj, &s_signal);
     x->x_out_right = outlet_new(&x->x_obj, &s_signal);
     x->smmf_mode = 0;
@@ -362,7 +362,8 @@ static void *fluid_tilde_new(t_symbol *s, int argc, t_atom *argv)
 void fluid_tilde_setup(void)
 {
     fluid_tilde_class = class_new(gensym("fluid~"),
-        (t_newmethod)fluid_tilde_new, 0, sizeof(t_fluid_tilde),
+        (t_newmethod)fluid_tilde_new, (t_method)fluid_tilde_free,
+        sizeof(t_fluid_tilde),
         CLASS_DEFAULT, A_GIMME, 0);
     class_addmethod(fluid_tilde_class, (t_method)fluid_init, gensym("init"),
         A_GIMME, 0);
