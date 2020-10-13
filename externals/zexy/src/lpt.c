@@ -46,6 +46,8 @@
 #  define Z_WANT_LPT 1
 # endif
 #elif defined __WIN32__
+// ag: We don't have the requisite dlls, disabled for now.
+#define Z_WANT_LPT 0
 # if defined __i386__
 #  ifndef Z_WANT_LPT
 #   define Z_WANT_LPT 1

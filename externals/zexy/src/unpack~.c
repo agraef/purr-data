@@ -94,7 +94,7 @@ static void sigunpack_dsp(t_sigunpack *x, t_signal **sp)
     x->bufsize = newsize;
   }
 
-  dsp_add(sigunpack_perform, 3, sp[0]->s_vec, x, sp[0]->s_n);
+  dsp_add(sigunpack_perform, 3, sp[0]->s_vec, x, (t_int)sp[0]->s_n);
 }
 
 static void *sigunpack_new(t_floatarg f)

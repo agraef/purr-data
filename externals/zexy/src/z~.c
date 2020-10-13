@@ -89,7 +89,7 @@ static t_int *zN_perform(t_int *w)
 
 static void zNdelay_dsp(t_zNdelay *x, t_signal **sp)
 {
-  dsp_add(zN_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, sp[0]->s_n);
+  dsp_add(zN_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)sp[0]->s_n);
 }
 
 static void *zNdelay_new(t_symbol*UNUSED(s), int argc, t_atom*argv)

@@ -211,7 +211,7 @@ static void mline_dsp(t_mline *x, t_signal **sp)
   }
 
   x->msec2tick = sp[0]->s_sr / (1000.f * sp[0]->s_n);
-  dsp_add(mline_perform, 2, x, sp[0]->s_n);
+  dsp_add(mline_perform, 2, x, (t_int)sp[0]->s_n);
 }
 
 

@@ -6,18 +6,18 @@
 lib.name = zexy
 
 
-make-lib-executable=yes
+make-lib-executable=no
 with-regex=yes
 with-lpt=yes
 
 # input source file (class name == source file basename)
 class.sources = \
-	src/0x260x260x7e.c \
+	src/0x260x26_tilde.c \
 	src/0x2e.c \
-	src/0x3c0x7e.c \
-	src/0x3d0x3d0x7e.c \
-	src/0x3e0x7e.c \
-	src/0x7c0x7c0x7e.c \
+	src/0x3c_tilde.c \
+	src/0x3d0x3d_tilde.c \
+	src/0x3e_tilde.c \
+	src/0x7c0x7c_tilde.c \
 	src/a2l.c \
 	src/abs~.c \
 	src/absgn~.c \
