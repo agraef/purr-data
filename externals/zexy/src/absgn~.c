@@ -106,12 +106,12 @@ static void sigABSGN_dsp(t_absgn* UNUSED(x), t_signal **sp)
     zexy_testSSE(sigABSGN_perform, sigABSGN_performSSE, 1, 2)
   ) {
     dsp_add(sigABSGN_performSSE, 4, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec,
-            sp[0]->s_n);
+            (t_int)sp[0]->s_n);
   } else
 #endif
   {
     dsp_add(sigABSGN_perform, 4, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec,
-            sp[0]->s_n);
+            (t_int)sp[0]->s_n);
   }
 }
 

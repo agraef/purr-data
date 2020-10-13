@@ -202,13 +202,13 @@ static void lt_tilde_dsp(t_lt_tilde* UNUSED(x), t_signal **sp)
     Z_SIMD_CHKALIGN(out)&&
     ZEXY_TYPE_EQUAL(t_sample, float)
   ) {
-    dsp_add(lt_tilde_performSSE, 4, in1, in2, out, n);
+    dsp_add(lt_tilde_performSSE, 4, in1, in2, out, (t_int)n);
   } else
 #endif
     if(n&7) {
-      dsp_add(lt_tilde_perform, 4, in1, in2, out, n);
+      dsp_add(lt_tilde_perform, 4, in1, in2, out, (t_int)n);
     } else {
-      dsp_add(lt_tilde_perf8, 4, in1, in2, out, n);
+      dsp_add(lt_tilde_perf8, 4, in1, in2, out, (t_int)n);
     }
 }
 
@@ -225,13 +225,13 @@ static void scalarlt_tilde_dsp(t_scalarlt_tilde *x, t_signal **sp)
     Z_SIMD_CHKALIGN(out)&&
     ZEXY_TYPE_EQUAL(t_sample, float)
   ) {
-    dsp_add(scalarlt_tilde_performSSE, 4, in, &x->x_g, out, n);
+    dsp_add(scalarlt_tilde_performSSE, 4, in, &x->x_g, out, (t_int)n);
   } else
 #endif
     if (n&7) {
-      dsp_add(scalarlt_tilde_perform, 4, in, &x->x_g, out, n);
+      dsp_add(scalarlt_tilde_perform, 4, in, &x->x_g, out, (t_int)n);
     } else {
-      dsp_add(scalarlt_tilde_perf8, 4, in, &x->x_g, out, n);
+      dsp_add(scalarlt_tilde_perf8, 4, in, &x->x_g, out, (t_int)n);
     }
 }
 static void lt_tilde_help(t_object* UNUSED(x))

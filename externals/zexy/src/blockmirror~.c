@@ -78,7 +78,7 @@ static void blockmirror_dsp(t_blockmirror *x, t_signal **sp)
     x->blocksize = sp[0]->s_n;
     x->blockbuffer = getbytes(sizeof(*x->blockbuffer)*x->blocksize);
   }
-  dsp_add(blockmirror_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+  dsp_add(blockmirror_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void blockmirror_helper(t_blockmirror* UNUSED(x))
