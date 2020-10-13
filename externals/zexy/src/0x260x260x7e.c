@@ -283,7 +283,7 @@ static void andand_tilde_help(t_object* UNUSED(x))
   post("\n"HEARTSYMBOL " &&~\t\t:: logical AND operation on 2 signals");
 }
 
-ZEXY_SETUP void setup_0x260x260x7e(void)
+ZEXY_SETUP void setup_0x260x26_tilde(void)
 {
   andand_tilde_class = zexy_new("&&~",
                                 andand_tilde_new, 0, t_andand_tilde, 0, "*");
@@ -309,6 +309,6 @@ ZEXY_SETUP void setup_0x260x260x7e(void)
 #ifndef ZEXY_LIBRARY
 void setup(void)
 {
-  setup_0x260x260x7e();
+  setup_0x260x26_tilde();
 }
 #endif

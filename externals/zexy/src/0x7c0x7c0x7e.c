@@ -257,7 +257,7 @@ static void oror_tilde_help(t_object* UNUSED(x))
   post("\n"HEARTSYMBOL " &&~\t\t:: logical OR operation on 2 signals");
 }
 
-ZEXY_SETUP void setup_0x7c0x7c0x7e(void)
+ZEXY_SETUP void setup_0x7c0x7c_tilde(void)
 {
   oror_tilde_class = zexy_new("||~",
                               oror_tilde_new, 0, t_oror_tilde, 0, "*");
@@ -281,6 +281,6 @@ ZEXY_SETUP void setup_0x7c0x7c0x7e(void)
 #ifndef ZEXY_LIBRARY
 void setup(void)
 {
-  setup_0x7c0x7c0x7e();
+  setup_0x7c0x7c_tilde();
 }
 #endif

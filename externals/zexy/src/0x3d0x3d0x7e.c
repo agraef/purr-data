@@ -238,7 +238,7 @@ static void eq_tilde_help(t_object* UNUSED(x))
 {
   post("\n"HEARTSYMBOL " &&~\t\t:: test 2 signals for equality");
 }
-ZEXY_SETUP void setup_0x3d0x3d0x7e(void)
+ZEXY_SETUP void setup_0x3d0x3d_tilde(void)
 {
   eq_tilde_class = zexy_new("==~",
                             eq_tilde_new, 0, t_eq_tilde, 0, "*");
@@ -261,6 +261,6 @@ ZEXY_SETUP void setup_0x3d0x3d0x7e(void)
 #ifndef ZEXY_LIBRARY
 void setup(void)
 {
-  setup_0x3d0x3d0x7e();
+  setup_0x3d0x3d_tilde();
 }
 #endif
