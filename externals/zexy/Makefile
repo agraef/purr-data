@@ -6,7 +6,7 @@
 lib.name = zexy
 
 
-make-lib-executable=yes
+make-lib-executable=no
 with-regex=yes
 with-lpt=yes
 
