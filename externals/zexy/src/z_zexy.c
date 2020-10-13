@@ -4,12 +4,12 @@
  */
 
 /* forward declarations */
-void  setup_0x260x260x7e(void);          /*  0x260x260x7e.c      */
+void  setup_0x260x26_tilde(void);        /*  0x260x26_tilde.c    */
 void  setup_0x2e(void);                  /*  0x2e.c              */
-void  setup_0x3c0x7e(void);              /*  0x3c0x7e.c          */
-void  setup_0x3d0x3d0x7e(void);          /*  0x3d0x3d0x7e.c      */
-void  setup_0x3e0x7e(void);              /*  0x3e0x7e.c          */
-void  setup_0x7c0x7c0x7e(void);          /*  0x7c0x7c0x7e.c      */
+void  setup_0x3c_tilde(void);            /*  0x3c_tilde.c        */
+void  setup_0x3d0x3d_tilde(void);        /*  0x3d0x3d_tilde.c    */
+void  setup_0x3e_tilde(void);            /*  0x3e_tilde.c        */
+void  setup_0x7c0x7c_tilde(void);        /*  0x7c0x7c_tilde.c    */
 void  a2l_setup(void);                   /*  a2l.c               */
 void  absgn_tilde_setup(void);           /*  absgn~.c            */
 void  abs_tilde_setup(void);             /*  abs~.c              */
@@ -93,12 +93,12 @@ void  z_tilde_setup(void);               /*  z~.c                */
 
 void z_zexy_setup(void)
 {
-  setup_0x260x260x7e();
+  setup_0x260x26_tilde();
   setup_0x2e();
-  setup_0x3c0x7e();
-  setup_0x3d0x3d0x7e();
-  setup_0x3e0x7e();
-  setup_0x7c0x7c0x7e();
+  setup_0x3c_tilde();
+  setup_0x3d0x3d_tilde();
+  setup_0x3e_tilde();
+  setup_0x7c0x7c_tilde();
   a2l_setup();
   absgn_tilde_setup();
   abs_tilde_setup();
