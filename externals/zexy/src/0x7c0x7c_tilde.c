@@ -219,13 +219,13 @@ static void oror_tilde_dsp(t_oror_tilde* UNUSED(x), t_signal **sp)
     Z_SIMD_CHKALIGN(out)&&
     ZEXY_TYPE_EQUAL(t_sample, float)
   ) {
-    dsp_add(oror_tilde_performSSE, 4, in1, in2, out, n);
+    dsp_add(oror_tilde_performSSE, 4, in1, in2, out, (t_int)n);
   } else
 #endif
     if(n&7) {
-      dsp_add(oror_tilde_perform, 4, in1, in2, out, n);
+      dsp_add(oror_tilde_perform, 4, in1, in2, out, (t_int)n);
     } else {
-      dsp_add(oror_tilde_perf8, 4, in1, in2, out, n);
+      dsp_add(oror_tilde_perf8, 4, in1, in2, out, (t_int)n);
     }
 }
 
@@ -242,13 +242,13 @@ static void scalaroror_tilde_dsp(t_scalaroror_tilde *x, t_signal **sp)
     Z_SIMD_CHKALIGN(out)&&
     ZEXY_TYPE_EQUAL(t_sample, float)
   ) {
-    dsp_add(scalaroror_tilde_performSSE, 4, in, &x->x_g, out, n);
+    dsp_add(scalaroror_tilde_performSSE, 4, in, &x->x_g, out, (t_int)n);
   } else
 #endif
     if (n&7) {
-      dsp_add(scalaroror_tilde_perform, 4, in, &x->x_g, out, n);
+      dsp_add(scalaroror_tilde_perform, 4, in, &x->x_g, out, (t_int)n);
     } else {
-      dsp_add(scalaroror_tilde_perf8, 4, in, &x->x_g, out, n);
+      dsp_add(scalaroror_tilde_perf8, 4, in, &x->x_g, out, (t_int)n);
     }
 }
 
@@ -257,7 +257,7 @@ static void oror_tilde_help(t_object* UNUSED(x))
   post("\n"HEARTSYMBOL " &&~\t\t:: logical OR operation on 2 signals");
 }
 
-ZEXY_SETUP void setup_0x7c0x7c0x7e(void)
+ZEXY_SETUP void setup_0x7c0x7c_tilde(void)
 {
   oror_tilde_class = zexy_new("||~",
                               oror_tilde_new, 0, t_oror_tilde, 0, "*");
@@ -281,6 +281,6 @@ ZEXY_SETUP void setup_0x7c0x7c0x7e(void)
 #ifndef ZEXY_LIBRARY
 void setup(void)
 {
-  setup_0x7c0x7c0x7e();
+  setup_0x7c0x7c_tilde();
 }
 #endif

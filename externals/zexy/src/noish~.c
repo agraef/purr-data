@@ -141,7 +141,7 @@ static t_int *noish_perform(t_int *w)
 
 static void noish_dsp(t_nois *x, t_signal **sp)
 {
-  dsp_add(noish_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
+  dsp_add(noish_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
 }
 
 static void noish_helper(void)

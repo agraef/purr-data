@@ -96,7 +96,7 @@ static void pdf_dsp(t_pdf *x, t_signal **sp)
 {
   x->halfsize = (x->size - 1) / 2.0;
 
-  dsp_add(pdf_perform, 3, sp[0]->s_vec, x, sp[0]->s_n);
+  dsp_add(pdf_perform, 3, sp[0]->s_vec, x, (t_int)sp[0]->s_n);
 }
 
 static void *pdf_new(t_floatarg f)

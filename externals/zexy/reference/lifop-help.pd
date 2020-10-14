@@ -1,6 +1,6 @@
 #N canvas 0 31 568 508 10;
 #X text 471 31 part of;
-#X obj 533 30 zexy;
+#X text 533 30 zexy;
 #X obj 58 192 lifop;
 #X msg 58 85 1 2 3 4 5;
 #X msg 69 110 list a list;
