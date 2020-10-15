@@ -64,17 +64,18 @@ extern t_canvas *canvas_templatecanvas_forgroup(t_canvas *c);
 /* ico@vt.edu 2020-08-24:
 check if canvas consists of only scalars and returns 2. if the canvas only
 has the last object as a non-scalar (e.g. a new object has just been created,
-then we return 1, otherwise return 0. this is used to prevent creation of new
-objects in an GOP window that only has scalars inside it or scalars with one
-newly created object that is yet to be typed into and therefore properly
-instantiated */
+then we return 1, otherwise return 0. this is used to determine whether the
+GOP redrect should be drawn inside the GOP-enabled toplevel window, depending
+whether it only has scalars inside it or scalars with one newly created object
+that is yet to be typed into and therefore properly instantiated */
 int canvas_has_scalars_only(t_canvas *x)
 {
     t_gobj *g = x->gl_list;
-    int hasonlyscalars = 2;
+    int hasonlyscalars = 0;
     while (g)
     {
         //post("g...");
+        hasonlyscalars = 2;
         if (pd_class(&g->g_pd) != scalar_class)
         {
             /*
@@ -85,16 +86,19 @@ int canvas_has_scalars_only(t_canvas *x)
 
             /* ico@vt.edu 2020-08-24:
             if we have one more object or the last object is not newly
-            instantiated text object
-            to distinguish between a comment and a text object that is 
-            yet to be instantiated we use:
+            instantiated text object to distinguish between a comment and
+            a text object that is yet to be instantiated we use:
                1) comment is text_class and its te_type is T_TEXT
                2) blank object one is typing into is text_class but is NOT T_TEXT
-               3) instantiated object is something other than text_class (unless)
-                  it is a comment
+               3) instantiated object is something other than text_class (unless
+                  it is a comment)
                4) object that has failed to create is same as blank object
             */
             if (g->g_next || (pd_class(&g->g_pd) != text_class || ((t_text *)g)->te_type == T_TEXT))
+                hasonlyscalars = 0;
+            // check if we are not the only object on the canvas, in which case we should still
+            // return 0 since we have no scalars inside the canvas
+            else if (g == x->gl_list && !g->g_next)
                 hasonlyscalars = 0;
             else
                 hasonlyscalars = 1;
@@ -103,7 +107,6 @@ int canvas_has_scalars_only(t_canvas *x)
         //post("...scalar, comment, or uninitialized object=yes");
         g = g->g_next;
     }
-    //post("has scalars only=%d", hasonlyscalars);
     return(hasonlyscalars);
 }
 
@@ -128,7 +131,7 @@ void glist_update_redrect(t_glist *x)
     }
     else if (canvas_has_scalars_only(x) && x->gl_goprect)
     {
-         x->gl_goprect = 0;
+        x->gl_goprect = 0;
         canvas_drawredrect(x, 0);       
     }
 }
