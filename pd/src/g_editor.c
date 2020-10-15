@@ -5362,24 +5362,31 @@ void canvas_mouseup(t_canvas *x,
 
         x->gl_editor->e_onmotion = MA_NONE;
     }
-    //fprintf(stderr,"canvas_mouseup -> canvas_doclick %d\n", which);
-    /* this is to ignore scrollbar clicks from within tcl and is
-       unused within nw.js 2.x implementation and onward. here,
-       we use doit = -1 to signify mouseup */
-    //if (canvas_last_glist_mod == -1) {
     if (x->gl_editor->e_onmotion == MA_PASSOUT)
     {
         // here we borrow the double-click flag and make it -1 which signifies
         // mouse up since otherwise doit (the last argument) value of 0 is
         // shared between mouse up and mouse motion, making this unclear
-        int clickreturned = gobj_click(
-            x->gl_editor->e_grab, x, xpos, ypos, glob_shift, glob_alt, -1, 0);
+        if (x->gl_editor->e_grab)
+        {
+            int clickreturned = gobj_click(
+                x->gl_editor->e_grab, x, xpos, ypos, glob_shift, glob_alt, -1, 0);
+        }
+        // however, in the case of an array which does not have an e_grab declared
+        // we have to let go of the glist_grab instead
+        else
+            glist_grab(x, 0, 0, 0, 0, 0, 0, 0);
         x->gl_editor->e_onmotion = MA_NONE;
     }
 
-    canvas_doclick(x, xpos, ypos, 0,
-        (glob_shift + glob_ctrl*2 + glob_alt*4), 0);
-    //}
+    //fprintf(stderr,"canvas_mouseup -> canvas_doclick %d\n", which);
+    /* this is to ignore scrollbar clicks from within tcl and is
+       unused within nw.js 2.x implementation and onward. since 
+       canvas_last_glist_mod is never set to -1 */
+    //if (canvas_last_glist_mod == -1)
+    //    canvas_doclick(x, xpos, ypos, 0, \
+    //        (glob_shift + glob_ctrl*2 + glob_alt*4), 0);
+
     // now dispatch to any click listeners
     canvas_dispatch_mouseclick(0., xpos, ypos, which);
 }
@@ -5933,8 +5940,8 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
         //fprintf(stderr,"canvas_motion MA_SCROLL\n");
     }
     else {
-        //fprintf(stderr,"canvas_motion -> doclick %d %d\n",
-        //    x->gl_editor->e_onmotion, mod);
+        //post("canvas_motion -> doclick %d %d\n", \
+            x->gl_editor->e_onmotion, mod);
         //canvas_getscroll( x);
         canvas_doclick(x, xpos, ypos, 0, mod, 0);
         //pd_vmess(&x->gl_pd, gensym("mouse"), "ffff",

@@ -47,8 +47,11 @@ static void my_numbox_tick_reset(t_my_numbox *x)
 // 2 = exclusive keyboard and mouse focus
 static void my_numbox_remove_grab(t_my_numbox *x)
 {
-    x->x_focused = 0;
-    glist_grab(x->x_gui.x_glist, 0, 0, 0, 0, 0, 0, 0);
+    if (x->x_focused)
+    {
+        x->x_focused = 0;
+        glist_grab(x->x_gui.x_glist, 0, 0, 0, 0, 0, 0, 0);
+    }
 }
 
 void my_numbox_clip(t_my_numbox *x)
@@ -485,9 +488,9 @@ static void my_numbox_save(t_gobj *z, t_binbuf *b)
     t_symbol *srl[3];
 
     iemgui_save(&x->x_gui, srl, bflcol);
+    my_numbox_remove_grab(x);
     if(x->x_focused)
     {
-        my_numbox_remove_grab(x);
         clock_unset(x->x_clock_reset);
         x->x_gui.x_changed = 1;
         sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
@@ -548,9 +551,9 @@ static void my_numbox_properties(t_gobj *z, t_glist *owner)
     t_symbol *srl[3];
 
     iemgui_properties(&x->x_gui, srl);
-    if(x->x_gui.x_change)
+    my_numbox_remove_grab(x);
+    if(x->x_focused)
     {
-        my_numbox_remove_grab(x);
         clock_unset(x->x_clock_reset);
         x->x_gui.x_changed = 1;
         sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
@@ -1136,7 +1139,6 @@ static void my_numbox_free(t_my_numbox *x)
 {
     if(iemgui_has_rcv(&x->x_gui))
         pd_unbind(&x->x_gui.x_obj.ob_pd, x->x_gui.x_rcv);
-    x->x_focused = 0;
     my_numbox_remove_grab(x);
     clock_free(x->x_clock_reset);
     gfxstub_deleteforkey(x);
