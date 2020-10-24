@@ -1162,8 +1162,11 @@ function menu_saveas(name) {
 exports.menu_saveas = menu_saveas;
 
 function gui_canvas_print(name, initfile, initdir) {
-    // AG: We simply ignore initfile and initdir, as the print dialog will
-    // present its own file picker anyway if PDF output is chosen.
+    // AG: The print dialog presents its own file picker anyway if PDF
+    // output is chosen, and just ignores the settings for pdf_path. So
+    // initfile and initdir are only used here to provide a useful default
+    // for the header and footer information -- otherwise the print() method
+    // uses some random internal document URL which isn't helpful.
     pdsend("pd gui-busy 1");
     patchwin[name].print({ autoprint: false, headerString: initfile, footerString: path.join(initdir, initfile) });
     pdsend("pd gui-busy 0");
