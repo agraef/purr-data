@@ -1162,7 +1162,9 @@ exports.menu_saveas = menu_saveas;
 function gui_canvas_print(name, initfile, initdir) {
     // AG: We simply ignore initfile and initdir, as the print dialog will
     // present its own file picker anyway if PDF output is chosen.
+    pdsend("pd gui-busy 1");
     patchwin[name].print({ autoprint: false, headerString: initfile, footerString: path.join(initdir, initfile) });
+    pdsend("pd gui-busy 0");
     post("printed "+initfile);
 }
 
