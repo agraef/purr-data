@@ -287,6 +287,7 @@ function make_index() {
             finish_index();
         }
     }
+    pdsend("pd gui-busy 1");
     index_started = true;
     index_start_time = new Date().getTime() / 1000;
     var idx, manif;
@@ -329,6 +330,7 @@ function make_index() {
 	post("building help index in " + doc_path);
 	dive(doc_path, read_file, browser_path?make_index_cont:finish_index);
     }
+    pdsend("pd gui-busy 0");
 }
 
 // AG: This is called from dialog_search.html with a callback that expects to
@@ -1360,7 +1362,9 @@ function gui_quit_dialog() {
 function menu_send(name) {
     var message,
         win = name ? patchwin[name] : pd_window;
+    pdsend("pd gui-busy 1");
     message = win.window.prompt("Type a message to send to Pd", name);
+    pdsend("pd gui-busy 0");
     if (message != undefined && message.length) {
         post("Sending message to Pd: " + message + ";");
         pdsend(message);
