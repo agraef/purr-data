@@ -1405,36 +1405,41 @@ function menu_send(name) {
     }
 }
 
-/*
-ico@vt.edu 20200907: added svg tiled background to reflect edit mode and
-integrated it into the canvas_set_editmode below.
+// Background for edit mode. Currently, we use a grid if snap-to-grid
+// functionality is turned on in the GUI preferences. If not, we just use
+// the same grid with a lower opacity. That way the edit mode is always
+// visually distinct from run mode.
+var create_editmode_background = function(grid, size) {
+    var head, body, tail, cell_data_str, opacity_str;
+    // if snap-to-grid isn't turned on, just use cell size of 10 and make the
+    // grid partially transparent
+    size = grid ? size : 10;
+    opacity_str = '"' + (grid ? 1 : 0.25) + '"';
+post("size is " + size);
+    cell_data_str = ['"', "M", size, 0, "L", 0, 0, 0, size, '"'].join(" ");
 
-LATER: consider adding an interim version that reflects only the ctrl button press
-*/
-var gui_editmode_svg_background = "url(\"data:image/svg+xml,%3Csvg " +
-        "xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 " +
-        " 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity" +
-        "='0.4'%3E%3Cpath opacity='.5' d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1" +
-        "v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-" +
-        "1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9" +
-        "H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9" +
-        "V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v" +
-        "1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h" +
-        "9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-1" +
-        "0 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9" +
-        "h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-" +
-        "10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9" +
-        "h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9" +
-        "v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h" +
-        "9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h" +
-        "9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-1" +
-        "0 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-" +
-        "9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm1" +
-        "0 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9" +
-        "h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9" +
-        "h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0" +
-        "h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z'/%3E%3Cpath d" +
-        "='M6 5V0H5v5H0v1h5v94h1V6h94V5H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")";
+    head = ['<svg xmlns="http://www.w3.org/2000/svg" ',
+                'width="100%" height="100%" ',
+                'opacity=', opacity_str, '>']
+           .join("");
+    body = ['<defs>',
+              '<pattern id="cell" patternUnits="userSpaceOnUse" ',
+                       'width="', size, '" height="', size, '">',
+                '<path fill="none" stroke="#ddd" stroke-width="1" ',
+                      'd=', cell_data_str,'/>',
+              '</pattern>',
+              '<pattern id="grid" patternUnits="userSpaceOnUse" ',
+                        'width="100" height="100">',
+                '<rect width="100" height="100" fill="url(#cell)" />',
+                '<path fill="none" stroke="#bbb" stroke-width="1" ',
+                      'd="M 100 0 L 0 0 0 100"/>',
+              '</pattern>',
+            '</defs>',
+            '<rect width="100%" height="100%" fill="url(#grid)" />'
+        ].join("");
+    tail = '</svg>';
+    return "url('data:image/svg+xml;utf8," + head + body + tail + "')";
+}
 
 // requires nw.js API (Menuitem)
 function canvas_set_editmode(cid, state) {
@@ -1442,15 +1447,17 @@ function canvas_set_editmode(cid, state) {
         w.set_editmode_checkbox(state !== 0 ? true : false);
         if (state !== 0) {
             patchsvg.classList.add("editmode");
-            if (showgrid[cid]) {
-                //post("editmode:" + gui_editmode_svg_background);
-                patchwin[cid].window.document.body.style.setProperty
-                ("background-image", gui_editmode_svg_background);
-            }
+            // For now, we just change the opacity of the background grid
+            // depending on whether snap-to-grid is turned on. This way
+            // edit mode is always visually distinct.
+            patchwin[cid].window.document.body.style
+	        .setProperty("background-image",
+                    create_editmode_background(showgrid[cid], gridsize[cid]));
         } else {
             patchsvg.classList.remove("editmode");
-            patchwin[cid].window.document.body.style.setProperty("background-image",
-                "none");  
+            patchwin[cid].window.document.body.style
+                .setProperty("background-image", "none"
+            );
         }
     });
 }
@@ -1468,21 +1475,21 @@ function canvas_query_editmode(cid) {
 
 exports.canvas_query_editmode = canvas_query_editmode;
 
-function update_grid(grid) {
+function update_grid(grid, grid_size_value) {
     // Update the grid background of all canvas windows when the corresponding
     // option in the gui prefs changes.
-    var bg = grid != 0 ? gui_editmode_svg_background : "none";
     for (var cid in patchwin) {
 	gui(cid).get_elem("patchsvg", function(patchsvg, w) {
             var editmode = patchsvg.classList.contains("editmode");
             if (editmode) {
                 patchwin[cid].window.document.body.style.setProperty
-                ("background-image", bg);
+                ("background-image", create_editmode_background(grid !== 0,
+                    grid_size_value));
             }
 	});
     }
     // Also update the showgrid flags.
-    set_showgrid(grid);
+    set_grid(grid, grid_size_value);
 }
 
 exports.update_grid = update_grid;
@@ -1744,6 +1751,7 @@ var scroll = {},
     font = {},
     doscroll = {},
     showgrid = {},
+    gridsize = {},
     last_loaded, // last loaded canvas
     last_focused, // last focused canvas (doesn't include Pd window or dialogs)
     loading = {},
@@ -1754,9 +1762,11 @@ var scroll = {},
     var patchwin = {}; // object filled with cid: [Window object] pairs
     var dialogwin = {}; // object filled with did: [Window object] pairs
 
-var set_showgrid = function(grid) {
-    for (var cid in showgrid) {
+var set_grid = function(grid, gridsize_value) {
+    var cid;
+    for (cid in showgrid) {
 	showgrid[cid] = grid;
+        gridsize[cid] = gridsize_value;
     }
 }
 
@@ -1919,7 +1929,9 @@ function create_window(cid, type, width, height, xpos, ypos, attr_array) {
 }
 
 // create a new canvas
-function gui_canvas_new(cid, width, height, geometry, grid, zoom, editmode, name, dir, dirty_flag, warid, hide_scroll, hide_menu, has_toplevel_scalars, cargs) {
+function gui_canvas_new(cid, width, height, geometry, grid, grid_size_value,
+    zoom, editmode, name, dir, dirty_flag, warid, hide_scroll, hide_menu,
+    has_toplevel_scalars, cargs) {
     // hack for buggy tcl popups... should go away for node-webkit
     //reset_ctrl_on_popup_window
     
@@ -1947,6 +1959,7 @@ function gui_canvas_new(cid, width, height, geometry, grid, zoom, editmode, name
     font[cid] = 10;
     doscroll[cid] = 0;
     showgrid[cid] = grid != 0;
+    gridsize[cid] = grid_size_value;
     toplevel_scalars[cid] = has_toplevel_scalars;
     // geometry is just the x/y screen offset "+xoff+yoff"
     geometry = geometry.slice(1);   // remove the leading "+"
@@ -6190,10 +6203,10 @@ function gui_midi_properties(gfxstub, sys_indevs, sys_outdevs,
     }
 }
 
-function gui_gui_properties(dummy, name, show_grid, save_zoom, browser_doc, browser_path,
+function gui_gui_properties(dummy, name, show_grid, grid_size, save_zoom, browser_doc, browser_path,
     browser_init, autopatch_yoffset) {
     if (dialogwin["prefs"] !== null) {
-        dialogwin["prefs"].window.gui_prefs_callback(name, show_grid, save_zoom,
+        dialogwin["prefs"].window.gui_prefs_callback(name, show_grid, grid_size, save_zoom,
             browser_doc, browser_path, browser_init, autopatch_yoffset);
     }
 }

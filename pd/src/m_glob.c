@@ -79,13 +79,14 @@ static void glob_perf(t_pd *dummy, float f)
     sys_perf = (f != 0);
 }
 
-extern int sys_grid, sys_zoom, sys_browser_doc, sys_browser_path, sys_browser_init,
+extern int sys_snaptogrid, sys_gridsize, sys_zoom, sys_browser_doc, sys_browser_path, sys_browser_init,
     sys_autopatch_yoffset;
 extern t_symbol *sys_gui_preset;
 static void glob_gui_prefs(t_pd *dummy, t_symbol *s, int argc, t_atom *argv)
 {
     sys_gui_preset = atom_getsymbolarg(0, argc--, argv++);
-    sys_grid = !!atom_getintarg(0, argc--, argv++);
+    sys_snaptogrid = !!atom_getintarg(0, argc--, argv++);
+    sys_gridsize = atom_getintarg(0, argc--, argv++);
     sys_zoom = !!atom_getintarg(0, argc--, argv++);
     sys_browser_doc = !!atom_getintarg(0, argc--, argv++);
     sys_browser_path = !!atom_getintarg(0, argc--, argv++);
@@ -96,10 +97,11 @@ static void glob_gui_prefs(t_pd *dummy, t_symbol *s, int argc, t_atom *argv)
 /* just the gui-preset, the save-zoom toggle and various help browser options for now */
 static void glob_gui_properties(t_pd *dummy)
 {
-    gui_vmess("gui_gui_properties", "xsiiiiii",
+    gui_vmess("gui_gui_properties", "xsiiiiiii",
         dummy,
         sys_gui_preset->s_name,
-        sys_grid,
+        sys_snaptogrid,
+	sys_gridsize,
         sys_zoom,
         sys_browser_doc,
         sys_browser_path,

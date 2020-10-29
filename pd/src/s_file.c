@@ -42,7 +42,7 @@
 #define snprintf sprintf_s
 #endif
 
-int sys_defeatrt, sys_autopatch_yoffset, sys_grid = 1, sys_zoom, sys_browser_doc = 1,
+int sys_defeatrt, sys_autopatch_yoffset, sys_snaptogrid = 1, sys_gridsize = 10, sys_zoom, sys_browser_doc = 1,
     sys_browser_path, sys_browser_init;
 t_symbol *sys_flags = &s_;
 void sys_doflags( void);
@@ -671,7 +671,9 @@ void sys_loadpreferences( void)
     if (sys_getpreference("defeatrt", prefbuf, MAXPDSTRING))
         sscanf(prefbuf, "%d", &sys_defeatrt);
     if (sys_getpreference("showgrid", prefbuf, MAXPDSTRING))
-        sscanf(prefbuf, "%d", &sys_grid);
+        sscanf(prefbuf, "%d", &sys_snaptogrid);
+    if (sys_getpreference("gridsize", prefbuf, MAXPDSTRING))
+        sscanf(prefbuf, "%d", &sys_gridsize);
     if (sys_getpreference("savezoom", prefbuf, MAXPDSTRING))
         sscanf(prefbuf, "%d", &sys_zoom);
     if (sys_getpreference("browser_doc", prefbuf, MAXPDSTRING))
@@ -819,8 +821,10 @@ void glob_savepreferences(t_pd *dummy)
     sys_putpreference("nloadlib", buf1);
     sprintf(buf1, "%d", sys_defeatrt);
     sys_putpreference("defeatrt", buf1);
-    sprintf(buf1, "%d", sys_grid);
+    sprintf(buf1, "%d", sys_snaptogrid);
     sys_putpreference("showgrid", buf1);
+    sprintf(buf1, "%d", sys_gridsize);
+    sys_putpreference("gridsize", buf1);
     sprintf(buf1, "%d", sys_zoom);
     sys_putpreference("savezoom", buf1);
     sprintf(buf1, "%d", sys_browser_doc);

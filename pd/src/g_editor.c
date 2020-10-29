@@ -2799,6 +2799,9 @@ void canvas_init_menu(t_canvas *x)
     gui_vmess("gui_menu_font_set_initial_size", "xi", x, x->gl_font);
 }
 
+extern int sys_snaptogrid; /* whether we are snapping to grid or not */
+extern int sys_gridsize;
+
 void canvas_vis(t_canvas *x, t_floatarg f)
 {
     //fprintf(stderr,"canvas_vis .x%zx %f\n", (t_int)x, f);
@@ -2809,7 +2812,6 @@ void canvas_vis(t_canvas *x, t_floatarg f)
 
     t_gobj *g;
     t_int properties;
-    extern int sys_grid;
 
     int flag = (f != 0);
     if (flag)
@@ -2865,12 +2867,13 @@ void canvas_vis(t_canvas *x, t_floatarg f)
                We may need to expand this to include scalars, as well. */
             canvas_create_editor(x);
             canvas_args_to_string(argsbuf, x);
-            gui_vmess("gui_canvas_new", "xiisiiissiiiiis",
+            gui_vmess("gui_canvas_new", "xiisiiiissiiiiis",
                 x,
                 (int)(x->gl_screenx2 - x->gl_screenx1),
                 (int)(x->gl_screeny2 - x->gl_screeny1),
                 geobuf,
-                sys_grid,
+                sys_snaptogrid,
+		sys_gridsize,
                 x->gl_zoom,
                 x->gl_edit,
                 x->gl_name->s_name,
@@ -3637,6 +3640,8 @@ static int canvas_upx, canvas_upy;
 
 static int ctrl_runmode_warned;
 
+static int snap_got_anchor;
+
     /* mouse click */
 void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     int mod, int doit)
@@ -3646,6 +3651,10 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
        to array_motion so that we can update corresponding send when
        the array has been changed */
     array_garray = NULL;
+
+    /* reset the snap_got_anchor variable so the the snap_to_grid feature
+       can find its anchor object before it starts to displace a selection */
+    snap_got_anchor = 0;
     //post("canvas_doclick %d", doit);
 
     t_gobj *y;
@@ -5767,15 +5776,78 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
 extern void graph_checkgop_rect(t_gobj *z, t_glist *glist,
     int *xp1, int *yp1, int *xp2, int *yp2);
 
+    /* We get the bbox for the object under the mouse the first time around,
+       then cache its offset from the mouse for future motion messages.
+       Since there are cases where snapping to a grid can move the object
+       relative to the mouse pointer, we can't rely on our "anchor" object to
+       always be directly under the mouse coordinates. */
+static void snap_get_anchor_xy(t_canvas *x, int *gobj_x, int *gobj_y)
+{
+    t_selection *s = x->gl_editor->e_selection;
+    int x1, y1, x2, y2;
+    while (s)
+    {
+        if (canvas_hitbox(x, s->sel_what, x->gl_editor->e_xwas,
+            x->gl_editor->e_ywas, &x1, &y1, &x2, &y2))
+        {
+            *gobj_x = x1;
+            *gobj_y = y1;
+            return;
+        }
+	s = s->sel_next;
+    }
+    bug("canvas_get_snap_offset");
+}
 
+int anchor_xoff;
+int anchor_yoff;
+
+static void canvas_snap_to_grid(t_canvas *x, int xwas, int ywas, int xnew,
+    int ynew, int *dx, int *dy)
+{
+    int gsize = sys_gridsize;
+        /* If we're snapping to grid, we need an initial delta to align
+           the object under the mouse to the given gridlines. We keep
+           that in the variables below, which will have no affect after
+           our initial grid adjustment. */
+    int snap_dx = 0, snap_dy = 0;
+    if (!snap_got_anchor)
+    {
+        int obx = xnew, oby = ynew;
+        snap_get_anchor_xy(x, &obx, &oby);
+            /* First, get the distance the selection should be displaced
+               in order to align the anchor object with a grid line. */
+
+        snap_dx = floor((obx + (gsize / 2)) / gsize) * gsize - obx;
+
+        snap_dy = floor((oby + (gsize / 2)) / gsize) * gsize - oby;
+        obx = floor(obx / gsize) * gsize;
+        oby = floor(oby / gsize) * gsize;
+        anchor_xoff = xnew - obx;
+        anchor_yoff = ynew - oby;
+        snap_got_anchor = 1;
+    }
+    *dx = floor((xnew - anchor_xoff) / gsize) * gsize -
+        floor((xwas - anchor_xoff) / gsize) * gsize + snap_dx;
+    *dy = floor((ynew - anchor_yoff) / gsize) * gsize -
+        floor((ywas - anchor_yoff) / gsize) * gsize + snap_dy;
+}
 
 static void delay_move(t_canvas *x)
 {
-    canvas_displaceselection(x,
-        x->gl_editor->e_xnew - x->gl_editor->e_xwas,
-        x->gl_editor->e_ynew - x->gl_editor->e_ywas);
-    x->gl_editor->e_xwas = x->gl_editor->e_xnew;
-    x->gl_editor->e_ywas = x->gl_editor->e_ynew;
+    int dx, dy;
+    int xwas = x->gl_editor->e_xwas, ywas = x->gl_editor->e_ywas,
+        xnew = x->gl_editor->e_xnew, ynew = x->gl_editor->e_ynew;
+    if (sys_snaptogrid)
+        canvas_snap_to_grid(x, xwas, ywas, xnew, ynew, &dx, &dy);
+    else
+    {
+        dx = xnew - xwas;
+        dy = ynew - ywas;
+    }
+    canvas_displaceselection(x, dx, dy);
+    x->gl_editor->e_xwas = xnew;
+    x->gl_editor->e_ywas = ynew;
 }
 
 void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,

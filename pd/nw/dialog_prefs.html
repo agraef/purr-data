@@ -415,9 +415,16 @@ select {
             </select>
             <br/>
             <label data-i18n="[title]prefs.gui.grid.show_grid_tt">
-              <input type="checkbox" id="show_grid" name="show_grid">
+              <input type="checkbox" id="show_grid" name="show_grid"
+                     onchange="grid_toggle(this.checked)">
               <span data-i18n="prefs.gui.grid.show_grid"></span>
             </label>
+	    <select id="grid_size">
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="25">25</option>
+            </select>
             <br/>
             <label data-i18n="[title]prefs.gui.zoom.save_zoom_tt">
               <input type="checkbox" id="save_zoom" name="save_zoom">
@@ -783,6 +790,7 @@ function apply(save_prefs) {
     pdgui.pdsend("pd gui-prefs",
         get_gui_preset(),
         get_bool_elem("show_grid"),
+	document.getElementById("grid_size").value,
         get_bool_elem("save_zoom"),
         get_bool_elem("browser_doc"),
         get_bool_elem("browser_path"),
@@ -796,7 +804,8 @@ function apply(save_prefs) {
         get_bool_elem("browser_path")
     );
     // Update the grid on all open windows.
-    pdgui.update_grid(get_bool_elem("show_grid"));
+    pdgui.update_grid(get_bool_elem("show_grid"),
+        document.getElementById("grid_size").value);
 
     // Send the startup config data to Pd
     pdgui.pdsend.apply(null, ["pd path-dialog", startup_use_stdpath, startup_verbose].concat(get_path_array()));
@@ -1035,13 +1044,18 @@ function midi_prefs_callback(attrs) {
     pdgui.resize_window(pd_object_callback);
 }
 
+function grid_toggle(checked) {
+    document.getElementById("grid_size").disabled = !checked;
+    document.getElementById("show_grid").checked = checked;
+}
+
 function autopatch_yoffset_toggle(checked) {
     document.getElementById("autopatch_yoffset_value").disabled = !checked;
     document.getElementById("autopatch_yoffset").checked = checked;
 }
 
-function gui_prefs_callback(name, show_grid, save_zoom, browser_doc, browser_path,
-    browser_init, autopatch_yoffset) {
+function gui_prefs_callback(name, show_grid, grid_size, save_zoom, browser_doc,
+    browser_path, browser_init, autopatch_yoffset) {
     var s = document.getElementById("gui_preset");
 
     // ag: scan the css subdir for user-defined styles
@@ -1071,6 +1085,8 @@ function gui_prefs_callback(name, show_grid, save_zoom, browser_doc, browser_pat
         }
     }
     document.getElementById("show_grid").checked = !!show_grid;
+    document.getElementById("grid_size").value = grid_size;
+    grid_toggle(!!show_grid);
     document.getElementById("save_zoom").checked = !!save_zoom;
     document.getElementById("browser_doc").checked = !!browser_doc;
     document.getElementById("browser_path").checked = !!browser_path;
