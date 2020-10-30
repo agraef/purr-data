@@ -5827,10 +5827,10 @@ static void canvas_snap_to_grid(t_canvas *x, int xwas, int ywas, int xnew,
         anchor_yoff = ynew - oby;
         snap_got_anchor = 1;
     }
-    *dx = floor((xnew - anchor_xoff) / gsize) * gsize -
-        floor((xwas - anchor_xoff) / gsize) * gsize + snap_dx;
-    *dy = floor((ynew - anchor_yoff) / gsize) * gsize -
-        floor((ywas - anchor_yoff) / gsize) * gsize + snap_dy;
+    *dx = floor((xnew - anchor_xoff + gsize / 2) / gsize) * gsize -
+        floor((xwas - anchor_xoff + gsize / 2) / gsize) * gsize + snap_dx;
+    *dy = floor((ynew - anchor_yoff + gsize / 2) / gsize) * gsize -
+        floor((ywas - anchor_yoff + gsize / 2) / gsize) * gsize + snap_dy;
 }
 
 static void delay_move(t_canvas *x)
