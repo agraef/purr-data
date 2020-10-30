@@ -432,8 +432,8 @@
         "footgun": "Footgun"
       },
       "grid": {
-        "show_grid": "grid background in edit mode",
-        "show_grid_tt": "Show the grid background in edit mode"
+        "show_grid": "snap to grid",
+        "show_grid_tt": "Snap to the grid in edit mode"
       },
       "zoom": {
         "save_zoom": "save/load zoom level with patch",
