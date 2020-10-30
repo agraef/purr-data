@@ -1415,7 +1415,6 @@ var create_editmode_background = function(grid, size) {
     // grid partially transparent
     size = grid ? size : 10;
     opacity_str = '"' + (grid ? 1 : 0.25) + '"';
-post("size is " + size);
     cell_data_str = ['"', "M", size, 0, "L", 0, 0, 0, size, '"'].join(" ");
 
     head = ['<svg xmlns="http://www.w3.org/2000/svg" ',
