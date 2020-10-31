@@ -1440,6 +1440,51 @@ var create_editmode_background = function(grid, size) {
     return "url('data:image/svg+xml;utf8," + head + body + tail + "')";
 }
 
+// Set the grid background position to adjust for the viewBox of the svg.
+// We do this separately and before setting the background so we can call this
+// when the scroll view needs to be adjusted.
+function set_grid_position(cid, svg_elem) {
+    var vbox = svg_elem.getAttribute("viewBox").split(" "),
+        dx = 0, dy = 0;
+    // First two values of viewBox are x-origin and y-origin. Pd allows
+    // negative coordinates-- for example, the user can drag an object at
+    // (0, 0) 12 pixels to the left to arrive at (-12, 0). To accommodate this
+    // with the svg backend, we would adjust the x-origin to be -12 so that
+    // the user can view it (possibly by scrolling). These adjustments are
+    // all handled with gui_canvas_get_scroll.
+    //
+    // For the background image css property, everything is based on
+    // CSS DOM positioning. CSS doesn't really know anything about the SVG
+    // viewport-- it only knows that an SVG element is of a certain size and
+    // (in our case) has its top-left corner at the top-left corner of the
+    // window. So when we change the viewBox to have negative origin indices,
+    // we have to adjust the origin of the grid in the opposite direction
+    // For example, if our new x-origin for the svg viewBox is -12, we make
+    // the x-origin for the background image "12px". This adjustment positions
+    // the grid *as if* if extended 12 more pixels to the left of its
+    // container.
+    if (vbox[0] < 0) {
+        dx = 0 - vbox[0];
+    }
+    if (vbox[1] < 0) {
+        dy = 0 - vbox[1];
+    }
+    patchwin[cid].window.document.body.style
+        .setProperty("background-position",
+            dx + "px " + dy + "px");
+}
+
+function set_editmode_bg(cid, svg_elem, state)
+{
+    // If we're setting the bg, figure out the correct offset first
+    if (state) {
+        set_grid_position(cid, svg_elem);
+    }
+    patchwin[cid].window.document.body.style.setProperty("background-image",
+        state ?
+            create_editmode_background(showgrid[cid], gridsize[cid]) : "none");
+}
+
 // requires nw.js API (Menuitem)
 function canvas_set_editmode(cid, state) {
     gui(cid).get_elem("patchsvg", function(patchsvg, w) {
@@ -1449,14 +1494,10 @@ function canvas_set_editmode(cid, state) {
             // For now, we just change the opacity of the background grid
             // depending on whether snap-to-grid is turned on. This way
             // edit mode is always visually distinct.
-            patchwin[cid].window.document.body.style
-	        .setProperty("background-image",
-                    create_editmode_background(showgrid[cid], gridsize[cid]));
+            set_editmode_bg(cid, patchsvg, true);
         } else {
             patchsvg.classList.remove("editmode");
-            patchwin[cid].window.document.body.style
-                .setProperty("background-image", "none"
-            );
+            set_editmode_bg(cid, patchsvg, false);
         }
     });
 }
@@ -1478,17 +1519,15 @@ function update_grid(grid, grid_size_value) {
     // Update the grid background of all canvas windows when the corresponding
     // option in the gui prefs changes.
     for (var cid in patchwin) {
+        showgrid[cid] = grid !== 0;
+        gridsize[cid] = grid_size_value;
 	gui(cid).get_elem("patchsvg", function(patchsvg, w) {
             var editmode = patchsvg.classList.contains("editmode");
             if (editmode) {
-                patchwin[cid].window.document.body.style.setProperty
-                ("background-image", create_editmode_background(grid !== 0,
-                    grid_size_value));
+                set_editmode_bg(cid, patchsvg, true);
             }
 	});
     }
-    // Also update the showgrid flags.
-    set_grid(grid, grid_size_value);
 }
 
 exports.update_grid = update_grid;
@@ -1760,14 +1799,6 @@ var scroll = {},
 
     var patchwin = {}; // object filled with cid: [Window object] pairs
     var dialogwin = {}; // object filled with did: [Window object] pairs
-
-var set_grid = function(grid, gridsize_value) {
-    var cid;
-    for (cid in showgrid) {
-	showgrid[cid] = grid;
-        gridsize[cid] = gridsize_value;
-    }
-}
 
 exports.get_patchwin = function(name) {
     return patchwin[name];
@@ -6779,6 +6810,9 @@ function do_getscroll(cid, checkgeom) {
             width: width,
             height: height
         });
+        // Now that we've updated the svg's viewBox, adjust the background
+        // position for the grid so it lines up properly with the patch.
+        set_grid_position(cid, svg_elem);
     });
 }
 

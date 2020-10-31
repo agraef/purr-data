@@ -5813,13 +5813,13 @@ static void canvas_snap_to_grid(t_canvas *x, int xwas, int ywas, int xnew,
     int snap_dx = 0, snap_dy = 0;
     if (!snap_got_anchor)
     {
-        int obx = xnew, oby = ynew;
+        int obx = xnew, oby = ynew, xsign, ysign;
         snap_get_anchor_xy(x, &obx, &oby);
             /* First, get the distance the selection should be displaced
                in order to align the anchor object with a grid line. */
 
-        snap_dx = ((obx + gsize / 2) / gsize) * gsize - obx;
-        snap_dy = ((oby + gsize / 2) / gsize) * gsize - oby;
+        snap_dx = ((obx + gsize / 2 * (obx < 0 ? -1 : 1)) / gsize) * gsize - obx;
+        snap_dy = ((oby + gsize / 2 * (oby < 0 ? -1 : 1)) / gsize) * gsize - oby;
         obx = obx / gsize * gsize;
         oby = oby / gsize * gsize;
         anchor_xoff = xnew - obx;
