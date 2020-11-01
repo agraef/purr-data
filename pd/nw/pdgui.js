@@ -1418,7 +1418,7 @@ var create_editmode_background = function(grid, size) {
     cell_data_str = ['"', "M", size, 0, "L", 0, 0, 0, size, '"'].join(" ");
 
     head = ['<svg xmlns="http://www.w3.org/2000/svg" ',
-                'width="100%" height="100%" ',
+                'width="100" height="100" ',
                 'opacity=', opacity_str, '>']
            .join("");
     body = ['<defs>',
@@ -1434,7 +1434,7 @@ var create_editmode_background = function(grid, size) {
                       'd="M 100 0 L 0 0 0 100"/>',
               '</pattern>',
             '</defs>',
-            '<rect width="100%" height="100%" fill="url(#grid)" />'
+            '<rect width="100" height="100" fill="url(#grid)" />'
         ].join("");
     tail = '</svg>';
     return "url('data:image/svg+xml;utf8," + head + body + tail + "')";
