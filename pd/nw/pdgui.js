@@ -1405,45 +1405,10 @@ function menu_send(name) {
     }
 }
 
-// Background for edit mode. Currently, we use a grid if snap-to-grid
-// functionality is turned on in the GUI preferences. If not, we just use
-// the same grid with a lower opacity. That way the edit mode is always
-// visually distinct from run mode.
-var create_editmode_background = function(grid, size) {
-    var head, body, tail, cell_data_str, opacity_str;
-    // if snap-to-grid isn't turned on, just use cell size of 10 and make the
-    // grid partially transparent
-    size = grid ? size : 10;
-    opacity_str = '"' + (grid ? 1 : 0.25) + '"';
-    cell_data_str = ['"', "M", size, 0, "L", 0, 0, 0, size, '"'].join(" ");
-
-    head = ['<svg xmlns="http://www.w3.org/2000/svg" ',
-                'width="100" height="100" ',
-                'opacity=', opacity_str, '>']
-           .join("");
-    body = ['<defs>',
-              '<pattern id="cell" patternUnits="userSpaceOnUse" ',
-                       'width="', size, '" height="', size, '">',
-                '<path fill="none" stroke="#ddd" stroke-width="1" ',
-                      'd=', cell_data_str,'/>',
-              '</pattern>',
-              '<pattern id="grid" patternUnits="userSpaceOnUse" ',
-                        'width="100" height="100">',
-                '<rect width="100" height="100" fill="url(#cell)" />',
-                '<path fill="none" stroke="#bbb" stroke-width="1" ',
-                      'd="M 100 0 L 0 0 0 100"/>',
-              '</pattern>',
-            '</defs>',
-            '<rect width="100" height="100" fill="url(#grid)" />'
-        ].join("");
-    tail = '</svg>';
-    return "url('data:image/svg+xml;utf8," + head + body + tail + "')";
-}
-
 // Set the grid background position to adjust for the viewBox of the svg.
 // We do this separately and before setting the background so we can call this
 // when the scroll view needs to be adjusted.
-function set_grid_position(cid, svg_elem) {
+function get_grid_coords(cid, svg_elem) {
     var vbox = svg_elem.getAttribute("viewBox").split(" "),
         dx = 0, dy = 0;
     // First two values of viewBox are x-origin and y-origin. Pd allows
@@ -1469,20 +1434,66 @@ function set_grid_position(cid, svg_elem) {
     if (vbox[1] < 0) {
         dy = 0 - vbox[1];
     }
-    patchwin[cid].window.document.body.style
-        .setProperty("background-position",
-            dx + "px " + dy + "px");
+    return { x: dx, y: dy };
+}
+
+// Background for edit mode. Currently, we use a grid if snap-to-grid
+// functionality is turned on in the GUI preferences. If not, we just use
+// the same grid with a lower opacity. That way the edit mode is always
+// visually distinct from run mode.
+var create_editmode_bg = function(cid, svg_elem) {
+    var head, body, tail, cell_data_str, opacity_str, grid, size, pos;
+    grid = showgrid[cid];
+    size = gridsize[cid];
+    pos = get_grid_coords(cid, svg_elem);
+    // if snap-to-grid isn't turned on, just use cell size of 10 and make the
+    // grid partially transparent
+    size = grid ? size : 10;
+    opacity_str = '"' + (grid ? 1 : 0.25) + '"';
+    cell_data_str = ['"', "M", size, 0, "L", 0, 0, 0, size, '"'].join(" ");
+
+    head = ['<svg xmlns="http://www.w3.org/2000/svg" ',
+                'width="100" height="100" ',
+                'opacity=', opacity_str, '>']
+           .join("");
+    body = ['<defs>',
+              '<pattern id="cell" patternUnits="userSpaceOnUse" ',
+                       'width="', size, '" height="', size, '">',
+                '<path fill="none" stroke="#ddd" stroke-width="1" ',
+                      'd=', cell_data_str,'/>',
+              '</pattern>',
+              '<pattern id="grid" patternUnits="userSpaceOnUse" ',
+                   'width="100" height="100" x="', pos.x, '" y="', pos.y, '">',
+                '<rect width="100" height="100" fill="url(#cell)" />',
+                '<path fill="none" stroke="#bbb" stroke-width="1" ',
+                      'd="M 100 0 L 0 0 0 100"/>',
+              '</pattern>',
+            '</defs>',
+            '<rect width="100" height="100" fill="url(#grid)" />'
+        ].join("");
+    tail = '</svg>';
+    return "url('data:image/svg+xml;utf8," + head + body + tail + "')";
 }
 
 function set_editmode_bg(cid, svg_elem, state)
 {
     // If we're setting the bg, figure out the correct offset first
-    if (state) {
-        set_grid_position(cid, svg_elem);
-    }
+//    if (state) {
+//        set_grid_position(cid, svg_elem);
+//    }
     patchwin[cid].window.document.body.style.setProperty("background-image",
         state ?
-            create_editmode_background(showgrid[cid], gridsize[cid]) : "none");
+            create_editmode_bg(cid, svg_elem) : "none");
+}
+
+function update_svg_background(cid, svg_elem) {
+    var bg = patchwin[cid].window.document.body.style
+        .getPropertyValue("background-image");
+    // Quick hack-- we just check whether the background has been drawn. If
+    // it has we assume we're in editmode.
+    if (bg !== "none") {
+        set_editmode_bg(cid, svg_elem, 1);
+    }
 }
 
 // requires nw.js API (Menuitem)
@@ -6810,9 +6821,8 @@ function do_getscroll(cid, checkgeom) {
             width: width,
             height: height
         });
-        // Now that we've updated the svg's viewBox, adjust the background
-        // position for the grid so it lines up properly with the patch.
-        set_grid_position(cid, svg_elem);
+        // Now update the svg's background if we're in edit mode
+        update_svg_background(cid, svg_elem);
     });
 }
 
