@@ -1442,6 +1442,8 @@ function get_grid_coords(cid, svg_elem) {
 // the same grid with a lower opacity. That way the edit mode is always
 // visually distinct from run mode.
 var create_editmode_bg = function(cid, svg_elem) {
+
+    return "linear-gradient(transparent 9px, rgba(220,220,200,.8) 10px, transparent 10px), linear-gradient(90deg, transparent 9px, rgba(220,220,200,.8) 10px, transparent 10px)";
     var head, body, tail, cell_data_str, opacity_str, grid, size, pos;
     grid = showgrid[cid];
     size = gridsize[cid];
@@ -1453,7 +1455,7 @@ var create_editmode_bg = function(cid, svg_elem) {
     cell_data_str = ['"', "M", size, 0, "L", 0, 0, 0, size, '"'].join(" ");
 
     head = ['<svg xmlns="http://www.w3.org/2000/svg" ',
-                'width="100" height="100" ',
+                'width="1000" height="1000" ',
                 'opacity=', opacity_str, '>']
            .join("");
     body = ['<defs>',
@@ -1464,12 +1466,12 @@ var create_editmode_bg = function(cid, svg_elem) {
               '</pattern>',
               '<pattern id="grid" patternUnits="userSpaceOnUse" ',
                    'width="100" height="100" x="', pos.x, '" y="', pos.y, '">',
-                '<rect width="100" height="100" fill="url(#cell)" />',
+                '<rect width="500" height="500" fill="url(#cell)" />',
                 '<path fill="none" stroke="#bbb" stroke-width="1" ',
-                      'd="M 100 0 L 0 0 0 100"/>',
+                      'd="M 500 0 L 0 0 0 500"/>',
               '</pattern>',
             '</defs>',
-            '<rect width="100" height="100" fill="url(#grid)" />'
+            '<rect width="1000" height="1000" fill="url(#grid)" />'
         ].join("");
     tail = '</svg>';
     return "url('data:image/svg+xml;utf8," + head + body + tail + "')";
@@ -1484,6 +1486,9 @@ function set_editmode_bg(cid, svg_elem, state)
     patchwin[cid].window.document.body.style.setProperty("background-image",
         state ?
             create_editmode_bg(cid, svg_elem) : "none");
+
+    patchwin[cid].window.document.body.style.setProperty("background-size",
+	    "100% 10px, 10px 100%");
 }
 
 function update_svg_background(cid, svg_elem) {
